@@ -139,7 +139,7 @@ static std::string _welcome(const newgame_def* ng)
     if (!text.empty())
         text = ", " + text;
     text = "Welcome" + text + ".";
-    return (text);
+    return text;
 }
 
 static void _print_character_info(const newgame_def* ng)
@@ -153,33 +153,33 @@ static void _print_character_info(const newgame_def* ng)
 static bool _is_species_valid_choice(species_type species)
 {
     if (species < 0 || species > NUM_SPECIES)
-        return (false);
+        return false;
 
     if (species >= SP_ELF) // These are all invalid.
-        return (false);
+        return false;
 
 #if 0
     if (species == SP_MY_NEW_TRUNK_ONLY_EXPERIMENT
         && Version::ReleaseType() != VER_ALPHA)
     {
-        return (false);
+        return false;
     }
 #endif
 
     // Non-base draconians cannot be selected either.
     if (species >= SP_RED_DRACONIAN && species < SP_BASE_DRACONIAN)
-        return (false);
+        return false;
 
-    return (true);
+    return true;
 }
 
 // Determines if a job is valid.
 static bool _is_job_valid_choice(job_type job)
 {
     if (job < 0 || job > NUM_JOBS)
-        return (false);
+        return false;
 
-    return (true);
+    return true;
 }
 
 #ifdef ASSERTS
@@ -201,7 +201,7 @@ undead_state_type get_undead_state(const species_type sp)
         return US_SEMI_UNDEAD;
     default:
         ASSERT(!_species_is_undead(sp));
-        return (US_ALIVE);
+        return US_ALIVE;
     }
 }
 
@@ -502,7 +502,7 @@ bool choose_game(newgame_def* ng, newgame_def* choice,
             cprintf("\nDo you really want to overwrite your old game? ");
             char c = getchm();
             if (c != 'Y' && c != 'y')
-                return (true);
+                return true;
         }
     }
 #endif
@@ -516,7 +516,7 @@ bool choose_game(newgame_def* ng, newgame_def* choice,
 
     write_newgame_options_file(*choice);
 
-    return (false);
+    return false;
 }
 
 // Set ng_choice to defaults without overwriting name and game type.
@@ -1327,11 +1327,11 @@ static weapon_type _fixup_weapon(weapon_type wp,
                                  const std::vector<weapon_choice>& weapons)
 {
     if (wp == WPN_UNKNOWN || wp == WPN_RANDOM || wp == WPN_VIABLE)
-        return (wp);
+        return wp;
     for (unsigned int i = 0; i < weapons.size(); ++i)
         if (wp == weapons[i].first)
-            return (wp);
-    return (WPN_UNKNOWN);
+            return wp;
+    return WPN_UNKNOWN;
 }
 
 static void _construct_weapon_menu(const weapon_type& defweapon,
@@ -1731,7 +1731,7 @@ static bool _choose_weapon(newgame_def* ng, newgame_def* ng_choice,
 {
     // No weapon use at all.  The actual item will be removed later.
     if (ng->species == SP_FELID)
-        return (true);
+        return true;
 
     switch (ng->job)
     {
@@ -1746,7 +1746,7 @@ static bool _choose_weapon(newgame_def* ng, newgame_def* ng_choice,
     case JOB_ARCANE_MARKSMAN:
         break;
     default:
-        return (true);
+        return true;
     }
 
     std::vector<weapon_choice> weapons = _get_weapons(ng);
@@ -1755,15 +1755,15 @@ static bool _choose_weapon(newgame_def* ng, newgame_def* ng_choice,
     if (weapons.size() == 1)
     {
         ng->weapon = ng_choice->weapon = weapons[0].first;
-        return (true);
+        return true;
     }
 
     if (ng_choice->weapon == WPN_UNKNOWN)
         if (!_prompt_weapon(ng, ng_choice, defaults, weapons))
-            return (false);
+            return false;
 
     _resolve_weapon(ng, ng_choice, weapons);
-    return (true);
+    return true;
 }
 
 static void _construct_gamemode_map_menu(const mapref_vector& maps,

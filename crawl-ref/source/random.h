@@ -50,7 +50,7 @@ T random_choose(T first, ...)
 
     va_end(args);
     ASSERT(nargs > 0);
-    return (chosen);
+    return chosen;
 }
 
 template <>
@@ -78,7 +78,7 @@ T random_choose_weighted(int weight, T first, ...)
     va_end(args);
     ASSERT(nargs > 0);
 
-    return (chosen);
+    return chosen;
 }
 
 struct dice_def

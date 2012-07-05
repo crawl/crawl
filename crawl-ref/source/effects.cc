@@ -237,7 +237,7 @@ int torment_player(actor *attacker, int taux)
     if (!hploss)
     {
         mpr("You feel a surge of unholy energy.");
-        return (0);
+        return 0;
     }
 
     mpr("Your body is wracked with pain!");
@@ -281,7 +281,7 @@ int torment_player(actor *attacker, int taux)
 
     ouch(hploss, attacker? attacker->mindex() : MHITNOT, type, aux);
 
-    return (1);
+    return 1;
 }
 
 // torment_monsters() is called with power 0 because torment is
@@ -300,10 +300,10 @@ int torment_monsters(coord_def where, actor *attacker, int taux)
     // Is a monster in this cell?
     monster* mons = monster_at(where);
     if (mons == NULL)
-        return (retval);
+        return retval;
 
     if (!mons->alive() || mons->res_torment())
-        return (retval);
+        return retval;
 
     int hploss = std::max(0, mons->hit_points / 2 - 1);
 
@@ -323,7 +323,7 @@ int torment_monsters(coord_def where, actor *attacker, int taux)
     if (hploss)
         retval = 1;
 
-    return (retval);
+    return retval;
 }
 
 int torment(actor *attacker, int taux, const coord_def& where)
@@ -337,7 +337,7 @@ int torment(actor *attacker, int taux, const coord_def& where)
             continue;
         r += torment_monsters(*ri, attacker, taux);
     }
-    return (r);
+    return r;
 }
 
 void immolation(int pow, int caster, coord_def where, bool known,
@@ -413,15 +413,15 @@ static bool _conduct_electricity_damage(bolt &beam, actor* victim,
                                         int &dmg, std::string &dmg_msg)
 {
     dmg = (10 + random2(15)) / 2;
-    return (false);
+    return false;
 }
 
 static bool _conduct_electricity_aoe(bolt& beam, const coord_def& target)
 {
     if (feat_is_water(grd(target)))
-        return (true);
+        return true;
 
-    return (false);
+    return false;
 }
 
 void conduct_electricity(coord_def where, actor *attacker)
@@ -544,7 +544,7 @@ bool forget_spell(void)
     ASSERT(!crawl_state.game_is_arena());
 
     if (!you.spell_no)
-        return (false);
+        return false;
 
     // find a random spell to forget:
     int slot = -1;
@@ -561,13 +561,13 @@ bool forget_spell(void)
     }
 
     if (slot == -1)              // should never happen though
-        return (false);
+        return false;
 
     mprf("Your knowledge of %s becomes hazy all of a sudden, and you forget "
          "the spell!", spell_title(you.spells[slot]));
 
     del_spell_from_memory_by_slot(slot);
-    return (true);
+    return true;
 }
 
 void direct_effect(monster* source, spell_type spell,
@@ -782,7 +782,7 @@ int recharge_wand(int item_slot, bool known, std::string *pre_msg)
         }
 
         if (wand.base_type != OBJ_WANDS && wand.base_type != OBJ_RODS)
-            return (0);
+            return 0;
 
         if (wand.base_type == OBJ_WANDS)
         {
@@ -854,7 +854,7 @@ int recharge_wand(int item_slot, bool known, std::string *pre_msg)
             }
 
             if (!work)
-                return (0);
+                return 0;
 
             if (pre_msg)
                 mpr(pre_msg->c_str());
@@ -863,11 +863,11 @@ int recharge_wand(int item_slot, bool known, std::string *pre_msg)
         }
 
         you.wield_change = true;
-        return (1);
+        return 1;
     }
     while (true);
 
-    return (0);
+    return 0;
 }
 
 // Berserking monsters cannot be ordered around.
@@ -1119,7 +1119,7 @@ inline static dungeon_feature_type _vitrified_feature(dungeon_feature_type feat)
 bool vitrify_area(int radius)
 {
     if (radius < 2)
-        return (false);
+        return false;
 
     bool something_happened = false;
     for (radius_iterator ri(you.pos(), radius, C_POINTY); ri; ++ri)
@@ -1133,7 +1133,7 @@ bool vitrify_area(int radius)
             something_happened = true;
         }
     }
-    return (something_happened);
+    return something_happened;
 }
 
 static void _hell_effects()
@@ -1272,7 +1272,7 @@ static bool _feat_is_flanked_by_walls(const coord_def &p)
     // paranoia!
     for (unsigned int i = 0; i < ARRAYSZ(adjs); ++i)
         if (!in_bounds(adjs[i]))
-            return (false);
+            return false;
 
     return (feat_is_wall(grd(adjs[0])) && feat_is_wall(grd(adjs[1]))
                && feat_has_solid_floor(grd(adjs[2])) && feat_has_solid_floor(grd(adjs[3]))
@@ -1326,7 +1326,7 @@ static bool _deadend_check_wall(const coord_def &p)
                 && (!in_bounds(c) || !in_bounds(d)
                     || !feat_is_wall(grd(c)) || !feat_is_wall(grd(d))))
             {
-                return (false);
+                return false;
             }
         }
     }
@@ -1347,12 +1347,12 @@ static bool _deadend_check_wall(const coord_def &p)
                 && (!in_bounds(c) || !in_bounds(d)
                     || !feat_is_wall(grd(c)) || !feat_is_wall(grd(d))))
             {
-                return (false);
+                return false;
             }
         }
     }
 
-    return (true);
+    return true;
 }
 
 // Similar to the above, checks whether turning a wall grid into floor
@@ -1395,7 +1395,7 @@ static bool _deadend_check_floor(const coord_def &p)
 
                 const coord_def c(p.x+j, p.y+i);
                 if (feat_has_solid_floor(grd(c)) && !feat_has_solid_floor(grd(b)))
-                    return (false);
+                    return false;
             }
         }
     }
@@ -1421,12 +1421,12 @@ static bool _deadend_check_floor(const coord_def &p)
 
                 const coord_def c(p.x+i, p.y+j);
                 if (feat_has_solid_floor(grd(c)) && !feat_has_solid_floor(grd(b)))
-                    return (false);
+                    return false;
             }
         }
     }
 
-    return (true);
+    return true;
 }
 
 // Changes a small portion of a labyrinth by exchanging wall against floor
@@ -1754,32 +1754,32 @@ void change_labyrinth(bool msg)
 static bool _food_item_needs_time_check(item_def &item)
 {
     if (!item.defined())
-        return (false);
+        return false;
 
     if (item.base_type != OBJ_CORPSES
         && item.base_type != OBJ_FOOD
         && item.base_type != OBJ_POTIONS)
     {
-        return (false);
+        return false;
     }
 
     if (item.base_type == OBJ_CORPSES
         && item.sub_type > CORPSE_SKELETON)
     {
-        return (false);
+        return false;
     }
 
     if (item.base_type == OBJ_FOOD && item.sub_type != FOOD_CHUNK)
-        return (false);
+        return false;
 
     if (item.base_type == OBJ_POTIONS && !is_blood_potion(item))
-        return (false);
+        return false;
 
     // The object specifically asks not to be checked:
     if (item.props.exists(CORPSE_NEVER_DECAYS))
-        return (false);
+        return false;
 
-    return (true);
+    return true;
 }
 
 #define ROTTING_WARNED_KEY "rotting_warned"
@@ -2667,7 +2667,7 @@ int place_ring(std::vector<coord_def> &ring_points,
                 seen_count++;
     }
 
-    return (spawned_count);
+    return spawned_count;
 }
 
 // Collect lists of points that are within LOS (under the given env map),
@@ -2786,7 +2786,7 @@ static int _mushroom_ring(item_def &corpse, int & seen_count,
 
     // Not enough valid points?
     if (radius_points[chosen_idx].size() < min_spawn)
-        return (0);
+        return 0;
 
     mgen_data temp(MONS_TOADSTOOL,
                    toadstool_behavior, 0, 0, 0,
@@ -2806,7 +2806,7 @@ static int _mushroom_ring(item_def &corpse, int & seen_count,
     int spawned_count = place_ring(radius_points[chosen_idx], corpse.pos, temp,
                                    n_arcs, 1, seen_count);
 
-    return (spawned_count);
+    return spawned_count;
 }
 
 // Try to spawn 'target_count' mushrooms around the position of
@@ -2824,7 +2824,7 @@ int spawn_corpse_mushrooms(item_def& corpse,
 {
     seen_targets = 0;
     if (target_count == 0)
-        return (0);
+        return 0;
 
     int c_size = 8;
     int permutation[] = {0, 1, 2, 3, 4, 5, 6, 7};
@@ -2856,7 +2856,7 @@ int spawn_corpse_mushrooms(item_def& corpse,
 
             seen_targets = -1;
 
-            return (res);
+            return res;
         }
     }
 
@@ -2956,7 +2956,7 @@ int spawn_corpse_mushrooms(item_def& corpse,
         }
     }
 
-    return (placed_targets);
+    return placed_targets;
 }
 
 int mushroom_prob(item_def & corpse)
@@ -2984,7 +2984,7 @@ int mushroom_prob(item_def & corpse)
 
     int trial_prob = static_cast<int>(100 * trial_prob_f);
 
-    return (trial_prob);
+    return trial_prob;
 }
 
 bool mushroom_spawn_message(int seen_targets, int seen_corpses)
@@ -2999,10 +2999,10 @@ bool mushroom_spawn_message(int seen_targets, int seen_corpses)
         mprf("%s grow%s from %s.",
              what.c_str(), seen_targets > 1 ? "" : "s", where.c_str());
 
-        return (true);
+        return true;
     }
 
-    return (false);
+    return false;
 }
 
 // Randomly decide whether or not to spawn a mushroom over the given

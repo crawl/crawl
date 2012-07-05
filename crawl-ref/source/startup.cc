@@ -512,7 +512,7 @@ static int _find_save(const std::vector<player_save_info>& chars,
 {
     for (int i = 0; i < static_cast<int>(chars.size()); ++i)
         if (chars[i].name == name)
-            return (i);
+            return i;
     return (-1);
 }
 
@@ -956,5 +956,5 @@ bool startup_step()
 
     _post_init(newchar);
 
-    return (newchar);
+    return newchar;
 }

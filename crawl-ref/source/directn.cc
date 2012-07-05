@@ -296,7 +296,7 @@ static command_type shift_direction(command_type cmd)
     case CMD_TARGET_DOWN_RIGHT: return CMD_TARGET_DIR_DOWN_RIGHT;
     case CMD_TARGET_UP_RIGHT:   return CMD_TARGET_DIR_UP_RIGHT;
     case CMD_TARGET_UP_LEFT:    return CMD_TARGET_DIR_UP_LEFT;
-    default: return (cmd);
+    default: return cmd;
     }
 }
 
@@ -450,7 +450,7 @@ static bool _mon_exposed_in_cloud(const monster* mon)
 static bool _mon_exposed(const monster* mon)
 {
     if (!mon || !you.see_cell(mon->pos()) || mon->visible_to(&you))
-        return (false);
+        return false;
 
     return (_mon_exposed_in_water(mon) || _mon_exposed_in_cloud(mon));
 }
@@ -908,7 +908,7 @@ char mlist_index_to_letter(int index)
     if (index >= 'l')
         index++;
 
-    return (index);
+    return index;
 }
 #endif
 
@@ -944,7 +944,7 @@ bool direction_chooser::move_is_ok() const
             else
                 mpr("Sorry, you can't target what you can't see.",
                     MSGCH_EXAMINE_FILTER);
-            return (false);
+            return false;
         }
 
         if (looking_at_you())
@@ -962,7 +962,7 @@ bool direction_chooser::move_is_ok() const
                 if (cancel_at_self || Options.allow_self_target == CONFIRM_CANCEL)
                 {
                     mpr("That would be overly suicidal.", MSGCH_EXAMINE_FILTER);
-                    return (false);
+                    return false;
                 }
                 else if (Options.allow_self_target == CONFIRM_PROMPT)
                     return yesno("Really target yourself?", false, 'n');
@@ -971,7 +971,7 @@ bool direction_chooser::move_is_ok() const
             if (cancel_at_self)
             {
                 mpr("Sorry, you can't target yourself.", MSGCH_EXAMINE_FILTER);
-                return (false);
+                return false;
             }
         }
     }
@@ -980,7 +980,7 @@ bool direction_chooser::move_is_ok() const
     if (!moves.isValid && !moves.isCancel)
         return yesno("Are you sure you want to fizzle?", false, 'n');
 
-    return (true);
+    return true;
 }
 
 // Assuming the target is in view, is line-of-fire
@@ -989,11 +989,11 @@ static bool _blocked_ray(const coord_def &where,
                          dungeon_feature_type* feat = NULL)
 {
     if (exists_ray(you.pos(), where, opc_solid_see))
-        return (false);
+        return false;
     if (feat == NULL)
-        return (true);
+        return true;
     *feat = ray_blocker(you.pos(), where);
-    return (true);
+    return true;
 }
 
 static std::string _targ_mode_name(targ_mode_type mode)
@@ -1999,10 +1999,10 @@ bool direction_chooser::do_main_loop()
     if (loop_done)
     {
         if (just_looking)
-            return (true);
+            return true;
 
         if (move_is_ok())
-            return (true);
+            return true;
         else
             need_text_redraw = true;
     }
@@ -2282,12 +2282,12 @@ static bool _mons_is_valid_target(const monster* mon, int mode, int range)
         && (mon->type != MONS_BALLISTOMYCETE || mon->number == 0)
         && mon->type != MONS_KRAKEN_TENTACLE)
     {
-        return (false);
+        return false;
     }
 
     // Don't target submerged monsters.
     if (mode != TARG_HOSTILE_SUBMERGED && mon->submerged())
-        return (false);
+        return false;
 
     // Don't usually target unseen monsters...
     if (!mon->visible_to(&you))
@@ -2299,7 +2299,7 @@ static bool _mons_is_valid_target(const monster* mon, int mode, int range)
                 && i_feel_safe(false, false, true, true, range));
     }
 
-    return (true);
+    return true;
 }
 
 #ifndef USE_TILE_LOCAL
@@ -2307,14 +2307,14 @@ static bool _find_mlist(const coord_def& where, int idx, bool need_path,
                         int range, targetter *hitfunc)
 {
     if (static_cast<int>(mlist.size()) <= idx)
-        return (false);
+        return false;
 
     if (!_is_target_in_range(where, range, hitfunc) || !you.see_cell(where))
-        return (false);
+        return false;
 
     const monster_info* mon = env.map_knowledge(where).monsterinfo();
     if (mon == NULL)
-        return (false);
+        return false;
 
     int real_idx = 0;
     for (unsigned int i = 0; i+1 < mlist.size(); ++i)
@@ -2335,15 +2335,15 @@ static bool _find_mlist(const coord_def& where, int idx, bool need_path,
     const monster* real_mon = monster_at(where);
     ASSERT(real_mon);
     if (!_mons_is_valid_target(real_mon, TARG_ANY, range))
-        return (false);
+        return false;
 
     if (need_path && _blocked_ray(where))
-        return (false);
+        return false;
 
     const monster_info* monl = &mlist[real_idx];
 
     if (mon->attitude != monl->attitude)
-        return (false);
+        return false;
 
     if (mon->type != monl->type)
         return (mons_is_mimic(mon->type) && mons_is_mimic(monl->type));
@@ -2361,7 +2361,7 @@ static bool _find_mlist(const coord_def& where, int idx, bool need_path,
         return (mon->mname == monl->mname);
 
     // Else the two monsters are identical.
-    return (true);
+    return true;
 }
 #endif
 
@@ -2370,18 +2370,18 @@ static bool _find_fprop_unoccupied(const coord_def & where, int mode,
 {
     // Don't target out of range.
     if (!_is_target_in_range(where, range, hitfunc))
-        return (false);
+        return false;
 
     monster* mon = monster_at(where);
     if (mon || !you.see_cell(where))
-        return (false);
+        return false;
 
     // Monster in LOS but only via glass walls, so no direct path.
     if (need_path && !you.see_cell_no_trans(where))
-        return (false);
+        return false;
 
     if (need_path && _blocked_ray(where))
-        return (false);
+        return false;
 
     return (env.pgrid(where) & mode);
 }
@@ -2402,31 +2402,31 @@ static bool _find_monster(const coord_def& where, int mode, bool need_path,
 
     // Target the player for friendly and general spells.
     if ((mode == TARG_FRIEND || mode == TARG_ANY) && where == you.pos())
-        return (true);
+        return true;
 
     // Don't target out of range.
     if (!_is_target_in_range(where, range, hitfunc))
-        return (false);
+        return false;
 
     const monster* mon = monster_at(where);
 
     // No monster or outside LOS.
     if (mon == NULL || !cell_see_cell(you.pos(), where, LOS_DEFAULT))
-        return (false);
+        return false;
 
     // Monster in LOS but only via glass walls, so no direct path.
     if (need_path && !you.see_cell_no_trans(where))
-        return (false);
+        return false;
 
     if (!_mons_is_valid_target(mon, mode, range))
-        return (false);
+        return false;
 
     if (need_path && _blocked_ray(mon->pos()))
-        return (false);
+        return false;
 
     // Now compare target modes.
     if (mode == TARG_ANY)
-        return (true);
+        return true;
 
     if (mode == TARG_HOSTILE || mode == TARG_HOSTILE_SUBMERGED)
         return (mons_attitude(mon) == ATT_HOSTILE);
@@ -2446,7 +2446,7 @@ static bool _find_monster(const coord_def& where, int mode, bool need_path,
 
     ASSERT(mode == TARG_ENEMY);
     if (mon->friendly())
-        return (false);
+        return false;
 
     // Don't target zero xp monsters.
     return (!mons_class_flag(mon->type, M_NO_EXP_GAIN));
@@ -2457,7 +2457,7 @@ static bool _find_feature(const coord_def& where, int mode,
 {
     // The stair need not be in LOS if the square is mapped.
     if (!you.see_cell(where) && !env.map_knowledge(where).seen())
-        return (false);
+        return false;
 
     return is_feature(mode, where);
 }
@@ -2467,10 +2467,10 @@ static bool _find_object(const coord_def& where, int mode,
 {
     // Don't target out of range.
     if (!_is_target_in_range(where, range, hitfunc))
-        return (false);
+        return false;
 
     if (need_path && (!you.see_cell(where) || _blocked_ray(where)))
-        return (false);
+        return false;
 
     return (env.map_knowledge(where).item()
             || (you.see_cell(where) && top_item_at(where)));
@@ -2492,7 +2492,7 @@ static int _next_los(int dir, int los, bool wrap)
     if (wrap)
     {
         if (!flipvh && !fliphv)
-            return (los);
+            return los;
 
         // We have to invert flipvh and fliphv if we're wrapping. Here's
         // why:
@@ -2509,17 +2509,17 @@ static int _next_los(int dir, int los, bool wrap)
     else
     {
         if (!flipvh && !fliphv)
-            return (LOS_NONE);
+            return LOS_NONE;
 
         if (flipvh && vis != (dir == 1))
-            return (LOS_NONE);
+            return LOS_NONE;
 
         if (fliphv && vis == (dir == 1))
-            return (LOS_NONE);
+            return LOS_NONE;
     }
 
     los = (los & ~LOS_VISMASK) | (vis? LOS_HIDDEN : LOS_VISIBLE);
-    return (los);
+    return los;
 }
 
 //---------------------------------------------------------------
@@ -2550,7 +2550,7 @@ static bool _find_square(coord_def &mfp, int direction,
     int i, j;
 
     if (los == LOS_NONE)
-        return (false);
+        return false;
 
     if (los == LOS_FLIPVH || los == LOS_FLIPHV)
     {
@@ -2600,7 +2600,7 @@ static bool _find_square(coord_def &mfp, int direction,
         {
             mfp = vyou;
             if (find_targ(you.pos(), mode, need_path, range, hitfunc))
-                return (true);
+                return true;
             return (_find_square(mfp, direction,
                                  find_targ, need_path, mode, range, hitfunc,
                                  false, _next_los(direction, los, wrap)));
@@ -2733,7 +2733,7 @@ static bool _find_square(coord_def &mfp, int direction,
         if (find_targ(targ, mode, need_path, range, hitfunc))
         {
             mfp.set(temp_xps, temp_yps);
-            return (true);
+            return true;
         }
     }
 
@@ -2795,7 +2795,7 @@ std::vector<dungeon_feature_type> features_by_desc(const base_pattern &pattern)
                 features.push_back(dungeon_feature_type(i));
         }
     }
-    return (features);
+    return features;
 }
 
 void describe_floor()
@@ -2866,7 +2866,7 @@ std::string thing_do_grammar(description_level_type dtype,
         {
             desc[0] = tolower(desc[0]);
         }*/
-        return (desc);
+        return desc;
     }
 
     switch (dtype)
@@ -2878,7 +2878,7 @@ std::string thing_do_grammar(description_level_type dtype,
     case DESC_NONE:
         return ("");
     default:
-        return (desc);
+        return desc;
     }
 }
 
@@ -3340,7 +3340,7 @@ static std::string _describe_monster_weapon(const monster_info& mi, bool ident)
     }
 
     if (name1.empty())
-        return (desc);
+        return desc;
 
     desc += " wielding ";
     desc += name1;
@@ -3351,7 +3351,7 @@ static std::string _describe_monster_weapon(const monster_info& mi, bool ident)
         desc += name2;
     }
 
-    return (desc);
+    return desc;
 }
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -3991,7 +3991,7 @@ command_type targetting_behaviour::get_command(int key)
 
     command_type cmd = key_to_command(key, KMC_TARGETTING);
     if (cmd >= CMD_MIN_TARGET && cmd < CMD_TARGET_CYCLE_TARGET_MODE)
-        return (cmd);
+        return cmd;
 
 #ifndef USE_TILE_LOCAL
     // Overrides the movement keys while mlist_targetting is active.
@@ -4003,7 +4003,7 @@ command_type targetting_behaviour::get_command(int key)
     if (cmd == CMD_TARGET_SELECT && key == ' ' && just_looking)
         cmd = CMD_TARGET_CANCEL;
 
-    return (cmd);
+    return cmd;
 }
 
 std::vector<std::string> targetting_behaviour::get_monster_desc(const monster_info& mi)

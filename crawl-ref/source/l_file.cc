@@ -38,7 +38,7 @@ static int file_marshall(lua_State *ls)
         marshallByte(th, lua_toboolean(ls, 2));
     else if (lua_isstring(ls, 2))
         marshallString(th, lua_tostring(ls, 2));
-    return (0);
+    return 0;
 }
 
 static int file_minor_version(lua_State *ls)
@@ -47,13 +47,13 @@ static int file_minor_version(lua_State *ls)
         luaL_error(ls, "Need reader as one argument");
     reader &th(*static_cast<reader*>(lua_touserdata(ls, 1)));
     lua_pushnumber(ls, th.getMinorVersion());
-    return (1);
+    return 1;
 }
 
 static int file_major_version(lua_State *ls)
 {
     lua_pushnumber(ls, TAG_MAJOR_VERSION);
-    return (1);
+    return 1;
 }
 
 static int file_unmarshall_boolean(lua_State *ls)
@@ -62,7 +62,7 @@ static int file_unmarshall_boolean(lua_State *ls)
         luaL_error(ls, "Need reader as one argument");
     reader &th(*static_cast<reader*>(lua_touserdata(ls, 1)));
     lua_pushboolean(ls, unmarshallByte(th));
-    return (1);
+    return 1;
 }
 
 static int file_unmarshall_number(lua_State *ls)
@@ -71,7 +71,7 @@ static int file_unmarshall_number(lua_State *ls)
         luaL_error(ls, "Need reader as one argument");
     reader &th(*static_cast<reader*>(lua_touserdata(ls, 1)));
     lua_pushnumber(ls, unmarshallInt(th));
-    return (1);
+    return 1;
 }
 
 static int file_unmarshall_string(lua_State *ls)
@@ -80,7 +80,7 @@ static int file_unmarshall_string(lua_State *ls)
         luaL_error(ls, "Need reader as one argument");
     reader &th(*static_cast<reader*>(lua_touserdata(ls, 1)));
     lua_pushstring(ls, unmarshallString(th).c_str());
-    return (1);
+    return 1;
 }
 
 enum lua_persist_type
@@ -117,7 +117,7 @@ static int file_marshall_meta(lua_State *ls)
     marshallByte(th, ptype);
     if (ptype != LPT_NIL)
         file_marshall(ls);
-    return (0);
+    return 0;
 }
 
 static int file_unmarshall_meta(lua_State *ls)
@@ -135,12 +135,12 @@ static int file_unmarshall_meta(lua_State *ls)
             return file_unmarshall_string(ls);
         case LPT_NIL:
             lua_pushnil(ls);
-            return (1);
+            return 1;
         default:
             luaL_error(ls, "Unexpected type signature.");
     }
     // Never get here.
-    return (0);
+    return 0;
 }
 
 // Returns a Lua table of filenames in the named directory. The file names
@@ -200,7 +200,7 @@ LUAFN(_file_writefile)
     {
         lua_pushboolean(ls, false);
     }
-    return (1);
+    return 1;
 }
 
 static const struct luaL_reg file_dlib[] =

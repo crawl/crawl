@@ -235,7 +235,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
     crawl_state.cancel_cmd_again();
     crawl_state.cancel_cmd_repeat();
 
-    return (1);
+    return 1;
 }
 
 spret_type cast_blink(bool allow_partial_control, bool fail)
@@ -303,7 +303,7 @@ bool allow_control_teleport(bool quiet)
             mpr("A powerful magic prevents control of your teleportation.");
     }
 
-    return (retval);
+    return retval;
 }
 
 spret_type cast_teleport_self(bool fail)
@@ -351,14 +351,14 @@ static bool _cell_vetoes_teleport(const coord_def cell, bool check_monsters = tr
 {
     // Monsters always veto teleport.
     if (monster_at(cell) && check_monsters)
-        return (true);
+        return true;
 
     // As do all clouds; this may change.
     if (env.cgrid(cell) != EMPTY_CLOUD && !wizard_tele)
-        return (true);
+        return true;
 
     if (cell_is_solid(cell))
-        return (true);
+        return true;
 
     return is_feat_dangerous(grd(cell), true) && !wizard_tele;
 }
@@ -421,7 +421,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
             && !new_abyss_area)
     {
         canned_msg(MSG_STRANGE_STASIS);
-        return (false);
+        return false;
     }
 
     // After this point, we're guaranteed to teleport. Kill the appropriate
@@ -440,7 +440,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
         if (you.pet_target != MHITYOU)
             you.pet_target = MHITNOT;
 
-        return (true);
+        return true;
     }
 
     coord_def pos(1, 0);
@@ -475,7 +475,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
                     "cancelling teleport.", MSGCH_ERROR);
                 if (!wizard_tele)
                     contaminate_player(1, true);
-                return (false);
+                return false;
             }
 
             dprf("Target square (%d,%d)", pos.x, pos.y);
@@ -493,7 +493,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
                 if (!wizard_tele)
                     contaminate_player(1, true);
                 maybe_id_ring_TC();
-                return (false);
+                return false;
             }
 
             monster* beholder = you.get_beholder(pos);
@@ -654,7 +654,7 @@ bool you_teleport_to(const coord_def where_to, bool move_monsters)
 
     // Don't bother to calculate a possible new position if it's out of bounds.
     if (!in_bounds(where))
-        return (false);
+        return false;
 
     if (_cell_vetoes_teleport(where))
     {
@@ -687,7 +687,7 @@ bool you_teleport_to(const coord_def where_to, bool move_monsters)
             }
             // Give up, we can't find a suitable spot.
             if (where == old_where)
-                return (false);
+                return false;
         }
     }
 
@@ -700,7 +700,7 @@ bool you_teleport_to(const coord_def where_to, bool move_monsters)
     move_player_to_grid(where, false, true);
 
     _handle_teleport_update(large_change, check_ring_TC, old_pos);
-    return (true);
+    return true;
 }
 
 void you_teleport_now(bool allow_control, bool new_abyss_area, bool wizard_tele)

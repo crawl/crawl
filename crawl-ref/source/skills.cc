@@ -979,7 +979,7 @@ static int _train(skill_type exsk, int &max_exp, bool simu)
     }
 
     if (skill_inc <= 0)
-        return (0);
+        return 0;
 
     // Bonus from manual
     if (exsk == you.manual_skill)
@@ -1006,7 +1006,7 @@ static int _train(skill_type exsk, int &max_exp, bool simu)
     ASSERT(max_exp >= 0);
     you.redraw_experience = true;
 
-    return (skill_inc);
+    return skill_inc;
 }
 
 void set_skill_level(skill_type skill, double amount)

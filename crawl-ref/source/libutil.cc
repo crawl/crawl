@@ -110,7 +110,7 @@ std::string apply_description(description_level_type desc,
         return ("your " + name);
     case DESC_PLAIN:
     default:
-        return (name);
+        return name;
     }
 }
 
@@ -154,7 +154,7 @@ std::string vmake_stringf(const char* s, va_list args)
     size_t len = vsnprintf(buf1, sizeof buf1, s, orig_args);
     va_end(orig_args);
     if (len < sizeof buf1)
-        return (buf1);
+        return buf1;
 
     char *buf2 = (char*)malloc(len + 1);
     va_copy(orig_args, args);
@@ -163,7 +163,7 @@ std::string vmake_stringf(const char* s, va_list args)
     std::string ret(buf2);
     free(buf2);
 
-    return (ret);
+    return ret;
 }
 
 std::string make_stringf(const char *s, ...)
@@ -180,9 +180,9 @@ bool key_is_escape(int key)
     switch (key)
     {
     CASE_ESCAPE
-        return (true);
+        return true;
     default:
-        return (false);
+        return false;
     }
 }
 
@@ -191,13 +191,13 @@ std::string &uppercase(std::string &s)
     for (unsigned i = 0, sz = s.size(); i < sz; ++i)
         s[i] = toupper(s[i]);
 
-    return (s);
+    return s;
 }
 
 std::string &lowercase(std::string &s)
 {
     s = lowercase_string(s);
-    return (s);
+    return s;
 }
 
 std::string lowercase_string(std::string s)
@@ -207,7 +207,7 @@ std::string lowercase_string(std::string s)
     char buf[4];
     for (const char *tp = s.c_str(); int len = utf8towc(&c, tp); tp += len)
         res.append(buf, wctoutf8(buf, towlower(c)));
-    return (res);
+    return res;
 }
 
 // Warning: this (and uppercase_first()) relies on no libc (glibc, BSD libc,
@@ -227,7 +227,7 @@ std::string lowercase_first(std::string s)
         utf8towc(&c, &s[0]);
         wctoutf8(&s[0], towlower(c));
     }
-    return (s);
+    return s;
 }
 
 std::string uppercase_first(std::string s)
@@ -241,19 +241,19 @@ std::string uppercase_first(std::string s)
         utf8towc(&c, &s[0]);
         wctoutf8(&s[0], towupper(c));
     }
-    return (s);
+    return s;
 }
 
 int ends_with(const std::string &s, const char *suffixes[])
 {
     if (!suffixes)
-        return (0);
+        return 0;
 
     for (int i = 0; suffixes[i]; ++i)
         if (ends_with(s, suffixes[i]))
             return (1 + i);
 
-    return (0);
+    return 0;
 }
 
 bool strip_suffix(std::string &s, const std::string &suffix)
@@ -262,7 +262,7 @@ bool strip_suffix(std::string &s, const std::string &suffix)
     {
         s.erase(s.length() - suffix.length(), suffix.length());
         trim_string(s);
-        return (true);
+        return true;
     }
     return false;
 }
@@ -273,7 +273,7 @@ bool strip_tag(std::string &s, const std::string &tag, bool skip_padding)
     if (s == tag)
     {
         s.clear();
-        return (true);
+        return true;
     }
 
     std::string::size_type pos;
@@ -284,9 +284,9 @@ bool strip_tag(std::string &s, const std::string &tag, bool skip_padding)
         {
             s.erase(pos, tag.length());
             trim_string(s);
-            return (true);
+            return true;
         }
-        return (false);
+        return false;
     }
 
     if ((pos = s.find(" " + tag + " ")) != std::string::npos)
@@ -294,7 +294,7 @@ bool strip_tag(std::string &s, const std::string &tag, bool skip_padding)
         // Leave one space intact.
         s.erase(pos, tag.length() + 1);
         trim_string(s);
-        return (true);
+        return true;
     }
 
     if ((pos = s.find(tag + " ")) == 0
@@ -303,10 +303,10 @@ bool strip_tag(std::string &s, const std::string &tag, bool skip_padding)
     {
         s.erase(pos, tag.length() + 1);
         trim_string(s);
-        return (true);
+        return true;
     }
 
-    return (false);
+    return false;
 }
 
 std::vector<std::string> strip_multiple_tag_prefix(std::string &s, const std::string &tagprefix)
@@ -345,7 +345,7 @@ std::string strip_tag_prefix(std::string &s, const std::string &tagprefix)
     s.erase(pos, ns - pos + 1);
     trim_string(s);
 
-    return (argument);
+    return argument;
 }
 
 int strip_number_tag(std::string &s, const std::string &tagprefix)
@@ -518,7 +518,7 @@ std::string pluralise(const std::string &name,
 std::string apostrophise(const std::string &name)
 {
     if (name.empty())
-        return (name);
+        return name;
 
     if (name == "you" || name == "You")
         return (name + "r");
@@ -533,7 +533,7 @@ std::string apostrophise(const std::string &name)
 std::string apostrophise_fixup(const std::string &msg)
 {
     if (msg.empty())
-        return (msg);
+        return msg;
 
     // XXX: This is rather hackish.
     return (replace_all(msg, "s's", "s'"));
@@ -622,7 +622,7 @@ std::string replace_all(std::string s,
         start = found + repl.length();
     }
 
-    return (s);
+    return s;
 }
 
 // Replaces all occurrences of any of the characters in tofind with the
@@ -641,7 +641,7 @@ std::string replace_all_of(std::string s,
         start = found + replacement.length();
     }
 
-    return (s);
+    return s;
 }
 
 int count_occurrences(const std::string &text, const std::string &s)
@@ -656,13 +656,13 @@ int count_occurrences(const std::string &text, const std::string &s)
         pos += s.length();
     }
 
-    return (nfound);
+    return nfound;
 }
 
 std::string trimmed_string(std::string s)
 {
     trim_string(s);
-    return (s);
+    return s;
 }
 
 // also used with macros
@@ -671,13 +671,13 @@ std::string &trim_string(std::string &str)
     str.erase(0, str.find_first_not_of(" \t\n\r"));
     str.erase(str.find_last_not_of(" \t\n\r") + 1);
 
-    return (str);
+    return str;
 }
 
 std::string &trim_string_right(std::string &str)
 {
     str.erase(str.find_last_not_of(" \t\n\r") + 1);
-    return (str);
+    return str;
 }
 
 static void add_segment(std::vector<std::string> &segs,
@@ -977,7 +977,7 @@ void cgotoxy(int x, int y, GotoRegion region)
 
 GotoRegion get_cursor_region()
 {
-    return (_current_region);
+    return _current_region;
 }
 #endif // USE_TILE_LOCAL
 

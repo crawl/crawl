@@ -170,7 +170,7 @@ bool make_god_gifts_disappear()
         }
     }
 
-    return (count);
+    return count;
 }
 
 // When under penance, Yredelemnulites can lose all nearby undead slaves.
@@ -216,10 +216,10 @@ bool yred_slaves_abandon_you()
             simple_god_message(" reclaims your granted undead slaves!");
         else
             simple_god_message(" reclaims some of your granted undead slaves!");
-        return (true);
+        return true;
     }
 
-    return (false);
+    return false;
 }
 
 // When under penance, Beoghites can lose all nearby orcish followers,
@@ -289,10 +289,10 @@ bool beogh_followers_abandon_you()
 
         chan << std::endl;
 
-        return (true);
+        return true;
     }
 
-    return (false);
+    return false;
 }
 
 static void _print_good_god_holy_being_speech(bool neutral,

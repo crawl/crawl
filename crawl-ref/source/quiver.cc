@@ -542,26 +542,26 @@ static bool _item_matches(const item_def &item, fire_type types,
         if (item.inscription.find(manual ? "+F" : "+f", 0)
             != std::string::npos)
         {
-            return (true);
+            return true;
         }
 
     if (item.base_type == OBJ_MISSILES)
     {
         if ((types & FIRE_DART) && item.sub_type == MI_DART)
-            return (true);
+            return true;
         if ((types & FIRE_STONE) && item.sub_type == MI_STONE)
-            return (true);
+            return true;
         if ((types & FIRE_JAVELIN) && item.sub_type == MI_JAVELIN)
-            return (true);
+            return true;
         if ((types & FIRE_ROCK) && item.sub_type == MI_LARGE_ROCK)
-            return (true);
+            return true;
         if ((types & FIRE_NET) && item.sub_type == MI_THROWING_NET)
-            return (true);
+            return true;
 
         if (types & FIRE_LAUNCHER)
         {
             if (launcher && item.launched_by(*launcher))
-                return (true);
+                return true;
         }
     }
     else if (item.base_type == OBJ_WEAPONS && is_throwable(&you, item))
@@ -570,18 +570,18 @@ static bool _item_matches(const item_def &item, fire_type types,
             && item.special == SPWPN_RETURNING
             && item_ident(item, ISFLAG_KNOW_TYPE))
         {
-            return (true);
+            return true;
         }
         if ((types & FIRE_DAGGER) && item.sub_type == WPN_DAGGER)
-            return (true);
+            return true;
         if ((types & FIRE_SPEAR) && item.sub_type == WPN_SPEAR)
-            return (true);
+            return true;
         if ((types & FIRE_HAND_AXE) && item.sub_type == WPN_HAND_AXE)
-            return (true);
+            return true;
         if ((types & FIRE_CLUB) && item.sub_type == WPN_CLUB)
-            return (true);
+            return true;
     }
-    return (false);
+    return false;
 }
 
 // Returns inv slot that contains an item that looks like item,

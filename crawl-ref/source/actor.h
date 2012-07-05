@@ -161,7 +161,7 @@ public:
 
     virtual bool fights_well_unarmed(int heavy_armour_penalty)
     {
-         return (true);
+         return true;
     }
     // Returns true if the actor has no way to attack (plants, statues).
     // (statues have only indirect attacks).
@@ -306,7 +306,7 @@ public:
     virtual bool cannot_act() const = 0;
     virtual bool confused() const = 0;
     virtual bool caught() const = 0;
-    virtual bool asleep() const { return (false); }
+    virtual bool asleep() const { return false; }
 
     // check_haloed: include halo
     // self_halo: include own halo (actually if self_halo = false

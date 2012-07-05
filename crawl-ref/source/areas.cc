@@ -253,7 +253,7 @@ coord_def find_centre_for(const coord_def& f, area_centre_type at)
             continue;
 
         if (a.centre == f)
-            return (f);
+            return f;
 
         int d = distance(a.centre, f);
         if (d <= a.radius && (d <= dist || dist == 0))
@@ -263,7 +263,7 @@ coord_def find_centre_for(const coord_def& f, area_centre_type at)
         }
     }
 
-    return (possible);
+    return possible;
 }
 
 ///////////////
@@ -280,7 +280,7 @@ bool remove_sanctuary(bool did_attack)
         env.sanctuary_time = 0;
 
     if (!in_bounds(env.sanctuary_pos))
-        return (false);
+        return false;
 
     const int radius = 5;
     bool seen_change = false;
@@ -309,7 +309,7 @@ bool remove_sanctuary(bool did_attack)
     if (is_resting())
         stop_running();
 
-    return (true);
+    return true;
 }
 
 // For the last (radius) counter turns the sanctuary will slowly shrink.
@@ -516,7 +516,7 @@ int monster::silence_radius2() const
 bool silenced(const coord_def& p)
 {
     if (!map_bounds(p))
-        return (false);
+        return false;
     if (!_agrid_valid)
         _update_agrid();
     return (_check_agrid_flag(p, APROP_SILENCE));
@@ -528,7 +528,7 @@ bool silenced(const coord_def& p)
 bool haloed(const coord_def& p)
 {
     if (!map_bounds(p))
-        return (false);
+        return false;
     if (!_agrid_valid)
         _update_agrid();
     return (_check_agrid_flag(p, APROP_HALO));
@@ -557,7 +557,7 @@ int player::halo_radius2() const
     if (player_equip_unrand(UNRAND_BRILLIANCE))
         size = std::max(size, 9);
 
-    return (size);
+    return size;
 }
 
 int monster::halo_radius2() const
@@ -576,36 +576,36 @@ int monster::halo_radius2() const
     switch (type)
     {
     case MONS_SPIRIT:
-        return (5);
+        return 5;
     case MONS_ANGEL:
-        return (26);
+        return 26;
     case MONS_CHERUB:
-        return (29);
+        return 29;
     case MONS_DAEVA:
-        return (32);
+        return 32;
     case MONS_SERAPH:
-        return (50);
+        return 50;
     case MONS_PEARL_DRAGON:
-        return (5);
+        return 5;
     case MONS_OPHAN:
-        return (64); // highest rank among sentient ones
+        return 64; // highest rank among sentient ones
     case MONS_PHOENIX:
-        return (10);
+        return 10;
     case MONS_SHEDU:
-        return (10);
+        return 10;
     case MONS_APIS:
-        return (4);
+        return 4;
     case MONS_PALADIN: // If a paladin finds the mace of brilliance
                        // it needs a larger halo
         return (std::max(4, size));  // mere humans
     case MONS_BLESSED_TOE:
-        return (17);
+        return 17;
     case MONS_SILVER_STAR:
-        return (40); // dumb but with an immense power
+        return 40; // dumb but with an immense power
     case MONS_HOLY_SWINE:
-        return (1);  // only notionally holy
+        return 1;  // only notionally holy
     default:
-        return (4);
+        return 4;
     }
 }
 
@@ -632,7 +632,7 @@ int monster::liquefying_radius2() const
 bool liquefied(const coord_def& p, bool check_actual)
 {
     if (!map_bounds(p))
-        return (false);
+        return false;
 
     if (!_agrid_valid)
         _update_agrid();
@@ -656,7 +656,7 @@ bool liquefied(const coord_def& p, bool check_actual)
 bool orb_haloed(const coord_def& p)
 {
     if (!map_bounds(p))
-        return (false);
+        return false;
     if (!_agrid_valid)
         _update_agrid();
 
@@ -670,7 +670,7 @@ bool orb_haloed(const coord_def& p)
 bool umbraed(const coord_def& p)
 {
     if (!map_bounds(p))
-        return (false);
+        return false;
     if (!_agrid_valid)
         _update_agrid();
 
@@ -697,7 +697,7 @@ int monster::umbra_radius2() const
     switch (type)
     {
     case MONS_PROFANE_SERVITOR:
-        return (40); // Very unholy!
+        return 40; // Very unholy!
     default:
         return (-1);
     }
@@ -709,7 +709,7 @@ int monster::umbra_radius2() const
 bool suppressed(const coord_def& p)
 {
     if (!map_bounds(p))
-        return (false);
+        return false;
     if (!_agrid_valid)
         _update_agrid();
 
@@ -719,7 +719,7 @@ bool suppressed(const coord_def& p)
 int monster::suppression_radius2() const
 {
     if (type == MONS_MOTH_OF_SUPPRESSION)
-        return (150);
+        return 150;
     else
         return (-1);
 }

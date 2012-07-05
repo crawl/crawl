@@ -78,7 +78,7 @@ colour_t random_uncommon_colour()
         result = random_colour();
     while (result == LIGHTCYAN || result == CYAN || result == BROWN);
 
-    return (result);
+    return result;
 }
 
 bool is_low_colour(colour_t colour)
@@ -96,7 +96,7 @@ colour_t make_low_colour(colour_t colour)
     if (is_high_colour(colour))
         return (colour - 8);
 
-    return (colour);
+    return colour;
 }
 
 colour_t make_high_colour(colour_t colour)
@@ -104,7 +104,7 @@ colour_t make_high_colour(colour_t colour)
     if (is_low_colour(colour))
         return (colour + 8);
 
-    return (colour);
+    return colour;
 }
 
 // returns if a colour is one of the special element colours (ie not regular)
@@ -587,7 +587,7 @@ int element_colour(int element, bool no_random, const coord_def& loc)
 {
     // pass regular colours through for safety.
     if (!_is_element_colour(element))
-        return (element);
+        return element;
 
     // Strip COLFLAGs just in case.
     element &= 0x007f;
@@ -615,7 +615,7 @@ static std::string tile_cols[24] =
 unsigned int str_to_tile_colour(std::string colour)
 {
     if (colour.empty())
-        return (0);
+        return 0;
 
     lowercase(colour);
 
@@ -629,9 +629,9 @@ unsigned int str_to_tile_colour(std::string colour)
     for (unsigned int i = 0; i < 24; i++)
     {
          if (tile_cols[i] == colour)
-             return (i);
+             return i;
     }
-    return (0);
+    return 0;
 }
 #endif
 
@@ -741,26 +741,26 @@ static unsigned short _dos_reverse_brand(unsigned short colour)
         }
     }
 
-    return (colour);
+    return colour;
 }
 
 static unsigned short _dos_hilite_brand(unsigned short colour,
                                         unsigned short hilite)
 {
     if (!hilite)
-        return (colour);
+        return colour;
 
     if (colour == hilite)
         colour = 0;
 
     colour |= (hilite << 4);
-    return (colour);
+    return colour;
 }
 
 static unsigned short _dos_brand(unsigned short colour, unsigned brand)
 {
     if ((brand & CHATTR_ATTRMASK) == CHATTR_NORMAL)
-        return (colour);
+        return colour;
 
     colour &= 0xFF;
 
@@ -791,7 +791,7 @@ static unsigned _colflag2brand(int colflag)
     case COLFLAG_TRAP_ITEM:
         return (Options.trap_item_brand);
     default:
-        return (CHATTR_NORMAL);
+        return CHATTR_NORMAL;
     }
 }
 #endif
@@ -815,5 +815,5 @@ unsigned real_colour(unsigned raw_colour, const coord_def& loc)
     }
 #endif
 
-    return (raw_colour);
+    return raw_colour;
 }

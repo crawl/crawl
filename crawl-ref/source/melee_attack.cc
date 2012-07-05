@@ -177,7 +177,7 @@ bool melee_attack::handle_phase_attempted()
     {
         --effective_attack_number;
 
-        return (false);
+        return false;
     }
 
     if (attacker->is_player() && defender->is_monster())
@@ -205,7 +205,7 @@ bool melee_attack::handle_phase_attempted()
                 else
                 {
                     cancel_attack = true;
-                    return (false);
+                    return false;
                 }
             }
             else
@@ -224,7 +224,7 @@ bool melee_attack::handle_phase_attempted()
                 if (stop_attack_prompt(hitfunc, verb))
                 {
                     cancel_attack = true;
-                    return (false);
+                    return false;
                 }
             }
         }
@@ -232,7 +232,7 @@ bool melee_attack::handle_phase_attempted()
                                     attacker->pos()))
         {
             cancel_attack = true;
-            return (false);
+            return false;
         }
         else if (cell_is_solid(defender->pos())
                  && mons_wall_shielded(defender->as_monster())
@@ -246,7 +246,7 @@ bool melee_attack::handle_phase_attempted()
                  raw_feature_description(defender->pos()).c_str(),
                  defender->name(DESC_THE).c_str());
             cancel_attack = true;
-            return (false);
+            return false;
         }
     }
     // Set delay now that we know the attack won't be cancelled.
@@ -283,7 +283,7 @@ bool melee_attack::handle_phase_attempted()
         // Statues and other special monsters which have AT_NONE need to lose
         // energy, but otherwise should exit the melee attack now.
         if (attk_type == AT_NONE)
-            return (false);
+            return false;
     }
 
     if (attacker != defender)
@@ -307,7 +307,7 @@ bool melee_attack::handle_phase_attempted()
         if (damage_brand == SPWPN_CHAOS)
             chaos_affects_attacker();
 
-        return (false);
+        return false;
     }
     // Non-fumbled self-attacks due to confusion are still pretty funny, though.
     else if (attacker == defender && attacker->confused())
@@ -355,7 +355,7 @@ bool melee_attack::handle_phase_attempted()
         if (damage_brand == SPWPN_CHAOS)
             chaos_affects_attacker();
 
-        return (false);
+        return false;
     }
 
     attack_occurred = true;
@@ -364,13 +364,13 @@ bool melee_attack::handle_phase_attempted()
     if (one_chance_in(3) && defender->is_player())
         practise(EX_MONSTER_MAY_HIT);
 
-    return (true);
+    return true;
 }
 
 bool melee_attack::handle_phase_blocked()
 {
     damage_done = 0;
-    return (true);
+    return true;
 }
 
 bool melee_attack::handle_phase_dodged()
@@ -428,10 +428,10 @@ bool melee_attack::handle_phase_dodged()
 
         // Retaliations can kill!
         if (!attacker->alive())
-            return (false);
+            return false;
     }
 
-    return (true);
+    return true;
 }
 
 /* An attack has been determined to have hit something
@@ -475,7 +475,7 @@ bool melee_attack::handle_phase_hit()
         slimify_monster(defender->as_monster());
         you.duration[DUR_SLIMIFY] = 0;
 
-        return (false);
+        return false;
     }
 
     // This does more than just calculate the damage, it also sets up
@@ -490,12 +490,12 @@ bool melee_attack::handle_phase_hit()
     // check_unrand_effects is safe to call with a dead defender, so always
     // call it, even if the hit effects said to stop.
     if (check_unrand_effects() || stop_hit)
-        return (false);
+        return false;
 
     if (damage_done > 0 || attk_flavour == AF_CRUSH)
     {
         if (!handle_phase_damaged())
-            return (false);
+            return false;
 
         // TODO: Remove this, (placed here to remove player_attack)
         if (attacker->is_player() && hit_woke_orc)
@@ -531,7 +531,7 @@ bool melee_attack::handle_phase_hit()
 
         // [ds] Monster may disappear after behaviour event.
         if (!defender->alive())
-            return (true);
+            return true;
     }
     else if (defender->is_player())
     {
@@ -542,7 +542,7 @@ bool melee_attack::handle_phase_hit()
         emit_foul_stench();
     }
 
-    return (true);
+    return true;
 }
 
 bool melee_attack::handle_phase_damaged()
@@ -671,7 +671,7 @@ bool melee_attack::handle_phase_damaged()
                 chaos_affects_attacker();
 
             do_miscast();
-            return (false);
+            return false;
         }
 
         if (!defender->alive())
@@ -680,7 +680,7 @@ bool melee_attack::handle_phase_damaged()
                 chaos_affects_attacker();
 
             do_miscast();
-            return (true);
+            return true;
         }
 
         // Yredelemnul's injury mirroring can kill the attacker.
@@ -691,7 +691,7 @@ bool melee_attack::handle_phase_damaged()
         {
             if (miscast_target == defender)
                 do_miscast();
-            return (false);
+            return false;
         }
 
         if (!defender->alive())
@@ -700,7 +700,7 @@ bool melee_attack::handle_phase_damaged()
                 chaos_affects_attacker();
 
             do_miscast();
-            return (true);
+            return true;
         }
 
         if (chaos_attack && attacker->alive())
@@ -711,20 +711,20 @@ bool melee_attack::handle_phase_damaged()
 
         // Yredelemnul's injury mirroring can kill the attacker.
         if (!attacker->alive())
-            return (false);
+            return false;
 
         if (miscast_target == attacker)
             do_miscast();
 
         // Miscast might have killed the attacker.
         if (!attacker->alive())
-            return (false);
+            return false;
     }
 
     if (shroud_broken)
         mpr("Your shroud falls apart!", MSGCH_WARN);
 
-    return (true);
+    return true;
 }
 
 bool melee_attack::handle_phase_killed()
@@ -740,7 +740,7 @@ bool melee_attack::handle_phase_killed()
     }
 
     _defender_die();
-    return (true);
+    return true;
 }
 
 bool melee_attack::handle_phase_end()
@@ -764,7 +764,7 @@ bool melee_attack::handle_phase_end()
     // This may invalidate both the attacker and defender.
     fire_final_effects();
 
-    return (true);
+    return true;
 }
 
 /* Initiate the processing of the attack
@@ -782,7 +782,7 @@ bool melee_attack::handle_phase_end()
 bool melee_attack::attack()
 {
     if (!handle_phase_attempted())
-        return (false);
+        return false;
 
     if (attacker != defender && attacker->self_destructs())
         return (did_hit = perceived_attack = true);
@@ -812,7 +812,7 @@ bool melee_attack::attack()
             simple_god_message(" blocks your attack.", GOD_ELYVILON);
             dec_penance(GOD_ELYVILON, 1);
 
-            return (false);
+            return false;
         }
         // Check for stab (and set stab_attempt and stab_bonus)
         player_stab_check();
@@ -835,7 +835,7 @@ bool melee_attack::attack()
 
             // Spines can kill!
             if (!attacker->alive())
-                return (false);
+                return false;
         }
 
         if (ev_margin >= 0)
@@ -843,7 +843,7 @@ bool melee_attack::attack()
             if (attacker != defender && attack_warded_off())
             {
                 perceived_attack = true;
-                return (false);
+                return false;
             }
 
             bool cont = handle_phase_hit();
@@ -851,7 +851,7 @@ bool melee_attack::attack()
             attacker_sustain_passive_damage();
 
             if (!cont)
-                return (false);
+                return false;
         }
         else
             handle_phase_dodged();
@@ -918,7 +918,7 @@ bool melee_attack::attack()
                 for (int i = 0; i <= 1; ++i)
                     if (is_melee_weapon(&you.inv[i]))
                         if (wield_weapon(true, i))
-                            return (false);
+                            return false;
         }
 
         you.pet_target = attacker->mindex();
@@ -931,7 +931,7 @@ bool melee_attack::attack()
 
     enable_attack_conducts(conducts);
 
-    return (attack_occurred);
+    return attack_occurred;
 }
 
 /* Initializes the noise_factor
@@ -1049,7 +1049,7 @@ void melee_attack::check_autoberserk()
 bool melee_attack::check_unrand_effects()
 {
     if (attacker->suppressed())
-        return (false);
+        return false;
 
     // If bashing the defender with a wielded unrandart launcher, don't use
     // unrand_entry->fight_func, since that's the function used for
@@ -1063,7 +1063,7 @@ bool melee_attack::check_unrand_effects()
         return (!defender->alive());
     }
 
-    return (false);
+    return false;
 }
 
 /* Setup all unarmed (non attack_type) variables
@@ -1236,7 +1236,7 @@ unarmed_attack_type melee_attack::player_aux_choose_uc_attack()
     if (_tran_forbid_aux_attack(uc_attack))
         uc_attack = UNAT_NO_ATTACK;
 
-    return (uc_attack);
+    return uc_attack;
 }
 
 bool melee_attack::player_aux_test_hit()
@@ -1253,13 +1253,13 @@ bool melee_attack::player_aux_test_hit()
     {
         simple_god_message(" blocks your attack.", GOD_ELYVILON);
         dec_penance(GOD_ELYVILON, 1);
-        return (false);
+        return false;
     }
 
     bool auto_hit = one_chance_in(30);
 
     if (to_hit >= evasion || auto_hit)
-        return (true);
+        return true;
 
     const int phaseless_evasion =
         defender->melee_evasion(attacker, EV_IGNORE_PHASESHIFT);
@@ -1277,7 +1277,7 @@ bool melee_attack::player_aux_test_hit()
              defender->name(DESC_THE).c_str());
     }
 
-    return (false);
+    return false;
 }
 
 /* Controls the looping on available unarmed attacks
@@ -1336,23 +1336,23 @@ bool melee_attack::player_aux_unarmed()
         // of the kraken still gets a chance to act and submerge
         // tentacles before we get here.
         if (!defender->alive())
-            return (true);
+            return true;
 
         if (player_aux_test_hit())
         {
             // Upset the monster.
             behaviour_event(defender->as_monster(), ME_WHACK, attacker);
             if (!defender->alive())
-                return (true);
+                return true;
 
             if (attack_shield_blocked(true))
                 continue;
             if (player_aux_apply(atk))
-                return (true);
+                return true;
         }
     }
 
-    return (false);
+    return false;
 }
 
 bool melee_attack::player_aux_apply(unarmed_attack_type atk)
@@ -1458,10 +1458,10 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
     if (defender->as_monster()->hit_points < 1)
     {
         _defender_die();
-        return (true);
+        return true;
     }
 
-    return (false);
+    return false;
 }
 
 void melee_attack::player_announce_aux_hit()
@@ -1528,7 +1528,7 @@ int melee_attack::player_stat_modify_damage(int damage)
     damage *= dammod;
     damage /= 78;
 
-    return (damage);
+    return damage;
 }
 
 int melee_attack::player_aux_stat_modify_damage(int damage)
@@ -1545,7 +1545,7 @@ int melee_attack::player_aux_stat_modify_damage(int damage)
     damage *= dammod;
     damage /= 20;
 
-    return (damage);
+    return damage;
 }
 
 int melee_attack::player_apply_weapon_skill(int damage)
@@ -1556,7 +1556,7 @@ int melee_attack::player_apply_weapon_skill(int damage)
         damage /= 2500;
     }
 
-    return (damage);
+    return damage;
 }
 
 int melee_attack::player_apply_fighting_skill(int damage, bool aux)
@@ -1566,7 +1566,7 @@ int melee_attack::player_apply_fighting_skill(int damage, bool aux)
     damage *= base * 100 + (random2(you.skill(SK_FIGHTING, 100) + 1));
     damage /= base * 100;
 
-    return (damage);
+    return damage;
 }
 
 int melee_attack::player_apply_misc_modifiers(int damage)
@@ -1582,7 +1582,7 @@ int melee_attack::player_apply_misc_modifiers(int damage)
     if (you.form == TRAN_STATUE)
         damage = div_rand_round(damage * 3, 2);
 
-    return (damage);
+    return damage;
 }
 
 int melee_attack::player_apply_weapon_bonuses(int damage)
@@ -1638,7 +1638,7 @@ int melee_attack::player_apply_weapon_bonuses(int damage)
             damage = div_rand_round(damage * 9, 10);
     }
 
-    return (damage);
+    return damage;
 }
 
 int melee_attack::player_stab_weapon_bonus(int damage)
@@ -1678,7 +1678,7 @@ int melee_attack::player_stab_weapon_bonus(int damage)
         break;
     }
 
-    return (damage);
+    return damage;
 }
 
 int melee_attack::player_stab(int damage)
@@ -1707,7 +1707,7 @@ int melee_attack::player_stab(int damage)
         damage = player_stab_weapon_bonus(damage);
     }
 
-    return (damage);
+    return damage;
 }
 
 void melee_attack::set_attack_verb()
@@ -2015,7 +2015,7 @@ bool melee_attack::player_monattk_hit_effects()
     }
 
     if (!defender->alive())
-        return (false);
+        return false;
 
     // These effects apply only to monsters that are still alive:
 
@@ -2032,7 +2032,7 @@ bool melee_attack::player_monattk_hit_effects()
     apply_staff_damage();
 
     if (!defender->alive())
-        return (false);
+        return false;
 
     if (special_damage || special_damage_flavour)
     {
@@ -2058,7 +2058,7 @@ bool melee_attack::player_monattk_hit_effects()
         }
     }
 
-    return (true);
+    return true;
 }
 
 void melee_attack::_defender_die()
@@ -2077,7 +2077,7 @@ int melee_attack::fire_res_apply_cerebov_downgrade(int res)
     if (weapon && weapon->special == UNRAND_CEREBOV)
         --res;
 
-    return (res);
+    return res;
 }
 
 void melee_attack::drain_defender()
@@ -2141,7 +2141,7 @@ bool melee_attack::distortion_affects_defender()
 
             defender->heal(1 + random2avg(7, 2), true); // heh heh
         }
-        return (false);
+        return false;
     }
 
     if (one_chance_in(3))
@@ -2150,7 +2150,7 @@ bool melee_attack::distortion_affects_defender()
             make_stringf("Space bends around %s.",
             def_name(DESC_THE).c_str());
         special_damage += 1 + random2avg(7, 2);
-        return (false);
+        return false;
     }
 
     if (one_chance_in(3))
@@ -2159,11 +2159,11 @@ bool melee_attack::distortion_affects_defender()
             make_stringf("Space warps horribly around %s!",
                          def_name(DESC_THE).c_str());
         special_damage += 3 + random2avg(24, 2);
-        return (false);
+        return false;
     }
 
     if (simu)
-        return (false);
+        return false;
 
     if (one_chance_in(3))
     {
@@ -2171,7 +2171,7 @@ bool melee_attack::distortion_affects_defender()
             obvious_effect = true;
         if (!defender->no_tele(true, false))
             add_final_effect(FINEFF_BLINK, 0, defender);
-        return (false);
+        return false;
     }
 
     // Used to be coinflip() || coinflip() for players, just coinflip()
@@ -2191,7 +2191,7 @@ bool melee_attack::distortion_affects_defender()
             add_final_effect(FINEFF_DISTORTION_TELEPORT, 0, defender);
         else
             defender->teleport();
-        return (false);
+        return false;
     }
 
     if (!player_in_branch(BRANCH_ABYSS) && coinflip())
@@ -2213,10 +2213,10 @@ bool melee_attack::distortion_affects_defender()
             obvious_effect = true;
 
         defender->banish(attacker, attacker->name(DESC_PLAIN, true));
-        return (true);
+        return true;
     }
 
-    return (false);
+    return false;
 }
 
 void melee_attack::antimagic_affects_defender()
@@ -2802,7 +2802,7 @@ brand_type melee_attack::random_chaos_brand()
     if (brand != SPWPN_CHAOS)
         take_note(Note(NOTE_MESSAGE, 0, 0, brand_name.c_str()), true);
 #endif
-    return (brand);
+    return brand;
 }
 
 attack_flavour melee_attack::random_chaos_attack_flavour()
@@ -3122,7 +3122,7 @@ bool melee_attack::apply_damage_brand()
             set_ident_flags(*weapon, ISFLAG_KNOW_TYPE);
     }
 
-    return (ret);
+    return ret;
 }
 
 
@@ -3178,7 +3178,7 @@ bool melee_attack::chop_hydra_head(int dam,
     // Monster attackers have only a 25% chance of making the
     // chop-check to prevent runaway head inflation.
     if (attacker->is_monster() && !one_chance_in(4))
-        return (false);
+        return false;
 
     // Only cutting implements.
     if (dam_type != DVORP_SLICING && dam_type != DVORP_CHOPPING
@@ -3227,7 +3227,7 @@ bool melee_attack::chop_hydra_head(int dam,
 
         defender->hurt(attacker, INSTANT_DEATH);
 
-        return (true);
+        return true;
     }
     else
     {
@@ -3251,7 +3251,7 @@ bool melee_attack::chop_hydra_head(int dam,
             {
                 if (defender_visible)
                     mpr("The flame cauterises the wound!");
-                return (true);
+                return true;
             }
             else if (defender->as_monster()->number < limit - 1)
             {
@@ -3263,7 +3263,7 @@ bool melee_attack::chop_hydra_head(int dam,
         }
     }
 
-    return (false);
+    return false;
 }
 
 bool melee_attack::decapitate_hydra(int dam, int damage_type)
@@ -3278,7 +3278,7 @@ bool melee_attack::decapitate_hydra(int dam, int damage_type)
 
         return chop_hydra_head(dam, dam_type, wpn_brand);
     }
-    return (false);
+    return false;
 }
 
 void melee_attack::attacker_sustain_passive_damage()
@@ -3628,7 +3628,7 @@ int melee_attack::calc_to_hit(bool random)
     // If no defender, we're calculating to-hit for debug-display
     // purposes, so don't drop down to defender code below
     if (defender == NULL)
-        return (mhit);
+        return mhit;
 
     if (!defender->visible_to(attacker))
         if (attacker->is_player())
@@ -3656,7 +3656,7 @@ int melee_attack::calc_to_hit(bool random)
          attacker->name(DESC_PLAIN).c_str(),
          base_hit, mhit);
 
-    return (mhit);
+    return mhit;
 }
 
 /*
@@ -3722,7 +3722,7 @@ int melee_attack::calc_attack_delay(bool random, bool scaled)
         return random ? div_rand_round(10 + delay, 2) : (10 + delay) / 2;
     }
 
-    return (0);
+    return 0;
 }
 
 /* Check for stab and prepare combat for stab-values
@@ -3818,7 +3818,7 @@ random_var melee_attack::player_weapon_speed()
         }
     }
 
-    return (attack_delay);
+    return attack_delay;
 }
 
 random_var melee_attack::player_unarmed_speed()
@@ -3834,7 +3834,7 @@ random_var melee_attack::player_unarmed_speed()
     // Bats are faster (for what good it does them).
     if (player_in_bat_form())
         unarmed_delay = div_rand_round(constant(3)*unarmed_delay, 5);
-    return (unarmed_delay);
+    return unarmed_delay;
 }
 
 bool melee_attack::attack_warded_off()
@@ -3860,10 +3860,10 @@ bool melee_attack::attack_warded_off()
             ASSERT(amu);
             wear_id_type(*amu);
         }
-        return (true);
+        return true;
     }
 
-    return (false);
+    return false;
 }
 
 /* Determine whether a block occurred
@@ -3878,10 +3878,10 @@ bool melee_attack::attack_warded_off()
 bool melee_attack::attack_shield_blocked(bool verbose)
 {
     if (!defender_shield && !defender->is_player())
-        return (false);
+        return false;
 
     if (defender->incapacitated())
-        return (false);
+        return false;
 
     const int con_block = random2(attacker->shield_bypass_ability(to_hit)
                                   + defender->shield_block_penalty());
@@ -3907,10 +3907,10 @@ bool melee_attack::attack_shield_blocked(bool verbose)
 
         defender->shield_block_succeeded(attacker);
 
-        return (true);
+        return true;
     }
 
-    return (false);
+    return false;
 }
 
 /* Select the attack verb for attacker
@@ -4802,7 +4802,7 @@ bool melee_attack::_tran_forbid_aux_attack(unarmed_attack_type atk)
         return (!form_keeps_mutations());
 
     default:
-        return (false);
+        return false;
     }
 }
 
@@ -4810,7 +4810,7 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk, bool is_uc)
 {
     // No extra unarmed attacks for disabled mutations.
     if (_tran_forbid_aux_attack(atk))
-        return (false);
+        return false;
 
     if (atk == UNAT_CONSTRICT)
         return (is_uc
@@ -4818,7 +4818,7 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk, bool is_uc)
                  || you.species == SP_OCTOPODE && you.has_usable_tentacle());
 
     if (you.strength() + you.dex() <= random2(50))
-        return (false);
+        return false;
 
     switch (atk)
     {
@@ -4859,7 +4859,7 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk, bool is_uc)
         return (is_uc && !one_chance_in(3));
 
     default:
-        return (false);
+        return false;
     }
 }
 
@@ -4926,7 +4926,7 @@ int melee_attack::test_hit(int to_land, int ev, bool randomise_ev)
     if (randomise_ev)
         ev = random2avg(2*ev, 2);
     if (to_land >= AUTOMATIC_HIT)
-        return (true);
+        return true;
     else if (x_chance_in_y(MIN_HIT_MISS_PERCENTAGE, 100))
         margin = (random2(2) ? 1 : -1) * AUTOMATIC_HIT;
     else
@@ -4937,7 +4937,7 @@ int melee_attack::test_hit(int to_land, int ev, bool randomise_ev)
          to_hit, ev, (margin >= 0) ? "hit" : "miss", margin);
 #endif
 
-    return (margin);
+    return margin;
 }
 
 /* Returns base weapon damage for attacker
@@ -4968,7 +4968,7 @@ int melee_attack::calc_base_weapon_damage()
         }
     }
 
-    return (damage);
+    return damage;
 }
 
 /* Returns attacker base unarmed damage
@@ -5162,7 +5162,7 @@ int melee_attack::calc_damage()
         return damage_done;
     }
 
-    return (0);
+    return 0;
 }
 
 int melee_attack::apply_defender_ac(int damage, int damage_max)
@@ -5220,7 +5220,7 @@ bool melee_attack::_player_vampire_draws_blood(const monster* mon, const int dam
     if (!_vamp_wants_blood_from_monster(mon) ||
         (!adjacent(defender->pos(), attacker->pos()) && needs_bite_msg))
     {
-        return (false);
+        return false;
     }
 
     const corpse_effect_type chunk_type = mons_corpse_effect(mon->type);
@@ -5281,7 +5281,7 @@ bool melee_attack::_player_vampire_draws_blood(const monster* mon, const int dam
 
     did_god_conduct(DID_DRINK_BLOOD, 5 + random2(4));
 
-    return (true);
+    return true;
 }
 
 // weighted average of strength and dex, between str and (str+dex)/2
@@ -5343,16 +5343,16 @@ void melee_attack::stab_message()
 bool melee_attack::_vamp_wants_blood_from_monster(const monster* mon)
 {
     if (you.species != SP_VAMPIRE)
-        return (false);
+        return false;
 
     if (you.hunger_state == HS_ENGORGED)
-        return (false);
+        return false;
 
     if (mon->is_summoned())
-        return (false);
+        return false;
 
     if (!mons_has_blood(mon->type))
-        return (false);
+        return false;
 
     const corpse_effect_type chunk_type = mons_corpse_effect(mon->type);
 

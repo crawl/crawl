@@ -509,7 +509,7 @@ static bool _octa_room(dgn_region& region, int oblique_max,
             oblique--;
     }
 
-    return (true);
+    return true;
 }
 
 static dungeon_feature_type _random_wall()
@@ -524,7 +524,7 @@ static dungeon_feature_type _random_wall()
     }
     while (wall == DNGN_SLIMY_WALL);
 
-    return (wall);
+    return wall;
 }
 
 // Helper function for chequerboard rooms.
@@ -654,7 +654,7 @@ static int _box_room_doors(int bx1, int bx2, int by1, int by2, int new_doors)
         new_doors --;
     }
 
-    return (doors_placed);
+    return doors_placed;
 }
 
 static void _box_room(int bx1, int bx2, int by1, int by2,
@@ -878,10 +878,10 @@ static bool _make_room(int sx,int sy,int ex,int ey,int max_doors, int doorlevel)
     diag_door += _good_door_spot(ex,ey);
 
     if ((diag_door + find_door) > 1 && max_doors == 1)
-        return (false);
+        return false;
 
     if (find_door == 0 || find_door > max_doors)
-        return (false);
+        return false;
 
     // Convert the area to floor.
     for (rx = sx; rx <= ex; rx++)
@@ -936,7 +936,7 @@ static bool _make_room(int sx,int sy,int ex,int ey,int max_doors, int doorlevel)
         }
     }
 
-    return (true);
+    return true;
 }
 
 static void _make_random_rooms(int num, int max_doors, int door_level,
@@ -1057,7 +1057,7 @@ static bool _may_overwrite_pos(coord_def c)
     if (grid >= DNGN_ENTER_SHOP && grid <= DNGN_EXIT_PORTAL_VAULT
         || grid == DNGN_EXIT_HELL)
     {
-        return (false);
+        return false;
     }
 
     // Don't overwrite feature if there's a monster or item there.

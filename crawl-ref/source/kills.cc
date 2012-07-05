@@ -57,15 +57,15 @@ const char *KillMaster::category_name(kill_category kc) const
 {
     if (kc >= KC_YOU && kc < KC_NCATEGORIES)
         return (kill_category_names[kc]);
-    return (NULL);
+    return NULL;
 }
 
 bool KillMaster::empty() const
 {
     for (int i = 0; i < KC_NCATEGORIES; ++i)
         if (!categorized_kills[i].empty())
-            return (false);
-    return (true);
+            return false;
+    return true;
 }
 
 void KillMaster::save(writer& outf) const
@@ -117,7 +117,7 @@ int KillMaster::total_kills() const
         int count = categorized_kills[i].get_kills(kills);
         grandtotal += count;
     }
-    return (grandtotal);
+    return grandtotal;
 }
 
 std::string KillMaster::kill_info() const
@@ -338,7 +338,7 @@ int Kills::get_kills(std::vector<kill_exp> &all_kills) const
     count += ghosts.size();
 
     std::sort(all_kills.begin(), all_kills.end());
-    return (count);
+    return count;
 }
 
 void Kills::save(writer& outf) const

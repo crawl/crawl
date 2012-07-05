@@ -324,9 +324,9 @@ static bool _missile_brand_is_prefix(special_missile_type brand)
     case SPMSL_EXPLODING:
     case SPMSL_STEEL:
     case SPMSL_SILVER:
-        return (true);
+        return true;
     default:
-        return (false);
+        return false;
     }
 }
 
@@ -1892,24 +1892,24 @@ bool item_type_has_ids(object_class_type base_type)
 bool item_type_known(const item_def& item)
 {
     if (item_ident(item, ISFLAG_KNOW_TYPE))
-        return (true);
+        return true;
 
     // Artefacts have different descriptions from other items,
     // so we can't use general item knowledge for them.
     if (is_artefact(item))
-        return (false);
+        return false;
 
     if (item.base_type == OBJ_MISSILES)
-        return (true);
+        return true;
 
     if (item.base_type == OBJ_MISCELLANY
         && (item.sub_type < MISC_FIRST_DECK || item.sub_type > MISC_LAST_DECK))
     {
-        return (true);
+        return true;
     }
 
     if (item.base_type == OBJ_BOOKS && item.sub_type == BOOK_DESTRUCTION)
-        return (true);
+        return true;
 
     if (!item_type_has_ids(item.base_type))
         return false;
@@ -1919,10 +1919,10 @@ bool item_type_known(const item_def& item)
 bool item_type_unknown(const item_def& item)
 {
     if (item_type_known(item))
-        return (false);
+        return false;
 
     if (is_artefact(item))
-        return (true);
+        return true;
 
     return item_type_has_ids(item.base_type);
 }
@@ -1937,7 +1937,7 @@ bool item_type_known(const object_class_type base_type, const int sub_type)
 bool item_type_tried(const item_def& item)
 {
     if (item_type_known(item))
-        return (false);
+        return false;
 
     if (item.flags & ISFLAG_TRIED)
         return true;
@@ -2111,7 +2111,7 @@ static MenuEntry *known_item_mangle(MenuEntry *me)
     KnownEntry *newme = new KnownEntry(ie);
     delete me;
 
-    return (newme);
+    return newme;
 }
 
 static MenuEntry *unknown_item_mangle(MenuEntry *me)
@@ -2120,7 +2120,7 @@ static MenuEntry *unknown_item_mangle(MenuEntry *me)
     UnknownEntry *newme = new UnknownEntry(ie);
     delete me;
 
-    return (newme);
+    return newme;
 }
 
 static bool _identified_item_names(const item_def *it1,
@@ -2695,15 +2695,15 @@ static char _random_cons(int seed)
 bool is_interesting_item(const item_def& item)
 {
     if (fully_identified(item) && is_artefact(item))
-        return (true);
+        return true;
 
     const std::string iname = menu_colour_item_prefix(item, false) + " "
                               + item.name(DESC_PLAIN);
     for (unsigned i = 0; i < Options.note_items.size(); ++i)
         if (Options.note_items[i].matches(iname))
-            return (true);
+            return true;
 
-    return (false);
+    return false;
 }
 
 // Returns true if an item is a potential life saver in an emergency
@@ -2711,7 +2711,7 @@ bool is_interesting_item(const item_def& item)
 bool is_emergency_item(const item_def &item)
 {
     if (!item_type_known(item))
-        return (false);
+        return false;
 
     switch (item.base_type)
     {
@@ -2720,12 +2720,12 @@ bool is_emergency_item(const item_def &item)
         {
         case WAND_HASTING:
             if (you.religion == GOD_CHEIBRIADOS)
-                return (false);
+                return false;
         case WAND_HEAL_WOUNDS:
         case WAND_TELEPORTATION:
-            return (true);
+            return true;
         default:
-            return (false);
+            return false;
         }
     case OBJ_SCROLLS:
         switch (item.sub_type)
@@ -2734,29 +2734,29 @@ bool is_emergency_item(const item_def &item)
         case SCR_BLINKING:
         case SCR_FEAR:
         case SCR_FOG:
-            return (true);
+            return true;
         default:
-            return (false);
+            return false;
         }
     case OBJ_POTIONS:
         if (you.species == SP_MUMMY)
-            return (false);
+            return false;
 
         switch (item.sub_type)
         {
         case POT_SPEED:
             if (you.religion == GOD_CHEIBRIADOS)
-                return (false);
+                return false;
         case POT_CURING:
         case POT_HEAL_WOUNDS:
         case POT_RESISTANCE:
         case POT_MAGIC:
-            return (true);
+            return true;
         default:
-            return (false);
+            return false;
         }
     default:
-        return (false);
+        return false;
     }
 }
 
@@ -2764,10 +2764,10 @@ bool is_emergency_item(const item_def &item)
 bool is_good_item(const item_def &item)
 {
     if (!item_type_known(item))
-        return (false);
+        return false;
 
     if (is_emergency_item(item))
-        return (true);
+        return true;
 
     switch (item.base_type)
     {
@@ -2781,12 +2781,12 @@ bool is_good_item(const item_def &item)
         case POT_GAIN_INTELLIGENCE:
         case POT_GAIN_DEXTERITY:
         case POT_EXPERIENCE:
-            return (true);
+            return true;
         default:
-            return (false);
+            return false;
         }
     default:
-        return (false);
+        return false;
     }
 }
 
@@ -2794,7 +2794,7 @@ bool is_good_item(const item_def &item)
 bool is_bad_item(const item_def &item, bool temp)
 {
     if (!item_type_known(item))
-        return (false);
+        return false;
 
     switch (item.base_type)
     {
@@ -2813,12 +2813,12 @@ bool is_bad_item(const item_def &item, bool temp)
             // prevent monsters from reading it.)
             return (temp && is_good_god(you.religion));
         default:
-            return (false);
+            return false;
         }
     case OBJ_POTIONS:
         // Can't be bad if you can't use them.
         if (you.species == SP_MUMMY)
-            return (false);
+            return false;
 
         switch (item.sub_type)
         {
@@ -2827,7 +2827,7 @@ bool is_bad_item(const item_def &item, bool temp)
         case POT_DEGENERATION:
         case POT_DECAY:
         case POT_PARALYSIS:
-            return (true);
+            return true;
         case POT_POISON:
         case POT_STRONG_POISON:
             // Poison is not that bad if you're poison resistant.
@@ -2838,17 +2838,17 @@ bool is_bad_item(const item_def &item, bool temp)
                     && (temp || you.species != SP_VAMPIRE
                         || you.hunger_state < HS_SATIATED));
         default:
-            return (false);
+            return false;
         }
     case OBJ_JEWELLERY:
         // Potentially useful.  TODO: check the properties.
         if (is_artefact(item))
-            return (false);
+            return false;
 
         switch (item.sub_type)
         {
         case AMU_INACCURACY:
-            return (true);
+            return true;
         case RING_HUNGER:
             // Even Vampires can use this ring.
             return (!you.is_undead || you.is_undead == US_HUNGRY_DEAD);
@@ -2862,11 +2862,11 @@ bool is_bad_item(const item_def &item, bool temp)
             return (item_ident(item, ISFLAG_KNOW_PLUSES) && item.plus <= 0
                     && item.plus2 <= 0);
         default:
-            return (false);
+            return false;
         }
 
     default:
-        return (false);
+        return false;
     }
 }
 
@@ -2875,7 +2875,7 @@ bool is_bad_item(const item_def &item, bool temp)
 bool is_dangerous_item(const item_def &item, bool temp)
 {
     if (!item_type_known(item))
-        return (false);
+        return false;
 
     switch (item.base_type)
     {
@@ -2884,14 +2884,14 @@ bool is_dangerous_item(const item_def &item, bool temp)
         {
         case SCR_IMMOLATION:
         case SCR_NOISE:
-            return (true);
+            return true;
         case SCR_TORMENT:
             return (!player_mutation_level(MUT_TORMENT_RESISTANCE)
                     || !temp && you.species == SP_VAMPIRE);
         case SCR_HOLY_WORD:
             return (you.undead_or_demonic());
         default:
-            return (false);
+            return false;
         }
 
     case OBJ_POTIONS:
@@ -2903,7 +2903,7 @@ bool is_dangerous_item(const item_def &item, bool temp)
                     || temp && you.species == SP_VAMPIRE
                        && you.hunger_state >= HS_SATIATED);
         default:
-            return (false);
+            return false;
         }
 
     case OBJ_BOOKS:
@@ -2912,7 +2912,7 @@ bool is_dangerous_item(const item_def &item, bool temp)
                 || is_dangerous_spellbook(item));
 
     default:
-        return (false);
+        return false;
     }
 }
 
@@ -2922,30 +2922,30 @@ bool is_useless_item(const item_def &item, bool temp)
     {
     case OBJ_WEAPONS:
         if (you.species == SP_FELID)
-            return (true);
+            return true;
 
         if (!you.could_wield(item, true, !temp)
             && !is_throwable(&you, item))
         {
             // Weapon is too large (or small) to be wielded and cannot
             // be thrown either.
-            return (true);
+            return true;
         }
 
         if (!item_type_known(item))
-            return (false);
+            return false;
 
         if (you.undead_or_demonic() && is_holy_item(item))
         {
             if (!temp && you.form == TRAN_LICH
                 && you.species != SP_DEMONSPAWN)
             {
-                return (false);
+                return false;
             }
-            return (true);
+            return true;
         }
 
-        return (false);
+        return false;
 
     case OBJ_MISSILES:
         if ((you.has_spell(SPELL_STICKS_TO_SNAKES)
@@ -2975,23 +2975,23 @@ bool is_useless_item(const item_def &item, bool temp)
             return (you.body_size(PSIZE_BODY, !temp) < SIZE_MEDIUM);
         }
 
-        return (false);
+        return false;
 
     case OBJ_ARMOUR:
         return (!can_wear_armour(item, false, true));
 
     case OBJ_SCROLLS:
         if (!item_type_known(item))
-            return (false);
+            return false;
 
         // A bad item is always useless.
         if (is_bad_item(item, temp))
-            return (true);
+            return true;
 
         switch (item.sub_type)
         {
         case SCR_RANDOM_USELESSNESS:
-            return (true);
+            return true;
         case SCR_TELEPORTATION:
             return (crawl_state.game_is_sprint());
         case SCR_AMNESIA:
@@ -3006,11 +3006,11 @@ bool is_useless_item(const item_def &item, bool temp)
         case SCR_VORPALISE_WEAPON:
             return (you.species == SP_FELID);
         default:
-            return (false);
+            return false;
         }
     case OBJ_WANDS:
         if (you.species == SP_FELID)
-            return (true);
+            return true;
 
         return (item.plus2 == ZAPCOUNT_EMPTY)
                || item_ident(item, ISFLAG_KNOW_PLUSES) && !item.plus;
@@ -3021,19 +3021,19 @@ bool is_useless_item(const item_def &item, bool temp)
         if (you.char_class == JOB_STALKER && !you.num_turns
             || you.has_spell(SPELL_EVAPORATE))
         {
-            return (false);
+            return false;
         }
 
         // Apart from Evaporate, mummies can't use potions.
         if (you.species == SP_MUMMY)
-            return (true);
+            return true;
 
         if (!item_type_known(item))
-            return (false);
+            return false;
 
         // A bad item is always useless.
         if (is_bad_item(item, temp))
-            return (true);
+            return true;
 
         switch (item.sub_type)
         {
@@ -3072,18 +3072,18 @@ bool is_useless_item(const item_def &item, bool temp)
 
         }
 
-        return (false);
+        return false;
     }
     case OBJ_JEWELLERY:
         if (!item_type_known(item))
-            return (false);
+            return false;
 
         // Potentially useful.  TODO: check the properties.
         if (is_artefact(item))
-            return (false);
+            return false;
 
         if (is_bad_item(item, temp))
-            return (true);
+            return true;
 
         switch (item.sub_type)
         {
@@ -3146,60 +3146,60 @@ bool is_useless_item(const item_def &item, bool temp)
             return (you.permanent_levitation() || you.permanent_flight());
 
         default:
-            return (false);
+            return false;
         }
 
     case OBJ_RODS:
         if (you.species == SP_FELID)
-            return (true);
+            return true;
         break;
 
     case OBJ_STAVES:
         if (you.species == SP_FELID)
-            return (true);
+            return true;
         if (you.religion == GOD_TROG)
-            return (true);
+            return true;
         if (!item_type_known(item))
-            return (false);
+            return false;
         if (item.sub_type == STAFF_ENERGY && you.species == SP_MUMMY)
-            return (true);
+            return true;
         if (item.sub_type == STAFF_ENERGY && temp && (you.form == TRAN_LICH
             || you.species == SP_VAMPIRE && you.hunger_state == HS_STARVING))
         {
-            return (true);
+            return true;
         }
         break;
 
     case OBJ_FOOD:
         if (!is_inedible(item))
-            return (false);
+            return false;
 
         if (item.sub_type == FOOD_CHUNK
             && (you.has_spell(SPELL_SUBLIMATION_OF_BLOOD)
                 || you.has_spell(SPELL_SIMULACRUM)
                 || !temp && you.form == TRAN_LICH))
         {
-            return (false);
+            return false;
         }
 
         if (is_fruit(item) && you.religion == GOD_FEDHAS)
-            return (false);
+            return false;
 
-        return (true);
+        return true;
 
     case OBJ_CORPSES:
         if (item.sub_type != CORPSE_SKELETON)
-            return (false);
+            return false;
 
         if (you.has_spell(SPELL_ANIMATE_DEAD)
             || you.has_spell(SPELL_ANIMATE_SKELETON)
             || you.religion == GOD_YREDELEMNUL && !you.penance[GOD_YREDELEMNUL]
                && you.piety >= piety_breakpoint(0))
         {
-            return (false);
+            return false;
         }
 
-        return (true);
+        return true;
 
     case OBJ_MISCELLANY:
         switch (item.sub_type)
@@ -3215,22 +3215,22 @@ bool is_useless_item(const item_def &item, bool temp)
         case MISC_HORN_OF_GERYON:
             return item.plus2;
         default:
-            return (false);
+            return false;
         }
 
     case OBJ_BOOKS:
         if (item.sub_type != BOOK_MANUAL || !item_type_known(item))
-            return (false);
+            return false;
         if (you.skills[item.plus] >= 27)
-            return (true);
+            return true;
         if (is_useless_skill((skill_type)item.plus))
-            return (true);
-        return (false);
+            return true;
+        return false;
 
     default:
-        return (false);
+        return false;
     }
-    return (false);
+    return false;
 }
 
 static const std::string _item_prefix(const item_def &item, bool temp,
@@ -3392,7 +3392,7 @@ std::string get_menu_colour_prefix_tags(const item_def &item,
         item_name = colour + item_name + colour_off;
     }
 
-    return (item_name);
+    return item_name;
 }
 
 typedef std::map<std::string, item_kind> item_names_map;
@@ -3485,7 +3485,7 @@ item_kind item_kind_by_name(std::string name)
 
     item_kind err = {OBJ_UNASSIGNED, 0, 0, 0};
 
-    return (err);
+    return err;
 }
 
 std::vector<std::string> item_name_list_for_glyph(unsigned glyph)

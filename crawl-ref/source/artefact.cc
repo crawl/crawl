@@ -38,11 +38,11 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
                                bool name_check_only = false)
 {
     if (which_god == GOD_NO_GOD)
-        return (false);
+        return false;
 
     // Jellies can't eat artefacts, so their god won't make any.
     if (which_god == GOD_JIYVA)
-        return (false);
+        return false;
 
     // First check the item's base_type and sub_type, then check the
     // item's brand and other randart properties.
@@ -112,13 +112,13 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
     }
 
     if (type_bad)
-        return (false);
+        return false;
 
     const int brand = get_weapon_brand(item);
     const int ego   = get_armour_ego_type(item);
 
     if (is_evil_god(which_god) && brand == SPWPN_HOLY_WRATH)
-        return (false);
+        return false;
     else if (is_good_god(which_god)
              && (brand == SPWPN_DRAINING
                  || brand == SPWPN_PAIN
@@ -128,7 +128,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
                  || is_demonic(item)
                  || artefact_wpn_property(item, ARTP_CURSED) != 0))
     {
-        return (false);
+        return false;
     }
 
     switch (which_god)
@@ -136,7 +136,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
     case GOD_BEOGH:
         // Orc god: no orc slaying.
         if (brand == SPWPN_ORC_SLAYING)
-            return (false);
+            return false;
         break;
 
     case GOD_ELYVILON:
@@ -144,87 +144,87 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
         if (artefact_wpn_property(item, ARTP_ANGRY)
             || artefact_wpn_property(item, ARTP_BERSERK))
         {
-            return (false);
+            return false;
         }
         break;
 
     case GOD_ZIN:
         // Lawful god: no mutagenics.
         if (artefact_wpn_property(item, ARTP_MUTAGENIC))
-            return (false);
+            return false;
         break;
 
     case GOD_SHINING_ONE:
         // Crusader god: holiness, honourable combat.
         if (item.base_type == OBJ_WEAPONS && brand != SPWPN_HOLY_WRATH)
-            return (false);
+            return false;
 
         if (artefact_wpn_property(item, ARTP_INVISIBLE)
             || artefact_wpn_property(item, ARTP_STEALTH) > 0)
         {
-            return (false);
+            return false;
         }
         break;
 
     case GOD_LUGONU:
         // Abyss god: corruption.
         if (item.base_type == OBJ_WEAPONS && brand != SPWPN_DISTORTION)
-            return (false);
+            return false;
         break;
 
     case GOD_KIKUBAAQUDGHA:
         // Necromancy god.
         if (item.base_type == OBJ_WEAPONS && brand != SPWPN_PAIN)
-            return (false);
+            return false;
     case GOD_SIF_MUNA:
     case GOD_VEHUMET:
         // The magic gods: no preventing spellcasting.
         if (artefact_wpn_property(item, ARTP_PREVENT_SPELLCASTING))
-            return (false);
+            return false;
         break;
 
     case GOD_TROG:
         // Anti-magic god: no spell use, no enhancing magic.
         if (brand == SPWPN_PAIN) // Pain involves necromantic spell use.
-            return (false);
+            return false;
 
         if (artefact_wpn_property(item, ARTP_MAGICAL_POWER))
-            return (false);
+            return false;
         break;
 
     case GOD_FEDHAS:
         // Fedhas forbids necromancy involving corpses, only reaping
         // really applies.
         if (brand == SPWPN_REAPING)
-            return (false);
+            return false;
         break;
 
     case GOD_CHEIBRIADOS:
         // Slow god: no speed, no berserking.
         if (brand == SPWPN_SPEED)
-            return (false);
+            return false;
 
         if (ego == SPARM_RUNNING)
-            return (false);
+            return false;
 
         if (artefact_wpn_property(item, ARTP_ANGRY)
             || artefact_wpn_property(item, ARTP_BERSERK))
         {
-            return (false);
+            return false;
         }
         break;
 
     case GOD_ASHENZARI:
         // Cursed god: no holy wrath (since that brand repels curses).
         if (brand == SPWPN_HOLY_WRATH)
-            return (false);
+            return false;
         break;
 
     default:
         break;
     }
 
-    return (true);
+    return true;
 }
 
 std::string replace_name_parts(const std::string &name_in, const item_def& item)
@@ -312,7 +312,7 @@ static unrandart_entry *_seekunrandart(const item_def &item);
 bool is_known_artefact(const item_def &item)
 {
     if (!item_type_known(item))
-        return (false);
+        return false;
 
     return (is_artefact(item));
 }
@@ -663,18 +663,18 @@ static int _need_bonus_stat_props(const artefact_properties_t &proprt)
         else if (i >= ARTP_ACCURACY && i <= ARTP_DAMAGE)
             num_acc_dam++;
         else
-            return (0);
+            return 0;
     }
 
     num_stats += num_acc_dam;
 
     // If an artefact has no properties at all, something is wrong.
     if (num_stats == 0)
-        return (2);
+        return 2;
 
     // Artefacts with two of more stat-only properties are fine.
     if (num_stats >= 2)
-        return (0);
+        return 0;
 
     // If an artefact has exactly one stat property, we might want to add
     // some more. (66% chance if it's Acc/Dam, else always.)
@@ -1142,11 +1142,11 @@ static bool _redo_book(item_def &book)
     }
 
     if (num_spells <= 5 && num_unknown == 0)
-        return (true);
+        return true;
     else if (num_spells > 5 && num_unknown <= 1)
-        return (true);
+        return true;
 
-    return (false);
+    return false;
 }
 
 static bool _init_artefact_book(item_def &book)
@@ -1184,7 +1184,7 @@ static bool _init_artefact_book(item_def &book)
         break;
     }
 
-    return (book_good);
+    return book_good;
 }
 
 static bool _init_artefact_properties(item_def &item)
@@ -1202,7 +1202,7 @@ static bool _init_artefact_properties(item_def &item)
         for (int i = 0; i < ART_PROPERTIES; i++)
             rap[i] = static_cast<short>(unrand->prpty[i]);
 
-        return (true);
+        return true;
     }
 
     if (item.base_type == OBJ_BOOKS)
@@ -1221,7 +1221,7 @@ static bool _init_artefact_properties(item_def &item)
         rap[i] = static_cast<short>(prop[i]);
     }
 
-    return (true);
+    return true;
 }
 
 void artefact_wpn_properties(const item_def &item,
@@ -1314,7 +1314,7 @@ int artefact_known_wpn_property(const item_def &item,
     if (known[prop])
         return (proprt[prop]);
     else
-        return (0);
+        return 0;
 }
 
 static int _artefact_num_props(const artefact_properties_t &proprt)
@@ -1386,7 +1386,7 @@ static bool _pick_db_name(const item_def &item)
     case OBJ_JEWELLERY:
         return one_chance_in(5);
     default:
-        return (false);
+        return false;
     }
 }
 
@@ -1462,7 +1462,7 @@ std::string make_artefact_name(const item_def &item, bool appearance)
         result += appear;
         result += " ";
         result += item_base_name(item);
-        return (result);
+        return result;
     }
 
     if (_pick_db_name(item))
@@ -1611,7 +1611,7 @@ int find_okay_unrandart(uint8_t aclass, uint8_t atype, bool in_abyss)
             ret = index;
     }
 
-    return (ret);
+    return ret;
 }
 
 int get_unrandart_num(const char *name)
@@ -1637,7 +1637,7 @@ static bool _randart_is_redundant(const item_def &item,
                                    artefact_properties_t &proprt)
 {
     if (item.base_type != OBJ_JEWELLERY)
-        return (false);
+        return false;
 
     artefact_prop_type provides  = ARTP_NUM_PROPERTIES;
     artefact_prop_type provides2 = ARTP_NUM_PROPERTIES;
@@ -1729,18 +1729,18 @@ static bool _randart_is_redundant(const item_def &item,
     }
 
     if (provides == ARTP_NUM_PROPERTIES)
-        return (false);
+        return false;
 
     if (proprt[provides] != 0)
-        return (true);
+        return true;
 
     if (provides2 == ARTP_NUM_PROPERTIES)
-        return (false);
+        return false;
 
     if (proprt[provides2] != 0)
-        return (true);
+        return true;
 
-    return (false);
+    return false;
 }
 
 static bool _randart_is_conflicting(const item_def &item,
@@ -1751,11 +1751,11 @@ static bool _randart_is_conflicting(const item_def &item,
         && (is_demonic(item)
             || proprt[ARTP_CURSED] != 0))
     {
-        return (true);
+        return true;
     }
 
     if (item.base_type != OBJ_JEWELLERY)
-        return (false);
+        return false;
 
     if (item.sub_type == AMU_STASIS
         && (proprt[ARTP_BLINK] != 0
@@ -1763,11 +1763,11 @@ static bool _randart_is_conflicting(const item_def &item,
             || proprt[ARTP_ANGRY] != 0
             || proprt[ARTP_BERSERK] != 0))
     {
-        return (true);
+        return true;
     }
 
     if (item.sub_type == RING_WIZARDRY && proprt[ARTP_INTELLIGENCE] < 0)
-        return (true);
+        return true;
 
     artefact_prop_type conflicts = ARTP_NUM_PROPERTIES;
 
@@ -1799,28 +1799,28 @@ static bool _randart_is_conflicting(const item_def &item,
     }
 
     if (conflicts == ARTP_NUM_PROPERTIES)
-        return (false);
+        return false;
 
     if (proprt[conflicts] != 0)
-        return (true);
+        return true;
 
-    return (false);
+    return false;
 }
 
 bool randart_is_bad(const item_def &item, artefact_properties_t &proprt)
 {
     if (item.base_type == OBJ_BOOKS)
-        return (false);
+        return false;
 
     if (_artefact_num_props(proprt) == 0)
-        return (true);
+        return true;
 
     // Weapons must have a brand and at least one other property.
     if (item.base_type == OBJ_WEAPONS
         && (proprt[ARTP_BRAND] == SPWPN_NORMAL
             || _artefact_num_props(proprt) < 2))
     {
-        return (true);
+        return true;
     }
 
     return (_randart_is_redundant(item, proprt)
@@ -1867,7 +1867,7 @@ bool make_item_randart(item_def &item, bool force_mundane)
         && item.base_type != OBJ_JEWELLERY
         && item.base_type != OBJ_BOOKS)
     {
-        return (false);
+        return false;
     }
 
     if (item.base_type == OBJ_BOOKS)
@@ -1875,21 +1875,21 @@ bool make_item_randart(item_def &item, bool force_mundane)
         if (item.sub_type != BOOK_RANDART_LEVEL
             && item.sub_type != BOOK_RANDART_THEME)
         {
-            return (false);
+            return false;
         }
     }
 
     // This item already is a randart.
     if (item.flags & ISFLAG_RANDART)
-        return (true);
+        return true;
 
     // Not a truly random artefact.
     if (item.flags & ISFLAG_UNRANDART)
-        return (false);
+        return false;
 
     // Mundane items are much less likely to be artefacts.
     if (!force_mundane && item.is_mundane() && !one_chance_in(5))
-        return (false);
+        return false;
 
     _artefact_setup_prop_vectors(item);
     item.flags |= ISFLAG_RANDART;
@@ -1908,7 +1908,7 @@ bool make_item_randart(item_def &item, bool force_mundane)
             item.props.erase(ARTEFACT_PROPS_KEY);
             item.props.erase(KNOWN_PROPS_KEY);
             item.flags &= ~ISFLAG_RANDART;
-            return (false);
+            return false;
         }
     }
     while (randart_is_bad(item)
@@ -1927,7 +1927,7 @@ bool make_item_randart(item_def &item, bool force_mundane)
         item.props[ARTEFACT_APPEAR_KEY].get_string() =
             make_artefact_name(item, true);
 
-    return (true);
+    return true;
 }
 
 static void _make_faerie_armour(item_def &item)
@@ -2050,7 +2050,7 @@ bool make_item_unrandart(item_def &item, int unrand_index)
         add_autoinscription(item);
     }
 
-    return (true);
+    return true;
 }
 
 void unrand_reacts()

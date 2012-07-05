@@ -95,7 +95,7 @@ class _inline_layout : public _layout
     {
         // x: View gets leftover; then mlist; then hud gutter
         if (leftover_x() < 0)
-            return (false);
+            return false;
 
         _increment(viewsz.x,   leftover_x(), Options.view_max_width);
 
@@ -113,7 +113,7 @@ class _inline_layout : public _layout
         // msg expands as much as it wants.
         // mlist gets any leftovers.
         if (leftover_y() < 0)
-            return (false);
+            return false;
 
         _increment(viewsz.y, leftover_leftcol_y(), Options.view_max_height);
         if ((viewsz.y % 2) != 1)
@@ -139,7 +139,7 @@ class _inline_layout : public _layout
         mlistp = hudp  + coord_def(0, hudsz.y);
 
         _assert_validity();
-        return (true);
+        return true;
     }
 
     int leftover_x() const
@@ -173,7 +173,7 @@ class _mlist_col_layout : public _layout
 
         // x: View and mlist share leftover; then hud gutter.
         if (leftover_x() < 0)
-            return (false);
+            return false;
 
         _increment(mlistsz.x,  leftover_x()/2, MLIST_MAX_WIDTH);
         _increment(viewsz.x,   leftover_x(),   Options.view_max_width);
@@ -187,7 +187,7 @@ class _mlist_col_layout : public _layout
 
         // y: View gets leftover; then message.
         if (leftover_y() < 0)
-            return (false);
+            return false;
 
         _increment(viewsz.y, leftover_y(), Options.view_max_height);
 
@@ -204,7 +204,7 @@ class _mlist_col_layout : public _layout
         hudp   = viewp + coord_def(viewsz.x+hud_gutter, 0);
 
         _assert_validity();
-        return (true);
+        return true;
     }
  private:
     int leftover_x() const

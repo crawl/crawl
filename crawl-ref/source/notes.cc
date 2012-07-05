@@ -48,9 +48,9 @@ static bool _is_noteworthy_skill_level(int level)
 {
     for (unsigned int i = 0; i < Options.note_skill_levels.size(); ++i)
         if (level == Options.note_skill_levels[i])
-            return (true);
+            return true;
 
-    return (false);
+    return false;
 }
 
 static bool _is_highest_skill(int skill)
@@ -60,9 +60,9 @@ static bool _is_highest_skill(int skill)
         if (i == skill)
             continue;
         if (you.skills[i] >= you.skills[skill])
-            return (false);
+            return false;
     }
-    return (true);
+    return true;
 }
 
 static bool _is_noteworthy_hp(int hp, int maxhp)
@@ -85,21 +85,21 @@ static bool _is_noteworthy_dlevel(unsigned short place)
 
     // The Abyss is noted a different way (since we care mostly about the cause).
     if (branch == BRANCH_ABYSS)
-        return (false);
+        return false;
 
     // Other portal levels are always interesting.
     if (!is_connected_branch(static_cast<branch_type>(branch)))
-        return (true);
+        return true;
 
     if (lev == _dungeon_branch_depth(branch)
         || branch == BRANCH_MAIN_DUNGEON && (lev % 5) == 0
         || branch == BRANCH_MAIN_DUNGEON && lev == 14
         || branch != BRANCH_MAIN_DUNGEON && lev == 1)
     {
-        return (true);
+        return true;
     }
 
-    return (false);
+    return false;
 }
 
 // Is a note worth taking?
@@ -134,7 +134,7 @@ static bool _is_noteworthy(const Note& note)
         || note.type == NOTE_ALLY_DEATH
         || note.type == NOTE_FEAT_MIMIC)
     {
-        return (true);
+        return true;
     }
 
     // Never noteworthy, hooked up for fun or future use.
@@ -142,7 +142,7 @@ static bool _is_noteworthy(const Note& note)
         || note.type == NOTE_MAXHP_CHANGE
         || note.type == NOTE_MAXMP_CHANGE)
     {
-        return (false);
+        return false;
     }
 
     // Xom effects are only noteworthy if the option is true.
@@ -153,14 +153,14 @@ static bool _is_noteworthy(const Note& note)
     if (note.type == NOTE_GOD_POWER
         && _real_god_power(note.first, note.second) == -1)
     {
-        return (false);
+        return false;
     }
 
     // HP noteworthiness is handled in its own function.
     if (note.type == NOTE_HP_CHANGE
         && !_is_noteworthy_hp(note.first, note.second))
     {
-        return (false);
+        return false;
     }
 
     // Skills are noteworthy if in the skill value list or if
@@ -171,9 +171,9 @@ static bool _is_noteworthy(const Note& note)
             || _is_noteworthy_skill_level(note.second)
             || Options.note_skill_max && _is_highest_skill(note.first))
         {
-            return (true);
+            return true;
         }
-        return (false);
+        return false;
     }
 
     if (note.type == NOTE_DUNGEON_LEVEL_CHANGE)
@@ -189,7 +189,7 @@ static bool _is_noteworthy(const Note& note)
         {
         case NOTE_GOD_POWER:
             if (rnote.first == note.first && rnote.second == note.second)
-                return (false);
+                return false;
             break;
 
         case NOTE_HP_CHANGE:
@@ -198,7 +198,7 @@ static bool _is_noteworthy(const Note& note)
             if (note.turn - rnote.turn < 5
                 && note.first * 2 >= rnote.first)
             {
-                return (false);
+                return false;
             }
             break;
 
@@ -206,10 +206,10 @@ static bool _is_noteworthy(const Note& note)
             mpr("Buggy note passed: unknown note type");
             // Return now, rather than give a "Buggy note passed" message
             // for each note of the matching type in the note list.
-            return (true);
+            return true;
         }
     }
-    return (true);
+    return true;
 }
 
 static const char* _number_to_ordinal(int number)
@@ -482,7 +482,7 @@ static bool notes_active = false;
 
 bool notes_are_active()
 {
-    return (notes_active);
+    return notes_active;
 }
 
 void take_note(const Note& note, bool force)

@@ -187,7 +187,7 @@ void enable_smart_cursor(bool cursor)
 
 bool is_smart_cursor_enabled()
 {
-    return (w32_smart_cursor);
+    return w32_smart_cursor;
 }
 
 void bFlush(void)
@@ -446,7 +446,7 @@ void set_cursor_enabled(bool enabled)
 
 bool is_cursor_enabled()
 {
-    return (cursor_is_enabled);
+    return cursor_is_enabled;
 }
 
 static void _setcursortype_internal(bool curstype)
@@ -726,11 +726,11 @@ static int w32_proc_mouse_event(const MOUSE_EVENT_RECORD &mer)
     crawl_view.mousep = pos;
 
     if (!crawl_state.mouse_enabled)
-        return (0);
+        return 0;
 
     c_mouse_event cme(pos);
     if (mer.dwEventFlags & MOUSE_MOVED)
-        return (CK_MOUSE_MOVE);
+        return CK_MOUSE_MOVE;
 
     if (mer.dwButtonState & FROM_LEFT_1ST_BUTTON_PRESSED)
         cme.bstate |= c_mouse_event::BUTTON1;
@@ -748,10 +748,10 @@ static int w32_proc_mouse_event(const MOUSE_EVENT_RECORD &mer)
     if (cme)
     {
         new_mouse_event(cme);
-        return (CK_MOUSE_CLICK);
+        return CK_MOUSE_CLICK;
     }
 
-    return (0);
+    return 0;
 }
 
 int getch_ck(void)

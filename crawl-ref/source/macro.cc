@@ -146,9 +146,9 @@ static bool userfunc_referenced(int index, const macromap &mm)
     for (macromap::const_iterator i = mm.begin(); i != mm.end(); ++i)
     {
         if (userfunc_index(i->second) == index)
-            return (true);
+            return true;
     }
-    return (false);
+    return false;
 }
 
 static bool userfunc_referenced(int index)
@@ -157,9 +157,9 @@ static bool userfunc_referenced(int index)
     {
         macromap *m = all_maps[i];
         if (userfunc_referenced(index, *m))
-            return (true);
+            return true;
     }
-    return (false);
+    return false;
 }
 
 // Expensive function to discard unused function names
@@ -183,7 +183,7 @@ static int userfunc_getindex(const std::string &fname)
     for (int i = 0, count = userfunctions.size(); i < count; ++i)
     {
         if (userfunctions[i] == fname)
-            return (i);
+            return i;
     }
 
     // Pass 2 to hunt for gaps.
@@ -192,7 +192,7 @@ static int userfunc_getindex(const std::string &fname)
         if (userfunctions[i].empty())
         {
             userfunctions[i] = fname;
-            return (i);
+            return i;
         }
     }
 
@@ -253,7 +253,7 @@ static void buf2keyseq(const char *buff, keyseq &k)
 static int read_key_code(std::string s)
 {
     if (s.empty())
-        return (0);
+        return 0;
 
     int base = 10;
     if (s[0] == 'x')
@@ -289,7 +289,7 @@ static keyseq parse_keyseq(std::string s)
     if (s.find("===") == 0)
     {
         buf2keyseq(s.c_str(), v);
-        return (v);
+        return v;
     }
 
     bool more_reset = false;
@@ -342,7 +342,7 @@ static keyseq parse_keyseq(std::string s)
         }
     }
 
-    return (v);
+    return v;
 }
 
 /*
@@ -642,7 +642,7 @@ int macro_buf_get()
     for (int i = 0, size_i = recorders.size(); i < size_i; i++)
         recorders[i]->add_key(key);
 
-    return (key);
+    return key;
 }
 
 static void write_map(FILE *f, const macromap &mp, const char *key)
@@ -722,7 +722,7 @@ static keyseq _getch_mul(int (*rgetch)() = NULL)
     while (kbhit() || a == 0)
         keys.push_back(a = rgetch());
 
-    return (keys);
+    return keys;
 }
 
 /*
@@ -740,7 +740,7 @@ int getchm(KeymapContext mc, int (*rgetch)())
 
     // Got data from buffer.
     if ((a = macro_buf_get()) != -1)
-        return (a);
+        return a;
 
     // Read some keys...
     keyseq keys = _getch_mul(rgetch);
@@ -1085,9 +1085,9 @@ bool is_synthetic_key(int key)
 #ifdef USE_TILE
     case CK_MOUSE_CMD:
 #endif
-        return (true);
+        return true;
     default:
-        return (false);
+        return false;
     }
 }
 
@@ -1207,7 +1207,7 @@ command_type name_to_command(std::string name)
     name_to_cmd_map::iterator it = _names_to_cmds.find(name);
 
     if (it == _names_to_cmds.end())
-        return (CMD_NO_CMD);
+        return CMD_NO_CMD;
 
     return static_cast<command_type>(it->second);
 }
@@ -1230,7 +1230,7 @@ command_type key_to_command(int key, KeymapContext context)
         KeymapContext cmd_context = _context_for_command(cmd);
 
         if (cmd == CMD_NO_CMD)
-            return (CMD_NO_CMD);
+            return CMD_NO_CMD;
 
         if (cmd_context != context)
         {
@@ -1248,10 +1248,10 @@ command_type key_to_command(int key, KeymapContext context)
             }
             flush_input_buffer(FLUSH_BEFORE_COMMAND);
 
-            return (CMD_NO_CMD);
+            return CMD_NO_CMD;
         }
 
-        return (cmd);
+        return cmd;
     }
 
     key_to_cmd_map           &key_map = _keys_to_cmds[context];
@@ -1377,7 +1377,7 @@ static std::string _special_keys_to_string(int key)
     case CK_PGDN:   cmd += "PgDn"; break;
     }
 
-    return (cmd);
+    return cmd;
 }
 
 std::string command_to_string(command_type cmd, bool tutorial)
@@ -1386,7 +1386,7 @@ std::string command_to_string(command_type cmd, bool tutorial)
 
     const std::string desc = _special_keys_to_string(key);
     if (!desc.empty())
-        return (desc);
+        return desc;
 
     if (key >= 32 && key < 256)
     {
@@ -1410,7 +1410,7 @@ std::string command_to_string(command_type cmd, bool tutorial)
     }
 
     std::string result = info;
-    return (result);
+    return result;
 }
 
 void insert_commands(std::string &desc, std::vector<command_type> cmds,

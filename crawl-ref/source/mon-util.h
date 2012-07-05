@@ -27,7 +27,7 @@ struct mon_attack_def
                                attack_flavour flav = AF_PLAIN)
     {
         mon_attack_def def = { typ, flav, dam };
-        return (def);
+        return def;
     }
 };
 

@@ -135,7 +135,7 @@ static bool _invalid_msg(const std::string &msg, bool no_player, bool no_foe,
             || msg.find("@Player") != std::string::npos
             || msg.find(":You") != std::string::npos))
     {
-        return (true);
+        return true;
     }
 
     if (no_player)
@@ -146,7 +146,7 @@ static bool _invalid_msg(const std::string &msg, bool no_player, bool no_foe,
             if (starts_with(lines[i], "You")
                 || ends_with(lines[i], "you."))
             {
-                return (true);
+                return true;
             }
         }
     }
@@ -156,22 +156,22 @@ static bool _invalid_msg(const std::string &msg, bool no_player, bool no_foe,
                    || msg.find("foe@") != std::string::npos
                    || msg.find("@species") != std::string::npos))
     {
-        return (true);
+        return true;
     }
 
     if (no_god && (msg.find("_god@") != std::string::npos
                    || msg.find("@god_") != std::string::npos))
     {
-        return (true);
+        return true;
     }
 
     if (no_foe_name && msg.find("@foe_name@") != std::string::npos)
-        return (true);
+        return true;
 
     if (unseen && msg.find("VISUAL") != std::string::npos)
-        return (true);
+        return true;
 
-    return (false);
+    return false;
 }
 
 static std::string _try_exact_string(const std::vector<std::string> &prefixes,
@@ -198,7 +198,7 @@ static std::string _try_exact_string(const std::vector<std::string> &prefixes,
         if (msg.empty())
         {
             if (tries == 0)
-                return (msg);
+                return msg;
             else
             {
                 tries--;
@@ -214,7 +214,7 @@ static std::string _try_exact_string(const std::vector<std::string> &prefixes,
         break;
     }
 
-    return (msg);
+    return msg;
 }
 
 static std::string __get_speak_string(const std::vector<std::string> &prefixes,
@@ -314,7 +314,7 @@ static std::string _get_speak_string(const std::vector<std::string> &prefixes,
         if (msg.empty())
         {
             if (tries == 0)
-                return (msg);
+                return msg;
             else
             {
                 tries--;
@@ -331,7 +331,7 @@ static std::string _get_speak_string(const std::vector<std::string> &prefixes,
         break;
     }
 
-    return (msg);
+    return msg;
 }
 
 // Returns true if the monster did speak, false otherwise.
@@ -412,7 +412,7 @@ bool mons_speaks(monster* mons)
        // to not have to deal with cases of speaking monsters which the
        // player can't see.
        if (unseen && !confused)
-           return (false);
+           return false;
 
         // Silenced monsters only "speak" 1/3 as often as non-silenced,
         // unless they're normally silent (S_SILENT).  Use
@@ -422,32 +422,32 @@ bool mons_speaks(monster* mons)
             && get_monster_data(mons->type)->shouts != S_SILENT)
         {
             if (!one_chance_in(3))
-                return (false);
+                return false;
         }
 
         // Berserk monsters just want your hide.
         if (mons->berserk())
-            return (false);
+            return false;
 
         // Rolling beetles shouldn't twitch antennae
         if (mons->rolling())
-            return (false);
+            return false;
 
         // Monsters in a battle frenzy are likewise occupied.
         // But roused holy creatures are not.
         if (mons->has_ench(ENCH_BATTLE_FRENZY) && !one_chance_in(3))
-            return (false);
+            return false;
 
         // Charmed monsters aren't too expressive.
         if (mons->has_ench(ENCH_CHARM) && !one_chance_in(3))
-            return (false);
+            return false;
     }
 
     std::vector<std::string> prefixes;
     if (mons->neutral())
     {
         if (!force_speak && coinflip()) // Neutrals speak half as often.
-            return (false);
+            return false;
 
         prefixes.push_back("neutral");
     }
@@ -642,7 +642,7 @@ bool mons_speaks(monster* mons)
 #ifdef DEBUG_MONSPEAK
         mpr("result: \"__NONE\"!", MSGCH_DIAGNOSTICS);
 #endif
-        return (false);
+        return false;
     }
 
     // Now that we're not dealing with a specific monster name, include
@@ -671,7 +671,7 @@ bool mons_speaks(monster* mons)
 #ifdef DEBUG_MONSPEAK
         mpr("result: \"__NONE\"!", MSGCH_DIAGNOSTICS);
 #endif
-        return (false);
+        return false;
     }
 
     // Monster symbol didn't work, try monster shape.  Since we're
@@ -727,7 +727,7 @@ bool mons_speaks(monster* mons)
 #ifdef DEBUG_MONSPEAK
         mpr("result: \"__NONE\"!", MSGCH_DIAGNOSTICS);
 #endif
-        return (false);
+        return false;
     }
 
     // If we failed to get a message with a winged or tailed humanoid,
@@ -758,7 +758,7 @@ bool mons_speaks(monster* mons)
 #ifdef DEBUG_MONSPEAK
                     mpr("result: \"__NONE\"!", MSGCH_DIAGNOSTICS);
 #endif
-                    return (false);
+                    return false;
                 }
 
                 if (msg2 == "__NONE")
@@ -781,7 +781,7 @@ bool mons_speaks(monster* mons)
         mprf(MSGCH_DIAGNOSTICS, "final result: %s!",
              (msg.empty() ? "empty" : "\"__NONE\""));
 #endif
-        return (false);
+        return false;
     }
 
     if (msg == "__NEXT")
@@ -789,7 +789,7 @@ bool mons_speaks(monster* mons)
         msg::streams(MSGCH_DIAGNOSTICS)
             << "__NEXT used by shape-based speech string for monster '"
             << mons->name(DESC_PLAIN) << "'" << std::endl;
-        return (false);
+        return false;
     }
 
     return (mons_speaks_msg(mons, msg, MSGCH_TALK, silence));
@@ -799,7 +799,7 @@ bool mons_speaks_msg(monster* mons, const std::string &msg,
                      const msg_channel_type def_chan, bool silence)
 {
     if (!mons_near(mons))
-        return (false);
+        return false;
 
     mon_acting mact(mons);
 
@@ -850,5 +850,5 @@ bool mons_speaks_msg(monster* mons, const std::string &msg,
             mpr(line.c_str(), msg_type);
         }
     }
-    return (noticed);
+    return noticed;
 }

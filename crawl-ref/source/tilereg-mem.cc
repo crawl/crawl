@@ -56,7 +56,7 @@ int MemoriseRegion::handle_mouse(MouseEvent &event)
 {
     unsigned int item_idx;
     if (!place_cursor(event, item_idx))
-        return (0);
+        return 0;
 
     const spell_type spell = (spell_type) m_items[item_idx].idx;
     if (event.button == MouseEvent::LEFT)
@@ -75,7 +75,7 @@ int MemoriseRegion::handle_mouse(MouseEvent &event)
         redraw_screen();
         return CK_MOUSE_CMD;
     }
-    return (0);
+    return 0;
 }
 
 bool MemoriseRegion::update_tab_tip_text(std::string &tip, bool active)
@@ -87,17 +87,17 @@ bool MemoriseRegion::update_tab_tip_text(std::string &tip, bool active)
                        prefix1, "Display spells in carried books",
                        prefix2, "Memorise spells");
 
-    return (true);
+    return true;
 }
 
 bool MemoriseRegion::update_tip_text(std::string& tip)
 {
     if (m_cursor == NO_CURSOR)
-        return (false);
+        return false;
 
     unsigned int item_idx = cursor_index();
     if (item_idx >= m_items.size() || m_items[item_idx].empty())
-        return (false);
+        return false;
 
     int flag = m_items[item_idx].flag;
     std::vector<command_type> cmd;
@@ -112,7 +112,7 @@ bool MemoriseRegion::update_tip_text(std::string& tip)
     tip += "\n[R-Click] Describe";
 
     insert_commands(tip, cmd);
-    return (true);
+    return true;
 }
 
 void MemoriseRegion::update()

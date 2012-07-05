@@ -108,7 +108,7 @@ dungeon_char_type dchar_by_name(const std::string &name)
         if (dchar_names[i] == name)
             return dungeon_char_type(i);
 
-    return (NUM_DCHAR_TYPES);
+    return NUM_DCHAR_TYPES;
 }
 
 void init_char_table(char_set_type set)
@@ -131,7 +131,7 @@ ucs_t dchar_glyph(dungeon_char_type dchar)
     if (dchar >= 0 && dchar < NUM_DCHAR_TYPES)
         return (Options.char_table[dchar]);
     else
-        return (0);
+        return 0;
 }
 
 std::string stringize_glyph(ucs_t glyph)

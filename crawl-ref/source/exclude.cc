@@ -53,10 +53,10 @@ static bool _need_auto_exclude(const monster* mon, bool sleepy = false)
             && (mon->attitude == ATT_HOSTILE
                 || mon->type == MONS_HYPERACTIVE_BALLISTOMYCETE))
         {
-            return (true);
+            return true;
         }
 
-    return (false);
+    return false;
 }
 
 // Nightstalker reduces LOS, so reducing the maximum exclusion radius
@@ -297,7 +297,7 @@ travel_exclude* exclude_set::get_exclude_root(const coord_def &p)
     if (it != exclude_roots.end())
         return (&(it->second));
 
-    return (NULL);
+    return NULL;
 }
 
 size_t exclude_set::size() const

@@ -21,25 +21,25 @@ extern "C" {
     static int name(lua_State *ls) \
     {   \
         wrapexpr; \
-        return (0); \
+        return 0; \
     }
 #define PLUARET(type, val) \
     { \
         lua_push##type(ls, val); \
-        return (1); \
+        return 1; \
     }
 #define LUARET1(name, type, val) \
     static int name(lua_State *ls) \
     { \
         lua_push##type(ls, val); \
-        return (1); \
+        return 1; \
     }
 #define LUARET2(name, type, val1, val2)  \
     static int name(lua_State *ls) \
     { \
         lua_push##type(ls, val1); \
         lua_push##type(ls, val2); \
-        return (2); \
+        return 2; \
     }
 
 #define ASSERT_DLUA \
@@ -86,7 +86,7 @@ static int lua_object_gc(lua_State *ls)
     T **pptr = static_cast<T**>(lua_touserdata(ls, 1));
     if (pptr)
         delete *pptr;
-    return (0);
+    return 0;
 }
 
 template <class T> T *clua_new_userdata(
@@ -113,7 +113,7 @@ static int dlua_push_object_type(lua_State *ls, const char *meta, const T &data)
         *ptr = new T(data);
     else
         lua_pushnil(ls);
-    return (1);
+    return 1;
 }
 
 /*
@@ -194,7 +194,7 @@ static int clua_gentable(lua_State *ls, const list &strings, lpush push)
         push(ls, strings[i]);
         lua_rawseti(ls, -2, i + 1);
     }
-    return (1);
+    return 1;
 }
 
 int clua_pushcxxstring(lua_State *ls, const std::string &s);

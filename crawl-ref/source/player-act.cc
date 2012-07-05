@@ -31,17 +31,17 @@
 
 int player::mindex() const
 {
-    return (MHITYOU);
+    return MHITYOU;
 }
 
 kill_category player::kill_alignment() const
 {
-    return (KC_YOU);
+    return KC_YOU;
 }
 
 god_type player::deity() const
 {
-    return (religion);
+    return religion;
 }
 
 bool player::alive() const
@@ -58,7 +58,7 @@ bool player::is_summoned(int* _duration, int* summon_type) const
     if (summon_type != NULL)
         *summon_type = 0;
 
-    return (false);
+    return false;
 }
 
 void player::moveto(const coord_def &c, bool clear_net)
@@ -117,7 +117,7 @@ bool player::swimming() const
 
 bool player::submerged() const
 {
-    return (false);
+    return false;
 }
 
 bool player::floundering() const
@@ -138,7 +138,7 @@ bool player::extra_balanced() const
 
 int player::get_experience_level() const
 {
-    return (experience_level);
+    return experience_level;
 }
 
 bool player::can_pass_through_feat(dungeon_feature_type grid) const
@@ -149,18 +149,18 @@ bool player::can_pass_through_feat(dungeon_feature_type grid) const
 bool player::is_habitable_feat(dungeon_feature_type actual_grid) const
 {
     if (!can_pass_through_feat(actual_grid))
-        return (false);
+        return false;
 
     if (airborne())
-        return (true);
+        return true;
 
     if (actual_grid == DNGN_LAVA
         || actual_grid == DNGN_DEEP_WATER && !can_swim())
     {
-        return (false);
+        return false;
     }
 
-    return (true);
+    return true;
 }
 
 size_type player::body_size(size_part_type psize, bool base) const
@@ -180,7 +180,7 @@ int player::body_weight(bool base) const
     int weight = actor::body_weight(base);
 
     if (base)
-        return (weight);
+        return weight;
 
     switch (form)
     {
@@ -194,7 +194,7 @@ int player::body_weight(bool base) const
         break;
     }
 
-    return (weight);
+    return weight;
 }
 
 int player::total_weight() const
@@ -207,13 +207,13 @@ int player::damage_type(int)
     if (const item_def* wp = weapon())
         return (get_vorpal_type(*wp));
     else if (form == TRAN_BLADE_HANDS)
-        return (DVORP_SLICING);
+        return DVORP_SLICING;
     else if (has_usable_claws())
-        return (DVORP_CLAWING);
+        return DVORP_CLAWING;
     else if (has_usable_tentacles())
-        return (DVORP_TENTACLE);
+        return DVORP_TENTACLE;
 
-    return (DVORP_CRUSHING);
+    return DVORP_CRUSHING;
 }
 
 brand_type player::damage_brand(int)
@@ -265,7 +265,7 @@ item_def *player::slot_item(equipment_type eq, bool include_melded)
 
     const int item = equip[eq];
     if (item == -1 || !include_melded && melded[eq])
-        return (NULL);
+        return NULL;
     return (&inv[item]);
 }
 
@@ -276,7 +276,7 @@ const item_def *player::slot_item(equipment_type eq, bool include_melded) const
 
     const int item = equip[eq];
     if (item == -1 || !include_melded && melded[eq])
-        return (NULL);
+        return NULL;
     return (&inv[item]);
 }
 
@@ -284,7 +284,7 @@ const item_def *player::slot_item(equipment_type eq, bool include_melded) const
 item_def *player::weapon(int /* which_attack */)
 {
     if (you.melded[EQ_WEAPON])
-        return (NULL);
+        return NULL;
 
     return (slot_item(EQ_WEAPON, false));
 }
@@ -296,7 +296,7 @@ bool player::can_wield(const item_def& item, bool ignore_curse,
     if (equip[EQ_WEAPON] != -1 && !ignore_curse)
     {
         if (inv[equip[EQ_WEAPON]].cursed())
-            return (false);
+            return false;
     }
 
     // Unassigned means unarmed combat.
@@ -304,7 +304,7 @@ bool player::can_wield(const item_def& item, bool ignore_curse,
                             || hands_reqd(item, body_size()) == HANDS_TWO;
 
     if (two_handed && !ignore_shield && player_wearing_slot(EQ_SHIELD))
-        return (false);
+        return false;
 
     return could_wield(item, ignore_brand, ignore_transform);
 }
@@ -313,36 +313,36 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
                          bool ignore_transform) const
 {
     if (species == SP_FELID)
-        return (false);
+        return false;
     if (body_size(PSIZE_TORSO, ignore_transform) < SIZE_LARGE
             && (item_mass(item) >= 500
                 || item.base_type == OBJ_WEAPONS
                     && item_mass(item) >= 300))
-        return (false);
+        return false;
 
     // Anybody can wield missiles to enchant, item_mass permitting
     if (item.base_type == OBJ_MISSILES)
-        return (true);
+        return true;
 
     // Or any other object, although there's no point here.
     if (!is_weapon(item))
-        return (true);
+        return true;
 
     // Small species wielding large weapons...
     if (body_size(PSIZE_BODY, ignore_transform) < SIZE_MEDIUM
         && !check_weapon_wieldable_size(item,
                body_size(PSIZE_BODY, ignore_transform)))
     {
-        return (false);
+        return false;
     }
 
     if (!ignore_brand)
     {
         if (undead_or_demonic() && is_holy_item(item))
-            return (false);
+            return false;
     }
 
-    return (true);
+    return true;
 }
 
 // Returns the shield the player is wearing, or NULL if none.
@@ -388,7 +388,7 @@ std::string player::pronoun(pronoun_type pro, bool) const
 
 std::string player::conj_verb(const std::string &verb) const
 {
-    return (verb);
+    return verb;
 }
 
 std::string player::hand_name(bool plural, bool *can_plural) const
@@ -501,7 +501,7 @@ std::string player::arm_name(bool plural, bool *can_plural) const
     if (plural)
         str = pluralise(str);
 
-    return (str);
+    return str;
 }
 
 bool player::fumbles_attack(bool verbose)
@@ -520,12 +520,12 @@ bool player::fumbles_attack(bool verbose)
         if (floundering())
             learned_something_new(HINT_FUMBLING_SHALLOW_WATER);
     }
-    return (did_fumble);
+    return did_fumble;
 }
 
 bool player::cannot_fight() const
 {
-    return (false);
+    return false;
 }
 
 // If you have a randart equipped that has the ARTP_ANGRY property,
@@ -535,7 +535,7 @@ bool player::cannot_fight() const
 static bool _equipment_make_berserk()
 {
     if (you.suppressed())
-        return (false);
+        return false;
 
     for (int eq = EQ_WEAPON; eq < NUM_EQUIP; eq++)
     {
@@ -547,11 +547,11 @@ static bool _equipment_make_berserk()
             continue;
 
         if (artefact_wpn_property(*item, ARTP_ANGRY) && one_chance_in(100))
-            return (true);
+            return true;
     }
 
     // nothing found
-    return (false);
+    return false;
 }
 
 void player::attacking(actor *other)
@@ -592,7 +592,7 @@ bool player::can_go_berserk(bool intentional, bool potion) const
         if (verbose)
             mpr("You're already berserk!");
         // or else you won't notice -- no message here.
-        return (false);
+        return false;
     }
 
     if (duration[DUR_EXHAUSTED])
@@ -600,14 +600,14 @@ bool player::can_go_berserk(bool intentional, bool potion) const
         if (verbose)
             mpr("You're too exhausted to go berserk.");
         // or else they won't notice -- no message here
-        return (false);
+        return false;
     }
 
     if (duration[DUR_DEATHS_DOOR])
     {
         if (verbose)
             mpr("Your body is effectively dead; that's not a shape for a blood rage.");
-        return (false);
+        return false;
     }
 
     if (beheld() && !player_equip_unrand_effect(UNRAND_DEMON_AXE))
@@ -615,7 +615,7 @@ bool player::can_go_berserk(bool intentional, bool potion) const
         if (verbose)
             mpr("You are too mesmerised to rage.");
         // or else they won't notice -- no message here
-        return (false);
+        return false;
     }
 
     if (afraid())
@@ -623,7 +623,7 @@ bool player::can_go_berserk(bool intentional, bool potion) const
         if (verbose)
             mpr("You are too terrified to rage.");
 
-        return (false);
+        return false;
     }
 
     if (!you.can_bleed(false))
@@ -633,7 +633,7 @@ bool player::can_go_berserk(bool intentional, bool potion) const
             mpr("You cannot raise a blood rage in your lifeless body.");
 
         // or else you won't notice -- no message here
-        return (false);
+        return false;
     }
 
     // Stasis, but only for identified amulets; unided amulets will
@@ -648,7 +648,7 @@ bool player::can_go_berserk(bool intentional, bool potion) const
             mprf("You cannot go berserk with %s on.",
                  amulet? amulet->name(DESC_YOUR).c_str() : "your amulet");
         }
-        return (false);
+        return false;
     }
 
     if (!intentional && !potion && player_mental_clarity(true))
@@ -664,7 +664,7 @@ bool player::can_go_berserk(bool intentional, bool potion) const
             }
         }
 
-        return (false);
+        return false;
     }
 
     ASSERT(HUNGER_STARVING + BERSERK_NUTRITION < 2066);
@@ -672,10 +672,10 @@ bool player::can_go_berserk(bool intentional, bool potion) const
     {
         if (verbose)
             mpr("You're too hungry to go berserk.");
-        return (false);
+        return false;
     }
 
-    return (true);
+    return true;
 }
 
 bool player::berserk() const

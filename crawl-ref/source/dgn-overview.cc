@@ -101,7 +101,7 @@ bool move_notable_thing(const coord_def& orig, const coord_def& dest)
     ASSERT(!is_notable_terrain(grd(dest)));
 
     if (!is_notable_terrain(grd(orig)))
-        return (false);
+        return false;
 
     level_pos pos1(level_id::current(), orig);
     level_pos pos2(level_id::current(), dest);
@@ -113,7 +113,7 @@ bool move_notable_thing(const coord_def& orig, const coord_def& dest)
 
     unnotice_feature(pos1);
 
-    return (true);
+    return true;
 }
 
 static std::string coloured_branch(branch_type br)
@@ -183,9 +183,9 @@ bool overview_knows_portal(branch_type portal)
           pl_iter != portals_present.end(); ++pl_iter)
     {
         if (pl_iter->second == portal)
-            return (true);
+            return true;
     }
-    return (false);
+    return false;
 }
 
 // Ever used only for Pan, Abyss and Hell.
@@ -199,7 +199,7 @@ int overview_knows_num_portals(dungeon_feature_type portal)
             num++;
     }
 
-    return (num);
+    return num;
 }
 
 static std::string _portals_description_string()
@@ -594,9 +594,9 @@ inline static bool _find_erase(Z &map, const Key &k)
     if (map.find(k) != map.end())
     {
         map.erase(k);
-        return (true);
+        return true;
     }
-    return (false);
+    return false;
 }
 
 static bool _unnotice_portal(const level_pos &pos)

@@ -75,13 +75,13 @@ static unsigned int convert_to_curses_attr(int chattr)
 {
     switch (chattr & CHATTR_ATTRMASK)
     {
-    case CHATTR_STANDOUT:       return (A_STANDOUT);
-    case CHATTR_BOLD:           return (A_BOLD);
-    case CHATTR_BLINK:          return (A_BLINK);
-    case CHATTR_UNDERLINE:      return (A_UNDERLINE);
-    case CHATTR_REVERSE:        return (A_REVERSE);
-    case CHATTR_DIM:            return (A_DIM);
-    default:                    return (A_NORMAL);
+    case CHATTR_STANDOUT:       return A_STANDOUT;
+    case CHATTR_BOLD:           return A_BOLD;
+    case CHATTR_BLINK:          return A_BLINK;
+    case CHATTR_UNDERLINE:      return A_UNDERLINE;
+    case CHATTR_REVERSE:        return A_REVERSE;
+    case CHATTR_DIM:            return A_DIM;
+    default:                    return A_NORMAL;
     }
 }
 
@@ -185,7 +185,7 @@ static int proc_mouse_event(int c, const MEVENT *me)
     crawl_view.mousep.y = me->y + 1;
 
     if (!crawl_state.mouse_enabled)
-        return (CK_MOUSE_MOVE);
+        return CK_MOUSE_MOVE;
 
     c_mouse_event cme(crawl_view.mousep);
     if (me->bstate & BUTTON1_CLICKED)
@@ -208,10 +208,10 @@ static int proc_mouse_event(int c, const MEVENT *me)
     if (cme)
     {
         new_mouse_event(cme);
-        return (CK_MOUSE_CLICK);
+        return CK_MOUSE_CLICK;
     }
 
-    return (CK_MOUSE_MOVE);
+    return CK_MOUSE_MOVE;
 }
 #endif
 
@@ -279,7 +279,7 @@ int m_getch()
              ((c == CK_MOUSE_MOVE || c == CK_MOUSE_CLICK)
                  && !crawl_state.mouse_enabled));
 
-    return (c);
+    return c;
 }
 
 int getch_ck()
@@ -540,12 +540,12 @@ void clear_to_end_of_line(void)
 
 int get_number_of_lines(void)
 {
-    return (LINES);
+    return LINES;
 }
 
 int get_number_of_cols(void)
 {
-    return (COLS);
+    return COLS;
 }
 
 int num_to_lines(int num)
@@ -575,7 +575,7 @@ void set_cursor_enabled(bool enabled)
 
 bool is_cursor_enabled()
 {
-    return (cursor_is_enabled);
+    return cursor_is_enabled;
 }
 
 bool is_smart_cursor_enabled()
@@ -744,7 +744,7 @@ static inline char_info character_at(int y, int x)
     cchar_t c;
     // (void) is to hush an incorrect clang warning.
     (void)mvin_wch(y, x, &c);
-    return (c);
+    return c;
 }
 
 static inline bool valid_char(const cchar_t &c)

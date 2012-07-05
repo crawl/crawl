@@ -381,7 +381,7 @@ static std::vector<int> _get_evaporate_result(int potion)
         clouds.push_back(CLOUD_STEAM);
     }
 
-    return (clouds);
+    return clouds;
 }
 
 // Returns a comma-separated list of all cloud types potentially created

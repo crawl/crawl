@@ -705,9 +705,9 @@ monster* get_shedu_pair(const monster* mons)
 {
     monster* pair = monster_by_mid(mons->number);
     if (pair)
-        return (pair);
+        return pair;
 
-    return (NULL);
+    return NULL;
 }
 
 /**
@@ -721,9 +721,9 @@ monster* get_shedu_pair(const monster* mons)
 bool shedu_pair_alive(const monster* mons)
 {
     if (get_shedu_pair(mons) == NULL)
-        return (false);
+        return false;
 
-    return (true);
+    return true;
 }
 
 /**

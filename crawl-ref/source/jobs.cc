@@ -82,7 +82,7 @@ job_type get_job_by_name(const char *name)
         }
     }
 
-    return (cl);
+    return cl;
 }
 
 bool is_valid_job(job_type job)

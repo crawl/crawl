@@ -25,14 +25,14 @@ skill_type abil_skill(ability_type abil)
     case ABIL_EVOKE_BERSERK:
     case ABIL_EVOKE_TURN_INVISIBLE:
     case ABIL_EVOKE_LEVITATE:
-        return (SK_EVOCATIONS);
+        return SK_EVOCATIONS;
 
     case ABIL_NEMELEX_DRAW_ONE:
     case ABIL_NEMELEX_PEEK_TWO:
     case ABIL_NEMELEX_TRIPLE_DRAW:
     case ABIL_NEMELEX_DEAL_FOUR:
     case ABIL_NEMELEX_STACK_FIVE:
-        return (SK_EVOCATIONS);
+        return SK_EVOCATIONS;
 
     case ABIL_YRED_RECALL_UNDEAD_SLAVES:
     case ABIL_MAKHLEB_MINOR_DESTRUCTION:
@@ -78,14 +78,14 @@ skill_type abil_skill(ability_type abil)
     case ABIL_YRED_ENSLAVE_SOUL:
     case ABIL_LUGONU_ABYSS_EXIT:
     case ABIL_CHEIBRIADOS_DISTORTION:
-        return (SK_INVOCATIONS);
+        return SK_INVOCATIONS;
 
     case ABIL_KIKU_RECEIVE_CORPSES:
     case ABIL_KIKU_TORMENT:
-        return (SK_NECROMANCY);
+        return SK_NECROMANCY;
 
     default:
-        return (SK_NONE);
+        return SK_NONE;
     }
 }
 
@@ -98,7 +98,7 @@ static int _abil_degree(ability_type abil)
     case ABIL_EVOKE_BERSERK:
     case ABIL_EVOKE_TURN_INVISIBLE:
     case ABIL_EVOKE_LEVITATE:
-        return (1);
+        return 1;
 
     case ABIL_NEMELEX_DRAW_ONE:
         return (1 + random2(2));
@@ -116,14 +116,14 @@ static int _abil_degree(ability_type abil)
     case ABIL_ELYVILON_LESSER_HEALING_SELF:
     case ABIL_ELYVILON_LESSER_HEALING_OTHERS:
     case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
-        return (1);
+        return 1;
     case ABIL_SIF_MUNA_CHANNEL_ENERGY:
     case ABIL_OKAWARU_HEROISM:
     case ABIL_JIYVA_CALL_JELLY:
         return (1 + random2(3));
 
     case ABIL_ZIN_RECITE:
-        return (2);
+        return 2;
     case ABIL_ZIN_VITALISATION:
     case ABIL_TSO_DIVINE_SHIELD:
     case ABIL_KIKU_RECEIVE_CORPSES:
@@ -180,7 +180,7 @@ static int _abil_degree(ability_type abil)
         return (8 + random2(10));
 
     default:
-        return (0);
+        return 0;
     }
 }
 
@@ -258,10 +258,10 @@ static bool _check_train_armour(int amount)
         if (x_chance_in_y(mass, you.skill(SK_ARMOUR, 50)))
         {
             exercise(SK_ARMOUR, amount);
-            return (true);
+            return true;
         }
     }
-    return (false);
+    return false;
 }
 
 static bool _check_train_dodging(int amount)
@@ -271,9 +271,9 @@ static bool _check_train_dodging(int amount)
     if (!x_chance_in_y(mass, 800))
     {
         exercise(SK_DODGING, amount);
-        return (true);
+        return true;
     }
-    return (false);
+    return false;
 }
 
 static void _check_train_sneak(bool invis)

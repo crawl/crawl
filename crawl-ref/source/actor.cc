@@ -118,8 +118,8 @@ int actor::res_holy_fire() const
     if (is_evil() || is_unholy())
         return (-1);
     else if (is_holy())
-        return (3);
-    return (0);
+        return 3;
+    return 0;
 }
 
 int actor::check_res_magic(int power)
@@ -127,7 +127,7 @@ int actor::check_res_magic(int power)
     const int mrs = res_magic();
 
     if (mrs == MAG_IMMUNE)
-        return (100);
+        return 100;
 
     // Evil, evil hack to make weak one hd monsters easier for first level
     // characters who have resistable 1st level spells. Six is a very special
@@ -166,34 +166,34 @@ bool actor::can_hibernate(bool holi_only) const
     // Undead, nonliving, and plants don't sleep.
     const mon_holy_type holi = holiness();
     if (holi == MH_UNDEAD || holi == MH_NONLIVING || holi == MH_PLANT)
-        return (false);
+        return false;
 
     if (!holi_only)
     {
         // The monster is berserk or already asleep.
         if (!can_sleep())
-            return (false);
+            return false;
 
         // The monster is cold-resistant and can't be hibernated.
         if (res_cold() > 0)
-            return (false);
+            return false;
 
         // The monster has slept recently.
         if (is_monster()
             && static_cast<const monster* >(this)->has_ench(ENCH_SLEEP_WARY))
         {
-            return (false);
+            return false;
         }
     }
 
-    return (true);
+    return true;
 }
 
 bool actor::can_sleep() const
 {
     const mon_holy_type holi = holiness();
     if (holi == MH_UNDEAD || holi == MH_NONLIVING || holi == MH_PLANT)
-        return (false);
+        return false;
     return !(berserk() || asleep());
 }
 
@@ -219,21 +219,21 @@ int actor::body_weight(bool base) const
     switch (body_size(PSIZE_BODY, base))
     {
     case SIZE_TINY:
-        return (150);
+        return 150;
     case SIZE_LITTLE:
-        return (300);
+        return 300;
     case SIZE_SMALL:
-        return (425);
+        return 425;
     case SIZE_MEDIUM:
-        return (550);
+        return 550;
     case SIZE_LARGE:
-        return (1300);
+        return 1300;
     case SIZE_BIG:
-        return (1500);
+        return 1500;
     case SIZE_GIANT:
-        return (1800);
+        return 1800;
     case SIZE_HUGE:
-        return (2200);
+        return 2200;
     default:
         die("invalid body weight");
     }
@@ -432,7 +432,7 @@ bool actor::is_constricting() const
 
 bool actor::is_constricted() const
 {
-    return (constricted_by);
+    return constricted_by;
 }
 
 void actor::accum_has_constricted()

@@ -43,7 +43,7 @@ bool GenericTexture::load_texture(const char *filename,
     success = wm->load_texture(this, filename, mip_opt, m_orig_width,
                                m_orig_height, proc, force_power_of_two);
 
-    return (success);
+    return success;
 }
 
 bool GenericTexture::load_texture(unsigned char *pixels, unsigned int new_width,
@@ -51,7 +51,7 @@ bool GenericTexture::load_texture(unsigned char *pixels, unsigned int new_width,
                                   MipMapOptions mip_opt)
 {
     if (!pixels || !new_width || !new_height)
-        return (false);
+        return false;
 
     m_width = new_width;
     m_height = new_height;
@@ -60,7 +60,7 @@ bool GenericTexture::load_texture(unsigned char *pixels, unsigned int new_width,
     bind();
     glmanager->load_texture(pixels, m_width, m_height, mip_opt);
 
-    return (true);
+    return true;
 }
 
 void GenericTexture::bind() const
@@ -110,7 +110,7 @@ bool ImageManager::load_textures(bool need_mips)
     for (size_t i = 0; i < ARRAYSZ(_filenames); ++i)
     {
         if (!m_textures[i].load_texture(_filenames[i], mip))
-            return (false);
+            return false;
     }
 
     m_textures[TEX_FLOOR].set_info(TILE_FLOOR_MAX, &tile_floor_info);
@@ -121,7 +121,7 @@ bool ImageManager::load_textures(bool need_mips)
     m_textures[TEX_GUI].set_info(TILEG_GUI_MAX, &tile_gui_info);
     m_textures[TEX_ICONS].set_info(TILEI_ICONS_MAX, &tile_icons_info);
 
-    return (true);
+    return true;
 }
 
 void ImageManager::unload_textures()

@@ -279,16 +279,16 @@ bool check_awaken(monster* mons)
     // Usually redundant because we iterate over player LOS,
     // but e.g. for you.xray_vision.
     if (!mons->see_cell(you.pos()))
-        return (false);
+        return false;
 
     // Monsters put to sleep by ensorcelled hibernation will sleep
     // at least one turn.
     if (mons->has_ench(ENCH_SLEEPY))
-        return (false);
+        return false;
 
     // Berserkers aren't really concerned about stealth.
     if (you.berserk())
-        return (true);
+        return true;
 
     // I assume that creatures who can sense invisible are very perceptive.
     int mons_perc = 10 + (mons_intel(mons) * 4) + mons->hit_dice
@@ -330,7 +330,7 @@ bool check_awaken(monster* mons)
         mons_perc = 0;
 
     if (x_chance_in_y(mons_perc + 1, stealth))
-        return (true); // Oops, the monster wakes up!
+        return true; // Oops, the monster wakes up!
 
     // You didn't wake the monster!
     if (you.can_see(mons) // to avoid leaking information
@@ -341,7 +341,7 @@ bool check_awaken(monster* mons)
         practise(unnatural_stealthy ? EX_SNEAK_INVIS : EX_SNEAK);
     }
 
-    return (false);
+    return false;
 }
 
 void item_noise(const item_def &item, std::string msg, int loudness)
@@ -463,7 +463,7 @@ bool noisy(int original_loudness, const coord_def& where,
            bool mermaid, bool message_if_unseen, bool fake_noise)
 {
     if (original_loudness <= 0)
-        return (false);
+        return false;
 
     // high ambient noise makes sounds harder to hear
     const int ambient = current_level_ambient_noise();
@@ -475,12 +475,12 @@ bool noisy(int original_loudness, const coord_def& where,
          loudness, original_loudness, ambient, where.x, where.y);
 
     if (loudness <= 0)
-        return (false);
+        return false;
 
     // If the origin is silenced there is no noise, unless we're
     // faking it.
     if (silenced(where) && !fake_noise)
-        return (false);
+        return false;
 
     // [ds] Reduce noise propagation for Sprint.
     const int scaled_loudness =
@@ -511,9 +511,9 @@ bool noisy(int original_loudness, const coord_def& where,
     {
         if (msg && !fake_noise)
             mpr(msg, MSGCH_SOUND);
-        return (true);
+        return true;
     }
-    return (false);
+    return false;
 }
 
 bool noisy(int loudness, const coord_def& where, int who,
@@ -753,20 +753,20 @@ bool noise_cell::apply_noise(int _noise_intensity_millis,
         noise_intensity_millis = _noise_intensity_millis;
         noise_travel_distance = _noise_travel_distance;
         neighbour_delta = _neighbour_delta;
-        return (true);
+        return true;
     }
-    return (false);
+    return false;
 }
 
 int noise_cell::turn_angle(const coord_def &next_delta) const
 {
     if (neighbour_delta.origin())
-        return (0);
+        return 0;
 
     // Going in reverse?
     if (next_delta.x == -neighbour_delta.x
         && next_delta.y == -neighbour_delta.y)
-        return (4);
+        return 4;
 
     const int xdiff = std::abs(neighbour_delta.x - next_delta.x);
     const int ydiff = std::abs(neighbour_delta.y - next_delta.y);
@@ -888,7 +888,7 @@ bool noise_grid::propagate_noise_to_neighbour(int base_attenuation,
     noise_cell &neighbour(cells(next_pos));
     if (!neighbour.can_apply_noise(cell.noise_intensity_millis -
                                    base_attenuation))
-        return (false);
+        return false;
 
     // Diagonals cost more.
     if ((next_pos - current_pos).abs() == 2)
@@ -912,7 +912,7 @@ bool noise_grid::propagate_noise_to_neighbour(int base_attenuation,
             // cell as a neighbour (presumably with a lower volume).
             return (neighbour_old_distance != travel_distance);
     }
-    return (false);
+    return false;
 }
 
 
@@ -1029,7 +1029,7 @@ coord_def noise_grid::noise_perceived_position(actor *act,
          affected_pos.x, affected_pos.y,
          cell_grid_distance, noise_travel_distance);
 #endif
-    return (final_perceived_point);
+    return final_perceived_point;
 }
 
 #ifdef DEBUG_NOISE_PROPAGATION

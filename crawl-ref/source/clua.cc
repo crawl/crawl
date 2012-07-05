@@ -25,7 +25,7 @@
         { \
             lua_settop(ls, oldtop); \
         } \
-        return (retval); \
+        return retval; \
     } \
     while (false)
 
@@ -86,7 +86,7 @@ std::string CLua::setuniqregistry()
     lua_insert(state(), -2);
     lua_settable(state(), LUA_REGISTRYINDEX);
 
-    return (name);
+    return name;
 }
 
 void CLua::setregistry(const char *name)
@@ -128,20 +128,20 @@ int CLua::file_write(lua_State *ls)
     if (!lua_islightuserdata(ls, 1))
     {
         luaL_argerror(ls, 1, "Expected filehandle at arg 1");
-        return (0);
+        return 0;
     }
     CLuaSave *sf = static_cast<CLuaSave *>(lua_touserdata(ls, 1));
     if (!sf)
-        return (0);
+        return 0;
 
     FILE *f = sf->get_file();
     if (!f)
-        return (0);
+        return 0;
 
     const char *text = luaL_checkstring(ls, 2);
     if (text)
         fprintf(f, "%s", text);
-    return (0);
+    return 0;
 }
 
 FILE *CLua::CLuaSave::get_file()
@@ -149,7 +149,7 @@ FILE *CLua::CLuaSave::get_file()
     if (!handle)
         handle = fopen_u(filename, "w");
 
-    return (handle);
+    return handle;
 }
 
 void CLua::set_error(int err, lua_State *ls)
@@ -208,7 +208,7 @@ int CLua::execstring(const char *s, const char *context, int nresults)
 {
     int err = 0;
     if ((err = loadstring(s, context)))
-        return (err);
+        return err;
 
     lua_State *ls = state();
     lua_call_throttle strangler(this);
@@ -274,7 +274,7 @@ int CLua::execfile(const char *filename, bool trusted, bool die_on_fail,
     if (die_on_fail && !error.empty())
         end(1, false, "Lua execfile error (%s): %s",
             filename, dlua.error.c_str());
-    return (err);
+    return err;
 }
 
 bool CLua::runhook(const char *hook, const char *params, ...)
@@ -283,7 +283,7 @@ bool CLua::runhook(const char *hook, const char *params, ...)
 
     lua_State *ls = state();
     if (!ls)
-        return (false);
+        return false;
 
     // Remember top of stack, for debugging porpoises
     int stack_top = lua_gettop(ls);
@@ -379,7 +379,7 @@ int CLua::push_args(lua_State *ls, const char *format, va_list args,
     {
         if (targ)
             va_copy(*targ, args);
-        return (0);
+        return 0;
     }
 
     const char *cs = strchr(format, ':');
@@ -444,13 +444,13 @@ int CLua::push_args(lua_State *ls, const char *format, va_list args,
     }
     if (targ)
         va_copy(*targ, args);
-    return (argc);
+    return argc;
 }
 
 int CLua::return_count(lua_State *ls, const char *format)
 {
     if (!format)
-        return (0);
+        return 0;
 
     const char *gs = strchr(format, '>');
     if (gs)
@@ -467,9 +467,9 @@ int CLua::return_count(lua_State *ls, const char *format)
             ci = 0;
         else if (ci > 10)
             ci = 10;
-        return (ci);
+        return ci;
     }
-    return (0);
+    return 0;
 }
 
 bool CLua::calltopfn(lua_State *ls, const char *params, va_list args,
@@ -491,7 +491,7 @@ maybe_bool CLua::callmbooleanfn(const char *fn, const char *params,
     error.clear();
     lua_State *ls = state();
     if (!ls)
-        return (B_MAYBE);
+        return B_MAYBE;
 
     int stacktop = lua_gettop(ls);
 
@@ -575,13 +575,13 @@ bool CLua::callfn(const char *fn, const char *params, ...)
     error.clear();
     lua_State *ls = state();
     if (!ls)
-        return (false);
+        return false;
 
     pushglobal(fn);
     if (!lua_isfunction(ls, -1))
     {
         lua_pop(ls, 1);
-        return (false);
+        return false;
     }
 
     va_list args;
@@ -596,7 +596,7 @@ bool CLua::callfn(const char *fn, const char *params, ...)
     }
     va_end(args);
     va_end(fnret);
-    return (ret);
+    return ret;
 }
 
 bool CLua::callfn(const char *fn, int nargs, int nret)
@@ -604,7 +604,7 @@ bool CLua::callfn(const char *fn, int nargs, int nret)
     error.clear();
     lua_State *ls = state();
     if (!ls)
-        return (false);
+        return false;
 
     // If a function is not provided on the stack, get the named function.
     if (fn)
@@ -613,7 +613,7 @@ bool CLua::callfn(const char *fn, int nargs, int nret)
         if (!lua_isfunction(ls, -1))
         {
             lua_settop(ls, -nargs - 2);
-            return (false);
+            return false;
         }
 
         // Slide the function in front of its args and call it.
@@ -792,9 +792,9 @@ bool lua_text_pattern::is_lua_pattern(const std::string &s)
     for (int i = 0, size = ARRAYSZ(pat_ops); i < size; ++i)
     {
         if (s.find(pat_ops[i].token) != std::string::npos)
-            return (true);
+            return true;
     }
-    return (false);
+    return false;
 }
 
 lua_text_pattern::lua_text_pattern(const std::string &_pattern)
@@ -827,7 +827,7 @@ bool lua_text_pattern::matches(const std::string &s) const
         translate();
 
     if (!isvalid)
-        return (false);
+        return false;
 
     return clua.callbooleanfn(false, lua_fn_name.c_str(), "s", s.c_str());
 }
@@ -863,12 +863,12 @@ std::string lua_text_pattern::new_fn_name()
 bool lua_text_pattern::translate() const
 {
     if (translated || !isvalid)
-        return (false);
+        return false;
 
     if (pattern.find("]]") != std::string::npos
         || pattern.find("[[") != std::string::npos)
     {
-        return (false);
+        return false;
     }
 
     std::string textp;
@@ -947,7 +947,7 @@ static int _clua_panic(lua_State *ls)
     {
         save_game(true);
     }
-    return (0);
+    return 0;
 }
 
 static void *_clua_allocator(void *ud, void *ptr, size_t osize, size_t nsize)
@@ -958,13 +958,13 @@ static void *_clua_allocator(void *ud, void *ptr, size_t osize, size_t nsize)
     if (nsize > osize && cl->memory_used >= CLUA_MAX_MEMORY_USE * 1024
         && cl->mixed_call_depth)
     {
-        return (NULL);
+        return NULL;
     }
 
     if (!nsize)
     {
         free(ptr);
-        return (NULL);
+        return NULL;
     }
     else
         return (realloc(ptr, nsize));
@@ -1059,7 +1059,7 @@ static int _clua_loadfile(lua_State *ls)
 {
     const char *file = luaL_checkstring(ls, 1);
     if (!file)
-        return (0);
+        return 0;
 
     const int err = CLua::loadfile(ls, file, !CLua::is_managed_vm(ls));
     if (err)
@@ -1067,30 +1067,30 @@ static int _clua_loadfile(lua_State *ls)
         const int place = lua_gettop(ls);
         lua_pushnil(ls);
         lua_insert(ls, place);
-        return (2);
+        return 2;
     }
-    return (1);
+    return 1;
 }
 
 static int _clua_require(lua_State *ls)
 {
     const char *file = luaL_checkstring(ls, 1);
     if (!file)
-        return (0);
+        return 0;
 
     CLua &vm(CLua::get_vm(ls));
     if (vm.execfile(file, false, false) != 0)
         luaL_error(ls, vm.error.c_str());
 
     lua_pushboolean(ls, true);
-    return (1);
+    return 1;
 }
 
 static int _clua_dofile(lua_State *ls)
 {
     const char *file = luaL_checkstring(ls, 1);
     if (!file)
-        return (0);
+        return 0;
 
     const int err = CLua::loadfile(ls, file, !CLua::is_managed_vm(ls));
     if (err)

@@ -60,13 +60,13 @@ actor_iterator actor_iterator::operator++(int)
 {
     actor_iterator copy = *this;
     ++(*this);
-    return (copy);
+    return copy;
 }
 
 bool actor_iterator::valid(const actor* a) const
 {
     if (!a->alive())
-        return (false);
+        return false;
     switch (restr)
     {
     case R_CIRC:
@@ -76,7 +76,7 @@ bool actor_iterator::valid(const actor* a) const
     case R_ACT:
         return (act->can_see(a));
     default:
-        return (true);
+        return true;
     }
 }
 

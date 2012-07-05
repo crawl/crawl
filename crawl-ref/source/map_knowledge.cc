@@ -62,7 +62,7 @@ int count_detected_mons()
             count++;
     }
 
-    return (count);
+    return count;
 }
 
 void clear_map(bool clear_items, bool clear_mons)

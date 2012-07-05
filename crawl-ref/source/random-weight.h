@@ -21,7 +21,7 @@ T* random_choose_weighted(std::vector<std::pair<T, int> >& choices)
         if (sum > r)
             return (&choices[i].first);
     }
-    return (NULL);
+    return NULL;
 }
 
 /*
@@ -45,7 +45,7 @@ T random_choose_weighted(FixedVector<T, SIZE>& choices)
 
         sum += choices[i];
         if (sum > r)
-            return (i);
+            return i;
     }
     return -1;
 }

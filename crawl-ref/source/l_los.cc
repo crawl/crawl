@@ -32,10 +32,10 @@ LUAFN(los_find_ray)
     if (find_ray(a, b, *ray, opc_no_trans))
     {
         _lua_push_ray(ls, ray);
-        return (1);
+        return 1;
     }
     delete ray;
-    return (0);
+    return 0;
 }
 
 #define VECT(v, p1, p2) \
@@ -49,7 +49,7 @@ LUAFN(los_make_ray)
     VECT(d, 3, 4);
     ray_def *ray = new ray_def(geom::ray(s.x, s.y, d.x, d.y));
     _lua_push_ray(ls, ray);
-    return (1);
+    return 1;
 }
 
 LUAFN(los_cell_see_cell)
@@ -75,7 +75,7 @@ LUAFN(ray_start)
     RAY(ls, 1, ray);
     lua_pushnumber(ls, ray->r.start.x);
     lua_pushnumber(ls, ray->r.start.y);
-    return (2);
+    return 2;
 }
 
 LUAFN(ray_dir)
@@ -83,14 +83,14 @@ LUAFN(ray_dir)
     RAY(ls, 1, ray);
     lua_pushnumber(ls, ray->r.dir.x);
     lua_pushnumber(ls, ray->r.dir.y);
-    return (2);
+    return 2;
 }
 
 LUAFN(ray_advance)
 {
     RAY(ls, 1, ray);
     ray->advance();
-    return (0);
+    return 0;
 }
 
 LUAFN(ray_pos)
@@ -99,7 +99,7 @@ LUAFN(ray_pos)
     coord_def p = ray->pos();
     lua_pushnumber(ls, p.x);
     lua_pushnumber(ls, p.y);
-    return (2);
+    return 2;
 }
 
 static const struct luaL_reg ray_dlib[] =

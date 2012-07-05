@@ -47,7 +47,7 @@ static int _fuzz_mons_level(int level)
         const int fuzz = random2avg(9, 2);
         return (fuzz > 4 ? level + fuzz - 4 : level);
     }
-    return (level);
+    return level;
 }
 
 // Choose a random branch. Which branches may be chosen is a function of
@@ -571,7 +571,7 @@ static monster_type _get_zotdef_monster(level_id &place, int power)
         while (rarity == 0 && count < 2000);
 
         if (rarity == 0)
-            return (MONS_PROGRAM_BUG);
+            return MONS_PROGRAM_BUG;
 
         // Calculate strength
         monsterentry *mentry = get_monster_data(mon_type);
@@ -647,7 +647,7 @@ static monster_type _get_zotdef_monster(level_id &place, int power)
         }
     }
 
-    return (MONS_PROGRAM_BUG);
+    return MONS_PROGRAM_BUG;
 }
 
 static void _zotdef_set_random_branch_wave(int power)
@@ -914,13 +914,13 @@ bool create_trap(trap_type spec_type)
     {
         if (abild.isCancel)
             canned_msg(MSG_OK);
-        return (false);
+        return false;
     }
     // only try to create on floor squares
     if (grd(abild.target) != DNGN_FLOOR)
     {
         mpr("You can't create a trap there!");
-        return (false);
+        return false;
     }
     bool result = place_specific_trap(abild.target, spec_type);
 
@@ -1008,16 +1008,16 @@ bool create_zotdef_ally(monster_type mtyp, const char *successmsg)
     {
         if (abild.isCancel)
             canned_msg(MSG_OK);
-        return (false);
+        return false;
     }
     if (!mons_place(mgen_data(mtyp, BEH_FRIENDLY, &you, 0, 0, abild.target,
                    you.pet_target)))
     {
         mpr("You can't create it there!");
-        return (false);
+        return false;
     }
     mpr(successmsg);
-    return (true);
+    return true;
 }
 
 void zotdef_bosses_check()

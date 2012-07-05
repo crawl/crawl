@@ -1066,7 +1066,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
 
     do_god_revenge(thing_done, victim);
 
-    return (retval);
+    return retval;
 }
 
 // These two arrays deal with the situation where a beam hits a non-fleeing

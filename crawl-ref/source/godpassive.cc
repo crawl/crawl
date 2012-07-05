@@ -28,7 +28,7 @@
 int che_stat_boost(int piety)
 {
     if (you.religion != GOD_CHEIBRIADOS || you.penance[GOD_CHEIBRIADOS])
-        return (0);
+        return 0;
     if (piety < 30)  // Since you've already begun to slow down.
         return 1;
     if (piety > 160) // Fudging this slightly to agree with ****** piety.
@@ -598,7 +598,7 @@ int ash_detect_portals(bool all)
     }
 
     you.seen_portals += portals_found;
-    return (portals_found);
+    return portals_found;
 }
 
 monster_type ash_monster_tier(const monster *mon)

@@ -71,7 +71,7 @@ static dungeon_feature_type _find_appropriate_stairs(bool down)
                 mpr("This branch has no exit stairs defined.");
                 return DNGN_UNSEEN;
             }
-            return (stairs);
+            return stairs;
         }
         // Branch non-edge cases
         else if (depth >= 1)
@@ -415,7 +415,7 @@ static int find_trap_slot()
 {
     for (int i = 0; i < MAX_TRAPS; ++i)
         if (env.trap[i].type == TRAP_UNASSIGNED)
-            return (i);
+            return i;
 
     return (-1);
 }

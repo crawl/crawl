@@ -162,7 +162,7 @@ static int _make_mimic_item(object_class_type type)
 
     item_colour(item); // also sets special vals for scrolls/potions
 
-    return (it);
+    return it;
 }
 
 // Creates a specific monster by name. Uses the same patterns as
@@ -362,7 +362,7 @@ static bool _sort_monster_list(int a, int b)
     if (m1->type == m2->type)
     {
         if (!m1->alive() || !m2->alive())
-            return (false);
+            return false;
 
         return (m1->name(DESC_PLAIN, true) < m2->name(DESC_PLAIN, true));
     }

@@ -192,13 +192,13 @@ mcache_entry *mcache_manager::get(tileidx_t tile)
 {
     tileidx_t idx = tile & TILE_FLAG_MASK;
     if (idx < TILEP_MCACHE_START)
-        return (NULL);
+        return NULL;
 
     if (idx >= TILEP_MCACHE_START + m_entries.size())
-        return (NULL);
+        return NULL;
 
     mcache_entry *entry = m_entries[idx - TILEP_MCACHE_START];
-    return (entry);
+    return entry;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -453,10 +453,10 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         break;
     default:
         // This monster cannot be displayed with a weapon.
-        return (false);
+        return false;
     }
 
-    return (true);
+    return true;
 }
 
 int mcache_monster::info(tile_draw_info *dinfo) const
@@ -491,13 +491,13 @@ int mcache_monster::info(tile_draw_info *dinfo) const
             dinfo[count++].set(eq2, -ofs_x, ofs_y);
     }
 
-    return (count);
+    return count;
 }
 
 bool mcache_monster::valid(const monster_info& mon)
 {
     if (mon.inv[MSLOT_WEAPON].get() == NULL)
-        return (false);
+        return false;
 
     tileidx_t mon_tile = tileidx_monster(mon) & TILE_FLAG_MASK;
 
@@ -681,7 +681,7 @@ bool mcache_ghost::valid(const monster_info& mon)
 
 bool mcache_ghost::transparent() const
 {
-    return (true);
+    return true;
 }
 
 /////////////////////////////////////////////////////////////////////////////

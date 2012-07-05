@@ -353,7 +353,7 @@ static int _strength_modifier()
     default:                                 break;
     }
 
-    return (result);
+    return result;
 }
 
 static int _int_modifier()
@@ -384,7 +384,7 @@ static int _int_modifier()
     result += player_mutation_level(MUT_CLEVER)
               - player_mutation_level(MUT_DOPEY);
 
-    return (result);
+    return result;
 }
 
 static int _dex_modifier()
@@ -429,7 +429,7 @@ static int _dex_modifier()
     default:                        break;
     }
 
-    return (result);
+    return result;
 }
 
 static int _stat_modifier(stat_type stat)
@@ -474,7 +474,7 @@ bool lose_stat(stat_type which_stat, int stat_loss, bool force,
         {
             mprf("Your divine stamina protects you from %s loss.",
                  _stat_name(which_stat).c_str());
-            return (false);
+            return false;
         }
 
         int sust = player_sust_abil();
@@ -501,10 +501,10 @@ bool lose_stat(stat_type which_stat, int stat_loss, bool force,
         you.stat_loss[which_stat] = std::min<int>(100,
                                         you.stat_loss[which_stat] + stat_loss);
         _handle_stat_change(which_stat, cause, see_source);
-        return (true);
+        return true;
     }
     else
-        return (false);
+        return false;
 }
 
 bool lose_stat(stat_type which_stat, int stat_loss, bool force,
@@ -541,7 +541,7 @@ static stat_type _random_lost_stat()
             if (one_chance_in(found))
                 choice = static_cast<stat_type>(i);
         }
-    return (choice);
+    return choice;
 }
 
 // Restore the stat in which_stat by the amount in stat_gain, displaying
@@ -560,14 +560,14 @@ bool restore_stat(stat_type which_stat, int stat_gain,
             if (restore_stat(static_cast<stat_type>(i), stat_gain, suppress_msg))
                 stat_restored = true;
 
-        return (stat_restored);
+        return stat_restored;
     }
 
     if (which_stat == STAT_RANDOM)
         which_stat = _random_lost_stat();
 
     if (which_stat >= NUM_STATS || you.stat_loss[which_stat] == 0)
-        return (false);
+        return false;
 
     if (!suppress_msg)
     {
@@ -581,7 +581,7 @@ bool restore_stat(stat_type which_stat, int stat_gain,
 
     you.stat_loss[which_stat] -= stat_gain;
     _handle_stat_change(which_stat);
-    return (true);
+    return true;
 }
 
 static void _normalize_stat(stat_type stat)

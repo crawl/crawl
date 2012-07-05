@@ -61,7 +61,7 @@ static int crawl_begin_test(lua_State *ls)
          activity,
          luaL_checkstring(ls, 1));
     lua_pushnumber(ls, ++ntests);
-    return (1);
+    return 1;
 }
 
 static int crawl_test_success(lua_State *ls)
@@ -69,7 +69,7 @@ static int crawl_test_success(lua_State *ls)
     if (!crawl_state.script)
         mprf(MSGCH_PROMPT, "Test success: %s", luaL_checkstring(ls, 1));
     lua_pushnumber(ls, ++nsuccess);
-    return (1);
+    return 1;
 }
 
 static int crawl_script_args(lua_State *ls)
@@ -96,15 +96,15 @@ static void _init_test_bindings()
 static bool _is_test_selected(const std::string &testname)
 {
     if (crawl_state.tests_selected.empty())
-        return (true);
+        return true;
     for (int i = 0, size = crawl_state.tests_selected.size();
          i < size; ++i)
     {
         const std::string &phrase(crawl_state.tests_selected[i]);
         if (testname.find(phrase) != std::string::npos)
-            return (true);
+            return true;
     }
-    return (false);
+    return false;
 }
 
 static void run_test(const std::string &file)

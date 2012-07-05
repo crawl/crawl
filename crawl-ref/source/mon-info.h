@@ -214,22 +214,22 @@ struct monster_info : public monster_info_base
 
     monster_type draco_subspecies() const
     {
-        return (draco_type);
+        return draco_type;
     }
 
     mon_intel_type intel() const
     {
-        return (mintel);
+        return mintel;
     }
 
     mon_resist_def resists() const
     {
-        return (mresists);
+        return mresists;
     }
 
     mon_itemuse_type itemuse() const
     {
-        return (mitemuse);
+        return mitemuse;
     }
 
     int randarts(artefact_prop_type ra_prop) const;
@@ -237,7 +237,7 @@ struct monster_info : public monster_info_base
 
     int base_speed() const
     {
-        return (mbase_speed);
+        return mbase_speed;
     }
 
     bool wields_two_weapons() const;

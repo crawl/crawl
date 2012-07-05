@@ -267,7 +267,7 @@ static std::vector<std::string> _in_vaults(const coord_def &pos)
             out.push_back(vault.map.name);
     }
 
-    return (out);
+    return out;
 }
 
 void debug_mons_scan()

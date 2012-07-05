@@ -555,7 +555,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
     }
 
     if (!rot_count && !coag_count)
-        return (false); // Nothing to be done.
+        return false; // Nothing to be done.
 
 #ifdef DEBUG_BLOOD_POTIONS
     mprf(MSGCH_DIAGNOSTICS, "in maybe_coagulate_blood_potions_INV "
@@ -597,7 +597,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
         else
             _compare_blood_quantity(blood, timer.size());
 
-        return (true);
+        return true;
     }
 
     // Coagulated blood cannot coagulate any further...
@@ -775,7 +775,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
             if (!knew_blood)
                 mpr_nocap(blood.name(DESC_INVENTORY).c_str());
 
-            return (true);
+            return true;
         }
         o = mitm[o].link;
     }
@@ -784,7 +784,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
     // Create a new stack of potions.
     o = get_mitm_slot();
     if (o == NON_ITEM)
-        return (false);
+        return false;
 
     // These values are common to all: {dlb}
     mitm[o].base_type = OBJ_POTIONS;
@@ -826,7 +826,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
         if (!knew_blood)
             mpr_nocap(blood.name(DESC_INVENTORY).c_str());
     }
-    return (true);
+    return true;
 }
 
 // Removes the oldest timer of a stack of blood potions.
@@ -848,7 +848,7 @@ int remove_oldest_blood_potion(item_def &stack)
     timer.pop_back();
 
     // The quantity will be decreased elsewhere.
-    return (val);
+    return val;
 }
 
 // Used whenever copies of blood potions have to be cleaned up.
@@ -927,10 +927,10 @@ bool check_blood_corpses_on_ground()
             && !food_is_rotten(*si)
             && mons_has_blood(si->mon_type))
         {
-            return (true);
+            return true;
         }
     }
-    return (false);
+    return false;
 }
 
 // Deliberately don't check for rottenness here, so this check
@@ -941,14 +941,14 @@ bool can_bottle_blood_from_corpse(monster_type mons_class)
     if (you.species != SP_VAMPIRE || you.experience_level < 6
         || !mons_has_blood(mons_class))
     {
-        return (false);
+        return false;
     }
 
     int chunk_type = mons_corpse_effect(mons_class);
     if (chunk_type == CE_CLEAN || chunk_type == CE_CONTAMINATED)
-        return (true);
+        return true;
 
-    return (false);
+    return false;
 }
 
 int num_blood_potions_from_corpse(monster_type mons_class, int chunk_type)
@@ -970,7 +970,7 @@ int num_blood_potions_from_corpse(monster_type mons_class, int chunk_type)
     if (pot_quantity < 1)
         pot_quantity = 1;
 
-    return (pot_quantity);
+    return pot_quantity;
 }
 
 // If autopickup is active, the potions are auto-picked up after creation.
@@ -1020,30 +1020,30 @@ static bool allow_bleeding_on_square(const coord_def& where)
     // No bleeding onto sanctuary ground, please.
     // Also not necessary if already covered in blood.
     if (is_bloodcovered(where) || is_sanctuary(where))
-        return (false);
+        return false;
 
     // No spattering into lava or water.
     if (grd(where) >= DNGN_LAVA && grd(where) < DNGN_FLOOR)
-        return (false);
+        return false;
 
     // No spattering into fountains (other than blood).
     if (grd(where) == DNGN_FOUNTAIN_BLUE
         || grd(where) == DNGN_FOUNTAIN_SPARKLING)
     {
-        return (false);
+        return false;
     }
 
     // The good gods like to keep their altars pristine.
     if (is_good_god(feat_altar_god(grd(where))))
-        return (false);
+        return false;
 
-    return (true);
+    return true;
 }
 
 bool maybe_bloodify_square(const coord_def& where)
 {
     if (!allow_bleeding_on_square(where))
-        return (false);
+        return false;
 
     env.pgrid(where) |= FPROP_BLOODY;
     return true;
@@ -1404,7 +1404,7 @@ bool scramble(void)
 
     // Statues are too stiff and heavy to scramble out of the water.
     if (you.form == TRAN_STATUE || you.cannot_move())
-        return (false);
+        return false;
 
     const int max_carry = carrying_capacity();
     // When highly encumbered, scrambling out is hard to do.
@@ -1416,7 +1416,7 @@ bool go_berserk(bool intentional, bool potion)
     ASSERT(!crawl_state.game_is_arena());
 
     if (!you.can_go_berserk(intentional, potion))
-        return (false);
+        return false;
 
     if (stasis_blocks_effect(true,
                              true,
@@ -1424,7 +1424,7 @@ bool go_berserk(bool intentional, bool potion)
                              3,
                              "%s vibrates violently and saps your rage."))
     {
-        return (false);
+        return false;
     }
 
     if (crawl_state.game_is_hints())
@@ -1479,7 +1479,7 @@ bool go_berserk(bool intentional, bool potion)
 
     you.redraw_quiver = true; // Account for no firing.
 
-    return (true);
+    return true;
 }
 
 // Returns true if the monster has a path to the player, or it has to be
@@ -1492,20 +1492,20 @@ static bool _mons_has_path_to_player(const monster* mon, bool want_move = false)
         if (want_move)
             dist--;
         if (dist >= 2)
-            return (false);
+            return false;
     }
 
     // Short-cut if it's already adjacent.
     if (grid_distance(mon->pos(), you.pos()) <= 1)
-        return (true);
+        return true;
 
     // If the monster is awake and knows a path towards the player
     // (even though the player cannot know this) treat it as unsafe.
     if (mon->travel_target == MTRAV_PLAYER)
-        return (true);
+        return true;
 
     if (mon->travel_target == MTRAV_KNOWN_UNREACHABLE)
-        return (false);
+        return false;
 
     // Try to find a path from monster to player, using the map as it's
     // known to the player and assuming unknown terrain to be traversable.
@@ -1516,12 +1516,12 @@ static bool _mons_has_path_to_player(const monster* mon, bool want_move = false)
         mp.set_range(range * 4);
 
     if (mp.init_pathfind(mon, you.pos(), true, false, true))
-        return (true);
+        return true;
 
     // Now we know the monster cannot possibly reach the player.
     mon->travel_target = MTRAV_KNOWN_UNREACHABLE;
 
-    return (false);
+    return false;
 }
 
 bool mons_can_hurt_player(const monster* mon, const bool want_move)
@@ -1531,17 +1531,17 @@ bool mons_can_hurt_player(const monster* mon, const bool want_move)
     // It also always returns true for sleeping monsters, but that's okay
     // for its current purposes. (Travel interruptions and tension.)
     if (_mons_has_path_to_player(mon, want_move))
-        return (true);
+        return true;
 
     // Even if the monster can not actually reach the player it might
     // still use some ranged form of attack.
     if (you.see_cell_no_trans(mon->pos())
         && mons_has_known_ranged_attack(mon))
     {
-        return (true);
+        return true;
     }
 
-    return (false);
+    return false;
 }
 
 // Returns true if a monster can be considered safe regardless
@@ -1597,7 +1597,7 @@ bool mons_is_safe(const monster* mon, const bool want_move,
     }
 #endif
 
-    return (is_safe);
+    return is_safe;
 }
 
 // Return all nearby monsters in range (default: LOS) that the player
@@ -1650,8 +1650,8 @@ static bool _exposed_monsters_nearby(bool want_move)
     const int radius = want_move ? 2 : 1;
     for (radius_iterator ri(you.pos(), radius); ri; ++ri)
         if (env.map_knowledge(*ri).flags & MAP_INVISIBLE_MONSTER)
-            return (true);
-    return (false);
+            return true;
+    return false;
 }
 
 bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
@@ -1672,14 +1672,14 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
                     mprf(MSGCH_WARN, "You're standing in a cloud of %s!",
                          cloud_name_at_index(cloudidx).c_str());
                 }
-                return (false);
+                return false;
             }
         }
 
         // No monster will attack you inside a sanctuary,
         // so presence of monsters won't matter -- until it starts shrinking...
         if (is_sanctuary(you.pos()) && env.sanctuary_time >= 5)
-            return (true);
+            return true;
     }
 
     // Monster check.
@@ -1702,12 +1702,12 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
     else if (_exposed_monsters_nearby(want_move))
         msg = "There is a strange disturbance nearby!";
     else
-        return (true);
+        return true;
 
     if (announce)
         mpr(msg, MSGCH_WARN);
 
-    return (false);
+    return false;
 }
 
 bool there_are_monsters_nearby(bool dangerous_only, bool require_visible,
@@ -1736,12 +1736,12 @@ static const char *shop_types[] = {
 int str_to_shoptype(const std::string &s)
 {
     if (s == "random" || s == "any")
-        return (SHOP_RANDOM);
+        return SHOP_RANDOM;
 
     for (unsigned i = 0; i < ARRAYSZ(shop_types); ++i)
     {
         if (s == shop_types[i])
-            return (i);
+            return i;
     }
     return (-1);
 }
@@ -2276,7 +2276,7 @@ bool bad_attack(const monster *mon, std::string& adj, std::string& suffix)
 {
     ASSERT(!crawl_state.game_is_arena());
     if (!you.can_see(mon))
-        return (false);
+        return false;
 
     adj.clear();
     suffix.clear();
@@ -2314,7 +2314,7 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
                         coord_def beam_target, bool autohit_first)
 {
     if (you.confused() || !you.can_see(mon))
-        return (false);
+        return false;
 
     std::string adj, suffix;
     if (!bad_attack(mon, adj, suffix))
@@ -2337,7 +2337,7 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
                  || you.pos() > beam_target && beam_target > mon->pos())
         {
             if (autohit_first)
-                return (false);
+                return false;
 
             verb += "in " + apostrophise(mon_name) + " direction";
             mon_name = "";
@@ -2400,7 +2400,7 @@ bool stop_attack_prompt(targetter &hitfunc, std::string verb,
 bool is_orckind(const actor *act)
 {
     if (mons_genus(act->mons_species()) == MONS_ORC)
-        return (true);
+        return true;
 
     if (act->is_monster())
     {
@@ -2408,16 +2408,16 @@ bool is_orckind(const actor *act)
         if (mons_is_zombified(mon)
             && mons_genus(mon->base_monster) == MONS_ORC)
         {
-            return (true);
+            return true;
         }
         if (mons_is_ghost_demon(mon->type)
             && mon->ghost->species == SP_HILL_ORC)
         {
-            return (true);
+            return true;
         }
     }
 
-    return (false);
+    return false;
 }
 
 bool is_dragonkind(const actor *act)
@@ -2425,7 +2425,7 @@ bool is_dragonkind(const actor *act)
     if (mons_genus(act->mons_species()) == MONS_DRAGON
         || mons_genus(act->mons_species()) == MONS_DRACONIAN)
     {
-        return (true);
+        return true;
     }
 
     if (act->is_player())
@@ -2435,22 +2435,22 @@ bool is_dragonkind(const actor *act)
     const monster* mon = act->as_monster();
 
     if (mon->type == MONS_SERPENT_OF_HELL)
-        return (true);
+        return true;
 
     if (mons_is_zombified(mon)
         && (mons_genus(mon->base_monster) == MONS_DRAGON
             || mons_genus(mon->base_monster) == MONS_DRACONIAN))
     {
-        return (true);
+        return true;
     }
 
     if (mons_is_ghost_demon(mon->type)
         && species_genus(mon->ghost->species) == GENPC_DRACONIAN)
     {
-        return (true);
+        return true;
     }
 
-    return (false);
+    return false;
 }
 
 // Make the player swap positions with a given monster.
@@ -2793,7 +2793,7 @@ int counted_monster_list::count()
     int nmons = 0;
     for (counted_list::const_iterator i = list.begin(); i != list.end(); ++i)
         nmons += i->second;
-    return (nmons);
+    return nmons;
 }
 
 std::string counted_monster_list::describe(description_level_type desc)
@@ -2824,18 +2824,18 @@ bool move_stairs(coord_def orig, coord_def dest)
     const dungeon_feature_type stair_feat = grd(orig);
 
     if (feat_stair_direction(stair_feat) == CMD_NO_CMD)
-        return (false);
+        return false;
 
     // The player can't use shops to escape, so don't bother.
     if (stair_feat == DNGN_ENTER_SHOP)
-        return (false);
+        return false;
 
     // Don't move around notable terrain the player is aware of if it's
     // out of sight.
     if (is_notable_terrain(stair_feat)
         && env.map_knowledge(orig).known() && !you.see_cell(orig))
     {
-        return (false);
+        return false;
     }
 
     return slide_feature_over(orig, dest);

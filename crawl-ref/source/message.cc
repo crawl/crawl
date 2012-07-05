@@ -273,7 +273,7 @@ static glyph _prefix_glyph(prefix_type p)
         g.col = LIGHTGRAY;
         break;
     }
-    return (g);
+    return g;
 }
 
 static bool _pre_more();
@@ -635,7 +635,7 @@ public:
 
     bool have_prev()
     {
-        return (prev_msg);
+        return prev_msg;
     }
 
     void store_msg(const message_item& msg)
@@ -728,7 +728,7 @@ msg_colour_type msg_colour(int col)
 static int colour_msg(msg_colour_type col)
 {
     if (col == MSGCOL_MUTED)
-        return (DARKGREY);
+        return DARKGREY;
     else
         return static_cast<int>(col);
 }
@@ -737,7 +737,7 @@ static int colour_msg(msg_colour_type col)
 static msg_colour_type channel_to_msgcol(msg_channel_type channel, int param)
 {
     if (you.asleep())
-        return (MSGCOL_DARKGREY);
+        return MSGCOL_DARKGREY;
 
     msg_colour_type ret;
 
@@ -867,7 +867,7 @@ static msg_colour_type channel_to_msgcol(msg_channel_type channel, int param)
         break;
     }
 
-    return (ret);
+    return ret;
 }
 
 int channel_to_colour(msg_channel_type channel, int param)
@@ -1277,9 +1277,9 @@ static bool channel_message_history(msg_channel_type channel)
     case MSGCH_PROMPT:
     case MSGCH_EQUIPMENT:
     case MSGCH_EXAMINE_FILTER:
-       return (false);
+       return false;
     default:
-       return (true);
+       return true;
     }
 }
 

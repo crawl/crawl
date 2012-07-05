@@ -29,11 +29,11 @@ monster_type debug_prompt_for_monster(void)
     if (!cancelable_get_line_autohist(specs, sizeof specs))
     {
         if (specs[0] == '\0')
-            return (MONS_NO_MONSTER);
+            return MONS_NO_MONSTER;
 
         return (get_monster_by_name(specs));
     }
-    return (MONS_NO_MONSTER);
+    return MONS_NO_MONSTER;
 }
 
 static void _dump_vault_table(const CrawlHashTable &table)
@@ -113,7 +113,7 @@ std::string debug_mon_str(const monster* mon)
     out += make_stringf("%s [midx = %d]", debug_coord_str(mon->pos()).c_str(),
                         midx);
 
-    return (out);
+    return out;
 }
 
 static void _debug_mid_name(mid_t mid)
@@ -350,7 +350,7 @@ skill_type debug_prompt_for_skill(const char *prompt)
     char specs[80];
     msgwin_get_line_autohist(prompt, specs, sizeof(specs));
     if (specs[0] == '\0')
-        return (SK_NONE);
+        return SK_NONE;
 
     return skill_from_name(lowercase_string(specs).c_str());
 }
@@ -375,7 +375,7 @@ skill_type skill_from_name(const char *name)
         }
     }
 
-    return (skill);
+    return skill;
 }
 
 std::string debug_art_val_str(const item_def& item)

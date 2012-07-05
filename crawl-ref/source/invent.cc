@@ -93,19 +93,19 @@ const std::string &InvEntry::get_basename() const
 {
     if (basename.empty())
         basename = item->name(DESC_BASENAME);
-    return (basename);
+    return basename;
 }
 
 const std::string &InvEntry::get_qualname() const
 {
     if (qualname.empty())
         qualname = item->name(DESC_QUALNAME);
-    return (qualname);
+    return qualname;
 }
 
 const std::string &InvEntry::get_fullname() const
 {
-    return (text);
+    return text;
 }
 
 bool InvEntry::is_item_cursed() const
@@ -144,9 +144,9 @@ bool InvEntry::is_item_equipped() const
 
     for (int i = 0; i < NUM_EQUIP; i++)
         if (item->link == you.equip[i])
-            return (true);
+            return true;
 
-    return (false);
+    return false;
 }
 
 // Returns values < 0 for edible chunks (non-rotten except for Saprovores),
@@ -364,7 +364,7 @@ InvMenu::xlat_itemvect(const std::vector<item_def> &v)
     std::vector<const item_def*> xlatitems;
     for (unsigned i = 0, size = v.size(); i < size; ++i)
         xlatitems.push_back(&v[i]);
-    return (xlatitems);
+    return xlatitems;
 }
 
 void InvMenu::set_type(menu_type t)
@@ -424,8 +424,8 @@ static bool _has_melded_armour()
 {
     for (int e = EQ_CLOAK; e <= EQ_BODY_ARMOUR; e++)
         if (you.melded[e])
-            return (true);
-    return (false);
+            return true;
+    return false;
 }
 
 static bool _has_tran_unwearable_armour()
@@ -437,10 +437,10 @@ static bool _has_tran_unwearable_armour()
         if (item.defined() && item.base_type == OBJ_ARMOUR
             && !you_tran_can_wear(item))
         {
-            return (true);
+            return true;
         }
     }
-    return (false);
+    return false;
 }
 
 static std::string _no_selectables_message(int item_selector)
@@ -520,14 +520,14 @@ void InvMenu::load_inv_items(int item_selector, int excluded_slot,
 bool InvEntry::get_tiles(std::vector<tile_def>& tileset) const
 {
     if (!Options.tile_menu_icons)
-        return (false);
+        return false;
 
     if (quantity <= 0)
-        return (false);
+        return false;
 
     tileidx_t idx = tileidx_item(get_item_info(*item));
     if (!idx)
-        return (false);
+        return false;
 
     if (in_inventory(*item))
     {
@@ -608,7 +608,7 @@ bool InvEntry::get_tiles(std::vector<tile_def>& tileset) const
             tileset.push_back(tile_def(brand, TEX_DEFAULT));
     }
 
-    return (true);
+    return true;
 }
 #endif
 
@@ -618,14 +618,14 @@ bool InvMenu::is_selectable(int index) const
     {
         InvEntry *item = dynamic_cast<InvEntry*>(items[index]);
         if (item->is_item_cursed() && item->is_item_equipped())
-            return (false);
+            return false;
 
         std::string text = item->get_text();
 
         if (text.find("!*") != std::string::npos
             || text.find("!d") != std::string::npos)
         {
-            return (false);
+            return false;
         }
     }
 
@@ -799,7 +799,7 @@ const menu_sort_condition *InvMenu::find_menu_sort_condition() const
         if (Options.sort_menus[i].matches(type))
             return &Options.sort_menus[i];
 
-    return (NULL);
+    return NULL;
 }
 
 void InvMenu::sort_menu(std::vector<InvEntry*> &invitems,
@@ -909,7 +909,7 @@ std::vector<SelItem> InvMenu::get_selitems() const
                     inv->selected_qty,
                     inv->item));
     }
-    return (selected_items);
+    return selected_items;
 }
 
 bool InvMenu::process_key(int key)
@@ -921,7 +921,7 @@ bool InvMenu::process_key(int key)
     {
         Options.show_inventory_weights = !Options.show_inventory_weights;
         draw_menu();
-        return (true);
+        return true;
     }
 
     if (type == MT_KNOW)
@@ -948,7 +948,7 @@ bool InvMenu::process_key(int key)
         case CK_ENTER:
         CASE_ESCAPE
             lastch = key;
-            return (false);
+            return false;
 
         case '_':
             show_known_menu_help();
@@ -956,13 +956,13 @@ bool InvMenu::process_key(int key)
             webtiles_update_scroll_pos();
 #endif
             draw_menu();
-            return (true);
+            return true;
 
         case CONTROL('D'):
             // If we cannot select anything (e.g. on the unknown items
             // page), ignore Ctrl-D.
             if (!(flags & (MF_SINGLESELECT | MF_MULTISELECT)))
-                return (true);
+                return true;
 
             // Reset the next selection to default.
             if (!resetting)
@@ -970,13 +970,13 @@ bool InvMenu::process_key(int key)
                 lastch = CONTROL('D');
                 set_title("Select to reset item to default: ");
                 update_title();
-                return (true);
+                return true;
             }
             else
             {
                 // Re-enter the menu.
                 lastch = CONTROL('R');
-                return (false);
+                return false;
             }
         }
     }
@@ -994,7 +994,7 @@ bool InvMenu::process_key(int key)
         deselect_all();
         sel.clear();
         draw_select_count(0, true);
-        return (true);
+        return true;
     }
 
     const bool result = Menu::process_key(key);
@@ -1007,10 +1007,10 @@ bool InvMenu::process_key(int key)
         if (result)
             lastch = CONTROL('R');
 
-        return (false);
+        return false;
     }
     else
-        return (result);
+        return result;
 }
 
 unsigned char InvMenu::getkey() const
@@ -1027,7 +1027,7 @@ unsigned char InvMenu::getkey() const
     {
         mkey = ' ';
     }
-    return (mkey);
+    return mkey;
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -1136,7 +1136,7 @@ std::vector<SelItem> select_items(const std::vector<const item_def*> &items,
         menu.show();
         selected = menu.get_selitems();
     }
-    return (selected);
+    return selected;
 }
 
 static bool _item_class_selected(const item_def &i, int selector)
@@ -1145,7 +1145,7 @@ static bool _item_class_selected(const item_def &i, int selector)
     if (selector == OSEL_ANY || selector == itype
                                 && itype != OBJ_FOOD && itype != OBJ_ARMOUR)
     {
-        return (true);
+        return true;
     }
 
     switch (selector)
@@ -1168,14 +1168,14 @@ static bool _item_class_selected(const item_def &i, int selector)
     case OSEL_THROWABLE:
     {
         if (i.base_type != OBJ_WEAPONS && i.base_type != OBJ_MISSILES)
-            return (false);
+            return false;
 
         const launch_retval projected = is_launched(&you, you.weapon(), i);
 
         if (projected == LRET_FUMBLED)
-            return (false);
+            return false;
 
-        return (true);
+        return true;
     }
     case OBJ_WEAPONS:
     case OSEL_WIELD:
@@ -1209,13 +1209,13 @@ static bool _item_class_selected(const item_def &i, int selector)
     case OSEL_EQUIP:
     {
         if (item_is_quivered(i))
-            return (true);
+            return true;
 
         for (int eq = 0; eq < NUM_EQUIP; eq++)
              if (you.equip[eq] == i.link)
-                 return (true);
+                 return true;
 
-        return (false);
+        return false;
     }
 
     case OSEL_CURSED_WORN:
@@ -1229,7 +1229,7 @@ static bool _item_class_selected(const item_def &i, int selector)
         return (!i.cursed() && item_is_equipped(i) && itype == OBJ_JEWELLERY);
 
     default:
-        return (false);
+        return false;
     }
 }
 
@@ -1240,7 +1240,7 @@ static bool _userdef_item_selected(const item_def &i, int selector)
                                                : NULL;
     return (luafn && clua.callbooleanfn(false, luafn, "i", &i));
 #else
-    return (false);
+    return false;
 #endif
 }
 
@@ -1272,7 +1272,7 @@ bool any_items_to_select(int selector, bool msg, int excluded_slot)
             && you.inv[i].link != excluded_slot
             && _is_item_selected(you.inv[i], selector))
         {
-            return (true);
+            return true;
         }
     }
     if (msg)
@@ -1280,7 +1280,7 @@ bool any_items_to_select(int selector, bool msg, int excluded_slot)
         mprf(MSGCH_PROMPT, "%s",
              _no_selectables_message(selector).c_str());
     }
-    return (false);
+    return false;
 }
 
 // Use title = NULL for stock Inventory title
@@ -1377,7 +1377,7 @@ static unsigned char _get_invent_quant(unsigned char keyin, int &quant)
         }
     }
 
-    return (keyin);
+    return keyin;
 }
 
 // This function prompts the user for an item, handles the '?' and '*'
@@ -1482,7 +1482,7 @@ std::vector<SelItem> prompt_invent_items(
 
                 for (unsigned int i = 0; i < items.size(); ++i)
                     items[i].slot = letter_to_index(items[i].slot);
-                return (items);
+                return items;
             }
 
             need_redraw = !(keyin == '?' || keyin == '*'
@@ -1570,18 +1570,18 @@ static bool _has_warning_inscription(const item_def& item,
         if (r[i] == '!')
         {
             if (r[i+1] == iletter || r[i+1] == '*')
-                return (true);
+                return true;
             else if (oper == OPER_ZAP && r[i+1] == 'z') // for the 0.3.4. keys
-                return (true);
+                return true;
             else if (oper == OPER_EVOKE
                      && (r[i+1] == 'V' || tolower(r[i+1]) == 'z'))
             {
-                return (true);
+                return true;
             }
         }
     }
 
-    return (false);
+    return false;
 }
 
 // Checks if current item (to be removed) has a warning inscription
@@ -1594,51 +1594,51 @@ bool check_old_item_warning(const item_def& item,
     if (oper == OPER_WIELD) // can we safely unwield old item?
     {
         if (!you.weapon())
-            return (true);
+            return true;
 
         old_item = *you.weapon();
         if (!needs_handle_warning(old_item, OPER_WIELD))
-            return (true);
+            return true;
 
         prompt += "Really unwield ";
     }
     else if (oper == OPER_WEAR) // can we safely take off old item?
     {
         if (item.base_type != OBJ_ARMOUR)
-            return (true);
+            return true;
 
         equipment_type eq_slot = get_armour_slot(item);
         if (you.equip[eq_slot] == -1)
-            return (true);
+            return true;
 
         old_item = you.inv[you.equip[eq_slot]];
 
         if (!needs_handle_warning(old_item, OPER_TAKEOFF))
-            return (true);
+            return true;
 
         prompt += "Really take off ";
     }
     else if (oper == OPER_PUTON) // can we safely remove old item?
     {
         if (item.base_type != OBJ_JEWELLERY)
-            return (true);
+            return true;
 
         if (jewellery_is_amulet(item))
         {
             if (you.equip[EQ_AMULET] == -1)
-                return (true);
+                return true;
 
             old_item = you.inv[you.equip[EQ_AMULET]];
             if (!needs_handle_warning(old_item, OPER_TAKEOFF))
-                return (true);
+                return true;
 
             prompt += "Really remove ";
         }
         else // rings handled in prompt_ring_to_remove
-            return (true);
+            return true;
     }
     else // anything else doesn't have a counterpart
-        return (true);
+        return true;
 
     // now ask
     prompt += old_item.name(DESC_INVENTORY);
@@ -1692,21 +1692,21 @@ static bool _is_wielded(const item_def &item)
 bool needs_handle_warning(const item_def &item, operation_types oper)
 {
     if (_has_warning_inscription(item, oper))
-        return (true);
+        return true;
 
     if (!item_ident(item, ISFLAG_KNOW_TYPE))
-        return (false);
+        return false;
 
     if (oper == OPER_REMOVE
         && item.base_type == OBJ_JEWELLERY
         && item.sub_type == AMU_FAITH
         && you.religion != GOD_NO_GOD)
     {
-        return (true);
+        return true;
     }
 
     if (_nasty_stasis(item, oper))
-        return (true);
+        return true;
 
     if (oper == OPER_WIELD // unwielding uses OPER_WIELD too
         && is_weapon(item))
@@ -1714,25 +1714,25 @@ bool needs_handle_warning(const item_def &item, operation_types oper)
         if (get_weapon_brand(item) == SPWPN_DISTORTION
             && !you.duration[DUR_WEAPON_BRAND])
         {
-            return (true);
+            return true;
         }
 
         if (get_weapon_brand(item) == SPWPN_VAMPIRICISM
             && !you.is_undead && !crawl_state.game_is_zotdef())
         {
-            return (true);
+            return true;
         }
 
         if (item_known_cursed(item) && !_is_wielded(item))
-            return (true);
+            return true;
     }
     else if (oper == OPER_PUTON || oper == OPER_WEAR)
     {
         if (item_known_cursed(item))
-            return (true);
+            return true;
     }
 
-    return (false);
+    return false;
 }
 
 // Returns true if user OK'd it (or no warning), false otherwise.
@@ -1746,19 +1746,19 @@ bool check_warning_inscriptions(const item_def& item,
         // If the player really wants to do that, they'll have
         // to remove the inscription.
         if (oper == OPER_DESTROY)
-            return (false);
+            return false;
 
         if (oper == OPER_WIELD)
         {
             // Can't use can_wield in item_use.cc because it wants
             // a non-const item_def.
             if (!you.can_wield(item))
-                return (true);
+                return true;
         }
         else if (oper == OPER_WEAR)
         {
             if (!can_wear_armour(item, false, false))
-                return (true);
+                return true;
 
             // Don't ask if item already worn.
             int equip = you.equip[get_armour_slot(item)];
@@ -1768,7 +1768,7 @@ bool check_warning_inscriptions(const item_def& item,
         else if (oper == OPER_PUTON)
         {
             if (item.base_type != OBJ_JEWELLERY)
-                return (true);
+                return true;
 
             // Don't ask if item already worn.
             int equip = -1;
@@ -1791,7 +1791,7 @@ bool check_warning_inscriptions(const item_def& item,
         {
             // Don't ask if it will fail anyway.
             if (item.cursed())
-                return (true);
+                return true;
         }
 
         std::string prompt = "Really " + _operation_verb(oper) + " ";
@@ -1843,7 +1843,7 @@ int prompt_invent_item(const char *prompt,
     {
         mprf(MSGCH_PROMPT, "%s",
              _no_selectables_message(type_expect).c_str());
-        return (PROMPT_NOTHING);
+        return PROMPT_NOTHING;
     }
 
     unsigned char  keyin = 0;
@@ -1990,13 +1990,13 @@ int prompt_invent_item(const char *prompt,
         }
     }
 
-    return (ret);
+    return ret;
 }
 
 bool prompt_failed(int retval, std::string msg)
 {
     if (retval != PROMPT_ABORT && retval != PROMPT_NOTHING)
-        return (false);
+        return false;
 
     if (msg.empty())
     {
@@ -2008,7 +2008,7 @@ bool prompt_failed(int retval, std::string msg)
 
     crawl_state.cancel_cmd_repeat();
 
-    return (true);
+    return true;
 }
 
 // Most items are wieldable, but this function check for items that needs to be
@@ -2045,12 +2045,12 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
         if (entry->evoke_func && item_type_known(item))
         {
             if (item_is_equipped(item) && !item_is_melded(item) || !equip)
-                return (true);
+                return true;
 
             if (msg)
                 mpr(error);
 
-            return (false);
+            return false;
         }
         // Unrandart might still be evokable (e.g., reaching)
     }
@@ -2065,23 +2065,23 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
         {
             if (msg)
                 mpr("You cannot grasp it well enough.");
-            return (false);
+            return false;
         }
 
         if (all_wands)
-            return (true);
+            return true;
 
         if (item.plus2 == ZAPCOUNT_EMPTY)
         {
             if (msg)
                 mpr("This wand has no charges.");
-            return (false);
+            return false;
         }
-        return (true);
+        return true;
 
     case OBJ_WEAPONS:
         if ((!wielded || !reach) && !msg)
-            return (false);
+            return false;
 
         if (reach && weapon_reach(item) > 2 && item_type_known(item))
         {
@@ -2089,23 +2089,23 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
             {
                 if (msg)
                     mpr(error);
-                return (false);
+                return false;
             }
-            return (true);
+            return true;
         }
 
         if (msg)
             mpr("That item cannot be evoked!");
-        return (false);
+        return false;
 
     case OBJ_RODS:
         if (!wielded)
         {
             if (msg)
                 mpr(error);
-            return (false);
+            return false;
         }
-        return (true);
+        return true;
 
     case OBJ_STAVES:
         if (!known && !item_type_known(item)
@@ -2116,13 +2116,13 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
             {
                 if (msg)
                     mpr(error);
-                return (false);
+                return false;
             }
-            return (true);
+            return true;
         }
         if (msg)
             mpr("That item cannot be evoked!");
-        return (false);
+        return false;
 
     case OBJ_MISCELLANY:
         if (is_deck(item))
@@ -2131,21 +2131,21 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
             {
                 if (msg)
                     mpr(error);
-                return (false);
+                return false;
             }
-            return (true);
+            return true;
         }
 
         if (item.sub_type != MISC_LANTERN_OF_SHADOWS
             && item.sub_type != MISC_EMPTY_EBONY_CASKET
             && item.sub_type != MISC_RUNE_OF_ZOT)
         {
-            return (true);
+            return true;
         }
         // else fall through
     default:
         if (msg)
             mpr("That item cannot be evoked!");
-        return (false);
+        return false;
     }
 }

@@ -314,7 +314,7 @@ static void _print_stats_hp(int x, int y)
 static short _get_stat_colour(stat_type stat)
 {
     if (you.stat_zero[stat] > 0)
-        return (LIGHTRED);
+        return LIGHTRED;
 
     // Check the stat_colour option for warning thresholds.
     for (unsigned int i = 0; i < Options.stat_colour.size(); ++i)
@@ -328,14 +328,14 @@ static short _get_stat_colour(stat_type stat)
         || stat == STAT_INT && you.duration[DUR_BRILLIANCE]
         || stat == STAT_DEX && you.duration[DUR_AGILITY])
     {
-        return (LIGHTBLUE);  // no end of effect warning
+        return LIGHTBLUE;  // no end of effect warning
     }
 
     // Stat is degenerated.
     if (you.stat_loss[stat] > 0)
-        return (YELLOW);
+        return YELLOW;
 
-    return (HUD_VALUE_COLOUR);
+    return HUD_VALUE_COLOUR;
 }
 
 static void _print_stat(stat_type stat, int x, int y)
@@ -999,7 +999,7 @@ static std::string _get_monster_name(const monster_info& mi,
     }
 
     desc += monpane_desc;
-    return (desc);
+    return desc;
 }
 
 // If past is true, the messages should be printed in the past tense
@@ -1017,7 +1017,7 @@ std::string mpr_monster_list(bool past)
         msg += (past ? "were" : "are");
         msg += " no monsters in sight!";
 
-        return (msg);
+        return msg;
     }
 
     std::vector<std::string> describe;
@@ -1045,7 +1045,7 @@ std::string mpr_monster_list(bool past)
         msg += comma_separated_line(describe.begin(), describe.end());
     msg += ".";
 
-    return (msg);
+    return msg;
 }
 
 #ifndef USE_TILE_LOCAL
@@ -1200,13 +1200,13 @@ int update_monster_pane()
     if (mons.empty())
         return (-1);
 
-    return (full_info);
+    return full_info;
 }
 #else
 // FIXME: Implement this for Tiles!
 int update_monster_pane()
 {
-    return (false);
+    return false;
 }
 #endif
 
@@ -1502,7 +1502,7 @@ static std::string _god_powers(bool simple)
             std::string asterisks = std::string(prank, '*')
                                     + std::string(6 - prank, '.');
             if (simple)
-                return (asterisks);
+                return asterisks;
             godpowers = chop_string(godpowers, 20, false)
                       + " [" + asterisks + "]";
             return (colour_string(godpowers, god_colour(you.religion)));
@@ -1943,7 +1943,7 @@ static std::string _annotate_form_based(std::string desc, bool suppressed)
     if (suppressed)
         return ("<darkgrey>(" + desc + ")</darkgrey>");
     else
-        return (desc);
+        return desc;
 }
 
 static std::string _dragon_abil(std::string desc)

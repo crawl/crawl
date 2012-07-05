@@ -35,7 +35,7 @@ void lua_push_moninf(lua_State *ls, monster_info *mi)
     { \
         MONINF(ls, 1, mi); \
         lua_push##type(ls, mi->cfield); \
-        return (1); \
+        return 1; \
     }
 
 #define MIREG(field) { #field, moninf_get_##field }
@@ -91,7 +91,7 @@ LUAFN(moninf_get_is)
         return 0;
     }
     lua_pushboolean(ls, mi->is(num));
-    return (1);
+    return 1;
 }
 
 static bool cant_see_you(const monster_info *mi)
@@ -125,21 +125,21 @@ LUAFN(moninf_get_stabbability)
     else
         lua_pushnumber(ls, 0);
 
-    return (1);
+    return 1;
 }
 
 LUAFN(moninf_get_is_constricted)
 {
     MONINF(ls, 1, mi);
     lua_pushboolean(ls, !mi->constrictor_name.empty());
-    return (1);
+    return 1;
 }
 
 LUAFN(moninf_get_is_constricting)
 {
     MONINF(ls, 1, mi);
     lua_pushboolean(ls, !mi->constricting_name.empty());
-    return (1);
+    return 1;
 }
 
 LUAFN(moninf_get_is_constricting_you)
@@ -148,14 +148,14 @@ LUAFN(moninf_get_is_constricting_you)
     if (!you.is_constricted())
     {
         lua_pushboolean(ls, false);
-        return (1);
+        return 1;
     }
 
     // yay the interface
     lua_pushboolean(ls, (std::find(mi->constricting_name.begin(),
                                    mi->constricting_name.end(), "you")
                          != mi->constricting_name.end()));
-    return (1);
+    return 1;
 }
 
 LUAFN(moninf_get_can_be_constricted)
@@ -177,7 +177,7 @@ LUAFN(moninf_get_can_be_constricted)
         dummy.base_monster = mi->base_type;
         lua_pushboolean(ls, dummy.res_constrict() < 3);
     }
-    return (1);
+    return 1;
 }
 
 LUAFN(moninf_get_reach_range)
@@ -185,7 +185,7 @@ LUAFN(moninf_get_reach_range)
     MONINF(ls, 1, mi);
 
     lua_pushnumber(ls, mi->reach_range());
-    return (1);
+    return 1;
 }
 
 LUAFN(moninf_get_is_unique)
@@ -196,7 +196,7 @@ LUAFN(moninf_get_is_unique)
         lua_pushboolean(ls, true);
     else
         lua_pushboolean(ls, mons_is_unique(mi->type));
-    return (1);
+    return 1;
 }
 
 
@@ -205,7 +205,7 @@ LUAFN(moninf_get_damage_desc)
     MONINF(ls, 1, mi);
     std::string s = mi->damage_desc();
     lua_pushstring(ls, s.c_str());
-    return (1);
+    return 1;
 }
 
 LUAFN(moninf_get_desc)
@@ -215,7 +215,7 @@ LUAFN(moninf_get_desc)
     int col;
     mi->to_string(1, desc, col);
     lua_pushstring(ls, desc.c_str());
-    return (1);
+    return 1;
 }
 
 LUAFN(moninf_get_name)
@@ -223,7 +223,7 @@ LUAFN(moninf_get_name)
     MONINF(ls, 1, mi);
     std::string s = mi->full_name();
     lua_pushstring(ls, s.c_str());
-    return (1);
+    return 1;
 }
 
 static const struct luaL_reg moninf_lib[] =
@@ -266,15 +266,15 @@ LUAFN(mi_get_monster_at)
     COORDSHOW(s, 1, 2)
     coord_def p = player2grid(s);
     if (!you.see_cell(p))
-        return (0);
+        return 0;
     if (env.mgrid(p) == NON_MONSTER)
-        return (0);
+        return 0;
     monster* m = &env.mons[env.mgrid(p)];
     if (!m->visible_to(&you))
-        return (0);
+        return 0;
     monster_info mi(m);
     lua_push_moninf(ls, &mi);
-    return (1);
+    return 1;
 }
 
 static const struct luaL_reg mon_lib[] =

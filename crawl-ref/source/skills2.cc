@@ -174,7 +174,7 @@ skill_type str_to_skill(const std::string &skill)
         if (skills[i][0] && skill == skills[i][0])
             return (static_cast<skill_type>(i));
 
-    return (SK_FIGHTING);
+    return SK_FIGHTING;
 }
 
 static std::string _stk_adj_cap()

@@ -233,7 +233,7 @@ std::string attack::wep_name(description_level_type desc, iflags_t ignre_flags)
 
     name += weapon->name(DESC_PLAIN, false, false, false, false, ignre_flags);
 
-    return (name);
+    return name;
 }
 
 /* TODO: Remove this!

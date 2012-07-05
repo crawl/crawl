@@ -88,7 +88,7 @@ static bool _give_wanderer_weapon(int & slot, int wpn_skill, int plus)
     you.inv[slot].plus  = random2(plus) + offset;
     you.inv[slot].plus2 = random2(plus) + offset;
 
-    return (true);
+    return true;
 }
 
 // The overall role choice for wanderers is a weighted chance based on
@@ -110,7 +110,7 @@ static stat_type _wanderer_choose_role()
     else
         role = STAT_INT;
 
-    return (role);
+    return role;
 }
 
 static skill_type _apt_weighted_choice(const skill_type * skill_array,
@@ -136,7 +136,7 @@ static skill_type _apt_weighted_choice(const skill_type * skill_array,
             return (skill_array[i]);
     }
 
-    return (NUM_SKILLS);
+    return NUM_SKILLS;
 }
 
 static skill_type _wanderer_role_skill_select(stat_type selected_role,
@@ -209,7 +209,7 @@ static skill_type _wanderer_role_skill_select(stat_type selected_role,
         ASSERT(you.species == SP_FELID);
         selected_skill = SK_UNARMED_COMBAT;
     }
-    return (selected_skill);
+    return selected_skill;
 }
 
 static skill_type _wanderer_role_weapon_select(stat_type role)
@@ -249,7 +249,7 @@ static skill_type _wanderer_role_weapon_select(stat_type role)
         break;
     }
 
-    return (skill);
+    return skill;
 }
 
 static void _wanderer_role_skill(stat_type role, int levels)
@@ -288,7 +288,7 @@ static skill_type _weighted_skill_roll()
             return (skill_type(i));
     }
 
-    return (NUM_SKILLS);
+    return NUM_SKILLS;
 }
 
 static void _give_wanderer_book(skill_type skill, int & slot)

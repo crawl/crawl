@@ -57,10 +57,10 @@ bool dgn_event_dispatcher::fire_vetoable_position_event(
              i != alcopy.listeners.end(); ++i)
         {
             if (!(*i)->notify_dgn_event(et))
-                return (false);
+                return false;
         }
     }
-    return (true);
+    return true;
 }
 
 void dgn_event_dispatcher::fire_position_event(

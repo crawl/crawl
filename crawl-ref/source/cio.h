@@ -100,7 +100,7 @@ struct c_mouse_event
     // Returns true for valid events.
     operator bool () const
     {
-        return (bstate);
+        return bstate;
     }
 
     bool left_clicked() const

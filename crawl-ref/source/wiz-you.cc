@@ -537,7 +537,7 @@ bool wizard_add_mutation()
     if (answer == -1)
     {
         canned_msg(MSG_OK);
-        return (false);
+        return false;
     }
     const bool force = (answer == 1);
 
@@ -545,14 +545,14 @@ bool wizard_add_mutation()
     {
         mpr("Can't mutate when immune to mutations without forcing it.");
         crawl_state.cancel_cmd_repeat();
-        return (false);
+        return false;
     }
 
     answer = yesnoquit("Treat mutation as god gift?", true, 'n');
     if (answer == -1)
     {
         canned_msg(MSG_OK);
-        return (false);
+        return false;
     }
     const bool god_gift = (answer == 1);
 
@@ -561,7 +561,7 @@ bool wizard_add_mutation()
                     specs, sizeof(specs));
 
     if (specs[0] == '\0')
-        return (false);
+        return false;
 
     std::string spec = lowercase_string(specs);
 
@@ -590,7 +590,7 @@ bool wizard_add_mutation()
             crawl_state.cancel_cmd_repeat("Your mutation resistance has "
                                           "increased.");
         }
-        return (success);
+        return success;
     }
 
     std::vector<mutation_type> partial_matches;
@@ -638,7 +638,7 @@ bool wizard_add_mutation()
                                      MSGCH_DIAGNOSTICS);
         }
 
-        return (false);
+        return false;
     }
     else
     {
@@ -669,7 +669,7 @@ bool wizard_add_mutation()
         }
     }
 
-    return (success);
+    return success;
 }
 #endif
 

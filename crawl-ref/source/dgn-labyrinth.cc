@@ -131,18 +131,18 @@ static bool _has_no_floor_neighbours(const coord_def &pos, bool recurse = false)
     {
         const coord_def& p = *ai;
         if (!in_bounds(p))
-            return (true);
+            return true;
 
         if (recurse)
         {
             if (grd(p) == DNGN_FLOOR)
-               return (false);
+               return false;
         }
         else if (_has_no_floor_neighbours(p, true))
-            return (true);
+            return true;
     }
 
-    return (recurse);
+    return recurse;
 }
 
 // Change the borders of the labyrinth to another (undiggable) wall type.
@@ -259,10 +259,10 @@ static bool _has_vault_in_radius(const coord_def &pos, int radius,
         if (!in_bounds(*rad))
             continue;
         if (map_masked(*rad, mask))
-            return (true);
+            return true;
     }
 
-    return (false);
+    return false;
 }
 
 // Find an entry point that's:
@@ -286,10 +286,10 @@ static coord_def _labyrinth_find_entry_point(const dgn_region &reg,
         if (_has_vault_in_radius(place, 6, MMT_VAULT))
             continue;
 
-        return (place);
+        return place;
     }
     coord_def unfound;
-    return (unfound);
+    return unfound;
 }
 
 static void _labyrinth_place_entry_point(const dgn_region &region,
@@ -335,10 +335,10 @@ static coord_def _find_random_deadend(const dgn_region &region)
         if (!_is_deadend(pos))
             continue;
 
-        return (pos);
+        return pos;
     }
 
-    return (result);
+    return result;
 }
 
 // Adds a bloody trail ending in a dead end with spattered walls.
@@ -407,9 +407,9 @@ static bool _find_random_nonmetal_wall(const dgn_region &region,
             continue;
 
         if (grd(pos) == DNGN_ROCK_WALL || grd(pos) == DNGN_STONE_WALL)
-            return (true);
+            return true;
     }
-    return (false);
+    return false;
 }
 
 static bool _grid_has_wall_neighbours(const coord_def& pos,
@@ -425,9 +425,9 @@ static bool _grid_has_wall_neighbours(const coord_def& pos,
             continue;
 
         if (grd(p) == DNGN_ROCK_WALL || grd(p) == DNGN_STONE_WALL)
-            return (true);
+            return true;
     }
-    return (false);
+    return false;
 }
 
 static void _vitrify_wall_neighbours(const coord_def& pos, bool first)

@@ -59,9 +59,9 @@ bool check_annotation_exclusion_warning()
         {
             canned_msg(MSG_OK);
             interrupt_activity(AI_FORCE_INTERRUPT);
-            return (false);
+            return false;
         }
-        return (true);
+        return true;
     }
 
     level_id  next_level_id = level_id::get_next_level_id(you.pos());
@@ -93,9 +93,9 @@ bool check_annotation_exclusion_warning()
         canned_msg(MSG_OK);
         interrupt_activity(AI_FORCE_INTERRUPT);
         crawl_state.level_annotation_shown = false;
-        return (false);
+        return false;
     }
-    return (true);
+    return true;
 }
 
 static void _player_change_level_reset()
@@ -123,16 +123,16 @@ static bool _marker_vetoes_level_change()
 static bool _stair_moves_pre(dungeon_feature_type stair)
 {
     if (crawl_state.prev_cmd == CMD_WIZARD)
-        return (false);
+        return false;
 
     if (stair != grd(you.pos()))
-        return (false);
+        return false;
 
     if (feat_stair_direction(stair) == CMD_NO_CMD)
-        return (false);
+        return false;
 
     if (!you.duration[DUR_REPEL_STAIRS_CLIMB])
-        return (false);
+        return false;
 
     int pct;
     if (you.duration[DUR_REPEL_STAIRS_MOVE])
@@ -146,14 +146,14 @@ static bool _stair_moves_pre(dungeon_feature_type stair)
     pct += dur/20;
 
     if (!x_chance_in_y(pct, 100))
-        return (false);
+        return false;
 
     // Get feature name before sliding stair over.
     std::string stair_str =
         feature_description_at(you.pos(), false, DESC_THE, false);
 
     if (!slide_feature_over(you.pos(), coord_def(-1, -1), false))
-        return (false);
+        return false;
 
     std::string verb = stair_climb_verb(stair);
 
@@ -162,7 +162,7 @@ static bool _stair_moves_pre(dungeon_feature_type stair)
 
     you.turn_is_over = true;
 
-    return (true);
+    return true;
 }
 
 static void _exit_stair_message(dungeon_feature_type stair, bool /* going_up */)

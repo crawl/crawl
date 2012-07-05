@@ -174,7 +174,7 @@ std::string comma_separated_line(Z start, Z end,
 
         text += *i;
     }
-    return (text);
+    return text;
 }
 
 std::string unwrap_desc(std::string desc);

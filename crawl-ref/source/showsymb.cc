@@ -126,7 +126,7 @@ unsigned short _cell_feat_show_colour(const map_cell& cell,
     if (Options.show_travel_trail && travel_trail_index(loc) >= 0)
         colour |= COLFLAG_REVERSE;
 
-    return (colour);
+    return colour;
 }
 
 static int _get_mons_colour(const monster_info& mi)
@@ -185,7 +185,7 @@ static int _get_mons_colour(const monster_info& mi)
         col = DARKGREY;
     }
 
-    return (col);
+    return col;
 }
 
 show_class get_cell_show_class(const map_cell& cell,
@@ -410,7 +410,7 @@ glyph get_item_glyph(const item_def *item)
     glyph g;
     g.ch = get_feature_def(show_type(*item)).symbol;
     g.col = item->colour;
-    return (g);
+    return g;
 }
 
 glyph get_mons_glyph(const monster_info& mi)
@@ -432,7 +432,7 @@ glyph get_mons_glyph(const monster_info& mi)
     else
         g.col = _get_mons_colour(mi);
     g.col = real_colour(g.col);
-    return (g);
+    return g;
 }
 
 std::string glyph_to_tagstr(const glyph& g)

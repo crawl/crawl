@@ -102,7 +102,7 @@ inline bool TilesTexture::get_coords(tileidx_t idx, int ofs_x, int ofs_y,
 
     // Nothing to draw.
     if (sy >= ey)
-        return (false);
+        return false;
 
     pos_sx += (ofs_x + inf.offset_x + size_ox) / tile_x;
     pos_sy += sy / tile_y;
@@ -114,7 +114,7 @@ inline bool TilesTexture::get_coords(tileidx_t idx, int ofs_x, int ofs_y,
     tex_ex = inf.ex / fwidth;
     tex_ey = (inf.ey + ey - pos_ey_adjust) / fheight;
 
-    return (true);
+    return true;
 }
 
 class ImageManager

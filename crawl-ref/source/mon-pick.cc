@@ -383,9 +383,9 @@ int mons_pan_rare(monster_type mcls)
     case MONS_SHADOW_IMP:
     case MONS_SHADOW_DEMON:
     case MONS_LOROCYPROCA:
-        return (40);
+        return 40;
     default:
-        return (0);
+        return 0;
     }
 }
 

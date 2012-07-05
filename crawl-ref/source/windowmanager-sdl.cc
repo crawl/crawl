@@ -41,18 +41,18 @@ static unsigned char _get_modifiers(SDL_keysym &keysym)
     {
     case SDLK_LSHIFT:
     case SDLK_RSHIFT:
-        return (MOD_SHIFT);
+        return MOD_SHIFT;
         break;
     case SDLK_LCTRL:
     case SDLK_RCTRL:
-        return (MOD_CTRL);
+        return MOD_CTRL;
         break;
     case SDLK_LALT:
     case SDLK_RALT:
-        return (MOD_ALT);
+        return MOD_ALT;
         break;
     default:
-        return (0);
+        return 0;
     }
 }
 
@@ -110,7 +110,7 @@ static int _translate_keysym(SDL_keysym &keysym)
     case SDLK_MODE:
     case SDLK_COMPOSE:
         // Don't handle these.
-        return (0);
+        return 0;
 
     case SDLK_F1:
     case SDLK_F2:
@@ -245,7 +245,7 @@ int SDLWrapper::init(coord_def *m_windowsz)
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) != 0)
     {
         printf("Failed to initialise SDL: %s\n", SDL_GetError());
-        return (false);
+        return false;
     }
 
     video_info = SDL_GetVideoInfo();
@@ -307,10 +307,10 @@ int SDLWrapper::init(coord_def *m_windowsz)
     if (!m_context)
     {
         printf("Failed to set video mode: %s\n", SDL_GetError());
-        return (false);
+        return false;
     }
 
-    return (true);
+    return true;
 }
 
 int SDLWrapper::screen_width() const
@@ -325,12 +325,12 @@ int SDLWrapper::screen_height() const
 
 int SDLWrapper::desktop_width() const
 {
-    return (_desktop_width);
+    return _desktop_width;
 }
 
 int SDLWrapper::desktop_height() const
 {
-    return (_desktop_height);
+    return _desktop_height;
 }
 
 void SDLWrapper::set_window_title(const char *title)
@@ -344,11 +344,11 @@ bool SDLWrapper::set_window_icon(const char* icon_name)
     if (!surf)
     {
         printf("Failed to load icon: %s\n", SDL_GetError());
-        return (false);
+        return false;
     }
     SDL_WM_SetIcon(surf, NULL);
     SDL_FreeSurface(surf);
-    return (true);
+    return true;
 }
 
 #ifdef TARGET_OS_WINDOWS
@@ -466,7 +466,7 @@ int SDLWrapper::wait_event(wm_event *event)
 {
     SDL_Event sdlevent;
     if (!SDL_WaitEvent(&sdlevent))
-        return (0);
+        return 0;
 
     // translate the SDL_Event into the almost-analogous wm_event
     switch (sdlevent.type)
@@ -530,7 +530,7 @@ int SDLWrapper::wait_event(wm_event *event)
         break;
     }
 
-    return (1);
+    return 1;
 }
 
 void SDLWrapper::set_timer(unsigned int interval, wm_timer_callback callback)
@@ -603,7 +603,7 @@ unsigned int SDLWrapper::get_event_count(wm_event_type type)
 
     default:
         // Error
-        return (0);
+        return 0;
     }
 
     SDL_Event store;
@@ -628,7 +628,7 @@ bool SDLWrapper::load_texture(GenericTexture *tex, const char *filename,
     if (tex_path.c_str()[0] == 0)
     {
         fprintf(stderr, "Couldn't find texture '%s'.\n", filename);
-        return (false);
+        return false;
     }
 
     SDL_Surface *img = load_image(tex_path.c_str());
@@ -636,7 +636,7 @@ bool SDLWrapper::load_texture(GenericTexture *tex, const char *filename,
     if (!img)
     {
         fprintf(stderr, "Couldn't load texture '%s'.\n", tex_path.c_str());
-        return (false);
+        return false;
     }
 
     unsigned int bpp = img->format->BytesPerPixel;
@@ -774,7 +774,7 @@ bool SDLWrapper::load_texture(GenericTexture *tex, const char *filename,
     {
         printf("Warning: unsupported format, bpp = %d for '%s'\n",
                bpp, acBuffer);
-        return (false);
+        return false;
     }
 
     bool success = false;
@@ -790,14 +790,14 @@ bool SDLWrapper::load_texture(GenericTexture *tex, const char *filename,
 
     SDL_FreeSurface(img);
 
-    return (success);
+    return success;
 }
 
 int SDLWrapper::byte_order()
 {
     if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
-        return (WM_BIG_ENDIAN);
-    return (WM_LIL_ENDIAN);
+        return WM_BIG_ENDIAN;
+    return WM_LIL_ENDIAN;
 }
 
 SDL_Surface *SDLWrapper::load_image(const char *file) const
@@ -816,9 +816,9 @@ SDL_Surface *SDLWrapper::load_image(const char *file) const
     }
 
     if (!surf)
-        return (NULL);
+        return NULL;
 
-    return (surf);
+    return surf;
 }
 
 #endif // USE_SDL

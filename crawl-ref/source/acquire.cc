@@ -158,7 +158,7 @@ static armour_type _pick_wearable_armour(const armour_type arm)
           result = NUM_ARMOURS;
     }
 
-    return (result);
+    return result;
 }
 
 static armour_type _acquirement_armour_subtype(bool divine)
@@ -328,7 +328,7 @@ static armour_type _acquirement_armour_subtype(bool divine)
         }
     }
 
-    return (result);
+    return result;
 }
 
 // If armour acquirement turned up a non-ego non-artefact armour item,
@@ -391,7 +391,7 @@ static bool _try_give_plain_armour(item_def &arm)
 
     // All available secondary slots already filled.
     if (picked == NUM_ARMOURS)
-        return (false);
+        return false;
 
     arm.clear();
     arm.quantity = 1;
@@ -407,7 +407,7 @@ static bool _try_give_plain_armour(item_def &arm)
     item_colour(arm);
 
     ASSERT(arm.is_valid());
-    return (true);
+    return true;
 }
 
 // Write results into arguments.
@@ -558,7 +558,7 @@ static int _acquirement_weapon_subtype(bool divine)
         if (x_chance_in_y(acqweight, count += acqweight))
             result = i;
     }
-    return (result);
+    return result;
 }
 
 static bool _have_item_with_types(object_class_type basetype, int subtype)
@@ -569,10 +569,10 @@ static bool _have_item_with_types(object_class_type basetype, int subtype)
         if (item.defined()
             && item.base_type == basetype && item.sub_type == subtype)
         {
-            return (true);
+            return true;
         }
     }
-    return (false);
+    return false;
 }
 
 static missile_type _acquirement_missile_subtype()
@@ -622,7 +622,7 @@ static missile_type _acquirement_missile_subtype()
     default:
         break;
     }
-    return (result);
+    return result;
 }
 
 static int _acquirement_jewellery_subtype()
@@ -642,7 +642,7 @@ static int _acquirement_jewellery_subtype()
             break;
     }
 
-    return (result);
+    return result;
 }
 
 static bool _want_rod()
@@ -737,7 +737,7 @@ static int _acquirement_misc_subtype()
         result = MISC_CRYSTAL_BALL_OF_ENERGY;
     }
 
-    return (result);
+    return result;
 }
 
 static int _acquirement_wand_subtype()
@@ -789,7 +789,7 @@ static int _acquirement_wand_subtype()
             picked = type;
     }
 
-    return (picked);
+    return picked;
 }
 
 static int _find_acquirement_subtype(object_class_type &class_wanted,
@@ -863,7 +863,7 @@ static int _find_acquirement_subtype(object_class_type &class_wanted,
             break;
     }
 
-    return (type_wanted);
+    return type_wanted;
 }
 
 // The weight of a spell takes into account its disciplines' skill levels
@@ -915,7 +915,7 @@ static int _book_weight(book_type book)
         total_weight += _spell_weight(stype);
     }
 
-    return (total_weight);
+    return total_weight;
 }
 
 static bool _is_magic_skill(int skill)
@@ -942,7 +942,7 @@ static bool _skill_useless_with_god(int skill)
     case GOD_NO_GOD:
         return (skill == SK_INVOCATIONS);
     default:
-        return (false);
+        return false;
     }
 }
 
@@ -1063,7 +1063,7 @@ static bool _do_book_acquirement(item_def &book, int agent)
         if (!make_book_theme_randart(book, 0, 0, 5 + coinflip(), 20,
                                      SPELL_NO_SPELL, owner))
         {
-            return (false);
+            return false;
         }
         break;
 
@@ -1071,7 +1071,7 @@ static bool _do_book_acquirement(item_def &book, int agent)
     {
         book.sub_type  = BOOK_RANDART_LEVEL;
         if (!make_book_level_randart(book, level, -1, owner))
-            return (false);
+            return false;
         break;
     }
 
@@ -1079,7 +1079,7 @@ static bool _do_book_acquirement(item_def &book, int agent)
     {
         // The Tome of Destruction is rare enough we won't change this.
         if (book.sub_type == BOOK_DESTRUCTION)
-            return (true);
+            return true;
 
         int weights[NUM_SKILLS];
         int total_weights = 0;
@@ -1130,14 +1130,14 @@ static bool _do_book_acquirement(item_def &book, int agent)
         break;
     } // manuals
     } // switch book choice
-    return (true);
+    return true;
 }
 
 static int _failed_acquirement(bool quiet)
 {
     if (!quiet)
         mpr("The demon of the infinite void smiles upon you.");
-    return (NON_ITEM);
+    return NON_ITEM;
 }
 
 static int _weapon_brand_quality(int brand, bool range)
@@ -1590,7 +1590,7 @@ int acquirement_create_item(object_class_type class_wanted,
         ASSERT(mitm[thing_created].is_valid());
         mitm[thing_created].props["acquired"].get_int() = agent;
     }
-    return (thing_created);
+    return thing_created;
 }
 
 bool acquirement(object_class_type class_wanted, int agent,
@@ -1637,7 +1637,7 @@ bool acquirement(object_class_type class_wanted, int agent,
             if (agent == AQ_WIZMODE)
             {
                 canned_msg(MSG_OK);
-                return (false);
+                return false;
             }
 
             // If we've gotten a HUP signal then the player will be unable
@@ -1646,7 +1646,7 @@ bool acquirement(object_class_type class_wanted, int agent,
             {
                 mpr("Acquirement interrupted by HUP signal.", MSGCH_ERROR);
                 you.turn_is_over = false;
-                return (false);
+                return false;
             }
             break;
         }
@@ -1662,5 +1662,5 @@ bool acquirement(object_class_type class_wanted, int agent,
     *item_index = acquirement_create_item(class_wanted, agent, quiet,
                                           you.pos(), debug);
 
-    return (true);
+    return true;
 }

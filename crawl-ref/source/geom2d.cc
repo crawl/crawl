@@ -42,7 +42,7 @@ double intersect(const ray &r, const line &l)
     double fp = l.f(r.start);
     double fd = l.f(r.dir);
     double t = (l.val - fp) / fd;
-    return (t);
+    return t;
 }
 
 double lineseq::index(const vector &v) const
@@ -64,7 +64,7 @@ double nextintersect(const ray &r, const lineseq &ls)
     if (double_is_zero(k - a))
         k += (ls.dist*fd > 0 ? 1 : -1);
     double t = (k - a) * ls.dist / fd;
-    return (t);
+    return t;
 }
 
 // Move the ray towards the next grid line.
@@ -95,9 +95,9 @@ bool ray::to_grid(const grid &g, bool half)
 bool ray::to_next_cell(const grid &g)
 {
     if (to_grid(g, false))
-        return (true);
+        return true;
     to_grid(g, true);
-    return (false);
+    return false;
 }
 
 vector normal(const form &f)
@@ -127,7 +127,7 @@ vector vector::operator+(const vector &v) const
 {
     vector copy = *this;
     copy += v;
-    return (copy);
+    return copy;
 }
 
 vector vector::operator-() const

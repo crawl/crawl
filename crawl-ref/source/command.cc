@@ -107,7 +107,7 @@ static std::string _get_version_information(void)
 
     result += "\n";
 
-    return (result);
+    return result;
 }
 
 static std::string _get_version_features(void)
@@ -122,7 +122,7 @@ static std::string _get_version_features(void)
         result += "\n";
     }
 
-    return (result);
+    return result;
 }
 
 static void _add_file_to_scroller(FILE* fp, formatted_scroller& m,
@@ -200,7 +200,7 @@ static std::string _get_version_changes(void)
 
     result += "\n\n";
 
-    return (result);
+    return result;
 }
 
 //#define DEBUG_FILES
@@ -619,9 +619,9 @@ static bool _cmdhelp_textfilter(const std::string &tag)
 {
 #ifdef WIZARD
     if (tag == "wiz")
-        return (true);
+        return true;
 #endif
-    return (false);
+    return false;
 }
 
 static const char *targetting_help_1 =
@@ -763,7 +763,7 @@ static bool _compare_mon_names(MenuEntry *entry_a, MenuEntry* entry_b)
     monster* b = static_cast<monster* >(entry_b->data);
 
     if (a->type == b->type)
-        return (false);
+        return false;
 
     std::string a_name = mons_type_name(a->type, DESC_PLAIN);
     std::string b_name = mons_type_name(b->type, DESC_PLAIN);
@@ -778,7 +778,7 @@ static bool _compare_mon_toughness(MenuEntry *entry_a, MenuEntry* entry_b)
     monster* b = static_cast<monster* >(entry_b->data);
 
     if (a->type == b->type)
-        return (false);
+        return false;
 
     int a_toughness = mons_avg_hp(a->type);
     int b_toughness = mons_avg_hp(b->type);
@@ -862,17 +862,17 @@ static std::vector<std::string> _get_desc_keys(std::string regex,
                                                                   filter);
 
     if (key_matches.size() == 1)
-        return (key_matches);
+        return key_matches;
     else if (key_matches.size() > 52)
-        return (key_matches);
+        return key_matches;
 
     std::vector<std::string> body_matches = getLongDescBodiesByRegex(regex,
                                                                      filter);
 
     if (key_matches.empty() && body_matches.empty())
-        return (key_matches);
+        return key_matches;
     else if (key_matches.empty() && body_matches.size() == 1)
-        return (body_matches);
+        return body_matches;
 
     // Merge key_matches and body_matches, discarding duplicates.
     std::vector<std::string> tmp = key_matches;
@@ -883,7 +883,7 @@ static std::vector<std::string> _get_desc_keys(std::string regex,
         if (i == 0 || all_matches[all_matches.size() - 1] != tmp[i])
             all_matches.push_back(tmp[i]);
 
-    return (all_matches);
+    return all_matches;
 }
 
 static std::vector<std::string> _get_monster_keys(ucs_t showchar)
@@ -910,7 +910,7 @@ static std::vector<std::string> _get_monster_keys(ucs_t showchar)
             mon_keys.push_back(me->name);
     }
 
-    return (mon_keys);
+    return mon_keys;
 }
 
 static std::vector<std::string> _get_god_keys()
@@ -941,7 +941,7 @@ static std::vector<std::string> _get_branch_keys()
 
         names.push_back(branch.shortname);
     }
-    return (names);
+    return names;
 }
 
 static bool _monster_filter(std::string key, std::string body)
@@ -959,12 +959,12 @@ static bool _spell_filter(std::string key, std::string body)
     spell_type spell = spell_by_name(key);
 
     if (spell == SPELL_NO_SPELL)
-        return (true);
+        return true;
 
     if (get_spell_flags(spell) & (SPFLAG_MONSTER | SPFLAG_TESTING))
         return (!you.wizard);
 
-    return (false);
+    return false;
 }
 
 static bool _item_filter(std::string key, std::string body)
@@ -986,9 +986,9 @@ static bool _skill_filter(std::string key, std::string body)
         name = lowercase_string(skill_name(sk));
 
         if (name.find(key) != std::string::npos)
-            return (false);
+            return false;
     }
-    return (true);
+    return true;
 }
 
 static bool _feature_filter(std::string key, std::string body)
@@ -1002,24 +1002,24 @@ static bool _card_filter(std::string key, std::string body)
 
     // Every card description contains the keyword "card".
     if (!ends_with(key, " card"))
-        return (true);
+        return true;
     key.erase(key.length() - 5);
 
     for (int i = 0; i < NUM_CARDS; ++i)
     {
         if (key == lowercase_string(card_name(static_cast<card_type>(i))))
-            return (false);
+            return false;
     }
-    return (true);
+    return true;
 }
 
 static bool _ability_filter(std::string key, std::string body)
 {
     lowercase(key);
     if (string_matches_ability_name(key))
-        return (false);
+        return false;
 
-    return (true);
+    return true;
 }
 
 typedef void (*db_keys_recap)(std::vector<std::string>&);
@@ -1108,7 +1108,7 @@ static bool _append_books(std::string &desc, item_def &item, std::string key)
     spell_type type = spell_by_name(key, true);
 
     if (type == SPELL_NO_SPELL)
-        return (false);
+        return false;
 
     desc += "\nType:       ";
     bool already = false;
@@ -1187,7 +1187,7 @@ static bool _append_books(std::string &desc, item_def &item, std::string key)
         desc += comma_separated_line(rods.begin(), rods.end(), "\n", "\n");
     }
 
-    return (true);
+    return true;
 }
 
 // Returns the result of the keypress.
@@ -1321,7 +1321,7 @@ static bool _handle_FAQ()
     if (question_keys.empty())
     {
         mpr("No questions found in FAQ! Please submit a bug report!");
-        return (false);
+        return false;
     }
     Menu FAQmenu(MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING);
     MenuEntry *title = new MenuEntry("Frequently Asked Questions");
@@ -1361,7 +1361,7 @@ static bool _handle_FAQ()
         std::vector<MenuEntry*> sel = FAQmenu.show();
         redraw_screen();
         if (sel.empty())
-            return (false);
+            return false;
         else
         {
             ASSERT(sel.size() == 1);
@@ -1386,7 +1386,7 @@ static bool _handle_FAQ()
         }
     }
 
-    return (true);
+    return true;
 }
 
 static void _find_description(bool *again, std::string *error_inout)
@@ -1830,7 +1830,7 @@ std::string help_highlighter::get_species_key() const
         strip_tag(result, "Draconian");
 
     result += "  ";
-    return (result);
+    return result;
 }
 ////////////////////////////////////////////////////////////////////////////
 

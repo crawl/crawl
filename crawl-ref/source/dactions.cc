@@ -51,7 +51,7 @@ static const char *daction_names[] =
 static bool _mons_matches_counter(const monster* mon, daction_type act)
 {
     if (!mon || !mon->alive())
-        return (false);
+        return false;
 
     switch (act)
     {
@@ -90,7 +90,7 @@ static bool _mons_matches_counter(const monster* mon, daction_type act)
                 && mon->mname != "freed slave");
 
     default:
-        return (false);
+        return false;
     }
 }
 

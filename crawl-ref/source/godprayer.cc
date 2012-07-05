@@ -41,7 +41,7 @@ static bool _confirm_pray_sacrifice(god_type god)
     if (Options.stash_tracking == STM_EXPLICIT && is_stash(you.pos()))
     {
         mpr("You can't sacrifice explicitly marked stashes.");
-        return (false);
+        return false;
     }
 
     for (stack_iterator si(you.pos(), true); si; ++si)
@@ -54,11 +54,11 @@ static bool _confirm_pray_sacrifice(god_type god)
             prompt += " in it?";
 
             if (!yesno(prompt.c_str(), false, 'n'))
-                return (false);
+                return false;
         }
     }
 
-    return (true);
+    return true;
 }
 
 std::string god_prayer_reaction()
@@ -78,7 +78,7 @@ std::string god_prayer_reaction()
                           : "displeased";
     result += ".";
 
-    return (result);
+    return result;
 }
 
 static bool _bless_weapon(god_type god, brand_type brand, int colour)
@@ -89,7 +89,7 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
         || (is_range_weapon(wpn) && brand != SPWPN_HOLY_WRATH)
         || is_artefact(wpn))
     {
-        return (false);
+        return false;
     }
 
     std::string prompt = "Do you wish to have " + wpn.name(DESC_YOUR)
@@ -103,7 +103,7 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
     prompt += "?";
 
     if (!yesno(prompt.c_str(), true, 'n'))
-        return (false);
+        return false;
 
     you.duration[DUR_WEAPON_BRAND] = 0;     // just in case
 
@@ -187,7 +187,7 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
     delay(1000);
 #endif
 
-    return (true);
+    return true;
 }
 
 // Prayer at your god's altar.
@@ -261,14 +261,14 @@ static bool _altar_prayer()
         if (!kiku_did_bless_weapon)
         {
             if (!yesno("Do you wish to receive the Necronomicon?", true, 'n'))
-                return (false);
+                return false;
 
             int thing_created = items(1, OBJ_BOOKS, BOOK_NECRONOMICON, true, 1,
                                       MAKE_ITEM_RANDOM_RACE,
                                       0, 0, you.religion);
 
             if (thing_created == NON_ITEM)
-                return (false);
+                return false;
 
             move_item_to_grid(&thing_created, you.pos());
 
@@ -285,10 +285,10 @@ static bool _altar_prayer()
         }
 
         // Return early so we don't offer our Necronomicon to Kiku.
-        return (did_bless);
+        return did_bless;
     }
 
-    return (did_bless);
+    return did_bless;
 }
 
 void pray()
@@ -562,16 +562,16 @@ static bool _destroyed_valuable_weapon(int value, int type)
 {
     // value/500 chance of piety normally
     if (value > random2(500))
-        return (true);
+        return true;
 
     // But all non-missiles are acceptable if you've never reached *.
     if (you.piety_max[GOD_ELYVILON] < piety_breakpoint(0)
         && type != OBJ_MISSILES)
     {
-        return (true);
+        return true;
     }
 
-    return (false);
+    return false;
 }
 
 static piety_gain_t _sac_corpse(const item_def& item)
@@ -737,7 +737,7 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item,
         break;
     }
 
-    return (relative_piety_gain);
+    return relative_piety_gain;
 }
 
 piety_gain_t sacrifice_item_stack(const item_def& item, int *js)
@@ -756,7 +756,7 @@ piety_gain_t sacrifice_item_stack(const item_def& item, int *js)
                 relative_gain = PIETY_LOTS;
         }
     }
-    return (relative_gain);
+    return relative_gain;
 }
 
 static bool _check_nemelex_sacrificing_item_type(const item_def& item)

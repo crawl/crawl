@@ -233,7 +233,7 @@ bool dir_exists(const std::string &dir)
     if (d)
         closedir(d);
 
-    return (exists);
+    return exists;
 #endif
 }
 
@@ -268,7 +268,7 @@ std::vector<std::string> get_dir_files(const std::string &dirname)
 
     DIR *dir = opendir(OUTS(dirname));
     if (!dir)
-        return (files);
+        return files;
 
     while (dirent *entry = readdir(dir))
     {
@@ -279,7 +279,7 @@ std::vector<std::string> get_dir_files(const std::string &dirname)
     closedir(dir);
 #endif
 
-    return (files);
+    return files;
 }
 
 int rename_u(const char *oldpath, const char *newpath)

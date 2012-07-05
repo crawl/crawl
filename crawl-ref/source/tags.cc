@@ -624,7 +624,7 @@ coord_def unmarshallCoord(reader &th)
     coord_def c;
     c.x = unmarshallShort(th);
     c.y = unmarshallShort(th);
-    return (c);
+    return c;
 }
 
 static void _marshall_constriction(writer &th, const actor *who)
@@ -858,7 +858,7 @@ static int unmarshallCString(reader &th, char *data, int maxSize)
     data[copylen] = 0;
 
     th.read(NULL, len - copylen);
-    return (copylen);
+    return copylen;
 }
 
 std::string unmarshallString(reader &th, int maxSize)
@@ -873,7 +873,7 @@ std::string unmarshallString(reader &th, int maxSize)
     ASSERT(slen >= 0 && slen < maxSize);
     const std::string res(buffer, slen);
     delete [] buffer;
-    return (res);
+    return res;
 }
 
 // To pass to unmarshallMap
@@ -1628,7 +1628,7 @@ static m_transit_list unmarshall_follower_list(reader &th)
         mlist.push_back(f);
     }
 
-    return (mlist);
+    return mlist;
 }
 
 static i_transit_list unmarshall_item_list(reader &th)
@@ -1644,7 +1644,7 @@ static i_transit_list unmarshall_item_list(reader &th)
         ilist.push_back(item);
     }
 
-    return (ilist);
+    return ilist;
 }
 
 static void marshall_level_map_masks(writer &th)
@@ -2560,7 +2560,7 @@ static int _last_used_index(const Z &thinglist, int max_things)
     for (int i = max_things - 1; i >= 0; --i)
         if (thinglist[i].defined())
             return (i + 1);
-    return (0);
+    return 0;
 }
 
 // ------------------------------- level tags ---------------------------- //
@@ -2955,7 +2955,7 @@ static mon_enchant unmarshall_mon_enchant(reader &th)
     me.source      = unmarshallInt(th);
     me.duration    = unmarshallShort(th);
     me.maxduration = unmarshallShort(th);
-    return (me);
+    return me;
 }
 
 void marshallMonster(writer &th, const monster& m)
@@ -3847,7 +3847,7 @@ static ghost_demon unmarshallGhost(reader &th)
 
     unmarshallSpells(th, ghost.spells);
 
-    return (ghost);
+    return ghost;
 }
 
 static void tag_construct_ghost(writer &th)

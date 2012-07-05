@@ -1340,7 +1340,7 @@ static std::map<std::string, int> accesses;
 bool CrawlHashTable::exists(const std::string &key) const
 {
     if (hash_map == NULL)
-        return (false);
+        return false;
 
     ACCESS(key);
     ASSERT_VALIDITY();
@@ -1430,7 +1430,7 @@ CrawlStoreValue& CrawlHashTable::get_value(const std::string &key)
         (*hash_map)[key]     = CrawlStoreValue();
         CrawlStoreValue &val = (*hash_map)[key];
 
-        return (val);
+        return val;
     }
 
     return (i->second);
@@ -1462,7 +1462,7 @@ const CrawlStoreValue& CrawlHashTable::get_value(const std::string &key) const
 hash_size CrawlHashTable::size() const
 {
     if (hash_map == NULL)
-        return (0);
+        return 0;
 
     return hash_map->size();
 }
@@ -1470,7 +1470,7 @@ hash_size CrawlHashTable::size() const
 bool CrawlHashTable::empty() const
 {
     if (hash_map == NULL)
-        return (true);
+        return true;
 
     return hash_map->empty();
 }

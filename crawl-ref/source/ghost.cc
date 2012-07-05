@@ -363,7 +363,7 @@ static int _player_ghost_base_movement_speed()
     else if (speed > MAX_GHOST_SPEED)
         speed = MAX_GHOST_SPEED;
 
-    return (speed);
+    return speed;
 }
 
 void ghost_demon::init_player_ghost()
@@ -463,7 +463,7 @@ static colour_t _ugly_thing_assign_colour(colour_t force_colour,
         while (force_not_colour != BLACK && colour == force_not_colour);
     }
 
-    return (colour);
+    return colour;
 }
 
 static attack_flavour _very_ugly_thing_flavour_upgrade(attack_flavour u_att_flav)
@@ -486,7 +486,7 @@ static attack_flavour _very_ugly_thing_flavour_upgrade(attack_flavour u_att_flav
         break;
     }
 
-    return (u_att_flav);
+    return u_att_flav;
 }
 
 static attack_flavour _ugly_thing_colour_to_flavour(colour_t u_colour)
@@ -526,7 +526,7 @@ static attack_flavour _ugly_thing_colour_to_flavour(colour_t u_colour)
     if (is_high_colour(u_colour))
         u_att_flav = _very_ugly_thing_flavour_upgrade(u_att_flav);
 
-    return (u_att_flav);
+    return u_att_flav;
 }
 
 void ghost_demon::init_ugly_thing(bool very_ugly, bool only_mutate,
@@ -733,7 +733,7 @@ static spell_type search_first_list(int ignore_spell)
     for (unsigned i = 0; i < ARRAYSZ(search_order_conj); ++i)
      {
         if (search_order_conj[i] == SPELL_NO_SPELL)
-            return (SPELL_NO_SPELL);
+            return SPELL_NO_SPELL;
 
         if (search_order_conj[i] == ignore_spell)
             continue;
@@ -742,7 +742,7 @@ static spell_type search_first_list(int ignore_spell)
             return (search_order_conj[i]);
     }
 
-    return (SPELL_NO_SPELL);
+    return SPELL_NO_SPELL;
 }
 
 static spell_type search_second_list(int ignore_spell)
@@ -750,7 +750,7 @@ static spell_type search_second_list(int ignore_spell)
     for (unsigned i = 0; i < ARRAYSZ(search_order_third); ++i)
     {
         if (search_order_third[i] == SPELL_NO_SPELL)
-            return (SPELL_NO_SPELL);
+            return SPELL_NO_SPELL;
 
         if (search_order_third[i] == ignore_spell)
             continue;
@@ -759,7 +759,7 @@ static spell_type search_second_list(int ignore_spell)
             return (search_order_third[i]);
     }
 
-    return (SPELL_NO_SPELL);
+    return SPELL_NO_SPELL;
 }
 
 static spell_type search_third_list(int ignore_spell)
@@ -767,7 +767,7 @@ static spell_type search_third_list(int ignore_spell)
     for (unsigned i = 0; i < ARRAYSZ(search_order_misc); ++i)
     {
         if (search_order_misc[i] == SPELL_NO_SPELL)
-            return (SPELL_NO_SPELL);
+            return SPELL_NO_SPELL;
 
         if (search_order_misc[i] == ignore_spell)
             continue;
@@ -776,7 +776,7 @@ static spell_type search_third_list(int ignore_spell)
             return (search_order_misc[i]);
     }
 
-    return (SPELL_NO_SPELL);
+    return SPELL_NO_SPELL;
 }
 
 // Used when creating ghosts: goes through and finds spells for the
@@ -833,18 +833,18 @@ spell_type ghost_demon::translate_spell(spell_type spell) const
     switch (spell)
     {
     case SPELL_CONTROLLED_BLINK:
-        return (SPELL_BLINK);        // approximate
+        return SPELL_BLINK;        // approximate
     case SPELL_DEMONIC_HORDE:
-        return (SPELL_CALL_IMP);
+        return SPELL_CALL_IMP;
     case SPELL_DELAYED_FIREBALL:
-        return (SPELL_FIREBALL);
+        return SPELL_FIREBALL;
     case SPELL_EVAPORATE:
-        return (SPELL_MEPHITIC_CLOUD);
+        return SPELL_MEPHITIC_CLOUD;
     default:
         break;
     }
 
-    return (spell);
+    return spell;
 }
 
 std::vector<ghost_demon> ghost_demon::find_ghosts()
@@ -864,7 +864,7 @@ std::vector<ghost_demon> ghost_demon::find_ghosts()
     // for the level.
     find_extra_ghosts(gs, n_extra_ghosts() + 1 - gs.size());
 
-    return (gs);
+    return gs;
 }
 
 void ghost_demon::find_transiting_ghosts(
@@ -921,7 +921,7 @@ void ghost_demon::find_extra_ghosts(std::vector<ghost_demon> &gs, int n)
 int ghost_demon::n_extra_ghosts()
 {
     if (env.absdepth0 < 10)
-        return (0);
+        return 0;
 
     return (MAX_GHOSTS - 1);
 }
@@ -935,62 +935,62 @@ bool debug_check_ghosts()
         // Values greater than the allowed maximum or less then the
         // allowed minimum signalise bugginess.
         if (ghost.damage < 0 || ghost.damage > MAX_GHOST_DAMAGE)
-            return (false);
+            return false;
         if (ghost.max_hp < 1 || ghost.max_hp > MAX_GHOST_HP)
-            return (false);
+            return false;
         if (ghost.xl < 1 || ghost.xl > 27)
-            return (false);
+            return false;
         if (ghost.ev > MAX_GHOST_EVASION)
-            return (false);
+            return false;
         if (ghost.speed < MIN_GHOST_SPEED || ghost.speed > MAX_GHOST_SPEED)
-            return (false);
+            return false;
         if (ghost.resists.fire < -3 || ghost.resists.fire > 3)
-            return (false);
+            return false;
         if (ghost.resists.cold < -3 || ghost.resists.cold > 3)
-            return (false);
+            return false;
         if (ghost.resists.elec < 0)
-            return (false);
+            return false;
         if (ghost.brand < SPWPN_NORMAL || ghost.brand > MAX_PAN_LORD_BRANDS)
-            return (false);
+            return false;
         if (ghost.species < 0 || ghost.species >= NUM_SPECIES)
-            return (false);
+            return false;
         if (ghost.job < JOB_FIGHTER || ghost.job >= NUM_JOBS)
-            return (false);
+            return false;
         if (ghost.best_skill < SK_FIGHTING || ghost.best_skill >= NUM_SKILLS)
-            return (false);
+            return false;
         if (ghost.best_skill_level < 0 || ghost.best_skill_level > 27)
-            return (false);
+            return false;
         if (ghost.religion < GOD_NO_GOD || ghost.religion >= NUM_GODS)
-            return (false);
+            return false;
 
         if (ghost.brand == SPWPN_HOLY_WRATH || is_good_god(ghost.religion))
-            return (false);
+            return false;
 
         // Only (very) ugly things get non-plain attack types and
         // flavours.
         if (ghost.att_type != AT_HIT || ghost.att_flav != AF_PLAIN)
-            return (false);
+            return false;
 
         // Only Pandemonium lords cycle colours.
         if (ghost.cycle_colours)
-            return (false);
+            return false;
 
         // Name validation.
         if (!validate_player_name(ghost.name, false))
-            return (false);
+            return false;
         // Many combining characters can come per every letter, but if there's
         // that much, it's probably a maliciously forged ghost of some kind.
         if (ghost.name.length() > kNameLen * 10 || ghost.name.empty())
-            return (false);
+            return false;
         if (ghost.name != trimmed_string(ghost.name))
-            return (false);
+            return false;
 
         // Check for non-existing spells.
         for (int sp = 0; sp < NUM_MONSTER_SPELL_SLOTS; ++sp)
             if (ghost.spells[sp] < 0 || ghost.spells[sp] >= NUM_SPELLS)
-                return (false);
+                return false;
     }
-    return (true);
+    return true;
 }
 
 int ghost_level_to_rank(const int xl)
@@ -1035,18 +1035,18 @@ int tile_offset_for_labrat_colour(colour_t l_colour)
 {
     switch (l_colour)
     {
-    case LIGHTGRAY:      return (0);
-    case CYAN:           return (1);
-    case YELLOW:         return (2);
-    case RED:            return (3);
-    case LIGHTCYAN:      return (4);
-    case LIGHTRED:       return (5);
-    case LIGHTBLUE:      return (6);
-    case LIGHTMAGENTA:   return (7);
-    case MAGENTA:        return (8);
-    case GREEN:          return (9);
+    case LIGHTGRAY:      return 0;
+    case CYAN:           return 1;
+    case YELLOW:         return 2;
+    case RED:            return 3;
+    case LIGHTCYAN:      return 4;
+    case LIGHTRED:       return 5;
+    case LIGHTBLUE:      return 6;
+    case LIGHTMAGENTA:   return 7;
+    case MAGENTA:        return 8;
+    case GREEN:          return 9;
     default:
-        return (0);
+        return 0;
     }
 }
 #endif

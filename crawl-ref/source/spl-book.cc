@@ -214,7 +214,7 @@ int spellbook_contents(item_def &book, read_book_action_type action,
     if (update_screen)
         keyn = tolower(getchm(KMC_MENU));
 
-    return (keyn);     // try to figure out that for which this is used {dlb}
+    return keyn;     // try to figure out that for which this is used {dlb}
 }
 
 // Rarity 100 is reserved for unused books.
@@ -351,7 +351,7 @@ int spell_rarity(spell_type which_spell)
     if (rarity == 255)
         return (-1);
 
-    return (rarity);
+    return rarity;
 }
 
 bool is_valid_spell_in_book(const item_def &book, int spell)
@@ -364,10 +364,10 @@ bool is_valid_spell_in_book(const item_def &book, int spell)
 bool player_can_memorise_from_spellbook(const item_def &book)
 {
     if (book.base_type != OBJ_BOOKS)
-        return (true);
+        return true;
 
     if (book.props.exists(SPELL_LIST_KEY))
-        return (true);
+        return true;
 
     if ((book.sub_type == BOOK_ANNIHILATIONS
             && you.religion != GOD_VEHUMET
@@ -382,10 +382,10 @@ bool player_can_memorise_from_spellbook(const item_def &book)
             && (you.skill(SK_NECROMANCY) < 10
                 || you.skill(SK_SPELLCASTING) < 6)))
     {
-        return (false);
+        return false;
     }
 
-    return (true);
+    return true;
 }
 
 void mark_had_book(const item_def &book)
@@ -436,7 +436,7 @@ int read_book(item_def &book, read_book_action_type action)
         more();
 
         inscribe_book_highlevel(book);
-        return (0);
+        return 0;
     }
 
 #ifdef USE_TILE_WEB
@@ -458,7 +458,7 @@ int read_book(item_def &book, read_book_action_type action)
     set_ident_flags(book, ISFLAG_KNOW_TYPE);
     set_ident_flags(book, ISFLAG_IDENT_MASK);
 
-    return (keyin);
+    return keyin;
 }
 
 bool you_cannot_memorise(spell_type spell)
@@ -561,13 +561,13 @@ bool you_cannot_memorise(spell_type spell, bool &undead)
         rc = true, undead = false;
     }
 
-    return (rc);
+    return rc;
 }
 
 bool player_can_memorise(const item_def &book)
 {
     if (!item_is_spellbook(book) || !player_spell_levels())
-        return (false);
+        return false;
 
     for (int j = 0; j < SPELLBOOK_SIZE; j++)
     {
@@ -580,7 +580,7 @@ bool player_can_memorise(const item_def &book)
         if (spell_difficulty(stype) > you.experience_level
             || player_spell_levels() < spell_levels_required(stype))
         {
-            return (false);
+            return false;
         }
 
         bool knows_spell = false;
@@ -589,9 +589,9 @@ bool player_can_memorise(const item_def &book)
 
         // You don't already know this spell.
         if (!knows_spell)
-            return (true);
+            return true;
     }
-    return (false);
+    return false;
 }
 
 typedef std::vector<spell_type>   spell_list;
@@ -706,7 +706,7 @@ static bool _get_mem_list(spell_list &mem_spells,
                     MSGCH_PROMPT);
             }
         }
-        return (false);
+        return false;
     }
     else if (num_on_ground && num_on_ground == num_books
              && !player_can_reach_floor("", just_check))
@@ -721,7 +721,7 @@ static bool _get_mem_list(spell_list &mem_spells,
                  "current level of comprehension.",
                  num_on_ground == 0 ? " you're carrying" : "");
         }
-        return (false);
+        return false;
     }
     else if (book_hash.empty())
     {
@@ -730,7 +730,7 @@ static bool _get_mem_list(spell_list &mem_spells,
             mpr("None of the spellbooks you are carrying contain any spells.",
                 MSGCH_PROMPT);
         }
-        return (false);
+        return false;
     }
 
     unsigned int num_known      = 0;
@@ -769,11 +769,11 @@ static bool _get_mem_list(spell_list &mem_spells,
     {
         if (!just_check)
             mpr("Your head is already too full of spells!");
-        return (false);
+        return false;
     }
 
     if (num_memable)
-        return (true);
+        return true;
 
     // Return true even if there are only spells we can't memorise _yet_.
     if (just_check)
@@ -796,7 +796,7 @@ static bool _get_mem_list(spell_list &mem_spells,
     {
         // Just because we can't memorise them doesn't mean we don't want to
         // see what we have available. See FR #235. {due}
-        return (true);
+        return true;
     }
     else
     {
@@ -811,7 +811,7 @@ static bool _get_mem_list(spell_list &mem_spells,
              "spells in them are available to you.", num_unreadable);
     }
 
-    return (false);
+    return false;
 }
 
 // If current_spell is a valid spell, returns whether you'll be able to
@@ -833,12 +833,12 @@ static bool _sort_mem_spells(spell_type a, spell_type b)
     if (player_spell_levels() >= spell_levels_required(a)
         && player_spell_levels() < spell_levels_required(b))
     {
-        return (true);
+        return true;
     }
     else if (player_spell_levels() < spell_levels_required(a)
              && player_spell_levels() >= spell_levels_required(b))
     {
-        return (false);
+        return false;
     }
 
     // Don't sort by failure rate beyond what the player can see in the
@@ -864,7 +864,7 @@ std::vector<spell_type> get_mem_spell_list(std::vector<int> &books)
     unsigned int    num_race;
 
     if (!_get_mem_list(mem_spells, book_hash, num_unreadable, num_race))
-        return (spells);
+        return spells;
 
     std::sort(mem_spells.begin(), mem_spells.end(), _sort_mem_spells);
 
@@ -877,7 +877,7 @@ std::vector<spell_type> get_mem_spell_list(std::vector<int> &books)
         books.push_back(it->second);
     }
 
-    return (spells);
+    return spells;
 }
 
 static spell_type _choose_mem_spell(spell_list &spells,
@@ -1032,7 +1032,7 @@ static spell_type _choose_mem_spell(spell_list &spells,
             redraw_screen();
 
         if (sel.empty())
-            return (SPELL_NO_SPELL);
+            return SPELL_NO_SPELL;
 
         ASSERT(sel.size() == 1);
 
@@ -1042,7 +1042,7 @@ static spell_type _choose_mem_spell(spell_list &spells,
         if (spell_menu.menu_action == Menu::ACT_EXAMINE)
             describe_spell(spell);
         else
-            return (spell);
+            return spell;
     }
 }
 
@@ -1052,37 +1052,37 @@ bool can_learn_spell(bool silent)
     {
         if (!silent)
             canned_msg(MSG_PRESENT_FORM);
-        return (false);
+        return false;
     }
 
     if (you.stat_zero[STAT_INT])
     {
         if (!silent)
             mpr("Your brain is not functional enough to learn spells.");
-        return (false);
+        return false;
     }
 
     if (you.confused())
     {
         if (!silent)
             mpr("You are too confused!");
-        return (false);
+        return false;
     }
 
     if (you.berserk())
     {
         if (!silent)
             canned_msg(MSG_TOO_BERSERK);
-        return (false);
+        return false;
     }
 
-    return (true);
+    return true;
 }
 
 bool learn_spell()
 {
     if (!can_learn_spell())
-        return (false);
+        return false;
 
     spell_list      mem_spells;
     spells_to_books book_hash;
@@ -1090,7 +1090,7 @@ bool learn_spell()
     unsigned int num_unreadable, num_race;
 
     if (!_get_mem_list(mem_spells, book_hash, num_unreadable, num_race))
-        return (false);
+        return false;
 
     spell_type specspell = _choose_mem_spell(mem_spells, book_hash,
                                              num_unreadable, num_race);
@@ -1098,7 +1098,7 @@ bool learn_spell()
     if (specspell == SPELL_NO_SPELL)
     {
         canned_msg(MSG_OK);
-        return (false);
+        return false;
     }
 
     spells_to_books::iterator it = book_hash.find(specspell);
@@ -1127,54 +1127,54 @@ std::string desc_cannot_memorise_reason(bool undead)
 
     desc += ".";
 
-    return (desc);
+    return desc;
 }
 
 static bool _learn_spell_checks(spell_type specspell)
 {
     if (!can_learn_spell())
-        return (false);
+        return false;
 
     if (already_learning_spell((int) specspell))
-        return (false);
+        return false;
 
     bool undead = false;
     if (you_cannot_memorise(specspell, undead))
     {
         mpr(desc_cannot_memorise_reason(undead).c_str());
-        return (false);
+        return false;
     }
 
     if (you.has_spell(specspell))
     {
         mpr("You already know that spell!");
-        return (false);
+        return false;
     }
 
     if (you.spell_no >= MAX_KNOWN_SPELLS)
     {
         mpr("Your head is already too full of spells!");
-        return (false);
+        return false;
     }
 
     if (you.experience_level < spell_difficulty(specspell))
     {
         mpr("You're too inexperienced to learn that spell!");
-        return (false);
+        return false;
     }
 
     if (player_spell_levels() < spell_levels_required(specspell))
     {
         mpr("You can't memorise that many levels of magic yet!");
-        return (false);
+        return false;
     }
-    return (true);
+    return true;
 }
 
 bool learn_spell(spell_type specspell, int book, bool is_safest_book)
 {
     if (!_learn_spell_checks(specspell))
-        return (false);
+        return false;
 
     int chance = spell_fail(specspell);
 
@@ -1203,7 +1203,7 @@ bool learn_spell(spell_type specspell, int book, bool is_safest_book)
         if (!yesno(prompt.c_str(), false, 'n'))
         {
             canned_msg(MSG_OK);
-            return (false);
+            return false;
         }
     }
 
@@ -1225,7 +1225,7 @@ bool learn_spell(spell_type specspell, int book, bool is_safest_book)
           (temp_rand2 == 2) ? "learn"
                             : "absorb"));
     if (chance >= 100)
-        return (false);
+        return false;
 
     snprintf(info, INFO_SIZE,
              "Memorise %s, consuming %d spell level%s and leaving %d?",
@@ -1238,7 +1238,7 @@ bool learn_spell(spell_type specspell, int book, bool is_safest_book)
     if (!yesno(info, true, 'n', false))
     {
         canned_msg(MSG_OK);
-        return (false);
+        return false;
     }
 
     if (player_mutation_level(MUT_BLURRY_VISION) > 0
@@ -1246,7 +1246,7 @@ bool learn_spell(spell_type specspell, int book, bool is_safest_book)
     {
         mpr("The writing blurs into unreadable gibberish.");
         you.turn_is_over = true;
-        return (false);
+        return false;
     }
 
     if (random2avg(100, 3) < chance && !one_chance_in(10))
@@ -1279,11 +1279,11 @@ bool learn_spell(spell_type specspell, int book, bool is_safest_book)
 
 #ifdef WIZARD
         if (!you.wizard)
-            return (false);
+            return false;
         else if (!yesno("Memorise anyway?", true, 'n'))
-            return (false);
+            return false;
 #else
-        return (false);
+        return false;
 #endif
     }
 
@@ -1292,7 +1292,7 @@ bool learn_spell(spell_type specspell, int book, bool is_safest_book)
 
     did_god_conduct(DID_SPELL_CASTING, 2 + random2(5));
 
-    return (true);
+    return true;
 }
 
 bool forget_spell_from_book(spell_type spell, const item_def* book)
@@ -1309,7 +1309,7 @@ bool forget_spell_from_book(spell_type spell, const item_def* book)
     if (!yesno(prompt.c_str(), false, 'n'))
     {
         canned_msg(MSG_OK);
-        return (false);
+        return false;
     }
     mprf("As you tear out the page describing %s, the book crumbles to dust.",
         spell_title(spell));
@@ -1320,13 +1320,13 @@ bool forget_spell_from_book(spell_type spell, const item_def* book)
         destroy_spellbook(*book);
         dec_inv_item_quantity(book->link, 1);
         you.turn_is_over = true;
-        return (true);
+        return true;
     }
     else
     {
         // This shouldn't happen.
         mprf("A bug prevents you from forgetting %s.", spell_title(spell));
-        return (false);
+        return false;
     }
 }
 
@@ -1336,17 +1336,17 @@ int count_rod_spells(const item_def &item, bool need_id)
         return (-1);
 
     if (need_id && !item_type_known(item))
-        return (0);
+        return 0;
 
     const int type = item.book_number();
     if (type == -1)
-        return (0);
+        return 0;
 
     int nspel = 0;
     while (nspel < SPELLBOOK_SIZE && is_valid_spell_in_book(item, nspel))
         ++nspel;
 
-    return (nspel);
+    return nspel;
 }
 
 int rod_spell(int rod)
@@ -1367,7 +1367,7 @@ int rod_spell(int rod)
     if (num_spells == 0)
     {
         canned_msg(MSG_NOTHING_HAPPENS);  // shouldn't happen
-        return (0);
+        return 0;
     }
     else if (num_spells == 1)
         keyin = 'a';  // automatically selected if it's the only option
@@ -1451,11 +1451,11 @@ int rod_spell(int rod)
 static bool _compare_spells(spell_type a, spell_type b)
 {
     if (a == SPELL_NO_SPELL && b == SPELL_NO_SPELL)
-        return (false);
+        return false;
     else if (a != SPELL_NO_SPELL && b == SPELL_NO_SPELL)
-        return (true);
+        return true;
     else if (a == SPELL_NO_SPELL && b != SPELL_NO_SPELL)
-        return (false);
+        return false;
 
     int level_a = spell_difficulty(a);
     int level_b = spell_difficulty(b);
@@ -1491,9 +1491,9 @@ bool is_memorised(spell_type spell)
 {
     for (int i = 0; i < MAX_KNOWN_SPELLS; i++)
         if (you.spells[i] == spell)
-            return (true);
+            return true;
 
-    return (false);
+    return false;
 }
 
 static void _get_spell_list(std::vector<spell_type> &spells, int level,
@@ -1690,7 +1690,7 @@ bool make_book_level_randart(item_def &book, int level, int num_spells,
         mprf(MSGCH_ERROR, "Could not create fixed level randart spellbook: %s",
              buf);
 
-        return (false);
+        return false;
     }
     random_shuffle(spells.begin(), spells.end());
 
@@ -1844,7 +1844,7 @@ bool make_book_level_randart(item_def &book, int level, int num_spells,
 
     set_artefact_name(book, name);
 
-    return (true);
+    return true;
 }
 
 static bool _get_weighted_discs(bool completely_random, god_type god,
@@ -1889,7 +1889,7 @@ static bool _get_weighted_discs(bool completely_random, god_type god,
         // all available spells. We could simply re-allow all disciplines
         // but the player isn't going to get any new spells, anyway, so just
         // consider this acquirement failed. (jpeg)
-        return (false);
+        return false;
     }
 
     int skill_weights[SPTYP_LAST_EXPONENT + 1];
@@ -1930,7 +1930,7 @@ static bool _get_weighted_discs(bool completely_random, god_type god,
     }
     while (disciplines_conflict(disc1, disc2));
 
-    return (true);
+    return true;
 }
 
 static void _get_weighted_spells(bool completely_random, god_type god,
@@ -2137,13 +2137,13 @@ bool make_book_theme_randart(item_def &book,
         if (!_get_weighted_discs(completely_random, god, disc1, disc2))
         {
             if (completely_random)
-                return (false);
+                return false;
 
             // Rather than give up at this point, choose schools randomly.
             // This way, an acquirement won't fail once the player has
             // seen all spells.
             if (!_get_weighted_discs(true, god, disc1, disc2))
-                return (false);
+                return false;
         }
     }
     else if (disc2 == 0)
@@ -2455,7 +2455,7 @@ bool make_book_theme_randart(item_def &book,
     book.plus  = max1;
     book.plus2 = max2;
 
-    return (true);
+    return true;
 }
 
 // Give Roxanne a randart spellbook of the disciplines Transmutations/Earth
@@ -2554,7 +2554,7 @@ bool book_has_title(const item_def &book)
     ASSERT(book.base_type == OBJ_BOOKS);
 
     if (!is_artefact(book))
-        return (false);
+        return false;
 
     return (book.props.exists("is_named")
             && book.props["is_named"].get_bool() == true);
@@ -2567,11 +2567,11 @@ bool is_dangerous_spellbook(const int book_type)
     case BOOK_NECRONOMICON:
     case BOOK_GRAND_GRIMOIRE:
     case BOOK_ANNIHILATIONS:
-        return (true);
+        return true;
     default:
         break;
     }
-    return (false);
+    return false;
 }
 
 bool is_dangerous_spellbook(const item_def &book)

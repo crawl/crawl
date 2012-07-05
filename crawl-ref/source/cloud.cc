@@ -157,7 +157,7 @@ static bool _killer_whose_match(kill_category whose, killer_type killer)
         case KC_NCATEGORIES:
             die("kill category not matching killer type");
     }
-    return (false);
+    return false;
 }
 #endif
 
@@ -260,7 +260,7 @@ static int _spread_cloud(const cloud_struct &cloud)
         extra_decay += 8;
     }
 
-    return (extra_decay);
+    return extra_decay;
 }
 
 static void _spread_fire(const cloud_struct &cloud)
@@ -657,7 +657,7 @@ static bool _is_opaque_cloud(cloud_type ctype)
 bool is_opaque_cloud(int cloud_idx)
 {
     if (cloud_idx == EMPTY_CLOUD)
-        return (false);
+        return false;
 
     return _is_opaque_cloud(env.cloud[cloud_idx].type);
 }
@@ -775,7 +775,7 @@ static int _cloud_base_damage(const actor *act,
 static bool _actor_cloud_immune(const actor *act, const cloud_struct &cloud)
 {
     if (is_harmless_cloud(cloud.type))
-        return (true);
+        return true;
 
     const bool player = act->is_player();
 
@@ -785,7 +785,7 @@ static bool _actor_cloud_immune(const actor *act, const cloud_struct &cloud)
         && (cloud.whose == KC_YOU || cloud.whose == KC_FRIENDLY)
         && (act->as_monster()->friendly() || act->as_monster()->neutral()))
     {
-        return (true);
+        return true;
     }
 
     switch (cloud.type)
@@ -813,7 +813,7 @@ static bool _actor_cloud_immune(const actor *act, const cloud_struct &cloud)
     case CLOUD_PETRIFY:
         return act->res_petrify() > 0;
     default:
-        return (false);
+        return false;
     }
 }
 
@@ -1193,7 +1193,7 @@ bool is_harmless_cloud(cloud_type type)
     case CLOUD_GLOOM:
     case CLOUD_INK:
     case CLOUD_DEBUGGING:
-        return (true);
+        return true;
     default:
         return (_cloud_is_cosmetic(type));
     }
@@ -1204,12 +1204,12 @@ bool in_what_cloud(cloud_type type)
     int cl = env.cgrid(you.pos());
 
     if (env.cgrid(you.pos()) == EMPTY_CLOUD)
-        return (false);
+        return false;
 
     if (env.cloud[cl].type == type)
-        return (true);
+        return true;
 
-    return (false);
+    return false;
 }
 
 std::string cloud_name_at_index(int cloudno)
@@ -1270,17 +1270,17 @@ kill_category cloud_struct::killer_to_whose(killer_type _killer)
         case KILL_YOU:
         case KILL_YOU_MISSILE:
         case KILL_YOU_CONF:
-            return (KC_YOU);
+            return KC_YOU;
 
         case KILL_MON:
         case KILL_MON_MISSILE:
         case KILL_MISC:
-            return (KC_OTHER);
+            return KC_OTHER;
 
         default:
             die("invalid killer type");
     }
-    return (KC_OTHER);
+    return KC_OTHER;
 }
 
 killer_type cloud_struct::whose_to_killer(kill_category _whose)
@@ -1292,7 +1292,7 @@ killer_type cloud_struct::whose_to_killer(kill_category _whose)
         case KC_OTHER:       return KILL_MISC;
         case KC_NCATEGORIES: die("invalid kill category");
     }
-    return (KILL_NONE);
+    return KILL_NONE;
 }
 
 void cloud_struct::set_whose(kill_category _whose)
@@ -1457,7 +1457,7 @@ int get_cloud_colour(int cloudno)
         which_colour = LIGHTGREY;
         break;
     }
-    return (which_colour);
+    return which_colour;
 }
 
 coord_def get_cloud_originator(const coord_def& pos)

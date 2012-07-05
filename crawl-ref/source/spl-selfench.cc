@@ -252,7 +252,7 @@ int cast_selective_amnesia(std::string *pre_msg)
     if (you.spell_no == 0)
     {
         canned_msg(MSG_NO_SPELLS);
-        return (0);
+        return 0;
     }
 
     int keyin = 0;
@@ -305,7 +305,7 @@ int cast_selective_amnesia(std::string *pre_msg)
             "it unravels.");
     }
 
-    return (1);
+    return 1;
 }
 
 spret_type cast_see_invisible(int pow, bool fail)
@@ -349,13 +349,13 @@ spret_type cast_liquefaction(int pow, bool fail)
             mpr("You can't cast this spell without touching the ground.");
         else
             mpr("You need to be on clear, solid ground to cast this spell.");
-        return (SPRET_ABORT);
+        return SPRET_ABORT;
     }
 
     if (you.duration[DUR_LIQUEFYING] || liquefied(you.pos()))
     {
         mpr("The ground here is already liquefied! You'll have to wait.");
-        return (SPRET_ABORT);
+        return SPRET_ABORT;
     }
 
     fail_check();

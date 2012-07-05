@@ -18,7 +18,7 @@ rect_def rect_def::intersect(const rect_def& other) const
     res.min.y = std::max(min.y, other.min.y);
     res.max.x = std::min(max.x, other.max.x);
     res.max.y = std::min(max.y, other.max.y);
-    return (res);
+    return res;
 }
 
 rectangle_iterator rect_def::iter() const
@@ -91,12 +91,12 @@ void circle_def::init_bbox()
 
 const rect_def& circle_def::get_bbox() const
 {
-    return (bbox);
+    return bbox;
 }
 
 const coord_def& circle_def::get_center() const
 {
-    return (origin);
+    return origin;
 }
 
 circle_iterator circle_def::iter() const
@@ -107,7 +107,7 @@ circle_iterator circle_def::iter() const
 bool circle_def::contains(const coord_def &p) const
 {
     if (!bbox.contains(p))
-        return (false);
+        return false;
     switch (shape)
     {
     case SH_SQUARE:
@@ -118,6 +118,6 @@ bool circle_def::contains(const coord_def &p) const
         return ((p - origin).abs() <= r_sq);
     }
     default:
-        return (false);
+        return false;
     }
 }

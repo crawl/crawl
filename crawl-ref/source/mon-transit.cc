@@ -260,11 +260,11 @@ bool follower::place(bool near_player)
         m->flags |= MF_JUST_SUMMONED;
         restore_mons_items(*m);
         env.mid_cache[m->mid] = m->mindex();
-        return (true);
+        return true;
     }
 
     m->reset();
-    return (false);
+    return false;
 }
 
 void follower::restore_mons_items(monster& m)
@@ -297,22 +297,22 @@ static bool _is_religious_follower(const monster* mon)
 static bool _tag_follower_at(const coord_def &pos, bool &real_follower)
 {
     if (!in_bounds(pos) || pos == you.pos())
-        return (false);
+        return false;
 
     monster* fol = monster_at(pos);
     if (fol == NULL)
-        return (false);
+        return false;
 
     if (!fol->alive()
         || fol->speed_increment < 50
         || fol->incapacitated()
         || mons_is_stationary(fol))
     {
-        return (false);
+        return false;
     }
 
     if (!monster_habitable_grid(fol, DNGN_FLOOR))
-        return (false);
+        return false;
 
     // Only non-wandering friendly monsters or those actively
     // seeking the player will follow up/down stairs.
@@ -320,7 +320,7 @@ static bool _tag_follower_at(const coord_def &pos, bool &real_follower)
           && (!mons_is_seeking(fol) || fol->foe != MHITYOU)
         || fol->foe == MHITNOT)
     {
-        return (false);
+        return false;
     }
 
     // Monsters that are not directly adjacent are subject to more
@@ -328,12 +328,12 @@ static bool _tag_follower_at(const coord_def &pos, bool &real_follower)
     if ((pos - you.pos()).abs() > 2)
     {
         if (!fol->friendly())
-            return (false);
+            return false;
 
         // Undead will follow Yredelemnul worshippers, and orcs will
         // follow Beogh worshippers.
         if (!_is_religious_follower(fol))
-            return (false);
+            return false;
     }
 
     // Monsters that can't use stairs can still be marked as followers
@@ -344,9 +344,9 @@ static bool _tag_follower_at(const coord_def &pos, bool &real_follower)
         if (_is_religious_follower(fol))
         {
             fol->flags |= MF_TAKING_STAIRS;
-            return (true);
+            return true;
         }
-        return (false);
+        return false;
     }
 
     real_follower = true;
@@ -364,7 +364,7 @@ static bool _tag_follower_at(const coord_def &pos, bool &real_follower)
     dprf("%s is marked for following.",
          fol->name(DESC_THE, true).c_str());
 
-    return (true);
+    return true;
 }
 
 static int follower_tag_radius2()
@@ -375,7 +375,7 @@ static int follower_tag_radius2()
     {
         if (const monster* mon = monster_at(*ai))
             if (!mon->friendly())
-                return (2);
+                return 2;
     }
 
     return (6 * 6);

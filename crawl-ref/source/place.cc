@@ -117,7 +117,7 @@ std::vector<level_id> all_dungeon_ids()
         for (int depth = 1; depth <= brdepth[i]; depth++)
             out.push_back(level_id(branch.id, depth));
     }
-    return (out);
+    return out;
 }
 
 bool is_level_on_stack(level_id lev)

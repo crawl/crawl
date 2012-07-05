@@ -67,11 +67,11 @@ TextureID get_dngn_tex(tileidx_t idx)
 {
     assert(idx < TILE_FEAT_MAX);
     if (idx < TILE_FLOOR_MAX)
-        return (TEX_FLOOR);
+        return TEX_FLOOR;
     else if (idx < TILE_WALL_MAX)
-        return (TEX_WALL);
+        return TEX_WALL;
     else
-        return (TEX_FEAT);
+        return TEX_FEAT;
 }
 
 #ifdef USE_TILE
@@ -390,7 +390,7 @@ tileidx_t tileidx_feature(const coord_def &gc)
                         && feat != DNGN_FLOOR
                         && feat != DNGN_UNSEEN;
     if (override && can_override)
-        return (override);
+        return override;
 
     const monster_info* mimic = env.map_knowledge(gc).monsterinfo();
     if (mimic && mons_is_feat_mimic(mimic->type))
@@ -467,12 +467,12 @@ tileidx_t tileidx_feature(const coord_def &gc)
         if (env.map_knowledge(gc).feat_colour() == GREEN
             || env.map_knowledge(gc).feat_colour() == LIGHTGREEN)
         {
-            return (TILE_DNGN_DEEP_WATER_MURKY);
+            return TILE_DNGN_DEEP_WATER_MURKY;
         }
         else if (player_in_branch(BRANCH_SHOALS))
-            return (TILE_SHOALS_DEEP_WATER);
+            return TILE_SHOALS_DEEP_WATER;
 
-        return (TILE_DNGN_DEEP_WATER);
+        return TILE_DNGN_DEEP_WATER;
     case DNGN_SHALLOW_WATER:
         {
             tileidx_t t = TILE_DNGN_SHALLOW_WATER;
@@ -490,7 +490,7 @@ tileidx_t tileidx_feature(const coord_def &gc)
                 t += tile_dngn_count(t);
             }
 
-            return (t);
+            return t;
         }
     default:
         return (_tileidx_feature_base(feat));
@@ -794,7 +794,7 @@ static tileidx_t _tileidx_monster_zombified(const monster_info& mon)
         || z_type == MONS_SIMULACRUM_LARGE)
         z_tile = _zombie_tile_to_simulacrum(z_tile);
 
-    return (z_tile);
+    return z_tile;
 }
 
 // Special case for *taurs which have a different tile
@@ -802,16 +802,16 @@ static tileidx_t _tileidx_monster_zombified(const monster_info& mon)
 static int _bow_offset(const monster_info& mon)
 {
     if (!mon.inv[MSLOT_WEAPON].get())
-        return (1);
+        return 1;
 
     switch (mon.inv[MSLOT_WEAPON]->sub_type)
     {
     case WPN_BOW:
     case WPN_LONGBOW:
     case WPN_CROSSBOW:
-        return (0);
+        return 0;
     default:
-        return (1);
+        return 1;
     }
 }
 
@@ -2676,14 +2676,14 @@ tileidx_t tileidx_draco_job(const monster_info& mon)
 {
     switch (mon.type)
     {
-        case MONS_DRACONIAN_CALLER:      return (TILEP_DRACO_CALLER);
-        case MONS_DRACONIAN_MONK:        return (TILEP_DRACO_MONK);
-        case MONS_DRACONIAN_ZEALOT:      return (TILEP_DRACO_ZEALOT);
-        case MONS_DRACONIAN_SHIFTER:     return (TILEP_DRACO_SHIFTER);
-        case MONS_DRACONIAN_ANNIHILATOR: return (TILEP_DRACO_ANNIHILATOR);
-        case MONS_DRACONIAN_KNIGHT:      return (TILEP_DRACO_KNIGHT);
-        case MONS_DRACONIAN_SCORCHER:    return (TILEP_DRACO_SCORCHER);
-        default:                         return (0);
+        case MONS_DRACONIAN_CALLER:      return TILEP_DRACO_CALLER;
+        case MONS_DRACONIAN_MONK:        return TILEP_DRACO_MONK;
+        case MONS_DRACONIAN_ZEALOT:      return TILEP_DRACO_ZEALOT;
+        case MONS_DRACONIAN_SHIFTER:     return TILEP_DRACO_SHIFTER;
+        case MONS_DRACONIAN_ANNIHILATOR: return TILEP_DRACO_ANNIHILATOR;
+        case MONS_DRACONIAN_KNIGHT:      return TILEP_DRACO_KNIGHT;
+        case MONS_DRACONIAN_SCORCHER:    return TILEP_DRACO_SCORCHER;
+        default:                         return 0;
     }
 }
 
@@ -4138,7 +4138,7 @@ tileidx_t tileidx_known_base_item(tileidx_t label)
     }
 
     if (label >= TILE_SCR_ID_FIRST && label <= TILE_SCR_ID_LAST)
-        return (TILE_SCROLL);
+        return TILE_SCROLL;
 
     if (label >= TILE_WAND_ID_FIRST && label <= TILE_WAND_ID_LAST)
     {
@@ -4163,7 +4163,7 @@ tileidx_t tileidx_known_base_item(tileidx_t label)
             return (TILE_STAFF_OFFSET + desc);
     }
 
-    return (0);
+    return 0;
 }
 
 tileidx_t tileidx_cloud(const cloud_info &cl, bool disturbance)
@@ -4719,7 +4719,7 @@ tileidx_t tileidx_known_brand(const item_def &item)
 tileidx_t tileidx_corpse_brand(const item_def &item)
 {
     if (item.base_type != OBJ_CORPSES || item.sub_type != CORPSE_BODY)
-        return (0);
+        return 0;
 
     const bool fulsome_dist = you.has_spell(SPELL_FULSOME_DISTILLATION);
     const bool rotten       = food_is_rotten(item);
@@ -4728,7 +4728,7 @@ tileidx_t tileidx_corpse_brand(const item_def &item)
     // Brands are mostly meaningless to herbivores.
     // Could still be interesting for Fulsome Distillation, though.
     if (fulsome_dist && player_mutation_level(MUT_HERBIVOROUS) == 3)
-        return (0);
+        return 0;
 
     // Vampires are only interested in fresh blood.
     if (you.species == SP_VAMPIRE
@@ -4785,17 +4785,17 @@ tileidx_t get_clean_map_idx(tileidx_t tile_idx, bool mon_only)
 tileidx_t tileidx_unseen_flag(const coord_def &gc)
 {
     if (!map_bounds(gc))
-        return (TILE_FLAG_UNSEEN);
+        return TILE_FLAG_UNSEEN;
     else if (env.map_knowledge(gc).known()
                 && !env.map_knowledge(gc).seen()
              || env.map_knowledge(gc).detected_item()
              || env.map_knowledge(gc).detected_monster()
            )
     {
-        return (TILE_FLAG_MM_UNSEEN);
+        return TILE_FLAG_MM_UNSEEN;
     }
     else
-        return (TILE_FLAG_UNSEEN);
+        return TILE_FLAG_UNSEEN;
 }
 
 int enchant_to_int(const item_def &item)
@@ -4833,7 +4833,7 @@ tileidx_t tileidx_enchant_equ(const item_def &item, tileidx_t tile)
 
     tile += etable[idx][etype];
 
-    return (tile);
+    return tile;
 }
 
 std::string tile_debug_string(tileidx_t fg, tileidx_t bg, char prefix)
@@ -4886,7 +4886,7 @@ std::string tile_debug_string(tileidx_t fg, tileidx_t bg, char prefix)
         bg & ~TILE_FLAG_MASK,
         tile_dngn_name(bg_idx));
 
-    return (tile_string);
+    return tile_string;
 }
 #endif
 

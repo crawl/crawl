@@ -228,7 +228,7 @@ level_range::operator raw_range () const
     r.shallowest = shallowest;
     r.deepest    = deepest;
     r.deny       = deny;
-    return (r);
+    return r;
 }
 
 void level_range::set(const std::string &br, int s, int d)
@@ -276,7 +276,7 @@ level_range level_range::parse(std::string s) throw (std::string)
         lr.set(br, lr.shallowest, lr.deepest);
     }
 
-    return (lr);
+    return lr;
 }
 
 void level_range::parse_partial(level_range &lr, const std::string &s)
@@ -502,7 +502,7 @@ std::string map_lines::add_feature_marker(const std::string &s)
     int sep = 0;
     std::string err = mapdef_split_key_item(s, &key, &sep, &arg, -1);
     if (!err.empty())
-        return (err);
+        return err;
 
     map_marker_spec spec(key, arg);
     spec.apply_transform(*this);
@@ -628,12 +628,12 @@ void map_lines::apply_overlays(const coord_def &c)
 
 const std::vector<std::string> &map_lines::get_lines() const
 {
-    return (lines);
+    return lines;
 }
 
 std::vector<std::string> &map_lines::get_lines()
 {
-    return (lines);
+    return lines;
 }
 
 void map_lines::add_line(const std::string &s)
@@ -740,10 +740,10 @@ bool map_colour_list::parse(const std::string &col, int weight)
 {
     const int colour = col == "none" ? BLACK : str_to_colour(col, -1);
     if (colour == -1)
-        return (false);
+        return false;
 
     push_back(map_weighted_colour(colour, weight));
-    return (true);
+    return true;
 }
 
 std::string map_lines::add_colour(const std::string &sub)
@@ -759,12 +759,12 @@ std::string map_lines::add_colour(const std::string &sub)
 
     std::string err = mapdef_split_key_item(sub, &key, &sep, &substitute, -1);
     if (!err.empty())
-        return (err);
+        return err;
 
     map_colour_list colours;
     err = _parse_weighted_str<map_colour_list>(substitute, colours);
     if (!err.empty())
-        return (err);
+        return err;
 
     colour_spec spec(key, sep == ':', colours);
     overlay_colours(spec);
@@ -779,7 +779,7 @@ bool map_fprop_list::parse(const std::string &fp, int weight)
     if (fp == "nothing")
         fprop = FPROP_NONE;
     else if (fp.empty())
-        return (false);
+        return false;
     else if (str_to_fprop(fp) == FPROP_NONE)
         return false;
     else
@@ -793,9 +793,9 @@ bool map_featheight_list::parse(const std::string &fp, int weight)
 {
     const int thisheight = strict_aton(fp.c_str(), INVALID_HEIGHT);
     if (thisheight == INVALID_HEIGHT)
-        return (false);
+        return false;
     push_back(map_weighted_fheight(thisheight, weight));
-    return (true);
+    return true;
 }
 
 std::string map_lines::add_fproperty(const std::string &sub)
@@ -811,12 +811,12 @@ std::string map_lines::add_fproperty(const std::string &sub)
 
     std::string err = mapdef_split_key_item(sub, &key, &sep, &substitute, -1);
     if (!err.empty())
-        return (err);
+        return err;
 
     map_fprop_list fprops;
     err = _parse_weighted_str<map_fprop_list>(substitute, fprops);
     if (!err.empty())
-        return (err);
+        return err;
 
     fprop_spec spec(key, sep == ':', fprops);
     overlay_fprops(spec);
@@ -836,12 +836,12 @@ std::string map_lines::add_fheight(const std::string &sub)
 
     std::string err = mapdef_split_key_item(sub, &key, &sep, &substitute, -1);
     if (!err.empty())
-        return (err);
+        return err;
 
     map_featheight_list fheights;
     err = _parse_weighted_str(substitute, fheights);
     if (!err.empty())
-        return (err);
+        return err;
 
     fheight_spec spec(key, sep == ':', fheights);
     overlay_fheights(spec);
@@ -868,12 +868,12 @@ std::string map_lines::add_subst(const std::string &sub)
 
     std::string err = mapdef_split_key_item(sub, &key, &sep, &substitute, -1);
     if (!err.empty())
-        return (err);
+        return err;
 
     glyph_replacements_t repl;
     err = parse_glyph_replacements(substitute, repl);
     if (!err.empty())
-        return (err);
+        return err;
 
     subst_spec spec(key, sep == ':', repl);
     subst(spec);
@@ -900,7 +900,7 @@ std::string map_lines::parse_nsubst_spec(const std::string &s,
     glyph_replacements_t repl;
     err = parse_glyph_replacements(arg, repl);
     if (!err.empty())
-        return (err);
+        return err;
 
     spec = subst_spec(count, sep == ':', repl);
     return ("");
@@ -915,7 +915,7 @@ std::string map_lines::add_nsubst(const std::string &s)
 
     std::string err = mapdef_split_key_item(s, &key, &sep, &arg, -1);
     if (!err.empty())
-        return (err);
+        return err;
 
     std::vector<std::string> segs = split_string("/", arg);
     for (int i = 0, vsize = segs.size(); i < vsize; ++i)
@@ -951,7 +951,7 @@ std::string map_lines::add_shuffle(const std::string &raws)
     if (err.empty())
         resolve_shuffle(s);
 
-    return (err);
+    return err;
 }
 
 int map_lines::width() const
@@ -1068,7 +1068,7 @@ bool map_lines::solid_borders(map_section_type border)
     case MAP_NORTHWEST: return solid_north && solid_west;
     case MAP_SOUTHEAST: return solid_south && solid_east;
     case MAP_SOUTHWEST: return solid_south && solid_west;
-    default: return (false);
+    default: return false;
     }
 }
 
@@ -1389,7 +1389,7 @@ int map_lines::apply_nsubst(std::vector<coord_def> &pos,
         lines[c.y][c.x] = val;
         ++substituted;
     }
-    return (substituted);
+    return substituted;
 }
 
 std::string map_lines::block_shuffle(const std::string &s)
@@ -1414,7 +1414,7 @@ std::string map_lines::shuffle(std::string s)
         s.erase(c, 1);
     }
 
-    return (result);
+    return result;
 }
 
 void map_lines::resolve_shuffle(const std::string &shufflage)
@@ -1646,13 +1646,13 @@ std::string map_lines::add_key_field(
 
     std::string err = mapdef_split_key_item(s, &key, &separator, &arg, -1);
     if (!err.empty())
-        return (err);
+        return err;
 
     keyed_mapspec &kmbase = keyspecs[key[0]];
     kmbase.key_glyph = key[0];
     err = ((kmbase.*set_field)(arg, separator == ':'));
     if (!err.empty())
-        return (err);
+        return err;
 
     size_t len = key.length();
     for (size_t i = 1; i < len; i++)
@@ -1662,7 +1662,7 @@ std::string map_lines::add_key_field(
         ((km.*copy_field)(kmbase));
     }
 
-    return (err);
+    return err;
 }
 
 std::string map_lines::add_key_item(const std::string &s)
@@ -1701,7 +1701,7 @@ std::vector<coord_def> map_lines::find_glyph(int gly) const
                 points.push_back(c);
         }
     }
-    return (points);
+    return points;
 }
 
 std::vector<coord_def> map_lines::find_glyph(const std::string &glyphs) const
@@ -1716,7 +1716,7 @@ std::vector<coord_def> map_lines::find_glyph(const std::string &glyphs) const
                 points.push_back(c);
         }
     }
-    return (points);
+    return points;
 }
 
 coord_def map_lines::find_first_glyph(int gly) const
@@ -1839,7 +1839,7 @@ bool map_lines::fill_zone(travel_distance_grid_t &tpd, const coord_def &start,
         points[cur].clear();
         cur = !cur;
     }
-    return (ret);
+    return ret;
 }
 
 int map_lines::count_feature_in_box(const coord_def &tl, const coord_def &br,
@@ -1852,17 +1852,17 @@ int map_lines::count_feature_in_box(const coord_def &tl, const coord_def &br,
             result++;
     }
 
-    return (result);
+    return result;
 }
 
 bool map_tile_list::parse(const std::string &s, int weight)
 {
     tileidx_t idx = 0;
     if (s != "none" && !tile_dngn_index(s.c_str(), &idx))
-        return (false);
+        return false;
 
     push_back(map_weighted_tile(s, weight));
-    return (true);
+    return true;
 }
 
 std::string map_lines::add_tile(const std::string &sub, bool is_floor, bool is_feat)
@@ -1881,12 +1881,12 @@ std::string map_lines::add_tile(const std::string &sub, bool is_floor, bool is_f
 
     std::string err = mapdef_split_key_item(s, &key, &sep, &substitute, -1);
     if (!err.empty())
-        return (err);
+        return err;
 
     map_tile_list list;
     err = _parse_weighted_str<map_tile_list>(substitute, list);
     if (!err.empty())
-        return (err);
+        return err;
 
     tile_spec spec(key, sep == ':', no_random, last_tile, is_floor, is_feat, list);
     overlay_tiles(spec);
@@ -1928,7 +1928,7 @@ std::string tile_spec::get_tile()
         chose_fixed = true;
         fixed_tile  = chosen;
     }
-    return (chosen);
+    return chosen;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -1967,7 +1967,7 @@ map_lines::iterator::operator bool() const
 
 coord_def map_lines::iterator::operator *() const
 {
-    return (p);
+    return p;
 }
 
 coord_def map_lines::iterator::operator ++ ()
@@ -1981,7 +1981,7 @@ coord_def map_lines::iterator::operator ++ (int)
 {
     coord_def here(**this);
     ++*this;
-    return (here);
+    return here;
 }
 
 ///////////////////////////////////////////////
@@ -2071,11 +2071,11 @@ bool depth_ranges::is_usable_in(const level_id &lid) const
         if (lr.matches(lid))
         {
             if (lr.deny)
-                return (false);
+                return false;
             any_matched = true;
         }
     }
-    return (any_matched);
+    return any_matched;
 }
 
 void depth_ranges::add_depths(const depth_ranges &other_depths)
@@ -2476,9 +2476,9 @@ bool map_def::run_hook(const std::string &hook_name, bool die_on_lua_error)
             mprf(MSGCH_ERROR, "Lua error running hook '%s' on map '%s': %s",
                  hook_name.c_str(), name.c_str(),
                  rewrite_chunk_errors(dlua.error).c_str());
-        return (false);
+        return false;
     }
-    return (true);
+    return true;
 }
 
 bool map_def::run_postplace_hook(bool die_on_lua_error)
@@ -2494,14 +2494,14 @@ bool map_def::test_lua_boolchunk(dlua_chunk &chunk, bool defval,
 
     int err = chunk.load(dlua);
     if (err == E_CHUNK_LOAD_FAILURE)
-        return (result);
+        return result;
     else if (err)
     {
         if (die_on_lua_error)
             end(1, false, "Lua error: %s", chunk.orig_error().c_str());
         else
             mprf(MSGCH_ERROR, "Lua error: %s", chunk.orig_error().c_str());
-        return (result);
+        return result;
     }
     if (dlua.callfn("dgn_run_map", 1, 1))
         dlua.fnreturns(">b", &result);
@@ -2514,7 +2514,7 @@ bool map_def::test_lua_boolchunk(dlua_chunk &chunk, bool defval,
             mprf(MSGCH_ERROR, "Lua error: %s",
                  rewrite_chunk_errors(dlua.error).c_str());
     }
-    return (result);
+    return result;
 }
 
 bool map_def::test_lua_validate(bool croak)
@@ -2541,17 +2541,17 @@ std::string map_def::rewrite_chunk_errors(const std::string &s) const
 {
     std::string res = s;
     if (prelude.rewrite_chunk_errors(res))
-        return (res);
+        return res;
     if (mapchunk.rewrite_chunk_errors(res))
-        return (res);
+        return res;
     if (main.rewrite_chunk_errors(res))
-        return (res);
+        return res;
     if (validate.rewrite_chunk_errors(res))
-        return (res);
+        return res;
     if (veto.rewrite_chunk_errors(res))
-        return (res);
+        return res;
     epilogue.rewrite_chunk_errors(res);
-    return (res);
+    return res;
 }
 
 std::string map_def::validate_temple_map()
@@ -2661,7 +2661,7 @@ std::string map_def::validate_map_def(const depth_ranges &default_depths)
 
     std::string err = run_lua(true);
     if (!err.empty())
-        return (err);
+        return err;
 
     fixup();
     resolve();
@@ -2867,7 +2867,7 @@ bool map_def::can_dock(map_section_type norient) const
     case MAP_EAST: case MAP_WEST:
         return map.height() > GYM * 2 / 3;
     default:
-        return (true);
+        return true;
     }
 }
 
@@ -2895,7 +2895,7 @@ point_vector map_def::anchor_points() const
         for (int x = 0, cwidth = map.width(); x < cwidth; ++x)
             if (map.glyph(x, y) == '@')
                 points.push_back(coord_def(x, y));
-    return (points);
+    return points;
 }
 
 coord_def map_def::float_aligned_place() const
@@ -2908,21 +2908,21 @@ coord_def map_def::float_aligned_place() const
 
     // Mismatch in the number of points we have to align, bail.
     if (our_anchors.size() != map_anchor_points.size())
-        return (fail);
+        return fail;
 
     // Align first point of both vectors, then check that the others match.
     const coord_def pos = map_anchor_points[0] - our_anchors[0];
 
     for (int i = 1, psize = map_anchor_points.size(); i < psize; ++i)
         if (pos + our_anchors[i] != map_anchor_points[i])
-            return (fail);
+            return fail;
 
     // Looking good, check bounds.
     if (!map_bounds(pos) || !map_bounds(pos + size() - 1))
-        return (fail);
+        return fail;
 
     // Go us!
-    return (pos);
+    return pos;
 }
 
 coord_def map_def::float_place()
@@ -2942,7 +2942,7 @@ coord_def map_def::float_place()
             pos = float_random_place();
     }
 
-    return (pos);
+    return pos;
 }
 
 void map_def::hmirror()
@@ -3091,7 +3091,7 @@ std::string map_def::subvault_from_tagstring(const std::string &sub)
 
     std::string err = mapdef_split_key_item(sub, &key, &sep, &substitute, -1);
     if (!err.empty())
-        return (err);
+        return err;
 
     // Randomly picking a different vault per-glyph is not supported.
     if (sep != ':')
@@ -3100,7 +3100,7 @@ std::string map_def::subvault_from_tagstring(const std::string &sub)
     map_string_list vlist;
     err = _parse_weighted_str<map_string_list>(substitute, vlist);
     if (!err.empty())
-        return (err);
+        return err;
 
     bool fix = false;
     string_spec spec(key, fix, vlist);
@@ -3112,7 +3112,7 @@ std::string map_def::subvault_from_tagstring(const std::string &sub)
         err = apply_subvault(spec);
 
     if (!err.empty())
-        return (err);
+        return err;
 
     return ("");
 }
@@ -3238,7 +3238,7 @@ int map_def::subvault_mismatch_count(const coord_def &offset) const
 {
     int count = 0;
     if (!is_subvault())
-        return (count);
+        return count;
 
     for (rectangle_iterator ri(map.get_iter()); ri; ++ri)
     {
@@ -3254,7 +3254,7 @@ int map_def::subvault_mismatch_count(const coord_def &offset) const
             count++;
     }
 
-    return (count);
+    return count;
 }
 
 ///////////////////////////////////////////////////////////////////
@@ -3268,7 +3268,7 @@ mons_list::mons_list() : mons()
 int mons_list::fix_demon(int demon) const
 {
     if (demon >= -1)
-        return (demon);
+        return demon;
 
     demon = -100 - demon;
 
@@ -3303,7 +3303,7 @@ mons_spec mons_list::pick_monster(mons_spec_slot &slot)
         slot.fix_slot = false;
     }
 
-    return (pick);
+    return pick;
 }
 
 mons_spec mons_list::get_monster(int index)
@@ -3447,7 +3447,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
         {
             parse_mons_spells(mspec, spells);
             if (!error.empty())
-                return (slot);
+                return slot;
         }
 
         std::vector<std::string> parts = split_string(";", s);
@@ -3457,7 +3457,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
         {
             error = make_stringf("Too many semi-colons for '%s' spec.",
                                  mon_str.c_str());
-            return (slot);
+            return slot;
         }
         else if (parts.size() == 2)
         {
@@ -3473,14 +3473,14 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
             {
                 error = make_stringf("More items than monster item slots "
                                      "for '%s'.", mon_str.c_str());
-                return (slot);
+                return slot;
             }
 
             for (int j = 0, isize = segs.size(); j < isize; ++j)
             {
                 error = mspec.items.add_item(segs[j], false);
                 if (!error.empty())
-                    return (slot);
+                    return slot;
             }
         }
 
@@ -3555,7 +3555,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
             catch (const std::string &err)
             {
                 error = err;
-                return (slot);
+                return slot;
             }
         }
 
@@ -3599,12 +3599,12 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
             {
                 error = make_stringf("bad monster summon type: \"%s\"",
                                 s_type.c_str());
-                return (slot);
+                return slot;
             }
             if (mspec.abjuration_duration == 0)
             {
                 error = "marked summon with no duration";
-                return (slot);
+                return slot;
             }
         }
 
@@ -3618,7 +3618,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
             if (mspec.abjuration_duration == 0)
             {
                 error = "marked summon with no duration";
-                return (slot);
+                return slot;
             }
         }
 
@@ -3635,7 +3635,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
                 {
                     error = make_stringf("bad monster colour \"%s\" in \"%s\"",
                                          colour.c_str(), specs[i].c_str());
-                    return (slot);
+                    return slot;
                 }
             }
         }
@@ -3651,7 +3651,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
             {
                 error = make_stringf("bad monster god: \"%s\"",
                                      god_name.c_str());
-                return (slot);
+                return slot;
             }
 
             if (strip_tag(mon_str, "god_gift"))
@@ -3665,7 +3665,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
             if (!tile_player_index(tile.c_str(), &index))
             {
                 error = make_stringf("bad tile name: \"%s\".", tile.c_str());
-                return (slot);
+                return slot;
             }
             // Store name along with the tile.
             mspec.props["monster_tile_name"].get_string() = tile;
@@ -3747,13 +3747,13 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
         {
             mspec.ench.push_back(parse_ench(ench_str, false));
             if (!error.empty())
-                return (slot);
+                return slot;
         }
         while (!(ench_str = strip_tag_prefix(mon_str, "perm_ench:")).empty())
         {
             mspec.ench.push_back(parse_ench(ench_str, true));
             if (!error.empty())
-                return (slot);
+                return slot;
         }
 
         trim_string(mon_str);
@@ -3786,7 +3786,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
             {
                 error = make_stringf("unknown monster: \"%s\"",
                                      mon_str.c_str());
-                return (slot);
+                return slot;
             }
 
             mspec.type    = nspec.type;
@@ -3809,7 +3809,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
             if (type >= NUM_MONSTERS)
             {
                 error = "Can't give spec items to a random monster.";
-                return (slot);
+                return slot;
             }
             else if (mons_class_itemuse(type) < MONUSE_STARTING_EQUIPMENT)
             {
@@ -3822,7 +3822,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
         slot.mlist.push_back(mspec);
     }
 
-    return (slot);
+    return slot;
 }
 
 std::string mons_list::add_mons(const std::string &s, bool fix)
@@ -3831,7 +3831,7 @@ std::string mons_list::add_mons(const std::string &s, bool fix)
 
     mons_spec_slot slotmons = parse_mons_spec(s);
     if (!error.empty())
-        return (error);
+        return error;
 
     if (fix)
     {
@@ -3841,7 +3841,7 @@ std::string mons_list::add_mons(const std::string &s, bool fix)
 
     mons.push_back(slotmons);
 
-    return (error);
+    return error;
 }
 
 std::string mons_list::set_mons(int index, const std::string &s)
@@ -3853,7 +3853,7 @@ std::string mons_list::set_mons(int index, const std::string &s)
 
     mons_spec_slot slotmons = parse_mons_spec(s);
     if (!error.empty())
-        return (error);
+        return error;
 
     if (index >= (int) mons.size())
     {
@@ -3861,7 +3861,7 @@ std::string mons_list::set_mons(int index, const std::string &s)
         mons.resize(index + 1, mons_spec_slot());
     }
     mons[index] = slotmons;
-    return (error);
+    return error;
 }
 
 void mons_list::get_zombie_type(std::string s, mons_spec &spec) const
@@ -4003,7 +4003,7 @@ mons_spec mons_list::drac_monspec(std::string name) const
 
     // Check if it's a simple drac name, we're done.
     if (spec.type != MONS_PROGRAM_BUG)
-        return (spec);
+        return spec;
 
     spec.type = RANDOM_DRACONIAN;
 
@@ -4015,7 +4015,7 @@ mons_spec mons_list::drac_monspec(std::string name) const
     if (starts_with(name, "base "))
     {
         // Base dracs need no further work.
-        return (RANDOM_BASE_DRACONIAN);
+        return RANDOM_BASE_DRACONIAN;
     }
     else if (starts_with(name, "nonbase "))
     {
@@ -4027,24 +4027,24 @@ mons_spec mons_list::drac_monspec(std::string name) const
 
     // Match "any draconian"
     if (name == "draconian")
-        return (spec);
+        return spec;
 
     // Check for recognition again to match any (nonbase) <colour> draconian.
     const monster_type colour = get_monster_by_name(name, true);
     if (colour != MONS_PROGRAM_BUG)
     {
         spec.monbase = colour;
-        return (spec);
+        return spec;
     }
 
     // Only legal possibility left is <colour> boss drac.
     std::string::size_type wordend = name.find(' ');
     if (wordend == std::string::npos)
-        return (MONS_PROGRAM_BUG);
+        return MONS_PROGRAM_BUG;
 
     std::string scolour = name.substr(0, wordend);
     if ((spec.monbase = draconian_colour_by_name(scolour)) == MONS_PROGRAM_BUG)
-        return (MONS_PROGRAM_BUG);
+        return MONS_PROGRAM_BUG;
 
     name = trimmed_string(name.substr(wordend + 1));
     spec.type = get_monster_by_name(name, true);
@@ -4056,10 +4056,10 @@ mons_spec mons_list::drac_monspec(std::string name) const
         || (spec.type >= MONS_BLACK_DRACONIAN
             && spec.type <= MONS_PALE_DRACONIAN))
     {
-        return (MONS_PROGRAM_BUG);
+        return MONS_PROGRAM_BUG;
     }
 
-    return (spec);
+    return spec;
 }
 
 mons_spec mons_list::mons_by_name(std::string name) const
@@ -4074,10 +4074,10 @@ mons_spec mons_list::mons_by_name(std::string name) const
 
     // Special casery:
     if (name == "pandemonium lord")
-        return (MONS_PANDEMONIUM_LORD);
+        return MONS_PANDEMONIUM_LORD;
 
     if (name == "any" || name == "any monster")
-        return (RANDOM_MONSTER);
+        return RANDOM_MONSTER;
 
     if (name == "any demon")
         return (-100 - DEMON_RANDOM);
@@ -4092,27 +4092,27 @@ mons_spec mons_list::mons_by_name(std::string name) const
         return (-100 - DEMON_GREATER);
 
     if (name == "small zombie")
-        return (MONS_ZOMBIE_SMALL);
+        return MONS_ZOMBIE_SMALL;
     if (name == "large zombie")
-        return (MONS_ZOMBIE_LARGE);
+        return MONS_ZOMBIE_LARGE;
 
     if (name == "small skeleton")
-        return (MONS_SKELETON_SMALL);
+        return MONS_SKELETON_SMALL;
     if (name == "large skeleton")
-        return (MONS_SKELETON_LARGE);
+        return MONS_SKELETON_LARGE;
 
     if (name == "spectral thing")
-        return (MONS_SPECTRAL_THING);
+        return MONS_SPECTRAL_THING;
 
     if (name == "small simulacrum")
-        return (MONS_SIMULACRUM_SMALL);
+        return MONS_SIMULACRUM_SMALL;
     if (name == "large simulacrum")
-        return (MONS_SIMULACRUM_LARGE);
+        return MONS_SIMULACRUM_LARGE;
 
     if (name == "small abomination")
-        return (MONS_ABOMINATION_SMALL);
+        return MONS_ABOMINATION_SMALL;
     if (name == "large abomination")
-        return (MONS_ABOMINATION_LARGE);
+        return MONS_ABOMINATION_LARGE;
 
     if (ends_with(name, "-headed hydra") && !starts_with(name, "spectral "))
         return (get_hydra_spec(name));
@@ -4130,7 +4130,7 @@ mons_spec mons_list::mons_by_name(std::string name) const
         {
             mons_spec spec = mons_by_name(name.substr(wordend + 1));
             spec.colour = colour;
-            return (spec);
+            return spec;
         }
     }
     if (name.find(" laboratory rat") != std::string::npos)
@@ -4143,14 +4143,14 @@ mons_spec mons_list::mons_by_name(std::string name) const
         {
             mons_spec spec = mons_by_name(name.substr(wordend+1));
             spec.colour = colour;
-            return (spec);
+            return spec;
         }
     }
 
     mons_spec spec;
     get_zombie_type(name, spec);
     if (spec.type != MONS_PROGRAM_BUG)
-        return (spec);
+        return spec;
 
     if (name.find("draconian") != std::string::npos)
         return drac_monspec(name);
@@ -4236,7 +4236,7 @@ item_spec item_list::random_item()
     if (items.size() <= 0)
     {
         const item_spec none;
-        return (none);
+        return none;
     }
 
     return (get_item(random2(size())));
@@ -4259,7 +4259,7 @@ item_spec item_list::random_item_weighted()
     if (rn_item)
         return (*rn_item);
 
-    return (none);
+    return none;
 }
 
 item_spec item_list::pick_item(item_spec_slot &slot)
@@ -4281,7 +4281,7 @@ item_spec item_list::pick_item(item_spec_slot &slot)
         slot.fix_slot = false;
     }
 
-    return (spec);
+    return spec;
 }
 
 item_spec item_list::get_item(int index)
@@ -4289,7 +4289,7 @@ item_spec item_list::get_item(int index)
     if (index < 0 || index >= (int) items.size())
     {
         const item_spec none;
-        return (none);
+        return none;
     }
 
     return (pick_item(items[index]));
@@ -4311,7 +4311,7 @@ std::string item_list::add_item(const std::string &spec, bool fix)
         items.push_back(sp);
     }
 
-    return (error);
+    return error;
 }
 
 std::string item_list::set_item(int index, const std::string &spec)
@@ -4331,7 +4331,7 @@ std::string item_list::set_item(int index, const std::string &spec)
         items.push_back(sp);
     }
 
-    return (error);
+    return error;
 }
 
 void item_list::set_from_slot(const item_list &list, int slot_index)
@@ -4484,7 +4484,7 @@ int item_list::parse_acquirement_source(const std::string &source)
     const god_type god(str_to_god(god_name));
     if (god == GOD_NO_GOD)
         error = make_stringf("unknown god name: '%s'", god_name.c_str());
-    return (god);
+    return god;
 }
 
 bool item_list::monster_corpse_is_valid(monster_type *mons,
@@ -4496,12 +4496,12 @@ bool item_list::monster_corpse_is_valid(monster_type *mons,
     if (*mons == RANDOM_NONBASE_DRACONIAN)
     {
         error = "Can't use non-base draconian for corpse/chunk items";
-        return (false);
+        return false;
     }
 
     // Accept randomised types without further checks:
     if (*mons >= NUM_MONSTERS)
-        return (true);
+        return true;
 
     // Convert to the monster species:
     *mons = mons_species(*mons);
@@ -4509,17 +4509,17 @@ bool item_list::monster_corpse_is_valid(monster_type *mons,
     if (!mons_class_can_leave_corpse(*mons))
     {
         error = make_stringf("'%s' cannot leave corpses", name.c_str());
-        return (false);
+        return false;
     }
 
     if (skeleton && !mons_skeleton(*mons))
     {
         error = make_stringf("'%s' has no skeleton", name.c_str());
-        return (false);
+        return false;
     }
 
     // We're ok.
-    return (true);
+    return true;
 }
 
 item_spec item_list::parse_corpse_spec(item_spec &result, std::string s)
@@ -4545,7 +4545,7 @@ item_spec item_list::parse_corpse_spec(item_spec &result, std::string s)
     if (!mons_parse_err.empty())
     {
         error = mons_parse_err;
-        return (result);
+        return result;
     }
 
     // Get the actual monster spec:
@@ -4555,12 +4555,12 @@ item_spec item_list::parse_corpse_spec(item_spec &result, std::string s)
     {
         error = make_stringf("Requested corpse '%s' is invalid",
                              s.c_str());
-        return (result);
+        return result;
     }
 
     // Ok, looking good, the caller can have their requested toy.
     result.set_corpse_monster_spec(spec);
-    return (result);
+    return result;
 }
 
 // Strips the first word from s and returns it.
@@ -4691,7 +4691,7 @@ item_spec item_list::parse_single_spec(std::string s)
         {
             error = make_stringf("Bad item generation weight: '%d'",
                                  result.genweight);
-            return (result);
+            return result;
         }
     }
 
@@ -4718,7 +4718,7 @@ item_spec item_list::parse_single_spec(std::string s)
         catch (const std::string &err)
         {
             error = err;
-            return (result);
+            return result;
         }
     }
 
@@ -4735,7 +4735,7 @@ item_spec item_list::parse_single_spec(std::string s)
             result.base_type = OBJ_RANDOM;
         else
             parse_random_by_class(s, result);
-        return (result);
+        return result;
     }
 
     std::string ego_str  = strip_tag_prefix(s, "ego:");
@@ -4754,7 +4754,7 @@ item_spec item_list::parse_single_spec(std::string s)
     else if (!race_str.empty())
     {
         error = make_stringf("Bad race: %s", race_str.c_str());
-        return (result);
+        return result;
     }
 
     std::string id_str = strip_tag_prefix(s, "ident:");
@@ -4779,7 +4779,7 @@ item_spec item_list::parse_single_spec(std::string s)
             else
             {
                 error = make_stringf("Bad identify status: %s", id_str.c_str());
-                return (result);
+                return result;
             }
         }
         result.props["ident"].get_int() = id;
@@ -4798,7 +4798,7 @@ item_spec item_list::parse_single_spec(std::string s)
                 && number != ISPEC_DAMAGED && number != ISPEC_BAD)
             {
                 error = make_stringf("Bad item level: %d", number);
-                return (result);
+                return result;
             }
 
             result.level = number;
@@ -4856,7 +4856,7 @@ item_spec item_list::parse_single_spec(std::string s)
             if (uniq <= 0)
             {
                 error = make_stringf("Bad uniq level: %d", uniq);
-                return (result);
+                return result;
             }
             result.allow_uniques = uniq;
         }
@@ -4882,7 +4882,7 @@ item_spec item_list::parse_single_spec(std::string s)
             if (disc1 == SPTYP_NONE)
             {
                 error = make_stringf("Bad spell school: %s", st_disc1.c_str());
-                return (result);
+                return result;
             }
         }
 
@@ -4893,7 +4893,7 @@ item_spec item_list::parse_single_spec(std::string s)
             if (disc2 == SPTYP_NONE)
             {
                 error = make_stringf("Bad spell school: %s", st_disc2.c_str());
-                return (result);
+                return result;
             }
         }
 
@@ -4903,7 +4903,7 @@ item_spec item_list::parse_single_spec(std::string s)
             {
                 error = make_stringf("Bad combination of spell schools: %s & %s.",
                                     st_disc1.c_str(), st_disc2.c_str());
-                return (result);
+                return result;
             }
         }
 
@@ -4921,7 +4921,7 @@ item_spec item_list::parse_single_spec(std::string s)
         else if (num_spells <= 0 || num_spells > SPELLBOOK_SIZE)
         {
             error = make_stringf("Bad spellbook size: %d", num_spells);
-            return (result);
+            return result;
         }
 
         short slevels = strip_number_tag(s, "slevels:");
@@ -4930,7 +4930,7 @@ item_spec item_list::parse_single_spec(std::string s)
         else if (slevels == 0)
         {
             error = make_stringf("Bad slevels: %d.", slevels);
-            return (result);
+            return result;
         }
 
         const std::string title = replace_all_of(strip_tag_prefix(s, "title:"),
@@ -4949,7 +4949,7 @@ item_spec item_list::parse_single_spec(std::string s)
             if (spell == SPELL_NO_SPELL)
             {
                 error = make_stringf("Bad spell: %s", spell_list[i].c_str());
-                return (result);
+                return result;
             }
             incl_spells.push_back(spell);
         }
@@ -4968,13 +4968,13 @@ item_spec item_list::parse_single_spec(std::string s)
         result.sub_type = BOOK_MINOR_MAGIC;
         result.plus = -1;
 
-        return (result);
+        return result;
     }
 
     if (s.find("deck") != std::string::npos)
     {
         build_deck_spec(s, &result);
-        return (result);
+        return result;
     }
 
     // Clean up after any tag brain damage.
@@ -4985,17 +4985,17 @@ item_spec item_list::parse_single_spec(std::string s)
 
     // Completely random?
     if (s == "random" || s == "any" || s == "%")
-        return (result);
+        return result;
 
     if (s == "*" || s == "star_item")
     {
         result.level = ISPEC_GOOD;
-        return (result);
+        return result;
     }
     else if (s == "|" || s == "superb_item")
     {
         result.level = ISPEC_SUPERB;
-        return (result);
+        return result;
     }
     else if (s == "$" || s == "gold")
     {
@@ -5004,14 +5004,14 @@ item_spec item_list::parse_single_spec(std::string s)
 
         result.base_type = OBJ_GOLD;
         result.sub_type  = OBJ_RANDOM;
-        return (result);
+        return result;
     }
 
     if (s == "nothing")
     {
         error.clear();
         result.base_type = OBJ_UNASSIGNED;
-        return (result);
+        return result;
     }
 
     error.clear();
@@ -5033,7 +5033,7 @@ item_spec item_list::parse_single_spec(std::string s)
         parse_raw_name(s, result);
 
     if (!error.empty())
-        return (result);
+        return result;
 
     if (!unrand_str.empty())
     {
@@ -5048,7 +5048,7 @@ item_spec item_list::parse_single_spec(std::string s)
     }
 
     if (ego_str.empty())
-        return (result);
+        return result;
 
     if (result.base_type != OBJ_WEAPONS
         && result.base_type != OBJ_MISSILES
@@ -5056,13 +5056,13 @@ item_spec item_list::parse_single_spec(std::string s)
     {
         error = "An ego can only be applied to a weapon, missile or "
             "armour.";
-        return (result);
+        return result;
     }
 
     if (ego_str == "none")
     {
         result.ego = -1;
-        return (result);
+        return result;
     }
 
     const int ego = str_to_ego(result, ego_str);
@@ -5070,13 +5070,13 @@ item_spec item_list::parse_single_spec(std::string s)
     if (ego == 0)
     {
         error = make_stringf("No such ego as: %s", ego_str.c_str());
-        return (result);
+        return result;
     }
     else if (ego == -1)
     {
         error = make_stringf("Ego '%s' is invalid for item '%s'.",
                              ego_str.c_str(), s.c_str());
-        return (result);
+        return result;
     }
     else if (result.sub_type == OBJ_RANDOM)
     {
@@ -5091,11 +5091,11 @@ item_spec item_list::parse_single_spec(std::string s)
     {
         error = make_stringf("Ego '%s' is incompatible with item '%s'.",
                              ego_str.c_str(), s.c_str());
-        return (result);
+        return result;
     }
     result.ego = ego;
 
-    return (result);
+    return result;
 }
 
 void item_list::parse_random_by_class(std::string c, item_spec &spec)
@@ -5176,7 +5176,7 @@ item_list::item_spec_slot item_list::parse_item_spec(std::string spec)
     for (unsigned i = 0; i < specifiers.size() && error.empty(); ++i)
         list.ilist.push_back(parse_single_spec(specifiers[i]));
 
-    return (list);
+    return list;
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -5195,7 +5195,7 @@ subst_spec::subst_spec(int _count, bool dofix, const glyph_replacements_t &g)
 int subst_spec::value()
 {
     if (frozen_value)
-        return (frozen_value);
+        return frozen_value;
 
     int cumulative = 0;
     int chosen = 0;
@@ -5206,7 +5206,7 @@ int subst_spec::value()
     if (fix)
         frozen_value = chosen;
 
-    return (chosen);
+    return chosen;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -5223,7 +5223,7 @@ nsubst_spec::nsubst_spec(std::string _key, const std::vector<subst_spec> &_specs
 int colour_spec::get_colour()
 {
     if (fixed_colour != BLACK)
-        return (fixed_colour);
+        return fixed_colour;
 
     int chosen = BLACK;
     int cweight = 0;
@@ -5232,7 +5232,7 @@ int colour_spec::get_colour()
             chosen = colours[i].first;
     if (fix)
         fixed_colour = chosen;
-    return (chosen);
+    return chosen;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -5241,7 +5241,7 @@ int colour_spec::get_colour()
 feature_property_type fprop_spec::get_property()
 {
     if (fixed_prop != FPROP_NONE)
-        return (fixed_prop);
+        return fixed_prop;
 
     feature_property_type chosen = FPROP_NONE;
     int cweight = 0;
@@ -5250,7 +5250,7 @@ feature_property_type fprop_spec::get_property()
             chosen = fprops[i].first;
     if (fix)
         fixed_prop = chosen;
-    return (chosen);
+    return chosen;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -5259,7 +5259,7 @@ feature_property_type fprop_spec::get_property()
 int fheight_spec::get_height()
 {
     if (fixed_height != INVALID_HEIGHT)
-        return (fixed_height);
+        return fixed_height;
 
     int chosen = INVALID_HEIGHT;
     int cweight = 0;
@@ -5268,7 +5268,7 @@ int fheight_spec::get_height()
             chosen = fheights[i].first;
     if (fix)
         fixed_height = chosen;
-    return (chosen);
+    return chosen;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -5286,7 +5286,7 @@ std::string string_spec::get_property()
             chosen = strlist[i].first;
     if (fix)
         fixed_str = chosen;
-    return (chosen);
+    return chosen;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -5313,7 +5313,7 @@ std::string map_marker_spec::apply_transform(map_lines &map)
         }
         catch (const std::string &err)
         {
-            return (err);
+            return err;
         }
     }
     return ("");
@@ -5393,7 +5393,7 @@ std::string keyed_mapspec::set_feat(const std::string &s, bool fix)
     if (fix)
         get_feat();
 
-    return (err);
+    return err;
 }
 
 void keyed_mapspec::copy_feat(const keyed_mapspec &spec)
@@ -5443,7 +5443,7 @@ feature_spec keyed_mapspec::parse_trap(std::string s, int weight)
 
     feature_spec fspec(known ? 1 : -1, weight);
     fspec.trap.reset(new trap_spec(static_cast<trap_type>(trap)));
-    return (fspec);
+    return fspec;
 }
 
 /**
@@ -5509,7 +5509,7 @@ feature_spec keyed_mapspec::parse_shop(std::string s, int weight)
                                    shop_type_name, shop_suffix_name, greed,
                                    num_items, use_all));
     fspec.shop->items = items;
-    return (fspec);
+    return fspec;
 }
 
 feature_spec_list keyed_mapspec::parse_feature(const std::string &str)
@@ -5532,20 +5532,20 @@ feature_spec_list keyed_mapspec::parse_feature(const std::string &str)
         feature_spec fsp(-1, weight, mimic, no_mimic);
         fsp.glyph = s[0];
         list.push_back(fsp);
-        return (list);
+        return list;
     }
 
     if (s.find("trap") != std::string::npos || s == "web")
     {
         list.push_back(parse_trap(s, weight));
-        return (list);
+        return list;
     }
 
     if (s.find("shop") != std::string::npos && s != "abandoned_shop"
         || s.find("store") != std::string::npos)
     {
         list.push_back(parse_shop(s, weight));
-        return (list);
+        return list;
     }
 
     const dungeon_feature_type ftype = dungeon_feature_by_name(s);
@@ -5555,7 +5555,7 @@ feature_spec_list keyed_mapspec::parse_feature(const std::string &str)
     else
         list.push_back(feature_spec(ftype, weight, mimic, no_mimic));
 
-    return (list);
+    return list;
 }
 
 std::string keyed_mapspec::set_mons(const std::string &s, bool fix)
@@ -5568,7 +5568,7 @@ std::string keyed_mapspec::set_mons(const std::string &s, bool fix)
     {
         const std::string error = mons.add_mons(segments[i], fix);
         if (!error.empty())
-            return (error);
+            return error;
     }
 
     return ("");
@@ -5585,10 +5585,10 @@ std::string keyed_mapspec::set_item(const std::string &s, bool fix)
     {
         err = item.add_item(segs[i], fix);
         if (!err.empty())
-            return (err);
+            return err;
     }
 
-    return (err);
+    return err;
 }
 
 std::string keyed_mapspec::set_mask(const std::string &s, bool garbage)
@@ -5608,10 +5608,10 @@ std::string keyed_mapspec::set_mask(const std::string &s, bool garbage)
     catch (const std::string &error)
     {
         err = error;
-        return (err);
+        return err;
     }
 
-    return (err);
+    return err;
 }
 
 void keyed_mapspec::copy_mons(const keyed_mapspec &spec)
@@ -5636,17 +5636,17 @@ feature_spec keyed_mapspec::get_feat()
 
 mons_list &keyed_mapspec::get_monsters()
 {
-    return (mons);
+    return mons;
 }
 
 item_list &keyed_mapspec::get_items()
 {
-    return (item);
+    return item;
 }
 
 map_flags &keyed_mapspec::get_mask()
 {
-    return (map_mask);
+    return map_mask;
 }
 
 bool keyed_mapspec::replaces_glyph()
@@ -5737,5 +5737,5 @@ feature_spec feature_slot::get_feat(int def_glyph)
         feats.clear();
         feats.push_back(chosen_feat);
     }
-    return (chosen_feat);
+    return chosen_feat;
 }
