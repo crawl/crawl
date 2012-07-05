@@ -987,7 +987,8 @@ void dec_color_smoke_trail();
 bool player_weapon_wielded();
 
 // Determines if the given grid is dangerous for the player to enter.
-bool is_feat_dangerous(dungeon_feature_type feat, bool permanently = false);
+bool is_feat_dangerous(dungeon_feature_type feat, bool permanently = false,
+                       bool ignore_items = false);
 
 void run_macro(const char *macroname = NULL);
 
