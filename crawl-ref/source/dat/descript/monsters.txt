@@ -2863,6 +2863,11 @@ This crystal golem is so ensorcelled that it is immune to nearly any magic
 itself, and it can also shoot powerful beams of fire and cold at any
 tresspassers.
 %%%%
+decayed bog body
+
+An undead figure preserved by the brackish waters of a bog. This one seems to
+have decayed quite a bit, and looks weak.
+%%%%
 deformed humanoid
 
 This poor creature looks hideously deformed.
