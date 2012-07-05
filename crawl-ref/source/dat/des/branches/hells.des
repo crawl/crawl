@@ -362,10 +362,10 @@ MONS: iron devil / nothing, iron imp / nothing
     lua_marker(']', trap_marker)
     lua_marker(')', trap_marker)
     lua_marker('G', props_marker {trap_statue=1,
-                                  feature_description="iron statue",
                                   veto_fragmentation="veto",
                                   veto_disintegrate="veto",
                                   veto_shatter="veto"})
+    set_feature_name("granite_statue", "iron statue")
 }}
 COLOUR: G = cyan
 SUBST: d = 3
@@ -941,6 +941,7 @@ MARKER:  o = lua:monster_on_death { \
             veto_fragmentation="veto", veto_disintegrate="veto", \
             veto_shatter="veto" \
          }
+: set_feature_name("granite_statue", "iron statue")
 MAP
 ....................................................................
 ...............................................v5v..v5v.............

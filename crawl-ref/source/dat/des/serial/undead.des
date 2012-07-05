@@ -35,10 +35,7 @@ function init_undead(e)
             name_adjective tile:mons_withered_plant')
 
   e.tile('G = dngn_gravestone')
-  e.lua_marker('G', portal_desc { desc = "a gravestone" })
-  e.lua_marker('G', props_marker { veto_fragmentation="veto",
-                                   veto_disintegrate="veto",
-                                   veto_shatter="veto" })
+  e.set_feature_name("granite_statue", "a gravestone")
 end
 }}
 

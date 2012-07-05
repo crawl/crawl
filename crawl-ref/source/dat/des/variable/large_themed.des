@@ -880,7 +880,6 @@ MARKER: V = lua:fog_machine { \
                 size = 30, size_buildup_amnt = 1, \
                 size_buildup_time = 10, cloud_type = "gloom" \
             }
-MARKER: v = lua:props_marker { veto_fragmentation="veto", veto_disintegrate="veto" }
 # Final subst
 SUBST:  MV = .
 :       set_feature_name("granite_statue", "iron statue")

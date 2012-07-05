@@ -2021,10 +2021,10 @@ KFEAT:  o = granite_statue
 function elephant_statue()
   return
 end
+
+set_feature_name("granite_statue", "elephant-shaped statue")
 }}
-MARKER: o = lua:portal_desc { desc="elephant-shaped statue", \
-            slaved_to="elephant" }
-MARKER: G = lua:portal_desc { desc="elephant-shaped statue" }
+MARKER: o = lua:portal_desc { slaved_to="elephant" }
 MARKER: G = lua:props_marker { veto_fragmentation="veto", \
                                veto_disintegrate="veto", \
                                veto_shatter="veto" }
