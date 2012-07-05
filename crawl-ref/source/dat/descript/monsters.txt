@@ -1092,12 +1092,6 @@ Executioner
 A horribly powerful and swift demon, its shape obscured by a cloud of swirling
 scythe-like blades.
 %%%%
-experimental stone golem
-
-This golem has been imbued with fire as part of some insane experiment. It
-looks as though it's going to explode at any moment.
-
-%%%%
 eye of devastation
 
 A huge eyeball, encased in a levitating globe of incandescent energy.
