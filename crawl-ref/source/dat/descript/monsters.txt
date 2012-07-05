@@ -607,8 +607,13 @@ A small snake that can augment its bite by constricting small creatures.
 ballistomycete
 
 A lumpy reddish fungus covered in knobbly rhizome growths, growing well in the
-dank underground dungeon. It will occasionally produce giant spore balls, which
-in turn will give rise to more ballistomycetes.
+dank underground dungeon. {{
+    if you.god() == "Fedhas" then
+        return "Fedhas has suppressed its production of giant spores to protect you from explosions."
+    else
+        return "It will occasionally produce giant spore balls, which in turn will give rise to more ballistomycetes."
+    end
+}}
 %%%%
 balrug
 
