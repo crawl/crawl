@@ -2090,11 +2090,9 @@ public:
         if (selected_qty > 2)
             selected_qty = 1; //Set to 0 to allow triple toggle
 
-		// Set the force_autopickup values
-		if (selected_qty == 2)
-            you.force_autopickup[item->base_type][item->sub_type] = -1;
-        else
-			you.force_autopickup[item->base_type][item->sub_type] = selected_qty;
+        // Set the force_autopickup values
+        const int forceval = (selected_qty == 2 ? -1 : selected_qty);
+        you.force_autopickup[item->base_type][item->sub_type] = forceval;
     }
 };
 
