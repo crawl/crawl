@@ -1568,7 +1568,7 @@ static bool _activate_talent(const talent& tal)
     // Doing these would outright kill the player.
     if (tal.which == ABIL_EVOKE_STOP_LEVITATING)
     {
-        if (is_feat_dangerous(env.grid(you.pos()), true)
+        if (is_feat_dangerous(env.grid(you.pos()), true, true)
             && (!you.can_swim() || !feat_is_water(env.grid(you.pos()))))
         {
             mpr("Stopping levitation right now would be fatal!");
