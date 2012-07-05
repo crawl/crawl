@@ -80,7 +80,7 @@ std::string item_def::name(description_level_type descrip,
     }
 
     if (descrip == DESC_NONE)
-        return ("");
+        return "";
 
     std::ostringstream buff;
 
@@ -2889,7 +2889,7 @@ bool is_dangerous_item(const item_def &item, bool temp)
             return (!player_mutation_level(MUT_TORMENT_RESISTANCE)
                     || !temp && you.species == SP_VAMPIRE);
         case SCR_HOLY_WORD:
-            return (you.undead_or_demonic());
+            return you.undead_or_demonic();
         default:
             return false;
         }
@@ -2978,7 +2978,7 @@ bool is_useless_item(const item_def &item, bool temp)
         return false;
 
     case OBJ_ARMOUR:
-        return (!can_wear_armour(item, false, true));
+        return !can_wear_armour(item, false, true);
 
     case OBJ_SCROLLS:
         if (!item_type_known(item))
@@ -2993,7 +2993,7 @@ bool is_useless_item(const item_def &item, bool temp)
         case SCR_RANDOM_USELESSNESS:
             return true;
         case SCR_TELEPORTATION:
-            return (crawl_state.game_is_sprint());
+            return crawl_state.game_is_sprint();
         case SCR_AMNESIA:
             return (you.religion == GOD_TROG);
         case SCR_RECHARGING:
@@ -3057,7 +3057,7 @@ bool is_useless_item(const item_def &item, bool temp)
         case POT_WATER:
         case POT_BLOOD:
         case POT_BLOOD_COAGULATED:
-            return (!can_ingest(item, true, false));
+            return !can_ingest(item, true, false);
         case POT_POISON:
         case POT_STRONG_POISON:
             // If you're poison resistant, poison is only useless.
@@ -3136,7 +3136,7 @@ bool is_useless_item(const item_def &item, bool temp)
             return player_control_teleport(true, temp, false);
 
         case RING_TELEPORTATION:
-            return (crawl_state.game_is_sprint());
+            return crawl_state.game_is_sprint();
 
         case RING_INVISIBILITY:
             return (temp ? you.backlit(true)
@@ -3209,9 +3209,9 @@ bool is_useless_item(const item_def &item, bool temp)
         case MISC_DISC_OF_STORMS:
             return (player_res_electricity(false, temp) > 0);
         case MISC_LAMP_OF_FIRE:
-            return (!you.skill(SK_FIRE_MAGIC));
+            return !you.skill(SK_FIRE_MAGIC);
         case MISC_AIR_ELEMENTAL_FAN:
-            return (!you.skill(SK_AIR_MAGIC));
+            return !you.skill(SK_AIR_MAGIC);
         case MISC_HORN_OF_GERYON:
             return item.plus2;
         default:
@@ -3481,7 +3481,7 @@ item_kind item_kind_by_name(std::string name)
     item_names_map::iterator i = item_names_cache.find(name);
 
     if (i != item_names_cache.end())
-        return (i->second);
+        return i->second;
 
     item_kind err = {OBJ_UNASSIGNED, 0, 0, 0};
 
@@ -3494,7 +3494,7 @@ std::vector<std::string> item_name_list_for_glyph(unsigned glyph)
     i = item_names_by_glyph_cache.find(glyph);
 
     if (i != item_names_by_glyph_cache.end())
-        return (i->second);
+        return i->second;
 
     std::vector<std::string> empty;
     return empty;
@@ -3504,7 +3504,7 @@ bool is_named_corpse(const item_def &corpse)
 {
     ASSERT(corpse.base_type == OBJ_CORPSES);
 
-    return (corpse.props.exists(CORPSE_NAME_KEY));
+    return corpse.props.exists(CORPSE_NAME_KEY);
 }
 
 std::string get_corpse_name(const item_def &corpse, uint64_t *name_type)
@@ -3512,7 +3512,7 @@ std::string get_corpse_name(const item_def &corpse, uint64_t *name_type)
     ASSERT(corpse.base_type == OBJ_CORPSES);
 
     if (!corpse.props.exists(CORPSE_NAME_KEY))
-        return ("");
+        return "";
 
     if (name_type != NULL)
         *name_type = corpse.props[CORPSE_NAME_TYPE_KEY].get_int64();

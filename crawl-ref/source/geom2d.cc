@@ -120,7 +120,7 @@ const vector& vector::operator+=(const vector &v)
 {
     x += v.x;
     y += v.y;
-    return (*this);
+    return *this;
 }
 
 vector vector::operator+(const vector &v) const

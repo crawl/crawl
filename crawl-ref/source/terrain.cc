@@ -48,7 +48,7 @@ actor* actor_at(const coord_def& c)
     if (!in_bounds(c))
         return NULL;
     if (c == you.pos())
-        return (&you);
+        return &you;
     return monster_at(c);
 }
 
@@ -1544,7 +1544,7 @@ dungeon_feature_type feat_by_desc(std::string desc)
     feat_desc_map::iterator i = feat_desc_cache.find(desc);
 
     if (i != feat_desc_cache.end())
-        return (i->second);
+        return i->second;
 
     return DNGN_UNSEEN;
 }

@@ -378,7 +378,7 @@ void trim_god_gift_inscrip(item_def& item)
 std::string artefact_auto_inscription(const item_def& item)
 {
     if (item.base_type == OBJ_BOOKS)
-        return ("");
+        return "";
 
     const std::vector<std::string> propnames = _randart_propnames(item);
 
@@ -549,7 +549,7 @@ std::string trap_name(trap_type trap)
 
     if (trap >= TRAP_DART && trap < NUM_TRAPS)
         return (trap_names[trap]);
-    return ("");
+    return "";
 }
 
 int str_to_trap(const std::string &s)
@@ -573,7 +573,7 @@ int str_to_trap(const std::string &s)
         if (tspec == lowercase_string(trap_names[i]))
             return i;
 
-    return (-1);
+    return -1;
 }
 
 //---------------------------------------------------------------
@@ -2992,7 +2992,7 @@ static std::string _describe_draconian_role(monster_type type)
     case MONS_DRACONIAN_KNIGHT:
         return "It wields a deadly weapon with menacing efficiency.";
     default:
-        return ("");
+        return "";
     }
 }
 
@@ -3019,7 +3019,7 @@ static std::string _describe_draconian_colour(int species)
     case MONS_PALE_DRACONIAN:
         return "It is cloaked in a pall of superheated steam.";
     }
-    return ("");
+    return "";
 }
 
 static std::string _describe_draconian(const monster_info& mi)
@@ -3277,7 +3277,7 @@ static std::string _monster_stat_description(const monster_info& mi)
     else if (sizes[mi.body_size()])
         result << uppercase_first(pronoun) << " is " << sizes[mi.body_size()] << ".\n";
 
-    return (result.str());
+    return result.str();
 }
 
 static std::string _serpent_of_hell_flavour(monster_type m)
@@ -3705,7 +3705,7 @@ std::string get_ghost_description(const monster_info &mi, bool concise)
              << god_name(mi.u.ghost.religion);
     }
 
-    return (gstr.str());
+    return gstr.str();
 }
 
 extern ability_type god_abilities[NUM_GODS][MAX_GOD_ABILITIES];

@@ -306,7 +306,7 @@ void Menu::do_menu()
 int Menu::get_cursor() const
 {
     if (last_selected == -1)
-        return (-1);
+        return -1;
 
     unsigned int next = (last_selected + 1) % item_count();
 
@@ -1566,10 +1566,10 @@ int menu_colour(const std::string &text, const std::string &prefix,
                || cm.tag == "inventory" && tag == "pickup")
             && cm.pattern.matches(tmp_text))
         {
-            return (cm.colour);
+            return cm.colour;
         }
     }
-    return (-1);
+    return -1;
 }
 
 int MenuHighlighter::entry_colour(const MenuEntry *entry) const

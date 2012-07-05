@@ -31,7 +31,7 @@ los_def& los_def::operator=(const los_def& los)
     init(los.center, *los.opc, los.bds);
     show = los.show;
     arena = los.arena;
-    return (*this);
+    return *this;
 }
 
 void los_def::init(const coord_def &c, const opacity_func &o,
@@ -89,7 +89,7 @@ circle_def los_def::get_bounds() const
 
 bool los_def::in_bounds(const coord_def& p) const
 {
-    return (bds.contains(p - center));
+    return bds.contains(p - center);
 }
 
 bool los_def::see_cell(const coord_def& p) const
@@ -112,7 +112,7 @@ circle_def los_glob::get_bounds() const
 
 bool los_glob::in_bounds(const coord_def& p) const
 {
-    return (bds.contains(p - center));
+    return bds.contains(p - center);
 }
 
 bool los_glob::see_cell(const coord_def& p) const
@@ -125,5 +125,5 @@ los_glob& los_glob::operator=(const los_glob& los)
     lt = los.lt;
     center = los.center;
     bds = los.bds;
-    return (*this);
+    return *this;
 }

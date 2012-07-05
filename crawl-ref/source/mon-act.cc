@@ -78,7 +78,7 @@ static int _compass_idx(const coord_def& mov)
     for (int i = 0; i < 8; i++)
         if (mon_compass[i] == mov)
             return i;
-    return (-1);
+    return -1;
 }
 
 static bool immobile_monster[MAX_MONSTERS];
@@ -336,7 +336,7 @@ static bool _mon_on_interesting_grid(monster* mon)
         // else fall through
     case DNGN_ALTAR_ZIN:
     case DNGN_ALTAR_SHINING_ONE:
-        return (mon->is_holy());
+        return mon->is_holy();
 
     // Orcs will tend to patrol around altars to Beogh, and guard the
     // stairway from and to the Orcish Mines.

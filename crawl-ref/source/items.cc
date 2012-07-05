@@ -1148,7 +1148,7 @@ bool origin_is_acquirement(const item_def& item, item_source_type *type)
 std::string origin_desc(const item_def &item)
 {
     if (!origin_describable(item))
-        return ("");
+        return "";
 
     if (_origin_is_original_equip(item))
         return "Original Equipment";
@@ -1467,7 +1467,7 @@ static int _userdef_find_free_slot(const item_def &i)
 #ifdef CLUA_BINDINGS
     int slot = -1;
     if (!clua.callfn("c_assign_invletter", "u>d", &i, &slot))
-        return (-1);
+        return -1;
 
     return slot;
 #else
@@ -1755,7 +1755,7 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
     if (inv_count() >= ENDOFPACK)
         drop_spoiled_chunks(1, true);
     if (inv_count() >= ENDOFPACK)
-        return (-1);
+        return -1;
 
     if (!quiet && partial_pickup)
         mpr("You can only carry some of what is here.");
@@ -1765,7 +1765,7 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
         || you.inv[freeslot].defined())
     {
         // Something is terribly wrong.
-        return (-1);
+        return -1;
     }
 
     if (mitm[obj].base_type == OBJ_ORBS

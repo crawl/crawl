@@ -1781,7 +1781,7 @@ struct complicated_sight_check
 
 static bool _basic_sight_check(monster* mons, actor * test)
 {
-    return (mons->can_see(test));
+    return mons->can_see(test);
 }
 
 template<typename T>

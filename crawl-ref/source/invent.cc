@@ -1082,7 +1082,7 @@ std::string item_class_name(int type, bool terse)
         case OBJ_CORPSES:    return "Carrion";
         }
     }
-    return ("");
+    return "";
 }
 
 const char* item_slot_name(equipment_type type, bool terse)
@@ -1315,7 +1315,7 @@ static unsigned char _invent_select(const char *title = NULL,
     if (items)
         *items = menu.get_selitems();
 
-    return (menu.getkey());
+    return menu.getkey();
 }
 
 unsigned char get_invent(int invent_type)

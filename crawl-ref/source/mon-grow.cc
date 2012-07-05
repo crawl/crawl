@@ -105,7 +105,7 @@ static const monster_level_up *_monster_level_up_target(monster_type type,
             if (static_cast<int>(me->hpdice[0]) == hit_dice
                 && x_chance_in_y(mlup.chance, 1000))
             {
-                return (&mlup);
+                return &mlup;
             }
         }
     }

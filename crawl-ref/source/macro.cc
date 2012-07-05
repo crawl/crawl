@@ -114,7 +114,7 @@ static inline int userfunc_index(int key)
 static int userfunc_index(const keyseq &seq)
 {
     if (seq.empty())
-        return (-1);
+        return -1;
 
     return userfunc_index(seq.front());
 }
@@ -175,7 +175,7 @@ static void userfunc_collectgarbage(void)
 static int userfunc_getindex(const std::string &fname)
 {
     if (fname.length() == 0)
-        return (-1);
+        return -1;
 
     userfunc_collectgarbage();
 
@@ -384,7 +384,7 @@ static std::string vtostr(const keyseq &seq)
             s << static_cast<char>(*i);
     }
 
-    return (s.str());
+    return s.str();
 }
 
 /*
@@ -628,7 +628,7 @@ int macro_buf_get()
         if (macro_keys_left == 0)
             macro_keys_left = -1;
 
-        return (-1);
+        return -1;
     }
 
     int key = Buffer.front();
@@ -1151,7 +1151,7 @@ void remove_key_recorder(key_recorder* recorder)
 
 int get_macro_buf_size()
 {
-    return (Buffer.size());
+    return Buffer.size();
 }
 
 ///////////////////////////////////////////////////////////////
@@ -1219,7 +1219,7 @@ std::string command_to_name(command_type cmd)
     if (it == _cmds_to_names.end())
         return "CMD_NO_CMD";
 
-    return (it->second);
+    return it->second;
 }
 
 command_type key_to_command(int key, KeymapContext context)
@@ -1279,7 +1279,7 @@ int command_to_key(command_type cmd)
     if (it == cmd_map.end())
         return ('\0');
 
-    return (it->second);
+    return it->second;
 }
 
 static KeymapContext _context_for_command(command_type cmd)

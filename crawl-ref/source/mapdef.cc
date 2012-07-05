@@ -141,7 +141,7 @@ std::string mapdef_split_key_item(const std::string &s,
     *arg = substitute;
     *separator = s[sep];
 
-    return ("");
+    return "";
 }
 
 int store_tilename_get_index(const std::string tilename)
@@ -456,7 +456,7 @@ map_lines &map_lines::operator = (const map_lines &map)
 {
     if (this != &map)
         init_from(map);
-    return (*this);
+    return *this;
 }
 
 map_lines::~map_lines()
@@ -507,7 +507,7 @@ std::string map_lines::add_feature_marker(const std::string &s)
     map_marker_spec spec(key, arg);
     spec.apply_transform(*this);
 
-    return ("");
+    return "";
 }
 
 std::string map_lines::add_lua_marker(const std::string &key,
@@ -515,7 +515,7 @@ std::string map_lines::add_lua_marker(const std::string &key,
 {
     map_marker_spec spec(key, function);
     spec.apply_transform(*this);
-    return ("");
+    return "";
 }
 
 void map_lines::apply_markers(const coord_def &c)
@@ -659,7 +659,7 @@ std::string map_lines::check_block_shuffle(const std::string &s)
             return "block shuffle segment length mismatch";
     }
 
-    return ("");
+    return "";
 }
 
 std::string map_lines::check_shuffle(std::string &s)
@@ -672,7 +672,7 @@ std::string map_lines::check_shuffle(std::string &s)
     if (s.find('/') != std::string::npos)
         return check_block_shuffle(s);
 
-    return ("");
+    return "";
 }
 
 std::string map_lines::parse_glyph_replacements(std::string s,
@@ -700,7 +700,7 @@ std::string map_lines::parse_glyph_replacements(std::string s,
         }
     }
 
-    return ("");
+    return "";
 }
 
 template<class T>
@@ -733,7 +733,7 @@ static std::string _parse_weighted_str(const std::string &spec, T &list)
                                 val.c_str(), spec.c_str());
         }
     }
-    return ("");
+    return "";
 }
 
 bool map_colour_list::parse(const std::string &col, int weight)
@@ -751,7 +751,7 @@ std::string map_lines::add_colour(const std::string &sub)
     std::string s = trimmed_string(sub);
 
     if (s.empty())
-        return ("");
+        return "";
 
     int sep = 0;
     std::string key;
@@ -769,7 +769,7 @@ std::string map_lines::add_colour(const std::string &sub)
     colour_spec spec(key, sep == ':', colours);
     overlay_colours(spec);
 
-    return ("");
+    return "";
 }
 
 bool map_fprop_list::parse(const std::string &fp, int weight)
@@ -803,7 +803,7 @@ std::string map_lines::add_fproperty(const std::string &sub)
     std::string s = trimmed_string(sub);
 
     if (s.empty())
-        return ("");
+        return "";
 
     int sep = 0;
     std::string key;
@@ -821,14 +821,14 @@ std::string map_lines::add_fproperty(const std::string &sub)
     fprop_spec spec(key, sep == ':', fprops);
     overlay_fprops(spec);
 
-    return ("");
+    return "";
 }
 
 std::string map_lines::add_fheight(const std::string &sub)
 {
     std::string s = trimmed_string(sub);
     if (s.empty())
-        return ("");
+        return "";
 
     int sep = 0;
     std::string key;
@@ -846,13 +846,13 @@ std::string map_lines::add_fheight(const std::string &sub)
     fheight_spec spec(key, sep == ':', fheights);
     overlay_fheights(spec);
 
-    return ("");
+    return "";
 }
 
 bool map_string_list::parse(const std::string &fp, int weight)
 {
     push_back(map_weighted_string(fp, weight));
-    return (!fp.empty());
+    return !fp.empty();
 }
 
 std::string map_lines::add_subst(const std::string &sub)
@@ -860,7 +860,7 @@ std::string map_lines::add_subst(const std::string &sub)
     std::string s = trimmed_string(sub);
 
     if (s.empty())
-        return ("");
+        return "";
 
     int sep = 0;
     std::string key;
@@ -878,7 +878,7 @@ std::string map_lines::add_subst(const std::string &sub)
     subst_spec spec(key, sep == ':', repl);
     subst(spec);
 
-    return ("");
+    return "";
 }
 
 std::string map_lines::parse_nsubst_spec(const std::string &s,
@@ -903,7 +903,7 @@ std::string map_lines::parse_nsubst_spec(const std::string &s,
         return err;
 
     spec = subst_spec(count, sep == ':', repl);
-    return ("");
+    return "";
 }
 
 std::string map_lines::add_nsubst(const std::string &s)
@@ -940,7 +940,7 @@ std::string map_lines::add_nsubst(const std::string &s)
     nsubst_spec spec(key, substs);
     nsubst(spec);
 
-    return ("");
+    return "";
 }
 
 std::string map_lines::add_shuffle(const std::string &raws)
@@ -1870,7 +1870,7 @@ std::string map_lines::add_tile(const std::string &sub, bool is_floor, bool is_f
     std::string s = trimmed_string(sub);
 
     if (s.empty())
-        return ("");
+        return "";
 
     bool no_random = strip_tag(s, "no_random");
     bool last_tile = strip_tag(s, "last_tile");
@@ -1891,7 +1891,7 @@ std::string map_lines::add_tile(const std::string &sub, bool is_floor, bool is_f
     tile_spec spec(key, sep == ':', no_random, last_tile, is_floor, is_feat, list);
     overlay_tiles(spec);
 
-    return ("");
+    return "";
 }
 
 std::string map_lines::add_rocktile(const std::string &sub)
@@ -2415,7 +2415,7 @@ std::string map_def::run_lua(bool run_main)
     if (err == E_CHUNK_LOAD_FAILURE)
         lua_pushnil(dlua);
     else if (err)
-        return (prelude.orig_error());
+        return prelude.orig_error();
     if (!dlua.callfn("dgn_run_map", 1, 0))
         return rewrite_chunk_errors(dlua.error);
 
@@ -2426,7 +2426,7 @@ std::string map_def::run_lua(bool run_main)
         if (err == E_CHUNK_LOAD_FAILURE)
             lua_pushnil(dlua);
         else if (err)
-            return (mapchunk.orig_error());
+            return mapchunk.orig_error();
         if (!dlua.callfn("dgn_run_map", 1, 0))
             return rewrite_chunk_errors(dlua.error);
 
@@ -2441,13 +2441,13 @@ std::string map_def::run_lua(bool run_main)
         if (err == E_CHUNK_LOAD_FAILURE)
             lua_pushnil(dlua);
         else if (err)
-            return (main.orig_error());
+            return main.orig_error();
         if (!dlua.callfn("dgn_run_map", 1, 0))
             return rewrite_chunk_errors(dlua.error);
         run_hook("post_main");
     }
 
-    return (dlua.error);
+    return dlua.error;
 }
 
 void map_def::copy_hooks_from(const map_def &other_map,
@@ -2597,7 +2597,7 @@ std::string map_def::validate_temple_map()
 
             // Assume that specialized single-god temples are set up
             // properly.
-            return ("");
+            return "";
         }
         else
         {
@@ -2628,13 +2628,13 @@ std::string map_def::validate_temple_map()
     if (altars.size() > god_list.size())
         return "Temple vault has too many altars";
 
-    return ("");
+    return "";
 }
 
 std::string map_def::validate_map_placeable()
 {
     if (has_depth() || !place.empty())
-        return ("");
+        return "";
 
     // Ok, the map wants to be placed by tag. In this case it should have
     // at least one tag that's not a map flag.
@@ -2780,7 +2780,7 @@ void map_def::add_depth(const level_range &range)
 
 bool map_def::has_depth() const
 {
-    return (!depths.empty());
+    return !depths.empty();
 }
 
 bool map_def::is_minivault() const
@@ -3030,7 +3030,7 @@ void map_def::normalise()
 std::string map_def::resolve()
 {
     dlua_set_map dl(this);
-    return ("");
+    return "";
 }
 
 void map_def::fixup()
@@ -3070,12 +3070,12 @@ std::vector<std::string> map_def::get_tags() const
 
 keyed_mapspec *map_def::mapspec_at(const coord_def &c)
 {
-    return (map.mapspec_at(c));
+    return map.mapspec_at(c);
 }
 
 const keyed_mapspec *map_def::mapspec_at(const coord_def &c) const
 {
-    return (map.mapspec_at(c));
+    return map.mapspec_at(c);
 }
 
 std::string map_def::subvault_from_tagstring(const std::string &sub)
@@ -3083,7 +3083,7 @@ std::string map_def::subvault_from_tagstring(const std::string &sub)
     std::string s = trimmed_string(sub);
 
     if (s.empty())
-        return ("");
+        return "";
 
     int sep = 0;
     std::string key;
@@ -3114,7 +3114,7 @@ std::string map_def::subvault_from_tagstring(const std::string &sub)
     if (!err.empty())
         return err;
 
-    return ("");
+    return "";
 }
 
 std::string map_def::apply_subvault(string_spec &spec)
@@ -3124,7 +3124,7 @@ std::string map_def::apply_subvault(string_spec &spec)
     if (!map.find_bounds(spec.key.c_str(), tl, br))
     {
         // No glyphs, so do nothing.
-        return ("");
+        return "";
     }
 
     int vwidth = br.x - tl.x + 1;
@@ -3170,7 +3170,7 @@ std::string map_def::apply_subvault(string_spec &spec)
         copy_hooks_from(vault, "post_place");
         dgn_register_vault(vault);
 
-        return ("");
+        return "";
     }
 
     // Failure, restore original unique tags and names.
@@ -3223,7 +3223,7 @@ int map_def::subvault_width() const
     if (!svmask)
         return 0;
 
-    return (svmask->width());
+    return svmask->width();
 }
 
 int map_def::subvault_height() const
@@ -3231,7 +3231,7 @@ int map_def::subvault_height() const
     if (!svmask)
         return 0;
 
-    return (svmask->height());
+    return svmask->height();
 }
 
 int map_def::subvault_mismatch_count(const coord_def &offset) const
@@ -4070,7 +4070,7 @@ mons_spec mons_list::mons_by_name(std::string name) const
     name = replace_all(name, "random", "any");
 
     if (name == "nothing")
-        return (-1);
+        return -1;
 
     // Special casery:
     if (name == "pandemonium lord")
@@ -4190,7 +4190,7 @@ item_spec &item_spec::operator = (const item_spec &other)
         if (other._corpse_monster_spec)
             set_corpse_monster_spec(other.corpse_monster_spec());
     }
-    return (*this);
+    return *this;
 }
 
 item_spec::~item_spec()
@@ -4257,7 +4257,7 @@ item_spec item_list::random_item_weighted()
 
     item_spec* rn_item = random_choose_weighted(pairs);
     if (rn_item)
-        return (*rn_item);
+        return *rn_item;
 
     return none;
 }
@@ -4471,7 +4471,7 @@ static int str_to_ego(item_spec &spec, std::string ego_str)
         for (int j = 0; list[j] != NULL; j++)
             if (ego_str == list[j])
                 // Ego incompatible with base type.
-                return (-1);
+                return -1;
     }
 
     // Non-existant ego
@@ -5298,7 +5298,7 @@ std::string map_marker_spec::apply_transform(map_lines &map)
 
     // Markers with no key are not an error.
     if (positions.empty())
-        return ("");
+        return "";
 
     for (int i = 0, size = positions.size(); i < size; ++i)
     {
@@ -5316,7 +5316,7 @@ std::string map_marker_spec::apply_transform(map_lines &map)
             return err;
         }
     }
-    return ("");
+    return "";
 }
 
 map_marker *map_marker_spec::create_marker()
@@ -5571,7 +5571,7 @@ std::string keyed_mapspec::set_mons(const std::string &s, bool fix)
             return error;
     }
 
-    return ("");
+    return "";
 }
 
 std::string keyed_mapspec::set_item(const std::string &s, bool fix)
@@ -5688,7 +5688,7 @@ feature_spec& feature_spec::operator = (const feature_spec& other)
 {
     if (this != &other)
         init_with(other);
-    return (*this);
+    return *this;
 }
 
 void feature_spec::init_with(const feature_spec& other)

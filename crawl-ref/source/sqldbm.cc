@@ -350,7 +350,7 @@ sql_datum &sql_datum::operator = (const sql_datum &d)
         reset();
         init_from(d);
     }
-    return (*this);
+    return *this;
 }
 
 void sql_datum::reset()

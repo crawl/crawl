@@ -268,7 +268,7 @@ int cast_selective_amnesia(std::string *pre_msg)
         if (key_is_escape(keyin))
         {
             canned_msg(MSG_OK);
-            return (-1);
+            return -1;
         }
 
         if (keyin == '?' || keyin == '*')

@@ -402,7 +402,7 @@ static std::string _item_name(lua_State *ls, item_def* item)
     else if (lua_isnumber(ls, 1))
         ndesc = static_cast<description_level_type>(luaL_checkint(ls, 1));
     const bool terse = lua_toboolean(ls, 2);
-    return (item->name(ndesc, terse));
+    return item->name(ndesc, terse);
 }
 
 static int l_item_do_name(lua_State *ls)

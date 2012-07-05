@@ -685,7 +685,7 @@ static level_pos _stair_dest(const coord_def& p, command_type dir)
     if (!sinf)
         return level_pos();
 
-    return (sinf->destination);
+    return sinf->destination;
 }
 
 // show_map() now centers the known map along x or y.  This prevents

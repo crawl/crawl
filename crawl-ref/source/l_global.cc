@@ -21,7 +21,7 @@ static text_pattern &get_text_pattern(const std::string &s, bool checkcase)
         pattern_cache.clear();
 
     pattern_cache[s] = text_pattern(s, !checkcase);
-    return (pattern_cache[s]);
+    return pattern_cache[s];
 }
 
 static int lua_pmatch(lua_State *ls)

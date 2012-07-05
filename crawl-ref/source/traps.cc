@@ -283,7 +283,7 @@ int get_trapping_net(const coord_def& where, bool trapped)
             && si->sub_type == MI_THROWING_NET
             && (!trapped || item_is_stationary(*si)))
         {
-            return (si->index());
+            return si->index();
         }
     }
     return NON_ITEM;
@@ -1138,7 +1138,7 @@ trap_def* find_trap(const coord_def& pos)
 trap_type get_trap_type(const coord_def& pos)
 {
     if (trap_def* ptrap = find_trap(pos))
-        return (ptrap->type);
+        return ptrap->type;
 
     return TRAP_UNASSIGNED;
 }
@@ -1374,7 +1374,7 @@ static int damage_or_escape_net(int hold)
 
     // If undecided, choose damaging approach (it's quicker).
     if (damage >= escape)
-        return (-damage); // negate value
+        return -damage; // negate value
 
     return escape;
 }

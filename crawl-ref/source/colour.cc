@@ -777,19 +777,19 @@ static unsigned _colflag2brand(int colflag)
     switch (colflag)
     {
     case COLFLAG_ITEM_HEAP:
-        return (Options.heap_brand);
+        return Options.heap_brand;
     case COLFLAG_FRIENDLY_MONSTER:
-        return (Options.friend_brand);
+        return Options.friend_brand;
     case COLFLAG_NEUTRAL_MONSTER:
-        return (Options.neutral_brand);
+        return Options.neutral_brand;
     case COLFLAG_WILLSTAB:
-        return (Options.stab_brand);
+        return Options.stab_brand;
     case COLFLAG_MAYSTAB:
-        return (Options.may_stab_brand);
+        return Options.may_stab_brand;
     case COLFLAG_FEATURE_ITEM:
-        return (Options.feature_item_brand);
+        return Options.feature_item_brand;
     case COLFLAG_TRAP_ITEM:
-        return (Options.trap_item_brand);
+        return Options.trap_item_brand;
     default:
         return CHATTR_NORMAL;
     }

@@ -89,13 +89,13 @@ static dgn_event_type dgn_event_type_by_name(const std::string &name)
 static const char *dgn_event_type_name(unsigned evmask)
 {
     if (evmask == 0)
-        return (dgn_event_type_names[0]);
+        return dgn_event_type_names[0];
 
     for (unsigned i = 1; i < ARRAYSZ(dgn_event_type_names); ++i)
         if (evmask & (1 << (i - 1)))
-            return (dgn_event_type_names[i]);
+            return dgn_event_type_names[i];
 
-    return (dgn_event_type_names[0]);
+    return dgn_event_type_names[0];
 }
 
 static void dgn_push_event_type(lua_State *ls, int n)

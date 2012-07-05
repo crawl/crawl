@@ -40,20 +40,20 @@ actor_iterator::operator bool() const
 actor* actor_iterator::operator*() const
 {
     if (!did_you)
-        return (&you);
+        return &you;
     else
-        return (*mi);
+        return *mi;
 }
 
 actor* actor_iterator::operator->() const
 {
-    return (**this);
+    return **this;
 }
 
 actor_iterator& actor_iterator::operator++()
 {
     advance();
-    return (*this);
+    return *this;
 }
 
 actor_iterator actor_iterator::operator++(int)
@@ -74,7 +74,7 @@ bool actor_iterator::valid(const actor* a) const
     case R_LOS:
         return (los->see_cell(a->pos()));
     case R_ACT:
-        return (act->can_see(a));
+        return act->can_see(a);
     default:
         return true;
     }

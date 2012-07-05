@@ -739,7 +739,7 @@ static spell_type search_first_list(int ignore_spell)
             continue;
 
         if (_know_spell(search_order_conj[i]))
-            return (search_order_conj[i]);
+            return search_order_conj[i];
     }
 
     return SPELL_NO_SPELL;
@@ -756,7 +756,7 @@ static spell_type search_second_list(int ignore_spell)
             continue;
 
         if (_know_spell(search_order_third[i]))
-            return (search_order_third[i]);
+            return search_order_third[i];
     }
 
     return SPELL_NO_SPELL;
@@ -773,7 +773,7 @@ static spell_type search_third_list(int ignore_spell)
             continue;
 
         if (_know_spell(search_order_misc[i]))
-            return (search_order_misc[i]);
+            return search_order_misc[i];
     }
 
     return SPELL_NO_SPELL;
@@ -1021,13 +1021,13 @@ std::string adjective_for_labrat_colour(colour_t l_colour)
     case LIGHTMAGENTA:   return "mutated";
     case MAGENTA:        return "shifting";
     case GREEN:          return "venomous";
-    case LIGHTGRAY:      return ("");
+    case LIGHTGRAY:      return "";
     default:
         die("invalid labrat adjective");
         break;
     }
 
-    return ("");
+    return "";
 }
 
 #ifdef USE_TILE

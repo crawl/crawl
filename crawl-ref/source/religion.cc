@@ -511,7 +511,7 @@ std::string get_god_powers(god_type which_god)
 {
     // Return early for the special cases.
     if (which_god == GOD_NO_GOD)
-        return ("");
+        return "";
 
     std::string result = getLongDescription(god_name(which_god) + " powers");
     return result;
@@ -520,7 +520,7 @@ std::string get_god_powers(god_type which_god)
 std::string get_god_likes(god_type which_god, bool verbose)
 {
     if (which_god == GOD_NO_GOD || which_god == GOD_XOM)
-        return ("");
+        return "";
 
     std::string text = uppercase_first(god_name(which_god));
     std::vector<std::string> likes;
@@ -812,7 +812,7 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
 {
     // Return early for the special cases.
     if (which_god == GOD_NO_GOD || which_god == GOD_XOM)
-        return ("");
+        return "";
 
     std::string text;
     std::vector<std::string> dislikes;        // Piety loss
@@ -935,7 +935,7 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
     }
 
     if (dislikes.empty() && really_dislikes.empty())
-        return ("");
+        return "";
 
     if (!dislikes.empty())
     {
@@ -1179,7 +1179,7 @@ int yred_random_servants(unsigned int threshold, bool force_hostile)
 
     const unsigned int servant = random2(threshold);
     if ((servant + 2) * 2 < threshold && !force_hostile)
-        return (-1);
+        return -1;
 
     monster_type mon_type = _yred_servants[servant];
     int how_many = (mon_type == MONS_FLYING_SKULL) ? 2 + random2(4)
@@ -1223,7 +1223,7 @@ static const item_def* _find_missile_launcher(int skill)
         if (is_range_weapon(item)
             && range_skill(item) == skill_type(skill))
         {
-            return (&item);
+            return &item;
         }
     }
     return NULL;
@@ -2348,7 +2348,7 @@ std::string god_name(god_type which_god, bool long_name)
     case GOD_ASHENZARI:     return "Ashenzari";
     case NUM_GODS:          return "Buggy";
     }
-    return ("");
+    return "";
 }
 
 std::string god_name_jiyva(bool second_name)
@@ -2560,7 +2560,7 @@ void dock_piety(int piety_loss, int penance)
 int piety_scale(int piety)
 {
     if (piety < 0)
-        return (-piety_scale(-piety));
+        return -piety_scale(-piety);
 
     if (player_effect_faith())
         return (piety + div_rand_round(piety, 3));
@@ -2885,7 +2885,7 @@ static std::string _god_hates_your_god_reaction(god_type god, god_type your_god)
     {
         // Non-good gods always hate your current god.
         if (!is_good_god(god))
-            return ("");
+            return "";
 
         // Zin hates chaotic gods.
         if (god == GOD_ZIN && is_chaotic_god(your_god))
@@ -2895,7 +2895,7 @@ static std::string _god_hates_your_god_reaction(god_type god, god_type your_god)
             return " for evil";
     }
 
-    return ("");
+    return "";
 }
 
 void excommunication(god_type new_god)
@@ -4094,7 +4094,7 @@ int piety_breakpoint(int i)
     if (i >= MAX_GOD_ABILITIES || i < 0)
         return 255;
     else
-        return (breakpoints[i]);
+        return breakpoints[i];
 }
 
 // Returns true if the Shining One doesn't mind your using unchivalric

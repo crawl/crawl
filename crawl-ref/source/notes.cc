@@ -147,7 +147,7 @@ static bool _is_noteworthy(const Note& note)
 
     // Xom effects are only noteworthy if the option is true.
     if (note.type == NOTE_XOM_EFFECT)
-        return (Options.note_xom_effects);
+        return Options.note_xom_effects;
 
     // God powers might be noteworthy if it's an actual power.
     if (note.type == NOTE_GOD_POWER

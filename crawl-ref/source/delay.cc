@@ -525,7 +525,7 @@ static void _maybe_interrupt_swap(bool force_unsafe)
 
 bool you_are_delayed(void)
 {
-    return (!you.delay_queue.empty());
+    return !you.delay_queue.empty();
 }
 
 delay_type current_delay_action(void)
@@ -1870,7 +1870,7 @@ static const char *_activity_interrupt_name(activity_interrupt_type ai)
     COMPILE_CHECK(ARRAYSZ(activity_interrupt_names) == NUM_AINTERRUPTS);
 
     if (ai == NUM_AINTERRUPTS)
-        return ("");
+        return "";
 
     return activity_interrupt_names[ai];
 }
@@ -1926,7 +1926,7 @@ delay_type get_delay(const std::string &name)
 const char *delay_name(int delay)
 {
     if (delay < 0 || delay >= NUM_DELAYS)
-        return ("");
+        return "";
 
     return delay_names[delay];
 }

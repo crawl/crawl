@@ -148,7 +148,7 @@ void place_followers()
 static bool place_lost_monster(follower &f)
 {
     dprf("Placing lost one: %s", f.mons.name(DESC_PLAIN, true).c_str());
-    return (f.place(false));
+    return f.place(false);
 }
 
 static void level_place_lost_monsters(m_transit_list &m)

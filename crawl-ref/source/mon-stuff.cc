@@ -377,16 +377,16 @@ int place_monster_corpse(const monster* mons, bool silent,
     // case we place no corpse since the explosion means anything left
     // over would be scattered, tiny chunks of shifter.
     if (!in_bounds(mons->pos()))
-        return (-1);
+        return -1;
 
     // Don't attempt to place corpses within walls, either.
     // Currently, this only applies to (shapeshifter) rock worms.
     if (feat_is_wall(grd(mons->pos())))
-        return (-1);
+        return -1;
 
     // If we were told not to leave a corpse, don't.
     if (mons->props.exists("never_corpse"))
-        return (-1);
+        return -1;
 
     item_def corpse;
     const monster_type corpse_class = fill_out_corpse(mons, mons->type,
@@ -412,7 +412,7 @@ int place_monster_corpse(const monster* mons, bool silent,
         || (mons_corpse_effect(corpse_class) == CE_MUTAGEN
            && !one_chance_in(3)))
     {
-        return (-1);
+        return -1;
     }
 
 #if TAG_MAJOR_VERSION <= 33
@@ -435,7 +435,7 @@ int place_monster_corpse(const monster* mons, bool silent,
     if (o == NON_ITEM)
     {
         item_was_destroyed(corpse);
-        return (-1);
+        return -1;
     }
 
     mitm[o] = corpse;
@@ -447,7 +447,7 @@ int place_monster_corpse(const monster* mons, bool silent,
         // We already have a spray of chunks.
         item_was_destroyed(mitm[o]);
         destroy_item(o);
-        return (-1);
+        return -1;
     }
 
     move_item_to_grid(&o, mons->pos(), !mons->swimming());
@@ -1474,7 +1474,7 @@ int monster_die(monster* mons, killer_type killer,
                 int killer_index, bool silent, bool wizard, bool fake)
 {
     if (invalid_monster(mons))
-        return (-1);
+        return -1;
 
     const bool was_visible = you.can_see(mons);
 
@@ -1487,7 +1487,7 @@ int monster_die(monster* mons, killer_type killer,
         && _monster_avoided_death(mons, killer, killer_index))
     {
         mons->flags &= ~MF_EXPLODE_KILL;
-        return (-1);
+        return -1;
     }
 
     // If the monster was calling the tide, let go now.
@@ -3095,7 +3095,7 @@ bool monster_blink(monster* mons, bool quiet)
     coord_def near = _random_monster_nearby_habitable_space(*mons, false,
                                                             true);
 
-    return (mons->blink_to(near, quiet));
+    return mons->blink_to(near, quiet);
 }
 
 bool mon_can_be_slimified(monster* mons)
@@ -3490,7 +3490,7 @@ bool can_go_straight(const monster* mon, const coord_def& p1,
 // The default suitable() function for choose_random_nearby_monster().
 bool choose_any_monster(const monster* mon)
 {
-    return (!mons_is_projectile(mon->type));
+    return !mons_is_projectile(mon->type);
 }
 
 // Find a nearby monster and return its index, including you as a
@@ -3774,7 +3774,7 @@ bool mons_avoids_cloud(const monster* mons, int cloud_num, bool placement)
 
     const cloud_struct &our_cloud = env.cloud[our_cloud_num];
 
-    return (!_mons_avoids_cloud(mons, our_cloud, true));
+    return !_mons_avoids_cloud(mons, our_cloud, true);
 }
 
 // Returns a rough estimate of damage from throwing the wielded weapon.
@@ -3848,11 +3848,11 @@ int mons_pick_best_missile(monster* mons, item_def **launcher,
     if (!tdam && !fdam)
         return NON_ITEM;
     else if (tdam >= fdam)
-        return (melee->index());
+        return melee->index();
     else
     {
         *launcher = launch;
-        return (missiles->index());
+        return missiles->index();
     }
 }
 

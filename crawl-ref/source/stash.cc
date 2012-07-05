@@ -66,7 +66,7 @@ std::string userdef_annotate_item(const char *s, const item_def *item,
         ann = luaL_checkstring(clua, -1);
     return ann;
 #else
-    return ("");
+    return "";
 #endif
 }
 
@@ -529,7 +529,7 @@ bool Stash::show_menu(const level_pos &prefix, bool can_travel,
 std::string Stash::description() const
 {
     if (!enabled || items.empty())
-        return ("");
+        return "";
 
     const item_def &item = items[0];
     std::string desc = stash_item_name(item);
@@ -549,7 +549,7 @@ std::string Stash::description() const
 std::string Stash::feature_description() const
 {
     if (feat == DNGN_FLOOR)
-        return ("");
+        return "";
 
     return (::feature_description_at(coord_def(x, y), false));
 }
@@ -2092,7 +2092,7 @@ ST_ItemIterator::operator bool() const
 
 const item_def& ST_ItemIterator::operator *() const
 {
-    return (*m_item);
+    return *m_item;
 }
 
 const item_def* ST_ItemIterator::operator->() const
@@ -2128,10 +2128,10 @@ const ST_ItemIterator& ST_ItemIterator::operator ++ ()
         {
             m_stash_level_it++;
             if (m_stash_level_it == StashTrack.levels.end())
-                return (*this);
+                return *this;
 
             new_level();
-            return (*this);
+            return *this;
         }
         m_shop = &(*m_shop_it);
 
@@ -2141,7 +2141,7 @@ const ST_ItemIterator& ST_ItemIterator::operator ++ ()
             m_item  = &(item.item);
             ASSERT(m_item->defined());
             m_price = item.price;
-            return (*this);
+            return *this;
         }
 
         m_shop_it++;
@@ -2156,21 +2156,21 @@ const ST_ItemIterator& ST_ItemIterator::operator ++ ()
         {
             m_item = &(*m_stash_item_it++);
             ASSERT(m_item->defined());
-            return (*this);
+            return *this;
         }
 
         m_stash_it++;
         if (m_stash_it == ls.m_stashes.end())
         {
             ++(*this);
-            return (*this);
+            return *this;
         }
 
         m_stash_item_it = m_stash_it->second.items.begin();
         ++(*this);
     }
 
-    return (*this);
+    return *this;
 }
 
 void ST_ItemIterator::new_level()

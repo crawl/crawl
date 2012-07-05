@@ -163,7 +163,7 @@ static void _write_abyssal_features()
 static int _abyssal_rune_roll()
 {
     if (you.runes[RUNE_ABYSSAL])
-        return (-1);
+        return -1;
 
     // The longer the player's hung around in the Abyss, the more
     // likely the rune. Never generate a new rune if the player
@@ -1620,7 +1620,7 @@ static bool _is_grid_corruptible(const coord_def &c)
 
     case DNGN_ROCK_WALL:
     case DNGN_CLEAR_ROCK_WALL:
-        return (!one_chance_in(3));
+        return !one_chance_in(3);
 
     default:
         return true;

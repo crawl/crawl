@@ -692,7 +692,7 @@ std::string screenshot()
         ;                       // ... and from the top
     for (; y < lines.size(); y++)
         ss << lines[y] << "\n";
-    return (ss.str());
+    return ss.str();
 }
 
 int viewmap_flash_colour()

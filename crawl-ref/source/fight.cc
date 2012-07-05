@@ -345,7 +345,7 @@ bool is_melee_weapon(const item_def *weapon)
     if (weapon->base_type != OBJ_WEAPONS)
         return false;
 
-    return (!is_range_weapon(*weapon));
+    return !is_range_weapon(*weapon);
 }
 
 bool wielded_weapon_check(item_def *weapon, bool no_message)

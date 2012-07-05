@@ -1066,7 +1066,7 @@ monster_type arena_pick_random_monster(const level_id &place, int power,
         if (arena_veto_random_monster(arena::cycle_random_pos))
             continue;
 
-        return (arena::cycle_random_pos);
+        return arena::cycle_random_pos;
     }
 
     game_ended_with_error(

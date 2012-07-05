@@ -880,12 +880,12 @@ void update_screen()
 
 int get_number_of_lines()
 {
-    return (screensize.Y);
+    return screensize.Y;
 }
 
 int get_number_of_cols()
 {
-    return (screensize.X);
+    return screensize.X;
 }
 
 int num_to_lines(int num)

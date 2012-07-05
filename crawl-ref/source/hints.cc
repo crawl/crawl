@@ -1074,7 +1074,7 @@ static std::string _describe_portal(const coord_def &gc)
             "while pressing the <w>Shift key</w> will let you enter any "
             "portal you're standing on.</tiles>";
 
-    return (text.str());
+    return text.str();
 }
 
 #define DELAY_EVENT \

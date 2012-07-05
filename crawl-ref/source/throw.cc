@@ -402,23 +402,23 @@ int get_ammo_to_shoot(int item, dist &target, bool teleport)
     if (fire_warn_if_impossible())
     {
         flush_input_buffer(FLUSH_ON_FAILURE);
-        return (-1);
+        return -1;
     }
 
     if (Options.auto_switch && you.m_quiver->get_fire_item() == -1
        && _autoswitch_to_ranged())
     {
-        return (-1);
+        return -1;
     }
 
     if (!_fire_choose_item_and_target(item, target, teleport))
-        return (-1);
+        return -1;
 
     std::string warn;
     if (!_fire_validate_item(item, warn))
     {
         mpr(warn.c_str());
-        return (-1);
+        return -1;
     }
     return item;
 }

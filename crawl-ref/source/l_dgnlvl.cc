@@ -57,7 +57,7 @@ level_id dlua_level_id(lua_State *ls, int ndx)
     else if (lua_isuserdata(ls, ndx))
     {
         const level_id *lid = static_cast<level_id*>(lua_touserdata(ls, ndx));
-        return (*lid);
+        return *lid;
     }
 
     luaL_argerror(ls, ndx, "Expected level_id");

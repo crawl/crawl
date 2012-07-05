@@ -31,7 +31,7 @@ const random_var& random_var::operator=(const random_var& other)
     end = other.end;
     total = other.total;
     weights = other.weights;
-    return (*this);
+    return *this;
 }
 
 int random_var::weight(int val) const

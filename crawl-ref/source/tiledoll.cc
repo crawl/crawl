@@ -35,7 +35,7 @@ dolls_data::dolls_data(const dolls_data& _orig)
 const dolls_data& dolls_data::operator=(const dolls_data& other)
 {
     memcpy(parts, other.parts, TILEP_PART_MAX * sizeof(tileidx_t));
-    return (*this);
+    return *this;
 }
 
 dolls_data::~dolls_data()

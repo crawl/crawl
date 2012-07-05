@@ -71,7 +71,7 @@ const mon_resist_def &mon_resist_def::operator |= (const mon_resist_def &o)
     acid        += o.acid;
     sticky_flame = sticky_flame || o.sticky_flame;
     rotting      = rotting      || o.rotting;
-    return (*this);
+    return *this;
 }
 
 mon_resist_def mon_resist_def::operator | (const mon_resist_def &o) const

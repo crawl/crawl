@@ -1402,7 +1402,7 @@ static bool _artefact_name_lookup(std::string &result,
                           const std::string &lookup)
 {
     result = _artefact_name_lookup(item, lookup);
-    return (!result.empty());
+    return !result.empty();
 }
 
 std::string make_artefact_name(const item_def &item, bool appearance)
@@ -1540,7 +1540,7 @@ void set_artefact_name(item_def &item, const std::string &name)
 
 int find_unrandart_index(const item_def& artefact)
 {
-    return (artefact.special);
+    return artefact.special;
 }
 
 unrandart_entry* get_unrand_entry(int unrand_index)

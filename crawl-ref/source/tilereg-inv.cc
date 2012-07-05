@@ -216,7 +216,7 @@ static bool _can_use_item(const item_def &item, bool equipped)
 
         // You can't unwield/fire a wielded cursed weapon/staff
         // but cursed armour and rings can be unwielded without problems.
-        return (!_is_true_equipped_item(item));
+        return !_is_true_equipped_item(item);
     }
 
     // Mummies can't do anything with food or potions.

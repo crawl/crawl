@@ -1020,7 +1020,7 @@ std::string monster_info::proper_name(description_level_type desc) const
 std::string monster_info::full_name(description_level_type desc, bool use_comma) const
 {
     if (desc == DESC_NONE)
-        return ("");
+        return "";
 
     if (has_proper_name())
     {
@@ -1178,7 +1178,7 @@ static std::string _verbose_info0(const monster_info& mi)
     if (mi.is(MB_INVISIBLE))
         return "invisible";
 
-    return ("");
+    return "";
 }
 
 static std::string _verbose_info(const monster_info& mi)

@@ -200,7 +200,7 @@ static inline bool _is_safe_cloud(const coord_def& c)
 
     // We can also safely run through smoke.
     const cloud_type ctype = env.cloud[cloud].type;
-    return (!is_damaging_cloud(ctype, true));
+    return !is_damaging_cloud(ctype, true);
 }
 
 // Returns an estimate for the time needed to cross this feature.
@@ -1892,7 +1892,7 @@ static std::string _get_trans_travel_dest(const travel_target &target,
     const char *branch = branches[branch_id].abbrevname;
 
     if (!branch)
-        return ("");
+        return "";
 
     std::ostringstream dest;
 
@@ -1909,7 +1909,7 @@ static std::string _get_trans_travel_dest(const travel_target &target,
     else if (target.entrance_only)
         dest << " (entrance)";
 
-    return (dest.str());
+    return dest.str();
 }
 
 // Returns the level on the given branch that's closest to the player's
@@ -2090,7 +2090,7 @@ static int _prompt_travel_branch(int prompt_flags, bool* to_entrance)
         case CONTROL('P'):
             return _find_parent_branch(curr.branch);
         case '.':
-            return (curr.branch);
+            return curr.branch;
         case '*':
             if (waypoint_list || waycount)
                 waypoint_list = !waypoint_list;
@@ -2133,7 +2133,7 @@ static int _prompt_travel_branch(int prompt_flags, bool* to_entrance)
                             return ID_CANCEL;
                     }
 #endif
-                    return (br[i]);
+                    return br[i];
                 }
             }
 
@@ -2224,11 +2224,11 @@ static int _travel_depth_keyfilter(int &c)
     switch (c)
     {
     case '<': case '>': case '?': case '$': case '^':
-        return (-1);
+        return -1;
     case '-':
     case CONTROL('P'): case 'p':
         c = '-';  // Make uniform.
-        return (-1);
+        return -1;
     default:
         return 1;
     }
@@ -2559,7 +2559,7 @@ static int _find_transtravel_stair(const level_id &cur,
     {
         // Are we in an exclude? If so, bail out.
         if (is_excluded(stair, li.get_excludes()))
-            return (-1);
+            return -1;
 
         // If there's no target position on the target level, or we're on the
         // target, we're home.
@@ -3275,7 +3275,7 @@ bool LevelInfo::know_stair(const coord_def &c) const
         return false;
 
     const level_pos &lp = stairs[index].destination;
-    return (lp.is_valid());
+    return lp.is_valid();
 }
 
 stair_info *LevelInfo::get_stair(const coord_def &pos)
@@ -3860,7 +3860,7 @@ runrest::operator int () const
 const runrest &runrest::operator = (int newrunmode)
 {
     runmode = newrunmode;
-    return (*this);
+    return *this;
 }
 
 static dungeon_feature_type _base_feat_type(dungeon_feature_type grid)
@@ -3989,7 +3989,7 @@ std::string runrest::runmode_name() const
     default:
         if (runmode > 0)
             return pos.origin()? "rest" : "run";
-        return ("");
+        return "";
     }
 }
 

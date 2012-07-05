@@ -3716,7 +3716,7 @@ static bool _vault_wants_damage(const vault_placement &vp)
     // tags like "ruin_abyss" or "ruin_lair"
     std::string place_desc = level_id::current().describe(false, false);
     lowercase(place_desc);
-    return (map.has_tag("ruin_" + place_desc));
+    return map.has_tag("ruin_" + place_desc);
 }
 
 static void _ruin_vault(const vault_placement &vp)
@@ -5494,7 +5494,7 @@ coord_def dgn_find_feature_marker(dungeon_feature_type feat)
         if (mark->get_type() == MAT_FEATURE
             && dynamic_cast<map_feature_marker*>(mark)->feat == feat)
         {
-            return (mark->pos);
+            return mark->pos;
         }
     }
     coord_def unfound;
@@ -6354,7 +6354,7 @@ vault_place_iterator &vault_place_iterator::operator ++ ()
         if (pos.y <= br.y && vault_place.map.in_map(pos - tl))
             break;
     }
-    return (*this);
+    return *this;
 }
 
 vault_place_iterator vault_place_iterator::operator ++ (int)

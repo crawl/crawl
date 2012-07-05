@@ -229,14 +229,14 @@ int CLua::loadfile(lua_State *ls, const char *filename, bool trusted,
                    bool die_on_fail)
 {
     if (!ls)
-        return (-1);
+        return -1;
 
     if (!is_path_safe(filename, trusted))
     {
         lua_pushstring(
             ls,
             make_stringf("invalid filename: %s", filename).c_str());
-        return (-1);
+        return -1;
     }
 
     std::string file = datafile_path(filename, die_on_fail);
@@ -244,7 +244,7 @@ int CLua::loadfile(lua_State *ls, const char *filename, bool trusted,
     {
         lua_pushstring(ls,
                        make_stringf("Can't find \"%s\"", filename).c_str());
-        return (-1);
+        return -1;
     }
 
     FileLineInput f(file.c_str());
@@ -692,7 +692,7 @@ CLua &CLua::get_vm(lua_State *ls)
     CLua *vm = clua_get_lightuserdata<CLua>(ls, -1);
     if (!vm)
         luaL_error(ls, "Could not find matching clua for lua state");
-    return (*vm);
+    return *vm;
 }
 
 bool CLua::is_managed_vm(lua_State *ls)
@@ -1149,7 +1149,7 @@ const lua_datum &lua_datum::operator = (const lua_datum &o)
         cleanup();
         set_from(o);
     }
-    return (*this);
+    return *this;
 }
 
 void lua_datum::push() const

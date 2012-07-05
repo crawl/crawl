@@ -29,7 +29,7 @@ bool player::see_cell(const coord_def &p) const
         return true;
     if (xray_vision)
         return ((pos() - p).abs() <= dist_range(you.current_vision));
-    return (actor::see_cell(p));
+    return actor::see_cell(p);
 }
 
 bool actor::can_see(const actor *target) const
@@ -50,7 +50,7 @@ bool player::trans_wall_blocking(const coord_def &p) const
 const los_base* actor::get_los()
 {
     los = los_glob(pos(), LOS_DEFAULT);
-    return (&los);
+    return &los;
 }
 
 const los_base* player::get_los()
@@ -60,22 +60,22 @@ const los_base* player::get_los()
         // env.show.init iterates over these bounds for arena
         los = los_glob(crawl_view.vgrdc, LOS_ARENA,
                        circle_def(LOS_MAX_RANGE, C_SQUARE));
-        return (&los);
+        return &los;
     }
     else if (xray_vision)
     {
         los = los_glob(pos(), LOS_ARENA,
                        circle_def(you.current_vision, C_ROUND));
-        return (&los);
+        return &los;
     }
     else
-        return (actor::get_los());
+        return actor::get_los();
 }
 
 const los_base* actor::get_los_no_trans()
 {
     los_no_trans = los_glob(pos(), LOS_NO_TRANS);
-    return (&los_no_trans);
+    return &los_no_trans;
 }
 
 bool player::can_see(const actor* a) const
@@ -85,5 +85,5 @@ bool player::can_see(const actor* a) const
     else if (xray_vision)
         return see_cell(a->pos());
     else
-        return (actor::can_see(a));
+        return actor::can_see(a);
 }

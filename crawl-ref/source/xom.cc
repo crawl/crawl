@@ -2384,13 +2384,13 @@ static bool _could_wear_eq(equipment_type eq)
     if (!you_tran_can_wear(eq, true))
         return false;
 
-    return (!you.slot_item(eq, true));
+    return !you.slot_item(eq, true);
 }
 
 static item_def* _tran_get_eq(equipment_type eq)
 {
     if (you_tran_can_wear(eq, true))
-        return (you.slot_item(eq, true));
+        return you.slot_item(eq, true);
 
     return NULL;
 }
@@ -3396,7 +3396,7 @@ static bool _allow_xom_banishment()
 
     // If Xom is bored, banishment becomes viable earlier.
     if (_xom_is_bored())
-        return (!_will_not_banish());
+        return !_will_not_banish();
 
     // Below the minimum experience level, only fake banishment is allowed.
     if (!_has_min_banishment_level())

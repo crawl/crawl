@@ -52,7 +52,7 @@ std::string dgn_set_default_depth(const std::string &s)
     {
         return error;
     }
-    return ("");
+    return "";
 }
 
 static void dgn_add_depths(depth_ranges &drs, lua_State *ls, int s, int e)

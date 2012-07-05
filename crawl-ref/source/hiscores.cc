@@ -593,7 +593,7 @@ static bool _hs_read(FILE *scores, scorefile_entry &dest)
     if (!fgets(inbuf, sizeof inbuf, scores))
         return false;
 
-    return (dest.parse(inbuf));
+    return dest.parse(inbuf);
 }
 
 static int _val_char(char digit)
@@ -643,7 +643,7 @@ static const char *_kill_method_name(kill_method_type kmt)
     COMPILE_CHECK(NUM_KILLBY == ARRAYSZ(kill_method_names));
 
     if (kmt == NUM_KILLBY)
-        return ("");
+        return "";
 
     return kill_method_names[kmt];
 }
@@ -689,7 +689,7 @@ scorefile_entry::scorefile_entry(const scorefile_entry &se)
 scorefile_entry &scorefile_entry::operator = (const scorefile_entry &se)
 {
     init_from(se);
-    return (*this);
+    return *this;
 }
 
 void scorefile_entry::init_from(const scorefile_entry &se)
@@ -789,7 +789,7 @@ std::string scorefile_entry::raw_string() const
     set_score_fields();
 
     if (!fields.get())
-        return ("");
+        return "";
 
     return fields->xlog_line() + "\n";
 }
@@ -806,7 +806,7 @@ static const char* _short_branch_name(int branch)
 {
     if (branch >= 0 && branch < NUM_BRANCHES)
         return branches[branch].abbrevname;
-    return ("");
+    return "";
 }
 
 enum old_job_type
@@ -1564,9 +1564,9 @@ std::string scorefile_entry::damage_string(bool terse) const
 std::string scorefile_entry::strip_article_a(const std::string &s) const
 {
     if (s.find("a ") == 0)
-        return (s.substr(2));
+        return s.substr(2);
     else if (s.find("an ") == 0)
-        return (s.substr(3));
+        return s.substr(3);
     return s;
 }
 
@@ -1773,7 +1773,7 @@ std::string scorefile_entry::death_place(death_desc_verbosity verbosity) const
     std::string place;
 
     if (death_type == KILLED_BY_LEAVING || death_type == KILLED_BY_WINNING)
-        return ("");
+        return "";
 
     char scratch[ INFO_SIZE ];
 
@@ -2525,7 +2525,7 @@ std::string xlog_fields::str_field(const std::string &s) const
 {
     xl_map::const_iterator i = fieldmap.find(s);
     if (i == fieldmap.end())
-        return ("");
+        return "";
 
     return i->second;
 }
@@ -2634,6 +2634,6 @@ std::string xlog_status_line()
     se.set_base_xlog_fields();
     xlog_fields xl = se.get_fields();
     xl.add_field("time", "%s", make_date_string(time(NULL)).c_str());
-    return (xl.xlog_line());
+    return xl.xlog_line();
 }
 #endif // DGL_WHEREIS

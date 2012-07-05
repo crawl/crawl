@@ -116,7 +116,7 @@ int actor::skill_rdiv(skill_type sk, int mult, int div) const
 int actor::res_holy_fire() const
 {
     if (is_evil() || is_unholy())
-        return (-1);
+        return -1;
     else if (is_holy())
         return 3;
     return 0;
@@ -140,7 +140,7 @@ int actor::check_res_magic(int power)
     // help them out (or building a level or two of their base skill so they
     // aren't resisted as often). - bwr
     if (is_monster() && mrs < 6 && coinflip())
-        return (-1);
+        return -1;
 
     power = stepdown_value(power, 30, 40, 100, 120);
 

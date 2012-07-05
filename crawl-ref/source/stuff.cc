@@ -71,7 +71,7 @@ std::string make_file_time(time_t when)
                  loc->tm_min,
                  loc->tm_sec);
     }
-    return ("");
+    return "";
 }
 
 void set_redraw_status(uint64_t flags)

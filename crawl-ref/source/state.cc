@@ -322,7 +322,7 @@ bool game_state::is_god_retribution() const
 {
     ASSERT(is_god_acting());
 
-    return (god_act.retribution);
+    return god_act.retribution;
 }
 
 god_type game_state::which_god_acting() const

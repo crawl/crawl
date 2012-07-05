@@ -84,7 +84,7 @@ circle_iterator::operator bool() const
 
 coord_def circle_iterator::operator*() const
 {
-    return (*iter);
+    return *iter;
 }
 
 void circle_iterator::operator++()
