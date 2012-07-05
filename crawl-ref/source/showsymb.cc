@@ -41,7 +41,12 @@ unsigned short _cell_feat_show_colour(const map_cell& cell,
             colour = fdef.seen_colour;
 
         if (colour)
+        {
+            // Show trails even out of LOS.
+            if (Options.show_travel_trail && travel_trail_index(loc) >= 0)
+                colour |= COLFLAG_REVERSE;
             return colour;
+        }
     }
 
     else if (cell.flags & MAP_EXCLUDED_STAIRS)
