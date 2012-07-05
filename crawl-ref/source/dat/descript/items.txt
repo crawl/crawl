@@ -870,9 +870,9 @@ A yellow fruit.
 %%%%
 lightning rod
 
-A wizard with poor knowledge of how mundane items work misunderstood the
-purpose of lightning rods, and instead of making one that merely draws
-lightning, he made one that creates it instead.
+Once, a wizard ignorant of the workings of mundane items misunderstood the
+purpose of lightning rods. Instead of making one that merely drew
+lightning, he made one that created it instead.
 
 This rod shoots continuous lightning: the discharge is sustained, and can be
 redirected to new targets by evoking the rod in subsequent turns (failing
