@@ -961,7 +961,7 @@ int shatter_items(coord_def where, int pow, actor *)
     return 0;
 }
 
-int shatter_walls(coord_def where, int pow, actor *)
+int shatter_walls(coord_def where, int pow, actor *agent)
 {
     int chance = 0;
 
@@ -1031,7 +1031,7 @@ int shatter_walls(coord_def where, int pow, actor *)
         grd(where) = DNGN_FLOOR;
         set_terrain_changed(where);
 
-        if (grid == DNGN_ORCISH_IDOL)
+        if (agent->is_player() && grid == DNGN_ORCISH_IDOL)
             did_god_conduct(DID_DESTROY_ORCISH_IDOL, 8);
 
         return 1;
