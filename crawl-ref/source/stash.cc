@@ -293,6 +293,7 @@ void Stash::update()
             add_item(*si);
 
         verified = true;
+        is_stack = items.size() > 1;
     }
     // If this is not your position, the only thing we can do is verify that
     // what the player sees on the square is the first item in this vector.
@@ -302,6 +303,7 @@ void Stash::update()
         {
             items.clear();
             verified = true;
+            is_stack = false;
             return;
         }
 
@@ -322,6 +324,7 @@ void Stash::update()
             add_item(item);
             // sacrificiable items and stacks of items will be visited.
             verified = !need_visit;
+            is_stack = item_stack;
             return;
         }
 
@@ -329,8 +332,10 @@ void Stash::update()
         // the top item matches what we remember.
         const item_def &first = items[0];
         // Compare these items
-        if (!are_items_same(first, item) || items.size() > 1 != item_stack)
+        if (!are_items_same(first, item) || is_stack != item_stack)
         {
+            is_stack = item_stack;
+
             // See if 'item' matches any of the items we have. If it does,
             // we'll just make that the first item and leave 'verified'
             // unchanged.
@@ -345,6 +350,7 @@ void Stash::update()
 
                     // The stash has changed, so we mark it as unverified.
                     verified = !need_visit;
+                    is_stack = item_stack;
 
                     return;
                 }
@@ -742,7 +748,8 @@ void Stash::save(writer& outf) const
     marshallByte(outf, trap);
 
     // Note: Enabled save value is inverted logic, so that it defaults to true
-    marshallByte(outf, ((verified? 1 : 0) | (!enabled? 2 : 0)));
+    marshallByte(outf, ((verified ? 1 : 0) | (!enabled ? 2 : 0)
+                        | (is_stack ? 4 : 0)));
 
     // And dump the items individually. We don't bother saving fields we're
     // not interested in (and don't anticipate being interested in).
@@ -771,6 +778,8 @@ void Stash::load(reader& inf)
     // Note: Enabled save value is inverted so it defaults to true.
     enabled  = (flags & 2) == 0;
 
+    is_stack = (flags & 4) != 0;
+
     abspos = GXM * (int) y + x;
 
     // Zap out item vector, in case it's in use (however unlikely)
@@ -783,6 +792,13 @@ void Stash::load(reader& inf)
 
         items.push_back(item);
     }
+
+#if TAG_MAJOR_VERSION == 33
+    // In case the save came before is_stack; we don't know whether or not
+    // a single item was a stack, but multiple items definitely were.
+    // Doing this unconditionally to avoid introducing a new minor tag.
+    is_stack |= items.size() > 1;
+#endif
 }
 
 ShopInfo::ShopInfo(int xp, int yp) : x(xp), y(yp), name(), shoptype(-1),

@@ -97,6 +97,7 @@ private:
     trap_type trap;
 
     std::vector<item_def> items;
+    bool is_stack;
 
     static bool are_items_same(const item_def &, const item_def &);
 
