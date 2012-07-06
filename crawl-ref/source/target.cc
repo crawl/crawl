@@ -9,6 +9,7 @@
 #include "itemprop.h"
 #include "libutil.h"
 #include "player.h"
+#include "spl-damage.h"
 #include "terrain.h"
 
 #define notify_fail(x) (why_not = (x), false)
@@ -126,6 +127,59 @@ aff_type targetter_smite::is_affected(coord_def loc)
     return AFF_NO;
 }
 
+targetter_fragment::targetter_fragment(const actor* act, int power, int ran) :
+    targetter_smite(act, ran, 1, 1, true, NULL),
+    pow(power)
+{
+}
+
+bool targetter_fragment::valid_aim(coord_def a)
+{
+    bolt tempbeam;
+    bool temp;
+    if (!setup_fragmentation_beam(tempbeam, pow, agent, a, false,
+                                  true, true, NULL, temp, temp))
+    {
+        return notify_fail("You cannot affect that.");
+    }
+    return true;
+}
+
+bool targetter_fragment::set_aim(coord_def a)
+{
+    if (!targetter::set_aim(a))
+        return false;
+
+    bolt tempbeam;
+    bool temp;
+
+    if (setup_fragmentation_beam(tempbeam, pow, agent, a, false,
+                                 false, true, NULL, temp, temp))
+    {
+        exp_range_min = tempbeam.ex_size;
+        setup_fragmentation_beam(tempbeam, pow, agent, a, false,
+                                 true, true, NULL, temp, temp);
+        exp_range_max = tempbeam.ex_size;
+    }
+    else
+    {
+        exp_range_min = exp_range_max = 0;
+        return false;
+    }
+
+    coord_def centre(9,9);
+    bolt beam;
+    beam.target = a;
+    beam.use_target_as_pos = true;
+    exp_map_min.init(INT_MAX);
+    beam.determine_affected_cells(exp_map_min, coord_def(), 0,
+                                  exp_range_min, false, false);
+    exp_map_max.init(INT_MAX);
+    beam.determine_affected_cells(exp_map_max, coord_def(), 0,
+                                  exp_range_max, false, false);
+
+    return true;
+}
 
 targetter_reach::targetter_reach(const actor* act, reach_type ran) :
     range(ran)

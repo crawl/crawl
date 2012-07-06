@@ -3,6 +3,7 @@
 
 #include "enum.h"
 #include "spl-cast.h"
+#include "act-iter.h"
 
 struct bolt;
 class dist;
@@ -27,7 +28,13 @@ spret_type cast_ignite_poison(int pow, bool fail);
 spret_type cast_discharge(int pow, bool fail);
 int disperse_monsters(coord_def where, int pow);
 spret_type cast_dispersal(int pow, bool fail = false);
-spret_type cast_fragmentation(int powc, const dist& spd, bool fail);
+bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
+                              const coord_def target, bool allow_random,
+                              bool get_max_distance, bool quiet,
+                              const char **what,
+                              bool &destroy_wall, bool &hole);
+spret_type cast_fragmentation(int powc, const actor *caster,
+                              const coord_def target, bool fail);
 int wielding_rocks();
 spret_type cast_sandblast(int powc, bolt &beam, bool fail);
 spret_type cast_tornado(int powc, bool fail);
