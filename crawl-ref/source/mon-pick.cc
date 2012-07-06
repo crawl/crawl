@@ -502,7 +502,6 @@ int mons_dungeon_level(monster_type mcls)
         return 16;
 
     case MONS_BLINK_FROG:
-    case MONS_BUTTERFLY:
     case MONS_VAMPIRE_MOSQUITO:
     case MONS_GUARDIAN_SERPENT:
     case MONS_RAKSHASA:
@@ -780,7 +779,6 @@ int mons_dungeon_rare(monster_type mcls)
     case MONS_SIMULACRUM_LARGE:
         return 25;
 
-    case MONS_BUTTERFLY:
     case MONS_FUNGUS:
     case MONS_AGATE_SNAIL:
     case MONS_ICE_DRAGON:
@@ -1147,7 +1145,6 @@ int mons_lair_level(monster_type mcls)
         return 3;
 
     case MONS_WATER_MOCCASIN:
-    case MONS_BUTTERFLY:
     case MONS_GOLIATH_BEETLE:
     case MONS_GIANT_SLUG:
     case MONS_HIPPOGRIFF:
@@ -1312,7 +1309,6 @@ int mons_lair_rare(monster_type mcls)
         return 6;
 
     case MONS_YELLOW_WASP:
-    case MONS_BUTTERFLY:
     case MONS_TRAPDOOR_SPIDER:
     case MONS_ROCK_WORM:
         return 5;
@@ -1446,7 +1442,6 @@ int mons_shoals_level(monster_type mcls)
 {
     switch (mcls)
     {
-    case MONS_BUTTERFLY:
     case MONS_BAT:
         return 1;
 
@@ -1497,7 +1492,6 @@ int mons_shoals_rare(monster_type mcls)
 
     case MONS_HIPPOGRIFF:
     case MONS_BAT:
-    case MONS_BUTTERFLY:
     case MONS_SHARK:
         return 35;
 
