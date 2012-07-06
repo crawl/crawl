@@ -1337,22 +1337,16 @@ int mons_swamp_level(monster_type mcls)
     case MONS_FUNGUS:
         return 1;
 
-    case MONS_BAT:
+    case MONS_RAVEN:
     case MONS_GIANT_FROG:
     case MONS_GIANT_AMOEBA:
     case MONS_GIANT_SLUG:
     case MONS_GIANT_NEWT:
-    case MONS_GIANT_GECKO:
-    case MONS_RAT:
     case MONS_SWAMP_DRAKE:
-    case MONS_WORM:
-    case MONS_GIANT_LEECH:
     case MONS_ALLIGATOR:
+    case MONS_WATER_MOCCASIN:
         return 2;
 
-    case MONS_NECROPHAGE:
-    case MONS_ADDER:
-    case MONS_BUTTERFLY:
     case MONS_CROCODILE:
     case MONS_VAMPIRE_MOSQUITO:
     case MONS_AGATE_SNAIL:
@@ -1360,16 +1354,15 @@ int mons_swamp_level(monster_type mcls)
     case MONS_BOG_BODY:
         return 3;
 
-    case MONS_WATER_MOCCASIN:
     case MONS_HUNGRY_GHOST:
     case MONS_INSUBSTANTIAL_WISP:
-    case MONS_JELLY:
     case MONS_KOMODO_DRAGON:
     case MONS_PHANTOM:
     case MONS_RED_WASP:
     case MONS_SPINY_FROG:
     case MONS_SWAMP_DRAGON:
     case MONS_UGLY_THING:
+    case MONS_GIANT_LEECH:
         return 4;
 
     case MONS_BLINK_FROG:
@@ -1398,35 +1391,33 @@ int mons_swamp_rare(monster_type mcls)
         return 99;
 
     case MONS_SWAMP_DRAKE:
+    case MONS_BOG_BODY:
         return 80;
 
+    case MONS_WATER_MOCCASIN:
+        return 75;
+
     case MONS_HYDRA:
-    case MONS_BOG_BODY:
+    case MONS_GIANT_LEECH:
         return 70;
 
-    case MONS_GIANT_LEECH:
-        return 61;
-
     case MONS_SLIME_CREATURE:
-        return 54;
-
-    case MONS_WATER_MOCCASIN:
         return 52;
 
     case MONS_INSUBSTANTIAL_WISP:
     case MONS_SWAMP_DRAGON:
         return 43;
 
-    case MONS_ADDER:
-        return 33;
-
     case MONS_RED_WASP:
     case MONS_GIANT_FROG:
         return 30;
 
-    case MONS_JELLY:
     case MONS_CROCODILE:
         return 25;
+
+    case MONS_RAVEN:
+    case MONS_GIANT_AMOEBA:
+        return 20;
 
     case MONS_KOMODO_DRAGON:
     case MONS_VERY_UGLY_THING:
@@ -1438,20 +1429,11 @@ int mons_swamp_rare(monster_type mcls)
     case MONS_HUNGRY_GHOST:
         return 13;
 
-    case MONS_NECROPHAGE:
-        return 12;
-
     case MONS_BLINK_FROG:
-    case MONS_GIANT_AMOEBA:
-    case MONS_GIANT_GECKO:
     case MONS_GIANT_NEWT:
     case MONS_GIANT_SLUG:
     case MONS_AGATE_SNAIL:
     case MONS_TENTACLED_MONSTROSITY:
-    case MONS_RAT:
-    case MONS_WORM:
-    case MONS_BUTTERFLY:
-    case MONS_BAT:
         return 10;
 
     default:
