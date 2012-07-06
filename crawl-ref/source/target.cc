@@ -409,7 +409,7 @@ bool targetter_thunderbolt::set_aim(coord_def a)
     bool hit = true;
     while ((origin - (p = ray.pos())).abs() <= range2)
     {
-        if (opc_solid_see(p) >= OPC_OPAQUE)
+        if (!map_bounds(p) || opc_solid_see(p) >= OPC_OPAQUE)
             hit = false;
         if (hit && p != origin && zapped[p] <= 0)
         {
@@ -426,7 +426,7 @@ bool targetter_thunderbolt::set_aim(coord_def a)
     hit = true;
     while ((origin - (p = ray.pos())).abs() <= range2)
     {
-        if (opc_solid_see(p) >= OPC_OPAQUE)
+        if (!map_bounds(p) || opc_solid_see(p) >= OPC_OPAQUE)
             hit = false;
         if (hit && p != origin && zapped[p] <= 0)
         {
