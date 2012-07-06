@@ -135,6 +135,9 @@ targetter_fragment::targetter_fragment(const actor* act, int power, int ran) :
 
 bool targetter_fragment::valid_aim(coord_def a)
 {
+    if (!targetter_smite::valid_aim(a))
+        return false;
+
     bolt tempbeam;
     bool temp;
     if (!setup_fragmentation_beam(tempbeam, pow, agent, a, false,
