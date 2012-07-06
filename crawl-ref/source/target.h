@@ -54,16 +54,27 @@ public:
     targetter_smite(const actor *act, int range = LOS_RADIUS,
                     int exp_min = 0, int exp_max = 0, bool wall_ok = false,
                     bool (*affects_pos_func)(const coord_def &) = 0);
-    bool set_aim(coord_def a);
-    bool valid_aim(coord_def a);
+    virtual bool set_aim(coord_def a);
+    virtual bool valid_aim(coord_def a);
     aff_type is_affected(coord_def loc);
-private:
-    int range2;
+protected:
     // assumes exp_map is valid only if >0, so let's keep it private
     int exp_range_min, exp_range_max;
     explosion_map exp_map_min, exp_map_max;
+private:
+    int range2;
     bool affects_walls;
     bool (*affects_pos)(const coord_def &);
+};
+
+class targetter_fragment : public targetter_smite
+{
+public:
+    targetter_fragment(const actor *act, int power, int range = LOS_RADIUS);
+    bool set_aim(coord_def a);
+    bool valid_aim(coord_def a);
+private:
+    int pow;
 };
 
 class targetter_reach : public targetter

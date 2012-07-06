@@ -998,6 +998,8 @@ static targetter* _spell_targetter(spell_type spell, int pow, int range)
             (you.props.exists("thunderbolt_last")
              && you.props["thunderbolt_last"].get_int() + 1 == you.num_turns) ?
                 you.props["thunderbolt_aim"].get_coord() : coord_def());
+    case SPELL_FRAGMENTATION:
+        return new targetter_fragment(&you, pow, range);
     default:
         return 0;
     }
@@ -1307,7 +1309,7 @@ static spret_type _do_cast(spell_type spell, int powc,
         return cast_airstrike(powc, spd, fail);
 
     case SPELL_FRAGMENTATION:
-        return cast_fragmentation(powc, spd, fail);
+        return cast_fragmentation(powc, &you, spd.target, fail);
 
     case SPELL_PORTAL_PROJECTILE:
         return cast_portal_projectile(powc, fail);

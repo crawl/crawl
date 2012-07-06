@@ -1587,33 +1587,72 @@ spret_type cast_dispersal(int pow, bool fail)
     return SPRET_SUCCESS;
 }
 
-spret_type cast_fragmentation(int pow, const dist& spd, bool fail)
+bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
+                              const coord_def target, bool allow_random,
+                              bool get_max_distance, bool quiet,
+                              const char **what, bool &destroy_wall, bool &hole)
 {
-    bool destroy_wall = false;
-    bool hole         = true;
-    const char *what  = NULL;
-
-    bolt beam;
-
     beam.flavour     = BEAM_FRAG;
     beam.glyph       = dchar_glyph(DCHAR_FIRED_BURST);
-    beam.beam_source = MHITYOU;
-    beam.thrower     = KILL_YOU;
+    beam.beam_source = caster->mindex();
+    beam.thrower     = caster->is_player() ? KILL_YOU : KILL_MON;
     beam.ex_size     = 1;
     beam.source      = you.pos();
     beam.hit         = AUTOMATIC_HIT;
 
-    beam.set_target(spd);
+    if (const monster* mons = caster->as_monster())
+        beam.source_name = mons->name(DESC_PLAIN, true);
+
+    beam.target = target;
     beam.aux_source.clear();
 
     // Number of dice vary... 3 is easy/common, but it can get as high as 6.
     beam.damage = dice_def(0, 5 + pow / 5);
 
-    monster* mon = monster_at(spd.target);
-    const dungeon_feature_type grid = grd(spd.target);
+    monster* mon = monster_at(target);
+    const dungeon_feature_type grid = grd(target);
 
+    if (target == you.pos())
+    {
+        const bool petrifying = you.petrifying();
+        const bool petrified = you.petrified();
+
+        if (you.form == TRAN_STATUE)
+        {
+            beam.ex_size    = 2;
+            beam.name       = "blast of rock fragments";
+            beam.colour     = BROWN;
+            beam.damage.num = 3;
+            return true;
+        }
+        else if (petrifying || petrified)
+        {
+            beam.ex_size    = petrifying ? 1 : 2;
+            beam.name       = "blast of petrified fragments";
+            beam.colour     = mons_class_colour(mon->type);
+            beam.damage.num = petrifying ? 2 : 3;
+            return true;
+        }
+        else if (you.form == TRAN_ICE_BEAST) // blast of ice
+        {
+            beam.name       = "icy blast";
+            beam.colour     = WHITE;
+            beam.damage.num = 2;
+            beam.flavour    = BEAM_ICE;
+            return true;
+        }
+        else if (you.form == TRAN_LICH) // blast of bone
+        {
+            beam.name   = "blast of bone shards";
+            beam.colour = LIGHTGREY;
+            beam.damage.num = 2;
+            return true;
+        }
+
+        goto do_terrain;
+    }
     // Set up the explosion if there's a visible monster.
-    if (mon && you.can_see(mon))
+    if (mon && (caster->is_monster() || (you.can_see(mon))))
     {
         switch (mon->type)
         {
@@ -1711,37 +1750,42 @@ spret_type cast_fragmentation(int pow, const dist& spd, bool fail)
             goto do_terrain;
         }
         // Got a target, let's blow it up.
-        goto all_done;
+        return true;
     }
 
   do_terrain:
 
-    if (env.markers.property_at(spd.target, MAT_ANY,
+    if (env.markers.property_at(target, MAT_ANY,
                                 "veto_fragmentation") == "veto")
     {
-        mprf("%s seems to be unnaturally hard.",
-             feature_description_at(spd.target, false, DESC_THE, false).c_str());
-        return SPRET_ABORT;
+        if (caster->is_player() && !quiet)
+            mprf("%s seems to be unnaturally hard.",
+                 feature_description_at(target, false, DESC_THE, false).c_str());
+        return false;
     }
 
     switch (grid)
     {
     // Stone and rock terrain
+    case DNGN_ORCISH_IDOL:
+        if (!caster->is_player())
+            return false; // don't let monsters blow up orcish idols
+
+        if (what && (*what == NULL))
+            *what = "stone idol";
+        // fall-through
     case DNGN_ROCK_WALL:
     case DNGN_SECRET_DOOR:
     case DNGN_SLIMY_WALL:
     case DNGN_STONE_WALL:
     case DNGN_CLEAR_ROCK_WALL:
     case DNGN_CLEAR_STONE_WALL:
-        what = "wall";
-        // fall-through
-    case DNGN_ORCISH_IDOL:
-        if (what == NULL)
-            what = "stone idol";
+        if (what && (*what == NULL))
+            *what = "wall";
         // fall-through
     case DNGN_GRANITE_STATUE:   // normal rock -- big explosion
-        if (what == NULL)
-            what = "statue";
+        if (what && (*what == NULL))
+            *what = "statue";
 
         beam.name       = "blast of rock fragments";
         beam.damage.num = 3;
@@ -1749,12 +1793,18 @@ spret_type cast_fragmentation(int pow, const dist& spd, bool fail)
         if ((grid == DNGN_ORCISH_IDOL
              || grid == DNGN_GRANITE_STATUE
              || grid == DNGN_GRATE
-             || pow >= 40 && grid == DNGN_ROCK_WALL && one_chance_in(3)
+             || pow >= 40 && grid == DNGN_ROCK_WALL
+                 && (allow_random && one_chance_in(3)
+                     || !allow_random && get_max_distance)
              || pow >= 40 && grid == DNGN_CLEAR_ROCK_WALL
-                 && one_chance_in(3)
-             || pow >= 60 && grid == DNGN_STONE_WALL && one_chance_in(10)
+                 && (allow_random && one_chance_in(3)
+                     || !allow_random && get_max_distance)
+             || pow >= 60 && grid == DNGN_STONE_WALL
+                 && (allow_random && one_chance_in(10)
+                     || !allow_random && get_max_distance)
              || pow >= 60 && grid == DNGN_CLEAR_STONE_WALL
-                 && one_chance_in(10)))
+                 && (allow_random && one_chance_in(10)
+                     || !allow_random && get_max_distance)))
         {
             beam.ex_size = 2;
             destroy_wall = true;
@@ -1763,15 +1813,18 @@ spret_type cast_fragmentation(int pow, const dist& spd, bool fail)
 
     // Metal -- small but nasty explosion
     case DNGN_METAL_WALL:
-        what            = "metal wall";
+        if (what)
+            *what = "metal wall";
         // fall through
     case DNGN_GRATE:
-        if (what == NULL)
-            what        = "iron grate";
+        if (what && (*what == NULL))
+            *what = "iron grate";
         beam.name       = "blast of metal fragments";
         beam.damage.num = 4;
 
-        if (pow >= 80 && x_chance_in_y(pow / 5, 500) || grid == DNGN_GRATE)
+        if (pow >= 80 && (allow_random && x_chance_in_y(pow / 5, 500)
+                          || !allow_random && get_max_distance)
+            || grid == DNGN_GRATE)
         {
             beam.damage.num += 2;
             destroy_wall     = true;
@@ -1780,12 +1833,14 @@ spret_type cast_fragmentation(int pow, const dist& spd, bool fail)
 
     // Crystal
     case DNGN_GREEN_CRYSTAL_WALL:       // crystal -- large & nasty explosion
-        what            = "crystal wall";
+        if (what)
+            *what = "crystal wall";
         beam.ex_size    = 2;
         beam.name       = "blast of crystal shards";
         beam.damage.num = 4;
 
-        if (coinflip())
+        if (allow_random && coinflip()
+            || !allow_random && get_max_distance)
         {
             beam.ex_size = 3;
             destroy_wall = true;
@@ -1798,13 +1853,14 @@ spret_type cast_fragmentation(int pow, const dist& spd, bool fail)
     case DNGN_CLOSED_DOOR:
     case DNGN_DETECTED_SECRET_DOOR:
         // Doors always blow up, stone arches never do (would cause problems).
-        what         = "door";
+        if (what)
+            *what = "door";
         destroy_wall = true;
 
         // fall-through
     case DNGN_STONE_ARCH:          // Floor -- small explosion.
-        if (what == NULL)
-            what        = "stone arch";
+        if (what && (*what == NULL))
+            *what = "stone arch";
         hole            = false;  // to hit monsters standing on doors
         beam.name       = "blast of rock fragments";
         beam.damage.num = 2;
@@ -1812,20 +1868,53 @@ spret_type cast_fragmentation(int pow, const dist& spd, bool fail)
 
     default:
         // Couldn't find a monster or wall to shatter - abort casting!
-        mpr("You can't deconstruct that!");
-        return SPRET_ABORT;
+        if (caster->is_player() && !quiet)
+            mpr("You can't deconstruct that!");
+        return false;
     }
 
     // If it was recoloured, use that colour instead.
-    if (env.grid_colours(spd.target))
-        beam.colour = env.grid_colours(spd.target);
+    if (env.grid_colours(target))
+        beam.colour = env.grid_colours(target);
     else
     {
         beam.colour = element_colour(get_feature_def(grid).colour,
-                                     false, spd.target);
+                                     false, target);
     }
 
-  all_done:
+    return true;
+}
+
+spret_type cast_fragmentation(int pow, const actor *caster,
+                              const coord_def target, bool fail)
+{
+    bool destroy_wall = false;
+    bool hole         = true;
+    const char *what  = NULL;
+
+    bolt beam;
+
+    if (!setup_fragmentation_beam(beam, pow, caster, target, true, false,
+                                  false, &what, destroy_wall, hole))
+        return SPRET_ABORT;
+
+    if (caster->is_player())
+    {
+        bolt tempbeam;
+        bool temp;
+        setup_fragmentation_beam(tempbeam, pow, caster, target, false, true,
+                                 true, NULL, temp, temp);
+        tempbeam.is_tracer = true;
+        tempbeam.explode(false);
+        if (tempbeam.beam_cancelled)
+        {
+            canned_msg(MSG_OK);
+            return SPRET_ABORT;
+        }
+    }
+
+    monster* mon = monster_at(target);
+    const dungeon_feature_type grid = grd(target);
 
     fail_check();
 
@@ -1833,7 +1922,7 @@ spret_type cast_fragmentation(int pow, const dist& spd, bool fail)
     {
         mprf("The %s shatters!", what);
         if (destroy_wall)
-            nuke_wall(spd.target);
+            nuke_wall(target);
     }
     else // Monster explodes.
     {
@@ -1845,16 +1934,29 @@ spret_type cast_fragmentation(int pow, const dist& spd, bool fail)
             monster_die(mon, KILL_YOU, NON_MONSTER);
             beam.damage.num += 2;
         }
-        else if (_player_hurt_monster(*mon, beam.damage.roll(),
-                                      BEAM_DISINTEGRATION))
+        else if (caster->is_player())
         {
-            beam.damage.num += 2;
+            if(_player_hurt_monster(*mon, beam.damage.roll(),
+                                      BEAM_DISINTEGRATION))
+            {
+                beam.damage.num += 2;
+            }
+        }
+        else
+        {
+            mon->hurt(caster, beam.damage.roll(), BEAM_DISINTEGRATION);
+            if (!mon->alive())
+            {
+                beam.damage.num += 2;
+            }
         }
     }
 
     beam.explode(true, hole);
 
-    if (grid == DNGN_ORCISH_IDOL)
+    // Monsters shouldn't be able to blow up idols,
+    // but this check is here just in case...
+    if (caster->is_player() && grid == DNGN_ORCISH_IDOL)
         did_god_conduct(DID_DESTROY_ORCISH_IDOL, 8);
 
     return SPRET_SUCCESS;
