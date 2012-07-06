@@ -1284,9 +1284,10 @@ energies. Every now and then it seems to pulsate.
 %%%%
 emperor scorpion
 
-Though the ordinary dungeon scorpion may be both large and dangerous, this
-sinister relative is even more so. The wicked-looking barb on its tail drips
-with a deadly venom.
+The emperor scorpion is the largest arachnid known to exist. The massive barb on
+its tail drips with a deadly venom, and its pincers are big enough to shear you
+in half. Though the ordinary dungeon scorpion may be both large and dangerous,
+this freakish relative puts it to shame.
 %%%%
 giant slug
 
