@@ -340,6 +340,201 @@ confirming the target with <w>Enter</w>.</localtiles>
                                  <cyan>Press <w>any key</w> to clear this
 screen...</cyan>
 %%%%
+#######################################
+# Tutorial map 3: Items and Inventory #
+#######################################
+tutorial3 start
+
+In this lesson you're going to learn about items and how to use them.
+%%%%
+tutorial3 armour
+
+Pick up these boots with <w>[$cmd[CMD_PICKUP]]</w> and wear them with
+<w>[$cmd[CMD_WEAR_ARMOUR]]</w>.<localtiles> Or simply <w>[mouseclick]</w> on
+them in the inventory panel.</localtiles>
+%%%%
+tutorial3 autopickup
+
+Some types of items<tiles>, marked with a green frame, </tiles>are picked up
+automatically as you step on them.
+%%%%
+tutorial3 scroll
+
+Many items are unidentified when you find them. One way to find out what they
+do is to use them. Try reading this scroll with
+<w>[$cmd[CMD_READ]]</w><localtiles> or with <w>[mouseclick]</w> in the
+inventory panel</localtiles>.
+%%%%
+tutorial3 scroll_noautopickup
+
+Autopickup does not work if there's a monster around. You can either pick up
+this scroll now with <w>[$cmd[CMD_PICKUP]]</w><localtiles> or <w>[clicking]</w>
+on your character,</localtiles> or you can fight the nearby enemy and pick it
+up afterwards.
+%%%%
+tutorial3 ego_weapon
+
+An item described as <lightblue>runed</lightblue> or
+<lightblue>glowing</lightblue> will always be enchanted, or have special
+properties, or both. You need to wield this scimitar (with
+<w>[$cmd[CMD_WIELD_WEAPON]]</w><localtiles> or by <w>[clicking]</w> on it in
+the inventory panel) to find out what those are.
+%%%%
+tutorial3 inventory
+
+# TODO: Should give tutorial messages inside the inventory to find the weapon.
+#       Maybe there should also be a separate lesson to highlight the commands
+#       in the item description screen.
+To view the description of your new weapon, find and select it in your
+inventory (<w>[$cmd[CMD_DISPLAY_INVENTORY]]</w>). <localtiles>You can also
+<w>[mouseover]</w> or <w>[right click]</w> it in the inventory
+panel</localtiles>. Notice that all the item commands also work from the item
+description screens.
+%%%%
+tutorial3 battle
+
+Once you've succesfully managed to poison a monster, it is sometimes best to
+retreat and let the poison do the work. Also retreat to heal, if necessary.
+%%%%
+tutorial3 downstairs
+
+Well fought! If necessary, rest up with <w>[$cmd[CMD_REST]]</w>, the continue
+downwards with <w>[$cmd[CMD_GO_DOWNSTAIRS]]</w><localtiles> or with
+<w>[Shift-Click]</w> on your character</localtiles>.
+%%%%
+tutorial3 command_help
+
+If the many commands are too confusing, you can also look them up in the
+command help <w>[$cmd[CMD_DISPLAY_COMMANDS]]</w>. <localtiles>A number of
+commands are also available in the clickable <w>command panel</w> to the right
+of the screen. </localtiles>Rereading old messages with
+<w>[$cmd[CMD_REPLAY_MESSAGES]]</w> is available as usual.
+%%%%
+tutorial3 potion
+
+You can quaff one of these potions with <w>[$cmd[CMD_QUAFF]]</w><localtiles> or
+with <w>[mouseclick]</w></localtiles>.
+%%%%
+tutorial3 artefact_armour
+
+# TODO: Replace unrandart with a real randart. Needs some safeguarding against
+#       things that would throw the tutorial off rails (cursed, Cursing,
+#       mutations, activatable abilities..)
+Items with <w>unusual names</w> are artefacts. Artefacts can have a number of
+special properties. Some items (such as this cloak) are known and come
+pre-identified, others are random and have unknown properties. Try equipping
+this cloak with <w>[$cmd[CMD_WEAR_ARMOUR]]</w> <localtiles>or
+<w>[mouseclick]</w> in the inventory panel</localtiles>.
+%%%%
+tutorial3 wand_fire
+
+# TODO: The wand targetting screen could perhaps use a little context help.
+You can evoke a wand with <w>[$cmd[CMD_EVOKE]]</w><localtiles> or with
+<w>[mouseclick]</w> in the inventory panel</localtiles>.
+%%%%
+tutorial3 wand_digging
+
+A wand of digging can destroy certain kinds of walls. Use
+<w>[$cmd[CMD_LOOK_AROUND]][$cmd[CMD_TARGET_DESCRIBE]]</w> <localtiles>or
+<w>[mouseover]</w>/<w>[right click]</w> </localtiles>to check wall types.
+%%%%
+tutorial3 amulet
+
+Jewellery is put on with <w>[$cmd[CMD_WEAR_JEWELLERY]]</w><localtiles> or with
+<w>[mouseclick]</w> in the inventory panel</localtiles>. Some types of
+jewellery are identified when you put them on. For others, you'll need another
+way of identifying them.
+%%%%
+tutorial3 scroll_id
+
+An important way to identify unknown items is by reading scrolls of identify.
+Try this scroll on your amulet, with <w>[$cmd[CMD_READ]]</w><localtiles> or by
+<w>[clicking]</w> it in the inventory panel</localtiles>, and then choosing the
+amulet from the item list with its assigned letter<localtiles> or by
+<w>[mouseclick]</w></localtiles>.
+%%%%
+tutorial3 drop
+
+The amulet is useless; you may want to drop it with
+<w>[$cmd[CMD_DROP]]</w><localtiles> or by <w>[Shift-leftclicking]</w> it in the
+inventory panel</localtiles>.
+%%%%
+tutorial3 gold
+
+Gold can be spent in shops. It has no weight and cannot be dropped.
+%%%%
+tutorial3 shop
+
+Shops offer a variety of items, but they don't buy items from anyone.
+%%%%
+tutorial3 enter_shop
+
+# TODO: Everything else except how to enter the shop should be told in the
+#       shopping screen.
+To enter this shop, press <w>[$cmd[CMD_GO_UPSTAIRS]]</w><localtiles> or
+<w>[Shift-leftclick]</w> on your character</localtiles>. To buy items, select
+them with their hotkey, hit <w>[Enter]</w> and confirm with <w>[y]es</w>. You
+can switch to description mode with <w>[!]</w>.
+%%%%
+tutorial3 autoexplore_reminder
+
+Remember, you can explore the level automatically with <w>[$cmd[CMD_EXPLORE]]</w><localtiles> or by <w>[clicking]</w> the autoexplore command button in the <w>command panel</w></localtiles>.
+%%%%
+tutorial3 go_shopping
+
+# TODO: Should only instruct to start the search here, and put the rest of the
+#       instructions into the search screen. Also, it would be good to highlight
+#       the search button in the command panel somehow when this message is
+#       viewed.
+You now have enough gold to do some serious shopping! The quickest way back to
+the shop is by searching for it. Type <w>[$cmd[CMD_SEARCH_STASHES]]</w>, and
+then enter "<w>shop</w>". Select the result to start traveling.<localtiles> You
+can also <w>[click]</w> on the search button in the command panel, or use the
+minimap to return to the shop.</localtiles>
+%%%%
+tutorial3 optional_battle
+
+Warning, this way leads to <lightred>a difficult battle</lightred>. You may
+choose to use what you've learned so far in a fight, or try to reach the other
+exit on the island. Either way, it may be a good idea to do some shopping, if
+you haven't already.
+%%%%
+tutorial3 tutorial_end
+
+Well done! To exit the tutorial, simply go down these stairs.
+%%%%
+tutorial3 exit
+
+# A single screen recapping all commands.
+
+<yellow>Item commands</yellow>
+
+  <w>$cmd[CMD_PICKUP]</w>  pick up an item
+  <w>$cmd[CMD_WEAR_ARMOUR]</w>  wear a piece of armour
+  <w>$cmd[CMD_READ]</w>  read a scroll
+  <w>$cmd[CMD_WIELD_WEAPON]</w>  wield a weapon
+  <w>$cmd[CMD_QUAFF]</w>  quaff a potion
+  <w>$cmd[CMD_EVOKE]</w>  evoke a wand
+  <w>$cmd[CMD_WEAR_JEWELLERY]</w>  put on jewellery
+  <w>$cmd[CMD_REMOVE_JEWELLERY]</w>  remove jewellery
+  <w>$cmd[CMD_DROP]</w>  drop an item
+
+  <w></w>Usage commands are also available from the inventory menu (<w>$cmd[CMD_DISPLAY_INVENTORY]</w>), as are the item descriptions.
+
+  <localtiles><w></w>And of course, <white>mouseclicks</white> also work.</localtiles>
+
+<yellow>Other</yellow>
+
+  <w>$cmd[CMD_DISPLAY_COMMANDS]?</w>  access the command help
+  <w>$cmd[CMD_RESISTS_SCREEN]</w>  display character overview
+  <w>$cmd[CMD_USE_ABILITY]</w>  use an ability
+  <w>$cmd[CMD_EXPLORE]</w>  explore automatically
+  <w>$cmd[CMD_SEARCH_STASHES]</w>  search for items/features previously seen
+
+  <localtiles><w></w>Several of these commands can also be executed by clicking in the <w>command panel</w>.</localtiles>
+
+                                 <cyan>Press <w>any key</w> to clear this screen...</cyan>
+%%%%
 ##############################################
 # Tutorial map 5: Gods and divine abilities  #
 ##############################################
