@@ -20,6 +20,34 @@ function crypt_drop_grates(data, triggerable, triggerer, marker, ev)
 end
 }}
 
+{{
+function callback.grunt_crypt_arrival_guards_awaken(data,triggerable,trigger,marker,ev)
+    local seen = false
+    for slave in iter.slave_iterator("trap_sarcophagus", 1) do
+        if you.see_cell(slave.x, slave.y) then
+            seen = true
+            break
+        end
+    end
+    if seen then
+        crawl.mpr("Something awakens from inside the sarcophagi!", "warning")
+    elseif you.silenced() then
+        crawl.mpr("The ground shakes!", "warning")
+    else
+        crawl.mpr("You hear grinding stone!", "warning");
+    end
+    for slave in iter.slave_iterator("trap_sarcophagus", 1) do
+        dgn.terrain_changed(slave.x, slave.y, "floor", false, false, false)
+        dgn.colour_at(slave.x, slave.y, "lightgray")
+        dgn.create_monster(slave.x, slave.y,
+                           "w:5 human skeleton / \
+                            w:5 human zombie / \
+                            mummy / \
+                            w:5 guardian mummy")
+    end
+end
+}}
+
 NAME: crypt_curse_skull
 TAGS: allow_dup luniq extra
 DEPTH: Crypt
@@ -290,6 +318,7 @@ NAME:   grunt_crypt_arrival_webbed
 TAGS:   extra uniq_crypt_arrival no_monster_gen no_trap_gen no_item_gen
 KFEAT:  ^ = known web trap / w:20 floor
 DEPTH:  Crypt:1
+WEIGHT: 30
 ORIENT: south
 MAP
       .@.
@@ -314,6 +343,7 @@ ENDMAP
 NAME:   grunt_crypt_arrival_split
 TAGS:   extra uniq_crypt_arrival no_monster_gen no_trap_gen no_item_gen
 DEPTH:  Crypt:1
+WEIGHT: 30
 ORIENT: south
 MAP
        .@.
@@ -332,6 +362,65 @@ xxxG....V....Gxxx
 xxxxxG..{..Gxxxxx
 xxxxxxxG.Gxxxxxxx
 xxxxxxxxxxxxxxxxx
+ENDMAP
+
+# Do not disturb the sanctity of this place, mortal...
+NAME:   grunt_crypt_arrival_guarded_gate
+TAGS:   uniq_crypt_arrival no_item_gen no_monster_gen no_trap_gen layout_basic \
+        layout_rooms layout_city layout_misc no_hmirror no_rotate extra
+ORIENT: south
+DEPTH:  Crypt:1
+WEIGHT: 30
+TILE:   H = dngn_sarcophagus_pedestal_left
+TILE:   I = dngn_sarcophagus_pedestal_right
+COLOUR: HI = yellow
+TILE:   C = wall_stone_gray
+{{
+  local trap_marker = TriggerableFunction:new {
+      func = "callback.grunt_crypt_arrival_guards_awaken",
+      repeated = false}
+  trap_marker:add_triggerer(DgnTriggerer:new {
+      type="player_los"})
+  lua_marker('J', trap_marker)
+  lua_marker('H', props_marker {trap_sarcophagus=1,
+                                veto_fragmentation="veto",
+                                veto_disintegrate="veto",
+                                veto_shatter="veto"})
+  lua_marker('I', props_marker {trap_sarcophagus=1,
+                                veto_fragmentation="veto",
+                                veto_disintegrate="veto",
+                                veto_shatter="veto"})
+  set_feature_name("granite_statue", "sarcophagus")
+}}
+SUBST:  HI = G
+SUBST:  J = V
+SUBST:  C = c
+MAP
+.....@.....
+@....J....@
+...........
+xxcc+++ccxx
+xxcC...Ccxx
+xxcH...Icxx
+xxcC...Ccxx
+xxcH...Icxx
+xxcC...Ccxx
+xxcH...Icxx
+xxcC...Ccxx
+xxcH...Icxx
+xxcC...Ccxx
+xxcH...Icxx
+xxcC...Ccxx
+xccc...cccx
+xcC.....Ccx
+xc.......cx
+xc...{...cx
+xcV.....Vcx
+xc..[.(..cx
+xc.......cx
+xcC..V..Ccx
+xcccccccccx
+xxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
