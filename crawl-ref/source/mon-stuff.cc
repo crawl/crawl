@@ -1129,10 +1129,13 @@ static bool _explode_monster(monster* mons, killer_type killer,
         return false;
     }
 
-    if (YOU_KILL(killer) && beam.aux_source.empty())
-        beam.aux_source = "set off by themself";
-    else if (pet_kill)
-        beam.aux_source = "set off by their pet";
+    if (beam.aux_source.empty())
+    {
+        if (YOU_KILL(killer))
+            beam.aux_source = "set off by themself";
+        else if (pet_kill)
+            beam.aux_source = "set off by their pet";
+    }
 
     bool saw = false;
     if (you.can_see(mons))
