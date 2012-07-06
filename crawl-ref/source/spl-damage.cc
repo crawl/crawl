@@ -1891,6 +1891,7 @@ spret_type cast_fragmentation(int pow, const actor *caster,
     bool destroy_wall = false;
     bool hole         = true;
     const char *what  = NULL;
+    const dungeon_feature_type grid = grd(target);
 
     bolt beam;
 
@@ -1900,6 +1901,16 @@ spret_type cast_fragmentation(int pow, const actor *caster,
 
     if (caster->is_player())
     {
+        if (grid == DNGN_ORCISH_IDOL)
+        {
+            if (!yesno("Really insult Beogh by defacing this idol?",
+                       false, 'n'))
+            {
+                canned_msg(MSG_OK);
+                return SPRET_ABORT;
+            }
+        }
+
         bolt tempbeam;
         bool temp;
         setup_fragmentation_beam(tempbeam, pow, caster, target, false, true,
@@ -1914,7 +1925,6 @@ spret_type cast_fragmentation(int pow, const actor *caster,
     }
 
     monster* mon = monster_at(target);
-    const dungeon_feature_type grid = grd(target);
 
     fail_check();
 
