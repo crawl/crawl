@@ -987,6 +987,13 @@ static targetter* _spell_targetter(spell_type spell, int pow, int range)
 {
     switch (spell)
     {
+    case SPELL_ICE_STORM:
+        return new targetter_beam(&you, range, BEAM_VISUAL, true, 2,
+                                  (pow > 76) ? 3 : 2);
+    case SPELL_EVAPORATE:
+    case SPELL_FIREBALL:
+    case SPELL_MEPHITIC_CLOUD:
+        return new targetter_beam(&you, range, BEAM_VISUAL, true, 1, 1);
     case SPELL_FIRE_STORM:
         return new targetter_smite(&you, range, 2, pow > 76 ? 3 : 2);
     case SPELL_FREEZING_CLOUD:

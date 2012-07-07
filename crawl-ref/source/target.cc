@@ -30,6 +30,102 @@ bool targetter::set_aim(coord_def a)
     return true;
 }
 
+targetter_beam::targetter_beam(const actor *act, int range, beam_type flavour,
+                               bool stop, int min_ex_rad, int max_ex_rad) :
+                               min_expl_rad(min_ex_rad),
+                               max_expl_rad(max_ex_rad)
+{
+    ASSERT(act);
+    ASSERT(min_ex_rad >= 0);
+    ASSERT(max_ex_rad >= 0);
+    ASSERT(max_ex_rad >= min_ex_rad);
+    agent = act;
+    origin = aim = act->pos();
+    beam.is_tracer = true;
+    beam.flavour = flavour;
+    beam.range = range;
+    beam.source = origin;
+    beam.target = aim;
+    beam.dont_stop_player = !stop;
+    beam.friend_info.dont_stop = !stop;
+    beam.foe_info.dont_stop = !stop;
+    beam.ex_size = min_ex_rad;
+    beam.aimed_at_spot = true;
+    range2 = dist_range(range);
+}
+
+bool targetter_beam::set_aim(coord_def a)
+{
+    if (!targetter::set_aim(a))
+        return false;
+
+    bolt tempbeam = beam;
+
+    tempbeam.target = aim;
+    tempbeam.path_taken.clear();
+    tempbeam.fire();
+    path_taken = tempbeam.path_taken;
+
+    if (min_expl_rad > 0 && max_expl_rad > 0)
+    {
+        bolt tempbeam2;
+        tempbeam2.target = path_taken[path_taken.size() - 1];
+        for (int i = path_taken.size() - 2;
+             i >= 0 && cell_is_solid(tempbeam2.target);
+             i--)
+            tempbeam2.target = path_taken[i];
+        tempbeam2.use_target_as_pos = true;
+        exp_map_min.init(INT_MAX);
+        tempbeam2.determine_affected_cells(exp_map_min, coord_def(), 0,
+                                           min_expl_rad, true, true);
+        exp_map_max.init(INT_MAX);
+        tempbeam2.determine_affected_cells(exp_map_max, coord_def(), 0,
+                                           max_expl_rad, true, true);
+    }
+    return true;
+}
+
+bool targetter_beam::valid_aim(coord_def a)
+{
+    if (a != origin && !cell_see_cell(origin, a, LOS_NO_TRANS))
+    {
+        if (agent->see_cell(a))
+            return notify_fail("There's something in the way.");
+        return notify_fail("You cannot see that place.");
+    }
+    if ((origin - a).abs() > range2)
+        return notify_fail("Out of range.");
+    return true;
+}
+
+aff_type targetter_beam::is_affected(coord_def loc)
+{
+    bool on_path = false;
+    coord_def c;
+    for (unsigned int i = 0; i < path_taken.size(); i++)
+    {
+        if (cell_is_solid(path_taken[i]))
+            break;
+        c = path_taken[i];
+        if (c == loc)
+        {
+            if (min_expl_rad > 0 && max_expl_rad > 0)
+                on_path = true;
+            else
+                return AFF_YES;
+        }
+    }
+    if (min_expl_rad > 0 && max_expl_rad > 0 &&
+        (loc - c).rdist() <= 9)
+    {
+        coord_def centre(9,9);
+        if (exp_map_min(loc - c + centre) < INT_MAX)
+            return AFF_YES;
+        if (exp_map_max(loc - c + centre) < INT_MAX)
+            return AFF_MAYBE;
+    }
+    return on_path ? AFF_TRACER : AFF_NO;
+}
 
 targetter_view::targetter_view()
 {

@@ -33,11 +33,17 @@ public:
 class targetter_beam : public targetter
 {
 public:
-    targetter_beam(const actor *act, int range, beam_type flavour, bool stop);
+    targetter_beam(const actor *act, int range, beam_type flavour, bool stop,
+                   int min_expl_rad = 0, int max_expl_rad = 0);
     bolt beam;
     bool set_aim(coord_def a);
     bool valid_aim(coord_def a);
     aff_type is_affected(coord_def loc);
+private:
+    std::vector<coord_def> path_taken; // Path beam took.
+    int range2;
+    int min_expl_rad, max_expl_rad;
+    explosion_map exp_map_min, exp_map_max;
 };
 
 class targetter_view : public targetter
