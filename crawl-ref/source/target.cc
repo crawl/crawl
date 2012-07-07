@@ -6,6 +6,7 @@
 #include "coord.h"
 #include "coordit.h"
 #include "env.h"
+#include "godabil.h"
 #include "itemprop.h"
 #include "libutil.h"
 #include "player.h"
@@ -49,6 +50,7 @@ targetter_beam::targetter_beam(const actor *act, int range, beam_type flavour,
     ASSERT(max_ex_rad >= 0);
     ASSERT(max_ex_rad >= min_ex_rad);
     agent = act;
+    beam.set_agent(const_cast<actor *>(act));
     origin = aim = act->pos();
     beam.is_tracer = true;
     beam.flavour = flavour;
@@ -80,13 +82,17 @@ bool targetter_beam::set_aim(coord_def a)
     {
         bolt tempbeam2;
         tempbeam2.target = origin;
-        for (unsigned int i = 0; i < path_taken.size(); i++)
+        for (std::vector<coord_def>::const_iterator i = path_taken.begin();
+             i != path_taken.end(); ++i)
         {
-            if (cell_is_solid(path_taken[i]))
+            if (cell_is_solid(*i))
                 break;
-            tempbeam2.target = path_taken[i];
-            if (anyone_there(tempbeam2.target))
+            tempbeam2.target = *i;
+            if (anyone_there(*i)
+                && !fedhas_shoot_through(tempbeam, monster_at(*i)))
+            {
                 break;
+            }
         }
         tempbeam2.use_target_as_pos = true;
         exp_map_min.init(INT_MAX);
@@ -116,12 +122,13 @@ aff_type targetter_beam::is_affected(coord_def loc)
 {
     bool on_path = false;
     coord_def c;
-    for (unsigned int i = 0; i < path_taken.size(); i++)
+    for (std::vector<coord_def>::const_iterator i = path_taken.begin();
+         i != path_taken.end(); ++i)
     {
-        if (cell_is_solid(path_taken[i]) &&
-            min_expl_rad > 0)
+        if (cell_is_solid(*i) && min_expl_rad > 0)
             break;
-        c = path_taken[i];
+
+        c = *i;
         if (c == loc)
         {
             if (min_expl_rad > 0 && max_expl_rad > 0)
@@ -129,12 +136,14 @@ aff_type targetter_beam::is_affected(coord_def loc)
             else
                 return AFF_YES;
         }
-        if (anyone_there(path_taken[i]) &&
-            !penetrates_targets)
+        if (anyone_there(*i)
+            && !fedhas_shoot_through(beam, monster_at(*i))
+            && !penetrates_targets)
+        {
             break;
+        }
     }
-    if (min_expl_rad > 0 && max_expl_rad > 0 &&
-        (loc - c).rdist() <= 9)
+    if (min_expl_rad > 0 && max_expl_rad > 0 && (loc - c).rdist() <= 9)
     {
         coord_def centre(9,9);
         if (exp_map_min(loc - c + centre) < INT_MAX)
