@@ -282,6 +282,11 @@ void Stash::update()
             feat = DNGN_FLOOR, trap = TRAP_UNASSIGNED;
     }
 
+    if (feat == DNGN_FLOOR)
+        feat_desc = "";
+    else
+        feat_desc = feature_description_at(coord_def(x, y), false);
+
     // If this is your position, you know what's on this square
     if (p == you.pos())
     {
@@ -554,10 +559,7 @@ std::string Stash::description() const
 
 std::string Stash::feature_description() const
 {
-    if (feat == DNGN_FLOOR)
-        return "";
-
-    return (::feature_description_at(coord_def(x, y), false));
+    return feat_desc;
 }
 
 bool Stash::matches_search(const std::string &prefix,
@@ -747,6 +749,8 @@ void Stash::save(writer& outf) const
     marshallByte(outf, feat);
     marshallByte(outf, trap);
 
+    marshallString(outf, feat_desc);
+
     // Note: Enabled save value is inverted logic, so that it defaults to true
     marshallByte(outf, ((verified ? 1 : 0) | (!enabled ? 2 : 0)
                         | (is_stack ? 4 : 0)));
@@ -770,6 +774,14 @@ void Stash::load(reader& inf)
 #if TAG_MAJOR_VERSION == 33
     if (trap == TRAP_AXED)
         trap = TRAP_SPEAR;
+
+    if (inf.getMinorVersion() < TAG_MINOR_STASH_FEATDESC)
+    {
+        feat_desc = (is_boring_feature(feat)
+                     ? "" : ::feature_description(feat, trap));
+    }
+    else
+        feat_desc = unmarshallString(inf);
 #endif
 
     uint8_t flags = unmarshallUByte(inf);
