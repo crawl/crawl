@@ -784,6 +784,20 @@ void bolt::draw(const coord_def& p)
 // the feature.
 void bolt::bounce()
 {
+    // Don't bounce player tracers off unknown cells, or cells that we
+    // incorrectly thought were non-bouncy.
+    if (is_tracer && agent() == &you)
+    {
+        const dungeon_feature_type feat = env.map_knowledge(ray.pos()).feat();
+
+        if (feat == DNGN_UNSEEN || !feat_is_solid(feat) || !is_bouncy(feat))
+        {
+            ray.regress();
+            finish_beam();
+            return;
+        }
+    }
+
     ray_def old_ray  = ray;
     bolt    old_bolt = *this;
 
