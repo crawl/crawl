@@ -94,6 +94,7 @@ private:
     uint8_t x, y;
     int  abspos;
     dungeon_feature_type feat;
+    std::string feat_desc; // Only for interesting features.
     trap_type trap;
 
     std::vector<item_def> items;

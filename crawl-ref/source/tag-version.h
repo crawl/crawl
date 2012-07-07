@@ -26,6 +26,7 @@ enum tag_minor_version
     TAG_MINOR_CLEAR_APTABLE,       // Reset old broken force_autopickup tables.
     TAG_MINOR_CONSTRICT_MID,       // Store constriction by mid, not mindex.
     TAG_MINOR_FEAT_RENAMES,        // Per-vault feature renames.
+    TAG_MINOR_STASH_FEATDESC,      // Store feature descriptions in stashes.
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
 };
