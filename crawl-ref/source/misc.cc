@@ -2603,6 +2603,7 @@ void maybe_id_ring_TC()
 void maybe_id_ring_hunger()
 {
     _maybe_id_jewel(RING_HUNGER, NUM_JEWELLERY, ARTP_METABOLISM);
+    _maybe_id_jewel(RING_SUSTENANCE, NUM_JEWELLERY, ARTP_METABOLISM);
 }
 
 void maybe_id_resist(beam_type flavour)
