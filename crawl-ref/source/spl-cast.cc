@@ -990,10 +990,12 @@ static targetter* _spell_targetter(spell_type spell, int pow, int range)
     case SPELL_ICE_STORM:
         return new targetter_beam(&you, range, BEAM_VISUAL, true, 2,
                                   (pow > 76) ? 3 : 2);
-    case SPELL_EVAPORATE:
     case SPELL_FIREBALL:
-    case SPELL_MEPHITIC_CLOUD:
         return new targetter_beam(&you, range, BEAM_VISUAL, true, 1, 1);
+    case SPELL_EVAPORATE:
+    case SPELL_MEPHITIC_CLOUD:
+        return new targetter_beam(&you, range, BEAM_VISUAL, true,
+                                  pow >= 100 ? 1 : 0, 1);
     case SPELL_SHOCK:
     case SPELL_LIGHTNING_BOLT:
         return new targetter_beam(&you, range, BEAM_ELECTRICITY, false, 0, 0);
