@@ -1302,7 +1302,7 @@ static void _print_talent_description(const talent& tal)
 
     // XXX: The suffix is necessary to distinguish between similarly
     // named spells.  Yes, this is a hack.
-    std::string lookup = getLongDescription(name + "ability");
+    std::string lookup = getLongDescription(name + " ability");
     if (lookup.empty())
     {
         // Try again without the suffix.
