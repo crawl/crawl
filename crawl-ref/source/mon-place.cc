@@ -58,10 +58,12 @@ band_type active_monster_band = BAND_NO_BAND;
 static std::vector<int> vault_mon_types;
 static std::vector<int> vault_mon_bases;
 static std::vector<int> vault_mon_weights;
+static std::vector<bool> vault_mon_bands;
 
 #define VAULT_MON_TYPES_KEY   "vault_mon_types"
 #define VAULT_MON_BASES_KEY   "vault_mon_bases"
 #define VAULT_MON_WEIGHTS_KEY "vault_mon_weights"
+#define VAULT_MON_BANDS_KEY   "vault_mon_bands"
 
 // proximity is the same as for mons_place:
 // 0 is no restrictions
@@ -77,7 +79,8 @@ static monster_type _resolve_monster_type(monster_type mon_type,
                                           unsigned mmask,
                                           dungeon_char_type *stair_type,
                                           int *lev_mons,
-                                          bool *chose_ood_monster);
+                                          bool *chose_ood_monster,
+                                          bool *want_band);
 
 static monster_type _band_member(band_type band, int power);
 static band_type _choose_band(monster_type mon_type, int power, int &band_size,
@@ -648,8 +651,12 @@ static monster_type _resolve_monster_type(monster_type mon_type,
                                           unsigned mmask,
                                           dungeon_char_type *stair_type,
                                           int *lev_mons,
-                                          bool *chose_ood_monster)
+                                          bool *chose_ood_monster,
+                                          bool *want_band)
 {
+    if (want_band)
+        *want_band = false;
+
     if (mon_type == RANDOM_DRACONIAN)
     {
         // Pick any random drac, constrained by colour if requested.
@@ -707,6 +714,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
                                            vault_mon_weights.end());
             int type = vault_mon_types[i];
             int base = vault_mon_bases[i];
+            bool banded = vault_mon_bands[i];
 
             if (type == -1)
             {
@@ -717,6 +725,8 @@ static monster_type _resolve_monster_type(monster_type mon_type,
             {
                 base_type = (monster_type) base;
                 mon_type  = (monster_type) type;
+                if (want_band)
+                    *want_band = banded;
                 if (mon_type == RANDOM_DRACONIAN
                     || mon_type == RANDOM_BASE_DRACONIAN
                     || mon_type == RANDOM_NONBASE_DRACONIAN)
@@ -725,7 +735,8 @@ static monster_type _resolve_monster_type(monster_type mon_type,
                         _resolve_monster_type(mon_type, proximity,
                                               base_type, pos, mmask,
                                               stair_type, lev_mons,
-                                              chose_ood_monster);
+                                              chose_ood_monster,
+                                              want_band);
                 }
                 return mon_type;
             }
@@ -904,10 +915,14 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
         mg.power = env.absdepth0;
 
     bool chose_ood_monster = false;
+    bool want_band = false;
     mg.cls = _resolve_monster_type(mg.cls, mg.proximity, mg.base_type,
                                    mg.pos, mg.map_mask,
                                    &stair_type, &mg.power,
-                                   &chose_ood_monster);
+                                   &chose_ood_monster,
+                                   &want_band);
+    if (want_band)
+        mg.flags |= MG_PERMIT_BANDS;
 
     if (mg.cls == MONS_NO_MONSTER || mg.cls == MONS_PROGRAM_BUG)
         return 0;
@@ -3577,6 +3592,7 @@ void set_vault_mon_list(const std::vector<mons_spec> &list)
     props.erase(VAULT_MON_TYPES_KEY);
     props.erase(VAULT_MON_BASES_KEY);
     props.erase(VAULT_MON_WEIGHTS_KEY);
+    props.erase(VAULT_MON_BANDS_KEY);
 
     unsigned int size = list.size();
     if (size == 0)
@@ -3588,10 +3604,12 @@ void set_vault_mon_list(const std::vector<mons_spec> &list)
     props[VAULT_MON_TYPES_KEY].new_vector(SV_INT).resize(size);
     props[VAULT_MON_BASES_KEY].new_vector(SV_INT).resize(size);
     props[VAULT_MON_WEIGHTS_KEY].new_vector(SV_INT).resize(size);
+    props[VAULT_MON_BANDS_KEY].new_vector(SV_BOOL).resize(size);
 
     CrawlVector &type_vec   = props[VAULT_MON_TYPES_KEY].get_vector();
     CrawlVector &base_vec   = props[VAULT_MON_BASES_KEY].get_vector();
     CrawlVector &weight_vec = props[VAULT_MON_WEIGHTS_KEY].get_vector();
+    CrawlVector &band_vec   = props[VAULT_MON_BANDS_KEY].get_vector();
 
     for (unsigned int i = 0; i < size; i++)
     {
@@ -3609,6 +3627,7 @@ void set_vault_mon_list(const std::vector<mons_spec> &list)
                    && !_is_random_monster(spec.monbase));
             type_vec[i] = spec.type;
             base_vec[i] = spec.monbase;
+            band_vec[i] = spec.band;
         }
         weight_vec[i] = spec.genweight;
     }
@@ -3627,13 +3646,22 @@ static void _get_vault_mon_list(std::vector<mons_spec> &list)
 
     ASSERT(props.exists(VAULT_MON_BASES_KEY));
     ASSERT(props.exists(VAULT_MON_WEIGHTS_KEY));
+#if TAG_MAJOR_VERSION > 33
+    ASSERT(props.exists(VAULT_MON_BANDS_KEY));
+#endif
 
     CrawlVector &type_vec   = props[VAULT_MON_TYPES_KEY].get_vector();
     CrawlVector &base_vec   = props[VAULT_MON_BASES_KEY].get_vector();
     CrawlVector &weight_vec = props[VAULT_MON_WEIGHTS_KEY].get_vector();
+#if TAG_MAJOR_VERSION <= 33
+    if (!props.exists(VAULT_MON_BANDS_KEY))
+        props[VAULT_MON_BANDS_KEY].new_vector(SV_BOOL).resize(type_vec.size());
+#endif
+    CrawlVector &band_vec  = props[VAULT_MON_BANDS_KEY].get_vector();
 
     ASSERT(type_vec.size() == base_vec.size());
     ASSERT(type_vec.size() == weight_vec.size());
+    ASSERT(type_vec.size() == band_vec.size());
 
     unsigned int size = type_vec.size();
     for (unsigned int i = 0; i < size; i++)
@@ -3657,6 +3685,7 @@ static void _get_vault_mon_list(std::vector<mons_spec> &list)
                    && !_is_random_monster(spec.monbase));
         }
         spec.genweight = weight_vec[i];
+        spec.band = band_vec[i];
 
         list.push_back(spec);
     }
@@ -3667,6 +3696,7 @@ void setup_vault_mon_list()
     vault_mon_types.clear();
     vault_mon_bases.clear();
     vault_mon_weights.clear();
+    vault_mon_bands.clear();
 
     std::vector<mons_spec> list;
     _get_vault_mon_list(list);
@@ -3676,6 +3706,7 @@ void setup_vault_mon_list()
     vault_mon_types.resize(size);
     vault_mon_bases.resize(size);
     vault_mon_weights.resize(size);
+    vault_mon_bands.resize(size);
 
     for (unsigned int i = 0; i < size; i++)
     {
@@ -3692,6 +3723,7 @@ void setup_vault_mon_list()
             if (i < 10)
                 env.mons_alloc[i] = (monster_type)list[i].type;
         }
+        vault_mon_bands[i] = list[i].band;
         vault_mon_weights[i] = list[i].genweight;
     }
     if (size)

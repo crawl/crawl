@@ -142,11 +142,6 @@ static int dgn_set_random_mon_list(lua_State *ls)
                  "being discarded.",
                  name.c_str());
 
-        if (mon.band)
-            mprf(MSGCH_ERROR, "dgn.set_random_mon_list() : band request for "
-                 "%s being ignored.",
-                 name.c_str());
-
         if (mon.colour != BLACK)
             mprf(MSGCH_ERROR, "dgn.set_random_mon_list() : colour for "
                  "%s being ignored.",
