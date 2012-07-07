@@ -117,7 +117,8 @@ aff_type targetter_beam::is_affected(coord_def loc)
     coord_def c;
     for (unsigned int i = 0; i < path_taken.size(); i++)
     {
-        if (cell_is_solid(path_taken[i]))
+        if (cell_is_solid(path_taken[i]) &&
+            min_expl_rad > 0)
             break;
         c = path_taken[i];
         if (c == loc)
@@ -127,7 +128,8 @@ aff_type targetter_beam::is_affected(coord_def loc)
             else
                 return AFF_YES;
         }
-        if (anyone_there(path_taken[i]))
+        if (anyone_there(path_taken[i]) &&
+            min_expl_rad > 0)
             break;
     }
     if (min_expl_rad > 0 && max_expl_rad > 0 &&
