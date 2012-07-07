@@ -602,49 +602,46 @@ NAME:    swamp_vile
 PLACE:   Swamp:$
 TAGS:    no_pool_fixup no_monster_gen
 ORIENT:  southeast
-MONS:    rotting hulk / ugly thing, large abomination / very ugly thing, \
+MONS:    bog body / ugly thing, large abomination / very ugly thing, \
          rotting devil / orange demon, green death, hell beast, \
          death ooze, titanic slime creature
 KMONS:   8 = hydra / swamp dragon
 KMONS:   9 = tentacled monstrosity
 KITEM:   r = decaying rune of zot
-KFEAT:   8f = shallow_water
+KFEAT:   8 = shallow_water
 KFEAT:   t = mangrove
-MARKER:  f = lua:fog_machine {cloud_type = "black smoke", \
-             pow_min = 6, pow_max = 11, delay_min = 125, delay_max = 250, \
-             size = 2, spread_rate= 35, start_clouds = 1 }
 SHUFFLE: yz, '", 56~ / ``9
 SUBST:   yX = x:20 t:4 W:1, z = .wwwwWWW, ' = ...W, " = wWW, ~ = 56
 NSUBST:  & = 1:4 / *:7
 MAP
 @@  '' Xxccxcxcct
-@'''WXfXW""'..Wcct
+@'''WXWXW""'..Wcct
    'XWXWx''"zyW.xct
-    fXWx"wwwyzwxWcct
+    WXWx"wwwyzwxWcct
    XXWx.x1wwzyw.x.xct
   txWx"x3wwwyzwx1W.cctt
   xt"'w1w38wzywx21xWcctt
   ct"'www88wyxwcxx.xWxttt
    x'"wwwww.cXWwwwwWwWcttt
    c.yzyzyzcX..zyzyzWx8xct
-  ct.zyzyzxX.f.yzyzy.fxWcct
+  ct.zyzyzxX.W.yzyzy.WxWcct
   xt"'wWWWwW..wWW.WWw.WwWcct
    x"'WxxxWwzyWwcwc.WyzWwWxct
-   c'"wx1xWwyzWcf.wcWzywWx.cct
+   c'"wx1xWwyzWcW.wcWzywWx.cct
   xt"'wx2.xwzy.w.&.w.yzwx1..xct
   ct'"wx1xWwyzWcw..cWzywc21xWcct
-   x"'WxxWwWzyW.cwcfWyzwxcxWwWccc
-   c"'wWWwWf..wWW.WWw.wWwWWwWwWcc
-  ctfzyzyzWW.w.yzyzy.W.WWzyzyzftt
+   x"'WxxWwWzyW.cwcWWyzwxcxWwWccc
+   c"'wWWwWW..wWW.WWw.wWwWWwWwWcc
+  ctWzyzyzWW.w.yzyzy.W.WWzyzyzWtt
   xt.yzyzyzxw..zyzyzw..xzyzyzy.tc
-   c"'wWWw.WXWfwwwwwwWXc.WW.w'"ct
-   c"'WxxWW.yWwWWxWwWWy.fWxx."'xt
+   c"'wWWw.WXWWwwwwwwWXc.WW.w'"ct
+   c"'WxxWW.yWwWWxWwWWy.WWxx."'xt
   ct'"xx3xWwzyWxx.xWwyzWWc3cx'"cx
   xt'"x.w3xWyzWx121xWzyWx3~5t"'tc
   ctt8x4.xxWyzWxxxxxWyz.xc6rc'"ct
    ct'xxxxWwzywWwwwWwzyw.xtcc8tXc
-   ccW'8""''yz""'&'""yz'"'"'8ftcc
-   tccct''""f.''"'"''f."'"'"Wt&cc
+   ccW'8""''yz""'&'""yz'"'"'8Wtcc
+   tccct''""W.''"'"''W."'"'"Wt&cc
   tttttccxcccttcxctcxcXctcXXxtccc
 ttttttttttttttttttttttttttttttttt
 ENDMAP
