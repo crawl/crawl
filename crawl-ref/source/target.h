@@ -28,6 +28,8 @@ public:
     virtual bool valid_aim(coord_def a) = 0;
 
     virtual aff_type is_affected(coord_def loc) = 0;
+protected:
+    bool anyone_there(coord_def loc);
 };
 
 class targetter_beam : public targetter
@@ -112,8 +114,6 @@ public:
     targetter_splash(const actor *act);
     bool valid_aim(coord_def a);
     aff_type is_affected(coord_def loc);
-private:
-    bool anyone_there(coord_def loc);
 };
 
 class targetter_los : public targetter
