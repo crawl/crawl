@@ -4133,6 +4133,7 @@ void display_char_status()
         STATUS_CONSTRICTED,
         STATUS_AUGMENTED,
         STATUS_SUPPRESSED,
+        STATUS_SILENCE,
     };
 
     status_info inf;
