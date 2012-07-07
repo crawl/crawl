@@ -1,29 +1,55 @@
-Stone Soup 0.11 (up to 0.11-a0-2423-g1baa356)
+Stone Soup 0.11 (up to 0.11-a0-2724-g330e717)
 ---------------------------------------------
 
 Highlights
 ----------
 * A new branch: the Spider Nest.
-* Missile enchantments are no more.
+* The Swamp branch is less annoying now.
+* Missile enchantments are no more, greatly simplifying inventory management.
+    - Formulas have been changed to compensate, with skill filling the role of
+      missile enchantments.
+* Grey draconians are better.
+* Monster constriction vs the player has been overhauled.
+* Greatly improved targetting prompts for area of effect spells and lightning.
+* New monsters: Arachne, Fannar, orb spider, bog body.
+* Removed monsters: Jozef, bog mummy, midges.
+* New item: lightning rod.
+* Removed items: ankus, scroll of detect curse, amulet of controlled flight,
+  rods of smiting.
+* New card: the Mercenary.
 
 Branches, environment
 ---------------------
 * New wizlab: Roulette of Golubria.
+* A metric buttload of new vaults, including several new branch endings and
+  a full-level vault for deeper parts of the main dungeon.
+* Vaults are more common.
+* There are three new level layouts for the dungeon and various branches.
 * You don't lose portal vaults after being banished from one.
 * Escaping the Abyss places you where you came from, but grants short-term
   immunity to most forms of banishment.
 * The Elven Halls are only three levels deep.
 * Branch difficulty doesn't depend on where their entrance was anymore.
 * Traps of a given type deal the same damage no matter where they are.
-* Gas traps get their separate type.
+* Gas traps get their own trap type, rather than being "pressure plates".
 * Axe traps got axed.
 * Wax walls are no more.
-* A metric buttload of new vaults.
+* There are no more randomly generated secret doors, but they can still be
+  found in vaults.
+* The silver rune of Zot can now appear in any of the four quadrants
+  on Vaults:8.
+* The Swamp has an improved layout, with smaller and more compact levels, and
+  more trees. It is also less misty than before.
+* Swamp trees are now mangroves, and are opaque.
+* Spider Nest: replaces the old spider portal vault, contains the gossamer
+  rune of Zot.
+* Games will have one of the Spider Nest or Snake Pit, and one of the Swamp or
+  Shoals, guaranteeing one poison themed branch and one water themed one.
 
 Character
 ---------
 * Humans get slightly more stat increases.
-* Nagas get constriction only at XL13.
+* Nagas get constriction at XL13 now.
 * Tengu can fly when transformed.
 * Grey Draconians are better at Earth and worse at Air, get more AC, and
   no longer fumble in water.
@@ -44,26 +70,46 @@ Monsters
 * Magical staves work for monsters as something more than a mere cudgel.
 * Monsters can use rings and amulets.
 * Mindless monsters don't have any skills (zombies with pain weapons, etc.).
-* New uniques: Arachne, Fannar.
+* New uniques:
+    - Arachne, half-human, half-spider.
+    - Fannar, an elven ice elementalist.
 * Margery gets dragon armour.
-* Monsters with arcane spells won't switch to heavy armour.
-* Donald can spawn in Labyrinths.
+* Monsters with arcane spells won't wear heavy armour.
+* Donald can spawn in Labyrinths, and complains about them.
 * Urug is drastically stronger.
 * Mimics can be "inept", (no adjective), "ravenous" or "monstrous", with
   a progression of strength and abilities.
-* New: orb spiders, moths of suppression.
-* Removed: Jozef.
+* New monster: orb spider. Shoots weak orbs of destruction at you.
+* Removed: Jozef, midges.
 * Porcupines get spines.
 * Hell Sentinels replace Pit Fiends.
 * Boulder beetles can roll as a boulder.
-* Jumping spiders can ensnare in melee.
+* Jumping spiders can ensnare you with webs in melee.
+* Poison attacks from sea snakes and redbacks can only be partially resisted.
+* Hit dice and damage have been increased for all spider enemies.
+* Emperor scorpions are much stronger.
+* Ghost moths have been nerfed.
+* Vampire mosquitoes lose their sickness attack, gain a stronger vampiric
+  attack.
+* Swamp worms have better melee accuracy.
+* Giant leeches are more dangerous.
+* Bog mummies have been replaced with bog bodies: no death curse, stronger
+  spells, can be decomposed via Fedhas prayer.
 * Monsters who submerge stop fleeing.
 * Umbras don't give bonuses to demons anymore.
+* Monsters (and player ghosts) can cast Ozocubu's Refrigeration.
+* Monsters cast emergency spells more often.
+* Monster constriction has been overhauled. Escape is easier, blinking counts
+  as two escape attempts (rather than always succeeding), and damage values are
+  saner.
+* A "damageless constriction" effect has been implemented for certain
+  monsters, particularly mimics.
 
 Spells
 ------
-* LRD works in Slime now.
-* Iskenderun's Mystic Blast often explodes.
+* Lee's Rapid Deconstruction works in Slime now.
+* Iskenderun's Mystic Blast often explodes, but can still safely be used at
+  point blank range.
 * Death Channel is level 6.
 * Simulacrum works on beef jerkies, sausages and meat rations.
 
@@ -77,15 +123,17 @@ Items
 * Ambrosia gives more mp, but only as you digest it.
 * Raw troll hides grant regeneration.
 * Jewelry auto-ids when it shows an obvious effect.
-* Ankuses, scrolls of detect curse, and amulets of controlled flight are
-  no more.
+* Ankuses, scrolls of detect curse, amulets of controlled flight, and rods of
+  smiting are no more.
 * Rods of striking are better.
-* Staves of energy merely reduce spell hunger instead of eliminating it.
+* Staves of energy reduce spell hunger to 1/3 instead of eliminating it.
 * All missile brands start visible.
-* Visored helmets don't stop bite attacks.
+* Visored helmets don't prevent bite attacks.
 * Identifying weapons by use works instantly but requires a random (per
   item) level of skill.
 * Unbranded items can't be glowing/runed unless they're cursed.
+* New item: Lightning rod. Has a continuous effect across multiple zaps, and
+  allows you to spray wide cones of electricity at your enemies.
 
 Cards
 -----
@@ -94,22 +142,23 @@ Cards
 * Removed: Spade.
 * Map and Dowsing have been combined into one.
 * Walls from the Tomb expire after a while.
-* New: the Mercenary.
+* New: the Mercenary. Allows you to purchase allies.
 * Warpwright teleport traps expire shortly.
 
 Gods
 ----
 * Trog accepts kills of holies.
 * Abandoning Kikubaaqudgha rots all currently existing corpses.
-* Kikubaaqudgha no longer guarantees getting all necromancy spells.
+* Kikubaaqudgha no longer guarantees getting all necromancy spells: instead,
+  he gifts books with a random selection of spells.
 * Banishing monsters grants some XP and Lugonu piety.
-* New Xom effect: inner flame.
-* Nemelex gives far less decks of summoning.
+* New Xom effect: mass inner flame.
+* Nemelex gives far fewer decks of summoning.
 * Nemelex loses the Mark Four ability, gains Deal Four.
 * Nemelex doesn't try to enforce "genuine" use of cards -- was too
   inaccurate.
 * Xom can't gift permanent allies anymore.
-* Xom grants far less item gifts.
+* Xom grants far fewer item gifts.
 * Xom acts drastically more often when you're in a tough fight.
 * Elyvilon doesn't take piety when life-saving allies.
 * Non-newbie Elyvilonites can't destroy non-unholy weapons.
@@ -122,16 +171,26 @@ Interface
 ---------
 * Stash tracking, annotations, etc, work for portal levels.
 * Mutation notes mention how it was gained or lost.
-* Removed options: pizza, ood_interesting, rare_interesting, note_all_spells
-* New options: auto_drop_chunks, autofight_throw, dump_kill_breakdowns.
+* Removed options: pizza, ood_interesting, rare_interesting, note_all_spells.
+* New options: auto_drop_chunks, autofight_throw, dump_kill_breakdowns,
+  show_travel_trail
+* Webtiles chat is now logged (can be disabled via note_chat_messages)
+* The show_gold_turns and show_game_turns options are now enabled by default:
+  you will see how much gold you have, and how much time your actions take.
 * Fake translations: dwarven, jägerkin, kraut, wide.
 * Loads of new tiles.
-* Fixed Pan/Hell lords get special tall tiles.
+* The unique Pan/Hell lords get special tall tiles.
 * An in-game high scores browser.
 * Picking up stackable items shows how many you picked up.
 * Every item, monster, feature has a description.
 * Autoexplore stops on items sacrificeable to your god.
 * Rods appear as a separate item class.
+* Autopickup settings can now be configured in-game, via the '\' key.
+* Several improvements have been made to the tutorial.
+* Lantern of shadows no longer makes the whole screen dark grey in console mode.
+* Targetting prompts have been massively improved. Almost all area of effect
+  spells are now supported, and bounce paths (e.g. from lightning bolt) are
+  displayed.
 
 Wizmode
 -------
