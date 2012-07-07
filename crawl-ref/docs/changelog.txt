@@ -28,6 +28,8 @@ Branches, environment
 * You don't lose portal vaults after being banished from one.
 * Escaping the Abyss places you where you came from, but grants short-term
   immunity to most forms of banishment.
+* Pandemonium: slightly fewer exits to the dungeon are placed, but there are
+  much more exits through the abyss (which will return you to the Dungeon).
 * The Elven Halls are only three levels deep.
 * Branch difficulty doesn't depend on where their entrance was anymore.
 * Traps of a given type deal the same damage no matter where they are.
