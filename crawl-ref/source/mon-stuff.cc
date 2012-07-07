@@ -1935,7 +1935,7 @@ int monster_die(monster* mons, killer_type killer,
 
         case KILL_MON:          // Monster kills in combat.
         case KILL_MON_MISSILE:  // Monster kills by missile or beam.
-            if (!silent)
+            if (death_message)
             {
                 const char* msg =
                     exploded                     ? " is blown up!" :
@@ -2188,7 +2188,7 @@ int monster_die(monster* mons, killer_type killer,
 
         // Monster killed by trap/inanimate thing/itself/poison not from you.
         case KILL_MISC:
-            if (!silent)
+            if (death_message)
             {
                 if (fake_abjuration)
                 {
