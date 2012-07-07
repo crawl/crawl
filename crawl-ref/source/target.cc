@@ -78,7 +78,7 @@ bool targetter_beam::set_aim(coord_def a)
     tempbeam.fire();
     path_taken = tempbeam.path_taken;
 
-    if (min_expl_rad > 0 && max_expl_rad > 0)
+    if (max_expl_rad > 0)
     {
         bolt tempbeam2;
         tempbeam2.target = origin;
@@ -125,13 +125,13 @@ aff_type targetter_beam::is_affected(coord_def loc)
     for (std::vector<coord_def>::const_iterator i = path_taken.begin();
          i != path_taken.end(); ++i)
     {
-        if (cell_is_solid(*i) && min_expl_rad > 0)
+        if (cell_is_solid(*i) && max_expl_rad > 0)
             break;
 
         c = *i;
         if (c == loc)
         {
-            if (min_expl_rad > 0 && max_expl_rad > 0)
+            if (max_expl_rad > 0)
                 on_path = true;
             else
                 return AFF_YES;
@@ -143,7 +143,7 @@ aff_type targetter_beam::is_affected(coord_def loc)
             break;
         }
     }
-    if (min_expl_rad > 0 && max_expl_rad > 0 && (loc - c).rdist() <= 9)
+    if (max_expl_rad > 0 && (loc - c).rdist() <= 9)
     {
         coord_def centre(9,9);
         if (exp_map_min(loc - c + centre) < INT_MAX)
