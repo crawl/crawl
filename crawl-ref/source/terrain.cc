@@ -1431,6 +1431,9 @@ bool fall_into_a_pool(const coord_def& entry, bool allow_shift,
         {
             mpr("The lava burns you to a cinder!");
             ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_LAVA);
+
+            if (you.dead) // felids
+                return false;
         }
         else
         {
@@ -1448,6 +1451,9 @@ bool fall_into_a_pool(const coord_def& entry, bool allow_shift,
                 mpr("The lava scalds you!");
 
             ouch(damage, NON_MONSTER, KILLED_BY_LAVA);
+
+            if (you.dead) // felids
+                return false;
         }
 
         expose_player_to_element(BEAM_LAVA, 14);
