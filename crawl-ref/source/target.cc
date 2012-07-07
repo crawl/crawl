@@ -30,6 +30,15 @@ bool targetter::set_aim(coord_def a)
     return true;
 }
 
+bool targetter::anyone_there(coord_def loc)
+{
+    if (!map_bounds(loc))
+        return false;
+    if (agent && agent->is_player())
+        return env.map_knowledge(loc).monsterinfo();
+    return actor_at(loc);
+}
+
 targetter_beam::targetter_beam(const actor *act, int range, beam_type flavour,
                                bool stop, int min_ex_rad, int max_ex_rad) :
                                min_expl_rad(min_ex_rad),
@@ -69,11 +78,15 @@ bool targetter_beam::set_aim(coord_def a)
     if (min_expl_rad > 0 && max_expl_rad > 0)
     {
         bolt tempbeam2;
-        tempbeam2.target = path_taken[path_taken.size() - 1];
-        for (int i = path_taken.size() - 2;
-             i >= 0 && cell_is_solid(tempbeam2.target);
-             i--)
+        tempbeam2.target = origin;
+        for (unsigned int i = 0; i < path_taken.size(); i++)
+        {
+            if (cell_is_solid(path_taken[i]))
+                break;
             tempbeam2.target = path_taken[i];
+            if (anyone_there(tempbeam2.target))
+                break;
+        }
         tempbeam2.use_target_as_pos = true;
         exp_map_min.init(INT_MAX);
         tempbeam2.determine_affected_cells(exp_map_min, coord_def(), 0,
@@ -114,6 +127,8 @@ aff_type targetter_beam::is_affected(coord_def loc)
             else
                 return AFF_YES;
         }
+        if (anyone_there(path_taken[i]))
+            break;
     }
     if (min_expl_rad > 0 && max_expl_rad > 0 &&
         (loc - c).rdist() <= 9)
@@ -426,15 +441,6 @@ bool targetter_splash::valid_aim(coord_def a)
     if (agent && grid_distance(origin, a) > 1)
         return notify_fail("Out of range.");
     return true;
-}
-
-bool targetter_splash::anyone_there(coord_def loc)
-{
-    if (!map_bounds(loc))
-        return false;
-    if (agent && agent->is_player())
-        return env.map_knowledge(loc).monsterinfo();
-    return actor_at(loc);
 }
 
 aff_type targetter_splash::is_affected(coord_def loc)
