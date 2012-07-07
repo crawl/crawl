@@ -62,6 +62,7 @@ targetter_beam::targetter_beam(const actor *act, int range, beam_type flavour,
     beam.foe_info.dont_stop = true;
     beam.ex_size = min_ex_rad;
     beam.aimed_at_spot = true;
+
     penetrates_targets = !stop;
     range2 = dist_range(range);
 }
@@ -122,6 +123,7 @@ aff_type targetter_beam::is_affected(coord_def loc)
 {
     bool on_path = false;
     coord_def c;
+    aff_type current = AFF_YES;
     for (std::vector<coord_def>::const_iterator i = path_taken.begin();
          i != path_taken.end(); ++i)
     {
@@ -134,13 +136,16 @@ aff_type targetter_beam::is_affected(coord_def loc)
             if (max_expl_rad > 0)
                 on_path = true;
             else
-                return cell_is_solid(*i) ? AFF_NO : AFF_YES;
+                return cell_is_solid(*i) ? AFF_NO : current;
         }
         if (anyone_there(*i)
             && !fedhas_shoot_through(beam, monster_at(*i))
             && !penetrates_targets)
         {
-            break;
+            // We assume an exploding spell will always stop here.
+            if (max_expl_rad > 0)
+                break;
+            current = AFF_MAYBE;
         }
     }
     if (max_expl_rad > 0 && (loc - c).rdist() <= 9)
