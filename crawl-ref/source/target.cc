@@ -134,7 +134,7 @@ aff_type targetter_beam::is_affected(coord_def loc)
             if (max_expl_rad > 0)
                 on_path = true;
             else
-                return AFF_YES;
+                return cell_is_solid(*i) ? AFF_NO : AFF_YES;
         }
         if (anyone_there(*i)
             && !fedhas_shoot_through(beam, monster_at(*i))
