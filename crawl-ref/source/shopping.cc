@@ -2728,7 +2728,7 @@ void ShoppingList::display()
     ShoppingListMenu shopmenu;
     shopmenu.set_tag("shop");
     shopmenu.menu_action  = travelable ? Menu::ACT_EXECUTE : Menu::ACT_EXAMINE;
-    shopmenu.action_cycle = travelable ? Menu::CYCLE_CYCLE : Menu::CYCLE_NONE;
+    shopmenu.action_cycle = travelable ? Menu::CYCLE_CYCLE : Menu::CYCLE_NO_EXEC;
     std::string title     = "thing";
 
     MenuEntry *mtitle = new MenuEntry(title, MEL_TITLE);
