@@ -57,13 +57,32 @@ bool monster::blink_to(const coord_def& dest, bool quiet)
     if (dest == pos())
         return false;
 
-    if (!attempt_escape(2))
-        return false;
-
+    bool was_constricted = false;
     const bool jump = type == MONS_JUMPING_SPIDER;
+    const std::string verb = (jump ? "leap" : "blink");
+
+    if (is_constricted())
+    {
+        was_constricted = true;
+
+        if (!attempt_escape(2))
+        {
+            if (!quiet)
+            {
+                std::string message = " struggles to " + verb
+                                    + " free from constriction.";
+                simple_monster_message(this, message.c_str());
+            }
+            return false;
+        }
+    }
 
     if (!quiet)
-        simple_monster_message(this, jump ? " leaps!" : " blinks!");
+    {
+        std::string message = " " + conj_verb(verb)
+                            + (was_constricted ? " free!" : "!");
+        simple_monster_message(this, message.c_str());
+    }
 
     if (!(flags & MF_WAS_IN_VIEW))
         seen_context = SC_TELEPORT_IN;
@@ -146,7 +165,7 @@ bool blink_away(monster* mon)
     if (dest.origin())
         return false;
     bool success = mon->blink_to(dest);
-    ASSERT(success);
+    ASSERT(success || mon->is_constricted());
     return success;
 }
 
@@ -160,7 +179,7 @@ void blink_range(monster* mon)
     if (dest.origin())
         return;
     bool success = mon->blink_to(dest);
-    ASSERT(success);
+    ASSERT(success || mon->is_constricted());
 #ifndef DEBUG
     UNUSED(success);
 #endif
@@ -176,7 +195,7 @@ void blink_close(monster* mon)
     if (dest.origin())
         return;
     bool success = mon->blink_to(dest);
-    ASSERT(success);
+    ASSERT(success || mon->is_constricted());
 #ifndef DEBUG
     UNUSED(success);
 #endif
