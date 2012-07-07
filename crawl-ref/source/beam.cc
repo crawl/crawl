@@ -1332,10 +1332,10 @@ void bolt::do_fire()
             break;
         }
 
-        path_taken.push_back(pos());
-
         if (!affects_nothing)
             affect_cell();
+
+        path_taken.push_back(pos());
 
         if (range_used() > range)
             break;
