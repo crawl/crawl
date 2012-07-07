@@ -1725,7 +1725,6 @@ NAME:   evilmike_holy_pan
 TAGS:   pan no_pool_fixup
 ORIENT: encompass
 NSUBST: . = > / .
-NSUBST: . = 2:6 / *:.
 ITEM:   w:5 any / potion of curing
 ITEM:   any / potion of heal wounds
 ITEM:   acquire any
@@ -1764,7 +1763,7 @@ SUBST:  D& = +, '"- = ., H = G, C = c
 : set_feature_name("granite_statue", "golden statue")
 : set_feature_name("metal_wall", "silver wall")
 : set_random_mon_list("angel / cherub / ophan / daeva / phoenix / " ..
-:                     "apis / paladin / apis / ophan / angel")
+:                     "apis / paladin / apis / shedu band / angel")
 # Do not place if you are with a holy god. It's just free loot in that case.
 veto {{
     if you.god() == "the Shining One" or you.god() == "Zin" or you.god() == "Elyvilon" then

@@ -28,6 +28,7 @@
 #include "message.h"
 #include "mislead.h"
 #include "mon-behv.h"
+#include "mon-death.h"
 #include "mon-gear.h"
 #include "mon-iter.h"
 #include "mon-pick.h"
@@ -3321,6 +3322,11 @@ bool player_angers_monster(monster* mon)
                 break;
             }
         }
+
+        // Anger a shedu's mate.  This won't be an infinite recursion
+        // because the original is already hostile.
+        if (mons_is_shedu(mon) && shedu_pair_alive(mon))
+            player_angers_monster(get_shedu_pair(mon));
 
         return true;
     }
