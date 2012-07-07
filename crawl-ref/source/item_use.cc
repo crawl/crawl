@@ -1665,6 +1665,29 @@ static bool _dont_use_invis()
     return false;
 }
 
+static targetter *_wand_targetter(const item_def *wand)
+{
+    int range = _wand_range(wand->zap());
+
+    switch (wand->sub_type)
+    {
+    case WAND_FIREBALL:
+        return new targetter_beam(&you, range, BEAM_VISUAL, true, 1, 1);
+    case WAND_LIGHTNING:
+        return new targetter_beam(&you, range, BEAM_ELECTRICITY, false, 0, 0);
+    case WAND_FLAME:
+        return new targetter_beam(&you, range, BEAM_FIRE, true, 0, 0);
+    case WAND_FIRE:
+        return new targetter_beam(&you, range, BEAM_FIRE, false, 0, 0);
+    case WAND_FROST:
+        return new targetter_beam(&you, range, BEAM_COLD, true, 0, 0);
+    case WAND_COLD:
+        return new targetter_beam(&you, range, BEAM_COLD, false, 0, 0);
+    default:
+        return 0;
+    }
+}
+
 void zap_wand(int slot)
 {
     if (you.species == SP_FELID || !form_can_wield())
@@ -1738,6 +1761,7 @@ void zap_wand(int slot)
     const bool alreadytried = item_type_tried(wand);
           bool invis_enemy  = false;
     const bool dangerous    = player_in_a_dangerous_place(&invis_enemy);
+    targetter *hitfunc      = 0;
 
     if (!alreadyknown)
         beam.effect_known = false;
@@ -1766,6 +1790,8 @@ void zap_wand(int slot)
             targ_mode = TARG_HOSTILE;
             break;
         }
+
+        hitfunc = _wand_targetter(&wand);
     }
 
     const int tracer_range =
@@ -1777,7 +1803,11 @@ void zap_wand(int slot)
     args.mode = targ_mode;
     args.range = tracer_range;
     args.top_prompt = zap_title;
+    args.hitfunc = hitfunc;
     direction(zap_wand, args);
+
+    if (hitfunc)
+        delete hitfunc;
 
     if (!zap_wand.isValid)
     {
