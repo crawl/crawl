@@ -31,6 +31,7 @@ enum status_type
     STATUS_AUGMENTED,
     STATUS_SUPPRESSED,
     STATUS_TERRAIN,
+    STATUS_SILENCE,
 };
 
 struct status_info

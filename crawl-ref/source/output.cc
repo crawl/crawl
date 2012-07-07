@@ -630,6 +630,7 @@ static void _get_status_lights(std::vector<status_light>& out)
         STATUS_AUGMENTED,
         STATUS_SUPPRESSED,
         STATUS_TERRAIN,
+        STATUS_SILENCE,
     };
 
     status_info inf;

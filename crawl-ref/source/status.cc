@@ -521,6 +521,17 @@ void fill_status_info(int status, status_info* inf)
         _describe_terrain(inf);
         break;
 
+    // Silenced by an external source.
+    case STATUS_SILENCE:
+        if (silenced(you.pos()) && !you.duration[DUR_SILENCE])
+        {
+            inf->light_colour = LIGHTMAGENTA;
+            inf->light_text   = "Sil";
+            inf->short_text   = "silenced";
+            inf->long_text    = "You are silenced.";
+        }
+        break;
+
     default:
         if (!found)
         {
