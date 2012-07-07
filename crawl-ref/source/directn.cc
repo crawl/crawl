@@ -681,7 +681,7 @@ void full_describe_view()
     {
         std::vector<InvEntry*> all_items;
         for (unsigned int i = 0; i < list_items.size(); ++i)
-            all_items.push_back(new InvEntry(list_items[i]));
+            all_items.push_back(new InvEntry(list_items[i], true));
 
         const menu_sort_condition *cond = desc_menu.find_menu_sort_condition();
         desc_menu.sort_menu(all_items, cond);
