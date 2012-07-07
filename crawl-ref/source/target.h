@@ -42,6 +42,7 @@ public:
     bool valid_aim(coord_def a);
     aff_type is_affected(coord_def loc);
 private:
+    bool penetrates_targets;
     std::vector<coord_def> path_taken; // Path beam took.
     int range2;
     int min_expl_rad, max_expl_rad;

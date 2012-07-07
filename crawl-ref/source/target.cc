@@ -55,11 +55,12 @@ targetter_beam::targetter_beam(const actor *act, int range, beam_type flavour,
     beam.range = range;
     beam.source = origin;
     beam.target = aim;
-    beam.dont_stop_player = !stop;
-    beam.friend_info.dont_stop = !stop;
-    beam.foe_info.dont_stop = !stop;
+    beam.dont_stop_player = true;
+    beam.friend_info.dont_stop = true;
+    beam.foe_info.dont_stop = true;
     beam.ex_size = min_ex_rad;
     beam.aimed_at_spot = true;
+    penetrates_targets = !stop;
     range2 = dist_range(range);
 }
 
@@ -129,7 +130,7 @@ aff_type targetter_beam::is_affected(coord_def loc)
                 return AFF_YES;
         }
         if (anyone_there(path_taken[i]) &&
-            min_expl_rad > 0)
+            !penetrates_targets)
             break;
     }
     if (min_expl_rad > 0 && max_expl_rad > 0 &&

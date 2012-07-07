@@ -996,7 +996,16 @@ static targetter* _spell_targetter(spell_type spell, int pow, int range)
         return new targetter_beam(&you, range, BEAM_VISUAL, true, 1, 1);
     case SPELL_SHOCK:
     case SPELL_LIGHTNING_BOLT:
-        return new targetter_beam(&you, range, BEAM_ELECTRICITY, true, 0, 0);
+        return new targetter_beam(&you, range, BEAM_ELECTRICITY, false, 0, 0);
+    case SPELL_FLAME_TONGUE:
+    case SPELL_THROW_FLAME:
+        return new targetter_beam(&you, range, BEAM_FIRE, true, 0, 0);
+    case SPELL_BOLT_OF_FIRE:
+        return new targetter_beam(&you, range, BEAM_FIRE, false, 0, 0);
+    case SPELL_THROW_FROST:
+        return new targetter_beam(&you, range, BEAM_COLD, true, 0, 0);
+    case SPELL_BOLT_OF_COLD:
+        return new targetter_beam(&you, range, BEAM_COLD, false, 0, 0);
     case SPELL_FIRE_STORM:
         return new targetter_smite(&you, range, 2, pow > 76 ? 3 : 2);
     case SPELL_FREEZING_CLOUD:
