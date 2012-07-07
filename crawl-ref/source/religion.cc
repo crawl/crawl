@@ -926,7 +926,7 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
         break;
 
     case GOD_CHEIBRIADOS:
-        really_dislikes.push_back("you hasten yourself");
+        really_dislikes.push_back("you hasten yourself or others");
         really_dislikes.push_back("use unnaturally quick items");
         break;
 
