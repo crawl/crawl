@@ -992,6 +992,8 @@ static targetter* _spell_targetter(spell_type spell, int pow, int range)
                                   (pow > 76) ? 3 : 2);
     case SPELL_FIREBALL:
         return new targetter_beam(&you, range, BEAM_FIRE, true, 1, 1);
+    case SPELL_HELLFIRE:
+        return new targetter_beam(&you, range, BEAM_HELLFIRE, true, 1, 1);
     case SPELL_EVAPORATE:
     case SPELL_MEPHITIC_CLOUD:
         return new targetter_beam(&you, range, BEAM_POTION_MEPHITIC, true,
