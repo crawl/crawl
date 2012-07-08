@@ -140,7 +140,7 @@ ENDMAP
 
 NAME: grunt_ashenzari_visionary_spider
 TAGS: grunt_ashenzari_visionary_spider no_trap_gen no_monster_gen
-MONS: place:Spider:1
+MONS: place:Spider:1 spells:none
 SUBST:  . = ....x1
 COLOUR: 1. = brown
 COLOUR: x = yellow
@@ -167,7 +167,7 @@ ENDMAP
 
 NAME: grunt_ashenzari_visionary_snake
 TAGS: grunt_ashenzari_visionary_snake no_trap_gen no_monster_gen
-MONS: place:Snake:1
+MONS: place:Snake:1 spells:none
 SUBST:  . = ....x1
 COLOUR: 1. = lightgreen
 COLOUR: x = yellow
