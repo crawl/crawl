@@ -84,12 +84,12 @@ protected:
     struct GlyphInfo
     {
         // offset before drawing glyph; can be negative
-        char offset;
+        int8_t offset;
 
         // per-glyph horizontal advance
-        char advance;
+        int8_t advance;
         // per-glyph width
-        char width;
+        int8_t width;
                 // does glyph have any pixels?
         bool renderable;
 
