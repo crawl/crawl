@@ -684,7 +684,8 @@ static void _describe_regen(status_info* inf)
 static void _describe_poison(status_info* inf)
 {
     int pois = you.duration[DUR_POISONING];
-    inf->light_colour = _bad_ench_colour(pois, 5, 10);
+    inf->light_colour = (player_res_poison(false) >= 3
+                         ? DARKGREY : _bad_ench_colour(pois, 5, 10));
     inf->light_text   = "Pois";
     const std::string adj =
          (pois > 10) ? "extremely" :
@@ -826,7 +827,7 @@ static void _describe_nausea(status_info* inf)
     if (!you.duration[DUR_NAUSEA])
         return;
 
-    inf->light_colour = BROWN;
+    inf->light_colour = you.is_undead == US_UNDEAD ? DARKGREY : BROWN;
     inf->light_text   = "Nausea";
     inf->short_text   = "nauseated";
     inf->long_text    = (you.hunger_state <= HS_NEAR_STARVING) ?
