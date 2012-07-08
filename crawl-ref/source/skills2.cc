@@ -580,6 +580,9 @@ static std::vector<skill_type> _get_crosstrain_skills(skill_type sk)
     }
 }
 
+// This threshold is in tenths of a skill point.
+#define CROSSTRAIN_THRESHOLD 1
+
 float crosstrain_bonus(skill_type sk)
 {
     int bonus = 1;
@@ -587,7 +590,8 @@ float crosstrain_bonus(skill_type sk)
     std::vector<skill_type> crosstrain_skills = _get_crosstrain_skills(sk);
 
     for (unsigned int i = 0; i < crosstrain_skills.size(); ++i)
-        if (you.skills[crosstrain_skills[i]] > you.skills[sk])
+        if (you.skill(crosstrain_skills[i], 10, true) >=
+            (you.skill(sk, 10, true) + CROSSTRAIN_THRESHOLD))
             bonus *= 2;
 
     return bonus;
@@ -598,7 +602,8 @@ bool crosstrain_other(skill_type sk, bool show_zero)
     std::vector<skill_type> crosstrain_skills = _get_crosstrain_skills(sk);
 
     for (unsigned int i = 0; i < crosstrain_skills.size(); ++i)
-        if (you.skills[crosstrain_skills[i]] < you.skills[sk]
+        if ((you.skill(crosstrain_skills[i], 10, true) <=
+            (you.skill(sk, 10, true) - CROSSTRAIN_THRESHOLD))
             && (you.skills[crosstrain_skills[i]] > 0 || show_zero))
         {
             return true;
