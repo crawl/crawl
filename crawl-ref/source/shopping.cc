@@ -2720,12 +2720,10 @@ void ShoppingList::display()
     if (list->empty())
         return;
 
-    const bool travelable = can_travel_interlevel();
-
     ShoppingListMenu shopmenu;
     shopmenu.set_tag("shop");
-    shopmenu.menu_action  = travelable ? Menu::ACT_EXECUTE : Menu::ACT_EXAMINE;
-    shopmenu.action_cycle = travelable ? Menu::CYCLE_CYCLE : Menu::CYCLE_NO_EXEC;
+    shopmenu.menu_action  = Menu::ACT_EXECUTE;
+    shopmenu.action_cycle = Menu::CYCLE_CYCLE;
     std::string title     = "thing";
 
     MenuEntry *mtitle = new MenuEntry(title, MEL_TITLE);
