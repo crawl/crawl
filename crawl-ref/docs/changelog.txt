@@ -11,11 +11,11 @@ Highlights
 * Grey draconians are better.
 * Monster constriction vs the player has been overhauled.
 * Greatly improved targetting prompts for area of effect spells and lightning.
-* New monsters: Arachne, Fannar, orb spider, bog body.
-* Removed monsters: Jozef, bog mummy, midges.
+* New monsters: Arachne, Fannar, orb spider, bog body, hell sentinel.
+* Removed monsters: Jozef, bog mummy, midge, pit fiend.
 * New item: lightning rod.
 * Removed items: ankus, scroll of detect curse, amulet of controlled flight,
-  rods of smiting.
+  rod of smiting.
 * New card: the Mercenary.
 
 Branches, environment
