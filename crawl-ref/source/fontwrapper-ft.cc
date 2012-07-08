@@ -171,7 +171,7 @@ bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
     return true;
 }
 
-void FTFontWrapper::load_glyph(int c, ucs_t uchar)
+void FTFontWrapper::load_glyph(unsigned int c, ucs_t uchar)
 {
     // get on with rendering the new glyph
     FT_Error error;
@@ -275,9 +275,9 @@ void FTFontWrapper::load_glyph(int c, ucs_t uchar)
     }
 }
 
-ucs_t FTFontWrapper::map_unicode(ucs_t uchar)
+unsigned int FTFontWrapper::map_unicode(ucs_t uchar)
 {
-    ucs_t c;  // index in m_glyphs
+    unsigned int c;  // index in m_glyphs
     if (m_glyphmap.find(uchar) == m_glyphmap.end())
     {
         // work out which glyph we can overwrite if we've gone over MAX_GLYPHS
@@ -378,7 +378,7 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
     {
         for (unsigned int x = 0; x < width; x++)
         {
-            ucs_t c = map_unicode(chars[i]);
+            unsigned int c = map_unicode(chars[i]);
             uint8_t col_bg = colours[i] >> 4;
             uint8_t col_fg = colours[i] & 0xF;
 
@@ -520,7 +520,7 @@ unsigned int FTFontWrapper::string_width(const char *text)
         }
         else
         {
-            ucs_t c = map_unicode(*itr);
+            unsigned int c = map_unicode(*itr);
             width += m_glyphs[c].advance;
             adjust = std::max(0, m_glyphs[c].width - m_glyphs[c].advance);
         }
@@ -536,7 +536,7 @@ int FTFontWrapper::find_index_before_width(const char *text, int max_width)
 
     for (int i = 0; text[i]; i++)
     {
-        ucs_t c = map_unicode(text[i]);
+        unsigned int c = map_unicode(text[i]);
         width += m_glyphs[c].advance;
         int adjust = std::max(0, m_glyphs[c].width - m_glyphs[c].advance);
         if (width + adjust > max_width)
@@ -765,9 +765,9 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
 }
 
 void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
-                          ucs_t c, const VColour &col)
+                          ucs_t ch, const VColour &col)
 {
-    c = map_unicode(c);
+    unsigned int c = map_unicode(ch);
     if (!m_glyphs[c].renderable)
     {
         x += m_glyphs[c].advance;

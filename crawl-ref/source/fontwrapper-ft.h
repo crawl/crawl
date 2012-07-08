@@ -77,9 +77,9 @@ protected:
 
     int find_index_before_width(const char *str, int max_width);
 
-    ucs_t map_unicode(ucs_t uchar, bool update);
-    ucs_t map_unicode(ucs_t uchar);
-    void load_glyph(int c, ucs_t uchar);
+    unsigned int map_unicode(ucs_t uchar, bool update);
+    unsigned int map_unicode(ucs_t uchar);
+    void load_glyph(unsigned int c, ucs_t uchar);
 
     struct GlyphInfo
     {
@@ -94,12 +94,12 @@ protected:
         bool renderable;
 
         // index of prev/next glyphs in LRU
-        ucs_t prev; ucs_t next;
+        unsigned int prev; unsigned int next;
         // charcode of glyph
         ucs_t uchar;
     };
     GlyphInfo *m_glyphs;
-    std::map<ucs_t,ucs_t> m_glyphmap;
+    std::map<ucs_t, unsigned int> m_glyphmap;
     // index of least recently used glyph
     ucs_t m_glyphs_lru;
     // index of most recently used glyph
