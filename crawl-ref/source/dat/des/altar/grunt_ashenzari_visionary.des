@@ -16,10 +16,16 @@ NAME: grunt_ashenzari_visionary
 DEPTH: D:2-12
 TAGS: temple_overflow_ashenzari uniq_altar_ashenzari no_trap_gen no_monster_gen
 SHUFFLE: ef
+# The branches should be in reverse order here so we don't select the
+# same branch twice.
 : if crawl.game_started() and dgn.br_exists("Swamp") then
 SUBVAULT: e : grunt_ashenzari_visionary_swamp
 : elseif crawl.game_started() and dgn.br_exists("Shoals") then
 SUBVAULT: e : grunt_ashenzari_visionary_shoals
+: elseif crawl.game_started() and dgn.br_exists("Spider") then
+SUBVAULT: e : grunt_ashenzari_visionary_spider
+: elseif crawl.game_started() and dgn.br_exists("Snake") then
+SUBVAULT: e : grunt_ashenzari_visionary_snake
 : else
 SUBVAULT: e : grunt_ashenzari_visionary
 : end
@@ -27,6 +33,10 @@ SUBVAULT: e : grunt_ashenzari_visionary
 SUBVAULT: f : grunt_ashenzari_visionary_snake
 : elseif crawl.game_started() and dgn.br_exists("Spider") then
 SUBVAULT: f : grunt_ashenzari_visionary_spider
+: elseif crawl.game_started() and dgn.br_exists("Shoals") then
+SUBVAULT: f : grunt_ashenzari_visionary_shoals
+: elseif crawl.game_started() and dgn.br_exists("Swamp") then
+SUBVAULT: f : grunt_ashenzari_visionary_swamp
 : else
 SUBVAULT: f : grunt_ashenzari_visionary
 : end
