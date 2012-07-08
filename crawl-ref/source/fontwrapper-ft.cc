@@ -107,6 +107,9 @@ bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
     m_min_offset    = 0;
     m_glyphs        = new GlyphInfo[MAX_GLYPHS];
 
+    if (outl)
+        max_width += 2, max_height += 2;
+
     // Grow character size to power of 2
     while (charsz.x < max_width)
         charsz.x *= 2;
@@ -257,35 +260,28 @@ ucs_t FTFontWrapper::map_unicode(ucs_t uchar)
             if (outl)
             {
                 const int charw = bmp->width;
-                for (int x = -1; x <= bmp->width; x++)
-                    for (int y = -1; y <= bmp->rows; y++)
+                for (int x = 0; x < bmp->width; x++)
+                    for (int y = 0; y < bmp->rows; y++)
                     {
-                        bool x_valid = x >= 0 && x < bmp->width;
-                        bool y_valid = y >= 0 && y < bmp->rows;
-                        bool valid   = x_valid && y_valid;
-
                         unsigned int idx = offset_x+x+1 + (offset_y+y+1) * charsz.x;
                         idx *= 4;
 
-                        if (x_valid && y_valid)
-                        {
-                            unsigned char orig = valid ? bmp->buffer[x + charw * y] : 0;
+                        unsigned char orig = bmp->buffer[x + charw * y];
 
-                            unsigned char edge = 0;
-                            if (y_valid && x > 0)
-                                edge = std::max(bmp->buffer[(x-1) + charw * y], edge);
-                            if (x_valid && y > 0)
-                                edge = std::max(bmp->buffer[x + charw * (y-1)], edge);
-                            if (y_valid && x < bmp->width - 1)
-                                edge = std::max(bmp->buffer[(x+1) + charw * y], edge);
-                            if (x_valid && y < bmp->rows - 1)
-                                edge = std::max(bmp->buffer[x + charw * (y+1)], edge);
+                        unsigned char edge = 0;
+                        if (x > 0)
+                            edge = std::max(bmp->buffer[(x-1) + charw * y], edge);
+                        if (y > 0)
+                            edge = std::max(bmp->buffer[x + charw * (y-1)], edge);
+                        if (x < bmp->width - 1)
+                            edge = std::max(bmp->buffer[(x+1) + charw * y], edge);
+                        if (y < bmp->rows - 1)
+                            edge = std::max(bmp->buffer[x + charw * (y+1)], edge);
 
-                            pixels[idx] = orig;
-                            pixels[idx + 1] = orig;
-                            pixels[idx + 2] = orig;
-                            pixels[idx + 3] = std::min((int)orig + edge, 255);
-                        }
+                        pixels[idx] = orig;
+                        pixels[idx + 1] = orig;
+                        pixels[idx + 2] = orig;
+                        pixels[idx + 3] = std::min((int)orig + edge, 255);
                     }
             }
             else
