@@ -621,8 +621,7 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
             browse_inventory();
         else if (key == '$')
         {
-            if (viewing || (num_selected == 0 && num_in_list == 0)
-                || !_can_shoplist())
+            if (viewing || (num_selected == 0 && num_in_list == 0))
             {
                 _shop_print("Huh?", 1);
                 _shop_more();
@@ -2261,13 +2260,6 @@ bool ShoppingList::add_thing(const item_def &item, int cost,
 
     SETUP_POS();
 
-    if (!_can_shoplist(pos.id.branch))
-    {
-        mpr("The shopping list can only contain things in the dungeon.",
-             MSGCH_ERROR);
-        return false;
-    }
-
     if (find_thing(item, pos) != -1)
     {
         mprf(MSGCH_ERROR, "%s is already on the shopping list.",
@@ -2291,13 +2283,6 @@ bool ShoppingList::add_thing(std::string desc, std::string buy_verb, int cost,
     ASSERT(cost > 0);
 
     SETUP_POS();
-
-    if (!_can_shoplist(pos.id.branch))
-    {
-        mpr("The shopping list can only contain things in the dungeon.",
-             MSGCH_ERROR);
-        return false;
-    }
 
     if (find_thing(desc, pos) != -1)
     {
@@ -2337,6 +2322,18 @@ void ShoppingList::del_thing_at_index(int idx)
 {
     ASSERT(idx >= 0 && idx < list->size());
     list->erase(idx);
+    refresh();
+}
+
+void ShoppingList::del_things_from(const level_id &lid)
+{
+    for (unsigned int i = 0; i < list->size(); i++)
+    {
+        const CrawlHashTable &thing = (*list)[i];
+
+        if (thing_pos(thing).is_on(lid))
+            list->erase(i--);
+    }
     refresh();
 }
 
