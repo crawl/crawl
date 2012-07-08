@@ -108,7 +108,6 @@ bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
     m_glyphs        = new GlyphInfo[MAX_GLYPHS];
 
     // Grow character size to power of 2
-    //charsz(1,1);
     while (charsz.x < max_width)
         charsz.x *= 2;
     while (charsz.y < max_height)
@@ -118,14 +117,23 @@ bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
     // Having to blow out 8-bit alpha values into full 32-bit textures is
     // kind of frustrating, but not all OpenGL implementations support the
     // "esoteric" ALPHA8 format and it's not like this texture is very large.
+
+    // [frogbotherer] I think we can get memory usage lower by blowing out
+    // the texture as a whole out to a power of 2, instead of each individual
+    // character. Also, whilst GLES baulks at ALPHA8, there might be some
+    // other compression format that we can use to get the size down a bit
     m_ft_width  = GLYPHS_PER_ROWCOL * charsz.x;
     m_ft_height = GLYPHS_PER_ROWCOL * charsz.y;
-    pixels = new unsigned char[4 * m_ft_width * m_ft_height];
-    memset(pixels, 0, sizeof(unsigned char) * 4 * m_ft_width * m_ft_height);
+
+    pixels = new unsigned char[4 * charsz.x * charsz.y];
+    memset(pixels, 0, sizeof(unsigned char) * 4 * charsz.x * charsz.y);
 
     dprintf("new font tex %d x %d x 4 = %dpx %d bytes\n",
             m_ft_width, m_ft_height, m_ft_width * m_ft_height,
             4 * m_ft_width * m_ft_height);
+
+    // initialise empty texture of correct size
+    m_tex.load_texture(NULL, m_ft_width, m_ft_height, MIPMAP_NONE);
 
     // Special case c = 0 for full block.
     {
@@ -142,29 +150,25 @@ bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
         for (int x = 0; x < max_width; x++)
             for (int y = 0; y < max_height; y++)
             {
-                unsigned int idx = x + y * m_ft_width;
+                unsigned int idx = x + y * charsz.x;
                 idx *= 4;
                 pixels[idx]     = 255;
                 pixels[idx + 1] = 255;
                 pixels[idx + 2] = 255;
                 pixels[idx + 3] = 255;
             }
+        bool success = m_tex.load_texture(pixels, charsz.x, charsz.y,
+                                          MIPMAP_NONE, 0, 0);
+        ASSERT(success);
     }
 
     // precache common chars
-    for(int i = 0x20; i < 0x7f; i++)
-        map_unicode(i, false);
-    update_font_tex();
-
+    for (int i = 0x20; i < 0x7f; i++)
+        map_unicode(i);
     return true;
 }
 
 ucs_t FTFontWrapper::map_unicode(ucs_t uchar)
-{
-    return map_unicode(uchar, true);
-}
-
-ucs_t FTFontWrapper::map_unicode(ucs_t uchar, bool update)
 {
     ucs_t c;  // index in m_glyphs
     if (m_glyphmap.find(uchar) == m_glyphmap.end())
@@ -247,21 +251,9 @@ ucs_t FTFontWrapper::map_unicode(ucs_t uchar, bool update)
             ASSERT(bmp->num_grays == 256);
 
             // Horizontal offset stored in m_glyphs and handled when drawing
-            unsigned int offset_x = (c % GLYPHS_PER_ROWCOL) * charsz.x;
-            unsigned int offset_y = (c / GLYPHS_PER_ROWCOL) * charsz.y + vert_offset;
-
-            if (m_glyphs_top == MAX_GLYPHS)
-            {
-                // blank out above char if it's been replaced
-                for (int x = 0; x < charsz.x; x++)
-                    for (int y = 0; y < charsz.y; y++)
-                    {
-                        unsigned int idx = offset_x + x + (offset_y + y - vert_offset) * m_ft_width;
-                        idx *= 4;
-                        pixels[idx + 3] = 0;
-                    }
-            }
-
+            const unsigned int offset_x = 0;
+            const unsigned int offset_y = vert_offset;
+            memset(pixels, 0, sizeof(unsigned char) * 4 * charsz.x * charsz.y);
             if (outl)
             {
                 const int charw = bmp->width;
@@ -272,7 +264,7 @@ ucs_t FTFontWrapper::map_unicode(ucs_t uchar, bool update)
                         bool y_valid = y >= 0 && y < bmp->rows;
                         bool valid   = x_valid && y_valid;
 
-                        unsigned int idx = offset_x+x+1 + (offset_y+y+1) * m_ft_width;
+                        unsigned int idx = offset_x+x+1 + (offset_y+y+1) * charsz.x;
                         idx *= 4;
 
                         if (x_valid && y_valid)
@@ -301,7 +293,7 @@ ucs_t FTFontWrapper::map_unicode(ucs_t uchar, bool update)
                 for (int x = 0; x < bmp->width; x++)
                     for (int y = 0; y < bmp->rows; y++)
                     {
-                        unsigned int idx = offset_x + x + (offset_y + y) * m_ft_width;
+                        unsigned int idx = offset_x + x + (offset_y + y) * charsz.x;
                         idx *= 4;
                         if (x < bmp->width && y < bmp->rows)
                         {
@@ -313,8 +305,11 @@ ucs_t FTFontWrapper::map_unicode(ucs_t uchar, bool update)
                         }
                     }
             }
-            if (update)
-                update_font_tex();
+            bool success = m_tex.load_texture(pixels, charsz.x, charsz.y,
+                                MIPMAP_NONE,
+                                (c % GLYPHS_PER_ROWCOL) * charsz.x,
+                                (c / GLYPHS_PER_ROWCOL) * charsz.y);
+            ASSERT(success);
         }
         dprintf("mapped %d (%x; %lc) to %d\n", uchar, uchar, uchar, c);
     }
@@ -357,15 +352,6 @@ ucs_t FTFontWrapper::map_unicode(ucs_t uchar, bool update)
 
     return m_glyphmap[uchar];
 }
-
-void FTFontWrapper::update_font_tex()
-{
-    m_tex.unload_texture();
-    bool success = m_tex.load_texture(pixels, m_ft_width, m_ft_height,
-                                      MIPMAP_NONE);
-    ASSERT(success);
-}
-
 
 void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
                                      ucs_t *chars,
@@ -793,8 +779,8 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
 
     float tex_sx = (float)(c % GLYPHS_PER_ROWCOL) / (float)GLYPHS_PER_ROWCOL;
     float tex_sy = (float)(c / GLYPHS_PER_ROWCOL) / (float)GLYPHS_PER_ROWCOL;
-    float tex_ex = tex_sx + (float)this_width / (float)m_tex.width();
-    float tex_ey = tex_sy + (float)m_max_advance.y / (float)m_tex.height();
+    float tex_ex = tex_sx + (float)this_width / (float)(GLYPHS_PER_ROWCOL*charsz.x);//(float)m_tex.width();
+    float tex_ey = tex_sy + (float)m_max_advance.y / (float)(GLYPHS_PER_ROWCOL*charsz.y);//(float)m_tex.height();
 
     GLWPrim rect(pos_sx, pos_sy, pos_ex, pos_ey);
     rect.set_tex(tex_sx, tex_sy, tex_ex, tex_ey);

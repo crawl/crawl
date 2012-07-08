@@ -79,7 +79,6 @@ protected:
 
     ucs_t map_unicode(ucs_t uchar, bool update);
     ucs_t map_unicode(ucs_t uchar);
-    void update_font_tex();
 
     struct GlyphInfo
     {

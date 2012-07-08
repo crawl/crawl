@@ -27,7 +27,7 @@ public:
                       tex_proc_func proc = NULL,
                       bool force_power_of_two = true);
     bool load_texture(unsigned char *pixels, unsigned int w, unsigned int h,
-                      MipMapOptions mip_opt);
+                      MipMapOptions mip_opt, int offsetx=-1, int offsety=-1);
     void unload_texture();
 
     unsigned int width() const { return m_width; }
