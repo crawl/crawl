@@ -352,7 +352,7 @@ void immolation(int pow, int caster, coord_def where, bool known,
     switch (caster)
     {
     case IMMOLATION_SCROLL:
-        aux = "scroll of immolation";
+        aux = "a scroll of immolation";
         break;
 
     case IMMOLATION_AFFIX:
