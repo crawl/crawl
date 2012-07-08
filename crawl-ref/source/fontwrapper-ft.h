@@ -79,6 +79,7 @@ protected:
 
     ucs_t map_unicode(ucs_t uchar, bool update);
     ucs_t map_unicode(ucs_t uchar);
+    void load_glyph(int c, ucs_t uchar);
 
     struct GlyphInfo
     {
