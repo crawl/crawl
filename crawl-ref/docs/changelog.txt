@@ -175,8 +175,8 @@ Interface
 * Mutation notes mention how it was gained or lost.
 * Removed options: pizza, ood_interesting, rare_interesting, note_all_spells.
 * New options: auto_drop_chunks, autofight_throw, dump_kill_breakdowns,
-  show_travel_trail
-* Webtiles chat is now logged (can be disabled via note_chat_messages)
+  show_travel_trail.
+* Webtiles chat is now logged (can be disabled via note_chat_messages).
 * The show_gold_turns and show_game_turns options are now enabled by default:
   you will see how much gold you have, and how much time your actions take.
 * Fake translations: dwarven, jägerkin, kraut, wide.
