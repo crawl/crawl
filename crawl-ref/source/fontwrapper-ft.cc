@@ -313,6 +313,7 @@ unsigned int FTFontWrapper::map_unicode(ucs_t uchar)
         m_glyphmap[uchar] = c;
 
         load_glyph(c, uchar);
+        n_subst++;
 
         dprintf("mapped %d (%x; %lc) to %d\n", uchar, uchar, uchar, c);
     }
@@ -371,6 +372,7 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
 
     ASSERT(m_buf);
     m_buf->clear();
+    n_subst = 0;
 
     float texcoord_dy = (float)m_max_advance.y / (float)m_tex.height();
 
@@ -418,12 +420,26 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
 
             i++;
             adv.x += m_glyphs[c].advance - m_glyphs[c].offset;
+
+            // See if we need to flush prematurely.
+            if (n_subst == MAX_GLYPHS - 1)
+            {
+                draw_m_buf(x_pos, y_pos, drop_shadow);
+                m_buf->clear();
+                n_subst = 0;
+            }
         }
 
         adv.x = 0;
         adv.y += m_max_advance.y;
     }
 
+    draw_m_buf(x_pos, y_pos, drop_shadow);
+}
+
+void FTFontWrapper::draw_m_buf(unsigned int x_pos, unsigned int y_pos,
+                               bool drop_shadow)
+{
     if (!m_buf->size())
         return;
 
