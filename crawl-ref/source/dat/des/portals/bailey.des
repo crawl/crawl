@@ -965,12 +965,12 @@ MONS:   orc warrior ; spear w:5 | trident w:5 | halberd | hand axe | war axe /\
 : bailey_setup(_G)
 MAP
 cccccccccccccccccccccccccccccccccccccccccccccccccccccc
-cc...<.....1cccccccc....1ccccccccc....1ccc..........cc
+cc.<.......1cccccccc....1ccccccccc....1ccc..........cc
 c..........12cccccc.....13c.....c.....14+....5......5c
 c..........12c.$$.c.....13+.!!!.+.....14+.......???..c
 cA.........12+.$$.+.....13+.!!!.+.....14+.......???.<c
 c..........12c.$$.c.....13+.!!!.+.....14+.......???..c
 c..........12cccccc.....13c.....c.....14+....5......5c
-cc...<.....1cccccccc....1ccccccccc....1ccc..........cc
+cc.<.......1cccccccc....1ccccccccc....1ccc..........cc
 cccccccccccccccccccccccccccccccccccccccccccccccccccccc
 ENDMAP
