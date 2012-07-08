@@ -31,6 +31,7 @@ BRANCHFN(parent_branch, string,
          br.parent_branch == NUM_BRANCHES
              ? ""
              : branches[br.parent_branch].abbrevname)
+BRANCHFN(depth, number, brdepth[br.id]);
 
 static void _push_level_id(lua_State *ls, const level_id &lid)
 {
@@ -88,6 +89,7 @@ const struct luaL_reg dgn_level_dlib[] =
 { "br_rockcol", dgn_br_rockcol },
 { "br_has_uniques", dgn_br_has_uniques },
 { "br_parent_branch", dgn_br_parent_branch },
+{ "br_depth", dgn_br_depth },
 
 { "level_id", dgn_level_id },
 { "level_name", dgn_level_name },
