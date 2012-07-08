@@ -171,6 +171,110 @@ bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
     return true;
 }
 
+void FTFontWrapper::load_glyph(int c, ucs_t uchar)
+{
+    // get on with rendering the new glyph
+    FT_Error error;
+    m_glyphs[c].offset  = 0;
+    m_glyphs[c].advance = 0;
+    m_glyphs[c].renderable = false;
+
+    FT_Int glyph_index = FT_Get_Char_Index(face, uchar);
+
+    if (!glyph_index)
+        glyph_index = FT_Get_Char_Index(face, MISSING_CHAR);
+
+    error = FT_Load_Glyph(face, glyph_index, FT_LOAD_RENDER |
+        (Options.tile_font_ft_light ? FT_LOAD_TARGET_LIGHT : 0));
+    ASSERT(!error);
+
+    FT_Bitmap *bmp = &face->glyph->bitmap;
+    ASSERT(bmp);
+
+    int advance = face->glyph->advance.x >> 6;
+
+    int bmp_width  = bmp->width;
+    int bmp_top    = ascender - face->glyph->bitmap_top;
+    int bmp_bottom = ascender + bmp->rows - face->glyph->bitmap_top;
+    if (outl)
+    {
+        bmp_width  += 2;
+        bmp_top    -= 1;
+        bmp_bottom += 1;
+    }
+
+    m_glyphs[c].offset  = face->glyph->bitmap_left;
+    m_glyphs[c].advance = advance;
+    m_glyphs[c].width   = bmp_width;
+
+    // Some glyphs (e.g. ' ') don't get a buffer.
+    if (!bmp->buffer)
+        m_glyphs[c].renderable = false;
+    else
+    {
+        m_glyphs[c].renderable = true;
+
+        int vert_offset = ascender - face->glyph->bitmap_top;
+
+        ASSERT(bmp->pixel_mode == FT_PIXEL_MODE_GRAY);
+        ASSERT(bmp->num_grays == 256);
+
+        // Horizontal offset stored in m_glyphs and handled when drawing
+        const unsigned int offset_x = 0;
+        const unsigned int offset_y = vert_offset;
+        memset(pixels, 0, sizeof(unsigned char) * 4 * charsz.x * charsz.y);
+        if (outl)
+        {
+            const int charw = bmp->width;
+            for (int x = 0; x < bmp->width; x++)
+                for (int y = 0; y < bmp->rows; y++)
+                {
+                    unsigned int idx = offset_x+x+1 + (offset_y+y+1) * charsz.x;
+                    idx *= 4;
+
+                    unsigned char orig = bmp->buffer[x + charw * y];
+
+                    unsigned char edge = 0;
+                    if (x > 0)
+                        edge = std::max(bmp->buffer[(x-1) + charw * y], edge);
+                    if (y > 0)
+                        edge = std::max(bmp->buffer[x + charw * (y-1)], edge);
+                    if (x < bmp->width - 1)
+                        edge = std::max(bmp->buffer[(x+1) + charw * y], edge);
+                    if (y < bmp->rows - 1)
+                        edge = std::max(bmp->buffer[x + charw * (y+1)], edge);
+
+                    pixels[idx] = orig;
+                    pixels[idx + 1] = orig;
+                    pixels[idx + 2] = orig;
+                    pixels[idx + 3] = std::min((int)orig + edge, 255);
+                }
+        }
+        else
+        {
+            for (int x = 0; x < bmp->width; x++)
+                for (int y = 0; y < bmp->rows; y++)
+                {
+                    unsigned int idx = offset_x + x + (offset_y + y) * charsz.x;
+                    idx *= 4;
+                    if (x < bmp->width && y < bmp->rows)
+                    {
+                        unsigned char alpha = bmp->buffer[x + bmp->width * y];
+                        pixels[idx] = 255;
+                        pixels[idx + 1] = 255;
+                        pixels[idx + 2] = 255;
+                        pixels[idx + 3] = alpha;
+                    }
+                }
+        }
+        bool success = m_tex.load_texture(pixels, charsz.x, charsz.y,
+                            MIPMAP_NONE,
+                            (c % GLYPHS_PER_ROWCOL) * charsz.x,
+                            (c / GLYPHS_PER_ROWCOL) * charsz.y);
+        ASSERT(success);
+    }
+}
+
 ucs_t FTFontWrapper::map_unicode(ucs_t uchar)
 {
     ucs_t c;  // index in m_glyphs
@@ -199,6 +303,7 @@ ucs_t FTFontWrapper::map_unicode(ucs_t uchar)
             // move top index on
             m_glyphs_top++;
         }
+
         // set some default prev/next values
         m_glyphs[c].prev = m_glyphs_mru;
         m_glyphs[m_glyphs_mru].next = c;
@@ -207,106 +312,8 @@ ucs_t FTFontWrapper::map_unicode(ucs_t uchar)
         m_glyphs[c].uchar = uchar;
         m_glyphmap[uchar] = c;
 
-        // get on with rendering the new glyph
-        FT_Error error;
-        m_glyphs[c].offset  = 0;
-        m_glyphs[c].advance = 0;
-        m_glyphs[c].renderable = false;
+        load_glyph(c, uchar);
 
-        FT_Int glyph_index = FT_Get_Char_Index(face, uchar);
-
-        if (!glyph_index)
-            glyph_index = FT_Get_Char_Index(face, MISSING_CHAR);
-
-        error = FT_Load_Glyph(face, glyph_index, FT_LOAD_RENDER |
-            (Options.tile_font_ft_light ? FT_LOAD_TARGET_LIGHT : 0));
-        ASSERT(!error);
-
-        FT_Bitmap *bmp = &face->glyph->bitmap;
-        ASSERT(bmp);
-
-        int advance = face->glyph->advance.x >> 6;
-
-        int bmp_width  = bmp->width;
-        int bmp_top    = ascender - face->glyph->bitmap_top;
-        int bmp_bottom = ascender + bmp->rows - face->glyph->bitmap_top;
-        if (outl)
-        {
-            bmp_width  += 2;
-            bmp_top    -= 1;
-            bmp_bottom += 1;
-        }
-
-        m_glyphs[c].offset  = face->glyph->bitmap_left;
-        m_glyphs[c].advance = advance;
-        m_glyphs[c].width   = bmp_width;
-
-        // Some glyphs (e.g. ' ') don't get a buffer.
-        if (!bmp->buffer)
-            m_glyphs[c].renderable = false;
-        else
-        {
-            m_glyphs[c].renderable = true;
-
-            int vert_offset = ascender - face->glyph->bitmap_top;
-
-            ASSERT(bmp->pixel_mode == FT_PIXEL_MODE_GRAY);
-            ASSERT(bmp->num_grays == 256);
-
-            // Horizontal offset stored in m_glyphs and handled when drawing
-            const unsigned int offset_x = 0;
-            const unsigned int offset_y = vert_offset;
-            memset(pixels, 0, sizeof(unsigned char) * 4 * charsz.x * charsz.y);
-            if (outl)
-            {
-                const int charw = bmp->width;
-                for (int x = 0; x < bmp->width; x++)
-                    for (int y = 0; y < bmp->rows; y++)
-                    {
-                        unsigned int idx = offset_x+x+1 + (offset_y+y+1) * charsz.x;
-                        idx *= 4;
-
-                        unsigned char orig = bmp->buffer[x + charw * y];
-
-                        unsigned char edge = 0;
-                        if (x > 0)
-                            edge = std::max(bmp->buffer[(x-1) + charw * y], edge);
-                        if (y > 0)
-                            edge = std::max(bmp->buffer[x + charw * (y-1)], edge);
-                        if (x < bmp->width - 1)
-                            edge = std::max(bmp->buffer[(x+1) + charw * y], edge);
-                        if (y < bmp->rows - 1)
-                            edge = std::max(bmp->buffer[x + charw * (y+1)], edge);
-
-                        pixels[idx] = orig;
-                        pixels[idx + 1] = orig;
-                        pixels[idx + 2] = orig;
-                        pixels[idx + 3] = std::min((int)orig + edge, 255);
-                    }
-            }
-            else
-            {
-                for (int x = 0; x < bmp->width; x++)
-                    for (int y = 0; y < bmp->rows; y++)
-                    {
-                        unsigned int idx = offset_x + x + (offset_y + y) * charsz.x;
-                        idx *= 4;
-                        if (x < bmp->width && y < bmp->rows)
-                        {
-                            unsigned char alpha = bmp->buffer[x + bmp->width * y];
-                            pixels[idx] = 255;
-                            pixels[idx + 1] = 255;
-                            pixels[idx + 2] = 255;
-                            pixels[idx + 3] = alpha;
-                        }
-                    }
-            }
-            bool success = m_tex.load_texture(pixels, charsz.x, charsz.y,
-                                MIPMAP_NONE,
-                                (c % GLYPHS_PER_ROWCOL) * charsz.x,
-                                (c / GLYPHS_PER_ROWCOL) * charsz.y);
-            ASSERT(success);
-        }
         dprintf("mapped %d (%x; %lc) to %d\n", uchar, uchar, uchar, c);
     }
     else // we found uchar in glyphmap
@@ -324,8 +331,9 @@ ucs_t FTFontWrapper::map_unicode(ucs_t uchar)
             m_glyphs[m_glyphs[c].prev].next = m_glyphs[c].next;
             m_glyphs[m_glyphs[c].next].prev = m_glyphs[c].prev;
         }
-    } // regardless of how we came about 'c'
+    }
 
+    // regardless of how we came about 'c'
     if (m_glyphs_mru != c)
     {
         // point the last character we wrote out to the one we're writing
