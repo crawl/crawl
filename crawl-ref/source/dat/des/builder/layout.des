@@ -369,7 +369,11 @@ TAGS:    overwritable layout allow_dup unrand
         mapgrd[40][36] = 'O'
         mapgrd[41][36] = 'O'
         nsubst('O = 1:O / *:.')
-        kfeat('O = exit_through_abyss')
+        if you.in_branch("Pan") then
+            kfeat('O = exit_through_abyss')
+        else
+            kfeat('O = enter_abyss')
+        end
     end
 
     random_wall_material(_G)
