@@ -31,7 +31,19 @@ BRANCHFN(parent_branch, string,
          br.parent_branch == NUM_BRANCHES
              ? ""
              : branches[br.parent_branch].abbrevname)
-BRANCHFN(depth, number, brdepth[br.id]);
+
+LUAFN(dgn_br_depth)
+{
+    branch_type brn = you.where_are_you;
+    if (lua_gettop(ls) == 1)
+    {
+        const char *branch_name = luaL_checkstring(ls, 1);
+        brn = str_to_branch(branch_name);
+        if (brn == NUM_BRANCHES)
+            luaL_argerror(ls, 1, "No such branch");
+    }
+    PLUARET(number, brdepth[brn]);
+}
 
 static void _push_level_id(lua_State *ls, const level_id &lid)
 {
