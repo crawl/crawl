@@ -53,6 +53,8 @@ public:
     bool del_thing(const item_def &item, const level_pos* pos = NULL);
     bool del_thing(std::string desc, const level_pos* pos = NULL);
 
+    void del_things_from(const level_id &lid);
+
     unsigned int cull_identical_items(const item_def& item, int cost = -1);
 
     void gold_changed(int old_amount, int new_amount);

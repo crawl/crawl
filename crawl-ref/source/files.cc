@@ -72,6 +72,7 @@
 #include "player.h"
 #include "random.h"
 #include "show.h"
+#include "shopping.h"
 #include "stash.h"
 #include "state.h"
 #include "syscalls.h"
@@ -1868,6 +1869,8 @@ void delete_level(const level_id &level)
 {
     travel_cache.erase_level_info(level);
     StashTrack.remove_level(level);
+    shopping_list.del_things_from(level);
+
     clear_level_exclusion_annotation(level);
     clear_level_annotations(level);
 
