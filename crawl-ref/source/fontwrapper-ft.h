@@ -80,6 +80,7 @@ protected:
     unsigned int map_unicode(ucs_t uchar, bool update);
     unsigned int map_unicode(ucs_t uchar);
     void load_glyph(unsigned int c, ucs_t uchar);
+    void draw_m_buf(unsigned int x_pos, unsigned int y_pos, bool drop_shadow);
 
     struct GlyphInfo
     {
@@ -106,6 +107,9 @@ protected:
     ucs_t m_glyphs_mru;
     // index of last populated glyph until m_glyphs[] is full
     ucs_t m_glyphs_top;
+
+    // count of glyph loads in the current text block
+    int n_subst;
 
     // cached value of the maximum advance from m_advance
     coord_def m_max_advance;
