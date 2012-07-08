@@ -357,17 +357,6 @@ bool Menu::process_key(int keyin)
         update_title();
         return true;
     }
-    else if (action_cycle == CYCLE_NO_EXEC && (keyin == '!' || keyin == '?'))
-    {
-        ASSERT(menu_action != ACT_EXECUTE);
-        menu_action = (action)((menu_action+1) % ACT_NUM);
-        if (menu_action == ACT_EXECUTE)
-            menu_action = (action) (menu_action + 1);
-
-        sel.clear();
-        update_title();
-        return true;
-    }
 
     bool nav = false, repaint = false;
 
