@@ -1174,6 +1174,8 @@ enum dungeon_feature_type
     DNGN_SECRET_DOOR,
 #if TAG_MAJOR_VERSION == 33
     DNGN_OLD_WAX_WALL,
+#else
+    DNGN_MANGROVE,
 #endif
     DNGN_METAL_WALL,
         DNGN_MINWALL = DNGN_METAL_WALL,
@@ -1182,12 +1184,7 @@ enum dungeon_feature_type
     DNGN_SLIMY_WALL,
     DNGN_STONE_WALL,
     DNGN_PERMAROCK_WALL,               // for undiggable walls
-#if TAG_MAJOR_VERSION > 33
-    DNGN_MANGROVE,
-        DNGN_MAXOPAQUE = DNGN_MANGROVE,
-#else
         DNGN_MAXOPAQUE = DNGN_PERMAROCK_WALL,
-#endif
     DNGN_CLEAR_ROCK_WALL,              // transparent walls
         // Lowest grid value which can be seen through.
         DNGN_MINSEE = DNGN_CLEAR_ROCK_WALL,
