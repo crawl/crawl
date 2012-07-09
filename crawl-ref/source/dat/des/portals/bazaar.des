@@ -1821,14 +1821,14 @@ WEIGHT: 1
     delve(3, 3, 0, 100, 1)
 
     -- place one marker (shop / entrance / exit) at random
-    _G.nsubst('. = 1:C / *:.')
+    nsubst('. = 1:C / *:.')
     -- then add five more, using a greedy algorithm
     for i = 1, 5 do
       local x, y = farthest_from('C')
       mapgrd[x][y] = 'C'
     end
-    _G.nsubst('C = 1:< / 1:> / *:C')
-    _G.subst('X = x')
-    _G.kfeat('C = any shop')
+    nsubst('C = 1:< / 1:> / *:C')
+    subst('X = x')
+    kfeat('C = any shop')
     bazaar_setup(_G)
 }}
