@@ -428,7 +428,7 @@ Can I play Tiles online?
 %%%%
 A:tiles online
 
-A: A web-based tile interface is available at https://tiles.crawl.develz.org/, though it is missing some features of the local Tiles version.  Trunk builds are not currently supported, but may be in the future.
+A: A web-based tile interface is available at https://tiles.crawl.develz.org/, though it is missing some features of the local Tiles version. Trunk builds are not currently supported, but may be in the future.
 %%%%
 Q:tiles commands
 

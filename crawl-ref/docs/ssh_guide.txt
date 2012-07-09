@@ -21,14 +21,14 @@ allows you to do:
 ----
 
 So you've downloaded the latest version of Crawl Stone Soup and have
-been playing offline (or 'local') and you thoroughly enjoy it.  You
+been playing offline (or 'local') and you thoroughly enjoy it. You
 may have noticed from the akrasiac homepage, http://crawl.akrasiac.org/
 or posts in forums that there is a way to enhance your gaming experience
 by playing 'online' using something called 'SSH'.
 
-If only you could figure out how.  Well, if like me (to begin with)
+If only you could figure out how. Well, if like me (to begin with)
 you really are at a loss as to where on earth to start with all this
-stuff, what you need is some assistance.  Wouldn't it be nice if
+stuff, what you need is some assistance. Wouldn't it be nice if
 someone could take the time to write an 'Idiots Guide' - a step by
 step list in easy to understand language, telling you from the very
 beginning exactly what to do...
@@ -39,7 +39,7 @@ Oh look! somebody has - done just that! Great, then let's get started.
 
 1. Get the PuTTY program
 ------------------------
-Firstly you will need a means of accessing the server.  The easiest
+Firstly you will need a means of accessing the server. The easiest
 and most common method is by using an SSH (Secure SHell) connection,
 we are going to learn here how to use the 'PuTTY' terminal to do this.
 In laymans terms PuTTY is simply a small programme that acts as your
@@ -51,7 +51,7 @@ In order to download PuTTY, simply click on the following link:
 As you can see, this is the homepage for 'PuTTY: A Free Telnet/SSH
 Client'.
 
-Now go to the downloads section.  Scroll down to the Windows downloads
+Now go to the downloads section. Scroll down to the Windows downloads
 section and look for the first option down - you will see that it is
 called 'PuTTY'.
 
@@ -63,9 +63,9 @@ named 'putty'.
 
 2. Configure PuTTY connection: SSH, port 22
 -------------------------------------------
-So far, so good?  Good.  Okay, now double click on the putty icon to
+So far, so good? Good. Okay, now double click on the putty icon to
 open the interface which is called  'PuTTY Configuration'. Here you
-will be presented with an interface in a small window.  On the
+will be presented with an interface in a small window. On the
 left-hand side you will see a 'Category' tree and on the right-hand
 side a series of boxes and radio buttons under the heading 'Basic
 options for your PuTTY session'.
@@ -75,14 +75,14 @@ concerned with a couple of easy to do actions and then we're almost
 there!
 
 You will see the cursor flashing in the following box: 'Host Name (or
-IP address)'.  Here you need to type in the following:
+IP address)'. Here you need to type in the following:
 
 crawl.akrasiac.org
 
 Done that? We next need to set one option: There are five radio buttons
 underneath the 'Host Name (or IP address)' fields, called 'Connection
 type:' Here you need to choose the SSH button; it should be highlighted
-green.  If it's not already, simply click on it so that it is green.
+green. If it's not already, simply click on it so that it is green.
 When SSH is selected, the Port field will automatically change to 22.
 
 Finally, enable SSH compression by using
@@ -94,7 +94,7 @@ It's disabled by default but helps on a busy server as akrasiac.
 ----------------------------
 Next we need to ensure our keyboard will work properly, once connected.
 So, to the left of the interface (the 'Category' tree) you need to
-click/select the 'keyboard' option.  Doing this will change the options
+click/select the 'keyboard' option. Doing this will change the options
 on the right-hand side to 'Options controlling the effects of keys'.
 Mid-way down that section under 'Application keypad settings:', click on
 the 'Nethack' radio button so it is highlighted.
@@ -145,10 +145,10 @@ ________________________________________________________________
 
 6. Creating an account
 ----------------------
-Now all you need to do is create an account.  Hit the 'r' key and
-continue as prompted.  When you have chosen your player/user name,
+Now all you need to do is create an account. Hit the 'r' key and
+continue as prompted. When you have chosen your player/user name,
 this will be the name of every character you play with on that
-account.  The rest should be self explanatory and easy to follow.
+account. The rest should be self explanatory and easy to follow.
 
 7. Playing online
 -----------------
@@ -182,7 +182,7 @@ http://crawl.akrasiac.org/cao_key.ppk
 
 and put it in your PuTTY directory. Then start PuTTY, load your stored
 session and go to 'Connection' ---> 'SSH' ---> 'Auth' in the Category
-tree.  Press the 'Browse' button near the input box labelled 'Private key
+tree. Press the 'Browse' button near the input box labelled 'Private key
 file for authentication', choose the 'cao_key.ppk' file you have just
 downloaded and press the 'Open' button. Save the changes as in step 4.
 
@@ -196,7 +196,7 @@ Then open the Properties of the newly created shortcut and add
 "Crawl" if you followed this guide so far) to the Target object input box
 at the end of the path, for example,
 C:\PuTTY\putty.exe -load "Crawl"
-Now you can rename the shortcut (to for example 'CAO').  Double-clicking
-the shortcut will immediately start your saved session.  If you followed
+Now you can rename the shortcut (to for example 'CAO'). Double-clicking
+the shortcut will immediately start your saved session. If you followed
 this guide from the beginning, after a while you will arrive at the DGL
 initial display without the need to type a word.
