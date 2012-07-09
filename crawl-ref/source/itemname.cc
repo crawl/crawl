@@ -2050,21 +2050,17 @@ public:
             }
         }
 
-        char buff[256];
-        if (selected_qty == 0) //Default
-            sprintf(buff, "%c%c%c%c%s", hotkeys[0],
-                    need_cursor ? '[' : ' ',
-                    item_needs_autopickup(*item) ? '+' : '-',
-                    need_cursor ? ']' : ' ',
-                    name.c_str());
-        else //Forced Autopickup
-            sprintf(buff, "%c%c%c%c%s", hotkeys[0],
-                    need_cursor ? '[' : ' ',
-                    selected_qty == 1 ? '+' : '-',
-                    need_cursor ? ']' : ' ',
-                    name.c_str());
+        char symbol;
+        if (selected_qty == 0)
+            symbol = item_needs_autopickup(*item) ? '+' : '-';
+        else if (selected_qty == 1)
+            symbol = '+';
+        else
+            symbol = '-';
 
-        return std::string(buff);// + NAME;
+        return make_stringf("%c%c%c%c%s", hotkeys[0], need_cursor ? '[' : ' ',
+                                          symbol, need_cursor ? ']' : ' ',
+                                          name.c_str());
     }
 
     virtual int highlight_colour() const
