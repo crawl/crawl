@@ -683,14 +683,14 @@ TAGS: overwritable layout allow_dup unrand
     fill_area{fill = 'x', border = 'X'}
 
     delve(3, 3, 0, -1, 1)
-    _G.subst('X = x')
-    _G.lrocktile('wall_pebble_lightgray')
-    _G.lfloortile('floor_pebble_brown')
+    subst('X = x')
+    lrocktile('wall_pebble_lightgray')
+    lfloortile('floor_pebble_brown')
 
     if (crawl.one_chance_in(5)) then
-      _G.subst('x = b')
-      _G.tile('b = wall_emerald')
-      _G.lfloortile('floor_pebble_green')
+      subst('x = b')
+      tile('b = wall_emerald')
+      lfloortile('floor_pebble_green')
     end
 }}
 
@@ -964,11 +964,11 @@ TAGS: overwritable layout allow_dup unrand
     end
 
     -- Prevent staircases from being placed in special or inner rooms.
-    _G.nsubst('. = { / ( / [ / < / } / ) / ] / > / .')
-    _G.kmask('+ = no_secret_doors')
+    nsubst('. = { / ( / [ / < / } / ) / ] / > / .')
+    kmask('+ = no_secret_doors')
 
     if special ~= -1 then
-        _G.subvault('O : special_room')
+        subvault('O : special_room')
     end
 }}
 MAP
@@ -1005,12 +1005,12 @@ TAGS: overwritable layout allow_dup unrand
     delve(ngb_min, ngb_max, connchance, -1, top)
     if crawl.coinflip() then
       crawl.dpr("delve: adding water");
-      _G.subst('. = @')
+      subst('. = @')
       delve(ngb_min, ngb_max, 100, 100, top)
-      _G.subst('. = w')
-      _G.subst('@ = .')
+      subst('. = w')
+      subst('@ = .')
     end
-    _G.subst('X = x')
+    subst('X = x')
 }}
 
 # Dummy layouts that just call C++ functions that do all the work.
