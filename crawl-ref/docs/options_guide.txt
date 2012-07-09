@@ -1540,7 +1540,9 @@ msg_condense_short = true
 
 show_travel_trail = true
         When set to true, the path taken during autoexplore or travel
-        will be highlighted.
+        will be highlighted.  If a travel trail is currently being displayed,
+        the Clear Map command (Ctrl-C) clears the trail instead of the map
+        (pressing it a second time then clears the map as usual).
 
 show_no_ctele = true
         If set, -cTele will be displayed in the status light area when
