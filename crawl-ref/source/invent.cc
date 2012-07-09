@@ -924,12 +924,16 @@ bool InvMenu::process_key(int key)
 
     if (type == MT_KNOW)
     {
-        if (lastch == CONTROL('D'))
+        bool resetting = (lastch == CONTROL('D'));
+        if (resetting)
         {
             //return the menu title to its previous text.
             set_title(temp_title);
             update_title();
             num = -2;
+
+            // Disarm ^D here, because process_key doesn't always set lastch.
+            lastch = ' ';
         }
         else
             num = -1;
@@ -940,7 +944,7 @@ bool InvMenu::process_key(int key)
             key = ' ';
             break;
         case '*':
-            if (lastch != CONTROL('D'))
+            if (!resetting)
                 break;
         case '^':
             key = ',';
@@ -963,24 +967,18 @@ bool InvMenu::process_key(int key)
 
         case CONTROL('D'):
             // If we cannot select anything (e.g. on the unknown items
-            // page), ignore Ctrl-D.
-            if (!(flags & (MF_SINGLESELECT | MF_MULTISELECT)))
-                return (true);
-
-            // Reset the next selection to default.
-            if (lastch != CONTROL('D'))
+            // page), ignore Ctrl-D.  Likewise if the last key was
+            // Ctrl-D (we have already disarmed Ctrl-D for the next
+            // keypress by resetting lastch).
+            if (flags & (MF_SINGLESELECT | MF_MULTISELECT) && !resetting)
             {
                 lastch = CONTROL('D');
                 temp_title = title->text;
                 set_title("Select to reset item to default: ");
                 update_title();
-                return true;
             }
-            else
-            {
-                lastch = ' '; //disarm
-                return true;
-            }
+
+            return true;
         }
     }
 
