@@ -941,8 +941,7 @@ bool InvMenu::process_key(int key)
         switch (key)
         {
         case ',':
-            key = ' ';
-            break;
+            return true;
         case '*':
             if (!resetting)
                 break;
