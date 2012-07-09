@@ -2043,8 +2043,11 @@ public:
         else
         {
             name = item->name(DESC_PLAIN,false,true,false,false,flags);
-            if (item->sub_type != MISC_RUNE_OF_ZOT)
+            if (!(item->base_type == OBJ_MISCELLANY
+                  && item->sub_type == MISC_RUNE_OF_ZOT))
+            {
                 name = pluralise(name);
+            }
         }
 
         char buff[256];
