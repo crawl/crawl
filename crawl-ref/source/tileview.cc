@@ -1134,14 +1134,14 @@ static bool _top_item_is_corpse(const map_cell& mc)
 
 static uint8_t _get_direction_index(const coord_def& delta)
 {
-    if (delta.x ==  0 && delta.y == -1) return 1;
-    if (delta.x ==  1 && delta.y == -1) return 2;
-    if (delta.x ==  1 && delta.y ==  0) return 3;
-    if (delta.x ==  1 && delta.y ==  1) return 4;
-    if (delta.x ==  0 && delta.y ==  1) return 5;
-    if (delta.x == -1 && delta.y ==  1) return 6;
-    if (delta.x == -1 && delta.y ==  0) return 7;
-    if (delta.x == -1 && delta.y == -1) return 8;
+    if (delta.x ==  0 && delta.y ==  1) return 1;
+    if (delta.x == -1 && delta.y ==  1) return 2;
+    if (delta.x == -1 && delta.y ==  0) return 3;
+    if (delta.x == -1 && delta.y == -1) return 4;
+    if (delta.x ==  0 && delta.y == -1) return 5;
+    if (delta.x ==  1 && delta.y == -1) return 6;
+    if (delta.x ==  1 && delta.y ==  0) return 7;
+    if (delta.x ==  1 && delta.y ==  1) return 8;
     return 0;
 }
 
@@ -1236,7 +1236,7 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
             }
             if (tt_idx < (int) env.travel_trail.size() - 1)
             {
-                coord_def delta = env.travel_trail[tt_idx+1] - gc;
+                coord_def delta = gc - env.travel_trail[tt_idx+1];
                 cell.travel_trail |= _get_direction_index(delta) << 4;
             }
         }
