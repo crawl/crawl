@@ -3874,8 +3874,14 @@ int monster::res_petrify(bool temp) const
 {
     if (is_insubstantial())
         return 1;
-    if (type == MONS_STONE_GOLEM || type == MONS_CATOBLEPAS || mons_is_statue(type))
+
+    if (type == MONS_STONE_GOLEM
+        || type == MONS_CATOBLEPAS
+        || type == MONS_EARTH_ELEMENTAL
+        || mons_is_statue(type))
+    {
         return 1;
+    }
     // Clay, etc, might be incapable of movement when hardened.
     // Skeletons -- NetHack assumes fossilization doesn't hurt, we might
     // want to make it that way too.
