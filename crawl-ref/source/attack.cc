@@ -130,15 +130,16 @@ void attack::init_attack()
     ;
 }
 
-/* In wizard mode, return formatted damage done
+/* If debug, return formatted damage done
  *
  */
 std::string attack::debug_damage_number()
 {
-if (you.wizard)
+#ifdef DEBUG_DIAGNOSTICS
     return make_stringf(" for %d", damage_done);
-else
+#else
     return "";
+#endif
 }
 
 /* Returns special punctuation
