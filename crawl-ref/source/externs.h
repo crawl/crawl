@@ -697,7 +697,7 @@ struct message_filter
     {
     }
 
-    message_filter(const std::string &s) : channel(-1), pattern(s) { }
+    message_filter(const std::string &s) : channel(-1), pattern(s, true) { }
 
     bool is_filtered(int ch, const std::string &s) const
     {
