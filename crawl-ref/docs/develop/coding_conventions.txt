@@ -6,8 +6,8 @@ Introduction
 
 This file documents the style conventions currently in use in the Crawl
 codebase, as well as the conventions that new and/or modified code should
-conform to.  It is explicitly not meant to be a didactic "how to program
-effectively" treatise.  That is something best left to books and websites,
+conform to. It is explicitly not meant to be a didactic "how to program
+effectively" treatise. That is something best left to books and websites,
 as well as experience.
 
 Conventions
@@ -136,7 +136,7 @@ Comparisons using the ? shortcut may be indented ...
 C) Variable naming
 ------------------
 
-When naming variables, use underscores_as_spaces instead of mixedCase.  Other
+When naming variables, use underscores_as_spaces instead of mixedCase. Other
 conventions are pointed out by example, below.
 
 Global variables are capitalized and underscored.
@@ -429,13 +429,13 @@ Only use them if the value returned is an expression.
 
     return (prop_str >= 0 && prop_int >= 0 && prop_dex >= 0);
 
-	return (helpful ? XOM_GOOD_POLYMORPH : XOM_BAD_POLYMORPH);
+    return (helpful ? XOM_GOOD_POLYMORPH : XOM_BAD_POLYMORPH);
 
 For simple scalar values and function calls, the parenthesis serve no purpose
 other than making the statement looks like a function call.
 
-	return true;
+    return true;
 
-	return -1;
+    return -1;
 
-	return coinflip();
+    return coinflip();
