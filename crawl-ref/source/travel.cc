@@ -324,7 +324,7 @@ static bool _is_reseedable(const coord_def& c, bool ignore_danger = false)
     map_cell &cell(env.map_knowledge(c));
     const dungeon_feature_type grid = cell.feat();
 
-    if (feat_is_wall(grid))
+    if (feat_is_wall(grid) || grid == DNGN_MANGROVE)
         return false;
 
     return (feat_is_water(grid)
