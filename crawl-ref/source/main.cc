@@ -1742,9 +1742,17 @@ static void _do_rest()
 
 static void _do_clear_map()
 {
-    mpr("Clearing level map.");
-    clear_map();
-    crawl_view.set_player_at(you.pos());
+    if (Options.show_travel_trail && env.travel_trail.size())
+    {
+        mpr("Clearing travel trail.");
+        clear_travel_trail();
+    }
+    else
+    {
+        mpr("Clearing level map.");
+        clear_map();
+        crawl_view.set_player_at(you.pos());
+    }
 }
 
 static void _do_display_map()

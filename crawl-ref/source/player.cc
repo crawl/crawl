@@ -2831,6 +2831,10 @@ void forget_map(bool rot)
 {
     ASSERT(!crawl_state.game_is_arena());
 
+    // If forgetting was intentional, clear the travel trail.
+    if (!rot)
+        clear_travel_trail();
+
     // Labyrinth and the Abyss use special rotting rules.
     const bool rot_resist = player_in_branch(BRANCH_LABYRINTH)
                                 && you.species == SP_MINOTAUR
