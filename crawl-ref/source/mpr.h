@@ -72,6 +72,14 @@ enum msg_colour_type
     MSGCOL_NONE,                // parsing failure, etc
 };
 
+enum diag_type
+{
+    DIAG_NORMAL,
+    DIAG_COMBAT,
+    DIAG_BEAM,
+    NUM_DIAGNOSTICS
+};
+
 msg_colour_type msg_colour(int colour);
 
 void mpr(std::string text, msg_channel_type channel=MSGCH_PLAIN, int param=0,
@@ -100,6 +108,7 @@ void mprf_nocap(PRINTF(0, ));
 
 #ifdef DEBUG_DIAGNOSTICS
 void dprf(PRINTF(0, ));
+void dprf(diag_type param, PRINTF(1, ));
 #else
 # define dprf(...) ((void)0)
 #endif

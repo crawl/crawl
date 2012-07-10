@@ -952,6 +952,17 @@ void dprf(const char *format, ...)
     do_message_print(MSGCH_DIAGNOSTICS, 0, false, format, argp);
     va_end(argp);
 }
+
+void dprf(diag_type param, const char *format, ...)
+{
+    if (Options.quiet_debug_messages[param])
+        return;
+
+    va_list  argp;
+    va_start(argp, format);
+    do_message_print(MSGCH_DIAGNOSTICS, param, false, format, argp);
+    va_end(argp);
+}
 #endif
 
 static bool _updating_view = false;

@@ -272,7 +272,7 @@ bool melee_attack::handle_phase_attempted()
         {
             int energy = attacker->as_monster()->action_energy(EUT_ATTACK);
             int delay = calc_attack_delay();
-            dprf("Attack delay %d, multiplier %1.1f", delay, energy * 0.1);
+            dprf(DIAG_COMBAT, "Attack delay %d, multiplier %1.1f", delay, energy * 0.1);
             ASSERT(energy > 0);
             ASSERT(delay > 0);
 
@@ -1622,7 +1622,7 @@ int melee_attack::player_apply_weapon_bonuses(int damage)
                         div_rand_round(
                             std::min(static_cast<int>(you.piety), 180), 33), 2);
 
-                dprf("Damage: %d -> %d, Beogh bonus: %d",
+                dprf(DIAG_COMBAT, "Damage: %d -> %d, Beogh bonus: %d",
                      orig_damage, damage, damage - orig_damage);
             }
 
@@ -2036,7 +2036,7 @@ bool melee_attack::player_monattk_hit_effects()
 
     if (special_damage || special_damage_flavour)
     {
-        dprf("Special damage to %s: %d, flavour: %d",
+        dprf(DIAG_COMBAT, "Special damage to %s: %d, flavour: %d",
              defender->name(DESC_THE).c_str(),
              special_damage, special_damage_flavour);
     }
@@ -3019,7 +3019,7 @@ bool melee_attack::apply_damage_brand()
         int hp_boost = weapon->special == UNRAND_VAMPIRES_TOOTH
                      ? damage_done : 1 + random2(damage_done);
 
-        dprf("Vampiric Healing: damage %d, healed %d",
+        dprf(DIAG_COMBAT, "Vampiric Healing: damage %d, healed %d",
              damage_done, hp_boost);
         attacker->heal(hp_boost);
 
@@ -3652,7 +3652,7 @@ int melee_attack::calc_to_hit(bool random)
     if (!attacker->is_player())
         mhit = random2(mhit + 1);
 
-    dprf("%s: Base to-hit: %d, Final to-hit: %d",
+    dprf(DIAG_COMBAT, "%s: Base to-hit: %d, Final to-hit: %d",
          attacker->name(DESC_PLAIN).c_str(),
          base_hit, mhit);
 
@@ -3706,7 +3706,7 @@ int melee_attack::calc_attack_delay(bool random, bool scaled)
             you.time_taken = div_rand_round(you.time_taken, 2);
         }
 
-        dprf("Weapon speed: %d; min: %d; attack time: %d",
+        dprf(DIAG_COMBAT, "Weapon speed: %d; min: %d; attack time: %d",
              final_delay, min_delay, you.time_taken);
 
         return std::max(2, div_rand_round(you.time_taken * final_delay, 10));
@@ -3890,7 +3890,7 @@ bool melee_attack::attack_shield_blocked(bool verbose)
     if (!attacker->visible_to(defender))
         pro_block /= 3;
 
-    dprf("Defender: %s, Pro-block: %d, Con-block: %d",
+    dprf(DIAG_COMBAT, "Defender: %s, Pro-block: %d, Con-block: %d",
          def_name(DESC_PLAIN).c_str(), pro_block, con_block);
 
     if (pro_block >= con_block)
@@ -4249,7 +4249,7 @@ void melee_attack::mons_apply_attack_flavour()
                  special_attack_punctuation().c_str());
         }
 
-        dprf("Shock damage: %d", special_damage);
+        dprf(DIAG_COMBAT, "Shock damage: %d", special_damage);
         break;
 
     case AF_VAMPIRIC:
@@ -4552,7 +4552,7 @@ void melee_attack::do_spines()
             int ac = random2(1 + attacker->armour_class());
             int hurt = dmg - ac - evp;
 
-            dprf("Spiny: dmg = %d ac = %d hurt = %d", dmg, ac, hurt);
+            dprf(DIAG_COMBAT, "Spiny: dmg = %d ac = %d hurt = %d", dmg, ac, hurt);
 
             if (hurt <= 0)
                 return;
@@ -4586,7 +4586,7 @@ void melee_attack::do_spines()
             int dmg = roll_dice(level, 4);
             int ac = random2(1 + attacker->armour_class());
             int hurt = dmg - ac;
-            dprf("Spiny: dmg = %d ac = %d hurt = %d", dmg, ac, hurt);
+            dprf(DIAG_COMBAT, "Spiny: dmg = %d ac = %d hurt = %d", dmg, ac, hurt);
 
             if (hurt <= 0)
                 return;
@@ -4693,7 +4693,7 @@ void melee_attack::do_minotaur_retaliation()
         int hurt = dmg - ac;
 
         mpr("You furiously retaliate!");
-        dprf("Retaliation: dmg = %d ac = %d hurt = %d", dmg, ac, hurt);
+        dprf(DIAG_COMBAT, "Retaliation: dmg = %d ac = %d hurt = %d", dmg, ac, hurt);
         if (hurt <= 0)
         {
             mprf("You headbutt %s, but do no damage.",
@@ -4933,7 +4933,7 @@ int melee_attack::test_hit(int to_land, int ev, bool randomise_ev)
         margin = to_land - ev;
 
 #ifdef DEBUG_DIAGNOSTICS
-    dprf("to hit: %d; ev: %d; result: %s (%d)",
+    dprf(DIAG_COMBAT, "to hit: %d; ev: %d; result: %s (%d)",
          to_hit, ev, (margin >= 0) ? "hit" : "miss", margin);
 #endif
 
@@ -5108,7 +5108,7 @@ int melee_attack::calc_damage()
 
             damage = damage * (115 + frenzy_degree * 15) / 100;
 
-            dprf("%s frenzy damage: %d->%d",
+            dprf(DIAG_COMBAT, "%s frenzy damage: %d->%d",
                  attacker->name(DESC_PLAIN).c_str(), orig_damage, damage);
         }
 
@@ -5120,7 +5120,7 @@ int melee_attack::calc_damage()
         {
             damage = damage * 5 / 2;
 
-            dprf("Stab damage vs %s: %d",
+            dprf(DIAG_COMBAT, "Stab damage vs %s: %d",
                  defender->name(DESC_PLAIN).c_str(),
                  damage);
         }
@@ -5191,7 +5191,7 @@ int melee_attack::apply_defender_ac(int damage, int damage_max)
 
             damage -= damage_reduction;
 
-            dprf("AC: at: %s, df: %s, dam: %d (max %d), DR: %d (GDR %d), "
+            dprf(DIAG_COMBAT, "AC: at: %s, df: %s, dam: %d (max %d), DR: %d (GDR %d), "
                  "rdam: %d",
                  attacker->name(DESC_PLAIN, true).c_str(),
                  defender->name(DESC_PLAIN, true).c_str(),

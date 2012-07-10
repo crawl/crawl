@@ -292,6 +292,9 @@ public:
     std::vector<text_pattern> drop_filter;
 
     FixedArray<bool, NUM_DELAYS, NUM_AINTERRUPTS> activity_interrupts;
+#ifdef DEBUG_DIAGNOSTICS
+    FixedBitArray<NUM_DIAGNOSTICS> quiet_debug_messages;
+#endif
 
     // Previous startup options
     bool        remember_name;      // Remember and reprompt with last name
