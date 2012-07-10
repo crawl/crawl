@@ -76,8 +76,12 @@ unsigned short _cell_feat_show_colour(const map_cell& cell,
         colour = RED;
     else if (cell.flags & MAP_MOLDY && !norecolour)
         colour = (cell.flags & MAP_GLOWING_MOLDY) ? LIGHTRED : LIGHTGREEN;
-    else if (cell.flags & MAP_CORRODING && !norecolour)
+    else if (cell.flags & MAP_CORRODING && !norecolour
+             && !feat_is_wall(feat) && !feat_is_lava(feat)
+             && !feat_is_water(feat))
+    {
         colour = LIGHTGREEN;
+    }
     else if (cell.feat_colour())
         colour = cell.feat_colour();
     else
