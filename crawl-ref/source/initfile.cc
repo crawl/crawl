@@ -2018,7 +2018,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
 {
 #define BOOL_OPTION_NAMED(_opt_str, _opt_var)               \
     if (key == _opt_str) do {                               \
-        this->_opt_var = _read_bool(field, this->_opt_var); \
+        _opt_var = _read_bool(field, _opt_var); \
     } while (false)
 #define BOOL_OPTION(_opt) BOOL_OPTION_NAMED(#_opt, _opt)
 
@@ -2026,7 +2026,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     if (key == _opt_str) do {                                           \
         const int col = str_to_colour(field);                           \
         if (col != -1) {                                                \
-            this->_opt_var = col;                                       \
+            _opt_var = col;                                       \
         } else {                                                        \
             /*fprintf(stderr, "Bad %s -- %s\n", key, field.c_str());*/  \
             report_error("Bad %s -- %s\n", key.c_str(), field.c_str()); \
@@ -2036,7 +2036,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
 
 #define CURSES_OPTION_NAMED(_opt_str, _opt_var)     \
     if (key == _opt_str) do {                       \
-        this->_opt_var = curses_attribute(field);   \
+        _opt_var = curses_attribute(field);   \
     } while (false)
 #define CURSES_OPTION(_opt) CURSES_OPTION_NAMED(#_opt, _opt)
 
@@ -2052,7 +2052,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         else if (val > max_val)                                         \
             report_error("Bad %s: %d > %d", _opt_str, val, max_val);    \
         else                                                            \
-            this->_opt_var = val;                                       \
+            _opt_var = val;                                       \
     } while (false)
 #define INT_OPTION(_opt, _min_val, _max_val) \
     INT_OPTION_NAMED(#_opt, _opt, _min_val, _max_val)
@@ -3265,7 +3265,7 @@ std::string game_options::resolve_include(const std::string &file,
     try
     {
         const std::string resolved =
-            resolve_include(this->filename, file, &SysEnv.rcdirs);
+            resolve_include(filename, file, &SysEnv.rcdirs);
 
         if (resolved.empty())
             report_error("Cannot find %sfile \"%s\".", type, file.c_str());
@@ -3295,12 +3295,12 @@ void game_options::include(const std::string &rawfilename,
 
     included.insert(include_file);
 
-    // Change this->filename to the included filename while we're reading it.
-    unwind_var<std::string> optfile(this->filename, include_file);
-    unwind_var<std::string> basefile(this->basefilename, rawfilename);
+    // Change filename to the included filename while we're reading it.
+    unwind_var<std::string> optfile(filename, include_file);
+    unwind_var<std::string> basefile(basefilename, rawfilename);
 
     // Save current line number
-    unwind_var<int> currlinenum(this->line_num, 0);
+    unwind_var<int> currlinenum(line_num, 0);
 
     // Also unwind any aliases defined in included files.
     unwind_var<string_map> unwalias(aliases);

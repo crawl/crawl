@@ -135,9 +135,9 @@ void trap_def::prepare_ammo(int charges)
         break;
     case TRAP_TELEPORT:
         if (crawl_state.game_is_zotdef())
-            this->ammo_qty = 2 + random2(2);
+            ammo_qty = 2 + random2(2);
         else
-            this->ammo_qty = 0;
+            ammo_qty = 0;
         break;
     default:
         ammo_qty = 0;
@@ -1580,9 +1580,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
     {
         if (!force_hit && (one_chance_in(5) || was_known && !one_chance_in(4)))
         {
-            mprf("You avoid triggering %s trap.",
-                  this->name(DESC_A).c_str());
-
+            mprf("You avoid triggering %s trap.", name(DESC_A).c_str());
             return;         // no ammo generated either
         }
     }

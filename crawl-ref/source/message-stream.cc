@@ -55,12 +55,12 @@ namespace msg
 
     void mpr_stream_buf::set_param(int p)
     {
-        this->param = p;
+        param = p;
     }
 
     void mpr_stream_buf::set_muted(bool m)
     {
-        this->muted = m;
+        muted = m;
     }
 
     // again, can be improved

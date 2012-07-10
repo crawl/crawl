@@ -843,7 +843,7 @@ std::string ShopInfo::shop_item_desc(const shop_item &si) const
 
     const iflags_t oldflags = si.item.flags;
 
-    if (shoptype_identifies_stock(static_cast<shop_type>(this->shoptype)))
+    if (shoptype_identifies_stock(static_cast<shop_type>(shoptype)))
         const_cast<shop_item&>(si).item.flags |= ISFLAG_IDENT_MASK;
 
     if (is_dumpable_artefact(si.item, false))
@@ -867,7 +867,7 @@ void ShopInfo::describe_shop_item(const shop_item &si) const
 {
     const iflags_t oldflags = si.item.flags;
 
-    if (shoptype_identifies_stock(static_cast<shop_type>(this->shoptype)))
+    if (shoptype_identifies_stock(static_cast<shop_type>(shoptype)))
         const_cast<shop_item&>(si).item.flags |= ISFLAG_IDENT_MASK
             | ISFLAG_NOTED_ID | ISFLAG_NOTED_GET;
 
@@ -1713,8 +1713,8 @@ void StashTracker::search_stashes()
 {
     char buf[400];
 
-    this->update_corpses();
-    this->update_identification();
+    update_corpses();
+    update_identification();
 
     stash_search_reader reader(buf, sizeof buf);
 

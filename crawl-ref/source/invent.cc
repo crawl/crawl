@@ -867,7 +867,7 @@ menu_letter InvMenu::load_items(const std::vector<const item_def*> &mitems,
         for (unsigned int j = 0; j < items_in_class.size(); ++j)
         {
             InvEntry *ie = items_in_class[j];
-            if (this->tag == "pickup")
+            if (tag == "pickup")
                 ie->tag = "pickup";
             // If there's no hotkey, provide one.
             if (ie->hotkeys[0] == ' ')

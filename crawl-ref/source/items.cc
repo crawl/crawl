@@ -3123,7 +3123,7 @@ int item_def::index() const
 
 int item_def::armour_rating() const
 {
-    if (!this->defined() || base_type != OBJ_ARMOUR)
+    if (!defined() || base_type != OBJ_ARMOUR)
         return 0;
 
     return (property(*this, PARM_AC) + plus);

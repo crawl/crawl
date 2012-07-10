@@ -52,7 +52,7 @@ struct menu_letter
     menu_letter operator ++ (int)
     {
         menu_letter copy = *this;
-        this->operator++();
+        operator++();
         return copy;
     }
 };
@@ -77,7 +77,7 @@ struct menu_letter2
     menu_letter2 operator ++ (int)
     {
         menu_letter2 copy = *this;
-        this->operator++();
+        operator++();
         return copy;
     }
 };

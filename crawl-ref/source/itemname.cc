@@ -84,8 +84,8 @@ std::string item_def::name(description_level_type descrip,
 
     std::ostringstream buff;
 
-    const std::string auxname = this->name_aux(descrip, terse, ident,
-                                               with_inscription, ignore_flags);
+    const std::string auxname = name_aux(descrip, terse, ident,
+                                         with_inscription, ignore_flags);
 
     const bool startvowel     = is_vowel(auxname[0]);
 
@@ -93,7 +93,7 @@ std::string item_def::name(description_level_type descrip,
     {
         if (in_inventory(*this)) // actually in inventory
         {
-            buff << index_to_letter(this->link);
+            buff << index_to_letter(link);
             if (terse)
                 buff << ") ";
             else
@@ -123,7 +123,7 @@ std::string item_def::name(description_level_type descrip,
          && !starts_with(get_corpse_name(*this), "shaped "))
         || item_is_orb(*this) || item_is_horn_of_geryon(*this)
         || (ident || item_type_known(*this)) && is_artefact(*this)
-            && this->special != UNRAND_OCTOPUS_KING_RING)
+            && special != UNRAND_OCTOPUS_KING_RING)
     {
         // Artefacts always get "the" unless we just want the plain name.
         switch (descrip)
@@ -137,7 +137,7 @@ std::string item_def::name(description_level_type descrip,
             break;
         }
     }
-    else if (this->quantity > 1)
+    else if (quantity > 1)
     {
         switch (descrip)
         {
@@ -156,9 +156,9 @@ std::string item_def::name(description_level_type descrip,
             && descrip != DESC_DBNAME)
         {
             if (quantity_in_words)
-                buff << number_in_words(this->quantity) << " ";
+                buff << number_in_words(quantity) << " ";
             else
-                buff << this->quantity << " ";
+                buff << quantity << " ";
         }
     }
     else
@@ -292,8 +292,8 @@ std::string item_def::name(description_level_type descrip,
         if (tried)
             insparts.push_back(tried_str);
 
-        if (with_inscription && !(this->inscription.empty()))
-            insparts.push_back(this->inscription);
+        if (with_inscription && !(inscription.empty()))
+            insparts.push_back(inscription);
 
         if (!insparts.empty())
         {
@@ -1440,8 +1440,8 @@ std::string item_def::name_aux(description_level_type desc,
             buff << "wand of " << _wand_type_name(item_typ);
         else
         {
-            buff << wand_secondary_string(this->special / NDSC_WAND_PRI)
-                 << wand_primary_string(this->special % NDSC_WAND_PRI)
+            buff << wand_secondary_string(special / NDSC_WAND_PRI)
+                 << wand_primary_string(special % NDSC_WAND_PRI)
                  << " wand";
         }
 
@@ -1469,8 +1469,8 @@ std::string item_def::name_aux(description_level_type desc,
             buff << "potion of " << potion_type_name(item_typ);
         else
         {
-            const int pqual   = PQUAL(this->plus);
-            const int pcolour = PCOLOUR(this->plus);
+            const int pqual   = PQUAL(plus);
+            const int pcolour = PCOLOUR(plus);
 
             static const char *potion_qualifiers[] = {
                 "",  "bubbling ", "fuming ", "fizzy ", "viscous ", "lumpy ",
@@ -1552,7 +1552,7 @@ std::string item_def::name_aux(description_level_type desc,
         else
         {
             const uint32_t sseed =
-                this->special
+                special
                 + (static_cast<uint32_t>(it_plus) << 8)
                 + (static_cast<uint32_t>(OBJ_SCROLLS) << 16);
             buff << "labeled " << make_name(sseed, true);
@@ -1610,14 +1610,14 @@ std::string item_def::name_aux(description_level_type desc,
         {
             if (jewellery_is_amulet(*this))
             {
-                buff << amulet_secondary_string(this->special / NDSC_JEWEL_PRI)
-                     << amulet_primary_string(this->special % NDSC_JEWEL_PRI)
+                buff << amulet_secondary_string(special / NDSC_JEWEL_PRI)
+                     << amulet_primary_string(special % NDSC_JEWEL_PRI)
                      << " amulet";
             }
             else  // i.e., a ring
             {
-                buff << ring_secondary_string(this->special / NDSC_JEWEL_PRI)
-                     << ring_primary_string(this->special % NDSC_JEWEL_PRI)
+                buff << ring_secondary_string(special / NDSC_JEWEL_PRI)
+                     << ring_primary_string(special % NDSC_JEWEL_PRI)
                      << " ring";
             }
         }
@@ -1649,7 +1649,7 @@ std::string item_def::name_aux(description_level_type desc,
             }
             buff << misc_type_name(item_typ, know_type);
             if (is_deck(*this) && !dbname
-                && (top_card_is_known(*this) || this->plus2 != 0))
+                && (top_card_is_known(*this) || plus2 != 0))
             {
                 buff << " {";
                 // A marked deck!
@@ -1658,17 +1658,17 @@ std::string item_def::name_aux(description_level_type desc,
 
                 // How many cards have been drawn, or how many are
                 // left.
-                if (this->plus2 != 0)
+                if (plus2 != 0)
                 {
                     if (top_card_is_known(*this))
                         buff << ", ";
 
-                    if (this->plus2 > 0)
+                    if (plus2 > 0)
                         buff << "drawn: ";
                     else
                         buff << "left: ";
 
-                    buff << abs(this->plus2);
+                    buff << abs(plus2);
                 }
 
                 buff << "}";
@@ -1688,8 +1688,8 @@ std::string item_def::name_aux(description_level_type desc,
             buff << (item_typ == BOOK_MANUAL ? "manual" : "book");
         else if (!know_type)
         {
-            buff << book_secondary_string(this->special / NDSC_BOOK_PRI)
-                 << book_primary_string(this->special % NDSC_BOOK_PRI)
+            buff << book_secondary_string(special / NDSC_BOOK_PRI)
+                 << book_primary_string(special % NDSC_BOOK_PRI)
                  << (item_typ == BOOK_MANUAL ? "manual" : "book");
         }
         else
@@ -1713,8 +1713,8 @@ std::string item_def::name_aux(description_level_type desc,
         {
             if (!basename)
             {
-                buff << staff_secondary_string((this->rnd / NDSC_STAVE_PRI) % NDSC_STAVE_SEC)
-                     << staff_primary_string(this->rnd % NDSC_STAVE_PRI);
+                buff << staff_secondary_string((rnd / NDSC_STAVE_PRI) % NDSC_STAVE_SEC)
+                     << staff_primary_string(rnd % NDSC_STAVE_PRI);
             }
 
             buff << "rod";
@@ -1750,8 +1750,8 @@ std::string item_def::name_aux(description_level_type desc,
         {
             if (!basename)
             {
-                buff << staff_secondary_string(this->special / NDSC_STAVE_PRI)
-                     << staff_primary_string(this->special % NDSC_STAVE_PRI);
+                buff << staff_secondary_string(special / NDSC_STAVE_PRI)
+                     << staff_primary_string(special % NDSC_STAVE_PRI);
             }
 
             buff << "staff";
@@ -1819,14 +1819,14 @@ std::string item_def::name_aux(description_level_type desc,
     }
 
     // One plural to rule them all.
-    if (need_plural && this->quantity > 1 && !basename && !qualname)
+    if (need_plural && quantity > 1 && !basename && !qualname)
         buff.str(pluralise(buff.str()));
 
     // Disambiguation.
     if (!terse && !basename && !dbname && know_type
         && !is_artefact(*this))
     {
-        switch (this->base_type)
+        switch (base_type)
         {
         case OBJ_RODS:
             switch (item_typ)
@@ -1855,18 +1855,18 @@ std::string item_def::name_aux(description_level_type desc,
     if (base_type == OBJ_RODS && know_type && know_pluses
         && !basename && !qualname && !dbname)
     {
-        buff << " (" << (this->plus / ROD_CHARGE_MULT)
-             << "/"  << (this->plus2 / ROD_CHARGE_MULT)
+        buff << " (" << (plus / ROD_CHARGE_MULT)
+             << "/"  << (plus2 / ROD_CHARGE_MULT)
              << ")";
     }
 
     // debugging output -- oops, I probably block it above ... dang! {dlb}
     if (buff.str().length() < 3)
     {
-        buff << "bad item (cl:" << static_cast<int>(this->base_type)
+        buff << "bad item (cl:" << static_cast<int>(base_type)
              << ",ty:" << item_typ << ",pl:" << it_plus
-             << ",pl2:" << item_plus2 << ",sp:" << this->special
-             << ",qu:" << this->quantity << ")";
+             << ",pl2:" << item_plus2 << ",sp:" << special
+             << ",qu:" << quantity << ")";
     }
 
     return buff.str();
