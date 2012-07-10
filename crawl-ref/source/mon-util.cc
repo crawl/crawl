@@ -2491,7 +2491,6 @@ bool mons_tree_shielded(const monster* mon)
 {
     return (_mons_class_habitat(mons_base_type(mon)) == HT_FOREST);
 }
-+
 
 bool intelligent_ally(const monster* mon)
 {
