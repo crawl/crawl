@@ -64,6 +64,7 @@ class package
 {
 public:
     package(const char* file, bool writeable, bool empty = false);
+    package();
     ~package();
     chunk_writer* writer(const std::string name);
     chunk_reader* reader(const std::string name);

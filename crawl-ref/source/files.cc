@@ -617,6 +617,10 @@ static void _fill_player_doll(player_save_info &p, package *save)
 static std::vector<player_save_info> _find_saved_characters()
 {
     std::vector<player_save_info> chars;
+
+    if (Options.no_save)
+        return chars;
+
 #ifndef DISABLE_SAVEGAME_LISTS
     std::string searchpath = _get_savefile_directory();
 
@@ -1734,6 +1738,9 @@ bool load_ghost(bool creating_level)
 // returns false if a new game should start instead
 static bool _restore_game(const std::string& filename)
 {
+    if (Options.no_save)
+        return false;
+
     you.save = new package((_get_savefile_directory() + filename).c_str(), true);
 
     if (!_read_char_chunk(you.save))

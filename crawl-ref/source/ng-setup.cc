@@ -18,6 +18,7 @@
 #include "newgame.h"
 #include "ng-init.h"
 #include "ng-wanderer.h"
+#include "options.h"
 #include "player.h"
 #include "skills.h"
 #include "skills2.h"
@@ -1426,6 +1427,9 @@ static void _setup_generic(const newgame_def& ng)
         you.nemelex_sacrificing = true;
 
     // Create the save file.
-    you.save = new package(get_savedir_filename(you.your_name).c_str(),
-                           true, true);
+    if (Options.no_save)
+        you.save = new package();
+    else
+        you.save = new package(get_savedir_filename(you.your_name).c_str(),
+                               true, true);
 }

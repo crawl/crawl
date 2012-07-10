@@ -3417,6 +3417,7 @@ enum commandline_option_type
     CLO_ZOTDEF,
     CLO_TUTORIAL,
     CLO_WIZARD,
+    CLO_NO_SAVE,
 #ifdef USE_TILE_WEB
     CLO_WEBTILES_SOCKET,
     CLO_AWAIT_CONNECTION,
@@ -3431,7 +3432,7 @@ static const char *cmd_ops[] = {
     "mapstat", "arena", "dump-maps", "test", "script", "builddb",
     "help", "version", "seed", "save-version", "sprint",
     "extra-opt-first", "extra-opt-last", "sprint-map", "edit-save",
-    "print-charset", "zotdef", "tutorial", "wizard",
+    "print-charset", "zotdef", "tutorial", "wizard", "no-save",
 #ifdef USE_TILE_WEB
     "webtiles-socket", "await-connection",
 #endif
@@ -4072,6 +4073,13 @@ bool parse_args(int argc, char **argv, bool rc_only)
 #ifdef WIZARD
             if (!rc_only)
                 Options.wiz_mode = WIZ_NO;
+#endif
+            break;
+
+        case CLO_NO_SAVE:
+#ifdef WIZARD
+            if (!rc_only)
+                Options.no_save = true;
 #endif
             break;
 
