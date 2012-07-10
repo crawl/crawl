@@ -3290,10 +3290,10 @@ static const std::string _item_prefix(const item_def &item, bool temp,
             prefixes.push_back("poisonous");
         else if (is_mutagenic(item))
             prefixes.push_back("mutagenic");
-        else if (is_contaminated(item))
-            prefixes.push_back("contaminated");
         else if (causes_rot(item))
             prefixes.push_back("rot-inducing");
+        else if (is_contaminated(item))
+            prefixes.push_back("contaminated");
         break;
 
     case OBJ_POTIONS:
