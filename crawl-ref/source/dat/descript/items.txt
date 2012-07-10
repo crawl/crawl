@@ -169,9 +169,6 @@ feel the sheer impact of arcane fury contained within. It is sought after by
 sorcerers, for it allows the gifted and resourceful to command destruction with
 the ease of a twinkle. Feeble wizards, however, may well meet their doom when
 trying to read this opus.
-
-WARNING: If you fail in an attempt to memorise a spell from this book, the book
-will lash out at you.
 %%%%
 book of beasts
 
@@ -732,9 +729,6 @@ abominable runes, describe how the mighty among summoners can bend to their
 will the terrible things from betwixt the planes. Many have been the unwary
 souls, however, who have toyed with this tome and been driven mad by eldritch
 horrors from beyond imagining.
-
-WARNING: If you fail in an attempt to memorise a spell from this book, the book
-will lash out at you.
 %%%%
 grape
 
