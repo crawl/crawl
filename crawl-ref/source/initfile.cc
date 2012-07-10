@@ -669,6 +669,10 @@ void game_options::reset_options()
 
     set_default_activity_interrupts();
 
+#ifdef DEBUG_DIAGNOSTICS
+    quiet_debug_messages.reset();
+#endif
+
 #if defined(USE_TILE_LOCAL)
     restart_after_game = true;
 #else

@@ -232,7 +232,7 @@ static void _ench_animation(int flavour, const monster* mon, bool force)
 spret_type zapping(zap_type ztype, int power, bolt &pbolt,
                    bool needs_tracer, const char* msg, bool fail)
 {
-    dprf("zapping: power=%d", power);
+    dprf(DIAG_BEAM, "zapping: power=%d", power);
 
     pbolt.thrower = KILL_YOU_MISSILE;
 
@@ -313,7 +313,7 @@ bool player_tracer(zap_type ztype, int power, bolt &pbolt, int range)
     // "Fire through friendly?" prompts.
     if (pbolt.beam_cancelled)
     {
-        dprf("%s", "Beam cancelled.");
+        dprf(DIAG_BEAM, "Beam cancelled.");
         canned_msg(MSG_OK);
         you.turn_is_over = false;
         return false;
@@ -478,7 +478,7 @@ bool bolt::can_affect_actor(const actor *act) const
         // Note: this is done for balance, even if it hurts realism a bit.
         // It is arcane knowledge which wall patterns will cause lightning
         // to bounce thrice, double damage for ordinary bounces is enough.
-        dprf("skipping beam hit, affected them twice already");
+        dprf(DIAG_BEAM, "skipping beam hit, affected them twice already");
         return false;
     }
     // If there's a function that checks whether an actor is affected,
@@ -590,7 +590,7 @@ static void _munge_bounced_bolt(bolt &old_bolt, bolt &new_bolt,
     }
 
     new_ray = temp_ray;
-    dprf("chaos beam: old_deg = %5.2f, new_deg = %5.2f, shift = %5.2f",
+    dprf(DIAG_BEAM, "chaos beam: old_deg = %5.2f, new_deg = %5.2f, shift = %5.2f",
          static_cast<float>(old_deg), static_cast<float>(new_deg),
          static_cast<float>(shift));
 
@@ -705,7 +705,7 @@ void bolt::initialise_fire()
     }
 
 #ifdef DEBUG_DIAGNOSTICS
-    dprf("%s%s%s [%s] (%d,%d) to (%d,%d): "
+    dprf(DIAG_BEAM, "%s%s%s [%s] (%d,%d) to (%d,%d): "
           "gl=%d col=%d flav=%d hit=%d dam=%dd%d range=%d",
           (is_beam) ? "beam" : "missile",
           (is_explosion) ? "*" :
@@ -1308,7 +1308,7 @@ void bolt::do_fire()
     if (range < extra_range_used && range > 0)
     {
 #ifdef DEBUG
-        dprf("fire_beam() called on already done beam "
+        dprf(DIAG_BEAM, "fire_beam() called on already done beam "
              "'%s' (item = '%s')", name.c_str(),
              item ? item->name(DESC_PLAIN).c_str() : "none");
 #endif
@@ -2899,12 +2899,12 @@ static bool _test_beam_hit(int attack, int defence, bool is_beam,
     else if (defl)
         attack = r[0].random2(attack / defl);
 
-    dprf("Beam attack: %d, defence: %d", attack, defence);
+    dprf(DIAG_BEAM, "Beam attack: %d, defence: %d", attack, defence);
 
     attack = r[1].random2(attack);
     defence = r[2].random2avg(defence, 2);
 
-    dprf("Beam new attack: %d, defence: %d", attack, defence);
+    dprf(DIAG_BEAM, "Beam new attack: %d, defence: %d", attack, defence);
 
     return (attack >= defence);
 }
@@ -2970,7 +2970,7 @@ bool bolt::is_harmless(const monster* mon) const
 
 bool bolt::harmless_to_player() const
 {
-    dprf("beam flavour: %d", flavour);
+    dprf(DIAG_BEAM, "beam flavour: %d", flavour);
 
     switch (flavour)
     {
@@ -3057,7 +3057,7 @@ void bolt::reflect()
     {
         reflector = -1;
 #ifdef DEBUG
-        dprf("Bolt reflected by neither player nor "
+        dprf(DIAG_BEAM, "Bolt reflected by neither player nor "
              "monster (bolt = %s, item = %s)", name.c_str(),
              item ? item->name(DESC_PLAIN).c_str() : "none");
 #endif
@@ -3154,7 +3154,7 @@ bool bolt::misses_player()
 
         const int block = you.shield_bonus();
 
-        dprf("Beamshield: hit: %d, block %d", testhit, block);
+        dprf(DIAG_BEAM, "Beamshield: hit: %d, block %d", testhit, block);
         if (testhit < block)
         {
             if (is_reflectable(you.shield()))
@@ -3591,7 +3591,7 @@ void bolt::affect_player()
     hurted = apply_AC(&you, hurted, dummy);
 
 #ifdef DEBUG_DIAGNOSTICS
-    dprf("Player damage: rolled=%d; after AC=%d", roll, hurted);
+    dprf(DIAG_BEAM, "Player damage: rolled=%d; after AC=%d", roll, hurted);
 #endif
 
     practise(EX_BEAM_WILL_HIT);
@@ -3691,7 +3691,7 @@ void bolt::affect_player()
     if (origin_spell == SPELL_QUICKSILVER_BOLT)
         antimagic();
 
-    dprf("Damage: %d", hurted);
+    dprf(DIAG_BEAM, "Damage: %d", hurted);
 
     was_affected = apply_hit_funcs(&you, hurted) || was_affected;
 
@@ -4377,7 +4377,7 @@ void bolt::affect_monster(monster* mon)
         return;
 
 #ifdef DEBUG_DIAGNOSTICS
-    dprf("Monster: %s; Damage: pre-AC: %d; post-AC: %d; post-resist: %d",
+    dprf(DIAG_BEAM, "Monster: %s; Damage: pre-AC: %d; post-AC: %d; post-resist: %d",
          mon->name(DESC_PLAIN).c_str(), preac, postac, final);
 #endif
 
@@ -4799,7 +4799,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 
     case BEAM_ENSLAVE_SOUL:
     {
-        dprf("HD: %d; pow: %d", mon->hit_dice, ench_power);
+        dprf(DIAG_BEAM, "HD: %d; pow: %d", mon->hit_dice, ench_power);
 
         if (!mons_can_be_zombified(mon) || mons_intel(mon) < I_NORMAL)
             return MON_UNAFFECTED;
@@ -5338,7 +5338,7 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
     }
 
 #ifdef DEBUG_DIAGNOSTICS
-    dprf("explosion at (%d, %d) : g=%d c=%d f=%d hit=%d dam=%dd%d r=%d",
+    dprf(DIAG_BEAM, "explosion at (%d, %d) : g=%d c=%d f=%d hit=%d dam=%dd%d r=%d",
          pos().x, pos().y, glyph, colour, flavour, hit, damage.num, damage.size, r);
 #endif
 
