@@ -14,8 +14,8 @@ These include:
 * Public Domain|CC0: most of tiles
 * MIT: json.cc/json.h, some .js files in webserver/static/scripts/contrib/
 
-While a vast majority of the tiles are in the Public Domain, there is no
-accurate list.  To err on the side of caution, please refer to Chris Hamons'
+While a majority of the tiles are in the Public Domain, there is no accurate
+list.  To err on the side of caution, please refer to Chris Hamons'
 collection at http://code.google.com/p/crawl-tiles/
 
 *&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*&*
