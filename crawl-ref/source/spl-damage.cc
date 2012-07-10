@@ -1612,6 +1612,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
     monster* mon = monster_at(target);
     const dungeon_feature_type grid = grd(target);
 
+#if 0
     if (target == you.pos())
     {
         const bool petrifying = you.petrifying();
@@ -1651,6 +1652,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
 
         goto do_terrain;
     }
+#endif
     // Set up the explosion if there's a visible monster.
     if (mon && (caster->is_monster() || (you.can_see(mon))))
     {
