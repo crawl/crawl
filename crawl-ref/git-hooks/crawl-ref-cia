@@ -178,6 +178,7 @@ $user =~ s/flodiebold/edlothiol/;
 $user =~ s/chriscampbell89/MarvinPA/;
 $user =~ s/naesten/SamB/;
 $user =~ s/neil/|amethyst/;
+$user =~ s/smelenchuk/Grunt/;
 
 # Other regular contributorss
 $user =~ s/homelesspete/Twinge/;
@@ -191,7 +192,6 @@ $user =~ s/brendan/bmh/;
 $user =~ s/sbalady/nfogravity/;
 $user =~ s/ben\.striegel/Wensley/;
 $user =~ s/thann/Thann/;
-$user =~ s/smelenchuk/Grunt/;
 $user =~ s/policarpocp/CommanderC/;
 
 $rev = substr($commit, 0, 12);
