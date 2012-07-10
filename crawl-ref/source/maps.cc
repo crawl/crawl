@@ -398,6 +398,18 @@ static bool _map_safe_vault_place(const map_def &map,
         // Don't overwrite monsters or items, either!
         if (monster_at(cp) || igrd(cp) != NON_ITEM)
             return false;
+
+        // If in Slime, don't let stairs end up next to possibly unsafe walls.
+        if (player_in_branch(BRANCH_SLIME_PITS)
+            && (lines[dp.y][dp.x] == 'x'
+                || lines[dp.y][dp.x] == 'X'))
+        {
+            for (adjacent_iterator ai(cp); ai; ++ai)
+            {
+                if (map_bounds(*ai) && feat_is_stair(grd(*ai)))
+                    return false;
+            }
+        }
     }
 
     return true;
