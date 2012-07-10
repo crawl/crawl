@@ -400,7 +400,7 @@ static bool _map_safe_vault_place(const map_def &map,
             return false;
 
         // If in Slime, don't let stairs end up next to minivaults,
-	// so that they don't possibly end up next to unsafe walls.
+        // so that they don't possibly end up next to unsafe walls.
         if (player_in_branch(BRANCH_SLIME_PITS))
         {
             for (adjacent_iterator ai(cp); ai; ++ai)

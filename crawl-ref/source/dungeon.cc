@@ -3010,15 +3010,20 @@ static void _place_traps()
 static void _dgn_place_feature_at_random_floor_square(dungeon_feature_type feat,
                                                       unsigned mask = MMT_VAULT)
 {
-    coord_def place =
-        _dgn_random_point_in_bounds(DNGN_FLOOR, mask, DNGN_FLOOR);
+    coord_def place = _dgn_random_point_in_bounds(DNGN_FLOOR, mask, DNGN_FLOOR);
     if (player_in_branch(BRANCH_SLIME_PITS))
     {
         int tries = 100;
-        while ((dgn_has_adjacent_feat(place, DNGN_ROCK_WALL)
-                || dgn_has_adjacent_feat(place, DNGN_SLIMY_WALL))
+        while (!place.origin()  // stop if we fail to find floor.
+               && (dgn_has_adjacent_feat(place, DNGN_ROCK_WALL)
+                   || dgn_has_adjacent_feat(place, DNGN_SLIMY_WALL))
                && tries-- > 0)
+        {
             place = _dgn_random_point_in_bounds(DNGN_FLOOR, mask, DNGN_FLOOR);
+        }
+
+        if (tries < 0)  // tries == 0 means we succeeded on the last attempt
+            place.reset();
     }
     if (place.origin())
         throw dgn_veto_exception("Cannot place feature at random floor square.");
