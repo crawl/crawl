@@ -9,7 +9,9 @@
 #include <algorithm>
 
 #include <errno.h>
-#include <langinfo.h>
+#ifndef TARGET_OS_WINDOWS
+# include <langinfo.h>
+#endif
 #include <time.h>
 #include <stdlib.h>
 #include <string.h>
