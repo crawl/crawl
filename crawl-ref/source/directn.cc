@@ -27,6 +27,7 @@
 #include "dbg-util.h"
 #include "debug.h"
 #include "describe.h"
+#include "dgn-height.h"
 #include "dungeon.h"
 #include "fprop.h"
 #include "godabil.h"
@@ -3182,6 +3183,15 @@ std::string raw_feature_description(const coord_def &where)
             v->map.feat_renames.find(feat);
         if (it != v->map.feat_renames.end())
             return it->second;
+    }
+
+    if (player_in_branch(BRANCH_SHOALS))
+    {
+        const int height = dgn_height_at(where);
+        if (feat_is_water(feat) && height > SHT_SHORE_LOW)
+            return _base_feature_desc(feat, get_trap_type(where)) + " (tidal)";
+        else if (feat == DNGN_FLOOR || feat == DNGN_UNDISCOVERED_TRAP)
+            return height <= SHT_SHORE_HIGH ? "some wet sand" : "some sand";
     }
 
     return _base_feature_desc(feat, get_trap_type(where));
