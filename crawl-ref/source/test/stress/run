@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-CRAWL=${CRAWL:-./crawl -seed 1}
+CRAWL=${CRAWL:-./crawl -seed 1 -no-save}
 
 run_one()
 {

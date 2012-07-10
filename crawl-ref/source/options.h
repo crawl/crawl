@@ -165,6 +165,7 @@ public:
 #ifdef WIZARD
     int                      wiz_mode;   // no, never, start in wiz mode
     std::vector<std::string> terp_files; // Lua files to load for luaterp
+    bool                     no_save;    // don't use persistent save files
 #endif
 
     // internal use only:

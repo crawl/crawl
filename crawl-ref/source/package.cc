@@ -125,6 +125,29 @@ package::package(const char* file, bool writeable, bool empty)
     }
 }
 
+package::package()
+  : rw(true), n_users(0), dirty(false), aborted(false)
+{
+    dprintf("package: initializing tmp file\n");
+    filename = "[tmp]";
+
+    char file[7] = "XXXXXX";
+    fd = mkstemp(file);
+    if (fd == -1)
+        sysfail("can't create temporary save file");
+
+    ::unlink(file); // FIXME: won't work on Windows
+
+    if (!lock_file(fd, true))
+    {
+        close(fd);
+        sysfail("failed to lock newly created save (%s)", file);
+    }
+
+    dirty = true;
+    file_len = sizeof(file_header);
+}
+
 void package::load()
 {
     file_header head;
