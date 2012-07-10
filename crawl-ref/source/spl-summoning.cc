@@ -1169,13 +1169,29 @@ spret_type cast_summon_greater_demon(int pow, god_type god, bool fail)
     return SPRET_SUCCESS;
 }
 
+static monster_type _zotdef_shadow()
+{
+    for (int tries = 0; tries < 100; tries++)
+    {
+        monster_type mc = env.mons_alloc[random2(MAX_MONS_ALLOC)];
+        if (!invalid_monster_type(mc) && !mons_is_unique(mc))
+            return mc;
+    }
+
+    return RANDOM_MOBILE_MONSTER;
+}
+
 spret_type cast_shadow_creatures(god_type god, bool fail)
 {
     fail_check();
     mpr("Wisps of shadow whirl around you...");
 
+    monster_type critter = RANDOM_MOBILE_MONSTER;
+    if (crawl_state.game_is_zotdef())
+        critter = _zotdef_shadow();
+
     if (monster *mons = create_monster(
-            mgen_data(RANDOM_MOBILE_MONSTER, BEH_FRIENDLY, &you,
+            mgen_data(critter, BEH_FRIENDLY, &you,
                       1, // This duration is only used for band members.
                       SPELL_SHADOW_CREATURES, you.pos(), MHITYOU,
                       MG_FORCE_BEH, god), false))
