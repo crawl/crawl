@@ -2532,7 +2532,7 @@ void bolt::affect_ground()
     // covers 21 tiles in open space, so the expected number of spores
     // produced is the x in x_chance_in_y() in the conditional below.
     if (is_explosion && flavour == BEAM_SPORE
-        && this->agent() && !this->agent()->is_summoned())
+        && agent() && !agent()->is_summoned())
     {
         if (env.grid(pos()) == DNGN_FLOOR)
             env.pgrid(pos()) |= FPROP_MOLD;
@@ -2542,13 +2542,12 @@ void bolt::affect_ground()
            && mons_class_can_pass(MONS_BALLISTOMYCETE, env.grid(pos()))
            && !actor_at(pos()))
         {
-            beh_type beh = attitude_creation_behavior(this->attitude);
+            beh_type beh = attitude_creation_behavior(attitude);
 
             if (crawl_state.game_is_arena())
                 beh = coinflip() ? BEH_FRIENDLY : BEH_HOSTILE;
 
-            const god_type god = this->agent() ? this->agent()->deity()
-                                               : GOD_NO_GOD;
+            const god_type god = agent() ? agent()->deity() : GOD_NO_GOD;
 
             if (create_monster(mgen_data(MONS_BALLISTOMYCETE,
                                          beh,
@@ -4190,7 +4189,7 @@ void bolt::beam_hits_actor(actor *act)
                 mprf("%s %s knocked back by the %s.",
                      act->name(DESC_THE).c_str(),
                      act->conj_verb("are").c_str(),
-                     this->name.c_str());
+                     name.c_str());
             }
         }
         act->apply_location_effects(oldpos, killer(), beam_source);

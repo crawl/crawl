@@ -581,7 +581,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_ROT:
         if (!quiet)
         {
-            if (this->type == MONS_BOG_BODY)
+            if (type == MONS_BOG_BODY)
                 simple_monster_message(this, "'s decay slows.");
             else
                 simple_monster_message(this, " is no longer rotting.");
@@ -1505,7 +1505,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     {
         if (decay_enchantment(me))
         {
-            coord_def base_position = this->props["base_position"].get_coord();
+            coord_def base_position = props["base_position"].get_coord();
             // Do a thing.
             if (you.see_cell(base_position))
                 mprf("The portal closes; %s is severed.", name(DESC_THE).c_str());
@@ -1517,7 +1517,7 @@ void monster::apply_enchantment(const mon_enchant &me)
             add_ench(ENCH_SEVERED);
 
             // Severed tentacles immediately become "hostile" to everyone (or insane)
-            this->attitude = ATT_NEUTRAL;
+            attitude = ATT_NEUTRAL;
             behaviour_event(this, ME_ALERT);
         }
     }
@@ -1527,10 +1527,10 @@ void monster::apply_enchantment(const mon_enchant &me)
     {
         if (decay_enchantment(me))
         {
-            if (this->has_ench(ENCH_SEVERED))
+            if (has_ench(ENCH_SEVERED))
                 break;
 
-            if (!this->friendly())
+            if (!friendly())
                 break;
 
             if (!silenced(you.pos()))
@@ -1541,7 +1541,7 @@ void monster::apply_enchantment(const mon_enchant &me)
                     mpr("You hear a distant and violent thrashing sound.");
             }
 
-            this->attitude = ATT_HOSTILE;
+            attitude = ATT_HOSTILE;
             behaviour_event(this, ME_ALERT, &you);
         }
     }
@@ -1632,7 +1632,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     //This is like Corona, but if silver harms them, it sticky flame levels of damage.
     case ENCH_SILVER_CORONA:
 
-        if (this->is_chaotic())
+        if (is_chaotic())
         {
             bolt beam;
             beam.flavour = BEAM_LIGHT;

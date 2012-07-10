@@ -115,7 +115,7 @@ map_feature_marker::map_feature_marker(
 
 void map_feature_marker::write(writer &outf) const
 {
-    this->map_marker::write(outf);
+    map_marker::write(outf);
     marshallShort(outf, feat);
 }
 
@@ -491,7 +491,7 @@ map_wiz_props_marker::map_wiz_props_marker(
 
 void map_wiz_props_marker::write(writer &outf) const
 {
-    this->map_marker::write(outf);
+    map_marker::write(outf);
     marshallShort(outf, properties.size());
     for (std::map<std::string, std::string>::const_iterator i =
              properties.begin(); i != properties.end(); ++i)
@@ -733,7 +733,7 @@ map_position_marker::map_position_marker(
 
 void map_position_marker::write(writer &outf) const
 {
-    this->map_marker::write(outf);
+    map_marker::write(outf);
     marshallCoord(outf, dest);
 }
 

@@ -4133,7 +4133,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         }
 
         if (amount != INSTANT_DEATH)
-            if (this->has_ench(ENCH_DEATHS_DOOR))
+            if (has_ench(ENCH_DEATHS_DOOR))
                return 0;
             else if (petrified())
                 amount /= 2;
@@ -5505,7 +5505,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             // If we are going to die, monster_die hook will handle
             // purging the tentacle.
             if (hit_points < menv[number].hit_points
-                && this->hit_points > 0)
+                && hit_points > 0)
             {
                 int pass_damage = menv[number].hit_points -  hit_points;
                 menv[number].hurt(oppressor, pass_damage, flavour);

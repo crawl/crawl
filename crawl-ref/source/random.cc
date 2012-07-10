@@ -126,7 +126,7 @@ int roll_dice(int num, int size)
 
 int dice_def::roll() const
 {
-    return roll_dice(this->num, this->size);
+    return roll_dice(num, size);
 }
 
 dice_def calc_dice(int num_dice, int max_damage)
