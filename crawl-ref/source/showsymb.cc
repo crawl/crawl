@@ -100,9 +100,11 @@ unsigned short _cell_feat_show_colour(const map_cell& cell,
     {
         const int height = dgn_height_at(loc);
         if (feat == DNGN_SHALLOW_WATER)
-            colour = height > SHT_SHORE ? LIGHTCYAN : CYAN;
+            colour = height > SHT_SHORE_LOW ? LIGHTCYAN : CYAN;
         if (feat == DNGN_DEEP_WATER)
-            colour = height > SHT_SHORE ? LIGHTBLUE : BLUE;
+            colour = height > SHT_SHORE_LOW ? LIGHTBLUE : BLUE;
+        if (feat == DNGN_FLOOR && height <= SHT_SHORE_HIGH)
+            colour = BROWN;
     }
 
     if (feat_has_solid_floor(feat) && !feat_is_water(feat)
