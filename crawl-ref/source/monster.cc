@@ -4254,6 +4254,11 @@ void monster::ghost_init(bool need_pos)
     foe_memory      = 0;
     number          = MONS_NO_MONSTER;
 
+    // Ghosts can't worship good gods, but keep the god in the ghost
+    // structure so the ghost can comment on it.
+    if (is_good_god(god))
+        god = GOD_NO_GOD;
+
     inv.init(NON_ITEM);
     enchantments.clear();
     ench_cache.reset();
