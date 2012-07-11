@@ -134,8 +134,8 @@ This spell induces a state of bewilderment and confusion in a creature's mind.
 %%%%
 Confusing Touch spell
 
-This spell enchants the caster's hands with magical energy. This energy is
-released when the caster touches a monster with their bare hands, and may
+This spell enchants the caster's dominant hand with magical energy. This energy
+is released when the caster touches a monster with their bare hand, and may
 induce a state of confusion in the monster.
 %%%%
 Conjure Ball Lightning spell
