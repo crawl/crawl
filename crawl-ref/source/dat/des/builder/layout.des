@@ -965,7 +965,6 @@ TAGS: overwritable layout allow_dup unrand
 
     -- Prevent staircases from being placed in special or inner rooms.
     nsubst('. = { / ( / [ / < / } / ) / ] / > / .')
-    kmask('+ = no_secret_doors')
 
     if special ~= -1 then
         subvault('O : special_room')
