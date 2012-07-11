@@ -275,7 +275,10 @@ bool player_tracer(zap_type ztype, int power, bolt &pbolt, int range)
         return true;
 
     _zappy(ztype, power, pbolt);
-    pbolt.name = "unimportant";
+
+    // Special case so that the IMB tracer behaves properly.
+    if (pbolt.name != "orb of energy")
+        pbolt.name = "unimportant";
 
     pbolt.is_tracer      = true;
     pbolt.source         = you.pos();
@@ -2235,68 +2238,87 @@ static void _create_feat_splash(coord_def center,
     }
 }
 
-static void _imb_explosion(actor *agent,
-                           std::vector<coord_def> *prior_path,
-                           coord_def origin,
-                           coord_def center,
-                           dice_def dam)
+bool imb_can_splash(coord_def origin, coord_def center,
+                    std::vector<coord_def> path_taken, coord_def target)
 {
-    const int dist = prior_path->size();
-    if (origin == center || !x_chance_in_y(3, 2 + 2 * dist))
+    // Don't go back along the path of the beam (the explosion doesn't
+    // reverse direction). We do this to avoid hitting the caster and
+    // also because we don't want aiming one
+    // square past a lone monster to be optimal.
+    if (origin == target)
+    {
+        return false;
+    }
+    if (path_taken.size() > 1
+        && path_taken[path_taken.size() - 2] == target)
+    {
+        return false;
+    }
+    // Don't go far away from the caster (not enough momentum).
+    if (distance(origin, center + (target - center)*2)
+        > sqr(you.current_vision) + 1)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+static void _imb_explosion(bolt *parent, coord_def center)
+{
+    const int dist = parent->path_taken.size();
+    if (parent->source == center
+        || (!parent->is_tracer && x_chance_in_y(3, 2 + 2 * dist)))
         return;
     bolt beam;
     beam.name           = "mystic blast";
     beam.aux_source     = "orb of energy";
-    beam.beam_source    = agent->mindex();
-    beam.thrower        = agent->is_player() ? KILL_YOU_MISSILE : KILL_MON_MISSILE;
+    beam.beam_source    = parent->beam_source;
+    beam.thrower        = parent->thrower;
     beam.range          = 3;
     beam.hit            = AUTOMATIC_HIT;
-    beam.damage         = dam;
+    beam.damage         = parent->damage;
     beam.glyph          = dchar_glyph(DCHAR_FIRED_ZAP);
     beam.colour         = MAGENTA;
     beam.flavour        = BEAM_MMISSILE;
     beam.obvious_effect = true;
     beam.is_beam        = false;
     beam.is_explosion   = false;
-    beam.is_tracer      = false;
+    beam.is_tracer      = parent->is_tracer;
     beam.aimed_at_spot  = true;
     if (you.see_cell(center))
         beam.seen = true;
-    if (const monster* mons = agent->as_monster())
-        beam.source_name = mons->name(DESC_PLAIN, true);
-    beam.source = center;
+    beam.source_name    = parent->source_name;
+    beam.source         = center;
     bool first = true;
-    for (int x = -1; x <= 1; x++)
+    for (adjacent_iterator ai(center); ai; ++ai)
     {
-        for (int y = -1; y <= 1; y++)
+        if (!imb_can_splash(parent->source, center, parent->path_taken, *ai))
         {
-            if (x == 0 && y == 0)
-                continue;
-            // Don't go back along the path of the beam (the explosion doesn't
-            // reverse direction). We do this to avoid hitting the caster and
-            // also because we don't want aiming one
-            // square past a lone monster to be optimal.
-            if (origin == center + coord_def(x, y))
-                continue;
-            if (dist > 1 && (*prior_path)[dist - 2] == center + coord_def(x, y))
-                continue;
-            // Don't go far away from the caster (not enough momentum).
-            if (distance(origin, center + coord_def(2 * x, 2 * y)) >
-                sqr(you.current_vision) + 1)
+            continue;
+        }
+        if (beam.is_tracer || x_chance_in_y(3, 4))
+        {
+            if (first && !beam.is_tracer)
             {
-                continue;
+                if (you.see_cell(center))
+                    mpr("The orb of energy explodes!");
+                noisy(10, center);
+                first = false;
             }
-            if (x_chance_in_y(3, 4))
+            beam.friend_info.reset();
+            beam.foe_info.reset();
+            beam.target = center + (*ai - center) * 2;
+            beam.fire();
+            if (beam.is_tracer)
             {
-                if (first)
+                if (beam.beam_cancelled)
                 {
-                    if (you.see_cell(center))
-                        mpr("The orb of energy explodes!");
-                    noisy(10, center);
-                    first = false;
+                    parent->beam_cancelled = true;
+                    return;
                 }
-                beam.target = center + coord_def(2 * x, 2 * y);
-                beam.fire();
+                parent->friend_info += beam.friend_info;
+                parent->foe_info    += beam.foe_info;
             }
         }
     }
@@ -2391,7 +2413,11 @@ void bolt::affect_endpoint()
     }
 
     if (is_tracer)
+    {
+        if (name == "orb of energy")
+            _imb_explosion(this, pos());
         return;
+    }
 
     if (!is_explosion && !noise_generated && loudness)
     {
@@ -2457,7 +2483,7 @@ void bolt::affect_endpoint()
     }
 
     if (name == "orb of energy")
-        _imb_explosion(agent(), &path_taken, source, pos(), damage);
+        _imb_explosion(this, pos());
 }
 
 bool bolt::stop_at_target() const

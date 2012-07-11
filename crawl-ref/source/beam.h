@@ -329,6 +329,8 @@ bool napalm_monster(monster* mons, const actor* who, int levels = 1,
                     bool verbose = true);
 void fire_tracer(const monster* mons, struct bolt &pbolt,
                   bool explode_only = false);
+bool imb_can_splash(coord_def origin, coord_def center,
+                    std::vector<coord_def> path_taken, coord_def target);
 spret_type zapping(zap_type ztype, int power, bolt &pbolt,
                    bool needs_tracer = false, const char* msg = NULL,
                    bool fail = false);
