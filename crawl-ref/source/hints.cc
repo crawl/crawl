@@ -272,17 +272,6 @@ static job_type _get_hints_job(unsigned int type)
     }
 }
 
-// Converts all secret doors in a fixed radius around the player's starting
-// position into normal closed doors.
-// FIXME: Ideally, we'd need to zap secret doors that block the way
-// between entrance and exit.
-void hints_zap_secret_doors()
-{
-    for (radius_iterator ri(you.pos(), 25, true, false); ri; ++ri)
-        if (grd(*ri) == DNGN_SECRET_DOOR)
-            grd(*ri) = DNGN_CLOSED_DOOR;
-}
-
 static void _replace_static_tags(std::string &text)
 {
     size_t p;
@@ -1091,7 +1080,6 @@ static bool _rare_hints_event(hints_event_type event)
 {
     switch (event)
     {
-    case HINT_FOUND_SECRET_DOOR:
     case HINT_KILLED_MONSTER:
     case HINT_NEW_LEVEL:
     case HINT_YOU_ENCHANTED:
@@ -1816,39 +1804,6 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
             cmd.push_back(CMD_DISPLAY_MAP);
             cmd.push_back(CMD_DISPLAY_MAP);
         }
-        break;
-
-    case HINT_FOUND_SECRET_DOOR:
-#ifdef USE_TILE
-        tiles.place_cursor(CURSOR_TUTORIAL, gc);
-        tiles.add_text_tag(TAG_TUTORIAL, "Secret door", gc);
-#endif
-        text << "That ";
-#ifndef USE_TILE
-        text << glyph_to_tagstr(get_cell_glyph(gc)) << " ";
-#endif
-        if (grd(gc) == DNGN_SECRET_DOOR)
-            text << "is";
-        else
-            text << "was";
-
-        text << " a secret door. You can actively try to find secret doors "
-                "by searching. To search for one turn, press <w>s</w>, "
-                "<w>.</w>, <w>delete</w> or <w>keypad-5</w>. Pressing "
-                "<w>5</w> or <w>shift-and-keypad-5</w> "
-#ifdef USE_TILE
-                ", or clicking into the stat area "
-#endif
-                "will search 100 times, stopping early if you find any "
-                "secret doors or traps, or when your HP or MP fully "
-                "recovers.\n\n"
-
-                "If you can't find all three (or any) of the down stairs "
-                "on a level, you should try searching for secret doors, since "
-                "the missing stairs might be in sections of the level blocked "
-                "off by them. If you really can't find any secret doors, then "
-                "the missing stairs are probably in sections of the level "
-                "totally disconnected from the section you're searching.";
         break;
 
     case HINT_KILLED_MONSTER:
@@ -4190,7 +4145,6 @@ static void _hints_describe_feature(int x, int y)
             break;
 
        case DNGN_CLOSED_DOOR:
-       case DNGN_DETECTED_SECRET_DOOR:
             if (!Hints.hints_explored)
             {
                 ostr << "\nTo avoid accidentally opening a door you'd rather "
@@ -4567,7 +4521,7 @@ void hints_observe_cell(const coord_def& gc)
         learned_something_new(HINT_SEEN_ALTAR, gc);
     else if (is_feature('^', gc))
         learned_something_new(HINT_SEEN_TRAP, gc);
-    else if (feat_is_closed_door(grd(gc)))
+    else if (grd(gc) == DNGN_CLOSED_DOOR)
         learned_something_new(HINT_SEEN_DOOR, gc);
     else if (grd(gc) == DNGN_ENTER_SHOP)
         learned_something_new(HINT_SEEN_SHOP, gc);

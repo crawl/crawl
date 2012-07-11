@@ -454,11 +454,8 @@ int monster_pathfind::mons_travel_cost(coord_def npos)
     ASSERT(grid_distance(pos, npos) <= 1);
 
     // Doors need to be opened.
-    if (feat_is_closed_door(grd(npos)) || grd(npos) == DNGN_SECRET_DOOR
-        && env.markers.property_at(npos, MAT_ANY, "door_restrict") != "veto")
-    {
+    if (grd(npos) == DNGN_CLOSED_DOOR)
         return 2;
-    }
 
     const monster_type mt = mons_base_type(mons);
     const bool ground_level = !mons_airborne(mt, -1, false)

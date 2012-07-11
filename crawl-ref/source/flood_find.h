@@ -157,7 +157,6 @@ bool flood_find<fgrd, bound_check>::path_flood(
     }
 
     if (check_traversable && !feat_is_traversable(feat)
-        && feat != DNGN_SECRET_DOOR
         && !feat_is_trap(feat))
     {
         return false;

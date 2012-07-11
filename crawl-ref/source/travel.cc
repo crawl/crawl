@@ -207,7 +207,7 @@ static inline bool _is_safe_cloud(const coord_def& c)
 // This is done, so traps etc. will usually be circumvented where possible.
 static inline int _feature_traverse_cost(dungeon_feature_type feature)
 {
-    if (feature == DNGN_SHALLOW_WATER || feat_is_closed_door(feature))
+    if (feature == DNGN_SHALLOW_WATER || feature == DNGN_CLOSED_DOOR)
         return 2;
     else if (feat_is_trap(feature))
         return 3;
@@ -245,7 +245,7 @@ bool feat_is_traversable_now(dungeon_feature_type grid)
         }
 
         // You can't open doors in bat form.
-        if (grid == DNGN_CLOSED_DOOR || grid == DNGN_DETECTED_SECRET_DOOR)
+        if (grid == DNGN_CLOSED_DOOR)
             return player_can_open_doors();
     }
 
@@ -260,8 +260,7 @@ bool feat_is_traversable(dungeon_feature_type feat)
         return false;
     else if (feat == DNGN_TELEPORTER) // never ever enter it automatically
         return false;
-    else if (feat >= DNGN_MINWALK || feat == DNGN_DETECTED_SECRET_DOOR
-             || feat == DNGN_CLOSED_DOOR)
+    else if (feat >= DNGN_MINWALK || feat == DNGN_CLOSED_DOOR)
     {
         return true;
     }

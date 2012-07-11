@@ -134,7 +134,6 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             break;
 
         case DNGN_CLOSED_DOOR:
-        case DNGN_DETECTED_SECRET_DOOR:
             f.dchar   = DCHAR_DOOR_CLOSED;
             f.colour  = LIGHTGREY;
             f.minimap = MF_DOOR;
@@ -143,14 +142,6 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
         case DNGN_METAL_WALL:
             f.dchar        = DCHAR_WALL;
             f.colour       = CYAN;
-            f.magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
-            f.minimap      = MF_WALL;
-            break;
-
-        case DNGN_SECRET_DOOR:
-            // Note: get_secret_door_appearance means this probably isn't used.
-            f.dchar        = DCHAR_WALL;
-            f.colour       = ETC_ROCK;
             f.magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
             f.minimap      = MF_WALL;
             break;

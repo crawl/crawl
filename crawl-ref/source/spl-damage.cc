@@ -967,14 +967,7 @@ static int _shatter_walls(coord_def where, int pow, actor *)
 
     switch (grid)
     {
-    case DNGN_SECRET_DOOR:
-        if (you.see_cell(where))
-            mpr("A secret door shatters!");
-        chance = 100;
-        break;
-
     case DNGN_CLOSED_DOOR:
-    case DNGN_DETECTED_SECRET_DOOR:
     case DNGN_OPEN_DOOR:
         if (you.see_cell(where))
             mpr("A door shatters!");
@@ -1777,7 +1770,6 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
             *what = "stone idol";
         // fall-through
     case DNGN_ROCK_WALL:
-    case DNGN_SECRET_DOOR:
     case DNGN_SLIMY_WALL:
     case DNGN_STONE_WALL:
     case DNGN_CLEAR_ROCK_WALL:
@@ -1853,7 +1845,6 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
 
     case DNGN_OPEN_DOOR:
     case DNGN_CLOSED_DOOR:
-    case DNGN_DETECTED_SECRET_DOOR:
         // Doors always blow up, stone arches never do (would cause problems).
         if (what)
             *what = "door";

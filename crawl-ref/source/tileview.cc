@@ -373,22 +373,6 @@ void tile_init_flavour(const coord_def &gc)
         else
             env.tile_flv(gc).special = 0;
     }
-    else if (feat_is_secret_door(grd(gc)))
-    {
-        env.tile_flv(gc).special = 0;
-
-        if (env.tile_flv(gc).feat == 0)
-        {
-            // If surrounding tiles from a secret door are using tile
-            // overrides, then use that tile for the secret door.
-            coord_def door;
-            dungeon_feature_type door_feat;
-            find_secret_door_info(gc, &door_feat, &door);
-
-            if (env.tile_flv(door).feat)
-                env.tile_flv(gc).feat = env.tile_flv(door).feat;
-        }
-    }
     else if (!env.tile_flv(gc).special)
         env.tile_flv(gc).special = random2(256);
 }
@@ -659,10 +643,7 @@ static tileidx_t _get_floor_bg(const coord_def& gc)
     {
         bg = tileidx_feature(gc);
 
-        dungeon_feature_type feat = grid_appearance(gc);
-        if (feat == DNGN_DETECTED_SECRET_DOOR)
-            bg |= TILE_FLAG_WAS_SECRET;
-        else if (is_unknown_stair(gc))
+        if (is_unknown_stair(gc))
             bg |= TILE_FLAG_NEW_STAIR;
     }
 
@@ -1097,10 +1078,7 @@ static inline void _apply_variations(const tile_flavour &flv, tileidx_t *bg,
     {
         tileidx_t override = flv.feat;
         /*
-          If the override is not a door tile (i.e., between
-          TILE_DNGN_DETECTED_SECRET_DOOR and TILE_DNGN_ORCISH_IDOL),
-          it's assumed to be for an undetected secret door and not
-          used here.
+          Was: secret doors.  Is it ever needed anymore?
          */
         if (is_door_tile(override))
         {

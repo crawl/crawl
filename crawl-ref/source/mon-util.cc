@@ -3270,10 +3270,6 @@ static bool _mons_can_open_doors(const monster* mon)
 
 // Some functions that check whether a monster can open/eat/pass a
 // given door. These all return false if there's no closed door there.
-
-// Normal/smart monsters know about secret doors, since they live in
-// the dungeon, unless they're marked specifically not to be opened unless
-// already opened by the player {bookofjude}.
 bool mons_can_open_door(const monster* mon, const coord_def& pos)
 {
     if (env.markers.property_at(pos, MAT_ANY, "door_restrict") == "veto")
@@ -3282,9 +3278,7 @@ bool mons_can_open_door(const monster* mon, const coord_def& pos)
     if (!_mons_can_open_doors(mon))
         return false;
 
-    dungeon_feature_type feat = env.grid(pos);
-    return (feat == DNGN_CLOSED_DOOR
-            || feat_is_secret_door(feat) && mons_intel(mon) >= I_NORMAL);
+    return (env.grid(pos) == DNGN_CLOSED_DOOR);
 }
 
 // Monsters that eat items (currently only jellies) also eat doors.
@@ -3326,14 +3320,6 @@ bool mons_can_traverse(const monster* mon, const coord_def& p,
 
     if (!mon->is_habitable(p))
         return false;
-
-    // Your friends only know about doors you know about, unless they feel
-    // at home in this branch.
-    if (grd(p) == DNGN_SECRET_DOOR && mon->friendly()
-        && (mons_intel(mon) < I_NORMAL || !mons_is_native_in_branch(mon)))
-    {
-        return false;
-    }
 
     const trap_def* ptrap = find_trap(p);
     if (checktraps && ptrap)

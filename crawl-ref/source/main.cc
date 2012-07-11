@@ -3501,7 +3501,7 @@ static bool _untrap_target(const coord_def move, bool check_confused)
     }
 
     const dungeon_feature_type feat = grd(target);
-    if (!feat_is_closed_door(feat) || you.confused())
+    if (feat != DNGN_CLOSED_DOOR || you.confused())
     {
         switch (feat)
         {
@@ -3577,8 +3577,7 @@ static void _open_door(coord_def move, bool check_confused)
     // The player hasn't picked a direction yet.
     if (move.origin())
     {
-        const int num = _check_adjacent(DNGN_CLOSED_DOOR, move)
-                        + _check_adjacent(DNGN_DETECTED_SECRET_DOOR, move);
+        const int num = _check_adjacent(DNGN_CLOSED_DOOR, move);
 
         if (num == 0)
         {
@@ -3621,7 +3620,7 @@ static void _open_door(coord_def move, bool check_confused)
                                 "door_verb_already_open");
     }
 
-    if (!feat_is_closed_door(feat))
+    if (feat != DNGN_CLOSED_DOOR)
     {
         if (you.confused())
         {
@@ -3793,7 +3792,6 @@ static void _open_door(coord_def move, bool check_confused)
         mprf(verb, adj, noun);
     }
 
-    bool seen_secret = false;
     std::vector<coord_def> excludes;
     for (std::set<coord_def>::iterator i = all_door.begin();
          i != all_door.end(); ++i)
@@ -3808,12 +3806,6 @@ static void _open_door(coord_def move, bool check_confused)
 #ifdef USE_TILE
             env.tile_bk_bg(dc) = TILE_DNGN_OPEN_DOOR;
 #endif
-            if (!seen_secret && grd(dc) == DNGN_SECRET_DOOR)
-            {
-                seen_secret = true;
-                mprf("That %s was a secret door!",
-                     feature_description_at(dc, "", DESC_PLAIN, false).c_str());
-            }
         }
         grd(dc) = DNGN_OPEN_DOOR;
         set_terrain_changed(dc);
@@ -4045,7 +4037,6 @@ static void _close_door(coord_def move)
         switch (feat)
         {
         case DNGN_CLOSED_DOOR:
-        case DNGN_DETECTED_SECRET_DOOR:
             mpr("It's already closed!");
             break;
         default:
@@ -4374,7 +4365,7 @@ static void _move_player(coord_def move)
     }
 
     // BCR - Easy doors single move
-    if (Options.easy_open && !attacking && feat_is_closed_door(targ_grid))
+    if (Options.easy_open && !attacking && targ_grid == DNGN_CLOSED_DOOR)
     {
         _open_door(move.x, move.y, false);
         you.prev_move = move;

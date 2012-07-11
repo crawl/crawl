@@ -1674,7 +1674,6 @@ static void _corrupt_square(const corrupt_env &cenv, const coord_def &c)
         feat = _abyss_proto_feature();
 
     if (feat_is_trap(feat, true)
-        || feat == DNGN_SECRET_DOOR
         || feat == DNGN_UNSEEN
         || (feat_is_traversable(grd(c)) && !feat_is_traversable(feat)
             && coinflip()))
