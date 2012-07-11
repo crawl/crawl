@@ -1010,6 +1010,8 @@ static targetter* _spell_targetter(spell_type spell, int pow, int range)
         return new targetter_beam(&you, range, BEAM_COLD, true, 0, 0);
     case SPELL_BOLT_OF_COLD:
         return new targetter_beam(&you, range, BEAM_COLD, false, 0, 0);
+    case SPELL_ISKENDERUNS_MYSTIC_BLAST:
+        return new targetter_imb(&you, range);
     case SPELL_FIRE_STORM:
         return new targetter_smite(&you, range, 2, pow > 76 ? 3 : 2);
     case SPELL_FREEZING_CLOUD:
