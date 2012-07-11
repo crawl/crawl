@@ -337,6 +337,11 @@ static int _corpse_badness(corpse_effect_type ce, const item_def &item,
     // Being almost rotten has 480 badness, contamination usually 333.
     contam -= 3 * item.special;
 
+    // Corpses your god gives penance for messing with are absolute last
+    // priority.
+    if (is_forbidden_food(item))
+        contam += 10000;
+
     return contam;
 }
 
