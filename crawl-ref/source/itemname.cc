@@ -2892,6 +2892,14 @@ bool is_dangerous_item(const item_def &item, bool temp)
     }
 }
 
+static bool _invisibility_is_useless(const bool temp)
+{
+    // If you're Corona'd or a TSO-ite, this is always useless.
+    return (temp ? you.backlit(true)
+                 : you.haloed() && you.religion == GOD_SHINING_ONE);
+
+}
+
 bool is_useless_item(const item_def &item, bool temp)
 {
     switch (item.base_type)
@@ -2988,6 +2996,9 @@ bool is_useless_item(const item_def &item, bool temp)
         if (you.species == SP_FELID)
             return true;
 
+        if (item.sub_type == WAND_INVISIBILITY && _invisibility_is_useless(temp))
+            return true;
+
         return (item.plus2 == ZAPCOUNT_EMPTY)
                || item_ident(item, ISFLAG_KNOW_PLUSES) && !item.plus;
 
@@ -3042,10 +3053,7 @@ bool is_useless_item(const item_def &item, bool temp)
             return (player_res_poison(false) > 0);
 
         case POT_INVISIBILITY:
-            // If you're Corona'd or a TSO-ite, this is always useless.
-            return (temp ? you.backlit(true)
-                         : you.haloed() && you.religion == GOD_SHINING_ONE);
-
+            return _invisibility_is_useless(temp);
         }
 
         return false;
@@ -3115,8 +3123,7 @@ bool is_useless_item(const item_def &item, bool temp)
             return crawl_state.game_is_sprint();
 
         case RING_INVISIBILITY:
-            return (temp ? you.backlit(true)
-                         : you.haloed() && you.religion == GOD_SHINING_ONE);
+            return _invisibility_is_useless(temp);
 
         case RING_LEVITATION:
             return (you.permanent_levitation() || you.permanent_flight());
