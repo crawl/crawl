@@ -49,6 +49,8 @@ Grandeur
 Mastery
 
 Superiority
+
+Magnificence
 %%%%
 _conflict_name_
 
@@ -67,6 +69,8 @@ Internal Strife
 Contention
 
 Dissent
+
+Quarrel
 %%%%
 _anger_name_
 
@@ -89,6 +93,8 @@ Hatred
 Indignation
 
 Outrage
+
+Scorn
 %%%%
 _battle_or_war_
 
@@ -107,6 +113,10 @@ the Onslaught
 Skirmishing
 
 the Endless March
+
+Plunder
+
+Ravage
 
 # Lemuel's Suggestions
 the Warrior
@@ -181,6 +191,8 @@ Certain Death
 
 Uncertain Death
 
+Exquisite Death
+
 Pain and Death
 
 Untimely Demise
@@ -254,6 +266,8 @@ Overwhelming Force
 Subterfuge
 
 Strategic Superiority
+
+Guile
 %%%%
 _valour_name_
 
@@ -383,6 +397,8 @@ Priest
 
 Madman
 
+Scavenger
+
 w:15
 @_diviner_name_@
 %%%%
@@ -402,6 +418,10 @@ Mosquito
 Gnat
 
 Blowfly
+
+Dragonfly
+
+Firefly
 
 # arachnids
 Spider
@@ -578,8 +598,6 @@ Drought
 
 Floods
 
-Holocaust
-
 Ruination
 
 # the Apocalypse
@@ -594,6 +612,8 @@ Ragnarok
 Annihilation
 
 the End of Times
+
+World Downfall
 
 # the Apocalyptic Riders (except Death)
 Pestilence
@@ -729,8 +749,6 @@ Animal Spirits
 
 Bankruptcy
 
-Capitalism
-
 Collusion
 
 Compound Interest
@@ -835,6 +853,8 @@ the Trees
 the Volcano
 
 the Equator
+
+the Poles
 
 the Old World
 
@@ -1179,6 +1199,8 @@ Head
 Mouth
 
 Throat
+
+Kidney
 %%%%
 _magic_name_
 
