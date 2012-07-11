@@ -1298,13 +1298,7 @@ void search_around(bool only_adjacent)
             // Making this harsher by removing the old +1...
             int effective = skill / (2*dist - 1);
 
-            if (grd(*ri) == DNGN_SECRET_DOOR && x_chance_in_y(effective+1, 17))
-            {
-                mpr("You found a secret door!");
-                reveal_secret_door(*ri);
-                practise(EX_FOUND_SECRET_DOOR);
-            }
-            else if (grd(*ri) == DNGN_UNDISCOVERED_TRAP
+            if (grd(*ri) == DNGN_UNDISCOVERED_TRAP
                      && x_chance_in_y(effective + 1, 17))
             {
                 trap_def* ptrap = find_trap(*ri);

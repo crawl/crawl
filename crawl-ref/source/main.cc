@@ -3720,8 +3720,7 @@ static void _open_door(coord_def move, bool check_confused)
         }
     }
 
-    int skill = you.dex()
-                + (you.skill_rdiv(SK_TRAPS_DOORS) + you.skill_rdiv(SK_STEALTH)) / 2;
+    int skill = you.dex() + you.skill_rdiv(SK_STEALTH);
 
     std::string berserk_open = env.markers.property_at(doorpos, MAT_ANY,
                                         "door_berserk_verb_open");
@@ -3953,8 +3952,7 @@ static void _close_door(coord_def move)
             }
         }
 
-        int skill = you.dex()
-                    + (you.skill_rdiv(SK_TRAPS_DOORS) + you.skill_rdiv(SK_STEALTH)) / 2;
+        int skill = you.dex() + you.skill_rdiv(SK_STEALTH);
 
         if (you.berserk())
         {

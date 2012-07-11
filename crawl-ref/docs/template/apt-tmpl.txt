@@ -46,7 +46,7 @@ Ddg - Dodging                SBl - Short Blades          Coj - Conjurations
 Sth - Stealth                LBl - Long Blades           Hex - Hexes
 Stb - Stabbing               M&F - Maces & Flails        Cha - Charms
 Shd - Shields                Axs - Axes                  Sum - Summonings
-T&D - Traps & Doors          Pla - Polearms              Nec - Necromancy
+Trp - Traps                  Pla - Polearms              Nec - Necromancy
                              Stv - Staves                Trl - Translocations
 Inv - Invocations            UC  - Unarmed Combat        Trm - Transmutations
 Evo - Evocations
@@ -57,7 +57,7 @@ Exp - experience             Crb - Crossbows             Ear - Earth Magic
                                                          Poi - Poison Magic
 
 
-                 Arm Ddg Sth Stb Shd T&D   Inv Evo        HP  MP   Exp
+                 Arm Ddg Sth Stb Shd Trp   Inv Evo        HP  MP   Exp
 ----------------------------------------------------------------------
 
 
