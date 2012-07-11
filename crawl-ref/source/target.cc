@@ -172,20 +172,23 @@ bool targetter_imb::set_aim(coord_def a)
     splash.clear();
 
     coord_def end = path_taken[path_taken.size() - 1];
+
+    // IMB never splashes if you self-target.
     if (end == origin)
-    {
-        // IMB never splashes if you self-target.
         return true;
-    }
 
     for (adjacent_iterator ai(end); ai; ++ai)
     {
         if (!imb_can_splash(origin, end, path_taken, *ai))
-        {
             continue;
-        }
 
         splash.push_back(*ai);
+        if (!cell_is_solid(*ai)
+            && !(anyone_there(*ai)
+                 && !fedhas_shoot_through(beam, monster_at(*ai))))
+        {
+            splash.push_back(end + (*ai - end) * 2);
+        }
     }
 
     return true;
@@ -195,24 +198,19 @@ aff_type targetter_imb::is_affected(coord_def loc)
 {
     coord_def end = path_taken[path_taken.size() - 1];
     if (end == loc)
-    {
         return cell_is_solid(end) ? AFF_NO : AFF_YES;
-    }
+
     for (std::vector<coord_def>::const_iterator i = path_taken.begin();
          i != path_taken.end(); ++i)
     {
         if (*i == loc)
-        {
             return cell_is_solid(*i) ? AFF_NO : AFF_TRACER;
-        }
     }
     for (std::vector<coord_def>::const_iterator i = splash.begin();
          i != splash.end(); ++i)
     {
         if (*i == loc)
-        {
             return cell_is_solid(*i) ? AFF_NO : AFF_MAYBE;
-        }
     }
     return AFF_NO;
 }
