@@ -176,7 +176,8 @@ public:
     virtual void generate_textures(size_t count, unsigned int *textures) = 0;
     virtual void bind_texture(unsigned int texture) = 0;
     virtual void load_texture(unsigned char *pixels, unsigned int width,
-                              unsigned int height, MipMapOptions mip_opt) = 0;
+                              unsigned int height, MipMapOptions mip_opt,
+                              int xoffset=-1, int yoffset=-1) = 0;
 
     // Debug
 #ifdef ASSERTS
