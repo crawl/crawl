@@ -23,6 +23,7 @@ Branches, environment
 * New wizlab: Roulette of Golubria.
 * A metric buttload of new vaults, including several new branch endings and
   a full-level vault for deeper parts of the main dungeon.
+* A new Sprint map by st, based on the Ziggurat.
 * Vaults are more common.
 * There are three new level layouts for the dungeon and various branches.
 * You don't lose portal vaults after being banished from one.
