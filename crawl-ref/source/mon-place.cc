@@ -1856,6 +1856,9 @@ monster_type pick_local_zombifiable_monster(int power, bool hack_hd,
                                             const coord_def& pos)
 {
     bool ignore_rarity = false;
+    const level_id place = (crawl_state.game_is_zotdef())
+                           ? level_id(BRANCH_MAIN_DUNGEON)
+                           : level_id::current();
     power = std::min(27, power);
 
     // How OOD this zombie can be.
@@ -1874,21 +1877,22 @@ monster_type pick_local_zombifiable_monster(int power, bool hack_hd,
         // where this is a problem are hell levels and the crypt.
         // we have to watch for summoned zombies on other levels, too,
         // such as the Temple, HoB, and Slime Pits.
-        if (!player_in_connected_branch()
-            || player_in_hell()
-            || player_in_branch(BRANCH_VESTIBULE_OF_HELL)
-            || player_in_branch(BRANCH_ECUMENICAL_TEMPLE)
-            || player_in_branch(BRANCH_CRYPT)
-            || player_in_branch(BRANCH_TOMB)
-            || player_in_branch(BRANCH_HALL_OF_BLADES)
-            || player_in_branch(BRANCH_SLIME_PITS)
-            || one_chance_in(1000))
+        if (!crawl_state.game_is_zotdef()
+            && (!player_in_connected_branch()
+                || player_in_hell()
+                || player_in_branch(BRANCH_VESTIBULE_OF_HELL)
+                || player_in_branch(BRANCH_ECUMENICAL_TEMPLE)
+                || player_in_branch(BRANCH_CRYPT)
+                || player_in_branch(BRANCH_TOMB)
+                || player_in_branch(BRANCH_HALL_OF_BLADES)
+                || player_in_branch(BRANCH_SLIME_PITS)
+                || one_chance_in(1000)))
         {
             ignore_rarity = true;
         }
 
         // Don't make out-of-rarity zombies when we don't have to.
-        if (!ignore_rarity && mons_rarity(base) == 0)
+        if (!ignore_rarity && mons_rarity(base, place) == 0)
             continue;
 
         // Does the zombie match the parameters?
@@ -1903,11 +1907,12 @@ monster_type pick_local_zombifiable_monster(int power, bool hack_hd,
         // Check for rarity.. and OOD - identical to mons_place()
         int level, diff, chance;
 
-        level = mons_level(base) + absdungeon_depth(you.where_are_you, 0) - 4;
+        level = mons_level(base, place)
+                + absdungeon_depth(you.where_are_you, 0) - 4;
         diff  = level - power;
 
         chance = (ignore_rarity) ? 100
-                                 : mons_rarity(base) - (diff * diff) / 2;
+                                 : mons_rarity(base, place) - (diff * diff) / 2;
 
         if (power > level - relax && power < level + relax
             && random2avg(100, 2) <= chance)
