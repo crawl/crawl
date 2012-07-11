@@ -111,11 +111,6 @@ function ($, comm, client, enums, dungeon_renderer, cr) {
     {
         client.set_layer("normal");
 
-        if (menu.elem)
-        {
-            $("#menu").html(menu.elem);
-            return;
-        }
         var menu_div = $("<div>");
         menu_div.addClass("menu_" + menu.tag);
         menu.elem = menu_div;
@@ -152,14 +147,30 @@ function ($, comm, client, enums, dungeon_renderer, cr) {
         var container = $("<ol>");
         items_inner.append(container);
 
-        var chunk = menu.items;
-        menu.items = { length: menu.total_items };
-        menu.first_present = 999999;
-        menu.last_present = -999999;
-        prepare_item_range(menu.chunk_start,
-                           menu.chunk_start + chunk.length - 1,
-                           true, container);
-        update_item_range(menu.chunk_start, chunk);
+        if (!menu.created)
+        {
+            var chunk = menu.items;
+            menu.items = { length: menu.total_items };
+            menu.first_present = 999999;
+            menu.last_present = -999999;
+            prepare_item_range(menu.chunk_start,
+                               menu.chunk_start + chunk.length - 1,
+                               true, container);
+            update_item_range(menu.chunk_start, chunk);
+        }
+        else
+        {
+            for (var i = menu.first_present; i < menu.last_present; ++i)
+            {
+                var item = menu.items[i];
+                if (!item) continue;
+                item.elem = $("<li>...</li>");
+                item.elem.data("item", item);
+                item.elem.addClass("placeholder");
+                container.append(item.elem);
+                set_item_contents(item, item.elem);
+            }
+        }
 
         menu_div.append("<div id='menu_more'>" + formatted_string_to_html(menu.more)
                         + "</div>");
@@ -167,6 +178,7 @@ function ($, comm, client, enums, dungeon_renderer, cr) {
         content_div.scroll(menu_scroll_handler);
 
         menu.server_scroll = true;
+        menu.created = true;
 
         client.show_dialog("#menu");
 
