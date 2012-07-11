@@ -516,6 +516,13 @@ bool mons_speaks(monster* mons)
                 prefixes.push_back("unbeliever");
         }
     }
+    else if (mons->type == MONS_PLAYER_GHOST)
+    {
+        // Use the *ghost's* religion, to get speech about its god.  Only
+        // sometimes, though, so we can get skill-based messages as well.
+        if (coinflip())
+            prefixes.push_back(god_name(mons->ghost->religion));
+    }
     else
     {
         // Include our current god's name, too. This means that uniques
