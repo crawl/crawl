@@ -422,7 +422,7 @@ function choose_mset_3(e)
 -- Holy
   else
     e.kmons("1 = daeva / angel / cherub / pearl dragon / ophan / \
-                 apis / paladin / phoenix / nothing w:70")
+                 apis / paladin / phoenix / shedu band / nothing w:74")
   end
 end
 
