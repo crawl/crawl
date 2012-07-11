@@ -535,6 +535,11 @@ conduct_type god_hates_item_handling(const item_def &item)
     return DID_NOTHING;
 }
 
+bool god_hates_item(const item_def &item)
+{
+    return good_god_hates_item_handling(item) || god_hates_item_handling(item);
+}
+
 bool god_dislikes_spell_type(spell_type spell, god_type god)
 {
     if (god_hates_spell(spell, god))

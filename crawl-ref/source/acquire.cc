@@ -20,6 +20,7 @@
 #include "dungeon.h"
 #include "externs.h"
 #include "food.h"
+#include "goditem.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -850,8 +851,11 @@ static int _find_acquirement_subtype(object_class_type &class_wanted,
         dummy.plus = 1; // empty wands would be useless
         dummy.flags |= ISFLAG_IDENT_MASK;
 
-        if (is_useless_item(dummy, false) && useless_count++ < 200)
+        if ((is_useless_item(dummy, false) || god_hates_item(dummy))
+            && useless_count++ < 200)
+        {
             continue;
+        }
 
         if (!try_again)
             break;
