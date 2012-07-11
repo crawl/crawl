@@ -451,9 +451,7 @@ void ghost_demon::init_player_ghost()
     species = you.species;
     job = you.char_class;
 
-    // Ghosts can't worship good gods.
-    if (!is_good_god(you.religion))
-        religion = you.religion;
+    religion = you.religion;
 
     best_skill = ::best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
     best_skill_level = you.skills[best_skill];
@@ -959,7 +957,7 @@ bool debug_check_ghosts()
         if (ghost.religion < GOD_NO_GOD || ghost.religion >= NUM_GODS)
             return false;
 
-        if (ghost.brand == SPWPN_HOLY_WRATH || is_good_god(ghost.religion))
+        if (ghost.brand == SPWPN_HOLY_WRATH)
             return false;
 
         // Only (very) ugly things get non-plain attack types and
