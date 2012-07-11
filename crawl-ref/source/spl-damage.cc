@@ -128,6 +128,17 @@ spret_type cast_fire_storm(int pow, bolt &beam, bool fail)
     fail_check();
     setup_fire_storm(&you, pow, beam);
 
+    bolt tempbeam = beam;
+    tempbeam.ex_size = (pow > 76) ? 3 : 2;
+    tempbeam.is_tracer = true;
+
+    tempbeam.explode(false);
+    if (tempbeam.beam_cancelled)
+    {
+        canned_msg(MSG_OK);
+        return SPRET_ABORT;
+    }
+
     mpr("A raging storm of fire appears!");
 
     beam.explode(false);
