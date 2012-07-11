@@ -6218,7 +6218,7 @@ int player::skill(skill_type sk, int scale, bool real) const
 // only for purposes of detection, not disarming
 int player::traps_skill() const
 {
-    int val = skill(SK_TRAPS_DOORS, 15);
+    int val = skill(SK_TRAPS, 15);
 
     if (you.religion == GOD_ASHENZARI && !player_under_penance())
         val += you.piety;

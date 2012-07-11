@@ -249,9 +249,7 @@ ENDMAP
 # 29x23
 # Morbid curiosity
 # Monsters are easier. Made it harder for them to get out. The single orc
-# can pack a punch, though. His window is secret, so autoexploring won't
-# notice, except for characters with starting Traps and Doors skill, who
-# will then bring Stealth and Evasion as well.
+# can pack a punch, though.
 NAME:    dpeg_entry_morbid_curiosity
 TAGS:    entry no_rotate no_monster_gen
 ORIENT:  float
