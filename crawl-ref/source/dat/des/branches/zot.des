@@ -1289,6 +1289,7 @@ WEIGHT: 5
 KMASK:  1! = no_item_gen
 SUBST:  ! = ^ .:40
 SUBST:  . = .:500 ^
+SUBST:  : = .
 COLOUR: c = magenta
 KMONS:  1 = patrolling Orb Guardian
 : zot5_orb(_G)
@@ -1300,16 +1301,16 @@ ccccXX!Z!XXccXc
  cccX1!!!1XcXX
   ccXX...XXcX
   XXXX...XXXX
- XXXXXG.GXXXXX
+ XXXXXG:GXXXXX
  XX.XX...XX.XX
  X1..X.1.X..1X
- ....XG.GX....
+ :...XG:GX...:
  X1..X...X..1X
  XX..X...X..XX
- XX..XG.GX..XX
+ XX..XG:GX..XX
   X.1X...X1.X
   X..X.1.X..X
- cX..XG.GX..Xc
+ cX..XG:GX..Xc
 ccX..X...X..Xcc
 ccX.........Xcc
   XX.......XX
