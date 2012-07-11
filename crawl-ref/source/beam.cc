@@ -858,13 +858,6 @@ void bolt::digging_wall_effect()
         }
         break;
 
-    case DNGN_SECRET_DOOR:
-        obvious_effect = true;
-        mpr("There is a secret door!");
-        reveal_secret_door(pos());
-        finish_beam();
-        break;
-
     default:
         if (feat_is_wall(feat))
             finish_beam();
@@ -919,8 +912,6 @@ static bool _nuke_wall_msg(dungeon_feature_type feat, const coord_def& p)
     case DNGN_CLEAR_ROCK_WALL:
     case DNGN_GRANITE_STATUE:
     case DNGN_CLOSED_DOOR:
-    case DNGN_DETECTED_SECRET_DOOR:
-    case DNGN_SECRET_DOOR:
         // XXX: When silenced, features disappear without message.
         // XXX: For doors, we only issue a sound where the beam hit.
         //      If someone wants to improve on the door messaging,
@@ -1007,8 +998,6 @@ void bolt::nuke_wall_effect()
         break;
 
     case DNGN_CLOSED_DOOR:
-    case DNGN_DETECTED_SECRET_DOOR:
-    case DNGN_SECRET_DOOR:
     {
          std::set<coord_def> doors = connected_doors(pos());
          std::set<coord_def>::iterator it;
@@ -2602,8 +2591,7 @@ maybe_bool bolt::affects_wall(dungeon_feature_type wall) const
     // digging
     if (flavour == BEAM_DIGGING
         && (wall == DNGN_ROCK_WALL || wall == DNGN_CLEAR_ROCK_WALL
-            || wall == DNGN_SLIMY_WALL || wall == DNGN_GRATE
-            || wall == DNGN_SECRET_DOOR))
+            || wall == DNGN_SLIMY_WALL || wall == DNGN_GRATE))
     {
         return B_TRUE;
     }
@@ -2625,9 +2613,7 @@ maybe_bool bolt::affects_wall(dungeon_feature_type wall) const
             || wall == DNGN_ORCISH_IDOL
             || wall == DNGN_TREE
             || wall == DNGN_MANGROVE
-            || wall == DNGN_CLOSED_DOOR
-            || wall == DNGN_DETECTED_SECRET_DOOR
-            || wall == DNGN_SECRET_DOOR)
+            || wall == DNGN_CLOSED_DOOR)
         {
             return B_TRUE;
         }
@@ -5491,9 +5477,7 @@ void bolt::determine_affected_cells(explosion_map& m, const coord_def& delta,
     bool at_wall = false;
 
     // Check to see if we're blocked by a wall.
-    if (feat_is_wall(dngn_feat)
-        || dngn_feat == DNGN_SECRET_DOOR
-        || feat_is_closed_door(dngn_feat))
+    if (feat_is_wall(dngn_feat) || dngn_feat == DNGN_CLOSED_DOOR)
     {
         // Special case: explosion originates from rock/statue
         // (e.g. Lee's Rapid Deconstruction) - in this case, ignore

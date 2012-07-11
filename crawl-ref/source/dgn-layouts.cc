@@ -843,7 +843,7 @@ static void _diamond_rooms(int level_number)
 static int _good_door_spot(int x, int y)
 {
     if (!feat_is_solid(grd[x][y]) && grd[x][y] < DNGN_ENTER_PANDEMONIUM
-        || feat_is_closed_door(grd[x][y]))
+        || grd[x][y] == DNGN_CLOSED_DOOR)
     {
         return 1;
     }

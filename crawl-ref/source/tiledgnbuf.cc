@@ -223,9 +223,6 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
 
     if (bg_idx > TILE_DNGN_UNSEEN)
     {
-        if (bg & TILE_FLAG_WAS_SECRET)
-            m_buf_feat.add(TILE_DNGN_DETECTED_SECRET_DOOR, x, y);
-
         // Draw blood on top of wall tiles.
         if (bg_idx <= TILE_WALL_MAX)
             add_blood_overlay(x, y, cell, bg_idx >= TILE_FLOOR_MAX);

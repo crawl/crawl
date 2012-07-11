@@ -265,7 +265,6 @@ static bool _feat_is_passwallable(dungeon_feature_type feat)
     case DNGN_ROCK_WALL:
     case DNGN_SLIMY_WALL:
     case DNGN_CLEAR_ROCK_WALL:
-    case DNGN_SECRET_DOOR:
         return true;
     default:
         return false;

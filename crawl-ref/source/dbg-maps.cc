@@ -88,20 +88,6 @@ static bool mg_do_build_level(int niters)
             continue;
         }
 
-        for (int y = 0; y < GYM; ++y)
-            for (int x = 0; x < GXM; ++x)
-            {
-                switch (grd[x][y])
-                {
-                case DNGN_SECRET_DOOR:
-                case DNGN_DETECTED_SECRET_DOOR: // paranoia
-                    grd[x][y] = DNGN_CLOSED_DOOR;
-                    break;
-                default:
-                    break;
-                }
-            }
-
         {
             unwind_bool wiz(you.wizard, true);
             magic_mapping(1000, 100, true, true, false,

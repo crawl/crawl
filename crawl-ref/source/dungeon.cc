@@ -679,7 +679,7 @@ bool dgn_square_travel_ok(const coord_def &c)
         return !(trap && trap->type == TRAP_TELEPORT);
     }
     else
-        return (feat_is_traversable(feat) || feat == DNGN_SECRET_DOOR);
+        return feat_is_traversable(feat);
 }
 
 static bool _dgn_square_is_passable(const coord_def &c)
@@ -2308,7 +2308,7 @@ static void _check_doors()
 {
     for (rectangle_iterator ri(1); ri; ++ri)
     {
-        if (!feat_is_closed_door(grd(*ri)))
+        if (grd(*ri) != DNGN_CLOSED_DOOR)
             continue;
 
         int solid_count = 0;
@@ -3525,9 +3525,7 @@ static bool _connect_vault_exit(const coord_def& exit)
 
 static bool _grid_needs_exit(const coord_def& c)
 {
-    return (!cell_is_solid(c)
-            || feat_is_closed_door(grd(c))
-            || grd(c) == DNGN_SECRET_DOOR);
+    return !cell_is_solid(c) || grd(c) == DNGN_CLOSED_DOOR;
 }
 
 static bool _map_feat_is_on_edge(const vault_placement &place,

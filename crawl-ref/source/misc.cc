@@ -2245,27 +2245,6 @@ int speed_to_duration(int speed)
     return div_rand_round(100, speed);
 }
 
-void reveal_secret_door(const coord_def& p)
-{
-    ASSERT(grd(p) == DNGN_SECRET_DOOR);
-
-    const std::string door_open_prompt =
-        env.markers.property_at(p, MAT_ANY, "door_open_prompt");
-
-    // Former secret doors become known but are still hidden to monsters
-    // until opened. Transparent secret doors are opened to not change
-    // LOS, unless they have a warning prompt.
-    dungeon_feature_type door = grid_secret_door_appearance(p);
-    if (feat_is_opaque(door) || !door_open_prompt.empty())
-        grd(p) = DNGN_DETECTED_SECRET_DOOR;
-    else
-        grd(p) = DNGN_OPEN_DOOR;
-
-    set_terrain_changed(p);
-    viewwindow();
-    learned_something_new(HINT_FOUND_SECRET_DOOR, p);
-}
-
 bool bad_attack(const monster *mon, std::string& adj, std::string& suffix)
 {
     ASSERT(!crawl_state.game_is_arena());

@@ -428,13 +428,7 @@ static std::auto_ptr<FixedArray<bool, GXM, GYM> > _tile_detectability()
 
         (*map)(p) = true;
 
-        if (grd(p) == DNGN_SECRET_DOOR)
-        {
-            reveal_secret_door(p);
-            continue;
-        }
-
-        if (grd(p) < DNGN_MINSEE && !feat_is_closed_door(grd(p)))
+        if (grd(p) < DNGN_MINSEE && grd(p) != DNGN_CLOSED_DOOR)
             continue;
 
         for (int dy = -1; dy <= 1; ++dy)
@@ -513,13 +507,13 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
 
         bool open = true;
 
-        if (feat_is_solid(feat) && !feat_is_closed_door(feat))
+        if (feat_is_solid(feat) && feat != DNGN_CLOSED_DOOR)
         {
             open = false;
             for (adjacent_iterator ai(*ri); ai; ++ai)
             {
                 if (map_bounds(*ai) && (!feat_is_opaque(grd(*ai))
-                                        || feat_is_closed_door(grd(*ai))))
+                                        || grd(*ai)) == DNGN_CLOSED_DOOR)
                 {
                     open = true;
                     break;

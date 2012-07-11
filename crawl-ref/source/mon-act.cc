@@ -2769,7 +2769,6 @@ static void _mons_open_door(monster* mons, const coord_def &pos)
 {
     const char *adj = "", *noun = "door";
 
-    bool was_secret = false;
     bool was_seen   = false;
 
     std::set<coord_def> all_door = connected_doors(pos);
@@ -2779,8 +2778,6 @@ static void _mons_open_door(monster* mons, const coord_def &pos)
          i != all_door.end(); ++i)
     {
         const coord_def& dc = *i;
-        if (grd(dc) == DNGN_SECRET_DOOR && you.see_cell(dc))
-            was_secret = true;
 
         if (you.see_cell(dc))
             was_seen = true;
@@ -2792,13 +2789,6 @@ static void _mons_open_door(monster* mons, const coord_def &pos)
     if (was_seen)
     {
         viewwindow();
-
-        if (was_secret)
-        {
-            mprf("%s was actually a secret door!",
-                 feature_description_at(pos, "", DESC_THE, false).c_str());
-            learned_something_new(HINT_FOUND_SECRET_DOOR, pos);
-        }
 
         std::string open_str = "opens the ";
         open_str += adj;

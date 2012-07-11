@@ -2765,13 +2765,7 @@ static void _describe_oos_feature(const coord_def& where)
     if (!env.map_knowledge(where).seen())
         return;
 
-    std::string desc;
-
-    dungeon_feature_type feat = env.map_knowledge(where).feat();
-    if (feat == DNGN_SECRET_DOOR)
-        desc = feature_description(grid_secret_door_appearance(where));
-    else
-        desc = feature_description_at(where);
+    std::string desc = feature_description_at(where);
 
     if (!desc.empty())
         mprf(MSGCH_EXAMINE_FILTER, "[%s]", desc.c_str());
@@ -2930,7 +2924,6 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
     case DNGN_STONE_WALL:
         return "stone wall";
     case DNGN_ROCK_WALL:
-    case DNGN_SECRET_DOOR:
         if (player_in_branch(BRANCH_PANDEMONIUM))
             return "wall of the weird stuff which makes up Pandemonium";
         else
@@ -3225,10 +3218,7 @@ std::string feature_description_at(const coord_def& where, bool covering,
 
     dungeon_feature_type grid = grd(where);
 
-    if (grid == DNGN_SECRET_DOOR)
-        grid = grid_secret_door_appearance(where);
-
-    if (grid == DNGN_OPEN_DOOR || feat_is_closed_door(grid))
+    if (grid == DNGN_OPEN_DOOR || grid == DNGN_CLOSED_DOOR)
     {
         const std::string door_desc_prefix =
             env.markers.property_at(where, MAT_ANY,
@@ -3259,9 +3249,7 @@ std::string feature_description_at(const coord_def& where, bool covering,
 
         if (door_desc_veto.empty() || door_desc_veto != "veto")
         {
-            if (grid == DNGN_DETECTED_SECRET_DOOR)
-                desc += "detected secret ";
-            else if (grid == DNGN_OPEN_DOOR)
+            if (grid == DNGN_OPEN_DOOR)
                 desc += "open ";
             else
                 desc += "closed ";
