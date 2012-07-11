@@ -2871,6 +2871,8 @@ void unmarshallMapCell(reader &th, map_cell& cell)
 #if TAG_MAJOR_VERSION == 33
     if (feature == DNGN_OLD_WAX_WALL)
         feature = DNGN_ROCK_WALL;
+    if (feature == DNGN_SECRET_DOOR || feature == DNGN_DETECTED_SECRET_DOOR)
+        feature = DNGN_CLOSED_DOOR;
 #endif
 
     if (flags & MAP_SERIALIZE_FEATURE_COLOUR)
@@ -3246,6 +3248,8 @@ static void tag_read_level(reader &th)
 #if TAG_MAJOR_VERSION == 33
             if (feat == DNGN_OLD_WAX_WALL)
                 grd[i][j] = DNGN_ROCK_WALL;
+            else if (feat == DNGN_SECRET_DOOR || feat == DNGN_DETECTED_SECRET_DOOR)
+                grd[i][j] = DNGN_CLOSED_DOOR;
             if (you.where_are_you == root_branch && you.depth == 1
                 && (feat == DNGN_ESCAPE_HATCH_UP
                     || feat == DNGN_STONE_STAIRS_UP_I
