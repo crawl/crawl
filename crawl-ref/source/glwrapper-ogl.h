@@ -24,7 +24,8 @@ public:
     virtual void generate_textures(size_t count, unsigned int *textures);
     virtual void bind_texture(unsigned int texture);
     virtual void load_texture(unsigned char *pixels, unsigned int width,
-                              unsigned int height, MipMapOptions mip_opt);
+                              unsigned int height, MipMapOptions mip_opt,
+                              int xoffset=-1, int yoffset=-1);
 protected:
     GLState m_current_state;
 };
