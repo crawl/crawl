@@ -1749,7 +1749,7 @@ KMONS:   8 = ghoul
 KMONS:   9 = vampire mage / vampire knight
 KMONS:   0 = soul eater
 KMONS:   Z = large skeleton / large zombie / small skeleton / small zombie
-KFEAT:   A = secret_door
+KFEAT:   A = closed_door
 MARKER:  A = lua:restrict_door()
 SUBST:   ? = ?..., ? = 2., 0 = 002
 SHUFFLE: 3569

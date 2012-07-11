@@ -4496,7 +4496,7 @@ static dungeon_feature_type _glyph_to_feat(int glyph,
             (glyph == 'o') ? DNGN_CLEAR_PERMAROCK_WALL :
             (glyph == 't') ? DNGN_TREE :
             (glyph == '+') ? DNGN_CLOSED_DOOR :
-            (glyph == '=') ? DNGN_SECRET_DOOR :
+            (glyph == '=') ? DNGN_CLOSED_DOOR :
             (glyph == 'w') ? DNGN_DEEP_WATER :
             (glyph == 'W') ? DNGN_SHALLOW_WATER :
             (glyph == 'l') ? DNGN_LAVA :

@@ -2945,8 +2945,6 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
         return "the endless lava";
     case DNGN_CLOSED_DOOR:
         return "closed door";
-    case DNGN_DETECTED_SECRET_DOOR:
-        return "detected secret door";
     case DNGN_METAL_WALL:
         return "metal wall";
     case DNGN_GREEN_CRYSTAL_WALL:

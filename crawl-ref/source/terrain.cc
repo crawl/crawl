@@ -1637,8 +1637,9 @@ std::string stair_climb_verb(dungeon_feature_type feat)
 
 static const char *dngn_feature_names[] =
 {
-"unseen", "closed_door", "detected_secret_door", "secret_door",
+"unseen", "closed_door",
 #if TAG_MAJOR_VERSION == 33
+"detected_non-secret_door", "non-secret_door",
 "waxed_wall", "metal_wall", "green_crystal_wall", "rock_wall",
 "slimy_wall", "stone_wall", "permarock_wall",
 "clear_rock_wall", "clear_stone_wall", "clear_permarock_wall", "iron_grate",
@@ -1649,7 +1650,8 @@ static const char *dngn_feature_names[] =
 "slimy_wall", "stone_wall", "permarock_wall", "mangrove",
 "clear_rock_wall", "clear_stone_wall", "clear_permarock_wall", "iron_grate",
 "tree", "open_sea", "endless_lava", "orcish_idol",
-"granite_statue", "malign_gateway", "", "", "", "", "", "", "", "", "",
+"granite_statue", "malign_gateway",
+"", "", "", "", "", "", "", "", "", "", "",
 #endif
 
 // DNGN_MINMOVE
