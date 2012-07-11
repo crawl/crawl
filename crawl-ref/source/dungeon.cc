@@ -985,10 +985,10 @@ void dgn_register_place(const vault_placement &place, bool register_vault)
         if (place.map.orient == MAP_ENCOMPASS)
         {
             for (rectangle_iterator ri(0); ri; ++ri)
-                env.level_map_mask(*ri) |= MMT_VAULT | MMT_NO_DOOR;
+                env.level_map_mask(*ri) |= MMT_VAULT;
         }
         else
-            _mask_vault(place, MMT_VAULT | MMT_NO_DOOR);
+            _mask_vault(place, MMT_VAULT);
 
         if (!transparent)
             _mask_vault(place, MMT_OPAQUE);

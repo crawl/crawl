@@ -408,7 +408,7 @@ ENDMAP
 NAME:   metal_show
 ORIENT: float
 DEPTH:  Vaults:3-7
-TAGS:   no_secret_doors no_monster_gen no_item_gen no_wall_fixup
+TAGS:   no_monster_gen no_item_gen no_wall_fixup
 COLOUR: M = magenta
 COLOUR: K = magenta
 FTILE:  M = floor_rough_red, K = floor_rough_red, # = floor_rough_red
@@ -490,7 +490,7 @@ lua_marker('m', portal_desc { teleport_spot=2})
 }}
 ORIENT:     float
 DEPTH:      Vaults:3-7
-TAGS:       no_secret_doors no_monster_gen no_item_gen uniq_the_teleporter \
+TAGS:       no_monster_gen no_item_gen uniq_the_teleporter \
             patrolling
 KFEAT:      ME = teleporter
 MONS:       iron golem / crystal golem / stone golem

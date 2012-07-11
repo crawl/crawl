@@ -1664,7 +1664,6 @@ DEPTH:   D:23-27, Vaults
 MONS:    generate_awake angel / generate_awake daeva / w:1 angel / w:1 daeva
 COLOUR:  - : yellow
 SUBST:   - : +
-KMASK:   + = no_secret_doors
 MARKER:  ! = lua:message_at_spot ( "You almost think you hear a voice: \
                                    \"Seek not undue power, mortal.\"", \
                                    "warning" )
@@ -1717,7 +1716,6 @@ SUBST:   _ : .
 SUBST:   T = T F:1
 COLOUR:  - : yellow
 SUBST:   - : +
-KMASK:   + = no_secret_doors
 MARKER:  ! = lua:message_at_spot ( "You almost think you hear a voice: \
                                    \"Seek not undue power, mortal.\"", \
                                    "warning" )
@@ -1768,7 +1766,6 @@ SUBST:   _ : .
 SUBST:   T = T F:1
 COLOUR:  - : yellow
 SUBST:   - : +
-KMASK:   + = no_secret_doors
 MARKER:  ! = lua:message_at_spot ( "You almost think you hear a voice: \
                                    \"Seek not undue power, mortal.\"", \
                                    "warning" )

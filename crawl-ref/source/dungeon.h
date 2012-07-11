@@ -57,7 +57,6 @@ enum map_mask_type
     MMT_NO_ITEM    = 0x02,    // Random items should not be placed here.
     MMT_NO_MONS    = 0x04,    // Random monsters should not be placed here.
     MMT_NO_POOL    = 0x08,    // Pool fixup should not be applied here.
-    MMT_NO_DOOR    = 0x10,    // No secret-doorisation.
     MMT_NO_WALL    = 0x20,    // Wall fixup should not be applied here.
     MMT_OPAQUE     = 0x40,    // Vault may impede connectivity.
     MMT_NO_TRAP    = 0x80,    // No trap generation
