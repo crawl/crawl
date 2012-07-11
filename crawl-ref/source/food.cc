@@ -56,6 +56,7 @@
 
 static corpse_effect_type _determine_chunk_effect(corpse_effect_type chunktype,
                                                   bool rotten_chunk);
+static int _contamination_ratio(corpse_effect_type chunk_effect);
 static void _eat_chunk(item_def& food);
 static void _eating(item_def &food);
 static void _describe_food_change(int hunger_increment);
@@ -309,6 +310,36 @@ static void _terminate_butchery(bool wpn_switch, bool removed_gloves,
         start_delay(DELAY_ARMOUR_ON, 1, old_gloves, 1);
 }
 
+static int _corpse_badness(corpse_effect_type ce, const item_def &item,
+                           bool wants_any)
+{
+    // Not counting poisonous chunks as useless here, caller must do that
+    // themself.
+
+    int contam = _contamination_ratio(ce);
+    if (you.mutation[MUT_SAPROVOROUS] == 3)
+        contam = -contam;
+
+    // Arbitrarily lower the value of poisonous chunks: swapping resistances
+    // is tedious.
+    if (ce == CE_POISONOUS)
+        contam = contam * 3 / 2;
+
+    // Have uses that care about age but not quality?
+    if (wants_any)
+        contam /= 2;
+
+    dprf("%s: to rot %d, contam %d -> badness %d",
+         item.name(DESC_PLAIN).c_str(),
+         item.special - ROTTING_CORPSE, contam,
+         contam - 3 * item.special);
+
+    // Being almost rotten has 480 badness, contamination usually 333.
+    contam -= 3 * item.special;
+
+    return contam;
+}
+
 int count_corpses_in_pack(bool blood_only)
 {
     int num = 0;
@@ -419,9 +450,13 @@ bool butchery(int which_corpse, bool bottle_blood)
         return false;
     }
 
+    bool wants_any = you.has_spell(SPELL_SIMULACRUM)
+                  || you.has_spell(SPELL_SUBLIMATION_OF_BLOOD);
+
     // First determine how many things there are to butcher.
     int num_corpses = 0;
     int corpse_id   = -1;
+    int best_badness = INT_MAX;
     bool prechosen  = (which_corpse != -1);
     for (stack_iterator si(you.pos(), true); si; ++si)
     {
@@ -433,12 +468,23 @@ bool butchery(int which_corpse, bool bottle_blood)
                 continue;
             }
 
-            corpse_id = si->index();
-            num_corpses++;
-
             // Return pre-chosen corpse if it exists.
-            if (prechosen && corpse_id == which_corpse)
+            if (prechosen && si->index() == which_corpse)
+            {
+                corpse_id = si->index();
                 break;
+            }
+
+            corpse_effect_type ce = _determine_chunk_effect(mons_corpse_effect(
+                                                            si->mon_type),
+                                                            food_is_rotten(*si));
+            int badness = _corpse_badness(ce, *si, wants_any);
+            if (ce == CE_POISONOUS)
+                badness += 500;
+
+            if (badness < best_badness)
+                corpse_id = si->index(), best_badness = badness;
+            num_corpses++;
         }
     }
 
@@ -482,7 +528,8 @@ bool butchery(int which_corpse, bool bottle_blood)
     // Butcher pre-chosen corpse, if found, or if there is only one corpse.
     bool success = false;
     if (prechosen && corpse_id == which_corpse
-        || num_corpses == 1 && Options.confirm_butcher != CONFIRM_ALWAYS)
+        || num_corpses == 1 && Options.confirm_butcher != CONFIRM_ALWAYS
+        || Options.confirm_butcher == CONFIRM_NEVER)
     {
         if (Options.confirm_butcher == CONFIRM_NEVER
             && !_should_butcher(corpse_id, bottle_blood))
@@ -527,18 +574,6 @@ bool butchery(int which_corpse, bool bottle_blood)
         else
         {
             corpse_id = -1;
-
-            if (Options.confirm_butcher == CONFIRM_NEVER)
-            {
-                if (!_should_butcher(si->index(), bottle_blood))
-                    continue;
-                if (!_prepare_butchery(can_butcher, removed_gloves, wpn_switch))
-                    return false;
-
-                corpse_id = si->index();
-                _corpse_butchery(corpse_id, butcher_tool, true, bottle_blood);
-                break;
-            }
 
             std::string corpse_name = si->name(DESC_A);
 
@@ -2813,29 +2848,10 @@ maybe_bool drop_spoiled_chunks(int weight_needed, bool whole_slot)
             continue; // no nutrition from those
         // We assume that carrying poisonous chunks means you can swap rPois in.
 
-        int contam = _contamination_ratio(ce);
-        if (you.mutation[MUT_SAPROVOROUS] == 3)
-            contam = -contam;
-
-        // Arbitrarily lower the value of poisonous chunks: swapping resistances
-        // is tedious.
-        if (ce == CE_POISONOUS)
-            contam = contam * 3 / 2;
-
-        // Have uses that care about age but not quality?
-        if (wants_any)
-            contam /= 2;
-
-        dprf("%s: to rot %d, contam %d -> badness %d",
-             item.name(DESC_PLAIN).c_str(),
-             item.special - ROTTING_CORPSE, contam,
-             contam - 3 * item.special);
-
-        // Being almost rotten has 480 badness, contamination usually 333.
-        contam -= 3 * item.special;
+        int badness = _corpse_badness(ce, item, wants_any);
 
         nchunks += item.quantity;
-        chunk_slots.push_back(std::pair<int,int>(slot, contam));
+        chunk_slots.push_back(std::pair<int,int>(slot, badness));
     }
 
     // No rotten ones to drop, and we're not allowed to drop others.
