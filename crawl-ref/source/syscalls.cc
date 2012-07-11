@@ -21,6 +21,7 @@
 #include <sys/stat.h>
 #endif
 
+#include "random.h"
 #include "syscalls.h"
 #include "unicode.h"
 
@@ -147,6 +148,29 @@ int fdatasync(int fd)
     }
 
     return 0;
+}
+
+int mkstemp(char *dummy)
+{
+    HANDLE fh;
+
+    for (int tries = 0; tries < 100; tries++)
+    {
+        wchar_t filename[MAX_PATH];
+        int len = GetTempPathW(MAX_PATH - 8, filename);
+        ASSERT(len);
+        for (int i = 0; i < 6; i++)
+            filename[len + i] = 'a' + random2(26);
+        filename[len + 6] = 0;
+        fh = CreateFileW(filename, GENERIC_READ | GENERIC_WRITE, 0, NULL,
+                         CREATE_NEW,
+                         FILE_FLAG_DELETE_ON_CLOSE | FILE_ATTRIBUTE_TEMPORARY,
+                         NULL);
+        if (fh != INVALID_HANDLE_VALUE)
+            return _open_osfhandle((intptr_t)fh, 0);
+    }
+
+    die("can't create temporary file in %%TMPDIR%%");
 }
 # endif
 #endif
