@@ -778,6 +778,7 @@ void chunk_writer::finish_block(len_t next)
 
 void chunk_writer::write(const void *data, len_t len)
 {
+    ASSERT(data);
     ASSERT(!pkg->aborted);
 
 #ifdef USE_ZLIB
@@ -898,6 +899,7 @@ len_t chunk_reader::raw_read(void *data, len_t len)
 
 len_t chunk_reader::read(void *data, len_t len)
 {
+    ASSERT(data);
     if (pkg->aborted)
         return 0;
 
