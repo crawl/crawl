@@ -4583,8 +4583,12 @@ static dungeon_feature_type _glyph_to_feat(int glyph,
                                            vault_placement *place = NULL)
 {
     // Please purge this some day.
-    if (glyph == 'a')
-        die("map %s tried to place a wax wall", place ? place->map.name.c_str() : "[NULL]");
+    if (glyph == '=')
+    {
+        die("map %s tried to place a secret door",
+            place ? place->map.name.c_str() : "[NULL]");
+    }
+
     return ((glyph == 'x') ? DNGN_ROCK_WALL :
             (glyph == 'X') ? DNGN_PERMAROCK_WALL :
             (glyph == 'c') ? DNGN_STONE_WALL :
