@@ -112,7 +112,14 @@ void reader::close()
 
 void reader::advance(size_t offset)
 {
-    read(NULL, offset);
+    char junk[128];
+
+    while (offset)
+    {
+        const size_t junklen = std::min(sizeof(junk), offset);
+        offset -= junklen;
+        read(junk, junklen);
+    }
 }
 
 bool reader::valid() const
@@ -857,7 +864,7 @@ static int unmarshallCString(reader &th, char *data, int maxSize)
     th.read(data, copylen);
     data[copylen] = 0;
 
-    th.read(NULL, len - copylen);
+    th.advance(len - copylen);
     return copylen;
 }
 
