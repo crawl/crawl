@@ -38,12 +38,12 @@ MAP
  xx....xxx.....xxx....xx
 xx.....xxx.I.I.xxx..I..x
 xx......x.......x......xx
-x..x.x..x..x=x..x..x+x..x
-x.xx.xx.x.xx=xx.x.xx~xx.x
+x..x.x..x..x+x..x..x+x..x
+x.xx.xx.x.xx.xx.x.xx~xx.x
 x.x%1.x.x.x2e2x.x.x3d3x.x
 x.x.%1x.x.x2e2x.x.xd3dx.x
-x.xx.xx.x.xx=xx.x.xx~xx.x
-x..x.x..x..x=x..x..x+x..x
+x.xx.xx.x.xx.xx.x.xx~xx.x
+x..x.x..x..x+x..x..x+x..x
 x.......+.......+.......x
 xx.....xxx.I.I.xxx..I..xx
  xx...xx xx...xx xx...xx
@@ -233,13 +233,13 @@ MAP
 .............................
 .Iwwwwwwwwwwwwwwwwwwwwwwwwww.
 .wIwwwwwwwwwwwwwwwwwwwwwwwww.
-.ww2=cccccccccccccccccccccww.
+.ww2+cccccccccccccccccccccww.
 .ww.c.......3.3.3......w2cww.
 .wwxx........3.3.......cccww.
 .122........3.I.3.....G4Ocww.
 .wwxx........3.3.......cccww.
 .ww.c.......3.3.3......w2cww.
-.ww2=cccccccccccccccccccccww.
+.ww2+cccccccccccccccccccccww.
 .wIwwwwwwwwwwwwwwwwwwwwwwwww.
 .Iwwwwwwwwwwwwwwwwwwwwwwwwww.
 .............................
@@ -339,7 +339,7 @@ xx??.........??xx
    xx??111??xx
     xx??1??xx
      xxI2Ixx
-      xv=vx
+      xv+vx
       x!!!x
       x!O!x
       x!!!x
@@ -368,11 +368,11 @@ xx?xxxxxxx?xx
 x111xxxxx111x
 ?1I1aaaaa1I1?
 x111xxxxx111x
-xxbx=xxx=xcxx
+xxbx+xxx+xcxx
 xxbxx!!!xxcxx
 xxbxx!O!xxcxx
 xxbxx!!!xxcxx
-xxbx=xxx=xcxx
+xxbx+xxx+xcxx
 x111xxxxx111x
 ?1I1ddddd1I1x
 x111xxxxx111?
@@ -609,12 +609,12 @@ MAP
 ENDMAP
 
 ###################################
-# hidden treasure chamber
+# treasure chamber
 #
 NAME: mines2_lemuel
 SUBST: ? = x@
 MAP
-  ?x=x?
+  ?x+x?
  ?xx.xx?
 ?xx$$$xx?
 ?xx$$$xx?

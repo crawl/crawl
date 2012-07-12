@@ -625,7 +625,7 @@ ORIENT:  float
 SHUFFLE: {[(
 MAP
 xx.(.@x..xx@
-xx...xx...=.
+xx...xx...+.
 .....xxx..xx
 ....xxx...x.
 x...xx....x.
@@ -1217,7 +1217,7 @@ MONS:    plant
 SHUFFLE: {[
 MAP
           ......
-        ..xx==xx..
+        ..xx++xx..
       ...xx1~~1xx...
      ..xxxxt11txxxx..
     ..xxccccccccccxx..
@@ -1243,7 +1243,7 @@ WEIGHT:  3
 SHUFFLE: {[
 MAP
          ........
-        ..xx==xx..
+        ..xx++xx..
       ...xxW~~Wxx...
      ..xxxxWWWWxxxx..
     ..xxccccccccccxx..
@@ -1271,7 +1271,7 @@ WEIGHT:  1
 SHUFFLE: {[
 MAP
          ........
-        ..xx==xx..
+        ..xx++xx..
       ...xxl~~lxx...
      ..xxxxllllxxxx..
     ..xxccccccccccxx..
@@ -1311,7 +1311,7 @@ NAME:   ncdulo_wetmaze
 TAGS:   entry no_monster_gen no_trap_gen
 ORIENT: float
 MAP
-xxxx=xxxx
+xxxx+xxxx
 x[wwwww(x
 xWxW{Wxwx
 xWxxxWxWx
@@ -1344,12 +1344,12 @@ ORIENT: float
 MAP
 xxxxxxxxx
 x[.....(x
-x.xx=xx.x
+x.xx+xx.x
 x.x...x.x
 x.x.{.x.x
 x.xx+xx.x
-x.....=.+
-xxxxxxx=x
+x.....+.+
+xxxxxxx+x
 ENDMAP
 
 NAME:   ncdulo_halloftheorcs
@@ -1566,13 +1566,12 @@ NAME:   saegor_entry_simple_C
 TAGS:   entry no_monster_gen
 ORIENT: float
 SHUFFLE: {([
-NSUBST: Z = 1:= / *:+
 MAP
 xxxxxxx
 x[.{.(x
 xx...xx
 x.vvv.x
-xGZ=ZGx
+xG+++Gx
 xxv@vxx
 ENDMAP
 
@@ -1603,7 +1602,7 @@ xx....xx.x
 xxx.{.xx.x
 x(+...xx.x
 x[xx.xx.xx
-xxxxx=+xxx
+xxxxx++xxx
 ENDMAP
 
 NAME:   saegor_entry_simple_F

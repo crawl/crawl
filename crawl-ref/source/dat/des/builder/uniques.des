@@ -397,11 +397,11 @@ TAGS:    place_unique no_monster_gen no_item_gen
 MONS:    Crazy Yiuf
 MONS:    fungus / bush w:1
 ITEM:    hammer
-# Randomisation 1: Some chance for a gate. Very rarely secret doors.
+# Randomisation 1: Some chance for a gate.
 SHUFFLE: Bb/Aa
 SUBST:   B=;, b=;
 : if crawl.one_chance_in(3) then
-SUBST:   A:AAAa, a:+++=, A=x
+SUBST:   A:AAA+, A=x
 : else
 SUBST:   A:;;;x, a=;
 : end

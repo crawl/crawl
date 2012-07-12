@@ -716,23 +716,23 @@ xxxx..............................x
 xxxx..............................x
 xxxx.x.x.x.x.x.x.x..x.x.x.x.x.x.x.x
 xxxx..............................x
-xxxx.x.xxxx=xxxxxxxxxxxx=xxxxxx.x.x
+xxxx.x.xxxx+xxxxxxxxxxxx+xxxxxx.x.x
 xxxx...xx....................xx...x
 xxxx.x.x..ccccc..4..4..ccccc..x.x.x
 xxxx...x.cc.3............3.cc.x...x
 xxxx.x.x.c..ccccc.cc.ccccc..c.x.x.x
 xxxx...x.c.cc.....cc.....cc.c.x...x
 xxxx.x.x.c.c.2...cccc...2.c.c.x.x.x
-xxxx...x...c...ccc..ccc...c...=...x
+xxxx...x...c...ccc..ccc...c...+...x
 xxxx.x.x.3.....2..1O..2.....3.x.x.x
-xxxx...=...c...ccc..ccc...c...x...x
+xxxx...+...c...ccc..ccc...c...x...x
 xxxx.x.x.c.c.2...cccc...2.c.c.x.x.x
 xxxx...x.c.cc.....cc.....cc.c.x...x
 xxxx.x.x.c..ccccc.cc.ccccc..c.x.x.x
 xxxx...x.cc.3............3.cc.x...x
-xxxx.x.x..ccccc..4..4..ccccc..=.x.x
+xxxx.x.x..ccccc..4..4..ccccc..+.x.x
 xxxx...xx....................xx...x
-xxxx.x.xxxx=xxxx=xxxxxxxx=xxxxx.x.x
+xxxx.x.xxxx+xxxx+xxxxxxxx+xxxxx.x.x
 xxxx..............................x
 xxxx.x.x.x.x.x.x.x..x.x.x.x.x.x.x.x
 xxxx..............................x
@@ -779,7 +779,7 @@ xxx.x.xccx.x.x.x.x...x.x.x.x.xccx.x.xxx
 xxxx....ccc2x.x.x.....x.x.x2ccc....xxxx
 xxxxx.....cccc.x.x...x.x.cccc.....xxxxx
 xxxxxxx......ccccx...xcccc......xxxxxxx
-xxxxxxxxx.......cc===cc.......xxxxxxxxx
+xxxxxxxxx.......cc+++cc.......xxxxxxxxx
 xxxxxxxxxxxx.......2.......xxxxxxxxxxxx
 xxxxxxxxxxxxxxx.........xxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -794,9 +794,10 @@ SUBST:      V : x.
 : if crawl.coinflip() then
 SUBST:      C : c, d : c
 : else
-SUBST:      C : ., d : =
+SUBST:      C : ., d : +
 : end
-MARKER:     + = lua:restrict_door()
+MARKER:     = = lua:restrict_door()
+SUBST:      = = +
 TILE:       c = dngn_stone_wall_darkgray
 MONS:       patrolling Gloorx Vloq
 MONS:       executioner, shadow demon, shadow wraith, demonic crawler
@@ -818,11 +819,11 @@ x..x...cxxxxxxxxxxxxx..X.c...V.xx
 x.V....cxxxxxxxxxxx......c..x..xx
 x..x...cxxxxxxxx.....X.X.c...x.xx
 x.x..cccxxxx.............c..V..xx
-x...3c5+.2.........X.X.X.cc..x.xx
-....cc5c.................=3.x..xx
+x...3c5=.2.........X.X.X.cc..x.xx
+....cc5c.................+3.x..xx
 @...cO5c1....2...X.X.X.X.dC..V.xx
-....cc5c.................=3.x..xx
-x...3c5+.2.........X.X.X.cc..x.xx
+....cc5c.................+3.x..xx
+x...3c5=.2.........X.X.X.cc..x.xx
 x.x..cccxxxx.............c..V..xx
 x..x...cxxxxxxxx.....X.X.c...x.xx
 x.V....cxxxxxxxxxxx......c..x..xx

@@ -52,7 +52,7 @@ xw.x...xxx
 xw.xx...xx
 xww.x...xx
 xwwWxx...x
-xwwwW+...=
+xwwwW+...+
 xwwWxx...x
 xww.x...xx
 xw.xx...xx
@@ -150,7 +150,6 @@ SUBST:   . = ' .:120
 SUBST:   ` = ''., V = Xx, U = Xxxx, x = X x:60
 KPROP:   X' = bloody
 SUBST:   X = x, ' = .
-SUBST:   = : xx=, = = +==
 SUBST:   . = .:320 d:5 e:20 f:5
 SUBST:   y : x
 MAP
@@ -376,8 +375,8 @@ ENDMAP
 NAME:    minmay_entry_stone_box
 TAGS:    entry
 ORIENT:  float
-NSUBST:  A = 1:= / 1=c= / *:c
-NSUBST:  B = 1:= / *:c
+NSUBST:  A = 1:+ / 1=c+ / *:c
+NSUBST:  B = 1:+ / *:c
 SHUFFLE: {[(<
 SHUFFLE: ^B~>TVGl
 KFEAT:   ^ = teleport trap
@@ -406,10 +405,10 @@ ORIENT: float
 MONS:   kobold; dart ego:dispersal q:3
 MAP
 .............
-.x=xxxxxxx=x.
+.x+xxxxxxx+x.
 .x.llllll{.l@
 .x.llllll>.l.
-.x.xxxxxxx=x.
+.x.xxxxxxx+x.
 .x1x.........
 .xxx.........
 .............
@@ -741,7 +740,7 @@ TAGS:    entry
 ORIENT:  float
 SHUFFLE: {[(, XY/AB
 KFEAT:   X = teleport trap
-SUBST:   Y=x, A=., B==, (=(., [=[.
+SUBST:   Y=x, A=., B=+, (=(., [=[.
 MAP
    xxxx@xxxxxxx.@.x
    xxxx.xxxxxx...xx
@@ -1084,7 +1083,7 @@ NAME:    lemuel_entry_rhombus
 TAGS:    entry no_monster_gen
 ORIENT:  float
 SHUFFLE: {[, abc
-SUBST:   a:+=, b=x, c=x
+SUBST:   a:+, b=x, c=x
 MAP
       x@x
     xax.xcx
@@ -1138,7 +1137,7 @@ NAME:    shiori_shiawase
 TAGS:    entry no_monster_gen no_rotate no_vmirror
 ORIENT:  float
 SHUFFLE: +=
-SUBST:   =:==x , x:xvcb
+SUBST:   =:x , x:xvcb
 MAP
       x+x
       x.x
@@ -1267,6 +1266,7 @@ ORIENT:  float
 ITEM:    nothing, nothing
 SHUFFLE: =+, TVG, {[
 SUBST:   c:cxx
+SUBST:   = = x
 KMASK:   T = no_monster_gen
 MAP
 xx@...@xxxxxxxx
@@ -1289,6 +1289,7 @@ TAGS:    entry
 ORIENT:  float
 ITEM:    nothing, nothing
 SHUFFLE: =+, cx, de/{(, {[(
+SUBST:   = = x
 MAP
 @.........@
 ...xx+xx...
@@ -1356,7 +1357,7 @@ TAGS:    entry
 MONS:    rat, goblin, bat
 ORIENT:  float
 SHUFFLE: [{(
-SUBST:   X = x=
+SUBST:   X = x+
 MAP
 xxxxxxxxxxxx..@
 xx.1.%1xxxxx...
@@ -1852,7 +1853,7 @@ ENDMAP
 NAME:   dpeg_entry_erosion
 TAGS:   entry
 ORIENT: float
-SUBST:  '=cx., "=+.=, c:xxc
+SUBST:  '=cx., "=+.x, c:xxc
 MAP
 xxxxxxxxxxxxxxxxxxxx
 xccccccx.......x..c.
@@ -1915,7 +1916,7 @@ SHUFFLE: {[(
 :   subst("b = x")
 : else
 :   subst("B = '")
-:   subst("b = =")
+:   subst("b = x")
 : end
 SUBST:   ' = x. , v : cvxxxx
 MAP
