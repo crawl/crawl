@@ -358,6 +358,13 @@ function wizlab_wucad_summon_monks(data, triggerable, triggerer, marker, ev)
     return
   end
 
+  -- For now, no spawning during Step From Time; perhaps monks should
+  -- continue to appear, just more slowly. If so, the circle_iterator below
+  -- needs a different centre from (0,0).
+  if you.pos() == 0 then
+    return
+  end
+
   local msp = "human name:monk n_suf col:white hd:10 dur:2 sum:shadow_creatures" ..
             " nas:old_memories tile:mons_human_monk seen / rock troll name:monk n_suf"..
             " dur:2 seen sum:shadow_creatures nas:old_memories tile:mons_rock_troll_monk" ..
