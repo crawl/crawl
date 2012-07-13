@@ -170,7 +170,7 @@ static void _update_agrid()
 
     }
 
-    if (you.char_direction == GDT_ASCENDING)
+    if (you.char_direction == GDT_ASCENDING && !you.duration[DUR_TIME_STEP])
     {
         ASSERT(!env.orb_pos.origin());
 
