@@ -2227,15 +2227,15 @@ ENDMAP
 NAME:   minmay_lair_end_frog_pond
 PLACE:  Lair:$
 ORIENT: float
-MONS:   giant frog / spiny frog
+MONS:   giant frog / spiny frog w:7
 MONS:   blink frog
 MONS:   vampire mosquito
 MONS:   plant
 SUBST:  p = 44W2
-SUBST:  w = W:40 w:10 1:2 3:1 4:5
-SUBST:  . = .:40 W:10 1:2 3:1 4:5
+SUBST:  w = W:80 w:20 1:4 3:1 4:10
+SUBST:  . = .:80 W:20 1:4 3:1 4:10
 KFEAT:  W = W
-KMONS:  W = giant leech / nothing w:1000
+KMONS:  W = giant leech / nothing w:1200
 SUBST:  % = %%*|
 : lair_small_ending(_G)
 MAP
