@@ -213,7 +213,8 @@ static bool make_item_for_monster(
     int subtype,
     int level,
     item_make_species_type race,
-    int allow_uniques);
+    int allow_uniques,
+    iflags_t flags);
 
 static item_make_species_type _give_weapon(monster* mon, int level,
                                            bool melee_only = false,
@@ -1118,7 +1119,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
             set_equip_race(item, ISFLAG_ELVEN);
             // this might not be the best place for this logic, but:
             make_item_for_monster(mon, OBJ_JEWELLERY, RING_ICE,
-                                  0, MAKE_ITEM_NO_RACE, 1);
+                                  0, MAKE_ITEM_NO_RACE, 1, ISFLAG_KNOW_TYPE);
         }
         item.flags |= ISFLAG_KNOW_TYPE;
         break;
@@ -1581,7 +1582,8 @@ static bool make_item_for_monster(
     int subtype,
     int level,
     item_make_species_type race = MAKE_ITEM_NO_RACE,
-    int allow_uniques = 0)
+    int allow_uniques = 0,
+    iflags_t flags = 0)
 {
     const int bp = get_mitm_slot();
     if (bp == NON_ITEM)
@@ -1592,6 +1594,8 @@ static bool make_item_for_monster(
 
     if (thing_created == NON_ITEM)
         return false;
+
+    mitm[thing_created].flags |= flags;
 
     _give_monster_item(mons, thing_created);
     return true;
