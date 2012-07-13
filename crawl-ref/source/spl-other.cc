@@ -504,9 +504,17 @@ spret_type cast_fulsome_distillation(int pow, bool check_range, bool fail)
     mprf("You extract %s from the corpse.",
          corpse->name(DESC_A).c_str());
 
-    // Try to move the potion to the player (for convenience).
+    // Try to move the potion to the player (for convenience);
+    // they probably won't autopickup bad potions.
+    // Treats potion as though it was being picked up manually (0005916).
+    std::map<int,int> tmp_l_p = you.last_pickup;
+    you.last_pickup.clear();
+
     if (move_item_to_player(corpse->index(), 1) != 1)
         mpr("Unfortunately, you can't carry it right now!");
+
+    if (you.last_pickup.empty())
+        you.last_pickup = tmp_l_p;
 
     if (was_orc)
         did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
