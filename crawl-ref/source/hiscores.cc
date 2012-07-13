@@ -2185,7 +2185,7 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
 
     case KILLED_BY_SOMETHING:
         if (!auxkilldata.empty())
-            desc += auxkilldata;
+            desc += (terse ? "" : "Killed by ") + auxkilldata;
         else
             desc += terse? "died" : "Died";
         needs_damage = true;
