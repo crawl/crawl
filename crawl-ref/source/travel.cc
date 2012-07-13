@@ -430,8 +430,11 @@ static bool _is_travelsafe_square(const coord_def& c, bool ignore_hostile,
     if (!ignore_danger && is_excluded(c) && !is_stair_exclusion(c))
         return false;
 
-    if (g_Slime_Wall_Check && slime_wall_neighbour(c))
+    if (g_Slime_Wall_Check && slime_wall_neighbour(c)
+        && !actor_slime_wall_immune(&you))
+    {
         return false;
+    }
 
     if (!_is_safe_cloud(c))
         return false;
