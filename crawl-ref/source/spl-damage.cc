@@ -2055,7 +2055,9 @@ spret_type cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
     beam.glyph             = dchar_glyph(DCHAR_FIRED_BURST);
     beam.colour            = LIGHTCYAN;
     beam.range             = 1;
-    beam.hit               = 7 + pow / 25;
+    // Dodging a horizontal arc is nearly impossible: you'd have to fall prone
+    // or jump high.
+    beam.hit               = prev.origin() ? 10 + pow / 20 : 1000;
     beam.ac_rule           = AC_PROPORTIONAL;
     beam.set_agent(caster);
 #ifdef USE_TILE
@@ -2093,7 +2095,7 @@ spret_type cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
         beam.source = beam.target = p->first;
         beam.source.x -= sgn(beam.source.x - hitfunc.origin.x);
         beam.source.y -= sgn(beam.source.y - hitfunc.origin.y);
-        beam.damage = dice_def(juice, div_rand_round(25 + pow / 7, arc + 2));
+        beam.damage = dice_def(juice, div_rand_round(30 + pow / 6, arc + 2));
         beam.fire();
     }
 
