@@ -2284,6 +2284,7 @@ static void _imb_explosion(bolt *parent, coord_def center)
     beam.obvious_effect = true;
     beam.is_beam        = false;
     beam.is_explosion   = false;
+    beam.passed_target  = true; // The centre was the target.
     beam.is_tracer      = parent->is_tracer;
     beam.aimed_at_spot  = true;
     if (you.see_cell(center))
