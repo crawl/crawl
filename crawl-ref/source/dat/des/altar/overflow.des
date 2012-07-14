@@ -1319,8 +1319,8 @@ NAME:    tso_metal_star
 TAGS:    no_monster_gen no_trap_gen no_pool_fixup no_item_gen no_secret_doors
 TAGS:    temple_overflow_the_shining_one uniq_altar_the_shining_one
 KFEAT:   _ = altar_the_shining_one
-KFEAT:   m = iron_grate / w:5 clear_rock_wall
-SUBST:   ! : vmmTG..
+KFEAT:   g = iron_grate
+SUBST:   ! : vmggTG..
 MAP
           @
           .
