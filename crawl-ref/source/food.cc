@@ -250,7 +250,8 @@ static bool _should_butcher(int corpse_id, bool bottle_blood = false)
     }
     else if (!bottle_blood && you.species == SP_VAMPIRE
              && (can_bottle_blood_from_corpse(mitm[corpse_id].mon_type)
-                 || !is_bad_food(mitm[corpse_id]))
+                 || mons_has_blood(mitm[corpse_id].mon_type)
+                    && !is_bad_food(mitm[corpse_id]))
              && !you.has_spell(SPELL_SUBLIMATION_OF_BLOOD)
              && !you.has_spell(SPELL_SIMULACRUM)
              && (Options.confirm_butcher == CONFIRM_NEVER
