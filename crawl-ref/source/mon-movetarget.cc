@@ -92,8 +92,10 @@ static void _set_no_path_found(monster* mon)
         {
             // You might have used a wizard power to teleport into a wall or
             // a loot chamber.
-            mprf(MSGCH_ERROR, "Monster %s failed to pathfind!",
-                 mon->name(DESC_PLAIN).c_str());
+            mprf(MSGCH_ERROR, "Monster %s failed to pathfind to (%d,%d) (%s)",
+                mon->name(DESC_PLAIN, true).c_str(),
+                env.orb_pos.x, env.orb_pos.y,
+                orb_position().origin() ? "you" : "the Orb");
         }
         else
         {
@@ -105,7 +107,7 @@ static void _set_no_path_found(monster* mon)
             // which is why we check for BRANCH_MAIN_DUNGEON above.
             // (This kind of thing is totally normal in, say, a Bazaar.)
             die("ZotDef: monster %s failed to pathfind to (%d,%d) (%s)",
-                mon->name(DESC_PLAIN).c_str(),
+                mon->name(DESC_PLAIN, true).c_str(),
                 env.orb_pos.x, env.orb_pos.y,
                 orb_position().origin() ? "you" : "the Orb");
         }
