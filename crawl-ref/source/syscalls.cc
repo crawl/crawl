@@ -103,6 +103,7 @@ bool read_urandom(char *buf, int len)
 
 #ifdef TARGET_OS_WINDOWS
 # ifndef UNIX
+// should check the presence of alarm() instead
 static void CALLBACK _abortion(PVOID dummy, BOOLEAN timedout)
 {
     TerminateProcess(GetCurrentProcess(), 0);
@@ -113,7 +114,9 @@ void alarm(unsigned int seconds)
     HANDLE dummy;
     CreateTimerQueueTimer(&dummy, 0, _abortion, 0, seconds * 1000, 0, 0);
 }
+# endif
 
+# ifndef HAVE_FDATASYNC
 // implementation by Richard W.M. Jones
 // He claims this is the equivalent to fsync(), reading the MSDN doesn't seem
 // to show that vital metadata is indeed flushed, others report that at least
@@ -149,6 +152,7 @@ int fdatasync(int fd)
 
     return 0;
 }
+# endif
 
 int mkstemp(char *dummy)
 {
@@ -172,15 +176,15 @@ int mkstemp(char *dummy)
 
     die("can't create temporary file in %%TMPDIR%%");
 }
-# endif
-#endif
 
-#ifdef NEED_FAKE_FDATASYNC
+#else
+// non-Windows
+# ifndef HAVE_FDATASYNC
 // At least MacOS X 10.6 has it (as required by Posix) but present only
 // as a symbol in the libraries without a proper header.
 int fdatasync(int fd)
 {
-# ifdef F_FULLFSYNC
+#  ifdef F_FULLFSYNC
     // On MacOS X, fsync() doesn't even try to actually do what it was asked.
     // Sane systems might have this problem only on disks that do write caching
     // but ignore flush requests.  fsync() should never return before the disk
@@ -190,10 +194,11 @@ int fdatasync(int fd)
     // F_FULLFSYNC is said to fail (at least on some versions of OS X), while
     // fsync() actually works.  Thus, we need to try both.
     return fcntl(fd, F_FULLFSYNC, 0) && fsync(fd);
-# else
+#  else
     return fsync(fd);
-# endif
+#  endif
 }
+# endif
 #endif
 
 
