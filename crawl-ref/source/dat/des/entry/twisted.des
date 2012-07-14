@@ -320,12 +320,6 @@ ENDMAP
 NAME:    dpeg_entry_concentric_ovals
 TAGS:    entry no_monster_gen no_rotate
 ORIENT:  float
-MONS:    worm / goliath beetle, worm / goliath beetle
-ITEM:    nothing / ring of hunger / \
-         ring of protection from fire / ring of protection from cold
-ITEM:    nothing / choko / pear / apple / sausage / banana / any scroll
-SHUFFLE: dD1AB/yyyyy, eE2FG/yyyyy, AB, FG
-SUBST:   y=x, A==, B=x, D=., F==, G=x, E=.
 SUBST:   ' : Wlncxxxv, " : Wlncxxxv
 MAP
 .........................
@@ -336,12 +330,12 @@ MAP
 ..xxxx....'''''....xxxx..
 ..xxx...'''''''''...xxx..
 .xxxx..''.......''..xxxx.
-.xdx...'..""+""..'...xex.
-.xDx..''.""..."".''..xEx.
-.x1x..''.""[({"".''..x2x.
-.xDx..''.""..."".''..xEx.
-.xDx...'.."""""..'...xEx.
-.BxAx..''.......''..xFxG.
+.xxx...'..""+""..'...xxx.
+.xxx..''.""..."".''..xxx.
+.xxx..''.""[({"".''..xxx.
+.xxx..''.""..."".''..xxx.
+.xxx...'.."""""..'...xxx.
+.xxxx..''.......''..xxxx.
 ..xxx...''''.''''...xxx..
 ..xxxx....''+''....xxxx..
 ..xxxxx...........xxxxx..
