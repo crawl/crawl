@@ -588,12 +588,26 @@ A floor
 
 Dungeon floor.
 %%%%
+Some sand
+
+Beach sand, with some shells.
+%%%%
+Some wet sand
+
+Beach sand, still wet from the last tide. Will probably be under water at the
+next high tide.
+%%%%
 Some deep water
 
 This water is as deep as it is dangerous. No sane traveller would try to set
 foot into it, apart from those who fly or swim. Let it be a warning for you:
 many confused adventurers found their death at the depths, and an untimely end
 of levitation drowned even more hopeful trespassers.
+%%%%
+Some deep water (tidal)
+
+This water has sand at the bottom. It is as deadly as other deep waters, but it
+probably won't be here anymore at low tide.
 %%%%
 Some lava
 
@@ -603,6 +617,11 @@ Some shallow water
 
 This waist-deep, misty water makes movement and combat cumbersome for
 landlubbers - sometimes dangerous, but never directly fatal.
+%%%%
+Some shallow water (tidal)
+
+This water has sand at the bottom. It is as cumbersome and dangerous as other
+shallow waters, but it probably won't be here anymore at low tide.
 %%%%
 The open sea
 
