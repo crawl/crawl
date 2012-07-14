@@ -173,6 +173,7 @@ bool targetter_imb::set_aim(coord_def a)
     std::vector<coord_def> cur_path;
 
     splash.clear();
+    splash2.clear();
 
     coord_def end = path_taken[path_taken.size() - 1];
 
@@ -181,6 +182,7 @@ bool targetter_imb::set_aim(coord_def a)
         return true;
 
     coord_def c;
+    bool first = true;
 
     for (std::vector<coord_def>::iterator i = path_taken.begin();
          i != path_taken.end(); i++)
@@ -192,23 +194,23 @@ bool targetter_imb::set_aim(coord_def a)
             && c != end)
             continue;
 
+        std::vector<coord_def> *which_splash = (first) ? &splash : &splash2;
+
         for (adjacent_iterator ai(c); ai; ++ai)
         {
             if (!imb_can_splash(origin, c, cur_path, *ai))
                 continue;
 
-            splash.push_back(*ai);
+            which_splash->push_back(*ai);
             if (!cell_is_solid(*ai)
                 && !(anyone_there(*ai)
                      && !fedhas_shoot_through(beam, monster_at(*ai))))
             {
-                splash.push_back(c + (*ai - c) * 2);
+                which_splash->push_back(c + (*ai - c) * 2);
             }
         }
 
-        // If we want to show just the first explosion, we'd stop here.
-        // At the moment, though, the tracer keeps going,
-        // and checks explosions on all possible monster tiles!
+        first = false;
     }
 
     return true;
@@ -225,6 +227,12 @@ aff_type targetter_imb::is_affected(coord_def loc)
     {
         if (*i == loc)
             return cell_is_solid(*i) ? AFF_NO : AFF_MAYBE;
+    }
+    for (std::vector<coord_def>::const_iterator i = splash2.begin();
+         i != splash2.end(); ++i)
+    {
+        if (*i == loc)
+            return cell_is_solid(*i) ? AFF_NO : AFF_TRACER;
     }
     return AFF_NO;
 }
