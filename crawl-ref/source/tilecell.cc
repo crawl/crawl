@@ -374,8 +374,7 @@ void pack_cell_overlays(const coord_def &gc, packed_cell *cell)
     if (player_in_branch(BRANCH_SHOALS))
         _pack_shoal_waves(gc, cell);
     else
-    {
         _pack_default_waves(gc, cell);
-        _pack_wall_shadows(gc, cell);
-    }
+
+    _pack_wall_shadows(gc, cell);
 }
