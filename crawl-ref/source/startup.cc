@@ -117,7 +117,7 @@ static void _initialize()
         && crawl_state.title_screen)
     {
         tiles.draw_title();
-        tiles.update_title_msg("Loading Databases...");
+        tiles.update_title_msg("Loading databases...");
     }
 #endif
 
@@ -125,7 +125,7 @@ static void _initialize()
     databaseSystemInit();
 #ifdef USE_TILE_LOCAL
     if (crawl_state.title_screen)
-        tiles.update_title_msg("Loading Spells and Features...");
+        tiles.update_title_msg("Loading spells and features...");
 #endif
 
     init_feat_desc_cache();
