@@ -488,6 +488,7 @@ public:
     god_type  deity() const;
     bool      alive() const;
     bool      is_summoned(int* duration = NULL, int* summon_type = NULL) const;
+    bool      is_perm_summoned() const { return false; };
 
     bool        swimming() const;
     bool        submerged() const;

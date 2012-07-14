@@ -431,7 +431,7 @@ monster_info::monster_info(const monster* m, int milev)
         if (m->is_summoned())
             mb.set(MB_SUMMONED);
 
-        if (testbits(m->flags, MF_HARD_RESET) && testbits(m->flags, MF_NO_REWARD))
+        if (m->is_perm_summoned())
             mb.set(MB_PERM_SUMMON);
     }
     else

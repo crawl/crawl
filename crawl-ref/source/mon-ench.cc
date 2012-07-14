@@ -1732,6 +1732,11 @@ bool monster::is_summoned(int* duration, int* summon_type) const
     return true;
 }
 
+bool monster::is_perm_summoned() const
+{
+    return testbits(flags, MF_HARD_RESET | MF_NO_REWARD);
+}
+
 void monster::apply_enchantments()
 {
     if (enchantments.empty())

@@ -52,8 +52,11 @@ public:
 
     virtual bool      alive() const = 0;
 
+    // Should return false for perma-summoned things.
     virtual bool is_summoned(int* duration = NULL,
                              int* summon_type = NULL) const = 0;
+
+    virtual bool is_perm_summoned() const = 0;
 
     // [ds] Low-level moveto() - moves the actor without updating relevant
     // grids, such as mgrd.
