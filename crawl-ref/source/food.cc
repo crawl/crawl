@@ -241,7 +241,9 @@ static bool _prepare_butchery(bool can_butcher, bool removed_gloves,
 
 static bool _should_butcher(int corpse_id, bool bottle_blood = false)
 {
-    if (is_forbidden_food(mitm[corpse_id])
+    const item_def &corpse = mitm[corpse_id];
+
+    if (is_forbidden_food(corpse)
         && (Options.confirm_butcher == CONFIRM_NEVER
             || !yesno("Desecrating this corpse would be a sin. Continue anyway?",
                       false, 'n')))
@@ -249,9 +251,8 @@ static bool _should_butcher(int corpse_id, bool bottle_blood = false)
         return false;
     }
     else if (!bottle_blood && you.species == SP_VAMPIRE
-             && (can_bottle_blood_from_corpse(mitm[corpse_id].mon_type)
-                 || mons_has_blood(mitm[corpse_id].mon_type)
-                    && !is_bad_food(mitm[corpse_id]))
+             && (can_bottle_blood_from_corpse(corpse.mon_type)
+                 || mons_has_blood(corpse.mon_type) && !is_bad_food(corpse))
              && !you.has_spell(SPELL_SUBLIMATION_OF_BLOOD)
              && !you.has_spell(SPELL_SIMULACRUM)
              && (Options.confirm_butcher == CONFIRM_NEVER
