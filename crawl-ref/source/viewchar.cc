@@ -25,8 +25,9 @@ static const ucs_t dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
         '0', ')', '[', '/', '%', '?', '=', '!', '(',
     //                                §     ♣       ©
         ':', '|', '}', '%', '$', '"', 0xA7, 0x2663, 0xA9,
-        ' ', '!', '#', '%', '+', ')', '*', '+',     // space .. fired_burst
-        '/', '=', '?', 'X', '[', '`', '#'           // fi_stick .. explosion
+    //                                     ÷
+        ' ', '!', '#', '%', '+', ')', '*', 0xF7,       // space .. fired_burst
+        '/', '=', '?', 'X', '[', '`', '#'              // fi_stick .. explosion
     },
     // CSET_ASCII
     {
@@ -47,7 +48,7 @@ static const ucs_t dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
         '0', ')', '[', '/', '%', '?', '=', '!', '(',               // orb .. missile
     //  ∞       \                              ♣       Ω
         0x221e, '\\', '}', '%', '$', '"', '#', 0x2663, 0x3a9,      // book .. teleporter
-        ' ', '!', '#', '%', '+', ')', '*', '+',                    // space .. fired_burst
+        ' ', '!', '#', '%', '+', ')', '*', 0xF7,                   // space .. fired_burst
         '/', '=', '?', 'X', '[', '`', '#'                          // fi_stick .. explosion
     },
 
@@ -80,7 +81,8 @@ static const ucs_t dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
         '0', ')', '[', '/', '%', '?', '=', '!', '(',
     //  ∞                                §     ♣       ©
         0x221E, '|', '}', '%', '$', '"', 0xA7, 0x2663, 0xA9,
-        ' ', '!', '#', '%', '+', ')', '*', '+',        // space .. fired_burst
+    //                                     ÷
+        ' ', '!', '#', '%', '+', ')', '*', 0xF7,       // space .. fired_burst
         '/', '=', '?', 'X', '[', '`', '#'              // fi_stick .. explosion
     },
 };
