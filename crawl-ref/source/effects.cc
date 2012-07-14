@@ -2595,6 +2595,10 @@ void update_level(int elapsedTime)
 {
     ASSERT(!crawl_state.game_is_arena());
 
+    // In ZotDef, no time passes while off-level.
+    if (crawl_state.game_is_zotdef())
+        return;
+
     const int turns = elapsedTime / 10;
 
 #ifdef DEBUG_DIAGNOSTICS
