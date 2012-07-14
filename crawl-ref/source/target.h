@@ -58,6 +58,7 @@ public:
     aff_type is_affected(coord_def loc);
 private:
     std::vector<coord_def> splash;
+    std::vector<coord_def> splash2;
 };
 
 class targetter_view : public targetter
