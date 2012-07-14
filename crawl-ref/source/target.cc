@@ -170,6 +170,8 @@ bool targetter_imb::set_aim(coord_def a)
     if (!targetter_beam::set_aim(a))
         return false;
 
+    std::vector<coord_def> cur_path;
+
     splash.clear();
 
     coord_def end = path_taken[path_taken.size() - 1];
@@ -178,18 +180,35 @@ bool targetter_imb::set_aim(coord_def a)
     if (end == origin)
         return true;
 
-    for (adjacent_iterator ai(end); ai; ++ai)
+    coord_def c;
+
+    for (std::vector<coord_def>::iterator i = path_taken.begin();
+         i != path_taken.end(); i++)
     {
-        if (!imb_can_splash(origin, end, path_taken, *ai))
+        c = *i;
+        cur_path.push_back(c);
+        if (!(anyone_there(c)
+              && !fedhas_shoot_through(beam, monster_at(c)))
+            && c != end)
             continue;
 
-        splash.push_back(*ai);
-        if (!cell_is_solid(*ai)
-            && !(anyone_there(*ai)
-                 && !fedhas_shoot_through(beam, monster_at(*ai))))
+        for (adjacent_iterator ai(c); ai; ++ai)
         {
-            splash.push_back(end + (*ai - end) * 2);
+            if (!imb_can_splash(origin, c, cur_path, *ai))
+                continue;
+
+            splash.push_back(*ai);
+            if (!cell_is_solid(*ai)
+                && !(anyone_there(*ai)
+                     && !fedhas_shoot_through(beam, monster_at(*ai))))
+            {
+                splash.push_back(c + (*ai - c) * 2);
+            }
         }
+
+        // If we want to show just the first explosion, we'd stop here.
+        // At the moment, though, the tracer keeps going,
+        // and checks explosions on all possible monster tiles!
     }
 
     return true;
@@ -197,16 +216,10 @@ bool targetter_imb::set_aim(coord_def a)
 
 aff_type targetter_imb::is_affected(coord_def loc)
 {
-    coord_def end = path_taken[path_taken.size() - 1];
-    if (end == loc)
-        return cell_is_solid(end) ? AFF_NO : AFF_YES;
+    aff_type from_path = targetter_beam::is_affected(loc);
+    if (from_path != AFF_NO)
+        return from_path;
 
-    for (std::vector<coord_def>::const_iterator i = path_taken.begin();
-         i != path_taken.end(); ++i)
-    {
-        if (*i == loc)
-            return cell_is_solid(*i) ? AFF_NO : AFF_TRACER;
-    }
     for (std::vector<coord_def>::const_iterator i = splash.begin();
          i != splash.end(); ++i)
     {

@@ -2311,6 +2311,8 @@ static void _imb_explosion(bolt *parent, coord_def center)
             beam.foe_info.reset();
             beam.target = center + (*ai - center) * 2;
             beam.fire();
+            parent->friend_info += beam.friend_info;
+            parent->foe_info    += beam.foe_info;
             if (beam.is_tracer)
             {
                 if (beam.beam_cancelled)
@@ -2318,8 +2320,6 @@ static void _imb_explosion(bolt *parent, coord_def center)
                     parent->beam_cancelled = true;
                     return;
                 }
-                parent->friend_info += beam.friend_info;
-                parent->foe_info    += beam.foe_info;
             }
         }
     }
@@ -4050,6 +4050,9 @@ void bolt::tracer_affect_monster(monster* mon)
         tracer_enchantment_affect_monster(mon);
     else
         tracer_nonenchantment_affect_monster(mon);
+
+    if (name == "orb of energy")
+        _imb_explosion(this, pos());
 }
 
 void bolt::enchantment_affect_monster(monster* mon)
