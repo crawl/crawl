@@ -1151,15 +1151,13 @@ void direction_chooser::draw_beam_if_needed()
     // Use the new API if implemented.
     if (hitfunc)
     {
-        if (!hitfunc->valid_aim(target()))
+        if (!hitfunc->set_aim(target()))
         {
 #ifdef USE_TILE
             viewwindow(true, true);
 #endif
             return;
         }
-
-        hitfunc->set_aim(target());
         for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
             if (aff_type aff = hitfunc->is_affected(*ri))
             {
