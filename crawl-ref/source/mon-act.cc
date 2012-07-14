@@ -1902,7 +1902,7 @@ void handle_monster_move(monster* mons)
             // Same for friendlies if friendly_pickup is set to "none".
             if ((!mons->neutral() && !mons->has_ench(ENCH_CHARM)
                  || (you.religion == GOD_JIYVA && mons_is_slime(mons)))
-                && !mons->is_summoned()
+                && !mons->is_summoned() && !mons->is_perm_summoned()
                 && (!mons->friendly()
                     || you.friendly_pickup != FRIENDLY_PICKUP_NONE))
             {
