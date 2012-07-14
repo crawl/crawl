@@ -2141,11 +2141,11 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
             desc += "suicidal targetting";
         else
         {
-            desc += "Shot themself with a ";
+            desc += "Shot themself with ";
             if (auxkilldata.empty())
-                desc += "beam";
+                desc += "a beam";
             else
-                desc += auxkilldata;
+                desc += article_a(auxkilldata, true);
         }
         needs_damage = true;
         break;
