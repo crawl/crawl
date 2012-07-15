@@ -3981,9 +3981,6 @@ tileidx_t tileidx_item(const item_def &item)
         return TILE_STAFF_OFFSET + (special/ NDSC_STAVE_PRI) % NDSC_STAVE_SEC;
 
     case OBJ_RODS:
-        if (item.flags & ISFLAG_KNOW_TYPE)
-           return TILE_ROD_ID_FIRST + type;
-
         return TILE_ROD + item.rnd % tile_main_count(TILE_ROD);
 
     case OBJ_CORPSES:
@@ -4712,6 +4709,11 @@ tileidx_t tileidx_known_brand(const item_def &item)
         default:
             break;
         }
+    }
+    else if (item.base_type == OBJ_RODS)
+    {
+        // Technically not a brand, but still handled here
+        return TILE_ROD_ID_FIRST + item.sub_type;
     }
     return 0;
 }

@@ -617,8 +617,11 @@ static void _fill_item_info(InventoryTile &desc, const item_info &item)
     else
         desc.quantity = -1;
 
-    if (type == OBJ_WEAPONS || type == OBJ_MISSILES || type == OBJ_ARMOUR)
+    if (type == OBJ_WEAPONS || type == OBJ_MISSILES
+        || type == OBJ_ARMOUR || type == OBJ_RODS)
+    {
         desc.special = tileidx_known_brand(item);
+    }
     else if (type == OBJ_CORPSES)
         desc.special = tileidx_corpse_brand(item);
 
