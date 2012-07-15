@@ -1,4 +1,4 @@
-Stone Soup 0.11 (up to 0.11-a0-2724-g330e717)
+Stone Soup 0.11 (up to 0.11-a0-2859-ga7b20a9)
 ---------------------------------------------
 
 Highlights
@@ -11,7 +11,7 @@ Highlights
 * Grey draconians are better.
 * Monster constriction vs the player has been overhauled.
 * Greatly improved targetting prompts for area of effect spells and lightning.
-* New monsters: Arachne, Fannar, orb spider, bog body, hell sentinel.
+* New monsters: Arachne, Fannar, orb spider, bog body, Hell Sentinel.
 * Removed monsters: Jozef, bog mummy, midge, pit fiend.
 * New item: lightning rod.
 * Removed items: ankus, scroll of detect curse, amulet of controlled flight,
@@ -107,6 +107,7 @@ Monsters
   saner.
 * A "damageless constriction" effect has been implemented for certain
   monsters, particularly mimics.
+* Earth elementals are immune to petrification.
 
 Spells
 ------
@@ -137,6 +138,8 @@ Items
 * Unbranded items can't be glowing/runed unless they're cursed.
 * New item: Lightning rod. Has a continuous effect across multiple zaps, and
   allows you to spray wide cones of electricity at your enemies.
+* Randart weapons have a wider selection of names.
+* Acquirement will not provide you with items your god hates.
 
 Cards
 -----
@@ -194,6 +197,9 @@ Interface
 * Targetting prompts have been massively improved. Almost all area of effect
   spells are now supported, and bounce paths (e.g. from lightning bolt) are
   displayed.
+* A status indicator is shown when silenced by an external source.
+* While in lich form, Pois and Nausea status indicators are grayed out.
+* Message filters are case-insensitive.
 
 Wizmode
 -------
