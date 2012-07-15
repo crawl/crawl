@@ -573,6 +573,9 @@ static void _boulder_stop(monster& mon, bool msg = true)
             simple_monster_message(&mon, " comes to a halt.");
         */
 
+        // Deduct the energy first - the move they made that just stopped
+        // them was a speed 14 move.
+        mon.lose_energy(EUT_MOVE);
         mon.del_ench(ENCH_ROLLING,!msg);
     }
 }
@@ -733,8 +736,8 @@ move_again:
                 noisy(20, pos, "You hear a loud crashing sound!");
 
             // Remove ROLLING and add DAZED
-            mon.del_ench(ENCH_ROLLING,true);
-            mons->del_ench(ENCH_ROLLING,true);
+            _boulder_stop(mon);
+            _boulder_stop(*mons);
             if (!mon.check_clarity(false))
                 mon.add_ench(ENCH_CONFUSION);
             if (!mons->check_clarity(false))
