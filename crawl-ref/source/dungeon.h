@@ -310,4 +310,6 @@ bool join_the_dots(const coord_def &from, const coord_def &to, unsigned mmask);
 int count_feature_in_box(int x0, int y0, int x1, int y1,
                          dungeon_feature_type feat);
 bool door_vetoed(const coord_def pos);
+
+void fixup_misplaced_items(void);
 #endif
