@@ -1140,7 +1140,8 @@ void shillelagh(actor *wielder, coord_def where, int pow)
     for (adjacent_iterator ai(where, false); ai; ++ai)
     {
         monster *mon = monster_at(*ai);
-        if (!mon || !mon->alive() || mon->submerged() || mon->is_insubstantial())
+        if (!mon || !mon->alive() || mon->submerged()
+            || mon->is_insubstantial() || !you.can_see(mon))
             continue;
         if (mon == wielder)
             continue;
