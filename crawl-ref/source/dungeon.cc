@@ -1337,7 +1337,7 @@ static void _fixup_walls()
 
 // Remove any items that are on squares that items should not be on.
 // link_items() must be called after this function.
-static void _fixup_misplaced_items()
+void fixup_misplaced_items()
 {
     for (int i = 0; i < MAX_ITEMS; i++)
     {
@@ -2223,7 +2223,7 @@ static void _build_dungeon_level(dungeon_feature_type dest_stairs_type)
     }
 
     _fixup_branch_stairs();
-    _fixup_misplaced_items();
+    fixup_misplaced_items();
 
     link_items();
     if (_mimic_at_level())

@@ -1239,7 +1239,11 @@ static void _generate_area(const map_mask &abyss_genlevel_mask)
     bool use_vaults = (you.char_direction == GDT_GAME_START ? false : true);
 
     if (use_vaults)
+    {
         _abyss_place_vaults(abyss_genlevel_mask);
+        fixup_misplaced_items();
+        link_items();
+    }
     _abyss_create_items(abyss_genlevel_mask, placed_abyssal_rune, use_vaults);
     generate_random_blood_spatter_on_level(&abyss_genlevel_mask);
     setup_environment_effects();
