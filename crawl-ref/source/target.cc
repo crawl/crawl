@@ -54,6 +54,7 @@ targetter_beam::targetter_beam(const actor *act, int range, beam_type flavour,
     beam.set_agent(const_cast<actor *>(act));
     origin = aim = act->pos();
     beam.is_tracer = true;
+    beam.is_targetting = true;
     beam.flavour = flavour;
     beam.range = range;
     beam.source = origin;
