@@ -2756,6 +2756,8 @@ static void _mercenary_card(int power, deck_rarity_type rarity)
 
     if (mon)
     {
+        mon->props["dbname"].get_string() = mons_class_name(merctypes[merc]);
+
         redraw_screen(); // We want to see the monster while it's asking to be paid.
 
         if (player_will_anger_monster(mon))

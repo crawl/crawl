@@ -803,6 +803,8 @@ monster* zotdef_spawn(bool boss)
         {
             if (!give_monster_proper_name(mon, false))
                 mon->mname = make_name(random_int(), false);
+
+            mon->props["dbname"].get_string() = mons_class_name(mt);
         }
 
         mon->hit_points = mon->hit_points * 3 / 2;
