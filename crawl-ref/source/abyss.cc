@@ -277,7 +277,16 @@ static bool _abyss_place_vault_tagged(const map_mask &abyss_genlevel_mask,
 
 static bool _abyss_place_rune_vault(const map_mask &abyss_genlevel_mask)
 {
-    return _abyss_place_vault_tagged(abyss_genlevel_mask, "abyss_rune");
+    // Make sure we're not about to link bad items.
+    debug_item_scan();
+
+    const bool result = _abyss_place_vault_tagged(abyss_genlevel_mask,
+                                                  "abyss_rune");
+
+    // Make sure the rune is linked.
+    fixup_misplaced_items();
+    link_items();
+    return result;
 }
 
 static bool _abyss_place_rune(const map_mask &abyss_genlevel_mask,
@@ -1240,8 +1249,11 @@ static void _generate_area(const map_mask &abyss_genlevel_mask)
 
     if (use_vaults)
     {
+        // Make sure we're not about to link bad items.
         debug_item_scan();
         _abyss_place_vaults(abyss_genlevel_mask);
+
+        // Link the vault-placed items.
         fixup_misplaced_items();
         link_items();
     }
