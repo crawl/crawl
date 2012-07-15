@@ -82,12 +82,17 @@ def find_running_game(charname, start):
             return socket.process
     return None
 
-milestone_file_tailer = None
+milestone_file_tailers = []
 def start_reading_milestones():
     if config.milestone_file is None: return
 
-    global milestone_file_tailer
-    milestone_file_tailer = FileTailer(config.milestone_file, handle_new_milestone)
+    if isinstance(config.milestone_file, basestring):
+        files = [config.milestone_file]
+    else:
+        files = config.milestone_file
+
+    for f in files:
+        milestone_file_tailers.append(FileTailer(f, handle_new_milestone))
 
 def handle_new_milestone(line):
     data = parse_where_data(line)
