@@ -2743,6 +2743,15 @@ static void _mercenary_card(int power, deck_rarity_type rarity)
 
     mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
+    // This is a bit of a hack to use give_monster_proper_name to feed
+    // the mgen_data, but it gets the job done.
+    monster tempmon;
+    tempmon.type = merctypes[merc];
+    if (give_monster_proper_name(&tempmon, false))
+        mg.mname = tempmon.mname;
+    else
+        mg.mname = make_name(random_int(), false);
+
     monster *mon = create_monster(mg);
 
     if (mon)
