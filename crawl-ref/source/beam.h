@@ -141,6 +141,7 @@ struct bolt
     // INTERNAL use - should not usually be set outside of beam.cc
     int         extra_range_used;
     bool        is_tracer;       // is this a tracer?
+    bool        is_targetting;   // . . . in particular, a targetting tracer?
     bool        aimed_at_feet;   // this was aimed at self!
     bool        msg_generated;   // an appropriate msg was already mpr'd
     bool        noise_generated; // a noise has already been generated at this pos

@@ -1104,8 +1104,9 @@ bool bolt::hit_wall()
         die("beam::hit_wall yet not solid: %s", dungeon_feature_name(feat));
 #endif
 
-    if (is_tracer && YOU_KILL(thrower) && in_bounds(target) && !passed_target
-        && pos() != target  && pos() != source && foe_info.count == 0
+    if (is_tracer && !is_targetting && YOU_KILL(thrower)
+        && in_bounds(target) && !passed_target && pos() != target
+        && pos() != source && foe_info.count == 0
         && flavour != BEAM_DIGGING && flavour <= BEAM_LAST_REAL
         && bounces == 0 && reflections == 0 && you.see_cell(target)
         && !feat_is_solid(grd(target)))
@@ -5679,7 +5680,7 @@ bolt::bolt() : origin_spell(SPELL_NO_SPELL),
                damage_funcs(), hit_funcs(), aoe_funcs(), affect_func(NULL),
                obvious_effect(false), seen(false), heard(false),
                path_taken(), extra_range_used(0), is_tracer(false),
-               aimed_at_feet(false), msg_generated(false),
+               is_targetting(false), aimed_at_feet(false), msg_generated(false),
                noise_generated(false), passed_target(false),
                in_explosion_phase(false), smart_monster(false),
                can_see_invis(false), nightvision(false), attitude(ATT_HOSTILE), foe_ratio(0),
