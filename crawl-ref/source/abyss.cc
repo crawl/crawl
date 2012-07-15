@@ -1240,6 +1240,7 @@ static void _generate_area(const map_mask &abyss_genlevel_mask)
 
     if (use_vaults)
     {
+        debug_item_scan();
         _abyss_place_vaults(abyss_genlevel_mask);
         fixup_misplaced_items();
         link_items();
