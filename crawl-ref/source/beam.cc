@@ -2268,7 +2268,7 @@ static void _imb_explosion(bolt *parent, coord_def center)
 {
     const int dist = parent->path_taken.size();
     if (parent->source == center
-        || (!parent->is_tracer && x_chance_in_y(3, 2 + 2 * dist)))
+        || (!parent->is_tracer && !x_chance_in_y(3, 2 + 2 * dist)))
         return;
     bolt beam;
     beam.name           = "mystic blast";
