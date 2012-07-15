@@ -135,6 +135,11 @@ void seen_monsters_react()
            )
         {
             behaviour_event(*mi, ME_ALERT, MHITYOU, you.pos(), false);
+
+            // That might have caused a pacified monster to leave the level.
+            if (!(*mi)->alive())
+                continue;
+
             handle_monster_shouts(*mi);
         }
 
