@@ -510,7 +510,8 @@ helmet_winged THELM_HELM_WINGED
 glove1 ARM_GLOVES
 glove2
 glove3
-glove4_gauntlets
+glove4
+glove5
 
 ###### BOOTS
 boots1_brown ARM_BOOTS
