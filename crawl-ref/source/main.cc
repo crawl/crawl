@@ -450,6 +450,11 @@ static void _launch_game()
 
 static void _show_commandline_options_help()
 {
+#if defined(TARGET_OS_WINDOWS) && defined(USE_TILE_LOCAL)
+    std::string help;
+# define puts(x) (help += x, help += '\n')
+#endif
+
     puts("Command line options:");
     puts("  -help                 prints this list of options");
     puts("  -name <string>        character name");
@@ -500,6 +505,10 @@ static void _show_commandline_options_help()
     puts("");
     puts("Miscellaneous options:");
     puts("  -dump-maps       write map Lua to stderr when parsing .des files");
+
+#if defined(TARGET_OS_WINDOWS) && defined(USE_TILE_LOCAL)
+    text_popup(help, L"Dungeon Crawl command line help");
+#endif
 }
 
 static void _wanderer_startup_message()
