@@ -678,6 +678,8 @@ WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
+    layout_type "delve"
+
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym}
     fill_area{fill = 'x', border = 'X'}
@@ -980,6 +982,8 @@ CHANCE: 100%
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
+    layout_type "delve"
+
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym}
     fill_area{fill = 'x', border = 'X'}
