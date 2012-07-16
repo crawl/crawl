@@ -59,16 +59,18 @@ stone_arch DNGN_STONE_ARCH
 orcish_idol DNGN_ORCISH_IDOL
 # dungeon statues
 %weight 5
-statue_dwarf_axe DNGN_GRANITE_STATUE
-%weight 3
-statue_dwarf_mace
+statue_dwarf DNGN_GRANITE_STATUE
+statue_archer
 %weight 2
-statue_dwarf_sword
+statue_sword
+%weight 1
+statue_sigmund
 %weight 5
 statue_centaur
 %syn DNGN_STATUE_CENTAUR
 %weight 3
-statue_centaur2
+statue_angel
+%syn DNGN_STATUE_ANGEL
 %weight 8
 statue_mermaid
 %syn DNGN_STATUE_MERMAID
@@ -76,22 +78,23 @@ statue_naga
 %syn DNGN_STATUE_NAGA
 statue_dragon
 %syn DNGN_STATUE_DRAGON
-statue_head
-statue_eye
+statue_demonic_bust
 %weight 5
 statue_snail
-statue_troll
-%syn DNGN_STATUE_TROLL
 statue_cat
 %syn DNGN_STATUE_CAT
 %weight 3
-statue_skull
-%syn DNGN_STATUE_SKULL
 statue_elephant
 %syn DNGN_STATUE_ELEPHANT
+statue_wraith
+statue_imp
+%syn DNGN_STATUE_IMP
+statue_orb
 %weight 1
 statue_ancient_hero
 %syn DNGN_STATUE_ANCIENT_HERO
+statue_ancient_evil
+%syn DNGN_STATUE_ANCIENT_EVIL
 # damaged statues
 crumbled_column_1 DNGN_CRUMBLED_COLUMN
 crumbled_column_2
@@ -100,6 +103,9 @@ crumbled_column_4
 crumbled_column_5
 crumbled_column_6
 granite_stump DNGN_GRANITE_STUMP
+
+# Statues in Dis
+statue_iron DNGN_STATUE_IRON
 
 ## Features only used in certain minivaults
 %sdir dngn/vaults
@@ -126,6 +132,10 @@ sarcophagus_sealed DNGN_SARCOPHAGUS_SEALED
 ## sideways sarcophagi for tomb:1
 sarcophagus_pedestal_left DNGN_SARCOPHAGUS_PEDESTAL_LEFT
 sarcophagus_pedestal_right DNGN_SARCOPHAGUS_PEDESTAL_RIGHT
+
+## Animating statues for due_jungle_book, dis_mu, and grunt_dis_stairs_iron_hall
+statue_elephant_jade DNGN_STATUE_ELEPHANT_JADE
+statue_iron_golem DNGN_STATUE_IRON_GOLEM
 
 dimension_edge DNGN_DIMENSION_EDGE
 

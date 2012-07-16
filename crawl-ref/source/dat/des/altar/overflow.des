@@ -186,7 +186,7 @@ DEPTH:  D:2-12
 TAGS:   temple_overflow_cheibriados uniq_altar_cheibriados
 TAGS:   no_trap_gen no_monster_gen
 KMONS:  O = statue hd:1 name:snail_statue name_replace name_descriptor \
-            tile:mons_statue_snail \
+            tile:mons_snail_statue \
             spells:leda's_liquefaction;leda's_liquefaction;leda's_liquefaction;\
             leda's_liquefaction;leda's_liquefaction;leda's_liquefaction
 KFEAT:  _ = altar_cheibriados

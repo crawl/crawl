@@ -2029,7 +2029,7 @@ MARKER: G = lua:props_marker { veto_fragmentation="veto", \
                                veto_disintegrate="veto", \
                                veto_shatter="veto" }
 COLOUR: oG = green
-TILE:   oG = dngn_statue_elephant
+TILE:   oG = dngn_statue_elephant_jade
 MARKER: o = lua:monster_on_death { \
             target="anaconda_guard", new_monster="generate_awake dire elephant", \
             message_seen="The elephant guardians awaken!", \
