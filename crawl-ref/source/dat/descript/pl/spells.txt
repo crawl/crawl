@@ -263,9 +263,8 @@ istotą.
 %%%%
 Ensorcelled Hibernation spell
 
-Ten czar próbuje oziębić metabolizm wybranej istoty, co zwykle skutkuje
-zapadnięciem w stan przypominający sen. Zimnokrwiste stworzenia mogą ponieść
-dodatkowe konsekwencje.
+Ten czar próbuje oziębić metabolizm wybranej istoty, co skutkuje
+zapadnięciem w stan przypominający sen.
 %%%%
 Evaporate spell
 
