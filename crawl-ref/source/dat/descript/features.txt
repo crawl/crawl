@@ -173,6 +173,11 @@ A gateway to the freezing wastes of Cocytus
 
 From the frost-bitten lands, a cold chill touches your soul.
 %%%%
+A gleaming silver wall
+
+This wall, made of pure silver, was formed by the power of Zin to imprison a
+monster within its confines. It is quickly crumbling, and will not last long.
+%%%%
 A glowing golden altar of the Shining One
 
 An altar to the Shining One, made from the purest gold and almost blinding in

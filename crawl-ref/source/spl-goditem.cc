@@ -863,7 +863,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
                 env.grid_colours(*ai) = LIGHTGREY;
 
                 map_wiz_props_marker *marker = new map_wiz_props_marker(*ai);
-                marker->set_property("feature_description", "A gleaming silver wall");
+                marker->set_property("feature_description", "a gleaming silver wall");
                 marker->set_property("tomb", "Zin");
                 env.markers.add(marker);
             }
