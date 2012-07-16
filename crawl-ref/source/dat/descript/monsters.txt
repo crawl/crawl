@@ -1158,6 +1158,12 @@ flying skull
 An undead skull kept aloft and flitting swiftly about by unholy magic. It
 periodically emits loud, blood-curdling shrieks.
 %%%%
+freed slave
+
+A human who has just been released from magical enslavement. While still
+disheveled and not having fully regained their composure yet, you can see
+this person trying to stand proud.
+%%%%
 freezing wraith
 
 An incorporeal skeletal form surrounded by a cloud of freezing air, likely the

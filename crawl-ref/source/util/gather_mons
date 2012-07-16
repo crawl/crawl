@@ -61,6 +61,8 @@ for (grep /\.des$/, `git ls-files`)
     }
 }
 
+$mons{"freed slave"} = 1;
+
 unless ($db)
 {
     open IN, "<spl-summoning.cc" or die "Can't read spl-summoning.cc\n";
