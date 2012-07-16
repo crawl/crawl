@@ -1605,8 +1605,11 @@ std::string StashTracker::stash_search_prompt()
 {
     std::vector<std::string> opts;
     if (!lastsearch.empty())
+    {
+        const std::string disp = replace_all(lastsearch, "<", "<<");
         opts.push_back(
-            make_stringf("Enter for \"%s\"", lastsearch.c_str()));
+            make_stringf("Enter for \"%s\"", disp.c_str()));
+    }
     if (lastsearch != ".")
         opts.push_back("? for help");
 
