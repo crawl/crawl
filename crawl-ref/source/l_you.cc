@@ -511,6 +511,8 @@ static int _you_have_rune(lua_State *ls)
     return 1;
 }
 
+LUARET1(you_have_orb, boolean, player_has_orb())
+
 static int _you_gold(lua_State *ls)
 {
     if (lua_gettop(ls) >= 1)
@@ -656,6 +658,7 @@ static const struct luaL_reg you_dlib[] =
 { "uniques",            _you_uniques },
 { "num_runes",          you_num_runes },
 { "have_rune",          _you_have_rune },
+{ "have_orb",           you_have_orb},
 { "die",                _you_die },
 { "piety",              _you_piety },
 { "in_branch",          you_in_branch },
