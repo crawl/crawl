@@ -295,6 +295,7 @@ NSUBST: 1:1=) / *=1
 NSUBST: 1:1=] / *=1
 SUBST:  = : =+
 SUBST:  }=}>, )=)>, ]=]>
+TILE:   F = dngn_statue_iron
 # occasionally (12.5%), all downstairs are in this vault
 MAP
 xxxxxxxxxxxxxxxxxxxxxxx
@@ -368,6 +369,7 @@ MONS: iron devil / nothing, iron imp / nothing
     set_feature_name("granite_statue", "iron statue")
 }}
 COLOUR: G = cyan
+TILE: G = dngn_statue_iron_golem
 SUBST: d = 3
 SUBST: e = 4
 SUBST: f = 5
@@ -482,7 +484,8 @@ KMONS:  H = ice statue
 KMONS:  O = ice statue name:chilling_statue name_replace name_descriptor \
             hd:15 spells:bolt_of_cold;ozocubu's_refrigeration;\
             ozocubu's_refrigeration;freezing_cloud;\
-            ozocubu's_refrigeration;ozocubu's_refrigeration
+            ozocubu's_refrigeration;ozocubu's_refrigeration \
+            tile:mons_chilling_statue
 MAP
 xwww..4......
 xwwwwww..5...
@@ -931,6 +934,7 @@ SHUFFLE: 23
 SUBST:   4 = 4:20 7
 SUBST:   8 = 8o
 COLOUR:  o : cyan
+TILE:    o = dngn_statue_iron_golem
 : dis_rune(_G)
 # Use master/slave setup.
 MARKER:  o = lua:monster_on_death { \
@@ -1133,8 +1137,8 @@ NSUBST:  A = 1:+ / *:v, B = 1:+ / *:v
 NSUBST:  S = 1:( / 1:[ / 1:{ / *:.
 # four hell sentinels in Dispater's building
 NSUBST:  _ = 4:4 / *:.
-# Maybe make an iron statue tile for this?
 COLOUR:  G = cyan
+TILE:    G = dngn_statue_iron
 : serpent_of_hell_setup(_G)
 : dis_setup(_G)
 : dis_rune(_G)

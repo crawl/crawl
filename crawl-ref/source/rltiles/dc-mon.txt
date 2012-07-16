@@ -385,7 +385,14 @@ silver_statue MONS_SILVER_STATUE
 orange_crystal_statue MONS_ORANGE_STATUE
 wucad_mu_statue MONS_WUCAD_MU_STATUE
 %sdir mon/vault
-statue_snail MONS_STATUE_SNAIL
+spooky_statue MONS_SPOOKY_STATUE
+snail_statue MONS_SNAIL_STATUE
+chilling_statue MONS_CHILLING_STATUE
+air_elementalist_statue MONS_AIR_ELEMENTALIST_STATUE
+earth_elementalist_statue MONS_EARTH_ELEMENTALIST_STATUE
+fire_elementalist_statue MONS_FIRE_ELEMENTALIST_STATUE
+water_elementalist_statue MONS_WATER_ELEMENTALIST_STATUE
+zot_statue MONS_ZOT_STATUE
 
 %sdir mon/statues
 %back statue_base
