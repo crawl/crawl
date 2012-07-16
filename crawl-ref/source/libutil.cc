@@ -1097,6 +1097,10 @@ void init_signals()
     SetConsoleCtrlHandler(console_handler, true);
 }
 
+void text_popup(const std::string& text, const wchar_t *caption)
+{
+    MessageBoxW(0, OUTW(text), caption, MB_OK);
+}
 #else
 
 /* [ds] This SIGHUP handling is primitive and far from safe, but it

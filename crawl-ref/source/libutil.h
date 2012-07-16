@@ -208,6 +208,7 @@ enum taskbar_pos
 
 int get_taskbar_size();
 taskbar_pos get_taskbar_pos();
+void text_popup(const std::string& text, const wchar_t *caption);
 #endif
 
 class mouse_control
