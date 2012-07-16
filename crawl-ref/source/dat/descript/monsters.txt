@@ -1160,9 +1160,7 @@ periodically emits loud, blood-curdling shrieks.
 %%%%
 freed slave
 
-A human who has just been released from magical enslavement. While still
-disheveled and not having fully regained their composure yet, you can see
-this person trying to stand proud.
+A human who has just been released from magical enslavement. It tries to stand proudly before you, despite its lingering fear and unkempt appearance.
 %%%%
 freezing wraith
 
