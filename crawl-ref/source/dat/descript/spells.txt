@@ -251,7 +251,7 @@ while.
 Ensorcelled Hibernation spell
 
 This spell tries to lower its target's metabolic rate, inducing hypothermic
-hibernation. It may have side effects on cold-blooded creatures.
+hibernation.
 %%%%
 Evaporate spell
 
