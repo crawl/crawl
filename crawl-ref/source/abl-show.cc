@@ -1343,6 +1343,13 @@ bool activate_ability()
             else if (you.flight_mode() == FL_FLY)
                 mpr("You're already flying!");
         }
+        else if (silenced(you.pos()) && you.religion != GOD_NO_GOD)
+        {
+            // At the very least the player has "Renounce Religion", but
+            // cannot use it in silence.
+            mprf("You cannot call out to %s while silenced.",
+                 god_name(you.religion).c_str());
+        }
         else
             mpr("Sorry, you're not good enough to have a special ability.");
 
