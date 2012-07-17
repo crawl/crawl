@@ -5187,40 +5187,20 @@ int melee_attack::calc_damage()
 
 int melee_attack::apply_defender_ac(int damage, int damage_max)
 {
-    int ac = defender->armour_class();
     int stab_bypass = stab_bonus
                       ? random2(you.skill_rdiv(SK_STABBING) / stab_bonus)
                       : 0;
-    if (ac > 0)
-    {
-        if (attacker->is_player())
-            damage -= random2(1 + defender->armour_class() - stab_bypass);
-        else
-        {
-            int damage_reduction = random2(ac + 1);
-            int guaranteed_damage_reduction = 0;
-
-            if (defender->is_player())
-            {
-                const int gdr_perc = defender->gdr_perc();
-                guaranteed_damage_reduction =
-                    std::min(damage_max * gdr_perc / 100, ac / 2);
-                damage_reduction =
-                    std::max(guaranteed_damage_reduction, damage_reduction);
-            }
-
-            damage -= damage_reduction;
-
-            dprf(DIAG_COMBAT, "AC: at: %s, df: %s, dam: %d (max %d), DR: %d (GDR %d), "
-                 "rdam: %d",
+    int after_ac = defender->apply_ac(damage, damage_max, AC_NORMAL,
+                                      stab_bypass);
+    dprf(DIAG_COMBAT, "AC: att: %s, def: %s, ac: %d, gdr: %d, dam: %d -> %d",
                  attacker->name(DESC_PLAIN, true).c_str(),
                  defender->name(DESC_PLAIN, true).c_str(),
-                 damage, damage_max, damage_reduction, guaranteed_damage_reduction,
-                 damage - damage_reduction);
-        }
-    }
+                 defender->armour_class(),
+                 defender->gdr_perc(),
+                 damage,
+                 after_ac);
 
-    return std::max(0, damage);
+    return after_ac;
 }
 
 /* TODO: This code is only used from melee_attack methods, but perhaps it

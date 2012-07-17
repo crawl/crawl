@@ -23,17 +23,6 @@ enum mon_resist_type
     MON_OTHER,                  // monster unaffected, but for other reasons
 };
 
-enum ac_type
-{
-    AC_NONE,
-    // These types block small amounts of damage, hardly affecting big hits.
-    AC_NORMAL,
-    AC_HALF,
-    AC_TRIPLE,
-    // This one stays fair over arbitrary splits.
-    AC_PROPORTIONAL,
-};
-
 class dist;
 
 typedef FixedArray<int, 19, 19> explosion_map;
