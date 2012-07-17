@@ -8,7 +8,7 @@ Stone Soup 0.11 (up to 0.11-a0-2859-ga7b20a9)
 * Missile enchantments are no more.
 * Monster constriction vs the player has been overhauled.
 * New monsters: Arachne, Fannar, orb spider, bog body, Hell Sentinel.
-* Removed monsters: Jozef, bog mummy, midge, pit fiend.
+* Removed monsters: Jozef, bog mummy, midge, Pit Fiend.
 * Lots of new vaults and tiles.
 
 Branches, environment
