@@ -36,7 +36,7 @@ tileidx_t tilep_equ_weapon(const item_def &item)
         return TILEP_HAND1_STAFF_LARGE + desc;
     }
 
-    if (item.base_type == OBJ_STAVES)
+    if (item.base_type == OBJ_RODS)
         return _mon_mod(TILEP_HAND1_ROD_BROWN, item.rnd);
 
     if (item.base_type == OBJ_MISCELLANY)
