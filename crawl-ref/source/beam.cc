@@ -2250,6 +2250,11 @@ bool imb_can_splash(coord_def origin, coord_def center,
     {
         return false;
     }
+    if (path_taken.size() > 0
+        && path_taken[path_taken.size() - 1] == target)
+    {
+        return false;
+    }
     if (path_taken.size() > 1
         && path_taken[path_taken.size() - 2] == target)
     {
