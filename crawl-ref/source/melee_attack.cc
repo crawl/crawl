@@ -5202,7 +5202,7 @@ int melee_attack::apply_defender_ac(int damage, int damage_max)
 
             if (defender->is_player())
             {
-                const int gdr_perc = defender->as_player()->gdr_perc();
+                const int gdr_perc = defender->gdr_perc();
                 guaranteed_damage_reduction =
                     std::min(damage_max * gdr_perc / 100, ac / 2);
                 damage_reduction =
