@@ -574,12 +574,11 @@ KFEAT:   _ = altar_makhleb
 # Either one slow type 3 or 4 demon (iron devil or smoke demon) or
 # three slow type 5 demons (iron imp).
 # The smoke demon can only come up in D:9-11.
-SHUFFLE: 1234
+SHUFFLE: 123
 NSUBST:  1 = 1:1 / *:.
 NSUBST:  2 = 1:2 / *:.
-NSUBST:  3 = 2:3 / *:.
 : if you.absdepth() < 9 then
-SUBST:   3 = 12
+SUBST:   2 = 1
 : end
 MONS:    iron devil, smoke demon, iron imp
 MAP
