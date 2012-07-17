@@ -239,6 +239,7 @@ public:
     virtual bool can_throw_large_rocks() const = 0;
 
     virtual int armour_class() const = 0;
+    virtual int gdr_perc() const = 0;
     virtual int melee_evasion(const actor *attacker,
                               ev_ignore_type ign = EV_IGNORE_NONE) const = 0;
     virtual int shield_bonus() const = 0;

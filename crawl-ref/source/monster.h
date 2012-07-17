@@ -395,6 +395,7 @@ public:
     bool can_speak();
 
     int armour_class() const;
+    int gdr_perc() const { return 0; }
     int melee_evasion(const actor *attacker, ev_ignore_type evit) const;
 
     bool poison(actor *agent, int amount = 1, bool force = false);
