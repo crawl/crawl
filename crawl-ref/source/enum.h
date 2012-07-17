@@ -3510,6 +3510,17 @@ enum los_type
     LOS_SOLID_SEE    = (1 << 3),
 };
 
+enum ac_type
+{
+    AC_NONE,
+    // These types block small amounts of damage, hardly affecting big hits.
+    AC_NORMAL,
+    AC_HALF,
+    AC_TRIPLE,
+    // This one stays fair over arbitrary splits.
+    AC_PROPORTIONAL,
+};
+
 // Tiles stuff.
 
 enum screen_mode

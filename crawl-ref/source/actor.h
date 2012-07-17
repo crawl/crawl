@@ -240,6 +240,8 @@ public:
 
     virtual int armour_class() const = 0;
     virtual int gdr_perc() const = 0;
+    int apply_ac(int damage, int max_damage = 0, ac_type ac_rule = AC_NORMAL,
+                 int stab_bypass = 0);
     virtual int melee_evasion(const actor *attacker,
                               ev_ignore_type ign = EV_IGNORE_NONE) const = 0;
     virtual int shield_bonus() const = 0;
