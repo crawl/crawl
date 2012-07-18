@@ -2581,6 +2581,53 @@ static void _summon_demon_card(int power, deck_rarity_type rarity)
     }
 }
 
+static void _summon_animals(int power)
+{
+    // Maybe we should just generate a Lair monster instead (and
+    // guarantee that it is mobile)?
+    const monster_type animals[] = {
+        MONS_BUMBLEBEE, MONS_WAR_DOG, MONS_SHEEP, MONS_YAK,
+        MONS_HOG, MONS_SOLDIER_ANT, MONS_WOLF,
+        MONS_GRIZZLY_BEAR, MONS_POLAR_BEAR, MONS_BLACK_BEAR,
+        MONS_AGATE_SNAIL, MONS_BORING_BEETLE, MONS_BASILISK,
+        MONS_KOMODO_DRAGON, MONS_SPINY_FROG, MONS_HOUND,
+        MONS_ELEPHANT, MONS_HIPPOGRIFF, MONS_GRIFFON
+    };
+
+    int count = 0;
+    const int count_max = 8;
+
+    int pow_left = power + 1;
+
+    const bool varied = coinflip();
+
+    monster_type mon = MONS_PROGRAM_BUG;
+
+    while (pow_left >= 0 && count < count_max)
+    {
+        // Pick a random monster and subtract its cost.
+        if (varied || count == 0)
+            mon = RANDOM_ELEMENT(animals);
+
+        const int pow_spent = mons_power(mon) * 3;
+
+        // Allow a certain degree of overuse, but not too much.
+        // Guarantee at least two summons.
+        if (pow_spent >= pow_left * 2 && count >= 2)
+            break;
+
+        pow_left -= pow_spent;
+        count++;
+
+        const bool friendly = (random2(power) > 4);
+
+        create_monster(
+            mgen_data(mon,
+                      friendly ? BEH_FRIENDLY : BEH_HOSTILE, &you,
+                      4, 0, you.pos(), MHITYOU));
+    }
+}
+
 static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
 {
     const int power_level = _get_power_level(power, rarity);
@@ -2934,7 +2981,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_WRATH:            _godly_wrath(); break;
     case CARD_CRUSADE:          _crusade_card(power, rarity); break;
     case CARD_SUMMON_DEMON:     _summon_demon_card(power, rarity); break;
-    case CARD_SUMMON_ANIMAL:    summon_animals(random2(power/3)); break;
+    case CARD_SUMMON_ANIMAL:    _summon_animals(random2(power/3)); break;
     case CARD_SUMMON_WEAPON:    _summon_dancing_weapon(power, rarity); break;
     case CARD_SUMMON_FLYING:    _summon_flying(power, rarity); break;
     case CARD_SUMMON_SKELETON:  _summon_skeleton(power, rarity); break;

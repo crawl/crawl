@@ -50,60 +50,6 @@ static void _monster_greeting(monster *mons, const std::string &key)
     mons_speaks_msg(mons, msg, MSGCH_TALK, silenced(mons->pos()));
 }
 
-bool summon_animals(int pow)
-{
-    bool success = false;
-
-    // Maybe we should just generate a Lair monster instead (and
-    // guarantee that it is mobile)?
-    const monster_type animals[] = {
-        MONS_BUMBLEBEE, MONS_WAR_DOG, MONS_SHEEP, MONS_YAK,
-        MONS_HOG, MONS_SOLDIER_ANT, MONS_WOLF,
-        MONS_GRIZZLY_BEAR, MONS_POLAR_BEAR, MONS_BLACK_BEAR,
-        MONS_AGATE_SNAIL, MONS_BORING_BEETLE, MONS_BASILISK,
-        MONS_KOMODO_DRAGON, MONS_SPINY_FROG, MONS_HOUND,
-        MONS_ELEPHANT, MONS_HIPPOGRIFF, MONS_GRIFFON
-    };
-
-    int count = 0;
-    const int count_max = 8;
-
-    int pow_left = pow + 1;
-
-    const bool varied = coinflip();
-
-    monster_type mon = MONS_PROGRAM_BUG;
-
-    while (pow_left >= 0 && count < count_max)
-    {
-        // Pick a random monster and subtract its cost.
-        if (varied || count == 0)
-            mon = RANDOM_ELEMENT(animals);
-
-        const int pow_spent = mons_power(mon) * 3;
-
-        // Allow a certain degree of overuse, but not too much.
-        // Guarantee at least two summons.
-        if (pow_spent >= pow_left * 2 && count >= 2)
-            break;
-
-        pow_left -= pow_spent;
-        count++;
-
-        const bool friendly = (random2(pow) > 4);
-
-        if (create_monster(
-                mgen_data(mon,
-                          friendly ? BEH_FRIENDLY : BEH_HOSTILE, &you,
-                          4, 0, you.pos(), MHITYOU)))
-        {
-            success = true;
-        }
-    }
-
-    return success;
-}
-
 spret_type cast_summon_butterflies(int pow, god_type god, bool fail)
 {
     fail_check();
