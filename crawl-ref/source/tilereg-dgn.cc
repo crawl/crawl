@@ -9,6 +9,7 @@
 #include "cloud.h"
 #include "command.h"
 #include "coord.h"
+#include "dgn-height.h"
 #include "env.h"
 #include "invent.h"
 #include "itemprop.h"
@@ -983,14 +984,21 @@ bool DungeonRegion::update_tip_text(std::string &tip)
         {
             const coord_def ep = grid2show(gc);
 
-            tip += make_stringf("GC(%d, %d) EP(%d, %d)\n\n",
+            tip += make_stringf("GC(%d, %d) EP(%d, %d)\n",
                                 gc.x, gc.y, ep.x, ep.y);
 
+            if (env.heightmap.get())
+                tip += make_stringf("HEIGHT(%d)\n", dgn_height_at(gc));
+
+            tip += "\n";
             tip += tile_debug_string(env.tile_fg(ep), env.tile_bg(ep), ' ');
         }
         else
         {
-            tip += make_stringf("GC(%d, %d) [out of sight]\n\n", gc.x, gc.y);
+            tip += make_stringf("GC(%d, %d) [out of sight]\n", gc.x, gc.y);
+            if (env.heightmap.get())
+                tip += make_stringf("HEIGHT(%d)\n", dgn_height_at(gc));
+            tip += "\n";
         }
 
         tip += tile_debug_string(env.tile_bk_fg(gc), env.tile_bk_bg(gc), 'B');
