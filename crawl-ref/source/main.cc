@@ -61,6 +61,7 @@
 #include "fprop.h"
 #include "fight.h"
 #include "files.h"
+#include "fineff.h"
 #include "food.h"
 #include "godabil.h"
 #include "godpassive.h"
@@ -3207,6 +3208,8 @@ void world_reacts()
 {
     // All markers should be activated at this point.
     ASSERT(!env.markers.need_activate());
+
+    fire_final_effects();
 
     if (crawl_state.viewport_monster_hp)
     {

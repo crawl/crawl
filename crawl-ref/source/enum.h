@@ -3458,6 +3458,7 @@ enum final_effect_flavour
     FINEFF_TRAMPLE_FOLLOW,
     FINEFF_BLINK,
     FINEFF_DISTORTION_TELEPORT,
+    FINEFF_ROYAL_JELLY_SPAWN,
 };
 
 enum disable_type
