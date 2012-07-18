@@ -3400,6 +3400,7 @@ TILE:   c = dngn_transparent_wall_white
 COLOUR: v = white
 MARKER: D = lua:restrict_door()
 SUBST:  D = +, !' = .
+: set_feature_name("metal_wall", "silver wall")
 MAP
 ............@@@@@@@............
 ....vvvvvvv...T.T...vvvvvvv....
