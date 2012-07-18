@@ -3769,7 +3769,11 @@ static bool _build_vault_impl(const map_def *vault,
                               bool make_no_exits, const coord_def &where)
 {
     if (dgn_check_connectivity && !dgn_zones)
+    {
         dgn_zones = dgn_count_disconnected_zones(false);
+        if (player_in_branch(BRANCH_PANDEMONIUM) && dgn_zones > 1)
+            throw dgn_veto_exception("Pan map with disconnected zones");
+    }
 
     vault_placement place;
 
