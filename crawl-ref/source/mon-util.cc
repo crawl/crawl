@@ -513,6 +513,11 @@ bool mons_is_projectile(monster_type mc)
     return (mc == MONS_ORB_OF_DESTRUCTION);
 }
 
+bool mons_is_projectile(const monster* mon)
+{
+    return (mon->type == MONS_ORB_OF_DESTRUCTION);
+}
+
 bool mons_is_boulder(const monster* mon)
 {
     return (mon->type == MONS_BOULDER_BEETLE && mon->rolling());
