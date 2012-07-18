@@ -5427,8 +5427,8 @@ void monster::react_to_damage(const actor *oppressor, int damage,
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "Trying to spawn %d jellies.", tospawn);
 #endif
-        const beh_type beha = SAME_ATTITUDE(this);
         int spawned = 0;
+        unsigned short att = oppressor ? oppressor->mindex() : MHITNOT;
         for (int i = 0; i < tospawn; ++i)
         {
             const monster_type jelly = royal_jelly_ejectable_monster();
@@ -5437,8 +5437,8 @@ void monster::react_to_damage(const actor *oppressor, int damage,
                 continue;
 
             if (monster *mons = mons_place(
-                                  mgen_data(jelly, beha, this, 0, 0,
-                                            jpos, foe, MG_DONT_COME, god)))
+                                  mgen_data(jelly, BEH_HOSTILE, this, 0, 0,
+                                            jpos, att, MG_DONT_COME, god)))
             {
                 // Don't allow milking the royal jelly.
                 mons->flags |= MF_NO_REWARD;
