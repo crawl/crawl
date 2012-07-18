@@ -202,7 +202,8 @@ static bool _iood_shielded(monster& mon, actor &victim)
 
 static bool _boulder_hit(monster& mon, const coord_def &pos)
 {
-    if (actor *victim = actor_at(pos))
+    actor *victim = actor_at(pos);
+    if (victim)
     {
         simple_monster_message(&mon, (std::string(" smashes into ")
                                + victim->name(DESC_THE) + "!").c_str());
@@ -215,7 +216,7 @@ static bool _boulder_hit(monster& mon, const coord_def &pos)
     }
 
     noisy(5, pos);
-    return true;
+    return victim && victim->alive();
 }
 
 static bool _iood_hit(monster& mon, const coord_def &pos, bool big_boom = false)
@@ -503,7 +504,7 @@ move_again:
 
         if (_iood_hit(mon, pos))
         {
-            if (!iood && victim && victim->alive())
+            if (!iood)
                 _iood_stop(mon);
             return true;
         }
