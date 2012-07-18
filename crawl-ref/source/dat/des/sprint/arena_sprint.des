@@ -98,7 +98,7 @@ function arena_sprint_end_round(data)
         dgn.create_item(you_x, you_y, data.monster_set[3])
         data.time_left = 1500 + crawl.random2(500)
     elseif data.round_id == 27 then
-        crawl.mpr("The Orb of Zot has appeared!", "orb")
+        crawl.mpr("The Orb of Zot has appeared in the centre of the arena!", "orb")
         local p = dgn.find_marker_positions_by_prop("centre_point", 1)[1]
         dgn.create_item(p.x, p.y, "orb of zot")
         data.time_left = 1000 + crawl.random2(250)
@@ -115,7 +115,7 @@ function arena_sprint_end_round(data)
         data.style_mult = 27
     end
 
-    if data.num_killed >= data.round_enemies or data.spawn_rate == 1 then
+    if data.num_killed >= data.round_enemies or data.lightning_round then
         data.style_mult = data.style_mult + 1
         if arena_sprint_is_boss_round(data.round_id) then
             crawl.mpr("<yellow>You have won a prize for killing the boss!</yellow>", "warning")
@@ -125,8 +125,7 @@ function arena_sprint_end_round(data)
         else
             crawl.mpr("<yellow>Victory!</yellow>", "warning")
         end
-        crawl.mpr("Score multiplier: " .. data.style_mult .. "x",
-                  "intrinsic_gain")
+        crawl.mpr("Score multiplier: " .. data.style_mult .. "x", "intrinsic_gain")
         -- Gold multiplier is capped at 5x
         gold_gain = gold_gain * math.min(data.style_mult, 5)
     else
@@ -807,10 +806,12 @@ function thing_do_arena(data, triggerable, triggerer, marker, ev)
                 crawl.dpr("Number to spawn: " .. data.round_enemies .. ".")
 
                 -- 1/5 chance of a normal round being a lightning round
+                data.lightning_round = false
                 if data.round_id ~= 27 and data.round_id ~= 1 and crawl.one_chance_in(5)
                     and not arena_sprint_is_boss_round(data.round_id)
                 then
                     data.spawn_rate = 1
+                    data.lightning_round = true
                     crawl.mpr("LIGHTNING ROUND!", "warning")
                 elseif arena_sprint_is_boss_round(data.round_id) then
                     data.spawn_rate = math.ceil(2000 / data.round_enemies)
@@ -883,6 +884,7 @@ LROCKTILE:  wall_hall
             round_enemies = 0,      -- How many you need to fight
             spawn_rate = 0,         -- How quickly monsters spawn
             spawn_timer = 0,        -- Counter for monster spawning
+            lightning_round = false,
             time_left = 60,         -- How much time is left
             between_rounds = true,  -- Are we waiting for the next round?
             finished = false,       -- You somehow beat round 57
