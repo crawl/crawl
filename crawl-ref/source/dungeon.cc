@@ -2429,6 +2429,7 @@ static void _pan_level()
 
             dgn_ensure_vault_placed(_build_primary_vault(layout), true);
 
+            dgn_check_connectivity = true;
             _build_secondary_vault(vault);
         }
     }
