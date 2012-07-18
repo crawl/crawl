@@ -2405,7 +2405,6 @@ int mons_gehenna_level(monster_type mcls)
 
     case MONS_FLYING_SKULL:
     case MONS_IRON_GOLEM:
-    case MONS_MUMMY:
     case MONS_PHANTOM:
     case MONS_ROTTING_DEVIL:
     case MONS_SHADOW:
@@ -2451,9 +2450,6 @@ int mons_gehenna_rare(monster_type mcls)
     case MONS_ZOMBIE_LARGE:
     case MONS_ZOMBIE_SMALL:
         return 99;
-
-    case MONS_MUMMY:
-        return 70;
 
     case MONS_SHADOW:
         return 61;
