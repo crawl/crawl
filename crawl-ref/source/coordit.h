@@ -77,7 +77,7 @@ private:
     circle_iterator iter;
     bool exclude_center;
     const los_base* los;  // restrict to the los if not NULL
-    coord_def current;    // storage for operater->
+    coord_def current;    // storage for operator->
 };
 
 class adjacent_iterator : public radius_iterator
