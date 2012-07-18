@@ -2578,13 +2578,15 @@ bool mon_special_ability(monster* mons, bolt & beem)
                 if (coinflip())
                 {
                 //  behaviour_event(mons, ME_CORNERED);
-                    boulder_flee(mons, &beem);
+                    simple_monster_message(mons, " curls into a ball and rolls away!");
+                    boulder_start(mons, &beem);
                 }
             }
             // Normal check - don't roll at adjacent targets
             else if (one_chance_in(3) &&
                      !adjacent(mons->pos(), beem.target))
             {
+                simple_monster_message(mons, " curls into a ball and starts rolling!");
                 boulder_start(mons, &beem);
             }
         }
