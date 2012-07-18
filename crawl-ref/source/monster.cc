@@ -5415,67 +5415,8 @@ void monster::react_to_damage(const actor *oppressor, int damage,
     // The royal jelly objects to taking damage and will SULK. :-)
     if (type == MONS_ROYAL_JELLY)
     {
-        int lobes = hit_points / 12;
-        int oldlobes = (hit_points + damage) / 12;
-
-        if (lobes == oldlobes)
-            return;
-
-        mon_acting mact(this);
-
-        const int tospawn = oldlobes - lobes;
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "Trying to spawn %d jellies.", tospawn);
-#endif
-        int spawned = 0;
-        unsigned short att = oppressor ? oppressor->mindex() : MHITNOT;
-        for (int i = 0; i < tospawn; ++i)
-        {
-            const monster_type jelly = royal_jelly_ejectable_monster();
-            coord_def jpos = find_newmons_square_contiguous(jelly, pos());
-            if (!in_bounds(jpos))
-                continue;
-
-            if (monster *mons = mons_place(
-                                  mgen_data(jelly, BEH_HOSTILE, this, 0, 0,
-                                            jpos, att, MG_DONT_COME, god)))
-            {
-                // Don't allow milking the royal jelly.
-                mons->flags |= MF_NO_REWARD;
-                spawned++;
-            }
-        }
-
-        const bool needs_message = spawned && mons_near(this)
-                                   && visible_to(&you);
-
-        if (!needs_message)
-            return;
-
-        const std::string monnam = name(DESC_THE);
-        if (alive())
-        {
-            mprf("%s shudders%s.", monnam.c_str(),
-                 spawned >= 5 ? " alarmingly" :
-                 spawned >= 3 ? " violently" :
-                 spawned > 1 ? " vigorously" : "");
-
-            if (spawned == 1)
-                mprf("%s spits out another jelly.", monnam.c_str());
-            else
-            {
-                mprf("%s spits out %s more jellies.",
-                     monnam.c_str(),
-                     number_in_words(spawned).c_str());
-            }
-        }
-        else if (spawned == 1)
-            mprf("One of %s's fragments survives.", monnam.c_str());
-        else
-        {
-            mprf("The dying %s spits out %s more jellies.",
-                 name(DESC_PLAIN).c_str(), number_in_words(spawned).c_str());
-        }
+        add_final_effect(FINEFF_ROYAL_JELLY_SPAWN, oppressor, this,
+                         pos(), damage);
     }
 
     if (!alive())
