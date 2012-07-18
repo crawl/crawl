@@ -22,6 +22,7 @@
 #include "mon-place.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
+#include "ouch.h"
 #include "shout.h"
 #include "stuff.h"
 #include "terrain.h"
@@ -593,30 +594,21 @@ static bool _boulder_shielded(monster& mon, actor &victim)
     return (pro_block >= con_block);
 }
 
-static bool _boulder_hit(monster& mon, const coord_def &pos)
+static bool _boulder_hit(monster& mon, const coord_def &pos, actor *victim)
 {
-    bolt beam;
-    beam.name = "rolling boulder";
-    beam.flavour = BEAM_MISSILE;
-    beam.attitude = mon.attitude;
+    if (victim)
+    {
+        simple_monster_message(&mon, (std::string(" smashes into ")
+                               + victim->name(DESC_PLAIN) + "!").c_str());
 
-    actor *caster = &mon;
-    beam.set_agent(caster);
-    beam.colour = WHITE;
-    beam.glyph = dchar_glyph(DCHAR_FIRED_BURST);
-    beam.range = 1;
-    beam.source = pos;
-    beam.target = pos;
-    beam.hit = AUTOMATIC_HIT;
-    beam.source_name = mon.name(DESC_PLAIN, true);
+        int dam = roll_dice(3, 20) - random2(1 + victim->armour_class());
+        if (victim->is_player())
+            ouch(dam, mon.mindex(), KILLED_BY_ROLLING);
+        else
+            victim->hurt(&mon, dam);
+    }
 
-    beam.damage = dice_def(3, 20);
-
-    beam.ex_size = 1;
-    beam.loudness = 5;
-
-    beam.fire();
-
+    noisy(5, pos);
     return true;
 }
 
@@ -822,7 +814,7 @@ move_again:
         if (victim == &you)
             mprf("%s hits you!", mon.name(DESC_THE, true).c_str());
 
-        if (_boulder_hit(mon, pos))
+        if (_boulder_hit(mon, pos, victim))
         {
             if (victim && victim->alive())
                 _boulder_stop(mon);
