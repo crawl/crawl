@@ -2953,7 +2953,7 @@ NAME:   sevenhm_entry_forest_fort_small_3
 TAGS:   entry no_pool_fixup no_monster_gen
 ORIENT: float
 : if crawl.one_chance_in(4) then
-SUBST:  z : @ , + = +== , Z : + =:1 , X = xx. , p : tR , m : c
+SUBST:  z : @ , Z : + , X = xx. , p : tR , m : c
 : else
 SUBST:  X : @, Z : c, z : x, p : x, m : .
 : end
