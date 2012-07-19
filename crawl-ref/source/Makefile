@@ -52,6 +52,7 @@
 #                         font; if not set, a copy of Bitstream Vera Sans
 #                         shipped with Crawl will be used
 #    MONOSPACED_FONT   -- monospaced font; Bitstream Vera Mono Sans
+#    COPY_FONTS    -- force installing fonts
 #
 #    WEBTILES      -- set to anything to compile for Webtiles
 #    WEBDIR        -- place to hold the Webtiles client data. Can be either
@@ -220,6 +221,7 @@ ifneq (,$(findstring MINGW,$(uname_S)))
 	ifeq ($(shell gcc -v -static-libstdc++ 2>&1 | grep 'unrecognized option'),)
 		EXTRA_LIBS += -static-libgcc -static-libstdc++
 	endif
+	COPY_FONTS = yes
 endif
 ifeq ($(uname_S),Darwin)
 	STRIP := strip -x
@@ -235,6 +237,7 @@ ifeq ($(uname_S),Darwin)
 		BUILD_SDLIMAGE = YesPlease
 		BUILD_LIBPNG = YesPlease
 	endif
+	COPY_FONTS = yes
 endif
 ifdef USE_LUAJIT
 	BUILD_LUA := YesPlease
@@ -246,6 +249,7 @@ ifneq (,$(findstring CYGWIN,$(uname_S)))
 	GAME = crawl.exe
 	NO_RDYNAMIC = YesPlease
 	BUILD_PCRE = YesPlease
+	CONTRIB_FONTS = yes
 endif
 
 ifdef BUILD_ALL
@@ -626,13 +630,6 @@ endif
 DEFINES_L += $(PNG_CFLAGS) $(FREETYPE_CFLAGS) $(SDL_CFLAGS)
 INCLUDES_L += $(PNG_INCLUDE) $(FREETYPE_INCLUDE) $(SDL_INCLUDE)
 
-ifdef PROPORTIONAL_FONT
-DEFINES += -DPROPORTIONAL_FONT=\"$(PROPORTIONAL_FONT)\"
-endif
-ifdef MONOSPACED_FONT
-DEFINES += -DMONOSPACED_FONT=\"$(MONOSPACED_FONT)\"
-endif
-
 endif # TILES
 
 # On clang, unknown -Wfoo is merely a warning, thus -Werror.
@@ -771,9 +768,17 @@ ifneq ($(strip $(DATADIR)),)
     endif
   endif
   CFOTHERS_L += -DDATA_DIR_PATH=\"$(abspath $(DATADIR))/\"
+  FONTDIR = $(abspath $(DATADIR))dat/tiles/
 else
   ifneq ($(prefix),)
 	DATADIR := $(strip $(prefix))/$(strip $(DATADIR))
+        FONTDIR = $(strip $(prefix))/$(strip $(DATADIR))dat/tiles/
+  else
+    ifneq ($(DESTDIR),)
+        FONTDIR = dat/tiles/
+    else
+        FONTDIR = contrib/fonts/
+    endif
   endif
 endif
 datadir_fp := $(abspath $(strip $(DESTDIR))$(strip $(DATADIR)))
@@ -792,6 +797,62 @@ else
   endif
 endif
 webdir_fp := $(abspath $(strip $(DESTDIR))$(strip $(WEBDIR)))
+
+
+# Fonts.
+ifdef TILES
+
+OUR_PROPORTIONAL_FONT=DejaVuSans.ttf
+OUR_MONOSPACED_FONT=DejaVuSansMono.ttf
+
+ifdef PROPORTIONAL_FONT
+  DEFINES += -DPROPORTIONAL_FONT=\"$(PROPORTIONAL_FONT)\"
+  ifneq (,$(COPY_FONTS))
+    INSTALL_FONTS += $(PROPORTIONAL_FONT)
+  endif
+else
+  SYS_PROPORTIONAL_FONT = $(shell find /usr/share/fonts -iname $(OUR_PROPORTIONAL_FONT)|head -n 1)
+  ifeq (,$(SYS_PROPORTIONAL_FONT))
+    SYS_PROPORTIONAL_FONT = $(shell find /usr/local/share/fonts -iname $(OUR_PROPORTIONAL_FONT)|head -n 1)
+  endif
+  ifneq (,$(SYS_PROPORTIONAL_FONT))
+    ifeq (,$(COPY_FONTS))
+      DEFINES += -DPROPORTIONAL_FONT=\"$(SYS_PROPORTIONAL_FONT)\"
+    else
+      DEFINES += -DPROPORTIONAL_FONT=\"$(FONTDIR)$(OUR_PROPORTIONAL_FONT)\"
+      INSTALL_FONTS += $(SYS_PROPORTIONAL_FONT)
+    endif
+  else
+    DEFINES += -DPROPORTIONAL_FONT=\"$(FONTDIR)$(OUR_PROPORTIONAL_FONT)\"
+    INSTALL_FONTS += contrib/fonts/$(OUR_PROPORTIONAL_FONT)
+  endif
+endif
+
+ifdef MONOSPACED_FONT
+  DEFINES += -DMONOSPACED_FONT=\"$(MONOSPACED_FONT)\"
+  ifneq (,$(COPY_FONTS))
+    INSTALL_FONTS += $(MONOSPACED_FONT)
+  endif
+else
+  SYS_MONOSPACED_FONT = $(shell find /usr/share/fonts -iname $(OUR_MONOSPACED_FONT)|head -n 1)
+  ifeq (,$(SYS_MONOSPACED_FONT))
+    SYS_MONOSPACED_FONT = $(shell find /usr/local/share/fonts -iname $(OUR_MONOSPACED_FONT)|head -n 1)
+  endif
+  ifneq (,$(SYS_MONOSPACED_FONT))
+    ifeq (,$(COPY_FONTS))
+      DEFINES += -DMONOSPACED_FONT=\"$(SYS_MONOSPACED_FONT)\"
+    else
+      DEFINES += -DMONOSPACED_FONT=\"$(FONTDIR)$(OUR_MONOSPACED_FONT)\"
+      INSTALL_FONTS += $(SYS_MONOSPACED_FONT)
+    endif
+  else
+    DEFINES += -DMONOSPACED_FONT=\"$(FONTDIR)$(OUR_MONOSPACED_FONT)\"
+    INSTALL_FONTS += contrib/fonts/$(OUR_MONOSPACED_FONT)
+  endif
+endif
+
+endif
+
 
 ifndef NO_NCURSES
 
@@ -1182,11 +1243,8 @@ endif
 ifdef TILES
 	mkdir -p $(datadir_fp)/dat/tiles
 	$(COPY) dat/tiles/*.png $(datadir_fp)/dat/tiles/
-ifndef PROPORTIONAL_FONT
-	$(COPY) dat/tiles/Vera.ttf $(datadir_fp)/dat/tiles/
-endif
-ifndef MONOSPACED_FONT
-	$(COPY) dat/tiles/VeraMono.ttf $(datadir_fp)/dat/tiles/
+ifneq (,$(INSTALL_FONTS))
+	$(COPY) $(INSTALL_FONTS) $(datadir_fp)/dat/tiles/
 endif
 endif
 ifdef WEBTILES

@@ -378,11 +378,13 @@
 // Uncomment these if you can't find these functions on your system
 // #define NEED_USLEEP
 
-#ifndef PROPORTIONAL_FONT
-    #define PROPORTIONAL_FONT "Vera.ttf"
-#endif
-#ifndef MONOSPACED_FONT
-    #define MONOSPACED_FONT "VeraMono.ttf"
+#ifdef USE_TILE_LOCAL
+# ifndef PROPORTIONAL_FONT
+#  error PROPORTIONAL_FONT not defined
+# endif
+# ifndef MONOSPACED_FONT
+#  error MONOSPACED_FONT not defined
+# endif
 #endif
 
 #ifdef __cplusplus
