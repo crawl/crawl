@@ -381,7 +381,7 @@ public:
     int warding() const;
 
     bool rolling() const { return has_ench(ENCH_ROLLING); } ;
-    bool has_spells() const;
+    bool has_spells(bool check_god = true) const;
     bool has_spell(spell_type spell) const;
     bool has_unholy_spell() const;
     bool has_evil_spell() const;

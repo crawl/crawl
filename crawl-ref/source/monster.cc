@@ -3048,8 +3048,14 @@ void monster::banish(actor *agent, const std::string &)
         }
 }
 
-bool monster::has_spells() const
+bool monster::has_spells(bool check_god) const
 {
+    if (check_god
+        && (god == GOD_OKAWARU
+            || god == GOD_TROG
+            || god == GOD_YREDELEMNUL))
+        return true;
+
     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
         if (spells[i] != SPELL_NO_SPELL)
             return true;

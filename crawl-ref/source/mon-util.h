@@ -13,6 +13,7 @@
 #include "mon_resist_def.h"
 #include "player.h"
 #include "monster.h"
+#include "mon-mst.h"
 
 struct bolt;
 
@@ -279,6 +280,8 @@ int mons_class_colour(monster_type mc);
 
 monster_type royal_jelly_ejectable_monster();
 monster_type random_draconian_monster_species();
+
+void mons_load_spells(monster* mon, mon_spellbook_type book);
 
 bool init_abomination(monster* mon, int hd);
 void define_monster(monster* mons);

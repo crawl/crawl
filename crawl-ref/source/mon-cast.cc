@@ -1766,6 +1766,38 @@ static void _mons_set_priest_wizard_god(monster* mons, bool& priest,
         god = mons->god;
 }
 
+static monster_spells _get_mons_god_spells(god_type god, bool *found)
+{
+    static monster mon_okawaru;
+    static monster mon_trog;
+    static monster mon_yred;
+    static bool loaded = false;
+
+    if (god != GOD_OKAWARU
+        && god != GOD_TROG
+        && god != GOD_YREDELEMNUL)
+    {
+        *found = false;
+        return monster_spells();
+    }
+    if (!loaded)
+    {
+        mons_load_spells(&mon_okawaru, MST_BK_OKAWARU);
+        mons_load_spells(&mon_trog,    MST_BK_TROG);
+        mons_load_spells(&mon_yred,    MST_BK_YREDELEMNUL);
+        loaded = true;
+    }
+
+    monster *which = (god == GOD_OKAWARU)       ? &mon_okawaru
+                     : (god == GOD_TROG)        ? &mon_trog
+                     : (god == GOD_YREDELEMNUL) ? &mon_yred
+                                                : NULL;
+
+    ASSERT(which);
+    *found = true;
+    return which->spells;
+}
+
 //---------------------------------------------------------------
 //
 // handle_spell
@@ -1838,8 +1870,40 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         return false;
     else
     {
+        bool using_god_spells = false;
         spell_type spell_cast = SPELL_NO_SPELL;
         monster_spells hspell_pass(mons->spells);
+
+        // Try to use god abilities if appropriate.
+        if (mons->god != GOD_NO_GOD
+            && mons->god != GOD_NAMELESS
+            && (!mons->has_spells(false) || coinflip()))
+        {
+            bool has_god_spells = false;
+            monster_spells book = _get_mons_god_spells(mons->god,
+                                                       &has_god_spells);
+
+            if (has_god_spells)
+            {
+                using_god_spells = true;
+                hspell_pass = book;
+
+                // GOD TODO: piety check as separate function
+                int piety_level =
+                    std::min(6, (mons->hit_dice * 5) / 2);
+                for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
+                {
+                    if (hspell_pass[i] == SPELL_NO_SPELL
+                        || hspell_pass[i] == SPELL_MELEE)
+                        continue;
+
+                    if ((spell_difficulty(hspell_pass[i]) - 1) > piety_level)
+                        hspell_pass[i] = SPELL_NO_SPELL;
+                }
+            }
+        }
+
+try_again:
 
         if (!mon_enemies_around(mons))
         {
@@ -1880,7 +1944,16 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 }
             }
             else if (mons->foe == MHITYOU && !monsterNearby)
+            {
+                if (using_god_spells)
+                {
+                    using_god_spells = false;
+                    hspell_pass = mons->spells;
+                    finalAnswer = false;
+                    goto try_again;
+                }
                 return false;
+            }
         }
 
         // Monsters caught in a net try to get away.
@@ -1938,6 +2011,13 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             if (mons->wont_attack() && !mon_enemies_around(mons)
                 && !one_chance_in(10))
             {
+                if (using_god_spells)
+                {
+                    using_god_spells = false;
+                    hspell_pass = mons->spells;
+                    finalAnswer = false;
+                    goto try_again;
+                }
                 return false;
             }
 
@@ -1962,6 +2042,13 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             if (num_no_spell == NUM_MONSTER_SPELL_SLOTS
                 && draco_breath == SPELL_NO_SPELL)
             {
+                if (using_god_spells)
+                {
+                    using_god_spells = false;
+                    hspell_pass = mons->spells;
+                    finalAnswer = false;
+                    goto try_again;
+                }
                 return false;
             }
 

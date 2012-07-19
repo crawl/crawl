@@ -59,8 +59,6 @@ static mon_display monster_symbols[NUM_MONSTERS];
 static bool initialised_randmons = false;
 static std::vector<monster_type> monsters_by_habitat[NUM_HABITATS];
 
-#include "mon-mst.h"
-
 struct mon_spellbook
 {
     mon_spellbook_type type;
@@ -1862,7 +1860,7 @@ static bool _get_spellbook_list(mon_spellbook_type book[6],
     return retval;
 }
 
-static void _mons_load_spells(monster* mon, mon_spellbook_type book)
+void mons_load_spells(monster* mon, mon_spellbook_type book)
 {
     if (book == MST_GHOST)
         return mon->load_ghost_spells();
@@ -1898,7 +1896,7 @@ static void _get_spells(mon_spellbook_type book, monster* mon)
         }
     }
 
-    _mons_load_spells(mon, book);
+    mons_load_spells(mon, book);
 
     // (Dumb) special casing to give ogre mages Haste Other. -cao
     if (mon->type == MONS_OGRE_MAGE)
