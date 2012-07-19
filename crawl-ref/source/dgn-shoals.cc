@@ -57,6 +57,15 @@ static const int MAX_SHOAL_PLANTS = 180;
 
 static const int _shoals_margin = 6;
 
+enum shoals_height_thresholds
+{
+    SHT_UNDEFINED = -10000,
+    SHT_STONE = 400,
+    SHT_ROCK  = 135,
+    SHT_FLOOR = 0,
+    SHT_SHALLOW_WATER = -30,
+};
+
 enum tide_direction
 {
     TIDE_RISING,

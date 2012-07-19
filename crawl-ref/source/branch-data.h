@@ -83,7 +83,7 @@ const Branch branches[NUM_BRANCHES] = {
       DNGN_ENTER_SHOALS, DNGN_RETURN_FROM_SHOALS,
       "Shoals", "the Shoals", "Shoals",
       NULL,
-      true, YELLOW, BROWN,
+      true, BROWN, BROWN,
       mons_shoals_rare, mons_shoals_level,
       'A', true, 3 },
 
