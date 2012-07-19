@@ -21,6 +21,7 @@
 #include "food.h"
 #include "fprop.h"
 #include "godconduct.h"
+#include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
@@ -1294,7 +1295,8 @@ static int _ignite_poison_clouds(coord_def where, int pow, int, actor *actor)
     if (i != EMPTY_CLOUD)
     {
         cloud_struct& cloud = env.cloud[i];
-        if (cloud.type == CLOUD_MEPHITIC)
+
+	if (cloud.type == CLOUD_MEPHITIC)
         {
             cloud.decay /= 2;
 
@@ -1453,8 +1455,94 @@ static int _ignite_poison_player(coord_def where, int pow, int, actor *actor)
         return 0;
 }
 
+
+static bool maybe_abort_ignite()
+{
+    std::string prompt = "You are standing ";
+
+
+    const int i = env.cgrid(you.pos());
+    if (i != EMPTY_CLOUD)
+    {
+        cloud_struct& cloud = env.cloud[i];
+
+	if (cloud.type == CLOUD_MEPHITIC || cloud.type == CLOUD_POISON)
+	{
+	    prompt += "in a cloud of ";
+	    prompt += cloud_type_name(cloud.type, true);
+	    prompt += "! Ignite poison anyway?";
+	    return (!yesno(prompt.c_str(),false,'n'));
+	}
+    }
+
+    //now check for items at player position
+
+    item_def item;
+    for (stack_iterator si(you.pos()); si; ++si)
+    {
+	item = *si;
+
+
+	if (item.base_type == OBJ_MISSILES && item.special == SPMSL_POISONED)
+	{
+	    prompt += "over ";
+	    prompt += (item.quantity == 1? "a " : "") + (item.name(DESC_PLAIN));
+	    prompt += "! Ignite poison anyway?";
+	    return (!yesno(prompt.c_str(),false,'n'));
+
+        }
+        else if (item.base_type == OBJ_POTIONS)
+        {
+	    if (item_type_known(item)) //don't warn for unidentified potions
+	    {
+                switch (item.sub_type)
+                {
+                case POT_STRONG_POISON:
+                case POT_DEGENERATION:
+                case POT_POISON:
+	            prompt += "over ";
+	            prompt += (item.quantity == 1? "a " : "") + (item.name(DESC_PLAIN));
+	            prompt += "! Ignite poison anyway?";
+                    return (!yesno(prompt.c_str(),false,'n'));
+                    break;
+                default:
+                    break;
+                }
+	    }
+        }
+        else if (item.base_type == OBJ_CORPSES &&
+                 item.sub_type == CORPSE_BODY &&
+                 chunk_is_poisonous(mons_corpse_effect(item.mon_type)))
+        {
+	    prompt += "over ";
+	    prompt += (item.quantity == 1? "a " : "") + (item.name(DESC_PLAIN));
+	    prompt += "! Ignite poison anyway?";
+	    return (!yesno(prompt.c_str(),false,'n'));
+        }
+        else if (item.base_type == OBJ_FOOD &&
+                 item.sub_type == FOOD_CHUNK &&
+                 chunk_is_poisonous(mons_corpse_effect(item.mon_type)))
+        {
+	    prompt += "over ";
+	    prompt += (item.quantity == 1? "a " : "") + (item.name(DESC_PLAIN));
+	    prompt += "! Ignite poison anyway?";
+	    return (!yesno(prompt.c_str(),false,'n'));
+        }
+    }
+
+
+
+    return false;
+}
+
 spret_type cast_ignite_poison(int pow, bool fail)
 {
+    if (maybe_abort_ignite())
+    {
+	canned_msg(MSG_OK);
+	return SPRET_ABORT;
+    }
+
     fail_check();
     targetter_los hitfunc(&you, LOS_NO_TRANS);
     flash_view(RED, &hitfunc);
