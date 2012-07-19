@@ -2247,19 +2247,11 @@ bool imb_can_splash(coord_def origin, coord_def center,
     // also because we don't want aiming one
     // square past a lone monster to be optimal.
     if (origin == target)
-    {
         return false;
-    }
-    if (path_taken.size() > 0
-        && path_taken[path_taken.size() - 1] == target)
-    {
-        return false;
-    }
-    if (path_taken.size() > 1
-        && path_taken[path_taken.size() - 2] == target)
-    {
-        return false;
-    }
+    for (unsigned int i = 0; i < path_taken.size(); i++)
+        if (path_taken[i] == target)
+            return false;
+
     // Don't go far away from the caster (not enough momentum).
     if (distance(origin, center + (target - center)*2)
         > sqr(you.current_vision) + 1)
@@ -2272,8 +2264,8 @@ bool imb_can_splash(coord_def origin, coord_def center,
 
 static void _imb_explosion(bolt *parent, coord_def center)
 {
-    const int dist = parent->path_taken.size();
-    if (parent->source == center
+    const int dist = grid_distance(parent->source, center);
+    if (dist == 0
         || (!parent->is_tracer && !x_chance_in_y(3, 2 + 2 * dist)))
         return;
     bolt beam;
