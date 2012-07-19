@@ -1359,12 +1359,13 @@ void monster::apply_enchantment(const mon_enchant &me)
                         && !mon->has_ench(ENCH_STICKY_FLAME)
                         && coinflip())
                     {
-                        mprf("%s catches fire!", mon->name(DESC_A).c_str());
                         const int dur = me.degree/2 + 1 + random2(me.degree);
                         mon->add_ench(mon_enchant(ENCH_STICKY_FLAME, dur,
                                                   me.agent()));
                         mon->add_ench(mon_enchant(ENCH_FEAR, dur + random2(20),
                                                   me.agent()));
+                        if (visible_to(&you))
+                            mprf("%s catches fire!", mon->name(DESC_A).c_str());
                         behaviour_event(mon, ME_SCARE, me.agent());
                         xom_is_stimulated(100);
                     }
@@ -1388,8 +1389,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         // If you are no longer dying, you must be dead.
         if (decay_enchantment(me))
         {
-            if (you.see_cell(position))
-
+            if (visible_to(&you))
             {
                 if (type == MONS_PILLAR_OF_SALT)
                 {
