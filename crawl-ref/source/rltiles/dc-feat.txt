@@ -192,6 +192,8 @@ stone_stairs_down DNGN_STONE_STAIRS_DOWN
 stone_stairs_up DNGN_STONE_STAIRS_UP
 escape_hatch_down DNGN_ESCAPE_HATCH_DOWN
 escape_hatch_up DNGN_ESCAPE_HATCH_UP
+shoals_stairs_down DNGN_SHOALS_STAIRS_DOWN
+shoals_stairs_up DNGN_SHOALS_STAIRS_UP
 enter DNGN_ENTER
 %rim 1
 return DNGN_RETURN
