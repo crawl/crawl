@@ -890,7 +890,7 @@ struct spell_desc
     SPELL_BERSERKER_RAGE, "Berserker Rage",
      SPTYP_CHARMS,
      SPFLAG_HASTY | SPFLAG_MONSTER,
-     3,
+     1,
      0,
      -1, -1,
      0,
@@ -2909,6 +2909,32 @@ struct spell_desc
      0,
      NULL,
      true,
+     false
+},
+
+{
+    SPELL_HEROISM, "Heroism",
+     SPTYP_CHARMS,
+     SPFLAG_MONSTER,
+     2,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_FINESSE, "Finesse",
+     SPTYP_CHARMS,
+     SPFLAG_HASTY | SPFLAG_MONSTER,
+     5,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
      false
 },
 

@@ -148,6 +148,10 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_ROLLING;
     case ENCH_OZOCUBUS_ARMOUR:
         return MB_OZOCUBUS_ARMOUR;
+    case ENCH_HEROISM:
+        return MB_HEROISM;
+    case ENCH_FINESSE:
+        return MB_FINESSE;
     default:
         return NUM_MB_FLAGS;
     }
@@ -1363,6 +1367,10 @@ std::vector<std::string> monster_info::attributes() const
         v.push_back("rolling");
     if (is(MB_OZOCUBUS_ARMOUR))
         v.push_back("covered in an icy film");
+    if (is(MB_HEROISM))
+        v.push_back("heroic");
+    if (is(MB_FINESSE))
+        v.push_back("attacking rapidly");
     return v;
 }
 

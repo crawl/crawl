@@ -1138,6 +1138,8 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_DEATHS_DOOR:
     case SPELL_OZOCUBUS_ARMOUR:
     case SPELL_OZOCUBUS_REFRIGERATION:
+    case SPELL_HEROISM:
+    case SPELL_FINESSE:
         return true;
     default:
         if (check_validity)
@@ -1592,6 +1594,16 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
 
     case SPELL_OZOCUBUS_ARMOUR:
         if (mon->has_ench(ENCH_OZOCUBUS_ARMOUR))
+            ret = true;
+        break;
+
+    case SPELL_HEROISM:
+        if (mon->has_ench(ENCH_HEROISM))
+            ret = true;
+        break;
+
+    case SPELL_FINESSE:
+        if (mon->has_ench(ENCH_FINESSE) || mon->check_stasis(true))
             ret = true;
         break;
 
@@ -4140,6 +4152,29 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                                    BASELINE_DELAY *
                                    (20 + random2(power) + random2(power))));
 
+        return;
+    }
+
+    case SPELL_HEROISM:
+    {
+        simple_monster_message(mons, " gains the combat prowess of a "
+                                     "mighty hero!");
+        mons->add_ench(mon_enchant(ENCH_HEROISM, 0, mons,
+                                   BASELINE_DELAY *
+                                   (35 + random2(mons->skill(SK_INVOCATIONS, 8)))));
+        return;
+    }
+
+    case SPELL_FINESSE:
+    {
+        bool plural = true;
+        std::string hands = mons->hand_name(true, &plural);
+        mprf("%s %s speed%s up!",
+             apostrophise(mons->name(DESC_THE)).c_str(),
+             hands.c_str(), plural ? "" : "s");
+        mons->add_ench(mon_enchant(ENCH_FINESSE, 0, mons,
+                                   BASELINE_DELAY *
+                                   (40 + random2(mons->skill(SK_INVOCATIONS, 8)))));
         return;
     }
     }

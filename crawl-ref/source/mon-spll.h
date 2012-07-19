@@ -74,7 +74,6 @@
       }
     },
 
-
     {  MST_BK_TROG,
       {
        SPELL_BROTHERS_IN_ARMS,
@@ -82,7 +81,7 @@
        SPELL_TROGS_HAND,
        SPELL_BERSERKER_RAGE,
        SPELL_NO_SPELL,
-       SPELL_NO_SPELL
+       SPELL_BROTHERS_IN_ARMS
       }
     },
 
@@ -1488,8 +1487,8 @@
       {
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
-       SPELL_MIGHT,
-       SPELL_HASTE,
+       SPELL_HEROISM,
+       SPELL_FINESSE,
        SPELL_NO_SPELL,
        SPELL_NO_SPELL
       }

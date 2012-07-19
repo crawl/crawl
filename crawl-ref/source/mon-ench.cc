@@ -767,6 +767,20 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(this, " is no longer regenerating.");
          break;
 
+    case ENCH_HEROISM:
+         if (!quiet)
+            simple_monster_message(this, " looks like a meek peon again.");
+         break;
+
+    case ENCH_FINESSE:
+         if (!quiet && you.can_see(this))
+         {
+            bool plural = true;
+            std::string hands = hand_name(true, &plural);
+            mprf("%s %s slow%s down.",
+                 apostrophise(name(DESC_THE)).c_str(),
+                 hands.c_str(), plural ? "" : "s");
+         }
     default:
         break;
     }
@@ -1078,6 +1092,8 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_BREATH_WEAPON:
     case ENCH_DEATHS_DOOR:
     case ENCH_OZOCUBUS_ARMOUR:
+    case ENCH_HEROISM:
+    case ENCH_FINESSE:
     // case ENCH_ROLLING:
         decay_enchantment(me);
         break;
@@ -1781,7 +1797,7 @@ static const char *enchant_names[] =
     "liquefying", "tornado", "fake_abjuration",
     "dazed", "mute", "blind", "dumb", "mad", "silver_corona", "recite timer",
     "inner_flame", "roused", "breath timer", "deaths_door", "rolling",
-    "ozocubus_armour", "buggy",
+    "ozocubus_armour", "heroism", "finesse", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)

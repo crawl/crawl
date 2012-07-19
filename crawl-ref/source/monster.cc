@@ -4014,14 +4014,22 @@ int monster::skill(skill_type sk, int scale, bool real) const
     if (mons_intel(this) < I_NORMAL)
         return 0;
 
+    bool magic = false;
+    int ret = 0;
+
     int hd = scale * hit_dice;
     switch (sk)
     {
     case SK_EVOCATIONS:
-        return (type == MONS_DEEP_DWARF_ARTIFICER ? hd * 2 : hd);
+        magic = true;
+        ret = (type == MONS_DEEP_DWARF_ARTIFICER ? hd * 2 : hd);
+        break;
 
     case SK_NECROMANCY:
-        return ((holiness() == MH_UNDEAD || holiness() == MH_DEMONIC) ? hd : hd/2);
+        magic = true;
+        ret = ((holiness() == MH_UNDEAD || holiness() == MH_DEMONIC)
+              ? hd : hd/2);
+        break;
 
     case SK_POISON_MAGIC:
     case SK_FIRE_MAGIC:
@@ -4029,11 +4037,33 @@ int monster::skill(skill_type sk, int scale, bool real) const
     case SK_EARTH_MAGIC:
     case SK_AIR_MAGIC:
     case SK_SUMMONINGS:
-        return (is_actual_spellcaster() ? hd : hd / 3);
+        magic = true;
+        ret = (is_actual_spellcaster() ? hd : hd / 3);
+        break;
+
+    case SK_SPELLCASTING:
+    case SK_CONJURATIONS:
+    case SK_HEXES:
+    case SK_CHARMS:
+    case SK_TRANSLOCATIONS:
+    case SK_TRANSMUTATIONS:
+    case SK_INVOCATIONS:
+        magic = true;
+        break;
 
     default:
-        return 0;
+        break;
     }
+
+    if (has_ench(ENCH_HEROISM) && !magic)
+        ret += 5;
+
+    if (ret > 27)
+        ret = 27;
+
+    // GOD TODO: Ashenzari skill boosts
+
+    return ret;
 }
 
 void monster::blink(bool)

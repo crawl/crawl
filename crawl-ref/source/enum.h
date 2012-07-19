@@ -1512,6 +1512,8 @@ enum enchant_type
     ENCH_DEATHS_DOOR,
     ENCH_ROLLING,       // Boulder Beetle in ball form
     ENCH_OZOCUBUS_ARMOUR,
+    ENCH_HEROISM,
+    ENCH_FINESSE,
     // Update enchantment names in monster.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -3231,6 +3233,9 @@ enum spell_type
     SPELL_SILVER_BLAST,
     SPELL_ENSNARE,
     SPELL_THUNDERBOLT,
+
+    SPELL_HEROISM,
+    SPELL_FINESSE,
 
     NUM_SPELLS
 };

@@ -3459,6 +3459,74 @@ int melee_attack::calc_to_hit(bool random)
     const int base_hit = mhit;
 #endif
 
+    // fighting contribution
+    mhit += maybe_random_div(attacker->skill(SK_FIGHTING, 100), 100, random);
+
+    // weapon skill contribution
+    if (weapon)
+    {
+        if (wpn_skill != SK_FIGHTING)
+        {
+            // GOD TODO: apply this to monsters too!
+            if (attacker->is_player()
+                && you.skill(wpn_skill) < 1
+                && player_in_a_dangerous_place())
+                xom_is_stimulated(10); // Xom thinks that is mildly amusing.
+
+            mhit += maybe_random_div(attacker->skill(wpn_skill, 100), 100,
+                                     random);
+        }
+    }
+    else
+    {                       // ...you must be unarmed
+        // Members of clawed species have presumably been using the claws,
+        // making them more practiced and thus more accurate in unarmed
+        // combat.  They keep this benefit even the claws are covered (or
+        // missing because of a change in form).
+        if (attacker->is_player())
+            mhit += species_has_claws(you.species) ? 4 : 2;
+
+        mhit += maybe_random_div(attacker->skill(SK_UNARMED_COMBAT, 100), 100,
+                                     random);
+    }
+
+    // weapon bonus contribution
+    if (weapon)
+    {
+        if (weapon->base_type == OBJ_WEAPONS && !is_range_weapon(*weapon))
+        {
+            mhit += weapon->plus;
+            mhit += property(*weapon, PWPN_HIT);
+
+            if (get_equip_race(*weapon) == ISFLAG_ELVEN
+                && (attacker->is_player() && player_genus(GENPC_ELVEN)
+                    || attacker->is_monster()
+                       && mons_genus(attacker->as_monster()->type) == MONS_ELF))
+            {
+                mhit += (random && coinflip() ? 2 : 1);
+            }
+            else if (get_equip_race(*weapon) == ISFLAG_ORCISH
+                     && (attacker->is_player() && you.religion == GOD_BEOGH
+                         && !player_under_penance()
+                         || attacker->is_monster()
+                            && attacker->as_monster()->god == GOD_BEOGH))
+            {
+                mhit++;
+            }
+
+        }
+        else if (weapon->base_type == OBJ_STAVES)
+            mhit += property(*weapon, PWPN_HIT);
+        else if (weapon->base_type == OBJ_RODS)
+        {
+            mhit += property(*weapon, PWPN_HIT);
+            mhit += weapon->special;
+        }
+    }
+
+    // armour penalty
+    mhit -= (attacker_armour_tohit_penalty + attacker_shield_tohit_penalty);
+
     // This if statement is temporary, it should be removed when the
     // implementation of a more universal (and elegant) to-hit calculation
     // is designed. The actual code is copied from the old mons_to_hit and
@@ -3468,71 +3536,12 @@ int melee_attack::calc_to_hit(bool random)
         if (player_effect_inaccuracy())
             mhit -= 5;
 
-        // fighting contribution
-        mhit += maybe_random_div(you.skill(SK_FIGHTING, 100), 100, random);
-
-        // weapon skill contribution
-        if (weapon)
-        {
-            if (wpn_skill != SK_FIGHTING)
-            {
-                if (you.skill(wpn_skill) < 1 && player_in_a_dangerous_place())
-                    xom_is_stimulated(10); // Xom thinks that is mildly amusing.
-
-                mhit += maybe_random_div(you.skill(wpn_skill, 100), 100,
-                                         random);
-            }
-        }
-        else
-        {                       // ...you must be unarmed
-            // Members of clawed species have presumably been using the claws,
-            // making them more practiced and thus more accurate in unarmed
-            // combat.  They keep this benefit even the claws are covered (or
-            // missing because of a change in form).
-            mhit += species_has_claws(you.species) ? 4 : 2;
-
-            mhit += maybe_random_div(you.skill(SK_UNARMED_COMBAT, 100), 100,
-                                         random);
-        }
-
-        // weapon bonus contribution
-        if (weapon)
-        {
-            if (weapon->base_type == OBJ_WEAPONS && !is_range_weapon(*weapon))
-            {
-                mhit += weapon->plus;
-                mhit += property(*weapon, PWPN_HIT);
-
-                if (get_equip_race(*weapon) == ISFLAG_ELVEN
-                    && player_genus(GENPC_ELVEN))
-                {
-                    mhit += (random && coinflip() ? 2 : 1);
-                }
-                else if (get_equip_race(*weapon) == ISFLAG_ORCISH
-                         && you.religion == GOD_BEOGH && !player_under_penance())
-                {
-                    mhit++;
-                }
-
-            }
-            else if (weapon->base_type == OBJ_STAVES)
-                mhit += property(*weapon, PWPN_HIT);
-            else if (weapon->base_type == OBJ_RODS)
-            {
-                mhit += property(*weapon, PWPN_HIT);
-                mhit += weapon->special;
-            }
-        }
-
         // slaying bonus
         mhit += slaying_bonus(PWPN_HIT);
 
         // hunger penalty
         if (you.hunger_state == HS_STARVING)
             mhit -= 3;
-
-        // armour penalty
-        mhit -= (attacker_armour_tohit_penalty + attacker_shield_tohit_penalty);
 
         //mutation
         if (player_mutation_level(MUT_EYEBALLS))
@@ -3611,9 +3620,6 @@ int melee_attack::calc_to_hit(bool random)
         }
 
         mhit += scan_mon_inv_randarts(attacker->as_monster(), ARTP_ACCURACY);
-
-        if (weapon && weapon->base_type == OBJ_RODS)
-            mhit += weapon->special;
     }
 
     // Penalties for both players and monsters:
@@ -3713,13 +3719,18 @@ int melee_attack::calc_attack_delay(bool random, bool scaled)
     }
     else
     {
-        if (!weapon)
-            return 10;
+        int ret = 10;
+        if (weapon)
+        {
+            int delay = property(*weapon, PWPN_SPEED);
+            if (damage_brand == SPWPN_SPEED)
+                delay = (delay + 1) / 2;
+            ret = random ? div_rand_round(10 + delay, 2) : (10 + delay) / 2;
+        }
+        if (scaled && attacker->as_monster()->has_ench(ENCH_FINESSE))
+            ret = random ? div_rand_round(ret, 2) : ret / 2;
 
-        int delay = property(*weapon, PWPN_SPEED);
-        if (damage_brand == SPWPN_SPEED)
-            delay = (delay + 1) / 2;
-        return random ? div_rand_round(10 + delay, 2) : (10 + delay) / 2;
+        return ret;
     }
 
     return 0;
