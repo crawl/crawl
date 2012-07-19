@@ -966,7 +966,7 @@ KFEAT:  { = {
 # grouped by category.
 
 KFEAT:  C = scroll shop type:Identification suffix:Station count:17 greed:25 ; scroll of identify q:3
-KFEAT:  D = book shop type:Must-Have suffix:Magic greed:14 count:13 use_all ; \
+KFEAT:  D = book shop type:Must-Have suffix:Magic greed:9 count:13 use_all ; \
             book of summonings | book of spatial translocations | book of enchantments |\
             book of death | book of war chants | book of the sky | book of the warp |\
             book of the earth | book of burglary | book of annihilations |\
@@ -992,9 +992,9 @@ KFEAT:  O = distillery shop type:Do-It-Yourself suffix:Clinic count:17 use_all g
             potion of heal wounds q:3 | potion of heal wounds q:3 | potion of heal wounds q:3 |\
             potion of curing q:4 | potion of curing q:4 | potion of curing q:4 |\
             potion of curing q:4 | potion of curing q:4
-KFEAT:  IJ = antiques shop type:Jewellery count:17 greed:16 ; \
+KFEAT:  IJ = antiques shop type:Jewellery count:17 greed:14 ; \
              any jewellery randart
-KFEAT:  K = antique armour shop count:17 use_all type:Advanced suffix:Armour greed:60 ; \
+KFEAT:  K = antique armour shop count:17 use_all type:Advanced suffix:Armour greed:40 ; \
             pair of gloves randart | pair of gloves randart | pair of boots randart |\
             pair of boots randart | helmet randart | cap randart | buckler randart |\
             shield randart | cloak randart | cloak randart | robe randart | animal skin randart |\
@@ -1011,7 +1011,7 @@ KFEAT:  L = armour shop count:17 greed:12 type:Basic suffix:Armour use_all ; \
             mundane not_cursed buckler | mundane not_cursed pair of gloves |\
             mundane not_cursed helmet
 KFEAT:  M = food shop count:17 type:Bee suffix:Food greed:5 ; royal jelly q:3
-KFEAT:  N = antiques shop type:Book suffix:Bin count:17 greed:16 ; any randbook
+KFEAT:  N = antiques shop type:Book suffix:Bin count:17 greed:15 ; any randbook
 KFEAT:  Q = weapon shop type:Weapon suffix:Rack count:17 use_all greed:30 ; \
             mundane not_cursed quick blade | mundane not_cursed demon blade |\
             mundane not_cursed triple sword | mundane not_cursed broad axe |\
@@ -1021,7 +1021,7 @@ KFEAT:  Q = weapon shop type:Weapon suffix:Rack count:17 use_all greed:30 ; \
             mundane not_cursed lajatang | staff of fire | staff of air |\
             staff of earth | staff of cold | staff of poison | staff of death
 KFEAT:  H = distillery shop type:Bottled suffix:Wisdom count:10 greed:10 ; | potion of experience
-KFEAT:  R = general shop type:Premium suffix:Goods use_all count:17 greed:30 ; \
+KFEAT:  R = general shop type:Premium suffix:Goods use_all count:17 greed:25 ; \
             quad damage | quad damage | quad damage | quad damage | wand of heal wounds charges:5 | \
             wand of hasting charges:5 | sultana q:200 | amulet of the gourmand | \
             amulet of clarity | amulet of stasis | ring of see invisible |\
