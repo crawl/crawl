@@ -1935,6 +1935,7 @@ int monster_die(monster* mons, killer_type killer,
 
         case KILL_MON:          // Monster kills in combat.
         case KILL_MON_MISSILE:  // Monster kills by missile or beam.
+        {
             if (death_message)
             {
                 const char* msg =
@@ -1968,15 +1969,9 @@ int monster_die(monster* mons, killer_type killer,
                                 true, mons);
             }
 
-            // Trying to prevent summoning abuse here, so we're trying to
-            // prevent summoned creatures from being done_good kills.  Only
-            // affects creatures which were friendly when summoned.
-            if (!created_friendly && gives_xp && pet_kill
-                && (anon || !invalid_monster_index(killer_index)))
+            monster* killer_mon = NULL;
+            if (!invalid_monster_index(killer_index))
             {
-                bool notice = false;
-
-                monster* killer_mon = NULL;
                 if (!anon)
                 {
                     killer_mon = &menv[killer_index];
@@ -1986,6 +1981,40 @@ int monster_die(monster* mons, killer_type killer,
                     if (killer_mon->type == MONS_NO_MONSTER)
                         anon = true;
                 }
+            }
+
+            if (killer_mon
+                && (gives_xp
+                    || (is_evil_god(killer_mon->god) && !mons->is_summoned()
+                        && !fake_abjuration
+                        && (targ_holy == MH_NATURAL || targ_holy == MH_HOLY))))
+            {
+                if((killer_mon->god == GOD_MAKHLEB
+                    || killer_mon->god == GOD_SHINING_ONE
+                           && (mons->is_evil() || mons->is_unholy()))
+                   && !mons_is_object(mons->type)
+                   && mons->piety_level() >= 1
+                   && !killer_mon->has_ench(ENCH_DEATHS_DOOR))
+                {
+                    if (killer_mon->stat_hp() < killer_mon->stat_maxhp())
+                    {
+                        int heal = (killer_mon->god == GOD_MAKHLEB) ?
+                                    mons->hit_dice + random2(mons->hit_dice) :
+                                    random2(1 + 2 * mons->hit_dice);
+                        if (heal > 0)
+                            simple_monster_message(killer_mon,
+                                " looks a little better.");
+                        killer_mon->heal(heal);
+                    }
+                }
+            }
+
+            // Trying to prevent summoning abuse here, so we're trying to
+            // prevent summoned creatures from being done_good kills.  Only
+            // affects creatures which were friendly when summoned.
+            if (!created_friendly && gives_xp && pet_kill)
+            {
+                bool notice = false;
 
                 const mon_holy_type killer_holy =
                     anon ? MH_NATURAL : killer_mon->holiness();
@@ -2185,6 +2214,7 @@ int monster_die(monster* mons, killer_type killer,
                     _make_spectral_thing(mons, !death_message);
             }
             break;
+        }
 
         // Monster killed by trap/inanimate thing/itself/poison not from you.
         case KILL_MISC:

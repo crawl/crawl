@@ -947,6 +947,28 @@ bolt mons_spells(monster* mons, spell_type spell_cast, int power,
         beam.hit      = 22 + power / 20;
         break;
 
+    case SPELL_ORB_OF_ELECTRICITY:
+        beam.name     = "orb of electricity";
+        beam.damage   = calc_dice(0, 40 + (4 * power)/ 5);
+        beam.colour   = LIGHTBLUE;
+        beam.flavour  = BEAM_ELECTRICITY;
+        beam.hit      = 40;
+        beam.is_beam  = true;
+        beam.is_explosion = true;
+        break;
+
+    case SPELL_MINOR_DESTRUCTION:
+        beam.name = "Makhleb's minor destruction";
+        // fall through
+    case SPELL_MAJOR_DESTRUCTION:
+        if (beam.name == "****")
+            beam.name = "Makhleb's major destruction";
+        // these are set later
+        beam.flavour  = BEAM_MMISSILE;
+        beam.is_beam  = true;
+        beam.hit      = AUTOMATIC_HIT;
+        break;
+
     default:
         if (check_validity)
         {
@@ -1140,6 +1162,8 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_OZOCUBUS_REFRIGERATION:
     case SPELL_HEROISM:
     case SPELL_FINESSE:
+    case SPELL_LESSER_SERVANT:
+    case SPELL_GREATER_SERVANT:
         return true;
     default:
         if (check_validity)
@@ -1607,6 +1631,26 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
             ret = true;
         break;
 
+    case SPELL_MINOR_DESTRUCTION:
+        if (mon->stat_hp() <= 1)
+            ret = true;
+        break;
+
+    case SPELL_LESSER_SERVANT:
+        if (mon->stat_hp() <= 4)
+            ret = true;
+        break;
+
+    case SPELL_MAJOR_DESTRUCTION:
+        if (mon->stat_hp() <= 6)
+            ret = true;
+        break;
+
+    case SPELL_GREATER_SERVANT:
+        if (mon->stat_hp() <= 10)
+            ret = true;
+        break;
+
     case SPELL_NO_SPELL:
         ret = true;
         break;
@@ -1768,12 +1812,14 @@ static void _mons_set_priest_wizard_god(monster* mons, bool& priest,
 
 static monster_spells _get_mons_god_spells(god_type god, bool *found)
 {
+    static monster mon_makhleb;
     static monster mon_okawaru;
     static monster mon_trog;
     static monster mon_yred;
     static bool loaded = false;
 
-    if (god != GOD_OKAWARU
+    if (god != GOD_MAKHLEB
+        && god != GOD_OKAWARU
         && god != GOD_TROG
         && god != GOD_YREDELEMNUL)
     {
@@ -1782,13 +1828,15 @@ static monster_spells _get_mons_god_spells(god_type god, bool *found)
     }
     if (!loaded)
     {
+        mons_load_spells(&mon_makhleb, MST_BK_MAKHLEB);
         mons_load_spells(&mon_okawaru, MST_BK_OKAWARU);
         mons_load_spells(&mon_trog,    MST_BK_TROG);
         mons_load_spells(&mon_yred,    MST_BK_YREDELEMNUL);
         loaded = true;
     }
 
-    monster *which = (god == GOD_OKAWARU)       ? &mon_okawaru
+    monster *which = (god == GOD_MAKHLEB)       ? &mon_makhleb
+                     : (god == GOD_OKAWARU)     ? &mon_okawaru
                      : (god == GOD_TROG)        ? &mon_trog
                      : (god == GOD_YREDELEMNUL) ? &mon_yred
                                                 : NULL;
@@ -1840,6 +1888,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
 
     bool priest;
     bool wizard;
+    bool using_god_spells = false;
     god_type god;
 
     _mons_set_priest_wizard_god(mons, priest, wizard, god);
@@ -1870,7 +1919,6 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         return false;
     else
     {
-        bool using_god_spells = false;
         spell_type spell_cast = SPELL_NO_SPELL;
         monster_spells hspell_pass(mons->spells);
 
@@ -1888,9 +1936,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 using_god_spells = true;
                 hspell_pass = book;
 
-                // GOD TODO: piety check as separate function
-                int piety_level =
-                    std::min(6, (mons->hit_dice * 5) / 2);
+                int piety_level = mons->piety_level();
                 for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; i++)
                 {
                     if (hspell_pass[i] == SPELL_NO_SPELL
@@ -2344,7 +2390,8 @@ try_again:
             // Why only cast blink if nearby? {dlb}
             if (monsterNearby)
             {
-                mons_cast_noise(mons, beem, spell_cast);
+                mons_cast_noise(mons, beem, spell_cast, false,
+                                using_god_spells);
                 monster_blink(mons);
 
                 mons->lose_energy(EUT_SPELL);
@@ -2372,7 +2419,7 @@ try_again:
             if (spell_needs_foe(spell_cast))
                 make_mons_stop_fleeing(mons);
 
-            mons_cast(mons, beem, spell_cast);
+            mons_cast(mons, beem, spell_cast, true, false, using_god_spells);
             mons->lose_energy(EUT_SPELL);
         }
     } // end "if (mons->can_use_spells())"
@@ -3171,7 +3218,7 @@ static void _clone_monster(monster* mons, monster_type clone_type,
 }
 
 void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
-               bool do_noise, bool special_ability)
+               bool do_noise, bool special_ability, bool god_ability)
 {
     // Always do setup.  It might be done already, but it doesn't hurt
     // to do it again (cheap).
@@ -3213,14 +3260,15 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
             {
                 if (do_noise)
                     mons_cast_noise(mons, pbolt, spell_cast,
-                                    special_ability);
+                                    special_ability, god_ability);
                 direct_effect(mons, spell_cast, pbolt, &you);
             }
             return;
         }
 
         if (do_noise)
-            mons_cast_noise(mons, pbolt, spell_cast, special_ability);
+            mons_cast_noise(mons, pbolt, spell_cast, special_ability,
+                            god_ability);
         direct_effect(mons, spell_cast, pbolt, mons->get_foe());
         return;
     }
@@ -3236,7 +3284,8 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 #endif
 
     if (do_noise)
-        mons_cast_noise(mons, pbolt, spell_cast, special_ability);
+        mons_cast_noise(mons, pbolt, spell_cast, special_ability,
+                        god_ability);
 
     bool priest;
     bool wizard;
@@ -4264,6 +4313,61 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                                    (40 + random2(mons->skill(SK_INVOCATIONS, 8)))));
         return;
     }
+
+    case SPELL_MINOR_DESTRUCTION:
+    {
+        spell_type type = random_choose(SPELL_THROW_FLAME,
+                                        SPELL_PAIN,
+                                        SPELL_STONE_ARROW,
+                                        SPELL_SHOCK,
+                                        SPELL_ACID_SPLASH,
+                                        -1);
+        setup_mons_cast(mons, pbolt, type);
+        mons->hurt(mons, 1);
+        break;
+    }
+
+    case SPELL_LESSER_SERVANT:
+    {
+        duration = std::min(2 + mons->skill(SK_INVOCATIONS, 30), 6);
+        create_monster(
+                mgen_data(random_choose(MONS_HELLWING, MONS_NEQOXEC,
+                          MONS_ORANGE_DEMON, MONS_SMOKE_DEMON, MONS_YNOXINUL,
+                          -1),
+                          SAME_ATTITUDE(mons), mons,
+                          duration, spell_cast,
+                          mons->pos(), mons->foe, 0, GOD_MAKHLEB));
+        mons->hurt(mons, 4);
+        return;
+    }
+
+    case SPELL_MAJOR_DESTRUCTION:
+    {
+        spell_type type = random_choose(SPELL_BOLT_OF_FIRE,
+                                        SPELL_FIREBALL,
+                                        SPELL_LIGHTNING_BOLT,
+                                        SPELL_STICKY_FLAME_RANGE,
+                                        SPELL_IRON_SHOT,
+                                        SPELL_BOLT_OF_DRAINING,
+                                        SPELL_ORB_OF_ELECTRICITY,
+                                        -1);
+        setup_mons_cast(mons, pbolt, type);
+        mons->hurt(mons, 6);
+        break;
+    }
+
+    case SPELL_GREATER_SERVANT:
+    {
+        duration = std::min(2 + mons->skill(SK_INVOCATIONS, 30), 6);
+        create_monster(
+            mgen_data(random_choose(MONS_EXECUTIONER, MONS_GREEN_DEATH,
+                      MONS_BLIZZARD_DEMON, MONS_BALRUG, MONS_CACODEMON, -1),
+                      SAME_ATTITUDE(mons), mons,
+                      duration, spell_cast,
+                      mons->pos(), mons->foe, 0, GOD_MAKHLEB));
+        mons->hurt(mons, 10);
+        return;
+    }
     }
 
     // If a monster just came into view and immediately cast a spell,
@@ -4625,7 +4729,8 @@ static void _noise_fill_target(std::string& targ_prep, std::string& target,
 }
 
 void mons_cast_noise(monster* mons, const bolt &pbolt,
-                     spell_type spell_cast, bool special_ability)
+                     spell_type spell_cast, bool special_ability,
+                     bool god_ability)
 {
     bool force_silent = false;
 
@@ -4669,8 +4774,8 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
 
     const unsigned int flags = get_spell_flags(actual_spell);
 
-    const bool priest = mons->is_priest();
-    const bool wizard = mons->is_actual_spellcaster();
+    const bool priest = mons->is_priest() || god_ability;
+    const bool wizard = mons->is_actual_spellcaster() && !god_ability;
     const bool innate = !(priest || wizard || no_silent)
                         || (flags & SPFLAG_INNATE) || special_ability;
 

@@ -3051,7 +3051,8 @@ void monster::banish(actor *agent, const std::string &)
 bool monster::has_spells(bool check_god) const
 {
     if (check_god
-        && (god == GOD_OKAWARU
+        && (god == GOD_MAKHLEB
+            || god == GOD_OKAWARU
             || god == GOD_TROG
             || god == GOD_YREDELEMNUL))
         return true;
@@ -4047,13 +4048,17 @@ int monster::skill(skill_type sk, int scale, bool real) const
         ret = (is_actual_spellcaster() ? hd : hd / 3);
         break;
 
+    case SK_INVOCATIONS:
+        magic = true;
+        ret = (is_priest() ? hd : hd / 3);
+        break;
+
     case SK_SPELLCASTING:
     case SK_CONJURATIONS:
     case SK_HEXES:
     case SK_CHARMS:
     case SK_TRANSLOCATIONS:
     case SK_TRANSMUTATIONS:
-    case SK_INVOCATIONS:
         magic = true;
         break;
 
@@ -5892,4 +5897,12 @@ bool monster::check_stasis(bool silent, bool calc_unid) const
     }
 
     return false;
+}
+
+int monster::piety_level() const
+{
+    if (god == GOD_NO_GOD)
+        return 0;
+
+    return std::min(6, hit_dice * 2 / 5);
 }

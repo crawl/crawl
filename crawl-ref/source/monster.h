@@ -467,6 +467,8 @@ public:
     bool check_clarity(bool silent) const;
     bool check_stasis(bool silent, bool calc_unid = true) const;
 
+    int  piety_level() const;
+
 private:
     void init_with(const monster& mons);
     void swap_slots(mon_inv_type a, mon_inv_type b);

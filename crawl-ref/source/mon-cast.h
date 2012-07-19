@@ -19,9 +19,11 @@ bool handle_mon_spell(monster* mons, bolt &beem);
 bolt mons_spells(monster* mons, spell_type spell_cast, int power,
                  bool check_validity = false);
 void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
-               bool do_noise = true, bool special_ability = false);
+               bool do_noise = true, bool special_ability = false,
+               bool god_ability = false);
 void mons_cast_noise(monster* mons, const bolt &pbolt,
-                     spell_type spell_cast, bool special_ability = false);
+                     spell_type spell_cast, bool special_ability = false,
+                     bool god_ability = false);
 bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                      bool check_validity = false);
 

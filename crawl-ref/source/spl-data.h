@@ -2939,6 +2939,71 @@ struct spell_desc
 },
 
 {
+    SPELL_ORB_OF_ELECTRICITY, "Orb of Electricity",
+     SPTYP_CONJURATION | SPTYP_AIR,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER,
+     5,
+     0,
+     8, 8,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
+    SPELL_MINOR_DESTRUCTION, "Minor Destruction",
+     SPTYP_CONJURATION,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER,
+     3,
+     0,
+     8, 8,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
+    SPELL_LESSER_SERVANT, "Lesser Servant",
+     SPTYP_SUMMONING,
+     SPFLAG_UNHOLY | SPFLAG_BATTLE | SPFLAG_MONSTER,
+     4,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_MAJOR_DESTRUCTION, "Major Destruction",
+     SPTYP_CONJURATION,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER,
+     5,
+     0,
+     8, 8,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
+    SPELL_GREATER_SERVANT, "Greater Servant",
+     SPTYP_SUMMONING,
+     SPFLAG_UNHOLY | SPFLAG_BATTLE | SPFLAG_MONSTER,
+     6,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,

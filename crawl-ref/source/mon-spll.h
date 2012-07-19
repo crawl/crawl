@@ -1791,6 +1791,17 @@
       }
     },
 
+    {  MST_BK_MAKHLEB,
+      {
+       SPELL_MINOR_DESTRUCTION,
+       SPELL_LESSER_SERVANT,
+       SPELL_MAJOR_DESTRUCTION,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_GREATER_SERVANT
+      }
+    },
+
     {  MST_TEST_SPAWNER,
       {
        SPELL_SHADOW_CREATURES,
