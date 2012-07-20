@@ -1514,6 +1514,7 @@ enum enchant_type
     ENCH_OZOCUBUS_ARMOUR,
     ENCH_HEROISM,
     ENCH_FINESSE,
+    ENCH_TIME_STEP,
     // Update enchantment names in monster.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -3243,6 +3244,11 @@ enum spell_type
     SPELL_LESSER_SERVANT,
     SPELL_MAJOR_DESTRUCTION,
     SPELL_GREATER_SERVANT,
+
+    SPELL_BEND_TIME,
+    SPELL_TEMPORAL_DISTORTION,
+    SPELL_SLOUCH,
+    SPELL_TIME_STEP,
 
     NUM_SPELLS
 };

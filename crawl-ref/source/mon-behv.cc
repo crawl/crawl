@@ -288,7 +288,8 @@ void handle_behaviour(monster* mon)
     {
         if (isFriendly && mons_is_stationary(mon)
             && (mon->foe != MHITNOT && mon->foe != MHITYOU)
-            && !mon->can_see(&menv[mon->foe]))
+            && (!mon->can_see(&menv[mon->foe])
+                || menv[mon->foe].has_ench(ENCH_TIME_STEP)))
         {
             mon->foe = MHITYOU;
             //mprf("%s resetting target (cantSee)",
@@ -389,7 +390,9 @@ void handle_behaviour(monster* mon)
     while (changed)
     {
         actor* afoe = mon->get_foe();
-        proxFoe = afoe && mon->can_see(afoe);
+        proxFoe = afoe && mon->can_see(afoe)
+                  && (afoe->is_player()
+                      || !afoe->as_monster()->has_ench(ENCH_TIME_STEP));
 
         if (mon->foe == MHITYOU)
         {
@@ -826,6 +829,7 @@ static bool _mons_check_foe(monster* mon, const coord_def& p,
     {
         if (foe != mon
             && mon->can_see(foe)
+            && !foe->has_ench(ENCH_TIME_STEP)
             && !mons_is_projectile(foe->type)
             && (friendly || !is_sanctuary(p))
             && (foe->friendly() != friendly

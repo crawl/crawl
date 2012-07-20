@@ -3004,6 +3004,58 @@ struct spell_desc
 },
 
 {
+    SPELL_BEND_TIME, "Bend Time",
+     SPTYP_HEXES,
+     SPFLAG_MONSTER,
+     2,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_TEMPORAL_DISTORTION, "Temporal Distortion",
+     SPTYP_TRANSLOCATION,
+     SPFLAG_MONSTER,
+     4,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_SLOUCH, "Slouch",
+     SPTYP_HEXES,
+     SPFLAG_MONSTER,
+     5,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_TIME_STEP, "Step From Time",
+     SPTYP_TRANSLOCATION,
+     SPFLAG_MONSTER,
+     6,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,

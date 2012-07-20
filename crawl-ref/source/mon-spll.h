@@ -1813,6 +1813,17 @@
       }
     },
 
+    {  MST_BK_CHEIBRIADOS,
+      {
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_SLOUCH,
+       SPELL_BEND_TIME,
+       SPELL_TEMPORAL_DISTORTION,
+       SPELL_TIME_STEP
+      }
+    },
+
     {  MST_TEST_SPAWNER,
       {
        SPELL_SHADOW_CREATURES,

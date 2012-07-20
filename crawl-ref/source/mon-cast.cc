@@ -17,6 +17,7 @@
 #include "env.h"
 #include "fight.h"
 #include "fprop.h"
+#include "godabil.h"
 #include "ghost.h"
 #include "items.h"
 #include "libutil.h"
@@ -44,6 +45,7 @@
 #include "spl-cast.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
+#include "spl-monench.h"
 #include "spl-summoning.h"
 #include "state.h"
 #include "stuff.h"
@@ -64,6 +66,8 @@ static int  _mons_mesmerise(monster* mons, bool actual = true);
 static int  _mons_cause_fear(monster* mons, bool actual = true);
 static bool _mons_drain_life(monster* mons, bool actual = true);
 static bool _mons_ozocubus_refrigeration(monster *mons, bool actual = true);
+static bool _mons_bend_time(monster *mons, bool actual = true);
+static bool _mons_slouch(monster *mons, bool actual = true);
 
 void init_mons_spells()
 {
@@ -1164,6 +1168,10 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_FINESSE:
     case SPELL_LESSER_SERVANT:
     case SPELL_GREATER_SERVANT:
+    case SPELL_BEND_TIME:
+    case SPELL_TEMPORAL_DISTORTION:
+    case SPELL_SLOUCH:
+    case SPELL_TIME_STEP:
         return true;
     default:
         if (check_validity)
@@ -1736,6 +1744,7 @@ static bool _ms_low_hitpoint_cast(const monster* mon, spell_type monspell)
     case SPELL_HASTE:
     case SPELL_DEATHS_DOOR:
     case SPELL_BERSERKER_RAGE:
+    case SPELL_TIME_STEP:
         return true;
     case SPELL_VAMPIRIC_DRAINING:
         return !targ_sanct && targ_adj && !targ_friendly && !targ_undead;
@@ -1813,6 +1822,7 @@ static void _mons_set_priest_wizard_god(monster* mons, bool& priest,
 static monster_spells _get_mons_god_spells(god_type god, bool *found)
 {
     static monster mon_beogh;
+    static monster mon_chei;
     static monster mon_makhleb;
     static monster mon_okawaru;
     static monster mon_trog;
@@ -1820,6 +1830,7 @@ static monster_spells _get_mons_god_spells(god_type god, bool *found)
     static bool loaded = false;
 
     if (god != GOD_BEOGH
+        && god != GOD_CHEIBRIADOS
         && god != GOD_MAKHLEB
         && god != GOD_OKAWARU
         && god != GOD_TROG
@@ -1831,6 +1842,7 @@ static monster_spells _get_mons_god_spells(god_type god, bool *found)
     if (!loaded)
     {
         mons_load_spells(&mon_beogh,   MST_BK_BEOGH);
+        mons_load_spells(&mon_chei,    MST_BK_CHEIBRIADOS);
         mons_load_spells(&mon_makhleb, MST_BK_MAKHLEB);
         mons_load_spells(&mon_okawaru, MST_BK_OKAWARU);
         mons_load_spells(&mon_trog,    MST_BK_TROG);
@@ -1839,6 +1851,7 @@ static monster_spells _get_mons_god_spells(god_type god, bool *found)
     }
 
     monster *which = (god == GOD_BEOGH)         ? &mon_beogh
+                     : (god == GOD_CHEIBRIADOS) ? &mon_chei
                      : (god == GOD_MAKHLEB)     ? &mon_makhleb
                      : (god == GOD_OKAWARU)     ? &mon_okawaru
                      : (god == GOD_TROG)        ? &mon_trog
@@ -2375,6 +2388,16 @@ try_again:
         else if (spell_cast == SPELL_OZOCUBUS_REFRIGERATION)
         {
             if (!_mons_ozocubus_refrigeration(mons, false))
+                return false;
+        }
+        else if (spell_cast == SPELL_BEND_TIME)
+        {
+            if (!_mons_bend_time(mons, false))
+                return false;
+        }
+        else if (spell_cast == SPELL_SLOUCH)
+        {
+            if (!_mons_slouch(mons, false))
                 return false;
         }
 
@@ -3121,6 +3144,97 @@ static bool _mons_ozocubus_refrigeration(monster* mons, bool actual)
     return success;
 }
 
+static bool _mons_bend_time(monster* mons, bool actual)
+{
+    if (actual)
+    {
+        mprf("The flow of time bends around %s!",
+             you.can_see(mons)
+             ? mons->name(DESC_THE).c_str()
+             : "something");
+    }
+
+    bool success = false;
+    int pow = 16 + mons->skill(SK_INVOCATIONS, 8);
+
+    for (adjacent_iterator ai(mons->pos()); ai; ++ai)
+    {
+        if (*ai == you.pos())
+        {
+            success = true;
+
+            if (actual)
+            {
+                int res_margin = roll_dice(you.experience_level, 3)
+                                 - random2avg(pow, 2);
+                if (res_margin > 0)
+                {
+                    canned_msg(MSG_YOU_RESIST);
+                    continue;
+                }
+                simple_god_message(" rebukes you.", GOD_CHEIBRIADOS);
+                slow_player(100);
+            }
+        }
+        else
+        {
+            monster *mon = monster_at(*ai);
+            if (!mon)
+                continue;
+
+            success = true;
+
+            if (actual)
+            {
+                int res_margin = roll_dice(mon->hit_dice, 3)
+                                 - random2avg(pow, 2);
+                if (res_margin > 0)
+                {
+                    if (you.can_see(mon))
+                    {
+                        mprf("%s%s",
+                             mon->name(DESC_THE).c_str(),
+                             mons_resist_string(mon, res_margin));
+                    }
+                    continue;
+                }
+                if (you.can_see(mon))
+                {
+                    simple_god_message(
+                        make_stringf(" rebukes %s.",
+                                     mon->name(DESC_THE).c_str()).c_str(),
+                                     GOD_CHEIBRIADOS);
+                }
+                do_slow_monster(mon, mons);
+            }
+        }
+    }
+
+    return success;
+}
+
+static bool _mons_slouch(monster* mons, bool actual)
+{
+    if (actual)
+    {
+        mprf("You can feel time thicken for a moment!");
+    }
+
+    bool success = false;
+
+    for (radius_iterator ri(mons->get_los()); ri; ++ri)
+    {
+        success |= slouchable(*ri, 0, 0, mons);
+        if (actual)
+        {
+            slouch_monsters(*ri, 0, 0, mons);
+            continue;
+        }
+    }
+
+    return success;
+}
+
 static bool _mon_spell_bail_out_early(monster* mons, spell_type spell_cast)
 {
     // single calculation permissible {dlb}
@@ -3140,6 +3254,8 @@ static bool _mon_spell_bail_out_early(monster* mons, spell_type spell_cast)
     case SPELL_SYMBOL_OF_TORMENT:
     case SPELL_HOLY_WORD:
     case SPELL_OZOCUBUS_REFRIGERATION:
+    case SPELL_BEND_TIME:
+    case SPELL_SLOUCH:
         if (!monsterNearby
             // friendly holies don't care if you are friendly
             || (mons->friendly() && spell_cast != SPELL_HOLY_WORD))
@@ -3827,6 +3943,39 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_OZOCUBUS_REFRIGERATION:
         _mons_ozocubus_refrigeration(mons);
         return;
+
+    case SPELL_BEND_TIME:
+        _mons_bend_time(mons);
+        return;
+
+    case SPELL_TEMPORAL_DISTORTION:
+    {
+        if (you.can_see(mons))
+        {
+            mprf("%s warps the flow of time around %s!",
+                 mons->name(DESC_THE).c_str(),
+                 mons->pronoun(PRONOUN_REFLEXIVE).c_str());
+        }
+        mons->add_ench(mon_enchant(ENCH_TIME_STEP, 0, mons,
+                                   BASELINE_DELAY * (3 + random2(3))));
+        return;
+    }
+
+    case SPELL_SLOUCH:
+        _mons_slouch(mons);
+        return;
+
+    case SPELL_TIME_STEP:
+    {
+        simple_monster_message(mons, " steps out of the flow of time!");
+        if (you.can_see(mons))
+            flash_view(LIGHTBLUE);
+
+        int pow = mons->skill(SK_INVOCATIONS, 10);
+        mons->add_ench(mon_enchant(ENCH_TIME_STEP, 0, mons,
+                                   BASELINE_DELAY * pow));
+        return;
+    }
 
     case SPELL_LEDAS_LIQUEFACTION:
         if (!mons->has_ench(ENCH_LIQUEFYING) && you.can_see(mons))

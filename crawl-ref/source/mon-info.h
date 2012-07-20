@@ -86,6 +86,7 @@ enum monster_info_flags
     MB_OZOCUBUS_ARMOUR,
     MB_HEROISM,
     MB_FINESSE,
+    MB_TIME_STEP,
     NUM_MB_FLAGS
 };
 

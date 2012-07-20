@@ -157,6 +157,9 @@ static int _get_mons_colour(const monster_info& mi)
     if (mi.is(MB_INNER_FLAME))
         col = ETC_FIRE;
 
+    if (mi.is(MB_TIME_STEP))
+        col = DARKGRAY;
+
     if (mi.attitude == ATT_FRIENDLY)
         col |= COLFLAG_FRIENDLY_MONSTER;
     else if (mi.attitude != ATT_HOSTILE)

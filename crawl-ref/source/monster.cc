@@ -3052,6 +3052,7 @@ bool monster::has_spells(bool check_god) const
 {
     if (check_god
         && (god == GOD_BEOGH
+            || god == GOD_CHEIBRIADOS
             || god == GOD_MAKHLEB
             || god == GOD_OKAWARU
             || god == GOD_TROG
@@ -3172,7 +3173,8 @@ bool monster::paralysed() const
 bool monster::cannot_act() const
 {
     return (paralysed() || petrified()
-            || has_ench(ENCH_PREPARING_RESURRECT));
+            || has_ench(ENCH_PREPARING_RESURRECT)
+            || has_ench(ENCH_TIME_STEP));
 }
 
 bool monster::cannot_move() const
@@ -4175,7 +4177,8 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         }
 
         if (amount != INSTANT_DEATH)
-            if (has_ench(ENCH_DEATHS_DOOR))
+            if (has_ench(ENCH_DEATHS_DOOR)
+                || has_ench(ENCH_TIME_STEP))
                return 0;
             else if (petrified())
                 amount /= 2;
@@ -4628,11 +4631,20 @@ void monster::calc_speed()
         break;
     }
 
+    if (god == GOD_CHEIBRIADOS)
+    {
+        int delay = 100 / speed;
+        delay += 2 + std::min(hit_dice / 2, 8);
+        speed = 100 / delay;
+    }
+
     bool is_liquefied = (liquefied(pos()) && ground_level()
                          && !is_insubstantial());
 
     // Going berserk on liquid ground doesn't speed you up any.
-    if (!is_liquefied && (has_ench(ENCH_BERSERK) || has_ench(ENCH_INSANE)))
+    if (!is_liquefied
+        && (has_ench(ENCH_BERSERK) || has_ench(ENCH_INSANE))
+        && (god != GOD_CHEIBRIADOS))
         speed = berserk_mul(speed);
     else if (has_ench(ENCH_HASTE))
         speed = haste_mul(speed);
@@ -5279,7 +5291,8 @@ bool monster::should_drink_potion(potion_type ptype) const
         return (!has_ench(ENCH_MIGHT) && !has_ench(ENCH_HASTE)
                 && needs_berserk());
     case POT_SPEED:
-        return !has_ench(ENCH_HASTE);
+        return !has_ench(ENCH_HASTE)
+               && god != GOD_CHEIBRIADOS;
     case POT_MIGHT:
         return (!has_ench(ENCH_MIGHT) && foe_distance() <= 2);
     case POT_INVISIBILITY:

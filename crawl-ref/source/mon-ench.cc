@@ -781,6 +781,10 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
                  apostrophise(name(DESC_THE)).c_str(),
                  hands.c_str(), plural ? "" : "s");
          }
+    case ENCH_TIME_STEP:
+         if (!quiet)
+            simple_monster_message(this, " slowly begins to move again.");
+         break;
     default:
         break;
     }
@@ -884,7 +888,8 @@ void monster::timeout_enchantments(int levels)
         case ENCH_MIRROR_DAMAGE: case ENCH_STONESKIN: case ENCH_LIQUEFYING:
         case ENCH_SILVER_CORONA: case ENCH_DAZED: case ENCH_FAKE_ABJURATION:
         case ENCH_ROUSED: case ENCH_BREATH_WEAPON: case ENCH_DEATHS_DOOR:
-        case ENCH_OZOCUBUS_ARMOUR:
+        case ENCH_OZOCUBUS_ARMOUR: case ENCH_HEROISM: case ENCH_FINESSE:
+        case ENCH_TIME_STEP:
             lose_ench_levels(i->second, levels);
             break;
 
@@ -1094,6 +1099,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_OZOCUBUS_ARMOUR:
     case ENCH_HEROISM:
     case ENCH_FINESSE:
+    case ENCH_TIME_STEP:
     // case ENCH_ROLLING:
         decay_enchantment(me);
         break;
@@ -1310,6 +1316,13 @@ void monster::apply_enchantment(const mon_enchant &me)
     {
         const int poisonval = me.degree;
         int dam = (poisonval >= 4) ? 1 : 0;
+
+        if (god == GOD_CHEIBRIADOS
+            && piety_level() >= 1
+            && coinflip())
+        {
+            break;
+        }
 
         if (coinflip())
             dam += roll_dice(1, poisonval + 1);
@@ -1797,7 +1810,7 @@ static const char *enchant_names[] =
     "liquefying", "tornado", "fake_abjuration",
     "dazed", "mute", "blind", "dumb", "mad", "silver_corona", "recite timer",
     "inner_flame", "roused", "breath timer", "deaths_door", "rolling",
-    "ozocubus_armour", "heroism", "finesse", "buggy",
+    "ozocubus_armour", "heroism", "finesse", "time_step", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)

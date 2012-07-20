@@ -118,6 +118,11 @@ melee_attack::melee_attack(actor *attk, actor *defn,
         attk_flavour    = mon_attk.flavour;
         attk_damage     = mon_attk.damage;
 
+        // Monsters don't have stats, so give Chei worshippers
+        // a roughly equivalent damage boost to simulate the effect.
+        if (attacker->as_monster()->god == GOD_CHEIBRIADOS)
+            attk_damage += std::min(attacker->as_monster()->hit_dice, 15);
+
         if (attk_type == AT_WEAP_ONLY)
         {
             int weap = attacker->as_monster()->inv[MSLOT_WEAPON];

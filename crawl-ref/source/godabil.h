@@ -68,6 +68,8 @@ void lugonu_bend_space();
 
 void cheibriados_time_bend(int pow);
 void cheibriados_temporal_distortion();
+int slouchable(coord_def where, int pow, int, actor* agent);
+int slouch_monsters(coord_def where, int pow, int dummy, actor* agent);
 bool cheibriados_slouch(int pow);
 void cheibriados_time_step(int pow);
 bool ashenzari_transfer_knowledge();

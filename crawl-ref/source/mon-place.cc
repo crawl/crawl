@@ -1504,6 +1504,10 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         }
     }
 
+    // Now that god and HD are set, do speed calculations
+    // (for the benefit of Chei-worshipping monsters).
+    mon->calc_speed();
+
     if (mg.hp != 0)
     {
         mon->max_hit_points = mg.hp;

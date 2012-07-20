@@ -152,6 +152,8 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_HEROISM;
     case ENCH_FINESSE:
         return MB_FINESSE;
+    case ENCH_TIME_STEP:
+        return MB_TIME_STEP;
     default:
         return NUM_MB_FLAGS;
     }
@@ -1130,6 +1132,8 @@ bool monster_info::less_than(const monster_info& m1, const monster_info& m2,
 
 static std::string _verbose_info0(const monster_info& mi)
 {
+    if (mi.is(MB_TIME_STEP))
+        return "beyond time";
     if (mi.is(MB_BERSERK))
         return "berserk";
     if (mi.is(MB_FRENZIED))
@@ -1371,6 +1375,8 @@ std::vector<std::string> monster_info::attributes() const
         v.push_back("heroic");
     if (is(MB_FINESSE))
         v.push_back("attacking rapidly");
+    if (is(MB_TIME_STEP))
+        v.push_back("beyond time");
     return v;
 }
 
@@ -1553,7 +1559,8 @@ size_type monster_info::body_size() const
 
 bool monster_info::cannot_move() const
 {
-    return is(MB_PARALYSED) || is(MB_PETRIFIED) || is(MB_PREP_RESURRECT);
+    return is(MB_PARALYSED) || is(MB_PETRIFIED) || is(MB_PREP_RESURRECT)
+           || is(MB_TIME_STEP);
 }
 
 bool monster_info::airborne() const

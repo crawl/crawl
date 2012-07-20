@@ -3148,17 +3148,28 @@ void cheibriados_time_bend(int pow)
     }
 }
 
-static int _slouchable(coord_def where, int pow, int, actor* agent)
+int slouchable(coord_def where, int pow, int, actor* agent)
 {
+    if (where == you.pos() && agent != &you)
+    {
+        int you_speed = 1000/player_movement_speed()/player_speed();
+        return (agent->as_monster()->speed < you_speed) ? 1 : 0;
+    }
+
     monster* mon = monster_at(where);
-    if (mon == NULL || mons_is_stationary(mon) || mon->cannot_move()
-        || mons_is_projectile(mon->type)
+    if (mon == NULL
+        || (agent->is_monster() && mon == agent->as_monster())
+        || mons_is_stationary(mon)
+        || mon->cannot_move() || mons_is_projectile(mon->type)
         || mon->asleep() && !mons_is_confused(mon))
     {
         return 0;
     }
 
-    int dmg = (mon->speed - 1000/player_movement_speed()/player_speed());
+    int speed = (agent->is_player())
+                ? 1000/player_movement_speed()/player_speed()
+                : agent->as_monster()->speed;
+    int dmg = (mon->speed - speed);
     return (dmg > 0) ? 1 : 0;
 }
 
@@ -3166,27 +3177,40 @@ static bool _act_slouchable(const actor *act)
 {
     if (act->is_player())
         return false;  // too slow-witted
-    return _slouchable(act->pos(), 0, 0, 0);
+    return slouchable(act->pos(), 0, 0, &you);
 }
 
-static int _slouch_monsters(coord_def where, int pow, int dummy, actor* agent)
+int slouch_monsters(coord_def where, int pow, int dummy, actor* agent)
 {
-    if (!_slouchable(where, pow, dummy, agent))
+    if (!slouchable(where, pow, dummy, agent))
         return 0;
+
+    int speed = (agent->is_player())
+                ? 1000/player_movement_speed()/player_speed()
+                : agent->as_monster()->speed;
+    int dmg = 0;
+
+    if (you.pos() == where)
+    {
+        int you_speed = 1000/player_movement_speed()/player_speed();
+        dmg = you_speed - speed;
+        dmg = (dmg > 0 ? roll_dice(dmg*4, 3)/2 : 0);
+        ouch(dmg, agent->as_monster()->mindex(), KILLED_BY_BEAM,
+             "by Slouch", true, agent->as_monster()->name(DESC_A).c_str());
+        return 1;
+    }
 
     monster* mon = monster_at(where);
     ASSERT(mon);
-
-    int dmg = (mon->speed - 1000/player_movement_speed()/player_speed());
+    dmg = (mon->speed - speed);
     dmg = (dmg > 0 ? roll_dice(dmg*4, 3)/2 : 0);
-
     mon->hurt(agent, dmg, BEAM_MMISSILE, true);
     return 1;
 }
 
 bool cheibriados_slouch(int pow)
 {
-    int count = apply_area_visible(_slouchable, pow, &you);
+    int count = apply_area_visible(slouchable, pow, &you);
     if (!count)
         if (!yesno("There's no one hasty visible. Invoke Slouch anyway?",
                    true, 'n'))
@@ -3201,7 +3225,7 @@ bool cheibriados_slouch(int pow)
     mpr("You can feel time thicken for a moment.");
     dprf("your speed is %d", player_movement_speed());
 
-    apply_area_visible(_slouch_monsters, pow, &you);
+    apply_area_visible(slouch_monsters, pow, &you);
     return true;
 }
 
