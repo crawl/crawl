@@ -475,9 +475,9 @@ bool is_useless_skill(skill_type skill)
     return species_apt(skill) == -99;
 }
 
-int skill_bump(skill_type skill, int scale)
+int skill_bump(skill_type skill, int scale, const actor *who)
 {
-    int sk = you.skill_rdiv(skill, scale);
+    int sk = who->skill_rdiv(skill, scale);
     return sk < 3 * scale ? sk * 2 : sk + 3 * scale;
 }
 

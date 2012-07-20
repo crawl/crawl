@@ -1494,15 +1494,16 @@ struct corrupt_env
     corrupt_env(): rock_colour(BLACK), floor_colour(BLACK) { }
 };
 
-static void _place_corruption_seed(const coord_def &pos, int duration)
+static void _place_corruption_seed(const coord_def &pos, int duration,
+                                   actor* agent)
 {
-    env.markers.add(new map_corruption_marker(pos, duration));
+    env.markers.add(new map_corruption_marker(pos, duration, agent));
     // Corruption markers don't need activation, though we might
     // occasionally miss other unactivated markers by clearing.
     env.markers.clear_need_activate();
 }
 
-static void _initialise_level_corrupt_seeds(int power)
+static void _initialise_level_corrupt_seeds(int power, actor* agent)
 {
     const int low = power * 40 / 100, high = power * 140 / 100;
     const int nseeds = random_range(-1, std::min(2 + power / 110, 4), 2);
@@ -1512,7 +1513,7 @@ static void _initialise_level_corrupt_seeds(int power)
     dprf("Placing %d corruption seeds (power: %d)", nseeds, power);
 
     // The corruption centreed on the player is free.
-    _place_corruption_seed(you.pos(), high + 300);
+    _place_corruption_seed(agent->pos(), high + 300, agent);
 
     for (int i = 0; i < nseeds; ++i)
     {
@@ -1527,22 +1528,29 @@ static void _initialise_level_corrupt_seeds(int power)
         }
 
         if (!where.origin())
-            _place_corruption_seed(where, random_range(low, high, 2) + 300);
+            _place_corruption_seed(where, random_range(low, high, 2) + 300,
+                                   agent);
     }
 }
 
 // Create a corruption spawn at the given position. Returns false if further
 // monsters should not be placed near this spot (overcrowding), true if
 // more monsters can fit in.
-static bool _spawn_corrupted_servant_near(const coord_def &pos)
+static bool _spawn_corrupted_servant_near(const coord_def &pos, actor *agent)
 {
+    bool friendly = (agent)
+                    ? (agent->is_player() || agent->as_monster()->friendly())
+                    : true;
+    int skill = (agent) ? agent->skill(SK_INVOCATIONS, 25) : 0;
     const beh_type beh =
-        x_chance_in_y(100, 200 + you.skill(SK_INVOCATIONS, 25)) ? BEH_HOSTILE
-        : BEH_NEUTRAL;
+        x_chance_in_y(100, 200 + skill)
+        ? (friendly ? BEH_HOSTILE : BEH_NEUTRAL)
+        : (friendly ? BEH_NEUTRAL : BEH_HOSTILE);
 
     // [ds] No longer summon hostiles -- don't create the monster if
     // it would be hostile.
-    if (beh == BEH_HOSTILE)
+    if ((friendly && beh == BEH_HOSTILE)
+        || (!friendly && beh == BEH_NEUTRAL))
         return true;
 
     // Thirty tries for a place.
@@ -1582,12 +1590,19 @@ static void _apply_corruption_effect(map_marker *marker, int duration)
     if (cmark->duration < 1)
         return;
 
+    int midx = cmark->agent;
+    actor *agent = NULL;
+    if (midx == MHITYOU)
+        agent = &you;
+    else if (!invalid_monster_index(midx))
+        agent = &menv[midx];
+
     const int neffects = std::max(div_rand_round(duration, 5), 1);
 
     for (int i = 0; i < neffects; ++i)
     {
         if (x_chance_in_y(cmark->duration, 4000)
-            && !_spawn_corrupted_servant_near(cmark->pos))
+            && !_spawn_corrupted_servant_near(cmark->pos, agent))
         {
             break;
         }
@@ -1773,11 +1788,12 @@ static bool _is_level_corrupted()
     return (!!env.markers.find(MAT_CORRUPTION_NEXUS));
 }
 
-bool is_level_incorruptible()
+bool is_level_incorruptible(bool silent)
 {
     if (_is_level_corrupted())
     {
-        mpr("This place is already infused with evil and corruption.");
+        if (!silent)
+            mpr("This place is already infused with evil and corruption.");
         return true;
     }
 
@@ -1799,18 +1815,19 @@ static void _corrupt_choose_colours(corrupt_env *cenv)
     cenv->floor_colour = colour;
 }
 
-bool lugonu_corrupt_level(int power)
+bool lugonu_corrupt_level(int power, actor *agent)
 {
     if (is_level_incorruptible())
         return false;
 
-    simple_god_message("'s Hand of Corruption reaches out!");
+    simple_god_message("'s Hand of Corruption reaches out!",
+                       GOD_LUGONU);
     take_note(Note(NOTE_MESSAGE, 0, 0, make_stringf("Corrupted %s",
               level_id::current().describe().c_str()).c_str()));
 
     flash_view(MAGENTA);
 
-    _initialise_level_corrupt_seeds(power);
+    _initialise_level_corrupt_seeds(power, agent);
 
     corrupt_env cenv;
     _corrupt_choose_colours(&cenv);

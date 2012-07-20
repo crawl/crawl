@@ -3058,7 +3058,7 @@ struct spell_desc
 {
     SPELL_RECEIVE_CORPSES, "Receive Corpses",
      SPTYP_NECROMANCY,
-     SPFLAG_MONSTER,
+     SPFLAG_UNHOLY | SPFLAG_MONSTER,
      2,
      0,
      -1, -1,
@@ -3071,7 +3071,59 @@ struct spell_desc
 {
     SPELL_CORPSE_TORMENT, "Torment",
      SPTYP_NECROMANCY,
-     SPFLAG_MONSTER,
+     SPFLAG_UNHOLY | SPFLAG_MONSTER,
+     6,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_DEPART_ABYSS, "Depart Abyss",
+     SPTYP_TRANSLOCATION,
+     SPFLAG_UNHOLY | SPFLAG_CHAOTIC | SPFLAG_MONSTER,
+     2,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_BEND_SPACE, "Bend Space",
+     SPTYP_TRANSLOCATION,
+     SPFLAG_UNHOLY | SPFLAG_CHAOTIC | SPFLAG_MONSTER,
+     3,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_CORRUPT, "Corrupt",
+     SPTYP_TRANSLOCATION,
+     SPFLAG_UNHOLY | SPFLAG_CHAOTIC | SPFLAG_MONSTER,
+     3,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_ENTER_ABYSS, "Enter Abyss",
+     SPTYP_TRANSLOCATION,
+     SPFLAG_UNHOLY | SPFLAG_CHAOTIC | SPFLAG_MONSTER,
      6,
      0,
      -1, -1,

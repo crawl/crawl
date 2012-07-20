@@ -6,6 +6,7 @@
 #include "AppHdr.h"
 #include "mon-cast.h"
 
+#include "abyss.h"
 #include "act-iter.h"
 #include "beam.h"
 #include "cloud.h"
@@ -13,6 +14,7 @@
 #include "coordit.h"
 #include "delay.h"
 #include "database.h"
+#include "dgn-overview.h"
 #include "effects.h"
 #include "env.h"
 #include "fight.h"
@@ -41,12 +43,14 @@
 #include "random.h"
 #include "religion.h"
 #include "shout.h"
+#include "skills2.h"
 #include "spl-util.h"
 #include "spl-cast.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
 #include "spl-monench.h"
 #include "spl-summoning.h"
+#include "spl-transloc.h"
 #include "state.h"
 #include "stuff.h"
 #include "areas.h"
@@ -1174,6 +1178,10 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_TIME_STEP:
     case SPELL_RECEIVE_CORPSES:
     case SPELL_CORPSE_TORMENT:
+    case SPELL_DEPART_ABYSS:
+    case SPELL_BEND_SPACE:
+    case SPELL_CORRUPT:
+    case SPELL_ENTER_ABYSS:
         return true;
     default:
         if (check_validity)
@@ -1513,6 +1521,7 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
     case SPELL_BLINK_CLOSE:
     case SPELL_BLINK_RANGE:
     case SPELL_BLINK_AWAY:
+    case SPELL_BEND_SPACE:
         if (mon->no_tele(true, false))
             ret = true;
         break;
@@ -1540,6 +1549,11 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
     case SPELL_SLEEP:
     case SPELL_HIBERNATION:
     {
+        if (monspell == SPELL_BANISHMENT && player_in_branch(BRANCH_ABYSS))
+        {
+            ret = true;
+            break;
+        }
         if (monspell == SPELL_HIBERNATION && (!foe || foe->asleep()))
         {
             ret = true;
@@ -1676,6 +1690,22 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
         break;
     }
 
+    case SPELL_DEPART_ABYSS:
+        if (!player_in_branch(BRANCH_ABYSS)
+            || mon->hit_points >= mon->max_hit_points / 3)
+            ret = true;
+        break;
+
+    case SPELL_CORRUPT:
+        if (is_level_incorruptible(true))
+            ret = true;
+        break;
+
+    case SPELL_ENTER_ABYSS:
+        if (player_in_branch(BRANCH_ABYSS))
+            ret = true;
+        break;
+
     case SPELL_NO_SPELL:
         ret = true;
         break;
@@ -1762,6 +1792,8 @@ static bool _ms_low_hitpoint_cast(const monster* mon, spell_type monspell)
     case SPELL_DEATHS_DOOR:
     case SPELL_BERSERKER_RAGE:
     case SPELL_TIME_STEP:
+    case SPELL_DEPART_ABYSS:
+    case SPELL_ENTER_ABYSS:
         return true;
     case SPELL_VAMPIRIC_DRAINING:
         return !targ_sanct && targ_adj && !targ_friendly && !targ_undead;
@@ -1784,6 +1816,7 @@ static bool _ms_low_hitpoint_cast(const monster* mon, spell_type monspell)
         return !targ_friendly && !targ_sanct;
     case SPELL_BLINK:
     case SPELL_CONTROLLED_BLINK:
+    case SPELL_BEND_SPACE:
         return targ_adj;
     case SPELL_TOMB_OF_DOROKLOHE:
         return true;
@@ -1809,6 +1842,7 @@ static bool _ms_quick_get_away(const monster* mon, spell_type monspell)
             return false;
         // intentional fall-through
     case SPELL_BLINK:
+    case SPELL_BEND_SPACE:
         return true;
     default:
         return false;
@@ -1841,6 +1875,7 @@ static monster_spells _get_mons_god_spells(god_type god, bool *found)
     static monster mon_beogh;
     static monster mon_chei;
     static monster mon_kiku;
+    static monster mon_lugonu;
     static monster mon_makhleb;
     static monster mon_okawaru;
     static monster mon_trog;
@@ -1850,6 +1885,7 @@ static monster_spells _get_mons_god_spells(god_type god, bool *found)
     if (god != GOD_BEOGH
         && god != GOD_CHEIBRIADOS
         && god != GOD_KIKUBAAQUDGHA
+        && god != GOD_LUGONU
         && god != GOD_MAKHLEB
         && god != GOD_OKAWARU
         && god != GOD_TROG
@@ -1863,6 +1899,7 @@ static monster_spells _get_mons_god_spells(god_type god, bool *found)
         mons_load_spells(&mon_beogh,   MST_BK_BEOGH);
         mons_load_spells(&mon_chei,    MST_BK_CHEIBRIADOS);
         mons_load_spells(&mon_kiku,    MST_BK_KIKUBAAQUDGHA);
+        mons_load_spells(&mon_lugonu,  MST_BK_LUGONU);
         mons_load_spells(&mon_makhleb, MST_BK_MAKHLEB);
         mons_load_spells(&mon_okawaru, MST_BK_OKAWARU);
         mons_load_spells(&mon_trog,    MST_BK_TROG);
@@ -1873,6 +1910,7 @@ static monster_spells _get_mons_god_spells(god_type god, bool *found)
     monster *which = (god == GOD_BEOGH)           ? &mon_beogh
                      : (god == GOD_CHEIBRIADOS)   ? &mon_chei
                      : (god == GOD_KIKUBAAQUDGHA) ? &mon_kiku
+                     : (god == GOD_LUGONU)        ? &mon_lugonu
                      : (god == GOD_MAKHLEB)       ? &mon_makhleb
                      : (god == GOD_OKAWARU)       ? &mon_okawaru
                      : (god == GOD_TROG)          ? &mon_trog
@@ -4570,6 +4608,113 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         destroy_item(i);
         simple_god_message(" torments the living!", GOD_KIKUBAAQUDGHA);
         torment(mons, TORMENT_KIKUBAAQUDGHA, mons->pos());
+        return;
+    }
+
+    case SPELL_DEPART_ABYSS:
+    {
+        const coord_def old_pos = mons->pos();
+        simple_monster_message(mons, " departs the Abyss!", MSGCH_BANISHMENT);
+        level_id to_where;
+        if (you.char_direction == GDT_GAME_START
+            || you.level_stack.empty())
+            to_where = level_id(BRANCH_MAIN_DUNGEON, 1);
+        else
+            to_where = you.level_stack.back().id;
+
+        mons->set_transit(to_where);
+        set_unique_annotation(mons, to_where);
+        mons->patrol_point.reset();
+        mons->travel_path.clear();
+        mons->travel_target = MTRAV_NONE;
+        mons->destroy_inventory();
+        monster_cleanup(mons);
+
+        place_cloud(CLOUD_TLOC_ENERGY, old_pos, 5 + random2(8), 0);
+        for (adjacent_iterator ai(old_pos); ai; ++ai)
+            if (!feat_is_solid(grd(*ai)) && env.cgrid(*ai) == EMPTY_CLOUD
+                && coinflip())
+            {
+                place_cloud(CLOUD_TLOC_ENERGY, *ai, 1 + random2(8), 0);
+            }
+        return;
+    }
+
+    case SPELL_BEND_SPACE:
+    {
+        const int pow = 4 + skill_bump(SK_INVOCATIONS, 1, mons);
+        const bool area_warp = random2(pow) > 9;
+        if (you.can_see(mons))
+            mprf(MSGCH_WARN, "Space bends %saround %s!",
+                 area_warp ? "sharply " : "",
+                 mons->name(DESC_THE).c_str());
+        if (area_warp)
+        {
+            for (adjacent_iterator ai(mons->pos(), true); ai; ++ai)
+            {
+                if (*ai == you.pos())
+                {
+                    if (you.check_res_magic(pow) > 0)
+                        canned_msg(MSG_YOU_RESIST);
+                    else
+                    {
+                        const int damage = 1 + random2(pow / 6);
+                        if (you.check_res_magic(pow) <= 0)
+                        {
+                            ouch(damage, mons->mindex(), KILLED_BY_BEAM,
+                                "a spatial distortion", true,
+                                mons->name(DESC_A).c_str());
+                            if (!you.dead && !you.no_tele(true, false))
+                                random_blink(false);
+                        }
+                    }
+                }
+                else if (monster* victim = monster_at(*ai))
+                {
+                    int res_margin = victim->check_res_magic(pow * 2);
+                    if (res_margin > 0)
+                    {
+                        if (you.can_see(victim))
+                            mprf("%s%s",
+                                 victim->name(DESC_THE).c_str(),
+                                 mons_resist_string(victim, res_margin));
+                    }
+                    else
+                    {
+                        const int damage = 1 + random2(pow / 6);
+                        if (mons_genus(victim->type) == MONS_BLINK_FROG)
+                            victim->heal(damage, false);
+                        else if (victim->check_res_magic(pow) <= 0)
+                        {
+                            victim->hurt(mons, damage);
+                            if (victim->alive()
+                                && !victim->no_tele(true, false))
+                                victim->blink();
+                        }
+                    }
+                }
+            }
+        }
+        monster_blink(mons);
+        mons->hurt(NULL, roll_dice(1, 4));
+        return;
+    }
+
+    case SPELL_CORRUPT:
+    {
+        int pow = 300 + mons->skill(SK_INVOCATIONS, 15);
+        lugonu_corrupt_level(pow, mons);
+        return;
+    }
+
+    case SPELL_ENTER_ABYSS:
+    {
+        int maxloss = std::max(2, div_rand_round(mons->max_hit_points, 30));
+        mons->max_hit_points -= random_range(1, maxloss);
+        if (mons->max_hit_points < 1)
+            mons->max_hit_points = 1;
+        mons->hurt(mons, random2(mons->hit_points));
+        mons->banish(mons);
         return;
     }
     }

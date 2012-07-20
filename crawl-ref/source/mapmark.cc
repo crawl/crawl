@@ -439,21 +439,34 @@ map_marker *map_lua_marker::parse(
 // map_corruption_marker
 
 map_corruption_marker::map_corruption_marker(const coord_def &p,
-                                             int dur)
+                                             int dur, actor *who)
     : map_marker(MAT_CORRUPTION_NEXUS, p), duration(dur)
 {
+    if (agent)
+        agent = who->mindex();
+    else
+        agent = MONS_NO_MONSTER;
 }
 
 void map_corruption_marker::write(writer &out) const
 {
     map_marker::write(out);
     marshallShort(out, duration);
+    marshallInt(out, agent);
 }
 
 void map_corruption_marker::read(reader &in)
 {
     map_marker::read(in);
     duration = unmarshallShort(in);
+#if TAG_MAJOR_VERSION == 33
+    if (in.getMinorVersion() < TAG_MINOR_MONSTER_CORRUPT)
+    {
+        agent = MHITYOU;
+        return;
+    }
+#endif
+    agent = unmarshallInt(in);
 }
 
 map_marker *map_corruption_marker::read(reader &in, map_marker_type)

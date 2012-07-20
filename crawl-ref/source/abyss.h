@@ -7,6 +7,8 @@
 #ifndef ABYSS_H
 #define ABYSS_H
 
+#include "player.h"
+
 // When shifting areas in the abyss, shift the square containing player LOS
 // plus a little extra so that the player won't be disoriented by taking a
 // step backward after an abyss shift.
@@ -27,8 +29,8 @@ void recompute_saved_abyss_features();
 void maybe_shift_abyss_around_player();
 void abyss_teleport(bool new_area);
 void save_abyss_uniques();
-bool is_level_incorruptible();
-bool lugonu_corrupt_level(int power);
+bool is_level_incorruptible(bool silent = false);
+bool lugonu_corrupt_level(int power, actor *agent = &you);
 void run_corruption_effects(int duration);
 
 #endif

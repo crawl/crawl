@@ -90,7 +90,7 @@ class map_corruption_marker : public map_marker
 {
 public:
     map_corruption_marker(const coord_def &pos = coord_def(0, 0),
-                          int dur = 0);
+                          int dur = 0, actor *who = &you);
 
     void write(writer &) const;
     void read(reader &);
@@ -101,6 +101,7 @@ public:
 
 public:
     int duration;
+    int agent;
 };
 
 class map_tomb_marker : public map_marker

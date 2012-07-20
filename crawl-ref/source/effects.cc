@@ -616,14 +616,7 @@ void direct_effect(monster* source, spell_type spell,
     {
     case SPELL_SMITING:
     {
-        // This is lifted from _do_ability and skill_bump().
-        int pow = source->skill_rdiv(SK_INVOCATIONS, 6);
-        if (pow < 18)
-            pow = pow * 2;
-        else
-            pow = pow + 18;
-
-        pow += 12;
+        int pow = 12 + skill_bump(SK_INVOCATIONS, 6, source);
 
         if (def)
             simple_monster_message(def, " is smitten.");

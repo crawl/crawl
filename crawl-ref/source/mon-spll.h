@@ -1835,6 +1835,16 @@
       }
     },
 
+    {  MST_BK_LUGONU,
+      {
+       SPELL_BANISHMENT,
+       SPELL_NO_SPELL,
+       SPELL_DEPART_ABYSS,
+       SPELL_CORRUPT,
+       SPELL_BEND_SPACE,
+       SPELL_ENTER_ABYSS,
+      }
+    },
 
     {  MST_TEST_SPAWNER,
       {
