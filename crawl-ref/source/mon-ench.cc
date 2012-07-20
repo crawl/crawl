@@ -1389,7 +1389,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         // If you are no longer dying, you must be dead.
         if (decay_enchantment(me))
         {
-            if (visible_to(&you))
+            if (you.can_see(this))
             {
                 if (type == MONS_PILLAR_OF_SALT)
                 {
