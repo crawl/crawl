@@ -249,7 +249,6 @@ ifneq (,$(findstring CYGWIN,$(uname_S)))
 	GAME = crawl.exe
 	NO_RDYNAMIC = YesPlease
 	BUILD_PCRE = YesPlease
-	CONTRIB_FONTS = yes
 endif
 
 ifdef BUILD_ALL
