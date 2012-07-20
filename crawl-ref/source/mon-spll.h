@@ -1824,6 +1824,18 @@
       }
     },
 
+    {  MST_BK_KIKUBAAQUDGHA,
+      {
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_RECEIVE_CORPSES,
+       SPELL_CORPSE_TORMENT,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+      }
+    },
+
+
     {  MST_TEST_SPAWNER,
       {
        SPELL_SHADOW_CREATURES,

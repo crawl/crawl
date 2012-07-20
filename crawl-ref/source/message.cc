@@ -992,7 +992,7 @@ static void debug_channel_arena(msg_channel_type channel)
     switch (channel)
     {
     case MSGCH_PROMPT:
-    case MSGCH_GOD:
+    //case MSGCH_GOD:
     case MSGCH_PRAY:
     case MSGCH_DURATION:
     case MSGCH_FOOD:

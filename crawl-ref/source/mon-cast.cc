@@ -1172,6 +1172,8 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_TEMPORAL_DISTORTION:
     case SPELL_SLOUCH:
     case SPELL_TIME_STEP:
+    case SPELL_RECEIVE_CORPSES:
+    case SPELL_CORPSE_TORMENT:
         return true;
     default:
         if (check_validity)
@@ -1659,6 +1661,21 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
             ret = true;
         break;
 
+    case SPELL_CORPSE_TORMENT:
+    {
+        int i = igrd(mon->pos());
+        for (; i != NON_ITEM; i = mitm[i].link)
+            if (mitm[i].base_type == OBJ_CORPSES
+                && mitm[i].sub_type == CORPSE_BODY
+                && !item_is_stationary(mitm[i]))
+            {
+                break;
+            }
+        if (i == NON_ITEM)
+            ret = true;
+        break;
+    }
+
     case SPELL_NO_SPELL:
         ret = true;
         break;
@@ -1823,6 +1840,7 @@ static monster_spells _get_mons_god_spells(god_type god, bool *found)
 {
     static monster mon_beogh;
     static monster mon_chei;
+    static monster mon_kiku;
     static monster mon_makhleb;
     static monster mon_okawaru;
     static monster mon_trog;
@@ -1831,6 +1849,7 @@ static monster_spells _get_mons_god_spells(god_type god, bool *found)
 
     if (god != GOD_BEOGH
         && god != GOD_CHEIBRIADOS
+        && god != GOD_KIKUBAAQUDGHA
         && god != GOD_MAKHLEB
         && god != GOD_OKAWARU
         && god != GOD_TROG
@@ -1843,6 +1862,7 @@ static monster_spells _get_mons_god_spells(god_type god, bool *found)
     {
         mons_load_spells(&mon_beogh,   MST_BK_BEOGH);
         mons_load_spells(&mon_chei,    MST_BK_CHEIBRIADOS);
+        mons_load_spells(&mon_kiku,    MST_BK_KIKUBAAQUDGHA);
         mons_load_spells(&mon_makhleb, MST_BK_MAKHLEB);
         mons_load_spells(&mon_okawaru, MST_BK_OKAWARU);
         mons_load_spells(&mon_trog,    MST_BK_TROG);
@@ -1850,13 +1870,14 @@ static monster_spells _get_mons_god_spells(god_type god, bool *found)
         loaded = true;
     }
 
-    monster *which = (god == GOD_BEOGH)         ? &mon_beogh
-                     : (god == GOD_CHEIBRIADOS) ? &mon_chei
-                     : (god == GOD_MAKHLEB)     ? &mon_makhleb
-                     : (god == GOD_OKAWARU)     ? &mon_okawaru
-                     : (god == GOD_TROG)        ? &mon_trog
-                     : (god == GOD_YREDELEMNUL) ? &mon_yred
-                                                : NULL;
+    monster *which = (god == GOD_BEOGH)           ? &mon_beogh
+                     : (god == GOD_CHEIBRIADOS)   ? &mon_chei
+                     : (god == GOD_KIKUBAAQUDGHA) ? &mon_kiku
+                     : (god == GOD_MAKHLEB)       ? &mon_makhleb
+                     : (god == GOD_OKAWARU)       ? &mon_okawaru
+                     : (god == GOD_TROG)          ? &mon_trog
+                     : (god == GOD_YREDELEMNUL)   ? &mon_yred
+                                                  : NULL;
 
     ASSERT(which);
     *found = true;
@@ -3256,6 +3277,7 @@ static bool _mon_spell_bail_out_early(monster* mons, spell_type spell_cast)
     case SPELL_OZOCUBUS_REFRIGERATION:
     case SPELL_BEND_TIME:
     case SPELL_SLOUCH:
+    case SPELL_CORPSE_TORMENT:
         if (!monsterNearby
             // friendly holies don't care if you are friendly
             || (mons->friendly() && spell_cast != SPELL_HOLY_WORD))
@@ -4416,8 +4438,10 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
             const int dur = BASELINE_DELAY * 2 * mons->skill(SK_NECROMANCY);
             simple_monster_message(mons,
                                    " stands defiantly in death's doorway!");
-            mons->hit_points = std::max(std::min(mons->hit_points,
-                                        mons->skill(SK_NECROMANCY)), 1);
+            int new_hp = mons->skill(SK_NECROMANCY) / 2;
+            if (mons->god == GOD_KIKUBAAQUDGHA)
+                new_hp += mons->piety() / 15;
+            mons->hit_points = std::max(std::min(mons->hit_points, new_hp), 1);
             mons->add_ench(mon_enchant(ENCH_DEATHS_DOOR, 0, mons, dur));
         }
         return;
@@ -4519,6 +4543,33 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                       duration, spell_cast,
                       mons->pos(), mons->foe, 0, GOD_MAKHLEB));
         mons->hurt(mons, 10);
+        return;
+    }
+
+    case SPELL_RECEIVE_CORPSES:
+    {
+        kiku_receive_corpses(mons->skill(SK_NECROMANCY, 4), mons->pos(), mons);
+        return;
+    }
+
+    case SPELL_CORPSE_TORMENT:
+    {
+        int i = igrd(mons->pos());
+        for (; i != NON_ITEM; i = mitm[i].link)
+            if (mitm[i].base_type == OBJ_CORPSES
+                && mitm[i].sub_type == CORPSE_BODY
+                && !item_is_stationary(mitm[i]))
+            {
+                break;
+            }
+        if (i == NON_ITEM)
+            return;
+
+        item_def &item(mitm[i]);
+        item_was_destroyed(item);
+        destroy_item(i);
+        simple_god_message(" torments the living!", GOD_KIKUBAAQUDGHA);
+        torment(mons, TORMENT_KIKUBAAQUDGHA, mons->pos());
         return;
     }
     }

@@ -3053,6 +3053,7 @@ bool monster::has_spells(bool check_god) const
     if (check_god
         && (god == GOD_BEOGH
             || god == GOD_CHEIBRIADOS
+            || god == GOD_KIKUBAAQUDGHA
             || god == GOD_MAKHLEB
             || god == GOD_OKAWARU
             || god == GOD_TROG
@@ -4634,7 +4635,7 @@ void monster::calc_speed()
     if (god == GOD_CHEIBRIADOS)
     {
         int delay = 100 / speed;
-        delay += 2 + std::min(hit_dice / 2, 8);
+        delay += 2 + std::min(piety() / 20, 8);
         speed = 100 / delay;
     }
 

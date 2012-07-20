@@ -1609,8 +1609,11 @@ void MiscastEffect::_divination_mon(int severity)
 
 void MiscastEffect::_necromancy(int severity)
 {
-    if (target->is_player() && you.religion == GOD_KIKUBAAQUDGHA
-        && !player_under_penance() && you.piety >= piety_breakpoint(1))
+    if ((target->is_player() && you.religion == GOD_KIKUBAAQUDGHA
+         && !player_under_penance() && you.piety >= piety_breakpoint(1))
+        || (target->is_monster()
+            && target->as_monster()->god == GOD_KIKUBAAQUDGHA
+            && target->as_monster()->piety_level() >= 2))
     {
         const bool death_curse =
                      (cause.find("death curse") != std::string::npos);
@@ -1618,7 +1621,9 @@ void MiscastEffect::_necromancy(int severity)
         if (spell != SPELL_NO_SPELL)
         {
             // An actual necromancy miscast.
-            if (x_chance_in_y(you.piety, 150))
+            if ((target->is_player() && x_chance_in_y(you.piety, 150))
+                || (target->is_monster()
+                    && x_chance_in_y(target->as_monster()->hit_dice, 15)))
             {
                 canned_msg(MSG_NOTHING_HAPPENS);
                 return;
@@ -1628,12 +1633,18 @@ void MiscastEffect::_necromancy(int severity)
         {
             if (coinflip())
             {
-                simple_god_message(" averts the curse.");
+                if (target->is_player()
+                    || you.can_see(target))
+                simple_god_message(" averts the curse.",
+                                   GOD_KIKUBAAQUDGHA);
                 return;
             }
             else
             {
-                simple_god_message(" partially averts the curse.");
+                if (target->is_player()
+                    || you.can_see(target))
+                    simple_god_message(" partially averts the curse.",
+                                       GOD_KIKUBAAQUDGHA);
                 severity = std::max(severity - 1, 0);
             }
         }

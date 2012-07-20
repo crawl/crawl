@@ -1772,7 +1772,7 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
          !force_hostile ? "is now yours" : "fights you");
 }
 
-bool kiku_receive_corpses(int pow, coord_def where)
+bool kiku_receive_corpses(int pow, coord_def where, actor *agent)
 {
     // pow = necromancy * 4, ranges from 0 to 108
     dprf("kiku_receive_corpses() power: %d", pow);
@@ -1859,17 +1859,25 @@ bool kiku_receive_corpses(int pow, coord_def where)
 
     if (corpses_created)
     {
-        if (you.religion == GOD_KIKUBAAQUDGHA)
+        if (agent->is_player() && you.religion == GOD_KIKUBAAQUDGHA)
         {
             simple_god_message(corpses_created > 1 ? " delivers you corpses!"
                                                    : " delivers you a corpse!");
+        }
+        else if (!agent->is_player() && you.can_see(agent))
+        {
+            std::string msg = " delivers "
+                              + agent->as_monster()->name(DESC_THE)
+                              + ((corpses_created > 1) ? " corpses!"
+                                                       : " a corpse!");
+            simple_god_message(msg.c_str(), GOD_KIKUBAAQUDGHA);
         }
         maybe_update_stashes();
         return true;
     }
     else
     {
-        if (you.religion == GOD_KIKUBAAQUDGHA)
+        if (agent->is_player() && you.religion == GOD_KIKUBAAQUDGHA)
             simple_god_message(" can find no cadavers for you!");
         return false;
     }

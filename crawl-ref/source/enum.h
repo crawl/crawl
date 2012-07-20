@@ -3250,6 +3250,9 @@ enum spell_type
     SPELL_SLOUCH,
     SPELL_TIME_STEP,
 
+    SPELL_RECEIVE_CORPSES,
+    SPELL_CORPSE_TORMENT,
+
     NUM_SPELLS
 };
 

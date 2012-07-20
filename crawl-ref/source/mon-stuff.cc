@@ -1472,6 +1472,51 @@ int monster_die(monster* mons, actor *killer, bool silent,
     return monster_die(mons, ktype, kindex, silent, wizard, fake);
 }
 
+static void _mons_god_death_message(monster* mons)
+{
+    if (!you.can_see(mons))
+        return;
+
+    switch (mons->god)
+    {
+        case GOD_FEDHAS:
+        {
+            std::string msg = " appreciates "
+                              + apostrophise(mons->name(DESC_THE))
+                              + " contribution to the ecosystem.";
+            simple_god_message(msg.c_str(), GOD_FEDHAS);
+            break;
+        }
+        case GOD_KIKUBAAQUDGHA:
+        {
+            std::string msg = " rasps at "
+                              + mons->name(DESC_THE)
+                              + ", \"You have failed me! Welcome... "
+                              + ((mons->holiness() == MH_NONLIVING
+                                  || mons->holiness() == MH_UNDEAD)
+                                 ? "oblivion" : "death")
+                              + "!\"";
+            simple_god_message(msg.c_str(), GOD_KIKUBAAQUDGHA);
+            break;
+        }
+
+        case GOD_NEMELEX_XOBEH:
+        {
+            //nemelex_death_message(mons);
+            break;
+        }
+
+        case GOD_YREDELEMNUL:
+            break; // to be done elsewhere
+
+        case GOD_XOM:
+            break;
+
+        default:
+            break;
+    }
+}
+
 // Returns the slot of a possibly generated corpse or -1.
 int monster_die(monster* mons, killer_type killer,
                 int killer_index, bool silent, bool wizard, bool fake)
@@ -1774,6 +1819,8 @@ int monster_die(monster* mons, killer_type killer,
                          mons->name(DESC_THE).c_str());
                 }
 
+                _mons_god_death_message(mons);
+
                 if ((created_friendly || was_neutral) && gives_xp)
                     mpr("That felt strangely unrewarding.");
             }
@@ -1944,6 +1991,8 @@ int monster_die(monster* mons, killer_type killer,
                                                  : " dies!";
                 simple_monster_message(mons, msg, MSGCH_MONSTER_DAMAGE,
                                        MDAM_DEAD);
+
+                _mons_god_death_message(mons);
             }
 
             if (crawl_state.game_is_arena())
@@ -2247,6 +2296,8 @@ int monster_die(monster* mons, killer_type killer,
                                                      : " dies!";
                     simple_monster_message(mons, msg, MSGCH_MONSTER_DAMAGE,
                                            MDAM_DEAD);
+
+                    _mons_god_death_message(mons);
                 }
             }
             break;

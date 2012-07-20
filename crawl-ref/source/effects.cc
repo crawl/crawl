@@ -306,6 +306,35 @@ int torment_monsters(coord_def where, actor *attacker, int taux)
         return retval;
 
     int hploss = std::max(0, mons->hit_points / 2 - 1);
+    if (mons->god == GOD_KIKUBAAQUDGHA
+        && mons->piety_level() >= 4)
+    {
+        if (hploss > 0)
+        {
+            if (random2(600) < mons->piety())
+            {
+                hploss = 0;
+                if (you.can_see(mons))
+                {
+                    std::string msg = " shields "
+                                      + mons->name(DESC_THE)
+                                      + " from torment!";
+                    simple_god_message(msg.c_str(), GOD_KIKUBAAQUDGHA);
+                }
+            }
+            else if (random2(250) < mons->piety())
+            {
+                hploss -= random2(hploss - 1);
+                if (you.can_see(mons))
+                {
+                    std::string msg = " partially shields "
+                                      + mons->name(DESC_THE)
+                                      + " from torment!";
+                    simple_god_message(msg.c_str(), GOD_KIKUBAAQUDGHA);
+                }
+            }
+        }
+    }
 
     if (hploss)
     {

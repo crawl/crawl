@@ -3056,6 +3056,32 @@ struct spell_desc
 },
 
 {
+    SPELL_RECEIVE_CORPSES, "Receive Corpses",
+     SPTYP_NECROMANCY,
+     SPFLAG_MONSTER,
+     2,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_CORPSE_TORMENT, "Torment",
+     SPTYP_NECROMANCY,
+     SPFLAG_MONSTER,
+     6,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,

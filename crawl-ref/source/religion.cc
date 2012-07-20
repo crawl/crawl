@@ -2397,22 +2397,28 @@ god_type str_to_god(const std::string &_name, bool exact)
 
 void god_speaks(god_type god, const char *mesg)
 {
-    ASSERT(!crawl_state.game_is_arena());
+    // With monster gods, this is no longer necessarily true.
+    // ASSERT(!crawl_state.game_is_arena());
 
-    int orig_mon = mgrd(you.pos());
+    int orig_mon = (crawl_state.game_is_arena())
+                   ? MONS_NO_MONSTER
+                   : mgrd(you.pos());
 
     monster fake_mon;
     fake_mon.type       = MONS_PROGRAM_BUG;
     fake_mon.hit_points = 1;
     fake_mon.god        = god;
-    fake_mon.set_position(you.pos());
+    if (!crawl_state.game_is_arena())
+        fake_mon.set_position(you.pos());
     fake_mon.foe        = MHITYOU;
     fake_mon.mname      = "FAKE GOD MONSTER";
 
     mpr(do_mon_str_replacements(mesg, &fake_mon).c_str(), MSGCH_GOD, god);
 
     fake_mon.reset();
-    mgrd(you.pos()) = orig_mon;
+
+    if (!crawl_state.game_is_arena())
+        mgrd(you.pos()) = orig_mon;
 }
 
 void religion_turn_start()
