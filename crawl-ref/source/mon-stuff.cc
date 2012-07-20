@@ -388,6 +388,10 @@ int place_monster_corpse(const monster* mons, bool silent,
     if (mons->props.exists("never_corpse"))
         return -1;
 
+    // The body disappears for Nemelex worshippers...
+    if (mons->god == GOD_NEMELEX_XOBEH)
+        return -1;
+
     item_def corpse;
     const monster_type corpse_class = fill_out_corpse(mons, mons->type,
                                                       corpse);
@@ -402,7 +406,10 @@ int place_monster_corpse(const monster* mons, bool silent,
     // "always_corpse" forces monsters to always generate a corpse upon
     // their deaths.
     if (mons->props.exists("always_corpse")
-        || mons_class_flag(mons->type, M_ALWAYS_CORPSE))
+        || mons_class_flag(mons->type, M_ALWAYS_CORPSE)
+        || (mons->god == GOD_YREDELEMNUL
+            && mons->holiness() == MH_NATURAL
+            && mons_can_be_zombified(mons)))
     {
         vault_forced = true;
     }
@@ -853,6 +860,97 @@ static bool _beogh_forcibly_convert_orc(monster* mons, killer_type killer,
     return false;
 }
 
+static void _monster_death_message(monster* mons, killer_type killer,
+                                   bool exploded = false, bool anon = false,
+                                   int killer_index = MONS_NO_MONSTER)
+{
+    mon_holy_type targ_holy = mons->holiness();
+
+    // Dual holiness, Trog and Kiku like dead demons but not undead.
+    if ((mons->type == MONS_ABOMINATION_SMALL
+         || mons->type == MONS_ABOMINATION_LARGE
+         || mons->type == MONS_CRAWLING_CORPSE
+         || mons->type == MONS_MACABRE_MASS)
+        && (you.religion == GOD_TROG
+         || you.religion == GOD_KIKUBAAQUDGHA))
+    {
+        targ_holy = MH_DEMONIC;
+    }
+
+    switch (killer)
+    {
+    case KILL_MON:
+    case KILL_MON_MISSILE:
+    case KILL_MISC:
+    case KILL_YOU_CONF:
+        if (killer != KILL_YOU_CONF ||
+            (anon || !invalid_monster_index(killer_index)))
+        {
+            mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s is %s!",
+                 mons->name(DESC_THE).c_str(),
+                 exploded                        ? "blown up" :
+                 _wounded_damaged(targ_holy)     ? "destroyed"
+                                                 : "killed");
+            break;
+        }
+        // fall through
+    case KILL_YOU:          // You kill in combat.
+    case KILL_YOU_MISSILE:  // You kill by missile or beam.
+        mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "You %s %s!",
+             exploded                        ? "blow up" :
+             _wounded_damaged(targ_holy)     ? "destroy"
+                                             : "kill",
+             mons->name(DESC_THE).c_str());
+        break;
+    default:
+        break;
+    }
+
+    return;
+}
+
+static bool _god_monster_death_intervention(monster* mons, killer_type killer)
+{
+    if (killer == KILL_RESET
+        || killer == KILL_DISMISSED
+        || killer == KILL_BANISHED)
+        return false;
+
+    switch (mons->god)
+    {
+        case GOD_XOM:
+        {
+            if (!one_chance_in(20))
+                break;
+
+            const int death_tension = get_tension(GOD_XOM, mons);
+            if (death_tension < random2(5) || !xom_is_nice(death_tension))
+                break;
+
+            if (mons_near(mons)
+                && mons->visible_to(&you))
+            {
+                _monster_death_message(mons, killer, false, false,
+                                       MONS_NO_MONSTER);
+                const std::string key =
+                    (killer == KILL_MISC) ? " general"
+                                          : " actor";
+                std::string speech = getSpeakString("Xom life saving" + key);
+                god_speaks(GOD_XOM, speech.c_str());
+
+                speech = "Xom revives " + mons->name(DESC_THE) + "!";
+                god_speaks(GOD_XOM, speech.c_str());
+            }
+
+            mons->hit_points = 1 + random2(mons->max_hit_points / 4);
+            return true;
+        }
+        default:
+            break;
+    }
+    return false;
+}
+
 static bool _monster_avoided_death(monster* mons, killer_type killer, int i)
 {
     if (mons->hit_points < -25
@@ -875,6 +973,9 @@ static bool _monster_avoided_death(monster* mons, killer_type killer, int i)
 
     // Beogh special.
     if (_beogh_forcibly_convert_orc(mons, killer, i))
+        return true;
+
+    if (_god_monster_death_intervention(mons, killer))
         return true;
 
     return false;
@@ -1502,7 +1603,7 @@ static void _mons_god_death_message(monster* mons)
 
         case GOD_NEMELEX_XOBEH:
         {
-            //nemelex_death_message(mons);
+            nemelex_death_message(mons);
             break;
         }
 
@@ -1510,11 +1611,54 @@ static void _mons_god_death_message(monster* mons)
             break; // to be done elsewhere
 
         case GOD_XOM:
+        {
+            const int death_tension = get_tension(GOD_XOM, mons);
+            if (mons->hit_points >= -1 * random2(3)
+                && death_tension <= random2(10))
+            {
+                god_speaks(GOD_XOM, getSpeakString("Xom boring death").c_str());
+            }
+            else if (mons->hit_points <= -10
+                     || death_tension >= 20)
+            {
+                std::string msg = getSpeakString("Xom laughter");
+                if (you.religion == GOD_XOM
+                    && crawl_state.which_god_acting() != GOD_XOM)
+                    xom_is_stimulated(200, msg, true);
+                else
+                    god_speaks(GOD_XOM, msg.c_str());
+            }
             break;
+        }
 
         default:
             break;
     }
+}
+
+bool _yred_zombify(monster* mons)
+{
+    if (mons->god != GOD_YREDELEMNUL
+        || mons->holiness() != MH_NATURAL
+        || !mons_can_be_zombified(mons))
+        return false;
+
+    std::string msg = apostrophise(mons->name(DESC_THE))
+                      + " body arises from the dead as a mindless zombie.";
+
+    beh_type beh = SAME_ATTITUDE(mons);
+    unsigned short hitting = mons->foe;
+
+    monster *zombie = 0;
+    if (animate_remains(mons->pos(), CORPSE_BODY, beh, hitting, NULL,
+                        "Yredelemnul", GOD_YREDELEMNUL, true, true, true,
+                        &zombie) <= 0)
+    {
+        return false;
+    }
+    if (you.can_see(zombie))
+        god_speaks(GOD_YREDELEMNUL, msg.c_str());
+    return true;
 }
 
 // Returns the slot of a possibly generated corpse or -1.
@@ -1801,24 +1945,8 @@ int monster_die(monster* mons, killer_type killer,
 
             if (death_message)
             {
-                if (killer == KILL_YOU_CONF
-                    && (anon || !invalid_monster_index(killer_index)))
-                {
-                    mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s is %s!",
-                         mons->name(DESC_THE).c_str(),
-                         exploded                        ? "blown up" :
-                         _wounded_damaged(targ_holy)     ? "destroyed"
-                                                         : "killed");
-                }
-                else
-                {
-                    mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "You %s %s!",
-                         exploded                        ? "blow up" :
-                         _wounded_damaged(targ_holy)     ? "destroy"
-                                                         : "kill",
-                         mons->name(DESC_THE).c_str());
-                }
-
+                _monster_death_message(mons, killer, exploded, anon,
+                                       killer_index);
                 _mons_god_death_message(mons);
 
                 if ((created_friendly || was_neutral) && gives_xp)
@@ -1985,13 +2113,9 @@ int monster_die(monster* mons, killer_type killer,
         {
             if (death_message)
             {
-                const char* msg =
-                    exploded                     ? " is blown up!" :
-                    _wounded_damaged(targ_holy)  ? " is destroyed!"
-                                                 : " dies!";
-                simple_monster_message(mons, msg, MSGCH_MONSTER_DAMAGE,
-                                       MDAM_DEAD);
 
+                _monster_death_message(mons, killer, exploded, anon,
+                                       killer_index);
                 _mons_god_death_message(mons);
             }
 
@@ -2290,13 +2414,8 @@ int monster_die(monster* mons, killer_type killer,
                 }
                 else
                 {
-                    const char* msg =
-                        exploded                     ? " is blown up!" :
-                        _wounded_damaged(targ_holy)  ? " is destroyed!"
-                                                     : " dies!";
-                    simple_monster_message(mons, msg, MSGCH_MONSTER_DAMAGE,
-                                           MDAM_DEAD);
-
+                    _monster_death_message(mons, killer, exploded, anon,
+                                           killer_index);
                     _mons_god_death_message(mons);
                 }
             }
@@ -2526,12 +2645,13 @@ int monster_die(monster* mons, killer_type killer,
     if (fake)
     {
         if (corpse != -1)
-            if (_reaping(mons))
+            if (_yred_zombify(mons) || _reaping(mons))
                 corpse = -1;
+
+            crawl_state.dec_mon_acting(mons);
 
         _give_experience(player_exp, monster_exp, killer, killer_index,
                          pet_kill, was_visible);
-        crawl_state.dec_mon_acting(mons);
 
         return corpse;
     }
@@ -2581,7 +2701,7 @@ int monster_die(monster* mons, killer_type killer,
         autotoggle_autopickup(false);
 
     if (corpse != -1)
-        if (_reaping(mons))
+        if (_yred_zombify(mons) || _reaping(mons))
             corpse = -1;
 
     crawl_state.dec_mon_acting(mons);

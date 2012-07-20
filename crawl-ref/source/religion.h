@@ -75,7 +75,7 @@ bool fedhas_protects(const monster* target);
 bool fedhas_neutralises(const monster* target);
 void print_sacrifice_message(god_type, const item_def &,
                              piety_gain_t, bool = false);
-void nemelex_death_message();
+void nemelex_death_message(const actor* victim);
 
 bool tso_unchivalric_attack_safe_monster(const monster* mon);
 
@@ -101,8 +101,9 @@ void get_pure_deck_weights(int weights[]);
 void religion_turn_start();
 void religion_turn_end();
 
-int get_tension(god_type god = you.religion);
-int get_monster_tension(const monster* mons, god_type god = you.religion);
+int get_tension(god_type god = you.religion, actor *who = &you);
+int get_monster_tension(const monster* mons, god_type god = you.religion,
+                        actor *who = &you);
 int get_fuzzied_monster_difficulty(const monster *mons);
 
 bool do_god_gift(bool forced = false);

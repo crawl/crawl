@@ -3473,9 +3473,13 @@ int melee_attack::calc_to_hit(bool random)
         if (wpn_skill != SK_FIGHTING)
         {
             // GOD TODO: apply this to monsters too!
-            if (attacker->is_player()
-                && you.skill(wpn_skill) < 1
-                && player_in_a_dangerous_place())
+            if ((attacker->is_player()
+                 && you.skill(wpn_skill) < 1
+                 && player_in_a_dangerous_place())
+                || (attacker->is_monster()
+                    && attacker->as_monster()->god == GOD_XOM
+                    && attacker->skill(wpn_skill) < 1
+                    && monster_in_a_dangerous_place(attacker->as_monster())))
                 xom_is_stimulated(10); // Xom thinks that is mildly amusing.
 
             mhit += maybe_random_div(attacker->skill(wpn_skill, 100), 100,

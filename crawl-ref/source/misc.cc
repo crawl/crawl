@@ -22,6 +22,7 @@
 #include "misc.h"
 
 #include "abyss.h"
+#include "act-iter.h"
 #include "areas.h"
 #include "clua.h"
 #include "cloud.h"
@@ -69,6 +70,7 @@
 #include "skills.h"
 #include "skills2.h"
 #include "spl-clouds.h"
+#include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"
@@ -1776,6 +1778,141 @@ static void monster_threat_values(double *general, double *highest,
     *general = sum;
 }
 
+int player_exper_value()
+{
+    int x_val = 0;
+
+    int hd    = you.experience_level;
+    int maxhp = you.hp_max;
+    int speed = 1000/player_movement_speed()/player_speed();
+
+    const bool spellcaster = !!you.spell_no;
+
+    x_val = (16 + maxhp) * (hd * hd) / 10;
+
+    int diff = 0;
+
+    if (spellcaster)
+        for (int i = 0; i < 52; ++i)
+        {
+            const char letter = index_to_letter(i);
+            const spell_type spell = get_spell_by_letter(letter);
+
+            if (!is_valid_spell(spell))
+                continue;
+
+            switch(spell)
+            {
+            case SPELL_PARALYSE:
+            case SPELL_SMITING:
+            case SPELL_SUMMON_GREATER_DEMON:
+            case SPELL_SUMMON_EYEBALLS:
+            case SPELL_HELLFIRE_BURST:
+            case SPELL_HELLFIRE:
+            case SPELL_SYMBOL_OF_TORMENT:
+            case SPELL_ICE_STORM:
+            case SPELL_FIRE_STORM:
+                diff += 25;
+                break;
+
+            case SPELL_LIGHTNING_BOLT:
+            case SPELL_CHAIN_LIGHTNING:
+            case SPELL_BOLT_OF_DRAINING:
+            case SPELL_VENOM_BOLT:
+            case SPELL_STICKY_FLAME_RANGE:
+            case SPELL_DISINTEGRATE:
+            case SPELL_HAUNT:
+            case SPELL_SUMMON_DRAGON:
+            case SPELL_SUMMON_HORRIBLE_THINGS:
+            case SPELL_BANISHMENT:
+            case SPELL_LEHUDIBS_CRYSTAL_SPEAR:
+            case SPELL_IRON_SHOT:
+            case SPELL_IOOD:
+            case SPELL_TELEPORT_SELF:
+            case SPELL_TELEPORT_OTHER:
+            case SPELL_PORKALATOR:
+                diff += 10;
+                break;
+
+            default:
+                break;
+            }
+        }
+
+    diff += 5 * player_mutation_level(MUT_REGENERATION);
+
+    // GOD TODO: figure out how to calculate player melee damage
+    /* if (speed >= 10)
+    {
+        int max_melee = 0;
+    }*/
+
+    diff += 30;
+
+    if (diff > 100)
+        diff = 100;
+    else if (diff < -30)
+        diff = -30;
+
+    x_val *= (100 + diff);
+
+    if (speed > 0)
+    {
+        x_val *= speed;
+        x_val /= 10;
+    }
+
+    if (x_val <= 0)
+        x_val = 1;
+    else if (x_val > 15000)
+        x_val = 15000;
+
+    return x_val;
+}
+
+static void monster_threat_values(monster *who, double *general,
+                                  double *highest, bool *invis)
+{
+    *invis = false;
+
+    double sum = 0;
+    int highest_xp = -1;
+
+    for (actor_iterator ai(who->get_los()); ai; ++ai)
+    {
+        if (ai->is_player() && !who->friendly())
+        {
+            const int xp = player_exper_value();
+            const double log_xp = log((double)xp);
+            sum += log_xp;
+            if (xp > highest_xp)
+            {
+                highest_xp = xp;
+                *highest   = log_xp;
+            }
+            if (!who->can_see(*ai))
+                *invis = true;
+        }
+        else if (ai->is_monster()
+                 && !mons_atts_aligned(ai->as_monster()->attitude,
+                                       who->attitude))
+        {
+            const int xp = exper_value(ai->as_monster());
+            const double log_xp = log((double)xp);
+            sum += log_xp;
+            if (xp > highest_xp)
+            {
+                highest_xp = xp;
+                *highest   = log_xp;
+            }
+            if (!who->can_see(*ai))
+                *invis = true;
+        }
+    }
+
+    *general = sum;
+}
+
 bool player_in_a_dangerous_place(bool *invis)
 {
     bool junk;
@@ -1785,6 +1922,19 @@ bool player_in_a_dangerous_place(bool *invis)
     const double logexp = log((double)you.experience);
     double gen_threat = 0.0, hi_threat = 0.0;
     monster_threat_values(&gen_threat, &hi_threat, invis);
+
+    return (gen_threat > logexp * 1.3 || hi_threat > logexp / 2);
+}
+
+bool monster_in_a_dangerous_place(monster *who, bool *invis)
+{
+    bool junk;
+    if (invis == NULL)
+        invis = &junk;
+
+    const double logexp = log((double)exp_needed(who->hit_dice, 10));
+    double gen_threat = 0.0, hi_threat = 0.0;
+    monster_threat_values(who, &gen_threat, &hi_threat, invis);
 
     return (gen_threat > logexp * 1.3 || hi_threat > logexp / 2);
 }

@@ -3196,12 +3196,19 @@ void print_sacrifice_message(god_type god, const item_def &item,
         MSGCH_GOD, god);
 }
 
-void nemelex_death_message()
+void nemelex_death_message(const actor* victim)
 {
+    int piety = (victim->is_player())
+                ? you.piety
+                : victim->as_monster()->piety();
     const piety_gain_t piety_gain = static_cast<piety_gain_t>
-            (std::min(random2(you.piety) / 30, (int)PIETY_LOTS));
+            (std::min(random2(piety) / 30, (int)PIETY_LOTS));
+    std::string body = (victim->is_player())
+                       ? "Your body"
+                       : apostrophise(victim->as_monster()->name(DESC_THE))
+                         + " body";
     mpr(_sacrifice_message(_Sacrifice_Messages[GOD_NEMELEX_XOBEH][piety_gain],
-                           "Your body", you.backlit(), false, piety_gain));
+                           body, victim->backlit(), false, piety_gain));
 }
 
 bool god_hates_attacking_friend(god_type god, const actor *fr)
@@ -4113,16 +4120,82 @@ bool tso_unchivalric_attack_safe_monster(const monster* mon)
             || !mon->is_holy() && holiness != MH_NATURAL);
 }
 
-int get_monster_tension(const monster* mons, god_type god)
+static int _get_player_tension(god_type god, actor *who)
+{
+    if (you.dead)
+        return 0;
+
+    if (who->is_player())
+        return 0;
+
+    const mon_attitude_type att = mons_attitude(who->as_monster());
+    if (att == ATT_GOOD_NEUTRAL || att == ATT_NEUTRAL)
+        return 0;
+
+    if (you.cannot_act() || you.asleep())
+        return 0;
+
+    int exper = player_exper_value();
+    if (exper <= 0)
+        return 0;
+
+    exper *= you.hp;
+    exper /= you.hp_max;
+
+    if (att == ATT_FRIENDLY)
+        exper = -exper;
+    else
+    {
+        if (!who->as_monster()->visible_to(&you))
+            exper /= 2;
+        if (!you.visible_to(who->as_monster()))
+            exper *= 2;
+    }
+
+    if (you.confused() || you.caught())
+        exper /= 2;
+
+    if (you.duration[DUR_SLOW])
+    {
+        exper *= 2;
+        exper /= 3;
+    }
+
+    if (you.duration[DUR_HASTE])
+    {
+        exper *= 3;
+        exper /= 2;
+    }
+
+    if (you.duration[DUR_MIGHT])
+    {
+        exper *= 5;
+        exper /= 4;
+    }
+
+    if (you.berserk())
+    {
+        // in addition to haste and might bonuses above
+        exper *= 3;
+        exper /= 2;
+    }
+
+    return exper;
+}
+
+int get_monster_tension(const monster* mons, god_type god, actor *who)
 {
     if (!mons->alive())
         return 0;
 
-    if (you.see_cell(mons->pos()))
+    if (who->is_player() && you.see_cell(mons->pos()))
     {
         if (!mons_can_hurt_player(mons))
             return 0;
     }
+
+    const monster *as_mon = (who->is_monster()) ? who->as_monster()
+                                                : (monster *)NULL;
 
     const mon_attitude_type att = mons_attitude(mons);
     if (att == ATT_GOOD_NEUTRAL || att == ATT_NEUTRAL)
@@ -4144,31 +4217,46 @@ int get_monster_tension(const monster* mons, god_type god)
     if (god != GOD_NO_GOD)
         gift = mons_is_god_gift(mons, god);
 
-    if (att == ATT_HOSTILE)
+    if (who->is_player())
     {
-        // God is punishing you with a hostile gift, so it doesn't
-        // count towards tension.
-        if (gift)
-            return 0;
-    }
-    else if (att == ATT_FRIENDLY)
-    {
-        // Friendly monsters being around to help you reduce
-        // tension.
-        exper = -exper;
+        if (att == ATT_HOSTILE)
+        {
+            // God is punishing you with a hostile gift, so it doesn't
+            // count towards tension.
+            if (gift)
+                return 0;
+        }
+        else if (att == ATT_FRIENDLY)
+        {
+            // Friendly monsters being around to help you reduce
+            // tension.
+            exper = -exper;
 
-        // If it's a god gift, it reduces tension even more, since
-        // the god is already helping you out.
-        if (gift)
-            exper *= 2;
-    }
+            // If it's a god gift, it reduces tension even more, since
+            // the god is already helping you out.
+            if (gift)
+                exper *= 2;
+        }
 
-    if (att != ATT_FRIENDLY)
+        if (att != ATT_FRIENDLY)
+        {
+            if (!you.visible_to(mons))
+                exper /= 2;
+            if (!mons->visible_to(&you))
+                exper *= 2;
+        }
+    }
+    else
     {
-        if (!you.visible_to(mons))
-            exper /= 2;
-        if (!mons->visible_to(&you))
-            exper *= 2;
+        if (mons_atts_aligned(mons_attitude(as_mon), att))
+            exper = -exper;
+        else
+        {
+            if (!as_mon->visible_to(mons))
+                exper /= 2;
+            if (!mons->visible_to(&you))
+                exper *= 2;
+        }
     }
 
     if (mons->confused() || mons->caught())
@@ -4202,21 +4290,32 @@ int get_monster_tension(const monster* mons, god_type god)
     return exper;
 }
 
-int get_tension(god_type god)
+int get_tension(god_type god, actor *who)
 {
     int total = 0;
 
+    const monster *as_mon = (who->is_monster()) ? who->as_monster()
+                                                : (monster *)NULL;
+
     bool nearby_monster = false;
-    for (radius_iterator ri(you.get_los()); ri; ++ri)
+    for (radius_iterator ri(who->get_los()); ri; ++ri)
     {
         const monster* mon = monster_at(*ri);
 
-        if (mon && mon->alive() && you.can_see(mon))
+        if (mon && mon->alive() && who->can_see(mon))
         {
-            int exper = get_monster_tension(mon, god);
+            int exper = get_monster_tension(mon, god, who);
 
             if (!mon->wont_attack() && !mon->withdrawn())
                 nearby_monster = true;
+
+            total += exper;
+        }
+        else if (as_mon && *ri == you.pos())
+        {
+            int exper = _get_player_tension(god, who);
+
+            nearby_monster = true;
 
             total += exper;
         }
@@ -4232,12 +4331,16 @@ int get_tension(god_type god)
 
     // Tension goes up inversely proportional to the percentage of max
     // hp you have.
-    tension *= (scale + 1) * you.hp_max;
-    tension /= you.hp_max + scale * you.hp;
+    tension *= (scale + 1) * who->stat_maxhp();
+    tension /= who->stat_maxhp() + scale * who->stat_hp();
 
     // Divides by 1 at level 1, 200 at level 27.
-    const int exp_lev  = you.get_experience_level();
-    const int exp_need = exp_needed(exp_lev);
+    const int exp_lev  = (who->is_player())
+                         ? you.get_experience_level()
+                         : as_mon->hit_dice;
+    const int exp_need = (who->is_player())
+                         ? exp_needed(exp_lev)
+                         : 0;
     const int factor   = (int)ceil(sqrt(exp_need / 30.0));
     const int div      = 1 + factor;
 
@@ -4254,7 +4357,7 @@ int get_tension(god_type god)
         }
     }
 
-    if (you.cannot_act())
+    if (who->cannot_act())
     {
         tension *= 10;
         tension  = std::max(1, tension);
@@ -4262,19 +4365,21 @@ int get_tension(god_type god)
         return tension;
     }
 
-    if (you.confused())
+    if (who->confused())
         tension *= 2;
 
-    if (you.caught())
+    if (who->caught())
         tension *= 2;
 
-    if (you.duration[DUR_SLOW])
+    if ((who->is_player() && you.duration[DUR_SLOW])
+        || (!who->is_player() && as_mon->has_ench(ENCH_SLOW)))
     {
         tension *= 3;
         tension /= 2;
     }
 
-    if (you.duration[DUR_HASTE])
+    if ((who->is_player() && you.duration[DUR_HASTE])
+        || (!who->is_player() && as_mon->has_ench(ENCH_HASTE)))
     {
         tension *= 2;
         tension /= 3;

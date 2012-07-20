@@ -4158,6 +4158,16 @@ bool monster::rot(actor *agent, int amount, int immediate, bool quiet)
     return true;
 }
 
+bool monster::god_protects_mons_from_harm()
+{
+    // GOD TODO: Elyvilon life protection
+    if (god_can_protect_from_harm(god)
+        && (one_chance_in(10)
+            || x_chance_in_y(piety(), 1000)))
+        return true;
+    return false;
+}
+
 int monster::hurt(const actor *agent, int amount, beam_type flavour,
                    bool cleanup_dead)
 {
@@ -4198,6 +4208,21 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
             amount *= 4;
             if (amount > hit_points + 50)
                 flags |= MF_EXPLODE_KILL;
+        }
+
+        if (amount > hit_points && max_hit_points > 0 &&
+            god_protects_mons_from_harm())
+        {
+            // This is intentionally see_cell, in case you're beating up
+            // an invisible monster that's protected from harm.
+            if (you.see_cell(pos()))
+            {
+                std::string msg = " protects "
+                                  + name(DESC_THE)
+                                  + " from harm!";
+                simple_god_message(msg.c_str(), god);
+            }
+            return 0;
         }
 
         amount = std::min(amount, hit_points);

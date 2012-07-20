@@ -1453,7 +1453,7 @@ void _end_game(scorefile_entry &se)
             break;
 
         case GOD_NEMELEX_XOBEH:
-            nemelex_death_message();
+            nemelex_death_message(&you);
             break;
 
         case GOD_KIKUBAAQUDGHA:

@@ -494,6 +494,7 @@ private:
                               coord_def &chosen,
                               int &nvalid) const;
 
+    bool god_protects_mons_from_harm();
 };
 
 #endif

@@ -98,7 +98,9 @@ void run_environment_effects();
 
 int str_to_shoptype(const std::string &s);
 
+int player_exper_value();
 bool player_in_a_dangerous_place(bool *invis = NULL);
+bool monster_in_a_dangerous_place(monster *who, bool *invis = NULL);
 void bring_to_safety();
 void revive();
 
