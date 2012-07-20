@@ -64,8 +64,8 @@ void immolation(int pow, int caster, coord_def where, bool known = false,
 
 void conduct_electricity(coord_def where, actor *attacker);
 
-void cleansing_flame(int pow, int caster, coord_def where,
-                     actor *attacker = NULL);
+bool cleansing_flame(int pow, int caster, coord_def where,
+                     actor *attacker = NULL, bool tracer = false);
 
 void change_labyrinth(bool msg = false);
 

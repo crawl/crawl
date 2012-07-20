@@ -487,10 +487,10 @@ void conduct_electricity(coord_def where, actor *attacker)
     beam.explode(false, true);
 }
 
-void cleansing_flame(int pow, int caster, coord_def where,
-                     actor *attacker)
+bool cleansing_flame(int pow, int caster, coord_def where,
+                     actor *attacker, bool tracer)
 {
-    ASSERT(!crawl_state.game_is_arena());
+//    ASSERT(!crawl_state.game_is_arena());
 
     const char *aux = "cleansing flame";
 
@@ -509,12 +509,13 @@ void cleansing_flame(int pow, int caster, coord_def where,
     beam.flavour      = BEAM_HOLY;
     beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
     beam.damage       = dice_def(2, pow);
-    beam.target       = you.pos();
+    beam.target       = where;
     beam.name         = "golden flame";
     beam.colour       = YELLOW;
     beam.aux_source   = aux;
     beam.ex_size      = 2;
     beam.is_explosion = true;
+    beam.is_tracer    = tracer;
 
     if (caster == CLEANSING_FLAME_GENERIC || caster == CLEANSING_FLAME_TSO)
     {
@@ -536,7 +537,22 @@ void cleansing_flame(int pow, int caster, coord_def where,
         beam.beam_source = attacker->mindex();
     }
 
+    if (tracer)
+    {
+        if (attacker && attacker->is_player())
+        {
+            beam.explode();
+            return !beam.beam_cancelled;
+        }
+
+        ASSERT(attacker && attacker->is_monster());
+
+        fire_tracer(attacker->as_monster(), beam, true);
+        return mons_should_fire(beam);
+    }
+
     beam.explode();
+    return true;
 }
 
 static std::string _who_banished(const std::string &who)

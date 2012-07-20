@@ -3134,6 +3134,32 @@ struct spell_desc
 },
 
 {
+    SPELL_CLEANSING_FLAME, "Cleansing Flame",
+     SPTYP_CONJURATION | SPTYP_FIRE,
+     SPFLAG_MONSTER,
+     5,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_DIVINE_WARRIOR, "Divine Warrior",
+     SPTYP_SUMMONING,
+     SPFLAG_MONSTER,
+     6,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,

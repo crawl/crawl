@@ -565,48 +565,73 @@ int monster::halo_radius2() const
     item_def* weap = mslot_item(MSLOT_WEAPON);
     int size = -1;
 
+    if (god == GOD_SHINING_ONE && mons_intel(this) >= I_NORMAL)
+    {
+        const int r = piety() - 10;
+        // The cap is 64, just less than the LOS of 65.
+        size = std::min(LOS_RADIUS*LOS_RADIUS, r * r / 400);
+    }
+
     if (weap && weap->special == UNRAND_BRILLIANCE)
-        size = 9;
+        size = std::max(size, 9);
 
     if (holiness() != MH_HOLY)
         return size;
+
     // The values here depend on 1. power, 2. sentience.  Thus, high-ranked
     // sentient celestials have really big haloes, while holy animals get
     // small ones.
     switch (type)
     {
     case MONS_SPIRIT:
-        return 5;
+        size = std::max(size, 5);
+        break;
     case MONS_ANGEL:
-        return 26;
+        size = std::max(size, 26);
+        break;
     case MONS_CHERUB:
-        return 29;
+        size = std::max(size, 29);
+        break;
     case MONS_DAEVA:
-        return 32;
+        size = std::max(size, 32);
+        break;
     case MONS_SERAPH:
-        return 50;
+        size = std::max(size, 50);
+        break;
     case MONS_PEARL_DRAGON:
-        return 5;
+        size = std::max(size, 5);
+        break;
     case MONS_OPHAN:
-        return 64; // highest rank among sentient ones
+        size = std::max(size, 64); // highest rank among sentient ones
+        break;
     case MONS_PHOENIX:
-        return 10;
+        size = std::max(size, 10);
+        break;
     case MONS_SHEDU:
-        return 10;
+        size = std::max(size, 10);
+        break;
     case MONS_APIS:
-        return 4;
+        size = std::max(size, 4);
+        break;
     case MONS_PALADIN: // If a paladin finds the mace of brilliance
                        // it needs a larger halo
-        return std::max(4, size);  // mere humans
+        size = std::max(size, 4);  // mere humans
+        break;
     case MONS_BLESSED_TOE:
-        return 17;
+        size = std::max(size, 17);
+        break;
     case MONS_SILVER_STAR:
-        return 40; // dumb but with an immense power
+        size = std::max(size, 40); // dumb but with an immense power
+        break;
     case MONS_HOLY_SWINE:
-        return 1;  // only notionally holy
+        size = std::max(size, 1);  // only notionally holy
+        break;
     default:
-        return 4;
+        size = std::max(size, 4);
+        break;
     }
+
+    return size;
 }
 
 //////////////////////

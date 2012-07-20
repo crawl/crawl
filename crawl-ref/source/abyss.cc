@@ -1594,7 +1594,8 @@ static void _apply_corruption_effect(map_marker *marker, int duration)
     actor *agent = NULL;
     if (midx == MHITYOU)
         agent = &you;
-    else if (!invalid_monster_index(midx))
+    else if (!invalid_monster_index(midx)
+             && menv[midx].alive())
         agent = &menv[midx];
 
     const int neffects = std::max(div_rand_round(duration, 5), 1);

@@ -1846,6 +1846,17 @@
       }
     },
 
+    {  MST_BK_SHINING_ONE,
+      {
+       SPELL_CLEANSING_FLAME,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_DIVINE_WARRIOR,
+       SPELL_NO_SPELL,
+       SPELL_DIVINE_WARRIOR,
+      }
+    },
+
     {  MST_TEST_SPAWNER,
       {
        SPELL_SHADOW_CREATURES,

@@ -1508,6 +1508,10 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     // (for the benefit of Chei-worshipping monsters).
     mon->calc_speed();
 
+    // ... and calc the halo for TSO worshippers.
+    if (mon->god == GOD_SHINING_ONE)
+        invalidate_agrid(true);
+
     if (mg.hp != 0)
     {
         mon->max_hit_points = mg.hp;

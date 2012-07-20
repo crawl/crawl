@@ -3057,6 +3057,7 @@ bool monster::has_spells(bool check_god) const
             || god == GOD_LUGONU
             || god == GOD_MAKHLEB
             || god == GOD_OKAWARU
+            || god == GOD_SHINING_ONE
             || god == GOD_TROG
             || god == GOD_YREDELEMNUL))
         return true;
@@ -3854,6 +3855,9 @@ int monster::res_negative_energy() const
         if (w && w->base_type == OBJ_STAVES && w->sub_type == STAFF_DEATH)
             u++;
     }
+
+    if (god == GOD_SHINING_ONE && piety() > u * 50)
+        u = piety() / 50;
 
     if (u > 3)
         u = 3;

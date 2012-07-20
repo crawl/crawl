@@ -1182,6 +1182,8 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_BEND_SPACE:
     case SPELL_CORRUPT:
     case SPELL_ENTER_ABYSS:
+    case SPELL_CLEANSING_FLAME:
+    case SPELL_DIVINE_WARRIOR:
         return true;
     default:
         if (check_validity)
@@ -1878,6 +1880,7 @@ static monster_spells _get_mons_god_spells(god_type god, bool *found)
     static monster mon_lugonu;
     static monster mon_makhleb;
     static monster mon_okawaru;
+    static monster mon_tso;
     static monster mon_trog;
     static monster mon_yred;
     static bool loaded = false;
@@ -1888,6 +1891,7 @@ static monster_spells _get_mons_god_spells(god_type god, bool *found)
         && god != GOD_LUGONU
         && god != GOD_MAKHLEB
         && god != GOD_OKAWARU
+        && god != GOD_SHINING_ONE
         && god != GOD_TROG
         && god != GOD_YREDELEMNUL)
     {
@@ -1902,6 +1906,7 @@ static monster_spells _get_mons_god_spells(god_type god, bool *found)
         mons_load_spells(&mon_lugonu,  MST_BK_LUGONU);
         mons_load_spells(&mon_makhleb, MST_BK_MAKHLEB);
         mons_load_spells(&mon_okawaru, MST_BK_OKAWARU);
+        mons_load_spells(&mon_tso,     MST_BK_SHINING_ONE);
         mons_load_spells(&mon_trog,    MST_BK_TROG);
         mons_load_spells(&mon_yred,    MST_BK_YREDELEMNUL);
         loaded = true;
@@ -1913,6 +1918,7 @@ static monster_spells _get_mons_god_spells(god_type god, bool *found)
                      : (god == GOD_LUGONU)        ? &mon_lugonu
                      : (god == GOD_MAKHLEB)       ? &mon_makhleb
                      : (god == GOD_OKAWARU)       ? &mon_okawaru
+                     : (god == GOD_SHINING_ONE)   ? &mon_tso
                      : (god == GOD_TROG)          ? &mon_trog
                      : (god == GOD_YREDELEMNUL)   ? &mon_yred
                                                   : NULL;
@@ -1999,7 +2005,9 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         monster_spells hspell_pass(mons->spells);
 
         // Try to use god abilities if appropriate.
-        if (mons->god != GOD_NO_GOD
+        if (mons_intel(mons) >= I_NORMAL
+            && !mons->is_summoned()
+            && mons->god != GOD_NO_GOD
             && mons->god != GOD_NAMELESS
             && (!mons->has_spells(false) || coinflip()))
         {
@@ -2457,6 +2465,13 @@ try_again:
         else if (spell_cast == SPELL_SLOUCH)
         {
             if (!_mons_slouch(mons, false))
+                return false;
+        }
+        else if (spell_cast == SPELL_CLEANSING_FLAME)
+        {
+            int pow = 10 + mons->skill_rdiv(SK_INVOCATIONS, 7, 6);
+            if (!cleansing_flame(pow, CLEANSING_FLAME_INVOCATION,
+                                 mons->pos(), mons, true))
                 return false;
         }
 
@@ -4715,6 +4730,24 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
             mons->max_hit_points = 1;
         mons->hurt(mons, random2(mons->hit_points));
         mons->banish(mons);
+        return;
+    }
+
+    case SPELL_CLEANSING_FLAME:
+    {
+        int pow = 10 + mons->skill_rdiv(SK_INVOCATIONS, 7, 6);
+        cleansing_flame(pow, CLEANSING_FLAME_INVOCATION, mons->pos(), mons);
+        return;
+    }
+
+    case SPELL_DIVINE_WARRIOR:
+    {
+        int pow = mons->skill(SK_INVOCATIONS, 4);
+        duration = std::min(2 + (random2(pow) / 4), 6);
+        create_monster(
+            mgen_data(coinflip() ? MONS_ANGEL : MONS_DAEVA,
+                      SAME_ATTITUDE(mons), mons, duration, spell_cast,
+                      mons->pos(), mons->foe, 0, GOD_SHINING_ONE));
         return;
     }
     }
