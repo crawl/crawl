@@ -279,7 +279,6 @@ endif
 LIBZ := contrib/install/$(ARCH)/lib/libz.a
 
 ifndef CROSSHOST
-	LUA_INCLUDE_DIR := /usr/include/lua5.1
 	SQLITE_INCLUDE_DIR := /usr/include
 else
 	# This is totally wrong, works only with some old-style setups, and
@@ -291,10 +290,8 @@ else
 	#
 	# Needs to be replaced by compile checks.  Guessing the paths is fragile,
 	# while the compiler knows them already.
-	LUA_INCLUDE_DIR := /usr/$(ARCH)/include/lua5.1
 	SQLITE_INCLUDE_DIR := /usr/$(ARCH)/include
 endif
-LUA_LIB := -llua5.1
 SQLITE_LIB := -lsqlite3
 
 #
@@ -523,16 +520,14 @@ endif
 endif
 
 ifndef BUILD_LUA
-  ifneq (,$(wildcard $(LUA_INCLUDE_DIR)/lua.h))
-    INCLUDES_L += -I$(LUA_INCLUDE_DIR)
-    LIBS += $(LUA_LIB)
-  else
-    ifneq (,$(wildcard /usr/include/lua.h))
-      LIBS += -llua
-    else
-      BUILD_LUA = yes
-    endif
+  ifneq ($(shell $(PKGCONFIG) lua5.1 --exists || echo no),)
+    BUILD_LUA = yes
   endif
+endif
+ifndef BUILD_LUA
+  INCLUDES_L += $(shell $(PKGCONFIG) lua5.1 --cflags-only-I)
+  CFLAGS_L  += $(shell $(PKGCONFIG) lua5.1 --cflags-only-other)
+  LIBS += $(shell $(PKGCONFIG) lua5.1 --libs)
 endif
 
 ifndef BUILD_SQLITE
