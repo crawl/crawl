@@ -586,6 +586,16 @@ void direct_effect(monster* source, spell_type spell,
     switch (spell)
     {
     case SPELL_SMITING:
+    {
+        // This is lifted from _do_ability and skill_bump().
+        int pow = source->skill_rdiv(SK_INVOCATIONS, 6);
+        if (pow < 18)
+            pow = pow * 2;
+        else
+            pow = pow + 18;
+
+        pow += 12;
+
         if (def)
             simple_monster_message(def, " is smitten.");
         else
@@ -594,8 +604,9 @@ void direct_effect(monster* source, spell_type spell,
         pbolt.name       = "smiting";
         pbolt.flavour    = BEAM_MISSILE;
         pbolt.aux_source = "by divine providence";
-        damage_taken     = 7 + random2avg(11, 2);
+        damage_taken     = 7 + (random2(pow) * 33 / 191);
         break;
+    }
 
     case SPELL_AIRSTRIKE:
         // Damage averages 14 for 5HD, 18 for 10HD, 28 for 20HD, +50% if flying.

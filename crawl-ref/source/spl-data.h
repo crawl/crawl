@@ -420,7 +420,7 @@ struct spell_desc
     SPELL_SMITING, "Smiting",
      SPTYP_NONE,
      SPFLAG_TARGET | SPFLAG_NOT_SELF, // divine ability, rod, monsters
-     4,
+     3,
      200,
      LOS_RADIUS, LOS_RADIUS,
      4, // SPTYP_NONE spells have no default noise level

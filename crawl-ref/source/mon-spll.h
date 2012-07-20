@@ -1791,6 +1791,17 @@
       }
     },
 
+    {  MST_BK_BEOGH,
+      {
+       SPELL_SMITING,
+       SPELL_CANTRIP,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL
+      }
+    },
+
     {  MST_BK_MAKHLEB,
       {
        SPELL_MINOR_DESTRUCTION,

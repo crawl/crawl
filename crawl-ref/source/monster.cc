@@ -3051,7 +3051,8 @@ void monster::banish(actor *agent, const std::string &)
 bool monster::has_spells(bool check_god) const
 {
     if (check_god
-        && (god == GOD_MAKHLEB
+        && (god == GOD_BEOGH
+            || god == GOD_MAKHLEB
             || god == GOD_OKAWARU
             || god == GOD_TROG
             || god == GOD_YREDELEMNUL))
@@ -4067,10 +4068,10 @@ int monster::skill(skill_type sk, int scale, bool real) const
     }
 
     if (has_ench(ENCH_HEROISM) && !magic)
-        ret += 5;
+        ret += 5*scale;
 
-    if (ret > 27)
-        ret = 27;
+    if (ret > 27*scale)
+        ret = 27*scale;
 
     // GOD TODO: Ashenzari skill boosts
 

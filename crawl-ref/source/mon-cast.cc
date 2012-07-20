@@ -1812,13 +1812,15 @@ static void _mons_set_priest_wizard_god(monster* mons, bool& priest,
 
 static monster_spells _get_mons_god_spells(god_type god, bool *found)
 {
+    static monster mon_beogh;
     static monster mon_makhleb;
     static monster mon_okawaru;
     static monster mon_trog;
     static monster mon_yred;
     static bool loaded = false;
 
-    if (god != GOD_MAKHLEB
+    if (god != GOD_BEOGH
+        && god != GOD_MAKHLEB
         && god != GOD_OKAWARU
         && god != GOD_TROG
         && god != GOD_YREDELEMNUL)
@@ -1828,6 +1830,7 @@ static monster_spells _get_mons_god_spells(god_type god, bool *found)
     }
     if (!loaded)
     {
+        mons_load_spells(&mon_beogh,   MST_BK_BEOGH);
         mons_load_spells(&mon_makhleb, MST_BK_MAKHLEB);
         mons_load_spells(&mon_okawaru, MST_BK_OKAWARU);
         mons_load_spells(&mon_trog,    MST_BK_TROG);
@@ -1835,7 +1838,8 @@ static monster_spells _get_mons_god_spells(god_type god, bool *found)
         loaded = true;
     }
 
-    monster *which = (god == GOD_MAKHLEB)       ? &mon_makhleb
+    monster *which = (god == GOD_BEOGH)         ? &mon_beogh
+                     : (god == GOD_MAKHLEB)     ? &mon_makhleb
                      : (god == GOD_OKAWARU)     ? &mon_okawaru
                      : (god == GOD_TROG)        ? &mon_trog
                      : (god == GOD_YREDELEMNUL) ? &mon_yred
