@@ -345,6 +345,13 @@ void tile_init_flavour(const coord_def &gc)
         env.tile_flv(gc).wall = _pick_random_dngn_tile(wall_base);
     }
 
+    if (feat_is_stone_stair(grd(gc)) && player_in_branch(BRANCH_SHOALS))
+    {
+        const bool up = feat_stair_direction(grd(gc)) == CMD_GO_UPSTAIRS;
+        env.tile_flv(gc).feat = up ? TILE_DNGN_SHOALS_STAIRS_UP
+                                   : TILE_DNGN_SHOALS_STAIRS_DOWN;
+    }
+
     if (feat_is_door(grd(gc)))
     {
         // Check for horizontal gates.
