@@ -3677,7 +3677,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         return;
 
     case SPELL_LEDAS_LIQUEFACTION:
-        if (!mons->has_ench(ENCH_LIQUEFYING))
+        if (!mons->has_ench(ENCH_LIQUEFYING) && you.can_see(mons))
         {
             mprf("%s liquefies the ground around %s!", mons->name(DESC_THE).c_str(),
                 mons->pronoun(PRONOUN_REFLEXIVE).c_str());
