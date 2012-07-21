@@ -974,6 +974,8 @@ bool miasma_player(std::string source, std::string source_aux = "");
 bool napalm_player(int amount);
 void dec_napalm_player(int delay);
 
+void dec_silver_corona_player(int delay);
+
 bool slow_player(int turns);
 void dec_slow_player(int delay);
 void dec_exhaust_player(int delay);

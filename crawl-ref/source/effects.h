@@ -54,6 +54,8 @@ void yell(bool force = false);
 void holy_word(int pow, int caster, const coord_def& where, bool silent = false,
                actor *attacker = NULL);
 
+void holy_word_player(int pow, int caster, actor *attacker);
+
 void holy_word_monsters(coord_def where, int pow, int caster,
                         actor *attacker = NULL);
 

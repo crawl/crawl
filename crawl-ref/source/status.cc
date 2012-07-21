@@ -617,6 +617,8 @@ static void _describe_backlit(status_info* inf)
         inf->light_colour = BLUE;
     else if (you.duration[DUR_LIQUID_FLAMES])
         inf->light_colour = RED;
+    else if (you.duration[DUR_SILVER_CORONA])
+        inf->light_colour = LIGHTGRAY;
     else if (you.halo_radius2() > 0)
         return;
     else if (you.duration[DUR_CORONA])

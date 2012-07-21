@@ -5305,6 +5305,28 @@ void dec_napalm_player(int delay)
     you.duration[DUR_LIQUID_FLAMES] -= delay;
 }
 
+void dec_silver_corona_player(int delay)
+{
+    delay = std::min(delay, you.duration[DUR_SILVER_CORONA]);
+
+    // Mirrors checks in _silver_damages_victim.
+    int mutated = how_mutated((you.species == SP_DEMONSPAWN), true);
+
+    if (player_is_shapechanged() || mutated > 0)
+    {
+        int dam = roll_dice(2, 4) - 1;
+        if (dam > 0)
+        {
+            mpr("The silver light sears your flesh!", MSGCH_WARN);
+            ouch(dam, NON_MONSTER, KILLED_BY_BURNING);
+        }
+    }
+
+    you.duration[DUR_SILVER_CORONA] -= delay;
+    if (!you.backlit())
+        mpr("You are no longer glowing.");
+}
+
 bool slow_player(int turns)
 {
     ASSERT(!crawl_state.game_is_arena());
@@ -7266,7 +7288,8 @@ bool player::visible_to(const actor *looker) const
 bool player::backlit(bool check_haloed, bool self_halo) const
 {
     if (get_contamination_level() > 1 || duration[DUR_CORONA]
-        || duration[DUR_LIQUID_FLAMES] || duration[DUR_QUAD_DAMAGE])
+        || duration[DUR_LIQUID_FLAMES] || duration[DUR_QUAD_DAMAGE]
+        || duration[DUR_SILVER_CORONA])
     {
         return true;
     }
@@ -7297,7 +7320,9 @@ void player::backlight()
 {
     if (!duration[DUR_INVIS])
     {
-        if (duration[DUR_CORONA] || you.glows_naturally())
+        if (duration[DUR_CORONA]
+            || duration[DUR_SILVER_CORONA]
+            || you.glows_naturally())
             mpr("You glow brighter.");
         else
             mpr("You are outlined in light.");

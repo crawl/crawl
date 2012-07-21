@@ -3059,7 +3059,8 @@ bool monster::has_spells(bool check_god) const
             || god == GOD_OKAWARU
             || god == GOD_SHINING_ONE
             || god == GOD_TROG
-            || god == GOD_YREDELEMNUL))
+            || god == GOD_YREDELEMNUL
+            || god == GOD_ZIN))
         return true;
 
     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
@@ -3177,7 +3178,8 @@ bool monster::cannot_act() const
 {
     return (paralysed() || petrified()
             || has_ench(ENCH_PREPARING_RESURRECT)
-            || has_ench(ENCH_TIME_STEP));
+            || has_ench(ENCH_TIME_STEP)
+            || has_ench(ENCH_RECITING));
 }
 
 bool monster::cannot_move() const
@@ -5508,6 +5510,16 @@ void monster::react_to_damage(const actor *oppressor, int damage,
     {
         add_final_effect(FINEFF_ROYAL_JELLY_SPAWN, oppressor, this,
                          pos(), damage);
+    }
+
+    if (has_ench(ENCH_RECITING))
+    {
+        if (you.can_see(this))
+            mprf(MSGCH_SOUND, "%s recitation is interrupted.",
+                 apostrophise(name(DESC_THE)).c_str());
+        else if (player_can_hear(pos()))
+            mprf(MSGCH_SOUND, "You hear the recitation suddenly stop.");
+        del_ench(ENCH_RECITING, true);
     }
 
     if (!alive())

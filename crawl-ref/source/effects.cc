@@ -79,7 +79,7 @@
 
 static void _update_corpses(int elapsedTime);
 
-static void _holy_word_player(int pow, int caster, actor *attacker)
+void holy_word_player(int pow, int caster, actor *attacker)
 {
     if (!you.undead_or_demonic())
         return;
@@ -134,7 +134,7 @@ void holy_word_monsters(coord_def where, int pow, int caster,
 
     // Is the player in this cell?
     if (where == you.pos())
-        _holy_word_player(pow, caster, attacker);
+        holy_word_player(pow, caster, attacker);
 
     // Is a monster in this cell?
     monster* mons = monster_at(where);

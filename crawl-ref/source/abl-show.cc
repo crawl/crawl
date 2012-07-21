@@ -1444,7 +1444,7 @@ static bool _check_ability_possible(const ability_def& abil,
         if (!zin_check_able_to_recite())
             return false;
 
-        const int result = zin_check_recite_to_monsters(0);
+        const int result = zin_check_recite_to_monsters(&you, 0);
         if (result == -1)
         {
             mpr("There's no appreciative audience!");
@@ -2191,7 +2191,7 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_ZIN_RECITE:
     {
         recite_type prayertype;
-        if (zin_check_recite_to_monsters(&prayertype))
+        if (zin_check_recite_to_monsters(&you, &prayertype))
             start_delay(DELAY_RECITE, 3, prayertype, you.hp);
         else
         {

@@ -13,6 +13,7 @@
 #include "env.h"
 #include "fight.h"
 #include "fprop.h"
+#include "godabil.h"
 #include "hints.h"
 #include "itemprop.h"
 #include "items.h"
@@ -785,6 +786,17 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
          if (!quiet)
             simple_monster_message(this, " slowly begins to move again.");
          break;
+    case ENCH_RECITING:
+         if (!quiet)
+         {
+             if (you.can_see(this))
+                 mprf("%s finishes %s recitation.",
+                      name(DESC_THE).c_str(),
+                      pronoun(PRONOUN_POSSESSIVE).c_str());
+             else if (player_can_hear(pos()))
+                 mpr("You hear the recitation end.", MSGCH_SOUND);
+         }
+         break;
     default:
         break;
     }
@@ -889,7 +901,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_SILVER_CORONA: case ENCH_DAZED: case ENCH_FAKE_ABJURATION:
         case ENCH_ROUSED: case ENCH_BREATH_WEAPON: case ENCH_DEATHS_DOOR:
         case ENCH_OZOCUBUS_ARMOUR: case ENCH_HEROISM: case ENCH_FINESSE:
-        case ENCH_TIME_STEP:
+        case ENCH_TIME_STEP: case ENCH_RECITING:
             lose_ench_levels(i->second, levels);
             break;
 
@@ -1684,6 +1696,31 @@ void monster::apply_enchantment(const mon_enchant &me)
         decay_enchantment(me, true);
         break;
 
+    case ENCH_RECITING:
+    {
+        recite_type prayertype = (recite_type)((int)props["prayertype"]);
+        int trits[7];
+        trits[0] = props["trits0"];
+        trits[1] = props["trits1"];
+        trits[2] = props["trits2"];
+        trits[3] = props["trits3"];
+        trits[4] = props["trits4"];
+        trits[5] = props["trits5"];
+        trits[6] = props["trits6"];
+        int step = (me.duration / 10) - 1;
+        std::string recitation = zin_recite_text(trits, 7, prayertype, step);
+        if (you.can_see(this))
+            mprf(MSGCH_SOUND, "%s recites: \"%s\"",
+                 name(DESC_THE).c_str(), recitation.c_str());
+        else if (player_can_hear(pos()))
+            mprf(MSGCH_SOUND, "You hear something recites \"%s\"",
+                 recitation.c_str());
+        for (radius_iterator ri(get_los()); ri; ++ri)
+            zin_recite_to_single_monster(this, *ri, prayertype);
+        decay_enchantment(me, true);
+        break;
+    }
+
     default:
         break;
     }
@@ -1810,7 +1847,8 @@ static const char *enchant_names[] =
     "liquefying", "tornado", "fake_abjuration",
     "dazed", "mute", "blind", "dumb", "mad", "silver_corona", "recite timer",
     "inner_flame", "roused", "breath timer", "deaths_door", "rolling",
-    "ozocubus_armour", "heroism", "finesse", "time_step", "buggy",
+    "ozocubus_armour", "heroism", "finesse", "time_step", "reciting",
+    "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)

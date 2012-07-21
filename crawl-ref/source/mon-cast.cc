@@ -1184,6 +1184,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_ENTER_ABYSS:
     case SPELL_CLEANSING_FLAME:
     case SPELL_DIVINE_WARRIOR:
+    case SPELL_RECITE:
         return true;
     default:
         if (check_validity)
@@ -1708,6 +1709,12 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
             ret = true;
         break;
 
+    case SPELL_RECITE:
+        if (mon->has_ench(ENCH_BREATH_WEAPON)
+            || !zin_check_recite_to_monsters((actor *)mon, 0))
+            ret = true;
+        break;
+
     case SPELL_NO_SPELL:
         ret = true;
         break;
@@ -1883,6 +1890,7 @@ static monster_spells _get_mons_god_spells(god_type god, bool *found)
     static monster mon_tso;
     static monster mon_trog;
     static monster mon_yred;
+    static monster mon_zin;
     static bool loaded = false;
 
     if (god != GOD_BEOGH
@@ -1893,7 +1901,8 @@ static monster_spells _get_mons_god_spells(god_type god, bool *found)
         && god != GOD_OKAWARU
         && god != GOD_SHINING_ONE
         && god != GOD_TROG
-        && god != GOD_YREDELEMNUL)
+        && god != GOD_YREDELEMNUL
+        && god != GOD_ZIN)
     {
         *found = false;
         return monster_spells();
@@ -1909,6 +1918,7 @@ static monster_spells _get_mons_god_spells(god_type god, bool *found)
         mons_load_spells(&mon_tso,     MST_BK_SHINING_ONE);
         mons_load_spells(&mon_trog,    MST_BK_TROG);
         mons_load_spells(&mon_yred,    MST_BK_YREDELEMNUL);
+        mons_load_spells(&mon_zin,     MST_BK_ZIN);
         loaded = true;
     }
 
@@ -1921,6 +1931,7 @@ static monster_spells _get_mons_god_spells(god_type god, bool *found)
                      : (god == GOD_SHINING_ONE)   ? &mon_tso
                      : (god == GOD_TROG)          ? &mon_trog
                      : (god == GOD_YREDELEMNUL)   ? &mon_yred
+                     : (god == GOD_ZIN)           ? &mon_zin
                                                   : NULL;
 
     ASSERT(which);
@@ -4748,6 +4759,32 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
             mgen_data(coinflip() ? MONS_ANGEL : MONS_DAEVA,
                       SAME_ATTITUDE(mons), mons, duration, spell_cast,
                       mons->pos(), mons->foe, 0, GOD_SHINING_ONE));
+        return;
+    }
+
+    case SPELL_RECITE:
+    {
+        recite_type prayertype;
+        if (zin_check_recite_to_monsters(mons, &prayertype))
+        {
+            if (you.can_see(mons))
+                mprf(MSGCH_SOUND, "%s clears %s throat.",
+                     mons->name(DESC_THE).c_str(),
+                     mons->pronoun(PRONOUN_POSSESSIVE).c_str());
+            else if (player_can_hear(mons->pos()))
+                mprf(MSGCH_SOUND, "You hear something clear its throat.");
+
+            mons->props["prayertype"] = prayertype;
+            mons->props["trits0"] = random2(3);
+            mons->props["trits1"] = random2(3);
+            mons->props["trits2"] = random2(3);
+            mons->props["trits3"] = random2(3);
+            mons->props["trits4"] = random2(3);
+            mons->props["trits5"] = random2(3);
+            mons->props["trits6"] = random2(3);
+            mons->add_ench(mon_enchant(ENCH_RECITING, 0, mons,
+                                       BASELINE_DELAY * 3));
+        }
         return;
     }
     }

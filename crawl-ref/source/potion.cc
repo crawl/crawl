@@ -290,6 +290,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
 
             // And also cancel corona (for whatever good that will do).
             you.duration[DUR_CORONA] = 0;
+            you.duration[DUR_SILVER_CORONA] = 0;
             return true;
         }
 
@@ -310,6 +311,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
 
         // Invisibility cancels corona.
         you.duration[DUR_CORONA] = 0;
+        you.duration[DUR_SILVER_CORONA] = 0;
 
         // Now multiple invisiblity casts aren't as good. -- bwr
         if (!you.duration[DUR_INVIS])

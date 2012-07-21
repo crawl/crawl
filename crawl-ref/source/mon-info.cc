@@ -154,6 +154,8 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_FINESSE;
     case ENCH_TIME_STEP:
         return MB_TIME_STEP;
+    case ENCH_RECITING:
+        return MB_RECITING;
     default:
         return NUM_MB_FLAGS;
     }
@@ -1140,6 +1142,8 @@ static std::string _verbose_info0(const monster_info& mi)
         return "frenzied";
     if (mi.is(MB_ROUSED))
         return "roused";
+    if (mi.is(MB_RECITING))
+        return "reciting";
     if (mi.is(MB_INNER_FLAME))
         return "inner flame";
     if (mi.is(MB_DUMB))
@@ -1377,6 +1381,8 @@ std::vector<std::string> monster_info::attributes() const
         v.push_back("attacking rapidly");
     if (is(MB_TIME_STEP))
         v.push_back("beyond time");
+    if (is(MB_RECITING))
+        v.push_back("reciting");
     return v;
 }
 

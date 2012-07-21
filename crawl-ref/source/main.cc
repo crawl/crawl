@@ -2334,6 +2334,9 @@ static void _decrement_durations()
     if (you.duration[DUR_LIQUID_FLAMES])
         dec_napalm_player(delay);
 
+    if (you.duration[DUR_SILVER_CORONA])
+        dec_silver_corona_player(delay);
+
     if (_decrement_a_duration(DUR_ICY_ARMOUR, delay,
                               "Your icy armour evaporates.", coinflip(),
                               you.props.exists("melt_armour") ? NULL
@@ -2864,6 +2867,8 @@ static void _decrement_durations()
                           "Your shroud unravels.",
                           0,
                           "Your shroud begins to fray at the edges.");
+
+    _decrement_a_duration(DUR_RECITE_TIMER, delay);
 
     if (!env.sunlight.empty())
         process_sunlights();

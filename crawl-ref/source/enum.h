@@ -1427,6 +1427,9 @@ enum duration_type
     DUR_TORNADO_COOLDOWN,
     DUR_NAUSEA,
     DUR_AMBROSIA,
+
+    DUR_RECITE_TIMER,
+    DUR_SILVER_CORONA,
     NUM_DURATIONS
 };
 
@@ -1515,6 +1518,7 @@ enum enchant_type
     ENCH_HEROISM,
     ENCH_FINESSE,
     ENCH_TIME_STEP,
+    ENCH_RECITING,
     // Update enchantment names in monster.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -3260,6 +3264,8 @@ enum spell_type
 
     SPELL_CLEANSING_FLAME,
     SPELL_DIVINE_WARRIOR,
+
+    SPELL_RECITE,
 
     NUM_SPELLS
 };

@@ -87,6 +87,7 @@ enum monster_info_flags
     MB_HEROISM,
     MB_FINESSE,
     MB_TIME_STEP,
+    MB_RECITING,
     NUM_MB_FLAGS
 };
 
