@@ -7,6 +7,8 @@
 #ifndef MONSTUFF_H
 #define MONSTUFF_H
 
+#include "player.h"
+
 #define ORIG_MONSTER_KEY "orig_monster_key"
 
 enum mon_dam_level_type
@@ -133,14 +135,16 @@ monster *choose_random_nearby_monster(
     bool (*suitable)(const monster* mon) =
         choose_any_monster,
     bool in_sight = true,
-    bool prefer_named = false, bool prefer_priest = false);
+    bool prefer_named = false, bool prefer_priest = false,
+    actor* who = &you);
 
 monster *choose_random_monster_on_level(
     int weight,
     bool (*suitable)(const monster* mon) =
         choose_any_monster,
     bool in_sight = true, bool near_by = false,
-    bool prefer_named = false, bool prefer_priest = false);
+    bool prefer_named = false, bool prefer_priest = false,
+    actor* who = &you);
 
 bool swap_places(monster* mons, const coord_def &loc);
 bool swap_check(monster* mons, coord_def &loc, bool quiet = false);

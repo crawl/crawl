@@ -2986,7 +2986,7 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_SUMMON_FLYING:    _summon_flying(power, rarity); break;
     case CARD_SUMMON_SKELETON:  _summon_skeleton(power, rarity); break;
     case CARD_SUMMON_UGLY:      _summon_ugly(power, rarity); break;
-    case CARD_XOM:              xom_acts(5 + random2(power/10)); break;
+    case CARD_XOM:              xom_acts(&you, 5 + random2(power/10)); break;
     case CARD_TROWEL:           _trowel_card(power, rarity); break;
     case CARD_BANSHEE:          mass_enchantment(ENCH_FEAR, power); break;
     case CARD_TORMENT:          torment(&you, TORMENT_CARDS, you.pos()); break;

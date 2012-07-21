@@ -311,7 +311,7 @@ int torment_monsters(coord_def where, actor *attacker, int taux)
     {
         if (hploss > 0)
         {
-            if (random2(600) < mons->piety())
+            if (random2(600) < mons->get_piety())
             {
                 hploss = 0;
                 if (you.can_see(mons))
@@ -322,7 +322,7 @@ int torment_monsters(coord_def where, actor *attacker, int taux)
                     simple_god_message(msg.c_str(), GOD_KIKUBAAQUDGHA);
                 }
             }
-            else if (random2(250) < mons->piety())
+            else if (random2(250) < mons->get_piety())
             {
                 hploss -= random2(hploss - 1);
                 if (you.can_see(mons))
@@ -1165,13 +1165,13 @@ inline static dungeon_feature_type _vitrified_feature(dungeon_feature_type feat)
 }
 
 // Returns true if there was a visible change.
-bool vitrify_area(int radius)
+bool vitrify_area(int radius, coord_def pos)
 {
     if (radius < 2)
         return false;
 
     bool something_happened = false;
-    for (radius_iterator ri(you.pos(), radius, C_POINTY); ri; ++ri)
+    for (radius_iterator ri(pos, radius, C_POINTY); ri; ++ri)
     {
         const dungeon_feature_type grid = grd(*ri);
         const dungeon_feature_type newgrid = _vitrified_feature(grid);

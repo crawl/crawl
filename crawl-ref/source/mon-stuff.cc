@@ -911,7 +911,8 @@ static void _monster_death_message(monster* mons, killer_type killer,
 
 static bool _god_monster_death_intervention(monster* mons, killer_type killer)
 {
-    if (killer == KILL_RESET
+    if (mons->is_summoned()
+        || killer == KILL_RESET
         || killer == KILL_DISMISSED
         || killer == KILL_BANISHED)
         return false;
@@ -1576,6 +1577,9 @@ int monster_die(monster* mons, actor *killer, bool silent,
 static void _mons_god_death_message(monster* mons)
 {
     if (!you.can_see(mons))
+        return;
+
+    if (mons->is_summoned())
         return;
 
     switch (mons->god)
@@ -3707,22 +3711,24 @@ bool choose_any_monster(const monster* mon)
 monster* choose_random_nearby_monster(int weight,
                                        bool (*suitable)(const monster* mon),
                                        bool in_sight, bool prefer_named,
-                                       bool prefer_priest)
+                                       bool prefer_priest,
+                                       actor* who)
 {
     return choose_random_monster_on_level(weight, suitable, in_sight, true,
-                                          prefer_named, prefer_priest);
+                                          prefer_named, prefer_priest, who);
 }
 
 monster* choose_random_monster_on_level(int weight,
                                          bool (*suitable)(const monster* mon),
                                          bool in_sight, bool near_by,
-                                         bool prefer_named, bool prefer_priest)
+                                         bool prefer_named, bool prefer_priest,
+                                         actor* who)
 {
     monster* chosen = NULL;
 
     // A radius_iterator with radius == max(GXM, GYM) will sweep the
     // whole level.
-    radius_iterator ri(you.pos(), near_by ? 9 : std::max(GXM, GYM),
+    radius_iterator ri(who->pos(), near_by ? 9 : std::max(GXM, GYM),
                        true, in_sight);
 
     for (; ri; ++ri)
@@ -3730,11 +3736,13 @@ monster* choose_random_monster_on_level(int weight,
         if (in_sight)
         {
             // Seeing through glass/trees is not enough.
-            if (!you.see_cell_no_trans(*ri))
+            if (!who->see_cell_no_trans(*ri))
                 continue;
         }
 
-        if (monster* mon = monster_at(*ri))
+        monster* mon = monster_at(*ri);
+
+        if (mon && (who->is_player() || (mon != who->as_monster())))
         {
             if (suitable(mon))
             {

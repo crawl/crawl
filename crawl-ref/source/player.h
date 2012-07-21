@@ -684,6 +684,8 @@ public:
                                 killer_type killer = KILL_NONE,
                                 int killernum = -1);
 
+    int get_piety() const { return piety; }
+
     ////////////////////////////////////////////////////////////////
 
     PlaceInfo& get_place_info() const ; // Current place info

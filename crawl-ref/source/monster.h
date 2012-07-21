@@ -170,7 +170,8 @@ public:
 
     bool can_drink_potion(potion_type ptype) const;
     bool should_drink_potion(potion_type ptype) const;
-    item_type_id_state_type drink_potion_effect(potion_type pot_eff);
+    item_type_id_state_type drink_potion_effect(potion_type pot_eff,
+                                                bool actual_potion = true);
 
     bool can_evoke_jewellery(jewellery_type jtype) const;
     bool should_evoke_jewellery(jewellery_type jtype) const;
@@ -467,7 +468,7 @@ public:
     bool check_clarity(bool silent) const;
     bool check_stasis(bool silent, bool calc_unid = true) const;
 
-    int  piety() const { return hit_dice * 10; }
+    int  get_piety() const { return hit_dice * 10; }
     int  piety_level() const;
 
 private:

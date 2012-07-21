@@ -57,6 +57,7 @@
 #include "hints.h"
 #include "view.h"
 #include "shout.h"
+#include "xom.h"
 
 static bool _handle_pickup(monster* mons);
 static void _mons_in_cloud(monster* mons);
@@ -2195,6 +2196,10 @@ void handle_monsters(bool with_noise)
 
         handle_monster_move(*mi);
         fire_final_effects();
+
+        if (mi->god == GOD_XOM
+            && !mi->is_summoned())
+            xom_monster_tick(*mi);
 
         if (!invalid_monster(*mi) && mi->pos() != oldpos)
             immobile_monster[mi->mindex()] = true;

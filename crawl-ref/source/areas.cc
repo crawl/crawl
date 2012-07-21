@@ -567,7 +567,7 @@ int monster::halo_radius2() const
 
     if (god == GOD_SHINING_ONE && mons_intel(this) >= I_NORMAL)
     {
-        const int r = piety() - 10;
+        const int r = get_piety() - 10;
         // The cap is 64, just less than the LOS of 65.
         size = std::min(LOS_RADIUS*LOS_RADIUS, r * r / 400);
     }

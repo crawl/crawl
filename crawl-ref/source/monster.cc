@@ -3856,8 +3856,8 @@ int monster::res_negative_energy() const
             u++;
     }
 
-    if (god == GOD_SHINING_ONE && piety() > u * 50)
-        u = piety() / 50;
+    if (god == GOD_SHINING_ONE && get_piety() > u * 50)
+        u = get_piety() / 50;
 
     if (u > 3)
         u = 3;
@@ -4168,7 +4168,7 @@ bool monster::god_protects_mons_from_harm()
     // GOD TODO: Elyvilon life protection
     if (god_can_protect_from_harm(god)
         && (one_chance_in(10)
-            || x_chance_in_y(piety(), 1000)))
+            || x_chance_in_y(get_piety(), 1000)))
         return true;
     return false;
 }
@@ -4665,7 +4665,7 @@ void monster::calc_speed()
     if (god == GOD_CHEIBRIADOS)
     {
         int delay = 100 / speed;
-        delay += 2 + std::min(piety() / 20, 8);
+        delay += 2 + std::min(get_piety() / 20, 8);
         speed = 100 / delay;
     }
 
@@ -5339,9 +5339,11 @@ bool monster::should_drink_potion(potion_type ptype) const
 }
 
 // Return the ID status gained.
-item_type_id_state_type monster::drink_potion_effect(potion_type pot_eff)
+item_type_id_state_type monster::drink_potion_effect(potion_type pot_eff,
+                                                     bool actual_potion)
 {
-    simple_monster_message(this, " drinks a potion.");
+    if (actual_potion)
+        simple_monster_message(this, " drinks a potion.");
 
     item_type_id_state_type ident = ID_MON_TRIED_TYPE;
 
@@ -5402,7 +5404,10 @@ item_type_id_state_type monster::drink_potion_effect(potion_type pot_eff)
         break;
     }
 
-    return ident;
+    if (actual_potion)
+        return ident;
+
+    return ID_UNKNOWN_TYPE;
 }
 
 bool monster::can_evoke_jewellery(jewellery_type jtype) const

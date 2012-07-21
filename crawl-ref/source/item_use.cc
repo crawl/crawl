@@ -2350,7 +2350,7 @@ static bool _vorpalise_weapon(bool already_known)
                 break;
             }
         case 1:
-            xom_acts(coinflip(), HALF_MAX_PIETY, 0); // ignore tension
+            xom_acts(&you, coinflip(), HALF_MAX_PIETY, 0); // ignore tension
         default:
             break;
         }

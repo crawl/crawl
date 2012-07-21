@@ -1617,9 +1617,10 @@ std::vector<monster* > get_nearby_monsters(bool want_move,
                                            bool consider_user_options,
                                            bool require_visible,
                                            bool check_dist,
-                                           int range)
+                                           int range,
+                                           actor *who)
 {
-    ASSERT(!crawl_state.game_is_arena());
+//    ASSERT(!crawl_state.game_is_arena());
 
     if (range == -1)
         range = LOS_RADIUS;
@@ -1627,16 +1628,22 @@ std::vector<monster* > get_nearby_monsters(bool want_move,
     std::vector<monster* > mons;
 
     // Sweep every visible square within range.
-    for (radius_iterator ri(you.pos(), range); ri; ++ri)
+    for (radius_iterator ri(who->pos(), range); ri; ++ri)
     {
-        if (monster* mon = monster_at(*ri))
+        monster* mon = monster_at(*ri);
+        if (mon && (who->is_player() || mon != who->as_monster()))
         {
             if (mon->alive()
-                && (!require_visible || mon->visible_to(&you))
+                && (!require_visible || mon->visible_to(who))
                 && !mon->submerged()
-                && (!dangerous_only || !mons_is_safe(mon, want_move,
-                                                     consider_user_options,
-                                                     check_dist)))
+                && (!dangerous_only
+                    || (who->is_player()
+                        && !mons_is_safe(mon, want_move,
+                                         consider_user_options,
+                                         check_dist)))
+                    || (who->is_monster()
+                        && !mons_atts_aligned(mons_attitude(who->as_monster()),
+                                              mons_attitude(mon))))
             {
                 mons.push_back(mon);
                 if (just_check) // stop once you find one
@@ -1713,11 +1720,11 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
 }
 
 bool there_are_monsters_nearby(bool dangerous_only, bool require_visible,
-                               bool consider_user_options)
+                               bool consider_user_options, actor *who)
 {
     return (!get_nearby_monsters(false, true, dangerous_only,
                                  consider_user_options,
-                                 require_visible).empty());
+                                 require_visible, true, -1, who).empty());
 }
 
 static const char *shop_types[] = {

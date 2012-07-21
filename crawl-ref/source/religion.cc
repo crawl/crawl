@@ -3198,9 +3198,7 @@ void print_sacrifice_message(god_type god, const item_def &item,
 
 void nemelex_death_message(const actor* victim)
 {
-    int piety = (victim->is_player())
-                ? you.piety
-                : victim->as_monster()->piety();
+    int piety = victim->get_piety();
     const piety_gain_t piety_gain = static_cast<piety_gain_t>
             (std::min(random2(piety) / 30, (int)PIETY_LOTS));
     std::string body = (victim->is_player())

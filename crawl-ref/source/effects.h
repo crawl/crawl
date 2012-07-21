@@ -7,6 +7,8 @@
 #ifndef EFFECTS_H
 #define EFFECTS_H
 
+#include "player.h"
+
 struct bolt;
 
 class monster;
@@ -69,7 +71,7 @@ bool cleansing_flame(int pow, int caster, coord_def where,
 
 void change_labyrinth(bool msg = false);
 
-bool vitrify_area(int radius);
+bool vitrify_area(int radius, coord_def pos = you.pos());
 void update_level(int elapsedTime);
 void handle_time();
 void recharge_rods(int aut, bool floor_only);

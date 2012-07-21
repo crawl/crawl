@@ -23,19 +23,19 @@ w:1
 ##############################
 Xom general gift
 
-Xom grants you a gift!
+Xom grants @the_toy@ a gift!
 
 "Here."
 
 Xom's generous nature manifests itself.
 
-Xom grants you an implement of some kind.
+Xom grants @the_toy@ an implement of some kind.
 
 "Take this instrument of something!"
 
 "Take this token of my esteem."
 
-Xom smiles on you.
+Xom smiles on @the_toy@.
 
 "Catch!"
 %%%%
@@ -69,17 +69,17 @@ Xom opens a gate.
 # higher demonic being
 Xom single major demon summon
 
-Xom grants you a demonic assistant.
+Xom grants @the_toy@ a demonic assistant.
 
-Xom grants you a demonic servitor.
+Xom grants @the_toy@ a demonic servitor.
 
 Xom opens a gate.
 %%%%
 Xom single major holy summon
 
-Xom grants you an assistant from another god.
+Xom grants @the_toy@ an assistant from another god.
 
-Xom beguiles another god's servant into helping you.
+Xom beguiles another god's servant into helping @the_toy@.
 
 "Where'd that come from? Oh, well."
 
@@ -94,7 +94,7 @@ Xom multiple summons
 
 "Serve the mortal, my children!"
 
-Xom grants you some temporary aid.
+Xom grants @the_toy@ some temporary aid.
 
 Xom momentarily opens a gate.
 %%%%
@@ -130,13 +130,13 @@ Xom momentarily opens a gate.
 # changing the scenery
 Xom scenery
 
-Xom briefly touches your surroundings.
+Xom briefly touches @the_toys@ surroundings.
 
-Xom adds some personal touches to your environment.
+Xom adds some personal touches to @the_toys@ environment.
 
 Xom complains about the scenery.
 
-Xom alters the dungeon around you.
+Xom alters the dungeon around @the_toy@.
 
 "There, this looks better."
 
@@ -148,22 +148,22 @@ Xom alters the dungeon around you.
 # miscast strength 0, mostly harmless
 Xom zero miscast effect
 
-Xom almost notices you.
+Xom almost notices @the_toy@.
 
-Xom's attention almost turns to you for a moment.
+Xom's attention almost turns to @the_toy@ for a moment.
 
-Xom's power almost touches on you for a moment.
+Xom's power almost touches on @the_toy@ for a moment.
 
 You almost hear Xom's maniacal laughter.
 %%%%
 # miscast strength random2(2), harmless/annoying
 Xom minor miscast effect
 
-Xom notices you.
+Xom notices @the_toy@.
 
-Xom's attention turns to you for a moment.
+Xom's attention turns to @the_toy@ for a moment.
 
-Xom's power touches on you for a moment.
+Xom's power touches on @the_toy@ for a moment.
 
 You hear Xom's maniacal laughter.
 %%%%
@@ -177,9 +177,9 @@ Xom major miscast effect
 
 "Try this."
 
-Xom's attention turns to you.
+Xom's attention turns to @the_toy@.
 
-Xom's power touches on you.
+Xom's power touches on @the_toy@.
 
 Xom giggles.
 
@@ -190,9 +190,9 @@ Xom lose stats
 
 "Suffer!"
 
-Xom's malign attention turns to you for a moment.
+Xom's malign attention turns to @the_toy@ for a moment.
 
-Xom's power touches on you for a moment.
+Xom's power touches on @the_toy@ for a moment.
 
 You hear Xom's maniacal laughter.
 %%%%
@@ -216,13 +216,13 @@ Xom teleportation journey
 
 "Where it stops, nobody knows!"
 
-Xom twists space around you.
+Xom twists space around @the_toy@.
 %%%%
 Xom confusion
 
 "Heh heh heh..."
 
-Xom's power touches on your mind for a moment.
+Xom's power touches on @the_toys@ mind for a moment.
 
 Xom titters.
 %%%%
@@ -233,7 +233,7 @@ Xom draining or torment
 
 "You have grown too confident for your meagre worth."
 
-Xom's power touches on you for a moment.
+Xom's power touches on @the_toy@ for a moment.
 
 You hear Xom's maniacal laughter.
 %%%%
@@ -256,7 +256,7 @@ Xom banishment
 
 "You have grown too comfortable in your little world, mortal!"
 
-Xom casts you into the Abyss!
+Xom casts @the_toy@ into the Abyss!
 
 The world seems to spin as Xom's maniacal laughter rings in your ears.
 %%%%
@@ -269,7 +269,7 @@ w:30
 
 "No, I've changed my mind."
 
-Xom pulls you back into the comparable quietude of the dungeon.
+Xom pulls @the_toy@ back into the comparable quietude of the dungeon.
 %%%%
 # Xom upgrades a nearby hostile monster's weapon to a chaos brand
 Xom chaos upgrade
@@ -289,23 +289,23 @@ Xom potion effect
 
 "Go forth and cause havoc, mortal!"
 
-Xom grants you a minor favour.
+Xom grants @the_toy@ a minor favour.
 
-Xom smiles on you.
+Xom smiles on @the_toy@.
 %%%%
 # random divination (magic mapping, detect items, detect creatures)
 Xom divination
 
 "See what I see, my child!"
 
-Xom grants you insight.
+Xom grants @the_toy@ insight.
 
 Xom smirks.
 %%%%
 # cast a random spell
 Xom spell effect
 
-Xom's power flows through you!
+Xom's power flows through @the_toy@!
 
 Xom plays with reality for a moment.
 
@@ -327,7 +327,7 @@ Everything around seems to assume a strange transparency.
 
 The walls suddenly lose part of their structure.
 
-Xom alters the dungeon around you.
+Xom alters the dungeon around @the_toy@.
 %%%%
 # strengthens friendlies, weakens hostiles
 Xom good monster polymorph
@@ -351,7 +351,7 @@ Xom good mutations
 
 "Let me alter your pitiful body."
 
-Xom's power touches on you for a moment.
+Xom's power touches on @the_toy@ for a moment.
 
 You hear Xom's maniacal cackling.
 %%%%
@@ -361,19 +361,19 @@ Xom random mutations
 
 "Let me alter your body."
 
-Xom's power brushes against you for a moment.
+Xom's power brushes against @the_toy@ for a moment.
 
 You hear Xom's avuncular chuckle.
 %%%%
 Xom snakes to sticks
 
-Xom transforms those around you.
+Xom transforms those around @the_toy@.
 
 "I like them better like this."
 
 "Never liked these squiggly things."
 
-Xom touches your surroundings.
+Xom touches @the_toys@ surroundings.
 
 @Xom good monster polymorph@
 %%%%
@@ -395,15 +395,15 @@ Xom resurrection
 
 "Let me repair your body."
 
-Xom tricks Death into leaving you alone.
+Xom tricks Death into leaving @the_toy@ alone.
 
 Xom's maniacal laughter scares Death away.
 
-Xom's power revives you.
+Xom's power revives @the_toy@.
 
-Xom brings you back to life.
+Xom brings @the_toy@ back to life.
 
-Xom smiles on you.
+Xom smiles on @the_toy@.
 %%%%
 Xom repel stairs
 
@@ -413,7 +413,7 @@ Xom pokes at a nearby @staircase@.
 
 "Tag, you're it!"
 
-Xom alters the dungeon around you.
+Xom alters the dungeon around @the_toy@.
 %%%%
 Xom life saving general
 

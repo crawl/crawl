@@ -76,7 +76,8 @@ std::vector<monster* > get_nearby_monsters(bool want_move = false,
                                            bool consider_user_options = true,
                                            bool require_visible = true,
                                            bool check_dist = true,
-                                           int range = -1);
+                                           int range = -1,
+                                           actor* who = &you);
 
 bool i_feel_safe(bool announce = false, bool want_move = false,
                  bool just_monsters = false, bool check_dist = true,
@@ -84,7 +85,8 @@ bool i_feel_safe(bool announce = false, bool want_move = false,
 
 bool there_are_monsters_nearby(bool dangerous_only = false,
                                bool require_visible = true,
-                               bool consider_user_options = false);
+                               bool consider_user_options = false,
+                               actor* who = &you);
 
 void timeout_tombs(int duration);
 

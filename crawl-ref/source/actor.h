@@ -396,6 +396,7 @@ public:
     virtual bool has_usable_tentacle() const = 0;
     virtual int constriction_damage() const = 0;
 
+    virtual int get_piety() const = 0;
 
 protected:
     void clear_constricted();

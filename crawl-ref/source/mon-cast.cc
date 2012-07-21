@@ -4493,7 +4493,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                                    " stands defiantly in death's doorway!");
             int new_hp = mons->skill(SK_NECROMANCY) / 2;
             if (mons->god == GOD_KIKUBAAQUDGHA)
-                new_hp += mons->piety() / 15;
+                new_hp += mons->get_piety() / 15;
             mons->hit_points = std::max(std::min(mons->hit_points, new_hp), 1);
             mons->add_ench(mon_enchant(ENCH_DEATHS_DOOR, 0, mons, dur));
         }

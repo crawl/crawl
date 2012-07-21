@@ -72,18 +72,20 @@ enum xom_event_type
 };
 
 void xom_tick();
+void xom_monster_tick(monster* toy);
 void xom_is_stimulated(int maxinterestingness,
                        xom_message_type message_type = XM_NORMAL,
                        bool force_message = false);
 void xom_is_stimulated(int maxinterestingness, const std::string& message,
                        bool force_message = false);
 bool xom_is_nice(int tension = -1);
-int xom_acts(bool niceness, int sever, int tension = -1, bool debug = false);
+int xom_acts(actor *toy, bool niceness, int sever, int tension = -1,
+             bool debug = false);
 const std::string describe_xom_favour();
 
-inline int xom_acts(int sever, int tension = -1)
+inline int xom_acts(actor *toy, int sever, int tension = -1)
 {
-    return xom_acts(xom_is_nice(tension), sever, tension);
+    return xom_acts(toy, xom_is_nice(tension), sever, tension);
 }
 
 void xom_check_lost_item(const item_def& item);

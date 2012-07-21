@@ -755,9 +755,10 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
         do
         {
             if (you.religion == GOD_XOM)
-                result = xom_acts(abs(you.piety - HALF_MAX_PIETY));
+                result = xom_acts(&you, abs(you.piety - HALF_MAX_PIETY));
             else
-                result = xom_acts(coinflip(), random_range(0, HALF_MAX_PIETY));
+                result = xom_acts(&you, coinflip(),
+                                  random_range(0, HALF_MAX_PIETY));
         }
         while (result == 0);
         break;
