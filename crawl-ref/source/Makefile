@@ -1009,7 +1009,6 @@ GENERATED_FILES := $(GENERATED_HEADERS) art-data.h mon-mst.h mi-enum.h \
                    $(RLTILES)/dc-unrand.txt build.h compflag.h dat/dlua/tags.lua \
                    cmd-name.h $(INI_OBJECTS)
 
-GAME_DEPENDS  := $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS) dat/dlua/tags.lua
 SRC_PKG_BASE  := stone_soup
 SRC_VERSION   := $(shell git describe --tags $(MERGE_BASE) 2>/dev/null || cat util/release_ver)
 MAJOR_VERSION = $(shell echo "$(SRC_VERSION)"|sed -r 's/-.*//;s/^([^.]+\.[^.]+).*/\1/')
@@ -1292,7 +1291,7 @@ distclean: clean clean-contrib clean-rltiles
 	$(RM) -r mac-app-zips
 	$(RM) -r $(DOXYGEN_HTML_GEN)
 
-$(GAME): $(GAME_DEPENDS)
+$(GAME): $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS) dat/dlua/tags.lua check-fonts
 	+$(QUIET_LINK)$(CXX) $(LDFLAGS) $(EXTRA_OBJECTS) $(OBJECTS) -o $(GAME) $(LIBS)
 
 debug: all
@@ -1557,6 +1556,14 @@ clean-rltiles:
 
 ifdef TILES_ANY
 $(GAME): $(DESTTILEFILES)
+endif
+
+.PHONY: check-fonts
+check-fonts:
+ifneq (,$(INSTALL_FONTS))
+	@for x in $(INSTALL_FONTS); do if [ ! -e "$$x" ]; then echo \
+	"Font file $${x##contrib/fonts/} not found. Please install it (possibly via contribs)."; \
+	exit 1; fi; done
 endif
 
 #############################################################################
