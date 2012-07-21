@@ -1437,9 +1437,6 @@ static void _give_ammo(monster* mon, int level,
 
             case MONS_JOSEPH:
                 mitm[thing_created].quantity += 2 + random2(7);
-                mitm[thing_created].plus += 2 + random2(2);
-                if (mitm[thing_created].plus > 6)
-                    mitm[thing_created].plus = 6;
                 break;
 
             default:
