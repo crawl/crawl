@@ -1444,7 +1444,8 @@ void bolt::do_fire()
         // the player.
         const monster* mon = &menv[beam_source];
         if (foe_info.hurt > 0 && !mon->wont_attack() && !crawl_state.game_is_arena()
-            && you.pet_target == MHITNOT && env.sanctuary_time <= 0)
+            && you.pet_target == MHITNOT
+            && (env.sanctuary_time <= 0 || !friendly_sanctuary()))
         {
             you.pet_target = beam_source;
         }
@@ -4066,7 +4067,8 @@ void bolt::enchantment_affect_monster(monster* mon)
     {
         if (YOU_KILL(thrower))
         {
-            if (is_sanctuary(mon->pos()) || is_sanctuary(you.pos()))
+            if ((is_sanctuary(mon->pos()) || is_sanctuary(you.pos()))
+                && (sanctuary_owner() && sanctuary_owner()->is_player()))
                 remove_sanctuary(true);
 
             set_attack_conducts(conducts, mon, you.can_see(mon));
@@ -4077,6 +4079,16 @@ void bolt::enchantment_affect_monster(monster* mon)
                 && you.piety >= piety_breakpoint(2) && mons_near(mon))
             {
                 hit_woke_orc = true;
+            }
+        }
+        else if (MON_KILL(thrower))
+        {
+            if (!invalid_monster_index(beam_source))
+            {
+                const monster* attacker = &menv[beam_source];
+                if ((is_sanctuary(mon->pos()) || is_sanctuary(attacker->pos()))
+                    && (sanctuary_owner() && sanctuary_owner() == attacker))
+                    remove_sanctuary(true);
             }
         }
         behaviour_event(mon, ME_ANNOY, beam_source_as_target());
@@ -4429,10 +4441,21 @@ void bolt::affect_monster(monster* mon)
                 (!you.can_see(mon)
                     || aux_source == "scroll of immolation" && !effect_known);
 
-            if (is_sanctuary(mon->pos()) || is_sanctuary(you.pos()))
+            if ((is_sanctuary(mon->pos()) || is_sanctuary(you.pos()))
+                && (sanctuary_owner() && sanctuary_owner()->is_player()))
                 remove_sanctuary(true);
 
             set_attack_conducts(conducts, mon, !okay);
+        }
+        else if (MON_KILL(thrower) && final > 0)
+        {
+            if (!invalid_monster_index(beam_source))
+            {
+                const monster* attacker = &menv[beam_source];
+                if ((is_sanctuary(mon->pos()) || is_sanctuary(attacker->pos()))
+                    && (sanctuary_owner() && sanctuary_owner() == attacker))
+                    remove_sanctuary(true);
+            }
         }
     }
 

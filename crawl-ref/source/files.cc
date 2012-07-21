@@ -1257,6 +1257,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         // sanctuary
         env.sanctuary_pos  = coord_def(-1, -1);
         env.sanctuary_time = 0;
+        env.sanctuary_owner = NON_MONSTER;
     }
     else
     {

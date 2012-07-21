@@ -429,7 +429,9 @@ spret_type cast_toxic_radiance(int pow, bool non_player, bool fail)
                 mpr("The monsters around you are poisoned!");
         }
         // Sanctuary is violated if either you or any victims are in it.
-        if (!non_player && (sanct || is_sanctuary(you.pos())))
+        if (!non_player
+            && (sanct || (is_sanctuary(you.pos())))
+            && friendly_sanctuary())
             remove_sanctuary(true);
 
     }
@@ -538,7 +540,9 @@ spret_type cast_refrigeration(int pow, bool non_player, bool freeze_potions,
         else
             mi->hurt(&you, hurt, BEAM_COLD);
 
-        if (!non_player && (is_sanctuary(you.pos()) || is_sanctuary(mi->pos())))
+        if (!non_player
+            && (is_sanctuary(you.pos()) || is_sanctuary(mi->pos()))
+            && friendly_sanctuary())
             remove_sanctuary(true);
 
         // Cold-blooded creatures can be slowed.
@@ -928,7 +932,8 @@ static int _shatter_monsters(coord_def where, int pow, actor *agent)
     {
         _player_hurt_monster(*mon, damage);
 
-        if (is_sanctuary(you.pos()) || is_sanctuary(mon->pos()))
+        if ((is_sanctuary(you.pos()) || is_sanctuary(mon->pos()))
+            && friendly_sanctuary())
             remove_sanctuary(true);
     }
     else

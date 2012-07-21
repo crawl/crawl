@@ -3243,7 +3243,7 @@ static coord_def _random_monster_nearby_habitable_space(const monster& mon,
                                                         bool allow_adjacent,
                                                         bool respect_los)
 {
-    const bool respect_sanctuary = mon.wont_attack();
+    const bool respect_sanctuary = mons_friendly_to_sanctuary_owner(&mon);
 
     coord_def target;
     int tries;
@@ -4531,7 +4531,8 @@ void monster_teleport(monster* mons, bool instan, bool silent)
     }
 
     if (newpos.origin())
-        _monster_random_space(mons, newpos, !mons->wont_attack());
+        _monster_random_space(mons, newpos,
+                              !mons_friendly_to_sanctuary_owner(mons));
 
     // XXX: If the above function didn't find a good spot, return now
     // rather than continue by slotting the monster (presumably)

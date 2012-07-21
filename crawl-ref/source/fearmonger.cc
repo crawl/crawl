@@ -11,6 +11,7 @@
 #include "debug.h"
 #include "env.h"
 #include "fprop.h"
+#include "misc.h"
 #include "mon-util.h"
 #include "monster.h"
 #include "state.h"
@@ -19,7 +20,7 @@
 // Add a monster to the list of fearmongers.
 bool player::add_fearmonger(const monster* mon)
 {
-    if (is_sanctuary(you.pos()))
+    if (is_sanctuary(you.pos()) && friendly_sanctuary())
     {
         if (you.can_see(mon))
         {
@@ -188,5 +189,5 @@ bool player::_possible_fearmonger(const monster* mon) const
          && !mon->asleep() && !mon->cannot_move()
          && !mon->wont_attack() && !mon->pacified()
          && !mon->berserk() && !mons_is_fleeing(mon)
-         && !is_sanctuary(you.pos()));
+         && (!is_sanctuary(you.pos()) || !friendly_sanctuary()));
 }

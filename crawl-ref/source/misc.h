@@ -147,6 +147,9 @@ unsigned int breakpoint_rank(int val, const int breakpoints[],
 
 bool move_stairs(coord_def orig, coord_def dest);
 
+actor* sanctuary_owner();
+bool friendly_sanctuary();
+
 #define DISCONNECT_DIST (INT_MAX - 1000)
 
 struct position_node

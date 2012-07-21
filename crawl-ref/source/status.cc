@@ -4,6 +4,7 @@
 
 #include "areas.h"
 #include "env.h"
+#include "fprop.h"
 #include "misc.h"
 #include "mutation.h"
 #include "player.h"
@@ -529,6 +530,17 @@ void fill_status_info(int status, status_info* inf)
             inf->light_text   = "Sil";
             inf->short_text   = "silenced";
             inf->long_text    = "You are silenced.";
+        }
+        break;
+
+    // In a hostile sanctuary.
+    case STATUS_HOSTILE_SANCTUARY:
+        if (is_sanctuary(you.pos()) && !friendly_sanctuary())
+        {
+            inf->light_colour = RED;
+            inf->light_text   = "Dread";
+            inf->short_text   = "dread";
+            inf->long_text    = "You are filled with a sense of dread.";
         }
         break;
 

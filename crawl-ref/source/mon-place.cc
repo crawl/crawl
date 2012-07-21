@@ -26,6 +26,7 @@
 #include "lev-pand.h"
 #include "libutil.h"
 #include "message.h"
+#include "misc.h"
 #include "mislead.h"
 #include "mon-behv.h"
 #include "mon-death.h"
@@ -862,7 +863,11 @@ static bool _valid_monster_generation_location(const mgen_data &mg,
                                                                   : mg.cls);
     if (!monster_habitable_grid(montype, grd(mg_pos), mg.preferred_grid_feature,
                                 mons_class_flies(montype), false)
-        || (mg.behaviour != BEH_FRIENDLY && !mons_is_mimic(montype)
+        || (sanctuary_owner()
+            && (friendly_sanctuary() && mg.behaviour != BEH_FRIENDLY
+                || sanctuary_owner()->is_monster()
+                   && mg.behaviour != SAME_ATTITUDE(sanctuary_owner()->as_monster()))
+            && !mons_is_mimic(montype)
             && is_sanctuary(mg_pos)))
     {
         return false;
@@ -1304,7 +1309,11 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     if (dont_place)
         fpos.reset();
     else if (leader == 0 && in_bounds(mg.pos)
-        && (mg.behaviour == BEH_FRIENDLY || !is_sanctuary(mg.pos)
+        && (!is_sanctuary(mg.pos)
+            || !sanctuary_owner()
+            || (friendly_sanctuary() && mg.behaviour == BEH_FRIENDLY
+                || sanctuary_owner()->is_monster()
+                   && mg.behaviour == SAME_ATTITUDE(sanctuary_owner()->as_monster()))
             || mons_is_mimic(montype))
         && !monster_at(mg.pos)
         && (you.pos() != mg.pos || fedhas_passthrough_class(mg.cls))

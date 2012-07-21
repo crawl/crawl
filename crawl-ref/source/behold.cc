@@ -12,6 +12,7 @@
 #include "debug.h"
 #include "env.h"
 #include "fprop.h"
+#include "misc.h"
 #include "mon-util.h"
 #include "monster.h"
 #include "random.h"
@@ -26,7 +27,9 @@ static bool _mermaid_beholder(const monster* mons)
 // Add a monster to the list of beholders.
 void player::add_beholder(const monster* mon, bool axe)
 {
-    if (is_sanctuary(you.pos()) && !axe)
+    if (is_sanctuary(you.pos())
+        && friendly_sanctuary()
+        && !axe)
     {
         if (_mermaid_beholder(mon))
         {
@@ -148,7 +151,9 @@ static void _removed_beholder_msg(const monster* mon)
         return;
     }
 
-    if (is_sanctuary(you.pos()) && !mons_is_fleeing(mon))
+    if (is_sanctuary(you.pos())
+        && friendly_sanctuary()
+        && !mons_is_fleeing(mon))
     {
         if (_mermaid_beholder(mon))
         {
@@ -268,6 +273,6 @@ bool player::possible_beholder(const monster* mon) const
              && !mon->confused()
              && !mon->asleep() && !mon->cannot_move()
              && !mon->berserk() && !mons_is_fleeing(mon)
-             && !is_sanctuary(you.pos())
+             && (!is_sanctuary(you.pos()) || !friendly_sanctuary())
            || player_equip_unrand_effect(UNRAND_DEMON_AXE)));
 }

@@ -1215,7 +1215,8 @@ static bool _make_monster_angry(const monster* mon, monster* targ)
 
 static bool _moth_incite_monsters(const monster* mon)
 {
-    if (is_sanctuary(you.pos()) || is_sanctuary(mon->pos()))
+    if ((is_sanctuary(you.pos()) && friendly_sanctuary())
+        || is_sanctuary(mon->pos()))
         return false;
 
     int goaded = 0;
@@ -1225,7 +1226,7 @@ static bool _moth_incite_monsters(const monster* mon)
         if (*mi == mon || !mi->needs_berserk())
             continue;
 
-        if (is_sanctuary(mi->pos()))
+        if (is_sanctuary(mi->pos()) && friendly_sanctuary())
             continue;
 
         // Cannot goad other moths of wrath!
@@ -1242,7 +1243,8 @@ static bool _moth_incite_monsters(const monster* mon)
 static bool _queen_incite_worker(const monster* queen)
 {
     ASSERT(queen->type == MONS_QUEEN_BEE);
-    if (is_sanctuary(you.pos()) || is_sanctuary(queen->pos()))
+    if ((is_sanctuary(you.pos()) && friendly_sanctuary())
+        || is_sanctuary(queen->pos()))
         return false;
 
     int goaded = 0;

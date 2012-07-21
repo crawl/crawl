@@ -28,6 +28,7 @@ enum tag_minor_version
     TAG_MINOR_FEAT_RENAMES,        // Per-vault feature renames.
     TAG_MINOR_STASH_FEATDESC,      // Store feature descriptions in stashes.
     TAG_MINOR_MONSTER_CORRUPT,     // Monsters can use Corrupt.
+    TAG_MINOR_MONSTER_SANCTUARY,   // Monsters can use Sanctuary.
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
 };

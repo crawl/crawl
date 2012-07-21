@@ -872,7 +872,9 @@ bool melee_attack::attack()
     if (env.sanctuary_time > 0 && attack_occurred && !cancel_attack
         && attacker != defender && !attacker->confused()
         && (is_sanctuary(attacker->pos()) || is_sanctuary(defender->pos()))
-        && (attacker->is_player() || attacker->as_monster()->friendly()))
+        && ((attacker->is_player() && friendly_sanctuary())
+            || (!attacker->is_player()
+                && mons_friendly_to_sanctuary_owner(attacker->as_monster()))))
     {
         remove_sanctuary(true);
     }
@@ -917,7 +919,7 @@ bool melee_attack::attack()
         && !crawl_state.game_is_arena()
         && !attacker->as_monster()->wont_attack()
         && you.pet_target == MHITNOT
-        && env.sanctuary_time <= 0)
+        && (env.sanctuary_time <= 0 || !friendly_sanctuary()))
     {
         if (defender->is_player())
         {

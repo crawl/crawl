@@ -30,6 +30,7 @@
 #include "libutil.h"
 #include "mapmark.h"
 #include "mgen_data.h"
+#include "misc.h"
 #include "mon-abil.h"
 #include "mon-behv.h"
 #include "mon-death.h"
@@ -2618,9 +2619,25 @@ bool mons_is_lurking(const monster* m)
     return (m->behaviour == BEH_LURK);
 }
 
+bool mons_friendly_to_sanctuary_owner(const monster *m)
+{
+    actor *owner = sanctuary_owner();
+    if (!owner)
+        return false;
+
+    if (owner->is_player())
+        return m->wont_attack();
+
+    if (owner->is_monster())
+        return mons_atts_aligned(mons_attitude(owner->as_monster()),
+                                 mons_attitude(m));
+
+    return false;
+}
+
 bool mons_is_influenced_by_sanctuary(const monster* m)
 {
-    return (!m->wont_attack() && !mons_is_stationary(m));
+    return (!mons_friendly_to_sanctuary_owner(m) && !mons_is_stationary(m));
 }
 
 bool mons_is_fleeing_sanctuary(const monster* m)

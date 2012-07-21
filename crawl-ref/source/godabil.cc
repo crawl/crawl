@@ -1657,7 +1657,7 @@ bool zin_sanctuary()
     // Pets stop attacking and converge on you.
     you.pet_target = MHITYOU;
 
-    create_sanctuary(you.pos(), 7 + you.skill_rdiv(SK_INVOCATIONS) / 2);
+    create_sanctuary(&you, you.pos(), 7 + you.skill_rdiv(SK_INVOCATIONS) / 2);
 
     return true;
 }

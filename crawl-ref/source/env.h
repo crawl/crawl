@@ -102,6 +102,7 @@ struct crawl_environment
     unsigned int dactions_done;
 
     coord_def sanctuary_pos;
+    int sanctuary_owner;
     coord_def orb_pos;
     int sanctuary_time;
     int forest_awoken_until;

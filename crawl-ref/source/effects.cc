@@ -1090,7 +1090,8 @@ void yell(bool force)
             return;
         }
 
-        if (env.sanctuary_time > 0)
+        if (env.sanctuary_time > 0
+            && friendly_sanctuary())
         {
             if (!yesno("An ally attacking under your orders might violate "
                        "sanctuary; order anyway?", false, 'n'))
@@ -1188,7 +1189,7 @@ bool vitrify_area(int radius, coord_def pos)
 static void _hell_effects()
 {
     if ((you.religion == GOD_ZIN && x_chance_in_y(you.piety, MAX_PIETY))
-        || is_sanctuary(you.pos()))
+        || (is_sanctuary(you.pos()) && friendly_sanctuary()))
     {
         simple_god_message("'s power protects you from the chaos of Hell!");
         return;
@@ -2182,7 +2183,7 @@ void handle_time()
             (get_contamination_level() > 1
              && x_chance_in_y(you.magic_contamination, 12));
 
-        if (glow_effect && is_sanctuary(you.pos()))
+        if (glow_effect && is_sanctuary(you.pos()) && friendly_sanctuary())
         {
             mpr("Your body momentarily shudders from a surge of wild "
                 "energies until Zin's power calms it.", MSGCH_GOD);

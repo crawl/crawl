@@ -974,6 +974,12 @@ bool direction_chooser::move_is_ok() const
                 return false;
             }
         }
+
+        if (is_sanctuary(target()) && !friendly_sanctuary())
+        {
+            mprf("You can't target something in the sanctuary!");
+            return false;
+        }
     }
 
     // Some odd cases

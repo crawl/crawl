@@ -16,6 +16,7 @@
 #include "env.h"
 #include "fprop.h"
 #include "exclude.h"
+#include "misc.h"
 #include "mon-act.h"
 #include "mon-death.h"
 #include "mon-iter.h"
@@ -177,9 +178,12 @@ void handle_behaviour(monster* mon)
     }
 
     bool changed = true;
-    bool isFriendly = mon->friendly();
-    bool isNeutral  = mon->neutral();
-    bool wontAttack = mon->wont_attack();
+    bool isFriendly  = mon->friendly();
+    bool isNeutral   = mon->neutral();
+    bool inSanctuary = is_sanctuary(mon->pos())
+                       && !friendly_sanctuary()
+                       && mons_friendly_to_sanctuary_owner(mon);
+    bool wontAttack  = mon->wont_attack();
 
     // Whether the player position is in LOS of the monster.
     bool proxPlayer = !crawl_state.game_is_arena() && mon->see_cell(you.pos());
@@ -234,7 +238,8 @@ void handle_behaviour(monster* mon)
 
     if (mons_is_fleeing_sanctuary(mon)
         && mons_is_fleeing(mon)
-        && is_sanctuary(you.pos()))
+        && sanctuary_owner()
+        && is_sanctuary(sanctuary_owner()->pos()))
     {
         return;
     }
@@ -384,6 +389,12 @@ void handle_behaviour(monster* mon)
         mon->foe = MHITYOU;
     }
 
+    // Monsters in a sanctuary friendly to them will not attack.
+    if (inSanctuary)
+    {
+        mon->foe = MHITNOT;
+    }
+
     // Validate current target again.
     _mon_check_foe_invalid(mon);
 
@@ -442,6 +453,7 @@ void handle_behaviour(monster* mon)
                 if (crawl_state.game_is_arena()
                     || !proxPlayer && !isFriendly
                     || isNeutral || patrolling
+                    || inSanctuary
                     || mon->type == MONS_GIANT_SPORE)
                 {
                     new_beh = BEH_WANDER;
@@ -774,7 +786,7 @@ void handle_behaviour(monster* mon)
             if (!proxFoe)
             {
                 if ((isFriendly || proxPlayer) && !isNeutral && !patrolling
-                    && !crawl_state.game_is_arena())
+                    && !inSanctuary && !crawl_state.game_is_arena())
                 {
                     new_foe = MHITYOU;
                 }
@@ -914,7 +926,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
     if (is_sanctuary(mon->pos()) && mons_is_fleeing_sanctuary(mon))
     {
         mon->behaviour = BEH_FLEE;
-        mon->foe       = MHITYOU;
+        mon->foe       = env.sanctuary_owner;
         mon->target    = env.sanctuary_pos;
         return;
     }

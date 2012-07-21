@@ -523,7 +523,7 @@ static void _handle_movement(monster* mons)
     // sanctuary, even if you're right next to them.
     if (is_sanctuary(mons->pos() + mmov)
         && (!is_sanctuary(mons->pos())
-            || mons->pos() + mmov == you.pos()))
+            || (friendly_sanctuary() && mons->pos() + mmov == you.pos())))
     {
         mmov.reset();
     }
@@ -2955,7 +2955,7 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
 
     // Non-friendly and non-good neutral monsters won't enter
     // sanctuaries.
-    if (!mons->wont_attack()
+    if (!mons_friendly_to_sanctuary_owner(mons)
         && is_sanctuary(targ)
         && !is_sanctuary(mons->pos()))
     {
@@ -3015,7 +3015,7 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
     // Wandering mushrooms usually don't move while you are looking.
     if (mons->type == MONS_WANDERING_MUSHROOM)
     {
-        if (!mons->wont_attack()
+        if (!mons_friendly_to_sanctuary_owner(mons)
             && is_sanctuary(mons->pos()))
         {
             return true;

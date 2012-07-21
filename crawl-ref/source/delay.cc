@@ -1589,9 +1589,11 @@ static bool _should_stop_activity(const delay_queue_item &item,
         return false;
     }
 
-    // No monster will attack you inside a sanctuary,
+    // No monster will attack you inside a friendly sanctuary,
     // so presence of monsters won't matter.
-    if (ai == AI_SEE_MONSTER && is_sanctuary(you.pos()))
+    if (ai == AI_SEE_MONSTER
+        && is_sanctuary(you.pos())
+        && friendly_sanctuary())
         return false;
 
     delay_type curr = current_delay_action();

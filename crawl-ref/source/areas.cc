@@ -294,12 +294,14 @@ bool remove_sanctuary(bool did_attack)
 
     env.sanctuary_pos.set(-1, -1);
 
-    if (did_attack)
+    if (did_attack && env.sanctuary_owner == MHITYOU)
     {
         if (seen_change)
             simple_god_message(" revokes the gift of sanctuary.", GOD_ZIN);
         did_god_conduct(DID_ATTACK_IN_SANCTUARY, 3);
     }
+
+    env.sanctuary_owner = NON_MONSTER;
 
     // Now that the sanctuary is gone, monsters aren't afraid of it
     // anymore.
@@ -349,10 +351,11 @@ void decrease_sanctuary_radius()
     }
 }
 
-void create_sanctuary(const coord_def& center, int time)
+void create_sanctuary(const actor *priest, const coord_def& center, int time)
 {
-    env.sanctuary_pos  = center;
-    env.sanctuary_time = time;
+    env.sanctuary_pos   = center;
+    env.sanctuary_time  = time;
+    env.sanctuary_owner = priest->mindex();
 
     // radius could also be influenced by Inv
     // and would then have to be stored globally.
@@ -361,11 +364,13 @@ void create_sanctuary(const coord_def& center, int time)
     int       trap_count  = 0;
     int       scare_count = 0;
     int       cloud_count = 0;
-    monster* seen_mon    = NULL;
+    monster* seen_mon     = NULL;
+    bool      dread       = false;
 
     // Since revealing mimics can move monsters, we do it first.
-    for (radius_iterator ri(center, radius, C_POINTY); ri; ++ri)
-        discover_mimic(*ri);
+    if (priest->is_player())
+        for (radius_iterator ri(center, radius, C_POINTY); ri; ++ri)
+            discover_mimic(*ri);
 
     int shape = random2(4);
     for (radius_iterator ri(center, radius, C_POINTY); ri; ++ri)
@@ -376,7 +381,9 @@ void create_sanctuary(const coord_def& center, int time)
         if (testbits(env.pgrid(pos), FPROP_BLOODY) && you.see_cell(pos))
             blood_count++;
 
-        if (trap_def* ptrap = find_trap(pos))
+        trap_def* ptrap = find_trap(pos);
+
+        if (priest->is_player() && ptrap)
         {
             if (!ptrap->is_known())
             {
@@ -414,19 +421,27 @@ void create_sanctuary(const coord_def& center, int time)
 
         env.pgrid(pos) &= ~(FPROP_BLOODY);
 
+        // Warn the player about not being able to move through the sanctuary,
+        // if applicable.
+        if (!priest->is_player() && pos == you.pos()
+            && !priest->wont_attack())
+        {
+            dread = true;
+        }
+
         // Scare all attacking monsters inside sanctuary, and make
         // all friendly monsters inside sanctuary stop attacking and
         // move towards the player.
         if (monster* mon = monster_at(pos))
         {
-            if (mon->friendly())
+            if (mons_friendly_to_sanctuary_owner(mon))
             {
-                mon->foe       = MHITYOU;
+                mon->foe       = priest->mindex();
                 mon->target    = center;
                 mon->behaviour = BEH_SEEK;
-                behaviour_event(mon, ME_EVAL, &you);
+                behaviour_event(mon, ME_EVAL, priest);
             }
-            else if (!mon->wont_attack() && mons_is_influenced_by_sanctuary(mon))
+            else if (mons_is_influenced_by_sanctuary(mon))
             {
                 mons_start_fleeing_from_sanctuary(mon);
 
@@ -475,6 +490,9 @@ void create_sanctuary(const coord_def& center, int time)
         simple_monster_message(seen_mon, " turns to flee the light!");
     else if (scare_count > 0)
         mpr("The monsters scatter in all directions!");
+
+    if (dread)
+        mpr("You feel a sense of dread!", MSGCH_WARN);
 }
 
 

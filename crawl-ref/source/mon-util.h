@@ -325,6 +325,7 @@ bool mons_is_panicking(const monster* m);
 bool mons_is_cornered(const monster* m);
 bool mons_is_lurking(const monster* m);
 bool mons_is_batty(const monster* m);
+bool mons_friendly_to_sanctuary_owner(const monster *m);
 bool mons_is_influenced_by_sanctuary(const monster* m);
 bool mons_is_fleeing_sanctuary(const monster* m);
 bool mons_class_is_slime(monster_type mc);

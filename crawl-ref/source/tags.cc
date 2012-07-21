@@ -2643,6 +2643,7 @@ static void tag_construct_level(writer &th)
 
     marshallCoord(th, env.sanctuary_pos);
     marshallByte(th, env.sanctuary_time);
+    marshallInt(th, env.sanctuary_owner);
 
     marshallInt(th, env.spawn_random_rate);
 
@@ -3334,6 +3335,14 @@ static void tag_read_level(reader &th)
 
     env.sanctuary_pos  = unmarshallCoord(th);
     env.sanctuary_time = unmarshallByte(th);
+#if TAG_MAJOR_VERSION == 33
+    if (th.getMinorVersion() < TAG_MINOR_MONSTER_SANCTUARY)
+        env.sanctuary_owner = MHITYOU;
+    else
+#endif
+    {
+        env.sanctuary_owner = unmarshallInt(th);
+    }
 
     env.spawn_random_rate = unmarshallInt(th);
 

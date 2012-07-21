@@ -4276,6 +4276,32 @@ static void _move_player(coord_def move)
         return;
     }
 
+    if (env.sanctuary_time && !friendly_sanctuary())
+    {
+        if (is_sanctuary(you.pos()))
+        {
+            if (grid_distance(targ, env.sanctuary_pos)
+                < grid_distance(you.pos(), env.sanctuary_pos))
+            {
+                mpr("You cannot move closer to the centre of the sanctuary!");
+                return;
+            }
+            else if (attacking && is_sanctuary(targ))
+            {
+                mpr("You cannot attack something in the sanctuary!");
+                return;
+            }
+        }
+        else if (is_sanctuary(targ))
+        {
+            if (attacking)
+                mpr("You cannot attack something in the sanctuary!");
+            else
+                mpr("You cannot move into the sanctuary!");
+            return;
+        }
+    }
+
     coord_def mon_swap_dest;
 
     if (targ_monst && !targ_monst->submerged())

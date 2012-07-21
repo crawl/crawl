@@ -15,6 +15,7 @@
 #include "fprop.h"
 #include "item_use.h"
 #include "los.h"
+#include "misc.h"
 #include "monster.h"
 #include "mon-stuff.h"
 #include "player.h"
@@ -147,7 +148,10 @@ void blink_other_close(actor* victim, const coord_def &target)
     actor* caster = actor_at(target);
     if (!caster)
         return;
-    if (is_sanctuary(you.pos()))
+    if (is_sanctuary(victim->pos())
+        && (victim->is_player() && friendly_sanctuary()
+            || victim->is_monster()
+               && mons_friendly_to_sanctuary_owner(victim->as_monster())))
         return;
     coord_def dest = random_space_weighted(victim, caster, true);
     if (!in_bounds(dest))

@@ -1188,6 +1188,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_RECITE:
     case SPELL_VITALISATION:
     case SPELL_IMPRISON:
+    case SPELL_SANCTUARY:
         return true;
     default:
         if (check_validity)
@@ -1410,7 +1411,7 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
         return true;
     }
 
-    if (!mon->wont_attack())
+    if (!mons_friendly_to_sanctuary_owner(mon))
     {
         if (spell_harms_area(monspell) && env.sanctuary_time > 0)
             return true;
@@ -1738,6 +1739,11 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
         break;
     }
 
+    case SPELL_SANCTUARY:
+        if (env.sanctuary_time)
+            ret = true;
+        break;
+
     case SPELL_NO_SPELL:
         ret = true;
         break;
@@ -1791,7 +1797,7 @@ static bool _ms_low_hitpoint_cast(const monster* mon, spell_type monspell)
     {
         if (adjacent(you.pos(), mon->pos()))
             targ_adj = true;
-        if (is_sanctuary(you.pos()))
+        if (is_sanctuary(you.pos()) && friendly_sanctuary())
             targ_sanct = true;
         if (you.undead_or_demonic())
             targ_undead = true;
@@ -1800,7 +1806,8 @@ static bool _ms_low_hitpoint_cast(const monster* mon, spell_type monspell)
     {
         if (adjacent(menv[mon->foe].pos(), mon->pos()))
             targ_adj = true;
-        if (is_sanctuary(menv[mon->foe].pos()))
+        if (is_sanctuary(menv[mon->foe].pos())
+            && mons_friendly_to_sanctuary_owner(&menv[mon->foe]))
             targ_sanct = true;
         if (menv[mon->foe].undead_or_demonic())
             targ_undead = true;
@@ -1826,6 +1833,7 @@ static bool _ms_low_hitpoint_cast(const monster* mon, spell_type monspell)
     case SPELL_TIME_STEP:
     case SPELL_DEPART_ABYSS:
     case SPELL_ENTER_ABYSS:
+    case SPELL_SANCTUARY:
         return true;
     case SPELL_VAMPIRIC_DRAINING:
         return !targ_sanct && targ_adj && !targ_friendly && !targ_undead;
@@ -1986,7 +1994,8 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         && mons_class_flag(mons->type, M_SPEAKS)
         && mons->has_spells());
 
-    if (is_sanctuary(mons->pos()) && !mons->wont_attack())
+    if (is_sanctuary(mons->pos())
+        && !mons_friendly_to_sanctuary_owner(mons))
         return false;
 
     // Yes, there is a logic to this ordering {dlb}:
@@ -2607,7 +2616,8 @@ static int _monster_abjure_square(const coord_def &pos,
             shielded = true;
         }
     }
-    else if (is_sanctuary(target->pos()))
+    else if (is_sanctuary(target->pos())
+             && friendly_sanctuary())
     {
         pow = 0;
         mpr("Zin's power protects your fellow warrior from evil magic!",
@@ -4216,7 +4226,9 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
             return;
 
         const bool friendly  = mons->friendly();
-        const bool buff_only = !friendly && is_sanctuary(you.pos());
+        const bool buff_only = !friendly
+                               && is_sanctuary(you.pos())
+                               && friendly_sanctuary();
         const msg_channel_type channel = (friendly) ? MSGCH_FRIEND_ENCHANT
                                                     : MSGCH_MONSTER_ENCHANT;
 
@@ -4833,6 +4845,28 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         cast_imprison(power, victim, -GOD_ZIN, mons);
         return;
     }
+    case SPELL_SANCTUARY:
+        if (!env.sanctuary_time)
+        {
+            if (!silenced(mons->pos()) && player_can_hear(mons->pos()))
+                mpr("You hear a choir sing!", MSGCH_SOUND);
+            else
+                simple_monster_message(mons,
+                                       " is suddenly bathed in radiance!");
+            if (you.can_see(mons))
+                flash_view(WHITE);
+
+            holy_word(100, HOLY_WORD_ZIN, mons->pos(), true, mons);
+
+#ifndef USE_TILE_LOCAL
+            if (you.can_see(mons))
+                delay(1000);
+#endif
+
+            create_sanctuary(mons, mons->pos(),
+                             7 + mons->skill_rdiv(SK_INVOCATIONS) / 2);
+        }
+        return;
     }
 
     // If a monster just came into view and immediately cast a spell,

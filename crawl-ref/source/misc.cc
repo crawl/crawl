@@ -1687,7 +1687,9 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
 
         // No monster will attack you inside a sanctuary,
         // so presence of monsters won't matter -- until it starts shrinking...
-        if (is_sanctuary(you.pos()) && env.sanctuary_time >= 5)
+        if (is_sanctuary(you.pos())
+            && friendly_sanctuary()
+            && env.sanctuary_time >= 5)
             return true;
     }
 
@@ -2441,7 +2443,8 @@ bool bad_attack(const monster *mon, std::string& adj, std::string& suffix)
     adj.clear();
     suffix.clear();
 
-    if (is_sanctuary(you.pos()) || is_sanctuary(mon->pos()))
+    if ((is_sanctuary(you.pos()) || is_sanctuary(mon->pos()))
+        && friendly_sanctuary())
         suffix = ", despite your sanctuary";
 
     if (mon->friendly())
@@ -3000,4 +3003,22 @@ bool move_stairs(coord_def orig, coord_def dest)
     }
 
     return slide_feature_over(orig, dest);
+}
+
+actor* sanctuary_owner()
+{
+    int midx = env.sanctuary_owner;
+    if (midx == MHITYOU)
+        return &you;
+    else if (!invalid_monster_index(midx))
+        return &menv[midx];
+    else
+        return NULL;
+}
+
+bool friendly_sanctuary()
+{
+    return sanctuary_owner()
+           && (sanctuary_owner()->is_player()
+               || sanctuary_owner()->as_monster()->wont_attack());
 }

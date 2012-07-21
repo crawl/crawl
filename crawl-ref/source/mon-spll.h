@@ -1864,7 +1864,7 @@
        SPELL_VITALISATION,
        SPELL_IMPRISON,
        SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
+       SPELL_SANCTUARY,
       }
     },
 
