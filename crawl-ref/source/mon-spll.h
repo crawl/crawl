@@ -1860,9 +1860,9 @@
     {  MST_BK_ZIN,
       {
        SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
        SPELL_RECITE,
-       SPELL_NO_SPELL,
+       SPELL_VITALISATION,
+       SPELL_IMPRISON,
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
       }

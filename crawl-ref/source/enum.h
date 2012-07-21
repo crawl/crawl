@@ -1519,6 +1519,7 @@ enum enchant_type
     ENCH_FINESSE,
     ENCH_TIME_STEP,
     ENCH_RECITING,
+    ENCH_DIVINE_STAMINA, // Vitalisation
     // Update enchantment names in monster.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -3266,6 +3267,8 @@ enum spell_type
     SPELL_DIVINE_WARRIOR,
 
     SPELL_RECITE,
+    SPELL_VITALISATION,
+    SPELL_IMPRISON,
 
     NUM_SPELLS
 };

@@ -3173,6 +3173,32 @@ struct spell_desc
 },
 
 {
+    SPELL_VITALISATION, "Vitalisation",
+     SPTYP_CHARMS,
+     SPFLAG_MONSTER,
+     3,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_IMPRISON, "Imprison",
+     SPTYP_HEXES,
+     SPFLAG_MONSTER,
+     4,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,

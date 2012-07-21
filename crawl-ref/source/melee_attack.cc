@@ -124,6 +124,11 @@ melee_attack::melee_attack(actor *attk, actor *defn,
             attk_damage += std::min(attacker->as_monster()->get_piety() / 10,
                                     15);
 
+        // Also consider stat boosts from Vitalisation.
+        // GOD TODO: put these into a separate function
+        if (attacker->as_monster()->has_ench(ENCH_DIVINE_STAMINA))
+            attk_damage += attacker->skill(SK_INVOCATIONS) / 3;
+
         if (attk_type == AT_WEAP_ONLY)
         {
             int weap = attacker->as_monster()->inv[MSLOT_WEAPON];

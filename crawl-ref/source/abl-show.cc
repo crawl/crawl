@@ -2227,7 +2227,7 @@ static bool _do_ability(const ability_def& abil)
         power = 3 + roll_dice(6, (30 + you.skill(SK_INVOCATIONS, 10))
                                  / (3 + mons->hit_dice)) / 3;
 
-        if (!cast_imprison(power, mons, -GOD_ZIN))
+        if (!cast_imprison(power, mons, -GOD_ZIN, &you))
             return false;
         break;
     }

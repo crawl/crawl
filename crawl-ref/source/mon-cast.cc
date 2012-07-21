@@ -48,6 +48,7 @@
 #include "spl-cast.h"
 #include "spl-clouds.h"
 #include "spl-damage.h"
+#include "spl-goditem.h"
 #include "spl-monench.h"
 #include "spl-summoning.h"
 #include "spl-transloc.h"
@@ -1185,6 +1186,8 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_CLEANSING_FLAME:
     case SPELL_DIVINE_WARRIOR:
     case SPELL_RECITE:
+    case SPELL_VITALISATION:
+    case SPELL_IMPRISON:
         return true;
     default:
         if (check_validity)
@@ -1714,6 +1717,26 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
             || !zin_check_recite_to_monsters((actor *)mon, 0))
             ret = true;
         break;
+
+    case SPELL_VITALISATION:
+        if (mon->has_ench(ENCH_DIVINE_STAMINA))
+            ret = true;
+        break;
+
+    case SPELL_IMPRISON:
+    {
+        actor* victim = mon->get_foe();
+        if (!victim)
+            ret = true;
+        else
+        {
+            int power = 3 + roll_dice(6, (30 + mon->skill(SK_INVOCATIONS, 10)
+                                         / (3 + victim->get_experience_level())))
+                            / 3;
+            ret = !cast_imprison(power, victim, -GOD_ZIN, (actor *)mon, true);
+        }
+        break;
+    }
 
     case SPELL_NO_SPELL:
         ret = true;
@@ -4785,6 +4808,29 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
             mons->add_ench(mon_enchant(ENCH_RECITING, 0, mons,
                                        BASELINE_DELAY * 3));
         }
+        return;
+    }
+    case SPELL_VITALISATION:
+    {
+        if (you.can_see(mons))
+        {
+            std::string msg = " grants "
+                              + mons->name(DESC_THE) + " divine stamina!";
+            simple_god_message(msg.c_str(), GOD_ZIN);
+        }
+        mons->add_ench(mon_enchant(ENCH_DIVINE_STAMINA, 0, mons,
+                                   BASELINE_DELAY * (60 + roll_dice(2, 10))));
+        return;
+    }
+    case SPELL_IMPRISON:
+    {
+        actor* victim = mons->get_foe();
+        if (!victim)
+            return;
+        int power = 3 + roll_dice(6, (30 + mons->skill(SK_INVOCATIONS, 10)
+                                     / (3 + victim->get_experience_level())))
+                        / 3;
+        cast_imprison(power, victim, -GOD_ZIN, mons);
         return;
     }
     }

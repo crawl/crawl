@@ -112,6 +112,43 @@ bool monster::add_ench(const mon_enchant &ench)
         return false;
     }
 
+    if (has_ench(ENCH_DIVINE_STAMINA))
+    {
+        std::string what = "";
+        bool immune = true;
+        switch (ench.ench)
+        {
+            case ENCH_CONFUSION:
+                what = "confusion";
+                break;
+            case ENCH_POISON:
+                what = "poison";
+                break;
+            case ENCH_ROT:
+                what = "decay";
+                break;
+            case ENCH_SICK:
+                what = "disease";
+                break;
+            case ENCH_PETRIFYING:
+                what = "petrification";
+                break;
+            default:
+                immune = false;
+                break;
+        }
+        if (immune)
+        {
+            if (you.can_see(this))
+                mprf("%s divine stamina protects %s from %s!",
+                     apostrophise(name(DESC_THE)).c_str(),
+                     pronoun(PRONOUN_OBJECTIVE).c_str(),
+                     what.c_str());
+
+            return false;
+        }
+    }
+
     if (ench.ench == ENCH_LEVITATION && has_ench(ENCH_LIQUEFYING))
     {
         del_ench(ENCH_LIQUEFYING);
@@ -797,6 +834,10 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
                  mpr("You hear the recitation end.", MSGCH_SOUND);
          }
          break;
+    case ENCH_DIVINE_STAMINA:
+        if (!quiet && you.can_see(this))
+            mprf("%s divine stamina fades away.",
+                 apostrophise(name(DESC_THE)).c_str());
     default:
         break;
     }
@@ -901,7 +942,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_SILVER_CORONA: case ENCH_DAZED: case ENCH_FAKE_ABJURATION:
         case ENCH_ROUSED: case ENCH_BREATH_WEAPON: case ENCH_DEATHS_DOOR:
         case ENCH_OZOCUBUS_ARMOUR: case ENCH_HEROISM: case ENCH_FINESSE:
-        case ENCH_TIME_STEP: case ENCH_RECITING:
+        case ENCH_TIME_STEP: case ENCH_RECITING: case ENCH_DIVINE_STAMINA:
             lose_ench_levels(i->second, levels);
             break;
 
@@ -1112,6 +1153,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_HEROISM:
     case ENCH_FINESSE:
     case ENCH_TIME_STEP:
+    case ENCH_DIVINE_STAMINA:
     // case ENCH_ROLLING:
         decay_enchantment(me);
         break;
@@ -1713,7 +1755,7 @@ void monster::apply_enchantment(const mon_enchant &me)
             mprf(MSGCH_SOUND, "%s recites: \"%s\"",
                  name(DESC_THE).c_str(), recitation.c_str());
         else if (player_can_hear(pos()))
-            mprf(MSGCH_SOUND, "You hear something recites \"%s\"",
+            mprf(MSGCH_SOUND, "You hear something recite: \"%s\"",
                  recitation.c_str());
         for (radius_iterator ri(get_los()); ri; ++ri)
             zin_recite_to_single_monster(this, *ri, prayertype);
@@ -1848,7 +1890,7 @@ static const char *enchant_names[] =
     "dazed", "mute", "blind", "dumb", "mad", "silver_corona", "recite timer",
     "inner_flame", "roused", "breath timer", "deaths_door", "rolling",
     "ozocubus_armour", "heroism", "finesse", "time_step", "reciting",
-    "buggy",
+    "divine_stamina", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)

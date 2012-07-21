@@ -764,7 +764,8 @@ bool curse_item(bool armour, bool alreadyknown, std::string *pre_msg)
     return true;
 }
 
-static bool _do_imprison(int pow, const coord_def& where, bool zin)
+static bool _do_imprison(int pow, const coord_def& where, bool zin,
+                         actor *agent, bool tracer)
 {
     // power guidelines:
     // powc is roughly 50 at Evoc 10 with no godly assistance, ranging
@@ -785,7 +786,13 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
         // We need to get this now because we won't be able to see
         // the monster once the walls go up!
         mon = monster_at(where);
-        targname = mon->name(DESC_THE);
+        if (!mon)
+        {
+            assert(where == you.pos());
+            targname = "you";
+        }
+        else
+            targname = mon->name(DESC_THE);
         bool success = true;
         bool none_vis = true;
 
@@ -795,7 +802,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
             if (actor *fatass = actor_at(*ai))
             {
                 success = false;
-                if (you.can_see(fatass))
+                if (agent->can_see(fatass))
                     none_vis = false;
                 break;
             }
@@ -816,12 +823,14 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
 
         if (!success)
         {
-            mprf(none_vis ? "You briefly glimpse something next to %s."
-                          : "You need more space to imprison %s.",
-                 targname.c_str());
+            if (agent->is_player())
+                mprf(none_vis ? "You briefly glimpse something next to %s."
+                              : "You need more space to imprison %s.",
+                     targname.c_str());
             return false;
         }
-
+        if (tracer)
+            return true;
     }
 
     for (adjacent_iterator ai(where); ai; ++ai)
@@ -909,7 +918,7 @@ bool entomb(int pow)
         mpr("The dungeon rumbles ominously, and rocks fall from the ceiling!");
         return false;
     }
-    if (_do_imprison(pow, you.pos(), false))
+    if (_do_imprison(pow, you.pos(), false, &you, false))
     {
         const int tomb_duration = BASELINE_DELAY * pow;
         env.markers.add(new map_tomb_marker(you.pos(),
@@ -923,15 +932,19 @@ bool entomb(int pow)
     return false;
 }
 
-bool cast_imprison(int pow, monster* mons, int source)
+bool cast_imprison(int pow, actor* victim, int source, actor *agent,
+                   bool tracer)
 {
-    if (_do_imprison(pow, mons->pos(), true))
+    if (_do_imprison(pow, victim->pos(), true, agent, tracer))
     {
+        if (tracer)
+            return true;
+
         const int tomb_duration = BASELINE_DELAY * pow;
-        env.markers.add(new map_tomb_marker(mons->pos(),
+        env.markers.add(new map_tomb_marker(victim->pos(),
                                             tomb_duration,
                                             source,
-                                            mons->mindex()));
+                                            victim->mindex()));
         env.markers.clear_need_activate(); // doesn't need activation
         return true;
     }
