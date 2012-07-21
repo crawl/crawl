@@ -4861,6 +4861,19 @@ bool monster::mutate(const std::string &reason)
     if (!can_mutate())
         return false;
 
+    // Zin's protection.
+    if (god == GOD_ZIN
+        && (x_chance_in_y(get_piety(), MAX_PIETY)
+            || x_chance_in_y(get_piety(), MAX_PIETY + 22)))
+    {
+        if (you.can_see(this))
+        {
+            std::string msg = " protects " + name(DESC_THE) + " from mutation!";
+            simple_god_message(msg.c_str(), GOD_ZIN);
+        }
+        return true;
+    }
+
     // Polymorphing a (very) ugly thing will mutate it into a different
     // (very) ugly thing.
     if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING)
