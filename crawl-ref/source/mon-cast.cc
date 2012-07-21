@@ -68,7 +68,6 @@ const int MAX_ACTIVE_KRAKEN_TENTACLES = 4;
 static bool _valid_mon_spells[NUM_SPELLS];
 
 static int  _mons_mesmerise(monster* mons, bool actual = true);
-static int  _mons_cause_fear(monster* mons, bool actual = true);
 static bool _mons_drain_life(monster* mons, bool actual = true);
 static bool _mons_ozocubus_refrigeration(monster *mons, bool actual = true);
 static bool _mons_bend_time(monster *mons, bool actual = true);
@@ -2484,7 +2483,7 @@ try_again:
         // Try to cause fear: if nothing is scared, pretend we didn't cast it.
         else if (spell_cast == SPELL_CAUSE_FEAR)
         {
-            if (_mons_cause_fear(mons, false) < 0)
+            if (mons_cause_fear(mons, false) < 0)
                 return false;
         }
         // Try to drain life: if nothing is drained, pretend we didn't cast it.
@@ -2665,7 +2664,7 @@ static int _apply_radius_around_square(const coord_def &c, int radius,
     return res;
 }
 
-static int _monster_abjuration(const monster* caster, bool actual)
+int monster_abjuration(const monster* caster, bool actual)
 {
     const bool wont_attack = caster->wont_attack();
     int maffected = 0;
@@ -2701,10 +2700,10 @@ static int _monster_abjuration(const monster* caster, bool actual)
 
 static bool _mons_abjured(monster* mons, bool nearby)
 {
-    if (nearby && _monster_abjuration(mons, false) > 0
+    if (nearby && monster_abjuration(mons, false) > 0
         && coinflip())
     {
-        _monster_abjuration(mons, true);
+        monster_abjuration(mons, true);
         return true;
     }
 
@@ -3018,7 +3017,7 @@ static int _mons_mesmerise(monster* mons, bool actual)
 // Returns 0, if targets can be scared but the attempt failed or wasn't made.
 // Returns 1, if targets are scared.
 // Returns -1, if targets can never be scared.
-static int _mons_cause_fear(monster* mons, bool actual)
+int mons_cause_fear(monster* mons, bool actual, int set_pow)
 {
     if (actual)
     {
@@ -3032,7 +3031,7 @@ static int _mons_cause_fear(monster* mons, bool actual)
 
     int retval = -1;
 
-    const int pow = std::min(mons->hit_dice * 12, 200);
+    const int pow = (set_pow) ? set_pow : std::min(mons->hit_dice * 12, 200);
 
     for (actor_iterator ai(mons->get_los()); ai; ++ai)
     {
@@ -4052,7 +4051,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         return;
 
     case SPELL_CAUSE_FEAR:
-        _mons_cause_fear(mons);
+        mons_cause_fear(mons);
         return;
 
     case SPELL_DRAIN_LIFE:

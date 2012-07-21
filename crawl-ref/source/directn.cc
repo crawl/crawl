@@ -62,6 +62,7 @@
 #include "view.h"
 #include "viewchar.h"
 #include "viewgeom.h"
+#include "wiz-item.h"
 #include "wiz-mon.h"
 #include "spl-goditem.h"
 
@@ -1754,6 +1755,10 @@ void direction_chooser::handle_wizard_command(command_type key_command,
 
     case CMD_TARGET_WIZARD_KILL_MONSTER:
         monster_die(m, KILL_YOU, NON_MONSTER);
+        break;
+
+    case CMD_TARGET_WIZARD_MONSTER_CARD:
+        wizard_draw_card(m);
         break;
 
     default:

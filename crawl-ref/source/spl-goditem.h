@@ -14,7 +14,7 @@ int detect_creatures(int pow, bool telepathic = false);
 bool remove_curse(bool alreadyknown = true, std::string *pre_msg = NULL);
 bool curse_item(bool armour, bool alreadyknown, std::string *pre_msg = NULL);
 
-bool entomb(int pow);
+bool entomb(actor* victim, int pow);
 bool cast_imprison(int pow, actor* victim, int source, actor *agent,
                    bool tracer = false);
 

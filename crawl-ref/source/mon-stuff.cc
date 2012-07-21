@@ -3103,7 +3103,7 @@ void change_monster_type(monster* mons, monster_type targetc)
 // says.
 bool monster_polymorph(monster* mons, monster_type targetc,
                        poly_power_type power,
-                       bool force_beh)
+                       bool force_beh, bool force)
 {
     // Don't attempt to polymorph a monster that is busy using the stairs.
     if (mons->flags & MF_TAKING_STAIRS)
@@ -3158,7 +3158,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
                                                         target_power, relax)));
     }
 
-    if (!_valid_morph(mons, targetc))
+    if (!force && !_valid_morph(mons, targetc))
         return simple_monster_message(mons, " looks momentarily different.");
 
     bool could_see = you.can_see(mons);

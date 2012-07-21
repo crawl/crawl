@@ -15,7 +15,7 @@ void wizard_uncurse_item();
 void wizard_create_all_artefacts();
 void wizard_identify_pack();
 void wizard_unidentify_pack();
-void wizard_draw_card();
+void wizard_draw_card(actor *who);
 
 void debug_item_statistics(void);
 

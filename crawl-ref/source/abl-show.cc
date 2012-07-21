@@ -1833,7 +1833,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_MAKE_WATER:
-        create_pond(you.pos(), 3, false);
+        create_pond(&you, you.pos(), 3, false);
         break;
 
     case ABIL_MAKE_BAZAAR:
@@ -1889,7 +1889,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_MAKE_SAGE:
-        sage_card(20, DECK_RARITY_RARE);
+        sage_card(&you, 20, DECK_RARITY_RARE);
         lose_stat(STAT_RANDOM, 1 + random2(3), false, "zot ability");
         break;
 

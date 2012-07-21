@@ -130,7 +130,7 @@ bool choose_deck_and_draw();
 void nemelex_shuffle_decks();
 void shuffle_all_decks_on_level();
 
-void card_effect(card_type which_card, deck_rarity_type rarity,
+void card_effect(actor *who, card_type which_card, deck_rarity_type rarity,
                  uint8_t card_flags = 0, bool tell_card = true);
 void draw_from_deck_of_punishment(bool deal = false);
 
@@ -148,8 +148,9 @@ card_type get_card_and_flags(const item_def& deck, int idx,
                              uint8_t& _flags);
 
 // Used elsewhere in ZotDef.
-void sage_card(int power, deck_rarity_type rarity);
-void create_pond(const coord_def& center, int radius, bool allow_deep);
+void sage_card(actor* who, int power, deck_rarity_type rarity);
+void create_pond(actor* who, const coord_def& center, int radius,
+                 bool allow_deep);
 
 const std::vector<card_type> get_drawn_cards(const item_def& deck);
 // see and mark the first card with a scroll.

@@ -1550,7 +1550,7 @@ void debug_item_statistics(void)
     fclose(ostat);
 }
 
-void wizard_draw_card()
+void wizard_draw_card(actor *who)
 {
     msg::streams(MSGCH_PROMPT) << "Which card? " << std::endl;
     char buf[80];
@@ -1571,7 +1571,7 @@ void wizard_draw_card()
         lowercase(card);
         if (card.find(wanted) != std::string::npos)
         {
-            card_effect(c, DECK_RARITY_LEGENDARY);
+            card_effect(who, c, DECK_RARITY_LEGENDARY);
             found_card = true;
             break;
         }

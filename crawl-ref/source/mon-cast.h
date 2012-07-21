@@ -14,6 +14,10 @@ struct bolt;
 void init_mons_spells();
 bool is_valid_mon_spell(spell_type spell);
 
+int mons_cause_fear(monster* mons, bool actual = true, int set_pow = 0);
+
+int monster_abjuration(const monster* caster, bool actual);
+
 bool handle_mon_spell(monster* mons, bolt &beem);
 
 bolt mons_spells(monster* mons, spell_type spell_cast, int power,

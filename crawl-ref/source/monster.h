@@ -471,11 +471,12 @@ public:
     int  get_piety() const { return hit_dice * 10; }
     int  piety_level() const;
 
+    bool level_up();
+
 private:
     void init_with(const monster& mons);
     void swap_slots(mon_inv_type a, mon_inv_type b);
     bool need_message(int &near) const;
-    bool level_up();
     bool level_up_change();
     bool pickup(item_def &item, int slot, int near, bool force_merge = false);
     void equip_weapon(item_def &item, int near, bool msg = true);

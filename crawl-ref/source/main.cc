@@ -659,7 +659,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case 'C': wizard_uncurse_item();                 break;
     case 'g': wizard_exercise_skill();               break;
     case 'G': wizard_dismiss_all_monsters();         break;
-    case 'c': wizard_draw_card();                    break;
+    case 'c': wizard_draw_card(&you);                break;
     case 'H': wizard_heal(true);                     break;
     case 'h': wizard_heal(false);                    break;
     case 'b': blink(1000, true, true);               break;

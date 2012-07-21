@@ -910,21 +910,22 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin,
     return (number_built > 0);
 }
 
-bool entomb(int pow)
+bool entomb(actor* victim, int pow)
 {
     // Zotdef - turned off
     if (crawl_state.game_is_zotdef())
     {
-        mpr("The dungeon rumbles ominously, and rocks fall from the ceiling!");
+        if (victim->is_player() || you.can_see(victim))
+            mpr("The dungeon rumbles ominously, and rocks fall from the ceiling!");
         return false;
     }
-    if (_do_imprison(pow, you.pos(), false, &you, false))
+    if (_do_imprison(pow, victim->pos(), false, victim, false))
     {
         const int tomb_duration = BASELINE_DELAY * pow;
-        env.markers.add(new map_tomb_marker(you.pos(),
+        env.markers.add(new map_tomb_marker(victim->pos(),
                                             tomb_duration,
-                                            you.mindex(),
-                                            you.mindex()));
+                                            victim->mindex(),
+                                            victim->mindex()));
         env.markers.clear_need_activate(); // doesn't need activation
         return true;
     }

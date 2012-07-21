@@ -109,12 +109,12 @@ spret_type cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy,
     return SPRET_SUCCESS;
 }
 
-void cast_iood_burst(int pow, coord_def target)
+void cast_iood_burst(actor *caster, int pow, coord_def target)
 {
     int foe = MHITNOT;
     if (const monster* mons = monster_at(target))
     {
-        if (mons && you.can_see(mons))
+        if (mons && caster->can_see(mons))
             foe = mons->mindex();
     }
 
@@ -125,7 +125,7 @@ void cast_iood_burst(int pow, coord_def target)
     for (int i = 0; i < n_orbs; i++)
     {
         double angle = angle0 + i * PI * 2 / n_orbs;
-        cast_iood(&you, pow, 0, sin(angle), cos(angle), foe);
+        cast_iood(caster, pow, 0, sin(angle), cos(angle), foe);
     }
 }
 

@@ -132,7 +132,7 @@ static void _monster_regenerate(monster* mons)
     }
 }
 
-static bool _swap_monsters(monster* mover, monster* moved)
+bool swap_monsters(monster* mover, monster* moved)
 {
     // Can't swap with a stationary monster.
     // Although nominally stationary kraken tentacles can be swapped
@@ -2112,7 +2112,7 @@ void handle_monster_move(monster* mons)
                 && monster_can_hit_monster(mons, targ))
             {
                 // Maybe they can swap places?
-                if (_swap_monsters(mons, targ))
+                if (swap_monsters(mons, targ))
                 {
                     _swim_or_move_energy(mons);
                     continue;

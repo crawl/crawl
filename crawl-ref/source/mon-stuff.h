@@ -77,7 +77,7 @@ enum poly_power_type
 void change_monster_type(monster* mons, monster_type targetc);
 bool monster_polymorph(monster* mons, monster_type targetc,
                        poly_power_type power = PPT_SAME,
-                       bool force_beh = false);
+                       bool force_beh = false, bool force = false);
 
 int monster_die(monster* mons, actor *killer, bool silent = false,
                 bool wizard = false, bool fake = false);
