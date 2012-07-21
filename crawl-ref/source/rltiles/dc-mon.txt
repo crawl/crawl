@@ -618,6 +618,8 @@ tengu MONS_TENGU
 shedu MONS_SHEDU
 %sdir mon/vault
 tengu_conjurer MONS_TENGU_CONJURER
+%sdir mon/unique
+arachne MONS_ARACHNE
 
 ## Various beasts ('I')
 %sdir mon/animals
