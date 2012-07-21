@@ -2228,7 +2228,7 @@ static int _xom_change_scenery(bool debug = false)
     return XOM_GOOD_SCENERY;
 }
 
-static int _xom_inner_flame(bool debug = false)
+static int _xom_inner_flame(int sever, bool debug = false)
 {
     bool rc = false;
     for (monster_iterator mi(you.get_los()); mi; ++mi)
@@ -2240,7 +2240,7 @@ static int _xom_inner_flame(bool debug = false)
             return XOM_GOOD_INNER_FLAME;
 
         if (mi->add_ench(mon_enchant(ENCH_INNER_FLAME, 0,
-              &menv[ANON_FRIENDLY_MONSTER])))
+              &menv[ANON_FRIENDLY_MONSTER], random2(sever))))
         {
             // Only give this message once.
             if (!rc)
@@ -2305,7 +2305,7 @@ static int _xom_is_good(int sever, int tension, bool debug = false)
     else if (x_chance_in_y(11, sever))
         done = _xom_polymorph_nearby_monster(true, debug);
     else if (x_chance_in_y(12, sever))
-        done = _xom_inner_flame(debug);
+        done = _xom_inner_flame(sever, debug);
     else if (tension > 0 && x_chance_in_y(13, sever))
         done = _xom_rearrange_pieces(sever, debug);
     else if (random2(tension) < 15 && x_chance_in_y(14, sever))
