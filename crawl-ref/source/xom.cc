@@ -2438,7 +2438,8 @@ static int _xom_is_good(actor *toy, int sever, int tension, bool debug = false)
     int done = XOM_DID_NOTHING;
 
     // Did Xom (already) kill the player?
-    if (_player_is_dead())
+    if (toy->is_player() && _player_is_dead()
+        || toy->is_monster() && !toy->as_monster()->alive())
         return XOM_PLAYER_DEAD;
 
     god_acting gdact(GOD_XOM);
@@ -3758,7 +3759,8 @@ static int _xom_is_bad(actor *toy, int sever, int tension, bool debug = false)
     while (done == XOM_DID_NOTHING)
     {
         // Did Xom kill the player?
-        if (_player_is_dead())
+        if (toy->is_player() && _player_is_dead()
+            || toy->is_monster() && !toy->as_monster()->alive())
             return XOM_PLAYER_DEAD;
 
         if (!nasty && x_chance_in_y(3, sever))
@@ -4156,9 +4158,10 @@ int xom_acts(actor *toy, bool niceness, int sever, int tension, bool debug)
             return result;
     }
 
-    _handle_accidental_death(orig_hp, orig_stat_loss, orig_mutation);
+    if (toy->is_player())
+        _handle_accidental_death(orig_hp, orig_stat_loss, orig_mutation);
 
-    if (you.religion == GOD_XOM && one_chance_in(5))
+    if (toy->is_player() && you.religion == GOD_XOM && one_chance_in(5))
     {
         const std::string old_xom_favour = describe_xom_favour();
         you.piety = random2(MAX_PIETY + 1);
