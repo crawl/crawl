@@ -469,7 +469,7 @@ public:
     bool check_clarity(bool silent) const;
     bool check_stasis(bool silent, bool calc_unid = true) const;
 
-    int  get_piety() const { return hit_dice * 10; }
+    int  get_piety() const;
     int  piety_level() const;
 
     bool level_up();

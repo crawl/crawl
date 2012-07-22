@@ -6017,10 +6017,37 @@ bool monster::check_stasis(bool silent, bool calc_unid) const
     return false;
 }
 
+int monster::get_piety() const
+{
+    if (god == GOD_NO_GOD)
+        return 0;
+
+    if (god == GOD_XOM)
+    {
+        if (you.religion == GOD_XOM)
+            return you.piety;
+
+        int cap = std::min(HALF_MAX_PIETY, hit_dice * 10);
+        return random_range(HALF_MAX_PIETY - cap, HALF_MAX_PIETY + cap);
+    }
+
+    return std::min(200, hit_dice * 10);
+}
+
 int monster::piety_level() const
 {
     if (god == GOD_NO_GOD)
         return 0;
 
-    return std::min(6, hit_dice * 2 / 5);
+    if (god == GOD_XOM)
+        return random2(7);
+
+    if (get_piety() >= 160)
+        return 6;
+
+    for(int i = 4; i >= 0; i--)
+        if (get_piety() >= piety_breakpoint(i))
+            return i + 1;
+
+    return 0;
 }
