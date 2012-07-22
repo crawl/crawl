@@ -315,6 +315,19 @@ void MiscastEffect::do_miscast()
 
         unsigned int _school = school_list[random2(school_list.size())];
         sp_type = static_cast<spschool_flag_type>(1 << _school);
+
+        if (target->is_monster())
+        {
+            monster* mon = target->as_monster();
+            if (mon->god == GOD_SIF_MUNA
+                && mon->get_piety() >= 100
+                && x_chance_in_y(mon->get_piety() + 1, 150))
+            {
+                if (you.can_see(mon))
+                    canned_msg(MSG_NOTHING_HAPPENS);
+                return;
+            }
+        }
     }
     else
     {
