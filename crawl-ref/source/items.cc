@@ -2315,6 +2315,14 @@ mon_inv_type get_mon_equip_slot(const monster* mon, const item_def &item)
     if (slot == MSLOT_WEAPON && mon->mslot_item(MSLOT_ALT_WEAPON) == &item)
         return MSLOT_ALT_WEAPON;
 
+    if (is_deck(item) && slot == MSLOT_WEAPON
+        && mon->mslot_item(MSLOT_MISCELLANY) == &item)
+        return MSLOT_MISCELLANY;
+
+    if (is_deck(item) && slot == MSLOT_MISCELLANY
+        && mon->mslot_item(MSLOT_WEAPON) == &item)
+        return MSLOT_WEAPON;
+
     return NUM_MONSTER_SLOTS;
 }
 
@@ -3882,10 +3890,9 @@ item_info get_item_info(const item_def& item)
             ii.sub_type = item.sub_type;
         else
         {
-            if (item.sub_type >= MISC_DECK_OF_ESCAPE && item.sub_type <= MISC_DECK_OF_DEFENCE)
-                ii.sub_type = NUM_MISCELLANY; // Needs to be changed if we add other
-                                              // miscellaneous items that can be
-                                              // non-identified
+            if (item.sub_type >= MISC_DECK_OF_ESCAPE
+                && item.sub_type <= MISC_DECK_OF_DEFENCE)
+                ii.sub_type = MISC_UNIDENTIFIED_DECK;
             else
                 ii.sub_type = item.sub_type;
         }
@@ -3898,8 +3905,8 @@ item_info get_item_info(const item_def& item)
             ii.special = item.special;
 
             const int num_cards = cards_in_deck(item);
-            CrawlVector info_cards;
-            CrawlVector info_card_flags;
+            CrawlVector info_cards(SV_BYTE);
+            CrawlVector info_card_flags(SV_BYTE);
             bool found_unmarked = false;
             for (int i = 0; i < num_cards; ++i)
             {

@@ -2980,6 +2980,7 @@ static bool _mons_has_ranged_weapon(const monster* mon)
     const item_def *missile = mnc->missiles();
 
     if (!missile && weapon != primary && primary
+        && primary->base_type == OBJ_WEAPONS
         && get_weapon_brand(*primary) == SPWPN_RETURNING)
     {
         return true;
@@ -3415,6 +3416,8 @@ mon_inv_type item_to_mslot(const item_def &item)
     case OBJ_POTIONS:
         return MSLOT_POTION;
     case OBJ_MISCELLANY:
+        if (is_deck(item))
+            return MSLOT_WEAPON;
         return MSLOT_MISCELLANY;
     case OBJ_GOLD:
         return MSLOT_GOLD;

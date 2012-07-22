@@ -1007,6 +1007,9 @@ void monster::equip(item_def &item, int slot, int near)
 {
     switch (item.base_type)
     {
+    case OBJ_MISCELLANY:
+        if (!is_deck(item))
+            break;
     case OBJ_WEAPONS:
     case OBJ_STAVES:
     case OBJ_RODS:
@@ -1145,6 +1148,9 @@ bool monster::unequip(item_def &item, int slot, int near, bool force)
 
     switch (item.base_type)
     {
+    case OBJ_MISCELLANY:
+        if (!is_deck(item))
+            break;
     case OBJ_WEAPONS:
     {
         bool give_msg = (slot == MSLOT_WEAPON || mons_wields_two_weapons(this));
@@ -1403,6 +1409,30 @@ static bool _nonredundant_launcher_ammo_brands(item_def *launcher,
     }
 }
 
+// This picks up the deck to be used as a weapon.
+bool monster::pickup_deck(item_def &deck, int near)
+{
+    // Nemelex monsters will use Draw One instead of wielding the deck.
+    if (god == GOD_NEMELEX_XOBEH && piety_level() >= 1)
+        return false;
+
+    // Don't let monsters pick up decks as a weapon if they already have
+    // a ranged weapon.
+    int eslot = -1;
+    for (int i = MSLOT_WEAPON; i <= MSLOT_ALT_WEAPON; ++i)
+    {
+        if (const item_def *elaunch = mslot_item(static_cast<mon_inv_type>(i)))
+        {
+            if (is_range_weapon(*elaunch))
+                return false;
+        }
+        else
+            eslot = i;
+    }
+
+    return (eslot == -1 ? false : pickup(deck, eslot, near));
+}
+
 bool monster::pickup_launcher(item_def &launch, int near, bool force)
 {
     // Don't allow monsters to pick up launchers that would also
@@ -1609,7 +1639,7 @@ bool monster::pickup_melee_weapon(item_def &item, int near)
         }
         else
         {
-            if (is_range_weapon(*weap))
+            if (is_range_weapon(*weap) || is_deck(*weap))
                 continue;
 
             // Don't swap from a signature weapon to a non-signature one.
@@ -1726,8 +1756,12 @@ bool monster::pickup_throwable_weapon(item_def &item, int near)
 
 bool monster::wants_weapon(const item_def &weap) const
 {
+    // TODO: check for deck usability better
+    if (is_deck(weap))
+        return true;
+
     if (!could_wield(weap))
-       return false;
+        return false;
 
     // Blademasters and master archers like their starting weapon and
     // don't want another, thank you.
@@ -2051,6 +2085,9 @@ bool monster::pickup_weapon(item_def &item, int near, bool force)
     // - If it is a throwable weapon, and we're carrying no missiles (or our
     //   missiles are the same type), pick it up.
 
+    if (is_deck(item))
+        return pickup_deck(item, near);
+
     if (is_range_weapon(item))
         return pickup_launcher(item, near, force);
 
@@ -2329,6 +2366,9 @@ bool monster::pickup_item(item_def &item, int near, bool force)
     case OBJ_ARMOUR:
         return pickup_armour(item, near, force);
     case OBJ_MISCELLANY:
+        if (is_deck(item))
+            if (pickup_weapon(item, near, force))
+                return true;
         return pickup_misc(item, near);
     case OBJ_FOOD:
         return pickup_food(item, near);
@@ -2398,7 +2438,8 @@ void monster::swap_weapons(int near)
 void monster::wield_melee_weapon(int near)
 {
     const item_def *weap = mslot_item(MSLOT_WEAPON);
-    if (!weap || (!weap->cursed() && is_range_weapon(*weap)))
+    if (!weap || (!weap->cursed()
+                  && (is_range_weapon(*weap) || is_deck(*weap))))
     {
         const item_def *alt = mslot_item(MSLOT_ALT_WEAPON);
 
@@ -2406,7 +2447,8 @@ void monster::wield_melee_weapon(int near)
         // or switch away from our main weapon if it's a ranged weapon.
         //
         // Don't switch to alt weapon if it's a stack of throwing weapons.
-        if (alt && !is_range_weapon(*alt) && alt->quantity == 1
+        if (alt && !is_range_weapon(*alt) && !is_deck(*alt)
+            && alt->quantity == 1
             || weap && !alt && type != MONS_STATUE)
         {
             swap_weapons(near);

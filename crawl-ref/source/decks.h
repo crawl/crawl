@@ -122,6 +122,7 @@ enum card_type
 
 const char* card_name(card_type card);
 void evoke_deck(item_def& deck);
+void mons_evoke_deck(monster* mon, item_def& deck);
 bool deck_triple_draw();
 bool deck_peek();
 bool deck_deal();
@@ -155,5 +156,8 @@ void create_pond(actor* who, const coord_def& center, int radius,
 const std::vector<card_type> get_drawn_cards(const item_def& deck);
 // see and mark the first card with a scroll.
 bool deck_identify_first(int slot);
+
+int mons_deck(monster* mons);
+bool mons_should_use_deck(monster* mons, int deck_index);
 
 #endif

@@ -14,6 +14,7 @@
 #include "cloud.h"
 #include "coordit.h"
 #include "dbg-scan.h"
+#include "decks.h"
 #include "delay.h"
 #include "directn.h"
 #include "dungeon.h"
@@ -1294,6 +1295,14 @@ static bool _handle_wand(monster* mons, bolt &beem)
         return _handle_rod(mons, beem);
     }
 
+    if (mons->inv[MSLOT_WEAPON] != NON_ITEM
+        && is_deck(mitm[mons->inv[MSLOT_WEAPON]])
+        && mons_should_use_deck(mons, mons->inv[MSLOT_WEAPON]))
+    {
+        mons_evoke_deck(mons, mitm[mons->inv[MSLOT_WEAPON]]);
+        return true;
+    }
+
     if (mons->inv[MSLOT_WAND] == NON_ITEM
         || mitm[mons->inv[MSLOT_WAND]].plus <= 0)
     {
@@ -1463,6 +1472,42 @@ static bool _mons_has_launcher(const monster* mons)
                 return true;
         }
     }
+    return false;
+}
+
+//---------------------------------------------------------------
+//
+// handle_deck
+//
+// Give the monster a chance to use a deck. Returns true if the
+// monster used a deck.
+//
+//---------------------------------------------------------------
+static bool _handle_deck(monster* mons)
+{
+    // Nemelex monsters will use Draw One instead of wielding a deck.
+    if (mons->god == GOD_NEMELEX_XOBEH
+        || mons->piety_level() >= 1)
+        return false;
+
+    int deck = mons_deck(mons);
+    if (deck != NON_ITEM && mons_should_use_deck(mons, deck))
+    {
+        if (mons->inv[MSLOT_ALT_WEAPON] == NON_ITEM
+            && mons->inv[MSLOT_MISCELLANY] == deck)
+        {
+            mons->inv[MSLOT_ALT_WEAPON] = deck;
+            mons->inv[MSLOT_MISCELLANY] = NON_ITEM;
+        }
+        if (mons->inv[MSLOT_ALT_WEAPON] == deck)
+            mons->swap_weapons();
+        if (mons->inv[MSLOT_WEAPON] == deck)
+        {
+            mons_evoke_deck(mons, mitm[deck]);
+            return true;
+        }
+    }
+
     return false;
 }
 
@@ -2054,6 +2099,12 @@ void handle_monster_move(monster* mons)
                     DEBUG_ENERGY_USE("_handle_reaching()");
                     continue;
                 }
+            }
+
+            if (_handle_deck(mons))
+            {
+                DEBUG_ENERGY_USE("_handle_deck()");
+                continue;
             }
 
             if (_handle_throw(mons, beem))

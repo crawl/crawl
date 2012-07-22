@@ -83,7 +83,7 @@
 // The card type and per-card flags are each stored as unsigned bytes,
 // for a maximum of 256 different kinds of cards and 8 bits of flags.
 
-static void _deck_ident(item_def& deck);
+static void _deck_ident(actor* who, item_def& deck);
 
 struct card_with_weights
 {
@@ -200,10 +200,12 @@ const deck_archetype deck_of_punishment[] = {
     END_OF_DECK
 };
 
-static void _check_odd_card(uint8_t flags)
+static void _check_odd_card(actor* who, uint8_t flags)
 {
     if ((flags & CFLAG_ODDITY) && !(flags & CFLAG_SEEN))
-        mpr("This card doesn't seem to belong here.");
+        mprf("%s card doesn't seem to belong %s.",
+             (who->is_player() ? "This" : "That"),
+             (who->is_player() ? "here" : "there"));
 }
 
 static bool _card_forbidden(card_type card)
@@ -443,7 +445,7 @@ static card_type _random_card(const item_def& item, bool &was_oddity)
     return _random_card(item.sub_type, deck_rarity(item), was_oddity);
 }
 
-static card_type _draw_top_card(item_def& deck, bool message,
+static card_type _draw_top_card(actor* who, item_def& deck, bool message,
                                 uint8_t &_flags)
 {
     CrawlHashTable &props = deck.props;
@@ -463,12 +465,24 @@ static card_type _draw_top_card(item_def& deck, bool message,
     {
         const char *verb = (_flags & CFLAG_DEALT) ? "deal" : "draw";
 
-        if (_flags & CFLAG_MARKED)
-            mprf("You %s %s.", verb, card_name(card));
-        else
-            mprf("You %s a card... It is %s.", verb, card_name(card));
+        if (who->is_player())
+        {
+            if (_flags & CFLAG_MARKED)
+                mprf("You %s %s.", verb, card_name(card));
+            else
+                mprf("You %s a card... It is %s.", verb, card_name(card));
+        }
+        else if (you.can_see(who))
+        {
+            const char *monnam = who->as_monster()->name(DESC_THE).c_str();
+            if (_flags & CFLAG_MARKED)
+                mprf("%s %ss %s.", monnam, verb, card_name(card));
+            else
+                mprf("%s %ss a card... It is %s.", monnam, verb,
+                     card_name(card));
+        }
 
-        _check_odd_card(_flags);
+        _check_odd_card(who, _flags);
     }
 
     return card;
@@ -485,7 +499,8 @@ static void _push_top_card(item_def& deck, card_type card,
     flags.push_back((char) _flags);
 }
 
-static void _remember_drawn_card(item_def& deck, card_type card, bool allow_id)
+static void _remember_drawn_card(actor* who, item_def& deck, card_type card,
+                                 bool allow_id)
 {
     ASSERT(is_deck(deck));
     CrawlHashTable &props = deck.props;
@@ -494,7 +509,7 @@ static void _remember_drawn_card(item_def& deck, card_type card, bool allow_id)
 
     // Once you've drawn two cards, you know the deck.
     if (allow_id && (drawn.size() >= 2 || origin_is_god_gift(deck)))
-        _deck_ident(deck);
+        _deck_ident(who, deck);
 }
 
 const std::vector<card_type> get_drawn_cards(const item_def& deck)
@@ -513,12 +528,13 @@ const std::vector<card_type> get_drawn_cards(const item_def& deck)
     return result;
 }
 
-static bool _check_buggy_deck(item_def& deck)
+static bool _check_buggy_deck(actor* who, item_def& deck)
 {
     std::ostream& strm = msg::streams(MSGCH_DIAGNOSTICS);
     if (!is_deck(deck))
     {
-        crawl_state.zero_turns_taken();
+        if (who->is_player())
+             crawl_state.zero_turns_taken();
         strm << "This isn't a deck at all!" << std::endl;
         return true;
     }
@@ -563,11 +579,25 @@ static bool _check_buggy_deck(item_def& deck)
             "and whisks it away."
              << std::endl;
 
-        if (deck.link == you.equip[EQ_WEAPON])
-            unwield_item();
+        if (who->is_player())
+        {
+            if (deck.link == you.equip[EQ_WEAPON])
+                unwield_item();
 
-        dec_inv_item_quantity(deck.link, 1);
-        did_god_conduct(DID_CARDS, 1);
+            dec_inv_item_quantity(deck.link, 1);
+            did_god_conduct(DID_CARDS, 1);
+        }
+        else
+        {
+            monster *mon = who->as_monster();
+            mon_inv_type slot = get_mon_equip_slot(mon, deck);
+            if (slot != NUM_MONSTER_SLOTS)
+            {
+                mon->unequip(deck, slot, 0, true);
+                mon->inv[slot] = NON_ITEM;
+            }
+            destroy_item(deck);
+        }
 
         return true;
     }
@@ -623,11 +653,25 @@ static bool _check_buggy_deck(item_def& deck)
              << "A swarm of software bugs snatches the deck from you "
              "and whisks it away." << std::endl;
 
-        if (deck.link == you.equip[EQ_WEAPON])
-            unwield_item();
+        if (who->is_player())
+        {
+            if (deck.link == you.equip[EQ_WEAPON])
+                unwield_item();
 
-        dec_inv_item_quantity(deck.link, 1);
-        did_god_conduct(DID_CARDS, 1);
+            dec_inv_item_quantity(deck.link, 1);
+            did_god_conduct(DID_CARDS, 1);
+        }
+        else
+        {
+            monster* mons = who->as_monster();
+            mon_inv_type slot = get_mon_equip_slot(mons, deck);
+            if (slot != NUM_MONSTER_SLOTS)
+            {
+                mons->unequip(deck, slot, 0, true);
+                mons->inv[slot] = NON_ITEM;
+            }
+            destroy_item(deck);
+        }
 
         return true;
     }
@@ -731,6 +775,9 @@ static bool _check_buggy_deck(item_def& deck)
     if (!problems)
         return false;
 
+    if (!who->is_player())
+        return true;
+
     you.wield_change = true;
 
     if (!yesno("Problems might not have been completely fixed; "
@@ -777,13 +824,23 @@ bool choose_deck_and_draw()
     return true;
 }
 
-static void _deck_ident(item_def& deck)
+static void _deck_ident(actor* who, item_def& deck)
 {
-    if (in_inventory(deck) && !item_ident(deck, ISFLAG_KNOW_TYPE))
+    if ((who->is_player() && in_inventory(deck)
+         || you.can_see(who)) && !item_ident(deck, ISFLAG_KNOW_TYPE))
     {
         set_ident_flags(deck, ISFLAG_KNOW_TYPE);
-        mprf("This is %s.", deck.name(DESC_A).c_str());
-        you.wield_change = true;
+        if (who->is_player())
+        {
+            mprf("This is %s.", deck.name(DESC_A).c_str());
+            you.wield_change = true;
+        }
+        else
+        {
+            mprf("%s deck is %s.",
+                 apostrophise(who->as_monster()->name(DESC_THE)).c_str(),
+                 deck.name(DESC_A).c_str());
+        }
     }
 }
 
@@ -802,7 +859,7 @@ static void _deck_lose_card(item_def& deck)
     while ((flags & CFLAG_MARKED) && coinflip()
             || (flags & CFLAG_SEEN) && coinflip());
 
-    _draw_top_card(deck, false, flags);
+    _draw_top_card(&you, deck, false, flags);
     deck.plus2++;
 }
 
@@ -818,7 +875,7 @@ bool deck_peek()
     }
     item_def& deck(you.inv[slot]);
 
-    if (_check_buggy_deck(deck))
+    if (_check_buggy_deck(&you, deck))
         return false;
 
     if (cards_in_deck(deck) > 2)
@@ -865,7 +922,7 @@ bool deck_peek()
     _shuffle_deck(deck);
 
     // Peeking identifies the deck.
-    _deck_ident(deck);
+    _deck_ident(&you, deck);
 
     you.wield_change = true;
     return true;
@@ -900,7 +957,7 @@ bool deck_deal()
         return false;
     }
     item_def& deck(you.inv[slot]);
-    if (_check_buggy_deck(deck))
+    if (_check_buggy_deck(&you, deck))
         return false;
 
     CrawlHashTable &props = deck.props;
@@ -918,7 +975,7 @@ bool deck_deal()
     }
 
     const int num_cards = cards_in_deck(deck);
-    _deck_ident(deck);
+    _deck_ident(&you, deck);
 
     if (num_cards == 1)
         mpr("There's only one card left!");
@@ -1009,7 +1066,7 @@ bool deck_stack()
     }
 
     item_def& deck(you.inv[slot]);
-    if (_check_buggy_deck(deck))
+    if (_check_buggy_deck(&you, deck))
         return false;
 
     CrawlHashTable &props = deck.props;
@@ -1020,7 +1077,7 @@ bool deck_stack()
         return false;
     }
 
-    _deck_ident(deck);
+    _deck_ident(&you, deck);
     const int num_cards    = cards_in_deck(deck);
     const int num_to_stack = (num_cards < 5 ? num_cards : 5);
 
@@ -1046,7 +1103,7 @@ bool deck_stack()
     for (int i = 0; i < num_cards; ++i)
     {
         uint8_t   _flags;
-        card_type card = _draw_top_card(deck, false, _flags);
+        card_type card = _draw_top_card(&you, deck, false, _flags);
 
         if (i < num_to_stack)
         {
@@ -1140,7 +1197,7 @@ bool deck_stack()
     for (unsigned int i = 0; i < draws.size(); ++i)
     {
         uint8_t   _flags;
-        _draw_top_card(deck, false, _flags);
+        _draw_top_card(&you, deck, false, _flags);
     }
     for (unsigned int i = 0; i < draws.size(); ++i)
     {
@@ -1148,7 +1205,7 @@ bool deck_stack()
                        flags[flags.size() - 1 - i]);
     }
 
-    _check_buggy_deck(deck);
+    _check_buggy_deck(&you, deck);
     you.wield_change = true;
 
     return true;
@@ -1166,7 +1223,7 @@ bool deck_triple_draw()
 
     item_def& deck(you.inv[slot]);
 
-    if (_check_buggy_deck(deck))
+    if (_check_buggy_deck(&you, deck))
         return false;
 
     const int num_cards = cards_in_deck(deck);
@@ -1174,7 +1231,7 @@ bool deck_triple_draw()
     // We have to identify the deck before removing cards from it.
     // Otherwise, _remember_drawn_card() will implicitly call
     // _deck_ident() when the deck might have no cards left.
-    _deck_ident(deck);
+    _deck_ident(&you, deck);
 
     if (num_cards == 1)
     {
@@ -1190,7 +1247,7 @@ bool deck_triple_draw()
     for (int i = 0; i < num_to_draw; ++i)
     {
         uint8_t _flags;
-        card_type card = _draw_top_card(deck, false, _flags);
+        card_type card = _draw_top_card(&you, deck, false, _flags);
 
         draws.push_back(card);
         flags.push_back(_flags);
@@ -1233,7 +1290,7 @@ bool deck_triple_draw()
     uint8_t num_marked_left = deck.props["num_marked"].get_byte();
     for (int i = 0; i < num_to_draw; ++i)
     {
-        _remember_drawn_card(deck, draws[i], false);
+        _remember_drawn_card(&you, deck, draws[i], false);
         if (flags[i] & CFLAG_MARKED)
         {
             ASSERT(num_marked_left > 0);
@@ -1318,7 +1375,7 @@ static int _xom_check_card(item_def &deck, card_type card,
 
 void evoke_deck(item_def& deck)
 {
-    if (_check_buggy_deck(deck))
+    if (_check_buggy_deck(&you, deck))
         return;
 
     int brownie_points = 0;
@@ -1328,7 +1385,7 @@ void evoke_deck(item_def& deck)
     CrawlHashTable &props = deck.props;
 
     uint8_t flags = 0;
-    card_type card = _draw_top_card(deck, true, flags);
+    card_type card = _draw_top_card(&you, deck, true, flags);
 
     // Oddity cards don't give any information about the deck.
     if (flags & CFLAG_ODDITY)
@@ -1369,7 +1426,7 @@ void evoke_deck(item_def& deck)
         props["num_marked"]--;
 
     deck.plus2++;
-    _remember_drawn_card(deck, card, allow_id);
+    _remember_drawn_card(&you, deck, card, allow_id);
 
     // Get rid of the deck *before* the card effect because a card
     // might cause a wielded deck to be swapped out for something else,
@@ -1418,6 +1475,64 @@ void evoke_deck(item_def& deck)
     // Always wield change, since the number of cards used/left has
     // changed.
     you.wield_change = true;
+}
+
+void mons_evoke_deck(monster* mon, item_def& deck)
+{
+    if (_check_buggy_deck(mon, deck))
+        return;
+
+    bool allow_id = you.can_see(mon) && !item_ident(deck, ISFLAG_KNOW_TYPE);
+
+    const deck_rarity_type rarity = deck_rarity(deck);
+    CrawlHashTable &props = deck.props;
+
+    uint8_t flags = 0;
+    card_type card = _draw_top_card(mon, deck, true, flags);
+
+    // Oddity cards don't give any information about the deck.
+    if (flags & CFLAG_ODDITY)
+        allow_id = false;
+
+    const int amusement   = _xom_check_card(deck, card, flags);
+
+    // Do these before the deck item_def object is gone.
+    if (flags & CFLAG_MARKED)
+        props["num_marked"]--;
+
+    deck.plus2++;
+    _remember_drawn_card(mon, deck, card, allow_id);
+
+    // Get rid of the deck *before* the card effect because a card
+    // might cause a wielded deck to be swapped out for something else,
+    // in which case we don't want an empty deck to go through the
+    // swapping process.
+    const bool deck_gone = (cards_in_deck(deck) == 0);
+    if (deck_gone)
+    {
+        if (you.can_see(mon))
+            canned_msg(MSG_DECK_EXHAUSTED);
+
+        mon_inv_type slot = get_mon_equip_slot(mon, deck);
+        if (slot != NUM_MONSTER_SLOTS)
+        {
+            mon->unequip(deck, slot, 0, true);
+            mon->inv[slot] = NON_ITEM;
+        }
+        destroy_item(deck);
+    }
+
+    card_effect(mon, card, rarity, flags, false);
+
+    if (!(flags & CFLAG_MARKED))
+    {
+        // Could a Xom worshipper ever get a stacked deck in the first
+        // place?
+        xom_is_stimulated(amusement);
+
+        // You can't ID off a marked card
+        allow_id = false;
+    }
 }
 
 static int _get_power_level(int power, deck_rarity_type rarity)
@@ -1946,8 +2061,13 @@ static void _damaging_card_mons(monster* mon, card_type card, int power,
 
     bolt beam;
     beam.source = mon->pos();
-    beam.target = mon->target;
-    mons_cast(mon, beam, spell_cast, true, true, false);
+    if (mon->foe == MHITYOU && mon->can_see(&you))
+        beam.target = you.pos();
+    else if (!invalid_monster_index(mon->foe) && mon->can_see(&menv[mon->foe]))
+        beam.target = menv[mon->foe].pos();
+    else
+        beam.target = mon->target;
+    mons_cast(mon, beam, spell_cast, false, true, false);
 }
 
 static void _elixir_card(actor* who, int power, deck_rarity_type rarity)
@@ -3439,7 +3559,7 @@ void card_effect(actor* who, card_type which_card, deck_rarity_type rarity,
         if (who->is_player())
             cast_dispersal(power/4);
         else
-            ; // GOD TODO: implement
+            canned_msg(MSG_NOTHING_HAPPENS); // GOD TODO: implement
         break;
     case CARD_ELIXIR:           _elixir_card(who, power, rarity); break;
     case CARD_BATTLELUST:       _battle_lust_card(who, power, rarity); break;
@@ -3505,18 +3625,12 @@ void card_effect(actor* who, card_type which_card, deck_rarity_type rarity,
     case CARD_MERCENARY:        _mercenary_card(who, power, rarity); break;
 
     case CARD_VENOM:
-        if (coinflip())
+        // GOD TODO: implement OTR for monsters
+        if (who->is_player() && coinflip())
         {
-            if (who->is_player())
-            {
-                mprf("You have %s %s.", participle, card_name(which_card));
-                your_spells(SPELL_OLGREBS_TOXIC_RADIANCE, random2(power/4),
-                            false);
-            }
-            else
-            {
-                // GOD TODO: implement
-            }
+            mprf("You have %s %s.", participle, card_name(which_card));
+            your_spells(SPELL_OLGREBS_TOXIC_RADIANCE, random2(power/4),
+                        false);
         }
         else if (who->is_player())
             _damaging_card(which_card, power, rarity, flags & CFLAG_DEALT);
@@ -3633,8 +3747,9 @@ card_type top_card(const item_def &deck)
 bool is_deck(const item_def &item)
 {
     return (item.base_type == OBJ_MISCELLANY
-            && item.sub_type >= MISC_FIRST_DECK
-            && item.sub_type <= MISC_LAST_DECK);
+            && (item.sub_type >= MISC_FIRST_DECK
+                && item.sub_type <= MISC_LAST_DECK
+                || item.sub_type == MISC_UNIDENTIFIED_DECK));
 }
 
 bool bad_deck(const item_def &item)
@@ -3794,4 +3909,64 @@ void nemelex_shuffle_decks()
     // was triggered by the presence of any deck anywhere.
     if (you.num_total_gifts[GOD_NEMELEX_XOBEH])
         god_speaks(GOD_NEMELEX_XOBEH, "You hear Nemelex Xobeh chuckle.");
+}
+
+int mons_deck(monster* mons)
+{
+    int wpn  = mons->inv[MSLOT_WEAPON];
+    int alt  = mons->inv[MSLOT_ALT_WEAPON];
+    int misc = mons->inv[MSLOT_MISCELLANY];
+
+    if (wpn != NON_ITEM && is_deck(mitm[wpn]))
+        return wpn;
+    if (alt != NON_ITEM && is_deck(mitm[alt]))
+        return alt;
+    if (misc != NON_ITEM && is_deck(mitm[misc]))
+        return misc;
+
+    return NON_ITEM;
+}
+
+bool mons_should_use_deck(monster* mons, int deck_index)
+{
+    if (deck_index == NON_ITEM)
+        return false;
+
+    item_def deck = mitm[deck_index];
+    if (!is_deck(deck))
+        return false;
+
+    actor *target = NULL;
+    if (mons->foe == MHITYOU && mons->can_see(&you))
+        target = &you;
+    else if (!invalid_monster_index(mons->foe)
+             && mons->can_see(&menv[mons->foe]))
+    {
+        target = &menv[mons->foe];
+    }
+
+    switch(deck.sub_type)
+    {
+    case MISC_DECK_OF_ESCAPE:
+        return (mons->hit_points < mons->max_hit_points / 3
+                || mons_is_fleeing(mons) || mons_is_panicking(mons));
+    case MISC_DECK_OF_WAR:
+    case MISC_DECK_OF_DESTRUCTION:
+        // Don't use destruction in close proximity,
+        // in case of high-power Spark card or other explosions.
+        return (target && distance(mons->pos(), target->pos()) >= 3);
+    case MISC_DECK_OF_WONDERS:
+        return true;
+    case MISC_DECK_OF_DEFENCE:
+    case MISC_DECK_OF_SUMMONING:
+        return (!mons->target.origin() && mons->see_cell(mons->target))
+               && (x_chance_in_y(
+                       6 - 5*(mons->hit_points / mons->max_hit_points), 10)
+                   || mons_is_fleeing(mons) || mons_is_panicking(mons));
+    case MISC_DECK_OF_CHANGES:
+    case MISC_DECK_OF_DUNGEONS:
+    case MISC_DECK_OF_PUNISHMENT:
+    default:
+        return false;
+    }
 }
