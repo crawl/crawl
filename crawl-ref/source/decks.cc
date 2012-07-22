@@ -1031,6 +1031,11 @@ bool mons_deck_deal(monster* mon, item_def& deck, bool check_only)
     if (check_only)
         return true;
 
+    int idx = NON_ITEM;
+    mon_inv_type slot = get_mon_equip_slot(mon, deck);
+    if (slot)
+        idx = mon->inv[slot];
+
     const int num_cards = cards_in_deck(deck);
     _deck_ident(mon, deck);
 
@@ -1055,10 +1060,12 @@ bool mons_deck_deal(monster* mon, item_def& deck, bool check_only)
 
         mons_evoke_deck(mon, deck);
         redraw_screen();
+        if (!mon->alive())
+            break;
     }
 
     // Nemelex doesn't like dealers with inadequate decks.
-    if (num_to_deal < 4)
+    if (num_to_deal < 4 && mon->alive())
     {
         if (you.can_see(mon))
             mprf("Nemelex gives %s another card to finish dealing.",
@@ -1072,12 +1079,16 @@ bool mons_deck_deal(monster* mon, item_def& deck, bool check_only)
         if (you.can_see(mon))
             canned_msg(MSG_DECK_EXHAUSTED);
 
-        mon_inv_type slot = get_mon_equip_slot(mon, deck);
-        if (slot != NUM_MONSTER_SLOTS)
+        if (mon->alive())
         {
-            mon->unequip(deck, slot, 0, true);
-            mon->inv[slot] = NON_ITEM;
+            if (slot != NUM_MONSTER_SLOTS)
+            {
+                mon->unequip(deck, slot, 0, true);
+                mon->inv[slot] = NON_ITEM;
+            }
         }
+        else if (idx != NON_ITEM)
+            unlink_item(idx);
         destroy_item(deck);
     }
 
@@ -1554,6 +1565,11 @@ void mons_evoke_deck(monster* mon, item_def& deck)
     if (_check_buggy_deck(mon, deck))
         return;
 
+    int idx = NON_ITEM;
+    mon_inv_type slot = get_mon_equip_slot(mon, deck);
+    if (slot)
+        idx = mon->inv[slot];
+
     bool allow_id = you.can_see(mon) && !item_ident(deck, ISFLAG_KNOW_TYPE);
 
     const deck_rarity_type rarity = deck_rarity(deck);
@@ -1585,12 +1601,16 @@ void mons_evoke_deck(monster* mon, item_def& deck)
         if (you.can_see(mon))
             canned_msg(MSG_DECK_EXHAUSTED);
 
-        mon_inv_type slot = get_mon_equip_slot(mon, deck);
-        if (slot != NUM_MONSTER_SLOTS)
+        if (mon->alive())
         {
-            mon->unequip(deck, slot, 0, true);
-            mon->inv[slot] = NON_ITEM;
+            if (slot != NUM_MONSTER_SLOTS)
+            {
+                mon->unequip(deck, slot, 0, true);
+                mon->inv[slot] = NON_ITEM;
+            }
         }
+        else if (idx != NON_ITEM)
+            unlink_item(idx);
         destroy_item(deck);
     }
 
