@@ -94,6 +94,7 @@ Monsters
   saner.
 * A "damageless constriction" effect has been implemented for certain
   monsters, particularly mimics.
+* The Royal Jelly is able to regenerate.
 
 Spells
 ------
@@ -102,6 +103,7 @@ Spells
   point blank range.
 * Death Channel is level 6.
 * Simulacrum works on beef jerkies, sausages and meat rations.
+* Removed: Projected Noise.
 
 Items
 -----
@@ -196,6 +198,11 @@ Wizmode
 * &P to rebuild a level based on a vault.
 * &^M to memorise a spell.
 * &# to (partially) load a character dump file.
+
+Technical
+---------
+* Local tiles can display non-ASCII characters, in default builds only
+  Latin, Greek and Cyrillic.
 
 Stone Soup 0.10.3 (20120614)
 ----------------------------
