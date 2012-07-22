@@ -1506,11 +1506,11 @@ bool is_memorised(spell_type spell)
     return false;
 }
 
-static void _get_spell_list(std::vector<spell_type> &spells, int level,
-                            unsigned int disc1, unsigned int disc2,
-                            god_type god, bool avoid_uncastable,
-                            int &god_discard, int &uncastable_discard,
-                            bool avoid_known = false)
+void get_spell_list(std::vector<spell_type> &spells, int level,
+                    unsigned int disc1, unsigned int disc2,
+                    god_type god, bool avoid_uncastable,
+                    int &god_discard, int &uncastable_discard,
+                    bool avoid_known)
 {
     // For randarts handed out by Sif Muna, spells contained in the
     // Vehumet/Kiku specials are fair game.
@@ -1604,9 +1604,9 @@ static void _get_spell_list(std::vector<spell_type> &spells,
                             int &god_discard, int &uncastable_discard,
                             bool avoid_known = false)
 {
-    _get_spell_list(spells, -1, disc1, disc2,
-                    god, avoid_uncastable, god_discard, uncastable_discard,
-                    avoid_known);
+    get_spell_list(spells, -1, disc1, disc2,
+                   god, avoid_uncastable, god_discard, uncastable_discard,
+                   avoid_known);
 }
 
 static void _get_spell_list(std::vector<spell_type> &spells, int level,
@@ -1614,9 +1614,9 @@ static void _get_spell_list(std::vector<spell_type> &spells, int level,
                             int &god_discard, int &uncastable_discard,
                             bool avoid_known = false)
 {
-    _get_spell_list(spells, level, SPTYP_NONE, SPTYP_NONE,
-                    god, avoid_uncastable, god_discard, uncastable_discard,
-                    avoid_known);
+    get_spell_list(spells, level, SPTYP_NONE, SPTYP_NONE,
+                   god, avoid_uncastable, god_discard, uncastable_discard,
+                   avoid_known);
 }
 
 static void _make_book_randart(item_def &book)

@@ -29,6 +29,7 @@
 #include "misc.h"
 #include "mislead.h"
 #include "mon-behv.h"
+#include "mon-cast.h"
 #include "mon-death.h"
 #include "mon-gear.h"
 #include "mon-iter.h"
@@ -40,7 +41,9 @@
 #include "random.h"
 #include "religion.h"
 #include "shopping.h"
+#include "spl-book.h"
 #include "spl-damage.h"
+#include "spl-util.h"
 #include "sprint.h"
 #include "stairs.h"
 #include "state.h"
@@ -1280,6 +1283,246 @@ static void _place_twister_clouds(monster *mon)
     tornado_damage(mon, -10);
 }
 
+// Select spells from Kiku's book gifts.
+static void _init_mon_kiku_spells(monster* mon)
+{
+    if (mon->piety_level() < 1)
+        return;
+
+    // First randbook.
+    mon->flags |= MF_ACTUAL_SPELLS;
+
+    if (mon->spells[0] == SPELL_NO_SPELL || coinflip())
+        mon->spells[0] = SPELL_PAIN;
+    if (mon->spells[2] == SPELL_NO_SPELL || coinflip())
+    {
+        if (mon->holiness() == MH_UNDEAD
+            || mons_species(mon->type) == MONS_DEEP_DWARF
+            || coinflip())
+            mon->spells[2] = SPELL_VAMPIRIC_DRAINING;
+        else
+            mon->spells[2] = SPELL_REGENERATION;
+    }
+    if (mon->spells[3] == SPELL_NO_SPELL || coinflip())
+        mon->spells[3] = SPELL_CORPSE_ROT;
+    else if (mon->spells[4] == SPELL_NO_SPELL || coinflip())
+        mon->spells[4] = SPELL_CORPSE_ROT;
+
+    if (mon->piety_level() < 3)
+        return;
+
+    // Second randbook.
+    if (mon->spells[0] == SPELL_NO_SPELL
+        || mon->spells[0] == SPELL_PAIN
+        || coinflip())
+        mon->spells[0] = SPELL_AGONY;
+    if (mon->spells[1] == SPELL_NO_SPELL || coinflip())
+        mon->spells[1] = SPELL_ANIMATE_DEAD;
+    if (mon->spells[4] == SPELL_NO_SPELL || coinflip())
+        mon->spells[4] = coinflip() ? SPELL_BOLT_OF_DRAINING
+                                     : SPELL_SIMULACRUM;
+    else if (mon->spells[3] == SPELL_NO_SPELL || coinflip())
+        mon->spells[3] = coinflip() ? SPELL_BOLT_OF_DRAINING
+                                     : SPELL_SIMULACRUM;
+
+    if (mon->piety_level() < 6)
+        return;
+
+    // Necronomicon.
+    if (mon->spells[3] == SPELL_NO_SPELL || coinflip())
+        mon->spells[3] = SPELL_HAUNT;
+    else if (mon->spells[4] == SPELL_NO_SPELL || coinflip())
+        mon->spells[4] = SPELL_HAUNT;
+    if (mon->spells[5] == SPELL_NO_SPELL || coinflip())
+        mon->spells[5] = SPELL_DEATHS_DOOR;
+}
+
+static void _assign_mons_spells_from_list(monster* mon,
+                                          std::vector<spell_type> spells,
+                                         std::vector<int> spell_weight)
+{
+    if (spells.size() == 0)
+        return; // Too bad!
+
+    mon->flags |= MF_ACTUAL_SPELLS;
+
+    // Assign regular spells first.
+    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS - 1; i++)
+    {
+        if (spells.size() == 0)
+            break;
+
+        if (mon->spells[i] != SPELL_NO_SPELL && coinflip())
+            continue;
+
+        int idx = choose_random_weighted(spell_weight.begin(),
+                                         spell_weight.end());
+        spell_type spell = spells[idx];
+        spells.erase(spells.begin() + idx);
+        spell_weight.erase(spell_weight.begin() + idx);
+
+        mon->spells[i] = spell;
+    }
+
+    // Then give them an escape spell.
+    if (spells.size() > 0
+        && (mon->spells[5] == SPELL_NO_SPELL || coinflip()))
+    {
+        int count = 0;
+        for (std::vector<spell_type>::iterator it = spells.begin();
+             it != spells.end(); it++)
+        {
+            if (testbits(get_spell_flags(*it), SPFLAG_ESCAPE
+                && !random2(++count)))
+                mon->spells[5] = *it;
+        }
+    }
+}
+
+static void _init_mon_sif_spells(monster* mon)
+{
+    // Minimum threshold for book gifts.
+    if (mon->get_piety() < 160)
+        return;
+
+    // Find some good spell schools for the monster to choose from.
+    int spell_counts[SPTYP_LAST_EXPONENT + 1];
+    int school = 0, school2 = 0;
+    int max    = 0;
+    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+    {
+        spell_type spell = mon->spells[i];
+        if (spell == SPELL_NO_SPELL)
+            continue;
+
+        for (int exp = 0; exp <= SPTYP_LAST_EXPONENT; exp++)
+        {
+            if (spell_typematch(spell, (1 << exp)))
+                spell_counts[exp]++;
+        }
+    }
+    for (int i = 0; i <= SPTYP_LAST_EXPONENT; i++)
+    {
+        if (spell_counts[i] > max)
+        {
+            school2 = school;
+            school = (1 << i);
+            max = spell_counts[i];
+        }
+    }
+
+    // If they're not a spellcaster, pick a school at random.
+    if (school == 0)
+    {
+        do
+        {
+            school = 1 << random2(SPTYP_LAST_EXPONENT + 1);
+        }
+        while (school == SPTYP_DIVINATION);
+    }
+    if (school2 == 0)
+    {
+        do
+        {
+            school2 = 1 << random2(SPTYP_LAST_EXPONENT + 1);
+        }
+        while (school2 == school
+               || disciplines_conflict(school, school2)
+               || school2 == SPTYP_DIVINATION);
+    }
+
+    // Now, find some spells to give them!
+    std::vector<spell_type> spells;
+    std::vector<int>        spell_weight;
+    int junk;
+
+    get_spell_list(spells, -1, school, school2, GOD_SIF_MUNA, false,
+                   junk, junk, false);
+
+    bolt temp;
+    std::vector<spell_type>::iterator it = spells.begin();
+    std::vector<spell_type>::iterator next = it;
+    for(; it != spells.end(); it = next)
+    {
+        next = it;
+        it = next++;
+        // Discard too-high-level spells and non-monster spells.
+        if ((spell_difficulty(*it) > (mon->hit_dice * 2 / 5) + 1)
+            || !is_valid_mon_spell(*it))
+        {
+            next = spells.erase(it);
+        }
+        else
+        {
+            // Yes, weighting towards rarer spells is intentional.
+            // It makes fighting Sif enemies more interesting!
+            int weight = (30 - spell_rarity(*it))
+                         * spell_difficulty(*it)
+                         * spell_difficulty(*it);
+            spell_weight.push_back(weight);
+        }
+    }
+
+    ASSERT(spells.size() == spell_weight.size());
+
+    _assign_mons_spells_from_list(mon, spells, spell_weight);
+}
+
+static void _init_mon_vehumet_spells(monster* mon)
+{
+    // Minimum threshold for book gifts.
+    if (mon->get_piety() < 160)
+        return;
+
+    // Check what types of books to give.
+    int summ = 0, conj = 0;
+    int books[3] = {0, 0, 0};
+    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+    {
+        spell_type spell = mon->spells[i];
+        if (spell == SPELL_NO_SPELL)
+            continue;
+
+        if (spell_typematch(spell, SPTYP_SUMMONING))
+            summ++;
+        if (spell_typematch(spell, SPTYP_CONJURATION))
+            conj++;
+    }
+
+    if (summ > conj || (summ == conj && coinflip()))
+    {
+        books[0] = BOOK_CALLINGS;
+        books[1] = BOOK_SUMMONINGS;
+        books[2] = BOOK_GRAND_GRIMOIRE;
+    }
+    else
+    {
+        books[0] = BOOK_CONJURATIONS;
+        books[1] = BOOK_POWER;
+        books[2] = BOOK_ANNIHILATIONS;
+    }
+
+    // Get lists from books to populate spell list.
+    std::vector<spell_type> spells;
+    std::vector<int> spell_weights;
+    for (int i = 0; i < 2; i++)
+        for (int j = 0; j < SPELLBOOK_SIZE; j++)
+        {
+            spell_type spell = which_spell_in_book(books[i], j);
+
+            if (spell == SPELL_NO_SPELL
+                || !is_valid_mon_spell(spell)
+                || spell_difficulty(spell) > (mon->hit_dice * 2 / 5) + 1)
+                continue;
+
+            spells.push_back(spell);
+            spell_weights.push_back(spell_difficulty(spell)
+                                    * spell_difficulty(spell));
+        }
+
+    _assign_mons_spells_from_list(mon, spells, spell_weights);
+}
+
 static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
                                    bool force_pos, bool dont_place)
 {
@@ -1398,7 +1641,8 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     if (mg.god != GOD_NO_GOD)
     {
         mon->god    = mg.god;
-        mon->flags |= MF_GOD_GIFT;
+        if (!Generating_Level)
+            mon->flags |= MF_GOD_GIFT;
     }
     // Not a god gift, give priestly monsters a god.
     else if (mons_class_flag(mg.cls, M_PRIEST))
@@ -1486,7 +1730,8 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     }
 
     // Holy monsters need their halo!
-    if (mon->holiness() == MH_HOLY)
+    if (mon->holiness() == MH_HOLY
+        || mon->god == GOD_SHINING_ONE)
         invalidate_agrid(true);
     if (mg.cls == MONS_SILENT_SPECTRE || mg.cls == MONS_PROFANE_SERVITOR
         || mg.cls == MONS_MOTH_OF_SUPPRESSION)
@@ -1517,9 +1762,15 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     // (for the benefit of Chei-worshipping monsters).
     mon->calc_speed();
 
-    // ... and calc the halo for TSO worshippers.
-    if (mon->god == GOD_SHINING_ONE)
-        invalidate_agrid(true);
+    // Also account for spells "gifted" to monsters.
+    if (mon->god == GOD_KIKUBAAQUDGHA)
+        _init_mon_kiku_spells(mon);
+
+    if (mon->god == GOD_SIF_MUNA)
+        _init_mon_sif_spells(mon);
+
+    if (mon->god == GOD_VEHUMET)
+        _init_mon_vehumet_spells(mon);
 
     if (mg.hp != 0)
     {

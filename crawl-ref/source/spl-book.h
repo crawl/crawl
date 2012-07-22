@@ -48,6 +48,12 @@ spell_type which_spell_in_book(int sbook_type, int spl);
 int rod_spell(int zap_device_2);
 bool is_memorised(spell_type spell);
 
+void get_spell_list(std::vector<spell_type> &spells, int level,
+                    unsigned int disc1, unsigned int disc2,
+                    god_type god, bool avoid_uncastable,
+                    int &god_discard, int &uncastable_discard,
+                    bool avoid_known = false);
+
 bool you_cannot_memorise(spell_type spell);
 bool you_cannot_memorise(spell_type spell, bool &undead);
 bool has_spells_to_memorise(bool silent = true,
