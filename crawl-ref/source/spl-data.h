@@ -3212,6 +3212,32 @@ struct spell_desc
 },
 
 {
+    SPELL_DRAW_ONE, "Deal One",
+     SPTYP_CHARMS,
+     SPFLAG_MONSTER,
+     2,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_DEAL_FOUR, "Deal Four",
+     SPTYP_CHARMS,
+     SPFLAG_MONSTER,
+     5,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,

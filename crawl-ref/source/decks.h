@@ -126,6 +126,7 @@ void mons_evoke_deck(monster* mon, item_def& deck);
 bool deck_triple_draw();
 bool deck_peek();
 bool deck_deal();
+bool mons_deck_deal(monster* mon, item_def& deck, bool check_only = false);
 bool deck_stack();
 bool choose_deck_and_draw();
 void nemelex_shuffle_decks();
@@ -133,7 +134,7 @@ void shuffle_all_decks_on_level();
 
 void card_effect(actor *who, card_type which_card, deck_rarity_type rarity,
                  uint8_t card_flags = 0, bool tell_card = true);
-void draw_from_deck_of_punishment(bool deal = false);
+void draw_from_deck_of_punishment(actor* who, bool deal = false);
 
 bool      top_card_is_known(const item_def &item);
 card_type top_card(const item_def &item);
@@ -157,7 +158,7 @@ const std::vector<card_type> get_drawn_cards(const item_def& deck);
 // see and mark the first card with a scroll.
 bool deck_identify_first(int slot);
 
-int mons_deck(monster* mons);
-bool mons_should_use_deck(monster* mons, int deck_index);
+int mons_deck(const monster* mons);
+bool mons_should_use_deck(const monster* mons, int deck_index);
 
 #endif

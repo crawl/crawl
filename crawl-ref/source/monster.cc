@@ -3098,6 +3098,7 @@ bool monster::has_spells(bool check_god) const
             || god == GOD_KIKUBAAQUDGHA
             || god == GOD_LUGONU
             || god == GOD_MAKHLEB
+            || god == GOD_NEMELEX_XOBEH
             || god == GOD_OKAWARU
             || god == GOD_SHINING_ONE
             || god == GOD_TROG

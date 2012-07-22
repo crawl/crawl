@@ -1001,7 +1001,7 @@ bool deck_deal()
     if (num_to_deal < 4)
     {
         mpr("Nemelex gives you another card to finish dealing.");
-        draw_from_deck_of_punishment(true);
+        draw_from_deck_of_punishment(&you, true);
     }
 
     // If the deck had cards left, exhaust it.
@@ -1012,6 +1012,73 @@ bool deck_deal()
             unwield_item();
 
         dec_inv_item_quantity(slot, 1);
+    }
+
+    return true;
+}
+
+bool mons_deck_deal(monster* mon, item_def& deck, bool check_only)
+{
+    if (_check_buggy_deck(mon, deck))
+        return false;
+
+    CrawlHashTable &props = deck.props;
+    if (props["num_marked"].get_byte() > 0)
+        return false;
+    if (props["stacked"].get_bool())
+        return false;
+
+    if (check_only)
+        return true;
+
+    const int num_cards = cards_in_deck(deck);
+    _deck_ident(mon, deck);
+
+    if (you.can_see(mon))
+    {
+        if (num_cards == 1)
+            mpr("There's only one card left!");
+        else if (num_cards < 4)
+            mprf("The deck only has %d cards.", num_cards);
+    }
+
+    const int num_to_deal = (num_cards < 4 ? num_cards : 4);
+
+    for (int i = 0; i < num_to_deal; ++i)
+    {
+        int last = cards_in_deck(deck) - 1;
+        uint8_t flags;
+
+        // Flag the card as dealt (changes messages and gives no piety).
+        card_type card = get_card_and_flags(deck, last, flags);
+        _set_card_and_flags(deck, last, card, flags | CFLAG_DEALT);
+
+        mons_evoke_deck(mon, deck);
+        redraw_screen();
+    }
+
+    // Nemelex doesn't like dealers with inadequate decks.
+    if (num_to_deal < 4)
+    {
+        if (you.can_see(mon))
+            mprf("Nemelex gives %s another card to finish dealing.",
+                 mon->name(DESC_THE).c_str());
+        draw_from_deck_of_punishment(mon, true);
+    }
+
+    // If the deck had cards left, exhaust it.
+    if (deck.quantity > 0)
+    {
+        if (you.can_see(mon))
+            canned_msg(MSG_DECK_EXHAUSTED);
+
+        mon_inv_type slot = get_mon_equip_slot(mon, deck);
+        if (slot != NUM_MONSTER_SLOTS)
+        {
+            mon->unequip(deck, slot, 0, true);
+            mon->inv[slot] = NON_ITEM;
+        }
+        destroy_item(deck);
     }
 
     return true;
@@ -1322,14 +1389,19 @@ bool deck_triple_draw()
 
 // This is Nemelex retribution.  If deal is true, use the word "deal"
 // rather than "draw" (for the Deal Four out-of-cards situation).
-void draw_from_deck_of_punishment(bool deal)
+void draw_from_deck_of_punishment(actor* who, bool deal)
 {
     bool oddity;
     card_type card = _random_card(MISC_DECK_OF_PUNISHMENT, DECK_RARITY_COMMON,
                                   oddity);
 
-    mprf("You %s a card...", deal ? "deal" : "draw");
-    card_effect(&you, card, DECK_RARITY_COMMON, deal ? CFLAG_DEALT : 0);
+    if (who->is_player())
+        mprf("You %s a card...", deal ? "deal" : "draw");
+    else if (you.can_see(who))
+        mprf("%s %s a card...",
+             who->as_monster()->name(DESC_THE).c_str(),
+             deal ? "deals" : "draws");
+    card_effect(who, card, DECK_RARITY_COMMON, deal ? CFLAG_DEALT : 0);
 }
 
 static int _xom_check_card(item_def &deck, card_type card,
@@ -3911,7 +3983,7 @@ void nemelex_shuffle_decks()
         god_speaks(GOD_NEMELEX_XOBEH, "You hear Nemelex Xobeh chuckle.");
 }
 
-int mons_deck(monster* mons)
+int mons_deck(const monster* mons)
 {
     int wpn  = mons->inv[MSLOT_WEAPON];
     int alt  = mons->inv[MSLOT_ALT_WEAPON];
@@ -3927,7 +3999,7 @@ int mons_deck(monster* mons)
     return NON_ITEM;
 }
 
-bool mons_should_use_deck(monster* mons, int deck_index)
+bool mons_should_use_deck(const monster* mons, int deck_index)
 {
     if (deck_index == NON_ITEM)
         return false;

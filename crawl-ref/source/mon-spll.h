@@ -1868,6 +1868,17 @@
       }
     },
 
+    {  MST_BK_NEMELEX,
+      {
+       SPELL_DRAW_ONE,
+       SPELL_DRAW_ONE,
+       SPELL_DRAW_ONE,
+       SPELL_DRAW_ONE,
+       SPELL_DRAW_ONE,
+       SPELL_DEAL_FOUR,
+      }
+    },
+
     {  MST_TEST_SPAWNER,
       {
        SPELL_SHADOW_CREATURES,

@@ -921,7 +921,7 @@ static bool _nemelex_retribution()
 
     // like Xom, this might actually help the player -- bwr
     simple_god_message(" makes you draw from the Deck of Punishment.", god);
-    draw_from_deck_of_punishment();
+    draw_from_deck_of_punishment(&you);
     return true;
 }
 

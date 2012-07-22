@@ -14,6 +14,7 @@
 #include "coordit.h"
 #include "delay.h"
 #include "database.h"
+#include "decks.h"
 #include "dgn-overview.h"
 #include "effects.h"
 #include "env.h"
@@ -1188,6 +1189,8 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_VITALISATION:
     case SPELL_IMPRISON:
     case SPELL_SANCTUARY:
+    case SPELL_DRAW_ONE:
+    case SPELL_DEAL_FOUR:
         return true;
     default:
         if (check_validity)
@@ -1743,6 +1746,23 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
             ret = true;
         break;
 
+    case SPELL_DRAW_ONE:
+    {
+        if (!mons_should_use_deck(mon, mons_deck(mon)))
+            ret = true;
+        break;
+    }
+
+    case SPELL_DEAL_FOUR:
+    {
+        int deck = mons_deck(mon);
+        if (deck == NON_ITEM
+            || !mons_should_use_deck(mon, deck)
+            || !mons_deck_deal((monster *)mon, mitm[deck], true))
+            ret = true;
+        break;
+    }
+
     case SPELL_NO_SPELL:
         ret = true;
         break;
@@ -1833,6 +1853,7 @@ static bool _ms_low_hitpoint_cast(const monster* mon, spell_type monspell)
     case SPELL_DEPART_ABYSS:
     case SPELL_ENTER_ABYSS:
     case SPELL_SANCTUARY:
+    case SPELL_DEAL_FOUR:
         return true;
     case SPELL_VAMPIRIC_DRAINING:
         return !targ_sanct && targ_adj && !targ_friendly && !targ_undead;
@@ -1916,6 +1937,7 @@ static monster_spells _get_mons_god_spells(god_type god, bool *found)
     static monster mon_kiku;
     static monster mon_lugonu;
     static monster mon_makhleb;
+    static monster mon_nemelex;
     static monster mon_okawaru;
     static monster mon_tso;
     static monster mon_trog;
@@ -1928,6 +1950,7 @@ static monster_spells _get_mons_god_spells(god_type god, bool *found)
         && god != GOD_KIKUBAAQUDGHA
         && god != GOD_LUGONU
         && god != GOD_MAKHLEB
+        && god != GOD_NEMELEX_XOBEH
         && god != GOD_OKAWARU
         && god != GOD_SHINING_ONE
         && god != GOD_TROG
@@ -1944,6 +1967,7 @@ static monster_spells _get_mons_god_spells(god_type god, bool *found)
         mons_load_spells(&mon_kiku,    MST_BK_KIKUBAAQUDGHA);
         mons_load_spells(&mon_lugonu,  MST_BK_LUGONU);
         mons_load_spells(&mon_makhleb, MST_BK_MAKHLEB);
+        mons_load_spells(&mon_nemelex, MST_BK_NEMELEX);
         mons_load_spells(&mon_okawaru, MST_BK_OKAWARU);
         mons_load_spells(&mon_tso,     MST_BK_SHINING_ONE);
         mons_load_spells(&mon_trog,    MST_BK_TROG);
@@ -1956,7 +1980,7 @@ static monster_spells _get_mons_god_spells(god_type god, bool *found)
                      : (god == GOD_CHEIBRIADOS)   ? &mon_chei
                      : (god == GOD_KIKUBAAQUDGHA) ? &mon_kiku
                      : (god == GOD_LUGONU)        ? &mon_lugonu
-                     : (god == GOD_MAKHLEB)       ? &mon_makhleb
+                     : (god == GOD_NEMELEX_XOBEH) ? &mon_nemelex
                      : (god == GOD_OKAWARU)       ? &mon_okawaru
                      : (god == GOD_SHINING_ONE)   ? &mon_tso
                      : (god == GOD_TROG)          ? &mon_trog
@@ -3485,7 +3509,9 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         || spell_cast == SPELL_MIRROR_DAMAGE
         || spell_cast == SPELL_DRAIN_LIFE
         || spell_cast == SPELL_TROGS_HAND
-        || spell_cast == SPELL_LEDAS_LIQUEFACTION)
+        || spell_cast == SPELL_LEDAS_LIQUEFACTION
+        || spell_cast == SPELL_DRAW_ONE
+        || spell_cast == SPELL_DEAL_FOUR)
     {
         do_noise = false;       // Spell itself does the messaging.
     }
@@ -4865,6 +4891,14 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
             create_sanctuary(mons, mons->pos(),
                              7 + mons->skill_rdiv(SK_INVOCATIONS) / 2);
         }
+        return;
+    case SPELL_DRAW_ONE:
+        ASSERT(mons_deck(mons) != NON_ITEM);
+        mons_evoke_deck(mons, mitm[mons_deck(mons)]);
+        return;
+    case SPELL_DEAL_FOUR:
+        ASSERT(mons_deck(mons) != NON_ITEM);
+        mons_deck_deal(mons, mitm[mons_deck(mons)]);
         return;
     }
 

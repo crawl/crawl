@@ -3272,6 +3272,9 @@ enum spell_type
     SPELL_IMPRISON,
     SPELL_SANCTUARY,
 
+    SPELL_DRAW_ONE,
+    SPELL_DEAL_FOUR,
+
     NUM_SPELLS
 };
 
