@@ -1219,7 +1219,6 @@ bool spell_no_hostile_in_range(spell_type spell, int minRange)
     {
     // These don't target monsters.
     case SPELL_APPORTATION:
-    case SPELL_PROJECTED_NOISE:
     case SPELL_CONJURE_FLAME:
     case SPELL_DIG:
     case SPELL_PASSWALL:

@@ -1601,8 +1601,11 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_CONTROLLED_BLINK:
         return cast_controlled_blink(powc, fail);
 
+#if TAG_MAJOR_VERSION == 33
     case SPELL_PROJECTED_NOISE:
-        return project_noise(fail);
+        mpr("Sorry, this spell is gone!");
+        return SPRET_ABORT;
+#endif
 
     case SPELL_CONJURE_FLAME:
         return conjure_flame(powc, beam.target, fail);
@@ -1779,7 +1782,6 @@ std::string spell_noise_string(spell_type spell)
         break;
 
     case SPELL_SHATTER:
-    case SPELL_PROJECTED_NOISE:
         effect_noise = 30;
         break;
 
