@@ -1169,6 +1169,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_DEATHS_DOOR:
     case SPELL_OZOCUBUS_ARMOUR:
     case SPELL_OZOCUBUS_REFRIGERATION:
+    case SPELL_OLGREBS_TOXIC_RADIANCE:
     case SPELL_HEROISM:
     case SPELL_FINESSE:
     case SPELL_LESSER_SERVANT:
@@ -2523,6 +2524,13 @@ try_again:
             if (!_mons_ozocubus_refrigeration(mons, false))
                 return false;
         }
+        // Try to use Olgreb's Toxic Radiance; if nothing happened,
+        // pretend we didn't cast it.
+        else if (spell_cast == SPELL_OLGREBS_TOXIC_RADIANCE)
+        {
+            if (!mons_olgrebs_toxic_radiance(mons, false))
+                return false;
+        }
         else if (spell_cast == SPELL_BEND_TIME)
         {
             if (!_mons_bend_time(mons, false))
@@ -3285,6 +3293,107 @@ static bool _mons_ozocubus_refrigeration(monster* mons, bool actual)
     return success;
 }
 
+bool mons_olgrebs_toxic_radiance(monster* mons, bool actual)
+{
+    if (actual)
+    {
+        if (you.can_see(mons))
+        {
+            simple_monster_message(mons, " radiates a sickly green light!");
+        }
+        else
+            mpr("The air is filled with a sickly green light!");
+
+        flash_view_delay(GREEN, 300);
+    }
+
+    bool success = false;
+    bool sanct = false;
+
+    const int pow = mons->hit_dice;
+    const dice_def dam_dice(3, 5 + pow / 2);
+    counted_monster_list affected_monsters;
+
+    for (actor_iterator ai(mons->get_los()); ai; ++ai)
+    {
+        if (ai->is_player())
+        {
+            if (you.duration[DUR_INVIS])
+                mpr("The light passes straight through your body.");
+            else
+            {
+                if (actual)
+                {
+                    int base_amount = 1 + random2(pow / 20);
+                    int poison_amount =
+                        poison_player(base_amount, mons->name(DESC_A, true),
+                                      "toxic radiance");
+                    if (poison_amount)
+                    {
+                        mpr("You feel rather sick.");
+                        if (is_sanctuary(you.pos()))
+                            sanct = true;
+                    }
+                }
+                success = true;
+            }
+        }
+        else
+        {
+            monster* m = ai->as_monster();
+
+            if (m->res_poison() >= 1
+                || m->submerged())
+                continue;
+
+            if (!m->has_ench(ENCH_INVIS))
+            {
+                success = true;
+                if (actual)
+                {
+                    int amount = (m == mons) ? 2 : 1 + random2(pow / 20);
+                    if (poison_monster(m, mons, amount, false, false))
+                    {
+                        if (is_sanctuary(m->pos()))
+                            sanct = true;
+                        if (you.can_see(m))
+                            affected_monsters.add(m);
+                    }
+                }
+            }
+            else if (actual && you.can_see(m))
+                mprf("The light passes through %s.",
+                     m->name(DESC_THE).c_str());
+
+        }
+    }
+
+    if (actual && !affected_monsters.empty())
+    {
+        const std::string message =
+            make_stringf("%s %s poisoned.",
+                         affected_monsters.describe().c_str(),
+                         affected_monsters.count() == 1? "is" : "are");
+        if (strwidth(message) < get_number_of_cols() - 2)
+            mpr(message.c_str());
+        else
+        {
+            // Exclamation mark to suggest that a lot of creatures were
+            // affected.
+            mpr("Nearby monsters are poisoned!");
+        }
+    }
+
+    if (actual && success
+        && (sanct || (is_sanctuary(mons->pos())))
+        && mons_friendly_to_sanctuary_owner(mons))
+    {
+        remove_sanctuary(true);
+    }
+
+    return success;
+}
+
 static bool _mons_bend_time(monster* mons, bool actual)
 {
     if (actual)
@@ -3395,6 +3504,7 @@ static bool _mon_spell_bail_out_early(monster* mons, spell_type spell_cast)
     case SPELL_SYMBOL_OF_TORMENT:
     case SPELL_HOLY_WORD:
     case SPELL_OZOCUBUS_REFRIGERATION:
+    case SPELL_OLGREBS_TOXIC_RADIANCE:
     case SPELL_BEND_TIME:
     case SPELL_SLOUCH:
     case SPELL_CORPSE_TORMENT:
@@ -4086,6 +4196,10 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_OZOCUBUS_REFRIGERATION:
         _mons_ozocubus_refrigeration(mons);
+        return;
+
+    case SPELL_OLGREBS_TOXIC_RADIANCE:
+        mons_olgrebs_toxic_radiance(mons);
         return;
 
     case SPELL_BEND_TIME:

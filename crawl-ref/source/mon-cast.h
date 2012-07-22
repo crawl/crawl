@@ -14,6 +14,8 @@ struct bolt;
 void init_mons_spells();
 bool is_valid_mon_spell(spell_type spell);
 
+bool mons_olgrebs_toxic_radiance(monster *mons, bool actual = true);
+
 int mons_cause_fear(monster* mons, bool actual = true, int set_pow = 0);
 
 int monster_abjuration(const monster* caster, bool actual);

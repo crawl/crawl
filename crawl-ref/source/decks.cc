@@ -3717,12 +3717,16 @@ void card_effect(actor* who, card_type which_card, deck_rarity_type rarity,
     case CARD_MERCENARY:        _mercenary_card(who, power, rarity); break;
 
     case CARD_VENOM:
-        // GOD TODO: implement OTR for monsters
-        if (who->is_player() && coinflip())
+        if (coinflip())
         {
-            mprf("You have %s %s.", participle, card_name(which_card));
-            your_spells(SPELL_OLGREBS_TOXIC_RADIANCE, random2(power/4),
-                        false);
+            if (who->is_player())
+            {
+                mprf("You have %s %s.", participle, card_name(which_card));
+                your_spells(SPELL_OLGREBS_TOXIC_RADIANCE, random2(power/4),
+                            false);
+            }
+            else
+                mons_olgrebs_toxic_radiance(who->as_monster(), true);
         }
         else if (who->is_player())
             _damaging_card(which_card, power, rarity, flags & CFLAG_DEALT);
