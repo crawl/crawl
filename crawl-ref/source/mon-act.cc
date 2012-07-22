@@ -1753,7 +1753,8 @@ void handle_monster_move(monster* mons)
 
     // Memory is decremented here for a reason -- we only want it
     // decrementing once per monster "move".
-    if (mons->foe_memory > 0 && !you.penance[GOD_ASHENZARI])
+    if (mons->foe_memory > 0 && !you.penance[GOD_ASHENZARI]
+        && mons->god != GOD_ASHENZARI)
         mons->foe_memory--;
 
     // Otherwise there are potential problems with summonings.

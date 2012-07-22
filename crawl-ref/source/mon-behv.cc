@@ -284,7 +284,8 @@ void handle_behaviour(monster* mon)
 
         // Ash penance makes monsters very likely to target you through
         // invisibility, depending on their intelligence.
-        if (you.penance[GOD_ASHENZARI] && x_chance_in_y(intel, 6))
+        if ((you.penance[GOD_ASHENZARI] || mon->god == GOD_ASHENZARI)
+            && x_chance_in_y(intel, 6))
             proxPlayer = true;
     }
 
@@ -530,7 +531,9 @@ void handle_behaviour(monster* mon)
                             else
                             {
                                 if (x_chance_in_y(300, you.skill(SK_STEALTH, 100))
-                                    || you.penance[GOD_ASHENZARI] && coinflip())
+                                    || (you.penance[GOD_ASHENZARI]
+                                        || mon->god == GOD_ASHENZARI)
+                                        && coinflip())
                                 {
                                     mon->target = you.pos();
                                 }
