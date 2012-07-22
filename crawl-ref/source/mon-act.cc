@@ -1109,7 +1109,8 @@ static bool _thunderbolt_tracer(monster *caster, int pow, coord_def aim)
         prev = caster->props["thunderbolt_aim"].get_coord();
     }
 
-    targetter_thunderbolt hitfunc(caster, spell_range(SPELL_THUNDERBOLT, pow),
+    targetter_thunderbolt hitfunc(caster,
+                                  spell_range(SPELL_THUNDERBOLT, pow, caster),
                                   prev);
     hitfunc.set_aim(aim);
 

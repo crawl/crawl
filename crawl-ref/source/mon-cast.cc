@@ -265,7 +265,7 @@ bolt mons_spells(monster* mons, spell_type spell_cast, int power,
             beam.range = (power >= 20) ? 2 : 1;
             break;
         default:
-        beam.range = spell_range(spell_cast, power, false);
+        beam.range = spell_range(spell_cast, power, mons);
      }
 
     const int drac_type = (mons_genus(mons->type) == MONS_DRACONIAN)

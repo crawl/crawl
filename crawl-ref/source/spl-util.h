@@ -66,7 +66,7 @@ int spell_hunger(spell_type which_spell, bool rod = false);
 int spell_mana(spell_type which_spell);
 int spell_difficulty(spell_type which_spell);
 int spell_power_cap(spell_type spell);
-int spell_range(spell_type spell, int pow, bool player_spell = true);
+int spell_range(spell_type spell, int pow, actor* who = &you);
 int spell_noise(spell_type spell);
 
 const char *get_spell_target_prompt(spell_type which_spell);

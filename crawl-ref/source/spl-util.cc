@@ -956,7 +956,7 @@ int spell_power_cap(spell_type spell)
     }
 }
 
-int spell_range(spell_type spell, int pow, bool player_spell)
+int spell_range(spell_type spell, int pow, actor* who)
 {
     int minrange = _seekspell(spell)->min_range;
     int maxrange = _seekspell(spell)->max_range;
@@ -973,13 +973,15 @@ int spell_range(spell_type spell, int pow, bool player_spell)
         maxrange++;
     }
 
-    if (player_spell
-        && vehumet_supports_spell(spell)
-        && you.religion == GOD_VEHUMET
+    if (vehumet_supports_spell(spell)
+        && (who->is_player() && you.religion == GOD_VEHUMET
+            && !player_under_penance()
+            && you.piety >= piety_breakpoint(2)
+            || who->is_monster()
+               && who->as_monster()->god == GOD_VEHUMET
+               && who->as_monster()->piety_level() >= 2)
         && spell != SPELL_STICKY_FLAME
-        && spell != SPELL_FREEZE
-        && !player_under_penance()
-        && you.piety >= piety_breakpoint(2))
+        && spell != SPELL_FREEZE)
     {
         maxrange++;
         minrange++;
