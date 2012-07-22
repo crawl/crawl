@@ -315,6 +315,7 @@ wall_vines4
 wall_vines5
 wall_vines6
 
+# These 15 variants are referenced from tileview.cc
 pebble_red0 WALL_PEBBLE WALL_PEBBLE_RED
 pebble_red1
 pebble_red2

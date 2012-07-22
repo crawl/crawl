@@ -194,10 +194,12 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
         switch (random2(6))
         {
         default:
-        case 0: flv.wall = TILE_WALL_HIVE; break;
-        case 1: flv.wall = TILE_WALL_PEBBLE_RED; break;
-        case 2: flv.wall = TILE_WALL_SLIME; break;
-        case 3: flv.wall = TILE_WALL_ICE; break;
+        case 0:
+        case 1:
+        case 2:
+        case 3: flv.wall = TILE_WALL_PEBBLE
+                + random2(15) * (TILE_WALL_PEBBLE_BLUE - TILE_WALL_PEBBLE_RED);
+                break;
         case 4: flv.wall = TILE_WALL_HALL; break;
         case 5: flv.wall = TILE_WALL_UNDEAD; break;
         }
