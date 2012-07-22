@@ -1464,7 +1464,9 @@ bool zin_recite_to_single_monster(actor* priest,
                 {
                     simple_monster_message(mon,
                         " melts away into a sizzling puddle of chaotic flesh.");
-                    monster_die(mon, KILL_YOU, NON_MONSTER);
+                    monster_die(mon, priest->is_player() ? KILL_YOU
+                                                         : KILL_MON,
+                                NON_MONSTER);
                 }
             }
             else if (damage > 0 && !mon)

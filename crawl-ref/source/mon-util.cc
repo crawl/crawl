@@ -2692,7 +2692,7 @@ void mons_stop_fleeing_from_sanctuary(monster* mons)
     const bool had_flag = (mons->flags & MF_FLEEING_FROM_SANCTUARY);
     mons->flags &= (~MF_FLEEING_FROM_SANCTUARY);
     if (had_flag)
-        behaviour_event(mons, ME_EVAL, &you);
+        behaviour_event(mons, ME_EVAL, sanctuary_owner());
 }
 
 void mons_pacify(monster* mon, mon_attitude_type att)
