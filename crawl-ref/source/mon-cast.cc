@@ -1730,7 +1730,9 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
         break;
 
     case SPELL_RECITE:
-        if (mon->has_ench(ENCH_BREATH_WEAPON)
+        if (!((monster *)mon)->can_speak()
+            || mon->type == MONS_MENNAS
+            || mon->has_ench(ENCH_BREATH_WEAPON)
             || !zin_check_recite_to_monsters((actor *)mon, 0))
             ret = true;
         break;
