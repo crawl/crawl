@@ -2167,26 +2167,6 @@ xx.................xx
 xxxxxxxxxx@xxxxxxxxxx
 ENDMAP
 
-##############################################################################
-NAME:    matt_entry_hidden_altar
-TAGS:    entry no_monster_gen
-ORIENT:  float
-SHUFFLE: {[(<, Aa1/Bb2/Bb2/Bb2/Cc3/Cc3/Cc3/Cc3/Cc3
-SUBST:   AC==, a=., 12=C, B=x, b=>, 3=%, c=T
-MAP
-xxx@xxx@xxx
-x.........x
-x....(....x
-x..xxAxx..x
-x..x.a.x..x
-@.[xT1Tx<.@
-x..x.T.x..x
-x..xxxxx..x
-x....{....x
-x.........x
-xxx@xxx@xxx
-ENDMAP
-
 ##############################################################
 # A Maze of Twisty Passages, All Alike
 NAME:    elethiomel_entry_maze

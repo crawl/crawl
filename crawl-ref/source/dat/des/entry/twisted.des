@@ -7,39 +7,6 @@
 # complicated: several layers of SUBST/SHUFFLE operations, serious use of
 # lua, use of SUBVAULTs or just plain obfusciation. Some maps simply have
 # extremely long headers, so we put them here.
-
-##############################################################################
-# Just another altar on DL:1
-#
-NAME:    dpeg_entry_hidden_altar
-TAGS:    entry no_monster_gen
-ORIENT:  float
-NSUBST:  ' = 1:@ / 1:{ / *:.
-SHUFFLE: {{[
-: if crawl.one_chance_in(4) then
-SHUFFLE: DE/de
-SUBST:   AB=x, ab=c, D=., E=+=, d=>, e=cx=+, ]=]]]>, C=CT
-: else
-SHUFFLE: Aa/Bb
-SUBST:   Aa==, B=x, b=c, D=>, ]=]>>>, E=cccx=, C=CCCT
-: end
-MONS:    gnoll
-MAP
-'''''''''''''''
-'''''''''''''''
-''xxxxBxxxxxxxx
-''xcccbcccccccx
-''xcclllc..1.cx
-''xcllllc....cx
-''xcl...c1...cx
-''AalDC.E...1cx
-''xcl...c....cx
-''xcllllc....cx
-''xcclllc...]cx
-''xcccccccccccx
-''xxxxxxxxxxxxx
-ENDMAP
-
 ##############################################################################
 NAME:    dpeg_entry_thieves
 ORIENT:  float
@@ -790,7 +757,7 @@ NSUBST:  U = 1:} / *:{
 : elseif crawl.one_chance_in(3) then
 SUBST:   U=., Yy=w, Zz=l
 SHUFFLE: x_/'"
-SUBST:   x==, '=b, ":".b
+SUBST:   x=+, '=b, ":".b
 NSUBST:  X = 1:} / *:{
 : elseif crawl.one_chance_in(2) then
 SUBST:   U=., Zz=l, Xx"'=b
