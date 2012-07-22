@@ -1382,8 +1382,8 @@ static void _assign_mons_spells_from_list(monster* mon,
 static void _init_mon_sif_spells(monster* mon)
 {
     // Minimum threshold for book gifts.
-    if (mon->get_piety() < 160)
-        return;
+    //if (mon->get_piety() < 160)
+    //    return;
 
     // Find some good spell schools for the monster to choose from.
     int spell_counts[SPTYP_LAST_EXPONENT + 1];
@@ -1471,8 +1471,8 @@ static void _init_mon_sif_spells(monster* mon)
 static void _init_mon_vehumet_spells(monster* mon)
 {
     // Minimum threshold for book gifts.
-    if (mon->get_piety() < 160)
-        return;
+    //if (mon->get_piety() < 160)
+    //    return;
 
     // Check what types of books to give.
     int summ = 0, conj = 0;
