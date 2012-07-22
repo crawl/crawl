@@ -2204,6 +2204,58 @@ void give_weapon(monster *mons, int level_number, bool mons_summoned, bool spect
     _give_weapon(mons, level_number, false, true, spectral_orcs);
 }
 
+void _god_item_properties(monster* mons)
+{
+    if (mons->god == GOD_NEMELEX_XOBEH && mons->piety_level() >= 1)
+    {
+        item_def deck;
+        deck.base_type = OBJ_MISCELLANY;
+        deck.sub_type  = one_chance_in(3) ? MISC_DECK_OF_DESTRUCTION :
+                         coinflip()       ? MISC_DECK_OF_ESCAPE
+                                          : MISC_DECK_OF_SUMMONING;
+
+        deck.special   = (mons->piety_level() >= 5) ? DECK_RARITY_LEGENDARY :
+                         (mons->piety_level() >= 3) ? DECK_RARITY_RARE
+                                                    : DECK_RARITY_COMMON;
+
+        const int thing_created =
+            items(false, deck.base_type, deck.sub_type, true, 0, 0, 0,
+                  deck.special, -1, false);
+        _give_monster_item(mons, thing_created);
+    }
+
+    if ((mons->god == GOD_XOM && one_chance_in(3))
+        || (mons->god == GOD_LUGONU
+            || mons->god == GOD_KIKUBAAQUDGHA
+            || mons->god == GOD_SHINING_ONE)
+            && (x_chance_in_y(mons->piety_level(), 6)))
+    {
+        int brand = (mons->god == GOD_XOM)           ? SPWPN_CHAOS :
+                    (mons->god == GOD_LUGONU)        ? SPWPN_DISTORTION :
+                    (mons->god == GOD_KIKUBAAQUDGHA) ? SPWPN_PAIN :
+                    (mons->god == GOD_SHINING_ONE)   ? SPWPN_HOLY_WRATH
+                                                     : SPWPN_NORMAL;
+        int midx = mons->inv[MSLOT_WEAPON];
+        if (midx == NON_ITEM)
+            midx = mons->inv[MSLOT_ALT_WEAPON];
+        if (midx != NON_ITEM)
+        {
+            item_def &item(mitm[midx]);
+            if (item.base_type == OBJ_WEAPONS
+                && !is_unrandom_artefact(item))
+            {
+                if (is_random_artefact(item))
+                    artefact_set_property(item, ARTP_BRAND, brand);
+                else
+                {
+                    item.special = brand;
+                    set_equip_desc(item, ISFLAG_GLOWING);
+                }
+            }
+        }
+    }
+}
+
 void give_item(monster *mons, int level_number, bool mons_summoned, bool spectral_orcs)
 {
     ASSERT(level_number > -1); // debugging absdepth0 changes
@@ -2221,4 +2273,6 @@ void give_item(monster *mons, int level_number, bool mons_summoned, bool spectra
 
     _give_armour(mons, 1 + level_number / 2, spectral_orcs);
     _give_shield(mons, 1 + level_number / 2);
+
+    _god_item_properties(mons);
 }
