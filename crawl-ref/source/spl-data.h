@@ -1239,6 +1239,7 @@ struct spell_desc
      true
 },
 
+#if TAG_MAJOR_VERSION == 33
 {
     SPELL_PROJECTED_NOISE, "Projected Noise",
      SPTYP_HEXES,
@@ -1251,6 +1252,7 @@ struct spell_desc
      false,
      false
 },
+#endif
 
 {
     SPELL_DEBUGGING_RAY, "Debugging Ray",

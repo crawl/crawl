@@ -545,11 +545,6 @@ Portal Projectile spell
 This spell teleports a fired or thrown missile directly to its target, greatly
 increasing its accuracy (but not damage).
 %%%%
-Projected Noise spell
-
-This spell produces a noise emanating from a place of the caster's own
-choosing.
-%%%%
 Recall spell
 
 This spell is greatly prized by summoners and necromancers, as it allows the
