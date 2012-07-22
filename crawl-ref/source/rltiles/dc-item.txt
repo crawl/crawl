@@ -1088,6 +1088,7 @@ rune_demonic_3
 rune_demonic_4
 rune_demonic_5
 rune_demonic_6
+rune_elven MISC_RUNE_ELVEN
 
 #OBJ_CORPSES
 #handled in dc-corpse.txt
