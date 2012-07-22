@@ -2239,13 +2239,15 @@ void _god_item_properties(monster* mons)
     if ((mons->god == GOD_XOM && one_chance_in(3))
         || (mons->god == GOD_LUGONU
             || mons->god == GOD_KIKUBAAQUDGHA
-            || mons->god == GOD_SHINING_ONE)
+            || mons->god == GOD_SHINING_ONE
+            || mons->god == GOD_TROG)
             && (x_chance_in_y(mons->piety_level(), 6)))
     {
         int brand = (mons->god == GOD_XOM)           ? SPWPN_CHAOS :
                     (mons->god == GOD_LUGONU)        ? SPWPN_DISTORTION :
                     (mons->god == GOD_KIKUBAAQUDGHA) ? SPWPN_PAIN :
-                    (mons->god == GOD_SHINING_ONE)   ? SPWPN_HOLY_WRATH
+                    (mons->god == GOD_SHINING_ONE)   ? SPWPN_HOLY_WRATH :
+                    (mons->god == GOD_TROG)          ? SPWPN_ANTIMAGIC
                                                      : SPWPN_NORMAL;
         int midx = mons->inv[MSLOT_WEAPON];
         if (midx == NON_ITEM)
