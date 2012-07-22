@@ -4064,7 +4064,8 @@ static std::string _describe_ash_skill_boost()
             desc << bondage_parts[i];
 
         std::string skills;
-        std::map<skill_type, int8_t> boosted_skills = ash_get_boosted_skills(eq_type(i));
+        std::map<skill_type, int8_t> boosted_skills = ash_get_boosted_skills(
+            &you, eq_type(i), you.bondage[i]);
         int8_t bonus = boosted_skills.begin()->second;
         std::map<skill_type, int8_t>::iterator it = boosted_skills.begin();
 

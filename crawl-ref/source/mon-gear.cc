@@ -2224,6 +2224,18 @@ void _god_item_properties(monster* mons)
         _give_monster_item(mons, thing_created);
     }
 
+    if (mons->god == GOD_ASHENZARI)
+    {
+        for (int i = MSLOT_WEAPON; i < NUM_MONSTER_SLOTS; i++)
+        {
+            int midx = mons->inv[i];
+            if (midx == NON_ITEM)
+                continue;
+
+            do_curse_item(mitm[midx]);
+        }
+    }
+
     if ((mons->god == GOD_XOM && one_chance_in(3))
         || (mons->god == GOD_LUGONU
             || mons->god == GOD_KIKUBAAQUDGHA

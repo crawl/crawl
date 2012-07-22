@@ -252,7 +252,8 @@ void ash_check_bondage(bool msg)
     for (int s = ET_WEAPON; s < NUM_ET; s++)
     {
         you.bondage[s] = new_bondage[s];
-        std::map<skill_type, int8_t> boosted_skills = ash_get_boosted_skills(eq_type(s));
+        std::map<skill_type, int8_t> boosted_skills =
+            ash_get_boosted_skills(&you, eq_type(s), you.bondage[s]);
         for (std::map<skill_type, int8_t>::iterator it = boosted_skills.begin();
              it != boosted_skills.end(); ++it)
         {
@@ -609,16 +610,29 @@ monster_type ash_monster_tier(const monster *mon)
     return monster_type(MONS_SENSED_TRIVIAL + monster_info(mon).threat);
 }
 
-std::map<skill_type, int8_t> ash_get_boosted_skills(eq_type type)
+std::map<skill_type, int8_t> ash_get_boosted_skills(actor* who,
+                                                    eq_type type,
+                                                    const int bondage)
 {
-    const int bondage = you.bondage[type];
     std::map<skill_type, int8_t> boost;
     if (bondage <= 0)
         return boost;
 
+    monster* mon = (who->is_player()) ? NULL : who->as_monster();
+
     // Include melded.
-    const item_def* wpn = you.slot_item(EQ_WEAPON, true);
+    const item_def* wpn =
+        (who->is_player()) ? you.slot_item(EQ_WEAPON, true)
+        : (mon->inv[MSLOT_WEAPON] != NON_ITEM)
+            ? &mitm[mon->inv[MSLOT_WEAPON]]
+            : NULL;
+
     const item_def* armour = you.slot_item(EQ_BODY_ARMOUR, true);
+        (who->is_player()) ? you.slot_item(EQ_BODY_ARMOUR, true)
+        : (mon->inv[MSLOT_ARMOUR] != NON_ITEM)
+            ? &mitm[mon->inv[MSLOT_ARMOUR]]
+            : NULL;
+
     const int evp = armour ? -property(*armour, PARM_EVASION) : 0;
     switch (type)
     {

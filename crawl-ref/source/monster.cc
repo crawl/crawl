@@ -23,6 +23,7 @@
 #include "godabil.h"
 #include "godconduct.h"
 #include "goditem.h"
+#include "godpassive.h"
 #include "itemname.h"
 #include "items.h"
 #include "kills.h"
@@ -41,6 +42,7 @@
 #include "random.h"
 #include "religion.h"
 #include "shopping.h"
+#include "skills2.h"
 #include "spl-damage.h"
 #include "spl-util.h"
 #include "state.h"
@@ -4070,6 +4072,48 @@ bool monster::poison(actor *agent, int amount, bool force)
     return poison_monster(this, agent, amount, force);
 }
 
+static std::vector<int> _mons_ash_bondage(const monster* mons)
+{
+    std::vector<int> ret;
+    for (int i = ET_WEAPON; i < NUM_ET; i++)
+        ret.push_back(0);
+
+    // Check this slot by slot.
+    for (int i = MSLOT_WEAPON; i < MSLOT_MISCELLANY; i++)
+    {
+        if (i == MSLOT_MISSILE
+            || i == MSLOT_ALT_MISSILE
+            || i == MSLOT_WAND)
+            continue;
+        int slot = (i == MSLOT_WEAPON
+                    || i == MSLOT_ALT_WEAPON) ? ET_WEAPON :
+                   (i == MSLOT_SHIELD)        ? ET_SHIELD :
+                   (i == MSLOT_ARMOUR)        ? ET_ARMOUR
+                                              : ET_JEWELS;
+
+        int iidx = mons->inv[i];
+        if (iidx != NON_ITEM)
+        {
+            item_def &item = mitm[iidx];
+            if (item.cursed())
+            {
+                hands_reqd_type hands = hands_reqd(item, mons->body_size());
+                if (i == MSLOT_WEAPON && hands >= HANDS_TWO)
+                {
+                    ret[ET_WEAPON] = 3;
+                    ret[ET_SHIELD] = 3;
+                }
+                else if (i == MSLOT_ALT_WEAPON && ret[slot] > 0)
+                    ret[slot] = 3;
+                else
+                    ret[slot] = 2;
+            }
+        }
+    }
+
+    return ret;
+}
+
 int monster::skill(skill_type sk, int scale, bool real) const
 {
     if (mons_intel(this) < I_NORMAL)
@@ -4120,13 +4164,34 @@ int monster::skill(skill_type sk, int scale, bool real) const
         break;
     }
 
+    if (god == GOD_ASHENZARI && piety_level() >= 2)
+    {
+        int boost = 0;
+        std::vector<int> bondage = _mons_ash_bondage(this);
+        for (int s = ET_WEAPON; s < NUM_ET; s++)
+        {
+             std::map<skill_type, int8_t> boosts =
+                 ash_get_boosted_skills((actor *)this, eq_type(s), bondage[s]);
+             if (boost < boosts[sk])
+                 boost = boosts[sk];
+        }
+
+
+        unsigned int level = (ret / scale);
+        unsigned int points = skill_exp_needed(level, sk, SP_HUMAN);
+        points += ((boost * 2) + 1) * (piety_level() + 1) * (level * 10);
+        while (level < 27
+               && points >= skill_exp_needed(level + 1, sk, SP_HUMAN))
+            ++level;
+
+        ret = level * scale;
+    }
+
     if (has_ench(ENCH_HEROISM) && !magic)
         ret += 5*scale;
 
     if (ret > 27*scale)
         ret = 27*scale;
-
-    // GOD TODO: Ashenzari skill boosts
 
     return ret;
 }
@@ -4839,6 +4904,8 @@ bool monster::can_see_invisible() const
     else if (mons_class_flag(type, M_SEE_INVIS))
         return true;
     else if (scan_mon_inv_randarts(this, ARTP_EYESIGHT) > 0)
+        return true;
+    else if (god == GOD_ASHENZARI && piety_level() >= 3)
         return true;
     return false;
 }
@@ -5991,6 +6058,15 @@ bool monster::check_clarity(bool silent) const
         {
             simple_monster_message(this, " seems unimpeded by the mental distress.");
             set_ident_type(mitm[jewellery], ID_KNOWN_TYPE);
+        }
+        return true;
+    }
+
+    if (god == GOD_ASHENZARI && piety_level() >= 3)
+    {
+        if (!silent && you.can_see(this) && !mons_is_lurking(this))
+        {
+            simple_monster_message(this, " seems unimpeded by the mental distress.");
         }
         return true;
     }
