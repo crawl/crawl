@@ -1997,6 +1997,7 @@ static monster_spells _get_mons_god_spells(god_type god, bool *found)
                      : (god == GOD_CHEIBRIADOS)   ? &mon_chei
                      : (god == GOD_KIKUBAAQUDGHA) ? &mon_kiku
                      : (god == GOD_LUGONU)        ? &mon_lugonu
+                     : (god == GOD_MAKHLEB)       ? &mon_makhleb
                      : (god == GOD_NEMELEX_XOBEH) ? &mon_nemelex
                      : (god == GOD_OKAWARU)       ? &mon_okawaru
                      : (god == GOD_SHINING_ONE)   ? &mon_tso
