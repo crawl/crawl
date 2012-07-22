@@ -34,6 +34,7 @@
 #include "player.h"
 #include "player-equip.h"
 #include "shout.h"
+#include "spl-transloc.h"
 #include "spl-util.h"
 #include "stuff.h"
 #include "terrain.h"
@@ -1595,11 +1596,42 @@ static int _disperse_monster(monster* mon, int pow)
     return 0;
 }
 
-spret_type cast_dispersal(int pow, bool fail)
+spret_type cast_dispersal(actor* who, int pow, bool fail)
 {
-    fail_check();
-    if (!apply_monsters_around_square(_disperse_monster, you.pos(), pow))
-        mpr("The air shimmers briefly around you.");
+    bool did_player = false;
+    if (who->is_player())
+    {
+        fail_check();
+    }
+    else if (adjacent(you.pos(), who->pos()))
+    {
+        if (!you.no_tele())
+        {
+            if (you.check_res_magic(pow) > 0)
+            {
+                if (coinflip())
+                {
+                    canned_msg(MSG_YOU_PARTIALLY_RESIST);
+                    random_blink(true);
+                }
+                else
+                    canned_msg(MSG_YOU_RESIST);
+            }
+            else
+                you_teleport_now(true);
+        }
+
+        did_player = true;
+    }
+    if (!apply_monsters_around_square(_disperse_monster, who->pos(), pow)
+        && !did_player)
+    {
+        if (who->is_player())
+            mpr("The air shimmers briefly around you.");
+        else if (you.can_see(who))
+            mprf("The air shimmers briefly around %s.",
+                 who->as_monster()->name(DESC_THE).c_str());
+    }
 
     return SPRET_SUCCESS;
 }

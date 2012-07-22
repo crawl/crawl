@@ -27,7 +27,7 @@ spret_type cast_shatter(int pow, bool fail);
 spret_type cast_ignite_poison(int pow, bool fail);
 spret_type cast_discharge(int pow, bool fail);
 int disperse_monsters(coord_def where, int pow);
-spret_type cast_dispersal(int pow, bool fail = false);
+spret_type cast_dispersal(actor* who, int pow, bool fail = false);
 bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
                               const coord_def target, bool allow_random,
                               bool get_max_distance, bool quiet,

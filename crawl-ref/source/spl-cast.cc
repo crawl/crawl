@@ -1347,7 +1347,7 @@ static spret_type _do_cast(spell_type spell, int powc,
         return cast_chain_lightning(powc, &you, fail);
 
     case SPELL_DISPERSAL:
-        return cast_dispersal(powc, fail);
+        return cast_dispersal(&you, powc, fail);
 
     case SPELL_SHATTER:
         return cast_shatter(powc, fail);

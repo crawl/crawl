@@ -3647,12 +3647,7 @@ void card_effect(actor* who, card_type which_card, deck_rarity_type rarity,
     case CARD_SWAP:             _swap_monster_card(who, power, rarity); break;
     case CARD_VELOCITY:         _velocity_card(who, power, rarity); break;
     case CARD_DAMNATION:        _damnation_card(who, power, rarity); break;
-    case CARD_SOLITUDE:
-        if (who->is_player())
-            cast_dispersal(power/4);
-        else
-            canned_msg(MSG_NOTHING_HAPPENS); // GOD TODO: implement
-        break;
+    case CARD_SOLITUDE:         cast_dispersal(who, power/4); break;
     case CARD_ELIXIR:           _elixir_card(who, power, rarity); break;
     case CARD_BATTLELUST:       _battle_lust_card(who, power, rarity); break;
     case CARD_METAMORPHOSIS:    _metamorphosis_card(who, power, rarity); break;

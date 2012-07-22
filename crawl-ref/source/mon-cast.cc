@@ -1170,6 +1170,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_OZOCUBUS_ARMOUR:
     case SPELL_OZOCUBUS_REFRIGERATION:
     case SPELL_OLGREBS_TOXIC_RADIANCE:
+    case SPELL_DISPERSAL:
     case SPELL_HEROISM:
     case SPELL_FINESSE:
     case SPELL_LESSER_SERVANT:
@@ -1655,6 +1656,18 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
             ret = true;
         break;
 
+    case SPELL_DISPERSAL:
+    {
+        ret = true;
+        for (adjacent_iterator ai(mon->pos()); ai; ++ai)
+            if (*ai == you.pos() || monster_at(*ai))
+            {
+                ret = false;
+                break;
+            }
+        break;
+    }
+
     case SPELL_HEROISM:
         if (mon->has_ench(ENCH_HEROISM))
             ret = true;
@@ -1878,6 +1891,7 @@ static bool _ms_low_hitpoint_cast(const monster* mon, spell_type monspell)
     case SPELL_BLINK:
     case SPELL_CONTROLLED_BLINK:
     case SPELL_BEND_SPACE:
+    case SPELL_DISPERSAL:
         return targ_adj;
     case SPELL_TOMB_OF_DOROKLOHE:
         return true;
@@ -4201,6 +4215,13 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_OLGREBS_TOXIC_RADIANCE:
         mons_olgrebs_toxic_radiance(mons);
         return;
+
+    case SPELL_DISPERSAL:
+    {
+        int pow = 12 * mons->hit_dice;
+        cast_dispersal(mons, pow, false);
+        return;
+    }
 
     case SPELL_BEND_TIME:
         _mons_bend_time(mons);
