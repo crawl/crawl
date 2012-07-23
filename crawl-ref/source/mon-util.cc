@@ -4264,3 +4264,10 @@ mon_threat_level_type mons_threat_level(const monster *mon, bool real)
         // Check all wands/jewels several times, wear brown pants...
         return MTHRT_NASTY;
 }
+
+bool mons_elyvilon_pacifistic(const monster* mons)
+{
+    return (mons->god == GOD_ELYVILON
+            && (!mons_is_panicking(mons) && !mons_is_cornered(mons)
+                || mons->has_ench(ENCH_DIVINE_PROTECTION)));
+}

@@ -3107,6 +3107,7 @@ bool monster::has_spells(bool check_god) const
     if (check_god
         && (god == GOD_BEOGH
             || god == GOD_CHEIBRIADOS
+            || god == GOD_ELYVILON
             || god == GOD_FEDHAS
             || god == GOD_JIYVA
             || god == GOD_KIKUBAAQUDGHA
@@ -4313,7 +4314,8 @@ bool monster::god_protects_mons_from_harm()
 {
     // GOD TODO: Elyvilon life protection
     if (god_can_protect_from_harm(god)
-        && (one_chance_in(10)
+        && (has_ench(ENCH_DIVINE_PROTECTION)
+            || one_chance_in(10)
             || x_chance_in_y(get_piety(), 1000)))
         return true;
     return false;

@@ -2915,7 +2915,7 @@ struct spell_desc
 {
     SPELL_HEROISM, "Heroism",
      SPTYP_CHARMS,
-     SPFLAG_MONSTER,
+     SPFLAG_HELPFUL | SPFLAG_MONSTER,
      2,
      0,
      -1, -1,
@@ -2928,7 +2928,7 @@ struct spell_desc
 {
     SPELL_FINESSE, "Finesse",
      SPTYP_CHARMS,
-     SPFLAG_HASTY | SPFLAG_MONSTER,
+     SPFLAG_HELPFUL | SPFLAG_HASTY | SPFLAG_MONSTER,
      5,
      0,
      -1, -1,
@@ -3065,7 +3065,7 @@ struct spell_desc
      0,
      NULL,
      false,
-     false
+     true
 },
 
 {
@@ -3188,14 +3188,14 @@ struct spell_desc
 {
     SPELL_VITALISATION, "Vitalisation",
      SPTYP_CHARMS,
-     SPFLAG_MONSTER,
+     SPFLAG_HELPFUL | SPFLAG_MONSTER,
      3,
      0,
      -1, -1,
      0,
      NULL,
      false,
-     false
+     true
 },
 
 {
@@ -3260,7 +3260,7 @@ struct spell_desc
      0,
      NULL,
      false,
-     false
+     true
 },
 
 {
@@ -3352,6 +3352,58 @@ struct spell_desc
      NULL,
      false,
      false
+},
+
+{
+    SPELL_DIVINE_HEALING, "Divine Healing",
+     SPTYP_NONE,
+     SPFLAG_RECOVERY | SPFLAG_HELPFUL | SPFLAG_MONSTER,
+     2,
+     0,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     false,
+     true
+},
+
+{
+    SPELL_DIVINE_PROTECTION, "Divine Protection",
+     SPTYP_CHARMS,
+     SPFLAG_RECOVERY | SPFLAG_HELPFUL | SPFLAG_MONSTER,
+     2,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     true
+},
+
+{
+    SPELL_PURIFICATION, "Purification",
+     SPTYP_CHARMS,
+     SPFLAG_RECOVERY | SPFLAG_HELPFUL | SPFLAG_MONSTER,
+     4,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     true
+},
+
+{
+    SPELL_DIVINE_VIGOUR, "Divine Vigour",
+     SPTYP_CHARMS,
+     SPFLAG_RECOVERY | SPFLAG_HELPFUL | SPFLAG_MONSTER,
+     6,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     true
 },
 
 {

@@ -1532,6 +1532,9 @@ static bool _handle_throw(monster* mons, bolt & beem)
     if (mons_itemuse(mons) < MONUSE_STARTING_EQUIPMENT)
         return false;
 
+    if (mons_elyvilon_pacifistic(mons))
+        return false;
+
     const bool archer = mons->is_archer();
 
     // Highly-specialised archers are more likely to shoot than talk. (?)
@@ -2033,7 +2036,8 @@ void handle_monster_move(monster* mons)
         }
         mon_nearby_ability(mons);
 
-        if (!mons->asleep() && !mons_is_wandering(mons)
+        if (!mons->asleep()
+            && (!mons_is_wandering(mons) || mons->god == GOD_ELYVILON)
             && !mons->withdrawn()
             // Berserking monsters are limited to running up and
             // hitting their foes.
@@ -2052,6 +2056,8 @@ void handle_monster_move(monster* mons)
             const bool friendly_or_near =
                 mons->friendly() && mons->foe == MHITYOU || mons->near_foe();
             if (friendly_or_near
+                // Healers can heal when off-screen.
+                || mons->god == GOD_ELYVILON
                 || mons->type == MONS_TEST_SPAWNER
                 // Slime creatures can split when offscreen.
                 || mons->type == MONS_SLIME_CREATURE)
@@ -2123,7 +2129,8 @@ void handle_monster_move(monster* mons)
                 ASSERT(!crawl_state.game_is_arena());
 
                 if (!mons->wont_attack() && !mons->has_ench(ENCH_CHARM)
-                    && !mons->withdrawn())
+                    && !mons->withdrawn()
+                    && !mons_elyvilon_pacifistic(mons))
                 {
                     // If it steps into you, cancel other targets.
                     mons->foe = MHITYOU;
@@ -2162,6 +2169,7 @@ void handle_monster_move(monster* mons)
             if (targ
                 && targ != mons
                 && !mons_aligned(mons, targ)
+                && !mons_elyvilon_pacifistic(mons)
                 && monster_can_hit_monster(mons, targ))
             {
                 // Maybe they can swap places?
@@ -3117,6 +3125,14 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
             return false; // blocks square
         }
 
+        // Healers only attack in desperate situations.
+        if (mons_elyvilon_pacifistic(mons))
+            return false;
+
+        // Pacified monsters, in turn, do not attack healers.
+        if (mons->pacified() && targmonster->god == GOD_ELYVILON)
+            return false;
+
         // Cut down plants only when no alternative, or they're
         // our target.
         if (mons_is_firewood(targmonster) && mons->target != targ)
@@ -3149,6 +3165,9 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
     {
         return false;
     }
+
+    if (targ == you.pos() && mons_elyvilon_pacifistic(mons))
+        return false;
 
     // Wandering through a trap is OK if we're pretty healthy,
     // really stupid, or immune to the trap.
@@ -3443,6 +3462,10 @@ static bool _may_cutdown(monster* mons, monster* targ)
     {
         return false;
     }
+
+    // Healers don't attack except in desperate scenarios.
+    if (mons_elyvilon_pacifistic(mons))
+        return false;
 
     // Don't let Fedhas worshippers harm plants.
     if (mons->god == GOD_FEDHAS && mons_is_plant(targ))

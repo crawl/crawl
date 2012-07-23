@@ -184,6 +184,7 @@ void handle_behaviour(monster* mon)
                        && !friendly_sanctuary()
                        && mons_friendly_to_sanctuary_owner(mon);
     bool wontAttack  = mon->wont_attack();
+    bool isPacifist  = mons_elyvilon_pacifistic(mon);
 
     // Whether the player position is in LOS of the monster.
     bool proxPlayer = !crawl_state.game_is_arena() && mon->see_cell(you.pos());
@@ -195,7 +196,12 @@ void handle_behaviour(monster* mon)
         proxPlayer = false;
 #endif
     bool proxFoe;
-    bool isHealthy  = (mon->hit_points > mon->max_hit_points / 2);
+    // Using a mons_elyvilon_pacifistic check here causes "cornered"
+    // behaviour to work incorrectly.
+    bool isHealthy =
+        (mon->god == GOD_ELYVILON)
+        ? (mon->hit_points == mon->max_hit_points)
+        : (mon->hit_points > mon->max_hit_points / 2);
     bool isSmart    = (mons_intel(mon) > I_ANIMAL);
     bool isScared   = mon->has_ench(ENCH_FEAR);
     bool isPacified = mon->pacified();
@@ -382,7 +388,7 @@ void handle_behaviour(monster* mon)
     // Unfriendly monsters fighting other monsters will usually
     // target the player, if they're healthy.
     // Zotdef: 2/3 chance of retargetting changed to 1/4
-    if (!isFriendly && !isNeutral
+    if (!isFriendly && !isNeutral && !isPacifist
         && mon->foe != MHITYOU && mon->foe != MHITNOT
         && proxPlayer && !mon->berserk() && isHealthy
         && (crawl_state.game_is_zotdef() ? one_chance_in(4)
@@ -391,8 +397,9 @@ void handle_behaviour(monster* mon)
         mon->foe = MHITYOU;
     }
 
-    // Monsters in a sanctuary friendly to them will not attack.
-    if (inSanctuary)
+    // Monsters in a sanctuary friendly to them will not attack;
+    // healers also usually will not attack.
+    if (inSanctuary || (isPacifist && !mons_is_fleeing(mon)))
     {
         mon->foe = MHITNOT;
     }
@@ -455,7 +462,7 @@ void handle_behaviour(monster* mon)
                 if (crawl_state.game_is_arena()
                     || !proxPlayer && !isFriendly
                     || isNeutral || patrolling
-                    || inSanctuary
+                    || inSanctuary || isPacifist
                     || mon->type == MONS_GIANT_SPORE)
                 {
                     new_beh = BEH_WANDER;
@@ -790,7 +797,8 @@ void handle_behaviour(monster* mon)
             if (!proxFoe)
             {
                 if ((isFriendly || proxPlayer) && !isNeutral && !patrolling
-                    && !inSanctuary && !crawl_state.game_is_arena())
+                    && !inSanctuary && !isPacifist
+                    && !crawl_state.game_is_arena())
                 {
                     new_foe = MHITYOU;
                 }
@@ -912,7 +920,10 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
 
     const beh_type old_behaviour = mon->behaviour;
 
-    int fleeThreshold = std::min(mon->max_hit_points / 4, 20);
+    int fleeThreshold =
+        mons_elyvilon_pacifistic(mon)
+        ? mon->max_hit_points
+        : std::min(mon->max_hit_points / 4, 20);
 
     bool isSmart          = (mons_intel(mon) > I_ANIMAL);
     bool isMobile         = !mons_is_stationary(mon);
@@ -1058,7 +1069,8 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         if ((!mons_is_fleeing(mon) || mons_class_flag(mon->type, M_FLEEING))
             && !mons_is_retreating(mon)
             && !mons_is_panicking(mon)
-            && !mons_is_cornered(mon))
+            && !mons_is_cornered(mon)
+            && !mons_elyvilon_pacifistic(mon))
         {
             mon->behaviour = BEH_SEEK;
         }
@@ -1171,14 +1183,16 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         //   at 19 hp: 5% chance of fleeing
         //   at 10 hp: 50% chance of fleeing
         //   (chance increases by 5% for every hp lost.)
-        if (!isSmart && isMobile
+        if ((!isSmart || mons_elyvilon_pacifistic(mon))
+            && isMobile
             && mon->holiness() != MH_UNDEAD
             && mon->holiness() != MH_PLANT
             && mon->holiness() != MH_NONLIVING
             && !mons_class_flag(mon->type, M_NO_FLEE)
             && !mons_is_cornered(mon)
             && !mon->berserk()
-            && x_chance_in_y(fleeThreshold - mon->hit_points, fleeThreshold))
+            && (mons_elyvilon_pacifistic(mon)
+                || x_chance_in_y(fleeThreshold - mon->hit_points, fleeThreshold)))
         {
             mon->behaviour = BEH_FLEE;
         }

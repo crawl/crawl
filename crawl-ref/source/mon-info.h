@@ -92,6 +92,8 @@ enum monster_info_flags
     MB_SLIMIFY,
     MB_CONDENSATION_SHIELD,
     MB_DIVINE_SHIELD,
+    MB_DIVINE_PROTECTION,
+    MB_DIVINE_VIGOUR,
     NUM_MB_FLAGS
 };
 

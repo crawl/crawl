@@ -20,5 +20,7 @@ bool cast_imprison(int pow, actor* victim, int source, actor *agent,
 
 bool cast_smiting(int pow, monster* mons);
 
-int is_pacifiable(const monster* mon);
+int is_pacifiable(actor* agent, const monster* mon);
+int can_pacify_monster(actor* agent, const monster* mon, const int healed,
+                       const int max_healed);
 #endif

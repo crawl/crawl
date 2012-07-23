@@ -1524,6 +1524,8 @@ enum enchant_type
     ENCH_SLIMIFY,
     ENCH_CONDENSATION_SHIELD,
     ENCH_DIVINE_SHIELD,
+    ENCH_DIVINE_PROTECTION,
+    ENCH_DIVINE_VIGOUR,
     // Update enchantment names in monster.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -3288,6 +3290,11 @@ enum spell_type
     SPELL_GROWTH,
     SPELL_REPRODUCTION,
     SPELL_RAIN,
+
+    SPELL_DIVINE_HEALING,
+    SPELL_DIVINE_PROTECTION,
+    SPELL_PURIFICATION,
+    SPELL_DIVINE_VIGOUR,
 
     NUM_SPELLS
 };

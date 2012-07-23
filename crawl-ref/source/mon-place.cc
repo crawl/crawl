@@ -3606,6 +3606,13 @@ bool player_angers_monster(monster* mon)
         return true;
     }
 
+    // It's a bit hackish to put this here, but...
+    if (mon->god == GOD_ELYVILON)
+    {
+        mon->attitude = ATT_GOOD_NEUTRAL;
+        mons_att_changed(mon);
+    }
+
     return false;
 }
 

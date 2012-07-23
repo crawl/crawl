@@ -8,6 +8,7 @@
 
 #include "abyss.h"
 #include "act-iter.h"
+#include "attitude-change.h"
 #include "beam.h"
 #include "cloud.h"
 #include "colour.h"
@@ -62,6 +63,7 @@
 #include "viewchar.h"
 
 #include <algorithm>
+#include <math.h> // ceil
 
 // kraken stuff
 const int MAX_ACTIVE_KRAKEN_TENTACLES = 4;
@@ -73,6 +75,7 @@ static bool _mons_drain_life(monster* mons, bool actual = true);
 static bool _mons_ozocubus_refrigeration(monster *mons, bool actual = true);
 static bool _mons_bend_time(monster *mons, bool actual = true);
 static bool _mons_slouch(monster *mons, bool actual = true);
+static void _mons_divine_healing(monster *mons, coord_def pos);
 
 void init_mons_spells()
 {
@@ -208,9 +211,9 @@ static bool _set_allied_target(monster* caster, bolt & pbolt)
             else
                 continue;
 
-        else if (mons_genus(targ->type) == caster_genus
-                 || mons_genus(targ->base_monster) == caster_genus
-                 || targ->is_holy() && caster->is_holy()
+        else if ((mons_genus(targ->type) == caster_genus
+                  || mons_genus(targ->base_monster) == caster_genus
+                  || targ->is_holy() && caster->is_holy())
             && mons_aligned(*targ, caster)
             && !targ->has_ench(ENCH_CHARM)
             && _flavour_benefits_monster(pbolt.flavour, **targ))
@@ -228,6 +231,96 @@ static bool _set_allied_target(monster* caster, bolt & pbolt)
     if (selected_target)
     {
         pbolt.target = selected_target->pos();
+        return true;
+    }
+
+    // Didn't find a target
+    return false;
+}
+
+// Find a monster to attempt to pacify or heal.
+static bool _set_pacification_target(monster* caster, bolt & pbolt)
+{
+    // Be selfish in bad situations.
+    if (caster->hit_points * 3 < caster->max_hit_points
+        || (caster->hit_points < caster->max_hit_points
+            && (mons_is_fleeing(caster) || mons_is_panicking(caster))))
+    {
+        pbolt.target = caster->pos();
+        return true;
+    }
+
+    monster* selected_target = NULL;
+    int min_distance = INT_MAX;
+    monster* selected_friendly = NULL;
+    int min_friendly_distance = INT_MAX;
+
+    monster_type caster_genus = mons_genus(caster->type);
+
+    for (monster_iterator targ(caster); targ; ++targ)
+    {
+        if (*targ == caster)
+            continue;
+
+        int targ_distance = grid_distance(targ->pos(), caster->pos());
+
+        bool got_target = false;
+
+        if ((mons_genus(targ->type) == caster_genus
+                  || mons_genus(targ->base_monster) == caster_genus
+                  || targ->is_holy() && caster->is_holy())
+            && mons_aligned(*targ, caster)
+            && !targ->has_ench(ENCH_CHARM)
+            && _flavour_benefits_monster(BEAM_HEALING, **targ))
+        {
+            got_target = true;
+        }
+
+        if (got_target)
+        {
+            if (targ_distance < min_friendly_distance)
+            {
+                min_friendly_distance = targ_distance;
+                selected_friendly = *targ;
+            }
+            continue;
+        }
+
+        if (!targ->pacified()
+            && (is_pacifiable(caster, *targ) == 0)
+            && !targ->has_ench(ENCH_CHARM)
+            && targ_distance < min_distance)
+        {
+            min_distance = targ_distance;
+            selected_target = *targ;
+        }
+    }
+
+    if (selected_target)
+    {
+        pbolt.target = selected_target->pos();
+        return true;
+    }
+
+    if (selected_friendly)
+    {
+        pbolt.target = selected_friendly->pos();
+        return true;
+    }
+
+    // Target the player if not hostile.
+    if (caster->wont_attack()
+        && caster->can_see(&you)
+        && you.hp < you.hp_max)
+    {
+        pbolt.target = you.pos();
+        return true;
+    }
+
+    // Heal self if applicable.
+    if (caster->hit_points < caster->max_hit_points)
+    {
+        pbolt.target = caster->pos();
         return true;
     }
 
@@ -1203,6 +1296,10 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_GROWTH:
     case SPELL_REPRODUCTION:
     case SPELL_RAIN:
+    case SPELL_DIVINE_HEALING:
+    case SPELL_DIVINE_PROTECTION:
+    case SPELL_PURIFICATION:
+    case SPELL_DIVINE_VIGOUR:
         return true;
     default:
         if (check_validity)
@@ -1817,6 +1914,29 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
         break;
     }
 
+    case SPELL_DIVINE_PROTECTION:
+        if (!mon_enemies_around(mon)
+            || mon->hit_points * 3 > mon->max_hit_points
+            || mon->has_ench(ENCH_DIVINE_PROTECTION))
+            ret = true;
+        break;
+
+    case SPELL_PURIFICATION:
+        if (!mon->has_ench(ENCH_SICK)
+            && !mon->has_ench(ENCH_ROT)
+            && !mon->has_ench(ENCH_POISON)
+            && !mon->has_ench(ENCH_CONFUSION)
+            && !mon->has_ench(ENCH_SLOW)
+            && !mon->has_ench(ENCH_PETRIFYING))
+            ret = true;
+        break;
+
+    case SPELL_DIVINE_VIGOUR:
+        if (!mon_enemies_around(mon)
+            || mon->has_ench(ENCH_DIVINE_VIGOUR))
+            ret = true;
+        break;
+
     case SPELL_NO_SPELL:
         ret = true;
         break;
@@ -1843,6 +1963,7 @@ static bool _ms_useful_fleeing_out_of_sight(const monster* mon,
     case SPELL_INVISIBILITY:
     case SPELL_MINOR_HEALING:
     case SPELL_MAJOR_HEALING:
+    case SPELL_DIVINE_HEALING:
     case SPELL_ANIMATE_DEAD:
     case SPELL_TWISTED_RESURRECTION:
         return true;
@@ -1908,6 +2029,8 @@ static bool _ms_low_hitpoint_cast(const monster* mon, spell_type monspell)
     case SPELL_ENTER_ABYSS:
     case SPELL_SANCTUARY:
     case SPELL_DEAL_FOUR:
+    case SPELL_DIVINE_HEALING:
+    case SPELL_DIVINE_PROTECTION:
         return true;
     case SPELL_VAMPIRIC_DRAINING:
         return !targ_sanct && targ_adj && !targ_friendly && !targ_undead;
@@ -1989,6 +2112,7 @@ static monster_spells _get_mons_god_spells(god_type god, bool *found)
 {
     static monster mon_beogh;
     static monster mon_chei;
+    static monster mon_elyvilon;
     static monster mon_fedhas;
     static monster mon_jiyva;
     static monster mon_kiku;
@@ -2004,6 +2128,7 @@ static monster_spells _get_mons_god_spells(god_type god, bool *found)
 
     if (god != GOD_BEOGH
         && god != GOD_CHEIBRIADOS
+        && god != GOD_ELYVILON
         && god != GOD_FEDHAS
         && god != GOD_JIYVA
         && god != GOD_KIKUBAAQUDGHA
@@ -2021,24 +2146,26 @@ static monster_spells _get_mons_god_spells(god_type god, bool *found)
     }
     if (!loaded)
     {
-        mons_load_spells(&mon_beogh,   MST_BK_BEOGH);
-        mons_load_spells(&mon_chei,    MST_BK_CHEIBRIADOS);
-        mons_load_spells(&mon_fedhas,  MST_BK_FEDHAS);
-        mons_load_spells(&mon_jiyva,   MST_BK_JIYVA);
-        mons_load_spells(&mon_kiku,    MST_BK_KIKUBAAQUDGHA);
-        mons_load_spells(&mon_lugonu,  MST_BK_LUGONU);
-        mons_load_spells(&mon_makhleb, MST_BK_MAKHLEB);
-        mons_load_spells(&mon_nemelex, MST_BK_NEMELEX);
-        mons_load_spells(&mon_okawaru, MST_BK_OKAWARU);
-        mons_load_spells(&mon_tso,     MST_BK_SHINING_ONE);
-        mons_load_spells(&mon_trog,    MST_BK_TROG);
-        mons_load_spells(&mon_yred,    MST_BK_YREDELEMNUL);
-        mons_load_spells(&mon_zin,     MST_BK_ZIN);
+        mons_load_spells(&mon_beogh,    MST_BK_BEOGH);
+        mons_load_spells(&mon_chei,     MST_BK_CHEIBRIADOS);
+        mons_load_spells(&mon_elyvilon, MST_BK_ELYVILON);
+        mons_load_spells(&mon_fedhas,   MST_BK_FEDHAS);
+        mons_load_spells(&mon_jiyva,    MST_BK_JIYVA);
+        mons_load_spells(&mon_kiku,     MST_BK_KIKUBAAQUDGHA);
+        mons_load_spells(&mon_lugonu,   MST_BK_LUGONU);
+        mons_load_spells(&mon_makhleb,  MST_BK_MAKHLEB);
+        mons_load_spells(&mon_nemelex,  MST_BK_NEMELEX);
+        mons_load_spells(&mon_okawaru,  MST_BK_OKAWARU);
+        mons_load_spells(&mon_tso,      MST_BK_SHINING_ONE);
+        mons_load_spells(&mon_trog,     MST_BK_TROG);
+        mons_load_spells(&mon_yred,     MST_BK_YREDELEMNUL);
+        mons_load_spells(&mon_zin,      MST_BK_ZIN);
         loaded = true;
     }
 
     monster *which = (god == GOD_BEOGH)           ? &mon_beogh
                      : (god == GOD_CHEIBRIADOS)   ? &mon_chei
+                     : (god == GOD_ELYVILON)      ? &mon_elyvilon
                      : (god == GOD_FEDHAS)        ? &mon_fedhas
                      : (god == GOD_JIYVA)         ? &mon_jiyva
                      : (god == GOD_KIKUBAAQUDGHA) ? &mon_kiku
@@ -2202,8 +2329,14 @@ try_again:
                         finalAnswer = true;
                     }
                 }
+
+                // Kind of a hack, but...
+                if (spell_cast == SPELL_DIVINE_HEALING)
+                    beem.target = mons->pos();
             }
-            else if (mons->foe == MHITYOU && !monsterNearby)
+            else if (mons->foe == MHITYOU && !monsterNearby
+                     && (mons->god != GOD_ELYVILON
+                         || !using_god_spells))
             {
                 if (using_god_spells)
                 {
@@ -2262,13 +2395,19 @@ try_again:
                     }
                 }
             }
+
+            // Kind of a hack, but...
+            if (spell_cast == SPELL_DIVINE_HEALING)
+                beem.target = mons->pos();
         }
 
         if (!finalAnswer)
         {
             // If nothing found by now, safe friendlies and good
             // neutrals will rarely cast.
+            // Exception: healers will feel free to heal!
             if (mons->wont_attack() && !mon_enemies_around(mons)
+                && !(mons->god == GOD_ELYVILON && using_god_spells)
                 && !one_chance_in(10))
             {
                 if (using_god_spells)
@@ -2364,6 +2503,12 @@ try_again:
                      || spell_cast == SPELL_HEAL_OTHER
                      || spell_cast == SPELL_SACRIFICE)
                         && !_set_allied_target(mons, beem))
+                {
+                    spell_cast = SPELL_NO_SPELL;
+                    continue;
+                }
+                else if (spell_cast == SPELL_DIVINE_HEALING
+                         && !_set_pacification_target(mons, beem))
                 {
                     spell_cast = SPELL_NO_SPELL;
                     continue;
@@ -3566,6 +3711,109 @@ static bool _mons_slouch(monster* mons, bool actual)
     }
 
     return success;
+}
+
+static void _mons_divine_healing(monster* mons, coord_def pos)
+{
+    if (!actor_at(pos))
+        return;
+
+    bool greater = (mons->piety_level() >= 3);
+    int pow = 0;
+    int max_pow = 0;
+    if (greater)
+    {
+        pow = 10 + mons->skill_rdiv(SK_INVOCATIONS, 1, 3);
+        max_pow = 10 + (int) ceil(mons->skill(SK_INVOCATIONS, 1) / 3.0);
+    }
+    else
+    {
+        pow = 3 + mons->skill_rdiv(SK_INVOCATIONS, 1, 6);
+        max_pow = 3 + (int) ceil(mons->skill(SK_INVOCATIONS, 1) / 6.0);
+    }
+    pow =     std::min(50, pow);
+    max_pow = std::min(50, max_pow);
+
+    int healed     = pow + roll_dice(2, pow) - 2;
+    int max_healed = (3 * max_pow) - 2;
+
+    if (pos == you.pos())
+    {
+        mpr("You are healed.");
+        inc_hp(healed);
+        return;
+    }
+
+    monster* target = monster_at(pos);
+    ASSERT(target);
+
+    if (target != mons
+        && !mons_aligned(target, mons)
+        && !target->pacified())
+    {
+        const int can_pacify = can_pacify_monster(mons, target, healed,
+                                                  max_healed);
+        if (can_pacify <= 0)
+        {
+            if (you.can_see(target))
+            {
+                if (can_pacify == 0)
+                {
+                    mprf("The light of Elyvilon fails to reach %s.",
+                         target->name(DESC_THE).c_str());
+                }
+                else if (can_pacify == -2) // this should not happen
+                {
+                    mprf("%s snores at %s.",
+                         target->name(DESC_THE).c_str(),
+                         mons->name(DESC_THE).c_str());
+                }
+                else if (can_pacify == -3)
+                {
+                    mprf("The light of Elyvilon almost touches upon %s.",
+                         target->name(DESC_THE).c_str());
+                }
+                else if (can_pacify == -4)
+                {
+                    mprf("%s is completely unfazed by %s meager offer of peace.",
+                         target->name(DESC_THE).c_str(),
+                         apostrophise(mons->name(DESC_THE)).c_str());
+                }
+                return;
+            }
+        }
+        if (can_pacify == 1)
+        {
+            std::string msg =
+                (coinflip() ? " approves of " : " supports ")
+                + apostrophise(mons->name(DESC_THE))
+                + " offer of peace.";
+            if (you.can_see(mons))
+                simple_god_message(msg.c_str(), GOD_ELYVILON);
+
+            if (target->is_holy()
+                && is_good_god(you.religion))
+                good_god_holy_attitude_change(target);
+            else
+            {
+                simple_monster_message(target, " turns neutral.");
+                record_monster_defeat(target, KILL_PACIFIED);
+                mons_pacify(target, ATT_NEUTRAL);
+            }
+        }
+    }
+    if (target->heal(healed))
+    {
+        if (you.can_see(mons))
+            mprf("%s heals %s.",
+                 mons->name(DESC_THE).c_str(),
+                 mons == target ? mons->pronoun(PRONOUN_REFLEXIVE).c_str()
+                                : target->name(DESC_THE).c_str());
+        if (target->hit_points == target->max_hit_points)
+            simple_monster_message(target, " is completely healed.");
+        else if (you.can_see(target))
+            print_wounds(mons);
+    }
 }
 
 static bool _mon_spell_bail_out_early(monster* mons, spell_type spell_cast)
@@ -5167,6 +5415,41 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_RAIN:
         fedhas_rain(mons, mons->pos());
         return;
+    case SPELL_DIVINE_HEALING:
+        _mons_divine_healing(mons, pbolt.target);
+        return;
+    case SPELL_DIVINE_PROTECTION:
+        if (you.can_see(mons))
+            mprf("%s beseeches %s to protect %s life!",
+                 mons->name(DESC_THE).c_str(),
+                 god_name(mons->god).c_str(),
+                 mons->pronoun(PRONOUN_POSSESSIVE).c_str());
+        mons->add_ench(mon_enchant(ENCH_DIVINE_PROTECTION, 0, mons,
+                                   9 * BASELINE_DELAY +
+                                   (random2avg(mons->get_piety()
+                                    * BASELINE_DELAY, 2)
+                                   / 10)));
+        return;
+    case SPELL_PURIFICATION:
+        simple_monster_message(mons, " is purified!");
+        mons->del_ench(ENCH_SICK, true);
+        mons->del_ench(ENCH_ROT, true);
+        mons->del_ench(ENCH_POISON, true);
+        mons->del_ench(ENCH_CONFUSION, true);
+        mons->del_ench(ENCH_SLOW, true);
+        mons->del_ench(ENCH_PETRIFYING, true);
+        return;
+    case SPELL_DIVINE_VIGOUR:
+    {
+        if (you.can_see(mons))
+            mprf("Elyvilon grants %s divine vigour!",
+                 mons->name(DESC_THE).c_str());
+        mons->add_ench(mon_enchant(ENCH_DIVINE_VIGOUR, 0, mons,
+                                   BASELINE_DELAY *
+                                   (40 +
+                                    mons->skill_rdiv(SK_INVOCATIONS, 5, 2))));
+        return;
+    }
     }
 
     // If a monster just came into view and immediately cast a spell,

@@ -164,6 +164,10 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_DIVINE_STAMINA;
     case ENCH_SLIMIFY:
         return MB_SLIMIFY;
+    case ENCH_DIVINE_PROTECTION:
+        return MB_DIVINE_PROTECTION;
+    case ENCH_DIVINE_VIGOUR:
+        return MB_DIVINE_VIGOUR;
     default:
         return NUM_MB_FLAGS;
     }
@@ -1399,6 +1403,10 @@ std::vector<std::string> monster_info::attributes() const
         v.push_back("slimifying");
     if (is(MB_DIVINE_SHIELD))
         v.push_back("divine shielding");
+    if (is(MB_DIVINE_PROTECTION))
+        v.push_back("divine protection");
+    if (is(MB_DIVINE_VIGOUR))
+        v.push_back("divine vigour");
     return v;
 }
 

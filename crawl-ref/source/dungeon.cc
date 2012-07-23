@@ -4343,6 +4343,8 @@ monster* dgn_place_monster(mons_spec &mspec,
         mg.behaviour = BEH_STRICT_NEUTRAL;
         break;
     default:
+        if (mspec.god == GOD_ELYVILON)
+            mg.behaviour = BEH_GOOD_NEUTRAL;
         break;
     }
     mg.base_type = mspec.monbase;

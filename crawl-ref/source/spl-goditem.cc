@@ -130,9 +130,10 @@ static bool _mons_hostile(const monster* mon)
 // Returns -1, if monster can never be pacified.
 // Returns -2, if monster can currently not be pacified (asleep).
 // Returns 0, if it's possible to pacify this monster.
-int is_pacifiable(const monster* mon)
+int is_pacifiable(actor* agent, const monster* mon)
 {
-    if (you.religion != GOD_ELYVILON)
+    if (agent->is_player() && you.religion != GOD_ELYVILON
+        || agent->is_monster() && agent->as_monster()->god != GOD_ELYVILON)
         return -1;
 
     // I was thinking of jellies when I wrote this, but maybe we shouldn't
@@ -169,11 +170,11 @@ int is_pacifiable(const monster* mon)
 // Returns -2, if monster can currently not be pacified (asleep).
 // Returns -3, if monster can be pacified but the attempt narrowly failed.
 // Returns -4, if monster can currently not be pacified (too much hp).
-static int _can_pacify_monster(const monster* mon, const int healed,
-                               const int max_healed)
+int can_pacify_monster(actor* agent, const monster* mon, const int healed,
+                       const int max_healed)
 {
 
-   int pacifiable = is_pacifiable(mon);
+   int pacifiable = is_pacifiable(agent, mon);
    if (pacifiable < 0)
        return pacifiable;
 
@@ -181,7 +182,11 @@ static int _can_pacify_monster(const monster* mon, const int healed,
         return 0;
 
     const int factor = (mons_intel(mon) <= I_ANIMAL)       ? 3 : // animals
-                       (is_player_same_species(mon->type)) ? 2   // same species
+                       (agent->is_player()
+                        && is_player_same_species(mon->type)
+                        || agent->is_monster()
+                           && mons_species(agent->as_monster()->type)
+                              == mons_species(mon->type))  ? 2   // same species
                                                            : 1;  // other
 
     int divisor = 3;
@@ -194,18 +199,18 @@ static int _can_pacify_monster(const monster* mon, const int healed,
     else if (holiness == MH_DEMONIC)
         divisor += 2;
 
-    if (mon->max_hit_points > factor * ((you.skill(SK_INVOCATIONS, max_healed)
+    if (mon->max_hit_points > factor * ((agent->skill(SK_INVOCATIONS, max_healed)
                                          + max_healed) / divisor))
     {
         return -4;
     }
 
-    int random_factor = random2((you.skill(SK_INVOCATIONS, healed) + healed)
+    int random_factor = random2((agent->skill(SK_INVOCATIONS, healed) + healed)
                                 / divisor);
 
     dprf("pacifying %s? max hp: %d, factor: %d, Inv: %d, healed: %d, rnd: %d",
          mon->name(DESC_PLAIN).c_str(), mon->max_hit_points, factor,
-         you.skill(SK_INVOCATIONS), healed, random_factor);
+         agent->skill(SK_INVOCATIONS), healed, random_factor);
 
     if (mon->max_hit_points < factor * random_factor)
         return 1;
@@ -273,7 +278,7 @@ static int _healing_spell(int healed, int max_healed, bool divine_ability,
         return 0;
     }
 
-    const int can_pacify  = _can_pacify_monster(mons, healed, max_healed);
+    const int can_pacify  = can_pacify_monster(&you, mons, healed, max_healed);
     const bool is_hostile = _mons_hostile(mons);
 
     // Don't divinely heal a monster you can't pacify.

@@ -1901,6 +1901,17 @@
       }
     },
 
+    {  MST_BK_ELYVILON,
+      {
+       SPELL_DIVINE_HEALING,
+       SPELL_NO_SPELL,
+       SPELL_DIVINE_VIGOUR,
+       SPELL_PURIFICATION,
+       SPELL_NO_SPELL,
+       SPELL_DIVINE_PROTECTION,
+      }
+    },
+
     {  MST_TEST_SPAWNER,
       {
        SPELL_SHADOW_CREATURES,

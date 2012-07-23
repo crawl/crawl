@@ -313,12 +313,20 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         break;
 
     case ENCH_DIVINE_SHIELD:
-        {
-            const int sh_bonus = 3 + skill_rdiv(SK_SHIELDS, 1, 5);
+    {
+        const int sh_bonus = 3 + skill_rdiv(SK_SHIELDS, 1, 5);
 
-            props["divine_shield"].get_byte() = sh_bonus;
-        }
+        props["divine_shield"].get_byte() = sh_bonus;
         break;
+    }
+    case ENCH_DIVINE_VIGOUR:
+    {
+        const int vigour_amt = 1 + skill_rdiv(SK_INVOCATIONS, 1, 3);
+        props["divine_vigour"].get_byte() = vigour_amt;
+        max_hit_points += vigour_amt;
+        hit_points += vigour_amt;
+        break;
+    }
 
     default:
         break;
@@ -867,6 +875,20 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
          if (!quiet)
             simple_monster_message(this, " looks less slimy.");
          break;
+    case ENCH_DIVINE_PROTECTION:
+        if (!quiet && you.can_see(this))
+            mprf("%s divine protection fades away.",
+                 apostrophise(name(DESC_THE)).c_str());
+        break;
+    case ENCH_DIVINE_VIGOUR:
+        if (!quiet && you.can_see(this))
+            mprf("%s divine vigour fades away.",
+                 apostrophise(name(DESC_THE)).c_str());
+        max_hit_points -= props["divine_vigour"].get_byte();
+        hit_points -= props["divine_vigour"].get_byte();
+        if (hit_points <= 0)
+            monster_die(this, KILL_MISC, NON_MONSTER);
+        break;
     default:
         break;
     }
@@ -973,7 +995,8 @@ void monster::timeout_enchantments(int levels)
         case ENCH_OZOCUBUS_ARMOUR: case ENCH_HEROISM: case ENCH_FINESSE:
         case ENCH_TIME_STEP: case ENCH_RECITING: case ENCH_DIVINE_STAMINA:
         case ENCH_SLIMIFY: case ENCH_CONDENSATION_SHIELD:
-        case ENCH_DIVINE_SHIELD:
+        case ENCH_DIVINE_SHIELD: case ENCH_DIVINE_PROTECTION:
+        case ENCH_DIVINE_VIGOUR:
             lose_ench_levels(i->second, levels);
             break;
 
@@ -1188,6 +1211,8 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_SLIMIFY:
     case ENCH_CONDENSATION_SHIELD:
     case ENCH_DIVINE_SHIELD:
+    case ENCH_DIVINE_PROTECTION:
+    case ENCH_DIVINE_VIGOUR:
     // case ENCH_ROLLING:
         decay_enchantment(me);
         break;
@@ -1925,7 +1950,7 @@ static const char *enchant_names[] =
     "inner_flame", "roused", "breath timer", "deaths_door", "rolling",
     "ozocubus_armour", "heroism", "finesse", "time_step", "reciting",
     "divine_stamina", "slimify", "condensation_shield", "divine_shield",
-    "buggy",
+    "divine_protection", "divine_vigour", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
