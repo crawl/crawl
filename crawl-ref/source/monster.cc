@@ -3337,6 +3337,7 @@ bool monster::pacified() const
 
 int monster::shield_bonus() const
 {
+    int val = 0;
     const item_def *shld = const_cast<monster* >(this)->shield();
     if (shld && get_armour_slot(*shld) == EQ_SHIELD)
     {
@@ -3347,8 +3348,17 @@ int monster::shield_bonus() const
         int shld_c = property(*shld, PARM_AC) + shld->plus;
         shld_c = shld_c * 2 + (body_size(PSIZE_TORSO) - SIZE_MEDIUM)
                             * (shld->sub_type - ARM_LARGE_SHIELD);
-        return (random2avg(shld_c + hit_dice * 4 / 3, 2) / 2);
+        val = random2avg(shld_c + hit_dice * 4 / 3, 2) / 2;
     }
+    else if (has_ench(ENCH_CONDENSATION_SHIELD))
+        val += (300 + skill(SK_ICE_MAGIC, 25)) / 100;
+
+    if (has_ench(ENCH_DIVINE_SHIELD))
+        val += (int)props["divine_shield"] * 3 / 2;
+
+    if (val > 0)
+        return val;
+
     return -100;
 }
 

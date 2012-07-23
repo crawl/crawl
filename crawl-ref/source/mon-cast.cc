@@ -1171,6 +1171,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_OZOCUBUS_REFRIGERATION:
     case SPELL_OLGREBS_TOXIC_RADIANCE:
     case SPELL_DISPERSAL:
+    case SPELL_CONDENSATION_SHIELD:
     case SPELL_HEROISM:
     case SPELL_FINESSE:
     case SPELL_LESSER_SERVANT:
@@ -1186,6 +1187,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_CORRUPT:
     case SPELL_ENTER_ABYSS:
     case SPELL_CLEANSING_FLAME:
+    case SPELL_DIVINE_SHIELD:
     case SPELL_DIVINE_WARRIOR:
     case SPELL_RECITE:
     case SPELL_VITALISATION:
@@ -1676,6 +1678,11 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
         break;
     }
 
+    case SPELL_CONDENSATION_SHIELD:
+        if (mon->has_ench(ENCH_CONDENSATION_SHIELD))
+            ret = true;
+        break;
+
     case SPELL_HEROISM:
         if (mon->has_ench(ENCH_HEROISM))
             ret = true;
@@ -1734,6 +1741,11 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
 
     case SPELL_ENTER_ABYSS:
         if (player_in_branch(BRANCH_ABYSS))
+            ret = true;
+        break;
+
+    case SPELL_DIVINE_SHIELD:
+        if (mon->has_ench(ENCH_DIVINE_SHIELD))
             ret = true;
         break;
 
@@ -4774,13 +4786,25 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_OZOCUBUS_ARMOUR:
     {
-        mprf("A film of ice covers %s body!",
-        apostrophise(mons->name(DESC_THE)).c_str());
+        if (you.can_see(mons))
+            mprf("A film of ice covers %s body!",
+                 apostrophise(mons->name(DESC_THE)).c_str());
         const int power = (mons->hit_dice * 15) / 10;
         mons->add_ench(mon_enchant(ENCH_OZOCUBUS_ARMOUR, 0, mons,
                                    BASELINE_DELAY *
                                    (20 + random2(power) + random2(power))));
 
+        return;
+    }
+
+    case SPELL_CONDENSATION_SHIELD:
+    {
+        if (you.can_see(mons))
+            mpr("A crackling disc of dense vapour forms in the air!");
+        const int power = (mons->hit_dice * 15) / 10;
+        mons->add_ench(mon_enchant(ENCH_CONDENSATION_SHIELD, 0, mons,
+                                   BASELINE_DELAY *
+                                   (15 + random2(power))));
         return;
     }
 
@@ -4993,6 +5017,18 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
             mons->max_hit_points = 1;
         mons->hurt(mons, random2(mons->hit_points));
         mons->banish(mons);
+        return;
+    }
+
+    case SPELL_DIVINE_SHIELD:
+    {
+        if (you.can_see(mons))
+            mprf("A divine shield forms around %s!",
+                 mons->name(DESC_THE).c_str());
+        mons->add_ench(mon_enchant(ENCH_DIVINE_SHIELD, 0, mons,
+                                   BASELINE_DELAY *
+                                   (35 +
+                                    mons->skill_rdiv(SK_INVOCATIONS, 4, 3))));
         return;
     }
 

@@ -1522,6 +1522,8 @@ enum enchant_type
     ENCH_RECITING,
     ENCH_DIVINE_STAMINA, // Vitalisation
     ENCH_SLIMIFY,
+    ENCH_CONDENSATION_SHIELD,
+    ENCH_DIVINE_SHIELD,
     // Update enchantment names in monster.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -3265,6 +3267,7 @@ enum spell_type
     SPELL_CORRUPT,
     SPELL_ENTER_ABYSS,
 
+    SPELL_DIVINE_SHIELD,
     SPELL_CLEANSING_FLAME,
     SPELL_DIVINE_WARRIOR,
 

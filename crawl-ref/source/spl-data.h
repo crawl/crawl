@@ -3134,6 +3134,19 @@ struct spell_desc
 },
 
 {
+    SPELL_DIVINE_SHIELD, "Divine Shield",
+     SPTYP_CHARMS | SPTYP_TRANSMUTATION,
+     SPFLAG_MONSTER,
+     3,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
     SPELL_CLEANSING_FLAME, "Cleansing Flame",
      SPTYP_CONJURATION | SPTYP_FIRE,
      SPFLAG_MONSTER,

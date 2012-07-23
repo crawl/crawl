@@ -90,6 +90,8 @@ enum monster_info_flags
     MB_RECITING,
     MB_DIVINE_STAMINA,
     MB_SLIMIFY,
+    MB_CONDENSATION_SHIELD,
+    MB_DIVINE_SHIELD,
     NUM_MB_FLAGS
 };
 

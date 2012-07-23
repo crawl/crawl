@@ -148,12 +148,16 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_ROLLING;
     case ENCH_OZOCUBUS_ARMOUR:
         return MB_OZOCUBUS_ARMOUR;
+    case ENCH_CONDENSATION_SHIELD:
+        return MB_CONDENSATION_SHIELD;
     case ENCH_HEROISM:
         return MB_HEROISM;
     case ENCH_FINESSE:
         return MB_FINESSE;
     case ENCH_TIME_STEP:
         return MB_TIME_STEP;
+    case ENCH_DIVINE_SHIELD:
+        return MB_DIVINE_SHIELD;
     case ENCH_RECITING:
         return MB_RECITING;
     case ENCH_DIVINE_STAMINA:
@@ -1379,6 +1383,8 @@ std::vector<std::string> monster_info::attributes() const
         v.push_back("rolling");
     if (is(MB_OZOCUBUS_ARMOUR))
         v.push_back("covered in an icy film");
+    if (is(MB_CONDENSATION_SHIELD))
+        v.push_back("condensation shielded");
     if (is(MB_HEROISM))
         v.push_back("heroic");
     if (is(MB_FINESSE))
@@ -1391,6 +1397,8 @@ std::vector<std::string> monster_info::attributes() const
         v.push_back("divine stamina");
     if (is(MB_SLIMIFY))
         v.push_back("slimifying");
+    if (is(MB_DIVINE_SHIELD))
+        v.push_back("divine shielding");
     return v;
 }
 

@@ -312,6 +312,14 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         calc_speed();
         break;
 
+    case ENCH_DIVINE_SHIELD:
+        {
+            const int sh_bonus = 3 + skill_rdiv(SK_SHIELDS, 1, 5);
+
+            props["divine_shield"].get_byte() = sh_bonus;
+        }
+        break;
+
     default:
         break;
     }
@@ -489,6 +497,14 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         if (!quiet && you.can_see(this))
         {
             mprf("%s icy armour evaporates.",
+                 apostrophise(name(DESC_THE)).c_str());
+        }
+        break;
+
+    case ENCH_CONDENSATION_SHIELD:
+        if (!quiet && you.can_see(this))
+        {
+            mprf("%s icy shield evaporates.",
                  apostrophise(name(DESC_THE)).c_str());
         }
         break;
@@ -824,6 +840,13 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
          if (!quiet)
             simple_monster_message(this, " slowly begins to move again.");
          break;
+    case ENCH_DIVINE_SHIELD:
+         if (!quiet && you.can_see(this))
+         {
+             mprf("%s divine shield fades away",
+                  apostrophise(name(DESC_THE)).c_str());
+         }
+         break;
     case ENCH_RECITING:
          if (!quiet)
          {
@@ -949,7 +972,8 @@ void monster::timeout_enchantments(int levels)
         case ENCH_ROUSED: case ENCH_BREATH_WEAPON: case ENCH_DEATHS_DOOR:
         case ENCH_OZOCUBUS_ARMOUR: case ENCH_HEROISM: case ENCH_FINESSE:
         case ENCH_TIME_STEP: case ENCH_RECITING: case ENCH_DIVINE_STAMINA:
-        case ENCH_SLIMIFY:
+        case ENCH_SLIMIFY: case ENCH_CONDENSATION_SHIELD:
+        case ENCH_DIVINE_SHIELD:
             lose_ench_levels(i->second, levels);
             break;
 
@@ -1162,6 +1186,8 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_TIME_STEP:
     case ENCH_DIVINE_STAMINA:
     case ENCH_SLIMIFY:
+    case ENCH_CONDENSATION_SHIELD:
+    case ENCH_DIVINE_SHIELD:
     // case ENCH_ROLLING:
         decay_enchantment(me);
         break;
@@ -1898,7 +1924,8 @@ static const char *enchant_names[] =
     "dazed", "mute", "blind", "dumb", "mad", "silver_corona", "recite timer",
     "inner_flame", "roused", "breath timer", "deaths_door", "rolling",
     "ozocubus_armour", "heroism", "finesse", "time_step", "reciting",
-    "divine_stamina", "slimify", "buggy",
+    "divine_stamina", "slimify", "condensation_shield", "divine_shield",
+    "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
