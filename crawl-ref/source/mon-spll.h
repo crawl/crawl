@@ -1890,6 +1890,17 @@
       }
     },
 
+    {  MST_BK_FEDHAS,
+      {
+       SPELL_FUNGAL_BLOOM,
+       SPELL_EVOLUTION,
+       SPELL_RAIN,
+       SPELL_SUNLIGHT,
+       SPELL_REPRODUCTION,
+       SPELL_GROWTH,
+      }
+    },
+
     {  MST_TEST_SPAWNER,
       {
        SPELL_SHADOW_CREATURES,

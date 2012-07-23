@@ -1195,6 +1195,12 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_DEAL_FOUR:
     case SPELL_REQUEST_JELLY:
     case SPELL_SLIMIFY:
+    case SPELL_FUNGAL_BLOOM:
+    case SPELL_EVOLUTION:
+    case SPELL_SUNLIGHT:
+    case SPELL_GROWTH:
+    case SPELL_REPRODUCTION:
+    case SPELL_RAIN:
         return true;
     default:
         if (check_validity)
@@ -1781,6 +1787,24 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
         break;
     }
 
+    case SPELL_SLIMIFY:
+        if (mon->has_ench(ENCH_SLIMIFY))
+            ret = true;
+        break;
+
+    case SPELL_SUNLIGHT:
+    {
+        coord_def pos;
+        actor* target = mon->get_foe();
+        if (!target
+            || ((!(target->invisible() && !mon->can_see_invisible()))
+                && (!feat_is_water(grd(target->pos())))))
+        {
+            ret = true;
+        }
+        break;
+    }
+
     case SPELL_NO_SPELL:
         ret = true;
         break;
@@ -1953,6 +1977,7 @@ static monster_spells _get_mons_god_spells(god_type god, bool *found)
 {
     static monster mon_beogh;
     static monster mon_chei;
+    static monster mon_fedhas;
     static monster mon_jiyva;
     static monster mon_kiku;
     static monster mon_lugonu;
@@ -1967,6 +1992,7 @@ static monster_spells _get_mons_god_spells(god_type god, bool *found)
 
     if (god != GOD_BEOGH
         && god != GOD_CHEIBRIADOS
+        && god != GOD_FEDHAS
         && god != GOD_JIYVA
         && god != GOD_KIKUBAAQUDGHA
         && god != GOD_LUGONU
@@ -1985,6 +2011,7 @@ static monster_spells _get_mons_god_spells(god_type god, bool *found)
     {
         mons_load_spells(&mon_beogh,   MST_BK_BEOGH);
         mons_load_spells(&mon_chei,    MST_BK_CHEIBRIADOS);
+        mons_load_spells(&mon_fedhas,  MST_BK_FEDHAS);
         mons_load_spells(&mon_jiyva,   MST_BK_JIYVA);
         mons_load_spells(&mon_kiku,    MST_BK_KIKUBAAQUDGHA);
         mons_load_spells(&mon_lugonu,  MST_BK_LUGONU);
@@ -2000,6 +2027,7 @@ static monster_spells _get_mons_god_spells(god_type god, bool *found)
 
     monster *which = (god == GOD_BEOGH)           ? &mon_beogh
                      : (god == GOD_CHEIBRIADOS)   ? &mon_chei
+                     : (god == GOD_FEDHAS)        ? &mon_fedhas
                      : (god == GOD_JIYVA)         ? &mon_jiyva
                      : (god == GOD_KIKUBAAQUDGHA) ? &mon_kiku
                      : (god == GOD_LUGONU)        ? &mon_lugonu
@@ -2569,6 +2597,26 @@ try_again:
             int pow = 10 + mons->skill_rdiv(SK_INVOCATIONS, 7, 6);
             if (!cleansing_flame(pow, CLEANSING_FLAME_INVOCATION,
                                  mons->pos(), mons, true))
+                return false;
+        }
+        else if (spell_cast == SPELL_FUNGAL_BLOOM)
+        {
+            if (!fedhas_fungal_bloom(mons, true))
+                return false;
+        }
+        else if (spell_cast == SPELL_EVOLUTION)
+        {
+            if (!fedhas_evolve_flora(mons, true))
+                return false;
+        }
+        else if (spell_cast == SPELL_GROWTH)
+        {
+            if (!fedhas_plant_ring_from_fruit(mons, true))
+                return false;
+        }
+        else if (spell_cast == SPELL_REPRODUCTION)
+        {
+            if (!fedhas_corpse_spores(mons, false, true))
                 return false;
         }
 
@@ -5065,6 +5113,24 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                                    mons->skill_rdiv(SK_INVOCATIONS, 3, 2) + 3));
         return;
     }
+    case SPELL_FUNGAL_BLOOM:
+        fedhas_fungal_bloom(mons, false);
+        return;
+    case SPELL_EVOLUTION:
+        fedhas_evolve_flora(mons, false);
+        return;
+    case SPELL_SUNLIGHT:
+        fedhas_sunlight(mons);
+        return;
+    case SPELL_GROWTH:
+        fedhas_plant_ring_from_fruit(mons, false);
+        return;
+    case SPELL_REPRODUCTION:
+        fedhas_corpse_spores(mons, false, false);
+        return;
+    case SPELL_RAIN:
+        fedhas_rain(mons, mons->pos());
+        return;
     }
 
     // If a monster just came into view and immediately cast a spell,

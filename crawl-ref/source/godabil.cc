@@ -2294,15 +2294,40 @@ bool fedhas_shoot_through(const bolt & beam, const monster* victim)
 // Turns corpses in LOS into skeletons and grows toadstools on them.
 // Can also turn zombies into skeletons and destroy ghoul-type monsters.
 // Returns the number of corpses consumed.
-int fedhas_fungal_bloom()
+int fedhas_fungal_bloom(actor* agent, bool check_only)
 {
     int seen_mushrooms = 0;
     int seen_corpses = 0;
     int processed_count = 0;
     bool kills = false;
+    beh_type beh = (agent->is_player() || you.religion == GOD_FEDHAS)
+                    ? BEH_GOOD_NEUTRAL : BEH_HOSTILE;
 
-    for (radius_iterator i(you.pos(), LOS_RADIUS); i; ++i)
+    for (radius_iterator i(agent->pos(), LOS_RADIUS); i; ++i)
     {
+        if (!agent->is_player() && *i == you.pos())
+        {
+            if (you.species != SP_GHOUL)
+                continue;
+
+            if (check_only)
+            {
+                processed_count++;
+                continue;
+            }
+
+            mpr("Your flesh rots away!", MSGCH_WARN);
+            int damage = random2avg(agent->skill(SK_INVOCATIONS, 5), 2);
+
+            // If this kills us, attribute the kill to the monster.
+            if (damage >= you.hp_max_temp)
+                ouch(damage, agent->mindex(), KILLED_BY_ROTTING);
+
+            rot_hp(random2avg(agent->skill(SK_INVOCATIONS, 5), 2));
+            processed_count++;
+            continue;
+        }
+
         monster* target = monster_at(*i);
         if (!can_spawn_mushrooms(*i))
             continue;
@@ -2316,11 +2341,17 @@ int fedhas_fungal_bloom()
                 // Maybe turn a zombie into a skeleton.
                 if (mons_skeleton(mons_zombie_base(target)))
                 {
+                    if (check_only && piety)
+                    {
+                        processed_count++;
+                        continue;
+                    }
+
                     simple_monster_message(target, "'s flesh rots away.");
 
                     downgrade_zombie_to_skeleton(target);
 
-                    behaviour_event(target, ME_ALERT, &you);
+                    behaviour_event(target, ME_ALERT, agent);
 
                     if (piety)
                         processed_count++;
@@ -2331,6 +2362,11 @@ int fedhas_fungal_bloom()
                 // Ghoul-type monsters are always destroyed.
             case MONS_GHOUL:
             {
+                if (check_only && piety)
+                {
+                    processed_count++;
+                    continue;
+                }
                 simple_monster_message(target, " rots away and dies.");
 
                 kills = true;
@@ -2350,8 +2386,8 @@ int fedhas_fungal_bloom()
                 {
                     if (create_monster(
                                 mgen_data(MONS_TOADSTOOL,
-                                          BEH_GOOD_NEUTRAL,
-                                          &you,
+                                          beh,
+                                          agent,
                                           0,
                                           0,
                                           pos,
@@ -2389,11 +2425,17 @@ int fedhas_fungal_bloom()
             {
                 corpse_on_pos = true;
 
+                if (check_only)
+                {
+                    processed_count++;
+                    continue;
+                }
+
                 const int trial_prob = mushroom_prob(*j);
                 const int target_count = 1 + binomial_generator(20, trial_prob);
                 int seen_per;
                 spawn_corpse_mushrooms(*j, target_count, seen_per,
-                                       BEH_GOOD_NEUTRAL, true);
+                                       beh, true);
 
                 // Either turn this corpse into a skeleton or destroy it.
                 if (mons_skeleton(j->mon_type))
@@ -2417,35 +2459,49 @@ int fedhas_fungal_bloom()
     if (seen_mushrooms > 0)
         mushroom_spawn_message(seen_mushrooms, seen_corpses);
 
-    if (kills)
+    if (kills && agent->is_player())
         mpr("That felt like a moral victory.");
 
-    if (processed_count)
+    if (processed_count && !check_only)
     {
-        simple_god_message(" appreciates your contribution to the "
-                           "ecosystem.", GOD_FEDHAS);
-        // Doubling the expected value per sacrifice to approximate the
-        // extra piety gain blood god worshipers get for the initial kill.
-        // -cao
+        if (agent->is_player())
+        {
+            simple_god_message(" appreciates your contribution to the "
+                               "ecosystem.", GOD_FEDHAS);
+            // Doubling the expected value per sacrifice to approximate the
+            // extra piety gain blood god worshipers get for the initial kill.
+            // -cao
 
-        int piety_gain = 0;
-        for (int i = 0; i < processed_count * 2; ++i)
-            piety_gain += random2(15); // avg 1.4 piety per corpse
-        gain_piety(piety_gain, 10);
+            int piety_gain = 0;
+            for (int i = 0; i < processed_count * 2; ++i)
+                piety_gain += random2(15); // avg 1.4 piety per corpse
+            gain_piety(piety_gain, 10);
+        }
+        else if (you.can_see(agent))
+        {
+            std::string msg = " appreciates "
+                              + apostrophise(agent->as_monster()->name(DESC_THE))
+                              + " contribution to the ecosystem.";
+            simple_god_message(msg.c_str(), GOD_FEDHAS);
+        }
     }
 
     return processed_count;
 }
 
-static bool _create_plant(coord_def & target, int hp_adjust = 0)
+static bool _create_plant(actor* agent, coord_def & target, int hp_adjust = 0)
 {
     if (actor_at(target) || !mons_class_can_pass(MONS_PLANT, grd(target)))
         return 0;
 
+    beh_type beh = (agent->is_player() || you.religion == GOD_FEDHAS)
+                   ? BEH_FRIENDLY
+                   : SAME_ATTITUDE(agent->as_monster());
+
     if (monster *plant = create_monster(mgen_data
                                      (MONS_PLANT,
-                                      BEH_FRIENDLY,
-                                      &you,
+                                      beh,
+                                      agent,
                                       0,
                                       0,
                                       target,
@@ -2475,26 +2531,36 @@ static bool _create_plant(coord_def & target, int hp_adjust = 0)
 
 #define SUNLIGHT_DURATION 80
 
-bool fedhas_sunlight()
+bool fedhas_sunlight(actor* agent)
 {
-    dist spelld;
+    coord_def base;
 
+    bool you_lit = false;
     bolt temp_bolt;
     temp_bolt.colour = YELLOW;
 
-    direction_chooser_args args;
-    args.restricts = DIR_TARGET;
-    args.mode = TARG_HOSTILE_SUBMERGED;
-    args.range = LOS_RADIUS;
-    args.needs_path = false;
-    args.may_target_monster = false;
-    args.top_prompt = "Select sunlight destination.";
-    direction(spelld, args);
+    if (agent->is_player())
+    {
+        dist spelld;
 
-    if (!spelld.isValid)
-        return false;
+        direction_chooser_args args;
+        args.restricts = DIR_TARGET;
+        args.mode = TARG_HOSTILE_SUBMERGED;
+        args.range = LOS_RADIUS;
+        args.needs_path = false;
+        args.may_target_monster = false;
+        args.top_prompt = "Select sunlight destination.";
+        direction(spelld, args);
 
-    const coord_def base = spelld.target;
+        if (!spelld.isValid)
+            return false;
+
+        base = spelld.target;
+    }
+    else
+    {
+        base = agent->as_monster()->target;
+    }
 
     int revealed_count = 0;
 
@@ -2515,6 +2581,9 @@ bool fedhas_sunlight()
 
         temp_bolt.explosion_draw_cell(*ai);
 
+        if (!agent->is_player() && *ai == you.pos())
+            you_lit = true;
+
         monster *victim = monster_at(*ai);
         if (victim && you.see_cell(*ai) && !victim->visible_to(&you))
         {
@@ -2524,7 +2593,7 @@ bool fedhas_sunlight()
         }
 
         if (victim)
-            behaviour_event(victim, ME_ALERT, &you);
+            behaviour_event(victim, ME_ALERT, agent);
     }
 
     {
@@ -2539,6 +2608,9 @@ bool fedhas_sunlight()
     cgotoxy(temp.x, temp.y, GOTO_DNGN);
 #endif
     delay(200);
+
+    if (you_lit)
+        mpr("You are bathed in sunlight!");
 
     if (revealed_count)
     {
@@ -2741,7 +2813,8 @@ static void _point_point_distance(const std::vector<coord_def> & origins,
 // We claim danger is proportional to the minimum distances from the point to a
 // (hostile) monster. This function carries out at most 7 searches to calculate
 // the distances in question.
-bool prioritise_adjacent(const coord_def &target, std::vector<coord_def> & candidates)
+bool prioritise_adjacent(actor* agent, const coord_def &target,
+                         std::vector<coord_def> & candidates)
 {
     radius_iterator los_it(target, LOS_RADIUS, true, true, true);
 
@@ -2749,10 +2822,23 @@ bool prioritise_adjacent(const coord_def &target, std::vector<coord_def> & candi
     // collect hostile monster positions in LOS
     for (; los_it; ++los_it)
     {
+        if (agent->is_monster()
+            && !agent->wont_attack()
+            && *los_it == you.pos()
+            && agent->can_see(&you))
+        {
+            mons_positions.push_back(you.pos());
+            continue;
+        }
+
         monster* hostile = monster_at(*los_it);
 
-        if (hostile && hostile->attitude == ATT_HOSTILE
-            && you.can_see(hostile))
+        if (hostile
+            && (agent->is_player() && hostile->attitude == ATT_HOSTILE
+                || agent->is_monster()
+                   && !mons_atts_aligned(mons_attitude(agent->as_monster()),
+                                         mons_attitude(hostile)))
+            && agent->can_see(hostile))
         {
             mons_positions.push_back(hostile->pos());
         }
@@ -2856,15 +2942,25 @@ static void _decrease_amount(std::vector<std::pair<int, int> >& available,
 // prompted to select a stack of fruit, and then plants are placed on open
 // squares adjacent to the user.  Of course, one piece of fruit is
 // consumed per plant, so a complete ring may not be formed.
-bool fedhas_plant_ring_from_fruit()
+bool fedhas_plant_ring_from_fruit(actor* agent, bool check_only)
 {
     // How much fruit is available?
     std::vector<std::pair<int, int> > collected_fruit;
-    int total_fruit = _collect_fruit(collected_fruit);
+    int total_fruit = 0;
+    monster* mon = agent->as_monster();
+
+    if (agent->is_player())
+        total_fruit = _collect_fruit(collected_fruit);
+    else
+    {
+        int misc = mon->inv[MSLOT_MISCELLANY];
+        if (misc != NON_ITEM && is_fruit(mitm[misc]))
+            total_fruit = mitm[misc].quantity;
+    }
 
     // How many adjacent open spaces are there?
     std::vector<coord_def> adjacent;
-    for (adjacent_iterator adj_it(you.pos()); adj_it; ++adj_it)
+    for (adjacent_iterator adj_it(agent->pos()); adj_it; ++adj_it)
     {
         if (mons_class_can_pass(MONS_PLANT, env.grid(*adj_it))
             && !actor_at(*adj_it))
@@ -2873,88 +2969,125 @@ bool fedhas_plant_ring_from_fruit()
         }
     }
 
-    const int max_use = std::min(total_fruit,
-                                 static_cast<int>(adjacent.size()));
+    int max_use = std::min(total_fruit, static_cast<int>(adjacent.size()));
 
     // Don't prompt if we can't do anything (due to having no fruit or
     // no squares to place plants on).
     if (max_use == 0)
     {
-        if (adjacent.empty())
-            mpr("No empty adjacent squares.");
+        if (agent->is_player())
+        {
+            if (adjacent.empty())
+                mpr("No empty adjacent squares.");
+            else
+                mpr("No fruit available.");
+        }
+
+        return false;
+    }
+
+    if (check_only)
+        return true;
+
+    prioritise_adjacent(agent, agent->pos(), adjacent);
+
+    int target_count = 0;
+    if (agent->is_player())
+    {
+        // Screwing around with display code I don't really understand. -cao
+        targetter_smite range(&you, 1);
+        range_view_annotator show_range(&range);
+
+        for (int i = 0; i < max_use; ++i)
+        {
+    #ifndef USE_TILE_LOCAL
+            coord_def temp = grid2view(adjacent[i]);
+            cgotoxy(temp.x, temp.y, GOTO_DNGN);
+            put_colour_ch(GREEN, '1' + i);
+    #endif
+    #ifdef USE_TILE
+            tiles.add_overlay(adjacent[i], TILE_INDICATOR + i);
+    #endif
+        }
+
+        // And how many plants does the user want to create?
+        if (!_prompt_amount(max_use, target_count,
+                            "How many plants will you create?"))
+        {
+            // User canceled at the prompt.
+            return false;
+        }
+    }
+    else
+    {
+        // TODO: make this more intelligent
+        if (mon->hit_points < mon->max_hit_points / 3
+            || mons_is_fleeing(mon) || mons_is_panicking(mon))
+        {
+            if (max_use > 4)
+                target_count = random_range(4, max_use - 1);
+            else
+                target_count = std::min(4, max_use);
+        }
+        else if (max_use > 1)
+            target_count = random_range(1, max_use - 1);
         else
-            mpr("No fruit available.");
-
-        return false;
+            return false;
     }
 
-    prioritise_adjacent(you.pos(), adjacent);
+    const int hp_adjust = agent->skill(SK_INVOCATIONS, 10);
 
-    // Screwing around with display code I don't really understand. -cao
-    targetter_smite range(&you, 1);
-    range_view_annotator show_range(&range);
-
-    for (int i = 0; i < max_use; ++i)
+    if (agent->is_player())
     {
+        // The user entered a number, remove all number overlays which
+        // are higher than that number.
 #ifndef USE_TILE_LOCAL
-        coord_def temp = grid2view(adjacent[i]);
-        cgotoxy(temp.x, temp.y, GOTO_DNGN);
-        put_colour_ch(GREEN, '1' + i);
+        unsigned not_used = adjacent.size() - unsigned(target_count);
+        for (unsigned i = adjacent.size() - not_used;
+             i < adjacent.size();
+             i++)
+        {
+            view_update_at(adjacent[i]);
+        }
 #endif
 #ifdef USE_TILE
-        tiles.add_overlay(adjacent[i], TILE_INDICATOR + i);
+        // For tiles we have to clear all overlays and redraw the ones
+        // we want.
+        tiles.clear_overlays();
+        for (int i = 0; i < target_count; ++i)
+            tiles.add_overlay(adjacent[i], TILE_INDICATOR + i);
 #endif
     }
-
-    // And how many plants does the user want to create?
-    int target_count;
-    if (!_prompt_amount(max_use, target_count,
-                        "How many plants will you create?"))
-    {
-        // User canceled at the prompt.
-        return false;
-    }
-
-    const int hp_adjust = you.skill(SK_INVOCATIONS, 10);
-
-    // The user entered a number, remove all number overlays which
-    // are higher than that number.
-#ifndef USE_TILE_LOCAL
-    unsigned not_used = adjacent.size() - unsigned(target_count);
-    for (unsigned i = adjacent.size() - not_used;
-         i < adjacent.size();
-         i++)
-    {
-        view_update_at(adjacent[i]);
-    }
-#endif
-#ifdef USE_TILE
-    // For tiles we have to clear all overlays and redraw the ones
-    // we want.
-    tiles.clear_overlays();
-    for (int i = 0; i < target_count; ++i)
-        tiles.add_overlay(adjacent[i], TILE_INDICATOR + i);
-#endif
 
     int created_count = 0;
     for (int i = 0; i < target_count; ++i)
     {
-        if (_create_plant(adjacent[i], hp_adjust))
+        if (_create_plant(agent, adjacent[i], hp_adjust))
             created_count++;
 
-        // Clear the overlay and draw the plant we just placed.
-        // This is somewhat more complicated in tiles.
-        view_update_at(adjacent[i]);
+        if (agent->is_player())
+        {
+            // Clear the overlay and draw the plant we just placed.
+            // This is somewhat more complicated in tiles.
+            view_update_at(adjacent[i]);
 #ifdef USE_TILE
-        tiles.clear_overlays();
-        for (int j = i + 1; j < target_count; ++j)
-            tiles.add_overlay(adjacent[j], TILE_INDICATOR + j);
-        viewwindow(false);
+            tiles.clear_overlays();
+            for (int j = i + 1; j < target_count; ++j)
+                tiles.add_overlay(adjacent[j], TILE_INDICATOR + j);
+            viewwindow(false);
 #endif
-        delay(200);
+            delay(200);
+        }
     }
 
-    _decrease_amount(collected_fruit, created_count);
+    if (agent->is_player())
+        _decrease_amount(collected_fruit, created_count);
+    else
+    {
+        int misc = mon->inv[MSLOT_MISCELLANY];
+        ASSERT(misc != NON_ITEM && is_fruit(mitm[misc]));
+        dec_mitm_item_quantity(misc, created_count);
+    }
 
     return created_count;
 }
@@ -2965,10 +3098,15 @@ bool fedhas_plant_ring_from_fruit()
 // chance of spawning plants or fungus on unoccupied dry floor tiles
 // outside of the rainfall area.  Return the number of plants/fungi
 // created.
-int fedhas_rain(const coord_def &target)
+int fedhas_rain(actor* agent, const coord_def &target)
 {
     int spawned_count = 0;
     int processed_count = 0;
+
+    beh_type beh = (agent->is_player()
+                    || you.religion == GOD_FEDHAS) ? BEH_GOOD_NEUTRAL
+                                                   : BEH_HOSTILE;
+
 
     for (radius_iterator rad(target, LOS_RADIUS, true, true, true); rad; ++rad)
     {
@@ -2994,8 +3132,8 @@ int fedhas_rain(const coord_def &target)
             {
                 if (create_monster(mgen_data(
                                       coinflip() ? MONS_PLANT : MONS_FUNGUS,
-                                      BEH_GOOD_NEUTRAL,
-                                      &you,
+                                      beh,
+                                      agent,
                                       0,
                                       0,
                                       *rad,
@@ -3003,7 +3141,8 @@ int fedhas_rain(const coord_def &target)
                                       MG_FORCE_PLACE,
                                       GOD_FEDHAS)))
                 {
-                    spawned_count++;
+                    if (you.see_cell(*rad))
+                        spawned_count++;
                 }
 
                 processed_count++;
@@ -3045,7 +3184,7 @@ int fedhas_rain(const coord_def &target)
 
             if (x_chance_in_y(expected, 20))
             {
-                place_cloud(CLOUD_RAIN, *rad, 10, &you);
+                place_cloud(CLOUD_RAIN, *rad, 10, agent);
 
                 processed_count++;
             }
@@ -3066,12 +3205,12 @@ int fedhas_rain(const coord_def &target)
 // and make 1 giant spore per corpse.  Spores are given the input as
 // their starting behavior; the function returns the number of corpses
 // processed.
-int fedhas_corpse_spores(beh_type behavior, bool interactive)
+int fedhas_corpse_spores(actor* agent, bool hostile, bool check_only)
 {
     int count = 0;
     std::vector<stack_iterator> positions;
 
-    for (radius_iterator rad(you.pos(), LOS_RADIUS, true, true, true); rad;
+    for (radius_iterator rad(agent->pos(), LOS_RADIUS, true, true, true); rad;
          ++rad)
     {
         if (actor_at(*rad))
@@ -3089,33 +3228,48 @@ int fedhas_corpse_spores(beh_type behavior, bool interactive)
         }
     }
 
-    if (count == 0)
+    if (count == 0 || check_only)
         return count;
 
-    viewwindow(false);
-    for (unsigned i = 0; i < positions.size(); ++i)
-    {
-#ifndef USE_TILE_LOCAL
-
-        coord_def temp = grid2view(positions[i]->pos);
-        cgotoxy(temp.x, temp.y, GOTO_DNGN);
-
-        unsigned color = GREEN | COLFLAG_FRIENDLY_MONSTER;
-        color = real_colour(color);
-
-        unsigned character = mons_char(MONS_GIANT_SPORE);
-        put_colour_ch(color, character);
-#endif
-#ifdef USE_TILE
-        tiles.add_overlay(positions[i]->pos, TILE_SPORE_OVERLAY);
-#endif
-    }
-
-    if (interactive && yesnoquit("Will you create these spores?",
-                                 true, 'y') <= 0)
+    if (agent->is_player() && !hostile)
     {
         viewwindow(false);
-        return -1;
+        for (unsigned i = 0; i < positions.size(); ++i)
+        {
+#ifndef USE_TILE_LOCAL
+
+            coord_def temp = grid2view(positions[i]->pos);
+            cgotoxy(temp.x, temp.y, GOTO_DNGN);
+
+            unsigned color = GREEN | COLFLAG_FRIENDLY_MONSTER;
+            color = real_colour(color);
+
+            unsigned character = mons_char(MONS_GIANT_SPORE);
+            put_colour_ch(color, character);
+#endif
+#ifdef USE_TILE
+            tiles.add_overlay(positions[i]->pos, TILE_SPORE_OVERLAY);
+#endif
+        }
+
+        if (yesnoquit("Will you create these spores?", true, 'y') <= 0)
+        {
+            viewwindow(false);
+            return -1;
+        }
+    }
+
+    beh_type behavior = BEH_FRIENDLY;
+    if (hostile && (agent->is_player() || you.religion == GOD_FEDHAS))
+        behavior = BEH_HOSTILE;
+    else if (agent->is_monster())
+    {
+        if (hostile)
+            behavior = (you.religion == GOD_FEDHAS)         ? BEH_GOOD_NEUTRAL :
+                       (agent->as_monster()->wont_attack()) ? BEH_HOSTILE
+                                                            : BEH_NEUTRAL;
+        else
+            behavior = SAME_ATTITUDE(agent->as_monster());
     }
 
     for (unsigned i = 0; i < positions.size(); ++i)
@@ -3123,7 +3277,7 @@ int fedhas_corpse_spores(beh_type behavior, bool interactive)
         count++;
         if (monster *rc = create_monster(mgen_data(MONS_GIANT_SPORE,
                                           behavior,
-                                          &you,
+                                          agent,
                                           0,
                                           0,
                                           positions[i]->pos,
@@ -3148,7 +3302,10 @@ int fedhas_corpse_spores(beh_type behavior, bool interactive)
         }
     }
 
-    viewwindow(false);
+    if (agent->is_player() && !hostile)
+        viewwindow(false);
+    else if (agent->is_monster())
+        simple_monster_message(agent->as_monster(), " creates spores!");
 
     return count;
 }
@@ -3213,11 +3370,13 @@ bool mons_is_evolvable(const monster* mon)
     return _possible_evolution(mon, temp);
 }
 
-static bool _place_ballisto(const coord_def & pos)
+static bool _place_ballisto(actor* agent, const coord_def & pos)
 {
+    beh_type beh = (agent->is_player()) ? BEH_FRIENDLY
+                                        : SAME_ATTITUDE(agent->as_monster());
     if (create_monster(mgen_data(MONS_BALLISTOMYCETE,
-                                                  BEH_FRIENDLY,
-                                                  &you,
+                                                  beh,
+                                                  agent,
                                                   0,
                                                   0,
                                                   pos,
@@ -3226,8 +3385,11 @@ static bool _place_ballisto(const coord_def & pos)
                                                   GOD_FEDHAS)))
     {
         remove_mold(pos);
-        mpr("The mold grows into a ballistomycete.");
-        mpr("Your piety has decreased.");
+        if (agent->is_player())
+        {
+            mpr("The mold grows into a ballistomycete.");
+            mpr("Your piety has decreased.");
+        }
         lose_piety(1);
         return true;
     }
@@ -3239,99 +3401,152 @@ static bool _place_ballisto(const coord_def & pos)
     return false;
 }
 
-bool fedhas_evolve_flora()
+bool fedhas_evolve_flora(actor* agent, bool check_only)
 {
     monster_conversion upgrade;
+    monster* target = NULL;
+    coord_def pos;
 
     // This is a little sloppy, but cancel early if nothing useful is in
     // range.
     bool in_range = false;
-    for (radius_iterator rad(you.get_los()); rad; ++rad)
+    for (radius_iterator rad(agent->get_los()); rad; ++rad)
     {
-        const monster* temp = monster_at(*rad);
+        monster* temp = monster_at(*rad);
         if (is_moldy(*rad) && mons_class_can_pass(MONS_BALLISTOMYCETE,
                                                   env.grid(*rad))
             || temp && mons_is_evolvable(temp))
         {
             in_range = true;
-            break;
+            if (agent->is_player())
+                break;
+
+            monster_conversion temp_upgrade;
+            bool doing_upgrade = false;
+
+            if (!temp ||
+                 (doing_upgrade = _possible_evolution(temp, temp_upgrade)))
+            {
+                if (!target && pos.origin()
+                    || (doing_upgrade
+                        && (!pos.origin()
+                            || (upgrade.new_type == MONS_WANDERING_MUSHROOM
+                                && temp_upgrade.new_type
+                                   != MONS_WANDERING_MUSHROOM))))
+                {
+                    int misc = agent->as_monster()->inv[MSLOT_MISCELLANY];
+                    if (!doing_upgrade
+                        || !temp_upgrade.fruit_cost
+                        || (misc != NON_ITEM
+                            && mitm[misc].quantity >= temp_upgrade.fruit_cost))
+                    {
+                        if (!doing_upgrade)
+                        {
+                            pos = *rad;
+                            target = NULL;
+                            upgrade = temp_upgrade; // clears it
+                        }
+                        else
+                        {
+                            target = temp;
+                            pos.reset();
+                            upgrade = temp_upgrade;
+                        }
+                    }
+                }
+            }
         }
     }
 
     if (!in_range)
     {
-        mpr("No evolvable flora in sight.");
-        return false;
-    }
-
-    dist spelld;
-
-    direction_chooser_args args;
-    args.restricts = DIR_TARGET;
-    args.mode = TARG_EVOLVABLE_PLANTS;
-    args.range = LOS_RADIUS;
-    args.needs_path = false;
-    args.may_target_monster = false;
-    args.show_floor_desc = true;
-    args.top_prompt = "Select plant or fungus to evolve.";
-
-    direction(spelld, args);
-
-    if (!spelld.isValid)
-    {
-        // Check for user cancel.
-        canned_msg(MSG_OK);
-        return false;
-    }
-
-    monster* const target = monster_at(spelld.target);
-
-    if (!target)
-    {
-        if (!is_moldy(spelld.target)
-            || !mons_class_can_pass(MONS_BALLISTOMYCETE,
-                                    env.grid(spelld.target)))
-        {
-            if (feat_is_tree(env.grid(spelld.target)))
-                mpr("The tree has already reached the pinnacle of evolution.");
-            else
-                mpr("You must target a plant or fungus.");
-            return false;
-        }
-        return _place_ballisto(spelld.target);
-
-    }
-
-    if (!_possible_evolution(target, upgrade))
-    {
-        if (target->type == MONS_GIANT_SPORE)
-            mpr("You can evolve only complete plants, not seeds.");
-        else  if (mons_is_plant(target))
-            simple_monster_message(target, " has already reached "
-                                   "the pinnacle of evolution.");
-        else
-            mpr("Only plants or fungi may be evolved.");
-
+        if (agent->is_player())
+            mpr("No evolvable flora in sight.");
         return false;
     }
 
     std::vector<std::pair<int, int> > collected_fruit;
-    if (upgrade.fruit_cost)
+    if (agent->is_player())
     {
-        const int total_fruit = _collect_fruit(collected_fruit);
+        dist spelld;
 
-        if (total_fruit < upgrade.fruit_cost)
+        direction_chooser_args args;
+        args.restricts = DIR_TARGET;
+        args.mode = TARG_EVOLVABLE_PLANTS;
+        args.range = LOS_RADIUS;
+        args.needs_path = false;
+        args.may_target_monster = false;
+        args.show_floor_desc = true;
+        args.top_prompt = "Select plant or fungus to evolve.";
+
+        direction(spelld, args);
+
+        if (!spelld.isValid)
         {
-            mpr("Not enough fruit available.");
+            // Check for user cancel.
+            canned_msg(MSG_OK);
+            return false;
+        }
+
+        target = monster_at(spelld.target);
+
+        if (!target)
+        {
+            if (!is_moldy(spelld.target)
+                || !mons_class_can_pass(MONS_BALLISTOMYCETE,
+                                        env.grid(spelld.target)))
+            {
+                if (feat_is_tree(env.grid(spelld.target)))
+                    mpr("The tree has already reached the pinnacle of evolution.");
+                else
+                    mpr("You must target a plant or fungus.");
+                return false;
+            }
+            return _place_ballisto(&you, spelld.target);
+
+        }
+
+        if (!_possible_evolution(target, upgrade))
+        {
+            if (target->type == MONS_GIANT_SPORE)
+                mpr("You can evolve only complete plants, not seeds.");
+            else  if (mons_is_plant(target))
+                simple_monster_message(target, " has already reached "
+                                       "the pinnacle of evolution.");
+            else
+                mpr("Only plants or fungi may be evolved.");
+
+            return false;
+        }
+
+        if (upgrade.fruit_cost)
+        {
+            const int total_fruit = _collect_fruit(collected_fruit);
+
+            if (total_fruit < upgrade.fruit_cost)
+            {
+                mpr("Not enough fruit available.");
+                return false;
+            }
+        }
+
+        if (upgrade.piety_cost && upgrade.piety_cost > you.piety)
+        {
+            mpr("Not enough piety available.");
             return false;
         }
     }
-
-    if (upgrade.piety_cost && upgrade.piety_cost > you.piety)
+    else if (!target && !pos.origin())
     {
-        mpr("Not enough piety available.");
+        return _place_ballisto(agent, pos);
+    }
+    else if (!target)
+    {
         return false;
     }
+
+    if (check_only)
+        return true;
 
     switch (target->type)
     {
@@ -3339,7 +3554,7 @@ bool fedhas_evolve_flora()
     case MONS_BUSH:
     {
         std::string evolve_desc = " can now spit acid";
-        int skill = you.skill(SK_INVOCATIONS);
+        int skill = agent->skill(SK_INVOCATIONS);
         if (skill >= 20)
             evolve_desc += " continuously";
         else if (skill >= 15)
@@ -3375,7 +3590,9 @@ bool fedhas_evolve_flora()
 
     target->upgrade_type(upgrade.new_type, true, true);
     target->god = GOD_FEDHAS;
-    target->attitude = ATT_FRIENDLY;
+    target->attitude =
+        (agent->is_player()) ? ATT_FRIENDLY
+                             : mons_attitude(agent->as_monster());
     target->flags |= MF_NO_REWARD;
     target->flags |= MF_ATT_CHANGE_ATTEMPT;
     behaviour_event(target, ME_ALERT);
@@ -3390,15 +3607,24 @@ bool fedhas_evolve_flora()
     if (target->type == MONS_HYPERACTIVE_BALLISTOMYCETE)
         target->add_ench(ENCH_EXPLODING);
 
-    target->hit_dice += you.skill_rdiv(SK_INVOCATIONS);
+    target->hit_dice += agent->skill_rdiv(SK_INVOCATIONS);
 
-    if (upgrade.fruit_cost)
-        _decrease_amount(collected_fruit, upgrade.fruit_cost);
-
-    if (upgrade.piety_cost)
+    if (agent->is_player())
     {
-        lose_piety(upgrade.piety_cost);
-        mpr("Your piety has decreased.");
+        if (upgrade.fruit_cost)
+            _decrease_amount(collected_fruit, upgrade.fruit_cost);
+
+        if (upgrade.piety_cost)
+        {
+            lose_piety(upgrade.piety_cost);
+            mpr("Your piety has decreased.");
+        }
+    }
+    else if (upgrade.fruit_cost)
+    {
+        int misc = agent->as_monster()->inv[MSLOT_MISCELLANY];
+        ASSERT(misc != NON_ITEM && mitm[misc].quantity >= upgrade.fruit_cost);
+        dec_mitm_item_quantity(misc, upgrade.fruit_cost);
     }
 
     return true;

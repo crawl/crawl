@@ -2263,6 +2263,16 @@ bool monster::pickup_food(item_def &item, int near)
         return pickup(item, MSLOT_MISCELLANY, near);
     }
 
+    // Fedhas worshippers use fruit for some spells.
+    if (is_fruit(item) && god == GOD_FEDHAS)
+    {
+        int misc = inv[MSLOT_MISCELLANY];
+        if (misc == NON_ITEM
+            || !is_fruit(mitm[misc])
+            || item.quantity > mitm[misc].quantity)
+            return pickup(item, MSLOT_MISCELLANY, near);
+    }
+
     return false;
 }
 
@@ -3097,6 +3107,7 @@ bool monster::has_spells(bool check_god) const
     if (check_god
         && (god == GOD_BEOGH
             || god == GOD_CHEIBRIADOS
+            || god == GOD_FEDHAS
             || god == GOD_JIYVA
             || god == GOD_KIKUBAAQUDGHA
             || god == GOD_LUGONU

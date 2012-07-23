@@ -3443,7 +3443,12 @@ static bool _may_cutdown(monster* mons, monster* targ)
     {
         return false;
     }
-    // Outside of that case, can always cut mundane plants.
+
+    // Don't let Fedhas worshippers harm plants.
+    if (mons->god == GOD_FEDHAS && mons_is_plant(targ))
+        return false;
+
+    // Outside of those cases, can always cut mundane plants.
     if (mons_is_firewood(targ))
         return true;
 

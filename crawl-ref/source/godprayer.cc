@@ -356,7 +356,7 @@ void pray()
         break;
 
     case GOD_FEDHAS:
-        if (fedhas_fungal_bloom())
+        if (fedhas_fungal_bloom(&you, false))
             something_happened = true;
         break;
 

@@ -1576,10 +1576,9 @@ int monster_die(monster* mons, actor *killer, bool silent,
 
 static void _mons_god_death_message(monster* mons)
 {
-    if (!you.can_see(mons))
-        return;
-
-    if (mons->is_summoned())
+    if (!you.can_see(mons)
+        || mons->is_summoned()
+        || mons_intel(mons) < I_NORMAL)
         return;
 
     switch (mons->god)

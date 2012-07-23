@@ -3264,6 +3264,84 @@ struct spell_desc
 },
 
 {
+    SPELL_FUNGAL_BLOOM, "Fungal Bloom",
+     SPTYP_TRANSMUTATION | SPTYP_HEXES,
+     SPFLAG_MONSTER,
+     1,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_EVOLUTION, "Evolution",
+     SPTYP_TRANSMUTATION | SPTYP_CHARMS,
+     SPFLAG_MONSTER,
+     2,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_SUNLIGHT, "Sunlight",
+     SPTYP_HEXES,
+     SPFLAG_MONSTER,
+     3,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_GROWTH, "Growth",
+     SPTYP_TRANSMUTATION | SPTYP_SUMMONING,
+     SPFLAG_MONSTER,
+     4,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_REPRODUCTION, "Reproduction",
+     SPTYP_TRANSMUTATION | SPTYP_SUMMONING,
+     SPFLAG_MONSTER,
+     5,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_RAIN, "Rain",
+     SPTYP_AIR,
+     SPFLAG_MONSTER,
+     6,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,

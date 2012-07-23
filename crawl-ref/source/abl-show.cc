@@ -2583,7 +2583,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_FEDHAS_SUNLIGHT:
-        if (!fedhas_sunlight())
+        if (!fedhas_sunlight(&you))
         {
             canned_msg(MSG_OK);
             return false;
@@ -2591,12 +2591,12 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_FEDHAS_PLANT_RING:
-        if (!fedhas_plant_ring_from_fruit())
+        if (!fedhas_plant_ring_from_fruit(&you))
             return false;
         break;
 
     case ABIL_FEDHAS_RAIN:
-        if (!fedhas_rain(you.pos()))
+        if (!fedhas_rain(&you, you.pos()))
         {
             canned_msg(MSG_NOTHING_HAPPENS);
             return false;
@@ -2605,7 +2605,7 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_FEDHAS_SPAWN_SPORES:
     {
-        const int retval = fedhas_corpse_spores();
+        const int retval = fedhas_corpse_spores(&you);
         if (retval <= 0)
         {
             if (retval == 0)
@@ -2618,7 +2618,7 @@ static bool _do_ability(const ability_def& abil)
     }
 
     case ABIL_FEDHAS_EVOLUTION:
-        if (!fedhas_evolve_flora())
+        if (!fedhas_evolve_flora(&you, false))
             return false;
         break;
 

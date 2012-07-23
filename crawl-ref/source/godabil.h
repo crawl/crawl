@@ -52,17 +52,19 @@ bool fedhas_passthrough_class(const monster_type mc);
 bool fedhas_passthrough(const monster* target);
 bool fedhas_passthrough(const monster_info* target);
 bool fedhas_shoot_through(const bolt & beam, const monster* victim);
-int fedhas_fungal_bloom();
-bool fedhas_sunlight();
+int fedhas_fungal_bloom(actor* agent, bool check_only = false);
+bool fedhas_sunlight(actor* agent);
 void process_sunlights(bool future = false);
-bool prioritise_adjacent(const coord_def &target,
+bool prioritise_adjacent(actor* agent,
+                         const coord_def &target,
                          std::vector<coord_def> &candidates);
-bool fedhas_plant_ring_from_fruit();
-int fedhas_rain(const coord_def &target);
-int fedhas_corpse_spores(beh_type behavior = BEH_FRIENDLY,
-                         bool interactive = true);
+bool fedhas_plant_ring_from_fruit(actor* agent, bool check_only = false);
+int fedhas_rain(actor* agent, const coord_def &target);
+int fedhas_corpse_spores(actor* agent,
+                         bool hostile = false,
+                         bool check_only = false);
 bool mons_is_evolvable(const monster* mon);
-bool fedhas_evolve_flora();
+bool fedhas_evolve_flora(actor* agent, bool check_only = false);
 
 void lugonu_bend_space();
 

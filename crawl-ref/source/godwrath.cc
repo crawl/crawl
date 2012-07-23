@@ -1043,7 +1043,7 @@ static bool _fedhas_retribution()
     case 0:
         // Try and spawn some hostile giant spores, if none are created
         // fall through to the elemental miscast effects.
-        if (fedhas_corpse_spores(BEH_HOSTILE, false))
+        if (fedhas_corpse_spores(&you, true, false))
         {
             simple_god_message(" produces spores.", GOD_FEDHAS);
             break;
@@ -1145,7 +1145,7 @@ static bool _fedhas_retribution()
         {
             unsigned target_count = random_range(2, 8);
             if (target_count < radius_points[0].size())
-                prioritise_adjacent(you.pos(), radius_points[0]);
+                prioritise_adjacent(&you, you.pos(), radius_points[0]);
             else
                 target_count = radius_points[0].size();
 

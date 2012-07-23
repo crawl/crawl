@@ -2224,6 +2224,22 @@ void _god_item_properties(monster* mons)
         _give_monster_item(mons, thing_created);
     }
 
+    if (mons->god == GOD_FEDHAS)
+    {
+        // Low nutrition items, so the player doesn't reap huge benefits.
+        int type = one_chance_in(3) ? FOOD_STRAWBERRY :
+                   coinflip()       ? FOOD_GRAPE
+                                    : FOOD_SULTANA ;
+        const int thing_created =
+            items(false, OBJ_FOOD, type, true, 0, 0);
+        if (thing_created != NON_ITEM)
+        {
+            mitm[thing_created].quantity =
+                random2avg(mons->get_piety() / 5, 2) + 1;
+            _give_monster_item(mons, thing_created);
+        }
+    }
+
     if (mons->god == GOD_ASHENZARI)
     {
         for (int i = MSLOT_WEAPON; i < NUM_MONSTER_SLOTS; i++)
