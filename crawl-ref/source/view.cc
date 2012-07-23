@@ -1134,22 +1134,19 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
     // Alter colour if flashing the characters vision.
     if (flash_colour)
     {
-        if (you.see_cell(gc))
-        {
+        if (!you.see_cell(gc))
+            cell->colour = DARKGREY;
 #ifdef USE_TILE_LOCAL
+        else
             cell->colour = real_colour(flash_colour);
 #else
+        else if (gc != you.pos())
+        {
             monster_type mons = env.map_knowledge(gc).monster();
             if (mons == MONS_NO_MONSTER || mons_class_is_firewood(mons))
-            {
                 cell->colour = real_colour(flash_colour);
-            }
+        }
 #endif
-        }
-        else
-        {
-            cell->colour = DARKGREY;
-        }
         cell->flash_colour = cell->colour;
     }
     else if (crawl_state.darken_range)
