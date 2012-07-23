@@ -3798,7 +3798,7 @@ static void _mons_divine_healing(monster* mons, coord_def pos)
             {
                 simple_monster_message(target, " turns neutral.");
                 record_monster_defeat(target, KILL_PACIFIED);
-                mons_pacify(target, ATT_NEUTRAL);
+                mons_pacify(mons, target, ATT_NEUTRAL);
             }
         }
     }

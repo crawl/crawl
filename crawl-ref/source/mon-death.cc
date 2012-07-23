@@ -425,7 +425,7 @@ void elven_twins_pacify(monster* twin)
         simple_monster_message(mons, " likewise turns neutral.");
 
     record_monster_defeat(mons, KILL_PACIFIED);
-    mons_pacify(mons, ATT_NEUTRAL);
+    mons_pacify(&you, mons, ATT_NEUTRAL);
 }
 
 /**
