@@ -1879,6 +1879,17 @@
       }
     },
 
+    {  MST_BK_JIYVA,
+      {
+       SPELL_NO_SPELL,
+       SPELL_SLIMIFY,
+       SPELL_NO_SPELL,
+       SPELL_REQUEST_JELLY,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+      }
+    },
+
     {  MST_TEST_SPAWNER,
       {
        SPELL_SHADOW_CREATURES,

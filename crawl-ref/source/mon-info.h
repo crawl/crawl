@@ -89,6 +89,7 @@ enum monster_info_flags
     MB_TIME_STEP,
     MB_RECITING,
     MB_DIVINE_STAMINA,
+    MB_SLIMIFY,
     NUM_MB_FLAGS
 };
 

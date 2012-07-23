@@ -112,6 +112,66 @@ static void _trj_spawns(actor *attacker, actor *trj, coord_def pos, int damage)
     }
 }
 
+static void _jiyva_spawns(actor *attacker, actor *trj, coord_def pos,
+                          int tospawn)
+{
+    if (tospawn <= 0)
+        return;
+
+    dprf("Trying to spawn %d jellies.", tospawn);
+
+    unsigned short foe = attacker ? attacker->mindex() : MHITNOT;
+
+    int spawned = 0;
+    for (int i = 0; i < tospawn; ++i)
+    {
+        const monster_type jelly = royal_jelly_ejectable_monster();
+        coord_def jpos = find_newmons_square_contiguous(jelly, pos);
+        if (!in_bounds(jpos))
+            continue;
+
+        beh_type beh = (trj) ? (SAME_ATTITUDE(trj->as_monster()))
+                             : BEH_HOSTILE;
+
+        if (monster *mons = mons_place(
+                              mgen_data(jelly, beh, trj, 0, 0,
+                                        jpos, foe, MG_DONT_COME, GOD_JIYVA)))
+        {
+            // Don't allow milking the royal jelly.
+            mons->flags |= MF_NO_REWARD;
+            spawned++;
+        }
+    }
+
+    if (!spawned || !you.see_cell(pos))
+        return;
+
+    if (trj)
+    {
+        const std::string monnam = trj->name(DESC_THE);
+        mprf("%s shudders%s.", monnam.c_str(),
+             spawned >= 5 ? " alarmingly" :
+             spawned >= 3 ? " violently" :
+             spawned > 1 ? " vigorously" : "");
+
+        if (spawned == 1)
+            mprf("%s spits out another jelly.", monnam.c_str());
+        else
+        {
+            mprf("%s spits out %s more jellies.",
+                 monnam.c_str(),
+                 number_in_words(spawned).c_str());
+        }
+    }
+    else if (spawned == 1)
+        mpr("One of its fragments survives.");
+    else
+    {
+        mprf("%s more jellies are split off.",
+             number_in_words(spawned).c_str());
+    }
+}
+
 // Effects that occur after all other effects, even if the monster is dead.
 // For example, explosions that would hit other creatures, but we want
 // to deal with only one creature at a time, so that's handled last.
@@ -187,6 +247,10 @@ void fire_final_effects()
 
         case FINEFF_ROYAL_JELLY_SPAWN:
             _trj_spawns(attacker, defender, fe.pos, fe.x);
+            break;
+
+        case FINEFF_JIYVA_SPAWN:
+            _jiyva_spawns(attacker, defender, fe.pos, fe.x);
             break;
         }
     }

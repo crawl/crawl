@@ -3238,6 +3238,32 @@ struct spell_desc
 },
 
 {
+    SPELL_REQUEST_JELLY, "Request Jelly",
+     SPTYP_SUMMONING,
+     SPFLAG_CHAOTIC | SPFLAG_MONSTER,
+     2,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_SLIMIFY, "Slimify",
+     SPTYP_TRANSMUTATION | SPTYP_HEXES,
+     SPFLAG_CHAOTIC | SPFLAG_MONSTER,
+     5,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,

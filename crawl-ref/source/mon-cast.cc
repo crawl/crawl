@@ -1193,6 +1193,8 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SANCTUARY:
     case SPELL_DRAW_ONE:
     case SPELL_DEAL_FOUR:
+    case SPELL_REQUEST_JELLY:
+    case SPELL_SLIMIFY:
         return true;
     default:
         if (check_validity)
@@ -1951,6 +1953,7 @@ static monster_spells _get_mons_god_spells(god_type god, bool *found)
 {
     static monster mon_beogh;
     static monster mon_chei;
+    static monster mon_jiyva;
     static monster mon_kiku;
     static monster mon_lugonu;
     static monster mon_makhleb;
@@ -1964,6 +1967,7 @@ static monster_spells _get_mons_god_spells(god_type god, bool *found)
 
     if (god != GOD_BEOGH
         && god != GOD_CHEIBRIADOS
+        && god != GOD_JIYVA
         && god != GOD_KIKUBAAQUDGHA
         && god != GOD_LUGONU
         && god != GOD_MAKHLEB
@@ -1981,6 +1985,7 @@ static monster_spells _get_mons_god_spells(god_type god, bool *found)
     {
         mons_load_spells(&mon_beogh,   MST_BK_BEOGH);
         mons_load_spells(&mon_chei,    MST_BK_CHEIBRIADOS);
+        mons_load_spells(&mon_jiyva,   MST_BK_JIYVA);
         mons_load_spells(&mon_kiku,    MST_BK_KIKUBAAQUDGHA);
         mons_load_spells(&mon_lugonu,  MST_BK_LUGONU);
         mons_load_spells(&mon_makhleb, MST_BK_MAKHLEB);
@@ -1995,6 +2000,7 @@ static monster_spells _get_mons_god_spells(god_type god, bool *found)
 
     monster *which = (god == GOD_BEOGH)           ? &mon_beogh
                      : (god == GOD_CHEIBRIADOS)   ? &mon_chei
+                     : (god == GOD_JIYVA)         ? &mon_jiyva
                      : (god == GOD_KIKUBAAQUDGHA) ? &mon_kiku
                      : (god == GOD_LUGONU)        ? &mon_lugonu
                      : (god == GOD_MAKHLEB)       ? &mon_makhleb
@@ -5038,6 +5044,27 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         ASSERT(mons_deck(mons) != NON_ITEM);
         mons_deck_deal(mons, mitm[mons_deck(mons)]);
         return;
+    case SPELL_REQUEST_JELLY:
+    {
+        mgen_data mg(MONS_JELLY, SAME_ATTITUDE(mons), 0, 0, 0, mons->pos(),
+                     MHITNOT, 0, GOD_JIYVA);
+        mg.non_actor_summoner = "Jiyva";
+
+        create_monster(mg);
+        return;
+    }
+    case SPELL_SLIMIFY:
+    {
+        const item_def* const weapon = mons->weapon();
+        const std::string msg = apostrophise(mons->name(DESC_THE)) + " " +
+            ((weapon) ? weapon->name(DESC_PLAIN)
+                      : mons->hand_name(true));
+        if (you.can_see(mons))
+            mprf(MSGCH_DURATION, "A thick mucus forms on %s.", msg.c_str());
+        mons->add_ench(mon_enchant(ENCH_SLIMIFY, 0, mons,
+                                   mons->skill_rdiv(SK_INVOCATIONS, 3, 2) + 3));
+        return;
+    }
     }
 
     // If a monster just came into view and immediately cast a spell,

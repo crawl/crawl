@@ -819,6 +819,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
                  apostrophise(name(DESC_THE)).c_str(),
                  hands.c_str(), plural ? "" : "s");
          }
+         break;
     case ENCH_TIME_STEP:
          if (!quiet)
             simple_monster_message(this, " slowly begins to move again.");
@@ -838,6 +839,11 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         if (!quiet && you.can_see(this))
             mprf("%s divine stamina fades away.",
                  apostrophise(name(DESC_THE)).c_str());
+        break;
+    case ENCH_SLIMIFY:
+         if (!quiet)
+            simple_monster_message(this, " looks less slimy.");
+         break;
     default:
         break;
     }
@@ -943,6 +949,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_ROUSED: case ENCH_BREATH_WEAPON: case ENCH_DEATHS_DOOR:
         case ENCH_OZOCUBUS_ARMOUR: case ENCH_HEROISM: case ENCH_FINESSE:
         case ENCH_TIME_STEP: case ENCH_RECITING: case ENCH_DIVINE_STAMINA:
+        case ENCH_SLIMIFY:
             lose_ench_levels(i->second, levels);
             break;
 
@@ -1154,6 +1161,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_FINESSE:
     case ENCH_TIME_STEP:
     case ENCH_DIVINE_STAMINA:
+    case ENCH_SLIMIFY:
     // case ENCH_ROLLING:
         decay_enchantment(me);
         break;
@@ -1890,7 +1898,7 @@ static const char *enchant_names[] =
     "dazed", "mute", "blind", "dumb", "mad", "silver_corona", "recite timer",
     "inner_flame", "roused", "breath timer", "deaths_door", "rolling",
     "ozocubus_armour", "heroism", "finesse", "time_step", "reciting",
-    "divine_stamina", "buggy",
+    "divine_stamina", "slimify", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)

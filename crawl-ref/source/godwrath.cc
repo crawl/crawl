@@ -966,7 +966,7 @@ static bool _jiyva_retribution()
             simple_god_message(
                 make_stringf("'s putrescence saturates %s!",
                              mon->name(DESC_THE).c_str()).c_str(), god);
-            slimify_monster(mon, true);
+            slimify_monster(&you, mon, true);
         }
     }
     else if (!one_chance_in(3))

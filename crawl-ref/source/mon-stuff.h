@@ -99,7 +99,7 @@ bool explode_corpse(item_def& corpse, const coord_def& where);
 int place_monster_corpse(const monster* mons, bool silent,
                          bool force = false);
 
-void slimify_monster(monster* mons, bool hostile = false);
+void slimify_monster(actor* agent, monster* mons, bool hostile = false);
 
 bool mon_can_be_slimified(monster* mons);
 

@@ -158,6 +158,8 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_RECITING;
     case ENCH_DIVINE_STAMINA:
         return MB_DIVINE_STAMINA;
+    case ENCH_SLIMIFY:
+        return MB_SLIMIFY;
     default:
         return NUM_MB_FLAGS;
     }
@@ -1387,6 +1389,8 @@ std::vector<std::string> monster_info::attributes() const
         v.push_back("reciting");
     if (is(MB_DIVINE_STAMINA))
         v.push_back("divine stamina");
+    if (is(MB_SLIMIFY))
+        v.push_back("slimifying");
     return v;
 }
 

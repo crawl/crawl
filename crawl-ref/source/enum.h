@@ -1521,6 +1521,7 @@ enum enchant_type
     ENCH_TIME_STEP,
     ENCH_RECITING,
     ENCH_DIVINE_STAMINA, // Vitalisation
+    ENCH_SLIMIFY,
     // Update enchantment names in monster.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -3275,6 +3276,9 @@ enum spell_type
     SPELL_DRAW_ONE,
     SPELL_DEAL_FOUR,
 
+    SPELL_REQUEST_JELLY,
+    SPELL_SLIMIFY,
+
     NUM_SPELLS
 };
 
@@ -3504,6 +3508,7 @@ enum final_effect_flavour
     FINEFF_BLINK,
     FINEFF_DISTORTION_TELEPORT,
     FINEFF_ROYAL_JELLY_SPAWN,
+    FINEFF_JIYVA_SPAWN,
 };
 
 enum disable_type

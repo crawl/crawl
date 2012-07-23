@@ -3317,7 +3317,7 @@ bool mon_can_be_slimified(monster* mons)
           );
 }
 
-void slimify_monster(monster* mon, bool hostile)
+void slimify_monster(actor* agent, monster* mon, bool hostile)
 {
     if (mon->holiness() == MH_UNDEAD)
         monster_polymorph(mon, MONS_DEATH_OOZE);
@@ -3350,10 +3350,24 @@ void slimify_monster(monster* mon, bool hostile)
     if (!mons_eats_items(mon))
         mon->add_ench(ENCH_EAT_ITEMS);
 
-    if (!hostile)
-        mon->attitude = ATT_STRICT_NEUTRAL;
+    if (agent->is_player())
+    {
+        if (!hostile)
+            mon->attitude = ATT_STRICT_NEUTRAL;
+        else
+            mon->attitude = ATT_HOSTILE;
+    }
     else
-        mon->attitude = ATT_HOSTILE;
+    {
+        if (!hostile)
+            mon->attitude = agent->as_monster()->attitude;
+        else if (mon->attitude == ATT_FRIENDLY
+                 || mon->attitude == ATT_NEUTRAL
+                 || mon->attitude == ATT_STRICT_NEUTRAL)
+            mon->attitude = ATT_HOSTILE;
+        else
+            mon->attitude = ATT_STRICT_NEUTRAL;
+    }
 
     mons_make_god_gift(mon, GOD_JIYVA);
 

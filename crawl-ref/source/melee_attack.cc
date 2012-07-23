@@ -477,14 +477,39 @@ bool melee_attack::handle_phase_hit()
     }
 
     // Slimify does no damage and serves as an on-hit effect, handle it
-    if (attacker->is_player() && you.duration[DUR_SLIMIFY]
-        && mon_can_be_slimified(defender->as_monster()))
+    if (((attacker->is_player() && you.duration[DUR_SLIMIFY])
+         || (attacker->is_monster()
+             && attacker->as_monster()->has_ench(ENCH_SLIMIFY)))
+        && (defender->is_player()
+            || mon_can_be_slimified(defender->as_monster())))
     {
         // Bail out after sliming so we don't get aux unarmed and
         // attack a fellow slime.
         damage_done = 0;
-        slimify_monster(defender->as_monster());
-        you.duration[DUR_SLIMIFY] = 0;
+        if (defender->is_player())
+        {
+            mprf("%s touches you!",
+                 attacker->as_monster()->name(DESC_THE).c_str());
+            mpr("You are covered in slime!", MSGCH_WARN);
+            std::string reason =
+                apostrophise(attacker->as_monster()->name(DESC_A, true))
+                + " slime";
+            for (int i = 0; i < 3; i++)
+                you.mutate(reason);
+        }
+        else
+        {
+            if (attacker->is_monster()
+                && (you.can_see(attacker) || you.can_see(defender)))
+                mprf("%s touches %s!",
+                     attacker->as_monster()->name(DESC_THE).c_str(),
+                     defender->as_monster()->name(DESC_THE).c_str());
+            slimify_monster(attacker, defender->as_monster());
+        }
+        if (attacker->is_player())
+            you.duration[DUR_SLIMIFY] = 0;
+        else
+            attacker->as_monster()->del_ench(ENCH_SLIMIFY, true);
 
         return false;
     }

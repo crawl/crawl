@@ -3097,6 +3097,7 @@ bool monster::has_spells(bool check_god) const
     if (check_god
         && (god == GOD_BEOGH
             || god == GOD_CHEIBRIADOS
+            || god == GOD_JIYVA
             || god == GOD_KIKUBAAQUDGHA
             || god == GOD_LUGONU
             || god == GOD_MAKHLEB
@@ -3975,7 +3976,21 @@ int monster::res_constrict() const
 
 int monster::res_acid() const
 {
-    return (get_mons_resists(this).acid);
+    int u = get_mons_resists(this).acid;
+
+    const int jewellery = inv[MSLOT_JEWELLERY];
+
+    if (jewellery != NON_ITEM && mitm[jewellery].base_type == OBJ_JEWELLERY
+        && mitm[jewellery].base_type == AMU_RESIST_CORROSION)
+        u++;
+
+    if (god == GOD_JIYVA && piety_level() >= 3)
+        u++;
+
+    if (u > 3)
+        u = 3;
+
+    return u;
 }
 
 int monster::res_magic() const
@@ -5633,6 +5648,20 @@ void monster::react_to_damage(const actor *oppressor, int damage,
     {
         add_final_effect(FINEFF_ROYAL_JELLY_SPAWN, oppressor, this,
                          pos(), damage);
+    }
+    else if (god == GOD_JIYVA && piety_level() >= 6)
+    {
+        int count = 0;
+        if (damage >= max_hit_points * 3 / 4)
+            count = random2(4) + 2;
+        else if (damage >= max_hit_points / 2)
+            count = random2(2) + 2;
+        else if (damage >= max_hit_points / 4)
+            count = 1;
+
+        if (count > 0)
+            add_final_effect(FINEFF_JIYVA_SPAWN, oppressor, this,
+                             pos(), count);
     }
 
     if (has_ench(ENCH_RECITING))
