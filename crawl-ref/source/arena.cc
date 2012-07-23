@@ -1315,6 +1315,42 @@ void arena_monster_died(monster* mons, killer_type killer,
     }
 }
 
+void arena_monster_faction_change(monster* mons,
+                                  mon_attitude_type new_attitude)
+{
+    if (mons->attitude == ATT_FRIENDLY)
+        arena::faction_a.active_members--;
+    else if (mons->attitude == ATT_HOSTILE)
+        arena::faction_b.active_members--;
+    if (new_attitude == ATT_FRIENDLY)
+        arena::faction_a.active_members++;
+    else if (new_attitude == ATT_HOSTILE)
+        arena::faction_b.active_members++;
+
+    if (arena::faction_a.active_members > 0
+        && arena::faction_b.active_members <= 0)
+    {
+        arena::faction_a.won = true;
+    }
+    else if (arena::faction_b.active_members > 0
+             && arena::faction_a.active_members <= 0)
+    {
+        arena::faction_b.won = true;
+    }
+    else if (mons->attitude == ATT_HOSTILE)
+    {
+        arena::faction_a.won = true;
+    }
+    else if (mons->attitude == ATT_FRIENDLY)
+    {
+        arena::faction_b.won = true;
+    }
+    else
+    {
+        game_ended_with_error("Last arena monster didn't belong to a faction.");
+    }
+}
+
 static bool _sort_by_age(int a, int b)
 {
     return (arena::item_drop_times[a] < arena::item_drop_times[b]);

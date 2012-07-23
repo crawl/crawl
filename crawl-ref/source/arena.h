@@ -31,5 +31,8 @@ void arena_split_monster(monster* split_from, monster* split_to);
 void arena_monster_died(monster* mons, killer_type killer,
                         int killer_index, bool silent, int corpse);
 
+void arena_monster_faction_change(monster* mons,
+                                  mon_attitude_type new_attitude);
+
 int arena_cull_items();
 #endif

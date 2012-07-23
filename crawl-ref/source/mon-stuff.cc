@@ -3349,24 +3349,31 @@ void slimify_monster(actor* agent, monster* mon, bool hostile)
     if (!mons_eats_items(mon))
         mon->add_ench(ENCH_EAT_ITEMS);
 
+    mon_attitude_type new_attitude;
+
     if (agent->is_player())
     {
         if (!hostile)
-            mon->attitude = ATT_STRICT_NEUTRAL;
+            new_attitude = ATT_STRICT_NEUTRAL;
         else
-            mon->attitude = ATT_HOSTILE;
+            new_attitude = ATT_HOSTILE;
     }
     else
     {
         if (!hostile)
-            mon->attitude = agent->as_monster()->attitude;
+            new_attitude = agent->as_monster()->attitude;
         else if (mon->attitude == ATT_FRIENDLY
                  || mon->attitude == ATT_NEUTRAL
                  || mon->attitude == ATT_STRICT_NEUTRAL)
-            mon->attitude = ATT_HOSTILE;
+            new_attitude = ATT_HOSTILE;
         else
-            mon->attitude = ATT_STRICT_NEUTRAL;
+            new_attitude = ATT_STRICT_NEUTRAL;
     }
+
+    if (crawl_state.game_is_arena())
+        arena_monster_faction_change(mon, new_attitude);
+
+    mon->attitude = new_attitude;
 
     mons_make_god_gift(mon, GOD_JIYVA);
 

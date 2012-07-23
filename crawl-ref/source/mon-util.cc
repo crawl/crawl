@@ -9,6 +9,7 @@
 
 #include "mon-util.h"
 
+#include "arena.h"
 #include "artefact.h"
 #include "beam.h"
 #include "colour.h"
@@ -2703,6 +2704,9 @@ void mons_pacify(actor* agent, monster* mon, mon_attitude_type att)
     // to good_neutral when you kill Pikel.
     if (agent->is_player() && mon->attitude >= att)
         return;
+
+    if (crawl_state.game_is_arena())
+        arena_monster_faction_change(mon, att);
 
     // Make the monster permanently neutral.
     mon->attitude = att;
