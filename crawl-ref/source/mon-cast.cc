@@ -2274,7 +2274,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
 
             if (has_god_spells)
             {
-                using_god_spells = true;
+                bool useful_spells = false;
                 hspell_pass = book;
 
                 int piety_level = mons->piety_level();
@@ -2286,7 +2286,14 @@ bool handle_mon_spell(monster* mons, bolt &beem)
 
                     if ((spell_difficulty(hspell_pass[i]) - 1) > piety_level)
                         hspell_pass[i] = SPELL_NO_SPELL;
+                    else if (hspell_pass[i] != SPELL_CANTRIP)
+                        useful_spells = true;
                 }
+
+                if (useful_spells)
+                    using_god_spells = true;
+                else
+                    hspell_pass = mons->spells;
             }
         }
 
