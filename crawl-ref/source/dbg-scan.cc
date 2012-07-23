@@ -168,15 +168,15 @@ void debug_item_scan(void)
         //
         //   -- eggplant is an illegal throwing weapon
         //
-        //   -- bola is an illegal fixed artefact
-        //
         //   -- items described as buggy (typically adjectives out of range)
         //      (note: covers buggy, bugginess, buggily, whatever else)
         //
+        // Theoretically some of these could match random names.
+        //
         if (strstr(name, "questionable") != NULL
             || strstr(name, "eggplant") != NULL
-            || strstr(name, "bola") != NULL
-            || strstr(name, "bugg") != NULL)
+            || strstr(name, "buggy") != NULL
+            || strstr(name, "buggi") != NULL)
         {
             mpr("Bad item:", MSGCH_ERROR);
             _dump_item(name, i, mitm[i]);
