@@ -961,12 +961,6 @@ Also be warned that their nomadic lifestyle has taught these sellers to
 appropriate any items an adventurer might leave behind, and then leave quickly,
 probably to sell them elsewhere.
 %%%%
-A gateway to a hive
-
-You hear a manifold buzzing. The waxy walls of this place are dripping with
-honey, but the larvae are hungry, and the queen bee will not tolerate
-intruders.
-%%%%
 A frozen archway
 
 A permanent cold front seems to surround this portal. Whatever lives on the

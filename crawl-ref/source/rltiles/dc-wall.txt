@@ -172,7 +172,7 @@ relief3
 %repeat WALL_HALL WALL_HALL_DARKGRAY
 %resetcol
 
-beehives0 WALL_HIVE
+beehives0 WALL_WAX
 beehives1
 beehives2
 beehives3

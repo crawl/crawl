@@ -104,9 +104,6 @@ static branch_type _zotdef_random_branch()
             case BRANCH_SLIME_PITS:
                 ok = wavenum > 20 && coinflip();   // 4K-
                 break;        // >4K turns only
-            case BRANCH_HIVE:
-                ok = wavenum > 12 && wavenum < 35; // 2.6-7.5K
-                break;
             case BRANCH_HALL_OF_BLADES:
                 ok = wavenum > 30;                 // 6K-
                 break;
