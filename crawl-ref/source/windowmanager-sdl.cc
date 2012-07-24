@@ -709,7 +709,7 @@ bool SDLWrapper::load_texture(GenericTexture *tex, const char *filename,
                     if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
                         pixel = p[0] << 16 | p[1] << 8 | p[2];
                     else
-                        pixel = p[0] | p[1] << 8 | p[2];
+                        pixel = p[0] | p[1] << 8 | p[2] << 16;
                     SDL_GetRGBA(pixel, img->format, &pixels[dest],
                                 &pixels[dest+1], &pixels[dest+2],
                                 &pixels[dest+3]);
