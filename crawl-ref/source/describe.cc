@@ -3116,9 +3116,9 @@ static std::string _monster_stat_description(const monster_info& mi)
     resists_t resist = mi.resists();
 
     const mon_resist_flags resists[] = {
-        MR_RES_ELEC,   MR_RES_POISON, MR_RES_FIRE,
-        MR_RES_STEAM,  MR_RES_COLD,   MR_RES_ACID,
-        MR_RES_ROTTING,MR_RES_NEG,
+        MR_RES_ELEC,    MR_RES_POISON, MR_RES_FIRE,
+        MR_RES_STEAM,   MR_RES_COLD,   MR_RES_ACID,
+        MR_RES_ROTTING, MR_RES_NEG,
     };
 
     std::vector<std::string> extreme_resists;
