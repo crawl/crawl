@@ -193,7 +193,6 @@ slime0 WALL_SLIME
 slime1
 slime2
 slime3
-%weight 5
 slime4
 slime5
 slime6
