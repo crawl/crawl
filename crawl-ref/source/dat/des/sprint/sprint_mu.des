@@ -460,7 +460,7 @@ KFEAT: # = closed_door
 :           })
 MARKER: # = lua:restrict_door()
 COLOUR: a = yellow
-TILE:   a = wall_hive
+TILE:   a = wall_wax
 SUBST:  a = x
 
 

@@ -622,7 +622,7 @@ MAP
 ENDMAP
 
 NAME: layout_caves
-DEPTH: Hive, Orc, Slime
+DEPTH: Orc, Slime
 CHANCE: 100%
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand

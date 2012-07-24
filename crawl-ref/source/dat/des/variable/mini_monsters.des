@@ -89,7 +89,7 @@ SUBST: 1 : 1:15 2 3:2 4:1
 SUBST: * : * R:3
 KITEM: R = w:2 honeycomb / w:1 royal jelly
 COLOUR:a = yellow
-TILE:  a = wall_hive
+TILE:  a = wall_wax
 SUBST: a = x
 MAP
   ????????
@@ -112,7 +112,7 @@ TAGS:  allow_dup
 MONS:  patrolling queen bee, patrolling killer bee
 KITEM: R = w:2 honeycomb / w:1 royal jelly
 COLOUR:a = yellow
-TILE:  a = wall_hive
+TILE:  a = wall_wax
 SUBST: a = x
 MAP
 ............

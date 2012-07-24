@@ -38,8 +38,6 @@ int mons_hallelf_level(monster_type mcls);
 int mons_hallelf_rare(monster_type mcls);
 int mons_hallzot_level(monster_type mcls);
 int mons_hallzot_rare(monster_type mcls);
-int mons_hive_level(monster_type mcls);
-int mons_hive_rare(monster_type mcls);
 int mons_lair_level(monster_type mcls);
 int mons_lair_rare(monster_type mcls);
 int mons_dwarf_level(monster_type mcls);

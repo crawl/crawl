@@ -1751,39 +1751,6 @@ int mons_pitslime_rare(monster_type mcls)
     }
 }
 
-// The Hive
-int mons_hive_level(monster_type mcls)
-{
-    switch (mcls)
-    {
-    case MONS_PLANT:
-    case MONS_KILLER_BEE:
-    case MONS_KILLER_BEE_LARVA:
-        return 1;
-
-    default:
-        return DEPTH_NOWHERE;
-    }
-}
-
-int mons_hive_rare(monster_type mcls)
-{
-    switch (mcls)
-    {
-    case MONS_KILLER_BEE:
-        return 300;
-
-    case MONS_PLANT:
-        return 100;
-
-    case MONS_KILLER_BEE_LARVA:
-        return 50;
-
-    default:
-        return 0;
-    }
-}
-
 // The Vaults
 int mons_vaults_level(monster_type mcls)
 {

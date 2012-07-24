@@ -290,7 +290,3 @@ The laboratory of some wizard, the portal to which has been carelessly left
 open. Beware, for wizards love to guard their possessions with traps and
 monsters of their own making!
 %%%%
-Hive
-
-You hear a manifold buzzing.
-%%%%
