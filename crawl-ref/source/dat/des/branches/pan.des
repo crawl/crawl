@@ -1572,12 +1572,12 @@ ENDMAP
 # A couple of small vaults featuring blood fountains.
 
 NAME:   pan_blood_fountain
-TAGS:   pan
-SUBST:  ' : '"
-COLOUR: ' = red / none
-COLOUR: " = red / none w:5 / lightred w:2
-COLOUR: . = red / none w:40
-# not sure which FTILE to use here
+TAGS:   extra allow_dup transparent
+DEPTH:  Pan
+CHANCE: 10%
+SUBST:  ' = '..
+SUBST:  . = " / .:80
+KPROP:  '" = bloody
 SUBST:  '=. , "=.
 MAP
  ...
@@ -1588,13 +1588,13 @@ MAP
 ENDMAP
 
 NAME:   pan_blood_fountain_2
-TAGS:   pan
-SUBST:  ' : '"
+TAGS:   extra allow_dup transparent
+DEPTH:  Pan
+CHANCE: 5%
 SUBST:  Y = YYV
-COLOUR: ' = red / none
-COLOUR: " = red / none w:5 / lightred w:2
-COLOUR: . = red / none w:80
-# not sure which FTILE to use here
+SUBST:  ' = '..
+SUBST:  . = " / .:80
+KPROP:  '" = bloody
 SUBST:  '=. , "=.
 MAP
  @.....
@@ -1604,6 +1604,14 @@ MAP
  ..'Y'..
   .'''.
    ...
+ENDMAP
+
+NAME:   pan_blood_fountain_small
+TAGS:   extra allow_dup transparent
+DEPTH:  Pan
+CHANCE: 15%
+MAP
+Y
 ENDMAP
 
 ###################################
