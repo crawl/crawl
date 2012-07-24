@@ -99,7 +99,7 @@ function TollStair:check_veto(marker, pname)
   elseif pname == "veto_level_change" then
     local name = self.props.overview
     if you.shopping_list_has(name, marker) then
-      crawl.mpr("Removing " .. name .. " from shopping list")
+      crawl.mpr("Removing " .. name .. " from shopping list.")
       you.shopping_list_del(name, marker)
     end
 
