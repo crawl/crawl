@@ -188,10 +188,21 @@ lair1
 lair2
 lair3
 
+%weight 10
 slime0 WALL_SLIME
 slime1
 slime2
 slime3
+%weight 5
+slime4
+slime5
+slime6
+slime7
+
+slime_stone0 STONE_WALL_SLIME
+slime_stone1
+slime_stone2
+slime_stone3
 
 tomb0 WALL_TOMB
 tomb1
