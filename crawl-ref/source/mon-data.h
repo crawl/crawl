@@ -3464,7 +3464,7 @@ static monsterentry mondata[] = {
 // nagas ('N')
 {
     MONS_NAGA, 'N', GREEN, "naga",
-    M_SPELLCASTER | M_SEE_INVIS | M_WARM_BLOOD | M_SPEAKS,
+    M_SPELLCASTER | M_FAKE_SPELLS | M_SEE_INVIS | M_WARM_BLOOD | M_SPEAKS,
     MR_RES_POISON,
     1000, 10, MONS_NAGA, MONS_NAGA, MH_NATURAL, -6,
     { {AT_HIT, AF_PLAIN, 17}, {AT_CONSTRICT, AF_CRUSH, 3},
@@ -3490,7 +3490,8 @@ static monsterentry mondata[] = {
 
 {
     MONS_NAGA_WARRIOR, 'N', BLUE, "naga warrior",
-    M_FIGHTER | M_SPELLCASTER | M_SEE_INVIS | M_WARM_BLOOD | M_SPEAKS,
+    M_FIGHTER | M_SPELLCASTER | M_FAKE_SPELLS | M_SEE_INVIS | M_WARM_BLOOD
+        | M_SPEAKS,
     MR_RES_POISON,
     1000, 8, MONS_NAGA, MONS_NAGA, MH_NATURAL, -6,
     { {AT_HIT, AF_PLAIN, 28}, {AT_CONSTRICT, AF_CRUSH, 6},
