@@ -414,9 +414,8 @@ tileidx_t tileidx_feature(const coord_def &gc)
             }
             if (slimy)
                 return TILE_FLOOR_SLIME_ACIDIC;
-            else
-                return _tileidx_feature_base(feat);
         }
+        return _tileidx_feature_base(feat);
     case DNGN_SECRET_DOOR:
     case DNGN_DETECTED_SECRET_DOOR:
     {
