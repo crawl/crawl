@@ -376,6 +376,13 @@ void ghost_demon::init_player_ghost()
     set_resist(resists, MR_RES_FIRE, player_res_fire());
     set_resist(resists, MR_RES_COLD, player_res_cold());
     set_resist(resists, MR_RES_ELEC, player_res_electricity());
+    // clones might lack innate rPois, copy it.  pghosts don't care.
+    set_resist(resists, MR_RES_POISON, player_res_poison());
+    set_resist(resists, MR_RES_ACID, player_res_acid());
+    set_resist(resists, MR_RES_STEAM, player_res_steam());
+    set_resist(resists, MR_RES_STICKY_FLAME, player_res_sticky_flame());
+    set_resist(resists, MR_RES_ASPHYX, you.res_asphyx());
+    set_resist(resists, MR_RES_ROTTING, you.res_rotting());
     speed          = _player_ghost_base_movement_speed();
 
     damage = 4;
