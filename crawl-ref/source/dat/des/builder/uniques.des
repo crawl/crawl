@@ -360,7 +360,7 @@ NAME:   uniq_ignacio
 DEPTH:  Pan
 CHANCE: 25%
 # TODO: use regular unique code instead?
-TAGS:   pan transparent extra allow_dup luniq_ignacio
+TAGS:   transparent extra allow_dup luniq_ignacio
 veto {{
   if you.uniques("Ignacio") then
     return true -- don't spam the list of vaults
