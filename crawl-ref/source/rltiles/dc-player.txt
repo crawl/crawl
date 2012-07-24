@@ -373,6 +373,8 @@ plate PLATE
 plate2 PLATE2
 plate_black PLATE_BLACK
 crystal_plate CRYSTAL_PLATE
+crystal_plate2
+crystal_plate3
 armor_mummy ARMOR_MUMMY
 
 ##cloth_u_sail SAILOR
