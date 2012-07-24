@@ -163,7 +163,6 @@ enum mon_itemeat_type
     MONEAT_NOTHING,
     MONEAT_ITEMS,
     MONEAT_CORPSES,
-    MONEAT_HONEY,
     MONEAT_FOOD,
 
     NUM_MONEAT

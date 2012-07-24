@@ -205,7 +205,7 @@ MDEF(muse)
 
 static const char *_moneat_names[] =
 {
-    "nothing", "items", "corpses", "honey", "food",
+    "nothing", "items", "corpses", "food",
 };
 
 static const char *_moneat_to_str(mon_itemeat_type etyp)
