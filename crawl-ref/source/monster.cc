@@ -3809,13 +3809,10 @@ int monster::res_holy_energy(const actor *attacker) const
 
 int monster::res_negative_energy() const
 {
-    if (holiness() != MH_NATURAL
-        || type == MONS_SHADOW_DRAGON)
-    {
+    if (holiness() != MH_NATURAL)
         return 3;
-    }
 
-    int u = 0;
+    int u = get_mons_resist(this, MR_RES_NEG);
 
     if (mons_itemuse(this) >= MONUSE_STARTING_EQUIPMENT)
     {

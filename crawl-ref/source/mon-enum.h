@@ -183,7 +183,9 @@ enum mon_resist_flags
     MR_RES_FIRE          = 1 << 6,
     MR_RES_HELLFIRE      = mrd(MR_RES_FIRE, 4),
     MR_RES_COLD          = 1 << 9,
-    MR_LAST_MULTI        = MR_RES_COLD,
+    MR_RES_NEG           = 1 << 12,
+    MR_LAST_MULTI        = MR_RES_NEG,
+
     MR_RES_ASPHYX        = 1 << 24,
     MR_RES_ACID          = 1 << 25,
     MR_RES_STICKY_FLAME  = 1 << 26,
