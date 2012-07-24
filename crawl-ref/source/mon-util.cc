@@ -708,11 +708,6 @@ bool mons_eats_corpses(const monster* mon)
     return (mons_itemeat(mon) == MONEAT_CORPSES);
 }
 
-bool mons_eats_honey(const monster* mon)
-{
-    return (mons_itemeat(mon) == MONEAT_HONEY);
-}
-
 bool mons_eats_food(const monster* mon)
 {
     return (mons_itemeat(mon) == MONEAT_FOOD);
@@ -3251,9 +3246,6 @@ bool monster_senior(const monster* m1, const monster* m2, bool fleeing)
             return true;
 
         if (m1->type == MONS_QUEEN_BEE && m2->type != MONS_QUEEN_BEE)
-            return true;
-
-        if (m1->type == MONS_KILLER_BEE && m2->type == MONS_KILLER_BEE_LARVA)
             return true;
     }
 

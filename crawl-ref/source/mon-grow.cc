@@ -40,8 +40,6 @@ static const monster_level_up mon_grow[] =
 
     monster_level_up(MONS_ANT_LARVA, MONS_WORKER_ANT),
 
-    monster_level_up(MONS_KILLER_BEE_LARVA, MONS_KILLER_BEE),
-
     monster_level_up(MONS_CENTAUR, MONS_CENTAUR_WARRIOR),
     monster_level_up(MONS_YAKTAUR, MONS_YAKTAUR_CAPTAIN),
 

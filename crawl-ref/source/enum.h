@@ -2021,7 +2021,9 @@ enum monster_type                      // menv[].type
     MONS_WORKER_ANT,
     MONS_SOLDIER_ANT,
     MONS_QUEEN_ANT,
+#if TAG_MAJOR_VERSION == 33
     MONS_KILLER_BEE_LARVA,
+#endif
     MONS_KILLER_BEE,
     MONS_QUEEN_BEE,
     MONS_VAMPIRE_MOSQUITO,

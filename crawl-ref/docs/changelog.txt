@@ -70,7 +70,7 @@ Monsters
 * Mimics can be "inept", (no adjective), "ravenous" or "monstrous", with
   a progression of strength and abilities.
 * New monster: orb spider. Shoots weak orbs of destruction at you.
-* Removed: Jozef, midges.
+* Removed: Jozef, midges, killer bee larvae.
 * Porcupines get spines.
 * Hell Sentinels replace Pit Fiends.
 * Boulder beetles can roll as a boulder.
