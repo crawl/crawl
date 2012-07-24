@@ -1424,11 +1424,10 @@ int rod_spell(int rod)
     if (spell == SPELL_THUNDERBOLT && you.props.exists("thunderbolt_last")
         && you.props["thunderbolt_last"].get_int() + 1 == you.num_turns)
     {
-        // Starting it up takes 2 mana, continuing any integer amount up to 5.
+        // Starting it up takes 2 mana, continuing any amount up to 5.
         // You don't get to expend less (other than stopping the zap completely).
-        int oomph = std::max(1, std::min(5, irod.plus / ROD_CHARGE_MULT));
-        you.props["thunderbolt_mana"].get_byte() = oomph;
-        mana = ROD_CHARGE_MULT * oomph;
+        mana = std::min(5 * ROD_CHARGE_MULT, (int)irod.plus);
+        you.props["thunderbolt_mana"].get_int() = mana;
     }
 
     if (irod.plus < mana)

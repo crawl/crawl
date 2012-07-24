@@ -1193,9 +1193,8 @@ static bool _handle_rod(monster *mons, bolt &beem)
         if (mons->props.exists("thunderbolt_last")
             && mons->props["thunderbolt_last"].get_int() + 1 == you.num_turns)
         {
-            int oomph = std::max(1, std::min(5, rod.plus / ROD_CHARGE_MULT));
-            mons->props["thunderbolt_mana"].get_int() = oomph;
-            rate = oomph * ROD_CHARGE_MULT;
+            rate = std::min(5 * ROD_CHARGE_MULT, (int)rod.plus);
+            mons->props["thunderbolt_mana"].get_int() = rate;
         }
         break;
 
