@@ -2833,7 +2833,7 @@ static monsterentry mondata[] = {
 {
     MONS_SHADOW_DRAGON, 'D', MAGENTA, "shadow dragon",
     M_SPELLCASTER | M_SEE_INVIS | M_COLD_BLOOD | M_FAKE_SPELLS,
-    MR_RES_POISON | mrd(MR_RES_COLD, 2),
+    MR_RES_POISON | mrd(MR_RES_COLD, 2) | mrd(MR_RES_NEG, 3),
     1800, 12, MONS_DRAGON, MONS_SHADOW_DRAGON, MH_NATURAL, -5,
     { {AT_BITE, AF_DRAIN_XP, 20}, {AT_CLAW, AF_PLAIN, 15},
       {AT_CLAW, AF_PLAIN, 15}, AT_NO_ATK },
