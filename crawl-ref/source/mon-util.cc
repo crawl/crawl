@@ -314,7 +314,7 @@ void set_resist(resists_t &all, mon_resist_flags res, int lev)
         if (lev)
             all |= res;
         else
-            all &= res;
+            all &= ~res;
         return;
     }
 
