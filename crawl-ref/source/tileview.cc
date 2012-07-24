@@ -270,7 +270,7 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
         return;
 
     case BRANCH_VOLCANO:
-        flv.wall  = TILE_WALL_PEBBLE_RED;
+        flv.wall  = TILE_WALL_VOLCANIC;
         flv.floor = TILE_FLOOR_ROUGH_RED;
         return;
 
