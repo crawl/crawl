@@ -124,8 +124,8 @@
      MONEAT_FOOD
 
     Monsters with MONEAT_ITEMS are capable of eating most items,
-    monsters with MONEAT_CORPSES are capable of eating corpses,
-    and monsters with MONEAT_FOOD are capable of eating food (note that
+    monsters with MONEAT_CORPSES are capable of eating corpses, and
+    monsters with MONEAT_FOOD are capable of eating food (note that
     corpses also count as food).
 
    size:
