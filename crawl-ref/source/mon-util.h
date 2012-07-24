@@ -10,7 +10,6 @@
 #include "externs.h"
 #include "enum.h"
 #include "mon-enum.h"
-#include "mon_resist_def.h"
 #include "player.h"
 #include "monster.h"
 
@@ -107,7 +106,7 @@ struct monsterentry
     const char *name;
 
     uint64_t bitfields;
-    mon_resist_def resists;
+    resists_t resists;
 
     short weight;
     // [Obsolete] Experience used to be calculated like this:
@@ -159,11 +158,26 @@ enum mon_threat_level_type
     MTHRT_UNDEF,
 };
 
+void set_resist(resists_t &all, mon_resist_flags res, int lev);
+
+// In all cases this will be simplified to a bit field access, so let's let
+// the compiler inline it.
+static inline int get_resist(resists_t all, mon_resist_flags res)
+{
+    if (res > MR_LAST_MULTI)
+        return all & res ? 1 : 0;
+    int v = (all / res) & 7;
+    if (v > 4)
+        return v - 8;
+    return v;
+}
+
 dungeon_feature_type habitat2grid(habitat_type ht);
 
 monsterentry *get_monster_data(monster_type mc) PURE;
-const mon_resist_def &get_mons_class_resists(monster_type mc);
-mon_resist_def get_mons_resists(const monster* mon);
+resists_t get_mons_class_resists(monster_type mc) PURE;
+resists_t get_mons_resists(const monster* mon);
+int get_mons_resist(const monster* mon, mon_resist_flags res);
 
 void init_monsters();
 void init_monster_symbols();

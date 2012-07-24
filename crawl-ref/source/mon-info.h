@@ -106,7 +106,7 @@ struct monster_info_base
     std::string quote;
     mon_holy_type holi;
     mon_intel_type mintel;
-    mon_resist_def mresists;
+    resists_t mresists;
     mon_itemuse_type mitemuse;
     int mbase_speed;
     flight_type fly;
@@ -222,7 +222,7 @@ struct monster_info : public monster_info_base
         return mintel;
     }
 
-    mon_resist_def resists() const
+    resists_t resists() const
     {
         return mresists;
     }

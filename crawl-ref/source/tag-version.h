@@ -27,6 +27,7 @@ enum tag_minor_version
     TAG_MINOR_CONSTRICT_MID,       // Store constriction by mid, not mindex.
     TAG_MINOR_FEAT_RENAMES,        // Per-vault feature renames.
     TAG_MINOR_STASH_FEATDESC,      // Store feature descriptions in stashes.
+    TAG_MINOR_BITFIELD_RESISTS,    // Store resistances as a bitfield.
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
 };

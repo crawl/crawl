@@ -153,7 +153,7 @@ void ghost_demon::reset()
     brand            = SPWPN_NORMAL;
     att_type         = AT_HIT;
     att_flav         = AF_PLAIN;
-    resists          = mon_resist_def();
+    resists          = 0;
     spellcaster      = false;
     cycle_colours    = false;
     colour           = BLACK;
@@ -177,30 +177,23 @@ void ghost_demon::init_random_demon()
 
     see_invis = !one_chance_in(10);
 
-    if (!one_chance_in(3))
-        resists.fire = random_range(1, 2);
-    else
-    {
-        resists.fire = 0;
-
-        if (one_chance_in(10))
-            resists.fire = -1;
-    }
+    resists = 0;
 
     if (!one_chance_in(3))
-        resists.cold = random_range(1, 2);
-    else
-    {
-        resists.cold = 0;
+        resists |= MR_RES_FIRE * random_range(1, 2);
+    else if (one_chance_in(10))
+        resists |= MR_VUL_FIRE;
 
-        if (one_chance_in(10))
-            resists.cold = -1;
-    }
+    if (!one_chance_in(3))
+        resists |= MR_RES_COLD * random_range(1, 2);
+    else
+        resists |= MR_VUL_COLD;
 
     // Demons, like ghosts, automatically get poison res. and life prot.
 
     // resist electricity:
-    resists.elec = one_chance_in(3);
+    if (one_chance_in(3))
+        resists |= MR_RES_ELEC; // no rElec++ for Pan lords, because of witches
 
     // HTH damage:
     damage = 20 + roll_dice(2, 20);
@@ -379,9 +372,10 @@ void ghost_demon::init_player_ghost()
         ev = MAX_GHOST_EVASION;
 
     see_invis      = you.can_see_invisible();
-    resists.fire   = player_res_fire();
-    resists.cold   = player_res_cold();
-    resists.elec   = player_res_electricity();
+    resists        = 0;
+    set_resist(resists, MR_RES_FIRE, player_res_fire());
+    set_resist(resists, MR_RES_COLD, player_res_cold());
+    set_resist(resists, MR_RES_ELEC, player_res_electricity());
     speed          = _player_ghost_base_movement_speed();
 
     damage = 4;
@@ -607,51 +601,34 @@ void ghost_demon::ugly_thing_to_very_ugly_thing()
     ugly_thing_add_resistance(true, att_flav);
 }
 
-static mon_resist_def _ugly_thing_resists(bool very_ugly, attack_flavour u_att_flav)
+static resists_t _ugly_thing_resists(bool very_ugly, attack_flavour u_att_flav)
 {
-    mon_resist_def resists;
-    resists.elec = 0;
-    resists.poison = 0;
-    resists.fire = 0;
-    resists.sticky_flame = false;
-    resists.cold = 0;
-    resists.acid = 0;
-    resists.rotting = false;
-
     switch (u_att_flav)
     {
     case AF_FIRE:
     case AF_NAPALM:
-        resists.fire = (very_ugly ? 2 : 1);
-        resists.sticky_flame = true;
-        break;
+        return MR_RES_FIRE * (very_ugly ? 2 : 1) | MR_RES_STICKY_FLAME;
 
     case AF_ACID:
-        resists.acid = (very_ugly ? 2 : 1);
-        break;
+        return MR_RES_ACID;
 
     case AF_POISON_NASTY:
     case AF_POISON_MEDIUM:
-        resists.poison = (very_ugly ? 2 : 1);
-        break;
+        return MR_RES_POISON * (very_ugly ? 2 : 1);
 
     case AF_ELEC:
-        resists.elec = (very_ugly ? 2 : 1);
-        break;
+        return MR_RES_ELEC * (very_ugly ? 2 : 1);
 
     case AF_DISEASE:
     case AF_ROT:
-        resists.rotting = true;
-        break;
+        return MR_RES_ROTTING;
 
     case AF_COLD:
-        resists.cold = (very_ugly ? 2 : 1);
-        break;
+        return MR_RES_COLD * (very_ugly ? 2 : 1);
 
     default:
-        break;
+        return 0;
     }
-    return resists;
 }
 
 void ghost_demon::ugly_thing_add_resistance(bool very_ugly,
@@ -944,11 +921,7 @@ bool debug_check_ghosts()
             return false;
         if (ghost.speed < MIN_GHOST_SPEED || ghost.speed > MAX_GHOST_SPEED)
             return false;
-        if (ghost.resists.fire < -3 || ghost.resists.fire > 3)
-            return false;
-        if (ghost.resists.cold < -3 || ghost.resists.cold > 3)
-            return false;
-        if (ghost.resists.elec < 0)
+        if (get_resist(ghost.resists, MR_RES_ELEC) < 0)
             return false;
         if (ghost.brand < SPWPN_NORMAL || ghost.brand > MAX_PAN_LORD_BRANDS)
             return false;
@@ -1076,7 +1049,7 @@ static colour_t _labrat_random_colour()
     return RANDOM_ELEMENT(labrat_colour_values);
 }
 
-void ghost_demon::init_labrat (colour_t force_colour)
+void ghost_demon::init_labrat(colour_t force_colour)
 {
     // Base init for "plain" laboratory rats. Kept in line with mon-data.h.
     xl = 5;
@@ -1092,13 +1065,7 @@ void ghost_demon::init_labrat (colour_t force_colour)
 
     spells.init(SPELL_NO_SPELL);
 
-    resists.elec = 0;
-    resists.poison = 0;
-    resists.fire = 0;
-    resists.sticky_flame = false;
-    resists.cold = 0;
-    resists.acid = 0;
-    resists.rotting = false;
+    resists = 0;
 
     switch (colour)
     {
@@ -1116,13 +1083,12 @@ void ghost_demon::init_labrat (colour_t force_colour)
         att_flav = AF_FIRE;
         spells[0] = SPELL_FIRE_BREATH;
         spellcaster = true;
-        resists.fire = 3;
-        resists.sticky_flame = true;
+        resists |= MR_RES_FIRE * 3 | MR_RES_STICKY_FLAME;
         break;
     case LIGHTCYAN: // gaseous
         spells[0] = SPELL_MEPHITIC_CLOUD;
         spellcaster = true;
-        resists.poison = 1; // otherwise it'll confuse itself
+        resists |= MR_RES_POISON; // otherwise it'll confuse itself
         break;
     case LIGHTRED: // leeching
         att_flav = AF_VAMPIRIC;
@@ -1131,7 +1097,7 @@ void ghost_demon::init_labrat (colour_t force_colour)
         fly = FL_LEVITATE;
         spells[0] = SPELL_SHOCK;
         spellcaster = true;
-        resists.elec = 1;
+        resists |= MR_RES_ELEC;
         speed = 15;
         ev = 15;
         break;
@@ -1150,7 +1116,7 @@ void ghost_demon::init_labrat (colour_t force_colour)
         break;
     case GREEN:
         att_flav = AF_POISON;
-        resists.poison = 3;
+        resists |= MR_RES_POISON * 3;
         break;
     case LIGHTGRAY:
         break;

@@ -3111,7 +3111,7 @@ static std::string _monster_stat_description(const monster_info& mi)
 
     // Don't leak or duplicate resistance information for ghost demon
     // monsters, except for (very) ugly things.
-    const mon_resist_def resist = mi.resists();
+    resists_t resist = mi.resists();
 
     const mon_resist_flags resists[] = {
         MR_RES_ELEC,   MR_RES_POISON, MR_RES_FIRE,
@@ -3126,9 +3126,7 @@ static std::string _monster_stat_description(const monster_info& mi)
 
     for (unsigned int i = 0; i < ARRAYSZ(resists); ++i)
     {
-        int level = resist.get_resist_level(resists[i]);
-        if (resists[i] == MR_RES_FIRE && resist.hellfire)
-            level = 3;
+        int level = get_resist(resist, resists[i]);
 
         if (level != 0)
         {

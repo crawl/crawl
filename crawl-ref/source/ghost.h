@@ -9,7 +9,6 @@
 #include "enum.h"
 #include "itemprop.h"
 #include "mon-enum.h"
-#include "mon_resist_def.h"
 
 #ifdef USE_TILE
 int tile_offset_for_labrat_colour(colour_t l_colour);
@@ -34,7 +33,7 @@ public:
     brand_type brand;
     attack_type att_type;
     attack_flavour att_flav;
-    mon_resist_def resists;
+    resists_t resists;
 
     bool spellcaster, cycle_colours;
     colour_t colour;

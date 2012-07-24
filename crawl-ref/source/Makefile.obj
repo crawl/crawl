@@ -150,7 +150,6 @@ mon-stealth.o \
 mon-stuff.o \
 mon-transit.o \
 mon-util.o \
-mon_resist_def.o \
 monster.o \
 mutation.o \
 newgame.o \
