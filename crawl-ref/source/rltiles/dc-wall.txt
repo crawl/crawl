@@ -198,8 +198,10 @@ slime5
 slime6
 slime7
 
+%weight 3
 slime_stone0 STONE_WALL_SLIME
 slime_stone1
+%weight 10
 slime_stone2
 slime_stone3
 
