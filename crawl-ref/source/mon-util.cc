@@ -305,24 +305,38 @@ static bool _get_kraken_head(const monster*& mon)
     return true;
 }
 
-const mon_resist_def &get_mons_class_resists(monster_type mc)
+void set_resist(resists_t &all, mon_resist_flags res, int lev)
+{
+    if (res > MR_LAST_MULTI)
+    {
+        ASSERT(lev >= 0);
+        ASSERT(lev <= 1);
+        if (lev)
+            all |= res;
+        else
+            all &= res;
+        return;
+    }
+
+    ASSERT(lev >= -3);
+    ASSERT(lev <= 4);
+    all = all & ~(res * 7) | res * lev;
+}
+
+resists_t get_mons_class_resists(monster_type mc)
 {
     const monsterentry *me = get_monster_data(mc);
     return (me ? me->resists : get_monster_data(MONS_PROGRAM_BUG)->resists);
 }
 
-mon_resist_def get_mons_resists(const monster* mon)
+resists_t get_mons_resists(const monster* mon)
 {
     _get_kraken_head(mon);
 
-    mon_resist_def resists;
+    resists_t resists = get_mons_class_resists(mon->type);
 
     if (mons_is_ghost_demon(mon->type))
-        resists = mon->ghost->resists;
-    else
-        resists = mon_resist_def();
-
-    resists |= get_mons_class_resists(mon->type);
+        resists |= mon->ghost->resists;
 
     if (mons_genus(mon->type) == MONS_DRACONIAN
             && mon->type != MONS_DRACONIAN
@@ -333,12 +347,17 @@ mon_resist_def get_mons_resists(const monster* mon)
             resists |= get_mons_class_resists(draco_species);
     }
 
-    // Undead get an additional level of poison resistance, in case
+    // Undead get full poison resistance. This is set from here in case
     // they're undead due to the MF_FAKE_UNDEAD flag.
     if (mon->holiness() == MH_UNDEAD)
-        resists.poison += 1;
+        resists = resists & ~(MR_RES_POISON * 7) | MR_RES_POISON * 3;
 
     return resists;
+}
+
+int get_mons_resist(const monster* mon, mon_resist_flags res)
+{
+    return get_resist(get_mons_resists(mon), res);
 }
 
 monster* monster_at(const coord_def &pos)

@@ -1820,7 +1820,7 @@ static int _get_monster_armour_value(const monster *mon,
 
     // Poison becomes much less valuable if the monster is
     // intrinsically resistant.
-    if (get_mons_resists(mon).poison <= 0)
+    if (get_mons_resist(mon, MR_RES_POISON) <= 0)
         value += get_armour_res_poison(item, true);
 
     // Same for life protection.
@@ -1976,7 +1976,7 @@ static int _get_monster_jewellery_value(const monster *mon,
 
     // Poison becomes much less valuable if the monster is
     // intrinsically resistant.
-    if (get_mons_resists(mon).poison <= 0)
+    if (get_mons_resist(mon, MR_RES_POISON) <= 0)
         value += get_jewellery_res_poison(item, true);
 
     // Same for life protection.
@@ -3558,16 +3558,12 @@ bool monster::is_insubstantial() const
 
 int monster::res_hellfire() const
 {
-    int res = get_mons_resists(this).hellfire;
-
-    return res;
+    return get_mons_resist(this, MR_RES_FIRE) >= 4;
 }
 
 int monster::res_fire() const
 {
-    const mon_resist_def res = get_mons_resists(this);
-
-    int u = std::min(res.fire + res.hellfire * 3, 3);
+    int u = get_mons_resist(this, MR_RES_FIRE);
 
     if (mons_itemuse(this) >= MONUSE_STARTING_EQUIPMENT)
     {
@@ -3601,7 +3597,7 @@ int monster::res_fire() const
 
 int monster::res_steam() const
 {
-    int res = get_mons_resists(this).steam;
+    int res = get_mons_resist(this, MR_RES_STEAM);
     if (has_equipped(EQ_BODY_ARMOUR, ARM_STEAM_DRAGON_ARMOUR))
         res += 3;
 
@@ -3615,7 +3611,7 @@ int monster::res_steam() const
 
 int monster::res_cold() const
 {
-    int u = get_mons_resists(this).cold;
+    int u = get_mons_resist(this, MR_RES_COLD);
 
     if (mons_itemuse(this) >= MONUSE_STARTING_EQUIPMENT)
     {
@@ -3652,7 +3648,7 @@ int monster::res_elec() const
     // This is a variable, not a player_xx() function, so can be above 1.
     int u = 0;
 
-    u += get_mons_resists(this).elec;
+    u += get_mons_resist(this, MR_RES_ELEC);
 
     // Don't bother checking equipment if the monster can't use it.
     if (mons_itemuse(this) >= MONUSE_STARTING_EQUIPMENT)
@@ -3683,7 +3679,7 @@ int monster::res_elec() const
 
 int monster::res_asphyx() const
 {
-    int res = get_mons_resists(this).asphyx;
+    int res = get_mons_resist(this, MR_RES_ASPHYX);
     if (is_unbreathing())
         res += 1;
     return res;
@@ -3708,7 +3704,7 @@ int monster::res_poison(bool temp) const
 {
     UNUSED(temp);
 
-    int u = get_mons_resists(this).poison;
+    int u = get_mons_resist(this, MR_RES_POISON);
     if (u > 0)
         return u;
 
@@ -3743,7 +3739,7 @@ int monster::res_poison(bool temp) const
 
 int monster::res_sticky_flame() const
 {
-    int res = get_mons_resists(this).sticky_flame;
+    int res = get_mons_resist(this, MR_RES_STICKY_FLAME);
     if (is_insubstantial())
         res += 1;
     if (has_equipped(EQ_BODY_ARMOUR, ARM_MOTTLED_DRAGON_ARMOUR))
@@ -3782,7 +3778,7 @@ int monster::res_rotting(bool temp) const
     }
     if (is_insubstantial())
         res = 3;
-    if (get_mons_resists(this).rotting)
+    if (get_mons_resist(this, MR_RES_ROTTING))
         res += 1;
 
     return std::min(3, res);
@@ -3912,7 +3908,7 @@ int monster::res_constrict() const
 
 int monster::res_acid() const
 {
-    return (get_mons_resists(this).acid);
+    return get_mons_resist(this, MR_RES_ACID);
 }
 
 int monster::res_magic() const

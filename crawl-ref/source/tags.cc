@@ -292,9 +292,6 @@ static void tag_read_ghost(reader &th);
 static void marshallGhost(writer &th, const ghost_demon &ghost);
 static ghost_demon unmarshallGhost(reader &th);
 
-static void marshallResists(writer &th, const mon_resist_def &res);
-static void unmarshallResists(reader &th, mon_resist_def &res);
-
 static void marshallSpells(writer &, const monster_spells &);
 static void unmarshallSpells(reader &, monster_spells &);
 
@@ -3054,7 +3051,7 @@ void marshallMonsterInfo(writer &th, const monster_info& mi)
     marshallString(th, mi.quote);
     marshallUnsigned(th, mi.holi);
     marshallUnsigned(th, mi.mintel);
-    marshallResists(th, mi.mresists);
+    marshallInt(th, mi.mresists);
     marshallUnsigned(th, mi.mitemuse);
     marshallByte(th, mi.mbase_speed);
     marshallUnsigned(th, mi.fly);
@@ -3103,7 +3100,16 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
 
     unmarshallUnsigned(th, mi.holi);
     unmarshallUnsigned(th, mi.mintel);
-    unmarshallResists(th, mi.mresists);
+#if TAG_MAJOR_VERSION == 33
+    if (th.getMinorVersion() < TAG_MINOR_BITFIELD_RESISTS)
+    {
+        for (int i = 0; i < 10; i++)
+            unmarshallByte(th);
+        mi.mresists = 0;
+    }
+    else
+#endif
+    mi.mresists = unmarshallInt(th);
     unmarshallUnsigned(th, mi.mitemuse);
     mi.mbase_speed = unmarshallByte(th);
 
@@ -3753,34 +3759,6 @@ static void tag_init_tile_bk()
 }
 // ------------------------------- ghost tags ---------------------------- //
 
-static void marshallResists(writer &th, const mon_resist_def &res)
-{
-    marshallByte(th, res.elec);
-    marshallByte(th, res.poison);
-    marshallByte(th, res.fire);
-    marshallByte(th, res.steam);
-    marshallByte(th, res.cold);
-    marshallByte(th, res.hellfire);
-    marshallByte(th, res.asphyx);
-    marshallByte(th, res.acid);
-    marshallByte(th, res.sticky_flame);
-    marshallByte(th, res.rotting);
-}
-
-static void unmarshallResists(reader &th, mon_resist_def &res)
-{
-    res.elec         = unmarshallByte(th);
-    res.poison       = unmarshallByte(th);
-    res.fire         = unmarshallByte(th);
-    res.steam        = unmarshallByte(th);
-    res.cold         = unmarshallByte(th);
-    res.hellfire     = unmarshallByte(th);
-    res.asphyx       = unmarshallByte(th);
-    res.acid         = unmarshallByte(th);
-    res.sticky_flame = unmarshallByte(th);
-    res.rotting      = unmarshallByte(th);
-}
-
 static void marshallSpells(writer &th, const monster_spells &spells)
 {
     for (int j = 0; j < NUM_MONSTER_SPELL_SLOTS; ++j)
@@ -3812,9 +3790,7 @@ static void marshallGhost(writer &th, const ghost_demon &ghost)
     marshallShort(th, ghost.brand);
     marshallShort(th, ghost.att_type);
     marshallShort(th, ghost.att_flav);
-
-    marshallResists(th, ghost.resists);
-
+    marshallInt(th, ghost.resists);
     marshallByte(th, ghost.spellcaster);
     marshallByte(th, ghost.cycle_colours);
     marshallByte(th, ghost.colour);
@@ -3843,9 +3819,16 @@ static ghost_demon unmarshallGhost(reader &th)
     ghost.brand            = static_cast<brand_type>(unmarshallShort(th));
     ghost.att_type = static_cast<attack_type>(unmarshallShort(th));
     ghost.att_flav = static_cast<attack_flavour>(unmarshallShort(th));
-
-    unmarshallResists(th, ghost.resists);
-
+#if TAG_MAJOR_VERSION == 33
+    if (th.getMinorVersion() < TAG_MINOR_BITFIELD_RESISTS)
+    {
+        for (int i = 0; i < 10; i++)
+            unmarshallByte(th);
+        ghost.resists = 0;
+    }
+    else
+#endif
+    ghost.resists = unmarshallInt(th);
     ghost.spellcaster      = unmarshallByte(th);
     ghost.cycle_colours    = unmarshallByte(th);
     ghost.colour           = unmarshallByte(th);
