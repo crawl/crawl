@@ -1081,7 +1081,7 @@ end
 #
 NAME:    layout_loops_misc
 DEPTH:   1-, !Vaults
-WEIGHT:  10 (Pan), 20
+WEIGHT:  5 (Pan), 20
 ORIENT:  encompass
 TAGS:    overwritable layout allow_dup unrand
 {{
@@ -1455,8 +1455,8 @@ ENDMAP
 #  generated around the central rooms.
 #
 NAME:    layout_loops_corners
-DEPTH:   Pan, 4-22, !Vaults
-WEIGHT:  5 (Pan), 10
+DEPTH:   4-22, !Vaults
+WEIGHT:  5
 ORIENT:  encompass
 TAGS:    overwritable layout allow_dup unrand
 {{
