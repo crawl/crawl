@@ -422,7 +422,7 @@ static bool _is_seen_slimy_wall(const coord_def& gc)
 {
     const dungeon_feature_type feat = _safe_feat(gc);
 
-    return (feat == DNGN_SLIMY_WALL);
+    return feat == DNGN_SLIMY_WALL;
 }
 
 void pack_cell_overlays(const coord_def &gc, packed_cell *cell)
