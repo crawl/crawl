@@ -4825,7 +4825,7 @@ int enchant_to_int(const item_def &item)
     }
 }
 
-tileidx_t tileidx_enchant_equ(const item_def &item, tileidx_t tile)
+tileidx_t tileidx_enchant_equ(const item_def &item, tileidx_t tile, bool player)
 {
     static const int etable[5][5] =
     {
@@ -4837,7 +4837,11 @@ tileidx_t tileidx_enchant_equ(const item_def &item, tileidx_t tile)
     };
 
     const int etype = enchant_to_int(item);
-    const int idx   = tile_main_count(tile) - 1;
+    int idx;
+    if (player)
+        idx = tile_player_count(tile) - 1;
+    else
+        idx = tile_main_count(tile) - 1;
     ASSERT(idx < 5);
 
     tile += etable[idx][etype];

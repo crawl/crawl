@@ -49,7 +49,8 @@ tileidx_t tileidx_unseen_flag(const coord_def &gc);
 // Return the level of enchantment as an int.  None is 0, Randart is 4.
 int enchant_to_int(const item_def &item);
 // If tile has variations, select among them based upon the enchant of item.
-tileidx_t tileidx_enchant_equ(const item_def &item, tileidx_t tile);
+tileidx_t tileidx_enchant_equ(const item_def &item, tileidx_t tile,
+                              bool player = false);
 
 // For a given fg/bg set of tile indices and a 1 character prefix,
 // return index, flag, and tile name as a printable string.
