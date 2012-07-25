@@ -2905,6 +2905,19 @@ struct spell_desc
      true,
      false
 },
+        
+{
+    SPELL_ARCANE_FAMILIAR, "Iskenderun's Arcane Familiar",
+      SPTYP_CONJURATION | SPTYP_CHARMS,
+      SPFLAG_NONE,
+      4,
+      100,
+      -1, -1,
+      0,
+      NULL,
+      false,
+      true
+},
 
 {
     SPELL_SUMMON_MINOR_DEMON, "Summon Minor Demon",

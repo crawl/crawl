@@ -115,6 +115,7 @@
 #include "spl-goditem.h"
 #include "spl-other.h"
 #include "spl-selfench.h"
+#include "spl-summoning.h"
 #include "spl-transloc.h"
 #include "spl-util.h"
 #include "stairs.h"
@@ -2829,6 +2830,9 @@ static void _decrement_durations()
                           "Your shroud unravels.",
                           0,
                           "Your shroud begins to fray at the edges.");
+    
+    if (_decrement_a_duration(DUR_ARCANE_FAMILIAR, delay))
+        end_arcane_familiar(false);
 
     if (!env.sunlight.empty())
         process_sunlights();

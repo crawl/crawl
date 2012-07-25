@@ -147,6 +147,7 @@ struct mgen_data
     {
         ASSERT(summon_type == 0 || (abj >= 1 && abj <= 6)
                || mt == MONS_BALL_LIGHTNING || mt == MONS_ORB_OF_DESTRUCTION
+               || mt == MONS_ARCANE_FAMILIAR
                || summon_type == SPELL_STICKS_TO_SNAKES
                || summon_type == SPELL_DEATH_CHANNEL
                || summon_type == SPELL_SIMULACRUM);

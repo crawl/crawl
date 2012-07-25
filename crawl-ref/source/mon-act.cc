@@ -49,6 +49,7 @@
 #include "shopping.h" // for item values
 #include "spl-book.h"
 #include "spl-damage.h"
+#include "spl-summoning.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
@@ -1776,6 +1777,7 @@ void handle_monster_move(monster* mons)
         if (just_once)
         {
             move_demon_tentacle(mons);
+            reset_arcane_familiar(mons);
             just_once = false;
         }
 
@@ -1840,6 +1842,12 @@ void handle_monster_move(monster* mons)
                 return;
             mons->lose_energy(EUT_MOVE);
             continue;
+        }
+
+        if (mons->type == MONS_ARCANE_FAMILIAR)
+        {
+            if (fire_arcane_familiar(mons))
+                mons->lose_energy(EUT_SPECIAL);
         }
 
         mons->shield_blocks = 0;
@@ -3723,7 +3731,8 @@ static bool _monster_move(monster* mons)
     if (mmov.x || mmov.y || (mons->confused() && one_chance_in(6)))
         return _do_move_monster(mons, mmov);
 
-    if (mons_is_wandering(mons))
+    // Familiars need to preserve their tracking targets after each move
+    if (mons_is_wandering(mons) && mons->type != MONS_ARCANE_FAMILIAR)
     {
         // trigger a re-evaluation of our wander target on our next move -cao
         mons->target = mons->pos();

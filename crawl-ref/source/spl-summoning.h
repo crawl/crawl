@@ -1,6 +1,7 @@
 #ifndef SPL_SUMMONING_H
 #define SPL_SUMMONING_H
 
+#include "beam.h"
 #include "enum.h"
 #include "itemprop-enum.h"
 #include "spl-cast.h"
@@ -80,5 +81,12 @@ spret_type cast_haunt(int pow, const coord_def& where, god_type god, bool fail);
 
 spret_type cast_abjuration(int pow, const coord_def& where, bool fail = false);
 spret_type cast_mass_abjuration(int pow, bool fail = false);
+
+spret_type cast_arcane_familiar(int pow, god_type god, bool fail);
+void end_arcane_familiar(bool killed);
+bool aim_arcane_familiar(spell_type spell, int powc, bolt& beam);
+bool trigger_arcane_familiar();
+bool fire_arcane_familiar(monster* mons);
+void reset_arcane_familiar(monster* mons);
 
 #endif
