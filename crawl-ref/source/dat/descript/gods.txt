@@ -65,8 +65,10 @@ Okawaru
 
 Okawaru is a dangerous and powerful God of battle. Followers can gain a number
 of powers useful in combat as well as various rewards, but must constantly
-prove themselves through battle and the sacrifice of corpses. Okawaru despises
-those who harm their allies.
+prove themselves through battle and the sacrifice of corpses. Okawaru gives
+little heed to small victories, applauding heroic feats against much
+stronger enemies. While there is no requirement to fight fair, harming one's
+allies is the foulest thing in Okawaru's eyes.
 %%%%
 Makhleb
 
