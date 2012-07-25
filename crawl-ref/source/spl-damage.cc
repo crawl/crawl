@@ -2105,6 +2105,8 @@ spret_type cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
     caster->props["thunderbolt_last"].get_int() = you.num_turns;
     caster->props["thunderbolt_aim"].get_coord() = aim;
 
+    noisy(15 + div_rand_round(juice, ROD_CHARGE_MULT), hitfunc.origin);
+
     return SPRET_SUCCESS;
 }
 
