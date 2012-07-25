@@ -633,7 +633,7 @@ TILE:     urand_storm_bow
 TILE_EQ:  bow_blue
 BRAND:    SPWPN_ELECTROCUTION
 
-NAME:    shield of Ignorance
+NAME:    large shield of Ignorance
 OBJ:     OBJ_ARMOUR/ARM_LARGE_SHIELD
 PLUS:    +8
 COLOUR:  BROWN
