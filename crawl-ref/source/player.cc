@@ -5264,7 +5264,7 @@ void dec_napalm_player(int delay)
 {
     delay = std::min(delay, you.duration[DUR_LIQUID_FLAMES]);
 
-    if (feat_is_watery(grd(you.pos())))
+    if (feat_is_watery(grd(you.pos())) && you.ground_level())
     {
         mpr("The flames go out!", MSGCH_WARN);
         you.duration[DUR_LIQUID_FLAMES] = 0;
