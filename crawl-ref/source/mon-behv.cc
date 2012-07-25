@@ -301,7 +301,8 @@ void handle_behaviour(monster* mon)
     if (isFriendly
         && (mon->foe == MHITNOT || mon->foe == MHITYOU)
         && !mon->berserk()
-        && mon->type != MONS_GIANT_SPORE)
+        && mon->type != MONS_GIANT_SPORE
+        && mon->type != MONS_ARCANE_FAMILIAR)
     {
         if  (!crawl_state.game_is_zotdef())
         {
@@ -841,7 +842,8 @@ static bool _mons_check_foe(monster* mon, const coord_def& p,
 static void _set_nearest_monster_foe(monster* mon)
 {
     // These don't look for foes.
-    if (mon->good_neutral() || mon->strict_neutral())
+    if (mon->good_neutral() || mon->strict_neutral()
+            || mon->type == MONS_ARCANE_FAMILIAR)
         return;
 
     const bool friendly = mon->friendly();

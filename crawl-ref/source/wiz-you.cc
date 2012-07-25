@@ -801,7 +801,8 @@ static const char* dur_names[] =
     "temporary mutations",
 #endif
     "disjunction",
-    "vehumet gift"
+    "vehumet gift",
+    "arcane familiar"
 };
 
 void wizard_edit_durations(void)

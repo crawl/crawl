@@ -7,6 +7,8 @@
 
 #include "spl-summoning.h"
 
+#include <algorithm>
+
 #include "areas.h"
 #include "artefact.h"
 #include "cloud.h"
@@ -38,11 +40,14 @@
 #include "player-stats.h"
 #include "religion.h"
 #include "shout.h"
+#include "spl-util.h"
+#include "spl-zap.h"
 #include "state.h"
 #include "stuff.h"
 #include "teleport.h"
 #include "terrain.h"
 #include "unwind.h"
+#include "viewchar.h"
 #include "xom.h"
 
 static void _monster_greeting(monster *mons, const string &key)
@@ -2409,4 +2414,302 @@ spret_type cast_mass_abjuration(int pow, bool fail)
         _abjuration(pow, *mi);
 
     return SPRET_SUCCESS;
+}
+
+monster* _find_arcane_familiar()
+{
+    monster* mons = NULL;
+    for (int i = 0; i < MAX_MONSTERS; ++i)
+    {
+        mons = &menv[i];
+        if (mons->type == MONS_ARCANE_FAMILIAR)
+        {
+            return mons;
+        }
+    }
+
+    return NULL;
+}
+
+spret_type cast_arcane_familiar(int pow, god_type god, bool fail)
+{
+    if (you.duration[DUR_ARCANE_FAMILIAR] > 0)
+    {
+        monster* familiar = _find_arcane_familiar();
+        bool recalled = false;
+        if (!you.can_see(familiar))
+        {
+            coord_def empty;
+            if (empty_surrounds(you.pos(), DNGN_FLOOR, 3, false, empty)
+                && familiar->move_to_pos(empty))
+                recalled = true;
+        }
+
+        if (recalled)
+            mpr("You recall your familiar and imbue it with additional charge.");
+        else
+            mpr("You imbue your familiar with additional charge.");
+
+        familiar->number = std::min(20, (int) familiar->number + 4 + (pow / 20));
+        you.increase_duration(DUR_ARCANE_FAMILIAR, 7 + roll_dice (2, pow), 50);
+    }
+    else
+    {
+        mgen_data mg (MONS_ARCANE_FAMILIAR,
+                BEH_FRIENDLY,
+                &you,
+                0, SPELL_ARCANE_FAMILIAR,
+                you.pos(),
+                MHITYOU,
+                0, god,
+                MONS_NO_MONSTER, 0, BLACK,
+                0);
+        mg.hd = 1 + (pow / 11);
+        monster *familiar = create_monster(mg);
+
+        if (familiar)
+        {
+            mpr ("You conjure a globe of magical energy.");
+            you.increase_duration(DUR_ARCANE_FAMILIAR, 7 + roll_dice (2, pow), 50);
+            familiar->number = 4 + (pow / 20);
+        }
+        else
+            canned_msg(MSG_NOTHING_HAPPENS);
+    }
+
+    return SPRET_SUCCESS;
+}
+
+void end_arcane_familiar(bool killed)
+{
+    you.duration[DUR_ARCANE_FAMILIAR] = 0;
+    if (!killed)
+    {
+        monster *familiar = _find_arcane_familiar();
+        //Should only happen if you dismiss it in wizard mode, I think
+        if (familiar)
+        {
+            if (you.can_see(familiar))
+            {
+                if ((familiar->number == 0))
+                    mpr("Your arcane familiar expends the last of its energy and dissipates.");
+                else
+                    mpr("Your arcane familiar wavers and loses cohesion.");
+            }
+            else
+                mpr("You feel your bond with your familiar wane.");
+
+            place_cloud(CLOUD_MAGIC_TRAIL, familiar->pos(), 3 + random2(3), familiar);
+
+            familiar->reset();
+        }
+    }
+}
+
+bool _familiar_can_mirror(spell_type spell)
+{
+    return ((spell_typematch(spell, SPTYP_CONJURATION)
+            && spell_to_zap(spell) != NUM_ZAPS)
+            || spell == SPELL_MEPHITIC_CLOUD
+            || spell == SPELL_IOOD);
+}
+
+bool aim_arcane_familiar(spell_type spell, int powc, bolt& beam)
+{
+    //Is this spell something that will trigger the familiar?
+    if (_familiar_can_mirror(spell))
+    {
+        monster* familiar = _find_arcane_familiar();
+
+        // In case the familiar was in the middle of a (failed) target-seeking
+        // action, cancel it so that it can focus on a new target
+        reset_arcane_familiar(familiar);
+
+        // Don't try to fire at ourselves
+        if (beam.target == familiar->pos())
+            return false;
+
+        // If the player beam is targeted at a creature, aim at this creature.
+        // Otherwise, aim at the furthest creature in the player beam path
+        bolt testbeam;
+        zappy(spell_to_zap(spell), powc, testbeam);
+
+        familiar->props["firing_target"] = beam.target;
+        familiar->props.erase("foe");
+        if (!monster_at(beam.target))
+        {
+            beam.is_tracer = true;
+            beam.fire();
+            beam.is_tracer = false;
+
+            for (vector<coord_def>::const_reverse_iterator i = beam.path_taken.rbegin();
+                i != beam.path_taken.rend(); ++i)
+            {
+                if (*i != familiar->pos() && monster_at(*i))
+                {
+                    familiar->props["firing_target"] = *i;
+                    familiar->foe = monster_at(*i)->mindex();
+                    familiar->props["foe"] = familiar->foe;
+                }
+            }
+        }
+        else
+        {
+            familiar->foe = monster_at(beam.target)->mindex();
+            familiar->props["foe"] = familiar->foe;
+        }
+
+        familiar->props["ready"] = true;
+
+        return true;
+    }
+
+    return false;
+}
+
+bool trigger_arcane_familiar()
+{
+    monster* familiar = _find_arcane_familiar();
+
+    if (familiar->props.exists("ready"))
+    {
+        familiar->props.erase("ready");
+        familiar->props["firing"] = true;
+        return true;
+    }
+
+    return false;
+}
+
+// Called at the start of each round. Cancels firing orders given in the previous
+// round, if the familiar was not able to execute them fully before the next
+// player action
+void reset_arcane_familiar(monster* mons)
+{
+    if (!mons || mons->type != MONS_ARCANE_FAMILIAR)
+        return;
+
+    mons->props.erase("ready");
+
+    if (mons->props.exists("tracking"))
+    {
+        mons->props.erase("tracking");
+        mons->props.erase("firing");
+        if (mons->props.exists("foe"))
+            mons->foe = mons->props["foe"].get_int();
+        mons->behaviour = BEH_SEEK;
+    }
+}
+
+bool fire_arcane_familiar(monster* mons)
+{
+    if (!mons || !mons->type == MONS_ARCANE_FAMILIAR)
+        return false;
+
+    bool used = false;
+
+    if (mons->props.exists("firing") && mons->number > 0)
+    {
+        if (mons->props.exists("tracking"))
+        {
+            if (mons->pos() == mons->props["tracking_target"].get_coord())
+            {
+                mons->props.erase("tracking");
+                if (mons->props.exists("foe"))
+                    mons->foe = mons->props["foe"].get_int();
+                mons->behaviour = BEH_SEEK;
+            }
+            else // Currently tracking, but have not reached target pos
+            {
+                mons->target = mons->props["tracking_target"].get_coord();
+                return false;
+            }
+        }
+        else
+        {
+            // If the familiar forgot its foe (due to being out of los), remind it
+            if (mons->props.exists("foe"))
+                mons->foe = mons->props["foe"].get_int();
+        }
+
+        // Set up the beam.
+        bolt beam;
+        beam.source_name = "arcane familiar";
+        beam.target = mons->props["firing_target"].get_coord();
+
+        beam.name       = "bolt of energy";
+        beam.range      = LOS_RADIUS;
+        beam.hit        = AUTOMATIC_HIT;
+        beam.damage     = dice_def(2, 6 + mons->hit_dice * 3 / 2);
+        beam.glyph      = dchar_glyph(DCHAR_FIRED_ZAP);
+        beam.colour     = MAGENTA;
+        beam.flavour    = BEAM_MISSILE;
+        beam.is_beam    = false;
+
+        // Fire tracer.
+        fire_tracer(mons, beam);
+
+        // Never fire if we would hurt the caster, and ensure that the beam
+        // would hit at least SOMETHING, unless it was targeted at empty space
+        // in the first place
+        if (beam.friend_info.count == 0
+            && (monster_at(beam.target) ? beam.foe_info.count > 0 :
+                find(beam.path_taken.begin(), beam.path_taken.end(), beam.target)
+                    != beam.path_taken.end()))
+        {
+            beam.thrower = KILL_YOU;
+            simple_monster_message(mons, " fires!");
+            beam.fire();
+
+            used = true;
+            // Decrement # of volleys left and possibly expire the familiar.
+            if (--mons->number == 0)
+                end_arcane_familiar(false);
+
+            mons->props.erase("firing");
+        }
+        // If we are firing at something, try to find a nearby position
+        // from which we could safely fire at it
+        else
+        {
+            bool empty_beam = (beam.foe_info.count == 0);
+            for (distance_iterator di(mons->pos(), true, true, 2); di; ++di)
+            {
+                if (*di == beam.target || actor_at(*di)
+                    || feat_is_solid(grd(*di))
+                    || !you.see_cell(*di))
+                    continue;
+
+                beam.source = *di;
+                beam.is_tracer = true;
+                beam.friend_info.reset();
+                beam.fire();
+                if (beam.friend_info.count == 0
+                    && (beam.foe_info.count > 0 || empty_beam))
+                {
+                    if (empty_beam &&
+                        find(beam.path_taken.begin(), beam.path_taken.end(), beam.target)
+                        == beam.path_taken.end())
+                        continue;
+
+                    mons->firing_pos = coord_def(0,0);
+                    mons->target = *di;
+                    mons->behaviour = BEH_WANDER;
+                    mons->props["foe"] = mons->foe;
+                    mons->props["tracking"] = true;
+                    mons->foe = MHITNOT;
+                    mons->props["tracking_target"] = *di;
+                    break;
+                }
+            }
+        }
+    }
+
+    // If our last target is dead, or the player wandered off, resume
+    // following the player
+    if ((mons->foe == MHITNOT || !mons->can_see(you.as_player()))
+        && !mons->props.exists("tracking"))
+        mons->foe = MHITYOU;
+
+    return used;
 }

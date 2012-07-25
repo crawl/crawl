@@ -1474,6 +1474,7 @@ enum duration_type
 #endif
     DUR_DISJUNCTION,
     DUR_VEHUMET_GIFT,
+    DUR_ARCANE_FAMILIAR,
     NUM_DURATIONS
 };
 
@@ -2507,6 +2508,7 @@ enum monster_type                      // menv[].type
     MONS_PLAYER_GHOST,
     MONS_BALL_LIGHTNING,
     MONS_ORB_OF_DESTRUCTION,    // a projectile, not a real mon
+    MONS_ARCANE_FAMILIAR,
     MONS_PILLAR_OF_SALT,
     MONS_HELL_LORD,             // genus
     MONS_MERGED_SLIME_CREATURE, // used only for recolouring
@@ -3315,7 +3317,7 @@ enum spell_type
     SPELL_CHAOS_BREATH,
     SPELL_FRENZY,
     SPELL_SUMMON_TWISTER,
-
+    SPELL_ARCANE_FAMILIAR,
     NUM_SPELLS
 };
 

@@ -702,6 +702,11 @@ bool mons_is_boulder(const monster* mon)
     return (mon->type == MONS_BOULDER_BEETLE && mon->rolling());
 }
 
+bool mons_is_familiar(monster_type mc)
+{
+    return (mc == MONS_ARCANE_FAMILIAR);
+}
+
 // Conjuration or Hexes.  Summoning and Necromancy make the monster a creature
 // at least in some degree, golems have a chem granting them that.
 bool mons_is_object(monster_type mc)
@@ -711,6 +716,7 @@ bool mons_is_object(monster_type mc)
            || mc == MONS_FIRE_VORTEX
            || mc == MONS_SPATIAL_VORTEX
            || mc == MONS_TWISTER
+           || mc == MONS_ARCANE_FAMILIAR
            // unloading seeds helps the species
            || mc == MONS_GIANT_SPORE
            || mc == MONS_LURKING_HORROR
@@ -1150,7 +1156,8 @@ bool mons_is_conjured(monster_type mc)
     return mons_is_projectile(mc)
            || mc == MONS_FIRE_VORTEX
            || mc == MONS_SPATIAL_VORTEX
-           || mc == MONS_BALL_LIGHTNING;
+           || mc == MONS_BALL_LIGHTNING
+           || mc == MONS_ARCANE_FAMILIAR;
 }
 
 // Returns true if the given monster's foe is also a monster.
@@ -1468,7 +1475,8 @@ bool mons_class_can_use_stairs(monster_type mc)
             && mc != MONS_PLAYER_GHOST
             && mc != MONS_GERYON
             && mc != MONS_ROYAL_JELLY
-            && mc != MONS_MOTH_OF_SUPPRESSION);
+            && mc != MONS_MOTH_OF_SUPPRESSION
+            && mc != MONS_ARCANE_FAMILIAR);
 }
 
 bool mons_can_use_stairs(const monster* mon)
