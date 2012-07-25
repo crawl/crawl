@@ -527,7 +527,7 @@ void skill_manual(int slot)
         set_ident_flags(manual, ISFLAG_KNOW_TYPE);
     const skill_type skill = static_cast<skill_type>(manual.plus);
 
-    if (is_useless_skill(skill))
+    if (is_useless_skill(skill) || you.skills[skill] >= 27)
     {
         if (!known)
             mprf("This is a manual of %s.", skill_name(skill));
