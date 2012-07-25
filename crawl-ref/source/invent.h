@@ -181,6 +181,8 @@ protected:
     std::string temp_title;
 };
 
+void get_class_hotkeys(const int type, std::vector<char> &glyphs);
+
 bool any_items_to_select(int type_expect, bool msg = false, int excluded_slot = -1);
 
 int prompt_invent_item(const char *prompt,
