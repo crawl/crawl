@@ -80,7 +80,7 @@ std::string compilation_info()
     out += make_stringf("Build platform: %s\n", Version::BuildArch().c_str());
     out += make_stringf("Platform: %s\n", Version::Arch().c_str());
 
-    out += make_stringf("CLFAGS: %s\n", Version::CFLAGS().c_str());
+    out += make_stringf("CFLAGS: %s\n", Version::CFLAGS().c_str());
     out += make_stringf("LDFLAGS: %s\n", Version::LDFLAGS().c_str());
 
     return out;
