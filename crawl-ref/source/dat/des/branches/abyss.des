@@ -264,6 +264,7 @@ KMONS: K = kraken
 KMONS: T = tentacled monstrosity
 SUBST: T = Tw
 KFEAT: KT = w
+KFEAT: O = W
 SUBST: D : cW
 SUBST: . = w., w = WWWw, C = c., c = ccv
 MAP
