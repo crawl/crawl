@@ -255,7 +255,7 @@ std::string InvEntry::get_text(bool need_cursor) const
     return tstr.str();
 }
 
-static void _get_class_hotkeys(const int type, std::vector<char> &glyphs)
+void get_class_hotkeys(const int type, std::vector<char> &glyphs)
 {
     switch (type)
     {
@@ -318,7 +318,7 @@ void InvEntry::add_class_hotkeys(const item_def &i)
     }
 
     std::vector<char> glyphs;
-    _get_class_hotkeys(type, glyphs);
+    get_class_hotkeys(type, glyphs);
     for (unsigned int k = 0; k < glyphs.size(); ++k)
         add_hotkey(glyphs[k]);
 
@@ -830,14 +830,12 @@ menu_letter InvMenu::load_items(const std::vector<const item_def*> &mitems,
         if (type != MT_RUNES)
         {
             std::string subtitle = item_class_name(i);
-            if (type == MT_KNOW && i == OBJ_MISCELLANY)
-                subtitle = "Runes"; // hack
 
             // Mention the class selection shortcuts.
             if (is_set(MF_MULTISELECT) && inv_class[i] > 1)
             {
                 std::vector<char> glyphs;
-                _get_class_hotkeys(i, glyphs);
+                get_class_hotkeys(i, glyphs);
                 if (!glyphs.empty())
                 {
                     // longest string

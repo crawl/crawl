@@ -2022,6 +2022,31 @@ item_type_id_state_type get_ident_type(object_class_type basetype, int subtype)
     return you.type_ids[basetype][subtype];
 }
 
+class KnownMenu : public InvMenu
+{
+public:
+    // This loads items in the order they are put into the list (sequentially)
+    menu_letter load_items_seq(const std::vector<const item_def*> &mitems,
+                               MenuEntry *(*procfn)(MenuEntry *me) = NULL,
+                               menu_letter ckey = 'a')
+    {
+        for (int i = 0, count = mitems.size(); i < count; ++i)
+        {
+            InvEntry *ie = new InvEntry(*mitems[i]);
+            if (tag == "pickup")
+                ie->tag = "pickup";
+            // If there's no hotkey, provide one.
+            if (ie->hotkeys[0] == ' ')
+                ie->hotkeys[0] = ckey++;
+            do_preselect(ie);
+
+            add_entry(procfn? (*procfn)(ie) : ie);
+        }
+
+        return ckey;
+    }
+};
+
 class KnownEntry : public InvEntry
 {
 public:
@@ -2037,17 +2062,34 @@ public:
         int flags = item->base_type == OBJ_WANDS ? 0 : ISFLAG_KNOW_PLUSES;
 
         std::string name;
-        //if (item->sub_type == get_max_subtype(item->base_type))
-        if (item->quantity == 2)
+
+
+        if (item->base_type == OBJ_FOOD)
+        {
+            if (item->sub_type == FOOD_CHUNK)
+                name = "chunks";
+            else
+                name = "non-perishables";
+        }
+        else if (item->base_type == OBJ_MISCELLANY)
+        {
+            if (item->sub_type == MISC_RUNE_OF_ZOT)
+                name = "runes";
+            else
+                name = "miscellaneous";
+        }
+        else if (item->base_type == OBJ_BOOKS || item->base_type == OBJ_RODS
+                 || item->base_type == OBJ_GOLD)
+        {
+            name = lowercase_string(item_class_name(item->base_type));
+            name = pluralise(name);
+        }
+        else if (item->sub_type == get_max_subtype(item->base_type))
             name = "unknown " + lowercase_string(item_class_name(item->base_type));
         else
         {
             name = item->name(DESC_PLAIN,false,true,false,false,flags);
-            if (!(item->base_type == OBJ_MISCELLANY
-                  && item->sub_type == MISC_RUNE_OF_ZOT))
-            {
-                name = pluralise(name);
-            }
+            name = pluralise(name);
         }
 
         char symbol;
@@ -2140,7 +2182,8 @@ static bool _identified_item_names(const item_def *it1,
 void check_item_knowledge(bool unknown_items)
 {
     std::vector<const item_def*> items;
-    std::vector<const item_def*> items2; //List of missiles should go after everything
+    std::vector<const item_def*> items_missile; //List of missiles should go after normal items
+    std::vector<const item_def*> items_other;    //List of other items should go after everything
     std::vector<SelItem> selected_items;
 
     bool all_items_known = true;
@@ -2193,38 +2236,7 @@ void check_item_knowledge(bool unknown_items)
 
     else
     {
-        // runes are shown only if known
-        for (int i = 0; i < NUM_RUNE_TYPES; i++)
-            if (you.runes[i])
-            {
-                item_def* ptmp = new item_def;
-                if (ptmp != 0)
-                {
-                    ptmp->base_type = OBJ_MISCELLANY;
-                    ptmp->sub_type  = MISC_RUNE_OF_ZOT;
-                    ptmp->quantity  = 1;
-                    ptmp->plus      = i;
-                    item_colour(*ptmp);
-                    items.push_back(ptmp);
-                }
-            }
-        for (int i = 0; i < NUM_MISSILES; i++)
-        {
-            item_def* ptmp = new item_def;
-            if (ptmp != 0)
-            {
-                ptmp->base_type = OBJ_MISSILES;
-                ptmp->sub_type  = i;
-                ptmp->colour    = 1;
-                ptmp->quantity  = 1;
-                items2.push_back(ptmp);
-
-                if (you.force_autopickup[OBJ_MISSILES][i] == 1)
-                    selected_items.push_back(SelItem(0,1,ptmp));
-                if (you.force_autopickup[OBJ_MISSILES][i] == -1)
-                    selected_items.push_back(SelItem(0,2,ptmp));
-            }
-        }
+        // items yet to be known
         for (int ii = 0; ii < NUM_OBJECT_CLASSES; ii++)
         {
             object_class_type i = (object_class_type)ii;
@@ -2236,7 +2248,7 @@ void check_item_knowledge(bool unknown_items)
                 ptmp->base_type = i;
                 ptmp->sub_type  = get_max_subtype(i);
                 ptmp->colour    = 1;
-                ptmp->quantity  = 2;
+                ptmp->quantity  = 1;
                 items.push_back(ptmp);
 
                 if (you.force_autopickup[i][ptmp->sub_type] == 1)
@@ -2245,13 +2257,54 @@ void check_item_knowledge(bool unknown_items)
                     selected_items.push_back(SelItem(0,2,ptmp));
             }
         }
+        // Missiles
+        for (int i = 0; i < NUM_MISSILES; i++)
+        {
+            item_def* ptmp = new item_def;
+            if (ptmp != 0)
+            {
+                ptmp->base_type = OBJ_MISSILES;
+                ptmp->sub_type  = i;
+                ptmp->colour    = 1;
+                ptmp->quantity  = 1;
+                items_missile.push_back(ptmp);
 
+                if (you.force_autopickup[OBJ_MISSILES][i] == 1)
+                    selected_items.push_back(SelItem(0,1,ptmp));
+                if (you.force_autopickup[OBJ_MISSILES][i] == -1)
+                    selected_items.push_back(SelItem(0,2,ptmp));
+            }
+        }
+        // Misc.
+        object_class_type misc_list[] = {OBJ_FOOD, OBJ_FOOD, OBJ_BOOKS,
+                                         OBJ_RODS, OBJ_GOLD, OBJ_MISCELLANY,
+                                         OBJ_MISCELLANY};
+        int misc_ST_list[] = {FOOD_CHUNK, NUM_FOODS, NUM_BOOKS, NUM_RODS,
+                              1, MISC_RUNE_OF_ZOT, NUM_MISCELLANY};
+        for (unsigned i = 0; i < sizeof(misc_list)/sizeof(object_class_type); i++)
+        {
+            item_def* ptmp = new item_def;
+            if (ptmp != 0)
+            {
+                ptmp->base_type = misc_list[i];
+                ptmp->sub_type  = misc_ST_list[i];
+                ptmp->colour    = 2;
+                ptmp->quantity  = 18;  //show a good amount of gold
+                ptmp->special   = 100; //makes chunks fresh
+                items_other.push_back(ptmp);
+
+                if (you.force_autopickup[misc_list[i]][ptmp->sub_type] == 1)
+                    selected_items.push_back(SelItem(0,1,ptmp));
+                if (you.force_autopickup[misc_list[i]][ptmp->sub_type] == -1)
+                    selected_items.push_back(SelItem(0,2,ptmp));
+            }
+        }
     }
 
     std::sort(items.begin(), items.end(), _identified_item_names);
-    std::sort(items2.begin(), items2.end(), _identified_item_names);
-    InvMenu menu;
+    std::sort(items_missile.begin(), items_missile.end(), _identified_item_names);
 
+    KnownMenu menu;
     std::string stitle;
 
     if (unknown_items)
@@ -2274,10 +2327,13 @@ void check_item_knowledge(bool unknown_items)
                     | ((unknown_items) ? MF_NOSELECT
                                        : MF_MULTISELECT | MF_ALLOW_FILTER));
     menu.set_type(MT_KNOW);
-    menu_letter ml = menu.load_items(items, unknown_items ? unknown_item_mangle
-                                                          : known_item_mangle);
+    menu_letter ml;
+    ml = menu.load_items(items, unknown_items ? unknown_item_mangle
+                                              : known_item_mangle);
 
-    menu.load_items(items2, known_item_mangle, ml);
+    ml = menu.load_items(items_missile, known_item_mangle, ml);
+    menu.add_entry(new MenuEntry("Other Items", MEL_SUBTITLE));
+    menu.load_items_seq(items_other, known_item_mangle, ml);
 
     menu.set_title(stitle);
     menu.show(true);
@@ -2287,7 +2343,9 @@ void check_item_knowledge(bool unknown_items)
     std::vector<const item_def*>::iterator iter;
     for (iter = items.begin(); iter != items.end(); ++iter)
          delete *iter;
-    for (iter = items2.begin(); iter != items2.end(); ++iter)
+    for (iter = items_missile.begin(); iter != items_missile.end(); ++iter)
+         delete *iter;
+    for (iter = items_other.begin(); iter != items_other.end(); ++iter)
          delete *iter;
 
     if (!all_items_known && (last_char == '\\' || last_char == '-'))
@@ -3154,6 +3212,8 @@ bool is_useless_item(const item_def &item, bool temp)
         break;
 
     case OBJ_FOOD:
+        if (item.sub_type == NUM_FOODS)
+            break;
         if (!is_inedible(item))
             return false;
 
@@ -3280,6 +3340,8 @@ static const std::string _item_prefix(const item_def &item, bool temp,
         }
         // intentional fall-through
     case OBJ_FOOD:
+        if (item.sub_type == NUM_FOODS)
+            break;
         if (is_forbidden_food(item))
             prefixes.push_back("evil_eating");
 

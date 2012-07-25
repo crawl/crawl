@@ -64,11 +64,9 @@ static bool _vampire_consume_corpse(int slot, bool invent);
 static void _heal_from_food(int hp_amt, bool unrot = false,
                             bool restore_str = false);
 
-
 /*
  *  BEGIN PUBLIC FUNCTIONS
  */
-
 void make_hungry(int hunger_amount, bool suppress_msg,
                  bool allow_reducing)
 {

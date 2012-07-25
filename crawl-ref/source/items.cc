@@ -2514,15 +2514,14 @@ void autoinscribe()
     will_autoinscribe = false;
 }
 
-
-static bool _known_subtype(const item_def &item)
+static int _autopickup_subtype(const item_def &item)
 {
     // Sensed items and item_infos of unknown subtype.
     if (item.base_type >= NUM_OBJECT_CLASSES
         || get_max_subtype(item.base_type) > 0
            && item.sub_type >= get_max_subtype(item.base_type))
     {
-        return false;
+        return get_max_subtype(item.base_type);
     }
 
     // Only where item_type_known() refers to the subtype (as opposed to the
@@ -2534,16 +2533,22 @@ static bool _known_subtype(const item_def &item)
     case OBJ_SCROLLS:
     case OBJ_JEWELLERY:
     case OBJ_POTIONS:
-    case OBJ_BOOKS:
     case OBJ_STAVES:
+        if (item_type_known(item))
+            break;
+    case OBJ_FOOD:
+        if (item.sub_type == FOOD_CHUNK)
+            break;
     case OBJ_MISCELLANY:
+        if (item.sub_type == MISC_RUNE_OF_ZOT)
+            break;
+    case OBJ_BOOKS:
     case OBJ_RODS:
-        return item_type_known(item);
-    default:
-        return true;
+    case OBJ_GOLD:
+        return get_max_subtype(item.base_type);
     }
+    return item.sub_type;
 }
-
 
 static bool _is_option_autopickup(const item_def &item, std::string &iname)
 {
@@ -2552,9 +2557,7 @@ static bool _is_option_autopickup(const item_def &item, std::string &iname)
 
     if (item.base_type < NUM_OBJECT_CLASSES)
     {
-        const int subtype = _known_subtype(item) ? item.sub_type
-                                           : get_max_subtype(item.base_type);
-        const int force = you.force_autopickup[item.base_type][subtype];
+        const int force = you.force_autopickup[item.base_type][_autopickup_subtype(item)];
         if (force != 0)
             return (force == 1);
     }

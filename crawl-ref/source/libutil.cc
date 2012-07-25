@@ -486,7 +486,8 @@ std::string pluralise(const std::string &name,
              || ends_with(name, "tengu") || ends_with(name, "shedu")
              || ends_with(name, "swine") || ends_with(name, "efreet")
              // "shedu" is male, "lammasu" is female of the same creature
-             || ends_with(name, "lammasu") || ends_with(name, "lamassu"))
+             || ends_with(name, "lammasu") || ends_with(name, "lamassu")
+             || ends_with(name, "gold"))
     {
         return name;
     }
