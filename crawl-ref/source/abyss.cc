@@ -645,6 +645,18 @@ static void _place_displaced_monsters()
     displaced_monsters.clear();
 }
 
+static bool _pushy_feature(dungeon_feature_type feat)
+{
+    // Only completely impassible features and lava will push items.
+    // In particular, deep water will not push items, because the item
+    // will eventually become accessible again through abyss morphing.
+
+    // Perhaps this should instead be merged with (the complement of)
+    // _item_safe_square() in terrain.cc.  Unlike this function, that
+    // one treats traps as unsafe, but closed doors as safe.
+    return (feat_is_solid(feat) || feat == DNGN_LAVA);
+}
+
 static void _push_items()
 {
     for (int i = 0; i < MAX_ITEMS; i++)
@@ -653,11 +665,11 @@ static void _push_items()
         if (!item.defined() || !in_bounds(item.pos) || item.held_by_monster())
             continue;
 
-        if (grd(item.pos) == DNGN_FLOOR)
+        if (!_pushy_feature(grd(item.pos)))
             continue;
 
         for (distance_iterator di(item.pos); di; ++di)
-            if (grd(*di) == DNGN_FLOOR)
+            if (!_pushy_feature(grd(*di)))
             {
                 move_item_to_grid(&i, *di, true);
                 break;
