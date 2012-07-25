@@ -741,7 +741,7 @@ shield_middle_ethn SHIELD_MIDDLE_ETHN
 shield_long_cross SHIELD_LONG_CROSS
 shield_shaman SHIELD_SHAMAN
 shield_of_resistance SHIELD_OF_RESISTANCE
-shield_of_ignorance SHIELD_OF_IGNORANCE
+large_shield_of_ignorance LARGE_SHIELD_OF_IGNORANCE
 gil-galad SHIELD_GILGALAD
 shield_spriggan SHIELD_SPRIGGAN
 

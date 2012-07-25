@@ -235,7 +235,7 @@ storm bow
 
 This bow has the colour of dark rain clouds, and the smell of wet ozone.
 %%%%
-shield of Ignorance
+large shield of Ignorance
 
 "An open mind is like a fortress with its gates unbarred and unguarded."
 %%%%

@@ -638,7 +638,7 @@ OBJ:     OBJ_ARMOUR/ARM_LARGE_SHIELD
 PLUS:    +8
 COLOUR:  BROWN
 TILE:    urand_ignorance
-TILE_EQ: shield_of_ignorance
+TILE_EQ: large_shield_of_ignorance
 AC:      2
 EV:      2
 INT:     -6

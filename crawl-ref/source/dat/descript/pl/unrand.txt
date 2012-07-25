@@ -228,7 +228,7 @@ storm bow
 
 Ten łuk ma kolor ciemnych deszczowych chmur, i pachnie ozonem.
 %%%%
-shield of Ignorance
+large shield of Ignorance
 
 „Otwarty umysł jest jak twierdza o bramach otwartych i niestrzeżonych.”
 %%%%

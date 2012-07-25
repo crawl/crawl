@@ -768,7 +768,7 @@ ITEM:    chain mail unrand:lears_chain_mail                                  /\
          robe unrand:robe_of_augmentation / robe unrand:robe_of_folly        /\
  randart buckler / randart shield / randart large shield                     /\
          shield unrand:shield_of_resistance / shield unrand:bullseye         /\
-         shield unrand:shield_of_ignorance                                   /\
+         shield unrand:large_shield_of_ignorance                             /\
  randart cloak w:25                                                          /\
          cloak unrand:cloak_of_flash / cloak unrand:cloak_of_starlight       /\
          cloak unrand:cloak_of_the_thief
