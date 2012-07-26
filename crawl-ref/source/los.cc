@@ -89,7 +89,7 @@ static std::vector<coord_def> ray_coords;
 // words, blockrays(p)[i] is set iff an opaque cell p blocks
 // the cellray with index i.
 static std::vector<coord_def> cellray_ends;
-typedef FixedArray<bit_array*, LOS_MAX_RANGE+1, LOS_MAX_RANGE+1> blockrays_t;
+typedef FixedArray<bit_vector*, LOS_MAX_RANGE+1, LOS_MAX_RANGE+1> blockrays_t;
 static blockrays_t blockrays;
 
 // We also store the minimal cellrays by target position
@@ -101,8 +101,8 @@ static FixedArray<std::vector<cellray>, LOS_MAX_RANGE+1, LOS_MAX_RANGE+1> min_ce
 // Temporary arrays used in losight() to track which rays
 // are blocked or have seen a smoke cloud.
 // Allocated when doing the precomputations.
-static bit_array *dead_rays     = NULL;
-static bit_array *smoke_rays    = NULL;
+static bit_vector *dead_rays     = NULL;
+static bit_vector *smoke_rays    = NULL;
 
 class quadrant_iterator : public rectangle_iterator
 {
@@ -405,7 +405,7 @@ static void _create_blockrays()
     const int n_cellrays = ray_coords.size();
     blockrays_t all_blockrays;
     for (quadrant_iterator qi; qi; ++qi)
-        all_blockrays(*qi) = new bit_array(n_cellrays);
+        all_blockrays(*qi) = new bit_vector(n_cellrays);
 
     for (unsigned int r = 0; r < fullrays.size(); ++r)
     {
@@ -432,7 +432,7 @@ static void _create_blockrays()
     // Compress blockrays accordingly.
     for (quadrant_iterator qi; qi; ++qi)
     {
-        blockrays(*qi) = new bit_array(n_min_rays);
+        blockrays(*qi) = new bit_vector(n_min_rays);
         for (int i = 0; i < n_min_rays; ++i)
             blockrays(*qi)->set(i, all_blockrays(*qi)
                                    ->get(min_indices[i]));
@@ -442,8 +442,8 @@ static void _create_blockrays()
     for (quadrant_iterator qi; qi; ++qi)
         delete all_blockrays(*qi);
 
-    dead_rays  = new bit_array(n_min_rays);
-    smoke_rays = new bit_array(n_min_rays);
+    dead_rays  = new bit_vector(n_min_rays);
+    smoke_rays = new bit_vector(n_min_rays);
 
     dprf("Cellrays: %d Fullrays: %u Minimal cellrays: %u",
           n_cellrays, (unsigned int)fullrays.size(), n_min_rays);
