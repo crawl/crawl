@@ -813,7 +813,7 @@ monster* zotdef_spawn(bool boss)
 
 static rune_type _get_rune()
 {
-    FixedBitArray<NUM_RUNE_TYPES> runes = you.runes;
+    FixedBitVector<NUM_RUNE_TYPES> runes = you.runes;
     for (int i = 0; i < MAX_ITEMS; i++)
         if (item_is_rune(mitm[i]))
             runes.set(mitm[i].plus);

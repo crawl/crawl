@@ -34,7 +34,7 @@ protected:
 
 #define LONGSIZE (sizeof(unsigned long)*8)
 
-template <unsigned int SIZE> class FixedBitArray
+template <unsigned int SIZE> class FixedBitVector
 {
 protected:
     unsigned long data[(SIZE + LONGSIZE - 1) / LONGSIZE];
@@ -45,7 +45,7 @@ public:
             data[i] = 0;
     }
 
-    FixedBitArray()
+    FixedBitVector()
     {
         reset();
     }
@@ -55,7 +55,7 @@ public:
 #ifdef ASSERTS
         // printed as signed, as in FixedVector
         if (i >= SIZE)
-            die("bit array range error: %d / %u", (int)i, SIZE);
+            die("bit vector range error: %d / %u", (int)i, SIZE);
 #endif
         return data[i / LONGSIZE] & 1UL << i % LONGSIZE;
     }
@@ -69,7 +69,7 @@ public:
     {
 #ifdef ASSERTS
         if (i >= SIZE)
-            die("bit array range error: %d / %u", (int)i, SIZE);
+            die("bit vector range error: %d / %u", (int)i, SIZE);
 #endif
         if (value)
             data[i / LONGSIZE] |= 1UL << i % LONGSIZE;
@@ -77,14 +77,14 @@ public:
             data[i / LONGSIZE] &= ~(1UL << i % LONGSIZE);
     }
 
-    inline FixedBitArray<SIZE>& operator|=(const FixedBitArray<SIZE>&x)
+    inline FixedBitVector<SIZE>& operator|=(const FixedBitVector<SIZE>&x)
     {
         for (unsigned int i = 0; i < ARRAYSZ(data); i++)
             data[i] |= x.data[i];
         return *this;
     }
 
-    inline FixedBitArray<SIZE>& operator&=(const FixedBitArray<SIZE>&x)
+    inline FixedBitVector<SIZE>& operator&=(const FixedBitVector<SIZE>&x)
     {
         for (unsigned int i = 0; i < ARRAYSZ(data); i++)
             data[i] &= x.data[i];

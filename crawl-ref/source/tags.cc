@@ -303,9 +303,9 @@ static void unmarshall_vector(reader& th, std::vector<T>& vec,
                               T (*T_unmarshall)(reader&));
 
 template<int SIZE>
-void marshallFixedBitArray(writer& th, const FixedBitArray<SIZE>& arr);
+void marshallFixedBitVector(writer& th, const FixedBitVector<SIZE>& arr);
 template<int SIZE>
-void unmarshallFixedBitArray(reader& th, FixedBitArray<SIZE>& arr);
+void unmarshallFixedBitVector(reader& th, FixedBitVector<SIZE>& arr);
 
 void marshallByte(writer &th, int8_t data)
 {
@@ -443,7 +443,7 @@ int64_t unmarshallSigned(reader& th)
 // can have invalid length.  For long ones you might want to do this
 // differently to not lose 1/8 bits and speed.
 template<int SIZE>
-void marshallFixedBitArray(writer& th, const FixedBitArray<SIZE>& arr)
+void marshallFixedBitVector(writer& th, const FixedBitVector<SIZE>& arr)
 {
     int last_bit;
     for (last_bit = SIZE - 1; last_bit > 0; last_bit--)
@@ -468,7 +468,7 @@ void marshallFixedBitArray(writer& th, const FixedBitArray<SIZE>& arr)
 }
 
 template<int SIZE>
-void unmarshallFixedBitArray(reader& th, FixedBitArray<SIZE>& arr)
+void unmarshallFixedBitVector(reader& th, FixedBitVector<SIZE>& arr)
 {
     arr.reset();
 
@@ -1440,7 +1440,7 @@ static void tag_construct_you_items(writer &th)
     for (i = 0; i < ENDOFPACK; ++i)
         marshallItem(th, you.inv[i]);
 
-    marshallFixedBitArray<NUM_RUNE_TYPES>(th, you.runes);
+    marshallFixedBitVector<NUM_RUNE_TYPES>(th, you.runes);
     marshallByte(th, you.obtainable_runes);
 
     // Item descrip for each type & subtype.
@@ -1485,7 +1485,7 @@ static void tag_construct_you_items(writer &th)
     for (j = 0; j < NUM_ARMOURS; ++j)
         marshallInt(th,you.seen_armour[j]);
 
-    marshallFixedBitArray<NUM_MISCELLANY>(th, you.seen_misc);
+    marshallFixedBitVector<NUM_MISCELLANY>(th, you.seen_misc);
 
     for (i = 0; i < NUM_OBJECT_CLASSES; i++)
         for (j = 0; j < MAX_SUBTYPES; j++)
@@ -2243,7 +2243,7 @@ static void tag_read_you_items(reader &th)
     for (i = 0; i < count; ++i)
         unmarshallItem(th, you.inv[i]);
 
-    unmarshallFixedBitArray<NUM_RUNE_TYPES>(th, you.runes);
+    unmarshallFixedBitVector<NUM_RUNE_TYPES>(th, you.runes);
     you.obtainable_runes = unmarshallByte(th);
 
     // Item descrip for each type & subtype.
@@ -2359,7 +2359,7 @@ static void tag_read_you_items(reader &th)
         you.seen_armour[j] = 0;
     for (j = NUM_ARMOURS; j < count; ++j)
         unmarshallInt(th);
-    unmarshallFixedBitArray<NUM_MISCELLANY>(th, you.seen_misc);
+    unmarshallFixedBitVector<NUM_MISCELLANY>(th, you.seen_misc);
 
 #if TAG_MAJOR_VERSION == 33
     if (th.getMinorVersion() >= TAG_MINOR_AUTOPICKUP_TABLE)
@@ -3035,7 +3035,7 @@ void marshallMonster(writer &th, const monster& m)
 
 void marshallMonsterInfo(writer &th, const monster_info& mi)
 {
-    marshallFixedBitArray<NUM_MB_FLAGS>(th, mi.mb);
+    marshallFixedBitVector<NUM_MB_FLAGS>(th, mi.mb);
     marshallString(th, mi.mname);
     marshallUnsigned(th, mi.type);
     marshallUnsigned(th, mi.base_type);
@@ -3082,7 +3082,7 @@ void marshallMonsterInfo(writer &th, const monster_info& mi)
 
 void unmarshallMonsterInfo(reader &th, monster_info& mi)
 {
-    unmarshallFixedBitArray<NUM_MB_FLAGS>(th, mi.mb);
+    unmarshallFixedBitVector<NUM_MB_FLAGS>(th, mi.mb);
     mi.mname = unmarshallString(th);
     unmarshallUnsigned(th, mi.type);
     ASSERT(!invalid_monster_type(mi.type));

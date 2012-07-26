@@ -5490,7 +5490,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             int old_hp                = hit_points;
             uint64_t old_flags        = flags;
             mon_enchant_list old_ench = enchantments;
-            FixedBitArray<NUM_ENCHANTMENTS> old_ench_cache = ench_cache;
+            FixedBitVector<NUM_ENCHANTMENTS> old_ench_cache = ench_cache;
             int8_t old_ench_countdown = ench_countdown;
 
             if (!fly_died)

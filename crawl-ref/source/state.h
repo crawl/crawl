@@ -103,7 +103,7 @@ struct game_state
     // Any changes to macros that need to be changed?
     bool unsaved_macros;
 
-    FixedBitArray<NUM_DISABLEMENTS> disables;
+    FixedBitVector<NUM_DISABLEMENTS> disables;
 
     // Version of the last character save.
     int minorVersion;

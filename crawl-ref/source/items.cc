@@ -1498,7 +1498,7 @@ int find_free_slot(const item_def &i)
     if (slotisfree(slot))
         return slot;
 
-    FixedBitArray<ENDOFPACK> disliked;
+    FixedBitVector<ENDOFPACK> disliked;
     if (i.base_type == OBJ_FOOD)
         disliked.set('e' - 'a'), disliked.set('y' - 'a');
     else if (i.base_type == OBJ_POTIONS)
