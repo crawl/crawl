@@ -72,6 +72,23 @@ static void _push_level_id(lua_State *ls, const level_id &lid)
     new (nlev) level_id(lid);
 }
 
+LUAFN(dgn_br_entrance)
+{
+    const int nargs = lua_gettop(ls);
+    branch_type brn = you.where_are_you;
+    if (nargs == 1)
+    {
+        const char *branch_name = luaL_checkstring(ls, 1);
+        brn = str_to_branch(branch_name);
+        if (brn == NUM_BRANCHES)
+            luaL_argerror(ls, 1, "No such branch");
+    }
+
+    _push_level_id(ls, level_id(branches[brn].parent_branch,
+                                startdepth[brn]));
+    return 1;
+}
+
 level_id dlua_level_id(lua_State *ls, int ndx)
 {
     if (lua_isstring(ls, ndx))
@@ -122,6 +139,7 @@ const struct luaL_reg dgn_level_dlib[] =
 { "br_parent_branch", dgn_br_parent_branch },
 { "br_depth", dgn_br_depth },
 { "br_exists", dgn_br_exists },
+{ "br_entrance", dgn_br_entrance },
 
 { "level_id", dgn_level_id },
 { "level_name", dgn_level_name },
