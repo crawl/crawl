@@ -823,6 +823,7 @@ NAME:   led_sif_book
 DEPTH:  3-12, Orc
 TAGS:   no_item_gen no_pool_fixup no_monster_gen
 TAGS:   temple_overflow_sif_muna uniq_altar_sif_muna
+KPROP:  1d = no_rtele_into
 KFEAT:  _ = altar_sif_muna
 ITEM:   randbook owner:Sif_Muna numspells:1 slevels:1
 MONS:   orc wizard
