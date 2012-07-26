@@ -3190,11 +3190,46 @@ static void _place_specific_stair(dungeon_feature_type stair,
 
 static void _place_branch_entrances()
 {
+    // Find what branch entrances are already placed, and what branch
+    // entrances (or mimics thereof) could be placed here.
+    bool branch_entrance_placed[NUM_BRANCHES];
+    bool could_be_placed = false;
+    for (int i = 0; i < NUM_BRANCHES; ++i)
+    {
+        branch_entrance_placed[i] = false;
+        if (!could_be_placed
+            && !branch_is_unfinished(branches[i].id)
+            && !is_hell_subbranch(branches[i].id)
+            && you.depth >= branches[i].mindepth
+            && you.depth <= branches[i].maxdepth)
+            could_be_placed = true;
+    }
+
+    // If there's nothing to be placed, don't bother.
+    if (!could_be_placed)
+        return;
+
+    for (rectangle_iterator ri(0); ri; ++ri)
+    {
+        if (!feat_is_branch_stairs(grd(*ri)))
+            continue;
+
+        for (int i = 0; i < NUM_BRANCHES; ++i)
+            if (branches[i].entry_stairs == grd(*ri)
+                && !feature_mimic_at(*ri))
+            {
+                branch_entrance_placed[i] = true;
+                break;
+            }
+    }
+
     // Place actual branch entrances.
     for (int i = 0; i < NUM_BRANCHES; ++i)
     {
         // Vestibule and hells are placed by other means.
-        if (i >= BRANCH_VESTIBULE_OF_HELL && i <= BRANCH_LAST_HELL)
+        // Likewise, if we already have an entrance, keep going.
+        if (i >= BRANCH_VESTIBULE_OF_HELL && i <= BRANCH_LAST_HELL
+            || branch_entrance_placed[i])
             continue;
 
         const Branch *b = &branches[i];
