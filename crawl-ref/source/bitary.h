@@ -137,6 +137,11 @@ public:
             data[i / LONGSIZE] &= ~(1UL << i % LONGSIZE);
     }
 
+    inline void set(coord_def c, bool value = true)
+    {
+        return set(c.x, c.y, value);
+    }
+
     inline FixedBitArray<SIZEX, SIZEY>& operator|=(const FixedBitArray<SIZEX, SIZEY>&x)
     {
         for (unsigned int i = 0; i < ARRAYSZ(data); i++)
