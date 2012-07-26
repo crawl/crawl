@@ -119,9 +119,9 @@ public:
         return data[i / LONGSIZE] & 1UL << i % LONGSIZE;
     }
 
-    inline bool get(coord_def c) const
+    template<class Indexer> inline bool get(const Indexer &i) const
     {
-        return get(c.x, c.y);
+        return get(i.x, i.y);
     }
 
     inline bool operator () (int x, int y) const
@@ -147,9 +147,9 @@ public:
             data[i / LONGSIZE] &= ~(1UL << i % LONGSIZE);
     }
 
-    inline void set(coord_def c, bool value = true)
+    template<class Indexer> inline void set(const Indexer &i, bool value = true)
     {
-        return set(c.x, c.y, value);
+        return set(i.x, i.y, value);
     }
 
     inline FixedBitArray<SIZEX, SIZEY>& operator|=(const FixedBitArray<SIZEX, SIZEY>&x)
