@@ -3476,6 +3476,8 @@ ORIENT: float
 SHUFFLE: )]}>
 SUBST:  } = }>
 SUBST:  ] = ]>
+KMONS:  0 = 0 band
+KMONS:  8 = 8 band
 MAP
    xxxxxxxxxxxxccccc@
    xxxxxxxxxcccc.....
@@ -3555,7 +3557,10 @@ SUBST:  *% = .
 KMONS:  8 = w:35 nonbase draconian / orb of fire / electric golem / \
             killer klown / death cob / w:5 curse toe / w:5 ancient lich
 SUBST:  *% = .
+:else
+KMONS:  8 = 8 band
 : end
+KMONS:  0 = 0 band
 MAP
   xxxxxccccc@
   xxxxcc.....
