@@ -124,6 +124,16 @@ public:
         return get(c.x, c.y);
     }
 
+    inline bool operator () (int x, int y) const
+    {
+        return get(x, y);
+    }
+
+    template<class Indexer> inline bool operator () (const Indexer &i) const
+    {
+        return get(i.x, i.y);
+    }
+
     inline void set(int x, int y, bool value = true)
     {
 #ifdef ASSERTS
