@@ -90,7 +90,7 @@ public:
   transformation_type form;
 
   FixedVector< item_def, ENDOFPACK > inv;
-  FixedBitArray<NUM_RUNE_TYPES> runes;
+  FixedBitVector<NUM_RUNE_TYPES> runes;
   int obtainable_runes; // can be != 15 in Sprint
 
   int burden;
@@ -213,7 +213,7 @@ public:
   FixedVector<bool, NUM_SPELLS>      seen_spell;
   FixedVector<uint32_t, NUM_WEAPONS> seen_weapon;
   FixedVector<uint32_t, NUM_ARMOURS> seen_armour;
-  FixedBitArray<NUM_MISCELLANY>      seen_misc;
+  FixedBitVector<NUM_MISCELLANY>      seen_misc;
   uint8_t                            octopus_king_rings;
 
   uint8_t normal_vision;        // how far the species gets to see

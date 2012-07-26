@@ -90,7 +90,7 @@ enum monster_info_flags
 struct monster_info_base
 {
     coord_def pos;
-    FixedBitArray<NUM_MB_FLAGS> mb;
+    FixedBitVector<NUM_MB_FLAGS> mb;
     std::string mname;
     monster_type type;
     monster_type base_type;

@@ -293,7 +293,7 @@ public:
 
     FixedArray<bool, NUM_DELAYS, NUM_AINTERRUPTS> activity_interrupts;
 #ifdef DEBUG_DIAGNOSTICS
-    FixedBitArray<NUM_DIAGNOSTICS> quiet_debug_messages;
+    FixedBitVector<NUM_DIAGNOSTICS> quiet_debug_messages;
 #endif
 
     // Previous startup options

@@ -48,7 +48,7 @@ public:
     unsigned short foe;
     int8_t ench_countdown;
     mon_enchant_list enchantments;
-    FixedBitArray<NUM_ENCHANTMENTS> ench_cache;
+    FixedBitVector<NUM_ENCHANTMENTS> ench_cache;
     uint64_t flags;                    // bitfield of boolean flags
 
     unsigned int experience;

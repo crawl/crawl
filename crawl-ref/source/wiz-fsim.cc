@@ -298,7 +298,7 @@ static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
 
     // disable death and delay, but make sure that these values
     // get reset when the function call ends
-    unwind_var<FixedBitArray<NUM_DISABLEMENTS> > disabilities(crawl_state.disables);
+    unwind_var<FixedBitVector<NUM_DISABLEMENTS> > disabilities(crawl_state.disables);
     crawl_state.disables.set(DIS_DEATH);
     crawl_state.disables.set(DIS_DELAY);
 
@@ -597,7 +597,7 @@ void wizard_fight_sim(bool double_scale)
 
     // disable death and delay, but make sure that these values
     // get reset when the function call ends
-    unwind_var<FixedBitArray<NUM_DISABLEMENTS> > disabilities(crawl_state.disables);
+    unwind_var<FixedBitVector<NUM_DISABLEMENTS> > disabilities(crawl_state.disables);
     crawl_state.disables.set(DIS_DEATH);
     crawl_state.disables.set(DIS_DELAY);
 
