@@ -3230,7 +3230,9 @@ static void _place_branch_entrances()
         // Likewise, if we already have an entrance, keep going.
         if (i >= BRANCH_VESTIBULE_OF_HELL && i <= BRANCH_LAST_HELL
             || branch_entrance_placed[i])
+        {
             continue;
+        }
 
         const Branch *b = &branches[i];
 
