@@ -92,4 +92,64 @@ public:
     }
 };
 
+template <unsigned int SIZEX, unsigned int SIZEY> class FixedBitArray
+{
+protected:
+    unsigned long data[(SIZEX*SIZEY + LONGSIZE - 1) / LONGSIZE];
+public:
+    void reset()
+    {
+        for (unsigned int i = 0; i < ARRAYSZ(data); i++)
+            data[i] = 0;
+    }
+
+    FixedBitArray()
+    {
+        reset();
+    }
+
+    inline bool get(int x, int y) const
+    {
+#ifdef ASSERTS
+        // printed as signed, as in FixedArray
+        if (x < 0 || y < 0 || x >= (int)SIZEX || y >= (int)SIZEY)
+            die("bit array range error: %d,%d / %u,%u", x, y, SIZEX, SIZEY);
+#endif
+        unsigned int i = y * SIZEX + x;
+        return data[i / LONGSIZE] & 1UL << i % LONGSIZE;
+    }
+
+    inline bool get(coord_def c) const
+    {
+        return get(c.x, c.y);
+    }
+
+    inline void set(int x, int y, bool value = true)
+    {
+#ifdef ASSERTS
+        if (x < 0 || y < 0 || x >= (int)SIZEX || y >= (int)SIZEY)
+            die("bit array range error: %d,%d / %u,%u", x, y, SIZEX, SIZEY);
+#endif
+        unsigned int i = y * SIZEX + x;
+        if (value)
+            data[i / LONGSIZE] |= 1UL << i % LONGSIZE;
+        else
+            data[i / LONGSIZE] &= ~(1UL << i % LONGSIZE);
+    }
+
+    inline FixedBitArray<SIZEX, SIZEY>& operator|=(const FixedBitArray<SIZEX, SIZEY>&x)
+    {
+        for (unsigned int i = 0; i < ARRAYSZ(data); i++)
+            data[i] |= x.data[i];
+        return *this;
+    }
+
+    inline FixedBitArray<SIZEX, SIZEY>& operator&=(const FixedBitArray<SIZEX, SIZEY>&x)
+    {
+        for (unsigned int i = 0; i < ARRAYSZ(data); i++)
+            data[i] &= x.data[i];
+        return *this;
+    }
+};
+
 #endif
