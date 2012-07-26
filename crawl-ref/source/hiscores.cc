@@ -2223,7 +2223,8 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
         if (terse)
             desc += "divine wrath";
         else
-            desc += auxkilldata.empty() ? "Divine wrath" : auxkilldata;
+            desc += "Killed by " +
+                    (auxkilldata.empty() ? "divine wrath" : auxkilldata);
         needs_damage = true;
         break;
 
