@@ -11,20 +11,20 @@
 
 #include "debug.h"
 
-class bit_array
+class bit_vector
 {
 public:
-    bit_array(unsigned long size = 0);
-    ~bit_array();
+    bit_vector(unsigned long size = 0);
+    ~bit_vector();
 
     void reset();
 
     bool get(unsigned long index) const;
     void set(unsigned long index, bool value = true);
 
-    bit_array& operator |= (const bit_array& other);
-    bit_array& operator &= (const bit_array& other);
-    bit_array  operator & (const bit_array& other) const;
+    bit_vector& operator |= (const bit_vector& other);
+    bit_vector& operator &= (const bit_vector& other);
+    bit_vector  operator & (const bit_vector& other) const;
 
 protected:
     unsigned long size;
