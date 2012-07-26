@@ -6,6 +6,7 @@
 #include "cloud.h"
 #include "colour.h"
 #include "coord.h"
+#include "coordit.h"
 #include "decks.h"
 #include "describe.h"
 #include "env.h"
@@ -399,6 +400,22 @@ tileidx_t tileidx_feature(const coord_def &gc)
     // Any grid-specific tiles.
     switch (feat)
     {
+    case DNGN_FLOOR:
+        if (player_in_branch(BRANCH_SLIME_PITS))
+        {
+            bool slimy = false;
+            for (adjacent_iterator ai(gc); ai; ++ai)
+            {
+                if (env.map_knowledge(*ai).feat() == DNGN_SLIMY_WALL)
+                {
+                    slimy = true;
+                    break;
+                }
+            }
+            if (slimy)
+                return TILE_FLOOR_SLIME_ACIDIC;
+        }
+        return _tileidx_feature_base(feat);
     case DNGN_SECRET_DOOR:
     case DNGN_DETECTED_SECRET_DOOR:
     {
