@@ -1096,6 +1096,11 @@ static inline void _apply_variations(const tile_flavour &flv, tileidx_t *bg,
         if (orig == TILE_DNGN_STONE_WALL)
             orig = TILE_DNGN_STONE_WALL_BROWN;
     }
+    else if (player_in_branch(BRANCH_SLIME_PITS))
+    {
+        if (orig == TILE_DNGN_STONE_WALL)
+            orig = TILE_STONE_WALL_SLIME;
+    }
 
     const bool mimic = monster_at(gc) && mons_is_feat_mimic(monster_at(gc)->type);
 

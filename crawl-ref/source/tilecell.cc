@@ -80,6 +80,58 @@ static void _add_overlay(int tileidx, packed_cell *cell)
     cell->dngn_overlay[cell->num_dngn_overlay++] = tileidx;
 }
 
+typedef bool (*map_predicate) (const coord_def&);
+
+static coord_def overlay_directions[] = {
+    coord_def(0, -1),
+    coord_def(1, 0),
+    coord_def(0, 1),
+    coord_def(-1, 0),
+    coord_def(-1, -1),
+    coord_def(1, -1),
+    coord_def(1, 1),
+    coord_def(-1, 1)
+};
+
+static void _add_directional_overlays(const coord_def& gc, packed_cell* cell,
+                                      tileidx_t tile, map_predicate pred,
+                                      uint8_t tile_mask = 0xFF)
+{
+    uint8_t dir_mask = 0;
+
+    for (int i = 0; i < 8; ++i)
+    {
+        if (!pred(gc + overlay_directions[i]))
+            continue;
+
+        if (i > 3)
+        {
+            // Don't overlay corners if there's an overlay for one of the sides
+            if (dir_mask & (1 << (i - 4)))
+                continue;
+            if (dir_mask & (1 << ((i - 1) % 4)))
+                continue;
+        }
+
+        dir_mask |= 1 << i;
+    }
+
+    tileidx_t tileidx = tile;
+
+    for (int i = 0; i < 8; ++i)
+    {
+        if ((tile_mask & (1 << i)) == 0)
+            continue;
+
+        if (dir_mask & (1 << i))
+        {
+            _add_overlay(tileidx, cell);
+        }
+
+        tileidx++;
+    }
+}
+
 static void _pack_shoal_waves(const coord_def &gc, packed_cell *cell)
 {
     // Add wave tiles on floor adjacent to shallow water.
@@ -366,6 +418,13 @@ static void _pack_wall_shadows(const coord_def &gc, packed_cell *cell)
         _add_overlay(TILE_DNGN_WALL_SHADOW_E, cell);
 }
 
+static bool _is_seen_slimy_wall(const coord_def& gc)
+{
+    const dungeon_feature_type feat = _safe_feat(gc);
+
+    return feat == DNGN_SLIMY_WALL;
+}
+
 void pack_cell_overlays(const coord_def &gc, packed_cell *cell)
 {
     if (env.map_knowledge(gc).feat() == DNGN_UNSEEN)
@@ -376,5 +435,11 @@ void pack_cell_overlays(const coord_def &gc, packed_cell *cell)
     else
         _pack_default_waves(gc, cell);
 
-    _pack_wall_shadows(gc, cell);
+    if (player_in_branch(BRANCH_SLIME_PITS) &&
+        env.map_knowledge(gc).feat() != DNGN_SLIMY_WALL)
+    {
+        _add_directional_overlays(gc, cell, TILE_SLIME_OVERLAY, _is_seen_slimy_wall);
+    }
+    else
+        _pack_wall_shadows(gc, cell);
 }
