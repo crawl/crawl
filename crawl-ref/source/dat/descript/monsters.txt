@@ -3103,6 +3103,14 @@ This lad has been caught by kobolds, and was meant to be roasted and eaten
 before you unceremoniously interrupted. Don't you have any manners? Didn't
 mommy tell you to not disrupt people from having a meal?
 %%%%
+young spriggan druid
+
+A junior member of the order of spriggans sworn to protect the nature. While
+less dangerous than the elders, this lad is already well-capable of dealing
+with trespassers like you.{{ if you.god() == "Fedhas" then
+return "\n\nThose foul druids care mostly for animals, instead of taking " ..
+"proper care of plants as Fedhas commands."; end }}
+%%%%
 vampire noble
 
 <vampire>

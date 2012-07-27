@@ -2274,7 +2274,7 @@ NAME:   minmay_lair_end_enchanted_forest
 PLACE:  Lair:$
 ORIENT: northwest
 MONS:   black bear / grizzly bear, wolf, spriggan
-MONS:   spriggan rider / spriggan druid
+MONS:   spriggan rider / spriggan druid n_adj n_noc name:young hd:8
 SUBST:  T : T:20 .:1 t:1
 SUBST:  T = t.
 # These can't be substituted with floor because it might be disconnected, but if
