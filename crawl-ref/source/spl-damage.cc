@@ -2145,6 +2145,7 @@ void forest_message(const coord_def pos, const std::string &msg, msg_channel_typ
 void forest_damage(const actor *mon)
 {
     const coord_def pos = mon->pos();
+    const int hd = mon->get_experience_level();
 
     if (one_chance_in(4))
         forest_message(pos, random_choose(
@@ -2164,7 +2165,7 @@ void forest_damage(const actor *mon)
         for (adjacent_iterator ai(*ri); ai; ++ai)
             if (feat_is_tree(grd(*ai)) && cell_see_cell(pos, *ai, LOS_DEFAULT))
             {
-                const int damage = 5 + random2(10);
+                const int damage = div_rand_round((5 + random2(10)) * hd, 12);
                 if (foe->is_player())
                 {
                     mpr(random_choose(
