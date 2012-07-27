@@ -1354,7 +1354,11 @@ NAME:   forest_paths
 DEPTH:  D, Lair
 FTILE:  .t0@*123 = floor_moss
 : if you.absdepth()>15 then
+:   if you.branch()=="Lair" then
+MONS:   spriggan, spriggan druid n_adj n_noc name:young hd:8, spriggan rider
+:   else
 MONS:   spriggan, spriggan druid, spriggan rider
+:   end
 SUBST:  0=1
 : end
 MAP
