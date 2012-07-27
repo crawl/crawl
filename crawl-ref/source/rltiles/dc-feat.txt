@@ -436,7 +436,11 @@ altar_makhleb_flame7
 altar_makhleb_flame8
 altar_sif_muna DNGN_ALTAR_SIF_MUNA
 altar_trog DNGN_ALTAR_TROG
-altar_nemelex_xobeh DNGN_ALTAR_NEMELEX_XOBEH
+nemelex1 DNGN_ALTAR_NEMELEX_XOBEH
+nemelex2
+nemelex3
+nemelex4
+nemelex5
 altar_elyvilon DNGN_ALTAR_ELYVILON
 altar_lugonu DNGN_ALTAR_LUGONU
 altar_beogh DNGN_ALTAR_BEOGH
