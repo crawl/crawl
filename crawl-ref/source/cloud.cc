@@ -1147,6 +1147,13 @@ static bool _cloud_is_harmful(actor *act, cloud_struct &cloud,
 
 bool is_damaging_cloud(cloud_type type, bool accept_temp_resistances)
 {
+    // A nasty hack; map_knowledge doesn't preserve whom the cloud belongs to.
+    if (type == CLOUD_TORNADO && !you.duration[DUR_TORNADO]
+        && !you.duration[DUR_TORNADO_COOLDOWN])
+    {
+        return true;
+    }
+
     if (accept_temp_resistances)
     {
         cloud_struct cloud;
