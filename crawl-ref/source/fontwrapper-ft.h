@@ -91,7 +91,10 @@ protected:
         int8_t advance;
         // per-glyph width
         int8_t width;
-                // does glyph have any pixels?
+        // per-glyph ascender
+        int8_t ascender;
+
+        // does glyph have any pixels?
         bool renderable;
 
         // index of prev/next glyphs in LRU
@@ -117,13 +120,15 @@ protected:
     // minimum offset (likely negative)
     int m_min_offset;
 
-    // size of ascender
-    int ascender;
+    // size of ascender according to font
+    int m_ascender;
 
     // other font metrics
     coord_def charsz;
     unsigned int m_ft_width;
     unsigned int m_ft_height;
+    int m_max_width;
+    int m_max_height;
 
     GenericTexture m_tex;
     GLShapeBuffer *m_buf;

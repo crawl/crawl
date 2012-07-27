@@ -43,7 +43,9 @@ FTFontWrapper::FTFontWrapper() :
     m_glyphs_top(0),  // reinitialised to 1 in load_font
     m_max_advance(0, 0),
     m_min_offset(0),
-    charsz(1,1)
+    charsz(1,1),
+    m_max_width(0),
+    m_max_height(0)
 {
     m_buf = GLShapeBuffer::create(true, true);
 }
@@ -101,19 +103,19 @@ bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
     m_max_advance   = coord_def(0,0);
     m_max_advance.x = metrics.max_advance >> 6;
     m_max_advance.y = (metrics.ascender-metrics.descender)>>6;
-    ascender        = (metrics.ascender>>6);
-    int max_width   = (face->bbox.xMax >> 6) - (face->bbox.xMin >> 6);
-    int max_height  = m_max_advance.y;
+    m_ascender      = (metrics.ascender>>6);
+    m_max_width     = (face->bbox.xMax >> 6) - (face->bbox.xMin >> 6);
+    m_max_height    = (face->bbox.yMax>>6)-(face->bbox.yMin>>6);//m_max_advance.y;
     m_min_offset    = 0;
     m_glyphs        = new GlyphInfo[MAX_GLYPHS];
 
     if (outl)
-        max_width += 2, max_height += 2;
+        m_max_width += 2, m_max_height += 2;
 
     // Grow character size to power of 2
-    while (charsz.x < max_width)
+    while (charsz.x < m_max_width)
         charsz.x *= 2;
-    while (charsz.y < max_height)
+    while (charsz.y < m_max_height)
         charsz.y *= 2;
 
     // Fill out texture to be (16*charsz.x) X (16*charsz.y) X (32-bit)
@@ -146,14 +148,15 @@ bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
         m_glyphs_mru = 0;
         m_glyphs[0].offset  = 0;
         m_glyphs[0].advance = 0;
+        m_glyphs[0].ascender = 0;
         m_glyphs[0].renderable = false;
         m_glyphs[0].uchar   = MISSING_CHAR;
         m_glyphs[0].prev    = 0;
         m_glyphs[0].next    = 0;
-        for (int x = 0; x < max_width; x++)
-            for (int y = 0; y < max_height; y++)
+        for (int x = 0; x < m_max_width; x++)
+            for (int y = 0; y < m_max_height; y++)
             {
-                unsigned int idx = x + y * charsz.x;
+                unsigned int idx = x + y * m_max_width;
                 idx *= 4;
                 pixels[idx]     = 255;
                 pixels[idx + 1] = 255;
@@ -177,6 +180,7 @@ void FTFontWrapper::load_glyph(unsigned int c, ucs_t uchar)
     FT_Error error;
     m_glyphs[c].offset  = 0;
     m_glyphs[c].advance = 0;
+    m_glyphs[c].ascender = m_ascender;
     m_glyphs[c].renderable = false;
 
     FT_Int glyph_index = FT_Get_Char_Index(face, uchar);
@@ -194,34 +198,25 @@ void FTFontWrapper::load_glyph(unsigned int c, ucs_t uchar)
     int advance = face->glyph->advance.x >> 6;
 
     int bmp_width  = bmp->width;
-    int bmp_top    = ascender - face->glyph->bitmap_top;
-    int bmp_bottom = ascender + bmp->rows - face->glyph->bitmap_top;
     if (outl)
-    {
         bmp_width  += 2;
-        bmp_top    -= 1;
-        bmp_bottom += 1;
-    }
 
     m_glyphs[c].offset  = face->glyph->bitmap_left;
     m_glyphs[c].advance = advance;
+    m_glyphs[c].ascender = face->glyph->bitmap_top;
     m_glyphs[c].width   = bmp_width;
 
     // Some glyphs (e.g. ' ') don't get a buffer.
-    if (!bmp->buffer)
-        m_glyphs[c].renderable = false;
-    else
+    if (bmp->buffer)
     {
         m_glyphs[c].renderable = true;
-
-        int vert_offset = ascender - face->glyph->bitmap_top;
 
         ASSERT(bmp->pixel_mode == FT_PIXEL_MODE_GRAY);
         ASSERT(bmp->num_grays == 256);
 
         // Horizontal offset stored in m_glyphs and handled when drawing
         const unsigned int offset_x = 0;
-        const unsigned int offset_y = vert_offset;
+        const unsigned int offset_y = 0;
         memset(pixels, 0, sizeof(unsigned char) * 4 * charsz.x * charsz.y);
         if (outl)
         {
@@ -374,8 +369,7 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
     m_buf->clear();
     n_subst = 0;
 
-    float texcoord_dy = (float)m_max_advance.y / (float)m_tex.height();
-
+    float texcoord_dy = (float)m_max_height / (float)m_tex.height();
     for (unsigned int y = 0; y < height; y++)
     {
         for (unsigned int x = 0; x < width; x++)
@@ -407,8 +401,9 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
                 float tex_x2 = tex_x + (float)this_width / (float)m_tex.width();
                 float tex_y2 = tex_y + texcoord_dy;
 
-                GLWPrim rect(adv.x, adv.y, adv.x + this_width,
-                             adv.y + m_max_advance.y);
+                GLWPrim rect(adv.x, adv.y - m_glyphs[c].ascender + m_ascender,
+                             adv.x + this_width, adv.y + m_max_height - m_glyphs[c].ascender + m_ascender);
+
                 VColour col(term_colours[col_fg].r,
                             term_colours[col_fg].g,
                             term_colours[col_fg].b);
@@ -793,14 +788,14 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
     int this_width = m_glyphs[c].width;
 
     float pos_sx = x + m_glyphs[c].offset;
-    float pos_sy = y;
+    float pos_sy = y - m_glyphs[c].ascender + m_ascender;
     float pos_ex = pos_sx + this_width;
-    float pos_ey = y + m_max_advance.y;
+    float pos_ey = y + m_max_height - m_glyphs[c].ascender + m_ascender;
 
     float tex_sx = (float)(c % GLYPHS_PER_ROWCOL) / (float)GLYPHS_PER_ROWCOL;
     float tex_sy = (float)(c / GLYPHS_PER_ROWCOL) / (float)GLYPHS_PER_ROWCOL;
-    float tex_ex = tex_sx + (float)this_width / (float)(GLYPHS_PER_ROWCOL*charsz.x);//(float)m_tex.width();
-    float tex_ey = tex_sy + (float)m_max_advance.y / (float)(GLYPHS_PER_ROWCOL*charsz.y);//(float)m_tex.height();
+    float tex_ex = tex_sx + (float)this_width / (float)(GLYPHS_PER_ROWCOL*charsz.x);
+    float tex_ey = tex_sy + (float)m_max_height / (float)(GLYPHS_PER_ROWCOL*charsz.y);
 
     GLWPrim rect(pos_sx, pos_sy, pos_ex, pos_ey);
     rect.set_tex(tex_sx, tex_sy, tex_ex, tex_ey);
