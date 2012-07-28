@@ -2723,8 +2723,11 @@ static void _decrement_durations()
 #endif
     }
 
-    _decrement_a_duration(DUR_TORNADO_COOLDOWN, delay,
-                          "The winds around you calm down.");
+    if (_decrement_a_duration(DUR_TORNADO_COOLDOWN, delay,
+                              "The winds around you calm down."))
+    {
+        remove_tornado_clouds(MID_PLAYER);
+    }
     // Should expire before levitation.
     if (you.duration[DUR_TORNADO])
     {

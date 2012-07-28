@@ -48,4 +48,5 @@ bool is_damaging_cloud(cloud_type type, bool temp = false);
 bool is_harmless_cloud(cloud_type type);
 bool in_what_cloud(cloud_type type);
 
+void remove_tornado_clouds(mid_t whose);
 #endif
