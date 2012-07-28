@@ -1099,7 +1099,7 @@ static void _print_next_monster_desc(const std::vector<monster_info>& mons,
             cprintf(" ");
 
             monster_info mi = mons[start];
-            textcolor(real_colour(dam_colour(mi) | COLFLAG_ITEM_HEAP));
+            textcolor(real_colour(dam_colour(mi) | COLFLAG_REVERSE));
             cprintf(" ");
             textbackground(BLACK);
             textcolor(LIGHTGREY);
