@@ -152,7 +152,7 @@ ENDMAP
 
 # Anthill
 NAME: minivault_29
-TAGS: allow_dup
+DEPTH: D:8-13, Lair, Spider
 MONS: patrolling queen ant, patrolling soldier ant
 MONS: patrolling worker ant, ant larva
 MAP
@@ -171,7 +171,7 @@ MAP
 ENDMAP
 
 NAME:   zaba_anthell
-DEPTH:  D:12-19, Lair:2-, Spider
+DEPTH:  D:8-13, Lair:2-, Spider
 TAGS:   no_rotate
 MONS:   queen ant, soldier ant, worker ant, soldier ant / w:20 worker ant
 SUBST:  ? = . x
@@ -194,7 +194,7 @@ MAP
 ENDMAP
 
 NAME:  zaba_antful_of_joy
-DEPTH: D:10-17, Lair, Spider
+DEPTH: D:8-13, Lair, Spider
 TAGS:  no_rotate
 MONS:  queen ant, worker ant w:5 / soldier ant, worker ant / nothing w:5
 KFEAT: ^ = alarm trap / .
@@ -240,7 +240,7 @@ WWWxxxxxxxWWW
 ENDMAP
 
 NAME:   minmay_another_anthill
-DEPTH:  D:10-21, Lair:3-, Spider, Snake:1-3
+DEPTH:  D:8-13, Lair:2-, Spider
 MONS:   patrolling ant larva, worker ant, soldier ant, patrolling queen ant
 SUBST:  a = 1223........x
 MAP
