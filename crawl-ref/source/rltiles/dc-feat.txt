@@ -424,7 +424,8 @@ xom4
 xom5
 xom6
 xom7
-vehumet DNGN_ALTAR_VEHUMET
+vehumet1 DNGN_ALTAR_VEHUMET
+vehumet2
 okawaru DNGN_ALTAR_OKAWARU
 makhleb_flame1 DNGN_ALTAR_MAKHLEB
 makhleb_flame2
@@ -455,9 +456,7 @@ jiyva08
 jiyva09
 jiyva10
 jiyva11
-%rim 1
 fedhas DNGN_ALTAR_FEDHAS
-%rim 0
 cheibriados_02 DNGN_ALTAR_CHEIBRIADOS
 cheibriados_03
 cheibriados_04
