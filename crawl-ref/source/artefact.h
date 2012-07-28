@@ -46,6 +46,7 @@ struct unrandart_entry
 {
     const char *name;        // true name of unrandart
     const char *unid_name;   // un-id'd name of unrandart
+    const char *type_name;   // custom item type
 
     object_class_type base_type;
     uint8_t           sub_type;
