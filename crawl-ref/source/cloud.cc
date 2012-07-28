@@ -1148,11 +1148,8 @@ static bool _cloud_is_harmful(actor *act, cloud_struct &cloud,
 bool is_damaging_cloud(cloud_type type, bool accept_temp_resistances)
 {
     // A nasty hack; map_knowledge doesn't preserve whom the cloud belongs to.
-    if (type == CLOUD_TORNADO && !you.duration[DUR_TORNADO]
-        && !you.duration[DUR_TORNADO_COOLDOWN])
-    {
-        return true;
-    }
+    if (type == CLOUD_TORNADO)
+        return !you.duration[DUR_TORNADO] && !you.duration[DUR_TORNADO_COOLDOWN];
 
     if (accept_temp_resistances)
     {
@@ -1476,4 +1473,18 @@ coord_def get_cloud_originator(const coord_def& pos)
     if (!agent)
         return coord_def();
     return agent->pos();
+}
+
+void remove_tornado_clouds(mid_t whose)
+{
+    // Needed to clean up after the end of tornado cooldown, so we can again
+    // assume all "raging winds" clouds are harmful.  This is needed only
+    // because map_knowledge doesn't preserve the knowledge about whom the
+    // cloud belongs to.  If this changes, please remove this function.  For
+    // example, this approach doesn't work if we ever make Tornado a monster
+    // spell (excluding immobile and mindless casters).
+
+    for (int i = 0; i < MAX_CLOUDS; i++)
+        if (env.cloud[i].type == CLOUD_TORNADO && env.cloud[i].source == whose)
+            delete_cloud(i);
 }
