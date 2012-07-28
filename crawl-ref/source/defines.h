@@ -31,19 +31,19 @@
 typedef uint32_t ucs_t;
 
 // length of a single zot defence cycle
-#define CYCLE_LENGTH 100
+#define ZOTDEF_CYCLE_LENGTH 100
 
 // Waiting time before monsters arrive
-#define CYCLE_INTERVAL 50
+#define ZOTDEF_CYCLE_INTERVAL 50
 
 // peak size of a random spawn
-#define SPAWN_SIZE 1
+#define ZOTDEF_SPAWN_SIZE 1
 
 // Extra power to assign to a boss monster
-#define BOSS_MONSTER_EXTRA_POWER 5
+#define ZOTDEF_BOSS_EXTRA_POWER 5
 
 // number of waves to pass between bosses generated with a rune
-#define FREQUENCY_OF_RUNES 7
+#define ZOTDEF_RUNE_FREQ 7
 
 // max size of inventory array {dlb}:
 #define ENDOFPACK 52

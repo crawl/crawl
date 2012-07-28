@@ -3286,14 +3286,14 @@ void world_reacts()
         && you.num_turns > 100)
     {
         zotdef_bosses_check();
-        for (int i = 0; i < SPAWN_SIZE; i++)
+        for (int i = 0; i < ZOTDEF_SPAWN_SIZE; i++)
         {
             // Reduce critter frequency for first wave
-            if (you.num_turns<CYCLE_LENGTH && one_chance_in(3))
+            if (you.num_turns<ZOTDEF_CYCLE_LENGTH && one_chance_in(3))
                 continue;
 
-            if ((you.num_turns % CYCLE_LENGTH > CYCLE_INTERVAL)
-                && x_chance_in_y((you.num_turns % CYCLE_LENGTH), CYCLE_LENGTH*3))
+            if ((you.num_turns % ZOTDEF_CYCLE_LENGTH > ZOTDEF_CYCLE_INTERVAL)
+                && x_chance_in_y((you.num_turns % ZOTDEF_CYCLE_LENGTH), ZOTDEF_CYCLE_LENGTH*3))
             {
                 zotdef_spawn(false);
             }

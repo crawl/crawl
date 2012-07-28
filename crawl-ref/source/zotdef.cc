@@ -54,7 +54,7 @@ static int _fuzz_mons_level(int level)
 // the wave number
 static branch_type _zotdef_random_branch()
 {
-    int wavenum = you.num_turns / CYCLE_LENGTH;
+    int wavenum = you.num_turns / ZOTDEF_CYCLE_LENGTH;
 
     while (true)
     {
@@ -544,9 +544,9 @@ void debug_waves()
     // Test more than just 15 runes, the player may stay longer, and if
     // for some reason a rune is lost, he will have to, and get extra
     // demonics.
-    for (int i = 0; i < 30 * FREQUENCY_OF_RUNES; i++)
+    for (int i = 0; i < 30 * ZOTDEF_RUNE_FREQ; i++)
     {
-        you.num_turns += CYCLE_LENGTH;
+        you.num_turns += ZOTDEF_CYCLE_LENGTH;
         zotdef_set_wave();
     }
 }
@@ -657,7 +657,7 @@ static void _zotdef_set_random_branch_wave(int power)
     }
     level_id l(_zotdef_random_branch(), -1);
     env.mons_alloc[BOSS_SLOT] = _get_zotdef_monster(l,
-        power + BOSS_MONSTER_EXTRA_POWER);
+        power + ZOTDEF_BOSS_EXTRA_POWER);
 }
 
 static void _zotdef_set_branch_wave(branch_type b, int power)
@@ -670,14 +670,14 @@ static void _zotdef_set_branch_wave(branch_type b, int power)
     for (int i = 0; i < NSLOTS; i++)
         env.mons_alloc[i] = _get_zotdef_monster(l, _fuzz_mons_level(power));
     env.mons_alloc[BOSS_SLOT] = _get_zotdef_monster(l,
-                                    power + BOSS_MONSTER_EXTRA_POWER);
+                                    power + ZOTDEF_BOSS_EXTRA_POWER);
 }
 
 static void _zotdef_set_boss_unique()
 {
     for (int tries = 0; tries < 100; tries++)
     {
-        int level = random2avg(you.num_turns / CYCLE_LENGTH, 2) + 1;
+        int level = random2avg(you.num_turns / ZOTDEF_CYCLE_LENGTH, 2) + 1;
         monster_type which_unique = _pick_unique(level);
 
         // Sometimes, we just quit if a unique is already placed.
@@ -696,15 +696,15 @@ static void _zotdef_set_boss_unique()
 // mons_alloc[BOSS_SLOT] is the boss.
 //
 // A game lasts for 15 runes, each rune 1400 turns apart
-// (assuming FREQUENCY_OF_RUNES=7, CYCLE_LENGTH=200). That's
+// (assuming ZOTDEF_RUNE_FREQ=7, ZOTDEF_CYCLE_LENGTH=200). That's
 // a total of 105 waves. Set probabilities accordingly.
 void zotdef_set_wave()
 {
     // power ramps up from 1 to 35 over the course of the game.
-    int power = (you.num_turns + CYCLE_LENGTH * 2) / (CYCLE_LENGTH * 3);
+    int power = (you.num_turns + ZOTDEF_CYCLE_LENGTH * 2) / (ZOTDEF_CYCLE_LENGTH * 3);
 
     // Early waves are all DUNGEON
-    if (you.num_turns < CYCLE_LENGTH * 4)
+    if (you.num_turns < ZOTDEF_CYCLE_LENGTH * 4)
     {
         _zotdef_set_branch_wave(BRANCH_MAIN_DUNGEON, power);
         return;
@@ -721,7 +721,7 @@ void zotdef_set_wave()
     {
         branch_type b = _zotdef_random_branch();
         // HoB branch waves v. rare before 10K turns
-        if (b == BRANCH_HALL_OF_BLADES && you.num_turns / CYCLE_LENGTH < 50)
+        if (b == BRANCH_HALL_OF_BLADES && you.num_turns / ZOTDEF_CYCLE_LENGTH < 50)
             b = _zotdef_random_branch();
         _zotdef_set_branch_wave(b, power);
         break;
@@ -1021,12 +1021,12 @@ bool create_zotdef_ally(monster_type mtyp, const char *successmsg)
 
 void zotdef_bosses_check()
 {
-    if ((you.num_turns + 1) % CYCLE_LENGTH == 0)
+    if ((you.num_turns + 1) % ZOTDEF_CYCLE_LENGTH == 0)
     {
         if (monster *mon = zotdef_spawn(true))        // boss monster=true
         {
             const char *msg = "You sense that a powerful threat has arrived.";
-            if (!(((you.num_turns + 1) / CYCLE_LENGTH) % FREQUENCY_OF_RUNES))
+            if (!(((you.num_turns + 1) / ZOTDEF_CYCLE_LENGTH) % ZOTDEF_RUNE_FREQ))
             {
                 const rune_type which_rune = _get_rune();
                 int ip = items(1, OBJ_MISCELLANY, MISC_RUNE_OF_ZOT, true,
@@ -1046,7 +1046,7 @@ void zotdef_bosses_check()
         save_game(false);
     }
 
-    if ((you.num_turns + 1) % CYCLE_LENGTH == CYCLE_INTERVAL)
+    if ((you.num_turns + 1) % ZOTDEF_CYCLE_LENGTH == ZOTDEF_CYCLE_INTERVAL)
     {
         // Set the next wave
         zotdef_set_wave();

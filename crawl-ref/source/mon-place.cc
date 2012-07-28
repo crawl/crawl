@@ -1860,7 +1860,7 @@ monster_type pick_local_zombifiable_monster(int power, bool hack_hd,
                            ? level_id(BRANCH_MAIN_DUNGEON)
                            : level_id::current();
     const int eff_depth  = (crawl_state.game_is_zotdef())
-                           ? (you.num_turns / (2 * CYCLE_LENGTH)) + 1
+                           ? (you.num_turns / (2 * ZOTDEF_CYCLE_LENGTH)) + 1
                            : absdungeon_depth(you.where_are_you, 0);
     power = std::min(27, power);
 
@@ -3055,7 +3055,7 @@ monster* mons_place(mgen_data mg)
     if (mg.cls == MONS_DANCING_WEAPON && mg.summoner)
         ; // It's an animated weapon, don't touch the power
     else if (crawl_state.game_is_zotdef())
-        mg.power = you.num_turns / (CYCLE_LENGTH * 3);
+        mg.power = you.num_turns / (ZOTDEF_CYCLE_LENGTH * 3);
     else
         mg.power = -1;
 
