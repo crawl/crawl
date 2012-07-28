@@ -411,62 +411,62 @@ zig_portal DNGN_PORTAL_ZIGGURAT
 zig_used DNGN_PORTAL_ZIGGURAT_GONE
 
 %sdir dngn/altars
-altar DNGN_UNSEEN_ALTAR
-altar_zin DNGN_ALTAR_ZIN
-altar_shining_one DNGN_ALTAR_SHINING_ONE
-altar_kikubaaqudgha DNGN_ALTAR_KIKUBAAQUDGHA
-altar_yredelemnul DNGN_ALTAR_YREDELEMNUL
-altar_xom0 DNGN_ALTAR_XOM
-altar_xom1
-altar_xom2
-altar_xom3
-altar_xom4
-altar_xom5
-altar_xom6
-altar_xom7
-altar_vehumet DNGN_ALTAR_VEHUMET
-altar_okawaru DNGN_ALTAR_OKAWARU
-altar_makhleb_flame1 DNGN_ALTAR_MAKHLEB
-altar_makhleb_flame2
-altar_makhleb_flame3
-altar_makhleb_flame4
-altar_makhleb_flame5
-altar_makhleb_flame6
-altar_makhleb_flame7
-altar_makhleb_flame8
-altar_sif_muna DNGN_ALTAR_SIF_MUNA
-altar_trog DNGN_ALTAR_TROG
+generic DNGN_UNSEEN_ALTAR
+zin DNGN_ALTAR_ZIN
+shining_one DNGN_ALTAR_SHINING_ONE
+kikubaaqudgha DNGN_ALTAR_KIKUBAAQUDGHA
+yredelemnul DNGN_ALTAR_YREDELEMNUL
+xom0 DNGN_ALTAR_XOM
+xom1
+xom2
+xom3
+xom4
+xom5
+xom6
+xom7
+vehumet DNGN_ALTAR_VEHUMET
+okawaru DNGN_ALTAR_OKAWARU
+makhleb_flame1 DNGN_ALTAR_MAKHLEB
+makhleb_flame2
+makhleb_flame3
+makhleb_flame4
+makhleb_flame5
+makhleb_flame6
+makhleb_flame7
+makhleb_flame8
+sif_muna DNGN_ALTAR_SIF_MUNA
+trog DNGN_ALTAR_TROG
 nemelex1 DNGN_ALTAR_NEMELEX_XOBEH
 nemelex2
 nemelex3
 nemelex4
 nemelex5
-altar_elyvilon DNGN_ALTAR_ELYVILON
-altar_lugonu DNGN_ALTAR_LUGONU
-altar_beogh DNGN_ALTAR_BEOGH
-altar_jiyva01 DNGN_ALTAR_JIYVA
-altar_jiyva02
-altar_jiyva03
-altar_jiyva04
-altar_jiyva05
-altar_jiyva06
-altar_jiyva07
-altar_jiyva08
-altar_jiyva09
-altar_jiyva10
-altar_jiyva11
+elyvilon DNGN_ALTAR_ELYVILON
+lugonu DNGN_ALTAR_LUGONU
+beogh DNGN_ALTAR_BEOGH
+jiyva01 DNGN_ALTAR_JIYVA
+jiyva02
+jiyva03
+jiyva04
+jiyva05
+jiyva06
+jiyva07
+jiyva08
+jiyva09
+jiyva10
+jiyva11
 %rim 1
-altar_fedhas DNGN_ALTAR_FEDHAS
+fedhas DNGN_ALTAR_FEDHAS
 %rim 0
-altar_cheibriados_02 DNGN_ALTAR_CHEIBRIADOS
-altar_cheibriados_03
-altar_cheibriados_04
-altar_cheibriados_06
-altar_cheibriados_08
-altar_cheibriados_09
-altar_cheibriados_10
-altar_cheibriados_12
-altar_ashenzari DNGN_ALTAR_ASHENZARI
+cheibriados_02 DNGN_ALTAR_CHEIBRIADOS
+cheibriados_03
+cheibriados_04
+cheibriados_06
+cheibriados_08
+cheibriados_09
+cheibriados_10
+cheibriados_12
+ashenzari DNGN_ALTAR_ASHENZARI
 
 %sdir dngn
 blue_fountain DNGN_FOUNTAIN DNGN_BLUE_FOUNTAIN
