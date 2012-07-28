@@ -157,7 +157,7 @@ end
 
 # 25% chance to appear on D:21-27, and guaranteed on D:24.
 NAME: pan_entry
-TAGS: extra allow_dup can_overwrite
+TAGS: extra allow_dup can_overwrite replace_portal
 DEPTH: D:21-27
 CHANCE: 100% (D:24), 25%
 : if you.where() == 'D:24' then

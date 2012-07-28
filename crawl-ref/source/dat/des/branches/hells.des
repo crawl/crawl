@@ -120,7 +120,7 @@ end
 
 # This replaces the hardcoded placement of a hell entrance on D:21-27.
 NAME:   hell_entry
-TAGS:   extra allow_dup luniq can_overwrite
+TAGS:   extra allow_dup luniq can_overwrite replace_portal
 DEPTH:  D:21-27
 CHANCE: 100%
 KFEAT:  O = enter_hell
