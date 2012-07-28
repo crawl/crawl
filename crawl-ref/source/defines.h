@@ -48,9 +48,6 @@ typedef uint32_t ucs_t;
 // max size of inventory array {dlb}:
 #define ENDOFPACK 52
 
-// minimum value for strength required on armour and weapons
-const int STR_REQ_THRESHOLD = 10;
-
 // Max ghosts on a level.
 const int MAX_GHOSTS = 10;
 
