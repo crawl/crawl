@@ -193,6 +193,7 @@ $user =~ s/sbalady/nfogravity/;
 $user =~ s/ben\.striegel/Wensley/;
 $user =~ s/thann/Thann/;
 $user =~ s/policarpocp/CommanderC/;
+$user =~ s/therealchriswest/frogbotherer/;
 
 $rev = substr($commit, 0, 12);
 
