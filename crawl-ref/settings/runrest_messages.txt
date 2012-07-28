@@ -18,6 +18,7 @@ ignore = You walk carefully through the
 ignore = Eating a chunk
 ignore = This .*flesh tastes
 ignore = You .* eating
+ignore = The winds around you calm down.
 
 # Traps
 #
