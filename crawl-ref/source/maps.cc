@@ -25,6 +25,7 @@
 #include "libutil.h"
 #include "message.h"
 #include "mapdef.h"
+#include "mapmark.h"
 #include "mon-util.h"
 #include "mon-place.h"
 #include "coord.h"
@@ -360,6 +361,15 @@ static bool _may_overwrite_feature(const coord_def p,
     return true;
 }
 
+static bool _is_portal_place(const coord_def &c)
+{
+    map_marker* marker = env.markers.find(c, MAT_LUA_MARKER);
+    if (!marker)
+        return false;
+
+    return (marker->property("portal") != "");
+}
+
 static bool _map_safe_vault_place(const map_def &map,
                                   const coord_def &c,
                                   const coord_def &size)
@@ -392,8 +402,12 @@ static bool _map_safe_vault_place(const map_def &map,
 
         // Don't overwrite features other than floor, rock wall, doors,
         // nor water, if !water_ok.
-        if (!_may_overwrite_feature(cp, water_ok))
+        if (!_may_overwrite_feature(cp, water_ok)
+            && (!map.has_tag("replace_portal")
+                || !_is_portal_place(cp)))
+        {
             return false;
+        }
 
         // Don't overwrite monsters or items, either!
         if (monster_at(cp) || igrd(cp) != NON_ITEM)
@@ -431,7 +445,9 @@ static bool _connected_minivault_place(const coord_def &c,
         if (lines[ci.y - c.y][ci.x - c.x] == ' ')
             continue;
 
-        if (_may_overwrite_feature(ci, water_ok, false))
+        if (_may_overwrite_feature(ci, water_ok, false)
+            || (place.map.has_tag("replace_portal")
+                && _is_portal_place(ci)))
             return true;
     }
 
@@ -442,6 +458,26 @@ static coord_def _find_minivault_place(
     const vault_placement &place,
     bool check_place)
 {
+    if (place.map.has_tag("replace_portal"))
+    {
+        std::vector<map_marker*> markers =
+            env.markers.get_all(MAT_LUA_MARKER);
+        std::vector<coord_def> candidates;
+        for (std::vector<map_marker*>::iterator it = markers.begin();
+             it != markers.end(); it++)
+        {
+            if ((*it)->property("portal") != "")
+            {
+                coord_def v1((*it)->pos);
+                if ((!check_place || map_place_valid(place.map, v1, place.size))
+                    && _connected_minivault_place(v1, place))
+                    candidates.push_back(v1);
+            }
+        }
+        if (candidates.size() > 0)
+            return candidates[random2(candidates.size())];
+    }
+
     // [ds] The margin around the edges of the map where the minivault
     // won't be placed. Purely arbitrary as far as I can see.
     const int margin = MAPGEN_BORDER * 2;
