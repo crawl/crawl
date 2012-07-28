@@ -174,17 +174,24 @@ orcish_spear1 WPN_SPEAR_ORC
 orcish_spear2
 elven_spear1 WPN_SPEAR_ELF
 elven_spear2
-%rim 1
 trident1 WPN_TRIDENT
 trident2
+trident3
+orcish_trident1 WPN_TRIDENT_ORC
+orcish_trident2
 demon_trident WPN_DEMON_TRIDENT
 halberd1 WPN_HALBERD
 halberd2
+halberd3
+orcish_halberd1 WPN_HALBERD_ORC
+orcish_halberd2
+%rim 1
 scythe1 WPN_SCYTHE
 scythe2
+%rim 0
 glaive1 WPN_GLAIVE
 glaive2
-%rim 0
+glaive3
 orcish_glaive1 WPN_GLAIVE_ORC
 orcish_glaive2
 %rim 1
@@ -195,8 +202,11 @@ bardiche2
 staff WPN_STAFF
 quarterstaff WPN_QUARTERSTAFF
 quarterstaff2
+%rim 0
 lajatang1 WPN_LAJATANG
 lajatang2
+lajatang3
+%rim 1
 
 
 ##Ranged
