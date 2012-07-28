@@ -2823,9 +2823,13 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
         return TILE_WPN_SPEAR;
 
     case WPN_TRIDENT:
+        if (race == ISFLAG_ORCISH)
+            return TILE_WPN_TRIDENT_ORC;
         return TILE_WPN_TRIDENT;
 
     case WPN_HALBERD:
+        if (race == ISFLAG_ORCISH)
+            return TILE_WPN_HALBERD_ORC;
         return TILE_WPN_HALBERD;
 
     case WPN_SCYTHE:
