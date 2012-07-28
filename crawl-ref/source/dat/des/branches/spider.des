@@ -135,6 +135,7 @@ TAGS:   spider_entry patrolling no_monster_gen
 KFEAT:  O = enter_spider_nest
 KMONS:  O = wolf spider / tarantella / redback / jumping spider
 SUBST:  x = ..xx^
+KFEAT:  ^ = web
 MAP
    xxxxx
  @xxxxxxxx
