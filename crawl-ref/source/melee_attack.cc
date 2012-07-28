@@ -256,7 +256,13 @@ bool melee_attack::handle_phase_attempted()
         if (weapon)
         {
             if (weapon->base_type == OBJ_WEAPONS)
-                count_action(CACT_MELEE, weapon->sub_type);
+                if (is_unrandom_artefact(*weapon)
+                    && get_unrand_entry(weapon->special)->type_name)
+                {
+                    count_action(CACT_MELEE, weapon->special);
+                }
+                else
+                    count_action(CACT_MELEE, weapon->sub_type);
             else if (weapon->base_type == OBJ_RODS)
                 count_action(CACT_MELEE, WPN_CLUB);
             else if (weapon->base_type == OBJ_STAVES)

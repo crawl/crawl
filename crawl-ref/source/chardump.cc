@@ -1202,6 +1202,14 @@ static std::string _describe_action_subtype(caction_type type, int subtype)
     {
     case CACT_MELEE:
     case CACT_FIRE:
+        if (subtype >= UNRAND_START)
+        {
+            // Paranoia: an artefact may lose its specialness.
+            const char *tn = get_unrand_entry(subtype)->type_name;
+            if (tn)
+                return uppercase_first(tn);
+            subtype = get_unrand_entry(subtype)->sub_type;
+        }
         return ((subtype == -1) ? "Unarmed"
                 : uppercase_first(item_base_name(OBJ_WEAPONS, subtype)));
     case CACT_THROW:

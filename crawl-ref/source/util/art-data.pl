@@ -59,6 +59,7 @@ my %field_type = (
     SPECIAL  => "bool",
     STEALTH  => "num",
     STR      => "num",
+    TYPE     => "str",
     UNIDED   => "bool",
     VALUE    => "num",
 
@@ -476,7 +477,7 @@ sub process_line
 }
 
 my @art_order = (
-    "NAME", "APPEAR", "\n",
+    "NAME", "APPEAR", "TYPE", "\n",
     "base_type", "sub_type", "plus", "plus2", "COLOUR", "VALUE", "\n",
     "flags",
 
@@ -543,7 +544,7 @@ sub art_to_str
         {
             my $temp = $artefact->{$part};
             $temp =~ s/"/\\"/g;
-            $str .= "\"$temp\"";
+            $str .= ($part eq "TYPE" && $temp eq "") ? "NULL" : "\"$temp\"";
         }
         else
         {
