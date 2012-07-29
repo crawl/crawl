@@ -317,7 +317,7 @@ static std::string _dragon_abil(std::string desc)
     return _annotate_form_based(desc, supp);
 }
 
-std::string describe_mutations()
+std::string describe_mutations(bool center_title)
 {
     std::string result;
     bool have_any = false;
@@ -327,11 +327,13 @@ std::string describe_mutations()
     _num_full_suppressed = _num_part_suppressed = 0;
     _num_form_based = _num_hunger_based = 0;
 
-    // center title
-    int offset = 39 - strwidth(mut_title) / 2;
-    if (offset < 0) offset = 0;
+    if (center_title)
+    {
+        int offset = 39 - strwidth(mut_title) / 2;
+        if (offset < 0) offset = 0;
 
-    result += std::string(offset, ' ');
+        result += std::string(offset, ' ');
+    }
 
     result += "<white>";
     result += mut_title;
@@ -727,7 +729,7 @@ static void _display_vampire_attributes()
 
 void display_mutations()
 {
-    std::string mutation_s = describe_mutations();
+    std::string mutation_s = describe_mutations(true);
 
     std::string extra = "";
     if (_num_part_suppressed)

@@ -85,7 +85,7 @@ inline bool give_bad_mutation(const std::string &reason,
 
 void display_mutations();
 mutation_activity_type mutation_activity_level(mutation_type mut);
-std::string describe_mutations();
+std::string describe_mutations(bool center_title);
 
 bool delete_mutation(mutation_type which_mutation, const std::string &reason,
                      bool failMsg = true,

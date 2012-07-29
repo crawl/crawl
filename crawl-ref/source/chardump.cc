@@ -1318,7 +1318,7 @@ static void _sdump_mutations(dump_params &par)
     if (how_mutated(true, false))
     {
         text += "\n";
-        text += (formatted_string::parse_string(describe_mutations()));
+        text += (formatted_string::parse_string(describe_mutations(false)));
         text += "\n\n";
     }
 }
