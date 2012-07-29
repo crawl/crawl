@@ -5,6 +5,7 @@
 #include "dgn-nolithius.h"
 #include "dgn-forest.h"
 #include "dgn-delve.h"
+#include "dgn-deposit.h"
 #include <locale.h>
 
 static wchar_t dchar(dungeon_feature_type g)
@@ -45,7 +46,7 @@ int main()
     setlocale(LC_CTYPE, "");
     grd.init(DNGN_ROCK_WALL);
     seed_rng();
-    layout_delve(2, 3, 0, -1, 125);
+    layout_deposit(80);
     draw();
     return 0;
 }
