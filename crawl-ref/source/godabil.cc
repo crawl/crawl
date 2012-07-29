@@ -2855,7 +2855,7 @@ static bool _possible_evolution(const monster* input,
     case MONS_FUNGUS:
     case MONS_TOADSTOOL:
         possible_monster.new_type = MONS_WANDERING_MUSHROOM;
-        possible_monster.piety_cost = (input->type == MONS_TOADSTOOL ? 2 : 1);
+        possible_monster.piety_cost = 4;
         break;
 
     case MONS_BALLISTOMYCETE:
