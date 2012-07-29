@@ -388,7 +388,9 @@ static void _show_morgue(scorefile_entry& se)
     while (fgets(buf, sizeof buf, morgue) != NULL)
     {
         std::string line = std::string(buf);
-        line.erase(line.find_last_of('\n'));
+        size_t newline_pos = line.find_last_of('\n');
+        if (newline_pos != std::string::npos)
+            line.erase(newline_pos);
         morgue_text += "<w>" + line + "</w>" + '\n';
     }
 
