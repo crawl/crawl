@@ -195,7 +195,7 @@ static inline void swapv(Z &a, Z &b)
     b = tmp;
 }
 
-inline int sqr(int x)
+static inline int sqr(int x)
 {
     return x * x;
 }
@@ -203,7 +203,7 @@ inline int sqr(int x)
 unsigned int isqrt(unsigned int x);
 int isqrt_ceil(int x);
 
-inline bool testbits(uint64_t flags, uint64_t test)
+static inline bool testbits(uint64_t flags, uint64_t test)
 {
     return ((flags & test) == test);
 }
