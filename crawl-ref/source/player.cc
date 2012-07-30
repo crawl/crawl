@@ -7638,9 +7638,9 @@ bool player::attempt_escape(int attempts)
     }
     else
     {
-        std::string emsg = "While you don't manage to break free from ";
+        std::string emsg = "Your attempt to break free from ";
         emsg += themonst->name(DESC_THE, true);
-        emsg += ", you feel that another attempt might be more successful.";
+        emsg += " fails, but you feel that another attempt might succeed.";
         mpr(emsg);
         you.turn_is_over = true;
         return false;
