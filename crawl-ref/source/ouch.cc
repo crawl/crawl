@@ -1437,12 +1437,33 @@ void _end_game(scorefile_entry &se)
 
     _delete_files();
 
+    kill_method_type death_type = static_cast<kill_method_type>(se.get_death_type());
+    int death_source = se.get_death_source();
+
     // death message
-    if (se.get_death_type() != KILLED_BY_LEAVING
-        && se.get_death_type() != KILLED_BY_QUITTING
-        && se.get_death_type() != KILLED_BY_WINNING)
+    if (death_type != KILLED_BY_LEAVING
+        && death_type != KILLED_BY_QUITTING
+        && death_type != KILLED_BY_WINNING)
     {
         mprnojoin("You die...");      // insert player name here? {dlb}
+
+        // Mummy death curse
+        if (you.species == SP_MUMMY
+                && (death_type == KILLED_BY_MONSTER
+                    || death_type == KILLED_BY_HEADBUTT
+                    || death_type == KILLED_BY_BEAM
+                    || death_type == KILLED_BY_DISINT
+                    || death_type == KILLED_BY_SPORE
+                    || death_type == KILLED_BY_CLOUD
+                    || death_type == KILLED_BY_ROTTING
+                    || death_type == KILLED_BY_REFLECTION
+                    || death_type == KILLED_BY_ROLLING)
+                && !invalid_monster_index(death_source)
+                && menv[death_source].type != -1) {
+            mprf(MSGCH_MONSTER_SPELL, "A malignant aura surrounds %s.",
+                 menv[death_source].name(DESC_THE).c_str());
+        }
+
         xom_death_message((kill_method_type) se.get_death_type());
 
         switch (you.religion)
