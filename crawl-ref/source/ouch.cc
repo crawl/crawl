@@ -64,6 +64,7 @@
 #include "tutorial.h"
 #include "view.h"
 #include "shout.h"
+#include "spl-miscast.h"
 #include "xom.h"
 
 static void _end_game(scorefile_entry &se);
@@ -1459,9 +1460,13 @@ void _end_game(scorefile_entry &se)
                     || death_type == KILLED_BY_REFLECTION
                     || death_type == KILLED_BY_ROLLING)
                 && !invalid_monster_index(death_source)
-                && menv[death_source].type != -1) {
+                && menv[death_source].type != -1)
+        {
+            int pow = std::max(1, you.experience_level - 3);
             mprf(MSGCH_MONSTER_SPELL, "A malignant aura surrounds %s.",
                  menv[death_source].name(DESC_THE).c_str());
+            MiscastEffect(&menv[death_source], MHITYOU, SPTYP_NECROMANCY,
+                          pow, random2avg(88, 3), "a mummy death curse");
         }
 
         xom_death_message((kill_method_type) se.get_death_type());
