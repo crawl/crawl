@@ -82,7 +82,6 @@
 // Helper functions (some of these should probably be public).
 static void _ench_animation(int flavour, const monster* mon = NULL,
                             bool force = false);
-static void _zappy(zap_type z_type, int power, bolt &pbolt);
 static beam_type _chaos_beam_flavour();
 static std::string _beam_type_name(beam_type type);
 
@@ -245,7 +244,7 @@ spret_type zapping(zap_type ztype, int power, bolt &pbolt,
 
     fail_check();
     // Fill in the bolt structure.
-    _zappy(ztype, power, pbolt);
+    zappy(ztype, power, pbolt);
 
     if (msg)
         mpr(msg);
@@ -274,7 +273,7 @@ bool player_tracer(zap_type ztype, int power, bolt &pbolt, int range)
     if (you.confused())
         return true;
 
-    _zappy(ztype, power, pbolt);
+    zappy(ztype, power, pbolt);
 
     // Special case so that the IMB tracer behaves properly.
     if (pbolt.name != "orb of energy")
@@ -418,7 +417,7 @@ int zap_power_cap(zap_type z_type)
     return (zinfo ? zinfo->power_cap : 0);
 }
 
-static void _zappy(zap_type z_type, int power, bolt &pbolt)
+void zappy(zap_type z_type, int power, bolt &pbolt)
 {
     const zap_info* zinfo = _seek_zap(z_type);
 

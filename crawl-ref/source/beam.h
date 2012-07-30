@@ -341,5 +341,6 @@ void init_zap_index();
 void clear_zap_info_on_exit();
 
 int zap_power_cap(zap_type ztype);
+void zappy(zap_type z_type, int power, bolt &pbolt);
 
 #endif
