@@ -622,7 +622,7 @@ static void _DEMON_AXE_world_reacts(item_def *item)
         monster *mon = monster_at(*di);
         if (mon && you.can_see(mon)
             && you.possible_beholder(mon)
-            && !mons_is_firewood(mon))
+            && !mons_class_flag(mon->type, M_NO_EXP_GAIN))
         {
             closest = mon;
             goto found;
