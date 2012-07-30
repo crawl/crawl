@@ -1128,7 +1128,7 @@ bool spell_is_useless(spell_type spell, bool transient)
     {
         if (you.duration[DUR_CONF] > 0
             || spell_mana(spell) > you.magic_points
-            || spell_no_hostile_in_range(spell, get_dist_to_nearest_monster()))
+            || spell_no_hostile_in_range(spell))
         {
             return true;
         }
@@ -1209,12 +1209,16 @@ int spell_highlight_by_utility(spell_type spell, int default_color,
     return default_color;
 }
 
-bool spell_no_hostile_in_range(spell_type spell, int minRange)
+bool spell_no_hostile_in_range(spell_type spell)
 {
+    int minRange = get_dist_to_nearest_monster();
     if (minRange < 0)
         return false;
 
-    bool bonus = 0;
+    const int range = calc_spell_range(spell);
+    if (range < 0)
+        return false;
+
     switch (spell)
     {
     // These don't target monsters.
@@ -1225,37 +1229,73 @@ bool spell_no_hostile_in_range(spell_type spell, int minRange)
     case SPELL_GOLUBRIAS_PASSAGE:
     case SPELL_FRAGMENTATION:
 
-    // These bounce and may be aimed elsewhere to bounce at monsters
-    // outside range (I guess).
-    case SPELL_SHOCK:
-    case SPELL_LIGHTNING_BOLT:
+    // Shock and Lightning Bolt are no longer here, as the code below can
+    // account for possible bounces.
 
     case SPELL_FIRE_STORM:
         return false;
-
-    case SPELL_EVAPORATE:
-    case SPELL_MEPHITIC_CLOUD:
-    case SPELL_FIREBALL:
-    case SPELL_FREEZING_CLOUD:
-    case SPELL_NOXIOUS_CLOUD:
-    case SPELL_POISONOUS_CLOUD:
-        // Increase range by one due to cloud radius.
-        bonus = 1;
-        break;
-
     default:
         break;
+    }
+
+    bolt beam;
+
+    zap_type zap = spell_to_zap(spell);
+    if (spell == SPELL_FIREBALL)
+        zap = ZAP_FIREBALL;
+
+    if (zap != NUM_ZAPS)
+    {
+        beam.thrower = KILL_YOU_MISSILE;
+        zappy(zap, calc_spell_power(spell, true), beam);
+    }
+    else if (spell == SPELL_EVAPORATE
+             || spell == SPELL_MEPHITIC_CLOUD)
+    {
+        beam.flavour = BEAM_POTION_MEPHITIC;
+        beam.ex_size = 1;
+        beam.damage = dice_def(1, 1); // so that foe_info is populated
+        beam.hit = 20;
+        beam.thrower = KILL_YOU;
+        beam.ench_power = calc_spell_power(spell, true);
+        beam.is_beam = false;
+        beam.is_explosion = true;
+    }
+
+    if (beam.flavour != BEAM_VISUAL)
+    {
+        bolt tempbeam;
+        bool found = false;
+        beam.beam_source = MHITYOU;
+        beam.range = range;
+        beam.is_tracer = true;
+        beam.is_targetting = true;
+        beam.source  = you.pos();
+        beam.dont_stop_player = true;
+        beam.friend_info.dont_stop = true;
+        beam.foe_info.dont_stop = true;
+        beam.attitude = ATT_FRIENDLY;
+        beam.can_see_invis = you.can_see_invisible();
+        for (radius_iterator ri(you.pos(), range, C_ROUND, you.get_los());
+             ri; ++ri)
+        {
+            tempbeam = beam;
+            tempbeam.target = *ri;
+            tempbeam.fire();
+            if (tempbeam.foe_info.count > 0)
+            {
+                found = true;
+                break;
+            }
+        }
+        return !found;
     }
 
     // The healing spells.
     if (testbits(get_spell_flags(spell), SPFLAG_HELPFUL))
         return false;
 
-    const int range = calc_spell_range(spell);
-    if (range < 0)
-        return false;
-
-    const int rsq = (range + bonus) * (range + bonus) + 1;
+    const int rsq = range * range + 1;
     if (rsq < minRange)
         return true;
 
