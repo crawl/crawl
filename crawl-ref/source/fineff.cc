@@ -63,7 +63,8 @@ static void _trj_spawns(actor *attacker, actor *trj, coord_def pos, int damage)
 
     dprf("Trying to spawn %d jellies.", tospawn);
 
-    unsigned short foe = attacker ? attacker->mindex() : MHITNOT;
+    unsigned short foe = attacker && attacker->alive() ? attacker->mindex()
+                                                       : MHITNOT;
 
     int spawned = 0;
     for (int i = 0; i < tospawn; ++i)
