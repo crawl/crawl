@@ -155,7 +155,6 @@ public:
     std::string get_name() const  { return name; }
     int    get_score() const      { return points; }
     int    get_death_type() const { return death_type; }
-    int    get_death_source() const { return death_source; }
     time_t get_death_time() const { return death_time; }
     xlog_fields get_fields() const;
 
