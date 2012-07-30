@@ -185,6 +185,13 @@ void MiscastEffect::init()
         if (target_known && death_curse)
             source_known = true;
     }
+    else if (source == MHITYOU)
+    {
+        act_source = guilty = &you;
+        kc = KC_FRIENDLY;
+        kt = KILL_MISC; // don't give player XP for this
+        source_known = true;
+    }
     else
     {
         ASSERT(source == ZOT_TRAP_MISCAST
