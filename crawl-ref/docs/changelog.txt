@@ -8,7 +8,7 @@ Stone Soup 0.11 (up to 0.11-a0-2859-ga7b20a9)
 * Missile enchantments are no more.
 * Monster constriction vs the player has been overhauled.
 * New monsters: Arachne, Fannar, orb spider, bog body, Hell Sentinel.
-* Removed monsters: Jozef, bog mummy, midge, Pit Fiend, Hairy Devil
+* Removed monsters: Jozef, bog mummy, midge, Pit Fiend, hairy devil.
 * Lots of new vaults and tiles.
 
 Branches, environment
@@ -70,7 +70,7 @@ Monsters
 * Mimics can be "inept", (no adjective), "ravenous" or "monstrous", with
   a progression of strength and abilities.
 * New monster: orb spider. Shoots weak orbs of destruction at you.
-* Removed: Jozef, midges, killer bee larvae, Hairy Devils.
+* Removed: Jozef, midges, killer bee larvae, hairy devils.
 * Porcupines get spines.
 * Hell Sentinels replace Pit Fiends.
 * Boulder beetles can roll as a boulder.
