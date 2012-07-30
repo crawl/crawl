@@ -490,8 +490,8 @@ void init_train()
         }
 }
 
-static bool _cmp_rest(const std::pair<skill_type,int>& a,
-                      const std::pair<skill_type,int>& b)
+static bool _cmp_rest(const std::pair<skill_type,long>& a,
+                      const std::pair<skill_type,long>& b)
 {
     return a.second < b.second;
 }
@@ -507,12 +507,12 @@ static bool _cmp_rest(const std::pair<skill_type,int>& a,
 template <typename T, int SIZE>
 static void _scale_array(FixedVector<T, SIZE> &array, int scale, bool exact)
 {
-    int total = 0;
+    long total = 0;
     // First, we calculate the sum of the values to be scaled.
     for (int i = 0; i < NUM_SKILLS; ++i)
         total += array[i];
 
-    std::vector<std::pair<skill_type,int> > rests;
+    std::vector<std::pair<skill_type,long> > rests;
     int scaled_total = 0;
 
     // All skills disabled, nothing to do.
@@ -523,11 +523,11 @@ static void _scale_array(FixedVector<T, SIZE> &array, int scale, bool exact)
     for (int i = 0; i < NUM_SKILLS; ++i)
         if (array[i] > 0)
         {
-            int result = array[i] * scale;
-            const int rest = result % total;
+            long result = (long)array[i] * (long)scale;
+            const long rest = result % total;
             if (rest)
-                rests.push_back(std::pair<skill_type,int>(skill_type(i), rest));
-            array[i] = result / total;
+                rests.push_back(std::pair<skill_type,long>(skill_type(i),rest));
+            array[i] = (int)(result / total);
             scaled_total += array[i];
         }
 
@@ -539,7 +539,7 @@ static void _scale_array(FixedVector<T, SIZE> &array, int scale, bool exact)
     // We ensure that the percentage always add up to 100 by increasing the
     // training for skills which had the higher rest from the above scaling.
     std::sort(rests.begin(), rests.end(), _cmp_rest);
-    std::vector<std::pair<skill_type,int> >::iterator it = rests.begin();
+    std::vector<std::pair<skill_type,long> >::iterator it = rests.begin();
     while (scaled_total < scale && it != rests.end())
     {
         ++array[it->first];
