@@ -2638,7 +2638,7 @@ static void _decrement_durations()
 
     if (you.duration[DUR_BERSERK]
         && (_decrement_a_duration(DUR_BERSERK, delay)
-            || you.hunger <= HUNGER_STARVING + BERSERK_NUTRITION))
+            || you.hunger + 100 <= HUNGER_STARVING + BERSERK_NUTRITION))
     {
         mpr("You are no longer berserk.");
         you.duration[DUR_BERSERK] = 0;
@@ -2689,7 +2689,7 @@ static void _decrement_durations()
         slow_player(dur);
 
         make_hungry(BERSERK_NUTRITION, true);
-        you.hunger = std::max(HUNGER_STARVING, you.hunger);
+        you.hunger = std::max(HUNGER_STARVING - 100, you.hunger);
 
         // 1KB: No berserk healing.
         you.hp = (you.hp + 1) * 2 / 3;
