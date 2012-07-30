@@ -667,7 +667,7 @@ bool player::can_go_berserk(bool intentional, bool potion) const
         return false;
     }
 
-    ASSERT(HUNGER_STARVING + BERSERK_NUTRITION < 2066);
+    ASSERT(HUNGER_STARVING - 100 + BERSERK_NUTRITION < 2066);
     if (you.hunger <= 2066)
     {
         if (verbose)
