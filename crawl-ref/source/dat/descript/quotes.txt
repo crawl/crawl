@@ -42,8 +42,19 @@ A gateway to a ziggurat
 %%%%
 A gateway to Hell
 
-“Lasciate ogne speranza, voi ch’intrate.”
-    -Dante Alighieri, _Divina Commedia_, “L’Inferno”, Canto III. Circa 1315.
+“I am the way into the city of woe.
+ I am the way to a forsaken people.
+ I am the way into eternal sorrow.
+
+ Sacred justice moved my architect.
+ I was raised here by divine omnipotence,
+ Primordial love and ultimate intellect.
+
+ Only those elements time cannot wear
+ Were made before me, and beyond time I stand.
+ Abandon all hope, ye who enter here.”
+    -Dante Alighieri, _The Divine Comedy_, “Inferno”, Canto III. ca. 1315.
+     trans. John Ciardi, 1954.
 %%%%
 A granite statue
 
