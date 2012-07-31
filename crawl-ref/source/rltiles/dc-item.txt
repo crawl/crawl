@@ -570,7 +570,6 @@ gem_lead
 gem_plastic
 
 %sdir item/wand
-%back i-label
 i-flame WAND_FLAME WAND_ID_FIRST
 i-frost WAND_FROST
 i-slowing WAND_SLOWING
@@ -592,7 +591,6 @@ i-draining WAND_DRAINING
 i-random_effects WAND_RANDOM_EFFECTS
 i-disintegration WAND_DISINTEGRATION WAND_ID_LAST
 
-%back none
 #################OBJ_FOOD
 %sdir item/food
 meat_ration FOOD_MEAT_RATION UNSEEN_FOOD
@@ -930,11 +928,11 @@ rod07
 rod08
 rod09
 
-i-rod_smiting ROD_LIGHTNING ROD_ID_FIRST
+i-rod_lightning ROD_LIGHTNING ROD_ID_FIRST
 i-rod_summoning ROD_SUMMONING
 i-rod_destruction_fire ROD_DESTRUCTION_FIRE
 i-rod_destruction_ice ROD_DESTRUCTION_ICE
-i-rod_destruction_lightning ROD_DESTRUCTION_LIGHTNING
+i-rod_iron ROD_DESTRUCTION_IRON
 i-rod_destruction_inaccuracy ROD_DESTRUCTION_INACCURACY
 i-rod_warding ROD_WARDING
 i-rod_demonology ROD_DEMONOLOGY
