@@ -630,7 +630,8 @@ void dgn_set_grid_colour_at(const coord_def &c, int colour)
 static void _set_grd(const coord_def &c, dungeon_feature_type feat)
 {
     // It might be good to clear some pgrid flags as well.
-    tile_clear_flavour(c);
+    env.tile_flv(c).feat    = 0;
+    env.tile_flv(c).special = 0;
     env.grid_colours(c) = 0;
     grd(c) = feat;
 }
