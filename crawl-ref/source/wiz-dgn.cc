@@ -309,7 +309,9 @@ bool wizard_create_feature(const coord_def& pos)
     if (feat == DNGN_ENTER_PORTAL_VAULT)
         return wizard_create_portal(pos);
 
+    env.tile_flv(pos).feat = 0;
     env.tile_flv(pos).special = 0;
+    env.grid_colours(pos) = 0;
     const dungeon_feature_type old_feat = grd(pos);
     dungeon_terrain_changed(pos, feat, false);
     // Update gate tiles, if existing.
