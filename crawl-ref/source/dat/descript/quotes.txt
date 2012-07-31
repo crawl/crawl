@@ -1076,7 +1076,7 @@ shadow
  And the response
  Falls the Shadow
      Life is very long”
-    -T.S. Eliot, “The Hollow Men”
+    -T.S. Eliot, “The Hollow Men”. 1925.
 %%%%
 small skeleton
 
@@ -1090,8 +1090,8 @@ toenail golem
 but my toes hardly notice. All they’re interested in is turning out
 toenails—semitransparent, flexible sheets of a hornlike material, as defense
 against—whom?”
-    -Jorge Luis Borges
-    trans. Andrew Hurley
+    -Jorge Luis Borges, “Toenails”. 1960.
+    trans. Andrew Hurley, 1998.
 %%%%
 ugly thing
 
