@@ -3143,8 +3143,18 @@ void bolt::tracer_affect_player()
 
 bool bolt::misses_player()
 {
-    if (is_explosion || aimed_at_feet || auto_hit || is_enchantment())
+    if (is_enchantment())
         return false;
+
+    const bool engulfs = is_explosion || is_big_cloud;
+
+    if (is_explosion || aimed_at_feet || auto_hit)
+    {
+        if (hit_verb.empty())
+            hit_verb = engulfs ? "engulfs" : "hits";
+        mprf("The %s %s you!", name.c_str(), hit_verb.c_str());
+        return false;
+    }
 
     const int dodge = player_evasion();
     const int dodge_less = player_evasion(EV_IGNORE_PHASESHIFT);
@@ -3229,7 +3239,6 @@ bool bolt::misses_player()
     }
     else
     {
-        const bool engulfs = is_explosion || is_big_cloud;
         int dodge_more = player_evasion(EV_IGNORE_HELPLESS);
 
         if (hit_verb.empty())
@@ -5223,6 +5232,14 @@ void bolt::refine_for_explosion()
         glyph   = dchar_glyph(DCHAR_FIRED_ZAP);
         flavour = BEAM_FRAG;     // Sets it from pure damage to shrapnel
                                  // (which is absorbed extra by armour).
+    }
+
+    if (name == "great blast of fire")
+    {
+        seeMsg  = "A raging storm of fire appears!";
+        hearMsg = "You hear a raging storm!";
+
+        // Everything else is handled elsewhere...
     }
 
     if (name == "great blast of cold")

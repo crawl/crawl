@@ -4152,6 +4152,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         const actor *foe = mons->get_foe();
         const bool need_more = foe && (foe->is_player() || you.see_cell(foe->pos()));
         pbolt.in_explosion_phase = false;
+        pbolt.refine_for_explosion();
         pbolt.explode(need_more);
     }
     else
