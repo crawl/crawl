@@ -147,7 +147,7 @@ static std::string _spell_extra_description(spell_type spell, bool viewing)
 // to certain criteria. Currently used for Tiles to distinguish
 // spells targeted on player vs. spells targeted on monsters.
 int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
-                int minRange, spell_selector selector)
+                spell_selector selector)
 {
     if (toggle_with_I && get_spell_by_letter('I') != SPELL_NO_SPELL)
         toggle_with_I = false;
@@ -584,8 +584,6 @@ bool cast_a_spell(bool check_range, spell_type spell)
     if (crawl_state.game_is_hints())
         Hints.hints_spell_counter++;
 
-    const int minRange = get_dist_to_nearest_monster();
-
     if (spell == SPELL_NO_SPELL)
     {
         int keyin = 0;
@@ -624,7 +622,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
 
             if (keyin == '?' || keyin == '*')
             {
-                keyin = list_spells(true, false, minRange);
+                keyin = list_spells(true, false);
                 if (!keyin)
                     keyin = ESCAPE;
 
