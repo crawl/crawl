@@ -1315,7 +1315,7 @@ bool direction_chooser::pickup_item()
     item_info *ii = 0;
     if (in_bounds(target()))
         ii = env.map_knowledge(target()).item();
-    if (!ii || !ii->is_valid())
+    if (!ii || !ii->is_valid(true))
     {
         mpr("You can't see any item there.", MSGCH_EXAMINE_FILTER);
         return false;
@@ -1333,6 +1333,9 @@ bool direction_chooser::pickup_item()
         if (!item->is_valid()
             || ii->base_type != item->base_type
             || ii->sub_type != item->sub_type
+               // TODO: check for different unidentified items of the same base type
+               && (!item_type_has_unidentified(item->base_type)
+                   || ii->sub_type == get_max_subtype(item->base_type))
             || ii->colour != item->colour)
         {
             item = 0;

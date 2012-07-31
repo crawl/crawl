@@ -3163,15 +3163,29 @@ bool item_def::defined() const
     return (base_type != OBJ_UNASSIGNED && quantity > 0);
 }
 
+bool item_type_has_unidentified(object_class_type base_type)
+{
+    return base_type == OBJ_WANDS
+        || base_type == OBJ_SCROLLS
+        || base_type == OBJ_JEWELLERY
+        || base_type == OBJ_POTIONS
+        || base_type == OBJ_BOOKS
+        || base_type == OBJ_STAVES
+        || base_type == OBJ_RODS;
+}
+
 // Checks whether the item is actually a good one.
 // TODO: check brands, etc.
-bool item_def::is_valid() const
+bool item_def::is_valid(bool iinfo) const
 {
     if (!defined())
         return false;
     const int max_sub = get_max_subtype(base_type);
     if (max_sub != -1 && sub_type >= max_sub)
-        return false;
+    {
+        if (!iinfo || sub_type > max_sub || !item_type_has_unidentified(base_type))
+            return false;
+    }
     if (colour == 0)
         return false; // No black items.
     return true;
