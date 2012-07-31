@@ -2669,11 +2669,13 @@ static void tag_construct_level(writer &th)
     }
 }
 
-void marshallItem(writer &th, const item_def &item)
+void marshallItem(writer &th, const item_def &item, bool iinfo)
 {
     marshallByte(th, item.base_type);
     if (item.base_type == OBJ_UNASSIGNED)
         return;
+
+    ASSERT(item.is_valid(iinfo));
 
     marshallByte(th, item.sub_type);
     marshallShort(th, item.plus);
@@ -2840,7 +2842,7 @@ void marshallMapCell(writer &th, const map_cell &cell)
     }
 
     if (flags & MAP_SERIALIZE_ITEM)
-        marshallItem(th, *cell.item());
+        marshallItem(th, *cell.item(), true);
 
     if (flags & MAP_SERIALIZE_MONSTER)
         marshallMonsterInfo(th, *cell.monsterinfo());
@@ -3060,7 +3062,7 @@ void marshallMonsterInfo(writer &th, const monster_info& mi)
         if (mi.inv[i].get())
         {
             marshallBoolean(th, true);
-            marshallItem(th, *mi.inv[i].get());
+            marshallItem(th, *mi.inv[i].get(), true);
         }
         else
             marshallBoolean(th, false);
