@@ -131,7 +131,7 @@ void marshallBoolean (writer &, bool);
 void marshallString  (writer &, const std::string &, int maxSize = 0);
 void marshallString4 (writer &, const std::string &);
 void marshallCoord   (writer &, const coord_def &);
-void marshallItem    (writer &, const item_def &);
+void marshallItem    (writer &, const item_def &, bool info = false);
 void marshallMonster (writer &, const monster&);
 void marshallMonsterInfo (writer &, const monster_info &);
 void marshallMapCell (writer &, const map_cell &);

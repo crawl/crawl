@@ -758,7 +758,7 @@ void Stash::save(writer& outf) const
     // And dump the items individually. We don't bother saving fields we're
     // not interested in (and don't anticipate being interested in).
     for (unsigned i = 0; i < items.size(); ++i)
-        marshallItem(outf, items[i]);
+        marshallItem(outf, items[i], true);
 }
 
 void Stash::load(reader& inf)
@@ -1083,7 +1083,7 @@ void ShopInfo::save(writer& outf) const
 
     for (unsigned i = 0; i < items.size(); ++i)
     {
-        marshallItem(outf, items[i].item);
+        marshallItem(outf, items[i].item, true);
         marshallShort(outf, (short) items[i].price);
     }
 }
