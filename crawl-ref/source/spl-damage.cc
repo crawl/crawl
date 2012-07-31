@@ -139,8 +139,7 @@ spret_type cast_fire_storm(int pow, bolt &beam, bool fail)
         return SPRET_ABORT;
     }
 
-    mpr("A raging storm of fire appears!");
-
+    beam.refine_for_explosion();
     beam.explode(false);
 
     viewwindow();
