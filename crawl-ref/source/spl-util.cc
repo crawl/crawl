@@ -1239,6 +1239,7 @@ bool spell_no_hostile_in_range(spell_type spell)
     }
 
     bolt beam;
+    beam.flavour = BEAM_VISUAL;
 
     zap_type zap = spell_to_zap(spell);
     if (spell == SPELL_FIREBALL)
