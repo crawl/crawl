@@ -2937,7 +2937,8 @@ level_id level_id::get_next_level_id(const coord_def &pos)
     int gridc = grd(pos);
     level_id id = current();
 
-    if (gridc == branches[id.branch].exit_stairs)
+    if (gridc == branches[id.branch].exit_stairs
+        || gridc == DNGN_ENTER_PORTAL_VAULT)
         return stair_destination(pos);
 
     for (int i = 0; i < NUM_BRANCHES; ++i)
