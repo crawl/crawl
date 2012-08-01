@@ -1272,6 +1272,15 @@ autofight_stop = 30
         you would want:
             autofight_stop = 0
 
+autofight_throw = false
+        If your quiver contains a throwable item, autofight will throw it
+        at enemies out of melee range. Without this option, only a wielded
+        launcher (a bow, crossbow, sling or blowgun) will be considered.
+
+autofight_throw_nomove = true
+        This works same as above, except that only for ===hit_adjacent
+        rather than ===hit_closest; this is usually bound to shift-Tab.
+
 
 4-j     Messages and Display Enhancements.
 ------------------------------------------
