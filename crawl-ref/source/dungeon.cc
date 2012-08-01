@@ -1355,6 +1355,12 @@ void fixup_misplaced_items()
             if (feat >= DNGN_MINITEM)
                 continue;
 
+            // We accept items in deep water in the Abyss---they are likely to
+            // be revealed eventually by morphing, and having deep water push
+            // items away leads to strange results.
+            if (feat == DNGN_DEEP_WATER && you.where_are_you == BRANCH_ABYSS)
+                continue;
+
             mprf(MSGCH_ERROR, "Item %s buggily placed in feature %s at (%d, %d).",
                  item.name(DESC_PLAIN).c_str(),
                  feature_description_at(item.pos, false, DESC_PLAIN,
