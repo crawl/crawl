@@ -1285,25 +1285,13 @@ int player_regen()
     if (you.species == SP_VAMPIRE)
     {
         if (you.hunger_state == HS_STARVING)
-        {
-            // No regeneration for starving vampires.
-            rr = 0;
-        }
+            rr = 0;   // No regeneration for starving vampires.
         else if (you.hunger_state == HS_ENGORGED)
-        {
-            // More bonus regeneration for engorged vampires.
-            rr += 20;
-        }
+            rr += 20; // More bonus regeneration for engorged vampires.
         else if (you.hunger_state < HS_SATIATED)
-        {
-            // Halved regeneration for hungry vampires.
-            rr /= 2;
-        }
+            rr /= 2;  // Halved regeneration for hungry vampires.
         else if (you.hunger_state >= HS_FULL)
-        {
-            // Bonus regeneration for full vampires.
-            rr += 10;
-        }
+            rr += 10; // Bonus regeneration for full vampires.
     }
 
     // Slow heal mutation.  Each level reduces your natural healing by
