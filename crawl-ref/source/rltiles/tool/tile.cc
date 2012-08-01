@@ -402,7 +402,7 @@ bool tile::load(const std::string &new_filename)
         for (int y = 0; y < img->h; y++)
             for (int x = 0; x < img->w; x++)
             {
-                unsigned int index = ((unsigned char*)img->pixels)[src++];
+                unsigned int index = ((unsigned char*)img->pixels)[y*img->pitch + x];
                 m_pixels[dest].r = pal->colors[index].r;
                 m_pixels[dest].g = pal->colors[index].g;
                 m_pixels[dest].b = pal->colors[index].b;
