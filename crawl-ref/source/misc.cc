@@ -578,23 +578,16 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
         // Only coagulated blood can rot.
         ASSERT(blood.sub_type == POT_BLOOD_COAGULATED);
         _potion_stack_changed_message(blood, rot_count, "rot%s away");
-        blood.quantity -= rot_count;
+        bool destroyed = dec_inv_item_quantity(blood.link, rot_count);
 
         if (!knew_coag)
         {
             set_ident_type(OBJ_POTIONS, POT_BLOOD_COAGULATED, ID_KNOWN_TYPE);
-            if (blood.quantity >= 1)
+            if (!destroyed)
                 mpr_nocap(blood.name(DESC_INVENTORY).c_str());
         }
 
-        if (blood.quantity < 1)
-        {
-            if (you.equip[EQ_WEAPON] == blood.link)
-                you.equip[EQ_WEAPON] = -1;
-
-            destroy_item(blood);
-        }
-        else
+        if (!destroyed)
             _compare_blood_quantity(blood, timer.size());
 
         return true;
@@ -632,16 +625,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
 
             ASSERT(props2.exists("timer"));
             CrawlVector &timer2 = props2["timer"].get_vector();
-
-            blood.quantity -= coag_count + rot_count;
-            if (blood.quantity < 1)
-            {
-                if (you.equip[EQ_WEAPON] == blood.link)
-                    you.equip[EQ_WEAPON] = -1;
-
-                destroy_item(blood);
-            }
-            else
+            if (!dec_inv_item_quantity(blood.link, coag_count + rot_count))
             {
                 _compare_blood_quantity(blood, timer.size());
                 if (!knew_blood)
@@ -812,15 +796,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
     props_new.assert_validity();
     move_item_to_grid(&o, you.pos());
 
-    blood.quantity -= rot_count + coag_count;
-    if (blood.quantity < 1)
-    {
-        if (you.equip[EQ_WEAPON] == blood.link)
-            you.equip[EQ_WEAPON] = -1;
-
-        destroy_item(blood);
-    }
-    else
+    if (!dec_inv_item_quantity(blood.link, coag_count + rot_count))
     {
         _compare_blood_quantity(blood, timer.size());
         if (!knew_blood)
