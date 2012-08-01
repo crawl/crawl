@@ -1238,6 +1238,10 @@ bool spell_no_hostile_in_range(spell_type spell)
         break;
     }
 
+    // The healing spells.
+    if (testbits(get_spell_flags(spell), SPFLAG_HELPFUL))
+        return false;
+
     bolt beam;
     beam.flavour = BEAM_VISUAL;
 
@@ -1291,10 +1295,6 @@ bool spell_no_hostile_in_range(spell_type spell)
         }
         return !found;
     }
-
-    // The healing spells.
-    if (testbits(get_spell_flags(spell), SPFLAG_HELPFUL))
-        return false;
 
     const int rsq = range * range + 1;
     if (rsq < minRange)
