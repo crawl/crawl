@@ -3179,7 +3179,9 @@ bool item_type_has_unidentified(object_class_type base_type)
 // TODO: check brands, etc.
 bool item_def::is_valid(bool iinfo) const
 {
-    if (!defined())
+    if (base_type == OBJ_DETECTED)
+        return iinfo;
+    else if (!defined())
         return false;
     const int max_sub = get_max_subtype(base_type);
     if (max_sub != -1 && sub_type >= max_sub)
