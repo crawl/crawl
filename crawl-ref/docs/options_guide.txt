@@ -348,52 +348,8 @@ Lua files are included using the lua_file option (one file per line):
 
 lua_file = <path/name.lua>
 
-The available stock Lua scripts are
-  stash.lua     -- annotates the stash file for better searching
-                   (Ctrl-F). Searching for 'Long blades' will also turn
-                   up all weapons with the long blade skill. Similarly,
-                   you can use 'altar','portal' etc. Also, you can look
-                   for spellbooks ('book'), artefacts ('artefact'), and
-                   ego items ('ego').
-  wield.lua     -- shows more intelligent options when using 'w?'
-  kills.lua     -- improves the Vanquished Creatures list in dump files;
-                   currently gives three lists (Vanquished, Friendly,
-                   Others).
-  runrest.lua   -- allows overriding certain stop conditions when
-                   running.
-                   New options: runrest_ignore_poison, runrest_stop_message
-                   runrest_ignore_message, runrest_ignore_monster
-  gearset.lua   -- provides commands for switching of complete sets via
-                   macro.
-                   New macroable functions: rememberkit, swapkit
-  trapwalk.lua  -- allows travel to cross certain traps if you have
-                   enough HP.
-  autofight.lua -- provides a command for moving to and attacking the
-                   nearest monster. Attempts to move towards or attack the
-                   closest hostile monster. If there are several monsters of
-                   equal distance, e.g. adjacent, prefers those that are
-                   sleeping or paralyzed, then those that are most injured,
-                   then those of a higher danger level. "Safe" but hostile
-                   monsters such as ballistomycetes and withdrawn agate snails
-                   will be targeted when there are no other targets. Will use
-                   reaching weapons and launchers, if equipped.
-                   Stops if HP <= (autofight_stop)% * MHP, where
-                   autofight_stop = 30 by default but can be set by the player.
-                   Never moves if hit_adjacent is used instead of hit_closest.
-                   hit_closest Will use thrown weapons only if autofight_throw
-                   is true (off by default), hit_adjacent will do so if
-                   either autofight_throw or autofight_throw_nomove is true
-                   (and it is enabled by default).
-                   Tab is automatically bound to hit_closest and shift-tab to
-                   hit_adjacent.
-                   Requires non-rebound vi keys.
-                   New macroable functions: hit_closest, hit_adjacent
-                   New options: autofight_stop, autofight_throw,
-                   autofight_throw_nomove
-
-
-The above mentioned Lua functions can be macroed in-game by setting the
-macro action to "===", followed by the function name.
+Lua functions can be macroed in-game by setting the macro action to "===",
+followed by the function name.
 
 Also see section 7 on inline Lua fragments.
 
@@ -463,7 +419,7 @@ autopickup_exceptions = <pickup-regex, >don't-pickup-regex, ...
              autopickup_exceptions = immolation, curse (armour|weapon),
              autopickup_exceptions = uselessness, noise, torment
 
-        Note that if pickup.lua has been sourced, you won't need to set
+        Unless you clear the list of exceptions, you won't need to set
         autopickup exceptions for potions except maybe for very special
         cases.
 
@@ -941,20 +897,15 @@ runrest_stop_message = <list of regexes>
         explore_stop stops for.
 
 runrest_ignore_poison = <poison damage>:<minimum hp>
-        This only works if runrest.lua has already been sourced in
-        init.txt. Poison damage of x will be ignored if you have at
-        least y hp if you've defined a runrest_ignore_poison = x:y
-        option. Running here means shift-running and resting only. Only
-        one runrest_ignore_poison line is considered. Note that for
-        this work, you should also tell Crawl to ignore the
-        "You feel sick" messages. For example,
+        Poison damage of x will be ignored if you have at least y hp if
+        you've defined a runrest_ignore_poison = x:y option. Running here
+        means shift-running and resting only. Only one runrest_ignore_poison
+        line is considered. Note that for this work, you should also tell
+        Crawl to ignore the "You feel sick" messages. For example,
              runrest_ignore_message = You feel.*sick
              runrest_ignore_poison = 4:100
 
 runrest_ignore_monster = <string>:<distance>
-        This only works if runrest.lua has already been sourced in
-        init.txt.
-
         Any monster containing the string will only interrupt your
         activity if the distance between you and the monster is
         less than the specified number. E.g. with
@@ -964,9 +915,8 @@ runrest_ignore_monster = <string>:<distance>
         distance is at least 3.
 
 trapwalk_safe_hp = <trap_name>:<minimum_hp>, ...
-        This only works if trapwalk.lua has already been sourced in
-        init.txt. Any square containing one of the listed trap types
-        will be considered safe for travel if your hp is greater than or
+        Any square containing one of the listed trap types will be
+        considered safe for travel if your hp is greater than or
         equal to the number connected to the trap in question.
 
         All the existing trap types can be used, but in practice only
@@ -995,14 +945,11 @@ You can search for items all around the dungeon with Ctrl-F. It accepts not
 only the real name but can also take certain "annotations":
 
 annotate_item_class = false
-        This only works if stash.lua has already been sourced in
-        init.txt. Automatically annotates items with their object class,
-        e.g. weapon or wand, for floor item searching.
+        Automatically annotates items with their object class, e.g. weapon
+        or wand, for floor item searching.
 
 annotate_item_dropped = false
-        This only works if stash.lua has already been sourced in
-        init.txt. Annotates dropped items with {dropped} for floor
-        searching.
+        Annotates dropped items with {dropped} for floor searching.
 
 4-i     Command Enhancements.
 -----------------------------
@@ -1264,9 +1211,6 @@ spell_slot = <regex>:<list of spell letters>
             spell_slot = .*:ABCDEFGHIJKLMNOPQRSTUVWXYZ
 
 autofight_stop = 30
-        This only works if autofight.lua has already been sourced in
-        init.txt.
-
         Autofight will not act if your HP is at or lower than this
         percentage of your max HP. For example, to remove this stop
         you would want:
