@@ -361,7 +361,10 @@ void player_quiver::_maybe_fill_empty_slot()
     if (unquiver_weapon && order.empty())
     {
         // Setting the quantity to zero will force the quiver to be empty,
-        // should nothing else be found.
+        // should nothing else be found.  We also set the base type to
+        // OBJ_UNASSIGNED so this is not an invalid object with a real type,
+        // as that would trigger an assertion on saving.
+        m_last_used_of_type[slot].base_type = OBJ_UNASSIGNED;
         m_last_used_of_type[slot].quantity = 0;
     }
     else
@@ -488,7 +491,15 @@ void player_quiver::load(reader& inf)
     ASSERT(count <= ARRAYSZ(m_last_used_of_type));
 
     for (unsigned int i = 0; i < count; i++)
+    {
         unmarshallItem(inf, m_last_used_of_type[i]);
+#if TAG_MAJOR_VERSION == 33
+        // We haven't always been so careful about making sure this was
+        // either OBJ_UNASSIGNED or valid.
+        if (m_last_used_of_type[i].quantity == 0)
+            m_last_used_of_type[i].base_type = OBJ_UNASSIGNED;
+#endif
+    }
 }
 
 // ----------------------------------------------------------------------
