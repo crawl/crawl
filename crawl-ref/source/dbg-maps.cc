@@ -53,7 +53,9 @@ static bool _mg_is_disconnected_level()
     // Don't care about non-Dungeon levels.
     if (!player_in_connected_branch()
         || (branches[you.where_are_you].branch_flags & BFLAG_ISLANDED))
+    {
         return false;
+    }
 
     return dgn_count_disconnected_zones(true);
 }
@@ -360,7 +362,9 @@ static void _write_mapgen_stats()
     std::multimap<int, std::string> usedmaps;
     for (std::map<std::string, int>::const_iterator i =
              mapgen_try_count.begin(); i != mapgen_try_count.end(); ++i)
+    {
         usedmaps.insert(std::pair<int, std::string>(i->second, i->first));
+    }
 
     for (std::multimap<int, std::string>::reverse_iterator i =
              usedmaps.rbegin(); i != usedmaps.rend(); ++i)

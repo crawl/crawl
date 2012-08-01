@@ -1016,8 +1016,10 @@ static int _handle_conflicting_mutations(mutation_type mutation,
                     // Ignore if not forced, otherwise override.
                     // All cases but regen:slowmeta will currently trade off.
                     if (override)
+                    {
                         while (delete_mutation(b, reason, true, true))
                             ;
+                    }
                     break;
                 case 1:
                     // If we have one of the pair, delete a level of the
@@ -2093,9 +2095,11 @@ bool perma_mutate(mutation_type which_mut, int how_much,
     int levels = 0;
     while (how_much-- > 0)
     {
-        if (you.mutation[which_mut] < cap)
-            if (!mutate(which_mut, reason, false, true, false, false, true))
-                return levels; // a partial success was still possible
+        if (you.mutation[which_mut] < cap
+            && !mutate(which_mut, reason, false, true, false, false, true))
+        {
+            return levels; // a partial success was still possible
+        }
         levels++;
     }
     you.innate_mutations[which_mut] += levels;

@@ -1818,10 +1818,14 @@ bool cell_can_cling_to(const coord_def& from, const coord_def to)
         return false;
 
     for (orth_adjacent_iterator ai(from); ai; ++ai)
+    {
         if (feat_is_wall(env.grid(*ai)))
+        {
             for (orth_adjacent_iterator ai2(to, false); ai2; ++ai2)
                 if (feat_is_wall(env.grid(*ai2)) && distance(*ai, *ai2) <= 1)
                     return true;
+        }
+    }
 
         return false;
 }

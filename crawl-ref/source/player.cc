@@ -1285,17 +1285,25 @@ int player_regen()
     if (you.species == SP_VAMPIRE)
     {
         if (you.hunger_state == HS_STARVING)
+        {
             // No regeneration for starving vampires.
             rr = 0;
+        }
         else if (you.hunger_state == HS_ENGORGED)
+        {
             // More bonus regeneration for engorged vampires.
             rr += 20;
+        }
         else if (you.hunger_state < HS_SATIATED)
+        {
             // Halved regeneration for hungry vampires.
             rr /= 2;
+        }
         else if (you.hunger_state >= HS_FULL)
+        {
             // Bonus regeneration for full vampires.
             rr += 10;
+        }
     }
 
     // Slow heal mutation.  Each level reduces your natural healing by
@@ -4911,7 +4919,9 @@ int get_real_mp(bool include_items)
 
     if (include_items && player_equip_ego_type(EQ_WEAPON, SPWPN_ANTIMAGIC)
         && !you.suppressed())
+    {
         enp /= 3;
+    }
 
     enp = std::max(enp, 0);
 
@@ -5768,7 +5778,7 @@ void player::init()
     global_info.make_global();
     global_info.assert_validity();
 
-   if (m_quiver)
+    if (m_quiver)
         delete m_quiver;
     m_quiver = new player_quiver;
 

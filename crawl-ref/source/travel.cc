@@ -1043,8 +1043,10 @@ command_type direction_to_command(int x, int y)
     if (x == -1 && y ==  1) return CMD_MOVE_DOWN_LEFT;
     if (x ==  0 && y == -1) return CMD_MOVE_UP;
     if (x ==  0 && y ==  0)
+    {
         return (you.running == RMODE_EXPLORE_GREEDY ? CMD_INSPECT_FLOOR
                                                     : CMD_NO_CMD);
+    }
     if (x ==  0 && y ==  1) return CMD_MOVE_DOWN;
     if (x ==  1 && y == -1) return CMD_MOVE_UP_RIGHT;
     if (x ==  1 && y ==  0) return CMD_MOVE_RIGHT;
@@ -1498,8 +1500,10 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
                 int dist = traveled_distance;
 
                 if (need_for_greed && Options.explore_item_greed > 0)
+                {
                     // Penalize distance to favor item pickup
                     dist += Options.explore_item_greed;
+                }
 
                 if (Options.explore_wall_bias)
                 {
@@ -4171,9 +4175,8 @@ void explore_discoveries::found_item(const coord_def &pos, const item_def &i)
                 can_autopickup
                 && _is_greed_inducing_square(current_level, pos);
 
-            if (greed_inducing
-                && (Options.explore_stop & ES_GREEDY_ITEM))
-                ; // Stop for this conditions
+            if (greed_inducing && (Options.explore_stop & ES_GREEDY_ITEM))
+                ; // Stop for this condition
             else if (!greed_inducing
                      && ((Options.explore_stop & ES_ITEM)
                          || ((Options.explore_stop & ES_GLOWING_ITEM)

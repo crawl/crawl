@@ -4170,8 +4170,10 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         react_to_damage(agent, amount, flavour);
 
         if (has_ench(ENCH_MIRROR_DAMAGE))
+        {
             add_final_effect(FINEFF_MIRROR_DAMAGE, agent, this,
                              coord_def(0, 0), amount);
+        }
 
         blame_damage(agent, amount);
         behaviour_event(this, ME_HURT);
@@ -5398,8 +5400,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
     if (type == MONS_SIXFIRHY && flavour == BEAM_ELECTRICITY)
     {
         if (!alive()) // overcharging is deadly
-            simple_monster_message(this,
-                                   " explodes in a shower of sparks!");
+            simple_monster_message(this, " explodes in a shower of sparks!");
         else if (heal(damage*2, false))
             simple_monster_message(this, " seems to be charged up!");
         return;

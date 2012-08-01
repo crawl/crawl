@@ -1236,8 +1236,10 @@ unarmed_attack_type melee_attack::player_aux_choose_uc_attack()
     // No punching with a shield or 2-handed wpn, except staves.
     // Octopodes aren't affected by this, though!
     if (you.species != SP_OCTOPODE && uc_attack == UNAT_PUNCH
-            && !you.has_usable_offhand())
+        && !you.has_usable_offhand())
+    {
         uc_attack = UNAT_NO_ATTACK;
+    }
 
     if (_tran_forbid_aux_attack(uc_attack))
         uc_attack = UNAT_NO_ATTACK;
@@ -2770,7 +2772,9 @@ brand_type melee_attack::random_chaos_brand()
         case SPWPN_ANTIMAGIC:
             if (defender->as_monster() &&
                 !defender->as_monster()->can_use_spells())
+            {
                 susceptible = false;
+            }
             break;
         default:
             break;
@@ -3229,8 +3233,10 @@ bool melee_attack::chop_hydra_head(int dam,
         defender->as_monster()->number--;
 
         if (!defender->is_summoned())
+        {
             bleed_onto_floor(defender->pos(), defender->type,
                              defender->as_monster()->hit_points, true);
+        }
 
         defender->hurt(attacker, INSTANT_DEATH);
 
@@ -3647,7 +3653,9 @@ int melee_attack::calc_to_hit(bool random)
         // This can only help if you're visible!
         if (defender->is_player()
             && player_mutation_level(MUT_TRANSLUCENT_SKIN) >= 3)
+        {
             mhit -= 5;
+        }
 
         if (defender->backlit(true, false))
             mhit += 2 + random2(8);
@@ -4723,8 +4731,7 @@ bool melee_attack::do_knockback(bool trample)
     {
         monster* def_monster = defender->as_monster();
         if (def_monster && mons_is_stationary(def_monster))
-            // don't even print a message
-            return false;
+            return false; // don't even print a message
 
         int size_diff =
             attacker->body_size(PSIZE_BODY) - defender->body_size(PSIZE_BODY);
@@ -4735,8 +4742,11 @@ bool melee_attack::do_knockback(bool trample)
         coord_def new_pos = defender->pos() + defender->pos() - attacker->pos();
 
         // need a valid tile
-        if (grd(new_pos) < DNGN_SHALLOW_WATER && !defender->is_habitable(new_pos))
+        if (grd(new_pos) < DNGN_SHALLOW_WATER
+            && !defender->is_habitable(new_pos))
+        {
             break;
+        }
 
         // don't trample into a monster - or do we want to cause a chain
         // reaction here?

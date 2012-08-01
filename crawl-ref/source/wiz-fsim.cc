@@ -252,9 +252,11 @@ static monster* _init_fsim()
     // this probably works best in the arena, or at least somewhere
     // where there's no water or anything weird to interfere
     if (!adjacent(mon->pos(), you.pos()))
+    {
         for (adjacent_iterator ai(you.pos()); ai; ++ai)
             if (mon->move_to_pos(*ai))
                 break;
+    }
 
     if (!adjacent(mon->pos(), you.pos()))
     {

@@ -1817,8 +1817,8 @@ static void _dgn_verify_connectivity(unsigned nvaults)
 //   in the order their altars are placed.
 static void _build_overflow_temples()
 {
+    // Levels built while in testing mode.
     if (!you.props.exists(OVERFLOW_TEMPLES_KEY))
-        // Levels built while in testing mode.
         return;
 
     CrawlVector &levels = you.props[OVERFLOW_TEMPLES_KEY].get_vector();
@@ -3061,12 +3061,16 @@ void dgn_place_stone_stairs(bool maybe_place_hatches)
     for (int i = 0; i < pair_count; ++i)
     {
         if (!existing[i])
+        {
             _dgn_place_feature_at_random_floor_square(
                 static_cast<dungeon_feature_type>(DNGN_STONE_STAIRS_DOWN_I + i));
+        }
 
         if (!existing[DNGN_STONE_STAIRS_UP_I - stair_start + i])
+        {
             _dgn_place_feature_at_random_floor_square(
                 static_cast<dungeon_feature_type>(DNGN_STONE_STAIRS_UP_I + i));
+        }
     }
 }
 
@@ -3890,8 +3894,10 @@ static bool _build_vault_impl(const map_def *vault,
     // here is an automatic veto. Note that the post-place hook must
     // be run only after _build_postvault_level.
     if (!place.map.run_postplace_hook())
+    {
         throw dgn_veto_exception("Post-place hook failed for: "
                                  + place.map.name);
+    }
 
     return true;
 }
@@ -3960,8 +3966,10 @@ static int _dgn_item_corpse(const item_spec &ispec, const coord_def where)
 
     item_def &corpse(mitm[corpse_index]);
     if (ispec.props.exists(CORPSE_NEVER_DECAYS))
+    {
         corpse.props[CORPSE_NEVER_DECAYS].get_bool() =
             ispec.props[CORPSE_NEVER_DECAYS].get_bool();
+    }
 
     if (ispec.base_type == OBJ_CORPSES && ispec.sub_type == CORPSE_SKELETON)
         turn_corpse_into_skeleton(corpse);
@@ -3969,8 +3977,10 @@ static int _dgn_item_corpse(const item_spec &ispec, const coord_def where)
         turn_corpse_into_chunks(corpse, false, false);
 
     if (ispec.props.exists(MONSTER_HIT_DICE))
+    {
         corpse.props[MONSTER_HIT_DICE].get_short() =
             ispec.props[MONSTER_HIT_DICE].get_short();
+    }
 
     if (ispec.qty && ispec.base_type == OBJ_FOOD)
         corpse.quantity = ispec.qty;
@@ -5385,8 +5395,10 @@ static bool _connect_spotty(const coord_def& from)
     }
 
     if (success)
+    {
         for (it = flatten.begin(); it != flatten.end(); ++it)
             grd(*it) = DNGN_FLOOR;
+    }
 
     return success;
 }

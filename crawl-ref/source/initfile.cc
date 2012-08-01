@@ -1393,8 +1393,10 @@ std::string read_init_file(bool runscript)
     if (f.error())
     {
         if (!init_file_name.empty())
+        {
             return make_stringf("(\"%s\" is not readable)",
                                 init_file_name.c_str());
+        }
 
 #ifdef UNIX
         return "(~/.crawlrc missing)";
@@ -3772,8 +3774,10 @@ bool parse_args(int argc, char **argv, bool rc_only)
          arg_seen[i] = false;
 
     if (SysEnv.cmd_args.empty())
+    {
         for (int i = 1; i < argc; ++i)
             SysEnv.cmd_args.push_back(argv[i]);
+    }
 
     while (current < argc)
     {
@@ -4115,9 +4119,10 @@ bool parse_args(int argc, char **argv, bool rc_only)
             if (!next_is_param)
                 return false;
 
+            // Don't print the help message if the opt was wrong
             if (!_check_extra_opt(next_arg))
-                // Don't print the help message if the opt was wrong
                 return true;
+
             SysEnv.extra_opts_first.push_back(next_arg);
             nextUsed = true;
 
@@ -4129,9 +4134,10 @@ bool parse_args(int argc, char **argv, bool rc_only)
             if (!next_is_param)
                 return false;
 
+            // Don't print the help message if the opt was wrong
             if (!_check_extra_opt(next_arg))
-                // Don't print the help message if the opt was wrong
                 return true;
+
             SysEnv.extra_opts_last.push_back(next_arg);
             nextUsed = true;
 

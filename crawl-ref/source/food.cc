@@ -2232,7 +2232,9 @@ bool is_contaminated(const item_def &food)
 {
     if ((food.base_type != OBJ_FOOD || food.sub_type != FOOD_CHUNK)
             && food.base_type != OBJ_CORPSES)
+    {
         return false;
+    }
 
     const corpse_effect_type chunk_type = mons_corpse_effect(food.mon_type);
     return (chunk_type == CE_CONTAMINATED

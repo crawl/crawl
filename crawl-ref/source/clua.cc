@@ -272,8 +272,10 @@ int CLua::execfile(const char *filename, bool trusted, bool die_on_fail,
         err = lua_pcall(ls, 0, 0, 0);
     set_error(err);
     if (die_on_fail && !error.empty())
+    {
         end(1, false, "Lua execfile error (%s): %s",
             filename, dlua.error.c_str());
+    }
     return err;
 }
 

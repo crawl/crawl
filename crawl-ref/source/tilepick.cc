@@ -807,8 +807,7 @@ static tileidx_t _tileidx_monster_zombified(const monster_info& mon)
     if (z_type == MONS_SPECTRAL_THING)
         z_tile = _zombie_tile_to_spectral(z_tile);
 
-    if (z_type == MONS_SIMULACRUM_SMALL
-        || z_type == MONS_SIMULACRUM_LARGE)
+    if (z_type == MONS_SIMULACRUM_SMALL || z_type == MONS_SIMULACRUM_LARGE)
         z_tile = _zombie_tile_to_simulacrum(z_tile);
 
     return z_tile;

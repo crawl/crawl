@@ -747,8 +747,7 @@ static void _shoals_run_tide(int &tide, int &acc)
 
     tide += acc;
     tide = std::max(std::min(tide, HIGH_TIDE), LOW_TIDE);
-    if ((tide == HIGH_TIDE && acc > 0)
-        || (tide == LOW_TIDE && acc < 0))
+    if ((tide == HIGH_TIDE && acc > 0) || (tide == LOW_TIDE && acc < 0))
         acc = -acc;
     bool in_decel_margin =
         (abs(tide - HIGH_TIDE) < TIDE_DECEL_MARGIN)
@@ -1010,8 +1009,10 @@ static void _shoals_apply_tide(int tide, bool incremental_tide)
             const bool was_wet(_shoals_tide_passable_feat(herefeat));
             seen_points(c) = true;
             if (_shoals_tide_susceptible_feat(herefeat))
+            {
                 _shoals_apply_tide_at(c, _shoals_tide_at(c, tide),
                                       incremental_tide);
+            }
 
             const bool is_wet(feat_is_water(grd(c)));
 

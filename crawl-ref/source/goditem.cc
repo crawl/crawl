@@ -33,7 +33,9 @@ static bool _is_bookrod_type(const item_def& item,
     // (== NUM_{BOOKS,RODS} in most cases, OBJ_RANDOM for acquirement)
     if (item.sub_type == get_max_subtype(item.base_type)
         || item.sub_type == OBJ_RANDOM)
+    {
         return false;
+    }
 
     int total       = 0;
     int total_liked = 0;

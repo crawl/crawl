@@ -1853,8 +1853,13 @@ static bool _slot_blocked(const item_def &item)
         }
 
         for (int i = eq_from; i <= eq_to; ++i)
-            if (you.equip[i] == -1 || _item_is_swappable(you.inv[you.equip[i]], false))
+        {
+            if (you.equip[i] == -1
+                || _item_is_swappable(you.inv[you.equip[i]], false))
+            {
                 return false;
+            }
+        }
 
         // No free slot found.
         return true;
@@ -1867,7 +1872,8 @@ static bool _slot_blocked(const item_def &item)
         return true;
     }
 
-    return (you.equip[eq] != -1 && !_item_is_swappable(you.inv[you.equip[eq]], eq, false));
+    return (you.equip[eq] != -1
+            && !_item_is_swappable(you.inv[you.equip[eq]], eq, false));
 }
 
 bool item_skills(const item_def &item, std::set<skill_type> &skills)
@@ -2575,15 +2581,17 @@ int property(const item_def &item, int prop_type)
     case OBJ_WEAPONS:
         if (is_unrandom_artefact(item))
         {
-            if (prop_type == PWPN_DAMAGE)
+            switch (prop_type) {
+            case PWPN_DAMAGE:
                 return (Weapon_prop[ Weapon_index[item.sub_type] ].dam
                         + artefact_wpn_property(item, ARTP_BASE_DAM));
-            else if (prop_type == PWPN_HIT)
+            case PWPN_HIT:
                 return (Weapon_prop[ Weapon_index[item.sub_type] ].hit
                         + artefact_wpn_property(item, ARTP_BASE_ACC));
-            else if (prop_type == PWPN_SPEED)
+            case PWPN_SPEED:
                 return (Weapon_prop[ Weapon_index[item.sub_type] ].speed
                         + artefact_wpn_property(item, ARTP_BASE_DELAY));
+            }
         }
         if (prop_type == PWPN_DAMAGE)
             return (Weapon_prop[ Weapon_index[item.sub_type] ].dam);

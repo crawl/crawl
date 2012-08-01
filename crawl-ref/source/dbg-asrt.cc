@@ -504,8 +504,10 @@ static void _debug_dump_lua_persist(FILE* file)
 
     std::string result;
     if (!dlua.callfn("persist_to_string", 0, 1))
+    {
         result = make_stringf("error (persist_to_string): %s",
                               dlua.error.c_str());
+    }
     else if (lua_isstring(dlua, -1))
         result = lua_tostring(dlua, -1);
     else

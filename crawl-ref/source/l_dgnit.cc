@@ -104,8 +104,10 @@ static int dgn_item_property_set(lua_State *ls)
         const std::string key = luaL_checkstring(ls, 2);
         const std::string type = luaL_checkstring(ls, 3);
         if (type.empty() || type.length() > 1)
+        {
             luaL_error(ls, "Expected type: [BbSifsC], got: '%s'",
                        type.c_str());
+        }
 
         switch (type[0])
         {
@@ -146,8 +148,10 @@ static int dgn_item_property(lua_State *ls)
         const std::string key = luaL_checkstring(ls, 2);
         const std::string type = luaL_checkstring(ls, 3);
         if (type.empty() || type.length() > 1)
+        {
             luaL_error(ls, "Expected type: [BbSifsC], got: '%s'",
                        type.c_str());
+        }
 
         if (!item->props.exists(key))
         {

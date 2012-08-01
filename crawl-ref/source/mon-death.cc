@@ -197,11 +197,15 @@ void hogs_to_humans()
     else if (any > 1)
     {
         if (any == human)
+        {
             mpr("No longer under Kirke's spell, all hogs revert to their "
                 "human forms!");
+        }
         else
+        {
             mpr("No longer under Kirke's spell, all hogs revert to their "
                 "original forms!");
+        }
     }
 
     // Revert the player as well.
@@ -351,11 +355,15 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
     if (found_duvessa)
     {
         if (mons_near(mons))
+        {
             // Provides its own flavour message.
             mons->go_berserk(true);
+        }
         else
+        {
             // She'll go berserk the next time she sees you
             mons->props["duvessa_berserk"] = bool(true);
+        }
     }
     else if (found_dowan)
     {

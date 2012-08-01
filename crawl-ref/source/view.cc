@@ -579,8 +579,10 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
         std::vector<std::string> sensed;
 
         if (num_altars > 0)
+        {
             sensed.push_back(make_stringf("%d altar%s", num_altars,
                                           num_altars > 1 ? "s" : ""));
+        }
 
         if (num_shops_portals > 0)
         {

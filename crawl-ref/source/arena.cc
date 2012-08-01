@@ -265,8 +265,10 @@ namespace arena
         ASSERT(map);
         bool success = dgn_place_map(map, false, true);
         if (!success)
+        {
             throw make_stringf("Failed to create arena named \"%s\"",
                                arena_type.c_str());
+        }
         link_items();
 
         if (!env.rock_colour)
@@ -324,8 +326,10 @@ namespace arena
         summon_throttle = strip_number_tag(spec, "summon_throttle:");
 
         if (real_summons && respawn)
+        {
             throw (std::string("Can't set real_summons and respawn at "
                                "same time."));
+        }
 
         if (summon_throttle <= 0)
             summon_throttle = INT_MAX;
@@ -337,7 +341,9 @@ namespace arena
         const int ntrials = strip_number_tag(spec, "t:");
         if (ntrials != TAG_UNFOUND && ntrials >= 1 && ntrials <= 99
             && !total_trials)
+        {
             total_trials = ntrials;
+        }
 
         arena_type = strip_tag_prefix(spec, "arena:");
 
@@ -374,8 +380,10 @@ namespace arena
             factions = split_string(" vs ", spec);
 
         if (factions.size() != 2)
+        {
             throw make_stringf("Expected arena monster spec \"xxx v yyy\", "
                                "but got \"%s\"", spec.c_str());
+        }
 
         try
         {
@@ -524,12 +532,16 @@ namespace arena
         int orig_b = faction_b.active_members;
 
         if (orig_a < 0)
+        {
             mpr("Book-keeping says faction_a has negative active members.",
                 MSGCH_ERROR);
+        }
 
         if (orig_b < 0)
+        {
             mpr("Book-keeping says faction_b has negative active members.",
                 MSGCH_ERROR);
+        }
 
         faction_a.active_members = 0;
         faction_b.active_members = 0;

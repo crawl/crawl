@@ -558,7 +558,9 @@ void list_jewellery(void)
     {
         if ((you.species != SP_OCTOPODE && i > EQ_AMULET)
             || (you.species == SP_OCTOPODE && i < EQ_AMULET))
+        {
             continue;
+        }
 
         const int jewellery_id = you.equip[i];
         int       colour       = MSGCOL_BLACK;

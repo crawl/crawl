@@ -2042,11 +2042,15 @@ void handle_time()
         if (you.species == SP_VAMPIRE)
         {
             if (you.hunger_state == HS_STARVING)
+            {
                 // No stat recovery for starving vampires.
                 recovery = false;
+            }
             else if (you.hunger_state <= HS_HUNGRY)
+            {
                 // Halved stat recovery for hungry vampires.
                 recovery = coinflip();
+            }
         }
 
         // Slow heal mutation.  Applied last.

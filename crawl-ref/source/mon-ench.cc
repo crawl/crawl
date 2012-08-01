@@ -464,8 +464,10 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_TEMP_PACIF:
         if (!quiet)
+        {
             simple_monster_message(this, (" seems to come to "
                 + pronoun(PRONOUN_POSSESSIVE) + " senses.").c_str());
+        }
         // Yeah, this _is_ offensive to Zin, but hey, he deserves it (1KB).
 
         behaviour_event(this, ME_EVAL);

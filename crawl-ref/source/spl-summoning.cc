@@ -2305,11 +2305,15 @@ spret_type cast_haunt(int pow, const coord_def& where, god_type god, bool fail)
     }
 
     if (success > 1)
+    {
         mpr(friendly ? "Insubstantial figures form in the air."
                      : "You sense hostile presences.");
+    }
     else if (success)
+    {
         mpr(friendly ? "An insubstantial figure forms in the air."
                      : "You sense a hostile presence.");
+    }
     else
     {
         canned_msg(MSG_NOTHING_HAPPENS);

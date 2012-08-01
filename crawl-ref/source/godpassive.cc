@@ -244,9 +244,11 @@ void ash_check_bondage(bool msg)
 
     int flags = 0;
     if (msg)
+    {
         for (int s = ET_WEAPON; s < NUM_ET; s++)
             if (new_bondage[s] != you.bondage[s])
                 flags |= 1 << s;
+    }
 
     you.skill_boost.clear();
     for (int s = ET_WEAPON; s < NUM_ET; s++)

@@ -57,8 +57,7 @@ LUAFN(dgn_br_exists)
             luaL_argerror(ls, 1, "No such branch");
     }
 
-    if (branches[brn].parent_branch == NUM_BRANCHES
-        || startdepth[brn] != -1)
+    if (branches[brn].parent_branch == NUM_BRANCHES || startdepth[brn] != -1)
         exists = true;
 
     PLUARET(boolean, exists);

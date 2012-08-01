@@ -3495,18 +3495,17 @@ bool MenuFreeform::select_item(MenuItem* item)
 bool MenuFreeform::attach_item(MenuItem* item)
 {
     // is the item inside boundaries?
-    if (item->get_min_coord().x < m_min_coord.x
-        || item->get_min_coord().x > m_max_coord.x)
-        return false;
-    if (item->get_min_coord().y < m_min_coord.y
-        || item->get_min_coord().y > m_max_coord.y)
-        return false;
-    if (item->get_max_coord().x < m_min_coord.x
-        || item->get_max_coord().x > m_max_coord.x)
-        return false;
-    if (item->get_max_coord().y < m_min_coord.y
+    if (   item->get_min_coord().x < m_min_coord.x
+        || item->get_min_coord().x > m_max_coord.x
+        || item->get_min_coord().y < m_min_coord.y
+        || item->get_min_coord().y > m_max_coord.y
+        || item->get_max_coord().x < m_min_coord.x
+        || item->get_max_coord().x > m_max_coord.x
+        || item->get_max_coord().y < m_min_coord.y
         || item->get_max_coord().y > m_max_coord.y)
+    {
         return false;
+    }
     // It's inside boundaries
 
     m_entries.push_back(item);
@@ -4025,8 +4024,7 @@ void MenuScroller::_place_items()
             if (m_currently_active < 0)
                 break; // all space allocated
             if (one_past_last > m_currently_active)
-                /// we included our active one, ok!
-                break;
+                break; // we included our active one, ok!
             else
             {
                 // active one didn't fit, chop the first one and run the loop

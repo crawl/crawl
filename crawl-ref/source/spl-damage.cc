@@ -765,11 +765,9 @@ spret_type cast_freeze(int pow, monster* mons, bool fail)
 spret_type cast_airstrike(int pow, const dist &beam, bool fail)
 {
     monster* mons = monster_at(beam.target);
-    if (mons && (mons->submerged() ||
-                 (cell_is_solid(beam.target) && mons_wall_shielded(mons))))
-        mons = NULL;
-
-    if (mons == NULL)
+    if (!mons
+        || mons->submerged()
+        || (cell_is_solid(beam.target) && mons_wall_shielded(mons)))
     {
         fail_check();
         canned_msg(MSG_SPELL_FIZZLES);
@@ -1140,10 +1138,11 @@ void shillelagh(actor *wielder, coord_def where, int pow)
     {
         monster *mon = monster_at(*ai);
         if (!mon || !mon->alive() || mon->submerged()
-            || mon->is_insubstantial() || !you.can_see(mon))
+            || mon->is_insubstantial() || !you.can_see(mon)
+            || mon == wielder)
+        {
             continue;
-        if (mon == wielder)
-            continue;
+        }
         affected_monsters.add(mon);
     }
     if (!affected_monsters.empty())
@@ -1232,11 +1231,17 @@ static int _ignite_poison_affect_item(item_def& item, bool in_inv)
         if (in_inv)
         {
             if (item.base_type == OBJ_POTIONS)
+            {
                 mprf("%s explode%s!",
-                     item.name(DESC_PLAIN).c_str(), item.quantity == 1 ? "s" : "");
+                     item.name(DESC_PLAIN).c_str(),
+                     item.quantity == 1 ? "s" : "");
+            }
             else
+            {
                 mprf("Your %s burn%s!",
-                     item.name(DESC_PLAIN).c_str(), item.quantity == 1 ? "s" : "");
+                     item.name(DESC_PLAIN).c_str(),
+                     item.quantity == 1 ? "s" : "");
+            }
         }
 
         if (item.base_type == OBJ_CORPSES &&
@@ -1798,8 +1803,10 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
                                 "veto_fragmentation") == "veto")
     {
         if (caster->is_player() && !quiet)
+        {
             mprf("%s seems to be unnaturally hard.",
                  feature_description_at(target, false, DESC_THE, false).c_str());
+        }
         return false;
     }
 
@@ -1936,7 +1943,9 @@ spret_type cast_fragmentation(int pow, const actor *caster,
 
     if (!setup_fragmentation_beam(beam, pow, caster, target, true, false,
                                   false, &what, destroy_wall, hole))
+    {
         return SPRET_ABORT;
+    }
 
     if (caster->is_player())
     {

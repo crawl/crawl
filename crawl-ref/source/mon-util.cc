@@ -4015,8 +4015,10 @@ mon_body_shape get_mon_shape(const monster_type mc)
         return MON_SHAPE_HUMANOID;
     case 'W': // wraiths, humanoid if not a spectral thing
         if (mc == MONS_SPECTRAL_THING)
+        {
             // constructed type, not enough info to determine shape
             return MON_SHAPE_MISC;
+        }
         else
             return MON_SHAPE_HUMANOID;
     case 'X': // large abominations
@@ -4240,15 +4242,23 @@ mon_threat_level_type mons_threat_level(const monster *mon, bool real)
     const int tension = exper_value(mon, real) / (1 + factor);
 
     if (tension <= 0)
+    {
         // Conjurators use melee to conserve mana, MDFis switch plates...
         return MTHRT_TRIVIAL;
+    }
     else if (tension <= 5)
+    {
         // An easy fight but not ignorable.
         return MTHRT_EASY;
+    }
     else if (tension <= 32)
+    {
         // Hard but reasonable.
         return MTHRT_TOUGH;
+    }
     else
+    {
         // Check all wands/jewels several times, wear brown pants...
         return MTHRT_NASTY;
+    }
 }

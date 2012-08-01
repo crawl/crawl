@@ -147,8 +147,10 @@ map_marker *map_feature_marker::parse(
 
     const dungeon_feature_type ft = dungeon_feature_by_name(raw);
     if (ft == DNGN_UNSEEN)
+    {
         throw make_stringf("Bad feature marker: %s (unknown feature '%s')",
                            s.c_str(), raw.c_str());
+    }
     return new map_feature_marker(coord_def(0, 0), ft);
 }
 
@@ -260,8 +262,10 @@ void map_lua_marker::write(writer &outf) const
 
     // Right, what's on top should be a table name. Save it.
     if (!lua_isstring(dlua, -1))
+    {
         end(1, false, "Expected marker class name (string) to save, got %s",
             lua_typename(dlua, lua_type(dlua, -1)));
+    }
 
     const std::string marker_class(lua_tostring(dlua, -1));
     marshallString(outf, marker_class);
@@ -398,8 +402,7 @@ std::string map_lua_marker::debug_to_string() const
         return "Unable to get table for lua marker.";
 
     if (!dlua.callfn("table_to_string", 1, 1))
-        return make_stringf("error (table_to_string): %s",
-                            dlua.error.c_str());
+        return make_stringf("error (table_to_string): %s", dlua.error.c_str());
 
     std::string result;
     if (lua_isstring(dlua, -1))
@@ -998,8 +1001,7 @@ std::string map_markers::property_at(const coord_def &c, map_marker_type type,
 
 void map_markers::clear()
 {
-    for (dgn_marker_map::iterator i = markers.begin();
-         i != markers.end(); ++i)
+    for (dgn_marker_map::iterator i = markers.begin(); i != markers.end(); ++i)
         delete i->second;
     markers.clear();
     check_empty();

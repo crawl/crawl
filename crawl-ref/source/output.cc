@@ -1489,8 +1489,7 @@ static std::string _god_powers(bool simple)
     else if (you.religion != GOD_NO_GOD)
     {
         if (player_under_penance())
-            return (simple ? "*"
-                           : colour_string("*" + godpowers, RED));
+            return (simple ? "*" : colour_string("*" + godpowers, RED));
         else
         {
             // piety rankings

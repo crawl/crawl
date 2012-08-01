@@ -357,8 +357,10 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     if (you.weapon())
     {
         if (unwield_item(show_weff_messages))
+        {
             // Enable skills so they can be re-disabled later
             update_can_train();
+        }
         else
             return false;
     }
@@ -594,8 +596,10 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     if (player_genus(GENPC_DRACONIAN) && slot == EQ_BODY_ARMOUR)
     {
         if (verbose)
+        {
             mprf("Your wings%s won't fit in that.", you.mutation[MUT_BIG_WINGS]
                  ? "" : ", even vestigial as they are,");
+        }
         return false;
     }
 

@@ -724,11 +724,9 @@ char index_to_letter(int the_index)
 int letter_to_index(int the_letter)
 {
     if (the_letter >= 'a' && the_letter <= 'z')
-        // returns range [0-25] {dlb}
-        return (the_letter - 'a');
+        return (the_letter - 'a'); // returns range [0-25] {dlb}
     else if (the_letter >= 'A' && the_letter <= 'Z')
-        // returns range [26-51] {dlb}
-        return (the_letter - 'A' + 26);
+        return (the_letter - 'A' + 26); // returns range [26-51] {dlb}
 
     die("slot not a letter: %s (%d)", the_letter ?
         stringize_glyph(the_letter).c_str() : "null", the_letter);

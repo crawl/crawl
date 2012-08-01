@@ -185,8 +185,10 @@ static bool _reaching_weapon_attack(const item_def& wpn)
         // of invisible monsters.
 
         if (you.confused())
+        {
             mprf("You swing wildly%s", beam.isMe() ?
                                        " and almost hit yourself!" : ".");
+        }
         else
             mpr("You attack empty space.");
         return true;

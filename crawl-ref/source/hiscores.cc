@@ -992,8 +992,10 @@ void scorefile_entry::set_base_xlog_fields() const
 
     // Don't write No God to save some space.
     if (god != -1)
+    {
         fields->add_field("god", "%s", god == GOD_NO_GOD? "" :
                           god_name(god).c_str());
+    }
 
     if (wiz_mode)
         fields->add_field("wiz", "%d", wiz_mode);

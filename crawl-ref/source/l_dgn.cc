@@ -420,8 +420,10 @@ static int dgn_map(lua_State *ls)
 
     const std::string newline = luaL_checkstring(ls, 3);
     if (which_line < 0)
+    {
         luaL_error(ls,
                    make_stringf("Index %d out of range", which_line).c_str());
+    }
 
     if (which_line < (int) lines.size())
     {

@@ -184,11 +184,15 @@ static std::vector<coord_def> _box_side(int x1, int y1, int x2, int y2, int side
     x = start_x; y = start_y;
 
     if (start_x == stop_x)
+    {
         for (y = start_y+1; y < stop_y; y++)
             line.push_back(coord_def(x, y));
+    }
     else
+    {
         for (x = start_x+1; x < stop_x; x++)
             line.push_back(coord_def(x, y));
+    }
 
     return line;
 }
