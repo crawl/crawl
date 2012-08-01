@@ -1526,10 +1526,36 @@ static int _discharge_monsters(coord_def where, int pow, int, actor *)
     return damage;
 }
 
-// XXX no friendly check.
+bool _safe_discharge(coord_def where, std::vector<const monster *> &exclude)
+{
+    for (adjacent_iterator ai(where); ai; ++ai)
+    {
+        const monster *mon = monster_at(*ai);
+        if (!mon)
+            continue;
+
+        if (std::find(exclude.begin(), exclude.end(), mon) == exclude.end())
+        {
+            if (stop_attack_prompt(mon, false, where))
+                return false;
+
+            exclude.push_back(mon);
+            if (!_safe_discharge(mon->pos(), exclude))
+                return false;
+        }
+    }
+
+    return true;
+}
+
 spret_type cast_discharge(int pow, bool fail)
 {
     fail_check();
+
+    std::vector<const monster *> exclude;
+    if (!_safe_discharge(you.pos(), exclude))
+        return SPRET_ABORT;
+
     const int num_targs = 1 + random2(random_range(1, 3) + pow / 20);
     const int dam = apply_random_around_square(_discharge_monsters, you.pos(),
                                                true, pow, num_targs);
