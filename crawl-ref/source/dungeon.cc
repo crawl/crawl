@@ -3988,6 +3988,111 @@ static int _dgn_item_corpse(const item_spec &ispec, const coord_def where)
     return corpse_index;
 }
 
+static bool _apply_item_props(item_def &item, const item_spec &spec,
+                              bool allow_useless, bool monster)
+{
+    const CrawlHashTable props = spec.props;
+
+    if (props.exists("make_book_theme_randart"))
+    {
+        std::string owner = props["randbook_owner"].get_string();
+        if (owner == "player")
+            owner = you.your_name;
+
+        std::vector<spell_type> spells;
+        CrawlVector spell_list = props["randbook_spells"].get_vector();
+        for (unsigned int i = 0; i < spell_list.size(); ++i)
+            spells.push_back((spell_type) spell_list[i].get_int());
+
+        make_book_theme_randart(item,
+            spells,
+            props["randbook_disc1"].get_short(),
+            props["randbook_disc2"].get_short(),
+            props["randbook_num_spells"].get_short(),
+            props["randbook_slevels"].get_short(),
+            owner,
+            props["randbook_title"].get_string());
+    }
+
+    // Remove {god gift} from the inscription (could have been added if
+    // the item spec contains "acquire:moloch").
+    trim_god_gift_inscrip(item);
+    // And wipe item origin to remove "this is a god gift!" from there,
+    // unless we're dealing with a corpse.
+    if (!spec.corpselike())
+        origin_reset(item);
+    if (is_stackable_item(item) && spec.qty > 0)
+    {
+        item.quantity = spec.qty;
+        if (is_blood_potion(item))
+            init_stack_blood_potions(item);
+    }
+
+    if (spec.item_special)
+        item.special = spec.item_special;
+
+    if (spec.plus >= 0
+        && (item.base_type == OBJ_BOOKS
+            && item.sub_type == BOOK_MANUAL)
+        || (item.base_type == OBJ_MISCELLANY
+            && item.sub_type == MISC_RUNE_OF_ZOT))
+    {
+        item.plus = spec.plus;
+        item_colour(item);
+    }
+
+    if (item_is_rune(item) && you.runes[item.plus])
+    {
+        destroy_item(item, true);
+        return false;
+    }
+
+    if (props.exists("cursed"))
+        do_curse_item(item);
+    else if (props.exists("uncursed"))
+        do_uncurse_item(item, false);
+    if (props.exists("useful") && is_useless_item(item, false)
+        && !allow_useless)
+    {
+        destroy_item(item, true);
+        return false;
+    }
+    if (item.base_type == OBJ_WANDS && props.exists("charges"))
+        item.plus = props["charges"].get_int();
+    if ((item.base_type == OBJ_WEAPONS || item.base_type == OBJ_ARMOUR
+         || item.base_type == OBJ_JEWELLERY || item.base_type == OBJ_MISSILES)
+        && props.exists("plus"))
+    {
+        item.plus = props["plus"].get_int();
+    }
+    if ((item.base_type == OBJ_WEAPONS || item.base_type == OBJ_JEWELLERY)
+        && props.exists("plus2"))
+    {
+        item.plus2 = props["plus2"].get_int();
+    }
+    if (props.exists("ident"))
+    {
+        item.flags |= props["ident"].get_int();
+        add_autoinscription(item);
+    }
+    if (props.exists("unobtainable"))
+        item.flags |= ISFLAG_UNOBTAINABLE;
+
+    if (!monster)
+    {
+        if (props.exists("mimic"))
+        {
+            const int chance = props["mimic"];
+            if (chance > 0 && one_chance_in(chance))
+                item.flags |= ISFLAG_MIMIC;
+        }
+        if (props.exists("no_mimic"))
+            item.flags |= ISFLAG_NO_MIMIC;
+    }
+
+    return true;
+}
+
 int dgn_place_item(const item_spec &spec,
                    const coord_def &where,
                    int level)
@@ -4054,100 +4159,15 @@ retry:
     {
         item_def &item(mitm[item_made]);
         item.pos = where;
-        CrawlHashTable props = spec.props;
 
-        if (props.exists("make_book_theme_randart"))
+        if (!_apply_item_props(item, spec, (useless_tries >= 10), false))
         {
-            std::string owner = props["randbook_owner"].get_string();
-            if (owner == "player")
-                owner = you.your_name;
+            if (item_is_rune(item) && you.runes[item.plus])
+                return NON_ITEM;
 
-            std::vector<spell_type> spells;
-            CrawlVector spell_list = props["randbook_spells"].get_vector();
-            for (unsigned int i = 0; i < spell_list.size(); ++i)
-                spells.push_back((spell_type) spell_list[i].get_int());
-
-            make_book_theme_randart(item,
-                spells,
-                props["randbook_disc1"].get_short(),
-                props["randbook_disc2"].get_short(),
-                props["randbook_num_spells"].get_short(),
-                props["randbook_slevels"].get_short(),
-                owner,
-                props["randbook_title"].get_string());
-        }
-
-        // Remove {god gift} from the inscription (could have been added if
-        // the item spec contains "acquire:moloch").
-        trim_god_gift_inscrip(item);
-        // And wipe item origin to remove "this is a god gift!" from there,
-        // unless we're dealing with a corpse.
-        if (!spec.corpselike())
-            origin_reset(item);
-        if (is_stackable_item(item) && spec.qty > 0)
-        {
-            item.quantity = spec.qty;
-            if (is_blood_potion(item))
-                init_stack_blood_potions(item);
-        }
-
-        if (spec.item_special)
-            item.special = spec.item_special;
-
-        if (spec.plus >= 0
-            && (item.base_type == OBJ_BOOKS
-                && item.sub_type == BOOK_MANUAL)
-            || (item.base_type == OBJ_MISCELLANY
-                && item.sub_type == MISC_RUNE_OF_ZOT))
-        {
-            item.plus = spec.plus;
-            item_colour(item);
-        }
-
-        if (item_is_rune(item) && you.runes[item.plus])
-        {
-            destroy_item(item, true);
-            return NON_ITEM;
-        }
-
-        if (props.exists("cursed"))
-            do_curse_item(item);
-        else if (props.exists("uncursed"))
-            do_uncurse_item(item, false);
-        if (props.exists("useful") && (useless_tries++ < 10)
-            && is_useless_item(item, false))
-        {
-            destroy_item(item, true);
+            useless_tries++;
             goto retry;
         }
-        if (item.base_type == OBJ_WANDS && props.exists("charges"))
-            item.plus = props["charges"].get_int();
-        if ((item.base_type == OBJ_WEAPONS || item.base_type == OBJ_ARMOUR
-             || item.base_type == OBJ_JEWELLERY || item.base_type == OBJ_MISSILES)
-            && props.exists("plus"))
-        {
-            item.plus = props["plus"].get_int();
-        }
-        if ((item.base_type == OBJ_WEAPONS || item.base_type == OBJ_JEWELLERY)
-            && props.exists("plus2"))
-        {
-            item.plus2 = props["plus2"].get_int();
-        }
-        if (props.exists("ident"))
-        {
-            item.flags |= props["ident"].get_int();
-            add_autoinscription(item);
-        }
-        if (props.exists("unobtainable"))
-            item.flags |= ISFLAG_UNOBTAINABLE;
-        if (props.exists("mimic"))
-        {
-            const int chance = props["mimic"];
-            if (chance > 0 && one_chance_in(chance))
-                item.flags |= ISFLAG_MIMIC;
-        }
-        if (props.exists("no_mimic"))
-            item.flags |= ISFLAG_NO_MIMIC;
 
         return item_made;
     }
@@ -4275,30 +4295,13 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
         {
             item_def &item(mitm[item_made]);
 
-            if (spec.props.exists("cursed"))
-                do_curse_item(item);
-            else if (spec.props.exists("uncursed"))
-                do_uncurse_item(item, false);
-            if (spec.props.exists("useful") && (useless_tries++ < 10)
-                && is_useless_item(item, false))
+            if (!_apply_item_props(item, spec, (useless_tries >= 10), true))
             {
-                destroy_item(item_made, true);
-                goto retry;
-            }
+                if (item_is_rune(item) && you.runes[item.plus])
+                    continue;
 
-            if ((item.base_type == OBJ_WEAPONS
-                 || item.base_type == OBJ_ARMOUR
-                 || item.base_type == OBJ_JEWELLERY
-                 || item.base_type == OBJ_WANDS)
-                && spec.props.exists("plus"))
-            {
-                item.plus = spec.props["plus"].get_int();
-            }
-            if ((item.base_type == OBJ_WEAPONS
-                 || item.base_type == OBJ_JEWELLERY)
-                && spec.props.exists("plus2"))
-            {
-                item.plus2 = spec.props["plus2"].get_int();
+                useless_tries++;
+                goto retry;
             }
 
             // Mark items on summoned monsters as such.
