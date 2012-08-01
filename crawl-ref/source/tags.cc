@@ -2223,8 +2223,10 @@ static void tag_read_you(reader &th)
     you.octopus_king_rings = unmarshallUByte(th);
 
     if (!dlua.callfn("dgn_load_data", "u", &th))
+    {
         mprf(MSGCH_ERROR, "Failed to load Lua persist table: %s",
              dlua.error.c_str());
+    }
 
     unmarshallString(th);
 
@@ -2370,9 +2372,11 @@ static void tag_read_you_items(reader &th)
 #if TAG_MAJOR_VERSION == 33
     // Reset old broken force_autopickup tables.
     if (th.getMinorVersion() < TAG_MINOR_CLEAR_APTABLE)
+    {
         for (i = 0; i < iclasses; i++)
             for (j = 0; j < count2; j++)
                 you.force_autopickup[i][j] = 0;
+    }
 
     if (th.getMinorVersion() < TAG_MINOR_DETECT_CURSE_REMOVAL)
         for (j = SCR_REMOVE_CURSE + 1; j + 1 < MAX_SUBTYPES; ++j)

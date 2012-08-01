@@ -1957,12 +1957,10 @@ int monster_die(monster* mons, killer_type killer,
             {
                 const int mon_intel = mons_class_intel(mons->type) - I_ANIMAL;
 
-                if (mon_intel > 0)
-                    did_god_conduct(DID_SOULED_FRIEND_DIED, 1 + (mons->hit_dice / 2),
-                                    true, mons);
-                else
-                    did_god_conduct(DID_FRIEND_DIED, 1 + (mons->hit_dice / 2),
-                                    true, mons);
+                did_god_conduct(mon_intel > 0 ? DID_SOULED_FRIEND_DIED
+                                              : DID_FRIEND_DIED,
+                                1 + (mons->hit_dice / 2),
+                                true, mons);
             }
 
             if (pet_kill && fedhas_protects(mons))
@@ -2447,9 +2445,8 @@ int monster_die(monster* mons, killer_type killer,
 
     if (fake)
     {
-        if (corpse != -1)
-            if (_reaping(mons))
-                corpse = -1;
+        if (corpse != -1 && _reaping(mons))
+            corpse = -1;
 
         _give_experience(player_exp, monster_exp, killer, killer_index,
                          pet_kill, was_visible);
@@ -2502,9 +2499,8 @@ int monster_die(monster* mons, killer_type killer,
     if (mons_near(mons) && mons->has_ench(ENCH_INVIS))
         autotoggle_autopickup(false);
 
-    if (corpse != -1)
-        if (_reaping(mons))
-            corpse = -1;
+    if (corpse != -1 && _reaping(mons))
+        corpse = -1;
 
     crawl_state.dec_mon_acting(mons);
     monster_cleanup(mons);
@@ -2779,9 +2775,11 @@ void change_monster_type(monster* mons, monster_type targetc)
     // which would make things a lot simpler.
     // See also record_monster_defeat.
     bool old_mon_unique           = mons_is_unique(mons->type);
-    if (mons->props.exists("original_was_unique"))
-        if (mons->props["original_was_unique"].get_bool())
-            old_mon_unique = true;
+    if (mons->props.exists("original_was_unique")
+        && mons->props["original_was_unique"].get_bool())
+    {
+        old_mon_unique = true;
+    }
 
     mon_enchant abj       = mons->get_ench(ENCH_ABJ);
     mon_enchant fabj      = mons->get_ench(ENCH_FAKE_ABJURATION);

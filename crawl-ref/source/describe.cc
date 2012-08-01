@@ -1023,8 +1023,10 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
             iflags_t race = get_equip_race(item);
 
             if (race == ISFLAG_DWARVEN)
+            {
                 description += "\nIt is well-crafted and durable. Dwarves "
                                "deal slightly more damage with it.";
+            }
 
             if (race == ISFLAG_ORCISH)
                 description += "\nOrcs deal slightly more damage with it.";
@@ -2169,8 +2171,10 @@ std::string get_item_description(const item_def &item, bool verbose,
         description << "\n" << origin_desc(item) << ".";
 
     if (verbose)
+    {
         description << "\n\n" << "Stash search prefixes: "
                     << userdef_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item);
+    }
 
     return description.str();
 }
@@ -3177,8 +3181,10 @@ static std::string _monster_stat_description(const monster_info& mi)
     const char* pronoun = mi.pronoun(PRONOUN_SUBJECTIVE);
 
     if (mi.threat != MTHRT_UNDEF)
+    {
         result << uppercase_first(pronoun) << " looks "
                << _get_threat_desc(mi.threat) << ".\n";
+    }
 
     if (!resist_descriptions.empty())
     {

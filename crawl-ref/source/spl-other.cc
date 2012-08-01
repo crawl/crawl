@@ -281,7 +281,8 @@ spret_type cast_passwall(const coord_def& delta, int pow, bool fail)
     coord_def dest;
     for (dest = you.pos() + delta;
          in_bounds(dest) && _feat_is_passwallable(grd(dest));
-         dest += delta) ;
+         dest += delta)
+    {}
 
     int walls = (dest - you.pos()).rdist() - 1;
     if (walls == 0)

@@ -2427,8 +2427,11 @@ bool mon_special_ability(monster* mons, bolt & beem)
 
         bool spit = one_chance_in(3);
         if (mons->type == MONS_OKLOB_PLANT)
+        {
+            // reduced chance in zotdef
             spit = x_chance_in_y(mons->hit_dice,
-                crawl_state.game_is_zotdef() ? 40 : 30); // reduced chance in zotdef
+                crawl_state.game_is_zotdef() ? 40 : 30);
+        }
         if (mons->type == MONS_OKLOB_SAPLING)
             spit = one_chance_in(4);
 
@@ -2486,7 +2489,9 @@ bool mon_special_ability(monster* mons, bolt & beem)
     case MONS_QUEEN_BEE:
         if (one_chance_in(4)
             || mons->hit_points < mons->max_hit_points / 3 && one_chance_in(2))
+        {
             used = _queen_incite_worker(mons);
+        }
         break;
 
     case MONS_SNORG:

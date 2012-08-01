@@ -138,7 +138,9 @@ static bool _swap_monsters(monster* mover, monster* moved)
     // with the main body.
     if (mons_is_stationary(moved)
         && moved->type != MONS_KRAKEN_TENTACLE)
+    {
         return false;
+    }
 
     // If the target monster is constricted it is stuck
     // and not eligible to be swapped with
@@ -2243,9 +2245,11 @@ static bool _jelly_divide(monster* parent)
 
     // First, find a suitable spot for the child {dlb}:
     for (adjacent_iterator ai(parent->pos()); ai; ++ai)
-        if (actor_at(*ai) == NULL && parent->can_pass_through(*ai))
-            if (one_chance_in(++num_spots))
-                child_spot = *ai;
+        if (actor_at(*ai) == NULL && parent->can_pass_through(*ai)
+            && one_chance_in(++num_spots))
+        {
+            child_spot = *ai;
+        }
 
     if (num_spots == 0)
         return false;
@@ -2275,9 +2279,11 @@ static bool _jelly_divide(monster* parent)
 
     mgrd(child->pos()) = child->mindex();
 
-    if (!simple_monster_message(parent, " splits in two!"))
-        if (player_can_hear(parent->pos()) || player_can_hear(child->pos()))
-            mpr("You hear a squelching noise.", MSGCH_SOUND);
+    if (!simple_monster_message(parent, " splits in two!")
+        && (player_can_hear(parent->pos()) || player_can_hear(child->pos())))
+    {
+        mpr("You hear a squelching noise.", MSGCH_SOUND);
+    }
 
     if (crawl_state.game_is_arena())
         arena_placed_monster(child);
@@ -2381,8 +2387,10 @@ static bool _monster_eat_item(monster* mons, bool nearby)
             item_was_destroyed(*si, mons->mindex());
 
         if (is_blood_potion(*si))
+        {
             for (int i = 0; i < quant; ++i)
                 remove_oldest_blood_potion(*si);
+        }
         dec_mitm_item_quantity(si.link(), quant);
     }
 

@@ -163,8 +163,10 @@ void package::load()
         corrupted("save file (%s) corrupted -- header truncated", filename.c_str());
 
     if (htole(head.magic) != PACKAGE_MAGIC)
+    {
         corrupted("save file (%s) corrupted -- not a DCSS save file",
              filename.c_str());
+    }
     off_t len = lseek(fd, 0, SEEK_END);
     if (len == -1)
         sysfail("save file (%s) is not seekable", filename.c_str());

@@ -125,8 +125,10 @@ void dlua_chunk::add(int line, const std::string &s)
         first = line;
 
     if (line != last && last != -1)
+    {
         while (last++ < line)
             chunk += '\n';
+    }
 
     chunk += " ";
     chunk += s;

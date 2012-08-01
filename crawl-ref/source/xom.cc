@@ -2487,8 +2487,10 @@ static void _xom_zero_miscast()
     }
 
     if (in_view[DNGN_STONE_ARCH])
+    {
         priority.push_back("The stone arch briefly shows a sunny meadow on "
                            "the other side.");
+    }
 
     const dungeon_feature_type feat = grd(you.pos());
 

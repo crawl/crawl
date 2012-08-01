@@ -1170,8 +1170,10 @@ static bool _init_artefact_book(item_def &book)
         book.plus2 = plus2;
 
         if (book.sub_type == BOOK_RANDART_LEVEL)
+        {
             // The parameters to this call are in book.plus and plus2.
             book_good = make_book_level_randart(book, book.plus);
+        }
         else
             book_good = make_book_theme_randart(book);
 
@@ -1839,8 +1841,7 @@ static void _artefact_setup_prop_vectors(item_def &item)
 {
     CrawlHashTable &props = item.props;
     if (!props.exists(ARTEFACT_PROPS_KEY))
-        props[ARTEFACT_PROPS_KEY].new_vector(SV_SHORT)
-            .resize(ART_PROPERTIES);
+        props[ARTEFACT_PROPS_KEY].new_vector(SV_SHORT).resize(ART_PROPERTIES);
 
     CrawlVector &rap = props[ARTEFACT_PROPS_KEY].get_vector();
     rap.set_max_size(ART_PROPERTIES);

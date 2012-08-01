@@ -859,8 +859,10 @@ static int kill_lualc_holiness(lua_State *ls)
         case MH_PLANT:      verdict = "plant"; break;
         }
         if (ke->modifier != kill_monster_desc::M_NORMAL
-                && ke->modifier != kill_monster_desc::M_SHAPESHIFTER)
+            && ke->modifier != kill_monster_desc::M_SHAPESHIFTER)
+        {
             verdict = "undead";
+        }
         lua_pushstring(ls, verdict);
         return 1;
     }
@@ -992,8 +994,10 @@ static int kill_lualc_summary(lua_State *ls)
     char buf[120];
     *buf = 0;
     if (count)
+    {
         snprintf(buf, sizeof buf, "%u creature%s vanquished.",
                 count, count > 1? "s" : "");
+    }
     lua_pushstring(ls, buf);
     return 1;
 }

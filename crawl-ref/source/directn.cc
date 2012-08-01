@@ -3681,8 +3681,10 @@ std::string get_monster_equipment_desc(const monster_info& mi,
         if (mon_arm)
         {
             if (found_sth)
+            {
                 desc += (!mon_shd && !mon_rng && !mon_qvr && !mon_carry)
                         ? " and" : ",";
+            }
             else
                 found_sth = true;
 

@@ -2348,8 +2348,13 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
     {
         int i;
         for (i = 0; i < 100; ++i)
-            if (_try_make_armour_artefact(item, force_type, 0, true) && is_artefact(item))
+        {
+            if (_try_make_armour_artefact(item, force_type, 0, true)
+                && is_artefact(item))
+            {
                 return;
+            }
+        }
         // fall back to an ordinary item
         item_level = MAKE_GOOD_ITEM;
     }
@@ -2958,8 +2963,10 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
         else
         {
             if (item.plus > 0)
+            {
                 item.plus = 2 + (one_chance_in(3) ? random2(4)
                                                   : 1 + random2avg(5, 2));
+            }
             item.plus2 = 2 + (one_chance_in(3) ? random2(4)
                                                : 1 + random2avg(5, 2));
 

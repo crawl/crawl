@@ -3279,9 +3279,8 @@ void cheibriados_time_step(int pow) // pow is the number of turns to skip
 
 bool ashenzari_transfer_knowledge()
 {
-    if (you.transfer_skill_points > 0)
-        if (!ashenzari_end_transfer())
-            return false;
+    if (you.transfer_skill_points > 0 && !ashenzari_end_transfer())
+        return false;
 
     while (true)
     {

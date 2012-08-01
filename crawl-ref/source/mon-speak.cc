@@ -374,7 +374,9 @@ void maybe_mons_speaks(monster* mons)
         // a lot of them.  Except for uniques.
         if (testbits(mons->flags, MF_BAND_MEMBER)
             && !mons_is_unique(mons->type))
+        {
             chance *= 10;
+        }
 
         // However, confused and fleeing monsters are more interesting.
         if (mons_is_fleeing(mons))

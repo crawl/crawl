@@ -1635,7 +1635,9 @@ inline static bool _monster_warning(activity_interrupt_type ai,
         return false;
     if (!delay_is_run(atype) && !_is_butcher_delay(atype)
         && !(atype == DELAY_NOT_DELAYED))
+    {
         return false;
+    }
     if (at.context != SC_NEWLY_SEEN && atype == DELAY_NOT_DELAYED)
         return false;
 

@@ -311,8 +311,10 @@ static int _fuzz_mons_level(int level)
         const int fuzz = std::max(0, random_range(-fuzzspan, fuzzspan, 2));
 
         if (fuzz)
+        {
             dprf("Monster level fuzz: %d (old: %d, new: %d)",
                  fuzz, level, level + fuzz);
+        }
 
         return level + fuzz;
     }
@@ -1481,7 +1483,9 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         invalidate_agrid(true);
     if (mg.cls == MONS_SILENT_SPECTRE || mg.cls == MONS_PROFANE_SERVITOR
         || mg.cls == MONS_MOTH_OF_SUPPRESSION)
+    {
         invalidate_agrid(true);
+    }
 
     // If the caller requested a specific colour for this monster, apply
     // it now.

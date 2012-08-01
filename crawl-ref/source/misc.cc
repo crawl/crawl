@@ -357,8 +357,7 @@ void maybe_coagulate_blood_potions_floor(int obj)
     }
 
     if (!rot_count && !coag_count)
-        // Nothing to be done.
-        return;
+        return; // Nothing to be done.
 
 #ifdef DEBUG_BLOOD_POTIONS
     mprf(MSGCH_DIAGNOSTICS, "in maybe_coagulate_blood_potions_FLOOR "
@@ -1833,8 +1832,7 @@ static void _drop_tomb(const coord_def& pos, bool premature)
     if (count)
     {
         if (seen_change && !zin)
-            mprf("The walls disappear%s!",
-                 premature ? " prematurely" : "");
+            mprf("The walls disappear%s!", premature ? " prematurely" : "");
         else if (seen_change && zin)
         {
             mprf("Zin %s %s %s.",
@@ -2202,9 +2200,13 @@ coord_def pick_adjacent_free_square(const coord_def& p)
     coord_def result(-1, -1);
 
     for (adjacent_iterator ai(p); ai; ++ai)
-        if (grd(*ai) == DNGN_FLOOR && monster_at(*ai) == NULL)
-            if (one_chance_in(++num_ok))
-                result = *ai;
+    {
+        if (grd(*ai) == DNGN_FLOOR && monster_at(*ai) == NULL
+            && one_chance_in(++num_ok))
+        {
+            result = *ai;
+        }
+    }
 
     return result;
 }

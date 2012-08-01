@@ -1628,8 +1628,10 @@ static void _experience_check()
                 << std::endl;
 #ifdef DEBUG_DIAGNOSTICS
     if (wearing_amulet(AMU_THE_GOURMAND))
+    {
         mprf(MSGCH_DIAGNOSTICS, "Gourmand charge: %d",
              you.duration[DUR_GOURMAND]);
+    }
 
     mprf(MSGCH_DIAGNOSTICS, "Turns spent on this level: %d",
          env.turns_on_level);
@@ -2700,9 +2702,8 @@ static void _decrement_durations()
         you.redraw_quiver = true; // Can throw again.
     }
 
-    if (_decrement_a_duration(DUR_CORONA, delay))
-        if (!you.backlit())
-            mpr("You are no longer glowing.", MSGCH_DURATION);
+    if (_decrement_a_duration(DUR_CORONA, delay) && !you.backlit())
+        mpr("You are no longer glowing.", MSGCH_DURATION);
 
     // Leak piety from the piety pool into actual piety.
     // Note that changes of religious status without corresponding actions

@@ -1758,9 +1758,11 @@ static bool _choose_weapon(newgame_def* ng, newgame_def* ng_choice,
         return true;
     }
 
-    if (ng_choice->weapon == WPN_UNKNOWN)
-        if (!_prompt_weapon(ng, ng_choice, defaults, weapons))
-            return false;
+    if (ng_choice->weapon == WPN_UNKNOWN
+        && !_prompt_weapon(ng, ng_choice, defaults, weapons))
+    {
+        return false;
+    }
 
     _resolve_weapon(ng, ng_choice, weapons);
     return true;

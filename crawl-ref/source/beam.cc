@@ -1222,9 +1222,11 @@ void bolt::affect_cell()
     // affected the player on this square. -cao
     const bool still_wall = (was_solid && old_pos == pos());
     if ((!hit_player || is_beam || is_explosion) && !still_wall)
-        if (monster* m = monster_at(pos()))
-            if (can_affect_actor(m))
-                affect_monster(m);
+    {
+        monster *m = monster_at(pos());
+        if (m && can_affect_actor(m))
+            affect_monster(m);
+    }
 
     if (!feat_is_solid(grd(pos())))
         affect_ground();
@@ -2264,8 +2266,7 @@ bool imb_can_splash(coord_def origin, coord_def center,
 static void _imb_explosion(bolt *parent, coord_def center)
 {
     const int dist = grid_distance(parent->source, center);
-    if (dist == 0
-        || (!parent->is_tracer && !x_chance_in_y(3, 2 + 2 * dist)))
+    if (dist == 0 || (!parent->is_tracer && !x_chance_in_y(3, 2 + 2 * dist)))
         return;
     bolt beam;
     beam.name           = "mystic blast";
@@ -3910,8 +3911,10 @@ bool bolt::determine_damage(monster* mon, int& preac, int& postac, int& final,
     // All these are invalid if we return false.
 
     if (is_tracer)
+    {
         // Was mean between min and max;
         preac = preac_max_damage;
+    }
     else
         preac = damage.roll();
 
@@ -4191,8 +4194,8 @@ void bolt::monster_post_hit(monster* mon, int dmg)
             _curare_hits_monster(agent(), mon, 2);
     }
 
-    if (name == "bolt of energy"
-        || origin_spell == SPELL_QUICKSILVER_BOLT) // purple draconian breath
+    // purple draconian breath
+    if (name == "bolt of energy" || origin_spell == SPELL_QUICKSILVER_BOLT)
         debuff_monster(mon);
 
     if (dmg)
@@ -4946,7 +4949,9 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             // No KILL_YOU_CONF, or we get "You heal ..."
             if (cast_healing(5 + damage.roll(), 5 + damage.num * damage.size,
                              false, mon->pos()) > 0)
+            {
                 obvious_effect = true;
+            }
             msg_generated = true; // to avoid duplicate "nothing happens"
         }
         else if (mon->heal(5 + damage.roll()))

@@ -557,7 +557,7 @@ bool restore_stat(stat_type which_stat, int stat_gain,
     {
         bool stat_restored = false;
         for (int i = 0; i < NUM_STATS; ++i)
-            if (restore_stat(static_cast<stat_type>(i), stat_gain, suppress_msg))
+            if (restore_stat((stat_type) i, stat_gain, suppress_msg))
                 stat_restored = true;
 
         return stat_restored;

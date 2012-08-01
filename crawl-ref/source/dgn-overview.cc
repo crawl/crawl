@@ -455,8 +455,7 @@ static std::string _print_altars_for_gods(const std::vector<god_type>& gods,
         if (has_altar_been_seen)
             colour = "white";
         // Good gods don't inflict penance unless they hate your god.
-        if (you.penance[god]
-            && (!is_good_god(god) || god_hates_your_god(god)))
+        if (you.penance[god] && (!is_good_god(god) || god_hates_your_god(god)))
             colour = (you.penance[god] > 10) ? "red" : "lightred";
         // Indicate good gods that you've abandoned, though.
         else if (you.penance[god])
@@ -756,7 +755,9 @@ static std::string unique_name(monster* mons)
     {
         if (strstr(name.c_str(), "royal jelly")
             || strstr(name.c_str(), "Royal Jelly"))
+        {
             name = "Royal Jelly";
+        }
         if (strstr(name.c_str(), "Lernaean hydra"))
             name = "Lernaean hydra";
         if (strstr(name.c_str(), "Serpent of Hell"))

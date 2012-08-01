@@ -586,8 +586,10 @@ static void _send_mcache(mcache_entry *entry, bool submerged)
     tile_draw_info dinfo[mcache_entry::MAX_INFO_COUNT];
     int draw_info_count = entry->info(&dinfo[0]);
     for (int i = 0; i < draw_info_count; i++)
+    {
         tiles.write_message("[%u,%d,%d],", (unsigned int) dinfo[i].idx,
                             dinfo[i].ofs_x, dinfo[i].ofs_y);
+    }
 
     tiles.write_message("],");
 }
@@ -604,7 +606,9 @@ static bool _needs_flavour(const packed_cell &cell)
         return true; // Needs flv.floor
     if (cell.is_liquefied || cell.is_bloody ||
         cell.is_moldy || cell.glowing_mold)
+    {
         return true; // Needs flv.special
+    }
     return false;
 }
 
@@ -707,59 +711,85 @@ void TilesFramework::_send_cell(const coord_def &gc,
 
         if ((force_full && next_pc.is_bloody)
             || next_pc.is_bloody != current_pc.is_bloody)
+        {
             write_message("bloody:%u,", next_pc.is_bloody);
+        }
 
         if ((force_full && next_pc.old_blood)
             || next_pc.old_blood != current_pc.old_blood)
+        {
             write_message("old_blood:%u,", next_pc.old_blood);
+        }
 
         if ((force_full && next_pc.is_silenced)
             || next_pc.is_silenced != current_pc.is_silenced)
+        {
             write_message("silenced:%u,", next_pc.is_silenced);
+        }
 
         if ((force_full && next_pc.is_suppressed)
             || next_pc.is_suppressed != current_pc.is_suppressed)
+        {
             write_message("suppressed:%u,", next_pc.is_suppressed);
+        }
 
         if ((force_full && next_pc.halo)
             || next_pc.halo != current_pc.halo)
+        {
             write_message("halo:%u,", next_pc.halo);
+        }
 
         if ((force_full && next_pc.is_moldy)
             || next_pc.is_moldy != current_pc.is_moldy)
+        {
             write_message("moldy:%u,", next_pc.is_moldy);
+        }
 
         if ((force_full && next_pc.glowing_mold)
             || next_pc.glowing_mold != current_pc.glowing_mold)
+        {
             write_message("glowing_mold:%u,", next_pc.glowing_mold);
+        }
 
         if ((force_full && next_pc.is_sanctuary)
             || next_pc.is_sanctuary != current_pc.is_sanctuary)
+        {
             write_message("sanctuary:%u,", next_pc.is_sanctuary);
+        }
 
         if ((force_full && next_pc.is_liquefied)
             || next_pc.is_liquefied != current_pc.is_liquefied)
+        {
             write_message("liquefied:%u,", next_pc.is_liquefied);
+        }
 
         if ((force_full && next_pc.orb_glow)
             || next_pc.orb_glow != current_pc.orb_glow)
+        {
             write_message("orb_glow:%u,", next_pc.orb_glow);
+        }
 
         if ((force_full && next_pc.mangrove_water)
             || next_pc.mangrove_water != current_pc.mangrove_water)
+        {
             write_message("swtree:%u,", next_pc.mangrove_water);
+        }
 
         if ((force_full && next_pc.blood_rotation)
             || next_pc.blood_rotation != current_pc.blood_rotation)
+        {
             write_message("bloodrot:%d,", next_pc.blood_rotation);
+        }
 
         if ((force_full && next_pc.travel_trail)
             || next_pc.travel_trail != current_pc.travel_trail)
+        {
             write_message("tt:%d,", next_pc.travel_trail);
+        }
 
         if (_needs_flavour(next_pc) &&
-            ((next_pc.flv.floor != current_pc.flv.floor)
-             || (next_pc.flv.special != current_pc.flv.special)
+            (next_pc.flv.floor != current_pc.flv.floor
+             || next_pc.flv.special != current_pc.flv.special
              || !_needs_flavour(current_pc)
              || force_full))
         {
@@ -937,12 +967,16 @@ void TilesFramework::_send_monster(const coord_def &gc, const monster_info* m,
         force_full = true;
 
     if (force_full || (last->full_name() != m->full_name()))
+    {
         write_message("name:'%s',",
                       replace_all_of(m->full_name(), "'", "\\'").c_str());
+    }
 
     if (force_full || (last->pluralised_name() != m->pluralised_name()))
+    {
         write_message("plural:'%s',",
                       replace_all_of(m->pluralised_name(), "'", "\\'").c_str());
+    }
 
     if (force_full || (last->type != m->type))
     {
@@ -1201,8 +1235,7 @@ void TilesFramework::redraw()
 
 void TilesFramework::update_minimap(const coord_def& gc)
 {
-    if (gc.x < 0 || gc.x >= GXM ||
-        gc.y < 0 || gc.y >= GYM)
+    if (gc.x < 0 || gc.x >= GXM || gc.y < 0 || gc.y >= GYM)
         return;
 
     mark_for_redraw(gc);
@@ -1357,8 +1390,10 @@ void TilesFramework::put_ucs_string(ucs_t *str)
             }
 
             if (m_print_y < m_print_area->my)
+            {
                 m_print_area->put_character(*str, m_print_fg, m_print_bg,
                                             m_print_x, m_print_y);
+            }
 
             m_print_x++;
         }
@@ -1369,8 +1404,7 @@ void TilesFramework::put_ucs_string(ucs_t *str)
 
 void TilesFramework::clear_to_end_of_line()
 {
-    if (m_print_area == NULL ||
-        m_print_y >= m_print_area->my)
+    if (m_print_area == NULL || m_print_y >= m_print_area->my)
         return;
 
     for (int x = m_print_x; x < m_print_area->mx; ++x)

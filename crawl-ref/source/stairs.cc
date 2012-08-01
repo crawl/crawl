@@ -699,8 +699,10 @@ void down_stairs(dungeon_feature_type force_stair)
         }
 
         if (!known_trap && shaft_dest.depth - you.depth > 1)
-            mark_milestone("shaft", "fell down a shaft to " +
-                                    short_place_name(shaft_dest) + ".");
+        {
+            mark_milestone("shaft", "fell down a shaft to "
+                                    + short_place_name(shaft_dest) + ".");
+        }
 
         if (you.flight_mode() != FL_FLY || force_stair)
             mpr("You fall through a shaft!");

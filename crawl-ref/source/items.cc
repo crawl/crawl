@@ -2568,8 +2568,10 @@ static bool _is_option_autopickup(const item_def &item, std::string &iname)
     bool res = clua.callbooleanfn(false, "ch_force_autopickup", "is",
                                         &item, iname.c_str());
     if (!clua.error.empty())
+    {
         mprf(MSGCH_ERROR, "ch_force_autopickup failed: %s",
              clua.error.c_str());
+    }
 
     if (res)
         return true;
@@ -2577,8 +2579,10 @@ static bool _is_option_autopickup(const item_def &item, std::string &iname)
     res = clua.callbooleanfn(false, "ch_deny_autopickup", "is",
                              &item, iname.c_str());
     if (!clua.error.empty())
+    {
         mprf(MSGCH_ERROR, "ch_deny_autopickup failed: %s",
              clua.error.c_str());
+    }
 
     if (res)
         return false;
@@ -3241,8 +3245,10 @@ static void _rune_from_specs(const char* _specs, item_def &item)
     item.sub_type = MISC_RUNE_OF_ZOT;
 
     if (strstr(_specs, "rune of zot"))
+    {
         strlcpy(specs, _specs, std::min(strlen(_specs) - strlen(" of zot") + 1,
                                         sizeof(specs)));
+    }
     else
         strlcpy(specs, _specs, sizeof(specs));
 

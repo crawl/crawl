@@ -367,13 +367,19 @@ void manage_clouds()
         {
             int count = 0;
             for (adjacent_iterator ai(cloud.pos); ai; ++ai)
-                if (env.cgrid(*ai) != EMPTY_CLOUD)
-                    if (env.cloud[env.cgrid(*ai)].type == CLOUD_GLOOM)
+            {
+                if (env.cgrid(*ai) != EMPTY_CLOUD
+                    && env.cloud[env.cgrid(*ai)].type == CLOUD_GLOOM)
+                {
                         count++;
+                }
+            }
 
             if (!umbraed(cloud.pos) && haloed(cloud.pos)
                 && !silenced(cloud.pos))
+            {
                 count = 0;
+            }
 
             if (count < 4)
                 dissipate *= 50;
@@ -1127,8 +1133,10 @@ int actor_apply_cloud(actor *act)
         actor *oppressor = find_agent(cloud.source, cloud.whose);
 
         if (player)
+        {
             ouch(final_damage, oppressor? oppressor->mindex() : NON_MONSTER,
                  KILLED_BY_CLOUD, cloud.cloud_name("", true).c_str());
+        }
         else
             mons->hurt(oppressor, final_damage, BEAM_MISSILE);
     }

@@ -210,8 +210,7 @@ int wcwidth(ucs_t ucs)
         return -1;
 
     /* binary search in table of non-spacing characters */
-    if (bisearch(ucs, combining,
-                 sizeof(combining) / sizeof(struct interval) - 1))
+    if (bisearch(ucs, combining, ARRAYSZ(combining) - 1))
         return 0;
 
     /* if we arrive here, ucs is not a combining or C0/C1 control character */

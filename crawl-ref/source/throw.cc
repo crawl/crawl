@@ -356,8 +356,10 @@ bool fire_warn_if_impossible(bool silent)
         else if (weapon->sub_type != WPN_BLOWGUN)
         {
             if (!silent)
+            {
                 mprf("You cannot shoot with your %s while %s.",
                      weapon->name(DESC_BASENAME).c_str(), held_status());
+            }
             return true;
         }
         // Else shooting is possible.

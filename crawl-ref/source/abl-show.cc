@@ -2140,7 +2140,9 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_HELLFIRE:
         if (your_spells(SPELL_HELLFIRE,
                         you.experience_level * 10, false) == SPRET_ABORT)
+        {
             return false;
+        }
         break;
 
     case ABIL_EVOKE_TURN_INVISIBLE:     // ring, randarts, darkness items
@@ -3149,7 +3151,8 @@ std::vector<talent> your_talents(bool check_confused)
         _add_talent(talents, ABIL_DELAYED_FIREBALL, check_confused);
 
     // Evocations from items.
-    if (!you.suppressed()) {
+    if (!you.suppressed())
+    {
         if (scan_artefacts(ARTP_BLINK))
             _add_talent(talents, ABIL_EVOKE_BLINK, check_confused);
 

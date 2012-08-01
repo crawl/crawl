@@ -2564,8 +2564,7 @@ bool ShoppingList::items_are_same(const item_def& item_a,
 void ShoppingList::move_things(const coord_def &_src, const coord_def &_dst)
 {
     if (crawl_state.map_stat_gen || crawl_state.test)
-        // Shopping list is unitialized and uneeded.
-        return;
+        return; // Shopping list is unitialized and uneeded.
 
     const level_pos src(level_id::current(), _src);
     const level_pos dst(level_id::current(), _dst);
@@ -2582,8 +2581,7 @@ void ShoppingList::move_things(const coord_def &_src, const coord_def &_dst)
 void ShoppingList::forget_pos(const level_pos &pos)
 {
     if (!crawl_state.need_save)
-        // Shopping list is unitialized and uneeded.
-        return;
+        return; // Shopping list is unitialized and uneeded.
 
     for (unsigned int i = 0; i < list->size(); i++)
     {

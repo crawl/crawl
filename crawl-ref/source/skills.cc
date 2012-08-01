@@ -667,9 +667,11 @@ void reset_training()
         // The selected skills have not been exercised recently. Give them all
         // a default weight of 1 (or 2 for focus skills).
         if (empty)
+        {
             for (int sk = 0; sk < NUM_SKILLS; ++sk)
                 if (skill_trained(sk))
                     you.training[sk] = you.train[sk];
+        }
 
         // Focused skills get at least 20% training.
         for (int sk = 0; sk < NUM_SKILLS; ++sk)

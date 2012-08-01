@@ -611,8 +611,10 @@ static void _abyss_move_sanctuary(const coord_def abyss_shift_start_centre,
     if (env.sanctuary_time > 0 && in_bounds(env.sanctuary_pos))
     {
         if (you.see_cell(env.sanctuary_pos))
+        {
             env.sanctuary_pos += (abyss_shift_end_centre -
                                   abyss_shift_start_centre);
+        }
         else
             remove_sanctuary(false);
     }
@@ -635,8 +637,10 @@ static void _place_displaced_monsters()
         {
             maybe_bloodify_square(mon->pos());
             if (you.can_see(mon))
+            {
                 simple_monster_message(mon, " is pulled into the abyss.",
                         MSGCH_BANISHMENT);
+            }
             _abyss_lose_monster(*mon);
 
         }

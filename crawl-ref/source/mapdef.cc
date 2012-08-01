@@ -120,8 +120,10 @@ std::string mapdef_split_key_item(const std::string &s,
 
     const std::string::size_type sep = norm < fixe? norm : fixe;
     if (sep == std::string::npos)
+    {
         return make_stringf("malformed declaration - must use = or : in '%s'",
                             s.c_str());
+    }
 
     *key = trimmed_string(s.substr(0, sep));
     std::string substitute    = trimmed_string(s.substr(sep + 1));
@@ -135,8 +137,10 @@ std::string mapdef_split_key_item(const std::string &s,
     }
 
     if (substitute.empty())
+    {
         return make_stringf("no substitute defined in '%s'",
                             s.c_str());
+    }
 
     *arg = substitute;
     *separator = s[sep];
@@ -546,8 +550,10 @@ void map_lines::apply_grid_overlay(const coord_def &c)
 
             const int property = (*overlay)(x, y).property;
             if (property >= FPROP_BLOODY)
+            {
                  // Over-ride whatever property is already there.
                 env.pgrid(gc) |= property;
+            }
 
             const int fheight = (*overlay)(x, y).height;
             if (fheight != INVALID_HEIGHT)
@@ -932,8 +938,10 @@ std::string map_lines::add_nsubst(const std::string &s)
         subst_spec spec;
         err = parse_nsubst_spec(ns, spec);
         if (!err.empty())
+        {
             return (make_stringf("Bad NSUBST spec: %s (%s)",
                                  s.c_str(), err.c_str()));
+        }
         substs.push_back(spec);
     }
 
@@ -1991,8 +1999,10 @@ dlua_set_map::dlua_set_map(map_def *map)
 {
     clua_push_map(dlua, map);
     if (!dlua.callfn("dgn_set_map", 1, 1))
+    {
         mprf(MSGCH_ERROR, "dgn_set_map failed for '%s': %s",
              map->name.c_str(), dlua.error.c_str());
+    }
     // Save the returned map as a lua_datum
     old_map.reset(new lua_datum(dlua));
 }
@@ -2353,8 +2363,10 @@ static map_chance _unmarshall_map_chance(reader &th)
 void map_def::write_index(writer& outf) const
 {
     if (!cache_offset)
+    {
         end(1, false, "Map %s: can't write index - cache offset not set!",
             name.c_str());
+    }
     marshallString4(outf, name);
     marshallString4(outf, place_loaded_from.filename);
     marshallInt(outf, place_loaded_from.lineno);
@@ -2508,11 +2520,15 @@ bool map_def::test_lua_boolchunk(dlua_chunk &chunk, bool defval,
     else
     {
         if (die_on_lua_error)
+        {
             end(1, false, "Lua error: %s",
                 rewrite_chunk_errors(dlua.error).c_str());
+        }
         else
+        {
             mprf(MSGCH_ERROR, "Lua error: %s",
                  rewrite_chunk_errors(dlua.error).c_str());
+        }
     }
     return result;
 }
@@ -2744,21 +2760,27 @@ std::string map_def::validate_map_def(const depth_ranges &default_depths)
     {
     case MAP_NORTH: case MAP_SOUTH:
         if (map.height() > GYM * 2 / 3)
+        {
             return make_stringf("Map too large - height %d (max %d)",
                                 map.height(), GYM * 2 / 3);
+        }
         break;
     case MAP_EAST: case MAP_WEST:
         if (map.width() > GXM * 2 / 3)
+        {
             return make_stringf("Map too large - width %d (max %d)",
                                 map.width(), GXM * 2 / 3);
+        }
         break;
     case MAP_NORTHEAST: case MAP_SOUTHEAST:
     case MAP_NORTHWEST: case MAP_SOUTHWEST:
     case MAP_FLOAT:
         if (map.width() > GXM * 2 / 3 || map.height() > GYM * 2 / 3)
+        {
             return make_stringf("Map too large - %dx%d (max %dx%d)",
                                 map.width(), map.height(),
                                 GXM * 2 / 3, GYM * 2 / 3);
+        }
         break;
     default:
         break;
@@ -3626,8 +3648,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
         if (!colour.empty())
         {
             if (colour == "any")
-                // XXX: Hack
-                mspec.colour = -1;
+                mspec.colour = -1; // XXX: Hack
             else
             {
                 mspec.colour = str_to_colour(colour, BLACK);
@@ -4009,8 +4030,7 @@ mons_spec mons_list::drac_monspec(std::string name) const
 
     // Request for any draconian?
     if (starts_with(name, "any "))
-        // Strip "any "
-        name = name.substr(4);
+        name = name.substr(4); // Strip "any "
 
     if (starts_with(name, "base "))
     {
@@ -4726,8 +4746,10 @@ item_spec item_list::parse_single_spec(std::string s)
     if (!acquirement_source.empty() || strip_tag(s, "acquire"))
     {
         if (!acquirement_source.empty())
+        {
             result.acquirement_source =
                 parse_acquirement_source(acquirement_source);
+        }
         // If requesting acquirement, must specify item base type or
         // "any".
         result.level = ISPEC_ACQUIREMENT;
@@ -5306,8 +5328,10 @@ std::string map_marker_spec::apply_transform(map_lines &map)
         {
             map_marker *mark = create_marker();
             if (!mark)
+            {
                 return make_stringf("Unable to parse marker from %s",
                                     marker.c_str());
+            }
             mark->pos = positions[i];
             map.add_marker(mark);
         }

@@ -2802,17 +2802,25 @@ void lose_piety(int pgn)
             you.redraw_title = true;
 
             if (you.religion == GOD_ZIN)
+            {
                 simple_god_message(
                     " is no longer ready to cure all your mutations.");
+            }
             else if (you.religion == GOD_SHINING_ONE)
+            {
                 simple_god_message(
                     " is no longer ready to bless your weapon.");
+            }
             else if (you.religion == GOD_KIKUBAAQUDGHA)
+            {
                 simple_god_message(
                     " is no longer ready to enhance your necromancy.");
+            }
             else if (you.religion == GOD_LUGONU)
+            {
                 simple_god_message(
                     " is no longer ready to corrupt your weapon.");
+            }
         }
 
         for (int i = 0; i < MAX_GOD_ABILITIES; ++i)
@@ -3392,14 +3400,22 @@ void god_pitch(god_type which_god)
     {
         you.turn_is_over = false;
         if (which_god == GOD_SIF_MUNA)
+        {
             simple_god_message(" does not accept worship from the ignorant!",
                                which_god);
+        }
         else if (!_transformed_player_can_join_god(which_god))
-            simple_god_message(" says: How dare you come in such a loathsome form!",
+        {
+            simple_god_message(" says: How dare you come"
+                               " in such a loathsome form!",
                                which_god);
+        }
         else
-            simple_god_message(" does not accept worship from those such as you!",
+        {
+            simple_god_message(" does not accept worship"
+                               " from those such as you!",
                                which_god);
+        }
         return;
     }
 
@@ -3492,9 +3508,11 @@ void god_pitch(god_type which_god)
 
     // We disable all magical skills to avoid accidentally angering Trog.
     if (you.religion == GOD_TROG)
+    {
         for (int sk = SK_SPELLCASTING; sk <= SK_LAST_MAGIC; ++sk)
             if (you.skills[sk])
                 you.train[sk] = 0;
+    }
 
     // Elyvilon gives you invocations immediately.
     if (you.religion == GOD_ELYVILON)
@@ -3815,9 +3833,11 @@ bool god_protects_from_harm()
             return true;
         }
 
-    if (god_can_protect_from_harm(you.religion))
-        if (one_chance_in(10) || x_chance_in_y(piety_scale(you.piety), 1000))
-            return true;
+    if (god_can_protect_from_harm(you.religion)
+        && (one_chance_in(10) || x_chance_in_y(piety_scale(you.piety), 1000)))
+    {
+        return true;
+    }
 
     return false;
 }

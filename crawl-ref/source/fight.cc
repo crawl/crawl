@@ -58,7 +58,9 @@ bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
         // Friendly and good neutral monsters won't attack unless confused.
         if (attacker->as_monster()->wont_attack() &&
             !mons_is_confused(attacker->as_monster()))
+        {
             return false;
+        }
 
         // It's hard to attack from within a shell.
         if (attacker->as_monster()->withdrawn())

@@ -955,8 +955,10 @@ bolt mons_spells(monster* mons, spell_type spell_cast, int power,
         }
 
         if (!is_valid_spell(real_spell))
+        {
             die("Invalid spell #%d cast by %s", (int) real_spell,
                      mons->name(DESC_PLAIN, true).c_str());
+        }
 
         die("Unknown monster spell '%s' cast by %s",
                  spell_title(real_spell),
@@ -3113,8 +3115,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
             if (monsterNearby)
             {
                 if (do_noise)
-                    mons_cast_noise(mons, pbolt, spell_cast,
-                                    special_ability);
+                    mons_cast_noise(mons, pbolt, spell_cast, special_ability);
                 direct_effect(mons, spell_cast, pbolt, &you);
             }
             return;
@@ -4246,8 +4247,11 @@ static unsigned int _noise_keys(std::vector<std::string>& key_list,
 
     // Last, generic wizard, priest or demon.
     if (wizard)
-        key_list.push_back((std::string)((shape <= MON_SHAPE_NAGA) ? "" : "non-humanoid ")
-                           + "wizard" + cast_str);
+    {
+        key_list.push_back(make_stringf("%swizard%s",
+                               shape <= MON_SHAPE_NAGA ? "" : "non-humanoid ",
+                               cast_str.c_str()));
+    }
     else if (priest)
         key_list.push_back("priest" + cast_str);
     else if (mons_is_demon(mons->type))

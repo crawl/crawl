@@ -110,7 +110,9 @@ int clua_pushpoint(lua_State *ls, const coord_def &pos)
     lua_pushnumber(ls, pos.y);
     CLua &vm(CLua::get_vm(ls));
     if (!vm.callfn("dgn.point", 2, 1))
+    {
         luaL_error(ls, "dgn.point(%d,%d) failed: %s",
                    pos.x, pos.y, vm.error.c_str());
+    }
     return 1;
 }

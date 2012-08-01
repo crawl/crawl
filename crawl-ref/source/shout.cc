@@ -766,7 +766,9 @@ int noise_cell::turn_angle(const coord_def &next_delta) const
     // Going in reverse?
     if (next_delta.x == -neighbour_delta.x
         && next_delta.y == -neighbour_delta.y)
+    {
         return 4;
+    }
 
     const int xdiff = std::abs(neighbour_delta.x - next_delta.x);
     const int ydiff = std::abs(neighbour_delta.y - next_delta.y);
@@ -886,9 +888,11 @@ bool noise_grid::propagate_noise_to_neighbour(int base_attenuation,
                                               const coord_def &next_pos)
 {
     noise_cell &neighbour(cells(next_pos));
-    if (!neighbour.can_apply_noise(cell.noise_intensity_millis -
-                                   base_attenuation))
+    if (!neighbour.can_apply_noise(cell.noise_intensity_millis
+                                   - base_attenuation))
+    {
         return false;
+    }
 
     // Diagonals cost more.
     if ((next_pos - current_pos).abs() == 2)

@@ -345,8 +345,7 @@ void tornado_damage(actor *caster, int dur)
                         dmg = 0;
                     dprf("damage done: %d", dmg);
                     if (victim->is_player())
-                        ouch(dmg, caster->mindex(), KILLED_BY_BEAM,
-                             "tornado");
+                        ouch(dmg, caster->mindex(), KILLED_BY_BEAM, "tornado");
                     else
                         victim->hurt(caster, dmg);
                 }

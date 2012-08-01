@@ -950,8 +950,10 @@ LUAFN(_crawl_millis)
     struct timezone tz;
     const int error = gettimeofday(&tv, &tz);
     if (error)
+    {
         luaL_error(ls, make_stringf("Failed to get time: %s",
                                     strerror(error)).c_str());
+    }
 
     lua_pushnumber(ls, tv.tv_sec * 1000 + tv.tv_usec / 1000);
     return 1;
