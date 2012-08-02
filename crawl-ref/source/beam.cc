@@ -2273,6 +2273,7 @@ static void _imb_explosion(bolt *parent, coord_def center)
     beam.aux_source     = "orb of energy";
     beam.beam_source    = parent->beam_source;
     beam.thrower        = parent->thrower;
+    beam.attitude       = parent->attitude;
     beam.range          = 3;
     beam.hit            = AUTOMATIC_HIT;
     beam.damage         = parent->damage;
@@ -2284,6 +2285,7 @@ static void _imb_explosion(bolt *parent, coord_def center)
     beam.is_explosion   = false;
     beam.passed_target  = true; // The centre was the target.
     beam.is_tracer      = parent->is_tracer;
+    beam.is_targetting  = parent->is_targetting;
     beam.aimed_at_spot  = true;
     if (you.see_cell(center))
         beam.seen = true;
@@ -2307,6 +2309,8 @@ static void _imb_explosion(bolt *parent, coord_def center)
             }
             beam.friend_info.reset();
             beam.foe_info.reset();
+            beam.friend_info.dont_stop = parent->friend_info.dont_stop;
+            beam.foe_info.dont_stop = parent->foe_info.dont_stop;
             beam.target = center + (*ai - center) * 2;
             beam.fire();
             parent->friend_info += beam.friend_info;
