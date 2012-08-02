@@ -1757,6 +1757,11 @@ std::string spell_noise_string(spell_type spell)
         effect_noise = 7;
         break;
 
+    case SPELL_MALIGN_GATEWAY:
+        effect_noise = 10;
+        break;
+
+    case SPELL_EXCRUCIATING_WOUNDS:
     // Small explosions.
     case SPELL_MEPHITIC_CLOUD:
     case SPELL_EVAPORATE:
