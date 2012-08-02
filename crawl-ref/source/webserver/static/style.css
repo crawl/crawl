@@ -196,6 +196,9 @@ a:hover {
     width: 100%;
     margin: 0px;
     padding: 0px;
+    position: fixed;
+    top: 0;
+    left: 0;
 }
 #loader_center {
     display: table-cell;
