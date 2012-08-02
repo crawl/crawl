@@ -189,7 +189,8 @@ void turn_corpse_into_chunks(item_def &item, bool bloodspatter,
     item.quantity  = 1 + random2(max_chunks);
     item.quantity  = stepdown_value(item.quantity, 4, 4, 12, 12);
 
-    if (is_bad_food(item))
+    // Don't mark it as dropped if we are forcing autopickup of chunks.
+    if (is_bad_food(item) && you.force_autopickup[OBJ_FOOD][FOOD_CHUNK] <= 0)
         item.flags |= ISFLAG_DROPPED;
     else if (you.species != SP_VAMPIRE)
         item.flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
