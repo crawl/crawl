@@ -409,6 +409,18 @@ function (exports, $, key_conversion, chat, comm) {
     exports.hide_dialog = hide_dialog;
     exports.center_element = center_element;
 
+    function handle_dialog(data)
+    {
+        var dialog = $("<div class='floating_dialog'>");
+        dialog.html(data.html);
+        $("body").append(dialog);
+        dialog.find("[data-key]").on("click", function (ev) {
+            var key = $(this).data("key");
+            send_bytes([key.charCodeAt(0)]);
+        });
+        show_dialog(dialog);
+    }
+
     function start_register()
     {
         show_dialog("#register");
@@ -846,6 +858,8 @@ function (exports, $, key_conversion, chat, comm) {
 
         "set_game_links": set_game_links,
         "html": set_html,
+        "show_dialog": handle_dialog,
+        "hide_dialog": hide_dialog,
 
         "lobby_clear": lobby_clear,
         "lobby_entry": lobby_entry,
