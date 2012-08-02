@@ -282,7 +282,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     { "provide lesser healing for yourself",
       "purify yourself",
       "provide greater healing for yourself and others",
-      "restore your abilities",
+      "",
       "call upon Elyvilon for divine vigour" },
     // Lugonu
     { "depart the Abyss",
@@ -399,7 +399,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     { "provide lesser healing for yourself",
       "purify yourself",
       "provide greater healing",
-      "restore your abilities",
+      "",
       "call upon Elyvilon for divine vigour" },
     // Lugonu
     { "depart the Abyss at will",
