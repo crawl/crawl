@@ -287,7 +287,7 @@ static bool _check_uniques()
 
     for (monster_type mt = MONS_0; mt < NUM_MONSTERS; ++mt)
     {
-        if (!mons_is_unique(mt))
+        if (!mons_is_unique(mt) || mons_species(mt) == MONS_SERPENT_OF_HELL)
             continue;
         bool was_set = saved_uniques[mt];
         bool is_set = you.unique_creatures[mt];
