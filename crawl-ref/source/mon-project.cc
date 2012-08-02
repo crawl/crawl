@@ -612,7 +612,9 @@ void boulder_start(monster *mon, bolt *beam)
     beam->choose_ray();
     mon->props["iood_x"].get_float() = beam->ray.r.start.x - 0.5;
     mon->props["iood_y"].get_float() = beam->ray.r.start.y - 0.5;
-    mon->props["iood_vx"].get_float() = beam->ray.r.dir.x;
-    mon->props["iood_vy"].get_float() = beam->ray.r.dir.y;
+    mon->props["iood_vx"].get_float() = mons_is_fleeing(mon) ?
+        -beam->ray.r.dir.x : beam->ray.r.dir.x;
+    mon->props["iood_vy"].get_float() = mons_is_fleeing(mon) ?
+        -beam->ray.r.dir.y : beam->ray.r.dir.y;
     iood_act(*mon);
 }
