@@ -465,7 +465,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         elif obj["msg"] == "stop_stale_process_purge":
             self._stop_purging_stale_processes()
 
-        elif self.conn:
+        elif self.conn and self.conn.open:
             self.conn.send_message(msg.encode("utf8"))
 
     def handle_chat_message(self, username, text):
