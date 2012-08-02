@@ -158,7 +158,8 @@ def check_config():
             logging.warning("Crawl executable %s doesn't exist!", game_data["crawl_binary"])
             success = False
 
-        if not os.path.exists(game_data["client_path"]):
+        if ("client_path" in game_data and
+            not os.path.exists(game_data["client_path"])):
             logging.warning("Client data path %s doesn't exist!", game_data["client_path"])
             success = False
     return success
