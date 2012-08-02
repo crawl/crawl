@@ -2290,7 +2290,15 @@ void check_item_knowledge(bool unknown_items)
                 ptmp->sub_type  = misc_ST_list[i];
                 ptmp->colour    = 2;
                 ptmp->quantity  = 18;  //show a good amount of gold
-                ptmp->special   = 100; //makes chunks fresh
+
+                // Make chunks fresh, non-poisonous, etc.
+                if (ptmp->base_type == OBJ_FOOD
+                    && ptmp->sub_type == FOOD_CHUNK)
+                {
+                    ptmp->special = 100;
+                    ptmp->mon_type = MONS_RAT;
+                }
+
                 items_other.push_back(ptmp);
 
                 if (you.force_autopickup[misc_list[i]][ptmp->sub_type] == 1)
