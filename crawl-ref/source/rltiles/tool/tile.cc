@@ -397,7 +397,6 @@ bool tile::load(const std::string &new_filename)
         assert(pal->colors);
         bool ck_enabled = img->flags & SDL_SRCCOLORKEY;
 
-        int src  = 0;
         int dest = 0;
         for (int y = 0; y < img->h; y++)
             for (int x = 0; x < img->w; x++)
