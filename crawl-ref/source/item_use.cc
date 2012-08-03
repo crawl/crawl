@@ -1672,21 +1672,23 @@ static bool _dont_use_invis()
 static targetter *_wand_targetter(const item_def *wand)
 {
     int range = _wand_range(wand->zap());
+    const int power = 15 + you.skill(SK_EVOCATIONS, 5) / 2;
 
     switch (wand->sub_type)
     {
     case WAND_FIREBALL:
-        return new targetter_beam(&you, range, BEAM_FIRE, true, 1, 1);
+        return new targetter_beam(&you, range, ZAP_FIREBALL, power, true, 1, 1);
     case WAND_LIGHTNING:
-        return new targetter_beam(&you, range, BEAM_ELECTRICITY, false, 0, 0);
+        return new targetter_beam(&you, range, ZAP_LIGHTNING, power, false, 0,
+                                  0);
     case WAND_FLAME:
-        return new targetter_beam(&you, range, BEAM_FIRE, true, 0, 0);
+        return new targetter_beam(&you, range, ZAP_FLAME, power, true, 0, 0);
     case WAND_FIRE:
-        return new targetter_beam(&you, range, BEAM_FIRE, false, 0, 0);
+        return new targetter_beam(&you, range, ZAP_FIRE, power, false, 0, 0);
     case WAND_FROST:
-        return new targetter_beam(&you, range, BEAM_COLD, true, 0, 0);
+        return new targetter_beam(&you, range, ZAP_FROST, power, true, 0, 0);
     case WAND_COLD:
-        return new targetter_beam(&you, range, BEAM_COLD, false, 0, 0);
+        return new targetter_beam(&you, range, ZAP_COLD, power, false, 0, 0);
     default:
         return 0;
     }

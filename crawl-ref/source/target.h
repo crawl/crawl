@@ -35,8 +35,8 @@ protected:
 class targetter_beam : public targetter
 {
 public:
-    targetter_beam(const actor *act, int range, beam_type flavour, bool stop,
-                   int min_expl_rad = 0, int max_expl_rad = 0);
+    targetter_beam(const actor *act, int range, zap_type zap, int pow,
+                   bool stop, int min_expl_rad = 0, int max_expl_rad = 0);
     bolt beam;
     virtual bool set_aim(coord_def a);
     bool valid_aim(coord_def a);
@@ -53,7 +53,7 @@ private:
 class targetter_imb : public targetter_beam
 {
 public:
-    targetter_imb(const actor *act, int range);
+    targetter_imb(const actor *act, int pow, int range);
     bool set_aim(coord_def a);
     aff_type is_affected(coord_def loc);
 private:

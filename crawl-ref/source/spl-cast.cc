@@ -986,30 +986,32 @@ static targetter* _spell_targetter(spell_type spell, int pow, int range)
     switch (spell)
     {
     case SPELL_ICE_STORM:
-        return new targetter_beam(&you, range, BEAM_ICE, true, 2,
+        return new targetter_beam(&you, range, ZAP_ICE_STORM, pow, true, 2,
                                   (pow > 76) ? 3 : 2);
     case SPELL_FIREBALL:
-        return new targetter_beam(&you, range, BEAM_FIRE, true, 1, 1);
+        return new targetter_beam(&you, range, ZAP_FIREBALL, pow, true, 1, 1);
     case SPELL_HELLFIRE:
-        return new targetter_beam(&you, range, BEAM_HELLFIRE, true, 1, 1);
+        return new targetter_beam(&you, range, ZAP_HELLFIRE, pow, true, 1, 1);
     case SPELL_EVAPORATE:
     case SPELL_MEPHITIC_CLOUD:
-        return new targetter_beam(&you, range, BEAM_POTION_MEPHITIC, true,
+        return new targetter_beam(&you, range, ZAP_BREATHE_MEPHITIC, true,
                                   pow >= 100 ? 1 : 0, 1);
     case SPELL_SHOCK:
     case SPELL_LIGHTNING_BOLT:
-        return new targetter_beam(&you, range, BEAM_ELECTRICITY, false, 0, 0);
+        return new targetter_beam(&you, range, spell_to_zap(spell), pow, false,
+                                  0, 0);
     case SPELL_FLAME_TONGUE:
     case SPELL_THROW_FLAME:
-        return new targetter_beam(&you, range, BEAM_FIRE, true, 0, 0);
+        return new targetter_beam(&you, range, spell_to_zap(spell), pow, true,
+                                  0, 0);
     case SPELL_BOLT_OF_FIRE:
-        return new targetter_beam(&you, range, BEAM_FIRE, false, 0, 0);
+        return new targetter_beam(&you, range, ZAP_FIRE, pow, false, 0, 0);
     case SPELL_THROW_FROST:
-        return new targetter_beam(&you, range, BEAM_COLD, true, 0, 0);
+        return new targetter_beam(&you, range, ZAP_FROST, pow, true, 0, 0);
     case SPELL_BOLT_OF_COLD:
-        return new targetter_beam(&you, range, BEAM_COLD, false, 0, 0);
+        return new targetter_beam(&you, range, ZAP_COLD, false, 0, 0);
     case SPELL_ISKENDERUNS_MYSTIC_BLAST:
-        return new targetter_imb(&you, range);
+        return new targetter_imb(&you, pow, range);
     case SPELL_FIRE_STORM:
         return new targetter_smite(&you, range, 2, pow > 76 ? 3 : 2);
     case SPELL_FREEZING_CLOUD:
