@@ -461,7 +461,6 @@ zonguldrok ZONGULDROK
 sword_of_power SWORD_OF_POWER
 knife_of_accuracy KNIFE_OF_ACCURACY
 vampires_tooth VAMPIRES_TOOTH
-dire_lajatang DIRE_LAJATANG
 spriggans_knife SPRIGGANS_KNIFE
 cutlass CUTLASS
 ## blunt
@@ -599,6 +598,9 @@ d_glaive D_GLAIVE
 pole_forked POLE_FORKED
 fork2 FORK2
 trishula TRISHULA
+lajatang1 LAJATANG
+lajatang2
+lajatang3
 
 ## staves
 
