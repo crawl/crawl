@@ -25,7 +25,7 @@ static std::string _wallmsg(coord_def c)
 bool targetter::set_aim(coord_def a)
 {
     // This matches a condition in direction_chooser::move_is_ok().
-    if (!cell_see_cell(you.pos(), a, LOS_NO_TRANS))
+    if (agent && !cell_see_cell(agent->pos(), a, LOS_NO_TRANS))
         return false;
 
     aim = a;
