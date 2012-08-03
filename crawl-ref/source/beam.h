@@ -211,6 +211,8 @@ public:
 
     bool can_affect_actor(const actor *act) const;
 
+    maybe_bool affects_wall(dungeon_feature_type wall) const;
+
 private:
     void do_fire();
     coord_def pos() const;
@@ -218,9 +220,9 @@ private:
 
     // Lots of properties of the beam.
     bool is_blockable() const;
-    bool is_superhot() const;
     bool is_fiery() const;
-    maybe_bool affects_wall(dungeon_feature_type wall) const;
+    bool is_superhot() const;
+    bool can_affect_wall(dungeon_feature_type feat) const;
     bool can_affect_wall_actor(const actor *act) const;
     bool actor_wall_shielded(const actor *act) const;
     bool is_bouncy(dungeon_feature_type feat) const;

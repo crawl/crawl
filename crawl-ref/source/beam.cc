@@ -275,8 +275,9 @@ bool player_tracer(zap_type ztype, int power, bolt &pbolt, int range)
 
     zappy(ztype, power, pbolt);
 
-    // Special case so that the IMB tracer behaves properly.
-    if (pbolt.name != "orb of energy")
+    // Special cases so that tracers behave properly.
+    if (pbolt.name != "orb of energy"
+        && pbolt.affects_wall(DNGN_TREE) == B_FALSE)
         pbolt.name = "unimportant";
 
     pbolt.is_tracer      = true;
@@ -1057,7 +1058,7 @@ void bolt::affect_wall()
 {
     if (is_tracer)
     {
-        if (affects_wall(grd(pos())) != B_TRUE)
+        if (!can_affect_wall(grd(pos())))
             finish_beam();
         return;
     }
@@ -1089,7 +1090,7 @@ bool bolt::need_regress() const
     //      others obsolete.
     return ((is_explosion && !in_explosion_phase)
             || drop_item
-            || feat_is_solid(grd(pos())) && !affects_wall(grd(pos()))
+            || feat_is_solid(grd(pos())) && !can_affect_wall(grd(pos()))
             || origin_spell == SPELL_PRIMAL_WAVE);
 }
 
@@ -1151,7 +1152,7 @@ bool bolt::hit_wall()
         dungeon_events.fire_vetoable_position_event(event, target);
     }
 
-    if (in_bounds(pos()) && affects_wall(feat))
+    if (in_bounds(pos()) && can_affect_wall(feat))
         affect_wall();
     else if (is_bouncy(feat) && !in_explosion_phase)
         bounce();
@@ -1374,7 +1375,7 @@ void bolt::do_fire()
         // always in the past, and we don't want to crash
         // if they accidentally pass through a corner.
         ASSERT(!feat_is_solid(grd(pos()))
-               || is_tracer && affects_wall(grd(pos()))
+               || is_tracer && can_affect_wall(grd(pos()))
                || affects_nothing); // returning weapons
 
         const bool was_seen = seen;
@@ -2667,6 +2668,15 @@ maybe_bool bolt::affects_wall(dungeon_feature_type wall) const
         return B_TRUE; // smite targetting, we don't care
 
     return B_FALSE;
+}
+
+bool bolt::can_affect_wall(dungeon_feature_type feat) const
+{
+    maybe_bool ret = affects_wall(feat);
+
+    return (ret == B_TRUE)  ? true :
+           (ret == B_MAYBE) ? is_tracer || coinflip()
+                            : false;
 }
 
 void bolt::affect_place_clouds()
@@ -5551,13 +5561,15 @@ void bolt::determine_affected_cells(explosion_map& m, const coord_def& delta,
         // Special case: explosion originates from rock/statue
         // (e.g. Lee's Rapid Deconstruction) - in this case, ignore
         // solid cells at the center of the explosion.
-        if (stop_at_walls && !(delta.origin() && affects_wall(dngn_feat)))
+        if (stop_at_walls && !(delta.origin() && can_affect_wall(dngn_feat)))
             return;
         // But remember that we are at a wall.
         at_wall = true;
     }
 
-    if (feat_is_solid(dngn_feat) && !feat_is_wall(dngn_feat) && stop_at_statues)
+    if (feat_is_solid(dngn_feat) && !feat_is_wall(dngn_feat)
+        && !(delta.origin() && can_affect_wall(dngn_feat))
+        && stop_at_statues)
         return;
 
     // Check if it passes the callback functions.
