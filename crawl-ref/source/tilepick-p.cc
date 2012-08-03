@@ -131,7 +131,9 @@ tileidx_t tilep_equ_weapon(const item_def &item)
     case WPN_GLAIVE:        return TILEP_HAND1_GLAIVE;
     case WPN_STAFF:         return TILEP_HAND1_STAFF;
     case WPN_QUARTERSTAFF:  return TILEP_HAND1_QUARTERSTAFF1;
-    case WPN_LAJATANG:      return TILEP_HAND1_DIRE_LAJATANG;
+    case WPN_LAJATANG:
+        return tileidx_enchant_equ(item, TILEP_HAND1_LAJATANG, true);
+
     case WPN_SCYTHE:        return TILEP_HAND1_SCYTHE;
     case WPN_HAMMER:        return TILEP_HAND1_HAMMER;
     case WPN_TRIDENT:       return TILEP_HAND1_TRIDENT2;
