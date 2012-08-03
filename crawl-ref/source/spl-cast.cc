@@ -994,7 +994,7 @@ static targetter* _spell_targetter(spell_type spell, int pow, int range)
         return new targetter_beam(&you, range, ZAP_HELLFIRE, pow, true, 1, 1);
     case SPELL_EVAPORATE:
     case SPELL_MEPHITIC_CLOUD:
-        return new targetter_beam(&you, range, ZAP_BREATHE_MEPHITIC, true,
+        return new targetter_beam(&you, range, ZAP_BREATHE_MEPHITIC, pow, true,
                                   pow >= 100 ? 1 : 0, 1);
     case SPELL_SHOCK:
     case SPELL_LIGHTNING_BOLT:
@@ -1009,7 +1009,7 @@ static targetter* _spell_targetter(spell_type spell, int pow, int range)
     case SPELL_THROW_FROST:
         return new targetter_beam(&you, range, ZAP_FROST, pow, true, 0, 0);
     case SPELL_BOLT_OF_COLD:
-        return new targetter_beam(&you, range, ZAP_COLD, false, 0, 0);
+        return new targetter_beam(&you, range, ZAP_COLD, pow, false, 0, 0);
     case SPELL_ISKENDERUNS_MYSTIC_BLAST:
         return new targetter_imb(&you, pow, range);
     case SPELL_FIRE_STORM:

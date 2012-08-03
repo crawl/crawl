@@ -183,7 +183,7 @@ aff_type targetter_beam::is_affected(coord_def loc)
 }
 
 targetter_imb::targetter_imb(const actor *act, int pow, int range) :
-               targetter_beam(act, range, ZAP_MYSTIC_BLAST, pow, true)
+               targetter_beam(act, range, ZAP_MYSTIC_BLAST, pow, true, 0, 0)
 {
 }
 
