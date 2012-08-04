@@ -263,7 +263,7 @@ ifdef BUILD_ALL
 endif
 
 # Should be the first rule, but must come after $(GAME) is set.
-all: greet $(GAME) docs webserver
+all: greet check-fonts $(GAME) docs webserver
 
 LIBPCRE := contrib/install/$(ARCH)/lib/libpcre.a
 LIBSDL := contrib/install/$(ARCH)/lib/libSDL.a
@@ -1304,7 +1304,7 @@ distclean: clean clean-contrib clean-rltiles
 	$(RM) -r mac-app-zips
 	$(RM) -r $(DOXYGEN_HTML_GEN)
 
-$(GAME): $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS) dat/dlua/tags.lua check-fonts
+$(GAME): $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS) dat/dlua/tags.lua
 	+$(QUIET_LINK)$(CXX) $(LDFLAGS) $(EXTRA_OBJECTS) $(OBJECTS) -o $(GAME) $(LIBS)
 
 debug: all
