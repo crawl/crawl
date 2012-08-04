@@ -73,6 +73,9 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
     flv.floor   = TILE_FLOOR_NORMAL;
     flv.special = 0;
 
+    flv.wall_idx = 0;
+    flv.floor_idx = 0;
+
     switch (br)
     {
     case BRANCH_MAIN_DUNGEON:
@@ -286,10 +289,13 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
 
 void tile_clear_flavour(const coord_def &p)
 {
-    env.tile_flv(p).floor   = 0;
-    env.tile_flv(p).wall    = 0;
-    env.tile_flv(p).feat    = 0;
-    env.tile_flv(p).special = 0;
+    env.tile_flv(p).floor     = 0;
+    env.tile_flv(p).wall      = 0;
+    env.tile_flv(p).feat      = 0;
+    env.tile_flv(p).floor_idx = 0;
+    env.tile_flv(p).wall_idx  = 0;
+    env.tile_flv(p).feat_idx  = 0;
+    env.tile_flv(p).special   = 0;
 }
 
 void tile_clear_flavour()
