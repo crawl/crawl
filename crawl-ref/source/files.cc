@@ -1307,9 +1307,11 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         else
             _place_player_on_stair(old_level.branch, stair_taken, dest_pos);
 
-        // Don't return the player into deep water or a trap.
+        // Don't return the player into walls, deep water, or a trap.
         for (distance_iterator di(you.pos(), true, false); di; ++di)
-            if (!is_feat_dangerous(grd(*di), true) && !feat_is_trap(grd(*di), true))
+            if (you.is_habitable_feat(grd(*di))
+                && !is_feat_dangerous(grd(*di), true)
+                && !feat_is_trap(grd(*di), true))
             {
                 if (you.pos() != *di)
                     you.moveto(*di);
