@@ -1259,8 +1259,11 @@ void Menu::write_title()
         cprintf(" (page %d of %d)", curpage, numpages);
     }
 
+    // Don't clear the next line if the title was exactly as wide as the
+    // screen; but do clear the current line if the title was empty.
     const int x = wherex(), y = wherey();
-    cprintf("%-*s", get_number_of_cols() - x, "");
+    if (x > 1 || text.empty())
+        cprintf("%-*s", get_number_of_cols() + 1 - x, "");
     cgotoxy(x, y);
 }
 
