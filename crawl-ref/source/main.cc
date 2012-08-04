@@ -1150,8 +1150,6 @@ static void _input()
     disable_check player_disabled(you.incapacitated());
     religion_turn_start();
     god_conduct_turn_start();
-    you.update_beholders();
-    you.update_fearmongers();
     you.walking = 0;
 
     // Currently only set if Xom accidentally kills the player.
@@ -3064,6 +3062,9 @@ static void _player_reacts()
     // Icy shield and armour melt over lava.
     if (grd(you.pos()) == DNGN_LAVA)
         expose_player_to_element(BEAM_LAVA);
+
+    you.update_beholders();
+    you.update_fearmongers();
 
     _decrement_durations();
     you.handle_constriction();
