@@ -10,26 +10,6 @@
 
 using namespace std;
 
-#if defined(_WIN32) || defined(_WIN64)
-/*
- * Replacement for MSVCRT's broken implementation of tmpfile(): it
- * attempts to place the files in the root directory, which obviously
- * doesn't work for non-admin users...
- */
-FILE *tmpfile(void)
-{
-    char *fn = tempnam(NULL, "tileg");
-
-    // T: short-lived
-    // D: delete-on-close
-    FILE *fp = fopen(fn, "w+TD");
-
-    free(fn);
-
-    return fp;
-}
-#endif
-
 tile_list_processor::tile_list_processor() :
     m_last_enum(0),
     m_rim(false),
@@ -833,90 +813,6 @@ void tile_list_processor::add_image(tile &img, const char *enumname)
     }
 }
 
-static bool _files_differ(FILE *newfile, FILE *oldfile)
-{
-    rewind(newfile);
-    rewind(oldfile);
-
-    const size_t blocksize = 1024;
-    char newblock[blocksize];
-    char oldblock[blocksize];
-
-    while (true)
-    {
-        size_t newread = fread(newblock, 1, blocksize, newfile);
-        size_t oldread = fread(oldblock, 1, blocksize, oldfile);
-
-        if (newread != oldread)
-            return (true);
-
-        if (memcmp(newblock, oldblock, newread))
-            return (true);
-
-        bool newdone = !!feof(newfile);
-        bool olddone = !!feof(oldfile);
-
-        if (newdone || olddone)
-            return (newdone != olddone);
-    }
-
-    // Silence warnings.
-    return (false);
-}
-
-static bool _copy_file(FILE *src, FILE *dst)
-{
-    rewind(src);
-    rewind(dst);
-
-    const size_t blocksize = 1024;
-    char srcblock[blocksize];
-
-    while (!feof(src))
-    {
-        size_t readcount = fread(srcblock, 1, blocksize, src);
-        if (readcount > 0)
-        {
-            size_t writecount = fwrite(srcblock, 1, readcount, dst);
-            if (readcount != writecount)
-                return (false);
-        }
-    }
-
-    return (true);
-}
-
-static bool _write_if_changed(const char *oldfilename, FILE *newfile)
-{
-    // Read in oldfile.  If newfile differs from oldfile, copy its
-    // contents into oldfile.  Return false if some error occurs.
-    // It assumes newfile is open for read.
-
-    assert(newfile);
-    assert(oldfilename);
-
-    FILE *oldfile = fopen(oldfilename, "r");
-    if (oldfile)
-    {
-        if (!_files_differ(newfile, oldfile))
-        {
-            fclose(oldfile);
-            return (true);
-        }
-        fclose(oldfile);
-    }
-
-    oldfile = fopen(oldfilename, "w");
-    if (!oldfile)
-        return (false);
-
-    bool ret = _copy_file(newfile, oldfile);
-
-    fclose(oldfile);
-
-    return (ret);
-}
-
 void tile_list_processor::add_abstracts(
     FILE *fp,
     const char *format,
@@ -1021,7 +917,7 @@ bool tile_list_processor::write_data()
     {
         char filename[1024];
         sprintf(filename, "tiledef-%s.h", lcname.c_str());
-        FILE *fp = tmpfile();
+        FILE *fp = fopen(filename, "w");
 
         if (!fp)
         {
@@ -1172,10 +1068,6 @@ bool tile_list_processor::write_data()
 
         fprintf(fp, "\n#endif\n\n");
 
-        fflush(fp);
-        if (!_write_if_changed(filename, fp))
-            return (false);
-
         fclose(fp);
     }
 
@@ -1184,7 +1076,7 @@ bool tile_list_processor::write_data()
     {
         char filename[1024];
         sprintf(filename, "tiledef-%s.cc", lcname.c_str());
-        FILE *fp = tmpfile();
+        FILE *fp = fopen(filename, "w");
 
         if (!fp)
         {
@@ -1407,10 +1299,6 @@ bool tile_list_processor::write_data()
             "}\n\n",
             lcname.c_str(), lcname.c_str(), lcname.c_str(), lcname.c_str());
 
-        fflush(fp);
-        if (!_write_if_changed(filename, fp))
-            return (false);
-
         fclose(fp);
     }
     else
@@ -1423,7 +1311,7 @@ bool tile_list_processor::write_data()
 
         char filename[1024];
         sprintf(filename, "tiledef-%s.cc", lcname.c_str());
-        FILE *fp = tmpfile();
+        FILE *fp = fopen(filename, "w");
 
         if (!fp)
         {
@@ -1500,11 +1388,6 @@ bool tile_list_processor::write_data()
             lcname.c_str());
         add_abstracts(fp, "return (tile_%s_coloured(idx, col));", lc_enum, uc_max_enum);
         fprintf(fp, "}\n\n");
-
-
-        fflush(fp);
-        if (!_write_if_changed(filename, fp))
-            return (false);
 
         fclose(fp);
     }
@@ -1624,7 +1507,7 @@ bool tile_list_processor::write_data()
     {
         char filename[1024];
         sprintf(filename, "tileinfo-%s.js", lcname.c_str());
-        FILE *fp = tmpfile();
+        FILE *fp = fopen(filename, "w");
 
         if (!fp)
         {
@@ -1811,10 +1694,6 @@ bool tile_list_processor::write_data()
         }
 
         fprintf(fp, "return exports;\n});\n");
-
-        fflush(fp);
-        if (!_write_if_changed(filename, fp))
-            return false;
 
         fclose(fp);
     }

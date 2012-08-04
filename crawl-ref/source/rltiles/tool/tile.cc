@@ -470,6 +470,11 @@ bool tile::load(const std::string &new_filename)
     if (logfile)
         fprintf(logfile, "%s\n", new_filename.c_str());
 #else
+    FILE* fp = fopen(new_filename.c_str(), "r");
+    if (!fp)
+        return false;
+    fclose(fp);
+
     m_width  = 0;
     m_height = 0;
     m_pixels = new tile_colour[1];
