@@ -585,8 +585,11 @@ bool check_selected_skills()
         skill_type sk = static_cast<skill_type>(i);
         if (skill_trained(sk))
             return false;
-        if (is_useless_skill(sk) || you.skill_points[sk] >= skill_exp_needed(27, sk))
+        if (is_useless_skill(sk) || is_harmful_skill(sk)
+            || you.skill_points[sk] >= skill_exp_needed(27, sk))
+        {
             continue;
+        }
         if (!you.can_train[sk])
         {
             could_train = true;
@@ -708,11 +711,8 @@ void exercise(skill_type exsk, int deg)
 // We look at skill points because actual level up comes later.
 static bool _level_up_check(skill_type sk, bool simu)
 {
-        // Don't overtrain spellcasting past level 1 with Trog and
-        // don't train past level 27.
-        if (sk == SK_SPELLCASTING && !you.skills[sk] && you.religion == GOD_TROG
-        && you.skill_points[sk] >= skill_exp_needed(1, sk)
-                || you.skill_points[sk] >= skill_exp_needed(27, sk))
+    // Don't train past level 27.
+    if (you.skill_points[sk] >= skill_exp_needed(27, sk))
     {
         you.training[sk] = 0;
         if (!simu)
@@ -723,12 +723,8 @@ static bool _level_up_check(skill_type sk, bool simu)
     return false;
 }
 
-static bool _is_magic_skill(skill_type sk)
+bool is_magic_skill(skill_type sk)
 {
-    // Learning spellcasting with scrolls doesn't count for Trog.
-    if (you.religion == GOD_TROG && sk == SK_SPELLCASTING && !you.skills[sk])
-        return false;
-
     return (sk > SK_LAST_MUNDANE && sk <= SK_LAST_MAGIC);
 }
 
@@ -816,7 +812,7 @@ static void _train_skills(int exp, const int cost, const bool simu)
                     sk_exp[sk] = 0;
             }
 
-            if (gain && _is_magic_skill(sk))
+            if (gain && is_magic_skill(sk))
                 magic_gain += gain;
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -848,7 +844,7 @@ static void _train_skills(int exp, const int cost, const bool simu)
 
         _level_up_check(sk, simu);
 
-        if (gain && _is_magic_skill(sk))
+        if (gain && is_magic_skill(sk))
             magic_gain += gain;
 
 #ifdef DEBUG_DIAGNOSTICS
