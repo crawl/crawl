@@ -236,6 +236,11 @@ static monster* _init_fsim()
                 return NULL;
             }
             mtype = get_monster_by_name(specs);
+
+            // Wizmode users should be able to conjure up uniques even if they
+            // were already created.
+            if (mons_is_unique(mtype) && you.unique_creatures[mtype])
+                you.unique_creatures[mtype] = false;
         }
 
         mon = create_monster(
