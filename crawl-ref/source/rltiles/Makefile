@@ -76,7 +76,7 @@ JAVASCRIPT := $(INPUTS:%=tileinfo-%.js)
 ifneq ($(findstring $(MAKEFLAGS),s),s)
 ifndef V
         QUIET_HOSTCXX  = @echo '   ' HOSTCXX $@;
-        QUIET_GEN      = @echo '   ' GEN $(lastword $(subst -, ,$*));
+        QUIET_GEN      = @echo '   ' GEN $@;
         QUIET_HOSTLINK = @echo '   ' HOSTLINK $@;
         export V
 endif
@@ -91,8 +91,11 @@ ifdef TILES
 all: $(IMAGES)
 endif
 
-%.png tiledef-%.h tiledef-%.cc tileinfo-%.js: dc-%.txt $(TILEGEN)
-	$(QUIET_GEN)$(TILEGEN) $<
+%.png: dc-%.txt $(TILEGEN)
+	$(QUIET_GEN)$(TILEGEN) -i $<
+
+tiledef-%.h tiledef-%.cc tileinfo-%.js: dc-%.txt $(TILEGEN)
+	$(QUIET_GEN)$(TILEGEN) -c $<
 
 # CFLAGS difference check
 TRACK_CFLAGS = $(subst ','\'',$(HOSTCXX) $(CFLAGS))           # (stray ' for highlights)

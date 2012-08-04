@@ -855,7 +855,7 @@ void tile_list_processor::add_abstracts(
     }
 }
 
-bool tile_list_processor::write_data()
+bool tile_list_processor::write_data(bool image, bool code)
 {
     if (m_name == "")
     {
@@ -889,27 +889,34 @@ bool tile_list_processor::write_data()
         if (!m_page.place_images())
             return (false);
 
-        char filename[1024];
-        sprintf(filename, "%s.png", lcname.c_str());
-        if (m_abstract.empty())
+        if (image)
         {
-            if (!m_page.write_image(filename))
-                return (false);
-        }
-        else
-        {
-            // Write an empty file.
             char filename[1024];
             sprintf(filename, "%s.png", lcname.c_str());
-            FILE *fp = fopen(filename, "w");
-            if (!fp)
+            if (m_abstract.empty())
             {
-                fprintf(stderr, "Error: couldn't open '%s' for write.\n", filename);
-                return (false);
+                if (!m_page.write_image(filename))
+                    return (false);
             }
-            fclose(fp);
+            else
+            {
+                // Write an empty file.
+                char filename[1024];
+                sprintf(filename, "%s.png", lcname.c_str());
+                FILE *fp = fopen(filename, "w");
+                if (!fp)
+                {
+                    fprintf(stderr, "Error: couldn't open '%s' for write.\n",
+                            filename);
+                    return (false);
+                }
+                fclose(fp);
+            }
         }
     }
+
+    if (!code)
+        return true;
 
     int *part_min = NULL;
 
