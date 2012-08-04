@@ -174,7 +174,7 @@ void DungeonCellBuffer::draw()
 void DungeonCellBuffer::add_blood_overlay(int x, int y, const packed_cell &cell,
                                           bool is_wall)
 {
-    if (cell.is_liquefied)
+    if (cell.is_liquefied && !is_wall)
     {
         int offset = cell.flv.special % tile_dngn_count(TILE_LIQUEFACTION);
         m_buf_feat.add(TILE_LIQUEFACTION + offset, x, y);
