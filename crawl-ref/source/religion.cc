@@ -63,6 +63,7 @@
 #include "player.h"
 #include "player-stats.h"
 #include "shopping.h"
+#include "skills.h"
 #include "skills2.h"
 #include "spl-book.h"
 #include "spl-miscast.h"
@@ -3136,6 +3137,9 @@ void excommunication(god_type new_god)
     // Evil hack.
     learned_something_new(HINT_EXCOMMUNICATE,
                           coord_def((int)new_god, old_piety));
+
+    // Perhaps we abandoned Trog with everything but Spellcasting maxed out.
+    check_selected_skills();
 }
 
 static std::string _sacrifice_message(std::string msg,

@@ -803,7 +803,8 @@ bool SkillMenu::exit()
         }
 
         if (you.skills[i] < 27 && you.can_train[i]
-            && !is_useless_skill((skill_type) i))
+            && !is_useless_skill((skill_type) i)
+            && !is_harmful_skill((skill_type) i))
         {
             maxed_out = false;
         }

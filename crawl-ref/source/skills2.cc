@@ -475,6 +475,11 @@ bool is_useless_skill(skill_type skill)
     return species_apt(skill) == -99;
 }
 
+bool is_harmful_skill(skill_type skill)
+{
+    return is_magic_skill(skill) && you.religion == GOD_TROG;
+}
+
 int skill_bump(skill_type skill, int scale)
 {
     int sk = you.skill_rdiv(skill, scale);
