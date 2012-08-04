@@ -480,6 +480,7 @@ void show_hiscore_table()
     menu.attach_object(highlighter);
 
     menu.set_active_object(score_entries);
+    score_entries->set_active_item((MenuItem*) NULL);
     score_entries->activate_first_item();
 
     enable_smart_cursor(false);
