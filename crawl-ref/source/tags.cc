@@ -3650,6 +3650,8 @@ void tag_read_level_tiles(reader &th)
     }
 
     // flavour
+    bool need_reinit = false;
+
     env.tile_default.wall_idx  = unmarshallShort(th);
     _check_tile_idx(env.tile_default.wall_idx, "default wall");
     env.tile_default.floor_idx = unmarshallShort(th);
@@ -3657,6 +3659,9 @@ void tag_read_level_tiles(reader &th)
     env.tile_default.wall      = unmarshallShort(th);
     env.tile_default.floor     = unmarshallShort(th);
     env.tile_default.special   = unmarshallShort(th);
+
+    if (env.tile_default.wall == 0 || env.tile_default.floor == 0)
+        need_reinit = true;
 
     for (int x = 0; x < gx; x++)
         for (int y = 0; y < gy; y++)
@@ -3672,10 +3677,17 @@ void tag_read_level_tiles(reader &th)
             env.tile_flv[x][y].floor   = unmarshallShort(th);
             env.tile_flv[x][y].feat    = unmarshallShort(th);
             env.tile_flv[x][y].special = unmarshallShort(th);
+
+            if (env.tile_flv[x][y].wall == 0
+                || env.tile_flv[x][y].floor == 0
+                || env.tile_flv[x][y].feat == 0)
+            {
+                need_reinit = true;
+            }
         }
     _debug_count_tiles();
 
-    if (unmarshallInt(th) != TILE_WALL_MAX)
+    if (unmarshallInt(th) != TILE_WALL_MAX || need_reinit)
     {
         dprf("DNGN tilecount has changed -- recreating tile data.");
         tag_missing_level_tiles();
