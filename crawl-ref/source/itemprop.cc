@@ -724,10 +724,10 @@ static iflags_t _full_ident_mask(const item_def& item)
     case OBJ_CORPSES:
     case OBJ_MISCELLANY:
     case OBJ_MISSILES:
+    case OBJ_ORBS:
         flagset = 0;
         break;
     case OBJ_BOOKS:
-    case OBJ_ORBS:
     case OBJ_SCROLLS:
     case OBJ_POTIONS:
         flagset = ISFLAG_KNOW_TYPE;
