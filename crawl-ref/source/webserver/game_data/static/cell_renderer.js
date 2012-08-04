@@ -362,13 +362,12 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
         // Much of the following is more or less directly copied from tiledgnbuf.cc
         draw_blood_overlay: function(x, y, cell, is_wall)
         {
-            if (cell.liquefied)
+            if (cell.liquefied && !is_wall)
             {
                 offset = cell.flv.s % dngn.tile_count(dngn.LIQUEFACTION);
                 this.draw_dngn(dngn.LIQUEFACTION + offset, x, y);
             }
             else if (cell.bloody)
-
             {
                 cell.bloodrot = cell.bloodrot || 0;
                 var basetile;
