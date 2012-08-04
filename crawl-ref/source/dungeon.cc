@@ -4162,7 +4162,8 @@ retry:
 
         if (!_apply_item_props(item, spec, (useless_tries >= 10), false))
         {
-            if (item_is_rune(item) && you.runes[item.plus])
+            if (base_type == OBJ_MISCELLANY
+                && spec.sub_type == MISC_RUNE_OF_ZOT)
                 return NON_ITEM;
 
             useless_tries++;
@@ -4297,7 +4298,8 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
 
             if (!_apply_item_props(item, spec, (useless_tries >= 10), true))
             {
-                if (item_is_rune(item) && you.runes[item.plus])
+                if (spec.base_type == OBJ_MISCELLANY
+                    && spec.sub_type == MISC_RUNE_OF_ZOT)
                     continue;
 
                 useless_tries++;
