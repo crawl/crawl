@@ -162,7 +162,7 @@ static coord_def _rotate(coord_def org, coord_def from,
     if (avail.empty())
         return from;
 
-    coord_def best;
+    coord_def best = from;
     double hiscore = 1e38;
 
     double dist0 = sqrt((from - org).abs());
@@ -171,6 +171,11 @@ static coord_def _rotate(coord_def org, coord_def from,
         ang0 -= 2 * PI;
     for (unsigned int i = 0; i < avail.size(); i++)
     {
+        // If the path is blocked - say the monster is in a cage -
+        // veto the cell.
+        if (!cell_see_cell(from, avail[i], LOS_SOLID_SEE))
+            continue;
+
         double dist = sqrt((avail[i] - org).abs());
         double distdiff = fabs(dist - dist0);
         double ang = atan2(avail[i].x - org.x, avail[i].y - org.y);
