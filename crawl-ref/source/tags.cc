@@ -3619,6 +3619,15 @@ static void _debug_count_tiles()
 #endif
 }
 
+static void _check_tile_idx(int idx, std::string desc, int x = 0, int y = 0)
+{
+    if (idx < 0 || idx > env.tile_names.size())
+    {
+        mprf(MSGCH_ERROR, "%s tile idx (%d/%d) out of bounds: %d\n",
+             desc.c_str(), x, y, idx);
+    }
+}
+
 void tag_read_level_tiles(reader &th)
 {
     // Map grids.
@@ -3642,7 +3651,9 @@ void tag_read_level_tiles(reader &th)
 
     // flavour
     env.tile_default.wall_idx  = unmarshallShort(th);
+    _check_tile_idx(env.tile_default.wall_idx, "default wall");
     env.tile_default.floor_idx = unmarshallShort(th);
+    _check_tile_idx(env.tile_default.floor_idx, "default floor");
     env.tile_default.wall      = unmarshallShort(th);
     env.tile_default.floor     = unmarshallShort(th);
     env.tile_default.special   = unmarshallShort(th);
@@ -3651,8 +3662,11 @@ void tag_read_level_tiles(reader &th)
         for (int y = 0; y < gy; y++)
         {
             env.tile_flv[x][y].wall_idx  = unmarshallShort(th);
+            _check_tile_idx(env.tile_flv[x][y].wall_idx, "wall");
             env.tile_flv[x][y].floor_idx = unmarshallShort(th);
+            _check_tile_idx(env.tile_flv[x][y].floor_idx, "floor");
             env.tile_flv[x][y].feat_idx  = unmarshallShort(th);
+            _check_tile_idx(env.tile_flv[x][y].feat_idx, "feat");
 
             env.tile_flv[x][y].wall    = unmarshallShort(th);
             env.tile_flv[x][y].floor   = unmarshallShort(th);
@@ -3704,17 +3718,21 @@ static void _reinit_flavour_tiles()
 {
     if (env.tile_default.wall_idx)
     {
-        env.tile_default.wall
+        tileidx_t new_wall
             = _get_tile_from_vector(env.tile_default.wall_idx);
-        if (!env.tile_default.wall)
+        if (!new_wall)
             env.tile_default.wall_idx = 0;
+        else
+            env.tile_default.wall = new_wall;
     }
     if (env.tile_default.floor_idx)
     {
-        env.tile_default.floor
+        tileidx_t new_floor
             = _get_tile_from_vector(env.tile_default.floor_idx);
-        if (!env.tile_default.floor)
+        if (!new_floor)
             env.tile_default.floor_idx = 0;
+        else
+            env.tile_default.floor = new_floor;
     }
 
     for (rectangle_iterator ri(coord_def(0, 0), coord_def(GXM-1, GYM-1));
@@ -3722,24 +3740,30 @@ static void _reinit_flavour_tiles()
     {
         if (env.tile_flv(*ri).wall_idx)
         {
-            env.tile_flv(*ri).wall
+            tileidx_t new_wall
                 = _get_tile_from_vector(env.tile_flv(*ri).wall_idx);
-            if (!env.tile_flv(*ri).wall)
+            if (!new_wall)
                 env.tile_flv(*ri).wall_idx = 0;
+            else
+                env.tile_flv(*ri).wall = new_wall;
         }
         if (env.tile_flv(*ri).floor_idx)
         {
-            env.tile_flv(*ri).floor
+            tileidx_t new_floor
                 = _get_tile_from_vector(env.tile_flv(*ri).floor_idx);
-            if (!env.tile_flv(*ri).floor)
+            if (!new_floor)
                 env.tile_flv(*ri).floor_idx = 0;
+            else
+                env.tile_flv(*ri).floor = new_floor;
         }
         if (env.tile_flv(*ri).feat_idx)
         {
-            env.tile_flv(*ri).feat
+            tileidx_t new_feat
                 = _get_tile_from_vector(env.tile_flv(*ri).feat_idx);
-            if (!env.tile_flv(*ri).feat)
+            if (!new_feat)
                 env.tile_flv(*ri).feat_idx = 0;
+            else
+                env.tile_flv(*ri).feat = new_feat;
         }
    }
 }
