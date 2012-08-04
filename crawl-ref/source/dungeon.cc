@@ -4164,7 +4164,9 @@ retry:
         {
             if (base_type == OBJ_MISCELLANY
                 && spec.sub_type == MISC_RUNE_OF_ZOT)
+            {
                 return NON_ITEM;
+            }
 
             useless_tries++;
             goto retry;
@@ -4300,7 +4302,9 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
             {
                 if (spec.base_type == OBJ_MISCELLANY
                     && spec.sub_type == MISC_RUNE_OF_ZOT)
+                {
                     continue;
+                }
 
                 useless_tries++;
                 goto retry;
