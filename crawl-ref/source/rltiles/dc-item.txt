@@ -199,7 +199,9 @@ bardiche1 WPN_BARDICHE
 bardiche2
 
 ##Staff
+%rim 0
 staff WPN_STAFF
+%rim 1
 quarterstaff WPN_QUARTERSTAFF
 quarterstaff2
 %rim 0
