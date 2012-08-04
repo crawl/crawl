@@ -3621,7 +3621,7 @@ static void _debug_count_tiles()
 
 static void _check_tile_idx(int idx, std::string desc, int x = 0, int y = 0)
 {
-    if (idx < 0 || idx > env.tile_names.size())
+    if (idx < 0 || idx > (int) env.tile_names.size())
     {
         mprf(MSGCH_ERROR, "%s tile idx (%d/%d) out of bounds: %d\n",
              desc.c_str(), x, y, idx);
@@ -3679,8 +3679,7 @@ void tag_read_level_tiles(reader &th)
             env.tile_flv[x][y].special = unmarshallShort(th);
 
             if (env.tile_flv[x][y].wall == 0
-                || env.tile_flv[x][y].floor == 0
-                || env.tile_flv[x][y].feat == 0)
+                || env.tile_flv[x][y].floor == 0)
             {
                 need_reinit = true;
             }
