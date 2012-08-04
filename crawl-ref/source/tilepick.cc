@@ -2724,6 +2724,8 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
     case WPN_DAGGER:
         if (race == ISFLAG_ORCISH)
             return TILE_WPN_DAGGER_ORC;
+        if (race == ISFLAG_DWARVEN)
+            return TILE_WPN_DAGGER_DWARF;
         if (race == ISFLAG_ELVEN)
             return TILE_WPN_DAGGER_ELF;
         return TILE_WPN_DAGGER;
@@ -2731,6 +2733,8 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
     case WPN_SHORT_SWORD:
         if (race == ISFLAG_ORCISH)
             return TILE_WPN_SHORT_SWORD_ORC;
+        if (race == ISFLAG_DWARVEN)
+            return TILE_WPN_SHORT_SWORD_DWARF;
         if (race == ISFLAG_ELVEN)
             return TILE_WPN_SHORT_SWORD_ELF;
         return TILE_WPN_SHORT_SWORD;

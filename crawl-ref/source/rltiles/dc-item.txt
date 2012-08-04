@@ -84,15 +84,19 @@ dagger3
 orcish_dagger WPN_DAGGER_ORC
 orcish_dagger2
 %rim 0
+dwarven_dagger1 WPN_DAGGER_DWARF
+dwarven_dagger2
 elven_dagger1 WPN_DAGGER_ELF
 elven_dagger2
 %rim 1
 
 short_sword1 WPN_SHORT_SWORD
 short_sword2
+%rim 0
+dwarven_short_sword1 WPN_SHORT_SWORD_DWARF
+dwarven_short_sword2
 orcish_short_sword WPN_SHORT_SWORD_ORC
 orcish_short_sword2
-%rim 0
 elven_short_sword1 WPN_SHORT_SWORD_ELF
 elven_short_sword2
 %rim 1
