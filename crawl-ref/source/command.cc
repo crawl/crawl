@@ -1071,6 +1071,9 @@ static void _recap_card_keys(std::vector<std::string> &keys)
 // Extra info on this item wasn't found anywhere else.
 static void _append_non_item(std::string &desc, std::string key)
 {
+    if (ends_with(key, " spell"))
+        key.erase(key.length() - 6);
+
     spell_type type = spell_by_name(key);
 
     if (type == SPELL_NO_SPELL)
@@ -1107,6 +1110,9 @@ static void _append_non_item(std::string &desc, std::string key)
 // to a description string.
 static bool _append_books(std::string &desc, item_def &item, std::string key)
 {
+    if (ends_with(key, " spell"))
+        key.erase(key.length() - 6);
+
     spell_type type = spell_by_name(key, true);
 
     if (type == SPELL_NO_SPELL)
