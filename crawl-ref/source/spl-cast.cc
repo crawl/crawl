@@ -643,6 +643,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
         if (key_is_escape(keyin))
         {
             canned_msg(MSG_OK);
+            crawl_state.zero_turns_taken();
             return false;
         }
         else if (keyin == '.' || keyin == CK_ENTER)
@@ -669,6 +670,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
     if (spell_mana(spell) > you.magic_points)
     {
         mpr("You don't have enough magic to cast that spell.");
+        crawl_state.zero_turns_taken();
         return false;
     }
 
@@ -685,6 +687,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
             range_view_annotator show_range(&range);
             delay(50);
         }
+        crawl_state.zero_turns_taken();
         return false;
     }
 
@@ -693,6 +696,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
             || you.hunger <= spell_hunger(spell)))
     {
         canned_msg(MSG_NO_ENERGY);
+        crawl_state.zero_turns_taken();
         return false;
     }
 
