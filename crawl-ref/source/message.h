@@ -94,6 +94,11 @@ private:
     bool msuppressed;
 };
 
+#ifdef USE_TILE_WEB
+void webtiles_send_messages();
+void webtiles_send_last_messages(int n = 20);
+#endif
+
 void save_messages(writer& outf);
 void load_messages(reader& inf);
 void clear_message_store();

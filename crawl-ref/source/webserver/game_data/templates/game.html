@@ -16,7 +16,15 @@
 <div id="crt" style="display: none;"></div>
 
 <div id="normal" style="display: none;">
-  <canvas id="dungeon"></canvas>
+  <div id="left_column">
+    <canvas id="dungeon"></canvas>
+    <div id="message_pane">
+      <div id="messages_container">
+        <div id="messages"></div>
+      </div>
+      <div id="more" style="display: none;">--more--</div>
+    </div>
+  </div>
   <div id="right_column">
     <div id="stats">
       <div id="stats_wizmode" style="float:right;" />
@@ -82,7 +90,6 @@
     </div>
     <div id="monster_list"></div>
   </div>
-  <div id="messages"></div>
 </div>
 
 <div id="settings" style="display: none;" class="floating_dialog">

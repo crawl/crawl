@@ -1,6 +1,6 @@
 define(["jquery", "comm", "client", "./dungeon_renderer", "./display", "./minimap",
         "./settings", "./enums",
-        "./text", "./menu", "./player"],
+        "./text", "./menu", "./player", "./messages"],
 function ($, comm, client, dungeon_renderer, display, minimap, settings, enums) {
     var layout_parameters, ui_state;
 
@@ -48,9 +48,10 @@ function ($, comm, client, dungeon_renderer, display, minimap, settings, enums) 
         $("#stats").html(old_html);
 
         // Determine height of messages area
+        var msg_height = layout_parameters.msg_height;
         old_html = $("#messages").html();
         s = "";
-        for (var i = 0; i < layout_parameters.msg_height; i++)
+        for (var i = 0; i < msg_height+1; i++)
             s = s + "<br>";
         $("#messages").html(s);
         var msg_height_px = $("#messages").outerHeight();
@@ -64,6 +65,10 @@ function ($, comm, client, dungeon_renderer, display, minimap, settings, enums) 
 
         // Position controls
         client.set_layer("normal");
+        $("#messages_container").css({
+            "max-height": msg_height_px*msg_height/(msg_height+1),
+            "width": remaining_width
+        });
         dungeon_renderer.fit_to(remaining_width, remaining_height,
                                 layout_parameters.show_diameter);
 

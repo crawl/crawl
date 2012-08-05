@@ -101,7 +101,6 @@ TilesFramework::TilesFramework()
       m_need_full_map(true),
       m_text_crt("crt"),
       m_text_menu("menu_txt"),
-      m_text_message("messages"),
       m_print_fg(15)
 {
     screen_cell_t default_cell;
@@ -1290,7 +1289,6 @@ void TilesFramework::resize()
     // Send the client the necessary data to do the layout
     _send_layout_data();
 
-    m_text_message.resize(crawl_view.msgsz.x, crawl_view.msgsz.y);
     m_text_crt.resize(crawl_view.termsz.x, crawl_view.termsz.y);
     m_text_menu.resize(crawl_view.termsz.x, crawl_view.termsz.y);
 }
@@ -1339,8 +1337,9 @@ void TilesFramework::_send_everything()
     json_close_object();
     finish_message();
 
+    webtiles_send_last_messages();
+
     m_text_crt.send(true);
-    m_text_message.send(true);
     m_text_menu.send(true);
 }
 
@@ -1375,10 +1374,6 @@ void TilesFramework::cgotoxy(int x, int y, GotoRegion region)
             break;
         }
         break;
-    case GOTO_MSG:
-        set_ui_state(UI_NORMAL);
-        m_print_area = &m_text_message;
-        break;
     case GOTO_STAT:
         set_ui_state(UI_NORMAL);
         m_print_area = NULL;
@@ -1395,10 +1390,10 @@ void TilesFramework::redraw()
     if (!has_receivers()) return;
 
     m_text_crt.send();
-    m_text_message.send();
     m_text_menu.send();
 
     _send_player();
+    webtiles_send_messages();
 
     if (m_need_redraw)
     {

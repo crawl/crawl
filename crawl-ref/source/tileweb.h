@@ -246,7 +246,6 @@ protected:
 
     WebTextArea m_text_crt;
     WebTextArea m_text_menu;
-    WebTextArea m_text_message;
 
     GotoRegion m_cursor_region;
 

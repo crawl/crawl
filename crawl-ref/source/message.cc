@@ -38,6 +38,10 @@
 #include "luaterp.h"
 #endif
 
+#ifdef USE_TILE_WEB
+#include "tileweb.h"
+#endif
+
 static bool _ends_in_punctuation(const string& text)
 {
     switch (text[text.size() - 1])
@@ -583,7 +587,23 @@ public:
             else
                 cprintf("--more--");
 
+#ifdef USE_TILE_WEB
+            tiles.json_open_object();
+            tiles.json_write_string("msg", "more");
+            tiles.json_write_int("full", full);
+            tiles.json_write_int("user", user);
+            tiles.json_close_object();
+            tiles.finish_message();
+#endif
+
             readkey_more(user);
+
+#ifdef USE_TILE_WEB
+            tiles.json_open_object();
+            tiles.json_write_string("msg", "hide_more");
+            tiles.json_close_object();
+            tiles.finish_message();
+#endif
         }
     }
 };
@@ -620,15 +640,24 @@ class message_store
     bool last_of_turn;
     int temp; // number of temporary messages
 
+    int unsent; // number of messages not yet sent to the webtiles client
+    bool prev_unsent;
+    int client_rollback;
+
 public:
-    message_store() : last_of_turn(false), temp(0) {}
+    message_store() : last_of_turn(false), temp(0),
+                      unsent(0), prev_unsent(false), client_rollback(0) {}
 
     void add(const message_item& msg)
     {
         if (msg.channel != MSGCH_PROMPT && prev_msg.merge(msg))
+        {
+            prev_unsent = true;
             return;
+        }
         flush_prev();
         prev_msg = msg;
+        prev_unsent = true;
         if (msg.channel == MSGCH_PROMPT || _temporary)
             flush_prev();
     }
@@ -651,6 +680,7 @@ public:
 
     void roll_back()
     {
+        client_rollback = std::max(0, temp - unsent);
         msgs.roll_back(temp);
         temp = 0;
     }
@@ -675,6 +705,11 @@ public:
             msgwin.new_cmdturn(true);
             last_of_turn = false;
         }
+        if (prev_unsent)
+        {
+            unsent++;
+            prev_unsent = false;
+        }
     }
 
     void new_turn()
@@ -698,10 +733,68 @@ public:
         last_of_turn = false;
         temp = 0;
     }
+
+#ifdef USE_TILE_WEB
+    void send(int old_msgs = 0)
+    {
+        unsent += old_msgs;
+        if (unsent == 0) return;
+
+        tiles.json_open_object();
+        tiles.json_write_string("msg", "msgs");
+        if (client_rollback > 0)
+        {
+            tiles.json_write_int("rollback", client_rollback);
+            client_rollback = 0;
+        }
+        if (old_msgs > 0)
+        {
+            tiles.json_write_int("old_msgs", old_msgs);
+        }
+        tiles.json_open_array("data");
+        for (int i = -unsent; i < 0; ++i)
+        {
+            message_item& msg = msgs[i];
+            tiles.json_open_object();
+            tiles.json_write_string("text", msg.text);
+            tiles.json_write_int("turn", msg.turn);
+            tiles.json_write_int("channel", msg.channel);
+            if (msg.repeats > 1)
+                tiles.json_write_int("repeats", msg.repeats);
+            tiles.json_close_object();
+        }
+        if (prev_unsent && have_prev())
+        {
+            tiles.json_open_object();
+            tiles.json_write_string("text", prev_msg.text);
+            tiles.json_write_int("turn", prev_msg.turn);
+            tiles.json_write_int("channel", prev_msg.channel);
+            if (prev_msg.repeats > 1)
+                tiles.json_write_int("repeats", prev_msg.repeats);
+            tiles.json_close_object();
+        }
+        tiles.json_close_array();
+        tiles.json_close_object();
+        tiles.finish_message();
+        unsent = 0;
+        prev_unsent = false;
+    }
+#endif
 };
 
 // Circular buffer for keeping past messages.
 message_store buffer;
+
+#ifdef USE_TILE_WEB
+void webtiles_send_messages()
+{
+    buffer.send();
+}
+void webtiles_send_last_messages(int n)
+{
+    buffer.send(n);
+}
+#endif
 
 static FILE* _msg_dump_file = NULL;
 
