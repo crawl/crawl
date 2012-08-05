@@ -768,7 +768,10 @@ void bolt::draw(const coord_def& p)
         tile_beam = tileidx_bolt(*this);
 
     if (tile_beam != -1)
-        tiles.add_overlay(p, tile_beam);
+    {
+        int dist = (p - source).rdist();
+        tiles.add_overlay(p, vary_bolt_tile(tile_beam, dist));
+    }
 #endif
 #ifndef USE_TILE_LOCAL
     cgotoxy(drawpos.x, drawpos.y, GOTO_DNGN);
@@ -5501,7 +5504,11 @@ void bolt::explosion_draw_cell(const coord_def& p)
         const coord_def drawpos = grid2view(p);
 #ifdef USE_TILE
         if (in_los_bounds_v(drawpos))
-            tiles.add_overlay(p, tileidx_bolt(*this));
+        {
+            int dist = (p - source).rdist();
+            tileidx_t tile = tileidx_bolt(*this);
+            tiles.add_overlay(p, vary_bolt_tile(tile, dist));
+        }
 #endif
 #ifndef USE_TILE_LOCAL
         // bounds check
