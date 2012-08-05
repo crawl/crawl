@@ -345,7 +345,6 @@ liquefaction2
 
 %sdir dngn/gateways
 %rim 1
-enter_hell DNGN_ENTER_HELL
 enter_zot_closed DNGN_ENTER_ZOT_CLOSED
 enter_zot_open DNGN_ENTER_ZOT_OPEN
 %rim 0
@@ -360,13 +359,28 @@ enter_slime DNGN_ENTER_SLIME_PITS
 enter_vaults DNGN_ENTER_VAULTS
 enter_crypt DNGN_ENTER_CRYPT
 enter_tomb DNGN_ENTER_TOMB
-enter_dis DNGN_ENTER_DIS
-enter_gehenna DNGN_ENTER_GEHENNA
-enter_cocytus DNGN_ENTER_COCYTUS
-enter_tartarus DNGN_ENTER_TARTARUS
+enter_hell1 DNGN_ENTER_HELL
+enter_hell2
+enter_hell3
+return_vestibule DNGN_RETURN_VESTIBULE
+stone_arch_hell DNGN_STONE_ARCH_HELL
+enter_dis1 DNGN_ENTER_DIS
+enter_dis2
+enter_dis3
+enter_gehenna1 DNGN_ENTER_GEHENNA
+enter_gehenna2
+enter_gehenna3
+enter_cocytus1 DNGN_ENTER_COCYTUS
+enter_cocytus2
+enter_cocytus3
+enter_tartarus1 DNGN_ENTER_TARTARUS
+enter_tartarus2
+enter_tartarus3
 return_hell DNGN_RETURN_HELL
 
-enter_abyss DNGN_ENTER_ABYSS
+enter_abyss1 DNGN_ENTER_ABYSS
+enter_abyss2
+enter_abyss3
 exit_abyss DNGN_EXIT_ABYSS
 exit_abyss_flickering
 
