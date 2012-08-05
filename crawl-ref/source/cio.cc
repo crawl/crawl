@@ -287,6 +287,14 @@ int line_reader::read_line(bool clear_previous)
     if (bufsz <= 0)
         return false;
 
+#ifdef USE_TILE_WEB
+    tiles.redraw();
+    tiles.json_open_object();
+    tiles.json_write_string("msg", "get_line");
+    tiles.json_close_object();
+    tiles.finish_message();
+#endif
+
     cursor_control con(true);
 
     if (clear_previous)

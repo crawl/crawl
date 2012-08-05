@@ -6,6 +6,10 @@ body {
     margin: 4px;
 }
 
+#left_column {
+    line-height: 1em;
+}
+
 #right_column {
     display: inline-block;
     vertical-align: top;
@@ -51,20 +55,38 @@ body {
     background-color: #FF3000; /* Red */
 }
 #stats_hp_bar_increase {
-    background-color: #5266FF; /* Light blue */
+    background-color: #64B946; /* Green */
 }
 
 #stats_mp_bar {
     background-color: #525252;
 }
 #stats_mp_bar_full {
-    background-color: #5266FF;
+    background-color: #5266FF; /* Light blue */
 }
 #stats_mp_bar_decrease {
     background-color: #EE5CEE; /* Magenta */
 }
 #stats_mp_bar_increase {
     background-color: #0052FF; /* Blue */
+}
+
+#message_pane {
+    width: 100%;
+}
+#messages_container {
+    display: block;
+    overflow-y: hidden;
+}
+#messages {
+    line-height: 1.4em;
+    width: 100%;
+}
+.prefix_glyph {
+    color: #babdb6;
+}
+.game_message {
+    white-space: pre-wrap;
 }
 
 #minimap_block {
