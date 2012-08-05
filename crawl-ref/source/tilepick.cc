@@ -4314,7 +4314,88 @@ tileidx_t tileidx_cloud(const cloud_info &cl, bool disturbance)
 tileidx_t tileidx_bolt(const bolt &bolt)
 {
     const int col = bolt.colour;
+    const coord_def diff = bolt.target - bolt.source;
+    const int dir = _tile_bolt_dir(diff.x, diff.y);
+
+    switch (col)
+    {
+    case WHITE:
+        if (bolt.name == "crystal spear")
+        {
+            return TILE_BOLT_CRYSTAL_SPEAR + dir;
+        }
+        else if (bolt.name == "puff of frost")
+        {
+            return TILE_BOLT_FROST; // TODO: vary by position
+        }
+        break;
+
+    case LIGHTCYAN:
+        if (bolt.name == "iron shot")
+        {
+            return TILE_BOLT_IRON_SHOT + dir;
+        }
+        else if (bolt.name == "zap")
+        {
+            return TILE_BOLT_ZAP + dir % tile_main_count(TILE_BOLT_ZAP);
+        }
+        break;
+
+    case RED:
+        if (bolt.name == "puff of flame")
+        {
+            return TILE_BOLT_FLAME; // TODO: vary by position
+        }
+        break;
+
+    case LIGHTMAGENTA:
+        if (bolt.name == "magic dart")
+        {
+            return TILE_BOLT_MAGIC_DART; // TODO: vary by position
+        }
+        break;
+
+    case BROWN:
+        if (bolt.name == "rocky blast"
+            || bolt.name == "large rocky blast"
+            || bolt.name == "blast of sand")
+        {
+            return TILE_BOLT_SANDBLAST; // TODO: vary by position
+        }
+        break;
+
+    case GREEN:
+        if (bolt.name == "sting")
+        {
+            return TILE_BOLT_STING; // TODO: vary by position
+        }
+        break;
+
+    case LIGHTGREY:
+        if (bolt.name == "stone arrow")
+        {
+            return TILE_BOLT_STONE_ARROW + dir;
+        }
+        break;
+    }
+
     return tileidx_zap(col);
+}
+
+tileidx_t vary_bolt_tile(tileidx_t tile, int dist)
+{
+    switch (tile)
+    {
+    case TILE_BOLT_FROST:
+    case TILE_BOLT_MAGIC_DART:
+    case TILE_BOLT_SANDBLAST:
+    case TILE_BOLT_STING:
+        return tile + dist % tile_main_count(tile);
+    case TILE_BOLT_FLAME:
+        return tile + random2(tile_main_count(tile));
+    default:
+        return tile;
+    }
 }
 
 tileidx_t tileidx_zap(int colour)
