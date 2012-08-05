@@ -909,13 +909,36 @@ int process_disconnected_zones(int x1, int y1, int x2, int y2,
                 ++ngood;
             else if (fill)
             {
+                // Don't fill in areas connected to vaults.
+                // We want vaults to be accessible; if the area is disconneted
+                // from the rest of the level, this will cause the level to be
+                // vetoed later on.
+                bool veto = false;
+                std::vector<coord_def> coords;
                 for (int fy = y1; fy <= y2 ; ++fy)
+                {
                     for (int fx = x1; fx <= x2; ++fx)
-                        if (travel_point_distance[fx][fy] == nzones
-                            && !map_masked(coord_def(fx, fy), MMT_VAULT))
+                    {
+                        if (travel_point_distance[fx][fy] == nzones)
                         {
-                            _set_grd(coord_def(fx, fy), fill);
+                            if (map_masked(coord_def(fx, fy), MMT_VAULT))
+                            {
+                                veto = true;
+                                break;
+                            }
+                            else
+                                coords.push_back(coord_def(fx, fy));
                         }
+                    }
+                    if (veto)
+                        break;
+                }
+                if (!veto)
+                    for (std::vector<coord_def>::iterator it = coords.begin();
+                         it != coords.end(); it++)
+                    {
+                        _set_grd(*it, fill);
+                    }
             }
         }
     }
