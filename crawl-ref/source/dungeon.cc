@@ -912,7 +912,7 @@ int process_disconnected_zones(int x1, int y1, int x2, int y2,
                 for (int fy = y1; fy <= y2 ; ++fy)
                     for (int fx = x1; fx <= x2; ++fx)
                         if (travel_point_distance[fx][fy] == nzones
-                            && !map_masked(coord_def(fx, fy), MMT_OPAQUE))
+                            && !map_masked(coord_def(fx, fy), MMT_VAULT))
                         {
                             _set_grd(coord_def(fx, fy), fill);
                         }
@@ -3888,6 +3888,12 @@ static bool _build_vault_impl(const map_def *vault,
         const bool spotty = player_in_branch(BRANCH_ORCISH_MINES)
                             || player_in_branch(BRANCH_SLIME_PITS);
         place.connect(spotty);
+    }
+
+    if (!build_only && (placed_vault_orientation != MAP_ENCOMPASS || is_layout)
+        && player_in_branch(BRANCH_SWAMP))
+    {
+        process_disconnected_zones(0, 0, GXM-1, GYM-1, true, DNGN_MANGROVE);
     }
 
     // Fire any post-place hooks defined for this map; any failure
