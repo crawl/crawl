@@ -792,7 +792,8 @@ void flush_input_buffer(int reason)
 
     if (crawl_state.is_replaying_keys() && reason != FLUSH_ABORT_MACRO
         && reason != FLUSH_KEY_REPLAY_CANCEL
-        && reason != FLUSH_REPLAY_SETUP_FAILURE)
+        && reason != FLUSH_REPLAY_SETUP_FAILURE
+        && reason != FLUSH_ON_FAILURE)
     {
         return;
     }
