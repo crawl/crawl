@@ -415,6 +415,20 @@ void ghost_demon::init_player_ghost()
                 if (brand > MAX_PAN_LORD_BRANDS)
                     brand = SPWPN_NORMAL;
             }
+            else if (weapon.base_type == OBJ_STAVES)
+            {
+                switch (static_cast<stave_type>(weapon.sub_type))
+                {
+                // very bad approximations
+                case STAFF_FIRE: brand = SPWPN_FLAMING; break;
+                case STAFF_COLD: brand = SPWPN_FREEZING; break;
+                case STAFF_POISON: brand = SPWPN_VENOM; break;
+                case STAFF_DEATH: brand = SPWPN_PAIN; break;
+                case STAFF_AIR: brand = SPWPN_ELECTROCUTION; break;
+                case STAFF_EARTH: brand = SPWPN_VORPAL; break;
+                default: ;
+                }
+            }
         }
     }
     else
