@@ -5,6 +5,7 @@ function ($, comm) {
     function handle_player_message(data)
     {
         log(data);
+        delete data.msg;
 
         $.extend(you, data);
     }
