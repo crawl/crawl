@@ -7,6 +7,7 @@
 #define TILEWEB_H
 
 #include "externs.h"
+#include "status.h"
 #include "tileweb-text.h"
 #include "tiledoll.h"
 #include "viewgeom.h"
@@ -29,6 +30,41 @@ enum WebtilesUIState
     UI_NORMAL,
     UI_CRT,
     UI_VIEW_MAP,
+};
+
+struct player_info
+{
+    std::string name;
+    std::string job_title;
+    bool wizard;
+    std::string species;
+    std::string god;
+    bool under_penance;
+    uint8_t piety_rank;
+
+    int hp, hp_max, real_hp_max;
+    int mp, mp_max;
+
+    int armour_class;
+    int evasion;
+    int shield_class;
+
+    int8_t strength, strength_max;
+    int8_t intel, intel_max;
+    int8_t dex, dex_max;
+
+    int experience_level;
+    int8_t exp_progress;
+    int gold;
+    int zot_points;
+    int elapsed_time;
+    int lives, deaths;
+
+    std::string place;
+    int depth;
+    coord_def position;
+
+    std::vector<status_info> status;
 };
 
 class TilesFramework
@@ -221,6 +257,8 @@ protected:
 
     dolls_data last_player_doll;
 
+    player_info m_current_player_info;
+
     void _send_version();
 
     void _send_everything();
@@ -234,7 +272,20 @@ protected:
     void _send_monster(const coord_def &gc, const monster_info* m,
                        map<uint32_t, coord_def>& new_monster_locs,
                        bool force_full);
-    void _send_player();
+    void _send_player(bool force_full = false);
+
+    void _update_string(bool force, std::string& current,
+                        const std::string& next,
+                        const std::string& name);
+    template<class T> void _update_int(bool force, T& current, T next,
+                                 const std::string& name)
+    {
+        if (force || (current != next))
+        {
+            json_write_int(name, next);
+            current = next;
+        }
+    }
 };
 
 // Main interface for tiles functions

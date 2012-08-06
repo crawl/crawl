@@ -3,10 +3,12 @@
 #ifdef USE_TILE_WEB
 
 #include "artefact.h"
+#include "branch.h"
 #include "coord.h"
 #include "directn.h"
 #include "env.h"
 #include "files.h"
+#include "lang-fake.h"
 #include "libutil.h"
 #include "map_knowledge.h"
 #include "menu.h"
@@ -15,8 +17,10 @@
 #include "notes.h"
 #include "options.h"
 #include "player.h"
+#include "religion.h"
 #include "state.h"
 #include "stuff.h"
+#include "skills2.h"
 #include "tiledef-dngn.h"
 #include "tiledef-gui.h"
 #include "tiledef-main.h"
@@ -464,6 +468,127 @@ void TilesFramework::set_ui_state(WebtilesUIState state)
     _send_ui_state(state);
 }
 
+void TilesFramework::_update_string(bool force, std::string& current,
+                                    const std::string& next,
+                                    const std::string& name)
+{
+    if (force || (current != next))
+    {
+        json_write_string(name, next);
+        current = next;
+    }
+}
+
+const int statuses[] = {
+    STATUS_STR_ZERO, STATUS_INT_ZERO, STATUS_DEX_ZERO,
+    STATUS_BURDEN,
+    STATUS_HUNGER,
+    DUR_PETRIFYING,
+    DUR_PETRIFIED,
+    DUR_PARALYSIS,
+    DUR_JELLY_PRAYER,
+    DUR_TELEPORT,
+    DUR_DEATHS_DOOR,
+    DUR_QUAD_DAMAGE,
+    DUR_DEFLECT_MISSILES,
+    DUR_REPEL_MISSILES,
+    STATUS_REGENERATION,
+    DUR_BERSERK,
+    DUR_RESISTANCE,
+    DUR_INSULATION,
+    DUR_SEE_INVISIBLE,
+    STATUS_AIRBORNE,
+    DUR_INVIS,
+    DUR_CONTROL_TELEPORT,
+    DUR_SILENCE,
+    DUR_CONFUSING_TOUCH,
+    DUR_BARGAIN,
+    STATUS_SAGE,
+    DUR_FIRE_SHIELD,
+    DUR_SLIMIFY,
+    DUR_SURE_BLADE,
+    DUR_CONF,
+    DUR_LOWERED_MR,
+    STATUS_BEHELD,
+    DUR_LIQUID_FLAMES,
+    DUR_MISLED,
+    DUR_POISONING,
+    STATUS_SICK,
+    DUR_NAUSEA,
+    STATUS_ROT,
+    STATUS_NET,
+    STATUS_CONTAMINATION,
+    DUR_SWIFTNESS,
+    STATUS_SPEED,
+    DUR_DEATH_CHANNEL,
+    DUR_TELEPATHY,
+    DUR_STEALTH,
+    DUR_BREATH_WEAPON,
+    DUR_EXHAUSTED,
+    DUR_POWERED_BY_DEATH,
+    DUR_TRANSFORMATION,
+    DUR_AFRAID,
+    DUR_MIRROR_DAMAGE,
+    DUR_SCRYING,
+    STATUS_CLINGING,
+    DUR_TORNADO,
+    DUR_LIQUEFYING,
+    DUR_HEROISM,
+    DUR_FINESSE,
+    DUR_LIFESAVING,
+    DUR_DARKNESS,
+    STATUS_FIREBALL,
+    DUR_SHROUD_OF_GOLUBRIA,
+    DUR_TORNADO_COOLDOWN,
+    STATUS_BACKLIT,
+    STATUS_UMBRA,
+    STATUS_CONSTRICTED,
+    DUR_DIVINE_STAMINA,
+    STATUS_AUGMENTED,
+    STATUS_SUPPRESSED,
+    STATUS_TERRAIN,
+    STATUS_SILENCE,
+};
+
+static bool _update_statuses(player_info& c)
+{
+    bool changed = false;
+    unsigned int counter = 0;
+    status_info inf;
+    for (unsigned int i = 0; i < ARRAYSZ(statuses); ++i)
+    {
+        fill_status_info(statuses[i], &inf);
+        if (!inf.light_text.empty())
+        {
+            if (!changed)
+            {
+                if (counter >= c.status.size()
+                    || inf.light_text != c.status[counter].light_text
+                    || inf.light_colour != c.status[counter].light_colour)
+                {
+                    changed = true;
+                }
+            }
+
+            if (changed)
+            {
+                c.status.resize(counter + 1);
+                c.status[counter] = inf;
+            }
+
+            counter++;
+        }
+    }
+    if (c.status.size() != counter)
+    {
+        ASSERT(!changed);
+        changed = true;
+        c.status.resize(counter);
+    }
+
+    return changed;
+}
+
 
 static void _send_doll(const dolls_data &doll, bool submerged, bool ghost)
 {
@@ -575,24 +700,120 @@ static void _send_mcache(mcache_entry *entry, bool submerged)
     tiles.json_close_array();
 }
 
-void TilesFramework::_send_player()
+void TilesFramework::_send_player(bool force_full)
 {
+    player_info& c = m_current_player_info;
+
     json_open_object();
     json_write_string("msg", "player");
+    json_treat_as_empty();
 
-    json_write_int("hp", you.hp);
-    json_write_int("hp_max", you.hp_max);
-    json_write_int("magic_points", you.magic_points);
-    json_write_int("max_magic_points", you.max_magic_points);
+    _update_string(force_full, c.name, you.your_name, "name");
+    _update_string(force_full, c.job_title, filtered_lang(player_title()),
+                   "title");
+    _update_int(force_full, c.wizard, you.wizard, "wizard");
+    _update_string(force_full, c.species, species_name(you.species),
+                   "species");
+    std::string god = "";
+    if (you.religion == GOD_JIYVA)
+        god = god_name_jiyva(true);
+    else if (you.religion != GOD_NO_GOD)
+        god = god_name(you.religion);
+    _update_string(force_full, c.god, god, "god");
+    _update_int(force_full, c.under_penance, player_under_penance(), "penance");
+    uint8_t prank = 0;
+    if (you.religion == GOD_XOM)
+    {
+        if (!you.gift_timeout)
+            prank = 2;
+        else if (you.gift_timeout == 1)
+            prank = 1;
+    }
+    else if (you.religion != GOD_NO_GOD)
+    {
+        prank = std::max(0, piety_rank() - 1);
+    }
+    _update_int(force_full, c.piety_rank, prank, "piety_rank");
 
-    json_open_object("pos");
-    json_write_int("x", you.pos().x - m_origin.x);
-    json_write_int("y", you.pos().y - m_origin.y);
-    json_close_object();
+    _update_int(force_full, c.hp, you.hp, "hp");
+    _update_int(force_full, c.hp_max, you.hp_max, "hp_max");
+    _update_int(force_full, c.real_hp_max, get_real_hp(true, true), "real_hp_max");
 
-    json_close_object();
+    _update_int(force_full, c.mp, you.magic_points, "mp");
+    _update_int(force_full, c.mp_max, you.max_magic_points, "mp_max");
 
-    send_message();
+    _update_int(force_full, c.armour_class, you.armour_class(), "ac");
+    _update_int(force_full, c.evasion, player_evasion(), "ev");
+    _update_int(force_full, c.shield_class, player_shield_class(), "sh");
+
+    _update_int(force_full, c.strength, (int8_t) you.strength(), "str");
+    _update_int(force_full, c.strength_max, (int8_t) you.max_strength(), "str_max");
+    _update_int(force_full, c.intel, (int8_t) you.intel(), "int");
+    _update_int(force_full, c.intel_max, (int8_t) you.max_intel(), "int_max");
+    _update_int(force_full, c.dex, (int8_t) you.dex(), "dex");
+    _update_int(force_full, c.dex_max, (int8_t) you.max_dex(), "dex_max");
+
+    if (you.species == SP_FELID)
+    {
+        _update_int(force_full, c.lives, you.lives, "lives");
+        _update_int(force_full, c.deaths, you.deaths, "deaths");
+    }
+
+    _update_int(force_full, c.experience_level, you.experience_level, "xl");
+    _update_int(force_full, c.exp_progress, (int8_t) get_exp_progress(), "progress");
+    _update_int(force_full, c.gold, you.gold, "gold");
+
+    if (crawl_state.game_is_zotdef())
+    {
+        _update_int(force_full, c.zot_points, you.zot_points, "zp");
+    }
+    _update_int(force_full, c.elapsed_time, you.elapsed_time, "time");
+
+    const PlaceInfo& place = you.get_place_info();
+    std::string short_name = branches[place.branch].shortname;
+
+    if (brdepth[place.branch] == 1)
+    {
+        // Definite articles
+        if (place.branch == BRANCH_ABYSS)
+            short_name.insert(0, "The ");
+        // Indefinite articles
+        else if (place.branch != BRANCH_PANDEMONIUM &&
+                 !is_connected_branch(place.branch))
+        {
+            short_name = article_a(short_name);
+        }
+    }
+    _update_string(force_full, c.place, short_name, "place");
+    _update_int(force_full, c.depth, brdepth[place.branch] > 1 ? you.depth : 0, "depth");
+
+    if (m_origin.equals(-1, -1))
+        m_origin = you.position;
+    coord_def pos = you.position - m_origin;
+    if (force_full || (c.position != pos))
+    {
+        json_open_object("pos");
+        json_write_int("x", pos.x);
+        json_write_int("y", pos.y);
+        json_close_object();
+        c.position = pos;
+    }
+
+    if (_update_statuses(c))
+    {
+        json_open_object("status");
+        for (unsigned int i = 0; i < c.status.size(); ++i)
+        {
+            json_open_object(c.status[i].light_text);
+            json_write_int("colour", c.status[i].light_colour);
+            json_close_object();
+        }
+        json_close_object();
+    }
+
+    json_close_object(true);
+
+    finish_message();
 }
 
 static bool _in_water(const packed_cell &cell)
@@ -1092,7 +1313,7 @@ void TilesFramework::_send_everything()
     finish_message();
 
      // Player
-    _send_player();
+    _send_player(true);
 
     send_message("{\"msg\":\"redraw\"}");
 
@@ -1181,6 +1402,8 @@ void TilesFramework::redraw()
     m_text_message.send();
     m_text_menu.send();
 
+    _send_player();
+
     if (m_need_redraw)
     {
         json_open_object();
@@ -1209,9 +1432,6 @@ void TilesFramework::redraw()
         {
             _send_map(false);
         }
-
-        // Player
-        _send_player();
 
         if (!json_is_empty())
         {

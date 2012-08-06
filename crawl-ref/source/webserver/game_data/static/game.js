@@ -1,4 +1,3 @@
-
 define(["jquery", "comm", "client", "./dungeon_renderer", "./display", "./minimap",
         "./settings", "./enums",
         "./text", "./menu", "./player"],
