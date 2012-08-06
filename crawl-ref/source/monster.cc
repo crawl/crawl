@@ -132,11 +132,11 @@ void monster::reset()
     ghost.reset(NULL);
     seen_context = SC_NONE;
     props.clear();
+    clear_constricted();
+    // no actual in-game monster should be reset while still constricting
+    ASSERT(!constricting);
 
     client_id = 0;
-
-    stop_constricting_all(false, true);
-    stop_being_constricted(true);
 }
 
 void monster::init_with(const monster& mon)
