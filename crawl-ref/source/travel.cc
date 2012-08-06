@@ -551,6 +551,8 @@ static bool _prompt_stop_explore(int es_why)
 #define ES_altar  (Options.explore_stop & ES_ALTAR)
 #define ES_portal (Options.explore_stop & ES_PORTAL)
 #define ES_branch (Options.explore_stop & ES_BRANCH)
+#define ES_stack  (Options.explore_stop & ES_GREEDY_VISITED_ITEM_STACK)
+#define ES_sacrificiable (Options.explore_stop & ES_GREEDY_SACRIFICIABLE)
 
 // Adds interesting stuff on the point p to explore_discoveries.
 inline static void _check_interesting_square(const coord_def pos,
@@ -926,15 +928,20 @@ command_type travel()
         // Stop greedy explore when visiting an unverified stash.
         if ((*move_x || *move_y)
             && you.running == RMODE_EXPLORE_GREEDY
-            && (Options.explore_stop & ES_GREEDY_VISITED_ITEM_STACK))
+            && (ES_stack || ES_sacrificiable))
         {
             const coord_def newpos = you.pos() + coord_def(*move_x, *move_y);
             if (newpos == you.running.pos)
             {
                 const LevelStashes *lev = StashTrack.find_current_level();
-                if (lev && lev->unverified_stash(newpos))
+                const bool stack = lev && lev->unverified_stash(newpos)
+                                   && ES_stack;
+                const bool sacrificiable = lev && lev->sacrificiable(newpos)
+                                           && ES_sacrificiable;
+                if (stack || sacrificiable)
                 {
-                    if (_prompt_stop_explore(ES_GREEDY_VISITED_ITEM_STACK))
+                    if (stack && _prompt_stop_explore(ES_GREEDY_VISITED_ITEM_STACK)
+                        || sacrificiable && _prompt_stop_explore(ES_GREEDY_SACRIFICIABLE))
                     {
                         explore_stopped_pos = newpos;
                         stop_running();

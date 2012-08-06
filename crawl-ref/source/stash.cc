@@ -30,6 +30,7 @@
 #include "notes.h"
 #include "options.h"
 #include "place.h"
+#include "religion.h"
 #include "shopping.h"
 #include "spl-book.h"
 #include "stash.h"
@@ -219,6 +220,21 @@ bool Stash::pickup_eligible() const
 {
     for (int i = 0, size = items.size(); i < size; ++i)
         if (item_needs_autopickup(items[i]))
+            return true;
+
+    return false;
+}
+
+bool Stash::sacrificiable() const
+{
+    if (!(Options.explore_stop & ES_GREEDY_SACRIFICIABLE)
+        || !god_likes_items(you.religion))
+    {
+        return false;
+    }
+
+    for (int i = 0, size = items.size(); i < size; ++i)
+        if (god_likes_item(you.religion, items[i]))
             return true;
 
     return false;
@@ -1146,7 +1162,7 @@ bool LevelStashes::shop_needs_visit(const coord_def& c) const
 bool LevelStashes::needs_visit(const coord_def& c) const
 {
     const Stash *s = find_stash(c);
-    if (s && (s->unverified() || s->pickup_eligible()))
+    if (s && (s->unverified() || s->pickup_eligible() || s->sacrificiable()))
         return true;
 
     return shop_needs_visit(c);
@@ -1156,6 +1172,12 @@ bool LevelStashes::unverified_stash(const coord_def &c) const
 {
     const Stash *s = find_stash(c);
     return (s && s->unverified());
+}
+
+bool LevelStashes::sacrificiable(const coord_def &c) const
+{
+    const Stash *s = find_stash(c);
+    return (s && s->sacrificiable());
 }
 
 ShopInfo &LevelStashes::get_shop(const coord_def& c)

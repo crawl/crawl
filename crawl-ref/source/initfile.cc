@@ -857,7 +857,8 @@ void game_options::reset_options()
 
     explore_stop           = (ES_ITEM | ES_STAIR | ES_PORTAL | ES_BRANCH
                               | ES_SHOP | ES_ALTAR | ES_GREEDY_PICKUP_SMART
-                              | ES_GREEDY_VISITED_ITEM_STACK);
+                              | ES_GREEDY_VISITED_ITEM_STACK
+                              | ES_GREEDY_SACRIFICIABLE);
 
     // The prompt conditions will be combined into explore_stop after
     // reading options.
@@ -1776,6 +1777,8 @@ int game_options::read_explore_stop_conditions(const std::string &field) const
             conditions |= ES_ARTEFACT;
         else if (c == "rune" || c == "runes")
             conditions |= ES_RUNE;
+        else if (c == "greedy_sacrificiable" || c == "greedy_sacrificiables")
+            conditions |= ES_GREEDY_SACRIFICIABLE;
     }
     return conditions;
 }
