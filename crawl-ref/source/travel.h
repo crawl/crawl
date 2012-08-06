@@ -197,6 +197,9 @@ enum explore_stop_type
     ES_ARTEFACT                  = 0x1000,
     ES_RUNE                      = 0x2000,
     ES_BRANCH                    = 0x4000,
+
+    // Explored into view of an item which can be sacrificied
+    ES_GREEDY_SACRIFICIABLE      = 0x8000,
 };
 
 ////////////////////////////////////////////////////////////////////////////
