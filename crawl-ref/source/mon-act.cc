@@ -3247,7 +3247,7 @@ static bool _do_move_monster(monster* mons, const coord_def& delta)
         {
             simple_monster_message(mons, " struggles to escape constriction.");
             _swim_or_move_energy(mons);
-            return(true);
+            return true;
         }
     }
 

@@ -2443,7 +2443,7 @@ static bool _find_monster(const coord_def& where, int mode, bool need_path,
         return mons_is_evolvable(mon);
 
     if (mode == TARG_HOSTILE_UNDEAD)
-        return  !mon->friendly() && mon->holiness() == MH_UNDEAD;
+        return !mon->friendly() && mon->holiness() == MH_UNDEAD;
 
     ASSERT(mode == TARG_ENEMY);
     if (mon->friendly())

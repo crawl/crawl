@@ -215,7 +215,7 @@ void OGLStateManager::load_texture(unsigned char *pixels, unsigned int width,
     {
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        if( xoffset >= 0 && yoffset >= 0 )
+        if (xoffset >= 0 && yoffset >= 0)
             glTexSubImage2D(GL_TEXTURE_2D, 0, xoffset, yoffset, width, height,
                          texture_format, format, pixels);
         else
