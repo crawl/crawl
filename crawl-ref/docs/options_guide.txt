@@ -20,8 +20,6 @@ The contents of this text are:
 2-  File System and Sound.
                 crawl_dir, morgue_dir, save_dir, macro_dir, sound
 3-  Lua files.
-                stash.lua, wield.lua, kills.lua, runrest.lua,
-                gearset.lua, trapwalk.lua, autofight.lua
 4-  Interface.
 4-a     Dropping and Picking up.
                 autopickup, autopickup_exceptions, default_autopickup,
