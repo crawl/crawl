@@ -37,7 +37,7 @@ lorsqu'il vise ses ennemis en tirant ou en lançant des sorts.
 %%%%
 amulet of rage
 
-Cette amulette permet au porteur de  tenter d'entrer dans un état de folie
+Cette amulette permet au porteur de tenter d'entrer dans un état de folie
 furieuse.
 %%%%
 amulet of resist corrosion
@@ -74,13 +74,18 @@ amulet of stasis
 
 Une amulette fabriquée méticuleusement avec des charmes pour bloquer les effets
 magiques et physiologiques qui pourraient autrement téléporter, ralentir,
-accélérer ou paralyser son porteur. Bien que l'amulette soit efficace contre la
-plupart des magies translocatives, les changements de plan tels que le
-bannissement sont au delà des ses capacités bloquantes.
+accélérer ou paralyser son porteur.
+
+Bien que l'amulette soit efficace contre la plupart des magies translocatives,
+les changements de plan tels que le bannissement sont au delà des ses capacités
+bloquantes.
 %%%%
 animal skin
 
-La peau d'un animal.
+Une grande pièce de peau épaisse couverte de fourrure, découpée du corps d'un
+animal et porté comme un vêtement primitif. Elle offre une protection
+rudimentaire, mais, n'ayant jamais été tannée, elle dégage une légère odeur de
+chaire pourrie.
 %%%%
 apple
 
@@ -92,7 +97,8 @@ Un succulent fruit jaune-orange, prunus armeniaca.
 %%%%
 arrow
 
-Une flèche, pour le tir à l'arc.
+Un long projectile, destiné à être tiré à l'aide d'un arc ou d'un arc long,
+avec un empennage en plume à une extrémité et une pointe à l'autre.
 %%%%
 banana
 
@@ -105,7 +111,8 @@ Une longue perche avec une énorme lame tranchante au bout.
 %%%%
 battleaxe
 
-Une large hache munie d'un double tranchant.
+Une large hache de guerre à deux main munie d'un redoutable double tranchant,
+destinée à être utilisée au combat par des guerriers entraînés.
 %%%%
 beef jerky
 
@@ -114,7 +121,7 @@ Une tranche séchée de vache ou de bœuf mort.
 blessed double sword
 
 Une arme magique, dotée de deux lames aiguisées comme des rasoirs. Elle a été
-améliorée par Le Lumineux.
+améliorée par l'Étincelant.
 %%%%
 bolt
 
