@@ -114,6 +114,18 @@ kill_timeout = 10 # Seconds until crawl is killed after HUP is sent
 nick_regex = r"^[a-zA-Z0-9]{3,20}$"
 max_passwd_length = 20
 
+# crypt() algorithm, e.g. "1" for MD5 or "6" for SHA-512; see crypt(3). If
+# false, use traditional DES (but then only the first eight characters of the
+# password are significant). If set to "broken", use traditional DES with
+# the password itself as the salt; this is necessary for compatibility with
+# dgamelaunch, but should be avoided if possible because it leaks the first
+# two characters of the password's plaintext.
+crypt_algorithm = "broken"
+
+# The length of the salt string to use. If crypt_algorithm is false, this
+# setting is ignored and the salt is two characters.
+crypt_salt_length = 16
+
 login_token_lifetime = 7 # Days
 
 uid = None  # If this is not None, the server will setuid to that (numeric) id
