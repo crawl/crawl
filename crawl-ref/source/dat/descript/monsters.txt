@@ -466,8 +466,6 @@ remaining eye is not very good, and he has mistaken you for one.
 {{
     if you.can_smell() then
         return "He smells terrible."
-    else
-        return ""
     end
 }}
 %%%%
@@ -476,8 +474,6 @@ Wiglaf
 A fat dwarf wearing a stupid-looking hat. {{
     if you.can_smell() then
         return "He reeks of alcohol. "
-    else
-        return ""
     end
 }}There is something odd to his unsteady walk, as if this unprobable rotund
 person was accustomed to motion more swift than that of a drunken dwarf. His
@@ -2174,8 +2170,6 @@ next victim.
         else
             return "It stinks."
         end
-    else
-        return ""
     end
 }}
 %%%%%
@@ -2482,8 +2476,6 @@ A small and slimy dragon, covered in swamp muck.
 {{
     if you.can_smell() then
         return "It smells terrible."
-    else
-        return ""
     end
 }}
 %%%%%
