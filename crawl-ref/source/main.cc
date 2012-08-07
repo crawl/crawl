@@ -3175,14 +3175,10 @@ static void _player_reacts_to_monsters()
         you.redraw_stats[STAT_DEX] = true;
         you.redraw_stats[STAT_INT] = true;
 
-        if(you.suppressed())
-        {
+        if (you.suppressed())
             you.props["exists_if_suppressed"] = true;
-        }
         else
-        {
            you.props.erase("exists_if_suppressed");
-        }
     }
 }
 

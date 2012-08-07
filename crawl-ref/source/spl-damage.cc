@@ -1994,8 +1994,8 @@ spret_type cast_fragmentation(int pow, const actor *caster,
         }
         else if (caster->is_player())
         {
-            if(_player_hurt_monster(*mon, beam.damage.roll(),
-                                      BEAM_DISINTEGRATION))
+            if (_player_hurt_monster(*mon, beam.damage.roll(),
+                                     BEAM_DISINTEGRATION))
             {
                 beam.damage.num += 2;
             }

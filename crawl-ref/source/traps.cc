@@ -1046,7 +1046,7 @@ int trap_def::max_damage(const actor& act)
         case TRAP_SPEAR:  return mon ? 10 : 26;
         case TRAP_BOLT:   return mon ? 18 : 40;
         case TRAP_BLADE:  return mon ? 38 : 76;
-        default:          return  0;
+        default:          return 0;
     }
 
     return 0;
