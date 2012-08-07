@@ -5790,7 +5790,7 @@ bool monster::attempt_escape(int attempts)
 bool monster::has_usable_tentacle() const
 {
     if (mons_species() != MONS_OCTOPODE)
-        return(false);
+        return false;
 
     // ignoring monster octopodes with weapons, for now
     return (num_constricting() < 8);
