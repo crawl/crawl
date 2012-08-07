@@ -609,7 +609,7 @@ static time_t _parse_time(const std::string &st)
     struct tm  date;
 
     if (st.length() < 15)
-        return (static_cast<time_t>(0));
+        return static_cast<time_t>(0);
 
     date.tm_year  =   _val_char(st[0]) * 1000 + _val_char(st[1]) * 100
                     + _val_char(st[2]) *   10 + _val_char(st[3]) - 1900;
@@ -1091,7 +1091,7 @@ std::string scorefile_entry::make_oneline(const std::string &ml) const
             trim_string(s);
         }
     }
-    return (comma_separated_line(lines.begin(), lines.end(), " ", " "));
+    return comma_separated_line(lines.begin(), lines.end(), " ", " ");
 }
 
 std::string scorefile_entry::long_kill_message() const

@@ -548,7 +548,7 @@ std::string trap_name(trap_type trap)
     COMPILE_CHECK(ARRAYSZ(trap_names) == NUM_TRAPS);
 
     if (trap >= TRAP_DART && trap < NUM_TRAPS)
-        return (trap_names[trap]);
+        return trap_names[trap];
     return "";
 }
 
@@ -4017,14 +4017,14 @@ static const char *divine_title[NUM_GODS][8] =
 
 static int _piety_level()
 {
-    return ((you.piety >  160) ? 7 :
-            (you.piety >= 120) ? 6 :
-            (you.piety >= 100) ? 5 :
-            (you.piety >=  75) ? 4 :
-            (you.piety >=  50) ? 3 :
-            (you.piety >=  30) ? 2 :
-            (you.piety >    5) ? 1
-                               : 0);
+    return (you.piety >  160) ? 7 :
+           (you.piety >= 120) ? 6 :
+           (you.piety >= 100) ? 5 :
+           (you.piety >=  75) ? 4 :
+           (you.piety >=  50) ? 3 :
+           (you.piety >=  30) ? 2 :
+           (you.piety >    5) ? 1
+                              : 0;
 }
 
 std::string god_title(god_type which_god, species_type which_species)

@@ -408,7 +408,7 @@ static const zap_info* _seek_zap(zap_type z_type)
     if (zap_index[z_type] == -1)
         return NULL;
     else
-        return (&zap_data[zap_index[z_type]]);
+        return &zap_data[zap_index[z_type]];
 }
 
 int zap_power_cap(zap_type z_type)
@@ -494,8 +494,8 @@ bool bolt::can_affect_actor(const actor *act) const
 
 bool bolt::actor_wall_shielded(const actor *act) const
 {
-    return (act->is_player()? false :
-            mons_wall_shielded(act->as_monster()));
+    return act->is_player()? false :
+           mons_wall_shielded(act->as_monster());
 }
 
 // Affect actor in wall unless it can shield itself using the wall.
@@ -2359,7 +2359,7 @@ static int _potion_beam_flavour_to_colour(beam_type flavour)
         return GREEN;
 
     case BEAM_POTION_POISON:
-        return (coinflip() ? GREEN : LIGHTGREEN);
+        return coinflip() ? GREEN : LIGHTGREEN;
 
     case BEAM_POTION_MIASMA:
     case BEAM_POTION_BLACK_SMOKE:
@@ -2370,10 +2370,10 @@ static int _potion_beam_flavour_to_colour(beam_type flavour)
         return LIGHTGREY;
 
     case BEAM_POTION_FIRE:
-        return (coinflip() ? RED : LIGHTRED);
+        return coinflip() ? RED : LIGHTRED;
 
     case BEAM_POTION_COLD:
-        return (coinflip() ? BLUE : LIGHTBLUE);
+        return coinflip() ? BLUE : LIGHTBLUE;
 
     case BEAM_POTION_BLUE_SMOKE:
         return LIGHTBLUE;
@@ -5644,7 +5644,7 @@ bool bolt::nasty_to(const monster* mon) const
 
     // Friendly and good neutral monsters don't mind being teleported.
     if (flavour == BEAM_TELEPORT)
-        return (!mon->wont_attack());
+        return !mon->wont_attack();
 
     // degeneration / sleep / enslave soul
     if (flavour == BEAM_DEGENERATE
@@ -5660,7 +5660,7 @@ bool bolt::nasty_to(const monster* mon) const
 
     // pain / agony
     if (flavour == BEAM_PAIN)
-        return (!mon->res_negative_energy());
+        return !mon->res_negative_energy();
 
     // everything else is considered nasty by everyone
     return true;
@@ -5803,7 +5803,7 @@ actor* bolt::agent() const
     if (YOU_KILL(nominal_ktype))
         return &you;
     else if (!invalid_monster_index(nominal_source))
-        return (&menv[nominal_source]);
+        return &menv[nominal_source];
     else
         return NULL;
 }

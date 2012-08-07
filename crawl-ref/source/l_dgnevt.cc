@@ -123,7 +123,7 @@ static int dgn_dgn_event(lua_State *ls)
 static dgn_event_type dgn_param_to_event_type(lua_State *ls, int n)
 {
     if (lua_isnumber(ls, n))
-        return (static_cast<dgn_event_type>(luaL_checkint(ls, n)));
+        return static_cast<dgn_event_type>(luaL_checkint(ls, n));
     else if (lua_isstring(ls, n))
         return dgn_event_type_by_name(lua_tostring(ls, n));
     else

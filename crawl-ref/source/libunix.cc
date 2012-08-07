@@ -87,7 +87,7 @@ static unsigned int convert_to_curses_attr(int chattr)
 
 static inline short macro_colour(short col)
 {
-    return (Options.colour[ col ]);
+    return Options.colour[ col ];
 }
 
 // Translate DOS colors to curses.

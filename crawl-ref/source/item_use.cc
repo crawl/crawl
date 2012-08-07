@@ -993,7 +993,7 @@ static int _prompt_ring_to_remove(int new_ring)
 
     const int eqslot = (c == lslot || c == '<') ? EQ_LEFT_RING
                                                 : EQ_RIGHT_RING;
-    return (you.equip[eqslot]);
+    return you.equip[eqslot];
 }
 
 static int _prompt_ring_to_remove_octopode(int new_ring)
@@ -1051,7 +1051,7 @@ static int _prompt_ring_to_remove_octopode(int new_ring)
     else if (key_is_escape(c) || eqslot == EQ_NONE)
         return -2;
 
-    return (you.equip[eqslot]);
+    return you.equip[eqslot];
 }
 
 // Checks whether a to-be-worn or to-be-removed item affects
@@ -1187,7 +1187,7 @@ bool safe_to_remove(const item_def &item, bool quiet)
         {
             std::string fname = (feat == DNGN_LAVA ? "lava" : "deep water");
             std::string prompt = "Really remove this item over " + fname + "?";
-            return (yesno(prompt.c_str(), false, 'n'));
+            return yesno(prompt.c_str(), false, 'n');
         }
     }
 
@@ -2589,7 +2589,7 @@ static int _handle_enchant_armour(int item_slot, std::string *pre_msg)
         if (ac_change)
             you.redraw_armour_class = true;
 
-        return (result ? 1 : 0);
+        return result ? 1 : 0;
     }
     while (true);
 

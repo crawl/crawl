@@ -1786,7 +1786,7 @@ static bool _is_level_corrupted()
     if (player_in_branch(BRANCH_ABYSS))
         return true;
 
-    return (!!env.markers.find(MAT_CORRUPTION_NEXUS));
+    return !!env.markers.find(MAT_CORRUPTION_NEXUS);
 }
 
 bool is_level_incorruptible()

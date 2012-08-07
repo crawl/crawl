@@ -482,7 +482,7 @@ static tag_pref _str_to_tag_pref(const char *opt)
     for (int i = 0; i < TAGPREF_MAX; i++)
     {
         if (!strcasecmp(opt, tag_prefs[i]))
-            return ((tag_pref)i);
+            return (tag_pref)i;
     }
 
     return TAGPREF_ENEMY;
@@ -3244,7 +3244,7 @@ std::string game_options::resolve_include(
     // multiuser system. On multiuser systems assert_read_safe_path()
     // will throw an exception if it sees absolute paths.
     if (is_absolute_path(included_file))
-        return (file_exists(included_file)? included_file : "");
+        return file_exists(included_file)? included_file : "";
 
     if (!parent_file.empty())
     {
@@ -3344,7 +3344,7 @@ void game_options::report_error(const char* format, ...)
 
 static std::string check_string(const char *s)
 {
-    return (s? s : "");
+    return s? s : "";
 }
 
 void get_system_environment(void)

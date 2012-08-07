@@ -229,7 +229,7 @@ int cards_in_deck(const item_def &deck)
     const CrawlHashTable &props = deck.props;
     ASSERT(props.exists("cards"));
 
-    return (props["cards"].get_vector().size());
+    return props["cards"].get_vector().size();
 }
 
 static void _shuffle_deck(item_def &deck)
@@ -3117,7 +3117,7 @@ colour_t deck_rarity_to_colour(deck_rarity_type rarity)
     }
 
     case DECK_RARITY_RARE:
-        return (coinflip() ? MAGENTA : BROWN);
+        return coinflip() ? MAGENTA : BROWN;
 
     case DECK_RARITY_LEGENDARY:
         return LIGHTMAGENTA;

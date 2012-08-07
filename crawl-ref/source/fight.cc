@@ -488,5 +488,5 @@ int player_weapon_str_weight()
 // define one of these.
 int player_weapon_dex_weight(void)
 {
-    return (10 - player_weapon_str_weight());
+    return 10 - player_weapon_str_weight();
 }

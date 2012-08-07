@@ -362,7 +362,7 @@ void autoid_unrand(item_def &item)
 unique_item_status_type get_unique_item_status(int art)
 {
     ASSERT(art > UNRAND_START && art < UNRAND_LAST);
-    return (you.unique_items[art - UNRAND_START]);
+    return you.unique_items[art - UNRAND_START];
 }
 
 static void _set_unique_item_status(int art, unique_item_status_type status)
@@ -681,7 +681,7 @@ static int _need_bonus_stat_props(const artefact_properties_t &proprt)
     if (num_acc_dam > 0)
         return random2(3);
 
-    return (1 + random2(2));
+    return 1 + random2(2);
 }
 
 static void _get_randart_properties(const item_def &item,
@@ -1295,7 +1295,7 @@ int artefact_wpn_property(const item_def &item, artefact_prop_type prop,
 
     _known = known[prop];
 
-    return (proprt[prop]);
+    return proprt[prop];
 }
 
 int artefact_wpn_property(const item_def &item, artefact_prop_type prop)
@@ -1314,7 +1314,7 @@ int artefact_known_wpn_property(const item_def &item,
     artefact_wpn_properties(item, proprt, known);
 
     if (known[prop])
-        return (proprt[prop]);
+        return proprt[prop];
     else
         return 0;
 }
@@ -1396,7 +1396,7 @@ static std::string _artefact_name_lookup(const item_def &item,
                                  const std::string &lookup)
 {
     const std::string name = getRandNameString(lookup);
-    return (!name.empty()? replace_name_parts(name, item) : name);
+    return name.empty() ? name : replace_name_parts(name, item);
 }
 
 static bool _artefact_name_lookup(std::string &result,
@@ -1630,7 +1630,7 @@ int get_unrandart_num(const char *name)
         art = replace_all(art, "'", "");
         lowercase(art);
         if (art == name || art.find(quoted) != std::string::npos)
-            return (UNRAND_START + i);
+            return UNRAND_START + i;
     }
     return SPWPN_NORMAL;
 }

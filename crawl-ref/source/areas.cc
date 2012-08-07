@@ -536,7 +536,7 @@ bool haloed(const coord_def& p)
 
 bool actor::haloed() const
 {
-    return (::haloed(pos()));
+    return ::haloed(pos());
 }
 
 int player::halo_radius2() const
@@ -680,7 +680,7 @@ bool umbraed(const coord_def& p)
 // Whether actor is in an umbra.
 bool actor::umbraed() const
 {
-    return (::umbraed(pos()));
+    return ::umbraed(pos());
 }
 
 // Stub for player umbra.
@@ -726,7 +726,7 @@ int monster::suppression_radius2() const
 
 bool actor::suppressed() const
 {
-    return (::suppressed(pos()));
+    return ::suppressed(pos());
 }
 
 int player::suppression_radius2() const

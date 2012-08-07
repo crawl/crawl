@@ -159,7 +159,7 @@ public:
 
     virtual int highlight_colour() const
     {
-        return (menu_colour(get_text(), "", tag));
+        return menu_colour(get_text(), "", tag);
     }
 
     virtual bool selected() const

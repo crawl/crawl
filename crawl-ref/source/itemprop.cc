@@ -1012,7 +1012,7 @@ special_missile_type get_ammo_brand(const item_def &item)
     if (item.base_type != OBJ_MISSILES || is_artefact(item))
         return SPMSL_NORMAL;
 
-    return (static_cast<special_missile_type>(item.special));
+    return static_cast<special_missile_type>(item.special);
 }
 
 special_armour_type get_armour_ego_type(const item_def &item)
@@ -1023,11 +1023,11 @@ special_armour_type get_armour_ego_type(const item_def &item)
 
     if (is_artefact(item))
     {
-        return (static_cast<special_armour_type>(
-                    artefact_wpn_property(item, ARTP_BRAND)));
+        return static_cast<special_armour_type>(
+                   artefact_wpn_property(item, ARTP_BRAND));
     }
 
-    return (static_cast<special_armour_type>(item.special));
+    return static_cast<special_armour_type>(item.special);
 }
 
 // Armour information and checking functions.
@@ -1139,12 +1139,12 @@ equipment_type get_armour_slot(const item_def &item)
 {
     ASSERT(item.base_type == OBJ_ARMOUR);
 
-    return (Armour_prop[ Armour_index[item.sub_type] ].slot);
+    return Armour_prop[ Armour_index[item.sub_type] ].slot;
 }
 
 equipment_type get_armour_slot(armour_type arm)
 {
-    return (Armour_prop[ Armour_index[arm] ].slot);
+    return Armour_prop[ Armour_index[arm] ].slot;
 }
 
 bool jewellery_is_amulet(const item_def &item)
@@ -1543,7 +1543,7 @@ hands_reqd_type hands_reqd(const item_def &item, size_type size)
     else if (ret < HANDS_ONE)
         ret = HANDS_ONE;
 
-    return (static_cast< hands_reqd_type >(ret));
+    return static_cast<hands_reqd_type>(ret);
 }
 
 bool is_whip_type(int wpn_type)
@@ -1742,19 +1742,19 @@ int weapon_str_weight(const item_def &wpn)
     ASSERT(is_weapon(wpn));
 
     if (wpn.base_type == OBJ_STAVES)
-        return (Weapon_prop[ Weapon_index[WPN_STAFF] ].str_weight);
+        return Weapon_prop[ Weapon_index[WPN_STAFF] ].str_weight;
 
     if (wpn.base_type == OBJ_RODS)
-        return (Weapon_prop[ Weapon_index[WPN_CLUB] ].str_weight);
+        return Weapon_prop[ Weapon_index[WPN_CLUB] ].str_weight;
 
-    return (Weapon_prop[ Weapon_index[wpn.sub_type] ].str_weight);
+    return Weapon_prop[ Weapon_index[wpn.sub_type] ].str_weight;
 }
 
 // Returns melee skill of item.
 skill_type weapon_skill(const item_def &item)
 {
     if (item.base_type == OBJ_WEAPONS && !is_range_weapon(item))
-        return (Weapon_prop[ Weapon_index[item.sub_type] ].skill);
+        return Weapon_prop[ Weapon_index[item.sub_type] ].skill;
     else if (item.base_type == OBJ_RODS)
         return SK_MACES_FLAILS; // Rods are short and stubby
     else if (item.base_type == OBJ_STAVES)
@@ -1779,7 +1779,7 @@ skill_type weapon_skill(object_class_type wclass, int wtype)
 skill_type range_skill(const item_def &item)
 {
     if (item.base_type == OBJ_WEAPONS && is_range_weapon(item))
-        return (Weapon_prop[ Weapon_index[item.sub_type] ].skill);
+        return Weapon_prop[ Weapon_index[item.sub_type] ].skill;
     else if (item.base_type == OBJ_MISSILES)
     {
         if (!has_launcher(item))
@@ -1988,7 +1988,7 @@ missile_type fires_ammo_type(const item_def &item)
     if (item.base_type != OBJ_WEAPONS)
         return MI_NONE;
 
-    return (Weapon_prop[Weapon_index[item.sub_type]].ammo);
+    return Weapon_prop[Weapon_index[item.sub_type]].ammo;
 }
 
 bool is_range_weapon(const item_def &item)
@@ -2024,7 +2024,7 @@ bool is_throwable(const actor *actor, const item_def &wpn, bool force)
     size_type bodysize = actor->body_size();
 
     if (wpn.base_type == OBJ_WEAPONS)
-        return (Weapon_prop[Weapon_index[wpn.sub_type]].throwable);
+        return Weapon_prop[Weapon_index[wpn.sub_type]].throwable;
     else if (wpn.base_type == OBJ_MISSILES)
     {
         if (!force)
@@ -2044,7 +2044,7 @@ bool is_throwable(const actor *actor, const item_def &wpn, bool force)
             }
         }
 
-        return (Missile_prop[Missile_index[wpn.sub_type]].throwable);
+        return Missile_prop[Missile_index[wpn.sub_type]].throwable;
     }
 
     return false;
@@ -2061,7 +2061,7 @@ launch_retval is_launched(const actor *actor, const item_def *launcher,
         return LRET_LAUNCHED;
     }
 
-    return (is_throwable(actor, missile) ? LRET_THROWN : LRET_FUMBLED);
+    return is_throwable(actor, missile) ? LRET_THROWN : LRET_FUMBLED;
 }
 
 //
@@ -2218,7 +2218,7 @@ int food_value(const item_def &item)
 int food_turns(const item_def &item)
 {
     ASSERT(item.defined() && item.base_type == OBJ_FOOD);
-    return (Food_prop[Food_index[item.sub_type]].turns);
+    return Food_prop[Food_index[item.sub_type]].turns;
 }
 
 bool can_cut_meat(const item_def &item)
@@ -2573,9 +2573,9 @@ int property(const item_def &item, int prop_type)
     {
     case OBJ_ARMOUR:
         if (prop_type == PARM_AC)
-            return (Armour_prop[ Armour_index[item.sub_type] ].ac);
+            return Armour_prop[ Armour_index[item.sub_type] ].ac;
         else if (prop_type == PARM_EVASION)
-            return (Armour_prop[ Armour_index[item.sub_type] ].ev);
+            return Armour_prop[ Armour_index[item.sub_type] ].ev;
         break;
 
     case OBJ_WEAPONS:
@@ -2594,18 +2594,18 @@ int property(const item_def &item, int prop_type)
             }
         }
         if (prop_type == PWPN_DAMAGE)
-            return (Weapon_prop[ Weapon_index[item.sub_type] ].dam);
+            return Weapon_prop[ Weapon_index[item.sub_type] ].dam;
         else if (prop_type == PWPN_HIT)
-            return (Weapon_prop[ Weapon_index[item.sub_type] ].hit);
+            return Weapon_prop[ Weapon_index[item.sub_type] ].hit;
         else if (prop_type == PWPN_SPEED)
-            return (Weapon_prop[ Weapon_index[item.sub_type] ].speed);
+            return Weapon_prop[ Weapon_index[item.sub_type] ].speed;
         else if (prop_type == PWPN_ACQ_WEIGHT)
-            return (Weapon_prop[ Weapon_index[item.sub_type] ].acquire_weight);
+            return Weapon_prop[ Weapon_index[item.sub_type] ].acquire_weight;
         break;
 
     case OBJ_MISSILES:
         if (prop_type == PWPN_DAMAGE)
-            return (Missile_prop[ Missile_index[item.sub_type] ].dam);
+            return Missile_prop[ Missile_index[item.sub_type] ].dam;
         break;
 
     case OBJ_STAVES:
@@ -2613,11 +2613,11 @@ int property(const item_def &item, int prop_type)
         weapon_sub = (item.base_type == OBJ_RODS) ? WPN_CLUB : WPN_STAFF;
 
         if (prop_type == PWPN_DAMAGE)
-            return (Weapon_prop[ Weapon_index[weapon_sub] ].dam);
+            return Weapon_prop[ Weapon_index[weapon_sub] ].dam;
         else if (prop_type == PWPN_HIT)
-            return (Weapon_prop[ Weapon_index[weapon_sub] ].hit);
+            return Weapon_prop[ Weapon_index[weapon_sub] ].hit;
         else if (prop_type == PWPN_SPEED)
-            return (Weapon_prop[ Weapon_index[weapon_sub] ].speed);
+            return Weapon_prop[ Weapon_index[weapon_sub] ].speed;
         break;
 
     default:
@@ -2924,7 +2924,7 @@ std::string item_base_name(object_class_type type, int sub_type)
     case OBJ_ARMOUR:
         return Armour_prop[Armour_index[sub_type]].name;
     case OBJ_JEWELLERY:
-        return (jewellery_is_amulet(sub_type) ? "amulet" : "ring");
+        return jewellery_is_amulet(sub_type) ? "amulet" : "ring";
     default:
         return "";
     }
@@ -2932,7 +2932,7 @@ std::string item_base_name(object_class_type type, int sub_type)
 
 std::string food_type_name(int sub_type)
 {
-    return (Food_prop[Food_index[sub_type]].name);
+    return Food_prop[Food_index[sub_type]].name;
 }
 
 const char* weapon_base_name(uint8_t subtype)

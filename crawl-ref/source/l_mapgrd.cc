@@ -44,7 +44,7 @@ static char* mapgrd_glyph(lua_State *ls, int &col, int &row)
         return NULL;
 
     coord_def mc(col, row);
-    return (&lines(mc));
+    return &lines(mc);
 }
 
 static int mapgrd_col_get(lua_State *ls)

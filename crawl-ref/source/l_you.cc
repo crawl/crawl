@@ -289,7 +289,7 @@ LUAFN(you_mutation)
     }
 
     std::string err = make_stringf("No such mutation: '%s'.", mutname.c_str());
-    return (luaL_argerror(ls, 1, err.c_str()));
+    return luaL_argerror(ls, 1, err.c_str());
 }
 
 LUAFN(you_is_level_on_stack)
@@ -558,7 +558,7 @@ LUAFN(you_in_branch)
                     "'%s' matches both branch '%s' and '%s'",
                     name, branches[br].abbrevname,
                     branches[i].abbrevname);
-                return (luaL_argerror(ls, 1, err.c_str()));
+                return luaL_argerror(ls, 1, err.c_str());
             }
             br = i;
         }
@@ -567,7 +567,7 @@ LUAFN(you_in_branch)
     if (br == NUM_BRANCHES)
     {
         std::string err = make_stringf("'%s' matches no branches.", name);
-        return (luaL_argerror(ls, 1, err.c_str()));
+        return luaL_argerror(ls, 1, err.c_str());
     }
 
     bool in_branch = (br == you.where_are_you);

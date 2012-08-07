@@ -19,7 +19,7 @@ T* random_choose_weighted(std::vector<std::pair<T, int> >& choices)
     {
         sum += choices[i].second;
         if (sum > r)
-            return (&choices[i].first);
+            return &choices[i].first;
     }
     return NULL;
 }

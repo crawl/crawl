@@ -533,7 +533,7 @@ static int monster_get(lua_State *ls)
 
     for (unsigned i = 0; i < ARRAYSZ(mons_attrs); ++i)
         if (!strcmp(attr, mons_attrs[i].attribute))
-            return (mons_attrs[i].accessor(ls, mons, attr));
+            return mons_attrs[i].accessor(ls, mons, attr);
 
     return 0;
 }
@@ -552,7 +552,7 @@ static const char *_monster_behaviour_names[] = {
 static const char* _behaviour_name(beh_type beh)
 {
     if (0 <= beh && beh < NUM_BEHAVIOURS)
-        return (_monster_behaviour_names[beh]);
+        return _monster_behaviour_names[beh];
     else
         return "invalid";
 }

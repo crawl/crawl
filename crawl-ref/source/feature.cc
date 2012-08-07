@@ -16,7 +16,7 @@ const feature_def &get_feature_def(show_type object)
     // any instead, or the base feature if there are no items.
     if (object.cls == SH_MONSTER)
         object.cls = (object.item != SHOW_ITEM_NONE)? SH_ITEM : SH_FEATURE;
-    return (Features[object]);
+    return Features[object];
 }
 
 const feature_def &get_feature_def(dungeon_feature_type feat)
@@ -25,7 +25,7 @@ const feature_def &get_feature_def(dungeon_feature_type feat)
     show_type object;
     object.cls = SH_FEATURE;
     object.feat = feat;
-    return (Features[object]);
+    return Features[object];
 }
 
 static void _apply_feature_overrides()

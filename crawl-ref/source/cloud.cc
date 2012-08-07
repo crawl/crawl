@@ -1227,7 +1227,7 @@ bool in_what_cloud(cloud_type type)
 std::string cloud_name_at_index(int cloudno)
 {
     if (!env.cloud[cloudno].name.empty())
-        return (env.cloud[cloudno].name);
+        return env.cloud[cloudno].name;
     else
         return cloud_type_name(env.cloud[cloudno].type);
 }
@@ -1377,7 +1377,7 @@ int get_cloud_colour(int cloudno)
 {
     int which_colour = LIGHTGREY;
     if (env.cloud[cloudno].colour != -1)
-        return (env.cloud[cloudno].colour);
+        return env.cloud[cloudno].colour;
 
     switch (env.cloud[cloudno].type)
     {

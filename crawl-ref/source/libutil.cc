@@ -92,7 +92,7 @@ description_level_type description_type_by_name(const char *desc)
 
 static std::string _number_to_string(unsigned number, bool in_words)
 {
-    return (in_words? number_in_words(number) : make_stringf("%u", number));
+    return in_words? number_in_words(number) : make_stringf("%u", number);
 }
 
 std::string apply_description(description_level_type desc,

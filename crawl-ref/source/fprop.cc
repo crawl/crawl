@@ -24,7 +24,7 @@ bool is_sanctuary(const coord_def& p)
 
 bool is_bloodcovered(const coord_def& p)
 {
-    return (testbits(env.pgrid(p), FPROP_BLOODY));
+    return testbits(env.pgrid(p), FPROP_BLOODY);
 }
 
 bool is_tide_immune(const coord_def &p)

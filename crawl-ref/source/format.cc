@@ -387,7 +387,7 @@ int formatted_string::find_last_colour() const
     {
         for (int i = ops.size() - 1; i >= 0; --i)
             if (ops[i].type == FSOP_COLOUR)
-                return (ops[i].x);
+                return ops[i].x;
     }
     return LIGHTGREY;
 }

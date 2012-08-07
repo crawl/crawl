@@ -35,7 +35,7 @@ void dgn_event_dispatcher::move_listeners(
 
 bool dgn_event_dispatcher::has_listeners_at(const coord_def &pos) const
 {
-    return (grid_triggers[pos.x][pos.y].get());
+    return grid_triggers[pos.x][pos.y].get();
 }
 
 bool dgn_event_dispatcher::fire_vetoable_position_event(

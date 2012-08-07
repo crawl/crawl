@@ -1087,7 +1087,7 @@ static int item_get(lua_State *ls)
 
     for (unsigned i = 0; i < ARRAYSZ(item_attrs); ++i)
         if (!strcmp(attr, item_attrs[i].attribute))
-            return (item_attrs[i].accessor(ls, iw, attr));
+            return item_attrs[i].accessor(ls, iw, attr);
 
     return 0;
 }
