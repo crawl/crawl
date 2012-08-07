@@ -47,6 +47,7 @@ Character
 * Grey Draconians are better at Earth and worse at Air, get more AC, and
   no longer fumble in water.
 * Felids are better at combat and Evocations, worse at Summonings.
+* Felid pounces (sneak attacks) do more damage.
 * The Evocations skill increases max MP.
 * Forms without some sort of hands can't use wands/etc.
 
