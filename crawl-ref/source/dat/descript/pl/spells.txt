@@ -563,10 +563,6 @@ Ten czar przemieszcza wystrzelony lub rzucony pocisk wprost z twego łuki/ręki
 na piędź przed cel, wielce poprawiając celność. Nie ma to jednak wpływu na
 zadane obrażenia.
 %%%%
-Projected Noise spell
-
-Ten czar wywołuje dźwięk we wskazanym odległym miejscu.
-%%%%
 Recall spell
 
 Ten czar przemieszcza wszelkie przyjazne istoty w dużym zasięgu wprost koło
