@@ -3,13 +3,14 @@ import sqlite3
 import re
 import os.path
 import logging
+import random
 
-from config import max_passwd_length, nick_regex, password_db
+from config import (max_passwd_length, nick_regex, password_db,
+                    crypt_algorithm, crypt_salt_length)
 
 def user_passwd_match(username, passwd): # Returns the correctly cased username.
     try:
         passwd = passwd[0:max_passwd_length]
-        crypted_pw = crypt.crypt(passwd, passwd)
     except:
         return None
 
@@ -20,9 +21,9 @@ def user_passwd_match(username, passwd): # Returns the correctly cased username.
                   (username,))
         result = c.fetchone()
 
-        if result is None or crypted_pw != result[1]:
+        if result is None:
             return None
-        else:
+        elif crypt.crypt(passwd, result[1]) == result[1]:
             return result[0]
     finally:
         if c: c.close()
@@ -45,6 +46,10 @@ def ensure_user_db_exists():
         if c: c.close()
         if conn: conn.close()
 
+saltchars = "./0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+
+def make_salt(saltlen):
+    return ''.join(random.choice(saltchars) for x in xrange(0,saltlen))
 
 def register_user(username, passwd, email): # Returns an error message or None
     if passwd == "": return "The password can't be empty!"
@@ -52,7 +57,14 @@ def register_user(username, passwd, email): # Returns an error message or None
     username = username.strip()
     if not re.match(nick_regex, username): return "Invalid username!"
 
-    crypted_pw = crypt.crypt(passwd, passwd)
+    if crypt_algorithm == "broken":
+        salt = passwd
+    elif crypt_algorithm:
+        salt = "$%s$%s$" % (crypt_algorithm, make_salt(crypt_salt_length))
+    else:
+        salt = make_salt(2)
+
+    crypted_pw = crypt.crypt(passwd, salt)
 
     try:
         conn = sqlite3.connect(password_db)
