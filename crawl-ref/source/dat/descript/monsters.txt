@@ -609,9 +609,11 @@ ballistomycete
 A lumpy reddish fungus covered in knobbly rhizome growths, growing well in the
 dank underground dungeon. {{
     if you.god() == "Fedhas" then
-        return "Fedhas has suppressed its production of giant spores to protect you from explosions."
+        return "Fedhas has suppressed its production of giant spores to " ..
+               "protect you from explosions."
     else
-        return "It will occasionally produce giant spore balls, which in turn will give rise to more ballistomycetes."
+        return "It will occasionally produce giant spore balls, which in " ..
+               "turn will give rise to more ballistomycetes."
     end
 }}
 %%%%
@@ -1160,7 +1162,8 @@ periodically emits loud, blood-curdling shrieks.
 %%%%
 freed slave
 
-A human who has just been released from magical enslavement. It tries to stand proudly before you, despite its lingering fear and unkempt appearance.
+A human who has just been released from magical enslavement. It tries to stand
+proudly before you, despite its lingering fear and unkempt appearance.
 %%%%
 freezing wraith
 
@@ -1288,10 +1291,10 @@ energies. Every now and then it seems to pulsate.
 %%%%
 emperor scorpion
 
-The emperor scorpion is the largest arachnid known to exist. The massive barb on
-its tail drips with a deadly venom, and its pincers are big enough to shear you
-in half. Though the ordinary dungeon scorpion may be both large and dangerous,
-this freakish relative puts it to shame.
+The emperor scorpion is the largest arachnid known to exist. The massive barb
+on its tail drips with a deadly venom, and its pincers are big enough to shear
+you in half. Though the ordinary dungeon scorpion may be both large and
+dangerous, this freakish relative puts it to shame.
 %%%%
 giant slug
 
@@ -3105,11 +3108,16 @@ mommy tell you to not disrupt people from having a meal?
 %%%%
 young spriggan druid
 
-A junior member of the order of spriggans sworn to protect nature. While
-less dangerous than the elders, this one is perfectly capable of dealing
-with trespassers like you.{{ if you.god() == "Fedhas" then
-return "\n\nThose foul druids care mostly for animals, instead of taking " ..
-"proper care of plants as Fedhas commands."; end }}
+A junior member of the order of spriggans sworn to protect nature. While less
+dangerous than the elders, this one is perfectly capable of dealing with
+trespassers like you.
+
+{{
+    if you.god() == "Fedhas" then
+        return "Those foul druids care mostly for animals, instead of " ..
+               "taking proper care of plants as Fedhas commands.";
+    end
+}}
 %%%%
 vampire noble
 

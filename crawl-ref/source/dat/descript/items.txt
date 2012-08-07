@@ -865,14 +865,14 @@ A yellow fruit.
 lightning rod
 
 Once, a wizard ignorant of the workings of mundane items misunderstood the
-purpose of lightning rods. Instead of making one that merely drew
-lightning, he made one that created it instead.
+purpose of lightning rods. Instead of making one that merely drew lightning, he
+made one that created it instead.
 
 This rod shoots continuous lightning: the discharge is sustained, and can be
-redirected to new targets by evoking the rod in subsequent turns (failing
-to do so will release the trigger). The rod takes a moment to warm up,
-making short bursts rather ineffective. Once the zap is active, one can wave
-the rod, creating impressive and damaging arcs of electricity.
+redirected to new targets by evoking the rod in subsequent turns (failing to do
+so will release the trigger). The rod takes a moment to warm up, making short
+bursts rather ineffective. Once the zap is active, one can wave the rod,
+creating impressive and damaging arcs of electricity.
 %%%%
 long sword
 

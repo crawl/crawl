@@ -9,7 +9,9 @@ Also, press <w>Space</w> to clear the <cyan>--more--</cyan> prompts.
 ##############################################
 tutorial1 start
 
-In this lesson you're going to learn how to move around and explore a level. You can move <localtiles>by clicking somewhere with your <w>[Mouse]</w>, or </localtiles>with the <w>[arrow keys]</w>.
+In this lesson you're going to learn how to move around and explore a level.
+You can move <localtiles>by clicking somewhere with your <w>[Mouse]</w>, or
+</localtiles>with the <w>[arrow keys]</w>.
 %%%%
 tutorial1 go_on
 
@@ -17,66 +19,96 @@ You're doing great! Now, explore a bit until you reach the next blue square.
 %%%%
 tutorial1 diagonal
 
-You can move diagonally by way of the <w>[number pad]</w> (try Numlock on/off) or by using the <w>[vi keys]</w>.
+You can move diagonally by way of the <w>[number pad]</w> (try Numlock on/off)
+or by using the <w>[vi keys]</w>.
 
-<w></w>  Numpad:       <w>7 8 9</w>           vi-keys:    <w>$cmd[CMD_MOVE_UP_LEFT] $cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
+<w></w>  Numpad:       <w>7 8 9</w>           vi-keys:
+<w>$cmd[CMD_MOVE_UP_LEFT] $cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
 
 <w></w>                 \|/                         \|/
 
-<w></w>                <w>4</w>-<w>.</w>-<w>6</w>                       <w>$cmd[CMD_MOVE_LEFT]</w>-<w>.</w>-<w>$cmd[CMD_MOVE_RIGHT]</w>
+<w></w>                <w>4</w>-<w>.</w>-<w>6</w>
+<w>$cmd[CMD_MOVE_LEFT]</w>-<w>.</w>-<w>$cmd[CMD_MOVE_RIGHT]</w>
 
 <w></w>                 /|\                         /|\
 
-<w></w>                <w>1 2 3</w>                       <w>$cmd[CMD_MOVE_DOWN_LEFT] $cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
+<w></w>                <w>1 2 3</w> <w>$cmd[CMD_MOVE_DOWN_LEFT]
+$cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
 
 <localtiles>You can also move using <w>[Mouse clicks]</w>.</localtiles>
 %%%%
 tutorial1 shiftmove
 
-A quicker way to 'run' through a corridor is to press <w>[Shift]</w> along with the <w>[number pad]</w> (try Numlock on/off) or <w>[vi keys]</w>.
+A quicker way to 'run' through a corridor is to press <w>[Shift]</w> along with
+the <w>[number pad]</w> (try Numlock on/off) or <w>[vi keys]</w>.
 %%%%
 tutorial1 downstairs
 
-When standing on a staircase leading downwards, you can enter the next level with <w>[$cmd[CMD_GO_DOWNSTAIRS]]</w><localtiles> or with <w>[Shift-Click]</w> on your character</localtiles>.
+When standing on a staircase leading downwards, you can enter the next level
+with <w>[$cmd[CMD_GO_DOWNSTAIRS]]</w><localtiles> or with <w>[Shift-Click]</w>
+on your character</localtiles>.
 %%%%
 tutorial1 levelmap
 
 # Messy, repeating the same things for <console> and <webtiles>
-What's this? To find out where you are, <tiles>have a look at the <w>minimap</w> to the right of the screen.</tiles><localtiles> You can have a closer look at a part of the map with a <w>[right mouseclick]</w> and also can travel there with a <w>[leftclick]</w>.</localtiles><webtiles>You can enter the overmap view with <w>[$cmd[CMD_DISPLAY_MAP]]</w> and then move the cursor around to look around the level. You also can travel wherever your cursor is pointing by pressing <w>[.]</w> or <w>[Enter]</w>. Press <w>[Escape]</w> to return to the normal game mode.</webtiles><console>enter the overmap view with <w>[$cmd[CMD_DISPLAY_MAP]]</w> and then move the cursor around to look around the level. You also can travel wherever your cursor is pointing by pressing <w>[.]</w> or <w>[Enter]</w>. Press <w>[Escape]</w> to return to the normal game mode.</console>
+What's this? To find out where you are, <tiles>have a look at the
+<w>minimap</w> to the right of the screen.</tiles><localtiles> You can have a
+closer look at a part of the map with a <w>[right mouseclick]</w> and also can
+travel there with a <w>[leftclick]</w>.</localtiles><webtiles>You can enter the
+overmap view with <w>[$cmd[CMD_DISPLAY_MAP]]</w> and then move the cursor
+around to look around the level. You also can travel wherever your cursor is
+pointing by pressing <w>[.]</w> or <w>[Enter]</w>. Press <w>[Escape]</w> to
+return to the normal game mode.</webtiles><console>enter the overmap view with
+<w>[$cmd[CMD_DISPLAY_MAP]]</w> and then move the cursor around to look around
+the level. You also can travel wherever your cursor is pointing by pressing
+<w>[.]</w> or <w>[Enter]</w>. Press <w>[Escape]</w> to return to the normal
+game mode.</console>
 %%%%
 tutorial1 autoexplore
 
-Exploring manually can get tedious after a while, so you might want to let that happen automatically. Try it by pressing <w>[$cmd[CMD_EXPLORE]]</w>.
+Exploring manually can get tedious after a while, so you might want to let that
+happen automatically. Try it by pressing <w>[$cmd[CMD_EXPLORE]]</w>.
 %%%%
 tutorial1 exclusion
 
-Some dangerous ground is marked with <w>exclusions</w>. Autoexplore <localtiles>(including by <w>[mouseclick]</w>! </localtiles>will not lead you into exclusions. Instead you will automatically stop.
+Some dangerous ground is marked with <w>exclusions</w>. Autoexplore
+<localtiles>(including by <w>[mouseclick]</w>! </localtiles>will not lead you
+into exclusions. Instead you will automatically stop.
 
-However, autoexplore will move you safely around exclusions so you may continue by pressing <w>[$cmd[CMD_EXPLORE]]</w>.
+However, autoexplore will move you safely around exclusions so you may continue
+by pressing <w>[$cmd[CMD_EXPLORE]]</w>.
 %%%%
 tutorial1 autoexplore_announce
 
-Autoexplore will stop to announce features and items. To travel directly to the stairs, you can <localtiles><w>[click]</w> on them or you can </localtiles>press <w>[$cmd[CMD_DISPLAY_MAP] << Enter]</w>.
+Autoexplore will stop to announce features and items. To travel directly to the
+stairs, you can <localtiles><w>[click]</w> on them or you can
+</localtiles>press <w>[$cmd[CMD_DISPLAY_MAP] << Enter]</w>.
 %%%%
 tutorial1 tutorial_end
 
 Congratulations! You've completed the first lesson!
 
-To exit the tutorial, simply go up these stairs with <w>[$cmd[CMD_GO_UPSTAIRS]]</w><localtiles> or by <w>[Shift-clicking]</w> on your character</localtiles>. Confirm the resulting prompt with an uppercase <w>[Y]</w>.
+To exit the tutorial, simply go up these stairs with
+<w>[$cmd[CMD_GO_UPSTAIRS]]</w><localtiles> or by <w>[Shift-clicking]</w> on
+your character</localtiles>. Confirm the resulting prompt with an uppercase
+<w>[Y]</w>.
 %%%%
 tutorial1 newlevel
 
 A new level! To begin with, head over to that door to the right.
 
-Also, remember: You can reread old messages with <w>[$cmd[CMD_REPLAY_MESSAGES]]</w>.
+Also, remember: You can reread old messages with
+<w>[$cmd[CMD_REPLAY_MESSAGES]]</w>.
 %%%%
 tutorial1 door
 
-You can open a closed door by walking into it. To close an open door, press <w>[$cmd[CMD_CLOSE_DOOR]]</w>.
+You can open a closed door by walking into it. To close an open door, press
+<w>[$cmd[CMD_CLOSE_DOOR]]</w>.
 %%%%
 tutorial1 secret_door_glass
 
-It doesn't look like the corridor ends here. Try searching for a secret door with <w>[$cmd[CMD_REST]]</w>. This process might spend multiple turns.
+It doesn't look like the corridor ends here. Try searching for a secret door
+with <w>[$cmd[CMD_REST]]</w>. This process might spend multiple turns.
 %%%%
 tutorial1 water
 
@@ -84,30 +116,36 @@ Note how you can move through shallow but not through deep water.
 %%%%
 tutorial1 secret_door_wall
 
-A dead-end! Or, wait... is it another secret door? Try searching again with <w>[$cmd[CMD_REST]]</w> once again.
+A dead-end! Or, wait... is it another secret door? Try searching again with
+<w>[$cmd[CMD_REST]]</w> once again.
 %%%%
 tutorial1 upstairs
 
-When standing on a staircase leading upwards, you can enter the previous level with <w>[$cmd[CMD_GO_UPSTAIRS]]</w><localtiles> or by <w>[Shift-clicking]</w> on your character</localtiles>.
+When standing on a staircase leading upwards, you can enter the previous level
+with <w>[$cmd[CMD_GO_UPSTAIRS]]</w><localtiles> or by <w>[Shift-clicking]</w>
+on your character</localtiles>.
 %%%%
 tutorial1 exit
-# A single screen recapping all commands.
 
 <yellow>Movement commands</yellow>
 
-   Numpad:       <w>7 8 9</w>           vi-keys:    <w>$cmd[CMD_MOVE_UP_LEFT] $cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
+   Numpad:       <w>7 8 9</w>           vi-keys:    <w>$cmd[CMD_MOVE_UP_LEFT]
+$cmd[CMD_MOVE_UP] $cmd[CMD_MOVE_UP_RIGHT]</w>
 
                   \|/                         \|/
 
-                 <w>4</w>-<w>.</w>-<w>6</w>                       <w>$cmd[CMD_MOVE_LEFT]</w>-<w>.</w>-<w>$cmd[CMD_MOVE_RIGHT]</w>
+                 <w>4</w>-<w>.</w>-<w>6</w>
+<w>$cmd[CMD_MOVE_LEFT]</w>-<w>.</w>-<w>$cmd[CMD_MOVE_RIGHT]</w>
 
                   /|\                         /|\
 
-                 <w>1 2 3</w>                       <w>$cmd[CMD_MOVE_DOWN_LEFT] $cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
+                 <w>1 2 3</w>                       <w>$cmd[CMD_MOVE_DOWN_LEFT]
+$cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
 
   <w>Shift + direction</w> moves you several squares into this direction.
 
-  <localtiles>You also can move by <w>clicking</w> somewhere in sight or on the <w>minimap</w>.</localtiles>
+  <localtiles>You also can move by <w>clicking</w> somewhere in sight or on the
+<w>minimap</w>.</localtiles>
 
 
 <yellow>Staircases</yellow>
@@ -132,46 +170,61 @@ tutorial1 exit
 
   <localtiles>mouseclick on the <w>minimap</w>
 
-  </localtiles><webtiles><w>$cmd[CMD_DISPLAY_MAP]</w>  enter the level map, travel with <w>Enter</w>
+  </localtiles><webtiles><w>$cmd[CMD_DISPLAY_MAP]</w>  enter the level map,
+travel with <w>Enter</w>
 
-  </webtiles><console><w>$cmd[CMD_DISPLAY_MAP]</w>  enter the level map, travel with <w>Enter</w>
+  </webtiles><console><w>$cmd[CMD_DISPLAY_MAP]</w>  enter the level map, travel
+with <w>Enter</w>
 
   </console><w>$cmd[CMD_EXPLORE]</w>  autoexplore
 
 
-                                 <cyan>Press <w>any key</w> to clear this screen...</cyan>
+                                 <cyan>Press <w>any key</w> to clear this
+screen...</cyan>
 %%%%
 ##############################################
 # Tutorial map 2: Monsters and combat        #
 ##############################################
 tutorial2 start
 
-This lesson will teach you about monsters and fighting. First, we need a weapon! Go and grab the one lying over there.
+This lesson will teach you about monsters and fighting. First, we need a
+weapon! Go and grab the one lying over there.
 %%%%
 tutorial2 pickup_weapon
 
-Pick up this weapon with <w>[$cmd[CMD_PICKUP]]</w> or <w>[g]</w> and then wield it with <w>[$cmd[CMD_WIELD_WEAPON]]</w>.<localtiles> Alternatively, you can perform either action by <w>[clicking]</w> on it in the inventory panel.</localtiles>
+Pick up this weapon with <w>[$cmd[CMD_PICKUP]]</w> or <w>[g]</w> and then wield
+it with <w>[$cmd[CMD_WIELD_WEAPON]]</w>.<localtiles> Alternatively, you can
+perform either action by <w>[clicking]</w> on it in the inventory
+panel.</localtiles>
 %%%%
 tutorial2 melee
 
-To attack a monster with your bare hands or wielded weapon, simply walk into it.
+To attack a monster with your bare hands or wielded weapon, simply walk into
+it.
 %%%%
 tutorial2 resting
 
-Very good! You can regain any lost hit points by resting with <w>$cmd[CMD_REST]</w>. This will make you rest and search for up to 100 turns, but will get interrupted by a number of important events.
+Very good! You can regain any lost hit points by resting with
+<w>$cmd[CMD_REST]</w>. This will make you rest and search for up to 100 turns,
+but will get interrupted by a number of important events.
 %%%%
 tutorial2 chop_corpses
 
-You can chop up corpses into edible meat chunks with <w>[$cmd[CMD_BUTCHER]]</w> <localtiles>or <w>[Shift + mouseclick]</w>, </localtiles>and then eat the resulting chunks with <w>[$cmd[CMD_EAT]]</w><localtiles> or by <w>[mouseclick]</w></localtiles>.
+You can chop up corpses into edible meat chunks with <w>[$cmd[CMD_BUTCHER]]</w>
+<localtiles>or <w>[Shift + mouseclick]</w>, </localtiles>and then eat the
+resulting chunks with <w>[$cmd[CMD_EAT]]</w><localtiles> or by
+<w>[mouseclick]</w></localtiles>.
 %%%%
 tutorial2 rest_and_chop_reminder
 
 # FIXME: Awkward. No mouse commands.
-Don't forget about chopping corpses for food (with <w>[$cmd[CMD_BUTCHER]]</w>), or resting (with <w>[$cmd[CMD_REST]]</w>)!
+Don't forget about chopping corpses for food (with <w>[$cmd[CMD_BUTCHER]]</w>),
+or resting (with <w>[$cmd[CMD_REST]]</w>)!
 %%%%
 tutorial2 wait
 
-Rather than storm the room and get swarmed by monsters, you can also step back and wait (with <w>[$cmd[CMD_MOVE_NOWHERE]]</w>) for them to come to you.
+Rather than storm the room and get swarmed by monsters, you can also step back
+and wait (with <w>[$cmd[CMD_MOVE_NOWHERE]]</w>) for them to come to you.
 %%%%
 tutorial2 resting_reminder
 
@@ -179,16 +232,27 @@ Remember, you can rest up with <w>[$cmd[CMD_REST]]</w>.
 %%%%
 tutorial2 eat_reminder
 
-Remember, you can chop creatures up with <w>[$cmd[CMD_BUTCHER]]</w> <localtiles>or <w>[Shift + mouseclick], </w>and then eat the resulting chunks with <w>[$cmd[CMD_EAT]]</w><localtiles> or <w>[mouseclick]</w></localtiles>.
+Remember, you can chop creatures up with <w>[$cmd[CMD_BUTCHER]]</w>
+<localtiles>or <w>[Shift + mouseclick], </w>and then eat the resulting chunks
+with <w>[$cmd[CMD_EAT]]</w><localtiles> or <w>[mouseclick]</w></localtiles>.
 %%%%
 tutorial2 compare_monster_desc
 
 # FIXME: Content repeated for <console> and <webtiles>.
-Examine these monsters (<localtiles>via <w>mouseover</w></localtiles><console>with <w>[$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_CYCLE_FORWARD]]</w></console><webtiles>with <w>[$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_CYCLE_FORWARD]]</w></webtiles>) and compare their descriptions (<localtiles><w>[right mouseclick]</w></localtiles><console><w>[$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]]</w></console><webtiles><w>[$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]]</w></webtiles>) to find out which of these cages is safer to fight through.
+Examine these monsters (<localtiles>via
+<w>mouseover</w></localtiles><console>with
+<w>[$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_CYCLE_FORWARD]]</w></console><webtiles
+>with <w>[$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_CYCLE_FORWARD]]</w></webtiles>)
+and compare their descriptions (<localtiles><w>[right
+mouseclick]</w></localtiles><console><w>[$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_D
+ESCRIBE]]</w></console><webtiles><w>[$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCR
+IBE]]</w></webtiles>) to find out which of these cages is safer to fight
+through.
 %%%%
 tutorial2 downstairs
 
-Well done! After resting to full health continue "into the next level with <w>[$cmd[CMD_GO_DOWNSTAIRS]]</w>.
+Well done! After resting to full health continue "into the next level with
+<w>[$cmd[CMD_GO_DOWNSTAIRS]]</w>.
 %%%%
 tutorial2 newlevel
 
@@ -196,20 +260,31 @@ Remember: You can reread old messages with <w>[$cmd[CMD_REPLAY_MESSAGES]]</w>.
 %%%%
 tutorial2 darts
 
-Now, for ranged combat! Pick up these darts with <w>[$cmd[CMD_PICKUP]]</w><localtiles> or by <w>[mouseclick]</w>,</localtiles> and continue.
+Now, for ranged combat! Pick up these darts with
+<w>[$cmd[CMD_PICKUP]]</w><localtiles> or by <w>[mouseclick]</w>,</localtiles>
+and continue.
 %%%%
 tutorial2 throwing
 
-You can fire your darts at a monster with <w>[$cmd[CMD_FIRE]]</w><localtiles> or by <w>[clicking]</w> on them in the inventory panel</localtiles>. To confirm the auto-targeted monster, press <w>[$cmd[CMD_TARGET_SELECT]]</w> or <w>[Enter]</w>.
+You can fire your darts at a monster with <w>[$cmd[CMD_FIRE]]</w><localtiles>
+or by <w>[clicking]</w> on them in the inventory panel</localtiles>. To confirm
+the auto-targeted monster, press <w>[$cmd[CMD_TARGET_SELECT]]</w> or
+<w>[Enter]</w>.
 %%%%
 tutorial2 wield_bow
 
-Pick up this bow and wield it with <w>[$cmd[CMD_WIELD_WEAPON]]</w><localtiles> or by <w>[mouseclick]</w></localtiles>.
+Pick up this bow and wield it with <w>[$cmd[CMD_WIELD_WEAPON]]</w><localtiles>
+or by <w>[mouseclick]</w></localtiles>.
 %%%%
 tutorial2 firing
 
 # FIXME: Lenghty because of the hint for choosing target.
-Firing arrows from your wielded bow works exactly the same as throwing darts: via <w>[$cmd[CMD_FIRE]]</w><localtiles> or <w>[mouseclick]</w>. You can change the targeted monster by pressing <w>[$cmd[CMD_TARGET_CYCLE_FORWARD]]</w> while in target mode. The worm is harmless behind the lava, so concentrate on the dummy which can fire at you. Again, confirm your choice with <w>[$cmd[CMD_TARGET_SELECT]]</w> or <w>[Enter]</w>.
+Firing arrows from your wielded bow works exactly the same as throwing darts:
+via <w>[$cmd[CMD_FIRE]]</w><localtiles> or <w>[mouseclick]</w>. You can change
+the targeted monster by pressing <w>[$cmd[CMD_TARGET_CYCLE_FORWARD]]</w> while
+in target mode. The worm is harmless behind the lava, so concentrate on the
+dummy which can fire at you. Again, confirm your choice with
+<w>[$cmd[CMD_TARGET_SELECT]]</w> or <w>[Enter]</w>.
 %%%%
 tutorial2 travel_reminder
 
@@ -217,35 +292,39 @@ Remember that you can autoexplore using <w>[$cmd[CMD_EXPLORE]]</w>.
 %%%%
 tutorial2 explore
 
-Find the exit! Remember that you can autoexplore using <w>[$cmd[CMD_EXPLORE]]</w>.
+Find the exit! Remember that you can autoexplore using
+<w>[$cmd[CMD_EXPLORE]]</w>.
 %%%%
 tutorial2 tutorial_end
 
-Congratulations! You've survived your first batch of monsters! To exit the tutorial, simply go down these stairs.
+Congratulations! You've survived your first batch of monsters! To exit the
+tutorial, simply go down these stairs.
 %%%%
 tutorial2 exit
-# A single screen recapping all commands.
 
-
+# FIXME: Duplicated for <console> and <webtiles>.
 <yellow>Weapons<console> <cyan>)</cyan></console></yellow>
 
   <w>$cmd[CMD_PICKUP]</w>  pick up an item
-  <w>$cmd[CMD_WIELD_WEAPON]</w> wield a weapon
-<localtiles>  You can also do this by <w>clicking</w> on the weapon in your inventory.</localtiles>
+  <w>$cmd[CMD_WIELD_WEAPON]</w> wield a weapon <localtiles>  You can also do
+this by <w>clicking</w> on the weapon in your inventory.</localtiles>
 
 
 <yellow>Monsters</yellow>
 
 <localtiles>  <w>mouseover</w>  examine a monster
-  <w>rightclick</w>  read a more detailed description</localtiles>
-# FIXME: Duplicated for <console> and <webtiles>.
-<console>  <w>$cmd[CMD_LOOK_AROUND]</w>  examine a monster
-  <w>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</w> read a more detailed description</console>
-<webtiles>  <w>$cmd[CMD_LOOK_AROUND]</w>  examine a monster
-  <w>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</w> read a more detailed description</webtiles>
-  <w>$cmd[CMD_FIRE]$cmd[CMD_TARGET_SELECT]</w>  fire ammunition at pre-targeted mosnter
+  <w>rightclick</w>  read a more detailed description</localtiles> <console>
+<w>$cmd[CMD_LOOK_AROUND]</w>  examine a monster
+  <w>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</w> read a more detailed
+description</console> <webtiles>  <w>$cmd[CMD_LOOK_AROUND]</w>  examine a
+monster
+  <w>$cmd[CMD_LOOK_AROUND]$cmd[CMD_TARGET_DESCRIBE]</w> read a more detailed
+description</webtiles>
+  <w>$cmd[CMD_FIRE]$cmd[CMD_TARGET_SELECT]</w>  fire ammunition at pre-targeted
+monster
   <w>$cmd[CMD_FIRE]$cmd[CMD_TARGET_CYCLE_FORWARD]</w> target another monster
-<localtiles>  You can also fire an item by <w>clicking</w> on it and the confirming the target with <w>Enter</w>.</localtiles>
+<localtiles>  You can also fire an item by <w>clicking</w> on it and the
+confirming the target with <w>Enter</w>.</localtiles>
 
 
 <yellow>Resting</yellow>
@@ -258,7 +337,8 @@ tutorial2 exit
 
   <w>$cmd[CMD_BUTCHER]</w>  chop a corpse into meat chunks
   <w>$cmd[CMD_EAT]</w>  eat a chunk of meat
-                                 <cyan>Press <w>any key</w> to clear this screen...</cyan>
+                                 <cyan>Press <w>any key</w> to clear this
+screen...</cyan>
 %%%%
 ##############################################
 # Tutorial map 5: Gods and divine abilities  #
@@ -269,94 +349,87 @@ In this lesson you're going to learn about gods and how to use their powers.
 %%%%
 tutorial5 secret_door
 
-There's got to be an entrance to the temple! Try walking around the glass
-walls and searching for secret doors with <w>$cmd[CMD_REST]</w><localtiles>
-or by <w>mouseclick</w> in the command panel</localtiles>.
+There's got to be an entrance to the temple! Try walking around the glass walls
+and searching for secret doors with <w>$cmd[CMD_REST]</w><localtiles> or by
+<w>mouseclick</w> in the command panel</localtiles>.
 %%%%
 tutorial5 dungeon_overview
 
 Trog is just one of many gods. In a real game, you check
 <w>$cmd[CMD_DISPLAY_OVERMAP]</w><localtiles> or click on the <w>dungeon overmap
-button</w> in the command panel</localtiles>
-for a list of all altars and other interesting features found so far.
+button</w> in the command panel</localtiles> for a list of all altars and other
+interesting features found so far.
 %%%%
 tutorial5 altar
 
-You can pray on an altar with <w>$cmd[CMD_PRAY]</w><localtiles> (or by clicking in
-the <w>command panel</w> or <w>Shift-clicking</w> on your
-character)</localtiles>
-to get an idea what a god offers you, and to join the faith.
-If you press <w>!</w>
-<localtiles>or <w>rightclick</w></localtiles>
-on the religion screen, you can see a more detailed description.
+You can pray on an altar with <w>$cmd[CMD_PRAY]</w><localtiles> (or by clicking
+in the <w>command panel</w> or <w>Shift-clicking</w> on your
+character)</localtiles> to get an idea what a god offers you, and to join the
+faith. If you press <w>!</w> <localtiles>or <w>rightclick</w></localtiles> on
+the religion screen, you can see a more detailed description.
 
 Confirm your choice with an uppercase <w>Y</w>.
 %%%%
 tutorial5 religion
 
 Have a look at your current religious standing with
-<w>$cmd[CMD_DISPLAY_RELIGION]</w><localtiles>
-(or via the <w>religion button</w> in the command panel,
-or by <w>Shift-rightclicking</w> on the player tile)</localtiles>.
-Again, pressing <w>!</w><localtiles> or <w>rightclicking</w></localtiles>
-will bring up a more detailed description of your god.
+<w>$cmd[CMD_DISPLAY_RELIGION]</w><localtiles> (or via the <w>religion
+button</w> in the command panel, or by <w>Shift-rightclicking</w> on the player
+tile)</localtiles>. Again, pressing <w>!</w><localtiles> or
+<w>rightclicking</w></localtiles> will bring up a more detailed description of
+your god.
 %%%%
 tutorial5 piety_on_kill
 
-Some gods really like it if you kill monsters in
-their name. Let the slaughter begin!
+Some gods really like it if you kill monsters in their name. Let the slaughter
+begin!
 %%%%
 tutorial5 sacrificing
 
-Praying on corpses with <w>$cmd[CMD_PRAY]</w><localtiles> or
-via the <w>command panel</w></localtiles>
-will sacrifice them to Trog. Try it!
+Praying on corpses with <w>$cmd[CMD_PRAY]</w><localtiles> or via the <w>command
+panel</w></localtiles> will sacrifice them to Trog. Try it!
 %%%%
 tutorial5 burn_book
 
 Trog will like it if you burn that book (with
-<w>$cmd[CMD_USE_ABILITY]</w><localtiles>
-or via the <w>command panel</w></localtiles>).
-Sometimes, you might want to wait (with <w>$cmd[CMD_MOVE_NOWHERE]</w>)
-for a monster to step on it before doing so.
+<w>$cmd[CMD_USE_ABILITY]</w><localtiles> or via the <w>command
+panel</w></localtiles>). Sometimes, you might want to wait (with
+<w>$cmd[CMD_MOVE_NOWHERE]</w>) for a monster to step on it before doing so.
 %%%%
 tutorial5 berserk
 
-Against particularly tough foes, you may want to use
-Trog's Berserk power with <w>$cmd[CMD_USE_ABILITY]</w><localtiles>
-or via the <w>command panel</w></localtiles>.
+Against particularly tough foes, you may want to use Trog's Berserk power with
+<w>$cmd[CMD_USE_ABILITY]</w><localtiles> or via the <w>command
+panel</w></localtiles>.
 %%%%
 tutorial5 exhaustion
 
-A berserker rage is truly exhausting. While fatigued,
-you cannot berserk again and are also slowed.
-It's best to rest with <w>$cmd[CMD_REST]</w>
-<localtiles>(or via the <w>command panel</w>)</localtiles>
-until you feel fit again.
+A berserker rage is truly exhausting. While fatigued, you cannot berserk again
+and are also slowed. It's best to rest with <w>$cmd[CMD_REST]</w>
+<localtiles>(or via the <w>command panel</w>)</localtiles> until you feel fit
+again.
 %%%%
 tutorial5 hunger
 
-You cannot berserk while very hungry, so you should
-always carry some food with you. This means that
-sometimes you'll have to decide between butchering
-a corpse or sacrificing it to Trog.
+You cannot berserk while very hungry, so you should always carry some food with
+you. This means that sometimes you'll have to decide between butchering a
+corpse or sacrificing it to Trog.
 %%%%
 tutorial5 berserk2
 
-Berserk is also really useful against multiple enemies
-— as long as you don't run out of steam in-between.
+Berserk is also really useful against multiple enemies — as long as you don't
+run out of steam in-between.
 %%%%
 tutorial5 tutorial_end
 
-Congratulations! You've finished the last tutorial lesson
-and are now ready for the real game. Good luck!
+Congratulations! You've finished the last tutorial lesson and are now ready for
+the real game. Good luck!
 
 To exit the tutorial, just go down these stairs.
 %%%%
 tutorial5 exit
 
 # A single screen recapping all commands.
-
 <yellow>Religious commands</yellow>
 
   $cmd[CMD_PRAY]  pray at an altar to join a god, or sacrifice a corpse
@@ -365,8 +438,8 @@ tutorial5 exit
 
   $cmd[CMD_DISPLAY_RELIGION]  check your religious standing
 
-<localtiles>A <w>rightclick</w> on the player tile will also bring
-up the religion screen.</localtiles>
+<localtiles>A <w>rightclick</w> on the player tile will also bring up the
+religion screen.</localtiles>
 
 
 <yellow>Resting</yellow>
@@ -383,5 +456,6 @@ up the religion screen.</localtiles>
   $cmd[CMD_DISPLAY_COMMANDS]<w>/</w>  search the description database
 
 
-                                 <cyan>Press <w>any key</w> to clear this screen...</cyan>
+                                 <cyan>Press <w>any key</w> to clear this
+screen...</cyan>
 %%%%
