@@ -484,6 +484,8 @@ static std::string _no_selectables_message(int item_selector)
         return "You aren't carrying any books or scrolls.";
     case OBJ_WANDS:
         return "You aren't carrying any wands.";
+    case OBJ_JEWELLERY:
+        return "You aren't carrying any pieces of jewellery.";
     case OSEL_THROWABLE:
         return "You aren't carrying any items that might be thrown or fired.";
     case OSEL_BUTCHERY:
