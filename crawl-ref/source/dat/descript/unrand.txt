@@ -124,7 +124,7 @@ not generally available.
 %%%%
 giant club "Skullcrusher"
 
-This lovely cudgel can make any ogre overjoyous - be it a bar brawl, genocide,
+This lovely cudgel can make any ogre overjoyous — be it a bar brawl, genocide,
 or a mixture of both.
 %%%%
 glaive of the Guard

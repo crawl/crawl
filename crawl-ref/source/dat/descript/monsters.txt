@@ -325,7 +325,7 @@ about Maud, forgot everything else.
 %%%%
 Maurice
 
-A sly, conniving thief. In his profession, Maurice is considered a legend - at
+A sly, conniving thief. In his profession, Maurice is considered a legend — at
 least according to himself. He is skilled, nonetheless, and among all the
 thieves and rogues lured by the Orb, Maurice is undoubtedly the most crafty.
 %%%%
@@ -378,7 +378,7 @@ out of reality.
 Norris
 
 A relaxed peace-in-death cultist with a healthy tan and a soothing voice. He
-doesn't really care if it is you or him who dies - “both” would probably be the
+doesn't really care if it is you or him who dies — “both” would probably be the
 best option.
 %%%%
 Pikel
@@ -433,7 +433,7 @@ Snorg
 
 A particularly corpulent troll with a short temper and a sizable gut.
 Uninterested in the Orb, Snorg delights in the endless parade of adventurers -
-that is, easy meals - it attracts.
+that is, easy meals — it attracts.
 %%%%
 Sonja
 
@@ -450,7 +450,7 @@ Terence
 
 A violent murderer who kills for both pleasure and profit, Terence has been
 forced into hiding after a botched job, and can't really afford to risk letting
-anyone who has seen him leave the dungeon alive - there is a price on his head,
+anyone who has seen him leave the dungeon alive — there is a price on his head,
 after all.
 %%%%
 Tiamat
@@ -1033,7 +1033,7 @@ hand combat.
 dwarf mountain bat
 
 A species of bat that lives in mountain caves. How it got into the dungeon is a
-mystery - probably something related to the sudden demise of dwarves in those
+mystery — probably something related to the sudden demise of dwarves in those
 lands. But don't worry, an eradication team is on the way.
 %%%%
 earth elemental
@@ -1211,7 +1211,7 @@ through the dungeons in search of food.
 worker ant
 
 A wingless black insect with sharp mandibles capable of injecting a deadly
-poison. It is a worker, and thus tasked with gathering food - any living being
+poison. It is a worker, and thus tasked with gathering food — any living being
 it encounters is a potential meal.
 %%%%
 bat
@@ -1977,7 +1977,7 @@ mob of its fellows.
 orc wizard
 
 While orcs generally prefer physical combat, some of their kind gain
-proficiency in the occult arts - though still for martial purposes.
+proficiency in the occult arts — though still for martial purposes.
 %%%%
 pale draconian
 
@@ -2056,8 +2056,8 @@ DevTeam.
 %%%%
 pulsating lump
 
-A revolting blob of all kinds of living matter - muscle, gut, nerves, viscera,
-marrow - piled haphazardly into a single writhing mass. This distorted flesh is
+A revolting blob of all kinds of living matter — muscle, gut, nerves, viscera,
+marrow — piled haphazardly into a single writhing mass. This distorted flesh is
 mutagenic on contact, but without any kind of structural arrangement to its
 parts, it lacks the coordination needed to move quickly.
 %%%%

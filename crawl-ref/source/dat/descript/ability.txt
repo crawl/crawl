@@ -137,7 +137,7 @@ Preach to monsters about Zin's laws, which can lead to various results. There
 are four books you can preach from:
 
 * Book of Abominations: This book deals with the very thing most abhorrent to
-Zin - chaos in all its forms. These recitations will invoke Zin's most powerful
+Zin — chaos in all its forms. These recitations will invoke Zin's most powerful
 smiting.
 
 * Book of Ablutions: The impure are nearly as loathed by the Law-Giver.
@@ -172,7 +172,7 @@ once should you breach the divine peace.
 %%%%
 Cure All Mutations
 
-Cure all your mutations - but only once.
+Cure all your mutations — but only once.
 %%%%
 # The Shining One
 Divine Shield
