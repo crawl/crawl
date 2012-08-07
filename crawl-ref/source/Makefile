@@ -1034,8 +1034,10 @@ SRC_PKG_TAR_NODEPS := $(PKG_SRC_DIR)-nodeps.tar.xz
 SRC_PKG_ZIP   := $(PKG_SRC_DIR).zip
 
 greet:
-	@printf "  * If you experience any problems building Crawl, please take a second look\\n"\
-	"  * at INSTALL.txt: the solution to your problem just might be in there!\\n"
+	@if [ ! -e $(GAME) ]; then\
+		printf "  * If you experience any problems building Crawl, please take a second look\\n"\
+		"  * at INSTALL.txt: the solution to your problem just might be in there!\\n";\
+	fi
 
 docs: $(GENERATED_DOCS)
 
