@@ -2739,9 +2739,9 @@ static bool _find_square(coord_def &mfp, int direction,
     }
 
     mfp = (direction > 0 ? coord_def(ctrx, ctry) : coord_def(minx, maxy));
-    return (_find_square(mfp, direction, find_targ, need_path,
-                         mode, range, hitfunc, false,
-                         _next_los(direction, los, wrap)));
+    return _find_square(mfp, direction, find_targ, need_path,
+                        mode, range, hitfunc, false,
+                        _next_los(direction, los, wrap));
 }
 
 // XXX Unbelievably hacky. And to think that my goal was to clean up the code.
@@ -3290,9 +3290,9 @@ std::string feature_description_at(const coord_def& where, bool covering,
     case DNGN_TRAP_MAGICAL:
     case DNGN_TRAP_NATURAL:
     case DNGN_TRAP_WEB:
-        return (feature_description(grid, get_trap_type(where),
-                                    covering_description, dtype,
-                                    add_stop, base_desc));
+        return feature_description(grid, get_trap_type(where),
+                                   covering_description, dtype,
+                                   add_stop, base_desc);
     case DNGN_ABANDONED_SHOP:
         return thing_do_grammar(dtype, add_stop, false, "an abandoned shop");
 
@@ -3301,9 +3301,9 @@ std::string feature_description_at(const coord_def& where, bool covering,
 
     case DNGN_ENTER_PORTAL_VAULT:
         // Should have been handled at the top of the function.
-        return (thing_do_grammar(
-                    dtype, add_stop, false,
-                    "UNAMED PORTAL VAULT ENTRY"));
+        return thing_do_grammar(
+                   dtype, add_stop, false,
+                   "UNAMED PORTAL VAULT ENTRY");
     default:
         return thing_do_grammar(dtype, add_stop, feat_is_trap(grid),
                    raw_feature_description(where) + covering_description);

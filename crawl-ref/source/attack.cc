@@ -62,7 +62,7 @@ bool attack::handle_phase_attempted()
 std::string attack::actor_name(const actor *a, description_level_type desc,
                                bool actor_visible, bool actor_invisible)
 {
-    return (actor_visible ? a->name(desc) : anon_name(desc, actor_invisible));
+    return actor_visible ? a->name(desc) : anon_name(desc, actor_invisible);
 }
 
 /* Returns an actor's pronoun
@@ -72,7 +72,7 @@ std::string attack::actor_name(const actor *a, description_level_type desc,
 std::string attack::actor_pronoun(const actor *a, pronoun_type pron,
                                   bool actor_visible)
 {
-    return (actor_visible ? a->pronoun(pron) : anon_pronoun(pron));
+    return actor_visible ? a->pronoun(pron) : anon_pronoun(pron);
 }
 
 /* Returns an anonymous actor's name
@@ -94,7 +94,7 @@ std::string attack::anon_name(description_level_type desc,
     case DESC_A:
     case DESC_PLAIN:
     default:
-        return (actor_invisible? "it" : "something");
+        return actor_invisible? "it" : "something";
     }
 }
 

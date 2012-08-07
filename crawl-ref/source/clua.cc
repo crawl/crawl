@@ -484,7 +484,7 @@ bool CLua::calltopfn(lua_State *ls, const char *params, va_list args,
     lua_call_throttle strangler(this);
     int err = lua_pcall(ls, argc, retc, 0);
     set_error(err, ls);
-    return (!err);
+    return !err;
 }
 
 maybe_bool CLua::callmbooleanfn(const char *fn, const char *params,

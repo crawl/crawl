@@ -180,7 +180,7 @@ void InvEntry::select(int qty)
 
 std::string InvEntry::get_filter_text() const
 {
-    return (filtering_item_prefix(*item) + " " + get_text());
+    return filtering_item_prefix(*item) + " " + get_text();
 }
 
 std::string InvEntry::get_text(bool need_cursor) const
@@ -458,8 +458,8 @@ static std::string _no_selectables_message(int item_selector)
         if (_has_melded_armour())
             return "Your armour is currently melded into you.";
         else if (_has_tran_unwearable_armour())
-            return ("You aren't carrying any armour you can wear in your "
-                   "current form.");
+            return "You aren't carrying any armour you can wear in your "
+                   "current form.";
         else
             return "You aren't carrying any armour.";
     }
@@ -468,8 +468,7 @@ static std::string _no_selectables_message(int item_selector)
     case OSEL_RECHARGE:
         return "You aren't carrying any rechargeable items.";
     case OSEL_ENCH_ARM:
-        return ("You aren't carrying any armour which can be enchanted "
-               "further.");
+        return "You aren't carrying any armour which can be enchanted further.";
     case OBJ_CORPSES:
     case OSEL_VAMP_EAT:
         return "You aren't carrying any corpses which you can drain.";
@@ -643,7 +642,7 @@ bool InvMenu::allow_easy_exit() const
 template <std::string (*proc)(const InvEntry *a)>
 static int compare_item_str(const InvEntry *a, const InvEntry *b)
 {
-    return (proc(a).compare(proc(b)));
+    return proc(a).compare(proc(b));
 }
 
 template <typename T, T (*proc)(const InvEntry *a)>

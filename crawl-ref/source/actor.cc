@@ -422,12 +422,12 @@ void actor::start_constricting(actor &whom, int dur)
 
 int actor::num_constricting() const
 {
-    return (constricting ? constricting->size() : 0);
+    return constricting ? constricting->size() : 0;
 }
 
 bool actor::is_constricting() const
 {
-    return (constricting && !constricting->empty());
+    return constricting && !constricting->empty();
 }
 
 bool actor::is_constricted() const

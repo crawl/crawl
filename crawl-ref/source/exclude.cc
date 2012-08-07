@@ -31,7 +31,7 @@ extern std::set<std::pair<std::string, level_id> > auto_unique_annotations;
 static bool _mon_needs_auto_exclude(const monster* mon, bool sleepy = false)
 {
     if (mons_is_stationary(mon))
-        return (!sleepy);
+        return !sleepy;
 
     // Auto exclusion only makes sense if the monster is still asleep or if it
     // is lurking (discovered mimics).
@@ -117,7 +117,7 @@ void remove_auto_exclude(const monster* mon, bool sleepy)
 
 static opacity_type _feat_opacity(dungeon_feature_type feat)
 {
-    return (feat_is_opaque(feat) ? OPC_OPAQUE : OPC_CLEAR);
+    return feat_is_opaque(feat) ? OPC_OPAQUE : OPC_CLEAR;
 }
 
 // A cell is considered clear unless the player knows it's
@@ -295,7 +295,7 @@ travel_exclude* exclude_set::get_exclude_root(const coord_def &p)
     exclude_set::iterator it = exclude_roots.find(p);
 
     if (it != exclude_roots.end())
-        return (&(it->second));
+        return &it->second;
 
     return NULL;
 }

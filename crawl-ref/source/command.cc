@@ -964,7 +964,7 @@ static bool _spell_filter(std::string key, std::string body)
         return true;
 
     if (get_spell_flags(spell) & (SPFLAG_MONSTER | SPFLAG_TESTING))
-        return (!you.wizard);
+        return !you.wizard;
 
     return false;
 }

@@ -992,14 +992,14 @@ static int _crawl_god_speaks(lua_State *ls)
     if (!god_name)
     {
         std::string err = "god_speaks requires a god!";
-        return (luaL_argerror(ls, 1, err.c_str()));
+        return luaL_argerror(ls, 1, err.c_str());
     }
 
     god_type god = str_to_god(god_name);
     if (god == GOD_NO_GOD)
     {
         std::string err = make_stringf("'%s' matches no god.", god_name);
-        return (luaL_argerror(ls, 1, err.c_str()));
+        return luaL_argerror(ls, 1, err.c_str());
     }
 
     const char *message = luaL_checkstring(ls, 2);

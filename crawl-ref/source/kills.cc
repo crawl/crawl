@@ -56,7 +56,7 @@ KillMaster::~KillMaster()
 const char *KillMaster::category_name(kill_category kc) const
 {
     if (kc >= KC_YOU && kc < KC_NCATEGORIES)
-        return (kill_category_names[kc]);
+        return kill_category_names[kc];
     return NULL;
 }
 

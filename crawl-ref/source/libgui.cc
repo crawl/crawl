@@ -170,7 +170,7 @@ void cgotoxy(int x, int y, GotoRegion region)
 coord_def cgetpos(GotoRegion region)
 {
     ASSERT(region == get_cursor_region());
-    return (coord_def(wherex(), wherey()));
+    return coord_def(wherex(), wherey());
 }
 
 GotoRegion get_cursor_region()

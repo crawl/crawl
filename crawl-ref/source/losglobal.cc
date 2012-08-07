@@ -28,9 +28,9 @@ static losfield_t* _lookup_globallos(const coord_def& p, const coord_def& q)
         return NULL;
     // p < q iff p.x < q.x || p.x == q.x && p.y < q.y
     if (diff < coord_def(0, 0))
-        return (&globallos[q.x][q.y][-diff.x + o_half_x][-diff.y + o_half_y]);
+        return &globallos[q.x][q.y][-diff.x + o_half_x][-diff.y + o_half_y];
     else
-        return (&globallos[p.x][p.y][ diff.x + o_half_x][ diff.y + o_half_y]);
+        return &globallos[p.x][p.y][ diff.x + o_half_x][ diff.y + o_half_y];
 }
 
 static void _save_los(los_def* los, los_type l)

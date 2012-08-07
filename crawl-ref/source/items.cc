@@ -2979,7 +2979,7 @@ item_def *find_floor_item(object_class_type cls, int sub_type)
                     && si->base_type == cls && si->sub_type == sub_type
                     && !(si->flags & ISFLAG_MIMIC))
                 {
-                    return (& (*si));
+                    return &*si;
                 }
 
     return NULL;
@@ -3019,7 +3019,7 @@ int get_max_subtype(object_class_type base_type)
 
     ASSERT(base_type < NUM_OBJECT_CLASSES);
 
-    return (max_subtype[base_type]);
+    return max_subtype[base_type];
 }
 
 equipment_type item_equip_slot(const item_def& item)
@@ -3029,7 +3029,7 @@ equipment_type item_equip_slot(const item_def& item)
 
     for (int i = 0; i < NUM_EQUIP; i++)
         if (item.link == you.equip[i])
-            return (static_cast<equipment_type>(i));
+            return static_cast<equipment_type>(i);
 
     return EQ_NONE;
 }
@@ -3144,7 +3144,7 @@ monster* item_def::holding_monster() const
     if (invalid_monster_index(midx))
         return NULL;
 
-    return (&menv[midx]);
+    return &menv[midx];
 }
 
 void item_def::set_holding_monster(int midx)
@@ -3734,7 +3734,7 @@ bool get_item_by_name(item_def *item, char* specs,
 coord_def orb_position()
 {
     item_def* orb = find_floor_item(OBJ_ORBS, ORB_ZOT);
-    return (orb ? orb->pos: coord_def());
+    return orb ? orb->pos: coord_def();
 }
 
 void move_items(const coord_def r, const coord_def p)

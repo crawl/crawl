@@ -693,7 +693,7 @@ int str_to_colour(const std::string &str, int default_colour,
             ret = ci;
     }
 
-    return ((ret == 16) ? default_colour : ret);
+    return (ret == 16) ? default_colour : ret;
 }
 
 #if defined(TARGET_OS_WINDOWS) || defined(USE_TILE_LOCAL)

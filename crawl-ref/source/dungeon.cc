@@ -2547,13 +2547,12 @@ static int _setup_temple_altars(CrawlHashTable &temple)
     for (unsigned int i = 0; i < god_list.size(); i++)
         _temple_altar_list.push_back((god_type) god_list[i].get_byte());
 
-    return ((int) god_list.size());
+    return (int)god_list.size();
 }
 
 struct map_component
 {
     int label;
-
 
     map_component()
     {
@@ -3751,7 +3750,7 @@ const map_def *dgn_safe_place_map(const map_def *mdef,
         {
             const bool placed =
                 dgn_place_map(mdef, check_collision, make_no_exits, where);
-            return (placed? mdef : NULL);
+            return placed? mdef : NULL;
         }
         catch (map_load_exception &mload)
         {

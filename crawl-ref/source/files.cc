@@ -384,8 +384,8 @@ void assert_read_safe_path(const std::string &path) throw (std::string)
 std::string canonicalise_file_separator(const std::string &path)
 {
     const std::string sep(1, FILE_SEPARATOR);
-    return (replace_all_of(replace_all_of(path, "/", sep),
-                           "\\", sep));
+    return replace_all_of(replace_all_of(path, "/", sep),
+                          "\\", sep);
 }
 
 static std::vector<std::string> _get_base_dirs()

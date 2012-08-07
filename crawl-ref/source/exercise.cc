@@ -101,15 +101,15 @@ static int _abil_degree(ability_type abil)
         return 1;
 
     case ABIL_NEMELEX_DRAW_ONE:
-        return (1 + random2(2));
+        return 1 + random2(2);
     case ABIL_NEMELEX_PEEK_TWO:
-        return (2 + random2(2));
+        return 2 + random2(2);
     case ABIL_NEMELEX_TRIPLE_DRAW:
-        return (3 + random2(3));
+        return 3 + random2(3);
     case ABIL_NEMELEX_DEAL_FOUR:
-        return (4 + random2(4));
+        return 4 + random2(4);
     case ABIL_NEMELEX_STACK_FIVE:
-        return (5 + random2(5));
+        return 5 + random2(5);
 
     case ABIL_YRED_RECALL_UNDEAD_SLAVES:
     case ABIL_MAKHLEB_MINOR_DESTRUCTION:
@@ -120,7 +120,7 @@ static int _abil_degree(ability_type abil)
     case ABIL_SIF_MUNA_CHANNEL_ENERGY:
     case ABIL_OKAWARU_HEROISM:
     case ABIL_JIYVA_CALL_JELLY:
-        return (1 + random2(3));
+        return 1 + random2(3);
 
     case ABIL_ZIN_RECITE:
         return 2;
@@ -128,7 +128,7 @@ static int _abil_degree(ability_type abil)
     case ABIL_TSO_DIVINE_SHIELD:
     case ABIL_KIKU_RECEIVE_CORPSES:
     case ABIL_BEOGH_SMITING:
-        return (2 + random2(2));
+        return 2 + random2(2);
     case ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB:
     case ABIL_LUGONU_BEND_SPACE:
     case ABIL_FEDHAS_SUNLIGHT:
@@ -137,11 +137,11 @@ static int _abil_degree(ability_type abil)
     case ABIL_FEDHAS_SPAWN_SPORES:
     case ABIL_FEDHAS_EVOLUTION:
     case ABIL_CHEIBRIADOS_TIME_BEND:
-        return (2 + random2(3));
+        return 2 + random2(3);
     case ABIL_YRED_ANIMATE_REMAINS:
     case ABIL_YRED_ANIMATE_DEAD:
     case ABIL_YRED_DRAIN_LIFE:
-        return (2 + random2(4));
+        return 2 + random2(4);
 
     case ABIL_ZIN_IMPRISON:
     case ABIL_MAKHLEB_MAJOR_DESTRUCTION:
@@ -150,34 +150,34 @@ static int _abil_degree(ability_type abil)
     case ABIL_LUGONU_BANISH:
     case ABIL_JIYVA_SLIMIFY:
     case ABIL_CHEIBRIADOS_DISTORTION:
-        return (3 + random2(5));
+        return 3 + random2(5);
     case ABIL_TSO_CLEANSING_FLAME:
-        return (3 + random2(6));
+        return 3 + random2(6);
     case ABIL_OKAWARU_FINESSE:
-        return (3 + random2(7));
+        return 3 + random2(7);
 
     case ABIL_CHEIBRIADOS_SLOUCH:
-        return (4 + random2(4));
+        return 4 + random2(4);
     case ABIL_ELYVILON_PURIFICATION:
-        return (4 + random2(6));
+        return 4 + random2(6);
 
     case ABIL_LUGONU_CORRUPT:
     case ABIL_JIYVA_CURE_BAD_MUTATION:
     case ABIL_CHEIBRIADOS_TIME_STEP:
     case ABIL_KIKU_TORMENT:
-        return (5 + random2(5));
+        return 5 + random2(5);
     case ABIL_ZIN_SANCTUARY:
-        return (5 + random2(8));
+        return 5 + random2(8);
 
     case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
-        return (6 + random2(6));
+        return 6 + random2(6);
     case ABIL_ELYVILON_DIVINE_VIGOUR:
-        return (6 + random2(10));
+        return 6 + random2(10);
 
     case ABIL_TSO_SUMMON_DIVINE_WARRIOR:
     case ABIL_YRED_ENSLAVE_SOUL:
     case ABIL_LUGONU_ABYSS_EXIT:
-        return (8 + random2(10));
+        return 8 + random2(10);
 
     default:
         return 0;

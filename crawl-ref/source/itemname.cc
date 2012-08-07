@@ -391,38 +391,38 @@ const char* weapon_brand_name(const item_def& item, bool terse)
     switch (get_weapon_brand(item))
     {
     case SPWPN_NORMAL: return "";
-    case SPWPN_FLAMING: return ((terse) ? " (flame)" : " of flaming");
-    case SPWPN_FREEZING: return ((terse) ? " (freeze)" : " of freezing");
-    case SPWPN_HOLY_WRATH: return ((terse) ? " (holy)" : " of holy wrath");
-    case SPWPN_ELECTROCUTION: return ((terse) ? " (elec)":" of electrocution");
-    case SPWPN_ORC_SLAYING: return ((terse) ? " (slay orc)":" of orc slaying");
-    case SPWPN_DRAGON_SLAYING: return ((terse) ? " (slay drac)":" of dragon slaying");
-    case SPWPN_VENOM: return ((terse) ? " (venom)" : " of venom");
-    case SPWPN_PROTECTION: return ((terse) ? " (protect)" : " of protection");
-    case SPWPN_EVASION: return ((terse) ? " (evade)" : " of evasion");
-    case SPWPN_DRAINING: return ((terse) ? " (drain)" : " of draining");
-    case SPWPN_SPEED: return ((terse) ? " (speed)" : " of speed");
-    case SPWPN_PAIN: return ((terse) ? " (pain)" : " of pain");
-    case SPWPN_DISTORTION: return ((terse) ? " (distort)" : " of distortion");
-    case SPWPN_REACHING: return ((terse) ? " (reach)" : " of reaching");
-    case SPWPN_RETURNING: return ((terse) ? " (return)" : " of returning");
+    case SPWPN_FLAMING: return terse ? " (flame)" : " of flaming";
+    case SPWPN_FREEZING: return terse ? " (freeze)" : " of freezing";
+    case SPWPN_HOLY_WRATH: return terse ? " (holy)" : " of holy wrath";
+    case SPWPN_ELECTROCUTION: return terse ? " (elec)":" of electrocution";
+    case SPWPN_ORC_SLAYING: return terse ? " (slay orc)":" of orc slaying";
+    case SPWPN_DRAGON_SLAYING: return terse ? " (slay drac)":" of dragon slaying";
+    case SPWPN_VENOM: return terse ? " (venom)" : " of venom";
+    case SPWPN_PROTECTION: return terse ? " (protect)" : " of protection";
+    case SPWPN_EVASION: return terse ? " (evade)" : " of evasion";
+    case SPWPN_DRAINING: return terse ? " (drain)" : " of draining";
+    case SPWPN_SPEED: return terse ? " (speed)" : " of speed";
+    case SPWPN_PAIN: return terse ? " (pain)" : " of pain";
+    case SPWPN_DISTORTION: return terse ? " (distort)" : " of distortion";
+    case SPWPN_REACHING: return terse ? " (reach)" : " of reaching";
+    case SPWPN_RETURNING: return terse ? " (return)" : " of returning";
 
     case SPWPN_VAMPIRICISM:
-        return ((terse) ? " (vamp)" : ""); // non-terse already handled
+        return terse ? " (vamp)" : ""; // non-terse already handled
 
     case SPWPN_VORPAL:
         if (is_range_weapon(item))
-            return ((terse) ? " (velocity)" : " of velocity");
+            return terse ? " (velocity)" : " of velocity";
         else
         {
             switch (get_vorpal_type(item))
             {
-            case DVORP_CRUSHING: return ((terse) ? " (crush)" :" of crushing");
-            case DVORP_SLICING:  return ((terse) ? " (slice)" : " of slicing");
-            case DVORP_PIERCING: return ((terse) ? " (pierce)":" of piercing");
-            case DVORP_CHOPPING: return ((terse) ? " (chop)" : " of chopping");
-            case DVORP_SLASHING: return ((terse) ? " (slash)" :" of slashing");
-            case DVORP_STABBING: return ((terse) ? " (stab)" : " of stabbing");
+            case DVORP_CRUSHING: return terse ? " (crush)" :" of crushing";
+            case DVORP_SLICING:  return terse ? " (slice)" : " of slicing";
+            case DVORP_PIERCING: return terse ? " (pierce)":" of piercing";
+            case DVORP_CHOPPING: return terse ? " (chop)" : " of chopping";
+            case DVORP_SLASHING: return terse ? " (slash)" :" of slashing";
+            case DVORP_STABBING: return terse ? " (stab)" : " of stabbing";
             default:             return "";
             }
         }
@@ -430,13 +430,13 @@ const char* weapon_brand_name(const item_def& item, bool terse)
                                                       // handled elsewhere
 
     // ranged weapon brands
-    case SPWPN_FLAME: return ((terse) ? " (flame)" : " of flame");
-    case SPWPN_FROST: return ((terse) ? " (frost)" : " of frost");
-    case SPWPN_PENETRATION: return ((terse) ? " (penet)" : " of penetration");
-    case SPWPN_REAPING: return ((terse) ? " (reap)" : " of reaping");
+    case SPWPN_FLAME: return terse ? " (flame)" : " of flame";
+    case SPWPN_FROST: return terse ? " (frost)" : " of frost";
+    case SPWPN_PENETRATION: return terse ? " (penet)" : " of penetration";
+    case SPWPN_REAPING: return terse ? " (reap)" : " of reaping";
 
     // both ranged and non-ranged
-    case SPWPN_CHAOS: return ((terse) ? " (chaos)" : " of chaos");
+    case SPWPN_CHAOS: return terse ? " (chaos)" : " of chaos";
 
     // randart brands
     default: return "";
@@ -2723,7 +2723,7 @@ static bool _is_random_name_vowel(char let)
 static char _random_vowel(int seed)
 {
     static const char vowels[] = "aeiouaeiouaeiouy  ";
-    return (vowels[ seed % (sizeof(vowels) - 1) ]);
+    return vowels[ seed % (sizeof(vowels) - 1) ];
 }
 
 // Returns a random consonant with not quite equal probability.
@@ -2731,7 +2731,7 @@ static char _random_vowel(int seed)
 static char _random_cons(int seed)
 {
     static const char consonants[] = "bcdfghjklmnpqrstvwxzcdfghlmnrstlmnrst";
-    return (consonants[ seed % (sizeof(consonants) - 1) ]);
+    return consonants[ seed % (sizeof(consonants) - 1) ];
 }
 
 bool is_interesting_item(const item_def& item)
@@ -3570,5 +3570,5 @@ std::string get_corpse_name(const item_def &corpse, uint64_t *name_type)
     if (name_type != NULL)
         *name_type = corpse.props[CORPSE_NAME_TYPE_KEY].get_int64();
 
-    return (corpse.props[CORPSE_NAME_KEY].get_string());
+    return corpse.props[CORPSE_NAME_KEY].get_string();
 }

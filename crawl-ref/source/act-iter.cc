@@ -70,9 +70,9 @@ bool actor_iterator::valid(const actor* a) const
     switch (restr)
     {
     case R_CIRC:
-        return (circle->contains(a->pos()));
+        return circle->contains(a->pos());
     case R_LOS:
-        return (los->see_cell(a->pos()));
+        return los->see_cell(a->pos());
     case R_ACT:
         return act->can_see(a);
     default:

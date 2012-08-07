@@ -1702,8 +1702,8 @@ static int _apply_herbivore_nutrition_effects(int nutrition)
 
 static int _apply_gourmand_nutrition_effects(int nutrition, int gourmand)
 {
-    return (nutrition * (gourmand + GOURMAND_NUTRITION_BASE)
-                      / (GOURMAND_MAX + GOURMAND_NUTRITION_BASE));
+    return nutrition * (gourmand + GOURMAND_NUTRITION_BASE)
+                     / (GOURMAND_MAX + GOURMAND_NUTRITION_BASE);
 }
 
 static int _chunk_nutrition(int likes_chunks)

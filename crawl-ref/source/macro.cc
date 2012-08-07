@@ -215,7 +215,7 @@ static std::string get_macro_file()
     }
 
 #if defined(DGL_MACRO_ABSOLUTE_PATH)
-    return (dir.empty()? "macro.txt" : dir);
+    return dir.empty()? "macro.txt" : dir;
 #endif
 
     check_mkdir("Macro directory", &dir, true);
@@ -1272,13 +1272,13 @@ int command_to_key(command_type cmd)
     KeymapContext context = _context_for_command(cmd);
 
     if (context == KMC_NONE)
-        return ('\0');
+        return '\0';
 
     cmd_to_key_map           &cmd_map = _cmds_to_keys[context];
     cmd_to_key_map::iterator it       = cmd_map.find(cmd);
 
     if (it == cmd_map.end())
-        return ('\0');
+        return '\0';
 
     return it->second;
 }

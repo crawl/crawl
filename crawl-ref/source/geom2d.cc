@@ -166,7 +166,7 @@ double degrees(const vector &v)
 vector degree_to_vector(double d)
 {
     double rad = d / 180.0 * M_PI;
-    return (vector(cos(rad), sin(rad)));
+    return vector(cos(rad), sin(rad));
 }
 
 }

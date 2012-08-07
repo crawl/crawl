@@ -79,8 +79,8 @@ inline bool give_bad_mutation(const std::string &reason,
                               bool failMsg = true,
                               bool force_mutation = false)
 {
-    return (mutate(RANDOM_BAD_MUTATION, reason, failMsg, force_mutation,
-                   false, false, false));
+    return mutate(RANDOM_BAD_MUTATION, reason, failMsg, force_mutation,
+                  false, false, false);
 }
 
 void display_mutations();
