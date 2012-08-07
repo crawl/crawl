@@ -27,11 +27,11 @@ It rewards the powerful with power and the meek with weakness.
 %%%%
 Staff of Olgreb
 
-This was the magical weapon wielded by the mighty wizard Olgreb before he met his
-fate somewhere within these dungeons. It increases the ability of its wielder
-to use venomous magic, and carries magical powers which can be evoked. The
-tales say that Olgreb researched rare venoms that may have some limited effect
-even on creatures immune to all commonly known poisons.
+This was the magical weapon wielded by the mighty wizard Olgreb before he met
+his fate somewhere within these dungeons. It increases the ability of its
+wielder to use venomous magic, and carries magical powers which can be evoked.
+The tales say that Olgreb researched rare venoms that may have some limited
+effect even on creatures immune to all commonly known poisons.
 %%%%
 Staff of Wucad Mu
 
