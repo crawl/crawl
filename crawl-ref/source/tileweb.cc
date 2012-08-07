@@ -101,7 +101,6 @@ TilesFramework::TilesFramework()
       m_need_full_map(true),
       m_text_crt("crt"),
       m_text_menu("menu_txt"),
-      m_text_stat("stats"),
       m_text_message("messages"),
       m_print_fg(15)
 {
@@ -799,7 +798,7 @@ void TilesFramework::_send_player(bool force_full)
         c.position = pos;
     }
 
-    if (_update_statuses(c))
+    if (force_full || _update_statuses(c))
     {
         json_open_object("status");
         for (unsigned int i = 0; i < c.status.size(); ++i)
@@ -1292,7 +1291,6 @@ void TilesFramework::resize()
     _send_layout_data();
 
     m_text_message.resize(crawl_view.msgsz.x, crawl_view.msgsz.y);
-    m_text_stat.resize(crawl_view.hudsz.x, crawl_view.hudsz.y);
     m_text_crt.resize(crawl_view.termsz.x, crawl_view.termsz.y);
     m_text_menu.resize(crawl_view.termsz.x, crawl_view.termsz.y);
 }
@@ -1342,7 +1340,6 @@ void TilesFramework::_send_everything()
     finish_message();
 
     m_text_crt.send(true);
-    m_text_stat.send(true);
     m_text_message.send(true);
     m_text_menu.send(true);
 }
@@ -1384,7 +1381,7 @@ void TilesFramework::cgotoxy(int x, int y, GotoRegion region)
         break;
     case GOTO_STAT:
         set_ui_state(UI_NORMAL);
-        m_print_area = &m_text_stat;
+        m_print_area = NULL;
         break;
     default:
         m_print_area = NULL;
@@ -1398,7 +1395,6 @@ void TilesFramework::redraw()
     if (!has_receivers()) return;
 
     m_text_crt.send();
-    m_text_stat.send();
     m_text_message.send();
     m_text_menu.send();
 

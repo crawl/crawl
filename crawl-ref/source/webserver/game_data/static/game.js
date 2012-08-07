@@ -69,6 +69,7 @@ function ($, comm, client, dungeon_renderer, display, minimap, settings, enums) 
 
         minimap.fit_to(stat_width_px, layout_parameters);
 
+        $("#stats").width(stat_width_px);
         $("#monster_list").width(stat_width_px);
 
         // Go back to the old layer
