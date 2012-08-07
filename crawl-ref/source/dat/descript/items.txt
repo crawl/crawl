@@ -445,7 +445,7 @@ slain by jealous rivals using their own spells against them.
 bottled efreet
 
 A mighty efreet, captured by some wizard and bound into a bronze flask.
-Breaking the flask's seal will release it to wreak havoc - possibly on you.
+Breaking the flask's seal will release it to wreak havoc — possibly on you.
 %%%%
 bow
 
@@ -1410,7 +1410,7 @@ This scroll surrounds the reader with a dense cloud of fog.
 scroll of holy word
 
 This scroll calls on the powers of Heaven to cause great damage to any nearby
-unholy creature - including you!
+unholy creature — including you!
 %%%%
 scroll of identify
 
@@ -1466,7 +1466,7 @@ short delay.
 scroll of torment
 
 This scroll calls on the powers of darkness to inflict great pain on any nearby
-creature - including you! This halves the resilience of all living creatures,
+creature — including you! This halves the resilience of all living creatures,
 although is never directly fatal.
 %%%%
 scroll of vorpalise weapon
@@ -1620,7 +1620,7 @@ staff of poison
 
 This staff increases the power of poisoning spells cast by its wielder, and
 protects him or her from the effects of poison. If the wielder is skilled in
-both evocations and poison magic, they can poison creatures struck by it - even
+both evocations and poison magic, they can poison creatures struck by it — even
 if the victims were normally resistant.
 %%%%
 staff of power
@@ -1771,7 +1771,7 @@ A magical device which forms tunnels through unworked rock by liquefying it.
 wand of disintegration
 
 A magical device which disrupts the physical structure of anything but the
-hardest walls - even rigid statues, to say nothing of flesh.
+hardest walls — even rigid statues, to say nothing of flesh.
 %%%%
 wand of draining
 

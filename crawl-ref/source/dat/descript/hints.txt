@@ -63,7 +63,7 @@ close combat.
 %%%%
 death random 1
 
-Learn when to run away from things you can't handle - this is important! It is
+Learn when to run away from things you can't handle — this is important! It is
 often wise to skip a particularly dangerous level. But don't overdo this as
 monsters will only get harder the deeper you delve.
 %%%%
@@ -95,7 +95,7 @@ corridor so that they are forced to fight you one on one.
 %%%%
 finished
 
-Congrats! You survived until the end of the hint mode - be sure to try the
+Congrats! You survived until the end of the hint mode — be sure to try the
 other ones as well. Note that the command help screen
 (<w>$cmd[CMD_DISPLAY_COMMANDS]?</w>) will look very different from now on.
 Here's a last playing hint:

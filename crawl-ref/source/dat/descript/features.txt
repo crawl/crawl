@@ -133,7 +133,7 @@ This gate leads to the Realm of Zot, the final stage of your quest as its
 deepest level houses the infamous Orb of Zot. Both the Orb and this Realm have
 a fearsome and questionable reputation, but one piece of information seems to
 be for certain: The monsters inhabiting this area and protecting the Orb are
-strong and strange - some of them nowhere encountered but here.
+strong and strange — some of them nowhere encountered but here.
 %%%%
 A gateway back into the Dungeon
 
@@ -343,7 +343,7 @@ These stairs lead back to the mighty Vaults.
 %%%%
 A staircase leading out of the dungeon
 
-This exit leads to the Big Blue Room. Sky, singing birds, fresh air -- that
+This exit leads to the Big Blue Room. Sky, singing birds, fresh air — that
 kind of stuff. Also taxes and whatever else you ran from.
 
 Climbing these stairs will end your quest, whether you carry the Orb with you
@@ -602,12 +602,12 @@ An intensely hot pool of molten rock, emitting clouds of sulphurous smoke.
 Some shallow water
 
 This waist-deep, misty water makes movement and combat cumbersome for
-landlubbers - sometimes dangerous, but never directly fatal.
+landlubbers — sometimes dangerous, but never directly fatal.
 %%%%
 The open sea
 
 Nothing but endless wind and waves, and not a lighthouse in sight. You'd be
-lost beyond all hope in short order - better not risk it.
+lost beyond all hope in short order — better not risk it.
 %%%%
 ########################
 ### Vault redefinitions

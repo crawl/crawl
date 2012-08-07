@@ -170,7 +170,7 @@ Zot
 
 A region of the dungeon complex, safely locked away and referred to usually by
 madness, frenzy, lunacy. Only the most demented adventurers would dare to break
-the seal and press deeper - in the vain hope for a fabled artefact no one has
+the seal and press deeper — in the vain hope for a fabled artefact no one has
 ever laid eyes on before.
 
 The Realm of Zot is five levels deep and can only be entered when carrying at
