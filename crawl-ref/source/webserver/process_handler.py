@@ -2,26 +2,73 @@ import os, os.path, errno, fcntl
 import subprocess
 import datetime, time
 import hashlib
+import logging
 
 import config
 
 from tornado.escape import json_decode, json_encode, xhtml_escape
-from tornado.ioloop import PeriodicCallback
+from tornado.ioloop import PeriodicCallback, IOLoop
 
 from terminal import TerminalRecorder
 from connection import WebtilesSocketConnection
 from util import DynamicTemplateLoader, dgl_format_str, parse_where_data
 from game_data_handler import GameDataHandler
-from ws_handler import update_all_lobbys
+from ws_handler import update_all_lobbys, remove_in_lobbys
+from inotify import DirectoryWatcher
 
 last_game_id = 0
 
+processes = dict()
+unowned_process_logger = logging.LoggerAdapter(logging.getLogger(), {})
+
+def handle_new_socket(path, event):
+    dirname, filename = os.path.split(path)
+    if ":" not in filename or not filename.endswith(".sock"): return
+    username = filename[:filename.index(":")]
+    abspath = os.path.abspath(path)
+    if event == DirectoryWatcher.CREATE:
+        if abspath in processes: return # Created by us
+
+        # Find a game_info with this socket path
+        game_info = None
+        for game_id in config.games.keys():
+            gi = config.games[game_id]
+            if os.path.abspath(gi["socket_path"]) == os.path.abspath(dirname):
+                game_info = gi
+                break
+        game_info["id"] = game_id
+
+        # Create process handler
+        process = CrawlProcessHandler(game_info, username,
+                                      unowned_process_logger)
+        processes[abspath] = process
+        process.connect(abspath)
+
+        # Notify lobbys
+        update_all_lobbys(process)
+    elif event == DirectoryWatcher.DELETE:
+        if abspath not in processes: return
+        process = processes[abspath]
+        if process.process: return # Handled by us, will be removed later
+        process.handle_process_end()
+        remove_in_lobbys(process)
+        del processes[abspath]
+
+def watch_socket_dirs():
+    watcher = DirectoryWatcher()
+    added_dirs = set()
+    for game_id in config.games.keys():
+        game_info = config.games[game_id]
+        socket_dir = os.path.abspath(game_info["socket_path"])
+        if socket_dir in added_dirs: continue
+        watcher.watch(socket_dir, handle_new_socket)
+
 class CrawlProcessHandlerBase(object):
-    def __init__(self, game_params, username, logger, io_loop):
+    def __init__(self, game_params, username, logger, io_loop=None):
         self.game_params = game_params
         self.username = username
         self.logger = logger
-        self.io_loop = io_loop
+        self.io_loop = io_loop or IOLoop.instance()
 
         self.process = None
         self.client_path = self.config_path("client_path")
@@ -235,7 +282,7 @@ class CrawlProcessHandlerBase(object):
         raise NotImplementedError()
 
 class CrawlProcessHandler(CrawlProcessHandlerBase):
-    def __init__(self, game_params, username, logger, io_loop):
+    def __init__(self, game_params, username, logger, io_loop=None):
         super(CrawlProcessHandler, self).__init__(game_params, username,
                                                   logger, io_loop)
         self.socketpath = None
@@ -371,6 +418,8 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         ttyrec_path = self.config_path("ttyrec_path")
         self.ttyrec_filename = os.path.join(ttyrec_path, self.lock_basename)
 
+        processes[os.path.abspath(self.socketpath)] = self
+
         self.logger.info("Starting crawl.")
 
         self.process = TerminalRecorder(call, self.ttyrec_filename,
@@ -383,9 +432,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
 
         self.gen_inprogress_lock()
 
-        self.conn = WebtilesSocketConnection(self.io_loop, self.socketpath)
-        self.conn.message_callback = self._on_socket_message
-        self.conn.connect()
+        self.connect(self.socketpath)
 
         self.logger.info("Crawl FDs: fd%s, fd%s.",
                          self.process.child_fd,
@@ -394,6 +441,12 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         self.last_activity_time = time.time()
 
         self.check_where()
+
+    def connect(self, socketpath):
+        self.socketpath = socketpath
+        self.conn = WebtilesSocketConnection(self.io_loop, self.socketpath)
+        self.conn.message_callback = self._on_socket_message
+        self.conn.connect()
 
     def gen_inprogress_lock(self):
         self.inprogress_lock = os.path.join(self.config_path("inprogress_path"),
@@ -430,6 +483,11 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         self.logger.info("Crawl terminated.")
 
         self.remove_inprogress_lock()
+
+        try:
+            del processes[os.path.abspath(self.socketpath)]
+        except KeyError:
+            self.logger.warning("Process entry already deleted: %s", self.socketpath)
 
         self.process = None
 
@@ -485,7 +543,8 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         # stdout data is only used for compatibility to wrapper
         # scripts -- so as soon as we receive something on the socket,
         # we stop using stdout
-        self.process.output_callback = None
+        if self.process:
+            self.process.output_callback = None
 
         if msg.startswith("*"):
             # Special message to the server

@@ -201,6 +201,9 @@ if __name__ == "__main__":
         purge_login_tokens_timeout()
         start_reading_milestones()
 
+    if watch_socket_dirs:
+        process_handler.watch_socket_dirs()
+
     logging.info("Webtiles server started! (PID: %s)" % os.getpid())
 
     try:

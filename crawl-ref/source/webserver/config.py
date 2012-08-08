@@ -30,6 +30,9 @@ server_id = ""
 # Disable caching of game data files
 game_data_no_cache = True
 
+# Watch socket dirs for games not started by the server
+watch_socket_dirs = False
+
 # Game configs
 # %n in paths is replaced by the current username
 games = OrderedDict([
