@@ -18,6 +18,7 @@
 #include "itemprop.h"
 #include "files.h"
 #include "godpassive.h"
+#include "godprayer.h"
 #include "invent.h"
 #include "items.h"
 #include "kills.h"
@@ -236,8 +237,17 @@ bool Stash::sacrificiable() const
     }
 
     for (int i = 0, size = items.size(); i < size; ++i)
+    {
+        if (you.religion == GOD_NEMELEX_XOBEH
+            && !check_nemelex_sacrificing_item_type(items[i])
+            || items[i].flags & (ISFLAG_DROPPED | ISFLAG_THROWN))
+        {
+            continue;
+        }
+
         if (god_likes_item(you.religion, items[i]))
             return true;
+    }
 
     return false;
 }
@@ -1164,8 +1174,11 @@ bool LevelStashes::shop_needs_visit(const coord_def& c) const
 bool LevelStashes::needs_visit(const coord_def& c) const
 {
     const Stash *s = find_stash(c);
-    if (s && (s->unverified() || s->pickup_eligible() || s->sacrificiable()))
+    if (s && (s->unverified() || s->sacrificiable()
+              || s->pickup_eligible() && can_autopickup()))
+    {
         return true;
+    }
 
     return shop_needs_visit(c);
 }

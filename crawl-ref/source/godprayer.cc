@@ -759,7 +759,7 @@ piety_gain_t sacrifice_item_stack(const item_def& item, int *js)
     return relative_gain;
 }
 
-static bool _check_nemelex_sacrificing_item_type(const item_def& item)
+bool check_nemelex_sacrificing_item_type(const item_def& item)
 {
     switch (item.base_type)
     {
@@ -835,7 +835,7 @@ static bool _offer_items()
 
         // Skip items you don't want to sacrifice right now.
         if (you.religion == GOD_NEMELEX_XOBEH
-            && !_check_nemelex_sacrificing_item_type(item))
+            && !check_nemelex_sacrificing_item_type(item))
         {
             i = next;
             continue;
