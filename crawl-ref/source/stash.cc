@@ -228,7 +228,9 @@ bool Stash::pickup_eligible() const
 bool Stash::sacrificiable() const
 {
     if (!(Options.explore_stop & ES_GREEDY_SACRIFICIABLE)
-        || !god_likes_items(you.religion))
+        || !god_likes_items(you.religion)
+        || you.religion == GOD_ASHENZARI) // Ash's sacrifice isn't trading items
+                        // for piety so it shouldn't make explore greedy for ?RC
     {
         return false;
     }
