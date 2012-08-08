@@ -1204,7 +1204,7 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode)
     if (runmode == RMODE_CONNECTIVITY)
         ignore_player_traversability = true;
 
-    need_for_greed = (runmode == RMODE_EXPLORE_GREEDY && can_autopickup());
+    need_for_greed = (runmode == RMODE_EXPLORE_GREEDY);
 
     if (!ls && (annotate_map || need_for_greed))
         ls = StashTrack.find_current_level();
@@ -4028,8 +4028,8 @@ void runrest::clear()
 // explore_discoveries
 
 explore_discoveries::explore_discoveries()
-    : can_autopickup(::can_autopickup()), es_flags(0), current_level(NULL),
-      items(), stairs(), portals(), shops(), altars()
+    : es_flags(0), current_level(NULL), items(), stairs(), portals(), shops(),
+      altars()
 {
 }
 
@@ -4178,9 +4178,8 @@ void explore_discoveries::found_item(const coord_def &pos, const item_def &i)
 
         if (current_level)
         {
-            const bool greed_inducing =
-                can_autopickup
-                && _is_greed_inducing_square(current_level, pos);
+            const bool greed_inducing = _is_greed_inducing_square(current_level,
+                                                                  pos);
 
             if (greed_inducing && (Options.explore_stop & ES_GREEDY_ITEM))
                 ; // Stop for this condition

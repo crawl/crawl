@@ -261,7 +261,6 @@ private:
         }
     };
 
-    bool can_autopickup;
     int es_flags;
     const LevelStashes *current_level;
     std::vector< named_thing<item_def> > items;
