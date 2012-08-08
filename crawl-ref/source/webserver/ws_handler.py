@@ -35,6 +35,11 @@ def update_all_lobbys(game):
     for socket in list(sockets):
         if socket.is_in_lobby():
             socket.send_message("lobby_entry", **lobby_entry)
+def remove_in_lobbys(process):
+    for socket in list(sockets):
+        if socket.is_in_lobby():
+            socket.send_message("lobby_remove", id=process.id)
+
 
 def write_dgl_status_file():
     f = None
@@ -75,11 +80,11 @@ def find_user_sockets(username):
             yield socket
 
 def find_running_game(charname, start):
-    for socket in list(sockets):
-        if (socket.is_running() and
-            socket.process.where.get("name") == charname and
-            socket.process.where.get("start") == start):
-            return socket.process
+    from process_handler import processes
+    for process in processes.values():
+        if (process.where.get("name") == charname and
+            process.where.get("start") == start):
+            return process
     return None
 
 milestone_file_tailers = []
@@ -179,9 +184,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def send_lobby(self):
         self.send_message("lobby_clear")
-        for socket in sockets:
-            if socket.is_running():
-                self.send_message("lobby_entry", **socket.process.lobby_entry())
+        from process_handler import processes
+        for process in processes.values():
+            self.send_message("lobby_entry", **process.lobby_entry())
         self.send_message("lobby_complete")
 
     def send_game_links(self):
@@ -258,9 +263,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def _on_crawl_end(self):
         if config.dgl_mode:
-            for socket in list(sockets):
-                if socket.is_in_lobby():
-                    socket.send_message("lobby_remove", id=self.process.id)
+            remove_in_lobbys(self.process)
         self.process = None
 
         if self.client_closed:
@@ -362,8 +365,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.received_pong = True
 
     def watch(self, username):
-        procs = [socket.process for socket in find_user_sockets(username)
-                 if socket.is_running()]
+        from process_handler import processes
+        procs = [process for process in processes.values()
+                 if process.username.lower() == username.lower()]
         if len(procs) >= 1:
             process = procs[0]
             self.logger.info("Started watching %s.", process.username)
