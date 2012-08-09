@@ -67,7 +67,7 @@ int clua_stringtable(lua_State *ls, const std::vector<std::string> &s);
  */
 
 template <class T>
-inline static T *clua_get_lightuserdata(lua_State *ls, int ndx)
+static inline T *clua_get_lightuserdata(lua_State *ls, int ndx)
 {
     return (lua_islightuserdata(ls, ndx))?
             static_cast<T *>(lua_touserdata(ls, ndx))
@@ -75,7 +75,7 @@ inline static T *clua_get_lightuserdata(lua_State *ls, int ndx)
 }
 
 template <class T>
-inline static T *clua_get_userdata(lua_State *ls, const char *mt, int ndx = 1)
+static inline T *clua_get_userdata(lua_State *ls, const char *mt, int ndx = 1)
 {
     return static_cast<T*>(luaL_checkudata(ls, ndx, mt));
 }
@@ -99,7 +99,7 @@ template <class T> T *clua_new_userdata(
 }
 
 template <typename T>
-inline void dlua_push_userdata(lua_State *ls, T udata, const char *meta)
+static inline void dlua_push_userdata(lua_State *ls, T udata, const char *meta)
 {
     T *de = clua_new_userdata<T>(ls, meta);
     *de = udata;

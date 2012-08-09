@@ -1103,7 +1103,7 @@ void yell(bool force)
     noisy(noise_level, you.pos());
 }
 
-inline static dungeon_feature_type _vitrified_feature(dungeon_feature_type feat)
+static inline dungeon_feature_type _vitrified_feature(dungeon_feature_type feat)
 {
     switch (feat)
     {

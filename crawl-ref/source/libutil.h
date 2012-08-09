@@ -129,7 +129,7 @@ std::string &trim_string(std::string &str);
 std::string &trim_string_right(std::string &str);
 std::string trimmed_string(std::string s);
 
-inline bool starts_with(const std::string &s, const std::string &prefix)
+static inline bool starts_with(const std::string &s, const std::string &prefix)
 {
     return (s.rfind(prefix, 0) != std::string::npos);
 }

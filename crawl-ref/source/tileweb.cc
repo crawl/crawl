@@ -612,7 +612,7 @@ static bool _needs_flavour(const packed_cell &cell)
     return false;
 }
 
-inline unsigned _get_brand(int col)
+static inline unsigned _get_brand(int col)
 {
     return (col & COLFLAG_FRIENDLY_MONSTER) ? Options.friend_brand :
            (col & COLFLAG_NEUTRAL_MONSTER)  ? Options.neutral_brand :
@@ -625,7 +625,7 @@ inline unsigned _get_brand(int col)
                                             : CHATTR_NORMAL;
 }
 
-inline void _write_tileidx(tileidx_t t)
+static inline void _write_tileidx(tileidx_t t)
 {
     // JS can only handle signed ints
     const int lo = t & 0xFFFFFFFF;

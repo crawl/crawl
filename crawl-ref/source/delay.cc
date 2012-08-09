@@ -1621,7 +1621,7 @@ static bool _should_stop_activity(const delay_queue_item &item,
             || Options.activity_interrupts[item.type][ai]);
 }
 
-inline static bool _monster_warning(activity_interrupt_type ai,
+static inline bool _monster_warning(activity_interrupt_type ai,
                                     const activity_interrupt_data &at,
                                     delay_type atype,
                                     std::vector<std::string>* msgs_buf = NULL)

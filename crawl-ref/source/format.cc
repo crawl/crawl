@@ -290,7 +290,7 @@ int formatted_string::width() const
     return len;
 }
 
-inline void cap(int &i, int max)
+static inline void cap(int &i, int max)
 {
     if (i < 0 && -i <= max)
         i += max;
