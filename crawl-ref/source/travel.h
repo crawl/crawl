@@ -261,6 +261,8 @@ private:
         }
     };
 
+    bool can_autopickup;
+    bool sacrifice;
     int es_flags;
     const LevelStashes *current_level;
     std::vector< named_thing<item_def> > items;
@@ -572,6 +574,12 @@ protected:
 
     // Are we greedy exploring?
     bool need_for_greed;
+
+    // Can we autopickup?
+    bool autopickup;
+
+    // Does god wants sacrifices?
+    bool sacrifice;
 
     // Targets for explore and greedy explore.
     coord_def unexplored_place, greedy_place;

@@ -250,7 +250,7 @@ public:
 
     // Returns true if the square at c contains potentially interesting
     // swag that merits a personal visit (for EXPLORE_GREEDY).
-    bool  needs_visit(const coord_def& c) const;
+    bool  needs_visit(const coord_def& c, bool autopickup, bool sacrifice) const;
     bool  shop_needs_visit(const coord_def& c) const;
 
     // Returns true if the items at c are not fully known to the stash-tracker

@@ -94,7 +94,7 @@ bool bless_follower(monster* follower = NULL,
 
 bool god_hates_attacking_friend(god_type god, const actor *fr);
 bool god_likes_item(god_type god, const item_def& item);
-bool god_likes_items(god_type god);
+bool god_likes_items(god_type god, bool greedy_explore = false);
 
 void get_pure_deck_weights(int weights[]);
 
