@@ -642,24 +642,25 @@ void TilesFramework::_send_cell(const coord_def &gc,
                                 std::map<uint32_t, coord_def>& new_monster_locs,
                                 bool force_full)
 {
-    if ((force_full && next_mc.feat()) || current_mc.feat() != next_mc.feat())
+    if (current_mc.feat() != next_mc.feat())
+    {
         write_message("f:%d,", next_mc.feat());
+    }
 
     if (next_mc.monsterinfo())
         _send_monster(gc, next_mc.monsterinfo(), new_monster_locs, force_full);
-    else if (!force_full && current_mc.monsterinfo())
+    else if (current_mc.monsterinfo())
         write_message("mon:null,");
 
     map_feature mf = get_cell_map_feature(next_mc);
-    if ((force_full && mf)
-        || (get_cell_map_feature(current_mc) != mf))
+    if (get_cell_map_feature(current_mc) != mf)
     {
         write_message("mf:%u,", mf);
     }
 
     // Glyph and colour
     ucs_t glyph = next_sc.glyph;
-    if (force_full ? (glyph != ' ') : (current_sc.glyph != glyph))
+    if (current_sc.glyph != glyph)
     {
         if (glyph == '\\')
             write_message("g:'\\\\',");
@@ -672,7 +673,7 @@ void TilesFramework::_send_cell(const coord_def &gc,
             write_message("g:'%s',", buf);
         }
     }
-    if (force_full ? (next_sc.colour != 7) : (current_sc.colour != next_sc.colour))
+    if (current_sc.colour != next_sc.colour)
     {
         int col = next_sc.colour;
         col = (_get_brand(col) << 4) | (col & 0xF);
@@ -690,7 +691,7 @@ void TilesFramework::_send_cell(const coord_def &gc,
         const bool in_water = _in_water(next_pc);
         bool fg_changed = false;
 
-        if ((force_full && next_pc.fg) || next_pc.fg != current_pc.fg)
+        if (next_pc.fg != current_pc.fg)
         {
             fg_changed = true;
 
@@ -701,88 +702,74 @@ void TilesFramework::_send_cell(const coord_def &gc,
                 write_message("base:%u,", (unsigned int) tileidx_known_base_item(fg_idx));
         }
 
-        if ((force_full && next_pc.bg != TILE_FLAG_UNSEEN)
-            || next_pc.bg != current_pc.bg)
+        if (next_pc.bg != current_pc.bg)
         {
             write_message("bg:");
             _write_tileidx(next_pc.bg);
             write_message(",");
         }
 
-        if ((force_full && next_pc.is_bloody)
-            || next_pc.is_bloody != current_pc.is_bloody)
+        if (next_pc.is_bloody != current_pc.is_bloody)
         {
             write_message("bloody:%u,", next_pc.is_bloody);
         }
 
-        if ((force_full && next_pc.old_blood)
-            || next_pc.old_blood != current_pc.old_blood)
+        if (next_pc.old_blood != current_pc.old_blood)
         {
             write_message("old_blood:%u,", next_pc.old_blood);
         }
 
-        if ((force_full && next_pc.is_silenced)
-            || next_pc.is_silenced != current_pc.is_silenced)
+        if (next_pc.is_silenced != current_pc.is_silenced)
         {
             write_message("silenced:%u,", next_pc.is_silenced);
         }
 
-        if ((force_full && next_pc.is_suppressed)
-            || next_pc.is_suppressed != current_pc.is_suppressed)
+        if (next_pc.is_suppressed != current_pc.is_suppressed)
         {
             write_message("suppressed:%u,", next_pc.is_suppressed);
         }
 
-        if ((force_full && next_pc.halo)
-            || next_pc.halo != current_pc.halo)
+        if (next_pc.halo != current_pc.halo)
         {
             write_message("halo:%u,", next_pc.halo);
         }
 
-        if ((force_full && next_pc.is_moldy)
-            || next_pc.is_moldy != current_pc.is_moldy)
+        if (next_pc.is_moldy != current_pc.is_moldy)
         {
             write_message("moldy:%u,", next_pc.is_moldy);
         }
 
-        if ((force_full && next_pc.glowing_mold)
-            || next_pc.glowing_mold != current_pc.glowing_mold)
+        if (next_pc.glowing_mold != current_pc.glowing_mold)
         {
             write_message("glowing_mold:%u,", next_pc.glowing_mold);
         }
 
-        if ((force_full && next_pc.is_sanctuary)
-            || next_pc.is_sanctuary != current_pc.is_sanctuary)
+        if (next_pc.is_sanctuary != current_pc.is_sanctuary)
         {
             write_message("sanctuary:%u,", next_pc.is_sanctuary);
         }
 
-        if ((force_full && next_pc.is_liquefied)
-            || next_pc.is_liquefied != current_pc.is_liquefied)
+        if (next_pc.is_liquefied != current_pc.is_liquefied)
         {
             write_message("liquefied:%u,", next_pc.is_liquefied);
         }
 
-        if ((force_full && next_pc.orb_glow)
-            || next_pc.orb_glow != current_pc.orb_glow)
+        if (next_pc.orb_glow != current_pc.orb_glow)
         {
             write_message("orb_glow:%u,", next_pc.orb_glow);
         }
 
-        if ((force_full && next_pc.mangrove_water)
-            || next_pc.mangrove_water != current_pc.mangrove_water)
+        if (next_pc.mangrove_water != current_pc.mangrove_water)
         {
             write_message("swtree:%u,", next_pc.mangrove_water);
         }
 
-        if ((force_full && next_pc.blood_rotation)
-            || next_pc.blood_rotation != current_pc.blood_rotation)
+        if (next_pc.blood_rotation != current_pc.blood_rotation)
         {
             write_message("bloodrot:%d,", next_pc.blood_rotation);
         }
 
-        if ((force_full && next_pc.travel_trail)
-            || next_pc.travel_trail != current_pc.travel_trail)
+        if (next_pc.travel_trail != current_pc.travel_trail)
         {
             write_message("tt:%d,", next_pc.travel_trail);
         }
@@ -848,8 +835,7 @@ void TilesFramework::_send_cell(const coord_def &gc,
             }
         }
 
-        if ((force_full && next_pc.num_dngn_overlay)
-            || overlays_changed)
+        if (overlays_changed)
         {
             write_message("ov:[");
             for (int i = 0; i < next_pc.num_dngn_overlay; ++i)
@@ -871,6 +857,12 @@ void TilesFramework::_send_map(bool force_full)
 
     if (force_full)
         write_message("clear:1,");
+
+    screen_cell_t default_cell;
+    default_cell.tile.bg = TILE_FLAG_UNSEEN;
+    default_cell.glyph = ' ';
+    default_cell.colour = 7;
+    map_cell default_map_cell;
 
     coord_def last_gc(0, 0);
     bool send_gc = true;
@@ -911,8 +903,14 @@ void TilesFramework::_send_map(bool force_full)
                 push_prefix("{");
             }
 
-            _send_cell(gc, m_current_view(gc), m_next_view(gc),
-                       m_current_map_knowledge(gc), env.map_knowledge(gc),
+            const screen_cell_t& sc = force_full ? default_cell
+                : m_current_view(gc);
+            const map_cell& mc = force_full ? default_map_cell
+                : m_current_map_knowledge(gc);
+            _send_cell(gc,
+                       sc,
+                       m_next_view(gc),
+                       mc, env.map_knowledge(gc),
                        new_monster_locs, force_full);
 
             if (prefix_popped())
