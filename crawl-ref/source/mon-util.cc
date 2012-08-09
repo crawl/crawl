@@ -320,7 +320,7 @@ void set_resist(resists_t &all, mon_resist_flags res, int lev)
 
     ASSERT(lev >= -3);
     ASSERT(lev <= 4);
-    all = all & ~(res * 7) | res * lev;
+    all = all & ~(res * 7) | res * (lev & 7);
 }
 
 resists_t get_mons_class_resists(monster_type mc)
