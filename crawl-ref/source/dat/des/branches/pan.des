@@ -128,12 +128,20 @@ disco_choices = {
 
 colour.add_colour("disco", function(rand, x, y)
     local vault = dgn.vault_at(x, y)
-    local ul = vault:pos()
-    local ulx, uly = ul:xy()
-    x, y = x - ulx, y - uly
+    local ballx = 0
+    local bally = 0
+    if vault then
+        local ul = vault:pos()
+        local ulx, uly = ul:xy()
+        x, y = x - ulx, y - uly
 
-    local map = vault:map()
-    local ballx, bally = dgn.gly_point(map, "D")
+        local map = vault:map()
+        local bx, by = dgn.gly_point(map, "D")
+        if bx ~= nil then
+            ballx = bx
+            bally = by
+        end
+    end
 
     local cycle = disco_choices[math.floor((you.turns() % (16 * #disco_choices)) / 16) + 1]
     return cycle(x, y, ballx, bally, you.turns() % 16, rand)
