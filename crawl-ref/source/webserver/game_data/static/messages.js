@@ -1,6 +1,19 @@
 define(["jquery", "comm", "./util"],
 function ($, comm, util) {
     var messages = [];
+    var old_scroll_top;
+
+    function hide()
+    {
+        old_scroll_top = $("#messages_container").scrollTop();
+        $("#messages").hide();
+    }
+
+    function show()
+    {
+        $("#messages").show();
+        $("#messages_container").scrollTop(old_scroll_top);
+    }
 
     function add_message(data)
     {
@@ -25,7 +38,11 @@ function ($, comm, util) {
             msg_elem.append(repeats);
         }
         $("#messages").append(msg_elem);
-        $("#messages_container").scrollTop($("#messages").height());
+        $("#messages_container")
+            .stop(true, false)
+            .animate({
+            scrollTop: $("#messages").height()
+        }, "fast");
     }
 
     function rollback(count)
@@ -109,5 +126,7 @@ function ($, comm, util) {
         });
 
     return {
+        hide: hide,
+        show: show
     };
 });

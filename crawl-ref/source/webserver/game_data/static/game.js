@@ -1,7 +1,7 @@
 define(["jquery", "comm", "client", "./dungeon_renderer", "./display", "./minimap",
-        "./settings", "./enums",
-        "./text", "./menu", "./player", "./messages"],
-function ($, comm, client, dungeon_renderer, display, minimap, settings, enums) {
+        "./settings", "./enums", "./messages",
+        "./text", "./menu", "./player"],
+function ($, comm, client, dungeon_renderer, display, minimap, settings, enums, messages) {
     var layout_parameters, ui_state;
 
     function init()
@@ -95,7 +95,7 @@ function ($, comm, client, dungeon_renderer, display, minimap, settings, enums) 
                                     layout_parameters.window_height - 5,
                                     layout_parameters.show_diameter);
             $("#right_column").hide();
-            $("#messages").hide();
+            messages.hide();
         }
         else
         {
@@ -103,7 +103,7 @@ function ($, comm, client, dungeon_renderer, display, minimap, settings, enums) 
                                     layout_parameters.remaining_height,
                                     layout_parameters.show_diameter);
             $("#right_column").show();
-            $("#messages").show();
+            messages.show();
         }
         display.invalidate(true);
         display.display();
