@@ -400,9 +400,17 @@ MARCH := $(uname_M)
 
 ifndef NO_AUTO_SDK
 
+# The SDK locations were moved in 10.8; this snippet tries to find them
+# there first, then reverts to the original location.
+ifeq ($(shell test -e /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer || echo NOPE),)
+DEVELOPER_PATH := /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer
+else
+DEVELOPER_PATH := /Developer
+endif
+
 # Find the oldest SDK available, in attempt to make this build as
 # backward-compatible as we possibly can.
-SDK_VER := $(shell ls /Developer/SDKs | sort -n | head -1 | perl -pe 's/^MacOSX//g;s/.sdk$$//g')
+SDK_VER := $(shell ls $(DEVELOPER_PATH)/SDKs | sort -n | head -1 | perl -pe 's/^MacOSX//g;s/.sdk$$//g')
 
 ifeq ($(SDK_VER),10.4u)
 SDK_VER := 10.4
@@ -434,9 +442,9 @@ endif
 # else is much easier to predict the name of.
 ifeq ($(SDK_VER),10.4)
 GCC_VER := 4.0
-SDKROOT := /Developer/SDKs/MacOSX$(SDK_VER)u.sdk
+SDKROOT := $(DEVELOPER_PATH)/SDKs/MacOSX$(SDK_VER)u.sdk
 else
-SDKROOT := /Developer/SDKs/MacOSX$(SDK_VER).sdk
+SDKROOT := $(DEVELOPER_PATH)/SDKs/MacOSX$(SDK_VER).sdk
 endif
 
 ifneq ($(shell test -d $(SDKROOT) || echo NOPE),)
