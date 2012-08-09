@@ -508,6 +508,54 @@ string player::arm_name(bool plural, bool *can_plural) const
     return str;
 }
 
+std::string player::unarmed_attack_name() const
+{
+    std::string text = "Nothing wielded"; // Default
+
+    if (species == SP_FELID)
+        text = "Teeth and claws";
+    else if (has_usable_claws(true))
+        text = "Claws";
+    else if (has_usable_tentacles(true))
+        text = "Tentacles";
+
+    switch (form)
+    {
+    case TRAN_SPIDER:
+        text = "Fangs (venom)";
+        break;
+    case TRAN_BLADE_HANDS:
+        text = "Blade " + blade_parts(true);
+        break;
+    case TRAN_STATUE:
+        if (has_usable_claws(true))
+            text = "Stone claws";
+        else if (has_usable_tentacles(true))
+            text = "Stone tentacles";
+        else
+            text = "Stone fists";
+        break;
+    case TRAN_ICE_BEAST:
+        text = "Ice fists (freeze)";
+        break;
+    case TRAN_DRAGON:
+        text = "Teeth and claws";
+        break;
+    case TRAN_LICH:
+        text += " (drain)";
+        break;
+    case TRAN_BAT:
+    case TRAN_PIG:
+        text = "Teeth";
+        break;
+    case TRAN_NONE:
+    case TRAN_APPENDAGE:
+    default:
+        break;
+    }
+    return text;
+}
+
 bool player::fumbles_attack(bool verbose)
 {
     bool did_fumble = false;

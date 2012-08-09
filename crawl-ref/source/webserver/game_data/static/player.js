@@ -9,10 +9,14 @@ function ($, comm, enums, map_knowledge) {
         gold: 0,
         str: 0, int: 0, dex: 0,
         piety_rank: 0, penance: false,
+        inv: {}, equip: {},
         pos: null
     };
     var last_time = null;
     window.player = player;
+
+    for (var i = 0; i < enums.equip.NUM_EQUIP; ++i)
+        player.equip[i] = -1;
 
     function update_bar(name)
     {
@@ -22,6 +26,8 @@ function ($, comm, enums, map_knowledge) {
             old_value = player["old_" + name];
         else
             old_value = value;
+        if (value < 0)
+            value = 0;
         player["old_" + name] = value;
         var increase = old_value < value;
         var full_bar = (100 * (increase ? old_value : value) / max).toFixed(0);
@@ -36,6 +42,37 @@ function ($, comm, enums, map_knowledge) {
     function repeat_string(s, n)
     {
         return Array(n+1).join(s);
+    }
+
+    function index_to_letter(index)
+    {
+        if (index < 26)
+            return String.fromCharCode("a".charCodeAt(0) + index);
+        else
+            return String.fromCharCode("A".charCodeAt(0) + index - 26);
+    }
+
+    function inventory_item_desc(index)
+    {
+        var item = player.inv[index];
+        return index_to_letter(index) + ") " + item.name;
+    }
+
+    function wielded_weapon()
+    {
+        var wielded = player.equip[enums.equip.WEAPON];
+        if (wielded == -1)
+            return "-) " + player.unarmed_attack;
+        else
+            return inventory_item_desc(wielded);
+    }
+
+    function quiver()
+    {
+        if (player.quiver_item == -1)
+            return "-) Nothing quivered";
+        else
+            return inventory_item_desc(player.quiver_item);
     }
 
     var simple_stats = ["hp", "hp_max", "mp", "mp_max",
@@ -84,11 +121,21 @@ function ($, comm, enums, map_knowledge) {
                        + status_light + "</span> ");
         }
         $("#stats_status_lights").html(status);
+
+        $("#stats_weapon").html(wielded_weapon());
+        $("#stats_quiver").html(quiver());
     }
 
     function handle_player_message(data)
     {
-        log(data);
+        for (var i in data.inv)
+        {
+            player.inv[i] = player.inv[i] || {};
+            $.extend(player.inv[i], data.inv[i]);
+        }
+        $.extend(player.equip, data.equip);
+        delete data.equip;
+        delete data.inv;
         delete data.msg;
 
         $.extend(player, data);
