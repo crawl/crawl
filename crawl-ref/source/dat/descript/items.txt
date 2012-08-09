@@ -31,7 +31,7 @@ will fail to provide its protection until more power is available.
 %%%%
 amulet of inaccuracy
 
-This amulet makes its wearer less accurate in hand combat and when targetting
+This amulet makes its wearer less accurate in melee combat and when targetting
 monsters via ranged attacks or spells.
 %%%%
 amulet of rage
@@ -169,6 +169,9 @@ feel the sheer impact of arcane fury contained within. It is sought after by
 sorcerers, for it allows the gifted and resourceful to command destruction with
 the ease of a twinkle. Feeble wizards, however, may well meet their doom when
 trying to read this opus.
+
+WARNING: If you fail in an attempt to memorise a spell from this book, the book
+will lash out at you.
 %%%%
 book of beasts
 
@@ -497,7 +500,7 @@ An almost tasteless green vegetable, which grows on a vine.
 %%%%
 chunk of flesh
 
-A piece of meat found in the dungeon.
+A piece of raw meat found in the dungeon. It won't stay fresh for long.
 %%%%
 cloak
 
@@ -729,6 +732,9 @@ abominable runes, describe how the mighty among summoners can bend to their
 will the terrible things from betwixt the planes. Many have been the unwary
 souls, however, who have toyed with this tome and been driven mad by eldritch
 horrors from beyond imagining.
+
+WARNING: If you fail in an attempt to memorise a spell from this book, the book
+will lash out at you.
 %%%%
 grape
 
@@ -1695,8 +1701,6 @@ swamp dragon hide
 The slimy{{
     if you.can_smell() then
         return ", smelly"
-    else
-        return ""
     end
 }} skin of a swamp-dwelling dragon. It confers resistance to poison on its
 wearer, and it may be turned into proper armour by magical means.
