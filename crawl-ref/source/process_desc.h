@@ -17,7 +17,7 @@ template<class T> void process_quote(T &proc, const describe_info &inf);
  * *********************************************************************** */
 // My kingdom for a closure.
 template<class T>
-inline void process_description(T &proc, const describe_info &inf)
+void process_description(T &proc, const describe_info &inf)
 {
     const unsigned int line_width = proc.width();
     const          int height     = proc.height();
@@ -99,7 +99,7 @@ inline void process_description(T &proc, const describe_info &inf)
 }
 
 template<class T>
-inline void process_quote(T &proc, const describe_info &inf)
+void process_quote(T &proc, const describe_info &inf)
 {
     const unsigned int line_width = proc.width();
     const          int height     = proc.height();

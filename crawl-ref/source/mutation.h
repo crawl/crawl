@@ -75,7 +75,7 @@ bool mutate(mutation_type which_mutation, const std::string &reason,
             bool stat_gain_potion = false, bool demonspawn = false,
             bool no_rot = false);
 
-inline bool give_bad_mutation(const std::string &reason,
+static inline bool give_bad_mutation(const std::string &reason,
                               bool failMsg = true,
                               bool force_mutation = false)
 {

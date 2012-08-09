@@ -42,7 +42,7 @@ static inline bool map_bounds(const coord_def &p)
 bool map_bounds_with_margin(coord_def p, int margin);
 
 // Determines if the coordinate is within bounds of an LOS array.
-inline bool show_bounds(const coord_def &p)
+static inline bool show_bounds(const coord_def &p)
 {
     return (p.x >= 0 && p.x < ENV_SHOW_DIAMETER
             && p.y >= 0 && p.y < ENV_SHOW_DIAMETER);

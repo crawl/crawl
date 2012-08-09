@@ -390,7 +390,7 @@
 #ifdef __cplusplus
 
 template < class T >
-inline void UNUSED(const volatile T &)
+static inline void UNUSED(const volatile T &)
 {
 }
 

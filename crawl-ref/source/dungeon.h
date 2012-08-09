@@ -297,7 +297,7 @@ vault_placement *dgn_vault_at(coord_def gp);
 void dgn_seen_vault_at(coord_def gp);
 
 int count_neighbours(int x, int y, dungeon_feature_type feat);
-inline int count_neighbours(const coord_def& p, dungeon_feature_type feat)
+static inline int count_neighbours(const coord_def& p, dungeon_feature_type feat)
 {
     return count_neighbours(p.x, p.y, feat);
 }

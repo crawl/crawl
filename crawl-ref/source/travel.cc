@@ -285,7 +285,7 @@ uint8_t is_waypoint(const coord_def &p)
     return curr_waypoints[p.x][p.y];
 }
 
-inline bool is_stash(const LevelStashes *ls, const coord_def& p)
+static inline bool is_stash(const LevelStashes *ls, const coord_def& p)
 {
     if (!ls)
         return false;
@@ -555,7 +555,7 @@ static bool _prompt_stop_explore(int es_why)
 #define ES_sacrificiable (Options.explore_stop & ES_GREEDY_SACRIFICIABLE)
 
 // Adds interesting stuff on the point p to explore_discoveries.
-inline static void _check_interesting_square(const coord_def pos,
+static inline void _check_interesting_square(const coord_def pos,
                                              explore_discoveries &ed)
 {
     if ((ES_item || ES_greedy || ES_glow || ES_art || ES_rune)

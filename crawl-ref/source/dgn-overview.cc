@@ -167,12 +167,12 @@ static std::string shoptype_to_string(shop_type s)
     }
 }
 
-inline static std::string place_desc(const level_pos &pos)
+static inline std::string place_desc(const level_pos &pos)
 {
     return "[" + pos.id.describe(false, true) + "] ";
 }
 
-inline static std::string altar_description(god_type god)
+static inline std::string altar_description(god_type god)
 {
     return feature_description(altar_for_god(god));
 }
@@ -588,7 +588,7 @@ static std::string _get_notes()
 }
 
 template <typename Z, typename Key>
-inline static bool _find_erase(Z &map, const Key &k)
+static inline bool _find_erase(Z &map, const Key &k)
 {
     if (map.find(k) != map.end())
     {

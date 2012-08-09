@@ -140,7 +140,7 @@ void marshall_level_id(writer& th, const level_id& id);
 void marshallEnumVal (writer &, const enum_info *, int);
 
 template<typename enm>
-inline void marshallEnum(writer& wr, enm value)
+static inline void marshallEnum(writer& wr, enm value)
 {
     marshallEnumVal(wr, &enum_details<enm>::desc, static_cast<int>(value));
 }
@@ -211,7 +211,7 @@ level_id    unmarshall_level_id(reader& th);
 int         unmarshallEnumVal (reader &, const enum_info *);
 
 template<typename enm>
-inline enm unmarshallEnum(writer& wr)
+static inline enm unmarshallEnum(writer& wr)
 {
     return static_cast<enm>(unmarshallEnumVal(wr, &enum_details<enm>::desc));
 }

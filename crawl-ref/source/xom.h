@@ -81,7 +81,7 @@ bool xom_is_nice(int tension = -1);
 int xom_acts(bool niceness, int sever, int tension = -1, bool debug = false);
 const std::string describe_xom_favour();
 
-inline int xom_acts(int sever, int tension = -1)
+static inline int xom_acts(int sever, int tension = -1)
 {
     return xom_acts(xom_is_nice(tension), sever, tension);
 }

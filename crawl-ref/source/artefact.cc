@@ -578,7 +578,7 @@ void artefact_desc_properties(const item_def &item,
     }
 }
 
-inline static void _randart_propset(artefact_properties_t &p,
+static inline void _randart_propset(artefact_properties_t &p,
                                      artefact_prop_type pt,
                                      int value,
                                      bool neg)
