@@ -540,6 +540,7 @@ public:
     string hand_name(bool plural, bool *can_plural = NULL) const;
     string foot_name(bool plural, bool *can_plural = NULL) const;
     string arm_name(bool plural, bool *can_plural = NULL) const;
+    string unarmed_attack_name() const;
 
     bool fumbles_attack(bool verbose = true);
     bool cannot_fight() const;

@@ -414,58 +414,34 @@ static void _print_stats_wp(int y)
     {
         const string prefix = "-) ";
         col = LIGHTGREY;
-        text = "Nothing wielded"; // Default
-
-        if (you.species == SP_FELID)
-            text = "Teeth and claws";
-        else if (you.has_usable_claws(true))
-            text = "Claws";
-        else if (you.has_usable_tentacles(true))
-            text = "Tentacles";
-
         switch (you.form)
         {
-            case TRAN_SPIDER:
-                col = LIGHTGREEN;
-                text = "Fangs (venom)";
-                break;
-            case TRAN_BLADE_HANDS:
-                col = RED;
-                text = "Blade " + blade_parts(true);
-                break;
-            case TRAN_STATUE:
-                col = LIGHTGREY;
-                if (you.has_usable_claws(true))
-                    text = "Stone claws";
-                else if (you.has_usable_tentacles(true))
-                    text = "Stone tentacles";
-                else
-                    text = "Stone fists";
-                break;
-            case TRAN_ICE_BEAST:
-                col = WHITE;
-                text = "Ice fists (freeze)";
-                break;
-            case TRAN_DRAGON:
-                col = GREEN;
-                text = "Teeth and claws";
-                break;
-            case TRAN_LICH:
-                col = MAGENTA;
-                text += " (drain)";
-                break;
-            case TRAN_BAT:
-            case TRAN_PIG:
-                col = LIGHTGREY;
-                text = "Teeth";
-                break;
-            case TRAN_NONE:
-            case TRAN_APPENDAGE:
-            default:
-                break;
+        case TRAN_SPIDER:
+            col = LIGHTGREEN;
+            break;
+        case TRAN_BLADE_HANDS:
+            col = RED;
+            break;
+        case TRAN_STATUE:
+            col = LIGHTGREY;
+            break;
+        case TRAN_ICE_BEAST:
+            col = WHITE;
+            break;
+        case TRAN_DRAGON:
+            col = GREEN;
+            break;
+        case TRAN_LICH:
+            col = MAGENTA;
+            break;
+        case TRAN_BAT:
+        case TRAN_PIG:
+            col = LIGHTGREY;
+            break;
+        default:
+            break;
         }
-
-        text = prefix + text;
+        text = prefix + you.unarmed_attack_name();
     }
 
     cgotoxy(1, y, GOTO_STAT);

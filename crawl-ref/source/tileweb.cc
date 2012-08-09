@@ -466,15 +466,35 @@ void TilesFramework::set_ui_state(WebtilesUIState state)
     _send_ui_state(state);
 }
 
-void TilesFramework::_update_string(bool force, std::string& current,
-                                    const std::string& next,
-                                    const std::string& name)
+static bool _update_string(bool force, std::string& current,
+                           const std::string& next,
+                           const std::string& name,
+                           bool update = true)
 {
     if (force || (current != next))
     {
-        json_write_string(name, next);
-        current = next;
+        tiles.json_write_string(name, next);
+        if (update)
+            current = next;
+        return true;
     }
+    else
+        return false;
+}
+
+template<class T> static bool _update_int(bool force, T& current, T next,
+                                          const std::string& name,
+                                          bool update = true)
+{
+    if (force || (current != next))
+    {
+        tiles.json_write_int(name, next);
+        if (update)
+            current = next;
+        return true;
+    }
+    else
+        return false;
 }
 
 const int statuses[] = {
@@ -587,6 +607,203 @@ static bool _update_statuses(player_info& c)
     return changed;
 }
 
+player_info::player_info()
+{
+    for (unsigned int i = 0; i < NUM_EQUIP; ++i)
+        equip[i] = -1;
+}
+
+void TilesFramework::_send_player(bool force_full)
+{
+    player_info& c = m_current_player_info;
+
+    json_open_object();
+    json_write_string("msg", "player");
+    json_treat_as_empty();
+
+    _update_string(force_full, c.name, you.your_name, "name");
+    _update_string(force_full, c.job_title, filtered_lang(player_title()),
+                   "title");
+    _update_int(force_full, c.wizard, you.wizard, "wizard");
+    _update_string(force_full, c.species, species_name(you.species),
+                   "species");
+    std::string god = "";
+    if (you.religion == GOD_JIYVA)
+        god = god_name_jiyva(true);
+    else if (you.religion != GOD_NO_GOD)
+        god = god_name(you.religion);
+    _update_string(force_full, c.god, god, "god");
+    _update_int(force_full, c.under_penance, player_under_penance(), "penance");
+    uint8_t prank = 0;
+    if (you.religion == GOD_XOM)
+    {
+        if (!you.gift_timeout)
+            prank = 2;
+        else if (you.gift_timeout == 1)
+            prank = 1;
+    }
+    else if (you.religion != GOD_NO_GOD)
+    {
+        prank = std::max(0, piety_rank() - 1);
+    }
+    _update_int(force_full, c.piety_rank, prank, "piety_rank");
+
+    _update_int(force_full, c.form, (uint8_t) you.form, "form");
+
+    _update_int(force_full, c.hp, you.hp, "hp");
+    _update_int(force_full, c.hp_max, you.hp_max, "hp_max");
+    _update_int(force_full, c.real_hp_max, get_real_hp(true, true), "real_hp_max");
+
+    _update_int(force_full, c.mp, you.magic_points, "mp");
+    _update_int(force_full, c.mp_max, you.max_magic_points, "mp_max");
+
+    _update_int(force_full, c.armour_class, you.armour_class(), "ac");
+    _update_int(force_full, c.evasion, player_evasion(), "ev");
+    _update_int(force_full, c.shield_class, player_shield_class(), "sh");
+
+    _update_int(force_full, c.strength, (int8_t) you.strength(), "str");
+    _update_int(force_full, c.strength_max, (int8_t) you.max_strength(), "str_max");
+    _update_int(force_full, c.intel, (int8_t) you.intel(), "int");
+    _update_int(force_full, c.intel_max, (int8_t) you.max_intel(), "int_max");
+    _update_int(force_full, c.dex, (int8_t) you.dex(), "dex");
+    _update_int(force_full, c.dex_max, (int8_t) you.max_dex(), "dex_max");
+
+    if (you.species == SP_FELID)
+    {
+        _update_int(force_full, c.lives, you.lives, "lives");
+        _update_int(force_full, c.deaths, you.deaths, "deaths");
+    }
+
+    _update_int(force_full, c.experience_level, you.experience_level, "xl");
+    _update_int(force_full, c.exp_progress, (int8_t) get_exp_progress(), "progress");
+    _update_int(force_full, c.gold, you.gold, "gold");
+
+    if (crawl_state.game_is_zotdef())
+    {
+        _update_int(force_full, c.zot_points, you.zot_points, "zp");
+    }
+    _update_int(force_full, c.elapsed_time, you.elapsed_time, "time");
+
+    const PlaceInfo& place = you.get_place_info();
+    std::string short_name = branches[place.branch].shortname;
+
+    if (brdepth[place.branch] == 1)
+    {
+        // Definite articles
+        if (place.branch == BRANCH_ABYSS)
+            short_name.insert(0, "The ");
+        // Indefinite articles
+        else if (place.branch != BRANCH_PANDEMONIUM &&
+                 !is_connected_branch(place.branch))
+        {
+            short_name = article_a(short_name);
+        }
+    }
+    _update_string(force_full, c.place, short_name, "place");
+    _update_int(force_full, c.depth, brdepth[place.branch] > 1 ? you.depth : 0, "depth");
+
+    if (m_origin.equals(-1, -1))
+        m_origin = you.position;
+    coord_def pos = you.position - m_origin;
+    if (force_full || (c.position != pos))
+    {
+        json_open_object("pos");
+        json_write_int("x", pos.x);
+        json_write_int("y", pos.y);
+        json_close_object();
+        c.position = pos;
+    }
+
+    if (force_full || _update_statuses(c))
+    {
+        json_open_object("status");
+        for (unsigned int i = 0; i < c.status.size(); ++i)
+        {
+            json_open_object(c.status[i].light_text);
+            json_write_int("colour", c.status[i].light_colour);
+            json_close_object();
+        }
+        json_close_object();
+    }
+
+    json_open_object("inv");
+    for (unsigned int i = 0; i < ENDOFPACK; ++i)
+    {
+        json_open_object(make_stringf("%d", i));
+        _send_item(c.inv[i], get_item_info(you.inv[i]), force_full);
+        json_close_object(true);
+    }
+    json_close_object(true);
+
+    json_open_object("equip");
+    for (unsigned int i = 0; i < NUM_EQUIP; ++i)
+    {
+        _update_int(force_full, c.equip[i], you.equip[i],
+                    make_stringf("%d", i));
+    }
+    json_close_object(true);
+
+    _update_int(force_full, c.quiver_item,
+                (int8_t) you.m_quiver->get_fire_item(), "quiver_item");
+
+    _update_string(force_full, c.unarmed_attack,
+                   you.unarmed_attack_name(), "unarmed_attack");
+
+    json_close_object(true);
+
+    finish_message();
+}
+
+void TilesFramework::_send_item(item_info& current, const item_info& next,
+                                bool force_full)
+{
+    bool changed = false;
+
+    if (force_full || (current.base_type != next.base_type))
+    {
+        changed = true;
+        json_write_int("base_type", next.base_type);
+    }
+
+    changed |= _update_int(force_full, current.sub_type, next.sub_type,
+                           "sub_type", false);
+    changed |= _update_int(force_full, current.plus, next.plus,
+                           "plus", false);
+    changed |= _update_int(force_full, current.plus2, next.plus2,
+                           "plus2", false);
+    changed |= _update_int(force_full, current.quantity, next.quantity,
+                           "quantity", false);
+    changed |= _update_int(force_full, current.flags, next.flags,
+                           "flags", false);
+    changed |= _update_string(force_full, current.inscription,
+                              next.inscription, "inscription", false);
+
+    // TODO: props?
+
+    changed |= (current.special != next.special);
+
+    // Derived stuff
+    if (changed)
+    {
+        std::string name = next.name(DESC_A, true, false, true);
+        if (current.name(DESC_A) != name)
+            json_write_string("name", name);
+
+        tileidx_t tile = tileidx_item(next);
+        if (tileidx_item(current) != tile)
+        {
+            json_open_array("tile");
+            tileidx_t base_tile = tileidx_known_base_item(tile);
+            if (base_tile)
+                json_write_int(base_tile);
+            json_write_int(tile);
+            json_close_array();
+        }
+
+        current = next;
+    }
+}
+
 
 static void _send_doll(const dolls_data &doll, bool submerged, bool ghost)
 {
@@ -696,122 +913,6 @@ static void _send_mcache(mcache_entry *entry, bool submerged)
     }
 
     tiles.json_close_array();
-}
-
-void TilesFramework::_send_player(bool force_full)
-{
-    player_info& c = m_current_player_info;
-
-    json_open_object();
-    json_write_string("msg", "player");
-    json_treat_as_empty();
-
-    _update_string(force_full, c.name, you.your_name, "name");
-    _update_string(force_full, c.job_title, filtered_lang(player_title()),
-                   "title");
-    _update_int(force_full, c.wizard, you.wizard, "wizard");
-    _update_string(force_full, c.species, species_name(you.species),
-                   "species");
-    std::string god = "";
-    if (you.religion == GOD_JIYVA)
-        god = god_name_jiyva(true);
-    else if (you.religion != GOD_NO_GOD)
-        god = god_name(you.religion);
-    _update_string(force_full, c.god, god, "god");
-    _update_int(force_full, c.under_penance, player_under_penance(), "penance");
-    uint8_t prank = 0;
-    if (you.religion == GOD_XOM)
-    {
-        if (!you.gift_timeout)
-            prank = 2;
-        else if (you.gift_timeout == 1)
-            prank = 1;
-    }
-    else if (you.religion != GOD_NO_GOD)
-    {
-        prank = std::max(0, piety_rank() - 1);
-    }
-    _update_int(force_full, c.piety_rank, prank, "piety_rank");
-
-    _update_int(force_full, c.hp, you.hp, "hp");
-    _update_int(force_full, c.hp_max, you.hp_max, "hp_max");
-    _update_int(force_full, c.real_hp_max, get_real_hp(true, true), "real_hp_max");
-
-    _update_int(force_full, c.mp, you.magic_points, "mp");
-    _update_int(force_full, c.mp_max, you.max_magic_points, "mp_max");
-
-    _update_int(force_full, c.armour_class, you.armour_class(), "ac");
-    _update_int(force_full, c.evasion, player_evasion(), "ev");
-    _update_int(force_full, c.shield_class, player_shield_class(), "sh");
-
-    _update_int(force_full, c.strength, (int8_t) you.strength(), "str");
-    _update_int(force_full, c.strength_max, (int8_t) you.max_strength(), "str_max");
-    _update_int(force_full, c.intel, (int8_t) you.intel(), "int");
-    _update_int(force_full, c.intel_max, (int8_t) you.max_intel(), "int_max");
-    _update_int(force_full, c.dex, (int8_t) you.dex(), "dex");
-    _update_int(force_full, c.dex_max, (int8_t) you.max_dex(), "dex_max");
-
-    if (you.species == SP_FELID)
-    {
-        _update_int(force_full, c.lives, you.lives, "lives");
-        _update_int(force_full, c.deaths, you.deaths, "deaths");
-    }
-
-    _update_int(force_full, c.experience_level, you.experience_level, "xl");
-    _update_int(force_full, c.exp_progress, (int8_t) get_exp_progress(), "progress");
-    _update_int(force_full, c.gold, you.gold, "gold");
-
-    if (crawl_state.game_is_zotdef())
-    {
-        _update_int(force_full, c.zot_points, you.zot_points, "zp");
-    }
-    _update_int(force_full, c.elapsed_time, you.elapsed_time, "time");
-
-    const PlaceInfo& place = you.get_place_info();
-    std::string short_name = branches[place.branch].shortname;
-
-    if (brdepth[place.branch] == 1)
-    {
-        // Definite articles
-        if (place.branch == BRANCH_ABYSS)
-            short_name.insert(0, "The ");
-        // Indefinite articles
-        else if (place.branch != BRANCH_PANDEMONIUM &&
-                 !is_connected_branch(place.branch))
-        {
-            short_name = article_a(short_name);
-        }
-    }
-    _update_string(force_full, c.place, short_name, "place");
-    _update_int(force_full, c.depth, brdepth[place.branch] > 1 ? you.depth : 0, "depth");
-
-    if (m_origin.equals(-1, -1))
-        m_origin = you.position;
-    coord_def pos = you.position - m_origin;
-    if (force_full || (c.position != pos))
-    {
-        json_open_object("pos");
-        json_write_int("x", pos.x);
-        json_write_int("y", pos.y);
-        json_close_object();
-        c.position = pos;
-    }
-
-    if (force_full || _update_statuses(c))
-    {
-        json_open_object("status");
-        for (unsigned int i = 0; i < c.status.size(); ++i)
-        {
-            json_open_object(c.status[i].light_text);
-            json_write_int("colour", c.status[i].light_colour);
-            json_close_object();
-        }
-        json_close_object();
-    }
-
-    json_close_object(true);
-
-    finish_message();
 }
 
 static bool _in_water(const packed_cell &cell)

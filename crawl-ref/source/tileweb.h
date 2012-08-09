@@ -34,6 +34,8 @@ enum WebtilesUIState
 
 struct player_info
 {
+    player_info();
+
     std::string name;
     std::string job_title;
     bool wizard;
@@ -41,6 +43,8 @@ struct player_info
     std::string god;
     bool under_penance;
     uint8_t piety_rank;
+
+    uint8_t form;
 
     int hp, hp_max, real_hp_max;
     int mp, mp_max;
@@ -65,6 +69,11 @@ struct player_info
     coord_def position;
 
     std::vector<status_info> status;
+
+    FixedVector<item_info, ENDOFPACK> inv;
+    FixedVector<int8_t, NUM_EQUIP> equip;
+    int8_t quiver_item;
+    std::string unarmed_attack;
 };
 
 class TilesFramework
@@ -271,19 +280,8 @@ protected:
                        map<uint32_t, coord_def>& new_monster_locs,
                        bool force_full);
     void _send_player(bool force_full = false);
-
-    void _update_string(bool force, std::string& current,
-                        const std::string& next,
-                        const std::string& name);
-    template<class T> void _update_int(bool force, T& current, T next,
-                                 const std::string& name)
-    {
-        if (force || (current != next))
-        {
-            json_write_int(name, next);
-            current = next;
-        }
-    }
+    void _send_item(item_info& current, const item_info& next,
+                    bool force_full);
 };
 
 // Main interface for tiles functions
