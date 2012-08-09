@@ -704,6 +704,12 @@ bool show_map(level_pos &lpos,
     mouse_control mc(MOUSE_MODE_NORMAL);
     tiles.do_map_display();
 #endif
+
+#ifdef USE_TILE_WEB
+    tiles_crt_control crt(false);
+    tiles_ui_control ui(UI_VIEW_MAP);
+#endif
+
     {
         levelview_excursion le(travel_mode);
         level_id original(level_id::current());
@@ -713,11 +719,6 @@ bool show_map(level_pos &lpos,
 
         cursor_control ccon(!Options.use_fake_cursor);
         int i, j;
-
-#ifdef USE_TILE_WEB
-        tiles_crt_control crt(false);
-        tiles_ui_control ui(UI_VIEW_MAP);
-#endif
 
         int move_x = 0, move_y = 0, scroll_y = 0;
 
