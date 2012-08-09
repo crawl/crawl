@@ -228,14 +228,6 @@ bool Stash::pickup_eligible() const
 
 bool Stash::sacrificiable() const
 {
-    if (!(Options.explore_stop & ES_GREEDY_SACRIFICIABLE)
-        || !god_likes_items(you.religion)
-        || you.religion == GOD_ASHENZARI) // Ash's sacrifice isn't trading items
-                        // for piety so it shouldn't make explore greedy for ?RC
-    {
-        return false;
-    }
-
     for (int i = 0, size = items.size(); i < size; ++i)
     {
         if (you.religion == GOD_NEMELEX_XOBEH
@@ -1171,15 +1163,16 @@ bool LevelStashes::shop_needs_visit(const coord_def& c) const
     return (shop && !shop->is_visited());
 }
 
-bool LevelStashes::needs_visit(const coord_def& c) const
+bool LevelStashes::needs_visit(const coord_def& c, bool autopickup,
+                               bool sacrifice) const
 {
     const Stash *s = find_stash(c);
-    if (s && (s->unverified() || s->sacrificiable()
-              || s->pickup_eligible() && can_autopickup()))
+    if (s && (s->unverified()
+              || sacrifice && s->sacrificiable()
+              || autopickup && s->pickup_eligible()))
     {
         return true;
     }
-
     return shop_needs_visit(c);
 }
 

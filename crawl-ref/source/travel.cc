@@ -40,6 +40,7 @@
 #include "options.h"
 #include "place.h"
 #include "player.h"
+#include "religion.h"
 #include "stairs.h"
 #include "stash.h"
 #include "stuff.h"
@@ -178,7 +179,8 @@ static bool _find_transtravel_square(const level_pos &pos,
 static bool _loadlev_populate_stair_distances(const level_pos &target);
 static void _populate_stair_distances(const level_pos &target);
 static bool _is_greed_inducing_square(const LevelStashes *ls,
-                                      const coord_def &c);
+                                      const coord_def &c, bool autopickup,
+                                      bool sacrifice);
 static bool _is_travelsafe_square(const coord_def& c,
                                   bool ignore_hostile = false,
                                   bool ignore_danger = false);
@@ -614,7 +616,8 @@ static bool _is_valid_explore_target(const coord_def& where)
     if (you.running == RMODE_EXPLORE_GREEDY)
     {
         LevelStashes *lev = StashTrack.find_current_level();
-        return (lev && lev->needs_visit(where));
+        return (lev && lev->needs_visit(where, can_autopickup(),
+                                        god_likes_items(you.religion, true)));
     }
 
     return false;
@@ -1097,11 +1100,11 @@ travel_pathfind::travel_pathfind()
     : runmode(RMODE_NOT_RUNNING), start(), dest(), next_travel_move(),
       floodout(false), double_flood(false), ignore_hostile(false),
       ignore_danger(false), annotate_map(false), ls(NULL),
-      need_for_greed(false), unexplored_place(), greedy_place(),
-      unexplored_dist(0), greedy_dist(0), refdist(NULL), reseed_points(),
-      features(NULL), unreachables(), point_distance(travel_point_distance),
-      points(0), next_iter_points(0), traveled_distance(0),
-      circ_index(0)
+      need_for_greed(false), autopickup(false), sacrifice(false),
+      unexplored_place(), greedy_place(), unexplored_dist(0), greedy_dist(0),
+      refdist(NULL), reseed_points(), features(NULL), unreachables(),
+      point_distance(travel_point_distance), points(0), next_iter_points(0),
+      traveled_distance(0), circ_index(0)
 {
 }
 
@@ -1110,14 +1113,15 @@ travel_pathfind::~travel_pathfind()
 }
 
 static bool _is_greed_inducing_square(const LevelStashes *ls,
-                                      const coord_def &c)
+                                      const coord_def &c, bool autopickup,
+                                      bool sacrifice)
 {
-    return (ls && ls->needs_visit(c));
+    return (ls && ls->needs_visit(c, autopickup, sacrifice));
 }
 
 bool travel_pathfind::is_greed_inducing_square(const coord_def &c) const
 {
-    return _is_greed_inducing_square(ls, c);
+    return _is_greed_inducing_square(ls, c, autopickup, sacrifice);
 }
 
 void travel_pathfind::set_src_dst(const coord_def &src, const coord_def &dst)
@@ -1204,7 +1208,10 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode)
     if (runmode == RMODE_CONNECTIVITY)
         ignore_player_traversability = true;
 
-    need_for_greed = (runmode == RMODE_EXPLORE_GREEDY);
+    autopickup = can_autopickup();
+    sacrifice = god_likes_items(you.religion, true);
+    need_for_greed = runmode == RMODE_EXPLORE_GREEDY
+                     && (autopickup || sacrifice);
 
     if (!ls && (annotate_map || need_for_greed))
         ls = StashTrack.find_current_level();
@@ -4028,8 +4035,9 @@ void runrest::clear()
 // explore_discoveries
 
 explore_discoveries::explore_discoveries()
-    : es_flags(0), current_level(NULL), items(), stairs(), portals(), shops(),
-      altars()
+    : can_autopickup(::can_autopickup()),
+      sacrifice(god_likes_items(you.religion, true)), es_flags(0),
+      current_level(NULL), items(), stairs(), portals(), shops(), altars()
 {
 }
 
@@ -4179,7 +4187,9 @@ void explore_discoveries::found_item(const coord_def &pos, const item_def &i)
         if (current_level)
         {
             const bool greed_inducing = _is_greed_inducing_square(current_level,
-                                                                  pos);
+                                                                  pos,
+                                                                  can_autopickup,
+                                                                  sacrifice);
 
             if (greed_inducing && (Options.explore_stop & ES_GREEDY_ITEM))
                 ; // Stop for this condition
