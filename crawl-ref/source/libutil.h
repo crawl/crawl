@@ -68,8 +68,6 @@ static inline int isaalnum(int c)
     return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9');
 }
 
-bool ends_with(const std::string &s, const std::string &suffix);
-
 int numcmp(const char *a, const char *b, int limit = 0);
 bool numcmpstr(std::string a, std::string b);
 size_t strlcpy(char *dst, const char *src, size_t n);
@@ -136,7 +134,7 @@ inline bool starts_with(const std::string &s, const std::string &prefix)
     return (s.rfind(prefix, 0) != std::string::npos);
 }
 
-inline bool ends_with(const std::string &s, const std::string &suffix)
+static inline bool ends_with(const std::string &s, const std::string &suffix)
 {
     if (s.length() < suffix.length())
         return false;
