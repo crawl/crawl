@@ -431,7 +431,12 @@ note_monsters = orb of fire, ancient lich, Sigmund
 # char_set         = ascii
 # use_fake_player_cursor = false
 #
-# language = polski
+# Translation to use (in 0.11, only badly incomplete descriptions; Polish
+# has god messages and a few misc, Greek has sheep).
+# language = pl|fr|zh|ko|fi|ru|el|da|li|pt|de|lv|cs|hu
+#
+# Joke translations (complete!).
+# language = dwarven|jagerkin|kraut|wide
 #
 # colour.lightgray = black
 # colour.lightcyan = cyan
