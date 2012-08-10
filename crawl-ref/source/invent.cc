@@ -854,14 +854,20 @@ menu_letter InvMenu::load_items(const std::vector<const item_def*> &mitems,
             items_in_class.clear();
         }
 
+        InvEntry *forced_first = NULL;
         for (int j = 0, count = mitems.size(); j < count; ++j)
         {
             if (mitems[j]->base_type != i)
                 continue;
-            items_in_class.push_back(new InvEntry(*mitems[j]));
+            if (mitems[j]->sub_type == get_max_subtype(mitems[j]->base_type))
+                forced_first = new InvEntry(*mitems[j]);
+            else
+                items_in_class.push_back(new InvEntry(*mitems[j]));
         }
 
         sort_menu(items_in_class, cond);
+        if (forced_first)
+            items_in_class.insert(items_in_class.begin(),forced_first);
 
         for (unsigned int j = 0; j < items_in_class.size(); ++j)
         {
