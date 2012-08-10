@@ -27,6 +27,7 @@
 #include "fixedarray.h"
 #include "food.h"
 #include "godabil.h"
+#include "godprayer.h"
 #include "hints.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -2915,6 +2916,18 @@ void start_explore(bool grab_items)
         mpr("Greedy explore is available only if stash_tracking = all");
         more();
         you.running = RMODE_EXPLORE;
+    }
+
+    if (you.running == RMODE_EXPLORE_GREEDY && god_likes_items(you.religion, true))
+    {
+        const LevelStashes *lev = StashTrack.find_current_level();
+            if (lev && lev->sacrificiable(you.pos()))
+            {
+                if (yesno("Do you want to sacrifice the items here? ", true, 'n'))
+                    pray();
+                else
+                    mark_items_non_visit_at(you.pos());
+            }
     }
 
     // Clone shadow array off map
