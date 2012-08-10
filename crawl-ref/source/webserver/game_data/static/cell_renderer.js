@@ -1,7 +1,7 @@
 define(["jquery", "./view_data", "./tileinfo-main", "./tileinfo-player",
         "./tileinfo-icons", "./tileinfo-dngn", "./enums",
-        "./map_knowledge", "./tileinfos"],
-function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinfos) {
+        "./map_knowledge", "./tileinfos", "./player"],
+function ($, view_data, main, tileinfo_player, icons, dngn, enums, map_knowledge, tileinfos, player) {
     function DungeonCellRenderer()
     {
         this.set_cell_size(32, 32);
@@ -206,7 +206,7 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
                     });
                 }
 
-                if ((fg_idx >= player.MCACHE_START) && cell.mcache)
+                if ((fg_idx >= tileinfo_player.MCACHE_START) && cell.mcache)
                 {
                     $.each(cell.mcache, function (i, mcache_part) {
                         if (mcache_part) {
@@ -267,6 +267,12 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
 
             this.render_cursors(cx, cy, x, y);
 
+            if (fg_idx == tileinfo_player.PLAYER &&
+                this.display_mode != "glyphs")
+            {
+                this.draw_minibars(x, y);
+            }
+
             // Debug helper
             if (cell.mark)
             {
@@ -280,6 +286,53 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
             }
 
             cell.sy = this.current_sy;
+        },
+
+        // adapted from DungeonRegion::draw_minibars in tilereg_dgn.cc
+        draw_minibars: function(x, y)
+        {
+            var healthy = "#00FF00";
+            //  damaged = "#FFFF00";
+            //  wounded = "#960000";
+            var hp_spend= "#FF0000";
+
+            var magic = "#0000FF";
+            var magic_spend = "#000000";
+
+            // don't draw if hp and mp is full
+            if (player.hp == player.hp_max
+                && player.mp == player.mp_max)
+            {
+                return;
+            }
+
+            var hp_bar_offset = 2;
+
+            // TODO: use different colors if heavily wounded, like in the tiles version
+            if (player.mp > 0) {
+                var mp_percent = player.mp / player.mp_max;
+
+                this.ctx.fillStyle = magic_spend;
+                this.ctx.fillRect(x, y + this.cell_height - 2,
+                                  this.cell_width, 2);
+
+                this.ctx.fillStyle = magic;
+                this.ctx.fillRect(x, y + this.cell_height - 2,
+                                  this.cell_width * mp_percent, 1);
+
+                hp_bar_offset += 2;
+            }
+
+            var hp_percent = player.hp / player.hp_max;
+            if (hp_percent < 0) hp_percent = 0;
+
+            this.ctx.fillStyle = hp_spend;
+            this.ctx.fillRect(x, y + this.cell_height - hp_bar_offset,
+                              this.cell_width, 2);
+
+            this.ctx.fillStyle = healthy;
+            this.ctx.fillRect(x, y + this.cell_height - hp_bar_offset,
+                              this.cell_width * hp_percent, 2);
         },
 
         render_cell: function()
@@ -807,7 +860,7 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
 
         draw_player: function(idx, x, y, ofsx, ofsy, y_max)
         {
-            this.draw_tile(idx, x, y, player, ofsx, ofsy, y_max);
+            this.draw_tile(idx, x, y, tileinfo_player, ofsx, ofsy, y_max);
         },
 
         draw_icon: function(idx, x, y, ofsx, ofsy)
