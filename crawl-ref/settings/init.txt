@@ -250,12 +250,10 @@ sort_menus = inv: true : equipped, freshness, charged
 # You can change colours by using something like
 # $contaminated := magenta
 
-# Colouring of autoinscribed god gifts
-menu_colour = pickup:green:god gift
-
-# Highlight (partly) selected items
-menu_colour = inventory:white:\w \+\s
-menu_colour = inventory:white:\w \#\s
+# You can redefine inventory items like this:
+# menu_colour = inventory:magenta:shillelagh
+# or ones in pick-up dialogs:
+# menu_colour = pickup:green:god gift
 
 # Colouring of messages
 # Messages are colour coded as follows:
