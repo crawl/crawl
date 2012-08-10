@@ -4262,3 +4262,24 @@ mon_threat_level_type mons_threat_level(const monster *mon, bool real)
         return MTHRT_NASTY;
     }
 }
+
+// Used when clearing level data, to ensure any additional reset quirks
+// are handled properly.
+void reset_all_monsters()
+{
+    for (int i = 0; i < MAX_MONSTERS; i++)
+    {
+        // Since these aren't new monsters, and clearing constriction is no
+        // longer handled in reset(), we need to do it here.
+        // We're already clearing all monster data, so concerns about invalid
+        // mids and the like should not be a problem.
+        if (!invalid_monster(&menv[i]))
+        {
+            menv[i].stop_constricting_all(false, true);
+            menv[i].stop_being_constricted(true);
+        }
+        menv[i].reset();
+    }
+
+    env.mid_cache.clear();
+}
