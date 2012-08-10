@@ -1865,6 +1865,17 @@ void mark_items_non_pickup_at(const coord_def &pos)
     }
 }
 
+void mark_items_non_visit_at(const coord_def &pos)
+{
+    int item = igrd(pos);
+    while (item != NON_ITEM)
+    {
+        if (god_likes_item(you.religion, mitm[item]))
+            mitm[item].flags |= ISFLAG_DROPPED;
+        item = mitm[item].link;
+    }
+}
+
 // Moves mitm[obj] to p... will modify the value of obj to
 // be the index of the final object (possibly different).
 //
