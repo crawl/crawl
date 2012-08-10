@@ -1362,6 +1362,16 @@ static const char* lua_builtins[] =
     "clua/kills.lua",
 };
 
+static const char* config_defaults[] =
+{
+    "defaults/autopickup_exceptions.txt",
+    "defaults/runrest_messages.txt",
+    "defaults/standard_colours.txt",
+    "defaults/food_colouring.txt",
+    "defaults/menu_colours.txt",
+    "defaults/messages.txt",
+};
+
 // Returns an error message if the init.txt was not found.
 std::string read_init_file(bool runscript)
 {
@@ -1377,6 +1387,9 @@ std::string read_init_file(bool runscript)
                 mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
         }
     }
+
+    for (unsigned int i = 0; i < ARRAYSZ(config_defaults); ++i)
+        Options.include(datafile_path(config_defaults[i]), false, runscript);
 #endif
 
     Options.filename     = "extra opts first";
