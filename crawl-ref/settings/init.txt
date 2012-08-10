@@ -81,9 +81,6 @@
 # Rods are \ here.
 # autopickup = $?!:"/%
 
-# There is a long list of autopickup exceptions in
-include = autopickup_exceptions.txt
-
 drop_filter = useless_item
 
 # default_autopickup = false
@@ -161,17 +158,15 @@ auto_exclude = oklob,statue,curse skull,roxanne,hyperactive,lightning spire,mimi
 # tc_excluded       = lightmagenta
 # tc_exclude_circle = red
 
-# runrest options (require runrest.lua to be included above)
+# Interrupting run and rest compound commands:
 runrest_ignore_poison  = 2:30
 runrest_ignore_monster = butterfly:1
 # runrest_ignore_monster = swamp worm:3
-
-# The file runrest_messages.txt contains a list of default
-# runrest message settings. Add your own before this to override
-# later settings.
 # runrest_stop_message = You hear a.* slurping noise
 # runrest_ignore_message = Jiyva's power touches on your attributes
-include = runrest_messages.txt
+
+# A good number of runrest_messages is defined by default; you may want to
+# clear them or override some.
 
 trapwalk_safe_hp = dart:20,needle:15,arrow:35,bolt:45,spear:40,axe:45,blade:95
 
@@ -242,8 +237,7 @@ sort_menus = inv: true : equipped, freshness, charged
 # menu_colour_prefix_class = false
 # menu_colour_shops = false
 
-# Food is colour coded in standard_colours.txt as follows:
-include = standard_colours.txt
+# Food is colour coded by default as follows:
 #
 #   yellow     = preferred food                    ($preferred)
 #   darkgrey   = cannot be eaten at all            ($inedible)
@@ -256,12 +250,6 @@ include = standard_colours.txt
 # You can change colours by using something like
 # $contaminated := magenta
 
-include = food_colouring.txt
-
-# There is elaborate colouring of items in the inventory (and other menus)
-# depending on their usefulness, taking species and other criteria into account.
-include = menu_colours.txt
-
 # Colouring of autoinscribed god gifts
 menu_colour = pickup:green:god gift
 
@@ -270,14 +258,13 @@ menu_colour = inventory:white:\w \+\s
 menu_colour = inventory:white:\w \#\s
 
 # Colouring of messages
-# Messages are colour coded in standard_colours.txt as follows:
+# Messages are colour coded as follows:
 #
 #   lightred   = really important messages  ($danger)
 #   yellow     = significant messages       ($warning)
 #   lightred   = item damaged/destroyed     ($item_dmg [same as $danger])
 #   darkgrey   = boring, message clutter    ($boring)
 #
-include = messages.txt
 
 # Colouring for the notes
 menu_colour = notes:white:Reached XP level
