@@ -2816,6 +2816,8 @@ int get_exp_progress()
 
     const int current = exp_needed(you.experience_level);
     const int next    = exp_needed(you.experience_level + 1);
+    if (next == current)
+        return 0;
     return ((you.experience - current) * 100 / (next - current));
 }
 

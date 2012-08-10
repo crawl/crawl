@@ -1,5 +1,5 @@
-define(["jquery", "comm"],
-function ($, comm) {
+define(["jquery", "comm", "./enums", "./map_knowledge"],
+function ($, comm, enums, map_knowledge) {
     var player = {
         name: "", god: "",
         hp: 0, hp_max: 0,
@@ -9,6 +9,7 @@ function ($, comm) {
         gold: 0,
         str: 0, int: 0, dex: 0,
         piety_rank: 0, penance: false,
+        pos: null
     };
     var last_time = null;
     window.player = player;
@@ -99,6 +100,13 @@ function ($, comm) {
         last_time = player.time;
 
         update_stats_pane();
+
+        if (("hp" in data || "hp_max" in data ||
+             "mp" in data || "mp_max" in data)
+            && (player.pos != null))
+        {
+            map_knowledge.touch(player.pos);
+        }
     }
 
     comm.register_handlers({
