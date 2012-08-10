@@ -264,8 +264,8 @@ sort_menus = inv: true : equipped, freshness, charged
 #   darkgrey   = boring, message clutter    ($boring)
 #
 
-# Colouring for the notes
-menu_colour = notes:white:Reached XP level
+# Notes also use, quite misnamed, menu_colour:
+# menu_colour = notes:white:Reached XP level
 
 # These lines will suppress extra feedback messages from travel/shift-running.
 #
