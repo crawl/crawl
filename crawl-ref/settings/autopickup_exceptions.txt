@@ -1,0 +1,2 @@
+# This file is obsolete, it is present to reduce the need for manual config
+# file updates; please remove it together with others in one go.
