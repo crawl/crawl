@@ -1937,9 +1937,9 @@ note_hp_percent = 5
         repetitions of notes based on the same incident.
 
 note_skill_levels = 1,5,13,27
-        This sets which skill levels are noteworthy. You can have
-        multiple note_skill_levels lines. The default is nothing (no
-        notes.)
+        This sets which skill levels are noteworthy. It's a single line,
+        although you can use += as a continuation. The default is levels
+        1, 5, 10, 15, 27.
 
 note_all_skill_levels = false
         This is a shortcut for note_skill_levels = 1,2,..,27. If you set
