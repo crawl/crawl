@@ -947,7 +947,8 @@ wares. They never stay in one place for very long.
 A gateway to a bazaar
 
 A glowing portal to a bazaar, where itinerant merchants gather to sell their
-wares. They never stay in one place for very long.
+wares. They will wait for you, but once you get a chance to browse their
+inventory, the merchants will depart in search of other customers.
 %%%%
 A frozen archway
 
