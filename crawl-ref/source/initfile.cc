@@ -2231,8 +2231,11 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         // most fake langs, though.
         else if (field == "dwarven" || field == "dwarf")
             lang = LANG_DWARVEN;
-        else if (field == "jäger" || field == "jägerkin" || field == "jager" || field == "jagerkin")
+        else if (field == "jäger" || field == "jägerkin" || field == "jager" || field == "jagerkin"
+                 || field == "jaeger" || field == "jaegerkin")
+        {
             lang = LANG_JAGERKIN;
+        }
         // Due to a conflict with actual "de", this uses slang names for the
         // option.  Let's try to keep to less rude ones, though.
         else if (field == "kraut" || field == "jerry" || field == "fritz")
