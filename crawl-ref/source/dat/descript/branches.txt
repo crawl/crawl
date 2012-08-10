@@ -220,7 +220,7 @@ No fewer than five runes can be found in Pandemonium:
  • a glowing rune in the contaminated domain of Mnoleg
  • a magical rune guarded by the arcane powers of Lom Lobon and his minions
  • a dark rune in the shadowy abode of Gloorx Vloq
- • a demonic rune owned by an unknown lord
+ • demonic runes exist in multiple copies, owned by less famous lords
 %%%%
 Ziggurat
 
@@ -248,8 +248,7 @@ Bazaar
 While some merchants set up shop in the dungeon, others travel in caravans from
 place to place. The bazaars of these intinerant traders feature a number of
 different shops and often have better stock than the sedentary ones, sometimes
-even at a bargain. Once you hear the clinking of coins, hurry up and find the
-impromptu marketplace before the caravan moves on!
+even at a bargain.
 
 Also be warned that their nomadic lifestyle has taught these sellers to
 appropriate any items an adventurer might leave behind, and then leave quickly,
