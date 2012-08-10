@@ -438,4 +438,5 @@ bool mons_is_tentacle_end(monster_type mtype);
 mon_threat_level_type mons_threat_level(const monster *mon,
                                         bool real = false);
 
+void reset_all_monsters();
 #endif

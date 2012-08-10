@@ -1208,9 +1208,7 @@ void dgn_reset_level(bool enable_random_maps)
         init_item(i);
 
     // Reset all monsters.
-    env.mid_cache.clear();
-    for (int i = 0; i < MAX_MONSTERS; i++)
-        menv[i].reset();
+    reset_all_monsters();
     init_anon();
 
     // ... and Pan/regular spawn lists.

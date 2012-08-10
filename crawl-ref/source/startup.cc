@@ -95,8 +95,7 @@ static void _initialize()
     // Empty messaging string.
     info[0] = 0;
 
-    for (int i = 0; i < MAX_MONSTERS; ++i)
-        menv[i].reset();
+    reset_all_monsters();
 
     igrd.init(NON_ITEM);
     mgrd.init(NON_MONSTER);
