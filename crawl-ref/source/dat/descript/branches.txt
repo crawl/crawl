@@ -183,7 +183,7 @@ Zot
 A region of the dungeon that is so terrifying, so full of madness, frenzy and
 lunacy, that it has been locked securely against random trespassers. Only the
 most demented adventurers would dare gather the required keys, break the seal
-and penetrate deeper - all in the vain hope for a fabled artefact no one has
+and penetrate deeper — all in the vain hope for a fabled artefact no one has
 ever laid eyes on before.
 
 The Realm of Zot is five levels deep and can only be entered when carrying at
@@ -304,7 +304,7 @@ volcano's heart never ceases.
 %%%%
 Wizlab
 
-In ages past, the most powerful mages -- many of whom you may have heard of --
+In ages past, the most powerful mages — many of whom you may have heard of —
 would frequently find or construct small realms sealed off from the rest of the
 world, where they could isolate themselves in the pursuit of ever-greater
 magical knowledge and power. The mages are long gone, but many of their arcane

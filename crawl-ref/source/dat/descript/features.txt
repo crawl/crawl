@@ -133,7 +133,7 @@ This gate leads to the Realm of Zot, the final stage of your quest as its
 deepest level houses the infamous Orb of Zot. Both the Orb and this Realm have
 a fearsome and questionable reputation, but one piece of information seems to
 be certain: The monsters inhabiting this area and protecting the Orb are strong
-and strange - some of them encountered nowhere but here.
+and strange — some of them encountered nowhere but here.
 %%%%
 A gateway back into the Dungeon
 
