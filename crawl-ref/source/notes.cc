@@ -44,15 +44,6 @@ static int _real_god_power(int religion, int idx)
     return count;
 }
 
-static bool _is_noteworthy_skill_level(int level)
-{
-    for (unsigned int i = 0; i < Options.note_skill_levels.size(); ++i)
-        if (level == Options.note_skill_levels[i])
-            return true;
-
-    return false;
-}
-
 static bool _is_highest_skill(int skill)
 {
     for (int i = 0; i < NUM_SKILLS; ++i)
@@ -168,7 +159,7 @@ static bool _is_noteworthy(const Note& note)
     if (note.type == NOTE_GAIN_SKILL || note.type == NOTE_LOSE_SKILL)
     {
         if (Options.note_all_skill_levels
-            || _is_noteworthy_skill_level(note.second)
+            || note.second <= 27 && Options.note_skill_levels[note.second]
             || Options.note_skill_max && _is_highest_skill(note.first))
         {
             return true;

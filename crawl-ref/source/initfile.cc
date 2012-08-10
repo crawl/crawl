@@ -1063,7 +1063,12 @@ void game_options::reset_options()
     autoinscribe_artefacts = true;
     autoinscribe_cursed = true;
     note_items.clear();
-    note_skill_levels.clear();
+    note_skill_levels.reset();
+    note_skill_levels.set(1);
+    note_skill_levels.set(5);
+    note_skill_levels.set(10);
+    note_skill_levels.set(15);
+    note_skill_levels.set(27);
     auto_spell_letters.clear();
     force_more_message.clear();
     sound_mappings.clear();
@@ -2760,12 +2765,14 @@ void game_options::read_option_line(const std::string &str, bool runscript)
 
     else if (key == "note_skill_levels")
     {
+        if (!plus_equal && !minus_equal)
+            note_skill_levels.reset();
         std::vector<std::string> thesplit = split_string(",", field);
         for (unsigned i = 0; i < thesplit.size(); ++i)
         {
             int num = atoi(thesplit[i].c_str());
             if (num > 0 && num <= 27)
-                note_skill_levels.push_back(num);
+                note_skill_levels.set(num, !minus_equal);
             else
             {
                 report_error("Bad skill level to note -- %s\n",
