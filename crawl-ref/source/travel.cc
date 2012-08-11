@@ -1117,7 +1117,7 @@ static bool _is_greed_inducing_square(const LevelStashes *ls,
                                       const coord_def &c, bool autopickup,
                                       bool sacrifice)
 {
-    return (ls && ls->needs_visit(c, autopickup, sacrifice) && !is_trap(c));
+    return (ls && ls->needs_visit(c, autopickup, sacrifice));
 }
 
 bool travel_pathfind::is_greed_inducing_square(const coord_def &c) const
