@@ -60,8 +60,6 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
     {
         case DNGN_UNSEEN:
         case DNGN_EXPLORE_HORIZON:
-        case DNGN_UNKNOWN_ALTAR:
-        case DNGN_UNKNOWN_PORTAL:
         default:
             break;
 
@@ -690,6 +688,18 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
         case DNGN_PERMADRY_FOUNTAIN:
             f.colour  = LIGHTGREY;
             f.dchar   = DCHAR_FOUNTAIN;
+            f.minimap = MF_FEATURE;
+            break;
+
+        case DNGN_UNKNOWN_ALTAR:
+            f.colour  = LIGHTGREY;
+            f.dchar   = DCHAR_ALTAR;
+            f.minimap = MF_FEATURE;
+            break;
+
+        case DNGN_UNKNOWN_PORTAL:
+            f.colour  = LIGHTGREY;
+            f.dchar   = DCHAR_ARCH;
             f.minimap = MF_FEATURE;
             break;
     }
