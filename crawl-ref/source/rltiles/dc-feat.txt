@@ -219,10 +219,22 @@ abandoned_shop DNGN_ABANDONED_SHOP
 
 ## from here on multiple tile definitions are CHANGEABLE, i.e. they may
 ## change from turn to turn
-floor/lava0 DNGN_LAVA
-floor/lava1
-floor/lava2
-floor/lava3
+floor/lava00 DNGN_LAVA
+floor/lava01
+floor/lava02
+floor/lava03
+floor/lava04
+floor/lava05
+floor/lava06
+floor/lava07
+floor/lava08
+floor/lava09
+floor/lava10
+floor/lava11
+floor/lava04
+floor/lava05
+floor/lava06
+floor/lava07
 
 ## water
 %sdir dngn/water
