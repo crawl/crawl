@@ -371,6 +371,10 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_DRY_FOUNTAIN_BLOOD:
     case DNGN_PERMADRY_FOUNTAIN:
         return TILE_DNGN_DRY_FOUNTAIN;
+    case DNGN_UNKNOWN_ALTAR:
+        return TILE_DNGN_UNKNOWN_ALTAR;
+    case DNGN_UNKNOWN_PORTAL:
+        return TILE_DNGN_UNKNOWN_PORTAL;
     default:
         return TILE_DNGN_ERROR;
     }

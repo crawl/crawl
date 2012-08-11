@@ -1343,6 +1343,9 @@ enum dungeon_feature_type
     // Not meant to ever appear in grd().
     DNGN_EXPLORE_HORIZON, // dummy for redefinition
 
+    DNGN_UNKNOWN_ALTAR,
+    DNGN_UNKNOWN_PORTAL,
+
     NUM_FEATURES
 };
 
