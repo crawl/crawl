@@ -1229,6 +1229,7 @@ endif
 	mkdir -p $(datadir_fp)/dat/clua
 	mkdir -p $(datadir_fp)/dat/lua
 	mkdir -p $(datadir_fp)/dat/database
+	mkdir -p $(datadir_fp)/dat/defaults
 	mkdir -p $(datadir_fp)/dat/descript
 	mkdir -p $(datadir_fp)/docs/develop
 	mkdir -p $(datadir_fp)/docs/develop/levels
@@ -1245,6 +1246,7 @@ endif
 	$(COPY)   dat/clua/*.lua $(datadir_fp)/dat/clua/
 	$(COPY)   dat/lua/*.lua $(datadir_fp)/dat/lua/
 	$(COPY_R) dat/database/* $(datadir_fp)/dat/database/
+	$(COPY_R) dat/defaults/* $(datadir_fp)/dat/defaults/
 	$(COPY_R) dat/descript/* $(datadir_fp)/dat/descript/
 	$(COPY) ../docs/*.txt $(datadir_fp)/docs/
 	$(COPY) ../docs/develop/*.txt $(datadir_fp)/docs/develop/
