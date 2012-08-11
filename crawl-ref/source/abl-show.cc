@@ -67,6 +67,7 @@
 #include "spl-util.h"
 #include "stairs.h"
 #include "state.h"
+#include "tilepick.h"
 #include "areas.h"
 #include "transform.h"
 #include "hints.h"
@@ -2834,18 +2835,36 @@ static void _pay_ability_costs(const ability_def& abil, int zpcost)
 
 int choose_ability_menu(const std::vector<talent>& talents)
 {
-    Menu abil_menu(MF_SINGLESELECT | MF_ANYPRINTABLE, "ability");
+#ifdef USE_TILE_LOCAL
+    const bool text_only = false;
+#else
+    const bool text_only = true;
+#endif
+
+    ToggleableMenu abil_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
+                             | MF_ALWAYS_SHOW_MORE, text_only);
 
     abil_menu.set_highlighter(NULL);
+#ifdef USE_TILE_LOCAL
+    {
+        // Hack like the one in spl-cast.cc:list_spells() to align the title.
+        ToggleableMenuEntry* me =
+            new ToggleableMenuEntry("  Ability - do what?                 "
+                                    "Cost                       Failure",
+                                    "  Ability - describe what?           "
+                                    "Cost                       Failure",
+                                    MEL_ITEM);
+        me->colour = BLUE;
+        abil_menu.add_entry(me);
+    }
+#else
     abil_menu.set_title(
-        new MenuEntry("  Ability - do what?                 "
-                      "Cost                       Failure"));
-    abil_menu.set_title(
-        new MenuEntry("  Ability - describe what?           "
-                      "Cost                       Failure"), false);
-
-    abil_menu.set_flags(MF_SINGLESELECT | MF_ANYPRINTABLE
-                            | MF_ALWAYS_SHOW_MORE);
+        new ToggleableMenuEntry("  Ability - do what?                 "
+                                "Cost                       Failure",
+                                "  Ability - describe what?           "
+                                "Cost                       Failure",
+                                MEL_TITLE));
+#endif
 
     if (crawl_state.game_is_hints())
     {
@@ -2879,23 +2898,44 @@ int choose_ability_menu(const std::vector<talent>& talents)
             found_zotdef = true;
         else
         {
-            MenuEntry* me = new MenuEntry(_describe_talent(talents[i]),
-                                          MEL_ITEM, 1, talents[i].hotkey);
+            ToggleableMenuEntry* me =
+                new ToggleableMenuEntry(_describe_talent(talents[i]),
+                                        _describe_talent(talents[i]),
+                                        MEL_ITEM, 1, talents[i].hotkey);
             me->data = &numbers[i];
+#ifdef USE_TILE
+            me->add_tile(tile_def(tileidx_ability(talents[i].which), TEX_GUI));
+#endif
             abil_menu.add_entry(me);
         }
     }
 
     if (found_zotdef)
     {
-        abil_menu.add_entry(new MenuEntry("    Zot Defence - ", MEL_SUBTITLE));
+#ifdef USE_TILE_LOCAL
+        ToggleableMenuEntry* subtitle =
+            new ToggleableMenuEntry("    Zot Defence -",
+                                    "    Zot Defence -", MEL_ITEM);
+        subtitle->colour = BLUE;
+        abil_menu.add_entry(subtitle);
+#else
+        abil_menu.add_entry(
+            new ToggleableMenuEntry("    Zot Defence - ",
+                                    "    Zot Defence - ", MEL_SUBTITLE));
+#endif
         for (unsigned int i = 0; i < talents.size(); ++i)
         {
             if (talents[i].is_zotdef)
             {
-                MenuEntry* me = new MenuEntry(_describe_talent(talents[i]),
-                                              MEL_ITEM, 1, talents[i].hotkey);
+                ToggleableMenuEntry* me =
+                    new ToggleableMenuEntry(_describe_talent(talents[i]),
+                                            _describe_talent(talents[i]),
+                                            MEL_ITEM, 1, talents[i].hotkey);
                 me->data = &numbers[i];
+#ifdef USE_TILE
+                me->add_tile(tile_def(tileidx_ability(talents[i].which),
+                                      TEX_GUI));
+#endif
                 abil_menu.add_entry(me);
             }
         }
@@ -2903,14 +2943,30 @@ int choose_ability_menu(const std::vector<talent>& talents)
 
     if (found_invocations)
     {
-        abil_menu.add_entry(new MenuEntry("    Invocations - ", MEL_SUBTITLE));
+#ifdef USE_TILE_LOCAL
+        ToggleableMenuEntry* subtitle =
+            new ToggleableMenuEntry("    Invocations - ",
+                                    "    Invocations - ", MEL_ITEM);
+        subtitle->colour = BLUE;
+        abil_menu.add_entry(subtitle);
+#else
+        abil_menu.add_entry(
+            new ToggleableMenuEntry("    Invocations - ",
+                                    "    Invocations - ", MEL_SUBTITLE));
+#endif
         for (unsigned int i = 0; i < talents.size(); ++i)
         {
             if (talents[i].is_invocation)
             {
-                MenuEntry* me = new MenuEntry(_describe_talent(talents[i]),
-                                              MEL_ITEM, 1, talents[i].hotkey);
+                ToggleableMenuEntry* me =
+                    new ToggleableMenuEntry(_describe_talent(talents[i]),
+                                            _describe_talent(talents[i]),
+                                            MEL_ITEM, 1, talents[i].hotkey);
                 me->data = &numbers[i];
+#ifdef USE_TILE
+                me->add_tile(tile_def(tileidx_ability(talents[i].which),
+                                      TEX_GUI));
+#endif
                 abil_menu.add_entry(me);
             }
         }
