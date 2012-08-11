@@ -29,7 +29,9 @@ animated_weapon ANIMATED_WEAPON
 mimic MIMIC
 inept_mimic INEPT_MIMIC
 ravenous_mimic RAVENOUS_MIMIC
+%rim 0
 poison POISON
+%rim 1
 sticky_flame STICKY_FLAME
 inner_flame INNER_FLAME
 constricted CONSTRICTED
