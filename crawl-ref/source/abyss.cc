@@ -1789,11 +1789,12 @@ static bool _is_level_corrupted()
     return !!env.markers.find(MAT_CORRUPTION_NEXUS);
 }
 
-bool is_level_incorruptible()
+bool is_level_incorruptible(bool quiet)
 {
     if (_is_level_corrupted())
     {
-        mpr("This place is already infused with evil and corruption.");
+        if (!quiet)
+            mpr("This place is already infused with evil and corruption.");
         return true;
     }
 

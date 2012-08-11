@@ -2675,6 +2675,10 @@ static void _gain_piety_point()
             if (_abil_chg_message(god_gain_power_messages[you.religion][i],
                                   "You can now %s.", i))
             {
+#ifdef USE_TILE_LOCAL
+                tiles.layout_statcol();
+                redraw_screen();
+#endif
                 learned_something_new(HINT_NEW_ABILITY_GOD);
             }
 
@@ -2842,6 +2846,14 @@ void lose_piety(int pgn)
                     fall_into_a_pool(you.pos(), true, grd(you.pos()));
             }
         }
+
+#ifdef USE_TILE_LOCAL
+        if (you.redraw_title)
+        {
+            tiles.layout_statcol();
+            redraw_screen();
+        }
+#endif
     }
 
     if (you.piety > 0 && you.piety <= 5)
@@ -3134,6 +3146,11 @@ void excommunication(god_type new_god)
         mpr("The divine host forsakes you.", MSGCH_MONSTER_ENCHANT);
         add_daction(DACT_ALLY_HOLY);
     }
+
+#ifdef USE_TILE_LOCAL
+    tiles.layout_statcol();
+    redraw_screen();
+#endif
 
     // Evil hack.
     learned_something_new(HINT_EXCOMMUNICATE,
@@ -3664,6 +3681,11 @@ void god_pitch(god_type which_god)
     you.redraw_quiver = true;
 
     you.redraw_title = true;
+
+#ifdef USE_TILE_LOCAL
+    tiles.layout_statcol();
+    redraw_screen();
+#endif
 
     learned_something_new(HINT_CONVERT);
 }

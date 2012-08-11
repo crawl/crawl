@@ -544,7 +544,8 @@ public:
 
     void attacking(actor *other);
     bool can_go_berserk() const;
-    bool can_go_berserk(bool intentional, bool potion = false) const;
+    bool can_go_berserk(bool intentional, bool potion = false,
+                        bool quiet = false) const;
     void go_berserk(bool intentional, bool potion = false);
     bool berserk() const;
     bool has_lifeforce() const;

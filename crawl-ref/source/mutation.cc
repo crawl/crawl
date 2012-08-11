@@ -41,6 +41,7 @@
 #include "religion.h"
 #include "random.h"
 #include "skills2.h"
+#include "stuff.h"
 #include "transform.h"
 #include "hints.h"
 #include "xom.h"
@@ -1493,6 +1494,13 @@ bool mutate(mutation_type which_mutation, const std::string &reason,
 
     take_note(Note(NOTE_GET_MUTATION, mutat, you.mutation[mutat], reason.c_str()));
 
+#ifdef USE_TILE_LOCAL
+    if (your_talents(false).size() != old_talents)
+    {
+        tiles.layout_statcol();
+        redraw_screen();
+    }
+#endif
     if (crawl_state.game_is_hints()
         && your_talents(false).size() > old_talents)
     {

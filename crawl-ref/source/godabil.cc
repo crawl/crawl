@@ -610,11 +610,12 @@ static int _zin_check_recite_to_single_monster(const monster *mon,
 // Returns 0, if no monsters found.
 // Returns 1, if eligible audience found.
 // Returns -1, if entire audience already affected or too dumb to understand.
-bool zin_check_able_to_recite()
+bool zin_check_able_to_recite(bool quiet)
 {
     if (you.duration[DUR_BREATH_WEAPON])
     {
-        mpr("You're too short of breath to recite.");
+        if (!quiet)
+            mpr("You're too short of breath to recite.");
         return false;
     }
 

@@ -985,7 +985,8 @@ void game_options::reset_options()
     tile_window_height    = -90;
     tile_map_pixels       = 0;
     tile_layout_priority = split_string(",", "minimap, inventory, gold_turn, "
-                                             "command, spell, monster");
+                                             "command, spell, ability, "
+                                             "monster");
 #endif
 
 #ifdef USE_TILE

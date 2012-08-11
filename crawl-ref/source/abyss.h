@@ -27,7 +27,7 @@ void recompute_saved_abyss_features();
 void maybe_shift_abyss_around_player();
 void abyss_teleport(bool new_area);
 void save_abyss_uniques();
-bool is_level_incorruptible();
+bool is_level_incorruptible(bool quiet = false);
 bool lugonu_corrupt_level(int power);
 void run_corruption_effects(int duration);
 

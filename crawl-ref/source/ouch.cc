@@ -818,6 +818,11 @@ void lose_level()
 
     you.redraw_title = true;
     you.redraw_experience = true;
+#ifdef USE_TILES_LOCAL
+    // In case of intrinsic ability changes.
+    tiles.layout_statcol();
+    redraw_screen();
+#endif
 
     xom_is_stimulated(200);
 
