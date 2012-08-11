@@ -1436,8 +1436,9 @@ static bool _check_ability_possible(const ability_def& abil,
     if (hungerCheck && !you.is_undead)
     {
         const int expected_hunger = you.hunger - abil.food_cost * 2;
-        dprf("hunger: %d, max. food_cost: %d, expected hunger: %d",
-             you.hunger, abil.food_cost * 2, expected_hunger);
+        if (!quiet)
+            dprf("hunger: %d, max. food_cost: %d, expected hunger: %d",
+                 you.hunger, abil.food_cost * 2, expected_hunger);
         // Safety margin for natural hunger, mutations etc.
         if (expected_hunger <= 150)
         {
