@@ -25,6 +25,10 @@ high_scores STARTUP_HIGH_SCORES
 
 %include dc-commands.txt
 
+%include dc-abilities.txt
+%include dc-invocations.txt
+%include dc-zotdef.txt
+
 misc/todo TODO
 misc/error ERROR
 
