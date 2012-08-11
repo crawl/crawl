@@ -3156,6 +3156,10 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
         return "dry fountain";
     case DNGN_EXPLORE_HORIZON:
         return "explore horizon";
+    case DNGN_UNKNOWN_ALTAR:
+        return "detected altar";
+    case DNGN_UNKNOWN_PORTAL:
+        return "detected shop or portal";
     default:
         return "";
     }

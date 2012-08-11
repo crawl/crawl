@@ -60,6 +60,8 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
     {
         case DNGN_UNSEEN:
         case DNGN_EXPLORE_HORIZON:
+        case DNGN_UNKNOWN_ALTAR:
+        case DNGN_UNKNOWN_PORTAL:
         default:
             break;
 
@@ -839,13 +841,13 @@ dungeon_feature_type magic_map_base_feat(dungeon_feature_type feat)
     case DCHAR_WAVY:
         return DNGN_SHALLOW_WATER;
     case DCHAR_ARCH:
-        return DNGN_ABANDONED_SHOP;
+        return DNGN_UNKNOWN_PORTAL;
     case DCHAR_FOUNTAIN:
         return DNGN_FOUNTAIN_BLUE;
     case DCHAR_WALL:
         return DNGN_ROCK_WALL;
     case DCHAR_ALTAR:
-        return DNGN_ALTAR_FIRST_GOD;
+        return DNGN_UNKNOWN_ALTAR;
     default:
         // We could do more, e.g. map the different upstairs together.
         return feat;

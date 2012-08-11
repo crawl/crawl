@@ -1700,6 +1700,7 @@ static const char *dngn_feature_names[] =
 "permadry_fountain",
 
 "explore_horizon",
+"unknown_altar", "unknown_portal",
 };
 
 dungeon_feature_type dungeon_feature_by_name(const std::string &name)

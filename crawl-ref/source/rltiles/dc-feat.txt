@@ -410,6 +410,8 @@ bazaar_gone DNGN_PORTAL_BAZAAR_GONE
 zig_portal DNGN_PORTAL_ZIGGURAT
 zig_used DNGN_PORTAL_ZIGGURAT_GONE
 
+portal_unknown DNGN_UNKNOWN_PORTAL
+
 %sdir dngn/altars
 generic DNGN_UNSEEN_ALTAR
 zin DNGN_ALTAR_ZIN
@@ -466,6 +468,7 @@ cheibriados_09
 cheibriados_10
 cheibriados_12
 ashenzari DNGN_ALTAR_ASHENZARI
+unknown DNGN_UNKNOWN_ALTAR
 
 %sdir dngn
 blue_fountain DNGN_FOUNTAIN DNGN_BLUE_FOUNTAIN
