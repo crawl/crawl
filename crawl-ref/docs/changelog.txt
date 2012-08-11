@@ -1,4 +1,4 @@
-Stone Soup 0.11 (up to 0.11-a0-2859-ga7b20a9)
+Stone Soup 0.11 (up to 0.11-a0-3206-g559a7a8)
 ---------------------------------------------
 
 0.11 Highlights
@@ -192,6 +192,9 @@ Interface
   displayed.
 * Some added or improved status indicators.
 * Message filters are case-insensitive.
+* Webtiles has experimental support for watching console games on servers
+  running both webtiles and dgamelaunch.
+* Local tiles now has an abilities tab.
 
 Wizmode
 -------
