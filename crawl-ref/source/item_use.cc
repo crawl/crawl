@@ -1468,6 +1468,13 @@ static bool _puton_item(int item_slot)
     equip_item(hand_used, item_slot);
 
     check_item_hint(you.inv[item_slot], old_talents);
+#ifdef USE_TILE_LOCAL
+    if (your_talents(false).size() != old_talents)
+    {
+        tiles.layout_statcol();
+        redraw_screen();
+    }
+#endif
 
     // Putting on jewellery is as fast as wielding weapons.
     you.time_taken /= 2;
@@ -1630,7 +1637,17 @@ bool remove_ring(int slot, bool announce)
         return false;
 
     mprf("You remove %s.", you.inv[ring_wear_2].name(DESC_YOUR).c_str());
+#ifdef USE_TILE_LOCAL
+    const unsigned int old_talents = your_talents(false).size();
+#endif
     unequip_item(hand_used);
+#ifdef USE_TILE_LOCAL
+    if (your_talents(false).size() != old_talents)
+    {
+        tiles.layout_statcol();
+        redraw_screen();
+    }
+#endif
 
     you.time_taken /= 2;
     you.turn_is_over = true;

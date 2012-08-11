@@ -352,7 +352,7 @@ bool TabbedRegion::update_alt_text(std::string &alt)
 int TabbedRegion::find_tab(std::string tab_name) const
 {
     lowercase(tab_name);
-    std::string pluralised_name = tab_name + "s";
+    std::string pluralised_name = pluralise(tab_name);
     for (int i = 0, size = m_tabs.size(); i < size; ++i)
     {
         std::string reg_name = lowercase_string(m_tabs[i].reg->name());

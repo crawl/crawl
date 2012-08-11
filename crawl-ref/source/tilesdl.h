@@ -20,6 +20,7 @@ class TileRegion;
 class DungeonRegion;
 class GridRegion;
 class InventoryRegion;
+class AbilityRegion;
 class SpellRegion;
 class MemoriseRegion;
 class ActorRegion;
@@ -162,6 +163,7 @@ protected:
         TAB_ITEM,
         TAB_SPELL,
         TAB_MEMORISE,
+        TAB_ABILITY,
         TAB_MONSTER,
         TAB_SKILL,
         TAB_COMMAND,
@@ -193,6 +195,7 @@ protected:
     MapRegion       *m_region_map;
     TabbedRegion    *m_region_tab;
     InventoryRegion *m_region_inv;
+    AbilityRegion   *m_region_abl;
     SpellRegion     *m_region_spl;
     MemoriseRegion  *m_region_mem;
     MonsterRegion   *m_region_mon;

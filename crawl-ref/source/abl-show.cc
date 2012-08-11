@@ -154,10 +154,8 @@ struct ability_def
 };
 
 static int  _find_ability_slot(const ability_def& abil);
-static bool _activate_talent(const talent& tal);
 static bool _do_ability(const ability_def& abil);
 static void _pay_ability_costs(const ability_def& abil, int zpcost);
-static std::string _describe_talent(const talent& tal);
 static int _scale_piety_cost(ability_type abil, int original_cost);
 static std::string _zd_mons_description_for_ability(const ability_def &abil);
 static monster_type _monster_for_ability(const ability_def& abil);
@@ -929,7 +927,7 @@ static ability_type _fixup_ability(ability_type ability)
     }
 }
 
-static talent _get_talent(ability_type ability, bool check_confused)
+talent get_talent(ability_type ability, bool check_confused)
 {
     ASSERT(ability != ABIL_NON_ABILITY);
 
@@ -1295,11 +1293,10 @@ std::vector<const char*> get_ability_names()
     return result;
 }
 
-static void _print_talent_description(const talent& tal)
+// XXX: should this be in describe.cc?
+std::string get_ability_desc(const ability_type ability)
 {
-    clrscr();
-
-    const std::string& name = ability_name(tal.which);
+    const std::string& name = ability_name(ability);
 
     // XXX: The suffix is necessary to distinguish between similarly
     // named spells.  Yes, this is a hack.
@@ -1313,11 +1310,43 @@ static void _print_talent_description(const talent& tal)
     if (lookup.empty()) // Still nothing found?
         lookup = "No description found.\n";
 
-    print_description(name + "\n\n" + lookup + "\n"
-                      + _detailed_cost_description(tal.which));
+    return name + "\n\n" + lookup + "\n" + _detailed_cost_description(ability);
+}
+
+static void _print_talent_description(const talent& tal)
+{
+    clrscr();
+
+    print_description(get_ability_desc(tal.which));
 
     getchm();
     clrscr();
+}
+
+void no_ability_msg()
+{
+    // Give messages if the character cannot use innate talents right now.
+    // * Vampires can't turn into bats when full of blood.
+    // * Permanent flying (Tengu) cannot be turned off.
+    if (you.species == SP_VAMPIRE && you.experience_level >= 3)
+        mpr("Sorry, you're too full to transform right now.");
+    else if (you.species == SP_TENGU && you.experience_level >= 5
+             || player_mutation_level(MUT_BIG_WINGS))
+    {
+        if (you.flight_mode() == FL_LEVITATE)
+            mpr("You can only start flying from the ground.");
+        else if (you.flight_mode() == FL_FLY)
+            mpr("You're already flying!");
+    }
+    else if (silenced(you.pos()) && you.religion != GOD_NO_GOD)
+    {
+        // At the very least the player has "Renounce Religion", but
+        // cannot use it in silence.
+        mprf("You cannot call out to %s while silenced.",
+             god_name(you.religion).c_str());
+    }
+    else
+        mpr("Sorry, you're not good enough to have a special ability.");
 }
 
 bool activate_ability()
@@ -1331,29 +1360,7 @@ bool activate_ability()
     std::vector<talent> talents = your_talents(false);
     if (talents.empty())
     {
-        // Give messages if the character cannot use innate talents right now.
-        // * Vampires can't turn into bats when full of blood.
-        // * Permanent flying (Tengu) cannot be turned off.
-        if (you.species == SP_VAMPIRE && you.experience_level >= 3)
-            mpr("Sorry, you're too full to transform right now.");
-        else if (you.species == SP_TENGU && you.experience_level >= 5
-                 || player_mutation_level(MUT_BIG_WINGS))
-        {
-            if (you.flight_mode() == FL_LEVITATE)
-                mpr("You can only start flying from the ground.");
-            else if (you.flight_mode() == FL_FLY)
-                mpr("You're already flying!");
-        }
-        else if (silenced(you.pos()) && you.religion != GOD_NO_GOD)
-        {
-            // At the very least the player has "Renounce Religion", but
-            // cannot use it in silence.
-            mprf("You cannot call out to %s while silenced.",
-                 god_name(you.religion).c_str());
-        }
-        else
-            mpr("Sorry, you're not good enough to have a special ability.");
-
+        no_ability_msg();
         crawl_state.zero_turns_taken();
         return false;
     }
@@ -1414,14 +1421,15 @@ bool activate_ability()
         }
     }
 
-    return _activate_talent(talents[selected]);
+    return activate_talent(talents[selected]);
 }
 
 // Check prerequisites for a number of abilities.
 // Abort any attempt if these cannot be met, without losing the turn.
 // TODO: Many more cases need to be added!
 static bool _check_ability_possible(const ability_def& abil,
-                                    bool hungerCheck = true)
+                                    bool hungerCheck = true,
+                                    bool quiet = false)
 {
     // Don't insta-starve the player.
     // (Happens at 100, losing consciousness possible from 500 downward.)
@@ -1433,7 +1441,8 @@ static bool _check_ability_possible(const ability_def& abil,
         // Safety margin for natural hunger, mutations etc.
         if (expected_hunger <= 150)
         {
-            canned_msg(MSG_TOO_HUNGRY);
+            if (!quiet)
+                canned_msg(MSG_TOO_HUNGRY);
             return false;
         }
     }
@@ -1442,18 +1451,20 @@ static bool _check_ability_possible(const ability_def& abil,
     {
     case ABIL_ZIN_RECITE:
     {
-        if (!zin_check_able_to_recite())
+        if (!zin_check_able_to_recite(quiet))
             return false;
 
         const int result = zin_check_recite_to_monsters(0);
         if (result == -1)
         {
-            mpr("There's no appreciative audience!");
+            if (!quiet)
+                mpr("There's no appreciative audience!");
             return false;
         }
         else if (result == 0)
         {
-            mpr("There's no-one here to preach to!");
+            if (!quiet)
+                mpr("There's no-one here to preach to!");
             return false;
         }
         return true;
@@ -1465,7 +1476,8 @@ static bool _check_ability_possible(const ability_def& abil,
     case ABIL_ZIN_SANCTUARY:
         if (env.sanctuary_time)
         {
-            mpr("There's already a sanctuary in place on this level.");
+            if (!quiet)
+                mpr("There's already a sanctuary in place on this level.");
             return false;
         }
         return true;
@@ -1480,7 +1492,8 @@ static bool _check_ability_possible(const ability_def& abil,
             && !player_rotted()
             && !you.duration[DUR_NAUSEA])
         {
-            mpr("Nothing ails you!");
+            if (!quiet)
+                mpr("Nothing ails you!");
             return false;
         }
         return true;
@@ -1491,7 +1504,8 @@ static bool _check_ability_possible(const ability_def& abil,
             && you.dex() == you.max_dex()
             && !player_rotted())
         {
-            mprf("You don't need to restore your stats or hit points!");
+            if (!quiet)
+                mprf("You don't need to restore your stats or hit points!");
             return false;
         }
         return true;
@@ -1499,18 +1513,20 @@ static bool _check_ability_possible(const ability_def& abil,
     case ABIL_LUGONU_ABYSS_EXIT:
         if (!player_in_branch(BRANCH_ABYSS))
         {
-            mpr("You aren't in the Abyss!");
+            if (!quiet)
+                mpr("You aren't in the Abyss!");
             return false;
         }
         return true;
 
     case ABIL_LUGONU_CORRUPT:
-        return !is_level_incorruptible();
+        return !is_level_incorruptible(quiet);
 
     case ABIL_LUGONU_ABYSS_ENTER:
         if (player_in_branch(BRANCH_ABYSS))
         {
-            mpr("You're already here!");
+            if (!quiet)
+                mpr("You're already here!");
             return false;
         }
         return true;
@@ -1518,7 +1534,8 @@ static bool _check_ability_possible(const ability_def& abil,
     case ABIL_SIF_MUNA_FORGET_SPELL:
         if (you.spell_no == 0)
         {
-            canned_msg(MSG_NO_SPELLS);
+            if (!quiet)
+                canned_msg(MSG_NO_SPELLS);
             return false;
         }
         return true;
@@ -1535,7 +1552,8 @@ static bool _check_ability_possible(const ability_def& abil,
     case ABIL_BREATHE_MEPHITIC:
         if (you.duration[DUR_BREATH_WEAPON])
         {
-            canned_msg(MSG_CANNOT_DO_YET);
+            if (!quiet)
+                canned_msg(MSG_CANNOT_DO_YET);
             return false;
         }
         return true;
@@ -1544,24 +1562,28 @@ static bool _check_ability_possible(const ability_def& abil,
     case ABIL_EVOKE_BLINK:
         if (item_blocks_teleport(false, false))
         {
-            mpr("You cannot teleport right now.");
+            if (!quiet)
+                mpr("You cannot teleport right now.");
             return false;
         }
         return true;
 
     case ABIL_EVOKE_BERSERK:
     case ABIL_TROG_BERSERK:
-        return (you.can_go_berserk(true) && berserk_check_wielded_weapon());
+        return (you.can_go_berserk(true, false, true)
+                && (quiet || berserk_check_wielded_weapon()));
 
     case ABIL_FLY_II:
         if (you.duration[DUR_EXHAUSTED])
         {
-            mpr("You're too exhausted to fly.");
+            if (!quiet)
+                mpr("You're too exhausted to fly.");
             return false;
         }
         else if (you.burden_state != BS_UNENCUMBERED)
         {
-            mpr("You're carrying too much weight to fly.");
+            if (!quiet)
+                mpr("You're carrying too much weight to fly.");
             return false;
         }
         return true;
@@ -1571,7 +1593,14 @@ static bool _check_ability_possible(const ability_def& abil,
     }
 }
 
-static bool _activate_talent(const talent& tal)
+bool check_ability_possible(const ability_type ability, bool hungerCheck,
+                            bool quiet)
+{
+    return _check_ability_possible(_get_ability_def(ability), hungerCheck,
+                                   quiet);
+}
+
+bool activate_talent(const talent& tal)
 {
     // Doing these would outright kill the player.
     if (tal.which == ABIL_EVOKE_STOP_LEVITATING)
@@ -2899,8 +2928,8 @@ int choose_ability_menu(const std::vector<talent>& talents)
         else
         {
             ToggleableMenuEntry* me =
-                new ToggleableMenuEntry(_describe_talent(talents[i]),
-                                        _describe_talent(talents[i]),
+                new ToggleableMenuEntry(describe_talent(talents[i]),
+                                        describe_talent(talents[i]),
                                         MEL_ITEM, 1, talents[i].hotkey);
             me->data = &numbers[i];
 #ifdef USE_TILE
@@ -2928,8 +2957,8 @@ int choose_ability_menu(const std::vector<talent>& talents)
             if (talents[i].is_zotdef)
             {
                 ToggleableMenuEntry* me =
-                    new ToggleableMenuEntry(_describe_talent(talents[i]),
-                                            _describe_talent(talents[i]),
+                    new ToggleableMenuEntry(describe_talent(talents[i]),
+                                            describe_talent(talents[i]),
                                             MEL_ITEM, 1, talents[i].hotkey);
                 me->data = &numbers[i];
 #ifdef USE_TILE
@@ -2959,8 +2988,8 @@ int choose_ability_menu(const std::vector<talent>& talents)
             if (talents[i].is_invocation)
             {
                 ToggleableMenuEntry* me =
-                    new ToggleableMenuEntry(_describe_talent(talents[i]),
-                                            _describe_talent(talents[i]),
+                    new ToggleableMenuEntry(describe_talent(talents[i]),
+                                            describe_talent(talents[i]),
                                             MEL_ITEM, 1, talents[i].hotkey);
                 me->data = &numbers[i];
 #ifdef USE_TILE
@@ -2991,7 +3020,7 @@ int choose_ability_menu(const std::vector<talent>& talents)
     }
 }
 
-static std::string _describe_talent(const talent& tal)
+std::string describe_talent(const talent& tal)
 {
     ASSERT(tal.which != ABIL_NON_ABILITY);
 
@@ -3009,7 +3038,7 @@ static std::string _describe_talent(const talent& tal)
 static void _add_talent(std::vector<talent>& vec, const ability_type ability,
                         bool check_confused)
 {
-    const talent t = _get_talent(ability, check_confused);
+    const talent t = get_talent(ability, check_confused);
     if (t.which != ABIL_NON_ABILITY)
         vec.push_back(t);
 }

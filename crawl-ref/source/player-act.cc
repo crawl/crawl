@@ -583,9 +583,9 @@ bool player::can_go_berserk() const
     return can_go_berserk(false);
 }
 
-bool player::can_go_berserk(bool intentional, bool potion) const
+bool player::can_go_berserk(bool intentional, bool potion, bool quiet) const
 {
-    const bool verbose = intentional || potion;
+    const bool verbose = (intentional || potion) && !quiet;
 
     if (berserk())
     {

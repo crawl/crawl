@@ -13,7 +13,7 @@
 struct bolt;
 
 std::string zin_recite_text(int* trits, size_t len, int prayertype, int step);
-bool zin_check_able_to_recite();
+bool zin_check_able_to_recite(bool quiet = false);
 int zin_check_recite_to_monsters(recite_type *prayertype);
 bool zin_recite_to_single_monster(const coord_def& where,
                                   recite_type prayertype);

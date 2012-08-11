@@ -2,6 +2,7 @@
 
 #ifdef USE_TILE_LOCAL
 
+#include "abl-show.h"
 #include "artefact.h"
 #include "cio.h"
 #include "coord.h"
@@ -20,6 +21,7 @@
 #include "tiledef-main.h"
 #include "tilefont.h"
 #include "tilereg.h"
+#include "tilereg-abl.h"
 #include "tilereg-cmd.h"
 #include "tilereg-crt.h"
 #include "tilereg-dgn.h"
@@ -126,6 +128,7 @@ void TilesFramework::shutdown()
     delete m_region_inv;
     delete m_region_spl;
     delete m_region_mem;
+    delete m_region_abl;
     delete m_region_mon;
     delete m_region_crt;
     delete m_region_menu;
@@ -138,6 +141,7 @@ void TilesFramework::shutdown()
     m_region_inv   = NULL;
     m_region_spl   = NULL;
     m_region_mem   = NULL;
+    m_region_abl   = NULL;
     m_region_mon   = NULL;
     m_region_crt   = NULL;
     m_region_menu  = NULL;
@@ -337,6 +341,7 @@ bool TilesFramework::initialise()
     m_region_inv  = new InventoryRegion(m_init);
     m_region_spl  = new SpellRegion(m_init);
     m_region_mem  = new MemoriseRegion(m_init);
+    m_region_abl  = new AbilityRegion(m_init);
     m_region_mon  = new MonsterRegion(m_init);
     m_region_skl  = new SkillRegion(m_init);
     m_region_cmd  = new CommandRegion(m_init);
@@ -344,6 +349,7 @@ bool TilesFramework::initialise()
     m_region_tab->set_tab_region(TAB_ITEM, m_region_inv, TILEG_TAB_ITEM);
     m_region_tab->set_tab_region(TAB_SPELL, m_region_spl, TILEG_TAB_SPELL);
     m_region_tab->set_tab_region(TAB_MEMORISE, m_region_mem, TILEG_TAB_MEMORISE);
+    m_region_tab->set_tab_region(TAB_ABILITY, m_region_abl, TILEG_TAB_ABILITY);
     m_region_tab->set_tab_region(TAB_MONSTER, m_region_mon, TILEG_TAB_MONSTER);
     m_region_tab->set_tab_region(TAB_SKILL, m_region_skl, TILEG_TAB_SKILL);
     m_region_tab->set_tab_region(TAB_COMMAND, m_region_cmd, TILEG_TAB_COMMAND);
@@ -931,6 +937,17 @@ void TilesFramework::place_tab(int idx)
         }
         max_ln = calc_tab_lines(you.spell_no);
         break;
+    case TAB_ABILITY:
+    {
+        unsigned int talents = your_talents(false).size();
+        if (talents == 0)
+        {
+            m_region_tab->enable_tab(TAB_ABILITY);
+            return;
+        }
+        max_ln = calc_tab_lines(talents);
+        break;
+    }
     case TAB_MONSTER:
         max_ln = max_mon_height;
         break;
