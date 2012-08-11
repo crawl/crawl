@@ -37,10 +37,6 @@ stone_arrow5
 stone_arrow6
 stone_arrow7
 
-drain0 BOLT_DRAIN
-drain1
-drain2
-
 flame0 BOLT_FLAME
 flame1
 flame2
