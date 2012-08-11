@@ -942,7 +942,15 @@ void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
     {
         flv->special = (flv->special + 1) % tile_dngn_count(bg_idx);
     }
-    else if (bg_idx >= TILE_DNGN_LAVA && bg_idx < TILE_BLOOD)
+    else if (bg_idx == TILE_DNGN_LAVA)
+    {
+        // Lava tiles are four sets of four tiles (the second and fourth
+        // sets are the same). This cycles between the four sets, picking
+        // a random element from each set.
+        flv->special = ((flv->special - ((flv->special % 4)))
+                        + 4 + random2(4)) % tile_dngn_count(bg_idx);
+    }
+    else if (bg_idx > TILE_DNGN_LAVA && bg_idx < TILE_BLOOD)
         flv->special = random2(256);
     else if (bg_idx == TILE_WALL_NORMAL
              && flv->wall >= TILE_WALL_BRICK_TORCH_START
