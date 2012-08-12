@@ -75,7 +75,7 @@ install: build
 	cd build-tiles/source && $(MAKE) $(ARGS_TILES) install DESTDIR=../../debian/crawl-tiles
 	rm -rf debian/crawl-tiles/var
 	cd debian/crawl-tiles/usr/share/crawl/ && rm -rf docs settings
-	cd debian/crawl-tiles/usr/share/crawl/dat && rm -rf des clua dlua database descript lua
+	cd debian/crawl-tiles/usr/share/crawl/dat && rm -rf des clua dlua defaults database descript lua
 	
 	mkdir -p debian/crawl/usr/share/man/man6
 	cp docs/crawl.6 debian/crawl/usr/share/man/man6/
