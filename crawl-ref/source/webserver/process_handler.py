@@ -187,9 +187,10 @@ class CrawlProcessHandlerBase(object):
         watcher.send_message("game_client", content = game_html)
 
     def stop(self):
-        self.process.send_signal(subprocess.signal.SIGHUP)
-        t = time.time() + config.kill_timeout
-        self.kill_timeout = self.io_loop.add_timeout(t, self.kill)
+        if self.process:
+            self.process.send_signal(subprocess.signal.SIGHUP)
+            t = time.time() + config.kill_timeout
+            self.kill_timeout = self.io_loop.add_timeout(t, self.kill)
 
     def kill(self):
         if self.process:
@@ -299,6 +300,11 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
     def start(self):
         self._purge_locks_and_start(True)
 
+    def stop(self):
+        super(CrawlProcessHandler, self).stop()
+        self._stop_purging_stale_processes()
+        self._stale_pid = None
+
     def _purge_locks_and_start(self, firsttime=False):
         # Purge stale locks
         lockfile = self._find_lock()
@@ -348,6 +354,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
 
     def _kill_stale_process(self, signal=subprocess.signal.SIGHUP):
         self._process_hup_timeout = None
+        if self._stale_pid == None: return
         if signal == subprocess.signal.SIGHUP:
             self.logger.info("Purging stale lock at %s, pid %s.",
                              self._stale_lockfile, self._stale_pid)
@@ -500,7 +507,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
     def add_watcher(self, watcher, hide = False):
         super(CrawlProcessHandler, self).add_watcher(watcher, hide)
 
-        if self.conn:
+        if self.conn and self.conn.open:
             self.conn.send_message('{"msg":"spectator_joined"}')
 
     def handle_input(self, msg):
@@ -529,10 +536,11 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
     def handle_chat_message(self, username, text):
         super(CrawlProcessHandler, self).handle_chat_message(username, text)
 
-        self.conn.send_message(json_encode({
-                    "msg": "note",
-                    "content": "%s: %s" % (username, text)
-                    }))
+        if self.conn and self.conn.open:
+            self.conn.send_message(json_encode({
+                        "msg": "note",
+                        "content": "%s: %s" % (username, text)
+                        }))
 
     def _on_process_output(self, line):
         self.check_where()
