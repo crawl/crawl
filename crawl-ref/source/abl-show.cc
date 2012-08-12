@@ -2871,8 +2871,7 @@ int choose_ability_menu(const std::vector<talent>& talents)
     const bool text_only = true;
 #endif
 
-    ToggleableMenu abil_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
-                             | MF_ALWAYS_SHOW_MORE, text_only);
+    ToggleableMenu abil_menu(MF_SINGLESELECT | MF_ANYPRINTABLE, text_only);
 
     abil_menu.set_highlighter(NULL);
 #ifdef USE_TILE_LOCAL
@@ -2895,6 +2894,8 @@ int choose_ability_menu(const std::vector<talent>& talents)
                                 "Cost                       Failure",
                                 MEL_TITLE));
 #endif
+    abil_menu.set_tag("ability");
+    abil_menu.add_toggle_key('!');
 
     if (crawl_state.game_is_hints())
     {
@@ -2908,9 +2909,6 @@ int choose_ability_menu(const std::vector<talent>& talents)
                            "Press '<w>!</w>' or '<w>?</w>' to toggle "
                            "between ability selection and description."));
     }
-
-    abil_menu.action_cycle = Menu::CYCLE_TOGGLE;
-    abil_menu.menu_action  = Menu::ACT_EXECUTE;
 
     int numbers[52];
     for (int i = 0; i < 52; ++i)
