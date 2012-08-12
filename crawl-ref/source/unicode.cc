@@ -136,7 +136,7 @@ std::wstring utf8_to_16(const char *s)
 }
 #endif
 
-std::string utf16_to_8(const wchar_t *s)
+std::string utf16_to_8(const utf16_t *s)
 {
     std::string d;
     ucs_t c;
@@ -295,7 +295,7 @@ FileLineInput::~FileLineInput()
 std::string FileLineInput::get_line()
 {
     ASSERT(f);
-    std::wstring win; // actually, these are more of a lose
+    std::vector<utf16_t> win;
     std::string out;
     char buf[512];
     ucs_t c;
@@ -352,7 +352,8 @@ std::string FileLineInput::get_line()
             win.push_back(c);
         }
         while (!seen_eof);
-        return utf16_to_8(win.c_str());
+        win.push_back(0);
+        return utf16_to_8(&win[0]);
 
     case BOM_UTF16BE:
         do
@@ -369,7 +370,8 @@ std::string FileLineInput::get_line()
             win.push_back(c);
         }
         while (!seen_eof);
-        return utf16_to_8(win.c_str());
+        win.push_back(0);
+        return utf16_to_8(&win[0]);
 
     case BOM_UTF32LE:
         do

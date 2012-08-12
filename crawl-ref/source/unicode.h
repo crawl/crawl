@@ -6,9 +6,11 @@
 #ifndef UNICODE_H
 #define UNICODE_H
 
+
 int wctoutf8(char *d, ucs_t s);
 int utf8towc(ucs_t *d, const char *s);
 #ifdef TARGET_OS_WINDOWS
+typedef wchar_t utf16_t;
 std::wstring utf8_to_16(const char *s);
 std::string utf16_to_8(const wchar_t *s);
 
@@ -20,6 +22,8 @@ static inline std::string utf16_to_8(const std::wstring &s)
 {
     return utf16_to_8(s.c_str());
 }
+#else
+typedef uint16_t utf16_t;
 #endif
 std::string utf8_to_mb(const char *s);
 std::string mb_to_utf8(const char *s);
