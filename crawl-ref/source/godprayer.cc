@@ -578,6 +578,10 @@ static piety_gain_t _sac_corpse(const item_def& item)
 {
     if (you.religion == GOD_OKAWARU)
     {
+        // Corpses placed by vaults grant no piety (but still sacrifice).
+        if (!item.props.exists(MONSTER_MID))
+            return PIETY_NONE;
+
         monster dummy;
         dummy.type = (monster_type)(item.orig_monnum ? item.orig_monnum - 1 : item.plus);
         if (item.props.exists(MONSTER_HIT_DICE))
