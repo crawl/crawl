@@ -34,7 +34,8 @@ bool activate_ability();
 bool check_ability_possible(const ability_type ability, bool hungerCheck = true,
                             bool quiet = false);
 bool activate_talent(const talent& tal);
-std::vector<talent> your_talents(bool check_confused);
+std::vector<talent> your_talents(bool check_confused,
+                                 bool include_unusable = false);
 bool string_matches_ability_name(const std::string& key);
 std::string print_abilities(void);
 
