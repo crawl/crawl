@@ -2896,6 +2896,7 @@ int choose_ability_menu(const std::vector<talent>& talents)
 #endif
     abil_menu.set_tag("ability");
     abil_menu.add_toggle_key('!');
+    abil_menu.add_toggle_key('?');
 
     if (crawl_state.game_is_hints())
     {
