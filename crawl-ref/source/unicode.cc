@@ -113,6 +113,8 @@ int utf8towc(ucs_t *d, const char *s)
     return cnt;
 }
 
+#ifdef TARGET_OS_WINDOWS
+// don't pull in wstring templates on other systems
 std::wstring utf8_to_16(const char *s)
 {
     std::wstring d;
@@ -132,6 +134,7 @@ std::wstring utf8_to_16(const char *s)
     }
     return d;
 }
+#endif
 
 std::string utf16_to_8(const wchar_t *s)
 {
