@@ -698,8 +698,9 @@ void blood_smell(int strength, const coord_def& where)
             int vamp_range = vamp_strength * vamp_strength;
             check_player_sense(SENSE_SMELL_BLOOD, vamp_range, where);
         }
-        check_monsters_sense(SENSE_SMELL_BLOOD, range, where);
     }
+
+    check_monsters_sense(SENSE_SMELL_BLOOD, range, where);
 }
 
 //////////////////////////////////////////////////////////////////////////////
