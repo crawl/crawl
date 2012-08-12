@@ -4405,6 +4405,33 @@ _Jessica_rare_
 @The_monster@ shouts @at_foe@, "You are a ghastly nuisance!"
 ## END Jessica ##
 %%%%
+############ JORGRUN ### A dwarven earth elementalist.
+Jorgrun
+
+@_Jorgrun_common_@
+
+w:5
+@_Jorgrun_rare_@
+%%%%
+_Jorgrun_common_
+
+@The_monster@ says @to_foe@, "May tha earth consume ye!"
+
+@The_monster@ says @to_foe@, "'tis place shall be yer tomb!"
+
+@The_monster@ mutters some incantations to @reflexive@.
+%%%%
+_Jorgrun_rare_
+
+@The_monster@ says @to_foe@, "Tha earth be me home, an' ye bee trespassing!"
+
+@The_monster@ says @to_foe@, "Yer just na down-ta-earth enough."
+
+@The_monster@ says, "I've ne'er se'n tha particular type o' rock formation 'fore."
+
+@The_monster@ says, "A few more walls knocked out 'ere an' thar an' 'tis whole place will come crashin' down."
+## END Jorgrun ##
+%%%%
 ############ JORY ### A powerful vampire Lord.
 silenced Jory
 
