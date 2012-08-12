@@ -1431,6 +1431,17 @@ static bool _check_ability_possible(const ability_def& abil,
                                     bool hungerCheck = true,
                                     bool quiet = false)
 {
+    if (silenced(you.pos()) && you.religion != GOD_NEMELEX_XOBEH)
+    {
+        talent tal = get_talent(abil.ability, false);
+        if (tal.is_invocation)
+        {
+            if (!quiet)
+                mprf("You cannot call out to %s while silenced.",
+                     god_name(you.religion).c_str());
+            return false;
+        }
+    }
     // Don't insta-starve the player.
     // (Happens at 100, losing consciousness possible from 500 downward.)
     if (hungerCheck && !you.is_undead)
@@ -3043,7 +3054,7 @@ static void _add_talent(std::vector<talent>& vec, const ability_type ability,
         vec.push_back(t);
 }
 
-std::vector<talent> your_talents(bool check_confused)
+std::vector<talent> your_talents(bool check_confused, bool include_unusable)
 {
     std::vector<talent> talents;
 
@@ -3213,12 +3224,13 @@ std::vector<talent> your_talents(bool check_confused)
         _add_talent(talents, ABIL_BLINK, check_confused);
 
     // Religious abilities.
-    std::vector<ability_type> abilities = get_god_abilities();
+    std::vector<ability_type> abilities = get_god_abilities(include_unusable);
     for (unsigned int i = 0; i < abilities.size(); ++i)
         _add_talent(talents, abilities[i], check_confused);
 
     // And finally, the ability to opt-out of your faith {dlb}:
-    if (you.religion != GOD_NO_GOD && !silenced(you.pos()))
+    if (you.religion != GOD_NO_GOD
+        && (include_unusable || !silenced(you.pos())))
         _add_talent(talents, ABIL_RENOUNCE_RELIGION, check_confused);
 
     //jmf: Check for breath weapons - they're exclusive of each other, I hope!
