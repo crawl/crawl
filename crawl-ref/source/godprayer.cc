@@ -583,12 +583,22 @@ static piety_gain_t _sac_corpse(const item_def& item)
             return PIETY_NONE;
 
         monster dummy;
-        dummy.type = (monster_type)(item.orig_monnum ? item.orig_monnum - 1 : item.plus);
-        if (item.props.exists(MONSTER_HIT_DICE))
-            dummy.hit_dice = item.props[MONSTER_HIT_DICE].get_short();
+        dummy.type = (monster_type)(item.orig_monnum ? item.orig_monnum - 1
+                                                     : item.plus);
         if (item.props.exists(MONSTER_NUMBER))
             dummy.number   = item.props[MONSTER_NUMBER].get_short();
         define_monster(&dummy);
+
+        // Hit dice are overridden by define_monster, so only set them now.
+        if (item.props.exists(MONSTER_HIT_DICE))
+        {
+            int hd = item.props[MONSTER_HIT_DICE].get_short();
+            const monsterentry *m = get_monster_data(dummy.type);
+            int hp = hit_points(hd, m->hpdice[1], m->hpdice[2]) + m->hpdice[3];
+
+            dummy.hit_dice = hd;
+            dummy.max_hit_points = hp;
+        }
         int gain = get_fuzzied_monster_difficulty(&dummy);
         dprf("fuzzied corpse difficulty: %4.2f", gain*0.01);
 
