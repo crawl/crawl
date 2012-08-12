@@ -150,23 +150,35 @@ dwarven_hand_axe1 WPN_HAND_AXE_DWARF
 dwarven_hand_axe2
 orcish_hand_axe1 WPN_HAND_AXE_ORC
 orcish_hand_axe2
-%rim 1
 war_axe1 WPN_WAR_AXE
 war_axe2
-%rim 0
+war_axe3
 dwarven_war_axe1 WPN_WAR_AXE_DWARF
 dwarven_war_axe2
 orcish_war_axe1 WPN_WAR_AXE_ORC
 orcish_war_axe2
-%rim 1
 broad_axe1 WPN_BROAD_AXE
 broad_axe2
 broad_axe3
+dwarven_broad_axe1 WPN_BROAD_AXE_DWARF
+dwarven_broad_axe2
+orcish_broad_axe1 WPN_BROAD_AXE_ORC
+orcish_broad_axe2
 battle_axe1 WPN_BATTLEAXE
 battle_axe2
 battle_axe3
+dwarven_battle_axe1 WPN_BATTLEAXE_DWARF
+dwarven_battle_axe2
+orcish_battle_axe1 WPN_BATTLEAXE_ORC
+orcish_battle_axe2
 executioner_axe1 WPN_EXECUTIONERS_AXE
 executioner_axe2
+executioner_axe3
+dwarven_executioner_axe1 WPN_EXECUTIONERS_AXE_DWARF
+dwarven_executioner_axe2
+orcish_executioner_axe1 WPN_EXECUTIONERS_AXE_ORC
+orcish_executioner_axe2
+%rim 1
 
 ##Polearm
 %rim 0
