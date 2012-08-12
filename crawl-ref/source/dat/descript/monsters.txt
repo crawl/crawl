@@ -248,6 +248,11 @@ Jessica
 An evil apprentice sorceress. She entered the dungeon hoping to find a quiet,
 secluded place where she could study the darker arts without being disturbed.
 %%%%
+Jorgrun
+
+A deep dwarven magician, particularly well-attuned to the dungeon around him.
+He wields powerful earth magic in combat.
+%%%%
 Jory
 
 Once a simple village peasant, Jory found himself transformed in undeath into a

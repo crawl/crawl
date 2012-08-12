@@ -1836,6 +1836,17 @@
       }
     },
 
+    {  MST_JORGRUN,
+      {
+       SPELL_IRON_SHOT,
+       SPELL_PETRIFY,
+       SPELL_STONESKIN,
+       SPELL_FRAGMENTATION,
+       SPELL_SHATTER,
+       SPELL_BLINK
+      }
+    },
+
     {  MST_TEST_SPAWNER,
       {
        SPELL_SHADOW_CREATURES,
