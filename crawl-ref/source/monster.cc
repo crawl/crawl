@@ -951,8 +951,6 @@ void monster::equip_armour(item_def &item, int near)
 
     // Shields can affect evasion.
     ev += property(item, PARM_EVASION) / 2;
-    if (ev < 1)
-        ev = 1;   // This *shouldn't* happen.
 }
 
 void monster::equip_jewellery(item_def &item, int near)
@@ -1105,8 +1103,6 @@ void monster::unequip_armour(item_def &item, int near)
     }
 
     ev -= property(item, PARM_EVASION) / 2;
-    if (ev < 1)
-        ev = 1;   // This *shouldn't* happen.
 }
 
 void monster::unequip_jewellery(item_def &item, int near)
@@ -3344,7 +3340,7 @@ int monster::melee_evasion(const actor *act, ev_ignore_type evit) const
         evasion -= 8;
 
     if (evit & EV_IGNORE_HELPLESS)
-        return evasion;
+        return max(evasion, 0);
 
     if (paralysed() || petrified() || petrifying() || asleep())
         evasion = 0;
@@ -3352,7 +3348,7 @@ int monster::melee_evasion(const actor *act, ev_ignore_type evit) const
         evasion /= (body_size(PSIZE_BODY) + 2);
     else if (confused())
         evasion /= 2;
-    return evasion;
+    return max(evasion, 0);
 }
 
 bool monster::heal(int amount, bool max_too)
