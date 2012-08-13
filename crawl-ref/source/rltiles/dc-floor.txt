@@ -669,10 +669,12 @@ black_cobalt10
 black_cobalt11
 black_cobalt12
 
+%weight 10
 frozen0 FLOOR_FROZEN
 frozen1
 frozen2
 frozen3
+%weight 2
 frozen4
 frozen5
 frozen6
