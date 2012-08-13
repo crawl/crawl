@@ -2098,11 +2098,12 @@ ENDMAP
 
 NAME:   evilmike_butchery
 TAGS:   no_item_gen
+DEPTH:  D:9-
 SUBST:  . = ..", X = xxB
 KPROP:  "B = bloody
 SUBST:  " = ., B = x
 NSUBST: . = 5:d / 10=d. / 2:e / 1:e. / *=.^
-: if you.absdepth() > 12 then
+: if you.absdepth() > 14 then
 KFEAT:  ^ = blade trap
 : else
 KITEM:  ^ = hand axe
