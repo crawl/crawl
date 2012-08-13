@@ -107,14 +107,31 @@ void dgn_build_basic_level()
         {
             if (!one_chance_in(3) && !map_masked(end, MMT_NO_TRAP)) // 2/3 chance it ends in a shaft
             {
-                trap_def& ts(env.trap[0]);
-                ts.type = TRAP_SHAFT;
-                ts.pos = end;
-                grd(end) = DNGN_UNDISCOVERED_TRAP;
-                env.tgrid(end) = 0;
-                if (shaft_known(level_number, false))
-                    ts.reveal();
-                dprf("Trail ends in shaft.");
+                trap_def* ts = NULL;
+                int i = 0;
+                for (; i < MAX_TRAPS; i++)
+                {
+                    if (env.trap[i].type != TRAP_UNASSIGNED)
+                        continue;
+
+                    ts = &env.trap[i];
+                    break;
+                }
+                if (i < MAX_TRAPS)
+                {
+                    ts->type = TRAP_SHAFT;
+                    ts->pos = end;
+                    grd(end) = DNGN_UNDISCOVERED_TRAP;
+                    env.tgrid(end) = i;
+                    if (shaft_known(level_number, false))
+                        ts->reveal();
+                    dprf("Trail ends in shaft.");
+                }
+                else
+                {
+                    grd(end) = DNGN_FLOOR;
+                    dprf("Trail does not end in shaft.");
+                }
             }
             else
             {
