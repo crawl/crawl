@@ -88,7 +88,7 @@ static void _create_monster_hide(const item_def corpse)
     if (corpse.props.exists("never_hide"))
         return;
 
-    const monster_type mons_class = corpse.mon_type;
+    monster_type mons_class = corpse.mon_type;
 
     int o = get_mitm_slot();
     if (o == NON_ITEM)
@@ -106,6 +106,8 @@ static void _create_monster_hide(const item_def corpse)
     item.colour    = mons_class_colour(mons_class);
 
     // These values cannot be set by a reasonable formula: {dlb}
+    if (mons_genus(mons_class) == MONS_TROLL)
+        mons_class = MONS_TROLL;
     switch (mons_class)
     {
     case MONS_DRAGON:         item.sub_type = ARM_FIRE_DRAGON_HIDE;    break;

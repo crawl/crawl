@@ -3951,10 +3951,14 @@ bool monster_descriptor(monster_type which_class, mon_desc_type which_descriptor
 {
     if (which_descriptor == MDSC_LEAVES_HIDE)
     {
+        if (mons_genus(which_class) == MONS_TROLL
+            || mons_genus(which_class) == MONS_YAK)
+        {
+            return true;
+        }
         switch (which_class)
         {
         case MONS_DRAGON:
-        case MONS_TROLL:
         case MONS_ICE_DRAGON:
         case MONS_STEAM_DRAGON:
         case MONS_MOTTLED_DRAGON:
@@ -3962,8 +3966,6 @@ bool monster_descriptor(monster_type which_class, mon_desc_type which_descriptor
         case MONS_GOLDEN_DRAGON:
         case MONS_SWAMP_DRAGON:
         case MONS_PEARL_DRAGON:
-        case MONS_YAK:
-        case MONS_SHEEP:
             return true;
         default:
             return false;
