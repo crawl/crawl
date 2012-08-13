@@ -388,8 +388,8 @@ ENDMAP
 # This replaces dungeon.cc:_plan_3().
 #
 NAME: layout_rooms
-DEPTH: Pan, 4-22, !Vaults
-WEIGHT: 60 (Pan), 20
+DEPTH: Pan, 4-22, Zot, !Vaults
+WEIGHT: 60 (Pan), 10 (Zot), 20
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
@@ -586,7 +586,7 @@ ENDMAP
 #
 # This replaces dungeon.cc:_plan_5().
 NAME: layout_misc
-DEPTH: Pan, 4-22, !Vaults
+DEPTH: Pan, 4-22, Zot, !Vaults
 WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
@@ -1021,7 +1021,7 @@ TAGS: overwritable layout allow_dup unrand
 # Dummy layouts that just call C++ functions that do all the work.
 NAME: layout_basic
 DEPTH: 1-, !Vaults, !Pan
-WEIGHT: 90, 200 (Geh), 200 (Coc)
+WEIGHT: 90, 200 (Geh), 200 (Coc), 10 (Zot)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
