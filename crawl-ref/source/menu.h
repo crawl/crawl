@@ -266,6 +266,7 @@ enum MenuFlag
                                     /// select the appropriate items.
     MF_ALLOW_FORMATTING = 0x0100,   /// Parse index for formatted-string
     MF_SHOW_PAGENUMBERS = 0x0200,   /// Show "(page X of Y)" when appropriate
+    MF_TOGGLE_ACTION    = 0x0400,   /// ToggleableMenu toggles action as well
     MF_EASY_EXIT        = 0x1000,
     MF_START_AT_END     = 0x2000,
     MF_PRESELECTED      = 0x4000,   /// Has a preselected entry.
