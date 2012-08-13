@@ -2016,6 +2016,14 @@ int ToggleableMenu::pre_process(int key)
             webtiles_update_item(i);
 #endif
 
+        if (flags & MF_TOGGLE_ACTION)
+        {
+            if (menu_action == ACT_EXECUTE)
+                menu_action = ACT_EXAMINE;
+            else
+                menu_action = ACT_EXECUTE;
+        }
+
         // Don't further process the key
         return 0;
     }

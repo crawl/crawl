@@ -2882,7 +2882,8 @@ int choose_ability_menu(const std::vector<talent>& talents)
     const bool text_only = true;
 #endif
 
-    ToggleableMenu abil_menu(MF_SINGLESELECT | MF_ANYPRINTABLE, text_only);
+    ToggleableMenu abil_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
+                             | MF_TOGGLE_ACTION, text_only);
 
     abil_menu.set_highlighter(NULL);
 #ifdef USE_TILE_LOCAL
@@ -2908,6 +2909,7 @@ int choose_ability_menu(const std::vector<talent>& talents)
     abil_menu.set_tag("ability");
     abil_menu.add_toggle_key('!');
     abil_menu.add_toggle_key('?');
+    abil_menu.menu_action = Menu::ACT_EXECUTE;
 
     if (crawl_state.game_is_hints())
     {
