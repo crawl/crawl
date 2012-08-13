@@ -70,7 +70,8 @@ end
 #
 {{
 function getRandomWallMaterial ()
-  if not you.in_branch("Lair") and crawl.one_chance_in(20) then
+  if not you.in_branch("Lair") and not you.in_branch("Zot")
+     and crawl.one_chance_in(20) then
     if crawl.one_chance_in(3) then
       return 'v'
     else
