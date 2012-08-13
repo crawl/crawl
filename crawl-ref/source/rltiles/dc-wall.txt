@@ -516,7 +516,7 @@ spider01
 spider02
 spider03
 spider04
-%weight 3
+%weight 1
 spider05
 spider06
 spider07
