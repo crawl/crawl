@@ -462,7 +462,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         fcntl.lockf(f.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
         self.inprogress_lock_file = f
         cols, lines = self.process.get_terminal_size()
-        f.write("%s\n%s\n%s\n" % (self.process.pid, cols, lines))
+        f.write("%s\n%s\n%s\n" % (self.process.pid, lines, cols))
         f.flush()
 
     def remove_inprogress_lock(self):
