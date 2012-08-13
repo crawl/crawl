@@ -21,6 +21,22 @@ last_game_id = 0
 processes = dict()
 unowned_process_logger = logging.LoggerAdapter(logging.getLogger(), {})
 
+def find_game_info(socket_dir, socket_file):
+    game_id = socket_file[socket_file.index(":")+1:-5]
+    if (game_id in config.games and
+        os.path.abspath(config.games[game_id]["socket_path"]) == os.path.abspath(socket_dir)):
+        config.games[game_id]["id"] = game_id
+        return config.games[game_id]
+
+    game_info = None
+    for game_id in config.games.keys():
+        gi = config.games[game_id]
+        if os.path.abspath(gi["socket_path"]) == os.path.abspath(socket_dir):
+            game_info = gi
+            break
+    game_info["id"] = game_id
+    return game_info
+
 def handle_new_socket(path, event):
     dirname, filename = os.path.split(path)
     if ":" not in filename or not filename.endswith(".sock"): return
@@ -30,13 +46,7 @@ def handle_new_socket(path, event):
         if abspath in processes: return # Created by us
 
         # Find a game_info with this socket path
-        game_info = None
-        for game_id in config.games.keys():
-            gi = config.games[game_id]
-            if os.path.abspath(gi["socket_path"]) == os.path.abspath(dirname):
-                game_info = gi
-                break
-        game_info["id"] = game_id
+        game_info = find_game_info(dirname, filename)
 
         # Create process handler
         process = CrawlProcessHandler(game_info, username,
