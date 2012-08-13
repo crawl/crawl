@@ -449,7 +449,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
 
         self.gen_inprogress_lock()
 
-        self.connect(self.socketpath)
+        self.connect(self.socketpath, True)
 
         self.logger.info("Crawl FDs: fd%s, fd%s.",
                          self.process.child_fd,
@@ -459,11 +459,11 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
 
         self.check_where()
 
-    def connect(self, socketpath):
+    def connect(self, socketpath, primary = False):
         self.socketpath = socketpath
         self.conn = WebtilesSocketConnection(self.io_loop, self.socketpath)
         self.conn.message_callback = self._on_socket_message
-        self.conn.connect()
+        self.conn.connect(primary)
 
     def gen_inprogress_lock(self):
         self.inprogress_lock = os.path.join(self.config_path("inprogress_path"),
