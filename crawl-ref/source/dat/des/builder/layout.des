@@ -56,7 +56,8 @@
     end
 
     function random_wall_material(e)
-        if not you.in_branch("Lair") and crawl.one_chance_in(20) then
+        if not you.in_branch("Lair") and not you.in_branch("Zot")
+           and crawl.one_chance_in(20) then
             e.subst('x : ccv')
         end
     end
@@ -470,7 +471,7 @@ ENDMAP
 # This replaces dungeon.cc:_city_level().
 #
 NAME: layout_city
-DEPTH: Dis, Vaults, 15-, !Pan
+DEPTH: Dis, Vaults, 15-, !Pan, !Zot
 WEIGHT: 1 (Vaults), 10
 CHANCE: 100% (Dis)
 ORIENT: encompass
@@ -698,7 +699,7 @@ TAGS: overwritable layout allow_dup unrand
 
 ## This replaces dungeon.cc:_roguey_level.
 NAME: layout_roguey
-DEPTH: 1-, !Vaults, !Pan
+DEPTH: 1-, !Vaults, !Pan, !Zot
 WEIGHT: 20
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
@@ -1041,7 +1042,7 @@ MAP
 ENDMAP
 
 NAME: layout_chaotic_city
-DEPTH: Vaults, Pan, 4-
+DEPTH: Vaults, Pan, 4-, !Zot
 WEIGHT: 2 (Vaults), 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
