@@ -853,6 +853,17 @@ TAGS: overwritable layout allow_dup unrand
         end
     end
 
+    function room_is_placeable(x1, y1, x2, y2)
+        if is_validating() then return true end
+        for point in iter.rect_iterator(dgn.point(x1, y1),
+                                        dgn.point(x2, y2)) do
+            if dgn.in_vault(point.x, point.y) then
+                return false
+            end
+        end
+        return true
+    end
+
     local gxm, gym = dgn.max_bounds()
 
     extend_map { width = gxm, height = gym, fill = 'x' }
@@ -876,6 +887,19 @@ TAGS: overwritable layout allow_dup unrand
     for y = 0, rows - 1 do
         for x = 0, cols - 1 do
             local base_x, base_y = x * xspace + 8, y * yspace + 8
+            local x1, x2, y1, y2
+            local tries = 50
+            local placeable = true
+            while tries > 0 do
+                x1 = base_x + crawl.random2(4)
+                y1 = base_y + crawl.random2(4)
+                x2 = base_x + xsize + crawl.random2(5)
+                y2 = base_y + ysize + crawl.random2(3)
+                if room_is_placeable(x1, y1, x2, y2) then break end
+                tries = tries - 1
+            end
+
+            if tries == 0 then placeable = false end
 
             local room = {
                 x1 = base_x + crawl.random2(4),
@@ -884,7 +908,7 @@ TAGS: overwritable layout allow_dup unrand
                 y2 = base_y + ysize + crawl.random2(3),
                 -- Rogue has 0-3 rooms per 3x3 level missing;
                 -- this averages to 1.5 in 9, or 1 in 6.
-                present = not crawl.one_chance_in(6),
+                present = placeable and not crawl.one_chance_in(6),
                 maze = (crawl.random2(10) < you.absdepth() - 1 and
                         crawl.one_chance_in(15)),
                 fill = '.',

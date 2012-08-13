@@ -3951,7 +3951,10 @@ static void _build_postvault_level(vault_placement &place)
               random_choose(1, 20, 125, 500, 999999, -1));
     }
     else
-        dgn_build_rooms_level(random_range(25, 100));
+    {
+        const map_def* layout = random_map_for_tag("layout", true, true);
+        _build_secondary_vault(layout, false);
+    }
 }
 
 static const object_class_type _acquirement_item_classes[] =
@@ -6295,6 +6298,9 @@ void vault_placement::apply_grid()
         // placement.
         for (rectangle_iterator ri(pos, pos + size - 1); ri; ++ri)
         {
+            if (map.is_overwritable_layout() && map_masked(*ri, MMT_VAULT))
+                continue;
+
             const coord_def &rp(*ri);
             const coord_def dp = rp - pos;
 

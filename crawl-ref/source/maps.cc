@@ -377,6 +377,10 @@ static bool _map_safe_vault_place(const map_def &map,
     if (size.zero())
         return true;
 
+    // Processing for layouts is handled elsewhere.
+    if (map.is_overwritable_layout())
+        return true;
+
     const bool water_ok =
         map.has_tag("water_ok") || player_in_branch(BRANCH_SWAMP);
 
