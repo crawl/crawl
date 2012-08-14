@@ -99,6 +99,7 @@ class CrawlProcessHandlerBase(object):
                                              io_loop = self.io_loop)
         self.idle_checker.start()
         self._was_idle = False
+        self.last_watcher_join = 0
 
         global last_game_id
         self.id = last_game_id + 1
@@ -164,6 +165,7 @@ class CrawlProcessHandlerBase(object):
         update_all_lobbys(self)
 
     def add_watcher(self, watcher, hide = False):
+        self.last_watcher_join = time.time()
         if not hide:
             self._watchers.add(watcher)
         self._receivers.add(watcher)
@@ -577,6 +579,13 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                                     msgobj["msg"])
         else:
             self.check_where()
+            if time.time() > self.last_watcher_join + 2:
+                # Treat socket messages as activity, since it's otherwise
+                # hard to determine activity for games found via
+                # watch_socket_dirs.
+                # But don't if a spectator just joined, since we don't
+                # want that to reset idle time.
+                self.note_activity()
 
             self.write_to_all(msg)
 
