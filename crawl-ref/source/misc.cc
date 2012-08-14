@@ -108,6 +108,8 @@ static void _create_monster_hide(const item_def corpse)
     // These values cannot be set by a reasonable formula: {dlb}
     if (mons_genus(mons_class) == MONS_TROLL)
         mons_class = MONS_TROLL;
+    if (mons_genus(mons_class) == MONS_YAK)
+        mons_class = MONS_YAK;
     switch (mons_class)
     {
     case MONS_DRAGON:         item.sub_type = ARM_FIRE_DRAGON_HIDE;    break;
@@ -119,7 +121,6 @@ static void _create_monster_hide(const item_def corpse)
     case MONS_GOLDEN_DRAGON:  item.sub_type = ARM_GOLD_DRAGON_HIDE;    break;
     case MONS_SWAMP_DRAGON:   item.sub_type = ARM_SWAMP_DRAGON_HIDE;   break;
     case MONS_PEARL_DRAGON:   item.sub_type = ARM_PEARL_DRAGON_HIDE;   break;
-    case MONS_SHEEP:
     case MONS_YAK:
     default:
         item.sub_type = ARM_ANIMAL_SKIN;
