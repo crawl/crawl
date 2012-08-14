@@ -119,6 +119,7 @@ function arena_sprint_end_round(data)
         data.style_mult = data.style_mult + 1
         if arena_sprint_is_boss_round(data.round_id) then
             crawl.mpr("<yellow>You have won a prize for killing the boss!</yellow>", "warning")
+            -- Extra score multiplier for killing the boss.
             data.style_mult = data.style_mult + 1
             -- Reward for boss kills. Doesn't come identified...
             dgn.create_item(you_x, you_y, "acquire any")
@@ -138,20 +139,17 @@ function arena_sprint_end_round(data)
         end
     end
 
-    if style_gain > 0 then
-        data.style_points = data.style_points + (style_gain * data.style_mult)
-        if data.style_points > 1 then
-            crawl.mpr("You now have " .. data.style_points .. " arena points " ..
-                      "(gained " .. style_gain .. ").", "intrinsic_gain")
-        else
-            crawl.mpr("You now have 1 arena point.", "intrinsic_gain")
-        end
-        crawl.take_note("Arena points: " .. data.style_points)
+    style_gain = style_gain * data.style_mult
+    data.style_points = data.style_points + style_gain
+    if data.style_points > 1 then
+        crawl.mpr("You now have " .. data.style_points .. " arena points " ..
+                  "(gained " .. style_gain .. ").", "intrinsic_gain")
+    else
+        crawl.mpr("You now have 1 arena point.", "intrinsic_gain")
     end
+    crawl.take_note("Arena points: " .. data.style_points)
 
-    if gold_gain > 0 then
-        dgn.create_item(you_x, you_y, "gold q:" .. gold_gain)
-    end
+    dgn.create_item(you_x, you_y, "gold q:" .. gold_gain)
 
     -- This dismisses *every* monster on the entire level, including
     -- your allies.
@@ -228,7 +226,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "ooze / w:5 jelly / w:1 brown ooze",
                 "giant cockroach / giant mite / giant centipede / w:5 spider /\
                     w:5 goliath beetle / worm / w:5 brain worm",
-                "giant spore"
+                "giant spore hd:3"
             }
         elseif round <= 5 then
             mon_set = {
@@ -276,7 +274,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "giant frog w:20 / blink frog w:6 / spiny frog w:6 / prince ribbit w:2",
                 "gnoll / gnoll shaman / gnoll sergeant / hound / war dog",
                 -- Gimmicks
-                "brain worm", "giant spore", "orc priest", "orc perm_ench:invis",
+                "brain worm", "giant spore hd:3", "orc priest", "orc perm_ench:invis",
                 "kobold name:kamikaze_kobold n_rpl n_noc n_des perm_ench:inner_flame",
                 -- Teams
                 "place:Elf name:(purple_team) n_suf n_noc /\
@@ -328,7 +326,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "shapeshifter hd:7",
                 "polar bear / grizzly bear",
                 -- Gimmicks
-                "brain worm", "giant spore", "deep elf priest always_corpse",
+                "brain worm", "giant spore hd:3", "deep elf priest always_corpse",
                 "kobold name:kamikaze_kobold n_rpl n_noc n_des perm_ench:inner_flame",
                 "dwarf name:drunken n_adj n_des n_noc perm_ench:confusion",
                 "hungry ghost",
@@ -381,7 +379,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "necrophage / rotting hulk / ghoul / bog body",
                 "shapeshifter",
                 -- Gimmicks
-                "neqoxec", "giant spore", "deep elf priest always_corpse",
+                "neqoxec", "giant spore hd:3", "deep elf priest always_corpse",
                 "moth of wrath / w:20 hill giant", "ball lightning",
                 "boulder beetle", "orb spider", "redback / sea snake w:3",
                 "hungry ghost / w:5 harpy", "shining eye",
@@ -452,7 +450,7 @@ function arena_sprint_get_monster_set(round, boss)
                     great orb of eyes / eye of draining / w:5 ophan",
                 "vampire / vampire knight / vampire mage / w:1 jory",
                 -- Gimmicks
-                "neqoxec", "giant spore", "smoke demon", "catoblepas",
+                "neqoxec", "giant spore hd:3", "smoke demon", "catoblepas",
                 "moth of wrath / w:20 stone giant", "ball lightning",
                 "boulder beetle", "orb spider", "eldritch tentacle spells:malign_gateway",
                 "hungry ghost / harpy", "shining eye", "tormentor",
@@ -525,7 +523,7 @@ function arena_sprint_get_monster_set(round, boss)
                     hell hound / hellephant / hellwing / w:2 nellie",
                 "profane servitor w:20 / angel / daeva / cherub / seraph w:5",
                 -- Gimmicks
-                "neqoxec", "giant spore", "smoke demon", "catoblepas",
+                "neqoxec", "giant spore hd:3", "smoke demon", "catoblepas",
                 "moth of wrath / w:20 ettin", "orb spider", "fire crab",
                 "eldritch tentacle spells:malign_gateway", "boulder beetle",
                 "shining eye", "tormentor", "tentacled monstrosity",
@@ -597,7 +595,7 @@ function arena_sprint_get_monster_set(round, boss)
                     hell hound / hellephant / hellwing / w:2 nellie",
                 "profane servitor w:25 / angel / daeva / cherub / seraph",
                 -- Gimmicks
-                "neqoxec", "giant spore", "smoke demon", "catoblepas",
+                "neqoxec", "giant spore hd:3", "smoke demon", "catoblepas",
                 "moth of wrath / w:20 ettin", "orb spider", "fire crab",
                 "eldritch tentacle spells:malign_gateway", "boulder beetle",
                 "shining eye", "tormentor",
@@ -739,7 +737,7 @@ function arena_sprint_init_boss_table()
         bs[i], bs[r] = bs[r], bs[i]
     end
 
-    -- who run barter town
+    -- who run bartertown
     bs[15] = {"pandemonium lord",
               "ancient lich name:Master_Blaster n_rpl hd:30 hp:1000 col:lightmagenta \
               spells:fire_storm;ice_storm;hellfire;miasma;teleport_self", "demonic rune of zot"}
@@ -877,20 +875,20 @@ LROCKTILE:  wall_hall
 {{
     local arena_marker = TriggerableFunction:new {
         data = {
-            num_killed = 0,         -- How many you have killed
-            num_spawned = 0,        -- How many have spawned so far
-            boss_spawned = false,   -- Has a boss spawned?
-            round_id = 1,           -- Current round id
+            num_killed = 0,
+            num_spawned = 0,
+            boss_spawned = false,
+            round_id = 1,
             round_enemies = 0,      -- How many you need to fight
-            spawn_rate = 0,         -- How quickly monsters spawn
+            spawn_rate = 0,
             spawn_timer = 0,        -- Counter for monster spawning
             lightning_round = false,
             time_left = 60,         -- How much time is left
             between_rounds = true,  -- Are we waiting for the next round?
             finished = false,       -- You somehow beat round 57
-            monster_set = {},       -- Our monster set
-            style_points = 0,       -- This measures how much of a pro you are
-            style_mult = 1,         -- ditto
+            monster_set = {},
+            style_points = 0,
+            style_mult = 1,
             spawn_dir = ""          -- Which spawn points to use?
         },
         func = "thing_do_arena",
