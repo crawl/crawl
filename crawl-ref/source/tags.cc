@@ -2679,8 +2679,6 @@ void marshallItem(writer &th, const item_def &item, bool iinfo)
     if (item.base_type == OBJ_UNASSIGNED)
         return;
 
-    ASSERT(item.is_valid(iinfo));
-
     marshallByte(th, item.sub_type);
     marshallShort(th, item.plus);
     marshallShort(th, item.plus2);
