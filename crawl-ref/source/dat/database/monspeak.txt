@@ -1477,6 +1477,10 @@ Ashenzari player ghost
 @The_monster@ says @to_foe@, "Your future is not even bleak."
 
 @The_monster@ says @to_foe@, "You will be nailed to the ground forevermore."
+
+@The_monster@ whispers: "Through my death, I saw my mistakes, and the mistakes of many more..."
+
+@The_monster@ says with laughter: "And yet I knew I would end up like that..."
 %%%%
 Beogh player ghost
 
@@ -1600,6 +1604,8 @@ Vehumet player ghost
 @The_monster@ boasts, "After taking care of you, I will research a spell that consumes the world."
 
 @The_monster@ screams in joy, "As in life, so in death: Kill! Kill!! Kill!!!"
+
+@The_monster@ threatens, "Do not fail me, O the fires of Iskenderun!"
 %%%%
 Xom player ghost
 
@@ -1612,6 +1618,14 @@ Xom player ghost
 @The_monster@ twaddles, "I had a jolly good time in life, and I have a jolly good time now!"
 
 @The_monster@ giggles, "Hey deadhead, what fun to see your head drop dead!"
+
+@The_monster@ says: "Tell me about yourself, by the way. We will soon be clo-o-ose friends, aren't we?"
+
+@The_monster@ suddenly cries: "I wanted that beard TOO! But look, there is no beard! Now, I WILL REVENGE!"
+
+@The_monster@ says: "I need scissors! I think I chipped a nail somewhere..."
+
+@The_monster@ tries to make a funny facial expression.
 %%%%
 Yredelemnul player ghost
 
