@@ -5920,7 +5920,7 @@ static monsterentry mondata[] = {
 {
     MONS_AZRAEL, 'R', LIGHTRED, "Azrael",
     M_UNIQUE | M_SPELLCASTER | M_GLOWS_LIGHT | M_SPEAKS,
-    MR_RES_POISON | mrd(MR_RES_FIRE, 3) | MR_VUL_COLD,
+    MR_RES_POISON | MR_RES_HELLFIRE | MR_VUL_COLD,
     0, 12, MONS_EFREET, MONS_EFREET, MH_DEMONIC, -3,
     { {AT_HIT, AF_PLAIN, 12}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 11, 0, 0, 88 },
