@@ -930,6 +930,20 @@ void monster::equip_weapon(item_def &item, int near, bool msg)
     }
 }
 
+int monster::armour_bonus(const item_def &item)
+{
+    if (is_shield(item))
+        return 0;
+
+    int armour_ac = property(item, PARM_AC);
+    // For concistency with players, we should multiply this by 1 + (skill/22),
+    // where skill may be HD.
+
+    const int armour_plus = item.plus;
+    ASSERT(abs(armour_plus) < 30); // sanity check
+    return armour_ac + armour_plus;
+}
+
 void monster::equip_armour(item_def &item, int near)
 {
     if (need_message(near))
@@ -939,17 +953,7 @@ void monster::equip_armour(item_def &item, int near)
         simple_monster_message(this, info);
     }
 
-    const equipment_type eq = get_armour_slot(item);
-    if (eq != EQ_SHIELD)
-    {
-        ac += property(item, PARM_AC);
-
-        const int armour_plus = item.plus;
-        ASSERT(abs(armour_plus) < 30); // sanity check
-        ac += armour_plus;
-    }
-
-    // Shields can affect evasion.
+    ac += armour_bonus(item);
     ev += property(item, PARM_EVASION) / 2;
 }
 
@@ -1092,16 +1096,7 @@ void monster::unequip_armour(item_def &item, int near)
         simple_monster_message(this, info);
     }
 
-    const equipment_type eq = get_armour_slot(item);
-    if (eq != EQ_SHIELD)
-    {
-        ac -= property(item, PARM_AC);
-
-        const int armour_plus = item.plus;
-        ASSERT(abs(armour_plus) < 30);
-        ac -= armour_plus;
-    }
-
+    ac += armour_bonus(item);
     ev -= property(item, PARM_EVASION) / 2;
 }
 

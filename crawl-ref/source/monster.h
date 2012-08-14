@@ -480,6 +480,7 @@ private:
     void unequip_weapon(item_def &item, int near, bool msg = true);
     void unequip_armour(item_def &item, int near);
     void unequip_jewellery(item_def &item, int near);
+    int armour_bonus(const item_def &item);
 
     bool decay_enchantment(const mon_enchant &me, bool decay_degree = true);
 
