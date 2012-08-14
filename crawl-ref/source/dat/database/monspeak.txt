@@ -1603,8 +1603,6 @@ Vehumet player ghost
 
 @The_monster@ boasts, "After taking care of you, I will research a spell that consumes the world."
 
-@The_monster@ screams in joy, "As in life, so in death: Kill! Kill!! Kill!!!"
-
 @The_monster@ threatens, "Do not fail me, O the fires of Iskenderun!"
 %%%%
 Xom player ghost
