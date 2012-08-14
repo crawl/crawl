@@ -77,7 +77,8 @@ class CrawlProcessHandlerBase(object):
     def __init__(self, game_params, username, logger, io_loop=None):
         self.game_params = game_params
         self.username = username
-        self.logger = logger
+        self.logger = logging.LoggerAdapter(logger, {})
+        self.logger.process = self._process_log_msg
         self.io_loop = io_loop or IOLoop.instance()
 
         self.process = None
@@ -104,6 +105,9 @@ class CrawlProcessHandlerBase(object):
         global last_game_id
         self.id = last_game_id + 1
         last_game_id = self.id
+
+    def _process_log_msg(self, msg, kwargs):
+        return "P%-5s %s" % (self.id, msg), kwargs
 
     def format_path(self, path):
         return dgl_format_str(path, self.username, self.game_params)
