@@ -54,6 +54,7 @@
 #include "xom.h"
 
 #include <algorithm>
+#include <math.h>
 #include <queue>
 
 // Macro that saves some typing, nothing more.
@@ -954,7 +955,7 @@ void monster::equip_armour(item_def &item, int near)
     }
 
     ac += armour_bonus(item);
-    ev += property(item, PARM_EVASION) / 2;
+    ev += property(item, PARM_EVASION);
 }
 
 void monster::equip_jewellery(item_def &item, int near)
@@ -1097,7 +1098,7 @@ void monster::unequip_armour(item_def &item, int near)
     }
 
     ac += armour_bonus(item);
-    ev -= property(item, PARM_EVASION) / 2;
+    ev -= property(item, PARM_EVASION);
 }
 
 void monster::unequip_jewellery(item_def &item, int near)
@@ -3298,6 +3299,19 @@ int monster::armour_class() const
 {
     // Extra AC for snails/turtles drawn into their shells.
     return std::max(ac + (has_ench(ENCH_WITHDRAWN) ? 10 : 0), 0);
+}
+
+int monster::gdr_perc() const
+{
+    // dragons, etc?
+
+    const item_def *body_armour = mslot_item(MSLOT_ARMOUR);
+
+    if (!body_armour)
+        return 0;
+
+    const int body_base_AC = property(*body_armour, PARM_AC);
+    return (14 * pow(std::max(body_base_AC - 2, 0), 0.5));
 }
 
 int monster::melee_evasion(const actor *act, ev_ignore_type evit) const
