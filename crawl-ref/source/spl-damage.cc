@@ -1457,8 +1457,11 @@ static int _ignite_poison_player(coord_def where, int pow, int, actor *actor)
 
 static bool maybe_abort_ignite()
 {
-    std::string prompt = "You are standing ";
+    // Fire cloud immunity.
+    if (you.duration[DUR_FIRE_SHIELD] || you.mutation[MUT_IGNITE_BLOOD])
+        return false;
 
+    std::string prompt = "You are standing ";
 
     const int i = env.cgrid(you.pos());
     if (i != EMPTY_CLOUD)
@@ -1483,7 +1486,7 @@ static bool maybe_abort_ignite()
         if (item.base_type == OBJ_MISSILES && item.special == SPMSL_POISONED)
         {
             prompt += "over ";
-            prompt += (item.quantity == 1? "a " : "") + (item.name(DESC_PLAIN));
+            prompt += (item.quantity == 1 ? "a " : "") + (item.name(DESC_PLAIN));
             prompt += "! Ignite poison anyway?";
             return (!yesno(prompt.c_str(), false, 'n'));
         }
@@ -1507,7 +1510,7 @@ static bool maybe_abort_ignite()
                  && chunk_is_poisonous(mons_corpse_effect(item.mon_type)))
         {
             prompt += "over ";
-            prompt += (item.quantity == 1? "a " : "") + (item.name(DESC_PLAIN));
+            prompt += (item.quantity == 1 ? "a " : "") + (item.name(DESC_PLAIN));
             prompt += "! Ignite poison anyway?";
             return (!yesno(prompt.c_str(), false, 'n'));
         }
@@ -1516,7 +1519,7 @@ static bool maybe_abort_ignite()
                  chunk_is_poisonous(mons_corpse_effect(item.mon_type)))
         {
             prompt += "over ";
-            prompt += (item.quantity == 1? "a " : "") + (item.name(DESC_PLAIN));
+            prompt += (item.quantity == 1 ? "a " : "") + (item.name(DESC_PLAIN));
             prompt += "! Ignite poison anyway?";
             return (!yesno(prompt.c_str(), false, 'n'));
         }
@@ -1536,6 +1539,8 @@ spret_type cast_ignite_poison(int pow, bool fail)
     fail_check();
     targetter_los hitfunc(&you, LOS_NO_TRANS);
     flash_view(RED, &hitfunc);
+
+    mpr("You ignite the poison in your surroundings!");
 
     apply_area_visible(_ignite_poison_clouds, pow, &you);
     apply_area_visible(_ignite_poison_objects, pow, &you);
