@@ -3991,6 +3991,8 @@ static int _dgn_item_corpse(const item_spec &ispec, const coord_def where)
     }
 
     item_def &corpse(mitm[corpse_index]);
+    corpse.props["cap_sacrifice"].get_bool() = true;
+
     if (ispec.props.exists(CORPSE_NEVER_DECAYS))
     {
         corpse.props[CORPSE_NEVER_DECAYS].get_bool() =
