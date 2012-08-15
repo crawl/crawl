@@ -457,7 +457,7 @@ function arena_sprint_get_monster_set(round, boss)
                 -- Gimmicks
                 "neqoxec", "giant spore hd:3", "smoke demon", "catoblepas",
                 "moth of wrath / w:20 stone giant", "ball lightning",
-                "boulder beetle", "orb spider", "eldritch tentacle spells:malign_gateway",
+                "boulder beetle", "orb spider",
                 "hungry ghost / harpy", "shining eye", "tormentor",
                 "skeletal warrior / w:5 skeletal warrior ; blowgun . needle ego:confusion",
                 -- Teams
@@ -530,7 +530,7 @@ function arena_sprint_get_monster_set(round, boss)
                 -- Gimmicks
                 "neqoxec", "giant spore hd:3", "smoke demon", "catoblepas",
                 "moth of wrath / w:20 ettin", "orb spider", "fire crab",
-                "eldritch tentacle spells:malign_gateway", "boulder beetle",
+                "boulder beetle",
                 "shining eye", "tormentor", "tentacled monstrosity",
                 "skeletal warrior / skeletal warrior ; blowgun . needle ego:confusion",
                 "unseen horror / lorocyproca / shadow wraith / ghost moth",
@@ -602,7 +602,7 @@ function arena_sprint_get_monster_set(round, boss)
                 -- Gimmicks
                 "neqoxec", "giant spore hd:3", "smoke demon", "catoblepas",
                 "moth of wrath / w:20 ettin", "orb spider", "fire crab",
-                "eldritch tentacle spells:malign_gateway", "boulder beetle",
+                "boulder beetle",
                 "shining eye", "tormentor",
                 "unseen horror / lorocyproca / shadow wraith / ghost moth",
                 "reaper / hell beast / geryon w:1",
