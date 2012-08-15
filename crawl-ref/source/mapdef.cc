@@ -5179,6 +5179,18 @@ void item_list::parse_random_by_class(std::string c, item_spec &spec)
         spec.plus      = -1;
         return;
     }
+    else if (c == "ring")
+    {
+        spec.base_type = OBJ_JEWELLERY;
+        spec.sub_type = NUM_RINGS;
+        return;
+    }
+    else if (c == "amulet")
+    {
+        spec.base_type = OBJ_JEWELLERY;
+        spec.sub_type = NUM_JEWELLERY;
+        return;
+    }
 
     error = make_stringf("Bad item class: '%s'", c.c_str());
 }
