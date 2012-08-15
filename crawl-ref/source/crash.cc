@@ -142,6 +142,10 @@ static void _crash_signal_handler(int sig_num)
         console_shutdown();
 #endif
 
+#ifdef USE_TILE_WEB
+    tiles.shutdown();
+#endif
+
 #ifdef DGAMELAUNCH
     /* Infinite loop protection.
 
