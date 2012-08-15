@@ -2877,11 +2877,14 @@ static void _generate_rod_item(item_def& item, int force_type, int item_level)
 static bool _try_make_jewellery_unrandart(item_def& item, int force_type,
                                           int item_level)
 {
+    int type = (force_type == NUM_RINGS)     ? get_random_ring_type() :
+               (force_type == NUM_JEWELLERY) ? get_random_amulet_type()
+                                             : force_type;
     if (item_level > 2
         && one_chance_in(20)
         && x_chance_in_y(101 + item_level * 3, 2000))
     {
-        if (_try_make_item_unrand(item, force_type))
+        if (_try_make_item_unrand(item, type))
             return true;
     }
 
@@ -2929,15 +2932,22 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
 
     // Determine subtype.
     // Note: removed double probability reduction for some subtypes
-    if (force_type != OBJ_RANDOM)
+    if (force_type != OBJ_RANDOM
+        && force_type != NUM_RINGS
+        && force_type != NUM_JEWELLERY)
         item.sub_type = force_type;
     else
     {
         int tries = 500;
         do
         {
-            item.sub_type = (one_chance_in(4) ? get_random_amulet_type()
-                                              : get_random_ring_type());
+            if (force_type == NUM_RINGS)
+                item.sub_type = get_random_ring_type();
+            else if (force_type == NUM_JEWELLERY)
+                item.sub_type = get_random_amulet_type();
+            else
+                item.sub_type = (one_chance_in(4) ? get_random_amulet_type()
+                                                  : get_random_ring_type());
         }
         while (agent == GOD_XOM
                && _is_boring_item(OBJ_JEWELLERY, item.sub_type)
@@ -3120,6 +3130,7 @@ int items(bool allow_uniques,
     }
 
     ASSERT(force_type == OBJ_RANDOM
+           || item.base_type == OBJ_JEWELLERY && force_type == NUM_JEWELLERY
            || force_type < get_max_subtype(item.base_type));
 
     item.quantity = 1;          // generally the case
