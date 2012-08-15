@@ -3588,3 +3588,63 @@ xxxxxxccccccccccc.ccxxx
             .....ccxxxx
             @cccccxxxxx
 ENDMAP
+
+###############################################################################
+
+NAME:    hangedman_box_tower
+TAGS:    no_monster_gen no_item_gen no_pool_fixup transparent
+DEPTH:   D:16-26
+ORIENT:  float
+KMONS:   1 = patrolling 0 w:40 / nothing
+KMONS:   4 = 9 w:40 / 0 band
+KITEM:   1 = % w:75 / $ w:20 / nothing w:4 / * w:1
+KITEM:   $ = $ w:40 / nothing
+KFEAT:   D = any shop
+SHUFFLE: *|, CT, 23 / CT, 8w / 8w / w8
+SHUFFLE: 1239 / 1239 / 1239 / 1239 / $444, wW / wW / wW / mm
+NSUBST:  = = 1:+ / 1:==XX+ / *:=, - = 1:+ / 1:xxxx+ / *:x
+SUBST:   X = x, 23 = 9, = : y:3 x:1, | : |:4 D:1, C : C:3 T:17
+SUBST:   T = T:5 U:2 V:2 Y:1, x : x:13 y:1 c:1, G : G:1 c:1 y:8
+SUBST:   z : y:3 v:1 b:1 x:1, y : c:13 v:1 b:1
+MAP
+               .........
+               .xxx-xxx......
+          ......x1...1xx-xxx.
+          .xxx-xxxx+xxx1..1x...
+        ...x1..1x.....xxx+xxxx.
+        .xxxx+xxx..2..x....x1x.
+        .x1x....x..G..+..9.+.x.
+        .x.+.9..+..T..x....x.-.x
+       x.-.x....x.....x....x1x......
+   ......x1x....xxx+xxxxx+xxxxx-xxx.
+   .xxx-xxxxx+xxxx1.1xxx.....x1..1x...
+ ...x1..1x.....xxyy=yy1x...3.xxx+xxxx.
+ .xxxx+xxx.3...x1y...y.+..G..x....x1x.
+ .x1x....x..G..+.y.W.=.x.C...+..9.+.x.
+ .x.+.9..+...C.x.=.0.y1x.....x....x.-.
+ .-.x....x.....x1y.%.yyyxx+xxx....x1x...
+..x1x....xxx+xxyyy.z.%9y1..1xxxx+xxxxxx.
+.xxxxx+xxxx1..1y9%....%yy=yyyxx.....x1x.
+.x1x.....xxyy=yy%.8*|8......y1x.....x.x.
+.x.x.....x1y......|ww*.z%0W.=.+.TG2.+.-.
+.-.+.2GT.+.=.W0%z.*ww|......y1x.....x.x.
+.x.x.....x1y......8|*8.%yy=yyxx.....x1x.
+.x1x.....xxyyy=yy%....%9y1..1xxxx+xxxxx.
+.xxxxxx+xxxx1..1y9%.z.yyyxx+xxx....x1x..
+...x1x....xxx+xxyyy.%.y.x.....x....x.-.
+  .-.x....x.....x1y.0.=.x.C...+..9.+.x.
+  .x.+.9..+...C.x.=.W.y.+..G..x....x1x.
+  .x1x....x..G..+.y...y.x...3.xxx+xxxx.
+  .xxxx+xxx.3...x1yy=yyxx.....x1..1x...
+  ...x1..1x.....xxx1.1xxxx+xxxxx-xxx.
+    .xxx-xxxxx+xxxxx+xxx....x1x......
+    ......x1x....x.....x....x.-.x
+        x.-.x....x..T..+..9.+.x.
+         .x.+.9..+..G..x....x1x.
+         .x1x....x..2..xxx+xxxx.
+         .xxxx+xxx.....x1..1x...
+         ...x1..1xxx+xxxx-xxx.
+           .xxx-xx1...1x......
+           ......xxx-xxx.
+                .........
+ENDMAP
