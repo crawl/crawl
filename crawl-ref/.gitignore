@@ -165,6 +165,7 @@ Thumbs.db
 # Webtiles stuff
 passwd.db3
 *.ttyrec
+/source/rcs
 
 # junk when compiled with DGAMELAUNCH
 /source/cache*
