@@ -250,7 +250,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "w:15 adder / ball python / water moccasin / naga / w:2 black mamba /\
                     w:1 naga mage / w:1 naga warrior",
                 "jelly / w:5 ooze / w:3 brown ooze / giant eyeball / w:2 shining eye",
-                "killer bee w:20 / w:5 queen bee / w:5 bumblebee / w:1 killer bee larva",
+                "killer bee w:20 / w:5 queen bee / w:5 bumblebee",
                 "deep dwarf scion / deep dwarf artificer / deep dwarf",
                 "small zombie / small skeleton / wight / necrophage / large zombie w:5 /\
                     large skeleton w:5 / shadow w:5 / phantom w:5 / w:1 josephine",
