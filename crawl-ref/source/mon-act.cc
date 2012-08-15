@@ -833,6 +833,9 @@ static bool _handle_reaching(monster* mons)
     if (!foe || range <= REACH_NONE)
         return false;
 
+    if (is_sanctuary(mons->pos()) || is_sanctuary(foe->pos()))
+        return false;
+
     if (mons->submerged())
         return false;
 
