@@ -53,6 +53,7 @@ def handle_new_socket(path, event):
                                       unowned_process_logger)
         processes[abspath] = process
         process.connect(abspath)
+        process.logger.info("Found a %s game.", game_info["id"])
 
         # Notify lobbys
         update_all_lobbys(process)
@@ -61,6 +62,7 @@ def handle_new_socket(path, event):
         process = processes[abspath]
         if process.process: return # Handled by us, will be removed later
         process.handle_process_end()
+        process.logger.info("Game ended.")
         remove_in_lobbys(process)
         del processes[abspath]
 
@@ -443,7 +445,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
 
         processes[os.path.abspath(self.socketpath)] = self
 
-        self.logger.info("Starting crawl.")
+        self.logger.info("Starting %s.", game["id"])
 
         self.process = TerminalRecorder(call, self.ttyrec_filename,
                                         self._ttyrec_id_header(),
@@ -484,7 +486,11 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
     def remove_inprogress_lock(self):
         fcntl.lockf(self.inprogress_lock_file.fileno(), fcntl.LOCK_UN)
         self.inprogress_lock_file.close()
-        os.remove(self.inprogress_lock)
+        try:
+            os.remove(self.inprogress_lock)
+        except OSError:
+            # Lock already got deleted
+            pass
 
     def _ttyrec_id_header(self):
         clrscr = "\033[2J"
