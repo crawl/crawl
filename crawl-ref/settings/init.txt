@@ -405,7 +405,7 @@ force_more_message = Found .* abyssal rune of Zot
 # dump_order  = header, hiscore, stats, misc, notes, inventory,
 # dump_order += turns_by_place, skills, spells, overview, mutations,
 # dump_order += messages, screenshot, monlist, kills_by_place, kills
-# dump_order += spell_usage, action_counts
+# dump_order += action_counts
 # dump_book_spells = false
 
 ##### 5-b       Notes #################################

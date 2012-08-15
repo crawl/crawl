@@ -87,7 +87,6 @@ static void _sdump_overview(dump_params &);
 static void _sdump_hiscore(dump_params &);
 static void _sdump_monster_list(dump_params &);
 static void _sdump_vault_list(dump_params &);
-static void _sdump_spell_usage(dump_params &);
 static void _sdump_action_counts(dump_params &);
 static void _sdump_separator(dump_params &);
 #ifdef CLUA_BINDINGS
@@ -141,7 +140,7 @@ static dump_section_handler dump_handlers[] = {
     { "hiscore",        _sdump_hiscore       },
     { "monlist",        _sdump_monster_list  },
     { "vaults",         _sdump_vault_list    },
-    { "spell_usage",    _sdump_spell_usage   },
+    { "spell_usage",    _sdump_action_counts }, // compat
     { "action_counts",  _sdump_action_counts },
 
     // Conveniences for the .crawlrc artist.
@@ -1112,66 +1111,6 @@ static bool _sort_by_first(std::pair<int, FixedVector<int, 28> > a,
             return false;
     }
     return false;
-}
-
-static void _sdump_spell_usage(dump_params &par)
-{
-    std::vector<std::pair<int, FixedVector<int, 28> > > usage_vec;
-    for (std::map<std::pair<caction_type, int>,
-           FixedVector<int, 27> >::const_iterator sp = you.action_count.begin();
-         sp != you.action_count.end();
-         ++sp)
-    {
-        if (sp->first.first != CACT_CAST)
-            continue;
-        FixedVector<int, 28> v;
-        v[27] = 0;
-        for (int i = 0; i < 27; i++)
-        {
-            v[i] = sp->second[i];
-            v[27] += v[i];
-        }
-        usage_vec.push_back(std::pair<int, FixedVector<int, 28> >(sp->first.second, v));
-    }
-    if (usage_vec.empty())
-        return;
-    std::sort(usage_vec.begin(), usage_vec.end(), _sort_by_first);
-
-    int max_lt = (std::min<int>(you.max_level, 27) - 1) / 3;
-
-    // Don't show both a total and 1..3 when there's only one tier.
-    if (max_lt)
-        max_lt++;
-
-    par.text += make_stringf("\n%-24s", "Spells cast");
-    for (int lt = 0; lt < max_lt; lt++)
-        par.text += make_stringf(" | %2d-%2d", lt * 3 + 1, lt * 3 + 3);
-    par.text += make_stringf(" || %5s", "total");
-    par.text += "\n-------------------------";
-    for (int lt = 0; lt < max_lt; lt++)
-        par.text += "+-------";
-    par.text += "++-------\n";
-
-    for (std::vector<std::pair<int, FixedVector<int, 28> > >::const_iterator sp =
-         usage_vec.begin(); sp != usage_vec.end(); ++sp)
-    {
-        par.text += chop_string(spell_title((spell_type)sp->first), 24);
-
-        for (int lt = 0; lt < max_lt; lt++)
-        {
-            int ltotal = 0;
-            for (int i = lt * 3; i < lt * 3 + 3; i++)
-                ltotal += sp->second[i];
-            if (ltotal)
-                par.text += make_stringf(" |%6d", ltotal);
-            else
-                par.text += " |      ";
-        }
-        par.text += make_stringf(" ||%6d", sp->second[27]);
-        par.text += "\n";
-    }
-
-    par.text += "\n";
 }
 
 static std::string _describe_action(caction_type type)
