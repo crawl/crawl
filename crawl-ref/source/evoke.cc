@@ -869,6 +869,7 @@ bool evoke_item(int slot)
             you.duration[DUR_QUAD_DAMAGE] = 30 * BASELINE_DELAY;
             ASSERT(in_inventory(item));
             dec_inv_item_quantity(item.link, 1);
+            invalidate_agrid(true);
             break;
 
         default:

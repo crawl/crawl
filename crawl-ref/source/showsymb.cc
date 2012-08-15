@@ -128,6 +128,8 @@ unsigned short _cell_feat_show_colour(const map_cell& cell,
             colour = CYAN; // Silence but no holy/unholy
         else if (cell.flags & MAP_ORB_HALOED)
             colour = ETC_ORB_GLOW;
+        else if (cell.flags & MAP_QUAD_HALOED)
+            colour = BLUE;
         else if (cell.flags & MAP_SUPPRESSED)
             colour = LIGHTGREEN;
     }

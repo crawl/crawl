@@ -759,6 +759,11 @@ void TilesFramework::_send_cell(const coord_def &gc,
             write_message("orb_glow:%u,", next_pc.orb_glow);
         }
 
+        if (next_pc.quad_glow != current_pc.quad_glow)
+        {
+            write_message("quad_glow:%u,", next_pc.quad_glow);
+        }
+
         if (next_pc.mangrove_water != current_pc.mangrove_water)
         {
             write_message("swtree:%u,", next_pc.mangrove_water);
