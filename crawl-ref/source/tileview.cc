@@ -1254,6 +1254,9 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
     if (mc.flags & MAP_ORB_HALOED)
         cell.orb_glow = get_orb_phase(gc) ? 2 : 1;
 
+    if (mc.flags & MAP_QUAD_HALOED)
+        cell.quad_glow = true;
+
     if (Options.show_travel_trail)
     {
         int tt_idx = travel_trail_index(gc);

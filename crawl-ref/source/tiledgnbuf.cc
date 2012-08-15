@@ -271,6 +271,8 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
 
             if (cell.orb_glow)
                 m_buf_feat.add(TILE_ORB_GLOW + cell.orb_glow - 1, x, y);
+            if (cell.quad_glow)
+                m_buf_feat.add(TILE_QUAD_GLOW, x, y);
 
             // Apply the travel exclusion under the foreground if the cell is
             // visible.  It will be applied later if the cell is unseen.

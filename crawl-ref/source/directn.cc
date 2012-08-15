@@ -3771,7 +3771,7 @@ static bool _print_cloud_desc(const coord_def where)
         areas.push_back("thrums with a field of magical suppression");
     if (liquefied(where))
         areas.push_back("is liquefied");
-    if (orb_haloed(where))
+    if (orb_haloed(where) || quad_haloed(where))
         areas.push_back("is covered in magical glow");
     if (!areas.empty())
     {

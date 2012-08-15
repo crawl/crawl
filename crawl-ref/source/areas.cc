@@ -41,6 +41,7 @@ enum areaprop_flag
     APROP_ORB           = (1 << 6),
     APROP_UMBRA         = (1 << 7),
     APROP_SUPPRESSION   = (1 << 8),
+    APROP_QUAD          = (1 << 9),
 };
 
 struct area_centre
@@ -181,6 +182,18 @@ static void _update_agrid()
              ri; ++ri)
         {
             _set_agrid_flag(*ri, APROP_ORB);
+        }
+        no_areas = false;
+    }
+
+    if (you.duration[DUR_QUAD_DAMAGE])
+    {
+        const int r = 5;
+        _agrid_centres.push_back(area_centre(AREA_QUAD, you.pos(), r));
+        for (radius_iterator ri(you.pos(), r, C_CIRCLE, you.get_los());
+             ri; ++ri)
+        {
+            _set_agrid_flag(*ri, APROP_QUAD);
         }
         no_areas = false;
     }
@@ -661,6 +674,20 @@ bool orb_haloed(const coord_def& p)
         _update_agrid();
 
     return _check_agrid_flag(p, APROP_ORB);
+}
+
+/////////////
+// Quad damage glow
+//
+
+bool quad_haloed(const coord_def& p)
+{
+    if (!map_bounds(p))
+        return false;
+    if (!_agrid_valid)
+        _update_agrid();
+
+    return _check_agrid_flag(p, APROP_QUAD);
 }
 
 /////////////

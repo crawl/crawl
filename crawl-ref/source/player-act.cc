@@ -71,6 +71,9 @@ void player::moveto(const coord_def &c, bool clear_net)
 
     clear_far_constrictions();
 
+    if (you.duration[DUR_QUAD_DAMAGE])
+        invalidate_agrid(true);
+
     if (player_has_orb())
     {
         env.orb_pos = c;

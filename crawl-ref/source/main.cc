@@ -2572,8 +2572,11 @@ static void _decrement_durations()
     {
         end_mislead();
     }
-    _decrement_a_duration(DUR_QUAD_DAMAGE, delay, NULL, 0,
-                          "Quad Damage is wearing off.");
+    if (_decrement_a_duration(DUR_QUAD_DAMAGE, delay, NULL, 0,
+                              "Quad Damage is wearing off."))
+    {
+        invalidate_agrid(true);
+    }
     _decrement_a_duration(DUR_MIRROR_DAMAGE, delay,
                           "Your dark mirror aura disappears.");
     if (_decrement_a_duration(DUR_HEROISM, delay,
