@@ -1016,3 +1016,162 @@ cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 ENDMAP
+
+###############################################################################
+#  This vault excercises varied old ideas for the Vaults branch:
+#  a primarily humanoid-based monster set, a focus on placing groups,
+#  and a pattern-based layout emphasizing lots of distinct rooms.
+#  Of course, HangedMan twisted these ideas thoroughly.
+#  Many thanks to elliott for writing the band placement lua!
+#
+NAME:    hangedman_spin_cycle
+TAGS:    no_monster_gen no_item_gen no_trap_gen patrolling
+DEPTH:   D:16-26
+ORIENT:  encompass
+KMONS:   - = plant
+KMONS:   _ = plant col:random name:demonic name_adjective
+KMONS:   no = human ; dart ego:exploding w:21 | dart ego:dispersal w:2 | \
+                      dart ego:none w:1 | wand of lightning w:1 . \
+                      mundane flail | mundane falchion | mundane trident . \
+                      mundane ring mail | mundane scale mail | mundane chain mail / \
+              human ; mundane blowgun . needle ego:confusion | \
+                      needle ego:slow | needle ego:poisoned w:4 | \
+                      needle ego:paralysis w:4 | needle ego:sleep w:4 . \
+                      mundane flail | mundane falchion | mundane trident . \
+                      mundane ring mail | mundane scale mail | mundane chain mail
+KMONS:   p = giant eyeball
+KMONS:   q = great orb of eyes
+KMONS:   r = vault guard
+: local bands = {
+:     [42 - you.absdepth() * 2] =
+:         { "cyclops", "kobold demonologist", "naga", "Azrael", "Kirke" },
+:     [65 - you.absdepth() * 3] =
+:         { "boggart", "deep elf fighter", "necromancer" },
+:     [29 - you.absdepth()] =
+:         { "centaur warrior", "orc knight", "ogre mage", "skeletal warrior",
+:           "yaktaur", "deep troll" },
+:     [you.absdepth() * 2 - 37] =
+:         { "deep elf knight", "orc high priest" },
+:     [you.absdepth() * 2 - 40] =
+:         { "harpy", "hell knight", "ghoul", "naga mage", "naga warrior",
+:           "orc warlord", "vampire mage", "yaktaur captain" },
+:     [you.absdepth() - 20] =
+:         { "deep dwarf death knight", "deep elf high priest",
+:           "merfolk impaler", "merfolk javelineer", "Margery", "Saint Roka" },
+: }
+: local kmonsters = {}
+: for weight, monsters in pairs(bands) do
+:     if weight > 0 then
+:         for _, mons in ipairs(monsters) do
+:             if not you.uniques(mons) then
+:                 table.insert(kmonsters, mons .. " band w:" .. weight)
+:             end
+:         end
+:     end
+: end
+: kmons("s = " .. table.concat(kmonsters, " / "))
+KITEM:   ? = any ring randart w:390 / ring of hunger unrand:ring_of_the_octopus_king
+KITEM:   ! = ring of invisibility / ring of regeneration / \
+             ring of teleport control / ring of slaying / \
+             ring of wizardry / any good_item ring no_uniq w:75
+KITEM:   | = | / any good_item
+KFEAT:   ^ = known teleport trap
+KFEAT:   ~ = teleport trap
+KFEAT:   aD = stone_arch
+KFEAT:   A = enter_hell
+KFEAT:   & = enter_pandemonium
+KFEAT:   @ = enter_abyss
+KFEAT:   B = enter_vaults
+KFEAT:   C : C / any shop
+SHUFFLE: <d` / {e1 / (f2 / [g3, >h4 / }i5 / )j6 / ]k7, (f2 / )j6, 15
+: if you.absdepth() > 20 then
+SHUFFLE: aA&@
+SUBST:   ( = D
+MARKER:  D = lua:props_marker { portal=1 }
+: else
+SUBST:   A&@ = a, _ = -
+SUBST:   l = W
+:     if you.where() == dgn.level_name(dgn.br_entrance("Vaults")) then
+NSUBST:  ( = 1:B / *:(
+SUBST:   f = r, 2 = '
+:     end
+: end
+SUBST:   {} = **|||, ( = T, ) : TTCCC, [ = !, ] = ?
+NSUBST:  < = 1:{ / 1:( / 1:[, > = 1:} / 1:) / 1:]
+SUBST:   d = 0, e = 009, f = %, g = 0, h = 0, i = 009, j = %, k = 0
+SUBST:   ` = >, 1 = 9988s, 2 = 009, 3 = s, 4 = `, 5 = 998ss, 6 = 009, 7 = s
+SHUFFLE: })]` / {([>, ?!, no / pq, pq / pq / pq / qp / pp / qq
+SHUFFLE: LM / LM / LM / LM / LM / LM / LM / ML / ML / MM
+SHUFFLE: NO / NO / NO / NO / NO / NO / NO / ON / ON / OO
+SHUFFLE: PQ / PQ / PQ / PQ / PQ / QP, RS / RS / RS / RS / SR
+SUBST:   LNPR : x, MOQS : ~, J : ~xxx, K : ~xxxx, c : x:7 c:1, v : v:7 c:1
+NSUBST:  ~ = 2:~ / 1:~. / 75:H / 225:I / *:.
+SUBST:   H = ~ .:4490, I = ~ .:9990
+COLOUR:  "-_ = green
+COLOUR:  '`089%*|!?OPYZ = white
+FTILE:   ^"aA@&-_U = floor_grass
+: if crawl.coinflip() then
+FTILE:   '`<{([>})]089s%*|!?BCTDEF = floor_vault
+: else
+FTILE:   '`<{([>})]089s%*|!?BCTDEF = floor_pebble_darkgray
+: end
+MAP
+                          vvvvvvv
+                         vv'%<%'vv
+                 vvvv    vd'''''dv    vvvv
+                vv%'vvvvvv'''`'''vvvvvv'%vv
+               vv{''evvcccc+ccc+ccccvvg''[vv
+               v%'1'''cc...........cc'''3'%v
+               v'''cc+c.......N.....c+cc'''v
+               vve'c.....L~~~~OO~......c'gvv
+                vv'+....~MM~~~~N~~~....+'vv
+          xxxx xcccc..~~~~L~~~~OO~~~~..ccv  xxxx
+         xxJJxxx~~~..~~~~~MM~~~~N~~Q~~..ccxxxKKxx
+         xJJJJxx~~~~px~~~~~L~~~~OO~~x~~~~~xxKKKKx
+         xJJJJx~~~~~xn~~~~~MM~~~~N~~~P~~~~~xKKKKx
+         xxJJ~~~~~~~~~~~~~~.L...~~~~~~~~~~~~~KKxx
+    vvvv  xxx~www~~~~~~~~~.......~~~~~~~~www~xxxx
+   vv%'vv xx~~www~x~~~.....c+c+c....~~~x~www~~~xx vvvvv
+  vv(''fvvc~~~ww~R~~~.....cc'''cc.....~~R~ww~~~~cvv'%vvv
+  v%'2'''cc~~~~~RS~~..c+ccc''4''ccc+c..~SR~~~~~~cvf''(vv
+  v'''cc+c.~~~~x~~...cc''kch'''hci''cc..~~x~~~~~c'''2'%v
+  vvf'c....~~~~~~....+'7''cc%>%cc''5'+..~~~~~~~.c+cc'''v
+   vv'+...~~P~~~..c+cck''%bbbbbbb%''ic...~~~~xq....c'fvv
+   vvcc..~~x~~~..cc'jbbb%]bbbbbbb}%bbc+c..~~~ox~...+'vv
+   vcc...~Q~~~~..+'6'bbbbbbblllbbbbbbj'cc..~~~~~~..ccvv
+   vc....~~~~~~..c'''%bbbbbbl^lbbbbbb'6'+..~~~~~~...ccv
+ vvvc...~~~ON~~..cj'%)bblllll"llllbb%'''c..~~~~~~....cv
+vvg'c..~~ONO~~..ccccbbbbla""""""Albb)%'jc..~~~~~~~...cvvv
+v'''+..ONO~~~..cc'icbbbbl"""U"_""lbbbbcccc..~~~~~ML..c'evv
+v%''c.NO~~~~~..+'''%bblll"_""""""lbbbbck'cc..~~MLM~..+'''v
+v['3c..~~~~~ML.c'5'}bbl^"""""""U"lllbb%'''+..MLM~~~..c''%v
+v%''c..~~~MLM..+'''%bblll"U"""""""^lbb]'7'c.LM~~~~~..c1'{v
+v'''+..~MLM~~..cc'icbbbbl""""""_"lllbb%'''+..~~~~~ON.c''%v
+vvg'c..LM~~~~~..ccccbbbbl""_"U"""lbbbbck'cc..~~~ONO..+'''v
+ vvvc...~~~~~~~..ch'%>bbl@""""""&lbbbbcccc..~~ONO~~..c'evv
+   vc....~~~~~~..c'''%bbllll"lllllbb>%'hc..~~NO~~~~..cvvv
+   vcc...~~~~~~..+'4'bbbbbbl^lbbbbbb%'''c..~~~~~~~...cv
+   vvcc..~~~~~~..cc'hbbbbbblllbbbbbbb'4'+..~~~~Q~...ccv
+  vvv'+...~xo~~~..c+cbb%]bbbbbbb}%bbbh'cc..~~~x~~..ccvv
+  vvd'c....qx~~~~...ck''%bbbbbbb%''icc+c..~~~P~~...+'vvv
+  v'''cc+c.~~~~~~~..+'7''cc%)%cc''5'+....~~~~~~....c'dvv
+  v%'`'''c~~~~~x~~..cc''kcj'''jci''cc...~~x~~~~.c+cc'''v
+  vv<''dvc~~~~~~RS~..c+ccc''6''ccc+c..~~SR~~~~~cc'''`'%v
+   vv%'vvc~~~~ww~R~~.....cc'''cc.....~~~R~ww~~~cvvd''<vv
+    vvvv cxx~~www~x~~.....c+c+c.....~~~x~www~~xx vv'%vv
+          xxx~www~~~~~~~~.......~~~~~~~~~www~xxx  vvvv
+         xxKK~~~~~~~~~~~~~..L..~~~~~~~~~~~~~~JJxx
+         xKKKKx~~~~~P~~~N~~~MM~~~~~~nx~~~~~xJJJJx
+         xKKKKxx~~~~~x~~OO~~~L~~~~~~xp~~~~xxJJJJx
+         xxKKxxxxc..~~Q~~N~~~MM~~~~~~..~~~xxxJJxx
+          xxxx  vcc..~~~~OO~~~L~~~~~..ccccc xxxx
+               vv'+....~~~N~~~MM~~....+'vv
+              vve'c.....~~OO~~~L~.....c'gvv
+              v'''cc+c.....N.......c+cc'''v
+              v%'1'''cc...........cc'''3'%v
+              vv{''evvcccc+ccc+ccccvvg''[vv
+               vv%'vvvvvv'''2'''vvvvvv'%vv
+                vvvv    vf'''''fv    vvvv
+                        vv'%(%'vv
+                         vvvvvvv
+ENDMAP

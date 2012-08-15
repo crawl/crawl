@@ -302,6 +302,54 @@ xwwwxwwwx
  xWxwxWx
 ENDMAP
 
+NAME:    hangedman_shoal_volcano
+TAGS:    no_monster_gen no_item_gen patrolling
+DEPTH:   Shoals
+KMONS:   12 = merfolk ; trident ego:flaming | spear ego:flaming . \
+             robe ego:fire_resistance | robe w:5 . \
+             buckler ego:fire_resistance | buckler | nothing w:30
+KMONS:   3 = mermaid ; trident ego:flaming | spear ego:flaming . \
+             robe ego:fire_resistance | robe w:5 . \
+             buckler ego:fire_resistance w:20 | buckler | nothing w:70
+KMONS:   4 = siren ; trident ego:flaming | spear ego:flaming . \
+             robe ego:fire_resistance | robe w:5 . \
+             buckler ego:fire_resistance w:20 | buckler | nothing w:70
+KMONS:   5 = lava fish
+KMONS:   67 = fire bat
+KMONS:   8 = fire crab
+KITEM:   67 = % w:15 / *
+KITEM:   8 = * w:15 / |
+KPROP:   l = no_cloud_gen
+KPROP:   .1234"x = no_tide
+: if crawl.random2(you.depth()+4) <= you.depth() then
+SUBST:   3 = 4
+SHUFFLE: 12 / 4"
+: else
+SHUFFLE: 12 / 3"
+: end
+: if crawl.random2(you.depth()+4) <= you.depth() then
+SUBST:   7 = 8
+: end
+SUBST:   6 = 66*, X = xx., x : x:9 .:1
+FTILE:   '678 = floor_pebble_red
+COLOUR:  '678 = red
+MAP
+   WWWWWWWW
+ WWWW.xx.WWWW
+ WW..x..x..WW
+WW.x2x''x"x.WW
+WW.1''''''3.WW
+W.xx'8ll6'xx.W
+Wx.''ll5l''.xW
+Wx.''l5ll''.xW
+W.xx'6ll7'xx.W
+WW.3''''''2.WW
+WW.x"x''x1x.WW
+WWW..x..x..WWW
+ WWWW.xx.WWWW
+   WWWWWWWW
+ENDMAP
+
 ##############################################################################
 # Branch ends.
 # Note that the Shoals usually have a randomised end map; predrawn maps
