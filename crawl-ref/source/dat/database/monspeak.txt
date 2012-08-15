@@ -1585,7 +1585,7 @@ The Shining One player ghost
 
 @The_monster@ whispers, "I have become one of them."
 
-@The_monster@ mumbles, "We raided the strongholds of evil.  Now I walk alone."
+@The_monster@ mumbles, "We raided the strongholds of evil. Now I walk alone."
 
 @The_monster@ utters, "No lamp to guide me anymore..."
 %%%%
@@ -1603,7 +1603,7 @@ Vehumet player ghost
 
 @The_monster@ boasts, "After taking care of you, I will research a spell that consumes the world."
 
-@The_monster@ threatens, "Do not fail me, O the fires of Iskenderun!"
+@The_monster@ threatens, "Do not fail me, O fires of Iskenderun!"
 %%%%
 Xom player ghost
 
@@ -1637,9 +1637,9 @@ Zin player ghost
 
 @The_monster@ says @to_foe@, "Once you're dead, I will avenge you with righteous fury!"
 
-@The_monster@ says @to_foe@, "I died poor and in vain, but not a freak."
+@The_monster@ says @to_foe@, "I died poor and in vain, but not as a freak."
 
-@The_monster@ says @to_foe@, "For all the tithe, I expected a more glorious afterlife than this."
+@The_monster@ says @to_foe@, "For all the tithing, I expected a more glorious afterlife than this."
 %%%%
 _generic_ranged_
 
