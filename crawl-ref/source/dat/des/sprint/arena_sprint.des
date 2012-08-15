@@ -97,6 +97,11 @@ function arena_sprint_end_round(data)
         crawl.mpr("A rune of Zot has appeared.", "orb")
         dgn.create_item(you_x, you_y, data.monster_set[3])
         data.time_left = 1500 + crawl.random2(500)
+        if data.round_id > 27 then
+            local p = dgn.find_marker_positions_by_prop("centre_point", 1)[1]
+            dgn.grid(p.x, p.y, "exit_dungeon")
+            crawl.mpr("The exit has re-opened... for now.", "orb")
+        end
     elseif data.round_id == 27 then
         crawl.mpr("The Orb of Zot has appeared in the centre of the arena!", "orb")
         local p = dgn.find_marker_positions_by_prop("centre_point", 1)[1]
@@ -675,7 +680,7 @@ function arena_sprint_init_boss_table()
                  "gossamer rune of zot"}
     else
         bs[2] = {"place:Shoals", "polyphemus hp:350 / ilsuiw hp:250 /\
-                 siren name:demonic n_adj n_noc col:lightmagenta hp:300 spells:malign_gateway /\
+                 siren name:succubus n_rpl n_des n_spe col:lightmagenta hp:300 spells:malign_gateway /\
                  harpy name:queen n_suf n_noc col:lightgreen hp:260 /\
                  manticore name:hardcore n_adj n_noc col:lightred hp:400",
                  "barnacled rune of zot"}
@@ -822,6 +827,14 @@ function thing_do_arena(data, triggerable, triggerer, marker, ev)
                 data.boss_spawned = false
                 data.monster_set = arena_sprint_get_monster_set(data.round_id,
                                                                 arena_sprint_is_boss_round(data.round_id))
+
+                if data.round_id > 27 then
+                    local p = dgn.find_marker_positions_by_prop("centre_point", 1)[1]
+                    if feat.is_stair(p.x, p.y) then
+                        dgn.grid(p.x, p.y, "floor")
+                        crawl.mpr("The exit has been sealed! It will re-open when you get the next rune.")
+                    end
+                end
 
                 -- 33% chance of picking a specific direction to spawn from, else
                 -- spawn from all four directions. These "tension rounds" are
