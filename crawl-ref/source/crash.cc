@@ -142,6 +142,10 @@ static void _crash_signal_handler(int sig_num)
         console_shutdown();
 #endif
 
+#ifdef USE_TILE_WEB
+    tiles.shutdown();
+#endif
+
     do_crash_dump();
 
     if (crawl_state.game_wants_emergency_save && crawl_state.need_save
