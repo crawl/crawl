@@ -105,7 +105,7 @@ function arena_sprint_end_round(data)
     end
 
     -- Guarantee at least 10 turns of rest
-    data.time_left = math.max(100, data.time_left)
+    data.time_left = data.time_left + 100
 
     -- Scoring
     local style_gain = (1 + data.num_killed) * data.round_id
@@ -216,8 +216,8 @@ function arena_sprint_get_monster_set(round, boss)
                 "goblin / hobgoblin / kobold / big kobold / ijyb w:3 / pikel w:2",
                 "rat / quokka / grey rat / green rat / porcupine / w:2 orange rat / w:3 purgy",
                 "ball python / adder w:15 / water moccasin w:5",
-                "orc w:40 / orc wizard w:8 / orc priest w:5 / w:5 orc warrior / blork the orc w:1",
-                "gnoll w:35 / hound w:5 / gnoll sergeant / gnoll shaman / crazy yiuf w:3",
+                "orc w:40 / orc wizard w:8 / orc priest w:5 / w:5 orc warrior / blork the orc w:5",
+                "gnoll w:35 / hound w:5 / gnoll sergeant / gnoll shaman / crazy yiuf w:5",
                 "lesser demon w:30 / grinder w:2 / w:1 eustachio",
                 "small zombie / small skeleton / wight w:5 / necrophage / large zombie w:5 /\
                     large skeleton w:5 / shadow w:5 / phantom w:5",
@@ -236,8 +236,8 @@ function arena_sprint_get_monster_set(round, boss)
                     w:1 psyche / w:1 joseph",
                 "w:30 place:Orc / orc wizard / orc warrior / w:3 orc knight /\
                     orc priest / orc high priest w:1 / blork the orc w:3 / urug w:1",
-                "w:5 place:Elf / deep elf fighter / deep elf soldier / deep elf priest /\
-                    w:5 deep elf conjurer / w:2 deep elf summoner",
+                "w:2 place:Elf / deep elf fighter / deep elf soldier / deep elf priest /\
+                    w:2 deep elf conjurer / w:2 deep elf summoner",
                 "place:Lair / sheep / w:5 yak / w:5 crocodile / w:3 basilisk /\
                     w:1 death yak / green rat / orange rat / porcupine",
                 "w:20 merfolk / w:5 mermaid / hippogriff / centaur / w:5 griffon /\
@@ -245,7 +245,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "bog body / w:5 giant leech / insubstantial wisp / w:5 swamp drake /\
                     w:1 vapour / giant frog / w:2 spiny frog / w:2 hydra /\
                     w:2 vampire mosquito",
-                "w:30 spider / goliath beetle / w:5 boulder beetle / w:5 jumping spider /\
+                "w:30 spider / goliath beetle / w:2 boulder beetle / w:2 jumping spider /\
                     scorpion / w:2 tarantella / w:1 wolf spider",
                 "w:15 adder / ball python / water moccasin / naga / w:2 black mamba /\
                     w:1 naga mage / w:1 naga warrior",
@@ -261,16 +261,16 @@ function arena_sprint_get_monster_set(round, boss)
                 "w:15 fire bat / fire elemental / w:5 fire drake / w:5 mottled dragon /\
                     w:1 flaming corpse",
                 "steam dragon / w:5 air elemental / w:1 vapour / lightning spire /\
-                    w:20 sky beast / insubstantial wisp",
+                    w:30 sky beast / insubstantial wisp",
                 "w:5 earth elemental / clay golem / w:5 stone golem / w:5 boulder beetle /\
-                    iron devil / iron imp / w:5 rock worm",
+                    w:15 iron devil / w:15 iron imp / w:5 rock worm",
                 "w:20 ice beast / small simulacrum / large simulacrum /\
                     w:5 water elemental",
                 "wight / wraith / spectral thing",
                 -- Misc
                 "kobold / big kobold / w:2 kobold demonologist / w:1 sonja",
                 "jackal w:1 / hound w:5 / war dog w:20 / hell hound w:7 / w:3 grum",
-                "ogre w:35 / two-headed ogre / ogre mage w:5 / w:1 erolcha",
+                "ogre w:35 / two-headed ogre / ogre mage w:5 / w:2 erolcha",
                 "giant frog w:20 / blink frog w:6 / spiny frog w:6 / prince ribbit w:2",
                 "gnoll / gnoll shaman / gnoll sergeant / hound / war dog",
                 -- Gimmicks
@@ -298,11 +298,11 @@ function arena_sprint_get_monster_set(round, boss)
                 "jelly / w:5 brown ooze / giant eyeball / w:2 shining eye /\
                     w:2 golden eye / w:2 eye of draining / w:1 slime creature",
                 "killer bee w:15 / w:5 queen bee / w:5 bumblebee / w:1 oklob plant",
-                "deep dwarf scion / deep dwarf artificer / deep dwarf death knight /\
+                "deep dwarf scion / deep dwarf artificer / w:3 deep dwarf death knight /\
                     w:5 deep dwarf berserker",
                 "w:3 skeletal warrior / wight / necrophage / large zombie w:5 /\
                     large skeleton w:5 / flayed ghost w:5 / phantom w:5 /\
-                    silent spectre / w:2 josephine",
+                    silent spectre / w:4 josephine",
                 "common demon",
                 "mummy / w:5 guardian mummy / w:1 mummy priest",
                 -- Fire, Air, Earth, Water, Death
@@ -615,10 +615,10 @@ function arena_sprint_get_monster_set(round, boss)
                 "orb of fire / w:5 orb of fire name:orb_of_ice n_rpl n_des spells:ice_storm col:lightblue /\
                   orb of fire name:orb_of_electricity n_rpl n_des spells:chain_lightning col:yellow /\
                   w:5 silver star",
-                "hellion / efreet w:20",
+                "hellion / efreet",
                 -- Teams
-                "orb spider name:(purple_team) n_suf /\
-                    orb spider name:(green_team) n_suf att:friendly"
+                "greater demon name:(purple_team) n_suf /\
+                    greater demon name:(green_team) n_suf att:friendly"
             }
         end
 
@@ -652,14 +652,14 @@ function arena_sprint_init_boss_table()
         bs[1] = {"place:Snake", "aizul hd:10 hp:120 /\
                  naga warrior name:naga_warlord n_rpl n_des n_noc col:cyan hp:140 /\
                  anaconda name:giant n_adj n_noc hp:140 col:lightred /\
-                 black mamba name:dark n_adj n_noc col:darkgrey hp:130 /\
-                 naga mage name:naga_archmage n_rpl n_des n_noc col:magenta hp:120",
+                 black mamba name:dark n_adj n_noc col:darkgrey hp:140 /\
+                 naga mage name:naga_archmage n_rpl n_des n_noc col:magenta hp:140",
                  "serpentine rune of zot"}
     else
         bs[1] = {"place:Swamp", "the lernaean hydra /\
                  swamp dragon name:elder n_adj n_noc col:cyan hp:140 /\
-                 swamp drake name:stinky n_adj n_noc col:cyan hp:135 /\
-                 wizard name:witch n_rpl n_des n_noc col:green hp:125 \
+                 swamp drake name:stinky n_adj n_noc col:cyan hp:130 /\
+                 wizard name:witch n_rpl n_des n_noc col:green hp:140 \
                     spells:mephitic_cloud;.;summon_hydra;.;invisibility;teleport_self /\
                  bog body name:big n_adj n_noc col:blue hp:150",
                  "decaying rune of zot"}
@@ -667,16 +667,16 @@ function arena_sprint_init_boss_table()
 
     if crawl.coinflip() then
         bs[2] = {"place:Spider", "arachne hp:250 /\
-                 wolf spider name:dire n_adj n_noc col:blue hp:250 /\
-                 emperor scorpion name:ancient n_adj n_noc hp:215 /\
-                 ghost moth name:greater n_adj n_noc col:lightmagenta hp:215 /\
+                 wolf spider name:dire n_adj n_noc col:blue hp:300 /\
+                 emperor scorpion name:ancient n_adj n_noc hp:250 /\
+                 ghost moth name:greater n_adj n_noc col:lightmagenta hp:225 /\
                  jumping spider name:phase_spider n_rpl n_des never_corpse \
-                    col:lightgreen spells:teleport_self hp:225",
+                    col:lightgreen spells:teleport_self hp:300",
                  "gossamer rune of zot"}
     else
         bs[2] = {"place:Shoals", "polyphemus hp:350 / ilsuiw hp:250 /\
-                 siren name:demonic n_adj n_noc col:lightmagenta hp:265 spells:malign_gateway /\
-                 harpy name:queen n_suf n_noc col:lightgreen hp:225 /\
+                 siren name:demonic n_adj n_noc col:lightmagenta hp:300 spells:malign_gateway /\
+                 harpy name:queen n_suf n_noc col:lightgreen hp:260 /\
                  manticore name:hardcore n_adj n_noc col:lightred hp:400",
                  "barnacled rune of zot"}
     end
@@ -685,7 +685,7 @@ function arena_sprint_init_boss_table()
         -- Elementalist boss is from mu_elemental_laboratory
         bs[3] = {"place:Elf w:300 / deep elf sorcerer / deep elf blademaster /\
                  deep elf master archer / deep elf annihilator / deep elf high priest",
-                 "fannar hp:350 hd:14 /\
+                 "fannar hp:400 hd:14 /\
                  col:flash deep elf sorcerer hp:400 \
                      name:deep_elf_elementalist n_rpl n_des n_noc tile:mons_deep_elf_elementalist \
                      spells:iron_shot;summon_air_elementals;sticky_flame_range;summon_water_elementals;haste;blink actual_spells \
@@ -696,15 +696,15 @@ function arena_sprint_init_boss_table()
                  "elven rune of zot"}
     else
         bs[3] = {"place:Forest:5 w:50 / spriggan druid w:2 / spriggan air mage w:5 /\
-                 spriggan berserker w:5", "the enchantress hp:220 / agnes hp:400",
+                 spriggan berserker w:5", "the enchantress hp:300 / agnes hp:400",
                  "mossy rune of zot"}
     end
 
-    bs[4] = {"place:Slime", "dissolution hp:375 /\
-             acid blob name:sulfuric n_adj col:white hp:400 /\
+    bs[4] = {"place:Slime", "dissolution hp:500 /\
+             acid blob name:sulfuric n_adj col:white hp:500 /\
              great orb of eyes name:greater_orb_of_eyes n_rpl n_des n_noc col:green hp:600",
              "slimy rune of zot"}
-    bs[5] = {"vault guard / place:Vaults", "mennas hp:200 / mara hp:300 /\
+    bs[5] = {"vault guard / place:Vaults", "mennas hp:300 / mara hp:350 /\
              vault guard name:captain n_suf n_noc col:lightcyan hp:800 hd:26",
              "silver rune of zot"}
     if crawl.coinflip() then
@@ -797,7 +797,7 @@ function thing_do_arena(data, triggerable, triggerer, marker, ev)
                 data.time_left = 510 + crawl.random2(200)
 
                 -- Non-boss rounds have more enemies, and a more random amount
-                data.round_enemies = 5 + crawl.div_rand_round(data.round_id, 2)
+                data.round_enemies = 5 + crawl.div_rand_round(data.round_id, 3)
                 if not arena_sprint_is_boss_round(data.round_id) then
                     data.round_enemies = data.round_enemies + crawl.random2(crawl.div_rand_round(data.round_id, 3))
                 end
@@ -811,8 +811,6 @@ function thing_do_arena(data, triggerable, triggerer, marker, ev)
                     data.spawn_rate = 1
                     data.lightning_round = true
                     crawl.mpr("LIGHTNING ROUND!", "warning")
-                elseif arena_sprint_is_boss_round(data.round_id) then
-                    data.spawn_rate = math.ceil(2000 / data.round_enemies)
                 else
                     data.spawn_rate = math.ceil((1000 + crawl.random2(500)) / data.round_enemies)
                 end
