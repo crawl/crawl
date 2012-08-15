@@ -322,7 +322,7 @@ const Branch branches[NUM_BRANCHES] = {
       '8', false, 0 },
 
 #if TAG_MAJOR_VERSION == 33
-    { BRANCH_HIVE, NUM_BRANCHES, -1, -1, 1, 13,
+    { BRANCH_HIVE,/*gone*/ NUM_BRANCHES, -1, -1, 1, 13,
       BFLAG_NO_XLEV_TRAVEL, 0,
       DNGN_ENTER_PORTAL_VAULT, DNGN_EXIT_PORTAL_VAULT,
       "Hive", "a hive", "Hive",
