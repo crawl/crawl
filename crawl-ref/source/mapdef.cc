@@ -1212,6 +1212,21 @@ void map_lines::merge_subvault(const coord_def &mtl, const coord_def &mbr,
         add_marker(clone);
     }
 
+    unsigned mask_tags = 0;
+
+    // TODO: merge the matching of tags to MMTs into a function that is
+    // called from both here and dungeon.cc::dgn_register_place.
+    if (vmap.has_tag("no_monster_gen"))
+        mask_tags |= MMT_NO_MONS;
+    if (vmap.has_tag("no_item_gen"))
+        mask_tags |= MMT_NO_ITEM;
+    if (vmap.has_tag("no_pool_fixup"))
+        mask_tags |= MMT_NO_POOL;
+    if (vmap.has_tag("no_wall_fixup"))
+        mask_tags |= MMT_NO_WALL;
+    if (vmap.has_tag("no_trap_gen"))
+        mask_tags |= MMT_NO_TRAP;
+
     // Cache keyspecs we've already pushed into the extended keyspec space.
     // If !ksmap[key], then we haven't seen the 'key' glyph before.
     keyspec_map ksmap(0);
@@ -1307,6 +1322,10 @@ void map_lines::merge_subvault(const coord_def &mtl, const coord_def &mbr,
                     spec.glyph = c;
                     km.feat.feats.insert(km.feat.feats.begin(), spec);
                 }
+
+                // Add overall tags to the keyspec.
+                keyspecs[idx].map_mask.flags_set
+                    |= (mask_tags & ~keyspecs[idx].map_mask.flags_unset);
             }
 
             // Finally, handle merging the cell itself.
