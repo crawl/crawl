@@ -370,7 +370,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                  if process.username.lower() == username.lower()]
         if len(procs) >= 1:
             process = procs[0]
-            self.logger.info("Started watching %s.", process.username)
+            self.logger.info("Started watching %s (P%s).", process.username,
+                             process.id)
             self.watched_game = process
             process.add_watcher(self)
             self.send_message("watching_started")
