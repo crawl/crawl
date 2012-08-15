@@ -47,12 +47,23 @@ This trap can shoot relatively weak spikes of metal. They are unlikely to kill
 anyone outright, but may be enough to put down someone who's running half-dead
 while chased by some monster.
 %%%%
+A detected altar
+
+An altar of some kind, although if you wish to know what deity it is
+consecrated to, you would have to come closer.
+%%%%
 A detected secret door
 
 A wooden door, cunningly hidden. It used to be a secret door but at least for
 you it's not a secret anymore.
 
 To open it, try simply walking into it, or press 'O'.
+%%%%
+# mmap/antennae/etc
+A detected shop or portal
+
+There's a gateway of some kind there, although you haven't sensed its
+nature.
 %%%%
 A closed door
 
