@@ -1878,9 +1878,9 @@ dump_order += monlist,kills
         which happens when you die, quit or win (or in ordinary dumps
         while in wizard mode).
 
-        Also, "spell_usage" will count spells you have used, in total and
-        per every three experience levels. The section "action_counts" is
-        similar, but also counts various non-spell actions.
+        Also, "action_counts" will count various actions you have done (such
+        as casting a spell or using a weapon type), in total and per every
+        three experience levels.
 
 dump_book_spells = true
         By default all randart spellbooks in inventory will have all their
