@@ -701,7 +701,7 @@ function arena_sprint_init_boss_table()
                  "elven rune of zot"}
     else
         bs[3] = {"place:Forest:5 w:50 / spriggan druid w:2 / spriggan air mage w:5 /\
-                 spriggan berserker w:5", "the enchantress hp:300 / agnes hp:400",
+                 spriggan berserker w:5", "agnes hp:400",
                  "mossy rune of zot"}
     end
 
