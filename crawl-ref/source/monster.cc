@@ -3964,6 +3964,10 @@ bool monster::no_tele(bool calc_unid, bool permit_id) const
     if (check_stasis(!permit_id, calc_unid))
         return true;
 
+    // TODO: calc_unid, permit_id
+    if (scan_mon_inv_randarts(this, ARTP_PREVENT_TELEPORTATION))
+        return true;
+
     return false;
 }
 
@@ -5827,6 +5831,14 @@ bool monster::check_clarity(bool silent) const
             simple_monster_message(this, " seems unimpeded by the mental distress.");
             set_ident_type(mitm[jewellery], ID_KNOWN_TYPE);
         }
+        return true;
+    }
+
+    if (scan_mon_inv_randarts(this, ARTP_CLARITY))
+    {
+        if (!silent && you.can_see(this) && !mons_is_lurking(this))
+            simple_monster_message(this, " seems unimpeded by the mental distress.");
+        // TODO: identify the property?
         return true;
     }
 
