@@ -19,8 +19,8 @@
 -- fast they spawn.
 --
 -- After round 27 the orb will drop, but picking it up is optional. You can do
--- so to win, or for massive arena points. Round 57 is the final one.
--- That round will give you the 15th rune if you survive, but it's designed to
+-- so to win, or for massive arena points. Round 42 is the final one.
+-- That round will give you the 10th rune if you survive, but it's designed to
 -- be almost impossible without extreme tactics (like using tomb cards or quad
 -- damage). It is much harder than anything you will find in a zig.
 --
@@ -168,7 +168,7 @@ function arena_sprint_end_round(data)
         end
     end
 
-    if data.round_id == 57 then
+    if data.round_id == 42 then
         crawl.mpr("The arena falls silent. Everyone but you is dead.")
         crawl.mpr("Frankly, I didn't think it was possible to get this far.")
         crawl.mpr("Congratulations, champion.")
@@ -736,14 +736,14 @@ function arena_sprint_init_boss_table()
               "dark rune of zot"}
     bs[14] = {"guardian mummy w:15 / mummy priest w:3 / greater mummy w:2",
                "khufu hp:400", "golden rune of zot"}
-    -- Shuffle the above 10
+    -- Shuffle the above 9. We only wind up using 6 through 9
     for i = 14, 7, -1 do
         local r = crawl.random_range(6, i)
         bs[i], bs[r] = bs[r], bs[i]
     end
 
-    -- who run bartertown
-    bs[15] = {"pandemonium lord",
+    -- Final (and tenth) boss
+    bs[10] = {"pandemonium lord",
               "ancient lich name:Master_Blaster n_rpl hd:30 hp:1000 col:lightmagenta \
               spells:fire_storm;ice_storm;hellfire;miasma;teleport_self", "demonic rune of zot"}
     return bs
@@ -789,7 +789,7 @@ function thing_do_arena(data, triggerable, triggerer, marker, ev)
 
             if data.time_left <= 0 then
                 crawl.mpr("ROUND " .. data.round_id .. "!", "warning")
-                if data.round_id == 57 then
+                if data.round_id == 42 then
                     crawl.mpr("FINAL BOSS!", "warning")
                 elseif arena_sprint_is_boss_round(data.round_id) then
                     crawl.mpr("BOSS ROUND!", "warning")
@@ -896,7 +896,7 @@ LROCKTILE:  wall_hall
             lightning_round = false,
             time_left = 60,         -- How much time is left
             between_rounds = true,  -- Are we waiting for the next round?
-            finished = false,       -- You somehow beat round 57
+            finished = false,       -- You somehow beat round 42
             monster_set = {},
             style_points = 0,
             style_mult = 1,
