@@ -1955,6 +1955,8 @@ static void _make_faerie_armour(item_def &item)
         {
             continue;
         }
+
+        break;
     }
     ASSERT(is_artefact(doodad));
     ASSERT(doodad.sub_type == item.sub_type);
