@@ -3224,9 +3224,12 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_STONESKIN:
     {
+        if (you.can_see(mons))
+            mprf("%s skin hardens.",
+                 apostrophise(mons->name(DESC_THE)).c_str());
         const int power = (mons->hit_dice * 15) / 10;
         mons->add_ench(mon_enchant(ENCH_STONESKIN, 0, mons,
-                       10 + (2 * random2(power))));
+                       BASELINE_DELAY * (10 + (2 * random2(power)))));
         return;
     }
 

@@ -443,6 +443,11 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_STONESKIN:
         if (props.exists("stoneskin_ac"))
             ac -= props["stoneskin_ac"].get_byte();
+        if (!quiet && you.can_see(this))
+        {
+            mprf("%s skin looks tender.",
+                 apostrophise(name(DESC_THE)).c_str());
+        }
         break;
 
     case ENCH_OZOCUBUS_ARMOUR:

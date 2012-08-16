@@ -146,6 +146,8 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_DEATHS_DOOR;
     case ENCH_ROLLING:
         return MB_ROLLING;
+    case ENCH_STONESKIN:
+        return MB_STONESKIN;
     case ENCH_OZOCUBUS_ARMOUR:
         return MB_OZOCUBUS_ARMOUR;
     default:
@@ -1361,6 +1363,8 @@ std::vector<std::string> monster_info::attributes() const
         v.push_back("regenerating");
     if (is(MB_ROLLING))
         v.push_back("rolling");
+    if (is(MB_STONESKIN))
+        v.push_back("stone skin");
     if (is(MB_OZOCUBUS_ARMOUR))
         v.push_back("covered in an icy film");
     return v;
