@@ -643,9 +643,7 @@ void TilesFramework::_send_cell(const coord_def &gc,
                                 bool force_full)
 {
     if (current_mc.feat() != next_mc.feat())
-    {
         write_message("f:%d,", next_mc.feat());
-    }
 
     if (next_mc.monsterinfo())
         _send_monster(gc, next_mc.monsterinfo(), new_monster_locs, force_full);
@@ -654,9 +652,7 @@ void TilesFramework::_send_cell(const coord_def &gc,
 
     map_feature mf = get_cell_map_feature(next_mc);
     if (get_cell_map_feature(current_mc) != mf)
-    {
         write_message("mf:%u,", mf);
-    }
 
     // Glyph and colour
     ucs_t glyph = next_sc.glyph;
@@ -710,74 +706,46 @@ void TilesFramework::_send_cell(const coord_def &gc,
         }
 
         if (next_pc.is_bloody != current_pc.is_bloody)
-        {
             write_message("bloody:%u,", next_pc.is_bloody);
-        }
 
         if (next_pc.old_blood != current_pc.old_blood)
-        {
             write_message("old_blood:%u,", next_pc.old_blood);
-        }
 
         if (next_pc.is_silenced != current_pc.is_silenced)
-        {
             write_message("silenced:%u,", next_pc.is_silenced);
-        }
 
         if (next_pc.is_suppressed != current_pc.is_suppressed)
-        {
             write_message("suppressed:%u,", next_pc.is_suppressed);
-        }
 
         if (next_pc.halo != current_pc.halo)
-        {
             write_message("halo:%u,", next_pc.halo);
-        }
 
         if (next_pc.is_moldy != current_pc.is_moldy)
-        {
             write_message("moldy:%u,", next_pc.is_moldy);
-        }
 
         if (next_pc.glowing_mold != current_pc.glowing_mold)
-        {
             write_message("glowing_mold:%u,", next_pc.glowing_mold);
-        }
 
         if (next_pc.is_sanctuary != current_pc.is_sanctuary)
-        {
             write_message("sanctuary:%u,", next_pc.is_sanctuary);
-        }
 
         if (next_pc.is_liquefied != current_pc.is_liquefied)
-        {
             write_message("liquefied:%u,", next_pc.is_liquefied);
-        }
 
         if (next_pc.orb_glow != current_pc.orb_glow)
-        {
             write_message("orb_glow:%u,", next_pc.orb_glow);
-        }
 
         if (next_pc.quad_glow != current_pc.quad_glow)
-        {
             write_message("quad_glow:%u,", next_pc.quad_glow);
-        }
 
         if (next_pc.mangrove_water != current_pc.mangrove_water)
-        {
             write_message("swtree:%u,", next_pc.mangrove_water);
-        }
 
         if (next_pc.blood_rotation != current_pc.blood_rotation)
-        {
             write_message("bloodrot:%d,", next_pc.blood_rotation);
-        }
 
         if (next_pc.travel_trail != current_pc.travel_trail)
-        {
             write_message("tt:%d,", next_pc.travel_trail);
-        }
 
         if (_needs_flavour(next_pc) &&
             (next_pc.flv.floor != current_pc.flv.floor

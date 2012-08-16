@@ -2299,9 +2299,7 @@ static void _imb_explosion(bolt *parent, coord_def center)
     for (adjacent_iterator ai(center); ai; ++ai)
     {
         if (!imb_can_splash(parent->source, center, parent->path_taken, *ai))
-        {
             continue;
-        }
         if (beam.is_tracer || x_chance_in_y(3, 4))
         {
             if (first && !beam.is_tracer)

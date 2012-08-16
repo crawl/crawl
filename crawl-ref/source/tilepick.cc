@@ -4333,9 +4333,7 @@ tileidx_t tileidx_bolt(const bolt &bolt)
     {
     case WHITE:
         if (bolt.name == "crystal spear")
-        {
             return TILE_BOLT_CRYSTAL_SPEAR + dir;
-        }
         else if (bolt.name == "puff of frost")
         {
             return TILE_BOLT_FROST; // TODO: vary by position
@@ -4344,9 +4342,7 @@ tileidx_t tileidx_bolt(const bolt &bolt)
 
     case LIGHTCYAN:
         if (bolt.name == "iron shot")
-        {
             return TILE_BOLT_IRON_SHOT + dir;
-        }
         else if (bolt.name == "zap")
         {
             return TILE_BOLT_ZAP + dir % tile_main_count(TILE_BOLT_ZAP);
@@ -4355,16 +4351,12 @@ tileidx_t tileidx_bolt(const bolt &bolt)
 
     case RED:
         if (bolt.name == "puff of flame")
-        {
             return TILE_BOLT_FLAME; // TODO: vary by position
-        }
         break;
 
     case LIGHTMAGENTA:
         if (bolt.name == "magic dart")
-        {
             return TILE_BOLT_MAGIC_DART; // TODO: vary by position
-        }
         break;
 
     case BROWN:
@@ -4378,16 +4370,12 @@ tileidx_t tileidx_bolt(const bolt &bolt)
 
     case GREEN:
         if (bolt.name == "sting")
-        {
             return TILE_BOLT_STING; // TODO: vary by position
-        }
         break;
 
     case LIGHTGREY:
         if (bolt.name == "stone arrow")
-        {
             return TILE_BOLT_STONE_ARROW + dir;
-        }
         break;
     }
 

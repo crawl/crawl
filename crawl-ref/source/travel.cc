@@ -4440,9 +4440,7 @@ void clear_travel_trail()
 {
 #ifdef USE_TILE_WEB
     for (unsigned int i = 0; i < env.travel_trail.size(); ++i)
-    {
         tiles.update_minimap(env.travel_trail[i]);
-    }
 #endif
     env.travel_trail.clear();
 }

@@ -1081,9 +1081,7 @@ static void _sdump_monster_list(dump_params &par)
     std::string monlist = mpr_monster_list(par.se);
     trim_string(monlist);
     while (!monlist.empty())
-    {
         par.text += wordwrap_line(monlist, 80) + "\n";
-    }
     par.text += "\n";
 }
 
