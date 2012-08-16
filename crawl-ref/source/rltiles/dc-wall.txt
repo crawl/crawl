@@ -983,11 +983,19 @@ bars_red08
 %repeat WALL_BARS WALL_BARS_DARKGRAY
 %resetcol
 
-shadow_w DNGN_WALL_SHADOW_W
-shadow_nw DNGN_WALL_SHADOW_NW
-shadow_n DNGN_WALL_SHADOW_N
-shadow_ne DNGN_WALL_SHADOW_NE
-shadow_e DNGN_WALL_SHADOW_E
+%rim 0
+%shrink 0
+shadow_w DNGN_WALL_SHADOW
+shadow_nw
+shadow_n
+shadow_ne
+shadow_e
+
+shadow_w_darker DNGN_WALL_SHADOW_DARK
+shadow_nw_darker
+shadow_n_darker
+shadow_ne_darker
+shadow_e_darker
 
 %sdir dngn/vaults
 brick_dark_leak WALL_BRICK_DARK_LEAK
