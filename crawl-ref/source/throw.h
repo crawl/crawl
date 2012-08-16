@@ -42,5 +42,5 @@ int launcher_final_speed(const item_def &launcher,
                          const item_def *shield, bool scaled = true);
 
 void setup_monster_throw_beam(monster* mons, bolt &beam);
-bool mons_throw(monster* mons, bolt &beam, int msl);
+bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport = false);
 #endif

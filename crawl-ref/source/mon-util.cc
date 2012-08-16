@@ -3196,7 +3196,8 @@ static bool _ms_ranged_spell(spell_type monspell, bool attack_only = false,
     // Check for Smiting specially, so it's not filtered along
     // with the summon spells.
     if (attack_only
-        && (monspell == SPELL_SMITING || monspell == SPELL_AIRSTRIKE))
+        && (monspell == SPELL_SMITING || monspell == SPELL_AIRSTRIKE
+            || monspell == SPELL_PORTAL_PROJECTILE))
     {
         return true;
     }
