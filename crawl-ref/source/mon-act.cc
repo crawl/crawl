@@ -1511,7 +1511,7 @@ static bool _handle_wand(monster* mons, bolt &beem)
 // the monster hurled.
 //
 //---------------------------------------------------------------
-static bool _handle_throw(monster* mons, bolt & beem)
+bool handle_throw(monster* mons, bolt & beem, bool teleport, bool check_only)
 {
     // Yes, there is a logic to this ordering {dlb}:
     if (mons->incapacitated()
@@ -1533,9 +1533,12 @@ static bool _handle_throw(monster* mons, bolt & beem)
     // Highly-specialised archers are more likely to shoot than talk. (?)
     // If we're standing on liquefied ground, try to stand and fire!
     // (Particularly archers.)
-    if ((liquefied && !archer && one_chance_in(9))
-        || (!liquefied && one_chance_in(archer ? 9 : 5)))
+    if (!teleport
+        && ((liquefied && !archer && one_chance_in(9))
+            || (!liquefied && one_chance_in(archer ? 9 : 5))))
+    {
         return false;
+    }
 
     if (mons_class_flag(mons->type, M_STABBER)
         && mons->get_foe() != NULL)
@@ -1606,14 +1609,18 @@ static bool _handle_throw(monster* mons, bolt & beem)
     beem.item = missile;
 
     // Fire tracer.
-    fire_tracer(mons, beem);
+    if (!teleport)
+        fire_tracer(mons, beem);
 
     // Clear fake damage (will be set correctly in mons_throw).
     beem.damage = dice_def();
 
     // Good idea?
-    if (mons_should_fire(beem))
+    if (teleport || mons_should_fire(beem))
     {
+        if (check_only)
+            return true;
+
         // Monsters shouldn't shoot if fleeing, so let them "turn to attack".
         make_mons_stop_fleeing(mons);
 
@@ -1621,7 +1628,7 @@ static bool _handle_throw(monster* mons, bolt & beem)
             mons->swap_weapons();
 
         beem.name.clear();
-        return mons_throw(mons, beem, mon_item);
+        return mons_throw(mons, beem, mon_item, teleport);
     }
 
     return false;
@@ -2188,7 +2195,7 @@ void handle_monster_move(monster* mons)
             }
         }
 
-        if (_handle_throw(mons, beem))
+        if (handle_throw(mons, beem, false, false))
         {
             DEBUG_ENERGY_USE("_handle_throw()");
             return;
