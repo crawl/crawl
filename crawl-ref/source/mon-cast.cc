@@ -1160,6 +1160,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_WIND_BLAST:
     case SPELL_SUMMON_VERMIN:
     case SPELL_TORNADO:
+    case SPELL_DISCHARGE:
         return true;
     default:
         if (check_validity)
@@ -1777,6 +1778,16 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
                 return false;
         }
         return true;
+
+    case SPELL_DISCHARGE:
+        // TODO: possibly check for friendlies nearby?
+        // Perhaps it will be used recklessly like chain lightning...
+        if ((mon->foe == MHITYOU || mon->foe == MHITNOT)
+            && !adjacent(you.pos(), mon->pos())
+            || (mon->foe != MHITYOU && mon->foe != MHITNOT
+                && !adjacent(menv[mon->foe].pos(), mon->pos())))
+            ret = true;
+        break;
 
      // No need to spam cantrips if we're just travelling around
     case SPELL_CANTRIP:
@@ -4995,6 +5006,37 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         _do_high_level_summon(mons, monsterNearby, spell_cast,
                               _pick_vermin, one_chance_in(4) ? 3 : 2 , god);
         return;
+
+    case SPELL_DISCHARGE:
+    {
+        const int power = (mons->hit_dice * 12) / 10;
+        const int num_targs = 1 + random2(random_range(1, 3) + power / 20);
+        const int dam = apply_random_around_square(discharge_monsters,
+                                                   mons->pos(), true, power,
+                                                   num_targs, mons);
+        if (dam == 0)
+        {
+            if (!you.can_see(mons))
+                mpr("You hear crackling.");
+            else if (coinflip())
+            {
+                mprf("The air around %s crackles with electrical energy.",
+                     mons->name(DESC_THE).c_str());
+            }
+            else
+            {
+                const bool plural = coinflip();
+                mprf("%s blue arc%s ground%s harmlessly %s %s.",
+                     plural ? "Some" : "A",
+                     plural ? "s" : "",
+                     plural ? " themselves" : "s itself",
+                     plural ? "around" : (coinflip() ? "beside" :
+                                          coinflip() ? "behind" : "before"),
+                     mons->name(DESC_THE).c_str());
+            }
+        }
+        return;
+    }
     }
 
     // If a monster just came into view and immediately cast a spell,

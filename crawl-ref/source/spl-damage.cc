@@ -1773,7 +1773,7 @@ spret_type cast_ignite_poison(int pow, bool fail)
     return SPRET_SUCCESS;
 }
 
-static int _discharge_monsters(coord_def where, int pow, int, actor *)
+int discharge_monsters(coord_def where, int pow, int, actor *agent)
 {
     monster* mons = monster_at(where);
     int damage = 0;
@@ -1789,7 +1789,7 @@ static int _discharge_monsters(coord_def where, int pow, int, actor *)
         dprf("You: static discharge damage: %d", damage);
         damage = check_your_resists(damage, BEAM_ELECTRICITY,
                                     "static discharge");
-        ouch(damage, NON_MONSTER, KILLED_BY_WILD_MAGIC, "static electricity");
+        ouch(damage, agent->mindex(), KILLED_BY_BEAM, "by static electricity");
     }
     else if (mons == NULL)
         return 0;
@@ -1806,7 +1806,10 @@ static int _discharge_monsters(coord_def where, int pow, int, actor *)
         {
             mprf("%s is struck by lightning.",
                  mons->name(DESC_THE).c_str());
-            _player_hurt_monster(*mons, damage);
+            if (agent->is_player())
+                _player_hurt_monster(*mons, damage);
+            else
+                mons->hurt(agent->as_monster(), damage);
         }
     }
 
@@ -1816,8 +1819,8 @@ static int _discharge_monsters(coord_def where, int pow, int, actor *)
     {
         mpr("The lightning arcs!");
         pow /= (coinflip() ? 2 : 3);
-        damage += apply_random_around_square(_discharge_monsters, where,
-                                             true, pow, 1);
+        damage += apply_random_around_square(discharge_monsters, where,
+                                             true, pow, 1, agent);
     }
     else if (damage > 0)
     {
@@ -1864,8 +1867,8 @@ spret_type cast_discharge(int pow, bool fail)
         return SPRET_ABORT;
 
     const int num_targs = 1 + random2(random_range(1, 3) + pow / 20);
-    const int dam = apply_random_around_square(_discharge_monsters, you.pos(),
-                                               true, pow, num_targs);
+    const int dam = apply_random_around_square(discharge_monsters, you.pos(),
+                                               true, pow, num_targs, &you);
 
     dprf("Arcs: %d Damage: %d", num_targs, dam);
 
