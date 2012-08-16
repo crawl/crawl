@@ -2079,7 +2079,7 @@ void setup_monster_throw_beam(monster* mons, bolt &beam)
 }
 
 // msl is the item index of the thrown missile (or weapon).
-bool mons_throw(monster* mons, bolt &beam, int msl)
+bool mons_throw(monster* mons, bolt &beam, int msl, bool teleport)
 {
     string ammo_name;
 
@@ -2134,6 +2134,8 @@ bool mons_throw(monster* mons, bolt &beam, int msl)
         lnchDamBonus = mitm[weapon].plus2;
         lnchBaseDam  = property(mitm[weapon], PWPN_DAMAGE);
     }
+    else if (projected == LRET_THROWN)
+        returning = returning && !teleport;
 
     // FIXME: ammo enchantment
     ammoHitBonus = ammoDamBonus = min(3, div_rand_round(mons->hit_dice , 3));
@@ -2312,9 +2314,13 @@ bool mons_throw(monster* mons, bolt &beam, int msl)
         }
     }
 
+    // Portal projectile accuracy bonus (power / 4):
+    if (teleport)
+        beam.hit += 3 * mons->hit_dice;
+
     // Now, if a monster is, for some reason, throwing something really
     // stupid, it will have baseHit of 0 and damage of 0.  Ah well.
-    string msg = mons->name(DESC_THE);
+    string msg = ((teleport) ? "Magically, " : "") + mons->name(DESC_THE);
     msg += ((projected == LRET_LAUNCHED) ? " shoots " : " throws ");
 
     if (!beam.name.empty() && projected == LRET_LAUNCHED)
@@ -2415,11 +2421,22 @@ bool mons_throw(monster* mons, bolt &beam, int msl)
     // Redraw the screen before firing, in case the monster just
     // came into view and the screen hasn't been updated yet.
     viewwindow();
-    beam.fire();
+    if (teleport)
+    {
+        beam.use_target_as_pos = true;
+        beam.affect_cell();
+        beam.affect_endpoint();
+        if (!really_returns)
+            beam.drop_object();
+    }
+    else
+    {
+        beam.fire();
 
-    // The item can be destroyed before returning.
-    if (really_returns && thrown_object_destroyed(&item, beam.target))
-        really_returns = false;
+        // The item can be destroyed before returning.
+        if (really_returns && thrown_object_destroyed(&item, beam.target))
+            really_returns = false;
+    }
 
     if (really_returns)
     {

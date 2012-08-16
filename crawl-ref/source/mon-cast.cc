@@ -34,6 +34,7 @@
 #include "mon-project.h"
 #include "terrain.h"
 #include "mgen_data.h"
+#include "mon-act.h"
 #include "mon-gear.h"
 #include "mon-speak.h"
 #include "mon-stuff.h"
@@ -1162,6 +1163,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_VERMIN:
     case SPELL_TORNADO:
     case SPELL_DISCHARGE:
+    case SPELL_PORTAL_PROJECTILE:
         return true;
     default:
         if (check_validity)
@@ -1789,6 +1791,16 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
                 && !adjacent(menv[mon->foe].pos(), mon->pos())))
             ret = true;
         break;
+
+    case SPELL_PORTAL_PROJECTILE:
+    {
+        bolt beam;
+        beam.source      = mon->pos();
+        beam.target      = mon->target;
+        beam.beam_source = mon->mindex();
+        ret = !handle_throw((monster *)mon, beam, true, true);
+        break;
+    }
 
      // No need to spam cantrips if we're just travelling around
     case SPELL_CANTRIP:
@@ -3884,7 +3896,8 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         || spell_cast == SPELL_INJURY_MIRROR
         || spell_cast == SPELL_DRAIN_LIFE
         || spell_cast == SPELL_TROGS_HAND
-        || spell_cast == SPELL_LEDAS_LIQUEFACTION)
+        || spell_cast == SPELL_LEDAS_LIQUEFACTION
+        || spell_cast == SPELL_PORTAL_PROJECTILE)
     {
         do_noise = false;       // Spell itself does the messaging.
     }
@@ -5040,6 +5053,19 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         }
         return;
     }
+    case SPELL_PORTAL_PROJECTILE:
+    {
+        // Swap weapons if necessary so that that happens before the spell
+        // casting message.
+        item_def *launcher = NULL;
+        mons_usable_missile(mons, &launcher);
+        const item_def *weapon = mons->mslot_item(MSLOT_WEAPON);
+        if (launcher && launcher != weapon)
+            mons->swap_weapons();
+        mons_cast_noise(mons, pbolt, spell_cast);
+        handle_throw(mons, pbolt, true, false);
+        return;
+    }
     }
 
     // If a monster just came into view and immediately cast a spell,
@@ -5488,7 +5514,8 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
                            && (pbolt.target != mons->pos()
                                || pbolt.visible())
                            // ugh. --Grunt
-                           && (actual_spell != SPELL_LRD);
+                           && (actual_spell != SPELL_LRD)
+                           && (actual_spell != SPELL_PORTAL_PROJECTILE);
 
     vector<string> key_list;
     unsigned int num_spell_keys =
