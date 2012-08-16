@@ -56,7 +56,7 @@ function arena_sprint_spawn_enemies(data)
         if data.num_spawned >= data.round_enemies then
             break
         end
-        if crawl.one_chance_in(#sp) then
+        if crawl.one_chance_in(5) then
             if arena_sprint_is_boss_round(data.round_id) and not data.boss_spawned then
                 local dude = dgn.create_monster(pos.x, pos.y, data.monster_set[2])
                 if dude then
@@ -282,8 +282,8 @@ function arena_sprint_get_monster_set(round, boss)
                 "brain worm", "giant spore hd:3", "orc priest", "orc perm_ench:invis",
                 "kobold name:kamikaze_kobold n_rpl n_noc n_des perm_ench:inner_flame",
                 -- Teams
-                "place:Elf name:(purple_team) n_suf n_noc /\
-                    place:Elf name:(green_team) n_suf n_noc att:friendly",
+                "place:D:15 name:(purple_team) n_suf n_noc /\
+                    place:D:15 name:(green_team) n_suf n_noc att:friendly",
              }
         elseif round <= 10 then
             mon_set = {
@@ -348,11 +348,11 @@ function arena_sprint_get_monster_set(round, boss)
                 "w:20 place:Orc:4 / orc wizard / orc sorcerer w:3 / orc warrior / orc knight /\
                     orc warlord w:3 / orc priest / orc high priest w:4 / urug w:3",
                 "place:Elf:3",
-                "place:Lair:8 w:300 / hydra / catoblepas / dire elephant / w:5 gastronok",
+                "place:Lair:8 w:100 / hydra / catoblepas / dire elephant / w:5 gastronok",
                 "place:Shoals:5 w:20 / w:6 siren / w:5 harpy",
                 "place:Swamp:5 w:20 / w:6 hydra / w:5 swamp dragon",
-                "place:Spider:5 w:20 / w:5 wolf spider / w:5 orb spider / w:1 emperor scorpion",
-                "place:Snake:5 w:20 / w:5 naga mage / w:5 naga warrior / w:1 greater naga",
+                "place:Spider:5 w:20 / w:5 wolf spider / w:5 orb spider / w:2 emperor scorpion",
+                "place:Snake:5 w:20 / w:5 naga mage / w:5 naga warrior / w:5 greater naga",
                 "place:Slime",
                 "queen bee / w:1 oklob plant",
                 "deep dwarf scion / deep dwarf artificer / deep dwarf death knight /\
@@ -397,18 +397,18 @@ function arena_sprint_get_monster_set(round, boss)
                 -- Branches: D, Orc, Elf, Shoals, Swamp, Spider, Snake, Slime,
                 -- Blade, Forest, Dwarf, Crypt, Pan, Tomb, Hell
                 "place:D:27 w:30 / w:1 nikola / w:1 frederick",
-                "w:45 place:Orc:4 / orc sorcerer w:3 / orc knight / orc warlord w:3 /\
+                "place:Orc:4 / orc sorcerer w:3 / orc knight / orc warlord w:3 /\
                     iron troll w:5 / stone giant w:5 / orc high priest w:4",
                 "deep elf high priest / deep elf demonologist / deep elf annihilator /\
                     deep elf sorcerer / deep elf death mage / deep elf blademaster /\
                     deep elf master archer / place:Elf:3 w:200",
-                "place:Shoals:5 w:70 / merfolk javelineer / merfolk impaler /\
+                "place:Shoals:5 w:30 / merfolk javelineer / merfolk impaler /\
                     merfolk aquamancer",
                 "place:Swamp:5 / hydra / swamp dragon / w:5 green death",
                 "place:Spider:5 / wolf spider / orb spider / w:5 emperor scorpion /\
                     w:5 ghost moth",
-                "place:Snake:5 / w:5 naga mage / w:5 naga warrior / w:5 greater naga /\
-                    w:5 guardian serpent / w:5 anaconda",
+                "place:Snake:5 / naga mage / naga warrior / greater naga /\
+                    guardian serpent / anaconda",
                 "place:Slime:6",
                 "dancing weapon",
                 "place:Forest",
@@ -470,19 +470,19 @@ function arena_sprint_get_monster_set(round, boss)
                 -- Blade, Forest, Dwarf, Crypt, Pan, Tomb, Hell
                 "vault guard w:50 / ancient lich w:5 / lich / yaktaur /\
                     yaktaur captain w:3 / stone giant / shadow dragon /\
-                    titan w:1",
+                    titan w:5",
                 "w:20 place:Orc:4 / orc sorcerer w:3 / orc knight / orc warlord w:5 /\
                     iron troll w:5 / stone giant w:5 / orc high priest w:4 /\
                     moth of wrath",
                 "deep elf high priest / deep elf demonologist / deep elf annihilator /\
                     deep elf sorcerer / deep elf death mage / deep elf blademaster /\
                     deep elf master archer / place:Elf:3 w:70",
-                "place:Shoals:5 w:30 / merfolk javelineer / merfolk impaler /\
+                "place:Shoals:5 / merfolk javelineer / merfolk impaler /\
                     merfolk aquamancer",
                 "hydra / swamp dragon / green death / death drake",
-                "place:Spider:5 / wolf spider / orb spider / emperor scorpion /\
+                "place:Spider:5 w:5 / wolf spider / orb spider / emperor scorpion /\
                     ghost moth / moth of wrath",
-                "place:Snake:5 / naga mage / naga warrior / w:15 greater naga /\
+                "place:Snake:5 w:5 / naga mage / naga warrior / w:20 greater naga /\
                     guardian serpent / w:5 anaconda",
                 "place:Slime:6 / acid blob / azure jelly / great orb of eyes",
                 "dancing weapon",
@@ -490,22 +490,22 @@ function arena_sprint_get_monster_set(round, boss)
                     spriggan air mage / spriggan druid w:3 / spriggan berserker",
                 "w:5 deep dwarf artificer / deep dwarf death knight / wiglaf w:2 /\
                     deep dwarf berserker / unborn deep dwarf",
-                "place:Crypt:5 w:30 / w:3 lich / w:5 vampire knight /\
+                "place:Crypt:5 w:25 / w:3 lich / w:5 vampire knight /\
                     w:2 boris / w:2 curse skull",
-                "any demon w:30 / pandemonium lord w:5",
+                "any demon w:30 / pandemonium lord",
                 "place:Tomb:3 w:70 / sphinx w:20 / greater mummy",
-                "place:Hell w:25 / geryon w:1 / nellie w:1",
+                "place:Hell w:25 / geryon w:2 / nellie w:2",
                 -- Elements/hells, Holy
-                "place:Dis:7 w:50 / hell sentinel / iron dragon / quicksilver dragon /\
-                    iron elemental / stone giant",
+                "place:Dis:7 w:20 / hell sentinel / iron dragon / quicksilver dragon /\
+                    iron elemental / stone giant / the iron giant",
                 "w:5 orb of fire / brimstone fiend / balrug / hellion /\
                     fire giant / sun demon / fire vortex",
-                "place:Coc:7 w:50 / ice fiend / blizzard demon / ice devil",
+                "place:Coc:7 w:20 / ice fiend / blizzard demon / ice devil",
                 "spriggan air mage / w:5 titan / w:5 electric golem / vapour /\
                     air elemental / ball lightning / storm dragon",
                 "shadow fiend / reaper / shadow dragon / death drake /\
                     deep elf death mage / lich w:15 / ancient lich w:5 /\
-                    unborn deep dwarf w:5 / place:Tar:7 w:70",
+                    unborn deep dwarf w:5 / place:Tar:7 w:40",
                 "daeva / angel / cherub / w:5 pearl dragon / ophan / \
                     w:5 silver star / apis / w:20 paladin",
                 -- Misc
@@ -559,10 +559,10 @@ function arena_sprint_get_monster_set(round, boss)
                 "place:Shoals:5 / merfolk javelineer / merfolk impaler /\
                     merfolk aquamancer",
                 "green death / death drake",
-                "place:Spider:5 / orb spider w:5 / emperor scorpion /\
+                "place:Spider:5 w:5 / orb spider w:5 / emperor scorpion /\
                     ghost moth / moth of wrath",
-                "place:Snake:5 / w:15 greater naga / guardian serpent / w:5 anaconda",
-                "place:Slime:6 / w:20 acid blob / azure jelly / giant eyeball /\
+                "place:Snake:5 w:2 / w:40 greater naga / guardian serpent / w:5 anaconda",
+                "place:Slime:6 / w:30 acid blob / azure jelly / giant eyeball /\
                     eye of draining",
                 "dancing weapon ; bardiche",
                 "spriggan defender / spriggan air mage / spriggan druid /\
@@ -570,7 +570,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "deep dwarf death knight / w:20 deep dwarf berserker / unborn deep dwarf",
                 "lich / w:5 ancient lich / w:1 curse skull / w:5 curse toe",
                 "any demon w:20 / pandemonium lord",
-                "place:Tomb:3 w:40 / sphinx w:20 / greater mummy",
+                "place:Tomb:3 w:30 / sphinx w:20 / greater mummy",
                 "hellephant w:15 / w:1 nellie",
                 -- Elements/hells, Holy
                 "hell sentinel / iron dragon / quicksilver dragon /\
@@ -735,7 +735,7 @@ function arena_sprint_init_boss_table()
               executioner / executioner / executioner", "gloorx vloq",
               "dark rune of zot"}
     bs[14] = {"guardian mummy w:15 / mummy priest w:3 / greater mummy w:2",
-               "khufu hp:400", "golden rune of zot"}
+               "khufu hp:500", "golden rune of zot"}
     -- Shuffle the above 9. We only wind up using 6 through 9
     for i = 14, 7, -1 do
         local r = crawl.random_range(6, i)
@@ -836,10 +836,9 @@ function thing_do_arena(data, triggerable, triggerer, marker, ev)
                     end
                 end
 
-                -- 33% chance of picking a specific direction to spawn from, else
-                -- spawn from all four directions. These "tension rounds" are
-                -- easier than normal ones, if you plan on evading them.
-                if crawl.one_chance_in(3) then
+                -- 50% chance of picking a specific direction to spawn from, else
+                -- spawn from all four directions.
+                if crawl.coinflip() then
                     local directions = {"north", "east", "south", "west"}
                     data.spawn_dir = directions[crawl.random2(#directions) + 1]
                     crawl.mpr("You sense a tension in the " .. data.spawn_dir .. ".")
@@ -985,7 +984,7 @@ KFEAT:  EP = scroll shop greed:10 use_all count:17 ; \
             scroll of fog q:3 | scroll of fog q:4 | scroll of fog q:5 |\
             scroll of recharging q:3 | scroll of recharging q:4 | scroll of recharging q:5 |\
             scroll of silence q:3 | scroll of silence q:4 | scroll of silence q:5 |\
-            scroll of fear q:5 | scroll of remove curse q:15 | scroll of enchant weapon iii q:6 |\
+            scroll of amnesia q:10 | scroll of remove curse q:15 | scroll of enchant weapon iii q:6 |\
             scroll of enchant armour q:4 | scroll of enchant armour q:4
 KFEAT:  FS = distillery shop use_all count:17 greed:10 ; \
              potion of speed q:3 | potion of speed q:4 | potion of speed q:5 |\
