@@ -399,7 +399,7 @@ int scan_mon_inv_randarts(const monster* mon,
         }
 
         if (second != NON_ITEM && mitm[second].base_type == OBJ_WEAPONS
-            && is_artefact(mitm[second]))
+            && is_artefact(mitm[second]) && mons_wields_two_weapons(mon))
         {
             ret += artefact_wpn_property(mitm[second], ra_prop);
         }
