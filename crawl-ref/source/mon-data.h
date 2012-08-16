@@ -2247,8 +2247,8 @@ static monsterentry mondata[] = {
     // Coloured with mon-util.cc:random_small_abomination_colour.
 
     // A demonically controlled mass of undead flesh theme-wise, this makes
-    // them MH_DEMONIC|MH_UNDEAD, but this currently is strictly the same
-    // as just MH_UNDEAD.
+    // them MH_DEMONIC|MH_UNDEAD, but this is mostly the same as just
+    // MH_UNDEAD (save for some god interactions).
     MONS_ABOMINATION_SMALL, 'x', BLACK, "small abomination",
     M_NO_FLAGS,
     MR_NO_FLAGS,
