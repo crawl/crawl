@@ -1,10 +1,10 @@
 <script>
   require.config({
-    paths: { "game": "/gamedata/{{ version }}" }
+    paths: { "game-{{ version }}": "/gamedata/{{ version }}" }
   });
   require(['jquery', 'client'], function ($, client) {
     client.inhibit_messages();
-    require(['game/game'], function (game) {
+    require(['game-{{ version }}/game'], function (game) {
       $(document).trigger("game_preinit");
       $(document).trigger("game_init");
       client.uninhibit_messages();
