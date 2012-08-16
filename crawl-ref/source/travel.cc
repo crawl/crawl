@@ -1208,11 +1208,12 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode)
 
     if (runmode == RMODE_CONNECTIVITY)
         ignore_player_traversability = true;
-
-    autopickup = can_autopickup();
-    sacrifice = god_likes_items(you.religion, true);
-    need_for_greed = runmode == RMODE_EXPLORE_GREEDY
-                     && (autopickup || sacrifice);
+    else if (runmode == RMODE_EXPLORE_GREEDY)
+    {
+        autopickup = can_autopickup();
+        sacrifice = god_likes_items(you.religion, true);
+        need_for_greed = (autopickup || sacrifice);
+    }
 
     if (!ls && (annotate_map || need_for_greed))
         ls = StashTrack.find_current_level();
