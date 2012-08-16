@@ -2666,6 +2666,7 @@ static void _decrement_durations()
             {
                 mpr("You pass out from exhaustion.", MSGCH_WARN);
                 you.increase_duration(DUR_PARALYSIS, roll_dice(1,4));
+                you.stop_constricting_all();
             }
         }
 
