@@ -2087,9 +2087,7 @@ spret_type cast_fragmentation(int pow, const actor *caster,
         {
             mon->hurt(caster, beam.damage.roll(), BEAM_DISINTEGRATION);
             if (!mon->alive())
-            {
                 beam.damage.num += 2;
-            }
         }
     }
 

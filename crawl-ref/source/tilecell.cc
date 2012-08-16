@@ -126,9 +126,7 @@ static void _add_directional_overlays(const coord_def& gc, packed_cell* cell,
             continue;
 
         if (dir_mask & (1 << i))
-        {
             _add_overlay(tileidx, cell);
-        }
 
         tileidx++;
     }

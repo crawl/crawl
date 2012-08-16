@@ -208,9 +208,7 @@ static InventoryTile _tile_for_ability(ability_type ability)
     desc.quantity = get_talent(ability, true).fail;
 
     if (!check_ability_possible(ability, true, true))
-    {
         desc.flag |= TILEI_FLAG_INVALID;
-    }
 
     return desc;
 }
