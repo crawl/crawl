@@ -2758,7 +2758,9 @@ friendly sensed monster
 By the power of Ashenzari, you know there is some creature there, and that it
 is one of your allies.
 %%%%
-# Vault-defined monsters
+##############################################################################
+### Vault-defined monsters
+##############################################################################
 Cloud Mage
 
 This strange wizard has attained mastery over clouds, and his mystic gestures
@@ -2878,6 +2880,12 @@ is a mockery of a plant. The colours don't match, and normal plants don't have
 mysterious appendages and tentacles writhing around. Fortunately, this one
 appears to be harmless, but with demons, you can never be sure.
 %%%%
+drunken dwarf
+
+This short fellow takes the importance of testing the quality of ale
+seriously. Suddenly, you feel an urge to help him in this task. Or perhaps
+her, with dwarves the gender can be hard to tell.
+%%%%
 earth elementalist statue
 
 A plain statue of a dwarf wielding a pickaxe. It looks incredibly heavy.
@@ -2918,6 +2926,10 @@ Without a gardener to provide it with something to prop itself over, and not
 being lucky enough to have its seed fall near something it can climb, this
 grape vine is still remarkably hard to step over.
 %%%%
+greater air elemental
+
+<air elemental>
+%%%%
 grey elf
 
 Once considered a unique species of its own, grey elves are now more properly
@@ -2944,6 +2956,12 @@ iron troll monk
 
 It seems a flimsy representation of a monk; nothing more than a half-formed
 memory.
+%%%%
+kamikaze kobold
+
+Either a madman, or a martyr for some obscure kobold faith, this guy bears a
+powerful magical enchantment, set to explode in a blaze of fire. Let's
+better keep the distance!
 %%%%
 lasher statue
 
@@ -3008,6 +3026,33 @@ This immature oklob plant seems to be mumbling some orisons... er, what?!?
 oklob sapling wizard
 
 <oklob plant annihilator>
+%%%%
+orb of electricity
+
+A massive floating ball, resembling ball lightning, but looking far more
+stable. It definitely lacks some heavy-duty insulation, though.
+%%%%
+# I'm not sure how widely cosmogonical Norse myths are known to an average
+# reader; Crawl's audience tends to be far more educated though, so let's
+# hope the concepts of Ginnungagap, Niflheim and Muspelheim are not too
+# obscure.
+orb of ice
+
+A globe of primordial ice, floating in the air. You don't know whether the
+tales about the world once being nothing but a vast void of nothingness with
+an endless realm of fire on one side and an endless realm of cold on the
+other have a basis in reality, but if so, this orb may be a relic of those
+times.
+
+Ordinary ice seems to form on the surface, yet it is so easy to tell from
+the ancient perfect ball inside. You'd better stay far away, or you may end
+up a whole bit less warm.
+%%%%
+orb slug
+
+A monstrously big slug, who apparently ate a mighty conjurer, an orb spider,
+or perhaps fell victim of divine experimentation (more likely of Xom than
+Vehumet...).
 %%%%
 orc demonologist
 
