@@ -918,17 +918,16 @@ static void _fire_monster_death_event(monster* mons,
         type = MONS_ROYAL_JELLY;
     }
 
-    // Banished monsters aren't technically dead, so no death event
-    // for them.
-    if (killer == KILL_BANISHED)
-        return;
-
     if (!polymorph)
     {
         dungeon_events.fire_event(
             dgn_event(DET_MONSTER_DIED, mons->pos(), 0,
                       mons->mid, killer));
     }
+
+    if (killer == KILL_BANISHED)
+        return;
+
     los_monster_died(mons);
 
     if (type == MONS_ROYAL_JELLY && !polymorph)
