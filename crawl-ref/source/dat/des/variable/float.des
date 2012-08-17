@@ -272,8 +272,11 @@ NAME:   firewood_loft
 TAGS:   extra
 DEPTH:  D:1-26
 ORIENT: float
+: if you.absdepth() > 8 then
+KITEM:  " = staff, quarterstaff, quarterstaff good_item
+: end
 KITEM:  " = staff, quarterstaff, quarterstaff
-KITEM:  ' = staff, staff / any magical staff w:2 / any rod w:1
+KITEM:  ' = staff, any magical staff / any rod w:1
 MAP
 xxxxx
 x"']x
