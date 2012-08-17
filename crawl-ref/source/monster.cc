@@ -1453,10 +1453,13 @@ static bool _is_signature_weapon(monster* mons, const item_def &weapon)
     // we are more interested in the brand, and the brand is *rare*.
     if (mons_is_unique(mons->type))
     {
+        weapon_type wtype = (weapon.base_type == OBJ_WEAPONS) ?
+            (weapon_type)weapon.sub_type : NUM_WEAPONS;
+
         // We might allow Sigmund to pick up a better scythe if he finds
         // one...
         if (mons->type == MONS_SIGMUND)
-            return (weapon.sub_type == WPN_SCYTHE);
+            return (wtype == WPN_SCYTHE);
 
         // Crazy Yiuf's got MONUSE_STARTING_EQUIPMENT right now, but
         // in case that ever changes we don't want him to switch away
@@ -1475,13 +1478,13 @@ static bool _is_signature_weapon(monster* mons, const item_def &weapon)
             return false;
 
         if (mons->type == MONS_AGNES)
-            return (weapon.sub_type == WPN_LAJATANG);
+            return (wtype == WPN_LAJATANG);
 
         if (mons->type == MONS_EDMUND)
         {
-            return (weapon.sub_type == WPN_FLAIL
-                    || weapon.sub_type == WPN_SPIKED_FLAIL
-                    || weapon.sub_type == WPN_DIRE_FLAIL);
+            return (wtype == WPN_FLAIL
+                 || wtype == WPN_SPIKED_FLAIL
+                 || wtype == WPN_DIRE_FLAIL);
         }
 
         // Pikel's got MONUSE_STARTING_EQUIPMENT right now, but,
@@ -1503,7 +1506,7 @@ static bool _is_signature_weapon(monster* mons, const item_def &weapon)
         }
 
         if (mons->type == MONS_IGNACIO)
-            return (weapon.sub_type == WPN_EXECUTIONERS_AXE);
+            return (wtype == WPN_EXECUTIONERS_AXE);
 
         if (mons->type == MONS_MENNAS)
             return (get_weapon_brand(weapon) == SPWPN_HOLY_WRATH);
