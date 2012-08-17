@@ -2882,9 +2882,7 @@ appears to be harmless, but with demons, you can never be sure.
 %%%%
 drunken dwarf
 
-This short fellow takes the importance of testing the quality of ale
-seriously. Suddenly, you feel an urge to help him in this task. Or perhaps
-her, with dwarves the gender can be hard to tell.
+This short fellow seems to be working as an ale quality tester, and is enjoying the job a little too much.
 %%%%
 earth elementalist statue
 
@@ -2959,9 +2957,9 @@ memory.
 %%%%
 kamikaze kobold
 
-Either a madman, or a martyr for some obscure kobold faith, this guy bears a
-powerful magical enchantment, set to explode in a blaze of fire. Let's
-better keep the distance!
+This kobold is either mad or a martyr for some obscure kobold faith, being enchanted
+to explode in a blaze of fire. You'd better
+keep your distance!
 %%%%
 lasher statue
 
@@ -3029,7 +3027,7 @@ oklob sapling wizard
 %%%%
 orb of electricity
 
-A massive floating ball, resembling ball lightning, but looking far more
+A massive floating ball. It resembles ball lightning, but looks far more
 stable. It definitely lacks some heavy-duty insulation, though.
 %%%%
 # I'm not sure how widely cosmogonical Norse myths are known to an average
@@ -3039,20 +3037,19 @@ stable. It definitely lacks some heavy-duty insulation, though.
 orb of ice
 
 A globe of primordial ice, floating in the air. You don't know whether the
-tales about the world once being nothing but a vast void of nothingness with
-an endless realm of fire on one side and an endless realm of cold on the
-other have a basis in reality, but if so, this orb may be a relic of those
-times.
+tales about the world's once being a void bracketed by
+realms of endless fire and cold
+are true, but if they are, this orb may be a relic of that
+ancient time.
 
-Ordinary ice seems to form on the surface, yet it is so easy to tell from
-the ancient perfect ball inside. You'd better stay far away, or you may end
-up a whole bit less warm.
+Ordinary ice seems to form on the surface, but it is easy to distinguish from
+the perfect ball inside. You'd better stay far away, or you may end
+up frozen.
 %%%%
 orb slug
 
-A monstrously big slug, who apparently ate a mighty conjurer, an orb spider,
-or perhaps fell victim of divine experimentation (more likely of Xom than
-Vehumet...).
+A monstrously big slug who apparently ate a mighty conjurer, or maybe an orb spider.
+Or perhaps it's a product of divine experiments, in which case it looks like Xom's handiwork...
 %%%%
 orc demonologist
 
