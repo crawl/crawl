@@ -35,6 +35,9 @@ sub vault_mon()
     $_=$tags{'dbname'} if $db && $tags{'dbname'};
     s/_/ /g;
 
+    # The Arena Sprint has teams, sometimes even on a place:X (ie, no name).
+    return if (s/ \((?:green|purple) team\)$//) && /^$/;
+
     $mons{$_} = 1;
 }
 
@@ -56,7 +59,15 @@ for (grep /\.des$/, `git ls-files`)
         s/"[^"]*"/LUA/g;
         s/"$//;
         s/"[^"]*$/LUA/;
+        vault_mon() for split m{/|,}; #/
+    }
+    for (/mon_set\s+=\s+\{([^}]+)}/sg)
+    {
+        s/^\s*"//s;
+        s/"\s*,\s*$//sg;
         s/\\\n *//g;
+        s/--[^\n]*\n//sg;
+        s|"\s*,\s*"|/|sg;
         vault_mon() for split m{/|,}; #/
     }
 }
