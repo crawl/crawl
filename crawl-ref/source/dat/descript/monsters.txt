@@ -2950,7 +2950,7 @@ memory.
 %%%%
 hungry kobold
 
-This kobold seems to be angry about having his meal interrupted.
+This kobold seems to be angry about having his or her meal interrupted.
 %%%%
 iron troll monk
 
