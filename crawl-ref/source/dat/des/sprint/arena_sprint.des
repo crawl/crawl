@@ -56,7 +56,7 @@ function arena_sprint_spawn_enemies(data)
         if data.num_spawned >= data.round_enemies then
             break
         end
-        if crawl.one_chance_in(5) then
+        if crawl.one_chance_in(#sp) then
             if arena_sprint_is_boss_round(data.round_id) and not data.boss_spawned then
                 local dude = dgn.create_monster(pos.x, pos.y, data.monster_set[2])
                 if dude then
@@ -106,11 +106,11 @@ function arena_sprint_end_round(data)
         crawl.mpr("The Orb of Zot has appeared in the centre of the arena!", "orb")
         local p = dgn.find_marker_positions_by_prop("centre_point", 1)[1]
         dgn.create_item(p.x, p.y, "orb of zot")
-        data.time_left = 1000 + crawl.random2(250)
+        data.time_left = 1500 + crawl.random2(500)
     end
 
-    -- Guarantee at least 10 turns of rest
-    data.time_left = data.time_left + 100
+    -- Guarantee at least 15 turns of rest
+    data.time_left = data.time_left + 150
 
     -- Scoring
     local style_gain = (1 + data.num_killed) * data.round_id
@@ -207,7 +207,7 @@ end
 function arena_sprint_get_monster_set(round, boss)
     if not boss then
         if round == 27 then
-            return {"base draconian / place:Zot:5 / orb guardian / tiamat w:3"}
+            return {"base draconian w:5 / place:Zot:5 / orb guardian w:15 / tiamat w:3"}
         end
 
         local mon_set = {}
@@ -655,18 +655,18 @@ function arena_sprint_init_boss_table()
     local bs = {}
     if crawl.coinflip() then
         bs[1] = {"place:Snake", "aizul hd:10 hp:120 /\
-                 naga warrior name:naga_warlord n_rpl n_des n_noc col:cyan hp:140 /\
-                 anaconda name:giant n_adj n_noc hp:140 col:lightred /\
-                 black mamba name:dark n_adj n_noc col:darkgrey hp:140 /\
-                 naga mage name:naga_archmage n_rpl n_des n_noc col:magenta hp:140",
+                 naga warrior name:naga_warlord n_rpl n_des n_noc col:cyan hp:130 /\
+                 anaconda name:giant n_adj n_noc hp:130 col:lightred /\
+                 black mamba name:dark n_adj n_noc col:darkgrey hp:130 /\
+                 naga mage name:naga_archmage n_rpl n_des n_noc col:magenta hp:130",
                  "serpentine rune of zot"}
     else
         bs[1] = {"place:Swamp", "the lernaean hydra /\
                  swamp dragon name:elder n_adj n_noc col:cyan hp:140 /\
                  swamp drake name:stinky n_adj n_noc col:cyan hp:130 /\
-                 wizard name:witch n_rpl n_des n_noc col:green hp:140 \
+                 wizard name:witch n_rpl n_des n_noc col:green hp:130 \
                     spells:mephitic_cloud;.;summon_hydra;.;invisibility;teleport_self /\
-                 bog body name:big n_adj n_noc col:blue hp:150",
+                 bog body name:big n_adj n_noc col:blue hp:130",
                  "decaying rune of zot"}
     end
 
