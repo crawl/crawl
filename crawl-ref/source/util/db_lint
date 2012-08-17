@@ -187,8 +187,6 @@ if (read_file("descript/monsters"))
         'player', 'player illusion', 'merged slime creature',
         # genus-only monsters
         'ghost', 'giant', 'golem', 'hell lord', 'bear', 'elemental',
-        # given a colour
-        'base draconian',
     );
     delete $keys{'__(_suffix_examine'};
     delete $keys{"the Serpent of Hell $_"} for qw(gehenna cocytus dis tartarus);

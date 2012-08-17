@@ -36,7 +36,7 @@ sub vault_mon()
     s/_/ /g;
 
     # The Arena Sprint has teams, sometimes even on a place:X (ie, no name).
-    return if (s/ \((?:green|purple) team\)$//) && /^$/;
+    return if s/ \((?:green|purple) team\)$//;
 
     $mons{$_} = 1;
 }
@@ -73,6 +73,9 @@ for (grep /\.des$/, `git ls-files`)
 }
 
 $mons{"freed slave"} = 1;
+
+# Unlike genus-only monsters, these are not even up to name translations.
+delete $mons{$_} for ("base draconian", "greater demon");
 
 unless ($db)
 {
