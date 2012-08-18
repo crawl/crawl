@@ -2453,7 +2453,12 @@ static void _pan_level()
             dgn_ensure_vault_placed(_build_primary_vault(vault), true);
         else
         {
-            const map_def *layout = random_map_for_tag("layout", true, true);
+            const map_def *layout;
+            do
+            {
+                layout = random_map_for_tag("layout", true, true);
+            }
+            while (layout->has_tag("no_primary_vault"));
 
             dgn_ensure_vault_placed(_build_primary_vault(layout), true);
 

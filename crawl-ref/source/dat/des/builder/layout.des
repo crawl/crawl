@@ -73,7 +73,7 @@ NAME:   layout_forbidden_donut
 DEPTH:  4-22, Pan, !Vaults
 WEIGHT: 10
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand
+TAGS:   overwritable layout no_primary_vault allow_dup unrand
 {{
     local gxm, gym = dgn.max_bounds()
     extend_map{width=gxm, height=gym, fill='x'}
@@ -214,7 +214,7 @@ NAME: layout_big_octagon
 DEPTH:   Pan, 4-22, !Vaults
 WEIGHT:  6 (Pan), 10
 ORIENT:  encompass
-TAGS:    overwritable layout allow_dup unrand
+TAGS:    overwritable layout no_primary_vault allow_dup unrand
 
 {{
     -- Step 1: Big octagon.
@@ -1058,7 +1058,7 @@ NAME: layout_bigger_room
 DEPTH: 9-22, !Vaults, !Crypt, !Pan
 WEIGHT: 10
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand
+TAGS: overwritable layout no_primary_vault allow_dup unrand
 {{
     if not is_validating() then layout_bigger_room() end
 }}
