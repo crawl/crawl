@@ -247,7 +247,7 @@ function arena_sprint_get_monster_set(round, boss)
                     w:1 death yak / green rat / orange rat / porcupine",
                 "w:20 merfolk / w:5 mermaid / hippogriff / centaur / w:5 griffon /\
                     w:1 harpy / w:5 cyclops / w:1 snapping turtle",
-                "bog body / w:5 giant leech / insubstantial wisp / w:5 swamp drake /\
+                "w:5 bog body / w:5 giant leech / insubstantial wisp / w:5 swamp drake /\
                     w:1 vapour / giant frog / w:2 spiny frog / w:2 hydra /\
                     w:2 vampire mosquito",
                 "w:30 spider / goliath beetle / w:2 boulder beetle / w:2 jumping spider /\
@@ -259,27 +259,27 @@ function arena_sprint_get_monster_set(round, boss)
                 "deep dwarf scion / deep dwarf artificer / deep dwarf",
                 "small zombie / small skeleton / wight / necrophage / large zombie w:5 /\
                     large skeleton w:5 / shadow w:5 / phantom w:5 / w:1 josephine",
-                "blue devil / iron devil w:5 / orange demon / red devil w:5 / rotting devil /\
-                    sixfirhy w:5 / hellwing",
+                "w:7 blue devil / iron devil w:5 / orange demon / red devil w:5 / rotting devil /\
+                    sixfirhy w:2 / hellwing",
                 "w:20 mummy / w:5 guardian mummy / w:5 menkaure",
                 -- Fire, Air, Earth, Water, Death
-                "w:15 fire bat / fire elemental / w:5 fire drake / w:5 mottled dragon /\
+                "w:20 fire bat / fire elemental / w:5 fire drake / w:5 mottled dragon /\
                     w:1 flaming corpse",
-                "steam dragon / w:5 air elemental / w:1 vapour / lightning spire /\
+                "steam dragon / w:5 air elemental / w:1 vapour / w:5 lightning spire /\
                     w:30 sky beast / insubstantial wisp",
                 "w:5 earth elemental / clay golem / w:5 stone golem / w:5 boulder beetle /\
                     w:15 iron devil / w:15 iron imp / w:5 rock worm",
                 "w:20 ice beast / small simulacrum / large simulacrum /\
                     w:5 water elemental",
-                "wight / wraith / spectral thing",
+                "wight / wraith / w:15 spectral thing",
                 -- Misc
-                "kobold / big kobold / w:2 kobold demonologist / w:1 sonja",
+                "kobold / big kobold / w:3 kobold demonologist / w:2 sonja",
                 "jackal w:1 / hound w:5 / war dog w:20 / hell hound w:7 / w:3 grum",
                 "ogre w:35 / two-headed ogre / ogre mage w:5 / w:2 erolcha",
                 "giant frog w:20 / blink frog w:6 / spiny frog w:6 / prince ribbit w:2",
                 "gnoll / gnoll shaman / gnoll sergeant / hound / war dog",
                 -- Gimmicks
-                "brain worm", "giant spore hd:3", "orc priest", "orc perm_ench:invis",
+                "brain worm", "giant spore hd:3", "orc priest", "vampire bat",
                 "kobold name:kamikaze_kobold n_rpl n_noc n_des perm_ench:inner_flame",
                 -- Teams
                 "place:D:15 name:(purple_team) n_suf n_noc /\
@@ -354,17 +354,17 @@ function arena_sprint_get_monster_set(round, boss)
                 "place:Spider:5 w:20 / w:5 wolf spider / w:5 orb spider / w:2 emperor scorpion",
                 "place:Snake:5 w:20 / w:5 naga mage / w:5 naga warrior / w:5 greater naga",
                 "place:Slime",
-                "queen bee / w:1 oklob plant",
+                "killer bee / queen bee / w:1 oklob plant",
                 "deep dwarf scion / deep dwarf artificer / deep dwarf death knight /\
                     w:5 deep dwarf berserker / w:2 unborn deep dwarf",
                 "place:Crypt / w:2 josephine",
-                "common demon w:30 / kobold demonologist w:5 / frances w:1",
+                "common demon w:30 / kobold demonologist w:5 / frances w:3",
                 "mummy / w:5 guardian mummy / w:2 mummy priest / w:1 sphinx",
                 -- Fire, Air, Earth, Water, Death
                 "w:5 fire bat / fire elemental / fire drake / mottled dragon /\
                     flaming corpse / sun demon / efreet / hell hound /\
                     hell hog / w:5 fire crab",
-                "w:1 storm dragon / air elemental / w:5 vapour / sky beast /\
+                "w:1 storm dragon / air elemental / w:5 vapour / w:15 sky beast /\
                     insubstantial wisp / w:1 nikola",
                 "earth elemental / w:5 iron golem / w:5 stone golem / boulder beetle /\
                     iron devil / w:5 rock worm / w:5 iron troll / w:1 roxanne /\
@@ -654,7 +654,7 @@ function arena_sprint_init_boss_table()
 
     local bs = {}
     if crawl.coinflip() then
-        bs[1] = {"place:Snake", "aizul hd:10 hp:120 /\
+        bs[1] = {"place:Snake", "aizul hd:7 hp:120 /\
                  naga warrior name:naga_warlord n_rpl n_des n_noc col:cyan hp:130 /\
                  anaconda name:giant n_adj n_noc hp:130 col:lightred /\
                  black mamba name:dark n_adj n_noc col:darkgrey hp:130 /\
@@ -662,7 +662,7 @@ function arena_sprint_init_boss_table()
                  "serpentine rune of zot"}
     else
         bs[1] = {"place:Swamp", "the lernaean hydra /\
-                 swamp dragon name:elder n_adj n_noc col:cyan hp:140 /\
+                 swamp dragon name:elder n_adj n_noc col:cyan hp:130 /\
                  swamp drake name:stinky n_adj n_noc col:cyan hp:130 /\
                  wizard name:witch n_rpl n_des n_noc col:green hp:130 \
                     spells:mephitic_cloud;.;summon_hydra;.;invisibility;teleport_self /\
@@ -674,7 +674,7 @@ function arena_sprint_init_boss_table()
         bs[2] = {"place:Spider", "arachne hp:250 /\
                  wolf spider name:dire n_adj n_noc col:blue hp:300 /\
                  emperor scorpion name:ancient n_adj n_noc hp:250 /\
-                 ghost moth name:greater n_adj n_noc col:lightmagenta hp:225 /\
+                 ghost moth name:greater n_adj n_noc col:lightmagenta hp:200 /\
                  jumping spider name:phase_spider n_rpl n_des never_corpse \
                     col:lightgreen spells:teleport_self hp:300",
                  "gossamer rune of zot"}
@@ -701,15 +701,15 @@ function arena_sprint_init_boss_table()
                  "elven rune of zot"}
     else
         bs[3] = {"place:Forest:5 w:50 / spriggan druid w:2 / spriggan air mage w:5 /\
-                 spriggan berserker w:5", "agnes hp:400",
+                 spriggan berserker w:5", "agnes hp:335",
                  "mossy rune of zot"}
     end
 
-    bs[4] = {"place:Slime", "dissolution hp:500 /\
-             acid blob name:sulfuric n_adj col:white hp:500 /\
+    bs[4] = {"place:Slime", "dissolution hp:430 /\
+             acid blob name:sulfuric n_adj col:white hp:450 /\
              great orb of eyes name:greater_orb_of_eyes n_rpl n_des n_noc col:green hp:600",
              "slimy rune of zot"}
-    bs[5] = {"vault guard / place:Vaults", "mennas hp:300 / mara hp:350 /\
+    bs[5] = {"vault guard / place:Vaults", "mennas hp:250 / mara hp:300 /\
              vault guard name:captain n_suf n_noc col:lightcyan hp:800 hd:26",
              "silver rune of zot"}
     if crawl.coinflip() then
