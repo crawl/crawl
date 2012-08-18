@@ -300,6 +300,9 @@ SQLITE_LIB := -lsqlite3
 ifdef TILES
 TILES_ANY = YesPlease
 OBJECTS += $(TILES_OBJECTS) $(GLTILES_OBJECTS)
+  ifdef WEBTILES
+    OBJECTS += $(error Web and local tiles are exclusive)
+  endif
 endif
 
 ifdef WEBTILES
