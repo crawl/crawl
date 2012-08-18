@@ -922,6 +922,10 @@ murray MONS_MURRAY
 ## From a special vault (ancient_champions.des)
 ancient_champion MONS_ANCIENT_CHAMPION
 
+## Sprint specials
+%sdir mon/sprint
+succubus MONS_SUCCUBUS
+
 %include dc-zombie.txt
 
 ## Draconians ('d')
