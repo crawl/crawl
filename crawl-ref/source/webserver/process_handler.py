@@ -520,11 +520,15 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
 
         self.process = None
 
+        self.handle_process_end()
+
+    def handle_process_end(self):
         if self.conn:
             self.conn.close()
             self.conn = None
 
-        self.handle_process_end()
+        super(CrawlProcessHandler, self).handle_process_end()
+
 
     def add_watcher(self, watcher, hide = False):
         super(CrawlProcessHandler, self).add_watcher(watcher, hide)
