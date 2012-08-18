@@ -922,6 +922,101 @@ mmmM``...`^~~^.d.``Mmmm
         mmmmmmm
 ENDMAP
 
+################################################################################
+# Space-filling minivaults by bmh.
+
+NAME: bmh_zot_hilbert_curve
+DEPTH: Zot
+TAGS: extra
+MAP
+xxxxxxxxx
+@...x...@
+xxx.x.xxx
+x...x...x
+x.xxxxx.x
+x.x...x.x
+x...x...x
+xxxxxxxxx
+ENDMAP
+
+NAME: bmh_zot_peano_curve
+DEPTH: Zot
+TAGS: extra
+MAP
+xxxxxxxxxxxxxxxxxxx
+x...x...x...x...x.@
+x.x.x.x.x.x.x.x.x.x
+x.x...x...x.x.x...x
+x.xxxxxxxxx.x.xxxxx
+x.x...x...x.x.x...x
+x.x.x.x.x.x.x.x.x.x
+x...x.x.x...x...x.x
+xxxxx.x.xxxxxxxxx.x
+x...x.x.x...x...x.x
+x.x.x.x.x.x.x.x.x.x
+@.x...x...x...x...x
+xxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   bmh_zot_big_hilbert_curve
+DEPTH:  Zot
+TAGS:   extra
+MAP
+xxxxxxxxxxxxx
+@.....x.....@
+@.....x.....@
+xxxx..x..xxxx
+x.....x.....x
+x.....x.....x
+x..xxxxxxx..x
+x..x.....x..x
+x..x.....x..x
+x.....x.....x
+x.....x.....x
+xxxxxxxxxxxxx
+ENDMAP
+
+NAME:   bmh_zot_zed_curve
+DEPTH:  Zot
+TAGS:   extra
+MAP
+xxxxxxxxxxxx
+@....xx....x
+xxx.xx.xx.xx
+xx.xx.xx.xxx
+x....xx...xx
+xxxxxxxxxx.x
+xx........xx
+x.xxxxxxxxxx
+xx...xx...xx
+xxx.xx.xx.xx
+xx.xx.xx.xxx
+x....xx....@
+xxxxxxxxxxxx
+ENDMAP
+
+NAME:   bmh_zot_levy_curve
+DEPTH:  Zot
+TAGS:   extra mini_float
+SUBST:  W = Ww
+MAP
+          WWW.
+          W.W..
+          W.WWW
+          ....W
+         .....W
+        ....WWW
+       .......W
+      ..www...W
+     ...w.w.WWW
+    ....wwwWW..
+WWW.......W...
+W........WW..
+WWW..W..WW..
+..W..W..W..
+ .WWWWWWW.
+ENDMAP
+
 ##############################################################################
 ##############################################################################
 #
