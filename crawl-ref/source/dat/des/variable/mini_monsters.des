@@ -3426,6 +3426,40 @@ xxxxxx*..'y............xx
       xxxxxxxxxxxxx@@xxxx
 ENDMAP
 
+NAME:   minmay_small_thing
+DEPTH:  D:4-8
+SUBST:  9 = 999.
+MAP
+ xxxxxxxxxx
+xx........@
+x..xx.x.x.x
+x.xx.xxxxxx
+x..xx.x.x.x
+xx..xx.x.xx
+ xx.xxxxx.x
+xx..x*.x.xx
+x..xxx.x.*x
+xx...9.9.xx
+ xxxxxxxxx
+ENDMAP
+
+NAME:   minmay_crossroads
+DEPTH:  D:4-8
+SUBST:  0 = 0.
+MAP
+                xxxxxxx
+    x@.0.@xx  xxx....{x
+    xx..0..xxxx.....xxx
+     xx.....x.....xxx
+      xx........xxx
+      xxx.....xxx
+    xxx........xx
+  xxx.....x.....xx
+xxx.....xxxx..0..xx
+x}....xxx  xx@.0.@x
+xxxxxxx
+ENDMAP
+
 ################################################################
 #
 # <<8>> Minivaults with monsters guarding a thematic item.
