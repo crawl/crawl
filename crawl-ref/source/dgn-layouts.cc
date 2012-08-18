@@ -168,8 +168,11 @@ void dgn_build_bigger_room_level(void)
     env.level_layout_types.insert("open");
 
     for (rectangle_iterator ri(10); ri; ++ri)
-        if (grd(*ri) == DNGN_ROCK_WALL)
+        if (grd(*ri) == DNGN_ROCK_WALL
+            && !map_masked(*ri, MMT_VAULT))
+        {
             grd(*ri) = DNGN_FLOOR;
+        }
 
     dungeon_feature_type pool_type = DNGN_DEEP_WATER;
 
