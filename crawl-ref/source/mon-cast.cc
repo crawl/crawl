@@ -60,10 +60,10 @@ const int MAX_ACTIVE_KRAKEN_TENTACLES = 4;
 
 static bool _valid_mon_spells[NUM_SPELLS];
 
-static int  _mons_mesmerise(monster* mons, bool actual = true);
-static int  _mons_cause_fear(monster* mons, bool actual = true);
 static bool _mons_drain_life(monster* mons, bool actual = true);
 static bool _mons_ozocubus_refrigeration(monster *mons, bool actual = true);
+static int  _mons_mesmerise(monster* mons, bool actual = true);
+static int  _mons_cause_fear(monster* mons, bool actual = true);
 
 void init_mons_spells()
 {
