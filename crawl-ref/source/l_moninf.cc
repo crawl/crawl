@@ -131,20 +131,15 @@ LUAFN(moninf_get_stabbability)
 LUAFN(moninf_get_is_constricted)
 {
     MONINF(ls, 1, mi);
-    lua_pushboolean(ls, (mi->constrictor_name.find("constricted by") == 0));
+    lua_pushboolean(ls, (mi->constrictor_name.find("constricted by") == 0)
+                     || (mi->constrictor_name.find("held by") == 0));
     return 1;
 }
 
 LUAFN(moninf_get_is_constricting)
 {
     MONINF(ls, 1, mi);
-    for (std::vector<std::string>::const_iterator it = mi->constricting_name.begin(); it != mi->constricting_name.end(); it++)
-        if ((*it).find("constricting") == 0)
-        {
-            lua_pushboolean(ls, true);
-            return 1;
-        }
-    lua_pushboolean(ls, false);
+    lua_pushboolean(ls, !mi->constricting_name.empty());
     return 1;
 }
 
@@ -161,6 +156,10 @@ LUAFN(moninf_get_is_constricting_you)
     lua_pushboolean(ls, (std::find(mi->constricting_name.begin(),
                                    mi->constricting_name.end(),
                                    "constricting you")
+                         != mi->constricting_name.end())
+                     || (std::find(mi->constricting_name.begin(),
+                                   mi->constricting_name.end(),
+                                   "holding you")
                          != mi->constricting_name.end()));
     return 1;
 }
