@@ -1047,6 +1047,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_TWISTED_RESURRECTION:
     case SPELL_SIMULACRUM:
     case SPELL_CALL_IMP:
+    case SPELL_SUMMON_MINOR_DEMON:
     case SPELL_SUMMON_SCORPIONS:
     case SPELL_SUMMON_SWARM:
     case SPELL_SUMMON_UFETUBUS:
@@ -3582,7 +3583,21 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         monster_simulacrum(mons, true);
         return;
 
-    case SPELL_CALL_IMP: // class 5 demons
+    case SPELL_CALL_IMP:
+        duration  = std::min(2 + mons->hit_dice / 5, 6);
+            create_monster(
+                mgen_data(random_choose_weighted(
+                            1, MONS_IRON_IMP,
+                            2, MONS_SHADOW_IMP,
+                            2, MONS_WHITE_IMP,
+                            4, MONS_CRIMSON_IMP,
+                            0),
+                          SAME_ATTITUDE(mons), mons,
+                          duration, spell_cast, mons->pos(), mons->foe, 0,
+                          god));
+        return;
+
+    case SPELL_SUMMON_MINOR_DEMON: // class 5 demons
         sumcount2 = 1 + random2(3);
 
         duration  = std::min(2 + mons->hit_dice / 5, 6);
