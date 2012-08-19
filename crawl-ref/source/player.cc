@@ -3517,10 +3517,6 @@ void level_change(bool skip_attribute_increase)
 #endif
         }
 
-#if TAG_MAJOR_VERSION <= 33
-        note_montiers();
-#endif
-
         const int old_hp = you.hp;
         const int old_maxhp = you.hp_max;
         const int old_mp = you.magic_points;
@@ -5806,11 +5802,6 @@ void player::init()
     delay_queue.clear();
 
     last_keypress_time = time(0);
-
-#if TAG_MAJOR_VERSION <= 33
-    for (unsigned int i = 0; i < ARRAYSZ(montiers); i++)
-        montiers[i] = 0;
-#endif
 
     action_count.clear();
 

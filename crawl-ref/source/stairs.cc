@@ -559,11 +559,7 @@ level_id stair_destination(dungeon_feature_type feat, const std::string &dst,
     case DNGN_EXIT_PANDEMONIUM:
         if (you.level_stack.empty())
         {
-#if TAG_MAJOR_VERSION == 33
-            if (you.wizard || you.props.exists("ticket_to_D:1"))
-#else
             if (you.wizard)
-#endif
             {
                 if (for_real)
                 {

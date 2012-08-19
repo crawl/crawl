@@ -199,8 +199,5 @@ int exp_rate(int killer);
 int count_monsters(monster_type mtyp, bool friendlyOnly);
 int count_allies();
 void record_monster_defeat(monster* mons, killer_type killer);
-#if TAG_MAJOR_VERSION <= 33
-void note_montiers();
-#endif
 
 #endif

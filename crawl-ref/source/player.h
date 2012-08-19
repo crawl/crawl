@@ -264,10 +264,6 @@ public:
   // (e.g. name of item, for scrolls of RC, ID, EA)
   CrawlHashTable type_id_props;
 
-#if TAG_MAJOR_VERSION <= 33
-  int montiers[5]; // four monster tiers, plus corpse count
-#endif
-
   // The version the save was last played with.
   std::string prev_save_version;
 

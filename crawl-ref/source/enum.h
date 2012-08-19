@@ -233,9 +233,6 @@ enum attribute_type
     ATTR_DIVINE_REGENERATION,
     ATTR_DIVINE_DEATH_CHANNEL,
     ATTR_CARD_COUNTDOWN,
-#if TAG_MAJOR_VERSION == 33
-    ATTR_UNUSED_1,
-#endif
     ATTR_BANISHMENT_IMMUNITY,   // banishment immunity until
     ATTR_DELAYED_FIREBALL,      // bwr: reserve fireballs
     ATTR_HELD,                  // caught in a net
@@ -479,9 +476,6 @@ enum branch_type                // you.where_are_you
     BRANCH_ICE_CAVE,
     BRANCH_VOLCANO,
     BRANCH_WIZLAB,
-#if TAG_MAJOR_VERSION == 33
-    BRANCH_HIVE,
-#endif
     NUM_BRANCHES
 };
 
@@ -1180,11 +1174,7 @@ enum dungeon_feature_type
     DNGN_CLOSED_DOOR,
     DNGN_DETECTED_SECRET_DOOR,
     DNGN_SECRET_DOOR,
-#if TAG_MAJOR_VERSION == 33
-    DNGN_OLD_WAX_WALL,
-#else
     DNGN_MANGROVE,
-#endif
     DNGN_METAL_WALL,
         DNGN_MINWALL = DNGN_METAL_WALL,
     DNGN_GREEN_CRYSTAL_WALL,
@@ -1201,13 +1191,7 @@ enum dungeon_feature_type
         DNGN_MAXWALL = DNGN_CLEAR_PERMAROCK_WALL,
     DNGN_GRATE,
     DNGN_TREE,
-#if TAG_MAJOR_VERSION == 33
-    DNGN_MANGROVE,
-        // Highest grid value which can't be reached through.
-        DNGN_MAX_NONREACH = DNGN_MANGROVE,
-#else
         DNGN_MAX_NONREACH = DNGN_TREE,
-#endif
 
     DNGN_OPEN_SEA,                     // Shoals equivalent for permarock
     DNGN_LAVA_SEA,                     // Gehenna equivalent for permarock
@@ -2030,9 +2014,6 @@ enum monster_type                      // menv[].type
     MONS_WORKER_ANT,
     MONS_SOLDIER_ANT,
     MONS_QUEEN_ANT,
-#if TAG_MAJOR_VERSION == 33
-    MONS_KILLER_BEE_LARVA,
-#endif
     MONS_KILLER_BEE,
     MONS_QUEEN_BEE,
     MONS_VAMPIRE_MOSQUITO,
@@ -2269,9 +2250,6 @@ enum monster_type                      // menv[].type
     MONS_LEMURE,
     MONS_UFETUBUS,
     MONS_IRON_IMP,
-#if TAG_MAJOR_VERSION == 33
-    MONS_MIDGE,
-#endif
     MONS_SHADOW_IMP,
     MONS_RED_DEVIL,
     MONS_ROTTING_DEVIL,
@@ -2406,9 +2384,6 @@ enum monster_type                      // menv[].type
     MONS_ERICA,
     MONS_JOSEPHINE,
     MONS_HAROLD,
-#if TAG_MAJOR_VERSION == 33
-    MONS_JOZEF,
-#endif
     MONS_AGNES,
     MONS_MAUD,
     MONS_LOUISE,
@@ -3101,9 +3076,6 @@ enum spell_type
     SPELL_CURE_POISON,
     SPELL_CONTROL_TELEPORT,
     SPELL_POISON_WEAPON,
-#if TAG_MAJOR_VERSION == 33
-    SPELL_PROJECTED_NOISE,
-#endif
     SPELL_DEBUGGING_RAY,
     SPELL_RECALL,
     SPELL_AGONY,
@@ -3210,9 +3182,6 @@ enum spell_type
     SPELL_HOLY_LIGHT,
     SPELL_HOLY_WORD,
     SPELL_SUMMON_HOLIES,
-#if TAG_MAJOR_VERSION == 33
-    SPELL_SUMMON_GREATER_HOLY,
-#endif
     SPELL_HEAL_OTHER,
     SPELL_SACRIFICE,
     SPELL_HOLY_FLAMES,
@@ -3288,9 +3257,6 @@ enum trap_type                         // env.trap_type[]
     TRAP_DART,
     TRAP_ARROW,
     TRAP_SPEAR,
-#if TAG_MAJOR_VERSION == 33
-    TRAP_AXED,
-#endif
     TRAP_TELEPORT,
     TRAP_ALARM,
     TRAP_BLADE,

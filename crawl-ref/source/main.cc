@@ -382,13 +382,6 @@ static void _launch_game()
 
     if (!game_start && you.prev_save_version != Version::Long())
     {
-#if TAG_MAJOR_VERSION == 33
-        if (numcmp(you.prev_save_version.c_str(), "0.11-a0-1711") == -1)
-        {
-            dprf("Will allow level_stack underflows.");
-            you.props["ticket_to_D:1"] = true;
-        }
-#endif
         snprintf(info, INFO_SIZE, "Upgraded the game from %s to %s",
                                   you.prev_save_version.c_str(),
                                   Version::Long().c_str());

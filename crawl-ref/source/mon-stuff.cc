@@ -415,11 +415,6 @@ int place_monster_corpse(const monster* mons, bool silent,
         return -1;
     }
 
-#if TAG_MAJOR_VERSION <= 33
-    // Ok, so there's a corpse (possibly exploded/drowned), count it.
-    you.montiers[4]++;
-#endif
-
     if (mons && mons_is_phoenix(mons))
         corpse.props["destroy_xp"].get_int() = _calc_player_experience(mons);
 
@@ -525,21 +520,6 @@ void record_monster_defeat(monster* mons, killer_type killer)
                        + ".");
     }
 }
-
-#if TAG_MAJOR_VERSION <= 33
-void note_montiers()
-{
-#if 0
-    char buf[128];
-    snprintf(buf, sizeof(buf), "Killed monsters: %d trivial, %d easy, "
-        "%d tough, %d nasty; %d corpses", you.montiers[0], you.montiers[1],
-        you.montiers[2], you.montiers[3], you.montiers[4]);
-    take_note(Note(NOTE_MESSAGE, 0, 0, buf));
-#endif
-    for (unsigned int i = 0; i < ARRAYSZ(you.montiers); i++)
-        you.montiers[i] = 0;
-}
-#endif
 
 static int _calc_monster_experience(monster* victim, killer_type killer,
                                     int killer_index)
@@ -1577,11 +1557,6 @@ int monster_die(monster* mons, killer_type killer,
         ASSERT(!crawl_state.game_is_arena());
         killer = KILL_YOU_CONF; // Well, it was confused in a sense... (jpeg)
     }
-
-#if TAG_MAJOR_VERSION <= 33
-    if (gives_xp && !mons_reset)
-        you.montiers[mons_threat_level(mons, true)]++;
-#endif
 
     // Take notes and mark milestones.
     record_monster_defeat(mons, killer);

@@ -347,9 +347,6 @@ const char* card_name(card_type card)
     case CARD_ALCHEMIST:       return "the Alchemist";
     case CARD_ORB:             return "the Orb";
     case CARD_MERCENARY:       return "the Mercenary";
-#if TAG_MAJOR_VERSION == 33
-    case CARD_REMOVED_1:
-#endif
     case NUM_CARDS:            return "a buggy card";
     }
     return "a very buggy card";
@@ -3047,9 +3044,6 @@ void card_effect(card_type which_card, deck_rarity_type rarity,
         }
         break;
 
-#if TAG_MAJOR_VERSION == 33
-    case CARD_REMOVED_1:
-#endif
     case NUM_CARDS:
         // The compiler will complain if any card remains unhandled.
         mprf("You have %s a buggy card!", participle);

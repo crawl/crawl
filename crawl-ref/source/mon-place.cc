@@ -3660,18 +3660,11 @@ static void _get_vault_mon_list(std::vector<mons_spec> &list)
 
     ASSERT(props.exists(VAULT_MON_BASES_KEY));
     ASSERT(props.exists(VAULT_MON_WEIGHTS_KEY));
-#if TAG_MAJOR_VERSION > 33
-    ASSERT(props.exists(VAULT_MON_BANDS_KEY));
-#endif
 
     CrawlVector &type_vec   = props[VAULT_MON_TYPES_KEY].get_vector();
     CrawlVector &base_vec   = props[VAULT_MON_BASES_KEY].get_vector();
     CrawlVector &weight_vec = props[VAULT_MON_WEIGHTS_KEY].get_vector();
-#if TAG_MAJOR_VERSION <= 33
-    if (!props.exists(VAULT_MON_BANDS_KEY))
-        props[VAULT_MON_BANDS_KEY].new_vector(SV_BOOL).resize(type_vec.size());
-#endif
-    CrawlVector &band_vec  = props[VAULT_MON_BANDS_KEY].get_vector();
+    CrawlVector &band_vec   = props[VAULT_MON_BANDS_KEY].get_vector();
 
     ASSERT(type_vec.size() == base_vec.size());
     ASSERT(type_vec.size() == weight_vec.size());
