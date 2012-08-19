@@ -64,6 +64,7 @@ static bool _mons_drain_life(monster* mons, bool actual = true);
 static bool _mons_ozocubus_refrigeration(monster *mons, bool actual = true);
 static int  _mons_mesmerise(monster* mons, bool actual = true);
 static int  _mons_cause_fear(monster* mons, bool actual = true);
+static coord_def _mons_fragment_target(monster *mons);
 
 void init_mons_spells()
 {
@@ -1140,6 +1141,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_DEATHS_DOOR:
     case SPELL_OZOCUBUS_ARMOUR:
     case SPELL_OZOCUBUS_REFRIGERATION:
+    case SPELL_FRAGMENTATION:
         return true;
     default:
         if (check_validity)
@@ -2230,6 +2232,12 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             if (!_mons_ozocubus_refrigeration(mons, false))
                 return false;
         }
+        // See if we have a good spot to cast LRD at.
+        else if (spell_cast == SPELL_FRAGMENTATION)
+        {
+            if (!in_bounds(_mons_fragment_target(mons)))
+                return false;
+        }
 
         if (mons->type == MONS_BALL_LIGHTNING)
             mons->suicide();
@@ -2973,6 +2981,48 @@ static bool _mons_ozocubus_refrigeration(monster* mons, bool actual)
     return success;
 }
 
+static coord_def _mons_fragment_target(monster *mons)
+{
+    coord_def target(GXM+1, GYM+1);
+    int pow = 4 * mons->hit_dice;
+    int range = spell_range(SPELL_FRAGMENTATION, pow, false);
+    int maxpower = 0;
+    for (distance_iterator di(mons->pos(), true, true, range); di; ++di)
+    {
+        bool temp;
+
+        if (!cell_see_cell(mons->pos(), *di, LOS_SOLID))
+            continue;
+
+        bolt beam;
+        if (!setup_fragmentation_beam(beam, pow, mons, *di, false, true, true,
+                                      NULL, temp, temp))
+            continue;
+
+        beam.range = range;
+        fire_tracer(mons, beam, true);
+        if (!mons_should_fire(beam))
+            continue;
+
+        bolt beam2;
+        if (!setup_fragmentation_beam(beam2, pow, mons, *di, false, false, true,
+                                      NULL, temp, temp))
+            continue;
+
+        beam2.range = range;
+        fire_tracer(mons, beam2, true);
+
+        if (beam2.foe_info.count > 0
+            && beam2.foe_info.power > maxpower)
+        {
+            maxpower = beam2.foe_info.power;
+            target = *di;
+        }
+    }
+
+    return target;
+}
+
 static bool _mon_spell_bail_out_early(monster* mons, spell_type spell_cast)
 {
     // single calculation permissible {dlb}
@@ -3676,6 +3726,17 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_OZOCUBUS_REFRIGERATION:
         _mons_ozocubus_refrigeration(mons);
         return;
+
+    case SPELL_FRAGMENTATION:
+    {
+        const coord_def target = _mons_fragment_target(mons);
+        if (in_bounds(target))
+        {
+           cast_fragmentation(4 * mons->hit_dice, mons, target, false);
+        }
+
+        return;
+    }
 
     case SPELL_LEDAS_LIQUEFACTION:
         if (!mons->has_ench(ENCH_LIQUEFYING) && you.can_see(mons))
@@ -4561,7 +4622,9 @@ void mons_cast_noise(monster* mons, const bolt &pbolt,
 
     const bool targeted = (flags & SPFLAG_TARGETTING_MASK)
                            && (pbolt.target != mons->pos()
-                               || pbolt.visible());
+                               || pbolt.visible())
+                           // ugh. --Grunt
+                           && (actual_spell != SPELL_FRAGMENTATION);
 
     std::vector<std::string> key_list;
     unsigned int num_spell_keys =
