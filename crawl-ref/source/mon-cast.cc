@@ -65,6 +65,7 @@ static bool _mons_ozocubus_refrigeration(monster *mons, bool actual = true);
 static int  _mons_mesmerise(monster* mons, bool actual = true);
 static int  _mons_cause_fear(monster* mons, bool actual = true);
 static coord_def _mons_fragment_target(monster *mons);
+static bool _mons_shatter(monster *mons, bool actual = true);
 
 void init_mons_spells()
 {
@@ -1142,6 +1143,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_OZOCUBUS_ARMOUR:
     case SPELL_OZOCUBUS_REFRIGERATION:
     case SPELL_FRAGMENTATION:
+    case SPELL_SHATTER:
         return true;
     default:
         if (check_validity)
@@ -2238,6 +2240,12 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             if (!in_bounds(_mons_fragment_target(mons)))
                 return false;
         }
+        // Try to cast Shatter; if nothing happened, pretend we didn't cast it.
+        else if (spell_cast == SPELL_SHATTER)
+        {
+            if (!_mons_shatter(mons, false))
+                return false;
+        }
 
         if (mons->type == MONS_BALL_LIGHTNING)
             mons->suicide();
@@ -3023,6 +3031,53 @@ static coord_def _mons_fragment_target(monster *mons)
     return target;
 }
 
+static bool _mons_shatter(monster* mons, bool actual)
+{
+    const bool silence = silenced(mons->pos());
+    bool success = false;
+
+    if (actual)
+    {
+        if (silence)
+            mprf("The dungeon shakes around %s!",
+                 mons->name(DESC_THE).c_str());
+        else
+        {
+            noisy(30, mons->pos(), mons->mindex());
+            mprf(MSGCH_SOUND, "The dungeon rumbles around %s!",
+                 mons->name(DESC_THE).c_str());
+        }
+    }
+
+    int pow = 5 + mons->skill(SK_EARTH_MAGIC, 3);
+    int rad = 3 + mons->skill_rdiv(SK_EARTH_MAGIC, 1, 5);
+
+    int dest = 0;
+    for (distance_iterator di(mons->pos(), true, true, rad); di; ++di)
+    {
+        // goes from the center out, so newly dug walls recurse
+        if (!cell_see_cell(mons->pos(), *di, LOS_SOLID))
+            continue;
+
+        if ((you.pos() == *di) || (monster_at(*di)))
+            success = true; // for checking whether to cast it or not
+
+        if (actual)
+        {
+            shatter_items(*di, pow, mons);
+            shatter_monsters(*di, pow, mons);
+            if (*di == you.pos())
+                shatter_player(pow, mons);
+            dest += shatter_walls(*di, pow, mons);
+        }
+    }
+
+    if (dest && !silence)
+        mpr("Ka-crash!", MSGCH_SOUND);
+
+    return success;
+}
+
 static bool _mon_spell_bail_out_early(monster* mons, spell_type spell_cast)
 {
     // single calculation permissible {dlb}
@@ -3042,6 +3097,7 @@ static bool _mon_spell_bail_out_early(monster* mons, spell_type spell_cast)
     case SPELL_SYMBOL_OF_TORMENT:
     case SPELL_HOLY_WORD:
     case SPELL_OZOCUBUS_REFRIGERATION:
+    case SPELL_SHATTER:
         if (!monsterNearby
             // friendly holies don't care if you are friendly
             || (mons->friendly() && spell_cast != SPELL_HOLY_WORD))
@@ -3731,12 +3787,14 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     {
         const coord_def target = _mons_fragment_target(mons);
         if (in_bounds(target))
-        {
            cast_fragmentation(4 * mons->hit_dice, mons, target, false);
-        }
 
         return;
     }
+
+    case SPELL_SHATTER:
+        _mons_shatter(mons);
+        return;
 
     case SPELL_LEDAS_LIQUEFACTION:
         if (!mons->has_ench(ENCH_LIQUEFYING) && you.can_see(mons))

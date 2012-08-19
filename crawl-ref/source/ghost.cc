@@ -110,6 +110,7 @@ static spell_type search_order_third[] = {
 // this fails, go through conjurations.  Note: Dig must be in misc2
 // (5th) position to work.
 static spell_type search_order_misc[] = {
+    SPELL_SHATTER,
     SPELL_AGONY,
     SPELL_BANISHMENT,
     SPELL_FREEZING_CLOUD,
