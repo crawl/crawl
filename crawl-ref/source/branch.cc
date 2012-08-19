@@ -80,9 +80,5 @@ branch_type get_branch_at(const coord_def& pos)
 
 bool branch_is_unfinished(branch_type branch)
 {
-    return branch == BRANCH_FOREST || branch == BRANCH_DWARVEN_HALL
-#if TAG_MAJOR_VERSION == 33
-           || branch == BRANCH_HIVE
-#endif
-           ;
+    return branch == BRANCH_FOREST || branch == BRANCH_DWARVEN_HALL;
 }

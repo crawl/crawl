@@ -4585,11 +4585,9 @@ static bool _dgn_place_one_monster(const vault_placement &place,
 static dungeon_feature_type _glyph_to_feat(int glyph,
                                            vault_placement *place = NULL)
 {
-#if TAG_MAJOR_VERSION == 33
-    // not really related to save compat
+    // Please purge this some day.
     if (glyph == 'a')
         die("map %s tried to place a wax wall", place ? place->map.name.c_str() : "[NULL]");
-#endif
     return ((glyph == 'x') ? DNGN_ROCK_WALL :
             (glyph == 'X') ? DNGN_PERMAROCK_WALL :
             (glyph == 'c') ? DNGN_STONE_WALL :
@@ -5463,9 +5461,6 @@ static bool _place_specific_trap(const coord_def& where, trap_spec* spec, int ch
     bool no_shaft = no_tele || !is_valid_shaft_level();
 
     while (spec_type >= NUM_TRAPS
-#if TAG_MAJOR_VERSION == 33
-           || spec_type == TRAP_AXED
-#endif
            || no_tele && spec_type == TRAP_TELEPORT
            || no_shaft && spec_type == TRAP_SHAFT)
     {

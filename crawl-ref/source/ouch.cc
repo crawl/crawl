@@ -1365,10 +1365,6 @@ void ouch(int dam, int death_source, kill_method_type death_type,
     crawl_state.need_save       = false;
     crawl_state.updating_scores = true;
 
-#if TAG_MAJOR_VERSION <= 33
-    note_montiers();
-#endif
-
     // Prevent bogus notes.
     activate_notes(false);
 

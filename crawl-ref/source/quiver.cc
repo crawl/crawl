@@ -491,15 +491,7 @@ void player_quiver::load(reader& inf)
     ASSERT(count <= ARRAYSZ(m_last_used_of_type));
 
     for (unsigned int i = 0; i < count; i++)
-    {
         unmarshallItem(inf, m_last_used_of_type[i]);
-#if TAG_MAJOR_VERSION == 33
-        // We haven't always been so careful about making sure this was
-        // either OBJ_UNASSIGNED or valid.
-        if (m_last_used_of_type[i].quantity == 0)
-            m_last_used_of_type[i].base_type = OBJ_UNASSIGNED;
-#endif
-    }
 }
 
 // ----------------------------------------------------------------------

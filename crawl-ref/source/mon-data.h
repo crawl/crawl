@@ -192,11 +192,7 @@ static monsterentry mondata[] = {
 },
 
 // Axed monsters.
-
-#if TAG_MAJOR_VERSION == 33
-    AXED_MON(MONS_JOZEF)
-    AXED_MON(MONS_MIDGE)
-#endif
+// AXED_MON(MONS_MOTHER_IN_LAW)
 
 // Real monsters begin here {dlb}:
 

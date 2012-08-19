@@ -320,17 +320,6 @@ const Branch branches[NUM_BRANCHES] = {
       false, LIGHTGREY, BROWN, // set per-map
       mons_null_rare, mons_null_level,
       '8', false, 0 },
-
-#if TAG_MAJOR_VERSION == 33
-    { BRANCH_HIVE,/*gone*/ NUM_BRANCHES, -1, -1, 1, 13,
-      BFLAG_NO_XLEV_TRAVEL, 0,
-      DNGN_ENTER_PORTAL_VAULT, DNGN_EXIT_PORTAL_VAULT,
-      "Hive", "a hive", "Hive",
-      "You hear a buzzing sound coming from all directions.",
-      false, YELLOW, BROWN,
-      mons_null_rare, mons_null_level,
-      'H', true, 5 },
-#endif
 };
 
 #endif

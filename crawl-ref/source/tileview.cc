@@ -83,13 +83,6 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
         flv.floor = TILE_FLOOR_NORMAL;
         return;
 
-#if TAG_MAJOR_VERSION == 33
-    case BRANCH_HIVE:
-        flv.wall  = TILE_WALL_WAX;
-        flv.floor = TILE_FLOOR_ORC;
-        return;
-#endif
-
     case BRANCH_VAULTS:
         flv.wall  = TILE_WALL_VAULT;
         flv.floor = TILE_FLOOR_VAULT;

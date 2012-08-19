@@ -1239,21 +1239,6 @@ struct spell_desc
      true
 },
 
-#if TAG_MAJOR_VERSION == 33
-{
-    SPELL_PROJECTED_NOISE, "Projected Noise",
-     SPTYP_HEXES,
-     SPFLAG_NONE,
-     2,
-     0,
-     LOS_RADIUS, LOS_RADIUS,
-     0,
-     NULL,
-     false,
-     false
-},
-#endif
-
 {
     SPELL_DEBUGGING_RAY, "Debugging Ray",
      SPTYP_CONJURATION,
@@ -2636,21 +2621,6 @@ struct spell_desc
      false,
      false
 },
-
-#if TAG_MAJOR_VERSION == 33
-{
-    SPELL_SUMMON_GREATER_HOLY, "Summon Greater Holy",
-     SPTYP_SUMMONING,
-     SPFLAG_MONSTER,
-     9,
-     0,
-     -1, -1,
-     0,
-     NULL,
-     false,
-     false
-},
-#endif
 
 {
     SPELL_HOLY_WORD, "Holy Word",

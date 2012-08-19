@@ -537,7 +537,7 @@ static std::string _randart_descrip(const item_def &item)
 
 static const char *trap_names[] =
 {
-    "dart", "arrow", "spear", "axe",
+    "dart", "arrow", "spear",
     "teleport", "alarm", "blade",
     "bolt", "net", "Zot", "needle",
     "shaft", "passage", "pressure plate", "web", "gas",

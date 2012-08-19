@@ -784,18 +784,7 @@ void Stash::load(reader& inf)
 
     feat =  static_cast<dungeon_feature_type>(unmarshallUByte(inf));
     trap =  static_cast<trap_type>(unmarshallUByte(inf));
-#if TAG_MAJOR_VERSION == 33
-    if (trap == TRAP_AXED)
-        trap = TRAP_SPEAR;
-
-    if (inf.getMinorVersion() < TAG_MINOR_STASH_FEATDESC)
-    {
-        feat_desc = (is_boring_feature(feat)
-                     ? "" : ::feature_description(feat, trap));
-    }
-    else
-        feat_desc = unmarshallString(inf);
-#endif
+    feat_desc = unmarshallString(inf);
 
     uint8_t flags = unmarshallUByte(inf);
     verified = (flags & 1) != 0;
