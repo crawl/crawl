@@ -1,5 +1,6 @@
 #include "AppHdr.h"
 #include "env.h"
+#include "libutil.h"
 #include "rng.h"
 #include "dgn-voronoi.h"
 #include "dgn-nolithius.h"
@@ -33,9 +34,11 @@ static wchar_t dchar(dungeon_feature_type g)
 
 void draw()
 {
+    int gxm = std::min(GXM, term_width());
+
     for (int y=0; y<GYM; y++)
     {
-        for (int x=0; x<GXM; x++)
+        for (int x=0; x<gxm; x++)
             printf("%C", dchar(grd[x][y]));
         printf("\n");
     }

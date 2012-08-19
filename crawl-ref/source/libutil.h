@@ -13,4 +13,6 @@ static inline int sqr(int x)
 {
     return x * x;
 }
+
+int term_width();
 #endif
