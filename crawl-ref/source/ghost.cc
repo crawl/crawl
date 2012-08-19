@@ -834,7 +834,7 @@ spell_type ghost_demon::translate_spell(spell_type spell) const
     case SPELL_CONTROLLED_BLINK:
         return SPELL_BLINK;        // approximate
     case SPELL_DEMONIC_HORDE:
-        return SPELL_CALL_IMP;
+        return SPELL_SUMMON_MINOR_DEMON;
     case SPELL_DELAYED_FIREBALL:
         return SPELL_FIREBALL;
     default:
