@@ -1032,7 +1032,7 @@ KFEAT:  Q = weapon shop type:Weapon suffix:Rack count:17 use_all greed:30 ; \
             mundane not_cursed demon trident | mundane not_cursed bardiche |\
             mundane not_cursed lajatang | staff of fire | staff of air |\
             staff of earth | staff of cold | staff of poison | staff of death
-KFEAT:  H = distillery shop type:Bottled suffix:Wisdom count:5 use_all greed:5 ; \
+KFEAT:  H = distillery shop type:Bottled suffix:Wisdom count:5 use_all greed:6 ; \
             potion of experience | potion of experience |\
             potion of experience q:2 | potion of experience q:3 |\
             potion of experience q:3
