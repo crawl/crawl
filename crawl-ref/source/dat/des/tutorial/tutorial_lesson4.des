@@ -13,7 +13,6 @@ tutorial_msg4 = {}
 
 function tutorial_msg4.start ()
     tutorial_intro("In this lesson you're going to learn how to learn and cast spells.")
-    crawl.tutorial_hint("HINT_NEW_LEVEL")
 end
 
 function tutorial_msg4.spellbook ()
@@ -86,31 +85,21 @@ function tutorial_msg4.spell_success ()
     return tutorial_message(text)
 end
 
-function tutorial_msg4.evaporate ()
-    return tutorial_message("Bad potions can be launched at monsters by way "
-                            .. "of the Evaporate spell. When that spell is "
-                            .. "memorised, examining a potion gives a hint of "
-                            .. "the clouds it can produce.\n"
-                            .. "Buy the potions to make use of them!")
+function tutorial_msg4.mephitic_cloud ()
+    return tutorial_message("Mephitic Cloud is a level 3 spell, so you can't "
+                            .. "memorise it yet. Quaff this potion of experience (with "
+                            .. tutorial_get_cmd("CMD_QUAFF")
+                            .. ") to level up, and then memorise it!\n"
+                            .. "At experience level 3, you'll be able to increase one of "
+                            .. "your stats - choosing <w>I</w>ntelligence will help your "
+                            .. "spellcasting even further.")
 end
 
 function tutorial_msg4.aiming_clouds ()
-    local text = "When casting Evaporate (with "
-                 .. tutorial_get_cmd("CMD_CAST_SPELL")
-
-    if crawl.is_tiles() and not crawl.is_webtiles() then
-        text = text .. " or by <white>clicking</white> on the spell tile"
-    end
-
-    text = text .. "), you need to first select a potion to vaporise and "
-                .. "then select a target for the resulting clouds. For the "
-                .. "latter, you can directly aim at monsters, but you also "
-                .. "can target any other square within both line of sight "
-                .. "and spell range.\n"
-                .. "Note that the spell will expand into a cloud on the "
-                .. "first monster in its path."
-
-    return tutorial_message(text)
+    return tutorial_message("Mephitic Cloud covers an area in noxious fumes when "
+                            .. "cast, and you'll be able to see the area it affects as "
+                            .. "you target it. Try to catch multiple enemies in a single "
+                            .. "cloud in order to be more efficient with your magic.")
 end
 
 function tutorial_msg4.spell_hunger ()
@@ -214,7 +203,7 @@ function tutorial_msg4.resting_reminder ()
         text = text .. " or by <white>mouseclick</white> in the command panel"
     end
     text = text .. ".\n"
-                .. "Also, undead don't breathe, so you can cast Evaporate "
+                .. "Also, undead don't breathe, so you can cast Mephitic Cloud "
                 .. "without harming your allies."
 
     return tutorial_message(text)
@@ -260,14 +249,12 @@ TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen 
 DESC:    "Lesson 4: Magic and Spellcasting"
 ORIENT:  encompass
 KFEAT:   ABCDE = .
-KFEAT:   S = distillery shop count:8 ; \
-         potion of slowing | w:20 potion of confusion | potion of poison | potion of paralysis
-COLOUR:  ABCDdefh = lightblue
-FTILE:   ABCDdefh = tutorial_pad
-ITEM:    randbook numspells:2 spells:magic_dart|evaporate title:Introduction_to_Spellcasting owner:player
+COLOUR:  ABCDdefgh = lightblue
+FTILE:   ABCDdefgh = tutorial_pad
+ITEM:    randbook numspells:2 spells:magic_dart|mephitic_cloud title:Introduction_to_Spellcasting owner:player
 ITEM:    ring of magical power not_cursed
 ITEM:    staff of wizardry not_cursed
-ITEM:    gold q:100
+ITEM:    potion of experience ident:type
 ITEM:    bread ration
 MONS:    training dummy ; stone q:20
 MONS:    bat skeleton, goblin skeleton
@@ -277,7 +264,7 @@ MARKER:  B = lua:tutorial_msg4.spellcasting()
 MARKER:  e = lua:tutorial_msg4.ring_power()
 MARKER:  C = lua:tutorial_msg4.undead()
 MARKER:  f = lua:tutorial_msg4.spell_success()
-MARKER:  S = lua:tutorial_msg4.evaporate()
+MARKER:  g = lua:tutorial_msg4.mephitic_cloud()
 MARKER:  D = lua:tutorial_msg4.aiming_clouds()
 MARKER:  h = lua:tutorial_msg4.spell_hunger()
 MARKER:  { = lua:one_way_stair { dst  = "tutorial_lesson4", \
@@ -299,12 +286,12 @@ xxxxxxxxxxxxxxBxxxxxxxxxxx.2..xxxxxxxx.....xxxxxxxxxx
 xxxxxxxxxxxxx..wwwxxxxxxxx....xxxxxxxxxxxxx.3...xxxxx
 xxxxxxxxxxxxx..ww1xxxxxxx.xxxxxxxxxxxxxxxx.......xxxx
 xxxxxxxxxxxxx..wwwxxxxx..xxxxxxxxxxxxxxxxx.2...xxxxxx
-xxxxxxxxxxxxx..wwwxxx.Cxxxxxxxxxxxxxxxxxxxxx.gxxxxxxx
+xxxxxxxxxxxxx..wwwxxx.Cxxxxxxxxxxxxxxxxxxxxx..xxxxxxx
 xxxxxxxxxxxxx......e.xxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.S.xxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.g.xxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxx
