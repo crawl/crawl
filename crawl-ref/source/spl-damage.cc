@@ -1737,7 +1737,6 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
     monster* mon = monster_at(target);
     const dungeon_feature_type grid = grd(target);
 
-#if 0
     if (target == you.pos())
     {
         const bool petrifying = you.petrifying();
@@ -1777,7 +1776,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
 
         goto do_terrain;
     }
-#endif
+
     // Set up the explosion if there's a visible monster.
     if (mon && (caster->is_monster() || (you.can_see(mon))))
     {
@@ -2064,6 +2063,15 @@ spret_type cast_fragmentation(int pow, const actor *caster,
         mprf("The %s shatters!", what);
         if (destroy_wall)
             nuke_wall(target);
+    }
+    else if (target == you.pos()) // You explode.
+    {
+        mpr("You shatter!");
+
+        ouch(beam.damage.roll(), caster->mindex(), KILLED_BY_BEAM,
+             "by Lee's Rapid Deconstruction", true,
+             caster->is_player() ? "themself"
+                                 : caster->name(DESC_A).c_str());
     }
     else // Monster explodes.
     {
