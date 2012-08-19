@@ -10,6 +10,7 @@
 #include "dgn-deposit.h"
 #include "dgn-dragon.h"
 #include "dgn-turbulent.h"
+#include "dgn-circles.h"
 #include <locale.h>
 
 static wchar_t dchar(dungeon_feature_type g)
@@ -52,8 +53,7 @@ int main()
     setlocale(LC_CTYPE, "");
     grd.init(DNGN_ROCK_WALL);
     seed_rng();
-    int m = random2(256) + 1;
-    layout_turbulent(m);
+    layout_circles(30);
     draw();
     return 0;
 }
