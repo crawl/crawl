@@ -530,8 +530,7 @@ static int _acquirement_weapon_subtype(bool divine)
         if (!acqweight)
             continue;
 
-        // HANDS_DOUBLE > HANDS_TWO, but it's currently never returned.
-        const bool two_handed = hands_reqd(item_considered, you.body_size()) >= HANDS_TWO;
+        const bool two_handed = hands_reqd(item_considered, you.body_size()) == HANDS_TWO;
 
         // For non-Trog/Okawaru acquirements, give a boost to high-end items.
         if (!divine && !is_range_weapon(item_considered))
