@@ -2717,7 +2717,8 @@ bool gives_resistance(const item_def &item)
     }
     case OBJ_STAVES:
         if (item.sub_type >= STAFF_FIRE && item.sub_type <= STAFF_POISON
-            || item.sub_type == STAFF_AIR)
+            || item.sub_type == STAFF_AIR
+            || item.sub_type == STAFF_DEATH)
         {
             return true;
         }
