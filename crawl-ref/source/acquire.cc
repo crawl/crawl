@@ -1049,6 +1049,13 @@ static bool _do_book_acquirement(item_def &book, int agent)
                 continue;
             }
 
+#if TAG_MAJOR_VERSION == 34
+            if (bk == BOOK_STALKING)
+            {
+                weights[bk] = 0;
+                continue;
+            }
+#endif
             weights[bk]    = _book_weight(static_cast<book_type>(bk));
             total_weights += weights[bk];
         }

@@ -269,29 +269,6 @@ bolt mons_spells(monster* mons, spell_type spell_cast, int power,
     if (spell_cast == SPELL_DRACONIAN_BREATH)
         real_spell = _draco_type_to_breath(drac_type);
 
-     if (spell_cast == SPELL_EVAPORATE)
-     {
-        int cloud = random2(5);
-        switch (cloud)
-        {
-            case 0:
-                real_spell = SPELL_MEPHITIC_CLOUD;
-                break;
-            case 1:
-                real_spell = SPELL_MIASMA_CLOUD;
-                break;
-            case 2:
-                real_spell = SPELL_POISON_CLOUD;
-                break;
-            case 3:
-                real_spell = SPELL_FIRE_CLOUD;
-                break;
-            default:
-                real_spell = SPELL_STEAM_CLOUD;
-                break;
-        }
-    }
-
     beam.glyph = dchar_glyph(DCHAR_FIRED_ZAP); // default
     beam.thrower = KILL_MON_MISSILE;
     beam.origin_spell = real_spell;
@@ -725,10 +702,7 @@ bolt mons_spells(monster* mons, spell_type spell_cast, int power,
         break;
 
     case SPELL_MEPHITIC_CLOUD:
-          if (spell_cast == SPELL_EVAPORATE)
-              beam.name     = "potion";
-          else
-              beam.name     = "foul vapour";
+        beam.name     = "foul vapour";
         beam.damage   = dice_def(1, 0);
         beam.colour   = GREEN;
         // Well, it works, even if the name isn't quite intuitive.
@@ -740,10 +714,7 @@ bolt mons_spells(monster* mons, spell_type spell_cast, int power,
         break;
 
     case SPELL_STEAM_CLOUD:
-          if (spell_cast == SPELL_EVAPORATE)
-              beam.name     = "potion";
-          else
-              beam.name     = "cloud of steam";
+        beam.name     = "cloud of steam";
         beam.damage   = dice_def(1, 0);
         beam.colour   = LIGHTGREY;
         beam.flavour  = BEAM_POTION_STEAM;
@@ -754,10 +725,7 @@ bolt mons_spells(monster* mons, spell_type spell_cast, int power,
         break;
 
     case SPELL_FIRE_CLOUD:
-          if (spell_cast == SPELL_EVAPORATE)
-              beam.name     = "potion";
-          else
-              beam.name     = "cloud of fire";
+        beam.name     = "cloud of fire";
         beam.damage   = dice_def(1, 0);
         beam.colour   = RED;
         beam.flavour  = BEAM_POTION_FIRE;
@@ -768,10 +736,7 @@ bolt mons_spells(monster* mons, spell_type spell_cast, int power,
         break;
 
     case SPELL_POISON_CLOUD:
-          if (spell_cast == SPELL_EVAPORATE)
-              beam.name     = "potion";
-          else
-              beam.name     = "cloud of poison";
+        beam.name     = "cloud of poison";
         beam.damage   = dice_def(1, 0);
         beam.colour   = LIGHTGREEN;
         beam.flavour  = BEAM_POTION_POISON;
@@ -782,10 +747,7 @@ bolt mons_spells(monster* mons, spell_type spell_cast, int power,
         break;
 
     case SPELL_MIASMA_CLOUD:
-          if (spell_cast == SPELL_EVAPORATE)
-              beam.name     = "potion";
-          else
-              beam.name     = "foul vapour";
+        beam.name     = "foul vapour";
         beam.damage   = dice_def(1, 0);
         beam.colour   = DARKGREY;
         beam.flavour  = BEAM_POTION_MIASMA;

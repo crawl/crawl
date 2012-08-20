@@ -912,6 +912,7 @@ struct spell_desc
      false
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_FULSOME_DISTILLATION, "Fulsome Distillation",
      SPTYP_TRANSMUTATION | SPTYP_NECROMANCY,
@@ -924,6 +925,7 @@ struct spell_desc
      false,
      true
 },
+#endif
 
 {
     SPELL_POISON_ARROW, "Poison Arrow",
@@ -1721,6 +1723,7 @@ struct spell_desc
      false
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_EVAPORATE, "Evaporate",
      SPTYP_FIRE | SPTYP_TRANSMUTATION,
@@ -1733,6 +1736,7 @@ struct spell_desc
      true,
      false
 },
+#endif
 
 {
     SPELL_FRAGMENTATION, "Lee's Rapid Deconstruction",

@@ -244,7 +244,6 @@ int book_rarity(uint8_t which_book)
         return 4;
 
     case BOOK_YOUNG_POISONERS:
-    case BOOK_STALKING:
     case BOOK_WAR_CHANTS:
     case BOOK_DEBILITATION:
         return 5;
@@ -296,6 +295,11 @@ int book_rarity(uint8_t which_book)
 
     case BOOK_DESTRUCTION:
         return 30;
+
+#if TAG_MAJOR_VERSION == 34
+    case BOOK_STALKING:
+        return 100;
+#endif
 
     default:
         return 1;
