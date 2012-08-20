@@ -574,6 +574,9 @@ public:
     // Returns true if this item should not normally be enchanted.
     bool is_mundane() const;
 
+    // Returns true if this item causes autoexplore to visit it.
+    bool is_greedy_sacrificiable() const;
+
 private:
     std::string name_aux(description_level_type desc,
                          bool terse, bool ident, bool with_inscription,
