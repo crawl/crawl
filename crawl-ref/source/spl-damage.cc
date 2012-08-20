@@ -1121,7 +1121,11 @@ int shatter_player(int pow, actor *wielder)
     int damage = std::max(0, dam_dice.roll() - random2(you.armour_class()));
 
     if (damage > 0)
+    {
+        mpr(damage > 15 ? "You shudder from the earth-shattering force."
+                        : "You shudder.");
         ouch(damage, wielder->mindex(), KILLED_BY_MONSTER);
+    }
 
     return damage;
 }
