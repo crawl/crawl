@@ -131,9 +131,9 @@ ENDMAP
 
 # Not Minivault 9 (by Mu.)
 NAME:   not_minivault_9_mu
-TAGS:   allow_dup
+TAGS:   allow_dup vaults_room_10_spin_empty
 WEIGHT: 1
-DEPTH:  D:15-27, Elf
+DEPTH:  D:15-27, Elf, Vaults
 MONS:   butterfly
 MARKER: X = lua: props_marker { connected_exclude="true" }
 SUBST:  X = =
@@ -523,9 +523,9 @@ ENDMAP
 
 # Not Minivault 9 (or, elephant zoo)
 NAME:   not_minivault_9_due
-TAGS:   allow_dup
+TAGS:   allow_dup vaults_room_10_spin_dangerous
 WEIGHT: 1
-DEPTH:  D:20-27, Elf:3-5
+DEPTH:  D:20-27, Elf:3-5, Vaults:3-
 MONS:   elephant, dire elephant, hellephant
 MARKER: X = lua: props_marker { connected_exclude="true" }
 SUBST:  X = =
@@ -1845,7 +1845,8 @@ ENDMAP
 ##### Demonic crawlers (s) and beetles.
 NAME:  einodemon_crawler_minivault
 TAGS:  patrolling mini_float
-DEPTH: D:13-27, Elf, Spider
+TAGS:  vaults_room_10_spin_encounter
+DEPTH: D:13-27, Vaults, Elf, Spider
 MONS:  demonic crawler
 MONS:  goliath beetle / boulder beetle w:8 / demonic crawler w:2 / \
        nothing
@@ -2778,7 +2779,8 @@ ENDMAP
 
 NAME:    hangedman_jelly_panic
 TAGS:    no_monster_gen no_item_gen
-DEPTH:   D:4-
+TAGS:    vaults_room_15_facing_encounter
+DEPTH:   D:4-, Vaults
 MONS:    ooze
 KMONS:   2J = jelly
 KMONS:   3 = brown ooze
@@ -2823,7 +2825,8 @@ xxxx.......xxxx
 xxxcx;x+x;xcxxx
   xxx6x.x6xxx
    xxxx+xxxx
-   xxxx@xxxx
+   xxxx.xxxx
+    ...@...
 ENDMAP
 
 ###################################################################
@@ -2956,8 +2959,11 @@ ENDMAP
 
 NAME:  minmay_ominous_box
 TAGS:  extra luniq_mini
-DEPTH: D:4-
+TAGS:  vaults_room_7_facing_dangerous
+DEPTH: D:4-, Vaults
+: if you.branch() ~= "Vaults" then
 SUBST: 8 = 8.......
+: end
 MARKER: = = lua:restrict_door()
 MAP
 .......
@@ -2967,7 +2973,7 @@ MAP
 .v...v.
 .vv=vv.
 ..G.G..
- .....
+  ...
 ENDMAP
 
 NAME:    minmay_three_doors
@@ -2999,7 +3005,8 @@ xxxxxxx
 ENDMAP
 
 NAME:  kb_rosetta
-DEPTH: D:6-, Elf
+TAGS:  vaults_room_15_spin_encounter
+DEPTH: D:6-, Vaults, Elf
 SUBST: x : xcvmnot
 SUBST: X : GItTU
 MAP
@@ -3506,9 +3513,10 @@ ENDMAP
 # Robustness
 #
 NAME:   minmay_guarded_unrand_robustness
-DEPTH:  D:10-
+DEPTH:  D:10-, Vaults
 TAGS:   no_monster_gen no_item_gen
-WEIGHT: 3
+TAGS:   vaults_room_15_spin_encounter
+WEIGHT: 3, 1 (Vaults)
 # Iron golems are speed 7, so even a naga can outrun them.
 MONS:   patrolling iron golem, patrolling metal gargoyle
 ITEM:   ring of protection unrand:ring_of_robustness
@@ -3716,7 +3724,8 @@ ENDMAP
 #
 NAME:   sword_in_stone
 TAGS:   mini_float patrolling
-DEPTH:  D:5-26, Orc, Elf
+TAGS:   vaults_7_room_spin_encounter
+DEPTH:  D:5-26, Vaults, Orc, Elf
 NSUBST: k = 4=k / *= .:19 k:1
 KITEM:  S = good_item long sword / good_item great sword / good_item demon blade /\
             good_item triple sword / good_item double sword
@@ -3797,12 +3806,20 @@ ENDMAP
 
 # This wizard likes to experiment!
 NAME:    laboratory_2
+TAGS:    laboratory_2
 MONS:    wizard col:lightred name:mad n_adj n_noc spells:polymorph_other;\
          paralyse;blink;bolt_of_fire;bolt_of_fire;teleport_self
-DEPTH:   D:10-26
+DEPTH:   D:10-26, Vaults
+: if you.branch() == "Vaults" then
+SUBST: d = +
+SUBST: e = c
+: else
+SUBST: d = c
+SUBST: e = +
+: end
 MONS:    laboratory rat
 MAP
-ccccccc+cc
+cccddddecc
 c........c
 c........c
 c..1.....c
@@ -3812,6 +3829,23 @@ c***c2222c
 c|**+2222c
 c||*c2222c
 cccccccccc
+ENDMAP
+
+NAME: laboratory_2_vaults
+TAGS: vaults_room_10_facing_encounter
+SUBVAULT: A : laboratory_2
+MAP
+   ....
+AAAAAAAAAA
+AAAAAAAAAA
+AAAAAAAAAA
+AAAAAAAAAA
+AAAAAAAAAA
+AAAAAAAAAA
+AAAAAAAAAA
+AAAAAAAAAA
+AAAAAAAAAA
+AAAAAAAAAA
 ENDMAP
 
 # Lava pond
@@ -3842,10 +3876,12 @@ ENDMAP
 # gate that opens all at once.
 NAME:   minivault_9
 TAGS:   allow_dup
-DEPTH:  D:15-27, Elf, Crypt, Dis, Geh, Tar, Coc, Zot
+TAGS:   vaults_room_10_spin_dangerous
+WEIGHT: 1 (Vaults), 10
+DEPTH:  D:15-27, Elf, Vaults, Crypt, Dis, Geh, Tar, Coc, Zot
 MARKER: X = lua: props_marker { connected_exclude="true" }
 SUBST:  X = =
-# Pick interesting monsters for dungeon branches. D gets normal OOD.
+# Pick interesting monsters for dungeon branches. Vaults and D get normal OOD.
 : if you.branch() == "Elf" then
 KMONS:  8 = deep elf annihilator / deep elf blademaster / deep elf master archer / \
             deep elf sorcerer / deep elf death mage / deep elf demonologist / \

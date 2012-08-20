@@ -78,10 +78,14 @@ xxxx
 ENDMAP
 
 NAME:   stair_cage_open
-DEPTH:  D:9-27, Crypt:2-5, Elf:2-5, Snake:2-5, Zot:2-5
+DEPTH:  D:9-, Crypt:2-, Elf:2-, Snake:2-, Zot:2-, Vaults:2-
 TAGS:   extra luniq_grate_trap no_monster_gen mini_float
+TAGS:   vaults_room_7_spin_up1
 WEIGHT: 2
 : place_grate_trap(_G, '^', 'm')
+: if you.branch() == "Vaults" then
+:   e.subst("{ = " .. dng.persist.vault_current_stairs_glyph)
+: end
 MAP
 .......
 .^^^^^.

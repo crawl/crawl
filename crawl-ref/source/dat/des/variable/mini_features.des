@@ -877,7 +877,8 @@ ENDMAP
 
 NAME:   minmay_stone_trees_small
 TAGS:   extra luniq_mini ruin_lair
-DEPTH:  D, Lair
+TAGS:   vaults_room_7_spin_empty
+DEPTH:  D, Vaults, Lair
 WEIGHT: 6
 MAP
 .......
