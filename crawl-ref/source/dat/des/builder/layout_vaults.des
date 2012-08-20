@@ -1285,6 +1285,7 @@ local FACING_UNASSIGNED = 10
 #  Content types for serial vaults are:
 #    -> CONTENT_SERIAL_MINIWIZLABS
 #    -> CONTENT_SERIAL_CRYSTAL
+#    -> CONTENT_SERIAL_MAGIC_RESEARCH
 #
 #  If you are adding a new content type (e.g. for a new portal
 #    vault), add it here (immediately before
@@ -1295,44 +1296,45 @@ local FACING_UNASSIGNED = 10
 #
 
 {{
-CONTENT_COUNT             = 26
-CONTENT_VALID_COUNT       = 25
+CONTENT_COUNT             = 27
+CONTENT_VALID_COUNT       = 26
 CONTENT_PROBABILITY_COUNT = 6
 
-CONTENT_EMPTY             = 0
-CONTENT_ENCOUNTER         = 1
-CONTENT_DANGEROUS         = 2
-CONTENT_LOOT              = 3
+CONTENT_EMPTY                  = 0
+CONTENT_ENCOUNTER              = 1
+CONTENT_DANGEROUS              = 2
+CONTENT_LOOT                   = 3
 
-CONTENT_VANISH            = 4
-CONTENT_HALLWAY           = 5
+CONTENT_VANISH                 = 4
+CONTENT_HALLWAY                = 5
 
-CONTENT_SOLID             = 6
+CONTENT_SOLID                  = 6
 
-CONTENT_STAIRS_UP_3       = 7
-CONTENT_STAIRS_DOWN_3     = 8
+CONTENT_STAIRS_UP_3            = 7
+CONTENT_STAIRS_DOWN_3          = 8
 
-CONTENT_STAIRS_UP_1A      = 9
-CONTENT_STAIRS_DOWN_1A    = 10
-CONTENT_STAIRS_UP_1B      = 11
-CONTENT_STAIRS_DOWN_1B    = 12
-CONTENT_STAIRS_UP_1C      = 13
-CONTENT_STAIRS_DOWN_1C    = 14
+CONTENT_STAIRS_UP_1A           = 9
+CONTENT_STAIRS_DOWN_1A         = 10
+CONTENT_STAIRS_UP_1B           = 11
+CONTENT_STAIRS_DOWN_1B         = 12
+CONTENT_STAIRS_UP_1C           = 13
+CONTENT_STAIRS_DOWN_1C         = 14
 
-CONTENT_BRANCH_CRYPT      = 15
-CONTENT_BRANCH_BLADE      = 16
+CONTENT_BRANCH_CRYPT           = 15
+CONTENT_BRANCH_BLADE           = 16
 
-CONTENT_PORTAL_BAZAAR     = 17
-CONTENT_PORTAL_ICE_CAVE   = 18
-CONTENT_PORTAL_LABYRINTH  = 19
-CONTENT_PORTAL_TROVE      = 20
-CONTENT_PORTAL_WIZARD_LAB = 21
-CONTENT_PORTAL_ZIGGURAT   = 22
+CONTENT_PORTAL_BAZAAR          = 17
+CONTENT_PORTAL_ICE_CAVE        = 18
+CONTENT_PORTAL_LABYRINTH       = 19
+CONTENT_PORTAL_TROVE           = 20
+CONTENT_PORTAL_WIZARD_LAB      = 21
+CONTENT_PORTAL_ZIGGURAT        = 22
 
-CONTENT_SERIAL_MINIWIZLAB = 23
-CONTENT_SERIAL_CRYSTAL    = 24
+CONTENT_SERIAL_MINIWIZLAB      = 23
+CONTENT_SERIAL_CRYSTAL         = 24
+CONTENT_SERIAL_MAGIC_RESEARCH  = 25
 
-CONTENT_UNASSIGNED        = 25
+CONTENT_UNASSIGNED             = 26
 }}
 
 #
@@ -1376,6 +1378,7 @@ A_CONTENT_NAME =
         "ziggurat",
         "miniwizlab",
         "crystal",
+        "magic_research",
         "ERROR" }
 CONTENT_NAME_SECRET = "secret"
 }}
@@ -3177,9 +3180,9 @@ function calculateContentSerialVault(a_rooms, room_count)
   --    not break all existing serial vaults.
   --
 
-  local chosen = crawl.random2(100)
+  local chosen = crawl.random2(200)
 
-  if chosen < 8 then
+  if chosen < 16 then
     --
     --  miniwizlab serial vault
     --
@@ -3208,7 +3211,7 @@ function calculateContentSerialVault(a_rooms, room_count)
       end
     end
 
-  elseif chosen < 10 then
+  elseif chosen < 20 then
 
     --
     -- crystal serial vault
@@ -3225,6 +3228,23 @@ function calculateContentSerialVault(a_rooms, room_count)
       setRandomRoomToContent(a_rooms, room_count,
                              a_group_for_size[10],
                              CONTENT_SERIAL_CRYSTAL)
+    end
+  elseif chosen < 21 then
+
+    --
+    -- serial_hangedman_research
+    --
+
+    if a_room_size_count[7] >= 4 then
+       local count = 4 + crawl.random2(3)
+       if count > a_room_size_count[7] then
+           count = a_room_size_count[7]
+       end
+       for i = 1, count do
+           setRandomRoomToContent(a_rooms, room_count,
+                                  a_group_for_size[7],
+                                  CONTENT_SERIAL_MAGIC_RESEARCH)
+       end
     end
   end
 end
