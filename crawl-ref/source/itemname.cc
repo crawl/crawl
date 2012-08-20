@@ -942,7 +942,9 @@ static const char* _book_type_name(int booktype)
     case BOOK_POWER:                  return "Power";
     case BOOK_CANTRIPS:               return "Cantrips";
     case BOOK_PARTY_TRICKS:           return "Party Tricks";
+#if TAG_MAJOR_VERSION == 34
     case BOOK_STALKING:               return "Stalking";
+#endif
     case BOOK_DEBILITATION:           return "Debilitation";
     case BOOK_DRAGON:                 return "the Dragon";
     case BOOK_BURGLARY:               return "Burglary";
@@ -3070,11 +3072,7 @@ bool is_useless_item(const item_def &item, bool temp)
 
     case OBJ_POTIONS:
     {
-        // No potion is useless if it can be used for Evaporate.
-        if (you.has_spell(SPELL_EVAPORATE))
-            return false;
-
-        // Apart from Evaporate, mummies can't use potions.
+        // Mummies can't use potions.
         if (you.species == SP_MUMMY)
             return true;
 

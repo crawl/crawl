@@ -4462,7 +4462,6 @@ tileidx_t tileidx_spell(spell_type spell)
 
     // Fire
     case SPELL_FLAME_TONGUE:             return TILEG_FLAME_TONGUE;
-    case SPELL_EVAPORATE:                return TILEG_EVAPORATE;
     case SPELL_FIRE_BRAND:               return TILEG_FIRE_BRAND;
     case SPELL_THROW_FLAME:              return TILEG_THROW_FLAME;
     case SPELL_CONJURE_FLAME:            return TILEG_CONJURE_FLAME;
@@ -4553,7 +4552,6 @@ tileidx_t tileidx_spell(spell_type spell)
     // Necromancy
     case SPELL_ANIMATE_SKELETON:         return TILEG_ANIMATE_SKELETON;
     case SPELL_PAIN:                     return TILEG_PAIN;
-    case SPELL_FULSOME_DISTILLATION:     return TILEG_FULSOME_DISTILLATION;
     case SPELL_CORPSE_ROT:               return TILEG_CORPSE_ROT;
     case SPELL_LETHAL_INFUSION:          return TILEG_LETHAL_INFUSION;
     case SPELL_SUBLIMATION_OF_BLOOD:     return TILEG_SUBLIMATION_OF_BLOOD;
@@ -5130,14 +5128,8 @@ tileidx_t tileidx_corpse_brand(const item_def &item)
     if (item.base_type != OBJ_CORPSES || item.sub_type != CORPSE_BODY)
         return 0;
 
-    const bool fulsome_dist = you.has_spell(SPELL_FULSOME_DISTILLATION);
     const bool rotten       = food_is_rotten(item);
     const bool saprovorous  = player_mutation_level(MUT_SAPROVOROUS);
-
-    // Brands are mostly meaningless to herbivores.
-    // Could still be interesting for Fulsome Distillation, though.
-    if (fulsome_dist && player_mutation_level(MUT_HERBIVOROUS) == 3)
-        return 0;
 
     // Vampires are only interested in fresh blood.
     if (you.species == SP_VAMPIRE
@@ -5146,9 +5138,9 @@ tileidx_t tileidx_corpse_brand(const item_def &item)
         return TILE_FOOD_INEDIBLE;
     }
 
-    // Rotten corpses' chunk effects are meaningless if we are neither
-    // saprovorous nor have the Fulsome Distillation spell.
-    if (rotten && !saprovorous && !fulsome_dist)
+    // Rotten corpses' chunk effects are meaningless if we are not
+    // saprovorous.
+    if (rotten && !saprovorous)
         return TILE_FOOD_INEDIBLE;
 
     // Harmful chunk effects > religious rules > chance of sickness.

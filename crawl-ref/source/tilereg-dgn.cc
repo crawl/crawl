@@ -558,7 +558,6 @@ static bool _spell_in_range(spell_type spell, actor* target)
 
     switch (spell)
     {
-    case SPELL_EVAPORATE:
     case SPELL_MEPHITIC_CLOUD:
     case SPELL_FIREBALL:
     case SPELL_FREEZING_CLOUD:
@@ -626,26 +625,8 @@ static bool _cast_spell_on_target(actor* target)
         return true;
     }
 
-    int item_slot = -1;
-    if (spell == SPELL_EVAPORATE)
-    {
-        const int pot = prompt_invent_item("Throw which potion?", MT_INVLIST,
-                                           OBJ_POTIONS);
-
-        if (prompt_failed(pot))
-            return false;
-        else if (you.inv[pot].base_type != OBJ_POTIONS)
-        {
-            mpr("This spell works only on potions!");
-            return false;
-        }
-        item_slot = you.inv[pot].slot;
-    }
-
     macro_buf_add_cmd(CMD_FORCE_CAST_SPELL);
     macro_buf_add(letter);
-    if (item_slot != -1)
-        macro_buf_add(item_slot);
 
     if (get_spell_flags(spell) & SPFLAG_TARGETTING_MASK)
         _add_targetting_commands(target->pos());
