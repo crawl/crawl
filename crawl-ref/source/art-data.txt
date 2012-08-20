@@ -401,7 +401,7 @@ COLD:    1
 
 ENUM:     KRISHNA
 NAME:     bow of Krishna "Sharnga"
-OBJ:      OBJ_WEAPONS/WPN_BOW
+OBJ:      OBJ_WEAPONS/WPN_LONGBOW
 PLUS:     +8/+8
 COLOUR:   ETC_GOLD
 TILE:     urand_krishna
