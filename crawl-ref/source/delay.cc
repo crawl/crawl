@@ -27,6 +27,7 @@
 #include "food.h"
 #include "godabil.h"
 #include "godpassive.h"
+#include "godprayer.h"
 #include "invent.h"
 #include "items.h"
 #include "itemname.h"
@@ -1410,6 +1411,18 @@ static void _handle_run_delays(const delay_queue_item &delay)
             if (prompt_eat_chunks(true) == 1)
                 return;
         }
+
+        if (Options.auto_sacrifice && you.running == RMODE_EXPLORE_GREEDY)
+        {
+            LevelStashes *lev = StashTrack.find_current_level();
+            if (lev && lev->sacrificiable(you.pos()))
+            {
+                const interrupt_block block_interrupts;
+                pray();
+                return;
+            }
+        }
+
 
         switch (delay.type)
         {

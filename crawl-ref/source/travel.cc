@@ -944,8 +944,9 @@ command_type travel()
                                            && ES_sacrificiable;
                 if (stack || sacrificiable)
                 {
-                    if (stack && _prompt_stop_explore(ES_GREEDY_VISITED_ITEM_STACK)
-                        || sacrificiable && _prompt_stop_explore(ES_GREEDY_SACRIFICIABLE))
+                    if ((stack && _prompt_stop_explore(ES_GREEDY_VISITED_ITEM_STACK)
+                         || sacrificiable && _prompt_stop_explore(ES_GREEDY_SACRIFICIABLE))
+                        && (!Options.auto_sacrifice || !sacrificiable || stack))
                     {
                         explore_stopped_pos = newpos;
                         stop_running();
@@ -2924,7 +2925,7 @@ void start_explore(bool grab_items)
         const LevelStashes *lev = StashTrack.find_current_level();
         if (lev && lev->sacrificiable(you.pos()))
         {
-            if (Options.sacrifice_before_explore == 1
+            if (Options.sacrifice_before_explore == 1 || Options.auto_sacrifice
                 || Options.sacrifice_before_explore == 2
                    && yesno("Do you want to sacrifice the items here? ", true, 'n'))
             {

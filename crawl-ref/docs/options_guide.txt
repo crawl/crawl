@@ -833,6 +833,10 @@ explore_improved = false
         sometimes increasing the turns taken by up to 5%, with
         pathological cases causing a 13% increase.
 
+auto_sacrifice = false
+       If set to true, elligible items will be automatically sacrificed during
+       auto-explore.
+
 travel_key_stop = true
         If set to true then travel will stop at any keypress.
 

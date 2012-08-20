@@ -149,6 +149,7 @@ drop_filter = useless_item
 # explore_improved = true
 # explore_wall_bias = 0
 # travel_key_stop = false
+# auto_sacrifice = true
 #
 # explore_stop_pickup_ignore = curare
 auto_exclude = oklob,statue,curse skull,roxanne,hyperactive,lightning spire,mimic

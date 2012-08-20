@@ -879,6 +879,7 @@ void game_options::reset_options()
     explore_wall_bias      = 0;
     explore_improved       = false;
     travel_key_stop        = true;
+    auto_sacrifice         = false;
 
     target_unshifted_dirs  = false;
     darken_beyond_range    = true;
@@ -2963,6 +2964,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else BOOL_OPTION(explore_improved);
     else BOOL_OPTION(travel_key_stop);
+    else BOOL_OPTION(auto_sacrifice);
     else if (key == "sound")
     {
         std::vector<std::string> seg = split_string(",", field);
