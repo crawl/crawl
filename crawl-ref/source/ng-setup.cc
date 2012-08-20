@@ -165,7 +165,6 @@ static void _jobs_stat_init(job_type which_job)
     case JOB_PRIEST:            s =  5; i =  4; d =  3; hp = 13; mp = 2; break;
 
     case JOB_ASSASSIN:          s =  3; i =  3; d =  6; hp = 12; mp = 0; break;
-    case JOB_STALKER:           s =  2; i =  4; d =  6; hp = 12; mp = 1; break;
 
     case JOB_HUNTER:            s =  4; i =  3; d =  5; hp = 13; mp = 0; break;
     case JOB_WARPER:            s =  3; i =  5; d =  4; hp = 12; mp = 1; break;
@@ -891,26 +890,6 @@ static void _give_items_skills(const newgame_def& ng)
         you.skills[SK_STEALTH]      = 2;
         break;
 
-    case JOB_STALKER:
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_DAGGER, -1, 1, 2, 2);
-        newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(2, EQ_CLOAK, OBJ_ARMOUR, ARM_CLOAK);
-        newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_STALKING);
-
-        newgame_make_item(4, EQ_NONE, OBJ_POTIONS, POT_CONFUSION, -1, 2);
-
-        if (you.species == SP_OGRE || you.species == SP_TROLL)
-            you.inv[0].sub_type = WPN_CLUB;
-
-        weap_skill = 1;
-        you.skills[SK_FIGHTING]       = 1;
-        you.skills[SK_DODGING]        = 2;
-        you.skills[SK_STEALTH]        = 2;
-        you.skills[SK_STABBING]       = 2;
-        you.skills[SK_SPELLCASTING]   = 1;
-        you.skills[SK_TRANSMUTATIONS] = 2;
-        break;
-
     case JOB_ASSASSIN:
         newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_DAGGER, -1, 1, 2, 2);
         newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_BLOWGUN);
@@ -1183,9 +1162,6 @@ static void _give_basic_spells(job_type which_job)
         break;
     case JOB_TRANSMUTER:
         which_spell = SPELL_BEASTLY_APPENDAGE;
-        break;
-    case JOB_STALKER:
-        which_spell = SPELL_FULSOME_DISTILLATION;
         break;
     case JOB_WARPER:
         which_spell = SPELL_APPORTATION;

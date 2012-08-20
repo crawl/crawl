@@ -3071,11 +3071,8 @@ bool is_useless_item(const item_def &item, bool temp)
     case OBJ_POTIONS:
     {
         // No potion is useless if it can be used for Evaporate.
-        if (you.char_class == JOB_STALKER && !you.num_turns
-            || you.has_spell(SPELL_EVAPORATE))
-        {
+        if (you.has_spell(SPELL_EVAPORATE))
             return false;
-        }
 
         // Apart from Evaporate, mummies can't use potions.
         if (you.species == SP_MUMMY)
