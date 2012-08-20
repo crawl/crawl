@@ -296,61 +296,6 @@ MAP
 ENDMAP
 
 ###############################################################################
-# Vaults arrivals - keep these less threatening than Vaults entries
-# XXX: Disabled for now... need to find something to do with these.
-###############################################################################
-
-# NAME:   grunt_vaults_arrival_checkpoint
-# TAGS:   extra uniq_vaults_arrival no_monster_gen no_item_gen no_trap_gen
-# MONS:   vault guard
-# ORIENT: float
-# MAP
-#    .@.
-# vvvv+vvvv
-# vvv...vvv
-# vvv...vvv
-# vvvn+nvvv
-# v..1.1..v
-# vT.....Tv
-# v.......v
-# vvvn+nvvv
-# vvv...vvv
-# vvv[{(vvv
-# vvvvvvvvv
-# ENDMAP
-
-# # With apologies to NetHack.
-# # You'd expect the second room to be completely full of monsters,
-# # but that would be just a little unfair.
-# # The rock padding is to (roughly) line it up with the corner of
-# # a layout_city map.
-# NAME:   grunt_vaults_arrival_ludios
-# TAGS:   extra uniq_vaults_arrival no_monster_gen no_item_gen no_trap_gen \
-#         generate_awake
-# DEPTH:  Vaults:1
-# SUBST:  0 = 00.
-# ORIENT: southwest
-# MAP
-# xxxxxxxxvvvvvvv.@
-# xxxxxxxxv.0.0.v..
-# xxxxxxxxv0.0.0+..
-# xxxxxxxxv.0.0.v..
-# xxxxxxxxv0.0.0v..
-# xxxxxxxxv..v+vvvv
-# xxxxxxxxv%%v...(v
-# xxxxxxxxv%%v..{[v
-# xxxxxxxxvvvvvvvvv
-# xxxxxxxxxxxxxxxxx
-# xxxxxxxxxxxxxxxxx
-# xxxxxxxxxxxxxxxxx
-# xxxxxxxxxxxxxxxxx
-# xxxxxxxxxxxxxxxxx
-# xxxxxxxxxxxxxxxxx
-# xxxxxxxxxxxxxxxxx
-# xxxxxxxxxxxxxxxxx
-# ENDMAP
-
-###############################################################################
 # Vaults:$ last level of the vaults -- dungeon.cc will change all these 'x's
 ###############################################################################
 #
