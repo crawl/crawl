@@ -23,7 +23,9 @@ struct item_kind
 // itemname.cc.
 enum potion_description_colour_type
 {
+#if TAG_MAJOR_VERSION == 34
     PDC_CLEAR,
+#endif
     PDC_BLUE,
     PDC_BLACK,
     PDC_SILVERY,

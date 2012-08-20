@@ -2223,7 +2223,7 @@ NAME:    onia_entry_mini_maze
 TAGS:    entry
 WEIGHT:  5
 ORIENT:  float
-ITEM:    apple / sausage / nothing / stone / potion of water
+ITEM:    apple / sausage / nothing / stone
 SHUFFLE: ({[, Aa, Bb, Cc, Ee, Ff
 MONS:    w:30 nothing / w:10 plant / w:5 fungus / w:10 rat
 SUBST:   A=x, B=x, C=x, E=x, F=x, a=., b=., c=., e=., f=.
@@ -2248,7 +2248,7 @@ NAME:    onia_entry_mini_maze_b
 TAGS:    entry
 WEIGHT:  5
 ORIENT:  float
-ITEM:    apple / sausage / nothing / stone / potion of water / w:30 nothing
+ITEM:    apple / sausage / nothing / stone / w:30 nothing
 SHUFFLE: ({[ , AB
 SUBST:   A : x , B = +., X = x=
 MONS:    w:30 nothing / w:10 plant / w:3 fungus / w:1 worm
@@ -2273,8 +2273,7 @@ NAME:    onia_entry_larder
 TAGS:    entry
 ORIENT:  float
 MONS:    w:100 rat / w:50 giant cockroach / quokka
-ITEM:    potion of water
-SUBST:   ? = .:30 1:20 d
+SUBST:   ? = .:30 1:20
 SUBST:   = = = +
 MAP
 xxxxxxxxxx@xxxxxxxxxx

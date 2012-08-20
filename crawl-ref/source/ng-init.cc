@@ -28,19 +28,20 @@ static uint8_t _random_potion_description()
 {
     int desc, colour;
 
-    do
-    {
-        desc = random2(PDQ_NQUALS * PDC_NCOLOURS);
+    desc = random2(PDQ_NQUALS * PDC_NCOLOURS);
 
-        if (coinflip())
-            desc %= PDC_NCOLOURS;
+    if (coinflip())
+        desc %= PDC_NCOLOURS;
 
-        colour = PCOLOUR(desc);
+    colour = PCOLOUR(desc);
 
-        // nature and colour correspond to primary and secondary in
-        // itemname.cc.
-    }
-    while (colour == PDC_CLEAR); // only water can be clear
+    // nature and colour correspond to primary and secondary in
+    // itemname.cc.
+
+#if TAG_MAJOR_VERSION == 34
+    if (colour == PDC_CLEAR) // only water can be clear, re-roll
+        return _random_potion_description();
+#endif
 
     return desc;
 }
@@ -265,8 +266,6 @@ void initialise_item_descriptions()
     // Must remember to check for already existing colours/combinations.
     you.item_description.init(255);
 
-    you.item_description[IDESC_POTIONS][POT_WATER] = PDESCS(PDC_CLEAR);
-    set_ident_type(OBJ_POTIONS, POT_WATER, ID_KNOWN_TYPE);
     you.item_description[IDESC_POTIONS][POT_PORRIDGE]
         = _get_random_porridge_desc();
     you.item_description[IDESC_POTIONS][POT_BLOOD]

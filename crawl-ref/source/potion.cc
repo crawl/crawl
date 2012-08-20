@@ -353,7 +353,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
         break;
 
     case POT_FIZZING:
-    case POT_WATER:
+    case NUM_POTIONS:
         if (you.species == SP_VAMPIRE)
             mpr("Blech - this tastes like water.");
         else
@@ -433,10 +433,6 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
         // Just one point of contamination. These potions are really rare,
         // and contamination is nastier.
         contaminate_player(1, was_known);
-        break;
-
-    case NUM_POTIONS:
-        mpr("You feel bugginess flow through your body.");
         break;
     }
 

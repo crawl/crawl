@@ -2489,6 +2489,11 @@ void unmarshallItem(reader &th, item_def &item)
     // of Crawl has more artefact props.
     if (is_artefact(item))
         artefact_fixup_props(item);
+
+#if TAG_MAJOR_VERSION == 34
+    if (item.base_type == OBJ_POTIONS && item.sub_type == POT_WATER)
+        item.sub_type = POT_CONFUSION;
+#endif
 }
 
 #define MAP_SERIALIZE_FLAGS_MASK 3

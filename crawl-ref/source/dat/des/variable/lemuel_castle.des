@@ -126,7 +126,7 @@ NAME:   lemuel_castle_interior_carwin_2
 TAGS:   lemuel_castle_interior
 : castle_lemuel_subvault_setup(_G)
 SUBST:  $=$:5 .
-ITEM:   w:5 meat ration / sausage / beef jerky / potion of water
+ITEM:   w:5 meat ration / sausage / beef jerky / potion of confusion
 MAP
 +c....+~~.....1............~$*c+
 ...1..cccccccccccccccccccccccXc.

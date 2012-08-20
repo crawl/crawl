@@ -2145,7 +2145,7 @@ static bool _drink_fountain()
         return true;
     }
 
-    potion_type fountain_effect = POT_WATER;
+    potion_type fountain_effect = NUM_POTIONS;
     if (feat == DNGN_FOUNTAIN_BLUE)
     {
         if (!yesno("Drink from the fountain?", true, 'n'))
@@ -2169,7 +2169,7 @@ static bool _drink_fountain()
         mpr("You drink the sparkling water.");
 
         fountain_effect =
-            random_choose_weighted(467, POT_WATER,
+            random_choose_weighted(467, NUM_POTIONS,
                                    48,  POT_DECAY,
                                    40,  POT_MUTATION,
                                    40,  POT_CURING,
@@ -2196,7 +2196,7 @@ static bool _drink_fountain()
                                    0);
     }
 
-    if (fountain_effect != POT_WATER && fountain_effect != POT_BLOOD)
+    if (fountain_effect != NUM_POTIONS && fountain_effect != POT_BLOOD)
         xom_is_stimulated(50);
 
     // Good gods do not punish for bad random effects. However, they do
