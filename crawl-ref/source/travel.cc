@@ -2924,8 +2924,12 @@ void start_explore(bool grab_items)
         const LevelStashes *lev = StashTrack.find_current_level();
         if (lev && lev->sacrificiable(you.pos()))
         {
-            if (yesno("Do you want to sacrifice the items here? ", true, 'n'))
+            if (Options.sacrifice_before_explore == 1
+                || Options.sacrifice_before_explore == 2
+                   && yesno("Do you want to sacrifice the items here? ", true, 'n'))
+            {
                 pray();
+            }
             else
                 mark_items_non_visit_at(you.pos());
         }
