@@ -203,7 +203,7 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_CRUSHING | DAM_PIERCE, 10 },
     { WPN_DIRE_FLAIL,        "dire flail",         13, -3, 13, 240,  9,
-        SK_MACES_FLAILS, HANDS_TWO, SIZE_LARGE,  MI_NONE, false,
+        SK_MACES_FLAILS, HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
         DAMV_CRUSHING | DAM_PIERCE, 10 },
     { WPN_EVENINGSTAR,       "eveningstar",        14, -1, 15, 180,  8,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
@@ -321,13 +321,13 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
 
     // Staves
     { WPN_STAFF,             "staff",               5,  5, 12, 150,  6,
-        SK_STAVES,       HANDS_HALF, SIZE_MEDIUM, MI_NONE, false,
+        SK_STAVES,       HANDS_HALF,   SIZE_MEDIUM, MI_NONE, false,
         DAMV_CRUSHING, 0 },
     { WPN_QUARTERSTAFF,      "quarterstaff",        10, 3, 13, 180,  7,
-        SK_STAVES,       HANDS_TWO, SIZE_LARGE,  MI_NONE, false,
+        SK_STAVES,       HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
         DAMV_CRUSHING, 10 },
     { WPN_LAJATANG,          "lajatang",            16,-3, 14, 200,  3,
-        SK_STAVES,       HANDS_TWO, SIZE_LARGE,  MI_NONE, false,
+        SK_STAVES,       HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
         DAMV_SLICING, 2 },
 
     // Range weapons
