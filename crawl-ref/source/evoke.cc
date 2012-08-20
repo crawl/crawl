@@ -348,11 +348,8 @@ bool disc_of_storms(bool drac_breath)
     const int fail_rate = 30 - you.skill(SK_EVOCATIONS);
     bool rc = false;
 
-    if ((player_res_electricity() || x_chance_in_y(fail_rate, 100))
-         && !drac_breath)
-    {
+    if (x_chance_in_y(fail_rate, 100) && !drac_breath)
         canned_msg(MSG_NOTHING_HAPPENS);
-    }
     else if (x_chance_in_y(fail_rate, 100) && !drac_breath)
         mpr("The disc glows for a moment, then fades.");
     else if (x_chance_in_y(fail_rate, 100) && !drac_breath)

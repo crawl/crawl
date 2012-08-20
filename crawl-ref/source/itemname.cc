@@ -3255,8 +3255,6 @@ bool is_useless_item(const item_def &item, bool temp)
         {
         case MISC_EMPTY_EBONY_CASKET:
             return item_type_known(item);
-        case MISC_DISC_OF_STORMS:
-            return (player_res_electricity(false, temp) > 0);
         case MISC_LAMP_OF_FIRE:
             return !you.skill(SK_FIRE_MAGIC);
         case MISC_AIR_ELEMENTAL_FAN:
