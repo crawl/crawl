@@ -244,7 +244,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.process = process_handler.DGLLessCrawlProcessHandler(self.logger, self.ioloop)
 
         self.process.end_callback = self._on_crawl_end
-        self.process.add_watcher(self, hide=True)
+        self.process.add_watcher(self)
         try:
             self.process.start()
         except:

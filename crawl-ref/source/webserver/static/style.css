@@ -175,6 +175,10 @@ body {
     font-weight: bold;
 }
 
+#spectator_list .player {
+    font-weight: bold;
+}
+
 #chat_input {
     width: 394px;
     font: small monospace;
