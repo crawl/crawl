@@ -225,7 +225,7 @@ function trove.spell_skills (e)
 end
 }}
 
-default-depth: D:10-, Elf:1-, Vaults:1-
+default-depth: D:10-, Elf:1-
 
 ##############################################################################
 #
@@ -290,7 +290,7 @@ CHANCE: 5%
 COLOUR: . = blue
 COLOUR: c = blue
 : if you.absdepth() <= 15 then
-# Got drafted in from Vaults:8, while the mages try and close the portal down.
+# Got drafted in from Vaults:$, while the mages try and close the portal down.
 KMONS:  e = vault guard
 : else
 # And this time he brought some friends...

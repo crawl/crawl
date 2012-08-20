@@ -931,7 +931,7 @@ ENDMAP
 NAME:    statue_cache
 ORIENT:  north
 TAGS:    no_monster_gen
-DEPTH:   D:12-20, Elf, Vaults
+DEPTH:   D:12-20, Elf
 MONS: statue name:archer name_adjective tile:mons_statue_crossbow ; crossbow \
       ego:flame . bolt q:30
 MONS: statue name:archer name_adjective tile:mons_statue_crossbow ; crossbow \
@@ -973,7 +973,7 @@ ENDMAP
 #
 NAME:   evilmike_wizard_prison
 TAGS:   no_monster_gen
-DEPTH:  D:17-27, Vaults:3-7, Crypt:1-4
+DEPTH:  D:17-27, Crypt:1-4
 ORIENT: southeast
 SUBST:  ~ = ~:2 .:3
 SUBST:  . = ~:1 .:9
@@ -1179,7 +1179,7 @@ ENDMAP
 NAME:   evilmike_iron_armoury
 ORIENT: southeast
 TAGS:   no_monster_gen no_item_gen
-DEPTH:  D:11-27, Vaults:1-7
+DEPTH:  D:11-27
 KFEAT:  _ = altar_okawaru
 SUBST:  = = =v
 FTILE:  '+Gvc12345_defghijk = floor_hall
