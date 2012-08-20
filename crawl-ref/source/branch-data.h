@@ -114,7 +114,7 @@ const Branch branches[NUM_BRANCHES] = {
       mons_pitslime_rare, mons_pitslime_level,
       'M', true, -5 },
 
-    { BRANCH_VAULTS, BRANCH_MAIN_DUNGEON, 14, 19, 8, 16,
+    { BRANCH_VAULTS, BRANCH_MAIN_DUNGEON, 15, 20, 5, 19,
       0, 0,
       DNGN_ENTER_VAULTS, DNGN_RETURN_FROM_VAULTS,
       "Vaults", "the Vaults", "Vaults",
@@ -123,7 +123,7 @@ const Branch branches[NUM_BRANCHES] = {
       mons_vaults_rare, mons_vaults_level,
       'V', true, 0 },
 
-    { BRANCH_HALL_OF_BLADES, BRANCH_VAULTS, 4, 6, 1, 21,
+    { BRANCH_HALL_OF_BLADES, BRANCH_VAULTS, 3, 4, 1, 21,
       BFLAG_NO_ITEMS, 0,
       DNGN_ENTER_HALL_OF_BLADES, DNGN_RETURN_FROM_HALL_OF_BLADES,
       "Hall of Blades", "the Hall of Blades", "Blade",
