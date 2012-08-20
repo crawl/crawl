@@ -281,7 +281,7 @@ static void _OLGREB_melee_effect(item_def* weapon, actor* attacker,
 
 static void _power_pluses(item_def *item)
 {
-    item->plus  = stepdown_value(-4 + (you.hp / 5), 4, 4, 4, 20);
+    item->plus  = std::min(you.hp / 10, 27);
     item->plus2 = item->plus;
 }
 
