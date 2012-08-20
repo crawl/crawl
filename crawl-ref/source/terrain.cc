@@ -606,7 +606,8 @@ coord_def get_random_stair()
     {
         const dungeon_feature_type feat = grd(*ri);
         if (feat_is_travelable_stair(feat) && !feat_is_escape_hatch(feat)
-            && feat != DNGN_EXIT_DUNGEON && feat != DNGN_EXIT_HELL)
+            && (crawl_state.game_is_zotdef() || feat != DNGN_EXIT_DUNGEON)
+            && feat != DNGN_EXIT_HELL)
         {
             st.push_back(*ri);
         }
