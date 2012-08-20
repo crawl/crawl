@@ -629,7 +629,7 @@ disc of storms
 
 This extremely powerful item can unleash a destructive storm of electricity.
 Its effectiveness greatly improves in the hands of one skilled in using magical
-devices, but cannot be used by one who is not a conductor.
+devices.
 %%%%
 double sword
 
