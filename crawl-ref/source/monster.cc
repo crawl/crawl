@@ -1465,17 +1465,26 @@ static bool _is_signature_weapon(monster* mons, const item_def &weapon)
         // in case that ever changes we don't want him to switch away
         // from his quarterstaff of chaos.
         if (mons->type == MONS_CRAZY_YIUF)
-            return false;
+        {
+            return wtype == WPN_QUARTERSTAFF
+                   && get_weapon_brand(weapon) == SPWPN_CHAOS;
+        }
 
         // Distortion/chaos is immensely flavourful, and we shouldn't
         // allow Psyche to switch away from it.
         if (mons->type == MONS_PSYCHE)
-            return false;
+        {
+            return get_weapon_brand(weapon) == SPWPN_CHAOS
+                   || get_weapon_brand(weapon) == SPWPN_DISTORTION;
+        }
 
         // Don't switch Azrael away from the customary scimitar of
         // flaming.
         if (mons->type == MONS_AZRAEL)
-            return false;
+        {
+            return wtype == WPN_SCIMITAR
+                   && get_weapon_brand(weapon) == SPWPN_FLAMING;
+        }
 
         if (mons->type == MONS_AGNES)
             return (wtype == WPN_LAJATANG);
