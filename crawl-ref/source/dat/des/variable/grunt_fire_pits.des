@@ -77,7 +77,7 @@ ENDMAP
 
 NAME: grunt_makhleb_burn_the_innocent
 TAGS: transparent uniq_altar_makhleb temple_overflow_makhleb mini_float
-DEPTH: D:2-12, Orc, Vaults
+DEPTH: D:2-12, Orc
 KFEAT: _ = altar_makhleb
 KPROP: defghijk. = bloody / nothing
 SUBVAULT: d : grunt_burning_victim

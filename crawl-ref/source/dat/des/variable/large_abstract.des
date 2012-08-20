@@ -525,7 +525,7 @@ ENDMAP
 
 NAME:    minmay_open_boxes_in_corner
 ORIENT:  southeast
-DEPTH:   D:12-, Vaults
+DEPTH:   D:12-
 SHUFFLE: $*%
 SUBST:   c : xcv
 SUBST:   $ = $$$$%*
@@ -553,7 +553,7 @@ ENDMAP
 
 NAME:    minmay_connected_boxes_in_corner
 ORIENT:  southeast
-DEPTH:   D:12-, Vaults
+DEPTH:   D:12-
 SHUFFLE: $*%, ABCDEFH
 SUBST:   $ = $$$$%*..
 SUBST:   % = %%%%$*.....
@@ -638,7 +638,7 @@ ENDMAP
 
 NAME:    minmay_isolated_rectangles_in_corner
 ORIENT:  southeast
-DEPTH:   D:12-26, Vaults:2-6
+DEPTH:   D:12-26
 SHUFFLE: ([{)]}, *$
 SUBST:   * = %**|$....
 SUBST:   $ = $$$$%
@@ -670,7 +670,7 @@ ENDMAP
 
 NAME:    minmay_connected_triangles_in_corner
 ORIENT:  southeast
-DEPTH:   D:12-26, Vaults:2-6
+DEPTH:   D:12-26
 SHUFFLE: ([{)]}, 890, |*%$
 SUBST:   c : cv
 MAP
