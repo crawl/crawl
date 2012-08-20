@@ -198,7 +198,7 @@ KITEM:   1 = sausage / nothing / animal skin / potion of confusion /\
              potion of degeneration / w:2 potion of speed / w:2 potion of might
 KFEAT:   1 = 1
 ITEM:    club, potion of confusion, slice of pizza, sausage / weight:40 nothing
-ITEM:    potion of confusion / potion of water
+ITEM:    potion of confusion
 SHUFFLE: defO
 KFEAT:   O = enter_orcish_mines
 MAP

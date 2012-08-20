@@ -673,8 +673,7 @@ KITEM:   R = any potion / potion of poison w:3 / \
 KITEM:   M = manual of Fighting / manual of Dodging / manual of Armour / \
              manual of Unarmed Combat / manual of Spellcasting w:1 / \
              manual of Invocations w:1
-KITEM:   Q = potion of water / potion of poison / potion of strong poison / \
-             bottled efreet w:1
+KITEM:   Q = potion of poison / potion of strong poison / bottled efreet w:1
 KFEAT:   ? = any shop
 KFEAT:   & = food shop
 MARKER:  = = lua:restrict_door()

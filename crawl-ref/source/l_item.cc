@@ -327,8 +327,6 @@ static int l_item_do_subtype(lua_State *ls)
                    s = "blood";
                 else if (item->sub_type == POT_BLOOD_COAGULATED)
                    s = "coagulated blood";
-                else if (item->sub_type == POT_WATER)
-                   s = "water";
                 else if (item->sub_type == POT_PORRIDGE)
                    s = "porridge";
                 else if (item->sub_type == POT_BERSERK_RAGE)

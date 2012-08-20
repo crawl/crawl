@@ -954,10 +954,6 @@ potion of strong poison
 
 Wyjątkowo groźna trucizna.
 %%%%
-potion of water
-
-Cudowna substancja, podstawa wszelkiego życia.
-%%%%
 quad damage
 
 Zadziwiający magiczny przedmiot w kształcie runy, jednorazowego użytku. Użyty,

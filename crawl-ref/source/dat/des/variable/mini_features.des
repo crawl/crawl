@@ -395,9 +395,8 @@ ENDMAP
 
 NAME:  minmay_liquid_box
 TAGS:  extra luniq_mini no_monster_gen
-ITEM:  potion of water / nothing
 DEPTH: D
-SUBST: w : wWWld
+SUBST: w : wWWl
 MAP
 xx+xx
 xwwwx
@@ -1981,7 +1980,7 @@ ENDMAP
 NAME:   supply_closet_lemuel
 DEPTH:  D:1-9
 TAGS:   no_monster_gen allow_dup extra luniq_mini
-ITEM:   potion of water w:20 / bread ration / meat ration / arrow /\
+ITEM:   bread ration / meat ration / arrow /\
         bolt / spear / any potion w:5
 NSUBST: x = 1:= / *:x
 SUBST:  = = +===

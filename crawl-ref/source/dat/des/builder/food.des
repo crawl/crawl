@@ -226,7 +226,7 @@ KMONS:  A = trapdoor spider w:6 / unseen horror / nothing w:4
 : else
 KMONS:  A = vapour w:4 / trapdoor spider w:6 / unseen horror / nothing w:1
 : end
-ITEM:   sultana w:8 q:1 / potion of water
+ITEM:   sultana w:8 q:1
 ITEM:   honeycomb q:2, bread ration q:3
 : if crawl.coinflip() then
 :     dgn.delayed_decay(_G, 'g', 'spriggan skeleton')

@@ -1741,7 +1741,7 @@ MARKER:     ! = lua:fog_machine { \
                 size_buildup_time = 25, cloud_type = "grey smoke", \
                 colour = "white", name = "white fluffiness" \
             }
-KITEM:      % = w:20 potion of levitation / w:20 potion of water / \
+KITEM:      % = w:20 potion of levitation / \
             potion of magic / potion of speed / potion of resistance / \
             gold / potion of agility / potion of brilliance
 KITEM:      ? = randbook disc:air
