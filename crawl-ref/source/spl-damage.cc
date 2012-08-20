@@ -1020,6 +1020,11 @@ int shatter_walls(coord_def where, int pow, actor *agent)
         chance = 50;
         break;
 
+    case DNGN_TREE:
+    case DNGN_MANGROVE:
+        chance = 33;
+        break;
+
     default:
         break;
     }
@@ -1028,11 +1033,12 @@ int shatter_walls(coord_def where, int pow, actor *agent)
     {
         noisy(30, where);
 
-        grd(where) = DNGN_FLOOR;
-        set_terrain_changed(where);
+        nuke_wall(where);
 
         if (agent->is_player() && grid == DNGN_ORCISH_IDOL)
             did_god_conduct(DID_DESTROY_ORCISH_IDOL, 8);
+        if (agent->is_player() && feat_is_tree(grid))
+            did_god_conduct(DID_KILL_PLANT, 1);
 
         return 1;
     }
