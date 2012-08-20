@@ -95,7 +95,6 @@ class CrawlProcessHandlerBase(object):
         self.lock_basename = self.formatted_time + ".ttyrec"
 
         self.end_callback = None
-        self._watchers = set()
         self._receivers = set()
         self.last_activity_time = time.time()
         self.idle_checker = PeriodicCallback(self.check_idle, 10000,
@@ -149,45 +148,46 @@ class CrawlProcessHandlerBase(object):
 
         self.idle_checker.stop()
 
-        for watcher in list(self._watchers):
-            watcher.stop_watching()
+        for watcher in list(self._receivers):
+            if watcher.watched_game == self:
+                watcher.stop_watching()
 
         if self.end_callback:
             self.end_callback()
 
     def update_watcher_description(self):
-        watcher_names = [watcher.username for watcher in self._watchers
-                         if watcher.username]
-        anon_count = len(self._watchers) - len(watcher_names)
+        def wrap_name(watcher):
+            if watcher.watched_game:
+                return "<span class='watcher'>" + watcher.username + "</span>"
+            else:
+                return "<span class='player'>" + watcher.username + "</span>"
+        watcher_names = [wrap_name(w) for w in self._receivers
+                         if w.username]
+        anon_count = len(self._receivers) - len(watcher_names)
         s = ", ".join(watcher_names)
         if len(watcher_names) > 0 and anon_count > 0:
             s = s + ", and %i Anon" % anon_count
         elif anon_count > 0:
             s = "%i Anon" % anon_count
         self.send_to_all("update_spectators",
-                         count = len(self._watchers),
+                         count = self.watcher_count(),
                          names = s)
 
         update_all_lobbys(self)
 
-    def add_watcher(self, watcher, hide = False):
+    def add_watcher(self, watcher):
         self.last_watcher_join = time.time()
-        if not hide:
-            self._watchers.add(watcher)
         self._receivers.add(watcher)
         if self.client_path:
             self._send_client(watcher)
-        if not hide:
-            self.update_watcher_description()
+        self.update_watcher_description()
 
     def remove_watcher(self, watcher):
-        if watcher in self._watchers:
-            self._watchers.remove(watcher)
         self._receivers.remove(watcher)
         self.update_watcher_description()
 
     def watcher_count(self):
-        return len(self._watchers)
+        return len([w for w in self._receivers if w.watched_game])
 
     def send_client_to_all(self):
         for receiver in self._receivers:
@@ -253,7 +253,7 @@ class CrawlProcessHandlerBase(object):
         entry = {
             "id": self.id,
             "username": self.username,
-            "spectator_count": len(self._watchers),
+            "spectator_count": self.watcher_count(),
             "idle_time": (self.idle_time() if self.is_idle() else 0),
             "game_id": self.game_params["id"],
             }
@@ -530,8 +530,8 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         super(CrawlProcessHandler, self).handle_process_end()
 
 
-    def add_watcher(self, watcher, hide = False):
-        super(CrawlProcessHandler, self).add_watcher(watcher, hide)
+    def add_watcher(self, watcher):
+        super(CrawlProcessHandler, self).add_watcher(watcher)
 
         if self.conn and self.conn.open:
             self.conn.send_message('{"msg":"spectator_joined"}')
