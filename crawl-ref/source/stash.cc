@@ -229,17 +229,8 @@ bool Stash::pickup_eligible() const
 bool Stash::sacrificiable() const
 {
     for (int i = 0, size = items.size(); i < size; ++i)
-    {
-        if (you.religion == GOD_NEMELEX_XOBEH
-            && !check_nemelex_sacrificing_item_type(items[i])
-            || items[i].flags & (ISFLAG_DROPPED | ISFLAG_THROWN))
-        {
-            continue;
-        }
-
-        if (god_likes_item(you.religion, items[i]))
+        if (items[i].is_greedy_sacrificiable())
             return true;
-    }
 
     return false;
 }
