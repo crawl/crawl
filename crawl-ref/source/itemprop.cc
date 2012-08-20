@@ -203,7 +203,7 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_CRUSHING | DAM_PIERCE, 10 },
     { WPN_DIRE_FLAIL,        "dire flail",         13, -3, 13, 240,  9,
-        SK_MACES_FLAILS, HANDS_DOUBLE, SIZE_LARGE,  MI_NONE, false,
+        SK_MACES_FLAILS, HANDS_TWO, SIZE_LARGE,  MI_NONE, false,
         DAMV_CRUSHING | DAM_PIERCE, 10 },
     { WPN_EVENINGSTAR,       "eveningstar",        14, -1, 15, 180,  8,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
@@ -321,13 +321,13 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
 
     // Staves
     { WPN_STAFF,             "staff",               5,  5, 12, 150,  6,
-        SK_STAVES,       HANDS_DOUBLE, SIZE_MEDIUM, MI_NONE, false,
+        SK_STAVES,       HANDS_HALF, SIZE_MEDIUM, MI_NONE, false,
         DAMV_CRUSHING, 0 },
     { WPN_QUARTERSTAFF,      "quarterstaff",        10, 3, 13, 180,  7,
-        SK_STAVES,       HANDS_DOUBLE, SIZE_LARGE,  MI_NONE, false,
+        SK_STAVES,       HANDS_TWO, SIZE_LARGE,  MI_NONE, false,
         DAMV_CRUSHING, 10 },
     { WPN_LAJATANG,          "lajatang",            16,-3, 14, 200,  3,
-        SK_STAVES,       HANDS_DOUBLE, SIZE_LARGE,  MI_NONE, false,
+        SK_STAVES,       HANDS_TWO, SIZE_LARGE,  MI_NONE, false,
         DAMV_SLICING, 2 },
 
     // Range weapons
@@ -1463,7 +1463,6 @@ hands_reqd_type hands_reqd(const item_def &item, size_type size)
 {
     int         ret = HANDS_ONE;
     int         fit;
-    bool        doub = false;
 
     switch (item.base_type)
     {
@@ -1473,11 +1472,11 @@ hands_reqd_type hands_reqd(const item_def &item, size_type size)
         // as a special case because we want to be very flexible with
         // these useful objects (we want spriggans and ogres to be
         // able to use them).  Rods are always 1-handed.
-        if (item.base_type == OBJ_STAVES || weapon_skill(item) == SK_STAVES)
+        if (item.base_type == OBJ_STAVES)
         {
-            if (size < SIZE_SMALL)
+            if (size < SIZE_MEDIUM)
                 ret = HANDS_TWO;
-            else if (size > SIZE_LARGE)
+            else if (size > SIZE_MEDIUM)
                 ret = HANDS_ONE;
             else
                 ret = HANDS_HALF;
@@ -1485,13 +1484,6 @@ hands_reqd_type hands_reqd(const item_def &item, size_type size)
         }
 
         ret = Weapon_prop[ Weapon_index[item.sub_type] ].hands;
-
-        // Size is the level where we can use one hand for one end.
-        if (ret == HANDS_DOUBLE)
-        {
-            doub = true;
-            ret = HANDS_TWO; // HANDS_HALF once double-ended is implemented.
-        }
 
         // Adjust handedness for size only for non-whip melee weapons.
         if (!is_range_weapon(item) && !is_whip_type(item.sub_type))
@@ -1508,13 +1500,10 @@ hands_reqd_type hands_reqd(const item_def &item, size_type size)
             // Large      XX      XX      0       0     -1      -2
             // Big        XX      XX     XX       0      0      -1
             // Giant      XX      XX     XX      XX      0       0
-
-            // Note the stretching of double weapons for larger characters
-            // by one level since they tend to be larger weapons.
             if (size < SIZE_MEDIUM && fit > 0)
                 ret += fit;
             else if (size > SIZE_MEDIUM && fit < 0)
-                ret += (fit + doub);
+                ret += fit;
         }
         break;
 

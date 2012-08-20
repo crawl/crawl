@@ -1005,9 +1005,6 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
             case HANDS_TWO:
                 description += "It is a two handed weapon.";
                 break;
-            case HANDS_DOUBLE:
-                description += "It is a buggy weapon.";
-                break;
             }
         }
         if (!you.could_wield(item, true))

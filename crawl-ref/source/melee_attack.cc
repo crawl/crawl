@@ -4977,15 +4977,6 @@ int melee_attack::calc_base_weapon_damage()
     {
         if (is_weapon(*weapon) && !is_range_weapon(*weapon))
             damage = property(*weapon, PWPN_DAMAGE);
-
-        // Even large staves can be wielded with a worn shield, but they
-        // are much less effective
-        if (shield && weapon->base_type == OBJ_WEAPONS
-            && weapon_skill(*weapon) == SK_STAVES
-            && cmp_weapon_size(*weapon, SIZE_LARGE) >= 0)
-        {
-            damage /= 2;
-        }
     }
 
     return damage;
