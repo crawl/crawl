@@ -225,7 +225,7 @@ function trove.spell_skills (e)
 end
 }}
 
-default-depth: D:10-, Elf:1-
+default-depth: D:10-, Elf:1-, Vaults
 
 ##############################################################################
 #
