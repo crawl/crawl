@@ -1093,27 +1093,30 @@ spret_type cast_shatter(int pow, bool fail)
     return SPRET_SUCCESS;
 }
 
+static int _shatter_player_dice()
+{
+    if (you.petrified())
+        return 12; // reduced later
+    else if (you.petrifying())
+        return 6;  // reduced later
+    // Same order as for monsters -- petrified flyers get hit hard, skeletal
+    // flyers get no extra damage.
+    else if (you.airborne())
+        return 1;
+    else if (you.form == TRAN_STATUE || you.form == TRAN_LICH)
+        return 6;
+    else if (you.form == TRAN_ICE_BEAST)
+        return 4;
+    else
+        return 3;
+}
+
 int shatter_player(int pow, actor *wielder)
 {
     if (wielder->is_player())
         return 0;
 
-    dice_def dam_dice(0, 5 + pow / 3); // Number of dice set below.
-
-    if (you.petrified())
-        dam_dice.num = 12; // reduced later
-    else if (you.petrifying())
-        dam_dice.num = 6;  // reduced later
-    // Same order as for monsters -- petrified flyers get hit hard, skeletal
-    // flyers get no extra damage.
-    else if (you.airborne())
-        dam_dice.num = 1;
-    else if (you.form == TRAN_STATUE || you.form == TRAN_LICH)
-        dam_dice.num = 6;
-    else if (you.form == TRAN_ICE_BEAST)
-        dam_dice.num = 4;
-    else
-        dam_dice.num = 3;
+    dice_def dam_dice(_shatter_player_dice(), 5 + pow / 3);
 
     int damage = std::max(0, dam_dice.roll() - random2(you.armour_class()));
 
@@ -1121,6 +1124,67 @@ int shatter_player(int pow, actor *wielder)
         ouch(damage, wielder->mindex(), KILLED_BY_MONSTER);
 
     return damage;
+}
+
+bool mons_shatter(monster* caster, bool actual)
+{
+    const bool silence = silenced(caster->pos());
+    int foes = 0;
+
+    if (actual)
+    {
+        if (silence)
+            mprf("The dungeon shakes around %s!",
+                 caster->name(DESC_THE).c_str());
+        else
+        {
+            noisy(30, caster->pos(), caster->mindex());
+            mprf(MSGCH_SOUND, "The dungeon rumbles around %s!",
+                 caster->name(DESC_THE).c_str());
+        }
+    }
+
+    int pow = 5 + caster->hit_dice / 3;
+    int rad = 3 + div_rand_round(caster->hit_dice, 5);
+
+    int dest = 0;
+    for (distance_iterator di(caster->pos(), true, true, rad); di; ++di)
+    {
+        // goes from the center out, so newly dug walls recurse
+        if (!cell_see_cell(caster->pos(), *di, LOS_SOLID))
+            continue;
+
+        if (actual)
+        {
+            shatter_items(*di, pow, caster);
+            shatter_monsters(*di, pow, caster);
+            if (*di == you.pos())
+                shatter_player(pow, caster);
+            dest += shatter_walls(*di, pow, caster);
+        }
+        else
+        {
+            if (you.pos() == *di)
+                foes -= _shatter_player_dice();
+            if (const monster *victim = monster_at(*di))
+            {
+                dprf("[%s]", victim->name(DESC_PLAIN, true).c_str());
+                foes += _shatter_mon_dice(victim)
+                     * (victim->wont_attack() ? -1 : 1);
+            }
+        }
+    }
+
+    if (dest && !silence)
+        mpr("Ka-crash!", MSGCH_SOUND);
+
+    if (!caster->wont_attack())
+        foes *= -1;
+
+    if (!actual)
+        dprf("Shatter foe HD: %d", foes);
+
+    return (foes > 0); // doesn't matter if actual
 }
 
 void shillelagh(actor *wielder, coord_def where, int pow)
