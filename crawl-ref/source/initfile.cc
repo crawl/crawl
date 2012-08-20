@@ -860,6 +860,8 @@ void game_options::reset_options()
                               | ES_GREEDY_VISITED_ITEM_STACK
                               | ES_GREEDY_SACRIFICIABLE);
 
+    sacrifice_before_explore = 0;
+
     // The prompt conditions will be combined into explore_stop after
     // reading options.
     explore_stop_prompt    = ES_NONE;
@@ -2917,6 +2919,13 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             explore_stop &= ~new_conditions;
         else
             explore_stop |= new_conditions;
+    }
+    else if (key == "sacrifice_before_explore")
+    {
+        if (field == "prompt" || field == "ask")
+            sacrifice_before_explore = 2;
+        else
+            sacrifice_before_explore = _read_bool(field, false);
     }
     else if (key == "explore_stop_prompt")
     {

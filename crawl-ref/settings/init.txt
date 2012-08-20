@@ -145,6 +145,7 @@ drop_filter = useless_item
 # explore_greedy   = false
 # explore_stop     = items,stairs,shops,altars,portals,branches
 # explore_stop    += greedy_pickup_smart,greedy_visited_item_stack
+# sacrifice_before_explore = true
 # explore_improved = true
 # explore_wall_bias = 0
 # travel_key_stop = false
