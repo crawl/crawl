@@ -790,6 +790,28 @@ static std::string _corrosion_resistance_string(const item_def &item)
         return "";
 }
 
+static std::string _handedness_string(const item_def &item)
+{
+    std::string description;
+
+    switch (hands_reqd(item, you.body_size()))
+    {
+    case HANDS_ONE:
+        description += "It is a one handed weapon.";
+        break;
+    case HANDS_HALF:
+        description += "It can be used with one hand, or more "
+                       "effectively with two (i.e. when not using a "
+                       "shield).";
+        break;
+    case HANDS_TWO:
+        description += "It is a two handed weapon.";
+        break;
+    }
+
+    return description;
+}
+
 //---------------------------------------------------------------
 //
 // describe_weapon
@@ -991,22 +1013,8 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
                          skill == SK_FIGHTING ? "buggy" : skill_name(skill));
 
         if (!launcher)
-        {
-            switch (hands_reqd(item, you.body_size()))
-            {
-            case HANDS_ONE:
-                description += "It is a one handed weapon.";
-                 break;
-            case HANDS_HALF:
-                description += "It can be used with one hand, or more "
-                       "effectively with two (i.e. when not using a "
-                       "shield).";
-                break;
-            case HANDS_TWO:
-                description += "It is a two handed weapon.";
-                break;
-            }
-        }
+            description += _handedness_string(item);
+
         if (!you.could_wield(item, true))
             description += "\nIt is too large for you to wield.";
     }
@@ -2071,7 +2079,8 @@ std::string get_item_description(const item_def &item, bool verbose,
             append_weapon_stats(stats, item);
             description << stats;
         }
-        description << "\n\nIt falls into the 'Staves' category.";
+        description << "\n\nIt falls into the 'Staves' category. ";
+        description << _handedness_string(item);
         break;
 
     case OBJ_MISCELLANY:
