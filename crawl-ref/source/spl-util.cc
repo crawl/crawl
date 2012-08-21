@@ -1161,10 +1161,6 @@ bool spell_is_useless(spell_type spell, bool transient)
         if (transient && you.duration[DUR_CONTROL_TELEPORT] > 0)
             return true;
         break;
-    case SPELL_SEE_INVISIBLE:
-        if (you.can_see_invisible(false, false))
-            return true;
-        break;
     case SPELL_DARKNESS:
         // mere corona is not enough, but divine light blocks it completely
         if (transient && you.haloed())

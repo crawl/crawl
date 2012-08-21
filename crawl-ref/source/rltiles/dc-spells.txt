@@ -59,7 +59,6 @@ extension EXTENSION
 haste HASTE
 invisibility INVISIBILITY
 mass_confusion MASS_CONFUSION
-see_invisible SEE_INVISIBLE
 slow SLOW
 sure_blade SURE_BLADE
 tukimas_dance TUKIMAS_DANCE

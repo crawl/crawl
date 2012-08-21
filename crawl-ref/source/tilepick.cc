@@ -4507,7 +4507,6 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_SLOW:                     return TILEG_SLOW;
     case SPELL_TUKIMAS_DANCE:            return TILEG_TUKIMAS_DANCE;
     case SPELL_ENSLAVEMENT:              return TILEG_ENSLAVEMENT;
-    case SPELL_SEE_INVISIBLE:            return TILEG_SEE_INVISIBLE;
     case SPELL_PETRIFY:                  return TILEG_PETRIFY;
     case SPELL_CAUSE_FEAR:               return TILEG_CAUSE_FEAR;
     case SPELL_HASTE:                    return TILEG_HASTE;
