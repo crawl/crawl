@@ -1111,7 +1111,7 @@ static int _shatter_player_dice()
         return 3;
 }
 
-int shatter_player(int pow, actor *wielder)
+int shatter_player(int pow, actor *wielder, bool devastator)
 {
     if (wielder->is_player())
         return 0;
@@ -1124,7 +1124,10 @@ int shatter_player(int pow, actor *wielder)
     {
         mpr(damage > 15 ? "You shudder from the earth-shattering force."
                         : "You shudder.");
-        ouch(damage, wielder->mindex(), KILLED_BY_MONSTER);
+        if (devastator)
+            ouch(damage, wielder->mindex(), KILLED_BY_MONSTER);
+        else
+            ouch(damage, wielder->mindex(), KILLED_BY_BEAM, "by Shatter");
     }
 
     return damage;
@@ -1237,7 +1240,7 @@ void shillelagh(actor *wielder, coord_def where, int pow)
         shatter_monsters(*ai, pow * 3 / 2, wielder);
 
     if ((you.pos() - wielder->pos()).abs() <= 2 && in_bounds(you.pos()))
-        shatter_player(pow, wielder);
+        shatter_player(pow, wielder, true);
 }
 
 static int _ignite_poison_affect_item(item_def& item, bool in_inv)
