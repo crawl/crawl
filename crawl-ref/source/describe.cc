@@ -1093,7 +1093,7 @@ static std::string _describe_ammo(const item_def &item)
                     how = "heavily frayed";
             }
 
-            description += "It looks ";
+            description += "\n\nIt looks ";
             description += how;
             description += ".";
         }
