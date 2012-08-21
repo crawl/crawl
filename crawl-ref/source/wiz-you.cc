@@ -744,7 +744,9 @@ static const char* dur_names[] =
     "stoneskin",
     "gourmand",
     "bargain",
+#if TAG_MAJOR_VERSION == 34
     "insulation",
+#endif
     "resistance",
     "slaying",
     "stealth",

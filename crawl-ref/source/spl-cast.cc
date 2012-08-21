@@ -1462,10 +1462,8 @@ static spret_type _do_cast(spell_type spell, int powc,
 
     // Self-enchantments. (Spells that can only affect the player.)
     // Resistances.
-    case SPELL_INSULATION:
-        return cast_insulation(powc, fail);
-
 #if TAG_MAJOR_VERSION == 34
+    case SPELL_INSULATION:
     case SPELL_SEE_INVISIBLE:
         mpr("Sorry, this spell is gone!");
         return SPRET_ABORT;
