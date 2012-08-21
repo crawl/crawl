@@ -477,6 +477,7 @@ bool butchery(int which_corpse, bool bottle_blood)
             if (prechosen && si->index() == which_corpse)
             {
                 corpse_id = si->index();
+                num_corpses = 1;
                 break;
             }
 
