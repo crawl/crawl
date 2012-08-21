@@ -250,7 +250,9 @@ enum attribute_type
                                // player has seen.
     ATTR_NOISES,               // A noisy artefact is equipped.
     ATTR_SHADOWS,              // Lantern of shadows effect.
+#if TAG_MAJOR_VERSION == 34
     ATTR_FRUIT_FOUND,          // Mask of fruit types found.
+#endif
     ATTR_LEV_UNCANCELLABLE,    // Potion or spell of levitation is in effect.
     ATTR_INVIS_UNCANCELLABLE,  // Potion/spell/wand of invis is in effect.
     ATTR_PERM_LEVITATION,      // Tengu flight or boots of lev are on.
