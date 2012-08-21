@@ -998,7 +998,9 @@ static int _train(skill_type exsk, int &max_exp, bool simu)
     you.total_experience += cost;
     max_exp -= cost;
 
-    redraw_skill(exsk, old_best_skill);
+    if (!simu)
+        redraw_skill(exsk, old_best_skill);
+
     check_skill_cost_change();
     ASSERT(you.exp_available >= 0);
     ASSERT(max_exp >= 0);
