@@ -190,7 +190,7 @@ std::vector<vault_placement> Temp_Vaults;
 static FixedVector<bool, NUM_MONSTERS> temp_unique_creatures;
 static FixedVector<unique_item_status_type, MAX_UNRANDARTS> temp_unique_items;
 
-const map_mask *Vault_Placement_Mask = NULL;
+const map_bitmask *Vault_Placement_Mask = NULL;
 
 bool Generating_Level = false;
 
@@ -6499,7 +6499,7 @@ vault_place_iterator vault_place_iterator::operator ++ (int)
 //////////////////////////////////////////////////////////////////////////
 // unwind_vault_placement_mask
 
-unwind_vault_placement_mask::unwind_vault_placement_mask(const map_mask *mask)
+unwind_vault_placement_mask::unwind_vault_placement_mask(const map_bitmask *mask)
     : oldmask(Vault_Placement_Mask)
 {
     Vault_Placement_Mask = mask;

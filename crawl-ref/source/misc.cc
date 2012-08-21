@@ -1203,7 +1203,7 @@ static void _spatter_neighbours(const coord_def& where, int chance,
     }
 }
 
-void generate_random_blood_spatter_on_level(const map_mask *susceptible_area)
+void generate_random_blood_spatter_on_level(const map_bitmask *susceptible_area)
 {
     const int max_cluster = 7 + random2(9);
 

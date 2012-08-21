@@ -20,6 +20,7 @@
 #define __STDC_FORMAT_MACROS
 #include <inttypes.h>
 
+#include "bitary.h"
 #include "defines.h"
 #include "enum.h"
 #include "fixedarray.h"
@@ -77,6 +78,7 @@ const int kPathLen = 256;
 
 typedef FixedArray<dungeon_feature_type, GXM, GYM> feature_grid;
 typedef FixedArray<unsigned int, GXM, GYM> map_mask;
+typedef FixedBitArray<GXM, GYM> map_bitmask;
 
 struct item_def;
 struct coord_def;
