@@ -308,24 +308,6 @@ int cast_selective_amnesia(std::string *pre_msg)
     return 1;
 }
 
-spret_type cast_see_invisible(int pow, bool fail)
-{
-    fail_check();
-    if (you.can_see_invisible())
-        mpr("You feel as though your vision will be sharpened longer.");
-    else
-    {
-        mpr("Your vision seems to sharpen.");
-
-        // We might have to turn autopickup back on again.
-        autotoggle_autopickup(false);
-    }
-
-    // No message if you already are under the spell.
-    you.increase_duration(DUR_SEE_INVISIBLE, 10 + random2(2 + pow/2), 100);
-    return SPRET_SUCCESS;
-}
-
 spret_type cast_silence(int pow, bool fail)
 {
     fail_check();

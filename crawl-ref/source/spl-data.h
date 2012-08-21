@@ -1593,6 +1593,7 @@ struct spell_desc
      false
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_SEE_INVISIBLE, "See Invisible",
      SPTYP_CHARMS,
@@ -1605,6 +1606,7 @@ struct spell_desc
      false,
      true
 },
+#endif
 
 {
     SPELL_PHASE_SHIFT, "Phase Shift",

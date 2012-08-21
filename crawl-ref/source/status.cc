@@ -79,8 +79,6 @@ static duration_def duration_data[] =
       BLUE, "RMsl", "repel missiles", "You are protected from missiles." },
     { DUR_RESISTANCE, true,
       LIGHTBLUE, "Resist", "", "You resist elements." },
-    { DUR_SEE_INVISIBLE, true,
-      BLUE, "SInv", "", "You can see invisible." },
     { DUR_SLAYING, false,
       0, "", "deadly", "" },
     { DUR_SLIMIFY, true,

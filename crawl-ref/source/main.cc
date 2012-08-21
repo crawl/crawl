@@ -2158,7 +2158,7 @@ static void _prep_input()
     }
     if (you.seen_invis)
     {
-        if (!you.can_see_invisible(false, true))
+        if (!you.can_see_invisible(false))
         {
             item_def *ring = get_only_unided_ring();
             if (ring && !is_artefact(*ring)
@@ -2264,22 +2264,6 @@ static void _decrement_petrification(int delay)
         }
         else if (dur < 15 && old_dur >= 15)
             mpr("Your limbs are stiffening.");
-    }
-}
-
-static void _check_invisibles()
-{
-    for (radius_iterator ri(you.pos(), LOS_RADIUS, C_ROUND); ri; ++ri)
-    {
-        if (!cell_see_cell(you.pos(), *ri, LOS_DEFAULT))
-            continue;
-        const monster* mons = monster_at(*ri);
-        if (mons && !mons->visible_to(&you) && !mons->submerged())
-        {
-            // we _could_ see the monster
-            autotoggle_autopickup(true);
-            return;
-        }
     }
 }
 
@@ -2499,15 +2483,6 @@ static void _decrement_durations()
                           "You feel less regenerative.");
     if (you.duration[DUR_POWERED_BY_DEATH] > 0)
         handle_pbd_corpses(true);
-
-    if (_decrement_a_duration(DUR_SEE_INVISIBLE, delay, NULL,
-                              coinflip(),
-                              "You begin to squint at shadows.")
-        && !you.can_see_invisible())
-    {
-        mpr("Your eyesight blurs momentarily.", MSGCH_DURATION);
-        _check_invisibles();
-    }
 
     _decrement_a_duration(DUR_TELEPATHY, delay, "You feel less empathic.");
 

@@ -579,7 +579,6 @@ static void _get_status_lights(std::vector<status_light>& out)
         DUR_BERSERK,
         DUR_RESISTANCE,
         DUR_INSULATION,
-        DUR_SEE_INVISIBLE,
         STATUS_AIRBORNE,
         DUR_INVIS,
         DUR_CONTROL_TELEPORT,

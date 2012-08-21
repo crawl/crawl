@@ -733,7 +733,9 @@ static const char* dur_names[] =
     "death channel",
     "deflect missiles",
     "phase shift",
+#if TAG_MAJOR_VERSION == 34
     "see invisible",
+#endif
     "weapon brand",
     "demonic guardian",
     "pbd",

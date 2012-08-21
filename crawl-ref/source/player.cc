@@ -3842,7 +3842,6 @@ int get_expiration_threshold(duration_type dur)
     case DUR_PHASE_SHIFT:
     case DUR_CONTROL_TELEPORT:
     case DUR_DEATH_CHANNEL:
-    case DUR_SEE_INVISIBLE:
     case DUR_SHROUD_OF_GOLUBRIA:
         return (6 * BASELINE_DELAY);
 
@@ -4100,7 +4099,6 @@ void display_char_status()
         DUR_PHASE_SHIFT,
         DUR_SILENCE,
         DUR_STONESKIN,
-        DUR_SEE_INVISIBLE,
         DUR_INVIS,
         DUR_CONF,
         STATUS_BEHELD,
@@ -7177,7 +7175,7 @@ bool player::sicken(int amount, bool allow_hint)
     return true;
 }
 
-bool player::can_see_invisible(bool calc_unid, bool transient) const
+bool player::can_see_invisible(bool calc_unid) const
 {
     if (crawl_state.game_is_arena())
         return true;
@@ -7207,10 +7205,6 @@ bool player::can_see_invisible(bool calc_unid, bool transient) const
         si++;
 
     if (player_mutation_level(MUT_EYEBALLS) == 3)
-        si++;
-
-    //jmf: added see_invisible spell
-    if (transient && duration[DUR_SEE_INVISIBLE] > 0)
         si++;
 
     if (you.religion == GOD_ASHENZARI && you.piety >= piety_breakpoint(2)

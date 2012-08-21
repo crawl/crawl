@@ -89,11 +89,11 @@
 
 {   // Book of Enchantments (fourth one)
     SPELL_TUKIMAS_DANCE,
-    SPELL_SEE_INVISIBLE,
     SPELL_CAUSE_FEAR,
     SPELL_SILENCE,
     SPELL_DEFLECT_MISSILES,
     SPELL_HASTE,
+    SPELL_NO_SPELL,
     SPELL_NO_SPELL,
     SPELL_NO_SPELL,
 },
