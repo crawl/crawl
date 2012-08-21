@@ -20,6 +20,7 @@
 function init_research(e)
   e.tags('serial_research')
   e.tags('no_monster_gen')
+  e.tags('no_hmirror no_vmirror no_rotate')
   e.tags('patrolling')
   e.weight('1')
   if you.branch() == "Elf" then
