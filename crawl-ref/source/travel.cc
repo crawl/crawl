@@ -834,6 +834,13 @@ void explore_pickup_event(int did_pickup, int tried_pickup)
     }
 }
 
+static bool _can_sacrifice(const coord_def p)
+{
+    const dungeon_feature_type feat = grd(p);
+    return (!you.cannot_speak()
+            && (!feat_is_altar(feat) || feat_is_player_altar(feat)));
+}
+
 // Top-level travel control (called from input() in main.cc).
 //
 // travel() is responsible for making the individual moves that constitute
@@ -2924,9 +2931,10 @@ void start_explore(bool grab_items)
         const LevelStashes *lev = StashTrack.find_current_level();
         if (lev && lev->sacrificiable(you.pos()))
         {
-            if (Options.sacrifice_before_explore == 1
-                || Options.sacrifice_before_explore == 2
-                   && yesno("Do you want to sacrifice the items here? ", true, 'n'))
+            if ((Options.sacrifice_before_explore == 1
+                 || Options.sacrifice_before_explore == 2
+                    && yesno("Do you want to sacrifice the items here? ", true, 'n'))
+                && _can_sacrifice(you.pos()))
             {
                 pray();
             }
