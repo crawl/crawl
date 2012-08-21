@@ -434,6 +434,11 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
         // and contamination is nastier.
         contaminate_player(1, was_known);
         break;
+
+#if TAG_MAJOR_VERSION == 34
+    case POT_WATER:
+        break;
+#endif
     }
 
     return (!was_known && effect);
