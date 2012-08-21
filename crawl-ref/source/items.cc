@@ -658,10 +658,10 @@ void item_list_on_square(std::vector<const item_def*>& items,
     }
 }
 
-static void _sacrificiable_item_list(std::vector<const item_def*>& items)
+static void _sacrificeable_item_list(std::vector<const item_def*>& items)
 {
     for (stack_iterator si(you.visible_igrd(you.pos())); si; ++si)
-        if (si->is_greedy_sacrificiable())
+        if (si->is_greedy_sacrificeable())
             items.push_back(& (*si));
 }
 
@@ -746,10 +746,10 @@ void item_check(bool verbose)
     std::ostream& strm = msg::streams(MSGCH_FLOOR_ITEMS);
 
     std::vector<const item_def*> items;
-    std::vector<const item_def*> sacrificiable_items;
+    std::vector<const item_def*> sacrificeable_items;
 
     item_list_on_square(items, you.visible_igrd(you.pos()), true);
-    _sacrificiable_item_list(sacrificiable_items);
+    _sacrificeable_item_list(sacrificeable_items);
 
     if (items.empty())
     {
@@ -764,13 +764,13 @@ void item_check(bool verbose)
         std::string name = get_menu_colour_prefix_tags(it, DESC_A);
         strm << "You see here " << name << '.' << std::endl;
         _maybe_give_corpse_hint(it);
-        if (sacrificiable_items.size())
+        if (sacrificeable_items.size())
             strm << "It can be sacrificed." << std::endl;
         return;
     }
 
     bool done_init_line = false;
-    bool done_list_sacrificiables = false;
+    bool done_list_sacrificeables = false;
 
     if (static_cast<int>(items.size()) >= Options.item_stack_summary_minimum)
     {
@@ -822,21 +822,21 @@ void item_check(bool verbose)
             mpr_nocap(name);
             _maybe_give_corpse_hint(it);
         }
-        if (items.size() == sacrificiable_items.size())
+        if (items.size() == sacrificeable_items.size())
         {
             strm << "They can be sacrificied." << std::endl;
-            done_list_sacrificiables = true;
+            done_list_sacrificeables = true;
         }
     }
     else if (!done_init_line)
         strm << "There are many items here." << std::endl;
 
-    if (!done_list_sacrificiables && sacrificiable_items.size())
+    if (!done_list_sacrificeables && sacrificeable_items.size())
     {
         mprnojoin("Things which can be sacrificed:", MSGCH_FLOOR_ITEMS);
-        for (unsigned int i = 0; i < sacrificiable_items.size(); ++i)
+        for (unsigned int i = 0; i < sacrificeable_items.size(); ++i)
         {
-            item_def it(*sacrificiable_items[i]);
+            item_def it(*sacrificeable_items[i]);
             std::string name = get_menu_colour_prefix_tags(it, DESC_A);
             mpr_nocap(name);
         }
@@ -3282,7 +3282,7 @@ bool item_def::is_mundane() const
 
 // Does the item causes autoexplore to visit it. It excludes ?RC for Ash,
 // disabled items for Nemelex and items already visited (dropped flag).
-bool item_def::is_greedy_sacrificiable() const
+bool item_def::is_greedy_sacrificeable() const
 {
     if (!god_likes_items(you.religion, true))
         return false;
