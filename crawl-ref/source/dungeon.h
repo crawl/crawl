@@ -7,6 +7,7 @@
 #ifndef DUNGEON_H
 #define DUNGEON_H
 
+#include "bitary.h"
 #include "fixedarray.h"
 #include "env.h"
 #include "externs.h"
@@ -169,16 +170,16 @@ private:
 class unwind_vault_placement_mask
 {
 public:
-    unwind_vault_placement_mask(const map_mask *mask);
+    unwind_vault_placement_mask(const map_bitmask *mask);
     ~unwind_vault_placement_mask();
 private:
-    const map_mask *oldmask;
+    const map_bitmask *oldmask;
 };
 
 extern bool Generating_Level;
 extern std::vector<vault_placement> Temp_Vaults;
 
-extern const map_mask *Vault_Placement_Mask;
+extern const map_bitmask *Vault_Placement_Mask;
 
 void init_level_connectivity();
 void read_level_connectivity(reader &th);
