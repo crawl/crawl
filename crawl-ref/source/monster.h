@@ -215,7 +215,7 @@ public:
     bool        extra_balanced() const;
     bool        can_pass_through_feat(dungeon_feature_type grid) const;
     bool        is_habitable_feat(dungeon_feature_type actual_grid) const;
-    bool        shove(const char* name);
+    bool        shove(const char* name = "");
     size_type   body_size(size_part_type psize = PSIZE_TORSO,
                           bool base = false) const;
     int         body_weight(bool base = false) const;

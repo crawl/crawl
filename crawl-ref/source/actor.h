@@ -90,7 +90,7 @@ public:
 
     virtual int       get_experience_level() const = 0;
 
-    virtual bool shove(const char* feat_name) = 0;
+    virtual bool shove(const char* feat_name = "") = 0;
     virtual bool can_pass_through_feat(dungeon_feature_type grid) const = 0;
     virtual bool can_pass_through(int x, int y) const;
     virtual bool can_pass_through(const coord_def &c) const;
