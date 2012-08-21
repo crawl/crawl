@@ -217,7 +217,11 @@ bool resolve_subvault(map_def &map)
     int width = map.subvault_width();
     int height = map.subvault_height();
 
-    bool can_rot = (map.map.width() <= height && map.map.height() <= width);
+    bool can_hmirror = !map.has_tag("no_hmirror");
+    bool can_vmirror = !map.has_tag("no_vmirror");
+
+    bool can_rot = (map.map.width() <= height && map.map.height() <= width)
+                   && !map.has_tag("no_rotate");
     bool must_rot = (map.map.width() > width || map.map.height() > height);
 
     // Too big, whether or not it is rotated.
@@ -238,10 +242,10 @@ bool resolve_subvault(map_def &map)
     bool exact_fit = (map.map.height() == height && map.map.width() == width);
     if (!exact_fit)
     {
-        if (coinflip())
+        if (can_hmirror && coinflip())
             map.hmirror();
 
-        if (coinflip())
+        if (can_vmirror && coinflip())
             map.vmirror();
 
         // The map may have refused to have been rotated, so verify dimensions.
@@ -275,9 +279,18 @@ bool resolve_subvault(map_def &map)
     map.hmirror();
     mismatch[3] = map.subvault_mismatch_count(svplace);
 
-    int min_mismatch = std::min(mismatch[0], mismatch[1]);
+    int min_mismatch = mismatch[0];
+    if (can_hmirror)
+        min_mismatch = std::min(min_mismatch, mismatch[1]);
+    if (can_hmirror && can_vmirror)
+        min_mismatch = std::min(min_mismatch, mismatch[2]);
+    if (can_vmirror)
+        min_mismatch = std::min(min_mismatch, mismatch[3]);
+
+    // Pick a mirror combination with the minimum number of mismatches.
     min_mismatch = std::min(min_mismatch, mismatch[2]);
-    min_mismatch = std::min(min_mismatch, mismatch[3]);
+    if (!map.has_tag("no_vmirror"))
+        min_mismatch = std::min(min_mismatch, mismatch[3]);
 
     // Pick a mirror combination with the minimum number of mismatches.
     int idx = random2(4);
