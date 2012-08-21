@@ -758,8 +758,7 @@ static void _abyss_move_entities_at(coord_def src, coord_def dst)
 }
 
 // Move all vaults within the mask by the specified delta.
-static void _abyss_move_masked_vaults_by_delta(const map_mask &mask,
-                                               const coord_def delta)
+static void _abyss_move_masked_vaults_by_delta(const coord_def delta)
 {
     std::set<int> vault_indexes;
     for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
@@ -841,8 +840,7 @@ static void _abyss_move_entities(coord_def target_centre,
         }
     }
 
-    _abyss_move_masked_vaults_by_delta(*shift_area_mask,
-                                       target_centre - source_centre);
+    _abyss_move_masked_vaults_by_delta(target_centre - source_centre);
 }
 
 static void _abyss_expand_mask_to_cover_vault(map_mask *mask,
