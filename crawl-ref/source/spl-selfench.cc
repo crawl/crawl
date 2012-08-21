@@ -227,14 +227,6 @@ spret_type cast_fly(int power, bool fail)
     return SPRET_SUCCESS;
 }
 
-spret_type cast_insulation(int power, bool fail)
-{
-    fail_check();
-    you.increase_duration(DUR_INSULATION, 10 + random2(power), 100,
-                          "You feel insulated.");
-    return SPRET_SUCCESS;
-}
-
 spret_type cast_teleport_control(int power, bool fail)
 {
     fail_check();

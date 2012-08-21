@@ -536,7 +536,7 @@ struct status_light
 // - magenta, light magenta     for "better" enchantments (deflect, fly)
 //
 // Prints burden, hunger,
-// pray, holy, teleport, regen, insulation, fly/lev, invis, silence,
+// pray, holy, teleport, regen, fly/lev, invis, silence,
 //   conf. touch, bargain, sage
 // confused, mesmerised, fire, poison, disease, rot, held, glow, swift,
 //   fast, slow, breath
@@ -578,7 +578,6 @@ static void _get_status_lights(std::vector<status_light>& out)
         STATUS_REGENERATION,
         DUR_BERSERK,
         DUR_RESISTANCE,
-        DUR_INSULATION,
         STATUS_AIRBORNE,
         DUR_INVIS,
         DUR_CONTROL_TELEPORT,

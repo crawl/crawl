@@ -1743,7 +1743,7 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
         if (you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION])
             return 3;
 
-        if (you.duration[DUR_INSULATION] || you.duration[DUR_RESISTANCE])
+        if (you.duration[DUR_RESISTANCE])
             re++;
 
         // transformations:
@@ -3831,7 +3831,6 @@ int get_expiration_threshold(duration_type dur)
     case DUR_DEFLECT_MISSILES:
     case DUR_REPEL_MISSILES:
     case DUR_REGENERATION:
-    case DUR_INSULATION:
     case DUR_RESISTANCE:
     case DUR_SWIFTNESS:
     case DUR_INVIS:
@@ -4092,7 +4091,6 @@ void display_char_status()
         STATUS_REGENERATION,
         DUR_SWIFTNESS,
         DUR_RESISTANCE,
-        DUR_INSULATION,
         DUR_TELEPORT,
         DUR_CONTROL_TELEPORT,
         DUR_DEATH_CHANNEL,

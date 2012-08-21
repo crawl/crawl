@@ -2464,9 +2464,6 @@ static void _decrement_durations()
     _decrement_a_duration(DUR_SWIFTNESS, delay,
                           "You feel sluggish.", coinflip(),
                           "You start to feel a little slower.");
-    _decrement_a_duration(DUR_INSULATION, delay,
-                          "You feel conductive.", coinflip(),
-                          "You start to feel a little less insulated.");
     _decrement_a_duration(DUR_RESISTANCE, delay,
                           "Your resistance to elements expires.", coinflip(),
                           "You start to feel less resistant.");

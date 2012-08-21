@@ -95,8 +95,6 @@ static duration_def duration_data[] =
       LIGHTBLUE, "Tele", "about to teleport", "You are about to teleport." },
     { DUR_DEATHS_DOOR, true,
       LIGHTGREY, "DDoor", "death's door", "" },
-    { DUR_INSULATION, true,
-      BLUE, "Ins", "", "You are insulated." },
     { DUR_PHASE_SHIFT, true,
       0, "", "phasing", "You are out of phase with the material plane." },
     { DUR_QUAD_DAMAGE, true,

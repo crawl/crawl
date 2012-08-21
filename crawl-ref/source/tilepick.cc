@@ -4438,7 +4438,6 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_MEPHITIC_CLOUD:           return TILEG_MEPHITIC_CLOUD;
     case SPELL_DISCHARGE:                return TILEG_STATIC_DISCHARGE;
     case SPELL_FLY:                      return TILEG_FLIGHT;
-    case SPELL_INSULATION:               return TILEG_INSULATION;
     case SPELL_LIGHTNING_BOLT:           return TILEG_LIGHTNING_BOLT;
     case SPELL_AIRSTRIKE:                return TILEG_AIRSTRIKE;
     case SPELL_SILENCE:                  return TILEG_SILENCE;
