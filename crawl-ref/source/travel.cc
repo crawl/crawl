@@ -834,6 +834,13 @@ void explore_pickup_event(int did_pickup, int tried_pickup)
     }
 }
 
+static bool _can_sacrifice(const coord_def p)
+{
+    const dungeon_feature_type feat = grd(p);
+    return (!you.cannot_speak()
+            && (!feat_is_altar(feat) || feat_is_player_altar(feat)));
+}
+
 // Top-level travel control (called from input() in main.cc).
 //
 // travel() is responsible for making the individual moves that constitute
@@ -947,7 +954,7 @@ command_type travel()
                     if ((stack && _prompt_stop_explore(ES_GREEDY_VISITED_ITEM_STACK)
                          || sacrificiable && _prompt_stop_explore(ES_GREEDY_SACRIFICIABLE))
                         && (!Options.auto_sacrifice || !sacrificiable || stack
-                            || you.cannot_speak()))
+                            || !_can_sacrifice(newpos)))
                     {
                         explore_stopped_pos = newpos;
                         stop_running();
@@ -2929,7 +2936,7 @@ void start_explore(bool grab_items)
             if ((Options.sacrifice_before_explore == 1 || Options.auto_sacrifice
                  || Options.sacrifice_before_explore == 2
                     && yesno("Do you want to sacrifice the items here? ", true, 'n'))
-                && !you.cannot_speak())
+                && _can_sacrifice(you.pos()))
             {
                 pray();
             }
