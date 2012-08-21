@@ -110,8 +110,6 @@ private:
     int         gold_found;         // Gold found.
     int         gold_spent;         // Gold spent shopping.
 
-    uint32_t    fruit_found_mask;   // Mask of fruits found.
-
     int         zigs;               // Ziggurats completed.
     int         zigmax;             // Max level reached in a ziggurat.
 
