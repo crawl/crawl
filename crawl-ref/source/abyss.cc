@@ -1140,6 +1140,7 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
     int exits_wanted  = 0;
     int altars_wanted = 0;
     bool use_abyss_exit_map = true;
+    bool push_player = false;
 
     const double abyss_depth = abyssal_state.depth;
 
@@ -1147,7 +1148,7 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
     {
         const coord_def p(*ri);
 
-        if (you.pos() == p || !abyss_genlevel_mask(p))
+        if (!abyss_genlevel_mask(p))
             continue;
 
         // Don't decay vaults.
@@ -1188,6 +1189,9 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
             monster* mon = monster_at(p);
             if (mon && !monster_habitable_grid(mon, feat))
                 _push_displaced_monster(mon);
+
+            if (p == you.pos() && (feat_is_solid(feat) || is_feat_dangerous(feat)))
+                push_player = true;
         }
 
         if (morph)
@@ -1211,6 +1215,9 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
                                  DNGN_STONE_ARCH,
                                  abyss_genlevel_mask));
     }
+
+    if (push_player)
+        you.shove();
 }
 
 void recompute_saved_abyss_features()

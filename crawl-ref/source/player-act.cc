@@ -703,7 +703,8 @@ bool player::shove(const char* feat_name)
         if (in_bounds(*di) && !actor_at(*di) && !is_feat_dangerous(grd(*di)))
         {
             moveto(*di);
-            mprf("You are pushed out of the %s.", feat_name);
+            if (*feat_name)
+                mprf("You are pushed out of the %s.", feat_name);
             dprf("Moved to (%d, %d).", pos().x, pos().y);
             return true;
         }
