@@ -575,7 +575,7 @@ public:
     bool is_mundane() const;
 
     // Returns true if this item causes autoexplore to visit it.
-    bool is_greedy_sacrificiable() const;
+    bool is_greedy_sacrificeable() const;
 
 private:
     std::string name_aux(description_level_type desc,

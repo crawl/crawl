@@ -3257,7 +3257,7 @@ bool god_hates_attacking_friend(god_type god, const actor *fr)
 
 bool god_likes_items(god_type god, bool greedy_explore)
 {
-    if (greedy_explore && (!(Options.explore_stop & ES_GREEDY_SACRIFICIABLE)
+    if (greedy_explore && (!(Options.explore_stop & ES_GREEDY_SACRIFICEABLE)
                            || you.religion == GOD_ASHENZARI))
         // Ash's sacrifice isn't trading items for piety so it shouldn't make
         // explore greedy for ?RC

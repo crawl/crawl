@@ -555,7 +555,7 @@ static bool _prompt_stop_explore(int es_why)
 #define ES_portal (Options.explore_stop & ES_PORTAL)
 #define ES_branch (Options.explore_stop & ES_BRANCH)
 #define ES_stack  (Options.explore_stop & ES_GREEDY_VISITED_ITEM_STACK)
-#define ES_sacrificiable (Options.explore_stop & ES_GREEDY_SACRIFICIABLE)
+#define ES_sacrificeable (Options.explore_stop & ES_GREEDY_SACRIFICEABLE)
 
 // Adds interesting stuff on the point p to explore_discoveries.
 static inline void _check_interesting_square(const coord_def pos,
@@ -939,7 +939,7 @@ command_type travel()
         // Stop greedy explore when visiting an unverified stash.
         if ((*move_x || *move_y)
             && you.running == RMODE_EXPLORE_GREEDY
-            && (ES_stack || ES_sacrificiable))
+            && (ES_stack || ES_sacrificeable))
         {
             const coord_def newpos = you.pos() + coord_def(*move_x, *move_y);
             if (newpos == you.running.pos)
@@ -947,13 +947,13 @@ command_type travel()
                 const LevelStashes *lev = StashTrack.find_current_level();
                 const bool stack = lev && lev->unverified_stash(newpos)
                                    && ES_stack;
-                const bool sacrificiable = lev && lev->sacrificiable(newpos)
-                                           && ES_sacrificiable;
-                if (stack || sacrificiable)
+                const bool sacrificeable = lev && lev->sacrificeable(newpos)
+                                           && ES_sacrificeable;
+                if (stack || sacrificeable)
                 {
                     if ((stack && _prompt_stop_explore(ES_GREEDY_VISITED_ITEM_STACK)
-                         || sacrificiable && _prompt_stop_explore(ES_GREEDY_SACRIFICIABLE))
-                        && (!Options.auto_sacrifice || !sacrificiable || stack
+                         || sacrificeable && _prompt_stop_explore(ES_GREEDY_SACRIFICEABLE))
+                        && (!Options.auto_sacrifice || !sacrificeable || stack
                             || !_can_sacrifice(newpos)))
                     {
                         explore_stopped_pos = newpos;
@@ -2931,7 +2931,7 @@ void start_explore(bool grab_items)
     if (you.running == RMODE_EXPLORE_GREEDY && god_likes_items(you.religion, true))
     {
         const LevelStashes *lev = StashTrack.find_current_level();
-        if (lev && lev->sacrificiable(you.pos()))
+        if (lev && lev->sacrificeable(you.pos()))
         {
             if ((Options.sacrifice_before_explore == 1 || Options.auto_sacrifice
                  || Options.sacrifice_before_explore == 2
