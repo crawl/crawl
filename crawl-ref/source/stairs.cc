@@ -605,7 +605,7 @@ static void _maybe_destroy_trap(const coord_def &p)
 {
     trap_def* trap = find_trap(p);
     if (trap)
-        trap->destroy();
+        trap->destroy(true);
 }
 
 void down_stairs(dungeon_feature_type force_stair)
