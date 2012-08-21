@@ -744,7 +744,7 @@ explore_greedy = true
 
 explore_stop  = items,stairs,shops,altars,portals,branches
 explore_stop += greedy_pickup_smart,greedy_visited_item_stack
-explore_stop += greedy_sacrificiable
+explore_stop += greedy_sacrificeable
         Explore will stop for one of these conditions. Whatever you
         set this option to, anything that stops travel will also stop
         explore. Multiple explore_stop lines are cumulative if you use
@@ -791,7 +791,7 @@ explore_stop += greedy_sacrificiable
             previously unknown to the player, even if the stack contains
             nothing eligible for autopickup.
 
-        greedy_sacrificiable: Visit and stop at stacks containing items which
+        greedy_sacrificeable: Visit and stop at stacks containing items which
             can be sacrificied to your god.
 
         glowing_items: like items, but only for items which are
@@ -806,7 +806,7 @@ sacrifice_before_explore = false
         when you start auto-explore, they will be automatically sacrificied.
         It can also be set to "prompt", in which case you will have a
         confirmation prompt before the items are sacrificed.
-        This option has no effect when explore_stop hasn't greedy_sacrificiable.
+        This option has no effect when explore_stop hasn't greedy_sacrificeable.
 
 explore_stop_pickup_ignore = <regex list>
         If explore_stop has greedy_pickup or greedy_pickup_smart set,

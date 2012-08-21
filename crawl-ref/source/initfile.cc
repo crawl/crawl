@@ -858,7 +858,7 @@ void game_options::reset_options()
     explore_stop           = (ES_ITEM | ES_STAIR | ES_PORTAL | ES_BRANCH
                               | ES_SHOP | ES_ALTAR | ES_GREEDY_PICKUP_SMART
                               | ES_GREEDY_VISITED_ITEM_STACK
-                              | ES_GREEDY_SACRIFICIABLE);
+                              | ES_GREEDY_SACRIFICEABLE);
 
     sacrifice_before_explore = 0;
 
@@ -1798,8 +1798,12 @@ int game_options::read_explore_stop_conditions(const std::string &field) const
             conditions |= ES_ARTEFACT;
         else if (c == "rune" || c == "runes")
             conditions |= ES_RUNE;
-        else if (c == "greedy_sacrificiable" || c == "greedy_sacrificiables")
-            conditions |= ES_GREEDY_SACRIFICIABLE;
+        else if (c == "greedy_sacrificeable" || c == "greedy_sacrificeables"
+                 || c == "greedy_sacrificable" || c == "greedy_sacrificables"
+                 || c == "greedy_sacrificiable" || c == "greedy_sacrificiables")
+        {
+            conditions |= ES_GREEDY_SACRIFICEABLE;
+        }
     }
     return conditions;
 }

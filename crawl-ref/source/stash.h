@@ -55,7 +55,7 @@ public:
     bool pickup_eligible() const;
 
     // Returns true if this Stash contains items that can be sacrificied
-    bool sacrificiable() const;
+    bool sacrificeable() const;
 
     // Returns true if this Stash is unverified (a visit by the character will
     // verify the stash).
@@ -259,7 +259,7 @@ public:
 
     // Returns true if the items at c contains at least one that can be
     // sacrificied
-    bool sacrificiable(const coord_def &c) const;
+    bool sacrificeable(const coord_def &c) const;
 
     // Add stash at (x,y), or player's current location if no parameters are
     // supplied
