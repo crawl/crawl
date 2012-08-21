@@ -22,7 +22,7 @@ void sonic_damage(bool scream);
 int shatter_monsters(coord_def where, int pow, actor *agent);
 int shatter_items(coord_def where, int pow, actor *agent);
 int shatter_walls(coord_def where, int pow, actor *agent);
-int shatter_player(int pow, actor *wielder);
+int shatter_player(int pow, actor *wielder, bool devastator = false);
 bool mons_shatter(monster* caster, bool actual = true);
 void shillelagh(actor *wielder, coord_def where, int pow);
 spret_type vampiric_drain(int pow, monster* mons, bool fail);
