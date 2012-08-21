@@ -205,7 +205,7 @@ static InventoryTile _tile_for_ability(ability_type ability)
     InventoryTile desc;
     desc.tile     = tileidx_ability(ability);
     desc.idx      = (int) ability;
-    desc.quantity = get_talent(ability, true).fail;
+    desc.quantity = get_ability_def(ability).mp_cost;
 
     if (!check_ability_possible(ability, true, true))
     {

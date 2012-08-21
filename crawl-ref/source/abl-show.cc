@@ -98,61 +98,6 @@ enum ability_flag_type
     ABFLAG_ZOTDEF         = 0x00040000, // ZotDef ability, w/ appropriate hotkey
 };
 
-struct generic_cost
-{
-    int base, add, rolls;
-
-    generic_cost(int num)
-        : base(num), add(num == 0 ? 0 : (num + 1) / 2 + 1), rolls(1)
-    {
-    }
-    generic_cost(int num, int _add, int _rolls = 1)
-        : base(num), add(_add), rolls(_rolls)
-    {
-    }
-    static generic_cost fixed(int fixed)
-    {
-        return generic_cost(fixed, 0, 1);
-    }
-    static generic_cost range(int low, int high, int _rolls = 1)
-    {
-        return generic_cost(low, high - low + 1, _rolls);
-    }
-
-    int cost() const;
-
-    operator bool () const { return base > 0 || add > 0; }
-};
-
-struct scaling_cost
-{
-    int value;
-
-    scaling_cost(int permille) : value(permille) {}
-
-    static scaling_cost fixed(int fixed)
-    {
-        return scaling_cost(-fixed);
-    }
-
-    int cost(int max) const;
-
-    operator bool () const { return value != 0; }
-};
-
-// Structure for representing an ability:
-struct ability_def
-{
-    ability_type        ability;
-    const char *        name;
-    unsigned int        mp_cost;        // magic cost of ability
-    scaling_cost        hp_cost;        // hit point cost of ability
-    unsigned int        food_cost;      // + rand2avg( food_cost, 2 )
-    generic_cost        piety_cost;     // + random2( (piety_cost + 1) / 2 + 1 )
-    unsigned int        zp_cost;        // zot point cost of ability
-    unsigned int        flags;          // used for additonal cost notices
-};
-
 static int  _find_ability_slot(const ability_def& abil);
 static bool _do_ability(const ability_def& abil);
 static void _pay_ability_costs(const ability_def& abil, int zpcost);
@@ -477,7 +422,7 @@ static const ability_def Ability_List[] =
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion", 0, 0, 0, 0, 0, ABFLAG_NONE},
 };
 
-static const ability_def& _get_ability_def(ability_type abil)
+const ability_def& get_ability_def(ability_type abil)
 {
     for (unsigned int i = 0;
          i < sizeof(Ability_List) / sizeof(Ability_List[0]); i++)
@@ -493,7 +438,7 @@ bool string_matches_ability_name(const std::string& key)
 {
     for (int i = ABIL_SPIT_POISON; i <= ABIL_RENOUNCE_RELIGION; ++i)
     {
-        const ability_def abil = _get_ability_def(static_cast<ability_type>(i));
+        const ability_def abil = get_ability_def(static_cast<ability_type>(i));
         if (abil.ability == ABIL_NON_ABILITY)
             continue;
 
@@ -685,7 +630,7 @@ static int _zp_cost(const ability_def& abil)
 
 const std::string make_cost_description(ability_type ability)
 {
-    const ability_def& abil = _get_ability_def(ability);
+    const ability_def& abil = get_ability_def(ability);
     std::ostringstream ret;
     if (abil.mp_cost)
     {
@@ -829,7 +774,7 @@ static std::string _get_piety_amount_str(int value)
 
 static const std::string _detailed_cost_description(ability_type ability)
 {
-    const ability_def& abil = _get_ability_def(ability);
+    const ability_def& abil = get_ability_def(ability);
     std::ostringstream ret;
     std::vector<std::string> values;
     std::string str;
@@ -937,7 +882,7 @@ talent get_talent(ability_type ability, bool check_confused)
     // doing anything else, so that we'll handle its flags properly.
     result.which = _fixup_ability(ability);
 
-    const ability_def &abil = _get_ability_def(result.which);
+    const ability_def &abil = get_ability_def(result.which);
 
     int failure = 0;
     bool invoc = false;
@@ -1281,7 +1226,7 @@ talent get_talent(ability_type ability, bool check_confused)
 
 const char* ability_name(ability_type ability)
 {
-    return _get_ability_def(ability).name;
+    return get_ability_def(ability).name;
 }
 
 std::vector<const char*> get_ability_names()
@@ -1608,7 +1553,7 @@ static bool _check_ability_possible(const ability_def& abil,
 bool check_ability_possible(const ability_type ability, bool hungerCheck,
                             bool quiet)
 {
-    return _check_ability_possible(_get_ability_def(ability), hungerCheck,
+    return _check_ability_possible(get_ability_def(ability), hungerCheck,
                                    quiet);
 }
 
@@ -1696,7 +1641,7 @@ bool activate_talent(const talent& tal)
         return false;
     }
 
-    const ability_def& abil = _get_ability_def(tal.which);
+    const ability_def& abil = get_ability_def(tal.which);
 
     // Check that we can afford to pay the costs.
     // Note that mutation shenanigans might leave us with negative MP,
