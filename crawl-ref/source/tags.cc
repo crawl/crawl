@@ -1410,6 +1410,9 @@ static void tag_construct_you(writer &th)
             marshallInt(th, ac->second[k]);
     }
 
+    marshallByte(th, NUM_BRANCHES);
+    for (i = 0; i < NUM_BRANCHES; i++)
+        marshallBoolean(th, you.branches_left[i]);
 
     marshallCoord(th, abyssal_state.major_coord);
     marshallFloat(th, abyssal_state.depth);
@@ -2210,6 +2213,23 @@ static void tag_read_you(reader &th)
         for (j = 0; j < 27; j++)
             you.action_count[std::pair<caction_type, int>(caction, subtype)][j] = unmarshallInt(th);
     }
+
+#if TAG_MAJOR_VERSION == 33
+    if (th.getMinorVersion() >= TAG_MINOR_BRANCHES_LEFT)
+    {
+#endif
+    count = unmarshallByte(th);
+    for (i = 0; i < count; i++)
+        you.branches_left[i] = unmarshallBoolean(th);
+#if TAG_MAJOR_VERSION == 33
+    }
+    else
+    {
+        // Assume all branches already exited in transferred games.
+        you.branches_left.init(true);
+    }
+#endif
+
     abyssal_state.major_coord = unmarshallCoord(th);
     abyssal_state.depth = unmarshallFloat(th);
     abyssal_state.phase = unmarshallFloat(th);

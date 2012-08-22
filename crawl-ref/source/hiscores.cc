@@ -2592,7 +2592,7 @@ std::string xlog_fields::xlog_line() const
  */
 void mark_milestone(const std::string &type,
                     const std::string &milestone,
-                    bool report_origin_level,
+                    const std::string &origin_level,
                     time_t t)
 {
 #ifdef DGL_MILESTONES
@@ -2623,11 +2623,12 @@ void mark_milestone(const std::string &type,
     const scorefile_entry se(0, 0, KILL_MISC, NULL);
     se.set_base_xlog_fields();
     xlog_fields xl = se.get_fields();
-    if (report_origin_level)
+    if (!origin_level.empty())
     {
-        // The branch entrance location
         xl.add_field("oplace", "%s",
-                     current_level_parent().describe().c_str());
+                     ((origin_level == "parent") ?
+                      current_level_parent().describe() :
+                      origin_level).c_str());
     }
     xl.add_field("time", "%s",
                  make_date_string(se.get_death_time()).c_str());

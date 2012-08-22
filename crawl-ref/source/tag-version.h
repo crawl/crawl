@@ -28,6 +28,7 @@ enum tag_minor_version
     TAG_MINOR_FEAT_RENAMES,        // Per-vault feature renames.
     TAG_MINOR_STASH_FEATDESC,      // Store feature descriptions in stashes.
     TAG_MINOR_BITFIELD_RESISTS,    // Store resistances as a bitfield.
+    TAG_MINOR_BRANCHES_LEFT,       // Note the first time branches are left
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
 };

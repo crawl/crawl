@@ -24,7 +24,7 @@ std::string hiscores_format_single_long(const scorefile_entry &se,
                                          bool verbose = false);
 
 void mark_milestone(const std::string &type, const std::string &milestone,
-                    bool report_origin_level = false, time_t t = 0);
+                    const std::string &origin_level = "", time_t t = 0);
 
 #ifdef DGL_WHEREIS
 std::string xlog_status_line();
