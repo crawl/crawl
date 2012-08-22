@@ -1831,7 +1831,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
         {
             beam.ex_size    = petrifying ? 1 : 2;
             beam.name       = "blast of petrified fragments";
-            beam.colour     = mons_class_colour(mon->type);
+            beam.colour     = mons_class_colour(player_mons(true));
             beam.damage.num = petrifying ? 2 : 3;
             return true;
         }
