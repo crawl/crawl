@@ -2598,12 +2598,9 @@ void bolt::affect_ground()
         }
     }
 
-    if (affects_items)
+    if (affects_items && is_explosion)
     {
-        const int burn_power = is_explosion ? 5 :
-                               is_beam      ? 3
-                                            : 2;
-        expose_items_to_element(flavour, pos(), burn_power);
+        expose_items_to_element(flavour, pos(), 5);
         affect_place_clouds();
     }
 }
