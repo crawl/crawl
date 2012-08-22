@@ -718,13 +718,16 @@ bool expose_items_to_element(beam_type flavour, const coord_def& where,
         if (si->base_type == target_class
             || target_class == OBJ_FOOD && si->base_type == OBJ_CORPSES)
         {
-            if (x_chance_in_y(strength, 100))
+            for (int j = 0; j < si->quantity; ++j)
             {
-                num_dest++;
-                if (!dec_mitm_item_quantity(si->index(), 1)
-                    && is_blood_potion(*si))
+                if (x_chance_in_y(strength, 100))
                 {
-                    remove_oldest_blood_potion(*si);
+                    num_dest++;
+                    if (!dec_mitm_item_quantity(si->index(), 1)
+                        && is_blood_potion(*si))
+                    {
+                       remove_oldest_blood_potion(*si);
+                    }
                 }
             }
         }
