@@ -5801,6 +5801,8 @@ void player::init()
 
     action_count.clear();
 
+    branches_left.init(false);
+
     // Volatile (same-turn) state:
     turn_is_over     = false;
     banished         = false;

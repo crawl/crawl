@@ -428,7 +428,7 @@ void Note::check_milestone() const
             if (dep == 1)
             {
                 mark_milestone(br == BRANCH_ZIGGURAT ? "zig.enter" : "br.enter",
-                               "entered " + branch + ".", true);
+                               "entered " + branch + ".", "parent");
             }
             else if (dep == _dungeon_branch_depth(br) || dep == 14
                      || br == BRANCH_ZIGGURAT)
