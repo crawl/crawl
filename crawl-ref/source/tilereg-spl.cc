@@ -45,7 +45,7 @@ void SpellRegion::draw_tag()
     const spell_type spell = (spell_type) idx;
     char* failure = failure_rate_to_string(spell_fail(spell));
     std::string desc = make_stringf("%d MP    %s    (%s)",
-                                    spell_difficulty(spell),
+                                    spell_mana(spell),
                                     spell_title(spell),
                                     failure);
     free(failure);
@@ -216,7 +216,7 @@ void SpellRegion::update()
         InventoryTile desc;
         desc.tile     = tileidx_spell(spell);
         desc.idx      = (int) spell;
-        desc.quantity = spell_difficulty(spell);
+        desc.quantity = spell_mana(spell);
 
         std::string temp;
         if (is_prevented_teleport(spell)
