@@ -1729,7 +1729,9 @@ static bool _add_connecting_escape_hatches()
     if (!player_in_connected_branch())
         return true;
 
-    if (at_branch_bottom())
+    // Veto D:1 if there are disconnected areas.
+    if (player_in_branch(BRANCH_MAIN_DUNGEON) && you.depth == 1
+        || at_branch_bottom())
         return (dgn_count_disconnected_zones(true) == 0);
 
     if (!_add_feat_if_missing(_is_perm_down_stair, DNGN_ESCAPE_HATCH_DOWN))
