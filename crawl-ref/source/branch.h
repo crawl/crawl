@@ -63,7 +63,6 @@ branch_type str_to_branch(const std::string &branch,
                           branch_type err = NUM_BRANCHES);
 
 int current_level_ambient_noise();
-bool branch_has_monsters(branch_type branch);
 
 branch_type get_branch_at(const coord_def& pos);
 bool branch_is_unfinished(branch_type branch);

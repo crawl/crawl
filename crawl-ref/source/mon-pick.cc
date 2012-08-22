@@ -27,6 +27,24 @@ int mons_rarity(monster_type mcls, const level_id &place)
     return branches[place.branch].mons_rarity_function(mcls);
 }
 
+// only Pan currently
+monster_type pick_monster_no_rarity(const level_id &place)
+{
+    if (branches[place.branch].mons_rarity_function == mons_null_rare)
+        return MONS_0;
+
+    monster_type mons;
+    do mons = (monster_type)random2(NUM_MONSTERS);
+    while (!branches[place.branch].mons_rarity_function(mons));
+
+    return mons;
+}
+
+bool branch_has_monsters(branch_type branch)
+{
+    return branches[branch].mons_rarity_function != mons_null_rare;
+}
+
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_TESTS)
 void debug_monpick()
 {

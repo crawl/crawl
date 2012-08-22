@@ -14,6 +14,9 @@
 int mons_rarity(monster_type mcls, const level_id &place = level_id::current());
 int mons_level(monster_type mcls, const level_id &place = level_id::current());
 
+monster_type pick_monster_no_rarity(const level_id &place);
+bool branch_has_monsters(branch_type branch);
+
 void debug_monpick();
 
 int mons_null_level(monster_type mcls);
