@@ -943,10 +943,20 @@ int shatter_items(coord_def where, int pow, actor *)
 
     for (stack_iterator si(where); si; ++si)
     {
-        if (si->base_type == OBJ_POTIONS && !one_chance_in(10))
+        if (si->base_type == OBJ_POTIONS)
         {
-            broke_stuff++;
-            destroy_item(si->index());
+            for (int j = 0; j < si->quantity; ++j)
+            {
+                if (one_chance_in(10))
+                {
+                    broke_stuff++;
+                    if (!dec_mitm_item_quantity(si->index(), 1)
+                        && is_blood_potion(*si))
+                    {
+                       remove_oldest_blood_potion(*si);
+                    }
+                }
+            }
         }
     }
 
