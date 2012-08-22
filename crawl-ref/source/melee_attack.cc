@@ -3380,7 +3380,7 @@ void melee_attack::apply_staff_damage()
                 make_stringf(
                     "%s crush%s %s!",
                     attacker->name(DESC_THE).c_str(),
-                    attacker->is_player() ? "" : "s",
+                    attacker->is_player() ? "" : "es",
                     defender->name(DESC_THE).c_str());
         }
         break;
