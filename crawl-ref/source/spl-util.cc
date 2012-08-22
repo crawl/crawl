@@ -1230,6 +1230,38 @@ bool spell_no_hostile_in_range(spell_type spell)
 
     case SPELL_FIRE_STORM:
         return false;
+
+    // Special handling for cloud spells.
+    case SPELL_FREEZING_CLOUD:
+    case SPELL_POISONOUS_CLOUD:
+    case SPELL_HOLY_BREATH:
+    {
+        targetter_cloud tgt(&you, range);
+        for (radius_iterator ri(you.pos(), range, C_ROUND, you.get_los());
+             ri; ++ri)
+        {
+            if (!tgt.valid_aim(*ri))
+                continue;
+            tgt.set_aim(*ri);
+            for (std::map<coord_def, aff_type>::iterator it = tgt.seen.begin();
+                 it != tgt.seen.end(); it++)
+            {
+                if (it->second == AFF_NO
+                    || it->second == AFF_TRACER)
+                    continue;
+
+                // Checks here are from get_dist_to_nearest_monster().
+                const monster* mons = monster_at(it->first);
+                if (mons && !mons->wont_attack()
+                    && (!mons_class_flag(mons->type, M_NO_EXP_GAIN)
+                        || (mons->type == MONS_BALLISTOMYCETE
+                            && mons->number != 0)))
+                    return false;
+            }
+        }
+
+        return true;
+    }
     default:
         break;
     }
