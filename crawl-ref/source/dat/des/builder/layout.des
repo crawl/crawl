@@ -699,10 +699,10 @@ TAGS: overwritable layout allow_dup unrand
 
 ## This replaces dungeon.cc:_roguey_level.
 NAME: layout_roguey
-DEPTH: 1-, !Vaults, !Pan, !Zot
+DEPTH: 2-, !Vaults, !Pan, !Zot
 WEIGHT: 20
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand
+TAGS: overwritable layout no_primary_vault allow_dup unrand
 {{
     function make_inner_room(room, feat, treasure)
         local inner_room = {
