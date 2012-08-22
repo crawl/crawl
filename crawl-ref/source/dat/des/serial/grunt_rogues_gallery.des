@@ -383,8 +383,7 @@ KMONS: O = ogre col:yellow name:berserker n_suf hd:15 god:trog \
            priest_spells ; \
            giant club ego:anti-magic good_item | \
            giant spiked club ego:anti-magic good_item w:5 . \
-           chain mail w:10 good_item | splint mail w:5 good_item | \
-           plate armour good_item w:1
+           animal skin good_item
 SHUFFLE: dh, ei, fj, gk
 KITEM: d = any armour good_item
 KITEM: e = any weapon ego:anti-magic good_item
