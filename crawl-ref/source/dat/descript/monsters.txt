@@ -2826,6 +2826,11 @@ you.
 
 Or, maybe, it's just a sheep after all.
 %%%%
+centaur hunter
+
+This particularly battle-adept centaur is an extremely precise shot with its
+longbow.
+%%%%
 charred statue
 
 It looks like this statue has been imbued with fire magic, letting it use
@@ -2869,6 +2874,15 @@ decayed bog body
 An undead figure preserved by the brackish waters of a bog. This one seems to
 have decayed quite a bit, and looks weak.
 %%%%
+deep dwarf earth mage
+
+A deep dwarf particularly well-attuned to the powers of earth.
+%%%%
+deep elf scorcher
+
+A deep elf excelling in fire magic, feared for its power to conjure great
+storms of flame.
+%%%%
 deformed humanoid
 
 This poor creature looks hideously deformed.
@@ -2884,6 +2898,27 @@ drunken dwarf
 
 This short fellow seems to be working as an ale quality tester, and is enjoying
 the job a little too much.
+%%%%
+demonspawn berserker
+
+This humanoid's demonic heritage clearly fuels it with bloodlust.
+%%%%
+demonspawn scorcher
+
+The air shimmers around this demonic-looking humanoid, as though it radiates
+intense heat. Wisps of smoke trail from its fingertips.
+%%%%
+demonspawn sorcerer
+
+The air crackles around this demonic-looking humanoid; it clearly wields
+magic of some power.
+%%%%
+draconian transmuter
+
+A draconian who has eschewed the study of weaponry, training in the art of
+transmutations. While its scaly fists, well-thewed leg, and mighty tail are
+lethal on their own, its combat prowess can be increased even further by
+the spells it wields.
 %%%%
 earth elementalist statue
 
@@ -2936,11 +2971,22 @@ classified as a sub-species of high elf. Little exists to distinguish them from
 their high elf cousins, aside from their supposed glamour (which is probably
 more myth than fact).
 %%%%
+high elf sorcerer
+
+This apparently adventurous high elf is just as proficient in magic as its
+deep elven brethren.
+%%%%
 hill dwarf
 
 Hill dwarves are a subrace of dwarves who, as their name implies, live on
 hills. Once able adventurers, the hill dwarves no longer have any interest in
 dungeon delving. This one was captured specially for this exhibit.
+%%%%
+halfling berserker
+
+While most halfling adventurers prefer stealth to direct combat, here stands
+one of the exceptions. Size is no diminishment to this stout warrior's
+rage-fuelled strength.
 %%%%
 human monk
 
@@ -2961,6 +3007,11 @@ kamikaze kobold
 This kobold is either mad or a martyr for some obscure kobold faith, being
 enchanted to explode in a blaze of fire. You'd better keep your distance!
 %%%%
+kobold berserker
+
+A particularly blood-thirsty kobold, known for plunging into a battle frenzy
+at the slightest provocation.
+%%%%
 lasher statue
 
 This statue depicts a savage-looking slave driver with a vicious barbed whip.
@@ -2975,12 +3026,59 @@ malarious mermaid
 A young woman with a fish tail in place of legs. She looks quite sick, but
 still capable of bespelling her audience.
 %%%%
+merfolk berserker
+
+A particularly angry merfolk warrior, toting a sharp and bloody polearm.
+%%%%
+merfolk gelid
+
+An unnaturally pale merfolk, with condensation forming around its hands.
+%%%%
+merfolk gladiator
+
+A particularly fearsome merfolk warrior, hefting a bundle of javelins and
+a sinister-looking polearm.
+%%%%
+minotaur berserker
+
+A particularly adventurous and blood-thirsty minotaur, capable of great
+feats of strength and rage.
+%%%%
+minotaur death knight
+A particularly adventurous and sinister minotaur, capable of calling upon
+the divine powers granted to Yredelemnul's followers.
+%%%%
+minotaur fighter
+
+A particularly adventurous and battle-ready minotaur, capable of out-fighting
+even its mighty brethren.
+%%%%
+minotaur gladiator
+
+A particularly adventurous and sharp-eyed minotaur, capable of landing
+astonishingly precise and brutal blows from afar with javelins.
+%%%%
+minotaur monk
+A particularly adventurous and agile minotaur, capable of tearing apart
+the unwary with naught but its bare hands.
+%%%%
 mountain dwarf
 
 Mountain dwarves are surface-dwelling relatives of the deep dwarves. After
 years of war with the taller but otherwise quite similar hill orcs, the
 mountain dwarves were conquered and driven from these lands. This one has been
 imported from foreign shores.
+%%%%
+mummy sorcerer
+
+An ancient magician, embalmed and cursed to walk in undeath for all eternity.
+Even in undeath, it retains many of its powers of magic.
+%%%%
+mummy summoner
+
+An ancient mystic, embalmed and cursed to walk in undeath for all eternity.
+Even in undeath, it holds the power to call forth great legions of infernal
+creatures.
 %%%%
 mummy warrior
 
@@ -2990,6 +3088,11 @@ musa plant
 
 This bushy plant can grow bananas. Or are they banananas? Or bananananas? Some
 yellow curved thingies, at least.
+%%%%
+ogre berserker
+
+A particularly large, hungry, and blood-thirsty ogre, capable of flying into
+a mighty rage at the slightest hint of food.
 %%%%
 # Sprint only, too unhinged for regular games...
 oklob plant annihilator
@@ -3054,6 +3157,10 @@ orc demonologist
 
 <orc sorcerer>
 %%%%
+orc berserker
+
+A tough, strong, and particularly angry orc.
+%%%%
 petrified plant
 
 Something has turned these ordinary plants into stone. Better not tarry here.
@@ -3085,6 +3192,10 @@ sickly siren
 A young woman with a fish tail in place of legs. She looks quite sick, but
 still capable of bespelling her audience.
 %%%%
+sludge elf earth mage
+
+A sludge elf particularly well-attuned to the powers of earth.
+%%%%
 skeletal archer
 
 Since when is having flesh a requirement to be a master archer? These skeletal
@@ -3104,6 +3215,11 @@ spooky statue
 
 You sense a ghostly presence around this statue, and it's not the slightest bit
 friendly.
+%%%%
+spriggan enchanter
+
+A spriggan particularly skilled in the arts of hexes and charms - and,
+apparently, lethal with a quick blade.
 %%%%
 spriggan necromancer
 
@@ -3126,6 +3242,11 @@ strawberry plant
 The same radiation that made cockroaches and spiders the size of small dogs
 didn't spare this humble strawberry plant, either. Fortunately, even with its
 size, it appears to be harmless.
+%%%%
+tengu aerator
+
+This particularly ferocious tengu is well on its way towards mastery of
+air magic.
 %%%%
 water elementalist statue
 
@@ -3151,6 +3272,12 @@ trespassers like you.
                "taking proper care of plants as Fedhas commands.";
     end
 }}
+%%%%
+vampire enchanter
+
+An enchanter who, by accident or design, has been afflicted with the curse of
+the vampire. Regardless, undeath merely fuels their abilities; few are aware
+of its presence until they find themselves on the wrong end of a quick blade.
 %%%%
 vampire noble
 
