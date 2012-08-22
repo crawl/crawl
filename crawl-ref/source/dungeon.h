@@ -14,6 +14,7 @@
 #include "terrain.h"
 #include "stuff.h"
 #include "mapdef.h"
+#include "mon-pick.h"
 
 #include <vector>
 #include <set>

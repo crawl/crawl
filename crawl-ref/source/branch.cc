@@ -68,11 +68,6 @@ int current_level_ambient_noise()
     return branches[you.where_are_you].ambient_noise;
 }
 
-bool branch_has_monsters(branch_type branch)
-{
-    return branches[branch].mons_rarity_function != mons_null_rare;
-}
-
 branch_type get_branch_at(const coord_def& pos)
 {
     return level_id::current().get_next_level_id(pos).branch;
