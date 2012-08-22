@@ -29,7 +29,7 @@ function pan_lord_epilogue(name)
     crawl.mpr(msgs[name])
     crawl.mpr("You feel a terrible weight on your shoulders! A mighty lord of Pandemonium must reside here.", "warning")
     crawl.take_note('Entered the realm of ' .. name .. '.')
-    crawl.mark_milestone('br.enter', 'entered the realm of ' .. name .. '.')
+    crawl.mark_milestone('br.enter', 'entered the realm of ' .. name .. '.', "")
 end
 
 function pan_lord_setup(_G, name)

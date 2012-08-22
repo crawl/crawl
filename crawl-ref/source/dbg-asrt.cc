@@ -711,7 +711,7 @@ void do_crash_dump()
 
     set_msg_dump_file(NULL);
 
-    mark_milestone("crash", _assert_msg, false, t);
+    mark_milestone("crash", _assert_msg, "", t);
 
     if (file != stderr)
         fclose(file);

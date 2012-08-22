@@ -132,7 +132,7 @@ function wizlab_setup (e, wizlab_desc)
 end
 
 function wizlab_milestone (e, wizlab_desc)
-    crawl.mark_milestone("br.enter", "entered " .. wizlab_desc .. ".", true)
+    crawl.mark_milestone("br.enter", "entered " .. wizlab_desc .. ".", "parent")
 end
 
 function tukima_machine (data, triggerable, triggerer, marker, ev)

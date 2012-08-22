@@ -422,6 +422,17 @@ void up_stairs(dungeon_feature_type force_stair)
     {
         mprf("Welcome back to %s!",
              branches[you.where_are_you].longname);
+        if ((brdepth[old_level.branch] > 1
+             || old_level.branch == BRANCH_VESTIBULE_OF_HELL)
+            && !you.branches_left[old_level.branch])
+        {
+            std::string old_branch_string = branches[old_level.branch].longname;
+            if (old_branch_string.find("The ") == 0)
+                old_branch_string[0] = tolower(old_branch_string[0]);
+            mark_milestone("br.exit", "left " + old_branch_string + ".",
+                           old_level.describe());
+            you.branches_left[old_level.branch] = true;
+        }
     }
 
     const coord_def stair_pos = you.pos();

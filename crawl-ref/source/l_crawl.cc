@@ -915,7 +915,7 @@ LUAFN(_crawl_milestone)
 {
     mark_milestone(luaL_checkstring(ls, 1),
                    luaL_checkstring(ls, 2),
-                   lua_toboolean(ls, 3));
+                   luaL_checkstring(ls, 3));
     return 0;
 }
 
