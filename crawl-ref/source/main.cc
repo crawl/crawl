@@ -1,12 +1,14 @@
 #include "AppHdr.h"
 #include "env.h"
 #include "libutil.h"
+#include "random.h"
 #include "rng.h"
 #include "dgn-voronoi.h"
 #include "dgn-nolithius.h"
 #include "dgn-forest.h"
 #include "dgn-delve.h"
 #include "dgn-deposit.h"
+#include "dgn-dragon.h"
 #include <locale.h>
 
 static wchar_t dchar(dungeon_feature_type g)
@@ -49,7 +51,9 @@ int main()
     setlocale(LC_CTYPE, "");
     grd.init(DNGN_ROCK_WALL);
     seed_rng();
-    layout_deposit(80);
+    int m = random2(256) + 1;
+    layout_dragon(m);
     draw();
+    printf("mask = %x\n", m);
     return 0;
 }
