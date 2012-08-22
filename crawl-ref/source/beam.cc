@@ -2598,9 +2598,10 @@ void bolt::affect_ground()
         }
     }
 
-    if (affects_items && is_explosion)
+    if (affects_items)
     {
-        expose_items_to_element(flavour, pos(), 5);
+        if (is_explosion)
+            expose_items_to_element(flavour, pos(), 5);
         affect_place_clouds();
     }
 }
