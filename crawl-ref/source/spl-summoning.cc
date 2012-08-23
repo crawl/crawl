@@ -2032,11 +2032,8 @@ bool monster_simulacrum(monster *caster, bool actual)
                             caster->friendly() ? MSGCH_FRIEND_SPELL : MSGCH_MONSTER_SPELL);
                     }
 
-                    if (--item.quantity <= 0)
-                    {
+                    if (dec_mitm_item_quantity(item.index(), 1))
                         caster->inv[MSLOT_MISCELLANY] = NON_ITEM;
-                        destroy_item(item);
-                    }
 
                     player_angers_monster(sim);
 
