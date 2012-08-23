@@ -779,7 +779,9 @@ void discover_mimic(const coord_def& pos, bool wake)
                                            : item->name(DESC_BASENAME);
 
     tileidx_t tile = tileidx_feature(pos);
+#ifdef USE_TILE
     apply_variations(env.tile_flv(pos), &tile, pos);
+#endif
 
     // If a monster is standing on top of the mimic, move it out of the way.
     actor* act = actor_at(pos);
