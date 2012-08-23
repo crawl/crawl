@@ -7,6 +7,7 @@
 #include "colour.h"
 #include "coord.h"
 #include "coordit.h"
+#include "dungeon.h"
 #include "env.h"
 #include "fprop.h"
 #include "items.h"
@@ -362,8 +363,10 @@ void tile_init_flavour(const coord_def &gc)
         const coord_def left(gc.x - 1, gc.y);
         const coord_def right(gc.x + 1, gc.y);
 
-        bool door_left  = (grd(left) == grd(gc));
-        bool door_right = (grd(right) == grd(gc));
+        bool door_left  = (grd(left) == grd(gc))
+                          || map_masked(left, MMT_WAS_DOOR_MIMIC);
+        bool door_right = (grd(right) == grd(gc))
+                          || map_masked(right, MMT_WAS_DOOR_MIMIC);
 
         if (door_left || door_right)
         {
@@ -1039,8 +1042,8 @@ static int _get_door_offset(tileidx_t base_tile, bool opened = false,
     return offset + gateway_type;
 }
 
-static inline void _apply_variations(const tile_flavour &flv, tileidx_t *bg,
-                                     const coord_def &gc)
+void apply_variations(const tile_flavour &flv, tileidx_t *bg,
+                      const coord_def &gc)
 {
     tileidx_t orig = (*bg) & TILE_FLAG_MASK;
     tileidx_t flag = (*bg) & (~TILE_FLAG_MASK);
@@ -1181,7 +1184,7 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
     if (!map_bounds(gc))
         return;
 
-    _apply_variations(env.tile_flv(gc), &cell.bg, gc);
+    apply_variations(env.tile_flv(gc), &cell.bg, gc);
 
     const map_cell& mc = env.map_knowledge(gc);
 

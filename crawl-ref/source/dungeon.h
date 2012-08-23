@@ -52,6 +52,7 @@ enum map_mask_type
     MMT_NO_TRAP    = 0x80,    // No trap generation
     MMT_MIMIC      = 0x100,   // Feature mimics
     MMT_NO_MIMIC   = 0x200,   // This feature shouldn't be turned into a mimic.
+    MMT_WAS_DOOR_MIMIC = 0x400, // There was a door mimic there.
 };
 
 class dgn_region;
