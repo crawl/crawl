@@ -778,7 +778,7 @@ void discover_mimic(const coord_def& pos, bool wake)
                item->base_type == OBJ_GOLD ? "pile of gold coins"
                                            : item->name(DESC_BASENAME);
 
-    tileidx_t tile = env.tile_bk_bg(pos);
+    tileidx_t tile = tileidx_feature(pos);
     apply_variations(env.tile_flv(pos), &tile, pos);
 
     // If a monster is standing on top of the mimic, move it out of the way.
