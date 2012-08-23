@@ -700,7 +700,8 @@ bool player::is_web_immune() const
 bool player::shove(const char* feat_name)
 {
     for (distance_iterator di(pos()); di; ++di)
-        if (in_bounds(*di) && !actor_at(*di) && !is_feat_dangerous(grd(*di)))
+        if (in_bounds(*di) && !actor_at(*di) && !is_feat_dangerous(grd(*di))
+            && you.can_pass_through_feat(grd(*di)))
         {
             moveto(*di);
             if (*feat_name)

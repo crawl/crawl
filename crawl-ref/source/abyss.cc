@@ -1190,8 +1190,11 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
             if (mon && !monster_habitable_grid(mon, feat))
                 _push_displaced_monster(mon);
 
-            if (p == you.pos() && (feat_is_solid(feat) || is_feat_dangerous(feat)))
+            if (p == you.pos() && (!you.can_pass_through_feat(feat)
+                                   || is_feat_dangerous(feat)))
+            {
                 push_player = true;
+            }
         }
 
         if (morph)
