@@ -196,12 +196,11 @@ static inline bool is_trap(const coord_def& c)
 
 static inline bool _is_safe_cloud(const coord_def& c)
 {
-    const int cloud = env.cgrid(c);
-    if (cloud == EMPTY_CLOUD)
+    const cloud_type ctype = env.map_knowledge(c).cloud();
+    if (ctype == CLOUD_NONE)
         return true;
 
     // We can also safely run through smoke.
-    const cloud_type ctype = env.cloud[cloud].type;
     return !is_damaging_cloud(ctype, true);
 }
 
