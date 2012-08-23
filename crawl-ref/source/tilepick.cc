@@ -435,25 +435,6 @@ tileidx_t tileidx_feature(const coord_def &gc)
         find_secret_door_info(gc, &door_feat, &door);
         return _tileidx_feature_base(door_feat);
     }
-    case DNGN_CLOSED_DOOR:
-    {
-        const coord_def left(gc.x - 1, gc.y);
-        const coord_def right(gc.x + 1, gc.y);
-
-        bool door_left  = feat_is_closed_door(env.map_knowledge(left).feat());
-        bool door_right = feat_is_closed_door(env.map_knowledge(right).feat());
-
-        if (door_left || door_right)
-        {
-            if (door_left && door_right)
-                return TILE_DNGN_GATE_CLOSED_MIDDLE;
-            else if (door_left)
-                return TILE_DNGN_GATE_CLOSED_RIGHT;
-            else
-                return TILE_DNGN_GATE_CLOSED_LEFT;
-        }
-        return _tileidx_feature_base(feat);
-    }
     case DNGN_TRAP_MECHANICAL:
     case DNGN_TRAP_MAGICAL:
     case DNGN_TRAP_NATURAL:
