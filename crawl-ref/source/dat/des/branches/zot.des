@@ -1422,7 +1422,7 @@ ENDMAP
 NAME:       hall_of_Zot_1
 DEPTH:      Zot:1
 CHANCE:     100%
-TAGS:       extra transparent no_dump
+TAGS:       extra transparent allow_dup no_dump
 LFLOORCOL:  lightgrey
 LROCKCOL:   white
 LFLOORTILE: floor_rough_lightgray
@@ -1434,7 +1434,7 @@ ENDMAP
 NAME:       hall_of_Zot_2
 DEPTH:      Zot:2
 CHANCE:     100%
-TAGS:       extra transparent no_dump
+TAGS:       extra transparent allow_dup no_dump
 LFLOORCOL:  white
 LROCKCOL:   blue
 LFLOORTILE: floor_rough_white
@@ -1446,7 +1446,7 @@ ENDMAP
 NAME:       hall_of_Zot_3
 DEPTH:      Zot:3
 CHANCE:     100%
-TAGS:       extra transparent no_dump
+TAGS:       extra transparent allow_dup no_dump
 LFLOORCOL:  blue
 LROCKCOL:   lightblue
 LFLOORTILE: floor_rough_blue
@@ -1458,7 +1458,7 @@ ENDMAP
 NAME:       hall_of_Zot_4
 DEPTH:      Zot:4
 CHANCE:     100%
-TAGS:       extra transparent no_dump
+TAGS:       extra transparent allow_dup no_dump
 LFLOORCOL:  lightblue
 LROCKCOL:   magenta
 LFLOORTILE: floor_rough_lightblue
