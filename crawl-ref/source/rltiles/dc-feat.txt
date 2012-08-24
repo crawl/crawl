@@ -71,10 +71,16 @@ closed_door DNGN_CLOSED_DOOR
 gate_closed_left DNGN_GATE_CLOSED_LEFT
 gate_closed_middle DNGN_GATE_CLOSED_MIDDLE
 gate_closed_right DNGN_GATE_CLOSED_RIGHT
+vgate_closed_up DNGN_VGATE_CLOSED_UP
+vgate_closed_middle DNGN_VGATE_CLOSED_MIDDLE
+vgate_closed_down DNGN_VGATE_CLOSED_DOWN
 open_door DNGN_OPEN_DOOR
 gate_open_left DNGN_GATE_OPEN_LEFT
 gate_open_middle DNGN_GATE_OPEN_MIDDLE
 gate_open_right DNGN_GATE_OPEN_RIGHT
+vgate_open_up DNGN_VGATE_OPEN_UP
+vgate_open_middle DNGN_VGATE_OPEN_MIDDLE
+vgate_open_down DNGN_VGATE_OPEN_DOWN
 
 ## Alternate doors for vaults, etc. Should be in the order listed above for
 ## doors which also provide gateways; otherwise detected, closed, open, or
