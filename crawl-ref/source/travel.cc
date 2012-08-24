@@ -3959,7 +3959,7 @@ bool runrest::run_should_stop() const
     if (tcell.cloud() != CLOUD_NONE)
         return true;
 
-    if (is_excluded(targ))
+    if (is_excluded(targ) && !is_stair_exclusion(targ))
     {
 #ifndef USE_TILE_LOCAL
         // XXX: Remove this once exclusions are visible.
