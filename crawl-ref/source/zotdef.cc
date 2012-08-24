@@ -143,9 +143,6 @@ static int _mon_strength(monster_type mon_type)
         case MONS_ZOMBIE_LARGE:
             strength += 4;
             break;
-        case MONS_PANDEMONIUM_LORD: // base init has 4HD (!)
-            strength = 30;
-            break;
         default:
             break;
     }
