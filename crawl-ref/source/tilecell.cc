@@ -404,7 +404,7 @@ static bool _is_seen_wall(coord_def gc)
 static void _pack_wall_shadows(const coord_def &gc, packed_cell *cell,
                                tileidx_t tile)
 {
-    if (_is_seen_wall(gc))
+    if (_is_seen_wall(gc) || _safe_feat(gc) == DNGN_OPEN_DOOR)
         return;
 
     if (_is_seen_wall(coord_def(gc.x - 1, gc.y)))
