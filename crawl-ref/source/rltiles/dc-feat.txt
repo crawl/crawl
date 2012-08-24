@@ -82,6 +82,22 @@ vgate_open_up DNGN_VGATE_OPEN_UP
 vgate_open_middle DNGN_VGATE_OPEN_MIDDLE
 vgate_open_down DNGN_VGATE_OPEN_DOWN
 
+# Crypt doors
+closed_door_crypt DNGN_CLOSED_DOOR_CRYPT
+gate_closed_left_crypt DNGN_GATE_CLOSED_LEFT_CRYPT
+gate_closed_middle_crypt DNGN_GATE_CLOSED_MIDDLE_CRYPT
+gate_closed_right_crypt DNGN_GATE_CLOSED_RIGHT_CRYPT
+vgate_closed_up_crypt DNGN_VGATE_CLOSED_UP_CRYPT
+vgate_closed_middle_crypt DNGN_VGATE_CLOSED_MIDDLE_CRYPT
+vgate_closed_down_crypt DNGN_VGATE_CLOSED_DOWN_CRYPT
+open_door_crypt DNGN_OPEN_DOOR_CRYPT
+gate_open_left_crypt DNGN_GATE_OPEN_LEFT_CRYPT
+gate_open_middle_crypt DNGN_GATE_OPEN_MIDDLE_CRYPT
+gate_open_right_crypt DNGN_GATE_OPEN_RIGHT_CRYPT
+vgate_open_up_crypt DNGN_VGATE_OPEN_UP_CRYPT
+vgate_open_middle_crypt DNGN_VGATE_OPEN_MIDDLE_CRYPT
+vgate_open_down_crypt DNGN_VGATE_OPEN_DOWN_CRYPT
+
 ## Alternate doors for vaults, etc. Should be in the order listed above for
 ## doors which also provide gateways; otherwise detected, closed, open, or
 ## closed, open.
