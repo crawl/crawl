@@ -326,6 +326,11 @@ static tileidx_t _pick_random_dngn_tile(tileidx_t idx, int value = -1)
     return idx;
 }
 
+static bool _same_door_at(dungeon_feature_type feat, const coord_def &gc)
+{
+    return (grd(gc) == feat) || map_masked(gc, MMT_WAS_DOOR_MIMIC);
+}
+
 void tile_init_flavour(const coord_def &gc)
 {
     if (!map_bounds(gc))
@@ -358,25 +363,27 @@ void tile_init_flavour(const coord_def &gc)
 
     if (feat_is_door(grd(gc)))
     {
-        // Check for horizontal gates.
+        // Check for gates.
+        bool door_left  = _same_door_at(grd(gc), coord_def(gc.x - 1, gc.y));
+        bool door_right = _same_door_at(grd(gc), coord_def(gc.x + 1, gc.y));
+        bool door_up    = _same_door_at(grd(gc), coord_def(gc.x, gc.y - 1));
+        bool door_down  = _same_door_at(grd(gc), coord_def(gc.x, gc.y + 1));
 
-        const coord_def left(gc.x - 1, gc.y);
-        const coord_def right(gc.x + 1, gc.y);
-
-        bool door_left  = (grd(left) == grd(gc))
-                          || map_masked(left, MMT_WAS_DOOR_MIMIC);
-        bool door_right = (grd(right) == grd(gc))
-                          || map_masked(right, MMT_WAS_DOOR_MIMIC);
-
-        if (door_left || door_right)
+        if (door_left || door_right || door_up || door_down)
         {
             tileidx_t target;
             if (door_left && door_right)
                 target = TILE_DNGN_GATE_CLOSED_MIDDLE;
+            else if (door_up && door_down)
+                target = TILE_DNGN_VGATE_CLOSED_MIDDLE;
             else if (door_left)
                 target = TILE_DNGN_GATE_CLOSED_RIGHT;
-            else
+            else if (door_right)
                 target = TILE_DNGN_GATE_CLOSED_LEFT;
+            else if (door_up)
+                target = TILE_DNGN_VGATE_CLOSED_DOWN;
+            else
+                target = TILE_DNGN_VGATE_CLOSED_UP;
 
             // NOTE: This requires that closed gates and open gates
             // are positioned in the tile set relative to their
@@ -1136,7 +1143,7 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
             *bg = override + offset;
         }
         else
-            *bg = orig + std::min((int)flv.special, 3);
+            *bg = orig + std::min((int)flv.special, 6);
     }
     else if (orig == TILE_DNGN_PORTAL_WIZARD_LAB
              || orig == TILE_DNGN_ALTAR_CHEIBRIADOS)
