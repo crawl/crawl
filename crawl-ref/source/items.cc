@@ -765,7 +765,10 @@ void item_check(bool verbose)
         strm << "You see here " << name << '.' << std::endl;
         _maybe_give_corpse_hint(it);
         if (sacrificeable_items.size())
-            strm << "It can be sacrificed." << std::endl;
+        {
+            strm << (it.quantity == 1 ? "It" : "They")
+                 << " can be sacrificed." << std::endl;
+        }
         return;
     }
 
@@ -824,7 +827,7 @@ void item_check(bool verbose)
         }
         if (items.size() == sacrificeable_items.size())
         {
-            strm << "They can be sacrificied." << std::endl;
+            strm << "They can be sacrificed." << std::endl;
             done_list_sacrificeables = true;
         }
     }
