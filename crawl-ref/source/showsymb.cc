@@ -33,9 +33,7 @@ unsigned short _cell_feat_show_colour(const map_cell& cell,
     // These aren't shown mossy/bloody/slimy.
     const bool norecolour = is_critical_feature(feat) || feat_is_trap(feat);
 
-    if (cell.flags & MAP_EXCLUDED_STAIRS)
-        colour = Options.tc_excluded;
-    else if (!coloured)
+    if (!coloured)
     {
         if (cell.flags & MAP_EMPHASIZE)
             colour = fdef.seen_em_colour;
@@ -50,6 +48,9 @@ unsigned short _cell_feat_show_colour(const map_cell& cell,
             return colour;
         }
     }
+
+    else if (cell.flags & MAP_EXCLUDED_STAIRS)
+        colour = Options.tc_excluded;
     else if (feat >= DNGN_MINMOVE && cell.flags & MAP_WITHHELD)
     {
         // Colour grids that cannot be reached due to beholders
