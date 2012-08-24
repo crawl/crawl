@@ -2594,8 +2594,8 @@ static int _find_transtravel_stair(const level_id &cur,
     // Have we reached the target level?
     if (cur == target.id)
     {
-        // Are we in an exclude? If so, bail out.
-        if (is_excluded(stair, li.get_excludes()))
+        // Are we in an exclude? If so, bail out. Unless it is just a stair exclusion.
+        if (is_excluded(stair, li.get_excludes()) && !is_stair_exclusion(stair))
             return -1;
 
         // If there's no target position on the target level, or we're on the
