@@ -27,6 +27,7 @@
 #include "options.h"
 #include "random.h"
 #include "religion.h"
+#include "skills2.h"
 #include "stash.h"
 #include "state.h"
 #include "stuff.h"
@@ -142,6 +143,7 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
 
     you.wield_change = true;
     you.one_time_ability_used[god] = true;
+    calc_mp(); // in case the old brand was antimagic
     string desc  = old_name + " ";
             desc += (god == GOD_SHINING_ONE   ? "blessed by the Shining One" :
                      god == GOD_LUGONU        ? "corrupted by Lugonu" :
