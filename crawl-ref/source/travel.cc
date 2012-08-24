@@ -1597,8 +1597,12 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
             && !point_distance[dc.x][dc.y]
             && dc != start)
         {
-            if (features && (is_trap(dc) || is_exclude_root(dc)))
+            if (features && (is_trap(dc) || is_exclude_root(dc))
+                && std::find(features->begin(), features->end(), dc)
+                   == features->end())
+            {
                 features->push_back(dc);
+            }
 
             if (double_flood)
                 reseed_points.push_back(dc);
@@ -1641,14 +1645,20 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
                        && !feat_is_water(feature)
                        && feature != DNGN_LAVA
                     || is_waypoint(dc)
-                    || is_stash(ls, dc)))
+                    || is_stash(ls, dc))
+                && std::find(features->begin(), features->end(), dc)
+                   == features->end())
             {
                 features->push_back(dc);
             }
         }
 
-        if (features && dc != start && is_exclude_root(dc))
+        if (features && dc != start && is_exclude_root(dc)
+            && std::find(features->begin(), features->end(), dc)
+               == features->end())
+        {
             features->push_back(dc);
+        }
     }
 
     return false;
