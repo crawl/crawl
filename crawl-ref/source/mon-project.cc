@@ -498,10 +498,6 @@ move_again:
             goto move_again;
         }
 
-        // Yay for inconsistencies in beam-vs-player and beam-vs-monsters.
-        if (victim && victim->is_player() && !mons_is_boulder(&mon))
-            mprf("%s hits you!", mon.name(DESC_THE, true).c_str());
-
         if (_iood_hit(mon, pos))
         {
             if (!iood)
