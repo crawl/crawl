@@ -85,6 +85,7 @@ class CrawlProcessHandlerBase(object):
 
         self.process = None
         self.client_path = self.config_path("client_path")
+        self.crawl_version = None
         self.where = {}
         self.wheretime = 0
         self.last_milestone = None
@@ -194,7 +195,10 @@ class CrawlProcessHandlerBase(object):
             self._send_client(receiver)
 
     def _send_client(self, watcher):
-        v = hashlib.sha1(os.path.abspath(self.client_path)).hexdigest()
+        h = hashlib.sha1(os.path.abspath(self.client_path))
+        if self.crawl_version:
+            h.update(self.crawl_version)
+        v = h.hexdigest()
         GameDataHandler.add_version(v,
                                     os.path.join(self.client_path, "static"))
 
@@ -587,6 +591,9 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
             if msgobj["msg"] == "client_path":
                 if self.client_path == None:
                     self.client_path = self.format_path(msgobj["path"])
+                    if "version" in msgobj:
+                        self.crawl_version = msgobj["version"]
+                        self.logger.info("Crawl version: %s.", self.crawl_version)
                     self.send_client_to_all()
             else:
                 self.logger.warning("Unknown message from the crawl process: %s",
