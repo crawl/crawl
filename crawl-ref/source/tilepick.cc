@@ -32,6 +32,14 @@
 #include "traps.h"
 #include "viewgeom.h"
 
+#ifdef COMPILE_CHECKS_NEED_FUNCTION
+// FIXME: this is too ugly to live, pollutes the executable's debug symbols,
+// and stinks of elderberries.  Need a better non-C++11 way to do static
+// asserts in GCC 4.8.
+void tile_compile_checks()
+{
+#endif
+
 // This should not be changed.
 COMPILE_CHECK(TILE_DNGN_UNSEEN == 0);
 
@@ -63,6 +71,10 @@ COMPILE_CHECK(MAX_TERM_COLOUR - 1
               == TILE_AMU_COL_LAST - TILE_AMU_COL_FIRST + 1);
 COMPILE_CHECK(MAX_TERM_COLOUR - 1
               == TILE_BOOK_COL_LAST - TILE_BOOK_COL_FIRST + 1);
+
+#ifdef COMPILE_CHECKS_NEED_FUNCTION
+}
+#endif
 
 TextureID get_dngn_tex(tileidx_t idx)
 {
