@@ -21,6 +21,7 @@
 
 #include "platform.h"
 #include <stdint.h>
+namespace std {};
 using namespace std;
 
 #ifdef TARGET_COMPILER_VC
