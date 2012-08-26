@@ -36,6 +36,7 @@
 # elif defined(__GNUC__) && (__GNUC__ > 4 || __GNUC__ == 4 && __GNUC_MINOR__ >= 8)
 // Otherwise, use a hack.
 #  define COMPILE_CHECK(expr) ((void)sizeof(char[1 - 2*!(expr)]))
+#  define COMPILE_CHECKS_NEED_FUNCTION
 # else
 // Or one with a slightly better message, except that GCC-4.8 notices it's
 // nonsense and spams warnings on non-failures.
