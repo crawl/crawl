@@ -424,13 +424,13 @@ bool TilesFramework::prefix_popped()
 
 void TilesFramework::_send_version()
 {
-    std::string title = CRAWL " " + Version::Long();
-    send_message("{msg:\"version\",text:\"%s\"}", title.c_str());
-
 #ifdef WEB_DIR_PATH
     // The star signals a message to the server
-    send_message("*{\"msg\":\"client_path\",\"path\":\"%s\"}", WEB_DIR_PATH);
+    send_message("*{\"msg\":\"client_path\",\"path\":\"%s\",\"version\":\"%s\"}", WEB_DIR_PATH, Version::Long().c_str());
 #endif
+
+    std::string title = CRAWL " " + Version::Long();
+    send_message("{msg:\"version\",text:\"%s\"}", title.c_str());
 }
 
 void TilesFramework::push_menu(Menu* m)
