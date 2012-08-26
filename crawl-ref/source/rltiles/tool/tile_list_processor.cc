@@ -1120,8 +1120,8 @@ bool tile_list_processor::write_data(bool image, bool code)
         fprintf(fp, "tileidx_t tile_%s_basetile(tileidx_t idx)\n{\n", lcname.c_str());
         fprintf(fp, "    assert(idx >= %s && idx < %s);\n",
                 m_start_value.c_str(), max.c_str());
-        fprintf(fp, "    return _tile_%s_basetiles[idx - %s];\n",
-                lcname.c_str(), m_start_value.c_str());
+        fprintf(fp, "    return _tile_%s_basetiles[idx - %s] + %s;\n",
+                lcname.c_str(), m_start_value.c_str(), m_start_value.c_str());
         fprintf(fp, "}\n\n");
 
         fprintf(fp, "static int _tile_%s_probs[%s - %s] =\n{\n",
