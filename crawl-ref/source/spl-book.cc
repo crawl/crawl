@@ -1427,6 +1427,8 @@ int rod_spell(int rod)
         // Starting it up takes 2 mana, continuing any amount up to 5.
         // You don't get to expend less (other than stopping the zap completely).
         mana = std::min(5 * ROD_CHARGE_MULT, (int)irod.plus);
+        // Never allow using less than a whole point of charge.
+        mana = std::max(mana, ROD_CHARGE_MULT);
         you.props["thunderbolt_mana"].get_int() = mana;
     }
 
