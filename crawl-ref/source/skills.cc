@@ -560,13 +560,13 @@ void init_training()
     skills.init(0);
     for (int i = 0; i < NUM_SKILLS; ++i)
         if (skill_trained(i))
-            skills[i] = pow(you.skill_points[i], 2);
+            skills[i] = pow(you.skill_points[i], 2.0);
 
     _scale_array(skills, EXERCISE_QUEUE_SIZE, true);
     _init_queue(you.exercises, skills);
 
     for (int i = 0; i < NUM_SKILLS; ++i)
-        skills[i] = pow(you.skill_points[i], 2);
+        skills[i] = pow(you.skill_points[i], 2.0);
 
     _scale_array(skills, EXERCISE_QUEUE_SIZE, true);
     _init_queue(you.exercises_all, skills);
