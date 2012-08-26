@@ -1072,7 +1072,7 @@ monster_type arena_pick_random_monster(const level_id &place, int power,
         if (arena::cycle_random_pos >= NUM_MONSTERS)
             arena::cycle_random_pos = MONS_0;
 
-        if (mons_rarity(arena::cycle_random_pos, place) == 0)
+        if (mons_rarity(arena::cycle_random_pos, place.branch) == 0)
             continue;
 
         if (arena_veto_random_monster(arena::cycle_random_pos))

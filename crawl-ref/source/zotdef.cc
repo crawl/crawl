@@ -560,7 +560,8 @@ static monster_type _get_zotdef_monster(level_id &place, int power)
         {
             mon_type = static_cast<monster_type>(random2(NUM_MONSTERS));
             count++;
-            rarity = (place.branch == NUM_BRANCHES) ? 30 : mons_rarity(mon_type, place);
+            rarity = (place.branch == NUM_BRANCHES) ? 30
+                     : mons_rarity(mon_type, place.branch);
         }
         while (rarity == 0 && count < 2000);
 
@@ -589,7 +590,7 @@ static monster_type _get_zotdef_monster(level_id &place, int power)
         // get default level
         int lev_mons = (place.branch == NUM_BRANCHES)
                        ? ((strength * 3) / 2)
-                       : mons_level(mon_type, place)
+                       : mons_level(mon_type, place.branch)
                          + absdungeon_depth(place.branch, 0);
 
         // if >50, bail out - these are special flags
