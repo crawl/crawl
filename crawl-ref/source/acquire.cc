@@ -1453,13 +1453,13 @@ int acquirement_create_item(object_class_type class_wanted,
         case RING_DEXTERITY:
         case RING_EVASION:
             // Make sure plus is >= 1.
-            thing.plus = max(abs(thing.plus), 1);
+            thing.plus = max(abs((int) thing.plus), 1);
             break;
 
         case RING_SLAYING:
             // Two plusses to handle here, and accuracy can be +0.
             thing.plus = abs(thing.plus);
-            thing.plus2 = max(abs(thing.plus2), 2);
+            thing.plus2 = max(abs((int) thing.plus2), 2);
             break;
 
         case RING_HUNGER:
