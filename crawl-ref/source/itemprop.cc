@@ -569,7 +569,7 @@ void do_uncurse_item(item_def &item, bool inscribe, bool no_ash,
     }
 
     if (inscribe && Options.autoinscribe_cursed
-        && item.inscription.find("was cursed") == std::string::npos
+        && item.inscription.find("was cursed") == string::npos
         && !item_ident(item, ISFLAG_SEEN_CURSED)
         && !fully_identified(item))
     {
@@ -673,7 +673,7 @@ void set_ident_flags(item_def &item, iflags_t flags)
     {
         // Clear "was cursed" inscription once the item is identified.
         if (Options.autoinscribe_cursed
-            && item.inscription.find("was cursed") != std::string::npos)
+            && item.inscription.find("was cursed") != string::npos)
         {
             item.inscription = replace_all(item.inscription, ", was cursed", "");
             item.inscription = replace_all(item.inscription, "was cursed, ", "");
@@ -1865,7 +1865,7 @@ static bool _slot_blocked(const item_def &item)
             && !_item_is_swappable(you.inv[you.equip[eq]], eq, false));
 }
 
-bool item_skills(const item_def &item, std::set<skill_type> &skills)
+bool item_skills(const item_def &item, set<skill_type> &skills)
 {
     const bool equipped = item_is_equipped(item);
 
@@ -2751,7 +2751,7 @@ int item_mass(const item_def &item)
 
             // Truncate to the nearest 5 and reduce the item mass:
             unit_mass -= ((reduc / 5) * 5);
-            unit_mass = std::max(unit_mass, 5);
+            unit_mass = max(unit_mass, 5);
         }
         break;
 
@@ -2898,12 +2898,12 @@ void ident_reflector(item_def *item)
         set_ident_flags(*item, ISFLAG_KNOW_TYPE);
 }
 
-std::string item_base_name(const item_def &item)
+string item_base_name(const item_def &item)
 {
     return item_base_name(item.base_type, item.sub_type);
 }
 
-std::string item_base_name(object_class_type type, int sub_type)
+string item_base_name(object_class_type type, int sub_type)
 {
     switch (type)
     {
@@ -2920,7 +2920,7 @@ std::string item_base_name(object_class_type type, int sub_type)
     }
 }
 
-std::string food_type_name(int sub_type)
+string food_type_name(int sub_type)
 {
     return Food_prop[Food_index[sub_type]].name;
 }

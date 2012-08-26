@@ -713,11 +713,11 @@ static tileidx_t _tileidx_monster_zombified(const monster_info& mon)
             if (_is_skeleton(z_type))
             {
                 return TILEP_MONS_SKELETON_HYDRA
-                       + std::min((int)mon.number, 5) - 1;
+                       + min((int)mon.number, 5) - 1;
             }
 
             z_tile = TILEP_MONS_ZOMBIE_HYDRA
-                     + std::min((int)mon.number, 5) - 1;
+                     + min((int)mon.number, 5) - 1;
             break;
         }
         else if ((mons_genus(subtype) == MONS_GIANT_NEWT
@@ -827,7 +827,7 @@ static tileidx_t _mon_mod(tileidx_t tile, int offset)
 static tileidx_t _mon_clamp(tileidx_t tile, int offset)
 {
     int count = tile_player_count(tile);
-    return (tile + std::min(std::max(offset, 0), count - 1));
+    return (tile + min(max(offset, 0), count - 1));
 }
 
 static tileidx_t _mon_random(tileidx_t tile)
@@ -5220,12 +5220,12 @@ tileidx_t tileidx_enchant_equ(const item_def &item, tileidx_t tile, bool player)
     return tile;
 }
 
-std::string tile_debug_string(tileidx_t fg, tileidx_t bg, char prefix)
+string tile_debug_string(tileidx_t fg, tileidx_t bg, char prefix)
 {
     tileidx_t fg_idx = fg & TILE_FLAG_MASK;
     tileidx_t bg_idx = bg & TILE_FLAG_MASK;
 
-    std::string fg_name;
+    string fg_name;
     if (fg_idx < TILE_MAIN_MAX)
         fg_name = tile_main_name(fg_idx);
     else if (fg_idx < TILEP_MCACHE_START)
@@ -5258,7 +5258,7 @@ std::string tile_debug_string(tileidx_t fg, tileidx_t bg, char prefix)
         }
     }
 
-    std::string tile_string = make_stringf(
+    string tile_string = make_stringf(
         "%cFG: %4"PRIu64" | 0x%8"PRIx64" (%s)\n"
         "%cBG: %4"PRIu64" | 0x%8"PRIx64" (%s)\n",
         prefix,

@@ -445,10 +445,10 @@ glyph get_mons_glyph(const monster_info& mi)
     return g;
 }
 
-std::string glyph_to_tagstr(const glyph& g)
+string glyph_to_tagstr(const glyph& g)
 {
-    std::string col = colour_to_str(g.col);
-    std::string ch = stringize_glyph(g.ch);
+    string col = colour_to_str(g.col);
+    string ch = stringize_glyph(g.ch);
     if (g.ch == '<')
         ch += "<";
     return make_stringf("<%s>%s</%s>", col.c_str(), ch.c_str(), col.c_str());

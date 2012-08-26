@@ -56,7 +56,7 @@ enum map_mask_type
 };
 
 class dgn_region;
-typedef std::vector<dgn_region> dgn_region_list;
+typedef vector<dgn_region> dgn_region_list;
 
 class dgn_region
 {
@@ -133,7 +133,7 @@ public:
 
     map_section_type orient;
     map_def map;
-    std::vector<coord_def> exits;
+    vector<coord_def> exits;
 
     int level_number;
 
@@ -178,7 +178,7 @@ private:
 };
 
 extern bool Generating_Level;
-extern std::vector<vault_placement> Temp_Vaults;
+extern vector<vault_placement> Temp_Vaults;
 
 extern const map_bitmask *Vault_Placement_Mask;
 
@@ -250,7 +250,7 @@ void dgn_place_multiple_items(item_list &list,
 bool set_level_flags(uint32_t flags, bool silent = false);
 bool unset_level_flags(uint32_t flags, bool silent = false);
 
-void dgn_set_branch_epilogue(branch_type br, std::string callback_name);
+void dgn_set_branch_epilogue(branch_type br, string callback_name);
 
 void dgn_reset_level(bool enable_random_maps = true);
 
@@ -292,7 +292,7 @@ static inline int count_neighbours(const coord_def& p, dungeon_feature_type feat
     return count_neighbours(p.x, p.y, feat);
 }
 
-std::string dump_vault_maps();
+string dump_vault_maps();
 
 bool dgn_square_travel_ok(const coord_def &c);
 

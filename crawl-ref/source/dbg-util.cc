@@ -55,8 +55,8 @@ void debug_dump_levgen()
 
     CrawlHashTable &props = env.properties;
 
-    std::string method;
-    std::string type;
+    string method;
+    string type;
 
     if (Generating_Level)
     {
@@ -97,19 +97,19 @@ void debug_dump_levgen()
     mpr("");
 }
 
-std::string debug_coord_str(const coord_def &pos)
+string debug_coord_str(const coord_def &pos)
 {
     return make_stringf("(%d, %d)%s", pos.x, pos.y,
                         !in_bounds(pos) ? " <OoB>" : "");
 }
 
-std::string debug_mon_str(const monster* mon)
+string debug_mon_str(const monster* mon)
 {
     const int midx = mon->mindex();
     if (invalid_monster_index(midx))
         return make_stringf("Invalid monster index %d", midx);
 
-    std::string out = "Monster '" + mon->full_name(DESC_PLAIN, true) + "' ";
+    string out = "Monster '" + mon->full_name(DESC_PLAIN, true) + "' ";
     out += make_stringf("%s [midx = %d]", debug_coord_str(mon->pos()).c_str(),
                         midx);
 
@@ -170,8 +170,7 @@ void debug_dump_mon(const monster* mon, bool recurse)
 
     if (in_bounds(mon->pos()))
     {
-        std::string feat =
-            raw_feature_description(mon->pos());
+        string feat = raw_feature_description(mon->pos());
         fprintf(stderr, "On/in/over feature: %s\n\n", feat.c_str());
     }
 
@@ -363,10 +362,10 @@ skill_type skill_from_name(const char *name)
     {
         skill_type sk = static_cast<skill_type>(i);
 
-        std::string sk_name = lowercase_string(skill_name(sk));
+        string sk_name = lowercase_string(skill_name(sk));
 
         size_t pos = sk_name.find(name);
-        if (pos != std::string::npos)
+        if (pos != string::npos)
         {
             skill = sk;
             // We prefer prefixes over partial matches.
@@ -378,7 +377,7 @@ skill_type skill_from_name(const char *name)
     return skill;
 }
 
-std::string debug_art_val_str(const item_def& item)
+string debug_art_val_str(const item_def& item)
 {
     ASSERT(is_artefact(item));
 

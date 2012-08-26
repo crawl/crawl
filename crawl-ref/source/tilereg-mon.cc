@@ -36,10 +36,10 @@ void MonsterRegion::update()
         return;
 
     get_monster_info(m_mon_info);
-    std::sort(m_mon_info.begin(), m_mon_info.end(),
+    sort(m_mon_info.begin(), m_mon_info.end(),
               monster_info::less_than_wrapper);
 
-    unsigned int num_mons = std::min(max_mons, m_mon_info.size());
+    unsigned int num_mons = min(max_mons, m_mon_info.size());
     for (size_t i = 0; i < num_mons; ++i)
     {
         InventoryTile desc;
@@ -91,7 +91,7 @@ int MonsterRegion::handle_mouse(MouseEvent &event)
     return 0;
 }
 
-bool MonsterRegion::update_tip_text(std::string &tip)
+bool MonsterRegion::update_tip_text(string &tip)
 {
     if (m_cursor == NO_CURSOR)
         return false;
@@ -104,12 +104,12 @@ bool MonsterRegion::update_tip_text(std::string &tip)
     return tile_dungeon_tip(mon->pos, tip);
 }
 
-bool MonsterRegion::update_tab_tip_text(std::string &tip, bool active)
+bool MonsterRegion::update_tab_tip_text(string &tip, bool active)
 {
     return false;
 }
 
-bool MonsterRegion::update_alt_text(std::string &alt)
+bool MonsterRegion::update_alt_text(string &alt)
 {
     if (m_cursor == NO_CURSOR)
         return false;
@@ -212,7 +212,7 @@ void MonsterRegion::draw_tag()
     if (!mon)
         return;
 
-    std::string desc = mon->proper_name(DESC_A);
+    string desc = mon->proper_name(DESC_A);
     draw_desc(desc.c_str());
 }
 

@@ -52,7 +52,7 @@ class FontBuffer : public VertBuffer
 public:
     FontBuffer(FontWrapper *font);
     void add(const formatted_string &fs, float x, float y);
-    void add(const std::string &s, const VColour &col, float x, float y);
+    void add(const string &s, const VColour &col, float x, float y);
 protected:
     FontWrapper *m_font;
 };

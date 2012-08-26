@@ -7,7 +7,7 @@
 #include "options.h"
 #include "show.h"
 
-typedef std::map<show_type, feature_def> feat_map;
+typedef map<show_type, feature_def> feat_map;
 static feat_map Features;
 
 const feature_def &get_feature_def(show_type object)

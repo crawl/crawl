@@ -44,7 +44,7 @@ public:
 
     // FontBuffer helper functions
     virtual void store(FontBuffer &buf, float &x, float &y,
-                       const std::string &s, const VColour &c) = 0;
+                       const string &s, const VColour &c) = 0;
     virtual void store(FontBuffer &buf, float &x, float &y,
                        const formatted_string &fs) = 0;
     virtual void store(FontBuffer &buf, float &x, float &y, ucs_t c,

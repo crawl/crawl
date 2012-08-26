@@ -444,12 +444,12 @@ bool feat_is_reachable_past(dungeon_feature_type feat)
 
 // Find all connected cells containing ft, starting at d.
 void find_connected_identical(const coord_def &d, dungeon_feature_type ft,
-                              std::set<coord_def>& out)
+                              set<coord_def>& out)
 {
     if (grd(d) != ft)
         return;
 
-    std::string prop = env.markers.property_at(d, MAT_ANY, "connected_exclude");
+    string prop = env.markers.property_at(d, MAT_ANY, "connected_exclude");
 
     if (!prop.empty())
     {
@@ -473,12 +473,12 @@ void find_connected_identical(const coord_def &d, dungeon_feature_type ft,
 static void _find_connected_range(const coord_def& d,
                                   dungeon_feature_type ft_min,
                                   dungeon_feature_type ft_max,
-                                  std::set<coord_def>& out)
+                                  set<coord_def>& out)
 {
     if (grd(d) < ft_min || grd(d) > ft_max)
         return;
 
-    std::string prop = env.markers.property_at(d, MAT_ANY, "connected_exclude");
+    string prop = env.markers.property_at(d, MAT_ANY, "connected_exclude");
 
     if (!prop.empty())
     {
@@ -498,9 +498,9 @@ static void _find_connected_range(const coord_def& d,
     }
 }
 
-std::set<coord_def> connected_doors(const coord_def& d)
+set<coord_def> connected_doors(const coord_def& d)
 {
-    std::set<coord_def> doors;
+    set<coord_def> doors;
     _find_connected_range(d, DNGN_CLOSED_DOOR, DNGN_SECRET_DOOR, doors);
     return doors;
 }
@@ -516,7 +516,7 @@ void get_door_description(int door_size, const char** adjective, const char** no
     };
 
     int max_idx = static_cast<int>(ARRAYSZ(descriptions) - 2);
-    const unsigned int idx = std::min(door_size*2, max_idx);
+    const unsigned int idx = min(door_size*2, max_idx);
 
     *adjective = descriptions[idx];
     *noun = descriptions[idx+1];
@@ -540,8 +540,8 @@ bool find_secret_door_info(const coord_def &where,
                            dungeon_feature_type *appearance,
                            coord_def *gc)
 {
-    std::set<coord_def> doors = connected_doors(where);
-    std::set<coord_def>::iterator it;
+    set<coord_def> doors = connected_doors(where);
+    set<coord_def>::iterator it;
 
     dungeon_feature_type feat = DNGN_FLOOR;
     coord_def loc = where;
@@ -595,7 +595,7 @@ dungeon_feature_type grid_secret_door_appearance(const coord_def &where)
 
 coord_def get_random_stair()
 {
-    std::vector<coord_def> st;
+    vector<coord_def> st;
     for (rectangle_iterator ri(1); ri; ++ri)
     {
         const dungeon_feature_type feat = grd(*ri);
@@ -612,7 +612,7 @@ coord_def get_random_stair()
 }
 
 
-static std::auto_ptr<map_mask_boolean> _slime_wall_precomputed_neighbour_mask;
+static auto_ptr<map_mask_boolean> _slime_wall_precomputed_neighbour_mask;
 
 static void _precompute_slime_wall_neighbours()
 {
@@ -712,13 +712,13 @@ static coord_def _dgn_find_nearest_square(
 {
     memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
 
-    std::list<coord_def> points[2];
+    list<coord_def> points[2];
     int iter = 0;
     points[iter].push_back(pos);
 
     while (!points[iter].empty())
     {
-        for (std::list<coord_def>::iterator i = points[iter].begin();
+        for (list<coord_def>::iterator i = points[iter].begin();
              i != points[iter].end(); ++i)
         {
             const coord_def &p = *i;
@@ -1079,14 +1079,14 @@ static void _announce_swap_real(coord_def orig_pos, coord_def dest_pos)
 {
     const dungeon_feature_type orig_feat = grd(dest_pos);
 
-    const std::string orig_name =
+    const string orig_name =
         feature_description_at(dest_pos, false,
                             you.see_cell(orig_pos) ? DESC_THE : DESC_A,
                             false);
 
-    std::string prep = feat_preposition(orig_feat, false);
+    string prep = feat_preposition(orig_feat, false);
 
-    std::string orig_actor, dest_actor;
+    string orig_actor, dest_actor;
     if (orig_pos == you.pos())
         orig_actor = "you";
     else if (const monster* m = monster_at(orig_pos))
@@ -1103,7 +1103,7 @@ static void _announce_swap_real(coord_def orig_pos, coord_def dest_pos)
             dest_actor = m->name(DESC_THE);
     }
 
-    std::ostringstream str;
+    ostringstream str;
     str << orig_name << " ";
     if (you.see_cell(orig_pos) && !you.see_cell(dest_pos))
     {
@@ -1519,7 +1519,7 @@ bool fall_into_a_pool(const coord_def& entry, bool allow_shift,
     return false;
 }
 
-typedef std::map<std::string, dungeon_feature_type> feat_desc_map;
+typedef map<string, dungeon_feature_type> feat_desc_map;
 static feat_desc_map feat_desc_cache;
 
 void init_feat_desc_cache()
@@ -1527,7 +1527,7 @@ void init_feat_desc_cache()
     for (int i = 0; i < NUM_FEATURES; i++)
     {
         dungeon_feature_type feat = static_cast<dungeon_feature_type>(i);
-        std::string          desc = feature_description(feat);
+        string               desc = feature_description(feat);
 
         lowercase(desc);
         if (feat_desc_cache.find(desc) == feat_desc_cache.end())
@@ -1535,7 +1535,7 @@ void init_feat_desc_cache()
     }
 }
 
-dungeon_feature_type feat_by_desc(std::string desc)
+dungeon_feature_type feat_by_desc(string desc)
 {
     lowercase(desc);
 
@@ -1554,8 +1554,7 @@ dungeon_feature_type feat_by_desc(std::string desc)
 // message: "<feature> slides away as you move <prep> it!"
 // Else, the actor is already on the feature:
 // "<feature> moves from <prep origin> to <prep destination>!"
-std::string feat_preposition(dungeon_feature_type feat, bool active,
-                             const actor* who)
+string feat_preposition(dungeon_feature_type feat, bool active, const actor* who)
 {
     const bool         airborne = !who || who->airborne();
     const command_type dir      = feat_stair_direction(feat);
@@ -1618,7 +1617,7 @@ std::string feat_preposition(dungeon_feature_type feat, bool active,
         return "beside";
 }
 
-std::string stair_climb_verb(dungeon_feature_type feat)
+string stair_climb_verb(dungeon_feature_type feat)
 {
     ASSERT(feat_stair_direction(feat) != CMD_NO_CMD);
 
@@ -1690,7 +1689,7 @@ static const char *dngn_feature_names[] =
 "unknown_altar", "unknown_portal",
 };
 
-dungeon_feature_type dungeon_feature_by_name(const std::string &name)
+dungeon_feature_type dungeon_feature_by_name(const string &name)
 {
     COMPILE_CHECK(ARRAYSZ(dngn_feature_names) == NUM_FEATURES);
 
@@ -1716,9 +1715,9 @@ dungeon_feature_type dungeon_feature_by_name(const std::string &name)
     return DNGN_UNSEEN;
 }
 
-std::vector<std::string> dungeon_feature_matches(const std::string &name)
+vector<string> dungeon_feature_matches(const string &name)
 {
-    std::vector<std::string> matches;
+    vector<string> matches;
 
     COMPILE_CHECK(ARRAYSZ(dngn_feature_names) == NUM_FEATURES);
     if (name.empty())
@@ -1810,7 +1809,7 @@ bool cell_can_cling_to(const coord_def& from, const coord_def to)
         if (feat_is_wall(env.grid(*ai)))
         {
             for (orth_adjacent_iterator ai2(to, false); ai2; ++ai2)
-                if (feat_is_wall(env.grid(*ai2)) && distance(*ai, *ai2) <= 1)
+                if (feat_is_wall(env.grid(*ai2)) && distance2(*ai, *ai2) <= 1)
                     return true;
         }
     }

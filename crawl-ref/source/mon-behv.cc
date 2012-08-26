@@ -40,7 +40,7 @@ static void _guess_invis_foe_pos(monster* mon)
     const actor* foe          = mon->get_foe();
     const int    guess_radius = mons_sense_invis(mon) ? 3 : 2;
 
-    std::vector<coord_def> possibilities;
+    vector<coord_def> possibilities;
 
     // NOTE: This depends on ignoring clouds, so that cells hidden by
     // opaque clouds are included as a possibility for the foe's location.
@@ -106,7 +106,7 @@ static void _set_firing_pos(monster* mon, coord_def target)
     const int current_distance = mon->pos().distance_from(target);
 
     // We don't consider getting farther away unless already very close.
-    const int max_range = std::max(ideal_range, current_distance);
+    const int max_range = max(ideal_range, current_distance);
 
     int best_distance = INT_MAX;
     int best_distance_to_ideal_range = INT_MAX;
@@ -133,11 +133,11 @@ static void _set_firing_pos(monster* mon, coord_def target)
 
         if (distance < best_distance
             || distance == best_distance
-               && std::abs(range - ideal_range) < best_distance_to_ideal_range)
+               && abs(range - ideal_range) < best_distance_to_ideal_range)
         {
             best_pos = p;
             best_distance = distance;
-            best_distance_to_ideal_range = std::abs(range - ideal_range);
+            best_distance_to_ideal_range = abs(range - ideal_range);
         }
     }
 
@@ -196,7 +196,7 @@ void handle_behaviour(monster* mon)
     bool isScared   = mon->has_ench(ENCH_FEAR);
     bool isPacified = mon->pacified();
     bool patrolling = mon->is_patrolling();
-    static std::vector<level_exit> e;
+    static vector<level_exit> e;
     static int                     e_index = -1;
 
     // Zotdef rotting
@@ -851,7 +851,7 @@ static void _set_nearest_monster_foe(monster* mon)
 
     for (int k = 1; k <= LOS_RADIUS; ++k)
     {
-        std::vector<coord_def> monster_pos;
+        vector<coord_def> monster_pos;
         for (int i = -k; i <= k; ++i)
             for (int j = -k; j <= k; (abs(i) == k ? j++ : j += 2*k))
             {
@@ -892,7 +892,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
 
     const beh_type old_behaviour = mon->behaviour;
 
-    int fleeThreshold = std::min(mon->max_hit_points / 4, 20);
+    int fleeThreshold = min(mon->max_hit_points / 4, 20);
 
     bool isSmart          = (mons_intel(mon) > I_ANIMAL);
     bool isMobile         = !mons_is_stationary(mon);
@@ -901,7 +901,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
     bool setTarget        = false;
     bool breakCharm       = false;
     bool was_sleeping     = mon->asleep();
-    std::string msg;
+    string msg;
     int src_idx           = src ? src->mindex() : MHITNOT; // AXE ME
 
     if (src)

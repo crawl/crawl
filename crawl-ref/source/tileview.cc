@@ -1143,7 +1143,7 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
             *bg = override + offset;
         }
         else
-            *bg = orig + std::min((int)flv.special, 6);
+            *bg = orig + min((int)flv.special, 6);
     }
     else if (orig == TILE_DNGN_PORTAL_WIZARD_LAB
              || orig == TILE_DNGN_ALTAR_CHEIBRIADOS)

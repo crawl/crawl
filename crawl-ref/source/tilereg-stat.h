@@ -10,7 +10,7 @@ public:
     StatRegion(FontWrapper *font);
 
     virtual int handle_mouse(MouseEvent &event);
-    virtual bool update_tip_text(std::string &tip);
+    virtual bool update_tip_text(string &tip);
 };
 
 #endif

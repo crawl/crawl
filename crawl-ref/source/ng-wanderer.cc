@@ -664,7 +664,7 @@ static void _give_wanderer_spell(skill_type skill)
 }
 
 static void _wanderer_decent_equipment(skill_type & skill,
-                                       std::set<skill_type> & gift_skills,
+                                       set<skill_type> & gift_skills,
                                        int & slot)
 {
     const skill_type combined_weapon_skills[] =
@@ -906,7 +906,7 @@ void create_wanderer(void)
 
     // Keep track of what skills we got items from, mostly to prevent
     // giving a good and then a normal version of the same weapon.
-    std::set<skill_type> gift_skills;
+    set<skill_type> gift_skills;
 
     // Wanderers get 1 good thing, a couple average things, and then
     // 1 last stage to fill any glaring equipment holes (no clothes,

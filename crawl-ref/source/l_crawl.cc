@@ -446,7 +446,7 @@ static int crawl_bindkey(lua_State *ls)
         return 0;
 
     lua_pushvalue(ls, 2);
-    std::string name = clua.setuniqregistry();
+    string name = clua.setuniqregistry();
     if (lua_gettop(ls) != 2)
     {
         fprintf(stderr, "Stack top has changed!\n");
@@ -472,7 +472,7 @@ static int crawl_msgch_num(lua_State *ls)
 static int crawl_msgch_name(lua_State *ls)
 {
     int num = luaL_checkint(ls, 1);
-    std::string name = channel_to_str(num);
+    string name = channel_to_str(num);
     lua_pushstring(ls, name.c_str());
     return 1;
 }
@@ -578,7 +578,7 @@ static int crawl_trim(lua_State *ls)
     const char *s = luaL_checkstring(ls, 1);
     if (!s)
         return 0;
-    std::string text = s;
+    string text = s;
     trim_string(text);
     lua_pushstring(ls, text.c_str());
     return 1;
@@ -591,7 +591,7 @@ static int crawl_split(lua_State *ls)
     if (!s || !token)
         return 0;
 
-    std::vector<std::string> segs = split_string(token, s);
+    vector<string> segs = split_string(token, s);
     lua_newtable(ls);
     for (int i = 0, count = segs.size(); i < count; ++i)
     {
@@ -671,7 +671,7 @@ static int crawl_get_command(lua_State *ls)
 
     const command_type cmd = name_to_command(luaL_checkstring(ls, 1));
 
-    std::string cmd_name = command_to_string(cmd, true);
+    string cmd_name = command_to_string(cmd, true);
     if (strcmp(cmd_name.c_str(), "<") == 0)
         cmd_name = "<<";
 
@@ -745,7 +745,7 @@ static int crawl_err_trace(lua_State *ls)
     {
         // This code from lua.c:traceback() (mostly)
         const char *errs = lua_tostring(ls, 1);
-        std::string errstr = errs? errs : "";
+        string errstr = errs? errs : "";
         lua_getfield(ls, LUA_GLOBALSINDEX, "debug");
         if (!lua_istable(ls, -1))
         {
@@ -960,7 +960,7 @@ LUAFN(_crawl_millis)
 }
 #endif
 
-static std::string _crawl_make_name(lua_State *ls)
+static string _crawl_make_name(lua_State *ls)
 {
     // A quick wrapper around itemname:make_name. Seed is random_int().
     // Possible parameters: all caps, max length, char start. By default
@@ -991,14 +991,14 @@ static int _crawl_god_speaks(lua_State *ls)
     const char *god_name = luaL_checkstring(ls, 1);
     if (!god_name)
     {
-        std::string err = "god_speaks requires a god!";
+        string err = "god_speaks requires a god!";
         return luaL_argerror(ls, 1, err.c_str());
     }
 
     god_type god = str_to_god(god_name);
     if (god == GOD_NO_GOD)
     {
-        std::string err = make_stringf("'%s' matches no god.", god_name);
+        string err = make_stringf("'%s' matches no god.", god_name);
         return luaL_argerror(ls, 1, err.c_str());
     }
 

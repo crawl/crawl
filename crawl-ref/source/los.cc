@@ -80,15 +80,15 @@ static const circle_def bds_precalc = circle_def(LOS_MAX_RANGE, C_ROUND);
 // These are filled during precomputation (_register_ray).
 // XXX: fullrays is not needed anymore after precomputation.
 struct los_ray;
-static std::vector<los_ray> fullrays;
-static std::vector<coord_def> ray_coords;
+static vector<los_ray> fullrays;
+static vector<coord_def> ray_coords;
 
 // These store all unique minimal cellrays. For each i,
 // cellray i ends in cellray_ends[i] and passes through
 // thoses cells p that have blockrays(p)[i] set. In other
 // words, blockrays(p)[i] is set iff an opaque cell p blocks
 // the cellray with index i.
-static std::vector<coord_def> cellray_ends;
+static vector<coord_def> cellray_ends;
 typedef FixedArray<bit_vector*, LOS_MAX_RANGE+1, LOS_MAX_RANGE+1> blockrays_t;
 static blockrays_t blockrays;
 
@@ -96,7 +96,7 @@ static blockrays_t blockrays;
 // for efficient retrieval by find_ray.
 // XXX: Consider condensing this representation.
 struct cellray;
-static FixedArray<std::vector<cellray>, LOS_MAX_RANGE+1, LOS_MAX_RANGE+1> min_cellrays;
+static FixedArray<vector<cellray>, LOS_MAX_RANGE+1, LOS_MAX_RANGE+1> min_cellrays;
 
 // Temporary arrays used in losight() to track which rays
 // are blocked or have seen a smoke cloud.
@@ -162,9 +162,9 @@ struct los_ray : public ray_def
     // slope, bounded by the pre-calc bounds shape.
     // Returns the cells it travels through, excluding the origin.
     // Returns an empty vector if this was a bad ray.
-    std::vector<coord_def> footprint()
+    vector<coord_def> footprint()
     {
-        std::vector<coord_def> cs;
+        vector<coord_def> cs;
         los_ray copy = *this;
         coord_def c;
         coord_def old;
@@ -196,7 +196,7 @@ struct los_ray : public ray_def
 };
 
 // Check if the passed rays have identical footprint.
-static bool _is_same_ray(los_ray ray, std::vector<coord_def> newray)
+static bool _is_same_ray(los_ray ray, vector<coord_def> newray)
 {
     if (ray.length != newray.size())
         return false;
@@ -207,7 +207,7 @@ static bool _is_same_ray(los_ray ray, std::vector<coord_def> newray)
 }
 
 // Check if the passed ray has already been created.
-static bool _is_duplicate_ray(std::vector<coord_def> newray)
+static bool _is_duplicate_ray(vector<coord_def> newray)
 {
     for (unsigned int i = 0; i < fullrays.size(); ++i)
         if (_is_same_ray(fullrays[i], newray))
@@ -321,10 +321,10 @@ static compare_type _compare_cellrays(const cellray& a, const cellray& b)
 // Determine all minimal cellrays.
 // They're stored globally by target in min_cellrays,
 // and returned as a list of indices into ray_coords.
-static std::vector<int> _find_minimal_cellrays()
+static vector<int> _find_minimal_cellrays()
 {
-    FixedArray<std::list<cellray>, LOS_MAX_RANGE+1, LOS_MAX_RANGE+1> minima;
-    std::list<cellray>::iterator min_it;
+    FixedArray<list<cellray>, LOS_MAX_RANGE+1, LOS_MAX_RANGE+1> minima;
+    list<cellray>::iterator min_it;
 
     for (unsigned int r = 0; r < fullrays.size(); ++r)
     {
@@ -334,7 +334,7 @@ static std::vector<int> _find_minimal_cellrays()
             // Is the cellray ray[0..i] duplicated so far?
             bool dup = false;
             cellray c(ray, i);
-            std::list<cellray>& min = minima(c.target());
+            list<cellray>& min = minima(c.target());
 
             bool erased = false;
             for (min_it = min.begin();
@@ -365,10 +365,10 @@ static std::vector<int> _find_minimal_cellrays()
         }
     }
 
-    std::vector<int> result;
+    vector<int> result;
     for (quadrant_iterator qi; qi; ++qi)
     {
-        std::list<cellray>& min = minima(*qi);
+        list<cellray>& min = minima(*qi);
         for (min_it = min.begin(); min_it != min.end(); ++min_it)
         {
             // Calculate imbalance and slope difference for sorting.
@@ -376,7 +376,7 @@ static std::vector<int> _find_minimal_cellrays()
             result.push_back(min_it->index());
         }
         min.sort(_is_better);
-        min_cellrays(*qi) = std::vector<cellray>(min.begin(), min.end());
+        min_cellrays(*qi) = vector<cellray>(min.begin(), min.end());
     }
     return result;
 }
@@ -385,7 +385,7 @@ static std::vector<int> _find_minimal_cellrays()
 static void _register_ray(geom::ray r)
 {
     los_ray ray = los_ray(r);
-    std::vector<coord_def> coords = ray.footprint();
+    vector<coord_def> coords = ray.footprint();
 
     if (coords.empty() || _is_duplicate_ray(coords))
         return;
@@ -423,8 +423,8 @@ static void _create_blockrays()
     // only the nonduplicated cellrays.
 
     // Determine minimal cellrays and store their indices in ray_coords.
-    std::vector<int> min_indices = _find_minimal_cellrays();
-    const int n_min_rays         = min_indices.size();
+    vector<int> min_indices = _find_minimal_cellrays();
+    const int n_min_rays    = min_indices.size();
     cellray_ends.resize(n_min_rays);
     for (int i = 0; i < n_min_rays; ++i)
         cellray_ends[i] = ray_coords[min_indices[i]];
@@ -462,8 +462,7 @@ static int _gcd(int x, int y)
     return x;
 }
 
-static bool _complexity_lt(const std::pair<int,int>& lhs,
-                           const std::pair<int,int>& rhs)
+static bool _complexity_lt(const pair<int,int>& lhs, const pair<int,int>& rhs)
 {
     return lhs.first * lhs.second < rhs.first * rhs.second;
 }
@@ -492,15 +491,15 @@ static void raycast()
 
     // Changing the order a bit. We want to order by the complexity
     // of the beam, which is log(x) + log(y) ~ xy.
-    std::vector<std::pair<int,int> > xyangles;
+    vector<pair<int,int> > xyangles;
     for (int xangle = 1; xangle <= LOS_MAX_ANGLE; ++xangle)
         for (int yangle = 1; yangle <= LOS_MAX_ANGLE; ++yangle)
         {
             if (_gcd(xangle, yangle) == 1)
-                xyangles.push_back(std::pair<int,int>(xangle, yangle));
+                xyangles.push_back(pair<int,int>(xangle, yangle));
         }
 
-    std::sort(xyangles.begin(), xyangles.end(), _complexity_lt);
+    sort(xyangles.begin(), xyangles.end(), _complexity_lt);
     for (unsigned int i = 0; i < xyangles.size(); ++i)
     {
         const int xangle = xyangles[i].first;
@@ -572,7 +571,7 @@ static bool _find_ray_se(const coord_def& target, ray_def& ray,
     // Ensure the precalculations have been done.
     raycast();
 
-    const std::vector<cellray> &min = min_cellrays(target);
+    const vector<cellray> &min = min_cellrays(target);
     ASSERT(!min.empty());
     cellray c = min[0]; // XXX: const cellray &c ?
     unsigned int index = 0;

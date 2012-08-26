@@ -49,7 +49,7 @@ static inline bool show_bounds(const coord_def &p)
 }
 
 int grid_distance(const coord_def& p1, const coord_def& p2);
-int distance(const coord_def& p1, const coord_def& p2);
+int distance2(const coord_def& p1, const coord_def& p2);
 bool adjacent(const coord_def& p1, const coord_def& p2);
 
 // Conversion between different coordinate systems.

@@ -290,10 +290,10 @@ COLORS SkillMenuEntry::get_colour() const
         return LIGHTGREY;
 }
 
-std::string SkillMenuEntry::get_prefix()
+string SkillMenuEntry::get_prefix()
 {
     int letter;
-    const std::vector<int> hotkeys = m_name->get_hotkeys();
+    const vector<int> hotkeys = m_name->get_hotkeys();
 
     if (!hotkeys.empty())
         letter = hotkeys[0];
@@ -313,7 +313,7 @@ std::string SkillMenuEntry::get_prefix()
 
 void SkillMenuEntry::set_aptitude()
 {
-    std::string text = "<white>";
+    string text = "<white>";
 
     const bool manual = you.manual_skill == m_sk;
     const int apt = species_apt(m_sk, you.species);
@@ -434,7 +434,7 @@ void SkillMenuEntry::set_progress()
 
 void SkillMenuEntry::set_reskill_progress()
 {
-    std::string text;
+    string text;
     if (m_sk == you.transfer_from_skill)
         text = "  *  ";
     else if (m_sk == you.transfer_to_skill)
@@ -490,7 +490,7 @@ void SkillMenuEntry::set_training()
     m_progress->set_fg_colour(BROWN);
 }
 
-SkillMenuSwitch::SkillMenuSwitch(std::string name, int hotkey) : m_name(name)
+SkillMenuSwitch::SkillMenuSwitch(string name, int hotkey) : m_name(name)
 {
     add_hotkey(hotkey);
     set_highlight_colour(YELLOW);
@@ -507,7 +507,7 @@ skill_menu_state SkillMenuSwitch::get_state()
     return m_state;
 }
 
-std::string SkillMenuSwitch::get_help()
+string SkillMenuSwitch::get_help()
 {
     switch (m_state)
     {
@@ -560,7 +560,7 @@ std::string SkillMenuSwitch::get_help()
     }
 }
 
-std::string SkillMenuSwitch::get_name(skill_menu_state state)
+string SkillMenuSwitch::get_name(skill_menu_state state)
 {
     switch (state)
     {
@@ -589,7 +589,7 @@ std::string SkillMenuSwitch::get_name(skill_menu_state state)
 void SkillMenuSwitch::set_state(skill_menu_state state)
 {
     // We only set it if it's a valid state.
-    for (std::vector<skill_menu_state>::iterator it = m_states.begin();
+    for (vector<skill_menu_state>::iterator it = m_states.begin();
          it != m_states.end(); ++it)
     {
         if (*it == state)
@@ -613,7 +613,7 @@ bool SkillMenuSwitch::toggle()
     if (m_states.size() <= 1)
         return false;
 
-    std::vector<skill_menu_state>::iterator it = m_states.begin();
+    vector<skill_menu_state>::iterator it = m_states.begin();
     while (*it != m_state)
         ++it;
 
@@ -634,17 +634,17 @@ void SkillMenuSwitch::update()
         return;
     }
 
-    const std::vector<int> hotkeys = get_hotkeys();
+    const vector<int> hotkeys = get_hotkeys();
     ASSERT(hotkeys.size());
-    std::string text = make_stringf("[%s(<yellow>%c</yellow>): ",
-                                    m_name.c_str(), hotkeys[0]);
-    for (std::vector<skill_menu_state>::iterator it = m_states.begin();
+    string text = make_stringf("[%s(<yellow>%c</yellow>): ",
+                               m_name.c_str(), hotkeys[0]);
+    for (vector<skill_menu_state>::iterator it = m_states.begin();
          it != m_states.end(); ++it)
     {
         if (it != m_states.begin())
             text += '|';
 
-        const std::string col = (*it == m_state) ? "white" : "darkgrey";
+        const string col = (*it == m_state) ? "white" : "darkgrey";
         text += make_stringf("<%s>%s</%s>", col.c_str(), get_name(*it).c_str(),
                              col.c_str());
     }
@@ -864,7 +864,7 @@ void SkillMenu::help()
 {
     if (!is_set(SKMF_HELP))
     {
-        std::string text;
+        string text;
         if (is_set(SKMF_SIMPLE))
             text = hints_skills_description_info();
         else
@@ -1142,7 +1142,7 @@ void SkillMenu::refresh_names()
 
 void SkillMenu::set_default_help()
 {
-    std::string text;
+    string text;
     if (is_set(SKMF_RESKILL_FROM))
     {
         text = "Select a skill as the source of the knowledge transfer. The "
@@ -1205,7 +1205,7 @@ void SkillMenu::set_default_help()
     m_help->set_text(text);
 }
 
-void SkillMenu::set_help(std::string msg)
+void SkillMenu::set_help(string msg)
 {
     if (msg == "")
         set_default_help();
@@ -1277,7 +1277,7 @@ void SkillMenu::toggle_practise(skill_type sk, int keyn)
     reset_training();
     SkillMenuEntry* skme = find_entry(sk);
     skme->set_name(true);
-    const std::vector<int> hotkeys = skme->get_name_item()->get_hotkeys();
+    const vector<int> hotkeys = skme->get_name_item()->get_hotkeys();
 
     if (!hotkeys.empty())
     {
@@ -1299,7 +1299,7 @@ void SkillMenu::set_title()
     const char* format = is_set(SKMF_RESKILLING)
                                 ? "Transfer Knowledge: select the %s skill"
                                 : "You have %s. Select the skills to train.";
-    std::string t;
+    string t;
     if (is_set(SKMF_RESKILL_FROM))
         t = make_stringf(format, "source");
     else if (is_set(SKMF_RESKILL_TO))
@@ -1316,7 +1316,7 @@ void SkillMenu::shift_bottom_down()
 {
     const coord_def down(0, 1);
     m_help->move(down);
-    for (std::map<skill_menu_switch, SkillMenuSwitch*>::iterator it
+    for (map<skill_menu_switch, SkillMenuSwitch*>::iterator it
          = m_switches.begin(); it != m_switches.end(); ++it)
     {
         it->second->move(down);
@@ -1339,8 +1339,8 @@ TextItem* SkillMenu::find_closest_selectable(int start_ln, int col)
     int delta = 0;
     while (1)
     {
-        int ln_up = std::max(0, start_ln - delta);
-        int ln_down = std::min(SK_ARR_LN, start_ln + delta);
+        int ln_up = max(0, start_ln - delta);
+        int ln_down = min(SK_ARR_LN, start_ln + delta);
         if (m_skills[ln_up][col].is_selectable())
             return m_skills[ln_up][col].get_name_item();
         else if (m_skills[ln_down][col].is_selectable())
@@ -1446,7 +1446,7 @@ void skill_menu(int flag, int exp)
         }
         else
         {
-            std::vector<MenuItem*> selection = skm.get_selected_items();
+            vector<MenuItem*> selection = skm.get_selected_items();
             skm.clear_selections();
             // There should only be one selection, otherwise something broke
             if (selection.size() != 1)

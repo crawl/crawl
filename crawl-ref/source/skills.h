@@ -9,8 +9,8 @@
 
 #include "player.h"
 
-typedef std::set<skill_type> skill_set;
-typedef std::set<skill_type>::iterator skill_set_iter;
+typedef set<skill_type> skill_set;
+typedef set<skill_type>::iterator skill_set_iter;
 
 unsigned int skill_cost_needed(int level);
 int calc_skill_cost(int skill_cost_level);

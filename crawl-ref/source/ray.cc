@@ -126,7 +126,7 @@ static void _round_to_grid(geom::ray *r)
     double diff = v.x - v.y - 0.5;
     double deltas = round(sum) - sum;
     double deltad = round(diff) - diff;
-    if (std::abs(deltas) <= std::abs(deltad))
+    if (abs(deltas) <= abs(deltad))
     {
         v.x += 0.5 * deltas;
         v.y += 0.5 * deltas;

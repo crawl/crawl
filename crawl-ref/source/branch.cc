@@ -54,7 +54,7 @@ bool is_connected_branch(level_id place)
     return is_connected_branch(place.branch);
 }
 
-branch_type str_to_branch(const std::string &branch, branch_type err)
+branch_type str_to_branch(const string &branch, branch_type err)
 {
     for (int i = 0; i < NUM_BRANCHES; ++i)
         if (branches[i].abbrevname && branches[i].abbrevname == branch)

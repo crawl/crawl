@@ -42,7 +42,7 @@ public:
     virtual void render();
     virtual void clear();
     virtual int handle_mouse(MouseEvent &event);
-    virtual bool update_tip_text(std::string &tip);
+    virtual bool update_tip_text(string &tip);
 
     void init_colours();
     void set(const coord_def &gc, map_feature f);

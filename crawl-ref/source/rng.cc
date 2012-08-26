@@ -28,7 +28,7 @@ void seed_rng(uint32_t* seed_key, size_t num_keys)
 {
     seed_asg(seed_key, num_keys);
 
-    // for std::random_shuffle()
+    // for random_shuffle()
     uint32_t oneseed = 0;
     for (size_t i = 0; i < num_keys; ++i)
         oneseed += seed_key[i];

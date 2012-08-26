@@ -38,7 +38,7 @@ struct activity_interrupt_data
         : apt(AIP_STRING), data(s), context(SC_NONE)
     {
     }
-    activity_interrupt_data(const std::string &s)
+    activity_interrupt_data(const string &s)
         : apt(AIP_STRING), data(s.c_str()), context(SC_NONE)
     {
     }
@@ -86,15 +86,15 @@ void handle_interrupted_swap(bool swap_if_safe = false,
 
 void clear_macro_process_key_delay();
 
-activity_interrupt_type get_activity_interrupt(const std::string &);
+activity_interrupt_type get_activity_interrupt(const string &);
 bool is_delay_interruptible(delay_type delay);
 
 const char *delay_name(int delay);
-delay_type get_delay(const std::string &);
+delay_type get_delay(const string &);
 
 void autotoggle_autopickup(bool off);
 bool interrupt_activity(activity_interrupt_type ai,
                         const activity_interrupt_data &a
                             = activity_interrupt_data(),
-                        std::vector<std::string>* msgs_buf = NULL);
+                        vector<string>* msgs_buf = NULL);
 #endif

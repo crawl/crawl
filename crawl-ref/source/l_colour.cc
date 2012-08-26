@@ -22,7 +22,7 @@ static int _lua_element_colour(int rand, const coord_def& loc,
 
 struct lua_element_colour_calc : public element_colour_calc
 {
-    lua_element_colour_calc(element_type _type, std::string _name,
+    lua_element_colour_calc(element_type _type, string _name,
                             lua_datum _function)
         : element_colour_calc(_type, _name, (element_colour_calculator)_lua_element_colour),
           function(_function)
@@ -62,7 +62,7 @@ static int _lua_element_colour(int rand, const coord_def& loc,
         return BLACK;
     }
 
-    std::string colour = luaL_checkstring(ls, -1);
+    string colour = luaL_checkstring(ls, -1);
     lua_pop(ls, 1);
 
     return str_to_colour(colour);
@@ -75,7 +75,7 @@ function add_colour(name, fun)
 */
 LUAFN(l_add_colour)
 {
-    const std::string &name = luaL_checkstring(ls, 1);
+    const string &name = luaL_checkstring(ls, 1);
     if (lua_gettop(ls) != 2 || !lua_isfunction(ls, 2))
         luaL_error(ls, "Expected colour generation function.");
 

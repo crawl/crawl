@@ -334,7 +334,7 @@ int resist_adjust_damage(actor *defender, beam_type flavour,
     else if (res < 0)
         resistible = resistible * (ranged? 15 : 20) / 10;
 
-    return std::max(resistible + irresistible, 0);
+    return max(resistible + irresistible, 0);
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -381,7 +381,7 @@ bool wielded_weapon_check(item_def *weapon, bool no_message)
         if (no_message)
             return false;
 
-        std::string prompt  = "Really attack while ";
+        string prompt  = "Really attack while ";
         if (unarmed_warning)
             prompt += "unarmed?";
         else

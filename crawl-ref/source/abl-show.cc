@@ -102,7 +102,7 @@ static int  _find_ability_slot(const ability_def& abil);
 static bool _do_ability(const ability_def& abil);
 static void _pay_ability_costs(const ability_def& abil, int zpcost);
 static int _scale_piety_cost(ability_type abil, int original_cost);
-static std::string _zd_mons_description_for_ability(const ability_def &abil);
+static string _zd_mons_description_for_ability(const ability_def &abil);
 static monster_type _monster_for_ability(const ability_def& abil);
 
 /**
@@ -434,7 +434,7 @@ const ability_def& get_ability_def(ability_type abil)
     return Ability_List[0];
 }
 
-bool string_matches_ability_name(const std::string& key)
+bool string_matches_ability_name(const string& key)
 {
     for (int i = ABIL_SPIT_POISON; i <= ABIL_RENOUNCE_RELIGION; ++i)
     {
@@ -442,18 +442,18 @@ bool string_matches_ability_name(const std::string& key)
         if (abil.ability == ABIL_NON_ABILITY)
             continue;
 
-        const std::string name = lowercase_string(ability_name(abil.ability));
-        if (name.find(key) != std::string::npos)
+        const string name = lowercase_string(ability_name(abil.ability));
+        if (name.find(key) != string::npos)
             return true;
     }
     return false;
 }
 
-std::string print_abilities()
+string print_abilities()
 {
-    std::string text = "\n<w>a:</w> ";
+    string text = "\n<w>a:</w> ";
 
-    const std::vector<talent> talents = your_talents(false);
+    const vector<talent> talents = your_talents(false);
 
     if (talents.empty())
         text += "no special abilities";
@@ -493,7 +493,7 @@ static monster_type _monster_for_ability(const ability_def& abil)
     return mtyp;
 }
 
-static std::string _zd_mons_description_for_ability(const ability_def &abil)
+static string _zd_mons_description_for_ability(const ability_def &abil)
 {
     switch (abil.ability)
     {
@@ -578,9 +578,9 @@ static int _zp_cost(const ability_def& abil)
                 num /= 5;
             }
             num -= 2;        // first two are base cost
-            num = std::max(num, 0);
-            scale10 = std::min(num, 10);       // next 10 at 10% increment
-            scale20 = num - scale10;           // after that at 20% increment
+            num = max(num, 0);
+            scale10 = min(num, 10);       // next 10 at 10% increment
+            scale20 = num - scale10;      // after that at 20% increment
             break;
 
         // Monster type 2: less generous
@@ -588,7 +588,7 @@ static int _zp_cost(const ability_def& abil)
         case ABIL_MAKE_OCS:
             num = _count_relevant_monsters(abil);
             num -= 2; // first two are base cost
-            scale20 = std::max(num, 0);        // after first two, 20% increment
+            scale20 = max(num, 0);        // after first two, 20% increment
 
         // Monster type 3: least generous
         case ABIL_MAKE_SILVER_STATUE:
@@ -597,7 +597,7 @@ static int _zp_cost(const ability_def& abil)
 
         // Simple Traps
         case ABIL_MAKE_DART_TRAP:
-            scale10 = std::max(count_traps(TRAP_DART)-10, 0); // First 10 at base cost
+            scale10 = max(count_traps(TRAP_DART)-10, 0); // First 10 at base cost
             break;
 
         case ABIL_MAKE_ARROW_TRAP:
@@ -607,7 +607,7 @@ static int _zp_cost(const ability_def& abil)
         case ABIL_MAKE_NET_TRAP:
         case ABIL_MAKE_ALARM_TRAP:
             num = count_traps(_trap_for_ability(abil));
-            scale10 = std::max(num-5, 0);   // First 5 at base cost
+            scale10 = max(num-5, 0);   // First 5 at base cost
             break;
 
         case ABIL_MAKE_TELEPORT_TRAP:
@@ -628,10 +628,10 @@ static int _zp_cost(const ability_def& abil)
     return c;
 }
 
-const std::string make_cost_description(ability_type ability)
+const string make_cost_description(ability_type ability)
 {
     const ability_def& abil = get_ability_def(ability);
-    std::ostringstream ret;
+    ostringstream ret;
     if (abil.mp_cost)
     {
         ret << abil.mp_cost;
@@ -764,7 +764,7 @@ const std::string make_cost_description(ability_type ability)
     return ret.str();
 }
 
-static std::string _get_piety_amount_str(int value)
+static string _get_piety_amount_str(int value)
 {
     return (value > 15 ? "extremely large" :
             value > 10 ? "large" :
@@ -772,12 +772,12 @@ static std::string _get_piety_amount_str(int value)
                          "small");
 }
 
-static const std::string _detailed_cost_description(ability_type ability)
+static const string _detailed_cost_description(ability_type ability)
 {
     const ability_def& abil = get_ability_def(ability);
-    std::ostringstream ret;
-    std::vector<std::string> values;
-    std::string str;
+    ostringstream ret;
+    vector<string> values;
+    string str;
 
     bool have_cost = false;
     ret << "This ability costs: ";
@@ -1229,23 +1229,23 @@ const char* ability_name(ability_type ability)
     return get_ability_def(ability).name;
 }
 
-std::vector<const char*> get_ability_names()
+vector<const char*> get_ability_names()
 {
-    std::vector<talent> talents = your_talents(false);
-    std::vector<const char*> result;
+    vector<talent> talents = your_talents(false);
+    vector<const char*> result;
     for (unsigned int i = 0; i < talents.size(); ++i)
         result.push_back(ability_name(talents[i].which));
     return result;
 }
 
 // XXX: should this be in describe.cc?
-std::string get_ability_desc(const ability_type ability)
+string get_ability_desc(const ability_type ability)
 {
-    const std::string& name = ability_name(ability);
+    const string& name = ability_name(ability);
 
     // XXX: The suffix is necessary to distinguish between similarly
     // named spells.  Yes, this is a hack.
-    std::string lookup = getLongDescription(name + " ability");
+    string lookup = getLongDescription(name + " ability");
     if (lookup.empty())
     {
         // Try again without the suffix.
@@ -1302,7 +1302,7 @@ bool activate_ability()
         return false;
     }
 
-    std::vector<talent> talents = your_talents(false);
+    vector<talent> talents = your_talents(false);
     if (talents.empty())
     {
         no_ability_msg();
@@ -1325,7 +1325,7 @@ bool activate_ability()
     while (selected < 0)
     {
         msg::streams(MSGCH_PROMPT) << "Use which ability? (? or * to list) "
-                                   << std::endl;
+                                   << endl;
 
         const int keyin = get_ch();
 
@@ -2516,7 +2516,7 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_LUGONU_ABYSS_ENTER:
     {
         // Move permanent hp/mp loss from leaving to entering the Abyss. (jpeg)
-        const int maxloss = std::max(2, div_rand_round(you.hp_max, 30));
+        const int maxloss = max(2, div_rand_round(you.hp_max, 30));
         // Lose permanent HP
         dec_max_hp(random_range(1, maxloss));
 
@@ -2649,8 +2649,8 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_JIYVA_SLIMIFY:
     {
         const item_def* const weapon = you.weapon();
-        const std::string msg = (weapon) ? weapon->name(DESC_YOUR)
-                                         : ("your " + you.hand_name(true));
+        const string msg = (weapon) ? weapon->name(DESC_YOUR)
+                                    : ("your " + you.hand_name(true));
         mprf(MSGCH_DURATION, "A thick mucus forms on %s.", msg.c_str());
         you.increase_duration(DUR_SLIMIFY,
                               you.skill_rdiv(SK_INVOCATIONS, 3, 2) + 3,
@@ -2819,7 +2819,7 @@ static void _pay_ability_costs(const ability_def& abil, int zpcost)
         lose_piety(piety_cost);
 }
 
-int choose_ability_menu(const std::vector<talent>& talents)
+int choose_ability_menu(const vector<talent>& talents)
 {
 #ifdef USE_TILE_LOCAL
     const bool text_only = false;
@@ -2961,7 +2961,7 @@ int choose_ability_menu(const std::vector<talent>& talents)
 
     while (true)
     {
-        std::vector<MenuEntry*> sel = abil_menu.show(false);
+        vector<MenuEntry*> sel = abil_menu.show(false);
         if (!crawl_state.doing_prev_cmd_again)
             redraw_screen();
         if (sel.empty())
@@ -2978,14 +2978,14 @@ int choose_ability_menu(const std::vector<talent>& talents)
     }
 }
 
-std::string describe_talent(const talent& tal)
+string describe_talent(const talent& tal)
 {
     ASSERT(tal.which != ABIL_NON_ABILITY);
 
     char* failure = failure_rate_to_string(tal.fail);
 
-    std::ostringstream desc;
-    desc << std::left
+    ostringstream desc;
+    desc << left
          << chop_string(ability_name(tal.which), 32)
          << chop_string(make_cost_description(tal.which), 27)
          << chop_string(failure, 10);
@@ -2993,7 +2993,7 @@ std::string describe_talent(const talent& tal)
     return desc.str();
 }
 
-static void _add_talent(std::vector<talent>& vec, const ability_type ability,
+static void _add_talent(vector<talent>& vec, const ability_type ability,
                         bool check_confused)
 {
     const talent t = get_talent(ability, check_confused);
@@ -3001,9 +3001,9 @@ static void _add_talent(std::vector<talent>& vec, const ability_type ability,
         vec.push_back(t);
 }
 
-std::vector<talent> your_talents(bool check_confused, bool include_unusable)
+vector<talent> your_talents(bool check_confused, bool include_unusable)
 {
-    std::vector<talent> talents;
+    vector<talent> talents;
 
     // zot defence abilities; must also be updated in player.cc when these levels are changed
     if (crawl_state.game_is_zotdef())
@@ -3171,7 +3171,7 @@ std::vector<talent> your_talents(bool check_confused, bool include_unusable)
         _add_talent(talents, ABIL_BLINK, check_confused);
 
     // Religious abilities.
-    std::vector<ability_type> abilities = get_god_abilities(include_unusable);
+    vector<ability_type> abilities = get_god_abilities(include_unusable);
     for (unsigned int i = 0; i < abilities.size(); ++i)
         _add_talent(talents, abilities[i], check_confused);
 
@@ -3417,9 +3417,9 @@ static int _find_ability_slot(const ability_def &abil)
     return -1;
 }
 
-std::vector<ability_type> get_god_abilities(bool include_unusable)
+vector<ability_type> get_god_abilities(bool include_unusable)
 {
-    std::vector<ability_type> abilities;
+    vector<ability_type> abilities;
     if (you.religion == GOD_TROG && (include_unusable || !silenced(you.pos())))
         abilities.push_back(ABIL_TROG_BURN_SPELLBOOKS);
     else if (you.religion == GOD_ELYVILON && (include_unusable || !silenced(you.pos())))

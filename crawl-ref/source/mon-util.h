@@ -185,7 +185,7 @@ void init_monster_symbols();
 monster *monster_at(const coord_def &pos);
 
 // this is the old moname()
-std::string mons_type_name(monster_type type, description_level_type desc);
+string mons_type_name(monster_type type, description_level_type desc);
 
 bool give_monster_proper_name(monster* mon, bool orcs_only = true);
 
@@ -281,7 +281,7 @@ bool mons_class_can_use_stairs(monster_type mc);
 bool mons_can_use_stairs(const monster* mon);
 bool mons_enslaved_body_and_soul(const monster* mon);
 bool mons_enslaved_soul(const monster* mon);
-bool name_zombie(monster* mon, monster_type mc, const std::string &mon_name);
+bool name_zombie(monster* mon, monster_type mc, const string &mon_name);
 bool name_zombie(monster* mon, const monster* orig);
 
 int mons_power(monster_type mc);
@@ -387,26 +387,26 @@ bool monster_shover(const monster* m);
 bool monster_senior(const monster* first, const monster* second,
                     bool fleeing = false);
 monster_type draco_subspecies(const monster* mon);
-std::string ugly_thing_colour_name(colour_t colour);
+string ugly_thing_colour_name(colour_t colour);
 colour_t ugly_thing_random_colour();
-int str_to_ugly_thing_colour(const std::string &s);
+int str_to_ugly_thing_colour(const string &s);
 colour_t random_monster_colour();
 int ugly_thing_colour_offset(colour_t colour);
-std::string  draconian_colour_name(monster_type mon_type);
-monster_type draconian_colour_by_name(const std::string &colour);
+string  draconian_colour_name(monster_type mon_type);
+monster_type draconian_colour_by_name(const string &colour);
 
 monster_type random_monster_at_grid(const coord_def& p);
 
 void         init_mon_name_cache();
-monster_type get_monster_by_name(std::string name, bool exact = false);
+monster_type get_monster_by_name(string name, bool exact = false);
 
-std::string do_mon_str_replacements(const std::string &msg,
-                                    const monster* mons, int s_type = -1);
+string do_mon_str_replacements(const string &msg, const monster* mons,
+                               int s_type = -1);
 
 mon_body_shape get_mon_shape(const monster* mon);
 mon_body_shape get_mon_shape(const monster_type mc);
 
-std::string get_mon_shape_str(const mon_body_shape shape);
+string get_mon_shape_str(const mon_body_shape shape);
 
 bool mons_class_can_pass(monster_type mc, const dungeon_feature_type grid);
 bool mons_can_open_door(const monster* mon, const coord_def& pos);

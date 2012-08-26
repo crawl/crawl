@@ -33,7 +33,7 @@
 #define MIN_GHOST_SPEED       6
 #define MAX_GHOST_SPEED      13
 
-std::vector<ghost_demon> ghosts;
+vector<ghost_demon> ghosts;
 
 // Order for looking for conjurations for the 1st & 2nd spell slots,
 // when finding spells to be remembered by a player's ghost.
@@ -697,12 +697,12 @@ void ghost_demon::init_dancing_weapon(const item_def& weapon, int power)
     // If you aren't an awesome spellcaster, nerf the weapons.  Do it in
     // a way that lays most of the penalty on heavy weapons.
 
-    speed = std::max(3, speed - (10 - power / 15));
-    ev    = std::max(3, ev    - (10 - power / 15));
+    speed = max(3, speed - (10 - power / 15));
+    ev    = max(3, ev    - (10 - power / 15));
 
     ac = ac * power / 200;
-    max_hp = std::max(5, max_hp * power / 150);
-    damage = std::max(1, damage * power / 150);
+    max_hp = max(5, max_hp * power / 150);
+    damage = max(1, damage * power / 150);
 
     // For a spellpower 75 character (typical late midgame mage with no Ench
     // focus), we have:
@@ -844,9 +844,9 @@ spell_type ghost_demon::translate_spell(spell_type spell) const
     return spell;
 }
 
-std::vector<ghost_demon> ghost_demon::find_ghosts()
+vector<ghost_demon> ghost_demon::find_ghosts()
 {
-    std::vector<ghost_demon> gs;
+    vector<ghost_demon> gs;
 
     if (!you.is_undead)
     {
@@ -865,7 +865,7 @@ std::vector<ghost_demon> ghost_demon::find_ghosts()
 }
 
 void ghost_demon::find_transiting_ghosts(
-    std::vector<ghost_demon> &gs, int n)
+    vector<ghost_demon> &gs, int n)
 {
     if (n <= 0)
         return;
@@ -897,7 +897,7 @@ void ghost_demon::announce_ghost(const ghost_demon &g)
 #endif
 }
 
-void ghost_demon::find_extra_ghosts(std::vector<ghost_demon> &gs, int n)
+void ghost_demon::find_extra_ghosts(vector<ghost_demon> &gs, int n)
 {
     for (monster_iterator mi; mi && n > 0; ++mi)
     {
@@ -1001,7 +1001,7 @@ int ghost_level_to_rank(const int xl)
 ///////////////////////////////////////////////////////////////////////////////
 // Laboratory rats!
 
-std::string adjective_for_labrat_colour(colour_t l_colour)
+string adjective_for_labrat_colour(colour_t l_colour)
 {
     switch (l_colour)
     {
@@ -1044,7 +1044,7 @@ int tile_offset_for_labrat_colour(colour_t l_colour)
 }
 #endif
 
-colour_t colour_for_labrat_adjective(std::string adjective)
+colour_t colour_for_labrat_adjective(string adjective)
 {
     if (adjective == "armoured")    return CYAN;
     if (adjective == "beastly")     return YELLOW;

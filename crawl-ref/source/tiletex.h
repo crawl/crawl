@@ -94,11 +94,11 @@ inline bool TilesTexture::get_coords(tileidx_t idx, int ofs_x, int ofs_y,
 
     int sy = pos_sy_adjust;
     if (ymin >= 0)
-        sy = std::max(ymin, sy);
+        sy = max(ymin, sy);
 
     int ey = pos_ey_adjust;
     if (ymax >= 0)
-        ey = std::min(ymax, ey);
+        ey = min(ymax, ey);
 
     // Nothing to draw.
     if (sy >= ey)

@@ -72,14 +72,14 @@ job_type get_job_by_name(const char *name)
     int i;
     job_type cl = JOB_UNKNOWN;
 
-    std::string low_name = lowercase_string(name);
+    string low_name = lowercase_string(name);
 
     for (i = 0; i < NUM_JOBS; i++)
     {
-        std::string low_job = lowercase_string(Job_Name_List[i]);
+        string low_job = lowercase_string(Job_Name_List[i]);
 
         size_t pos = low_job.find(low_name);
-        if (pos != std::string::npos)
+        if (pos != string::npos)
         {
             cl = static_cast<job_type>(i);
             if (!pos)  // prefix takes preference

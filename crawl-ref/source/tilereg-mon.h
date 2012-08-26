@@ -12,11 +12,11 @@ public:
 
     virtual void update();
     virtual int handle_mouse(MouseEvent &event);
-    virtual bool update_tip_text(std::string &tip);
-    virtual bool update_tab_tip_text(std::string &tip, bool active);
-    virtual bool update_alt_text(std::string &alt);
+    virtual bool update_tip_text(string &tip);
+    virtual bool update_tab_tip_text(string &tip, bool active);
+    virtual bool update_alt_text(string &alt);
 
-    virtual const std::string name() const { return "Monsters"; }
+    virtual const string name() const { return "Monsters"; }
 
 protected:
     const monster_info* get_monster(unsigned int idx) const;
@@ -25,7 +25,7 @@ protected:
     virtual void draw_tag();
     virtual void activate();
 
-    std::vector<monster_info> m_mon_info;
+    vector<monster_info> m_mon_info;
 };
 
 #endif

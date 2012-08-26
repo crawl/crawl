@@ -28,18 +28,18 @@ public:
     int num_tabs() const;
     void enable_tab(int idx);
     void disable_tab(int idx);
-    int find_tab(std::string tab_name) const;
+    int find_tab(string tab_name) const;
 
     virtual void update();
     virtual void clear();
     virtual void render();
     virtual void on_resize();
     virtual int handle_mouse(MouseEvent &event);
-    virtual bool update_tip_text(std::string &tip);
-    virtual bool update_tab_tip_text(std::string &tip, bool active);
-    virtual bool update_alt_text(std::string &alt);
+    virtual bool update_tip_text(string &tip);
+    virtual bool update_tab_tip_text(string &tip, bool active);
+    virtual bool update_alt_text(string &alt);
 
-    virtual const std::string name() const { return ""; }
+    virtual const string name() const { return ""; }
 
 protected:
     virtual void pack_buffers();
@@ -68,7 +68,7 @@ protected:
         int height;
         bool enabled;
     };
-    std::vector<TabInfo> m_tabs;
+    vector<TabInfo> m_tabs;
 };
 
 #endif

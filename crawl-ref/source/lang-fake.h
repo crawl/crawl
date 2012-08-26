@@ -1,2 +1,2 @@
-void filter_lang(std::string &str);
-std::string filtered_lang(std::string str);
+void filter_lang(string &str);
+string filtered_lang(string str);

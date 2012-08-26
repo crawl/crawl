@@ -76,27 +76,26 @@ struct talent
     bool is_zotdef;
 };
 
-const std::string make_cost_description(ability_type ability);
+const string make_cost_description(ability_type ability);
 const ability_def& get_ability_def(ability_type abil);
 talent get_talent(ability_type ability, bool check_confused);
 const char* ability_name(ability_type ability);
-std::vector<const char*> get_ability_names();
-std::string get_ability_desc(const ability_type ability);
-int choose_ability_menu(const std::vector<talent>& talents);
-std::string describe_talent(const talent& tal);
+vector<const char*> get_ability_names();
+string get_ability_desc(const ability_type ability);
+int choose_ability_menu(const vector<talent>& talents);
+string describe_talent(const talent& tal);
 
 void no_ability_msg();
 bool activate_ability();
 bool check_ability_possible(const ability_type ability, bool hungerCheck = true,
                             bool quiet = false);
 bool activate_talent(const talent& tal);
-std::vector<talent> your_talents(bool check_confused,
-                                 bool include_unusable = false);
-bool string_matches_ability_name(const std::string& key);
-std::string print_abilities(void);
+vector<talent> your_talents(bool check_confused, bool include_unusable = false);
+bool string_matches_ability_name(const string& key);
+string print_abilities(void);
 
 void set_god_ability_slots(void);
-std::vector<ability_type> get_god_abilities(bool include_unusable = false);
+vector<ability_type> get_god_abilities(bool include_unusable = false);
 void gain_god_ability(int i);
 void lose_god_ability(int i);
 

@@ -178,11 +178,11 @@ void wizard_create_spec_monster_name()
     }
 
     mons_list mlist;
-    std::string err = mlist.add_mons(specs);
+    string err = mlist.add_mons(specs);
 
     if (!err.empty())
     {
-        std::string newerr;
+        string newerr;
         // Try for a partial match, but not if the user accidentally entered
         // only a few letters.
         monster_type partial = get_monster_by_name(specs);
@@ -377,7 +377,7 @@ static bool _sort_monster_list(int a, int b)
 
 void debug_list_monsters()
 {
-    std::vector<std::string> mons;
+    vector<string> mons;
     int nfound = 0;
 
     int mon_nums[MAX_MONSTERS];
@@ -385,12 +385,12 @@ void debug_list_monsters()
     for (int i = 0; i < MAX_MONSTERS; ++i)
         mon_nums[i] = i;
 
-    std::sort(mon_nums, mon_nums + MAX_MONSTERS, _sort_monster_list);
+    sort(mon_nums, mon_nums + MAX_MONSTERS, _sort_monster_list);
 
     int total_exp = 0, total_adj_exp = 0, total_nonuniq_exp = 0;
 
-    std::string prev_name = "";
-    int         count     = 0;
+    string prev_name = "";
+    int    count     = 0;
 
     for (int i = 0; i < MAX_MONSTERS; ++i)
     {
@@ -402,7 +402,7 @@ void debug_list_monsters()
         if (!mi->alive())
             continue;
 
-        std::string name = mi->name(DESC_PLAIN, true);
+        string name = mi->name(DESC_PLAIN, true);
 
         if (prev_name != name && count > 0)
         {
@@ -502,7 +502,7 @@ void wizard_spawn_control()
 
         if (!cancelable_get_line(specs, sizeof(specs)))
         {
-            const int num = std::min(atoi(specs), max_spawn);
+            const int num = min(atoi(specs), max_spawn);
             if (num > 0)
             {
                 int curr_rate = env.spawn_random_rate;
@@ -647,7 +647,7 @@ void debug_stethoscope(int mon)
     mprf(MSGCH_DIAGNOSTICS, "ench: %s",
          mons.describe_enchantments().c_str());
 
-    std::ostringstream spl;
+    ostringstream spl;
     const monster_spells &hspell_pass = mons.spells;
     bool found_spell = false;
     for (int k = 0; k < NUM_MONSTER_SPELL_SLOTS; ++k)
@@ -844,15 +844,15 @@ void wizard_give_monster_item(monster* mon)
     case OBJ_RODS:
         // Let wizard specify which slot to put weapon into via
         // inscriptions.
-        if (item.inscription.find("first") != std::string::npos
-            || item.inscription.find("primary") != std::string::npos)
+        if (item.inscription.find("first") != string::npos
+            || item.inscription.find("primary") != string::npos)
         {
             mpr("Putting weapon into primary slot by inscription");
             mon_slot = MSLOT_WEAPON;
             break;
         }
-        else if (item.inscription.find("second") != std::string::npos
-                 || item.inscription.find("alt") != std::string::npos)
+        else if (item.inscription.find("second") != string::npos
+                 || item.inscription.find("alt") != string::npos)
         {
             mpr("Putting weapon into alt slot by inscription");
             mon_slot = MSLOT_ALT_WEAPON;
@@ -1271,8 +1271,8 @@ void debug_pathfind(int idx)
     bool success = mp.init_pathfind(&mon, dest, true, true);
     if (success)
     {
-        std::vector<coord_def> path = mp.backtrack();
-        std::string path_str;
+        vector<coord_def> path = mp.backtrack();
+        string path_str;
         mpr("Here's the shortest path: ");
         for (unsigned int i = 0; i < path.size(); ++i)
         {
@@ -1393,7 +1393,7 @@ void debug_miscast(int target_index)
 
     if (strchr(specs, ','))
     {
-        std::vector<std::string> nums = split_string(",", specs);
+        vector<string> nums = split_string(",", specs);
         pow  = atoi(nums[0].c_str());
         fail = atoi(nums[1].c_str());
 

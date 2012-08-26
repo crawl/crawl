@@ -359,8 +359,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 retval = true;
                 piety_denom = level + 18 - you.experience_level / 2;
                 piety_change = piety_denom - 6;
-                piety_denom = std::max(piety_denom, 1);
-                piety_change = std::max(piety_change, 0);
+                piety_denom = max(piety_denom, 1);
+                piety_change = max(piety_change, 0);
                 break;
 
             default:
@@ -385,8 +385,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 piety_denom = level + 18 - (is_good_god(you.religion) ? 0 :
                                           you.experience_level / 2);
                 piety_change = piety_denom - 5;
-                piety_denom = std::max(piety_denom, 1);
-                piety_change = std::max(piety_change, 0);
+                piety_denom = max(piety_denom, 1);
+                piety_change = max(piety_change, 0);
                 break;
 
             default:
@@ -412,8 +412,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 piety_denom = level + 18 - (is_good_god(you.religion) ? 0 :
                                           you.experience_level / 2);
                 piety_change = piety_denom - 4;
-                piety_denom = std::max(piety_denom, 1);
-                piety_change = std::max(piety_change, 0);
+                piety_denom = max(piety_denom, 1);
+                piety_change = max(piety_change, 0);
                 break;
 
             default:
@@ -476,8 +476,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 retval = true;
                 piety_denom = level + 18 - you.experience_level / 2;
                 piety_change = piety_denom - 6;
-                piety_denom = std::max(piety_denom, 1);
-                piety_change = std::max(piety_change, 0);
+                piety_denom = max(piety_denom, 1);
+                piety_change = max(piety_change, 0);
 
                 const int speed_delta =
                     cheibriados_monster_player_speed_delta(victim);
@@ -624,8 +624,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 retval = true;
                 piety_denom = level + 10 - you.experience_level/3;
                 piety_change = piety_denom - 6;
-                piety_denom = std::max(piety_denom, 1);
-                piety_change = std::max(piety_change, 0);
+                piety_denom = max(piety_denom, 1);
+                piety_change = max(piety_change, 0);
                 break;
             default:
                 break;
@@ -644,8 +644,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 retval = true;
                 piety_denom = level + 10 - you.experience_level/3;
                 piety_change = piety_denom - 6;
-                piety_denom = std::max(piety_denom, 1);
-                piety_change = std::max(piety_change, 0);
+                piety_denom = max(piety_denom, 1);
+                piety_change = max(piety_change, 0);
                 break;
             default:
                 break;
@@ -663,8 +663,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 retval = true;
                 piety_denom = level + 10 - you.experience_level/3;
                 piety_change = piety_denom - 6;
-                piety_denom = std::max(piety_denom, 1);
-                piety_change = std::max(piety_change, 0);
+                piety_denom = max(piety_denom, 1);
+                piety_change = max(piety_change, 0);
                 break;
             default:
                 break;
@@ -684,8 +684,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 piety_denom = level + 10 - (is_good_god(you.religion) ? 0 :
                                             you.experience_level/3);
                 piety_change = piety_denom - 6;
-                piety_denom = std::max(piety_denom, 1);
-                piety_change = std::max(piety_change, 0);
+                piety_denom = max(piety_denom, 1);
+                piety_change = max(piety_change, 0);
                 break;
             default:
                 break;
@@ -703,8 +703,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 retval = true;
                 piety_denom = level + 10 - you.experience_level/3;
                 piety_change = piety_denom - 6;
-                piety_denom = std::max(piety_denom, 1);
-                piety_change = std::max(piety_change, 0);
+                piety_denom = max(piety_denom, 1);
+                piety_change = max(piety_change, 0);
                 break;
             default:
                 break;
@@ -724,8 +724,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 piety_denom = level + 10 - (is_good_god(you.religion) ? 0 :
                                             you.experience_level/3);
                 piety_change = piety_denom - 6;
-                piety_denom = std::max(piety_denom, 1);
-                piety_change = std::max(piety_change, 0);
+                piety_denom = max(piety_denom, 1);
+                piety_change = max(piety_change, 0);
                 break;
             default:
                 break;
@@ -985,8 +985,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                     break;
                 piety_denom = level / 2 + 6 - you.experience_level / 4;
                 piety_change = piety_denom - 4;
-                piety_denom = std::max(piety_denom, 1);
-                piety_change = std::max(piety_change, 0);
+                piety_denom = max(piety_denom, 1);
+                piety_change = max(piety_change, 0);
                 retval = true;
             }
             break;

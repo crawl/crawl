@@ -232,7 +232,7 @@ void usleep(unsigned long time)
 #endif
 
 
-bool file_exists(const std::string &name)
+bool file_exists(const string &name)
 {
 #ifdef TARGET_OS_WINDOWS
     DWORD lAttr = GetFileAttributesW(OUTW(name));
@@ -246,7 +246,7 @@ bool file_exists(const std::string &name)
 }
 
 // Low-tech existence check.
-bool dir_exists(const std::string &dir)
+bool dir_exists(const string &dir)
 {
 #ifdef TARGET_OS_WINDOWS
     DWORD lAttr = GetFileAttributesW(OUTW(dir));
@@ -266,20 +266,20 @@ bool dir_exists(const std::string &dir)
 #endif
 }
 
-static inline bool _is_good_filename(const std::string &s)
+static inline bool _is_good_filename(const string &s)
 {
     return (s != "." && s != "..");
 }
 
 // Returns the names of all files in the given directory. Note that the
 // filenames returned are relative to the directory.
-std::vector<std::string> get_dir_files(const std::string &dirname)
+vector<string> get_dir_files(const string &dirname)
 {
-    std::vector<std::string> files;
+    vector<string> files;
 
 #ifdef TARGET_OS_WINDOWS
     WIN32_FIND_DATAW lData;
-    std::string dir = dirname;
+    string dir = dirname;
     if (!dir.empty() && dir[dir.length() - 1] != FILE_SEPARATOR)
         dir += FILE_SEPARATOR;
     dir += "*";
@@ -301,7 +301,7 @@ std::vector<std::string> get_dir_files(const std::string &dirname)
 
     while (dirent *entry = readdir(dir))
     {
-        std::string name = mb_to_utf8(entry->d_name);
+        string name = mb_to_utf8(entry->d_name);
         if (_is_good_filename(name))
             files.push_back(name);
     }

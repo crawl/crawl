@@ -27,7 +27,7 @@
 
 #define NOTES_VERSION_NUMBER 1002
 
-std::vector<Note> note_list;
+vector<Note> note_list;
 
 // return the real number of the power (casting out nonexistent powers),
 // starting from 0, or -1 if the power doesn't exist
@@ -214,12 +214,12 @@ static const char* _number_to_ordinal(int number)
     return ordinals[number-1];
 }
 
-std::string Note::describe(bool when, bool where, bool what) const
+string Note::describe(bool when, bool where, bool what) const
 {
-    std::ostringstream result;
+    ostringstream result;
 
     if (when)
-        result << std::setw(6) << turn << " ";
+        result << setw(6) << turn << " ";
 
     if (where)
     {
@@ -399,9 +399,9 @@ Note::Note(NOTE_TYPES t, int f, int s, const char* n, const char* d) :
     type(t), first(f), second(s)
 {
     if (n)
-        name = std::string(n);
+        name = string(n);
     if (d)
-        desc = std::string(d);
+        desc = string(d);
 
     turn         = you.num_turns;
     packed_place = get_packed_place();
@@ -421,7 +421,7 @@ void Note::check_milestone() const
         if (br != -1 && br != BRANCH_WIZLAB)
         {
             ASSERT(br >= 0 && br < NUM_BRANCHES);
-            std::string branch = place_name(packed_place, true, false).c_str();
+            string branch = place_name(packed_place, true, false).c_str();
             if (branch.find("The ") == 0)
                 branch[0] = tolower(branch[0]);
 
@@ -433,11 +433,11 @@ void Note::check_milestone() const
             else if (dep == _dungeon_branch_depth(br) || dep == 14
                      || br == BRANCH_ZIGGURAT)
             {
-                std::string level = place_name(packed_place, true, true);
+                string level = place_name(packed_place, true, true);
                 if (level.find("Level ") == 0)
                     level[0] = tolower(level[0]);
 
-                std::ostringstream branch_finale;
+                ostringstream branch_finale;
                 branch_finale << "reached " << level << ".";
                 mark_milestone(br == BRANCH_ZIGGURAT ? "zig" :
                                dep == 14 ? "br.mid" : "br.end",

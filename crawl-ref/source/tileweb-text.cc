@@ -6,7 +6,7 @@
 #include "tileweb.h"
 #include "unicode.h"
 
-WebTextArea::WebTextArea(std::string name) :
+WebTextArea::WebTextArea(string name) :
     mx(0),
     my(0),
     m_cbuf(NULL),
@@ -96,7 +96,7 @@ void WebTextArea::send(bool force)
     int last_col = -1;
     int space_count = 0;
     bool dirty = false;
-    std::string html;
+    string html;
 
     bool sending = false;
 

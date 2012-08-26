@@ -205,7 +205,7 @@ static bool _boulder_hit(monster& mon, const coord_def &pos)
     actor *victim = actor_at(pos);
     if (victim)
     {
-        simple_monster_message(&mon, (std::string(" smashes into ")
+        simple_monster_message(&mon, (string(" smashes into ")
                                + victim->name(DESC_THE) + "!").c_str());
 
         int dam = roll_dice(3, 20) - random2(1 + victim->armour_class());

@@ -74,7 +74,7 @@ void wizard_create_spec_object_by_name()
         return;
     }
 
-    std::string error;
+    string error;
     create_item_named(buf, you.pos(), &error);
     if (!error.empty())
     {
@@ -192,12 +192,12 @@ void wizard_create_spec_object()
     }
     else
     {
-        std::string prompt = "What type of item? ";
+        string prompt = "What type of item? ";
         if (class_wanted == OBJ_BOOKS)
             prompt += "(\"all\" for all) ";
         msgwin_get_line_autohist(prompt, specs, sizeof(specs));
 
-        std::string temp = specs;
+        string temp = specs;
         trim_string(temp);
         lowercase(temp);
         strlcpy(specs, temp.c_str(), sizeof(specs));
@@ -343,12 +343,12 @@ static void _tweak_randart(item_def &item)
     artefact_properties_t props;
     artefact_wpn_properties(item, props);
 
-    std::string prompt = "";
+    string prompt = "";
 
-    std::vector<unsigned int> choice_to_prop;
+    vector<unsigned int> choice_to_prop;
     for (unsigned int i = 0, choice_num = 0; i < ARTP_NUM_PROPERTIES; ++i)
     {
-        if (_prop_name[i] == std::string("UNUSED"))
+        if (_prop_name[i] == string("UNUSED"))
             continue;
         choice_to_prop.push_back(i);
         if (choice_num % 8 == 0 && choice_num != 0)
@@ -600,7 +600,7 @@ void wizard_create_all_artefacts()
 
         msg::streams(MSGCH_DIAGNOSTICS) << "Made " << item.name(DESC_A)
                                         << " (" << debug_art_val_str(item)
-                                        << ")" << std::endl;
+                                        << ")" << endl;
         move_item_to_grid(&islot, you.pos());
 
         // Make all eight.
@@ -623,7 +623,7 @@ void wizard_create_all_artefacts()
         move_item_to_grid(&islot, you.pos());
 
         msg::streams(MSGCH_DIAGNOSTICS) << "Made " << item.name(DESC_A)
-                                        << std::endl;
+                                        << endl;
     }
 }
 
@@ -937,7 +937,7 @@ static void _debug_acquirement_stats(FILE *ostat)
         total_quant += item.quantity;
         subtype_quants[item.sub_type] += item.quantity;
 
-        max_plus    = std::max(max_plus, item.plus + item.plus2);
+        max_plus    = max(max_plus, item.plus + item.plus2);
         total_plus += item.plus + item.plus2;
 
         if (is_artefact(item))
@@ -1001,7 +1001,7 @@ static void _debug_acquirement_stats(FILE *ostat)
                                    : "buggy items");
 
     // Print player species/profession.
-    std::string godname = "";
+    string godname = "";
     if (you.religion != GOD_NO_GOD)
         godname += " of " + god_name(you.religion);
 
@@ -1043,7 +1043,7 @@ static void _debug_acquirement_stats(FILE *ostat)
         fprintf(ostat, "Not wearing or wielding anything.\n");
 
     // Also print the skills, in case they matter.
-    std::string skills = "\nSkills:\n";
+    string skills = "\nSkills:\n";
     dump_skills(skills);
     fprintf(ostat, "%s\n\n", skills.c_str());
 
@@ -1051,8 +1051,8 @@ static void _debug_acquirement_stats(FILE *ostat)
     {
         // For spellbooks, for each spell discipline, list the number of
         // unseen and total spells available.
-        std::vector<int> total_spells(SPTYP_LAST_EXPONENT + 1);
-        std::vector<int> unseen_spells(SPTYP_LAST_EXPONENT + 1);
+        vector<int> total_spells(SPTYP_LAST_EXPONENT + 1);
+        vector<int> unseen_spells(SPTYP_LAST_EXPONENT + 1);
 
         for (int i = 0; i < NUM_SPELLS; ++i)
         {
@@ -1267,9 +1267,9 @@ static void _debug_acquirement_stats(FILE *ostat)
             continue;
 
         item.sub_type = i;
-        std::string name = item.name(desc, terse, true);
+        string name = item.name(desc, terse, true);
 
-        max_width = std::max(max_width, strwidth(name));
+        max_width = max(max_width, strwidth(name));
     }
 
     // Now output the sub types.
@@ -1285,7 +1285,7 @@ static void _debug_acquirement_stats(FILE *ostat)
             continue;
 
         item.sub_type = i;
-        std::string name = item.name(desc, terse, true);
+        string name = item.name(desc, terse, true);
 
         fprintf(ostat, format_str, name.c_str(),
                 (float) subtype_quants[i] * 100.0 / (float) total_quant);
@@ -1437,10 +1437,10 @@ static void _debug_rap_stats(FILE *ostat)
 
         int balance = num_good_props - num_bad_props;
 
-        max_props         = std::max(max_props, num_props);
-        max_good_props    = std::max(max_good_props, num_good_props);
-        max_bad_props     = std::max(max_bad_props, num_bad_props);
-        max_balance_props = std::max(max_balance_props, balance);
+        max_props         = max(max_props, num_props);
+        max_good_props    = max(max_good_props, num_good_props);
+        max_bad_props     = max(max_bad_props, num_bad_props);
+        max_balance_props = max(max_balance_props, balance);
 
         total_props         += num_props;
         total_good_props    += num_good_props;
@@ -1552,7 +1552,7 @@ void debug_item_statistics(void)
 
 void wizard_draw_card()
 {
-    msg::streams(MSGCH_PROMPT) << "Which card? " << std::endl;
+    msg::streams(MSGCH_PROMPT) << "Which card? " << endl;
     char buf[80];
     if (cancelable_get_line_autohist(buf, sizeof buf))
     {
@@ -1560,16 +1560,16 @@ void wizard_draw_card()
         return;
     }
 
-    std::string wanted = buf;
+    string wanted = buf;
     lowercase(wanted);
 
     bool found_card = false;
     for (int i = 0; i < NUM_CARDS; ++i)
     {
         const card_type c = static_cast<card_type>(i);
-        std::string card = card_name(c);
+        string card = card_name(c);
         lowercase(card);
-        if (card.find(wanted) != std::string::npos)
+        if (card.find(wanted) != string::npos)
         {
             card_effect(c, DECK_RARITY_LEGENDARY);
             found_card = true;

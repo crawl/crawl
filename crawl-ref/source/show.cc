@@ -239,7 +239,7 @@ static void _update_item_at(const coord_def &gp)
     }
     else
     {
-        const std::vector<item_def> stash = item_list_in_stash(gp);
+        const vector<item_def> stash = item_list_in_stash(gp);
         if (stash.empty())
             return;
 
@@ -495,7 +495,7 @@ void show_update_emphasis()
    // The only thing that can change is that previously unknown
    // stairs are now known. (see is_unknown_stair(), emphasise())
    LevelInfo& level_info = travel_cache.get_level_info(level_id::current());
-   std::vector<stair_info> stairs = level_info.get_stairs();
+   vector<stair_info> stairs = level_info.get_stairs();
    for (unsigned i = 0; i < stairs.size(); ++i)
        if (stairs[i].destination.is_valid())
            env.map_knowledge(stairs[i].position).flags &= ~MAP_EMPHASIZE;

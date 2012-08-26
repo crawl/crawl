@@ -67,20 +67,20 @@
 #include "travel.h"
 
 // defined in dgn-overview.cc
-extern std::map<branch_type, std::set<level_id> > stair_level;
-extern std::map<level_pos, shop_type> shops_present;
-extern std::map<level_pos, god_type> altars_present;
-extern std::map<level_pos, branch_type> portals_present;
-extern std::map<level_pos, std::string> portal_notes;
-extern std::map<level_id, std::string> level_annotations;
-extern std::map<level_id, std::string> level_exclusions;
-extern std::map<level_id, std::string> level_uniques;
-extern std::set<std::pair<std::string, level_id> > auto_unique_annotations;
+extern map<branch_type, set<level_id> > stair_level;
+extern map<level_pos, shop_type> shops_present;
+extern map<level_pos, god_type> altars_present;
+extern map<level_pos, branch_type> portals_present;
+extern map<level_pos, string> portal_notes;
+extern map<level_id, string> level_annotations;
+extern map<level_id, string> level_exclusions;
+extern map<level_id, string> level_uniques;
+extern set<pair<string, level_id> > auto_unique_annotations;
 
 // defined in abyss.cc
 extern abyss_state abyssal_state;
 
-reader::reader(const std::string &_read_filename, int minorVersion)
+reader::reader(const string &_read_filename, int minorVersion)
     : _filename(_read_filename), _chunk(0), _pbuf(NULL), _read_offset(0),
       _minorVersion(minorVersion), seen_enums()
 {
@@ -88,7 +88,7 @@ reader::reader(const std::string &_read_filename, int minorVersion)
     opened_file = !!_file;
 }
 
-reader::reader(package *save, const std::string &chunkname, int minorVersion)
+reader::reader(package *save, const string &chunkname, int minorVersion)
     : _file(0), _chunk(0), opened_file(false), _pbuf(0), _read_offset(0),
      _minorVersion(minorVersion)
 {
@@ -116,7 +116,7 @@ void reader::advance(size_t offset)
 
     while (offset)
     {
-        const size_t junklen = std::min(sizeof(junk), offset);
+        const size_t junklen = min(sizeof(junk), offset);
         offset -= junklen;
         read(junk, junklen);
     }
@@ -192,7 +192,7 @@ void reader::setMinorVersion(int minorVersion)
     _minorVersion = minorVersion;
 }
 
-void reader::fail_if_not_eof(const std::string &name)
+void reader::fail_if_not_eof(const string &name)
 {
     char dummy;
     if (_chunk ? _chunk->read(&dummy, 1) :
@@ -299,7 +299,7 @@ template<typename T, typename T_iter, typename T_marshal>
 static void marshall_iterator(writer &th, T_iter beg, T_iter end,
                               T_marshal marshal);
 template<typename T>
-static void unmarshall_vector(reader& th, std::vector<T>& vec,
+static void unmarshall_vector(reader& th, vector<T>& vec,
                               T (*T_unmarshall)(reader&));
 
 template<int SIZE>
@@ -329,7 +329,7 @@ uint8_t unmarshallUByte(reader &th)
     return th.readByte();
 }
 
-void marshallShort(std::vector<unsigned char>& buf, short data)
+void marshallShort(vector<unsigned char>& buf, short data)
 {
     CHECK_INITIALIZED(data);
     COMPILE_CHECK(sizeof(data) == 2);
@@ -356,7 +356,7 @@ int16_t unmarshallShort(reader &th)
     return data;
 }
 
-void marshallInt(std::vector<unsigned char>& buf, int32_t data)
+void marshallInt(vector<unsigned char>& buf, int32_t data)
 {
     CHECK_INITIALIZED(data);
     buf.push_back((unsigned char) ((data & 0xFF000000) >> 24));
@@ -492,22 +492,22 @@ static void _marshall_as_int(writer& th, const T& t)
 }
 
 template <typename data>
-void marshallSet(writer &th, const std::set<data> &s,
+void marshallSet(writer &th, const set<data> &s,
                  void (*marshall)(writer &, const data &))
 {
     marshallInt(th, s.size());
-    typename std::set<data>::const_iterator i = s.begin();
+    typename set<data>::const_iterator i = s.begin();
     for (; i != s.end(); ++i)
         marshall(th, *i);
 }
 
 template<typename key, typename value>
-void marshallMap(writer &th, const std::map<key,value>& data,
+void marshallMap(writer &th, const map<key,value>& data,
                  void (*key_marshall)(writer&, const key&),
                  void (*value_marshall)(writer&, const value&))
 {
     marshallInt(th, data.size());
-    typename std::map<key,value>::const_iterator ci;
+    typename map<key,value>::const_iterator ci;
     for (ci = data.begin(); ci != data.end(); ++ci)
     {
         key_marshall(th, ci->first);
@@ -519,7 +519,7 @@ template<typename T_iter, typename T_marshall_t>
 static void marshall_iterator(writer &th, T_iter beg, T_iter end,
                               T_marshall_t T_marshall)
 {
-    marshallInt(th, std::distance(beg, end));
+    marshallInt(th, distance(beg, end));
     while (beg != end)
     {
         T_marshall(th, *beg);
@@ -528,7 +528,7 @@ static void marshall_iterator(writer &th, T_iter beg, T_iter end,
 }
 
 template<typename T>
-static void unmarshall_vector(reader& th, std::vector<T>& vec,
+static void unmarshall_vector(reader& th, vector<T>& vec,
                               T (*T_unmarshall)(reader&))
 {
     vec.clear();
@@ -552,7 +552,7 @@ void marshall_level_id(writer& th, const level_id& id)
     marshallShort(th, id.packed_place());
 }
 
-void marshall_level_id_set(writer& th, const std::set<level_id>& id)
+void marshall_level_id_set(writer& th, const set<level_id>& id)
 {
     marshallSet(th, id, marshall_level_id);
 }
@@ -585,7 +585,7 @@ void unmarshallMap(reader& th, map& data,
     for (i = 0; i < len; ++i)
     {
         k = key_unmarshall(th);
-        std::pair<key, value> p(k, value_unmarshall(th));
+        pair<key, value> p(k, value_unmarshall(th));
         data.insert(p);
     }
 }
@@ -601,9 +601,9 @@ level_id unmarshall_level_id(reader& th)
     return level_id::from_packed_place(unmarshallShort(th));
 }
 
-std::set<level_id> unmarshall_level_id_set(reader& th)
+set<level_id> unmarshall_level_id_set(reader& th)
 {
-    std::set<level_id> id;
+    set<level_id> id;
     unmarshallSet(th, id, unmarshall_level_id);
     return id;
 }
@@ -734,7 +734,7 @@ float unmarshallFloat(reader &th)
 }
 
 // string -- 2 byte length, string data
-void marshallString(writer &th, const std::string &data, int maxSize)
+void marshallString(writer &th, const string &data, int maxSize)
 {
     // allow for very long strings (well, up to 32K).
     int len = data.length();
@@ -748,7 +748,7 @@ void marshallString(writer &th, const std::string &data, int maxSize)
 }
 
 // To pass to marshallMap
-static void marshallStringNoMax(writer &th, const std::string &data)
+static void marshallStringNoMax(writer &th, const string &data)
 {
     marshallString(th, data);
 }
@@ -773,7 +773,7 @@ static int unmarshallCString(reader &th, char *data, int maxSize)
     return copylen;
 }
 
-std::string unmarshallString(reader &th, int maxSize)
+string unmarshallString(reader &th, int maxSize)
 {
     if (maxSize <= 0)
         return "";
@@ -783,24 +783,24 @@ std::string unmarshallString(reader &th, int maxSize)
     *buffer = 0;
     const int slen = unmarshallCString(th, buffer, maxSize);
     ASSERT(slen >= 0 && slen < maxSize);
-    const std::string res(buffer, slen);
+    const string res(buffer, slen);
     delete [] buffer;
     return res;
 }
 
 // To pass to unmarshallMap
-static std::string unmarshallStringNoMax(reader &th)
+static string unmarshallStringNoMax(reader &th)
 {
     return unmarshallString(th);
 }
 
 // string -- 4 byte length, non-terminated string data.
-void marshallString4(writer &th, const std::string &data)
+void marshallString4(writer &th, const string &data)
 {
     marshallInt(th, data.length());
     th.write(data.c_str(), data.length());
 }
-void unmarshallString4(reader &th, std::string& s)
+void unmarshallString4(reader &th, string& s)
 {
     const int len = unmarshallInt(th);
     s.resize(len);
@@ -820,7 +820,7 @@ bool unmarshallBoolean(reader &th)
 }
 
 // Saving the date as a string so we're not reliant on a particular epoch.
-std::string make_date_string(time_t in_date)
+string make_date_string(time_t in_date)
 {
     if (in_date <= 0)
         return "";
@@ -840,7 +840,7 @@ void marshallEnumVal(writer& wr, const enum_info *ei, int val)
 
     if (!ews.store_type)
     {
-        std::vector<std::pair<int, std::string> > values;
+        vector<pair<int, string> > values;
 
         ei->collect(values);
 
@@ -879,7 +879,7 @@ int unmarshallEnumVal(reader& rd, const enum_info *ei)
 
     if (!ers.store_type)
     {
-        std::vector<std::pair<int, std::string> > values;
+        vector<pair<int, string> > values;
 
         ei->collect(values);
 
@@ -894,8 +894,8 @@ int unmarshallEnumVal(reader& rd, const enum_info *ei)
 
             for (; evi->name; ++evi)
             {
-                if (ers.names.find(std::string(evi->name)) != ers.names.end())
-                    ers.mapping[evi->value] = ers.names[std::string(evi->name)];
+                if (ers.names.find(string(evi->name)) != ers.names.end())
+                    ers.mapping[evi->value] = ers.names[string(evi->name)];
                 else
                     ers.mapping[evi->value] = ei->replacement;
             }
@@ -916,7 +916,7 @@ int unmarshallEnumVal(reader& rd, const enum_info *ei)
 
     ASSERT(rd.getMinorVersion() >= ei->non_historical_first);
 
-    std::string name = unmarshallString(rd);
+    string name = unmarshallString(rd);
 
     if (ers.names.find(name) != ers.names.end())
         ers.mapping[raw] = ers.names[name];
@@ -931,7 +931,7 @@ int unmarshallEnumVal(reader& rd, const enum_info *ei)
 // tagId specifies what to write.
 void tag_write(tag_type tagID, writer &outf)
 {
-    std::vector<unsigned char> buf;
+    vector<unsigned char> buf;
     writer th(&buf);
     switch (tagID)
     {
@@ -976,7 +976,7 @@ void tag_write(tag_type tagID, writer &outf)
 void tag_read(reader &inf, tag_type tag_id)
 {
     // Read header info and data
-    std::vector<unsigned char> buf;
+    vector<unsigned char> buf;
     const int data_size = unmarshallInt(inf);
     ASSERT(data_size >= 0);
 
@@ -1077,7 +1077,7 @@ static void tag_construct_you(writer &th)
     marshallInt(th, you.earth_attunement);
     marshallInt(th, you.form);
 
-    j = std::min<int>(you.sage_skills.size(), 32767);
+    j = min<int>(you.sage_skills.size(), 32767);
     marshallShort(th, you.sage_skills.size());
     for (i = 0; i < (int)you.sage_skills.size(); ++i)
     {
@@ -1158,14 +1158,14 @@ static void tag_construct_you(writer &th)
 
     marshallBoolean(th, you.auto_training);
     marshallByte(th, you.exercises.size());
-    for (std::list<skill_type>::iterator it = you.exercises.begin();
+    for (list<skill_type>::iterator it = you.exercises.begin();
          it != you.exercises.end(); ++it)
     {
         marshallInt(th, *it);
     }
 
     marshallByte(th, you.exercises_all.size());
-    for (std::list<skill_type>::iterator it = you.exercises_all.begin();
+    for (list<skill_type>::iterator it = you.exercises_all.begin();
          it != you.exercises_all.end(); ++it)
     {
         marshallInt(th, *it);
@@ -1288,13 +1288,13 @@ static void tag_construct_you(writer &th)
 
     // Action counts.
     j = 0;
-    for (std::map<std::pair<caction_type, int>, FixedVector<int, 27> >::const_iterator ac =
+    for (map<pair<caction_type, int>, FixedVector<int, 27> >::const_iterator ac =
          you.action_count.begin(); ac != you.action_count.end(); ++ac)
     {
         j++;
     }
     marshallShort(th, j);
-    for (std::map<std::pair<caction_type, int>, FixedVector<int, 27> >::const_iterator ac =
+    for (map<pair<caction_type, int>, FixedVector<int, 27> >::const_iterator ac =
          you.action_count.begin(); ac != you.action_count.end(); ++ac)
     {
         marshallShort(th, ac->first.first);
@@ -1320,7 +1320,7 @@ static void tag_construct_you(writer &th)
 
     // Write a human-readable string out on the off chance that
     // we fail to be able to read this file back in using some later version.
-    std::string revision = "Git:";
+    string revision = "Git:";
     revision += Version::Long();
     marshallString(th, revision);
 
@@ -1452,7 +1452,7 @@ static void tag_construct_you_dungeon(writer &th)
     marshallUniqueAnnotations(th);
 
     marshallPlaceInfo(th, you.global_info);
-    std::vector<PlaceInfo> list = you.get_all_place_info();
+    vector<PlaceInfo> list = you.get_all_place_info();
     // How many different places we have info on?
     marshallShort(th, list.size());
 
@@ -2057,7 +2057,7 @@ static void tag_read_you(reader &th)
         caction_type caction = (caction_type)unmarshallShort(th);
         int subtype = unmarshallInt(th);
         for (j = 0; j < 27; j++)
-            you.action_count[std::pair<caction_type, int>(caction, subtype)][j] = unmarshallInt(th);
+            you.action_count[pair<caction_type, int>(caction, subtype)][j] = unmarshallInt(th);
     }
 
 #if TAG_MAJOR_VERSION == 34
@@ -2289,7 +2289,7 @@ static void tag_read_you_dungeon(reader &th)
     ASSERT(place_info.is_global());
     you.set_place_info(place_info);
 
-    std::vector<PlaceInfo> list = you.get_all_place_info();
+    vector<PlaceInfo> list = you.get_all_place_info();
     unsigned short count_p = (unsigned short) unmarshallShort(th);
     // Use "<=" so that adding more branches or non-dungeon places
     // won't break save-file compatibility.
@@ -2302,13 +2302,13 @@ static void tag_read_you_dungeon(reader &th)
         you.set_place_info(place_info);
     }
 
-    typedef std::pair<string_set::iterator, bool> ssipair;
+    typedef pair<string_set::iterator, bool> ssipair;
     unmarshall_container(th, you.uniq_map_tags,
-                         (ssipair (string_set::*)(const std::string &))
+                         (ssipair (string_set::*)(const string &))
                          &string_set::insert,
                          unmarshallStringNoMax);
     unmarshall_container(th, you.uniq_map_names,
-                         (ssipair (string_set::*)(const std::string &))
+                         (ssipair (string_set::*)(const string &))
                          &string_set::insert,
                          unmarshallStringNoMax);
 
@@ -2450,7 +2450,7 @@ void marshallItem(writer &th, const item_def &item, bool iinfo)
 #if TAG_MAJOR_VERSION == 34
     if (!item.is_valid(iinfo))
     {
-        std::string name;
+        string name;
         item_def dummy = item;
         if (!item.quantity)
             name = "(quantity: 0) ", dummy.quantity = 1;
@@ -2694,8 +2694,8 @@ static void marshall_mon_enchant(writer &th, const mon_enchant &me)
     marshallShort(th, me.degree);
     marshallShort(th, me.who);
     marshallInt(th, me.source);
-    marshallShort(th, std::min(me.duration, INFINITE_DURATION));
-    marshallShort(th, std::min(me.maxduration, INFINITE_DURATION));
+    marshallShort(th, min(me.duration, INFINITE_DURATION));
+    marshallShort(th, min(me.maxduration, INFINITE_DURATION));
 }
 
 static mon_enchant unmarshall_mon_enchant(reader &th)
@@ -2752,8 +2752,8 @@ void marshallMonster(writer &th, const monster& m)
     }
     marshallByte(th, m.ench_countdown);
 
-    marshallShort(th, std::min(m.hit_points, MAX_MONSTER_HP));
-    marshallShort(th, std::min(m.max_hit_points, MAX_MONSTER_HP));
+    marshallShort(th, min(m.hit_points, MAX_MONSTER_HP));
+    marshallShort(th, min(m.max_hit_points, MAX_MONSTER_HP));
     marshallInt(th, m.number);
     marshallShort(th, m.base_monster);
     marshallShort(th, m.colour);
@@ -3090,7 +3090,7 @@ static void tag_read_level(reader &th)
     while (num_lights-- > 0)
     {
         coord_def c = unmarshallCoord(th);
-        env.sunlight.push_back(std::pair<coord_def, int>(c, unmarshallInt(th)));
+        env.sunlight.push_back(pair<coord_def, int>(c, unmarshallInt(th)));
     }
 }
 
@@ -3211,7 +3211,7 @@ void unmarshallMonster(reader &th, monster& m)
 
     if (m.props.exists("monster_tile_name"))
     {
-        std::string tile = m.props["monster_tile_name"].get_string();
+        string tile = m.props["monster_tile_name"].get_string();
         tileidx_t index;
         if (!tile_player_index(tile.c_str(), &index))
         {
@@ -3287,7 +3287,7 @@ static void _debug_count_tiles()
 {
 #ifdef DEBUG_DIAGNOSTICS
 # ifdef USE_TILE
-    std::map<int,bool> found;
+    map<int,bool> found;
     int t, cnt = 0;
     for (int i = 0; i < GXM; i++)
         for (int j = 0; j < GYM; j++)
@@ -3317,7 +3317,7 @@ void tag_read_level_tiles(reader &th)
     for (unsigned int i = 0; i < num_tilenames; ++i)
     {
 #ifdef DEBUG_TILE_NAMES
-        std::string temp = unmarshallString(th);
+        string temp = unmarshallString(th);
         mprf("Reading tile_names[%d] = %s", i, temp.c_str());
         env.tile_names.push_back(temp);
 #else
@@ -3377,7 +3377,7 @@ static tileidx_t _get_tile_from_vector(const unsigned int idx)
 #endif
         return 0;
     }
-    std::string tilename = env.tile_names[idx - 1];
+    string tilename = env.tile_names[idx - 1];
 
     tileidx_t tile;
     if (!tile_dngn_index(tilename.c_str(), &tile))

@@ -59,7 +59,7 @@ void clua_register_metatable(lua_State *ls, const char *tn,
                              const luaL_reg *lr,
                              int (*gcfn)(lua_State *ls) = NULL);
 
-int clua_stringtable(lua_State *ls, const std::vector<std::string> &s);
+int clua_stringtable(lua_State *ls, const vector<string> &s);
 
 /*
  * User-data templates.
@@ -197,7 +197,7 @@ static int clua_gentable(lua_State *ls, const list &strings, lpush push)
     return 1;
 }
 
-int clua_pushcxxstring(lua_State *ls, const std::string &s);
+int clua_pushcxxstring(lua_State *ls, const string &s);
 int clua_pushpoint(lua_State *ls, const coord_def &pos);
 
 #endif

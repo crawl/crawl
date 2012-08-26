@@ -132,10 +132,10 @@ void nowrap_eol_cprintf(const char *s, ...)
 
     va_list args;
     va_start(args, s);
-    std::string buf = vmake_stringf(s, args);
+    string buf = vmake_stringf(s, args);
     va_end(args);
 
-    cprintf("%s", chop_string(buf, std::max(wrapcol + 1 - wherex(), 0), false).c_str());
+    cprintf("%s", chop_string(buf, max(wrapcol + 1 - wherex(), 0), false).c_str());
 }
 
 // cprintf that knows how to wrap down lines
@@ -143,7 +143,7 @@ static void wrapcprintf(int wrapcol, const char *s, ...)
 {
     va_list args;
     va_start(args, s);
-    std::string buf = vmake_stringf(s, args);
+    string buf = vmake_stringf(s, args);
     va_end(args);
 
     while (!buf.empty())
@@ -185,7 +185,7 @@ input_history::input_history(size_t size)
     pos = history.end();
 }
 
-void input_history::new_input(const std::string &s)
+void input_history::new_input(const string &s)
 {
     history.remove(s);
 
@@ -198,7 +198,7 @@ void input_history::new_input(const std::string &s)
     go_end();
 }
 
-const std::string *input_history::prev()
+const string *input_history::prev()
 {
     if (history.empty())
         return NULL;
@@ -209,7 +209,7 @@ const std::string *input_history::prev()
     return &*--pos;
 }
 
-const std::string *input_history::next()
+const string *input_history::next()
 {
     if (history.empty())
         return NULL;
@@ -245,7 +245,7 @@ line_reader::~line_reader()
 {
 }
 
-std::string line_reader::get_text() const
+string line_reader::get_text() const
 {
     return buffer;
 }
@@ -461,8 +461,8 @@ int line_reader::process_key(int ch)
         if (!history)
             break;
 
-        const std::string *text = (ch == CK_UP) ? history->prev()
-                                                : history->next();
+        const string *text = (ch == CK_UP) ? history->prev()
+                                           : history->next();
 
         if (text)
         {
@@ -603,7 +603,7 @@ int line_reader::process_key(int ch)
 /////////////////////////////////////////////////////////////////////////////
 // Of mice and other mice.
 
-static std::queue<c_mouse_event> mouse_events;
+static queue<c_mouse_event> mouse_events;
 
 c_mouse_event get_mouse_event()
 {

@@ -1702,7 +1702,7 @@ bool monster::pickup_melee_weapon(item_def &item, int near)
 // Arbitrary damage adjustment for quantity of missiles. So sue me.
 static int _q_adj_damage(int damage, int qty)
 {
-    return (damage * std::min(qty, 8));
+    return (damage * min(qty, 8));
 }
 
 bool monster::pickup_throwable_weapon(item_def &item, int near)
@@ -2462,9 +2462,9 @@ bool monster::has_base_name() const
     return (!mname.empty() && !ghost.get());
 }
 
-static std::string _invalid_monster_str(monster_type type)
+static string _invalid_monster_str(monster_type type)
 {
-    std::string str = "INVALID MONSTER ";
+    string str = "INVALID MONSTER ";
 
     switch (type)
     {
@@ -2515,7 +2515,8 @@ static std::string _invalid_monster_str(monster_type type)
     return str;
 }
 
-static std::string _mon_special_name(const monster& mon, description_level_type desc, bool force_seen)
+static string _mon_special_name(const monster& mon, description_level_type desc,
+                                bool force_seen)
 {
     if (desc == DESC_NONE)
         return "";
@@ -2555,9 +2556,9 @@ static std::string _mon_special_name(const monster& mon, description_level_type 
     return "";
 }
 
-std::string monster::name(description_level_type desc, bool force_vis) const
+string monster::name(description_level_type desc, bool force_vis) const
 {
-    std::string s = _mon_special_name(*this, desc, force_vis);
+    string s = _mon_special_name(*this, desc, force_vis);
     if (!s.empty() || desc == DESC_NONE)
         return s;
 
@@ -2565,10 +2566,9 @@ std::string monster::name(description_level_type desc, bool force_vis) const
     return mi.proper_name(desc);
 }
 
-std::string monster::base_name(description_level_type desc, bool force_vis)
-    const
+string monster::base_name(description_level_type desc, bool force_vis) const
 {
-    std::string s = _mon_special_name(*this, desc, force_vis);
+    string s = _mon_special_name(*this, desc, force_vis);
     if (!s.empty() || desc == DESC_NONE)
         return s;
 
@@ -2576,10 +2576,9 @@ std::string monster::base_name(description_level_type desc, bool force_vis)
     return mi.common_name(desc);
 }
 
-std::string monster::full_name(description_level_type desc,
-                                bool use_comma) const
+string monster::full_name(description_level_type desc, bool use_comma) const
 {
-    std::string s = _mon_special_name(*this, desc, true);
+    string s = _mon_special_name(*this, desc, true);
     if (!s.empty() || desc == DESC_NONE)
         return s;
 
@@ -2587,12 +2586,12 @@ std::string monster::full_name(description_level_type desc,
     return mi.full_name(desc);
 }
 
-std::string monster::pronoun(pronoun_type pro, bool force_visible) const
+string monster::pronoun(pronoun_type pro, bool force_visible) const
 {
     return mons_pronoun(type, pro, force_visible || you.can_see(this));
 }
 
-std::string monster::conj_verb(const std::string &verb) const
+string monster::conj_verb(const string &verb) const
 {
     if (!verb.empty() && verb[0] == '!')
         return verb.substr(1);
@@ -2615,14 +2614,14 @@ std::string monster::conj_verb(const std::string &verb) const
     return pluralise(verb);
 }
 
-std::string monster::hand_name(bool plural, bool *can_plural) const
+string monster::hand_name(bool plural, bool *can_plural) const
 {
     bool _can_plural;
     if (can_plural == NULL)
         can_plural = &_can_plural;
     *can_plural = true;
 
-    std::string str;
+    string str;
     char        ch = mons_base_char(type);
 
     const bool rand = (type == MONS_CHAOS_SPAWN);
@@ -2735,14 +2734,14 @@ std::string monster::hand_name(bool plural, bool *can_plural) const
    return str;
 }
 
-std::string monster::foot_name(bool plural, bool *can_plural) const
+string monster::foot_name(bool plural, bool *can_plural) const
 {
     bool _can_plural;
     if (can_plural == NULL)
         can_plural = &_can_plural;
     *can_plural = true;
 
-    std::string str;
+    string str;
     char        ch = mons_base_char(type);
 
     const bool rand = (type == MONS_CHAOS_SPAWN);
@@ -2850,7 +2849,7 @@ std::string monster::foot_name(bool plural, bool *can_plural) const
    return str;
 }
 
-std::string monster::arm_name(bool plural, bool *can_plural) const
+string monster::arm_name(bool plural, bool *can_plural) const
 {
     mon_body_shape shape = get_mon_shape(this);
 
@@ -2860,8 +2859,8 @@ std::string monster::arm_name(bool plural, bool *can_plural) const
     if (can_plural != NULL)
         *can_plural = true;
 
-    std::string adj;
-    std::string str = "arm";
+    string adj;
+    string str = "arm";
 
     switch (mons_genus(type))
     {
@@ -3034,7 +3033,7 @@ void monster::expose_to_element(beam_type flavour, int strength)
     }
 }
 
-void monster::banish(actor *agent, const std::string &)
+void monster::banish(actor *agent, const string &)
 {
     coord_def old_pos = pos();
 
@@ -3326,7 +3325,7 @@ int monster::missile_deflection() const
 int monster::armour_class() const
 {
     // Extra AC for snails/turtles drawn into their shells.
-    return std::max(ac + (has_ench(ENCH_WITHDRAWN) ? 10 : 0), 0);
+    return max(ac + (has_ench(ENCH_WITHDRAWN) ? 10 : 0), 0);
 }
 
 int monster::melee_evasion(const actor *act, ev_ignore_type evit) const
@@ -3376,7 +3375,7 @@ bool monster::heal(int amount, bool max_too)
 
             // Limit HP growth.
             if (random2(3 * maxhp) > 2 * max_hit_points)
-                max_hit_points = std::min(max_hit_points + 1, MAX_MONSTER_HP);
+                max_hit_points = min(max_hit_points + 1, MAX_MONSTER_HP);
             else
                 success = false;
         }
@@ -3398,9 +3397,9 @@ bool monster::heal(int amount, bool max_too)
 void monster::blame_damage(const actor* attacker, int amount)
 {
     ASSERT(amount >= 0);
-    damage_total = std::min<int>(MAX_DAMAGE_COUNTER, damage_total + amount);
+    damage_total = min<int>(MAX_DAMAGE_COUNTER, damage_total + amount);
     if (attacker)
-        damage_friendly = std::min<int>(MAX_DAMAGE_COUNTER * 2,
+        damage_friendly = min<int>(MAX_DAMAGE_COUNTER * 2,
                       damage_friendly + amount * exp_rate(attacker->mindex()));
 }
 
@@ -3801,7 +3800,7 @@ int monster::res_rotting(bool temp) const
     if (get_mons_resist(this, MR_RES_ROTTING))
         res += 1;
 
-    return std::min(3, res);
+    return min(3, res);
 }
 
 int monster::res_holy_energy(const actor *attacker) const
@@ -4093,7 +4092,7 @@ bool monster::drain_exp(actor *agent, bool quiet, int pow)
         }
 
         max_hit_points -= 2 + random2(pow);
-        hit_points = std::min(max_hit_points, hit_points);
+        hit_points = min(max_hit_points, hit_points);
     }
 
     return true;
@@ -4121,11 +4120,11 @@ bool monster::rot(actor *agent, int amount, int immediate, bool quiet)
         if (alive())
         {
             max_hit_points -= immediate * 2;
-            hit_points = std::min(max_hit_points, hit_points);
+            hit_points = min(max_hit_points, hit_points);
         }
     }
 
-    add_ench(mon_enchant(ENCH_ROT, std::min(amount, 4), agent));
+    add_ench(mon_enchant(ENCH_ROT, min(amount, 4), agent));
 
     return true;
 }
@@ -4171,7 +4170,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
                 flags |= MF_EXPLODE_KILL;
         }
 
-        amount = std::min(amount, hit_points);
+        amount = min(amount, hit_points);
         hit_points -= amount;
 
         if (hit_points > max_hit_points)
@@ -4222,7 +4221,7 @@ void monster::confuse(actor *atk, int strength)
         enchant_monster_with_flavour(this, atk, BEAM_CONFUSION, strength);
 }
 
-void monster::paralyse(actor *atk, int strength, std::string cause)
+void monster::paralyse(actor *atk, int strength, string cause)
 {
     enchant_monster_with_flavour(this, atk, BEAM_PARALYSIS, strength);
 }
@@ -4316,7 +4315,7 @@ void monster::uglything_init(bool only_mutate)
 void monster::ghost_demon_init()
 {
     hit_dice        = ghost->xl;
-    max_hit_points  = std::min<short int>(ghost->max_hp, MAX_MONSTER_HP);
+    max_hit_points  = min<short int>(ghost->max_hp, MAX_MONSTER_HP);
     hit_points      = max_hit_points;
     ac              = ghost->ac;
     ev              = ghost->ev;
@@ -4366,7 +4365,7 @@ bool monster::find_home_near_place(const coord_def &c)
     coord_def place(-1, -1);
     int nvalid = 0;
     SquareArray<int, MAX_PLACE_NEAR_DIST> dist(-1);
-    std::queue<coord_def> q;
+    queue<coord_def> q;
 
     q.push(c);
     dist(coord_def()) = 0;
@@ -4793,7 +4792,7 @@ bool monster::can_bleed(bool /*allow_tran*/) const
     return mons_has_blood(type);
 }
 
-bool monster::mutate(const std::string &reason)
+bool monster::mutate(const string &reason)
 {
     if (!can_mutate())
         return false;
@@ -4976,7 +4975,7 @@ void monster::apply_location_effects(const coord_def &oldpos,
             prop &= ~FPROP_BLOODY;
             if (you.see_cell(pos()) && !visible_to(&you))
             {
-               std::string desc =
+               string desc =
                    feature_description_at(pos(), false, DESC_THE, false);
                mprf("The bloodstain on %s disappears!", desc.c_str());
             }
@@ -5111,8 +5110,7 @@ void monster::check_awaken(int)
     // XXX
 }
 
-int monster::beam_resists(bolt &beam, int hurted, bool doEffects,
-                          std::string source)
+int monster::beam_resists(bolt &beam, int hurted, bool doEffects, string source)
 {
     return mons_adjust_flavoured(this, beam, hurted, doEffects);
 }
@@ -5528,7 +5526,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
 
             type = fly_died ? MONS_SPRIGGAN : MONS_FIREFLY;
             define_monster(this);
-            hit_points = std::min(old_hp, hit_points);
+            hit_points = min(old_hp, hit_points);
             flags          = old_flags;
             enchantments   = old_ench;
             ench_cache     = old_ench_cache;
@@ -5585,7 +5583,7 @@ void monster::steal_item_from_player()
 {
     if (confused())
     {
-        std::string msg = getSpeakString("Maurice confused nonstealing");
+        string msg = getSpeakString("Maurice confused nonstealing");
         if (!msg.empty() && msg != "__NONE")
         {
             msg = replace_all(msg, "@The_monster@", name(DESC_THE));
@@ -5655,7 +5653,7 @@ void monster::steal_item_from_player()
             if (silenced(pos()))
                 return;
 
-            std::string complaint = getSpeakString("Maurice nonstealing");
+            string complaint = getSpeakString("Maurice nonstealing");
             if (!complaint.empty())
             {
                 complaint = replace_all(complaint, "@The_monster@",
@@ -5684,7 +5682,7 @@ void monster::steal_item_from_player()
             return;
         }
 
-        const int stolen_amount = std::min(20 + random2(800), you.gold);
+        const int stolen_amount = min(20 + random2(800), you.gold);
         if (inv[MSLOT_GOLD] != NON_ITEM)
         {
             // If Maurice already's got some gold, simply increase the amount.

@@ -8,10 +8,10 @@
 
 #define PATTERN_FLUSH_CEILING 100
 
-typedef std::map<std::string, text_pattern> pattern_map;
+typedef map<string, text_pattern> pattern_map;
 static pattern_map pattern_cache;
 
-static text_pattern &get_text_pattern(const std::string &s, bool checkcase)
+static text_pattern &get_text_pattern(const string &s, bool checkcase)
 {
     pattern_map::iterator i = pattern_cache.find(s);
     if (i != pattern_cache.end())

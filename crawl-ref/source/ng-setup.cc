@@ -620,7 +620,7 @@ static void _give_items_skills(const newgame_def& ng)
     case JOB_CHAOS_KNIGHT:
         you.religion = GOD_XOM;
         you.piety = 100;
-        you.gift_timeout = std::max(5, random2(40) + random2(40));
+        you.gift_timeout = max(5, random2(40) + random2(40));
 
         newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD, -1, 1,
                            2, 2);
@@ -1082,7 +1082,7 @@ static void _setup_tutorial_miscs()
     you.skills[SK_SHIELDS] = 0;
 
     // Some spellcasting for the magic tutorial.
-    if (crawl_state.map.find("tutorial_lesson4") != std::string::npos)
+    if (crawl_state.map.find("tutorial_lesson4") != string::npos)
         you.skills[SK_SPELLCASTING] = 1;
 
     // Set Str low enough for the burdened tutorial.
@@ -1171,7 +1171,7 @@ static void _give_basic_spells(job_type which_job)
         break;
     }
 
-    std::string temp;
+    string temp;
     if (which_spell != SPELL_NO_SPELL
         && !spell_is_uncastable(which_spell, temp))
     {

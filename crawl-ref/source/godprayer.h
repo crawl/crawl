@@ -8,7 +8,7 @@
 
 #include "religion-enum.h"
 
-std::string god_prayer_reaction();
+string god_prayer_reaction();
 void pray();
 
 piety_gain_t sacrifice_item_stack(const item_def& item, int *js = 0);

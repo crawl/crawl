@@ -5,7 +5,7 @@
 
 spret_type cast_controlled_blink(int pow, bool fail);
 int blink(int pow, bool high_level_controlled_blink, bool wizard_blink = false,
-          std::string *pre_msg = NULL);
+          string *pre_msg = NULL);
 spret_type cast_blink(bool allow_partial_control, bool fail);
 void random_blink(bool, bool override_abyss = false, bool override_stasis = false);
 

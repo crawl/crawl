@@ -94,7 +94,7 @@ int ng_num_species()
 }
 
 // Does a case-sensitive lookup of the species name supplied.
-species_type str_to_species(const std::string &species)
+species_type str_to_species(const string &species)
 {
     species_type sp;
     if (species.empty())
@@ -110,10 +110,10 @@ species_type str_to_species(const std::string &species)
     return SP_UNKNOWN;
 }
 
-std::string species_name(species_type speci, bool genus, bool adj)
+string species_name(species_type speci, bool genus, bool adj)
 // defaults:                                 false       false
 {
-    std::string res;
+    string res;
 
     switch (species_genus(speci))
     {

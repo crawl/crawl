@@ -33,7 +33,7 @@ int che_stat_boost(int piety)
         return 1;
     if (piety > 160) // Fudging this slightly to agree with ****** piety.
         return 15;
-    return std::min((piety - 10) / 10, 14);
+    return min((piety - 10) / 10, 14);
 }
 
 // Eat from one random off-level item stack.
@@ -120,7 +120,7 @@ void jiyva_slurp_bonus(int item_value, int *js)
         && x_chance_in_y(you.piety, MAX_PIETY)
         && you.magic_points < you.max_magic_points)
     {
-         inc_mp(std::max(random2(item_value), 1));
+         inc_mp(max(random2(item_value), 1));
          *js |= JS_MP;
      }
 
@@ -129,7 +129,7 @@ void jiyva_slurp_bonus(int item_value, int *js)
         && you.hp < you.hp_max
         && !you.duration[DUR_DEATHS_DOOR])
     {
-         inc_hp(std::max(random2(item_value), 1));
+         inc_hp(max(random2(item_value), 1));
          *js |= JS_HP;
      }
 }
@@ -254,8 +254,8 @@ void ash_check_bondage(bool msg)
     for (int s = ET_WEAPON; s < NUM_ET; s++)
     {
         you.bondage[s] = new_bondage[s];
-        std::map<skill_type, int8_t> boosted_skills = ash_get_boosted_skills(eq_type(s));
-        for (std::map<skill_type, int8_t>::iterator it = boosted_skills.begin();
+        map<skill_type, int8_t> boosted_skills = ash_get_boosted_skills(eq_type(s));
+        for (map<skill_type, int8_t>::iterator it = boosted_skills.begin();
              it != boosted_skills.end(); ++it)
         {
             you.skill_boost[it->first] += it->second;
@@ -267,16 +267,15 @@ void ash_check_bondage(bool msg)
 
     if (msg)
     {
-        std::string desc = ash_describe_bondage(flags,
-                                                you.bondage_level != old_level);
+        string desc = ash_describe_bondage(flags, you.bondage_level != old_level);
         if (!desc.empty())
             mpr(desc, MSGCH_GOD);
     }
 }
 
-std::string ash_describe_bondage(int flags, bool level)
+string ash_describe_bondage(int flags, bool level)
 {
-    std::string desc;
+    string desc;
     if (flags & ETF_WEAPON && flags & ETF_SHIELD
         && you.bondage[ET_WEAPON] != -1)
     {
@@ -611,10 +610,10 @@ monster_type ash_monster_tier(const monster *mon)
     return monster_type(MONS_SENSED_TRIVIAL + monster_info(mon).threat);
 }
 
-std::map<skill_type, int8_t> ash_get_boosted_skills(eq_type type)
+map<skill_type, int8_t> ash_get_boosted_skills(eq_type type)
 {
     const int bondage = you.bondage[type];
-    std::map<skill_type, int8_t> boost;
+    map<skill_type, int8_t> boost;
     if (bondage <= 0)
         return boost;
 
@@ -710,5 +709,5 @@ int ash_skill_boost(skill_type sk, int scale)
 
     level = level * scale + get_skill_progress(sk, level, skill_points, scale);
 
-    return std::min(level, 27 * scale);
+    return min(level, 27 * scale);
 }

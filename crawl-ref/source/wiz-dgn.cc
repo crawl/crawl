@@ -190,7 +190,7 @@ static void _wizard_go_to_level(const level_pos &pos)
 
 void wizard_interlevel_travel()
 {
-    std::string name;
+    string name;
     const level_pos pos =
         prompt_translevel_target(TPF_ALLOW_UPDOWN | TPF_SHOW_ALL_BRANCHES, name).p;
 
@@ -207,7 +207,7 @@ bool wizard_create_portal(const coord_def& pos)
 {
     mpr("Destination for portal:", MSGCH_PROMPT);
 
-    std::string dummy;
+    string dummy;
     level_id dest = prompt_translevel_target(TPF_ALLOW_UPDOWN
         | TPF_SHOW_PORTALS_ONLY, dummy).p.id;
 
@@ -250,13 +250,12 @@ bool wizard_create_feature(const coord_def& pos)
         feat = static_cast<dungeon_feature_type>(feat_num);
     else
     {
-        std::string name = lowercase_string(specs);
+        string name = lowercase_string(specs);
         name = replace_all(name, " ", "_");
         feat = dungeon_feature_by_name(name);
         if (feat == DNGN_UNSEEN) // no exact match
         {
-            std::vector<std::string> matches =
-                dungeon_feature_matches(name);
+            vector<string> matches = dungeon_feature_matches(name);
 
             if (matches.empty())
             {
@@ -284,8 +283,8 @@ bool wizard_create_feature(const coord_def& pos)
             // Multiple matches, list them to wizard
             else
             {
-                std::string prefix = "No exact match for feature '" +
-                    name +  "', possible matches are: ";
+                string prefix = "No exact match for feature '" +
+                                name +  "', possible matches are: ";
 
                 // Use mpr_comma_separated_list() because the list
                 // might be *LONG*.
@@ -368,7 +367,7 @@ void wizard_list_branches()
         if (temples.empty())
             continue;
 
-        std::vector<std::string> god_names;
+        vector<string> god_names;
 
         for (unsigned int j = 0; j < temples.size(); j++)
         {
@@ -446,13 +445,13 @@ void debug_make_trap()
     if (!*requested_trap)
         return;
 
-    std::string spec = lowercase_string(requested_trap);
-    std::vector<trap_type>   matches;
-    std::vector<std::string> match_names;
+    string spec = lowercase_string(requested_trap);
+    vector<trap_type> matches;
+    vector<string>    match_names;
     for (int t = TRAP_DART; t < NUM_TRAPS; ++t)
     {
         const trap_type tr = static_cast<trap_type>(t);
-        std::string tname  = lowercase_string(trap_name(tr));
+        string tname       = lowercase_string(trap_name(tr));
         if (spec.find(tname) != spec.npos)
         {
             trap = tr;
@@ -477,7 +476,7 @@ void debug_make_trap()
             trap = matches[0];
         else
         {
-            std::string prefix = "No exact match for trap '";
+            string prefix = "No exact match for trap '";
             prefix += spec;
             prefix += "', possible matches are: ";
             mpr_comma_separated_list(prefix, match_names);
@@ -532,7 +531,7 @@ bool debug_make_shop(const coord_def& pos)
     if (!*requested_shop)
         return false;
 
-    std::string s = replace_all_of(lowercase_string(requested_shop), "*", "");
+    string s = replace_all_of(lowercase_string(requested_shop), "*", "");
     new_shop_type = str_to_shoptype(s);
 
     if (new_shop_type == SHOP_UNASSIGNED || new_shop_type == -1)
@@ -549,7 +548,7 @@ bool debug_make_shop(const coord_def& pos)
     return true;
 }
 
-static void debug_load_map_by_name(std::string name, bool primary)
+static void debug_load_map_by_name(string name, bool primary)
 {
     const bool place_on_us = !primary && strip_tag(name, "*", true);
 
@@ -557,7 +556,7 @@ static void debug_load_map_by_name(std::string name, bool primary)
     const map_def *toplace = find_map_by_name(name);
     if (!toplace)
     {
-        std::vector<std::string> matches = find_map_matches(name);
+        vector<string> matches = find_map_matches(name);
 
         if (matches.empty())
         {
@@ -566,7 +565,7 @@ static void debug_load_map_by_name(std::string name, bool primary)
         }
         else if (matches.size() == 1)
         {
-            std::string prompt = "Only match is '";
+            string prompt = "Only match is '";
             prompt += matches[0];
             prompt += "', use that?";
             if (!yesno(prompt.c_str(), true, 'y'))
@@ -576,7 +575,7 @@ static void debug_load_map_by_name(std::string name, bool primary)
         }
         else
         {
-            std::string prompt = "No exact matches for '";
+            string prompt = "No exact matches for '";
             prompt += name;
             prompt += "', possible matches are: ";
             mpr_comma_separated_list(prompt, matches);
@@ -660,7 +659,7 @@ void debug_place_map(bool primary)
         return;
     }
 
-    std::string what = what_to_make;
+    string what = what_to_make;
     trim_string(what);
     if (what.empty())
     {
@@ -760,7 +759,7 @@ void wizard_list_levels()
 
     travel_cache.update_da_counters();
 
-    std::vector<level_id> levs = travel_cache.known_levels();
+    vector<level_id> levs = travel_cache.known_levels();
 
     mpr("Known levels:");
     for (unsigned int i = 0; i < levs.size(); i++)
@@ -768,7 +767,7 @@ void wizard_list_levels()
         const LevelInfo* lv = travel_cache.find_level_info(levs[i]);
         ASSERT(lv);
 
-        std::string cnts = "";
+        string cnts = "";
         for (int j = 0; j < NUM_DA_COUNTERS; j++)
         {
             char num[20];
@@ -779,7 +778,7 @@ void wizard_list_levels()
              "%-10s : %s", levs[i].describe().c_str(), cnts.c_str());
     }
 
-    std::string cnts = "";
+    string cnts = "";
     for (int j = 0; j < NUM_DA_COUNTERS; j++)
     {
         char num[20];

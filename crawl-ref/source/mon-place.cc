@@ -56,10 +56,10 @@
 
 band_type active_monster_band = BAND_NO_BAND;
 
-static std::vector<int> vault_mon_types;
-static std::vector<int> vault_mon_bases;
-static std::vector<int> vault_mon_weights;
-static std::vector<bool> vault_mon_bands;
+static vector<int> vault_mon_types;
+static vector<int> vault_mon_bases;
+static vector<int> vault_mon_weights;
+static vector<bool> vault_mon_bands;
 
 #define VAULT_MON_TYPES_KEY   "vault_mon_types"
 #define VAULT_MON_BASES_KEY   "vault_mon_bases"
@@ -308,7 +308,7 @@ static int _fuzz_mons_level(int level)
             1000))
     {
         const int fuzzspan = 5;
-        const int fuzz = std::max(0, random_range(-fuzzspan, fuzzspan, 2));
+        const int fuzz = max(0, random_range(-fuzzspan, fuzzspan, 2));
 
         if (fuzz)
         {
@@ -330,7 +330,7 @@ static int _vestibule_spawn_rate()
     if (env.turns_on_level > taper_off_turn)
     {
         genodds += (env.turns_on_level - taper_off_turn);
-        genodds  = (genodds < 0 ? 20000 : std::min(genodds, 20000));
+        genodds  = (genodds < 0 ? 20000 : min(genodds, 20000));
     }
 
     return genodds;
@@ -427,9 +427,9 @@ void spawn_random_monsters()
     viewwindow();
 }
 
-static std::vector<monster_type> _find_valid_monster_types(const level_id &place)
+static vector<monster_type> _find_valid_monster_types(const level_id &place)
 {
-    static std::vector<monster_type> valid_monster_types;
+    static vector<monster_type> valid_monster_types;
     static level_id last_monster_type_place;
 
     if (last_monster_type_place == place)
@@ -496,17 +496,17 @@ static monster_type _pick_random_monster(const level_id &place, int power,
             lev_mons = new_level;
         }
 
-        lev_mons = std::min(30, lev_mons);
+        lev_mons = min(30, lev_mons);
     }
 
     int level = 0, diff, chance;
 
-    lev_mons = std::min(30, lev_mons);
+    lev_mons = min(30, lev_mons);
 
     const int n_pick_tries   = 10000;
     const int n_relax_margin = n_pick_tries / 10;
     int monster_pick_tries = 10000;
-    const std::vector<monster_type> valid_monster_types =
+    const vector<monster_type> valid_monster_types =
         _find_valid_monster_types(place);
 
     if (valid_monster_types.empty())
@@ -547,8 +547,7 @@ static monster_type _pick_random_monster(const level_id &place, int power,
         chance = mons_rarity(mon_type, place) - (diff * diff);
 
         // If we're running low on tries, remove level restrictions.
-        if ((monster_pick_tries < n_relax_margin
-             || std::abs(lev_mons - level) <= 5)
+        if ((monster_pick_tries < n_relax_margin || abs(lev_mons - level) <= 5)
             && random2avg(100, 2) <= chance)
         {
             break;
@@ -875,7 +874,7 @@ static bool _valid_monster_generation_location(const mgen_data &mg,
     // XXX: This is a little redundant with proximity checks in
     // place_monster.
     if (mg.proximity == PROX_AWAY_FROM_PLAYER
-        && distance(you.pos(), mg_pos) <= LOS_RADIUS_SQ)
+        && distance2(you.pos(), mg_pos) <= LOS_RADIUS_SQ)
     {
         return false;
     }
@@ -1047,7 +1046,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
             switch (mg.proximity)
             {
             case PROX_ANYWHERE:
-                if (distance(you.pos(), mg.pos) < dist_range(2 + random2(3)))
+                if (distance2(you.pos(), mg.pos) < dist_range(2 + random2(3)))
                     proxOK = false;
                 break;
 
@@ -1055,7 +1054,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
             case PROX_AWAY_FROM_PLAYER:
                 // If this is supposed to measure los vs not los,
                 // then see_cell(mg.pos) should be used instead. (jpeg)
-                close_to_player = (distance(you.pos(), mg.pos) <=
+                close_to_player = (distance2(you.pos(), mg.pos) <=
                                    LOS_RADIUS_SQ);
 
                 if (mg.proximity == PROX_CLOSE_TO_PLAYER && !close_to_player
@@ -1135,7 +1134,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     // Message to player from stairwell/gate appearance.
     if (you.see_cell(mg.pos) && mg.proximity == PROX_NEAR_STAIRS)
     {
-        std::string msg;
+        string msg;
 
         if (mon->visible_to(&you))
             msg = mon->name(DESC_A);
@@ -1256,7 +1255,7 @@ monster* get_free_monster()
     return NULL;
 }
 
-void mons_add_blame(monster* mon, const std::string &blame_string)
+void mons_add_blame(monster* mon, const string &blame_string)
 {
     const bool exists = mon->props.exists("blame");
     CrawlStoreValue& blame = mon->props["blame"];
@@ -1516,8 +1515,8 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
 
     if (!crawl_state.game_is_arena())
     {
-        mon->max_hit_points = std::min(mon->max_hit_points, MAX_MONSTER_HP);
-        mon->hit_points = std::min(mon->hit_points, MAX_MONSTER_HP);
+        mon->max_hit_points = min(mon->max_hit_points, MAX_MONSTER_HP);
+        mon->hit_points = min(mon->hit_points, MAX_MONSTER_HP);
     }
 
     // Store the extra flags here.
@@ -1680,7 +1679,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
            || mg.foe == MHITYOU || mg.foe == MHITNOT);
     mon->foe = mg.foe;
 
-    std::string blame_prefix;
+    string blame_prefix;
 
     if (mg.flags & MG_BAND_MINION)
         blame_prefix = "led by ";
@@ -1804,7 +1803,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
 
 monster_type pick_random_zombie()
 {
-    static std::vector<monster_type> zombifiable;
+    static vector<monster_type> zombifiable;
 
     if (zombifiable.empty())
     {
@@ -1866,7 +1865,7 @@ monster_type pick_local_zombifiable_monster(int power, bool hack_hd,
     const int eff_depth  = (crawl_state.game_is_zotdef())
                            ? (you.num_turns / (2 * ZOTDEF_CYCLE_LENGTH)) + 1
                            : absdungeon_depth(you.where_are_you, 0);
-    power = std::min(27, power);
+    power = min(27, power);
 
     // How OOD this zombie can be.
     int relax = 5;
@@ -1967,7 +1966,7 @@ void roll_zombie_hp(monster* mon)
             mons_class_name(mon->type));
     }
 
-    mon->max_hit_points = std::max(hp, 1);
+    mon->max_hit_points = max(hp, 1);
     mon->hit_points     = mon->max_hit_points;
 }
 
@@ -2016,8 +2015,8 @@ static void _roll_zombie_ac_ev(monster* mon)
 
     _roll_zombie_ac_ev_mods(mon, acmod, evmod);
 
-    mon->ac = std::max(mon->ac + acmod, 0);
-    mon->ev = std::max(mon->ev + evmod, 0);
+    mon->ac = max(mon->ac + acmod, 0);
+    mon->ev = max(mon->ev + evmod, 0);
 }
 
 void define_zombie(monster* mon, monster_type ztype, monster_type cs)
@@ -2075,8 +2074,8 @@ bool downgrade_zombie_to_skeleton(monster* mon)
 
     // Reverse the zombie AC and EV mods, since they will be replaced
     // with the skeleton AC and EV mods below.
-    mon->ac = std::max(mon->ac - acmod, 0);
-    mon->ev = std::max(mon->ev - evmod, 0);
+    mon->ac = max(mon->ac - acmod, 0);
+    mon->ev = max(mon->ev - evmod, 0);
 
     const int old_hp    = mon->hit_points;
     const int old_maxhp = mon->max_hit_points;
@@ -2092,7 +2091,7 @@ bool downgrade_zombie_to_skeleton(monster* mon)
 
     // Scale the skeleton HP to the zombie HP.
     mon->hit_points     = old_hp * mon->max_hit_points / old_maxhp;
-    mon->hit_points     = std::max(mon->hit_points, 1);
+    mon->hit_points     = max(mon->hit_points, 1);
 
     return true;
 }
@@ -2966,7 +2965,7 @@ void mark_interesting_monst(monster* mons, beh_type behaviour)
     // Don't waste time on moname() if user isn't using this option
     else if (!Options.note_monsters.empty())
     {
-        const std::string iname = mons_type_name(mons->type, DESC_A);
+        const string iname = mons_type_name(mons->type, DESC_A);
         for (unsigned i = 0; i < Options.note_monsters.size(); ++i)
         {
             if (Options.note_monsters[i].matches(iname))
@@ -3141,7 +3140,7 @@ private:
     int nfound;
 public:
     // Terrain that we can't spawn on, but that we can skip through.
-    std::set<dungeon_feature_type> passable;
+    set<dungeon_feature_type> passable;
 public:
     newmons_square_find(dungeon_feature_type grdw,
                         const coord_def &pos,
@@ -3304,7 +3303,7 @@ bool player_angers_monster(monster* mon)
 
         if (you.can_see(mon))
         {
-            const std::string mname = mon->name(DESC_THE).c_str();
+            const string mname = mon->name(DESC_THE).c_str();
 
             switch(why)
             {
@@ -3599,7 +3598,7 @@ monster_type summon_any_dragon(dragon_class_type dct)
 //
 /////////////////////////////////////////////////////////////////////////////
 
-void set_vault_mon_list(const std::vector<mons_spec> &list)
+void set_vault_mon_list(const vector<mons_spec> &list)
 {
     CrawlHashTable &props = env.properties;
 
@@ -3649,7 +3648,7 @@ void set_vault_mon_list(const std::vector<mons_spec> &list)
     setup_vault_mon_list();
 }
 
-static void _get_vault_mon_list(std::vector<mons_spec> &list)
+static void _get_vault_mon_list(vector<mons_spec> &list)
 {
     list.clear();
 
@@ -3706,7 +3705,7 @@ void setup_vault_mon_list()
     vault_mon_weights.clear();
     vault_mon_bands.clear();
 
-    std::vector<mons_spec> list;
+    vector<mons_spec> list;
     _get_vault_mon_list(list);
 
     unsigned int size = list.size();
