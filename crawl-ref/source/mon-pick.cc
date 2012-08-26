@@ -72,12 +72,12 @@ int mons_rarity(monster_type mcls, branch_type branch)
 }
 
 // only Pan currently
-monster_type pick_monster_no_rarity(const level_id &place)
+monster_type pick_monster_no_rarity(branch_type branch)
 {
-    if (!population[place.branch].count)
+    if (!population[branch].count)
         return MONS_0;
 
-    return population[place.branch].pop[random2(population[place.branch].count)].mons;
+    return population[branch].pop[random2(population[branch].count)].mons;
 }
 
 bool branch_has_monsters(branch_type branch)
