@@ -15,16 +15,16 @@
 #include "place.h"
 
 // NOTE: The lower the level the earlier a monster may appear.
-int mons_level(monster_type mcls, const level_id &place)
+int mons_level(monster_type mcls, branch_type branch)
 {
-    return branches[place.branch].mons_level_function(mcls);
+    return branches[branch].mons_level_function(mcls);
 }
 
 // NOTE: Higher values returned means the monster is "more common".
 // A return value of zero means the monster will never appear. {dlb}
-int mons_rarity(monster_type mcls, const level_id &place)
+int mons_rarity(monster_type mcls, branch_type branch)
 {
-    return branches[place.branch].mons_rarity_function(mcls);
+    return branches[branch].mons_rarity_function(mcls);
 }
 
 // only Pan currently
@@ -52,12 +52,12 @@ void debug_monpick()
 
     for (int i = 0; i < NUM_BRANCHES; ++i)
     {
-        level_id place((branch_type)i);
+        branch_type br = (branch_type)i;
 
         for (monster_type m = MONS_0; m < NUM_MONSTERS; ++m)
         {
-            int lev = mons_level(m, place);
-            int rare = mons_rarity(m, place);
+            int lev = mons_level(m, br);
+            int rare = mons_rarity(m, br);
 
             if (lev < DEPTH_NOWHERE && !rare)
             {

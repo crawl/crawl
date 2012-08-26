@@ -437,7 +437,7 @@ static std::vector<monster_type> _find_valid_monster_types(const level_id &place
 
     valid_monster_types.clear();
     for (monster_type i = MONS_0; i < NUM_MONSTERS; ++i)
-        if (mons_rarity(i, place) > 0)
+        if (mons_rarity(i, place.branch) > 0)
             valid_monster_types.push_back(i);
 
     last_monster_type_place = place;
@@ -528,7 +528,8 @@ static monster_type _pick_random_monster(const level_id &place, int power,
             continue;
         }
 
-        level = mons_level(mon_type, place) + absdungeon_depth(place.branch, 0);
+        level = mons_level(mon_type, place.branch)
+                + absdungeon_depth(place.branch, 0);
         diff = level - lev_mons;
 #ifdef ASSERTS
         if (diff && branches[place.branch].numlevels <= 1)
@@ -544,7 +545,7 @@ static monster_type _pick_random_monster(const level_id &place, int power,
         if (monster_pick_tries < n_relax_margin)
             diff = 0;
 
-        chance = mons_rarity(mon_type, place) - (diff * diff);
+        chance = mons_rarity(mon_type, place.branch) - (diff * diff);
 
         // If we're running low on tries, remove level restrictions.
         if ((monster_pick_tries < n_relax_margin
@@ -1899,7 +1900,7 @@ monster_type pick_local_zombifiable_monster(int power, bool hack_hd,
         }
 
         // Don't make out-of-rarity zombies when we don't have to.
-        if (!ignore_rarity && mons_rarity(base, place) == 0)
+        if (!ignore_rarity && mons_rarity(base, place.branch) == 0)
             continue;
 
         // Does the zombie match the parameters?
@@ -1914,11 +1915,11 @@ monster_type pick_local_zombifiable_monster(int power, bool hack_hd,
         // Check for rarity.. and OOD - identical to mons_place()
         int level, diff, chance;
 
-        level = mons_level(base, place) + eff_depth - 4;
+        level = mons_level(base, place.branch) + eff_depth - 4;
         diff  = level - power;
 
         chance = (ignore_rarity) ? 100
-                                 : mons_rarity(base, place) - (diff * diff) / 2;
+                 : mons_rarity(base, place.branch) - (diff * diff) / 2;
 
         if (power > level - relax && power < level + relax
             && random2avg(100, 2) <= chance)
