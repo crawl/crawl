@@ -1951,6 +1951,7 @@ bool fedhas_shoot_through(const bolt & beam, const monster* victim)
             && fedhas_protects(victim)
             && !beam.is_enchantment()
             && !(beam.is_explosion && beam.in_explosion_phase)
+            && beam.name != "lightning arc"
             && (mons_atts_aligned(victim->attitude, origin_attitude)
                 || victim->neutral()));
 }
