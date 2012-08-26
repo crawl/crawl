@@ -50,7 +50,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
 {
     bool effect = true;  // current behaviour is all potions id on quaffing
 
-    pow = std::min(pow, 150);
+    pow = min(pow, 150);
 
     int factor = (you.species == SP_VAMPIRE
                   && you.hunger_state < HS_SATIATED
@@ -248,7 +248,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
                  (pot_eff == POT_POISON) ? "very" : "extremely");
 
             int amount;
-            std::string msg;
+            string msg;
             if (pot_eff == POT_POISON)
             {
                 amount = 1 + random2avg(5, 2);

@@ -44,17 +44,17 @@ void wizard_change_species(void)
 
     if (specs[0] == '\0')
         return;
-    std::string spec = lowercase_string(specs);
+    string spec = lowercase_string(specs);
 
     species_type sp = SP_UNKNOWN;
 
     for (i = 0; i < NUM_SPECIES; ++i)
     {
         const species_type si = static_cast<species_type>(i);
-        const std::string sp_name = lowercase_string(species_name(si));
+        const string sp_name = lowercase_string(species_name(si));
 
-        std::string::size_type pos = sp_name.find(spec);
-        if (pos != std::string::npos)
+        string::size_type pos = sp_name.find(spec);
+        if (pos != string::npos)
         {
             if (pos == 0)
             {
@@ -290,7 +290,7 @@ void wizard_heal(bool super_heal)
 
 void wizard_set_hunger_state()
 {
-    std::string hunger_prompt =
+    string hunger_prompt =
         "Set hunger state to s(T)arving, (N)ear starving, (H)ungry";
     if (you.species == SP_GHOUL)
         hunger_prompt += " or (S)atiated";
@@ -365,8 +365,8 @@ void wizard_set_piety()
 
         mprf("Set piety to %d, interest to %d.", you.piety, newinterest);
 
-        const std::string new_xom_favour = describe_xom_favour();
-        const std::string msg = "You are now " + new_xom_favour;
+        const string new_xom_favour = describe_xom_favour();
+        const string msg = "You are now " + new_xom_favour;
         god_speaks(you.religion, msg.c_str());
         return;
     }
@@ -563,7 +563,7 @@ bool wizard_add_mutation()
     if (specs[0] == '\0')
         return false;
 
-    std::string spec = lowercase_string(specs);
+    string spec = lowercase_string(specs);
 
     mutation_type mutat = NUM_MUTATIONS;
 
@@ -593,7 +593,7 @@ bool wizard_add_mutation()
         return success;
     }
 
-    std::vector<mutation_type> partial_matches;
+    vector<mutation_type> partial_matches;
 
     for (int i = 0; i < NUM_MUTATIONS; ++i)
     {
@@ -624,13 +624,13 @@ bool wizard_add_mutation()
             mpr("No matching mutation names.");
         else
         {
-            std::vector<std::string> matches;
+            vector<string> matches;
 
             for (unsigned int i = 0; i < partial_matches.size(); ++i)
                 matches.push_back(get_mutation_def(partial_matches[i]).wizname);
 
-            std::string prefix = "No exact match for mutation '" +
-                spec +  "', possible matches are: ";
+            string prefix = "No exact match for mutation '" +
+                            spec +  "', possible matches are: ";
 
             // Use mpr_comma_separated_list() because the list
             // might be *LONG*.
@@ -783,7 +783,7 @@ static const char* dur_names[] =
 void wizard_edit_durations(void)
 {
     COMPILE_CHECK(ARRAYSZ(dur_names) == NUM_DURATIONS);
-    std::vector<int> durs;
+    vector<int> durs;
     size_t max_len = 0;
 
     for (int i = 0; i < NUM_DURATIONS; ++i)
@@ -791,7 +791,7 @@ void wizard_edit_durations(void)
         if (!you.duration[i])
             continue;
 
-        max_len = std::max(strlen(dur_names[i]), max_len);
+        max_len = max(strlen(dur_names[i]), max_len);
         durs.push_back(i);
     }
 
@@ -843,8 +843,8 @@ void wizard_edit_durations(void)
     }
     else
     {
-        std::vector<int>         matches;
-        std::vector<std::string> match_names;
+        vector<int>    matches;
+        vector<string> match_names;
         max_len = 0;
 
         for (int i = 0; i < NUM_DURATIONS; ++i)
@@ -871,7 +871,7 @@ void wizard_edit_durations(void)
         }
         else
         {
-            std::string prefix = "No exact match for duration '";
+            string prefix = "No exact match for duration '";
             prefix += buf;
             prefix += "', possible matches are: ";
 
@@ -918,12 +918,12 @@ static void debug_downtick_xl(int newxl)
     if (you.hp_max <= 0)
     {
         // ... but remove it completely if unviable
-        you.hp_max_temp = std::max(you.hp_max_temp, 0);
-        you.hp_max_perm = std::max(you.hp_max_perm, 0);
+        you.hp_max_temp = max(you.hp_max_temp, 0);
+        you.hp_max_perm = max(you.hp_max_perm, 0);
         calc_hp();
     }
 
-    you.hp       = std::max(1, you.hp);
+    you.hp       = max(1, you.hp);
 }
 
 void wizard_set_xl()
@@ -1001,7 +1001,7 @@ void wizard_transform()
 
     while (true)
     {
-        std::string line;
+        string line;
         for (int i = 0; i <= LAST_FORM; i++)
         {
             line += make_stringf("[%c] %-10s ", i + 'a',
@@ -1037,11 +1037,11 @@ void wizard_transform()
                 mpr("The force is weak with this one.");
 }
 
-static void _wizard_modify_character(std::string inputdata)
+static void _wizard_modify_character(string inputdata)
 // for now this just sets skill levels and str dex int
 // (this should be enough to debug with)
 {
-    std::vector<std::string>  tokens = split_string(" ", inputdata);
+    vector<string>  tokens = split_string(" ", inputdata);
     int size = tokens.size();
     if (size > 3 && tokens[1] == "Level") // + Level 4.0 Fighting
     {

@@ -48,7 +48,7 @@ static void _burn_tree(coord_def pos)
 spret_type conjure_flame(int pow, const coord_def& where, bool fail)
 {
     // FIXME: This would be better handled by a flag to enforce max range.
-    if (distance(where, you.pos()) > dist_range(spell_range(SPELL_CONJURE_FLAME,
+    if (distance2(where, you.pos()) > dist_range(spell_range(SPELL_CONJURE_FLAME,
                                                       pow))
         || !in_bounds(where))
     {
@@ -110,13 +110,13 @@ spret_type conjure_flame(int pow, const coord_def& where, bool fail)
         // Reinforce the cloud - but not too much.
         // It must be a fire cloud from a previous test.
         mpr("The fire roars with new energy!");
-        const int extra_dur = 2 + std::min(random2(pow) / 2, 20);
+        const int extra_dur = 2 + min(random2(pow) / 2, 20);
         env.cloud[cloud].decay += extra_dur * 5;
         env.cloud[cloud].set_whose(KC_YOU);
     }
     else
     {
-        const int durat = std::min(5 + (random2(pow)/2) + (random2(pow)/2), 23);
+        const int durat = min(5 + (random2(pow)/2) + (random2(pow)/2), 23);
         place_cloud(CLOUD_FIRE, where, durat, &you);
         mpr("The fire roars!");
     }
@@ -169,7 +169,7 @@ spret_type stinking_cloud(int pow, bolt &beem, bool fail)
 spret_type cast_big_c(int pow, cloud_type cty, const actor *caster, bolt &beam,
                       bool fail)
 {
-    if (distance(beam.target, you.pos()) > dist_range(beam.range)
+    if (distance2(beam.target, you.pos()) > dist_range(beam.range)
         || !in_bounds(beam.target))
     {
         mpr("That is beyond the maximum range.");
@@ -191,7 +191,7 @@ spret_type cast_big_c(int pow, cloud_type cty, const actor *caster, bolt &beam,
 
 static int _make_a_normal_cloud(coord_def where, int pow, int spread_rate,
                                 cloud_type ctype, const actor *agent, int colour,
-                                std::string name, std::string tile, int excl_rad)
+                                string name, string tile, int excl_rad)
 {
     place_cloud(ctype, where,
                 (3 + random2(pow / 4) + random2(pow / 4) + random2(pow / 4)),
@@ -202,7 +202,7 @@ static int _make_a_normal_cloud(coord_def where, int pow, int spread_rate,
 
 void big_cloud(cloud_type cl_type, const actor *agent,
                const coord_def& where, int pow, int size, int spread_rate,
-               int colour, std::string name, std::string tile)
+               int colour, string name, string tile)
 {
     apply_area_cloud(_make_a_normal_cloud, where, pow, size,
                      cl_type, agent, spread_rate, colour, name, tile,

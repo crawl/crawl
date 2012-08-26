@@ -114,7 +114,7 @@ skill_type weapon_skill(object_class_type wclass, int wtype);
 skill_type range_skill(const item_def &item);
 skill_type range_skill(object_class_type wclass, int wtype);
 
-bool item_skills(const item_def &item, std::set<skill_type> &skills);
+bool item_skills(const item_def &item, set<skill_type> &skills);
 void maybe_change_train(const item_def &item, bool start);
 
 // launcher and ammo functions:
@@ -178,9 +178,9 @@ int item_mass(const item_def &item);
 equipment_type get_item_slot(object_class_type type, int sub_type);
 equipment_type get_item_slot(const item_def& item);
 
-std::string item_base_name(const item_def &item);
-std::string item_base_name(object_class_type type, int sub_type);
-std::string food_type_name(int sub_type);
+string item_base_name(const item_def &item);
+string item_base_name(object_class_type type, int sub_type);
+string food_type_name(int sub_type);
 const char* weapon_base_name(uint8_t subtype);
 
 void seen_item(const item_def &item);

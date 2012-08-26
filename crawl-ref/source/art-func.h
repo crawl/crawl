@@ -281,7 +281,7 @@ static void _OLGREB_melee_effect(item_def* weapon, actor* attacker,
 
 static void _power_pluses(item_def *item)
 {
-    item->plus  = std::min(you.hp / 10, 27);
+    item->plus  = min(you.hp / 10, 27);
     item->plus2 = item->plus;
 }
 
@@ -331,8 +331,8 @@ static void _SINGING_SWORD_world_reacts(item_def *item)
     int tier = (tension <= 0) ? 1 : (tension < 40) ? 2 : 3;
     bool silent = silenced(you.pos());
 
-    std::string old_name = get_artefact_name(*item);
-    std::string new_name;
+    string old_name = get_artefact_name(*item);
+    string new_name;
     if (silent)
         new_name = "Sulking Sword";
     else if (tier < 3)
@@ -358,8 +358,8 @@ static void _SINGING_SWORD_world_reacts(item_def *item)
 
     const char *tenname[] =  {"silenced", "no_tension", "low_tension",
                               "high_tension", "SCREAM"};
-    std::string key = tenname[tier];
-    const std::string msg = getSpeakString("singing sword " + key);
+    string key = tenname[tier];
+    const string msg = getSpeakString("singing sword " + key);
     const int loudness[] = {0, 2, 15, 25, 35};
     item_noise(*item, msg, loudness[tier]);
 
@@ -437,8 +437,8 @@ static void _wucad_miscast(actor* victim, int power,int fail)
 
 static void _wucad_pluses(item_def *item)
 {
-    item->plus  = std::min(you.intel() - 3, 22);
-    item->plus2 = std::min(you.intel() / 2, 13);
+    item->plus  = min(you.intel() - 3, 22);
+    item->plus2 = min(you.intel() / 2, 13);
 }
 
 static void _WUCAD_MU_equip(item_def *item, bool *show_msgs, bool unmeld)
@@ -570,7 +570,7 @@ static void _GONG_melee_effect(item_def* item, actor* wearer,
     if (silenced(wearer->pos()))
         return;
 
-    std::string msg = getSpeakString("shield of the gong");
+    string msg = getSpeakString("shield of the gong");
     if (msg.empty())
         msg = "You hear a strange loud sound.";
     mpr(msg.c_str(), MSGCH_SOUND);
@@ -696,7 +696,7 @@ static void _WYRMBANE_melee_effect(item_def* weapon, actor* attacker,
     // * bone dragon, Serpent of Hell (20)
     // * Tiamat (22)
     // * pghosts (up to 27)
-    int hd = std::min(defender->as_monster()->hit_dice, 18);
+    int hd = min(defender->as_monster()->hit_dice, 18);
     dprf("Killed a drac with hd %d.", hd);
     bool boosted = false;
     if (weapon->plus < hd)

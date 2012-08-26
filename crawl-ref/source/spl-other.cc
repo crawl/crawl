@@ -305,7 +305,7 @@ spret_type cast_passwall(const coord_def& delta, int pow, bool fail)
         mpr("You fail to penetrate the rock.");
     else
     {
-        std::string msg;
+        string msg;
         if (grd(dest) == DNGN_DEEP_WATER)
             msg = "You sense a large body of water on the other side of the rock.";
         else if (grd(dest) == DNGN_LAVA)

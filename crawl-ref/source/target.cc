@@ -15,7 +15,7 @@
 
 #define notify_fail(x) (why_not = (x), false)
 
-static std::string _wallmsg(coord_def c)
+static string _wallmsg(coord_def c)
 {
     ASSERT(map_bounds(c)); // there'd be an information leak
     const char *wall = feat_type_name(grd(c));
@@ -87,7 +87,7 @@ bool targetter_beam::set_aim(coord_def a)
     {
         bolt tempbeam2 = beam;
         tempbeam2.target = origin;
-        for (std::vector<coord_def>::const_iterator i = path_taken.begin();
+        for (vector<coord_def>::const_iterator i = path_taken.begin();
              i != path_taken.end(); ++i)
         {
             if (cell_is_solid(*i)
@@ -129,7 +129,7 @@ aff_type targetter_beam::is_affected(coord_def loc)
     bool on_path = false;
     coord_def c;
     aff_type current = AFF_YES;
-    for (std::vector<coord_def>::const_iterator i = path_taken.begin();
+    for (vector<coord_def>::const_iterator i = path_taken.begin();
          i != path_taken.end(); ++i)
     {
         if (cell_is_solid(*i)
@@ -192,7 +192,7 @@ bool targetter_imb::set_aim(coord_def a)
     if (!targetter_beam::set_aim(a))
         return false;
 
-    std::vector<coord_def> cur_path;
+    vector<coord_def> cur_path;
 
     splash.clear();
     splash2.clear();
@@ -206,7 +206,7 @@ bool targetter_imb::set_aim(coord_def a)
     coord_def c;
     bool first = true;
 
-    for (std::vector<coord_def>::iterator i = path_taken.begin();
+    for (vector<coord_def>::iterator i = path_taken.begin();
          i != path_taken.end(); i++)
     {
         c = *i;
@@ -216,7 +216,7 @@ bool targetter_imb::set_aim(coord_def a)
             && c != end)
             continue;
 
-        std::vector<coord_def> *which_splash = (first) ? &splash : &splash2;
+        vector<coord_def> *which_splash = (first) ? &splash : &splash2;
 
         for (adjacent_iterator ai(c); ai; ++ai)
         {
@@ -244,13 +244,13 @@ aff_type targetter_imb::is_affected(coord_def loc)
     if (from_path != AFF_NO)
         return from_path;
 
-    for (std::vector<coord_def>::const_iterator i = splash.begin();
+    for (vector<coord_def>::const_iterator i = splash.begin();
          i != splash.end(); ++i)
     {
         if (*i == loc)
             return cell_is_solid(*i) ? AFF_NO : AFF_MAYBE;
     }
-    for (std::vector<coord_def>::const_iterator i = splash2.begin();
+    for (vector<coord_def>::const_iterator i = splash2.begin();
          i != splash2.end(); ++i)
     {
         if (*i == loc)
@@ -504,7 +504,7 @@ bool targetter_cloud::set_aim(coord_def a)
 
     seen.clear();
     queue.clear();
-    queue.push_back(std::vector<coord_def>());
+    queue.push_back(vector<coord_def>());
 
     int placed = 0;
     queue[0].push_back(a);
@@ -539,7 +539,7 @@ aff_type targetter_cloud::is_affected(coord_def loc)
     if (!valid_aim(aim))
         return AFF_NO;
 
-    std::map<coord_def, aff_type>::const_iterator it = seen.find(loc);
+    map<coord_def, aff_type>::const_iterator it = seen.find(loc);
     if (it == seen.end() || it->second <= 0) // AFF_TRACER is used privately
         return AFF_NO;
 

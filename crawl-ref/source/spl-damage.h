@@ -50,7 +50,7 @@ spret_type cast_thunderbolt(actor *caster, int pow, coord_def aim,
                             bool fail = false);
 
 actor* forest_near_enemy(const actor *mon);
-void forest_message(const coord_def pos, const std::string &msg,
+void forest_message(const coord_def pos, const string &msg,
                     msg_channel_type ch = MSGCH_PLAIN);
-                    void forest_damage(const actor *mon);
+void forest_damage(const actor *mon);
 #endif

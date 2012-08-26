@@ -3,8 +3,7 @@
 
 #include "coord-circle.h"
 
-class rectangle_iterator :
-    public std::iterator<std::forward_iterator_tag, coord_def>
+class rectangle_iterator : public iterator<forward_iterator_tag, coord_def>
 {
 public:
     rectangle_iterator(const coord_def& corner1, const coord_def& corner2);
@@ -43,8 +42,7 @@ public:
  * centered at the same point), and to exclude the center.
  */
 class los_base;
-class radius_iterator : public std::iterator<std::forward_iterator_tag,
-                        coord_def>
+class radius_iterator : public iterator<forward_iterator_tag, coord_def>
 {
 public:
     // General constructor.
@@ -100,8 +98,7 @@ public:
  *                  iterators, it tries hard to not favorize any particular
  *                  direction (unless fair = false, when it saves some CPU).
  */
-class distance_iterator :
-    public std::iterator<std::forward_iterator_tag, coord_def>
+class distance_iterator : public iterator<forward_iterator_tag, coord_def>
 {
 public:
     distance_iterator(const coord_def& _center,
@@ -117,7 +114,7 @@ public:
     int radius() const;
 private:
     coord_def center, current;
-    std::vector<coord_def> lists[3], *vcur, *vnear, *vfar;
+    vector<coord_def> lists[3], *vcur, *vnear, *vfar;
     int r, max_radius;
     int threshold;
     unsigned int icur, iend;

@@ -33,13 +33,12 @@
 
 static armour_type _get_random_armour_type(int item_level);
 
-int create_item_named(std::string name, coord_def p,
-                      std::string *error)
+int create_item_named(string name, coord_def p, string *error)
 {
     trim_string(name);
 
     item_list ilist;
-    const std::string err = ilist.add_item(name, false);
+    const string err = ilist.add_item(name, false);
     if (!err.empty())
     {
         if (error)
@@ -87,7 +86,7 @@ static int _weapon_colour(const item_def &item)
     int item_colour = BLACK;
     // fixed artefacts get predefined colours
 
-    std::string itname = item.name(DESC_PLAIN);
+    string itname = item.name(DESC_PLAIN);
     lowercase(itname);
 
     if (is_artefact(item))
@@ -184,7 +183,7 @@ static int _missile_colour(const item_def &item)
 static int _armour_colour(const item_def &item)
 {
     int item_colour = BLACK;
-    std::string itname = item.name(DESC_PLAIN);
+    string itname = item.name(DESC_PLAIN);
     lowercase(itname);
 
     switch (item.sub_type)
@@ -2833,7 +2832,7 @@ static void _generate_book_item(item_def& item, bool allow_uniques,
         make_book_theme_randart(item, 0, 0, 5 + coinflip(), 20);
     else if (item.sub_type == BOOK_RANDART_LEVEL)
     {
-        int max_level  = std::min(9, std::max(1, item_level / 3));
+        int max_level  = min(9, max(1, item_level / 3));
         int spl_level  = random_range(1, max_level);
         make_book_level_randart(item, spl_level);
     }

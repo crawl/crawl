@@ -387,7 +387,7 @@ void tag_followers()
     const int radius2 = follower_tag_radius2();
     int n_followers = 18;
 
-    std::vector<coord_def> places[2];
+    vector<coord_def> places[2];
     int place_set = 0;
 
     places[place_set].push_back(you.pos());

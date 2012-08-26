@@ -65,7 +65,7 @@ static map_vector vdefs;
 // Parameter array that vault code can use.
 string_vector map_parameters;
 
-dgn_map_parameters::dgn_map_parameters(const std::string &astring)
+dgn_map_parameters::dgn_map_parameters(const string &astring)
     : mpar(map_parameters)
 {
     map_parameters.push_back(astring);
@@ -141,7 +141,7 @@ static void _dgn_flush_map_environments()
     dlua.callfn("dgn_flush_map_environments", 0, 0);
 }
 
-static void _dgn_flush_map_environment_for(const std::string &mapname)
+static void _dgn_flush_map_environment_for(const string &mapname)
 {
     dlua.callfn("dgn_flush_map_environment_for", "s", mapname.c_str());
 }
@@ -151,7 +151,7 @@ static bool _resolve_map_lua(map_def &map)
     _dgn_flush_map_environment_for(map.name);
     map.reinit();
 
-    std::string err = map.run_lua(true);
+    string err = map.run_lua(true);
     if (!err.empty())
     {
 #ifdef DEBUG_DIAGNOSTICS
@@ -281,16 +281,16 @@ bool resolve_subvault(map_def &map)
 
     int min_mismatch = mismatch[0];
     if (can_hmirror)
-        min_mismatch = std::min(min_mismatch, mismatch[1]);
+        min_mismatch = min(min_mismatch, mismatch[1]);
     if (can_hmirror && can_vmirror)
-        min_mismatch = std::min(min_mismatch, mismatch[2]);
+        min_mismatch = min(min_mismatch, mismatch[2]);
     if (can_vmirror)
-        min_mismatch = std::min(min_mismatch, mismatch[3]);
+        min_mismatch = min(min_mismatch, mismatch[3]);
 
     // Pick a mirror combination with the minimum number of mismatches.
-    min_mismatch = std::min(min_mismatch, mismatch[2]);
+    min_mismatch = min(min_mismatch, mismatch[2]);
     if (!map.has_tag("no_vmirror"))
-        min_mismatch = std::min(min_mismatch, mismatch[3]);
+        min_mismatch = min(min_mismatch, mismatch[3]);
 
     // Pick a mirror combination with the minimum number of mismatches.
     int idx = random2(4);
@@ -397,7 +397,7 @@ static bool _map_safe_vault_place(const map_def &map,
     const bool water_ok =
         map.has_tag("water_ok") || player_in_branch(BRANCH_SWAMP);
 
-    const std::vector<std::string> &lines = map.map.get_lines();
+    const vector<string> &lines = map.map.get_lines();
     for (rectangle_iterator ri(c, c + size - 1); ri; ++ri)
     {
         const coord_def cp(*ri);
@@ -453,7 +453,7 @@ static bool _connected_minivault_place(const coord_def &c,
 
     // Must not be completely isolated.
     const bool water_ok = place.map.has_tag("water_ok");
-    const std::vector<std::string> &lines = place.map.map.get_lines();
+    const vector<string> &lines = place.map.map.get_lines();
 
     for (rectangle_iterator ri(c, c + place.size - 1); ri; ++ri)
     {
@@ -477,10 +477,9 @@ static coord_def _find_minivault_place(
 {
     if (place.map.has_tag("replace_portal"))
     {
-        std::vector<map_marker*> markers =
-            env.markers.get_all(MAT_LUA_MARKER);
-        std::vector<coord_def> candidates;
-        for (std::vector<map_marker*>::iterator it = markers.begin();
+        vector<map_marker*> markers = env.markers.get_all(MAT_LUA_MARKER);
+        vector<coord_def> candidates;
+        for (vector<map_marker*>::iterator it = markers.begin();
              it != markers.end(); it++)
         {
             if ((*it)->property("portal") != "")
@@ -640,7 +639,7 @@ static bool _map_matches_species(const map_def &map)
            + lowercase_string(get_species_abbrev(you.species)));
 }
 
-const map_def *find_map_by_name(const std::string &name)
+const map_def *find_map_by_name(const string &name)
 {
     for (unsigned i = 0, size = vdefs.size(); i < size; ++i)
         if (vdefs[i].name == name)
@@ -657,17 +656,17 @@ void strip_all_maps()
         vdefs[i].strip();
 }
 
-std::vector<std::string> find_map_matches(const std::string &name)
+vector<string> find_map_matches(const string &name)
 {
-    std::vector<std::string> matches;
+    vector<string> matches;
 
     for (unsigned i = 0, size = vdefs.size(); i < size; ++i)
-        if (vdefs[i].name.find(name) != std::string::npos)
+        if (vdefs[i].name.find(name) != string::npos)
             matches.push_back(vdefs[i].name);
     return matches;
 }
 
-mapref_vector find_maps_for_tag(const std::string tag,
+mapref_vector find_maps_for_tag(const string tag,
                                 bool check_depth,
                                 bool check_used)
 {
@@ -725,7 +724,7 @@ public:
                             true);
     }
 
-    static map_selector by_tag(const std::string &_tag,
+    static map_selector by_tag(const string &_tag,
                                bool _check_depth,
                                bool _check_chance,
                                const level_id &_place = level_id::current())
@@ -738,7 +737,7 @@ public:
 
 private:
     map_selector(select_type _typ, const level_id &_pl,
-                 const std::string &_tag,
+                 const string &_tag,
                  bool _mini, bool _check_depth)
         : ignore_chance(false), preserve_dummy(false),
           sel(_typ), place(_pl), tag(_tag),
@@ -757,7 +756,7 @@ public:
     bool preserve_dummy;
     const select_type sel;
     const level_id place;
-    const std::string tag;
+    const string tag;
     const bool mini;
     const bool check_depth;
     const bool check_layout;
@@ -855,11 +854,11 @@ void map_selector::announce(const map_def *vault) const
 #endif
 }
 
-static std::string _vault_chance_tag(const map_def &map)
+static string _vault_chance_tag(const map_def &map)
 {
     if (map.has_tag_prefix("chance_"))
     {
-        const std::vector<std::string> tags = map.get_tags();
+        const vector<string> tags = map.get_tags();
         for (int i = 0, size = tags.size(); i < size; ++i)
         {
             if (tags[i].find("chance_") == 0)
@@ -869,7 +868,7 @@ static std::string _vault_chance_tag(const map_def &map)
     return "";
 }
 
-typedef std::vector<unsigned> vault_indices;
+typedef vector<unsigned> vault_indices;
 
 static vault_indices _eligible_maps_for_selector(const map_selector &sel)
 {
@@ -889,7 +888,7 @@ static const map_def *_random_map_by_selector(const map_selector &sel);
 
 static bool _vault_chance_new(const map_def &map,
                               const level_id &place,
-                              std::set<std::string> &chance_tags)
+                              set<string> &chance_tags)
 {
     if (map.chance(place).valid())
     {
@@ -899,7 +898,7 @@ static bool _vault_chance_new(const map_def &map,
         // CHANCE, and a common chance_xxx tag. Pick the
         // first such vault for the chance roll. Note that
         // at this point we ignore chance_priority.
-        const std::string tag = _vault_chance_tag(map);
+        const string tag = _vault_chance_tag(map);
         if (chance_tags.find(tag) == chance_tags.end())
         {
             if (!tag.empty())
@@ -946,7 +945,7 @@ private:
     }
 
 private:
-    const std::vector<const map_def *> &maps;
+    const vector<const map_def *> &maps;
     level_id place;
     mapref_vector::const_iterator current;
     mapref_vector::const_iterator end;
@@ -955,7 +954,7 @@ private:
 static const map_def *_resolve_chance_vault(const map_selector &sel,
                                             const map_def *map)
 {
-    const std::string chance_tag = _vault_chance_tag(*map);
+    const string chance_tag = _vault_chance_tag(*map);
     // If this map has a chance_ tag, convert the search into
     // a lookup for that tag.
     if (!chance_tag.empty())
@@ -977,7 +976,7 @@ _random_chance_maps_in_list(const map_selector &sel,
     mapref_vector chance;
     mapref_vector chosen_chances;
 
-    typedef std::set<std::string> tag_set;
+    typedef set<string> tag_set;
     tag_set chance_tags;
 
     for (unsigned f = 0, size = filtered.size(); f < size; ++f)
@@ -1013,7 +1012,7 @@ _random_map_in_list(const map_selector &sel,
     // Vaults that are eligible and have >0 chance.
     mapref_vector chance;
 
-    typedef std::set<std::string> tag_set;
+    typedef set<string> tag_set;
     tag_set chance_tags;
 
     for (unsigned f = 0, size = filtered.size(); f < size; ++f)
@@ -1091,7 +1090,7 @@ mapref_vector random_chance_maps_in_depth(const level_id &place)
     return _random_chance_maps_in_list(sel, eligible);
 }
 
-const map_def *random_map_for_tag(const std::string &tag,
+const map_def *random_map_for_tag(const string &tag,
                                   bool check_depth,
                                   bool check_chance)
 {
@@ -1104,7 +1103,7 @@ int map_count()
     return vdefs.size();
 }
 
-int map_count_for_tag(const std::string &tag,
+int map_count_for_tag(const string &tag,
                       bool check_depth)
 {
     return _eligible_maps_for_selector(
@@ -1115,18 +1114,18 @@ int map_count_for_tag(const std::string &tag,
 // Reading maps from .des files.
 
 // All global preludes.
-static std::vector<dlua_chunk> global_preludes;
+static vector<dlua_chunk> global_preludes;
 
 // Map-specific prelude.
 dlua_chunk lc_global_prelude("global_prelude");
-std::string lc_desfile;
+string lc_desfile;
 map_def     lc_map;
 level_range lc_range;
 depth_ranges lc_default_depths;
 bool lc_run_global_prelude = true;
 map_load_info_t lc_loaded_maps;
 
-static std::set<std::string> map_files_read;
+static set<string> map_files_read;
 
 extern int yylineno;
 
@@ -1145,7 +1144,7 @@ static void _reset_map_parser()
 
 static bool checked_des_index_dir = false;
 
-static std::string _des_cache_dir(const std::string &relpath = "")
+static string _des_cache_dir(const string &relpath = "")
 {
     return catpath(savedir_versioned_path("des"), relpath);
 }
@@ -1155,22 +1154,20 @@ static void _check_des_index_dir()
     if (checked_des_index_dir)
         return;
 
-    std::string desdir = _des_cache_dir();
+    string desdir = _des_cache_dir();
     if (!check_mkdir("Data file cache", &desdir, true))
         end(1, true, "Can't create data file cache: %s", desdir.c_str());
 
     checked_des_index_dir = true;
 }
 
-std::string get_descache_path(const std::string &file,
-                              const std::string &ext)
+string get_descache_path(const string &file, const string &ext)
 {
-    const std::string basename =
-        change_file_extension(get_base_filename(file), ext);
+    const string basename = change_file_extension(get_base_filename(file), ext);
     return _des_cache_dir(basename);
 }
 
-static bool verify_file_version(const std::string &file, time_t mtime)
+static bool verify_file_version(const string &file, time_t mtime)
 {
     FILE *fp = fopen_u(file.c_str(), "rb");
     if (!fp)
@@ -1193,18 +1190,18 @@ static bool verify_file_version(const std::string &file, time_t mtime)
     }
 }
 
-static bool _verify_map_index(const std::string &base, time_t mtime)
+static bool _verify_map_index(const string &base, time_t mtime)
 {
     return verify_file_version(base + ".idx", mtime);
 }
 
-static bool _verify_map_full(const std::string &base, time_t mtime)
+static bool _verify_map_full(const string &base, time_t mtime)
 {
     return verify_file_version(base + ".dsc", mtime);
 }
 
-static bool _load_map_index(const std::string& cache, const std::string &base,
-                           time_t mtime)
+static bool _load_map_index(const string& cache, const string &base,
+                            time_t mtime)
 {
     // If there's a global prelude, load that first.
     {
@@ -1253,16 +1250,16 @@ static bool _load_map_index(const std::string& cache, const std::string &base,
     return true;
 }
 
-static bool _load_map_cache(const std::string &filename, const std::string &cachename)
+static bool _load_map_cache(const string &filename, const string &cachename)
 {
     _check_des_index_dir();
-    const std::string descache_base = get_descache_path(cachename, "");
+    const string descache_base = get_descache_path(cachename, "");
 
     file_lock deslock(descache_base + ".lk", "rb", false);
 
     time_t mtime = file_modtime(filename);
-    std::string file_idx = descache_base + ".idx";
-    std::string file_dsc = descache_base + ".dsc";
+    string file_idx = descache_base + ".idx";
+    string file_dsc = descache_base + ".dsc";
 
     // What's the point in checking these twice (here and in load_ma_index)?
     if (!_verify_map_index(descache_base, mtime)
@@ -1274,9 +1271,9 @@ static bool _load_map_cache(const std::string &filename, const std::string &cach
     return _load_map_index(cachename, descache_base, mtime);
 }
 
-static void _write_map_prelude(const std::string &filebase, time_t mtime)
+static void _write_map_prelude(const string &filebase, time_t mtime)
 {
-    const std::string luafile = filebase + ".lux";
+    const string luafile = filebase + ".lux";
     if (lc_global_prelude.empty())
     {
         unlink_u(luafile.c_str());
@@ -1292,10 +1289,10 @@ static void _write_map_prelude(const std::string &filebase, time_t mtime)
     fclose(fp);
 }
 
-static void _write_map_full(const std::string &filebase, size_t vs, size_t ve,
+static void _write_map_full(const string &filebase, size_t vs, size_t ve,
                             time_t mtime)
 {
-    const std::string cfile = filebase + ".dsc";
+    const string cfile = filebase + ".dsc";
     FILE *fp = fopen_u(cfile.c_str(), "wb");
     if (!fp)
         end(1, true, "Unable to open %s for writing", cfile.c_str());
@@ -1309,10 +1306,10 @@ static void _write_map_full(const std::string &filebase, size_t vs, size_t ve,
     fclose(fp);
 }
 
-static void _write_map_index(const std::string &filebase, size_t vs, size_t ve,
+static void _write_map_index(const string &filebase, size_t vs, size_t ve,
                              time_t mtime)
 {
-    const std::string cfile = filebase + ".idx";
+    const string cfile = filebase + ".idx";
     FILE *fp = fopen_u(cfile.c_str(), "wb");
     if (!fp)
         end(1, true, "Unable to open %s for writing", cfile.c_str());
@@ -1332,12 +1329,12 @@ static void _write_map_index(const std::string &filebase, size_t vs, size_t ve,
     fclose(fp);
 }
 
-static void _write_map_cache(const std::string &filename, size_t vs, size_t ve,
+static void _write_map_cache(const string &filename, size_t vs, size_t ve,
                              time_t mtime)
 {
     _check_des_index_dir();
 
-    const std::string descache_base = get_descache_path(filename, "");
+    const string descache_base = get_descache_path(filename, "");
 
     file_lock deslock(descache_base + ".lk", "wb");
 
@@ -1346,9 +1343,9 @@ static void _write_map_cache(const std::string &filename, size_t vs, size_t ve,
     _write_map_index(descache_base, vs, ve, mtime);
 }
 
-static void _parse_maps(const std::string &s)
+static void _parse_maps(const string &s)
 {
-    std::string cache_name = get_cache_name(s);
+    string cache_name = get_cache_name(s);
     if (map_files_read.find(cache_name) != map_files_read.end())
         return;
 
@@ -1381,7 +1378,7 @@ static void _parse_maps(const std::string &s)
     _write_map_cache(cache_name, file_start, vdefs.size(), mtime);
 }
 
-void read_map(const std::string &file)
+void read_map(const string &file)
 {
     _parse_maps(lc_desfile = datafile_path(file));
     _dgn_flush_map_environments();
@@ -1455,7 +1452,7 @@ void run_map_local_preludes()
     {
         if (!vdefs[i].prelude.empty())
         {
-            std::string err = vdefs[i].run_lua(true);
+            string err = vdefs[i].run_lua(true);
             if (!err.empty())
                 mprf(MSGCH_ERROR, "Lua error (map %s): %s",
                      vdefs[i].name.c_str(), err.c_str());
@@ -1473,8 +1470,8 @@ const map_def *map_by_index(int index)
 
 #ifdef DEBUG_DIAGNOSTICS
 
-typedef std::pair<std::string, int> weighted_map_name;
-typedef std::vector<weighted_map_name> weighted_map_names;
+typedef pair<string, int> weighted_map_name;
+typedef vector<weighted_map_name> weighted_map_names;
 
 static weighted_map_names mg_find_random_vaults(
     const level_id &place, bool wantmini)
@@ -1484,7 +1481,7 @@ static weighted_map_names mg_find_random_vaults(
     if (!place.is_valid())
         return wms;
 
-    typedef std::map<std::string, int> map_count_t;
+    typedef map<string, int> map_count_t;
 
     map_count_t map_counts;
 
@@ -1523,18 +1520,16 @@ static void _mg_report_random_vaults(
     FILE *outf, const level_id &place, bool wantmini)
 {
     weighted_map_names wms = mg_find_random_vaults(place, wantmini);
-    std::sort(wms.begin(), wms.end(), _weighted_map_more_likely);
+    sort(wms.begin(), wms.end(), _weighted_map_more_likely);
     int weightsum = 0;
     for (int i = 0, size = wms.size(); i < size; ++i)
         weightsum += wms[i].second;
 
-    std::string line;
+    string line;
     for (int i = 0, size = wms.size(); i < size; ++i)
     {
-        std::string curr =
-            make_stringf("%s (%.2f%%)",
-                         wms[i].first.c_str(),
-                         100.0 * wms[i].second / weightsum);
+        string curr = make_stringf("%s (%.2f%%)", wms[i].first.c_str(),
+                                   100.0 * wms[i].second / weightsum);
         if (i < size - 1)
             curr += ", ";
         if (line.length() + curr.length() > 80u)

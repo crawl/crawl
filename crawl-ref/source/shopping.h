@@ -25,8 +25,8 @@ shop_struct *get_shop(const coord_def& where);
 
 void destroy_shop_at(coord_def p);
 
-std::string shop_name(const coord_def& where);
-std::string shop_name(const coord_def& where, bool add_stop);
+string shop_name(const coord_def& where);
+string shop_name(const coord_def& where, bool add_stop);
 
 bool shoptype_identifies_stock(shop_type type);
 
@@ -44,14 +44,14 @@ public:
 
     bool add_thing(const item_def &item, int cost,
                    const level_pos* pos = NULL);
-    bool add_thing(std::string desc, std::string buy_verb, int cost,
+    bool add_thing(string desc, string buy_verb, int cost,
                    const level_pos* pos = NULL);
 
     bool is_on_list(const item_def &item, const level_pos* pos = NULL) const;
-    bool is_on_list(std::string desc, const level_pos* pos = NULL) const;
+    bool is_on_list(string desc, const level_pos* pos = NULL) const;
 
     bool del_thing(const item_def &item, const level_pos* pos = NULL);
-    bool del_thing(std::string desc, const level_pos* pos = NULL);
+    bool del_thing(string desc, const level_pos* pos = NULL);
 
     void del_things_from(const level_id &lid);
 
@@ -82,24 +82,23 @@ private:
 
 private:
     int find_thing(const item_def &item, const level_pos &pos) const;
-    int find_thing(const std::string &desc, const level_pos &pos) const;
+    int find_thing(const string &desc, const level_pos &pos) const;
     void del_thing_at_index(int idx);
 
     void fill_out_menu(Menu& shopmenu);
 
     static       bool        thing_is_item(const CrawlHashTable& thing);
     static const item_def&   get_thing_item(const CrawlHashTable& thing);
-    static       std::string get_thing_desc(const CrawlHashTable& thing);
+    static       string get_thing_desc(const CrawlHashTable& thing);
 
     static int       thing_cost(const CrawlHashTable& thing);
     static level_pos thing_pos(const CrawlHashTable& thing);
 
-    static std::string name_thing(const CrawlHashTable& thing,
-                                  description_level_type descrip = DESC_PLAIN);
-    static std::string describe_thing(const CrawlHashTable& thing,
-                                  description_level_type descrip = DESC_PLAIN);
-    static std::string item_name_simple(const item_def& item,
-                                        bool ident = false);
+    static string name_thing(const CrawlHashTable& thing,
+                             description_level_type descrip = DESC_PLAIN);
+    static string describe_thing(const CrawlHashTable& thing,
+                                 description_level_type descrip = DESC_PLAIN);
+    static string item_name_simple(const item_def& item, bool ident = false);
 };
 
 extern ShoppingList shopping_list;

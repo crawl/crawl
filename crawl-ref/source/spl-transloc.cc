@@ -64,7 +64,7 @@ spret_type cast_controlled_blink(int pow, bool fail)
 // a monster being at the target spot), and the player gains no
 // contamination.
 int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
-          std::string *pre_msg)
+          string *pre_msg)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -865,13 +865,13 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
     // The maximum number of squares the item will actually move, always
     // at least one square.
     int quantity = item.quantity;
-    int apported_mass = unit_mass * std::min(quantity, max_units);
+    int apported_mass = unit_mass * min(quantity, max_units);
 
-    int max_dist = std::max(60 * pow / (apported_mass + 150), 1);
+    int max_dist = max(60 * pow / (apported_mass + 150), 1);
 
     dprf("Apport dist=%d, max_dist=%d", dist, max_dist);
 
-    int location_on_path = std::max(-1, dist - max_dist);
+    int location_on_path = max(-1, dist - max_dist);
     // Don't move mimics under you.
     if ((item.flags & ISFLAG_MIMIC) && location_on_path == -1)
         location_on_path = 0;
@@ -946,7 +946,7 @@ static bool _quadrant_blink(coord_def dir, int pow)
         }
 
         // ... which is close enough, but also far enough from us.
-        if (distance(base, target) > 10 || distance(you.pos(), target) < 8)
+        if (distance2(base, target) > 10 || distance2(you.pos(), target) < 8)
             continue;
 
         if (!you.see_cell_no_trans(target))

@@ -278,8 +278,7 @@ static bool _is_level_exit(const coord_def& pos)
 }
 
 // Returns true if a monster left the level.
-bool pacified_leave_level(monster* mon, std::vector<level_exit> e,
-                          int e_index)
+bool pacified_leave_level(monster* mon, vector<level_exit> e, int e_index)
 {
     // If a pacified monster is leaving the level, and has reached an
     // exit (whether that exit was its target or not), handle it here.
@@ -287,7 +286,7 @@ bool pacified_leave_level(monster* mon, std::vector<level_exit> e,
     // player, make it leave the level.
     if (_is_level_exit(mon->pos())
         || (e_index != -1 && mon->pos() == e[e_index].target)
-        || distance(mon->pos(), you.pos()) >= dist_range(LOS_RADIUS * 4))
+        || distance2(mon->pos(), you.pos()) >= dist_range(LOS_RADIUS * 4))
     {
         make_mons_leave_level(mon);
         return true;
@@ -642,7 +641,7 @@ static bool _choose_random_patrol_target_grid(monster* mon)
         return true;
 
     // If there's no chance we'll find the patrol point, quit right away.
-    if (distance(mon->pos(), mon->patrol_point) > dist_range(2 * LOS_RADIUS))
+    if (distance2(mon->pos(), mon->patrol_point) > dist_range(2 * LOS_RADIUS))
         return false;
 
     // Can the monster see the patrol point from its current position?
@@ -887,7 +886,7 @@ static bool _band_wander_target(monster * mon)
         return true;
     }
 
-    std::vector<coord_def> positions;
+    vector<coord_def> positions;
 
     for (radius_iterator r_it(mon->get_los_no_trans(), mon); r_it; ++r_it)
     {
@@ -911,8 +910,8 @@ static bool _band_wander_target(monster * mon)
 // Returns true if a movement target still needs to be set
 static bool _herd_wander_target(monster * mon)
 {
-    std::vector<monster_iterator> friends;
-    std::map<int, std::vector<coord_def> > distance_positions;
+    vector<monster_iterator> friends;
+    map<int, vector<coord_def> > distance_positions;
 
     int dist_thresh = LOS_RADIUS + HERD_COMFORT_RANGE;
 
@@ -948,7 +947,7 @@ static bool _herd_wander_target(monster * mon)
         if (count > 0)
             distance_positions[count].push_back(*r_it);
     }
-    std::map<int, std::vector<coord_def> >::reverse_iterator back =
+    map<int, vector<coord_def> >::reverse_iterator back =
         distance_positions.rbegin();
 
     if (back == distance_positions.rend())
@@ -1050,7 +1049,7 @@ void check_wander_target(monster* mon, bool isPacified)
     }
 }
 
-static void _find_all_level_exits(std::vector<level_exit> &e)
+static void _find_all_level_exits(vector<level_exit> &e)
 {
     e.clear();
 
@@ -1064,8 +1063,7 @@ static void _find_all_level_exits(std::vector<level_exit> &e)
     }
 }
 
-int mons_find_nearest_level_exit(const monster* mon,
-                                 std::vector<level_exit> &e,
+int mons_find_nearest_level_exit(const monster* mon, vector<level_exit> &e,
                                  bool reset)
 {
     if (e.empty() || reset)
@@ -1079,7 +1077,7 @@ int mons_find_nearest_level_exit(const monster* mon,
         if (e[i].unreachable)
             continue;
 
-        int dist = distance(mon->pos(), e[i].target);
+        int dist = distance2(mon->pos(), e[i].target);
 
         if (old_dist == -1 || old_dist >= dist)
         {
@@ -1107,7 +1105,7 @@ void set_random_slime_target(monster* mon)
     for (radius_iterator ri(mon->get_los()); ri; ++ri)
     {
         // XXX: an iterator that spirals out would be nice.
-        if (!in_bounds(*ri) || distance(pos, *ri) >= mindist)
+        if (!in_bounds(*ri) || distance2(pos, *ri) >= mindist)
             continue;
         if (testbits(env.pgrid(*ri), FPROP_NO_JIYVA))
             continue;
@@ -1118,7 +1116,7 @@ void set_random_slime_target(monster* mon)
             if (is_item_jelly_edible(item))
             {
                 mon->target = *ri;
-                mindist = distance(pos, *ri);
+                mindist = distance2(pos, *ri);
                 break;
             }
         }

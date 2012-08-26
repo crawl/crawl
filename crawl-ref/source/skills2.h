@@ -37,19 +37,19 @@ int get_skill_progress(skill_type sk, int level, int points, int scale);
 int get_skill_progress(skill_type sk, int scale);
 int get_skill_percentage(const skill_type x);
 const char *skill_name(skill_type which_skill);
-skill_type str_to_skill(const std::string &skill);
+skill_type str_to_skill(const string &skill);
 
-std::string skill_title(
+string skill_title(
     skill_type best_skill, uint8_t skill_lev,
     // these used for ghosts and hiscores:
     int species = -1, int str = -1, int dex = -1, int god = -1);
-std::string skill_title_by_rank(
+string skill_title_by_rank(
     skill_type best_skill, uint8_t skill_rank,
     // these used for ghosts and hiscores:
     int species = -1, int str = -1, int dex = -1, int god = -1);
 unsigned get_skill_rank(unsigned skill_lev);
 
-std::string player_title();
+string player_title();
 
 skill_type best_skill(skill_type min_skill, skill_type max_skill,
                       skill_type excl_skill = SK_NONE);
@@ -71,7 +71,7 @@ bool is_antitrained(skill_type sk);
 bool antitrain_other(skill_type sk, bool show_zero);
 
 void skill_menu(int flag = 0, int exp = 0);
-void dump_skills(std::string &text);
+void dump_skills(string &text);
 int skill_transfer_amount(skill_type sk);
 int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
                           bool simu, bool boost = false);

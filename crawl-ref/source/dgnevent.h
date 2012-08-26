@@ -77,7 +77,7 @@ struct dgn_square_alarm
     dgn_square_alarm() : eventmask(0), listeners() { }
 
     unsigned eventmask;
-    std::list<dgn_event_listener*> listeners;
+    list<dgn_event_listener*> listeners;
 };
 
 struct dgn_listener_def
@@ -129,8 +129,8 @@ private:
 
 private:
     unsigned global_event_mask;
-    std::auto_ptr<dgn_square_alarm> grid_triggers[GXM][GYM];
-    std::list<dgn_listener_def> listeners;
+    auto_ptr<dgn_square_alarm> grid_triggers[GXM][GYM];
+    list<dgn_listener_def> listeners;
 };
 
 extern dgn_event_dispatcher dungeon_events;

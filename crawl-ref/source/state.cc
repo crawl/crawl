@@ -48,7 +48,7 @@ game_state::game_state()
     reset_cmd_again();
 }
 
-void game_state::add_startup_error(const std::string &err)
+void game_state::add_startup_error(const string &err)
 {
     startup_errors.push_back(err);
 }
@@ -84,7 +84,7 @@ bool game_state::is_repeating_cmd() const
     return (repeat_cmd != CMD_NO_CMD);
 }
 
-void game_state::cancel_cmd_repeat(std::string reason)
+void game_state::cancel_cmd_repeat(string reason)
 {
     if (!is_repeating_cmd())
         return;
@@ -118,7 +118,7 @@ void game_state::cancel_cmd_repeat(std::string reason)
         mpr(reason.c_str());
 }
 
-void game_state::cancel_cmd_again(std::string reason)
+void game_state::cancel_cmd_again(string reason)
 {
     if (!doing_prev_cmd_again)
         return;
@@ -134,13 +134,13 @@ void game_state::cancel_cmd_again(std::string reason)
         mpr(reason.c_str());
 }
 
-void game_state::cancel_cmd_all(std::string reason)
+void game_state::cancel_cmd_all(string reason)
 {
     cancel_cmd_repeat(reason);
     cancel_cmd_again(reason);
 }
 
-void game_state::cant_cmd_repeat(std::string reason)
+void game_state::cant_cmd_repeat(string reason)
 {
     if (reason.empty())
         reason = "Can't repeat that command.";
@@ -148,7 +148,7 @@ void game_state::cant_cmd_repeat(std::string reason)
     cancel_cmd_repeat(reason);
 }
 
-void game_state::cant_cmd_again(std::string reason)
+void game_state::cant_cmd_again(string reason)
 {
     if (reason.empty())
         reason = "Can't redo that command.";
@@ -156,7 +156,7 @@ void game_state::cant_cmd_again(std::string reason)
     cancel_cmd_again(reason);
 }
 
-void game_state::cant_cmd_any(std::string reason)
+void game_state::cant_cmd_any(string reason)
 {
     cant_cmd_repeat(reason);
     cant_cmd_again(reason);
@@ -217,7 +217,7 @@ bool interrupt_cmd_repeat(activity_interrupt_type ai,
             monster_info mi(mon);
             set_auto_exclude(mon);
 
-            std::string text = get_monster_equipment_desc(mi, DESC_WEAPON);
+            string text = get_monster_equipment_desc(mi, DESC_WEAPON);
             text += " comes into view.";
             mpr(text, MSGCH_WARN);
         }
@@ -388,7 +388,7 @@ void game_state::clear_god_acting()
     god_act.reset();
 }
 
-std::vector<god_act_state> game_state::other_gods_acting() const
+vector<god_act_state> game_state::other_gods_acting() const
 {
     ASSERT(is_god_acting());
     return god_act_stack;
@@ -583,12 +583,12 @@ bool game_state::game_is_hints_tutorial() const
     return (game_is_hints() || game_is_tutorial());
 }
 
-std::string game_state::game_type_name() const
+string game_state::game_type_name() const
 {
     return game_type_name_for(type);
 }
 
-std::string game_state::game_type_name_for(game_type _type)
+string game_state::game_type_name_for(game_type _type)
 {
     switch (_type)
     {
@@ -609,13 +609,13 @@ std::string game_state::game_type_name_for(game_type _type)
     }
 }
 
-std::string game_state::game_savedir_path() const
+string game_state::game_savedir_path() const
 {
     return game_is_sprint()? "sprint/" :
            game_is_zotdef()? "zotdef/" : "";
 }
 
-std::string game_state::game_type_qualifier() const
+string game_state::game_type_qualifier() const
 {
     if (crawl_state.game_is_sprint())
         return "-sprint";

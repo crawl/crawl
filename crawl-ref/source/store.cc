@@ -61,8 +61,8 @@ CrawlStoreValue::CrawlStoreValue(const CrawlStoreValue &other)
 
     case SV_STR:
     {
-        std::string* str;
-        str = new std::string(*static_cast<std::string*>(other.val.ptr));
+        string* str;
+        str = new string(*static_cast<string*>(other.val.ptr));
         val.ptr = static_cast<void*>(str);
         break;
     }
@@ -186,7 +186,7 @@ CrawlStoreValue::CrawlStoreValue(const float &_val)
     get_float() = _val;
 }
 
-CrawlStoreValue::CrawlStoreValue(const std::string &_val)
+CrawlStoreValue::CrawlStoreValue(const string &_val)
     : type(SV_STR), flags(SFLAG_UNSET)
 {
     val.ptr = NULL;
@@ -299,7 +299,7 @@ void CrawlStoreValue::unset(bool force)
 
     case SV_STR:
     {
-        std::string* str = static_cast<std::string*>(val.ptr);
+        string* str = static_cast<string*>(val.ptr);
         delete str;
         val.ptr = NULL;
         break;
@@ -419,7 +419,7 @@ CrawlStoreValue &CrawlStoreValue::operator = (const CrawlStoreValue &other)
         break;
 
     case SV_STR:
-        COPY_PTR(std::string);
+        COPY_PTR(string);
         break;
 
     case SV_COORD:
@@ -516,7 +516,7 @@ void CrawlStoreValue::write(writer &th) const
 
     case SV_STR:
     {
-        std::string* str = static_cast<std::string*>(val.ptr);
+        string* str = static_cast<string*>(val.ptr);
         marshallString(th, *str);
         break;
     }
@@ -621,8 +621,8 @@ void CrawlStoreValue::read(reader &th)
 
     case SV_STR:
     {
-        std::string str = unmarshallString(th);
-        val.ptr = (void*) new std::string(str);
+        string str = unmarshallString(th);
+        val.ptr = (void*) new string(str);
         break;
     }
 
@@ -840,9 +840,9 @@ float &CrawlStoreValue::get_float()
     GET_VAL(SV_FLOAT, float, val._float, 0.0);
 }
 
-std::string &CrawlStoreValue::get_string()
+string &CrawlStoreValue::get_string()
 {
-    GET_VAL_PTR(SV_STR, std::string*, new std::string(""));
+    GET_VAL_PTR(SV_STR, string*, new string(""));
 }
 
 coord_def &CrawlStoreValue::get_coord()
@@ -927,10 +927,10 @@ float CrawlStoreValue::get_float() const
     return val._float;
 }
 
-std::string CrawlStoreValue::get_string() const
+string CrawlStoreValue::get_string() const
 {
     GET_CONST_SETUP(SV_STR);
-    return *((std::string*)val.ptr);
+    return *((string*)val.ptr);
 }
 
 coord_def CrawlStoreValue::get_coord() const
@@ -983,7 +983,7 @@ CrawlStoreValue::operator short&()                 { return get_short();      }
 CrawlStoreValue::operator float&()                 { return get_float();      }
 CrawlStoreValue::operator int&()                   { return get_int();        }
 CrawlStoreValue::operator int64_t&()               { return get_int64();      }
-CrawlStoreValue::operator std::string&()           { return get_string();     }
+CrawlStoreValue::operator string&()                { return get_string();     }
 CrawlStoreValue::operator coord_def&()             { return get_coord();      }
 CrawlStoreValue::operator CrawlHashTable&()        { return get_table();      }
 CrawlStoreValue::operator CrawlVector&()           { return get_vector();     }
@@ -1051,7 +1051,7 @@ CrawlStoreValue::operator float() const
     return get_float();
 }
 
-CrawlStoreValue::operator std::string() const
+CrawlStoreValue::operator string() const
 {
     return get_string();
 }
@@ -1109,7 +1109,7 @@ CrawlStoreValue &CrawlStoreValue::operator = (const float &_val)
     return *this;
 }
 
-CrawlStoreValue &CrawlStoreValue::operator = (const std::string &_val)
+CrawlStoreValue &CrawlStoreValue::operator = (const string &_val)
 {
     get_string() = _val;
     return *this;
@@ -1227,7 +1227,7 @@ int CrawlStoreValue::operator -- (int)
     INT_OPERATOR_UNARY(--);
 }
 
-std::string &CrawlStoreValue::operator += (const std::string &_val)
+string &CrawlStoreValue::operator += (const string &_val)
 {
     return (get_string() += _val);
 }
@@ -1253,7 +1253,7 @@ CrawlHashTable::CrawlHashTable(const CrawlHashTable& other)
 
 CrawlHashTable::~CrawlHashTable()
 {
-    // NOTE: Not using std::auto_ptr because making hash_map an auto_ptr
+    // NOTE: Not using auto_ptr because making hash_map an auto_ptr
     // causes compile weirdness in externs.h
     if (hash_map == NULL)
         return;
@@ -1317,7 +1317,7 @@ void CrawlHashTable::read(reader &th)
 
     for (hash_size i = 0; i < _size; i++)
     {
-        std::string      key = unmarshallString(th);
+        string           key = unmarshallString(th);
         CrawlStoreValue &val = (*this)[key];
 
         val.read(th);
@@ -1328,7 +1328,7 @@ void CrawlHashTable::read(reader &th)
 
 
 #ifdef DEBUG_PROPS
-static std::map<std::string, int> accesses;
+static map<string, int> accesses;
 # define ACCESS(x) ++accesses[x]
 #else
 # define ACCESS(x)
@@ -1337,7 +1337,7 @@ static std::map<std::string, int> accesses;
 //////////////////
 // Misc functions
 
-bool CrawlHashTable::exists(const std::string &key) const
+bool CrawlHashTable::exists(const string &key) const
 {
     if (hash_map == NULL)
         return false;
@@ -1363,11 +1363,11 @@ void CrawlHashTable::assert_validity() const
     {
         actual_size++;
 
-        const std::string    &key = i->first;
+        const string          &key = i->first;
         const CrawlStoreValue &val = i->second;
 
         ASSERT(!key.empty());
-        std::string trimmed = trimmed_string(key);
+        string trimmed = trimmed_string(key);
         ASSERT(key == trimmed);
 
         ASSERT(val.type != SV_NONE);
@@ -1417,7 +1417,7 @@ void CrawlHashTable::assert_validity() const
 ////////////////////////////////
 // Accessors to contained values
 
-CrawlStoreValue& CrawlHashTable::get_value(const std::string &key)
+CrawlStoreValue& CrawlHashTable::get_value(const string &key)
 {
     ASSERT_VALIDITY();
     init_hash_map();
@@ -1436,7 +1436,7 @@ CrawlStoreValue& CrawlHashTable::get_value(const std::string &key)
     return i->second;
 }
 
-const CrawlStoreValue& CrawlHashTable::get_value(const std::string &key) const
+const CrawlStoreValue& CrawlHashTable::get_value(const string &key) const
 {
 #ifdef ASSERTS
     if (!hash_map)
@@ -1475,7 +1475,7 @@ bool CrawlHashTable::empty() const
     return hash_map->empty();
 }
 
-void CrawlHashTable::erase(const std::string key)
+void CrawlHashTable::erase(const string key)
 {
     ASSERT_VALIDITY();
     init_hash_map();
@@ -1916,7 +1916,7 @@ CrawlVector::const_iterator CrawlVector::end() const
 
 
 #ifdef DEBUG_PROPS
-static bool _cmp(std::string a, std::string b)
+static bool _cmp(string a, string b)
 {
     return accesses[a] > accesses[b];
 }
@@ -1926,16 +1926,16 @@ void dump_prop_accesses()
     FILE *f = fopen("prop_accesses", "w");
     ASSERT(f);
 
-    std::vector<std::string> props;
+    vector<string> props;
 
-    for (std::map<std::string, int>::const_iterator i = accesses.begin();
+    for (map<string, int>::const_iterator i = accesses.begin();
          i != accesses.end(); ++i)
     {
         props.push_back(i->first);
     }
 
-    std::sort(props.begin(), props.end(), _cmp);
-    for (std::vector<std::string>::const_iterator i = props.begin();
+    sort(props.begin(), props.end(), _cmp);
+    for (vector<string>::const_iterator i = props.begin();
          i != props.end(); ++i)
     {
         fprintf(f, "%10d %s\n", accesses[*i], i->c_str());

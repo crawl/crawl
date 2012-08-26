@@ -32,13 +32,13 @@
 #include "terrain.h"
 #include "travel.h"
 
-typedef std::map<branch_type, std::set<level_id> > stair_map_type;
-typedef std::map<level_pos, shop_type> shop_map_type;
-typedef std::map<level_pos, god_type> altar_map_type;
-typedef std::map<level_pos, branch_type> portal_map_type;
-typedef std::map<level_pos, std::string> portal_note_map_type;
-typedef std::map<level_id, std::string> annotation_map_type;
-typedef std::pair<std::string, level_id> monster_annotation;
+typedef map<branch_type, set<level_id> > stair_map_type;
+typedef map<level_pos, shop_type> shop_map_type;
+typedef map<level_pos, god_type> altar_map_type;
+typedef map<level_pos, branch_type> portal_map_type;
+typedef map<level_pos, string> portal_note_map_type;
+typedef map<level_id, string> annotation_map_type;
+typedef pair<string, level_id> monster_annotation;
 
 stair_map_type stair_level;
 shop_map_type shops_present;
@@ -48,21 +48,21 @@ portal_note_map_type portal_notes;
 annotation_map_type level_annotations;
 annotation_map_type level_exclusions;
 annotation_map_type level_uniques;
-std::set<monster_annotation> auto_unique_annotations;
+set<monster_annotation> auto_unique_annotations;
 
 static void _seen_altar(god_type god, const coord_def& pos);
 static void _seen_staircase(const coord_def& pos);
 static void _seen_shop(const coord_def& pos);
 static void _seen_portal(dungeon_feature_type feat, const coord_def& pos);
 
-static std::string _get_branches(bool display);
-static std::string _get_altars(bool display);
-static std::string _get_shops(bool display);
-static std::string _get_portals();
-static std::string _get_notes();
-static std::string _print_altars_for_gods(const std::vector<god_type>& gods,
-                                          bool print_unseen, bool display);
-static const std::string _get_coloured_level_annotation(level_id li);
+static string _get_branches(bool display);
+static string _get_altars(bool display);
+static string _get_shops(bool display);
+static string _get_portals();
+static string _get_notes();
+static string _print_altars_for_gods(const vector<god_type>& gods,
+                                     bool print_unseen, bool display);
+static const string _get_coloured_level_annotation(level_id li);
 
 void overview_clear()
 {
@@ -116,7 +116,7 @@ bool move_notable_thing(const coord_def& orig, const coord_def& dest)
     return true;
 }
 
-static std::string coloured_branch(branch_type br)
+static string coloured_branch(branch_type br)
 {
     if (br < 0 || br >= NUM_BRANCHES)
         return "<lightred>Buggy buglands</lightred>";
@@ -142,12 +142,12 @@ static std::string coloured_branch(branch_type br)
     default:                       col = YELLOW; // shouldn't happen
     }
 
-    const std::string colname = colour_to_str(col);
+    const string colname = colour_to_str(col);
     return make_stringf("<%s>%s</%s>", colname.c_str(), branches[br].shortname,
                         colname.c_str());
 }
 
-static std::string shoptype_to_string(shop_type s)
+static string shoptype_to_string(shop_type s)
 {
     switch (s)
     {
@@ -167,12 +167,12 @@ static std::string shoptype_to_string(shop_type s)
     }
 }
 
-static inline std::string place_desc(const level_pos &pos)
+static inline string place_desc(const level_pos &pos)
 {
     return "[" + pos.id.describe(false, true) + "] ";
 }
 
-static inline std::string altar_description(god_type god)
+static inline string altar_description(god_type god)
 {
     return feature_description(altar_for_god(god));
 }
@@ -202,9 +202,9 @@ int overview_knows_num_portals(dungeon_feature_type portal)
     return num;
 }
 
-static std::string _portals_description_string()
+static string _portals_description_string()
 {
-    std::string disp;
+    string disp;
     level_id    last_id;
     for (branch_type cur_portal = BRANCH_MAIN_DUNGEON; cur_portal < NUM_BRANCHES;
          cur_portal = static_cast<branch_type>(cur_portal + 1))
@@ -233,7 +233,7 @@ static std::string _portals_description_string()
                 last_id = ci_portals->first.id;
 
                 // Portals notes (Zig/Trovel price).
-                const std::string note = portal_notes[ci_portals->first];
+                const string note = portal_notes[ci_portals->first];
                 if (!note.empty())
                     disp += " (" + note + ")";
             }
@@ -245,9 +245,9 @@ static std::string _portals_description_string()
 }
 
 // display: format for in-game display; !display: format for dump
-std::string overview_description_string(bool display)
+string overview_description_string(bool display)
 {
-    std::string disp;
+    string disp;
 
     disp += "                    <white>Dungeon Overview and Level Annotations</white>\n" ;
     disp += _get_branches(display);
@@ -260,14 +260,14 @@ std::string overview_description_string(bool display)
 }
 
 // iterate through every dungeon branch, listing the ones which have been found
-static std::string _get_seen_branches(bool display)
+static string _get_seen_branches(bool display)
 {
     // Each branch entry takes up 26 spaces + 38 for tags.
     const int width = 64;
 
     int num_printed_branches = 0;
     char buffer[100];
-    std::string disp;
+    string disp;
 
     disp += "\n<green>Branches:</green>";
     if (display)
@@ -287,8 +287,8 @@ static std::string _get_seen_branches(bool display)
             level_id lid(branch, 0);
             lid = find_deepest_explored(lid);
 
-            std::string entry_desc;
-            for (std::set<level_id>::iterator it = stair_level[branch].begin();
+            string entry_desc;
+            for (set<level_id>::iterator it = stair_level[branch].begin();
                  it != stair_level[branch].end(); ++it)
             {
                 entry_desc += " " + it->describe(false, true);
@@ -309,7 +309,7 @@ static std::string _get_seen_branches(bool display)
 
             disp += (num_printed_branches % 3) == 0
                     ? "\n"
-                    : std::string(std::max<int>(width - strlen(buffer), 0), ' ');
+                    : string(max<int>(width - strlen(buffer), 0), ' ');
         }
     }
 
@@ -318,11 +318,11 @@ static std::string _get_seen_branches(bool display)
     return disp;
 }
 
-static std::string _get_unseen_branches()
+static string _get_unseen_branches()
 {
     int num_printed_branches = 0;
     char buffer[100];
-    std::string disp;
+    string disp;
 
     /* see if we need to hide lair branches that don't exist */
     int seen_lair_branches = 0;
@@ -381,7 +381,7 @@ static std::string _get_unseen_branches()
                 disp += (num_printed_branches % 4) == 0
                         ? "\n"
                         // Each branch entry takes up 20 spaces
-                        : std::string(20 + 21 - strlen(buffer), ' ');
+                        : string(20 + 21 - strlen(buffer), ' ');
             }
         }
     }
@@ -391,19 +391,19 @@ static std::string _get_unseen_branches()
     return disp;
 }
 
-static std::string _get_branches(bool display)
+static string _get_branches(bool display)
 {
     return _get_seen_branches(display) + _get_unseen_branches();
 }
 
 // iterate through every god and display their altar's discovery state by colour
-static std::string _get_altars(bool display)
+static string _get_altars(bool display)
 {
     // Just wastes space for demigods.
     if (you.species == SP_DEMIGOD)
         return "";
 
-    std::string disp;
+    string disp;
 
     disp += "\n<green>Altars:</green>";
     if (display)
@@ -419,10 +419,10 @@ static std::string _get_altars(bool display)
 }
 
 // Loops through gods, printing their altar status by colour.
-static std::string _print_altars_for_gods(const std::vector<god_type>& gods,
-                                          bool print_unseen, bool display)
+static string _print_altars_for_gods(const vector<god_type>& gods,
+                                     bool print_unseen, bool display)
 {
-    std::string disp;
+    string disp;
     char buffer[100];
     int num_printed = 0;
     char const *colour;
@@ -482,13 +482,13 @@ static std::string _print_altars_for_gods(const std::vector<god_type>& gods,
             // manually aligning the god columns: five whitespaces between columns
             switch (num_printed % 5)
             {
-            case 1: disp += std::string(14 - strwidth(god_name(god, false)), ' ');
+            case 1: disp += string(14 - strwidth(god_name(god, false)), ' ');
                     break;
-            case 2: disp += std::string(18 - strwidth(god_name(god, false)), ' ');
+            case 2: disp += string(18 - strwidth(god_name(god, false)), ' ');
                     break;
-            case 3: disp += std::string(13 - strwidth(god_name(god, false)), ' ');
+            case 3: disp += string(13 - strwidth(god_name(god, false)), ' ');
                     break;
-            case 4: disp += std::string(16 - strwidth(god_name(god, false)), ' ');
+            case 4: disp += string(16 - strwidth(god_name(god, false)), ' ');
             }
     }
 
@@ -498,9 +498,9 @@ static std::string _print_altars_for_gods(const std::vector<god_type>& gods,
 }
 
 // iterate through all discovered shops, printing what level they are on.
-static std::string _get_shops(bool display)
+static string _get_shops(bool display)
 {
-    std::string disp;
+    string disp;
     level_id last_id;
 
     if (!shops_present.empty())
@@ -511,7 +511,7 @@ static std::string _get_shops(bool display)
         disp += "\n";
     }
     last_id.depth = 10000;
-    std::map<level_pos, shop_type>::const_iterator ci_shops;
+    map<level_pos, shop_type>::const_iterator ci_shops;
 
     // There are at most 5 shops per level, plus 7 chars for the level
     // name, plus 4 for the spacing; that makes a total of 17
@@ -536,7 +536,7 @@ static std::string _get_shops(bool display)
             }
             disp += "<brown>";
 
-            const std::string loc = ci_shops->first.id.describe(false, true);
+            const string loc = ci_shops->first.id.describe(false, true);
             disp += loc;
             column_count += strwidth(loc);
 
@@ -558,9 +558,9 @@ static std::string _get_shops(bool display)
 }
 
 // Loop through found portals and display them
-static std::string _get_portals()
+static string _get_portals()
 {
-    std::string disp;
+    string disp;
 
     if (!portals_present.empty())
         disp += "\n<green>Portals:</green>\n";
@@ -570,9 +570,9 @@ static std::string _get_portals()
 }
 
 // Loop through each branch, printing stored notes.
-static std::string _get_notes()
+static string _get_notes()
 {
-    std::string disp;
+    string disp;
 
     for (int br = 0 ; br < NUM_BRANCHES; ++br)
         for (int d = 1; d <= brdepth[br]; ++d)
@@ -649,7 +649,7 @@ bool unnotice_feature(const level_pos &pos)
 void display_overview()
 {
     clrscr();
-    std::string disp = overview_description_string(true);
+    string disp = overview_description_string(true);
     linebreak_string(disp, get_number_of_cols());
     formatted_scroller(MF_EASY_EXIT | MF_ANYPRINTABLE | MF_NOSELECT,
                        disp).show();
@@ -722,15 +722,15 @@ void enter_branch(branch_type branch, level_id from)
 
 static void _update_unique_annotation(level_id level)
 {
-    std::string note = "";
-    std::string sep = ", ";
-    for (std::set<monster_annotation>::iterator i = auto_unique_annotations.begin();
+    string note = "";
+    string sep = ", ";
+    for (set<monster_annotation>::iterator i = auto_unique_annotations.begin();
          i != auto_unique_annotations.end(); ++i)
     {
-        if (i->first.find(',') != std::string::npos)
+        if (i->first.find(',') != string::npos)
             sep = "; ";
     }
-    for (std::set<monster_annotation>::iterator i = auto_unique_annotations.begin();
+    for (set<monster_annotation>::iterator i = auto_unique_annotations.begin();
          i != auto_unique_annotations.end(); ++i)
     {
         if (i->second == level)
@@ -746,9 +746,9 @@ static void _update_unique_annotation(level_id level)
         level_uniques[level] = note;
 }
 
-static std::string unique_name(monster* mons)
+static string unique_name(monster* mons)
 {
-    std::string name = mons->name(DESC_PLAIN, true);
+    string name = mons->name(DESC_PLAIN, true);
     if (mons->type == MONS_PLAYER_GHOST)
         name += ", " + short_ghost_description(mons, true);
     else
@@ -779,16 +779,15 @@ void set_unique_annotation(monster* mons, const level_id level)
     }
 
     remove_unique_annotation(mons);
-    auto_unique_annotations.insert(std::make_pair(
-                unique_name(mons), level));
+    auto_unique_annotations.insert(make_pair(unique_name(mons), level));
     _update_unique_annotation(level);
 }
 
 void remove_unique_annotation(monster* mons)
 {
-    std::set<level_id> affected_levels;
-    std::string name = unique_name(mons);
-    for (std::set<monster_annotation>::iterator i = auto_unique_annotations.begin();
+    set<level_id> affected_levels;
+    string name = unique_name(mons);
+    for (set<monster_annotation>::iterator i = auto_unique_annotations.begin();
          i != auto_unique_annotations.end();)
     {
         if (i->first == name)
@@ -800,14 +799,14 @@ void remove_unique_annotation(monster* mons)
             ++i;
     }
 
-    for (std::set<level_id>::iterator i = affected_levels.begin();
+    for (set<level_id>::iterator i = affected_levels.begin();
          i != affected_levels.end(); ++i)
     {
         _update_unique_annotation(*i);
     }
 }
 
-void set_level_exclusion_annotation(std::string str, level_id li)
+void set_level_exclusion_annotation(string str, level_id li)
 {
     if (str.empty())
     {
@@ -823,14 +822,14 @@ void clear_level_exclusion_annotation(level_id li)
     level_exclusions.erase(li);
 }
 
-std::string get_level_annotation(level_id li, bool skip_excl,
-                                 bool skip_uniq, bool use_colour, int colour)
+string get_level_annotation(level_id li, bool skip_excl, bool skip_uniq,
+                            bool use_colour, int colour)
 {
     annotation_map_type::const_iterator i = level_annotations.find(li);
     annotation_map_type::const_iterator j = level_exclusions.find(li);
     annotation_map_type::const_iterator k = level_uniques.find(li);
 
-    std::string note = "";
+    string note = "";
 
     if (i != level_annotations.end())
     {
@@ -857,21 +856,21 @@ std::string get_level_annotation(level_id li, bool skip_excl,
     return note;
 }
 
-static const std::string _get_coloured_level_annotation(level_id li)
+static const string _get_coloured_level_annotation(level_id li)
 {
-    std::string place = "<yellow>" + li.describe();
+    string place = "<yellow>" + li.describe();
     place = replace_all(place, ":", "</yellow>:");
-    if (place.find("</yellow>") == std::string::npos)
+    if (place.find("</yellow>") == string::npos)
         place += "</yellow>";
     int col = level_annotation_has("!", li) ? LIGHTRED : MAGENTA;
     return place + " " + get_level_annotation(li, false, false, true, col);
 }
 
-bool level_annotation_has(std::string find, level_id li)
+bool level_annotation_has(string find, level_id li)
 {
-    std::string str = get_level_annotation(li);
+    string str = get_level_annotation(li);
 
-    return (str.find(find) != std::string::npos);
+    return (str.find(find) != string::npos);
 }
 
 void annotate_level()
@@ -905,8 +904,8 @@ void do_annotate(level_id& li)
             MSGCH_PROMPT);
     }
 
-    const std::string prompt = "New annotation for " + li.describe()
-                               + " (include '!' for warning): ";
+    const string prompt = "New annotation for " + li.describe()
+                          + " (include '!' for warning): ";
 
     char buf[77];
     if (msgwin_get_line_autohist(prompt, buf, sizeof(buf)))
@@ -931,8 +930,8 @@ void clear_level_annotations(level_id li)
     if (li == BRANCH_ABYSS)
         return;
 
-    std::set<monster_annotation>::iterator next;
-    for (std::set<monster_annotation>::iterator i = auto_unique_annotations.begin();
+    set<monster_annotation>::iterator next;
+    for (set<monster_annotation>::iterator i = auto_unique_annotations.begin();
          i != auto_unique_annotations.end(); i = next)
     {
         next = i;
@@ -946,7 +945,7 @@ void clear_level_annotations(level_id li)
 void marshallUniqueAnnotations(writer& outf)
 {
     marshallShort(outf, auto_unique_annotations.size());
-    for (std::set<monster_annotation>::iterator i = auto_unique_annotations.begin();
+    for (set<monster_annotation>::iterator i = auto_unique_annotations.begin();
          i != auto_unique_annotations.end(); ++i)
     {
         marshallString(outf, i->first);
@@ -960,9 +959,9 @@ void unmarshallUniqueAnnotations(reader& inf)
     int num_notes = unmarshallShort(inf);
     for (int i = 0; i < num_notes; ++i)
     {
-        std::string name = unmarshallString(inf);
+        string name = unmarshallString(inf);
         level_id level;
         level.load(inf);
-        auto_unique_annotations.insert(std::make_pair(name, level));
+        auto_unique_annotations.insert(make_pair(name, level));
     }
 }

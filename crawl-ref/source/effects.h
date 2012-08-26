@@ -12,7 +12,7 @@ struct bolt;
 class monster;
 struct item_def;
 
-void banished(const std::string &who = "");
+void banished(const string &who = "");
 
 bool forget_spell(void);
 
@@ -27,7 +27,7 @@ int spawn_corpse_mushrooms(item_def& corpse,
                            bool distance_as_time = false);
 
 struct mgen_data;
-int place_ring(std::vector<coord_def>& ring_points,
+int place_ring(vector<coord_def>& ring_points,
                const coord_def& origin,
                mgen_data prototype,
                int n_arcs,
@@ -37,13 +37,13 @@ int place_ring(std::vector<coord_def>& ring_points,
 class los_base;
 // Collect lists of points that are within LOS (under the given losgrid),
 // unoccupied, and not solid (walls/statues).
-void collect_radius_points(std::vector<std::vector<coord_def> > &radius_points,
+void collect_radius_points(vector<vector<coord_def> > &radius_points,
                            const coord_def &origin, const los_base* los);
 
 void random_uselessness(int scroll_slot = -1);
 
 int recharge_wand(const int item_slot = -1, bool known = true,
-                  std::string *pre_msg = NULL);
+                  string *pre_msg = NULL);
 
 void direct_effect(monster* src, spell_type spl, bolt &pbolt, actor *defender);
 

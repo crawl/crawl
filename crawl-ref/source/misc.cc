@@ -282,14 +282,14 @@ void init_stack_blood_potions(item_def &stack, int age)
 // Sort a CrawlVector<int>, should probably be done properly with templates.
 static void _int_sort(CrawlVector &vec)
 {
-    std::vector<int> help;
+    vector<int> help;
     while (!vec.empty())
     {
         help.push_back(vec[vec.size()-1].get_int());
         vec.pop_back();
     }
 
-    std::sort(help.begin(), help.end());
+    sort(help.begin(), help.end());
 
     while (!help.empty())
     {
@@ -334,7 +334,7 @@ void maybe_coagulate_blood_potions_floor(int obj)
     // First count whether coagulating is even necessary.
     int rot_count  = 0;
     int coag_count = 0;
-    std::vector<int> age_timer;
+    vector<int> age_timer;
     int current;
     while (!timer.empty())
     {
@@ -478,7 +478,7 @@ void maybe_coagulate_blood_potions_floor(int obj)
     _compare_blood_quantity(blood, timer.size());
 }
 
-static std::string _get_desc_quantity(const int quant, const int total)
+static string _get_desc_quantity(const int quant, const int total)
 {
     if (total == quant)
         return "Your";
@@ -495,7 +495,7 @@ static std::string _get_desc_quantity(const int quant, const int total)
 // Prints messages for blood potions coagulating in inventory (coagulate = true)
 // or whenever potions are cursed into potions of decay (coagulate = false).
 static void _potion_stack_changed_message(item_def &potion, int num_changed,
-                                          std::string verb)
+                                          string verb)
 {
     ASSERT(num_changed > 0);
 
@@ -530,7 +530,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
     // First count whether coagulating is even necessary.
     int rot_count  = 0;
     int coag_count = 0;
-    std::vector<int> age_timer;
+    vector<int> age_timer;
     int current;
     const int size = timer.size();
     for (int i = 0; i < size; i++)
@@ -1054,11 +1054,11 @@ static void _orient_wall_blood(const coord_def& where, coord_def from,
     for (orth_adjacent_iterator ai(where); ai; ++ai)
     {
         if (in_bounds(*ai) && !cell_is_solid(*ai) && ld.see_cell(*ai)
-            && (distance(*ai, from) < dist
-                || distance(*ai, from) == dist && coinflip()))
+            && (distance2(*ai, from) < dist
+                || distance2(*ai, from) == dist && coinflip()))
         {
             closer = *ai;
-            dist = distance(*ai, from);
+            dist = distance2(*ai, from);
         }
     }
 
@@ -1353,22 +1353,22 @@ void trackers_init_new_level(bool transit)
     travel_init_new_level();
 }
 
-std::string weird_glowing_colour()
+string weird_glowing_colour()
 {
     return getMiscString("glowing_colour_name");
 }
 
-std::string weird_writing()
+string weird_writing()
 {
     return getMiscString("writing_name");
 }
 
-std::string weird_smell()
+string weird_smell()
 {
     return getMiscString("smell_name");
 }
 
-std::string weird_sound()
+string weird_sound()
 {
     return getMiscString("sound_name");
 }
@@ -1584,20 +1584,20 @@ bool mons_is_safe(const monster* mon, const bool want_move,
 // require_visible Require that monsters be visible to the player
 // range           search radius (defaults: LOS)
 //
-std::vector<monster* > get_nearby_monsters(bool want_move,
-                                           bool just_check,
-                                           bool dangerous_only,
-                                           bool consider_user_options,
-                                           bool require_visible,
-                                           bool check_dist,
-                                           int range)
+vector<monster* > get_nearby_monsters(bool want_move,
+                                      bool just_check,
+                                      bool dangerous_only,
+                                      bool consider_user_options,
+                                      bool require_visible,
+                                      bool check_dist,
+                                      int range)
 {
     ASSERT(!crawl_state.game_is_arena());
 
     if (range == -1)
         range = LOS_RADIUS;
 
-    std::vector<monster* > mons;
+    vector<monster* > mons;
 
     // Sweep every visible square within range.
     for (radius_iterator ri(you.pos(), range); ri; ++ri)
@@ -1658,18 +1658,17 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
     }
 
     // Monster check.
-    std::vector<monster* > visible =
+    vector<monster* > visible =
         get_nearby_monsters(want_move, !announce, true, true, true,
                             check_dist, range);
 
     // Announce the presence of monsters (Eidolos).
-    std::string msg;
+    string msg;
     if (visible.size() == 1)
     {
         const monster& m = *visible[0];
-        const std::string monname = mons_is_mimic(m.type)
-                                  ? "A mimic"
-                                  : m.name(DESC_A);
+        const string monname = mons_is_mimic(m.type) ? "A mimic"
+                                                     : m.name(DESC_A);
         msg = make_stringf("%s is nearby!", monname.c_str());
     }
     else if (visible.size() > 1)
@@ -1708,7 +1707,7 @@ static const char *shop_types[] = {
     "general"
 };
 
-int str_to_shoptype(const std::string &s)
+int str_to_shoptype(const string &s)
 {
     if (s == "random" || s == "any")
         return SHOP_RANDOM;
@@ -1783,7 +1782,7 @@ static void _drop_tomb(const coord_def& pos, bool premature)
             (env.markers.property_at(*ai, MAT_ANY, "tomb") == "card"
              || env.markers.property_at(*ai, MAT_ANY, "tomb") == "monster"))
         {
-            std::vector<map_marker*> markers = env.markers.get_markers_at(*ai);
+            vector<map_marker*> markers = env.markers.get_markers_at(*ai);
             for (int i = 0, size = markers.size(); i < size; ++i)
             {
                 map_marker *mark = markers[i];
@@ -1809,7 +1808,7 @@ static void _drop_tomb(const coord_def& pos, bool premature)
         {
             zin = true;
 
-            std::vector<map_marker*> markers = env.markers.get_markers_at(*ai);
+            vector<map_marker*> markers = env.markers.get_markers_at(*ai);
             for (int i = 0, size = markers.size(); i < size; ++i)
             {
                 map_marker *mark = markers[i];
@@ -1854,11 +1853,11 @@ static void _drop_tomb(const coord_def& pos, bool premature)
     }
 }
 
-static std::vector<map_malign_gateway_marker*> _get_malign_gateways()
+static vector<map_malign_gateway_marker*> _get_malign_gateways()
 {
-    std::vector<map_malign_gateway_marker*> mm_markers;
+    vector<map_malign_gateway_marker*> mm_markers;
 
-    std::vector<map_marker*> markers = env.markers.get_all(MAT_MALIGN);
+    vector<map_marker*> markers = env.markers.get_all(MAT_MALIGN);
     for (int i = 0, size = markers.size(); i < size; ++i)
     {
         map_marker *mark = markers[i];
@@ -1883,7 +1882,7 @@ void timeout_malign_gateways(int duration)
     // Passing 0 should allow us to just touch the gateway and see
     // if it should decay. This, in theory, should resolve the one
     // turn delay between it timing out and being recastable. -due
-    std::vector<map_malign_gateway_marker*> markers = _get_malign_gateways();
+    vector<map_malign_gateway_marker*> markers = _get_malign_gateways();
 
     for (int i = 0, size = markers.size(); i < size; ++i)
     {
@@ -1946,7 +1945,7 @@ void timeout_tombs(int duration)
     if (!duration)
         return;
 
-    std::vector<map_marker*> markers = env.markers.get_all(MAT_TOMB);
+    vector<map_marker*> markers = env.markers.get_all(MAT_TOMB);
 
     for (int i = 0, size = markers.size(); i < size; ++i)
     {
@@ -2013,7 +2012,7 @@ void bring_to_safety()
             || monster_at(pos)
             || env.pgrid(pos) & FPROP_NO_TELE_INTO
             || crawl_state.game_is_sprint()
-               && distance(pos, you.pos()) > dist_range(10))
+               && distance2(pos, you.pos()) > dist_range(10))
         {
             tries++;
             continue;
@@ -2112,7 +2111,7 @@ void revive()
 // Living breathing dungeon stuff.
 //
 
-static std::vector<coord_def> sfx_seeds;
+static vector<coord_def> sfx_seeds;
 
 void setup_environment_effects()
 {
@@ -2233,7 +2232,7 @@ void reveal_secret_door(const coord_def& p)
 {
     ASSERT(grd(p) == DNGN_SECRET_DOOR);
 
-    const std::string door_open_prompt =
+    const string door_open_prompt =
         env.markers.property_at(p, MAT_ANY, "door_open_prompt");
 
     // Former secret doors become known but are still hidden to monsters
@@ -2250,7 +2249,7 @@ void reveal_secret_door(const coord_def& p)
     learned_something_new(HINT_FOUND_SECRET_DOOR, p);
 }
 
-bool bad_attack(const monster *mon, std::string& adj, std::string& suffix)
+bool bad_attack(const monster *mon, string& adj, string& suffix)
 {
     ASSERT(!crawl_state.game_is_arena());
     if (!you.can_see(mon))
@@ -2294,18 +2293,18 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
     if (you.confused() || !you.can_see(mon))
         return false;
 
-    std::string adj, suffix;
+    string adj, suffix;
     if (!bad_attack(mon, adj, suffix))
         return false;
 
     // Listed in the form: "your rat", "Blork the orc".
-    std::string mon_name = mon->name(DESC_PLAIN);
+    string mon_name = mon->name(DESC_PLAIN);
     if (!mon_name.find("the ")) // no "your the royal jelly" nor "the the RJ"
         mon_name.erase(0, 4);
     if (adj.find("your"))
         adj = "the " + adj;
     mon_name = adj + mon_name;
-    std::string verb;
+    string verb;
     if (beam_attack)
     {
         verb = "fire ";
@@ -2332,13 +2331,13 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
     return !yesno(info, false, 'n');
 }
 
-bool stop_attack_prompt(targetter &hitfunc, std::string verb,
+bool stop_attack_prompt(targetter &hitfunc, string verb,
                         bool (*affects)(const actor *victim))
 {
     if (you.confused())
         return false;
 
-    std::string adj, suffix;
+    string adj, suffix;
     counted_monster_list victims;
     for (distance_iterator di(hitfunc.origin, false, true, LOS_RADIUS); di; ++di)
     {
@@ -2349,7 +2348,7 @@ bool stop_attack_prompt(targetter &hitfunc, std::string verb,
             continue;
         if (affects && !affects(mon))
             continue;
-        std::string adjn, suffixn;
+        string adjn, suffixn;
         if (bad_attack(mon, adjn, suffixn))
         {
             if (victims.empty()) // record the adjectives for the first listed
@@ -2362,7 +2361,7 @@ bool stop_attack_prompt(targetter &hitfunc, std::string verb,
         return false;
 
     // Listed in the form: "your rat", "Blork the orc".
-    std::string mon_name = victims.describe(DESC_PLAIN);
+    string mon_name = victims.describe(DESC_PLAIN);
     if (!mon_name.find("the ")) // no "your the royal jelly" nor "the the RJ"
         mon_name.erase(0, 4);
     if (adj.find("your"))
@@ -2727,18 +2726,17 @@ void entered_malign_portal(actor* act)
 
 void handle_real_time(time_t t)
 {
-    you.real_time += std::min<time_t>(t - you.last_keypress_time,
-                                      IDLE_TIME_CLAMP);
+    you.real_time += min<time_t>(t - you.last_keypress_time, IDLE_TIME_CLAMP);
     you.last_keypress_time = t;
 }
 
-std::string part_stack_string(const int num, const int total)
+string part_stack_string(const int num, const int total)
 {
     if (num == total)
         return "Your";
 
-    std::string ret  = uppercase_first(number_in_words(num));
-                ret += " of your";
+    string ret  = uppercase_first(number_in_words(num));
+           ret += " of your";
 
     return ret;
 }
@@ -2755,7 +2753,7 @@ unsigned int breakpoint_rank(int val, const int breakpoints[],
 
 void counted_monster_list::add(const monster* mons)
 {
-    const std::string name = mons->name(DESC_PLAIN);
+    const string name = mons->name(DESC_PLAIN);
     for (counted_list::iterator i = list.begin(); i != list.end(); ++i)
     {
         if (i->first->name(DESC_PLAIN) == name)
@@ -2775,9 +2773,9 @@ int counted_monster_list::count()
     return nmons;
 }
 
-std::string counted_monster_list::describe(description_level_type desc)
+string counted_monster_list::describe(description_level_type desc)
 {
-    std::string out;
+    string out;
 
     for (counted_list::const_iterator i = list.begin(); i != list.end();)
     {

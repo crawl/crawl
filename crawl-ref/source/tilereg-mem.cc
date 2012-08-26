@@ -42,12 +42,12 @@ void MemoriseRegion::draw_tag()
 
     const spell_type spell = (spell_type) idx;
     char* failure = failure_rate_to_string(spell_fail(spell));
-    std::string desc = make_stringf("%s    (%s)    %d/%d spell slot%s",
-                                    spell_title(spell),
-                                    failure,
-                                    spell_levels_required(spell),
-                                    player_spell_levels(),
-                                    spell_levels_required(spell) > 1 ? "s" : "");
+    string desc = make_stringf("%s    (%s)    %d/%d spell slot%s",
+                               spell_title(spell),
+                               failure,
+                               spell_levels_required(spell),
+                               player_spell_levels(),
+                               spell_levels_required(spell) > 1 ? "s" : "");
     free(failure);
     draw_desc(desc.c_str());
 }
@@ -78,7 +78,7 @@ int MemoriseRegion::handle_mouse(MouseEvent &event)
     return 0;
 }
 
-bool MemoriseRegion::update_tab_tip_text(std::string &tip, bool active)
+bool MemoriseRegion::update_tab_tip_text(string &tip, bool active)
 {
     const char *prefix1 = active ? "" : "[L-Click] ";
     const char *prefix2 = active ? "" : "          ";
@@ -90,7 +90,7 @@ bool MemoriseRegion::update_tab_tip_text(std::string &tip, bool active)
     return true;
 }
 
-bool MemoriseRegion::update_tip_text(std::string& tip)
+bool MemoriseRegion::update_tip_text(string& tip)
 {
     if (m_cursor == NO_CURSOR)
         return false;
@@ -100,7 +100,7 @@ bool MemoriseRegion::update_tip_text(std::string& tip)
         return false;
 
     int flag = m_items[item_idx].flag;
-    std::vector<command_type> cmd;
+    vector<command_type> cmd;
     if (flag & TILEI_FLAG_INVALID)
         tip = "You cannot memorise this spell now.";
     else
@@ -128,8 +128,8 @@ void MemoriseRegion::update()
 
     const unsigned int max_spells = mx * my;
 
-    std::vector<int>  books;
-    std::vector<spell_type> spells = get_mem_spell_list(books);
+    vector<int>  books;
+    vector<spell_type> spells = get_mem_spell_list(books);
     for (unsigned int i = 0; m_items.size() < max_spells && i < spells.size();
          ++i)
     {

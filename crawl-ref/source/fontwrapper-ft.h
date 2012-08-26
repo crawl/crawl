@@ -48,7 +48,7 @@ public:
 
     // FontBuffer helper functions
     virtual void store(FontBuffer &buf, float &x, float &y,
-                       const std::string &s, const VColour &c);
+                       const string &s, const VColour &c);
     virtual void store(FontBuffer &buf, float &x, float &y,
                        const formatted_string &fs);
     virtual void store(FontBuffer &buf, float &x, float &y, ucs_t c,
@@ -71,7 +71,7 @@ public:
 
 protected:
     void store(FontBuffer &buf, float &x, float &y,
-               const std::string &s, const VColour &c, float orig_x);
+               const string &s, const VColour &c, float orig_x);
     void store(FontBuffer &buf, float &x, float &y, const formatted_string &fs,
                float orig_x);
 
@@ -103,7 +103,7 @@ protected:
         ucs_t uchar;
     };
     GlyphInfo *m_glyphs;
-    std::map<ucs_t, unsigned int> m_glyphmap;
+    map<ucs_t, unsigned int> m_glyphmap;
     // index of least recently used glyph
     ucs_t m_glyphs_lru;
     // index of most recently used glyph

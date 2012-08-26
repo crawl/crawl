@@ -57,26 +57,26 @@ void generate_random_blood_spatter_on_level(
 // Set FPROP_BLOODY after checking bleedability.
 bool maybe_bloodify_square(const coord_def& where);
 
-std::string weird_glowing_colour();
+string weird_glowing_colour();
 
-std::string weird_writing();
+string weird_writing();
 
-std::string weird_smell();
+string weird_smell();
 
-std::string weird_sound();
+string weird_sound();
 
 bool mons_can_hurt_player(const monster* mon, const bool want_move = false);
 bool mons_is_safe(const monster* mon, const bool want_move = false,
                   const bool consider_user_options = true,
                   const bool check_dist = true);
 
-std::vector<monster* > get_nearby_monsters(bool want_move = false,
-                                           bool just_check = false,
-                                           bool dangerous_only = false,
-                                           bool consider_user_options = true,
-                                           bool require_visible = true,
-                                           bool check_dist = true,
-                                           int range = -1);
+vector<monster* > get_nearby_monsters(bool want_move = false,
+                                      bool just_check = false,
+                                      bool dangerous_only = false,
+                                      bool consider_user_options = true,
+                                      bool require_visible = true,
+                                      bool check_dist = true,
+                                      int range = -1);
 
 bool i_feel_safe(bool announce = false, bool want_move = false,
                  bool just_monsters = false, bool check_dist = true,
@@ -96,7 +96,7 @@ void setup_environment_effects();
 // Lava smokes, swamp water mists.
 void run_environment_effects();
 
-int str_to_shoptype(const std::string &s);
+int str_to_shoptype(const string &s);
 
 bool player_in_a_dangerous_place(bool *invis = NULL);
 void bring_to_safety();
@@ -113,10 +113,10 @@ bool interrupt_cmd_repeat(activity_interrupt_type ai,
 
 void reveal_secret_door(const coord_def& p);
 
-bool bad_attack(const monster *mon, std::string& adj, std::string& suffix);
+bool bad_attack(const monster *mon, string& adj, string& suffix);
 bool stop_attack_prompt(const monster* mon, bool beam_attack,
                         coord_def beam_target, bool autohit_first = false);
-bool stop_attack_prompt(targetter &hitfunc, std::string verb,
+bool stop_attack_prompt(targetter &hitfunc, string verb,
                         bool (*affects)(const actor *victim) = 0);
 
 bool is_orckind(const actor *act);
@@ -137,7 +137,7 @@ int apply_chunked_AC(int dam, int ac);
 void entered_malign_portal(actor* act);
 
 void handle_real_time(time_t t = time(0));
-std::string part_stack_string(const int num, const int total);
+string part_stack_string(const int num, const int total);
 unsigned int breakpoint_rank(int val, const int breakpoints[],
                              unsigned int num_breakpoints);
 
@@ -200,8 +200,8 @@ struct position_node
 
 struct path_less
 {
-    bool operator()(const std::set<position_node>::iterator & left,
-                    const std::set<position_node>::iterator & right)
+    bool operator()(const set<position_node>::iterator & left,
+                    const set<position_node>::iterator & right)
     {
         return (left->total_dist() > right->total_dist());
     }
@@ -225,9 +225,9 @@ struct simple_connect
     }
 
     void operator()(const position_node & node,
-                    std::vector<position_node> & expansion)
+                    vector<position_node> & expansion)
     {
-        std::random_shuffle(compass_idx, compass_idx + connect);
+        random_shuffle(compass_idx, compass_idx + connect);
 
         for (int i=0; i < connect; i++)
         {
@@ -270,14 +270,14 @@ template<typename valid_T, typename expand_T>
 void search_astar(position_node & start,
                   valid_T & valid_target,
                   expand_T & expand_node,
-                  std::set<position_node> & visited,
-                  std::vector<std::set<position_node>::iterator > & candidates)
+                  set<position_node> & visited,
+                  vector<set<position_node>::iterator > & candidates)
 {
-    std::priority_queue<std::set<position_node>::iterator,
-                        std::vector<std::set<position_node>::iterator>,
+    priority_queue<set<position_node>::iterator,
+                        vector<set<position_node>::iterator>,
                         path_less  > fringe;
 
-    std::set<position_node>::iterator current = visited.insert(start).first;
+    set<position_node>::iterator current = visited.insert(start).first;
     fringe.push(current);
 
 
@@ -287,14 +287,14 @@ void search_astar(position_node & start,
         current = fringe.top();
         fringe.pop();
 
-        std::vector<position_node> expansion;
+        vector<position_node> expansion;
         expand_node(*current, expansion);
 
         for (unsigned i=0;i < expansion.size(); ++i)
         {
             expansion[i].last = &(*current);
 
-            std::pair<std::set<position_node>::iterator, bool > res;
+            pair<set<position_node>::iterator, bool > res;
             res = visited.insert(expansion[i]);
 
             if (!res.second)
@@ -319,8 +319,8 @@ template<typename valid_T, typename expand_T>
 void search_astar(const coord_def & start,
                   valid_T & valid_target,
                   expand_T & expand_node,
-                  std::set<position_node> & visited,
-                  std::vector<std::set<position_node>::iterator > & candidates)
+                  set<position_node> & visited,
+                  vector<set<position_node>::iterator > & candidates)
 {
     position_node temp_node;
     temp_node.pos = start;
@@ -335,8 +335,8 @@ void search_astar(const coord_def & start,
                   valid_T & valid_target,
                   cost_T & connection_cost,
                   est_T & cost_estimate,
-                  std::set<position_node> & visited,
-                  std::vector<std::set<position_node>::iterator > & candidates,
+                  set<position_node> & visited,
+                  vector<set<position_node>::iterator > & candidates,
                   int connect_mode = 8)
 {
     if (connect_mode < 1 || connect_mode > 8)
@@ -352,12 +352,12 @@ void search_astar(const coord_def & start,
 
 struct counted_monster_list
 {
-    typedef std::pair<const monster* ,int> counted_monster;
-    typedef std::vector<counted_monster> counted_list;
+    typedef pair<const monster* ,int> counted_monster;
+    typedef vector<counted_monster> counted_list;
     counted_list list;
     void add(const monster* mons);
     int count();
     bool empty() { return list.empty(); }
-    std::string describe(description_level_type desc = DESC_THE);
+    string describe(description_level_type desc = DESC_THE);
 };
 #endif

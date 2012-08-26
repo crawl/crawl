@@ -30,7 +30,7 @@ int allowed_deaths_door_hp(void)
     if (you.religion == GOD_KIKUBAAQUDGHA && !player_under_penance())
         hp += you.piety / 15;
 
-    return std::max(hp, 1);
+    return max(hp, 1);
 }
 
 spret_type cast_deaths_door(int pow, bool fail)
@@ -239,7 +239,7 @@ spret_type cast_teleport_control(int power, bool fail)
     return SPRET_SUCCESS;
 }
 
-int cast_selective_amnesia(std::string *pre_msg)
+int cast_selective_amnesia(string *pre_msg)
 {
     if (you.spell_no == 0)
     {

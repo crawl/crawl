@@ -145,9 +145,9 @@ static const char *describe_xom_mood()
                              : "a very special plaything of Xom.";
 }
 
-const std::string describe_xom_favour()
+const string describe_xom_favour()
 {
-    std::string favour;
+    string favour;
     if (you.religion != GOD_XOM)
         favour = "a very buggy toy of Xom.";
     else if (you.gift_timeout < 1)
@@ -158,9 +158,9 @@ const std::string describe_xom_favour()
     return favour;
 }
 
-static std::string _get_xom_speech(const std::string key)
+static string _get_xom_speech(const string key)
 {
-    std::string result = getSpeakString("Xom " + key);
+    string result = getSpeakString("Xom " + key);
 
     if (result.empty())
         result = getSpeakString("Xom general effect");
@@ -199,10 +199,10 @@ bool xom_is_nice(int tension)
         const int tension_bonus
             = (tension == -1 ? 0 // :
 // Xom needs to be less negative
-//              : tension ==  0 ? -std::min(abs(HALF_MAX_PIETY - you.piety) / 2,
-//                                         you.piety / 10)
-                             : std::min((MAX_PIETY - you.piety) / 2,
-                                        random2(tension)));
+//              : tension ==  0 ? -min(abs(HALF_MAX_PIETY - you.piety) / 2,
+//                                     you.piety / 10)
+                             : min((MAX_PIETY - you.piety) / 2,
+                                   random2(tension)));
 
         const int effective_piety = you.piety + tension_bonus;
         ASSERT(effective_piety >= 0 && effective_piety <= MAX_PIETY);
@@ -233,7 +233,7 @@ static void _xom_is_stimulated(int maxinterestingness,
 
     int interestingness = random2(piety_scale(maxinterestingness));
 
-    interestingness = std::min(200, interestingness);
+    interestingness = min(200, interestingness);
 
 #if defined(DEBUG_RELIGION) || defined(DEBUG_GIFTS) || defined(DEBUG_XOM)
     mprf(MSGCH_DIAGNOSTICS,
@@ -269,7 +269,7 @@ void xom_is_stimulated(int maxinterestingness, xom_message_type message_type,
                        force_message);
 }
 
-void xom_is_stimulated(int maxinterestingness, const std::string& message,
+void xom_is_stimulated(int maxinterestingness, const string& message,
                        bool force_message)
 {
     if (you.religion != GOD_XOM)
@@ -289,7 +289,7 @@ void xom_tick()
      if (x_chance_in_y(1, 20))
      {
         // Xom semi-randomly drifts your piety.
-        const std::string old_xom_favour = describe_xom_favour();
+        const string old_xom_favour = describe_xom_favour();
         const bool good = (you.piety == HALF_MAX_PIETY? coinflip()
                                                       : you.piety > HALF_MAX_PIETY);
         int size = abs(you.piety - HALF_MAX_PIETY);
@@ -301,7 +301,7 @@ void xom_tick()
             size = HALF_MAX_PIETY;
 
         you.piety = HALF_MAX_PIETY + (good ? size : -size);
-        std::string new_xom_favour = describe_xom_favour();
+        string new_xom_favour = describe_xom_favour();
         if (old_xom_favour != new_xom_favour)
         {
             // If we entered another favour state, take a big step into
@@ -328,7 +328,7 @@ void xom_tick()
         new_xom_favour = describe_xom_favour();
         if (old_xom_favour != new_xom_favour)
         {
-            const std::string msg = "You are now " + new_xom_favour;
+            const string msg = "You are now " + new_xom_favour;
             god_speaks(you.religion, msg.c_str());
             //updating piety status line
             you.redraw_title = true;
@@ -531,7 +531,7 @@ static bool _transformation_check(const spell_type spell)
 static int _xom_makes_you_cast_random_spell(int sever, int tension,
                                             bool debug = false)
 {
-    int spellenum = std::max(1, sever);
+    int spellenum = max(1, sever);
 
     god_acting gdact(GOD_XOM);
 
@@ -539,7 +539,7 @@ static int _xom_makes_you_cast_random_spell(int sever, int tension,
     if (tension > 0)
     {
         const int nxomspells = ARRAYSZ(_xom_tension_spells);
-        spellenum = std::min(nxomspells, spellenum);
+        spellenum = min(nxomspells, spellenum);
         spell     = _xom_tension_spells[random2(spellenum)];
 
         // Don't attempt to cast spells that are guaranteed to fail.
@@ -551,7 +551,7 @@ static int _xom_makes_you_cast_random_spell(int sever, int tension,
     else
     {
         const int nxomspells = ARRAYSZ(_xom_nontension_spells);
-        spellenum = std::min(nxomspells, spellenum);
+        spellenum = min(nxomspells, spellenum);
         spell     = _xom_nontension_spells[random2(spellenum)];
     }
 
@@ -984,7 +984,7 @@ static void _do_chaos_upgrade(item_def &item, const monster* mon)
 
         description_level_type desc = mon->friendly() ? DESC_YOUR :
                                                         DESC_THE;
-        std::string msg = apostrophise(mon->name(desc));
+        string msg = apostrophise(mon->name(desc));
 
         msg += " ";
 
@@ -1115,7 +1115,7 @@ static int _xom_do_potion(bool debug = false)
         you.berserk_penalty = NO_BERSERK_PENALTY;
 
     // Take a note.
-    std::string potion_msg = "potion effect ";
+    string potion_msg = "potion effect ";
     switch (pot)
     {
     case POT_CURING:        potion_msg += "(curing)"; break;
@@ -1191,7 +1191,7 @@ static int _xom_send_allies(int sever, bool debug = false)
     int numdemons = sever;
     for (int i = 0; i < 3; i++)
         numdemons = random2(numdemons + 1);
-    numdemons = std::min(numdemons + 2, 16);
+    numdemons = min(numdemons + 2, 16);
 
     // Limit number of demons by experience level.
     const int maxdemons = (you.experience_level);
@@ -1208,8 +1208,8 @@ static int _xom_send_allies(int sever, bool debug = false)
                                              1, 3,  // both hostile
                                              0);
 
-    std::vector<bool> is_demonic(numdemons, false);
-    std::vector<monster*> summons(numdemons);
+    vector<bool> is_demonic(numdemons, false);
+    vector<monster*> summons(numdemons);
 
     int num_actually_summoned = 0;
 
@@ -1368,7 +1368,7 @@ static int _xom_polymorph_nearby_monster(bool helpful, bool debug = false)
             god_speaks(GOD_XOM, _get_xom_speech(lookup).c_str());
 
             bool see_old = you.can_see(mon);
-            std::string old_name = mon->full_name(DESC_PLAIN);
+            string old_name = mon->full_name(DESC_PLAIN);
 
             if (one_chance_in(8)
                 && !mons_is_ghost_demon(mon->type)
@@ -1387,7 +1387,7 @@ static int _xom_polymorph_nearby_monster(bool helpful, bool debug = false)
 
             if (see_old || see_new)
             {
-                std::string new_name = mon->full_name(DESC_PLAIN);
+                string new_name = mon->full_name(DESC_PLAIN);
                 if (!see_old)
                     old_name = "something unseen";
                 else if (!see_new)
@@ -1398,7 +1398,7 @@ static int _xom_polymorph_nearby_monster(bool helpful, bool debug = false)
                 snprintf(poly_buf, sizeof(poly_buf), "polymorph %s -> %s",
                          old_name.c_str(), new_name.c_str());
 
-                std::string poly = poly_buf;
+                string poly = poly_buf;
 #ifdef NOTE_DEBUG_XOM
                 poly += " (";
                 poly += (powerup ? "upgrade" : "downgrade");
@@ -1498,7 +1498,7 @@ static int _xom_swap_weapons(bool debug = false)
         return XOM_DID_NOTHING;
     }
 
-    std::vector<monster* > mons_wpn;
+    vector<monster* > mons_wpn;
     for (monster_iterator mi(&you); mi; ++mi)
     {
         if (!wpn || mi->wont_attack() || mi->is_summoned()
@@ -1627,7 +1627,7 @@ static int _xom_rearrange_pieces(int sever, bool debug = false)
     if (player_stair_delay())
         return XOM_DID_NOTHING;
 
-    std::vector<monster* > mons;
+    vector<monster* > mons;
     for (monster_iterator mi(&you); mi; ++mi)
         mons.push_back(*mi);
 
@@ -1652,8 +1652,8 @@ static int _xom_rearrange_pieces(int sever, bool debug = false)
     if (num_mons > 1 && x_chance_in_y(sever, 70))
     {
         bool did_message = false;
-        const int max_repeats = std::min(num_mons / 2, 8);
-        const int repeats     = std::min(random2(sever / 10) + 1, max_repeats);
+        const int max_repeats = min(num_mons / 2, 8);
+        const int repeats     = min(random2(sever / 10) + 1, max_repeats);
         for (int i = 0; i < repeats; ++i)
         {
             const int mon1 = random2(num_mons);
@@ -1769,7 +1769,7 @@ static int _xom_snakes_to_sticks(int sever, bool debug = false)
 
 static int _xom_animate_monster_weapon(int sever, bool debug = false)
 {
-    std::vector<monster* > mons_wpn;
+    vector<monster* > mons_wpn;
     for (monster_iterator mi(&you); mi; ++mi)
     {
         if (mi->wont_attack() || mi->is_summoned()
@@ -1811,7 +1811,7 @@ static int _xom_animate_monster_weapon(int sever, bool debug = false)
     const int wpn = mon->inv[MSLOT_WEAPON];
     ASSERT(wpn != NON_ITEM);
 
-    const int dur = std::min(2 + (random2(sever) / 5), 6);
+    const int dur = min(2 + (random2(sever) / 5), 6);
 
     mgen_data mg(MONS_DANCING_WEAPON, BEH_FRIENDLY, &you, dur,
                  SPELL_TUKIMAS_DANCE, mon->pos(), mon->mindex(),
@@ -1967,9 +1967,9 @@ static int _xom_throw_divine_lightning(bool debug = false)
 
 static int _xom_change_scenery(bool debug = false)
 {
-    std::vector<coord_def> candidates;
-    std::vector<coord_def> closed_doors;
-    std::vector<coord_def> open_doors;
+    vector<coord_def> candidates;
+    vector<coord_def> closed_doors;
+    vector<coord_def> open_doors;
     for (radius_iterator ri(you.get_los()); ri; ++ri)
     {
         if (!you.see_cell(*ri))
@@ -1994,9 +1994,9 @@ static int _xom_change_scenery(bool debug = false)
             if (!found_door)
             {
                 // If it's a gate, add all doors belonging to the gate.
-                std::set<coord_def> all_door;
+                set<coord_def> all_door;
                 find_connected_identical(*ri, grd(*ri), all_door);
-                for (std::set<coord_def>::const_iterator dc = all_door.begin();
+                for (set<coord_def>::const_iterator dc = all_door.begin();
                      dc != all_door.end(); ++dc)
                 {
                     closed_doors.push_back(*dc);
@@ -2021,10 +2021,10 @@ static int _xom_change_scenery(bool debug = false)
             {
                 // Check whether any of the doors belonging to a gate is
                 // blocked by an item or monster.
-                std::set<coord_def> all_door;
+                set<coord_def> all_door;
                 find_connected_identical(*ri, grd(*ri), all_door);
                 bool is_blocked = false;
-                for (std::set<coord_def>::const_iterator dc = all_door.begin();
+                for (set<coord_def>::const_iterator dc = all_door.begin();
                      dc != all_door.end(); ++dc)
                 {
                     if (actor_at(*dc) || igrd(*dc) != NON_ITEM)
@@ -2038,7 +2038,7 @@ static int _xom_change_scenery(bool debug = false)
                 // belonging to the gate.
                 if (!is_blocked)
                 {
-                    for (std::set<coord_def>::const_iterator dc = all_door.begin();
+                    for (set<coord_def>::const_iterator dc = all_door.begin();
                          dc != all_door.end(); ++dc)
                     {
                         open_doors.push_back(*dc);
@@ -2056,7 +2056,7 @@ static int _xom_change_scenery(bool debug = false)
     for (unsigned int k = 0; k < closed_doors.size(); ++k)
         candidates.push_back(closed_doors[k]);
 
-    const std::string speech = _get_xom_speech("scenery");
+    const string speech = _get_xom_speech("scenery");
     if (candidates.empty())
     {
         if (!one_chance_in(8))
@@ -2065,7 +2065,7 @@ static int _xom_change_scenery(bool debug = false)
         // Place one or more altars to Xom.
         coord_def place;
         bool success = false;
-        const int max_altars = std::max(1, random2(random2(14)));
+        const int max_altars = max(1, random2(random2(14)));
         for (int tries = max_altars; tries > 0; --tries)
         {
             if ((random_near_space(you.pos(), place)
@@ -2149,7 +2149,7 @@ static int _xom_change_scenery(bool debug = false)
 
     god_speaks(GOD_XOM, speech.c_str());
 
-    std::vector<std::string> effects, terse;
+    vector<string> effects, terse;
     if (fountains_flow > 0)
     {
         snprintf(info, INFO_SIZE,
@@ -2171,7 +2171,7 @@ static int _xom_change_scenery(bool debug = false)
                  fountains_blood == 1 ? ""  : "s",
                  fountains_blood == 1 ? "s" : "");
 
-        std::string fountains = info;
+        string fountains = info;
         if (effects.empty())
             fountains = uppercase_first(fountains);
         effects.push_back(fountains);
@@ -2206,7 +2206,7 @@ static int _xom_change_scenery(bool debug = false)
                                   : "",
                  doors_close == 1 ? ""  : "s",
                  doors_close == 1 ? "s" : "");
-        std::string closed = info;
+        string closed = info;
         if (effects.empty())
             closed = uppercase_first(closed);
         effects.push_back(closed);
@@ -2406,10 +2406,10 @@ static void _get_in_view(FixedVector<bool, NUM_FEATURES>& in_view)
 
 static void _xom_zero_miscast()
 {
-    std::vector<std::string> messages;
-    std::vector<std::string> priority;
+    vector<string> messages;
+    vector<string> priority;
 
-    std::vector<int> inv_items;
+    vector<int> inv_items;
     for (int i = 0; i < ENDOFPACK; ++i)
     {
         const item_def &item(you.inv[i]);
@@ -2498,14 +2498,14 @@ static void _xom_zero_miscast()
         && !feat_is_trap(feat) && feat != DNGN_STONE_ARCH
         && feat != DNGN_OPEN_DOOR && feat != DNGN_ABANDONED_SHOP)
     {
-        const std::string feat_name =
-            feature_description_at(you.pos(), false, DESC_THE, false);
+        const string feat_name = feature_description_at(you.pos(), false,
+                                                        DESC_THE, false);
 
         if (you.airborne())
         {
             // Tengu fly a lot, so don't put airborne messages into the
             // priority vector for them.
-            std::vector<std::string>* vec;
+            vector<string>* vec;
             if (you.species == SP_TENGU)
                 vec = &messages;
             else
@@ -2537,7 +2537,7 @@ static void _xom_zero_miscast()
 
         const item_def &item(you.inv[idx]);
 
-        std::string name;
+        string name;
         if (item.quantity == 1)
             name = item.name(DESC_YOUR, false, false, false);
         else
@@ -2560,7 +2560,7 @@ static void _xom_zero_miscast()
     }
 
     {
-        std::string str = "A monocle briefly appears over your ";
+        string str = "A monocle briefly appears over your ";
         str += coinflip() ? "right" : "left";
         if (you.form == TRAN_SPIDER)
             if (coinflip())
@@ -2591,7 +2591,7 @@ static void _xom_zero_miscast()
 
     if (_could_wear_eq(EQ_WEAPON))
     {
-        std::string str = "A fancy cane briefly appears in your ";
+        string str = "A fancy cane briefly appears in your ";
         str += you.hand_name(false);
         str += ".";
 
@@ -2603,7 +2603,7 @@ static void _xom_zero_miscast()
 
     if ((item = _tran_get_eq(EQ_HELMET)))
     {
-        std::string str = "Your ";
+        string str = "Your ";
         str += item->name(DESC_BASENAME, false, false, false);
         str += " leaps into the air, briefly spins, then lands back on "
                "your head!";
@@ -2614,17 +2614,17 @@ static void _xom_zero_miscast()
     if ((item = _tran_get_eq(EQ_BOOTS)) && item->sub_type == ARM_BOOTS
         && !you.cannot_act())
     {
-        std::string name = item->name(DESC_BASENAME, false, false, false);
+        string name = item->name(DESC_BASENAME, false, false, false);
         name = replace_all(name, "pair of ", "");
 
-        std::string str = "You compulsively click the heels of your ";
+        string str = "You compulsively click the heels of your ";
         str += name;
         str += " together three times.";
     }
 
     if ((item = _tran_get_eq(EQ_SHIELD)))
     {
-        std::string str = "Your ";
+        string str = "Your ";
         str += item->name(DESC_BASENAME, false, false, false);
         str += " spins!";
 
@@ -2638,10 +2638,10 @@ static void _xom_zero_miscast()
 
     if ((item = _tran_get_eq(EQ_BODY_ARMOUR)))
     {
-        std::string str;
-        std::string name = item->name(DESC_BASENAME, false, false, false);
+        string str;
+        string name = item->name(DESC_BASENAME, false, false, false);
 
-        if (name.find("dragon") != std::string::npos)
+        if (name.find("dragon") != string::npos)
         {
             str  = "The scales on your ";
             str += name;
@@ -2686,8 +2686,8 @@ static void _xom_zero_miscast()
 
         item = &you.inv[idx];
 
-        std::string name = item->name(DESC_YOUR, false, false, false);
-        std::string verb = coinflip() ? "glow" : "vibrate";
+        string name = item->name(DESC_YOUR, false, false, false);
+        string verb = coinflip() ? "glow" : "vibrate";
 
         if (item->quantity == 1)
             verb += "s";
@@ -2701,14 +2701,14 @@ static void _xom_zero_miscast()
         mpr(messages[random2(messages.size())].c_str());
 }
 
-static void _get_hand_type(std::string &hand, bool &can_plural)
+static void _get_hand_type(string &hand, bool &can_plural)
 {
     hand       = "";
     can_plural = true;
 
-    std::vector<std::string> hand_vec;
-    std::vector<bool>        plural_vec;
-    bool                     plural;
+    vector<string> hand_vec;
+    vector<bool>   plural_vec;
+    bool           plural;
 
     hand_vec.push_back(you.hand_name(false, &plural));
     plural_vec.push_back(plural);
@@ -2800,7 +2800,7 @@ static int _xom_miscast(const int max_level, const bool nasty,
     }
 
     // Take a note.
-    std::string desc = "miscast effect";
+    string desc = "miscast effect";
 #ifdef NOTE_DEBUG_XOM
     static char level_buf[20];
     snprintf(level_buf, sizeof(level_buf), " level %d%s",
@@ -2816,8 +2816,8 @@ static int _xom_miscast(const int max_level, const bool nasty,
         return XOM_BAD_MISCAST_PSEUDO;
     }
 
-    std::string hand_str;
-    bool        can_plural;
+    string hand_str;
+    bool   can_plural;
 
     _get_hand_type(hand_str, can_plural);
 
@@ -2859,7 +2859,7 @@ static int _xom_lose_stats(bool debug = false)
         {
             int idx = random2(3);
             stat = types[idx];
-            max  = std::min(max, vals[idx] - 1);
+            max  = min(max, vals[idx] - 1);
         }
         while (max < 1 && (++tries < 30));
 
@@ -2968,7 +2968,7 @@ static int _xom_player_confusion_effect(int sever, bool debug = false)
         }
 
         // Take a note.
-        std::string conf_msg = "confusion";
+        string conf_msg = "confusion";
         if (mons_too)
             conf_msg += " (+ monsters)";
         take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, conf_msg.c_str()), true);
@@ -3108,8 +3108,7 @@ bool move_stair(coord_def stair_pos, bool away, bool allow_under)
 
     ASSERT(stair_pos != ray.pos());
 
-    std::string stair_str =
-        feature_description_at(stair_pos, false, DESC_THE, false);
+    string stair_str = feature_description_at(stair_pos, false, DESC_THE, false);
 
     mprf("%s slides %s you!", stair_str.c_str(),
          away ? "away from" : "towards");
@@ -3153,7 +3152,7 @@ static int _xom_repel_stairs(bool debug = false)
         return XOM_DID_NOTHING;
     }
 
-    std::vector<coord_def> stairs_avail;
+    vector<coord_def> stairs_avail;
     bool real_stairs = false;
     for (radius_iterator ri(you.get_los()); ri; ++ri)
     {
@@ -3175,10 +3174,10 @@ static int _xom_repel_stairs(bool debug = false)
         return XOM_BAD_STAIRS;
 
     // Don't mention staircases if there aren't any nearby.
-    std::string stair_msg = _get_xom_speech("repel stairs");
-    if (stair_msg.find("@staircase@") != std::string::npos)
+    string stair_msg = _get_xom_speech("repel stairs");
+    if (stair_msg.find("@staircase@") != string::npos)
     {
-        std::string feat_name;
+        string feat_name;
         if (!real_stairs)
         {
             if (feat_is_escape_hatch(grd(stairs_avail[0])))
@@ -3202,7 +3201,7 @@ static int _xom_repel_stairs(bool debug = false)
         you.duration[DUR_REPEL_STAIRS_CLIMB] = 500;
     }
 
-    std::random_shuffle(stairs_avail.begin(), stairs_avail.end());
+    random_shuffle(stairs_avail.begin(), stairs_avail.end());
     int count_moved = 0;
     for (unsigned int i = 0; i < stairs_avail.size(); i++)
         if (move_stair(stairs_avail[i], true, true))
@@ -3233,7 +3232,7 @@ static int _xom_colour_smoke_trail(bool debug = false)
 
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "colour smoke trail"), true);
 
-    const std::string speech = _get_xom_speech("colour smoke trail");
+    const string speech = _get_xom_speech("colour smoke trail");
     god_speaks(GOD_XOM, speech.c_str());
 
     return XOM_BAD_COLOUR_SMOKE_TRAIL;
@@ -3241,7 +3240,7 @@ static int _xom_colour_smoke_trail(bool debug = false)
 
 static int _xom_draining_torment_effect(int sever, bool debug = false)
 {
-    const std::string speech = _get_xom_speech("draining or torment");
+    const string speech = _get_xom_speech("draining or torment");
     const bool nasty = _xom_feels_nasty();
     int rc = XOM_DID_NOTHING;
 
@@ -3301,7 +3300,7 @@ static bool _has_min_animated_weapon_level()
 static int _xom_summon_hostiles(int sever, bool debug = false)
 {
     bool rc = false;
-    const std::string speech = _get_xom_speech("hostile monster");
+    const string speech = _get_xom_speech("hostile monster");
 
     int result = XOM_DID_NOTHING;
 
@@ -3313,7 +3312,7 @@ static int _xom_summon_hostiles(int sever, bool debug = false)
             return XOM_BAD_ANIMATE_WPN;
 
         const item_def& weapon = *you.weapon();
-        const std::string wep_name = weapon.name(DESC_PLAIN);
+        const string wep_name = weapon.name(DESC_PLAIN);
         rc = cast_tukimas_dance(100, GOD_XOM, true);
 
         if (rc)
@@ -3335,7 +3334,7 @@ static int _xom_summon_hostiles(int sever, bool debug = false)
         int numdemons = sever;
         for (int i = 0; i < 3; ++i)
             numdemons = random2(numdemons + 1);
-        numdemons = std::min(numdemons + 1, 14);
+        numdemons = min(numdemons + 1, 14);
 
         // Limit number of demons by experience level.
         if (!you.penance[GOD_XOM])
@@ -3594,7 +3593,7 @@ static int _xom_is_bad(int sever, int tension, bool debug = false)
     if (done && !debug && _xom_is_bored())
     {
         const int interest = random2avg(badness * 60, 2);
-        you.gift_timeout   = std::min(interest, 255);
+        you.gift_timeout   = min(interest, 255);
         //updating piety status line
         you.redraw_title = true;
 #if defined(DEBUG_RELIGION) || defined(DEBUG_XOM)
@@ -3620,7 +3619,7 @@ static void _handle_accidental_death(const int orig_hp,
         return;
     }
 
-    std::string speech_type = "accidental homicide";
+    string speech_type = "accidental homicide";
 
     const dungeon_feature_type feat = grd(you.pos());
 
@@ -3667,7 +3666,7 @@ static void _handle_accidental_death(const int orig_hp,
     god_speaks(GOD_XOM, _get_xom_speech("resurrection").c_str());
 
     if (you.hp <= 0)
-        you.hp = std::min(orig_hp, you.hp_max);
+        you.hp = min(orig_hp, you.hp_max);
 
     // MUT_THIN_SKELETON can statkill you by str, undo it if necessary
     /*while (you.strength() <= 0 && you.mutation[MUT_THIN_SKELETON] > orig_mutation[MUT_THIN_SKELETON])
@@ -3763,7 +3762,7 @@ int xom_acts(bool niceness, int sever, int tension, bool debug)
     ASSERT(!_player_is_dead());
 #endif
 
-    sever = std::max(1, sever);
+    sever = max(1, sever);
 
     god_type which_god = GOD_XOM;
     // Drawing the Xom card from Nemelex's decks of oddities or punishment.
@@ -3868,12 +3867,12 @@ int xom_acts(bool niceness, int sever, int tension, bool debug)
 
     if (you.religion == GOD_XOM && one_chance_in(5))
     {
-        const std::string old_xom_favour = describe_xom_favour();
+        const string old_xom_favour = describe_xom_favour();
         you.piety = random2(MAX_PIETY + 1);
-        const std::string new_xom_favour = describe_xom_favour();
+        const string new_xom_favour = describe_xom_favour();
         if (was_bored || old_xom_favour != new_xom_favour)
         {
-            const std::string msg = "You are now " + new_xom_favour;
+            const string msg = "You are now " + new_xom_favour;
             god_speaks(you.religion, msg.c_str());
         }
 #ifdef NOTE_DEBUG_XOM
@@ -3885,8 +3884,8 @@ int xom_acts(bool niceness, int sever, int tension, bool debug)
     {
         // If we didn't reroll at least mention the new favour
         // now it's not "BORING thing" anymore.
-        const std::string new_xom_favour = describe_xom_favour();
-        const std::string msg = "You are now " + new_xom_favour;
+        const string new_xom_favour = describe_xom_favour();
+        const string msg = "You are now " + new_xom_favour;
         god_speaks(you.religion, msg.c_str());
     }
 
@@ -4015,7 +4014,7 @@ static int _death_is_worth_saving(const kill_method_type killed_by,
     }
 }
 
-static std::string _get_death_type_keyword(const kill_method_type killed_by)
+static string _get_death_type_keyword(const kill_method_type killed_by)
 {
     switch (killed_by)
     {
@@ -4057,8 +4056,8 @@ bool xom_saves_your_life(const int dam, const int death_source,
     mpr("You die...");
     more();
 
-    const std::string key = _get_death_type_keyword(death_type);
-    std::string speech = _get_xom_speech("life saving " + key);
+    const string key = _get_death_type_keyword(death_type);
+    string speech = _get_xom_speech("life saving " + key);
     god_speaks(GOD_XOM, speech.c_str());
 
     // Give back some hp.
@@ -4072,7 +4071,7 @@ bool xom_saves_your_life(const int dam, const int death_source,
         stat_type s = static_cast<stat_type>(i);
         while (you.max_stat(s) < 1)
             you.base_stats[s]++;
-        you.stat_loss[s] = std::min<int8_t>(you.stat_loss[s], you.max_stat(s) - 1);
+        you.stat_loss[s] = min<int8_t>(you.stat_loss[s], you.max_stat(s) - 1);
         you.stat_zero[s] = 0;
     }
 
@@ -4092,10 +4091,10 @@ bool xom_saves_your_life(const int dam, const int death_source,
 #ifdef WIZARD
 struct xom_effect_count
 {
-    std::string effect;
-    int         count;
+    string effect;
+    int    count;
 
-    xom_effect_count(std::string e, int c) : effect(e), count(c) {};
+    xom_effect_count(string e, int c) : effect(e), count(c) {};
 };
 
 static bool _sort_xom_effects(const xom_effect_count &a,
@@ -4107,7 +4106,7 @@ static bool _sort_xom_effects(const xom_effect_count &a,
     return (a.count > b.count);
 }
 
-static const std::string _xom_effect_to_name(int effect)
+static const string _xom_effect_to_name(int effect)
 {
     ASSERT(effect < XOM_PLAYER_DEAD);
 
@@ -4131,7 +4130,7 @@ static const std::string _xom_effect_to_name(int effect)
         "banishment"
     };
 
-    std::string result = "";
+    string result = "";
     if (effect > XOM_DID_NOTHING && effect < XOM_PLAYER_DEAD)
     {
         if (effect <= XOM_LAST_GOOD_ACT)
@@ -4204,13 +4203,13 @@ void debug_xom_effects()
     fprintf(ostat, "\nRunning %d times through entire mood cycle.\n", N);
     fprintf(ostat, "---- OUTPUT EFFECT PERCENTAGES ----\n");
 
-    std::vector<int>               mood_effects;
-    std::vector<std::vector<int> > all_effects;
-    std::vector<std::string>       moods;
-    std::vector<int>               mood_good_acts;
+    vector<int>          mood_effects;
+    vector<vector<int> > all_effects;
+    vector<string>       moods;
+    vector<int>          mood_good_acts;
 
-    std::string old_mood = "";
-    std::string     mood = "";
+    string old_mood = "";
+    string     mood = "";
 
     // Add an empty list to later add all effects to.
     all_effects.push_back(mood_effects);
@@ -4256,7 +4255,7 @@ void debug_xom_effects()
     mood_good_acts[0] += mood_good;
 
     const int num_moods = moods.size();
-    std::vector<xom_effect_count> xom_ec_pairs;
+    vector<xom_effect_count> xom_ec_pairs;
     for (int i = 0; i < num_moods; ++i)
     {
         mood_effects    = all_effects[i];
@@ -4272,7 +4271,7 @@ void debug_xom_effects()
         fprintf(ostat, "BAD %7.2f%%\n",
                 (100.0 * (float) (total - mood_good_acts[i]) / (float) total));
 
-        std::sort(mood_effects.begin(), mood_effects.end());
+        sort(mood_effects.begin(), mood_effects.end());
 
         xom_ec_pairs.clear();
         int old_effect = XOM_DID_NOTHING;
@@ -4283,7 +4282,7 @@ void debug_xom_effects()
             {
                 if (count > 0)
                 {
-                    std::string name     = _xom_effect_to_name(old_effect);
+                    string name          = _xom_effect_to_name(old_effect);
                     xom_effect_count xec = xom_effect_count(name, count);
                     xom_ec_pairs.push_back(xec);
                 }
@@ -4296,12 +4295,12 @@ void debug_xom_effects()
 
         if (count > 0)
         {
-            std::string name     = _xom_effect_to_name(old_effect);
+            string name          = _xom_effect_to_name(old_effect);
             xom_effect_count xec = xom_effect_count(name, count);
             xom_ec_pairs.push_back(xec);
         }
 
-        std::sort(xom_ec_pairs.begin(), xom_ec_pairs.end(), _sort_xom_effects);
+        sort(xom_ec_pairs.begin(), xom_ec_pairs.end(), _sort_xom_effects);
         for (unsigned int k = 0; k < xom_ec_pairs.size(); ++k)
         {
             xom_effect_count xec = xom_ec_pairs[k];

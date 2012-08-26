@@ -72,7 +72,7 @@ bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
     // TODO enne - need to find a cross-platform way to also
     // attempt to locate system fonts by name...
     // 1KB: fontconfig if we are not scared of hefty libraries
-    std::string font_path = datafile_path(font_name, false, true);
+    string font_path = datafile_path(font_name, false, true);
     if (font_path.c_str()[0] == 0)
         die_noline("Could not find font '%s'\n", font_name);
 
@@ -231,18 +231,18 @@ void FTFontWrapper::load_glyph(unsigned int c, ucs_t uchar)
 
                     unsigned char edge = 0;
                     if (x > 0)
-                        edge = std::max(bmp->buffer[(x-1) + charw * y], edge);
+                        edge = max(bmp->buffer[(x-1) + charw * y], edge);
                     if (y > 0)
-                        edge = std::max(bmp->buffer[x + charw * (y-1)], edge);
+                        edge = max(bmp->buffer[x + charw * (y-1)], edge);
                     if (x < bmp->width - 1)
-                        edge = std::max(bmp->buffer[(x+1) + charw * y], edge);
+                        edge = max(bmp->buffer[(x+1) + charw * y], edge);
                     if (y < bmp->rows - 1)
-                        edge = std::max(bmp->buffer[x + charw * (y+1)], edge);
+                        edge = max(bmp->buffer[x + charw * (y+1)], edge);
 
                     pixels[idx] = orig;
                     pixels[idx + 1] = orig;
                     pixels[idx + 2] = orig;
-                    pixels[idx + 3] = std::min((int)orig + edge, 255);
+                    pixels[idx + 3] = min((int)orig + edge, 255);
                 }
         }
         else
@@ -362,7 +362,7 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
     if (!chars || !colours || !width || !height || !m_glyphs)
         return;
 
-    coord_def adv(std::max(-m_min_offset, 0), 0);
+    coord_def adv(max(-m_min_offset, 0), 0);
     unsigned int i = 0;
 
     ASSERT(m_buf);
@@ -470,7 +470,7 @@ static void _draw_box(int x_pos, int y_pos, float width, float height,
                       float box_width, unsigned char box_colour,
                       unsigned char box_alpha)
 {
-    std::auto_ptr<GLShapeBuffer> buf(GLShapeBuffer::create(false, true));
+    auto_ptr<GLShapeBuffer> buf(GLShapeBuffer::create(false, true));
     GLWPrim rect(x_pos - box_width, y_pos - box_width,
                  x_pos + width + box_width, y_pos + height + box_width);
 
@@ -494,7 +494,7 @@ static void _draw_box(int x_pos, int y_pos, float width, float height,
 
 unsigned int FTFontWrapper::string_height(const formatted_string &str) const
 {
-    std::string temp = str.tostring();
+    string temp = str.tostring();
     return string_height(temp.c_str());
 }
 
@@ -510,13 +510,13 @@ unsigned int FTFontWrapper::string_height(const char *text) const
 
 unsigned int FTFontWrapper::string_width(const formatted_string &str)
 {
-    std::string temp = str.tostring();
+    string temp = str.tostring();
     return string_width(temp.c_str());
 }
 
 unsigned int FTFontWrapper::string_width(const char *text)
 {
-    unsigned int base_width = std::max(-m_min_offset, 0);
+    unsigned int base_width = max(-m_min_offset, 0);
     unsigned int max_width = 0;
 
     unsigned int width = base_width;
@@ -525,7 +525,7 @@ unsigned int FTFontWrapper::string_width(const char *text)
     {
         if (*itr == '\n')
         {
-            max_width = std::max(width + adjust, max_width);
+            max_width = max(width + adjust, max_width);
             width = base_width;
             adjust = 0;
         }
@@ -533,23 +533,23 @@ unsigned int FTFontWrapper::string_width(const char *text)
         {
             unsigned int c = map_unicode(*itr);
             width += m_glyphs[c].advance;
-            adjust = std::max(0, m_glyphs[c].width - m_glyphs[c].advance);
+            adjust = max(0, m_glyphs[c].width - m_glyphs[c].advance);
         }
     }
 
-    max_width = std::max(width + adjust, max_width);
+    max_width = max(width + adjust, max_width);
     return max_width;
 }
 
 int FTFontWrapper::find_index_before_width(const char *text, int max_width)
 {
-    int width = std::max(-m_min_offset, 0);
+    int width = max(-m_min_offset, 0);
 
     for (int i = 0; text[i]; i++)
     {
         unsigned int c = map_unicode(text[i]);
         width += m_glyphs[c].advance;
-        int adjust = std::max(0, m_glyphs[c].width - m_glyphs[c].advance);
+        int adjust = max(0, m_glyphs[c].width - m_glyphs[c].advance);
         if (width + adjust > max_width)
             return i;
     }
@@ -569,7 +569,7 @@ formatted_string FTFontWrapper::split(const formatted_string &str,
     formatted_string ret;
     ret += str;
 
-    std::string base = str.tostring();
+    string base = str.tostring();
     int num_lines = 0;
 
     char *line = &base[0];
@@ -637,7 +637,7 @@ void FTFontWrapper::render_string(unsigned int px, unsigned int py,
         int w = wcwidth(c);
         if (w != -1)
             cols += w;
-        max_cols = std::max(cols, max_cols);
+        max_cols = max(cols, max_cols);
 
         // NOTE: only newlines should be used for tool tips.  Don't use EOL.
         ASSERT(c != '\r');
@@ -724,14 +724,13 @@ void FTFontWrapper::render_string(unsigned int px, unsigned int py,
 }
 
 void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
-                          const std::string &str, const VColour &col)
+                          const string &str, const VColour &col)
 {
     store(buf, x, y, str, col, x);
 }
 
 void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
-                          const std::string &str, const VColour &col,
-                          float orig_x)
+                          const string &str, const VColour &col, float orig_x)
 {
     const char *sp = str.c_str();
     ucs_t c;
