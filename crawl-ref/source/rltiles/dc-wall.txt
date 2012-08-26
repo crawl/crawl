@@ -7,39 +7,131 @@
 # Multiple tile definitions are STATIC, that is they may change between
 # saves but are otherwise fixed.
 
-%weight 35
-brick_dark0 WALL_BRICK_DARK WALL_NORMAL
-brick_dark1
-brick_dark2
-brick_dark3
-# sewer grate
-%weight 3
-brick_dark4
-# bones
-%weight 1
-brick_dark5
-# vines
+%weight 100
+brick_dark_1_0 WALL_BRICK_DARK_1 WALL_BRICK_DARK WALL_NORMAL
+brick_dark_1_1
+brick_dark_1_2
+brick_dark_1_3
+%weight 10
+brick_dark_1_4
+brick_dark_1_5
+brick_dark_1_6
+brick_dark_1_7
 %weight 5
-brick_dark6
-# banner
-%weight 3
-%back brick_dark1
-banners/banner1
-%back none
+brick_dark_1_8
+brick_dark_1_9
+brick_dark_1_10
+brick_dark_1_11
 
-%back brick_dark0
-# torch (out)
+%weight 100
+brick_dark_2_0 WALL_BRICK_DARK_2
+brick_dark_2_1
+brick_dark_2_2
+brick_dark_2_3
+%weight 10
+brick_dark_2_4
+brick_dark_2_5
+brick_dark_2_6
+brick_dark_2_7
+
+%weight 5
+brick_dark_2_8 WALL_BRICK_DARK_2_TORCH
+brick_dark_2_9
+brick_dark_2_10
+brick_dark_2_11
+
+%weight 100
+brick_dark_3_0 WALL_BRICK_DARK_3
+brick_dark_3_1
+brick_dark_3_2
+brick_dark_3_3
+%weight 10
+brick_dark_3_4
+brick_dark_3_5
+brick_dark_3_6
+brick_dark_3_7
 %weight 3
-torches/torch0
-%weight 1
-# torches (lit)
-torches/torch1
-%syn WALL_BRICK_TORCH_START
-torches/torch2
-torches/torch3
-torches/torch4
-%syn WALL_BRICK_TORCH_END
-%back none
+brick_dark_3_8
+brick_dark_3_9
+brick_dark_3_10
+brick_dark_3_11
+brick_dark_3_12
+brick_dark_3_13
+brick_dark_3_14
+brick_dark_3_15
+
+%weight 100
+brick_dark_4_0 WALL_BRICK_DARK_4
+brick_dark_4_1
+brick_dark_4_2
+brick_dark_4_3
+%weight 10
+brick_dark_4_4
+brick_dark_4_5
+brick_dark_4_6
+brick_dark_4_7
+%weight 3
+brick_dark_4_12
+brick_dark_4_13
+brick_dark_4_14
+brick_dark_4_15
+
+%weight 10
+brick_dark_4_8 WALL_BRICK_DARK_4_TORCH
+brick_dark_4_9
+brick_dark_4_10
+brick_dark_4_11
+
+%weight 100
+brick_dark_5_0 WALL_BRICK_DARK_5
+brick_dark_5_1
+brick_dark_5_2
+brick_dark_5_3
+%weight 10
+brick_dark_5_4
+brick_dark_5_5
+brick_dark_5_6
+brick_dark_5_7
+%weight 3
+brick_dark_5_8
+brick_dark_5_9
+brick_dark_5_10
+brick_dark_5_11
+brick_dark_5_12
+brick_dark_5_13
+brick_dark_5_14
+brick_dark_5_15
+brick_dark_5_16
+brick_dark_5_17
+brick_dark_5_18
+brick_dark_5_19
+
+%weight 100
+brick_dark_6_0 WALL_BRICK_DARK_6
+brick_dark_6_1
+brick_dark_6_2
+brick_dark_6_3
+%weight 10
+brick_dark_6_4
+brick_dark_6_5
+brick_dark_6_6
+brick_dark_6_7
+%weight 3
+brick_dark_6_8
+brick_dark_6_9
+brick_dark_6_10
+brick_dark_6_11
+brick_dark_6_16
+brick_dark_6_17
+brick_dark_6_18
+brick_dark_6_19
+
+%weight 15
+brick_dark_6_12 WALL_BRICK_DARK_6_TORCH
+brick_dark_6_13
+brick_dark_6_14
+brick_dark_6_15
+
 
 %weight 5
 brick_brown0 WALL_BRICK WALL_BRICK_BROWN

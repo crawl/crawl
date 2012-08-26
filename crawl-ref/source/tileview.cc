@@ -306,6 +306,31 @@ void tile_init_flavour()
         tile_init_flavour(*ri);
 }
 
+static void _get_dungeon_wall_tiles_by_depth(int depth, vector<tileidx_t>& t)
+{
+    if (depth <= 9)
+        t.push_back(TILE_WALL_BRICK_DARK_1);
+    if (depth > 4 && depth <= 13)
+    {
+        t.push_back(TILE_WALL_BRICK_DARK_2);
+        t.push_back(TILE_WALL_BRICK_DARK_2_TORCH);
+    }
+    if (depth > 9 && depth <= 18)
+        t.push_back(TILE_WALL_BRICK_DARK_3);
+    if (depth > 13 && depth <= 22)
+    {
+        t.push_back(TILE_WALL_BRICK_DARK_4);
+        t.push_back(TILE_WALL_BRICK_DARK_4_TORCH);
+    }
+    if (depth > 18)
+        t.push_back(TILE_WALL_BRICK_DARK_5);
+    if (depth > 22)
+    {
+        t.push_back(TILE_WALL_BRICK_DARK_6);
+        t.push_back(TILE_WALL_BRICK_DARK_6_TORCH);
+    }
+}
+
 static tileidx_t _pick_random_dngn_tile(tileidx_t idx, int value = -1)
 {
     ASSERT(idx >= 0 && idx < TILE_DNGN_MAX);
@@ -324,6 +349,33 @@ static tileidx_t _pick_random_dngn_tile(tileidx_t idx, int value = -1)
     }
 
     return idx;
+}
+
+static tileidx_t _pick_random_dngn_tile_multi(vector<tileidx_t> candidates, int value = -1)
+{
+    ASSERT(candidates.size() > 0);
+
+    int total = 0;
+    for (unsigned int i = 0; i < candidates.size(); ++i)
+    {
+        const unsigned int count = tile_dngn_count(candidates[i]);
+        total += tile_dngn_probs(candidates[i] + count - 1);
+    }
+    int rand = (value == -1 ? random2(total) : value % total);
+
+    for (unsigned int i = 0; i < candidates.size(); ++i)
+    {
+        const unsigned int count = tile_dngn_count(candidates[i]);
+        for (unsigned int j = 0; j < count; ++j)
+        {
+            if (rand < tile_dngn_probs(candidates[i] + j))
+                return candidates[i] + j;
+        }
+        rand -= tile_dngn_probs(candidates[i] + count - 1);
+    }
+
+    // Should never reach this place
+    ASSERT(false);
 }
 
 static bool _same_door_at(dungeon_feature_type feat, const coord_def &gc)
@@ -347,11 +399,20 @@ void tile_init_flavour(const coord_def &gc)
 
     if (!env.tile_flv(gc).wall)
     {
-        tileidx_t wall_base = env.tile_default.wall;
-        int colour = env.grid_colours(gc);
-        if (colour)
-            wall_base = tile_dngn_coloured(wall_base, colour);
-        env.tile_flv(gc).wall = _pick_random_dngn_tile(wall_base);
+        if (player_in_branch(BRANCH_MAIN_DUNGEON))
+        {
+            vector<tileidx_t> tile_candidates;
+            _get_dungeon_wall_tiles_by_depth(you.depth, tile_candidates);
+            env.tile_flv(gc).wall = _pick_random_dngn_tile_multi(tile_candidates);
+        }
+        else
+        {
+            tileidx_t wall_base = env.tile_default.wall;
+            int colour = env.grid_colours(gc);
+            if (colour)
+                wall_base = tile_dngn_coloured(wall_base, colour);
+            env.tile_flv(gc).wall = _pick_random_dngn_tile(wall_base);
+        }
     }
 
     if (feat_is_stone_stair(grd(gc)) && player_in_branch(BRANCH_SHOALS))
@@ -909,6 +970,13 @@ void tile_wizmap_terrain(const coord_def &gc)
     env.tile_bk_bg(gc) = tileidx_feature(gc);
 }
 
+static bool _is_torch(tileidx_t basetile)
+{
+    return (basetile == TILE_WALL_BRICK_DARK_2_TORCH
+            || basetile == TILE_WALL_BRICK_DARK_4_TORCH
+            || basetile == TILE_WALL_BRICK_DARK_6_TORCH);
+}
+
 // Updates the "flavour" of tiles that are animated.
 // Unfortunately, these are all hard-coded for now.
 void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
@@ -929,13 +997,13 @@ void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
     }
     else if (bg_idx > TILE_DNGN_LAVA && bg_idx < TILE_BLOOD)
         flv->special = random2(256);
-    else if (bg_idx == TILE_WALL_NORMAL
-             && flv->wall >= TILE_WALL_BRICK_TORCH_START
-             && flv->wall <= TILE_WALL_BRICK_TORCH_END)
+    else if (bg_idx == TILE_WALL_NORMAL)
     {
-        flv->wall += 1;
-        if (flv->wall > TILE_WALL_BRICK_TORCH_END)
-            flv->wall = TILE_WALL_BRICK_TORCH_START;
+        tileidx_t basetile = tile_dngn_basetile(flv->wall);
+        if (_is_torch(basetile))
+        {
+            flv->wall = basetile + (flv->wall - basetile + 1) % tile_dngn_count(basetile);
+        }
     }
 }
 
@@ -965,8 +1033,8 @@ static bool _suppress_blood(const map_cell& mc)
 
 static bool _suppress_blood(tileidx_t bg_idx)
 {
-    return (bg_idx >= TILE_WALL_BRICK_TORCH_START
-            && bg_idx <= TILE_WALL_BRICK_TORCH_END);
+    tileidx_t basetile = tile_dngn_basetile(bg_idx);
+    return _is_torch(basetile);
 }
 
 // Specifically for vault-overwritten doors. We have three "sets" of tiles that
