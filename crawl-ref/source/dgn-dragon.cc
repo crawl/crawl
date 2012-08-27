@@ -18,7 +18,7 @@ void layout_dragon(int mask)
     // 26208, 85 in 96118.  We care about such distance of 69 at most (as the
     // map is rectangular) -- if the origin is in a corner.  The fractal itself
     // operates in Minkowski's metric (and produces Euclidean-like shapes for
-    // most masks), yet we care about the region to fill.    
+    // most masks), yet we care about the region to fill.
     // Some masks may take longer to leave the visible area, but the shape
     // produced looks about as good with this cut-off.
     for (int n = 1; n <= 26208; n++)

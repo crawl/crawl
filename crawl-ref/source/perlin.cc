@@ -13,7 +13,7 @@ static double fhash3(int x, int y, int z)
     hash*=FNV64;
     hash^=z;
     hash*=FNV64;
-    
+
     x=hash ^ (hash >> 27) ^ (hash << 24) ^ (hash >> 48);
     return x / 2147483648.0;
 }
@@ -70,6 +70,6 @@ double perlin(int x, int y, int z)
         frequency = frequency * 2;
         amplitude = amplitude * persistence;
     }
-    
+
     return total / 2.7661014820; // p^0+p^1+p^2+...+p^(octaves-1)
 }
