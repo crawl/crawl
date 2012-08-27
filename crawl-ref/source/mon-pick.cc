@@ -80,6 +80,14 @@ monster_type pick_monster_no_rarity(branch_type branch)
     return population[branch].pop[random2(population[branch].count)].mons;
 }
 
+monster_type pick_monster_by_hash(branch_type branch, uint32_t hash)
+{
+    if (!population[branch].count)
+        return MONS_0;
+
+    return population[branch].pop[hash % population[branch].count].mons;
+}
+
 bool branch_has_monsters(branch_type branch)
 {
     COMPILE_CHECK(ARRAYSZ(population) == NUM_BRANCHES);

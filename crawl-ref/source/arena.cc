@@ -127,7 +127,7 @@ namespace arena
     coord_def place_a, place_b;
 
     bool cycle_random     = false;
-    monster_type cycle_random_pos = NUM_MONSTERS;
+    uint32_t cycle_random_pos = 0;
 
     FILE *file = NULL;
     int message_pos = 0;
@@ -1068,17 +1068,13 @@ monster_type arena_pick_random_monster(const level_id &place, int power,
 
     for (int tries = 0; tries <= NUM_MONSTERS; tries++)
     {
-        ++arena::cycle_random_pos;
-        if (arena::cycle_random_pos >= NUM_MONSTERS)
-            arena::cycle_random_pos = MONS_0;
+        monster_type mons = pick_monster_by_hash(place.branch,
+            ++arena::cycle_random_pos);
 
-        if (mons_rarity(arena::cycle_random_pos, place.branch) == 0)
+        if (arena_veto_random_monster(mons))
             continue;
 
-        if (arena_veto_random_monster(arena::cycle_random_pos))
-            continue;
-
-        return arena::cycle_random_pos;
+        return mons;
     }
 
     game_ended_with_error(
