@@ -13,7 +13,7 @@ Character
 
 Monsters
 --------
-* New monster spells: Shatter, LRD
+* New monster spells: Shatter, LRD.
 
 Spells
 ------
