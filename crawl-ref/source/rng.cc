@@ -75,7 +75,7 @@ void pop_rng_state()
 
 //-----------------------------------------------------------------------------
 // MurmurHash2, by Austin Appleby
-uint32_t hash(const void *data, int len)
+uint32_t hash32(const void *data, int len)
 {
     // 'm' and 'r' are mixing constants generated offline.
     // They're not really 'magic', they just happen to work well.
