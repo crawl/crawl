@@ -50,7 +50,7 @@ bool tile::valid() const
 #endif
 }
 
-const std::string &tile::filename() const
+const string &tile::filename() const
 {
     return m_filename;
 }
@@ -60,17 +60,17 @@ int tile::enumcount() const
     return m_enumname.size();
 }
 
-const std::string &tile::enumname(int idx) const
+const string &tile::enumname(int idx) const
 {
     return m_enumname[idx];
 }
 
-void tile::add_enumname(const std::string &name)
+void tile::add_enumname(const string &name)
 {
     m_enumname.push_back(name);
 }
 
-const std::string &tile::parts_ctg() const
+const string &tile::parts_ctg() const
 {
     return m_parts_ctg;
 }
@@ -195,7 +195,7 @@ void tile::corpsify(int corpse_width, int corpse_height,
     // Use maximum scale in case aspect ratios differ.
     const float width_scale  = (float)m_width / (float)corpse_width;
     const float height_scale = (float)m_height / (float)corpse_height;
-    const float image_scale  = std::max(width_scale, height_scale);
+    const float image_scale  = max(width_scale, height_scale);
 
     // Amount to scale height by to fake a projection.
     const float height_proj = 2.0f;
@@ -238,7 +238,7 @@ void tile::corpsify(int corpse_width, int corpse_height,
             flags(x, y) = true;
         }
 
-    const int wound_height = std::min(2, cut_height);
+    const int wound_height = min(2, cut_height);
 
     // Add some colour to the cut wound.
     for (int x = 0; x < corpse_width; x++)
@@ -372,7 +372,7 @@ bool tile::texture(const tile &img)
     return (true);
 }
 
-bool tile::load(const std::string &new_filename)
+bool tile::load(const string &new_filename)
 {
     m_filename = new_filename;
 

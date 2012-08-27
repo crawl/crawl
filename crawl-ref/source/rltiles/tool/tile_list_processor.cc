@@ -53,7 +53,7 @@ bool tile_list_processor::load_image(tile &img, const char *filename,
 
     if (m_sdir != "" || background && m_back_sdir != "")
     {
-        std::vector<const char *> dirs;
+        vector<const char *> dirs;
         if (m_sdir != "")
             dirs.push_back(m_sdir.c_str());
         if (background && m_back_sdir != "")
@@ -89,7 +89,7 @@ bool tile_list_processor::process_list(const char *list_file)
 {
     m_depends.push_back(list_file);
 
-    std::ifstream input(list_file);
+    ifstream input(list_file);
     if (!input.is_open())
     {
         fprintf(stderr, "Error: couldn't open '%s' for read.\n", list_file);
@@ -174,20 +174,20 @@ static void eat_comments(char *&text)
     }
 }
 
-static const std::string colour_list[16] =
+static const string colour_list[16] =
 {
     "black", "blue", "green", "cyan", "red", "magenta", "brown",
     "lightgrey", "darkgrey", "lightblue", "lightgreen", "lightcyan",
     "lightred", "lightmagenta", "yellow", "white"
 };
 
-static int str_to_colour(std::string colour)
+static int str_to_colour(string colour)
 {
     if (colour.empty())
         return (0);
 
     for (unsigned int c = 0; c < colour.size(); c++)
-        colour[c] = std::tolower(colour[c]);
+        colour[c] = tolower(colour[c]);
 
     for (int i = 0; i < 16; ++i)
     {
@@ -261,7 +261,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
     if (arg[0] == '#')
         return (true);
 
-    std::vector<char *> m_args;
+    vector<char *> m_args;
     m_args.push_back(arg);
 
     while (char *extra = strtok(NULL, delim))
@@ -816,8 +816,8 @@ void tile_list_processor::add_image(tile &img, const char *enumname)
 void tile_list_processor::add_abstracts(
     FILE *fp,
     const char *format,
-    const std::vector<std::string> &lc_enum,
-    const std::vector<std::string> &uc_max_enum)
+    const vector<string> &lc_enum,
+    const vector<string> &uc_max_enum)
 {
     assert(lc_enum.size() == uc_max_enum.size());
     assert(!lc_enum.empty());
@@ -869,19 +869,19 @@ bool tile_list_processor::write_data(bool image, bool code)
         return (false);
     }
 
-    std::string lcname = m_name;
-    std::string ucname = m_name;
+    string lcname = m_name;
+    string ucname = m_name;
     for (unsigned int i = 0; i < m_name.size(); i++)
     {
-        lcname[i] = std::tolower(m_name[i]);
-        ucname[i] = std::toupper(m_name[i]);
+        lcname[i] = tolower(m_name[i]);
+        ucname[i] = toupper(m_name[i]);
     }
-    std::string max = m_prefix;
+    string max = m_prefix;
     max += "_";
     max += ucname;
     max += "_MAX";
 
-    std::string ctg_max = m_prefix;
+    string ctg_max = m_prefix;
     ctg_max += "_PART_MAX";
 
     // Write image page.
@@ -950,14 +950,14 @@ bool tile_list_processor::write_data(bool image, bool code)
 
         fprintf(fp, "enum tile_%s_type\n{\n", lcname.c_str());
 
-        std::string start_val = " = ";
+        string start_val = " = ";
         start_val += m_start_value;
 
-        std::string old_enum_name = "";
+        string old_enum_name = "";
         int count = 0;
         for (unsigned int i = 0; i < m_page.m_tiles.size(); i++)
         {
-            const std::string &parts_ctg = m_page.m_tiles[i]->parts_ctg();
+            const string &parts_ctg = m_page.m_tiles[i]->parts_ctg();
             const int enumcount = m_page.m_tiles[i]->enumcount();
 
             if (enumcount == 0)
@@ -975,7 +975,7 @@ bool tile_list_processor::write_data(bool image, bool code)
             }
             else if (parts_ctg.empty())
             {
-                const std::string &enumname = m_page.m_tiles[i]->enumname(0);
+                const string &enumname = m_page.m_tiles[i]->enumname(0);
                 fprintf(fp, "    %s_%s%s,\n", m_prefix.c_str(),
                         enumname.c_str(), start_val.c_str());
                 old_enum_name = enumname;
@@ -983,7 +983,7 @@ bool tile_list_processor::write_data(bool image, bool code)
             }
             else
             {
-                const std::string &enumname = m_page.m_tiles[i]->enumname(0);
+                const string &enumname = m_page.m_tiles[i]->enumname(0);
                 fprintf(fp, "    %s_%s_%s%s,\n", m_prefix.c_str(),
                         parts_ctg.c_str(), enumname.c_str(), start_val.c_str());
                 old_enum_name = enumname;
@@ -992,8 +992,8 @@ bool tile_list_processor::write_data(bool image, bool code)
 
             for (int c = 1; c < enumcount; ++c)
             {
-                const std::string &basename = m_page.m_tiles[i]->enumname(0);
-                const std::string &enumname = m_page.m_tiles[i]->enumname(c);
+                const string &basename = m_page.m_tiles[i]->enumname(0);
+                const string &enumname = m_page.m_tiles[i]->enumname(c);
 
                 if (parts_ctg.empty())
                 {
@@ -1029,13 +1029,13 @@ bool tile_list_processor::write_data(bool image, bool code)
         else
         {
             size_t last_idx = m_abstract.size() - 1;
-            std::string max_enum = m_abstract[last_idx].second;
+            string max_enum = m_abstract[last_idx].second;
             max_enum += "_";
             max_enum += m_abstract[last_idx].first;
             max_enum += "_MAX";
 
             for (size_t j = 0; j < max_enum.size(); ++j)
-                max_enum[j] = std::toupper(max_enum[j]);
+                max_enum[j] = toupper(max_enum[j]);
 
             fprintf(fp, "    %s_%s_MAX = %s\n};\n\n", m_prefix.c_str(), ucname.c_str(), max_enum.c_str());
         }
@@ -1141,7 +1141,7 @@ bool tile_list_processor::write_data(bool image, bool code)
         fprintf(fp, "static const char *_tile_%s_name[%s - %s] =\n{\n",
                 lcname.c_str(), max.c_str(), m_start_value.c_str());
 
-        std::string old_enum_name = "";
+        string old_enum_name = "";
         int count = 0;
         for (unsigned int i = 0; i < m_page.m_tiles.size(); i++)
         {
@@ -1157,7 +1157,7 @@ bool tile_list_processor::write_data(bool image, bool code)
             }
             else
             {
-                const std::string &enumname = m_page.m_tiles[i]->enumname(0);
+                const string &enumname = m_page.m_tiles[i]->enumname(0);
                 fprintf(fp, "    \"%s\",\n", enumname.c_str());
                 old_enum_name = enumname;
                 count = 0;
@@ -1212,23 +1212,23 @@ bool tile_list_processor::write_data(bool image, bool code)
             fprintf(fp, "};\n\n");
         }
 
-        fprintf(fp, "\ntypedef std::pair<const char*, tileidx_t> _name_pair;\n\n");
+        fprintf(fp, "\ntypedef pair<const char*, tileidx_t> _name_pair;\n\n");
 
         fprintf(fp, "static _name_pair %s_name_pairs[] =\n"
                     "{\n", lcname.c_str());
 
-        typedef std::map<std::string, int> sort_map;
+        typedef map<string, int> sort_map;
         sort_map table;
 
         for (unsigned int i = 0; i < m_page.m_tiles.size(); i++)
         {
             for (int c = 0; c < m_page.m_tiles[i]->enumcount(); ++c)
             {
-                const std::string &enumname = m_page.m_tiles[i]->enumname(c);
+                const string &enumname = m_page.m_tiles[i]->enumname(c);
 
-                std::string lcenum = enumname;
+                string lcenum = enumname;
                 for (unsigned int c = 0; c < enumname.size(); c++)
-                    lcenum[c] = std::tolower(enumname[c]);
+                    lcenum[c] = tolower(enumname[c]);
 
                 table.insert(sort_map::value_type(lcenum, i));
             }
@@ -1269,7 +1269,7 @@ bool tile_list_processor::write_data(bool image, bool code)
             "}\n\n",
             lcname.c_str(), m_start_value.c_str(), max.c_str(), lcname.c_str());
 
-        fprintf(fp, "\ntypedef std::pair<tile_variation, tileidx_t> _colour_pair;\n\n");
+        fprintf(fp, "\ntypedef pair<tile_variation, tileidx_t> _colour_pair;\n\n");
 
         fprintf(fp,
             "static _colour_pair %s_colour_pairs[] =\n"
@@ -1332,21 +1332,21 @@ bool tile_list_processor::write_data(bool image, bool code)
         fprintf(fp, "using namespace std;\n\n");
         fprintf(fp, "\n\n");
 
-        std::vector<std::string> uc_max_enum;
+        vector<string> uc_max_enum;
         for (size_t i = 0; i < m_abstract.size(); ++i)
         {
-            std::string max_enum = m_abstract[i].second;
+            string max_enum = m_abstract[i].second;
             max_enum += "_";
             max_enum += m_abstract[i].first;
             max_enum += "_MAX";
 
             for (size_t j = 0; j < max_enum.size(); ++j)
-                max_enum[j] = std::toupper(max_enum[j]);
+                max_enum[j] = toupper(max_enum[j]);
 
             uc_max_enum.push_back(max_enum);
         }
 
-        std::vector<std::string> lc_enum;
+        vector<string> lc_enum;
         for (size_t i = 0; i < m_abstract.size(); ++i)
             lc_enum.push_back(m_abstract[i].first);
 
@@ -1437,9 +1437,9 @@ bool tile_list_processor::write_data(bool image, bool code)
             }
             else
             {
-                std::string lcenum = m_page.m_tiles[i]->enumname(0);
+                string lcenum = m_page.m_tiles[i]->enumname(0);
                 for (unsigned int c = 0; c < lcenum.size(); c++)
-                    lcenum[c] = std::tolower(lcenum[c]);
+                    lcenum[c] = tolower(lcenum[c]);
 
                 if (i == 0 || m_page.m_counts[i] == 1)
                     fprintf(fp, "<td>%s</td>", lcenum.c_str());
@@ -1451,7 +1451,7 @@ bool tile_list_processor::write_data(bool image, bool code)
                     fprintf(fp, "<td>%s (%.1f%%)</td>", lcenum.c_str(), perc);
                 }
 
-                const std::string &parts_ctg = m_page.m_tiles[i]->parts_ctg();
+                const string &parts_ctg = m_page.m_tiles[i]->parts_ctg();
                 if (parts_ctg.empty())
                 {
                     fprintf(fp, "<td>%s_%s</td>",
@@ -1559,11 +1559,11 @@ bool tile_list_processor::write_data(bool image, bool code)
         else
             fprintf(fp, "\nvar val = %s;\n", m_start_value.c_str());
 
-        std::string old_enum_name = "";
+        string old_enum_name = "";
         int count = 0;
         for (unsigned int i = 0; i < m_page.m_tiles.size(); i++)
         {
-            const std::string &parts_ctg = m_page.m_tiles[i]->parts_ctg();
+            const string &parts_ctg = m_page.m_tiles[i]->parts_ctg();
             const int enumcount = m_page.m_tiles[i]->enumcount();
 
             if (enumcount == 0)
@@ -1581,7 +1581,7 @@ bool tile_list_processor::write_data(bool image, bool code)
             }
             else if (parts_ctg.empty())
             {
-                const std::string &enumname = m_page.m_tiles[i]->enumname(0);
+                const string &enumname = m_page.m_tiles[i]->enumname(0);
                 fprintf(fp, "exports.%s = val++;\n",
                         enumname.c_str());
                 old_enum_name = enumname;
@@ -1589,7 +1589,7 @@ bool tile_list_processor::write_data(bool image, bool code)
             }
             else
             {
-                const std::string &enumname = m_page.m_tiles[i]->enumname(0);
+                const string &enumname = m_page.m_tiles[i]->enumname(0);
                 fprintf(fp, "exports.%s_%s = val++;\n",
                         parts_ctg.c_str(), enumname.c_str());
                 old_enum_name = enumname;
@@ -1598,8 +1598,8 @@ bool tile_list_processor::write_data(bool image, bool code)
 
             for (int c = 1; c < enumcount; ++c)
             {
-                const std::string &basename = m_page.m_tiles[i]->enumname(0);
-                const std::string &enumname = m_page.m_tiles[i]->enumname(c);
+                const string &basename = m_page.m_tiles[i]->enumname(0);
+                const string &enumname = m_page.m_tiles[i]->enumname(c);
 
                 if (parts_ctg.empty())
                 {
@@ -1657,12 +1657,12 @@ bool tile_list_processor::write_data(bool image, bool code)
             {
                 size_t last_idx = m_abstract.size() - 1;
 
-                std::string max_enum = "";
+                string max_enum = "";
                 max_enum += m_abstract[last_idx].first;
                 max_enum += "_MAX";
 
                 for (size_t j = 0; j < max_enum.size(); ++j)
-                    max_enum[j] = std::toupper(max_enum[j]);
+                    max_enum[j] = toupper(max_enum[j]);
 
                 fprintf(fp, "exports.%s_MAX = window.%s_%s_MAX = %s.%s;\n\n",
                         ucname.c_str(), m_prefix.c_str(), ucname.c_str()
@@ -1670,20 +1670,20 @@ bool tile_list_processor::write_data(bool image, bool code)
                         max_enum.c_str());
             }
 
-            std::vector<std::string> uc_max_enum;
+            vector<string> uc_max_enum;
             for (size_t i = 0; i < m_abstract.size(); ++i)
             {
-                std::string max_enum = m_abstract[i].first;
+                string max_enum = m_abstract[i].first;
                 max_enum += "_MAX";
                 for (size_t j = 0; j < max_enum.size(); ++j)
-                    max_enum[j] = std::toupper(max_enum[j]);
+                    max_enum[j] = toupper(max_enum[j]);
 
                 max_enum = m_abstract[i].first + "." + max_enum;
 
                 uc_max_enum.push_back(max_enum);
             }
 
-            std::vector<std::string> lc_enum;
+            vector<string> lc_enum;
             for (size_t i = 0; i < m_abstract.size(); ++i)
                 lc_enum.push_back(m_abstract[i].first);
 
