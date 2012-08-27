@@ -81,7 +81,7 @@ def             : defdepth  {}
 defdepth        : DEFAULT_DEPTH STRING
                 {
                     dgn_reset_default_depth();
-                    std::string err = dgn_set_default_depth($2);
+                    string err = dgn_set_default_depth($2);
                     if (!err.empty())
                         yyerror(make_stringf("Bad default-depth: %s (%s)",
                                 $2, err.c_str()).c_str());
@@ -100,7 +100,7 @@ level           : name map_specs
                             yyerror( lc_global_prelude.orig_error().c_str() );
                     }
 
-                    std::string err =
+                    string err =
                         lc_map.validate_map_def(lc_default_depths);
                     dump_map(lc_map);
                     if (!err.empty())
@@ -342,10 +342,10 @@ bflags          : BFLAGS STRING
 
 marker          : MARKER STRING
                 {
-                    std::string key, arg;
+                    string key, arg;
                     int sep(0);
 
-                    const std::string err =
+                    const string err =
                       mapdef_split_key_item($2, &key, &sep, &arg);
 
                     if (!err.empty())
