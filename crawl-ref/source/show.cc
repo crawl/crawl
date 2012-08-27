@@ -339,7 +339,7 @@ static int _hashed_rand(const monster* mons, uint32_t id, uint32_t die)
     data.id  = id;
     data.seed = you.attribute[ATTR_SEEN_INVIS_SEED];
 
-    return hash(&data, sizeof(data)) % die;
+    return hash32(&data, sizeof(data)) % die;
 }
 
 /**

@@ -2249,7 +2249,7 @@ void process_sunlights(bool future)
         to_hash.place = get_packed_place();
         to_hash.coord = c;
         to_hash.game_start = you.birth_time;
-        int h = hash(&to_hash, sizeof(to_hash)) % SUNLIGHT_DURATION;
+        int h = hash32(&to_hash, sizeof(to_hash)) % SUNLIGHT_DURATION;
 
         if ((from + h) / SUNLIGHT_DURATION == (until + h) / SUNLIGHT_DURATION)
             continue;

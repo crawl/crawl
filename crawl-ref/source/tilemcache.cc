@@ -545,7 +545,7 @@ mcache_ghost::mcache_ghost(const monster_info& mon)
 {
     ASSERT(mcache_ghost::valid(mon));
 
-    const uint32_t seed = hash(&mon.mname[0], mon.mname.size());
+    const uint32_t seed = hash32(&mon.mname[0], mon.mname.size());
     rng_save_excursion exc;
     seed_rng(seed);
 
@@ -693,7 +693,7 @@ mcache_demon::mcache_demon(const monster_info& minf)
 {
     ASSERT(minf.type == MONS_PANDEMONIUM_LORD);
 
-    const uint32_t seed = hash(&minf.mname[0], minf.mname.size());
+    const uint32_t seed = hash32(&minf.mname[0], minf.mname.size());
     rng_save_excursion exc;
     seed_rng(seed);
 
