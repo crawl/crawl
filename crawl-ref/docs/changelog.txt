@@ -1,3 +1,37 @@
+Stone Soup 0.12 (up to 0.12-a0-221-gc8484b0)
+--------------------------------------------
+
+Branches, environment
+---------------------
+* A new Sprint map by evilmike: "Thunderdome".
+* More layouts allowed in Zot.
+* Abyss morphing can push the player.
+
+Character
+---------
+* Stalker is removed.
+
+Monsters
+--------
+* New monster spells: Shatter, LRD
+
+Spells
+------
+* Removed: Fulsome Distillation, Evaporate, See Invisible and Insulation.
+
+Items
+-----
+* Monsters don't drop animal skins.
+* Potion of water is removed.
+
+Interface
+---------
+* New option: auto_sacrifice
+* Removed the hidden special cost of Spellcasting, Stealth, Evocations and
+  Invocations. Aptitudes adjusted.
+* Some colour changes in the skill menu.
+* Swap the cycle ammunition commands. '(' = backward, ')' = forward.
+
 Stone Soup 0.11 (up to 0.11-a0-3206-g559a7a8)
 ---------------------------------------------
 
@@ -171,7 +205,7 @@ Interface
 * Mutation notes mention how it was gained or lost.
 * Removed options: pizza, ood_interesting, rare_interesting, note_all_spells.
 * New options: auto_drop_chunks, autofight_throw, dump_kill_breakdowns,
-  show_travel_trail.
+  show_travel_trail, sacrifice_before_explore.
 * Webtiles chat is now logged (can be disabled via note_chat_messages).
 * The show_gold_turns and show_game_turns options are now enabled by default:
   you will see how much gold you have, and how much time your actions take.
