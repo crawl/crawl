@@ -553,20 +553,19 @@ static monster_type _get_zotdef_monster(level_id &place, int power)
     monster_type mon_type;
     for (int i = 0; i <= 10000; ++i)
     {
-        int count = 0;
         int rarity;
 
-        do
+        if (place.branch == NUM_BRANCHES)
         {
-            mon_type = static_cast<monster_type>(random2(NUM_MONSTERS));
-            count++;
-            rarity = (place.branch == NUM_BRANCHES) ? 30
-                     : mons_rarity(mon_type, place.branch);
+            mon_type = static_cast<monster_type>(random2(NUM_MONSTERS - 1) + 1);
+            rarity = 30;
         }
-        while (rarity == 0 && count < 2000);
-
-        if (rarity == 0)
-            return MONS_PROGRAM_BUG;
+        else
+        {
+            mon_type = pick_monster_no_rarity(place.branch);
+            rarity = mons_rarity(mon_type, place.branch);
+            ASSERT(rarity > 0);
+        }
 
         // Calculate strength
         monsterentry *mentry = get_monster_data(mon_type);
