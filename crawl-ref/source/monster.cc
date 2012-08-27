@@ -80,7 +80,7 @@ monster::monster()
     clear_constricted();
 };
 
-// Empty destructor to keep auto_ptr happy with incomplete ghost_demon type.
+// Empty destructor to keep unique_ptr happy with incomplete ghost_demon type.
 monster::~monster()
 {
 }

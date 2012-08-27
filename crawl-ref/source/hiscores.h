@@ -113,7 +113,7 @@ private:
     int         zigs;               // Ziggurats completed.
     int         zigmax;             // Max level reached in a ziggurat.
 
-    mutable auto_ptr<xlog_fields> fields;
+    mutable unique_ptr<xlog_fields> fields;
 
 public:
     scorefile_entry();

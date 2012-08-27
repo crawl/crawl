@@ -612,7 +612,7 @@ coord_def get_random_stair()
 }
 
 
-static auto_ptr<map_mask_boolean> _slime_wall_precomputed_neighbour_mask;
+static unique_ptr<map_mask_boolean> _slime_wall_precomputed_neighbour_mask;
 
 static void _precompute_slime_wall_neighbours()
 {

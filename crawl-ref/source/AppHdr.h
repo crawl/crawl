@@ -24,6 +24,13 @@
 namespace std {};
 using namespace std;
 
+#if defined(__cplusplus) && __cplusplus < 201103
+# define unique_ptr auto_ptr
+template<typename T>
+static inline T move(T x) { return x; } // good enough for our purposes
+# define nullptr NULL
+#endif
+
 #ifdef TARGET_COMPILER_VC
 /* Disable warning about:
    4290: the way VC handles the throw() specifier

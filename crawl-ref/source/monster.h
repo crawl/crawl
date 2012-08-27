@@ -64,7 +64,7 @@ public:
     god_type god;                      // What god the monster worships, if
                                        // any.
 
-    auto_ptr<ghost_demon> ghost;       // Ghost information.
+    unique_ptr<ghost_demon> ghost;     // Ghost information.
 
     seen_context_type seen_context;    // Non-standard context for
                                        // AI_SEE_MONSTER

@@ -1253,7 +1253,7 @@ CrawlHashTable::CrawlHashTable(const CrawlHashTable& other)
 
 CrawlHashTable::~CrawlHashTable()
 {
-    // NOTE: Not using auto_ptr because making hash_map an auto_ptr
+    // NOTE: Not using unique_ptr because making hash_map an unique_ptr
     // causes compile weirdness in externs.h
     if (hash_map == NULL)
         return;

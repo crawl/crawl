@@ -403,9 +403,9 @@ static const FixedArray<uint8_t, GXM, GYM>& _tile_difficulties(bool random)
     return cache;
 }
 
-static auto_ptr<FixedArray<bool, GXM, GYM> > _tile_detectability()
+static unique_ptr<FixedArray<bool, GXM, GYM> > _tile_detectability()
 {
-    auto_ptr<FixedArray<bool, GXM, GYM> > map(new FixedArray<bool, GXM, GYM>);
+    unique_ptr<FixedArray<bool, GXM, GYM> > map(new FixedArray<bool, GXM, GYM>);
 
     vector<coord_def> flood_from;
 
@@ -482,7 +482,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
     const FixedArray<uint8_t, GXM, GYM>& difficulty =
         _tile_difficulties(!deterministic);
 
-    auto_ptr<FixedArray<bool, GXM, GYM> > detectable;
+    unique_ptr<FixedArray<bool, GXM, GYM> > detectable;
 
     if (!deterministic)
         detectable = _tile_detectability();

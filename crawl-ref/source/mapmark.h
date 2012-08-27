@@ -192,7 +192,7 @@ public:
     string debug_to_string() const;
 private:
     bool initialised;
-    auto_ptr<lua_datum> marker_table;
+    unique_ptr<lua_datum> marker_table;
 
 private:
     void check_register_table();

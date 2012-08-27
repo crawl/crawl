@@ -994,14 +994,14 @@ void map_lines::extend(int min_width, int min_height, char fill)
     // Extend overlay matrix as well.
     if (overlay.get())
     {
-        auto_ptr<overlay_matrix> new_overlay(
+        unique_ptr<overlay_matrix> new_overlay(
             new overlay_matrix(width(), height()));
 
         for (int y = 0; y < old_height; ++y)
             for (int x = 0; x < old_width; ++x)
                 (*new_overlay)(x, y) = (*overlay)(x, y);
 
-        overlay = new_overlay;
+        overlay = move(new_overlay);
     }
 }
 
@@ -1495,12 +1495,12 @@ void map_lines::rotate(bool clockwise)
 
     if (overlay.get())
     {
-        auto_ptr<overlay_matrix> new_overlay(
+        unique_ptr<overlay_matrix> new_overlay(
             new overlay_matrix(lines.size(), map_width));
         for (int i = xs, y = 0; i != xe; i += xi, ++y)
             for (int j = ys, x = 0; j != ye; j += yi, ++x)
                 (*new_overlay)(x, y) = (*overlay)(i, j);
-        overlay = new_overlay;
+        overlay = move(new_overlay);
     }
 
     map_width = lines.size();
@@ -5466,7 +5466,7 @@ void keyed_mapspec::parse_features(const string &s)
  * @param s       The string to be parsed.
  * @param weight  The weight of this string.
  * @returns       A feature_spec with the contained, parsed trap_spec stored via
- *                auto_ptr as feature_spec->trap.
+ *                unique_ptr as feature_spec->trap.
 **/
 feature_spec keyed_mapspec::parse_trap(string s, int weight)
 {
@@ -5494,7 +5494,7 @@ feature_spec keyed_mapspec::parse_trap(string s, int weight)
  * @param s      The string to be parsed.
  * @param weight The weight of this string.
  * @returns      A feature_spec with the contained, parsed shop_spec stored via
- *               auto_ptr as feature_spec->shop.
+ *               unique_ptr as feature_spec->shop.
 **/
 feature_spec keyed_mapspec::parse_shop(string s, int weight)
 {
