@@ -9,6 +9,7 @@
 #include "dgn-delve.h"
 #include "dgn-deposit.h"
 #include "dgn-dragon.h"
+#include "dgn-turbulent.h"
 #include <locale.h>
 
 static wchar_t dchar(dungeon_feature_type g)
@@ -52,8 +53,7 @@ int main()
     grd.init(DNGN_ROCK_WALL);
     seed_rng();
     int m = random2(256) + 1;
-    layout_dragon(m);
+    layout_turbulent(m);
     draw();
-    printf("mask = %x\n", m);
     return 0;
 }
