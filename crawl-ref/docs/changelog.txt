@@ -21,6 +21,7 @@ Spells
 
 Items
 -----
+* All troll-genus monsters can drop troll hides.
 * Monsters don't drop animal skins.
 * Potion of water is removed.
 
