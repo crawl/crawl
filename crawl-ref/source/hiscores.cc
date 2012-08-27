@@ -70,7 +70,7 @@
 #define SCORE_VERSION "0.1"
 
 // enough memory allocated to snarf in the scorefile entries
-static auto_ptr<scorefile_entry> hs_list[SCORE_FILE_ENTRIES];
+static unique_ptr<scorefile_entry> hs_list[SCORE_FILE_ENTRIES];
 
 // hackish: scorefile position of newest entry.  Will be highlit during
 // highscore printing (always -1 when run from command line).
@@ -138,7 +138,7 @@ void hiscores_new_entry(const scorefile_entry &ne)
             // Fixed a nasty overflow bug here -- Sharp
             if (i+1 < SCORE_FILE_ENTRIES)
             {
-                hs_list[i + 1] = hs_list[i];
+                hs_list[i + 1] = move(hs_list[i]);
                 hs_list[i].reset(new scorefile_entry(ne));
                 i++;
             }

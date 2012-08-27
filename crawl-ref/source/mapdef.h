@@ -263,7 +263,7 @@ public:
     string marker;
 
     // Special handling for Lua markers:
-    auto_ptr<lua_datum> lua_fn;
+    unique_ptr<lua_datum> lua_fn;
 
     map_marker_spec(string _key, const string &mark)
         : key(_key), marker(mark), lua_fn() { }
@@ -500,7 +500,7 @@ private:
         int keyspec_idx;
     };
     typedef Matrix<overlay_def> overlay_matrix;
-    auto_ptr<overlay_matrix> overlay;
+    unique_ptr<overlay_matrix> overlay;
 
     typedef map<int, keyed_mapspec> keyed_specs;
     keyed_specs keyspecs;
@@ -801,14 +801,14 @@ struct trap_spec
  *
  * This specification struct is used firstly when a feature is specified in
  * vault code (any feature), and secondly, if that feature is either a trap or a
- * shop, as a container for a auto_ptr to that shop_spec or trap_spec.
+ * shop, as a container for a unique_ptr to that shop_spec or trap_spec.
 **/
 struct feature_spec
 {
     int genweight;                 /**> The weight of this specific feature. */
     int feat;                      /**> The specific feature being placed. */
-    auto_ptr<shop_spec> shop;      /**> A pointer to a shop_spec. */
-    auto_ptr<trap_spec> trap;      /**> A pointer to a trap_spec. */
+    unique_ptr<shop_spec> shop;    /**> A pointer to a shop_spec. */
+    unique_ptr<trap_spec> trap;    /**> A pointer to a trap_spec. */
     int glyph;                     /**> What glyph to use instead. */
     int mimic;                     /**> 1 chance in x to be a feature mimic. */
     bool no_mimic;                 /**> Prevents random feature mimic here. */
@@ -896,7 +896,7 @@ public:
     dlua_set_map(map_def *map);
     ~dlua_set_map();
 private:
-    auto_ptr<lua_datum> old_map;
+    unique_ptr<lua_datum> old_map;
 };
 
 dungeon_feature_type map_feature_at(map_def *map,

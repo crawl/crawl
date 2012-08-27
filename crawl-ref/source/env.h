@@ -42,7 +42,7 @@ struct crawl_environment
 
     vault_placement_refv                     level_vaults;
 
-    auto_ptr<grid_heightmap>                 heightmap;
+    unique_ptr<grid_heightmap>               heightmap;
 
     // Player-remembered terrain and LOS
     FixedArray< map_cell, GXM, GYM >         map_knowledge;

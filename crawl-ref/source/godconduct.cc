@@ -17,7 +17,7 @@
 
 god_conduct_trigger::god_conduct_trigger(
     conduct_type c, int pg, bool kn, const monster* vict)
-  : conduct(c), pgain(pg), known(kn), enabled(true), victim(NULL)
+  : conduct(c), pgain(pg), known(kn), enabled(true), victim(nullptr)
 {
     if (vict)
     {
