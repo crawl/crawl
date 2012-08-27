@@ -495,22 +495,6 @@ static float _apt_to_factor(int apt)
     return (1 / exp(log(2) * apt / APT_DOUBLE));
 }
 
-// Base skill cost, i.e. old-style human aptitudes.
-static int _base_cost(skill_type sk)
-{
-    switch (sk)
-    {
-    case SK_SPELLCASTING:
-        return 130;
-    case SK_STEALTH:
-    case SK_INVOCATIONS:
-    case SK_EVOCATIONS:
-        return 80;
-    default:
-        return 100;
-    }
-}
-
 unsigned int skill_exp_needed(int lev, skill_type sk, species_type sp)
 {
     const int exp[28] = { 0, 50, 150, 300, 500, 750,         // 0-5
@@ -522,7 +506,7 @@ unsigned int skill_exp_needed(int lev, skill_type sk, species_type sp)
     ASSERT(lev >= 0);
     ASSERT(lev <= 27);
 
-    return exp[lev] * species_apt_factor(sk, sp) * _base_cost(sk) / 100;
+    return exp[lev] * species_apt_factor(sk, sp);
 }
 
 int species_apt(skill_type skill, species_type species)
