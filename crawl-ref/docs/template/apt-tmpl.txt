@@ -34,8 +34,8 @@ There are three special values: HP, MP and Experience:
   fewer points, +1 is 10% more points, etc.
 - The Experience value indicates how much experience has to be earned in
   order to gain a new level. +1 is the Human standard, and all other
-  species (apart from Halfling and Kobold) are slower. These
-  values use the same scale as the skill aptitudes.
+  species (apart from Halfling and Kobold) are slower. These values use
+  the same scale as the skill aptitudes.
 
 The abbreviations used for the skills are:
 
