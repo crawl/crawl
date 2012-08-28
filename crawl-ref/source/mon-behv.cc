@@ -197,7 +197,7 @@ void handle_behaviour(monster* mon)
     bool isPacified = mon->pacified();
     bool patrolling = mon->is_patrolling();
     static vector<level_exit> e;
-    static int                     e_index = -1;
+    static int                e_index = -1;
 
     // Zotdef rotting
     if (crawl_state.game_is_zotdef())
