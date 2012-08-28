@@ -912,7 +912,7 @@ static int _shatter_mon_dice(const monster *mon)
     }
 }
 
-int shatter_monsters(coord_def where, int pow, actor *agent)
+static int _shatter_monsters(coord_def where, int pow, actor *agent)
 {
     dice_def dam_dice(0, 5 + pow / 3); // Number of dice set below.
     monster* mon = monster_at(where);
@@ -939,7 +939,7 @@ int shatter_monsters(coord_def where, int pow, actor *agent)
     return damage;
 }
 
-int shatter_items(coord_def where, int pow, actor *)
+static int _shatter_items(coord_def where, int pow, actor *)
 {
     UNUSED(pow);
 
@@ -975,7 +975,7 @@ int shatter_items(coord_def where, int pow, actor *)
     return 0;
 }
 
-int shatter_walls(coord_def where, int pow, actor *agent)
+static int _shatter_walls(coord_def where, int pow, actor *agent)
 {
     int chance = 0;
 
@@ -1096,9 +1096,9 @@ spret_type cast_shatter(int pow, bool fail)
         if (!cell_see_cell(you.pos(), *di, LOS_SOLID))
             continue;
 
-        shatter_items(*di, pow, &you);
-        shatter_monsters(*di, pow, &you);
-        dest += shatter_walls(*di, pow, &you);
+        _shatter_items(*di, pow, &you);
+        _shatter_monsters(*di, pow, &you);
+        dest += _shatter_walls(*di, pow, &you);
     }
 
     if (dest && !silence)
@@ -1125,7 +1125,7 @@ static int _shatter_player_dice()
         return 3;
 }
 
-int shatter_player(int pow, actor *wielder, bool devastator)
+static int _shatter_player(int pow, actor *wielder, bool devastator = false)
 {
     if (wielder->is_player())
         return 0;
@@ -1177,11 +1177,11 @@ bool mons_shatter(monster* caster, bool actual)
 
         if (actual)
         {
-            shatter_items(*di, pow, caster);
-            shatter_monsters(*di, pow, caster);
+            _shatter_items(*di, pow, caster);
+            _shatter_monsters(*di, pow, caster);
             if (*di == you.pos())
-                shatter_player(pow, caster);
-            dest += shatter_walls(*di, pow, caster);
+                _shatter_player(pow, caster);
+            dest += _shatter_walls(*di, pow, caster);
         }
         else
         {
@@ -1251,10 +1251,10 @@ void shillelagh(actor *wielder, coord_def where, int pow)
 
     // need to do this again to do the actual damage
     for (adjacent_iterator ai(where, false); ai; ++ai)
-        shatter_monsters(*ai, pow * 3 / 2, wielder);
+        _shatter_monsters(*ai, pow * 3 / 2, wielder);
 
     if ((you.pos() - wielder->pos()).abs() <= 2 && in_bounds(you.pos()))
-        shatter_player(pow, wielder, true);
+        _shatter_player(pow, wielder, true);
 }
 
 static int _ignite_poison_affect_item(item_def& item, bool in_inv)
