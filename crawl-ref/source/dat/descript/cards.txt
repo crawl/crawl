@@ -47,8 +47,8 @@ found in decks of defence, escape and war.
 %%%%
 Warpwright card
 
-This card may create teleporters. It is usually found in decks of defence,
-escape and war.
+This card may create teleportation traps. It is usually found in decks of
+defence, escape and war.
 %%%%
 Flight card
 
