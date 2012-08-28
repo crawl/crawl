@@ -397,8 +397,9 @@ static void _pack_default_waves(const coord_def &gc, packed_cell *cell)
 
 static bool _is_seen_wall(coord_def gc)
 {
-    dungeon_feature_type feat = _safe_feat(gc);
-    return (feat != DNGN_UNSEEN && feat <= DNGN_MAXWALL);
+    const dungeon_feature_type feat = _safe_feat(gc);
+    return (feat != DNGN_UNSEEN && feat <= DNGN_MAXWALL
+            && feat != DNGN_MANGROVE);
 }
 
 static void _pack_wall_shadows(const coord_def &gc, packed_cell *cell)
