@@ -367,9 +367,9 @@ int species_exp_modifier(species_type species)
     {
     case SP_HUMAN:
     case SP_HALFLING:
-    case SP_HILL_ORC:
     case SP_KOBOLD:
         return 1;
+    case SP_HILL_ORC:
     case SP_OGRE:
     case SP_SLUDGE_ELF:
     case SP_NAGA:
