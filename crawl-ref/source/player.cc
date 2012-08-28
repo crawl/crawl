@@ -4448,10 +4448,10 @@ unsigned int exp_needed(int lev, int exp_apt)
         break;
     }
 
-    if (!exp_apt)
+    if (exp_apt == -99)
         exp_apt = species_exp_modifier(you.species);
 
-    return ((level - 1) * exp_apt / 10);
+    return (unsigned int) ((level - 1) * exp(-log(2) * (exp_apt - 1) / 4));
 }
 
 // returns bonuses from rings of slaying, etc.

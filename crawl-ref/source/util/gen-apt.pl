@@ -129,7 +129,6 @@ sub aptitude_table {
       my $fmt = "%+*d";
       $fmt = "%*d" if $skill == 0;
       $fmt = " NA" if $skill == -99;
-      $fmt = "%*d0", $cwidth = 2 if $abbr eq "Exp";
       $line .= sprintf($fmt, $cwidth, $skill);
     }
     $text .= "$line\n";

@@ -1730,7 +1730,7 @@ static void tag_read_you(reader &th)
     int i,j;
     int count;
 
-    ASSERT(is_valid_species(you.species) && species_exp_modifier(you.species));
+    ASSERT(is_valid_species(you.species));
     ASSERT(you.char_class < NUM_JOBS);
     ASSERT(you.experience_level > 0);
     ASSERT(you.experience_level <= 27);

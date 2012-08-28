@@ -49,12 +49,14 @@ static void _train_skills(int exp, const int cost, const bool simu);
 
 // The progress of skill_cost_level depends only on total experience points,
 // it's independent of species. We try to keep close to the old system
-// and use an experience aptitude of 13 as a reference (Tengu).
-// This means that for a species with 13 exp apt, skill_cost_level should be
+// and use an experience aptitude of 130 as a reference (Tengu).
+// This means that for a species with 130 exp apt, skill_cost_level should be
 // the same as XL (unless the player has been drained).
+
+// 130 exp apt is midway between +0 and -1 now. -- elliptic
 unsigned int skill_cost_needed(int level)
 {
-    return exp_needed(level, 13);
+    return (exp_needed(level, 1) * 13) / 10;
 }
 
 // skill_cost_level makes skills more expensive for more experienced characters

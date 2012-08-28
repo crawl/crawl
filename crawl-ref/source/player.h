@@ -893,7 +893,7 @@ int scan_artefacts(artefact_prop_type which_property, bool calc_unid = true);
 
 int slaying_bonus(weapon_property_type which_affected, bool ranged = false);
 
-unsigned int exp_needed(int lev, int exp_apt = 0);
+unsigned int exp_needed(int lev, int exp_apt = -99);
 bool will_gain_life(int lev);
 
 int get_expiration_threshold(duration_type dur);
