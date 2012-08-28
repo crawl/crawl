@@ -3848,7 +3848,7 @@ int monster::res_negative_energy() const
             u += get_armour_life_protection(mitm[shld], false);
 
         if (jewellery != NON_ITEM && mitm[jewellery].base_type == OBJ_JEWELLERY)
-            u += get_armour_life_protection(mitm[jewellery], false);
+            u += get_jewellery_life_protection(mitm[jewellery], false);
 
         const item_def *w = primary_weapon();
         if (w && w->base_type == OBJ_STAVES && w->sub_type == STAFF_DEATH)
