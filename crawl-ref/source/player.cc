@@ -6696,16 +6696,6 @@ bool player::fights_well_unarmed(int heavy_armour_penalty)
             && x_chance_in_y(2, 1 + heavy_armour_penalty));
 }
 
-bool player::confusable() const
-{
-    return (player_mental_clarity() == 0);
-}
-
-bool player::slowable() const
-{
-    return true;
-}
-
 flight_type player::flight_mode() const
 {
     if (form == TRAN_DRAGON

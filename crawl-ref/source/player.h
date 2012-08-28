@@ -611,8 +611,6 @@ public:
     int res_constrict() const { return 0; };
     int res_magic() const;
     bool no_tele(bool calc_unid = true, bool permit_id = true) const;
-    bool confusable() const;
-    bool slowable() const;
 
     flight_type flight_mode() const;
     bool cancellable_levitation() const;
