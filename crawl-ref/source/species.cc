@@ -376,9 +376,9 @@ int species_exp_modifier(species_type species)
     case SP_GHOUL:
     case SP_MERFOLK:
     case SP_OCTOPODE:
+    case SP_TENGU:
         return 0;
     case SP_SPRIGGAN:
-    case SP_TENGU:
     case SP_DEEP_DWARF:
     case SP_MINOTAUR:
     case SP_BASE_DRACONIAN:
