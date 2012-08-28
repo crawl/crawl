@@ -348,7 +348,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
 
     // Don't generate randomly - should be rare and interesting.
     case POT_DECAY:
-        if (you.rot(&you, (10 + random2(10)) / factor))
+        if (you.rot(&you, 0, (3 + random2(3)) / factor))
             xom_is_stimulated(50 / xom_factor);
         break;
 
