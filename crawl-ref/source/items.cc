@@ -2554,14 +2554,15 @@ void autoinscribe()
 
 static int _autopickup_subtype(const item_def &item)
 {
+    // Sensed items.
+    if (item.base_type >= NUM_OBJECT_CLASSES)
+        return MAX_SUBTYPES - 1;
+
     const int max_type = get_max_subtype(item.base_type);
 
-    // Sensed items and item_infos of unknown subtype.
-    if (item.base_type >= NUM_OBJECT_CLASSES
-        || max_type > 0 && item.sub_type >= max_type)
-    {
+    // item_infos of unknown subtype.
+    if (max_type > 0 && item.sub_type >= max_type)
         return max_type;
-    }
 
     // Only where item_type_known() refers to the subtype (as opposed to the
     // brand, for example) do we have to check it.  For weapons etc. we always
