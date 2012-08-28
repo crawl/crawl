@@ -2505,6 +2505,11 @@ void monster_cleanup(monster* mons)
         env.forest_awoken_until = 0;
     }
 
+    // May have been constricting something. No message because that depends
+    // on the order in which things are cleaned up: If the constrictee is
+    // cleaned up first, we wouldn't get a message anyway.
+    mons->stop_constricting_all(false, true);
+
     env.mid_cache.erase(mons->mid);
     unsigned int monster_killed = mons->mindex();
     mons->reset();
