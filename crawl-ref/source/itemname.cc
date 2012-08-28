@@ -3058,15 +3058,20 @@ bool is_useless_item(const item_def &item, bool temp)
         default:
             return false;
         }
+
     case OBJ_WANDS:
         if (you.species == SP_FELID)
             return true;
 
-        if (item.sub_type == WAND_INVISIBILITY && _invisibility_is_useless(temp))
+        if (item.sub_type == WAND_INVISIBILITY
+            && item_type_known(item)
+                && _invisibility_is_useless(temp))
+        {
             return true;
+        }
 
         return (item.plus2 == ZAPCOUNT_EMPTY)
-               || item_ident(item, ISFLAG_KNOW_PLUSES) && !item.plus;
+                || item_ident(item, ISFLAG_KNOW_PLUSES) && !item.plus;
 
     case OBJ_POTIONS:
     {
