@@ -3741,7 +3741,7 @@ int monster::res_poison(bool temp) const
         if (shld != NON_ITEM && mitm[shld].base_type == OBJ_ARMOUR)
             u += get_armour_res_poison(mitm[shld], false);
 
-        if (jewellery != NON_ITEM && mitm[jewellery].base_type == OBJ_ARMOUR)
+        if (jewellery != NON_ITEM && mitm[jewellery].base_type == OBJ_JEWELLERY)
             u += get_jewellery_res_poison(mitm[jewellery], false);
 
         const item_def *w = primary_weapon();
@@ -3847,7 +3847,7 @@ int monster::res_negative_energy() const
         if (shld != NON_ITEM && mitm[shld].base_type == OBJ_ARMOUR)
             u += get_armour_life_protection(mitm[shld], false);
 
-        if (jewellery != NON_ITEM && mitm[jewellery].base_type == OBJ_ARMOUR)
+        if (jewellery != NON_ITEM && mitm[jewellery].base_type == OBJ_JEWELLERY)
             u += get_armour_life_protection(mitm[jewellery], false);
 
         const item_def *w = primary_weapon();
