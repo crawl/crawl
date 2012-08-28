@@ -2223,11 +2223,6 @@ bool is_fruit(const item_def & item)
     return (Food_prop[Food_index[item.sub_type]].flags & FFL_FRUIT);
 }
 
-uint32_t item_fruit_mask(const item_def &item)
-{
-    return (is_fruit(item)? (1 << Food_index[item.sub_type]) : 0);
-}
-
 bool food_is_rotten(const item_def &item)
 {
     return (item.special <= ROTTING_CORPSE)
