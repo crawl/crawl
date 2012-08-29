@@ -170,7 +170,8 @@ void jiyva_stat_action()
     for (int x = 0; x < 3; ++x)
         for (int y = 0; y < 3; ++y)
         {
-            if (x != y && target_stat[x] - cur_stat[x] + cur_stat[y] - target_stat[y] > 0)
+            if (x != y && cur_stat[y] > 1
+                && target_stat[x] - cur_stat[x] > target_stat[y] - cur_stat[y])
             {
                 choices++;
                 if (one_chance_in(choices))
