@@ -2578,7 +2578,7 @@ string xlog_fields::xlog_line() const
  * @callergraph
  */
 void mark_milestone(const string &type, const string &milestone,
-                    const string &origin_level, time_t t)
+                    const string &origin_level, time_t milestone_time)
 {
 #ifdef DGL_MILESTONES
     static string lasttype, lastmilestone;
@@ -2616,7 +2616,9 @@ void mark_milestone(const string &type, const string &milestone,
                       origin_level).c_str());
     }
     xl.add_field("time", "%s",
-                 make_date_string(se.get_death_time()).c_str());
+                 make_date_string(
+                     milestone_time ? milestone_time
+                                    : se.get_death_time()).c_str());
     xl.add_field("type", "%s", type.c_str());
     xl.add_field("milestone", "%s", milestone.c_str());
     const string xlog_line = xl.xlog_line();
