@@ -2593,7 +2593,7 @@ std::string xlog_fields::xlog_line() const
 void mark_milestone(const std::string &type,
                     const std::string &milestone,
                     const std::string &origin_level,
-                    time_t t)
+                    time_t milestone_time)
 {
 #ifdef DGL_MILESTONES
     static std::string lasttype, lastmilestone;
@@ -2631,7 +2631,9 @@ void mark_milestone(const std::string &type,
                       origin_level).c_str());
     }
     xl.add_field("time", "%s",
-                 make_date_string(se.get_death_time()).c_str());
+                 make_date_string(
+                     milestone_time ? milestone_time
+                                    : se.get_death_time()).c_str());
     xl.add_field("type", "%s", type.c_str());
     xl.add_field("milestone", "%s", milestone.c_str());
     const std::string xlog_line = xl.xlog_line();
