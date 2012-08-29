@@ -94,6 +94,12 @@ spret_type cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy,
         : (caster->is_player()) ? "you" : "";
     mon->props["iood_mid"].get_int() = caster->mid;
 
+    if (caster->is_player() || caster->type == MONS_PLAYER_GHOST
+        || caster->type == MONS_PLAYER_ILLUSION)
+    {
+        mon->props["iood_flawed"].get_byte() = true;
+    }
+
     // Move away from the caster's square.
     iood_act(*mon, true);
     // We need to take at least one full move (for the above), but let's
@@ -354,11 +360,15 @@ move_again:
         return true;
     }
 
-    if (iood && mon.props["iood_kc"].get_byte() == KC_YOU
-        && (you.pos() - pos).rdist() > LOS_RADIUS)
-    {   // not actual vision, because of the smoke trail
-        _iood_stop(mon);
-        return true;
+    if (iood && mon.props.exists("iood_flawed"))
+    {
+        const actor *caster = actor_by_mid(mon.props["iood_mid"].get_int());
+        if (!caster || caster->pos().origin() ||
+            (caster->pos() - pos).rdist() > LOS_RADIUS)
+        {   // not actual vision, because of the smoke trail
+            _iood_stop(mon);
+            return true;
+        }
     }
 
     if (pos == mon.pos())
