@@ -77,13 +77,6 @@ static inline T move(T x) { return x; } // good enough for our purposes
 #endif
 
 //
-// OS X's Terminal.app has color handling problems; dark grey is
-// especially bad, so we'll want to remap that. OS X is otherwise
-// Unix-ish, so we shouldn't need other special handling.
-//
-#define COL_TO_REPLACE_DARKGREY     BLUE
-
-//
 // MinGW
 //
 #if defined(TARGET_COMPILER_MINGW)
@@ -140,16 +133,6 @@ static inline T move(T x) { return x; } // good enough for our purposes
     // WARNING: Filenames passed to this command *are not validated in any way*.
     //
     // #define SOUND_PLAY_COMMAND "/usr/bin/play -v .5 \"%s\" 2>/dev/null &"
-
-    // For cases when the game will be played on terms that don't support the
-    // curses "bold == lighter" 16 colour mode. -- bwr
-    //
-    // Darkgrey is a particular problem in the 8 colour mode.  Popular values
-    // for replacing it around here are: WHITE, BLUE, and MAGENTA.  This
-    // option has no affect in 16 colour mode. -- bwr
-    //
-    // #define USE_8_COLOUR_TERM_MAP
-    // #define COL_TO_REPLACE_DARKGREY     MAGENTA
 
     #include "libunix.h"
 
