@@ -2862,7 +2862,8 @@ void mon_nearby_ability(monster* mons)
     if (!foe
         || !mons->can_see(foe)
         || mons->asleep()
-        || mons->submerged())
+        || mons->submerged()
+        || !summon_can_attack(mons, foe))
     {
         return;
     }

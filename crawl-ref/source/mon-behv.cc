@@ -65,7 +65,7 @@ static void _mon_check_foe_invalid(monster* mon)
         if (actor *foe = mon->get_foe())
         {
             const monster* foe_mons = foe->as_monster();
-            if (foe_mons->alive()
+            if (foe_mons->alive() && summon_can_attack(mon, foe)
                 && (mon->friendly() != foe_mons->friendly()
                     || mon->neutral() != foe_mons->neutral()))
             {
@@ -351,6 +351,10 @@ void handle_behaviour(monster* mon)
         if (mon->foe == MHITNOT && crawl_state.game_is_zotdef())
             mon->foe = MHITYOU;
     }
+
+    // Friendly summons will come back to the player if they go out of sight.
+    if (!summon_can_attack(mon))
+        mon->target = you.pos();
 
     // Monsters do not attack themselves. {dlb}
     if (mon->foe == mon->mindex())
@@ -821,6 +825,9 @@ static bool _mons_check_foe(monster* mon, const coord_def& p,
         // attack the player.
         return false;
     }
+
+    if (!summon_can_attack(mon, p))
+        return false;
 
     if (monster* foe = monster_at(p))
     {

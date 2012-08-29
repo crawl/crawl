@@ -836,6 +836,9 @@ void set_random_target(monster* mon)
         if (!in_bounds(newtarget))
             continue;
 
+        if (!summon_can_attack(mon, newtarget))
+            continue;
+
         mon->target = newtarget;
         break;
     }

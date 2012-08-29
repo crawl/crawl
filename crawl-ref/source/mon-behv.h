@@ -39,6 +39,10 @@ void make_mons_leave_level(monster* mon);
 
 bool monster_can_hit_monster(monster* mons, const monster* targ);
 
+bool summon_can_attack(const monster* mons);
+bool summon_can_attack(const monster* mons, const coord_def &p);
+bool summon_can_attack(const monster* mons, const actor* targ);
+
 // For Zotdef: the target position of MHITYOU monsters is
 // the orb.
 #define PLAYER_POS (crawl_state.game_is_zotdef() ? env.orb_pos : you.pos())
