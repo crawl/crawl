@@ -319,6 +319,7 @@ static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
             mon = orig;
             mon.hit_points = mon.max_hit_points;
             mon.move_to_pos(mon.pos());
+            mon.shield_blocks = 0;
             you.time_taken = player_speed();
 
             // first, ranged weapons. note: this includes
@@ -357,6 +358,7 @@ static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
         {
             you.hp = you.hp_max = 999; // again, arbitrary
             bool did_hit = false;
+            you.shield_blocks = 0; // no blocks this round
             fight_melee(&mon, &you, &did_hit, true);
 
             time_taken += 100 / (mon.speed ? mon.speed : 10);
