@@ -3286,6 +3286,9 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
 // monster has tentacles).
 bool monster_can_hit_monster(monster* mons, const monster* targ)
 {
+    if (!summon_can_attack(mons, targ))
+        return false;
+
     if (!targ->submerged() || mons->has_damage_type(DVORP_TENTACLE))
         return true;
 
@@ -3294,6 +3297,26 @@ bool monster_can_hit_monster(monster* mons, const monster* targ)
 
     const item_def *weapon = mons->weapon();
     return (weapon && weapon_skill(*weapon) == SK_POLEARMS);
+}
+
+// Friendly summons can't attack out of the player's LOS, it's too abusable.
+bool summon_can_attack(const monster* mons)
+{
+    return !mons->friendly() || !mons->is_summoned()
+           || you.see_cell_no_trans(mons->pos());
+}
+
+bool summon_can_attack(const monster* mons, const coord_def &p)
+{
+    if (!mons->friendly() || !mons->is_summoned())
+        return true;
+
+    return you.see_cell_no_trans(mons->pos()) && you.see_cell_no_trans(p);
+}
+
+bool summon_can_attack(const monster* mons, const actor* targ)
+{
+    return summon_can_attack(mons, targ->pos());
 }
 
 mon_dam_level_type mons_get_damage_level(const monster* mons)

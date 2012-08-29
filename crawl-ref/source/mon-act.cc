@@ -3017,6 +3017,9 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
             return false; // blocks square
         }
 
+        if (!summon_can_attack(mons, targ))
+            return false;
+
         // Cut down plants only when no alternative, or they're
         // our target.
         if (mons_is_firewood(targmonster) && mons->target != targ)
