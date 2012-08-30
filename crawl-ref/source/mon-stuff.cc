@@ -2162,6 +2162,7 @@ int monster_die(monster* mons, killer_type killer,
 
         // Monster killed by trap/inanimate thing/itself/poison not from you.
         case KILL_MISC:
+        case KILL_MISCAST:
             if (death_message)
             {
                 if (fake_abjuration)
