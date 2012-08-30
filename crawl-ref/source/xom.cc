@@ -2840,35 +2840,15 @@ static int _xom_lose_stats(bool debug = false)
         return XOM_BAD_STATLOSS;
 
     stat_type stat = static_cast<stat_type>(random2(NUM_STATS));
-    int       max  = 2; // was 3
+    int loss = 1;
 
     // Don't kill the player unless Xom is being nasty.
-    if (!_xom_feels_nasty())
-    {
-        // Make sure not to lower strength so much that the player
-        // will die once might wears off.
-        int vals[3] =
-            {you.strength() - ((you.duration[DUR_MIGHT]
-                               || you.duration[DUR_BERSERK]) ? 5 : 0),
-             you.dex() - (you.duration[DUR_AGILITY] ? 5 : 0),
-             you.intel() - (you.duration[DUR_BRILLIANCE] ? 5 : 0)};
-
-        stat_type types[3] = {STAT_STR, STAT_DEX, STAT_INT};
-        int tries = 0;
-        do
-        {
-            int idx = random2(3);
-            stat = types[idx];
-            max  = min(max, vals[idx] - 1);
-        }
-        while (max < 1 && (++tries < 30));
-
-        if (tries >= 30)
-            return XOM_DID_NOTHING;
-    }
+    if (_xom_feels_nasty())
+        loss = 1 + random2(3);
+    else if (you.stat(stat) <= loss)
+        return XOM_DID_NOTHING;
 
     god_speaks(GOD_XOM, _get_xom_speech("lose stats").c_str());
-    const int loss = 1 + random2(max);
     lose_stat(stat, loss, true, "the vengeance of Xom");
 
     // Take a note.
