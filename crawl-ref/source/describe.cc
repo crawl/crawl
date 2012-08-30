@@ -3891,8 +3891,7 @@ static std::string _religion_help(god_type god)
 
     case GOD_BEOGH:
         result += "You can pray to sacrifice all orcish remains on your "
-                  "square. Inscribe orcish remains with !p, !* or =p to avoid "
-                  "sacrificing them accidentally.";
+                  "square.";
         break;
 
     case GOD_NEMELEX_XOBEH:
@@ -3927,8 +3926,7 @@ static std::string _religion_help(god_type god)
             result += " ";
 
         result += "You can pray to sacrifice all fresh corpses on your "
-                  "square. Inscribe fresh corpses with !p, !* or =p to avoid "
-                  "sacrificing them accidentally.";
+                  "square.";
     }
 
     return result;
