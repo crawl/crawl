@@ -1161,7 +1161,7 @@ static int _xom_confuse_monsters(int sever, bool debug = false)
             rc = true;
         }
         else if (mi->add_ench(mon_enchant(ENCH_CONFUSION, 0,
-              &menv[ANON_FRIENDLY_MONSTER], random2(sever))))
+              &menv[ANON_FRIENDLY_MONSTER], random2(sever) + 3)))
         {
             // Only give this message once.
             if (!rc)
@@ -1424,7 +1424,7 @@ static void _confuse_monster(monster* mons, int sever)
 
     const bool was_confused = mons->confused();
     if (mons->add_ench(mon_enchant(ENCH_CONFUSION, 0,
-          &menv[ANON_FRIENDLY_MONSTER], random2(sever))))
+          &menv[ANON_FRIENDLY_MONSTER], random2(sever) + 3)))
     {
         if (was_confused)
             simple_monster_message(mons, " looks rather more confused.");
@@ -2240,7 +2240,7 @@ static int _xom_inner_flame(int sever, bool debug = false)
             return XOM_GOOD_INNER_FLAME;
 
         if (mi->add_ench(mon_enchant(ENCH_INNER_FLAME, 0,
-              &menv[ANON_FRIENDLY_MONSTER], random2(sever))))
+              &menv[ANON_FRIENDLY_MONSTER], random2(sever * 2) + 5)))
         {
             // Only give this message once.
             if (!rc)
@@ -2938,7 +2938,7 @@ static int _xom_player_confusion_effect(int sever, bool debug = false)
 
                 if (!mi->check_clarity(false)
                     && mi->add_ench(mon_enchant(ENCH_CONFUSION, 0,
-                           &menv[ANON_FRIENDLY_MONSTER], random2(sever))))
+                           &menv[ANON_FRIENDLY_MONSTER], random2(sever) + 3)))
                 {
                     simple_monster_message(*mi,
                                            " looks rather confused.");
