@@ -3169,9 +3169,9 @@ statue as ugly as you standing here for ages.
 %%%%
 phase spider
 
-An otherwordly spider that can translocate short and medium distances by
-briefly shifting between the planes of reality, in order to better catch and
-web up its prey.
+An otherworldly spider that can move short and medium distances by
+briefly shifting between the planes of reality, in order to better ensnare
+its prey.
 %%%%
 pristine statue
 
@@ -3251,9 +3251,9 @@ size, it appears to be harmless.
 %%%%
 succubus
 
-A demonic lady who uses her charms to seduce humanoid males. If you wish to
-take advantage of her, I'm afraid I have bad news: she seems to be pretty
-angry right now and has blood more on mind than other kinds of fun.
+A female demon who uses her charms to seduce humanoid males. If you wish to
+take advantage of her, however, you will fail: she seems very
+angry right now and has blood more on her mind than fun.
 %%%%
 tengu aerator
 
@@ -3317,9 +3317,9 @@ witch
 This old human crone must be spending most of her day just working on her
 looks: it's hard to believe one could reach this level of ugliness
 naturally. Robes stained with what appears to be swamp ooze, cauldron soot
-and brew ingredients don't improve the appearance either.
+and brew ingredients don't improve her appearance either.
 
-A person of such stellar level of sanity and manners probably has great pets
+A woman with such stellar sanity and manners probably has great pets
 as well, so it's better to neutralize her before she has a chance to unleash
 them on you.
 %%%%
