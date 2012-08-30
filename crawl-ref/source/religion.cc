@@ -1500,8 +1500,11 @@ static bool _blessing_wpn(monster* mon)
     const int weapon = mon->inv[MSLOT_WEAPON];
     const int alt_weapon = mon->inv[MSLOT_ALT_WEAPON];
 
-    if (weapon == NON_ITEM && alt_weapon == NON_ITEM)
+    if (weapon == NON_ITEM && alt_weapon == NON_ITEM
+        || mon->type == MONS_DANCING_WEAPON)
+    {
         return false;
+    }
 
     int slot;
 
@@ -1597,8 +1600,11 @@ static bool _tso_blessing_holy_wpn(monster* mon)
     const int weapon = mon->inv[MSLOT_WEAPON];
     const int alt_weapon = mon->inv[MSLOT_ALT_WEAPON];
 
-    if (weapon == NON_ITEM && alt_weapon == NON_ITEM)
+    if (weapon == NON_ITEM && alt_weapon == NON_ITEM
+        || mon->type == MONS_DANCING_WEAPON)
+    {
         return false;
+    }
 
     int slot;
 
@@ -1934,9 +1940,8 @@ bool bless_follower(monster* follower,
     {
         case GOD_SHINING_ONE:
         {
-            // Extend a monster's stay if it's abjurable, optionally
-            // making it friendly if it's charmed.  If neither is
-            // possible, deliberately fall through.
+            // Extend a monster's stay if it's abjurable, or extend charm
+            // duration. If neither is possible, deliberately fall through.
             int more_time = _tso_blessing_extend_stay(follower);
             bool friendliness = false;
 
