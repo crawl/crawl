@@ -32,8 +32,8 @@ class player_quiver
 
     // Queries from engine -- don't affect state
     void get_desired_item(const item_def** item_out, int* slot_out) const;
-    int get_fire_item(std::string* no_item_reason = 0) const;
-    void get_fire_order(std::vector<int>& v) const;
+    int get_fire_item(string* no_item_reason = 0) const;
+    void get_fire_order(vector<int>& v, bool manual) const;
 
     // Callbacks from engine
     void set_quiver(const item_def &item, ammo_t ammo_type);
@@ -48,9 +48,10 @@ class player_quiver
     void load(reader&);
 
  private:
-    void _get_fire_order(std::vector<int>&,
+    void _get_fire_order(vector<int>&,
                          bool ignore_inscription_etc,
-                         const item_def* launcher) const;
+                         const item_def* launcher,
+                         bool manual) const;
     void _maybe_fill_empty_slot();
 
  private:

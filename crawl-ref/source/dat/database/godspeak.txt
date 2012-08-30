@@ -36,57 +36,8 @@ Xom grants you an implement of some kind.
 "Take this token of my esteem."
 
 Xom smiles on you.
-%%%%
-# Xom will give you a ring or amulet you can't currently use, due to
-# cursed equipment.
-Xom cursed gift
-
-"Perhaps you should try this instead."
-
-"Maybe this would work better."
 
 "Catch!"
-
-w:1
-"Vanity is a pleasure."
-%%%%
-# If you're wearing a cursed ring, Xom will give you another ring.
-Xom ring gift
-
-"Try this."
-
-"Take this!"
-
-"Catch!"
-
-w:1
-"There is a nice ring to it."
-%%%%
-# Xom will choose a weapon of a different subtype from the one you're
-# currently wielding.
-Xom weapon gift
-
-"Perhaps you should try this instead."
-
-"Have you considered using one of these?"
-
-"How about this?"
-
-w:1
-"Variety is the spice of life."
-%%%%
-# If you're wearing a cursed cloak, Xom will give you either a cloak
-# or body armour.
-Xom armour gift
-
-"Perhaps you should try this instead."
-
-"Have you considered wearing one of these?"
-
-"Here you go."
-
-w:1
-"It's marvellous!"
 %%%%
 ####################
 # friendly summons
@@ -342,6 +293,15 @@ Xom grants you a minor favour.
 
 Xom smiles on you.
 %%%%
+# random divination (magic mapping, detect items, detect creatures)
+Xom divination
+
+"See what I see, my child!"
+
+Xom grants you insight.
+
+Xom smirks.
+%%%%
 # cast a random spell
 Xom spell effect
 
@@ -417,6 +377,12 @@ Xom touches your surroundings.
 
 @Xom good monster polymorph@
 %%%%
+Xom inner flame
+
+"Let it end in hellfire!"
+
+Xom turns up the heat.
+%%%%
 Xom accidental homicide
 
 "Oops, I didn't mean to do *that*!"
@@ -455,7 +421,7 @@ Xom life saving general
 
 "Hey, things were just getting interesting!"
 
-"NOOOOOOO, not my @xom_plaything@!"
+"NOOOOOOO, not my @_xom_plaything_@!"
 
 "Not here, not now."
 
@@ -466,13 +432,13 @@ Xom life saving actor
 w:20
 @Xom life saving general@
 
-"Hey, that's my @xom_plaything@!"
+"Hey, that's my @_xom_plaything_@!"
 
 "Oh, no, you don't!"
 
-"That's my @xom_plaything@, go get your own!"
+"That's my @_xom_plaything_@, go get your own!"
 
-"Leave my @xom_plaything@ alone!"
+"Leave my @_xom_plaything_@ alone!"
 %%%%
 Xom boring death
 
@@ -516,6 +482,19 @@ Xom chuckles heartily!
 
 Xom chortles!
 %%%%
+_xom_plaything_
+
+# piety > 180 and > 80, respectively
+{{
+if you.piety_rank() > 4 then
+    return "teddy bear"
+elseif you.piety_rank() > 2 then
+    return "toy"
+else
+    return "plaything"
+end
+}}
+%%%%
 ############################################
 # Beogh rants on destroying an orcish idol #
 ############################################
@@ -552,11 +531,11 @@ Beogh curses everyone not orcish, especially @player_genus_plural@.
 
 Beogh swears eternal hatred towards @player_god@.
 %%%%
-#####################################
-# TSO rants on killing a holy being #
-#####################################
+#################################################
+# The Shining One rants on killing a holy being #
+#################################################
 # an evil worshipper has killed a holy being
-TSO holy evil
+the Shining One holy evil
 
 The Shining One thunders, "Cease your foul attacks on the divine!"
 
@@ -567,7 +546,7 @@ The Shining One shouts, "Your misdeeds are remembered unto the final battle!"
 The Shining One whispers, "The forces of light will burn you to a crisp."
 %%%%
 # a non-good worshipper or atheist has killed a holy being
-TSO holy other
+the Shining One holy other
 
 The Shining One says, "As holy lives are taken, so shall yours be."
 
@@ -587,192 +566,9 @@ Elyvilon holy
 
 Elyvilon hisses: "You foul beast! How dare you!"
 
-Elyvilon sadly speaks: "How it came to be that such cruelty exists."
+Elyvilon sadly asks: "How did it come to be that such cruelty exists?"
 
 Elyvilon whispers: "No one should ever harm others. Ever!"
-%%%%
-##########################################################
-# Messages for the *player* using Zin's Recite invocation
-##########################################################
-recite_start
-
-begin
-
-launch into
-
-embark on
-%%%%
-recite_what
-
-a poem about
-
-the sacred texts on
-
-the word of Zin on
-
-sonorously on
-
-loudly on
-%%%%
-zin_recite_speech_start
-
-w:40
-begin reciting @axioms_of_law@
-
-begin reciting @recite_what@ @recite_subject@
-
-begin preaching about @recite_subject@
-
-@recite_start@ a @lecture_modifier@ lecture about @recite_subject@
-
-begin explaining in detail about @recite_subject@
-
-begin explaining the importance of @important_subject@
-
-@recite_start@ a @lecture_modifier@ sermon about @recite_subject@
-
-@recite_start@ a @lecture_modifier@ speech about @recite_subject@
-
-w:5
-begin speaking about @recite_subject@
-%%%%
-# the short form of the above, for continuing/stopping/finishing
-# reciting - order and weights must be the same as above!
-# doesn't need finishing interpunction
-zin_recite_speech_other
-
-w:50
-reciting
-
-preaching
-
-your lecture
-
-w:20
-your explanations
-
-your sermon
-
-w:15
-your speech
-%%%%
-lecture_modifier
-
-lengthy
-
-passionate
-
-righteous
-
-stern
-%%%%
-axioms_of_law
-
-Zin's Axioms of Law.
-
-the Axioms of Law.
-
-the books of the Law.
-
-the sacred Law of Zin.
-%%%%
-# used for "explaining the importance of ..."
-important_subject
-
-# law
-w:50
-@axioms_of_law@
-
-the eternal Law.
-
-obedience to the Law.
-
-the one true way.
-
-# purity
-purity of body and mind.
-
-preserving your bodily integrity.
-
-keeping your body clean and pure.
-
-proper care of body and soul.
-
-# mutations
-avoiding mutations.
-
-just saying no to mutations.
-
-# respecting intelligent beings
-proper burial practice.
-
-# demons
-not dealing with demons.
-
-rejecting the service of demons.
-%%%%
-# the subject of your recital/lecture/whatever
-# needs the full dot or exclamation mark
-recite_subject
-
-w:120
-@important_subject@
-
-# first, law and order
-w:80
-@axioms_of_law@
-
-the Law and the prophets.
-
-the importance of the Law.
-
-# anti-mutation
-mutations, and how to avoid them.
-
-potions of Mutation - the devil's brew!
-
-Neqoxecs and Cacodemons - may they all be destroyed!
-
-# respecting intelligent beings
-a proper diet respecting intelligent beings.
-
-# necromancy and evil
-the evils of necromancy.
-
-undead, and why they are evil.
-
-# the gods
-the fall of Lugonu.
-
-the alliance of Zin and the Shining One.
-
-the alliance of Zin and Elyvilon.
-
-the lawlessness of @chaotic_god@.
-
-the evilness of @evil_god@.
-%%%%
-chaotic_god
-
-Xom
-
-Makhleb
-
-Lugonu
-
-Jiyva
-%%%%
-evil_god
-
-Kikubaaqudgha
-
-Makhleb
-
-Yredelemnul
-
-Beogh
-
-Lugonu
 %%%%
 recite_closure
 
@@ -870,7 +666,7 @@ Cheibriados says: Take it easy.
 %%%%
 Elyvilon penance
 
-Elyvilon says: I plead you, be more careful when helping others!
+Elyvilon says: I plead of you, be more careful when helping others!
 %%%%
 Elyvilon welcome
 
@@ -948,11 +744,11 @@ Sif Muna welcome
 
 Sif Muna whispers: I know many secrets...
 %%%%
-The Shining One penance
+the Shining One penance
 
 The Shining One says: Being a martyr may wash away your sin!
 %%%%
-The Shining One welcome
+the Shining One welcome
 
 The Shining One says: Lead the forces of light to victory!
 %%%%
@@ -1010,7 +806,7 @@ Zin penance
 
 Zin castigates you for your disobedience of the Law.
 
-Zin sternly explains the importance of @important_subject@
+Zin sternly explains the importance of @_important_subject_@
 %%%%
 Zin welcome
 

@@ -9,7 +9,6 @@
 
 #include "mon-util.h"
 
-#include "act-iter.h"
 #include "artefact.h"
 #include "beam.h"
 #include "colour.h"
@@ -30,17 +29,16 @@
 #include "items.h"
 #include "libutil.h"
 #include "mapmark.h"
-#include "mislead.h"
 #include "mgen_data.h"
 #include "mon-abil.h"
 #include "mon-behv.h"
-#include "mon-clone.h"
 #include "mon-death.h"
 #include "mon-iter.h"
 #include "mon-place.h"
 #include "mon-stuff.h"
 #include "notes.h"
 #include "options.h"
+#include "orb.h"
 #include "random.h"
 #include "religion.h"
 #include "showsymb.h"
@@ -50,17 +48,17 @@
 #include "stuff.h"
 #include "terrain.h"
 #include "tilepick.h"
+#include "tileview.h"
 #include "traps.h"
 #include "unicode.h"
 #include "view.h"
-#include "viewchar.h"
 
 static FixedVector < int, NUM_MONSTERS > mon_entry;
 
 static mon_display monster_symbols[NUM_MONSTERS];
 
 static bool initialised_randmons = false;
-static std::vector<monster_type> monsters_by_habitat[NUM_HABITATS];
+static vector<monster_type> monsters_by_habitat[NUM_HABITATS];
 
 #include "mon-mst.h"
 
@@ -79,28 +77,28 @@ static mon_spellbook mspell_list[] =
 
 #define MONDATASIZE ARRAYSZ(mondata)
 
-static int _mons_exp_mod(int mclass);
+static int _mons_exp_mod(monster_type mclass);
 
 // Macro that saves some typing, nothing more.
 #define smc get_monster_data(mc)
 
 /* ******************** BEGIN PUBLIC FUNCTIONS ******************** */
 
-habitat_type grid2habitat(dungeon_feature_type grid)
+static habitat_type _grid2habitat(dungeon_feature_type grid)
 {
     if (feat_is_watery(grid))
-        return (HT_WATER);
+        return HT_WATER;
 
     if (feat_is_rock(grid) && !feat_is_permarock(grid))
-        return (HT_ROCK);
+        return HT_ROCK;
 
     switch (grid)
     {
     case DNGN_LAVA:
-        return (HT_LAVA);
+        return HT_LAVA;
     case DNGN_FLOOR:
     default:
-        return (HT_LAND);
+        return HT_LAND;
     }
 }
 
@@ -109,15 +107,15 @@ dungeon_feature_type habitat2grid(habitat_type ht)
     switch (ht)
     {
     case HT_WATER:
-        return (DNGN_DEEP_WATER);
+        return DNGN_DEEP_WATER;
     case HT_LAVA:
-        return (DNGN_LAVA);
+        return DNGN_LAVA;
     case HT_ROCK:
-        return (DNGN_ROCK_WALL);
+        return DNGN_ROCK_WALL;
     case HT_LAND:
     case HT_AMPHIBIOUS:
     default:
-        return (DNGN_FLOOR);
+        return DNGN_FLOOR;
     }
 }
 
@@ -127,9 +125,8 @@ static void _initialise_randmons()
     {
         const dungeon_feature_type grid = habitat2grid(habitat_type(i));
 
-        for (int m = 0; m < NUM_MONSTERS; ++m)
+        for (monster_type mt = MONS_0; mt < NUM_MONSTERS; ++mt)
         {
-            monster_type mt = static_cast<monster_type>(m);
             if (invalid_monster_type(mt))
                 continue;
 
@@ -142,23 +139,18 @@ static void _initialise_randmons()
 
 monster_type random_monster_at_grid(const coord_def& p)
 {
-    return (random_monster_at_grid(grd(p)));
-}
-
-monster_type random_monster_at_grid(dungeon_feature_type grid)
-{
     if (!initialised_randmons)
         _initialise_randmons();
 
-    const habitat_type ht = grid2habitat(grid);
-    const std::vector<monster_type> &valid_mons = monsters_by_habitat[ht];
+    const habitat_type ht = _grid2habitat(grd(p));
+    const vector<monster_type> &valid_mons = monsters_by_habitat[ht];
 
     ASSERT(!valid_mons.empty());
     return (valid_mons.empty() ? MONS_PROGRAM_BUG
                                : valid_mons[ random2(valid_mons.size()) ]);
 }
 
-typedef std::map<std::string, unsigned> mon_name_map;
+typedef map<string, monster_type> mon_name_map;
 static mon_name_map Mon_Name_Cache;
 
 void init_mon_name_cache()
@@ -166,9 +158,9 @@ void init_mon_name_cache()
     if (!Mon_Name_Cache.empty())
         return;
 
-    for (unsigned i = 0; i < sizeof(mondata) / sizeof(*mondata); ++i)
+    for (unsigned i = 0; i < ARRAYSZ(mondata); ++i)
     {
-        std::string name = mondata[i].name;
+        string name = mondata[i].name;
         lowercase(name);
 
         const int          mtype = mondata[i].mc;
@@ -180,7 +172,9 @@ void init_mon_name_cache()
         // breaks ?/M rakshasa.
         if (Mon_Name_Cache.find(name) != Mon_Name_Cache.end())
         {
-            if (mon == MONS_RAKSHASA_FAKE || mon == MONS_MARA_FAKE)
+            if (mon == MONS_RAKSHASA_FAKE || mon == MONS_MARA_FAKE
+                || mon != MONS_SERPENT_OF_HELL
+                   && mons_species(mon) == MONS_SERPENT_OF_HELL)
             {
                 // Keep previous entry.
                 continue;
@@ -193,7 +187,7 @@ void init_mon_name_cache()
     }
 }
 
-monster_type get_monster_by_name(std::string name, bool exact)
+monster_type get_monster_by_name(string name, bool exact)
 {
     lowercase(name);
 
@@ -202,21 +196,21 @@ monster_type get_monster_by_name(std::string name, bool exact)
         mon_name_map::iterator i = Mon_Name_Cache.find(name);
 
         if (i != Mon_Name_Cache.end())
-            return static_cast<monster_type>(i->second);
+            return i->second;
 
         return MONS_PROGRAM_BUG;
     }
 
     monster_type mon = MONS_PROGRAM_BUG;
-    for (unsigned i = 0; i < sizeof(mondata) / sizeof(*mondata); ++i)
+    for (unsigned i = 0; i < ARRAYSZ(mondata); ++i)
     {
-        std::string candidate = mondata[i].name;
+        string candidate = mondata[i].name;
         lowercase(candidate);
 
         const int mtype = mondata[i].mc;
 
-        const std::string::size_type match = candidate.find(name);
-        if (match == std::string::npos)
+        const string::size_type match = candidate.find(name);
+        if (match == string::npos)
             continue;
 
         mon = monster_type(mtype);
@@ -224,7 +218,7 @@ monster_type get_monster_by_name(std::string name, bool exact)
         if (match == 0)
             break;
     }
-    return (mon);
+    return mon;
 }
 
 void init_monsters()
@@ -246,18 +240,18 @@ void init_monsters()
 
 void init_monster_symbols()
 {
-    std::map<unsigned, monster_type> base_mons;
-    for (int i = 0; i < NUM_MONSTERS; ++i)
+    map<unsigned, monster_type> base_mons;
+    for (monster_type mc = MONS_0; mc < NUM_MONSTERS; ++mc)
     {
-        mon_display &md = monster_symbols[i];
-        const monsterentry *me = get_monster_data(i);
+        mon_display &md = monster_symbols[mc];
+        const monsterentry *me = get_monster_data(mc);
         if (me)
         {
             md.glyph  = me->basechar;
             md.colour = me->colour;
-            std::map<unsigned, monster_type>::iterator it = base_mons.find(md.glyph);
+            map<unsigned, monster_type>::iterator it = base_mons.find(md.glyph);
             if (it == base_mons.end() || it->first == MONS_PROGRAM_BUG)
-                base_mons[md.glyph] = static_cast<monster_type>(i);
+                base_mons[md.glyph] = mc;
             md.detected = base_mons[md.glyph];
         }
     }
@@ -277,7 +271,7 @@ void init_monster_symbols()
     }
 
     // Validate all glyphs, even those which didn't come from an override.
-    for (int i = 0; i < NUM_MONSTERS; ++i)
+    for (monster_type i = MONS_PROGRAM_BUG; i < NUM_MONSTERS; ++i)
         if (wcwidth(monster_symbols[i].glyph) != 1)
             monster_symbols[i].glyph = mons_base_char(i);
 }
@@ -285,13 +279,15 @@ void init_monster_symbols()
 static bool _get_kraken_head(const monster*& mon)
 {
     if (!valid_kraken_connection(mon))
-        return (false);
+        return false;
 
     // For kraken tentacle segments, find the associated tentacle.
     if (mon->type == MONS_KRAKEN_TENTACLE_SEGMENT)
     {
         if (invalid_monster_index(mon->number))
-            return (false);
+            return false;
+        if (invalid_monster(&menv[mon->number]))
+            return false;
 
         mon = &menv[mon->number];
     }
@@ -300,56 +296,48 @@ static bool _get_kraken_head(const monster*& mon)
     if (mon->type == MONS_KRAKEN_TENTACLE)
     {
         if (invalid_monster_index(mon->number))
-            return (false);
+            return false;
+        if (invalid_monster(&menv[mon->number]))
+            return false;
 
         mon = &menv[mon->number];
     }
 
-    return (true);
+    return true;
 }
 
-const mon_resist_def &get_mons_class_resists(int mc)
+void set_resist(resists_t &all, mon_resist_flags res, int lev)
+{
+    if (res > MR_LAST_MULTI)
+    {
+        ASSERT(lev >= 0);
+        ASSERT(lev <= 1);
+        if (lev)
+            all |= res;
+        else
+            all &= ~res;
+        return;
+    }
+
+    ASSERT(lev >= -3);
+    ASSERT(lev <= 4);
+    all = all & ~(res * 7) | res * (lev & 7);
+}
+
+resists_t get_mons_class_resists(monster_type mc)
 {
     const monsterentry *me = get_monster_data(mc);
     return (me ? me->resists : get_monster_data(MONS_PROGRAM_BUG)->resists);
 }
 
-static mon_resist_def _serpent_of_hell_resists(int flavour)
-{
-    mon_resist_def res;
-
-    switch (flavour)
-    {
-    case BRANCH_GEHENNA:
-        res.hellfire = 1;
-        break;
-
-    case BRANCH_COCYTUS:
-        res.cold = 3;
-        break;
-    }
-
-    return res;
-}
-
-static mon_resist_def _serpent_of_hell_resists(const monster* mon)
-{
-    int flavour = mon->props["serpent_of_hell_flavour"].get_int();
-    return _serpent_of_hell_resists(flavour);
-}
-
-mon_resist_def get_mons_resists(const monster* mon)
+resists_t get_mons_resists(const monster* mon)
 {
     _get_kraken_head(mon);
 
-    mon_resist_def resists;
+    resists_t resists = get_mons_class_resists(mon->type);
 
     if (mons_is_ghost_demon(mon->type))
-        resists = mon->ghost->resists;
-    else
-        resists = mon_resist_def();
-
-    resists |= get_mons_class_resists(mon->type);
+        resists |= mon->ghost->resists;
 
     if (mons_genus(mon->type) == MONS_DRACONIAN
             && mon->type != MONS_DRACONIAN
@@ -360,15 +348,17 @@ mon_resist_def get_mons_resists(const monster* mon)
             resists |= get_mons_class_resists(draco_species);
     }
 
-    if (mon->type == MONS_SERPENT_OF_HELL)
-        resists |= _serpent_of_hell_resists(mon);
-
-    // Undead get an additional level of poison resistance, in case
+    // Undead get full poison resistance. This is set from here in case
     // they're undead due to the MF_FAKE_UNDEAD flag.
     if (mon->holiness() == MH_UNDEAD)
-        resists.poison += 1;
+        resists = resists & ~(MR_RES_POISON * 7) | MR_RES_POISON * 3;
 
-    return (resists);
+    return resists;
+}
+
+int get_mons_resist(const monster* mon, mon_resist_flags res)
+{
+    return get_resist(get_mons_resists(mon), res);
 }
 
 monster* monster_at(const coord_def &pos)
@@ -384,7 +374,7 @@ monster* monster_at(const coord_def &pos)
     return (&menv[mindex]);
 }
 
-bool mons_class_flag(int mc, uint64_t bf)
+bool mons_class_flag(monster_type mc, uint64_t bf)
 {
     const monsterentry *me = get_monster_data(mc);
     return (me ? (me->bitfields & bf) != 0 : false);
@@ -397,10 +387,11 @@ int scan_mon_inv_randarts(const monster* mon,
 
     if (mons_itemuse(mon) >= MONUSE_STARTING_EQUIPMENT)
     {
-        const int weapon = mon->inv[MSLOT_WEAPON];
-        const int second = mon->inv[MSLOT_ALT_WEAPON]; // Two-headed ogres, etc.
-        const int armour = mon->inv[MSLOT_ARMOUR];
-        const int shield = mon->inv[MSLOT_SHIELD];
+        const int weapon    = mon->inv[MSLOT_WEAPON];
+        const int second    = mon->inv[MSLOT_ALT_WEAPON]; // Two-headed ogres, etc.
+        const int armour    = mon->inv[MSLOT_ARMOUR];
+        const int shield    = mon->inv[MSLOT_SHIELD];
+        const int jewellery = mon->inv[MSLOT_JEWELLERY];
 
         if (weapon != NON_ITEM && mitm[weapon].base_type == OBJ_WEAPONS
             && is_artefact(mitm[weapon]))
@@ -409,7 +400,7 @@ int scan_mon_inv_randarts(const monster* mon,
         }
 
         if (second != NON_ITEM && mitm[second].base_type == OBJ_WEAPONS
-            && is_artefact(mitm[second]))
+            && is_artefact(mitm[second]) && mons_wields_two_weapons(mon))
         {
             ret += artefact_wpn_property(mitm[second], ra_prop);
         }
@@ -425,18 +416,24 @@ int scan_mon_inv_randarts(const monster* mon,
         {
             ret += artefact_wpn_property(mitm[shield], ra_prop);
         }
+
+        if (jewellery != NON_ITEM && mitm[jewellery].base_type == OBJ_JEWELLERY
+            && is_artefact(mitm[jewellery]))
+        {
+            ret += artefact_wpn_property(mitm[jewellery], ra_prop);
+        }
     }
 
-    return (ret);
+    return ret;
 }
 
-mon_holy_type mons_class_holiness(int mc)
+mon_holy_type mons_class_holiness(monster_type mc)
 {
     ASSERT(smc);
-    return (smc->holiness);
+    return smc->holiness;
 }
 
-bool mons_class_is_confusable(int mc)
+bool mons_class_is_confusable(monster_type mc)
 {
     ASSERT(smc);
     return (smc->resist_magic < MAG_IMMUNE
@@ -444,9 +441,9 @@ bool mons_class_is_confusable(int mc)
             && mons_class_holiness(mc) != MH_PLANT);
 }
 
-bool mons_class_is_stationary(int mc)
+bool mons_class_is_stationary(monster_type mc)
 {
-    return (mons_class_flag(mc, M_STATIONARY));
+    return mons_class_flag(mc, M_STATIONARY);
 }
 
 bool mons_is_stationary(const monster* mon)
@@ -458,7 +455,7 @@ bool mons_is_stationary(const monster* mon)
 // Monsters that are worthless obstacles: not to
 // be attacked by default, but may be cut down to
 // get to target even if coaligned.
-bool mons_class_is_firewood(int mc)
+bool mons_class_is_firewood(monster_type mc)
 {
     return (mons_class_is_stationary(mc)
             && mons_class_flag(mc, M_NO_EXP_GAIN)
@@ -468,7 +465,7 @@ bool mons_class_is_firewood(int mc)
 
 bool mons_is_firewood(const monster* mon)
 {
-    return (mons_class_is_firewood(mon->type));
+    return mons_class_is_firewood(mon->type);
 }
 
 // "body" in a purely grammatical sense.
@@ -479,7 +476,7 @@ bool mons_has_body(const monster* mon)
         || mon->type == MONS_CURSE_TOE
         || mon->type == MONS_DANCING_WEAPON)
     {
-        return (false);
+        return false;
     }
 
     switch (mons_base_char(mon->type))
@@ -490,10 +487,10 @@ bool mons_has_body(const monster* mon)
     case '*':
     case '%':
     case 'J':
-        return (false);
+        return false;
     }
 
-    return (true);
+    return true;
 }
 
 bool mons_has_flesh(const monster* mon)
@@ -531,14 +528,24 @@ bool cheibriados_thinks_mons_is_fast(const monster* mon)
     return (cheibriados_monster_player_speed_delta(mon) > 0);
 }
 
-bool mons_is_projectile(int mc)
+bool mons_is_projectile(monster_type mc)
 {
     return (mc == MONS_ORB_OF_DESTRUCTION);
 }
 
+bool mons_is_projectile(const monster* mon)
+{
+    return (mon->type == MONS_ORB_OF_DESTRUCTION);
+}
+
+bool mons_is_boulder(const monster* mon)
+{
+    return (mon->type == MONS_BOULDER_BEETLE && mon->rolling());
+}
+
 // Conjuration or Hexes.  Summoning and Necromancy make the monster a creature
 // at least in some degree, golems have a chem granting them that.
-bool mons_is_object(int mc)
+bool mons_is_object(monster_type mc)
 {
     return mons_is_projectile(mc)
            || mc == MONS_BALL_LIGHTNING
@@ -550,13 +557,13 @@ bool mons_is_object(int mc)
            || mc == MONS_DANCING_WEAPON;
 }
 
-bool mons_has_blood(int mc)
+bool mons_has_blood(monster_type mc)
 {
     return (mons_class_flag(mc, M_COLD_BLOOD)
             || mons_class_flag(mc, M_WARM_BLOOD));
 }
 
-bool mons_is_sensed(int mc)
+bool mons_is_sensed(monster_type mc)
 {
     return mc == MONS_SENSED
            || mc == MONS_SENSED_FRIENDLY
@@ -619,23 +626,24 @@ bool mons_is_native_in_branch(const monster* mons,
     case BRANCH_TOMB:
         return (mons_genus(mons->type) == MONS_MUMMY);
 
-    case BRANCH_HIVE:
-        return (mons->type == MONS_KILLER_BEE_LARVA
-                || mons->type == MONS_KILLER_BEE
-                || mons->type == MONS_QUEEN_BEE);
+    case BRANCH_SPIDER_NEST:
+        return (mons_genus(mons->type) == MONS_SPIDER);
+
+    case BRANCH_FOREST:
+        return (mons_genus(mons->type) == MONS_SPRIGGAN);
 
     case BRANCH_HALL_OF_BLADES:
         return (mons->type == MONS_DANCING_WEAPON);
 
     default:
-        return (false);
+        return false;
     }
 }
 
 bool mons_is_poisoner(const monster* mon)
 {
     if (chunk_is_poisonous(mons_corpse_effect(mon->type)))
-        return (true);
+        return true;
 
     if (mon->has_attack_flavour(AF_POISON)
         || mon->has_attack_flavour(AF_POISON_NASTY)
@@ -646,21 +654,21 @@ bool mons_is_poisoner(const monster* mon)
         || mon->has_attack_flavour(AF_POISON_DEX)
         || mon->has_attack_flavour(AF_POISON_STAT))
     {
-        return (true);
+        return true;
     }
 
     if (mon->type == MONS_DANCING_WEAPON
         && mon->primary_weapon()
         && get_weapon_brand(*mon->primary_weapon()) == SPWPN_VENOM)
     {
-        return (true);
+        return true;
     }
 
-    return (false);
+    return false;
 }
 
 // Monsters considered as "slime" for Jiyva.
-bool mons_class_is_slime(int mc)
+bool mons_class_is_slime(monster_type mc)
 {
     return (mons_genus(mc) == MONS_JELLY
             || mons_genus(mc) == MONS_GIANT_EYEBALL
@@ -669,16 +677,16 @@ bool mons_class_is_slime(int mc)
 
 bool mons_is_slime(const monster* mon)
 {
-    return (mons_class_is_slime(mon->type));
+    return mons_class_is_slime(mon->type);
 }
 
 bool herd_monster(const monster* mon)
 {
-    return (mons_class_flag(mon->type, M_HERD));
+    return mons_class_flag(mon->type, M_HERD);
 }
 
 // Plant or fungus really
-bool mons_class_is_plant(int mc)
+bool mons_class_is_plant(monster_type mc)
 {
     return (mons_genus(mc) == MONS_PLANT
             || mons_genus(mc) == MONS_BUSH
@@ -687,7 +695,7 @@ bool mons_class_is_plant(int mc)
 
 bool mons_is_plant(const monster* mon)
 {
-    return (mons_class_is_plant(mon->type));
+    return mons_class_is_plant(mon->type);
 }
 
 bool mons_eats_items(const monster* mon)
@@ -722,40 +730,33 @@ bool invalid_monster_index(int i)
     return (i < 0 || i >= MAX_MONSTERS);
 }
 
-bool mons_is_statue(int mc, bool allow_disintegrate)
+bool mons_is_statue(monster_type mc, bool allow_disintegrate)
 {
     if (mc == MONS_ORANGE_STATUE || mc == MONS_SILVER_STATUE)
-        return (true);
+        return true;
 
     if (!allow_disintegrate)
         return (mc == MONS_ICE_STATUE || mc == MONS_ROXANNE);
 
-    return (false);
+    return false;
 }
 
-bool mons_is_mimic(int mc)
+bool mons_is_mimic(monster_type mc)
 {
     return (mons_is_item_mimic(mc) || mons_is_feat_mimic(mc));
 }
 
-bool mons_is_item_mimic(int mc)
+bool mons_is_item_mimic(monster_type mc)
 {
-    return (mc == MONS_ITEM_MIMIC);
+    return (mc >= MONS_INEPT_ITEM_MIMIC && mc <= MONS_MONSTROUS_ITEM_MIMIC);
 }
 
-bool mons_is_feat_mimic(int mc)
+bool mons_is_feat_mimic(monster_type mc)
 {
-    return (mc == MONS_FEATURE_MIMIC);
+    return (mc >= MONS_INEPT_FEATURE_MIMIC && mc <= MONS_MONSTROUS_FEATURE_MIMIC);
 }
 
-static bool _mons_is_weapon_mimic(const monster* mon)
-{
-    return (mons_is_item_mimic(mon->type)
-            && get_mimic_item(mon)
-            && get_mimic_item(mon)->base_type == OBJ_WEAPONS);
-}
-
-void discover_mimic(const coord_def& pos)
+void discover_mimic(const coord_def& pos, bool wake)
 {
     item_def* item = item_mimic_at(pos);
     const bool feature_mimic = !item && feature_mimic_at(pos);
@@ -773,27 +774,32 @@ void discover_mimic(const coord_def& pos)
     }
 
     const feature_def feat_d = get_feature_def(feat);
-    const std::string name = feature_mimic ? feat_type_name(feat) :
-               item->base_type == OBJ_GOLD ? "pile of gold coins"
-                                           : item->name(DESC_BASENAME);
+    const string name = feature_mimic ? feat_type_name(feat) :
+          item->base_type == OBJ_GOLD ? "pile of gold coins"
+                                      : item->name(DESC_BASENAME);
 
     tileidx_t tile = tileidx_feature(pos);
+#ifdef USE_TILE
+    apply_variations(env.tile_flv(pos), &tile, pos);
+#endif
 
     // If a monster is standing on top of the mimic, move it out of the way.
-    monster* mon = monster_at(pos);
-    if (mon && shove_monster(mon))
-    {
-        simple_monster_message(mon,
-            make_stringf(" is pushed out of the %s.", name.c_str()).c_str());
-        dprf("Moved to (%d, %d).", mon->pos().x, mon->pos().y);
-    }
-    else if (mon)
+    actor* act = actor_at(pos);
+    if (act && !act->shove(name.c_str()))
     {
         // Not a single habitable place left on the level.  Possible in a Zig
         // or if a paranoid player covers a small Trove with summons.
         mpr("There is some commotion, and a hidden mimic gets squished!");
         if (item)
             destroy_item(*item, true);
+        else
+        {
+            unnotice_feature(level_pos(level_id::current(), pos));
+            grd(pos) = DNGN_FLOOR;
+            env.level_map_mask(pos) &= !MMT_MIMIC;
+            set_terrain_changed(pos);
+            remove_markers_and_listeners_at(pos);
+        }
         return;
     }
 
@@ -802,7 +808,7 @@ void discover_mimic(const coord_def& pos)
         // If we took a note of this feature, then note that it was a mimic.
         if (!is_boring_terrain(feat))
         {
-            std::string desc = feature_description(pos, false, DESC_THE, false);
+            string desc = feature_description_at(pos, false, DESC_THE, false);
             take_note(Note(NOTE_FEAT_MIMIC, 0, 0, desc.c_str()));
         }
 
@@ -812,13 +818,32 @@ void discover_mimic(const coord_def& pos)
         env.level_map_mask(pos) &= !MMT_MIMIC;
         set_terrain_changed(pos);
         remove_markers_and_listeners_at(pos);
+
+        if (feat_is_door(feat))
+            env.level_map_mask(pos) |= MMT_WAS_DOOR_MIMIC;
     }
 
     // Generate and place the monster.
     mgen_data mg;
-    mg.behaviour = BEH_WANDER;
+    mg.behaviour = wake ? BEH_WANDER : BEH_LURK;
     mg.cls = item ? MONS_ITEM_MIMIC : MONS_FEATURE_MIMIC;
     mg.pos = pos;
+    if (wake)
+        mg.flags |= MG_DONT_COME;
+
+    const int level = env.absdepth0 + 1;
+
+    // Orb mimic is special
+    if (item && item->base_type == OBJ_ORBS)
+        mg.cls = MONS_MONSTROUS_ITEM_MIMIC;
+    // Early levels get inept mimics instead
+    else if (!x_chance_in_y(level - 6, 6))
+        mg.cls = item ? MONS_INEPT_ITEM_MIMIC : MONS_INEPT_FEATURE_MIMIC;
+    // Deeper, you get ravenous mimics
+    else if (x_chance_in_y(level - 15, 6))
+        mg.cls = item ? MONS_RAVENOUS_ITEM_MIMIC : MONS_RAVENOUS_FEATURE_MIMIC;
+
+
     if (feature_mimic)
     {
         if (feat_is_stone_stair(feat))
@@ -852,18 +877,27 @@ void discover_mimic(const coord_def& pos)
     if (!mimic->move_to_pos(pos))
         die("Moving mimic into position failed.");
 
-    if (item && item->base_type == OBJ_ARMOUR)
-        mimic->ac += 10;
-
-    behaviour_event(mimic, ME_ALERT, MHITYOU);
+    if (wake)
+        behaviour_event(mimic, ME_ALERT, &you);
 
     // Friendly monsters don't appreciate being pushed away.
-    if (mon && mon->friendly())
-        behaviour_event(mon, ME_WHACK, mimic->mindex());
+    if (act && !act->is_player() && act->as_monster()->friendly())
+        behaviour_event(act->as_monster(), ME_WHACK, mimic);
 
     // Announce the mimic.
     if (mons_near(mimic))
+    {
         mprf(MSGCH_WARN, "The %s is a mimic!", name.c_str());
+        mimic->seen_context = SC_JUST_SEEN;
+    }
+
+    // Orb mimics shriek.
+    if (item && item->base_type == OBJ_ORBS)
+    {
+        orb_pickup_noise(pos, 30,
+            "The orb mimic lets out a hideous shriek!",
+            "The orb mimic lets out a furious burst of light!");
+    }
 
     // Just in case there's another one.
     if (mimic_at(pos))
@@ -875,7 +909,7 @@ void discover_shifter(monster* shifter)
     shifter->flags |= MF_KNOWN_SHIFTER;
 }
 
-bool mons_is_demon(int mc)
+bool mons_is_demon(monster_type mc)
 {
     const char show_char = mons_base_char(mc);
 
@@ -883,13 +917,13 @@ bool mons_is_demon(int mc)
     if (mons_class_holiness(mc) == MH_DEMONIC
         && (isadigit(show_char) || show_char == '&'))
     {
-        return (true);
+        return true;
     }
 
-    return (false);
+    return false;
 }
 
-int mons_demon_tier(int mc)
+int mons_demon_tier(monster_type mc)
 {
     switch (mons_base_char(mc))
     {
@@ -913,7 +947,7 @@ int mons_demon_tier(int mc)
     }
 }
 
-bool mons_is_draconian(int mc)
+bool mons_is_draconian(monster_type mc)
 {
     return (mc >= MONS_FIRST_DRACONIAN && mc <= MONS_LAST_DRACONIAN);
 }
@@ -922,7 +956,7 @@ bool mons_is_draconian(int mc)
 // they're typically volatile (like, made of real fire).  As such, they
 // should be immune to Abjuration or Recall.  Also, they count as things
 // rather than beings.
-bool mons_is_conjured(int mc)
+bool mons_is_conjured(monster_type mc)
 {
     return mons_is_projectile(mc)
            || mc == MONS_FIRE_VORTEX
@@ -934,41 +968,41 @@ bool mons_is_conjured(int mc)
 bool mons_foe_is_mons(const monster* mons)
 {
     const actor *foe = mons->get_foe();
-    return (foe && foe->atype() == ACT_MONSTER);
+    return (foe && foe->is_monster());
 }
 
-int mons_weight(int mc)
+int mons_weight(monster_type mc)
 {
     ASSERT(smc);
-    return (smc->weight);
+    return smc->weight;
 }
 
-corpse_effect_type mons_corpse_effect(int mc)
+corpse_effect_type mons_corpse_effect(monster_type mc)
 {
     ASSERT(smc);
-    return (smc->corpse_thingy);
+    return smc->corpse_thingy;
 }
 
-monster_type mons_species(int mc)
+monster_type mons_species(monster_type mc)
 {
     const monsterentry *me = get_monster_data(mc);
     return (me ? me->species : MONS_PROGRAM_BUG);
 }
 
-monster_type mons_genus(int mc)
+monster_type mons_genus(monster_type mc)
 {
     if (mc == RANDOM_DRACONIAN || mc == RANDOM_BASE_DRACONIAN
         || mc == RANDOM_NONBASE_DRACONIAN
         || (mc == MONS_PLAYER_ILLUSION && player_genus(GENPC_DRACONIAN)))
     {
-        return (MONS_DRACONIAN);
+        return MONS_DRACONIAN;
     }
 
     if (mc == MONS_NO_MONSTER)
-        return (MONS_NO_MONSTER);
+        return MONS_NO_MONSTER;
 
     ASSERT(smc);
-    return (smc->genus);
+    return smc->genus;
 }
 
 monster_type mons_detected_base(monster_type mc)
@@ -981,14 +1015,14 @@ monster_type draco_subspecies(const monster* mon)
     ASSERT(mons_genus(mon->type) == MONS_DRACONIAN);
 
     if (mon->type == MONS_PLAYER_ILLUSION)
-        return (player_species_to_mons_species(mon->ghost->species));
+        return player_species_to_mons_species(mon->ghost->species);
 
     monster_type retval = mons_species(mon->type);
 
     if (retval == MONS_DRACONIAN && mon->type != MONS_DRACONIAN)
-        retval = static_cast<monster_type>(mon->base_monster);
+        retval = mon->base_monster;
 
-    return (retval);
+    return retval;
 }
 
 int get_shout_noise_level(const shout_type shout)
@@ -1018,19 +1052,19 @@ int get_shout_noise_level(const shout_type shout)
 // Only beasts and chaos spawns use S_RANDOM for noise type.
 // Pandemonium lords can also get here, but this is mostly used for the
 // "says" verb used for insults.
-static bool _shout_fits_monster(int type, int shout)
+static bool _shout_fits_monster(monster_type mc, int shout)
 {
     if (shout == NUM_SHOUTS || shout >= NUM_LOUDNESS || shout == S_SILENT)
-        return (false);
+        return false;
 
     // Chaos spawns can do anything but demon taunts, since they're
     // not coherent enough to actually say words.
-    if (type == MONS_CHAOS_SPAWN)
+    if (mc == MONS_CHAOS_SPAWN)
         return (shout != S_DEMON_TAUNT);
 
     // For Pandemonium lords, almost everything is fair game.  It's only
     // used for the shouting verb ("say", "bellow", "roar", etc.) anyway.
-    if (type != MONS_HELL_BEAST)
+    if (mc != MONS_HELL_BEAST)
         return (shout != S_BUZZ && shout != S_WHINE && shout != S_CROAK);
 
     switch (shout)
@@ -1041,15 +1075,15 @@ static bool _shout_fits_monster(int type, int shout)
     case S_WHINE:
     // The beast cannot speak.
     case S_DEMON_TAUNT:
-        return (false);
+        return false;
     default:
-        return (true);
+        return true;
     }
 }
 
 // If demon_shout is true, we're trying to find a random verb and
 // loudness for a Pandemonium lord trying to shout.
-shout_type mons_shouts(int mc, bool demon_shout)
+shout_type mons_shouts(monster_type mc, bool demon_shout)
 {
     ASSERT(smc);
     shout_type u = smc->shouts;
@@ -1063,10 +1097,10 @@ shout_type mons_shouts(int mc, bool demon_shout)
         while (!_shout_fits_monster(mc, u));
     }
 
-    return (u);
+    return u;
 }
 
-bool mons_is_ghost_demon(int mc)
+bool mons_is_ghost_demon(monster_type mc)
 {
     return (mc == MONS_UGLY_THING
             || mc == MONS_VERY_UGLY_THING
@@ -1077,77 +1111,72 @@ bool mons_is_ghost_demon(int mc)
             || mc == MONS_LABORATORY_RAT);
 }
 
-bool mons_is_pghost(int mc)
+bool mons_is_pghost(monster_type mc)
 {
     return (mc == MONS_PLAYER_GHOST || mc == MONS_PLAYER_ILLUSION);
 }
 
-bool mons_is_unique(int mc)
+bool mons_is_unique(monster_type mc)
 {
-    return (mons_class_flag(mc, M_UNIQUE));
+    return mons_class_flag(mc, M_UNIQUE);
 }
 
 bool mons_sense_invis(const monster* mon)
 {
-    return (mons_class_flag(mon->type, M_SENSE_INVIS));
+    return mons_class_flag(mon->type, M_SENSE_INVIS);
 }
 
-ucs_t mons_char(int mc)
+ucs_t mons_char(monster_type mc)
 {
     return monster_symbols[mc].glyph;
 }
 
-char mons_base_char(int mc)
+char mons_base_char(monster_type mc)
 {
     const monsterentry *me = get_monster_data(mc);
     return (me ? me->basechar : 0);
 }
 
-mon_itemuse_type mons_class_itemuse(int mc)
+mon_itemuse_type mons_class_itemuse(monster_type mc)
 {
     ASSERT(smc);
-    return (smc->gmon_use);
+    return smc->gmon_use;
 }
 
 mon_itemuse_type mons_itemuse(const monster* mon)
 {
     if (mons_enslaved_soul(mon))
-        return (mons_class_itemuse(mons_zombie_base(mon)));
+        return mons_class_itemuse(mons_zombie_base(mon));
 
-    return (mons_class_itemuse(mon->type));
+    return mons_class_itemuse(mon->type);
 }
 
-mon_itemeat_type mons_class_itemeat(int mc)
+static mon_itemeat_type _mons_class_itemeat(monster_type mc)
 {
     ASSERT(smc);
-    return (smc->gmon_eat);
+    return smc->gmon_eat;
 }
 
 mon_itemeat_type mons_itemeat(const monster* mon)
 {
     if (mons_enslaved_soul(mon))
-        return (mons_class_itemeat(mons_zombie_base(mon)));
+        return _mons_class_itemeat(mons_zombie_base(mon));
 
     if (mon->has_ench(ENCH_EAT_ITEMS))
-        return (MONEAT_ITEMS);
+        return MONEAT_ITEMS;
 
-    return (mons_class_itemeat(mon->type));
+    return _mons_class_itemeat(mon->type);
 }
 
-int mons_class_colour(int mc)
+int mons_class_colour(monster_type mc)
 {
     ASSERT(smc);
     return (monster_symbols[mc].colour);
 }
 
-int mons_colour(const monster* mon)
+bool mons_class_can_regenerate(monster_type mc)
 {
-    return (mon->colour);
-}
-
-bool mons_class_can_regenerate(int mc)
-{
-    return (!mons_class_flag(mc, M_NO_REGEN));
+    return !mons_class_flag(mc, M_NO_REGEN);
 }
 
 bool mons_can_regenerate(const monster* mon)
@@ -1155,21 +1184,21 @@ bool mons_can_regenerate(const monster* mon)
     _get_kraken_head(mon);
 
     if (testbits(mon->flags, MF_NO_REGEN))
-        return (false);
+        return false;
 
-    return (mons_class_can_regenerate(mon->type));
+    return mons_class_can_regenerate(mon->type);
 }
 
-bool mons_class_can_display_wounds(int mc)
+bool mons_class_can_display_wounds(monster_type mc)
 {
-    return (!monster_descriptor(mc, MDSC_NOMSG_WOUNDS));
+    return !monster_descriptor(mc, MDSC_NOMSG_WOUNDS);
 }
 
 bool mons_can_display_wounds(const monster* mon)
 {
     _get_kraken_head(mon);
 
-    return (mons_class_can_display_wounds(mon->type));
+    return mons_class_can_display_wounds(mon->type);
 }
 
 // Size based on zombie class.
@@ -1180,30 +1209,30 @@ zombie_size_type zombie_class_size(monster_type cs)
         case MONS_ZOMBIE_SMALL:
         case MONS_SIMULACRUM_SMALL:
         case MONS_SKELETON_SMALL:
-            return (Z_SMALL);
+            return Z_SMALL;
         case MONS_ZOMBIE_LARGE:
         case MONS_SIMULACRUM_LARGE:
         case MONS_SKELETON_LARGE:
-            return (Z_BIG);
+            return Z_BIG;
         case MONS_SPECTRAL_THING:
-            return (Z_NOZOMBIE);
+            return Z_NOZOMBIE;
         default:
             die("invalid zombie type");
     }
 }
 
-int mons_zombie_size(int mc)
+int mons_zombie_size(monster_type mc)
 {
     ASSERT(smc);
-    return (smc->zombie_size);
+    return smc->zombie_size;
 }
 
 monster_type mons_zombie_base(const monster* mon)
 {
-    return (mon->base_monster);
+    return mon->base_monster;
 }
 
-bool mons_class_is_zombified(int mc)
+bool mons_class_is_zombified(monster_type mc)
 {
     return (mc == MONS_ZOMBIE_SMALL || mc == MONS_ZOMBIE_LARGE
             || mc == MONS_SKELETON_SMALL || mc == MONS_SKELETON_LARGE
@@ -1213,7 +1242,7 @@ bool mons_class_is_zombified(int mc)
 
 bool mons_is_zombified(const monster* mon)
 {
-    return (mons_class_is_zombified(mon->type));
+    return mons_class_is_zombified(mon->type);
 }
 
 monster_type mons_base_type(const monster* mon)
@@ -1226,7 +1255,7 @@ bool mons_class_can_leave_corpse(monster_type mc)
     return (mons_weight(mc) > 0);
 }
 
-bool mons_class_can_be_zombified(int mc)
+bool mons_class_can_be_zombified(monster_type mc)
 {
     monster_type ms = mons_species(mc);
     return (!invalid_monster_type(ms)
@@ -1241,32 +1270,33 @@ bool mons_can_be_zombified(const monster* mon)
             && !mons_enslaved_body_and_soul(mon));
 }
 
-bool mons_class_can_use_stairs(int mc)
+bool mons_class_can_use_stairs(monster_type mc)
 {
     return ((!mons_class_is_zombified(mc) || mc == MONS_SPECTRAL_THING)
             && !mons_is_tentacle(mc)
             && mc != MONS_SILENT_SPECTRE
             && mc != MONS_PLAYER_GHOST
             && mc != MONS_GERYON
-            && mc != MONS_ROYAL_JELLY);
+            && mc != MONS_ROYAL_JELLY
+            && mc != MONS_MOTH_OF_SUPPRESSION);
 }
 
 bool mons_can_use_stairs(const monster* mon)
 {
-    return (mons_class_can_use_stairs(mon->type));
+    return mons_class_can_use_stairs(mon->type);
 }
 
 bool mons_enslaved_body_and_soul(const monster* mon)
 {
-    return (mon->has_ench(ENCH_SOUL_RIPE));
+    return mon->has_ench(ENCH_SOUL_RIPE);
 }
 
 bool mons_enslaved_soul(const monster* mon)
 {
-    return (testbits(mon->flags, MF_ENSLAVED_SOUL));
+    return testbits(mon->flags, MF_ENSLAVED_SOUL);
 }
 
-bool name_zombie(monster* mon, int mc, const std::string &mon_name)
+bool name_zombie(monster* mon, monster_type mc, const string &mon_name)
 {
     mon->mname = mon_name;
 
@@ -1300,22 +1330,22 @@ bool name_zombie(monster* mon, int mc, const std::string &mon_name)
     if (starts_with(mon->mname, "shaped "))
         mon->flags |= MF_NAME_SUFFIX;
 
-    return (true);
+    return true;
 }
 
 bool name_zombie(monster* mon, const monster* orig)
 {
     if (!mons_is_unique(orig->type) && orig->mname.empty())
-        return (false);
+        return false;
 
-    std::string name;
+    string name;
 
     if (!orig->mname.empty())
         name = orig->mname;
     else
         name = mons_type_name(orig->type, DESC_PLAIN);
 
-    return (name_zombie(mon, orig->type, name));
+    return name_zombie(mon, orig->type, name);
 }
 
 static int _downscale_zombie_damage(int damage)
@@ -1330,7 +1360,7 @@ static int _downscale_zombie_damage(int damage)
     if (damage > 14)
         damage--;
 
-    return (damage);
+    return damage;
 }
 
 static mon_attack_def _downscale_zombie_attack(const monster* mons,
@@ -1358,18 +1388,18 @@ static mon_attack_def _downscale_zombie_attack(const monster* mons,
 
     attk.damage = _downscale_zombie_damage(attk.damage);
 
-    return (attk);
+    return attk;
 }
 
 mon_attack_def mons_attack_spec(const monster* mon, int attk_number)
 {
-    int mc = mon->type;
+    monster_type mc = mon->type;
 
     _get_kraken_head(mon);
 
     const bool zombified = mons_is_zombified(mon);
 
-    if (attk_number < 0 || attk_number > 3 || mon->has_hydra_multi_attack())
+    if (attk_number < 0 || attk_number >= MAX_NUM_ATTACKS || mon->has_hydra_multi_attack())
         attk_number = 0;
 
     if (mons_is_ghost_demon(mc))
@@ -1381,7 +1411,7 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number)
                                          mon->ghost->att_flav));
         }
 
-        return (mon_attack_def::attk(0, AT_NONE));
+        return mon_attack_def::attk(0, AT_NONE);
     }
 
     if (zombified && mc != MONS_KRAKEN_TENTACLE)
@@ -1404,16 +1434,6 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number)
 
         attk.flavour = RANDOM_ELEMENT(flavours);
     }
-#if TAG_MAJOR_VERSION == 32
-    else if (attk.flavour == AF_SUBTRACTOR)
-    {
-        attack_flavour flavours[] =
-            {AF_POISON_NASTY, AF_ROT, AF_DRAIN_XP, AF_ANTIMAGIC, AF_DRAIN_STAT,
-             AF_POISON_STAT};
-
-        attk.flavour = RANDOM_ELEMENT(flavours);
-    }
-#endif
 
     if (attk.flavour == AF_POISON_STAT)
     {
@@ -1434,13 +1454,10 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number)
     if (mon->type == MONS_SLIME_CREATURE && mon->number > 1)
         attk.damage *= mon->number;
 
-    if (_mons_is_weapon_mimic(mon))
-        attk.damage += 5;
-
     return (zombified ? _downscale_zombie_attack(mon, attk) : attk);
 }
 
-static int _mons_damage(int mc, int rt)
+static int _mons_damage(monster_type mc, int rt)
 {
     if (rt < 0 || rt > 3)
         rt = 0;
@@ -1448,7 +1465,7 @@ static int _mons_damage(int mc, int rt)
     return (smc->attack[rt].damage);
 }
 
-std::string resist_margin_phrase(int margin)
+const char* resist_margin_phrase(int margin)
 {
     ASSERT(margin > 0);
 
@@ -1463,7 +1480,7 @@ bool mons_immune_magic(const monster* mon)
     return (get_monster_data(mon->type)->resist_magic == MAG_IMMUNE);
 }
 
-std::string mons_resist_string(const monster* mon, int res_margin)
+const char* mons_resist_string(const monster* mon, int res_margin)
 {
     if (mons_immune_magic(mon))
         return " is unaffected.";
@@ -1471,12 +1488,12 @@ std::string mons_resist_string(const monster* mon, int res_margin)
         return resist_margin_phrase(res_margin);
 }
 
-bool mons_skeleton(int mc)
+bool mons_skeleton(monster_type mc)
 {
-    return (!mons_class_flag(mc, M_NO_SKELETON));
+    return !mons_class_flag(mc, M_NO_SKELETON);
 }
 
-flight_type mons_class_flies(int mc)
+flight_type mons_class_flies(monster_type mc)
 {
     const monsterentry *me = get_monster_data(mc);
     return (me ? me->fly : FL_NONE);
@@ -1514,23 +1531,29 @@ flight_type mons_flies(const monster* mon, bool temp)
         }
     }
 
+    if (temp && ret == FL_NONE)
+    {
+        const int jewellery = mon->inv[MSLOT_JEWELLERY];
+        if (jewellery != NON_ITEM
+            && mitm[jewellery].base_type == OBJ_JEWELLERY
+            && mitm[jewellery].sub_type == RING_LEVITATION)
+        {
+            ret = FL_LEVITATE;
+        }
+    }
+
     if (temp && ret == FL_NONE && mon->has_ench(ENCH_LEVITATION))
         ret = FL_LEVITATE;
 
-    return (ret);
-}
-
-bool mons_class_flattens_trees(int mc)
-{
-    return (mc == MONS_LERNAEAN_HYDRA);
+    return ret;
 }
 
 bool mons_flattens_trees(const monster* mon)
 {
-    return (mons_class_flattens_trees(mons_base_type(mon)));
+    return mons_base_type(mon) == MONS_LERNAEAN_HYDRA;
 }
 
-int mons_class_res_wind(int mc)
+int mons_class_res_wind(monster_type mc)
 {
     // Lightning goes well with storms.
     if (mc == MONS_AIR_ELEMENTAL || mc == MONS_BALL_LIGHTNING
@@ -1547,16 +1570,6 @@ int mons_class_res_wind(int mc)
     return 0;
 }
 
-bool mons_class_wall_shielded(int mc)
-{
-    return (mons_class_habitat(mc) == HT_ROCK);
-}
-
-bool mons_wall_shielded(const monster* mon)
-{
-    return (mons_class_wall_shielded(mons_base_type(mon)));
-}
-
 // This nice routine we keep in exactly the way it was.
 int hit_points(int hit_dice, int min_hp, int rand_hp)
 {
@@ -1568,24 +1581,24 @@ int hit_points(int hit_dice, int min_hp, int rand_hp)
         hrolled += min_hp;
     }
 
-    return (hrolled);
+    return hrolled;
 }
 
 // This function returns the standard number of hit dice for a type of
 // monster, not a particular monster's current hit dice. - bwr
-int mons_class_hit_dice(int mc)
+int mons_class_hit_dice(monster_type mc)
 {
     const monsterentry *me = get_monster_data(mc);
     return (me ? me->hpdice[0] : 0);
 }
 
-int mons_avg_hp(int mc)
+int mons_avg_hp(monster_type mc)
 {
     // Currently, difficulty is defined as "average hp".  Leaks too much info?
     const monsterentry* me = get_monster_data(mc);
 
     if (!me)
-        return (0);
+        return 0;
 
     // [ds] XXX: Use monster experience value as a better indicator of diff.?
     return (me->hpdice[0] * (me->hpdice[1] + (me->hpdice[2]/2))
@@ -1594,10 +1607,10 @@ int mons_avg_hp(int mc)
 
 int exper_value(const monster* mon, bool real)
 {
-    long x_val = 0;
+    int x_val = 0;
 
     // These four are the original arguments.
-    const int mc          = mon->type;
+    const monster_type mc = mon->type;
     int hd                = mon->hit_dice;
     int maxhp             = mon->max_hit_points;
 
@@ -1641,7 +1654,7 @@ int exper_value(const monster* mon, bool real)
 
     // Early out for no XP monsters.
     if (mons_class_flag(mc, M_NO_EXP_GAIN))
-        return (0);
+        return 0;
 
     // The beta26 statues have non-spell-like abilities that the experience
     // code can't see, so inflate their XP a bit.  Ice statues and Roxanne
@@ -1769,7 +1782,7 @@ int exper_value(const monster* mon, bool real)
     else if (x_val > 15000)
         x_val = 15000;
 
-    return (x_val);
+    return x_val;
 }
 
 monster_type random_draconian_monster_species()
@@ -1781,8 +1794,6 @@ monster_type random_draconian_monster_species()
 // Note: For consistent behavior in player_will_anger_monster(), all
 // spellbooks a given monster can get here should produce the same
 // return values in the following:
-//
-//     is_holy_spell()
 //
 //     (is_unholy_spell() || is_evil_spell())
 //
@@ -1859,33 +1870,12 @@ static bool _get_spellbook_list(mon_spellbook_type book[6],
         book[5] = MST_NECROMANCER_II;
         break;
 
-    case MONS_SERPENT_OF_HELL:
-        switch (mon->props["serpent_of_hell_flavour"].get_int())
-        {
-        case BRANCH_GEHENNA:
-            book[0] = MST_SERPENT_OF_HELL_GEHENNA;
-            break;
-        case BRANCH_COCYTUS:
-            book[0] = MST_SERPENT_OF_HELL_COCYTUS;
-            break;
-        case BRANCH_DIS:
-            book[0] = MST_SERPENT_OF_HELL_DIS;
-            break;
-        case BRANCH_TARTARUS:
-            book[0] = MST_SERPENT_OF_HELL_TARTARUS;
-            break;
-        default:
-            book[0] = MST_SERPENT_OF_HELL_GEHENNA;
-            break;
-        }
-        break;
-
     default:
         retval = false;
         break;
     }
 
-    return (retval);
+    return retval;
 }
 
 static void _mons_load_spells(monster* mon, mon_spellbook_type book)
@@ -1933,19 +1923,19 @@ static void _get_spells(mon_spellbook_type book, monster* mon)
 
 // Never hand out DARKGREY as a monster colour, even if it is randomly
 // chosen.
-uint8_t random_monster_colour()
+colour_t random_monster_colour()
 {
-    uint8_t col = DARKGREY;
+    colour_t col = DARKGREY;
     while (col == DARKGREY)
         col = random_colour();
 
-    return (col);
+    return col;
 }
 
 // Butterflies
-static uint8_t _random_butterfly_colour()
+static colour_t _random_butterfly_colour()
 {
-    uint8_t col;
+    colour_t col;
     // Restricted to 'light' colours.
     do
         col = random_monster_colour();
@@ -1955,9 +1945,9 @@ static uint8_t _random_butterfly_colour()
 }
 
 // Abominations.
-static uint8_t _random_large_abomination_colour()
+static colour_t _random_large_abomination_colour()
 {
-    uint8_t col;
+    colour_t col;
     // Restricted colours:
     //  MAGENTA = orb guardian
     //  GREEN = tentacled monstrosity
@@ -1965,12 +1955,12 @@ static uint8_t _random_large_abomination_colour()
         col = random_monster_colour();
     while (col == MAGENTA || col == GREEN);
 
-    return (col);
+    return col;
 }
 
-static uint8_t _random_small_abomination_colour()
+static colour_t _random_small_abomination_colour()
 {
-    uint8_t col;
+    colour_t col;
     // Restricted colours:
     //  MAGENTA = unseen horror
     //  BROWN = used for crawling corpses/macabre masses
@@ -1979,24 +1969,7 @@ static uint8_t _random_small_abomination_colour()
         col = random_monster_colour();
     while (col == MAGENTA || col == BROWN || col == LIGHTCYAN);
 
-    return (col);
-}
-
-static int _serpent_of_hell_colour(const monster* mon)
-{
-    switch (mon->props["serpent_of_hell_flavour"].get_int())
-    {
-    case BRANCH_GEHENNA:
-        return ETC_FIRE;
-    case BRANCH_COCYTUS:
-        return ETC_ICE;
-    case BRANCH_DIS:
-        return ETC_IRON;
-    case BRANCH_TARTARUS:
-        return ETC_DEATH;
-    default:
-        return ETC_FIRE;
-    }
+    return col;
 }
 
 bool init_abomination(monster* mon, int hd)
@@ -2005,18 +1978,18 @@ bool init_abomination(monster* mon, int hd)
         || mon->type == MONS_MACABRE_MASS)
     {
         mon->hit_points = mon->max_hit_points = mon->hit_dice = hd;
-        return (true);
+        return true;
     }
     else if (mon->type != MONS_ABOMINATION_LARGE
              && mon->type != MONS_ABOMINATION_SMALL)
     {
-        return (false);
+        return false;
     }
 
     const int max_hd = mon->type == MONS_ABOMINATION_LARGE ? 30 : 15;
     const int max_ac = mon->type == MONS_ABOMINATION_LARGE ? 20 : 10;
 
-    mon->hit_dice = std::min(max_hd, hd);
+    mon->hit_dice = min(max_hd, hd);
 
     const monsterentry *m = get_monster_data(mon->type);
     int hp = hit_points(hd, m->hpdice[1], m->hpdice[2]) + m->hpdice[3];
@@ -2026,22 +1999,22 @@ bool init_abomination(monster* mon, int hd)
 
     if (mon->type == MONS_ABOMINATION_LARGE)
     {
-        mon->ac = std::min(max_ac, 7 + hd / 2);
-        mon->ev = std::min(max_ac, 2 * hd / 3);
+        mon->ac = min(max_ac, 7 + hd / 2);
+        mon->ev = min(max_ac, 2 * hd / 3);
     }
     else
     {
-        mon->ac = std::min(max_ac, 3 + hd * 2 / 3);
-        mon->ev = std::min(max_ac, 4 + hd);
+        mon->ac = min(max_ac, 3 + hd * 2 / 3);
+        mon->ev = min(max_ac, 4 + hd);
     }
 
-    return (true);
+    return true;
 }
 
 // Generate a shiny, new and unscarred monster.
 void define_monster(monster* mons)
 {
-    int mcls                  = mons->type;
+    monster_type mcls         = mons->type;
     int monnumber             = mons->number;
     monster_type monbase      = mons->base_monster;
     const monsterentry *m     = get_monster_data(mcls);
@@ -2147,15 +2120,6 @@ void define_monster(monster* mons)
         ev += random2(5) - 2;
         break;
 
-    case MONS_SERPENT_OF_HELL:
-    {
-        int &flavour = mons->props["serpent_of_hell_flavour"].get_int();
-        if (!flavour)
-            flavour = player_in_hell() ? you.where_are_you : BRANCH_GEHENNA;
-        col = _serpent_of_hell_colour(mons);
-        break;
-    }
-
     default:
         break;
     }
@@ -2259,69 +2223,61 @@ static const char *ugly_colour_names[] = {
     "red", "brown", "green", "cyan", "purple", "white"
 };
 
-std::string ugly_thing_colour_name(uint8_t colour)
+string ugly_thing_colour_name(colour_t colour)
 {
     int colour_offset = ugly_thing_colour_offset(colour);
 
     if (colour_offset == -1)
-        return ("buggy");
+        return "buggy";
 
     return (ugly_colour_names[colour_offset]);
 }
 
-std::string ugly_thing_colour_name(const monster* mon)
-{
-    if (mon->type == MONS_UGLY_THING || mon->type == MONS_VERY_UGLY_THING)
-        return (ugly_thing_colour_name(mon->colour));
-    else
-        return ("buggy");
-}
-
-static const uint8_t ugly_colour_values[] = {
+static const colour_t ugly_colour_values[] = {
     RED, BROWN, GREEN, CYAN, MAGENTA, LIGHTGREY
 };
 
-uint8_t ugly_thing_random_colour()
+colour_t ugly_thing_random_colour()
 {
-    return (RANDOM_ELEMENT(ugly_colour_values));
+    return RANDOM_ELEMENT(ugly_colour_values);
 }
 
-int str_to_ugly_thing_colour(const std::string &s)
+int str_to_ugly_thing_colour(const string &s)
 {
     COMPILE_CHECK(ARRAYSZ(ugly_colour_values) == ARRAYSZ(ugly_colour_names));
     for (int i = 0, size = ARRAYSZ(ugly_colour_values); i < size; ++i)
         if (s == ugly_colour_names[i])
             return ugly_colour_values[i];
-    return (BLACK);
+    return BLACK;
 }
 
-int ugly_thing_colour_offset(const uint8_t colour)
+int ugly_thing_colour_offset(colour_t colour)
 {
     for (unsigned i = 0; i < ARRAYSZ(ugly_colour_values); ++i)
     {
         if (make_low_colour(colour) == ugly_colour_values[i])
-            return (i);
+            return i;
     }
 
-    return (-1);
+    return -1;
 }
 
 static const char *drac_colour_names[] = {
     "black", "mottled", "yellow", "green", "purple", "red", "white", "grey", "pale"
 };
 
-std::string draconian_colour_name(monster_type mon_type)
+string draconian_colour_name(monster_type mon_type)
 {
     COMPILE_CHECK(ARRAYSZ(drac_colour_names) ==
                   MONS_PALE_DRACONIAN - MONS_DRACONIAN);
 
     if (mon_type < MONS_BLACK_DRACONIAN || mon_type > MONS_PALE_DRACONIAN)
-        return ("buggy");
+        return "buggy";
 
     return (drac_colour_names[mon_type - MONS_BLACK_DRACONIAN]);
 }
 
-monster_type draconian_colour_by_name(const std::string &name)
+monster_type draconian_colour_by_name(const string &name)
 {
     COMPILE_CHECK(ARRAYSZ(drac_colour_names)
                   == (MONS_PALE_DRACONIAN - MONS_DRACONIAN));
@@ -2332,14 +2288,14 @@ monster_type draconian_colour_by_name(const std::string &name)
             return (static_cast<monster_type>(i + MONS_BLACK_DRACONIAN));
     }
 
-    return (MONS_PROGRAM_BUG);
+    return MONS_PROGRAM_BUG;
 }
 
-std::string mons_type_name(int type, description_level_type desc)
+string mons_type_name(monster_type mc, description_level_type desc)
 {
-    std::string result;
+    string result;
 
-    if (!mons_is_unique(type))
+    if (!mons_is_unique(mc))
     {
         switch (desc)
         {
@@ -2349,31 +2305,32 @@ std::string mons_type_name(int type, description_level_type desc)
         }
     }
 
-    switch (type)
+    switch (mc)
     {
     case RANDOM_MONSTER:
         result += "random monster";
-        return (result);
+        return result;
     case RANDOM_DRACONIAN:
         result += "random draconian";
-        return (result);
+        return result;
     case RANDOM_BASE_DRACONIAN:
         result += "random base draconian";
-        return (result);
+        return result;
     case RANDOM_NONBASE_DRACONIAN:
         result += "random nonbase draconian";
-        return (result);
+        return result;
     case WANDERING_MONSTER:
         result += "wandering monster";
-        return (result);
+        return result;
+    default: ;
     }
 
-    const monsterentry *me = get_monster_data(type);
+    const monsterentry *me = get_monster_data(mc);
     ASSERT(me != NULL);
     if (me == NULL)
     {
-        result += make_stringf("invalid type %d", type);
-        return (result);
+        result += make_stringf("invalid type %d", mc);
+        return result;
     }
 
     result += me->name;
@@ -2389,27 +2346,27 @@ std::string mons_type_name(int type, description_level_type desc)
         result.insert(1, "n");
     }
 
-    return (result);
+    return result;
 }
 
-static std::string _get_proper_monster_name(const monster* mon)
+static string _get_proper_monster_name(const monster* mon)
 {
     const monsterentry *me = mon->find_monsterentry();
     if (!me)
-        return ("");
+        return "";
 
-    std::string name = getRandNameString(me->name, " name");
+    string name = getRandNameString(me->name, " name");
     if (!name.empty())
-        return (name);
+        return name;
 
     name = getRandNameString(get_monster_data(mons_genus(mon->type))->name,
                              " name");
 
     if (!name.empty())
-        return (name);
+        return name;
 
     name = getRandNameString("generic_monster_name");
-    return (name);
+    return name;
 }
 
 // Names a previously unnamed monster.
@@ -2417,7 +2374,7 @@ bool give_monster_proper_name(monster* mon, bool orcs_only)
 {
     // Already has a unique name.
     if (mon->is_named())
-        return (false);
+        return false;
 
     // Since this is called from the various divine blessing routines,
     // don't bless non-orcs, and normally don't bless plain orcs, either.
@@ -2426,44 +2383,42 @@ bool give_monster_proper_name(monster* mon, bool orcs_only)
         if (mons_genus(mon->type) != MONS_ORC
             || mon->type == MONS_ORC && !one_chance_in(8))
         {
-            return (false);
+            return false;
         }
     }
 
     mon->mname = _get_proper_monster_name(mon);
 
     if (mon->friendly())
-    {
         take_note(Note(NOTE_NAMED_ALLY, 0, 0, mon->mname.c_str()));
-    }
 
-    return (mon->is_named());
+    return mon->is_named();
 }
 
 // See mons_init for initialization of mon_entry array.
-monsterentry *get_monster_data(int mc)
+monsterentry *get_monster_data(monster_type mc)
 {
     if (mc >= 0 && mc < NUM_MONSTERS)
         return (&mondata[mon_entry[mc]]);
     else
-        return (NULL);
+        return NULL;
 }
 
-static int _mons_exp_mod(int mc)
+static int _mons_exp_mod(monster_type mc)
 {
     ASSERT(smc);
-    return (smc->exp_mod);
+    return smc->exp_mod;
 }
 
-int mons_class_base_speed(int mc)
+int mons_class_base_speed(monster_type mc)
 {
     ASSERT(smc);
-    return (smc->speed);
+    return smc->speed;
 }
 
-int mons_class_zombie_base_speed(int zombie_base_mc)
+int mons_class_zombie_base_speed(monster_type zombie_base_mc)
 {
-    return (std::max(3, mons_class_base_speed(zombie_base_mc) - 2));
+    return max(3, mons_class_base_speed(zombie_base_mc) - 2);
 }
 
 int mons_base_speed(const monster* mon)
@@ -2472,16 +2427,16 @@ int mons_base_speed(const monster* mon)
         return mon->ghost->speed;
 
     if (mons_enslaved_soul(mon))
-        return (mons_class_base_speed(mons_zombie_base(mon)));
+        return mons_class_base_speed(mons_zombie_base(mon));
 
     return (mons_is_zombified(mon) ? mons_class_zombie_base_speed(mons_zombie_base(mon))
                                    : mons_class_base_speed(mon->type));
 }
 
-mon_intel_type mons_class_intel(int mc)
+mon_intel_type mons_class_intel(monster_type mc)
 {
     ASSERT(smc);
-    return (smc->intel);
+    return smc->intel;
 }
 
 mon_intel_type mons_intel(const monster* mon)
@@ -2489,12 +2444,13 @@ mon_intel_type mons_intel(const monster* mon)
     _get_kraken_head(mon);
 
     if (mons_enslaved_soul(mon))
-        return (mons_class_intel(mons_zombie_base(mon)));
+        return mons_class_intel(mons_zombie_base(mon));
 
-    return (mons_class_intel(mon->type));
+    return mons_class_intel(mon->type);
 }
 
-habitat_type mons_class_habitat(int mc, bool real_amphibious)
+static habitat_type _mons_class_habitat(monster_type mc,
+                                        bool real_amphibious = false)
 {
     const monsterentry *me = get_monster_data(mc);
     habitat_type ht = (me ? me->habitat
@@ -2507,40 +2463,45 @@ habitat_type mons_class_habitat(int mc, bool real_amphibious)
         if (ht == HT_LAND && st >= SIZE_GIANT || mc == MONS_GREY_DRACONIAN)
             ht = HT_AMPHIBIOUS;
     }
-    return (ht);
+    return ht;
 }
 
 habitat_type mons_habitat(const monster* mon, bool real_amphibious)
 {
-    return (mons_class_habitat(mons_base_type(mon), real_amphibious));
+    return (_mons_class_habitat(mons_base_type(mon), real_amphibious));
 }
 
-habitat_type mons_class_primary_habitat(int mc)
+habitat_type mons_class_primary_habitat(monster_type mc)
 {
-    habitat_type ht = mons_class_habitat(mc);
+    habitat_type ht = _mons_class_habitat(mc);
     if (ht == HT_AMPHIBIOUS)
         ht = HT_LAND;
-    return (ht);
+    return ht;
 }
 
 habitat_type mons_primary_habitat(const monster* mon)
 {
-    return (mons_class_primary_habitat(mons_base_type(mon)));
+    return mons_class_primary_habitat(mons_base_type(mon));
 }
 
-habitat_type mons_class_secondary_habitat(int mc)
+habitat_type mons_class_secondary_habitat(monster_type mc)
 {
-    habitat_type ht = mons_class_habitat(mc);
+    habitat_type ht = _mons_class_habitat(mc);
     if (ht == HT_AMPHIBIOUS)
         ht = HT_WATER;
     else if (ht == HT_ROCK)
         ht = HT_LAND;
-    return (ht);
+    return ht;
 }
 
 habitat_type mons_secondary_habitat(const monster* mon)
 {
-    return (mons_class_secondary_habitat(mons_base_type(mon)));
+    return mons_class_secondary_habitat(mons_base_type(mon));
+}
+
+bool mons_wall_shielded(const monster* mon)
+{
+    return (_mons_class_habitat(mons_base_type(mon)) == HT_ROCK);
 }
 
 bool intelligent_ally(const monster* mon)
@@ -2548,11 +2509,11 @@ bool intelligent_ally(const monster* mon)
     return (mon->attitude == ATT_FRIENDLY && mons_intel(mon) >= I_NORMAL);
 }
 
-int mons_power(int mc)
+int mons_power(monster_type mc)
 {
     // For now, just return monster hit dice.
     ASSERT(smc);
-    return (mons_class_hit_dice(mc));
+    return mons_class_hit_dice(mc);
 }
 
 bool mons_aligned(const actor *m1, const actor *m2)
@@ -2561,50 +2522,50 @@ bool mons_aligned(const actor *m1, const actor *m2)
     const monster* mon1, *mon2;
 
     if (!m1 || !m2)
-        return (true);
+        return true;
 
-    if (m1->atype() == ACT_PLAYER)
+    if (m1->is_player())
         fr1 = ATT_FRIENDLY;
     else
     {
         mon1 = static_cast<const monster* >(m1);
         if (mons_is_projectile(mon1->type))
-            return (true);
+            return true;
         fr1 = mons_attitude(mon1);
     }
 
-    if (m2->atype() == ACT_PLAYER)
+    if (m2->is_player())
         fr2 = ATT_FRIENDLY;
     else
     {
         mon2 = static_cast<const monster* >(m2);
         if (mons_is_projectile(mon2->type))
-            return (true);
+            return true;
         fr2 = mons_attitude(mon2);
     }
 
-    return (mons_atts_aligned(fr1, fr2));
+    return mons_atts_aligned(fr1, fr2);
 }
 
 bool mons_atts_aligned(mon_attitude_type fr1, mon_attitude_type fr2)
 {
     if (mons_att_wont_attack(fr1) && mons_att_wont_attack(fr2))
-        return (true);
+        return true;
 
     return (fr1 == fr2);
 }
 
-bool mons_class_wields_two_weapons(int mc)
+bool mons_class_wields_two_weapons(monster_type mc)
 {
-    return (mons_class_flag(mc, M_TWO_WEAPONS));
+    return mons_class_flag(mc, M_TWO_WEAPONS);
 }
 
 bool mons_wields_two_weapons(const monster* mon)
 {
     if (testbits(mon->flags, MF_TWO_WEAPONS))
-        return (true);
+        return true;
 
-    return (mons_class_wields_two_weapons(mons_base_type(mon)));
+    return mons_class_wields_two_weapons(mons_base_type(mon));
 }
 
 bool mons_self_destructs(const monster* m)
@@ -2724,7 +2685,7 @@ void mons_start_fleeing_from_sanctuary(monster* mons)
 {
     mons->flags |= MF_FLEEING_FROM_SANCTUARY;
     mons->target = env.sanctuary_pos;
-    behaviour_event(mons, ME_SCARE, MHITNOT, env.sanctuary_pos);
+    behaviour_event(mons, ME_SCARE, 0, env.sanctuary_pos);
 }
 
 void mons_stop_fleeing_from_sanctuary(monster* mons)
@@ -2732,7 +2693,7 @@ void mons_stop_fleeing_from_sanctuary(monster* mons)
     const bool had_flag = (mons->flags & MF_FLEEING_FROM_SANCTUARY);
     mons->flags &= (~MF_FLEEING_FROM_SANCTUARY);
     if (had_flag)
-        behaviour_event(mons, ME_EVAL, MHITYOU);
+        behaviour_event(mons, ME_EVAL, &you);
 }
 
 void mons_pacify(monster* mon, mon_attitude_type att)
@@ -2788,15 +2749,15 @@ static bool _mons_should_fire_beneficial(bolt &beam)
     if (beam.friend_info.count == 0
         || beam.foe_info.count != 0)
     {
-        return (false);
+        return false;
     }
 
     // Should beneficial monster enchantment beams be allowed in a
     // sanctuary? -cao
     if (is_sanctuary(you.pos()) || is_sanctuary(beam.source))
-        return (false);
+        return false;
 
-    return (true);
+    return true;
 }
 
 static bool _beneficial_beam_flavour(beam_type flavour)
@@ -2806,10 +2767,10 @@ static bool _beneficial_beam_flavour(beam_type flavour)
     case BEAM_HASTE:
     case BEAM_HEALING:
     case BEAM_INVISIBILITY:
-        return (true);
+        return true;
 
     default:
-        return (false);
+        return false;
     }
 }
 
@@ -2824,9 +2785,9 @@ bool mons_should_fire(struct bolt &beam)
     // Use different evaluation criteria if the beam is a beneficial
     // enchantment (haste other).
     if (_beneficial_beam_flavour(beam.flavour))
-        return (_mons_should_fire_beneficial(beam));
+        return _mons_should_fire_beneficial(beam);
 
-    // Friendly monsters shouldn't be targeting you: this will happen
+    // Friendly monsters shouldn't be targetting you: this will happen
     // often because the default behaviour for charmed monsters is to
     // have you as a target.  While foe_ratio will handle this, we
     // don't want a situation where a friendly dragon breathes through
@@ -2840,7 +2801,7 @@ bool mons_should_fire(struct bolt &beam)
     {
         monster& m = menv[beam.beam_source];
         if (m.alive() && m.friendly() && beam.target == you.pos())
-            return (false);
+            return false;
     }
 
     // Use of foeRatio:
@@ -2851,14 +2812,14 @@ bool mons_should_fire(struct bolt &beam)
 
     // Quick check - did we in fact get any foes?
     if (beam.foe_info.count == 0)
-        return (false);
+        return false;
 
     if (is_sanctuary(you.pos()) || is_sanctuary(beam.source))
-        return (false);
+        return false;
 
     // If we hit no friends, fire away.
     if (beam.friend_info.count == 0)
-        return (true);
+        return true;
 
     // Only fire if they do acceptably low collateral damage.
     return (beam.foe_info.power >=
@@ -2873,7 +2834,7 @@ static bool _ms_los_spell(spell_type monspell)
     // water just like the kraken is, so it makes more sense not to
     // count them here.
     if (monspell == SPELL_KRAKEN_TENTACLES)
-        return (false);
+        return false;
 
     if (monspell == SPELL_SMITING
         || monspell == SPELL_AIRSTRIKE
@@ -2882,10 +2843,10 @@ static bool _ms_los_spell(spell_type monspell)
         || monspell == SPELL_SUMMON_SPECTRAL_ORCS
         || spell_typematch(monspell, SPTYP_SUMMONING))
     {
-        return (true);
+        return true;
     }
 
-    return (false);
+    return false;
 }
 
 static bool _ms_ranged_spell(spell_type monspell, bool attack_only = false,
@@ -2897,7 +2858,7 @@ static bool _ms_ranged_spell(spell_type monspell, bool attack_only = false,
         && (monspell == SPELL_SMITING || monspell == SPELL_AIRSTRIKE
             || monspell == SPELL_MISLEAD))
     {
-        return (true);
+        return true;
     }
 
     // These spells are ranged, but aren't direct attack spells.
@@ -2919,7 +2880,7 @@ static bool _ms_ranged_spell(spell_type monspell, bool attack_only = false,
     case SPELL_BLINK_RANGE:
     case SPELL_BERSERKER_RAGE:
     case SPELL_SWIFTNESS:
-        return (false);
+        return false;
 
     // The animation spells don't work through transparent walls and
     // thus are listed here instead of above.
@@ -2935,11 +2896,11 @@ static bool _ms_ranged_spell(spell_type monspell, bool attack_only = false,
     case SPELL_BLINK_OTHER_CLOSE:
     case SPELL_BLINK_AWAY:
     case SPELL_BLINK_OTHER:
-        return (ench_too);
+        return ench_too;
 
     default:
         // All conjurations count as ranged spells.
-        return (true);
+        return true;
     }
 }
 
@@ -2953,34 +2914,18 @@ bool mons_has_los_ability(monster_type mon_type)
         || mon_type == MONS_GOLDEN_EYE
         || mon_type == MONS_MOTH_OF_WRATH)
     {
-        return (true);
+        return true;
     }
 
     // Although not using spells, these are exceedingly dangerous.
     if (mon_type == MONS_SILVER_STATUE || mon_type == MONS_ORANGE_STATUE)
-        return (true);
+        return true;
 
     // Beholding just needs LOS.
     if (mons_genus(mon_type) == MONS_MERMAID)
-        return (true);
+        return true;
 
-    return (false);
-}
-
-bool mons_has_los_attack(const monster* mon)
-{
-    // Monsters may have spell like abilities.
-    if (mons_has_los_ability(mon->type))
-        return (true);
-
-    if (mon->can_use_spells())
-    {
-        for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
-            if (_ms_los_spell(mon->spells[i]))
-                return (true);
-    }
-
-    return (false);
+    return false;
 }
 
 bool mons_has_ranged_spell(const monster* mon, bool attack_only,
@@ -2988,19 +2933,19 @@ bool mons_has_ranged_spell(const monster* mon, bool attack_only,
 {
     // Monsters may have spell-like abilities.
     if (mons_has_los_ability(mon->type))
-        return (true);
+        return true;
 
     if (mon->can_use_spells())
     {
         for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
             if (_ms_ranged_spell(mon->spells[i], attack_only, ench_too))
-                return (true);
+                return true;
     }
 
-    return (false);
+    return false;
 }
 
-bool mons_has_ranged_ability(const monster* mon)
+static bool _mons_has_ranged_ability(const monster* mon)
 {
     // [ds] FIXME: Get rid of special abilities and remove this.
     switch (mon->type)
@@ -3027,7 +2972,7 @@ bool mons_has_ranged_ability(const monster* mon)
     }
 }
 
-bool mons_has_ranged_weapon(const monster* mon)
+static bool _mons_has_ranged_weapon(const monster* mon)
 {
     // Ugh.
     monster* mnc = const_cast<monster* >(mon);
@@ -3038,19 +2983,54 @@ bool mons_has_ranged_weapon(const monster* mon)
     if (!missile && weapon != primary && primary
         && get_weapon_brand(*primary) == SPWPN_RETURNING)
     {
-        return (true);
+        return true;
     }
 
     if (!missile)
-        return (false);
+        return false;
 
-    return (is_launched(mnc, weapon, *missile));
+    return is_launched(mnc, weapon, *missile);
 }
 
 bool mons_has_ranged_attack(const monster* mon)
 {
-    return mons_has_ranged_spell(mon, true) || mons_has_ranged_ability(mon)
-           || mons_has_ranged_weapon(mon);
+    return mons_has_ranged_spell(mon, true) || _mons_has_ranged_ability(mon)
+           || _mons_has_ranged_weapon(mon);
+}
+
+static bool _mons_starts_with_ranged_weapon(monster_type mc)
+{
+    switch (mc)
+    {
+    case MONS_JOSEPH:
+    case MONS_DEEP_ELF_MASTER_ARCHER:
+    case MONS_CENTAUR:
+    case MONS_CENTAUR_WARRIOR:
+    case MONS_NESSOS:
+    case MONS_YAKTAUR:
+    case MONS_YAKTAUR_CAPTAIN:
+    case MONS_CHERUB:
+    case MONS_DEEP_DWARF_ARTIFICER:
+    case MONS_SONJA:
+    case MONS_HAROLD:
+    case MONS_POLYPHEMUS:
+    case MONS_CYCLOPS:
+    case MONS_STONE_GIANT:
+    case MONS_CHUCK:
+    case MONS_MERFOLK_JAVELINEER:
+    case MONS_URUG:
+        return true;
+    default:
+        return false;
+    }
+}
+
+bool mons_has_known_ranged_attack(const monster* mon)
+{
+    return _mons_has_ranged_ability(mon)
+        || mon->flags & MF_SEEN_RANGED
+        || _mons_starts_with_ranged_weapon(mon->type)
+            && !(mon->flags & MF_KNOWN_SHIFTER);
 }
 
 bool mons_can_attack(const monster* mon)
@@ -3086,13 +3066,16 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
     }
     // Mara's fakes aren't a unique, but should still be classified
     // as male.
-    else if (mon_type == MONS_MARA_FAKE)
+    else if (mon_type == MONS_MARA_FAKE
+             || mon_type == MONS_HELLBINDER
+             || mon_type == MONS_CLOUD_MAGE)
+    {
         gender = GENDER_MALE;
+    }
     else if (mons_is_unique(mon_type) && !mons_is_pghost(mon_type))
     {
         switch (mon_type)
         {
-        case MONS_TERPSICHORE:
         case MONS_JESSICA:
         case MONS_PSYCHE:
         case MONS_JOSEPHINE:
@@ -3113,6 +3096,7 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
         case MONS_DUVESSA:
         case MONS_THE_ENCHANTRESS:
         case MONS_NELLIE:
+        case MONS_ARACHNE:
             gender = GENDER_FEMALE;
             break;
         case MONS_ROYAL_JELLY:
@@ -3149,7 +3133,7 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
                     (gender == GENDER_MALE)   ? "him" : "her");
      }
 
-    return ("");
+    return "";
 }
 
 // Checks if the monster can use smiting/torment to attack without
@@ -3165,10 +3149,10 @@ static bool _mons_has_smite_attack(const monster* mons)
             || hspell_pass[i] == SPELL_AIRSTRIKE
             || hspell_pass[i] == SPELL_MISLEAD)
         {
-            return (true);
+            return true;
         }
 
-    return (false);
+    return false;
 }
 
 // Determines if a monster is smart and pushy enough to displace other
@@ -3183,7 +3167,7 @@ bool monster_shover(const monster* m)
 {
     const monsterentry *me = get_monster_data(m->type);
     if (!me)
-        return (false);
+        return false;
 
     // Efreet and fire elementals are disqualified because they leave behind
     // clouds of flame. Rotting devils are disqualified because they trail
@@ -3191,17 +3175,17 @@ bool monster_shover(const monster* m)
     if (mons_genus(m->type) == MONS_EFREET || m->type == MONS_FIRE_ELEMENTAL
         || m->type == MONS_ROTTING_DEVIL || m->type == MONS_CURSE_TOE)
     {
-        return (false);
+        return false;
     }
 
     // Monsters too stupid to use stairs (e.g. non-spectral zombified undead)
     // are also disqualified.
     if (!mons_can_use_stairs(m))
-        return (false);
+        return false;
 
     // Smiters profit from staying back and smiting.
     if (_mons_has_smite_attack(m))
-        return (false);
+        return false;
 
     char mchar = me->basechar;
 
@@ -3210,7 +3194,7 @@ bool monster_shover(const monster* m)
     // aren't pushers and shovers. Worms and elementals are on the list because
     // all 'w' are currently unrelated.
     return (mchar != 'C' && mchar != 'B' && mchar != '(' && mchar != 'D'
-            && mchar != 'G' && mchar != 'w' && mchar != '#');
+            && mchar != 'G' && mchar != 'w' && mchar != 'E');
 }
 
 // Returns true if m1 and m2 are related, and m1 is higher up the totem pole
@@ -3222,7 +3206,7 @@ bool monster_senior(const monster* m1, const monster* m2, bool fleeing)
                        *me2 = get_monster_data(m2->type);
 
     if (!me1 || !me2)
-        return (false);
+        return false;
 
     // Band leaders can displace followers regardless of type considerations.
     // -cao
@@ -3230,14 +3214,14 @@ bool monster_senior(const monster* m1, const monster* m2, bool fleeing)
     {
         unsigned leader_mid = m2->props["band_leader"].get_int();
         if (leader_mid == m1->mid)
-            return (true);
+            return true;
     }
     // And prevent followers to displace the leader to avoid constant swapping.
     else if (m1->props.exists("band_leader"))
     {
         unsigned leader_mid = m1->props["band_leader"].get_int();
         if (leader_mid == m2->mid)
-            return (false);
+            return false;
     }
 
     char mchar1 = me1->basechar;
@@ -3259,45 +3243,42 @@ bool monster_senior(const monster* m1, const monster* m2, bool fleeing)
     if (m1->holiness() == m2->holiness() && mons_can_use_stairs(m1)
         && !mons_can_use_stairs(m2))
     {
-        return (true);
+        return true;
     }
 
     if (mons_genus(m1->type) == MONS_KILLER_BEE
         && mons_genus(m2->type) == MONS_KILLER_BEE)
     {
         if (fleeing)
-            return (true);
+            return true;
 
         if (m1->type == MONS_QUEEN_BEE && m2->type != MONS_QUEEN_BEE)
-            return (true);
-
-        if (m1->type == MONS_KILLER_BEE && m2->type == MONS_KILLER_BEE_LARVA)
-            return (true);
+            return true;
     }
 
     // Special-case gnolls, so they can't get past (hob)goblins.
     if (mons_species(m1->type) == MONS_GNOLL
         && mons_species(m2->type) != MONS_GNOLL)
     {
-        return (false);
+        return false;
     }
 
     return (mchar1 == mchar2 && (fleeing || m1->hit_dice > m2->hit_dice));
 }
 
-bool mons_class_can_pass(int mc, const dungeon_feature_type grid)
+bool mons_class_can_pass(monster_type mc, const dungeon_feature_type grid)
 {
     if (grid == DNGN_MALIGN_GATEWAY)
         return (mc == MONS_ELDRITCH_TENTACLE || mc == MONS_ELDRITCH_TENTACLE_SEGMENT);
 
-    if (mons_class_wall_shielded(mc))
+    if (_mons_class_habitat(mc) == HT_ROCK)
     {
         // Permanent walls can't be passed through.
         return (!feat_is_solid(grid)
                 || feat_is_rock(grid) && !feat_is_permarock(grid));
     }
 
-    return (!feat_is_solid(grid));
+    return !feat_is_solid(grid);
 }
 
 static bool _mons_can_open_doors(const monster* mon)
@@ -3314,10 +3295,10 @@ static bool _mons_can_open_doors(const monster* mon)
 bool mons_can_open_door(const monster* mon, const coord_def& pos)
 {
     if (env.markers.property_at(pos, MAT_ANY, "door_restrict") == "veto")
-        return (false);
+        return false;
 
     if (!_mons_can_open_doors(mon))
-        return (false);
+        return false;
 
     dungeon_feature_type feat = env.grid(pos);
     return (feat == DNGN_CLOSED_DOOR
@@ -3329,20 +3310,20 @@ bool mons_can_open_door(const monster* mon, const coord_def& pos)
 bool mons_can_eat_door(const monster* mon, const coord_def& pos)
 {
     if (env.markers.property_at(pos, MAT_ANY, "door_restrict") == "veto")
-        return (false);
+        return false;
 
     if (mons_itemeat(mon) != MONEAT_ITEMS)
-        return (false);
+        return false;
 
     dungeon_feature_type feat = env.grid(pos);
     if (feat == DNGN_OPEN_DOOR)
-        return (true);
+        return true;
 
     if (env.markers.property_at(pos, MAT_ANY, "door_restrict") == "veto"
          // Doors with permarock marker cannot be eaten.
         || feature_marker_at(pos, DNGN_PERMAROCK_WALL))
     {
-        return (false);
+        return false;
     }
 
     return (feat == DNGN_CLOSED_DOOR);
@@ -3359,17 +3340,17 @@ bool mons_can_traverse(const monster* mon, const coord_def& p,
                        bool checktraps)
 {
     if (_mons_can_pass_door(mon, p))
-        return (true);
+        return true;
 
     if (!mon->is_habitable(p))
-        return (false);
+        return false;
 
     // Your friends only know about doors you know about, unless they feel
     // at home in this branch.
     if (grd(p) == DNGN_SECRET_DOOR && mon->friendly()
         && (mons_intel(mon) < I_NORMAL || !mons_is_native_in_branch(mon)))
     {
-        return (false);
+        return false;
     }
 
     const trap_def* ptrap = find_trap(p);
@@ -3382,15 +3363,15 @@ bool mons_can_traverse(const monster* mon, const coord_def& p,
             && ptrap->is_known(mon)
             && mon->friendly())
         {
-            return (false);
+            return false;
         }
 
         // Monsters cannot travel over teleport traps.
         if (!can_place_on_trap(mons_base_type(mon), tt))
-            return (false);
+            return false;
     }
 
-    return (true);
+    return true;
 }
 
 void mons_remove_from_grid(const monster* mon)
@@ -3407,7 +3388,9 @@ mon_inv_type equip_slot_to_mslot(equipment_type eq)
     case EQ_WEAPON:      return MSLOT_WEAPON;
     case EQ_BODY_ARMOUR: return MSLOT_ARMOUR;
     case EQ_SHIELD:      return MSLOT_SHIELD;
-    default: return (NUM_MONSTER_SLOTS);
+    case EQ_RINGS:
+    case EQ_AMULET:      return MSLOT_JEWELLERY;
+    default: return NUM_MONSTER_SLOTS;
     }
 }
 
@@ -3417,6 +3400,7 @@ mon_inv_type item_to_mslot(const item_def &item)
     {
     case OBJ_WEAPONS:
     case OBJ_STAVES:
+    case OBJ_RODS:
         return MSLOT_WEAPON;
     case OBJ_MISSILES:
         return MSLOT_MISSILE;
@@ -3449,24 +3433,23 @@ monster_type royal_jelly_ejectable_monster()
 //
 // Atheists get "You"/"you", and worshippers of nameless gods get "Your
 // god"/"your god".
-static std::string _replace_god_name(god_type god, bool need_verb = false,
-                                     bool capital = false)
+static string _replace_god_name(god_type god, bool need_verb = false,
+                                bool capital = false)
 {
-    std::string result =
+    string result =
           ((god == GOD_NO_GOD)    ? (capital ? "You"      : "you") :
            (god == GOD_NAMELESS)  ? (capital ? "Your god" : "your god")
                                   : god_name(god, false));
     if (need_verb)
         result += (god == GOD_NO_GOD) ? " are" : " is";
 
-    return (result);
+    return result;
 }
 
-static std::string _get_species_insult(const std::string &species,
-                                       const std::string &type)
+static string _get_species_insult(const string &species, const string &type)
 {
-    std::string insult;
-    std::string lookup;
+    string insult;
+    string lookup;
 
     // Get species genus.
     if (!species.empty())
@@ -3487,12 +3470,12 @@ static std::string _get_species_insult(const std::string &species,
         insult  = getSpeakString(lookup);
     }
 
-    return (insult);
+    return insult;
 }
 
-static std::string _pluralise_player_genus()
+static string _pluralise_player_genus()
 {
-    std::string sp = species_name(you.species, true, false);
+    string sp = species_name(you.species, true, false);
     if (player_genus(GENPC_ELVEN, you.species)
         || you.species == SP_DEEP_DWARF)
     {
@@ -3502,15 +3485,15 @@ static std::string _pluralise_player_genus()
     else if (you.species != SP_DEMONSPAWN)
         sp += "s";
 
-    return (sp);
+    return sp;
 }
 
 // Replaces the "@foo@" strings in monster shout and monster speak
 // definitions.
-std::string do_mon_str_replacements(const std::string &in_msg,
-                                    const monster* mons, int s_type)
+string do_mon_str_replacements(const string &in_msg, const monster* mons,
+                               int s_type)
 {
-    std::string msg = in_msg;
+    string msg = in_msg;
 
     const actor*    foe   = (mons->wont_attack()
                              && invalid_monster_index(mons->foe)) ?
@@ -3523,11 +3506,11 @@ std::string do_mon_str_replacements(const std::string &in_msg,
     msg = replace_all(msg, "@player_genus@", species_name(you.species, true));
     msg = replace_all(msg, "@player_genus_plural@", _pluralise_player_genus());
 
-    std::string foe_species;
+    string foe_species;
 
     if (foe == NULL)
         ;
-    else if (foe->atype() == ACT_PLAYER)
+    else if (foe->is_player())
     {
         foe_species = species_name(you.species, true);
 
@@ -3553,7 +3536,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
     }
     else
     {
-        std::string foe_name;
+        string foe_name;
         const monster* m_foe = foe->as_monster();
         if (you.can_see(foe) || crawl_state.game_is_arena())
         {
@@ -3562,8 +3545,8 @@ std::string do_mon_str_replacements(const std::string &in_msg,
                 && !crawl_state.game_is_arena())
             {
                 foe_name = foe->name(DESC_YOUR);
-                const std::string::size_type pos = foe_name.find("'");
-                if (pos != std::string::npos)
+                const string::size_type pos = foe_name.find("'");
+                if (pos != string::npos)
                     foe_name = foe_name.substr(0, pos);
             }
             else
@@ -3572,7 +3555,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
         else
             foe_name = "something";
 
-        std::string prep = "at";
+        string prep = "at";
         if (s_type == S_SILENT || s_type == S_SHOUT || s_type == S_NORMAL)
             prep = "to";
         msg = replace_all(msg, "@says@ @to_foe@", "@says@ " + prep + " @foe@");
@@ -3588,12 +3571,11 @@ std::string do_mon_str_replacements(const std::string &in_msg,
         if (m_foe->is_named())
             msg = replace_all(msg, "@foe_name@", foe->name(DESC_PLAIN, true));
 
-        std::string species = mons_type_name(mons_species(m_foe->type),
-                                             DESC_PLAIN);
+        string species = mons_type_name(mons_species(m_foe->type), DESC_PLAIN);
 
         msg = replace_all(msg, "@foe_species@", species);
 
-        std::string genus = mons_type_name(mons_genus(m_foe->type), DESC_PLAIN);
+        string genus = mons_type_name(mons_genus(m_foe->type), DESC_PLAIN);
 
         msg = replace_all(msg, "@foe_genus@", genus);
         msg = replace_all(msg, "@Foe_genus@", uppercase_first(genus));
@@ -3606,7 +3588,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
 
     if (mons->is_named() && you.can_see(mons))
     {
-        const std::string name = mons->name(DESC_THE);
+        const string name = mons->name(DESC_THE);
 
         msg = replace_all(msg, "@the_something@", name);
         msg = replace_all(msg, "@The_something@", name);
@@ -3641,7 +3623,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
         else
             msg = replace_all(msg, "@surface@", "ground");
 
-        msg = replace_all(msg, "@feature@", raw_feature_description(feat));
+        msg = replace_all(msg, "@feature@", raw_feature_description(mons->pos()));
     }
     else
     {
@@ -3651,7 +3633,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
 
     if (you.can_see(mons))
     {
-        std::string something = mons->name(DESC_PLAIN);
+        string something = mons->name(DESC_PLAIN);
         msg = replace_all(msg, "@something@",   something);
         msg = replace_all(msg, "@a_something@", mons->name(DESC_A));
         msg = replace_all(msg, "@the_something@", mons->name(nocap));
@@ -3675,7 +3657,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
     // Player name.
     msg = replace_all(msg, "@player_name@", you.your_name);
 
-    std::string plain = mons->name(DESC_PLAIN);
+    string plain = mons->name(DESC_PLAIN);
     msg = replace_all(msg, "@monster@",     plain);
     msg = replace_all(msg, "@a_monster@",   mons->name(DESC_A));
     msg = replace_all(msg, "@the_monster@", mons->name(nocap));
@@ -3699,8 +3681,8 @@ std::string do_mon_str_replacements(const std::string &in_msg,
                       mons->pronoun(PRONOUN_OBJECTIVE));
 
     // Body parts.
-    bool        can_plural = false;
-    std::string part_str   = mons->hand_name(false, &can_plural);
+    bool   can_plural = false;
+    string part_str   = mons->hand_name(false, &can_plural);
 
     msg = replace_all(msg, "@hand@", part_str);
     msg = replace_all(msg, "@Hand@", uppercase_first(part_str));
@@ -3774,8 +3756,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
     else if (mons->god == GOD_NAMELESS)
     {
         msg = replace_all(msg, "@God@", "a god");
-        std::string possessive =
-            mons->pronoun(PRONOUN_POSSESSIVE) + " god";
+        string possessive = mons->pronoun(PRONOUN_POSSESSIVE) + " god";
         msg = replace_all(msg, "@possessive_God@", possessive.c_str());
 
         msg = replace_all(msg, "@my_God@", "my God");
@@ -3791,7 +3772,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
     }
 
     // Replace with species specific insults.
-    if (msg.find("@species_insult_") != std::string::npos)
+    if (msg.find("@species_insult_") != string::npos)
     {
         msg = replace_all(msg, "@species_insult_adj1@",
                                _get_species_insult(foe_species, "adj1"));
@@ -3827,7 +3808,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
         "whispers",     // S_SOFT
         "says",         // S_NORMAL
         "shouts",       // S_LOUD
-        "screams"       // S_VERY_LOUD
+        "screams",      // S_VERY_LOUD
     };
     COMPILE_CHECK(ARRAYSZ(sound_list) == NUM_LOUDNESS);
 
@@ -3841,7 +3822,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
 
     msg = apostrophise_fixup(msg);
 
-    return (msg);
+    return msg;
 }
 
 static mon_body_shape _get_ghost_shape(const monster* mon)
@@ -3851,10 +3832,10 @@ static mon_body_shape _get_ghost_shape(const monster* mon)
     switch (ghost.species)
     {
     case SP_NAGA:
-        return (MON_SHAPE_NAGA);
+        return MON_SHAPE_NAGA;
 
     case SP_CENTAUR:
-        return (MON_SHAPE_CENTAUR);
+        return MON_SHAPE_CENTAUR;
 
     case SP_RED_DRACONIAN:
     case SP_WHITE_DRACONIAN:
@@ -3866,10 +3847,10 @@ static mon_body_shape _get_ghost_shape(const monster* mon)
     case SP_MOTTLED_DRACONIAN:
     case SP_PALE_DRACONIAN:
     case SP_BASE_DRACONIAN:
-        return (MON_SHAPE_HUMANOID_TAILED);
+        return MON_SHAPE_HUMANOID_TAILED;
 
     default:
-        return (MON_SHAPE_HUMANOID);
+        return MON_SHAPE_HUMANOID;
     }
 }
 
@@ -3883,180 +3864,182 @@ mon_body_shape get_mon_shape(const monster* mon)
         return get_mon_shape(mon->type);
 }
 
-mon_body_shape get_mon_shape(const int type)
+mon_body_shape get_mon_shape(const monster_type mc)
 {
-    if (type == MONS_CHAOS_SPAWN)
+    if (mc == MONS_CHAOS_SPAWN)
         return (static_cast<mon_body_shape>(random2(MON_SHAPE_MISC + 1)));
 
-    const bool flies = (mons_class_flies(type) == FL_FLY);
+    const bool flies = (mons_class_flies(mc) == FL_FLY);
 
-    switch (mons_base_char(type))
+    switch (mons_base_char(mc))
     {
     case 'a': // ants
-        return (MON_SHAPE_INSECT);
+        return MON_SHAPE_INSECT;
     case 'b': // bats and butterflies
-        if (type == MONS_BUTTERFLY)
-            return (MON_SHAPE_INSECT_WINGED);
+        if (mc == MONS_BUTTERFLY)
+            return MON_SHAPE_INSECT_WINGED;
         else
-            return (MON_SHAPE_BAT);
+            return MON_SHAPE_BAT;
     case 'c': // centaurs
-        return (MON_SHAPE_CENTAUR);
+        return MON_SHAPE_CENTAUR;
     case 'd': // draconions and drakes
-        if (mons_genus(type) == MONS_DRACONIAN)
+        if (mons_genus(mc) == MONS_DRACONIAN)
         {
             if (flies)
-                return (MON_SHAPE_HUMANOID_WINGED_TAILED);
+                return MON_SHAPE_HUMANOID_WINGED_TAILED;
             else
-                return (MON_SHAPE_HUMANOID_TAILED);
+                return MON_SHAPE_HUMANOID_TAILED;
         }
         else if (flies)
-            return (MON_SHAPE_QUADRUPED_WINGED);
+            return MON_SHAPE_QUADRUPED_WINGED;
         else
-            return (MON_SHAPE_QUADRUPED);
+            return MON_SHAPE_QUADRUPED;
     case 'e': // elves
-        return (MON_SHAPE_HUMANOID);
+        return MON_SHAPE_HUMANOID;
     case 'f': // fungi
-        return (MON_SHAPE_FUNGUS);
+        return MON_SHAPE_FUNGUS;
     case 'g': // gnolls, goblins and hobgoblins
-        return (MON_SHAPE_HUMANOID);
+        return MON_SHAPE_HUMANOID;
     case 'h': // hounds
-        return (MON_SHAPE_QUADRUPED);
+        return MON_SHAPE_QUADRUPED;
     case 'i': // spriggans
-        return (MON_SHAPE_HUMANOID);
+        return MON_SHAPE_HUMANOID;
     case 'j': // snails
-        return (MON_SHAPE_SNAIL);
+        return MON_SHAPE_SNAIL;
     case 'k': // killer bees
-        return (MON_SHAPE_INSECT_WINGED);
+        return MON_SHAPE_INSECT_WINGED;
     case 'l': // lizards
-        return (MON_SHAPE_QUADRUPED);
+        return MON_SHAPE_QUADRUPED;
     case 'm': // merfolk
-        return (MON_SHAPE_HUMANOID);
+        return MON_SHAPE_HUMANOID;
     case 'n': // necrophages and ghouls
-        return (MON_SHAPE_HUMANOID);
+        return MON_SHAPE_HUMANOID;
     case 'o': // orcs
-        return (MON_SHAPE_HUMANOID);
+        return MON_SHAPE_HUMANOID;
     case 'p': // ghosts
-        if (type != MONS_INSUBSTANTIAL_WISP
-            && !mons_is_pghost(type)) // handled elsewhere
+        if (mc != MONS_INSUBSTANTIAL_WISP
+            && !mons_is_pghost(mc)) // handled elsewhere
         {
-            return (MON_SHAPE_HUMANOID);
+            return MON_SHAPE_HUMANOID;
         }
         break;
     case 'q': // dwarves
-        return (MON_SHAPE_HUMANOID);
+        return MON_SHAPE_HUMANOID;
     case 'r': // rodents
-        return (MON_SHAPE_QUADRUPED);
+        return MON_SHAPE_QUADRUPED;
     case 's': // arachnids and centipedes/cockroaches
-        if (type == MONS_GIANT_CENTIPEDE || type == MONS_DEMONIC_CRAWLER)
-            return (MON_SHAPE_CENTIPEDE);
-        else if (type == MONS_GIANT_COCKROACH)
-            return (MON_SHAPE_INSECT);
+        if (mc == MONS_GIANT_CENTIPEDE || mc == MONS_DEMONIC_CRAWLER)
+            return MON_SHAPE_CENTIPEDE;
+        else if (mc == MONS_GIANT_COCKROACH)
+            return MON_SHAPE_INSECT;
         else
-            return (MON_SHAPE_ARACHNID);
+            return MON_SHAPE_ARACHNID;
     case 'u': // mutated type, not enough info to determine shape
-        return (MON_SHAPE_MISC);
+        return MON_SHAPE_MISC;
     case 't': // crocodiles/turtles
-        if (type == MONS_SNAPPING_TURTLE
-            || type == MONS_ALLIGATOR_SNAPPING_TURTLE)
+        if (mc == MONS_SNAPPING_TURTLE
+            || mc == MONS_ALLIGATOR_SNAPPING_TURTLE)
         {
-            return (MON_SHAPE_QUADRUPED_TAILLESS);
+            return MON_SHAPE_QUADRUPED_TAILLESS;
         }
         else
-            return (MON_SHAPE_QUADRUPED);
+            return MON_SHAPE_QUADRUPED;
     case 'v': // vortices
-        return (MON_SHAPE_MISC);
+        return MON_SHAPE_MISC;
     case 'w': // worms
-        return (MON_SHAPE_SNAKE);
+        return MON_SHAPE_SNAKE;
     case 'x': // small abominations
-        return (MON_SHAPE_MISC);
+        return MON_SHAPE_MISC;
     case 'y': // winged insects
-        return (MON_SHAPE_INSECT_WINGED);
+        return MON_SHAPE_INSECT_WINGED;
     case 'z': // small zombies, etc.
-        if (type == MONS_WIGHT
-            || type == MONS_SKELETAL_WARRIOR
-            || type == MONS_FLAMING_CORPSE)
+        if (mc == MONS_WIGHT
+            || mc == MONS_SKELETAL_WARRIOR
+            || mc == MONS_FLAMING_CORPSE)
         {
-            return (MON_SHAPE_HUMANOID);
+            return MON_SHAPE_HUMANOID;
         }
         else
             // constructed type, not enough info to determine shape
-            return (MON_SHAPE_MISC);
+            return MON_SHAPE_MISC;
     case 'A': // angelic beings
-        return (MON_SHAPE_HUMANOID_WINGED);
+        return MON_SHAPE_HUMANOID_WINGED;
     case 'B': // beetles
-        return (MON_SHAPE_INSECT);
+        return MON_SHAPE_INSECT;
     case 'C': // giants
-        return (MON_SHAPE_HUMANOID);
+        return MON_SHAPE_HUMANOID;
     case 'D': // dragons
         if (flies)
-            return (MON_SHAPE_QUADRUPED_WINGED);
+            return MON_SHAPE_QUADRUPED_WINGED;
         else
-            return (MON_SHAPE_QUADRUPED);
+            return MON_SHAPE_QUADRUPED;
     case 'E': // elementals
-        return (MON_SHAPE_MISC);
+        return MON_SHAPE_MISC;
     case 'F': // frogs
-        return (MON_SHAPE_QUADRUPED_TAILLESS);
+        return MON_SHAPE_QUADRUPED_TAILLESS;
     case 'G': // floating eyeballs and orbs
-        return (MON_SHAPE_ORB);
+        return MON_SHAPE_ORB;
     case 'H': // minotaurs, manticores, hippogriffs and griffins
-        if (type == MONS_MINOTAUR || type == MONS_TENGU)
-            return (MON_SHAPE_HUMANOID);
-        else if (type == MONS_MANTICORE)
-            return (MON_SHAPE_QUADRUPED);
-        else if (type == MONS_HARPY)
-            return (MON_SHAPE_HUMANOID_WINGED);
+        if (mc == MONS_MINOTAUR || mc == MONS_TENGU)
+            return MON_SHAPE_HUMANOID;
+        else if (mc == MONS_MANTICORE)
+            return MON_SHAPE_QUADRUPED;
+        else if (mc == MONS_HARPY)
+            return MON_SHAPE_HUMANOID_WINGED;
         else
-            return (MON_SHAPE_QUADRUPED_WINGED);
+            return MON_SHAPE_QUADRUPED_WINGED;
     case 'I': // ice beasts
-        return (MON_SHAPE_QUADRUPED);
+        return MON_SHAPE_QUADRUPED;
     case 'J': // jellies and jellyfish
-        return (MON_SHAPE_BLOB);
+        return MON_SHAPE_BLOB;
     case 'K': // kobolds
-        return (MON_SHAPE_HUMANOID);
+        return MON_SHAPE_HUMANOID;
     case 'L': // liches
-        return (MON_SHAPE_HUMANOID);
+        return MON_SHAPE_HUMANOID;
     case 'M': // mummies
-        return (MON_SHAPE_HUMANOID);
+        return MON_SHAPE_HUMANOID;
     case 'N': // nagas
-        if (mons_genus(type) == MONS_GUARDIAN_SERPENT)
-            return (MON_SHAPE_SNAKE);
+        if (mons_genus(mc) == MONS_GUARDIAN_SERPENT)
+            return MON_SHAPE_SNAKE;
         else
-            return (MON_SHAPE_NAGA);
+            return MON_SHAPE_NAGA;
     case 'O': // ogres
-        return (MON_SHAPE_HUMANOID);
+        return MON_SHAPE_HUMANOID;
     case 'P': // plants
-        return (MON_SHAPE_PLANT);
-    case 'R': // rakshasa and efreeti; humanoid?
-        return (MON_SHAPE_HUMANOID);
+        return MON_SHAPE_PLANT;
+    case 'R': // rakshasas and efreet; humanoid?
+        return MON_SHAPE_HUMANOID;
     case 'S': // snakes
-        return (MON_SHAPE_SNAKE);
+        return MON_SHAPE_SNAKE;
     case 'T': // trolls
-        return (MON_SHAPE_HUMANOID);
+        return MON_SHAPE_HUMANOID;
     case 'U': // bears
-        return (MON_SHAPE_QUADRUPED_TAILLESS);
+        return MON_SHAPE_QUADRUPED_TAILLESS;
     case 'V': // vampires
-        return (MON_SHAPE_HUMANOID);
+        return MON_SHAPE_HUMANOID;
     case 'W': // wraiths, humanoid if not a spectral thing
-        if (type == MONS_SPECTRAL_THING)
+        if (mc == MONS_SPECTRAL_THING)
+        {
             // constructed type, not enough info to determine shape
-            return (MON_SHAPE_MISC);
+            return MON_SHAPE_MISC;
+        }
         else
-            return (MON_SHAPE_HUMANOID);
+            return MON_SHAPE_HUMANOID;
     case 'X': // large abominations
-        return (MON_SHAPE_MISC);
+        return MON_SHAPE_MISC;
     case 'Y': // yaks, sheep and elephants
-        if (type == MONS_SHEEP)
-            return (MON_SHAPE_QUADRUPED_TAILLESS);
+        if (mc == MONS_SHEEP)
+            return MON_SHAPE_QUADRUPED_TAILLESS;
         else
-            return (MON_SHAPE_QUADRUPED);
+            return MON_SHAPE_QUADRUPED;
     case 'Z': // large zombies, etc.
         // constructed type, not enough info to determine shape
-        return (MON_SHAPE_MISC);
+        return MON_SHAPE_MISC;
     case ';': // water monsters
-        if (type == MONS_ELECTRIC_EEL)
-            return (MON_SHAPE_SNAKE);
+        if (mc == MONS_ELECTRIC_EEL)
+            return MON_SHAPE_SNAKE;
         else
-            return (MON_SHAPE_FISH);
+            return MON_SHAPE_FISH;
 
     // The various demons, plus some golems and statues.  And humanoids.
     case '1':
@@ -4070,7 +4053,7 @@ mon_body_shape get_mon_shape(const int type)
     {
         // Assume that a demon has wings if it can fly, and that it has
         // a tail if it has a sting or tail-slap attack.
-        monsterentry *mon_data = get_monster_data(type);
+        monsterentry *mon_data = get_monster_data(mc);
         bool tailed = false;
         for (int i = 0; i < 4; ++i)
             if (mon_data->attack[i].type == AT_STING
@@ -4081,40 +4064,27 @@ mon_body_shape get_mon_shape(const int type)
             }
 
         if (flies && tailed)
-            return (MON_SHAPE_HUMANOID_WINGED_TAILED);
+            return MON_SHAPE_HUMANOID_WINGED_TAILED;
         else if (flies && !tailed)
-            return (MON_SHAPE_HUMANOID_WINGED);
+            return MON_SHAPE_HUMANOID_WINGED;
         else if (!flies && tailed)
-            return (MON_SHAPE_HUMANOID_TAILED);
+            return MON_SHAPE_HUMANOID_TAILED;
         else
-            return (MON_SHAPE_HUMANOID);
+            return MON_SHAPE_HUMANOID;
     }
 
     case '9': // gargoyles
-        return (MON_SHAPE_HUMANOID_WINGED_TAILED);
+        return MON_SHAPE_HUMANOID_WINGED_TAILED;
     case '*': // orbs
-        return (MON_SHAPE_ORB);
+        return MON_SHAPE_ORB;
     }
 
-    return (MON_SHAPE_MISC);
+    return MON_SHAPE_MISC;
 }
 
-std::string get_mon_shape_str(const monster* mon)
-{
-    return get_mon_shape_str(get_mon_shape(mon));
-}
-
-std::string get_mon_shape_str(const int type)
-{
-    return get_mon_shape_str(get_mon_shape(type));
-}
-
-std::string get_mon_shape_str(const mon_body_shape shape)
+string get_mon_shape_str(const mon_body_shape shape)
 {
     ASSERT(shape >= MON_SHAPE_HUMANOID && shape <= MON_SHAPE_MISC);
-
-    if (shape < MON_SHAPE_HUMANOID || shape > MON_SHAPE_MISC)
-        return "buggy shape";
 
     static const char *shape_names[] =
     {
@@ -4126,6 +4096,7 @@ std::string get_mon_shape_str(const mon_body_shape shape)
         "blob", "misc"
     };
 
+    COMPILE_CHECK(ARRAYSZ(shape_names) == MON_SHAPE_MISC + 1);
     return (shape_names[shape]);
 }
 
@@ -4138,20 +4109,19 @@ bool player_or_mon_in_sanct(const monster* mons)
 bool mons_landlubbers_in_reach(const monster* mons)
 {
     if (mons_has_ranged_attack(mons))
-        return (true);
+        return true;
 
-    const reach_type range = mons->reach_range();
     actor *act;
     for (radius_iterator ai(mons->pos(),
-                            range ? 2 : 1,
-                            (range == REACH_KNIGHT) ? C_ROUND : C_SQUARE,
+                            mons->reach_range(),
+                            C_CIRCLE,
                             NULL,
                             true);
                          ai; ++ai)
         if ((act = actor_at(*ai)) && !mons_aligned(mons, act))
-            return (true);
+            return true;
 
-    return (false);
+    return false;
 }
 
 int get_dist_to_nearest_monster()
@@ -4176,11 +4146,19 @@ int get_dist_to_nearest_monster()
         if (mon->wont_attack())
             continue;
 
-        int dist = distance(you.pos(), *ri);
+        int dist = distance2(you.pos(), *ri);
         if (dist < minRange)
             minRange = dist;
     }
-    return (minRange);
+    return minRange;
+}
+
+bool monster_nearby()
+{
+    for (radius_iterator ri(you.get_los()); ri; ++ri)
+        if (monster_at(*ri))
+            return true;
+    return false;
 }
 
 actor *actor_by_mid(mid_t m)
@@ -4195,13 +4173,13 @@ monster *monster_by_mid(mid_t m)
     if (m == MID_ANON_FRIEND)
         return &menv[ANON_FRIENDLY_MONSTER];
 
-    std::map<mid_t, unsigned short>::const_iterator mc = env.mid_cache.find(m);
+    map<mid_t, unsigned short>::const_iterator mc = env.mid_cache.find(m);
     if (mc != env.mid_cache.end())
         return &menv[mc->second];
     return 0;
 }
 
-bool mons_is_tentacle(int mc)
+bool mons_is_tentacle(monster_type mc)
 {
     return (mc == MONS_KRAKEN_TENTACLE
             || mc == MONS_KRAKEN_TENTACLE_SEGMENT
@@ -4209,7 +4187,7 @@ bool mons_is_tentacle(int mc)
             || mc == MONS_ELDRITCH_TENTACLE_SEGMENT);
 }
 
-bool mons_is_tentacle_segment(int mc)
+bool mons_is_tentacle_segment(monster_type mc)
 {
     return (mc == MONS_KRAKEN_TENTACLE_SEGMENT
             || mc == MONS_ELDRITCH_TENTACLE_SEGMENT);
@@ -4256,7 +4234,7 @@ const char* mons_class_name(monster_type mc)
     return get_monster_data(mc)->name;
 }
 
-bool mons_is_tentacle_end(const int mtype)
+bool mons_is_tentacle_end(monster_type mtype)
 {
     return (mtype == MONS_KRAKEN_TENTACLE
             || mtype == MONS_ELDRITCH_TENTACLE);
@@ -4268,15 +4246,44 @@ mon_threat_level_type mons_threat_level(const monster *mon, bool real)
     const int tension = exper_value(mon, real) / (1 + factor);
 
     if (tension <= 0)
+    {
         // Conjurators use melee to conserve mana, MDFis switch plates...
         return MTHRT_TRIVIAL;
+    }
     else if (tension <= 5)
+    {
         // An easy fight but not ignorable.
         return MTHRT_EASY;
+    }
     else if (tension <= 32)
+    {
         // Hard but reasonable.
         return MTHRT_TOUGH;
+    }
     else
+    {
         // Check all wands/jewels several times, wear brown pants...
         return MTHRT_NASTY;
+    }
+}
+
+// Used when clearing level data, to ensure any additional reset quirks
+// are handled properly.
+void reset_all_monsters()
+{
+    for (int i = 0; i < MAX_MONSTERS; i++)
+    {
+        // Since these aren't new monsters, and clearing constriction is no
+        // longer handled in reset(), we need to do it here.
+        // We're already clearing all monster data, so concerns about invalid
+        // mids and the like should not be a problem.
+        if (!invalid_monster(&menv[i]))
+        {
+            menv[i].stop_constricting_all(false, true);
+            menv[i].stop_being_constricted(true);
+        }
+        menv[i].reset();
+    }
+
+    env.mid_cache.clear();
 }

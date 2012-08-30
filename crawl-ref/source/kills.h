@@ -33,7 +33,7 @@ struct kill_monster_desc
         M_SHAPESHIFTER, // A shapeshifter pretending to be 'monnum'
     };
 
-    int monnum;                 // Number of the beast
+    monster_type monnum;        // Number of the beast
     name_modifier modifier;     // Nature of the beast
 
     struct less_than
@@ -65,17 +65,16 @@ public:
 
     void merge(const kill_def &k, bool unique_monster);
 
-    std::string info(const kill_monster_desc &md) const;
-    std::string base_name(const kill_monster_desc &md) const;
+    string info(const kill_monster_desc &md) const;
+    string base_name(const kill_monster_desc &md) const;
 
     unsigned short kills;           // How many kills does the player have?
     int            exp;             // Experience gained for slaying the beast.
                                     // Only set *once*, even for shapeshifters.
 
-    std::vector<unsigned short> places; // Places where we've killed the beast.
+    vector<unsigned short> places; // Places where we've killed the beast.
 private:
-    std::string append_places(const kill_monster_desc &md,
-            const std::string &name) const;
+    string append_places(const kill_monster_desc &md, const string &name) const;
 };
 
 // Ghosts and random Pandemonium demons.
@@ -88,9 +87,9 @@ public:
     void save(writer&) const;
     void load(reader&);
 
-    std::string info() const;
+    string info() const;
 
-    std::string ghost_name;
+    string ghost_name;
     int exp;
     unsigned short place;
 };
@@ -100,13 +99,13 @@ struct kill_exp
 {
     int nkills;
     int exp;
-    std::string base_name;
-    std::string desc;
+    string base_name;
+    string desc;
 
-    int monnum;       // Number of the beast
-    int modifier;     // Nature of the beast
+    monster_type monnum; // Number of the beast
+    int modifier;        // Nature of the beast
 
-    std::vector<unsigned short> places;
+    vector<unsigned short> places;
 
     kill_exp(const kill_def &k, const kill_monster_desc &md)
         : nkills(k.kills), exp(k.exp), base_name(k.base_name(md)),
@@ -118,7 +117,7 @@ struct kill_exp
 
     kill_exp(const kill_ghost &kg)
         : nkills(1), exp(kg.exp), base_name(), desc(kg.info()),
-          monnum(-1), modifier(0)
+          monnum(MONS_PROGRAM_BUG), modifier(0)
     {
         places.push_back(kg.place);
     }
@@ -140,16 +139,15 @@ public:
     void save(writer&) const;
     void load(reader&);
 
-    int get_kills(std::vector<kill_exp> &v) const;
+    int get_kills(vector<kill_exp> &v) const;
     int num_kills(const monster* mon) const;
     int num_kills(const monster_info& mon) const;
 private:
     int num_kills(kill_monster_desc desc) const;
 
-    typedef std::map<kill_monster_desc,
-                     kill_def,
-                     kill_monster_desc::less_than> kill_map;
-    typedef std::vector<kill_ghost> ghost_vec;
+    typedef map<kill_monster_desc, kill_def,
+                kill_monster_desc::less_than> kill_map;
+    typedef vector<kill_ghost> ghost_vec;
 
     kill_map    kills;
     ghost_vec   ghosts;
@@ -179,15 +177,14 @@ public:
 
     int total_kills() const;
 
-    std::string kill_info() const;
+    string kill_info() const;
 private:
     const char *category_name(kill_category kc) const;
 
     Kills categorized_kills[KC_NCATEGORIES];
 private:
-    void add_kill_info(std::string &, std::vector<kill_exp> &,
-                       int count, const char *c, bool separator)
-        const;
+    void add_kill_info(string &, vector<kill_exp> &,
+                       int count, const char *c, bool separator) const;
 };
 
 enum KILL_DUMP_OPTIONS

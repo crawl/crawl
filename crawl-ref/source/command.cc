@@ -24,6 +24,7 @@
 #include "debug.h"
 #include "decks.h"
 #include "describe.h"
+#include "directn.h"
 #include "files.h"
 #include "godmenu.h"
 #include "ghost.h"
@@ -34,11 +35,8 @@
 #include "macro.h"
 #include "menu.h"
 #include "message.h"
-#include "mon-place.h"
-#include "mon-stuff.h"
 #include "mon-util.h"
 #include "ouch.h"
-#include "place.h"
 #include "player.h"
 #include "religion.h"
 #include "showsymb.h"
@@ -103,19 +101,19 @@ static const char *features[] = {
 #endif
 };
 
-static std::string _get_version_information(void)
+static string _get_version_information(void)
 {
-    std::string result  = "This is <w>" CRAWL " " + Version::Long() + "</w>";
+    string result  = "This is <w>" CRAWL " " + Version::Long() + "</w>";
 
     result += "\n";
 
-    return (result);
+    return result;
 }
 
-static std::string _get_version_features(void)
+static string _get_version_features(void)
 {
-    std::string result  = "<w>Features</w>\n";
-                result += "--------\n";
+    string result  = "<w>Features</w>\n";
+           result += "--------\n";
 
     for (unsigned int i = 0; i < ARRAYSZ(features); i++)
     {
@@ -124,22 +122,22 @@ static std::string _get_version_features(void)
         result += "\n";
     }
 
-    return (result);
+    return result;
 }
 
 static void _add_file_to_scroller(FILE* fp, formatted_scroller& m,
                                   int first_hotkey  = 0,
                                   bool auto_hotkeys = false);
 
-static std::string _get_version_changes(void)
+static string _get_version_changes(void)
 {
     // Attempts to print "Highlights" of the latest version.
     FILE* fp = fopen_u(datafile_path("changelog.txt", false).c_str(), "r");
     if (!fp)
         return "";
 
-    std::string result = "";
-    std::string help;
+    string result = "";
+    string help;
     char buf[200];
     bool start = false;
     while (fgets(buf, sizeof buf, fp))
@@ -158,20 +156,20 @@ static std::string _get_version_changes(void)
         if (help.find("Stone Soup ") == 0)
         {
             // Stop if this is for an older major version; otherwise, highlight
-            if (help.find("Stone Soup "+Version::Major()) == std::string::npos)
+            if (help.find("Stone Soup "+Version::Major()) == string::npos)
                 break;
             else
                 goto highlight;
         }
 
-        if (help.find("Highlights") != std::string::npos)
+        if (help.find("Highlights") != string::npos)
         {
         highlight:
             // Highlight the Highlights, so to speak.
-            std::string text  = "<w>";
-                        text += help;
-                        text += "</w>";
-                        text += "\n";
+            string text  = "<w>";
+                   text += help;
+                   text += "</w>";
+                   text += "\n";
             result += text;
             // And start printing from now on.
             start = true;
@@ -202,7 +200,7 @@ static std::string _get_version_changes(void)
 
     result += "\n\n";
 
-    return (result);
+    return result;
 }
 
 //#define DEBUG_FILES
@@ -218,7 +216,7 @@ static void _print_version(void)
     // FIXME: Allow for hiding Page down when at the end of the listing, ditto
     // for page up at start of listing.
     cmd_version.set_more(formatted_string::parse_string(
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
                               "<cyan>[ +/L-click : Page down.   - : Page up."
                               "           Esc/R-click exits.]"));
 #else
@@ -260,7 +258,7 @@ void swap_inv_slots(int from_slot, int to_slot, bool verbose)
 
     // Slot switching.
     tmp.slot = you.inv[to_slot].slot;
-    you.inv[to_slot].slot  = you.inv[from_slot].slot;
+    you.inv[to_slot].slot  = index_to_letter(to_slot);//you.inv[from_slot].slot is 0 when 'from_slot' contains no item.
     you.inv[from_slot].slot = tmp.slot;
 
     you.inv[from_slot].link = from_slot;
@@ -408,7 +406,7 @@ static void _adjust_spell(void)
 
 static void _adjust_ability(void)
 {
-    const std::vector<talent> talents = your_talents(false);
+    const vector<talent> talents = your_talents(false);
 
     if (talents.empty())
     {
@@ -503,7 +501,7 @@ static void _adjust_ability(void)
 
 void list_armour()
 {
-    std::ostringstream estr;
+    ostringstream estr;
     for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_ARMOUR; i++)
     {
         const int armour_id = you.equip[i];
@@ -552,7 +550,7 @@ void list_armour()
 
 void list_jewellery(void)
 {
-    std::string jstr;
+    string jstr;
     int cols = get_number_of_cols() - 1;
     bool split = you.species == SP_OCTOPODE && cols > 84;
 
@@ -560,7 +558,9 @@ void list_jewellery(void)
     {
         if ((you.species != SP_OCTOPODE && i > EQ_AMULET)
             || (you.species == SP_OCTOPODE && i < EQ_AMULET))
+        {
             continue;
+        }
 
         const int jewellery_id = you.equip[i];
         int       colour       = MSGCOL_BLACK;
@@ -579,7 +579,7 @@ void list_jewellery(void)
                  (i == EQ_RING_EIGHT) ? "8th ring"
                                       : "unknown";
 
-        std::string item;
+        string item;
         if (jewellery_id != -1 && !you_tran_can_wear(you.inv[jewellery_id])
             || !you_tran_can_wear(i))
         {
@@ -588,8 +588,7 @@ void list_jewellery(void)
         else if (jewellery_id != -1)
         {
             item = you.inv[jewellery_id].name(DESC_INVENTORY);
-            std::string
-                prefix = menu_colour_item_prefix(you.inv[jewellery_id]);
+            string prefix = menu_colour_item_prefix(you.inv[jewellery_id]);
             colour = menu_colour(item, prefix, "equip");
         }
         else
@@ -611,115 +610,22 @@ void list_jewellery(void)
     }
 }
 
-void list_weapons(void)
+void toggle_viewport_monster_hp()
 {
-    const int weapon_id = you.equip[EQ_WEAPON];
-
-    // Output the current weapon
-    //
-    // Yes, this is already on the screen... I'm outputing it
-    // for completeness and to avoid confusion.
-    std::string wstring = "Current   : ";
-    int         colour;
-
-    if (weapon_id != -1)
-    {
-        wstring += you.inv[weapon_id].name(DESC_INVENTORY_EQUIP);
-        colour = menu_colour(wstring,
-                             menu_colour_item_prefix(you.inv[weapon_id]),
-                             "equip");
-    }
-    else
-    {
-        if (you.form == TRAN_BLADE_HANDS)
-            wstring += "    blade " + blade_parts(true);
-        else if (!you_tran_can_wear(EQ_WEAPON))
-            wstring += "    (currently unavailable)";
-        else
-            wstring += "    empty " + blade_parts(true);
-        colour = menu_colour(wstring, "", "equip");
-    }
-
-    mpr(wstring.c_str(), MSGCH_EQUIPMENT, colour);
-
-    // Print out the swap slots.
-    for (int i = 0; i <= 1; ++i)
-    {
-        // We'll avoid repeating the current weapon for these slots,
-        // in order to keep things clean.
-        if (weapon_id == i)
-            continue;
-
-        if (i == 0)
-            wstring = "Primary   : ";
-        else
-            wstring = "Secondary : ";
-
-        colour = MSGCOL_BLACK;
-        if (you.inv[i].defined()
-            && (you.inv[i].base_type == OBJ_WEAPONS
-                || you.inv[i].base_type == OBJ_STAVES
-                || you.inv[i].base_type == OBJ_MISCELLANY))
-        {
-            wstring += you.inv[i].name(DESC_INVENTORY_EQUIP);
-            colour = menu_colour(wstring,
-                                 menu_colour_item_prefix(you.inv[i]),
-                                 "equip");
-        }
-        else
-            wstring += "    none";
-
-        if (colour == MSGCOL_BLACK)
-            colour = menu_colour(wstring, "", "equip");
-
-        mpr(wstring.c_str(), MSGCH_EQUIPMENT, colour);
-    }
-
-    // Now we print out the current default fire weapon.
-    wstring = "Firing    : ";
-
-    int slot = you.m_quiver->get_fire_item();
-
-    colour = MSGCOL_BLACK;
-    if (slot == -1)
-    {
-        const item_def* item;
-        you.m_quiver->get_desired_item(&item, &slot);
-        if (!item->defined())
-        {
-            wstring += "    nothing";
-        }
-        else
-        {
-            wstring += "  - ";
-            wstring += item->name(DESC_A);
-            wstring += " (empty)";
-        }
-    }
-    else
-    {
-        wstring += you.inv[slot].name(DESC_INVENTORY_EQUIP);
-        colour = menu_colour(wstring,
-                             menu_colour_item_prefix(you.inv[slot]),
-                             "equip");
-    }
-
-    if (colour == MSGCOL_BLACK)
-        colour = menu_colour(wstring, "", "equip");
-
-    mpr(wstring.c_str(), MSGCH_EQUIPMENT, colour);
+    crawl_state.viewport_monster_hp = !crawl_state.viewport_monster_hp;
+    viewwindow();
 }
 
-static bool _cmdhelp_textfilter(const std::string &tag)
+static bool _cmdhelp_textfilter(const string &tag)
 {
 #ifdef WIZARD
     if (tag == "wiz")
-        return (true);
+        return true;
 #endif
-    return (false);
+    return false;
 }
 
-static const char *targeting_help_1 =
+static const char *targetting_help_1 =
     "<h>Examine surroundings ('<w>x</w><h>' in main):\n"
     "<w>Esc</w> : cancel (also <w>Space</w>, <w>x</w>)\n"
     "<w>Dir.</w>: move cursor in that direction\n"
@@ -736,15 +642,15 @@ static const char *targeting_help_1 =
     "<w>Tab</w> : cycle through shops and portals\n"
     "<w>r</w> : move cursor to you\n"
     "<w>e</w> : create/remove travel exclusion\n"
-    "<w>Ctrl-F</w> : monster targeting modes\n"
+    "<w>Ctrl-F</w> : monster targetting modes\n"
 #ifndef USE_TILE_LOCAL
-    "<w>Ctrl-L</w> : targeting via monster list\n"
+    "<w>Ctrl-L</w> : targetting via monster list\n"
 #endif
     "<w>Ctrl-P</w> : repeat prompt\n"
 ;
 #ifdef WIZARD
-static const char *targeting_help_wiz =
-    "<h>Wizard targeting commands:</h>\n"
+static const char *targetting_help_wiz =
+    "<h>Wizard targetting commands:</h>\n"
     "<w>Ctrl-C</w> : cycle through beam paths\n"
     "<w>D</w>: get debugging information about the monster\n"
     "<w>o</w>: give item to monster\n"
@@ -764,8 +670,8 @@ static const char *targeting_help_wiz =
 ;
 #endif
 
-static const char *targeting_help_2 =
-    "<h>Targeting (zap wands, cast spells, etc.):\n"
+static const char *targetting_help_2 =
+    "<h>Targetting (zap wands, cast spells, etc.):\n"
     "Most keys from examine surroundings work.\n"
     "Some keys fire at the target. By default,\n"
     "range is respected and beams don't stop.\n"
@@ -797,10 +703,10 @@ static void _add_file_to_scroller(FILE* fp, formatted_scroller& m,
     char buf[200];
 
     // Bracket with MEL_TITLES, so that you won't scroll into it or above it.
-    m.add_entry(new MenuEntry(std::string(), MEL_TITLE));
+    m.add_entry(new MenuEntry(string(), MEL_TITLE));
     for (int i = 0; i < get_number_of_lines(); ++i)
-        m.add_entry(new MenuEntry(std::string()));
-    m.add_entry(new MenuEntry(std::string(), MEL_TITLE));
+        m.add_entry(new MenuEntry(string()));
+    m.add_entry(new MenuEntry(string(), MEL_TITLE));
 
     while (fgets(buf, sizeof buf, fp))
     {
@@ -858,10 +764,10 @@ static bool _compare_mon_names(MenuEntry *entry_a, MenuEntry* entry_b)
     monster* b = static_cast<monster* >(entry_b->data);
 
     if (a->type == b->type)
-        return (false);
+        return false;
 
-    std::string a_name = mons_type_name(a->type, DESC_PLAIN);
-    std::string b_name = mons_type_name(b->type, DESC_PLAIN);
+    string a_name = mons_type_name(a->type, DESC_PLAIN);
+    string b_name = mons_type_name(b->type, DESC_PLAIN);
     return (lowercase(a_name) < lowercase(b_name));
 }
 
@@ -873,15 +779,15 @@ static bool _compare_mon_toughness(MenuEntry *entry_a, MenuEntry* entry_b)
     monster* b = static_cast<monster* >(entry_b->data);
 
     if (a->type == b->type)
-        return (false);
+        return false;
 
     int a_toughness = mons_avg_hp(a->type);
     int b_toughness = mons_avg_hp(b->type);
 
     if (a_toughness == b_toughness)
     {
-        std::string a_name = mons_type_name(a->type, DESC_PLAIN);
-        std::string b_name = mons_type_name(b->type, DESC_PLAIN);
+        string a_name = mons_type_name(a->type, DESC_PLAIN);
+        string b_name = mons_type_name(b->type, DESC_PLAIN);
         return (lowercase(a_name) < lowercase(b_name));
     }
     return (a_toughness > b_toughness);
@@ -907,7 +813,7 @@ public:
 
     void set_prompt()
         {
-            std::string prompt = "Describe which? ";
+            string prompt = "Describe which? ";
 
             if (showing_monsters)
             {
@@ -925,9 +831,9 @@ public:
                 return;
 
             if (sort_alpha)
-                std::sort(items.begin(), items.end(), _compare_mon_names);
+                ::sort(items.begin(), items.end(), _compare_mon_names);
             else
-                std::sort(items.begin(), items.end(), _compare_mon_toughness);
+                ::sort(items.begin(), items.end(), _compare_mon_toughness);
 
             for (unsigned int i = 0, size = items.size(); i < size; i++)
             {
@@ -950,42 +856,39 @@ public:
         }
 };
 
-static std::vector<std::string> _get_desc_keys(std::string regex,
-                                               db_find_filter filter)
+static vector<string> _get_desc_keys(string regex, db_find_filter filter)
 {
-    std::vector<std::string> key_matches = getLongDescKeysByRegex(regex,
-                                                                  filter);
+    vector<string> key_matches = getLongDescKeysByRegex(regex, filter);
 
     if (key_matches.size() == 1)
-        return (key_matches);
+        return key_matches;
     else if (key_matches.size() > 52)
-        return (key_matches);
+        return key_matches;
 
-    std::vector<std::string> body_matches = getLongDescBodiesByRegex(regex,
-                                                                     filter);
+    vector<string> body_matches = getLongDescBodiesByRegex(regex, filter);
 
     if (key_matches.empty() && body_matches.empty())
-        return (key_matches);
+        return key_matches;
     else if (key_matches.empty() && body_matches.size() == 1)
-        return (body_matches);
+        return body_matches;
 
     // Merge key_matches and body_matches, discarding duplicates.
-    std::vector<std::string> tmp = key_matches;
+    vector<string> tmp = key_matches;
     tmp.insert(tmp.end(), body_matches.begin(), body_matches.end());
-    std::sort(tmp.begin(), tmp.end());
-    std::vector<std::string> all_matches;
+    sort(tmp.begin(), tmp.end());
+    vector<string> all_matches;
     for (unsigned int i = 0, size = tmp.size(); i < size; i++)
         if (i == 0 || all_matches[all_matches.size() - 1] != tmp[i])
             all_matches.push_back(tmp[i]);
 
-    return (all_matches);
+    return all_matches;
 }
 
-static std::vector<std::string> _get_monster_keys(ucs_t showchar)
+static vector<string> _get_monster_keys(ucs_t showchar)
 {
-    std::vector<std::string> mon_keys;
+    vector<string> mon_keys;
 
-    for (int i = 0; i < NUM_MONSTERS; i++)
+    for (monster_type i = MONS_0; i < NUM_MONSTERS; ++i)
     {
         if (i == MONS_PROGRAM_BUG)
             continue;
@@ -1005,12 +908,12 @@ static std::vector<std::string> _get_monster_keys(ucs_t showchar)
             mon_keys.push_back(me->name);
     }
 
-    return (mon_keys);
+    return mon_keys;
 }
 
-static std::vector<std::string> _get_god_keys()
+static vector<string> _get_god_keys()
 {
-    std::vector<std::string> names;
+    vector<string> names;
 
     for (int i = GOD_NO_GOD + 1; i < NUM_GODS; i++)
     {
@@ -1021,14 +924,14 @@ static std::vector<std::string> _get_god_keys()
     return names;
 }
 
-static std::vector<std::string> _get_branch_keys()
+static vector<string> _get_branch_keys()
 {
-    std::vector<std::string> names;
+    vector<string> names;
 
     for (int i = BRANCH_MAIN_DUNGEON; i < NUM_BRANCHES; i++)
     {
         branch_type which_branch = static_cast<branch_type>(i);
-        Branch     &branch       = branches[which_branch];
+        const Branch &branch     = branches[which_branch];
 
         // Skip unimplemented branches
         if (branch_is_unfinished(which_branch))
@@ -1036,52 +939,41 @@ static std::vector<std::string> _get_branch_keys()
 
         names.push_back(branch.shortname);
     }
-
-    //add handpicked places
-    names.push_back(place_name(
-                            get_packed_place(BRANCH_MAIN_DUNGEON, 1,
-                                static_cast<level_area_type>(LEVEL_ABYSS)), false));
-    names.push_back(place_name(
-                            get_packed_place(BRANCH_MAIN_DUNGEON, 1,
-                                static_cast<level_area_type>(LEVEL_PANDEMONIUM)), false));
-
-    return (names);
+    return names;
 }
 
-static bool _monster_filter(std::string key, std::string body)
+static bool _monster_filter(string key, string body)
 {
     int mon_num = get_monster_by_name(key.c_str(), true);
     return (mon_num == MONS_PROGRAM_BUG);
 }
 
-static bool _spell_filter(std::string key, std::string body)
+static bool _spell_filter(string key, string body)
 {
+    if (!ends_with(key, " spell"))
+        return true;
+    key.erase(key.length() - 6);
+
     spell_type spell = spell_by_name(key);
 
     if (spell == SPELL_NO_SPELL)
-        return (true);
+        return true;
 
     if (get_spell_flags(spell) & (SPFLAG_MONSTER | SPFLAG_TESTING))
-    {
-#ifdef WIZARD
-        return (!you.wizard);
-#else
-        return (true);
-#endif
-    }
+        return !you.wizard;
 
-    return (false);
+    return false;
 }
 
-static bool _item_filter(std::string key, std::string body)
+static bool _item_filter(string key, string body)
 {
     return (item_kind_by_name(key).base_type == OBJ_UNASSIGNED);
 }
 
-static bool _skill_filter(std::string key, std::string body)
+static bool _skill_filter(string key, string body)
 {
     lowercase(key);
-    std::string name;
+    string name;
     for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; i++)
     {
         skill_type sk = static_cast<skill_type>(i);
@@ -1091,48 +983,46 @@ static bool _skill_filter(std::string key, std::string body)
 
         name = lowercase_string(skill_name(sk));
 
-        if (name.find(key) != std::string::npos)
-            return (false);
+        if (name.find(key) != string::npos)
+            return false;
     }
-    return (true);
+    return true;
 }
 
-static bool _feature_filter(std::string key, std::string body)
+static bool _feature_filter(string key, string body)
 {
     return (feat_by_desc(key) == DNGN_UNSEEN);
 }
 
-static bool _card_filter(std::string key, std::string body)
+static bool _card_filter(string key, string body)
 {
-    key = lowercase_string(key);
-    std::string name;
+    lowercase(key);
 
     // Every card description contains the keyword "card".
-    if (key.find("card") != std::string::npos)
-        return (false);
+    if (!ends_with(key, " card"))
+        return true;
+    key.erase(key.length() - 5);
 
     for (int i = 0; i < NUM_CARDS; ++i)
     {
-        name = lowercase_string(card_name(static_cast<card_type>(i)));
-
-        if (name.find(key) != std::string::npos)
-            return (false);
+        if (key == lowercase_string(card_name(static_cast<card_type>(i))))
+            return false;
     }
-    return (true);
+    return true;
 }
 
-static bool _ability_filter(std::string key, std::string body)
+static bool _ability_filter(string key, string body)
 {
     lowercase(key);
     if (string_matches_ability_name(key))
-        return (false);
+        return false;
 
-    return (true);
+    return true;
 }
 
-typedef void (*db_keys_recap)(std::vector<std::string>&);
+typedef void (*db_keys_recap)(vector<string>&);
 
-static void _recap_mon_keys(std::vector<std::string> &keys)
+static void _recap_mon_keys(vector<string> &keys)
 {
     for (unsigned int i = 0, size = keys.size(); i < size; i++)
     {
@@ -1141,7 +1031,7 @@ static void _recap_mon_keys(std::vector<std::string> &keys)
     }
 }
 
-static void _recap_feat_keys(std::vector<std::string> &keys)
+static void _recap_feat_keys(vector<string> &keys)
 {
     for (unsigned int i = 0, size = keys.size(); i < size; i++)
     {
@@ -1156,9 +1046,30 @@ static void _recap_feat_keys(std::vector<std::string> &keys)
     }
 }
 
-// Extra info on this item wasn't found anywhere else.
-static void _append_non_item(std::string &desc, std::string key)
+static void _recap_card_keys(vector<string> &keys)
 {
+    for (unsigned int i = 0, size = keys.size(); i < size; i++)
+    {
+        lowercase(keys[i]);
+
+        for (int j = 0; j < NUM_CARDS; ++j)
+        {
+            card_type card = static_cast<card_type>(j);
+            if (keys[i] == lowercase_string(card_name(card)) + " card")
+            {
+                keys[i] = string(card_name(card)) + " card";
+                break;
+            }
+        }
+    }
+}
+
+// Extra info on this item wasn't found anywhere else.
+static void _append_non_item(string &desc, string key)
+{
+    if (ends_with(key, " spell"))
+        key.erase(key.length() - 6);
+
     spell_type type = spell_by_name(key);
 
     if (type == SPELL_NO_SPELL)
@@ -1173,13 +1084,10 @@ static void _append_non_item(std::string &desc, std::string key)
     }
     else if (flags & SPFLAG_MONSTER)
     {
+        // We can get here only in wizmode, the spell isn't listed otherwise.
+        // And only if it has a description -- no monster ones do.
         desc += "\nThis is a monster-only spell, only available via the "
                 "&Z wizard command.";
-    }
-    else if (flags & SPFLAG_CARD)
-    {
-        desc += "\nThis is a card-effect spell, unavailable in ordinary "
-                "spellbooks.";
     }
     else
     {
@@ -1187,28 +1095,24 @@ static void _append_non_item(std::string &desc, std::string key)
                 "file a bug report.";
     }
 
-#ifdef WIZARD
-    if (!you.wizard)
-#else
-    if (true)
-#endif
+    if (!you.wizard && (flags & (SPFLAG_TESTING | SPFLAG_MONSTER)))
     {
-        if (flags & (SPFLAG_TESTING | SPFLAG_MONSTER))
-        {
-            desc += "\n\nYou aren't in wizard mode, so you shouldn't be "
-                    "seeing this entry. Please file a bug report.";
-        }
+        desc += "\n\nYou aren't in wizard mode, so you shouldn't be "
+                "seeing this entry. Please file a bug report.";
     }
 }
 
 // Adds a list of all books/rods that contain a given spell (by name)
 // to a description string.
-static bool _append_books(std::string &desc, item_def &item, std::string key)
+static bool _append_books(string &desc, item_def &item, string key)
 {
+    if (ends_with(key, " spell"))
+        key.erase(key.length() - 6);
+
     spell_type type = spell_by_name(key, true);
 
     if (type == SPELL_NO_SPELL)
-        return (false);
+        return false;
 
     desc += "\nType:       ";
     bool already = false;
@@ -1237,8 +1141,8 @@ static bool _append_books(std::string &desc, item_def &item, std::string key)
     }
 
     set_ident_flags(item, ISFLAG_IDENT_MASK);
-    std::vector<std::string> books;
-    std::vector<std::string> rods;
+    vector<string> books;
+    vector<string> rods;
 
     item.base_type = OBJ_BOOKS;
     for (int i = 0; i < NUM_FIXED_BOOKS; i++)
@@ -1249,9 +1153,9 @@ static bool _append_books(std::string &desc, item_def &item, std::string key)
                 books.push_back(item.name(DESC_PLAIN));
             }
 
-    item.base_type = OBJ_STAVES;
+    item.base_type = OBJ_RODS;
     int book;
-    for (int i = STAFF_FIRST_ROD; i < NUM_STAVES; i++)
+    for (int i = 0; i < NUM_RODS; i++)
     {
         item.sub_type = i;
         book = item.book_number();
@@ -1287,18 +1191,18 @@ static bool _append_books(std::string &desc, item_def &item, std::string key)
         desc += comma_separated_line(rods.begin(), rods.end(), "\n", "\n");
     }
 
-    return (true);
+    return true;
 }
 
 // Returns the result of the keypress.
-static int _do_description(std::string key, std::string type,
-                            std::string footer = "")
+static int _do_description(string key, string type, const string &suffix,
+                           string footer = "")
 {
     describe_info inf;
     inf.quote = getQuoteString(key);
 
-    std::string desc = getLongDescription(key);
-    int width = std::min(80, get_number_of_cols());
+    string desc = getLongDescription(key);
+    int width = min(80, get_number_of_cols());
 
     god_type which_god = str_to_god(key);
     if (which_god != GOD_NO_GOD)
@@ -1308,7 +1212,7 @@ static int _do_description(std::string key, std::string type,
             inf.suffix = "\n\n" + god_name(which_god) +
                          " won't accept worship from undead or evil beings.";
         }
-        std::string help = get_god_powers(which_god);
+        string help = get_god_powers(which_god);
         if (!help.empty())
         {
             desc += "\n";
@@ -1363,7 +1267,7 @@ static int _do_description(std::string key, std::string type,
                 }
                 else if (type == "spell"
                          || get_item_by_name(&mitm[thing_created], name, OBJ_BOOKS)
-                         || get_item_by_name(&mitm[thing_created], name, OBJ_STAVES))
+                         || get_item_by_name(&mitm[thing_created], name, OBJ_RODS))
                 {
                     if (!_append_books(desc, mitm[thing_created], key))
                     {
@@ -1394,6 +1298,8 @@ static int _do_description(std::string key, std::string type,
 
     inf.body << desc;
 
+    if (ends_with(key, suffix))
+        key.erase(key.length() - suffix.length());
     key = uppercase_first(key);
     linebreak_string(footer, width - 1);
 
@@ -1415,26 +1321,26 @@ static bool _handle_FAQ()
     clrscr();
     viewwindow();
 
-    std::vector<std::string> question_keys = getAllFAQKeys();
+    vector<string> question_keys = getAllFAQKeys();
     if (question_keys.empty())
     {
         mpr("No questions found in FAQ! Please submit a bug report!");
-        return (false);
+        return false;
     }
     Menu FAQmenu(MF_SINGLESELECT | MF_ANYPRINTABLE | MF_ALLOW_FORMATTING);
     MenuEntry *title = new MenuEntry("Frequently Asked Questions");
     title->colour = YELLOW;
     FAQmenu.set_title(title);
-    const int width = std::min(80, get_number_of_cols());
+    const int width = get_number_of_cols();
 
     for (unsigned int i = 0, size = question_keys.size(); i < size; i++)
     {
         const char letter = index_to_letter(i);
 
-        std::string question = getFAQ_Question(question_keys[i]);
+        string question = getFAQ_Question(question_keys[i]);
         // Wraparound if the question is longer than fits into a line.
         linebreak_string(question, width - 4);
-        std::vector<formatted_string> fss;
+        vector<formatted_string> fss;
         formatted_string::parse_string_to_multiple(question, fss);
 
         MenuEntry *me;
@@ -1456,33 +1362,38 @@ static bool _handle_FAQ()
 
     while (true)
     {
-        std::vector<MenuEntry*> sel = FAQmenu.show();
+        vector<MenuEntry*> sel = FAQmenu.show();
         redraw_screen();
         if (sel.empty())
-            return (false);
+            return false;
         else
         {
             ASSERT(sel.size() == 1);
             ASSERT(sel[0]->hotkeys.size() == 1);
 
-            std::string key = *((std::string*) sel[0]->data);
-            std::string answer = getFAQ_Answer(key);
+            string key = *((string*) sel[0]->data);
+            string answer = getFAQ_Answer(key);
             if (answer.empty())
             {
                 answer = "No answer found in the FAQ! Please submit a "
                          "bug report!";
             }
             answer = "Q: " + getFAQ_Question(key) + "\n" + answer;
-            linebreak_string(answer, width - 1);
-            print_description(answer);
-            getchm();
+            linebreak_string(answer, width - 1, true);
+            {
+#ifdef USE_TILE_WEB
+                tiles_crt_control show_as_menu(CRT_MENU, "faq_entry");
+#endif
+                print_description(answer);
+                getchm();
+            }
         }
     }
 
-    return (true);
+    return true;
 }
 
-static void _find_description(bool *again, std::string *error_inout)
+static void _find_description(bool *again, string *error_inout)
 {
     *again = true;
 
@@ -1497,8 +1408,9 @@ static void _find_description(bool *again, std::string *error_inout)
         cursor_control con(true);
         ch = toupper(getchm());
     }
-    std::string    type;
-    std::string    extra;
+    string    type;
+    string    extra;
+    string    suffix;
     db_find_filter filter     = NULL;
     db_keys_recap  recap      = NULL;
     bool           want_regex = true;
@@ -1524,6 +1436,7 @@ static void _find_description(bool *again, std::string *error_inout)
     case 'S':
         type         = "spell";
         filter       = _spell_filter;
+        suffix       = " spell";
         doing_spells = true;
         break;
     case 'K':
@@ -1537,6 +1450,8 @@ static void _find_description(bool *again, std::string *error_inout)
     case 'C':
         type   = "card";
         filter = _card_filter;
+        suffix = " card";
+        recap  = _recap_card_keys;
         break;
     case 'I':
         type        = "item";
@@ -1572,7 +1487,7 @@ static void _find_description(bool *again, std::string *error_inout)
         return;
     }
 
-    std::string regex = "";
+    string regex = "";
 
     if (want_regex)
     {
@@ -1611,13 +1526,13 @@ static void _find_description(bool *again, std::string *error_inout)
     if (want_regex && !(*filter)(regex, ""))
     {
         // Try to get an exact match first.
-        std::string desc = getLongDescription(regex);
+        string desc = getLongDescription(regex + suffix);
 
         if (!desc.empty())
             exact_match = true;
     }
 
-    std::vector<std::string> key_list;
+    vector<string> key_list;
 
     if (by_mon_symbol)
         key_list = _get_monster_keys(regex[0]);
@@ -1665,7 +1580,7 @@ static void _find_description(bool *again, std::string *error_inout)
         }
         else
         {
-            std::ostringstream os;
+            ostringstream os;
             os << "Too many matching " << pluralise(type)
                << " (" << key_list.size() << ") to display.";
             *error_inout = os.str();
@@ -1674,22 +1589,22 @@ static void _find_description(bool *again, std::string *error_inout)
     }
     else if (key_list.size() == 1)
     {
-        _do_description(key_list[0], type);
+        _do_description(key_list[0], type, suffix);
         return;
     }
 
     if (exact_match)
     {
-        std::string footer = "This entry is an exact match for '";
+        string footer = "This entry is an exact match for '";
         footer += regex;
         footer += "'. To see non-exact matches, press space.";
 
-        if (_do_description(regex, type, footer) != ' ')
+        if (_do_description(regex, type, suffix, footer) != ' ')
             return;
     }
 
     if (want_sort)
-        std::sort(key_list.begin(), key_list.end());
+        sort(key_list.begin(), key_list.end());
 
     // For tiles builds use a tiles menu to display monsters.
     const bool text_only =
@@ -1703,12 +1618,15 @@ static void _find_description(bool *again, std::string *error_inout)
                        MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING,
                        doing_mons, text_only);
     desc_menu.set_tag("description");
-    std::list<monster_info> monster_list;
-    std::list<item_def> item_list;
+    list<monster_info> monster_list;
+    list<item_def> item_list;
     for (unsigned int i = 0, size = key_list.size(); i < size; i++)
     {
-        const char  letter = index_to_letter(i);
-        std::string str    = uppercase_first(key_list[i]);
+        const char letter = index_to_letter(i);
+        string     str    = uppercase_first(key_list[i]);
+
+        if (ends_with(str, suffix)) // perhaps we should assert this?
+            str.erase(str.length() - suffix.length());
 
         MenuEntry *me = NULL;
 
@@ -1747,7 +1665,7 @@ static void _find_description(bool *again, std::string *error_inout)
             if (colour == BLACK)
                 colour = LIGHTGREY;
 
-            std::string prefix = "(<";
+            string prefix = "(<";
             prefix += colour_to_str(colour);
             prefix += ">";
             prefix += stringize_glyph(mons_char(m_type));
@@ -1770,8 +1688,7 @@ static void _find_description(bool *again, std::string *error_inout)
             me = new GodMenuEntry(str_to_god(key_list[i]));
         else
         {
-            me = new MenuEntry(uppercase_first(key_list[i]), MEL_ITEM, 1,
-                               letter);
+            me = new MenuEntry(str, MEL_ITEM, 1, letter);
 
 #ifdef USE_TILE
             if (doing_spells)
@@ -1794,7 +1711,7 @@ static void _find_description(bool *again, std::string *error_inout)
 
     while (true)
     {
-        std::vector<MenuEntry*> sel = desc_menu.show();
+        vector<MenuEntry*> sel = desc_menu.show();
         redraw_screen();
         if (sel.empty())
         {
@@ -1806,9 +1723,9 @@ static void _find_description(bool *again, std::string *error_inout)
         else
         {
             ASSERT(sel.size() == 1);
-            ASSERT(sel[0]->hotkeys.size() == 1);
+            ASSERT(sel[0]->hotkeys.size() >= 1);
 
-            std::string key;
+            string key;
 
             if (doing_mons)
             {
@@ -1818,9 +1735,9 @@ static void _find_description(bool *again, std::string *error_inout)
             else if (doing_features)
                 key = sel[0]->text;
             else
-                key = *((std::string*) sel[0]->data);
+                key = *((string*) sel[0]->data);
 
-            _do_description(key, type);
+            _do_description(key, type, suffix);
         }
     }
 }
@@ -1828,7 +1745,7 @@ static void _find_description(bool *again, std::string *error_inout)
 static void _keyhelp_query_descriptions()
 {
     bool again = false;
-    std::string error;
+    string error;
     do
     {
         // resets 'again'
@@ -1891,14 +1808,14 @@ static int _keyhelp_keyfilter(int ch)
 class help_highlighter : public MenuHighlighter
 {
 public:
-    help_highlighter(std::string = "");
+    help_highlighter(string = "");
     int entry_colour(const MenuEntry *entry) const;
 private:
     text_pattern pattern;
-    std::string get_species_key() const;
+    string get_species_key() const;
 };
 
-help_highlighter::help_highlighter(std::string highlight_string) :
+help_highlighter::help_highlighter(string highlight_string) :
     pattern(highlight_string == "" ? get_species_key() : highlight_string)
 {
 }
@@ -1909,22 +1826,22 @@ int help_highlighter::entry_colour(const MenuEntry *entry) const
 }
 
 // To highlight species in aptitudes list. ('?%')
-std::string help_highlighter::get_species_key() const
+string help_highlighter::get_species_key() const
 {
-    std::string result = species_name(you.species);
+    string result = species_name(you.species);
     // The table doesn't repeat the word "Draconian".
     if (you.species != SP_BASE_DRACONIAN && player_genus(GENPC_DRACONIAN))
         strip_tag(result, "Draconian");
 
     result += "  ";
-    return (result);
+    return result;
 }
 ////////////////////////////////////////////////////////////////////////////
 
-static int _show_keyhelp_menu(const std::vector<formatted_string> &lines,
+static int _show_keyhelp_menu(const vector<formatted_string> &lines,
                               bool with_manual, bool easy_exit = false,
                               int hotkey = 0,
-                              std::string highlight_string = "")
+                              string highlight_string = "")
 {
     formatted_scroller cmd_help;
 
@@ -1988,7 +1905,7 @@ static int _show_keyhelp_menu(const std::vector<formatted_string> &lines,
             "<w>F</w>.      Monsters\n"
             "<w>G</w>.      Items\n"
             "<w>H</w>.      Spellcasting\n"
-            "<w>I</w>.      Targeting\n"
+            "<w>I</w>.      Targetting\n"
             "<w>J</w>.      Religion\n"
             "<w>K</w>.      Mutations\n"
             "<w>L</w>.      Licence, Contact, History\n"
@@ -2002,7 +1919,7 @@ static int _show_keyhelp_menu(const std::vector<formatted_string> &lines,
             "<w>6</w>.      Inscriptions\n",
             true, true, _cmdhelp_textfilter);
 
-        std::vector<formatted_string> blines = cols.formatted_lines();
+        vector<formatted_string> blines = cols.formatted_lines();
         unsigned i;
         for (i = 0; i < blines.size(); ++i)
             cmd_help.add_item_formatted_string(blines[i]);
@@ -2011,7 +1928,7 @@ static int _show_keyhelp_menu(const std::vector<formatted_string> &lines,
             cmd_help.add_item_string("");
 
         // unscrollable
-        cmd_help.add_entry(new MenuEntry(std::string(), MEL_TITLE));
+        cmd_help.add_entry(new MenuEntry(string(), MEL_TITLE));
     }
 
     for (unsigned i = 0; i < lines.size(); ++i)
@@ -2022,7 +1939,7 @@ static int _show_keyhelp_menu(const std::vector<formatted_string> &lines,
         for (int i = 0; help_files[i].name != NULL; ++i)
         {
             // Attempt to open this file, skip it if unsuccessful.
-            std::string fname = canonicalise_file_separator(help_files[i].name);
+            string fname = canonicalise_file_separator(help_files[i].name);
             FILE* fp = fopen_u(datafile_path(fname, false).c_str(), "r");
 
             if (!fp)
@@ -2030,7 +1947,7 @@ static int _show_keyhelp_menu(const std::vector<formatted_string> &lines,
 
             // Put in a separator...
             cmd_help.add_item_string("");
-            cmd_help.add_item_string(std::string(get_number_of_cols()-1,'='));
+            cmd_help.add_item_string(string(get_number_of_cols()-1,'='));
             cmd_help.add_item_string("");
 
             // ...and the file itself.
@@ -2050,10 +1967,10 @@ static int _show_keyhelp_menu(const std::vector<formatted_string> &lines,
     return cmd_help.getkey();
 }
 
-static void _show_specific_help(const std::string &help)
+static void _show_specific_help(const string &help)
 {
-    std::vector<std::string> lines = split_string("\n", help, false, true);
-    std::vector<formatted_string> formatted_lines;
+    vector<string> lines = split_string("\n", help, false, true);
+    vector<formatted_string> formatted_lines;
     for (int i = 0, size = lines.size(); i < size; ++i)
     {
         formatted_lines.push_back(
@@ -2073,18 +1990,23 @@ void show_pickup_menu_help()
     _show_specific_help(getHelpString("pick-up"));
 }
 
-void show_targeting_help()
+void show_known_menu_help()
+{
+    _show_specific_help(getHelpString("known-menu"));
+}
+
+void show_targetting_help()
 {
     column_composer cols(2, 40);
     // Page size is number of lines - one line for --more-- prompt.
     cols.set_pagesize(get_number_of_lines() - 1);
 
-    cols.add_formatted(0, targeting_help_1, true, true);
+    cols.add_formatted(0, targetting_help_1, true, true);
 #ifdef WIZARD
     if (you.wizard)
-        cols.add_formatted(0, targeting_help_wiz, true, true);
+        cols.add_formatted(0, targetting_help_wiz, true, true);
 #endif
-    cols.add_formatted(1, targeting_help_2, true, true);
+    cols.add_formatted(1, targetting_help_2, true, true);
     _show_keyhelp_menu(cols.formatted_lines(), false, Options.easy_exit_menu);
 }
 void show_interlevel_travel_branch_help()
@@ -2114,18 +2036,18 @@ void show_skill_menu_help()
 
 static void _add_command(column_composer &cols, const int column,
                          const command_type cmd,
-                         const std::string desc,
+                         const string desc,
                          const unsigned int space_to_colon = 7)
 {
-    std::string command_name = command_to_string(cmd);
+    string command_name = command_to_string(cmd);
     if (strcmp(command_name.c_str(), "<") == 0)
         command_name += "<";
 
     const int cmd_len = strwidth(command_name);
-    std::string line = "<w>" + command_name + "</w>";
+    string line = "<w>" + command_name + "</w>";
     for (unsigned int i = cmd_len; i < space_to_colon; ++i)
         line += " ";
-    line += ": " + desc + "\n";
+    line += ": " + untag_tiles_console(desc) + "\n";
 
     cols.add_formatted(
             column,
@@ -2135,7 +2057,7 @@ static void _add_command(column_composer &cols, const int column,
 
 static void _add_insert_commands(column_composer &cols, const int column,
                                  const unsigned int space_to_colon,
-                                 const std::string &desc, const int first, ...)
+                                 const string &desc, const int first, ...)
 {
     const command_type cmd = (command_type) first;
 
@@ -2143,7 +2065,7 @@ static void _add_insert_commands(column_composer &cols, const int column,
     va_start(args, first);
     int nargs = 10;
 
-    std::vector<command_type> cmd_vector;
+    vector<command_type> cmd_vector;
     while (nargs-- > 0)
     {
         int value = va_arg(args, int);
@@ -2154,16 +2076,16 @@ static void _add_insert_commands(column_composer &cols, const int column,
     }
     va_end(args);
 
-    std::string line = desc;
+    string line = desc;
     insert_commands(line, cmd_vector);
     line += "\n";
     _add_command(cols, column, cmd, line, space_to_colon);
 }
 
 static void _add_insert_commands(column_composer &cols, const int column,
-                                 const std::string desc, const int first, ...)
+                                 const string desc, const int first, ...)
 {
-    std::vector<command_type> cmd_vector;
+    vector<command_type> cmd_vector;
     cmd_vector.push_back((command_type) first);
 
     va_list args;
@@ -2180,7 +2102,7 @@ static void _add_insert_commands(column_composer &cols, const int column,
     }
     va_end(args);
 
-    std::string line = desc;
+    string line = desc;
     insert_commands(line, cmd_vector);
     line += "\n";
     cols.add_formatted(
@@ -2273,7 +2195,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
     _add_insert_commands(cols, 0, "<lightgrey>/</lightgrey> : wands (e<w>%</w>oke)",
                          CMD_EVOKE, 0);
 
-    std::string item_types = "<lightcyan>";
+    string item_types = "<lightcyan>";
     item_types += stringize_glyph(get_item_symbol(SHOW_ITEM_BOOK));
     item_types +=
         "</lightcyan> : books (<w>%</w>ead, <w>%</w>emorise, <w>%</w>ap, <w>%</w>ap)";
@@ -2338,7 +2260,9 @@ static void _add_formatted_keyhelp(column_composer &cols)
 
     _add_command(cols, 1, CMD_SAVE_GAME, "Save game and exit");
     _add_command(cols, 1, CMD_SAVE_GAME_NOW, "Save and exit without query");
-    _add_command(cols, 1, CMD_QUIT, "Quit without saving");
+    _add_command(cols, 1, CMD_QUIT, "Suicide the current character");
+    cols.add_formatted(1, "         and quit the game\n",
+                       false, true, _cmdhelp_textfilter);
 
     cols.add_formatted(
             1,
@@ -2353,7 +2277,6 @@ static void _add_formatted_keyhelp(column_composer &cols)
     _add_command(cols, 1, CMD_DISPLAY_KNOWN_OBJECTS, "show item knowledge", 2);
     _add_command(cols, 1, CMD_DISPLAY_RUNES, "show runes collected", 2);
     _add_command(cols, 1, CMD_LIST_ARMOUR, "display worn armour", 2);
-    _add_command(cols, 1, CMD_LIST_WEAPONS, "display current weapons", 2);
     _add_command(cols, 1, CMD_LIST_JEWELLERY, "display worn jewellery", 2);
     _add_command(cols, 1, CMD_LIST_GOLD, "display gold in possession", 2);
     _add_command(cols, 1, CMD_EXPERIENCE_CHECK, "display experience info", 2);
@@ -2373,11 +2296,15 @@ static void _add_formatted_keyhelp(column_composer &cols)
     cols.add_formatted(1, "         pickup part of a single stack\n",
                        false, true, _cmdhelp_textfilter);
 
-
     _add_command(cols, 1, CMD_LOOK_AROUND, "eXamine surroundings/targets");
     _add_insert_commands(cols, 1, 7, "eXamine level map (<w>%?</w> for help)",
                          CMD_DISPLAY_MAP, CMD_DISPLAY_MAP, 0);
-    _add_command(cols, 1, CMD_FULL_VIEW, "list monsters, items, features in view");
+    _add_command(cols, 1, CMD_FULL_VIEW, "list monsters, items, features");
+    cols.add_formatted(1, "         in view\n",
+                       false, true, _cmdhelp_textfilter);
+    _add_command(cols, 1, CMD_SHOW_TERRAIN, "toggle terrain-only view");
+    if (!is_tiles())
+        _add_command(cols, 1, CMD_TOGGLE_VIEWPORT_MONSTER_HP, "colour monsters in view by HP");
     _add_command(cols, 1, CMD_DISPLAY_OVERMAP, "show dungeon Overview");
     _add_command(cols, 1, CMD_TOGGLE_AUTOPICKUP, "toggle auto-pickup");
     _add_command(cols, 1, CMD_TOGGLE_FRIENDLY_PICKUP, "change ally pickup behaviour");
@@ -2395,8 +2322,8 @@ static void _add_formatted_keyhelp(column_composer &cols)
     _add_command(cols, 1, CMD_QUIVER_ITEM, "select item slot to be quivered", 2);
 
     {
-        std::string interact = (you.species == SP_VAMPIRE ? "Drain corpses"
-                                                          : "Eat food");
+        string interact = (you.species == SP_VAMPIRE ? "Drain corpses"
+                                                     : "Eat food");
         interact += " (tries floor first)\n";
         _add_command(cols, 1, CMD_EAT, interact, 2);
     }
@@ -2436,8 +2363,8 @@ static void _add_formatted_keyhelp(column_composer &cols)
     _add_command(cols, 1, CMD_BUTCHER, "Chop up a corpse", 2);
 
     {
-        std::string interact = (you.species == SP_VAMPIRE ? "Drain corpses on"
-                                                          : "Eat food from");
+        string interact = (you.species == SP_VAMPIRE ? "Drain corpses on"
+                                                     : "Eat food from");
         interact += " floor\n";
         _add_command(cols, 1, CMD_EAT, interact, 2);
     }
@@ -2447,10 +2374,10 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "<h>Additional help:\n",
             true, true, _cmdhelp_textfilter);
 
-    std::string text =
+    string text =
             "Many commands have context sensitive "
             "help, among them <w>%</w>, <w>%</w>, <w>%</w> (or any "
-            "form of targeting), <w>%</w>, and <w>%</w>.\n"
+            "form of targetting), <w>%</w>, and <w>%</w>.\n"
             "You can read descriptions of your "
             "current spells (<w>%</w>), skills (<w>%?</w>) and "
             "abilities (<w>%!</w>).";
@@ -2538,80 +2465,58 @@ static void _add_formatted_hints_help(column_composer &cols)
             false, true, _cmdhelp_textfilter);
 
     _add_insert_commands(cols, 1,
-#ifndef USE_TILE
-                         "<cyan>)</cyan> : "
-#endif
+                         "<console><cyan>)</cyan> : </console>"
                          "hand weapons (<w>%</w>ield)",
                          CMD_WIELD_WEAPON, 0);
     _add_insert_commands(cols, 1,
-#ifndef USE_TILE
-                         "<brown>(</brown> : "
-#endif
+                         "<console><brown>(</brown> : </console>"
                          "missiles (<w>%</w>uiver, <w>%</w>ire, <w>%</w>/<w>%</w> cycle)",
                          CMD_QUIVER_ITEM, CMD_FIRE, CMD_CYCLE_QUIVER_FORWARD,
                          CMD_CYCLE_QUIVER_BACKWARD, 0);
     _add_insert_commands(cols, 1,
-#ifndef USE_TILE
-                         "<cyan>[</cyan> : "
-#endif
+                         "<console><cyan>[</cyan> : </console>"
                          "armour (<w>%</w>ear and <w>%</w>ake off)",
                          CMD_WEAR_ARMOUR, CMD_REMOVE_ARMOUR, 0);
     _add_insert_commands(cols, 1,
-#ifndef USE_TILE
-                         "<brown>percent</brown> : "
-#endif
+                         "<console><brown>percent</brown> : </console>"
                          "corpses and food (<w>%</w>hop up and <w>%</w>at)",
                          CMD_BUTCHER, CMD_EAT, 0);
     _add_insert_commands(cols, 1,
-#ifndef USE_TILE
-                         "<w>?</w> : "
-#endif
+                         "<console><w>?</w> : </console>"
                          "scrolls (<w>%</w>ead)",
                          CMD_READ, 0);
     _add_insert_commands(cols, 1,
-#ifndef USE_TILE
-                         "<magenta>!</magenta> : "
-#endif
+                         "<console><magenta>!</magenta> : </console>"
                          "potions (<w>%</w>uaff)",
                          CMD_QUAFF, 0);
     _add_insert_commands(cols, 1,
-#ifndef USE_TILE
-                         "<blue>=</blue> : "
-#endif
+                         "<console><blue>=</blue> : </console>"
                          "rings (<w>%</w>ut on and <w>%</w>emove)",
                          CMD_WEAR_JEWELLERY, CMD_REMOVE_JEWELLERY, 0);
     _add_insert_commands(cols, 1,
-#ifndef USE_TILE
-                         "<red>\"</red> : "
-#endif
+                         "<console><red>\"</red> : </console>"
                          "amulets (<w>%</w>ut on and <w>%</w>emove)",
                          CMD_WEAR_JEWELLERY, CMD_REMOVE_JEWELLERY, 0);
     _add_insert_commands(cols, 1,
-#ifndef USE_TILE
-                         "<lightgrey>/</lightgrey> : "
-#endif
+                         "<console><lightgrey>/</lightgrey> : </console>"
                          "wands (e<w>%</w>oke)",
                          CMD_EVOKE, 0);
 
-    std::string item_types =
-#ifndef USE_TILE
-                  "<lightcyan>";
+    string item_types =
+                  "<console><lightcyan>";
     item_types += stringize_glyph(get_item_symbol(SHOW_ITEM_BOOK));
     item_types +=
-        "</lightcyan> : "
-#endif
+        "</lightcyan> : </console>"
         "books (<w>%</w>ead, <w>%</w>emorise, <w>%</w>ap, <w>%</w>ap)";
     _add_insert_commands(cols, 1, item_types,
                          CMD_READ, CMD_MEMORISE_SPELL, CMD_CAST_SPELL,
                          CMD_FORCE_CAST_SPELL, 0);
 
     item_types =
-#ifndef USE_TILE
-                  "<brown>";
+                  "<console><brown>";
     item_types += stringize_glyph(get_item_symbol(SHOW_ITEM_STAVE));
     item_types +=
-        "</brown> : "
-#endif
+        "</brown> : </console>"
         "staves and rods (<w>%</w>ield and e<w>%</w>oke)";
     _add_insert_commands(cols, 1, item_types,
                          CMD_WIELD_WEAPON, CMD_EVOKE_WIELDED, 0);
@@ -2637,7 +2542,7 @@ static void _add_formatted_hints_help(column_composer &cols)
 
     cols.add_formatted(
             1,
-            "\n<h>Targeting\n"
+            "\n<h>Targetting\n"
             "<w>Enter</w> or <w>.</w> or <w>Del</w> : confirm target\n"
             "<w>+</w> and <w>-</w> : cycle between targets\n"
             "<w>f</w> or <w>p</w> : shoot at previous target\n"
@@ -2645,8 +2550,7 @@ static void _add_formatted_hints_help(column_composer &cols)
             false, true, _cmdhelp_textfilter);
 }
 
-void list_commands(int hotkey, bool do_redraw_screen,
-                   std::string highlight_string)
+void list_commands(int hotkey, bool do_redraw_screen, string highlight_string)
 {
     // 2 columns, split at column 40.
     column_composer cols(2, 41);
@@ -2693,13 +2597,12 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>_</w>      : gain religion\n"
                        "<w>^</w>      : set piety to a value\n"
                        "<w>@</w>      : set Str Int Dex\n"
+                       "<w>#</w>      : load character from a dump file\n"
                        "<w>Z</w>      : gain lots of Zot Points\n"
                        "\n"
                        "<yellow>Create level features</yellow>\n"
-                       "<w>l</w>      : make entrance to labyrinth\n"
                        "<w>L</w>      : place a vault by name\n"
-                       "<w>p</w>      : make entrance to pandemonium\n"
-                       "<w>P</w>      : make a portal\n"
+                       "<w>p</w>      : make a portal\n"
                        "<w>T</w>      : make a trap\n"
                        "<w><<</w>/<w>></w>    : create up/down staircase\n"
                        "<w>(</w>      : turn cell into feature\n"
@@ -2722,7 +2625,8 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>}</w>      : detect all traps on level\n"
                        "<w>)</w>      : change Shoals' tide speed\n"
                        "<w>Ctrl-E</w> : dump level builder information\n"
-                       "<w>Ctrl-R</w> : regenerate current level\n",
+                       "<w>Ctrl-R</w> : regenerate current level\n"
+                       "<w>P</w>      : create a level based on a vault\n",
                        true, true);
 
     cols.add_formatted(1,
@@ -2735,8 +2639,10 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>Ctrl-H</w> : set hunger state\n"
                        "<w>X</w>      : make Xom do something now\n"
                        "<w>z</w>      : cast spell by number/name\n"
+                       "<w>Ctrl-M</w> : memorise spell\n"
                        "<w>W</w>      : god wrath\n"
                        "<w>w</w>      : god mollification\n"
+                       "<w>Ctrl-P</w> : polymorph into a form\n"
                        "<w>Ctrl-V</w> : toggle xray vision\n"
                        "\n"
                        "<yellow>Monster related commands</yellow>\n"
@@ -2759,9 +2665,9 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>J</w>      : Jiyva off-level sacrifice\n"
                        "\n"
                        "<yellow>Debugging commands</yellow>\n"
-                       "<w>f</w>      : player combat damage stats\n"
-                       "<w>F</w>      : combat stats with fsim_kit\n"
-                       "<w>Ctrl-F</w> : combat stats (monster vs PC)\n"
+                       "<w>f</w>      : quick fight simulation\n"
+                       "<w>F</w>      : single scale fsim\n"
+                       "<w>Ctrl-F</w> : double scale fsim\n"
                        "<w>Ctrl-I</w> : item generation stats\n"
                        "<w>O</w>      : measure exploration time\n"
                        "<w>Ctrl-t</w> : enter in-game Lua interpreter\n"

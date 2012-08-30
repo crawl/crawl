@@ -1,0 +1,40 @@
+%%%%
+amulet
+
+Błyskotka do zawieszenia na szyi.
+%%%%
+book
+
+Księga czarów. Lepiej być ostrożnym, jako że co potężniejsze grymuary
+zdecydowanie nie są zabawkami, ani dla dzieci, ani dla dorosłych którzy cenią
+swe życie.
+%%%%
+deck of cards
+
+Talia potężnych magicznych kart namalowanych juchą demonów. Odkrycie każdej
+karty może przynieść jeden z wielu efektów: pomocnych lub groźnych.
+%%%%
+potion
+
+Mała buteleczka pełna płynu.
+%%%%
+ring
+
+Błyskotka którą możesz wsadzić na palec.
+%%%%
+rod
+
+Kijek zawierający jakieś czary.
+%%%%
+scroll
+
+Zwój papieru pokryty magicznym pismem.
+%%%%
+magical staff
+
+Kij, który może wesprzeć czary maga nim władającego.
+%%%%
+wand
+
+Patyk — być może zaczarowany.
+%%%%

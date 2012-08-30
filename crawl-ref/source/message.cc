@@ -13,7 +13,6 @@
 #include "format.h"
 #include "initfile.h"
 #include "libutil.h"
-#include "macro.h"
 #include "menu.h"
 #include "mon-stuff.h"
 #include "notes.h"
@@ -38,7 +37,7 @@
 #include "luaterp.h"
 #endif
 
-static bool _ends_in_punctuation(const std::string& text)
+static bool _ends_in_punctuation(const string& text)
 {
     switch (text[text.size() - 1])
     {
@@ -60,9 +59,9 @@ struct message_item
 {
     msg_channel_type    channel;        // message channel
     int                 param;          // param for channel (god, enchantment)
-    std::string         text;           // text of message (tagged string...)
+    string              text;           // text of message (tagged string...)
     int                 repeats;
-    long                turn;
+    int                 turn;
     bool                join;           // may this message be joined with
                                         // others?
 
@@ -71,7 +70,7 @@ struct message_item
     {
     }
 
-    message_item(std::string msg, msg_channel_type chan, int par, bool jn)
+    message_item(string msg, msg_channel_type chan, int par, bool jn)
         : channel(chan), param(par), text(msg), repeats(1),
           turn(you.num_turns)
     {
@@ -80,8 +79,7 @@ struct message_item
     }
 
     // Constructor for restored messages.
-    message_item(std::string msg, msg_channel_type chan, int par,
-                 int rep, int trn)
+    message_item(string msg, msg_channel_type chan, int par, int rep, int trn)
         : channel(chan), param(par), text(msg), repeats(rep),
           turn(trn), join(false)
     {
@@ -92,15 +90,15 @@ struct message_item
         return (repeats > 0);
     }
 
-    std::string pure_text() const
+    string pure_text() const
     {
         return formatted_string::parse_string(text).tostring();
     }
 
-    std::string with_repeats() const
+    string with_repeats() const
     {
         // TODO: colour the repeats indicator?
-        std::string rep = "";
+        string rep = "";
         if (repeats > 1)
             rep = make_stringf(" x%d", repeats);
         return (text + rep);
@@ -135,7 +133,7 @@ struct message_item
             {
                 // Note that join stays true.
 
-                std::string sep = "<lightgrey>";
+                string sep = "<lightgrey>";
                 int seplen = 1;
                 if (!_ends_in_punctuation(pure_text()))
                 {
@@ -274,7 +272,7 @@ static glyph _prefix_glyph(prefix_type p)
         g.col = LIGHTGRAY;
         break;
     }
-    return (g);
+    return g;
 }
 
 static bool _pre_more();
@@ -286,7 +284,7 @@ class message_window
     int next_line;
     int temp_line;     // starting point of temporary messages
     int input_line;    // last line-after-input
-    std::vector<formatted_string> lines;
+    vector<formatted_string> lines;
     prefix_type prompt; // current prefix prompt
 
     int height() const
@@ -296,7 +294,7 @@ class message_window
 
     int use_last_line() const
     {
-        return (first_col_more());
+        return first_col_more();
     }
 
     int width() const
@@ -316,10 +314,21 @@ class message_window
     //       and then just writing the actual non-empty lines.
     void place_cursor() const
     {
+        // XXX: the screen may have resized since the last time we
+        //  called lines.resize().  We can't actually resize lines
+        //  here because this is a const method.  Consider only the
+        //  last height() lines if this has happened.
+        const int diff = max(int(lines.size()) - height(), 0);
+
         int i;
-        for (i = lines.size() - 1; i >= 0 && lines[i].width() == 0; --i);
-        if (i >= 0 && (int) lines[i].width() < crawl_view.msgsz.x)
-            cgotoxy(lines[i].width() + 1, i + 1, GOTO_MSG);
+        for (i = lines.size() - 1; i >= diff && lines[i].width() == 0; --i);
+        if (i >= diff && (int) lines[i].width() < crawl_view.msgsz.x)
+            cgotoxy(lines[i].width() + 1, i - diff + 1, GOTO_MSG);
+        else if (i < diff)
+        {
+            // If there were no lines, put the cursor at the upper left.
+            cgotoxy(1, 1, GOTO_MSG);
+        }
     }
 
     // Whether to show msgwin-full more prompts.
@@ -339,7 +348,7 @@ class message_window
         int s = 0;
         if (input_line > 0)
         {
-            s = std::min(input_line, n - space);
+            s = min(input_line, n - space);
             scroll(s);
             space += s;
         }
@@ -361,7 +370,7 @@ class message_window
         else
         {
             clear();
-            return (height());
+            return height();
         }
     }
 
@@ -463,8 +472,15 @@ public:
         // XXX: this should not be necessary as formatted_string should
         //      already do it
         textcolor(LIGHTGREY);
-        for (size_t i = 0; i < lines.size(); ++i)
-            out_line(lines[i], i);
+
+        // XXX: the screen may have resized since the last time we
+        //  called lines.resize().  We can't actually resize lines
+        //  here because this is a const method.  Display the last
+        //  height() lines if this has happened.
+        const int diff = max(int(lines.size()) - height(), 0);
+
+        for (size_t i = diff; i < lines.size(); ++i)
+            out_line(lines[i], i - diff);
         place_cursor();
 #ifdef USE_TILE
         tiles.set_need_redraw();
@@ -473,12 +489,12 @@ public:
 
     // temporary: to be overwritten with next item, e.g. new turn
     //            leading dash or prompt without response
-    void add_item(std::string text, prefix_type first_col = P_NONE,
+    void add_item(string text, prefix_type first_col = P_NONE,
                   bool temporary = false)
     {
         prompt = P_NONE; // reset prompt
 
-        std::vector<formatted_string> newlines;
+        vector<formatted_string> newlines;
         linebreak_string(text, out_width());
         formatted_string::parse_string_to_multiple(text, newlines);
 
@@ -500,7 +516,7 @@ public:
 
     void roll_back()
     {
-        temp_line = std::max(temp_line, 0);
+        temp_line = max(temp_line, 0);
         for (int i = temp_line; i < next_line; ++i)
             lines[i].clear();
         next_line = temp_line;
@@ -555,7 +571,7 @@ public:
             textcolor(channel_to_colour(MSGCH_PROMPT));
             if (crawl_state.game_is_hints())
             {
-                std::string more_str = "--more-- Press Space ";
+                string more_str = "--more-- Press Space ";
 #ifdef USE_TILE
                 more_str += "or click ";
 #endif
@@ -618,7 +634,7 @@ public:
 
     bool have_prev()
     {
-        return (prev_msg);
+        return prev_msg;
     }
 
     void store_msg(const message_item& msg)
@@ -684,12 +700,12 @@ public:
 };
 
 // Circular buffer for keeping past messages.
-message_store messages;
+message_store buffer;
 
 static FILE* _msg_dump_file = NULL;
 
 static bool suppress_messages = false;
-static msg_colour_type prepare_message(const std::string& imsg,
+static msg_colour_type prepare_message(const string& imsg,
                                        msg_channel_type channel,
                                        int param);
 
@@ -711,7 +727,7 @@ msg_colour_type msg_colour(int col)
 static int colour_msg(msg_colour_type col)
 {
     if (col == MSGCOL_MUTED)
-        return (DARKGREY);
+        return DARKGREY;
     else
         return static_cast<int>(col);
 }
@@ -720,7 +736,7 @@ static int colour_msg(msg_colour_type col)
 static msg_colour_type channel_to_msgcol(msg_channel_type channel, int param)
 {
     if (you.asleep())
-        return (MSGCOL_DARKGREY);
+        return MSGCOL_DARKGREY;
 
     msg_colour_type ret;
 
@@ -850,7 +866,7 @@ static msg_colour_type channel_to_msgcol(msg_channel_type channel, int param)
         break;
     }
 
-    return (ret);
+    return ret;
 }
 
 int channel_to_colour(msg_channel_type channel, int param)
@@ -935,11 +951,22 @@ void dprf(const char *format, ...)
     do_message_print(MSGCH_DIAGNOSTICS, 0, false, format, argp);
     va_end(argp);
 }
+
+void dprf(diag_type param, const char *format, ...)
+{
+    if (Options.quiet_debug_messages[param])
+        return;
+
+    va_list  argp;
+    va_start(argp, format);
+    do_message_print(MSGCH_DIAGNOSTICS, param, false, format, argp);
+    va_end(argp);
+}
 #endif
 
 static bool _updating_view = false;
 
-static bool check_more(const std::string& line, msg_channel_type channel)
+static bool check_more(const string& line, msg_channel_type channel)
 {
     for (unsigned i = 0; i < Options.force_more_message.size(); ++i)
         if (Options.force_more_message[i].is_filtered(channel, line))
@@ -947,7 +974,7 @@ static bool check_more(const std::string& line, msg_channel_type channel)
     return false;
 }
 
-static bool check_join(const std::string& line, msg_channel_type channel)
+static bool check_join(const string& line, msg_channel_type channel)
 {
     switch (channel)
     {
@@ -987,13 +1014,13 @@ static void debug_channel_arena(msg_channel_type channel)
     }
 }
 
-bool strip_channel_prefix(std::string &text, msg_channel_type &channel, bool silence)
+bool strip_channel_prefix(string &text, msg_channel_type &channel, bool silence)
 {
-    std::string::size_type pos = text.find(":");
-    if (pos == std::string::npos)
+    string::size_type pos = text.find(":");
+    if (pos == string::npos)
         return false;
 
-    std::string param = text.substr(0, pos);
+    string param = text.substr(0, pos);
     bool sound = false;
 
     if (param == "WARN")
@@ -1035,20 +1062,20 @@ void msgwin_set_temporary(bool temp)
     _temporary = temp;
     if (!temp)
     {
-        messages.reset_temp();
+        buffer.reset_temp();
         msgwin.reset_temp();
     }
 }
 
 void msgwin_clear_temporary()
 {
-    messages.roll_back();
+    buffer.roll_back();
     msgwin.roll_back();
 }
 
-static long _last_msg_turn = -1; // Turn of last message.
+static int _last_msg_turn = -1; // Turn of last message.
 
-void mpr(std::string text, msg_channel_type channel, int param, bool nojoin, bool cap)
+void mpr(string text, msg_channel_type channel, int param, bool nojoin, bool cap)
 {
     if (_msg_dump_file != NULL)
         fprintf(_msg_dump_file, "%s\n", text.c_str());
@@ -1085,33 +1112,31 @@ void mpr(std::string text, msg_channel_type channel, int param, bool nojoin, boo
     msg_colour_type colour = prepare_message(text, channel, param);
 
     if (colour == MSGCOL_MUTED)
+    {
+        if (channel == MSGCH_PROMPT)
+            msgwin.show();
         return;
+    }
 
     bool domore = check_more(text, channel);
     bool join = !domore && !nojoin && check_join(text, channel);
 
     // Must do this before converting to formatted string and back;
     // that doesn't preserve close tags!
-    std::string col = colour_to_str(colour_msg(colour));
+    string col = colour_to_str(colour_msg(colour));
     text = "<" + col + ">" + text + "</" + col + ">"; // XXX
 
+    formatted_string fs = formatted_string::parse_string(text);
     if (you.duration[DUR_QUAD_DAMAGE])
-    {
-        // No sound, so we simulate the reverb with all caps.
-        formatted_string fs = formatted_string::parse_string(text);
-        fs.all_caps();
-        text = fs.to_colour_string();
-    }
+        fs.all_caps(); // No sound, so we simulate the reverb with all caps.
     else if (cap)
-    {
-        // Hate, hate, hate tagged strings.
-        formatted_string fs = formatted_string::parse_string(text);
         fs.capitalize();
-        text = fs.to_colour_string();
-    }
+    if (channel != MSGCH_ERROR && channel != MSGCH_DIAGNOSTICS)
+        fs.filter_lang();
+    text = fs.to_colour_string();
 
     message_item msg = message_item(text, channel, param, join);
-    messages.add(msg);
+    buffer.add(msg);
     _last_msg_turn = msg.turn;
 
     if (channel == MSGCH_ERROR)
@@ -1124,7 +1149,7 @@ void mpr(std::string text, msg_channel_type channel, int param, bool nojoin, boo
         more(true);
 }
 
-static std::string show_prompt(std::string prompt)
+static string show_prompt(string prompt)
 {
     mpr(prompt, MSGCH_PROMPT);
 
@@ -1133,14 +1158,14 @@ static std::string show_prompt(std::string prompt)
     return colour_string(prompt, colour_msg(colour));
 }
 
-static std::string _prompt;
-void msgwin_prompt(std::string prompt)
+static string _prompt;
+void msgwin_prompt(string prompt)
 {
     msgwin_set_temporary(true);
     _prompt = show_prompt(prompt);
 }
 
-void msgwin_reply(std::string reply)
+void msgwin_reply(string reply)
 {
     msgwin_clear_temporary();
     msgwin_set_temporary(false);
@@ -1154,7 +1179,7 @@ void msgwin_got_input()
     msgwin.got_input();
 }
 
-int msgwin_get_line(std::string prompt, char *buf, int len,
+int msgwin_get_line(string prompt, char *buf, int len,
                     input_history *mh, int (*keyproc)(int& c))
 {
     if (prompt != "")
@@ -1167,7 +1192,7 @@ int msgwin_get_line(std::string prompt, char *buf, int len,
 
 void msgwin_new_turn()
 {
-    messages.new_turn();
+    buffer.new_turn();
 }
 
 void msgwin_new_cmd()
@@ -1189,14 +1214,14 @@ unsigned int msgwin_lines()
 
 // mpr() an arbitrarily long list of strings without truncation or risk
 // of overflow.
-void mpr_comma_separated_list(const std::string &prefix,
-                              const std::vector<std::string> &list,
-                              const std::string &andc,
-                              const std::string &comma,
+void mpr_comma_separated_list(const string &prefix,
+                              const vector<string> &list,
+                              const string &andc,
+                              const string &comma,
                               const msg_channel_type channel,
                               const int param)
 {
-    std::string out = prefix;
+    string out = prefix;
 
     for (int i = 0, size = list.size(); i < size; i++)
     {
@@ -1215,7 +1240,7 @@ void mpr_comma_separated_list(const std::string &prefix,
 
 // Checks whether a given message contains patterns relevant for
 // notes, stop_running or sounds and handles these cases.
-static void mpr_check_patterns(const std::string& message,
+static void mpr_check_patterns(const string& message,
                                msg_channel_type channel,
                                int param)
 {
@@ -1263,15 +1288,15 @@ static bool channel_message_history(msg_channel_type channel)
     case MSGCH_PROMPT:
     case MSGCH_EQUIPMENT:
     case MSGCH_EXAMINE_FILTER:
-       return (false);
+       return false;
     default:
-       return (true);
+       return true;
     }
 }
 
 // Returns the default colour of the message, or MSGCOL_MUTED if
 // the message should be suppressed.
-static msg_colour_type prepare_message(const std::string& imsg,
+static msg_colour_type prepare_message(const string& imsg,
                                        msg_channel_type channel,
                                        int param)
 {
@@ -1289,9 +1314,9 @@ static msg_colour_type prepare_message(const std::string& imsg,
     if (colour != MSGCOL_MUTED)
         mpr_check_patterns(imsg, channel, param);
 
-    const std::vector<message_colour_mapping>& mcm
+    const vector<message_colour_mapping>& mcm
                = Options.message_colour_mappings;
-    typedef std::vector<message_colour_mapping>::const_iterator mcmci;
+    typedef vector<message_colour_mapping>::const_iterator mcmci;
 
     for (mcmci ci = mcm.begin(); ci != mcm.end(); ++ci)
     {
@@ -1307,7 +1332,7 @@ static msg_colour_type prepare_message(const std::string& imsg,
 
 void flush_prev_message()
 {
-    messages.flush_prev();
+    buffer.flush_prev();
 }
 
 void mesclr(bool force)
@@ -1317,7 +1342,7 @@ void mesclr(bool force)
     // Unflushed message will be lost with clear_messages,
     // so they shouldn't really exist, but some of the delay
     // code appears to do this intentionally.
-    // ASSERT(!messages.have_prev());
+    // ASSERT(!buffer.have_prev());
     flush_prev_message();
 
     msgwin.got_input(); // Consider old messages as read.
@@ -1405,18 +1430,18 @@ static bool is_channel_dumpworthy(msg_channel_type channel)
 
 void clear_message_store()
 {
-    messages.clear();
+    buffer.clear();
 }
 
-std::string get_last_messages(int mcount)
+string get_last_messages(int mcount)
 {
     flush_prev_message();
 
-    std::string text;
+    string text;
     // XXX: should use some message_history iterator here
-    const store_t& msgs = messages.get_store();
+    const store_t& msgs = buffer.get_store();
     // XXX: loop wraps around otherwise. This could be done better.
-    mcount = std::min(mcount, NUM_STORED_MESSAGES);
+    mcount = min(mcount, NUM_STORED_MESSAGES);
     for (int i = -1; mcount > 0; --i)
     {
         const message_item msg = msgs[i];
@@ -1435,11 +1460,28 @@ std::string get_last_messages(int mcount)
     return text;
 }
 
+void get_recent_messages(vector<string> &mess,
+                         vector<msg_channel_type> &chan)
+{
+    flush_prev_message();
+
+    const store_t& msgs = buffer.get_store();
+    int mcount = NUM_STORED_MESSAGES;
+    for (int i = -1; mcount > 0; --i, --mcount)
+    {
+        const message_item msg = msgs[i];
+        if (!msg)
+            break;
+        mess.push_back(msg.pure_text());
+        chan.push_back(msg.channel);
+    }
+}
+
 // We just write out the whole message store including empty/unused
 // messages. They'll be ignored when restoring.
 void save_messages(writer& outf)
 {
-    store_t msgs = messages.get_store();
+    store_t msgs = buffer.get_store();
     marshallInt(outf, msgs.size());
     for (int i = 0; i < msgs.size(); ++i)
     {
@@ -1458,7 +1500,7 @@ void load_messages(reader& inf)
     int num = unmarshallInt(inf);
     for (int i = 0; i < num; ++i)
     {
-        std::string text;
+        string text;
         unmarshallString4(inf, text);
 
         msg_channel_type channel = (msg_channel_type) unmarshallInt(inf);
@@ -1468,7 +1510,7 @@ void load_messages(reader& inf)
 
         message_item msg(message_item(text, channel, param, repeats, turn));
         if (msg)
-            messages.store_msg(msg);
+            buffer.store_msg(msg);
     }
     // With Options.message_clear, we don't want the message window
     // pre-filled.
@@ -1482,13 +1524,13 @@ void replay_messages(void)
                         "<cyan>[up/<< : Page up.    down/Space/> : Page down."
                         "                         Esc exits.]</cyan>"));
 
-    const store_t msgs = messages.get_store();
+    const store_t msgs = buffer.get_store();
     for (int i = 0; i < msgs.size(); ++i)
         if (channel_message_history(msgs[i].channel))
         {
-            std::string text = msgs[i].with_repeats();
+            string text = msgs[i].with_repeats();
             linebreak_string(text, cgetsize(GOTO_CRT).x - 1);
-            std::vector<formatted_string> parts;
+            vector<formatted_string> parts;
             formatted_string::parse_string_to_multiple(text, parts);
             for (unsigned int j = 0; j < parts.size(); ++j)
             {

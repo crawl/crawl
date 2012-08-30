@@ -1,11 +1,13 @@
 %%%%
 Centaur
 
-Swift, strong and bulky, they need more food than other species.
+Swift, strong and bulky, Centaurs need more food than other species. They are
+particularly skilled with ranged weaponry.
 %%%%
 Deep Dwarf
 
-They live deep underground and cannot regenerate health naturally, but they are resilient and have tools to heal.
+Deep Dwarves live underground and cannot regenerate health naturally, but they
+are very resilient to damage and carry tools to heal.
 %%%%
 Deep Elf
 
@@ -13,27 +15,33 @@ The most magic-affine elf, but also the most fragile.
 %%%%
 Demigod
 
-They will never follow a god, but Demigods make up for this with divine attributes and health.
+They will never follow a god, but Demigods make up for this with divine
+attributes and health.
 %%%%
 Demonspawn
 
-Demonspawn are half human, half demon. They acquire strong demonic mutations as they grow.
+Demonspawn are half human, half demon. They acquire strong demonic mutations as
+they grow.
 %%%%
 Draconian
 
-Draconians are versatile hybrids. They mature when reaching level 7 and develop a colour.
+Draconians are versatile hybrids. They mature when reaching level 7 and develop
+a colour.
 %%%%
 Felid
 
-These cats possess sentience, but are incapable of advanced item manipulation or the use of armour or weapons.
+These many-lived cats possess sentience, but are incapable of advanced item
+manipulation or the use of armour or weapons.
 %%%%
 Ghoul
 
-An undead, damned to rot eternally. They are always looking for rotten food to eat, hacking away with their claws.
+An undead, damned to rot eternally. They are always looking for rotten food to
+eat, hacking away with their claws.
 %%%%
 Halfling
 
-Small but hardy, they excel with slings. They have a limited resistance to mutagenic effects.
+Small but hardy, Halflings excel with slings. They have an increased resistance
+to mutagenic effects.
 %%%%
 High Elf
 
@@ -41,7 +49,8 @@ Proud elves, who can cast spells as well as they can fight with the sword.
 %%%%
 Hill Orc
 
-Orcs are skilled in close combat, and often dabble in offensive magic. Hated by most, orcs are very proud and many of them feel superior.
+Orcs are skilled in close combat, and often dabble in offensive magic. Hated by
+most, orcs are very proud and many of them feel superior.
 %%%%
 Human
 
@@ -49,31 +58,33 @@ Mundane and average.
 %%%%
 Tengu
 
-Bird-people who love to fight, both with weapons and spells. They are quite fragile, but they learn to fly later on.
+Bird-people who love to fight, both with weapons and spells. They are quite
+fragile, but they learn to fly swiftly later on.
 %%%%
 Kobold
 
-Small, mischievous and a little fragile, but multi-talented. They can and will eat any meat.
+Small, mischievous and a little fragile, but multi-talented. They can and will
+eat any meat.
 %%%%
 Merfolk
 
-Half fish, half human, the merfolk are citizens of both water and land.
+Half fish, half human, Merfolk are citizens of both water and land. They are
+strong combatants, and adept at using magic to assist in battle.
 %%%%
 Minotaur
 
-A large muscular human with the head of a bull. They excel at all forms of close and ranged combat.
-%%%%
-Mountain Dwarf
-
-Sturdy, strong and not too intelligent, they love heavy weapons and armours.
+A large muscular human with the head of a bull. They excel at all forms of
+close and ranged combat.
 %%%%
 Mummy
 
-An undead figure covered in bandages and embalming fluids, compelled to walk by an ancient curse.
+An undead figure covered in bandages and embalming fluids, compelled to walk by
+an ancient curse.
 %%%%
 Naga
 
-A hybrid; human from the chest up, with a scaly, muscular torso trailing off like that of a snake.
+A hybrid; human from the chest up, with a scaly, muscular torso trailing off
+like that of a snake. They move slowly but are naturally resilient.
 %%%%
 Nome
 
@@ -81,25 +92,31 @@ A gravel-skinned humanoid able to swim through solid rock.
 %%%%
 Octopode
 
-A species of amphibious cephalopods. They can wear eight rings, but almost no armour fits them.
+A species of amphibious cephalopods. They can wear eight rings, but almost no
+armour fits them.
 %%%%%%%%
 Ogre
 
-Large and strong, they're mostly seen as brutes. Ogres are very comfortable with the basics of magic, however.
+Large and strong, they're mostly seen as brutes. Ogres are very comfortable
+with the basics of magic, however.
 %%%%
 Sludge Elf
 
-A depraved type of elf, who prefers cunning to fair fighting, and dark magic to other wizardry.
+A depraved type of elf, who prefers cunning to fair fighting, and dark magic to
+other wizardry.
 %%%%
 Spriggan
 
-Very small, very frail and very fast. Spriggans make highly competent stabbers and spellcasters.
+Very small, very frail and very fast. Spriggans make highly competent stabbers
+and spellcasters.
 %%%%
 Troll
 
-Large brutes, ready to maim anything with their claws, never thinking twice. They're always hungry.
+Large brutes, ready to maim anything with their claws, never thinking twice.
+They're always hungry.
 %%%%
 Vampire
 
-Shifting between the states of life and undeath, they're accomplished stabbers and casters.
+Shifting between the states of life and undeath, they're accomplished stabbers
+and casters.
 %%%%

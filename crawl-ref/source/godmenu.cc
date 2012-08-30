@@ -18,7 +18,7 @@ GodMenuEntry::GodMenuEntry(god_type god_, bool long_name) :
         hotkeys.push_back('1');
     else
     {
-        //hotkeys.push_back(txt.at(0));
+        hotkeys.push_back(text.at(0));
         hotkeys.push_back(tolower(text.at(0)));
     }
     int c = god_message_altar_colour(god);
@@ -26,14 +26,14 @@ GodMenuEntry::GodMenuEntry(god_type god_, bool long_name) :
     data = &text;
 }
 
-std::string GodMenuEntry::get_text(const bool unused) const
+string GodMenuEntry::get_text(const bool unused) const
 {
     if (level == MEL_ITEM && hotkeys.size())
     {
         char buf[300];
         snprintf(buf, sizeof buf, " <%s>%c</%s> %c %s",  colour_text.c_str(),
                  hotkeys[0], colour_text.c_str(), preselected ? '+' : '-', text.c_str());
-        return std::string(buf);
+        return string(buf);
     }
     return text;
 }

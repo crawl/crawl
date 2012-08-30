@@ -4,7 +4,6 @@
 
 #include "cio.h"
 #include "menu.h"
-#include "options.h"
 #include "tilefont.h"
 #include "tilereg-crt.h"
 #include "viewgeom.h"
@@ -62,9 +61,7 @@ void CRTRegion::render()
 
     // render the attached menu if it exists
     if (m_attached_menu != NULL)
-    {
         m_attached_menu->draw_menu();
-    }
 }
 
 void CRTRegion::attach_menu(PrecisionMenu* menu)

@@ -49,7 +49,7 @@
 #pragma warning(disable : 4996)
 
 
-inline double round(double x)
+static inline double round(double x)
 {
     if (x >= 0.0)
         return floor(x + 0.5);
@@ -57,32 +57,32 @@ inline double round(double x)
         return ceil(x - 0.5);
 }
 
-inline double sqrt(int x)
+static inline double sqrt(int x)
 {
     return sqrt((double)x);
 }
 
-inline double atan2(int x, int y)
+static inline double atan2(int x, int y)
 {
     return atan2((double)x, (double)y);
 }
 
-inline double pow(int x, double y)
+static inline double pow(int x, double y)
 {
     return pow((double)x, y);
 }
 
-inline double pow(int x, int y)
+static inline double pow(int x, int y)
 {
     return pow((double)x, y);
 }
 
-inline double log(int x)
+static inline double log(int x)
 {
     return log((double)x);
 }
 
-//this is targeting for struct member name in store.h, nothing else gets affected as of 0.9.0
+//this is targetting for struct member name in store.h, nothing else gets affected as of 0.9.0
 #define _int64 var_int64
 
 //missing in sys/types.h

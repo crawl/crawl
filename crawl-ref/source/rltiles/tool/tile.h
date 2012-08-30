@@ -4,6 +4,10 @@
 #include "tile_colour.h"
 #include <string>
 #include <vector>
+#include <stdio.h>
+using namespace std;
+
+extern FILE* logfile;
 
 class tile
 {
@@ -12,8 +16,8 @@ public:
     tile(const tile &img, const char *enumnam = NULL, const char *parts = NULL);
     virtual ~tile();
 
-    bool load(const std::string &new_filename);
-    bool load(const std::string &new_filename, const std::string &new_enumname);
+    bool load(const string &new_filename);
+    bool load(const string &new_filename, const string &new_enumname);
 
     void unload();
     bool valid() const;
@@ -32,11 +36,11 @@ public:
     void replace_colour(tile_colour &find, tile_colour &replace);
     void fill(const tile_colour &col);
 
-    const std::string &filename() const;
+    const string &filename() const;
     int enumcount() const;
-    const std::string &enumname(int idx) const;
-    void add_enumname(const std::string &name);
-    const std::string &parts_ctg() const;
+    const string &enumname(int idx) const;
+    void add_enumname(const string &name);
+    const string &parts_ctg() const;
     int width() const;
     int height() const;
     bool shrink();
@@ -51,9 +55,9 @@ public:
 protected:
     int m_width;
     int m_height;
-    std::string m_filename;
-    std::vector<std::string> m_enumname;
-    std::string m_parts_ctg;
+    string m_filename;
+    vector<string> m_enumname;
+    string m_parts_ctg;
     tile_colour *m_pixels;
     bool m_shrink;
 

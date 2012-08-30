@@ -31,7 +31,7 @@ los_def& los_def::operator=(const los_def& los)
     init(los.center, *los.opc, los.bds);
     show = los.show;
     arena = los.arena;
-    return (*this);
+    return *this;
 }
 
 void los_def::init(const coord_def &c, const opacity_func &o,
@@ -48,7 +48,7 @@ void los_def::init_arena(const coord_def& c)
 {
     center = c;
     arena = true;
-    set_bounds(circle_def(LOS_MAX_RADIUS, C_SQUARE));
+    set_bounds(circle_def(LOS_RADIUS, C_SQUARE));
 }
 
 los_def::~los_def()
@@ -84,35 +84,35 @@ void los_def::set_bounds(const circle_def &b)
 
 circle_def los_def::get_bounds() const
 {
-    return (circle_def(center, bds));
+    return circle_def(center, bds);
 }
 
 bool los_def::in_bounds(const coord_def& p) const
 {
-    return (bds.contains(p - center));
+    return bds.contains(p - center);
 }
 
 bool los_def::see_cell(const coord_def& p) const
 {
     if (arena)
-        return (in_bounds(p));
+        return in_bounds(p);
     const coord_def sp = p - center;
     return (sp.rdist() <= LOS_MAX_RANGE && show(sp));
 }
 
 coord_def los_glob::get_center() const
 {
-    return (center);
+    return center;
 }
 
 circle_def los_glob::get_bounds() const
 {
-    return (circle_def(center, bds));
+    return circle_def(center, bds);
 }
 
 bool los_glob::in_bounds(const coord_def& p) const
 {
-    return (bds.contains(p - center));
+    return bds.contains(p - center);
 }
 
 bool los_glob::see_cell(const coord_def& p) const
@@ -125,5 +125,5 @@ los_glob& los_glob::operator=(const los_glob& los)
     lt = los.lt;
     center = los.center;
     bds = los.bds;
-    return (*this);
+    return *this;
 }

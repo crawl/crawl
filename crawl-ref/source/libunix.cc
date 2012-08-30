@@ -26,7 +26,7 @@
 #include "defines.h"
 
 #include "cio.h"
-#include "delay.h"
+#include "crash.h"
 #include "enum.h"
 #include "externs.h"
 #include "libutil.h"
@@ -75,19 +75,19 @@ static unsigned int convert_to_curses_attr(int chattr)
 {
     switch (chattr & CHATTR_ATTRMASK)
     {
-    case CHATTR_STANDOUT:       return (A_STANDOUT);
-    case CHATTR_BOLD:           return (A_BOLD);
-    case CHATTR_BLINK:          return (A_BLINK);
-    case CHATTR_UNDERLINE:      return (A_UNDERLINE);
-    case CHATTR_REVERSE:        return (A_REVERSE);
-    case CHATTR_DIM:            return (A_DIM);
-    default:                    return (A_NORMAL);
+    case CHATTR_STANDOUT:       return A_STANDOUT;
+    case CHATTR_BOLD:           return A_BOLD;
+    case CHATTR_BLINK:          return A_BLINK;
+    case CHATTR_UNDERLINE:      return A_UNDERLINE;
+    case CHATTR_REVERSE:        return A_REVERSE;
+    case CHATTR_DIM:            return A_DIM;
+    default:                    return A_NORMAL;
     }
 }
 
 static inline short macro_colour(short col)
 {
-    return (Options.colour[ col ]);
+    return Options.colour[ col ];
 }
 
 // Translate DOS colors to curses.
@@ -185,7 +185,7 @@ static int proc_mouse_event(int c, const MEVENT *me)
     crawl_view.mousep.y = me->y + 1;
 
     if (!crawl_state.mouse_enabled)
-        return (CK_MOUSE_MOVE);
+        return CK_MOUSE_MOVE;
 
     c_mouse_event cme(crawl_view.mousep);
     if (me->bstate & BUTTON1_CLICKED)
@@ -208,10 +208,10 @@ static int proc_mouse_event(int c, const MEVENT *me)
     if (cme)
     {
         new_mouse_event(cme);
-        return (CK_MOUSE_CLICK);
+        return CK_MOUSE_CLICK;
     }
 
-    return (CK_MOUSE_MOVE);
+    return CK_MOUSE_MOVE;
 }
 #endif
 
@@ -219,6 +219,10 @@ static int pending = 0;
 
 int getchk()
 {
+    // If we have (or wait for) actual keyboard input, it's not an infinite
+    // loop.
+    watchdog();
+
     if (pending)
     {
         int c = pending;
@@ -268,10 +272,14 @@ int m_getch()
             c = proc_mouse_event(c, &me);
         }
 #endif
-    } while ((c == CK_MOUSE_MOVE || c == CK_MOUSE_CLICK)
-             && !crawl_state.mouse_enabled);
+    } while (
+#ifdef KEY_RESIZE
+             c == -KEY_RESIZE ||
+#endif
+             ((c == CK_MOUSE_MOVE || c == CK_MOUSE_CLICK)
+                 && !crawl_state.mouse_enabled));
 
-    return (c);
+    return c;
 }
 
 int getch_ck()
@@ -390,7 +398,12 @@ void console_startup(void)
     termio_init();
 
 #ifdef CURSES_USE_KEYPAD
-    write(1, KPADAPP, strlen(KPADAPP));
+    // If hardening is enabled (default on recent distributions), glibc
+    // declares write() with __attribute__((warn_unused_result)) which not
+    // only spams when not relevant, but cannot even be selectively hushed
+    // by (void) casts like all other such warnings.
+    // "if ();" is an unsightly hack...
+    if (write(1, KPADAPP, strlen(KPADAPP))) {};
 #endif
 
 #ifdef USE_UNIX_SIGNALS
@@ -422,6 +435,8 @@ void console_startup(void)
 
     scrollok(stdscr, FALSE);
 
+    // Must call refresh() for ncurses to update COLS and LINES.
+    refresh();
     crawl_view.init_geometry();
 
     set_mouse_enabled(false);
@@ -433,16 +448,13 @@ void console_startup(void)
 
 void console_shutdown()
 {
-#ifdef USE_TILE_WEB
-    tiles.shutdown();
-#endif
-
     // resetty();
     endwin();
 
     tcsetattr(0, TCSAFLUSH, &def_term);
 #ifdef CURSES_USE_KEYPAD
-    write(1, KPADCUR, strlen(KPADCUR));
+    // "if ();" to avoid undisableable spurious warning.
+    if (write(1, KPADCUR, strlen(KPADCUR))) {};
 #endif
 
 #ifdef USE_UNIX_SIGNALS
@@ -528,12 +540,17 @@ void clear_to_end_of_line(void)
 
 int get_number_of_lines(void)
 {
-    return (LINES);
+    return LINES;
 }
 
 int get_number_of_cols(void)
 {
-    return (COLS);
+    return COLS;
+}
+
+int num_to_lines(int num)
+{
+    return num;
 }
 
 void clrscr()
@@ -558,7 +575,7 @@ void set_cursor_enabled(bool enabled)
 
 bool is_cursor_enabled()
 {
-    return (cursor_is_enabled);
+    return cursor_is_enabled;
 }
 
 bool is_smart_cursor_enabled()
@@ -570,7 +587,7 @@ void enable_smart_cursor(bool dummy)
 {
 }
 
-inline unsigned get_brand(int col)
+static inline unsigned get_brand(int col)
 {
     return (col & COLFLAG_FRIENDLY_MONSTER) ? Options.friend_brand :
            (col & COLFLAG_NEUTRAL_MONSTER)  ? Options.neutral_brand :
@@ -717,26 +734,30 @@ void gotoxy_sys(int x, int y)
 }
 
 typedef cchar_t char_info;
-inline bool operator == (const cchar_t &a, const cchar_t &b)
+static inline bool operator == (const cchar_t &a, const cchar_t &b)
 {
     return (a.attr == b.attr && *a.chars == *b.chars);
 }
-inline char_info character_at(int y, int x)
+
+static inline char_info character_at(int y, int x)
 {
     cchar_t c;
     // (void) is to hush an incorrect clang warning.
     (void)mvin_wch(y, x, &c);
-    return (c);
+    return c;
 }
-inline bool valid_char(const cchar_t &c)
+
+static inline bool valid_char(const cchar_t &c)
 {
     return *c.chars;
 }
-inline void write_char_at(int y, int x, const cchar_t &ch)
+
+static inline void write_char_at(int y, int x, const cchar_t &ch)
 {
     move(y, x);
     add_wchnstr(&ch, 1);
 }
+
 static void flip_colour(cchar_t &ch)
 {
     const unsigned colour = (ch.attr & A_COLOR);

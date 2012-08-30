@@ -69,7 +69,7 @@ bool feat_is_traversable(dungeon_feature_type feat);
 bool is_unknown_stair(const coord_def &p);
 
 void find_travel_pos(const coord_def& youpos, int *move_x, int *move_y,
-                     std::vector<coord_def>* coords = NULL);
+                     vector<coord_def>* coords = NULL);
 
 bool is_stair_exclusion(const coord_def &p);
 
@@ -99,10 +99,9 @@ command_type travel();
 
 int travel_direction(uint8_t branch, int subdungeondepth);
 
-void prevent_travel_to(const std::string &dungeon_feature_name);
+void prevent_travel_to(const string &dungeon_feature_name);
 
 // Sort dungeon features as appropriate.
-void arrange_features(std::vector<coord_def> &features);
 int level_distance(level_id first, level_id second);
 level_id find_deepest_explored(level_id curr);
 bool branch_entered(branch_type branch);
@@ -120,13 +119,13 @@ enum translevel_prompt_flags
     TPF_ALLOW_UPDOWN      = 0x2,
     TPF_REMEMBER_TARGET   = 0x4,
     TPF_SHOW_ALL_BRANCHES = 0x8,
+    TPF_SHOW_PORTALS_ONLY = 0x10,
 
     TPF_DEFAULT_OPTIONS   = TPF_ALLOW_WAYPOINTS | TPF_ALLOW_UPDOWN
                                                 | TPF_REMEMBER_TARGET,
 };
 
-travel_target prompt_translevel_target(int prompt_flags,
-        std::string& dest_name);
+travel_target prompt_translevel_target(int prompt_flags, string& dest_name);
 
 // Magic numbers for point_distance:
 
@@ -188,7 +187,7 @@ enum explore_stop_type
     ES_GREEDY_VISITED_ITEM_STACK = 0x0040,
 
     // Explored into view of a stair, shop, altar, portal, glowing
-    // item, or artefact.
+    // item, artefact, or branch entrance.
     ES_STAIR                     = 0x0080,
     ES_SHOP                      = 0x0100,
     ES_ALTAR                     = 0x0200,
@@ -196,6 +195,10 @@ enum explore_stop_type
     ES_GLOWING_ITEM              = 0x0800,
     ES_ARTEFACT                  = 0x1000,
     ES_RUNE                      = 0x2000,
+    ES_BRANCH                    = 0x4000,
+
+    // Explored into view of an item which can be sacrificied
+    ES_GREEDY_SACRIFICEABLE      = 0x8000,
 };
 
 ////////////////////////////////////////////////////////////////////////////
@@ -245,11 +248,11 @@ public:
 private:
     template <class Z> struct named_thing
     {
-        std::string name;
+        string name;
         Z thing;
 
-        named_thing(const std::string &n, Z t) : name(n), thing(t) { }
-        operator std::string () const { return name; }
+        named_thing(const string &n, Z t) : name(n), thing(t) { }
+        operator string () const { return name; }
 
         bool operator == (const named_thing<Z> &other) const
         {
@@ -258,29 +261,28 @@ private:
     };
 
     bool can_autopickup;
+    bool sacrifice;
     int es_flags;
     const LevelStashes *current_level;
-    std::vector< named_thing<item_def> > items;
-    std::vector< named_thing<int> > stairs;
-    std::vector< named_thing<int> > portals;
-    std::vector< named_thing<int> > shops;
-    std::vector< named_thing<int> > altars;
+    vector< named_thing<item_def> > items;
+    vector< named_thing<int> > stairs;
+    vector< named_thing<int> > portals;
+    vector< named_thing<int> > shops;
+    vector< named_thing<int> > altars;
 
-    std::vector<std::string> marker_msgs;
-    std::vector<std::string> marked_feats;
+    vector<string> marker_msgs;
+    vector<string> marked_feats;
 
 private:
     template <class C> void say_any(const C &coll, const char *category) const;
     template <class citer> bool has_duplicates(citer, citer) const;
 
-    std::string cleaned_feature_description(const coord_def &) const;
+    string cleaned_feature_description(const coord_def &) const;
     void add_item(const item_def &item);
     void add_stair(const named_thing<int> &stair);
-    std::vector<std::string> apply_quantities(
-        const std::vector< named_thing<int> > &v) const;
-    bool merge_feature(
-        std::vector< named_thing<int> > &v,
-        const named_thing<int> &feat) const;
+    vector<string> apply_quantities(const vector< named_thing<int> > &v) const;
+    bool merge_feature(vector< named_thing<int> > &v,
+                       const named_thing<int> &feat) const;
 };
 
 struct stair_info
@@ -313,7 +315,7 @@ public:
     void save(writer&) const;
     void load(reader&);
 
-    std::string describe() const;
+    string describe() const;
 
     bool can_travel() const { return (type == PHYSICAL); }
 };
@@ -329,7 +331,7 @@ struct LevelInfo
     void save(writer&) const;
     void load(reader&, int minorVersion);
 
-    std::vector<stair_info> &get_stairs()
+    vector<stair_info> &get_stairs()
     {
         return stairs;
     }
@@ -372,9 +374,9 @@ struct LevelInfo
 private:
     // Gets a list of coordinates of all player-known stairs on the current
     // level.
-    static void get_stairs(std::vector<coord_def> &stairs);
+    static void get_stairs(vector<coord_def> &stairs);
 
-    void correct_stair_list(const std::vector<coord_def> &s);
+    void correct_stair_list(const vector<coord_def> &s);
     void update_stair_distances();
     void sync_all_branch_stairs();
     void sync_branch_stairs(const stair_info *si);
@@ -382,12 +384,12 @@ private:
     void fixup();
 
 private:
-    std::vector<stair_info> stairs;
+    vector<stair_info> stairs;
 
     // Squares that are not safe to travel to.
     exclude_set excludes;
 
-    std::vector<short> stair_distances;  // Dist between stairs
+    vector<short> stair_distances;  // Dist between stairs
     level_id id;
 
     friend class TravelCache;
@@ -413,7 +415,7 @@ public:
 
     LevelInfo *find_level_info(const level_id &lev)
     {
-        std::map<level_id, LevelInfo>::iterator i = levels.find(lev);
+        map<level_id, LevelInfo>::iterator i = levels.find(lev);
         return (i != levels.end()? &i->second : NULL);
     }
 
@@ -427,7 +429,7 @@ public:
     {
         return levels.find(lev) != levels.end();
     }
-    std::vector<level_id> known_levels() const;
+    vector<level_id> known_levels() const;
 
     const level_pos &get_waypoint(int number) const
     {
@@ -461,7 +463,7 @@ private:
     void fixup_levels();
 
 private:
-    typedef std::map<level_id, LevelInfo> travel_levels_map;
+    typedef map<level_id, LevelInfo> travel_levels_map;
     travel_levels_map levels;
     level_pos waypoints[TRAVEL_WAYPOINT_COUNT];
 };
@@ -494,12 +496,12 @@ public:
     void set_distance_grid(travel_distance_grid_t distgrid);
 
     // Set feature vector to use; if non-NULL, also sets annotate_map to true.
-    void set_feature_vector(std::vector<coord_def> *features);
+    void set_feature_vector(vector<coord_def> *features);
 
     // Extract features without pathfinding
     void get_features();
 
-    const std::set<coord_def> get_unreachables() const;
+    const set<coord_def> get_unreachables() const;
 
     // The next square to go to to move towards the travel destination. Return
     // value is undefined if pathfind was not called with RMODE_TRAVEL.
@@ -570,6 +572,12 @@ protected:
     // Are we greedy exploring?
     bool need_for_greed;
 
+    // Can we autopickup?
+    bool autopickup;
+
+    // Does god wants sacrifices?
+    bool sacrifice;
+
     // Targets for explore and greedy explore.
     coord_def unexplored_place, greedy_place;
 
@@ -580,12 +588,12 @@ protected:
 
     // For double-floods, the points to restart floodfill from at the end of
     // the first flood.
-    std::vector<coord_def> reseed_points;
+    vector<coord_def> reseed_points;
 
-    std::vector<coord_def> *features;
+    vector<coord_def> *features;
 
     // List of unexplored and unreachable points.
-    std::set<coord_def> unreachables;
+    set<coord_def> unreachables;
 
     travel_distance_col *point_distance;
 
@@ -621,14 +629,7 @@ int click_travel(const coord_def &gc, bool force);
 bool check_for_interesting_features();
 void clear_level_target();
 
-class level_id_iterator : public std::iterator<std::forward_iterator_tag, level_id>
-{
-public:
-    level_id_iterator();
-    operator bool() const;
-    level_id operator *() const;
-    void operator++();
-private:
-    level_id cur;
-};
+void clear_travel_trail();
+int travel_trail_index(const coord_def& gc);
+
 #endif // TRAVEL_H

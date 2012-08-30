@@ -168,10 +168,10 @@ void MapRegion::set(const coord_def &gc, map_feature f)
         return;
 
     // Get map extents
-    m_min_gx = std::min(m_min_gx, gc.x);
-    m_max_gx = std::max(m_max_gx, gc.x);
-    m_min_gy = std::min(m_min_gy, gc.y);
-    m_max_gy = std::max(m_max_gy, gc.y);
+    m_min_gx = min(m_min_gx, gc.x);
+    m_max_gx = max(m_max_gx, gc.x);
+    m_min_gy = min(m_min_gy, gc.y);
+    m_max_gy = max(m_max_gy, gc.y);
 
     recenter();
 }
@@ -195,10 +195,10 @@ void MapRegion::update_bounds()
             if (f == MF_UNSEEN)
                 continue;
 
-            m_min_gx = std::min(m_min_gx, x);
-            m_max_gx = std::max(m_max_gx, x);
-            m_min_gy = std::min(m_min_gy, y);
-            m_max_gy = std::max(m_max_gy, y);
+            m_min_gx = min(m_min_gx, x);
+            m_max_gx = max(m_max_gx, x);
+            m_min_gy = min(m_min_gy, y);
+            m_max_gy = max(m_max_gy, y);
         }
 
     recenter();
@@ -272,7 +272,7 @@ int MapRegion::handle_mouse(MouseEvent &event)
             {
                 // Start autotravel, or give an appropriate message.
                 do_explore_cmd();
-                return (CK_MOUSE_CMD);
+                return CK_MOUSE_CMD;
             }
             else
             {
@@ -280,7 +280,7 @@ int MapRegion::handle_mouse(MouseEvent &event)
                 if (cmd != CK_MOUSE_CMD)
                     process_command((command_type) cmd);
 
-                return (CK_MOUSE_CMD);
+                return CK_MOUSE_CMD;
             }
         }
         else if (event.button == MouseEvent::RIGHT)
@@ -295,25 +295,25 @@ int MapRegion::handle_mouse(MouseEvent &event)
             m_far_view = false;
             tiles.load_dungeon(crawl_view.vgrdc);
         }
-        return (0);
+        return 0;
     default:
-        return (0);
+        return 0;
     }
 }
 
-bool MapRegion::update_tip_text(std::string& tip)
+bool MapRegion::update_tip_text(string& tip)
 {
     if (mouse_control::current_mode() != MOUSE_MODE_COMMAND)
-        return (false);
+        return false;
 
     tip = "[L-Click] Travel / [R-Click] View";
-    if (you.level_type != LEVEL_LABYRINTH
+    if (!player_in_branch(BRANCH_LABYRINTH)
         && (you.hunger_state > HS_STARVING || you_min_hunger())
         && i_feel_safe())
     {
         tip += "\n[Shift + L-Click] Autoexplore";
     }
-    return (true);
+    return true;
 }
 
 #endif

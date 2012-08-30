@@ -102,7 +102,6 @@ Crawl gladly and gratuitously uses the following open source packages; the
 text files mentioned can be found in the docs/license/ folder:
 * The Lua script language, see lualicense.txt.
 * The PCRE library for regular expressions, see pcre_license.txt.
-* The Mersenne Twister for random number generation, mt19937.txt.
 * The SQLite library as database engine; it is properly in the public domain.
 * The SDL and SDL_image libraries under the LGPL 2.1 license: lgpl.txt.
 * The libpng library, see libpng-LICENSE.txt

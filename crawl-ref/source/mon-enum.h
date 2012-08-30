@@ -15,17 +15,14 @@
 
 enum corpse_effect_type
 {
-    CE_NOCORPSE,        //    0
-    CE_CLEAN,           //    1
-    CE_CONTAMINATED,    //    2
-    CE_POISONOUS,       //    3
-    CE_POISON_CONTAM,   //    4
-    CE_ROT,             //    5
-    CE_MUTAGEN_RANDOM,  //    6
-    CE_MUTAGEN_GOOD,    //    7 - may be worth implementing {dlb}
-    CE_MUTAGEN_BAD,     //    8 - may be worth implementing {dlb}
-    CE_RANDOM,          //    9 - not used, but may be worth implementing {dlb}
-    CE_ROTTEN = 50,     //   50 - must remain at 50 for now {dlb}
+    CE_NOCORPSE,
+    CE_CLEAN,
+    CE_CONTAMINATED,
+    CE_POISONOUS,
+    CE_POISON_CONTAM,
+    CE_ROT,
+    CE_MUTAGEN,
+    CE_ROTTEN,
 };
 
 enum gender_type
@@ -35,7 +32,7 @@ enum gender_type
     GENDER_FEMALE,
 };
 
-// TODO: Unify this and a player_equivilent (if applicable)
+// TODO: Unify this and a player_equivalent (if applicable)
 // and move into attack.h
 enum attack_type
 {
@@ -59,6 +56,7 @@ enum attack_type
     AT_TRUNK_SLAP,
     AT_SNAP,
     AT_SPLASH,
+    AT_POUNCE,
     AT_CHERUB,
 
     AT_SHOOT,       // Attack representing missile damage for M_ARCHER.
@@ -107,9 +105,7 @@ enum attack_flavour
     AF_HOLY,
     AF_ANTIMAGIC,
     AF_PAIN,
-#if TAG_MAJOR_VERSION == 32
-    AF_SUBTRACTOR,
-#endif
+    AF_ENSNARE,
 };
 
 // Non-spell "summoning" types to give to monster::mark_summoned(), or
@@ -172,7 +168,9 @@ enum mon_itemeat_type
     NUM_MONEAT
 };
 
-// now saved in an unsigned long.
+typedef uint32_t resists_t;
+#define mrd(res, lev) (resists_t)((res) * ((lev) & 7))
+
 enum mon_resist_flags
 {
     MR_NO_FLAGS          = 0,
@@ -180,29 +178,27 @@ enum mon_resist_flags
     // resistances
     // Notes:
     // - negative energy is mostly handled via monster::res_negative_energy()
-    MR_RES_ELEC          = (1<< 0),
-    MR_RES_POISON        = (1<< 1),
-    MR_RES_FIRE          = (1<< 2),
-    MR_RES_HELLFIRE      = (1<< 3),
-    MR_RES_COLD          = (1<< 4),
-    MR_RES_ASPHYX        = (1<< 5),
-    MR_RES_ACID          = (1<< 6),
+    MR_RES_ELEC          = 1 << 0,
+    MR_RES_POISON        = 1 << 3,
+    MR_RES_FIRE          = 1 << 6,
+    MR_RES_HELLFIRE      = mrd(MR_RES_FIRE, 4),
+    MR_RES_COLD          = 1 << 9,
+    MR_RES_NEG           = 1 << 12,
+    MR_RES_ROTTING       = 1 << 15,
+
+    MR_LAST_MULTI, // must be >= any multi, < any boolean, exact value doesn't matter
+
+    MR_RES_ASPHYX        = 1 << 24,
+    MR_RES_ACID          = 1 << 25,
+    MR_RES_STICKY_FLAME  = 1 << 26,
+    // 1 << 27,
+    MR_RES_STEAM         = 1 << 28,
 
     // vulnerabilities
-    MR_VUL_ELEC          = (1<< 7),
-    MR_VUL_POISON        = (1<< 8),
-    MR_VUL_FIRE          = (1<< 9),
-    MR_VUL_COLD          = (1<<10),
-
-    // 1<<11 .. 1<<16: feel free to reuse
-
-    // Immune to stickiness of sticky flame.
-    MR_RES_STICKY_FLAME  = (1<<17),
-
-    // Immune to rotting.
-    MR_RES_ROTTING       = (1<<18),
-
-    MR_RES_STEAM         = (1<<19),
+    MR_VUL_ELEC          = mrd(MR_RES_ELEC, -1),
+    MR_VUL_POISON        = mrd(MR_RES_POISON, -1),
+    MR_VUL_FIRE          = mrd(MR_RES_FIRE, -1),
+    MR_VUL_COLD          = mrd(MR_RES_COLD, -1),
 };
 
 enum shout_type

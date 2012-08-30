@@ -50,7 +50,6 @@
 #include "mon-stuff.h"
 #include "mutation.h"
 #include "notes.h"
-#include "output.h"
 #include "player.h"
 #include "player-stats.h"
 #include "random.h"
@@ -65,7 +64,6 @@
 #include "tutorial.h"
 #include "view.h"
 #include "shout.h"
-#include "syscalls.h"
 #include "xom.h"
 
 static void _end_game(scorefile_entry &se);
@@ -105,7 +103,7 @@ static void _maybe_melt_player_enchantments(beam_type flavour, int damage)
 }
 
 // NOTE: DOES NOT check for hellfire!!!
-int check_your_resists(int hurted, beam_type flavour, std::string source,
+int check_your_resists(int hurted, beam_type flavour, string source,
                        bolt *beam, bool doEffects)
 {
     int resist;
@@ -113,7 +111,7 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
 
     dprf("checking resistance: flavour=%d", flavour);
 
-    std::string kaux = "";
+    string kaux = "";
     if (beam)
     {
         source = beam->get_source_name();
@@ -182,10 +180,10 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
         {
             resist = poison_player(coinflip() ? 2 : 1, source, kaux) ? 0 : 1;
 
-        hurted = resist_adjust_damage(&you, flavour, resist,
-                                      hurted, true);
+            hurted = resist_adjust_damage(&you, flavour, resist,
+                                          hurted, true);
             if (resist > 0)
-            canned_msg(MSG_YOU_RESIST);
+                canned_msg(MSG_YOU_RESIST);
         }
         else
         {
@@ -219,7 +217,7 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
         // TSO's protection.
         if (you.religion == GOD_SHINING_ONE && you.piety > resist * 50)
         {
-            int unhurted = std::min(hurted, (you.piety * hurted) / 150);
+            int unhurted = min(hurted, (you.piety * hurted) / 150);
 
             if (unhurted > 0)
                 hurted -= unhurted;
@@ -298,11 +296,11 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
         // For mutation damage, we want to count innate mutations for
         // the demonspawn, but not for other species.
         int mutated = how_mutated(you.species == SP_DEMONSPAWN, true);
-        int multiplier = std::min(mutated * 5, 100);
+        int multiplier = min(mutated * 5, 100);
         if (you.is_chaotic() || player_is_shapechanged())
             multiplier = 100; // full damage
         else if (you.is_undead || is_chaotic_god(you.religion))
-            multiplier = std::max(multiplier, 33);
+            multiplier = max(multiplier, 33);
 
         hurted = hurted * multiplier / 100;
 
@@ -317,23 +315,22 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
 
             if (one_chance_in(3)
                 // delete_mutation() handles MUT_MUTATION_RESISTANCE but not the amulet
-                && (!wearing_amulet(AMU_RESIST_MUTATION) || one_chance_in(10)))
+                && (!player_res_mutation_from_item()
+                    || one_chance_in(10)))
             {
-                delete_mutation(RANDOM_GOOD_MUTATION);
+                // silver stars only, if this ever changes we may want to give
+                // aux as well
+                delete_mutation(RANDOM_GOOD_MUTATION, source);
             }
         }
         break;
     }
 
     case BEAM_LIGHT:
-        if (you.invisible())
-            hurted = 0;
-        else if (you.species == SP_VAMPIRE)
+        if (you.species == SP_VAMPIRE)
             hurted += hurted / 2;
 
-        if (original && !hurted && doEffects)
-            mpr("The beam of light passes harmlessly through you.");
-        else if (hurted > original && doEffects)
+        if (hurted > original && doEffects)
         {
             mpr("The light scorches you terribly!");
             xom_is_stimulated(200);
@@ -349,15 +346,18 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
             hurted += hurted / 2;
         break;
     }
+
     default:
         break;
     }                           // end switch
 
-    return (hurted);
+    if (doEffects && hurted != original)
+        maybe_id_resist(flavour);
+
+    return hurted;
 }
 
-void splash_with_acid(int acid_strength, bool corrode_items,
-                      std::string hurt_message)
+void splash_with_acid(int acid_strength, bool corrode_items, string hurt_message)
 {
     int dam = 0;
     const bool wearing_cloak = player_wearing_slot(EQ_CLOAK);
@@ -414,7 +414,7 @@ void weapon_acid(int acid_strength)
 
     if (hand_thing == -1)
     {
-        msg::stream << "Your " << you.hand_name(true) << " burn!" << std::endl;
+        msg::stream << "Your " << you.hand_name(true) << " burn!" << endl;
         ouch(roll_dice(1, acid_strength), NON_MONSTER, KILLED_BY_ACID);
     }
     else if (x_chance_in_y(acid_strength + 1, 20))
@@ -432,7 +432,7 @@ static void _item_corrode(int slot)
         return;
 
     // Anti-corrosion items protect against 90% of corrosion.
-    if (wearing_amulet(AMU_RESIST_CORROSION) && !one_chance_in(10))
+    if (player_res_corr() && !one_chance_in(10))
     {
         dprf("Amulet protects.");
         return;
@@ -530,6 +530,7 @@ static int _get_target_class(beam_type flavour)
         break;
 
     case BEAM_COLD:
+    case BEAM_ICE:
     case BEAM_FRAG:
         target_class = OBJ_POTIONS;
         break;
@@ -543,7 +544,7 @@ static int _get_target_class(beam_type flavour)
         break;
     }
 
-    return (target_class);
+    return target_class;
 }
 
 // XXX: These expose functions could use being reworked into a real system...
@@ -557,7 +558,7 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
 
     const int target_class = _get_target_class(flavour);
     if (target_class == OBJ_UNASSIGNED)
-        return (false);
+        return false;
 
     // Fedhas worshipers are exempt from the food destruction effect
     // of spores.
@@ -566,7 +567,7 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
     {
         simple_god_message(" protects your food from the spores.",
                            GOD_FEDHAS);
-        return (false);
+        return false;
     }
 
     // Currently we test against each stack (and item in the stack)
@@ -612,14 +613,14 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
             }
 
             // Get name and quantity before destruction.
-            const std::string item_name = you.inv[i].name(DESC_PLAIN);
+            const string item_name = you.inv[i].name(DESC_PLAIN);
             const int quantity = you.inv[i].quantity;
             num_dest = 0;
 
             // Loop through all items in the stack.
             for (int j = 0; j < you.inv[i].quantity; ++j)
             {
-                if (x_chance_in_y(strength, 100))
+                if (bernoulli(strength, 0.01))
                 {
                     num_dest++;
 
@@ -652,24 +653,23 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
                          item_name.c_str(),
                          (num_dest == 1) ? "s" : "",
                          (num_dest == 1) ? "s" : "");
-                     break;
+                    break;
 
                 case OBJ_FOOD:
-                    // Message handled elsewhere.
-                    if (flavour == BEAM_DEVOUR_FOOD)
-                        break;
-                    mprf("%s %s %s covered with spores!",
+                    mprf("%s %s %s %s!",
                          part_stack_string(num_dest, quantity).c_str(),
                          item_name.c_str(),
-                         (num_dest == 1) ? "is" : "are");
-                     break;
+                         (num_dest == 1) ? "is" : "are",
+                         (flavour == BEAM_DEVOUR_FOOD) ?
+                             "devoured" : "covered with spores");
+                    break;
 
                 default:
                     mprf("%s %s %s destroyed!",
                          part_stack_string(num_dest, quantity).c_str(),
                          item_name.c_str(),
                          (num_dest == 1) ? "is" : "are");
-                     break;
+                    break;
                 }
 
                 total_dest += num_dest;
@@ -685,15 +685,15 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
     }
 
     if (!total_dest)
-        return (false);
+        return false;
 
     // Message handled elsewhere.
     if (flavour == BEAM_DEVOUR_FOOD)
-        return (true);
+        return true;
 
     xom_is_stimulated((num_dest > 1) ? 25 : 12);
 
-    return (true);
+    return true;
 }
 
 bool expose_items_to_element(beam_type flavour, const coord_def& where,
@@ -703,11 +703,11 @@ bool expose_items_to_element(beam_type flavour, const coord_def& where,
 
     const int target_class = _get_target_class(flavour);
     if (target_class == OBJ_UNASSIGNED)
-        return (false);
+        return false;
 
     // Beams fly *over* water and lava.
     if (grd(where) == DNGN_LAVA || grd(where) == DNGN_DEEP_WATER)
-        return (false);
+        return false;
 
     for (stack_iterator si(where); si; ++si)
     {
@@ -717,23 +717,26 @@ bool expose_items_to_element(beam_type flavour, const coord_def& where,
         if (si->base_type == target_class
             || target_class == OBJ_FOOD && si->base_type == OBJ_CORPSES)
         {
-            if (x_chance_in_y(strength, 100))
+            for (int j = 0; j < si->quantity; ++j)
             {
-                num_dest++;
-                if (!dec_mitm_item_quantity(si->index(), 1)
-                    && is_blood_potion(*si))
+                if (x_chance_in_y(strength, 100))
                 {
-                    remove_oldest_blood_potion(*si);
+                    num_dest++;
+                    if (!dec_mitm_item_quantity(si->index(), 1)
+                        && is_blood_potion(*si))
+                    {
+                       remove_oldest_blood_potion(*si);
+                    }
                 }
             }
         }
     }
 
     if (!num_dest)
-        return (false);
+        return false;
 
     if (flavour == BEAM_DEVOUR_FOOD)
-        return (true);
+        return true;
 
     if (you.see_cell(where))
     {
@@ -764,7 +767,7 @@ bool expose_items_to_element(beam_type flavour, const coord_def& where,
 
     xom_is_stimulated((num_dest > 1) ? 25 : 12);
 
-    return (true);
+    return true;
 }
 
 // Handle side-effects for exposure to element other than damage.  This
@@ -783,9 +786,9 @@ bool expose_player_to_element(beam_type flavour, int strength,
     _maybe_melt_player_enchantments(flavour, strength ? strength : 10);
 
     if (strength <= 0 || !damage_inventory)
-        return (false);
+        return false;
 
-    return (_expose_invent_to_element(flavour, strength));
+    return _expose_invent_to_element(flavour, strength);
 }
 
 void lose_level()
@@ -817,6 +820,11 @@ void lose_level()
 
     you.redraw_title = true;
     you.redraw_experience = true;
+#ifdef USE_TILES_LOCAL
+    // In case of intrinsic ability changes.
+    tiles.layout_statcol();
+    redraw_screen();
+#endif
 
     xom_is_stimulated(200);
 
@@ -834,7 +842,7 @@ bool drain_exp(bool announce_full)
         if (announce_full)
             canned_msg(MSG_YOU_RESIST);
 
-        return (false);
+        return false;
     }
 
     if (you.experience == 0)
@@ -842,44 +850,37 @@ bool drain_exp(bool announce_full)
         ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_DRAINING);
 
         // Return in case death was escaped via wizard mode.
-        return (true);
+        return true;
     }
 
     if (you.experience_level == 1)
     {
         you.experience = 0;
 
-        return (true);
+        return true;
     }
 
     unsigned int total_exp = exp_needed(you.experience_level + 1)
                                   - exp_needed(you.experience_level);
     unsigned int exp_drained = (total_exp * (5 + random2(11))) / 100;
-    unsigned int pool_drained = std::min(exp_drained,
-                                     (unsigned int)you.exp_available);
 
     // TSO's protection.
     if (you.religion == GOD_SHINING_ONE && you.piety > protection * 50)
     {
-        unsigned int undrained = std::min(exp_drained,
-                                      (you.piety * exp_drained) / 150);
-        unsigned int pool_undrained = std::min(pool_drained,
-                                           (you.piety * pool_drained) / 150);
+        unsigned int undrained = min(exp_drained,
+                                     (you.piety * exp_drained) / 150);
 
-        if (undrained > 0 || pool_undrained > 0)
+        if (undrained > 0)
         {
             simple_god_message(" protects your life force!");
             if (undrained > 0)
                 exp_drained -= undrained;
-            if (pool_undrained > 0)
-                pool_drained -= pool_undrained;
         }
     }
     else if (protection > 0)
     {
         canned_msg(MSG_YOU_PARTIALLY_RESIST);
         exp_drained -= (protection * exp_drained) / 3;
-        pool_drained -= (protection * pool_drained) / 3;
     }
 
     if (exp_drained > 0)
@@ -887,19 +888,15 @@ bool drain_exp(bool announce_full)
         mpr("You feel drained.");
         xom_is_stimulated(15);
         you.experience -= exp_drained;
-        you.exp_available -= pool_drained;
 
-        you.exp_available = std::max(0, you.exp_available);
-
-        dprf("You lose %d experience points, %d from pool.",
-             exp_drained, pool_drained);
+        dprf("You lose %d experience points.", exp_drained);
 
         level_change();
 
-        return (true);
+        return true;
     }
 
-    return (false);
+    return false;
 }
 
 static void _xom_checks_damage(kill_method_type death_type,
@@ -907,7 +904,7 @@ static void _xom_checks_damage(kill_method_type death_type,
 {
     if (you.religion == GOD_XOM)
     {
-        if (death_type == KILLED_BY_TARGETING
+        if (death_type == KILLED_BY_TARGETTING
             || death_type == KILLED_BY_BOUNCE
             || death_type == KILLED_BY_REFLECTION
             || death_type == KILLED_BY_SELF_AIMED
@@ -1110,6 +1107,8 @@ static void _place_player_corpse(bool explode)
 #if defined(WIZARD) || defined(DEBUG)
 static void _wizard_restore_life()
 {
+    if (you.hp_max <= 0)
+        unrot_hp(9999);
     if (you.hp <= 0)
         set_hp(you.hp_max);
     for (int i = 0; i < NUM_STATS; ++i)
@@ -1186,8 +1185,8 @@ void ouch(int dam, int death_source, kill_method_type death_type,
             int mp = div_rand_round(dam * you.magic_points,
                                     you.hp + you.magic_points);
             // but don't kill the player with round-off errors
-            mp = std::max(mp, dam + 1 - you.hp);
-            mp = std::min(mp, you.magic_points);
+            mp = max(mp, dam + 1 - you.hp);
+            mp = min(mp, you.magic_points);
 
             dam -= mp;
             dec_mp(mp);
@@ -1230,11 +1229,9 @@ void ouch(int dam, int death_source, kill_method_type death_type,
             _xom_checks_damage(death_type, dam, death_source);
 
             // for note taking
-            std::string damage_desc;
+            string damage_desc;
             if (!see_source)
-            {
                 damage_desc = make_stringf("something (%d)", dam);
-            }
             else
             {
                 damage_desc = scorefile_entry(dam, death_source,
@@ -1315,7 +1312,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
     {
         if (crawl_state.test || you.wizard)
         {
-            const std::string death_desc
+            const string death_desc
                 = se.death_description(scorefile_entry::DDV_VERBOSE);
 
             dprf("Damage: %d; Hit points: %d", dam, you.hp);
@@ -1354,6 +1351,10 @@ void ouch(int dam, int death_source, kill_method_type death_type,
 
         stop_delay(true);
 
+        // You wouldn't want to lose this accomplishment to a crash, would you?
+        // Especially if you manage to trigger one via lua somehow...
+        save_game(false);
+
         mprnojoin("You die...");
         xom_death_message((kill_method_type) se.get_death_type());
         more();
@@ -1366,43 +1367,34 @@ void ouch(int dam, int death_source, kill_method_type death_type,
     crawl_state.need_save       = false;
     crawl_state.updating_scores = true;
 
-#if TAG_MAJOR_VERSION <= 33
-    note_montiers();
-#endif
-
     // Prevent bogus notes.
     activate_notes(false);
 
-#ifdef SCORE_WIZARD_CHARACTERS
-    // Add this highscore to the score file.
-    hiscores_new_entry(se);
-    logfile_new_entry(se);
-#else
-
-    // Only add non-wizards to the score file.
-    // Never generate bones files of wizard or tutorial characters -- bwr
+#ifndef SCORE_WIZARD_CHARACTERS
     if (!you.wizard)
+#endif
     {
+        // Add this highscore to the score file.
         hiscores_new_entry(se);
         logfile_new_entry(se);
-
-        if (!non_death && !crawl_state.game_is_tutorial())
-            save_ghost();
     }
-#endif
+
+    // Never generate bones files of wizard or tutorial characters -- bwr
+    if (!non_death && !crawl_state.game_is_tutorial() && !you.wizard)
+        save_ghost();
 
     _end_game(se);
 }
 
-static std::string _morgue_name(time_t when_crawl_got_even)
+string morgue_name(string char_name, time_t when_crawl_got_even)
 {
-    std::string name = "morgue-" + you.your_name;
+    string name = "morgue-" + char_name;
 
-    std::string time = make_file_time(when_crawl_got_even);
+    string time = make_file_time(when_crawl_got_even);
     if (!time.empty())
         name += "-" + time;
 
-    return (name);
+    return name;
 }
 
 // Delete save files on game end.
@@ -1413,7 +1405,7 @@ static void _delete_files()
     you.save = 0;
 }
 
-void screen_end_game(std::string text)
+void screen_end_game(string text)
 {
     crawl_state.cancel_cmd_all();
     _delete_files();
@@ -1443,12 +1435,7 @@ void _end_game(scorefile_entry &se)
             continue;
         set_ident_flags(you.inv[i], ISFLAG_IDENT_MASK);
         set_ident_type(you.inv[i], ID_KNOWN_TYPE);
-        if (Options.autoinscribe_artefacts && is_artefact(you.inv[i]))
-        {
-            std::string inscr = artefact_auto_inscription(you.inv[i]);
-            if (inscr != "")
-                add_autoinscription(you.inv[i], inscr);
-        }
+        add_autoinscription(you.inv[i]);
     }
 
     _delete_files();
@@ -1512,7 +1499,7 @@ void _end_game(scorefile_entry &se)
             hints_death_screen();
     }
 
-    if (!dump_char(_morgue_name(se.get_death_time()), true, &se))
+    if (!dump_char(morgue_name(you.your_name, se.get_death_time()), true, &se))
     {
         mpr("Char dump unsuccessful! Sorry about that.");
         if (!crawl_state.seen_hups)
@@ -1530,7 +1517,8 @@ void _end_game(scorefile_entry &se)
     if (!crawl_state.seen_hups)
         more();
 
-    browse_inventory();
+    if (!crawl_state.disables[DIS_CONFIRMATIONS])
+        browse_inventory();
     textcolor(LIGHTGREY);
 
     // Prompt for saving macros.
@@ -1541,7 +1529,7 @@ void _end_game(scorefile_entry &se)
     cprintf("Goodbye, %s.", you.your_name.c_str());
     cprintf("\n\n    "); // Space padding where # would go in list format
 
-    std::string hiscore = hiscores_format_single_long(se, true);
+    string hiscore = hiscores_format_single_long(se, true);
 
     const int lines = count_occurrences(hiscore, "\n") + 1;
 
@@ -1559,7 +1547,7 @@ void _end_game(scorefile_entry &se)
 #endif
 
     // just to pause, actual value returned does not matter {dlb}
-    if (!crawl_state.seen_hups)
+    if (!crawl_state.seen_hups && !crawl_state.disables[DIS_CONFIRMATIONS])
         get_ch();
 
     if (se.get_death_type() == KILLED_BY_WINNING)
@@ -1570,12 +1558,12 @@ void _end_game(scorefile_entry &se)
 
 int actor_to_death_source(const actor* agent)
 {
-    if (agent->atype() == ACT_PLAYER)
-        return (NON_MONSTER);
-    else if (agent->atype() == ACT_MONSTER)
+    if (agent->is_player())
+        return NON_MONSTER;
+    else if (agent->is_monster())
         return (agent->as_monster()->mindex());
     else
-        return (NON_MONSTER);
+        return NON_MONSTER;
 }
 
 int timescale_damage(const actor *act, int damage)

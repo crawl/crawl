@@ -23,7 +23,7 @@
  *                   occurred, otherwise false, denoting that flashing lights
  *                   occurred.
 **/
-bool orb_noise (const coord_def& where, int loudness)
+static bool _orb_noise(const coord_def& where, int loudness)
 {
     // XXX: Fake noisy doesn't work. Oops.
     fake_noisy(loudness, where);
@@ -35,10 +35,10 @@ bool orb_noise (const coord_def& where, int loudness)
         flash_view_delay(MAGENTA, 100);
         flash_view_delay(LIGHTMAGENTA, 100);
 
-        return (false);
+        return false;
     }
 
-    return (true);
+    return true;
 }
 
 /**
@@ -52,9 +52,9 @@ bool orb_noise (const coord_def& where, int loudness)
  * @param msg         The message to be printed if orb_noise returned true.
  * @param msg2        The message to be printed if orb_noise returned false.
 **/
-void orb_pickup_noise (const coord_def& where, int loudness, const char* msg, const char* msg2)
+void orb_pickup_noise(const coord_def& where, int loudness, const char* msg, const char* msg2)
 {
-    if (orb_noise(where, loudness))
+    if (_orb_noise(where, loudness))
     {
         if (msg)
             mpr(msg, MSGCH_ORB);

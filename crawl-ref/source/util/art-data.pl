@@ -59,11 +59,10 @@ my %field_type = (
     SPECIAL  => "bool",
     STEALTH  => "num",
     STR      => "num",
+    TYPE     => "str",
+    UNIDED   => "bool",
     VALUE    => "num",
 
-    DESC     => "str",
-    DESC_END => "str",
-    DESC_ID  => "str",
     TILE     => "str",
     TILE_EQ  => "str",
     TILERIM  => "bool",
@@ -237,7 +236,7 @@ sub finish_art
     my $flags = "";
     my $flag;
     foreach $flag ("SPECIAL", "HOLY", "EVIL", "CHAOTIC",
-                   "CORPSE_VIOLATING", "NOGEN", "RANDAPP")
+                   "CORPSE_VIOLATING", "NOGEN", "RANDAPP", "UNIDED")
     {
         if ($artefact->{$flag})
         {
@@ -478,7 +477,7 @@ sub process_line
 }
 
 my @art_order = (
-    "NAME", "APPEAR", "\n",
+    "NAME", "APPEAR", "TYPE", "\n",
     "base_type", "sub_type", "plus", "plus2", "COLOUR", "VALUE", "\n",
     "flags",
 
@@ -489,10 +488,6 @@ my @art_order = (
     "MUTATE", "ACC", "DAM", "CURSED", "STEALTH", "MP", "\n",
     "BASE_DELAY", "HP", "CLARITY", "BASE_ACC", "BASE_DAM", "\n",
     "}",
-
-    "DESC", "\n",
-    "DESC_ID", "\n",
-    "DESC_END", "\n",
 
     "equip_func", "unequip_func", "world_reacts_func", "{fight_func_func",
     "evoke_func"
@@ -549,7 +544,7 @@ sub art_to_str
         {
             my $temp = $artefact->{$part};
             $temp =~ s/"/\\"/g;
-            $str .= "\"$temp\"";
+            $str .= ($part eq "TYPE" && $temp eq "") ? "NULL" : "\"$temp\"";
         }
         else
         {

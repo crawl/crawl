@@ -1,13 +1,13 @@
 %name floor
 %prefix TILE
 
-%sdir dc-dngn
-dngn_unseen DNGN_UNSEEN
-%back dngn_unseen
-dc-misc/error DNGN_ERROR
+%sdir dngn
+unseen DNGN_UNSEEN
+%back unseen
+misc/error DNGN_ERROR
 %back none
 
-%sdir dc-dngn/floor
+%sdir dngn/floor
 
 %weight 6
 grey_dirt0 FLOOR_GREY_DIRT FLOOR_NORMAL
@@ -174,10 +174,10 @@ mesh1
 mesh2
 mesh3
 
-hive0 FLOOR_HIVE FLOOR_ORC
-hive1
-hive2
-hive3
+orc0 FLOOR_ORC
+orc1
+orc2
+orc3
 
 ice0 FLOOR_ICE
 ice1
@@ -212,10 +212,26 @@ moss1
 moss2
 moss3
 
+%weight 10
 bog_green0 FLOOR_SLIME
+%weight 1
 bog_green1
 bog_green2
 bog_green3
+
+acidic_floor0 FLOOR_SLIME_ACIDIC
+acidic_floor1
+acidic_floor2
+acidic_floor3
+
+slime_overlay_N SLIME_OVERLAY
+slime_overlay_E
+slime_overlay_S
+slime_overlay_W
+slime_overlay_NW
+slime_overlay_NE
+slime_overlay_SE
+slime_overlay_SW
 
 %weight 10
 snake-a0 FLOOR_SNAKE_A
@@ -242,18 +258,24 @@ swamp1
 swamp2
 swamp3
 
+%weight 20
 spider00 FLOOR_SPIDER
 spider01
 spider02
 spider03
+%weight 10
 spider04
+%weight 1
 spider05
 spider06
+%weight 5
 spider07
 spider08
 spider09
+%weight 1
 spider10
 spider11
+%weight 3
 
 tomb0 FLOOR_TOMB
 tomb1
@@ -355,16 +377,15 @@ rough_red3
 %resetcol
 
 %weight 5
-floor_sand_stone0 FLOOR_SAND_STONE
-floor_sand_stone1
-floor_sand_stone2
-floor_sand_stone3
+sand1 FLOOR_SAND
+sand2
+sand3
+sand4
 %weight 2
-floor_sand_stone4
-floor_sand_stone5
-floor_sand_stone7
-%weight 1
-floor_sand_stone6
+sand5
+sand6
+sand7
+sand8
 
 %weight 5
 cobble_blood1 FLOOR_COBBLE_BLOOD
@@ -423,7 +444,7 @@ crystal_floor4
 %weight 1
 crystal_floor5
 
-%sdir dc-dngn/floor/grass
+%sdir dngn/floor/grass
 %weight 15
 grass0 FLOOR_GRASS
 grass1
@@ -453,7 +474,7 @@ grass0-dirt-mix1 FLOOR_GRASS_DIRT_MIX
 grass0-dirt-mix2
 grass0-dirt-mix3
 
-%sdir dc-dngn/floor
+%sdir dngn/floor
 floor_nerves0 FLOOR_NERVES
 floor_nerves1
 floor_nerves2
@@ -495,7 +516,7 @@ floor_nerves6
 %compose pedestal_nw
 %finish
 
-%sdir dc-dngn/floor
+%sdir dngn/floor
 pedestal_full
 
 %start
@@ -548,7 +569,7 @@ dirt_full
 
 tutorial_pad TUTORIAL_PAD
 
-%sdir dc-dngn/floor
+%sdir dngn/floor
 limestone0 FLOOR_LIMESTONE
 limestone1
 limestone2
@@ -648,10 +669,12 @@ black_cobalt10
 black_cobalt11
 black_cobalt12
 
+%weight 10
 frozen0 FLOOR_FROZEN
 frozen1
 frozen2
 frozen3
+%weight 2
 frozen4
 frozen5
 frozen6
@@ -727,3 +750,13 @@ green_bones09
 green_bones10
 green_bones11
 green_bones12
+
+woodground01 FLOOR_WOODGROUND
+woodground02
+woodground03
+woodground04
+woodground05
+woodground06
+woodground07
+woodground08
+woodground09

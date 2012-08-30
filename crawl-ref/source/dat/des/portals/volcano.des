@@ -39,38 +39,11 @@
 # See setup_loot() for more information.
 #
 ###
-# Index:
-#   volcano_grotto   - forgotten grotto "temple" volcano; a temple to
-#                      the side of a volcano, line 472-523
-#   volcano_lake     - lava lake "temple" volcano; a temple suspended
-#                      in the middle of a volcano, line 531-591
-#   volcano_pools    - many pools "pyramid"; some caves off a central
-#                      chamber, but no pyramid?, line 599-658
-#   volcano_tomb     - volcano "tomb"; based of Tutankhamun's burial
-#                      chamber, has mummies and fire. Line 666-709.
-#   volcano_aerie    - "aerie"; two paths to the loot, including lindwurm
-#                      island! Line 717-775.
-#   volcano_bunker   - "hidden bunker"; "science"-ish portal vault with
-#                      golems and a "conservatory". Line 783-823.
-#   volcano_caves    - "collapsing caverns", you can choose which one you
-#                      want! maybe more than one? Line 830-902.
-#   volcano_village  - by zaba! villagerrs are kinda scary, actually!
-#                      Line 912-967.
-#   volcano_overflow - overflowing lava! idea by dpeg, code by Jude.
-#                      Line 1034+.
-###
-
 {{
 -- ####
 -- # General setup and design functions: (head to line 382 for the maps)
 
 function volcano_portal (e)
-    local desc_long = "Leading directly into the rock is a dark and " ..
-                      "forbidding tunnel. Every so often air, hot enough " ..
-                      "to singe your face, blasts from within, and, as " ..
-                      "though triggered by the air, rocks fall from the roof " ..
-                      "and sides of the tunnel, slowly filling the entry."
-
     local timeout_turns_long = crawl.random_range(2700, 3300)
     local timeout_turns_short = timeout_turns_long/10
 
@@ -91,11 +64,8 @@ function volcano_portal (e)
         disappear = "There is a deep roar from within the tunnel. Moments " ..
                     "later, a river of lava pours forth, sealing it permanently.",
         desc = "dark tunnel",
-        desc_long = desc_long,
         entity = 'tunnel',
-        dst = "volcano",
-        dstname_abbrev = "Volcano",
-        dstorigin = "in a volcano",
+        dst = "Volcano",
         overview = "dark tunnel",
         turns = timeout_turns_long,
         turns_short = timeout_turns_short,
@@ -106,21 +76,12 @@ function volcano_portal (e)
     e.tile("O = dngn_portal_volcano")
     e.kfeat("S = .")
     e.colour("O = red")
-    e.rtile("X = wall_pebble_red")
+    e.rtile("X = wall_volcanic")
     e.ftile("OS = floor_rough_red")
 end
 
-function volcano_feat_descs()
-    dgn.set_feature_desc_short("gate leading back to the Dungeon",
-                               "rocky tunnel leading out of this place")
-    dgn.set_feature_desc_short("empty arch of ancient stone",
-                               "rock-blocked tunnel")
-end
-
-dgn.set_lt_callback("volcano", "volcano_feat_descs")
-
 -- Destinations:
-function volcano_setup (e, metal, subvault)
+function volcano_setup (e)
     setup_loot(e)
     e.kfeat("< = exit_portal_vault")
     e.kfeat("I = exit_portal_vault")
@@ -132,27 +93,11 @@ function volcano_setup (e, metal, subvault)
     e.subst("y : yyy.x")
     e.subst("y = xxx.")
     e.colour("< = red")
-    e.lrockcol("red")
-    e.lrocktile("wall_pebble_red")
-    if metal == nil or metal == false then
-        e.colour("c = lightred")
-        e.colour("G = lightred")
-        e.colour("= = lightred")
-        e.lfloorcol("red")
-        e.lfloortile("floor_rough_red")
-    end
-    if subvault == nil then
-        e.set_random_mon_list([[hog / fire elemental / fire vortex /
-                                worker ant / bumblebee / fire drake / lindwurm /
-                                crimson imp / redback / manticore / hell hound /
-                                hell hog / flayed ghost / pulsating lump /
-                                toenail golem / efreet /
-                                vampire]])
-    end
-end
-
-function volcano_milestone(e)
-    crawl.mark_milestone("br.enter", "entered a Volcano.", true)
+    e.colour("c = lightred")
+    e.colour("G = lightred")
+    e.colour("= = lightred")
+    e.set_feature_name("exit_portal_vault", "rocky tunnel leading out of this place")
+    e.set_feature_name("stone_arch", "rock-blocked tunnel")
 end
 
 -- "Volcano" functions. While the sizes may appear extreme, they are carefully
@@ -247,7 +192,7 @@ function setup_loot (e)
                                   " / fire dragon armour w:5")
     e.item([[potion of berserk rage w:20 / potion of poison w:2 / potion of might w:5 / potion of brilliance w:5 /
              potion of agility w:5 / potion of experience w:1 / potion of resistance]])
-    e.item(make_fiery_weapon(e, {"demon whip w:2", "dire flail w:4", "ankus w:20", "dagger w:20",
+    e.item(make_fiery_weapon(e, {"demon whip w:2", "dire flail w:4", "dagger w:20",
                                  "sabre w:20", "scimitar w:20", "demon blade w:2",
                                  "triple sword w:1", "broad axe w:20", "battleaxe w:10",
                                  "executioner's axe w:1", "spear w:20", "trident w:20", "demon " ..
@@ -492,7 +437,7 @@ end
 
 }}
 
-default-depth: Lair:1-8, Orc:1-4, Hive:1
+default-depth: Lair:1-8, Orc:1-4
 
 ###############################################################################
 # Entries:
@@ -582,11 +527,12 @@ ENDMAP
 # This is the "large" one. You might get a clear path, but then again...
 NAME:       enter_volcano_4
 TAGS:       uniq_volcano chance_volcano
+KPROP:      .SLO = no_rtele_into
 CHANCE:     5%
 ORIENT:     float
 COLOUR:     X = red
 COLOUR:     S = red
-NSUBST:     L = 4:. / *:l
+NSUBST:     L = 8:. / *:l
 :           volcano_portal(_G)
 MAP
  xxxxx
@@ -606,7 +552,7 @@ xxxSxxx
 ENDMAP
 ###############################################################################
 
-default-depth:
+default-depth: Volcano
 
 ###############################################################################
 # "Forgotten grotto Temple"
@@ -618,15 +564,12 @@ default-depth:
 NAME:       volcano_grotto
 WEIGHT:     60
 ORIENT:     encompass
-TAGS:       volcano no_item_gen no_monster_gen
+TAGS:       no_item_gen no_monster_gen
 SUBVAULT:   B : volcano_grotto_subvault
 KMONS:      l = lava snake w:2 / lava fish w:5 / nothing w:120
 KFEAT:      l = l
 :           volcano_setup(_G)
 :           place_tiny_volcano(_G)
-epilogue{{
-volcano_milestone(_G)
-}}
 MAP
                          xxxx
                     xxxxxxyyxxxx
@@ -666,7 +609,7 @@ KFEAT: _ = altar_makhleb / altar_trog / altar_vehumet
 :      fiery_guardians(_G)
 MONS:  clay golem w:50 / molten gargoyle w:2
 #      Loot: 9 items, 8 gold.
-:      volcano_setup(_G, false, true)
+:      volcano_setup(_G)
 MAP
 xxxxxxxxx+xxxxxxxxx
 xcccccxx...xxcccccx
@@ -690,7 +633,7 @@ NSUBST: X = 1:= / *:x
 #       Sets up the temple guardians.
 :       fiery_guardians(_G)
 #       Loot: 8 items.
-:       volcano_setup(_G, false, true)
+:       volcano_setup(_G)
 COLOUR: = = red
 MAP
 xxxxxxxxx+xxxxxxxxx
@@ -717,7 +660,7 @@ NSUBST: Y = 1:= / 1:G / *:x
 KMONS:  l = lava snake / lava fish w:20 / lava worm w:20 / nothing w:70
 KFEAT:  l = l
 #       Loot: 8 items.
-:       volcano_setup(_G, false, true)
+:       volcano_setup(_G)
 COLOUR: = = red
 MAP
 xxxxxxxxx.xxxxxxxxx
@@ -743,7 +686,7 @@ NSUBST: Y = 1:= / *:x
 :       fiery_guardians(_G)
 MONS:   clay golem w:50 / molten gargoyle w:2
 #       Loot: 8 items, 10 gold.
-:       volcano_setup(_G, false, true)
+:       volcano_setup(_G)
 COLOUR: = = red
 MAP
 xxxxxxxxx+xxxxxxxxx
@@ -771,7 +714,7 @@ KMONS:  G = statue name:firespitter name_adjective \
         spells:throw_flame;sticky_flame_range;.;bolt_of_magma;fireball;.
 MARKER: G = lua:MonPropsMarker:new { description = "Statue of a large head of a humanoid. Its mouth is blackened with scorch-marks. There is a faint ember glow in its empty eyes." }
 #       Loot: 12 items, 6 gold.
-:       volcano_setup(_G, false, true)
+:       volcano_setup(_G)
 MAP
 xxxxxxxxc+cxxxxxxxx
 xcccccccc.ccccccccx
@@ -796,7 +739,7 @@ KMONS:  F = statue name:firespitter name_adjective \
         spells:throw_flame;sticky_flame_range;.;bolt_of_magma;fireball;.
 MARKER: F = lua:MonPropsMarker:new { description = "Statue of a large head of a humanoid. Its mouth is blackened with scorch-marks. There is a faint ember glow in its empty eyes." }
 #       Loot: 10 items.
-:       volcano_setup(_G, false, true)
+:       volcano_setup(_G)
 MAP
 xxxxxxxxx+xxxxxxxxx
 xcccccccc.........x
@@ -816,12 +759,11 @@ TAGS:   volcano_grotto_subvault no_item_gen no_monster_gen no_rotate no_vmirror
 KFEAT:  _ = altar_makhleb / altar_trog / altar_vehumet
 #       Sets up the temple guardians.
 :       fiery_guardians(_G)
-KMONS:  G = statue name:lasher name_adjective \
-        generate_awake ; whip ego:flaming
+KMONS:  G = statue name:lasher name_adjective generate_awake ; whip ego:flaming
 KMONS:  l = lava fish / lava worm / nothing
 KFEAT:  l = l
 #       Loot: 10 items.
-:       volcano_setup(_G, false, true)
+:       volcano_setup(_G)
 MAP
 xcccccccx+xxxxxxxxx
 xc.....cc.cxxxxxxxx
@@ -847,7 +789,7 @@ ENDMAP
 NAME:       volcano_lake
 WEIGHT:     60
 ORIENT:     encompass
-TAGS:       volcano no_item_gen no_monster_gen no_rotate
+TAGS:       no_item_gen no_monster_gen no_rotate
 KFEAT:      _ = altar_makhleb / altar_trog / altar_vehumet
 KMONS:      l = lava snake w:2 / lava fish w:5 / nothing w:900
 KFEAT:      l = l
@@ -862,9 +804,6 @@ MONS:       clay golem w:50 / molten gargoyle w:2
 :           volcano_setup(_G)
 :           place_lake_volcanoes(_G, {"M", "E", "V", "Q", "T", "S"})
 KFEAT:      o = n
-epilogue{{
-volcano_milestone(_G)
-}}
 MAP
                       xxxx     xxxxx xxxxx xxxxxx
                     xxxyyxxx  xxyyxxxxyyyxxxyyyyxx
@@ -919,7 +858,7 @@ ENDMAP
 NAME:       volcano_pools
 WEIGHT:     60
 ORIENT:     encompass
-TAGS:       volcano no_item_gen no_monster_gen no_rotate
+TAGS:       no_item_gen no_monster_gen no_rotate
 #           Sets up the temple guardians.
 :           fiery_guardians(_G)
 MONS:       clay golem w:50 / molten gargoyle w:2
@@ -938,9 +877,6 @@ NSUBST:     Y = 2:1 / *:.
 KFEAT:      J = l
 MARKER:     J = lua:fog_machine { size = 3, pow_min = 7, pow_max = 7, delay = 80, \
                                   start_clouds = 1, cloud_type = "flame", excl_rad = -1 }
-epilogue{{
-volcano_milestone(_G)
-}}
 MAP
           xxx
          xxyxx
@@ -988,16 +924,13 @@ ENDMAP
 NAME:       volcano_tomb
 WEIGHT:     30
 ORIENT:     encompass
-TAGS:       volcano no_item_gen no_monster_gen no_rotate
+TAGS:       no_item_gen no_monster_gen no_rotate
 SUBVAULT:   B : volcano_tomb_subvault
 #           The flying skulls on lava.
 KFEAT:      u = lava
 KMONS:      u = flying skull
 :           volcano_setup(_G)
 :           place_tiny_volcano(_G)
-epilogue{{
-volcano_milestone(_G)
-}}
 MAP
                  xxxx
             xxxxxxyyxxxxx
@@ -1034,7 +967,7 @@ MONS:    menkaure / guardian mummy
 MONS:    fire drake skeleton w:5 / lindwurm skeleton w:1 / hog skeleton / hound skeleton
 MONS:    mummy
 #        Loot: 4 gold, 8 items.
-:        volcano_setup(_G, false, true)
+:        volcano_setup(_G)
 SHUFFLE: 12K
 KFEAT:   JK = l
 MARKER:  J = lua:fog_machine { size = 3, pow_min = 7, pow_max = 7, delay = 80, \
@@ -1073,7 +1006,7 @@ KFEAT:   ! = alarm trap
 NSUBST:  r = 2:r / *:.
 NSUBST:  s = 2:s / *:.
 KFEAT:   r = bolt trap
-KFEAT:   s = axe trap
+KFEAT:   s = spear trap
 #        The monsters. The patrolling tag seems to keep them from wandering
 #        around, opening the secret doors. It might also be keeping them from
 #        "answering" the alarm traps though.
@@ -1084,7 +1017,7 @@ MONS:    ogre skeleton / troll skeleton / draconian skeleton / naga skeleton / \
          minotaur skeleton
 MONS:    patrolling menkaure / patrolling guardian mummy
 #        Loot: 21 gold, 10 items.
-:        volcano_setup(_G, false, true)
+:        volcano_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxcccccxxxxxxxxxxxxxxxxx
@@ -1124,7 +1057,7 @@ NSUBST:     Y = 8:3 / 6:J / *:.
 SUBST:      X = lx
 KPROP:      l = no_cloud_gen
 COLOUR:     m = blue
-TAGS:       volcano no_item_gen no_monster_gen
+TAGS:       no_item_gen no_monster_gen
 :           volcano_setup(_G)
 :           place_small_volcano(_G)
 MARKER:     J = lua:fog_machine { size = 3, pow_min = 7, pow_max = 7, delay = 80, \
@@ -1133,9 +1066,6 @@ KFEAT:      K = l
 MARKER:     K = lua:fog_machine { size = 3, pow_min = 7, pow_max = 7, delay = 80, \
                                   start_clouds = 1, cloud_type = "flame", excl_rad = -1 }
 # Sides:    Lindwurm # Vortex/elemental
-epilogue{{
-volcano_milestone(_G)
-}}
 MAP
                  xxxxxxxxx
                 xxKlllllKxx
@@ -1188,9 +1118,9 @@ ENDMAP
 NAME:       volcano_bunker
 WEIGHT:     30
 ORIENT:     encompass
-TAGS:       volcano no_item_gen no_monster_gen no_rotate
+TAGS:       no_item_gen no_monster_gen no_rotate
 #           Loot: 11 items, 8 gold.
-:           volcano_setup(_G, true)
+:           volcano_setup(_G)
 ITEM:       apple / choko
 COLOUR:     m = blue
 COLOUR:     = = cyan
@@ -1198,16 +1128,10 @@ COLOUR:     + = cyan
 MONS:       human ; robe ego:fire_resistance
 MONS:       toenail golem
 :           place_chained_volcano(_G)
-:           dgn.set_feature_desc_short("translucent rock wall",
-:                                      "glass window")
-:           dgn.set_feature_desc_long("translucent rock wall",
-:                                     "A pockmarked, ultra-hard glass window.")
+:           set_feature_name("clear_rock_wall", "glass window")
 KFEAT:      K = .
 MARKER:     K = lua:fog_machine ( { cloud_type = "rain", walk_dist=3, pow_max=2, \
                                     delay=300, size=3 } )
-epilogue{{
-volcano_milestone(_G)
-}}
 MAP
       xxxx                  vvvvvvvvvvvvv
    xxxxllxxx xxx            v...........v
@@ -1241,9 +1165,8 @@ ENDMAP
 NAME:       volcano_caves
 WEIGHT:     30
 ORIENT:     encompass
-TAGS:       volcano no_item_gen no_monster_gen no_rotate
+TAGS:       no_item_gen no_monster_gen no_rotate
 LFLAGS:     no_tele_control
-:           volcano_setup(_G, true)
 {{
 local collapse_marker = TriggerableFunction:new (
   {
@@ -1273,9 +1196,6 @@ SUBST:      R = defg$
 #           There are eight oportunities for loot! Seven single threat (1) plus two items,
 #           and one triple threat (121), plus six items. items can be any of: 1 armour,
 #           1 weapon, 1 potion, 1 any, 1 gold)
-epilogue{{
-volcano_milestone(_G)
-}}
 MAP
                cccc ccc
              cccXXcccZcccccc
@@ -1307,7 +1227,7 @@ ENDMAP
 NAME:       volcano_village
 WEIGHT:     30
 ORIENT:     encompass
-TAGS:       volcano no_item_gen no_monster_gen no_rotate
+TAGS:       no_item_gen no_monster_gen no_rotate
 SUBST:      S = lw
 SUBST:      W = wW.
 SUBST:      L = ll.
@@ -1323,9 +1243,6 @@ KFEAT:      ' = alarm trap
 :           fiery_humans(_G)
 :           volcano_setup(_G)
 :           place_chained_volcano(_G)
-epilogue{{
-volcano_milestone(_G)
-}}
 MAP
 ###########################################
 #wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww#
@@ -1374,7 +1291,7 @@ ENDMAP
 NAME:       volcano_overflow
 WEIGHT:     10
 ORIENT:     encompass
-TAGS:       volcano no_item_gen no_monster_gen no_rotate
+TAGS:       no_item_gen no_monster_gen no_rotate
 MONS:       nothing, nothing, nothing
 {{
 -- So we know what to convert.
@@ -1399,9 +1316,6 @@ lua_marker("M", sink_marker)
 SUBST:      M = c
 NSUBST:     123 = 8:d / 8:e / 8:f / 8:g / 8:h / *:.
 :           volcano_setup(_G)
-epilogue{{
-volcano_milestone(_G)
-}}
 MAP
                 xxxx         xxx xxx                   xxx
         xxxxx  xx33xxx     xxx3xxx3xxxx xxxxx xxx     xx3xx

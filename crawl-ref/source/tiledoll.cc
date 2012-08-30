@@ -23,19 +23,19 @@
 dolls_data::dolls_data()
 {
     parts = new tileidx_t[TILEP_PART_MAX];
-    memset(parts, 0, TILEP_PART_MAX * sizeof(int));
+    memset(parts, 0, TILEP_PART_MAX * sizeof(tileidx_t));
 }
 
 dolls_data::dolls_data(const dolls_data& _orig)
 {
     parts = new tileidx_t[TILEP_PART_MAX];
-    memcpy(parts, _orig.parts, TILEP_PART_MAX * sizeof(int));
+    memcpy(parts, _orig.parts, TILEP_PART_MAX * sizeof(tileidx_t));
 }
 
 const dolls_data& dolls_data::operator=(const dolls_data& other)
 {
-    memcpy(parts, other.parts, TILEP_PART_MAX * sizeof(int));
-    return (*this);
+    memcpy(parts, other.parts, TILEP_PART_MAX * sizeof(tileidx_t));
+    return *this;
 }
 
 dolls_data::~dolls_data()
@@ -47,9 +47,7 @@ dolls_data::~dolls_data()
 bool dolls_data::operator==(const dolls_data& other) const
 {
     for (unsigned int i = 0; i < TILEP_PART_MAX; i++)
-    {
         if (parts[i] != other.parts[i]) return false;
-    }
     return true;
 }
 
@@ -58,7 +56,7 @@ dolls_data player_doll;
 bool save_doll_data(int mode, int num, const dolls_data* dolls)
 {
     // Save mode, num, and all dolls into dolls.txt.
-    std::string dollsTxtString = datafile_path("dolls.txt", false, true);
+    string dollsTxtString = datafile_path("dolls.txt", false, true);
 
     struct stat stFileInfo;
     stat(dollsTxtString.c_str(), &stFileInfo);
@@ -82,7 +80,8 @@ bool save_doll_data(int mode, int num, const dolls_data* dolls)
         // Print some explanatory comments. May contain no spaces!
         fprintf(fp, "#Legend:\n");
         fprintf(fp, "#***:equipment/123:index/000:none\n");
-        fprintf(fp, "#Shadow/Base/Cloak/Boots/Legs/Body/Gloves/Weapon/Shield/Hair/Beard/Helmet/Halo/Enchant/DrcHead/DrcWing\n");
+        fprintf(fp, "#Shadow/Base/Cloak/Boots/Legs/Body/Gloves/Weapon/Shield/"
+                    "Hair/Beard/Helmet/Halo/Enchant/DrcHead/DrcWing\n");
         fprintf(fp, "#Sh:Bse:Clk:Bts:Leg:Bdy:Glv:Wpn:Shd:Hai:Brd:Hlm:Hal:Enc:Drc:Wng\n");
         char fbuf[80];
         for (unsigned int i = 0; i < NUM_MAX_DOLLS; ++i)
@@ -92,10 +91,10 @@ bool save_doll_data(int mode, int num, const dolls_data* dolls)
         }
         fclose(fp);
 
-        return (true);
+        return true;
     }
 
-    return (false);
+    return false;
 }
 
 bool load_doll_data(const char *fn, dolls_data *dolls, int max,
@@ -104,7 +103,7 @@ bool load_doll_data(const char *fn, dolls_data *dolls, int max,
     char fbuf[1024];
     FILE *fp  = NULL;
 
-    std::string dollsTxtString = datafile_path(fn, false, true);
+    string dollsTxtString = datafile_path(fn, false, true);
 
     struct stat stFileInfo;
     stat(dollsTxtString.c_str(), &stFileInfo);
@@ -120,7 +119,7 @@ bool load_doll_data(const char *fn, dolls_data *dolls, int max,
     {
         // File doesn't exist. By default, use equipment settings.
         *mode = TILEP_MODE_EQUIP;
-        return (false);
+        return false;
     }
     else
     {
@@ -155,7 +154,7 @@ bool load_doll_data(const char *fn, dolls_data *dolls, int max,
 
                 // If we don't need to load a doll, return now.
                 fclose(fp);
-                return (true);
+                return true;
             }
 
             int count = 0;
@@ -185,7 +184,7 @@ bool load_doll_data(const char *fn, dolls_data *dolls, int max,
         }
 
         fclose(fp);
-        return (true);
+        return true;
     }
 }
 
@@ -279,40 +278,20 @@ void fill_doll_equipment(dolls_data &result)
     {
         const int item = you.melded[EQ_WEAPON] ? -1 : you.equip[EQ_WEAPON];
         if (you.form == TRAN_BLADE_HANDS)
-        {
             result.parts[TILEP_PART_HAND1] = TILEP_HAND1_BLADEHAND;
-        }
-        else if (item == -1 && you.has_tentacles(false)
-                 && you.species != SP_OCTOPODE)
-        {
-            result.parts[TILEP_PART_HAND1] = TILEP_HAND1_TENTACLE;
-        }
         else if (item == -1)
-        {
             result.parts[TILEP_PART_HAND1] = 0;
-        }
         else
-        {
             result.parts[TILEP_PART_HAND1] = tilep_equ_weapon(you.inv[item]);
-        }
     }
     // Off hand.
     if (result.parts[TILEP_PART_HAND2] == TILEP_SHOW_EQUIP)
     {
         const int item = you.equip[EQ_SHIELD];
         if (you.form == TRAN_BLADE_HANDS)
-        {
             result.parts[TILEP_PART_HAND2] = TILEP_HAND2_BLADEHAND;
-        }
-        else if (item == -1 && you.has_tentacles(false)
-                 && you.species != SP_OCTOPODE)
-        {
-            result.parts[TILEP_PART_HAND2] = TILEP_HAND2_TENTACLE;
-        }
         else if (item == -1)
-        {
             result.parts[TILEP_PART_HAND2] = 0;
-        }
         else
         {
             result.parts[TILEP_PART_HAND2] = tilep_equ_shield(you.inv[item]);
@@ -341,23 +320,29 @@ void fill_doll_equipment(dolls_data &result)
     {
         const int item = you.equip[EQ_HELMET];
         if (item != -1)
-        {
             result.parts[TILEP_PART_HELM] = tilep_equ_helm(you.inv[item]);
-        }
         else if (player_mutation_level(MUT_HORNS) > 0)
         {
-            switch (player_mutation_level(MUT_HORNS))
+            if (you.species == SP_FELID
+                && is_player_tile(result.parts[TILEP_PART_BASE], TILEP_BASE_FELID))
             {
-                case 1:
-                    result.parts[TILEP_PART_HELM] = TILEP_HELM_HORNS1;
-                    break;
-                case 2:
-                    result.parts[TILEP_PART_HELM] = TILEP_HELM_HORNS2;
-                    break;
-                case 3:
-                    result.parts[TILEP_PART_HELM] = TILEP_HELM_HORNS3;
-                    break;
+                // Felid horns are offset by the tile variant.
+                result.parts[TILEP_PART_HELM] = TILEP_HELM_HORNS_CAT
+                    + result.parts[TILEP_PART_BASE] - TILEP_BASE_FELID;
             }
+            else
+                switch (player_mutation_level(MUT_HORNS))
+                {
+                    case 1:
+                        result.parts[TILEP_PART_HELM] = TILEP_HELM_HORNS1;
+                        break;
+                    case 2:
+                        result.parts[TILEP_PART_HELM] = TILEP_HELM_HORNS2;
+                        break;
+                    case 3:
+                        result.parts[TILEP_PART_HELM] = TILEP_HELM_HORNS3;
+                        break;
+                }
         }
         else
             result.parts[TILEP_PART_HELM] = 0;
@@ -383,6 +368,8 @@ void fill_doll_equipment(dolls_data &result)
         const int item = you.equip[EQ_GLOVES];
         if (item != -1)
             result.parts[TILEP_PART_ARM] = tilep_equ_gloves(you.inv[item]);
+        else if (player_mutation_level(MUT_TENTACLE_SPIKE))
+            result.parts[TILEP_PART_ARM] = TILEP_ARM_OCTOPODE_SPIKE;
         else if (you.has_claws(false) >= 3)
             result.parts[TILEP_PART_ARM] = TILEP_ARM_CLAWS;
         else
@@ -437,7 +424,8 @@ void save_doll_file(writer &dollf)
 }
 
 #ifdef USE_TILE_LOCAL
-void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll, int x, int y, bool submerged, bool ghost)
+void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll,
+                   int x, int y, bool submerged, bool ghost)
 {
     // Ordered from back to front.
     int p_order[TILEP_PART_MAX] =

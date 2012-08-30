@@ -61,8 +61,7 @@ NAME:   temple_fountains
 TAGS:   temple_entry
 ORIENT: float
 SUBST:  ? : T:30 U
-KMASK:  T = no_monster_gen
-KMASK:  U = no_monster_gen
+KMASK:  TU = no_monster_gen
 KFEAT:  O = enter_temple
 MAP
 ...?...
@@ -103,8 +102,7 @@ TAGS:   temple_entry
 ORIENT: float
 SUBST:  c:cxxx
 SUBST:  ? : ?:40 T:30 U, ? = T:30 U
-KMASK:  T = no_monster_gen
-KMASK:  U = no_monster_gen
+KMASK:  TU = no_monster_gen
 KFEAT:  O = enter_temple
 MAP
 cccccccccc
@@ -124,8 +122,7 @@ ORIENT: float
 SUBST:  ? : ?:40 T:30 U, ? = T:30 U
 SUBST:  c:cxxx
 NSUBST: X = 1:= / *=m=
-KMASK:  T = no_monster_gen
-KMASK:  U = no_monster_gen
+KMASK:  TU = no_monster_gen
 KFEAT:  O = enter_temple
 MAP
 ccccccccccc
@@ -145,8 +142,7 @@ ORIENT: float
 SUBST:  ? : ?:40 T:30 U, ? = T:30 U
 SUBST:  c:cxxx
 NSUBST: X = 1:= / *=m=
-KMASK:  T = no_monster_gen
-KMASK:  U = no_monster_gen
+KMASK:  TU = no_monster_gen
 KFEAT:  O = enter_temple
 MAP
 ccccccccc
@@ -168,8 +164,7 @@ ORIENT: float
 SUBST:  ? : ?:40 T:30 U, ? = T:30 U
 SUBST:  c:cxxx
 NSUBST: X = 1:= / *=m=
-KMASK:  T = no_monster_gen
-KMASK:  U = no_monster_gen
+KMASK:  TU = no_monster_gen
 KFEAT:  O = enter_temple
 MAP
 ccccccccccc
@@ -191,8 +186,7 @@ ORIENT: float
 SUBST:  ? : ?:40 T:30 U, ? = T:30 U
 SUBST:  c:cxxx
 NSUBST: X = 1:= / *=m=
-KMASK:  T = no_monster_gen
-KMASK:  U = no_monster_gen
+KMASK:  TU = no_monster_gen
 KFEAT:  O = enter_temple
 MAP
 cccccc@cccccc
@@ -447,8 +441,7 @@ TAGS:   temple_entry
 ORIENT: float
 SUBST:  T = TV U:1
 SUBST:  X : xc v:1 b:1
-KMASK:  T = no_monster_gen
-KMASK:  U = no_monster_gen
+KMASK:  TU = no_monster_gen
 KFEAT:  O = enter_temple
 MAP
 xxx...xxx
@@ -548,8 +541,7 @@ NSUBST: C = 1:. / *:c
 NSUBST: D = 1:. / *:c
 NSUBST: E = 1:. / *:c
 NSUBST: F = 1:. / *:c
-KMASK:  T = no_monster_gen
-KMASK:  U = no_monster_gen
+KMASK:  TU = no_monster_gen
 KFEAT:  O = enter_temple
 MAP
 ccBcccBcccBcc
@@ -570,19 +562,19 @@ ENDMAP
 NAME:   minmay_temple_entry_mist
 TAGS:   temple_entry
 ORIENT: float
-MARKER: l = lua:fog_machine { cloud_type = "thin mist", pow_min = 1, \
+MARKER: ! = lua:fog_machine { cloud_type = "thin mist", pow_min = 1, \
         pow_max = 3, delay = 10, start_clouds = 1, size_min = 2, \
         size_max = 3, spread_rate = -1 }
-KMASK:  W = no_monster_gen
-KMASK:  l = no_monster_gen
+KMASK:  W! = no_monster_gen
+KFEAT:  ! = shallow_water
 KFEAT:  O = enter_temple
 MAP
 ..WWW..
-.WWWWW.
+.WW!WW.
 WWWWWWW
-WWWOWWW
+W!WOW!W
 WWWWWWW
-.WWWWW.
+.WW!WW.
 ..WWW..
 ENDMAP
 
@@ -608,8 +600,7 @@ TAGS:   temple_entry
 ORIENT: float
 SUBST:  c : c:80 xv
 SUBST:  T = T:80 UV
-KMASK:  T = no_monster_gen
-KMASK:  U = no_monster_gen
+KMASK:  TU = no_monster_gen
 KFEAT:  O = enter_temple
 MAP
 ccc+ccc
@@ -640,8 +631,7 @@ NAME:   minmay_temple_entry_statues_fountains
 TAGS:   temple_entry
 ORIENT: float
 SUBST:  T = T:80 UV
-KMASK:  T = no_monster_gen
-KMASK:  U = no_monster_gen
+KMASK:  TU = no_monster_gen
 KFEAT:  O = enter_temple
 MAP
 .......
@@ -658,8 +648,7 @@ TAGS:   temple_entry
 ORIENT: float
 SUBST:  x : xxxc
 SUBST:  T = T:80 UV
-KMASK:  T = no_monster_gen
-KMASK:  U = no_monster_gen
+KMASK:  TU = no_monster_gen
 KFEAT:  O = enter_temple
 MAP
 xx@xx@xx@xx
@@ -1382,7 +1371,6 @@ ENDMAP
 
 # Autumnal temple, 12 altars (oiseaux)
 NAME:   oiseaux_autumnal_temple_12
-DESC:   Autumnal temple
 PLACE:  Temple
 ORIENT: encompass
 TAGS:   no_rotate no_pool_fixup

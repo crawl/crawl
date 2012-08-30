@@ -9,13 +9,13 @@ struct cloud_info
     cloud_info() : type(CLOUD_NONE), colour(0), duration(3), tile(0), pos(0, 0)
     { }
 
-    cloud_info(cloud_type t, uint8_t c,
+    cloud_info(cloud_type t, colour_t c,
                uint8_t dur, unsigned short til, coord_def gc)
         : type(t), colour(c), duration(dur), tile(til), pos(gc)
     { }
 
     cloud_type type:8;
-    uint8_t colour;
+    colour_t colour;
     uint8_t duration; // decay/20, clamped to 0-3
     unsigned short tile;
     coord_def pos;
@@ -47,6 +47,8 @@ struct cloud_info
 #define MAP_LIQUEFIED       0x400000
 #define MAP_ORB_HALOED      0x800000
 #define MAP_UMBRAED        0x1000000
+#define MAP_SUPPRESSED     0X2000000
+#define MAP_QUAD_HALOED    0X4000000
 
 /*
  * A map_cell stores what the player knows about a cell.
@@ -84,7 +86,7 @@ struct map_cell
     map_cell& operator=(const map_cell& c)
     {
         if (&c == this)
-            return (*this);
+            return *this;
         if (_cloud)
             delete _cloud;
         if (_mons)
@@ -98,7 +100,7 @@ struct map_cell
             _mons = new monster_info(*_mons);
         if (_item)
             _item = new item_info(*_item);
-         return (*this);
+         return *this;
     }
 
     void clear()
@@ -236,7 +238,18 @@ struct map_cell
 
     void set_cloud(const cloud_info& ci)
     {
+        if (_cloud)
+            delete _cloud;
         _cloud = new cloud_info(ci);
+    }
+
+    void clear_cloud()
+    {
+        if (_cloud)
+        {
+            delete _cloud;
+            _cloud = 0;
+        }
     }
 
     bool known() const
@@ -278,7 +291,7 @@ private:
 #else
     dungeon_feature_type _feat:8;
 #endif
-    uint8_t _feat_colour;
+    colour_t _feat_colour;
     cloud_info* _cloud;
     item_info* _item;
     monster_info* _mons;
@@ -286,19 +299,19 @@ private:
 };
 
 void set_terrain_mapped(int x, int y);
-inline void set_terrain_mapped(const coord_def& c)
+static inline void set_terrain_mapped(const coord_def& c)
 {
     set_terrain_mapped(c.x,c.y);
 }
 
 void set_terrain_seen(int x, int y);
-inline void set_terrain_seen(const coord_def& c)
+static inline void set_terrain_seen(const coord_def& c)
 {
     set_terrain_seen(c.x, c.y);
 }
 
 void set_terrain_changed(int x, int y);
-inline void set_terrain_changed(const coord_def &c)
+static inline void set_terrain_changed(const coord_def &c)
 {
     set_terrain_changed(c.x, c.y);
 }
@@ -307,9 +320,8 @@ void set_terrain_visible(const coord_def &c);
 void clear_terrain_visibility();
 
 int count_detected_mons(void);
-void map_knowledge_forget_mons(const coord_def &c);
 
-void clear_map(bool clear_items = false, bool clear_mons = true);
+void clear_map(bool clear_items = true, bool clear_mons = true);
 
 map_feature get_cell_map_feature(const map_cell& cell);
 

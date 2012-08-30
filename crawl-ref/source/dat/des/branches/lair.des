@@ -223,7 +223,7 @@ ENDMAP
 NAME:   erik_lair_island
 TAGS:   lair_entry
 ORIENT: float
-MONS:   w:60 troll / Snorg
+MONS:   troll
 MONS:   w:30 hound / jackal / w:20 war dog
 SUBST:  ? = w.
 KFEAT:  O = enter_lair
@@ -334,6 +334,46 @@ MAP
    .1..11111.1....
      ......1....
        ..1....
+ENDMAP
+
+################################################################################
+# A guard hut placed over the entrance of the lair,
+# and a guard to watch over it.
+NAME:   grunt_lair_entry_elf_guard_hut
+ORIENT: float
+TAGS:   lair_entry transparent
+MONS:   plant / fungus / nothing
+MONS:   w:100 bat / w:100 rat / w:30 green rat / crocodile / yak / w:20 nothing
+KMONS:  A = patrolling deep elf soldier name:deep_elf_watchman \
+            name_replace name_descriptor name_nocorpse
+KFEAT:  O = enter_lair
+SUBST:  D = 1:5 2:2 .
+SUBST:  . = 1:2 2:2 .
+SUBST:  . = G:10 B:5 .
+COLOUR: G = green
+FTILE:  G = floor_grass
+SUBST:  G = .
+COLOUR: B = brown
+FTILE:  B = floor_dirt
+SUBST:  B = .
+SUBST:  C = .
+KFEAT:  O = enter_lair
+validate {{ return has_exit_from_glyph('O') }}
+MAP
+    ...@..
+  ..D.1.1...
+ ..D.1D1D1...
+ .D.1D221D1..
+.D.1D1D1D1D1..
+..1D1ccccD1D1.
+@1D2DcOAc121..
+..121c%CcD2D1@
+.1D1Dcc+c1D1..
+..1D1D1C1D1.D.
+ ..1D122D1.D.
+ ...1D1D1.D..
+  ...1.1.D..
+    ..@...
 ENDMAP
 
 ################################################################################
@@ -1278,6 +1318,682 @@ aaaw..ww
 ENDMAP
 
 ###############################################################################
+# Two stream minivaults
+NAME:   guppyfry_lair_drakes
+DEPTH:  Lair:3-7
+TAGS:   mini_float uniq_mini_stream
+MONS:   fire drake / swamp drake / mottled dragon
+MONS:   steam dragon
+MONS:   plant
+SUBST:  - = wwWW..%
+SHUFFLE: .t
+MAP
+.3WW-3.....
+.ttWW-ttt..
+.3ttW-tt.t.
+.ttWWtt...t
+tt1Wttt2.tt
+.ttWW-t3.t.
+..ttWW--1t.
+.tt1-WWttt.
+..tt--Wtt3.
+.tt3.tWWttW
+.ttt.ttWWW-
+....3.3-W-.
+ENDMAP
+
+NAME:   guppyfry_mini_stream
+DEPTH:  Lair
+TAGS:   mini_float uniq_mini_stream
+SUBST:  - = wW.%
+MAP
+..WW.......
+.ttWW.ttt..
+..ttW.tt.t.
+.ttWWtt...t
+tt0Wttt0.tt
+.ttWW.t..t.
+..ttWW-.0t.
+.tt0-WWttt.
+..tt.-Wtt..
+.tt..tWWtt.
+.ttt.ttWWtt
+........W..
+ENDMAP
+
+###############################################################################
+# A polar bear lost in the jungle, how odd
+NAME:  roderic_lost_polar_bear
+TAGS:  no_monster_gen mini_float
+DEPTH: Lair:3-7
+MONS:  plant, polar_bear, bush
+SUBST: ? = 1t
+SUBST: ' = .:80 1 3:3
+MAP
+??'.
+.'2'
+'??.
+ENDMAP
+
+###############################################################################
+# Wood themed vaults. Can generate in Forest as well as Lair. Some can spawn
+# in D.
+NAME:   wad_woods_pond
+TAGS:   uniq_wad_woods_large
+DEPTH:  Lair, Forest, D:2-16
+ORIENT: float
+WEIGHT: 1
+KFEAT:  t  = mangrove
+KFEAT:  q  = tree
+FTILE:  '1 = floor_grass_dirt_mix
+FTILE:  q1. = floor_woodground
+MARKER: O  = lua:fog_machine { \
+             pow_min = 3, pow_max = 7, delay = 21, \
+             size = 2, walk_dist = 1, spread_rate= 36 }
+MONS:   plant
+MAP
+                 .         qq.
+             qqqq. qq  qqqqq...qqq    qq   qq
+         qqqqqqqq...qqqqqqq....qqqq....q. qqq
+      qqqq11.qq.q...q11q.......qq.qqqqq..q..qq
+     qqqqqqq..qq.q1...q.1q...q...q...qqqq..q.qq
+   qqq.qq.qqq1q1q.q.....qq.........q....qqq....
+  qqq....qqqq.q.........Wq.q............q..q.q
+ qqqqq..qqq.q...q.W.OWtWt1q....1........q....qq
+ qq11.qqqq1.q..q...W1tWWtW1tWt....1....'.''..qq
+qqq1.q.1q.q......WtWWWwWWtWWtWtW.W......''...q
+ qq...q........tWtWWww.w>.WWWWWWWt.1......'..q
+  qqqq...q...q....ttWWtwwtWWWtWW1W......11q1.qq
+  qqq...11q1q.q...W.W.WWWWtW1tW.qt.......q.qqqq
+ qq.q.q.qq.q1qqqq....W.tWtW1WO.t....1...q1.q...
+qqq..qqqqqq.qq.q.q.1.........1.........qqq..1q
+ qq.q...qqqq.q1.11................q.q.q.qqqqq
+ qq...q..q.qq1q11..1q..........q1q.q.q1q.qq1.
+ qq....1q..qq.q1...qqq1...1...q.q.q.q.q.q.q...
+qqq....qq1qq.q......1qqq1...qqqq.qqq1q.q.q.qq..
+ qq...q11qq..1q........qq.1q.qq.qq.qq1q.q.q.qq.
+ .q......q..1q1.....1..1q.q.qq.q.q.q.q.q.q.q
+...q.......q1.........1q1qq..1qq..q.qqq.q.q.
+ .q1q....1.....'.....q.1..qq.q..q..11qqq1q.q
+  1.qq.1.....''''...qq..q..qq..q1.1qq..qq1q.q
+     ......'''''.....qq.q.11qq..q..q.1q..q.q.q
+      ..1...'.'''..q..q.11.q.qq...q1.qqq..q..q
+      q.........1...qq.1.qq.qq..q.qqqq...q..qq
+      .q1.1..1.......q..q.q.1qq.q11..q.q..1q
+       ..1.11..1.11q.1q.qqqq.q.q1.q.qqq..1qqq
+          ..111.1.qqqqqqq    qqqqq qqqqqq.qq
+            ......qqqqq       qqq  qqqqqq..
+              ..   qqq                    .
+ENDMAP
+
+NAME:   wad_woods_settlement
+TAGS:   uniq_wad_woods_large
+DEPTH:  Lair, Forest, D:2-16
+ORIENT: float
+WEIGHT: 1
+KFEAT:  q  = tree
+FTILE:  '2*+ = floor_dirt
+FTILE:  q13%OtI. = floor_woodground
+MARKER: O  = lua:fog_machine { \
+             pow_min = 3, pow_max = 7, delay = 21, \
+             size = 2, walk_dist = 1, spread_rate= 36 }
+MONS:   plant, gnoll, porcupine
+MAP
+               ..  qqqq   ...   ...
+          .qq.q...q11q.......qq.qqq
+       .qq..qq.q1...q.1q...q...q...qqq
+     qq.qqq1q1q.q................q....qqq.
+      .q.qq.q.......xxx...............q..q.
+    ..qqq.q...xxx...+2x'''''''1......x.q..
+  1.qq.q1%....x'+'''xxx'....x+xx1...x.....
+q1.q.1q.q.....xxx..'1'''..1.x''x..........
+q...q..............'''1..T..x*2x..1.x......
+qqqq...q...q.........'.%....xx+x1...x.11q1.
+ qq...11q1q.q.....x..''''''''''........q.qqq
+..q.q.qq.q1qq.q....x''.xxxx.......1...q1.q.
+q..qq...q.qq.q.q.1''x''+''x..........qqq..1
+q.q...qq.qOq1.11.'....1xxxx1....q.q.q.qqqqq
+ ...q..q.qq1q11.'1q..........q1q.q.q1q.qq1.
+  ...1q.%qq.q1..'qq.1....1..q.q.q.q.q.qOq...
+  ...qq1qq.q....'.1qqq1...qqqq.qqq1q.q.q.qq
+  ..q11qq..1q...'....qq.1q.qq%qq.qq1q3q.q
+ ......q..1q1..I'I1..1q.q.qq.q.q.q.q.q.q.q
+.q.......q1.....'...1q1qq..1qq..q.qqq.q.q
+q1q....1........'..q.1..qq.qO.q..11qqq1q.
+1.qq.1....xxx..'..qq..q..qq3.q1.1qq..qq1qq
+  q.......x'+''....qq.q.11qq..q..q.1q..q.q.
+  qq..1...xxx....q..q.11.q.qq...q1.qqq..q...
+.q1.q.........1...qq.1.qq.qq..q.qqqq...q..qq
+1.q1.q1.1..1.......q%.q.q.1qq.q11..q.q.31qqq
+qq.11..1.11..1.1  .1q.qqq      .q.qqq..1qq
+.1q   .1  111. .     qq        qq.q qqq.qq
+ENDMAP
+
+NAME:   wad_woods_tower
+TAGS:   uniq_wad_woods_med
+DEPTH:  Lair, Forest, D:2-16
+ORIENT: float
+WEIGHT: 1
+KFEAT:  q  = tree
+FTILE:  '2*+~T = floor_dirt
+FTILE:  q13%OI. = floor_woodground
+MARKER: O  = lua:fog_machine { \
+             pow_min = 3, pow_max = 7, delay = 21, \
+             size = 2, walk_dist = 1, spread_rate= 36 }
+MONS:   plant, gnoll, porcupine
+MAP
+   qqqq....   .qq1   qq.q    qqqq  ..q
+q.1.qqqq.qq.11O..q.11qqq..  13qqqq....q
+q..11xxx.q.qqqq.qqqq....q1q..11q.q..qqq.
+ .q.xx'xxq.1qqq..q1q.qq.qqq.qqqq.1.qqq1
+ .1x+'*~+x..q....q..q..1.q..11qq...q....
+  .qxx'xx.....q.1qqq.1qqq.1..q.q...q.1
+q.13qxxx.q.q.q..qq1.1I...q.q.1qq..qqq.
+ ..q.q...qq..q..1...'''%..1q..q..q...q.
+  .qq.q1...1q.1q...I'T'I.qq......q......
+ ...q..q.qq..111.q..'''.11.1..q.q.1..q.
+ ....q.q.q.qqq1.qq.1.I1q.q....q.q.3qqq..
+..q.qq.q.q..q1q..q.q1qq.qqq.q...1..qqq
+.11O...q..3.q..11q..q....1..11qq.1.q..q.
+q..q1q..q...11q..qqq..qqq....qOq...q.11q
+  1..q..q.  q..qq. 1q..  qq..qq  qqq.qq
+   q.q.1.   .q1.  ..     .11    .q.1...
+ENDMAP
+
+NAME:   wad_woods_stonehenge
+TAGS:   uniq_wad_woods_med
+DEPTH:  Lair, Forest, D:2-16
+ORIENT: float
+WEIGHT: 1
+KFEAT:  q  = tree
+FTILE:  '2*+T = floor_dirt
+FTILE:  q1C3%OI. = floor_woodground
+MARKER: O  = lua:fog_machine { \
+             pow_min = 3, pow_max = 7, delay = 21, \
+             size = 2, walk_dist = 1, spread_rate= 36 }
+MONS:   plant, gnoll, porcupine
+MAP
+       .....q..qq1.q  q.q    .. qq...
+      qq1qq.1qOq.q.11qqq..1.13qqqq.1..
+     qqq%q.qqqq.qqqq....q1q..11q.q.1qq..
+    qqqqqqq1qqq..q1q.qq.qqq.qqqq.1.qqq1q
+    qqqqqqq.q.q..q..q..1.q..11qq1..q.1.qqq
+   qqqqqq1q.1.q.1qqq.1q..1..q.q...1q11..qq
+  13qqqqqq1q.q...q1..I...q.q......qq..1q11
+q.qq.q.q.qq..q..1......c...c...q..q..q.q
+.q11q.q1.q.1q.1q.................q..1...
+q1..q1.q.qq.q111.q...c...C...c..1q.1.qq.q.
+ .1q.q.11q.qqq1.q..1............q.3qqqq...
+  q.qq.q.q..q1q......1.c...c...1.1..qq1.
+  1O.qqq1.3.q..11q1....1.1..11qq.1.q1...
+   q1qqqq.1.11q..qqq1.qq11qq.qOq1.qq.11
+    qq..q.q1   qq.11q1.1    .qq.1qqq.
+      .q.q  .   .q..q        .q1.q
+ENDMAP
+
+NAME:   wad_woods_01
+TAGS:   mini_float uniq_wad_woods_small
+DEPTH:  Lair, Forest
+WEIGHT: 1
+FTILE:  '*+T = floor_dirt
+FTILE:  qt123C%OI. = floor_woodground
+MARKER: O  = lua:fog_machine { \
+             pow_min = 3, pow_max = 7, delay = 21, \
+             size = 2, walk_dist = 1, spread_rate= 8 }
+MONS:   plant, gnoll, porcupine
+MAP
+     tt.tt  tt.1ttt
+    tt...tt1tOtt.1.t
+   ..1ttt....tttt...
+ t2t.ttt.tttttt2t.t.1t
+ t.tt..1tt1.tt.t.tt.tt
+ .tt.%1...tt.1ttt..t.tt
+tO1.tt..tt.t.t.tttt2t1
+t.t.tt.t.tt.tI..ttt.tt
+tt.ttt.1..ttt..ttt.1.tt
+t.tt.ttttt.tt1ttt1.t.tt
+ttt.tt2ttt..%.2ttOttt
+  ..1tt.t1t..I...t.t
+   .tt..2t1t.t.tt1t
+    .ttt  .t..ttt
+ENDMAP
+
+NAME:   wad_woods_02
+TAGS:   mini_float uniq_wad_woods_small
+DEPTH:  Lair, Forest
+WEIGHT: 1
+FTILE:  '*+T = floor_dirt
+FTILE:  tq123C%I. = floor_woodground
+MONS:   plant, gnoll, porcupine
+MAP
+   .1t1.t   .t.1t
+   t.1...t.1t1tt.1
+   131t.t.1..t1tt...
+  1t.ttt.tt.1t1t..t1
+ t.tt.11tt1....t.tt.t
+t.tt.%2..WWW......1t.tt
+tt1.....WWwWW..t.tt.t1.
+.1t.tt...WWW...tt1.t.t2
+ t.t.t.1..W.2..t1t.1.tt
+t.tt.t1t..1..1t.t1.t.
+...1t11t1t.1%.ttt...
+ t1.1tt.t1t..I..1..
+  t11..1tt    .1.1t
+    .1..1       .1.
+ENDMAP
+
+NAME:   wad_woods_03
+DEPTH:  Lair, Forest
+WEIGHT: 1
+FTILE:  '*~0+T1 = floor_dirt
+FTILE:  tq23C%I. = floor_woodground
+MONS:   plant, gnoll, porcupine
+MAP
+          .t t.tt'xx
+   .''t...tt'''''t.1x
+@'''.t''''~'ttttx11x1tx
+  ttt..t.tttxttxx11xx1x
+  ...1t.tttxxxxxxx+xxx1
+  .t..tttxtx'''x''''x1x
+  t.tt.tttxx''0+'''0xx1
+  .tt.tttttxxxxxxxxxxxx
+   ....tt..tttxxtxxxxxx
+    ..tttt..1xtttxxxxxx
+    ...t1.ttt.1ttxxxxxx
+      ..t.tt1txxtxxxxxx
+         ttxxxxxxxxxxxx
+            t1txxtttxtx
+ENDMAP
+
+NAME:   wad_woods_04
+TAGS:   mini_float extra
+DEPTH:  Lair, Forest
+WEIGHT: 1
+FTILE:  '+*~T = floor_dirt
+FTILE:  t*q123C%I. = floor_woodground
+MONS:   plant, bush, fungus
+MAP
+            .tttttt.ttxtx
+          t1t.tttxtt.tttx
+      tt1t11tt11ttxxx.xxx
+     tt.tt..tttttttx.x.xx
+    tt1t..tt11txxtt.ttx..
+    tttt.tttttxxxx.xxxxxx
+   tt1t2tttx.xxxx....xxxx
+   ttt11tt1.t..t.txxx.x.x
+  ..tttt1t.ttxx.xxxxxx.xx
+ .t.1.tt....ttxttxt..xx.x
+.ttttt..tttttttt.xxx..1x.
+tt1t.t.txx..xx..xxxxxxxxx
+tt...tttttxx.t.xxtxxxxxxx
+x.tt.x.xxxxx..xxxxx''*xxx
+.xx1xxxxxxxxxxx1.1x'~'xxx
+xxxx1..........xxx+'''xxx
+xxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   wad_woods_06
+TAGS:   mini_float extra
+DEPTH:  Lair, Forest
+WEIGHT: 1
+FTILE:  '+T = floor_dirt
+FTILE:  t*q123C%0I. = floor_woodground
+MONS:   plant, bush, fungus
+MAP
+    tt2ttt  1
+   tt.ttttt1t
+  tttt.ttt1tt
+tt1tt.1.tttt
+tttt0...2tt1
+ tt...I0.1ttt
+ ttt02..1ttt
+tt1tt...ttttt
+t1tt1ttt21tt
+   tttttt.t
+     tt1t.t
+ENDMAP
+
+NAME:   wad_woods_antlair
+TAGS:   mini_float
+DEPTH:  Lair, Forest
+WEIGHT: 1
+FTILE:  t*q1234C%I. = floor_woodground
+MONS:   plant, soldier ant, queen ant, worker ant
+MAP
+xxxxxxxxxxx1.xxxx
+xxx1xxx1xt.t.txxx
+x1xx1%..t1t.1x.tx
+xx..1.t...WWt%.x.
+xxxx.t.t.1tWWtt1.
+xxxxxxx1.....t.t.
+xxxxxx.x.x.1x...t
+xxxx.x.2xxx.xx.xx
+xxx4x.x.xxx.x.xxx
+xxxx.x.4x2..x.x2x
+x.x.x4x.W.x2x%.4x
+x2..x.xWWW.x.43*x
+xx4xxxxxxxx4xx*%x
+xxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   wad_woods_river_01
+DEPTH:  Lair, Forest, D:2-16
+ORIENT: float
+WEIGHT: 1
+FTILE:  t+*q123C0%I. = floor_woodground
+MONS:   plant, bush, fungus
+MAP
+      tttt       ttttt
+   t.tt1t.tt.   tt.t..tt
+  t..t1ttt.t.t.tt11t.tt.t
+ .1tt.ttttttt.t.t..t.t.t...
+ .t.tttttt.t.tt1....t.t.t...
+  t.t1tttt.1ttt.t.ttt.t.tt1t.
+.ttt.t.tt1t.1t.tt1t.t.tt.t.ttt
+t.1t.tt.tt.tt.t.ttt.t.t.t1tttt
+ttt1t......0..1tWWWWWWWWWWWttt
+ tt...tWWWWWWWWWWwwwwwwwwwWWWW
+WWWWWWWWwwwwwwwwwwWWWWWWwwwwww
+wwwwwwwwwwwWWWWWWWWW1.tWWWWWWW
+WWWWWWWWWWWWWt....1.......ttt
+tttt..tt.t....t.t..ttt1..t.tt
+ttt.tt.t.tt1t1t.t.1tt.t.tttttt
+ tt1t.tttttt.t.tttt.t.t1t1.ttt
+  ttt.t.t1t.t.t.1tt.t.tt11tt
+  tt.1tt1t.ttttt.t.t.t1t.ttt
+    .t1tttttttttttt.ttt.t.tt
+    .tttt   tt ttttt.ttttt
+   .ttt           ttt.tt
+ENDMAP
+
+NAME:   wad_woods_river_02
+TAGS:   mini_float extra
+DEPTH:  Lair, Forest
+WEIGHT: 1
+FTILE:  t|+*q1203C%OI. = floor_woodground
+MARKER: O  = lua:fog_machine { \
+             pow_min = 4, pow_max = 9, delay = 32, \
+             size = 2, walk_dist = 1, spread_rate= 24 }
+MONS:   plant, bush, fungus
+MAP
+      tttttttttt1tt
+   tt1ttt..WWWW...tt
+ttt1ttt..WWWwwWWW..tt
+t11t.WWtWWWwwwwwWWWtt
+.tt.WWWWWWwww|twwwWWt
+WWWWWWwwwwwww>OwwwWWt
+wwwwwwwwwwwwwwwwwwWWt
+WWWWWWwwwwwwwwwwWWW1t
+..ttWWWwwwwwwwWWW..tt
+tt.t.tWWWwWWWWW.t.ttt
+ttt1ttt.WWWt.ttt.t1t
+  tttt1t..ttttttt1tt
+    tttttttttttttt
+ENDMAP
+
+NAME:   wad_woods_river_03
+TAGS:   mini_float extra
+DEPTH:  Lair, Forest
+WEIGHT: 1
+FTILE:  t+*q1203C%OI. = floor_woodground
+MARKER: O  = lua:fog_machine { \
+             pow_min = 3, pow_max = 7, delay = 32, \
+             size = 3, walk_dist = 1, spread_rate= 24 }
+MONS:   plant, bush, fungus
+MAP
+   1t.tWwW.t.t.t
+   t.ttWwWt.tt1t
+   t.ttWwW.t11tt
+  t11.WWwWWt.t1t
+tt1t.WWwwWW.ttt
+t1ttWWwwWW.tttt
+t.WWwwwWWtOttt
+WWwwwWWtt.t.t
+wwwWWtt.tttt.
+WWWWt.t.t1t
+.tt.t.t1tt
+ENDMAP
+
+NAME:   wad_woods_river_04
+TAGS:   no_vmirror no_rotate mini_float extra
+DEPTH:  D, Lair, Forest
+WEIGHT: 1
+FTILE:  t+*q1203C%I. = floor_woodground
+TILE:   X = wall_brick_dark_leak
+TILE:   x = wall_brick_dark
+SUBST:  X = x
+MONS:   plant, bush, fungus
+MAP
+   ttttxxxtttt
+ tt1txxxxxxxtt
+ttt1xxxxXxxxx1tt
+tttt1xxxWxxx1tt
+ttt.t.1tWt.1t1tt
+tt.t1tt1WW1tt.tt
+.1ttt1tWWtt1tt.t
+ttt11tttWWttt1t1
+tt.ttt1WWWtt*ttt
+t.ttttWWWttttt1t
+ tttt.WwWttt.tt
+   tttWwW1tttt
+   tttWwW..ttt
+    ttWwWt..t
+ENDMAP
+
+NAME:   wad_woods_road_01
+TAGS:   extra
+DEPTH:  Lair, Forest
+WEIGHT: 1
+FTILE:  @' = floor_dirt
+FTILE:  qt0123C%OIT. = floor_woodground
+MONS:   plant, bush, fungus
+MARKER: O  = lua:fog_machine { \
+             pow_min = 3, pow_max = 7, delay = 32, \
+             size = 3, walk_dist = 1, spread_rate= 24 }
+MAP
+    t1t.t1  tt.1tt   .@
+  .1tt1.1   tOtt.1.tt.'
+ tt..2ttt.1..tttt...%'.
+ t2t.ttt.ttt1tt2t.t.'.
+1t.tt..1tt1.tt.t.tt'.1
+t.tt.%1..1tt.1ttt''t1tt
+.........I.....1'...1..
+@'''''''''''''''''''''@
+.1...1...T3............
+t.t.tt.t.tt.tI..t.t.ttt
+tt.ttt.1..ttt..ttt.1.tt
+ .tt.t2ttt.tt1t1t1.t.t
+ tt.tt2ttt..%.2ttOttt
+ t..1tt.t1t..I...t.t
+  t.tt..2 1t.t.tt1t
+  t21t      ..tttt
+ENDMAP
+
+NAME:   wad_woods_road_02
+TAGS:   extra
+DEPTH:  Lair, Forest
+WEIGHT: 1
+FTILE:  @' = floor_dirt
+FTILE:  qt123C%0ITU. = floor_woodground
+MONS:   plant, bush, fungus
+MAP
+      ttt      t
+   ttttt1t  111ttt
+ t.tttt1ttttt1t1t.t
+t1t.tt1ttttttt1ttt.t
+t....t.'''''0t....t.
+@'''''''.I%''''''''@
+t....t0'''''.t....t.
+ttt..ttt1tt11tt.t.tt
+tt.tt.t1tt1tt1ttttt
+tt1tt1ttt303tttttt
+ ttt1ttt3.U.3t1ttt
+   tttt1t3.3ttt1tt
+     tt ttttt1 tt
+ENDMAP
+
+NAME:   wad_woods_road_03
+TAGS:   extra
+DEPTH:  Lair, Forest
+WEIGHT: 1
+FTILE:  @' = floor_dirt
+FTILE:  qt123C%*0ITU. = floor_woodground
+MONS:   plant, bush, fungus
+MAP
+       tt..@.tt
+     1tt..'..t.t
+   ttt1t..'.t.ttt
+ tt1ttt..'.t0t.t
+tt1tt...'.tttt
+ttt..'''.t1t
+....'..11ttt
+.'''..ttt1t
+@....tt1t
+...1tttt
+tttt1tt
+ENDMAP
+
+NAME:   wad_woods_road_04
+DEPTH:  Lair, Forest
+WEIGHT: 1
+FTILE:  @'+T = floor_dirt
+FTILE:  t*q123C%I. = floor_woodground
+MONS:   plant, bush, oklob plant
+MAP
+  ttt..@..ttttttttt
+ t11...'.ttt1tt311t
+ tttt1..'.tttt1t*1tt
+ttt1tttt.'..ttttt1t
+  ttttttt.'..1tt1ttt
+   tt1t...'tttt..t..
+  t1tttt.''''''''...
+  ttttt..'.t1.tt.''@
+   ttt1t.'tttttttttt
+   tt1ttt.'.ttttttt
+  tt1tttttt'..ttttt
+  ttt1tt1..'.ttttt
+   ttt1tt..@ttt
+ENDMAP
+
+NAME:   wad_woods_road_05
+DEPTH:  Lair, Forest
+WEIGHT: 1
+FTILE:  @'~*+T = floor_dirt
+FTILE:  tq123C%0I. = floor_woodground
+MONS:   plant, gnoll, porcupine
+MAP
+       .ttttt1.@.tt
+     .1ttttt..'t1tt
+    .tt..1t.''tttttt
+   tt1tttt.'.t.tW1tt
+ttt.tt....'.t1t1WWtt
+tt.t.tt..~..tttttWWW
+ tttt...'..t1tttxtWw
+ t.1t.''tt1t1ttxxxtW
+ ttt.'.t1tttt1x+*xxt
+ttt.'.tttt   t1xxxtt
+tt.@t1ttt    tttxttt
+ENDMAP
+
+NAME:   wad_woods_road_06
+TAGS:   extra
+DEPTH:  Lair, Forest
+WEIGHT: 1
+FTILE:  @'~*+T = floor_dirt
+FTILE:  tq123C%0I. = floor_woodground
+MONS:   plant
+MAP
+   tt.'@@..tt1ttttt..@@@..ttt
+  tttt.'..ttttt1t11..'...1t11t
+ tt1tt..'...tt1t1t...'..tt1tx1t
+ tttt1t..'....tttt...'..tttxxx1
+ ttttttt..''...ttt..'...ttttx1t
+  tttttt1t..'...t..'..1.tttt%tt
+   tttt.t1tt.''.%.'....t1tt1ttt
+     t1ttttttt.'''...tt111t1tt
+      ttttttttt1....tt1ttt1tt
+       tttttttttttt1tttttt
+           tttttttttttt
+ENDMAP
+
+NAME:   wad_woods_minihive
+TAGS:   no_monster_gen
+DEPTH:  Lair, Forest, D:8-16
+ORIENT: float
+WEIGHT: 5
+KFEAT:  O = mangrove
+FTILE:  ~%.12t3 = floor_woodground
+TILE:   x = wall_brick_brown
+SUBST:  y = ., q = .
+SUBST:  c = x
+MONS:   plant, killer bee, queen bee
+COLOUR: a = yellow
+TILE:   a = wall_wax
+SUBST:  a = x
+MAP
+        ttttttt..t    tt.
+      .ttt.t.tt...t  ttt..
+    ttt.tt..tt.1t.t.1t.1.t...
+ t.t1ttt.1..1WW.1t....t1...t...
+t.1t..t.1..tWWW.t.1.1..t.tt..tt.
+ttt.t11.1t...OWW.1t.t1..tt...ttt
+tttt.1..aaaaaaa1Wt.t...t..tt1ttt
+t.t1.t1aa..a.2aaWWt1.1t.ttttttt
+ tt.ttaaa.aba.aaaWW.t..ttttt1ttt
+  tt.aa.2a3a~a.2aaWtt1t...tt.tt
+  t.aaaaaab|baaaaaa.t.......ttt
+ t1.1aa22a~a.a..aa.t...t.t.ttttt
+tt.1..aaa.aba2aaa.11.t..tttt%ttt
+t.t.1..aa..a2.aaWW.t.tt.tt11t
+tt.t.1.1aaaaaaaWWwW1.t..t.tt
+ tt.t111....t1WWwW.....1ttt
+  11.t.tt1.tt.tWWt1.1tt...
+    t.tttxtttt1ttttttxx.
+      .txxxt   ttxxtttt.
+ENDMAP
+
+NAME:   wad_woods_structure_01
+TAGS:   no_monster_gen
+DEPTH:  Lair, Forest, D:10-20
+ORIENT: float
+WEIGHT: 5
+FTILE:  "2T = floor_grass
+FTILE:  @'~0+ = floor_dirt
+FTILE:  %*.1t3 = floor_woodground
+SUBST:  y = ., q = .
+MONS:   plant, bush, queen bee
+
+MAP
+   ttxcxxxxxxxxxxxxxxxxxxxxxxxcxxxxxct
+ ttttxc''''+''0'xxxxxx'''+~'0'cx0'0'ctt
+ t.ttxc''0'xxxx~x''00x'''x''''cx''~'ctt
+ tt.txc'0''x''x'x''''x''0x''''cx''''ct1
+tt.t.xc'~''x''='+'''0x'''x'''~cc=cc+ct1tt
+t.t.txccc++ccccccxcxcxcxcc++cccx'x2'2tt1tt
+tttt.t.tt''tttttttcttttttt''ttx''x"'"ttt1t
+  ttt..tt''''''tttcttt''''''ttxxxx2'2tt1tt
+ ttt.tt..ttttt''ttctt''t...t.ttt.2"'"2.tt
+ t.tt.t.t.t..tt''tct''ttt..tttx22""'""22tt
+ tt.tt.ttt...t.t''c''t..t.t..tx2""'''""2tt
+ ttt.ttt..t.t.t..'''tt.t.ttt..x"2''T''2"tt
+  ttt...ttt.tt...0'0t.tt...tt.x2""'''""2t
+  ttt.t.t..t.t...'''ttt..tt..tx22""'""22tt
+tcccccccccccccccc+c+ccccccccccccccc=ccccct
+ tttttt.111ttt.1x'x'xtttttttttttttt1ttttt
+ ttt%1.tttt1..tt.'''.ttttttttttttt1.1tt
+  ttt.tt..1txxxc.'''.cxxxttt1tttttt.tttt
+ tt.tttt%.ttt1tt.'''.tttttt.t1ttttt.%*tt
+  tt.1ttt.tt1txx.'''.xxtt..ttt%tttttt..t
+  ttt.%.tt.tttcI.'''.Ict1tttttt.tttt..ttt
+ ttt.t1t1t.tttxx.'''.xx1ttttttt.ttttt.ttt
+ tt.tttt*.tt1ttt.'''.11ttttttt.tt1t.1tttt
+ ttt1tttttttt1xx.'''.xxtttttt.t.%t1tt
+ ttt..ttttttttcI.'''.Icttttttt%.t.
+  tttt1.%tt   xx..'..xxtttt
+   ttttttt     1t.@.tttt
+ENDMAP
+
+###############################################################################
 # Lair endings
 ###############################################################################
 
@@ -1305,25 +2021,23 @@ KFEAT:  o = granite_statue
 function elephant_statue()
   return
 end
+
+set_feature_name("granite_statue", "elephant-shaped statue")
 }}
-MARKER: o = lua:portal_desc { desc="elephant-shaped statue", \
-            desc_long=("This worn granite statue depicts" .. \
-                       " elephants standing guard."), \
-            slaved_to="elephant" }
-MARKER: G = lua:portal_desc { desc="elephant-shaped statue", \
-            desc_long=("This worn granite statue depicts" .. \
-                       " elephants standing guard.") }
+MARKER: o = lua:portal_desc { slaved_to="elephant" }
+MARKER: G = lua:props_marker { veto_fragmentation="veto", \
+                               veto_disintegrate="veto", \
+                               veto_shatter="veto" }
 COLOUR: oG = green
-TILE:   oG = dngn_statue_elephant
+TILE:   oG = dngn_statue_elephant_jade
 MARKER: o = lua:monster_on_death { \
             target="anaconda_guard", new_monster="generate_awake dire elephant", \
             message_seen="The elephant guardians awaken!", \
             message_unseen="You hear a distant trumpeting.", \
             master_name="elephant", \
             veto_fragmentation="veto", veto_disintegrate="veto", \
+            veto_shatter="veto", \
          }
-MARKER:  c = lua:portal_desc { desc="moss-covered stone wall", \
-             desc_long="This stone wall is ancient, and covered in moss." }
 MAP
   xxxxxxxxxxx
  xxxxxXX.XXXxx
@@ -1361,7 +2075,7 @@ KFEAT:  _ = altar_makhleb
 KPROP:  Q = bloody
 KFEAT:  L = endless_lava
 MONS:   smoke demon
-MONS:   red devil / rotting devil / hairy devil / hellwing w:50
+MONS:   red devil / rotting devil w:20 / hellwing w:50
 MONS:   orange demon
 MONS:   sun demon
 MONS:   hydra / fire drake / dire elephant
@@ -1513,15 +2227,15 @@ ENDMAP
 NAME:   minmay_lair_end_frog_pond
 PLACE:  Lair:$
 ORIENT: float
-MONS:   giant frog / spiny frog
+MONS:   giant frog / spiny frog w:7
 MONS:   blink frog
 MONS:   vampire mosquito
 MONS:   plant
 SUBST:  p = 44W2
-SUBST:  w = W:40 w:10 1:2 3:1 4:5
-SUBST:  . = .:40 W:10 1:2 3:1 4:5
+SUBST:  w = W:80 w:20 1:4 3:1 4:10
+SUBST:  . = .:80 W:20 1:4 3:1 4:10
 KFEAT:  W = W
-KMONS:  W = giant leech / nothing w:1000
+KMONS:  W = giant leech / nothing w:1200
 SUBST:  % = %%*|
 : lair_small_ending(_G)
 MAP
@@ -1560,7 +2274,7 @@ NAME:   minmay_lair_end_enchanted_forest
 PLACE:  Lair:$
 ORIENT: northwest
 MONS:   black bear / grizzly bear, wolf, spriggan
-MONS:   spriggan rider / spriggan druid
+MONS:   spriggan rider / spriggan druid n_adj n_noc name:young hd:8
 SUBST:  T : T:20 .:1 t:1
 SUBST:  T = t.
 # These can't be substituted with floor because it might be disconnected, but if

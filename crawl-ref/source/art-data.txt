@@ -7,8 +7,7 @@
 #
 # Each artefact definition is separated by one or more blank lines.
 #
-# Each artefact definition must have the NAME, APPEAR, OBJ and COLOUR
-# fields.
+# Each artefact definition must have the NAME, OBJ and COLOUR fields.
 #
 # The name and appearance of each unrandart must be unique.
 #
@@ -79,6 +78,7 @@
 # * inv:      Lets wearer evoke invisibility ability.
 # * lev:      Lets wearer evoke levitation ability.
 # * life:     Grants negative energy resistance.
+# * nogen:    Never randomly generated.
 # * noises:   Weapon makes noises.  Can be given its own set of noises by
 #             making an entry in dat/database/wpnnoise.txt, with the
 #             entry's key exactly the same as the weapon's name, but all
@@ -91,6 +91,7 @@
 # * special:  Artefact is "special": can't be picked up by monsters,
 #             can't be affected by Tukima's Dance.
 # * tilerim:  Adds a black outline to the tile, see above section.
+# * unided:   Properties start unidentified.
 
 # ENUM: Forces the artefact's enumeration literal to something specific.
 # For example, "ENUM: FOO" gives the enumeration "UNRAND_FOO".  The
@@ -127,12 +128,6 @@
 # CURSED:   The artefact has a one-in-num chance of becoming cursed each
 #           time it's equipped.
 # DAM:      Damage modifier (for non-weapon artefacts).
-# DESC:     Description which replaces the database (dat/descript/items.txt)
-#           description of the item.
-# DESC_ID:  Description which replaces the database desc or DESC when the
-#           artefact is identified.
-# DESC_END: String which goes at the end of the artefact's description, if
-#           the item is identified.
 # DEX:      Dexterity modifier.
 # EV:       Evasion modifier.
 # FIRE:     Fire resistance/vulnerability.
@@ -163,7 +158,6 @@ COLOUR: BLACK
 ####################### First come the old fixed arts.
 
 NAME:    Singing Sword
-APPEAR:  golden long sword
 OBJ:     OBJ_WEAPONS/WPN_LONG_SWORD
 PLUS:    +7/+7
 COLOUR:  ETC_GOLD
@@ -171,11 +165,8 @@ TILE:    spwpn_singing_sword
 TILE_EQ: singing_sword
 VALUE:   1200
 BOOL:    special
-DESC_ID: This blessed weapon loves nothing more than to sing to its owner,
-         whether they want it to or not.
 
 NAME:    Wrath of Trog
-APPEAR:  bloodstained battleaxe
 OBJ:     OBJ_WEAPONS/WPN_BATTLEAXE
 PLUS:    +3/+11
 COLOUR:  ETC_BLOOD
@@ -183,12 +174,8 @@ TILE:    spwpn_wrath_of_trog
 TILE_EQ: axe_trog
 VALUE:   1000
 BRAND:   SPWPN_ANTIMAGIC
-DESC_ID: This was the favourite weapon of the old god Trog, before it was
-         lost one day. It induces a bloodthirsty berserker rage in anyone
-         who uses it to strike another.
 
 NAME:    Mace of Variability
-APPEAR:  great shimmering mace
 OBJ:     OBJ_WEAPONS/WPN_GREAT_MACE
 PLUS:    0/0   # Set on generation
 COLOUR:  ETC_RANDOM
@@ -197,10 +184,8 @@ TILE_EQ: mace_of_variability
 VALUE:   700
 BOOL:    special
 BRAND:   SPWPN_CHAOS
-DESC_ID: It is rather unreliable.
 
 NAME:    Glaive of Prune
-APPEAR:  purple glaive
 OBJ:     OBJ_WEAPONS/WPN_GLAIVE
 PLUS:    +4/+12
 COLOUR:  MAGENTA
@@ -209,13 +194,8 @@ TILE_EQ: glaive_of_prune
 VALUE:   1000
 BOOL:    chaotic
 BRAND:   SPWPN_VORPAL
-DESC_ID: It is the creation of a mad god, and carries a curse which
-         transforms anyone possessing it into a prune. Fortunately, the
-         curse works very slowly, and one can use it briefly with no
-         consequences worse than slightly purple skin and a few wrinkles.
 
 NAME:    Sword of Power
-APPEAR:  chunky great sword
 OBJ:     OBJ_WEAPONS/WPN_GREAT_SWORD
 PLUS:    0/0 # Set on wield
 COLOUR:  RED
@@ -223,10 +203,8 @@ TILE:    spwpn_sword_of_power
 TILE_EQ: sword_of_power
 VALUE:   1000
 BOOL:    tilerim, special
-DESC_ID: It rewards the powerful with power and the meek with weakness.
 
 NAME:    Staff of Olgreb
-APPEAR:  green glowing staff
 OBJ:     OBJ_WEAPONS/WPN_STAFF
 PLUS:    0/0 # Set on wield
 COLOUR:  ETC_POISON
@@ -234,16 +212,8 @@ TILE:    spwpn_staff_of_olgreb
 TILE_EQ: olgreb
 VALUE:   1000
 BOOL:    poison
-DESC_ID: It was the magical weapon wielded by the mighty wizard Olgreb
-         before he met his fate somewhere within these dungeons. It
-         increases the ability of its wielder to use venomous magic, and
-         carries magical powers which can be evoked.
-         The tales say that Olgreb researched rare venoms that may have
-         some limited effect even on creatures immune to all commonly known
-         poisons.
 
 NAME:    Staff of Wucad Mu
-APPEAR:  ephemeral staff
 OBJ:     OBJ_WEAPONS/WPN_STAFF
 PLUS:    0/0 # Set on wield
 COLOUR:  ETC_MAGIC
@@ -251,13 +221,10 @@ TILE:    spwpn_wucad_mu
 TILE_EQ: wucad_mu
 VALUE:   1000
 BOOL:    special
-DESC_ID: Its power varies in proportion to its wielder's intelligence.
-         It can be evoked to restore large amounts of magical energy, but
-         at the risk of damaging the user's mind.
 
 NAME:    Vampire's Tooth
-APPEAR:  ivory dagger
 OBJ:     OBJ_WEAPONS/WPN_DAGGER
+# it's a dagger made from a tooth -> no TYPE
 PLUS:    +3/+4
 COLOUR:  ETC_BONE
 TILE:    spwpn_vampires_tooth
@@ -265,10 +232,8 @@ TILE_EQ: vampires_tooth
 BRAND:   SPWPN_VAMPIRICISM
 VALUE:   1000
 BOOL:    special
-DESC_ID: It is lethally vampiric.
 
 NAME:    Scythe of Curses
-APPEAR:  warped scythe
 OBJ:     OBJ_WEAPONS/WPN_SCYTHE
 PLUS:    +13/+13
 COLOUR:  ETC_DEATH
@@ -278,10 +243,8 @@ BRAND:   SPWPN_DRAINING
 VALUE:   800
 CURSED:  3
 BOOL:    evil
-DESC_ID: This weapon carries a terrible and highly irritating curse.
 
 NAME:    Sceptre of Torment
-APPEAR:  jewelled golden mace
 OBJ:     OBJ_WEAPONS/WPN_MACE
 PLUS:    +7/+6
 COLOUR:  ETC_GOLD
@@ -289,10 +252,8 @@ TILE:    spwpn_sceptre_of_torment
 TILE_EQ: mace_ruby
 VALUE:   1200
 BOOL:    tilerim, special, evil
-DESC_ID: This truly accursed weapon is an instrument of Hell.
 
 NAME:    Sword of Zonguldrok
-APPEAR:  bone long sword
 OBJ:     OBJ_WEAPONS/WPN_DOUBLE_SWORD
 PLUS:    +9/+9
 COLOUR:  ETC_BONE
@@ -302,10 +263,10 @@ BRAND:   SPWPN_REAPING
 VALUE:   1250
 CURSED:  3
 BOOL:    tilerim, special, evil, corpse_violating
-DESC_ID: This dreadful weapon is used at the user's peril.
 
 NAME:    Sword of Cerebov
 APPEAR:  great serpentine sword
+TYPE:    flamberge
 OBJ:     OBJ_WEAPONS/WPN_GREAT_SWORD
 PLUS:    +6/+6
 COLOUR:  ETC_FIRE
@@ -314,7 +275,6 @@ TILE_EQ: sword_twist
 VALUE:   2000
 BRAND:   SPWPN_FLAMING
 BOOL:    cursed, tilerim, evil, nogen
-DESC:    Eerie flames cover its twisted blade.
 
 NAME:    Staff of Dispater
 APPEAR:  golden staff
@@ -325,7 +285,6 @@ TILE:    spwpn_staff_of_dispater
 TILE_EQ: dispater
 VALUE:   1200
 BOOL:    tilerim, special, evil, nogen
-DESC_ID: This legendary item can unleash the fury of Hell.
 
 NAME:    Sceptre of Asmodeus
 APPEAR:  ruby sceptre
@@ -336,7 +295,6 @@ TILE:    spwpn_sceptre_of_asmodeus
 TILE_EQ: asmodeus
 VALUE:   1500
 BOOL:    tilerim, special, evil, nogen
-DESC_ID: It carries some of the powers of the arch-fiend Asmodeus.
 
 # Randomised properties, fixed appearance.
 # Reserved for the Enchantress.
@@ -347,16 +305,11 @@ PLUS:    +3
 COLOUR:  ETC_JEWEL
 TILE:    urand_faerie
 TILE_EQ: faerie_dragon_armour
-BOOL:    nogen
-DESC:    Faerie dragons used to be a race of the same species as mottled ones.
-         Too bad, their vivid colours became their bane, as they alerted
-         potential prey. They are now extinct, and this prized relic is one of
-         the last proofs they ever existed.
+BOOL:    nogen, unided
 
 ##################### End of old fixed arts.
 
 NAME:    demon blade "Bloodbane"
-APPEAR:  blackened demon blade
 OBJ:     OBJ_WEAPONS/WPN_DEMON_BLADE
 PLUS:    +7/+8
 COLOUR:  ETC_DARK
@@ -368,7 +321,6 @@ BOOL:    berserk
 STEALTH: -20
 
 NAME:    scimitar of Flaming Death
-APPEAR:  smoking scimitar
 OBJ:     OBJ_WEAPONS/WPN_SCIMITAR
 PLUS:    +7/+5
 COLOUR:  ETC_FIRE
@@ -381,7 +333,6 @@ BOOL:    poison
 MAGIC:   20
 
 NAME:    mace of Brilliance
-APPEAR:  brightly glowing mace
 OBJ:     OBJ_WEAPONS/WPN_MACE
 PLUS:    +5/+5
 COLOUR:  ETC_HOLY
@@ -394,7 +345,6 @@ STEALTH: -20
 BOOL:    life, seeinv
 
 NAME:    demon blade "Leech"
-APPEAR:  runed demon blade
 OBJ:     OBJ_WEAPONS/WPN_DEMON_BLADE
 PLUS:    +13/+4
 COLOUR:  MAGENTA
@@ -409,7 +359,6 @@ BOOL:    life
 CURSED:  4
 
 NAME:    dagger of Chilly Death
-APPEAR:  sapphire dagger
 OBJ:     OBJ_WEAPONS/WPN_DAGGER
 PLUS:    +5/+7
 COLOUR:  ETC_ICE
@@ -420,10 +369,8 @@ FIRE:    -1
 COLD:    2
 MAGIC:   20
 BOOL:    poison
-DESC:    A dagger made of one huge piece of sapphire.
 
 NAME:     dagger "Morg"
-APPEAR:   rusty dagger
 OBJ:      OBJ_WEAPONS/WPN_DAGGER
 PLUS:     -1/+4
 COLOUR:   LIGHTRED
@@ -432,12 +379,8 @@ TILE_EQ:  morg
 BRAND:    SPWPN_PAIN
 INT:      5
 MAGIC:    30
-DESC:     An ugly rusty dagger.
-DESC_END: Many years ago it was the property of a powerful mage called Boris.
-          He got lost in the Dungeon while seeking the Orb.
 
 NAME:    scythe "Finisher"
-APPEAR:  blackened scythe
 OBJ:     OBJ_WEAPONS/WPN_SCYTHE
 PLUS:    +3/+5
 COLOUR:  ETC_DARK
@@ -446,10 +389,8 @@ TILE_EQ: finisher
 BRAND:   SPWPN_SPEED
 STR:     3
 BOOL:    cursed
-DESC:    A long and sharp scythe, specially modified for combat purposes.
 
 NAME:    sling "Punk"
-APPEAR:  blue sling
 OBJ:     OBJ_WEAPONS/WPN_SLING
 PLUS:    +9/+12
 COLOUR:  ETC_ICE
@@ -457,12 +398,10 @@ TILE:    urand_punk
 TILE_EQ: punk
 BRAND:   SPWPN_FROST
 COLD:    1
-DESC:    A sling made of weird blue leather.
 
 ENUM:     KRISHNA
 NAME:     bow of Krishna "Sharnga"
-APPEAR:   golden bow
-OBJ:      OBJ_WEAPONS/WPN_BOW
+OBJ:      OBJ_WEAPONS/WPN_LONGBOW
 PLUS:     +8/+8
 COLOUR:   ETC_GOLD
 TILE:     urand_krishna
@@ -470,12 +409,8 @@ TILE_EQ:  krishna
 BRAND:    SPWPN_SPEED
 DEX:      3
 BOOL:     seeinv
-DESC:     A wonderful golden bow.
-DESC_END: It once belonged to a foreign god. It works best with special
-          arrows which are not generally available.
 
 NAME:    giant club "Skullcrusher"
-APPEAR:  brutal giant club
 OBJ:     OBJ_WEAPONS/WPN_GIANT_CLUB
 PLUS:    +0/+5
 COLOUR:  BROWN
@@ -485,7 +420,6 @@ BRAND:   SPWPN_SPEED
 STR:     5
 
 NAME:     glaive of the Guard
-APPEAR:   polished glaive
 OBJ:      OBJ_WEAPONS/WPN_GLAIVE
 PLUS:     +5/+8
 COLOUR:   ETC_ELECTRICITY
@@ -494,11 +428,8 @@ TILE_EQ:  glaive_of_the_guard
 BRAND:    SPWPN_ELECTROCUTION
 AC:       5
 BOOL:     seeinv, berserk
-DESC_END: This weapon once belonged to Gar Dogh, the guard of a king's
-          treasures. According to legend he was lost somewhere in the Dungeon.
 
 NAME:     sword of Jihad
-APPEAR:   crystal sword
 OBJ:      OBJ_WEAPONS/WPN_EUDEMON_BLADE
 PLUS:     +12/+10
 COLOUR:   ETC_HOLY
@@ -510,11 +441,8 @@ MAGIC:    20
 ANGRY:    1
 STEALTH:  -50
 BOOL:     life
-DESC_END: This sword was The Shining One's gift to a worshipper.
-DESC:     A long sword made of one huge piece of crystal.
 
 NAME:    crossbow "Hellfire"
-APPEAR:  flaming crossbow
 OBJ:     OBJ_WEAPONS/WPN_CROSSBOW
 PLUS:    +6/+9
 COLOUR:  ETC_FIRE
@@ -524,10 +452,8 @@ BRAND:   SPWPN_FLAME
 FIRE:    2
 COLD:    -1
 MAGIC:   40
-DESC:    A flaming crossbow, forged in the fires of the Hells.
 
 NAME:    sword of the Doom Knight
-APPEAR:  adamantine great sword
 OBJ:     OBJ_WEAPONS/WPN_GREAT_SWORD
 PLUS:    +13/+13
 COLOUR:  BLUE
@@ -536,10 +462,8 @@ TILE_EQ: doom_knight
 BRAND:   SPWPN_PAIN
 MAGIC:   50
 BOOL:    nospell
-DESC:    An adamantine great sword.
 
 NAME:    morningstar "Eos"
-APPEAR:  encrusted morningstar
 OBJ:     OBJ_WEAPONS/WPN_MORNINGSTAR
 PLUS:    +11/+11
 COLOUR:  ETC_JEWEL
@@ -553,7 +477,6 @@ BOOL:    elec, seeinv, notelep
 # spells designed to do harm. Priests (or rather sorcerers) of bo are
 # called botono.
 NAME:     spear of the Botono
-APPEAR:   ebony spear
 OBJ:      OBJ_WEAPONS/WPN_SPEAR
 PLUS:     +2/+10
 COLOUR:   ETC_UNHOLY
@@ -562,10 +485,8 @@ TILE_EQ:  botono
 BRAND:    SPWPN_REAPING
 HP:       -3
 BOOL:     poison, life, noises
-DESC_END: A really dark and malign artefact, which no wise man would even touch.
 
 NAME:     trident of the Octopus King
-APPEAR:   mangy trident
 OBJ:      OBJ_WEAPONS/WPN_TRIDENT
 PLUS:     +10/+4
 COLOUR:   ETC_WATER
@@ -574,12 +495,8 @@ TILE_EQ:  trident_octopus_king
 BRAND:    SPWPN_VENOM
 BOOL:     elec, poison
 MAGIC:    50
-DESC_END: This trident was stolen many years ago from the Octopus King's
-          garden by a really unimportant and already dead man. But beware
-          of the Octopus King's wrath!
 
 NAME:    mithril axe "Arga"
-APPEAR:  mithril axe
 OBJ:     OBJ_WEAPONS/WPN_WAR_AXE
 PLUS:    +10/+6
 COLOUR:  WHITE
@@ -588,10 +505,8 @@ TILE_EQ: arga
 BRAND:   SPWPN_SPEED
 STR:     2
 MAGIC:   30
-DESC:    A beautiful mithril axe, probably lost by some dwarven hero.
 
 NAME:     Elemental Staff
-APPEAR:   black staff
 OBJ:      OBJ_WEAPONS/WPN_STAFF
 PLUS:     +3/+1
 COLOUR:   DARKGREY
@@ -603,11 +518,8 @@ COLD:     2
 MAGIC:    60
 METAB:    2
 BOOL:     noises
-DESC_END: This powerful staff used to belong to the leader of the Guild of
-          Five Elements.
 
 NAME:    crossbow "Sniper"
-APPEAR:  black crossbow
 OBJ:     OBJ_WEAPONS/WPN_CROSSBOW
 PLUS:    +10/+0
 COLOUR:  ETC_DARK
@@ -615,10 +527,8 @@ TILE:    urand_sniper
 TILE_EQ: sniper
 BRAND:   SPWPN_VENOM
 BOOL:    seeinv
-DESC:    A crossbow made of some black material.
 
 NAME:    longbow "Piercer"
-APPEAR:  very long metal bow
 OBJ:     OBJ_WEAPONS/WPN_LONGBOW
 PLUS:    +2/+10
 COLOUR:  CYAN
@@ -626,11 +536,9 @@ TILE:    urand_piercer
 TILE_EQ: great_bow
 BRAND:   SPWPN_VORPAL
 EV:      -2
-DESC:    An exceptionally large metal longbow.
 
 ENUM:    BLOWGUN_ASSASSIN
 NAME:    blowgun of the Assassin
-APPEAR:  tiny blowgun
 OBJ:     OBJ_WEAPONS/WPN_BLOWGUN
 PLUS:    +6/+6
 COLOUR:  WHITE
@@ -638,11 +546,10 @@ TILE:    urand_blowgun
 TILE_EQ: blowgun
 STEALTH: 60
 BOOL:    inv, tilerim
-DESC:    It is designed for easy concealment, but still packs a nasty punch.
 
-NAME:    Wyrmbane
-APPEAR:  scale-covered lance
+NAME:    lance "Wyrmbane"
 OBJ:     OBJ_WEAPONS/WPN_SPEAR
+TYPE:    lance
 BASE_DAM: +2
 PLUS:    +9/+6
 COLOUR:  LIGHTGREEN
@@ -654,8 +561,8 @@ FIRE:    1
 BOOL:    poison, berserk, tilerim
 
 NAME:     Spriggan's Knife
-APPEAR:   dainty little knife
 OBJ:      OBJ_WEAPONS/WPN_DAGGER
+TYPE:     knife
 PLUS:     +4/+10
 COLOUR:   LIGHTCYAN
 TILE:     urand_spriggans_knife
@@ -665,13 +572,8 @@ EV:       4
 DEX:      4
 MAGIC:    20
 STEALTH:  50
-DESC:     A dainty little knife.
-DESC_END: This knife was made by Spriggans, or for Spriggans, or possibly
-          from Spriggans. Anyway, it's in some way associated with those
-          fey folk.
 
 NAME:    plutonium sword
-APPEAR:  glowing triple sword
 OBJ:     OBJ_WEAPONS/WPN_TRIPLE_SWORD
 PLUS:    +12/+16
 COLOUR:  ETC_RANDOM
@@ -680,21 +582,16 @@ TILE_EQ: plutonium_sword
 MUTATE:  6
 CURSED:  1
 STEALTH: -20
-DESC:    A triple sword made of weird glowing metal.
 
 NAME:     great mace "Undeadhunter"
-APPEAR:   great steel mace
 OBJ:      OBJ_WEAPONS/WPN_GREAT_MACE
 PLUS:     +7/+7
 COLOUR:   LIGHTGREY
 TILE:     urand_undeadhunter
 TILE_EQ:  undeadhunter
 BOOL:     life
-DESC_END: This weapon is imbued with magic that can counter and disrupt the
-          magic holding undead together, inflicting great damage.
 
 NAME:    whip "Snakebite"
-APPEAR:  forked whip
 OBJ:     OBJ_WEAPONS/WPN_WHIP
 PLUS:    +5/+10
 COLOUR:  DARKGREY
@@ -702,23 +599,19 @@ TILE:    urand_snakebite
 TILE_EQ: snakebite
 BRAND:   SPWPN_VENOM
 BOOL:    poison, tilerim
-DESC_ID: A double-ended whip made from the cured hides of the Lair of Beasts'
-         deadly black mambas.
 
 NAME:     knife of Accuracy
-APPEAR:   thin dagger
 OBJ:      OBJ_WEAPONS/WPN_DAGGER
+TYPE:     knife
 PLUS:     +27/-1
 COLOUR:   LIGHTCYAN
 TILE:     urand_knife_of_accuracy
 TILE_EQ:  knife_of_accuracy
 BOOL:     tilerim
-DESC_END: It is almost unerringly accurate.
 
 # A play on the spell of the same name.  Colour taken from crystal walls.
 ENUM:     CRYSTAL_SPEAR
 NAME:     Lehudib's crystal spear
-APPEAR:   crystal spear
 OBJ:      OBJ_WEAPONS/WPN_SPEAR
 PLUS:     +6/+6
 COLOUR:   GREEN
@@ -726,11 +619,10 @@ TILE:     urand_crystal_spear
 TILE_EQ:  crystal_spear
 INT:      3
 BRAND:    SPWPN_RETURNING
-DESC_END: Presumably this relic led to the invention of the famous spell, or maybe the other way around.
 
 NAME:     captain's cutlass
-APPEAR:   black cutlass
 OBJ:      OBJ_WEAPONS/WPN_SABRE
+TYPE:     cutlass
 PLUS:     +6/+7
 BASE_ACC: -1
 BASE_DAM: +2
@@ -738,29 +630,21 @@ COLOUR:   DARKGREY
 TILE:     urand_cutlass
 TILE_EQ:  cutlass
 BRAND:    SPWPN_SPEED
-DESC_END: This infamous weapon was used by a vile pirate captain to
-          slaughter countless innocents. Finally, he met his destiny
-          when a kraken swallowed his ship with all the crew aboard.
-          The cutlass was thought to be forever lost, but now you have
-          proof to the contrary in your very hands.
 
 NAME:     storm bow
-APPEAR:   night blue bow
 OBJ:      OBJ_WEAPONS/WPN_LONGBOW
 PLUS:     +8/+8
 COLOUR:   BLUE
 TILE:     urand_storm_bow
 TILE_EQ:  bow_blue
 BRAND:    SPWPN_ELECTROCUTION
-DESC:     This bow has the colour of dark rain clouds, and the smell of wet ozone.
 
-NAME:    shield of Ignorance
-APPEAR:  dull large shield
+NAME:    large shield of Ignorance
 OBJ:     OBJ_ARMOUR/ARM_LARGE_SHIELD
 PLUS:    +8
 COLOUR:  BROWN
 TILE:    urand_ignorance
-TILE_EQ: shield_of_ignorance
+TILE_EQ: large_shield_of_ignorance
 AC:      2
 EV:      2
 INT:     -6
@@ -768,7 +652,6 @@ BOOL:    life
 CURSED:  3
 
 NAME:    robe of Augmentation
-APPEAR:  silk robe
 OBJ:     OBJ_ARMOUR/ARM_ROBE
 PLUS:    +4
 COLOUR:  LIGHTRED
@@ -777,10 +660,8 @@ TILE_EQ: robe_white_blue
 STR:     4
 INT:     4
 DEX:     4
-DESC:    A robe made of the finest silk.
 
 NAME:     cloak of the Thief
-APPEAR:   tattered cloak
 OBJ:      OBJ_ARMOUR/ARM_CLOAK
 PLUS:     +1
 COLOUR:   ETC_DARK
@@ -791,10 +672,8 @@ DEX:      2
 DAM:      -3
 STEALTH:  60
 BOOL:     seeinv, inv, lev
-DESC_END: It allows its wearer to excel in the arts of thievery.
 
 NAME:    shield "Bullseye"
-APPEAR:  round shield
 OBJ:     OBJ_ARMOUR/ARM_SHIELD
 PLUS:    +15
 COLOUR:  RED
@@ -803,7 +682,6 @@ TILE_EQ: bullseye
 EV:      -5
 
 NAME:    crown of Dyrovepreva
-APPEAR:  jewelled bronze crown
 OBJ:     OBJ_ARMOUR/ARM_CAP
 PLUS:    +3
 COLOUR:  ETC_JEWEL
@@ -812,10 +690,8 @@ TILE_EQ: dyrovepreva
 INT:     2
 METAB:   1
 BOOL:    elec, seeinv
-DESC:    A large crown of dull bronze, set with a dazzling array of gemstones.
 
 NAME:     hat of the Bear Spirit
-APPEAR:   fur hat
 OBJ:      OBJ_ARMOUR/ARM_CAP
 PLUS:     +2
 COLOUR:   DARKGREY
@@ -824,8 +700,6 @@ TILE_EQ:  bear
 BRAND:    SPARM_SPIRIT_SHIELD
 BOOL:     life, berserk
 MAGIC:    50
-DESC_END: Once owned by Ukta, a powerful ogre shaman, this fur hat houses
-          the spirit of an especially mighty bear.
 
 NAME:     robe of Misfortune
 OBJ:      OBJ_ARMOUR/ARM_ROBE
@@ -840,11 +714,9 @@ DEX:      -2
 MUTATE:   5
 CURSED:   1
 STEALTH:  -80
-BOOL:     nospell, rnd_tele, randapp
-DESC_ID:  A splendid flowing robe of fur and silk.
+BOOL:     nospell, rnd_tele, randapp, unided
 
 NAME:     cloak of Flash
-APPEAR:   vibrating cloak
 OBJ:      OBJ_ARMOUR/ARM_CLOAK
 PLUS:     +3
 COLOUR:   ETC_FLASH
@@ -852,11 +724,9 @@ TILE:     urand_flash
 TILE_EQ:  red
 EV:       4
 BOOL:     lev
-DESC:     A vibrating cloak.
 
 ENUM:     BOOTS_ASSASSIN
 NAME:     boots of the Assassin
-APPEAR:   soft boots
 OBJ:      OBJ_ARMOUR/ARM_BOOTS
 PLUS:     +2
 COLOUR:   BROWN
@@ -865,34 +735,27 @@ TILE_EQ:  middle_gray
 DEX:      3
 STEALTH:  80
 BOOL:     inv
-DESC:     Some soft boots.
-DESC_END: These boots were specially designed by the Assassin's Guild.
 
 ENUM:    LEAR
 NAME:    Lear's chain mail
-APPEAR:  golden chain mail
 OBJ:     OBJ_ARMOUR/ARM_CHAIN_MAIL
 PLUS:    -1
 COLOUR:  ETC_GOLD
 TILE:    urand_lear
 TILE_EQ: lears_chain_mail
 DEX:     -3
-BOOL:    cursed, nospell, randapp
-DESC:    A chain mail made of pure gold.
+BOOL:    cursed, nospell, randapp, unided
 
 NAME:    skin of Zhor
-APPEAR:  smelly skin
 OBJ:     OBJ_ARMOUR/ARM_ANIMAL_SKIN
 PLUS:    +4
 COLOUR:  BROWN
 TILE:    urand_zhor
 TILE_EQ: zhor
 COLD:    2
-DESC:    The skin of some strange animal.
 
 ENUM:    SALAMANDER
 NAME:    salamander hide armour
-APPEAR:  red leather armour
 OBJ:     OBJ_ARMOUR/ARM_LEATHER_ARMOUR
 PLUS:    +3
 COLOUR:  ETC_FIRE
@@ -900,10 +763,8 @@ TILE:    urand_salamander
 TILE_EQ: leather_red
 FIRE:    2
 BOOL:    berserk
-DESC:    A leather armour made of a salamander's skin.
 
 NAME:    gauntlets of War
-APPEAR:  thick gauntlets
 OBJ:     OBJ_ARMOUR/ARM_GLOVES
 PLUS:    +3
 COLOUR:  BROWN
@@ -913,7 +774,6 @@ ACC:     5
 DAM:     5
 
 NAME:    shield of Resistance
-APPEAR:  bronze shield
 OBJ:     OBJ_ARMOUR/ARM_SHIELD
 PLUS:    +5
 COLOUR:  LIGHTRED
@@ -922,7 +782,6 @@ TILE_EQ: shield_of_resistance
 FIRE:    1
 COLD:    1
 MAGIC:   40
-DESC:    A bronze shield.
 
 NAME:    robe of Folly
 OBJ:     OBJ_ARMOUR/ARM_ROBE
@@ -932,12 +791,10 @@ TILE:    urand_folly
 TILE_EQ: robe_red2
 INT:     -5
 CURSED:  2
-BOOL:    nospell, randapp
-DESC:    A dull grey robe.
+BOOL:    nospell, randapp, unided
 
 ENUM:    MAXWELL
 NAME:    Maxwell's patent armour
-APPEAR:  weird-looking armour
 OBJ:     OBJ_ARMOUR/ARM_PLATE_ARMOUR
 PLUS:    +15
 COLOUR:  LIGHTGREEN
@@ -946,11 +803,9 @@ TILE_EQ: maxwell
 BRAND:   SPARM_PRESERVATION
 MAGIC:   50
 BOOL:    nospell, notelep, cursed
-DESC:    A weird-looking armour.
 
 ENUM:    DRAGONMASK
 NAME:    mask of the Dragon
-APPEAR:  blue mask
 OBJ:     OBJ_ARMOUR/ARM_CAP
 COLOUR:  ETC_SHIMMER_BLUE
 TILE:    urand_dragonmask
@@ -959,10 +814,8 @@ MAGIC:   40
 ACC:     3
 DAM:     3
 BOOL:    seeinv
-DESC:    A blue mask.
 
 NAME:     robe of Night
-APPEAR:   black robe
 OBJ:      OBJ_ARMOUR/ARM_ROBE
 PLUS:     +4
 COLOUR:   ETC_DARK
@@ -971,21 +824,16 @@ TILE_EQ:  robe_of_night
 MAGIC:    30
 STEALTH:  50
 BOOL:     seeinv, inv
-DESC:     A long black robe made of strange glossy material.
-DESC_END: According to legend, this robe was the gift of Ratri the Goddess
-          of the Night to one of her followers.
 
 NAME:    armour of the Dragon King
-APPEAR:  shiny gold dragon armour
 OBJ:     OBJ_ARMOUR/ARM_GOLD_DRAGON_ARMOUR
-PLUS:    +5
+PLUS:    +9
 COLOUR:  ETC_GOLD
 TILE:    urand_dragon_king
 TILE_EQ: dragonarm_gold
 MAGIC:   50
 
 NAME:    hat of the Alchemist
-APPEAR:  dirty hat
 OBJ:     OBJ_ARMOUR/ARM_WIZARD_HAT
 PLUS:    +2
 COLOUR:  MAGENTA
@@ -995,10 +843,8 @@ FIRE:    1
 COLD:    1
 MAGIC:   30
 BOOL:    elec
-DESC:    A dirty hat.
 
 NAME:    fencer's gloves
-APPEAR:  silk gloves
 OBJ:     OBJ_ARMOUR/ARM_GLOVES
 PLUS:    +2
 COLOUR:  WHITE
@@ -1007,10 +853,8 @@ TILE_EQ: glove_white
 EV:      3
 DEX:     3
 ACC:     8
-DESC:    A pair of gloves made of white silk.
 
 NAME:     cloak of Starlight
-APPEAR:   phosphorescent cloak
 OBJ:      OBJ_ARMOUR/ARM_CLOAK
 COLOUR:   ETC_ICE
 TILE:     urand_starlight
@@ -1019,11 +863,8 @@ EV:       4
 COLD:     1
 STEALTH:  -30
 BOOL:     elec
-DESC_END: A cloak woven of pure light beams.
-DESC:     A phosphorescent cloak.
 
 NAME:     ratskin cloak
-APPEAR:   motley cloak
 OBJ:      OBJ_ARMOUR/ARM_CLOAK
 PLUS:     +1
 COLOUR:   ETC_BEOGH
@@ -1032,14 +873,8 @@ TILE_EQ:  ratskin
 INT:      -1
 DEX:      -1
 BOOL:     life, poison
-DESC_END: An enchantress with a magic loom and way too much time on
-          her hands stitched this cloak from the hides of hundreds
-          of rats, most of them orange. It's a bit awkward to wear
-          and looks rather foolish, but it provides excellent protection
-          from rats of all kinds.
 
 NAME:     shield of the gong
-APPEAR:   bronze gong
 OBJ:      OBJ_ARMOUR/ARM_SHIELD
 PLUS:     +6
 COLOUR:   ETC_GOLD
@@ -1048,11 +883,8 @@ TILE_EQ:  gong
 BRAND:    SPARM_SPIRIT_SHIELD
 MAGIC:    50
 BOOL:     elec, life
-DESC:     This is a large gong; you wonder if it could be worn as a shield.
-DESC_ID:  This shield surely will be heard!
 
 NAME:    amulet of the Air
-APPEAR:  sky-blue amulet
 OBJ:     OBJ_JEWELLERY/AMU_CONTROLLED_FLIGHT
 COLOUR:  ETC_ELECTRICITY
 TILE:    urand_air
@@ -1061,7 +893,6 @@ STEALTH: 50
 BOOL:    elec, lev
 
 NAME:    ring of Shadows
-APPEAR:  black ring
 OBJ:     OBJ_JEWELLERY/RING_INVISIBILITY
 COLOUR:  ETC_DARK
 TILE:    urand_shadows
@@ -1071,7 +902,6 @@ STEALTH: 40
 BOOL:    life, seeinv
 
 NAME:    amulet of Cekugob
-APPEAR:  crystal amulet
 OBJ:     OBJ_JEWELLERY/AMU_WARDING
 COLOUR:  LIGHTGREY
 TILE:    urand_cekugob
@@ -1081,7 +911,6 @@ BOOL:    elec, poison, life, notelep
 METAB:   2
 
 NAME:    amulet of the Four Winds
-APPEAR:  jade amulet
 OBJ:     OBJ_JEWELLERY/AMU_CLARITY
 COLOUR:  ETC_POISON
 TILE:    urand_four_winds
@@ -1089,7 +918,6 @@ BOOL:    life
 MAGIC:   100
 
 NAME:    necklace of Bloodlust
-APPEAR:  blood-stained necklace
 OBJ:     OBJ_JEWELLERY/AMU_RAGE
 COLOUR:  ETC_BLOOD
 TILE:    urand_bloodlust
@@ -1102,21 +930,18 @@ CURSED:  3
 STEALTH: -20
 
 NAME:    ring of Shaolin
-APPEAR:  jade ring
 OBJ:     OBJ_JEWELLERY/RING_EVASION
 PLUS:    +8
 COLOUR:  ETC_POISON
 TILE:    urand_shaolin
 
 NAME:    ring of Robustness
-APPEAR:  steel ring
 OBJ:     OBJ_JEWELLERY/RING_PROTECTION
 PLUS:    +8
 COLOUR:  LIGHTGREY
 TILE:    urand_robustness
 
 NAME:    ring of the Mage
-APPEAR:  sapphire ring
 OBJ:     OBJ_JEWELLERY/RING_WIZARDRY
 COLOUR:  ETC_ENCHANT
 TILE:    urand_mage
@@ -1124,28 +949,22 @@ INT:     3
 MAGIC:   50
 
 NAME:     brooch of Shielding
-APPEAR:   shield-shaped amulet
 OBJ:      OBJ_JEWELLERY/AMU_WARDING
 COLOUR:   ETC_MAGIC
 TILE:     urand_brooch_of_shielding
 AC:       4
 EV:       4
-DESC_END: Back in the good old days, every adventurer had one of these
-          handy devices. That, and a pony.
 
 ENUM:     RCLOUDS
 NAME:     robe of Clouds
-APPEAR:   flimsy blue robe
 OBJ:      OBJ_ARMOUR/ARM_ROBE
 PLUS:     +3
 COLOUR:   ETC_MIST
 TILE:     urand_clouds
 TILE_EQ:  robe_clouds
 BOOL:     elec, lev
-DESC:     A robe of a material so flimsy it could almost be clouds.
 
 NAME:     hat of Pondering
-APPEAR:   slimy wizard hat
 OBJ:      OBJ_ARMOUR/ARM_WIZARD_HAT
 PLUS:     +3
 COLOUR:   LIGHTRED
@@ -1155,15 +974,9 @@ BRAND:    SPARM_PONDEROUSNESS
 INT:      +5
 MP:       +10
 MAGIC:    30
-DESC:     A slimy wizard hat.
-DESC_END: The favorite hat of the slug wizard Gastronok, stained with reddish
-          slime and enchanted to aid in his arcane pondering. It has been
-          specially enchanted to protect against the effects of salt, though
-          you probably don't care.
 
 ENUM:     DEMON_AXE
 NAME:     obsidian axe
-APPEAR:   bloodied obsidian axe
 OBJ:      OBJ_WEAPONS/WPN_BROAD_AXE
 PLUS:     +12/+15
 COLOUR:   ETC_UNHOLY
@@ -1173,13 +986,8 @@ BRAND:    SPWPN_VORPAL
 CURSED:    1
 STR:      +3
 BOOL:     evil, seeinv, lev, special
-DESC_END: This axe has had a curse placed on it by one of the lords of
-          Pandemonium so that unsuspecting adventurers like you would
-          unleash demons into this world. Beware, for this axe has
-          ways of taking its wielder under its command...
 
 NAME:     lightning scales
-APPEAR:   metallic naga barding
 OBJ:      OBJ_ARMOUR/ARM_NAGA_BARDING
 PLUS:     +3
 TILE:     urand_lightning_scales
@@ -1187,16 +995,9 @@ TILE_EQ:  lightning_scales
 COLOUR:   ETC_ELECTRICITY
 BRAND:    SPARM_RUNNING
 BOOL:     elec
-DESC:     This naga barding is made of some very metallic dragon hide, to
-          the point of confusing you at first glance into thinking that it's
-          actually made of metal.
-DESC_ID:  These scales have been fashioned into armour for a naga's lower
-          body. Faintly crackling with electricity, they have been enchanted
-          to allow their wearer to slither at almost a human's pace.
 
 ENUM:     BLACK_KNIGHT_HORSE
 NAME:     Black Knight's horse barding
-APPEAR:   black horse barding
 OBJ:      OBJ_ARMOUR/ARM_CENTAUR_BARDING
 PLUS:     +10
 TILE:     urand_bk_barding
@@ -1204,27 +1005,17 @@ TILE_EQ:  black_knight
 COLOUR:   ETC_UNHOLY
 BRAND:    SPARM_PONDEROUSNESS
 METAB:    -2
-BOOL:     life
-DESC:     You feel sorry for the horse that has to wear this mass of metal.
-DESC_ID:  This gear used to be worn by the personal horse of the Black Knight
-          during his reign of terror. Pitch-black, it appears to be made not
-          only of some strange black steel, but also of entire plates of
-          black diamond! Naturally, such a weight of metal and stone cannot
-          be good for the mount's speed. However, it offers not only mundane
-          protection against blows; the adamant bears an enchantment that
-          makes its wearer partially undead.
+BOOL:     life, evil
 
 NAME:     ring of Vitality
-APPEAR:   amethyst ring with an ankh
 OBJ:      OBJ_JEWELLERY/RING_REGENERATION
 HP:       +15
 COLOUR:   LIGHTMAGENTA
 TILE:     urand_vitality
-DESC_END: This famed ring greatly improves its wearer's health.
 
 NAME:     autumn katana
-APPEAR:   long, slightly curved sword
 OBJ:      OBJ_WEAPONS/WPN_LONG_SWORD
+TYPE:     katana
 TILE:     urand_katana
 TILE_EQ:  katana_slant
 COLOUR:   LIGHTRED
@@ -1234,11 +1025,10 @@ BASE_DAM: +4
 BASE_DELAY: -2
 BOOL:     clarity
 BRAND:    SPWPN_VORPAL
-DESC_ID:  This exotic sword is a weapon for truly enlightened users.
 
 NAME:     shillelagh "Devastator"
-APPEAR:   loaded stick
 OBJ:      OBJ_WEAPONS/WPN_CLUB
+TYPE:     shillelagh
 TILE:     urand_shillelagh
 TILE_EQ:  shillelagh
 PLUS:     +4/+8
@@ -1246,7 +1036,6 @@ BASE_DAM: +3
 BOOL:     special
 # hrm, nothing fitting, shouldn't be elemental but should be marked
 COLOUR:   WHITE
-DESC:     You guess this stick is loaded with something else than just lead.
 
 # Worn by Tiamat.
 ENUM:     DRAGONSKIN
@@ -1258,11 +1047,9 @@ TILE_EQ:  dragonskin
 PLUS:     +4
 COLOUR:   ETC_HEAL
 BOOL:     nogen
-DESC:     This opalescent cloak gleams with all dragon colours.
 
 ENUM:     OCTOPUS_KING_RING
 NAME:     ring of the Octopus King
-APPEAR:   coral ring
 OBJ:      OBJ_JEWELLERY/RING_HUNGER
 COLOUR:   ETC_WATER
 TILE:     urand_octoring
@@ -1271,11 +1058,56 @@ EV:       1
 STR:      1
 INT:      1
 DEX:      1
-DESC_END: "A mermaid who fancied to sing,\n
-           Roused lust in the Octopus King.\n
-           Her squiggly suitor,\n
-           Tried hard to woo her,\n
-           But she couldn't wear all his rings."
+BOOL:     unided
+
+# This is the first of two amulets used to test suppression aura.
+# Together, they confer every randart effect except for a few that are
+# determined explicitly by checking whether a certain amulet is worn
+# (such as stasis is).
+# The first amulet tests all properties, but since some properties can have
+# either positive or negative levels (or some properties are mutually
+# exclusive), the second amulet tests negative and exclusive effects.
+# Obviously, because it contains every positive property in the game,
+# this should never be randomly generated!
+NAME:    milk chocolate
+OBJ:     OBJ_JEWELLERY/AMU_STASIS
+COLOUR:  BROWN
+TILE:    urand_air
+ACC:     60
+ANGRY:   1
+COLD:    3
+DAM:     60
+DEX:     3
+EV:      3
+FIRE:    3
+INT:     3
+MAGIC:   100
+METAB:   10
+HP:      10
+MP:      10
+MUTATE:  6
+STEALTH: 100
+STR:     3
+BOOL:    nogen, berserk, blink, clarity, elec, inv, lev, life, nospell, notelep, poison, seeinv
+
+# This is the second of two amulets used to test suppression. See above.
+NAME:    dark chocolate
+OBJ:     OBJ_JEWELLERY/AMU_RESIST_CORROSION
+COLOUR:  DARKGREY
+TILE:    urand_bloodlust
+ACC:     -60
+COLD:    -3
+DAM:     -60
+DEX:     -3
+EV:      -3
+FIRE:    -3
+INT:     -3
+METAB:   -10
+HP:      -10
+MP:      -10
+STEALTH: -100
+STR:     -3
+BOOL:    nogen, rnd_tele
 
 # This entry must always be last.
 ENUM:   DUMMY2

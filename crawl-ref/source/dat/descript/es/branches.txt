@@ -1,0 +1,311 @@
+%%%%
+Dungeon
+
+Es todavía un misterio cómo fue creado este extraño lugar. Algunos dicen que es
+el campo de juegos de dioses aburridos, otros mantienen que fue moldeado por
+toda índole de especies que abandonaron la superficie y rechazaron la luz. No
+importando cual es el origen de esta cueva, está repleta con riquezas apenas
+conocidas así como de enromes peligros para cualquier intruso. Pocos han
+escapado con vida, e incluso menos han conservado algo de cordura para contar
+la historia.
+
+El calabozo tiene 27 niveles de profundidad pero, honestamente, eso es
+solamente el principio.
+%%%%
+Temple
+
+Un Templo a los Dioses, un lugar de paz y refugio lejos de la locura del
+calabozo. Está localizado entre los niveles 4 y 7 del calabozo principal.
+%%%%
+Orcish Mines
+
+Las minas de los orcos, repletas de su oro, pero traidoras y donde es fácil
+quedar atrapado.
+
+Las Minas Orcas tienen 4 niveles de profundidad y contienen la entrada a las
+Salas Élficas.
+%%%%
+Elven Halls
+
+Mientras que gran parte del pueblo elfo nunca se iría a un complejo oscuro y
+subterráneo como éste, los elfos de las profundidades sí lo hicieron. Sus salas
+están llenas de riquezas, pero cualquiera que pase por ellas debería estar
+alerta ante las legendarias proezas mágicas de esta especie.
+
+Las Salas Élficas tienen tres niveles.
+%%%%
+Dwarven Hall
+
+Estas salas de piedra finamente labrada es donde moran los enanos de las
+profundidades. Su gran destreza en la metalurgia les permite forjar suficientes
+armas contra aquellos como tú.
+
+Es solamente un nivel.
+%%%%
+Lair
+
+Muchos aventureros encuentran que la Guarida de las Bestias es un excitante
+cambio de clima. Y de hecho, tiene su aquél el ser corneado, aplastado y
+devorado antes que cortado, quemado o apuñalado.
+
+La Guarida tiene ocho niveles y contiene las escaleras hacia tres ramas más.
+%%%%
+Swamp
+
+Un erial pantanoso, lleno de cieno, materia putrefacta, moscas y grandes
+monstruos carnívoros.
+
+El Pantano tiene cinco niveles y contiene la Runa Podrida. Un calabozo solo
+contiene dos ramas de entre el Foso de las Serpientes, el Pantano, los Bancos
+de Arena y el Nido de las Arañas. Si el pantano está presente, su entrada se
+encuentra entre la Guarida:2 y Guarida:5
+%%%%
+Shoals
+
+Desde lejos oyes el sonido de olas y hueles el aire salado. Una vez llegues a
+los Bancos de Arena estarás impresionado por las exóticas playas subterráneas,
+constituyendo unas pocas islas en un vasto mar. De repente, un grito
+espeluznante llena el aire, seguido de un ruido de ahogo. Ansiosamente, buscas
+y te preguntas: ¿quién es el depredador?¿y quién la presa?
+
+Los Bancos de Arena tienen cinco niveles y contienen la Runa Percebe. Un
+calabozo solo contiene dos ramas de entre el Foso de las Serpientes, el
+Pantano, los Bancos de Arena y el Nido de las Arañas. Si los Bancos de Arena
+están presentes, su entrada se encuentra entre la Guarida:3 y la Guarida:6
+%%%%
+Snake Pit
+
+El hogar de la serpiente, la guarida de los naga.
+
+El Foso de las Serpientes tiene cinco niveles y contiene la Runa Serpentina. Un
+calabozo solo contiene dos ramas de entre el Foso de las Serpientes, el
+Pantano, los Bancos de Arena y el Nido de las Arañas. Si el Foso está presente,
+su entrada se encuentra entre la Guarida:3 y Guarida:6
+%%%%
+Spider Nest
+
+Y tú pensaste que solo con un zapato ya estaría hecho? Si no tienes aracnofobia
+todavía, pronto la tendrás.
+
+El Nido de las Arañas tiene cinco niveles y contiene la Runa Telaraña. Un
+calabozo solo contiene dos ramas de entre el Foso de las Serpientes, el
+Pantano, los Bancos de Arena y el Nido de las Arañas. Si el Nido está presente,
+su entrada se encuentra entre la Guarida:3 y Guarida:6
+%%%%
+Slime Pits
+
+El reino amorfo de los ácidos, gelatinas y mucosas. Cualquier rastro de seres
+inteligentes ha sido disuelto hace tiempo. Aún así, hay rumores de grandes
+tesoros muy adentro, escondidos en cámaras secretas sin El reino amorfo de los
+ácidos, gelatinas y mucosas. Cualquier rastro de seres inteligentes ha sido
+disuelto hace tiempo. Aún así, hay rumores de grandes tesoros muy adentro,
+escondidos en cámaras secretas sin ventanas o puertas evitando que el ácido
+pudiera colarse dentro.
+
+Los Fosos Cenagosos tienen seis niveles y contienen la Runa Cenagosa. La
+entrada está situada entre Guarida:6 y Guarida:8.
+%%%%
+Vaults
+
+Posiblemente construidas por algún hombre poderoso y loco, se cuenta de las
+Cámaras que son lugar de grandes tesoros. Las manchas de sangre por toda la
+entrada indican que también hay un cierto grado de violencia.
+
+Las Cámaras tienen ocho niveles y contienen la Runa Plateada. Su entrada se
+puede hallar entre los niveles 14 y 19 del calabozo principal.
+%%%%
+Hall of Blades
+
+Hace mucho tiempo todas las dagas, hachas y armas de asta se reunían durante la
+noche y bailaban el vals, soñando con campos de batalla sin hombres ni bestias.
+Ese tiempo ya pasó pero las armas todavía están ahí.
+
+La Sala de los Filos es un solo nivel y puede encontrarse entre Cámaras:4 y
+Cámaras:6.
+%%%%
+Crypt
+
+Escuchas quejidos y alaridos de almas torturadas, sufriendo actos innombrables.
+
+La Cripta tiene cinco niveles y puede hallarse entre Cámaras:2 y Cámaras:4.
+%%%%
+Tomb
+
+La Tumba de los Antiguos, un lugar de condenación, de horrores animados por la
+más vil necromancia.
+
+La Tumba tiene tres niveles y contiene la Runa Dorada. Su entrada está bien en
+Cripta:2 o Cripta:3.
+%%%%
+Hell
+
+El vestíbulo hacia los cuatro infiernos está guardado por Geryon. Los héroes
+que prueban su aptitud en el vestíbulo y soplan el Cuerno de Geryon pueden
+explorar las diferentes regiones del Infierno: Dis, Gehena, Cocito y Tártaro.
+
+Los portales hacia el Vestíbulo del Infierno se pueden encontrar en abundancia
+en las regiones más profundas del calabozo principal.
+%%%%
+Dis
+
+La Ciudad de Hierro de Dis. ¿Quién superará el test del hierro?
+
+Dis tiene siete niveles y contiene la Runa de Hierro. Puede accederse a él a
+través del Vestíbulo del Infierno.
+%%%%
+Gehenna
+
+Los fuegos de Gehena han quemado a más de un héroe confiado, y arderán para
+siempre.
+
+Gehena tiene siete niveles y contienen la Runa de Obsidiana. Puede accederse a
+él a través del Vestíbulo del Infierno.
+%%%%
+Cocytus
+
+Un erial desolador y azotado por el frío.
+
+Cocito tiene siete niveles y contiene la Runa Helada. Puede accederse a él a
+través del Vestíbulo del Infierno.
+%%%%
+Tartarus
+
+Un inframundo en descomposición. Con el tiempo, los no-muertos, demonios y
+diablos de este lugar les arrebatan la vida a los buscadores de tesoros.
+
+El Tártaro tiene siete niveles y contiene la Runa de Hueso. Puede accederse a
+él a través del Vestíbulo del Infierno.
+%%%%
+Zot
+
+Una región del complejo del calabozo, cerrada por seguridad y referida en
+términos de locura, frenesí, trastorno. Solo los aventureros más dementes se
+atreverían a romper el sello y continuar más allá - con la vana esperanza de
+encontrar un fabuloso artilugio sobre el que nadie ha puesto sus ojos con
+anterioridad.
+
+El Reino de Zot tiene cinco niveles y uno solo puede entrar cuando se tienen al
+menos tres runas.
+%%%%
+Forest
+
+¡Los árboles atacan!
+%%%%
+Abyss
+
+El Abismo es un lugar verdaderamente extraño, retorcido y que está cambiando
+sin cesar. Está repleto de toda suerte de monstruos, principalmente de
+naturaleza demoníaca, cuyo propósito común es darse un festín con los intrusos.
+Es también un vertedero para muchos hechiceros que se deleitan en enviar a
+aspirantes de héroe como tú a estos lugares de locura. Según se dice, hay
+alguna estructura en el caos, ya que Lugonu urde planes para este lugar y sus
+habitantes.
+
+La Runa Abisal puede encontrarse aquí. Es posible entrar deliberadamente en el
+Abismo usando los portales que se encuentran en los niveles más profundos del
+calabozo principal.
+%%%%
+Pandemonium
+
+Pandemonio es un reino infinito de dolor y de sufrimiento. Si bien puedes
+encontrar un buen botín, todos esos tesoros están custodiados por demonios o
+por los, aun más crueles, señores infernales. Muchos héroes, confundiendo
+confianza con megalomanía, han muerto inesperadamente, acribillados por el
+fuego infernal y el tormento.
+
+Pandemonio es infinito. Hay abundantes portales que llevan a él en las
+profundidades del calabozo. Piensa que regresar puede ser más difícil.
+
+Puedes encontrar cinco runas en el Pandemonio:
+ - La Runa Fiera en el caldeado reino de Cerebov.
+ - La Runa Brillante en los radioactivos dominios de Mnoleg.
+ - La Runa Mágica está custodiada por los poderes arcanos de Lom Lobon y sus
+   secuaces.
+ - La Runa Oscura yace en la morada sombría de Gloorx Vloq.
+ - La Runa Demoníaca existe en múltiples copias, en posesión de otros
+   señores de menos renombre.
+%%%%
+Ziggurat
+
+Una serie de arenas, cada una contiene mayores fortunas e incluso mayores
+peligros que la anterior. Quien quiera que fuera la entidad que creó esta
+monstruosidad, pone un alto precio por entrar. Cuidado, porque un zigurat no es
+un lugar para los débiles de espíritu: incluso el aventurero más valiente y
+diestro ha encontrado su final aquí. Si bien un portal de seguridad se
+encuentra presente en cada nivel, a un zigurat no se puede volver a entrar una
+vez se abandona.
+%%%%
+Labyrinth
+
+El Laberinto es un complejo y vasto lugar diseñado por mentes sutiles y
+maliciosas por razones ya olvidadas en el tiempo. Viejas historias cuentan que
+el laberinto fue construido como prisión para un espantoso minotauro. Historias
+más recientes dicen que esta bestia ronda todavía ahí, guardando la única
+salida del laberinto - así como un buen acopio de tesoros tomados de los
+cuerpos de los imprudentes aventureros que se perdieron y murieron de hambre.
+Ten cuidado dentro de los cambiantes pasadizos del laberinto, o tus posesiones
+podrían acabar apilados en el tesoro del minotauro.
+%%%%
+Bazaar
+
+Aparte de los vendedores que han instalado sus tiendas en diversos lugares del
+calabozo, hay otros intentando ganarse la vida viajando de lugar en lugar. Los
+bazares tienen un cierto número de tiendas variadas y a menudo tienen mejores
+productos que las tiendas sedentarias, incluso a veces a precio de saldo.
+
+Quedas avisado de que su estilo de vida nómada les ha enseñado a apropiarse de
+cualquier objeto que el aventurero pueda dejarse atrás, y entonces marcharse
+rápidamente, probablemente para venderlos en otra parte.
+%%%%
+Trove
+
+Hace mucho tiempo un mago y ladrón emprendedor, aterrado ante la idea de ser
+atrapado robando, creó un sistema de portales que llevaban a las cámaras
+secretas de los tesoros de los ricos. Demasiado espantado para saquearlas el
+mismo, en su lugar puso una fianza a la entrada para cualquiera que quisiera
+llegar a ellas. Siendo un competente artificiero, diseñó sus portales para
+dirigir a quien entrara, al tesoro más adecuado a sus necesidades.
+
+Los objetos que haya en el tesoro suelen ser útiles, pero precaución: el mago
+ya hace tiempo que murió e incluso mientras vivió nunca ofreció una garantía de
+devolución de dinero.
+%%%%
+Sewer
+
+Todos los emplazamientos conllevan desagradables alcantarillas y cloacas,
+ignoradas por la mayoría pero que son escondrijos para otros. Viejos cuentos
+hablan de peligrosas criaturas, bañándose en aguas verdosas de desagradable
+olor, cazándose los unos a los otros sin piedad. Las historias también aluden a
+valiosos objetos dejados por temerarios y desafortunados visitantes, criando
+moho en las húmedas cuevas.
+%%%%
+Ossuary
+
+Una pequeña tumba, que contiene los restos de algunos parientes lejanos de los
+faraones. Es sin duda alguna un lugar de muchas trampas, y es poco probable que
+sus habitantes gentilmente se dejen saquear.
+%%%%
+Bailey
+
+El castillo de algún señor. Está, sin duda alguna, protegido por barreras
+físicas y por soldados bien entrenados.
+%%%%
+Ice Cave
+
+Una caverna desolada y llena de ecos, excavada en el hielo. Las intrincadas
+tallas y esculturas que una vez decoraron sus muros, han sido borradas y
+ocultadas por siglos de lentos deshielos y congelaciones.
+%%%%
+Volcano
+
+Construida con enormes bloques de obsidiana, esta sofocante estancia puede
+haber sido usada como templo a alguna extraña deidad, o quizás como la morada
+de algún poderoso gigante de fuego. El aire se estremece con un calor opresivo,
+y el ronco rugido del corazón del volcán nunca cesa.
+%%%%
+Wizlab
+
+El laboratorio de algún mago, cuyo portal se ha dejado abierto descuidadamente.
+¡Precaución, porque a los magos les encanta proteger sus posesiones con trampas
+y monstruos de creación propia!
+%%%%

@@ -1,0 +1,784 @@
+############################################################
+# godspeak.txt contains the messages for divine speech.
+#
+# For an explanation of how to read godspeak.txt and how to
+# add new messages, see monster_speech.txt in the
+# docs/develop/ directory.
+############################################################
+%%%%
+# fall-back in case a keyword can't be found
+Xom general effect
+
+Xom chichocze.
+
+„A może spróbujemy tego?”
+
+„Albo może eksperyment, hmmm?”
+
+w:1
+„Ciekawe... Co ten przycisk robi?”
+%%%%
+##############################
+# Xom throwing stuff at you.
+##############################
+Xom general gift
+
+Xom udziela ci daru!
+
+„Łap!”
+
+„Trzymaj.”
+
+Xom manifestuje swą dobroć.
+
+Xom daje ci coś.
+
+„Weź to ustrojstwo.”
+
+„Weż to w dowód mego uszanowania.”
+
+Xom uśmiecha się do ciebie.
+
+„Proszę.”
+%%%%
+####################
+# friendly summons
+####################
+Xom single summon
+
+„Służ śmiertelnemu, moje dziecko!”
+
+„Służ mej zabawce!”
+
+Xom otwiera przejście.
+%%%%
+Xom single holy summon
+
+„Służ śmiertelnemu, moje zmylone dziecko!”
+
+„Służ mej zabawce, me wygnane dziecko!”
+
+Xom wzywa zaciekawionego sługę innego boga.
+
+Xom przynęca kogoś na ten świat.
+
+„Zabawka dla zabawki!”
+
+„Ciekawe która zabawka dłużej wytrzyma.”
+
+Xom otwiera przejście.
+%%%%
+# higher demonic being
+Xom single major demon summon
+
+Xom daje ci demonicznego asystenta.
+
+Xom daje ci demonicznego sługę.
+
+Xom otwiera przejście.
+%%%%
+Xom single major holy summon
+
+Xom daje ci asystenta wziętego innemu bogu.
+
+Xom przekabaca sługę innego boga, aby ci służył.
+
+„A skąd to przyszło? Dobrze, dobrze.”
+
+Ciekawe skąd Xom wziął tą istotę.
+
+Wygląda że Xomowi udało się znowu zmylić jakiegoś innego boga.
+
+Xom otwiera przejście.
+%%%%
+# several demons
+Xom multiple summons
+
+„Służcie śmiertelnemu, me dzieci!”
+
+Xom daje ci tymczasową pomoc.
+
+Xom na chwilę otwiera przejście.
+%%%%
+# holy beings and demons at the same time
+Xom multiple mixed summons
+
+Xom wzywa mieszane towarzystwo.
+
+„Służcie zabawce, moja zbieranino!”
+
+Xom przyzywa pomieszaną pomoc.
+
+„O, jaki fajny plac zabaw!”
+
+Xom sprowadza kilka różnych istot na ten świat.
+
+Xom na chwilę otwiera kilka przejść.
+%%%%
+Xom multiple holy summons
+
+Xom miesza wśród sług innych bogów.
+
+Xom wzywa marnotrawne sługi innych bogów.
+
+Xom mąci innym bogom, wzywając ich sługi.
+
+„Inny bóg, inna zabawka.”
+
+Xom otwiera przejście.
+%%%%
+# changing the scenery
+Xom scenery
+
+Dotyk Xoma muska twe otoczenie.
+
+Xom robi małe zmiany.
+
+Xom narzeka na dekoracje.
+
+Xom przerabia loch wokół ciebie.
+
+„Tak chyba wygląda lepiej.”
+
+„Tylko tą małą poprawkę...”
+%%%%
+##################
+# Xom nastiness
+##################
+# miscast strength 0, mostly harmless
+Xom zero miscast effect
+
+Xom niemal cię zauważa.
+
+Xom prawie zwraca na ciebie uwagę.
+
+Moc Xoma prawie cię dotyka.
+
+Niemal słyszysz szalony śmiech Xoma.
+%%%%
+# miscast strength random2(2), harmless/annoying
+Xom minor miscast effect
+
+Xom cię zauważa.
+
+Xom wraca na na ciebie uwagę.
+
+Moc Xoma cię dotyka.
+
+Słyszysz szalony śmiech Xoma.
+%%%%
+# miscast strength random2(3), mostly annoying
+Xom medium miscast effect
+
+@Xom minor miscast effect@
+%%%%
+# miscast strength random2(4), up to really nasty
+Xom major miscast effect
+
+„Spróbuj tego.”
+
+Xom patrzy na ciebię.
+
+Moc Xoma cię dotyka.
+
+Xom dziko chichocze.
+
+w:1
+„Zróbmy trochę crash testów na tej zabawce.”
+%%%%
+Xom lose stats
+
+„Cierp!”
+
+Czujesz na sobie złośliwy wzrok Xoma.
+
+Moc Xoma cię dotyka.
+
+Słyszysz szalony śmiech Xoma.
+%%%%
+Xom rearrange the pieces
+
+Xom przestawia.
+
+„Najpierw tu, potem tam.”
+
+„Tak chyba będzie lepiej!”
+%%%%
+Xom swap weapons
+
+“Zamieńcie się!”
+
+“To damy tobie, a to tobie.”
+
+“Czas na małą zamianę.”
+
+“Przewaga broni, tak?  Tak będzie bardziej sprawiedliwie.”
+%%%%
+Xom teleportation journey
+
+„Jauuuu!”
+
+„Chodźmy na przejażdżkę!”
+
+„Dokąd to prowadzi, któż to wie!”
+
+Xom zakrzywia przestrzeń wokół ciebie.
+%%%%
+Xom confusion
+
+„He he he...”
+
+Moc Xoma ćmi ci umysł.
+
+Xom nerwowo chichocze.
+%%%%
+# 25% chance of draining, else torment
+Xom draining or torment
+
+„Zezłościłeś mnie, śmiertelniku.”
+
+„A ty myślisz że kim jesteś?”
+
+„Znaj swe miejsce!”
+
+Słyszysz szalony śmiech Xoma.
+%%%%
+# 25% chance dancing weapon, else summon hostile monster
+Xom hostile monster
+
+„Czas na zabawę!”
+
+„Walcz o życie, śmiertelniku!”
+
+„Zobaczmy czy zabawka sobie z tym poradzi.”
+
+Słyszysz szalony śmiech Xoma.
+%%%%
+Xom animate monster weapon
+
+@Xom hostile monster@
+%%%%
+Xom banishment
+
+„Zbyt się przywiązujesz do tego świata, śmiertelniku!”
+
+Xom rzuca cię w Otchłań!
+
+Świat wiruje, a w uszach dzwoni ci śmiechem Xoma.
+%%%%
+Xom revert banishment
+
+w:30
+„Żartowałem!”
+
+„A w zasadzie, ...”
+
+„Nie, jednak nie.”
+
+Xom wciąga cię z powrotem.
+%%%%
+# Xom upgrades a nearby hostile monster's weapon to a chaos brand
+Xom chaos upgrade
+
+Moc Xoma dotyka pobliskiej broni.
+
+„Poczuj smak chaosu.”
+
+Xom rechocze.
+%%%%
+#####################
+# other effects
+#####################
+Xom potion effect
+
+„Idź i niszcz!”
+
+„Idź i rozrabiaj!”
+
+Xom daje ci pomniejszą łaskę.
+
+Xom się do ciebie uśmiecha.
+%%%%
+# random divination (magic mapping, detect items, detect creatures)
+Xom divination
+
+„Zobacz co ja widzę, me dziecko!”
+
+Xom oświeca cię.
+
+Xom się głupio uśmiecha.
+%%%%
+# cast a random spell
+Xom spell effect
+
+Moc Xoma płynie przez ciebie!
+
+Xom bawi się rzeczywistością.
+
+Xom rubasznie rechocze.
+%%%%
+# multicoloured smoke trail
+Xom colour smoke trail
+
+„Idź i dekoruj, me dziecię!”
+
+„Przydałoby się trochę nastroju.”
+%%%%
+# turns walls into glass
+Xom vitrification
+
+Widać cię!
+
+Czujesz na sobie wzrok wszystkich wokół.
+
+Ściany wokół robią się przejrzyste.
+
+Xom dotyka lochów wokół ciebie.
+%%%%
+# strengthens friendlies, weakens hostiles
+Xom good monster polymorph
+
+„Tak będzie lepiej!”
+
+„Tam dam tam dam...”
+
+Xom dotyka kogoś w pobliżu.
+
+Słyszysz ojcowski chichot Xoma.
+%%%%
+# weakens friendlies, strengthens hostiles
+Xom bad monster polymorph
+
+@Xom good monster polymorph@
+%%%%
+Xom good mutations
+
+„Potrzebujesz małych poprawek, śmiertelniku!”
+
+„Pozwól mi cię poprawić.”
+
+Xom zmienia twe ciało.
+
+Słyszysz szalony chichot Xoma.
+%%%%
+Xom random mutations
+
+„Potrzebujesz małych poprawek, śmiertelniku!”
+
+„Pozwól mi cię zmienić.”
+
+Moc Xoma przenicowuje cię na chwilę.
+
+Słyszysz ojcowski chichot Xoma.
+%%%%
+Xom snakes to sticks
+
+Xom przemienia węże.
+
+„Wolę tak.”
+
+„Nigdy nie lubiłem tych oślizgłych paskudztw.”
+
+@Xom good monster polymorph@
+%%%%
+Xom inner flame
+
+„Płoń!”
+
+„Niech wszystko spłonie!”
+
+Xom podkręca ogrzewanie.
+%%%%
+Xom accidental homicide
+
+„Uuups, to nie miało tak być!”
+
+„To nie tak, przepraszam.”
+%%%%
+Xom weird death
+
+„A jak »to« się stało? Dziwne.”
+%%%%
+Xom resurrection
+
+„Pozwól mi cię naprawić.”
+
+Xom cię ożywia.
+
+Nawet Śmierć boi się szajby Xoma.
+
+Xom przywraca cię do życia.
+
+Xom się do ciebie uśmiecha.
+%%%%
+Xom repel stairs
+
+Xom zmienia architekturę.
+
+Xom dotyka @staircase@.
+
+„Berek!”
+%%%%
+Xom life saving general
+
+„Jak? Poczekaj, nie!”
+
+„Eee, już robiło się ciekawie.”
+
+„NIEEEEEE, nie @_my_xom_plaything_@!”
+
+„Nie tak, nie teraz.”
+
+Xom ma dobry nastrój.
+%%%%
+Xom life saving actor
+
+w:20
+@Xom life saving general@
+
+„Hej, to @_my_xom_plaything_@!”
+
+„O nie, łapy precz!”
+
+„To @_my_xom_plaything_@, znajdź sobie własną!”
+
+„Zostaw moją zabawkę w spokoju!”
+%%%%
+Xom boring death
+
+Xom głośno ziewa!
+
+„Nudne życie, nudna śmierć...”
+
+„Co, już?”
+
+„Taak, potrzeba mi lepszej rozrywki.”
+
+„Eee, nudy.”
+%%%%
+# Xom laughing
+# (Currently only used post-game in response to "You die...")
+Xom laughter
+
+Xom rechocze.
+
+Xom ryczy ze śmiechu.
+
+Xom uważa że to zabawne.
+
+Xom chichocze.
+
+Xom się smieje.
+%%%%
+_my_xom_plaything_
+
+# piety > 180 and > 80, respectively
+{{
+if you.piety_rank() > 4 then
+    return "mój misiek"
+elseif you.piety_rank() > 2 then
+    return "moja zabawka"
+else
+    return "moja rozrywka"
+end
+}}
+%%%%
+############################################
+# Beogh rants on destroying an orcish idol #
+############################################
+# Beogh's messiah has destroyed an idol
+Beogh idol follower
+
+Beogh się złości: „To niemały grzech, orku!”
+
+Beogh szepcze: „Będziesz cierpiał za tą sprawkę.”
+
+Beogh się gniewa: „Oko za oko, ząb za ząb.”
+%%%%
+# an unbelieving hill orc has destroyed an idol
+Beogh idol hill orc
+
+Beogh grzmi: „Giń, heretyku!”
+
+Słyszysz grzmiący głos Beogha: „Cierp, niewierny!”
+
+Beogh ryczy: „Poczuj mą moc, odstępco!”
+%%%%
+# a character of another species has destroyed an idol
+Beogh idol other
+
+Beogh nie jest zachwycony zniszczeniem tego posągu.
+
+Beogh wydaje się być mocno rozgniewany.
+
+To mocno wkurzyło Beogha.
+
+Beogh rzuca klątwę na twój rodzaj.
+
+Beogh przeklina wszyskich nie-orków.
+
+Beogh obiecuje ci wieczną wrogość.
+%%%%
+#################################################
+# The Shining One rants on killing a holy being #
+#################################################
+# an evil worshipper has killed a holy being
+the Shining One holy evil
+
+Świetlisty grzmi: „Zaprzestań tych podłych ataków na boskość!”
+
+Świetlisty woła: „Ta śmierć nie pozostanie bez pomsty!”
+
+Świetlisty woła: „Twe grzechy będą pamiętane aż do końca świata!”
+
+Świetlisty szepcze: „Siły światła spalą cię na popiół.”
+%%%%
+# a non-good worshipper or atheist has killed a holy being
+the Shining One holy other
+
+Świetlisty mówi: „Tak jak święte życia się kończą, tak skończy się twoje.”
+
+Świetlisty mówi: „Czas oddzielić ziarno od plew.”
+
+Świetlisty mówi: „Pamięć o męczennikach nie zaginie.”
+
+w:1
+Świetlisty rzecze, „Oko za oko, ząb za ząb.”
+%%%%
+##########################################
+# Elyvilon hates you killing her animals #
+##########################################
+Elyvilon holy
+
+Elyvilon syczy: „Ty podła bestio! Jak możesz?!”
+
+Elyvilon mówi ze smutkiem: „Jak to możliwe że takie okrucieństwo w ogóle istnieje.”
+
+Elyvilon szepcze: „Nikt nie powinien krzywdzić innych. Nigdy!”
+%%%%
+recite_closure
+
+„Amen!”
+
+„Chwała Zinowi!”
+
+„I tak napisano.”
+
+„Tako rzecze Zin.”
+
+„Niech czystość będzie z wami.”
+%%%%
+##########################
+# Xom's response to prayer
+##########################
+Xom prayer
+
+Xom zdziela cię @_Xom_zdziela_@!
+
+Xom wesoło popiarduje.
+
+Xom rzecze: Widzę cię!
+
+Nic się nie dzieje. Chyba...
+
+w:1
+Ktoś cię uszczypnął. Ale za tobą nikogo nie ma!
+
+w:1
+Xom mówi: Amen!
+%%%%
+_Xom_zdziela_
+
+poduszką
+
+zdechłą rybą
+
+śmierdzącym jajem
+
+workiem buraków
+
+starym kaloszem
+
+kapciem
+%%%%
+######################################
+# Welcome messages on game restoration
+######################################
+Ashenzari penance
+
+@Ashenzari welcome@
+%%%%
+Ashenzari welcome
+
+Ashenzari rzecze: Weź udział w mej wizji. Weź udział w mym przekleństwie.
+%%%%
+Beogh penance
+
+Beogh rzecze: Ośmiel się okazać litość nie-orkom i każę cię zgładzić.
+%%%%
+Beogh welcome
+
+Beogh rzecze: Utop niewiernych w morzu krwi!
+%%%%
+Beogh newgame
+
+@Beogh welcome@
+%%%%
+Cheibriados penance
+
+Cheibriados rzecze: Nie tak szybko! Zwolnij!
+%%%%
+Cheibriados welcome
+
+Cheibriados mówi: Wyluzuj się.
+%%%%
+Elyvilon penance
+
+Elyvilon prosi: Błagam cię, więcej uwagi przy niesieniu pomocy!
+%%%%
+Elyvilon welcome
+
+Elyvilon mówi: Idź i pomóż cierpiącym!
+%%%%
+Elyvilon newgame
+
+@Elyvilon welcome@
+%%%%
+Fedhas penance
+
+Fedhas protestuje przeciw twemu psuciu środowiska.
+%%%%
+Fedhas welcome
+
+Fedhas rzecze: Nieś życie i śmierć.
+%%%%
+Jiyva penance
+
+@Jiyva welcome@
+%%%%
+Jiyva welcome
+
+Śluz dla boga śluzu!
+%%%%
+Kikubaaqudgha penance
+
+@Kikubaaqudgha welcome@
+%%%%
+Kikubaaqudgha welcome
+
+Kikubaaqudgha rzecze: Szerz ciemność i męczarnie bez końca!
+%%%%
+Lugonu penance
+
+@Lugonu welcome@
+%%%%
+Lugonu welcome
+
+Lugonu rzecze: Szerz rzeź i zepsucie!
+%%%%
+Lugonu newgame
+
+Lugonu mówi: Przejdź przez tą bramę, lub wezmij mnie, by sprowadzić cię na świat!
+%%%%
+Makhleb penance
+
+@Makhleb welcome@
+%%%%
+Makhleb welcome
+
+Krew i dusze dla Makhleba!
+%%%%
+Nemelex Xobeh penance
+
+@Nemelex Xobeh welcome@
+%%%%
+Nemelex Xobeh welcome
+
+Nemelex Xobeh mówi: Wszystko znajdziesz w kartach!
+%%%%
+Okawaru penance
+
+Okawaru gani cię: Nie bądź podłym tchórzem tym razem!
+%%%%
+Okawaru welcome
+
+Okawaru wzywa: Przynieś mi chwałę w walce!
+%%%%
+Sif Muna penance
+
+Sif Muna wścieka się: Więcej uwagi, nieuku!
+%%%%
+Sif Muna welcome
+
+Sif Muna szepcze: Znam wiele sekretów...
+%%%%
+the Shining One penance
+
+Świetlisty rzecze: Możesz jeszcze zmyć swój grzech jako męczennik!
+%%%%
+the Shining One welcome
+
+Świetlisty rzecze: Poprowadź siły światła ku zwycięstwu!
+%%%%
+Trog penance
+
+Trog mamrocze: Ach, to znowu ten marny gryzipiórek...
+%%%%
+Trog welcome
+
+Trog woła: Zabij ich wszystkich!
+%%%%
+Trog newgame
+
+@Trog welcome@
+%%%%
+Vehumet penance
+
+@Vehumet welcome@
+%%%%
+Vehumet welcome
+
+Vehumet woła: Niech wszystko spłonie!
+%%%%
+Xom bored
+
+Xom ziewa.
+
+„Ciekawe co dzieje się gdzie indziej...”
+
+@Xom generic@
+%%%%
+Xom newgame
+
+Xom woła: Nowa zabawka!
+%%%%
+Xom generic
+
+Xom chichocze.
+%%%%
+Yredelemnul penance
+
+Yredelemnul rzecze: Wszyscy umrą! Święte męczeństwo nie jest nic warte!
+%%%%
+Yredelemnul welcome
+
+Yredelemnul rzecze: Nieś czarną pochodnię! Podnieś bezczynnych zmarłych!
+%%%%
+Yredelemnul newgame
+
+@Yredelemnul welcome@
+%%%%
+Zin penance
+
+Zin potępia cię za nieposłuszeństwo prawu.
+
+Zin stanowczo wyjaśnia powagę @_important_subject_@
+%%%%
+Zin welcome
+
+Zin rzecze: Nieś światło, me dziecię.
+%%%%
+Zin newgame
+
+@Zin welcome@
+%%%%

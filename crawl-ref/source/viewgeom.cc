@@ -29,7 +29,7 @@
 // Helper for layouts.  Tries to increment lvalue without overflowing it.
 static void _increment(int& lvalue, int delta, int max_value)
 {
-    lvalue = std::min(lvalue+delta, max_value);
+    lvalue = min(lvalue+delta, max_value);
 }
 
 class _layout
@@ -95,7 +95,7 @@ class _inline_layout : public _layout
     {
         // x: View gets leftover; then mlist; then hud gutter
         if (leftover_x() < 0)
-            return (false);
+            return false;
 
         _increment(viewsz.x,   leftover_x(), Options.view_max_width);
 
@@ -113,7 +113,7 @@ class _inline_layout : public _layout
         // msg expands as much as it wants.
         // mlist gets any leftovers.
         if (leftover_y() < 0)
-            return (false);
+            return false;
 
         _increment(viewsz.y, leftover_leftcol_y(), Options.view_max_height);
         if ((viewsz.y % 2) != 1)
@@ -133,25 +133,25 @@ class _inline_layout : public _layout
         else
         {
             viewp  = termp;
-            msgp   = termp + coord_def(0, std::max(viewsz.y, hudsz.y+mlistsz.y));
+            msgp   = termp + coord_def(0, max(viewsz.y, hudsz.y+mlistsz.y));
         }
         hudp   = viewp + coord_def(viewsz.x+hud_gutter, 0);
         mlistp = hudp  + coord_def(0, hudsz.y);
 
         _assert_validity();
-        return (true);
+        return true;
     }
 
     int leftover_x() const
     {
-        int width = (viewsz.x + hud_gutter + std::max(hudsz.x, mlistsz.x));
+        int width = (viewsz.x + hud_gutter + max(hudsz.x, mlistsz.x));
         return (termsz.x - width);
     }
     int leftover_rightcol_y() const { return termsz.y-hudsz.y-mlistsz.y-msgsz.y; }
     int leftover_leftcol_y() const  { return termsz.y-viewsz.y-msgsz.y; }
     int leftover_y() const
     {
-        return std::min(leftover_rightcol_y(), leftover_leftcol_y());
+        return min(leftover_rightcol_y(), leftover_leftcol_y());
     }
 };
 
@@ -173,7 +173,7 @@ class _mlist_col_layout : public _layout
 
         // x: View and mlist share leftover; then hud gutter.
         if (leftover_x() < 0)
-            return (false);
+            return false;
 
         _increment(mlistsz.x,  leftover_x()/2, MLIST_MAX_WIDTH);
         _increment(viewsz.x,   leftover_x(),   Options.view_max_width);
@@ -187,7 +187,7 @@ class _mlist_col_layout : public _layout
 
         // y: View gets leftover; then message.
         if (leftover_y() < 0)
-            return (false);
+            return false;
 
         _increment(viewsz.y, leftover_y(), Options.view_max_height);
 
@@ -204,7 +204,7 @@ class _mlist_col_layout : public _layout
         hudp   = viewp + coord_def(viewsz.x+hud_gutter, 0);
 
         _assert_validity();
-        return (true);
+        return true;
     }
  private:
     int leftover_x() const
@@ -214,7 +214,7 @@ class _mlist_col_layout : public _layout
     }
     int leftover_y() const
     {
-        const int top_y = std::max(std::max(viewsz.y, hudsz.y), mlistsz.y);
+        const int top_y = max(max(viewsz.y, hudsz.y), mlistsz.y);
         const int height = top_y + msgsz.y;
         return (termsz.y - height);
     }
@@ -260,7 +260,7 @@ const crawl_view_buffer &crawl_view_buffer::operator = (const crawl_view_buffer 
         size_t count = sizeof(m_buffer[0]) * m_size.x * m_size.y;
         memcpy(m_buffer, rhs.m_buffer, count);
     }
-    return (*this);
+    return *this;
 }
 
 void crawl_view_buffer::clear()
@@ -309,9 +309,7 @@ void crawl_view_geometry::shift_player_to(const coord_def &c)
 void crawl_view_geometry::set_player_at(const coord_def &c, bool centre)
 {
     if (centre)
-    {
         vgrdc = c;
-    }
     else
     {
         const coord_def oldc = vgrdc;

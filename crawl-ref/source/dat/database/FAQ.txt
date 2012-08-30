@@ -29,10 +29,13 @@
 #   means they will be displayed in bold in the html. This will only
 #   work for commands that don't contain spaces.
 # * Emphasis using asterisks will be replaced with italics.
-# * Hyperlinks should begin with http:// and should never be directly
+# * Hyperlinks should begin with https:// and should never be directly
 #   followed by a dot (reorder the sentence, if need be), so they can be
 #   turned into properly clickable links.
 #
+T:html
+
+Dungeon Crawl Stone Soup - Frequently Asked Questions
 ##############################################
 # Beginners' questions about playing the game.
 ##############################################
@@ -78,18 +81,27 @@ A:roguelike difference
 A: First, you might want to read the philosophy section in the manual ('?N') to read about general important principles in Stone Soup's game design.
 
 As for specific differences, the most important are probably the following:
+
 * Species is *much* more important than the character background (or "class").
+
 * Bones files only contain ghosts, never their equipment or cause of death.
+
 * You cannot sell items to shops or elsewhere.
+
 * Resistances can be gained via mutations or items, never through eating.
+
 * Praying is mostly used to offer items or corpses to gods who'll accept them. To make use of divine powers use the 'a'bility command.
+
 * There are inevitable deaths, but new players can win without spoilers, if they learn from their mistakes. Very good players win streaks.
 
 Also, our aim is to give Crawl a really smooth interface, so you should really read through the command list ('??') some time. The most intriguing "newish" commands are probably the following:
 
 * 'o', for automatic exploration of an unknown level
+
 * 'G', for automatic travel to another level ('G?' for help)
+
 * 'X', to access the level map for travelling and other tasks ('X?')
+
 * 'Ctrl-F', to find and travel to items you've seen before ('Ctrl-F?')
 %%%%
 Q:survival
@@ -122,7 +134,7 @@ I teleported and ended up in a closed room without any exits. Am I stuck?
 %%%%
 A:stuck
 
-A: Hopefully not. Search all the walls with '5' in case there's a secret door. If you really can't find any, it could be a bug and need fixing, so please report it on our Mantis bug tracker: http://crawl.develz.org/mantis/
+A: Hopefully not. Search all the walls with '5' in case there's a secret door. If you really can't find any, it could be a bug and need fixing, so please report it on our Mantis bug tracker: https://crawl.develz.org/mantis/
 
 If you're playing locally, be sure to upload your save file!
 
@@ -149,11 +161,11 @@ A:labyrinth
 
 A: To escape a labyrinth, it can be useful to know a few things:
 
-1. Each labyrinth consists of several layers of different wall types, ranging from rock in the outer border to metal in the centre part, at the very centre of which the exit is located. (Though the exit itself may be part of a vault that has non-metal walls.)
+* Each labyrinth consists of several layers of different wall types, ranging from rock in the outer border to metal in the centre part, at the very centre of which the exit is located. (Though the exit itself may be part of a vault that has non-metal walls.)
 
-2. Teleportation will never take you into or even near the metal region.
+* Teleportation will never take you into or even near the metal region.
 
-3. From time to time, the walls will rearrange themselves. Though they will never close off the path to the exit, the path itself might change. In particular, this means that the "left hand" rule is not entirely reliable.
+* From time to time, the walls will rearrange themselves. Though they will never close off the path to the exit, the path itself might change. In particular, this means that the "left hand" rule is not entirely reliable.
 
 Also, exit and loot are guarded by a brutish minotaur, who is very much alive. Don't let yourself get sidetracked by necromantic remnants of its ancestors.
 %%%%
@@ -199,7 +211,7 @@ A: There isn't any such option, and we're not planning to add one, either.
 
 For a more constructive answer, once a ghost has been loaded onto a level, it won't be loaded again - unless you happen to die on that level, thus creating a bones file featuring more than one ghost. Keep in mind that you don't absolutely have to fight every monster you meet, and with ghosts it's even easier: they cannot leave the level they were created on.
 
-Alternatively, you could play a couple characters of strong species/background combinations for the sole purpose of busting those ghosts, e.g. Berserkers, spellcasters who've learned Dispel Undead, or followers of The Shining One.
+Alternatively, you could play a couple characters of strong species/background combinations for the sole purpose of busting those ghosts, e.g. Berserkers, spellcasters who've learned Dispel Undead, or followers of the Shining One.
 %%%%
 Q:instadeath
 
@@ -218,10 +230,15 @@ A:abyss
 A: If you are in the Abyss for the first time, chances of getting out are slim. Still, here are a few general hints:
 
 * You need to find a gateway leading out of the Abyss. These are rare!
+
 * Don't stick around to fight; move as much as possible!
+
 * If you have it, use defensive equipment (weapons of protection, etc.).
+
 * Use teleportation to hopefully end up in a completely new part of the Abyss.
+
 * Teleportation might take much longer to kick in than in the Dungeon.
+
 * Consider switching your allegiance to Lugonu to get out of there.
 %%%%
 Q:oklobs
@@ -243,6 +260,7 @@ A:randart
 A: Apart from the standard items you'll find lying around in the dungeon, you might also stumble upon artefacts which come in two varieties:
 
 * randart: a random artefact, usually a weapon or type of armour with random properties such as conferring resistances or abilities
+
 * unrandart: an artefact that looks like a randart but is really predefined. While a few (formerly known as "fixed artefacts") have special hardcoded effects, for most there's no further difference except that players "in the know" can recognize such an item by its special description and/or colour/tile.
 
 Neither of these types can be enchanted or branded, either temporarily or permanently. There is another type of special item that pops up a bit more frequently:
@@ -255,9 +273,9 @@ Is there a way for me to interact with other players?
 %%%%
 A:interact
 
-A: If you play online on http://crawl.akrasiac.org or http://crawl.develz.org, you can watch games in progress, other players can watch you while you play, and you can kill other players' ghosts. You can even send and receive messages.
+A: If you play online on https://crawl.akrasiac.org or https://crawl.develz.org, you can watch games in progress, other players can watch you while you play, and you can kill other players' ghosts. You can even send and receive messages.
 
-Check docs/ssh_guide.txt or http://crawl.develz.org/wordpress/howto for an explanation about how to play online.
+Check docs/ssh_guide.txt or https://crawl.develz.org/wordpress/howto for an explanation about how to play online.
 
 You can also chat in the Crawl channel (irc.freenode.net, ##crawl), or discuss in the Stone Soup forum (https://crawl.develz.org/tavern/), or in one of the other forums linked on the website.
 %%%%
@@ -280,9 +298,9 @@ Is there a way for me to play the new version before it is released?
 %%%%
 A:beta
 
-A: There certainly is! You can play "trunk" (what will eventually become the next version) online on both http://crawl.akrasiac.org and http://crawl.develz.org; the latter site also hosts Windows and Mac binaries you can download. Note that trunk may be buggy, and that some changes may invalidate your saved games. If that doesn't bother you, go ahead and play!
+A: There certainly is! You can play "trunk" (what will eventually become the next version) online on both https://crawl.akrasiac.org and https://crawl.develz.org; the latter site also hosts Windows and Mac binaries you can download. Note that trunk may be buggy, and that some changes may invalidate your saved games. If that doesn't bother you, go ahead and play!
 
-Be sure to reports bugs on our bug tracker (http://crawl.develz.org/mantis/) and to leave some feedback/suggestions on the development wiki (http://crawl.develz.org/wiki).
+Be sure to reports bugs on our bug tracker (https://crawl.develz.org/mantis/) and to leave some feedback/suggestions on the development wiki (https://crawl.develz.org/wiki).
 
 When doing so, please mention the version (see '?v') you're currently playing, in case the bug's already been fixed or the feature already implemented.
 %%%%
@@ -292,11 +310,15 @@ The game keeps crashing. / I think I found a bug. What do I do?
 %%%%
 A:bug
 
-A: Please submit a bug report on Mantis (http://crawl.develz.org/mantis/), and give as much information as you can:
+A: Please submit a bug report on Mantis (https://crawl.develz.org/mantis/), and give as much information as you can:
+
 * What were you doing at the time?
+
 * What did you expect to happen, what happened instead, etc.
+
 * Most importantly, what version are you playing?
   (If you're not sure, you can check in-game with '?v'.)
+
 * Console or tiles?
 
 For crashes or monsters/items/levels behaving oddly, we probably need a save file. If you're playing online, please create a copy of your save file for the developers to access before you continue playing. On CDO, you can do this from the main menu; on CAO you need to use the !copysave IRC command: !copysave username reason. Don't forget to include the server and your username in your bug report!
@@ -315,7 +337,7 @@ A: Sorry, but no. At least not on ideas alone.
 
 All of the devteam members submitted a number of code intensive patches and/or took over responsibility over an important side project before joining. A good way to become indispensable is to help us with patches or vaults, etc.
 
-Please add your ideas in the appropriate section of the Mantis wiki: http://crawl.develz.org/wiki
+Please add your ideas in the appropriate section of the Mantis wiki: https://crawl.develz.org/wiki
 
 If they catch the interest of at least one coder, chances are they'll make it into the game.
 
@@ -332,7 +354,9 @@ A: If you submitted a report on our Mantis tracker, you will get an email any ti
 We always try to give a reason for closing a request that has not been implemented, but it usually boils down to three reasons:
 
 * It doesn't fit into the Crawl world as we see it.
+
 * It violates Crawl's philosophy to avoid grinding and spoiler-heavy stuff.
+
 * We just don't think it's interesting enough to ever be implemented.
 
 Also, many requests that are reasonable but not urgent are moved to the wiki, where it's easier to keep track of them than in the bug tracker.
@@ -345,7 +369,7 @@ I've written a patch for a cool new feature! Where should I send it?
 %%%%
 A:patch
 
-A: Please submit it as a new issue on our Mantis tracker: http://crawl.develz.org/mantis/
+A: Please submit it as a new issue on our Mantis tracker: https://crawl.develz.org/mantis/
 
 Keep in mind that without previous discussions, we may not be able to use the patch, or it might need heavy modification. In general, it is safer to first file your suggestions under Feature Requests and wait for people to become enthusiastic and give feedback before you submit a patch. If you want, you can also write a patch that implements an existing FR or fixes a bug.
 
@@ -360,14 +384,18 @@ I cannot code, but I'd like to help improve the game. What can I do?
 A:help
 
 A: There are several areas where you can get creative and outside help is much appreciated. These are:
+
 * maps/vaults (see dat/ directory, docs/develop/levels/introduction.txt)
+
 * monster speech (see dat/database/, docs/develop/monster_speech.txt)
+
 * monster/item/spell descriptions (see dat/descript/)
+
 * tiles (see source/rltiles/, docs/develop/tiles_creation.txt)
 
 Also, if you'd like to write a patch but don't know how to go about it, read patch_guide.txt in the docs/develop/ directory.
 
-If you've got some cool addition, you can send it over the mailing list, or post it as a Mantis item. You can also help us by giving feedback on the most recent version or trunk (available via git, Windows and Mac binaries downloadable from http://crawl.develz.org/trunk/).
+If you've got some cool addition, you can send it over the mailing list, or post it as a Mantis item. You can also help us by giving feedback on the most recent version or trunk (available via git, Windows and Mac binaries downloadable from https://crawl.develz.org/trunk/).
 
 Thanks a lot for your support!
 %%%%
@@ -400,7 +428,7 @@ Can I play Tiles online?
 %%%%
 A:tiles online
 
-A: A web-based tile interface is available at https://tiles.crawl.develz.org/, though it is missing some features of the local Tiles version.  Trunk builds are not currently supported, but may be in the future.
+A: A web-based tile interface is available at https://tiles.crawl.develz.org/, though it is missing some features of the local Tiles version. Trunk builds are not currently supported, but may be in the future.
 %%%%
 Q:tiles commands
 

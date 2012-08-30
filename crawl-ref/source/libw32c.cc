@@ -46,7 +46,6 @@
 
 #include <excpt.h>
 #include <stdarg.h>
-#undef ARRAYSZ
 #include <windows.h>
 #undef max
 #undef AF_CHAOS
@@ -63,7 +62,6 @@
 #include "cio.h"
 #include "defines.h"
 #include "libutil.h"
-#include "message.h"
 #include "options.h"
 #include "state.h"
 #include "unicode.h"
@@ -189,7 +187,7 @@ void enable_smart_cursor(bool cursor)
 
 bool is_smart_cursor_enabled()
 {
-    return (w32_smart_cursor);
+    return w32_smart_cursor;
 }
 
 void bFlush(void)
@@ -355,7 +353,7 @@ void console_startup()
         exit(0);
     }
 
-    std::string title = CRAWL " " + Version::Long();
+    string title = CRAWL " " + Version::Long();
 
     if (!GetConsoleTitleW(oldTitle, 78))
         *oldTitle = 0;
@@ -448,7 +446,7 @@ void set_cursor_enabled(bool enabled)
 
 bool is_cursor_enabled()
 {
-    return (cursor_is_enabled);
+    return cursor_is_enabled;
 }
 
 static void _setcursortype_internal(bool curstype)
@@ -617,10 +615,14 @@ void putwch(ucs_t c)
 #define VKEY_MAPPINGS 11
 static int vk_tr[4][VKEY_MAPPINGS] = // virtual key, unmodified, shifted, control
 {
-   { VK_END, VK_DOWN, VK_NEXT, VK_LEFT, VK_CLEAR, VK_RIGHT, VK_HOME, VK_UP, VK_PRIOR, VK_INSERT, VK_TAB },
-   { CK_END, CK_DOWN, CK_PGDN, CK_LEFT, CK_CLEAR, CK_RIGHT, CK_HOME, CK_UP, CK_PGUP , CK_INSERT, CONTROL('I') },
-   { CK_SHIFT_END, CK_SHIFT_DOWN, CK_SHIFT_PGDN, CK_SHIFT_LEFT, CK_SHIFT_CLEAR, CK_SHIFT_RIGHT, CK_SHIFT_HOME, CK_SHIFT_UP, CK_SHIFT_PGUP, CK_SHIFT_INSERT, CK_SHIFT_TAB },
-   { CK_CTRL_END, CK_CTRL_DOWN, CK_CTRL_PGDN, CK_CTRL_LEFT, CK_CTRL_CLEAR, CK_CTRL_RIGHT, CK_CTRL_HOME, CK_CTRL_UP, CK_CTRL_PGUP, CK_CTRL_INSERT, CK_CTRL_TAB },
+   { VK_END, VK_DOWN, VK_NEXT, VK_LEFT, VK_CLEAR, VK_RIGHT,
+     VK_HOME, VK_UP, VK_PRIOR, VK_INSERT, VK_TAB },
+   { CK_END, CK_DOWN, CK_PGDN, CK_LEFT, CK_CLEAR, CK_RIGHT,
+     CK_HOME, CK_UP, CK_PGUP , CK_INSERT, CONTROL('I') },
+   { CK_SHIFT_END, CK_SHIFT_DOWN, CK_SHIFT_PGDN, CK_SHIFT_LEFT, CK_SHIFT_CLEAR, CK_SHIFT_RIGHT,
+     CK_SHIFT_HOME, CK_SHIFT_UP, CK_SHIFT_PGUP, CK_SHIFT_INSERT, CK_SHIFT_TAB },
+   { CK_CTRL_END, CK_CTRL_DOWN, CK_CTRL_PGDN, CK_CTRL_LEFT, CK_CTRL_CLEAR, CK_CTRL_RIGHT,
+     CK_CTRL_HOME, CK_CTRL_UP, CK_CTRL_PGUP, CK_CTRL_INSERT, CK_CTRL_TAB },
    };
 
 static int ck_tr[] =
@@ -724,11 +726,11 @@ static int w32_proc_mouse_event(const MOUSE_EVENT_RECORD &mer)
     crawl_view.mousep = pos;
 
     if (!crawl_state.mouse_enabled)
-        return (0);
+        return 0;
 
     c_mouse_event cme(pos);
     if (mer.dwEventFlags & MOUSE_MOVED)
-        return (CK_MOUSE_MOVE);
+        return CK_MOUSE_MOVE;
 
     if (mer.dwButtonState & FROM_LEFT_1ST_BUTTON_PRESSED)
         cme.bstate |= c_mouse_event::BUTTON1;
@@ -746,10 +748,10 @@ static int w32_proc_mouse_event(const MOUSE_EVENT_RECORD &mer)
     if (cme)
     {
         new_mouse_event(cme);
-        return (CK_MOUSE_CLICK);
+        return CK_MOUSE_CLICK;
     }
 
-    return (0);
+    return 0;
 }
 
 int getch_ck(void)
@@ -829,7 +831,7 @@ bool kbhit()
 {
     INPUT_RECORD ir[10];
     DWORD read_count = 0;
-    PeekConsoleInputW(inbuf, ir, sizeof ir / sizeof(ir[0]), &read_count);
+    PeekConsoleInputW(inbuf, ir, ARRAYSZ(ir), &read_count);
     if (read_count > 0)
     {
         for (unsigned i = 0; i < read_count; ++i)
@@ -878,12 +880,17 @@ void update_screen()
 
 int get_number_of_lines()
 {
-    return (screensize.Y);
+    return screensize.Y;
 }
 
 int get_number_of_cols()
 {
-    return (screensize.X);
+    return screensize.X;
+}
+
+int num_to_lines(int num)
+{
+    return num;
 }
 
 #endif /* #if defined(TARGET_OS_WINDOWS) && !defined(USE_TILE_LOCAL) */

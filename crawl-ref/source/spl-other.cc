@@ -67,12 +67,13 @@ spret_type cast_sublimation_of_blood(int pow, bool fail)
 
             dec_inv_item_quantity(wielded, 1);
 
-            if (mons_genus(you.inv[wielded].plus) == MONS_ORC)
+            if (mons_genus(you.inv[wielded].mon_type) == MONS_ORC)
                 did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
-            if (mons_class_holiness(you.inv[wielded].plus) == MH_HOLY)
+            if (mons_class_holiness(you.inv[wielded].mon_type) == MH_HOLY)
                 did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 2);
         }
-        else if (is_blood_potion(you.inv[wielded]))
+        else if (is_blood_potion(you.inv[wielded])
+                 && item_type_known(you.inv[wielded]))
         {
             fail_check();
             success = true;
@@ -237,7 +238,7 @@ bool recall(int type_recalled)
     if (!success)
         mpr("Nothing appears to have answered your call.");
 
-    return (success);
+    return success;
 }
 
 // Cast_phase_shift: raises evasion (by 8 currently) via Translocations.
@@ -265,9 +266,9 @@ static bool _feat_is_passwallable(dungeon_feature_type feat)
     case DNGN_SLIMY_WALL:
     case DNGN_CLEAR_ROCK_WALL:
     case DNGN_SECRET_DOOR:
-        return (true);
+        return true;
     default:
-        return (false);
+        return false;
     }
 }
 
@@ -280,7 +281,8 @@ spret_type cast_passwall(const coord_def& delta, int pow, bool fail)
     coord_def dest;
     for (dest = you.pos() + delta;
          in_bounds(dest) && _feat_is_passwallable(grd(dest));
-         dest += delta) ;
+         dest += delta)
+    {}
 
     int walls = (dest - you.pos()).rdist() - 1;
     if (walls == 0)
@@ -303,7 +305,7 @@ spret_type cast_passwall(const coord_def& delta, int pow, bool fail)
         mpr("You fail to penetrate the rock.");
     else
     {
-        std::string msg;
+        string msg;
         if (grd(dest) == DNGN_DEEP_WATER)
             msg = "You sense a large body of water on the other side of the rock.";
         else if (grd(dest) == DNGN_LAVA)
@@ -331,7 +333,10 @@ static int _intoxicate_monsters(coord_def where, int pow, int, actor *)
 
     if (x_chance_in_y(40 + pow/3, 100))
     {
+        if (mons->check_clarity(false))
+            return 1;
         mons->add_ench(mon_enchant(ENCH_CONFUSION, 0, &you));
+        simple_monster_message(mons, " looks rather confused.");
         return 1;
     }
     return 0;
@@ -340,6 +345,7 @@ static int _intoxicate_monsters(coord_def where, int pow, int, actor *)
 spret_type cast_intoxicate(int pow, bool fail)
 {
     fail_check();
+    mpr("You radiate an intoxicating aura.");
     if (x_chance_in_y(60 - pow/3, 100))
         potion_effect(POT_CONFUSION, 10 + (100 - pow) / 10);
 
@@ -351,166 +357,6 @@ spret_type cast_intoxicate(int pow, bool fail)
     }
 
     apply_area_visible(_intoxicate_monsters, pow);
-    return SPRET_SUCCESS;
-}
-
-// The intent of this spell isn't to produce helpful potions
-// for drinking, but rather to provide ammo for the Evaporate
-// spell out of corpses, thus potentially making it useful.
-// Producing helpful potions would break game balance here...
-// and producing more than one potion from a corpse, or not
-// using up the corpse might also lead to game balance problems. - bwr
-spret_type cast_fulsome_distillation(int pow, bool check_range, bool fail)
-{
-    int num_corpses = 0;
-    item_def *corpse = corpse_at(you.pos(), &num_corpses);
-    if (num_corpses && you.flight_mode() == FL_LEVITATE)
-        num_corpses = -1;
-
-    // If there is only one corpse, distill it; otherwise, ask the player
-    // which corpse to use.
-    switch (num_corpses)
-    {
-        case 0: case -1:
-            // Allow using Z to victory dance fulsome.
-            if (!check_range)
-            {
-                fail_check();
-                mpr("The spell fizzles.");
-                return SPRET_SUCCESS;
-            }
-
-            if (num_corpses == -1)
-                mpr("You can't reach the corpse!");
-            else
-                mpr("There aren't any corpses here.");
-            return SPRET_ABORT;
-        case 1:
-            // Use the only corpse available without prompting.
-            break;
-        default:
-            // Search items at the player's location for corpses.
-            // The last corpse detected earlier is irrelevant.
-            corpse = NULL;
-            for (stack_iterator si(you.pos(), true); si; ++si)
-            {
-                if (item_is_corpse(*si))
-                {
-                    const std::string corpsedesc =
-                        get_menu_colour_prefix_tags(*si, DESC_THE);
-                    const std::string prompt =
-                        make_stringf("Distill a potion from %s?",
-                                     corpsedesc.c_str());
-
-                    if (yesno(prompt.c_str(), true, 0, false))
-                    {
-                        corpse = &*si;
-                        break;
-                    }
-                }
-            }
-    }
-
-    if (!corpse)
-    {
-        canned_msg(MSG_OK);
-        return SPRET_ABORT;
-    }
-
-    fail_check();
-
-    potion_type pot_type = POT_WATER;
-
-    switch (mons_corpse_effect(corpse->plus))
-    {
-    case CE_CLEAN:
-        pot_type = POT_WATER;
-        break;
-
-    case CE_CONTAMINATED:
-        pot_type = (mons_weight(corpse->plus) >= 900)
-            ? POT_DEGENERATION : POT_CONFUSION;
-        break;
-
-    case CE_POISONOUS:
-    case CE_POISON_CONTAM:
-        pot_type = POT_POISON;
-        break;
-
-    case CE_MUTAGEN_RANDOM:
-    case CE_MUTAGEN_GOOD:   // unused
-    case CE_RANDOM:         // unused
-        pot_type = POT_MUTATION;
-        break;
-
-    case CE_MUTAGEN_BAD:    // unused
-    case CE_ROTTEN:         // actually this only occurs via mangling
-    case CE_ROT:            // necrophage
-        pot_type = POT_DECAY;
-        break;
-
-    case CE_NOCORPSE:       // shouldn't occur
-    default:
-        break;
-    }
-
-    switch (corpse->plus)
-    {
-    case MONS_RED_WASP:              // paralysis attack
-        pot_type = POT_PARALYSIS;
-        break;
-
-    case MONS_YELLOW_WASP:           // slowing attack
-        pot_type = POT_SLOWING;
-        break;
-
-    default:
-        break;
-    }
-
-    struct monsterentry* smc = get_monster_data(corpse->plus);
-
-    for (int nattk = 0; nattk < 4; ++nattk)
-    {
-        if (smc->attack[nattk].flavour == AF_POISON_MEDIUM
-            || smc->attack[nattk].flavour == AF_POISON_STRONG
-            || smc->attack[nattk].flavour == AF_POISON_STR
-            || smc->attack[nattk].flavour == AF_POISON_INT
-            || smc->attack[nattk].flavour == AF_POISON_DEX
-            || smc->attack[nattk].flavour == AF_POISON_STAT)
-        {
-            pot_type = POT_STRONG_POISON;
-        }
-    }
-
-    const bool was_orc = (mons_genus(corpse->plus) == MONS_ORC);
-    const bool was_holy = (mons_class_holiness(corpse->plus) == MH_HOLY);
-
-    // We borrow the corpse's object to make our potion.
-    corpse->base_type = OBJ_POTIONS;
-    corpse->sub_type  = pot_type;
-    corpse->quantity  = 1;
-    corpse->plus      = 0;
-    corpse->plus2     = 0;
-    corpse->flags     = 0;
-    corpse->inscription.clear();
-    item_colour(*corpse); // sets special as well
-
-    // Always identify said potion.
-    set_ident_type(*corpse, ID_KNOWN_TYPE);
-
-    mprf("You extract %s from the corpse.",
-         corpse->name(DESC_A).c_str());
-
-    // Try to move the potion to the player (for convenience).
-    if (move_item_to_player(corpse->index(), 1) != 1)
-        mpr("Unfortunately, you can't carry it right now!");
-
-    if (was_orc)
-        did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
-    if (was_holy)
-        did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 2);
-
     return SPRET_SUCCESS;
 }
 

@@ -44,12 +44,6 @@ function callback.tgw_kikubaaqudgha_zombify(data, triggerable,
     return
   end
 
-  for carrion in iter.stash_iterator(pt[1].x, pt[1].y) do
-    if string.find(carrion.name(), 'human corpse') then
-      carrion.destroy()
-    end
-  end
-
   -- Won't place the monster if there's a cloud there
   dgn.delete_cloud(pt[1].x, pt[1].y)
 
@@ -83,7 +77,7 @@ lua_marker('_', tm)
 MARKER: h = lua:portal_desc {slave_name="zombie"}
 MARKER: h = lua:MonPropsMarker:new{dslave="dslave"}
 KFEAT:  h = .
-KMONS:  h = generate_awake Human hp:12 ; nothing
+KMONS:  h = generate_awake Human never_corpse hp:12 ; nothing
 KPROP:  h = no_rtele_into
 TILE:   m = dngn_transparent_wall_darkgray
 MAP

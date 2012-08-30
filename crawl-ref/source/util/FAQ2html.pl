@@ -8,9 +8,6 @@ use strict;
 my $infile  = shift || "../dat/database/FAQ.txt";
 my $outfile = shift || "../../docs/FAQ.html";
 
-# Sometimes, you want an additional linebreak, sometimes you don't.
-my $BR   = shift || "</br>";
-
 open (FILE, $infile) or die "Cannot read file '$infile'.\n";
 
 my @keys;
@@ -22,6 +19,7 @@ my $text    = "";
 my $list    = 0;
 my $bullet  = 0;
 my $listct  = 0;
+my $title   = "no T:html key!";
 while (my $line = <FILE>)
 {
     next if ($line =~ /^#/);
@@ -45,149 +43,53 @@ while (my $line = <FILE>)
         push @keys, $key if (not exists $questions{$key});
         $current = "a";
     }
+    elsif ($key eq "" && $line =~ /^T:(.+)$/)
+    {
+        $key = $1;
+        $current = "t";
+    }
     elsif ($line =~ /^%%%%/)
     {
-        # Line contains the border sign.
-        # -> Put currently stored text into the appropriate hash.
-        # -> Clear key and text.
-        if ($list)
+        $_ = $text;
+        s/&/&amp;/g;
+        s/</&lt;/g;
+        s/>/&gt;/g;
+        s/"/&quot;/g;
+
+        if ($current eq "a")
         {
-            # Properly close list tags.
-            chomp $text;
-            $text .= "</li>";
-            if ($bullet)
-            {
-                $text .= "</ul>";
-                $bullet = 0;
-            }
-            else
-            {
-                $text .= "</ol>";
-                $listct = 0;
-            }
-            $text .= "\n";
-            $list = 0;
+            $_ = $text;
+
+            # Transform * lists into proper lists.
+            s|\n+\* |\n<li>|g;
+            # Separate paragraphs.
+            s/\n\n/\n<p>/g;
+            s|((?:<li>[^<]+)+)|<ul>\n$&</ul>\n|g;
+
+            # Hyperlink URLs.
+            s{http(?:|s)://[^\s\),]+}{<a href="$&">$&</a>}g;
+
+            # Highlight commands.
+            s|'([^\s']+)'|<strong>$1</strong>|g;
+
+            # Replace *emphasis* by italics.
+            s|\*(.*)\*|<em>$1</em>|g;
+
+            # Also use italics for mentioned txt/png files.
+            s{[^\s]+\.(?:txt|png)}{<em>$&</em>}g;
+
+
+            $answers{$key} = $_;
         }
-        $questions{$key} = $text if ($current eq "q");
-        $answers{$key}   = $text if ($current eq "a");
+
+        $questions{$key} = $_ if ($current eq "q");
+        $title = $_ if ($current eq "t" && $key eq "html");
         $text = "";
         $key  = "";
         $listct = 0;
     }
-    elsif ($line !~ /^\s+$/ || $text ne "")
+    else
     {
-        $line =~ s/^A:\s*//;
-
-        # Transform * lists into proper lists.
-        if ($line =~ /^[\*\d]/)
-        {
-            $bullet = 1 if ($line =~ /^\*/);
-
-            $line =~ s/^(\*|\d\.)/<li>/;
-            if (not $list)
-            {
-                $text =~ s/<\/br>\n$/\n/;
-                my $replace = "<ul>";
-                if (not $bullet)
-                {
-                   $listct++;
-                   $replace = "<ol start=\"$listct\">";
-                }
-                $line =~ s/^<li>/$replace<li>/;
-                $list = 1;
-            }
-            else
-            {
-                chomp $text;
-                $text .= "<\/li>\n";
-            }
-        }
-        elsif ($list && $line =~ /^\s*$/)
-        {
-            # An empty line, end list section.
-            chomp $text;
-            my $replace = "</ol>";
-               $replace = "</ul>" if ($bullet);
-            $text .= "</li>$replace\n";
-            $list = 0;
-            $bullet = 0;
-        }
-        elsif ($current eq "a")
-        {
-            # If this line is part of an answer, properly translate
-            # empty lines.
-            if ($line =~ /^\s*$/)
-            {
-                $line =~ s/\n/<\/br>$BR\n/;
-            }
-            else
-            {
-                # Replace newlines with spaces, so the text can run across
-                # multiple lines.
-                $line =~ s/\n/ /;
-            }
-        }
-
-        # Turn web addresses into hyperlinks.
-        # NOTE: We need the array in case there are several links on the
-        #       same line.
-        my @links;
-        my $count = 0;
-        while ($line =~ /^(.*)\b(http[^\s\)\,]+)([\s\)\,].*)/g)
-        {
-            $count++;
-
-            my $a = $1 || "";
-            my $b = $2;
-            my $c = $3 || "";
-            $b =~ s/\/$//;
-
-            push @links, $b;
-            my $l = "link$count";
-            $line = "$a<a href=$l>$l</a>$c ";
-        }
-        $count = 0;
-        foreach my $l (@links)
-        {
-            $count++;
-            $line =~ s/link$count/$l/g;
-        }
-
-        # Highlight commands.
-        while ($line =~ /^(.*)'([^\s']+)'(.*)$/)
-        {
-            my $a = $1;
-            my $b = $2;
-            my $c = $3;
-            $line = "$a<b>$b</b>$c";
-        }
-
-        # Replace *emphasis* by italics.
-        if ($line =~ /^(.*)\*(.*)\*(.*)$/)
-        {
-            my $a = $1;
-            my $b = $2;
-            my $c = $3;
-            $line = "$a<i>$b</i>$c";
-        }
-
-        # Also use italics for mentioned txt/png files.
-        if ($line =~ /^(.*\s)?([^\s]+\.(txt|png))(.*)$/)
-        {
-            my $a = $1 || "";
-            my $b = $2;
-            my $c = $4;
-            $line = "$a<i>$b</i>$c";
-        }
-
-        # Specialcase the '&' symbol.
-        if ($line =~ /^(.*)&(.*)$/)
-        {
-            my $a = $1;
-            my $b = $2;
-            $line = "$a&amp;$b";
-        }
-
         $text .= $line;
     }
 }
@@ -196,9 +98,23 @@ close FILE;
 open (OUTFILE, ">$outfile") or die "Cannot write to file '$outfile'.\n";
 
 # Print the header.
-print OUTFILE "<a name=\"top\"></a>\n";
-print OUTFILE "<b>Dungeon Crawl Stone Soup - Frequently Asked Questions</b></br>\n";
-print OUTFILE "$BR\n";
+print OUTFILE <<END;
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+<head>
+ <title>$title</title>
+ <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+ <style type="text/css">
+dt {font-weight:bold; margin-bottom:1em}
+dd {margin-left:0}
+ul {margin-top:0.5em}
+ </style>
+</head>
+<body>
+<p><a name=\"top\"></a>
+ <h4>$title</h4>
+ <ul style='list-style-type:none; padding-left:0'>
+END
 
 # Print all questions, and link them to their answer.
 my $count = 0;
@@ -223,11 +139,14 @@ foreach my $k (@keys)
     $question = "Q$count".". $question";
     $questions{$k} = $question;
 
-    print OUTFILE "<a href=\"#$k\">";
-    print OUTFILE $question;
-    print OUTFILE "</a> $BR\n";
+    print OUTFILE "<li><a href=\"#$k\">$question</a>\n";
 }
-print OUTFILE "$BR<hr>$BR\n";
+print OUTFILE <<END;
+</ul>
+<hr>
+
+<p><dl>
+END
 
 # Print all question/answer pairs.
 foreach my $k (@keys)
@@ -237,11 +156,14 @@ foreach my $k (@keys)
     my $question = $questions{$k};
     my $answer   = $answers{$k};
 
-    print OUTFILE "<a name=\"$k\"></a>\n";
-    print OUTFILE "<b>$question</b>$BR\n";
-    print OUTFILE "$BR\n";
-    print OUTFILE "$answer\n";
-    print OUTFILE "$BR\n" if ($answer !~ /<\/ul>\n$/);
-    print OUTFILE "<hr>$BR\n";
+    print OUTFILE <<END;
+<dt><a name=\"$k\">$question</a></dt>
+<dd>$answer<hr></dd>
+END
 }
-print OUTFILE "\n<a href=\"#top\">Back to top</a>\n";
+print OUTFILE <<END;
+
+</dl>
+<p><a href=\"#top\">Back to top</a></p>
+</body>
+END

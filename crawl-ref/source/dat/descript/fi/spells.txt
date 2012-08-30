@@ -1,0 +1,98 @@
+%%%%
+Abjuration spell
+
+Tämä loitsu yrittää lähettää vaarallisen kutsuntaolennon sinne, mistä se
+tulikin, tai ainakin lyhentää sen aikaa sen kutsujan apuna.
+%%%%
+Agony spell
+
+Tämä taika leikkaa olennon sietokyvyn kahtia, mutta ei tapa koskaan suoralta
+kädeltä.
+%%%%
+Animate Skeleton spell
+
+Tämä taika nostaa liikuntakyvyttömän luurangon epäelämän tilaan, vaikka
+kyseinen luuranko olisi lihan peittämä! Ota huomioon, että luurangot eivät voi
+poistua syntymäkerroksestaan.
+%%%%
+Blade Hands spell
+
+Tämä taika saa loitsijansa kädet kasvattamaan pitkät, viikatteen muotoiset
+terät. Se tekee loitsimisesta jotakuinkin hankalaa.
+%%%%
+Blink spell
+
+Tämä loitsu satunnaisesti teleporttaa loitsijaansa vähän matkaa.
+%%%%
+Bolt of Cold spell
+
+Tämä taika viskaa suuren jääammuksen.
+%%%%
+Bolt of Fire spell
+
+Tämä taika viskaa suuren liekkiammuksen.
+%%%%
+Call Canine Familiar spell
+
+Tämä taika kutsuu koiraeläimen loitsijan avuksi.
+%%%%
+Call Imp spell
+
+Tällä taialla voi kutsua pienen demonin Helvetin syövereistä.
+%%%%
+Cause Fear spell
+
+Tämä taika saa loitsijan lähellä olevat pelkäämään.
+%%%%
+Cigotuvi's Degeneration spell
+
+Tämä taika muuttaa yhden olennon sykkiväksi lihakasaksi.
+%%%%
+Confuse spell
+
+Tämä taika aiheuttaa olennon mieleen hämmennystä ja sekaannusta.
+%%%%
+Control Undead spell
+
+Tällä loitsulla voi yrittää alistaa lähellä olevia epäkuolleita.
+%%%%
+Cure Poison spell
+
+Tämä loitsu poistaa myrkkyä käyttäjän elimistöstä.
+%%%%
+Death Channel spell
+
+Tämä taika nostaa käyttäjän ja hänen apuriensa tappamia eläviä orjuuteen
+aavemaisina olentoina.
+%%%%
+Debugging Ray spell
+
+Säde joka tekee massiivista vahinkoa (1500 hp) ja osuu aina.
+%%%%
+Demonic Horde spell
+
+Tämä taika kutsuu pienen lauman pikkupiruja taistelemaan loitsijan vastustajia
+vastaan (ja joskus toisiaan!)
+%%%%
+Dig spell
+
+Tämä taika nesteyttää kiveä, synnyttäen tunneleita.
+%%%%
+Dispersal spell
+
+Tämä taika yrittää teleportata läheisen hirviön jonnekin muualle.
+%%%%
+Enslavement spell
+
+Tämä taika saa vaarallisen olennon taistelemaan puolellasi hetkeksi aikaa.
+%%%%
+Ensorcelled Hibernation spell
+
+Tämä taika yrittää hidastaa kohteen aineenvaihduntaa, johtaen alilämpöön ja
+horrosuneen. Kylmäverisiin olentoihin sillä saattaa olla sivuvaikutuksia.
+%%%%
+Fire Brand spell
+
+Tämä taika sytyttää taikojan aseen liekkeihin. Se ei vaikuta aseisiin, joissa
+on jo valmiiksi muita ominaisuuksia.
+%%%%

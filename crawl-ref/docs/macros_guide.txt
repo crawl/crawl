@@ -19,7 +19,7 @@ Keymaps are for when you want to fix layout and behavioural problems on
 your keyboard (i.e. unrecognised numpad sequences can by mapped into
 their numbers, foreign keyboard layouts can be modified to be more
 comfortable). There are also special sets of keymaps for the level map,
-the targeting mode and confirmation prompts, which allow for mappings
+the targetting mode and confirmation prompts, which allow for mappings
 that are restricted to just those situations.
 
 
@@ -36,12 +36,12 @@ can vary between different systems.
 By default, most upper- and lowercase alphanumeric keys are already
 assigned functions in Crawl. While you are free to remap those keys as
 well, it might be best to start with some of the currently unused keys,
-such as Tab or the function keys (F1 to F12), possibly combined with
+such as Ins or the function keys (F1 to F12), possibly combined with
 Ctrl, Shift or both. On some systems, it may also be possible to
 incorporate the Alt (Meta) key.
 
 Defining keymaps works in exactly the same way. Just press 'k'
-(default), 'x' (level-map), 't' (targeting) or 'c' (confirmation)
+(default), 'x' (level-map), 't' (targetting) or 'c' (confirmation)
 instead of 'm' after pressing '~'.
 
 After defining such a macro or keymap, you should test it. If you are
@@ -77,7 +77,7 @@ For keymaps just replace the "M:" on the first line of the definiton
 with one of the following:
 "K:"  default,
 "K1:" level-map,
-"K2:" targeting or
+"K2:" targetting or
 "K3:" confirmation.
 
 

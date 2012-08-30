@@ -714,11 +714,11 @@ function DgnTriggerer:event(triggerable, marker, ev)
 end
 
 function DgnTriggerer:monster_dies(triggerable, marker, ev)
-  local midx = ev:arg1()
-  local mons = dgn.mons_from_index(midx)
+  local mid = ev:arg1()
+  local mons = dgn.mons_from_mid(mid)
 
   if not mons then
-    error("DgnTriggerer:monster_dies() didn't get a valid monster index")
+    error("DgnTriggerer:monster_dies() didn't get a valid mid")
   end
 
   if self.target == "any" or mons.full_name == self.target or
@@ -799,6 +799,7 @@ end
 function DgnTriggerer:turn(triggerable, marker, ev)
   if not self.countdown then
     triggerable:do_trigger(self, marker, ev)
+    return
   end
 
   self.countdown = self.countdown - ev:ticks()

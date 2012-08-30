@@ -13,7 +13,7 @@ public:
     virtual ~tile_list_processor();
 
     bool process_list(const char *list_file);
-    bool write_data();
+    bool write_data(bool image, bool code);
 protected:
     bool load_image(tile &img, const char *filename, bool background = false);
     bool process_line(char *read_line, const char *list_file, int line);
@@ -23,10 +23,10 @@ protected:
     void add_abstracts(
         FILE *fp,
         const char *format,
-        const std::vector<std::string> &lc_enum,
-        const std::vector<std::string> &uc_max_enum);
+        const vector<string> &lc_enum,
+        const vector<string> &uc_max_enum);
 
-    std::string m_name;
+    string m_name;
 
     tile_page m_page;
     unsigned int m_last_enum;
@@ -36,40 +36,40 @@ protected:
     bool m_corpsify;
     bool m_composing;
     bool m_shrink;
-    std::vector<tile*> m_back;
-    std::string m_parts_ctg;
-    std::string m_sdir;
-    std::string m_back_sdir;
-    std::string m_prefix;
-    std::string m_start_value;
-    std::string m_start_value_module;
-    std::vector<std::string> m_include;
-    std::vector<std::string> m_categories;
-    std::vector<int> m_ctg_counts;
+    vector<tile*> m_back;
+    string m_parts_ctg;
+    string m_sdir;
+    string m_back_sdir;
+    string m_prefix;
+    string m_start_value;
+    string m_start_value_module;
+    vector<string> m_include;
+    vector<string> m_categories;
+    vector<int> m_ctg_counts;
     tile m_compose;
     tile* m_texture;
     int m_variation_idx;
     int m_variation_col;
     int m_weight;
 
-    typedef std::pair<tile_colour, tile_colour> palette_entry;
-    typedef std::vector<palette_entry> palette_list;
+    typedef pair<tile_colour, tile_colour> palette_entry;
+    typedef vector<palette_entry> palette_list;
     palette_list m_palette;
 
-    typedef std::pair<int, int> int_pair;
-    typedef std::vector<int_pair> hue_list;
+    typedef pair<int, int> int_pair;
+    typedef vector<int_pair> hue_list;
     hue_list m_hues;
 
-    typedef std::vector<int> desat_list;
+    typedef vector<int> desat_list;
     desat_list m_desat;
 
-    typedef std::vector<int_pair> lum_list;
+    typedef vector<int_pair> lum_list;
     lum_list m_lum;
 
-    std::vector<std::string> m_depends;
+    vector<string> m_depends;
 
-    typedef std::pair<std::string, std::string> string_pair;
-    typedef std::vector<string_pair> string_pair_list;
+    typedef pair<string, string> string_pair;
+    typedef vector<string_pair> string_pair_list;
     string_pair_list m_abstract;
 };
 

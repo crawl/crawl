@@ -1,10 +1,11 @@
 <script>
   require.config({
-    paths: { "game": "/gamedata/{{ version }}" }
+    paths: { "game-{{ version }}": "/gamedata/{{ version }}" }
   });
   require(['jquery', 'client'], function ($, client) {
     client.inhibit_messages();
-    require(['game/game'], function (game) {
+    require(['game-{{ version }}/game'], function (game) {
+      $(document).trigger("game_preinit");
       $(document).trigger("game_init");
       client.uninhibit_messages();
     });
@@ -37,6 +38,11 @@
            data-setting="display_mode" value="glyphs">Glyphs</input>
     <input type="radio" name="setting_glyph_mode"
            data-setting="display_mode" value="hybrid">Glyphs+Icons</input>
+  </p>
+  <p>
+    Tile scaling:
+    <input type="text" class="text" name="setting_tile_scaling"
+           data-setting="tile_scaling"></input>
   </p>
   <a id="close_settings" href="javascript:">(close)</a>
 </div>

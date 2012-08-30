@@ -30,7 +30,6 @@
  #include "tileweb.h"
 #endif
 #include "invent.h"
-#include "item_use.h"
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
@@ -44,6 +43,7 @@
 #include "stuff.h"
 #include "syscalls.h"
 #include "tags.h"
+#include "throw.h"
 #include "travel.h"
 #include "items.h"
 #include "view.h"
@@ -61,20 +61,68 @@ extern char **NXArgv;
 #include <unistd.h>
 #endif
 
-const std::string game_options::interrupt_prefix = "interrupt_";
+const string game_options::interrupt_prefix = "interrupt_";
 system_environment SysEnv;
 game_options Options;
 
-const static char *obj_syms = ")([/%.?=!.+\\0}X$";
-const static int   obj_syms_len = 16;
+object_class_type item_class_by_sym(ucs_t c)
+{
+    switch (c)
+    {
+    case ')':
+        return OBJ_WEAPONS;
+    case '(':
+    case 0x27b9: // ➹
+        return OBJ_MISSILES;
+    case '[':
+        return OBJ_ARMOUR;
+    case '/':
+        return OBJ_WANDS;
+    case '%':
+        return OBJ_FOOD;
+    case '?':
+        return OBJ_SCROLLS;
+    case '"': // Make the amulet symbol equiv to ring -- bwross
+    case '=':
+    case 0x00B0: // °
+        return OBJ_JEWELLERY;
+    case '!':
+        return OBJ_POTIONS;
+    case ':':
+    case '+': // ??? -- was the only symbol working for tile order up to 0.10,
+              // so keeping it for compat purposes (user configs).
+    case 0x221e: // ∞
+        return OBJ_BOOKS;
+    case '|':
+        return OBJ_STAVES;
+    case '0':
+        return OBJ_ORBS;
+    case '}':
+        return OBJ_MISCELLANY;
+    case '&':
+    case 'X':
+    case 'x':
+        return OBJ_CORPSES;
+    case '$':
+    case 0x20ac: // €
+    case 0x00a3: // £
+    case 0x00a5: // ¥
+        return OBJ_GOLD;
+    case '\\': // Compat break: used to be staves (why not '|'?).
+        return OBJ_RODS;
+    default:
+        return NUM_OBJECT_CLASSES;
+    }
 
-template<class A, class B> void append_vector(A &dest, const B &src)
+}
+
+template<class A, class B> static void append_vector(A &dest, const B &src)
 {
     dest.insert(dest.end(), src.begin(), src.end());
 }
 
 // Returns -1 if unmatched else returns 0-15.
-static msg_colour_type _str_to_channel_colour(const std::string &str)
+static msg_colour_type _str_to_channel_colour(const string &str)
 {
     int col = str_to_colour(str);
     msg_colour_type ret = MSGCOL_NONE;
@@ -92,10 +140,10 @@ static msg_colour_type _str_to_channel_colour(const std::string &str)
     else
         ret = msg_colour(str_to_colour(str));
 
-    return (ret);
+    return ret;
 }
 
-static const std::string message_channel_names[] =
+static const string message_channel_names[] =
 {
     "plain", "friend_action", "prompt", "god", "pray", "duration", "danger",
     "warning", "food", "recovery", "sound", "talk", "talk_visual",
@@ -106,7 +154,7 @@ static const std::string message_channel_names[] =
 };
 
 // returns -1 if unmatched else returns 0--(NUM_MESSAGE_CHANNELS-1)
-int str_to_channel(const std::string &str)
+int str_to_channel(const string &str)
 {
     COMPILE_CHECK(ARRAYSZ(message_channel_names) == NUM_MESSAGE_CHANNELS);
 
@@ -125,7 +173,7 @@ int str_to_channel(const std::string &str)
     return -1;
 }
 
-std::string channel_to_str(int channel)
+string channel_to_str(int channel)
 {
     if (channel < 0 || channel >= NUM_MESSAGE_CHANNELS)
         return "";
@@ -133,43 +181,43 @@ std::string channel_to_str(int channel)
     return message_channel_names[channel];
 }
 
-weapon_type str_to_weapon(const std::string &str)
+weapon_type str_to_weapon(const string &str)
 {
     if (str == "shortsword" || str == "short sword")
-        return (WPN_SHORT_SWORD);
+        return WPN_SHORT_SWORD;
     else if (str == "falchion")
-        return (WPN_FALCHION);
+        return WPN_FALCHION;
     else if (str == "quarterstaff")
-        return (WPN_QUARTERSTAFF);
+        return WPN_QUARTERSTAFF;
     else if (str == "mace")
-        return (WPN_MACE);
+        return WPN_MACE;
     else if (str == "spear")
-        return (WPN_SPEAR);
+        return WPN_SPEAR;
     else if (str == "trident")
-        return (WPN_TRIDENT);
+        return WPN_TRIDENT;
     else if (str == "hand axe" || str == "handaxe")
-        return (WPN_HAND_AXE);
+        return WPN_HAND_AXE;
     else if (str == "unarmed" || str == "claws")
-        return (WPN_UNARMED);
+        return WPN_UNARMED;
     else if (str == "sling")
-        return (WPN_SLING);
+        return WPN_SLING;
     else if (str == "bow")
-        return (WPN_BOW);
+        return WPN_BOW;
     else if (str == "crossbow")
-        return (WPN_CROSSBOW);
+        return WPN_CROSSBOW;
     else if (str == "rocks")
-        return (WPN_ROCKS);
+        return WPN_ROCKS;
     else if (str == "javelins")
-        return (WPN_JAVELINS);
+        return WPN_JAVELINS;
     else if (str == "darts")
-        return (WPN_DARTS);
+        return WPN_DARTS;
     else if (str == "random")
-        return (WPN_RANDOM);
+        return WPN_RANDOM;
 
-    return (WPN_UNKNOWN);
+    return WPN_UNKNOWN;
 }
 
-static std::string _weapon_to_str(int weapon)
+static string _weapon_to_str(int weapon)
 {
     switch (weapon)
     {
@@ -209,89 +257,89 @@ static std::string _weapon_to_str(int weapon)
 
 // Summon types can be any of mon_summon_type (enum.h), or a relevant summoning
 // spell.
-int str_to_summon_type(const std::string &str)
+int str_to_summon_type(const string &str)
 {
     if (str == "clone")
-        return (MON_SUMM_CLONE);
+        return MON_SUMM_CLONE;
     if (str == "animate")
-        return (MON_SUMM_ANIMATE);
+        return MON_SUMM_ANIMATE;
     if (str == "chaos")
-        return (MON_SUMM_CHAOS);
+        return MON_SUMM_CHAOS;
     if (str == "miscast")
-        return (MON_SUMM_MISCAST);
+        return MON_SUMM_MISCAST;
     if (str == "zot")
-        return (MON_SUMM_ZOT);
+        return MON_SUMM_ZOT;
     if (str == "wrath")
-        return (MON_SUMM_WRATH);
+        return MON_SUMM_WRATH;
     if (str == "aid")
-        return (MON_SUMM_AID);
+        return MON_SUMM_AID;
 
-    return (spell_by_name(str));
+    return spell_by_name(str);
 }
 
-static fire_type _str_to_fire_types(const std::string &str)
+static fire_type _str_to_fire_types(const string &str)
 {
     if (str == "launcher")
-        return (FIRE_LAUNCHER);
+        return FIRE_LAUNCHER;
     else if (str == "dart")
-        return (FIRE_DART);
+        return FIRE_DART;
     else if (str == "stone")
-        return (FIRE_STONE);
+        return FIRE_STONE;
     else if (str == "rock")
-        return (FIRE_ROCK);
+        return FIRE_ROCK;
     else if (str == "dagger")
-        return (FIRE_DAGGER);
+        return FIRE_DAGGER;
     else if (str == "spear")
-        return (FIRE_SPEAR);
+        return FIRE_SPEAR;
     else if (str == "hand axe" || str == "handaxe" || str == "axe")
-        return (FIRE_HAND_AXE);
+        return FIRE_HAND_AXE;
     else if (str == "club")
-        return (FIRE_CLUB);
+        return FIRE_CLUB;
     else if (str == "javelin")
-        return (FIRE_JAVELIN);
+        return FIRE_JAVELIN;
     else if (str == "net")
-        return (FIRE_NET);
+        return FIRE_NET;
     else if (str == "return" || str == "returning")
-        return (FIRE_RETURNING);
+        return FIRE_RETURNING;
     else if (str == "inscribed")
-        return (FIRE_INSCRIBED);
+        return FIRE_INSCRIBED;
 
-    return (FIRE_NONE);
+    return FIRE_NONE;
 }
 
-std::string gametype_to_str(game_type type)
+string gametype_to_str(game_type type)
 {
     switch (type)
     {
     case GAME_TYPE_NORMAL:
-        return ("normal");
+        return "normal";
     case GAME_TYPE_TUTORIAL:
-        return ("tutorial");
+        return "tutorial";
     case GAME_TYPE_ARENA:
-        return ("arena");
+        return "arena";
     case GAME_TYPE_SPRINT:
-        return ("sprint");
+        return "sprint";
     case GAME_TYPE_ZOTDEF:
-        return ("zotdef");
+        return "zotdef";
     default:
-        return ("none");
+        return "none";
     }
 }
 
 #ifndef DGAMELAUNCH
-static game_type _str_to_gametype(const std::string& s)
+static game_type _str_to_gametype(const string& s)
 {
     for (int i = 0; i < NUM_GAME_TYPE; ++i)
     {
         game_type t = static_cast<game_type>(i);
         if (s == gametype_to_str(t))
-            return (t);
+            return t;
     }
-    return (NUM_GAME_TYPE);
+    return NUM_GAME_TYPE;
 }
 #endif
 
-static std::string _species_to_str(species_type sp)
+static string _species_to_str(species_type sp)
 {
     if (sp == SP_RANDOM)
         return "random";
@@ -301,7 +349,7 @@ static std::string _species_to_str(species_type sp)
         return species_name(sp);
 }
 
-static species_type _str_to_species(const std::string &str)
+static species_type _str_to_species(const string &str)
 {
     if (str == "random")
         return SP_RANDOM;
@@ -319,10 +367,10 @@ static species_type _str_to_species(const std::string &str)
     if (ret == SP_UNKNOWN)
         fprintf(stderr, "Unknown species choice: %s\n", str.c_str());
 
-    return (ret);
+    return ret;
 }
 
-static std::string _job_to_str(job_type job)
+static string _job_to_str(job_type job)
 {
     if (job == JOB_RANDOM)
         return "random";
@@ -332,7 +380,7 @@ static std::string _job_to_str(job_type job)
         return get_job_name(job);
 }
 
-static job_type _str_to_job(const std::string &str)
+static job_type _str_to_job(const string &str)
 {
     if (str == "random")
         return JOB_RANDOM;
@@ -348,18 +396,18 @@ static job_type _str_to_job(const std::string &str)
     if (job == JOB_UNKNOWN)
         job = get_job_by_name(str.c_str());
 
-#if TAG_MAJOR_VERSION == 32
-    if (job == JOB_PALADIN || job == JOB_REAVER)
+#if TAG_MAJOR_VERSION == 34
+    if (job == JOB_STALKER)
         job = JOB_UNKNOWN;
 #endif
 
     if (job == JOB_UNKNOWN)
         fprintf(stderr, "Unknown background choice: %s\n", str.c_str());
 
-    return (job);
+    return job;
 }
 
-static bool _read_bool(const std::string &field, bool def_value)
+static bool _read_bool(const string &field, bool def_value)
 {
     bool ret = def_value;
 
@@ -369,14 +417,14 @@ static bool _read_bool(const std::string &field, bool def_value)
     if (field == "false" || field == "0" || field == "no")
         ret = false;
 
-    return (ret);
+    return ret;
 }
 
 // read a value which can be either a boolean (in which case return
 // 0 for true, -1 for false), or a string of the form PREFIX:NUMBER
 // (e.g., auto:7), in which case return NUMBER as an int.
-static int _read_bool_or_number(const std::string &field, int def_value,
-                                 const std::string& num_prefix)
+static int _read_bool_or_number(const string &field, int def_value,
+                                const string& num_prefix)
 {
     int ret = def_value;
 
@@ -389,11 +437,11 @@ static int _read_bool_or_number(const std::string &field, int def_value,
     if (field.find(num_prefix) == 0)
         ret = atoi(field.c_str() + num_prefix.size());
 
-    return (ret);
+    return ret;
 }
 
 
-static unsigned curses_attribute(const std::string &field)
+static unsigned curses_attribute(const string &field)
 {
     if (field == "standout")               // probably reverses
         return CHATTR_STANDOUT;
@@ -414,19 +462,20 @@ static unsigned curses_attribute(const std::string &field)
         int col = field.find(":");
         int colour = str_to_colour(field.substr(col + 1));
         if (colour == -1)
-        {
-            Options.report_error(
-                make_stringf("Bad highlight string -- %s\n", field.c_str()));
-        }
+            Options.report_error("Bad highlight string -- %s\n", field.c_str());
         else
             return CHATTR_HILITE | (colour << 8);
     }
     else if (field != "none")
-    {
-        Options.report_error(
-            make_stringf("Bad colour -- %s\n", field.c_str()));
-    }
+        Options.report_error("Bad colour -- %s\n", field.c_str());
     return CHATTR_NORMAL;
+}
+
+void game_options::str_to_enemy_hp_colour(const string &colours)
+{
+    vector<string> colour_list = split_string(" ", colours, true, true);
+    for (int i = 0, csize = colour_list.size(); i < csize; i++)
+        enemy_hp_colour.push_back(str_to_colour(colour_list[i]));
 }
 
 #ifdef USE_TILE
@@ -438,17 +487,17 @@ static tag_pref _str_to_tag_pref(const char *opt)
     for (int i = 0; i < TAGPREF_MAX; i++)
     {
         if (!strcasecmp(opt, tag_prefs[i]))
-            return ((tag_pref)i);
+            return (tag_pref)i;
     }
 
     return TAGPREF_ENEMY;
 }
 #endif
 
-void game_options::new_dump_fields(const std::string &text, bool add)
+void game_options::new_dump_fields(const string &text, bool add)
 {
     // Easy; chardump.cc has most of the intelligence.
-    std::vector<std::string> fields = split_string(",", text, true, true);
+    vector<string> fields = split_string(",", text, true, true);
     if (add)
         append_vector(dump_order, fields);
     else
@@ -515,18 +564,14 @@ void game_options::clear_activity_interrupts(
 
 void game_options::set_activity_interrupt(
         FixedVector<bool, NUM_AINTERRUPTS> &eints,
-        const std::string &interrupt)
+        const string &interrupt)
 {
     if (interrupt.find(interrupt_prefix) == 0)
     {
-        std::string delay_name = interrupt.substr(interrupt_prefix.length());
+        string delay_name = interrupt.substr(interrupt_prefix.length());
         delay_type delay = get_delay(delay_name);
         if (delay == NUM_DELAYS)
-        {
-            report_error (
-                make_stringf("Unknown delay: %s\n", delay_name.c_str()));
-            return;
-        }
+            return report_error("Unknown delay: %s\n", delay_name.c_str());
 
         FixedVector<bool, NUM_AINTERRUPTS> &refints =
             activity_interrupts[delay];
@@ -541,29 +586,23 @@ void game_options::set_activity_interrupt(
     activity_interrupt_type ai = get_activity_interrupt(interrupt);
     if (ai == NUM_AINTERRUPTS)
     {
-        report_error (
-            make_stringf("Delay interrupt name \"%s\" not recognised.\n",
-                         interrupt.c_str()));
-        return;
+        return report_error("Delay interrupt name \"%s\" not recognised.\n",
+                            interrupt.c_str());
     }
 
     eints[ai] = true;
 }
 
-void game_options::set_activity_interrupt(const std::string &activity_name,
-                                          const std::string &interrupt_names,
+void game_options::set_activity_interrupt(const string &activity_name,
+                                          const string &interrupt_names,
                                           bool append_interrupts,
                                           bool remove_interrupts)
 {
     const delay_type delay = get_delay(activity_name);
     if (delay == NUM_DELAYS)
-    {
-        report_error (
-            make_stringf("Unknown delay: %s\n", activity_name.c_str()));
-        return;
-    }
+        return report_error("Unknown delay: %s\n", activity_name.c_str());
 
-    std::vector<std::string> interrupts = split_string(",", interrupt_names);
+    vector<string> interrupts = split_string(",", interrupt_names);
     FixedVector<bool, NUM_AINTERRUPTS> &eints = activity_interrupts[ delay ];
 
     if (remove_interrupts)
@@ -589,7 +628,14 @@ void game_options::set_activity_interrupt(const std::string &activity_name,
     eints[AI_FORCE_INTERRUPT] = true;
 }
 
-std::string user_home_dir()
+#if defined(DGAMELAUNCH)
+static string _resolve_dir(const char* path, const char* suffix)
+{
+    return catpath(path, "");
+}
+#else
+
+static string _user_home_dir()
 {
 #ifdef TARGET_OS_WINDOWS
     wchar_t home[MAX_PATH];
@@ -606,22 +652,19 @@ std::string user_home_dir()
 #endif
 }
 
-std::string user_home_subpath(const std::string subpath)
+static string _user_home_subpath(const string subpath)
 {
-    return catpath(user_home_dir(), subpath);
+    return catpath(_user_home_dir(), subpath);
 }
 
-static std::string _resolve_dir(const char* path, const char* suffix)
+static string _resolve_dir(const char* path, const char* suffix)
 {
-#if defined(DGAMELAUNCH)
-    return catpath(path, "");
-#else
     if (path[0] != '~')
-        return catpath(std::string(path), suffix);
+        return catpath(string(path), suffix);
     else
-        return user_home_subpath(catpath(path + 1, suffix));
-#endif
+        return _user_home_subpath(catpath(path + 1, suffix));
 }
+#endif
 
 void game_options::reset_options()
 {
@@ -630,6 +673,10 @@ void game_options::reset_options()
     line_num     = -1;
 
     set_default_activity_interrupts();
+
+#ifdef DEBUG_DIAGNOSTICS
+    quiet_debug_messages.reset();
+#endif
 
 #if defined(USE_TILE_LOCAL)
     restart_after_game = true;
@@ -643,7 +690,7 @@ void game_options::reset_options()
     if (macro_dir.empty())
     {
 #ifdef UNIX
-        macro_dir = user_home_subpath(".crawl");
+        macro_dir = _user_home_subpath(".crawl");
 #else
         macro_dir = "settings/";
 #endif
@@ -651,8 +698,8 @@ void game_options::reset_options()
 #endif
 
 #if defined(TARGET_OS_MACOSX)
-    const std::string tmp_path_base =
-        user_home_subpath("Library/Application Support/" CRAWL);
+    const string tmp_path_base =
+        _user_home_subpath("Library/Application Support/" CRAWL);
     save_dir   = tmp_path_base + "/saves/";
     morgue_dir = tmp_path_base + "/morgue/";
     if (SysEnv.macro_dir.empty())
@@ -680,14 +727,14 @@ void game_options::reset_options()
 
     mouse_input = false;
 
-    view_max_width   = std::max(33, VIEW_MIN_WIDTH);
-    view_max_height  = std::max(21, VIEW_MIN_HEIGHT);
+    view_max_width   = max(33, VIEW_MIN_WIDTH);
+    view_max_height  = max(21, VIEW_MIN_HEIGHT);
     mlist_min_height = 4;
-    msg_min_height   = std::max(7, MSG_MIN_HEIGHT);
-    msg_max_height   = std::max(10, MSG_MIN_HEIGHT);
+    msg_min_height   = max(7, MSG_MIN_HEIGHT);
+    msg_max_height   = max(10, MSG_MIN_HEIGHT);
     mlist_allow_alternate_layout = false;
     messages_at_top  = false;
-    mlist_targeting = false;
+    mlist_targetting = false;
     msg_condense_repeats = true;
     msg_condense_short = true;
     show_no_ctele = true;
@@ -705,13 +752,8 @@ void game_options::reset_options()
     default_manual_training = false;
 
     show_newturn_mark = true;
-#ifdef EUCLIDEAN
     show_gold_turns = true;
     show_game_turns = true;
-#else
-    show_gold_turns = false;
-    show_game_turns = false;
-#endif
 
     game = newgame_def();
 
@@ -720,13 +762,13 @@ void game_options::reset_options()
     char_set      = CSET_DEFAULT;
 
     // set it to the .crawlrc default
-    autopickups = ((1 << 15) | // gold
-                   (1 <<  6) | // scrolls
-                   (1 <<  8) | // potions
-                   (1 << 10) | // books
-                   (1 <<  7) | // jewellery
-                   (1 <<  3) | // wands
-                   (1 <<  4)); // food
+    autopickups = ((1 << OBJ_GOLD)      |
+                   (1 << OBJ_SCROLLS)   |
+                   (1 << OBJ_POTIONS)   |
+                   (1 << OBJ_BOOKS)     |
+                   (1 << OBJ_JEWELLERY) |
+                   (1 << OBJ_WANDS)     |
+                   (1 << OBJ_FOOD));
     auto_switch             = false;
     suppress_startup_errors = false;
 
@@ -740,6 +782,7 @@ void game_options::reset_options()
     chunks_autopickup      = true;
     prompt_for_swap        = true;
     list_rotten            = true;
+    auto_drop_chunks       = ADC_NEVER;
     prefer_safe_chunks     = true;
     easy_eat_chunks        = false;
     easy_eat_gourmand      = false;
@@ -757,11 +800,9 @@ void game_options::reset_options()
     user_note_prefix       = "";
     note_all_skill_levels  = false;
     note_skill_max         = true;
-    note_all_spells        = true;
     note_xom_effects       = true;
+    note_chat_messages     = true;
     note_hp_percent        = 5;
-    ood_interesting        = 8;
-    rare_interesting       = 9;
 
     // [ds] Grumble grumble.
     auto_list              = true;
@@ -774,6 +815,7 @@ void game_options::reset_options()
 
     travel_delay           = 20;
     explore_delay          = -1;
+    show_travel_trail       = false;
     travel_stair_cost      = 500;
 
     arena_delay            = 600;
@@ -818,9 +860,12 @@ void game_options::reset_options()
 
     stash_tracking         = STM_ALL;
 
-    explore_stop           = (ES_ITEM | ES_STAIR | ES_PORTAL | ES_SHOP
-                              | ES_ALTAR | ES_GREEDY_PICKUP_SMART
-                              | ES_GREEDY_VISITED_ITEM_STACK);
+    explore_stop           = (ES_ITEM | ES_STAIR | ES_PORTAL | ES_BRANCH
+                              | ES_SHOP | ES_ALTAR | ES_GREEDY_PICKUP_SMART
+                              | ES_GREEDY_VISITED_ITEM_STACK
+                              | ES_GREEDY_SACRIFICEABLE);
+
+    sacrifice_before_explore = 0;
 
     // The prompt conditions will be combined into explore_stop after
     // reading options.
@@ -834,6 +879,7 @@ void game_options::reset_options()
     explore_wall_bias      = 0;
     explore_improved       = false;
     travel_key_stop        = true;
+    auto_sacrifice         = false;
 
     target_unshifted_dirs  = false;
     darken_beyond_range    = true;
@@ -862,13 +908,10 @@ void game_options::reset_options()
 
     item_stack_summary_minimum = 5;
 
-    pizza.clear();
-
 #ifdef WIZARD
     fsim_rounds = 4000L;
-    fsim_mons   = "worm";
-    fsim_str = fsim_int = fsim_dex = -1;
-    fsim_xl  = -1;
+    fsim_mons   = "";
+    fsim_scale.clear();
     fsim_kit.clear();
 #endif
 
@@ -898,7 +941,7 @@ void game_options::reset_options()
 #endif
 
 #ifdef USE_TILE
-    strcpy(tile_show_items, "!?/%=([)x}+\\_.");
+    tile_show_items      = "!?/%=([)x}:|\\";
     tile_skip_title      = false;
     tile_menu_icons      = true;
 #endif
@@ -950,7 +993,8 @@ void game_options::reset_options()
     tile_window_height    = -90;
     tile_map_pixels       = 0;
     tile_layout_priority = split_string(",", "minimap, inventory, gold_turn, "
-                                             "command, spell, monster");
+                                             "command, spell, ability, "
+                                             "monster");
 #endif
 
 #ifdef USE_TILE
@@ -971,25 +1015,8 @@ void game_options::reset_options()
 #endif
 
     // map each colour to itself as default
-    // If USE_8_COLOUR_TERM_MAP is defined, then we force 8 colors.
-    // Otherwise, do a check to see if we're using Apple_Terminal.
-#ifndef USE_8_COLOUR_TERM_MAP
-    const char *term_program = getenv("TERM_PROGRAM");
-    if (term_program && strcmp(term_program, "Apple_Terminal") == 0)
-    {
-#endif
-        for (int i = 0; i < 16; ++i)
-            colour[i] = i % 8;
-
-        colour[ DARKGREY ] = COL_TO_REPLACE_DARKGREY;
-#ifndef USE_8_COLOUR_TERM_MAP
-    }
-    else
-    {
-        for (int i = 0; i < 16; ++i)
-            colour[i] = i;
-    }
-#endif
+    for (int i = 0; i < 16; ++i)
+        colour[i] = i;
 
     // map each channel to plain (well, default for now since I'm testing)
     for (int i = 0; i < NUM_MESSAGE_CHANNELS; ++i)
@@ -1002,13 +1029,24 @@ void game_options::reset_options()
                     "screenshot,monlist,kills,notes");
 
     hp_colour.clear();
-    hp_colour.push_back(std::pair<int,int>(50, YELLOW));
-    hp_colour.push_back(std::pair<int,int>(25, RED));
+    hp_colour.push_back(pair<int,int>(50, YELLOW));
+    hp_colour.push_back(pair<int,int>(25, RED));
     mp_colour.clear();
-    mp_colour.push_back(std::pair<int, int>(50, YELLOW));
-    mp_colour.push_back(std::pair<int, int>(25, RED));
+    mp_colour.push_back(pair<int, int>(50, YELLOW));
+    mp_colour.push_back(pair<int, int>(25, RED));
     stat_colour.clear();
-    stat_colour.push_back(std::pair<int, int>(3, RED));
+    stat_colour.push_back(pair<int, int>(3, RED));
+    enemy_hp_colour.clear();
+    // I think these defaults are pretty ugly but apparently OS X has problems
+    // with lighter colours
+    enemy_hp_colour.push_back(GREEN);
+    enemy_hp_colour.push_back(GREEN);
+    enemy_hp_colour.push_back(BROWN);
+    enemy_hp_colour.push_back(BROWN);
+    enemy_hp_colour.push_back(MAGENTA);
+    enemy_hp_colour.push_back(RED);
+    enemy_hp_colour.push_back(LIGHTGREY);
+    visual_monster_hp = false;
 
     force_autopickup.clear();
     note_monsters.clear();
@@ -1017,7 +1055,12 @@ void game_options::reset_options()
     autoinscribe_artefacts = true;
     autoinscribe_cursed = true;
     note_items.clear();
-    note_skill_levels.clear();
+    note_skill_levels.reset();
+    note_skill_levels.set(1);
+    note_skill_levels.set(5);
+    note_skill_levels.set(10);
+    note_skill_levels.set(15);
+    note_skill_levels.set(27);
     auto_spell_letters.clear();
     force_more_message.clear();
     sound_mappings.clear();
@@ -1078,10 +1121,10 @@ ucs_t get_glyph_override(int c)
     return c;
 }
 
-static int read_symbol(std::string s)
+static int read_symbol(string s)
 {
     if (s.empty())
-        return (0);
+        return 0;
 
     if (s.length() > 1 && s[0] == '\\')
         s = s.substr(1);
@@ -1106,19 +1149,19 @@ static int read_symbol(std::string s)
     return -strtoul(s.c_str(), &tail, base);
 }
 
-void game_options::set_fire_order(const std::string &s, bool add)
+void game_options::set_fire_order(const string &s, bool add)
 {
     if (!add)
         fire_order.clear();
-    std::vector<std::string> slots = split_string(",", s);
+    vector<string> slots = split_string(",", s);
     for (int i = 0, size = slots.size(); i < size; ++i)
         add_fire_order_slot(slots[i]);
 }
 
-void game_options::add_fire_order_slot(const std::string &s)
+void game_options::add_fire_order_slot(const string &s)
 {
     unsigned flags = 0;
-    std::vector<std::string> alts = split_string("/", s);
+    vector<string> alts = split_string("/", s);
     for (int i = 0, size = alts.size(); i < size; ++i)
         flags |= _str_to_fire_types(alts[i]);
 
@@ -1126,7 +1169,7 @@ void game_options::add_fire_order_slot(const std::string &s)
         fire_order.push_back(flags);
 }
 
-void game_options::add_mon_glyph_overrides(const std::string &mons,
+void game_options::add_mon_glyph_overrides(const string &mons,
                                            mon_display &mdisp)
 {
     // If one character, this is a monster letter.
@@ -1135,7 +1178,7 @@ void game_options::add_mon_glyph_overrides(const std::string &mons,
         letter = mons[0] == '_' ? ' ' : mons[0];
 
     bool found = false;
-    for (int i = 0; i < NUM_MONSTERS; ++i)
+    for (monster_type i = MONS_0; i < NUM_MONSTERS; ++i)
     {
         const monsterentry *me = get_monster_data(i);
         if (!me || me->mc == MONS_PROGRAM_BUG)
@@ -1144,33 +1187,32 @@ void game_options::add_mon_glyph_overrides(const std::string &mons,
         if (me->basechar == letter || me->name == mons)
         {
             found = true;
-            mon_glyph_overrides[static_cast<monster_type>(i)] = mdisp;
+            mon_glyph_overrides[i] = mdisp;
         }
     }
     if (!found)
-        report_error (
-            make_stringf("Unknown monster: \"%s\"", mons.c_str()));
+        report_error("Unknown monster: \"%s\"", mons.c_str());
 }
 
-mon_display game_options::parse_mon_glyph(const std::string &s) const
+mon_display game_options::parse_mon_glyph(const string &s) const
 {
     mon_display md;
-    std::vector<std::string> phrases = split_string(" ", s);
+    vector<string> phrases = split_string(" ", s);
     for (int i = 0, size = phrases.size(); i < size; ++i)
     {
-        const std::string &p = phrases[i];
+        const string &p = phrases[i];
         const int col = str_to_colour(p, -1, false);
         if (col != -1 && colour)
             md.colour = col;
         else
             md.glyph = p == "_"? ' ' : read_symbol(p);
     }
-    return (md);
+    return md;
 }
 
-void game_options::add_mon_glyph_override(const std::string &text)
+void game_options::add_mon_glyph_override(const string &text)
 {
-    std::vector<std::string> override = split_string(":", text);
+    vector<string> override = split_string(":", text);
     if (override.size() != 2u)
         return;
 
@@ -1179,19 +1221,19 @@ void game_options::add_mon_glyph_override(const std::string &text)
         add_mon_glyph_overrides(override[0], mdisp);
 }
 
-void game_options::add_feature_override(const std::string &text)
+void game_options::add_feature_override(const string &text)
 {
-    std::string::size_type epos = text.rfind("}");
-    if (epos == std::string::npos)
+    string::size_type epos = text.rfind("}");
+    if (epos == string::npos)
         return;
 
-    std::string::size_type spos = text.rfind("{", epos);
-    if (spos == std::string::npos)
+    string::size_type spos = text.rfind("{", epos);
+    if (spos == string::npos)
         return;
 
-    std::string fname = text.substr(0, spos);
-    std::string props = text.substr(spos + 1, epos - spos - 1);
-    std::vector<std::string> iprops = split_string(",", props, true, true);
+    string fname = text.substr(0, spos);
+    string props = text.substr(spos + 1, epos - spos - 1);
+    vector<string> iprops = split_string(",", props, true, true);
 
     if (iprops.size() < 1 || iprops.size() > 7)
         return;
@@ -1200,8 +1242,7 @@ void game_options::add_feature_override(const std::string &text)
         iprops.resize(7);
 
     trim_string(fname);
-    std::vector<dungeon_feature_type> feats =
-        features_by_desc(text_pattern(fname));
+    vector<dungeon_feature_type> feats = features_by_desc(text_pattern(fname));
     if (feats.empty())
         return;
 
@@ -1225,13 +1266,12 @@ void game_options::add_feature_override(const std::string &text)
     }
 }
 
-void game_options::add_cset_override(
-        char_set_type set, const std::string &overrides)
+void game_options::add_cset_override(char_set_type set, const string &overrides)
 {
-    std::vector<std::string> overs = split_string(",", overrides);
+    vector<string> overs = split_string(",", overrides);
     for (int i = 0, size = overs.size(); i < size; ++i)
     {
-        std::vector<std::string> mapping = split_string(":", overs[i]);
+        vector<string> mapping = split_string(":", overs[i]);
         if (mapping.size() != 2)
             continue;
 
@@ -1249,7 +1289,7 @@ void game_options::add_cset_override(char_set_type set, dungeon_char_type dc,
     cset_override[dc] = get_glyph_override(symbol);
 }
 
-static std::string _find_crawlrc()
+static string _find_crawlrc()
 {
     const char* locations_data[][2] = {
         { SysEnv.crawl_dir.c_str(), "init.txt" },
@@ -1273,7 +1313,7 @@ static std::string _find_crawlrc()
 
     // -rc option always wins.
     if (!SysEnv.crawl_rc.empty())
-        return (SysEnv.crawl_rc);
+        return SysEnv.crawl_rc;
 
     // If we have any rcdirs, look in them for files from the
     // rc_dir_names list.
@@ -1281,10 +1321,9 @@ static std::string _find_crawlrc()
     {
         for (unsigned n = 0; n < ARRAYSZ(rc_dir_filenames); ++n)
         {
-            const std::string rc(
-                catpath(SysEnv.rcdirs[i], rc_dir_filenames[n]));
+            const string rc(catpath(SysEnv.rcdirs[i], rc_dir_filenames[n]));
             if (file_exists(rc))
-                return (rc);
+                return rc;
         }
     }
 
@@ -1294,22 +1333,58 @@ static std::string _find_crawlrc()
         // Don't look at unset options
         if (locations_data[i][0] != NULL)
         {
-            const std::string rc =
-                catpath(locations_data[i][0], locations_data[i][1]);
+            const string rc = catpath(locations_data[i][0],
+                                      locations_data[i][1]);
             if (file_exists(rc))
-                return (rc);
+                return rc;
         }
     }
 
     // Last attempt: pick up init.txt from datafile_path, which will
     // also search the settings/ directory.
-    return (datafile_path("init.txt", false, false));
+    return datafile_path("init.txt", false, false);
 }
 
+static const char* lua_builtins[] =
+{
+    "clua/stash.lua",
+    "clua/wield.lua",
+    "clua/runrest.lua",
+    "clua/gearset.lua",
+    "clua/trapwalk.lua",
+    "clua/autofight.lua",
+    "clua/kills.lua",
+};
+
+static const char* config_defaults[] =
+{
+    "defaults/autopickup_exceptions.txt",
+    "defaults/runrest_messages.txt",
+    "defaults/standard_colours.txt",
+    "defaults/food_colouring.txt",
+    "defaults/menu_colours.txt",
+    "defaults/messages.txt",
+};
+
 // Returns an error message if the init.txt was not found.
-std::string read_init_file(bool runscript)
+string read_init_file(bool runscript)
 {
     Options.reset_options();
+
+#ifdef CLUA_BINDINGS
+    if (runscript)
+    {
+        for (unsigned int i = 0; i < ARRAYSZ(lua_builtins); ++i)
+        {
+            clua.execfile(lua_builtins[i], false, false);
+            if (!clua.error.empty())
+                mprf(MSGCH_ERROR, "Lua error: %s", clua.error.c_str());
+        }
+    }
+
+    for (unsigned int i = 0; i < ARRAYSZ(config_defaults); ++i)
+        Options.include(datafile_path(config_defaults[i]), false, runscript);
+#endif
 
     Options.filename     = "extra opts first";
     Options.basefilename = "extra opts first";
@@ -1320,14 +1395,16 @@ std::string read_init_file(bool runscript)
         Options.read_option_line(SysEnv.extra_opts_first[i], true);
     }
 
-    const std::string init_file_name(_find_crawlrc());
+    const string init_file_name(_find_crawlrc());
 
     FileLineInput f(init_file_name.c_str());
     if (f.error())
     {
         if (!init_file_name.empty())
+        {
             return make_stringf("(\"%s\" is not readable)",
                                 init_file_name.c_str());
+        }
 
 #ifdef UNIX
         return "(~/.crawlrc missing)";
@@ -1358,7 +1435,7 @@ std::string read_init_file(bool runscript)
     Options.basefilename = get_base_filename(init_file_name);
     Options.line_num     = -1;
 
-    return ("");
+    return "";
 }
 
 newgame_def read_startup_prefs()
@@ -1371,7 +1448,7 @@ newgame_def read_startup_prefs()
     game_options temp;
     temp.read_options(fl, false);
 
-    return (temp.game);
+    return temp.game;
 #endif // !DISABLE_STICKY_STARTUP_OPTIONS
 }
 
@@ -1420,7 +1497,7 @@ void write_newgame_options_file(const newgame_def& prefs)
     //
     unwind_var<game_type> gt(crawl_state.type, Options.game.type);
 
-    std::string fn = get_prefs_filename();
+    string fn = get_prefs_filename();
     FILE *f = fopen_u(fn.c_str(), "w");
     if (!f)
         return;
@@ -1444,7 +1521,7 @@ void save_player_name()
 #endif // !DISABLE_STICKY_STARTUP_OPTIONS
 }
 
-void read_options(const std::string &s, bool runscript, bool clear_aliases)
+void read_options(const string &s, bool runscript, bool clear_aliases)
 {
     StringLineInput st(s);
     Options.read_options(st, runscript, clear_aliases);
@@ -1452,6 +1529,8 @@ void read_options(const std::string &s, bool runscript, bool clear_aliases)
 
 game_options::game_options()
 {
+    lang = LANG_EN; // FIXME: obtain from gettext
+    lang_name = 0;
     reset_options();
 }
 
@@ -1475,8 +1554,8 @@ void game_options::read_options(LineInput &il, bool runscript,
     while (!il.eof())
     {
         line_num++;
-        std::string s   = il.get_line();
-        std::string str = s;
+        string s   = il.get_line();
+        string str = s;
         line++;
 
         trim_string(str);
@@ -1643,7 +1722,7 @@ void game_options::fixup_options()
         evil_colour = MAGENTA;
 }
 
-static int _str_to_killcategory(const std::string &s)
+static int _str_to_killcategory(const string &s)
 {
     static const char *kc[] = {
         "you",
@@ -1651,14 +1730,14 @@ static int _str_to_killcategory(const std::string &s)
         "other",
     };
 
-    for (unsigned i = 0; i < sizeof(kc) / sizeof(*kc); ++i)
+    for (unsigned i = 0; i < ARRAYSZ(kc); ++i)
         if (s == kc[i])
             return i;
 
     return -1;
 }
 
-void game_options::do_kill_map(const std::string &from, const std::string &to)
+void game_options::do_kill_map(const string &from, const string &to)
 {
     int ifrom = _str_to_killcategory(from),
         ito   = _str_to_killcategory(to);
@@ -1666,13 +1745,13 @@ void game_options::do_kill_map(const std::string &from, const std::string &to)
         kill_map[ifrom] = ito;
 }
 
-int game_options::read_explore_stop_conditions(const std::string &field) const
+int game_options::read_explore_stop_conditions(const string &field) const
 {
     int conditions = 0;
-    std::vector<std::string> stops = split_string(",", field);
+    vector<string> stops = split_string(",", field);
     for (int i = 0, count = stops.size(); i < count; ++i)
     {
-        const std::string c = replace_all_of(stops[i], " ", "_");
+        const string c = replace_all_of(stops[i], " ", "_");
         if (c == "item" || c == "items")
             conditions |= ES_ITEM;
         else if (c == "greedy_pickup")
@@ -1687,6 +1766,10 @@ int game_options::read_explore_stop_conditions(const std::string &field) const
             conditions |= ES_SHOP;
         else if (c == "stair" || c == "stairs")
             conditions |= ES_STAIR;
+        else if (c == "branch" || c == "branches")
+            conditions |= ES_BRANCH;
+        else if (c == "portal" || c == "portals")
+            conditions |= ES_PORTAL;
         else if (c == "altar" || c == "altars")
             conditions |= ES_ALTAR;
         else if (c == "greedy_item" || c == "greedy_items")
@@ -1701,15 +1784,21 @@ int game_options::read_explore_stop_conditions(const std::string &field) const
             conditions |= ES_ARTEFACT;
         else if (c == "rune" || c == "runes")
             conditions |= ES_RUNE;
+        else if (c == "greedy_sacrificeable" || c == "greedy_sacrificeables"
+                 || c == "greedy_sacrificable" || c == "greedy_sacrificables"
+                 || c == "greedy_sacrificiable" || c == "greedy_sacrificiables")
+        {
+            conditions |= ES_GREEDY_SACRIFICEABLE;
+        }
     }
-    return (conditions);
+    return conditions;
 }
 
-void game_options::add_alias(const std::string &key, const std::string &val)
+void game_options::add_alias(const string &key, const string &val)
 {
     if (key[0] == '$')
     {
-        std::string name = key.substr(1);
+        string name = key.substr(1);
         // Don't alter if it's a constant.
         if (constants.find(name) != constants.end())
             return;
@@ -1719,7 +1808,7 @@ void game_options::add_alias(const std::string &key, const std::string &val)
         aliases[key] = val;
 }
 
-std::string game_options::unalias(const std::string &key) const
+string game_options::unalias(const string &key) const
 {
     string_map::const_iterator i = aliases.find(key);
     return (i == aliases.end()? key : i->second);
@@ -1727,37 +1816,33 @@ std::string game_options::unalias(const std::string &key) const
 
 #define IS_VAR_CHAR(c) (isaalpha(c) || c == '_' || c == '-')
 
-std::string game_options::expand_vars(const std::string &field) const
+string game_options::expand_vars(const string &field) const
 {
-    std::string field_out = field;
+    string field_out = field;
 
-    std::string::size_type curr_pos = 0;
+    string::size_type curr_pos = 0;
 
     // Only try 100 times, so as to not get stuck in infinite recursion.
     for (int i = 0; i < 100; i++)
     {
-        std::string::size_type dollar_pos = field_out.find("$", curr_pos);
+        string::size_type dollar_pos = field_out.find("$", curr_pos);
 
-        if (dollar_pos == std::string::npos
-            || field_out.size() == (dollar_pos + 1))
-        {
+        if (dollar_pos == string::npos || field_out.size() == (dollar_pos + 1))
             break;
-        }
 
-        std::string::size_type start_pos = dollar_pos + 1;
+        string::size_type start_pos = dollar_pos + 1;
 
         if (!IS_VAR_CHAR(field_out[start_pos]))
             continue;
 
-        std::string::size_type end_pos;
+        string::size_type end_pos;
         for (end_pos = start_pos; end_pos < field_out.size(); end_pos++)
         {
             if (!IS_VAR_CHAR(field_out[end_pos + 1]))
                 break;
         }
 
-        std::string var_name = field_out.substr(start_pos,
-                                                end_pos - start_pos + 1);
+        string var_name = field_out.substr(start_pos, end_pos - start_pos + 1);
 
         string_map::const_iterator x = variables.find(var_name);
 
@@ -1767,7 +1852,7 @@ std::string game_options::expand_vars(const std::string &field) const
             continue;
         }
 
-        std::string dollar_plus_name = "$";
+        string dollar_plus_name = "$";
         dollar_plus_name += var_name;
 
         field_out = replace_all(field_out, dollar_plus_name, x->second);
@@ -1779,23 +1864,23 @@ std::string game_options::expand_vars(const std::string &field) const
     return field_out;
 }
 
-void game_options::add_message_colour_mappings(const std::string &field)
+void game_options::add_message_colour_mappings(const string &field)
 {
-    std::vector<std::string> fragments = split_string(",", field);
+    vector<string> fragments = split_string(",", field);
     for (int i = 0, count = fragments.size(); i < count; ++i)
         add_message_colour_mapping(fragments[i]);
 }
 
-message_filter game_options::parse_message_filter(const std::string &filter)
+message_filter game_options::parse_message_filter(const string &filter)
 {
-    std::string::size_type pos = filter.find(":");
-    if (pos && pos != std::string::npos)
+    string::size_type pos = filter.find(":");
+    if (pos && pos != string::npos)
     {
-        std::string prefix = filter.substr(0, pos);
+        string prefix = filter.substr(0, pos);
         int channel = str_to_channel(prefix);
         if (channel != -1 || prefix == "any")
         {
-            std::string s = filter.substr(pos + 1);
+            string s = filter.substr(pos + 1);
             trim_string(s);
             return message_filter(channel, s);
         }
@@ -1804,9 +1889,9 @@ message_filter game_options::parse_message_filter(const std::string &filter)
     return message_filter(filter);
 }
 
-void game_options::add_message_colour_mapping(const std::string &field)
+void game_options::add_message_colour_mapping(const string &field)
 {
-    std::vector<std::string> cmap = split_string(":", field, true, true, 1);
+    vector<string> cmap = split_string(":", field, true, true, 1);
 
     if (cmap.size() != 2)
         return;
@@ -1826,7 +1911,7 @@ void game_options::add_message_colour_mapping(const std::string &field)
 
 // Option syntax is:
 // sort_menu = [menu_type:]yes|no|auto:n[:sort_conditions]
-void game_options::set_menu_sort(std::string field)
+void game_options::set_menu_sort(string field)
 {
     if (field.empty())
         return;
@@ -1849,22 +1934,21 @@ void game_options::set_menu_sort(std::string field)
     sort_menus.push_back(cond);
 }
 
-void game_options::split_parse(
-    const std::string &s, const std::string &separator,
-    void (game_options::*add)(const std::string &))
+void game_options::split_parse(const string &s, const string &separator,
+                               void (game_options::*add)(const string &))
 {
-    const std::vector<std::string> defs = split_string(separator, s);
+    const vector<string> defs = split_string(separator, s);
     for (int i = 0, size = defs.size(); i < size; ++i)
         (this->*add)(defs[i]);
 }
 
-void game_options::set_option_fragment(const std::string &s)
+void game_options::set_option_fragment(const string &s)
 {
     if (s.empty())
         return;
 
-    std::string::size_type st = s.find(':');
-    if (st == std::string::npos)
+    string::size_type st = s.find(':');
+    if (st == string::npos)
     {
         // Boolean option.
         if (s[0] == '!')
@@ -1881,13 +1965,13 @@ void game_options::set_option_fragment(const std::string &s)
 
 // Not a method of the game_options class since keybindings aren't
 // stored in that class.
-static void _bindkey(std::string field)
+static void _bindkey(string field)
 {
     const size_t start_bracket = field.find_first_of('[');
     const size_t end_bracket   = field.find_last_of(']');
 
-    if (start_bracket == std::string::npos
-        || end_bracket == std::string::npos
+    if (start_bracket == string::npos
+        || end_bracket == string::npos
         || start_bracket > end_bracket)
     {
         mprf(MSGCH_ERROR, "Bad bindkey bracketing in '%s'",
@@ -1895,8 +1979,8 @@ static void _bindkey(std::string field)
         return;
     }
 
-    const std::string key_str = field.substr(start_bracket + 1,
-                                             end_bracket - start_bracket - 1);
+    const string key_str = field.substr(start_bracket + 1,
+                                        end_bracket - start_bracket - 1);
 
     int key;
 
@@ -1908,9 +1992,7 @@ static void _bindkey(std::string field)
         return;
     }
     else if (key_str.length() == 1)
-    {
         key = key_str[0];
-    }
     else if (key_str.length() == 2)
     {
         if (key_str[0] != '^')
@@ -1929,14 +2011,14 @@ static void _bindkey(std::string field)
     }
 
     const size_t start_name = field.find_first_not_of(' ', end_bracket + 1);
-    if (start_name == std::string::npos)
+    if (start_name == string::npos)
     {
         mprf(MSGCH_ERROR, "No command name for bindkey directive '%s'",
              field.c_str());
         return;
     }
 
-    const std::string  name = field.substr(start_name);
+    const string       name = field.substr(start_name);
     const command_type cmd  = name_to_command(name);
     if (cmd == CMD_NO_CMD)
     {
@@ -1947,11 +2029,11 @@ static void _bindkey(std::string field)
     bind_command_to_key(cmd, key);
 }
 
-void game_options::read_option_line(const std::string &str, bool runscript)
+void game_options::read_option_line(const string &str, bool runscript)
 {
 #define BOOL_OPTION_NAMED(_opt_str, _opt_var)               \
     if (key == _opt_str) do {                               \
-        this->_opt_var = _read_bool(field, this->_opt_var); \
+        _opt_var = _read_bool(field, _opt_var); \
     } while (false)
 #define BOOL_OPTION(_opt) BOOL_OPTION_NAMED(#_opt, _opt)
 
@@ -1959,19 +2041,17 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     if (key == _opt_str) do {                                           \
         const int col = str_to_colour(field);                           \
         if (col != -1) {                                                \
-            this->_opt_var = col;                                       \
+            _opt_var = col;                                       \
         } else {                                                        \
             /*fprintf(stderr, "Bad %s -- %s\n", key, field.c_str());*/  \
-            report_error (                                              \
-                make_stringf("Bad %s -- %s\n",                          \
-                    key.c_str(), field.c_str()));                       \
+            report_error("Bad %s -- %s\n", key.c_str(), field.c_str()); \
         }                                                               \
     } while (false)
 #define COLOUR_OPTION(_opt) COLOUR_OPTION_NAMED(#_opt, _opt)
 
 #define CURSES_OPTION_NAMED(_opt_str, _opt_var)     \
     if (key == _opt_str) do {                       \
-        this->_opt_var = curses_attribute(field);   \
+        _opt_var = curses_attribute(field);   \
     } while (false)
 #define CURSES_OPTION(_opt) CURSES_OPTION_NAMED(#_opt, _opt)
 
@@ -1979,24 +2059,22 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     if (key == _opt_str) do {                                           \
         const int min_val = (_min_val);                                 \
         const int max_val = (_max_val);                                 \
-        int val = atoi(field.c_str());                                  \
-        if (val < min_val) {                                            \
-            report_error (                                              \
-                make_stringf("Bad %s: %d < %d", _opt_str, val, min_val)); \
-            val = min_val;                                              \
-        } else if (val > max_val) {                                     \
-            report_error (                                              \
-                make_stringf("Bad %s: %d > %d", _opt_str, val, max_val)); \
-            val = max_val;                                              \
-        }                                                               \
-        this->_opt_var = val;                                           \
+        int val = _opt_var;                                             \
+        if (!parse_int(field.c_str(), val))                             \
+            report_error("Bad %s: \"%s\"", _opt_str, field.c_str());    \
+        else if (val < min_val)                                         \
+            report_error("Bad %s: %d < %d", _opt_str, val, min_val);    \
+        else if (val > max_val)                                         \
+            report_error("Bad %s: %d > %d", _opt_str, val, max_val);    \
+        else                                                            \
+            _opt_var = val;                                       \
     } while (false)
 #define INT_OPTION(_opt, _min_val, _max_val) \
     INT_OPTION_NAMED(#_opt, _opt, _min_val, _max_val)
 
-    std::string key    = "";
-    std::string subkey = "";
-    std::string field  = "";
+    string key    = "";
+    string subkey = "";
+    string field  = "";
 
     bool plus_equal  = false;
     bool minus_equal = false;
@@ -2010,7 +2088,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     field = str.substr(first_equals + 1);
     field = expand_vars(field);
 
-    std::string prequal = trimmed_string(str.substr(0, first_equals));
+    string prequal = trimmed_string(str.substr(0, first_equals));
 
     // Is this a case of key += val?
     if (prequal.length() && prequal[prequal.length() - 1] == '+')
@@ -2037,8 +2115,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
 
     prequal = unalias(prequal);
 
-    const std::string::size_type first_dot = prequal.find('.');
-    if (first_dot != std::string::npos)
+    const string::size_type first_dot = prequal.find('.');
+    if (first_dot != string::npos)
     {
         key    = prequal.substr(0, first_dot);
         subkey = prequal.substr(first_dot + 1);
@@ -2057,7 +2135,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     trim_string(field);
 
     // Keep unlowercased field around
-    const std::string orig_field = field;
+    const string orig_field = field;
 
     if (key != "name" && key != "crawl_dir" && key != "macro_dir"
         && key != "species" && key != "background" && key != "job"
@@ -2077,65 +2155,29 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         && key != "levels" && key != "level" && key != "entries"
         && key != "include" && key != "bindkey"
         && key != "spell_slot"
-        && key.find("font") == std::string::npos)
+        && key.find("font") == string::npos)
     {
         lowercase(field);
     }
 
     if (key == "include")
-    {
         include(field, true, runscript);
-    }
     else if (key == "opt" || key == "option")
-    {
         split_parse(field, ",", &game_options::set_option_fragment);
-    }
     else if (key == "autopickup")
     {
         // clear out autopickup
         autopickups = 0;
 
-        for (size_t i = 0; i < field.length(); i++)
+        ucs_t c;
+        for (const char* tp = field.c_str(); int s = utf8towc(&c, tp); tp += s)
         {
-            char type = field[i];
+            object_class_type type = item_class_by_sym(c);
 
-            // Make the amulet symbol equiv to ring -- bwross
-            switch (type)
-            {
-            case '"':
-                // also represents jewellery
-                type = '=';
-                break;
-
-            case '|':
-                // also represents staves
-                type = '\\';
-                break;
-
-            case ':':
-                // also represents books
-                type = '+';
-                break;
-
-            case '&':
-            case 'x':
-                // also corpses
-                type = 'X';
-                break;
-            }
-
-            int j;
-            for (j = 0; j < obj_syms_len && type != obj_syms[j]; j++)
-                ;
-
-            if (j < obj_syms_len)
-                autopickups |= (1 << j);
+            if (type < NUM_OBJECT_CLASSES)
+                autopickups |= (1 << type);
             else
-            {
-                report_error (
-                    make_stringf("Bad object type '%c' for autopickup.\n",
-                                 type));
-            }
+                report_error("Bad object type '%*s' for autopickup.\n", s, tp);
         }
     }
 #if !defined(DGAMELAUNCH) || defined(DGL_REMEMBER_NAME)
@@ -2159,6 +2201,46 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             char_set = CSET_DEFAULT;
         else
             fprintf(stderr, "Bad character set: %s\n", field.c_str());
+    }
+    else if (key == "language")
+    {
+        // FIXME: should talk to gettext/etc instead
+        if (field == "en" || field == "english")
+            lang = LANG_EN, lang_name = 0; // disable the db
+        else if (field == "pl" || field == "polish" || field == "polski")
+            lang = LANG_PL, lang_name = "pl";
+        else if (field == "de" || field == "german" || field == "deutch")
+            lang = LANG_DE, lang_name = "de";
+        else if (field == "fr" || field == "french" || field == "français" || field == "francais")
+            lang = LANG_FR, lang_name = "fr";
+        else if (field == "es" || field == "spanish" || field == "español" || field == "espanol")
+            lang = LANG_ES, lang_name = "es";
+        else if (field == "el" || field == "greek" || field == "ελληνικά" || field == "ελληνικα")
+            lang = LANG_EL, lang_name = "el";
+        else if (field == "fi" || field == "finnish" || field == "suomi")
+            lang = LANG_FI, lang_name = "fi";
+        // Fake languages do not reset lang_name, allowing a translated
+        // database in an actual language.  This is probably pointless for
+        // most fake langs, though.
+        else if (field == "dwarven" || field == "dwarf")
+            lang = LANG_DWARVEN;
+        else if (field == "jäger" || field == "jägerkin" || field == "jager" || field == "jagerkin"
+                 || field == "jaeger" || field == "jaegerkin")
+        {
+            lang = LANG_JAGERKIN;
+        }
+        // Due to a conflict with actual "de", this uses slang names for the
+        // option.  Let's try to keep to less rude ones, though.
+        else if (field == "kraut" || field == "jerry" || field == "fritz")
+            lang = LANG_KRAUT;
+/*
+        else if (field == "cyr" || field == "cyrillic" || field == "commie" || field == "кириллица")
+            lang = LANG_CYRILLIC;
+*/
+        else if (field == "wide" || field == "doublewidth" || field == "fullwidth")
+            lang = LANG_WIDE;
+        else
+            report_error("No translations for language: %s\n", field.c_str());
     }
     else if (key == "default_autopickup")
     {
@@ -2235,6 +2317,17 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else BOOL_OPTION(easy_eat_gourmand);
     else BOOL_OPTION(easy_eat_contaminated);
     else BOOL_OPTION(auto_eat_chunks);
+    else if (key == "auto_drop_chunks")
+    {
+        if (field == "never")
+            auto_drop_chunks = ADC_NEVER;
+        else if (field == "rotten")
+            auto_drop_chunks = ADC_ROTTEN;
+        else if (field == "yes" || field == "true")
+            auto_drop_chunks = ADC_YES;
+        else
+            report_error("Invalid auto_drop_chunks: \"%s\"", field.c_str());
+    }
     else if (key == "lua_file" && runscript)
     {
 #ifdef CLUA_BINDINGS
@@ -2286,7 +2379,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else if (key.find("cset") == 0)
     {
-        std::string cset = key.substr(4);
+        string cset = key.substr(4);
         if (!cset.empty() && cset[0] == '_')
             cset = cset.substr(1);
 
@@ -2361,11 +2454,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else if (key == "fire_order")
         set_fire_order(field, plus_equal);
-    else if (key == "pizza")
-    {
-        // field is already cleaned up from trim_string()
-        pizza = field;
-    }
 #if !defined(DGAMELAUNCH) || defined(DGL_REMEMBER_NAME)
     else BOOL_OPTION(remember_name);
 #endif
@@ -2379,42 +2467,13 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else BOOL_OPTION(show_gold_turns);
     else BOOL_OPTION(show_game_turns);
     else BOOL_OPTION(show_no_ctele);
-    else if (key == "hp_warning")
-    {
-        hp_warning = atoi(field.c_str());
-        if (hp_warning < 0 || hp_warning > 100)
-        {
-            hp_warning = 0;
-            fprintf(stderr, "Bad HP warning percentage -- %s\n",
-                     field.c_str());
-        }
-    }
-    else if (key == "mp_warning")
-    {
-        magic_point_warning = atoi(field.c_str());
-        if (magic_point_warning < 0 || magic_point_warning > 100)
-        {
-            magic_point_warning = 0;
-            fprintf(stderr, "Bad MP warning percentage -- %s\n",
-                     field.c_str());
-        }
-    }
-    else INT_OPTION(ood_interesting, 0, 500);
-    else INT_OPTION(rare_interesting, 0, 99);
+    else INT_OPTION(hp_warning, 0, 100);
+    else INT_OPTION_NAMED("mp_warning", magic_point_warning, 0, 100);
     else if (key == "note_monsters")
         append_vector(note_monsters, split_string(",", field));
     else if (key == "note_messages")
         append_vector(note_messages, split_string(",", field));
-    else if (key == "note_hp_percent")
-    {
-        note_hp_percent = atoi(field.c_str());
-        if (note_hp_percent < 0 || note_hp_percent > 100)
-        {
-            note_hp_percent = 0;
-            fprintf(stderr, "Bad HP note percentage -- %s\n",
-                     field.c_str());
-        }
-    }
+    else INT_OPTION(note_hp_percent, 0, 100);
 #ifndef DGAMELAUNCH
     // If DATA_DIR_PATH is set, don't set crawl_dir from .crawlrc.
 #ifndef DATA_DIR_PATH
@@ -2449,7 +2508,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else BOOL_OPTION(mlist_allow_alternate_layout);
     else BOOL_OPTION(messages_at_top);
 #ifndef USE_TILE
-    else BOOL_OPTION(mlist_targeting);
+    else BOOL_OPTION(mlist_targetting);
 #endif
     else BOOL_OPTION(msg_condense_repeats);
     else BOOL_OPTION(msg_condense_short);
@@ -2497,8 +2556,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else BOOL_OPTION(note_all_skill_levels);
     else BOOL_OPTION(note_skill_max);
-    else BOOL_OPTION(note_all_spells);
     else BOOL_OPTION(note_xom_effects);
+    else BOOL_OPTION(note_chat_messages);
     else BOOL_OPTION(clear_messages);
     else BOOL_OPTION(show_more);
     else BOOL_OPTION(small_more);
@@ -2537,39 +2596,36 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         else if (field == "yes")
             wiz_mode = WIZ_YES;
         else
-        {
-            report_error (
-                make_stringf("Unknown wiz_mode option: %s\n", field.c_str()));
-        }
+            report_error("Unknown wiz_mode option: %s\n", field.c_str());
     #endif
 #endif
     }
     else if (key == "ban_pickup")
     {
-        std::vector<std::string> args = split_string(",", field);
+        vector<string> args = split_string(",", field);
         for (int i = 0, size = args.size(); i < size; ++i)
         {
-            const std::string &s = args[i];
+            const string &s = args[i];
             if (s.empty())
                 continue;
-            force_autopickup.push_back(std::make_pair(s, false));
+            force_autopickup.push_back(make_pair(s, false));
         }
     }
     else if (key == "autopickup_exceptions")
     {
-        std::vector<std::string> args = split_string(",", field);
+        vector<string> args = split_string(",", field);
         for (int i = 0, size = args.size(); i < size; ++i)
         {
-            const std::string &s = args[i];
+            const string &s = args[i];
             if (s.empty())
                 continue;
 
             if (s[0] == '>')
-                force_autopickup.push_back(std::make_pair(s.substr(1), false));
+                force_autopickup.push_back(make_pair(s.substr(1), false));
             else if (s[0] == '<')
-                force_autopickup.push_back(std::make_pair(s.substr(1), true));
+                force_autopickup.push_back(make_pair(s.substr(1), true));
             else
-                force_autopickup.push_back(std::make_pair(s, false));
+                force_autopickup.push_back(make_pair(s, false));
         }
     }
     else if (key == "note_items")
@@ -2583,49 +2639,35 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     if (key == "autoinscribe")
     {
         if (field.empty())
-        {
-            report_error("Autoinscribe string is empty");
-            return;
-        }
+            return report_error("Autoinscribe string is empty");
 
         const size_t first = field.find_first_of(':');
         const size_t last  = field.find_last_of(':');
-        if (first == std::string::npos || first != last)
+        if (first == string::npos || first != last)
         {
-            report_error (
-                make_stringf("Autoinscribe string must have exactly "
-                             "one colon: %s\n", field.c_str()));
-            return;
+            return report_error("Autoinscribe string must have exactly "
+                                "one colon: %s\n", field.c_str());
         }
 
         if (first == 0)
         {
-            report_error (
-                make_stringf("Autoinscribe pattern is empty: %s\n",
-                             field.c_str()));
+            report_error("Autoinscribe pattern is empty: %s\n", field.c_str());
             return;
         }
 
         if (last == field.length() - 1)
-        {
-            report_error (
-                make_stringf("Autoinscribe result is empty: %s\n",
-                             field.c_str()));
-            return;
-        }
+            return report_error("Autoinscribe result is empty: %s\n", field.c_str());
 
-        std::vector<std::string> thesplit = split_string(":", field);
+        vector<string> thesplit = split_string(":", field);
 
         if (thesplit.size() != 2)
         {
-            report_error (
-                make_stringf("Error parsing autoinscribe string: %s\n",
-                             field.c_str()));
+            report_error("Error parsing autoinscribe string: %s\n", field.c_str());
             return;
         }
 
-        autoinscriptions.push_back(
-            std::pair<text_pattern,std::string>(thesplit[0], thesplit[1]));
+        autoinscriptions.push_back(pair<text_pattern,string>(thesplit[0],
+                                                             thesplit[1]));
     }
     else BOOL_OPTION(autoinscribe_artefacts);
     else BOOL_OPTION(autoinscribe_cursed);
@@ -2636,17 +2678,16 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "hp_colour" || key == "hp_color")
     {
         hp_colour.clear();
-        std::vector<std::string> thesplit = split_string(",", field);
+        vector<string> thesplit = split_string(",", field);
         for (unsigned i = 0; i < thesplit.size(); ++i)
         {
-            std::vector<std::string> insplit = split_string(":", thesplit[i]);
+            vector<string> insplit = split_string(":", thesplit[i]);
             int hp_percent = 100;
 
             if (insplit.empty() || insplit.size() > 2
                  || insplit.size() == 1 && i != 0)
             {
-                report_error (
-                    make_stringf("Bad hp_colour string: %s\n", field.c_str()));
+                report_error("Bad hp_colour string: %s\n", field.c_str());
                 break;
             }
 
@@ -2654,23 +2695,22 @@ void game_options::read_option_line(const std::string &str, bool runscript)
                 hp_percent = atoi(insplit[0].c_str());
 
             int scolour = str_to_colour(insplit[(insplit.size() == 1) ? 0 : 1]);
-            hp_colour.push_back(std::pair<int, int>(hp_percent, scolour));
+            hp_colour.push_back(pair<int, int>(hp_percent, scolour));
         }
     }
     else if (key == "mp_color" || key == "mp_colour")
     {
         mp_colour.clear();
-        std::vector<std::string> thesplit = split_string(",", field);
+        vector<string> thesplit = split_string(",", field);
         for (unsigned i = 0; i < thesplit.size(); ++i)
         {
-            std::vector<std::string> insplit = split_string(":", thesplit[i]);
+            vector<string> insplit = split_string(":", thesplit[i]);
             int mp_percent = 100;
 
             if (insplit.empty() || insplit.size() > 2
                  || insplit.size() == 1 && i != 0)
             {
-                report_error (
-                    make_stringf("Bad mp_colour string: %s\n", field.c_str()));
+                report_error("Bad mp_colour string: %s\n", field.c_str());
                 break;
             }
 
@@ -2678,23 +2718,21 @@ void game_options::read_option_line(const std::string &str, bool runscript)
                 mp_percent = atoi(insplit[0].c_str());
 
             int scolour = str_to_colour(insplit[(insplit.size() == 1) ? 0 : 1]);
-            mp_colour.push_back(std::pair<int, int>(mp_percent, scolour));
+            mp_colour.push_back(pair<int, int>(mp_percent, scolour));
         }
     }
     else if (key == "stat_colour" || key == "stat_color")
     {
         stat_colour.clear();
-        std::vector<std::string> thesplit = split_string(",", field);
+        vector<string> thesplit = split_string(",", field);
         for (unsigned i = 0; i < thesplit.size(); ++i)
         {
-            std::vector<std::string> insplit = split_string(":", thesplit[i]);
+            vector<string> insplit = split_string(":", thesplit[i]);
 
             if (insplit.empty() || insplit.size() > 2
                 || insplit.size() == 1 && i != 0)
             {
-                report_error (
-                    make_stringf("Bad stat_colour string: %s\n",
-                                 field.c_str()));
+                report_error("Bad stat_colour string: %s\n", field.c_str());
                 break;
             }
 
@@ -2703,42 +2741,52 @@ void game_options::read_option_line(const std::string &str, bool runscript)
                 stat_limit = atoi(insplit[0].c_str());
 
             int scolour = str_to_colour(insplit[(insplit.size() == 1) ? 0 : 1]);
-            stat_colour.push_back(std::pair<int, int>(stat_limit, scolour));
+            stat_colour.push_back(pair<int, int>(stat_limit, scolour));
         }
     }
+
+    else if (key == "enemy_hp_colour" || key == "enemy_hp_color")
+    {
+        enemy_hp_colour.clear();
+        str_to_enemy_hp_colour(field);
+    }
+
     else if (key == "note_skill_levels")
     {
-        std::vector<std::string> thesplit = split_string(",", field);
+        if (!plus_equal && !minus_equal)
+            note_skill_levels.reset();
+        vector<string> thesplit = split_string(",", field);
         for (unsigned i = 0; i < thesplit.size(); ++i)
         {
             int num = atoi(thesplit[i].c_str());
             if (num > 0 && num <= 27)
-                note_skill_levels.push_back(num);
+                note_skill_levels.set(num, !minus_equal);
             else
             {
-                report_error (
-                    make_stringf("Bad skill level to note -- %s\n",
-                                 thesplit[i].c_str()));
+                report_error("Bad skill level to note -- %s\n",
+                             thesplit[i].c_str());
                 continue;
             }
         }
     }
     else if (key == "spell_slot")
     {
-        std::vector<std::string> thesplit = split_string(":", field);
+        vector<string> thesplit = split_string(":", field);
         if (thesplit.size() != 2)
-            {
-                report_error(
-                    make_stringf("Error parsing spell lettering string: %s\n",
-                    field.c_str()));
-                return;
-            }
+        {
+            return report_error("Error parsing spell lettering string: %s\n",
+                                field.c_str());
+        }
         lowercase(thesplit[0]);
-        auto_spell_letters.push_back(
-            std::pair<text_pattern,std::string>(thesplit[0], thesplit[1]));
+        auto_spell_letters.push_back(pair<text_pattern,string>(thesplit[0],
+                                                               thesplit[1]));
     }
     else BOOL_OPTION(pickup_thrown);
 #ifdef WIZARD
+    else if (key == "fsim_mode")
+        fsim_mode = field;
+    else if (key == "fsim_scale")
+        append_vector(fsim_scale, split_string(",", field));
     else if (key == "fsim_kit")
         append_vector(fsim_kit, split_string(",", field));
     else if (key == "fsim_rounds")
@@ -2751,18 +2799,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else if (key == "fsim_mons")
         fsim_mons = field;
-    else if (key == "fsim_str")
-        fsim_str = atoi(field.c_str());
-    else if (key == "fsim_int")
-        fsim_int = atoi(field.c_str());
-    else if (key == "fsim_dex")
-        fsim_dex = atoi(field.c_str());
-    else if (key == "fsim_xl")
-        fsim_xl = atoi(field.c_str());
 #endif // WIZARD
     else if (key == "sort_menus")
     {
-        std::vector<std::string> frags = split_string(";", field);
+        vector<string> frags = split_string(";", field);
         for (int i = 0, size = frags.size(); i < size; ++i)
         {
             if (frags[i].empty())
@@ -2788,6 +2828,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         if (explore_delay > 2000)
             explore_delay = 2000;
     }
+    else BOOL_OPTION(show_travel_trail);
     else if (key == "level_map_cursor_step")
     {
         level_map_cursor_step = atoi(field.c_str());
@@ -2801,20 +2842,20 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else BOOL_OPTION(show_player_species);
     else if (key == "force_more_message")
     {
-        std::vector<std::string> fragments = split_string(",", field);
+        vector<string> fragments = split_string(",", field);
         for (int i = 0, count = fragments.size(); i < count; ++i)
         {
             if (fragments[i].length() == 0)
                 continue;
 
-            std::string::size_type pos = fragments[i].find(":");
-            if (pos && pos != std::string::npos)
+            string::size_type pos = fragments[i].find(":");
+            if (pos && pos != string::npos)
             {
-                std::string prefix = fragments[i].substr(0, pos);
+                string prefix = fragments[i].substr(0, pos);
                 int channel = str_to_channel(prefix);
                 if (channel != -1 || prefix == "any")
                 {
-                    std::string s = fragments[i].substr(pos + 1);
+                    string s = fragments[i].substr(pos + 1);
                     trim_string(s);
                     force_more_message.push_back(
                         message_filter(channel, s));
@@ -2830,7 +2871,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         append_vector(drop_filter, split_string(",", field));
     else if (key == "travel_avoid_terrain")
     {
-        std::vector<std::string> seg = split_string(",", field);
+        vector<string> seg = split_string(",", field);
         for (int i = 0, count = seg.size(); i < count; ++i)
             prevent_travel_to(seg[i]);
     }
@@ -2864,6 +2905,13 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         else
             explore_stop |= new_conditions;
     }
+    else if (key == "sacrifice_before_explore")
+    {
+        if (field == "prompt" || field == "ask")
+            sacrifice_before_explore = 2;
+        else
+            sacrifice_before_explore = _read_bool(field, false);
+    }
     else if (key == "explore_stop_prompt")
     {
         if (!plus_equal && !minus_equal)
@@ -2895,14 +2943,15 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else BOOL_OPTION(explore_improved);
     else BOOL_OPTION(travel_key_stop);
+    else BOOL_OPTION(auto_sacrifice);
     else if (key == "sound")
     {
-        std::vector<std::string> seg = split_string(",", field);
+        vector<string> seg = split_string(",", field);
         for (int i = 0, count = seg.size(); i < count; ++i)
         {
-            const std::string &sub = seg[i];
-            std::string::size_type cpos = sub.find(":", 0);
-            if (cpos != std::string::npos)
+            const string &sub = seg[i];
+            string::size_type cpos = sub.find(":", 0);
+            if (cpos != string::npos)
             {
                 sound_mapping mapping;
                 mapping.pattern = sub.substr(0, cpos);
@@ -2917,13 +2966,13 @@ void game_options::read_option_line(const std::string &str, bool runscript)
 #endif
     if (key == "menu_colour" || key == "menu_color")
     {
-        std::vector<std::string> seg = split_string(",", field);
+        vector<string> seg = split_string(",", field);
         for (int i = 0, count = seg.size(); i < count; ++i)
         {
             // Format is "tag:colour:pattern" or "colour:pattern" (default tag).
             // FIXME: arrange so that you can use ':' inside a pattern
-            std::vector<std::string> subseg = split_string(":", seg[i], false);
-            std::string tagname, patname, colname;
+            vector<string> subseg = split_string(":", seg[i], false);
+            string tagname, patname, colname;
             if (subseg.size() < 2)
                 continue;
             if (subseg.size() >= 3)
@@ -2968,15 +3017,15 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else if (key == "kill_map")
     {
-        std::vector<std::string> seg = split_string(",", field);
+        vector<string> seg = split_string(",", field);
         for (int i = 0, count = seg.size(); i < count; ++i)
         {
-            const std::string &s = seg[i];
-            std::string::size_type cpos = s.find(":", 0);
-            if (cpos != std::string::npos)
+            const string &s = seg[i];
+            string::size_type cpos = s.find(":", 0);
+            if (cpos != string::npos)
             {
-                std::string from = s.substr(0, cpos);
-                std::string to   = s.substr(cpos + 1);
+                string from = s.substr(0, cpos);
+                string to   = s.substr(cpos + 1);
                 do_kill_map(from, to);
             }
         }
@@ -2990,10 +3039,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "dump_item_origins")
     {
         dump_item_origins = IODS_PRICE;
-        std::vector<std::string> choices = split_string(",", field);
+        vector<string> choices = split_string(",", field);
         for (int i = 0, count = choices.size(); i < count; ++i)
         {
-            const std::string &ch = choices[i];
+            const string &ch = choices[i];
             if (ch == "artefacts" || ch == "artifacts"
                 || ch == "artefact" || ch == "artifact")
             {
@@ -3043,29 +3092,29 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         darken_beyond_range = _read_bool(field, darken_beyond_range);
     else if (key == "drop_mode")
     {
-        if (field.find("multi") != std::string::npos)
+        if (field.find("multi") != string::npos)
             drop_mode = DM_MULTI;
         else
             drop_mode = DM_SINGLE;
     }
     else if (key == "pickup_mode")
     {
-        if (field.find("multi") != std::string::npos)
+        if (field.find("multi") != string::npos)
             pickup_mode = 0;
-        else if (field.find("single") != std::string::npos)
+        else if (field.find("single") != string::npos)
             pickup_mode = -1;
         else
             pickup_mode = _read_bool_or_number(field, pickup_mode, "auto:");
     }
     else if (key == "additional_macro_file")
     {
-        const std::string resolved = resolve_include(orig_field, "macro ");
+        const string resolved = resolve_include(orig_field, "macro ");
         if (!resolved.empty())
             additional_macro_files.push_back(resolved);
     }
 #ifdef USE_TILE
     else if (key == "tile_show_items")
-        strncpy(tile_show_items, field.c_str(), 18);
+        tile_show_items = field;
     else BOOL_OPTION(tile_skip_title);
     else BOOL_OPTION(tile_menu_icons);
 #endif
@@ -3155,15 +3204,9 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "constant")
     {
         if (variables.find(field) == variables.end())
-        {
-            report_error(make_stringf("No variable named '%s' to make "
-                                      "constant", field.c_str()));
-        }
+            report_error("No variable named '%s' to make constant", field.c_str());
         else if (constants.find(field) != constants.end())
-        {
-            report_error(make_stringf("'%s' is already a constant",
-                                      field.c_str()));
-        }
+            report_error("'%s' is already a constant", field.c_str());
         else
             constants.insert(field);
     }
@@ -3193,12 +3236,9 @@ void game_options::read_option_line(const std::string &str, bool runscript)
 // If safety check fails, throws a string with the reason for failure.
 // If file cannot be resolved, returns the empty string (this does not throw!)
 // If file can be resolved, returns the resolved path.
-std::string game_options::resolve_include(
-    std::string parent_file,
-    std::string included_file,
-    const std::vector<std::string> *rcdirs)
-
-    throw (std::string)
+string game_options::resolve_include(string parent_file, string included_file,
+                                     const vector<string> *rcdirs)
+    throw (string)
 {
     // Before we start, make sure we convert forward slashes to the platform's
     // favoured file separator.
@@ -3220,77 +3260,69 @@ std::string game_options::resolve_include(
     // multiuser system. On multiuser systems assert_read_safe_path()
     // will throw an exception if it sees absolute paths.
     if (is_absolute_path(included_file))
-        return (file_exists(included_file)? included_file : "");
+        return file_exists(included_file)? included_file : "";
 
     if (!parent_file.empty())
     {
-        const std::string candidate =
-            get_path_relative_to(parent_file, included_file);
+        const string candidate = get_path_relative_to(parent_file,
+                                                      included_file);
         if (file_exists(candidate))
-            return (candidate);
+            return candidate;
     }
 
     if (rcdirs)
     {
-        const std::vector<std::string> &dirs(*rcdirs);
+        const vector<string> &dirs(*rcdirs);
         for (int i = 0, size = dirs.size(); i < size; ++i)
         {
-            const std::string candidate(catpath(dirs[i], included_file));
+            const string candidate(catpath(dirs[i], included_file));
             if (file_exists(candidate))
-                return (candidate);
+                return candidate;
         }
     }
 
     return datafile_path(included_file, false, true);
 }
 
-std::string game_options::resolve_include(const std::string &file,
-                                           const char *type)
+string game_options::resolve_include(const string &file, const char *type)
 {
     try
     {
-        const std::string resolved =
-            resolve_include(this->filename, file, &SysEnv.rcdirs);
+        const string resolved = resolve_include(filename, file, &SysEnv.rcdirs);
 
         if (resolved.empty())
-        {
-            report_error(
-                make_stringf("Cannot find %sfile \"%s\".",
-                             type, file.c_str()));
-        }
-        return (resolved);
+            report_error("Cannot find %sfile \"%s\".", type, file.c_str());
+        return resolved;
     }
-    catch (const std::string &err)
+    catch (const string &err)
     {
-        report_error(
-            make_stringf("Cannot include %sfile: %s", type, err.c_str()));
+        report_error("Cannot include %sfile: %s", type, err.c_str());
         return "";
     }
 }
 
-bool game_options::was_included(const std::string &file) const
+bool game_options::was_included(const string &file) const
 {
     return (included.find(file) != included.end());
 }
 
-void game_options::include(const std::string &rawfilename,
-                           bool resolve,
+void game_options::include(const string &rawfilename, bool resolve,
                            bool runscript)
 {
-    const std::string include_file =
-        resolve ? resolve_include(rawfilename) : rawfilename;
+    const string include_file = resolve ? resolve_include(rawfilename)
+                                        : rawfilename;
 
     if (was_included(include_file))
         return;
 
     included.insert(include_file);
 
-    // Change this->filename to the included filename while we're reading it.
-    unwind_var<std::string> optfile(this->filename, include_file);
-    unwind_var<std::string> basefile(this->basefilename, rawfilename);
+    // Change filename to the included filename while we're reading it.
+    unwind_var<string> optfile(filename, include_file);
+    unwind_var<string> basefile(basefilename, rawfilename);
 
     // Save current line number
-    unwind_var<int> currlinenum(this->line_num, 0);
+    unwind_var<int> currlinenum(line_num, 0);
 
     // Also unwind any aliases defined in included files.
     unwind_var<string_map> unwalias(aliases);
@@ -3300,8 +3332,13 @@ void game_options::include(const std::string &rawfilename,
         read_options(fl, runscript, false);
 }
 
-void game_options::report_error(const std::string &error)
+void game_options::report_error(const char* format, ...)
 {
+    va_list args;
+    va_start(args, format);
+    string error = vmake_stringf(format, args);
+    va_end(args);
+
     // If called before game starts, log a startup error,
     // otherwise spam the warning channel.
     if (crawl_state.need_save)
@@ -3318,9 +3355,9 @@ void game_options::report_error(const std::string &error)
     }
 }
 
-static std::string check_string(const char *s)
+static string check_string(const char *s)
 {
-    return (s? s : "");
+    return s? s : "";
 }
 
 void get_system_environment(void)
@@ -3402,6 +3439,7 @@ enum commandline_option_type
     CLO_ZOTDEF,
     CLO_TUTORIAL,
     CLO_WIZARD,
+    CLO_NO_SAVE,
 #ifdef USE_TILE_WEB
     CLO_WEBTILES_SOCKET,
     CLO_AWAIT_CONNECTION,
@@ -3416,7 +3454,7 @@ static const char *cmd_ops[] = {
     "mapstat", "arena", "dump-maps", "test", "script", "builddb",
     "help", "version", "seed", "save-version", "sprint",
     "extra-opt-first", "extra-opt-last", "sprint-map", "edit-save",
-    "print-charset", "zotdef", "tutorial", "wizard",
+    "print-charset", "zotdef", "tutorial", "wizard", "no-save",
 #ifdef USE_TILE_WEB
     "webtiles-socket", "await-connection",
 #endif
@@ -3425,7 +3463,7 @@ static const char *cmd_ops[] = {
 static const int num_cmd_ops = CLO_NOPS;
 static bool arg_seen[num_cmd_ops];
 
-static std::string _find_executable_path()
+static string _find_executable_path()
 {
     // A lot of OSes give ways to find the location of the running app's
     // binary executable. This is useful, because argv[0] can be relative
@@ -3466,7 +3504,7 @@ static void _print_save_version(char *name)
 {
     try
     {
-        std::string filename = name;
+        string filename = name;
         // Check for the exact filename first, then go by char name.
         if (!file_exists(filename))
             filename = get_savedir_filename(filename);
@@ -3548,7 +3586,7 @@ static void _edit_save(int argc, char **argv)
 
     try
     {
-        std::string filename = name;
+        string filename = name;
         // Check for the exact filename first, then go by char name.
         if (!file_exists(filename))
             filename = get_savedir_filename(filename);
@@ -3556,8 +3594,8 @@ static void _edit_save(int argc, char **argv)
 
         if (cmd == ES_LS)
         {
-            std::vector<std::string> list = save.list_chunks();
-            std::sort(list.begin(), list.end(), numcmpstr);
+            vector<string> list = save.list_chunks();
+            sort(list.begin(), list.end(), numcmpstr);
             for (size_t i = 0; i < list.size(); i++)
                 printf("%s\n", list[i].c_str());
         }
@@ -3626,7 +3664,7 @@ static void _edit_save(int argc, char **argv)
         else if (cmd == ES_REPACK)
         {
             package save2((filename + ".tmp").c_str(), true, true);
-            std::vector<std::string> list = save.list_chunks();
+            vector<string> list = save.list_chunks();
             for (size_t i = 0; i < list.size(); i++)
             {
                 char buf[16384];
@@ -3643,8 +3681,8 @@ static void _edit_save(int argc, char **argv)
         }
         else if (cmd == ES_INFO)
         {
-            std::vector<std::string> list = save.list_chunks();
-            std::sort(list.begin(), list.end(), numcmpstr);
+            vector<string> list = save.list_chunks();
+            sort(list.begin(), list.end(), numcmpstr);
             len_t nchunks = list.size();
             len_t frag = save.get_chunk_fragmentation("");
             len_t flen = save.get_size();
@@ -3681,7 +3719,7 @@ static void _edit_save(int argc, char **argv)
 
 static bool _check_extra_opt(char* _opt)
 {
-    std::string opt(_opt);
+    string opt(_opt);
     trim_string(opt);
 
     if (opt[0] == ':' || opt[0] == '<' || opt[0] == '{'
@@ -3689,32 +3727,32 @@ static bool _check_extra_opt(char* _opt)
     {
         fprintf(stderr, "An extra option can't use Lua (%s)\n",
                 _opt);
-        return (false);
+        return false;
     }
 
     if (opt[0] == '#')
     {
         fprintf(stderr, "An extra option can't be a comment (%s)\n",
                 _opt);
-        return (false);
+        return false;
     }
 
-    if (opt.find_first_of('=') == std::string::npos)
+    if (opt.find_first_of('=') == string::npos)
     {
         fprintf(stderr, "An extra opt must contain a '=' (%s)\n",
                 _opt);
-        return (false);
+        return false;
     }
 
-    std::vector<std::string> parts = split_string(opt, "=");
+    vector<string> parts = split_string(opt, "=");
     if (opt.find_first_of('=') == 0 || parts[0].length() == 0)
     {
         fprintf(stderr, "An extra opt must have an option name (%s)\n",
                 _opt);
-        return (false);
+        return false;
     }
 
-    return (true);
+    return true;
 }
 
 bool parse_args(int argc, char **argv, bool rc_only)
@@ -3728,7 +3766,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
             argv, argv + argc);
     }
 
-    std::string exe_path = _find_executable_path();
+    string exe_path = _find_executable_path();
 
     if (!exe_path.empty())
         set_crawl_base_dir(exe_path.c_str());
@@ -3740,7 +3778,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
     SysEnv.rcdirs.clear();
 
     if (argc < 2)           // no args!
-        return (true);
+        return true;
 
     char *arg, *next_arg;
     int current = 1;
@@ -3752,8 +3790,10 @@ bool parse_args(int argc, char **argv, bool rc_only)
          arg_seen[i] = false;
 
     if (SysEnv.cmd_args.empty())
+    {
         for (int i = 1; i < argc; ++i)
             SysEnv.cmd_args.push_back(argv[i]);
+    }
 
     while (current < argc)
     {
@@ -3775,7 +3815,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
             fprintf(stderr,
                     "Option '%s' is invalid; options must be prefixed "
                     "with -\n\n", arg);
-            return (false);
+            return false;
         }
 
         // Look for match (we accept both -option and --option).
@@ -3791,18 +3831,18 @@ bool parse_args(int argc, char **argv, bool rc_only)
 
         // Print the list of commandline options for "--help".
         if (o == CLO_HELP)
-            return (false);
+            return false;
 
         if (o == num_cmd_ops)
         {
             fprintf(stderr,
                     "Unknown option: %s\n\n", argv[current]);
-            return (false);
+            return false;
         }
 
         // Disallow options specified more than once.
         if (arg_seen[o] == true)
-            return (false);
+            return false;
 
         // Set arg to 'seen'.
         arg_seen[o] = true;
@@ -3907,20 +3947,20 @@ bool parse_args(int argc, char **argv, bool rc_only)
 
         case CLO_BUILDDB:
             if (next_is_param)
-                return (false);
+                return false;
             crawl_state.build_db = true;
             break;
 
         case CLO_MACRO:
             if (!next_is_param)
-                return (false);
+                return false;
             SysEnv.macro_dir = next_arg;
             nextUsed = true;
             break;
 
         case CLO_MORGUE:
             if (!next_is_param)
-                return (false);
+                return false;
             if (!rc_only)
                 SysEnv.morgue_dir = next_arg;
             nextUsed = true;
@@ -3928,7 +3968,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
 
         case CLO_SCOREFILE:
             if (!next_is_param)
-                return (false);
+                return false;
             if (!rc_only)
                 SysEnv.scorefile = next_arg;
             nextUsed = true;
@@ -3936,7 +3976,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
 
         case CLO_NAME:
             if (!next_is_param)
-                return (false);
+                return false;
             if (!rc_only)
                 Options.game.name = next_arg;
             nextUsed = true;
@@ -3945,22 +3985,22 @@ bool parse_args(int argc, char **argv, bool rc_only)
         case CLO_RACE:
         case CLO_CLASS:
             if (!next_is_param)
-                return (false);
+                return false;
 
             if (!rc_only)
             {
                 if (o == 2)
-                    Options.game.species = _str_to_species(std::string(next_arg));
+                    Options.game.species = _str_to_species(string(next_arg));
 
                 if (o == 3)
-                    Options.game.job = _str_to_job(std::string(next_arg));
+                    Options.game.job = _str_to_job(string(next_arg));
             }
             nextUsed = true;
             break;
 
         case CLO_PLAIN:
             if (next_is_param)
-                return (false);
+                return false;
 
             if (!rc_only)
             {
@@ -3972,7 +4012,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
         case CLO_RCDIR:
             // Always parse.
             if (!next_is_param)
-                return (false);
+                return false;
 
             SysEnv.add_rcdir(next_arg);
             nextUsed = true;
@@ -3981,7 +4021,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
         case CLO_DIR:
             // Always parse.
             if (!next_is_param)
-                return (false);
+                return false;
 
             SysEnv.crawl_dir = next_arg;
             nextUsed = true;
@@ -3990,7 +4030,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
         case CLO_RC:
             // Always parse.
             if (!next_is_param)
-                return (false);
+                return false;
 
             SysEnv.crawl_rc = next_arg;
             nextUsed = true;
@@ -3998,7 +4038,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
 
         case CLO_HELP:
             // Shouldn't happen.
-            return (false);
+            return false;
 
         case CLO_VERSION:
             _print_version();
@@ -4007,7 +4047,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
         case CLO_SAVE_VERSION:
             // Always parse.
             if (!next_is_param)
-                return (false);
+                return false;
 
             _print_save_version(next_arg);
             end(0);
@@ -4015,17 +4055,17 @@ bool parse_args(int argc, char **argv, bool rc_only)
         case CLO_EDIT_SAVE:
             // Always parse.
             if (!next_is_param)
-                return (false);
+                return false;
 
             _edit_save(argc - current - 1, argv + current + 1);
             end(0);
 
         case CLO_SEED:
             if (!next_is_param)
-                return (false);
+                return false;
 
             if (!sscanf(next_arg, "%x", &Options.seed))
-                return (false);
+                return false;
             nextUsed = true;
             break;
 
@@ -4036,7 +4076,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
 
         case CLO_SPRINT_MAP:
             if (!next_is_param)
-                return (false);
+                return false;
 
             nextUsed               = true;
             crawl_state.sprint_map = next_arg;
@@ -4057,6 +4097,13 @@ bool parse_args(int argc, char **argv, bool rc_only)
 #ifdef WIZARD
             if (!rc_only)
                 Options.wiz_mode = WIZ_NO;
+#endif
+            break;
+
+        case CLO_NO_SAVE:
+#ifdef WIZARD
+            if (!rc_only)
+                Options.no_save = true;
 #endif
             break;
 
@@ -4086,11 +4133,12 @@ bool parse_args(int argc, char **argv, bool rc_only)
 
         case CLO_EXTRA_OPT_FIRST:
             if (!next_is_param)
-                return (false);
+                return false;
 
+            // Don't print the help message if the opt was wrong
             if (!_check_extra_opt(next_arg))
-                // Don't print the help message if the opt was wrong
-                return (true);
+                return true;
+
             SysEnv.extra_opts_first.push_back(next_arg);
             nextUsed = true;
 
@@ -4102,9 +4150,10 @@ bool parse_args(int argc, char **argv, bool rc_only)
             if (!next_is_param)
                 return false;
 
+            // Don't print the help message if the opt was wrong
             if (!_check_extra_opt(next_arg))
-                // Don't print the help message if the opt was wrong
-                return (true);
+                return true;
+
             SysEnv.extra_opts_last.push_back(next_arg);
             nextUsed = true;
 
@@ -4119,7 +4168,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
             current++;
     }
 
-    return (true);
+    return true;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -4130,10 +4179,8 @@ int game_options::o_int(const char *name, int def) const
     int val = def;
     opt_map::const_iterator i = named_options.find(name);
     if (i != named_options.end())
-    {
         val = atoi(i->second.c_str());
-    }
-    return (val);
+    return val;
 }
 
 bool game_options::o_bool(const char *name, bool def) const
@@ -4142,23 +4189,23 @@ bool game_options::o_bool(const char *name, bool def) const
     opt_map::const_iterator i = named_options.find(name);
     if (i != named_options.end())
         val = _read_bool(i->second, val);
-    return (val);
+    return val;
 }
 
-std::string game_options::o_str(const char *name, const char *def) const
+string game_options::o_str(const char *name, const char *def) const
 {
-    std::string val;
+    string val;
     opt_map::const_iterator i = named_options.find(name);
     if (i != named_options.end())
         val = i->second;
     else if (def)
         val = def;
-    return (val);
+    return val;
 }
 
 int game_options::o_colour(const char *name, int def) const
 {
-    std::string val = o_str(name);
+    string val = o_str(name);
     trim_string(val);
     lowercase(val);
     int col = str_to_colour(val);
@@ -4168,9 +4215,9 @@ int game_options::o_colour(const char *name, int def) const
 ///////////////////////////////////////////////////////////////////////
 // system_environment
 
-void system_environment::add_rcdir(const std::string &dir)
+void system_environment::add_rcdir(const string &dir)
 {
-    std::string cdir = canonicalise_file_separator(dir);
+    string cdir = canonicalise_file_separator(dir);
     if (dir_exists(cdir))
         rcdirs.push_back(cdir);
     else
@@ -4185,10 +4232,10 @@ menu_sort_condition::menu_sort_condition(menu_type _mt, int _sort)
 {
 }
 
-menu_sort_condition::menu_sort_condition(const std::string &s)
+menu_sort_condition::menu_sort_condition(const string &s)
     : mtype(MT_ANY), sort(-1), cmp()
 {
-    std::string cp = s;
+    string cp = s;
     set_menu_type(cp);
     set_sort(cp);
     set_comparators(cp);
@@ -4199,11 +4246,11 @@ bool menu_sort_condition::matches(menu_type mt) const
     return (mtype == MT_ANY || mtype == mt);
 }
 
-void menu_sort_condition::set_menu_type(std::string &s)
+void menu_sort_condition::set_menu_type(string &s)
 {
     static struct
     {
-        const std::string mname;
+        const string mname;
         menu_type mtype;
     } menu_type_map[] =
       {
@@ -4216,7 +4263,7 @@ void menu_sort_condition::set_menu_type(std::string &s)
 
     for (unsigned mi = 0; mi < ARRAYSZ(menu_type_map); ++mi)
     {
-        const std::string &name = menu_type_map[mi].mname;
+        const string &name = menu_type_map[mi].mname;
         if (s.find(name) == 0)
         {
             s = s.substr(name.length());
@@ -4226,26 +4273,25 @@ void menu_sort_condition::set_menu_type(std::string &s)
     }
 }
 
-void menu_sort_condition::set_sort(std::string &s)
+void menu_sort_condition::set_sort(string &s)
 {
     // Strip off the optional sort clauses and get the primary sort condition.
-    std::string::size_type trail_pos = s.find(':');
+    string::size_type trail_pos = s.find(':');
     if (s.find("auto:") == 0)
         trail_pos = s.find(':', trail_pos + 1);
 
-    std::string sort_cond =
-        trail_pos == std::string::npos? s : s.substr(0, trail_pos);
+    string sort_cond = trail_pos == string::npos? s : s.substr(0, trail_pos);
 
     trim_string(sort_cond);
     sort = _read_bool_or_number(sort_cond, sort, "auto:");
 
-    if (trail_pos != std::string::npos)
+    if (trail_pos != string::npos)
         s = s.substr(trail_pos + 1);
     else
         s.clear();
 }
 
-void menu_sort_condition::set_comparators(std::string &s)
+void menu_sort_condition::set_comparators(string &s)
 {
     init_item_sort_comparators(
         cmp,

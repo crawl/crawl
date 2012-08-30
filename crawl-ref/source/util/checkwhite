@@ -1,13 +1,24 @@
 #!/usr/bin/perl -w
 use Encode;
 use Text::Tabs;
+use Getopt::Std;
 
-open FLIST, "git ls-files|" or die "Can't run git ls-files";
+getopt('t'); # this removes -t from @ARGV;
+$tabstop = $opt_t if ($opt_t);
 
-while(<FLIST>)
+my @files = @ARGV;
+unless (@files)
+{
+    open FLIST, "git ls-files|" or die "Can't run git ls-files";
+    @files = <FLIST>;
+    close FLIST;
+}
+
+for (@files)
 {
     chomp;
-    next unless -f $_;
+    next if -d $_;
+    -f $_ or (print(STDERR "Can't read $_\n"), next);
     next if /\.(png|gif|ttf|ico|icns|fig|tex|eps|pdf)$/i;
     next if /\.(sln|vim|pbxproj|vsprops|plist)$/i;
     next if /vcproj/;
@@ -43,4 +54,3 @@ while(<FLIST>)
         close F;
     }
 }
-close FLIST;

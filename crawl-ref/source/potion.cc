@@ -15,22 +15,17 @@
 #include "areas.h"
 #include "artefact.h"
 #include "beam.h"
-#include "effects.h"
 #include "env.h"
 #include "food.h"
 #include "godconduct.h"
-#include "godwrath.h"
 #include "hints.h"
 #include "item_use.h"
-#include "itemprop.h"
 #include "message.h"
 #include "misc.h"
 #include "mutation.h"
 #include "player.h"
-#include "player-equip.h"
 #include "player-stats.h"
 #include "skill_menu.h"
-#include "skills.h"
 #include "spl-miscast.h"
 #include "terrain.h"
 #include "transform.h"
@@ -55,7 +50,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
 {
     bool effect = true;  // current behaviour is all potions id on quaffing
 
-    pow = std::min(pow, 150);
+    pow = min(pow, 150);
 
     int factor = (you.species == SP_VAMPIRE
                   && you.hunger_state < HS_SATIATED
@@ -214,17 +209,17 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
     }
 
     case POT_GAIN_STRENGTH:
-        if (mutate(MUT_STRONG, true, false, false, true))
+        if (mutate(MUT_STRONG, "potion of gain strength", true, false, false, true))
             learned_something_new(HINT_YOU_MUTATED);
         break;
 
     case POT_GAIN_DEXTERITY:
-        if (mutate(MUT_AGILE, true, false, false, true))
+        if (mutate(MUT_AGILE, "potion of gain dexterity", true, false, false, true))
             learned_something_new(HINT_YOU_MUTATED);
         break;
 
     case POT_GAIN_INTELLIGENCE:
-        if (mutate(MUT_CLEVER, true, false, false, true))
+        if (mutate(MUT_CLEVER, "potion of gain intelligence", true, false, false, true))
             learned_something_new(HINT_YOU_MUTATED);
         break;
 
@@ -241,7 +236,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
 
     case POT_POISON:
     case POT_STRONG_POISON:
-        if (player_res_poison())
+        if (player_res_poison() > 0)
         {
             mprf("You feel %s nauseous.",
                  (pot_eff == POT_POISON) ? "slightly" : "quite");
@@ -253,7 +248,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
                  (pot_eff == POT_POISON) ? "very" : "extremely");
 
             int amount;
-            std::string msg;
+            string msg;
             if (pot_eff == POT_POISON)
             {
                 amount = 1 + random2avg(5, 2);
@@ -295,7 +290,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
 
             // And also cancel corona (for whatever good that will do).
             you.duration[DUR_CORONA] = 0;
-            return (true);
+            return true;
         }
 
         if (get_contamination_level() > 1)
@@ -353,12 +348,12 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
 
     // Don't generate randomly - should be rare and interesting.
     case POT_DECAY:
-        if (you.rot(&you, (10 + random2(10)) / factor))
+        if (you.rot(&you, 0, (3 + random2(3)) / factor))
             xom_is_stimulated(50 / xom_factor);
         break;
 
     case POT_FIZZING:
-    case POT_WATER:
+    case NUM_POTIONS:
         if (you.species == SP_VAMPIRE)
             mpr("Blech - this tastes like water.");
         else
@@ -382,7 +377,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
         break;
 
     case POT_MAGIC:
-        inc_mp((10 + random2avg(28, 3)));
+        inc_mp(10 + random2avg(28, 3));
         mpr("Magic courses through your body.");
         break;
 
@@ -419,13 +414,13 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
         mpr("It has a very clean taste.");
         for (int i = 0; i < 7; i++)
             if (random2(9) >= i)
-                delete_mutation(RANDOM_MUTATION, false);
+                delete_mutation(RANDOM_MUTATION, "potion of cure mutation", false);
         break;
 
     case POT_MUTATION:
         mpr("You feel extremely strange.");
         for (int i = 0; i < 3; i++)
-            mutate(RANDOM_MUTATION, false);
+            mutate(RANDOM_MUTATION, "potion of mutation", false);
 
         learned_something_new(HINT_YOU_MUTATED);
         did_god_conduct(DID_DELIBERATE_MUTATING, 10, was_known);
@@ -433,19 +428,17 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
 
     case POT_RESISTANCE:
         mpr("You feel protected.", MSGCH_DURATION);
-        you.increase_duration(DUR_RESIST_FIRE,   (random2(pow) + 35) / factor);
-        you.increase_duration(DUR_RESIST_COLD,   (random2(pow) + 35) / factor);
-        you.increase_duration(DUR_RESIST_POISON, (random2(pow) + 35) / factor);
-        you.increase_duration(DUR_INSULATION,    (random2(pow) + 35) / factor);
+        you.increase_duration(DUR_RESISTANCE, (random2(pow) + 35) / factor);
 
         // Just one point of contamination. These potions are really rare,
         // and contamination is nastier.
         contaminate_player(1, was_known);
         break;
 
-    case NUM_POTIONS:
-        mpr("You feel bugginess flow through your body.");
+#if TAG_MAJOR_VERSION == 34
+    case POT_WATER:
         break;
+#endif
     }
 
     return (!was_known && effect);

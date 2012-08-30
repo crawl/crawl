@@ -61,7 +61,7 @@
 --     machine is reset. It will be called with a reference to the table,
 --     the fog machine, the Triggerer which was the cause, the marker,
 --     and the vevent which was the cause.
--- excl_radius: A value determining how large an exclusion radius will be
+-- excl_rad: A value determining how large an exclusion radius will be
 --     placed around this cloud. A value of -1 means that no exclusion will be
 --     placed, while a value of 0 means that only the cloud will be excluded.
 --     Any other value is used as the size of the exclusion.
@@ -266,11 +266,7 @@ function FogMachine:read(marker, th)
   self.colour              = file.unmarshall_string(th)
   self.name                = file.unmarshall_string(th)
   self.tile                = file.unmarshall_string(th)
-  if file.minor_version(th) < tags.TAG_MINOR_TEMPORARY_CLOUDS then
-    self.excl_rad = -1
-  else
-    self.excl_rad            = file.unmarshall_number(th)
-  end
+  self.excl_rad            = file.unmarshall_number(th)
 
   setmetatable(self, FogMachine)
 

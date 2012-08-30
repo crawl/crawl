@@ -11,6 +11,7 @@ s/\r\n/\n/sg;
 s|:http: ``(.+)``|$1|g;
 s|:telnet: ``(.+)``|telnet:  $1|g;
 s|:ssh: ``(.+)``|ssh:     $1|g;
+s|:tiles: ``(.+)``|tiles:   $1|g;
 
 # Notes.
 s/\.\. note::/Note: /g;

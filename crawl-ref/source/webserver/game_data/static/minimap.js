@@ -55,6 +55,8 @@ function ($, map_knowledge, dungeon_renderer, view_data,
 
         var block = $("#minimap_block");
         var canvas = $("#minimap")[0];
+        if (!canvas) return;
+
         block.width(width);
         canvas.width = width;
         cell_w = cell_h = Math.floor(width / gxm);
@@ -82,7 +84,9 @@ function ($, map_knowledge, dungeon_renderer, view_data,
     {
         var cell = map_cell.t;
 
-        if (cell && (cell.fg & enums.TILE_FLAG_MASK) == player.PLAYER)
+        if (cell) cell.fg = enums.prepare_fg_flags(cell.fg || 0);
+
+        if (cell && cell.fg.value == player.PLAYER)
             return enums.MF_PLAYER;
         else
             return map_cell.mf || enums.MF_UNSEEN;

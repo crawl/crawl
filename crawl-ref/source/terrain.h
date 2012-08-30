@@ -28,20 +28,16 @@ private:
 actor* actor_at(const coord_def& c);
 
 int count_neighbours_with_func(const coord_def& c, bool (*checker)(dungeon_feature_type));
-bool feat_is_test(dungeon_feature_type feat, bool (*checker)(dungeon_feature_type));
-bool feat_is_test(const coord_def& c, bool (*checker)(dungeon_feature_type));
 
 bool fall_into_a_pool(const coord_def& entry, bool allow_shift,
                        dungeon_feature_type terrain);
 
-bool cell_is_solid(int x, int y);
 bool cell_is_solid(const coord_def &c);
 
 bool feat_is_malign_gateway_suitable(dungeon_feature_type feat);
 bool feat_is_wall(dungeon_feature_type feat);
 bool feat_is_opaque(dungeon_feature_type feat);
 bool feat_is_solid(dungeon_feature_type feat);
-bool feat_is_floor(dungeon_feature_type feat);
 bool feat_has_solid_floor(dungeon_feature_type feat);
 bool feat_is_door(dungeon_feature_type feat);
 bool feat_is_closed_door(dungeon_feature_type feat);
@@ -54,7 +50,6 @@ bool feat_is_staircase(dungeon_feature_type feat);
 bool feat_is_escape_hatch(dungeon_feature_type feat);
 bool feat_is_trap(dungeon_feature_type feat, bool undiscovered_too = false);
 command_type feat_stair_direction(dungeon_feature_type feat);
-bool feat_sealable_portal(dungeon_feature_type feat);
 bool feat_is_portal(dungeon_feature_type feat);
 bool feat_is_tree(dungeon_feature_type feat);
 
@@ -63,9 +58,9 @@ bool feat_is_travelable_stair(dungeon_feature_type feat);
 bool feat_is_escape_hatch(dungeon_feature_type feat);
 bool feat_is_gate(dungeon_feature_type feat);
 
-std::string feat_preposition(dungeon_feature_type feat, bool active = false,
-                             const actor* who = NULL);
-std::string stair_climb_verb(dungeon_feature_type feat);
+string feat_preposition(dungeon_feature_type feat, bool active = false,
+                        const actor* who = NULL);
+string stair_climb_verb(dungeon_feature_type feat);
 
 bool feat_is_water(dungeon_feature_type feat);
 bool feat_is_watery(dungeon_feature_type feat);
@@ -77,11 +72,13 @@ bool feat_is_altar(dungeon_feature_type feat);
 bool feat_is_player_altar(dungeon_feature_type grid);
 
 bool feat_is_branch_stairs(dungeon_feature_type feat);
+bool feat_is_branchlike(dungeon_feature_type feat);
 bool feat_is_bidirectional_portal(dungeon_feature_type feat);
 bool feat_is_fountain(dungeon_feature_type feat);
+bool feat_is_reachable_past(dungeon_feature_type feat);
 void find_connected_identical(const coord_def& d, dungeon_feature_type ft,
-                              std::set<coord_def>& out);
-std::set<coord_def> connected_doors(const coord_def& d);
+                              set<coord_def>& out);
+set<coord_def> connected_doors(const coord_def& d);
 coord_def get_random_stair();
 
 bool slime_wall_neighbour(const coord_def& c);
@@ -126,11 +123,11 @@ bool is_valid_mimic_feat(dungeon_feature_type feat);
 bool feat_cannot_be_mimic(dungeon_feature_type feat);
 
 void                 init_feat_desc_cache();
-dungeon_feature_type feat_by_desc(std::string desc);
+dungeon_feature_type feat_by_desc(string desc);
 const char* feat_type_name(dungeon_feature_type feat);
 
-dungeon_feature_type dungeon_feature_by_name(const std::string &name);
-std::vector<std::string> dungeon_feature_matches(const std::string &name);
+dungeon_feature_type dungeon_feature_by_name(const string &name);
+vector<string> dungeon_feature_matches(const string &name);
 const char *dungeon_feature_name(dungeon_feature_type rfeat);
 void nuke_wall(const coord_def& p);
 bool cell_is_clingable(const coord_def pos);

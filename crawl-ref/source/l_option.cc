@@ -22,13 +22,13 @@ static int option_hboolean(lua_State *ls, const char *name, void *data,
     if (get)
     {
         lua_pushboolean(ls, *static_cast<bool*>(data));
-        return (1);
+        return 1;
     }
     else
     {
         if (lua_isboolean(ls, 3))
             *static_cast<bool*>(data) = lua_toboolean(ls, 3);
-        return (0);
+        return 0;
     }
 }
 
@@ -36,7 +36,7 @@ static int option_autopick(lua_State *ls, const char *name, void *data,
                            bool get)
 {
     lua_pushboolean(ls, Options.autopickup_on>0);
-    return (1);
+    return 1;
 }
 
 static option_handler handlers[] =
@@ -68,53 +68,52 @@ static const option_handler *get_handler(const char *optname)
 {
     if (optname)
     {
-        for (int i = 0, count = sizeof(handlers) / sizeof(*handlers);
-             i < count; ++i)
+        for (int i = 0, count = ARRAYSZ(handlers); i < count; ++i)
         {
             if (!strcmp(handlers[i].option, optname))
                 return &handlers[i];
         }
     }
-    return (NULL);
+    return NULL;
 }
 
 static int option_get(lua_State *ls)
 {
     const char *opt = luaL_checkstring(ls, 2);
     if (!opt)
-        return (0);
+        return 0;
 
     // Is this a Lua named option?
     game_options::opt_map::iterator i = Options.named_options.find(opt);
     if (i != Options.named_options.end())
     {
-        const std::string &ov = i->second;
+        const string &ov = i->second;
         lua_pushstring(ls, ov.c_str());
-        return (1);
+        return 1;
     }
 
     const option_handler *oh = get_handler(opt);
     if (oh)
 #ifdef DEBUG_GLOBALS
-        return (oh->handler(ls, opt, (char*)real_Options+(intptr_t)oh->data, true));
+        return oh->handler(ls, opt, (char*)real_Options+(intptr_t)oh->data, true);
 #else
-        return (oh->handler(ls, opt, oh->data, true));
+        return oh->handler(ls, opt, oh->data, true);
 #endif
 
-    return (0);
+    return 0;
 }
 
 static int option_set(lua_State *ls)
 {
     const char *opt = luaL_checkstring(ls, 2);
     if (!opt)
-        return (0);
+        return 0;
 
     const option_handler *oh = get_handler(opt);
     if (oh)
         oh->handler(ls, opt, oh->data, false);
 
-    return (0);
+    return 0;
 }
 
 #define OPT_METATABLE "clua_metatable_optaccess"

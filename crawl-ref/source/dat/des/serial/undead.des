@@ -1,0 +1,120 @@
+# "Undead" by dk
+#
+# Serial vault with an undead/graveyard theme
+
+{{
+function init_undead(e)
+  e.tags('serial_undead')
+  e.tags('extra')
+  e.tags('allow_dup')
+  e.weight('2')
+  e.ftile('- = floor_pebble_brown')
+  e.ftile('_ = floor_pebble_darkgray')
+  e.colour('- = brown')
+  e.colour('_ = darkgrey')
+
+  e.subst('S = .....S')
+  e.lua_marker('S', fog_machine { pow_max = 10, delay_min = 10, delay_max = 10,
+                                  size = 5, start_clouds = 1,
+                                  cloud_type = "black smoke" })
+  e.subst('S = .')
+
+  if you.absdepth() <= 3 then
+    e.kmons('.-_ = small zombie / small skeleton / w:300 nothing')
+  elseif you.absdepth() <= 6 then
+    e.kmons('.-_ = w:20 small zombie / large zombie / small skeleton / w:300 nothing')
+  elseif you.absdepth() <= 12 then
+    e.kmons('.-_ = w:5 small zombie / w:5 large zombie / w:4 mummy / wight / \
+            necrophage / w:300 nothing')
+  else
+    e.kmons('.-_ = w:2 guardian mummy / w:8 mummy / large zombie / small zombie / \
+            skeletal warrior / rotting hulk / w:1 ghoul / w:300 nothing')
+  end
+  e.kmons('t = w:2 col:darkgrey plant name:withered name_adjective \
+            tile:mons_withered_plant / w:1 col:lightgrey plant name:withered  \
+            name_adjective tile:mons_withered_plant')
+
+  e.tile('G = dngn_gravestone')
+  e.set_feature_name("granite_statue", "a gravestone")
+end
+}}
+
+NAME:   serial_undead
+DEPTH:  D:1-18
+TAGS:   extra luniq_serial
+CHANCE: 1%
+{{
+  local c = 4 + crawl.random2(3) * crawl.random2(4)
+  hook("post_place", function()
+    dgn.place_maps{tag="serial_undead", count=c}
+  end)
+}}
+
+###############################################################################
+
+NAME:   serial_undead_a
+SUBST:  . = ....-_
+: init_undead(_G)
+MAP
+.....
+.....
+..S..
+.....
+.....
+ENDMAP
+
+NAME:   serial_undead_b
+SUBST:  . = ...t
+: init_undead(_G)
+MAP
+....
+....
+.S..
+....
+ENDMAP
+
+NAME:   serial_undead_c
+SUBST:  . = -_.......tGG
+: init_undead(_G)
+MAP
+....
+....
+....
+....
+ENDMAP
+
+NAME:   serial_undead_d
+SUBST:  _ = -_
+SUBST:  . = ......-_
+FTILE:  G = FLOOR_PEBBLE_DARKGRAY
+: init_undead(_G)
+MAP
+.....
+.___.
+._G_.
+.___.
+.....
+ENDMAP
+
+NAME:   serial_undead_e
+SUBST:  . = ........--__ttG
+: init_undead(_G)
+MAP
+....
+..S.
+....
+....
+ENDMAP
+
+NAME:   serial_undead_f
+SUBST:  . = .......--__tt
+SUBST:  w = .wwW
+: init_undead(_G)
+MAP
+..S...
+.wwww.
+wWWWww
+.wWWW.
+.wwww.
+....S.
+ENDMAP

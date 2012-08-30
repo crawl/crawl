@@ -1,0 +1,166 @@
+######################################################
+# Miscellaneous
+# -------------
+# miscname.txt: lookup miscellaneous names
+#
+# This file contains a list of names for miscellaneous things.
+######################################################
+%%%%
+# "dust glows XXX", "eyes glow XXX", "hands glow XXX", "<actor> glows XXX".
+# If a language needs these keys split, please say so.
+#
+# Also used by Tome of Destruction below.
+#glowing_colour_name
+%%%%
+# Tome of Destruction: "The book opens to a page covered in XXX."
+#writing_name
+%%%%
+# random uselessness: "You smell XXX."
+#smell_name
+%%%%
+# random uselessness: "You hear XXX."
+#sound_name
+%%%%
+# Used both by Summon Horrible Things and Malign Gateway.
+#SHT_int_loss
+%%%%
+welcome_spam
+
+Czy uda Ci się wytrwać tam gdzie inni przepadli?  Czy zdobędziesz Kulę Zot?
+
+Głeboko w trzewiach tych lochów można znaleźć potężny artefakt, Kulę Zot.
+
+Losy świata zależą od Kuli Zot!  Idź i zdobądź ją!
+
+Podobno legendarna Kula Zot znajduje się w tych lochach — lecz nikt jeszcze jej nie zdobył.
+%%%%
+welcome_spam Zot Defence
+
+Hordy już idą, i chcą zabrać naszą Kulę!
+
+Stój dzielnie i broń Kuli!
+
+Tylko Ty stoisz jako obrońca Kuli Zot!
+
+Obroń Kulę Zot, nie zawiedź!
+%%%%
+hell_effect
+
+{{
+if you.can_smell() then
+    return "Czujesz woń siarki."
+else
+    return "Opary siarki unoszą się wokół."
+end
+}}
+
+Czujesz się zagubiony, i bardzo, bardzo daleko od domu...
+
+Trzęsiesz się ze strachu.
+
+WARN:Masz straszliwe przeczucie...
+
+WARN:Coś przerażającego się staje...
+
+WARN:Wydaje ci się że starożytne zło na ciebie patrzy.
+
+WARN:Nagle czujesz się sam jeden, mały, nieznaczny i bezbronny.
+
+WARN:Wyczuwasz jakąś wrogą obecność.
+
+TALK:„Nigdy nie opuścisz tego miejsca.”
+
+TALK:„Giń, śmiertelniku!”
+
+TALK:„My nie wybaczamy!”
+
+TALK:„Goście nie są tu mile widziani!”
+
+TALK:„Nie masz prawa tu być!”
+
+TALK:„Wynoś się, albo giń!”
+
+TALK:„Tu cię mamy!”
+
+SOUND:Rozlega się skręcający trzewia krzyk!
+
+SOUND:Słyszysz słowa mówione w jakimś dziwnym i strasznym języku...
+
+SOUND:Rozlega się diaboliczny śmiech!
+%%%%
+eating_cheese
+
+# No dot at the end, so we can exclaim after bryndza.
+Mniam, @_cheese_kind_@
+%%%%
+_cheese_kind_
+
+gołda.
+
+edamski.
+
+camembert.
+
+mozzarella
+
+oscypek.
+
+bryndza!
+
+ser z jaka.
+
+kozi ser.
+%%%%
+eating_pizza
+
+@_carni_mmm_@ hawajska.
+
+@_carni_mmm_@ familijna.
+
+# Papryczki nie kiełbasa — nie jesteśmy, panocku, w niedouczonej Chameryce.
+@_herbi_mmm_@ pepperoni.
+
+Z sardelą, paskudztwo!
+
+# Very rare in RL, fortunately.
+w:2
+{{
+if you.mutation("carnivorous") == 3 then
+    return "Kaszana."
+else
+    return "Błee... tfu... z kaszanką."
+end
+}}
+
+@_carni_mmm_@ kurczak z kukurydzą.
+
+Mmm... To słynna Pandemonium Pizza!
+
+Mmm... serowa.
+
+@_herbi_mmm_@ wegetariańska.
+
+@_herbi_mmm_@ z papryką.
+
+@_herbi_mmm_@ z grzybami.
+%%%%
+_carni_mmm_
+
+{{
+if you.mutation("herbivorous") > 0 then
+    return "Błee..."
+else
+    return "Mniam,"
+end
+}}
+%%%%
+_herbi_mmm_
+
+{{
+if you.mutation("carnivorous") > 0 then
+    return "Błee..."
+else
+    return "Mniam,"
+end
+}}
+%%%%

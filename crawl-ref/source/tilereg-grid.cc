@@ -109,23 +109,23 @@ bool GridRegion::place_cursor(MouseEvent &event, unsigned int &item_idx)
     if (!mouse_pos(event.px, event.py, cx, cy))
     {
         place_cursor(NO_CURSOR);
-        return (false);
+        return false;
     }
 
     const coord_def cursor(cx, cy);
     place_cursor(cursor);
 
     if (mouse_control::current_mode() != MOUSE_MODE_COMMAND)
-        return (false);
+        return false;
 
     if (event.event != MouseEvent::PRESS)
-        return (false);
+        return false;
 
     item_idx = cursor_index();
     if (item_idx >= m_items.size() || m_items[item_idx].empty())
-        return (false);
+        return false;
 
-    return (true);
+    return true;
 }
 
 void GridRegion::add_quad_char(char c, int x, int y,

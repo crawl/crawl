@@ -23,21 +23,50 @@
 club WPN_CLUB
 mace1 WPN_MACE
 mace2
+%rim 0
+orcish_mace1 WPN_MACE_ORC
+orcish_mace2
+dwarven_mace1 WPN_MACE_DWARF
+dwarven_mace2
+%rim 1
 mace_large1 WPN_GREAT_MACE
 mace_large2
 flail1 WPN_FLAIL
 flail2
+%rim 0
+orcish_flail1 WPN_FLAIL_ORC
+orcish_flail2
+dwarven_flail1 WPN_FLAIL_DWARF
+dwarven_flail2
+%rim 1
 spiked_flail1 WPN_SPIKED_FLAIL
 spiked_flail2
 great_flail1 WPN_GREAT_FLAIL
 great_flail2
+%rim 0
 morningstar1 WPN_MORNINGSTAR
 morningstar2
+morningstar3
+dwarven_morningstar1 WPN_MORNINGSTAR_DWARF
+dwarven_morningstar2
+orcish_morningstar1 WPN_MORNINGSTAR_ORC
+orcish_morningstar2
 eveningstar1 WPN_EVENINGSTAR
 eveningstar2
+eveningstar3
+dwarven_eveningstar1 WPN_EVENINGSTAR_DWARF
+dwarven_eveningstar2
+orcish_eveningstar1 WPN_EVENINGSTAR_ORC
+orcish_eveningstar2
+%rim 1
 hammer1 WPN_HAMMER
 hammer2
-ankus WPN_ANKUS
+%rim 0
+orcish_hammer1 WPN_HAMMER_ORC
+orcish_hammer2
+dwarven_hammer1 WPN_HAMMER_DWARF
+dwarven_hammer2
+%rim 1
 bullwhip WPN_WHIP
 bullwhip2
 %rim 0
@@ -49,34 +78,55 @@ giant_club WPN_GIANT_CLUB
 giant_spiked_club WPN_GIANT_SPIKED_CLUB
 
 ##Edged
-knife WPN_KNIFE
-
 dagger WPN_DAGGER
 dagger2
 dagger3
 orcish_dagger WPN_DAGGER_ORC
 orcish_dagger2
-elven_dagger WPN_DAGGER_ELF
+%rim 0
+dwarven_dagger1 WPN_DAGGER_DWARF
+dwarven_dagger2
+elven_dagger1 WPN_DAGGER_ELF
 elven_dagger2
+%rim 1
 
 short_sword1 WPN_SHORT_SWORD
 short_sword2
+%rim 0
+dwarven_short_sword1 WPN_SHORT_SWORD_DWARF
+dwarven_short_sword2
 orcish_short_sword WPN_SHORT_SWORD_ORC
 orcish_short_sword2
-elven_short_sword WPN_SHORT_SWORD_ELF
+elven_short_sword1 WPN_SHORT_SWORD_ELF
+elven_short_sword2
+%rim 1
 
 long_sword1 WPN_LONG_SWORD
 %rim 0
 long_sword2
+orcish_long_sword1 WPN_LONG_SWORD_ORC
+orcish_long_sword2
+elven_long_sword1 WPN_LONG_SWORD_ELF
+elven_long_sword2
 %rim 1
-orcish_long_sword WPN_LONG_SWORD_ORC
 
 greatsword1 WPN_GREAT_SWORD
 greatsword2
-orcish_great_sword WPN_GREAT_SWORD_ORC
+%rim 0
+orcish_great_sword1 WPN_GREAT_SWORD_ORC
+orcish_great_sword2
+%rim 1
 
 falchion1 WPN_FALCHION
 falchion2
+%rim 0
+orcish_falchion1 WPN_FALCHION_ORC
+orcish_falchion2
+dwarven_falchion1 WPN_FALCHION_DWARF
+dwarven_falchion2
+elven_falchion1 WPN_FALCHION_ELF
+elven_falchion2
+%rim 1
 scimitar1 WPN_SCIMITAR
 scimitar2
 
@@ -95,39 +145,86 @@ blessed_blade WPN_BLESSED_BLADE
 ##Axe
 hand_axe1 WPN_HAND_AXE
 hand_axe2
+%rim 0
+dwarven_hand_axe1 WPN_HAND_AXE_DWARF
+dwarven_hand_axe2
+orcish_hand_axe1 WPN_HAND_AXE_ORC
+orcish_hand_axe2
 war_axe1 WPN_WAR_AXE
 war_axe2
+war_axe3
+dwarven_war_axe1 WPN_WAR_AXE_DWARF
+dwarven_war_axe2
+orcish_war_axe1 WPN_WAR_AXE_ORC
+orcish_war_axe2
 broad_axe1 WPN_BROAD_AXE
 broad_axe2
 broad_axe3
+dwarven_broad_axe1 WPN_BROAD_AXE_DWARF
+dwarven_broad_axe2
+orcish_broad_axe1 WPN_BROAD_AXE_ORC
+orcish_broad_axe2
 battle_axe1 WPN_BATTLEAXE
 battle_axe2
 battle_axe3
+dwarven_battle_axe1 WPN_BATTLEAXE_DWARF
+dwarven_battle_axe2
+orcish_battle_axe1 WPN_BATTLEAXE_ORC
+orcish_battle_axe2
 executioner_axe1 WPN_EXECUTIONERS_AXE
 executioner_axe2
+executioner_axe3
+dwarven_executioner_axe1 WPN_EXECUTIONERS_AXE_DWARF
+dwarven_executioner_axe2
+orcish_executioner_axe1 WPN_EXECUTIONERS_AXE_ORC
+orcish_executioner_axe2
+%rim 1
 
 ##Polearm
-spear1_elven WPN_SPEAR
+%rim 0
+spear1 WPN_SPEAR
+%rim 1
 spear2
+%rim 0
+orcish_spear1 WPN_SPEAR_ORC
+orcish_spear2
+elven_spear1 WPN_SPEAR_ELF
+elven_spear2
 trident1 WPN_TRIDENT
 trident2
+trident3
+orcish_trident1 WPN_TRIDENT_ORC
+orcish_trident2
 demon_trident WPN_DEMON_TRIDENT
 halberd1 WPN_HALBERD
 halberd2
+halberd3
+orcish_halberd1 WPN_HALBERD_ORC
+orcish_halberd2
+%rim 1
 scythe1 WPN_SCYTHE
 scythe2
+%rim 0
 glaive1 WPN_GLAIVE
 glaive2
-orcish_glaive WPN_GLAIVE_ORC
+glaive3
+orcish_glaive1 WPN_GLAIVE_ORC
+orcish_glaive2
+%rim 1
 bardiche1 WPN_BARDICHE
 bardiche2
 
 ##Staff
+%rim 0
 staff WPN_STAFF
+%rim 1
 quarterstaff WPN_QUARTERSTAFF
 quarterstaff2
+%rim 0
 lajatang1 WPN_LAJATANG
 lajatang2
+lajatang3
+%rim 1
 
 
 ##Ranged
@@ -136,11 +233,27 @@ blowgun1 WPN_BLOWGUN
 blowgun2
 sling1 WPN_SLING
 sling2
+
+%rim 0
 bow1 WPN_BOW
 bow2
+bow3
+orcish_bow1 WPN_BOW_ORC
+orcish_bow2
+elvish_bow1 WPN_BOW_ELF
+elvish_bow2
 crossbow1 WPN_CROSSBOW
 crossbow2
-longbow WPN_LONGBOW
+crossbow3
+orcish_crossbow1 WPN_CROSSBOW_ORC
+orcish_crossbow2
+dwarven_crossbow1 WPN_CROSSBOW_DWARF
+dwarven_crossbow2
+longbow1 WPN_LONGBOW
+longbow2
+longbow3
+elvish_longbow1 WPN_LONGBOW_ELF
+elvish_longbow2
 
 %sdir item/weapon/brands
 %rim 0
@@ -333,8 +446,6 @@ orcish_chain_mail2
 
 splint_mail1 ARM_SPLINT_MAIL
 splint_mail2
-banded_mail1
-banded_mail2
 
 plate1 ARM_PLATE_ARMOUR
 plate2
@@ -344,7 +455,6 @@ orcish_plate2
 crystal_plate ARM_CRYSTAL_PLATE_ARMOUR
 crystal_plate2
 crystal_plate3
-crystal_plate4
 
 animal_skin1 ARM_ANIMAL_SKIN
 animal_skin2
@@ -388,6 +498,15 @@ centaur_barding_red
 buckler1 ARM_BUCKLER
 buckler2
 buckler3
+
+dwarven_buckler1 ARM_BUCKLER_DWARVEN
+dwarven_buckler2
+
+elven_buckler1 ARM_BUCKLER_ELVEN
+elven_buckler2
+
+orcish_buckler1 ARM_BUCKLER_ORCISH
+orcish_buckler2
 %rim 1
 
 shield1_elven ARM_SHIELD
@@ -418,7 +537,8 @@ helmet_winged THELM_HELM_WINGED
 glove1 ARM_GLOVES
 glove2
 glove3
-glove4_gauntlets
+glove4
+glove5
 
 ###### BOOTS
 boots1_brown ARM_BOOTS
@@ -468,7 +588,6 @@ gem_lead
 gem_plastic
 
 %sdir item/wand
-%back i-label
 i-flame WAND_FLAME WAND_ID_FIRST
 i-frost WAND_FROST
 i-slowing WAND_SLOWING
@@ -490,7 +609,6 @@ i-draining WAND_DRAINING
 i-random_effects WAND_RANDOM_EFFECTS
 i-disintegration WAND_DISINTEGRATION WAND_ID_LAST
 
-%back none
 #################OBJ_FOOD
 %sdir item/food
 meat_ration FOOD_MEAT_RATION UNSEEN_FOOD
@@ -543,35 +661,52 @@ chunk_brands/i-rotten FOOD_INEDIBLE
 %sdir item/scroll
 scroll SCROLL UNSEEN_SCROLL
 
-%back scroll
+#### These must be in the same order as the enum in item-prop.h!
 %sdir item/scroll
+%back scroll-yellow
 i-identify SCR_IDENTIFY SCR_ID_FIRST
+%back scroll-purple
 i-teleportation SCR_TELEPORTATION
+%back scroll-blue
 i-fear SCR_FEAR
+%back scroll-grey
 i-noise SCR_NOISE
+%back scroll-yellow
 i-remove_curse SCR_REMOVE_CURSE
-i-detect_curse SCR_DETECT_CURSE
-i-summoning SCR_SUMMONING
+%back scroll-brown
+i-unholy_creation SCR_UNHOLY_CREATION
+%back scroll-green
 i-enchant-weapon1 SCR_ENCHANT_WEAPON_I
 i-enchant_armour SCR_ENCHANT_ARMOUR
+%back scroll-red
 i-torment SCR_TORMENT
+%back scroll-grey
 i-random_uselessness SCR_RANDOM_USELESSNESS
+%back scroll-grey
 i-curse_weapon SCR_CURSE_WEAPON
 i-curse_armour SCR_CURSE_ARMOUR
 i-immolation SCR_IMMOLATION
+%back scroll-purple
 i-blinking SCR_BLINKING
-item/scroll/blank_paper SCR_PAPER
+%back scroll-yellow
 i-magic_mapping SCR_MAGIC_MAPPING
+%back scroll-blue
 i-fog SCR_FOG
+%back scroll-cyan
 i-acquirement SCR_ACQUIREMENT
+%back scroll-green
 i-enchant-weapon2 SCR_ENCHANT_WEAPON_II
 i-vorpalize-weapon SCR_VORPALISE_WEAPON
 i-recharging SCR_RECHARGING
 i-enchant-weapon3 SCR_ENCHANT_WEAPON_III
+%back scroll-red
 i-holy_word SCR_HOLY_WORD
 i-vulnerability SCR_VULNERABILITY
+%back scroll-red
 i-silence SCR_SILENCE
+%back scroll-yellow
 i-amnesia SCR_AMNESIA
+%back scroll-grey
 i-curse-jewellery SCR_CURSE_JEWELLERY SCR_ID_LAST
 %back none
 
@@ -688,7 +823,7 @@ i-stasis AMU_STASIS AMU_ID_LAST
 
 ####################OBJ_POTIONS
 %sdir item/potion
-clear POTION_OFFSET UNSEEN_POTION
+unknown POTION_OFFSET UNSEEN_POTION
 brilliant_blue
 black
 silver
@@ -723,8 +858,9 @@ i-confusion POT_CONFUSION
 i-invisibility POT_INVISIBILITY
 i-porridge POT_PORRIDGE
 i-degeneration POT_DEGENERATION
+# please remove when TAG_MAJOR_VERSION is bumped
+i-fizzing POT_REMOVE_ME
 i-decay POT_DECAY
-i-water POT_WATER
 i-experience POT_EXPERIENCE
 i-magic POT_MAGIC
 i-restore-abilities POT_RESTORE_ABILITIES
@@ -735,7 +871,7 @@ i-mutation POT_MUTATION
 i-resistance POT_RESISTANCE
 i-blood POT_BLOOD
 i-coagulated-blood POT_BLOOD_COAGULATED
-i-water POT_FIZZING POT_ID_LAST
+i-fizzing POT_FIZZING POT_ID_LAST
 %back none
 %rim 1
 
@@ -819,7 +955,7 @@ i-staff_channeling STAFF_CHANNELING STAFF_ID_LAST
 %rim 1
 
 %sdir item/rod
-rod00 ROD_OFFSET
+rod00 ROD
 rod01
 rod02
 rod03
@@ -830,16 +966,18 @@ rod07
 rod08
 rod09
 
-i-rod_smiting ROD_SMITING ROD_ID_FIRST
+%rim 0
+i-rod_lightning ROD_LIGHTNING ROD_ID_FIRST
 i-rod_summoning ROD_SUMMONING
 i-rod_destruction_fire ROD_DESTRUCTION_FIRE
 i-rod_destruction_ice ROD_DESTRUCTION_ICE
-i-rod_destruction_lightning ROD_DESTRUCTION_LIGHTNING
+i-rod_iron ROD_DESTRUCTION_IRON
 i-rod_destruction_inaccuracy ROD_DESTRUCTION_INACCURACY
 i-rod_warding ROD_WARDING
 i-rod_demonology ROD_DEMONOLOGY
 i-rod_striking ROD_STRIKING
 i-rod_venom ROD_VENOM ROD_ID_LAST
+%rim 1
 
 #OBJ_ORBS
 %sdir item/misc
@@ -970,34 +1108,51 @@ misc_deck_legendary MISC_DECK_LEGENDARY
 %compose misc_deck_legendary
 %compose i-deck_defense
 %finish
-misc_rune MISC_RUNE_OF_ZOT
-runes/rune_tartarus MISC_RUNE_TARTARUS
-runes/rune_cocytus MISC_RUNE_COCYTUS
-runes/rune_dis MISC_RUNE_DIS
-runes/rune_gehenna MISC_RUNE_GEHENNA
-runes/rune_cerebov MISC_RUNE_CEREBOV
-runes/rune_gloorx_vloq MISC_RUNE_GLOORX_VLOQ
-runes/rune_mnoleg MISC_RUNE_MNOLEG
-runes/rune_lom_lobon MISC_RUNE_LOM_LOBON
-runes/rune_snake MISC_RUNE_SNAKE
-runes/rune_swamp MISC_RUNE_SWAMP
-runes/rune_shoals MISC_RUNE_SHOALS
-runes/rune_slime MISC_RUNE_SLIME
-runes/rune_vaults MISC_RUNE_VAULTS
-runes/rune_tomb MISC_RUNE_TOMB
-runes/rune_abyss MISC_RUNE_ABYSS
-runes/rune_demonic_1 MISC_RUNE_DEMONIC
-runes/rune_demonic_2
-runes/rune_demonic_3
-runes/rune_demonic_4
-runes/rune_demonic_5
-runes/rune_demonic_6
 %rim 0
 misc_quad MISC_QUAD_DAMAGE
 %rim 1
+%sdir item/misc/runes
+generic MISC_RUNE_OF_ZOT
+rune_tartarus MISC_RUNE_TARTARUS
+rune_cocytus MISC_RUNE_COCYTUS
+rune_dis MISC_RUNE_DIS
+rune_gehenna MISC_RUNE_GEHENNA
+rune_cerebov MISC_RUNE_CEREBOV
+rune_gloorx_vloq MISC_RUNE_GLOORX_VLOQ
+rune_mnoleg MISC_RUNE_MNOLEG
+rune_lom_lobon MISC_RUNE_LOM_LOBON
+rune_snake MISC_RUNE_SNAKE
+rune_swamp MISC_RUNE_SWAMP
+rune_shoals MISC_RUNE_SHOALS
+rune_spider MISC_RUNE_SPIDER
+rune_slime MISC_RUNE_SLIME
+rune_vaults MISC_RUNE_VAULTS
+rune_tomb MISC_RUNE_TOMB
+rune_abyss MISC_RUNE_ABYSS
+rune_demonic_1 MISC_RUNE_DEMONIC
+rune_demonic_2
+rune_demonic_3
+rune_demonic_4
+rune_demonic_5
+rune_demonic_6
+rune_elven MISC_RUNE_ELVEN
 
 #OBJ_CORPSES
 #handled in dc-corpse.txt
 
 #OBJ_GOLD
-gold_pile GOLD UNSEEN_GOLD
+%sdir item/gold
+01 GOLD01
+02 GOLD02
+03 GOLD03
+04 GOLD04
+05 GOLD05
+06 GOLD06
+07 GOLD07
+08 GOLD08
+09 GOLD09
+10 GOLD10
+16 GOLD16
+19 GOLD19
+23 GOLD23
+25 GOLD25

@@ -7,7 +7,7 @@ function randomise_colours(e)
     }
 
     local walls = {
-        "wall_normal", "wall_hall", "wall_hive", "wall_ice", "wall_lair",
+        "wall_normal", "wall_hall", "wall_ice", "wall_lair",
         "wall_orc", "wall_snake", "wall_swamp", "wall_tomb", "wall_vault",
         "wall_zot_blue", "wall_zot_cyan", "wall_zot_lightgray",
         "wall_zot_green", "wall_zot_magenta", "wall_zot_red", "wall_zot_yellow",
@@ -16,9 +16,9 @@ function randomise_colours(e)
     }
 
     local floors = {
-        "floor_normal", "floor_hall", "floor_hive", "floor_ice", "floor_lair",
+        "floor_normal", "floor_hall", "floor_ice", "floor_lair",
         "floor_orc", "floor_snake", "floor_swamp", "floor_tomb", "floor_vault",
-        "floor_vines", "floor_rough_red", "floor_sand_stone", "floor_grass",
+        "floor_vines", "floor_rough_red", "floor_sand", "floor_grass",
         "floor_nerves", "floor_dirt", "floor_moss",
     }
 

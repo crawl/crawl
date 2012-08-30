@@ -33,13 +33,13 @@
 #include "player-stats.h"
 #include "potion.h"
 #include "religion.h"
+#include "shopping.h"
 #include "spl-clouds.h"
 #include "spl-goditem.h"
 #include "spl-miscast.h"
 #include "spl-selfench.h"
 #include "spl-summoning.h"
 #include "spl-transloc.h"
-#include "stash.h"
 #include "state.h"
 #include "transform.h"
 #include "shout.h"
@@ -151,7 +151,7 @@ static bool _tso_retribution()
         }
         break;
     }
-    return (false);
+    return false;
 }
 
 static void _zin_remove_good_mutations()
@@ -169,8 +169,8 @@ static void _zin_remove_good_mutations()
     {
         // Ensure that only good mutations are removed.
         if (i <= random2(10)
-            && delete_mutation(RANDOM_GOOD_MUTATION, failMsg, false, true,
-                               true))
+            && delete_mutation(RANDOM_GOOD_MUTATION, "Zin's wrath",
+                               failMsg, false, true, true))
         {
             success = true;
         }
@@ -229,7 +229,7 @@ static bool _zin_retribution()
         _zin_remove_good_mutations();
         break;
     }
-    return (false);
+    return false;
 }
 
 static void _ely_dull_inventory_weapons()
@@ -245,49 +245,33 @@ static void _ely_dull_inventory_weapons()
         if (!you.inv[i].defined())
             continue;
 
-        if (you.inv[i].base_type == OBJ_WEAPONS
-            || you.inv[i].base_type == OBJ_MISSILES)
+        if (you.inv[i].base_type == OBJ_WEAPONS)
         {
             // Don't dull artefacts at all, or weapons below -1/-1.
-            if (you.inv[i].base_type == OBJ_WEAPONS)
+            if (is_artefact(you.inv[i])
+                || you.inv[i].plus <= -1 && you.inv[i].plus2 <= -1)
             {
-                if (is_artefact(you.inv[i]) || you.inv[i].plus <= -1
-                    && you.inv[i].plus2 <= -1)
-                {
-                    continue;
-                }
-            }
-            // Don't dull missiles below -1.
-            else if (you.inv[i].plus <= -1)
                 continue;
+            }
 
             // 2/3 of the time, don't do anything.
             if (!one_chance_in(3))
                 continue;
 
             bool wielded = false;
-            bool quivered = false;
 
             if (you.inv[i].link == you.equip[EQ_WEAPON])
                 wielded = true;
-            if (you.inv[i].link == quiver_link)
-                quivered = true;
 
-            // Dull the weapon or missile(s).
+            // Dull the weapon.
             if (you.inv[i].plus > -1)
                 you.inv[i].plus--;
-
-            if (you.inv[i].base_type == OBJ_WEAPONS
-                && you.inv[i].plus2 > -1)
-            {
+            if (you.inv[i].plus2 > -1)
                 you.inv[i].plus2--;
-            }
 
-            // Update the weapon/ammo display, if necessary.
+            // Update the weapon display, if necessary.
             if (wielded)
                 you.wield_change = true;
-            if (quivered)
-                you.redraw_quiver = true;
 
             chance += item_value(you.inv[i], true) / 50;
             num_dulled++;
@@ -331,7 +315,7 @@ static bool _elyvilon_retribution()
         break;
     }
 
-    return (true);
+    return true;
 }
 
 static bool _cheibriados_retribution()
@@ -408,7 +392,7 @@ static bool _cheibriados_retribution()
 
     if (wrath_type > 2)
         dec_penance(god, 1 + random2(wrath_type));
-    return (glammer);
+    return glammer;
 }
 
 static bool _makhleb_retribution()
@@ -457,7 +441,7 @@ static bool _makhleb_retribution()
                                      : "'s minions fail to arrive.", god);
     }
 
-    return (true);
+    return true;
 }
 
 static bool _kikubaaqudgha_retribution()
@@ -509,7 +493,7 @@ static bool _kikubaaqudgha_retribution()
     animate_dead(&you, 1 + random2(3), BEH_HOSTILE, MHITYOU, 0,
                  "the malice of Kikubaaqudgha", GOD_KIKUBAAQUDGHA);
 
-    return (true);
+    return true;
 }
 
 static bool _yredelemnul_retribution()
@@ -520,9 +504,7 @@ static bool _yredelemnul_retribution()
     if (random2(you.experience_level) > 4)
     {
         if (you.religion == god && coinflip() && yred_slaves_abandon_you())
-        {
             ;
-        }
         else
         {
             const bool zombified = one_chance_in(4);
@@ -553,7 +535,7 @@ static bool _yredelemnul_retribution()
                       random2avg(88, 3), "the anger of Yredelemnul");
     }
 
-    return (true);
+    return true;
 }
 
 static bool _trog_retribution()
@@ -571,7 +553,7 @@ static bool _trog_retribution()
 
             while (points > 0)
             {
-                int cost = std::min(random2(8) + 3, points);
+                int cost = min(random2(8) + 3, points);
 
                 // quick reduction for large values
                 if (points > 20 && coinflip())
@@ -645,7 +627,7 @@ static bool _trog_retribution()
                       random2avg(98, 3), "the fiery rage of Trog");
     }
 
-    return (true);
+    return true;
 }
 
 static bool _beogh_retribution()
@@ -733,7 +715,7 @@ static bool _beogh_retribution()
 
         if (num_created > 0)
         {
-            std::ostringstream msg;
+            ostringstream msg;
             msg << " throws "
                 << (num_created == 1 ? "an implement" : "implements")
                 << " of " << (am_orc ? "orc slaying" : "electrocution")
@@ -783,7 +765,7 @@ static bool _beogh_retribution()
     }
     }
 
-    return (true);
+    return true;
 }
 
 static bool _okawaru_retribution()
@@ -800,7 +782,7 @@ static bool _okawaru_retribution()
     simple_god_message(count > 0 ? " sends forces against you!"
                                  : "'s forces are busy with other wars.", god);
 
-    return (true);
+    return true;
 }
 
 static bool _sif_muna_retribution()
@@ -834,7 +816,7 @@ static bool _sif_muna_retribution()
     case 7:
         if (!forget_spell())
             mpr("You get a splitting headache.");
-                break;
+        break;
 
     case 8:
         if (you.magic_points > 0)
@@ -849,11 +831,10 @@ static bool _sif_muna_retribution()
         // a duration of one round, thus potentially exposing
         // the player to real danger.
         antimagic();
-        mpr("Your magical effects suddenly unravel.", MSGCH_WARN);
         break;
     }
 
-    return (true);
+    return true;
 }
 
 static bool _lugonu_retribution()
@@ -918,7 +899,7 @@ static bool _lugonu_retribution()
                                    : "'s minions fail to arrive.", god);
     }
 
-    return (false);
+    return false;
 }
 
 static bool _vehumet_retribution()
@@ -930,7 +911,7 @@ static bool _vehumet_retribution()
     MiscastEffect(&you, -god, coinflip() ? SPTYP_CONJURATION : SPTYP_SUMMONING,
                    8 + you.experience_level, random2avg(98, 3),
                    "the wrath of Vehumet");
-    return (true);
+    return true;
 }
 
 static bool _nemelex_retribution()
@@ -941,7 +922,7 @@ static bool _nemelex_retribution()
     // like Xom, this might actually help the player -- bwr
     simple_god_message(" makes you draw from the Deck of Punishment.", god);
     draw_from_deck_of_punishment();
-    return (true);
+    return true;
 }
 
 static bool _jiyva_retribution()
@@ -955,7 +936,7 @@ static bool _jiyva_retribution()
         god_speaks(god, "You feel Jiyva alter your body.");
 
         for (int i = 0; i < mutat; ++i)
-            mutate(RANDOM_BAD_MUTATION, true, false, true);
+            mutate(RANDOM_BAD_MUTATION, "Jiyva's wrath", true, false, true);
     }
     else if (there_are_monsters_nearby() && coinflip())
     {
@@ -982,9 +963,9 @@ static bool _jiyva_retribution()
 
         if (found_one)
         {
-            mprf(MSGCH_GOD, "Jiyva's putrescence saturates %s!",
-                 mon->name(DESC_THE).c_str());
-
+            simple_god_message(
+                make_stringf("'s putrescence saturates %s!",
+                             mon->name(DESC_THE).c_str()).c_str(), god);
             slimify_monster(mon, true);
         }
     }
@@ -1046,7 +1027,7 @@ static bool _jiyva_retribution()
                                 : "The ground quivers slightly.");
     }
 
-    return (true);
+    return true;
 }
 
 static bool _fedhas_retribution()
@@ -1100,7 +1081,7 @@ static bool _fedhas_retribution()
 
         // We are going to spawn some oklobs but first we need to find
         // out a little about the situation.
-        std::vector<std::vector<coord_def> > radius_points;
+        vector<vector<coord_def> > radius_points;
         collect_radius_points(radius_points, you.pos(),
                               you.get_los_no_trans());
 
@@ -1184,14 +1165,14 @@ static bool _fedhas_retribution()
         if (success)
         {
             god_speaks(god, "Plants grow around you in an ominous manner.");
-            return (false);
+            return false;
         }
 
         break;
     }
     }
 
-    return (true);
+    return true;
 }
 
 bool divine_retribution(god_type god, bool no_bonus, bool force)
@@ -1199,7 +1180,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     ASSERT(god != GOD_NO_GOD);
 
     if (is_unavailable_god(god))
-        return (false);
+        return false;
 
     // Good gods don't use divine retribution on their followers, and
     // gods don't use divine retribution on followers of gods they don't
@@ -1207,7 +1188,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     if (!force && ((god == you.religion && is_good_god(god))
         || (!god_hates_your_god(god))))
     {
-        return (false);
+        return false;
     }
 
     god_acting gdact(god, true);
@@ -1238,7 +1219,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
 
     case GOD_ASHENZARI:
         // No reduction with time.
-        return (false);
+        return false;
 
     default:
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_RELIGION)
@@ -1246,11 +1227,11 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
              god_name(god).c_str());
 #endif
         do_more    = false;
-        return (false);
+        return false;
     }
 
     if (no_bonus)
-        return (true);
+        return true;
 
     // Sometimes divine experiences are overwhelming...
     if (do_more && one_chance_in(5) && you.experience_level < random2(37))
@@ -1276,7 +1257,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     // point...the punishment might have reduced penance further.
     dec_penance(god, 1 + random2(3));
 
-    return (true);
+    return true;
 }
 
 bool do_god_revenge(conduct_type thing_done, const monster *victim)
@@ -1302,18 +1283,18 @@ bool do_god_revenge(conduct_type thing_done, const monster *victim)
         break;
     }
 
-    return (retval);
+    return retval;
 }
 
 // Currently only used when orcish idols have been destroyed.
-static std::string _get_beogh_speech(const std::string key)
+static string _get_beogh_speech(const string key)
 {
-    std::string result = getSpeakString("Beogh " + key);
+    string result = getSpeakString("Beogh " + key);
 
     if (result.empty())
-        return ("Beogh is angry!");
+        return "Beogh is angry!";
 
-    return (result);
+    return result;
 }
 
 // Destroying orcish idols (a.k.a. idols of Beogh) may anger Beogh.
@@ -1338,10 +1319,10 @@ static bool _beogh_idol_revenge()
 
         _god_smites_you(GOD_BEOGH, revenge);
 
-        return (true);
+        return true;
     }
 
-    return (false);
+    return false;
 }
 
 static void _tso_blasts_cleansing_flame(const char *message)
@@ -1372,14 +1353,14 @@ static void _tso_blasts_cleansing_flame(const char *message)
 }
 
 // Currently only used when holy beings have been killed.
-static std::string _get_tso_speech(const std::string key)
+static string _get_tso_speech(const string key)
 {
-    std::string result = getSpeakString("TSO " + key);
+    string result = getSpeakString("the Shining One " + key);
 
     if (result.empty())
-        return ("The Shining One is angry!");
+        return "The Shining One is angry!";
 
-    return (result);
+    return result;
 }
 
 // Killing holy beings may anger TSO.
@@ -1401,28 +1382,28 @@ static bool _tso_holy_revenge()
 
         _tso_blasts_cleansing_flame(revenge);
 
-        return (true);
+        return true;
     }
 
-    return (false);
+    return false;
 }
 
 // Killing apises may make Elyvilon sad.  She'll sulk and stuff.
 static bool _ely_holy_revenge(const monster *victim)
 {
     // It's a mild effect, a relatively big chance is ok.  Keeping it small
-    // though -- we don't want gods to be omniescent.
+    // though -- we don't want gods to be omniscient.
     if (!one_chance_in(3))
         return false;
 
     god_acting gdact(GOD_ELYVILON, true);
 
-    std::string msg = getSpeakString("Elyvilon holy");
+    string msg = getSpeakString("Elyvilon holy");
     if (msg.empty())
         msg = "Elyvilon is displeased.";
     mpr(msg.c_str(), MSGCH_GOD, GOD_ELYVILON);
 
-    std::vector<monster*> patients;
+    vector<monster*> patients;
     for (monster_iterator mi(you.get_los()); mi; ++mi)
     {
         // healer not necromancer
@@ -1442,14 +1423,14 @@ static bool _ely_holy_revenge(const monster *victim)
         return false;
 
     mpr("Elyvilon touches your foes with healing grace.");
-    for (std::vector<monster*>::const_iterator mi = patients.begin();
+    for (vector<monster*>::const_iterator mi = patients.begin();
          mi != patients.end(); ++mi)
     {
         simple_monster_message(*mi, " is healed.");
         (*mi)->heal(10 + random2(10), false);
     }
 
-    return (true);
+    return true;
 }
 
 static void _god_smites_you(god_type god, const char *message,
@@ -1478,7 +1459,7 @@ static void _god_smites_you(god_type god, const char *message,
             }
         }
 
-        std::string aux;
+        string aux;
 
         if (death_type != KILLED_BY_BEOGH_SMITING
             && death_type != KILLED_BY_TSO_SMITING)
@@ -1506,7 +1487,7 @@ void ash_reduce_penance(int amount)
     if (!you.penance[GOD_ASHENZARI] || !you.exp_docked_total)
         return;
 
-    int lost = std::min(amount / 2, you.exp_docked);
+    int lost = min(amount / 2, you.exp_docked);
     you.exp_docked -= lost;
 
     int new_pen = (((int64_t)you.exp_docked * 50) + you.exp_docked_total - 1)

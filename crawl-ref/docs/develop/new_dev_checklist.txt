@@ -1,0 +1,14 @@
+This is a checklist for when a new developer joins the team.
+
+ * Commit rights: add their gitorious account to the dcss-developers group.
+ * Add them to CREDITS.txt and to git-hooks/crawl-ref-cia.
+ * Upgrade their mantis account to developer.
+ * Update https://crawl.develz.org/wiki/doku.php?id=dcss:admin:devteam
+ * Add them to the committer group on IRC :
+   /msg chanserv access ##crawl-dev add login committer
+ * Upgrade their CAO and CDO accounts so that they can use wizmode.
+ * Create them a WordPress account.
+ * On the Tavern, add them to the Dungeon Master group.
+ * Subscribe their email to c-r-d:
+   https://lists.sourceforge.net/lists/listinfo/crawl-ref-discuss
+ * Send an announcement/welcome message on c-r-d.

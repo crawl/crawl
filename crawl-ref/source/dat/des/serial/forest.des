@@ -1,0 +1,637 @@
+# forest.des (by infiniplex)
+#
+# These a a series of vaults with trees in them that can appear
+#  on early dungeon levels or the Lair.
+#
+# The vaults can also appear individually, but are not common.
+#  The individual vaults may appear more commonly in the Lair,
+#  depending on the vault.  Vaults that look artificial are
+#  equally common and vaults that look natural are 3 times as
+#  common.
+#
+# The chance of these vaults (both as a serial vault and as
+#  individual vaults) falls off based on depth.  None should
+#  appear in the main dungeon below D:4
+#
+# The meaning of the symbols as understood by the initialization
+#  function are:
+#   -> 1: bush
+#   -> 2: plant
+#   -> E: probably tree
+#   -> D: tree, bush, plant, or nothing
+#   -> ": forest area (chance of bush, plant, fruit)
+#   -> !: same as @
+#   -> _: same as .
+#
+# The ! and _ symbols exist because there used to be floor_moss
+#  tiles under all of these as well as t (tree) and TUV
+#  (fountain).  I took them out because it looked better that
+#  way.  I left the symbols in case there was ever a need to
+#  apply some effect to the themed portion of the vaults.
+
+{{
+function init_forest(e, base_weight, lair_weight)
+  e.tags('allow_dup')
+  e.tags('serial_forest')
+  if you.branch() == "Lair" then
+    e.weight(lair_weight)
+  elseif you.absdepth() == 1 then
+    e.weight(base_weight * 3)
+  elseif you.absdepth() == 2 then
+    e.weight(base_weight * 2)
+  else
+    e.weight(base_weight)
+  end
+  e.mons('bush')
+  e.mons('plant')
+  e.kprop('1 = no_rtele_into')
+  e.kprop('2 = no_rtele_into')
+  e.kprop('E = no_rtele_into')
+  e.kprop('D = no_rtele_into')
+  e.kprop('" = no_rtele_into')
+  e.kmask('1 = no_monster_gen')
+  e.kmask('2 = no_monster_gen')
+  e.kmask('E = no_monster_gen')
+  e.kmask('D = no_monster_gen')
+  e.kmask('" = no_monster_gen')
+  if you.branch() == "Lair" then
+    e.subst('E = tt12222_')
+    e.subst('D = t1222222____')
+    e.subst('" = 2:25 _:50')
+    e.subst('t : tt12')
+  else
+    e.subst('E = tt1_')
+    e.subst('D = tt11122_____')
+    e.subst('" = 1:5 2:10 _:60')
+  end
+  e.subst('! = @')
+  e.subst('_ = .')
+end
+}}
+
+# This is a higher-than-average chance for the main dungeon, but
+#  this serial vault can only appear on the first 4 levels.
+#  That means it should not be too common even with the higher
+#  chance.
+#
+NAME:   serial_forest
+TAGS:   allow_dup extra luniq_serial
+DEPTH:  D:1-4, Lair
+CHANCE: 3% (D:1), 2% (D:2), 1% (D:3-4), 1% (Lair:*)
+{{
+  -- between 5 and 11 forests
+  local c = 4 + crawl.random2(4) + crawl.random2(4)
+  hook("post_place", function()
+    dgn.place_maps{tag="serial_forest", count=c}
+  end)
+}}
+
+# corridors lined with trees
+#
+# 10 vaults
+
+NAME:    infiniplex_forest_straight_1
+TAGS:    transparent
+: init_forest(_G, 1, 1)
+MAP
+ttt
+@.@
+ttt
+ENDMAP
+
+NAME:    infiniplex_forest_straight_2
+TAGS:    transparent
+: init_forest(_G, 3, 3)
+MAP
+tttttt
+@....@
+tttttt
+ENDMAP
+
+NAME:    infiniplex_forest_straight_3
+TAGS:    transparent
+: init_forest(_G, 2, 2)
+MAP
+ttttttttt
+@.......@
+ttttttttt
+ENDMAP
+
+NAME:    infiniplex_forest_straight_4
+TAGS:    transparent
+: init_forest(_G, 2, 2)
+MAP
+ttttt
+tEEEt
+!___!
+tEEEt
+ttttt
+ENDMAP
+
+NAME:    infiniplex_forest_straight_5
+TAGS:    transparent
+: init_forest(_G, 1, 1)
+MAP
+tttttttttt
+tEEEEEEEEt
+!________!
+tEEEEEEEEt
+tttttttttt
+ENDMAP
+
+NAME:    infiniplex_forest_corner_1
+TAGS:    transparent
+: init_forest(_G, 2, 6)
+MAP
+ttEEt
+tD__!
+E_DDE
+E_DEt
+t!Ett
+ENDMAP
+
+NAME:    infiniplex_forest_corner_2
+TAGS:    transparent
+: init_forest(_G, 1, 3)
+MAP
+ tttEEt
+ttED__!
+tED_DEt
+tD_EEtt
+E_DEtt
+E_Ett
+t!tt
+ENDMAP
+
+NAME:    infiniplex_forest_zigzag_1
+TAGS:    transparent
+: init_forest(_G, 2, 6)
+MAP
+tttttttt
+tD__EEttt
+!_ED_DE_!
+tttEE__Dt
+ tttttttt
+ENDMAP
+
+NAME:    infiniplex_forest_zigzag_2
+TAGS:    transparent
+: init_forest(_G, 1, 3)
+MAP
+ttttttt
+!EtED_tt
+t_tE_D_t
+t_D_Et_t
+tt_DEtE!
+ ttttttt
+ENDMAP
+
+NAME:    infiniplex_forest_diagonal
+TAGS:    transparent
+: init_forest(_G, 1, 3)
+MAP
+tEttt
+!_EEtt
+ED_DEtt
+tD___Et
+tEEED_Et
+ tttE_DE
+   ttE_!
+    tEEt
+     tt
+ENDMAP
+
+# rooms with open areas
+#
+# 10 vaults
+
+NAME:    infiniplex_forest_end_1
+: init_forest(_G, 2, 6)
+MAP
+ ttttt
+tEEDDEt
+tE"""_!
+tEEDDEt
+ ttttt
+ENDMAP
+
+NAME:    infiniplex_forest_end_2
+: init_forest(_G, 3, 9)
+MAP
+  tttt
+ ttEEtt
+tEEDDEEt
+tED""DEt
+tED"DDEt
+ttE"EEtt
+ tED_Et
+  tE!t
+ENDMAP
+
+NAME:    infiniplex_forest_end_3
+: init_forest(_G, 2, 6)
+MAP
+    ttttt
+   ttEDDEt
+ ttEE"""_!
+ tED"DDDEt
+ttED""Ett
+tEDdDDEt
+tEEDEEEt
+ tttttt
+ENDMAP
+
+NAME:    infiniplex_forest_end_double
+: init_forest(_G, 1, 3)
+MAP
+    tt!t
+   ttE_t
+  tEED"tt
+ tEED""DE
+ttEDED"Et
+tED"DEDEt
+tED""DEtt
+tE_DEttt
+ t!Et
+ENDMAP
+
+NAME:    infiniplex_forest_3_way
+: init_forest(_G, 1, 3)
+MAP
+   ttttt
+  tEDDEt
+ ttE""DEt
+ !_D"DEEtt
+tt""""EE_!
+tE"D""D"Et
+tE"EDE"DEt
+tt"DtEEEt
+ tE_DEtt
+  t!Et
+ENDMAP
+
+NAME:    infiniplex_forest_side_room
+: init_forest(_G, 1, 3)
+MAP
+ ttttt
+ttEDEtt
+tE"""Ett
+tD"D"DEt
+ttED"DEtt
+ tttE"D_@
+   tE""DEt
+   @_DEEEt
+    ttEtt
+     ttt
+ENDMAP
+
+NAME:    infiniplex_forest_join
+: init_forest(_G, 1, 3)
+MAP
+      tE!t
+  ttttE_Et
+ttEEED""t
+!_ED""Ett
+ED""DDt
+ttED"Ett
+ ttED"Dtt
+   tE"DDt
+   ttDEEt
+    tttt
+ENDMAP
+
+NAME:    infiniplex_forest_split
+: init_forest(_G, 1, 3)
+MAP
+ tttt
+tEDEtt
+tDD"Dt   tEt
+tE""Et  tED!
+ttD""EttED_Dt
+ tEDE""E""DEt
+  ttED""Dttt
+  tED"EEtt
+  ttE"Dtt
+    t"""Et
+    ttD"DEt
+     ttEDEt
+      ttttt
+ENDMAP
+
+NAME:    infiniplex_forest_pool
+KMASK:   W = no_monster_gen
+: init_forest(_G, 1, 3)
+MAP
+ ttttt
+ttEEDEt
+tEDWWDtt
+EDWWWWEt
+tDDWWDEt
+tD"DDEEt
+tE"EEtt
+tE"Dt
+ tE_@
+  ttt
+ENDMAP
+
+NAME:    infiniplex_forest_fountain
+TAGS:    transparent
+SUBST:   T = TTUV
+: init_forest(_G, 1, 3)
+MAP
+   tt!tt
+ tttt_tttt
+ tt11_11tt
+tt11___11tt
+tt1_____1tt
+!____T____!
+tt1_____1tt
+tt11___11tt
+ tt11_11tt
+ tttt_tttt
+   tt!tt
+ENDMAP
+
+# clumps of trees to go in rooms
+#
+# These vaults deliberately do not have defined entry points.
+#
+# 10 vaults
+
+NAME:    infiniplex_forest_clump_tiny
+TAGS:    transparent mini_float
+: init_forest(_G, 2, 6)
+MAP
+ """
+"DED"
+ "D"
+ENDMAP
+
+NAME:    infiniplex_forest_clump_small
+TAGS:    transparent mini_float
+: init_forest(_G, 3, 9)
+MAP
+  ""
+ "ED"
+"DEED"
+"EttE"
+"DDED"
+ """"
+ENDMAP
+
+NAME:    infiniplex_forest_clump_medium
+TAGS:    transparent mini_float
+: init_forest(_G, 2, 6)
+MAP
+  """"
+ DEDD""
+"EtEED"
+DEtttED"
+DEEtEED"
+"DEEED"
+""DDD""
+ """"
+ENDMAP
+
+NAME:    infiniplex_forest_clump_large
+TAGS:    transparent mini_float
+: init_forest(_G, 1, 3)
+MAP
+   """"
+  "DD""""
+ ""DEEDDD"
+"DDDttEDE""
+"EEttttEED"
+"DttttttED"
+"DEttttED""
+ "DEEtED""
+  "DEDDD"
+   """""
+ENDMAP
+
+NAME:    infiniplex_forest_clump_long
+TAGS:    transparent mini_float
+: init_forest(_G, 2, 6)
+MAP
+    """"""
+  "DEDD"DDD"
+ "DEtEEEtEEDD
+DEEtttttDED"
+""DEEtEED""
+ ""DDEDD"
+   """"
+ENDMAP
+
+NAME:    infiniplex_forest_clump_diagonal
+TAGS:    transparent mini_float
+: init_forest(_G, 2, 6)
+MAP
+""""
+"ED""
+""tD"""
+ "EtED""
+ "DEtED"
+  ""DEtD"
+   "D"EE"
+    """ED"
+      """"
+ENDMAP
+
+NAME:    infiniplex_forest_clump_curved
+TAGS:    transparent mini_float
+: init_forest(_G, 2, 6)
+MAP
+   """"""
+ ""DDEED""
+ "EEttEED"
+"DEtED"""
+"EtED""
+"EtE""
+"DED"
+"DE"
+""D"
+ ""
+ENDMAP
+
+NAME:    infiniplex_forest_clump_C
+TAGS:    transparent mini_float
+: init_forest(_G, 1, 3)
+MAP
+  """""
+ ""DtED"
+""EtE""E"
+"DtE"""""
+"EtD"""""
+"DtED""""
+""EttEED"
+ ""DEDD"
+  """""
+ENDMAP
+
+NAME:    infiniplex_forest_clump_cross
+TAGS:    transparent mini_float
+: init_forest(_G, 1, 3)
+MAP
+    """
+   ""D""
+  ""DED""
+ """EtE"""
+"""DEtD"D""
+DEEttttEtE"
+"DDEEtDEDD"
+ """DE""""
+  ""EED""
+   "DDD"
+    """
+ENDMAP
+
+NAME:    infiniplex_forest_clump_double
+TAGS:    transparent mini_float
+: init_forest(_G, 2, 6)
+MAP
+   ""
+ ""D""
+""EED""
+"DEttE"
+ "DEED"
+ """"""
+   ""D""
+   "DEED"
+   "EttE""
+   ""DtED"
+   ""DED"
+    """"
+ENDMAP
+
+# corridors and rooms with spaced trees along the sides
+#
+# 10 vaults
+
+NAME:    infiniplex_forest_lined_1
+TAGS:    transparent
+: init_forest(_G, 1, 1)
+MAP
+t t t
+@...@
+t t t
+ENDMAP
+
+NAME:    infiniplex_forest_lined_2
+TAGS:    transparent
+: init_forest(_G, 3, 3)
+MAP
+t t t t
+@.....@
+t t t t
+ENDMAP
+
+NAME:    infiniplex_forest_lined_3
+TAGS:    transparent
+: init_forest(_G, 2, 2)
+MAP
+t t t t t t
+@.........@
+t t t t t t
+ENDMAP
+
+NAME:    infiniplex_forest_lined_corner
+TAGS:    transparent
+: init_forest(_G, 2, 2)
+MAP
+t t t
+ ...@
+t.t t
+ .
+t@t
+ENDMAP
+
+NAME:    infiniplex_forest_lined_3_way
+TAGS:    transparent
+: init_forest(_G, 1, 1)
+MAP
+t t t t
+@.....@
+t t.t t
+   .
+  t@t
+ENDMAP
+
+NAME:    infiniplex_forest_lined_4_way
+TAGS:    transparent
+: init_forest(_G, 1, 1)
+MAP
+  t@t
+   .
+t t.t t
+@.....@
+t t.t t
+   .
+  t@t
+ENDMAP
+
+NAME:    infiniplex_forest_lined_room_
+TAGS:    transparent mini_float
+SHUFFLE: JK
+SUBST:   J = t
+SUBST:   K = .
+: init_forest(_G, 1, 1)
+MAP
+t t t
+ ...
+t.J.t
+ ...
+t t t
+ENDMAP
+
+NAME:    infiniplex_forest_lined_room_2
+TAGS:    transparent mini_float
+SHUFFLE: JK
+SUBST:   J = t
+SUBST:   K = .
+: init_forest(_G, 2, 2)
+MAP
+t t t t
+ .....
+t.J.J.t
+ .....
+t.J.J.t
+ .....
+t t t t
+ENDMAP
+
+NAME:    infiniplex_forest_lined_room_3
+TAGS:    transparent mini_float
+SHUFFLE: JK
+SUBST:   J = t
+SUBST:   K = .
+: init_forest(_G, 1, 1)
+MAP
+t t t t t
+ .......
+t.J.J.J.t
+ .......
+t.J.J.J.t
+ .......
+t.J.J.J.t
+ .......
+t t t t t
+ENDMAP
+
+NAME:    infiniplex_forest_lined_ring
+TAGS:    transparent mini_float
+SHUFFLE: JKLL
+SUBST:   J = t
+SUBST:   K = .
+SUBST:   L = .
+: init_forest(_G, 1, 1)
+MAP
+   t t
+ t.....t
+ ..J.J..
+t.JK.KJ.t
+ ...J...
+t.JK.KJ.t
+ ..J.J..
+ t.....t
+   t t
+ENDMAP

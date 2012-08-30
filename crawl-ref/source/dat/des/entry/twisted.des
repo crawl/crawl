@@ -7,39 +7,6 @@
 # complicated: several layers of SUBST/SHUFFLE operations, serious use of
 # lua, use of SUBVAULTs or just plain obfusciation. Some maps simply have
 # extremely long headers, so we put them here.
-
-##############################################################################
-# Just another altar on DL:1
-#
-NAME:    dpeg_entry_hidden_altar
-TAGS:    entry no_monster_gen
-ORIENT:  float
-NSUBST:  ' = 1:@ / 1:{ / *:.
-SHUFFLE: {{[
-: if crawl.one_chance_in(4) then
-SHUFFLE: DE/de
-SUBST:   AB=x, ab=c, D=., E=+=, d=>, e=cx=+, ]=]]]>, C=CT
-: else
-SHUFFLE: Aa/Bb
-SUBST:   Aa==, B=x, b=c, D=>, ]=]>>>, E=cccx=, C=CCCT
-: end
-MONS:    gnoll
-MAP
-'''''''''''''''
-'''''''''''''''
-''xxxxBxxxxxxxx
-''xcccbcccccccx
-''xcclllc..1.cx
-''xcllllc....cx
-''xcl...c1...cx
-''AalDC.E...1cx
-''xcl...c....cx
-''xcllllc....cx
-''xcclllc...]cx
-''xcccccccccccx
-''xxxxxxxxxxxxx
-ENDMAP
-
 ##############################################################################
 NAME:    dpeg_entry_thieves
 ORIENT:  float
@@ -56,7 +23,7 @@ SUBST:   a:=., BbCG=x, Y=.
 :end
 SHUFFLE: H4/'"
 SUBST:   '=x, ":x"
-NSUBST:  "=1:<>/*:%, H=1:=/*:x, 4:4%., 4=%.
+NSUBST:  "=1:<>/*:., H=1:=/*:x, 4:4..
 SUBST:   Z=.=
 : if crawl.one_chance_in(7) then
 SHUFFLE: LK, IJ
@@ -68,7 +35,7 @@ SUBST:   KL=x, X=.
 NSUBST:  M=1:=/*:x, I=1:=/*:x, J=1:=/*:x
 :end
 SHUFFLE: 123567
-SUBST:   12=., 3:3., 5:5., 3567=%, %=%.
+SUBST:   12=., 3:3., 5:5., 3567=.
 MAP
 xxxxxxxxxxxxx
 x11B2.D33F.[x
@@ -210,14 +177,7 @@ ITEM:    stone q:1 w:5 / nothing
 ITEM:    stone q:1 w:1 / nothing w:20
 TILE:    G = dngn_granite_stump
 SHUFFLE: {[(
-:        dgn.set_feature_desc_short("granite statue",
-:                                   "granite stump")
-:        dgn.set_feature_desc_long("granite statue",
-:                                  "This stump of granite was probably " ..
-:                                  "a statue at some point in the past.")
-: lua_marker("G", portal_desc { stump = 1,
-:        desc="granite stump",
-:        desc_long="This stump of granite was probably a statue at some point in the past.\n"})
+:        set_feature_name("granite_statue", "granite stump")
 MAP
    xxxxxxx
   xx.....xx
@@ -238,7 +198,8 @@ NAME:    shiori_entry_whats_in_store_for_you
 TAGS:    entry no_monster_gen no_pool_fixup no_item_gen
 ORIENT:  west
 SHUFFLE: =@/AB ,  AB/CD
-SUBST:   A==+++++ , B=@ , C=x , D=x
+SUBST:   A=+ , B=@ , C=x , D=x
+SUBST:   = = +
 NSUBST:  T = 1=T... / *=.
 KFEAT:   T = net trap
 # Seemingly pointless, since there are no active foes here... but
@@ -293,66 +254,39 @@ ENDMAP
 NAME:   shiori_entry_oz
 TAGS:   entry
 ORIENT: float
-NSUBST: 1 = 1/%
 MONS:   kobold / goblin / hobgoblin / nothing
 MARKER: # = lua:fog_machine { \
             pow_max = 5, delay_min = 100, delay_max = 150, \
-            size = 5, start_clouds = 1, \
-            excl_rad = 0, \
+            size = 4, start_clouds = 1, \
+            excl_rad = 1, \
             cloud_type = "flame" }
 KFEAT:  # = l
 FTILE:  ' = floor_rough_red
 COLOUR: ' = red
 SUBST:  ' = .
 MAP
-bbbbbbbbb
-b.(.{.[.b
-b.......b
-b.......b
-b.b...b.b
-b.......b
-b.......b
-b.b'''b.b
-b.'''''.b
-@.'#'#'.@
-b.b'G'b.b
-b.......b
-bbb+b+bbb
-=1=.b.=1=
-bbb.b.bbb
-  b@b@b
-ENDMAP
-
-########################################
-# Entry with hidden altar
-NAME:    shiori_entry_hidden_altar
-TAGS:    entry no_monster_gen no_secret_doors no_pool_fixup
-ORIENT:  float
-SUBST:   B:.A , A:.x
-NSUBST:  E= 1=+ / *=+=x
-SUBST:   +:@+ , d=mlwG
-SHUFFLE: ef/gh/ij
-SUBST:   g=> , h=C/x , e=x , f=w , i=x , j=l
-MAP
-xxxExxxxxxx
-xAB.BAxfffx
-xB...Bxxehx
-E..{..=dghx
-xB...Bxxihx
-xAB.BAxjjjx
-xxxExxxxxxx
+bbbbbbbbbbb
+b..(.{.[..b
+b.........b
+b.........b
+b..b...b..b
+b.........b
+b.........b
+b..b'''b..b
+b..'''''..b
+@..'#'#'..@
+b..b'G'b..b
+b.........b
+bbbb+b+bbbb
+ =1=.b.=1=
+ bbb.b.bbb
+   b@b@b
 ENDMAP
 
 ############################################################################
 NAME:    dpeg_entry_concentric_ovals
 TAGS:    entry no_monster_gen no_rotate
 ORIENT:  float
-MONS:    worm / goliath beetle, worm / goliath beetle
-ITEM:    nothing / ring of hunger / \
-         ring of protection from fire / ring of protection from cold
-ITEM:    nothing / choko / pear / apple / sausage / banana / any scroll
-SHUFFLE: dD1AB/yyyyy, eE2FG/yyyyy, AB, FG
-SUBST:   y=x, A==, B=x, D=., F==, G=x, E=.
 SUBST:   ' : Wlncxxxv, " : Wlncxxxv
 MAP
 .........................
@@ -363,12 +297,12 @@ MAP
 ..xxxx....'''''....xxxx..
 ..xxx...'''''''''...xxx..
 .xxxx..''.......''..xxxx.
-.xdx...'..""+""..'...xex.
-.xDx..''.""..."".''..xEx.
-.x1x..''.""[({"".''..x2x.
-.xDx..''.""..."".''..xEx.
-.xDx...'.."""""..'...xEx.
-.BxAx..''.......''..xFxG.
+.xxx...'..""+""..'...xxx.
+.xxx..''.""..."".''..xxx.
+.xxx..''.""[({"".''..xxx.
+.xxx..''.""..."".''..xxx.
+.xxx...'.."""""..'...xxx.
+.xxxx..''.......''..xxxx.
 ..xxx...''''.''''...xxx..
 ..xxxx....''+''....xxxx..
 ..xxxxx...........xxxxx..
@@ -385,7 +319,7 @@ ORIENT:  float
 SHUFFLE: C{! / B(' / V["
 SUBST:   C=., !=@
 SHUFFLE: B(' / zzz, V[" / yyy
-SUBST:   z=x, y=x, B=., '==, V=., "==
+SUBST:   z=x, y=x, B=., '=+, V=., "=+
 NSUBST:  . = 1:d / *:.
 ITEM:    stone / dart
 MAP
@@ -413,7 +347,7 @@ NAME:    dpeg_entry_connections
 TAGS:    entry
 ORIENT:  float
 SHUFFLE: {1/[2/(3/]4, Aa/Bb/Cc/Dd/Ee
-SUBST:   A==, a=...%, BCDEbcde=x
+SUBST:   A==, a=...>, BCDEbcde=x
 SUBST:   1=@, 2:2., 3:33., 4:444., 234:x
 MAP
 22222222xxxxx333
@@ -434,12 +368,11 @@ NAME:    shiori_entry_maze
 ORIENT:  float
 TAGS:    entry no_monster_gen no_secret_doors
 SHUFFLE: [{(
-SUBST:   1= . 1:2 2:1 3:1
 NSUBST:  A= 1= + / 1= = / 2= =x / *= x
 NSUBST:  B= 1= + / 1= = / 2= =x / *= x
 NSUBST:  C= 1= + / 1= = / *= =x
-NSUBST:  @= 5=@+ / *= =x
-MONS:    fungus, plant, butterfly
+SUBST:  @ = @+
+MONS:    toadstool
 MAP
 xxx@xxx@xxx@xxx
 x.111.B0B.111.x
@@ -490,7 +423,7 @@ NAME:    erik_entry_cave_to_hall
 TAGS:    cave_to_hall_subvault no_rotate
 SHUFFLE: TTGGVY
 SUBST:   X : cX
-NSUBST:  X = 1:= / *:c
+NSUBST:  X = 1:+ / *:c
 KMASK:   T = no_monster_gen
 MAP
 ...T....ccc.
@@ -512,7 +445,7 @@ NAME:    erik_entry_cave_to_temple
 TAGS:    cave_to_temple_subvault no_rotate
 SUBST:   X : nnG
 NSUBST:  ' = 12:1 / 4:2 / 1:3 / *:.
-KPROP:   'tCD<> = no_rtele_into
+KPROP:   'tCD> = no_rtele_into
 : local rnd = crawl.random2(9)
 : if rnd == 0 then
 KFEAT:   C = altar_beogh
@@ -548,7 +481,7 @@ MAP
 ...T....ccc.
 ............
 ...xxxxxxxx.
-..xxxxt't<x.
+..xxxxt't>x.
 .xxxxx''''x.
 .G.x$X'C''x.
 ...+0x''''x.
@@ -564,7 +497,7 @@ ENDMAP
 NAME:   enne_entry_octagon_isle
 ORIENT: float
 TAGS:   entry no_monster_gen
-FTILE:  '[({ = floor_sand_stone
+FTILE:  '[({ = floor_sand
 SUBST:  ' = .
 {{
     octa_room({
@@ -824,7 +757,7 @@ NSUBST:  U = 1:} / *:{
 : elseif crawl.one_chance_in(3) then
 SUBST:   U=., Yy=w, Zz=l
 SHUFFLE: x_/'"
-SUBST:   x==, '=b, ":".b
+SUBST:   x=+, '=b, ":".b
 NSUBST:  X = 1:} / *:{
 : elseif crawl.one_chance_in(2) then
 SUBST:   U=., Zz=l, Xx"'=b
@@ -859,9 +792,9 @@ ORIENT:  float
 SHUFFLE: ABC
 KFEAT:   ABC = floor
 KMONS:  A = gnome ; nothing
-KMONS:  B = elf col:darkgrey name:grey_elf n_rpl n_spe n_des ; nothing
-KMONS:  C = dwarf name:hill_dwarf n_rpl n_spe n_des ; nothing
-KMONS:  D = dwarf name:mountain_dwarf n_rpl n_spe n_des ; nothing
+KMONS:  B = elf col:darkgrey name:grey n_adj n_spe n_des ; nothing
+KMONS:  C = dwarf name:hill n_adj n_spe n_des ; nothing
+KMONS:  D = dwarf name:mountain n_adj n_spe n_des ; nothing
 FTILE:  .m+T = floor_vault
 TILE:   X = wall_vines
 COLOUR: .= lightgrey
@@ -885,6 +818,8 @@ xxxxXXXXXmXxxxx
 xxxxxxxxxDxxxxx
 xxxxxxxxxxxxxxx
 ENDMAP
+
+###############################################################################
 
 NAME: nicolae_entry_kraken_aquarium_a
 TAGS: entry no_monster_gen no_pool_fixup no_trap_gen no_item_gen generate_awake
@@ -914,6 +849,8 @@ MAP
   ...>...
 ENDMAP
 
+###############################################################################
+
 NAME: nicolae_entry_kraken_aquarium_b
 TAGS: entry no_monster_gen no_pool_fixup no_trap_gen no_item_gen
 ORIENT: float
@@ -940,4 +877,93 @@ MAP
 .n'''''n.xxxxx
 .nnnnnnn.
 .........
+ENDMAP
+
+###############################################################################
+# Three runes > orb of zot > upstairs
+NAME:   nicolae_entry_your_instructions
+TAGS:   entry no_monster_gen no_trap_gen no_item_gen
+WEIGHT: 1
+ORIENT: float
+SHUFFLE: [(
+SHUFFLE: ABCDEFHIJKLMNOPQR
+KITEM:  A = gossamer rune of zot mimic
+KITEM:  B = decaying rune of zot mimic
+KITEM:  C = serpentine rune of zot mimic
+KITEM:  D = barnacled rune of zot mimic
+KITEM:  E = slimy rune of zot mimic
+KITEM:  F = silver rune of zot mimic
+KITEM:  H = abyssal rune of zot mimic
+KITEM:  I = demonic rune of zot mimic
+KITEM:  J = glowing rune of zot mimic
+KITEM:  K = magical rune of zot mimic
+KITEM:  L = fiery rune of zot mimic
+KITEM:  M = dark rune of zot mimic
+KITEM:  N = iron rune of zot mimic
+KITEM:  O = icy rune of zot mimic
+KITEM:  P = obsidian rune of zot mimic
+KITEM:  Q = bone rune of zot mimic
+KITEM:  R = golden rune of zot mimic
+KITEM:  Z = Orb of Zot mimic
+KFEAT:  < = escape_hatch_up mimic
+KPROP:  ->ABCDEFHIJKLMNOPQRZ = no_rtele_into
+SUBST:  - = .
+MAP
+xxxxxxxxxxxxxxxxxx
+x................x
+x...cccccccccc...xxxxxxxxx
+x...c---C----n...........@
+x.{.c>-Z<B---n.[.........@
+x...c---A----n...........@
+x...cccccccccc...xxxxxxxxx
+x................x
+xxxxxxxxxxxxxxxxxx
+ENDMAP
+
+###############################################################################
+
+NAME: grunt_entry_hellfire
+TAGS: entry no_monster_gen no_trap_gen no_item_gen
+WEIGHT: 4
+ORIENT: float
+SHUFFLE: {(
+KPROP: HdefghijkLMNP- = no_rtele_into
+TILE:  n = dngn_transparent_wall_red
+SUBVAULT: d : grunt_burning_victim
+SUBVAULT: e : grunt_burning_victim
+SUBVAULT: f : grunt_burning_victim
+SUBVAULT: g : grunt_burning_victim
+SUBVAULT: h : grunt_burning_victim
+SUBVAULT: i : grunt_burning_victim
+SUBVAULT: j : grunt_burning_victim
+SUBVAULT: k : grunt_burning_victim
+SUBVAULT: L : grunt_burning_victim
+SUBVAULT: M : grunt_burning_victim
+SUBVAULT: N : grunt_burning_victim
+SUBVAULT: P : grunt_burning_victim
+MARKER: H = lua:fog_machine { cloud_type="flame", pow_min=10, pow_max=10, \
+                              delay = 10, walk_dist = 3, size = 5, \
+                              excl_rad = 0 }
+MAP
+xxxxxxxxxx@xxxxxxxxxx
+xxxxxxx.......xxxxxxx
+xxxxx...........xxxxx
+xxxx......[......xxxx
+xxx.....nnnnn.....xxx
+xx....nnn---nnn....xx
+xx...nn--d-e--nn...xx
+x....n-f-----g-n....x
+x...nn--H-H-H--nn...x
+x...n-h-------i-n...x
+@...n---H-G-H---n...@
+x...n-j-------k-n...x
+x...nn--H-H-H--nn...x
+x....n-L-----M-n....x
+xx..{nn--N-P--nn(..xx
+xx....nnn---nnn....xx
+xxx.....nnnnn.....xxx
+xxxx.............xxxx
+xxxxx...........xxxxx
+xxxxxxx.......xxxxxxx
+xxxxxxxxxx@xxxxxxxxxx
 ENDMAP

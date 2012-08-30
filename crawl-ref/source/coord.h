@@ -42,14 +42,14 @@ static inline bool map_bounds(const coord_def &p)
 bool map_bounds_with_margin(coord_def p, int margin);
 
 // Determines if the coordinate is within bounds of an LOS array.
-inline bool show_bounds(const coord_def &p)
+static inline bool show_bounds(const coord_def &p)
 {
     return (p.x >= 0 && p.x < ENV_SHOW_DIAMETER
             && p.y >= 0 && p.y < ENV_SHOW_DIAMETER);
 }
 
 int grid_distance(const coord_def& p1, const coord_def& p2);
-int distance(const coord_def& p1, const coord_def& p2);
+int distance2(const coord_def& p1, const coord_def& p2);
 bool adjacent(const coord_def& p1, const coord_def& p2);
 
 // Conversion between different coordinate systems.

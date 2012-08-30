@@ -35,7 +35,7 @@ static int _table_int(lua_State *ls, int idx, const char *name, int defval)
         luaL_error(ls, "'%s' in table, but not an int.", name);
     int ret = (!nil && valid ? luaL_checkint(ls, idx) : defval);
     lua_pop(ls, 1);
-    return (ret);
+    return ret;
 }
 
 // Return the character stored in the table (on the stack) with the key name.
@@ -61,7 +61,7 @@ static char _table_char(lua_State *ls, int idx, const char *name, char defval)
             luaL_error(ls, "'%s' has more than one character.", name);
     }
     lua_pop(ls, 1);
-    return (ret);
+    return ret;
 }
 
 // Return the string stored in the table (on the stack) with the key name.
@@ -78,7 +78,7 @@ static const char* _table_str(lua_State *ls, int idx, const char *name, const ch
         luaL_error(ls, "'%s' in table, but not a string.", name);
     const char *ret = (!nil && valid ? lua_tostring(ls, idx) : defval);
     lua_pop(ls, 1);
-    return (ret);
+    return ret;
 }
 
 // Return the boolean stored in the table (on the stack) with the key name.
@@ -95,7 +95,7 @@ static bool _table_bool(lua_State *ls, int idx, const char *name, bool defval)
         luaL_error(ls, "'%s' in table, but not a bool.", name);
     bool ret = (!nil && valid ? lua_toboolean(ls, idx) : defval);
     lua_pop(ls, 1);
-    return (ret);
+    return ret;
 }
 
 // These macros all assume the table is on the top of the lua stack.
@@ -119,9 +119,9 @@ static bool _coords(lua_State *ls, map_lines &lines,
     y2 = _table_int(ls, idx, "y2", lines.height() - 1);
 
     if (x2 < x1)
-        std::swap(x1, x2);
+        swap(x1, x2);
     if (y2 < y1)
-        std::swap(y1, y2);
+        swap(y1, y2);
 
     return (x1 + border <= x2 - border && y1 + border <= y2 - border);
 }
@@ -152,11 +152,9 @@ static int _fill_area(lua_State *ls, map_lines &lines, int x1, int y1, int x2, i
 {
     for (int y = y1; y <= y2; ++y)
         for (int x = x1; x <= x2; ++x)
-        {
             lines(x, y) = fill;
-        }
 
-    return (0);
+    return 0;
 }
 
 static void _border_area(map_lines &lines, int x1, int y1, int x2, int y2, char border)
@@ -168,9 +166,9 @@ static void _border_area(map_lines &lines, int x1, int y1, int x2, int y2, char 
 }
 
 // Specifically only deals with horizontal lines.
-static std::vector<coord_def> _box_side (int x1, int y1, int x2, int y2, int side)
+static vector<coord_def> _box_side(int x1, int y1, int x2, int y2, int side)
 {
-    std::vector<coord_def> line;
+    vector<coord_def> line;
 
     int start_x, start_y, stop_x, stop_y, x, y;
 
@@ -186,18 +184,22 @@ static std::vector<coord_def> _box_side (int x1, int y1, int x2, int y2, int sid
     x = start_x; y = start_y;
 
     if (start_x == stop_x)
+    {
         for (y = start_y+1; y < stop_y; y++)
             line.push_back(coord_def(x, y));
+    }
     else
+    {
         for (x = start_x+1; x < stop_x; x++)
             line.push_back(coord_def(x, y));
+    }
 
-    return (line);
+    return line;
 }
 
 // Does what count_passable_neighbors does, but in C++ form.
-static int _count_passable_neighbors (lua_State *ls, map_lines &lines, int x,
-                                      int y, const char *passable = traversable_glyphs)
+static int _count_passable_neighbors(lua_State *ls, map_lines &lines, int x,
+                                     int y, const char *passable = traversable_glyphs)
 {
     coord_def tl(x, y);
     int count = 0;
@@ -209,13 +211,13 @@ static int _count_passable_neighbors (lua_State *ls, map_lines &lines, int x,
                 count++;
     }
 
-    return (count);
+    return count;
 }
 
-static int _count_passable_neighbors (lua_State *ls, map_lines &lines, coord_def point,
-                                      const char *passable = traversable_glyphs)
+static int _count_passable_neighbors(lua_State *ls, map_lines &lines, coord_def point,
+                                     const char *passable = traversable_glyphs)
 {
-    return (_count_passable_neighbors(ls, lines, point.x, point.y, passable));
+    return _count_passable_neighbors(ls, lines, point.x, point.y, passable);
 }
 
 
@@ -225,7 +227,7 @@ LUAFN(dgn_count_feature_in_box)
 
     int x1, y1, x2, y2;
     if (!_coords(ls, lines, x1, y1, x2, y2))
-        return (0);
+        return 0;
 
     TABLE_STR(ls, feat, "");
 
@@ -241,7 +243,7 @@ LUAFN(dgn_count_antifeature_in_box)
 
     int x1, y1, x2, y2;
     if (!_coords(ls, lines, x1, y1, x2, y2))
-        return (0);
+        return 0;
 
     TABLE_STR(ls, feat, "");
 
@@ -261,7 +263,7 @@ LUAFN(dgn_count_neighbors)
     TABLE_INT(ls, y, -1);
 
     if (!_valid_coord(ls, lines, x, y))
-        return (0);
+        return 0;
 
     coord_def tl(x-1, y-1);
     coord_def br(x+1, y+1);
@@ -280,11 +282,11 @@ LUAFN(dgn_count_passable_neighbors)
     if (!_valid_coord(ls, lines, x, y))
     {
         lua_pushnumber(ls, 0);
-        return (1);
+        return 1;
     }
 
     lua_pushnumber(ls, _count_passable_neighbors(ls, lines, x, y, passable));
-    return (1);
+    return 1;
 }
 
 
@@ -298,17 +300,17 @@ LUAFN(dgn_is_valid_coord)
     if (x < 0 || x >= lines.width())
     {
         lua_pushboolean(ls, false);
-        return (1);
+        return 1;
     }
 
     if (y < 0 || y >= lines.height())
     {
         lua_pushboolean(ls, false);
-        return (1);
+        return 1;
     }
 
     lua_pushboolean(ls, true);
-    return (1);
+    return 1;
 }
 
 LUAFN(dgn_extend_map)
@@ -321,7 +323,7 @@ LUAFN(dgn_extend_map)
 
     lines.extend(width, height, fill);
 
-    return (0);
+    return 0;
 }
 
 LUAFN(dgn_fill_area)
@@ -330,7 +332,7 @@ LUAFN(dgn_fill_area)
 
     int x1, y1, x2, y2;
     if (!_coords(ls, lines, x1, y1, x2, y2))
-        return (0);
+        return 0;
 
     TABLE_CHAR(ls, fill, 'x');
     TABLE_CHAR(ls, border, fill);
@@ -339,7 +341,7 @@ LUAFN(dgn_fill_area)
     if (border != fill)
         _border_area(lines, x1, y1, x2, y2, border);
 
-    return (0);
+    return 0;
 }
 
 LUAFN(dgn_fill_disconnected)
@@ -348,7 +350,7 @@ LUAFN(dgn_fill_disconnected)
 
     int x1, y1, x2, y2;
     if (!_coords(ls, lines, x1, y1, x2, y2))
-        return (0);
+        return 0;
 
     TABLE_CHAR(ls, fill, 'x');
     TABLE_STR(ls, passable, traversable_glyphs);
@@ -380,7 +382,7 @@ LUAFN(dgn_fill_disconnected)
         }
     }
 
-    return (0);
+    return 0;
 }
 
 LUAFN(dgn_is_passable_coord)
@@ -392,14 +394,14 @@ LUAFN(dgn_is_passable_coord)
     TABLE_STR(ls, passable, traversable_glyphs);
 
     if (!_valid_coord(ls, lines, x, y))
-        return (0);
+        return 0;
 
     if (strchr(passable, lines(x, y)))
         lua_pushboolean(ls, true);
     else
         lua_pushboolean(ls, false);
 
-    return (1);
+    return 1;
 }
 
 LUAFN(dgn_find_in_area)
@@ -412,7 +414,7 @@ LUAFN(dgn_find_in_area)
     TABLE_INT(ls, y2, -1);
 
     if (!_coords(ls, lines, x1, y1, x2, y2))
-        return (0);
+        return 0;
 
     TABLE_CHAR(ls, find, 'x');
 
@@ -423,11 +425,11 @@ LUAFN(dgn_find_in_area)
             if (lines(x, y) == find)
             {
                 lua_pushboolean(ls, true);
-                return (1);
+                return 1;
             }
 
     lua_pushboolean(ls, false);
-    return (1);
+    return 1;
 }
 
 LUAFN(dgn_height)
@@ -448,15 +450,15 @@ LUAFN(dgn_join_the_dots)
     TABLE_CHAR(ls, fill, '.');
 
     if (!_valid_coord(ls, lines, x1, y1))
-        return (0);
+        return 0;
     if (!_valid_coord(ls, lines, x2, y2))
-        return (0);
+        return 0;
 
     coord_def from(x1, y1);
     coord_def to(x2, y2);
 
     if (from == to)
-        return (0);
+        return 0;
 
     coord_def at = from;
     do
@@ -495,7 +497,7 @@ LUAFN(dgn_join_the_dots)
     }
     while (true);
 
-    return (0);
+    return 0;
 }
 
 LUAFN(dgn_make_circle)
@@ -508,14 +510,14 @@ LUAFN(dgn_make_circle)
     TABLE_CHAR(ls, fill, 'x');
 
     if (!_valid_coord(ls, lines, x, y))
-        return (0);
+        return 0;
 
     for (int ry = -radius; ry <= radius; ++ry)
         for (int rx = -radius; rx <= radius; ++rx)
             if (rx * rx + ry * ry < radius * radius)
                 lines(x + rx, y + ry) = fill;
 
-    return (0);
+    return 0;
 }
 
 LUAFN(dgn_make_diamond)
@@ -528,14 +530,14 @@ LUAFN(dgn_make_diamond)
     TABLE_CHAR(ls, fill, 'x');
 
     if (!_valid_coord(ls, lines, x, y))
-        return (0);
+        return 0;
 
     for (int ry = -radius; ry <= radius; ++ry)
         for (int rx = -radius; rx <= radius; ++rx)
-            if (std::abs(rx) + std::abs(ry) <= radius)
+            if (abs(rx) + abs(ry) <= radius)
                 lines(x + rx, y + ry) = fill;
 
-    return (0);
+    return 0;
 }
 
 LUAFN(dgn_make_rounded_square)
@@ -548,14 +550,14 @@ LUAFN(dgn_make_rounded_square)
     TABLE_CHAR(ls, fill, 'x');
 
     if (!_valid_coord(ls, lines, x, y))
-        return (0);
+        return 0;
 
     for (int ry = -radius; ry <= radius; ++ry)
         for (int rx = -radius; rx <= radius; ++rx)
-            if (std::abs(rx) != radius || std::abs(ry) != radius)
+            if (abs(rx) != radius || abs(ry) != radius)
                 lines(x + rx, y + ry) = fill;
 
-    return (0);
+    return 0;
 }
 
 LUAFN(dgn_make_square)
@@ -568,13 +570,13 @@ LUAFN(dgn_make_square)
     TABLE_CHAR(ls, fill, 'x');
 
     if (!_valid_coord(ls, lines, x, y))
-        return (0);
+        return 0;
 
     for (int ry = -radius; ry <= radius; ++ry)
         for (int rx = -radius; rx <= radius; ++rx)
             lines(x + rx, y + ry) = fill;
 
-    return (0);
+    return 0;
 }
 
 LUAFN(dgn_make_box)
@@ -583,7 +585,7 @@ LUAFN(dgn_make_box)
 
     int x1, y1, x2, y2;
     if (!_coords(ls, lines, x1, y1, x2, y2))
-        return (0);
+        return 0;
 
     TABLE_CHAR(ls, floor, '.');
     TABLE_CHAR(ls, wall, 'x');
@@ -592,7 +594,7 @@ LUAFN(dgn_make_box)
     _fill_area(ls, lines, x1, y1, x2, y2, wall);
     _fill_area(ls, lines, x1+width, y1+width, x2-width, y2-width, floor);
 
-    return (0);
+    return 0;
 }
 
 LUAFN(dgn_make_box_doors)
@@ -601,7 +603,7 @@ LUAFN(dgn_make_box_doors)
 
     int x1, y1, x2, y2;
     if (!_coords(ls, lines, x1, y1, x2, y2))
-        return (0);
+        return 0;
 
     TABLE_INT(ls, number, 1);
 
@@ -615,7 +617,7 @@ LUAFN(dgn_make_box_doors)
         if (sides[current_side] >= 2)
             current_side = random2(4);
 
-        std::vector<coord_def> points = _box_side(x1, y1, x2, y2, current_side);
+        vector<coord_def> points = _box_side(x1, y1, x2, y2, current_side);
 
         int total_points = int(points.size());
 
@@ -643,7 +645,7 @@ LUAFN(dgn_make_box_doors)
     }
 
     lua_pushnumber(ls, door_count);
-    return (1);
+    return 1;
 }
 
 // Return a metatable for a point on the map_lines grid.
@@ -654,14 +656,14 @@ LUAFN(dgn_mapgrd_table)
     map_def **mapref = clua_new_userdata<map_def *>(ls, MAPGRD_METATABLE);
     *mapref = map;
 
-    return (1);
+    return 1;
 }
 
 LUAFN(dgn_octa_room)
 {
     LINES(ls, 1, lines);
 
-    int default_oblique = std::min(lines.width(), lines.height()) / 2 - 1;
+    int default_oblique = min(lines.width(), lines.height()) / 2 - 1;
     TABLE_INT(ls, oblique, default_oblique);
     TABLE_CHAR(ls, outside, 'x');
     TABLE_CHAR(ls, inside, '.');
@@ -669,7 +671,7 @@ LUAFN(dgn_octa_room)
 
     int x1, y1, x2, y2;
     if (!_coords(ls, lines, x1, y1, x2, y2))
-        return (0);
+        return 0;
 
     coord_def tl(x1, y1);
     coord_def br(x2, y2);
@@ -682,14 +684,14 @@ LUAFN(dgn_octa_room)
             continue;
 
         int ob = 0;
-        ob += std::max(oblique + tl.x - mc.x, 0);
-        ob += std::max(oblique + mc.x - br.x, 0);
+        ob += max(oblique + tl.x - mc.x, 0);
+        ob += max(oblique + mc.x - br.x, 0);
 
         bool is_inside = (mc.y >= tl.y + ob && mc.y <= br.y - ob);
         lines(mc) = is_inside ? inside : outside;
     }
 
-    return (0);
+    return 0;
 }
 
 LUAFN(dgn_replace_area)
@@ -701,14 +703,14 @@ LUAFN(dgn_replace_area)
 
     int x1, y1, x2, y2;
     if (!_coords(ls, lines, x1, y1, x2, y2))
-        return (0);
+        return 0;
 
     for (int y = y1; y <= y2; ++y)
         for (int x = x1; x <= x2; ++x)
             if (strchr(find, lines(x, y)))
                 lines(x, y) = replace;
 
-    return (0);
+    return 0;
 }
 
 LUAFN(dgn_replace_first)
@@ -724,24 +726,20 @@ LUAFN(dgn_replace_first)
     TABLE_BOOL(ls, required, false);
 
     if (!_valid_coord(ls, lines, x, y))
-        return (0);
+        return 0;
 
     if (xdir < -1 || xdir > 1)
-    {
-        return (luaL_error(ls, "Invalid xdir: %d", xdir));
-    }
+        return luaL_error(ls, "Invalid xdir: %d", xdir);
 
     if (ydir < -1 || ydir > 1)
-    {
-        return (luaL_error(ls, "Invalid ydir: %d", ydir));
-    }
+        return luaL_error(ls, "Invalid ydir: %d", ydir);
 
     while (lines.in_bounds(coord_def(x, y)))
     {
         if (lines(x, y) == find)
         {
             lines(x, y) = replace;
-            return (0);
+            return 0;
         }
 
         x += xdir;
@@ -749,9 +747,9 @@ LUAFN(dgn_replace_first)
     }
 
     if (required)
-        return (luaL_error(ls, "Could not find feature '%c' to replace", find));
+        return luaL_error(ls, "Could not find feature '%c' to replace", find);
 
-    return (0);
+    return 0;
 }
 
 LUAFN(dgn_replace_random)
@@ -764,17 +762,17 @@ LUAFN(dgn_replace_random)
 
     int x1, y1, x2, y2;
     if (!_coords(ls, lines, x1, y1, x2, y2))
-        return (0);
+        return 0;
 
     int count = (x2 - x1) * (y2 - y1);
     if (!count)
     {
         if (required)
             luaL_error(ls, "%s", "No elements to replace");
-        return (0);
+        return 0;
     }
 
-    std::vector<coord_def> loc;
+    vector<coord_def> loc;
     loc.reserve(count);
 
     for (int y = y1; y <= y2; ++y)
@@ -785,13 +783,13 @@ LUAFN(dgn_replace_random)
     if (loc.empty())
     {
         if (required)
-            return (luaL_error(ls, "Could not find '%c'", find));
+            return luaL_error(ls, "Could not find '%c'", find);
     }
 
     int idx = random2(loc.size());
     lines(loc[idx]) = replace;
 
-    return (0);
+    return 0;
 }
 
 LUAFN(dgn_smear_map)
@@ -806,7 +804,7 @@ LUAFN(dgn_smear_map)
     const int border = 1;
     int x1, y1, x2, y2;
     if (!_coords(ls, lines, x1, y1, x2, y2, border))
-        return (0);
+        return 0;
 
     const int max_test_per_iteration = 10;
     int sanity = 0;
@@ -822,7 +820,7 @@ LUAFN(dgn_smear_map)
             do
             {
                 if (sanity++ > max_sanity)
-                    return (0);
+                    return 0;
 
                 mc.x = random_range(x1+border, y2-border);
                 mc.y = random_range(y1+border, y2-border);
@@ -846,7 +844,7 @@ LUAFN(dgn_smear_map)
         lines(mc) = smear;
     }
 
-    return (0);
+    return 0;
 }
 
 LUAFN(dgn_spotty_map)
@@ -861,7 +859,7 @@ LUAFN(dgn_spotty_map)
     const int border = 4;
     int x1, y1, x2, y2;
     if (!_coords(ls, lines, x1, y1, x2, y2, border))
-        return (0);
+        return 0;
 
     const int max_test_per_iteration = 10;
     int sanity = 0;
@@ -873,7 +871,7 @@ LUAFN(dgn_spotty_map)
         do
         {
             if (sanity++ > max_sanity)
-                return (0);
+                return 0;
 
             x = random_range(x1 + border, x2 - border);
             y = random_range(y1 + border, y2 - border);
@@ -896,7 +894,7 @@ LUAFN(dgn_spotty_map)
         }
     }
 
-    return (0);
+    return 0;
 }
 
 static int dgn_width(lua_State *ls)
@@ -922,7 +920,7 @@ LUAFN(dgn_delve)
     ARG_INT(ls, 6, top, 125);
 
     delve(&lines, ngb_min, ngb_max, connchance, cellnum, top);
-    return (0);
+    return 0;
 }
 
 LUAFN(dgn_farthest_from)
@@ -934,7 +932,7 @@ LUAFN(dgn_farthest_from)
     ASSERT(lines.height() <= GYM);
     FixedArray<bool, GXM, GYM> visited;
     visited.init(false);
-    std::vector<coord_def> queue;
+    vector<coord_def> queue;
     unsigned int dc_prev = 0, dc_next; // indices where dist changes to the next value
 
     for (int x = lines.width(); x >= 0; x--)
@@ -954,7 +952,7 @@ LUAFN(dgn_farthest_from)
         // Not a single beacon, nowhere to go.
         lua_pushnil(ls);
         lua_pushnil(ls);
-        return (2);
+        return 2;
     }
 
     for (unsigned int dc = 0; dc < queue.size(); dc++)
@@ -980,7 +978,7 @@ LUAFN(dgn_farthest_from)
     coord_def loc = queue[dc_prev + random2(dc_next - dc_prev)];
     lua_pushnumber(ls, loc.x);
     lua_pushnumber(ls, loc.y);
-    return (2);
+    return 2;
 }
 
 /* Wrappers for C++ layouts, to facilitate choosing of layouts by weight and
@@ -988,7 +986,7 @@ LUAFN(dgn_farthest_from)
 
 LUAFN(dgn_layout_basic)
 {
-    dgn_build_basic_level(you.absdepth0);
+    dgn_build_basic_level();
     return 0;
 }
 
@@ -1006,13 +1004,13 @@ LUAFN(dgn_layout_chaotic_city)
 
 LUAFN(dgn_layout_shoals)
 {
-    dgn_build_shoals_level(you.absdepth0);
+    dgn_build_shoals_level();
     return 0;
 }
 
 LUAFN(dgn_layout_swamp)
 {
-    dgn_build_swamp_level(you.absdepth0);
+    dgn_build_swamp_level();
     return 0;
 }
 

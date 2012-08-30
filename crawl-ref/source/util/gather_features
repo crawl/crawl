@@ -1,0 +1,49 @@
+#!/usr/bin/perl -w
+
+# Run gather_features -a if you want "A pigsty" rather than "pigsty".
+my $art = grep /^-a$/, @ARGV;
+
+sub articled($)
+{
+    local $_ = $_[0];
+    return $_ unless $art;
+    return $_ if /^[A-Z]/ && !/ trap$/;
+    return "\u$_" if /^(?:the |an |a |some )/i;
+    return "A $_" if /^one-/i;
+    return /^[aeiou]/i ? "An $_" : "A $_";
+}
+
+open IN, "<directn.cc" or die "Can't read directn.cc\n";
+{ undef local $/; $_ = <IN>; }
+close IN;
+
+s/.*_base_feature_desc\(dungeon_feature_type(.*?)\n}\n.*/$1/s
+    or die "Can't find _base_feature_desc in directn.cc\n";
+s|//.*$||mg;
+
+for (/"([^"\n]*)"/g)
+{
+    next if /^$/;
+    next if /^undefined trap$/;
+    next if /^Error/;
+
+    $features{articled($_)} = 1;
+}
+
+for (grep /\.des|\.des\.disabled|\.lua$/, `git ls-files`)
+{
+    chomp;
+    open IN, "<", $_ or die "Can't read $_\n";
+    { undef local $/; $_ = <IN>; }
+    close IN;
+
+    $features{articled($_)} = 1
+        for /set_feature_name\s*\(\s*"[^"\n"]+"\s*,[ \n:]*"([^"\n]+)"\s*\)/sg;
+
+    $features{articled($_)} = 1
+        for /\bdesc\s*=\s*"([^"]*)"/g;
+}
+
+$features{articled("gleaming silver wall")} = 1;
+
+print join("\n", sort keys %features), "\n";

@@ -21,6 +21,15 @@
 
 #include "platform.h"
 #include <stdint.h>
+namespace std {};
+using namespace std;
+
+#if defined(__cplusplus) && __cplusplus < 201103
+# define unique_ptr auto_ptr
+template<typename T>
+static inline T move(T x) { return x; } // good enough for our purposes
+# define nullptr NULL
+#endif
 
 #ifdef TARGET_COMPILER_VC
 /* Disable warning about:
@@ -68,19 +77,16 @@
 #endif
 
 //
-// OS X's Terminal.app has color handling problems; dark grey is
-// especially bad, so we'll want to remap that. OS X is otherwise
-// Unix-ish, so we shouldn't need other special handling.
-//
-#define COL_TO_REPLACE_DARKGREY     BLUE
-
-//
 // MinGW
 //
 #if defined(TARGET_COMPILER_MINGW)
     #ifndef REGEX_PCRE
     #define REGEX_PCRE
     #endif
+#endif
+
+#if !defined(__cplusplus) || (__cplusplus < 201103)
+# define constexpr const
 #endif
 
 // =========================================================================
@@ -128,16 +134,6 @@
     //
     // #define SOUND_PLAY_COMMAND "/usr/bin/play -v .5 \"%s\" 2>/dev/null &"
 
-    // For cases when the game will be played on terms that don't support the
-    // curses "bold == lighter" 16 colour mode. -- bwr
-    //
-    // Darkgrey is a particular problem in the 8 colour mode.  Popular values
-    // for replacing it around here are: WHITE, BLUE, and MAGENTA.  This
-    // option has no affect in 16 colour mode. -- bwr
-    //
-    // #define USE_8_COLOUR_TERM_MAP
-    // #define COL_TO_REPLACE_DARKGREY     MAGENTA
-
     #include "libunix.h"
 
 #elif defined(TARGET_OS_WINDOWS)
@@ -173,12 +169,19 @@
 # define _WIN32_WINNT 0x501
 #endif
 
+// Note: clang does masquerade as GNUC.
 #if defined(__GNUC__)
 # define NORETURN __attribute__ ((noreturn))
 #elif defined(_MSC_VER)
 # define NORETURN __declspec(noreturn)
 #else
 # define NORETURN
+#endif
+
+#if defined(__GNUC__)
+# define PURE __attribute__ ((pure))
+#else
+# define PURE
 #endif
 
 // =========================================================================
@@ -367,17 +370,19 @@
 // Uncomment these if you can't find these functions on your system
 // #define NEED_USLEEP
 
-#ifndef PROPORTIONAL_FONT
-    #define PROPORTIONAL_FONT "Vera.ttf"
-#endif
-#ifndef MONOSPACED_FONT
-    #define MONOSPACED_FONT "VeraMono.ttf"
+#ifdef USE_TILE_LOCAL
+# ifndef PROPORTIONAL_FONT
+#  error PROPORTIONAL_FONT not defined
+# endif
+# ifndef MONOSPACED_FONT
+#  error MONOSPACED_FONT not defined
+# endif
 #endif
 
 #ifdef __cplusplus
 
 template < class T >
-inline void UNUSED(const volatile T &)
+static inline void UNUSED(const volatile T &)
 {
 }
 

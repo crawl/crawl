@@ -17,6 +17,15 @@
 
 #include <algorithm>
 
+// These tend to be called from tight loops, and C++ method calls don't
+// get optimized away except for LTO -fwhole-program builds, so merely
+// disabling the function's body is not enough; let's not call them at all.
+#ifdef DEBUG
+# define ASSERT_VALIDITY(x) x assert_validity()
+#else
+# define ASSERT_VALIDITY(x)
+#endif
+
 CrawlStoreValue::CrawlStoreValue()
     : type(SV_NONE), flags(SFLAG_UNSET)
 {
@@ -52,8 +61,8 @@ CrawlStoreValue::CrawlStoreValue(const CrawlStoreValue &other)
 
     case SV_STR:
     {
-        std::string* str;
-        str = new std::string(*static_cast<std::string*>(other.val.ptr));
+        string* str;
+        str = new string(*static_cast<string*>(other.val.ptr));
         val.ptr = static_cast<void*>(str);
         break;
     }
@@ -177,7 +186,7 @@ CrawlStoreValue::CrawlStoreValue(const float &_val)
     get_float() = _val;
 }
 
-CrawlStoreValue::CrawlStoreValue(const std::string &_val)
+CrawlStoreValue::CrawlStoreValue(const string &_val)
     : type(SV_STR), flags(SFLAG_UNSET)
 {
     val.ptr = NULL;
@@ -290,7 +299,7 @@ void CrawlStoreValue::unset(bool force)
 
     case SV_STR:
     {
-        std::string* str = static_cast<std::string*>(val.ptr);
+        string* str = static_cast<string*>(val.ptr);
         delete str;
         val.ptr = NULL;
         break;
@@ -410,7 +419,7 @@ CrawlStoreValue &CrawlStoreValue::operator = (const CrawlStoreValue &other)
         break;
 
     case SV_STR:
-        COPY_PTR(std::string);
+        COPY_PTR(string);
         break;
 
     case SV_COORD:
@@ -442,7 +451,7 @@ CrawlStoreValue &CrawlStoreValue::operator = (const CrawlStoreValue &other)
         break;
     }
 
-    return (*this);
+    return *this;
 }
 
 ///////////////////////////////////
@@ -507,7 +516,7 @@ void CrawlStoreValue::write(writer &th) const
 
     case SV_STR:
     {
-        std::string* str = static_cast<std::string*>(val.ptr);
+        string* str = static_cast<string*>(val.ptr);
         marshallString(th, *str);
         break;
     }
@@ -612,8 +621,8 @@ void CrawlStoreValue::read(reader &th)
 
     case SV_STR:
     {
-        std::string str = unmarshallString(th);
-        val.ptr = (void*) new std::string(str);
+        string str = unmarshallString(th);
+        val.ptr = (void*) new string(str);
         break;
     }
 
@@ -831,9 +840,9 @@ float &CrawlStoreValue::get_float()
     GET_VAL(SV_FLOAT, float, val._float, 0.0);
 }
 
-std::string &CrawlStoreValue::get_string()
+string &CrawlStoreValue::get_string()
 {
-    GET_VAL_PTR(SV_STR, std::string*, new std::string(""));
+    GET_VAL_PTR(SV_STR, string*, new string(""));
 }
 
 coord_def &CrawlStoreValue::get_coord()
@@ -918,10 +927,10 @@ float CrawlStoreValue::get_float() const
     return val._float;
 }
 
-std::string CrawlStoreValue::get_string() const
+string CrawlStoreValue::get_string() const
 {
     GET_CONST_SETUP(SV_STR);
-    return *((std::string*)val.ptr);
+    return *((string*)val.ptr);
 }
 
 coord_def CrawlStoreValue::get_coord() const
@@ -974,7 +983,7 @@ CrawlStoreValue::operator short&()                 { return get_short();      }
 CrawlStoreValue::operator float&()                 { return get_float();      }
 CrawlStoreValue::operator int&()                   { return get_int();        }
 CrawlStoreValue::operator int64_t&()               { return get_int64();      }
-CrawlStoreValue::operator std::string&()           { return get_string();     }
+CrawlStoreValue::operator string&()                { return get_string();     }
 CrawlStoreValue::operator coord_def&()             { return get_coord();      }
 CrawlStoreValue::operator CrawlHashTable&()        { return get_table();      }
 CrawlStoreValue::operator CrawlVector&()           { return get_vector();     }
@@ -1042,7 +1051,7 @@ CrawlStoreValue::operator float() const
     return get_float();
 }
 
-CrawlStoreValue::operator std::string() const
+CrawlStoreValue::operator string() const
 {
     return get_string();
 }
@@ -1067,97 +1076,97 @@ CrawlStoreValue::operator level_pos() const
 CrawlStoreValue &CrawlStoreValue::operator = (const bool &_val)
 {
     get_bool() = _val;
-    return (*this);
+    return *this;
 }
 
 CrawlStoreValue &CrawlStoreValue::operator = (const char &_val)
 {
     get_byte() = _val;
-    return (*this);
+    return *this;
 }
 
 CrawlStoreValue &CrawlStoreValue::operator = (const short &_val)
 {
     get_short() = _val;
-    return (*this);
+    return *this;
 }
 
 CrawlStoreValue &CrawlStoreValue::operator = (const int &_val)
 {
     get_int() = _val;
-    return (*this);
+    return *this;
 }
 
 CrawlStoreValue &CrawlStoreValue::operator = (const int64_t &_val)
 {
     get_int64() = _val;
-    return (*this);
+    return *this;
 }
 
 CrawlStoreValue &CrawlStoreValue::operator = (const float &_val)
 {
     get_float() = _val;
-    return (*this);
+    return *this;
 }
 
-CrawlStoreValue &CrawlStoreValue::operator = (const std::string &_val)
+CrawlStoreValue &CrawlStoreValue::operator = (const string &_val)
 {
     get_string() = _val;
-    return (*this);
+    return *this;
 }
 
 CrawlStoreValue &CrawlStoreValue::operator = (const char* _val)
 {
     get_string() = _val;
-    return (*this);
+    return *this;
 }
 
 CrawlStoreValue &CrawlStoreValue::operator = (const coord_def &_val)
 {
     get_coord() = _val;
-    return (*this);
+    return *this;
 }
 
 CrawlStoreValue &CrawlStoreValue::operator = (const CrawlHashTable &_val)
 {
     get_table() = _val;
-    return (*this);
+    return *this;
 }
 
 CrawlStoreValue &CrawlStoreValue::operator = (const CrawlVector &_val)
 {
     get_vector() = _val;
-    return (*this);
+    return *this;
 }
 
 CrawlStoreValue &CrawlStoreValue::operator = (const item_def &_val)
 {
     get_item() = _val;
-    return (*this);
+    return *this;
 }
 
 CrawlStoreValue &CrawlStoreValue::operator = (const level_id &_val)
 {
     get_level_id() = _val;
-    return (*this);
+    return *this;
 }
 
 CrawlStoreValue &CrawlStoreValue::operator = (const level_pos &_val)
 {
     get_level_pos() = _val;
-    return (*this);
+    return *this;
 }
 
 CrawlStoreValue &CrawlStoreValue::operator = (const monster& _val)
 {
     get_monster() = _val;
-    return (*this);
+    return *this;
 }
 
 CrawlStoreValue &CrawlStoreValue::operator = (const dlua_chunk &_val)
 {
     get_lua() = _val;
-    return (*this);
+    return *this;
 }
 
 ///////////////////////////////////////////////////
@@ -1218,7 +1227,7 @@ int CrawlStoreValue::operator -- (int)
     INT_OPERATOR_UNARY(--);
 }
 
-std::string &CrawlStoreValue::operator += (const std::string &_val)
+string &CrawlStoreValue::operator += (const string &_val)
 {
     return (get_string() += _val);
 }
@@ -1244,7 +1253,7 @@ CrawlHashTable::CrawlHashTable(const CrawlHashTable& other)
 
 CrawlHashTable::~CrawlHashTable()
 {
-    // NOTE: Not using std::auto_ptr because making hash_map an auto_ptr
+    // NOTE: Not using unique_ptr because making hash_map an unique_ptr
     // causes compile weirdness in externs.h
     if (hash_map == NULL)
         return;
@@ -1261,19 +1270,19 @@ CrawlHashTable &CrawlHashTable::operator = (const CrawlHashTable &other)
     if (other.hash_map == NULL)
     {
         hash_map = NULL;
-        return (*this);
+        return *this;
     }
 
     hash_map = new hash_map_type(*(other.hash_map));
 
-    return (*this);
+    return *this;
 }
 
 //////////////////////////////
 // Read/write from/to savefile
 void CrawlHashTable::write(writer &th) const
 {
-    assert_validity();
+    ASSERT_VALIDITY();
     if (empty())
     {
         marshallByte(th, 0);
@@ -1290,12 +1299,12 @@ void CrawlHashTable::write(writer &th) const
         i->second.write(th);
     }
 
-    assert_validity();
+    ASSERT_VALIDITY();
 }
 
 void CrawlHashTable::read(reader &th)
 {
-    assert_validity();
+    ASSERT_VALIDITY();
 
     ASSERT(empty());
 
@@ -1308,18 +1317,18 @@ void CrawlHashTable::read(reader &th)
 
     for (hash_size i = 0; i < _size; i++)
     {
-        std::string      key = unmarshallString(th);
+        string           key = unmarshallString(th);
         CrawlStoreValue &val = (*this)[key];
 
         val.read(th);
     }
 
-    assert_validity();
+    ASSERT_VALIDITY();
 }
 
 
 #ifdef DEBUG_PROPS
-static std::map<std::string, int> accesses;
+static map<string, int> accesses;
 # define ACCESS(x) ++accesses[x]
 #else
 # define ACCESS(x)
@@ -1328,13 +1337,13 @@ static std::map<std::string, int> accesses;
 //////////////////
 // Misc functions
 
-bool CrawlHashTable::exists(const std::string &key) const
+bool CrawlHashTable::exists(const string &key) const
 {
     if (hash_map == NULL)
-        return (false);
+        return false;
 
     ACCESS(key);
-    assert_validity();
+    ASSERT_VALIDITY();
     hash_map_type::const_iterator i = hash_map->find(key);
 
     return (i != hash_map->end());
@@ -1348,17 +1357,17 @@ void CrawlHashTable::assert_validity() const
 
     hash_map_type::const_iterator i = hash_map->begin();
 
-    unsigned long actual_size = 0;
+    size_t actual_size = 0;
 
     for (; i != hash_map->end(); ++i)
     {
         actual_size++;
 
-        const std::string    &key = i->first;
+        const string          &key = i->first;
         const CrawlStoreValue &val = i->second;
 
         ASSERT(!key.empty());
-        std::string trimmed = trimmed_string(key);
+        string trimmed = trimmed_string(key);
         ASSERT(key == trimmed);
 
         ASSERT(val.type != SV_NONE);
@@ -1408,9 +1417,9 @@ void CrawlHashTable::assert_validity() const
 ////////////////////////////////
 // Accessors to contained values
 
-CrawlStoreValue& CrawlHashTable::get_value(const std::string &key)
+CrawlStoreValue& CrawlHashTable::get_value(const string &key)
 {
-    assert_validity();
+    ASSERT_VALIDITY();
     init_hash_map();
 
     ACCESS(key);
@@ -1421,19 +1430,19 @@ CrawlStoreValue& CrawlHashTable::get_value(const std::string &key)
         (*hash_map)[key]     = CrawlStoreValue();
         CrawlStoreValue &val = (*hash_map)[key];
 
-        return (val);
+        return val;
     }
 
-    return (i->second);
+    return i->second;
 }
 
-const CrawlStoreValue& CrawlHashTable::get_value(const std::string &key) const
+const CrawlStoreValue& CrawlHashTable::get_value(const string &key) const
 {
 #ifdef ASSERTS
     if (!hash_map)
         die("trying to read non-existant property \"%s\"", key.c_str());
 #endif
-    assert_validity();
+    ASSERT_VALIDITY();
 
     ACCESS(key);
     hash_map_type::const_iterator i = hash_map->find(key);
@@ -1445,7 +1454,7 @@ const CrawlStoreValue& CrawlHashTable::get_value(const std::string &key) const
     ASSERT(i->second.type != SV_NONE);
     ASSERT(!(i->second.flags & SFLAG_UNSET));
 
-    return (i->second);
+    return i->second;
 }
 
 ///////////////////////////
@@ -1453,7 +1462,7 @@ const CrawlStoreValue& CrawlHashTable::get_value(const std::string &key) const
 hash_size CrawlHashTable::size() const
 {
     if (hash_map == NULL)
-        return (0);
+        return 0;
 
     return hash_map->size();
 }
@@ -1461,14 +1470,14 @@ hash_size CrawlHashTable::size() const
 bool CrawlHashTable::empty() const
 {
     if (hash_map == NULL)
-        return (true);
+        return true;
 
     return hash_map->empty();
 }
 
-void CrawlHashTable::erase(const std::string key)
+void CrawlHashTable::erase(const string key)
 {
-    assert_validity();
+    ASSERT_VALIDITY();
     init_hash_map();
 
     ACCESS(key);
@@ -1487,7 +1496,7 @@ void CrawlHashTable::erase(const std::string key)
 
 void CrawlHashTable::clear()
 {
-    assert_validity();
+    ASSERT_VALIDITY();
     if (hash_map == NULL)
         return;
 
@@ -1497,7 +1506,7 @@ void CrawlHashTable::clear()
 
 CrawlHashTable::iterator CrawlHashTable::begin()
 {
-    assert_validity();
+    ASSERT_VALIDITY();
     init_hash_map();
 
     return hash_map->begin();
@@ -1505,7 +1514,7 @@ CrawlHashTable::iterator CrawlHashTable::begin()
 
 CrawlHashTable::iterator CrawlHashTable::end()
 {
-    assert_validity();
+    ASSERT_VALIDITY();
     init_hash_map();
 
     return hash_map->end();
@@ -1514,7 +1523,7 @@ CrawlHashTable::iterator CrawlHashTable::end()
 CrawlHashTable::const_iterator CrawlHashTable::begin() const
 {
     ASSERT(hash_map != NULL);
-    assert_validity();
+    ASSERT_VALIDITY();
 
     return hash_map->begin();
 }
@@ -1522,7 +1531,7 @@ CrawlHashTable::const_iterator CrawlHashTable::begin() const
 CrawlHashTable::const_iterator CrawlHashTable::end() const
 {
     ASSERT(hash_map != NULL);
-    assert_validity();
+    ASSERT_VALIDITY();
 
     return hash_map->end();
 }
@@ -1561,14 +1570,14 @@ CrawlVector::CrawlVector(store_val_type _type, store_flags flags,
 
 CrawlVector::~CrawlVector()
 {
-    assert_validity();
+    ASSERT_VALIDITY();
 }
 
 //////////////////////////////
 // Read/write from/to savefile
 void CrawlVector::write(writer &th) const
 {
-    assert_validity();
+    ASSERT_VALIDITY();
     if (empty())
     {
         marshallByte(th, 0);
@@ -1586,12 +1595,12 @@ void CrawlVector::write(writer &th) const
        val.write(th);
     }
 
-    assert_validity();
+    ASSERT_VALIDITY();
 }
 
 void CrawlVector::read(reader &th)
 {
-    assert_validity();
+    ASSERT_VALIDITY();
 
     ASSERT(empty());
     ASSERT(type == SV_NONE);
@@ -1614,7 +1623,7 @@ void CrawlVector::read(reader &th)
     for (vec_size i = 0; i < _size; i++)
         vec[i].read(th);
 
-    assert_validity();
+    ASSERT_VALIDITY();
 }
 
 
@@ -1623,13 +1632,13 @@ void CrawlVector::read(reader &th)
 
 store_flags CrawlVector::get_default_flags() const
 {
-    assert_validity();
+    ASSERT_VALIDITY();
     return default_flags;
 }
 
 store_flags CrawlVector::set_default_flags(store_flags flags)
 {
-    assert_validity();
+    ASSERT_VALIDITY();
     ASSERT(!(flags & SFLAG_UNSET));
     default_flags |= flags;
 
@@ -1638,7 +1647,7 @@ store_flags CrawlVector::set_default_flags(store_flags flags)
 
 store_flags CrawlVector::unset_default_flags(store_flags flags)
 {
-    assert_validity();
+    ASSERT_VALIDITY();
     ASSERT(!(flags & SFLAG_UNSET));
     default_flags &= ~flags;
 
@@ -1647,13 +1656,13 @@ store_flags CrawlVector::unset_default_flags(store_flags flags)
 
 store_val_type CrawlVector::get_type() const
 {
-    assert_validity();
+    ASSERT_VALIDITY();
     return type;
 }
 
 void CrawlVector::assert_validity() const
 {
-#ifdef ASSERTS
+#ifdef DEBUG
     ASSERT(!(default_flags & SFLAG_UNSET));
     ASSERT(max_size > 0);
     ASSERT(max_size >= size());
@@ -1729,7 +1738,7 @@ vec_size CrawlVector::get_max_size() const
 
 CrawlStoreValue& CrawlVector::get_value(const vec_size &index)
 {
-    assert_validity();
+    ASSERT_VALIDITY();
 
     ASSERT(index <= max_size);
     ASSERT(index <= vec.size());
@@ -1739,7 +1748,7 @@ CrawlStoreValue& CrawlVector::get_value(const vec_size &index)
 
 const CrawlStoreValue& CrawlVector::get_value(const vec_size &index) const
 {
-    assert_validity();
+    ASSERT_VALIDITY();
 
     ASSERT(index <= max_size);
     ASSERT(index <= vec.size());
@@ -1761,7 +1770,7 @@ bool CrawlVector::empty() const
 
 CrawlStoreValue& CrawlVector::pop_back()
 {
-    assert_validity();
+    ASSERT_VALIDITY();
     ASSERT(!vec.empty());
 
     CrawlStoreValue& val = vec[vec.size() - 1];
@@ -1771,7 +1780,7 @@ CrawlStoreValue& CrawlVector::pop_back()
 
 void CrawlVector::push_back(CrawlStoreValue val)
 {
-#ifdef ASSERTS
+#ifdef DEBUG
     if (type != SV_NONE)
         ASSERT(type == val.type);
 
@@ -1812,7 +1821,7 @@ void CrawlVector::push_back(CrawlStoreValue val)
     }
 #endif
 
-    assert_validity();
+    ASSERT_VALIDITY();
     ASSERT(vec.size() < max_size);
     ASSERT(type == SV_NONE
            || (val.type == SV_NONE && (val.flags & SFLAG_UNSET))
@@ -1824,12 +1833,12 @@ void CrawlVector::push_back(CrawlStoreValue val)
         val.flags |= SFLAG_CONST_TYPE;
     }
     vec.push_back(val);
-    assert_validity();
+    ASSERT_VALIDITY();
 }
 
 void CrawlVector::insert(const vec_size index, CrawlStoreValue val)
 {
-    assert_validity();
+    ASSERT_VALIDITY();
     ASSERT(vec.size() < max_size);
     ASSERT(type == SV_NONE
            || (val.type == SV_NONE && (val.flags & SFLAG_UNSET))
@@ -1845,7 +1854,7 @@ void CrawlVector::insert(const vec_size index, CrawlStoreValue val)
 
 void CrawlVector::resize(const vec_size _size)
 {
-    assert_validity();
+    ASSERT_VALIDITY();
     ASSERT(max_size == VEC_MAX_SIZE);
     ASSERT(_size < max_size);
 
@@ -1861,7 +1870,7 @@ void CrawlVector::resize(const vec_size _size)
 
 void CrawlVector::erase(const vec_size index)
 {
-    assert_validity();
+    ASSERT_VALIDITY();
     ASSERT(index <= max_size);
     ASSERT(index <= vec.size());
 
@@ -1870,7 +1879,7 @@ void CrawlVector::erase(const vec_size index)
 
 void CrawlVector::clear()
 {
-    assert_validity();
+    ASSERT_VALIDITY();
     ASSERT(!(default_flags & SFLAG_NO_ERASE));
 
     for (vec_size i = 0, _size = size(); i < _size; i++)
@@ -1883,31 +1892,31 @@ void CrawlVector::clear()
 
 CrawlVector::iterator CrawlVector::begin()
 {
-    assert_validity();
+    ASSERT_VALIDITY();
     return vec.begin();
 }
 
 CrawlVector::iterator CrawlVector::end()
 {
-    assert_validity();
+    ASSERT_VALIDITY();
     return vec.end();
 }
 
 CrawlVector::const_iterator CrawlVector::begin() const
 {
-    assert_validity();
+    ASSERT_VALIDITY();
     return vec.begin();
 }
 
 CrawlVector::const_iterator CrawlVector::end() const
 {
-    assert_validity();
+    ASSERT_VALIDITY();
     return vec.end();
 }
 
 
 #ifdef DEBUG_PROPS
-static bool _cmp(std::string a, std::string b)
+static bool _cmp(string a, string b)
 {
     return accesses[a] > accesses[b];
 }
@@ -1917,16 +1926,16 @@ void dump_prop_accesses()
     FILE *f = fopen("prop_accesses", "w");
     ASSERT(f);
 
-    std::vector<std::string> props;
+    vector<string> props;
 
-    for (std::map<std::string, int>::const_iterator i = accesses.begin();
+    for (map<string, int>::const_iterator i = accesses.begin();
          i != accesses.end(); ++i)
     {
         props.push_back(i->first);
     }
 
-    std::sort(props.begin(), props.end(), _cmp);
-    for (std::vector<std::string>::const_iterator i = props.begin();
+    sort(props.begin(), props.end(), _cmp);
+    for (vector<string>::const_iterator i = props.begin();
          i != props.end(); ++i)
     {
         fprintf(f, "%10d %s\n", accesses[*i], i->c_str());

@@ -76,18 +76,13 @@ JAVASCRIPT := $(INPUTS:%=tileinfo-%.js)
 ifneq ($(findstring $(MAKEFLAGS),s),s)
 ifndef V
         QUIET_HOSTCXX  = @echo '   ' HOSTCXX $@;
-        QUIET_GEN      = @echo '   ' GEN $(lastword $(subst -, ,$*));
+        QUIET_GEN      = @echo '   ' GEN $@;
         QUIET_HOSTLINK = @echo '   ' HOSTLINK $@;
         export V
 endif
 endif
 
 BASE_OBJECTS := tile_colour.o tile.o tile_page.o tile_list_processor.o main.o
-
-# MSVCRT's tmpfile() is broken, so use our own version instead.
-ifneq (,$(findstring MINGW,$(uname_S)))
-BASE_OBJECTS += tmpfile.o
-endif
 
 OBJECTS := $(BASE_OBJECTS:%=$(TOOLDIR)/%)
 
@@ -96,8 +91,11 @@ ifdef TILES
 all: $(IMAGES)
 endif
 
-%.png tiledef-%.h tiledef-%.cc tileinfo-%.js: dc-%.txt $(TILEGEN)
-	$(QUIET_GEN)$(TILEGEN) $<
+%.png: dc-%.txt $(TILEGEN)
+	$(QUIET_GEN)$(TILEGEN) -i $<
+
+tiledef-%.h tiledef-%.cc tileinfo-%.js: dc-%.txt $(TILEGEN)
+	$(QUIET_GEN)$(TILEGEN) -c $<
 
 # CFLAGS difference check
 TRACK_CFLAGS = $(subst ','\'',$(HOSTCXX) $(CFLAGS))           # (stray ' for highlights)
@@ -114,7 +112,7 @@ TRACK_CFLAGS = $(subst ','\'',$(HOSTCXX) $(CFLAGS))           # (stray ' for hig
 ##########################################################################
 # Dependencies 
 
-gui.png tiledef-gui.h tileinfo-gui.js: dc-spells.txt dc-skills.txt dc-commands.txt
+gui.png tiledef-gui.h tileinfo-gui.js: dc-spells.txt dc-skills.txt dc-commands.txt dc-abilities.txt dc-invocations.txt dc-zotdef.txt
 main.png tiledef-main.h tileinfo-main.js: dc-item.txt dc-unrand.txt dc-corpse.txt dc-misc.txt
 player.png tiledef-player.h tileinfo-player.js: dc-mon.txt dc-tentacles.txt dc-zombie.txt dc-demon.txt
 
@@ -129,7 +127,7 @@ clean:
 distclean: clean
 
 %.o: %.cc .cflags
-	$(QUIET_HOSTCXX)$(HOSTCXX) $(CFLAGS) -Wp,-MD,$*.d,-MT,$@ -c $< -o $@
+	$(QUIET_HOSTCXX)$(HOSTCXX) $(CFLAGS) -Wp,-MMD,$*.d,-MT,$@ -c $< -o $@
 
 $(TILEGEN): $(OBJECTS)
 	$(QUIET_HOSTLINK)$(HOSTCXX) $(OBJECTS) -o $@ $(LDFLAGS)

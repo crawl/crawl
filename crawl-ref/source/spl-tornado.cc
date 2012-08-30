@@ -11,7 +11,6 @@
 #include "fineff.h"
 #include "godconduct.h"
 #include "los.h"
-#include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
 #include "ouch.h"
@@ -67,11 +66,11 @@ int WindSystem::visit(coord_def c, int d, coord_def parent)
         if (depth(*ai - org) == -1)
         {
             int sonlow = visit(*ai, d+1, c);
-            low = std::min(low, sonlow);
-            sonmax = std::max(sonmax, sonlow);
+            low = min(low, sonlow);
+            sonmax = max(sonmax, sonlow);
         }
         else if (*ai != parent)
-            low = std::min(low, depth(*ai - org));
+            low = min(low, depth(*ai - org));
     }
 
     cut(c - org) = (sonmax >= d);
@@ -100,10 +99,9 @@ static void _set_tornado_durations(int powc)
 {
     int dur = 60;
     you.duration[DUR_TORNADO] = dur;
-    you.duration[DUR_LEVITATION] =
-        std::max(dur, you.duration[DUR_LEVITATION]);
+    you.duration[DUR_LEVITATION] = max(dur, you.duration[DUR_LEVITATION]);
     you.duration[DUR_CONTROLLED_FLIGHT] =
-        std::max(dur, you.duration[DUR_CONTROLLED_FLIGHT]);
+        max(dur, you.duration[DUR_CONTROLLED_FLIGHT]);
     you.attribute[ATTR_LEV_UNCANCELLABLE] = 1;
 }
 
@@ -158,12 +156,12 @@ static bool _mons_is_unmovable(const monster *mons)
 }
 
 static coord_def _rotate(coord_def org, coord_def from,
-                         std::vector<coord_def> &avail, int rdur)
+                         vector<coord_def> &avail, int rdur)
 {
     if (avail.empty())
         return from;
 
-    coord_def best;
+    coord_def best = from;
     double hiscore = 1e38;
 
     double dist0 = sqrt((from - org).abs());
@@ -172,10 +170,15 @@ static coord_def _rotate(coord_def org, coord_def from,
         ang0 -= 2 * PI;
     for (unsigned int i = 0; i < avail.size(); i++)
     {
+        // If the path is blocked - say the monster is in a cage -
+        // veto the cell.
+        if (!cell_see_cell(from, avail[i], LOS_SOLID_SEE))
+            continue;
+
         double dist = sqrt((avail[i] - org).abs());
         double distdiff = fabs(dist - dist0);
         double ang = atan2(avail[i].x - org.x, avail[i].y - org.y);
-        double angdiff = std::min(fabs(ang - ang0), fabs(ang - ang0 + 2 * PI));
+        double angdiff = min(fabs(ang - ang0), fabs(ang - ang0 + 2 * PI));
 
         double score = distdiff + angdiff * 2;
         if (score < hiscore)
@@ -220,7 +223,7 @@ void tornado_damage(actor *caster, int dur)
 
     int pow;
     // Not stored so unwielding that staff will reduce damage.
-    if (caster->atype() == ACT_PLAYER)
+    if (caster->is_player())
         pow = calc_spell_power(SPELL_TORNADO, true);
     else
         pow = caster->as_monster()->hit_dice * 4;
@@ -232,9 +235,9 @@ void tornado_damage(actor *caster, int dur)
     int age = _tornado_age(caster);
     ASSERT(age >= 0);
 
-    std::vector<actor*>        move_act;   // victims to move
-    std::vector<coord_def>     move_avail; // legal destinations
-    std::map<mid_t, coord_def> move_dest;  // chosen destination
+    vector<actor*>        move_act;   // victims to move
+    vector<coord_def>     move_avail; // legal destinations
+    map<mid_t, coord_def> move_dest;  // chosen destination
     int rdurs[TORNADO_RADIUS+1];           // durations at radii
     int cnt_open = 0;
     int cnt_all  = 0;
@@ -269,9 +272,9 @@ void tornado_damage(actor *caster, int dur)
         if (!rpow)
             break;
 
-        noise = std::max(div_rand_round(r * rdur * 3, 100), noise);
+        noise = max(div_rand_round(r * rdur * 3, 100), noise);
 
-        std::vector<coord_def> clouds;
+        vector<coord_def> clouds;
         for (; dam_i && dam_i.radius() == r; ++dam_i)
         {
             if (feat_is_tree(grd(*dam_i)) && dur > 0
@@ -281,7 +284,7 @@ void tornado_damage(actor *caster, int dur)
                 set_terrain_changed(*dam_i);
                 if (you.see_cell(*dam_i))
                     mpr("A tree falls to the hurricane!");
-                if (caster == &you)
+                if (caster->is_player())
                     did_god_conduct(DID_KILL_PLANT, 1);
             }
 
@@ -296,7 +299,7 @@ void tornado_damage(actor *caster, int dur)
                     leda = true; // and with fish, too
                     continue;
                 }
-                if (victim == &you && monster_at(*dam_i))
+                if (victim->is_player() && monster_at(*dam_i))
                 {
                     // A far-fetched case: you're using Fedhas' passthrough
                     // or standing on a submerged air elemental, there are
@@ -308,11 +311,11 @@ void tornado_damage(actor *caster, int dur)
                 }
 
                 leda = liquefied(victim->pos()) && victim->ground_level()
-                    || victim->atype() == ACT_MONSTER
+                    || victim->is_monster()
                        && _mons_is_unmovable(victim->as_monster());
                 if (!victim->res_wind())
                 {
-                    if (victim->atype() == ACT_MONSTER)
+                    if (victim->is_monster())
                     {
                         monster *mon = victim->as_monster();
                         if (!leda)
@@ -326,7 +329,7 @@ void tornado_damage(actor *caster, int dur)
                             else
                                 mon->add_ench(ench);
                         }
-                        behaviour_event(mon, ME_ANNOY, caster->mindex());
+                        behaviour_event(mon, ME_ANNOY, caster);
                     }
                     else if (!leda)
                     {
@@ -335,7 +338,7 @@ void tornado_damage(actor *caster, int dur)
                             mpr("The vortex of raging winds lifts you up.");
                         you.attribute[ATTR_LEV_UNCANCELLABLE] = 1;
                         you.duration[DUR_LEVITATION]
-                            = std::max(you.duration[DUR_LEVITATION], 20);
+                            = max(you.duration[DUR_LEVITATION], 20);
                         if (standing)
                             float_player(false);
                     }
@@ -345,9 +348,8 @@ void tornado_damage(actor *caster, int dur)
                     if (dur < 0)
                         dmg = 0;
                     dprf("damage done: %d", dmg);
-                    if (victim->atype() == ACT_PLAYER)
-                        ouch(dmg, caster->mindex(), KILLED_BY_BEAM,
-                             "tornado");
+                    if (victim->is_player())
+                        ouch(dmg, caster->mindex(), KILLED_BY_BEAM, "tornado");
                     else
                         victim->hurt(caster, dmg);
                 }
@@ -391,10 +393,7 @@ void tornado_damage(actor *caster, int dur)
     // have spawned something new (like Royal Jelly spawns).
     for (int i = move_avail.size() - 1; i >= 0; i--)
         if (actor_at(move_avail[i]))
-        {
-            move_avail[i] = move_avail[move_avail.size() - 1];
-            move_avail.pop_back();
-        }
+            erase_any(move_avail, i);
 
     // Calculate destinations.
     for (unsigned int i = 0; i < move_act.size(); i++)
@@ -406,8 +405,7 @@ void tornado_damage(actor *caster, int dur)
             if (move_avail[j] == dest)
             {
                 // Only one monster per destination.
-                move_avail[j] = move_avail[move_avail.size() - 1];
-                move_avail.pop_back();
+                erase_any(move_avail, j);
                 break;
             }
         move_dest[move_act[i]->mid] = dest;
@@ -423,7 +421,7 @@ void tornado_damage(actor *caster, int dur)
             ASSERT(move_act[i]->pos() == newpos);
         }
 
-    if (caster == &you)
+    if (caster->is_player())
         fire_final_effects();
 }
 
@@ -441,9 +439,9 @@ void cancel_tornado(bool tloc)
             // make damn sure all ways of translocating are prevented from
             // landing you in water.  Insta-kill due to an arrow of dispersal
             // is not nice.
-            you.duration[DUR_LEVITATION] = std::min(20,
+            you.duration[DUR_LEVITATION] = min(20,
                 you.duration[DUR_LEVITATION]);
-            you.duration[DUR_CONTROLLED_FLIGHT] = std::min(20,
+            you.duration[DUR_CONTROLLED_FLIGHT] = min(20,
                 you.duration[DUR_CONTROLLED_FLIGHT]);
         }
         else
@@ -490,7 +488,7 @@ void tornado_move(const coord_def &p)
         {
             // blinking/cTele inside an already windy area
             dprf("Tloc penalty: reducing tornado by %d turns", dist - 1);
-            you.duration[DUR_TORNADO] = std::max(1,
+            you.duration[DUR_TORNADO] = max(1,
                          you.duration[DUR_TORNADO] - (dist - 1) * 10);
             return;
         }

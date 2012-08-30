@@ -16,7 +16,6 @@
 #include "coordit.h"
 #include "directn.h"
 #include "env.h"
-#include "files.h"
 #include "fprop.h"
 #include "mon-behv.h"
 #include "mon-iter.h"
@@ -41,6 +40,8 @@ enum areaprop_flag
     APROP_ACTUAL_LIQUID = (1 << 5),
     APROP_ORB           = (1 << 6),
     APROP_UMBRA         = (1 << 7),
+    APROP_SUPPRESSION   = (1 << 8),
+    APROP_QUAD          = (1 << 9),
 };
 
 struct area_centre
@@ -55,7 +56,7 @@ struct area_centre
 // currently, only 4 of 32 bits are used, but meh...
 typedef FixedArray<uint32_t, GXM, GYM> propgrid_t;
 
-static std::vector<area_centre> _agrid_centres;
+static vector<area_centre> _agrid_centres;
 
 static propgrid_t _agrid;
 static bool _agrid_valid = false;
@@ -83,7 +84,8 @@ void areas_actor_moved(const actor* act, const coord_def& oldpos)
     if (act->alive() &&
         (you.entering_level
          || act->halo_radius2() > -1 || act->silence_radius2() > -1
-         || act->liquefying_radius2() > -1 || act->umbra_radius2() > -1))
+         || act->liquefying_radius2() > -1 || act->umbra_radius2() > -1
+         || act->suppression_radius2() > -1))
     {
         // Not necessarily new, but certainly potentially interesting.
         invalidate_agrid(true);
@@ -109,10 +111,20 @@ static void _update_agrid()
 
         if ((r = ai->silence_radius2()) >= 0)
         {
-            _agrid_centres.push_back(area_centre(AREA_HALO, ai->pos(), r));
+            _agrid_centres.push_back(area_centre(AREA_SILENCE, ai->pos(), r));
 
             for (radius_iterator ri(ai->pos(), r, C_CIRCLE); ri; ++ri)
                 _set_agrid_flag(*ri, APROP_SILENCE);
+            no_areas = false;
+        }
+
+        // Just like silence, suppression goes through walls
+        if ((r = ai->suppression_radius2()) >= 0)
+        {
+            _agrid_centres.push_back(area_centre(AREA_SUPPRESSION, ai->pos(), r));
+
+            for (radius_iterator ri(ai->pos(), r, C_CIRCLE); ri; ++ri)
+                _set_agrid_flag(*ri, APROP_SUPPRESSION);
             no_areas = false;
         }
 
@@ -159,8 +171,10 @@ static void _update_agrid()
 
     }
 
-    if (you.char_direction == GDT_ASCENDING && !env.orb_pos.origin())
+    if (you.char_direction == GDT_ASCENDING && !you.duration[DUR_TIME_STEP])
     {
+        ASSERT(!env.orb_pos.origin());
+
         const int r = 5;
         _agrid_centres.push_back(area_centre(AREA_ORB, env.orb_pos, r));
         los_glob los(env.orb_pos, LOS_DEFAULT);
@@ -172,15 +186,34 @@ static void _update_agrid()
         no_areas = false;
     }
 
+    if (you.duration[DUR_QUAD_DAMAGE])
+    {
+        const int r = 5;
+        _agrid_centres.push_back(area_centre(AREA_QUAD, you.pos(), r));
+        for (radius_iterator ri(you.pos(), r, C_CIRCLE, you.get_los());
+             ri; ++ri)
+        {
+            _set_agrid_flag(*ri, APROP_QUAD);
+        }
+        no_areas = false;
+    }
+
+    if (!env.sunlight.empty())
+    {
+        for (size_t i = 0; i < env.sunlight.size(); ++i)
+            _set_agrid_flag(env.sunlight[i].first, APROP_HALO);
+        no_areas = false;
+    }
+
     // TODO: update sanctuary here.
 
     _agrid_valid = true;
 }
 
-static area_centre_type _get_first_area (const coord_def& f)
+static area_centre_type _get_first_area(const coord_def& f)
 {
     uint32_t a = _agrid(f);
-    if (a & APROP_SANCTUARY_2)
+    if (a & APROP_SANCTUARY_1)
         return AREA_SANCTUARY;
     if (a & APROP_SANCTUARY_2)
         return AREA_SANCTUARY;
@@ -190,6 +223,8 @@ static area_centre_type _get_first_area (const coord_def& f)
         return AREA_HALO;
     if (a & APROP_UMBRA)
         return AREA_UMBRA;
+    if (a & APROP_SUPPRESSION)
+        return AREA_SUPPRESSION;
     // liquid is always applied; actual_liquid is on top
     // of this. If we find the first, we don't care about
     // the second.
@@ -199,7 +234,7 @@ static area_centre_type _get_first_area (const coord_def& f)
     return AREA_NONE;
 }
 
-coord_def find_centre_for (const coord_def& f, area_centre_type at)
+coord_def find_centre_for(const coord_def& f, area_centre_type at)
 {
     if (!map_bounds(f))
         return coord_def(-1, -1);
@@ -231,9 +266,9 @@ coord_def find_centre_for (const coord_def& f, area_centre_type at)
             continue;
 
         if (a.centre == f)
-            return (f);
+            return f;
 
-        int d = distance(a.centre, f);
+        int d = distance2(a.centre, f);
         if (d <= a.radius && (d <= dist || dist == 0))
         {
             possible = a.centre;
@@ -241,19 +276,8 @@ coord_def find_centre_for (const coord_def& f, area_centre_type at)
         }
     }
 
-    return (possible);
+    return possible;
 }
-
-///////////////
-// Callback
-//
-// Thus agrid can be invalidated when loading.
-static void _agrid_callback(bool saving)
-{
-    if (!saving)
-        invalidate_agrid(true);
-}
-static SavefileCallback _register_agrid_callback(_agrid_callback);
 
 ///////////////
 // Sanctuary
@@ -269,7 +293,7 @@ bool remove_sanctuary(bool did_attack)
         env.sanctuary_time = 0;
 
     if (!in_bounds(env.sanctuary_pos))
-        return (false);
+        return false;
 
     const int radius = 5;
     bool seen_change = false;
@@ -298,7 +322,7 @@ bool remove_sanctuary(bool did_attack)
     if (is_resting())
         stop_running();
 
-    return (true);
+    return true;
 }
 
 // For the last (radius) counter turns the sanctuary will slowly shrink.
@@ -322,7 +346,7 @@ void decrease_sanctuary_radius()
 
     for (radius_iterator ri(env.sanctuary_pos, size+1, C_SQUARE); ri; ++ri)
     {
-        int dist = distance(*ri, env.sanctuary_pos);
+        int dist = distance2(*ri, env.sanctuary_pos);
 
         // If necessary overwrite sanctuary property.
         if (dist > size*size)
@@ -360,7 +384,7 @@ void create_sanctuary(const coord_def& center, int time)
     for (radius_iterator ri(center, radius, C_POINTY); ri; ++ri)
     {
         const coord_def pos = *ri;
-        const int dist = distance(center, pos);
+        const int dist = distance2(center, pos);
 
         if (testbits(env.pgrid(pos), FPROP_BLOODY) && you.see_cell(pos))
             blood_count++;
@@ -413,7 +437,7 @@ void create_sanctuary(const coord_def& center, int time)
                 mon->foe       = MHITYOU;
                 mon->target    = center;
                 mon->behaviour = BEH_SEEK;
-                behaviour_event(mon, ME_EVAL, MHITYOU);
+                behaviour_event(mon, ME_EVAL, &you);
             }
             else if (!mon->wont_attack() && mons_is_influenced_by_sanctuary(mon))
             {
@@ -439,24 +463,24 @@ void create_sanctuary(const coord_def& center, int time)
     // Messaging.
     if (trap_count > 0)
     {
-        mpr("By Zin's power hidden traps are revealed to you.",
+        mpr("By Zin's power, hidden traps are revealed to you.",
             MSGCH_GOD);
     }
 
     if (cloud_count == 1)
     {
-        mpr("By Zin's power the foul cloud within the sanctuary is "
+        mpr("By Zin's power, the foul cloud within the sanctuary is "
             "swept away.", MSGCH_GOD);
     }
     else if (cloud_count > 1)
     {
-        mpr("By Zin's power all foul fumes within the sanctuary are "
+        mpr("By Zin's power, all foul fumes within the sanctuary are "
             "swept away.", MSGCH_GOD);
     }
 
     if (blood_count > 0)
     {
-        mpr("By Zin's power all blood is cleared from the sanctuary.",
+        mpr("By Zin's power, all blood is cleared from the sanctuary.",
             MSGCH_GOD);
     }
 
@@ -477,14 +501,14 @@ void create_sanctuary(const coord_def& center, int time)
 static int _silence_range(int dur)
 {
     if (dur <= 0)
-        return (-1);
+        return -1;
     dur /= BASELINE_DELAY; // now roughly number of turns
-    return std::max(0, std::min(dur - 6, 37));
+    return max(0, min(dur - 6, 37));
 }
 
 int player::silence_radius2() const
 {
-    return (_silence_range(you.duration[DUR_SILENCE]));
+    return _silence_range(you.duration[DUR_SILENCE]);
 }
 
 int monster::silence_radius2() const
@@ -493,22 +517,22 @@ int monster::silence_radius2() const
         return 150;
 
     if (!has_ench(ENCH_SILENCE))
-        return (-1);
+        return -1;
 
     const int dur = get_ench(ENCH_SILENCE).duration;
     // The below is arbitrarily chosen to make monster decay look reasonable.
-    const int moddur = BASELINE_DELAY *
-        std::max(7, stepdown_value(dur * 10 - 60, 10, 5, 45, 100));
-    return (_silence_range(moddur));
+    const int moddur = BASELINE_DELAY
+                       * max(7, stepdown_value(dur * 10 - 60, 10, 5, 45, 100));
+    return _silence_range(moddur);
 }
 
 bool silenced(const coord_def& p)
 {
     if (!map_bounds(p))
-        return (false);
+        return false;
     if (!_agrid_valid)
         _update_agrid();
-    return (_check_agrid_flag(p, APROP_SILENCE));
+    return _check_agrid_flag(p, APROP_SILENCE);
 }
 
 /////////////
@@ -517,15 +541,15 @@ bool silenced(const coord_def& p)
 bool haloed(const coord_def& p)
 {
     if (!map_bounds(p))
-        return (false);
+        return false;
     if (!_agrid_valid)
         _update_agrid();
-    return (_check_agrid_flag(p, APROP_HALO));
+    return _check_agrid_flag(p, APROP_HALO);
 }
 
 bool actor::haloed() const
 {
-    return (::haloed(pos()));
+    return ::haloed(pos());
 }
 
 int player::halo_radius2() const
@@ -538,13 +562,15 @@ int player::halo_radius2() const
         // Preserve the middle of old radii.
         const int r = you.piety - 10;
         // The cap is 64, just less than the LOS of 65.
-        size = std::min(LOS_RADIUS*LOS_RADIUS, r * r / 400);
+        size = min(LOS_RADIUS*LOS_RADIUS, r * r / 400);
     }
 
+    // Can't check suppression because this function is called from
+    // _update_agrid()---we'd get an infinite recursion.
     if (player_equip_unrand(UNRAND_BRILLIANCE))
-        size = std::max(size, 9);
+        size = max(size, 9);
 
-    return (size);
+    return size;
 }
 
 int monster::halo_radius2() const
@@ -563,36 +589,36 @@ int monster::halo_radius2() const
     switch (type)
     {
     case MONS_SPIRIT:
-        return (5);
+        return 5;
     case MONS_ANGEL:
-        return (26);
+        return 26;
     case MONS_CHERUB:
-        return (29);
+        return 29;
     case MONS_DAEVA:
-        return (32);
+        return 32;
     case MONS_SERAPH:
-        return (50);
+        return 50;
     case MONS_PEARL_DRAGON:
-        return (5);
+        return 5;
     case MONS_OPHAN:
-        return (64); // highest rank among sentient ones
+        return 64; // highest rank among sentient ones
     case MONS_PHOENIX:
-        return (10);
+        return 10;
     case MONS_SHEDU:
-        return (10);
+        return 10;
     case MONS_APIS:
-        return (4);
+        return 4;
     case MONS_PALADIN: // If a paladin finds the mace of brilliance
                        // it needs a larger halo
-        return (std::max(4, size));  // mere humans
+        return max(4, size);  // mere humans
     case MONS_BLESSED_TOE:
-        return (17);
+        return 17;
     case MONS_SILVER_STAR:
-        return (40); // dumb but with an immense power
+        return 40; // dumb but with an immense power
     case MONS_HOLY_SWINE:
-        return (1);  // only notionally holy
+        return 1;  // only notionally holy
     default:
-        return (4);
+        return 4;
     }
 }
 
@@ -602,24 +628,24 @@ int monster::halo_radius2() const
 
 int player::liquefying_radius2() const
 {
-    return (_silence_range(you.duration[DUR_LIQUEFYING]));
+    return _silence_range(you.duration[DUR_LIQUEFYING]);
 }
 
 int monster::liquefying_radius2() const
 {
     if (!has_ench(ENCH_LIQUEFYING))
-        return (-1);
+        return -1;
     const int dur = get_ench(ENCH_LIQUEFYING).duration;
     // The below is arbitrarily chosen to make monster decay look reasonable.
     const int moddur = BASELINE_DELAY *
-        std::max(7, stepdown_value(dur * 10 - 60, 10, 5, 45, 100));
-    return (_silence_range(moddur));
+        max(7, stepdown_value(dur * 10 - 60, 10, 5, 45, 100));
+    return _silence_range(moddur);
 }
 
 bool liquefied(const coord_def& p, bool check_actual)
 {
     if (!map_bounds(p))
-        return (false);
+        return false;
 
     if (!_agrid_valid)
         _update_agrid();
@@ -629,10 +655,10 @@ bool liquefied(const coord_def& p, bool check_actual)
 
     // "actually" liquified (ie, check for movement)
     if (check_actual)
-        return (_check_agrid_flag(p, APROP_ACTUAL_LIQUID));
+        return _check_agrid_flag(p, APROP_ACTUAL_LIQUID);
     // just recoloured for consistency
     else
-        return (_check_agrid_flag(p, APROP_LIQUID));
+        return _check_agrid_flag(p, APROP_LIQUID);
 }
 
 
@@ -643,11 +669,25 @@ bool liquefied(const coord_def& p, bool check_actual)
 bool orb_haloed(const coord_def& p)
 {
     if (!map_bounds(p))
-        return (false);
+        return false;
     if (!_agrid_valid)
         _update_agrid();
 
-    return (_check_agrid_flag(p, APROP_ORB));
+    return _check_agrid_flag(p, APROP_ORB);
+}
+
+/////////////
+// Quad damage glow
+//
+
+bool quad_haloed(const coord_def& p)
+{
+    if (!map_bounds(p))
+        return false;
+    if (!_agrid_valid)
+        _update_agrid();
+
+    return _check_agrid_flag(p, APROP_QUAD);
 }
 
 /////////////
@@ -657,35 +697,66 @@ bool orb_haloed(const coord_def& p)
 bool umbraed(const coord_def& p)
 {
     if (!map_bounds(p))
-        return (false);
+        return false;
     if (!_agrid_valid)
         _update_agrid();
 
-    return (_check_agrid_flag(p, APROP_UMBRA));
+    return _check_agrid_flag(p, APROP_UMBRA);
 }
 
 // Whether actor is in an umbra.
 bool actor::umbraed() const
 {
-    return (::umbraed(pos()));
+    return ::umbraed(pos());
 }
 
 // Stub for player umbra.
 int player::umbra_radius2() const
 {
-    return (-1);
+    return -1;
 }
 
 int monster::umbra_radius2() const
 {
     if (holiness() != MH_UNDEAD)
-        return (-1);
+        return -1;
 
     switch (type)
     {
     case MONS_PROFANE_SERVITOR:
-        return (40); // Very unholy!
+        return 40; // Very unholy!
     default:
-        return (-1);
+        return -1;
     }
+}
+
+/////////////
+// Suppression
+
+bool suppressed(const coord_def& p)
+{
+    if (!map_bounds(p))
+        return false;
+    if (!_agrid_valid)
+        _update_agrid();
+
+    return _check_agrid_flag(p, APROP_SUPPRESSION);
+}
+
+int monster::suppression_radius2() const
+{
+    if (type == MONS_MOTH_OF_SUPPRESSION)
+        return 150;
+    else
+        return -1;
+}
+
+bool actor::suppressed() const
+{
+    return ::suppressed(pos());
+}
+
+int player::suppression_radius2() const
+{
+    return -1;
 }

@@ -25,12 +25,12 @@ static int mapgrd_get(lua_State *ls)
     mapref->map = map;
     mapref->col = column;
 
-    return (1);
+    return 1;
 }
 
 static int mapgrd_set(lua_State *ls)
 {
-    return (luaL_error(ls, "%s", "Cannot assign to read-only table."));
+    return luaL_error(ls, "%s", "Cannot assign to read-only table.");
 }
 
 static char* mapgrd_glyph(lua_State *ls, int &col, int &row)
@@ -41,12 +41,10 @@ static char* mapgrd_glyph(lua_State *ls, int &col, int &row)
 
     map_lines &lines = mapc->map->map;
     if (row < 0 || col < 0 || col >= lines.width() || row >= lines.height())
-    {
-        return (NULL);
-    }
+        return NULL;
 
     coord_def mc(col, row);
-    return (&lines(mc));
+    return &lines(mc);
 }
 
 static int mapgrd_col_get(lua_State *ls)
@@ -54,7 +52,7 @@ static int mapgrd_col_get(lua_State *ls)
     int col, row;
     char *gly = mapgrd_glyph(ls, col, row);
     if (!gly)
-        return (luaL_error(ls, "Invalid coords: %d, %d", col, row));
+        return luaL_error(ls, "Invalid coords: %d, %d", col, row);
 
     char buf[2];
     buf[0] = *gly;
@@ -62,7 +60,7 @@ static int mapgrd_col_get(lua_State *ls)
 
     lua_pushstring(ls, buf);
 
-    return (1);
+    return 1;
 }
 
 static int mapgrd_col_set(lua_State *ls)
@@ -70,15 +68,15 @@ static int mapgrd_col_set(lua_State *ls)
     int col, row;
     char *gly = mapgrd_glyph(ls, col, row);
     if (!gly)
-        return (luaL_error(ls, "Invalid coords: %d, %d", col, row));
+        return luaL_error(ls, "Invalid coords: %d, %d", col, row);
 
     const char *str = luaL_checkstring(ls, 3);
     if (!str[0] || str[1])
-        return (luaL_error(ls, "%s", "mapgrd must be set to a single char."));
+        return luaL_error(ls, "%s", "mapgrd must be set to a single char.");
 
     (*gly) = str[0];
 
-    return (0);
+    return 0;
 }
 
 void dluaopen_mapgrd(lua_State *ls)

@@ -26,13 +26,18 @@ DEPTH:  D:7-14
 CHANCE: 100% (D:14), 15%
 TAGS:   uniq_second_food extra chance_second_food
 ITEM:   bread ration q:2
+: if crawl.one_chance_in(8) then
+:   dgn.delayed_decay(_G, 'e', 'spriggan name:baked n_adj n_spe n_des corpse')
+: else
+SUBST: =e = x
+: end
 MONS:   spriggan col:white name:baker n_suf ; robe . dagger
 MAP
-xxxx
-xddx
-x.xx
-x.1x
-x+xx
+xxxxxx
+xdd=ex
+x.xxxx
+x.1xxx
+x+xxxx
 ENDMAP
 
 # 18.6k, min 14k
@@ -42,6 +47,9 @@ CHANCE: 100% (D:14), 15%
 TAGS:   uniq_second_food extra chance_second_food
 MONS:   queen bee, killer bee
 ITEM:   w:2 honeycomb / w:1 royal jelly
+COLOUR: a = yellow
+TILE:   a = wall_wax
+SUBST:  a = x
 MAP
 ............
 ....aaaa....
@@ -115,8 +123,8 @@ DEPTH:  D:8-14
 CHANCE: 100% (D:14), 15%
 TAGS:   uniq_second_food extra chance_second_food no_monster_gen patrolling
 MONS:   spider / shadow / giant firefly / giant frog / brain worm / jelly / goliath beetle
-MONS:   orange rat w:8 / tarantella / jumping spider / yellow wasp / \
-        rock worm / boring beetle
+MONS:   orange rat w:8 / yellow wasp / rock worm / boring beetle / scorpion / \
+        soldier ant
 MONS:   human / elf / nothing
 ITEM:   cheese q:3 / beef jerky q:3 / lemon q:3, potion of porridge
 KITEM:  3 = honeycomb q:6
@@ -141,6 +149,7 @@ KMONS:  C = slime creature
 : end
 KITEM:  C = royal jelly q:4 / royal jelly q:6
 KFEAT:  C = altar_jiyva w:1 / . w:20
+KMASK:  W = no_monster_gen
 MARKER: + = lua:restrict_door()
 MAP
  .Wxxxxx
@@ -217,7 +226,7 @@ KMONS:  A = trapdoor spider w:6 / unseen horror / nothing w:4
 : else
 KMONS:  A = vapour w:4 / trapdoor spider w:6 / unseen horror / nothing w:1
 : end
-ITEM:   sultana w:8 q:1 / potion of water
+ITEM:   sultana w:8 q:1
 ITEM:   honeycomb q:2, bread ration q:3
 : if crawl.coinflip() then
 :     dgn.delayed_decay(_G, 'g', 'spriggan skeleton')
@@ -265,30 +274,26 @@ KMONS:   Q = troll
 KMONS:   R = draconian
 # Minotaurs are too strong and are busy guarding their labyrinths.
 # The undead don't care much for the culinary arts.
-KITEM:   1 = stone
+KITEM:   1 = stone q:1 / large rock q:1
 KITEM:   Ya = royal jelly / meat ration / bread ration
 KITEM:   b = honeycomb / cheese / apricot q:2 / apple q:2 / choko q:2
 KFEAT:   1Yab = shallow_water
-KMASK:   Yac = no_monster_gen
-MARKER:  Y = lua:fog_machine { \
-                cloud_type = "steam", pow_min = 1, pow_max = 10, delay = 60, \
-                size = 1, walk_dist = 0 \
-             }
-MARKER:  Z = lua:fog_machine { \
-                cloud_type = "flame", pow_min = 100, pow_max = 100, \
-                delay = 10, size = 1, walk_dist = 0, excl_radius = -1 \
-             }
+KMASK:   1Yac = no_monster_gen
+MARKER:  Y = lua:fog_machine { cloud_type = "steam", pow_min = 1, \
+                 pow_max = 10, delay = 60, size = 1, walk_dist = 0 }
+MARKER:  Z = lua:fog_machine { cloud_type = "flame", pow_min = 100, pow_max = 100, \
+                 delay = 10, size = 1, walk_dist = 0, excl_rad = -1 }
 MARKER:  + = lua:restrict_door()
-NSUBST:  c = 2:a / b
+NSUBST:  c = 2:a / *:b
 SHUFFLE: ABCDEFGHIJKLMNOPQR
 MAP
  .......
-.A.....B.
-..+vvv+..
-..vcccv..
-.ZvY1cv..
-..vcccv..
-..+vvv+..
-.C.....D.
+..A......
+..vvvv+B.
+.Zvcccv..
+..vY1cv..
+.Zvcccv..
+..vvvv+D.
+..C......
  .......
 ENDMAP

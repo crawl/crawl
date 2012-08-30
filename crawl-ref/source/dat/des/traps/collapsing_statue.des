@@ -57,8 +57,7 @@ lua_marker("#", collapsemarker)
 }}
 KFEAT: # = granite_statue
 : lua_marker("#", portal_desc {
-:        desc="a very old granite statue.",
-:        desc_long="There is a crevice running across its chest. Maybe it will break if you hit it?"})
+:        desc="a very old granite statue"})
 
 : if crawl.one_chance_in(2) then
 SUBST: abc = x, de = xx.

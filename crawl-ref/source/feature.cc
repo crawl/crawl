@@ -7,7 +7,7 @@
 #include "options.h"
 #include "show.h"
 
-typedef std::map<show_type, feature_def> feat_map;
+typedef map<show_type, feature_def> feat_map;
 static feat_map Features;
 
 const feature_def &get_feature_def(show_type object)
@@ -16,7 +16,7 @@ const feature_def &get_feature_def(show_type object)
     // any instead, or the base feature if there are no items.
     if (object.cls == SH_MONSTER)
         object.cls = (object.item != SHOW_ITEM_NONE)? SH_ITEM : SH_FEATURE;
-    return (Features[object]);
+    return Features[object];
 }
 
 const feature_def &get_feature_def(dungeon_feature_type feat)
@@ -25,10 +25,10 @@ const feature_def &get_feature_def(dungeon_feature_type feat)
     show_type object;
     object.cls = SH_FEATURE;
     object.feat = feat;
-    return (Features[object]);
+    return Features[object];
 }
 
-void apply_feature_overrides()
+static void _apply_feature_overrides()
 {
     for (int i = 0, size = Options.feature_overrides.size(); i < size; ++i)
     {
@@ -108,10 +108,10 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             f.minimap      = MF_WALL;
             break;
 
-        case DNGN_SWAMP_TREE:
+        case DNGN_MANGROVE:
             f.dchar        = DCHAR_TREE;
             f.magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
-            f.colour       = ETC_SWAMP_TREE;
+            f.colour       = ETC_MANGROVE;
             f.minimap      = MF_WALL;
             break;
 
@@ -168,13 +168,6 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             f.minimap = MF_WALL;
             break;
 
-        case DNGN_WAX_WALL:
-            f.dchar        = DCHAR_WALL;
-            f.colour       = YELLOW;
-            f.magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
-            f.minimap      = MF_WALL;
-            break;
-
         case DNGN_GRANITE_STATUE:
             f.dchar   = DCHAR_STATUE;
             f.colour  = DARKGREY;
@@ -221,6 +214,13 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             f.map_colour  = LIGHTGREY;
             f.seen_colour = RED;
             f.minimap     = MF_STAIR_BRANCH;
+            break;
+
+        case DNGN_TELEPORTER:
+            f.dchar       = DCHAR_TELEPORTER;
+            f.colour      = YELLOW;
+            f.map_colour  = YELLOW;
+            f.minimap     = MF_FEATURE;
             break;
 
         case DNGN_TRAP_MECHANICAL:
@@ -384,6 +384,7 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             break;
 
         case DNGN_ENTER_ABYSS:
+        case DNGN_EXIT_THROUGH_ABYSS:
             f.colour      = ETC_RANDOM;
             f.dchar       = DCHAR_ARCH;
             f.flags      |= FFT_NOTABLE;
@@ -433,7 +434,6 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
 
         case DNGN_ENTER_DWARVEN_HALL:
         case DNGN_ENTER_ORCISH_MINES:
-        case DNGN_ENTER_HIVE:
         case DNGN_ENTER_LAIR:
         case DNGN_ENTER_SLIME_PITS:
         case DNGN_ENTER_VAULTS:
@@ -464,9 +464,16 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             f.minimap     = MF_STAIR_BRANCH;
             break;
 
+        case DNGN_EXIT_DUNGEON:
+            f.colour      = LIGHTBLUE;
+            f.dchar       = DCHAR_STAIRS_UP;
+            f.map_colour  = GREEN;
+            f.seen_colour = LIGHTBLUE;
+            f.minimap     = MF_STAIR_BRANCH;
+            break;
+
         case DNGN_RETURN_FROM_DWARVEN_HALL:
         case DNGN_RETURN_FROM_ORCISH_MINES:
-        case DNGN_RETURN_FROM_HIVE:
         case DNGN_RETURN_FROM_LAIR:
         case DNGN_RETURN_FROM_SLIME_PITS:
         case DNGN_RETURN_FROM_VAULTS:
@@ -683,6 +690,18 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             f.dchar   = DCHAR_FOUNTAIN;
             f.minimap = MF_FEATURE;
             break;
+
+        case DNGN_UNKNOWN_ALTAR:
+            f.colour  = LIGHTGREY;
+            f.dchar   = DCHAR_ALTAR;
+            f.minimap = MF_FEATURE;
+            break;
+
+        case DNGN_UNKNOWN_PORTAL:
+            f.colour  = LIGHTGREY;
+            f.dchar   = DCHAR_ARCH;
+            f.minimap = MF_FEATURE;
+            break;
     }
 
     if (feat == DNGN_ENTER_ORCISH_MINES || feat == DNGN_ENTER_SLIME_PITS
@@ -800,7 +819,7 @@ void init_show_table(void)
             f.symbol = Options.char_table[f.dchar];
     }
 
-    apply_feature_overrides();
+    _apply_feature_overrides();
 
     for (feat_map::iterator i = Features.begin(); i != Features.end(); ++i)
     {
@@ -832,13 +851,13 @@ dungeon_feature_type magic_map_base_feat(dungeon_feature_type feat)
     case DCHAR_WAVY:
         return DNGN_SHALLOW_WATER;
     case DCHAR_ARCH:
-        return DNGN_ABANDONED_SHOP;
+        return DNGN_UNKNOWN_PORTAL;
     case DCHAR_FOUNTAIN:
         return DNGN_FOUNTAIN_BLUE;
     case DCHAR_WALL:
         return DNGN_ROCK_WALL;
     case DCHAR_ALTAR:
-        return DNGN_ALTAR_FIRST_GOD;
+        return DNGN_UNKNOWN_ALTAR;
     default:
         // We could do more, e.g. map the different upstairs together.
         return feat;

@@ -4,7 +4,6 @@
 #include "maps.h"
 #include "mon-util.h"
 #include "mpr.h"
-#include "ng-setup.h"
 #include "player.h"
 #include "random.h"
 
@@ -20,6 +19,8 @@ int sprint_modify_exp_inverse(int exp)
 
 int sprint_modify_piety(int piety)
 {
+    if (you.religion == GOD_OKAWARU)
+        return piety;
     return piety * 9;
 }
 

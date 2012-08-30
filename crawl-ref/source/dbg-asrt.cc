@@ -14,12 +14,10 @@
 #include "coord.h"
 #include "coordit.h"
 #include "crash.h"
-#include "dbg-crsh.h"
 #include "dbg-scan.h"
 #include "dbg-util.h"
 #include "directn.h"
 #include "dlua.h"
-#include "dungeon.h"
 #include "env.h"
 #include "initfile.h"
 #include "itemname.h"
@@ -35,6 +33,7 @@
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "state.h"
+#include "stuff.h"
 #include "travel.h"
 #include "hiscores.h"
 #include "view.h"
@@ -52,7 +51,7 @@
 #define NOLSTRING         /* lstr* string management routines */
 #define NODBCS            /* Double-byte character set routines */
 #define NOKEYBOARDINFO    /* Keyboard driver routines */
-#define NOCOLOR           /* COLOR_* color values */
+#define NOCOLOR           /* COLOR_* colour values */
 #define NODRAWTEXT        /* DrawText() and related definitions */
 #define NOSCALABLEFONT    /* Truetype scalable font support */
 #define NOMETAFILE        /* Metafile support */
@@ -78,13 +77,12 @@
 #endif
 #endif
 
-#include "threads.h"
 
-static std::string _assert_msg;
+static string _assert_msg;
 
 static void _dump_compilation_info(FILE* file)
 {
-    std::string comp_info = compilation_info();
+    string comp_info = compilation_info();
     if (!comp_info.empty())
     {
         fprintf(file, "Compilation info:\n");
@@ -96,27 +94,14 @@ static void _dump_compilation_info(FILE* file)
 
 static void _dump_level_info(FILE* file)
 {
-    CrawlHashTable &props = env.properties;
-
     fprintf(file, "Place info:\n");
 
-    fprintf(file, "absdepth0 = %d, branch = %d, level_type = %d, "
-                  "type_name = %s\n\n",
-            you.absdepth0, (int) you.where_are_you, (int) you.level_type,
-            you.level_type_name.c_str());
+    fprintf(file, "branch = %d, depth = %d\n\n",
+            (int)you.where_are_you, you.depth);
 
-    std::string place = level_id::current().describe();
-    std::string orig_place;
-
-    if (!props.exists(LEVEL_ID_KEY))
-        orig_place = "ABSENT";
-    else
-        orig_place = props[LEVEL_ID_KEY].get_string();
+    string place = level_id::current().describe();
 
     fprintf(file, "Level id: %s\n", place.c_str());
-    if (place != orig_place)
-        fprintf(file, "Level id when level was generated: %s\n",
-                orig_place.c_str());
 
     debug_dump_levgen();
 }
@@ -164,9 +149,8 @@ static void _dump_player(FILE *file)
 
     if (in_bounds(you.pos()))
     {
-        const dungeon_feature_type feat = grd(you.pos());
         fprintf(file, "Standing on/in/over feature: %s\n",
-                raw_feature_description(feat, NUM_TRAPS, true).c_str());
+                raw_feature_description(you.pos()).c_str());
     }
 
     debug_dump_constriction(&you);
@@ -216,7 +200,7 @@ static void _dump_player(FILE *file)
         if (sk >= 0 && you.skills[sk] < 27)
             needed_max = skill_exp_needed(you.skills[sk] + 1, sk);
 
-        fprintf(file, "%-16s|     %c     |   %d   |    %2d    |   %2d  | %6d | %d/%d\n",
+        fprintf(file, "%-16s|     %c     |   %d   |   %3d    |   %2d  | %6d | %d/%d\n",
                 skill_name(sk),
                 you.can_train[sk] ? 'X' : ' ',
                 you.train[sk],
@@ -224,7 +208,7 @@ static void _dump_player(FILE *file)
                 you.skills[sk],
                 you.skill_points[sk],
                 you.skill_points[sk] - needed_min,
-                std::max(needed_max - needed_min, 0));
+                max(needed_max - needed_min, 0));
     }
     fprintf(file, "\n");
 
@@ -311,7 +295,7 @@ static void _dump_player(FILE *file)
         else if (!item.defined())
             continue;
 
-        const std::string name = item.name(DESC_PLAIN, false, true);
+        const string name = item.name(DESC_PLAIN, false, true);
 
         if (item.link != i)
         {
@@ -349,7 +333,7 @@ static void _dump_player(FILE *file)
         }
         const bool unknown = !item_type_known(you.inv[eq]);
         const bool melded  = you.melded[i];
-        std::string suffix = "";
+        string suffix = "";
         if (unknown || melded)
         {
             suffix = " (";
@@ -389,7 +373,7 @@ static void _dump_player(FILE *file)
 
 static void _debug_marker_scan()
 {
-    std::vector<map_marker*> markers = env.markers.get_all();
+    vector<map_marker*> markers = env.markers.get_all();
 
     for (unsigned int i = 0; i < markers.size(); ++i)
     {
@@ -417,8 +401,7 @@ static void _debug_marker_scan()
         }
 
         bool found = false;
-        std::vector<map_marker*> at_pos
-            = env.markers.get_markers_at(marker->pos);
+        vector<map_marker*> at_pos = env.markers.get_markers_at(marker->pos);
 
         for (unsigned int j = 0; j < at_pos.size(); ++j)
         {
@@ -442,7 +425,7 @@ static void _debug_marker_scan()
     const coord_def   end(GXM - MAPGEN_BORDER - 2, GYM - MAPGEN_BORDER - 2);
     for (rectangle_iterator ri(start, end); ri; ++ri)
     {
-        std::vector<map_marker*> at_pos = env.markers.get_markers_at(*ri);
+        vector<map_marker*> at_pos = env.markers.get_markers_at(*ri);
 
         for (unsigned int i = 0; i < at_pos.size(); ++i)
         {
@@ -473,7 +456,7 @@ static void _debug_marker_scan()
 
 static void _debug_dump_markers()
 {
-    std::vector<map_marker*> markers = env.markers.get_all();
+    vector<map_marker*> markers = env.markers.get_all();
 
     for (unsigned int i = 0; i < markers.size(); ++i)
     {
@@ -490,7 +473,7 @@ static void _debug_dump_markers()
 
 static void _debug_dump_lua_markers(FILE *file)
 {
-    std::vector<map_marker*> markers = env.markers.get_all();
+    vector<map_marker*> markers = env.markers.get_all();
 
     for (unsigned int i = 0; i < markers.size(); ++i)
     {
@@ -501,7 +484,7 @@ static void _debug_dump_lua_markers(FILE *file)
 
         map_lua_marker* lua_marker = dynamic_cast<map_lua_marker*>(marker);
 
-        std::string result = lua_marker->debug_to_string();
+        string result = lua_marker->debug_to_string();
 
         if (!result.empty() && result[result.size() - 1] == '\n')
             result = result.substr(0, result.size() - 1);
@@ -518,10 +501,12 @@ static void _debug_dump_lua_persist(FILE* file)
 {
     lua_stack_cleaner cln(dlua);
 
-    std::string result;
+    string result;
     if (!dlua.callfn("persist_to_string", 0, 1))
+    {
         result = make_stringf("error (persist_to_string): %s",
                               dlua.error.c_str());
+    }
     else if (lua_isstring(dlua, -1))
         result = lua_tostring(dlua, -1);
     else
@@ -604,9 +589,9 @@ void do_crash_dump()
         return;
     }
 
-    std::string dir = (!Options.morgue_dir.empty() ? Options.morgue_dir :
-                       !SysEnv.crawl_dir.empty()   ? SysEnv.crawl_dir
-                                                   : "");
+    string dir = (!Options.morgue_dir.empty() ? Options.morgue_dir :
+                  !SysEnv.crawl_dir.empty()   ? SysEnv.crawl_dir
+                                              : "");
 
     if (!dir.empty() && dir[dir.length() - 1] != FILE_SEPARATOR)
         dir += FILE_SEPARATOR;
@@ -677,7 +662,7 @@ void do_crash_dump()
     {
         fprintf(file, "\nMessages:\n");
         fprintf(file, "<<<<<<<<<<<<<<<<<<<<<<\n");
-        std::string messages = get_last_messages(NUM_STORED_MESSAGES);
+        string messages = get_last_messages(NUM_STORED_MESSAGES);
         fprintf(file, "%s", messages.c_str());
         fprintf(file, ">>>>>>>>>>>>>>>>>>>>>>\n");
     }
@@ -725,7 +710,7 @@ void do_crash_dump()
 
     set_msg_dump_file(NULL);
 
-    mark_milestone("crash", _assert_msg, false, t);
+    mark_milestone("crash", _assert_msg, "", t);
 
     if (file != stderr)
         fclose(file);
@@ -778,12 +763,9 @@ static NORETURN void _BreakStrToDebugger(const char *mesg, bool assert)
 // AssertFailed
 //
 //---------------------------------------------------------------
-NORETURN void AssertFailed(const char *expr, const char *file, int line, bool save_game)
+NORETURN void AssertFailed(const char *expr, const char *file, int line)
 {
     char mesg[512];
-
-    if (save_game)
-        crawl_state.game_wants_emergency_save = true;
 
     const char *fileName = file + strlen(file); // strip off path
 

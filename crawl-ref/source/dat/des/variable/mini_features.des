@@ -6,7 +6,7 @@
 #
 #           Vaults with ORIENT lines are stored in float.des or large.des.
 #           Minivaults with monsters go to mini_monsters.des.
-#           Maps for the Vault branch, including Vaults:8 are in vaults.des.
+#           Maps for the Vaults branch, including Vaults:8 are in vaults.des.
 #
 # <<1>> Flavour vaults           (no items, no monsters)
 # <<2>> Inaccessible items
@@ -20,7 +20,7 @@
 # For serial vaults, read dat/des/serial/serial_guide.txt.
 ############################################################################
 
-default-depth: D, Vault, Elf, Crypt
+default-depth: D, Vaults, Elf, Crypt
 
 ############################################################################
 #
@@ -169,11 +169,10 @@ ENDMAP
 
 # This is an ancient vault.
 NAME:  solitary_fountain
-DEPTH: D, Elf, Vault
+DEPTH: D, Elf, Vaults
 TAGS:  allow_dup extra luniq_mini
 SUBST: ?=TUV
-KMASK: T = no_monster_gen
-KMASK: U = no_monster_gen
+KMASK: TU = no_monster_gen
 MAP
 .....
 .....
@@ -184,7 +183,7 @@ ENDMAP
 
 # Another very classical vault.
 NAME:  fountainhead
-DEPTH: D, Elf, Crypt, Vault
+DEPTH: D, Elf, Crypt, Vaults
 TAGS:  allow_dup extra luniq_mini
 SUBST: ?=TUV
 MAP
@@ -220,7 +219,7 @@ xxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   corexii_leaking_fountain
-DEPTH:  D, Elf, Crypt, Vault
+DEPTH:  D, Elf, Crypt, Vaults
 TAGS:   no_monster_gen no_item_gen extra luniq_mini
 NSUBST: W = 5:W / *:.
 MAP
@@ -396,9 +395,8 @@ ENDMAP
 
 NAME:  minmay_liquid_box
 TAGS:  extra luniq_mini no_monster_gen
-ITEM:  potion of water / nothing
 DEPTH: D
-SUBST: w : wWWld
+SUBST: w : wWWl
 MAP
 xx+xx
 xwwwx
@@ -410,8 +408,7 @@ ENDMAP
 NAME:  minmay_fountain_box
 TAGS:  extra luniq_mini
 DEPTH: D, Elf
-KMASK: T = no_monster_gen
-KMASK: U = no_monster_gen
+KMASK: TU = no_monster_gen
 SUBST: x : xxxxccbv
 MAP
 xxxx+xxxx
@@ -634,8 +631,7 @@ NAME:   minmay_misc_feat_room
 TAGS:   extra luniq_mini
 DEPTH:  D
 SUBST:  ? = GGGTUV
-KMASK:  T = no_monster_gen
-KMASK:  U = no_monster_gen
+KMASK:  TU = no_monster_gen
 MAP
 .......
 .xxxxx.
@@ -881,7 +877,7 @@ ENDMAP
 
 NAME:   minmay_stone_trees_small
 TAGS:   extra luniq_mini ruin_lair
-DEPTH:  D, Vault, Lair
+DEPTH:  D, Vaults, Lair
 WEIGHT: 6
 MAP
 .......
@@ -895,7 +891,7 @@ ENDMAP
 
 NAME:   minmay_stone_trees_medium
 TAGS:   extra luniq_mini ruin_lair
-DEPTH:  D, Vault, Lair
+DEPTH:  D, Vaults, Lair
 WEIGHT: 3
 MAP
 .............
@@ -915,7 +911,7 @@ ENDMAP
 
 NAME:   minmay_stone_trees_large
 TAGS:   extra luniq_mini ruin_lair
-DEPTH:  D, Vault, Lair
+DEPTH:  D, Vaults, Lair
 WEIGHT: 1
 SUBST:  T = t.
 MAP
@@ -1039,7 +1035,7 @@ MAP
 ENDMAP
 
 NAME:    minmay_large_rounded_square
-DEPTH:   D, Vault, Crypt
+DEPTH:   D, Vaults, Crypt
 WEIGHT:  1
 SUBST:   x : x c:2 v:1 b:1
 MAP
@@ -1543,7 +1539,7 @@ ENDMAP
 
 NAME:  abandoned_shop
 TAGS:  extra
-DEPTH: D:4-27, Orc, Elf, Shoals, Snake, Vault, Forest, Dwarf
+DEPTH: D:4-27, Orc, Elf, Shoals, Snake, Vaults, Forest, Dwarf
 KFEAT: O = abandoned_shop
 MAP
 O
@@ -1593,6 +1589,109 @@ xxxxxxx
  .....
 ENDMAP
 
+NAME:    hangedman_glass_teeth
+TAGS:    extra no_rotate
+DEPTH:   D, Elf, Vaults
+MAP
+@xx                 xx@
+@.xx               xx.@
+@..xxxxxxxxxxxxxxxxx..@
+x..mxmm...mxm...mmxm..x
+x..mmm....mmm....mmm..x
+x..mmm....mmm....mmm..x
+x..mm..m...m...m..mm..x
+xx..m..mm.....mm..m..xx
+ xx....mmm...mmm....xx
+  xx...mxm...mxm...xx
+   xxxxxxm...mxxxxxx
+       xxxxxxxxx
+ENDMAP
+
+NAME:   wad_floor_pattern_1
+TAGS:   mini_float extra
+WEIGHT: 2
+FTILE:  ' = floor_volcanic
+COLOUR: ' = red
+FTILE:  ; = floor_pebble
+COLOUR: ; = darkgrey
+FTILE:  " = floor_pebble_brown
+COLOUR: " = brown
+MAP
+';;;;;;;;;";;;;;;;;;'
+;'''''''''"''''''''';
+;''"""""""""""""""'';
+;'"';;;;;;";;;;;;'"';
+;'";';;;;;";;;;;';"';
+;'";;'''''"''''';;"';
+;'";;''"""""""'';;"';
+;'";;'"';;";;'"';;"';
+;'";;'";';";';"';;"';
+;'";;'";;'"';;"';;"';
+""""""""""'""""""""""
+;'";;'";;'"';;"';;"';
+;'";;'";';";';"';;"';
+;'";;'"';;";;'"';;"';
+;'";;''"""""""'';;"';
+;'";;'''''"''''';;"';
+;'";';;;;;";;;;;';"';
+;'"';;;;;;";;;;;;'"';
+;''"""""""""""""""'';
+;'''''''''"''''''''';
+';;;;;;;;;";;;;;;;;;'
+ENDMAP
+
+NAME:   wad_floor_pattern_2
+TAGS:   mini_float extra
+WEIGHT: 2
+FTILE:  ' = floor_black_cobalt
+COLOUR: ' = green
+FTILE:  ; = floor_pebble
+COLOUR: ; = darkgrey
+FTILE:  " = floor_iron
+COLOUR: " = cyan
+MAP
+'.;.;.;.;;";;.;.;.;.'
+.'.'''''''"'''''''.'.
+;.'"""""'"""'"""""'.;
+.'"';;;';".";';;;'"'.
+;'";';';.;";.;';';"';
+.'";;'''''"''''';;"'.
+;'";'''"""."""''';"';
+.'"';'"';""";'"';'"'.
+;'';.'";';";';"'.;'';
+;'"";'"";'"';""';""';
+"".""".""".""".""".""
+;'"";'"";'"';""';""';
+;'';.'";';";';"'.;'';
+.'"';'"';""";'"';'"'.
+;'";'''"""."""''';"';
+.'";;'''''"''''';;"'.
+;'";';';.;";.;';';"';
+.'"';;;';".";';;;'"'.
+;.'"""""'"""'"""""'.;
+.'.'''''''"'''''''.'.
+'.;.;.;.;;";;.;.;.;.'
+ENDMAP
+
+NAME: wad_floor_pattern_trapped
+TAGS: mini_float extra
+WEIGHT: 4
+FTILE:  GT = floor_iron
+FTILE:  ;" = floor_pebble
+COLOUR: ; = darkgrey
+COLOUR: "~ = brown
+MAP
+xxx.".xxx
+xx;""";xx
+x;G;~;G;x
+.";""";".
+""~"T"~""
+.";""";".
+x;G;~;G;x
+xx;""";xx
+xxx.".xxx
+ENDMAP
+
 #####################################################################
 #
 # <<2>> Inaccessible items
@@ -1616,7 +1715,7 @@ x@x
 ENDMAP
 
 NAME:  feat_on_display
-DEPTH: D, Elf, Crypt, Vault
+DEPTH: D, Elf, Crypt, Vaults
 TAGS:  serial_glass_rare allow_dup
 KPROP: ? = no_rtele_into
 SUBST: ? = TUl
@@ -1630,7 +1729,7 @@ MAP
 ENDMAP
 
 NAME:   item_on_display_a
-DEPTH:  D, Elf, Crypt, Vault
+DEPTH:  D, Elf, Crypt, Vaults
 TAGS:   serial_glass_rare allow_dup
 WEIGHT: 9
 KPROP:  % = no_rtele_into
@@ -1645,7 +1744,7 @@ MAP
 ENDMAP
 
 NAME:   item_on_display_b
-DEPTH:  D, Elf, Crypt, Vault
+DEPTH:  D, Elf, Crypt, Vaults
 TAGS:   serial_glass_rare allow_dup
 WEIGHT: 1
 KPROP:  * = no_rtele_into
@@ -1664,7 +1763,7 @@ ENDMAP
 NAME:   unseen_surprise_small
 WEIGHT: 1
 TAGS:   serial_glass_rare allow_dup no_wall_fixup
-DEPTH:  D:8-27, Elf, Crypt, Vault
+DEPTH:  D:8-27, Elf, Crypt, Vaults
 KPROP:  a = no_rtele_into
 KMONS:  a = generate_awake unseen_horror
 KITEM:  a = | / *
@@ -1678,7 +1777,7 @@ ENDMAP
 
 # Unseen surprise! by due (and dpeg).
 NAME:   due_unseen_surprise
-DEPTH:  D, Elf, Crypt, Vault
+DEPTH:  D, Elf, Crypt, Vaults
 TAGS:   serial_glass_rare allow_dup no_wall_fixup luniq
 KPROP:  ab = no_rtele_into
 : if you.absdepth()<11 or crawl.random2(27)>you.absdepth() then
@@ -1714,7 +1813,7 @@ ENDMAP
 
 # Don't you wish you knew apportation?
 NAME: baited_tele_trap
-DEPTH: !Temple, !Slime
+DEPTH: *, !Temple, !Slime
 KITEM: x = any good_item, any good_item/nothing, any good_item/nothing
 KFEAT: x = teleport trap
 MAP
@@ -1770,7 +1869,7 @@ MAP
 ENDMAP
 
 NAME:    treasure_zot_lemuel
-DEPTH:   D:10-27, Elf, Vault, Crypt
+DEPTH:   D:10-27, Elf, Vaults, Crypt
 TAGS:    allow_dup
 NSUBST:  Z = 4=. / z
 KFEAT:   z = zot trap
@@ -1835,7 +1934,7 @@ ENDMAP
 NAME:  minmay_trapped_gold
 TAGS:  extra luniq_mini no_monster_gen
 DEPTH: D:16-, Crypt
-KFEAT: a = axe trap / bolt trap
+KFEAT: a = spear trap / bolt trap
 KFEAT: b = blade trap
 KFEAT: c = zot trap
 MAP
@@ -1881,7 +1980,7 @@ ENDMAP
 NAME:   supply_closet_lemuel
 DEPTH:  D:1-9
 TAGS:   no_monster_gen allow_dup extra luniq_mini
-ITEM:   potion of water w:20 / bread ration / meat ration / arrow /\
+ITEM:   bread ration / meat ration / arrow /\
         bolt / spear / any potion w:5
 NSUBST: x = 1:= / *:x
 SUBST:  = = +===
@@ -1910,7 +2009,7 @@ ENDMAP
 
 NAME:    minmay_variable_closet
 TAGS:    extra allow_dup luniq_mini
-DEPTH:   D:9-27, Vault
+DEPTH:   D:9-27, Vaults
 ITEM:    any weapon, any missile, any armour, any food, any scroll
 ITEM:    any jewellery, any potion, any book
 SUBST:   + = +=, $ : $ZYXW
@@ -1927,7 +2026,7 @@ xxxx
 ENDMAP
 
 NAME:   secret_library_closet
-DEPTH:  D, Vault, Elf, Crypt, Snake, Spider, Dwarf, Orc
+DEPTH:  D, Vaults, Elf, Crypt, Snake, Spider, Dwarf, Orc
 TAGS:   allow_dup extra luniq_mini
 ITEM:   any book w:20 / any scroll / nothing
 MAP
@@ -1951,7 +2050,7 @@ ENDMAP
 
 NAME:   eino_tiny_chamber_secret
 TAGS:   allow_dup extra luniq_mini
-DEPTH:  D:2-27, Elf, Vault, Crypt
+DEPTH:  D:2-27, Elf, Vaults, Crypt
 MAP
 xxxxx
 x...x
@@ -1960,18 +2059,9 @@ x...x
 xxxxx
 ENDMAP
 
-NAME:  firewood_loft
-DEPTH: D:1-26
-KITEM: " = staff, staff, quarterstaff
-KITEM: ' = staff, staff / any magical staff w:3
-MAP
-xxxxx
-x"']x
-xxxxx
-ENDMAP
-
 NAME: nrook_loot_triangle
-DEPTH: D, Elf, Vault, Snake, Dis
+TAGS: extra luniq_mini
+DEPTH: D, Elf, Vaults, Snake, Dis
 MAP
     v
    vvv
@@ -2007,11 +2097,12 @@ ENDMAP
 
 NAME:   evilmike_butchery
 TAGS:   no_item_gen
+DEPTH:  D:9-
 SUBST:  . = ..", X = xxB
 KPROP:  "B = bloody
 SUBST:  " = ., B = x
 NSUBST: . = 5:d / 10=d. / 2:e / 1:e. / *=.^
-: if you.absdepth() > 12 then
+: if you.absdepth() > 14 then
 KFEAT:  ^ = blade trap
 : else
 KITEM:  ^ = hand axe
@@ -2034,7 +2125,7 @@ ENDMAP
 NAME:   dk_vineyard_1
 DEPTH:  D:2-12
 WEIGHT: 4
-TAGS:   no_item_gen no_monster_gen uniq_vineyard luniq_mini
+TAGS:   no_item_gen no_monster_gen uniq_vineyard luniq_mini extra
 ITEM:   grape q:1 / grape q:3 / grape q:5 / sultana q:2 / sultana q:4
 NSUBST: . = 6:d
 KFEAT:  w = shallow_water
@@ -2056,7 +2147,7 @@ ENDMAP
 NAME:   dk_vineyard_2
 DEPTH:  D:2-12
 WEIGHT: 4
-TAGS:   no_item_gen no_monster_gen uniq_vineyard luniq_mini
+TAGS:   no_item_gen no_monster_gen uniq_vineyard luniq_mini extra
 ITEM:   grape q:1 / grape q:3 / grape q:5 / sultana q:2 / sultana q:4
 NSUBST: . = 4:d
 KFEAT:  w = shallow_water
@@ -2073,7 +2164,7 @@ ENDMAP
 NAME:   dk_vineyard_3
 DEPTH:  D:2-12
 WEIGHT: 4
-TAGS:   no_item_gen no_monster_gen uniq_vineyard luniq_mini
+TAGS:   no_item_gen no_monster_gen uniq_vineyard luniq_mini extra
 ITEM:   grape q:1 / grape q:3 / grape q:5 / sultana q:2 / sultana q:4
 NSUBST: . = 4:d
 NSUBST: : = 5:. / *:'
@@ -2091,6 +2182,28 @@ MAP
 :...::
 ENDMAP
 
+# Wand duel gone wrong.
+NAME:   nicolae_wand_duel
+DEPTH:  D:6-
+KITEM:  d = wand of disintegration charges:0 ident:all
+TAGS:   no_hmirror no_vmirror no_monster_gen no_item_gen mini_float extra
+SUBST:  a = a A:4, b = b B:4
+KPROP:  ABd = bloody
+SUBST:  A = a, B = b
+NSUBST: a = 5:c / *:. , b = 5:c / *:.
+: dgn.delayed_decay(_G, 'c', 'human chunk q:1')
+MAP
+.................
+...aaa.....bbb...
+..aaaaa...bbbbb..
+.aaaaaaa.bbbbbbb.
+.aaadaaa.bbbdbbb.
+.aaaaaaa.bbbbbbb.
+..aaaaa...bbbbb..
+...aaa.....bbb...
+.................
+ENDMAP
+
 ##########################################################################
 #
 # <<4>> Fog generator vaults.
@@ -2104,7 +2217,7 @@ ENDMAP
 ##########################################################################
 
 NAME:   lemuel_flamethrower_3
-DEPTH:  D:12-27, Vault, Elf, Geh
+DEPTH:  D:12-27, Vaults, Elf, Geh
 TAGS:   allow_dup abyss ruin_abyss
 MARKER: * = lua:fog_machine { cloud_type="flame", \
             pow_min = 20, pow_max = 40, delay = 150, \
@@ -2122,7 +2235,7 @@ cc.cc
 ENDMAP
 
 NAME:   lemuel_flamethrower_2
-DEPTH:  D:5-27, Vault, Elf, Geh
+DEPTH:  D:5-27, Vaults, Elf, Geh
 TAGS:   abyss ruin_abyss
 MARKER: * = lua:fog_machine { cloud_type="flame", \
             pow_min = 20, pow_max = 40, delay_min = 100, delay_max=200, \
@@ -2146,7 +2259,7 @@ MAP
 ENDMAP
 
 NAME:   lemuel_flamethrower_1
-DEPTH:  D:5-27, Vault, Elf, Geh
+DEPTH:  D:5-27, Vaults, Elf, Geh
 TAGS:   layout_rooms layout_city
 MARKER: * = lua:fog_machine { cloud_type="flame", \
             pow_min = 20, pow_max = 40, delay = 150, \
@@ -2246,7 +2359,7 @@ Y
 ENDMAP
 
 NAME:   lemuel_flame_loot_1
-DEPTH:  D, Elf, Vault, Zot
+DEPTH:  D, Elf, Vaults, Zot
 ITEM:   nothing
 SUBST:  * = *.
 SUBST:  * : *$
@@ -2345,7 +2458,7 @@ ENDMAP
 # Flame stairs (Lemuel)
 #
 NAME:    lemuel_flame_stairs_1
-DEPTH:   D:9-26, Elf:2-4, Vault, Zot:1-4
+DEPTH:   D:9-26, Elf:2-4, Vaults, Zot:1-4
 ITEM:    nothing
 SHUFFLE: {[ / ]}
 MARKER:  d = lua:fog_machine { cloud_type = "flame", \
@@ -2362,7 +2475,7 @@ ccccccccccc
 ENDMAP
 
 NAME:    lemuel_freeze_stairs_1
-DEPTH:   D:9-26, Elf:2-4, Vault, Zot:1-4
+DEPTH:   D:9-26, Elf:2-4, Vaults, Zot:1-4
 ITEM:    nothing
 SHUFFLE: {[ / ]}
 MARKER:  d = lua:fog_machine { cloud_type = "freezing vapour", \
@@ -2380,7 +2493,7 @@ ENDMAP
 
 # No item generation for the sake of autoexplore.
 NAME:   lemuel_flamethrower_hall
-DEPTH:  D:9-27, Vault, Elf, Geh
+DEPTH:  D:9-27, Vaults, Elf, Geh
 TAGS:   layout_rooms layout_city no_item_gen abyss ruin_abyss
 MARKER: * = lua:fog_machine { cloud_type="flame", \
             pow_min = 25, pow_max = 50, delay = 150, \
@@ -2410,7 +2523,7 @@ ENDMAP
 # mutations -- certainly not worth most of the loot. With rMut,
 # it's still a gamble.
 NAME:  kilobyte_mutagenic_chamber
-DEPTH: D:15-, Elf, Vault
+DEPTH: D:15-, Elf, Vaults
 TAGS:  abyss ruin_abyss
 MARKER:     U = lua:fog_machine { cloud_type = "mutagenic fog", \
                 pow_min = 10, pow_max = 30, delay = 5, \
@@ -2550,9 +2663,9 @@ ENDMAP
 
 # Multicoloured onion
 NAME:    minivault_11
-DEPTH:   D, Elf, Vault, Crypt, Lair
+DEPTH:   D, Elf, Vaults, Crypt, Lair
 TAGS:    extra luniq_mini abyss ruin_abyss ruin_lair
-SHUFFLE: bcva
+SHUFFLE: bcv
 MAP
 ............
 .+xxxxxxxx+.

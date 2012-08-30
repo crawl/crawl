@@ -7,7 +7,7 @@
 #                     patterns). Use large_themed.des for vaults with a clear
 #                     theme to them.
 #
-# Note that all maps for the Vault branch system (including Vault:8) reside in
+# Note that all maps for the Vaults branch system (including Vaults:8) reside in
 # vaults.des.
 ###############################################################################
 
@@ -248,7 +248,7 @@ xxxxxxxxxxxxx.xxxxxxxxxxxxxx
 xxxxxxxxxxx.....xxxxxxxxxxxx
 xxxxxx...............xxxxxxx
 xxxx8.................8xxxxx
-xxxxxxx.............xxxxxxxx
+xxxxxxx***.......***xxxxxxxx
 xxxxxxxxxxxx999xxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
@@ -525,7 +525,7 @@ ENDMAP
 
 NAME:    minmay_open_boxes_in_corner
 ORIENT:  southeast
-DEPTH:   D:12-, Vault
+DEPTH:   D:12-, Vaults
 SHUFFLE: $*%
 SUBST:   c : xcv
 SUBST:   $ = $$$$%*
@@ -553,7 +553,7 @@ ENDMAP
 
 NAME:    minmay_connected_boxes_in_corner
 ORIENT:  southeast
-DEPTH:   D:12-, Vault
+DEPTH:   D:12-, Vaults
 SHUFFLE: $*%, ABCDEFH
 SUBST:   $ = $$$$%*..
 SUBST:   % = %%%%$*.....
@@ -638,7 +638,7 @@ ENDMAP
 
 NAME:    minmay_isolated_rectangles_in_corner
 ORIENT:  southeast
-DEPTH:   D:12-26, Vault:2-6
+DEPTH:   D:12-26, Vaults:2-6
 SHUFFLE: ([{)]}, *$
 SUBST:   * = %**|$....
 SUBST:   $ = $$$$%
@@ -670,7 +670,7 @@ ENDMAP
 
 NAME:    minmay_connected_triangles_in_corner
 ORIENT:  southeast
-DEPTH:   D:12-26, Vault:2-6
+DEPTH:   D:12-26, Vaults:2-6
 SHUFFLE: ([{)]}, 890, |*%$
 SUBST:   c : cv
 MAP

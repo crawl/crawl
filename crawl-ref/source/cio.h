@@ -7,9 +7,6 @@
 #define CIO_H
 
 #include "enum.h"
-#include "externs.h"
-#include "defines.h"
-#include "directn.h"
 
 #include <cctype>
 #include <string>
@@ -20,15 +17,15 @@ class input_history
 public:
     input_history(size_t size);
 
-    void new_input(const std::string &s);
+    void new_input(const string &s);
     void clear();
 
-    const std::string *prev();
-    const std::string *next();
+    const string *prev();
+    const string *next();
 
     void go_end();
 private:
-    typedef std::list<std::string> string_list;
+    typedef list<string> string_list;
 
     string_list             history;
     string_list::iterator   pos;
@@ -36,7 +33,7 @@ private:
 };
 
 void cursorxy(int x, int y);
-inline void cursorxy(const coord_def& p) { cursorxy(p.x, p.y); }
+static inline void cursorxy(const coord_def& p) { cursorxy(p.x, p.y); }
 
 // Read one key, flag it as a mouse event if appropriate, but apply no
 // other conversions. Defined in lib$OS.cc, not in cio.cc.
@@ -103,7 +100,7 @@ struct c_mouse_event
     // Returns true for valid events.
     operator bool () const
     {
-        return (bstate);
+        return bstate;
     }
 
     bool left_clicked() const
@@ -228,7 +225,7 @@ public:
 
     int read_line(bool clear_previous = true);
 
-    std::string get_text() const;
+    string get_text() const;
 
     void set_input_history(input_history *ih);
     void set_keyproc(keyproc fn);

@@ -99,7 +99,7 @@ function TollStair:check_veto(marker, pname)
   elseif pname == "veto_level_change" then
     local name = self.props.overview
     if you.shopping_list_has(name, marker) then
-      crawl.mpr("Removing " .. name .. " from shopping list")
+      crawl.mpr("Removing " .. name .. " from shopping list.")
       you.shopping_list_del(name, marker)
     end
 
@@ -131,13 +131,7 @@ function TollStair:property(marker, pname)
 end
 
 function TollStair:feature_description_long(marker)
-  local desc = self:unmangle(self.props.desc_long)
-  if desc then
-    desc = desc .. "\n\n"
-  else
-    desc = ""
-  end
-  return desc .. "The portal charges " .. self.props.amount .. " for entry.\n"
+  return "The portal charges " .. self.props.amount .. " for entry.\n"
 end
 
 function TollStair:write(marker, th)

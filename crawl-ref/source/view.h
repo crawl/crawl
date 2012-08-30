@@ -17,9 +17,6 @@ bool mons_near(const monster* mons);
 bool mon_enemies_around(const monster* mons);
 void seen_monsters_react();
 
-void find_features(const std::vector<coord_def>& features,
-                   ucs_t feature, std::vector<coord_def> *found);
-
 bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
                    bool force = false, bool deterministic = false,
                    coord_def origin = coord_def(-1, -1));
@@ -28,17 +25,17 @@ void fully_map_level();
 
 bool is_feature(ucs_t feature, const coord_def& where);
 
-std::string screenshot();
+string screenshot();
 
 int viewmap_flash_colour();
 bool view_update();
 void view_update_at(const coord_def &pos);
 class targetter;
 // beware, flash_view is broken for USE_TILE_LOCAL
-void flash_view(uint8_t colour, targetter *where = NULL);
-void flash_view_delay(uint8_t colour, int delay, targetter *where = NULL);
+void flash_view(colour_t colour, targetter *where = NULL);
+void flash_view_delay(colour_t colour, int delay, targetter *where = NULL);
 #ifndef USE_TILE_LOCAL
-void flash_monster_colour(const monster* mon, uint8_t fmc_colour,
+void flash_monster_colour(const monster* mon, colour_t fmc_colour,
                           int fmc_delay);
 #endif
 
@@ -47,8 +44,7 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
                bool anim_updates, int flash_colour);
 
 void update_monsters_in_view();
-bool handle_seen_interrupt(monster* mons,
-                           std::vector<std::string>* msgs_buf = NULL);
+bool handle_seen_interrupt(monster* mons, vector<string>* msgs_buf = NULL);
 void flush_comes_into_view();
 
 void toggle_show_terrain();

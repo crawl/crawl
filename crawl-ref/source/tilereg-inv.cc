@@ -8,7 +8,6 @@
 #include "cio.h"
 #include "describe.h"
 #include "env.h"
-#include "food.h"
 #include "invent.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -27,6 +26,7 @@
 #include "tiledef-icons.h"
 #include "tiledef-main.h"
 #include "tilepick.h"
+#include "unicode.h"
 #include "viewgeom.h"
 
 InventoryRegion::InventoryRegion(const TileRegionInit &init) : GridRegion(init)
@@ -117,7 +117,7 @@ int InventoryRegion::handle_mouse(MouseEvent &event)
 {
     unsigned int item_idx;
     if (!place_cursor(event, item_idx))
-        return (0);
+        return 0;
 
     int idx = m_items[item_idx].idx;
 
@@ -181,11 +181,11 @@ int InventoryRegion::handle_mouse(MouseEvent &event)
 }
 
 // NOTE: Assumes the item is equipped in the first place!
-static bool _is_true_equipped_item(item_def item)
+static bool _is_true_equipped_item(const item_def &item)
 {
     // Weapons and staves are only truly equipped if wielded.
     if (item.link == you.equip[EQ_WEAPON])
-        return (item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES);
+        return is_weapon(item);
 
     // Cursed armour and rings are only truly equipped if *not* wielded.
     return (item.link != you.equip[EQ_WEAPON]);
@@ -197,7 +197,7 @@ static bool _can_use_item(const item_def &item, bool equipped)
 {
     // There's nothing you can do with an empty box if you can't unwield it.
     if (!equipped && item.sub_type == MISC_EMPTY_EBONY_CASKET)
-        return (false);
+        return false;
 
     // Vampires can drain corpses.
     if (item.base_type == OBJ_CORPSES)
@@ -205,18 +205,18 @@ static bool _can_use_item(const item_def &item, bool equipped)
         return (you.species == SP_VAMPIRE
                 && item.sub_type != CORPSE_SKELETON
                 && !food_is_rotten(item)
-                && mons_has_blood(item.plus));
+                && mons_has_blood(item.mon_type));
     }
 
     if (equipped && item.cursed())
     {
         // Misc. items/rods can always be evoked, cursed or not.
         if (item_is_evokable(item))
-            return (true);
+            return true;
 
         // You can't unwield/fire a wielded cursed weapon/staff
         // but cursed armour and rings can be unwielded without problems.
-        return (!_is_true_equipped_item(item));
+        return !_is_true_equipped_item(item);
     }
 
     // Mummies can't do anything with food or potions.
@@ -224,12 +224,11 @@ static bool _can_use_item(const item_def &item, bool equipped)
         return (item.base_type != OBJ_POTIONS && item.base_type != OBJ_FOOD);
 
     // In all other cases you can use the item in some way.
-    return (true);
+    return true;
 }
 
-static void _handle_wield_tip(std::string &tip, std::vector<command_type> &cmd,
-                              const std::string prefix = "",
-                              bool unwield = false)
+static void _handle_wield_tip(string &tip, vector<command_type> &cmd,
+                              const string prefix = "", bool unwield = false)
 {
     tip += prefix;
     if (unwield)
@@ -239,7 +238,7 @@ static void _handle_wield_tip(std::string &tip, std::vector<command_type> &cmd,
     cmd.push_back(CMD_WIELD_WEAPON);
 }
 
-bool InventoryRegion::update_tab_tip_text(std::string &tip, bool active)
+bool InventoryRegion::update_tab_tip_text(string &tip, bool active)
 {
     const char *prefix1 = active ? "" : "[L-Click] ";
     const char *prefix2 = active ? "" : "          ";
@@ -248,17 +247,17 @@ bool InventoryRegion::update_tab_tip_text(std::string &tip, bool active)
                        prefix1, "Display inventory",
                        prefix2, "Use items");
 
-    return (true);
+    return true;
 }
 
-bool InventoryRegion::update_tip_text(std::string& tip)
+bool InventoryRegion::update_tip_text(string& tip)
 {
     if (m_cursor == NO_CURSOR)
-        return (false);
+        return false;
 
     unsigned int item_idx = cursor_index();
     if (item_idx >= m_items.size() || m_items[item_idx].empty())
-        return (false);
+        return false;
 
     int idx = m_items[item_idx].idx;
 
@@ -268,13 +267,13 @@ bool InventoryRegion::update_tip_text(std::string& tip)
                     && mouse_control::current_mode() == MOUSE_MODE_COMMAND);
 
     // TODO enne - should the command keys here respect keymaps?
-    std::vector<command_type> cmd;
+    vector<command_type> cmd;
     if (m_items[item_idx].flag & TILEI_FLAG_FLOOR)
     {
         const item_def &item = mitm[idx];
 
         if (!item.defined())
-            return (false);
+            return false;
 
         tip = "";
         if (m_items[item_idx].key)
@@ -286,7 +285,7 @@ bool InventoryRegion::update_tip_text(std::string& tip)
         tip += item.name(DESC_A);
 
         if (!display_actions)
-            return (true);
+            return true;
 
         tip += "\n[L-Click] Pick up (%)";
         cmd.push_back(CMD_PICKUP);
@@ -300,7 +299,7 @@ bool InventoryRegion::update_tip_text(std::string& tip)
             && !food_is_rotten(item))
         {
             tip += "\n[Shift + L-Click] ";
-            if (can_bottle_blood_from_corpse(item.plus))
+            if (can_bottle_blood_from_corpse(item.mon_type))
                 tip += "Bottle blood";
             else
                 tip += "Chop up";
@@ -325,12 +324,12 @@ bool InventoryRegion::update_tip_text(std::string& tip)
     {
         const item_def &item = you.inv[idx];
         if (!item.defined())
-            return (false);
+            return false;
 
         tip = item.name(DESC_INVENTORY_EQUIP);
 
         if (!display_actions)
-            return (true);
+            return true;
 
         int type = item.base_type;
         const bool equipped = m_items[item_idx].flag & TILEI_FLAG_EQUIP;
@@ -340,14 +339,14 @@ bool InventoryRegion::update_tip_text(std::string& tip)
 
         if (_can_use_item(item, equipped))
         {
-            std::string tip_prefix = "\n[L-Click] ";
-            std::string tmp = "";
+            string tip_prefix = "\n[L-Click] ";
+            string tmp = "";
             if (equipped)
             {
                 if (wielded && !item_is_evokable(item))
                 {
                     if (type == OBJ_JEWELLERY || type == OBJ_ARMOUR
-                        || type == OBJ_WEAPONS || type == OBJ_STAVES)
+                        || is_weapon(item))
                     {
                         type = OBJ_WEAPONS + EQUIP_OFFSET;
                     }
@@ -361,6 +360,7 @@ bool InventoryRegion::update_tip_text(std::string& tip)
             // first equipable categories
             case OBJ_WEAPONS:
             case OBJ_STAVES:
+            case OBJ_RODS:
                 if (you.species != SP_FELID)
                 {
                     _handle_wield_tip(tmp, cmd);
@@ -399,7 +399,7 @@ bool InventoryRegion::update_tip_text(std::string& tip)
                     break;
                 }
                 // else fall-through
-            case OBJ_STAVES + EQUIP_OFFSET: // rods - other staves handled above
+            case OBJ_RODS + EQUIP_OFFSET:
                 tmp += "Evoke (%)";
                 cmd.push_back(CMD_EVOKE_WIELDED);
                 _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
@@ -526,22 +526,22 @@ bool InventoryRegion::update_tip_text(std::string& tip)
     }
 
     insert_commands(tip, cmd);
-    return (true);
+    return true;
 }
 
-bool InventoryRegion::update_alt_text(std::string &alt)
+bool InventoryRegion::update_alt_text(string &alt)
 {
     if (m_cursor == NO_CURSOR)
-        return (false);
+        return false;
 
     unsigned int item_idx = cursor_index();
     if (item_idx >= m_items.size() || m_items[item_idx].empty())
-        return (false);
+        return false;
 
     if (m_last_clicked_item >= 0
         && item_idx == (unsigned int) m_last_clicked_item)
     {
-        return (false);
+        return false;
     }
 
     int idx = m_items[item_idx].idx;
@@ -553,7 +553,7 @@ bool InventoryRegion::update_alt_text(std::string &alt)
         item = &you.inv[idx];
 
     if (!item->defined())
-        return (false);
+        return false;
 
     describe_info inf;
     get_item_desc(*item, inf, true);
@@ -563,7 +563,7 @@ bool InventoryRegion::update_alt_text(std::string &alt)
 
     proc.get_string(alt);
 
-    return (true);
+    return true;
 }
 
 void InventoryRegion::draw_tag()
@@ -611,20 +611,23 @@ static void _fill_item_info(InventoryTile &desc, const item_info &item)
     {
         desc.quantity = item.plus;
     }
-    else if (item_is_rod(item) && item.flags & ISFLAG_KNOW_PLUSES)
+    else if (type == OBJ_RODS && item.flags & ISFLAG_KNOW_PLUSES)
         desc.quantity = item.plus / ROD_CHARGE_MULT;
     else
         desc.quantity = -1;
 
-    if (type == OBJ_WEAPONS || type == OBJ_MISSILES || type == OBJ_ARMOUR)
+    if (type == OBJ_WEAPONS || type == OBJ_MISSILES
+        || type == OBJ_ARMOUR || type == OBJ_RODS)
+    {
         desc.special = tileidx_known_brand(item);
+    }
     else if (type == OBJ_CORPSES)
         desc.special = tileidx_corpse_brand(item);
 
     desc.flag = 0;
     if (item.cursed())
         desc.flag |= TILEI_FLAG_CURSE;
-    if (item_type_tried(item))
+    if (item.flags & ISFLAG_TRIED)
         desc.flag |= TILEI_FLAG_TRIED;
     if (item.pos.x != -1)
         desc.flag |= TILEI_FLAG_FLOOR;
@@ -638,9 +641,6 @@ void InventoryRegion::update()
     if (mx * my == 0)
         return;
 
-    // item.base_type <-> char conversion table
-    const static char *obj_syms = ")([/%#?=!#+\\0}x";
-
     int max_pack_row = (ENDOFPACK-1) / mx + 1;
     int max_pack_items = max_pack_row * mx;
 
@@ -652,27 +652,22 @@ void InventoryRegion::update()
         num_ground++;
 
     // If the inventory is full, show at least one row of the ground.
-    int min_ground = std::min(num_ground, mx);
-    max_pack_items = std::min(max_pack_items, mx * my - min_ground);
-    max_pack_items = std::min(ENDOFPACK, max_pack_items);
+    int min_ground = min(num_ground, mx);
+    max_pack_items = min(max_pack_items, mx * my - min_ground);
+    max_pack_items = min(ENDOFPACK, max_pack_items);
 
-    const size_t show_types_len = strlen(Options.tile_show_items);
-    // Special case: show any type if (c == show_types_len).
-    for (unsigned int c = 0; c <= show_types_len; c++)
+    ucs_t c;
+    const char *tp = Options.tile_show_items.c_str();
+    int s;
+    do // Do one last iteration with the 0 char at the end.
     {
+        tp += s = utf8towc(&c, tp); // could be better to store this pre-parsed
+
         if ((int)m_items.size() >= max_pack_items)
             break;
 
-        bool show_any = (c == show_types_len);
-
-        object_class_type type = OBJ_UNASSIGNED;
-        if (!show_any)
-        {
-            const char *find = strchr(obj_syms, Options.tile_show_items[c]);
-            if (!find)
-                continue;
-            type = (object_class_type)(find - obj_syms);
-        }
+        bool show_any = !c;
+        object_class_type type = item_class_by_sym(c);
 
         // First, normal inventory
         for (int i = 0; i < ENDOFPACK; ++i)
@@ -709,7 +704,7 @@ void InventoryRegion::update()
             inv_shown[i] = true;
             m_items.push_back(desc);
         }
-    }
+    } while (s);
 
     int remaining = mx*my - m_items.size();
     int empty_on_this_row = mx - m_items.size() % mx;
@@ -741,8 +736,7 @@ void InventoryRegion::update()
             }
 
             // Add extra rows, if needed.
-            unsigned int ground_rows =
-                std::max((num_ground-1) / mx + 1, 1);
+            unsigned int ground_rows = max((num_ground-1) / mx + 1, 1);
 
             while ((int)(m_items.size() / mx + ground_rows) < my
                    && ((int)m_items.size()) < max_pack_items)
@@ -761,21 +755,17 @@ void InventoryRegion::update()
     // Then, as many ground items as we can fit.
     bool ground_shown[MAX_ITEMS];
     memset(ground_shown, 0, sizeof(ground_shown));
-    for (unsigned int c = 0; c <= show_types_len; c++)
+
+    tp = Options.tile_show_items.c_str();
+    do
     {
+        tp += s = utf8towc(&c, tp);
+
         if ((int)m_items.size() >= mx * my)
             break;
 
-        bool show_any = (c == show_types_len);
-
-        object_class_type type = OBJ_UNASSIGNED;
-        if (!show_any)
-        {
-            const char *find = strchr(obj_syms, Options.tile_show_items[c]);
-            if (!find)
-                continue;
-            type = (object_class_type)(find - obj_syms);
-        }
+        bool show_any = !c;
+        object_class_type type = item_class_by_sym(c);
 
         for (int i = you.visible_igrd(you.pos()); i != NON_ITEM;
              i = mitm[i].link)
@@ -793,7 +783,7 @@ void InventoryRegion::update()
 
             m_items.push_back(desc);
         }
-    }
+    } while (s);
 
     while ((int)m_items.size() < mx * my)
     {

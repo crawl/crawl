@@ -14,7 +14,6 @@
 #define DEAD_ARE_HOPPING 16
 #define DEAD_ARE_FLOATING 32
 
-bool summon_animals(int pow);
 spret_type cast_summon_butterflies(int pow, god_type god = GOD_NO_GOD,
                                    bool fail = false);
 spret_type cast_summon_small_mammals(int pow, god_type god, bool fail);
@@ -41,15 +40,11 @@ bool summon_holy_warrior(int pow, god_type god = GOD_NO_GOD, int spell = 0,
                          bool force_hostile = false, bool permanent = false,
                          bool quiet = false);
 
-spret_type cast_tukimas_ball(actor *caster, int pow, god_type god = GOD_NO_GOD,
-                             bool force_hostile = false, bool fail = false);
 spret_type cast_tukimas_dance(int pow, god_type god = GOD_NO_GOD,
                               bool force_hostile = false, bool fail = false);
 spret_type cast_conjure_ball_lightning(int pow, god_type god, bool fail);
 
 spret_type cast_call_imp(int pow, god_type god, bool fail);
-bool summon_greater_demon(int pow, god_type god = GOD_NO_GOD, int spell = 0,
-                          bool quiet = false);
 bool summon_demon_type(monster_type mon, int pow, god_type god = GOD_NO_GOD,
                        int spell = 0);
 spret_type cast_summon_demon(int pow, god_type god = GOD_NO_GOD,
@@ -61,12 +56,11 @@ spret_type cast_summon_horrible_things(int pow, god_type god, bool fail);
 bool can_cast_malign_gateway();
 spret_type cast_malign_gateway(actor* caster, int pow,
                                god_type god = GOD_NO_GOD, bool fail = false);
-coord_def find_gateway_location (actor* caster, bool (
-        *environment_checker)(dungeon_feature_type) = feat_is_malign_gateway_suitable);
+coord_def find_gateway_location(actor* caster);
 
 int animate_remains(const coord_def &a, corpse_type class_allowed,
                     beh_type beha, unsigned short hitting,
-                    actor *as = NULL, std::string nas = "",
+                    actor *as = NULL, string nas = "",
                     god_type god = GOD_NO_GOD, bool actual = true,
                     bool quiet = false, bool force_beh = false,
                     monster** mon = NULL, int* motions = NULL);
@@ -74,7 +68,7 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
 spret_type cast_animate_skeleton(god_type god, bool fail);
 spret_type cast_animate_dead(int pow, god_type god, bool fail);
 int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
-                 actor *as = NULL, std::string nas = "",
+                 actor *as = NULL, string nas = "",
                  god_type god = GOD_NO_GOD, bool actual = true);
 
 spret_type cast_simulacrum(int pow, god_type god, bool fail);

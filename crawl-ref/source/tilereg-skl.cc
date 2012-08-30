@@ -42,13 +42,13 @@ void SkillRegion::draw_tag()
     const skill_type skill = (skill_type) idx;
     const int apt          = species_apt(skill, you.species);
 
-    std::string progress = "";
+    string progress = "";
 
-    std::string desc = make_stringf("%-14s Skill %4.1f Aptitude %c%d",
-                                    skill_name(skill),
-                                    you.skill(skill, 10) / 10.0,
-                                    apt > 0 ? '+' : ' ',
-                                    apt);
+    string desc = make_stringf("%-14s Skill %4.1f Aptitude %c%d",
+                               skill_name(skill),
+                               you.skill(skill, 10) / 10.0,
+                               apt > 0 ? '+' : ' ',
+                               apt);
 
     draw_desc(desc.c_str());
 }
@@ -57,7 +57,7 @@ int SkillRegion::handle_mouse(MouseEvent &event)
 {
     unsigned int item_idx;
     if (!place_cursor(event, item_idx))
-        return (0);
+        return 0;
 
     const skill_type skill = (skill_type) m_items[item_idx].idx;
     if (event.button == MouseEvent::LEFT)
@@ -92,26 +92,26 @@ int SkillRegion::handle_mouse(MouseEvent &event)
         redraw_screen();
         return CK_MOUSE_CMD;
     }
-    return (0);
+    return 0;
 }
 
-bool SkillRegion::update_tab_tip_text(std::string &tip, bool active)
+bool SkillRegion::update_tab_tip_text(string &tip, bool active)
 {
     const char *prefix = active ? "" : "[L-Click] ";
 
     tip = make_stringf("%s%s", prefix, "Manage skills");
 
-    return (true);
+    return true;
 }
 
-bool SkillRegion::update_tip_text(std::string& tip)
+bool SkillRegion::update_tip_text(string& tip)
 {
     if (m_cursor == NO_CURSOR)
-        return (false);
+        return false;
 
     unsigned int item_idx = cursor_index();
     if (item_idx >= m_items.size() || m_items[item_idx].empty())
-        return (false);
+        return false;
 
     const int flag = m_items[item_idx].flag;
     if (flag & TILEI_FLAG_INVALID)
@@ -133,22 +133,22 @@ bool SkillRegion::update_tip_text(std::string& tip)
 
     tip += "\n[R-Click] Describe";
 
-    return (true);
+    return true;
 }
 
-bool SkillRegion::update_alt_text(std::string &alt)
+bool SkillRegion::update_alt_text(string &alt)
 {
     if (m_cursor == NO_CURSOR)
-        return (false);
+        return false;
 
     unsigned int item_idx = cursor_index();
     if (item_idx >= m_items.size() || m_items[item_idx].empty())
-        return (false);
+        return false;
 
     if (m_last_clicked_item >= 0
         && item_idx == (unsigned int) m_last_clicked_item)
     {
-        return (false);
+        return false;
     }
 
     int idx = m_items[item_idx].idx;
@@ -163,7 +163,7 @@ bool SkillRegion::update_alt_text(std::string &alt)
     process_description<alt_desc_proc>(proc, inf);
     proc.get_string(alt);
 
-    return (true);
+    return true;
 }
 
 static int _get_aptitude_tile(const int apt)

@@ -13,13 +13,8 @@ TAGS:   tomb_entry no_monster_gen no_item_gen
 MONS:   guardian mummy
 MONS:   sphinx
 # crawl will rotate for the rest of possibilities
-: if crawl.coinflip() then
-KFEAT:  A = =
-KFEAT:  B = c
-: else
-KFEAT:  A = c
-KFEAT:  B = =
-: end
+SHUFFLE: AB
+SUBST:  A = +, B = c
 KFEAT:  O = enter_tomb
 MAP
 cccc.cccc
@@ -165,13 +160,18 @@ PLACE:   Tomb:1
 ORIENT:  encompass
 TAGS:    no_dump
 #
-SHUFFLE: ([{, AB), ]}, FIJKL/fijkl, _-
+SHUFFLE: ([{, AB), ]}, _-
 SUBST:   A=|*, B=|*
-SUBST:   f = F, i = G, j = G, k = G, l = F
-SUBST:   I = G:900 6
-SUBST:   J = G:750 6
-SUBST:   K = G:550 6
-SUBST:   L = G:300 6
+: if crawl.coinflip() then
+SUBST:   I = I:900 6, N = N:900 6
+SUBST:   J = J:750 6, O = O:750 6
+SUBST:   K = K:550 6, P = P:550 6
+SUBST:   L = L:300 6, Q = Q:300 6
+: end
+TILE:    FIJKL = dngn_sarcophagus_pedestal_left
+TILE:    MNOPQ = dngn_sarcophagus_pedestal_right
+COLOUR:  FIJKLMNOPQ = yellow
+SUBST:   FIJKLMNOPQ = G
 SUBST:   - = T
 SUBST:   _ = F 6 ~:30 .:30
 SUBST:   T = ~ .
@@ -185,6 +185,7 @@ SUBST:   3 = 3., 4 = 4., 5 = 5.
 MONS:    mummy, guardian mummy, mummy priest, sphinx, greater mummy
 MONS:    silver statue / orange crystal statue / ice statue
 #
+: set_feature_name("granite_statue", "sarcophagus")
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -225,19 +226,19 @@ xxxxxxxxx..........cc''c.................................c''cc.........xxxxxxxxx
 xxxxxxxxx..........cc''ccccccccccccccTTTTTTTcccccccccccccc''cc.........xxxxxxxxx
 xxxxxxxxx..........cc''c'''''''''''ccc+++++ccc'''''''''''c''cc.........xxxxxxxxx
 xxxxxxxxx..........cc''c'''''''''''cc.2...2.cc'''''''''''c''cc.........xxxxxxxxx
-xxxxxxxxx..........cc''c''ccccccc''cc.L...L.cc''ccccccc''c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c''ccccccc''cc.L...Q.cc''ccccccc''c''cc.........xxxxxxxxx
 xxxxxxxxx..........cc''c''cc.322c''cc.......cc''c22.'cc''c''cc.........xxxxxxxxx
 xxxxxxxxx..........cc''c''c]'c22c''cc.2...2.cc''c22c.}c''c''cc.........xxxxxxxxx
-xxxxxxxxx..........cc''c''cccc''c''cc.K...K.cc''c3'cccc''c''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''c''cccc''c''cc.K...P.cc''c3'cccc''c''cc.........xxxxxxxxx
 xxxxxxxxx..........cc''c''''''''c''cc.......cc''c''''''''c''cc.........xxxxxxxxx
 xxxxxxxxx..........cc''c''''''''c''cc.2...2.cc''c''''''''c''cc.........xxxxxxxxx
-xxxxxxxxx..........cc''cccccccccc''cc.J...J.cc''cccccccccc''cc.........xxxxxxxxx
+xxxxxxxxx..........cc''cccccccccc''cc.J...O.cc''cccccccccc''cc.........xxxxxxxxx
 xxxxxxxxx..........cc''''''''''''''cc.......cc''''''''''''''cc.........xxxxxxxxx
 xxxxxxxxx..........cc''''''''''''''cc.......cc''''''''''''''cc.........xxxxxxxxx
-xxxxxxxxx..........cccccccccccccccccc.I...I.cccccccccccccccccc.........xxxxxxxxx
+xxxxxxxxx..........cccccccccccccccccc.I...N.cccccccccccccccccc.........xxxxxxxxx
 xxxxxxxxx..........cccccccccccccccccc.......cccccccccccccccccc.........xxxxxxxxx
 xxxxxxxxx.............................4...4............................xxxxxxxxx
-xxxxxxxxx.............................F...F............................xxxxxxxxx
+xxxxxxxxx.............................F...M............................xxxxxxxxx
 xxxxxxxxx...........................4.4...4.4..........................xxxxxxxxx
 xxxxxxxxx..............................................................xxxxxxxxx
 xxxxxxxxx..............................................................xxxxxxxxx
@@ -294,76 +295,76 @@ SUBST:   " = 2:3 3:1 .:96
 MONS: mummy, guardian mummy, mummy priest, greater mummy
 #
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcccccccccccccccccccccccccccccccccccccccccccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcccccccccccccccccccccccccccccccccccccccccccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc""""c""""""c"""""{""""c""""""""c"""""""ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc""""c"""""TcT""""""""TcT""""""TcT""""""ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc""""c"""2"T+T""""""""T+T""2"""T+T""""""ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc"""TcT""""TcT""""""""TcT""""""TcT""""""ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc""TT+T"""""c""""""""""c""""""""c"""""""ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxccccc+ccccccccccccccccccccccccccccccc""""ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc""TTc.............................c"3""ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc""""c.............................c""""ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc""3"c..xxx4.................4xxx..c"""fccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc""""c..xxx...................xxx..c""""ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc""""c..xxx.........1.........xxx..c)""}ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc""""c..xxx.....2.......2.....xxx..cccccccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc""""c.............................c''''ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcce"""c.............................cT'''ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc""""c........x...........x........+T'''ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc]""dc.............................cT'''ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxccccccc.....3........(........3.....c''''ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc''''c.............................c'QQQccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc'''Tc........x...........x........cccqcccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc'''T+.............................c'QQQccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc'''Tc.............................c''''ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc'ZZZc..xxx.....2.......2.....xxx..c''''ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcccczcc..xxx.........1.........xxx..c''''ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc'ZZZc..xxx...................xxx..c''''ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxccA'''c..xxx4.................4xxx..c''''ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc'YYYc.............................c''''ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxccccycc.............................cRRRAccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc'YYYc.............................ccrccccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc''''ccccc+ccccccccccccccc+cccccccccRRR'ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc''''''c'TTTc''''''''''''cTT''''''c'''''ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc'''''WcW''UcU''''''''''VcV''''''ScS''''ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc'''''WwW''UuU''''''''''VvV''''''SsS''''ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc'''''WcW''UcU''''''''''VcV''''''ScS''''ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxccA'''''c''''cA'''''''''''c''''''''c''''Accxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcccccccccccccccccccccccccccccccccccccccccccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcccccccccccccccccccccccccccccccccccccccccccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcccccccccccccccccccccccccccccccccccccccccccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcccccccccccccccccccccccccccccccccccccccccccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcc""""c""""""c"""""{""""c""""""""c"""""""ccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcc""""c"""""TcT""""""""TcT""""""TcT""""""ccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcc""""c"""2"T+T""""""""T+T""2"""T+T""""""ccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcc"""TcT""""TcT""""""""TcT""""""TcT""""""ccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcc""TT+T"""""c""""""""""c""""""""c"""""""ccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXccccc+ccccccccccccccccccccccccccccccc""""ccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcc""TTc.............................c"3""ccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcc""""c.............................c""""ccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcc""3"c..xxx4.................4xxx..c"""fccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcc""""c..xxx...................xxx..c""""ccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcc""""c..xxx.........1.........xxx..c)""}ccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcc""""c..xxx.....2.......2.....xxx..cccccccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcc""""c.............................c''''ccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcce"""c.............................cT'''ccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcc""""c........X...........X........+T'''ccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcc]""dc.............................cT'''ccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXccccccc.....3........(........3.....c''''ccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcc''''c.............................c'QQQccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcc'''Tc........X...........X........cccqcccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcc'''T+.............................c'QQQccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcc'''Tc.............................c''''ccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcc'ZZZc..xxx.....2.......2.....xxx..c''''ccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcccczcc..xxx.........1.........xxx..c''''ccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcc'ZZZc..xxx...................xxx..c''''ccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXccA'''c..xxx4.................4xxx..c''''ccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcc'YYYc.............................c''''ccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXccccycc.............................cRRRAccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcc'YYYc.............................ccrccccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcc''''ccccc+ccccccccccccccc+cccccccccRRR'ccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcc''''''c'TTTc''''''''''''cTT''''''c'''''ccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcc'''''WcW''UcU''''''''''VcV''''''ScS''''ccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcc'''''WwW''UuU''''''''''VvV''''''SsS''''ccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcc'''''WcW''UcU''''''''''VcV''''''ScS''''ccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXccA'''''c''''cA'''''''''''c''''''''c''''AccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcccccccccccccccccccccccccccccccccccccccccccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcccccccccccccccccccccccccccccccccccccccccccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ENDMAP
 
 
@@ -382,80 +383,77 @@ SUBST:   $ = *:2 |:1 $:17
 #
 MONS:    mummy, guardian mummy, mummy priest, greater mummy
 #
-MARKER:  O = lua:item_pickup_change_flags { \
-            branch_flags="!no_tele_control", item="auto" \
-         }
 KMASK:   O = no_item_gen
 KITEM:   O = golden rune of Zot
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcccccccccccccccccccccccccccccccccccccccccccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcccccccccccccccccccccccccccccccccccccccccccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxccccccc.............................cccccccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcccc...............cccccc..............ccccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxccc...............cccccccc..............cccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxccc.......4......ccccO4cccc......4......cccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxccc............cccc......cccc...........cccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc............cccc........cccc...........ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc............cccc........cccc...........ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc...........cccc..444444..cccc..........ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc.......................................ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc.......................................ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcc.................222222................ccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxccc................223322...............cccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxccc...3............223322............3..cccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcccc...............222222..............ccccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcccc....2..........................2...ccccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcccccc....2......................2....cccccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcccccccc............................cccccccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxccccccccc+ccc..................ccc+ccccccccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcccccccc""""cc................cc""""cccccccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcccccc"""""""cc22222222222222cc"""""'$cccccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcccc""""""""""cc............cc"""""""'$ccccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcccc'""""""""""cc..........cc""""""""'$ccccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxccc$''""""""""""cc........cc"""""""""'$$cccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxccc$$$'""""""""""cc222222cc""""""""''$$$cccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxccc|$$$''"""""""""c......c"""""""''$$$$$cccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxccc||$$$$'""""""""c......c""""""'$$$$$$$cccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxccc|||||$$'"""""""c......c"""""'$$$$$$$$cccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcccc|||||$'"""""""c......c""""'$$$$$$$$ccccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxccccc||||$$'""""""c......c""""'$$$$$$$cccccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcccccc||||$'""""""c......c""""'$$$$$$ccccccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxccccccc|||$$'"""""c......c"""'$$$$$$cccccccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcccccccc|||$'""""cc..{...cc""'$$$$$ccccccccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxccccccccc||$'""""cc...(..cc"'$$$$$cccccccccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcccccccccc|$'""cccc..[...cccc$$$$ccccccccccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcccccccccccccccccccccccccccccccccccccccccccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxcccccccccccccccccccccccccccccccccccccccccccxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcccccccccccccccccccccccccccccccccccccccccccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcccccccccccccccccccccccccccccccccccccccccccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXccccccc.............................cccccccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcccc...............cccccc..............ccccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXccc...............cccccccc..............cccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXccc.......4......ccccO4cccc......4......cccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXccc............cccc......cccc...........cccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcc............cccc........cccc...........ccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcc............cccc........cccc...........ccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcc...........cccc..444444..cccc..........ccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcc.......................................ccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcc.......................................ccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcc.................222222................ccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXccc................223322...............cccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXccc...3............223322............3..cccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcccc...............222222..............ccccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcccc....2..........................2...ccccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcccccc....2......................2....cccccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcccccccc............................cccccccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXccccccccc+ccc..................ccc+ccccccccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcccccccc""""cc................cc""""cccccccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcccccc"""""""cc22222222222222cc"""""'$cccccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcccc""""""""""cc............cc"""""""'$ccccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcccc'""""""""""cc..........cc""""""""'$ccccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXccc$''""""""""""cc........cc"""""""""'$$cccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXccc$$$'""""""""""cc222222cc""""""""''$$$cccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXccc|$$$''"""""""""c......c"""""""''$$$$$cccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXccc||$$$$'""""""""c......c""""""'$$$$$$$cccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXccc|||||$$'"""""""c......c"""""'$$$$$$$$cccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcccc|||||$'"""""""c......c""""'$$$$$$$$ccccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXccccc||||$$'""""""c......c""""'$$$$$$$cccccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcccccc||||$'""""""c......c""""'$$$$$$ccccccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXccccccc|||$$'"""""c......c"""'$$$$$$cccccccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcccccccc|||$'""""cc..{...cc""'$$$$$ccccccccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXccccccccc||$'""""cc...(..cc"'$$$$$cccccccccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcccccccccc|$'""cccc..[...cccc$$$$ccccccccccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcccccccccccccccccccccccccccccccccccccccccccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXcccccccccccccccccccccccccccccccccccccccccccXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ENDMAP

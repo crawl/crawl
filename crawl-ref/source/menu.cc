@@ -8,18 +8,18 @@
 #include <cctype>
 
 #include "cio.h"
+#include "colour.h"
 #include "command.h"
 #include "coord.h"
 #include "env.h"
+#include "hints.h"
 #include "invent.h"
 #include "menu.h"
 #include "macro.h"
 #include "message.h"
 #include "options.h"
 #include "player.h"
-#include "hints.h"
-#include "religion.h"
-#include "colour.h"
+#include "state.h"
 
 #ifdef USE_TILE_LOCAL
  #include "tilebuf.h"
@@ -66,7 +66,7 @@ void MenuDisplayText::draw_stock_item(int index, const MenuEntry *me)
     }
     else
     {
-        std::string text = me->get_text(needs_cursor);
+        string text = me->get_text(needs_cursor);
         text = chop_string(text, get_number_of_cols());
         cprintf("%s", text.c_str());
     }
@@ -90,8 +90,8 @@ void MenuDisplayTile::draw_stock_item(int index, const MenuEntry *me)
     int colour = m_menu->item_colour(index, me);
     const bool needs_cursor = (m_menu->get_cursor() == index
                                && m_menu->is_set(MF_MULTISELECT));
-    std::string text = me->get_text(needs_cursor);
-    tiles.get_menu()->set_entry(index, text, colour, me);
+    string text = me->get_text(needs_cursor);
+    tiles.get_menu()->set_entry(index, text, colour, me, !m_menu->is_set(MF_QUIET_SELECT));
 }
 
 void MenuDisplayTile::set_offset(int lines)
@@ -113,7 +113,7 @@ void MenuDisplayTile::set_num_columns(int columns)
 }
 #endif
 
-Menu::Menu(int _flags, const std::string& tagname, bool text_only)
+Menu::Menu(int _flags, const string& tagname, bool text_only)
   : f_selitem(NULL), f_drawitem(NULL), f_keyfilter(NULL),
     action_cycle(CYCLE_NONE), menu_action(ACT_EXAMINE), title(NULL),
     title2(NULL), flags(_flags), tag(tagname), first_entry(0), y_offset(0),
@@ -131,18 +131,23 @@ Menu::Menu(int _flags, const std::string& tagname, bool text_only)
 #endif
     mdisplay->set_num_columns(1);
     set_flags(flags);
+
+#ifdef USE_TILE_WEB
+    _webtiles_section_start = -1;
+    _webtiles_section_end = -1;
+#endif
 }
 
 void Menu::check_add_formatted_line(int firstcol, int nextcol,
-                                    std::string &line, bool check_eol)
+                                    string &line, bool check_eol)
 {
     if (line.empty())
         return;
 
-    if (check_eol && line.find("\n") == std::string::npos)
+    if (check_eol && line.find("\n") == string::npos)
         return;
 
-    std::vector<std::string> lines = split_string("\n", line, false, true);
+    vector<string> lines = split_string("\n", line, false, true);
     int size = lines.size();
 
     // If we have stuff after EOL, leave that in the line variable and
@@ -155,7 +160,7 @@ void Menu::check_add_formatted_line(int firstcol, int nextcol,
 
     for (int i = 0, col = firstcol; i < size; ++i, col = nextcol)
     {
-        std::string &s(lines[i]);
+        string &s(lines[i]);
 
         trim_string_right(s);
 
@@ -241,7 +246,7 @@ void Menu::reset()
     first_entry = 0;
 }
 
-std::vector<MenuEntry *> Menu::show(bool reuse_selections)
+vector<MenuEntry *> Menu::show(bool reuse_selections)
 {
 #ifdef USE_TILE_WEB
     tiles_crt_control crt_enabled(false);
@@ -249,9 +254,7 @@ std::vector<MenuEntry *> Menu::show(bool reuse_selections)
     cursor_control cs(false);
 
     if (reuse_selections)
-    {
         get_selected(&sel);
-    }
     else
     {
         deselect_all(false);
@@ -271,7 +274,7 @@ std::vector<MenuEntry *> Menu::show(bool reuse_selections)
 #endif
 
     if (is_set(MF_START_AT_END))
-        first_entry = std::max((int)items.size() - pagesize, 0);
+        first_entry = max((int)items.size() - pagesize, 0);
 
 #ifdef USE_TILE_WEB
     tiles.push_menu(this);
@@ -283,7 +286,7 @@ std::vector<MenuEntry *> Menu::show(bool reuse_selections)
     tiles.pop_menu();
 #endif
 
-    return (sel);
+    return sel;
 }
 
 void Menu::do_menu()
@@ -303,14 +306,14 @@ void Menu::do_menu()
 int Menu::get_cursor() const
 {
     if (last_selected == -1)
-        return (-1);
+        return -1;
 
     unsigned int next = (last_selected + 1) % item_count();
 
     if (items[next]->level != MEL_ITEM)
         next = (next + 1) % item_count();
 
-    return (next);
+    return next;
 }
 
 bool Menu::is_set(int flag) const
@@ -320,12 +323,12 @@ bool Menu::is_set(int flag) const
 
 int Menu::pre_process(int k)
 {
-    return (k);
+    return k;
 }
 
 int Menu::post_process(int k)
 {
-    return (k);
+    return k;
 }
 
 bool Menu::process_key(int keyin)
@@ -333,7 +336,7 @@ bool Menu::process_key(int keyin)
     if (items.empty())
     {
         lastch = keyin;
-        return (false);
+        return false;
     }
     else if (action_cycle == CYCLE_TOGGLE && (keyin == '!' || keyin == '?'))
     {
@@ -345,14 +348,14 @@ bool Menu::process_key(int keyin)
 
         sel.clear();
         update_title();
-        return (true);
+        return true;
     }
     else if (action_cycle == CYCLE_CYCLE && (keyin == '!' || keyin == '?'))
     {
         menu_action = (action)((menu_action+1) % ACT_NUM);
         sel.clear();
         update_title();
-        return (true);
+        return true;
     }
 
     bool nav = false, repaint = false;
@@ -365,13 +368,13 @@ bool Menu::process_key(int keyin)
     switch (keyin)
     {
     case 0:
-        return (true);
+        return true;
     case CK_MOUSE_B2:
     case CK_MOUSE_CMD:
     CASE_ESCAPE
         sel.clear();
         lastch = keyin;
-        return (false);
+        return false;
     case ' ': case CK_PGDN: case '>':
     case CK_MOUSE_B1:
     case CK_MOUSE_CLICK:
@@ -435,7 +438,7 @@ bool Menu::process_key(int keyin)
                     {
                         // Return the first item found.
                         get_selected(&sel);
-                        return (false);
+                        return false;
                     }
                 }
             }
@@ -525,7 +528,7 @@ bool Menu::process_key(int keyin)
 
     case CK_ENTER:
         if (!(flags & MF_PRESELECTED) || !sel.empty())
-            return (false);
+            return false;
         // else fall through
     default:
         // Even if we do return early, lastch needs to be set first,
@@ -535,7 +538,7 @@ bool Menu::process_key(int keyin)
 
         // If no selection at all is allowed, exit now.
         if (!(flags & (MF_SINGLESELECT | MF_MULTISELECT)))
-            return (false);
+            return false;
 
         if (!is_set(MF_NO_SELECT_QTY) && isadigit(keyin))
         {
@@ -548,7 +551,7 @@ bool Menu::process_key(int keyin)
         select_items(keyin, num);
         get_selected(&sel);
         if (sel.size() == 1 && (flags & MF_SINGLESELECT))
-            return (false);
+            return false;
 
         draw_select_count(sel.size());
 #ifdef USE_TILE_WEB
@@ -558,7 +561,7 @@ bool Menu::process_key(int keyin)
         if (flags & MF_ANYPRINTABLE
             && (!isadigit(keyin) || is_set(MF_NO_SELECT_QTY)))
         {
-            return (false);
+            return false;
         }
 
         break;
@@ -579,20 +582,22 @@ bool Menu::process_key(int keyin)
 #endif
             draw_menu();
         }
-        // Easy exit should not kill the menu if there are selected items.
-        else if (sel.empty() && is_set(MF_EASY_EXIT))
-        {
-            sel.clear();
-            return (false);
-        }
+        else if (allow_easy_exit() && is_set(MF_EASY_EXIT))
+            return false;
     }
-    return (true);
+    return true;
 }
 
-bool Menu::draw_title_suffix(const std::string &s, bool titlefirst)
+// Easy exit should not kill the menu if there are selected items.
+bool Menu::allow_easy_exit() const
+{
+    return sel.empty();
+}
+
+bool Menu::draw_title_suffix(const string &s, bool titlefirst)
 {
     if (crawl_state.doing_prev_cmd_again)
-        return (true);
+        return true;
 
     int oldx = wherex(), oldy = wherey();
 
@@ -603,22 +608,22 @@ bool Menu::draw_title_suffix(const std::string &s, bool titlefirst)
     if (x > get_number_of_cols() || x < 1)
     {
         cgotoxy(oldx, oldy);
-        return (false);
+        return false;
     }
 
     // Note: 1 <= x <= get_number_of_cols(); we have no fear of overflow.
     unsigned avail_width = get_number_of_cols() - x + 1;
-    std::string towrite = chop_string(s, avail_width);
+    string towrite = chop_string(s, avail_width);
     cprintf("%s", towrite.c_str());
 
     cgotoxy(oldx, oldy);
-    return (true);
+    return true;
 }
 
 bool Menu::draw_title_suffix(const formatted_string &fs, bool titlefirst)
 {
     if (crawl_state.doing_prev_cmd_again)
-        return (true);
+        return true;
 
     int oldx = wherex(), oldy = wherey();
 
@@ -629,7 +634,7 @@ bool Menu::draw_title_suffix(const formatted_string &fs, bool titlefirst)
     if (x > get_number_of_cols() || x < 1)
     {
         cgotoxy(oldx, oldy);
-        return (false);
+        return false;
     }
 
     // Note: 1 <= x <= get_number_of_cols(); we have no fear of overflow.
@@ -652,15 +657,13 @@ bool Menu::draw_title_suffix(const formatted_string &fs, bool titlefirst)
     }
 
     cgotoxy(oldx, oldy);
-    return (true);
+    return true;
 }
 
-std::string Menu::get_select_count_string(int count) const
+string Menu::get_select_count_string(int count) const
 {
     if (f_selitem)
-    {
         return f_selitem(&sel);
-    }
     else
     {
         char buf[100] = "";
@@ -669,26 +672,26 @@ std::string Menu::get_select_count_string(int count) const
             snprintf(buf, sizeof buf, "  (%d item%s)  ", count,
                     (count > 1? "s" : ""));
         }
-        return std::string(buf);
+        return string(buf);
     }
 }
 
 void Menu::draw_select_count(int count, bool force)
 {
-    if (!force && !is_set(MF_MULTISELECT))
+    if (is_set(MF_QUIET_SELECT) || !force && !is_set(MF_MULTISELECT))
         return;
 
     draw_title_suffix(get_select_count_string(count));
 }
 
-std::vector<MenuEntry*> Menu::selected_entries() const
+vector<MenuEntry*> Menu::selected_entries() const
 {
-    std::vector<MenuEntry*> selection;
+    vector<MenuEntry*> selection;
     get_selected(&selection);
-    return (selection);
+    return selection;
 }
 
-void Menu::get_selected(std::vector<MenuEntry*> *selected) const
+void Menu::get_selected(vector<MenuEntry*> *selected) const
 {
     selected->clear();
 
@@ -720,8 +723,7 @@ bool Menu::is_hotkey(int i, int key)
     int end = first_entry + pagesize;
     if (end > static_cast<int>(items.size())) end = items.size();
 
-    bool ishotkey = (is_set(MF_SINGLESELECT) ? items[i]->is_primary_hotkey(key)
-                                             : items[i]->is_hotkey(key));
+    bool ishotkey = items[i]->is_hotkey(key);
 
     return !is_set(MF_SELECT_BY_PAGE) ? ishotkey
                                       : ishotkey && i >= first_entry && i < end;
@@ -751,9 +753,9 @@ void Menu::select_items(int key, int qty)
         // are usually separated by at least a page, so we should
         // only select the item on the current page. This is why we
         // use two loops, and check to see if we've matched an item
-        // by its primary hotkey (which is assumed to always be
-        // hotkeys[0]), in which case, we stop selecting further
-        // items.
+        // by its primary hotkey (hotkeys[0] for multiple-selection
+        // menus, any hotkey for single-selection menus), in which
+        // case, we stop selecting further items.
         const bool check_preselected = (key == CK_ENTER);
         for (int i = first_entry; i < final; ++i)
         {
@@ -766,7 +768,7 @@ void Menu::select_items(int key, int qty)
             else if (is_hotkey(i, key))
             {
                 select_index(i, qty);
-                if (items[i]->hotkeys[0] == key)
+                if (items[i]->hotkeys[0] == key || is_set(MF_SINGLESELECT))
                 {
                     selected = true;
                     break;
@@ -787,11 +789,8 @@ void Menu::select_items(int key, int qty)
                 else if (is_hotkey(i, key))
                 {
                     select_index(i, qty);
-                    if (items[i]->hotkeys[0] == key)
-                    {
-                        selected = true;
-                        break;
-                    }
+                    selected = true;
+                    break;
                 }
             }
         }
@@ -799,7 +798,7 @@ void Menu::select_items(int key, int qty)
     cgotoxy(x, y);
 }
 
-MonsterMenuEntry::MonsterMenuEntry(const std::string &str, const monster_info* mon,
+MonsterMenuEntry::MonsterMenuEntry(const string &str, const monster_info* mon,
                                    int hotkey) :
     MenuEntry(str, MEL_ITEM, 1, hotkey)
 {
@@ -807,7 +806,7 @@ MonsterMenuEntry::MonsterMenuEntry(const std::string &str, const monster_info* m
     quantity = 1;
 }
 
-FeatureMenuEntry::FeatureMenuEntry(const std::string &str, const coord_def p,
+FeatureMenuEntry::FeatureMenuEntry(const string &str, const coord_def p,
                                    int hotkey) :
     MenuEntry(str, MEL_ITEM, 1, hotkey)
 {
@@ -819,7 +818,7 @@ FeatureMenuEntry::FeatureMenuEntry(const std::string &str, const coord_def p,
     quantity = 1;
 }
 
-FeatureMenuEntry::FeatureMenuEntry(const std::string &str,
+FeatureMenuEntry::FeatureMenuEntry(const string &str,
                                    const dungeon_feature_type f,
                                    int hotkey) :
     MenuEntry(str, MEL_ITEM, 1, hotkey)
@@ -831,21 +830,21 @@ FeatureMenuEntry::FeatureMenuEntry(const std::string &str,
 
 
 #ifdef USE_TILE
-PlayerMenuEntry::PlayerMenuEntry(const std::string &str) :
+PlayerMenuEntry::PlayerMenuEntry(const string &str) :
     MenuEntry(str, MEL_ITEM, 1)
 {
     quantity = 1;
 }
 
-bool MenuEntry::get_tiles(std::vector<tile_def>& tileset) const
+bool MenuEntry::get_tiles(vector<tile_def>& tileset) const
 {
     if (!Options.tile_menu_icons || tiles.empty())
-        return (false);
+        return false;
 
     for (unsigned int i = 0; i < tiles.size(); i++)
         tileset.push_back(tiles[i]);
 
-    return (true);
+    return true;
 }
 
 void MenuEntry::add_tile(tile_def tile)
@@ -853,14 +852,14 @@ void MenuEntry::add_tile(tile_def tile)
     tiles.push_back(tile);
 }
 
-bool MonsterMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
+bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
 {
     if (!Options.tile_menu_icons)
-        return (false);
+        return false;
 
     monster_info* m = (monster_info*)(data);
     if (!m)
-        return (false);
+        return false;
 
     MenuEntry::get_tiles(tileset);
 
@@ -940,7 +939,7 @@ bool MonsterMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
             tileset.push_back(tile_def(TILEI_MASK_DEEP_WATER_MURKY, TEX_ICONS));
     }
 
-    std::string damage_desc;
+    string damage_desc;
     mon_dam_level_type damage_level = m->dam;
 
     switch (damage_level)
@@ -980,16 +979,16 @@ bool MonsterMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
     else if (m->is(MB_DISTRACTED))
         tileset.push_back(tile_def(TILEI_MAY_STAB_BRAND, TEX_ICONS));
 
-    return (true);
+    return true;
 }
 
-bool FeatureMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
+bool FeatureMenuEntry::get_tiles(vector<tile_def>& tileset) const
 {
     if (!Options.tile_menu_icons)
-        return (false);
+        return false;
 
     if (feat == DNGN_UNSEEN)
-        return (false);
+        return false;
 
     MenuEntry::get_tiles(tileset);
 
@@ -999,13 +998,13 @@ bool FeatureMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
     if (in_bounds(pos) && is_unknown_stair(pos))
         tileset.push_back(tile_def(TILEI_NEW_STAIR, TEX_ICONS));
 
-    return (true);
+    return true;
 }
 
-bool PlayerMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
+bool PlayerMenuEntry::get_tiles(vector<tile_def>& tileset) const
 {
     if (!Options.tile_menu_icons)
-        return (false);
+        return false;
 
     MenuEntry::get_tiles(tileset);
 
@@ -1080,21 +1079,21 @@ bool PlayerMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
         tileset.push_back(tile_def(idx, TEX_PLAYER, ymax));
     }
 
-    return (true);
+    return true;
 }
 #endif
 
 bool Menu::is_selectable(int item) const
 {
     if (select_filter.empty())
-        return (true);
+        return true;
 
-    std::string text = items[item]->get_filter_text();
+    string text = items[item]->get_filter_text();
     for (int i = 0, count = select_filter.size(); i < count; ++i)
         if (select_filter[i].matches(text))
-            return (true);
+            return true;
 
-    return (false);
+    return false;
 }
 
 void Menu::select_item_index(int idx, int qty, bool draw_cursor)
@@ -1175,7 +1174,7 @@ int Menu::get_entry_index(const MenuEntry *e) const
     for (unsigned int i = first_entry; i < items.size(); i++)
     {
         if (items[i] == e)
-            return (index);
+            return index;
 
         if (items[i]->quantity != 0)
             index++;
@@ -1245,7 +1244,7 @@ void Menu::write_title()
 
     textcolor(item_colour(-1, first ? title : title2));
 
-    std::string text = (first ? title->get_text() : title2->get_text());
+    string text = (first ? title->get_text() : title2->get_text());
     cprintf("%s", text.c_str());
     if (flags & MF_SHOW_PAGENUMBERS)
     {
@@ -1260,8 +1259,11 @@ void Menu::write_title()
         cprintf(" (page %d of %d)", curpage, numpages);
     }
 
+    // Don't clear the next line if the title was exactly as wide as the
+    // screen; but do clear the current line if the title was empty.
     const int x = wherex(), y = wherey();
-    cprintf("%-*s", get_number_of_cols() - x, "");
+    if (x > 1 || text.empty())
+        cprintf("%-*s", get_number_of_cols() + 1 - x, "");
     cgotoxy(x, y);
 }
 
@@ -1307,9 +1309,9 @@ bool Menu::page_down()
         //    first_entry = items.size() - pagesize;
 
         if (old_first != first_entry)
-            return (true);
+            return true;
     }
-    return (false);
+    return false;
 }
 
 bool Menu::page_up()
@@ -1322,9 +1324,9 @@ bool Menu::page_up()
             first_entry = 0;
 
         if (old_first != first_entry)
-            return (true);
+            return true;
     }
-    return (false);
+    return false;
 }
 
 bool Menu::line_down()
@@ -1332,9 +1334,9 @@ bool Menu::line_down()
     if (first_entry + pagesize < (int) items.size())
     {
         ++first_entry;
-        return (true);
+        return true;
     }
-    return (false);
+    return false;
 }
 
 bool Menu::line_up()
@@ -1342,15 +1344,15 @@ bool Menu::line_up()
     if (first_entry > 0)
     {
         --first_entry;
-        return (true);
+        return true;
     }
-    return (false);
+    return false;
 }
 
 #ifdef USE_TILE_WEB
 static const int chunk_size = 50; // Should be equal to the one defined in menu.js
 
-void Menu::webtiles_write_menu() const
+void Menu::webtiles_write_menu(bool replace) const
 {
     if (crawl_state.doing_prev_cmd_again)
         return;
@@ -1359,29 +1361,34 @@ void Menu::webtiles_write_menu() const
     tiles.json_write_string("msg", "menu");
     tiles.json_write_string("tag", tag);
     tiles.json_write_int("flags", flags);
+    if (replace)
+        tiles.json_write_int("replace", 1);
 
     webtiles_write_title();
 
     tiles.json_write_string("more", more.to_colour_string());
 
-    bool complete_send = items.size() <= chunk_size * 2;
+    int count = webtiles_section_end() - webtiles_section_start();
+
+    bool complete_send = count <= chunk_size * 2;
     int start;
     if (is_set(MF_START_AT_END) && !complete_send)
-        start = items.size() - chunk_size;
+        start = count - chunk_size;
     else
-        start = 0;
+        start = webtiles_section_start();
 
-    int end = start + (complete_send ? items.size() : chunk_size);
+    int end = start + (complete_send ? count : chunk_size);
 
-    tiles.json_write_int("total_items", items.size());
-    tiles.json_write_int("chunk_start", start);
+    tiles.json_write_int("total_items", count);
+    tiles.json_write_int("chunk_start", start - webtiles_section_start());
+
+    if (first_entry != 0 && !is_set(MF_START_AT_END))
+        tiles.json_write_int("jump_to", first_entry - webtiles_section_start());
 
     tiles.json_open_array("items");
 
     for (int i = start; i < end; ++i)
-    {
         webtiles_write_item(i, items[i]);
-    }
 
     tiles.json_close_array();
 
@@ -1404,21 +1411,23 @@ void Menu::webtiles_scroll(int first)
 
 void Menu::webtiles_handle_item_request(int start, int end)
 {
-    if (start < 0) start = 0;
-    if (start >= (int) items.size()) start = (int) items.size() - 1;
+    start += webtiles_section_start();
+    end += webtiles_section_start();
+    if (start < webtiles_section_start()) start = webtiles_section_start();
+    if (start >= webtiles_section_end()) start = webtiles_section_end() - 1;
     if (end < start) end = start;
-    if (end >= start + chunk_size) end = start + chunk_size - 1;
+    if (end >= min(start + chunk_size, webtiles_section_end()))
+        end = min(start + chunk_size, webtiles_section_end()) - 1;
+
     tiles.json_open_object();
     tiles.json_write_string("msg", "update_menu_items");
 
-    tiles.json_write_int("chunk_start", start);
+    tiles.json_write_int("chunk_start", start - webtiles_section_start());
 
     tiles.json_open_array("items");
 
     for (int i = start; i <= end; ++i)
-    {
         webtiles_write_item(i, items[i]);
-    }
 
     tiles.json_close_array();
 
@@ -1474,25 +1483,27 @@ void Menu::webtiles_write_title() const
     if (!title) return;
     const bool first = (action_cycle == CYCLE_NONE
                         || menu_action == ACT_EXECUTE);
-    if (!first)
-        ASSERT(title2);
-
     const MenuEntry* me = (first ? title : title2);
 
     tiles.json_write_name("title");
     webtiles_write_item(-1, me);
 
     if (is_set(MF_MULTISELECT))
-    {
         tiles.json_write_string("suffix", get_select_count_string(sel.size()));
-    }
 }
 
 void Menu::webtiles_write_item(int index, const MenuEntry* me) const
 {
     tiles.json_open_object();
 
-    tiles.json_write_string("text", me->get_text());
+    if (me)
+        tiles.json_write_string("text", me->get_text());
+    else
+    {
+        tiles.json_write_string("text", "");
+        tiles.json_close_object();
+        return;
+    }
 
     if (me->quantity)
         tiles.json_write_int("q", me->quantity);
@@ -1517,7 +1528,7 @@ void Menu::webtiles_write_item(int index, const MenuEntry* me) const
     if (me->preselected)
         tiles.json_write_int("preselected", me->preselected);
 
-    std::vector<tile_def> t;
+    vector<tile_def> t;
     if (me->get_tiles(t) && !t.empty())
     {
         tiles.json_open_array("tiles");
@@ -1546,10 +1557,9 @@ void Menu::webtiles_write_item(int index, const MenuEntry* me) const
 // Menu colouring
 //
 
-int menu_colour(const std::string &text, const std::string &prefix,
-                const std::string &tag)
+int menu_colour(const string &text, const string &prefix, const string &tag)
 {
-    const std::string tmp_text = prefix + text;
+    const string tmp_text = prefix + text;
 
     for (unsigned int i = 0; i < Options.menu_colour_mappings.size(); ++i)
     {
@@ -1558,10 +1568,10 @@ int menu_colour(const std::string &text, const std::string &prefix,
                || cm.tag == "inventory" && tag == "pickup")
             && cm.pattern.matches(tmp_text))
         {
-            return (cm.colour);
+            return cm.colour;
         }
     }
-    return (-1);
+    return -1;
 }
 
 int MenuHighlighter::entry_colour(const MenuEntry *entry) const
@@ -1606,18 +1616,18 @@ void column_composer::clear()
 }
 
 void column_composer::add_formatted(int ncol,
-                                    const std::string &s,
+                                    const string &s,
                                     bool add_separator,
                                     bool eol_ends_format,
-                                    bool (*tfilt)(const std::string &),
+                                    bool (*tfilt)(const string &),
                                     int  margin)
 {
     ASSERT(ncol >= 0 && ncol < (int) columns.size());
 
     column &col = columns[ncol];
-    std::vector<std::string> segs = split_string("\n", s, false, true);
+    vector<string> segs = split_string("\n", s, false, true);
 
-    std::vector<formatted_string> newlines;
+    vector<formatted_string> newlines;
     // Add a blank line if necessary. Blank lines will not
     // be added at page boundaries.
     if (add_separator && col.lines && !segs.empty()
@@ -1645,12 +1655,12 @@ void column_composer::add_formatted(int ncol,
     strip_blank_lines(flines);
 }
 
-std::vector<formatted_string> column_composer::formatted_lines() const
+vector<formatted_string> column_composer::formatted_lines() const
 {
-    return (flines);
+    return flines;
 }
 
-void column_composer::strip_blank_lines(std::vector<formatted_string> &fs) const
+void column_composer::strip_blank_lines(vector<formatted_string> &fs) const
 {
     for (int i = fs.size() - 1; i >= 0; --i)
     {
@@ -1662,7 +1672,7 @@ void column_composer::strip_blank_lines(std::vector<formatted_string> &fs) const
 }
 
 void column_composer::compose_formatted_column(
-        const std::vector<formatted_string> &lines,
+        const vector<formatted_string> &lines,
         int startline,
         int margin)
 {
@@ -1687,16 +1697,16 @@ formatted_scroller::formatted_scroller() : Menu()
     set_highlighter(NULL);
 }
 
-formatted_scroller::formatted_scroller(int _flags, const std::string& s) :
+formatted_scroller::formatted_scroller(int _flags, const string& s) :
     Menu(_flags)
 {
     set_highlighter(NULL);
     add_text(s);
 }
 
-void formatted_scroller::add_text(const std::string& s, bool new_line)
+void formatted_scroller::add_text(const string& s, bool new_line)
 {
-    std::vector<formatted_string> parts;
+    vector<formatted_string> parts;
     formatted_string::parse_string_to_multiple(s, parts);
     for (unsigned int i = 0; i < parts.size(); ++i)
         add_item_formatted_string(parts[i]);
@@ -1718,7 +1728,7 @@ void formatted_scroller::add_item_formatted_string(const formatted_string& fs,
     add_entry(me);
 }
 
-void formatted_scroller::add_item_string(const std::string& s, int hotkey)
+void formatted_scroller::add_item_string(const string& s, int hotkey)
 {
     MenuEntry* me = new MenuEntry(s);
     if (hotkey)
@@ -1756,7 +1766,7 @@ formatted_scroller::~formatted_scroller()
             delete static_cast<formatted_string*>(items[i]->data);
 }
 
-int linebreak_string(std::string& s, int maxcol)
+int linebreak_string(string& s, int maxcol, bool indent)
 {
     // [ds] Don't loop forever if the user is playing silly games with
     // their term size.
@@ -1764,11 +1774,11 @@ int linebreak_string(std::string& s, int maxcol)
         return 0;
 
     int breakcount = 0;
-    std::string res;
+    string res;
 
     while (!s.empty())
     {
-        res += wordwrap_line(s, maxcol, true);
+        res += wordwrap_line(s, maxcol, true, indent);
         if (!s.empty())
         {
             res += "\n";
@@ -1779,9 +1789,9 @@ int linebreak_string(std::string& s, int maxcol)
     return breakcount;
 }
 
-std::string get_linebreak_string(const std::string& s, int maxcol)
+string get_linebreak_string(const string& s, int maxcol)
 {
-    std::string r = s;
+    string r = s;
     linebreak_string(r, maxcol);
     return r;
 }
@@ -1789,14 +1799,34 @@ std::string get_linebreak_string(const std::string& s, int maxcol)
 bool formatted_scroller::jump_to(int i)
 {
     if (i == first_entry + 1)
-        return (false);
+        return false;
 
     if (i == 0)
         first_entry = 0;
     else
         first_entry = i - 1;
 
-    return (true);
+#ifdef USE_TILE_WEB
+    if (first_entry < webtiles_section_start()
+        || webtiles_section_end() <= first_entry)
+    {
+        _webtiles_section_start = first_entry;
+        while (_webtiles_section_start > 0
+               && items[_webtiles_section_start]->level != MEL_TITLE)
+        {
+            _webtiles_section_start--;
+        }
+        _webtiles_section_end = first_entry + 1;
+        while (_webtiles_section_end < (int) items.size()
+               && items[_webtiles_section_end]->level != MEL_TITLE)
+        {
+            _webtiles_section_end++;
+        }
+    }
+    webtiles_write_menu(true);
+#endif
+
+    return true;
 }
 
 // Don't scroll past MEL_TITLE entries
@@ -1805,7 +1835,7 @@ bool formatted_scroller::page_down()
     const int old_first = first_entry;
 
     if ((int) items.size() <= first_entry + pagesize)
-        return (false);
+        return false;
 
     // If, when scrolling forward, we encounter a MEL_TITLE
     // somewhere in the newly displayed page, stop scrolling
@@ -1830,7 +1860,7 @@ bool formatted_scroller::page_up()
     // just before it becomes visible
 
     if (items[first_entry]->level == MEL_TITLE)
-        return (false);
+        return false;
 
     for (int i = 0; i < pagesize; ++i)
     {
@@ -1849,9 +1879,9 @@ bool formatted_scroller::line_down()
         && items[first_entry + pagesize]->level != MEL_TITLE)
     {
         ++first_entry;
-        return (true);
+        return true;
     }
-    return (false);
+    return false;
 }
 
 bool formatted_scroller::line_up()
@@ -1860,9 +1890,9 @@ bool formatted_scroller::line_up()
         && items[first_entry]->level != MEL_TITLE)
     {
         --first_entry;
-        return (true);
+        return true;
     }
-    return (false);
+    return false;
 }
 
 bool formatted_scroller::jump_to_hotkey(int keyin)
@@ -1871,9 +1901,22 @@ bool formatted_scroller::jump_to_hotkey(int keyin)
         if (items[i]->is_hotkey(keyin))
             return jump_to(i);
 
-    return (false);
+    return false;
 }
 
+vector<MenuEntry *> formatted_scroller::show(bool reuse_selections)
+{
+#ifdef USE_TILE_WEB
+    _webtiles_section_start = 0;
+    _webtiles_section_end = 1;
+    while (_webtiles_section_end < (int) items.size()
+           && items[_webtiles_section_end]->level != MEL_TITLE)
+    {
+        _webtiles_section_end++;
+    }
+#endif
+    return Menu::show(reuse_selections);
+}
 
 bool formatted_scroller::process_key(int keyin)
 {
@@ -1888,10 +1931,10 @@ bool formatted_scroller::process_key(int keyin)
     switch (keyin)
     {
     case 0:
-        return (true);
+        return true;
     case CK_MOUSE_CMD:
     CASE_ESCAPE
-        return (false);
+        return false;
     case ' ': case '+': case '=': case CK_PGDN: case '>': case '\'':
     case CK_MOUSE_B5:
     case CK_MOUSE_CLICK:
@@ -1925,7 +1968,7 @@ bool formatted_scroller::process_key(int keyin)
             select_items(keyin);
             get_selected(&sel);
             if (sel.size() >= 1)
-                return (false);
+                return false;
         }
         else
             repaint = jump_to_hotkey(keyin);
@@ -1936,15 +1979,14 @@ bool formatted_scroller::process_key(int keyin)
     if (repaint)
         draw_menu();
     else if (!moved || is_set(MF_EASY_EXIT))
-        return (false);
+        return false;
 
-    return (true);
+    return true;
 }
 
 int ToggleableMenu::pre_process(int key)
 {
-    if (std::find(toggle_keys.begin(), toggle_keys.end(), key) !=
-            toggle_keys.end())
+    if (find(toggle_keys.begin(), toggle_keys.end(), key) != toggle_keys.end())
     {
         // Toggle all menu entries
         for (unsigned int i = 0; i < items.size(); ++i)
@@ -1971,6 +2013,14 @@ int ToggleableMenu::pre_process(int key)
         for (unsigned int i = 0; i < items.size(); ++i)
             webtiles_update_item(i);
 #endif
+
+        if (flags & MF_TOGGLE_ACTION)
+        {
+            if (menu_action == ACT_EXECUTE)
+                menu_action = ACT_EXAMINE;
+            else
+                menu_action = ACT_EXECUTE;
+        }
 
         // Don't further process the key
         return 0;
@@ -2031,10 +2081,9 @@ void PrecisionMenu::clear()
 {
     // release all the data reserved
     if (m_attached_objects.empty())
-    {
         return;
-    }
-    std::vector<MenuObject*>::iterator it;
+
+    vector<MenuObject*>::iterator it;
     for (it = m_attached_objects.begin() ; it != m_attached_objects.end(); ++it)
     {
         if (*it != NULL)
@@ -2066,7 +2115,7 @@ bool PrecisionMenu::process_key(int key)
         else
         {
             // pick the first object possible
-            for (std::vector<MenuObject*>::iterator it = m_attached_objects.begin();
+            for (vector<MenuObject*>::iterator it = m_attached_objects.begin();
                  it != m_attached_objects.end(); ++it)
             {
                 if ((*it)->can_be_focused())
@@ -2081,9 +2130,7 @@ bool PrecisionMenu::process_key(int key)
     // Handle CK_MOUSE_CLICK separately
     // This signifies a menu ending action
     if (key == CK_MOUSE_CLICK)
-    {
         return true;
-    }
 
     bool focus_find = false;
     PrecisionMenu::Direction focus_direction;
@@ -2094,9 +2141,7 @@ bool PrecisionMenu::process_key(int key)
         break;
     case MenuObject::INPUT_SELECTED:
         if (m_select_type == PRECISION_SINGLESELECT)
-        {
             return true;
-        }
         else
         {
             // TODO: Handle multiselect somehow
@@ -2107,7 +2152,7 @@ bool PrecisionMenu::process_key(int key)
     case MenuObject::INPUT_END_MENU_SUCCESS:
         return true;
     case MenuObject::INPUT_END_MENU_ABORT:
-        _clear_selections();
+        clear_selections();
         return true;
     case MenuObject::INPUT_ACTIVE_CHANGED:
         break;
@@ -2140,17 +2185,13 @@ bool PrecisionMenu::process_key(int key)
             m_active_object->set_active_item((MenuItem*)NULL);
             m_active_object = find_object;
             if (focus_direction == PrecisionMenu::UP)
-            {
                 m_active_object->activate_last_item();
-            }
             else
-            {
                 m_active_object->activate_first_item();
-            }
         }
     }
     // Handle selection of other objects items hotkeys
-    std::vector<MenuObject*>::iterator it;
+    vector<MenuObject*>::iterator it;
     for (it = m_attached_objects.begin(); it != m_attached_objects.end(); ++it)
     {
         MenuItem* tmp = (*it)->select_item_by_hotkey(key);
@@ -2158,14 +2199,10 @@ bool PrecisionMenu::process_key(int key)
         {
             // was it a toggle?
             if (!tmp->selected())
-            {
                 continue;
-            }
             // it was a selection
             if (m_select_type == PrecisionMenu::PRECISION_SINGLESELECT)
-            {
                 return true;
-            }
         }
     }
     return false;
@@ -2180,7 +2217,7 @@ int PrecisionMenu::handle_mouse(const MouseEvent &me)
     // is over the item or not
     MenuObject::InputReturnValue input_return = MenuObject::INPUT_NO_ACTION;
 
-    std::vector<MenuObject*>::iterator it;
+    vector<MenuObject*>::iterator it;
     for (it = m_attached_objects.begin(); it != m_attached_objects.end(); ++it)
     {
         input_return = (*it)->handle_mouse(me);
@@ -2189,9 +2226,7 @@ int PrecisionMenu::handle_mouse(const MouseEvent &me)
         case MenuObject::INPUT_SELECTED:
             m_active_object = *it;
             if (m_select_type == PRECISION_SINGLESELECT)
-            {
                 return CK_MOUSE_CLICK;
-            }
             break;
         case MenuObject::INPUT_ACTIVE_CHANGED:
             // Set the active object to be this one
@@ -2201,7 +2236,7 @@ int PrecisionMenu::handle_mouse(const MouseEvent &me)
             // something got clicked that needs to signal the menu to end
             return CK_MOUSE_CLICK;
         case MenuObject::INPUT_END_MENU_ABORT:
-            _clear_selections();
+            clear_selections();
             return CK_MOUSE_CLICK;
         case MenuObject::INPUT_FOCUS_LOST:
             if (*it == m_active_object)
@@ -2217,17 +2252,15 @@ int PrecisionMenu::handle_mouse(const MouseEvent &me)
 }
 #endif
 
-void PrecisionMenu::_clear_selections()
+void PrecisionMenu::clear_selections()
 {
-    std::vector<MenuObject*>::iterator it;
+    vector<MenuObject*>::iterator it;
     for (it = m_attached_objects.begin(); it != m_attached_objects.end(); ++it)
-    {
         (*it)->clear_selections();
-    }
 }
 
 /**
- * Finds the closest rectangle to given entry start on a caardinal
+ * Finds the closest rectangle to given entry start on a cardinal
  * direction from it.
  * If no entries are found, NULL is returned.
  *
@@ -2238,9 +2271,7 @@ MenuObject* PrecisionMenu::_find_object_by_direction(const MenuObject* start,
                                                    Direction dir)
 {
     if (start == NULL)
-    {
         return NULL;
-    }
 
     coord_def aabb_start(0,0);
     coord_def aabb_end(0,0);
@@ -2285,7 +2316,7 @@ MenuObject* PrecisionMenu::_find_object_by_direction(const MenuObject* start,
     // loop through the entries
     // save the currently closest to the index in a variable
     MenuObject* closest = NULL;
-    std::vector<MenuObject*>::iterator it;
+    vector<MenuObject*>::iterator it;
     for (it = m_attached_objects.begin(); it != m_attached_objects.end(); ++it)
     {
         if (!(*it)->can_be_focused())
@@ -2303,34 +2334,24 @@ MenuObject* PrecisionMenu::_find_object_by_direction(const MenuObject* start,
         // intersects
         // check if it's closer than current
         if (closest == NULL)
-        {
             closest = *it;
-        }
 
         switch (dir)
         {
         case UP:
             if ((*it)->get_min_coord().y > closest->get_min_coord().y)
-            {
                 closest = *it;
-            }
             break;
         case DOWN:
             if ((*it)->get_min_coord().y < closest->get_min_coord().y)
-            {
                 closest = *it;
-            }
             break;
         case LEFT:
             if ((*it)->get_min_coord().x > closest->get_min_coord().x)
-            {
                 closest = *it;
-            }
         case RIGHT:
             if ((*it)->get_min_coord().x < closest->get_min_coord().x)
-            {
                 closest = *it;
-            }
         }
     }
     // TODO handle special cases here, like pressing down on the last entry
@@ -2338,16 +2359,16 @@ MenuObject* PrecisionMenu::_find_object_by_direction(const MenuObject* start,
     return closest;
 }
 
-std::vector<MenuItem*> PrecisionMenu::get_selected_items()
+vector<MenuItem*> PrecisionMenu::get_selected_items()
 {
-    std::vector<MenuItem*> ret_val;
-    std::vector<MenuObject*>::iterator it;
+    vector<MenuItem*> ret_val;
+    vector<MenuObject*>::iterator it;
     for (it = m_attached_objects.begin(); it != m_attached_objects.end(); ++it)
     {
-        std::vector<MenuItem*> object_selected = (*it)->get_selected_items();
+        vector<MenuItem*> object_selected = (*it)->get_selected_items();
         if (!object_selected.empty())
         {
-            std::vector<MenuItem*>::iterator object_it;
+            vector<MenuItem*>::iterator object_it;
             for (object_it = object_selected.begin();
                  object_it != object_selected.end(); ++object_it)
             {
@@ -2365,11 +2386,10 @@ void PrecisionMenu::attach_object(MenuObject* item)
 }
 
 // Predicate for std::find_if
-class _string_lookup : public std::binary_function<MenuObject*,
-                                                    std::string, bool>
+class _string_lookup : public binary_function<MenuObject*, string, bool>
 {
 public:
-    bool operator() (MenuObject* item, std::string lookup) const
+    bool operator() (MenuObject* item, string lookup) const
     {
         if (item->get_name().compare(lookup) == 0)
             return true;
@@ -2377,24 +2397,20 @@ public:
     }
 };
 
-MenuObject* PrecisionMenu::get_object_by_name(const std::string &search)
+MenuObject* PrecisionMenu::get_object_by_name(const string &search)
 {
-    std::vector<MenuObject*>::iterator ret_val;
-    ret_val = std::find_if(m_attached_objects.begin(), m_attached_objects.end(),
-        std::bind2nd(_string_lookup(), search));
+    vector<MenuObject*>::iterator ret_val;
+    ret_val = find_if(m_attached_objects.begin(), m_attached_objects.end(),
+                      bind2nd(_string_lookup(), search));
     if (ret_val != m_attached_objects.end())
-    {
         return *ret_val;
-    }
     return NULL;
 }
 
 MenuItem* PrecisionMenu::get_active_item()
 {
     if (m_active_object != NULL)
-    {
         return m_active_object->get_active_item();
-    }
     return NULL;
 }
 
@@ -2404,9 +2420,9 @@ void PrecisionMenu::set_active_object(MenuObject* object)
         return;
 
     // is the object attached?
-    std::vector<MenuObject*>::iterator find_val;
-    find_val = std::find(m_attached_objects.begin(), m_attached_objects.end(),
-                         object);
+    vector<MenuObject*>::iterator find_val;
+    find_val = find(m_attached_objects.begin(), m_attached_objects.end(),
+                    object);
     if (find_val != m_attached_objects.end())
     {
         m_active_object = object;
@@ -2418,7 +2434,7 @@ void PrecisionMenu::draw_menu()
 {
     if (!m_attached_objects.empty())
     {
-        std::vector<MenuObject*>::iterator it;
+        vector<MenuObject*>::iterator it;
         for (it = m_attached_objects.begin(); it != m_attached_objects.end();
              ++it)
         {
@@ -2575,7 +2591,7 @@ void MenuItem::clear_hotkeys()
     m_hotkeys.clear();
 }
 
-const std::vector<int>& MenuItem::get_hotkeys() const
+const vector<int>& MenuItem::get_hotkeys() const
 {
     return m_hotkeys;
 }
@@ -2678,7 +2694,7 @@ void TextItem::render()
 #else
     // Clean the drawing area first
     // clear_to_end_of_line does not work for us
-    std::string white_space(m_max_coord.x - m_min_coord.x, ' ');
+    string white_space(m_max_coord.x - m_min_coord.x, ' ');
     textcolor(BLACK);
     for (int i = 0; i < (m_max_coord.y - m_min_coord.y); ++i)
     {
@@ -2696,7 +2712,7 @@ void TextItem::render()
         textcolor(m_fg_colour);
         textbackground(m_bg_colour);
         cprintf("%s", m_render_text.substr(newline_pos, endline_pos).c_str());
-        if (endline_pos != std::string::npos)
+        if (endline_pos != string::npos)
             newline_pos = endline_pos + 1;
         else
             break;
@@ -2706,14 +2722,14 @@ void TextItem::render()
 #endif
 }
 
-void TextItem::set_text(const std::string& text)
+void TextItem::set_text(const string& text)
 {
     m_text = text;
     _wrap_text();
     m_dirty = true;
 }
 
-const std::string& TextItem::get_text() const
+const string& TextItem::get_text() const
 {
     return m_text;
 }
@@ -2803,7 +2819,7 @@ void FormattedTextItem::render()
     // clear_to_end_of_line does not work for us
     ASSERT(m_max_coord.x > m_min_coord.x);
     ASSERT(m_max_coord.y > m_min_coord.y);
-    std::string white_space(m_max_coord.x - m_min_coord.x, ' ');
+    string white_space(m_max_coord.x - m_min_coord.x, ' ');
     for (int i = 0; i < (m_max_coord.y - m_min_coord.y); ++i)
     {
         cgotoxy(m_min_coord.x, m_min_coord.y + i);
@@ -2956,7 +2972,7 @@ void SaveMenuItem::_pack_doll()
     for (int i = 0; i < TILEP_PART_MAX; ++i)
     {
         const int p   = p_order[i];
-        const int idx = m_save_doll.parts[p];
+        const tileidx_t idx = m_save_doll.parts[p];
         if (idx == 0 || idx == TILEP_SHOW_EQUIP || flags[p] == TILEP_FLAG_HIDE)
             continue;
 
@@ -2999,7 +3015,7 @@ void MenuObject::set_tile_height()
 #endif
 
 void MenuObject::init(const coord_def& min_coord, const coord_def& max_coord,
-              const std::string& name)
+                      const string& name)
 {
 #ifdef USE_TILE_LOCAL
     // these are saved in font dx / dy for mouse to work properly
@@ -3033,12 +3049,10 @@ MenuItem* MenuObject::_find_item_by_mouse_coords(const coord_def& pos)
 {
     // Is the mouse even in bounds?
     if (!_is_mouse_in_bounds(pos))
-    {
         return NULL;
-    }
 
     // Traverse
-    std::vector<MenuItem*>::iterator it;
+    vector<MenuItem*>::iterator it;
     for (it = m_entries.begin(); it != m_entries.end(); ++it)
     {
         if (!(*it)->can_be_highlighted())
@@ -3067,10 +3081,10 @@ MenuItem* MenuObject::_find_item_by_mouse_coords(const coord_def& pos)
 MenuItem* MenuObject::find_item_by_hotkey(int key)
 {
     // browse through all the Entries
-    std::vector<MenuItem*>::iterator it;
+    vector<MenuItem*>::iterator it;
     for (it = m_entries.begin(); it != m_entries.end(); ++it)
     {
-        std::vector<int>::const_iterator hot_iterator;
+        vector<int>::const_iterator hot_iterator;
         for (hot_iterator = (*it)->get_hotkeys().begin();
              hot_iterator != (*it)->get_hotkeys().end();
             ++hot_iterator)
@@ -3090,27 +3104,23 @@ MenuItem* MenuObject::select_item_by_hotkey(int key)
     return item;
 }
 
-std::vector<MenuItem*> MenuObject::get_selected_items()
+vector<MenuItem*> MenuObject::get_selected_items()
 {
-    std::vector<MenuItem*> ret_val;
-    std::vector<MenuItem*>::iterator it;
+    vector<MenuItem*> ret_val;
+    vector<MenuItem*>::iterator it;
     for (it = m_entries.begin(); it != m_entries.end(); ++it)
     {
         if ((*it)->selected())
-        {
             ret_val.push_back((*it));
-        }
     }
     return ret_val;
 }
 
 void MenuObject::clear_selections()
 {
-    std::vector<MenuItem*>::iterator it;
+    vector<MenuItem*>::iterator it;
     for (it = m_entries.begin(); it != m_entries.end(); ++it)
-    {
         (*it)->select(false);
-    }
 }
 
 void MenuObject::allow_focus(bool toggle)
@@ -3146,13 +3156,11 @@ MenuFreeform::MenuFreeform(): m_active_item(NULL), m_default_item(NULL)
 
 MenuFreeform::~MenuFreeform()
 {
-    std::vector<MenuItem*>::iterator it;
+    vector<MenuItem*>::iterator it;
     for (it = m_entries.begin(); it != m_entries.end(); ++it)
     {
         if (*it != NULL)
-        {
             delete *it;
-        }
     }
     m_entries.clear();
 }
@@ -3182,7 +3190,7 @@ MenuObject::InputReturnValue MenuFreeform::process_input(int key)
         else if (m_default_item == NULL)
         {
             // pick the first item possible
-            for (std::vector<MenuItem*>::iterator it = m_entries.begin();
+            for (vector<MenuItem*>::iterator it = m_entries.begin();
                  it != m_entries.end(); ++it)
             {
                 if ((*it)->can_be_highlighted())
@@ -3212,19 +3220,13 @@ MenuObject::InputReturnValue MenuFreeform::process_input(int key)
     {
     case CK_ENTER:
         if (m_active_item == NULL)
-        {
             return MenuObject::INPUT_NO_ACTION;
-        }
 
         select_item(m_active_item);
         if (m_active_item->selected())
-        {
             return MenuObject::INPUT_SELECTED;
-        }
         else
-        {
             return MenuObject::INPUT_DESELECTED;
-        }
         break;
     case CK_UP:
         find_entry = _find_item_by_direction(m_active_item, UP);
@@ -3234,9 +3236,7 @@ MenuObject::InputReturnValue MenuFreeform::process_input(int key)
             return MenuObject::INPUT_ACTIVE_CHANGED;
         }
         else
-        {
             return MenuObject::INPUT_FOCUS_RELEASE_UP;
-        }
         break;
     case CK_DOWN:
         find_entry = _find_item_by_direction(m_active_item, DOWN);
@@ -3246,9 +3246,7 @@ MenuObject::InputReturnValue MenuFreeform::process_input(int key)
             return MenuObject::INPUT_ACTIVE_CHANGED;
         }
         else
-        {
             return MenuObject::INPUT_FOCUS_RELEASE_DOWN;
-        }
         break;
     case CK_LEFT:
         find_entry = _find_item_by_direction(m_active_item, LEFT);
@@ -3258,9 +3256,7 @@ MenuObject::InputReturnValue MenuFreeform::process_input(int key)
             return MenuObject::INPUT_ACTIVE_CHANGED;
         }
         else
-        {
             return MenuObject::INPUT_FOCUS_RELEASE_LEFT;
-        }
         break;
     case CK_RIGHT:
         find_entry = _find_item_by_direction(m_active_item, RIGHT);
@@ -3270,22 +3266,16 @@ MenuObject::InputReturnValue MenuFreeform::process_input(int key)
             return MenuObject::INPUT_ACTIVE_CHANGED;
         }
         else
-        {
             return MenuObject::INPUT_FOCUS_RELEASE_RIGHT;
-        }
         break;
     default:
         find_entry = select_item_by_hotkey(key);
         if (find_entry != NULL)
         {
             if (find_entry->selected())
-            {
                 return MenuObject::INPUT_SELECTED;
-            }
             else
-            {
                 return MenuObject::INPUT_DESELECTED;
-            }
         }
         break;
     }
@@ -3296,9 +3286,7 @@ MenuObject::InputReturnValue MenuFreeform::process_input(int key)
 MenuObject::InputReturnValue MenuFreeform::handle_mouse(const MouseEvent& me)
 {
     if (!m_allow_focus || !m_visible)
-    {
         return INPUT_NO_ACTION;
-    }
 
     if (!_is_mouse_in_bounds(coord_def(me.px, me.py)))
     {
@@ -3308,9 +3296,7 @@ MenuObject::InputReturnValue MenuFreeform::handle_mouse(const MouseEvent& me)
             return INPUT_FOCUS_LOST;
         }
         else
-        {
             return INPUT_NO_ACTION;
-        }
     }
 
     MenuItem* find_item = NULL;
@@ -3344,13 +3330,9 @@ MenuObject::InputReturnValue MenuFreeform::handle_mouse(const MouseEvent& me)
         {
             select_item(find_item);
             if (find_item->selected())
-            {
                 return MenuObject::INPUT_SELECTED;
-            }
             else
-            {
                 return MenuObject::INPUT_DESELECTED;
-            }
         }
     }
     if (me.event == MouseEvent::PRESS && me.button == MouseEvent::LEFT)
@@ -3372,11 +3354,9 @@ void MenuFreeform::render()
     if (m_dirty)
         _place_items();
 
-    std::vector<MenuItem*>::iterator it;
+    vector<MenuItem*>::iterator it;
     for (it = m_entries.begin(); it != m_entries.end(); ++it)
-    {
         (*it)->render();
-    }
 }
 
 /**
@@ -3393,7 +3373,7 @@ MenuItem* MenuFreeform::get_active_item()
 }
 
 // Predicate for std::find_if
-class _id_comparison : public std::binary_function<MenuItem*, int, bool>
+class _id_comparison : public binary_function<MenuItem*, int, bool>
 {
 public:
     bool operator() (MenuItem* item, int ID) const
@@ -3410,9 +3390,9 @@ public:
  */
 void MenuFreeform ::set_active_item(int ID)
 {
-    std::vector<MenuItem*>::iterator ret_val;
-    ret_val = std::find_if(m_entries.begin(), m_entries.end(),
-                           std::bind2nd(_id_comparison(), ID));
+    vector<MenuItem*>::iterator ret_val;
+    ret_val = find_if(m_entries.begin(), m_entries.end(),
+                      bind2nd(_id_comparison(), ID));
     if (ret_val != m_entries.end())
     {
         m_active_item = *ret_val;
@@ -3447,8 +3427,8 @@ void MenuFreeform::_set_active_item_by_index(int index)
 void MenuFreeform::set_active_item(MenuItem* item)
 {
     // Does item exist in the menu?
-    std::vector<MenuItem*>::iterator it;
-    it = std::find(m_entries.begin(), m_entries.end(), item);
+    vector<MenuItem*>::iterator it;
+    it = find(m_entries.begin(), m_entries.end(), item);
     if (it != m_entries.end())
     {
         if (item->can_be_highlighted())
@@ -3510,8 +3490,8 @@ bool MenuFreeform::select_item(MenuItem* item)
     ASSERT(item != NULL);
 
     // Is the given item in menu?
-    std::vector<MenuItem*>::iterator find_val;
-    find_val = std::find(m_entries.begin(), m_entries.end(), item);
+    vector<MenuItem*>::iterator find_val;
+    find_val = find(m_entries.begin(), m_entries.end(), item);
     if (find_val != m_entries.end())
     {
         // Flip the selection flag
@@ -3523,18 +3503,17 @@ bool MenuFreeform::select_item(MenuItem* item)
 bool MenuFreeform::attach_item(MenuItem* item)
 {
     // is the item inside boundaries?
-    if (item->get_min_coord().x < m_min_coord.x
-        || item->get_min_coord().x > m_max_coord.x)
-        return false;
-    if (item->get_min_coord().y < m_min_coord.y
-        || item->get_min_coord().y > m_max_coord.y)
-        return false;
-    if (item->get_max_coord().x < m_min_coord.x
-        || item->get_max_coord().x > m_max_coord.x)
-        return false;
-    if (item->get_max_coord().y < m_min_coord.y
+    if (   item->get_min_coord().x < m_min_coord.x
+        || item->get_min_coord().x > m_max_coord.x
+        || item->get_min_coord().y < m_min_coord.y
+        || item->get_min_coord().y > m_max_coord.y
+        || item->get_max_coord().x < m_min_coord.x
+        || item->get_max_coord().x > m_max_coord.x
+        || item->get_max_coord().y < m_min_coord.y
         || item->get_max_coord().y > m_max_coord.y)
+    {
         return false;
+    }
     // It's inside boundaries
 
     m_entries.push_back(item);
@@ -3550,9 +3529,7 @@ MenuItem* MenuFreeform::_find_item_by_direction(const MenuItem* start,
                                                 MenuObject::Direction dir)
 {
     if (start == NULL)
-    {
         return NULL;
-    }
 
     coord_def aabb_start(0,0);
     coord_def aabb_end(0,0);
@@ -3609,7 +3586,7 @@ MenuItem* MenuFreeform::_find_item_by_direction(const MenuItem* start,
     // loop through the entries
     // save the currently closest to the index in a variable
     MenuItem* closest = NULL;
-    std::vector<MenuItem*>::iterator it;
+    vector<MenuItem*>::iterator it;
     for (it = m_entries.begin(); it != m_entries.end(); ++it)
     {
         if (!(*it)->can_be_highlighted())
@@ -3631,34 +3608,24 @@ MenuItem* MenuFreeform::_find_item_by_direction(const MenuItem* start,
         // intersects
         // check if it's closer than current
         if (closest == NULL)
-        {
             closest = *it;
-        }
 
         switch (dir)
         {
         case UP:
             if ((*it)->get_min_coord().y > closest->get_min_coord().y)
-            {
                 closest = *it;
-            }
             break;
         case DOWN:
             if ((*it)->get_min_coord().y < closest->get_min_coord().y)
-            {
                 closest = *it;
-            }
             break;
         case LEFT:
             if ((*it)->get_min_coord().x > closest->get_min_coord().x)
-            {
                 closest = *it;
-            }
         case RIGHT:
             if ((*it)->get_min_coord().x < closest->get_min_coord().x)
-            {
                 closest = *it;
-            }
         }
     }
     // TODO handle special cases here, like pressing down on the last entry
@@ -3673,13 +3640,11 @@ MenuScroller::MenuScroller(): m_topmost_visible(0), m_currently_active(0),
 
 MenuScroller::~MenuScroller()
 {
-    std::vector<MenuItem*>::iterator it;
+    vector<MenuItem*>::iterator it;
     for (it = m_entries.begin(); it != m_entries.end(); ++it)
     {
         if (*it != NULL)
-        {
             delete *it;
-        }
     }
     m_entries.clear();
 }
@@ -3715,19 +3680,13 @@ MenuObject::InputReturnValue MenuScroller::process_input(int key)
     {
     case CK_ENTER:
         if (m_currently_active < 0)
-        {
             return MenuObject::INPUT_NO_ACTION;
-        }
 
         select_item(m_currently_active);
         if (get_active_item()->selected())
-        {
             return MenuObject::INPUT_SELECTED;
-        }
         else
-        {
             return MenuObject::INPUT_DESELECTED;
-        }
         break;
     case CK_UP:
     case CONTROL('K'):
@@ -3739,9 +3698,7 @@ MenuObject::InputReturnValue MenuScroller::process_input(int key)
             return MenuObject::INPUT_ACTIVE_CHANGED;
         }
         else
-        {
             return MenuObject::INPUT_FOCUS_RELEASE_UP;
-        }
         break;
     case CK_DOWN:
     case CONTROL('J'):
@@ -3753,26 +3710,59 @@ MenuObject::InputReturnValue MenuScroller::process_input(int key)
             return MenuObject::INPUT_ACTIVE_CHANGED;
         }
         else
-        {
             return MenuObject::INPUT_FOCUS_RELEASE_DOWN;
-        }
         break;
     case CK_LEFT:
         return MenuObject::INPUT_FOCUS_RELEASE_LEFT;
     case CK_RIGHT:
         return MenuObject::INPUT_FOCUS_RELEASE_RIGHT;
+    case CK_PGUP:
+        if (m_currently_active != m_topmost_visible)
+        {
+            set_active_item(m_topmost_visible);
+            return MenuObject::INPUT_ACTIVE_CHANGED;
+        }
+        else
+        {
+            if (m_currently_active == 0)
+                return MenuObject::INPUT_FOCUS_RELEASE_UP;
+            else
+            {
+                int new_active = m_currently_active - m_items_shown;
+                if (new_active < 0)
+                    new_active = 0;
+                set_active_item(new_active);
+                return MenuObject::INPUT_ACTIVE_CHANGED;
+            }
+        }
+    case CK_PGDN:
+    {
+        int last_item_visible = m_topmost_visible + m_items_shown - 1;
+        int last_menu_item = m_entries.size() - 1;
+        if (last_item_visible > m_currently_active)
+        {
+            set_active_item(last_item_visible);
+            return MenuObject::INPUT_ACTIVE_CHANGED;
+        }
+        else if (m_currently_active == last_menu_item)
+            return MenuObject::INPUT_FOCUS_RELEASE_DOWN;
+        else
+        {
+            int new_active = m_currently_active + m_items_shown - 1;
+            if (new_active > last_menu_item)
+                new_active = last_menu_item;
+            set_active_item(new_active);
+            return MenuObject::INPUT_ACTIVE_CHANGED;
+        }
+    }
     default:
         find_entry = select_item_by_hotkey(key);
         if (find_entry != NULL)
         {
             if (find_entry->selected())
-            {
                 return MenuObject::INPUT_SELECTED;
-            }
             else
-            {
                 return MenuObject::INPUT_DESELECTED;
-            }
         }
         break;
     }
@@ -3783,9 +3773,7 @@ MenuObject::InputReturnValue MenuScroller::process_input(int key)
 MenuObject::InputReturnValue MenuScroller::handle_mouse(const MouseEvent &me)
 {
     if (!m_allow_focus || !m_visible)
-    {
         return INPUT_NO_ACTION;
-    }
 
     if (!_is_mouse_in_bounds(coord_def(me.px, me.py)))
     {
@@ -3795,9 +3783,7 @@ MenuObject::InputReturnValue MenuScroller::handle_mouse(const MouseEvent &me)
             return INPUT_FOCUS_LOST;
         }
         else
-        {
             return INPUT_NO_ACTION;
-        }
     }
 
     MenuItem* find_item = NULL;
@@ -3826,9 +3812,7 @@ MenuObject::InputReturnValue MenuScroller::handle_mouse(const MouseEvent &me)
                     return INPUT_ACTIVE_CHANGED;
                 }
                 else
-                {
                     return INPUT_NO_ACTION;
-                }
             }
             else
             {
@@ -3848,13 +3832,9 @@ MenuObject::InputReturnValue MenuScroller::handle_mouse(const MouseEvent &me)
         {
             select_item(find_item);
             if (find_item->selected())
-            {
                 return MenuObject::INPUT_SELECTED;
-            }
             else
-            {
                 return MenuObject::INPUT_DESELECTED;
-            }
         }
     }
     if (me.event == MouseEvent::PRESS && me.button == MouseEvent::LEFT)
@@ -3876,11 +3856,9 @@ void MenuScroller::render()
     if (m_dirty)
         _place_items();
 
-    std::vector<MenuItem*>::iterator it;
+    vector<MenuItem*>::iterator it;
     for (it = m_entries.begin(); it != m_entries.end(); ++it)
-    {
         (*it)->render();
-    }
 }
 
 MenuItem* MenuScroller::get_active_item()
@@ -3904,9 +3882,9 @@ void MenuScroller::set_active_item(int ID)
         }
     }
 
-    std::vector<MenuItem*>::iterator ret_val;
-    ret_val = std::find_if(m_entries.begin(), m_entries.end(),
-                           std::bind2nd(_id_comparison(), ID));
+    vector<MenuItem*>::iterator ret_val;
+    ret_val = find_if(m_entries.begin(), m_entries.end(),
+                      bind2nd(_id_comparison(), ID));
     if (ret_val != m_entries.end())
     {
         set_active_item(*ret_val);
@@ -3921,22 +3899,16 @@ void MenuScroller::_set_active_item_by_index(int index)
 {
     // prevent useless _place_items
     if (index == m_currently_active)
-    {
         return;
-    }
 
     if (index >= 0 && index < static_cast<int> (m_entries.size()))
     {
         m_currently_active = index;
         if (m_currently_active < m_topmost_visible)
-        {
             m_topmost_visible = m_currently_active;
-        }
     }
     else
-    {
         m_currently_active = -1;
-    }
     m_dirty = true;
 }
 
@@ -4009,9 +3981,7 @@ bool MenuScroller::select_item(MenuItem* item)
     for (int i = 0; i < static_cast<int> (m_entries.size()); ++i)
     {
         if (item == m_entries.at(i))
-        {
             return select_item(i);
-        }
     }
     return false;
 }
@@ -4043,7 +4013,7 @@ void MenuScroller::_place_items()
     coord_def max_coord(0,0);
 
     // Hide all the items
-    std::vector<MenuItem*>::iterator it;
+    vector<MenuItem*>::iterator it;
     for (it = m_entries.begin(); it != m_entries.end(); ++it)
     {
         (*it)->set_visible(false);
@@ -4060,14 +4030,9 @@ void MenuScroller::_place_items()
         if (space_used > space_available)
         {
             if (m_currently_active < 0)
-            {
                 break; // all space allocated
-            }
             if (one_past_last > m_currently_active)
-            {
-                /// we included our active one, ok!
-                break;
-            }
+                break; // we included our active one, ok!
             else
             {
                 // active one didn't fit, chop the first one and run the loop
@@ -4114,15 +4079,11 @@ MenuItem* MenuScroller::_find_item_by_direction(int start_index,
     {
     case UP:
         if ((start_index - 1) >= 0)
-        {
             find_item = m_entries.at(start_index - 1);
-        }
         break;
     case DOWN:
         if ((start_index + 1) < static_cast<int> (m_entries.size()))
-        {
             find_item = m_entries.at(start_index + 1);
-        }
         break;
     default:
         break;
@@ -4140,14 +4101,14 @@ MenuDescriptor::~MenuDescriptor()
 {
 }
 
-std::vector<MenuItem*> MenuDescriptor::get_selected_items()
+vector<MenuItem*> MenuDescriptor::get_selected_items()
 {
-    std::vector<MenuItem*> ret_val;
+    vector<MenuItem*> ret_val;
     return ret_val;
 }
 
 void MenuDescriptor::init(const coord_def& min_coord, const coord_def& max_coord,
-              const std::string& name)
+                          const string& name)
 {
     MenuObject::init(min_coord, max_coord, name);
     m_desc_item.set_bounds(min_coord, max_coord);
@@ -4203,13 +4164,9 @@ void MenuDescriptor::_place_items()
 
 
         if (tmp == NULL)
-        {
              m_desc_item.set_text("");
-        }
         else
-        {
             m_desc_item.set_text(m_active_item->get_description_text());
-        }
     }
 }
 
@@ -4223,9 +4180,9 @@ BoxMenuHighlighter::~BoxMenuHighlighter()
 {
 }
 
-std::vector<MenuItem*> BoxMenuHighlighter::get_selected_items()
+vector<MenuItem*> BoxMenuHighlighter::get_selected_items()
 {
-    std::vector<MenuItem*> ret_val;
+    vector<MenuItem*> ret_val;
     return ret_val;
 }
 
@@ -4308,9 +4265,7 @@ BlackWhiteHighlighter::~BlackWhiteHighlighter()
 void BlackWhiteHighlighter::render()
 {
     if (!m_visible)
-    {
         return;
-    }
 
     _place_items();
 
@@ -4327,9 +4282,7 @@ void BlackWhiteHighlighter::_place_items()
 {
     MenuItem* tmp = m_parent->get_active_item();
     if (tmp == m_active_item)
-    {
         return;
-    }
 
 #ifdef USE_TILE_LOCAL
     m_shape_buf.clear();

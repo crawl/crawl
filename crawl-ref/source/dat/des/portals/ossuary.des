@@ -13,12 +13,6 @@
 
 {{
 function ossuary_portal(e)
-  local desc_long =
-"You can make out a staircase leading downwards into a small tomb. Sand "..
-"surrounds the staircase and is continuously pouring onto it. Before long the "..
-"staircase will be gone. They say that some distant relatives of the pharaohs "..
-"were entombed here."
-
   local timeout_turns_long = crawl.random_range(2700, 3300)
   local timeout_turns_short = timeout_turns_long/10
 
@@ -38,10 +32,8 @@ function ossuary_portal(e)
       timed_marker {
         disappear = "The staircase has disappeared completely beneath the sand.",
         desc = "sand-covered staircase",
-        desc_long = desc_long,
         entity = 'staircase',
-        dst = "ossuary",
-        dstorigin = "in a tomb",
+        dst = "Ossuary",
         overview = "sand-covered staircase",
         turns = timeout_turns_long,
         turns_short = timeout_turns_short,
@@ -59,18 +51,6 @@ end
 function ossuary_setup_features(e)
         e.kfeat("< = exit_portal_vault")
         e.colour("< = brown")
-        e.lrockcol("white")
-        e.lfloorcol("yellow")
-        e.lrocktile("wall_sandstone")
-        e.lfloortile("floor_sandstone")
-        e.tile("c = dngn_stone_wall_brown")
-end
-}}
-
-# Add the milestone.
-{{
-function ossuary_milestone(e)
-  crawl.mark_milestone("br.enter", "entered an Ossuary.", true)
 end
 }}
 
@@ -178,7 +158,7 @@ ENDMAP
 
 # Reset default depth to prevent random generation of portal vaults.
 # Sort destination maps by WEIGHT.
-default-depth:
+default-depth: Ossuary
 
 ###########################################################
 # Common: WEIGHT 40
@@ -187,7 +167,7 @@ default-depth:
 NAME:    ossuary_tomb_1
 WEIGHT:  40
 ORIENT:  encompass
-TAGS:    ossuary no_item_gen no_monster_gen no_rotate
+TAGS:    no_item_gen no_monster_gen no_rotate
 SHUFFLE: dwyz
 SUBST:   w=2, y=2
 NSUBST:  z= 1:1 / *:3
@@ -201,9 +181,6 @@ MONS:    rat zombie / jackal zombie / adder zombie / goblin zombie / \
          human zombie / elf zombie / centaur zombie
 MONS:    kobold zombie / orc zombie / hobgoblin zombie
 : ossuary_setup_features(_G)
-epilogue{{
-ossuary_milestone(_G)
-}}
 MAP
 xxxxxxxxxxxxxxxxxxxxxx
 x.........<A.........x
@@ -234,7 +211,7 @@ NAME:    ossuary_tomb_2
 # traps.
 WEIGHT:  40
 ORIENT:  encompass
-TAGS:    ossuary no_item_gen no_monster_gen no_rotate
+TAGS:    no_item_gen no_monster_gen no_rotate
 KFEAT:   ~ = dart trap w:1 / arrow trap w:1 / needle trap
 KFEAT:   ^ = dart trap / arrow trap
 # Number of 1's is 53, number of ~'s is 57.
@@ -263,9 +240,6 @@ MONS:    adder zombie / hobgoblin zombie / orc zombie / kobold zombie / nothing
 MONS:    big kobold zombie / water moccasin zombie / gnoll zombie / nothing
 MONS:    mummy
 : ossuary_setup_features(_G)
-epilogue{{
-ossuary_milestone(_G)
-}}
 MAP
 cccccccccccccccccccccc
 c<11H~~~G1111F~~~E111c
@@ -293,7 +267,7 @@ ENDMAP
 NAME:    ossuary_tomb_3
 WEIGHT:  40
 ORIENT:  encompass
-TAGS:    ossuary no_item_gen no_monster_gen no_rotate no_vmirror
+TAGS:    no_item_gen no_monster_gen no_rotate no_vmirror
 # zombies should be awake, so they march downwards in a line
 MONS:    generate_awake orc zombie / generate_awake kobold zombie / \
          generate_awake hobgoblin zombie / generate_awake gnoll zombie
@@ -303,9 +277,6 @@ MONS:    orc zombie / kobold zombie / big kobold zombie / hobgoblin zombie
 ITEM:    nothing / any scroll w:5 / any potion
 KFEAT:   ^ = alarm trap
 : ossuary_setup_features(_G)
-epilogue{{
-ossuary_milestone(_G)
-}}
 MAP
 cccccccccccccccccccccc
 cccc.....2222.....cccc
@@ -336,7 +307,7 @@ ENDMAP
 NAME:    minmay_ossuary_two_tombs
 WEIGHT:  20
 ORIENT:  encompass
-TAGS:    ossuary no_item_gen no_monster_gen
+TAGS:    no_item_gen no_monster_gen
 # Loot: between 5 scrolls/potions and 9 scrolls/potions, with some gold.
 # The tomb close to the player is a bit easier than the other one, and is
 # more likely to be the one with less loot, giving weak players a chance.
@@ -356,9 +327,6 @@ MONS:    gnoll zombie / orc zombie / hound zombie / big kobold zombie / \
 KFEAT:   ~ = needle trap w:20 / arrow trap / spear trap w:5 / floor w:20
 KFEAT:   f = needle trap w:20 / arrow trap / spear trap w:5 / floor w:20
 : ossuary_setup_features(_G)
-epilogue{{
-ossuary_milestone(_G)
-}}
 MAP
 xxxxxxxxxxxxxxxxxxxxxx
 x........<..A........x
@@ -387,7 +355,7 @@ ENDMAP
 NAME:    ossuary_crypta
 WEIGHT:  20
 ORIENT:  encompass
-TAGS:    ossuary no_item_gen no_monster_gen no_rotate no_vmirror
+TAGS:    no_item_gen no_monster_gen no_rotate no_vmirror
 MONS:    mummy
 MONS:    gnoll zombie / hobgoblin zombie / orc zombie / \
          human zombie / kobold zombie / goblin zombie / \
@@ -418,9 +386,6 @@ KFEAT:   ^ = alarm trap / floor w:20
 SUBST:   = : =+
 NSUBST:  = = 1:= / *:+
 : ossuary_setup_features(_G)
-epilogue{{
-ossuary_milestone(_G)
-}}
 MAP
           vvv
         vvv1vvv
@@ -449,7 +414,7 @@ ENDMAP
 NAME:   ossuary_minmay_scorpions
 WEIGHT: 20
 ORIENT: encompass
-TAGS:   ossuary no_item_gen no_monster_gen
+TAGS:   no_item_gen no_monster_gen
 MONS:   scorpion
 MONS:   mummy
 MONS:   gnoll zombie / hobgoblin zombie / orc zombie / \
@@ -460,9 +425,6 @@ KFEAT:  ~ = needle trap / arrow trap / spear trap w:5 / dart trap w:2 / floor w:
 SUBST:  1 = 1.
 SUBST:  3 = 3.
 : ossuary_setup_features(_G)
-epilogue{{
-ossuary_milestone(_G)
-}}
 MAP
 ccccccccccccccccccccccccc
 c...c..3c..1c~~~ndddc131c
@@ -495,7 +457,7 @@ ENDMAP
 NAME:    ossuary_minmay_tomb_2a
 WEIGHT:  20
 ORIENT:  encompass
-TAGS:    ossuary no_item_gen no_monster_gen no_rotate
+TAGS:    no_item_gen no_monster_gen no_rotate
 MONS:    rat zombie / jackal zombie / goblin zombie / hobgoblin zombie / \
          adder zombie / gnoll zombie / orc zombie / kobold zombie / \
          big kobold zombie / hound zombie / human zombie / elf zombie
@@ -506,13 +468,10 @@ NSUBST:  B = 1:= / *:n
 NSUBST:  C = 1:= / *:n
 NSUBST:  D = 1:= / *:n
 NSUBST:  E = 1:= / *:n
-KFEAT:   ~ = needle trap / arrow trap / spear trap / bolt trap / axe trap
+KFEAT:   ~ = needle trap / arrow trap / spear trap
 SUBST:   ~ = ~.
 NSUBST:  X = 1:< / *:.
 : ossuary_setup_features(_G)
-epilogue{{
-ossuary_milestone(_G)
-}}
 MAP
 ccccccccccccccccccccccccccccccc
 c$$B~..........<..........~Cddc
@@ -545,7 +504,7 @@ ENDMAP
 NAME:    ossuary_zaba_flooded
 WEIGHT:  20
 ORIENT:  encompass
-TAGS:    ossuary no_item_gen no_monster_gen
+TAGS:    no_item_gen no_monster_gen
 {{
 local flood_x, flood_y, n = -1, -1, 0
 
@@ -592,15 +551,12 @@ SUBST:   CDJ = 1112
 MONS:    generate_awake zombie place:D:6 /\
          w:5 generate_awake mummy
 MONS:    plant col:darkgrey name:withered n_adj tile:mons_withered_plant /\
-         bog mummy hd:3 /\
+         bog body hd:3 spells:throw_frost;slow;corpse_rot name:decayed n_adj n_noc /\
          w:5 plant col:lightgrey name:withered n_adj tile:mons_withered_plant /\
          w:5 nothing
 ITEM:    any potion / any scroll / any jewellery w:1
 : ossuary_setup_features(_G)
 : lrockcol('brown')
-epilogue {{
-ossuary_milestone(_G)
-}}
 MAP
       xxxxxxxxxxxxxxx
    xxxxxxxxxxxxxxxxxxxxx
@@ -646,15 +602,12 @@ ENDMAP
 NAME:   minmay_ossuary_gauntlet
 WEIGHT: 10
 ORIENT: encompass
-TAGS:   ossuary no_item_gen no_monster_gen
+TAGS:   no_item_gen no_monster_gen
 NSUBST: 1 = 2:1 / *:2
 MONS:   mummy
 MONS:   goblin zombie / hobgoblin zombie / gnoll zombie / big kobold zombie / \
         orc zombie / human zombie w:2 / elf zombie w:2 / centaur zombie w:2
 : ossuary_setup_features(_G)
-epilogue{{
-ossuary_milestone(_G)
-}}
 MAP
          ccccccccccccccccc
          c1c1c1c1c1c1c1c1c
@@ -674,7 +627,7 @@ ENDMAP
 NAME:    ossuary_the_hunt_dpeg
 WEIGHT:  10
 ORIENT:  encompass
-TAGS:    ossuary no_item_gen no_monster_gen
+TAGS:    no_item_gen no_monster_gen
 # loot: 8 items of which 6 should be good.
 # Most of the loot helps right here, if need be.
 ITEM:    potion of curing / potion of heal wounds / potion of speed / \
@@ -702,16 +655,12 @@ MONS:    mummy
 MONS:    generate_awake centaur zombie / generate_awake hobgoblin zombie / \
          generate_awake big kobold zombie / nothing w:20
 MONS:    centaur zombie / hobgoblin zombie / big kobold zombie / nothing w:20
-KFEAT:   ~ = dart trap w:20 / axe trap w:2 / net trap / needle trap / \
-             alarm trap / floor w:40
+KFEAT:   ~ = dart trap w:20 / net trap / needle trap / alarm trap / floor w:40
 KFEAT:   T = alarm trap w:20 / net trap / floor w:70
-KFEAT:   ^ = net trap w:15 / needle trap w:4 / axe trap w:1 / floor w:20
+KFEAT:   ^ = net trap w:15 / needle trap w:4 / spear trap w:1 / floor w:20
 COLOUR:  ^ = red
 KFEAT:   W = dart trap / floor w:20
 : ossuary_setup_features(_G)
-epilogue{{
-ossuary_milestone(_G)
-}}
 MAP
            cccccccccccccccccccc
    ccccccccc3c3c3c3c3c3c3cddddccc
@@ -730,7 +679,7 @@ ENDMAP
 NAME:    ossuary_due_mausoleum
 WEIGHT:  10
 ORIENT:  encompass
-TAGS:    ossuary no_item_gen no_monster_gen no_rotate no_vmirror
+TAGS:    no_item_gen no_monster_gen no_rotate no_vmirror
 MONS:    orc skeleton / kobold skeleton / gnoll skeleton / orc skeleton
 MONS:    mummy
 MONS:    patrolling guardian mummy
@@ -743,9 +692,6 @@ KMONS:   x = guardian mummy
 : local x = {}
 : lua_marker("=", restrict_door(x))
 : ossuary_setup_features(_G)
-epilogue{{
-ossuary_milestone(_G)
-}}
 : crawl.mpr("You feel the presence of a powerful and evil guardian...", "warning")
 MAP
 ccccccccccccccccccccccccccccc
@@ -791,7 +737,7 @@ ENDMAP
 NAME:    ossuary_due_small_catacomb
 WEIGHT:  10
 ORIENT:  encompass
-TAGS:    ossuary no_item_gen no_monster_gen
+TAGS:    no_item_gen no_monster_gen
 ITEM:    any scroll / any potion
 MONS:    kobold skeleton / goblin skeleton / gnoll skeleton / \
          orc skeleton
@@ -814,9 +760,6 @@ KFEAT:   ^ = dart trap / arrow trap
 KITEM:   y = any scroll w:5 / any potion w:5 / nothing w:10
 KMONS:   y = rat skeleton
 : ossuary_setup_features(_G)
-epilogue{{
-ossuary_milestone(_G)
-}}
 MAP
            ccc
          cccxccccc
@@ -844,7 +787,7 @@ ENDMAP
 NAME:    ossuary_due_pyramid
 WEIGHT:  10
 ORIENT:  encompass
-TAGS:    ossuary no_item_gen no_monster_gen no_rotate no_vmirror no_hmirror
+TAGS:    no_item_gen no_monster_gen no_rotate no_vmirror no_hmirror
 MONS:    kobold zombie / gnoll zombie / orc zombie / rat zombie / \
          goblin zombie / hobgoblin zombie
 MONS:    kobold skeleton / gnoll skeleton / orc skeleton / rat skeleton / \
@@ -854,16 +797,13 @@ KMONS:   4 = Menkaure, mummy
 # Loot: 1-16 items
 ITEM:    any scroll / any potion / w:5 nothing
 KFEAT:   ^ = arrow trap / dart trap / alarm trap
-KFEAT:   m = bolt trap
+KFEAT:   m = spear trap
 KFEAT:   ~ = alarm trap
 NSUBST:  ' = 2:m / 25:1 / 25:2 / 30:^ / .
 SUBST:   X : XYc
 NSUBST:  X = 6:= / *:c
 NSUBST:  Y = 3:= / *:c
 : ossuary_setup_features(_G)
-epilogue{{
-ossuary_milestone(_G)
-}}
 MAP
                             cc
                            cccc
@@ -899,7 +839,7 @@ NAME:   ossuary_zaba_two_paths
 # more time to go for a walk and another chance to meet the player.
 ORIENT: encompass
 WEIGHT: 10
-TAGS:   ossuary no_item_gen no_monster_gen no_rotate
+TAGS:   no_item_gen no_monster_gen no_rotate
 #
 # Standard monsters: small zombies, large zombies, boss:
 MONS:   kobold zombie / goblin zombie / orc zombie / hobgoblin zombie
@@ -919,12 +859,9 @@ ITEM:   any potion / any scroll / nothing w:1
 #
 # There are not always traps in corridors but they are guaranteed near the loot:
 KFEAT:  ' = arrow trap w:3 / dart trap w:5 / alarm trap w:7 / floor w:85
-KFEAT:  " = bolt trap w:1 / net trap w:3 / arrow trap w:5 / dart trap w:10
+KFEAT:  " = spear trap w:1 / net trap w:3 / arrow trap w:5 / dart trap w:10
 #
 : ossuary_setup_features(_G)
-epilogue{{
-ossuary_milestone(_G)
-}}
 MAP
 ccccccccccccccccccccccccccc
 c2c2c2cc...........cc2c2c2c
@@ -973,7 +910,7 @@ ENDMAP
 NAME:    ossuary_due_cavern
 WEIGHT:  10
 ORIENT:  encompass
-TAGS:    ossuary no_item_gen no_monster_gen
+TAGS:    no_item_gen no_monster_gen
 MONS:    centaur zombie w:1 / orc zombie / hobgoblin zombie /\
          kobold zombie / adder zombie / orc skeleton / hobgoblin skeleton /\
          ball python skeleton / nothing w:5
@@ -995,9 +932,6 @@ MARKER:  L = lua:message_at_spot ( \
                  "warning" \
              )
 : ossuary_setup_features(_G)
-epilogue{{
-ossuary_milestone(_G)
-}}
 MAP
   ccccccccc
  cc.......cc
@@ -1037,14 +971,11 @@ ENDMAP
 NAME:   ossuary_minmay_four_chambers
 WEIGHT: 10
 ORIENT: encompass
-TAGS:   ossuary no_item_gen no_monster_gen
+TAGS:   no_item_gen no_monster_gen
 MONS:   human zombie / elf zombie / centaur zombie
 MONS:   mummy
 ITEM:   any scroll / any potion / any scroll q:2 w:2 / any potion q:2 w:2
 : ossuary_setup_features(_G)
-epilogue{{
-ossuary_milestone(_G)
-}}
 MAP
             ccc
           cccdccc
@@ -1080,7 +1011,7 @@ ENDMAP
 NAME:   ossuary_minmay_chase
 WEIGHT: 10
 ORIENT: encompass
-TAGS:   ossuary no_item_gen no_monster_gen
+TAGS:   no_item_gen no_monster_gen
 MONS:   rat zombie / quokka zombie / adder zombie /\
         goblin zombie / hobgoblin zombie / kobold zombie / gnoll zombie w:2 /\
         big kobold zombie w:1 / human zombie w:1 / elf zombie w:1 / orc zombie w:1
@@ -1088,9 +1019,6 @@ MONS:   generate_awake mummy
 ITEM:   any scroll / any potion / gold w:4
 KFEAT:  ~ = arrow trap / needle trap / floor w:40
 : ossuary_setup_features(_G)
-epilogue{{
-ossuary_milestone(_G)
-}}
 MAP
 ccccc     ccc ccc ccc
 cdddccccccc1ccc1ccc1ccccccc

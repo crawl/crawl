@@ -26,10 +26,9 @@ enum spschool_flag_type
   SPTYP_POISON         = 1<<10,
   SPTYP_EARTH          = 1<<11,
   SPTYP_AIR            = 1<<12,
-  SPTYP_HOLY           = 1<<13,
-  SPTYP_LAST_EXPONENT  = 13,    //jmf: ``NUM_SPELL_TYPES'' kinda useless
-  NUM_SPELL_TYPES      = 15,
-  SPTYP_RANDOM         = 1<<14,
+  SPTYP_LAST_EXPONENT  = 12,
+  SPTYP_LAST_SCHOOL    = 1<<SPTYP_LAST_EXPONENT,
+  SPTYP_RANDOM         = 1<<(SPTYP_LAST_EXPONENT + 1),
 };
 
 struct bolt;
@@ -51,12 +50,11 @@ enum spell_highlight_colours
 bool is_valid_spell(spell_type spell);
 void init_spell_descs(void);
 void init_spell_name_cache();
-spell_type spell_by_name(std::string name, bool partial_match = false);
+spell_type spell_by_name(string name, bool partial_match = false);
 
-spschool_flag_type school_by_name(std::string name);
+spschool_flag_type school_by_name(string name);
 
 int get_spell_slot_by_letter(char letter);
-int get_spell_slot(spell_type spell);
 int get_spell_letter(spell_type spell);
 spell_type get_spell_by_letter(char letter);
 
@@ -68,10 +66,8 @@ int spell_hunger(spell_type which_spell, bool rod = false);
 int spell_mana(spell_type which_spell);
 int spell_difficulty(spell_type which_spell);
 int spell_power_cap(spell_type spell);
-int spell_range(spell_type spell, int pow, bool real_cast,
-                bool player_spell=true);
+int spell_range(spell_type spell, int pow, bool player_spell = true);
 int spell_noise(spell_type spell);
-int spell_noise(unsigned int disciplines, int level);
 
 const char *get_spell_target_prompt(spell_type which_spell);
 
@@ -97,7 +93,7 @@ typedef int cell_func(coord_def where, int pow, int aux, actor *agent);
 typedef int monster_func(monster* mon, int pow);
 typedef int cloud_func(coord_def where, int pow, int spreadrate,
                        cloud_type type, const actor* agent, int colour,
-                       std::string name, std::string tile, int excl_rad);
+                       string name, string tile, int excl_rad);
 
 int apply_area_visible(cell_func cf, int power, actor *agent = NULL);
 
@@ -108,17 +104,15 @@ int apply_random_around_square(cell_func cf, const coord_def& where,
                                bool hole_in_middle, int power, int max_targs,
                                actor *agent = NULL);
 
-int apply_one_neighbouring_square(cell_func cf, int power, actor *agent = NULL);
-
 void apply_area_cloud(cloud_func func, const coord_def& where,
                       int pow, int number, cloud_type ctype,
                       const actor *agent,
                       int spread_rate = -1, int colour = -1,
-                      std::string name = "", std::string tile = "",
+                      string name = "", string tile = "",
                       int excl_rad = -1);
 
 bool spell_direction(dist &spelld, bolt &pbolt,
-                      targeting_type restrict = DIR_NONE,
+                      targetting_type restrict = DIR_NONE,
                       targ_mode_type mode = TARG_HOSTILE,
                       // pbolt.range if applicable, otherwise LOS_RADIUS
                       int range = 0,
@@ -130,7 +124,7 @@ bool spell_direction(dist &spelld, bolt &pbolt,
                       targetter *hitfunc = NULL,
                       desc_filter get_desc_func = NULL);
 
-skill_type spell_type2skill (unsigned int which_spelltype);
+skill_type spell_type2skill(unsigned int which_spelltype);
 
 spell_type zap_type_to_spell(zap_type zap);
 
@@ -142,6 +136,6 @@ int spell_highlight_by_utility(spell_type spell,
                                 int default_color = COL_UNKNOWN,
                                 bool transient = false,
                                 bool rod_spell = false);
-bool spell_no_hostile_in_range(spell_type spell, int minRange);
+bool spell_no_hostile_in_range(spell_type spell);
 
 #endif

@@ -16,7 +16,6 @@
 
 #include "luaterp.h"
 
-#include "cio.h"
 #include "clua.h"
 #include "dlua.h"
 #include "message.h"
@@ -45,9 +44,9 @@ static int _pushline(lua_State *ls, int firstline)
     char buffer[80];
     char *b = buffer;
     size_t l;
-    std::string prompt = firstline ? "> " : ". ";
+    string prompt = firstline ? "> " : ". ";
     if (msgwin_get_line_autohist(prompt, buffer, sizeof(buffer)))
-        return (0);
+        return 0;
     l = strlen(b);
 
     // XXX: get line doesn't return newline?
@@ -58,7 +57,7 @@ static int _pushline(lua_State *ls, int firstline)
         lua_pushfstring(ls, "return %s", b+1);  // change it to `return'
     else
         lua_pushstring(ls, b);
-    return (1);
+    return 1;
 }
 
 static int _loadline(lua_State *ls)
@@ -91,7 +90,7 @@ static int _docall(lua_State *ls)
 {
     int status;
     status = lua_pcall(ls, 0, LUA_MULTRET, 0);
-    return (status);
+    return status;
 }
 
 static int _report(lua_State *ls, int status)
@@ -109,7 +108,7 @@ static int _report(lua_State *ls, int status)
 
 static bool _luaterp_running = false;
 
-void run_clua_interpreter(lua_State *ls)
+static void _run_dlua_interpreter(lua_State *ls)
 {
     _luaterp_running = true;
 
@@ -138,7 +137,7 @@ void run_clua_interpreter(lua_State *ls)
 
 bool luaterp_running()
 {
-    return (_luaterp_running);
+    return _luaterp_running;
 }
 
 static bool _loaded_terp_files = false;
@@ -156,7 +155,7 @@ void debug_terp_dlua()
         }
         _loaded_terp_files = true;
     }
-    run_clua_interpreter(dlua);
+    _run_dlua_interpreter(dlua);
 }
 
 #endif

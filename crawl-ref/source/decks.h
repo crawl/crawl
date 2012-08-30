@@ -17,9 +17,7 @@
 // highest index card being the top card, and index 0 being the bottom
 // card), deck.props.["card_flags"] holds the flags for each card,
 // deck.props["num_marked"] is the number of marked cards left in the
-// deck, and deck.props["non_brownie_draws"] is the number of
-// non-marked draws you have to make from that deck before earning
-// brownie points from it again.
+// deck.
 //
 // The card type and per-card flags are each stored as unsigned bytes,
 // for a maximum of 256 different kinds of cards and 8 bits of flags.
@@ -47,6 +45,7 @@ enum card_flags_type
     CFLAG_ODDITY = (1 << 0),
     CFLAG_SEEN   = (1 << 1),
     CFLAG_MARKED = (1 << 2),
+    CFLAG_DEALT  = (1 << 4),
 };
 
 enum card_type
@@ -71,9 +70,7 @@ enum card_type
     CARD_SPARK,                 // lightning damage
     CARD_PAIN,                  // single target, like spell of agony
     CARD_TORMENT,               // Symbol of Torment
-#if TAG_MAJOR_VERSION != 32
     CARD_ORB,
-#endif
 
     CARD_ELIXIR,                // healing
     CARD_BATTLELUST,            // melee boosts
@@ -81,6 +78,7 @@ enum card_type
     CARD_HELM,                  // defence
     CARD_BLADE,                 // weapon boosts
     CARD_SHADOW,                // assassin skills
+    CARD_MERCENARY,
 
     CARD_CRUSADE,
     CARD_SUMMON_ANIMAL,
@@ -89,22 +87,19 @@ enum card_type
     CARD_SUMMON_FLYING,         // wisps and butterflies
     CARD_SUMMON_SKELETON,
     CARD_SUMMON_UGLY,
-    CARD_SUMMON_ANY,
 
     CARD_POTION,
     CARD_FOCUS,
     CARD_SHUFFLE,
-
     CARD_EXPERIENCE,
     CARD_WILD_MAGIC,
     CARD_SAGE,                  // skill training
     CARD_HELIX,                 // remove one *bad* mutation
+    CARD_ALCHEMIST,
 
     CARD_WATER,                 // flood squares
     CARD_GLASS,                 // make walls transparent
-    CARD_MAP,                   // magic mapping
-    CARD_DOWSING,               // detect SD/traps/items/monsters
-    CARD_SPADE,                 // dig
+    CARD_DOWSING,               // mapping/detect SD/traps/items/monsters
     CARD_TROWEL,                // create feature/vault
     CARD_MINEFIELD,             // plant traps
     CARD_STAIRS,                // moves stairs around
@@ -118,11 +113,6 @@ enum card_type
     CARD_FAMINE,
     CARD_CURSE,                 // Curse your items
     CARD_SWINE,                 // *oink*
-    CARD_ALCHEMIST,
-
-#if TAG_MAJOR_VERSION == 32
-    CARD_ORB,
-#endif
 
     NUM_CARDS
 };
@@ -131,16 +121,15 @@ const char* card_name(card_type card);
 void evoke_deck(item_def& deck);
 bool deck_triple_draw();
 bool deck_peek();
-bool deck_mark();
+bool deck_deal();
 bool deck_stack();
 bool choose_deck_and_draw();
 void nemelex_shuffle_decks();
 void shuffle_all_decks_on_level();
 
-// Return true if it was a "genuine" draw, false otherwise.
-bool card_effect(card_type which_card, deck_rarity_type rarity,
+void card_effect(card_type which_card, deck_rarity_type rarity,
                  uint8_t card_flags = 0, bool tell_card = true);
-void draw_from_deck_of_punishment();
+void draw_from_deck_of_punishment(bool deal = false);
 
 bool      top_card_is_known(const item_def &item);
 card_type top_card(const item_def &item);
@@ -148,7 +137,7 @@ card_type top_card(const item_def &item);
 bool is_deck(const item_def &item);
 bool bad_deck(const item_def &item);
 deck_rarity_type deck_rarity(const item_def &item);
-uint8_t deck_rarity_to_color(deck_rarity_type rarity);
+colour_t deck_rarity_to_colour(deck_rarity_type rarity);
 void init_deck(item_def &item);
 
 int cards_in_deck(const item_def &deck);
@@ -158,9 +147,8 @@ card_type get_card_and_flags(const item_def& deck, int idx,
 // Used elsewhere in ZotDef.
 void sage_card(int power, deck_rarity_type rarity);
 void create_pond(const coord_def& center, int radius, bool allow_deep);
-bool create_altar(bool disallow_no_altar = false);
 
-const std::vector<card_type> get_drawn_cards(const item_def& deck);
+const vector<card_type> get_drawn_cards(const item_def& deck);
 // see and mark the first card with a scroll.
 bool deck_identify_first(int slot);
 

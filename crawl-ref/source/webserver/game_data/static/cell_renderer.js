@@ -12,7 +12,7 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
 
     function in_water(cell)
     {
-        return ((cell.bg & enums.TILE_FLAG_WATER) && !(cell.fg & enums.TILE_FLAG_FLYING));
+        return ((cell.bg.WATER) && !(cell.fg.FLYING));
     }
 
     function split_term_colour(col)
@@ -21,7 +21,7 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
         var bg = 0;
         var attr = (col & 0xF0) >> 4;
         var param = (col & 0xF000) >> 12;
-        return { fg: fg, bg: bg, attr: attr };
+        return { fg: fg, bg: bg, attr: attr, param: param };
     }
 
     function term_colour_apply_attributes(col)
@@ -144,8 +144,8 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
 
             this.current_sy = 0;
 
-            cell.fg = cell.fg || 0;
-            cell.bg = cell.bg || 0;
+            cell.fg = enums.prepare_fg_flags(cell.fg || 0);
+            cell.bg = enums.prepare_bg_flags(cell.bg || 0);
             cell.flv = cell.flv || {};
             cell.flv.f = cell.flv.f || 0;
             cell.flv.s = cell.flv.s || 0;
@@ -164,7 +164,7 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
             if (this.display_mode == "tiles")
                 this.draw_background(x, y, cell);
 
-            var fg_idx = cell.fg & enums.TILE_FLAG_MASK;
+            var fg_idx = cell.fg.value;
             var is_in_water = in_water(cell);
 
             // Canvas doesn't support applying an alpha gradient
@@ -189,8 +189,10 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
                 if ((fg_idx >= player.MCACHE_START) && cell.mcache)
                 {
                     $.each(cell.mcache, function (i, mcache_part) {
-                        renderer.draw_player(mcache_part[0],
-                                             x, y, mcache_part[1], mcache_part[2]);
+                        if (mcache_part) {
+                            renderer.draw_player(mcache_part[0],
+                                                 x, y, mcache_part[1], mcache_part[2]);
+                        }
                     });
                 }
             }
@@ -360,18 +362,19 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
         // Much of the following is more or less directly copied from tiledgnbuf.cc
         draw_blood_overlay: function(x, y, cell, is_wall)
         {
-            if (cell.liquefied)
+            if (cell.liquefied && !is_wall)
             {
                 offset = cell.flv.s % dngn.tile_count(dngn.LIQUEFACTION);
                 this.draw_dngn(dngn.LIQUEFACTION + offset, x, y);
             }
             else if (cell.bloody)
-
             {
                 cell.bloodrot = cell.bloodrot || 0;
                 var basetile;
                 if (is_wall)
                 {
+                    basetile = cell.old_blood ? dngn.WALL_OLD_BLOOD : dngn.WALL_BLOOD_S;
+                    basetile += dngn.tile_count(basetile) * cell.bloodrot;
                     basetile = dngn.WALL_BLOOD_S + dngn.tile_count(dngn.WALL_BLOOD_S)
                         * cell.bloodrot;
                 }
@@ -395,11 +398,11 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
         draw_background: function(x, y, cell)
         {
             var bg = cell.bg;
-            var bg_idx = cell.bg & enums.TILE_FLAG_MASK;
+            var bg_idx = cell.bg.value;
 
             if (cell.swtree && bg_idx > dngn.DNGN_UNSEEN)
                 this.draw_dngn(dngn.DNGN_SHALLOW_WATER, x, y);
-            else if (bg_idx >= dngn.DNGN_WAX_WALL)
+            else if (bg_idx >= dngn.DNGN_FIRST_TRANSPARENT)
                 this.draw_dngn(cell.flv.f, x, y); // f = floor
 
             // Draw blood beneath feature tiles.
@@ -440,7 +443,7 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
 
             if (bg_idx > dngn.DNGN_UNSEEN)
             {
-                if (bg & enums.TILE_FLAG_WAS_SECRET)
+                if (bg.WAS_SECRET)
                     this.draw_dngn(dngn.DNGN_DETECTED_SECRET_DOOR, x, y);
 
                 // Draw blood on top of wall tiles.
@@ -453,55 +456,62 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
                     var renderer = this;
                     $.each(cell.ov, function (i, overlay)
                            {
-                               renderer.draw_dngn(overlay, x, y);
+                               if (overlay)
+                                   renderer.draw_dngn(overlay, x, y);
                            });
                 }
 
-                if (!(bg & enums.TILE_FLAG_UNSEEN))
+                if (!bg.UNSEEN)
                 {
-                    if (bg & enums.TILE_FLAG_KRAKEN_NW)
+                    if (bg.KRAKEN_NW)
                         this.draw_dngn(dngn.KRAKEN_OVERLAY_NW, x, y);
-                    else if (bg & enums.TILE_FLAG_ELDRITCH_NW)
+                    else if (bg.ELDRITCH_NW)
                         this.draw_dngn(dngn.ELDRITCH_OVERLAY_NW, x, y);
-                    if (bg & enums.TILE_FLAG_KRAKEN_NE)
+                    if (bg.KRAKEN_NE)
                         this.draw_dngn(dngn.KRAKEN_OVERLAY_NE, x, y);
-                    else if (bg & enums.TILE_FLAG_ELDRITCH_NE)
+                    else if (bg.ELDRITCH_NE)
                         this.draw_dngn(dngn.ELDRITCH_OVERLAY_NE, x, y);
-                    if (bg & enums.TILE_FLAG_KRAKEN_SE)
+                    if (bg.KRAKEN_SE)
                         this.draw_dngn(dngn.KRAKEN_OVERLAY_SE, x, y);
-                    else if (bg & enums.TILE_FLAG_ELDRITCH_SE)
+                    else if (bg.ELDRITCH_SE)
                         this.draw_dngn(dngn.ELDRITCH_OVERLAY_SE, x, y);
-                    if (bg & enums.TILE_FLAG_KRAKEN_SW)
+                    if (bg.KRAKEN_SW)
                         this.draw_dngn(dngn.KRAKEN_OVERLAY_SW, x, y);
-                    else if (bg & enums.TILE_FLAG_ELDRITCH_SW)
+                    else if (bg.ELDRITCH_SW)
                         this.draw_dngn(dngn.ELDRITCH_OVERLAY_SW, x, y);
                 }
 
                 if (cell.halo == enums.HALO_MONSTER)
                     this.draw_dngn(dngn.HALO, x, y);
 
-                if (!(bg & enums.TILE_FLAG_UNSEEN))
+                if (!bg.UNSEEN)
                 {
                     if (cell.sanctuary)
                         this.draw_dngn(dngn.SANCTUARY, x, y);
                     if (cell.silenced)
                         this.draw_dngn(dngn.SILENCED, x, y);
+                    if (cell.suppressed)
+                        this.draw_dngn(dngn.SUPPRESSED, x, y);
                     if (cell.halo == enums.HALO_RANGE)
                         this.draw_dngn(dngn.HALO_RANGE, x, y);
+                    if (cell.halo == enums.HALO_UMBRA)
+                        this.draw_dngn(dngn.UMBRA, x, y);
                     if (cell.orb_glow)
                         this.draw_dngn(dngn.ORB_GLOW + cell.orb_glow - 1, x, y);
+                    if (cell.quad_glow)
+                        this.draw_dngn(dngn.QUAD_GLOW, x, y);
 
                     // Apply the travel exclusion under the foreground if the cell is
                     // visible.  It will be applied later if the cell is unseen.
-                    if (bg & enums.TILE_FLAG_EXCL_CTR)
+                    if (bg.EXCL_CTR)
                         this.draw_dngn(dngn.TRAVEL_EXCLUSION_CENTRE_BG, x, y);
-                    else if (bg & enums.TILE_FLAG_TRAV_EXCL)
+                    else if (bg.TRAV_EXCL)
                         this.draw_dngn(dngn.TRAVEL_EXCLUSION_BG, x, y);
                 }
 
-                if (bg & enums.TILE_FLAG_RAY)
+                if (bg.RAY)
                     this.draw_dngn(dngn.RAY, x, y);
-                else if (bg & enums.TILE_FLAG_RAY_OOR)
+                else if (bg.RAY_OOR)
                     this.draw_dngn(dngn.RAY_OUT_OF_RANGE, x, y);
             }
         },
@@ -511,7 +521,7 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
             var cell = map_cell.t;
             var fg = cell.fg;
             var bg = cell.bg;
-            var fg_idx = cell.fg & enums.TILE_FLAG_MASK;
+            var fg_idx = cell.fg.value;
             var is_in_water = in_water(cell);
 
             if (fg_idx && fg_idx <= main.MAIN_MAX && this.display_mode == "tiles")
@@ -565,151 +575,162 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
                 this.render_glyph(x, y, map_cell, true);
             }
 
-            if (fg & enums.TILE_FLAG_NET)
+            if (fg.NET)
                 this.draw_icon(icons.TRAP_NET, x, y);
 
-            if (fg & enums.TILE_FLAG_S_UNDER)
+            if (fg.S_UNDER)
                 this.draw_icon(icons.SOMETHING_UNDER, x, y);
 
             var status_shift = 0;
-            if (fg & enums.TILE_FLAG_MIMIC)
+            if (fg.MIMIC_INEPT)
+                this.draw_icon(icons.INEPT_MIMIC, x, y);
+            else if (fg.MIMIC)
                 this.draw_icon(icons.MIMIC, x, y);
+            else if (fg.MIMIC_RAVEN)
+                this.draw_icon(icons.RAVENOUS_MIMIC, x, y);
 
-            if (fg & enums.TILE_FLAG_BERSERK)
+            if (fg.BERSERK)
             {
                 this.draw_icon(icons.BERSERK, x, y);
                 status_shift += 10;
             }
 
             // Pet mark
-            if (fg & enums.TILE_FLAG_ATT_MASK)
+            if (fg.PET)
             {
-                att_flag = fg & enums.TILE_FLAG_ATT_MASK;
-                if (att_flag == enums.TILE_FLAG_PET)
-                {
-                    this.draw_icon(icons.HEART, x, y);
-                    status_shift += 10;
-                }
-                else if (att_flag == enums.TILE_FLAG_GD_NEUTRAL)
-                {
-                    this.draw_icon(icons.GOOD_NEUTRAL, x, y);
-                    status_shift += 8;
-                }
-                else if (att_flag == enums.TILE_FLAG_NEUTRAL)
-                {
-                    this.draw_icon(icons.NEUTRAL, x, y);
-                    status_shift += 8;
-                }
+                this.draw_icon(icons.HEART, x, y);
+                status_shift += 10;
+            }
+            else if (fg.GD_NEUTRAL)
+            {
+                this.draw_icon(icons.GOOD_NEUTRAL, x, y);
+                status_shift += 8;
+            }
+            else if (fg.NEUTRAL)
+            {
+                this.draw_icon(icons.NEUTRAL, x, y);
+                status_shift += 8;
             }
 
-            if (fg & enums.TILE_FLAG_BEH_MASK)
+            if (fg.STAB)
             {
-                var beh_flag = fg & enums.TILE_FLAG_BEH_MASK;
-                if (beh_flag == enums.TILE_FLAG_STAB)
-                {
-                    this.draw_icon(icons.STAB_BRAND, x, y);
-                    status_shift += 15;
-                }
-                else if (beh_flag == enums.TILE_FLAG_MAY_STAB)
-                {
-                    this.draw_icon(icons.MAY_STAB_BRAND, x, y);
-                    status_shift += 8;
-                }
-                else if (beh_flag == enums.TILE_FLAG_FLEEING)
-                {
-                    this.draw_icon(icons.FLEEING, x, y);
-                    status_shift += 4;
-                }
+                this.draw_icon(icons.STAB_BRAND, x, y);
+                status_shift += 15;
+            }
+            else if (fg.MAY_STAB)
+            {
+                this.draw_icon(icons.MAY_STAB_BRAND, x, y);
+                status_shift += 8;
+            }
+            else if (fg.FLEEING)
+            {
+                this.draw_icon(icons.FLEEING, x, y);
+                status_shift += 4;
             }
 
-            if (fg & enums.TILE_FLAG_POISON)
+            if (fg.POISON)
             {
                 this.draw_icon(icons.POISON, x, y, -status_shift, 0);
                 status_shift += 5;
             }
-            if (fg & enums.TILE_FLAG_STICKY_FLAME)
+            if (fg.STICKY_FLAME)
             {
                 this.draw_icon(icons.STICKY_FLAME, x, y, -status_shift, 0);
                 status_shift += 5;
             }
-            if (fg & enums.TILE_FLAG_INNER_FLAME)
+            if (fg.INNER_FLAME)
             {
                 this.draw_icon(icons.INNER_FLAME, x, y, -status_shift, 0);
                 status_shift += 8;
             }
-            if (fg & enums.TILE_FLAG_CONSTRICTED)
+            if (fg.CONSTRICTED)
             {
                 this.draw_icon(icons.CONSTRICTED, x, y, -status_shift, 0);
                 status_shift += 13;
             }
+            if (fg.GLOWING)
+            {
+                this.draw_icon(icons.GLOWING, x, y, -status_shift, 0);
+                status_shift += 10;
+            }
+            if (fg.SLOWED)
+            {
+                this.draw_icon(icons.SLOWED, x, y, -status_shift, 0);
+                status_shift += 13;
+            }
 
-            if (fg & enums.TILE_FLAG_ANIM_WEP)
+            if (fg.ANIM_WEP)
                 this.draw_icon(icons.ANIMATED_WEAPON, x, y);
 
-            if (bg & enums.TILE_FLAG_UNSEEN && ((bg != enums.TILE_FLAG_UNSEEN) || fg))
+            if (bg.UNSEEN && (bg.value || fg.value))
                 this.draw_icon(icons.MESH, x, y);
 
-            if (bg & enums.TILE_FLAG_OOR && ((bg != enums.TILE_FLAG_OOR) || fg))
+            if (bg.OOR && (bg.value || fg.value))
                 this.draw_icon(icons.OOR_MESH, x, y);
 
-            if (bg & enums.TILE_FLAG_MM_UNSEEN && ((bg != enums.TILE_FLAG_MM_UNSEEN) || fg))
+            if (bg.MM_UNSEEN && (bg.value || fg.value))
                 this.draw_icon(icons.MAGIC_MAP_MESH, x, y);
 
             // Don't let the "new stair" icon cover up any existing icons, but
             // draw it otherwise.
-            if (bg & enums.TILE_FLAG_NEW_STAIR && status_shift == 0)
+            if (bg.NEW_STAIR && status_shift == 0)
                 this.draw_icon(icons.NEW_STAIR, x, y);
 
-            if (bg & enums.TILE_FLAG_EXCL_CTR && (bg & enums.TILE_FLAG_UNSEEN))
+            if (bg.EXCL_CTR && bg.UNSEEN)
                 this.draw_icon(icons.TRAVEL_EXCLUSION_CENTRE_FG, x, y);
-            else if (bg & enums.TILE_FLAG_TRAV_EXCL && (bg & enums.TILE_FLAG_UNSEEN))
+            else if (bg.TRAV_EXCL && bg.UNSEEN)
                 this.draw_icon(icons.TRAVEL_EXCLUSION_FG, x, y);
 
             // Tutorial cursor takes precedence over other cursors.
-            if (bg & enums.TILE_FLAG_TUT_CURSOR)
+            if (bg.TUT_CURSOR)
             {
                 this.draw_icon(icons.TUTORIAL_CURSOR, x, y);
             }
-            else if (bg & enums.TILE_FLAG_CURSOR)
+            else if (bg.CURSOR1)
             {
-                var type = ((bg & enums.TILE_FLAG_CURSOR) == enums.TILE_FLAG_CURSOR1) ?
-                    icons.CURSOR : icons.CURSOR2;
-
-                if ((bg & enums.TILE_FLAG_CURSOR) == enums.TILE_FLAG_CURSOR3)
-                    type = icons.CURSOR3;
-
-                this.draw_icon(type, x, y);
+                this.draw_icon(icons.CURSOR, x, y);
+            }
+            else if (bg.CURSOR2)
+            {
+                this.draw_icon(icons.CURSOR2, x, y);
+            }
+            else if (bg.CURSOR3)
+            {
+                this.draw_icon(icons.CURSOR3, x, y);
             }
 
-            if (fg & enums.TILE_FLAG_MDAM_MASK)
+            if (cell.tt & 0xF)
             {
-                var mdam_flag = fg & enums.TILE_FLAG_MDAM_MASK;
-                if (mdam_flag == enums.TILE_FLAG_MDAM_LIGHT)
-                    this.draw_icon(icons.MDAM_LIGHTLY_DAMAGED, x, y);
-                else if (mdam_flag == enums.TILE_FLAG_MDAM_MOD)
-                    this.draw_icon(icons.MDAM_MODERATELY_DAMAGED, x, y);
-                else if (mdam_flag == enums.TILE_FLAG_MDAM_HEAVY)
-                    this.draw_icon(icons.MDAM_HEAVILY_DAMAGED, x, y);
-                else if (mdam_flag == enums.TILE_FLAG_MDAM_SEV)
-                    this.draw_icon(icons.MDAM_SEVERELY_DAMAGED, x, y);
-                else if (mdam_flag == enums.TILE_FLAG_MDAM_ADEAD)
-                    this.draw_icon(icons.MDAM_ALMOST_DEAD, x, y);
+                this.draw_icon(icons.TRAVEL_PATH_FROM +
+                               (cell.tt & 0xF) - 1, x, y);
+            }
+            if (cell.tt & 0xF0)
+            {
+                this.draw_icon(icons.TRAVEL_PATH_TO +
+                               ((cell.tt & 0xF0) >> 4) - 1, x, y);
             }
 
-            if (fg & enums.TILE_FLAG_DEMON)
-            {
-                var demon_flag = fg & enums.TILE_FLAG_DEMON;
-                if (demon_flag == enums.TILE_FLAG_DEMON_1)
-                    this.draw_icon(icons.DEMON_NUM1, x, y);
-                else if (demon_flag == enums.TILE_FLAG_DEMON_2)
-                    this.draw_icon(icons.DEMON_NUM2, x, y);
-                else if (demon_flag == enums.TILE_FLAG_DEMON_3)
-                    this.draw_icon(icons.DEMON_NUM3, x, y);
-                else if (demon_flag == enums.TILE_FLAG_DEMON_4)
-                    this.draw_icon(icons.DEMON_NUM4, x, y);
-                else if (demon_flag == enums.TILE_FLAG_DEMON_5)
-                    this.draw_icon(icons.DEMON_NUM5, x, y);
-            }
+            if (fg.MDAM_LIGHT)
+                this.draw_icon(icons.MDAM_LIGHTLY_DAMAGED, x, y);
+            else if (fg.MDAM_MOD)
+                this.draw_icon(icons.MDAM_MODERATELY_DAMAGED, x, y);
+            else if (fg.MDAM_HEAVY)
+                this.draw_icon(icons.MDAM_HEAVILY_DAMAGED, x, y);
+            else if (fg.MDAM_SEV)
+                this.draw_icon(icons.MDAM_SEVERELY_DAMAGED, x, y);
+            else if (fg.MDAM_ADEAD)
+                this.draw_icon(icons.MDAM_ALMOST_DEAD, x, y);
+
+            if (fg.DEMON_1)
+                this.draw_icon(icons.DEMON_NUM1, x, y);
+            else if (fg.DEMON_2)
+                this.draw_icon(icons.DEMON_NUM2, x, y);
+            else if (fg.DEMON_3)
+                this.draw_icon(icons.DEMON_NUM3, x, y);
+            else if (fg.DEMON_4)
+                this.draw_icon(icons.DEMON_NUM4, x, y);
+            else if (fg.DEMON_5)
+                this.draw_icon(icons.DEMON_NUM5, x, y);
         },
 
 

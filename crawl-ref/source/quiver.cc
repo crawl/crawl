@@ -13,20 +13,20 @@
 
 #include "env.h"
 #include "invent.h"
-#include "item_use.h"
 #include "itemprop.h"
 #include "items.h"
 #include "options.h"
 #include "player.h"
 #include "stuff.h"
 #include "tags.h"
+#include "throw.h"
 
 #include <algorithm>
 
 static int _get_pack_slot(const item_def&);
 static ammo_t _get_weapon_ammo_type(const item_def*);
 static bool _item_matches(const item_def &item, fire_type types,
-                          const item_def* launcher);
+                          const item_def* launcher, bool manual);
 static bool _items_similar(const item_def& a, const item_def& b,
                            bool force = true);
 
@@ -76,7 +76,7 @@ void player_quiver::get_desired_item(const item_def** item_out, int* slot_out) c
 // This differs from get_desired_item; that method can return
 // an item that is not in inventory, while this one cannot.
 // If no item can be found, return the reason why.
-int player_quiver::get_fire_item(std::string* no_item_reason) const
+int player_quiver::get_fire_item(string* no_item_reason) const
 {
     // Felids have no use for the quiver.
     if (you.species == SP_FELID)
@@ -93,8 +93,8 @@ int player_quiver::get_fire_item(std::string* no_item_reason) const
     // If not in inv, try the head of the fire order.
     if (slot == -1)
     {
-        std::vector<int> order;
-        _get_fire_order(order, false, you.weapon());
+        vector<int> order;
+        _get_fire_order(order, false, you.weapon(), false);
         if (!order.empty())
             slot = order[0];
     }
@@ -102,16 +102,14 @@ int player_quiver::get_fire_item(std::string* no_item_reason) const
     // If we can't find anything, tell caller why.
     if (slot == -1)
     {
-        std::vector<int> full_fire_order;
-        _get_fire_order(full_fire_order, true, you.weapon());
+        vector<int> full_fire_order;
+        _get_fire_order(full_fire_order, true, you.weapon(), false);
         if (no_item_reason == NULL)
         {
             // nothing
         }
         else if (full_fire_order.empty())
-        {
             *no_item_reason = "No suitable missiles.";
-        }
         else
         {
             const int skipped_item = full_fire_order[0];
@@ -357,13 +355,16 @@ void player_quiver::_maybe_fill_empty_slot()
     const launch_retval desired_ret =
          (weapon && is_range_weapon(*weapon)) ? LRET_LAUNCHED : LRET_THROWN;
 
-    std::vector<int> order;
-    _get_fire_order(order, false, weapon);
+    vector<int> order;
+    _get_fire_order(order, false, weapon, false);
 
     if (unquiver_weapon && order.empty())
     {
         // Setting the quantity to zero will force the quiver to be empty,
-        // should nothing else be found.
+        // should nothing else be found.  We also set the base type to
+        // OBJ_UNASSIGNED so this is not an invalid object with a real type,
+        // as that would trigger an assertion on saving.
+        m_last_used_of_type[slot].base_type = OBJ_UNASSIGNED;
         m_last_used_of_type[slot].quantity = 0;
     }
     else
@@ -380,9 +381,9 @@ void player_quiver::_maybe_fill_empty_slot()
     }
 }
 
-void player_quiver::get_fire_order(std::vector<int>& v) const
+void player_quiver::get_fire_order(vector<int>& v, bool manual) const
 {
-    _get_fire_order(v, false, you.weapon());
+    _get_fire_order(v, false, you.weapon(), manual);
 }
 
 // Get a sorted list of items to show in the fire interface.
@@ -392,9 +393,10 @@ void player_quiver::get_fire_order(std::vector<int>& v) const
 // fire order is empty.
 //
 // launcher determines what items match the 'launcher' fire_order type.
-void player_quiver::_get_fire_order(std::vector<int>& order,
+void player_quiver::_get_fire_order(vector<int>& order,
                                      bool ignore_inscription_etc,
-                                     const item_def* launcher) const
+                                     const item_def* launcher,
+                                     bool manual) const
 {
     const int inv_start = (ignore_inscription_etc ? 0
                                                   : Options.fire_items_start);
@@ -436,7 +438,7 @@ void player_quiver::_get_fire_order(std::vector<int>& order,
 
         // =f prevents item from being in fire order.
         if (!ignore_inscription_etc
-            && strstr(item.inscription.c_str(), "=f"))
+            && strstr(item.inscription.c_str(), manual ? "=F" : "=f"))
         {
             continue;
         }
@@ -445,7 +447,7 @@ void player_quiver::_get_fire_order(std::vector<int>& order,
              i_flags++)
         {
             if (_item_matches(item, (fire_type) Options.fire_order[i_flags],
-                              launcher))
+                              launcher, manual))
             {
                 order.push_back((i_flags<<16) | (i_inv & 0xffff));
                 break;
@@ -453,7 +455,7 @@ void player_quiver::_get_fire_order(std::vector<int>& order,
         }
     }
 
-    std::sort(order.begin(), order.end());
+    sort(order.begin(), order.end());
 
     for (unsigned int i = 0; i < order.size(); i++)
         order[i] &= 0xffff;
@@ -535,31 +537,31 @@ preserve_quiver_slots::~preserve_quiver_slots()
 // Helper for _get_fire_order.
 // Types may actually contain more than one fire_type.
 static bool _item_matches(const item_def &item, fire_type types,
-                          const item_def* launcher)
+                          const item_def* launcher, bool manual)
 {
     ASSERT(item.defined());
 
     if (types & FIRE_INSCRIBED)
-        if (item.inscription.find("+f", 0) != std::string::npos)
-            return (true);
+        if (item.inscription.find(manual ? "+F" : "+f", 0) != string::npos)
+            return true;
 
     if (item.base_type == OBJ_MISSILES)
     {
         if ((types & FIRE_DART) && item.sub_type == MI_DART)
-            return (true);
+            return true;
         if ((types & FIRE_STONE) && item.sub_type == MI_STONE)
-            return (true);
+            return true;
         if ((types & FIRE_JAVELIN) && item.sub_type == MI_JAVELIN)
-            return (true);
+            return true;
         if ((types & FIRE_ROCK) && item.sub_type == MI_LARGE_ROCK)
-            return (true);
+            return true;
         if ((types & FIRE_NET) && item.sub_type == MI_THROWING_NET)
-            return (true);
+            return true;
 
         if (types & FIRE_LAUNCHER)
         {
             if (launcher && item.launched_by(*launcher))
-                return (true);
+                return true;
         }
     }
     else if (item.base_type == OBJ_WEAPONS && is_throwable(&you, item))
@@ -568,18 +570,18 @@ static bool _item_matches(const item_def &item, fire_type types,
             && item.special == SPWPN_RETURNING
             && item_ident(item, ISFLAG_KNOW_TYPE))
         {
-            return (true);
+            return true;
         }
         if ((types & FIRE_DAGGER) && item.sub_type == WPN_DAGGER)
-            return (true);
+            return true;
         if ((types & FIRE_SPEAR) && item.sub_type == WPN_SPEAR)
-            return (true);
+            return true;
         if ((types & FIRE_HAND_AXE) && item.sub_type == WPN_HAND_AXE)
-            return (true);
+            return true;
         if ((types & FIRE_CLUB) && item.sub_type == WPN_CLUB)
-            return (true);
+            return true;
     }
-    return (false);
+    return false;
 }
 
 // Returns inv slot that contains an item that looks like item,
@@ -590,7 +592,7 @@ static int _get_pack_slot(const item_def& item)
         return -1;
 
     if (in_inventory(item) && _items_similar(item, you.inv[item.link], false))
-        return (item.link);
+        return item.link;
 
     // First try to find the exact same item.
     for (int i = 0; i < ENDOFPACK; i++)

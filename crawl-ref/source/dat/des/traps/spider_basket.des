@@ -33,8 +33,8 @@ end
 # a basket of spiders
 #
 NAME:   spider_trap
-DEPTH:  D:9-27, Vault, Elf, Spider, Snake
-TAGS:   allow_dup extra luniq_spider_trap
+DEPTH:  D:9-27, Vaults, Elf, Spider, Snake
+TAGS:   allow_dup extra luniq_spider_trap transparent
 WEIGHT: 100
 KFEAT:  ^ = pressure plate trap
 {{

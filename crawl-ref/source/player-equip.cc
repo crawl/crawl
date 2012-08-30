@@ -22,7 +22,6 @@
 #include "religion.h"
 #include "shopping.h"
 #include "skills2.h"
-#include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-miscast.h"
 #include "state.h"
@@ -36,6 +35,23 @@ static void _equip_effect(equipment_type slot, int item_slot, bool unmeld,
                           bool msg);
 static void _unequip_effect(equipment_type slot, int item_slot, bool meld,
                             bool msg);
+
+void calc_hp_artefact()
+{
+    // Rounding must be down or Deep Dwarves would abuse certain values.
+    // We can reduce errors by a factor of 100 by using partial hp we have.
+    int old_max = you.hp_max;
+    int hp = you.hp * 100 + you.hit_points_regeneration;
+    calc_hp();
+    int new_max = you.hp_max;
+    hp = hp * new_max / old_max;
+    if (hp < 100)
+        hp = 100;
+    you.hp = min(hp / 100, you.hp_max);
+    you.hit_points_regeneration = hp % 100;
+    if (you.hp_max <= 0) // Borgnjor's abusers...
+        ouch(0, NON_MONSTER, KILLED_BY_DRAINING);
+}
 
 // Fill an empty equipment slot.
 void equip_item(equipment_type slot, int item_slot, bool msg)
@@ -52,7 +68,7 @@ void equip_item(equipment_type slot, int item_slot, bool msg)
     _equip_effect(slot, item_slot, false, msg);
     ash_check_bondage();
     if (you.equip[slot] != -1 && you.inv[you.equip[slot]].cursed())
-        god_id_inventory();
+        auto_id_inventory();
 }
 
 // Clear an equipment slot (possibly melded).
@@ -63,7 +79,7 @@ bool unequip_item(equipment_type slot, bool msg)
 
     const int item_slot = you.equip[slot];
     if (item_slot == -1)
-        return (false);
+        return false;
     else
     {
         item_skills(you.inv[item_slot], you.stop_train);
@@ -76,7 +92,7 @@ bool unequip_item(equipment_type slot, bool msg)
         else
             you.melded[slot] = false;
         ash_check_bondage();
-        return (true);
+        return true;
     }
 }
 
@@ -90,9 +106,9 @@ bool meld_slot(equipment_type slot, bool msg)
     {
         you.melded[slot] = true;
         _unequip_effect(slot, you.equip[slot], true, msg);
-        return (true);
+        return true;
     }
-    return (false);
+    return false;
 }
 
 bool unmeld_slot(equipment_type slot, bool msg)
@@ -104,9 +120,9 @@ bool unmeld_slot(equipment_type slot, bool msg)
     {
         you.melded[slot] = false;
         _equip_effect(slot, you.equip[slot], true, msg);
-        return (true);
+        return true;
     }
-    return (false);
+    return false;
 }
 
 static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld);
@@ -161,27 +177,8 @@ static void _unequip_effect(equipment_type slot, int item_slot, bool meld,
     else if (slot >= EQ_LEFT_RING && slot < NUM_EQUIP)
         _unequip_jewellery_effect(item, msg, meld);
 
-    if (slot == EQ_BODY_ARMOUR && !meld)
-        you.stop_train.insert(SK_ARMOUR);
-    else if (slot == EQ_SHIELD && !meld)
+    if (slot == EQ_SHIELD && !meld)
         you.stop_train.insert(SK_SHIELDS);
-}
-
-void _hp_artefact()
-{
-    // Rounding must be down or Deep Dwarves would abuse certain values.
-    // We can reduce errors by a factor of 100 by using partial hp we have.
-    int old_max = you.hp_max;
-    int hp = you.hp * 100 + you.hit_points_regeneration;
-    calc_hp();
-    int new_max = you.hp_max;
-    hp = hp * new_max / old_max;
-    if (hp < 100)
-        hp = 100;
-    you.hp = std::min(hp / 100, you.hp_max);
-    you.hit_points_regeneration = hp % 100;
-    if (you.hp_max <= 0) // Borgnjor's abusers...
-        ouch(0, NON_MONSTER, KILLED_BY_DRAINING);
 }
 
 ///////////////////////////////////////////////////////////
@@ -314,8 +311,8 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld)
     if (proprt[ARTP_NOISES])
         you.attribute[ATTR_NOISES] = 1;
 
-    if (!alreadyknown && Options.autoinscribe_artefacts)
-        add_autoinscription(item, artefact_auto_inscription(item));
+    if (!alreadyknown)
+        add_autoinscription(item);
 
     if (!alreadyknown && dangerous)
     {
@@ -325,7 +322,7 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld)
     }
 
     if (proprt[ARTP_HP])
-        _hp_artefact();
+        calc_hp_artefact();
 
     // Let's try this here instead of up there.
     if (proprt[ARTP_MAGICAL_POWER])
@@ -364,7 +361,7 @@ static void _unequip_artefact_effect(item_def &item,
     }
 
     if (proprt[ARTP_HP])
-        _hp_artefact();
+        calc_hp_artefact();
 
     if (proprt[ARTP_MAGICAL_POWER] && !known[ARTP_MAGICAL_POWER] && msg)
     {
@@ -383,10 +380,7 @@ static void _unequip_artefact_effect(item_def &item,
     if (proprt[ARTP_NOISES] != 0)
         you.attribute[ATTR_NOISES] = 0;
 
-    if (proprt[ARTP_LEVITATE] != 0
-        && you.duration[DUR_LEVITATION]
-        && !you.attribute[ATTR_LEV_UNCANCELLABLE]
-        && !you.permanent_levitation()
+    if (proprt[ARTP_LEVITATE] != 0 && you.cancellable_levitation()
         && !player_evokable_levitation())
     {
         you.duration[DUR_LEVITATION] = 0;
@@ -500,13 +494,22 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
 
             if ((you.max_magic_points + 13) *
                 (1.0+player_mutation_level(MUT_HIGH_MAGIC)/10.0) > 50)
+            {
                 mpr("You feel your mana capacity is already quite full.");
+            }
             else
                 canned_msg(MSG_MANA_INCREASE);
 
             calc_mp();
         }
 
+        _wield_cursed(item, known_cursed, unmeld);
+        break;
+    }
+
+    case OBJ_RODS:
+    {
+        set_ident_flags(item, ISFLAG_IDENT_MASK);
         _wield_cursed(item, known_cursed, unmeld);
         break;
     }
@@ -532,8 +535,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
             {
                 item.flags |= ISFLAG_NOTED_ID;
 
-                if (Options.autoinscribe_artefacts)
-                    add_autoinscription(item, artefact_auto_inscription(item));
+                add_autoinscription(item);
 
                 // Make a note of it.
                 take_note(Note(NOTE_ID_ITEM, 0, 0, item.name(DESC_A).c_str(),
@@ -710,6 +712,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
         }
 
         _wield_cursed(item, known_cursed || known_recurser, unmeld);
+        maybe_id_weapon(item);
         break;
     }
     default:
@@ -744,7 +747,7 @@ static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld)
 
         if (brand != SPWPN_NORMAL)
         {
-            const std::string msg = item.name(DESC_YOUR);
+            const string msg = item.name(DESC_YOUR);
 
             switch (brand)
             {
@@ -810,7 +813,7 @@ static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld)
                     // branded weapon since you can wait it out. This also
                     // fixes problems with unwield prompts (mantis #793).
                     MiscastEffect(&you, WIELD_MISCAST, SPTYP_TRANSLOCATION,
-                                  9, 90, "distortion unwield");
+                                  9, 90, "a distortion unwield");
                 }
                 break;
 
@@ -931,7 +934,7 @@ static void _equip_armour_effect(item_def& arm, bool unmeld)
         case SPARM_SPIRIT_SHIELD:
             if (!unmeld && player_spirit_shield() < 2)
             {
-                set_mp(0);
+                dec_mp(you.magic_points);
                 mpr("You feel spirits watching over you.");
                 if (you.species == SP_DEEP_DWARF)
                     mpr("Now linked to your health, your magic stops regenerating.");
@@ -1041,14 +1044,22 @@ static void _unequip_armour_effect(item_def& item, bool meld)
         break;
 
     case SPARM_LEVITATION:
-        if (you.attribute[ATTR_PERM_LEVITATION] == 0)
-            break;
-        else if (you.species != SP_TENGU || you.experience_level < 15)
+        if (you.attribute[ATTR_PERM_LEVITATION]
+            && !player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_LEVITATION)
+            && (you.species != SP_TENGU || you.experience_level < 15))
         {
-            if (!player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_LEVITATION))
                 you.attribute[ATTR_PERM_LEVITATION] = 0;
+                if (player_evokable_levitation())
+                    levitate_player(you.skill(SK_EVOCATIONS, 2) + 30, true);
         }
-        land_player();
+
+        //since a permlev item can keep templev evocations going
+        // we should check templev here too
+        if (you.cancellable_levitation() && !player_evokable_levitation())
+        {
+            you.duration[DUR_LEVITATION] = 0;
+            land_player();
+        }
         break;
 
     case SPARM_MAGIC_RESISTANCE:
@@ -1258,7 +1269,9 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
     case RING_MAGICAL_POWER:
         if ((you.max_magic_points + 9) *
             (1.0+player_mutation_level(MUT_HIGH_MAGIC)/10.0) > 50)
+        {
             mpr("You feel your mana capacity is already quite full.");
+        }
         else
             canned_msg(MSG_MANA_INCREASE);
 
@@ -1317,6 +1330,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
         you.duration[DUR_GOURMAND] = 0;
 
         if (you.species != SP_MUMMY
+            && you.species != SP_VAMPIRE
             && player_mutation_level(MUT_HERBIVOROUS) < 3)
         {
             mpr("You feel a craving for the dungeon's cuisine.");
@@ -1335,7 +1349,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
     case AMU_GUARDIAN_SPIRIT:
         if (player_spirit_shield() < 2 && !unmeld)
         {
-            set_mp(0);
+            dec_mp(you.magic_points);
             mpr("You feel your power drawn to a protective spirit.");
             if (you.species == SP_DEEP_DWARF)
                 mpr("Now linked to your health, your magic stops regenerating.");
@@ -1408,11 +1422,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
         if (fake_rap != ARTP_NUM_PROPERTIES)
             artefact_wpn_learn_prop(item, fake_rap);
 
-        if (!item.props.exists("jewellery_tried")
-            || !item.props["jewellery_tried"].get_bool())
-        {
-            item.props["jewellery_tried"].get_bool() = true;
-        }
+        item.flags |= ISFLAG_TRIED;
     }
     else
     {
@@ -1498,9 +1508,7 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld)
         break;
 
     case RING_LEVITATION:
-        if (you.duration[DUR_LEVITATION] && !you.permanent_levitation()
-            && !you.attribute[ATTR_LEV_UNCANCELLABLE]
-            && !player_evokable_levitation())
+        if (you.cancellable_levitation() && !player_evokable_levitation())
         {
             you.duration[DUR_LEVITATION] = 0;
             land_player();
@@ -1545,13 +1553,13 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld)
 bool unwield_item(bool showMsgs)
 {
     if (!you.weapon())
-        return (false);
+        return false;
 
     if (you.berserk())
     {
         if (showMsgs)
             canned_msg(MSG_TOO_BERSERK);
-        return (false);
+        return false;
     }
 
     item_def& item = *you.weapon();
@@ -1559,7 +1567,7 @@ bool unwield_item(bool showMsgs)
     const bool is_weapon = get_item_slot(item) == EQ_WEAPON;
 
     if (is_weapon && !safe_to_remove(item))
-        return (false);
+        return false;
 
     unequip_item(EQ_WEAPON, showMsgs);
 
@@ -1567,5 +1575,5 @@ bool unwield_item(bool showMsgs)
     you.redraw_quiver    = true;
     you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
 
-    return (true);
+    return true;
 }

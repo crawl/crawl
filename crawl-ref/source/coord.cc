@@ -14,7 +14,7 @@ const coord_def NO_CURSOR(-1, -1);
 // coord_def
 int coord_def::distance_from(const coord_def &other) const
 {
-    return (grid_distance(*this, other));
+    return grid_distance(*this, other);
 }
 
 int coord_def::range() const
@@ -38,7 +38,7 @@ int grid_distance(const coord_def& p1, const coord_def& p2)
     return ((p2 - p1).rdist());
 }
 
-int distance(const coord_def& p1, const coord_def& p2)
+int distance2(const coord_def& p1, const coord_def& p2)
 {
     return ((p2 - p1).abs());
 }

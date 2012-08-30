@@ -17,7 +17,16 @@
 
 # Dummy for the trowel card
 NAME:   enter_the_ziggurat
-TAGS:   trowel_portal
+TAGS:   trowel_portal unrand
+DEPTH:  *, !Zig
+veto {{
+  for d = 1,27 do
+    if you.is_level_on_stack("Zig:" .. d) then
+      return true
+    end
+  end
+  return false
+}}
 : ziggurat_portal(_G)
 MAP
 O
@@ -272,8 +281,7 @@ MAP
 ENDMAP
 
 
-# Empty default-depth as vaults below may not occur randomly in the dungeon.
-default-depth:
+default-depth: Zig
 
 #######################################################################
 # Pillars for ziggurats.
@@ -332,11 +340,11 @@ TAGS: ziggurat_pillar centered
 MONS: ancient lich / boggart / curse skull
 MONS: eye of draining / eye of devastation / giant eyeball
 MONS: plant col:lightred
-: if zig().depth > 21 then
+: if you.depth() > 21 then
 SUBST: 3 = 12222
-: elseif zig().depth > 15 then
+: elseif you.depth() > 15 then
 SUBST: 3 = 12
-: elseif zig().depth > 8 and crawl.coinflip() then
+: elseif you.depth() > 8 and crawl.coinflip() then
 SUBST: 3 = 12
 : end
 KFEAT: n = iron_grate
@@ -413,7 +421,7 @@ ENDMAP
 
 NAME:  ziggurat_pillar_centre_j
 TAGS:  ziggurat_pillar centered
-SUBST: x : abcmvxG
+SUBST: x : bcmvxG
 MAP
  x
 xxx
@@ -494,13 +502,7 @@ ENDMAP
 #######################################################################
 
 NAME: ziggurat1
+PLACE: Zig
 : ziggurat_level(_G)
-epilogue {{
-  local depth = zig().depth
-  if depth > 1 then
-    crawl.mark_milestone("zig",
-                         "reached level " .. depth .. " of a Ziggurat.")
-  end
-}}
 MAP
 ENDMAP

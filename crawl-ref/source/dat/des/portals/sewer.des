@@ -15,14 +15,6 @@
 
 {{
 function sewer_portal(e)
-  local desc_long =
-"Every settlement brings forth the unpleasant sewers and drains, ignored by "..
-"most but hideaways for others. Old tales speak of dangerous creatures, "..
-"bathing in disgustingly green water, preying on each other without mercy.  "..
-"The tales also tell of the valuable items left by daring and unfortunate "..
-"visitors, left to collect dust in the damp caverns. You have an uncanny "..
-"feeling that the drain will fall apart rather soon."
-
   local timeout_turns = crawl.random_range(2700, 3300)
 
   local messager =
@@ -41,10 +33,8 @@ function sewer_portal(e)
       timed_marker {
         disappear = "The drain falls to bits.",
         desc = "glowing drain",
-        desc_long = desc_long,
         entity = 'drain',
-        dst = "sewer",
-        dstorigin = "in the sewers",
+        dst = "Sewer",
         overview = "glowing drain",
         turns = timeout_turns,
         floor = "expired_portal",
@@ -55,26 +45,11 @@ function sewer_portal(e)
   e.tile("O = dngn_portal_sewer")
 end
 
--- Use the following line in destination maps after all SUBSTs
--- : sewer_setup(_G)
--- Note that the function also defines < to be the exit portal.
 function sewer_setup(e)
   e.kfeat("< = exit_portal_vault")
   e.colour("< = darkgrey")
-  e.lrockcol("darkgrey")
-  e.lfloorcol("lightgrey")
   e.colour("w = green")
   e.colour("W = lightgreen")
-  e.lrocktile("wall_slime")
-  e.lfloortile("floor_slime")
--- Random monster list and milestone.
-  e.set_random_mon_list("bat w:20 / giant newt w:20 / ball python / \
-                         ooze / worm / adder / giant cockroach / giant mite / \
-                         giant gecko")
-end
-
-function sewer_milestone(e)
-  crawl.mark_milestone("br.enter", "entered a Sewer.", true)
 end
 }}
 
@@ -201,7 +176,7 @@ xxxxxxxxxxx
 ENDMAP
 
 # The actual portal vaults #####################################
-default-depth:
+default-depth: Sewer
 
 ### KOBOLDS ################################################################
 
@@ -212,7 +187,7 @@ default-depth:
 # Easier than sewer_minmay_treatment, so more probably.
 #
 NAME:     sewer_kobolds
-TAGS:     sewer no_item_gen no_monster_gen no_pool_fixup
+TAGS:     no_item_gen no_monster_gen no_pool_fixup
 WEIGHT:   35
 ORIENT:   encompass
 : if crawl.one_chance_in(12) then
@@ -240,9 +215,6 @@ KITEM:    f = potion of levitation q:2 ident:type, potion of restore abilities w
           potion of gain dexterity
 KFEAT:    f = shallow_water
 MONS:     rat / grey rat / green rat w:2 / nothing w:3
-epilogue{{
-sewer_milestone(_G)
-}}
 MAP
         cccCCCCCCCCCCCC
         cwXvvvvvvvvvvvCCC         CCC
@@ -286,7 +258,7 @@ ENDMAP
 # Water treatment center, staffed by kobolds
 #
 NAME:   sewer_minmay_treatment
-TAGS:   sewer no_item_gen no_monster_gen no_pool_fixup
+TAGS:   no_item_gen no_monster_gen no_pool_fixup
 WEIGHT: 15
 ORIENT: encompass
 MONS:   grey rat / rat w:2 / green rat w:1
@@ -298,15 +270,8 @@ ITEM:   potion of curing / potion of heal wounds / potion of might w:4 /\
         potion of brilliance w:4 / potion of agility w:4 /\
         potion of levitation w:4 / any scroll w:7 / any armour w:2 / any weapon w:2
 : sewer_setup(_G)
-: dgn.set_feature_desc_short("translucent stone wall",
-: "large window")
-: dgn.set_feature_desc_long("translucent stone wall",
-: "A window embedded in the side of an enormous metal pipe, allowing "..
-: "observation of the water flowing inside.")
+: set_feature_name("clear_stone_wall", "large window")
 KFEAT:  C = deep_water
-epilogue{{
-sewer_milestone(_G)
-}}
 MAP
 vvvvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvvvv
 vwwvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvCCv
@@ -355,7 +320,7 @@ ENDMAP
 # Loot are good items, and often a scroll of blinking.
 #
 NAME:     sewer_frog_island_01
-TAGS:     sewer no_item_gen no_monster_gen no_pool_fixup
+TAGS:     no_item_gen no_monster_gen no_pool_fixup
 ORIENT:   encompass
 WEIGHT:   10
 SUBST:    - = WWW.
@@ -371,10 +336,6 @@ KFEAT:    ! = w
 COLOUR:   ! = green
 KMONS:    ! = giant frog / nothing w:2
 : sewer_setup(_G)
-epilogue{{
-sewer_milestone(_G)
-}}
-
 MAP
 ccccccccccccccccccccccccccccccccccc
 c.11---------.................1111c
@@ -409,7 +370,7 @@ cc........................----WwW-c
 ENDMAP
 
 NAME:     sewer_frog_island_02
-TAGS:     sewer no_item_gen no_monster_gen no_pool_fixup
+TAGS:     no_item_gen no_monster_gen no_pool_fixup
 ORIENT:   encompass
 WEIGHT:   10
 NSUBST:   ! = 2:! / *:w
@@ -428,9 +389,6 @@ ITEM:     scroll of teleportation w:2 / scroll of blinking / \
 ITEM:     nothing, nothing
 KITEM:    de = *
 : sewer_setup(_G)
-epilogue{{
-sewer_milestone(_G)
-}}
 MAP
            ccccccccccccc
         cccc-----------cccc
@@ -467,7 +425,7 @@ ENDMAP
 # reachable when frogs come to sight, and loot isn't handed out as a way
 # to handle them.
 NAME:    sewer_minmay_w
-TAGS:    sewer no_item_gen no_monster_gen no_pool_fixup
+TAGS:    no_item_gen no_monster_gen no_pool_fixup
 WEIGHT:  10
 ORIENT:  encompass
 SHUFFLE: de
@@ -483,9 +441,6 @@ SUBST:   y : yyyyyyW., Y : YYYYYYWw
 SUBST:   y = W., Y = Ww
 SUBST:   c = c x:1
 : sewer_setup(_G)
-epilogue{{
-sewer_milestone(_G)
-}}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxccccccxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxcccc2..2ccccxxxxxxxxxxxxxxxxxxx
@@ -528,7 +483,7 @@ ENDMAP
 # Threat is mostly a single larger creature, often Purgy. Combined weight 30.
 
 NAME:     sewer_big_baddie
-TAGS:     sewer no_item_gen no_monster_gen
+TAGS:     no_item_gen no_monster_gen no_pool_fixup
 ORIENT:   encompass
 WEIGHT:   10
 : sewer_setup(_G)
@@ -537,9 +492,6 @@ KMONS:    2 = crocodile
 KMONS:    3 = Purgy, crocodile
 ITEM:     potion of berserk rage / potion of speed w:5
 MONS:     bat
-epilogue{{
-sewer_milestone(_G)
-}}
 MAP
  ccccccc
 cc$***$cc
@@ -572,7 +524,7 @@ ENDMAP
 # slightly harder than the crocodile, but is much slower.
 #
 NAME:   sewer_the_slug
-TAGS:   sewer no_item_gen no_monster_gen no_pool_fixup
+TAGS:   no_item_gen no_monster_gen no_pool_fixup
 ORIENT: encompass
 WEIGHT: 10
 SUBST:  - = WW...
@@ -586,9 +538,6 @@ ITEM:   potion of levitation / potion of agility / potion of heal wounds / \
         scroll of random uselessness / meat ration / royal jelly / \
         potion of blood / nothing w:140
 : sewer_setup(_G)
-epilogue{{
-sewer_milestone(_G)
-}}
 MAP
    ccccccccc
    c%*c3c*%c
@@ -633,7 +582,7 @@ ENDMAP
 # can be seen from the island.
 #
 NAME:    sewer_co_purgy_island
-TAGS:    sewer no_item_gen no_monster_gen no_pool_fixup
+TAGS:    no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
 WEIGHT:  10
 #      Placing Purgy, he appears in one of three places. The crocodile serves
@@ -661,9 +610,6 @@ SUBST:   . = .WW
 SUBST:   X = xx.
 SUBST:   Y = xw
 : sewer_setup(_G)
-epilogue{{
-sewer_milestone(_G)
-}}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -718,7 +664,7 @@ ENDMAP
 # monsters, two will yield you treasure.
 #
 NAME:     sewer_fruit_machine
-TAGS:     sewer no_item_gen no_monster_gen no_pool_fixup
+TAGS:     no_item_gen no_monster_gen no_pool_fixup
 ORIENT:   encompass
 SHUFFLE:  QEDS
 SUBST:    Q = 4, E = 5, D : fgh, S = $
@@ -766,9 +712,6 @@ KITEM:    ' = scroll of random uselessness w:30 / \
               potion of confusion w:50 / potion of paralysis w:50 / \
               potion of mutation / potion of levitation / \
               wizard hat / buckler / pair of gloves w:5 / pair of boots w:5
-epilogue{{
-sewer_milestone(_G)
-}}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xwwwwwwwwwwwWWW-WW-W--WWWWW-WWW--W--WW-WW-WW-W-WWwwwwwwwwwwwx
@@ -800,7 +743,7 @@ ENDMAP
 # A sewer opening to sea by st_.
 #
 NAME:   sewer_sea
-TAGS:   sewer no_item_gen no_monster_gen no_rotate no_pool_fixup
+TAGS:   no_item_gen no_monster_gen no_rotate no_pool_fixup
 ORIENT: encompass
 MONS:   rat w:3 / grey rat w:1 / nothing w:1, rat / grey rat / green rat
 KMONS:  G = mermaid hd:3 name:malarious name_adjective name_species
@@ -818,9 +761,6 @@ COLOUR: s = cyan
 KITEM:  M = potion of levitation q:4 ident:type
 KITEM:  N = scroll of teleportation q:2 ident:type
 : sewer_setup(_G)
-epilogue{{
-sewer_milestone(_G)
-}}
 MAP
 OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
 OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
@@ -866,7 +806,7 @@ ENDMAP
 # is surrounded by deep water.
 #
 NAME:    sewer_co_15_rooms
-TAGS:    sewer no_item_gen no_monster_gen no_pool_fixup
+TAGS:    no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
 MONS:    kobold / w:7 big kobold
 MONS:    kobold / adder / ball python / w:7 worm / w:7 ooze / \
@@ -899,9 +839,6 @@ KITEM:   ! =  scroll of teleportation / scroll of fear w:5 /\
          scroll of blinking w:3 / scroll of magic mapping w:3 /\
          scroll of recharging w:2 / scroll of fog w:3
 : sewer_setup(_G)
-epilogue{{
-sewer_milestone(_G)
-}}
 MAP
 xxxxxxxxxxxxcccxxxxxxxcccxxxxxxxxxxxx
 xxxxxxxxxxxcccccxxxxxcccccxxxxxxxxxxx
@@ -949,7 +886,7 @@ ENDMAP
 # At least you won't go in circles...
 #
 NAME:   sewer_co_tree
-TAGS:   sewer no_item_gen no_monster_gen no_pool_fixup
+TAGS:   no_item_gen no_monster_gen no_pool_fixup
 ORIENT: encompass
 MONS:   kobold / big kobold
 MONS:   adder / ball python / worm
@@ -965,9 +902,6 @@ KITEM:  f = scroll of teleportation / scroll of fear w:5 /\
         scroll of blinking w:3 / scroll of magic mapping w:3 /\
         scroll of recharging w:2 / scroll of fog w:3
 : sewer_setup(_G)
-epilogue{{
-sewer_milestone(_G)
-}}
 MAP
 xxxxxxxxxxxxxxcccccccccccccccccccccxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxc?c?c?c?cxxxc?c?c?c?cxxxxxxxxxxxxxx
@@ -1029,7 +963,7 @@ ENDMAP
 # orange rat. The harder rat nest also contains cheese and more loot.
 #
 NAME:    sewer_co_cracked_pipes
-TAGS:    sewer no_item_gen no_monster_gen no_pool_fixup no_rotate no_vmirror
+TAGS:    no_item_gen no_monster_gen no_pool_fixup no_rotate no_vmirror
 ORIENT:  encompass
 #      water creatures
 MONS:    giant newt / ball python w:5 / \
@@ -1049,6 +983,7 @@ NSUBST:  H = 1:. / *:c
 NSUBST:  I = 1:. / *:c
 SUBST:   LMKJ = c
 #      randomize environment
+KPROP:   V2 = no_tele_into
 SUBST:   . = .W
 SUBST:   V = .WWWW
 SUBST:   X = xx"
@@ -1079,9 +1014,6 @@ KITEM:   ! =  scroll of teleportation / scroll of fear w:5 /\
          scroll of blinking w:3 / scroll of magic mapping w:3 /\
          scroll of recharging w:2 / scroll of fog w:3
 : sewer_setup(_G)
-epilogue{{
-sewer_milestone(_G)
-}}
 MAP
                         xxxxxxxxxxxxx
                         xxxxx''xxxxxx
@@ -1132,7 +1064,7 @@ ENDMAP
 # The loot is often at the end of the pipes, with guarding monsters.
 #
 NAME:    sewer_co_scattered_pipes
-TAGS:    sewer no_item_gen no_monster_gen no_pool_fixup
+TAGS:    no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
 KMONS:   P = plant / nothing
 #      pipe monsters.
@@ -1159,9 +1091,6 @@ SUBST:   Y = xxw
 #
 NSUBST:  B = 1:< / *:.
 : sewer_setup(_G)
-epilogue{{
-sewer_milestone(_G)
-}}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

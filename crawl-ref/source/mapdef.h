@@ -32,19 +32,21 @@ extern const char *traversable_glyphs;
 // Invalid heightmap height.
 static const int INVALID_HEIGHT = -31999;
 
+static const int BRANCH_END = 100;
+
 // Exception thrown when a map cannot be loaded from its .dsc file
 // because the .dsc file has changed under it.
-class map_load_exception : public std::exception
+class map_load_exception : public exception
 {
 public:
-    map_load_exception(const std::string &_mapname) : mapname(_mapname) { }
+    map_load_exception(const string &_mapname) : mapname(_mapname) { }
     ~map_load_exception() throw () { }
     const char *what() const throw()
     {
         return mapname.c_str();
     }
 private:
-    std::string mapname;
+    string mapname;
 };
 
 // [dshaligram] Maps can be mirrored; for every orientation, there must be
@@ -79,7 +81,6 @@ struct raw_range
 struct level_range
 {
 public:
-    level_area_type level_type;
     branch_type branch;
     int shallowest, deepest;
     bool deny;
@@ -89,7 +90,7 @@ public:
     level_range(branch_type br = BRANCH_MAIN_DUNGEON, int s = -1, int d = -1);
 
     void set(int s, int d = -1);
-    void set(const std::string &branch, int s, int d) throw (std::string);
+    void set(const string &branch, int s, int d) throw (string);
 
     void reset();
     bool matches(const level_id &) const;
@@ -99,44 +100,43 @@ public:
     void read(reader&);
 
     bool valid() const;
-    int span() const;
 
-    static level_range parse(std::string lr) throw (std::string);
+    static level_range parse(string lr) throw (string);
 
-    std::string describe() const;
-    std::string str_depth_range() const;
+    string describe() const;
+    string str_depth_range() const;
 
     bool operator == (const level_range &lr) const;
 
     operator raw_range () const;
-    operator std::string () const
+    operator string () const
     {
         return describe();
     }
 
 private:
-    static void parse_partial(level_range &lr, const std::string &s)
-        throw (std::string);
-    static void parse_depth_range(const std::string &s, int *low, int *high)
-        throw (std::string);
+    static void parse_partial(level_range &lr, const string &s)
+        throw (string);
+    static void parse_depth_range(const string &s, int *low, int *high)
+        throw (string);
 };
 
-typedef std::pair<int,int> glyph_weighted_replacement_t;
-typedef std::vector<glyph_weighted_replacement_t> glyph_replacements_t;
+typedef pair<int,int> glyph_weighted_replacement_t;
+typedef vector<glyph_weighted_replacement_t> glyph_replacements_t;
 
 class map_lines;
 
 class subst_spec
 {
 public:
-    subst_spec(std::string torepl, bool fix, const glyph_replacements_t &repls);
+    subst_spec(string torepl, bool fix, const glyph_replacements_t &repls);
     subst_spec(int count, bool fix, const glyph_replacements_t &repls);
     subst_spec() : key(""), count(-1), fix(false), frozen_value(0), repl() { }
 
     int value();
 
 public:
-    std::string key;
+    string key;
     // If this is part of an nsubst spec, how many to replace.
     // -1 corresponds to all (i.e. '*')
     int count;
@@ -150,22 +150,22 @@ public:
 class nsubst_spec
 {
 public:
-    nsubst_spec(std::string key, const std::vector<subst_spec> &specs);
+    nsubst_spec(string key, const vector<subst_spec> &specs);
 public:
-    std::string key;
-    std::vector<subst_spec> specs;
+    string key;
+    vector<subst_spec> specs;
 };
 
-typedef std::pair<int, int> map_weighted_colour;
-class map_colour_list : public std::vector<map_weighted_colour>
+typedef pair<int, int> map_weighted_colour;
+class map_colour_list : public vector<map_weighted_colour>
 {
 public:
-    bool parse(const std::string &s, int weight);
+    bool parse(const string &s, int weight);
 };
 class colour_spec
 {
 public:
-    colour_spec(std::string _key, bool _fix, const map_colour_list &clist)
+    colour_spec(string _key, bool _fix, const map_colour_list &clist)
         : key(_key), fix(_fix), fixed_colour(BLACK), colours(clist)
     {
     }
@@ -173,30 +173,30 @@ public:
     int get_colour();
 
 public:
-    std::string key;
+    string key;
     bool fix;
     int fixed_colour;
     map_colour_list colours;
 };
 
-typedef std::pair<feature_property_type, int> map_weighted_fprop;
-class map_fprop_list : public std::vector<map_weighted_fprop>
+typedef pair<feature_property_type, int> map_weighted_fprop;
+class map_fprop_list : public vector<map_weighted_fprop>
 {
 public:
-    bool parse(const std::string &fp, int weight);
+    bool parse(const string &fp, int weight);
 };
 
-typedef std::pair<int, int> map_weighted_fheight;
-class map_featheight_list : public std::vector<map_weighted_fheight>
+typedef pair<int, int> map_weighted_fheight;
+class map_featheight_list : public vector<map_weighted_fheight>
 {
 public:
-    bool parse(const std::string &fp, int weight);
+    bool parse(const string &fp, int weight);
 };
 
 class fprop_spec
 {
 public:
-    fprop_spec(std::string _key, bool _fix, const map_fprop_list &flist)
+    fprop_spec(string _key, bool _fix, const map_fprop_list &flist)
         : key(_key), fix(_fix), fixed_prop(FPROP_NONE), fprops(flist)
     {
     }
@@ -204,7 +204,7 @@ public:
     feature_property_type get_property();
 
 public:
-    std::string key;
+    string key;
     bool fix;
     feature_property_type fixed_prop;
     map_fprop_list fprops;
@@ -213,96 +213,92 @@ public:
 class fheight_spec
 {
 public:
-    fheight_spec(std::string _key, bool _fix,
-                 const map_featheight_list &_fheights)
+    fheight_spec(string _key, bool _fix, const map_featheight_list &_fheights)
         : key(_key), fix(_fix), fixed_height(INVALID_HEIGHT),
           fheights(_fheights)
     {
     }
     int get_height();
 public:
-    std::string key;
+    string key;
     bool fix;
     int fixed_height;
     map_featheight_list fheights;
 };
 
-typedef std::pair<std::string, int> map_weighted_tile;
-class map_tile_list : public std::vector<map_weighted_tile>
+typedef pair<string, int> map_weighted_tile;
+class map_tile_list : public vector<map_weighted_tile>
 {
 public:
-    bool parse(const std::string &s, int weight);
+    bool parse(const string &s, int weight);
 };
 
 class tile_spec
 {
 public:
-    tile_spec(const std::string &_key, bool _fix, bool _rand, bool _last, bool _floor, bool _feat, const map_tile_list &_tiles)
+    tile_spec(const string &_key, bool _fix, bool _rand, bool _last, bool _floor, bool _feat, const map_tile_list &_tiles)
         : key(_key), fix(_fix), chose_fixed(false), no_random(_rand), last_tile(_last), floor(_floor), feat(_feat),
           fixed_tile(""), tiles(_tiles)
     {
     }
 
-    std::string get_tile();
+    string get_tile();
 
 public:
-    std::string key;
+    string key;
     bool fix;
     bool chose_fixed;
     bool no_random;
     bool last_tile;
     bool floor;
     bool feat;
-    std::string fixed_tile;
+    string fixed_tile;
     map_tile_list tiles;
 };
 
 class map_marker_spec
 {
 public:
-    std::string key;
-    std::string marker;
+    string key;
+    string marker;
 
     // Special handling for Lua markers:
-    std::auto_ptr<lua_datum> lua_fn;
+    unique_ptr<lua_datum> lua_fn;
 
-    map_marker_spec(std::string _key, const std::string &mark)
+    map_marker_spec(string _key, const string &mark)
         : key(_key), marker(mark), lua_fn() { }
 
-    map_marker_spec(std::string _key, const lua_datum &fn)
+    map_marker_spec(string _key, const lua_datum &fn)
         : key(_key), marker(), lua_fn(new lua_datum(fn)) { }
 
-    std::string apply_transform(map_lines &map);
+    string apply_transform(map_lines &map);
 
 private:
     map_marker *create_marker();
 };
 
-typedef std::pair<std::string, int> map_weighted_string;
-class map_string_list : public std::vector<map_weighted_string>
+typedef pair<string, int> map_weighted_string;
+class map_string_list : public vector<map_weighted_string>
 {
 public:
-    bool parse(const std::string &fp, int weight);
+    bool parse(const string &fp, int weight);
 };
 class string_spec
 {
 public:
-    string_spec(std::string _key, bool _fix, const map_string_list &slist)
+    string_spec(string _key, bool _fix, const map_string_list &slist)
         : key(_key), fix(_fix), fixed_str(""), strlist(slist)
     {
     }
 
-    std::string get_property();
+    string get_property();
 
 public:
-    std::string key;
+    string key;
     bool fix;
-    std::string fixed_str;
+    string fixed_str;
     map_string_list strlist;
 };
-
-template<class T>
-std::string parse_weighted_str(const std::string &cspec, T &list);
 
 class map_def;
 class rectangle_iterator;
@@ -313,7 +309,7 @@ public:
     class iterator
     {
     public:
-        iterator(map_lines &ml, const std::string &key);
+        iterator(map_lines &ml, const string &key);
         operator bool () const;
         coord_def operator ++ ();
         coord_def operator ++ (int);
@@ -322,7 +318,7 @@ public:
         void advance();
     private:
         map_lines &maplines;
-        std::string key;
+        string key;
         coord_def p;
     };
 
@@ -335,26 +331,26 @@ public:
 
     bool in_map(const coord_def &pos) const;
 
-    void add_line(const std::string &s);
-    std::string add_nsubst(const std::string &st);
-    std::string add_subst(const std::string &st);
-    std::string add_shuffle(const std::string &s);
-    std::string add_colour(const std::string &col);
-    std::string add_fproperty(const std::string &sub);
-    std::string add_fheight(const std::string &arg);
+    void add_line(const string &s);
+    string add_nsubst(const string &st);
+    string add_subst(const string &st);
+    string add_shuffle(const string &s);
+    string add_colour(const string &col);
+    string add_fproperty(const string &sub);
+    string add_fheight(const string &arg);
     void clear_markers();
 
     void write_maplines(writer &) const;
     void read_maplines(reader&);
 
-    std::string add_floortile(const std::string &s);
-    std::string add_rocktile(const std::string &s);
-    std::string add_spec_tile(const std::string &s);
+    string add_floortile(const string &s);
+    string add_rocktile(const string &s);
+    string add_spec_tile(const string &s);
 
-    std::vector<coord_def> find_glyph(const std::string &glyphs) const;
-    std::vector<coord_def> find_glyph(int glyph) const;
+    vector<coord_def> find_glyph(const string &glyphs) const;
+    vector<coord_def> find_glyph(int glyph) const;
     coord_def find_first_glyph(int glyph) const;
-    coord_def find_first_glyph(const std::string &glyphs) const;
+    coord_def find_first_glyph(const string &glyphs) const;
 
     // Find rectangular bounds (inclusive) for uses of the glyph in the map.
     // Returns false if glyph could not be found.
@@ -362,7 +358,7 @@ public:
     // Same as above, but for any of the glyphs in glyph_str.
     bool find_bounds(const char *glyph_str, coord_def &tl, coord_def &br) const;
 
-    void set_orientation(const std::string &s);
+    void set_orientation(const string &s);
 
     int width() const;
     int height() const;
@@ -385,16 +381,15 @@ public:
     void clear();
 
     void add_marker(map_marker *marker);
-    std::string add_feature_marker(const std::string &desc);
-    std::string add_lua_marker(const std::string &key,
-                               const lua_datum &fn);
+    string add_feature_marker(const string &desc);
+    string add_lua_marker(const string &key, const lua_datum &fn);
 
     void apply_markers(const coord_def &pos);
     void apply_grid_overlay(const coord_def &pos);
     void apply_overlays(const coord_def &pos);
 
-    const std::vector<std::string> &get_lines() const;
-    std::vector<std::string> &get_lines();
+    const vector<string> &get_lines() const;
+    vector<string> &get_lines();
 
     rectangle_iterator get_iter() const;
     char operator () (const coord_def &c) const;
@@ -405,10 +400,10 @@ public:
     const keyed_mapspec *mapspec_at(const coord_def &c) const;
     keyed_mapspec *mapspec_at(const coord_def &c);
 
-    std::string add_key_item(const std::string &s);
-    std::string add_key_mons(const std::string &s);
-    std::string add_key_feat(const std::string &s);
-    std::string add_key_mask(const std::string &s);
+    string add_key_item(const string &s);
+    string add_key_mons(const string &s);
+    string add_key_feat(const string &s);
+    string add_key_mask(const string &s);
 
     bool in_bounds(const coord_def &c) const;
 
@@ -422,7 +417,7 @@ public:
     int count_feature_in_box(const coord_def &tl, const coord_def &br,
                              const char *feat) const;
 
-    void fill_mask_matrix(const std::string &glyphs, const coord_def &tl,
+    void fill_mask_matrix(const string &glyphs, const coord_def &tl,
                           const coord_def &br, Matrix<bool> &flags);
 
     // Merge vault onto the tl/br subregion, where mask is true.
@@ -440,8 +435,8 @@ private:
     void translate_marker(void (map_lines::*xform)(map_marker *, int par),
                           int par = 0);
 
-    void resolve_shuffle(const std::string &shuffle);
-    void subst(std::string &s, subst_spec &spec);
+    void resolve_shuffle(const string &shuffle);
+    void subst(string &s, subst_spec &spec);
     void subst(subst_spec &);
     void nsubst(nsubst_spec &);
     void bind_overlay();
@@ -456,25 +451,21 @@ private:
 
     void overlay_tiles(tile_spec &);
     void check_borders();
-    std::string shuffle(std::string s);
-    std::string block_shuffle(const std::string &s);
-    std::string check_shuffle(std::string &s);
-    std::string check_block_shuffle(const std::string &s);
-    std::string clean_shuffle(std::string s);
-    std::string parse_nsubst_spec(const std::string &s,
-                                  subst_spec &spec);
-    int apply_nsubst(std::vector<coord_def> &pos,
-                     int start, int nsub,
+    string shuffle(string s);
+    string block_shuffle(const string &s);
+    string check_shuffle(string &s);
+    string check_block_shuffle(const string &s);
+    string clean_shuffle(string s);
+    string parse_nsubst_spec(const string &s, subst_spec &spec);
+    int apply_nsubst(vector<coord_def> &pos, int start, int nsub,
                      subst_spec &spec);
-    std::string parse_glyph_replacements(std::string s,
-                                         glyph_replacements_t &gly);
+    string parse_glyph_replacements(string s, glyph_replacements_t &gly);
 
-    std::string add_tile(const std::string &sub, bool is_floor, bool is_feat);
+    string add_tile(const string &sub, bool is_floor, bool is_feat);
 
-    std::string add_key_field(
-        const std::string &s,
-        std::string (keyed_mapspec::*set_field)(
-            const std::string &s, bool fixed),
+    string add_key_field(
+        const string &s,
+        string (keyed_mapspec::*set_field)(const string &s, bool fixed),
         void (keyed_mapspec::*copy_field)(const keyed_mapspec &spec));
 
     const keyed_mapspec *mapspec_for_key(int key) const;
@@ -488,8 +479,8 @@ private:
     friend class tile_spec;
 
 private:
-    std::vector<map_marker *> markers;
-    std::vector<std::string> lines;
+    vector<map_marker *> markers;
+    vector<string> lines;
 
     struct overlay_def
     {
@@ -499,9 +490,9 @@ private:
             keyspec_idx(0)
         {}
         int colour;
-        std::string rocktile;
-        std::string floortile;
-        std::string tile;
+        string rocktile;
+        string floortile;
+        string tile;
         bool no_random;
         bool last_tile;
         int property;
@@ -509,9 +500,9 @@ private:
         int keyspec_idx;
     };
     typedef Matrix<overlay_def> overlay_matrix;
-    std::auto_ptr<overlay_matrix> overlay;
+    unique_ptr<overlay_matrix> overlay;
 
-    typedef std::map<int, keyed_mapspec> keyed_specs;
+    typedef map<int, keyed_mapspec> keyed_specs;
     keyed_specs keyspecs;
     int next_keyspec_idx;
 
@@ -579,7 +570,7 @@ private:
 private:
     void release_corpse_monster_spec();
 };
-typedef std::vector<item_spec> item_spec_list;
+typedef vector<item_spec> item_spec_list;
 
 class item_list
 {
@@ -594,8 +585,8 @@ public:
     size_t size() const { return items.size(); }
     bool empty() const { return items.empty(); }
 
-    std::string add_item(const std::string &spec, bool fix = false);
-    std::string set_item(int index, const std::string &spec);
+    string add_item(const string &spec, bool fix = false);
+    string set_item(int index, const string &spec);
 
     // Set this list to be a copy of the item_spec_slot in list.
     void set_from_slot(const item_list &list, int slot_index);
@@ -612,21 +603,21 @@ private:
     };
 
 private:
-    item_spec item_by_specifier(const std::string &spec);
-    item_spec_slot parse_item_spec(std::string spec);
-    void build_deck_spec(std::string s, item_spec* spec);
-    item_spec parse_single_spec(std::string s);
-    int parse_acquirement_source(const std::string &source);
-    void parse_raw_name(std::string name, item_spec &spec);
-    void parse_random_by_class(std::string c, item_spec &spec);
+    item_spec item_by_specifier(const string &spec);
+    item_spec_slot parse_item_spec(string spec);
+    void build_deck_spec(string s, item_spec* spec);
+    item_spec parse_single_spec(string s);
+    int parse_acquirement_source(const string &source);
+    void parse_raw_name(string name, item_spec &spec);
+    void parse_random_by_class(string c, item_spec &spec);
     item_spec pick_item(item_spec_slot &slot);
-    item_spec parse_corpse_spec(item_spec &result, std::string s);
-    bool monster_corpse_is_valid(monster_type *, const std::string &name,
+    item_spec parse_corpse_spec(item_spec &result, string s);
+    bool monster_corpse_is_valid(monster_type *, const string &name,
                                  bool corpse, bool skeleton, bool chunk);
 
 private:
-    std::vector<item_spec_slot> items;
-    std::string error;
+    vector<item_spec_slot> items;
+    string error;
 };
 
 class mons_spec
@@ -654,13 +645,13 @@ class mons_spec
     int summon_type;
 
     item_list items;
-    std::string monname;
-    std::string non_actor_summoner;
+    string monname;
+    string non_actor_summoner;
 
     bool explicit_spells;
-    std::vector<monster_spells> spells;
+    vector<monster_spells> spells;
     uint64_t extra_monster_flags;
-    std::vector<mon_enchant> ench;
+    vector<mon_enchant> ench;
 
     monster_type initial_shifter;
 
@@ -696,15 +687,15 @@ public:
     mons_spec get_monster(int slot_index, int list_index) const;
 
     // Returns an error string if the monster is unrecognised.
-    std::string add_mons(const std::string &s, bool fix_slot = false);
-    std::string set_mons(int slot, const std::string &s);
+    string add_mons(const string &s, bool fix_slot = false);
+    string set_mons(int slot, const string &s);
 
     bool empty()               const { return mons.empty(); }
     size_t size()              const { return mons.size(); }
     size_t slot_size(int slot) const { return mons[slot].mlist.size(); }
 
 private:
-    typedef std::vector<mons_spec> mons_spec_list;
+    typedef vector<mons_spec> mons_spec_list;
 
     struct mons_spec_slot
     {
@@ -723,22 +714,22 @@ private:
     };
 
 private:
-    mons_spec mons_by_name(std::string name) const;
-    mons_spec drac_monspec(std::string name) const;
-    void get_zombie_type(std::string s, mons_spec &spec) const;
-    mons_spec get_hydra_spec(const std::string &name) const;
-    mons_spec get_slime_spec(const std::string &name) const;
-    mons_spec get_zombified_monster(const std::string &name,
+    mons_spec mons_by_name(string name) const;
+    mons_spec drac_monspec(string name) const;
+    void get_zombie_type(string s, mons_spec &spec) const;
+    mons_spec get_hydra_spec(const string &name) const;
+    mons_spec get_slime_spec(const string &name) const;
+    mons_spec get_zombified_monster(const string &name,
                                     monster_type zomb) const;
-    mons_spec_slot parse_mons_spec(std::string spec);
-    void parse_mons_spells(mons_spec &slot, std::vector<std::string> &spells);
-    mon_enchant parse_ench(std::string &ench_str, bool perm);
+    mons_spec_slot parse_mons_spec(string spec);
+    void parse_mons_spells(mons_spec &slot, vector<string> &spells);
+    mon_enchant parse_ench(string &ench_str, bool perm);
     mons_spec pick_monster(mons_spec_slot &slot);
     int fix_demon(int id) const;
 
 private:
-    std::vector< mons_spec_slot > mons;
-    std::string error;
+    vector< mons_spec_slot > mons;
+    string error;
 };
 
 /**
@@ -754,14 +745,14 @@ struct shop_spec
 {
     shop_type sh_type;  /**< One of the shop_type enum values. */
 
-    std::string name;   /**< If provided, this is apostrophised and used as the
+    string name;        /**< If provided, this is apostrophised and used as the
                           *  shop keeper's name, ie, Plog as a name becomes
                           *  Plog's. */
 
-    std::string type;   /**< If provided, this is used as the shop type name,
+    string type;        /**< If provided, this is used as the shop type name,
                           *  ie, Hide, Antique, Wand, etc. */
 
-    std::string suffix; /**< If provided, this is used as the shop suffix,
+    string suffix;      /**< If provided, this is used as the shop suffix,
                           *  ie, Shop, Boutique, Parlour, etc. */
 
     int greed;          /**< If provided, this value is used for price
@@ -781,8 +772,8 @@ struct shop_spec
 
     bool use_all;       /**< True if all items in `items` should be used. */
 
-    shop_spec(shop_type sh, std::string n="", std::string t="",
-              std::string s="", int g=-1, int ni=-1, bool u=false)
+    shop_spec(shop_type sh, string n="", string t="",
+              string s="", int g=-1, int ni=-1, bool u=false)
         : sh_type(sh), name(n), type(t), suffix(s),
           greed(g), num_items(ni), items(), use_all(u) { }
 };
@@ -810,14 +801,14 @@ struct trap_spec
  *
  * This specification struct is used firstly when a feature is specified in
  * vault code (any feature), and secondly, if that feature is either a trap or a
- * shop, as a container for a std::auto_ptr to that shop_spec or trap_spec.
+ * shop, as a container for a unique_ptr to that shop_spec or trap_spec.
 **/
 struct feature_spec
 {
     int genweight;                 /**> The weight of this specific feature. */
     int feat;                      /**> The specific feature being placed. */
-    std::auto_ptr<shop_spec> shop; /**> A pointer to a shop_spec. */
-    std::auto_ptr<trap_spec> trap; /**> A pointer to a trap_spec. */
+    unique_ptr<shop_spec> shop;    /**> A pointer to a shop_spec. */
+    unique_ptr<trap_spec> trap;    /**> A pointer to a trap_spec. */
     int glyph;                     /**> What glyph to use instead. */
     int mimic;                     /**> 1 chance in x to be a feature mimic. */
     bool no_mimic;                 /**> Prevents random feature mimic here. */
@@ -829,7 +820,7 @@ struct feature_spec
     void init_with(const feature_spec& other);
 };
 
-typedef std::vector<feature_spec> feature_spec_list;
+typedef vector<feature_spec> feature_spec_list;
 struct feature_slot
 {
     feature_spec_list feats;
@@ -846,8 +837,8 @@ struct map_flags
     map_flags();
     void clear();
 
-    static map_flags parse(const std::string flag_list[],
-                           const std::string &s) throw(std::string);
+    static map_flags parse(const string flag_list[],
+                           const string &s) throw(string);
 };
 
 
@@ -867,11 +858,11 @@ public:
     // Parse the string and set the given entry.  If fix is true,
     // then whatever is selected for the first feature will be
     // permanently fixed.
-    std::string set_feat(const std::string &s, bool fix);
-    std::string set_mons(const std::string &s, bool fix);
-    std::string set_item(const std::string &s, bool fix);
-    std::string set_mask(const std::string &s, bool garbage);
-    std::string set_height(const std::string &s, bool garbage);
+    string set_feat(const string &s, bool fix);
+    string set_mons(const string &s, bool fix);
+    string set_item(const string &s, bool fix);
+    string set_mask(const string &s, bool garbage);
+    string set_height(const string &s, bool garbage);
 
     // Copy from the given mapspec.  If that entry is fixed,
     // it should be pre-selected prior to the copy.
@@ -886,37 +877,38 @@ public:
     item_list   &get_items();
     map_flags   &get_mask();
 
+    // Does this mapspec specify a feature, item, or monster?  If so, the
+    // glyph should be ignored.
+    bool replaces_glyph();
 private:
-    std::string err;
+    string err;
 
 private:
-    void parse_features(const std::string &);
-    feature_spec_list parse_feature(const std::string &s);
-    feature_spec parse_shop(std::string s, int weight);
-    feature_spec parse_trap(std::string s, int weight);
+    void parse_features(const string &);
+    feature_spec_list parse_feature(const string &s);
+    feature_spec parse_shop(string s, int weight);
+    feature_spec parse_trap(string s, int weight);
 };
 
-class map_def;
 class dlua_set_map
 {
 public:
     dlua_set_map(map_def *map);
     ~dlua_set_map();
 private:
-    std::auto_ptr<lua_datum> old_map;
+    unique_ptr<lua_datum> old_map;
 };
 
-class map_def;
 dungeon_feature_type map_feature_at(map_def *map,
                                     const coord_def &c,
                                     int rawfeat);
 
 struct map_file_place
 {
-    std::string filename;
+    string filename;
     int lineno;
 
-    map_file_place(const std::string &s = "", int line = 0)
+    map_file_place(const string &s = "", int line = 0)
         : filename(s), lineno(line)
     {
     }
@@ -940,7 +932,7 @@ struct map_chance
         : chance_priority(DEFAULT_CHANCE_PRIORITY), chance(_chance) { }
     bool valid() const { return chance_priority >= 0 && chance >= 0; }
     bool dummy_chance() const { return chance_priority == 0 && chance >= 0; }
-    std::string describe() const;
+    string describe() const;
     // Returns true if the vault makes the random CHANCE_ROLL.
     bool roll() const;
     void write(writer &) const;
@@ -954,14 +946,13 @@ struct map_chance_pair
    int chance;
 };
 
-typedef std::vector<level_range> depth_ranges_v;
+typedef vector<level_range> depth_ranges_v;
 class depth_ranges
 {
 private:
     depth_ranges_v depths;
 public:
-    static depth_ranges parse_depth_ranges(
-        const std::string &depth_ranges_string);
+    static depth_ranges parse_depth_ranges(const string &depth_ranges_string);
     void read(reader &);
     void write(writer &) const;
     void clear() { depths.clear(); }
@@ -969,7 +960,7 @@ public:
     bool is_usable_in(const level_id &lid) const;
     void add_depth(const level_range &range) { depths.push_back(range); }
     void add_depths(const depth_ranges &other_ranges);
-    std::string describe() const;
+    string describe() const;
 };
 
 template <typename X>
@@ -978,7 +969,7 @@ struct depth_range_X
     depth_ranges depths;
     X depth_thing;
     depth_range_X() : depths(), depth_thing() { }
-    depth_range_X(const std::string &depth_range_string, const X &thing)
+    depth_range_X(const string &depth_range_string, const X &thing)
         : depths(depth_ranges::parse_depth_ranges(depth_range_string)),
           depth_thing(thing)
     {
@@ -1007,7 +998,7 @@ template <typename X>
 class depth_ranges_X
 {
 private:
-    typedef std::vector<depth_range_X<X> > depth_range_X_v;
+    typedef vector<depth_range_X<X> > depth_range_X_v;
 
     X default_thing;
     depth_range_X_v depth_range_Xs;
@@ -1025,8 +1016,7 @@ public:
         default_thing = _default_X;
     }
     X get_default() const { return default_thing; }
-    void add_range(const std::string &depth_range_string,
-                   const X &thing)
+    void add_range(const string &depth_range_string, const X &thing)
     {
         depth_range_Xs.push_back(depth_range_X<X>(depth_range_string, thing));
     }
@@ -1087,11 +1077,11 @@ public:
 class map_def
 {
 public:
-    std::string     name;
+    string          name;
     // Description for the map that can be shown to players.
-    std::string     description;
-    std::string     tags;
-    level_id        place;
+    string          description;
+    string          tags;
+    depth_ranges    place;
 
     depth_ranges     depths;
     map_section_type orient;
@@ -1101,11 +1091,6 @@ public:
 
     range_chance_t   _chance;
     range_weight_t   _weight;
-
-    int              weight_depth_mult;
-    int              weight_depth_div;
-
-    std::vector<std::string> welcome_messages;
 
     map_lines       map;
     mons_list       mons;
@@ -1117,7 +1102,7 @@ public:
     static bool valid_monster_glyph(int gly);
     static int monster_array_glyph_to_slot(int gly);
 
-    std::vector<mons_spec> random_mons;
+    vector<mons_spec> random_mons;
 
     map_flags       level_flags, branch_flags;
 
@@ -1127,16 +1112,19 @@ public:
 
     map_def         *original;
 
-    uint8_t         rock_colour, floor_colour;
-    std::string     rock_tile, floor_tile;
+    colour_t        rock_colour, floor_colour;
+    string          rock_tile, floor_tile;
 
     dungeon_feature_type border_fill_type;
+
+    ::map<dungeon_feature_type, string> feat_renames;
+
 private:
     // This map has been loaded from an index, and not fully realised.
     bool            index_only;
     mutable long    cache_offset;
-    std::string     file;
-    std::string     cache_name;
+    string          file;
+    string          cache_name;
 
     typedef Matrix<bool> subvault_mask;
     subvault_mask *svmask;
@@ -1147,9 +1135,9 @@ private:
 public:
     map_def();
 
-    std::string desc_or_name() const;
+    string desc_or_name() const;
 
-    std::string describe() const;
+    string describe() const;
     void init();
     void reinit();
 
@@ -1164,9 +1152,9 @@ public:
 
     coord_def size() const { return coord_def(map.width(), map.height()); }
 
-    std::vector<coord_def> find_glyph(int glyph) const;
+    vector<coord_def> find_glyph(int glyph) const;
     coord_def find_first_glyph(int glyph) const;
-    coord_def find_first_glyph(const std::string &glyphs) const;
+    coord_def find_first_glyph(const string &glyphs) const;
 
     void write_index(writer&) const;
     void write_full(writer&) const;
@@ -1176,12 +1164,11 @@ public:
     void read_full(reader&, bool check_cache_version);
     void read_maplines(reader&);
 
-    void set_file(const std::string &s);
-    std::string run_lua(bool skip_main);
-    bool run_hook(const std::string &hook_name, bool die_on_lua_error = false);
+    void set_file(const string &s);
+    string run_lua(bool skip_main);
+    bool run_hook(const string &hook_name, bool die_on_lua_error = false);
     bool run_postplace_hook(bool die_on_lua_error = false);
-    void copy_hooks_from(const map_def &other_map,
-                         const std::string &hook_name);
+    void copy_hooks_from(const map_def &other_map, const string &hook_name);
 
 
     // Returns true if the validation passed.
@@ -1193,19 +1180,19 @@ public:
     // Executes post-generation lua code.
     bool run_lua_epilogue(bool croak = false);
 
-    std::string validate_map_def(const depth_ranges &);
-    std::string validate_temple_map();
+    string validate_map_def(const depth_ranges &);
+    string validate_temple_map();
     // Returns true if this map is in the middle of validation.
-    bool is_validating() const { return (validating_map_flag); }
+    bool is_validating() const { return validating_map_flag; }
 
-    void add_prelude_line(int line,  const std::string &s);
-    void add_main_line(int line, const std::string &s);
+    void add_prelude_line(int line,  const string &s);
+    void add_main_line(int line, const string &s);
 
     void hmirror();
     void vmirror();
     void rotate(bool clockwise);
     void normalise();
-    std::string resolve();
+    string resolve();
     void fixup();
 
     bool is_usable_in(const level_id &lid) const;
@@ -1224,13 +1211,13 @@ public:
     coord_def float_aligned_place() const;
     coord_def float_random_place() const;
 
-    std::vector<coord_def> anchor_points() const;
+    vector<coord_def> anchor_points() const;
 
     bool is_minivault() const;
     bool is_overwritable_layout() const;
-    bool has_tag(const std::string &tag) const;
-    bool has_tag_prefix(const std::string &tag) const;
-    bool has_tag_suffix(const std::string &suffix) const;
+    bool has_tag(const string &tag) const;
+    bool has_tag_prefix(const string &tag) const;
+    bool has_tag_suffix(const string &suffix) const;
 
     template <typename TagIterator>
     bool has_any_tag(TagIterator begin, TagIterator end) const
@@ -1241,15 +1228,15 @@ public:
         return false;
     }
 
-    std::vector<std::string> get_tags() const;
+    vector<string> get_tags() const;
 
-    std::vector<std::string> get_shuffle_strings() const;
-    std::vector<std::string> get_subst_strings() const;
+    vector<string> get_shuffle_strings() const;
+    vector<string> get_subst_strings() const;
 
     int glyph_at(const coord_def &c) const;
 
     // Subvault functions.
-    std::string subvault_from_tagstring(const std::string &s);
+    string subvault_from_tagstring(const string &s);
     bool is_subvault() const;
     void apply_subvault_mask();
     bool subvault_cell_valid(const coord_def &c) const;
@@ -1268,7 +1255,7 @@ public:
         // feature slots, but that's fine by us.
         dungeon_feature_type operator () (const coord_def &c) const
         {
-            return (map_feature_at(&map, c, -1));
+            return map_feature_at(&map, c, -1);
         }
     };
 
@@ -1284,28 +1271,22 @@ public:
     };
 
 private:
-    void write_depth_ranges(writer&) const;
-    void read_depth_ranges(reader&);
     bool test_lua_boolchunk(dlua_chunk &, bool def = false, bool croak = false);
-    std::string rewrite_chunk_errors(const std::string &s) const;
-    std::string apply_subvault(string_spec &);
-    std::string validate_map_placeable();
+    string rewrite_chunk_errors(const string &s) const;
+    string apply_subvault(string_spec &);
+    string validate_map_placeable();
 };
 
 const int CHANCE_ROLL = 10000;
 
-void map_register_flag(const std::string &flag);
+void map_register_flag(const string &flag);
 
-std::string escape_string(std::string in, const std::string &toesc,
-                          const std::string &escapewith);
+string escape_string(string in, const string &toesc, const string &escapewith);
 
-std::string mapdef_split_key_item(const std::string &s,
-                                  std::string *key,
-                                  int *separator,
-                                  std::string *arg,
-                                  int key_max_len = 1);
+string mapdef_split_key_item(const string &s, string *key, int *separator,
+                             string *arg, int key_max_len = 1);
 
 const char *map_section_name(int msect);
 
-int store_tilename_get_index(const std::string tilename);
+int store_tilename_get_index(const string tilename);
 #endif

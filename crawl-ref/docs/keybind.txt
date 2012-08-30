@@ -72,6 +72,8 @@ t         CMD_SHOUT
 x         CMD_LOOK_AROUND
 X         CMD_DISPLAY_MAP
 ^X        CMD_FULL_VIEW
+|         CMD_SHOW_TERRAIN
+^V        CMD_TOGGLE_VIEWPORT_MONSTER_HP
 z         CMD_CAST_SPELL
 Z         CMD_FORCE_CAST_SPELL
 C         CMD_CLOSE_DOOR
@@ -102,7 +104,6 @@ I         CMD_DISPLAY_SPELLS
 "         CMD_LIST_JEWELLERY
 [         CMD_LIST_ARMOUR
 ]         CMD_LIST_EQUIPMENT
-^V        CMD_LIST_WEAPONS
 $         CMD_LIST_GOLD
 \         CMD_DISPLAY_KNOWN_OBJECTS
 }         CMD_DISPLAY_RUNES
@@ -180,6 +181,7 @@ e         CMD_MAP_EXCLUDE_AREA (cycle through radii and toggle off/on)
 +         CMD_MAP_SCROLL_DOWN
 -         CMD_MAP_SCROLL_UP
 ., \r, ;  CMD_MAP_GOTO_TARGET
+!         CMD_MAP_ANNOTATE_LEVEL
 ESCAPE    CMD_MAP_EXIT_MAP
 
 Move cursor one step in a given direction

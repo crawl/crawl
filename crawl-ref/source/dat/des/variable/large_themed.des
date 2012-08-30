@@ -5,7 +5,7 @@
 #                   define a set of monsters. Use large_abstract.des for vaults
 #                   which don't have a special theme.
 #
-# Note that all maps for the Vault branch system (including Vault:8) reside in
+# Note that all maps for the Vaults branch system (including Vaults:8) reside in
 # vaults.des.
 ###############################################################################
 
@@ -731,9 +731,10 @@ TAGS:   no_monster_gen no_item_gen no_pool_fixup
 ORIENT: west
 DEPTH:  D:16-
 MONS:   crystal golem, orange crystal statue
-ITEM:   any magical staff / any book / any jewellery w:15 / any scroll w:20 / \
-        potion of magic / potion of brilliance / air elemental fan w:1 / \
-        lamp of fire w:1 / stone of earth elementals w:1 / gold w:30
+ITEM:   any magical staff / any rod w:2 / any book / any jewellery w:15 / \
+        any scroll w:20 / potion of magic / potion of brilliance / \
+        air elemental fan w:1 / lamp of fire w:1 / \
+        stone of earth elementals w:1 / gold w:30
 KFEAT:  _ = altar_sif_muna
 MAP
             bbbbb
@@ -872,18 +873,16 @@ COLOUR: I5M% = white
 SUBST:  I = G
 SUBST:  " = +
 SUBST:  T = ......^
-KFEAT:  ^ = alarm trap / blade trap w:1 / axe trap / bolt trap
+KFEAT:  ^ = alarm trap / blade trap w:1 / spear trap / bolt trap
 # Markers:
 MARKER: V = lua:fog_machine { \
                 pow_max = 10, delay_min = 5, delay_max = 30, \
                 size = 30, size_buildup_amnt = 1, \
                 size_buildup_time = 10, cloud_type = "gloom" \
             }
-MARKER: v = lua:props_marker { veto_fragmentation="veto", veto_disintegrate="veto" }
 # Final subst
 SUBST:  MV = .
-:       dgn.set_feature_desc_short("granite statue", "iron statue")
-:       dgn.set_feature_desc_long("granite statue", "The statue has no mouth. Creepy!\n")
+:       set_feature_name("granite_statue", "iron statue")
 :       dgn.delayed_decay(_G, '%', 'human corpse / human skeleton')
 veto {{
     if you.uniques("Jory") then
@@ -932,7 +931,7 @@ ENDMAP
 NAME:    statue_cache
 ORIENT:  north
 TAGS:    no_monster_gen
-DEPTH:   D:12-20, Elf, Vault
+DEPTH:   D:12-20, Elf, Vaults
 MONS: statue name:archer name_adjective tile:mons_statue_crossbow ; crossbow \
       ego:flame . bolt q:30
 MONS: statue name:archer name_adjective tile:mons_statue_crossbow ; crossbow \
@@ -974,7 +973,7 @@ ENDMAP
 #
 NAME:   evilmike_wizard_prison
 TAGS:   no_monster_gen
-DEPTH:  D:17-27, Vault:3-7, Crypt:1-4
+DEPTH:  D:17-27, Vaults:3-7, Crypt:1-4
 ORIENT: southeast
 SUBST:  ~ = ~:2 .:3
 SUBST:  . = ~:1 .:9
@@ -1003,7 +1002,7 @@ MONS:   draconian shifter / draconian annihilator / lich  / \
         deep elf annihilator / deep elf demonologist
 NSUBST: 4 = 6:5 / *:4
 MONS:   ancient lich
-MONS:   human name:innocent n_adj n_noc att:neutral
+MONS:   human name:sacrificial n_adj n_noc att:neutral
 NSUBST: 4 = 1:7 / *:4
 ITEM:   acquire any
 SUBST:  - = .
@@ -1138,7 +1137,7 @@ MONS:   w:5 deep elf mage / w:2 naga mage / w:30 wizard / \
 MONS:   w:25 deep elf sorcerer / w:50 lich / w:25 ancient lich
 : end
 ITEM:   any book / w:20 any randbook
-ITEM:   w:20 any magical staff / any jewellery
+ITEM:   w:18 any magical staff / any rod w:5 / any jewellery
 ITEM:   any randbook / gold
 SUBST:  '" = .
 MAP
@@ -1180,7 +1179,7 @@ ENDMAP
 NAME:   evilmike_iron_armoury
 ORIENT: southeast
 TAGS:   no_monster_gen no_item_gen
-DEPTH:  D:11-27, Vault:1-7
+DEPTH:  D:11-27, Vaults:1-7
 KFEAT:  _ = altar_okawaru
 SUBST:  = = =v
 FTILE:  '+Gvc12345_defghijk = floor_hall
@@ -1353,7 +1352,7 @@ MARKER: V = lua:fog_machine { cloud_type = "foul pestilence", \
             size = 1, walk_dist = 1, spread_rate= 33 }
 MARKER: V = lua:props_marker { feature_description = "foul fountain" }
 SUBST:  % = %*|$
-SUBST:  A = 11.
+SUBST:  A = 1.
 MAP
 xxxx......@@@......xxxxxxxxxxxxxxxxxxxxxxxxx
 xccc......1.1......ccccccccccccccccccccccccc
@@ -1363,11 +1362,11 @@ xccc..b.2c...c2.b..c%%c.......cc....ccc1>1cc
 xccc.....c...c.....cccc.......cc.bb.ccc.c.cc
 xccc=ccccc...ccccccccccccc+ccccc.BB.ccc.c.cc
 xcb$$bc.........cb$$bc....5....c....ccc.c.cc
-xc1..1c.Bb...bB.c1..1c.b.ccc.b.c5BB5cc....cc
+xc1..Ac.Bb...bB.cA..1c.b.ccc.b.c5BB5cc....cc
 xcb..bc.bb...bb.cb..bc.b.ccc.b.c.bb.cc.c.ccc
-xc1...+.........+...1=..2...2..=.6..cc.c.ccc
+xcA...+.........+...A=..2...2..=.6..cc.c.ccc
 xcb..bc.bb...bb.cb..bccccc.ccccc.cc..+.c.ccc
-xc1..1c.Bb...bB.c1..1=AAAc.cAAAccccccccc+ccc
+xc1..Ac.Bb...bB.cA..1=AAAc.cAAAccccccccc+ccc
 xcb$$bc...3_4...cb$$bcA$Ac.cA$Accccccc.....c
 xccc=ccccc...cccccccccA2Ac+cA2Accccccc%6.6%c
 xcc%%2ccccc+ccccccccccc+cc.cc+ccAAAccc%%7%%c

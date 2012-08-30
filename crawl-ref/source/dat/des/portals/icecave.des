@@ -15,10 +15,6 @@
 
 {{
 function ice_cave_portal(e)
-  local desc_long = "A permanent cold front seems to surround this " ..
-    "portal. Whatever lives on the other side, they will be full of " ..
-    "grim and arctic fury. You note that the archway is melting away."
-
   local timeout_turns_long = crawl.random_range(2700, 3300)
   local timeout_turns_short = timeout_turns_long/10
 
@@ -34,18 +30,15 @@ function ice_cave_portal(e)
                                "$F{The} is almost completely melted.")
     }
 
-  local difficulty = ice_cave_difficulty()
+  dgn.persist.ice_cave_hard = ice_cave_difficulty()
 
   e.lua_marker('O',
       timed_marker {
         disappear = "The archway melts and disappears.",
         desc = "frozen archway",
-        desc_long = desc_long,
         entity = 'archway',
-        dst = difficulty,
+        dst = "IceCv",
         dstname = "ice_cave",
-        dstname_abbrev = "IceCv",
-        dstorigin = "in an ice cave",
         overview = "frozen archway",
         turns = timeout_turns_long,
         turns_short = timeout_turns_short,
@@ -60,9 +53,6 @@ function ice_cave_portal(e)
   e.rtile("X = wall_zot_cyan")
   e.colour(".1234 = blue")
   e.ftile(".1234O+ = floor_ice")
-
-  dgn.set_lt_callback(difficulty, "ice_cave_feat_descs")
-
 end
 
 }}
@@ -71,29 +61,26 @@ end
 -- Figure out if an easy or a hard ice cave should be used. Players
 -- that enter the portal deeper in the dungeon end up in the hard ones.
 -- Possible depths for easy ice caves are D:11-14, Lair:1-8, Orc:1-4.
--- Hard ice caves are in D:14-19, Elf:1-5 and Vault:1-7. Those depths are
+-- Hard ice caves are in D:14-19, Elf:1-5 and Vaults:1-7. Those depths are
 -- set in the entry vault default-depth.
 function ice_cave_difficulty()
 
   -- First default to easy destinations.
-  local difficulty = "ice_cave_easy"
+  local hard = false
 
   -- Handle overlapping depths for easy and hard maps with a coinflip.
-  if you.branch() == "D" and you.subdepth() == 14 or
-     you.branch() == "Elf" and you.subdepth() < 3 then
-      if crawl.coinflip() then
-          difficulty = "ice_cave_hard"
-      end
+  if you.branch() == "D" and you.depth() == 14 or
+     you.branch() == "Elf" and you.depth() < 3 then
+      hard = crawl.coinflip()
   end
 
-  if you.branch() == "D" and you.subdepth() >= 15 or
+  if you.branch() == "D" and you.depth() >= 15 or
      you.branch() == "Elf" or
-     you.branch() == "Vault" then
-      difficulty = "ice_cave_hard"
+     you.branch() == "Vaults" then
+      hard = true
   end
 
-  return difficulty
-
+  return hard
 end
 }}
 
@@ -111,36 +98,22 @@ end
 
 }}
 
-{{
--- Alter short feature descriptions for all ice cave destination vaults.
-function ice_cave_feat_descs()
-    dgn.set_feature_desc_short("rock wall", "ice covered $BASE")
-    dgn.set_feature_desc_short("gate leading back to the Dungeon",
-                               "ice covered $BASE")
-    dgn.set_feature_desc_short("empty arch of ancient stone",
-                               "ice choked $BASE")
-    dgn.set_feature_desc_short("Some shallow water",
-                               "Some ice crusted shallow water")
-    dgn.set_feature_desc_short("Some deep water",
-                               "Some ice crusted deep water")
-
-    dgn.set_feature_desc_long("Some deep water",
-                              "It looks freezing!");
-end
-}}
-
 # For destination (not entry) vaults, use the following line after all
 # substitutions have been performed:
-# : ice_cave_colours(_G)
+# : ice_cave_appearance(_G)
 {{
-function ice_cave_colours(e)
+function ice_cave_appearance(e)
   e.kfeat("< = exit_portal_vault")
   e.colour("< = white")
   e.tile("< = dngn_portal_ice_cave")
-  e.lrockcol("white")
-  e.lfloorcol("blue")
-  e.lrocktile("wall_zot_cyan")
-  e.lfloortile("floor_ice")
+
+  -- Alter short feature descriptions for all ice cave destination vaults.
+  e.set_feature_name("rock_wall", "ice covered rock wall")
+  e.set_feature_name("exit_portal_vault",
+                             "ice covered gate leading back out of here")
+  e.set_feature_name("stone_arch", "ice choked empty arch of ancient stone")
+  e.set_feature_name("shallow_water", "Some ice crusted shallow water")
+  e.set_feature_name("deep_water", "Some ice crusted deep water")
 end
 }}
 
@@ -222,16 +195,35 @@ function ice_cave_caverns_natural_giant_monster_set(e)
 end
 }}
 
-# Add a milestone for entering the Ice Cave.
+# : ice_cave_caverns_undead_demon_loot(_G)
 {{
-function ice_cave_milestone(e)
-  crawl.mark_milestone("br.enter", "entered an Ice Cave.", true)
+function ice_cave_caverns_undead_demon_loot(e)
+  e.item("cloak ego:cold_resistance good_item / wizard hat good_item / \
+          pair of gloves good_item / pair of boots good_item / nothing")
+  e.item("book of ice / book of unlife / staff of cold / staff of death / \
+          nothing w:30")
+  e.item("ring of ice / ring of protection from cold / \
+          ring of life protection / wand of cold / wand of draining / nothing")
+end
+}}
+
+# : ice_cave_caverns_natura_giant_loot(_G)
+{{
+function ice_cave_caverns_natural_giant_loot(e)
+  e.item("animal skin good_item ego:cold_resistance / \
+          battleaxe good_item ego:freezing w:4 / \
+          glaive good_item ego:freezing w:4 / \
+          great sword good_item ego:freezing w:2 / nothing")
+  e.item("book of ice / crossbow ego:frost good_item no_uniq / \
+          longbow ego:frost good_item no_uniq / nothing w:20")
+  e.item("ring of ice / ring of protection from cold / wand of cold / \
+          arrow ego:ice q:25 / bolt ego:ice q:20 / nothing")
 end
 }}
 
 # Entries ##########################################
 
-default-depth: D:11-19, Lair:1-8, Orc:1-4, Elf:1-5, Vault:1-7
+default-depth: D:11-19, Lair:1-8, Orc:1-4, Elf:1-5, Vaults:1-7
 
 NAME:   portal_ice_cave_entry_pillars_01
 TAGS:   uniq_ice_cave patrolling no_monster_gen chance_icecave
@@ -337,7 +329,7 @@ ENDMAP
 NAME:   portal_ice_cave_entry_horrid_things
 TAGS:   uniq_ice_cave patrolling no_monster_gen chance_icecave
 CHANCE: 5%
-DEPTH:  D:14-19, Elf:3-5, Vault:1-7
+DEPTH:  D:14-19, Elf:3-5, Vaults:1-7
 : ice_cave_portal(_G)
 MONS:   ice beast / freezing wraith w:2 / nothing w:2
 MONS:   freezing wraith / nothing w:3
@@ -357,7 +349,7 @@ ENDMAP
 NAME:   portal_ice_cave_demonic_guard
 TAGS:   uniq_ice_cave patrolling no_monster_gen chance_icecave
 CHANCE: 5%
-DEPTH:  D:14-19, Elf:3-5, Vault:1-7
+DEPTH:  D:14-19, Elf:3-5, Vaults:1-7
 : ice_cave_portal(_G)
 MONS:   ice devil
 MAP
@@ -377,7 +369,7 @@ NAME:   portal_ice_cave_entry_ice_statue_01
 TAGS:   uniq_ice_cave chance_icecave
 CHANCE: 5%
 WEIGHT: 5
-DEPTH:  D:11-19, Elf:1-5, Vault:1-7
+DEPTH:  D:11-19, Elf:1-5, Vaults:1-7
 : ice_cave_portal(_G)
 MONS:   ice statue
 MAP
@@ -395,7 +387,7 @@ NAME:   portal_ice_cave_entry_ice_statue_02
 TAGS:   uniq_ice_cave chance_icecave
 CHANCE: 5%
 WEIGHT: 5
-DEPTH:  D:14-19, Elf:3-5, Vault:1-7
+DEPTH:  D:14-19, Elf:3-5, Vaults:1-7
 : ice_cave_portal(_G)
 MONS:   ice statue
 MAP
@@ -412,17 +404,17 @@ ENDMAP
 
 # The destination vaults ############
 #
-# For ice_cave_easy, there are currently five cave vaults (each of weight 6,
+# For easy caves, there are currently five cave vaults (each of weight 6,
 # total 30), three cavern vaults (each of weight 5, total 15) and two ice
 # statue gardens (weight 5, total 10). Total weight of all types is
 # 30+15+10=55.
 #
-# For ice_cave_hard, there are currently two cave vaults (each of weight 6,
+# For hard caves, there are currently two cave vaults (each of weight 6,
 # total 12), three cavern vaults (each of weight 5, total 15) and two ice
 # statue gardens (weight 5, total 10). Total weight of all types is
 # 12+15+10=37, so the latter types are more common in hard ice caves.
 
-default-depth:
+default-depth: IceCv
 
 ###############################################################################
 # The small caves.
@@ -437,17 +429,15 @@ default-depth:
 # Loot: heavy weapons and rC gear wearable by big races,
 #       plus some useful potions in the freezer.
 NAME:    ice_cave_small_giant
-TAGS:    ice_cave_easy no_item_gen no_monster_gen no_pool_fixup
+veto {{ return dgn.persist.ice_cave_hard }}
+TAGS:    no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
 WEIGHT:  6
 # Randomize the layout slightly.
 SHUFFLE: "'
 SUBST:   "=. , ':x .:1
-: ice_cave_colours(_G)
+: ice_cave_appearance(_G)
 : ice_cave_random_monster_list_natural_giant(_G)
-epilogue{{
-ice_cave_milestone(_G)
-}}
 MONS:    yak / wolf / polar bear w:4
 MONS:    polar bear
 MONS:    frost giant
@@ -520,17 +510,14 @@ ENDMAP
 # Foes: ice beasts, ice dragons & ice statues.
 # Loot: some gold, jewellery (approximately three rings).
 NAME:    ice_cave_small_dragons
-TAGS:    ice_cave_easy no_item_gen no_monster_gen no_pool_fixup
+veto {{ return dgn.persist.ice_cave_hard }}
+TAGS:    no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
 WEIGHT:  6
 # Randomize the layout slightly.
 SHUFFLE: "'
 SUBST:   "=. , ':x .:1
-: ice_cave_colours(_G)
-: dgn.set_random_mon_list("ice beast w:90 / ice dragon / nothing")
-epilogue{{
-ice_cave_milestone(_G)
-}}
+: ice_cave_appearance(_G)
 MONS:    ice beast
 MONS:    ice dragon
 MONS:    ice beast generate_awake
@@ -583,17 +570,15 @@ ENDMAP
 # Foes: mostly in the undead vein, plus a necromancer and an ice statue.
 # Loot: ice magic loot, gear of cold resistance (one piece).
 NAME:    ice_cave_small_necro
-TAGS:    ice_cave_easy no_item_gen no_monster_gen no_pool_fixup
+veto {{ return dgn.persist.ice_cave_hard }}
+TAGS:    no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
 WEIGHT:  6
 KFEAT:   _ = altar_kikubaaqudgha
 SUBST:   - = ........-
 KFEAT:   - = alarm trap
-: ice_cave_colours(_G)
+: ice_cave_appearance(_G)
 : ice_cave_random_monster_list_undead_necromancer(_G)
-epilogue{{
-ice_cave_milestone(_G)
-}}
 MONS:    ice beast
 MONS:    white imp
 MONS:    freezing wraith
@@ -661,7 +646,7 @@ ENDMAP
 # Foes: ice & blue devils, white imps & ufetubi, an ice statue.
 # Loot: weapons and/or armour.
 NAME:    ice_cave_small_demon
-TAGS:    ice_cave_easy ice_cave_hard no_item_gen no_monster_gen no_pool_fixup
+TAGS:    no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
 WEIGHT:  6
 NSUBST:  . = 9:1 / 1:2 / *:.
@@ -669,7 +654,7 @@ SHUFFLE: Qq / Zz / Nn / Bb / Mm
 SUBST:   Q=2, Z=2, N=., B=., M=.
 SUBST:   q=!, z=!, n=., b=., m=.
 # Replaces '!'s with fog generators, then makes them floor.
-: if you.level_type_tag() == "ice_cave_hard" then
+: if dgn.persist.ice_cave_hard then
 : place_fog(_G, "freezing vapour", 100)
 : else
 : place_fog(_G, "freezing vapour", 30)
@@ -686,12 +671,11 @@ NSUBST:  w = 3:! / *:w
 : place_fog(_G, "freezing vapour", 50)
 SUBST:   ! = w
 {{
-ice_cave_colours(_G)
+ice_cave_appearance(_G)
 dgn.set_random_mon_list("white imp w:35 / ufetubus w:35 / blue devil w:20 / \
-                         ice devil / nothing")
-ice_cave_milestone(_G)
+                         ice devil")
 }}
-: if you.level_type_tag() == "ice_cave_hard" then
+: if dgn.persist.ice_cave_hard then
 MONS:    white imp / ufetubus
 MONS:    ice devil / blue devil w:3 / nothing w:2
 MONS:    ice statue
@@ -763,7 +747,7 @@ NAME: ice_cave_tombish
 # This is an ice cave which is also a tomb of a necromancer who likes staying
 # alive and simulacrums, or just a chillout of an ice fiend. By Zaba.
 # Weighted as a small cave, although this is pretty tough. --Eino
-TAGS:   ice_cave_easy ice_cave_hard no_item_gen no_monster_gen
+TAGS:   no_item_gen no_monster_gen
 ORIENT: encompass
 WEIGHT: 6
 # S is either an ice statue or a granite statue.
@@ -772,7 +756,7 @@ KMONS:  S = ice statue
 # I is an ice statue with loot underneath.
 KITEM:  I = any scroll q:3
 KMONS:  I = ice statue
-: if you.level_type_tag() == "ice_cave_hard" then
+: if dgn.persist.ice_cave_hard then
 MONS:   ice devil / blue devil / nothing w:7
 # FIXME: I can't quite make up more simulacrums
 MONS:   grizzly bear simulacrum w:20 / dragon simulacrum /\
@@ -786,10 +770,7 @@ MONS:   necromancer
 : end
 ITEM:   any potion / any scroll / any weapon good_item / any armour good_item
 KFEAT:  ' = alarm trap / net trap / arrow trap / bolt trap w:5 / floor w:5
-: ice_cave_colours(_G)
-epilogue{{
-ice_cave_milestone(_G)
-}}
+: ice_cave_appearance(_G)
 : ice_cave_random_monster_list_undead_demon(_G)
 MAP
       xxxxx
@@ -849,7 +830,7 @@ ENDMAP
 # The caverns are more rare than the caves.
 
 NAME: ice_cave_caverns_01
-TAGS: ice_cave_easy ice_cave_hard no_item_gen no_monster_gen no_pool_fixup
+TAGS: no_item_gen no_monster_gen no_pool_fixup
 WEIGHT: 5
 ORIENT: encompass
 # A bit of layout randomization.
@@ -862,32 +843,16 @@ SUBST: ' = .
 SUBST: - = x
 SUBST: _ = w
 : end
-: ice_cave_colours(_G)
-epilogue{{
-ice_cave_milestone(_G)
-}}
+: ice_cave_appearance(_G)
 # Two different populations: undead/demon and natural/giant.
-: if you.level_type_tag() == "ice_cave_hard" then
+: if dgn.persist.ice_cave_hard then
 : ice_cave_random_monster_list_undead_demon(_G)
 : ice_cave_caverns_undead_demon_monster_set(_G)
-ITEM: cloak ego:fire_resistance good_item / wizard hat good_item / \
-      pair of gloves good_item / pair of boots good_item / nothing
-ITEM: book of ice / book of unlife / staff of cold / staff of death / \
-      nothing w:30
-ITEM: ring of ice / ring of protection from fire / ring of life protection / \
-      wand of cold / wand of draining / nothing
+: ice_cave_caverns_undead_demon_loot(_G)
 : else
 : ice_cave_random_monster_list_natural_giant(_G)
 : ice_cave_caverns_natural_giant_monster_set(_G)
-ITEM: animal skin good_item ego:fire_resistance / \
-      battleaxe good_item ego:freezing w:4 / \
-      glaive good_item ego:freezing w:4 / \
-      great sword good_item ego:freezing w:2 / nothing
-ITEM: book of ice / \
-      crossbow ego:frost good_item no_uniq / \
-      longbow ego:frost good_item no_uniq / nothing w:20
-ITEM: ring of ice / ring of protection from fire / wand of cold / \
-      arrow ego:ice q:25 / bolt ego:ice q:20 / nothing
+: ice_cave_caverns_natural_giant_loot(_G)
 : end
 ITEM: any wand / any potion w:5 / any scroll w:5
 MAP
@@ -919,7 +884,7 @@ xx..xwwwwxxxx....xxxx5.xxxwxx_xx...xxxxxwwwxxxx.1.5xxxxx.x.xxx..xxx
 ENDMAP
 
 NAME:   ice_cave_caverns_02
-TAGS:   ice_cave_easy ice_cave_hard no_item_gen no_monster_gen no_pool_fixup
+TAGS:   no_item_gen no_monster_gen no_pool_fixup
 WEIGHT: 5
 ORIENT: encompass
 # Two different populations: undead/demon and natural/giant.
@@ -927,15 +892,10 @@ ORIENT: encompass
 # doesn't have enough cold resistance for many clouds. The ';' placeholder
 # symbol gives the natural monsters some safety padding from generator
 # placement.
-: if you.level_type_tag() == "ice_cave_hard"  then
+: if dgn.persist.ice_cave_hard then
 : ice_cave_random_monster_list_undead_demon(_G)
 : ice_cave_caverns_undead_demon_monster_set(_G)
-ITEM: cloak ego:fire_resistance good_item / wizard hat good_item / \
-      pair of gloves good_item / pair of boots good_item / nothing
-ITEM: book of ice / book of unlife / staff of cold / staff of death / \
-      nothing w:30
-ITEM: ring of ice / ring of protection from fire / ring of life protection / \
-      wand of cold / wand of draining / nothing
+: ice_cave_caverns_undead_demon_loot(_G)
 # Take out ';' safety padding.
 SUBST: ; = .
 # Place the fog generators:
@@ -945,15 +905,7 @@ KFEAT: ! = .
 : else
 : ice_cave_random_monster_list_natural_giant(_G)
 : ice_cave_caverns_natural_giant_monster_set(_G)
-ITEM: animal skin good_item ego:fire_resistance / \
-      battleaxe good_item ego:freezing w:4 / \
-      glaive good_item ego:freezing w:4 / \
-      great sword good_item ego:freezing w:2 / nothing
-ITEM: book of ice / \
-      crossbow ego:frost good_item no_uniq / \
-      longbow ego:frost good_item no_uniq / nothing w:20
-ITEM: ring of ice / ring of protection from fire / wand of cold / \
-      arrow ego:ice q:25 / bolt ego:ice q:20 / nothing
+: ice_cave_caverns_natural_giant_loot(_G)
 # Place the fog generators. The predetermined ones are mild.
 : place_fog(_G, "freezing vapour", 5)
 # Place a few random, mild ones.
@@ -971,10 +923,7 @@ SUBST: '=x , -=.
 : else
 SUBST: '=. , -=x
 : end
-: ice_cave_colours(_G)
-epilogue{{
-ice_cave_milestone(_G)
-}}
+: ice_cave_appearance(_G)
 MAP
  xxxxxxxxxx xxxxxxxxxxxxxxxxxxxxx xxxxxxxxx    xxxxxxxx    xxxxxxxx
  x::xxwwwwxxx.x.'x-;x5;;5xxwwwwwxxx1;;;x;Wxxxxxx15415;xx  xx......xx
@@ -1002,21 +951,16 @@ xxxxxx;;xxxx...xx.3.xxwwxx'-;1x'''xxxxxwwwwwwwwxxxxxx;54;2;xx
 ENDMAP
 
 NAME: ice_cave_caverns_03
-TAGS: ice_cave_easy ice_cave_hard no_item_gen no_monster_gen no_pool_fixup
+TAGS: no_item_gen no_monster_gen no_pool_fixup
 WEIGHT: 5
 ORIENT: encompass
 # Two different populations: undead/demon (hard) and natural/giant (easy).
 # Different fog generator generation according to population,
 # as the natural monsters can't stomach the clouds.
-: if you.level_type_tag() == "ice_cave_hard" then
+: if dgn.persist.ice_cave_hard then
 : ice_cave_random_monster_list_undead_demon(_G)
 : ice_cave_caverns_undead_demon_monster_set(_G)
-ITEM: cloak ego:fire_resistance good_item / wizard hat good_item / \
-      pair of gloves good_item / pair of boots good_item / nothing
-ITEM: book of ice / book of unlife / staff of cold / staff of death / \
-      nothing w:30
-ITEM: ring of ice / ring of protection from fire / ring of life protection / \
-      wand of cold / wand of draining / nothing
+: ice_cave_caverns_undead_demon_loot(_G)
 # Place fog generators.
 SUBST: 3 = 3!
 : place_fog(_G, "freezing vapour", 25)
@@ -1028,15 +972,7 @@ KFEAT: ! = .
 : else
 : ice_cave_random_monster_list_natural_giant(_G)
 : ice_cave_caverns_natural_giant_monster_set(_G)
-ITEM: animal skin good_item ego:fire_resistance / \
-      battleaxe good_item ego:freezing w:4 / \
-      glaive good_item ego:freezing w:4 / \
-      great sword good_item ego:freezing w:2 / nothing
-ITEM: book of ice / \
-      crossbow ego:frost good_item no_uniq / \
-      longbow ego:frost good_item no_uniq / nothing w:20
-ITEM: ring of ice / ring of protection from fire / wand of cold / \
-      arrow ego:ice q:25 / bolt ego:ice q:20 / nothing
+: ice_cave_caverns_natural_giant_loot(_G)
 # Place fog generators.
 SUBST: 3 = 3!
 : place_fog(_G, "freezing vapour", 20)
@@ -1055,10 +991,7 @@ SUBST: '=x , -=.
 : else
 SUBST: '=. , -=x
 : end
-: ice_cave_colours(_G)
-epilogue{{
-ice_cave_milestone(_G)
-}}
+: ice_cave_appearance(_G)
 MAP
                                  xxxxx
                                 xx.x.xx      xxxxxxxxxx
@@ -1107,7 +1040,7 @@ ENDMAP
 # them (if they want loot, that is).
 
 NAME:   ice_cave_statue_garden_01
-TAGS:   ice_cave_easy ice_cave_hard no_item_gen no_monster_gen no_pool_fixup
+TAGS:   no_item_gen no_monster_gen no_pool_fixup
 WEIGHT: 5
 ORIENT: encompass
 MONS:   ice beast
@@ -1125,17 +1058,13 @@ lua_marker('M', m_marker)
 -- And the slave.
 lua_marker('m', portal_desc { teleport_spot=1})
 }}
-COLOUR: M = yellow
-TILE:   M = dngn_the_teleporter_ice_cave
+KFEAT:  M = teleporter
+TILE:   M = dngn_teleporter_ice_cave
 KPROP:  -2!m_| = no_tele_into
-SUBST:  Mm- = .
+SUBST:  m- = .
 SUBST:  ! = *
 SUBST:  _ = <
-: dgn.set_random_mon_list("ice beast w:90 / nothing")
-: ice_cave_colours(_G)
-epilogue{{
-ice_cave_milestone(_G)
-}}
+: ice_cave_appearance(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxccccccccccccccccccccccccc
 xxx.........xxxxxxxxxxxccccccccccccc---------ccc
@@ -1154,15 +1083,11 @@ xxxxxxxxxxxxxxxxxxxxxxxccccccccccccccccccccccccc
 ENDMAP
 
 NAME:   ice_cave_statue_garden_02
-TAGS:   ice_cave_easy ice_cave_hard no_item_gen no_monster_gen no_pool_fixup
+TAGS:   no_item_gen no_monster_gen no_pool_fixup
 WEIGHT: 5
 ORIENT: encompass
 MONS:   ice beast, ice statue
-: dgn.set_random_mon_list("ice beast w:90 / nothing")
-: ice_cave_colours(_G)
-epilogue{{
-ice_cave_milestone(_G)
-}}
+: ice_cave_appearance(_G)
 MAP
 ccccccccccc
 c|*.....*|c

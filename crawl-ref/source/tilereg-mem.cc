@@ -5,6 +5,7 @@
 #include "tilereg-mem.h"
 
 #include "cio.h"
+#include "describe.h"
 #include "libutil.h"
 #include "macro.h"
 #include "spl-book.h"
@@ -25,7 +26,7 @@ void MemoriseRegion::activate()
 
 int MemoriseRegion::get_max_slots()
 {
-    return (m_items.size());
+    return m_items.size();
 }
 
 void MemoriseRegion::draw_tag()
@@ -41,12 +42,12 @@ void MemoriseRegion::draw_tag()
 
     const spell_type spell = (spell_type) idx;
     char* failure = failure_rate_to_string(spell_fail(spell));
-    std::string desc = make_stringf("%s    (%s)    %d/%d spell slot%s",
-                                    spell_title(spell),
-                                    failure,
-                                    spell_levels_required(spell),
-                                    player_spell_levels(),
-                                    spell_levels_required(spell) > 1 ? "s" : "");
+    string desc = make_stringf("%s    (%s)    %d/%d spell slot%s",
+                               spell_title(spell),
+                               failure,
+                               spell_levels_required(spell),
+                               player_spell_levels(),
+                               spell_levels_required(spell) > 1 ? "s" : "");
     free(failure);
     draw_desc(desc.c_str());
 }
@@ -55,7 +56,7 @@ int MemoriseRegion::handle_mouse(MouseEvent &event)
 {
     unsigned int item_idx;
     if (!place_cursor(event, item_idx))
-        return (0);
+        return 0;
 
     const spell_type spell = (spell_type) m_items[item_idx].idx;
     if (event.button == MouseEvent::LEFT)
@@ -74,10 +75,10 @@ int MemoriseRegion::handle_mouse(MouseEvent &event)
         redraw_screen();
         return CK_MOUSE_CMD;
     }
-    return (0);
+    return 0;
 }
 
-bool MemoriseRegion::update_tab_tip_text(std::string &tip, bool active)
+bool MemoriseRegion::update_tab_tip_text(string &tip, bool active)
 {
     const char *prefix1 = active ? "" : "[L-Click] ";
     const char *prefix2 = active ? "" : "          ";
@@ -86,20 +87,20 @@ bool MemoriseRegion::update_tab_tip_text(std::string &tip, bool active)
                        prefix1, "Display spells in carried books",
                        prefix2, "Memorise spells");
 
-    return (true);
+    return true;
 }
 
-bool MemoriseRegion::update_tip_text(std::string& tip)
+bool MemoriseRegion::update_tip_text(string& tip)
 {
     if (m_cursor == NO_CURSOR)
-        return (false);
+        return false;
 
     unsigned int item_idx = cursor_index();
     if (item_idx >= m_items.size() || m_items[item_idx].empty())
-        return (false);
+        return false;
 
     int flag = m_items[item_idx].flag;
-    std::vector<command_type> cmd;
+    vector<command_type> cmd;
     if (flag & TILEI_FLAG_INVALID)
         tip = "You cannot memorise this spell now.";
     else
@@ -111,7 +112,7 @@ bool MemoriseRegion::update_tip_text(std::string& tip)
     tip += "\n[R-Click] Describe";
 
     insert_commands(tip, cmd);
-    return (true);
+    return true;
 }
 
 void MemoriseRegion::update()
@@ -127,8 +128,8 @@ void MemoriseRegion::update()
 
     const unsigned int max_spells = mx * my;
 
-    std::vector<int>  books;
-    std::vector<spell_type> spells = get_mem_spell_list(books);
+    vector<int>  books;
+    vector<spell_type> spells = get_mem_spell_list(books);
     for (unsigned int i = 0; m_items.size() < max_spells && i < spells.size();
          ++i)
     {

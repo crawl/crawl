@@ -20,6 +20,7 @@
 #define __STDC_FORMAT_MACROS
 #include <inttypes.h>
 
+#include "bitary.h"
 #include "defines.h"
 #include "enum.h"
 #include "fixedarray.h"
@@ -61,13 +62,6 @@ protected:
 #define ITEMNAME_SIZE   200          // size of item names/shop names/etc
 #define HIGHSCORE_SIZE  800          // <= 10 Lines for long format scores
 
-#if TAG_MAJOR_VERSION == 32
-#define MAX_NUM_GODS    21
-#else
-// FIXME: remove after save bump
-#define MAX_NUM_GODS NUM_GODS
-#endif
-
 #define BURDEN_TO_AUM 0.1f           // scale factor for converting burden to aum
 
 extern char info[INFO_SIZE];         // defined in main.cc {dlb}
@@ -84,6 +78,7 @@ const int kPathLen = 256;
 
 typedef FixedArray<dungeon_feature_type, GXM, GYM> feature_grid;
 typedef FixedArray<unsigned int, GXM, GYM> map_mask;
+typedef FixedBitArray<GXM, GYM> map_bitmask;
 
 struct item_def;
 struct coord_def;
@@ -102,7 +97,7 @@ template <typename Z> inline Z sgn(Z x)
     return (x < 0 ? -1 : (x > 0 ? 1 : 0));
 }
 
-inline int dist_range(int x) { return x*x + 1; };
+static inline int dist_range(int x) { return x*x + 1; };
 
 struct coord_def
 {
@@ -148,42 +143,42 @@ struct coord_def
     {
         x += other.x;
         y += other.y;
-        return (*this);
+        return *this;
     }
 
     const coord_def &operator += (int offset)
     {
         x += offset;
         y += offset;
-        return (*this);
+        return *this;
     }
 
     const coord_def &operator -= (const coord_def &other)
     {
         x -= other.x;
         y -= other.y;
-        return (*this);
+        return *this;
     }
 
     const coord_def &operator -= (int offset)
     {
         x -= offset;
         y -= offset;
-        return (*this);
+        return *this;
     }
 
     const coord_def &operator /= (int div)
     {
         x /= div;
         y /= div;
-        return (*this);
+        return *this;
     }
 
     const coord_def &operator *= (int mul)
     {
         x *= mul;
         y *= mul;
-        return (*this);
+        return *this;
     }
 
     coord_def operator + (const coord_def &other) const
@@ -239,7 +234,7 @@ struct coord_def
 
     int rdist() const
     {
-        return (std::max(std::abs(x), std::abs(y)));
+        return max(::abs(x), ::abs(y));
     }
 
     bool origin() const
@@ -273,10 +268,17 @@ struct run_check_dir
 };
 
 typedef uint32_t mid_t;
+#define PRImidt PRIu32
 #define MID_PLAYER      ((mid_t)0xffffffff)
 // the numbers are meaningless, there's just plenty of space for gods, env,
 // and whatever else we want to have, while keeping all monster ids smaller.
 #define MID_ANON_FRIEND ((mid_t)0xffff0000)
+
+static inline monster_type operator++(monster_type &x)
+{
+    x = static_cast<monster_type>(x + 1);
+    return x;
+}
 
 struct cloud_struct
 {
@@ -288,8 +290,8 @@ struct cloud_struct
     killer_type   killer;
     mid_t         source;
     int           colour;
-    std::string   name;
-    std::string   tile;
+    string        name;
+    string        tile;
     int           excl_rad;
 
     cloud_struct() : pos(), type(CLOUD_NONE), decay(0), spread_rate(0),
@@ -305,8 +307,7 @@ struct cloud_struct
     void set_whose(kill_category _whose);
     void set_killer(killer_type _killer);
 
-    std::string cloud_name(const std::string &default_name = "",
-                           bool terse = false) const;
+    string cloud_name(const string &default_name = "", bool terse = false) const;
     void announce_actor_engulfed(const actor *engulfee,
                                  bool beneficial = false) const;
 
@@ -320,9 +321,9 @@ struct shop_struct
     uint8_t             greed;
     shop_type           type;
     uint8_t             level;
-    std::string         shop_name;
-    std::string         shop_type_name;
-    std::string         shop_suffix_name;
+    string              shop_name;
+    string              shop_type_name;
+    string              shop_suffix_name;
 
     FixedVector<uint8_t, 3> keeper_name;
 
@@ -354,7 +355,6 @@ class level_id
 public:
     branch_type branch;     // The branch in which the level is.
     int depth;              // What depth (in this branch - starting from 1)
-    level_area_type level_type;
 
 public:
     // Returns the level_id of the current level.
@@ -365,66 +365,50 @@ public:
     static level_id get_next_level_id(const coord_def &pos);
 
     level_id()
-        : branch(BRANCH_MAIN_DUNGEON), depth(-1),
-          level_type(LEVEL_DUNGEON)
+        : branch(BRANCH_MAIN_DUNGEON), depth(-1)
     {
     }
-    level_id(branch_type br, int dep, level_area_type ltype = LEVEL_DUNGEON)
-        : branch(br), depth(dep), level_type(ltype)
+    level_id(branch_type br, int dep = 1)
+        : branch(br), depth(dep)
     {
     }
     level_id(const level_id &ot)
-        : branch(ot.branch), depth(ot.depth), level_type(ot.level_type)
-    {
-    }
-    level_id(level_area_type ltype)
-        : branch(BRANCH_MAIN_DUNGEON), depth(-1), level_type(ltype)
+        : branch(ot.branch), depth(ot.depth)
     {
     }
 
-    static level_id parse_level_id(const std::string &s) throw (std::string);
+    static level_id parse_level_id(const string &s) throw (string);
     static level_id from_packed_place(const unsigned short place);
 
     unsigned short packed_place() const;
-    std::string describe(bool long_name = false, bool with_number = true) const;
+    string describe(bool long_name = false, bool with_number = true) const;
 
     void clear()
     {
         branch = BRANCH_MAIN_DUNGEON;
         depth  = -1;
-        level_type = LEVEL_DUNGEON;
     }
 
     // Returns the absolute depth in the dungeon for the level_id;
     // non-dungeon branches (specifically Abyss and Pan) will return
-    // depths suitable for use in monster and item generation. If
-    // you're looking for a depth to set you.absdepth0 to, use
-    // dungeon_absdepth().
+    // depths suitable for use in monster and item generation.
     int absdepth() const;
-
-    // Returns the absolute depth in the dungeon for the level_id, corresponding
-    // to you.absdepth0.
-    int dungeon_absdepth() const;
 
     bool is_valid() const
     {
-        return (branch != NUM_BRANCHES && depth != -1)
-            || level_type != LEVEL_DUNGEON;
+        return (branch != NUM_BRANCHES && depth != -1);
     }
 
     const level_id &operator = (const level_id &id)
     {
         branch     = id.branch;
         depth      = id.depth;
-        level_type = id.level_type;
-        return (*this);
+        return *this;
     }
 
     bool operator == (const level_id &id) const
     {
-        return (level_type == id.level_type
-                && (level_type != LEVEL_DUNGEON
-                    || (branch == id.branch && depth == id.depth)));
+        return (branch == id.branch && depth == id.depth);
     }
 
     bool operator != (const level_id &id) const
@@ -434,18 +418,12 @@ public:
 
     bool operator <(const level_id &id) const
     {
-        if (level_type != id.level_type)
-            return (level_type < id.level_type);
-
-        if (level_type != LEVEL_DUNGEON)
-            return (false);
-
         return (branch < id.branch) || (branch==id.branch && depth < id.depth);
     }
 
     bool operator == (const branch_type _branch) const
     {
-        return (branch == _branch && level_type == LEVEL_DUNGEON);
+        return (branch == _branch);
     }
 
     bool operator != (const branch_type _branch) const
@@ -529,10 +507,10 @@ struct item_def
 {
     object_class_type base_type:8; // basic class (ie OBJ_WEAPON)
     uint8_t        sub_type;       // type within that class (ie WPN_DAGGER)
-    short          plus;           // +to hit, charges, corpse mon id
+    union { short plus; monster_type mon_type:16; }; // +to hit, charges, corpse mon id
     short          plus2;          // +to dam, sub-sub type for boots/helms
     int            special;        // special stuff
-    uint8_t        colour;         // item colour
+    colour_t       colour;         // item colour
     uint8_t        rnd;            // random number, used for tile choice
     short          quantity;       // number of items
     iflags_t       flags;          // item status flags
@@ -544,7 +522,7 @@ struct item_def
     unsigned short orig_place;
     short          orig_monnum;
 
-    std::string inscription;
+    string inscription;
 
     CrawlHashTable props;
 
@@ -556,11 +534,10 @@ public:
     {
     }
 
-    std::string name(description_level_type descrip,
-                     bool terse = false, bool ident = false,
-                     bool with_inscription = true,
-                     bool quantity_in_words = false,
-                     iflags_t ignore_flags = 0x0) const;
+    string name(description_level_type descrip, bool terse = false,
+                bool ident = false, bool with_inscription = true,
+                bool quantity_in_words = false,
+                iflags_t ignore_flags = 0x0) const;
     bool has_spells() const;
     bool cursed() const;
     int book_number() const;
@@ -589,7 +566,7 @@ public:
     bool held_by_monster() const;
 
     bool defined() const;
-    bool is_valid() const;
+    bool is_valid(bool info = false) const;
 
     // Returns true if this item should be preserved as far as possible.
     bool is_critical() const;
@@ -597,10 +574,12 @@ public:
     // Returns true if this item should not normally be enchanted.
     bool is_mundane() const;
 
+    // Returns true if this item causes autoexplore to visit it.
+    bool is_greedy_sacrificeable() const;
+
 private:
-    std::string name_aux(description_level_type desc,
-                         bool terse, bool ident, bool with_inscription,
-                         iflags_t ignore_flags) const;
+    string name_aux(description_level_type desc, bool terse, bool ident,
+                    bool with_inscription, iflags_t ignore_flags) const;
 };
 
 typedef item_def item_info;
@@ -631,7 +610,7 @@ public:
     bool is_explore() const;
     bool is_any_travel() const;
 
-    std::string runmode_name() const;
+    string runmode_name() const;
 
     // Clears run state.
     void clear();
@@ -651,7 +630,7 @@ private:
     bool run_should_stop() const;
 };
 
-typedef std::vector<delay_queue_item> delay_queue_type;
+typedef vector<delay_queue_item> delay_queue_type;
 
 class monster_spells : public FixedVector<spell_type, NUM_MONSTER_SPELL_SLOTS>
 {
@@ -683,23 +662,22 @@ public:
     map_marker *find(map_marker_type type);
     void move(const coord_def &from, const coord_def &to);
     void move_marker(map_marker *marker, const coord_def &to);
-    std::vector<map_marker*> get_all(map_marker_type type = MAT_ANY);
-    std::vector<map_marker*> get_all(const std::string &key,
-                                     const std::string &val = "");
-    std::vector<map_marker*> get_markers_at(const coord_def &c);
-    std::string property_at(const coord_def &c, map_marker_type type,
-                            const std::string &key);
-    std::string property_at(const coord_def &c, map_marker_type type,
-                            const char *key)
-    { return property_at(c, type, std::string(key)); }
+    vector<map_marker*> get_all(map_marker_type type = MAT_ANY);
+    vector<map_marker*> get_all(const string &key, const string &val = "");
+    vector<map_marker*> get_markers_at(const coord_def &c);
+    string property_at(const coord_def &c, map_marker_type type,
+                       const string &key);
+    string property_at(const coord_def &c, map_marker_type type,
+                       const char *key)
+    { return property_at(c, type, string(key)); }
     void clear();
 
     void write(writer &) const;
     void read(reader &);
 
 private:
-    typedef std::multimap<coord_def, map_marker *> dgn_marker_map;
-    typedef std::pair<coord_def, map_marker *> dgn_pos_marker;
+    typedef multimap<coord_def, map_marker *> dgn_marker_map;
+    typedef pair<coord_def, map_marker *> dgn_pos_marker;
 
     void init_from(const map_markers &);
     void unlink_marker(const map_marker *);
@@ -715,14 +693,14 @@ struct message_filter
     int             channel;        // Use -1 to match any channel.
     text_pattern    pattern;        // Empty pattern matches any message
 
-    message_filter(int ch, const std::string &s)
+    message_filter(int ch, const string &s)
         : channel(ch), pattern(s)
     {
     }
 
-    message_filter(const std::string &s) : channel(-1), pattern(s) { }
+    message_filter(const string &s) : channel(-1), pattern(s, true) { }
 
-    bool is_filtered(int ch, const std::string &s) const
+    bool is_filtered(int ch, const string &s) const
     {
         bool channel_match = ch == channel || channel == -1;
         if (!channel_match || pattern.empty())
@@ -735,12 +713,12 @@ struct message_filter
 struct sound_mapping
 {
     text_pattern pattern;
-    std::string  soundfile;
+    string       soundfile;
 };
 
 struct colour_mapping
 {
-    std::string tag;
+    string tag;
     text_pattern pattern;
     int colour;
 };
@@ -767,7 +745,7 @@ struct item_comparator
         return (negated? -cmpfn(a, b) : cmpfn(a, b));
     }
 };
-typedef std::vector<item_comparator> item_sort_comparators;
+typedef vector<item_comparator> item_sort_comparators;
 
 struct menu_sort_condition
 {
@@ -778,14 +756,14 @@ public:
 
 public:
     menu_sort_condition(menu_type mt = MT_INVLIST, int sort = 0);
-    menu_sort_condition(const std::string &s);
+    menu_sort_condition(const string &s);
 
     bool matches(menu_type mt) const;
 
 private:
-    void set_menu_type(std::string &s);
-    void set_sort(std::string &s);
-    void set_comparators(std::string &s);
+    void set_menu_type(string &s);
+    void set_sort(string &s);
+    void set_comparators(string &s);
 };
 
 struct mon_display

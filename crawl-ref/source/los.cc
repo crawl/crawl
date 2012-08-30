@@ -80,29 +80,29 @@ static const circle_def bds_precalc = circle_def(LOS_MAX_RANGE, C_ROUND);
 // These are filled during precomputation (_register_ray).
 // XXX: fullrays is not needed anymore after precomputation.
 struct los_ray;
-static std::vector<los_ray> fullrays;
-static std::vector<coord_def> ray_coords;
+static vector<los_ray> fullrays;
+static vector<coord_def> ray_coords;
 
 // These store all unique minimal cellrays. For each i,
 // cellray i ends in cellray_ends[i] and passes through
 // thoses cells p that have blockrays(p)[i] set. In other
 // words, blockrays(p)[i] is set iff an opaque cell p blocks
 // the cellray with index i.
-static std::vector<coord_def> cellray_ends;
-typedef FixedArray<bit_array*, LOS_MAX_RANGE+1, LOS_MAX_RANGE+1> blockrays_t;
+static vector<coord_def> cellray_ends;
+typedef FixedArray<bit_vector*, LOS_MAX_RANGE+1, LOS_MAX_RANGE+1> blockrays_t;
 static blockrays_t blockrays;
 
 // We also store the minimal cellrays by target position
 // for efficient retrieval by find_ray.
 // XXX: Consider condensing this representation.
 struct cellray;
-static FixedArray<std::vector<cellray>, LOS_MAX_RANGE+1, LOS_MAX_RANGE+1> min_cellrays;
+static FixedArray<vector<cellray>, LOS_MAX_RANGE+1, LOS_MAX_RANGE+1> min_cellrays;
 
 // Temporary arrays used in losight() to track which rays
 // are blocked or have seen a smoke cloud.
 // Allocated when doing the precomputations.
-static bit_array *dead_rays     = NULL;
-static bit_array *smoke_rays    = NULL;
+static bit_vector *dead_rays     = NULL;
+static bit_vector *smoke_rays    = NULL;
 
 class quadrant_iterator : public rectangle_iterator
 {
@@ -129,7 +129,7 @@ static void _handle_los_change();
 
 void set_los_radius(int r)
 {
-    ASSERT(r <= LOS_MAX_RADIUS);
+    ASSERT(r <= LOS_RADIUS);
     _los_radius_sq = r * r + 1;
     invalidate_los();
     _handle_los_change();
@@ -162,9 +162,9 @@ struct los_ray : public ray_def
     // slope, bounded by the pre-calc bounds shape.
     // Returns the cells it travels through, excluding the origin.
     // Returns an empty vector if this was a bad ray.
-    std::vector<coord_def> footprint()
+    vector<coord_def> footprint()
     {
-        std::vector<coord_def> cs;
+        vector<coord_def> cs;
         los_ray copy = *this;
         coord_def c;
         coord_def old;
@@ -196,7 +196,7 @@ struct los_ray : public ray_def
 };
 
 // Check if the passed rays have identical footprint.
-static bool _is_same_ray(los_ray ray, std::vector<coord_def> newray)
+static bool _is_same_ray(los_ray ray, vector<coord_def> newray)
 {
     if (ray.length != newray.size())
         return false;
@@ -207,7 +207,7 @@ static bool _is_same_ray(los_ray ray, std::vector<coord_def> newray)
 }
 
 // Check if the passed ray has already been created.
-static bool _is_duplicate_ray(std::vector<coord_def> newray)
+static bool _is_duplicate_ray(vector<coord_def> newray)
 {
     for (unsigned int i = 0; i < fullrays.size(); ++i)
         if (_is_same_ray(fullrays[i], newray))
@@ -259,9 +259,9 @@ static bool _is_better(const cellray& a, const cellray& b)
     // calc_params() has been called.
     ASSERT(a.imbalance >= 0 && b.imbalance >= 0);
     if (a.imbalance < b.imbalance)
-        return (true);
+        return true;
     else if (a.imbalance > b.imbalance)
-        return (false);
+        return false;
     else
         return (a.first_diag && !b.first_diag);
 }
@@ -321,10 +321,10 @@ static compare_type _compare_cellrays(const cellray& a, const cellray& b)
 // Determine all minimal cellrays.
 // They're stored globally by target in min_cellrays,
 // and returned as a list of indices into ray_coords.
-static std::vector<int> _find_minimal_cellrays()
+static vector<int> _find_minimal_cellrays()
 {
-    FixedArray<std::list<cellray>, LOS_MAX_RANGE+1, LOS_MAX_RANGE+1> minima;
-    std::list<cellray>::iterator min_it;
+    FixedArray<list<cellray>, LOS_MAX_RANGE+1, LOS_MAX_RANGE+1> minima;
+    list<cellray>::iterator min_it;
 
     for (unsigned int r = 0; r < fullrays.size(); ++r)
     {
@@ -334,7 +334,7 @@ static std::vector<int> _find_minimal_cellrays()
             // Is the cellray ray[0..i] duplicated so far?
             bool dup = false;
             cellray c(ray, i);
-            std::list<cellray>& min = minima(c.target());
+            list<cellray>& min = minima(c.target());
 
             bool erased = false;
             for (min_it = min.begin();
@@ -365,10 +365,10 @@ static std::vector<int> _find_minimal_cellrays()
         }
     }
 
-    std::vector<int> result;
+    vector<int> result;
     for (quadrant_iterator qi; qi; ++qi)
     {
-        std::list<cellray>& min = minima(*qi);
+        list<cellray>& min = minima(*qi);
         for (min_it = min.begin(); min_it != min.end(); ++min_it)
         {
             // Calculate imbalance and slope difference for sorting.
@@ -376,7 +376,7 @@ static std::vector<int> _find_minimal_cellrays()
             result.push_back(min_it->index());
         }
         min.sort(_is_better);
-        min_cellrays(*qi) = std::vector<cellray>(min.begin(), min.end());
+        min_cellrays(*qi) = vector<cellray>(min.begin(), min.end());
     }
     return result;
 }
@@ -385,7 +385,7 @@ static std::vector<int> _find_minimal_cellrays()
 static void _register_ray(geom::ray r)
 {
     los_ray ray = los_ray(r);
-    std::vector<coord_def> coords = ray.footprint();
+    vector<coord_def> coords = ray.footprint();
 
     if (coords.empty() || _is_duplicate_ray(coords))
         return;
@@ -405,7 +405,7 @@ static void _create_blockrays()
     const int n_cellrays = ray_coords.size();
     blockrays_t all_blockrays;
     for (quadrant_iterator qi; qi; ++qi)
-        all_blockrays(*qi) = new bit_array(n_cellrays);
+        all_blockrays(*qi) = new bit_vector(n_cellrays);
 
     for (unsigned int r = 0; r < fullrays.size(); ++r)
     {
@@ -423,8 +423,8 @@ static void _create_blockrays()
     // only the nonduplicated cellrays.
 
     // Determine minimal cellrays and store their indices in ray_coords.
-    std::vector<int> min_indices = _find_minimal_cellrays();
-    const int n_min_rays         = min_indices.size();
+    vector<int> min_indices = _find_minimal_cellrays();
+    const int n_min_rays    = min_indices.size();
     cellray_ends.resize(n_min_rays);
     for (int i = 0; i < n_min_rays; ++i)
         cellray_ends[i] = ray_coords[min_indices[i]];
@@ -432,7 +432,7 @@ static void _create_blockrays()
     // Compress blockrays accordingly.
     for (quadrant_iterator qi; qi; ++qi)
     {
-        blockrays(*qi) = new bit_array(n_min_rays);
+        blockrays(*qi) = new bit_vector(n_min_rays);
         for (int i = 0; i < n_min_rays; ++i)
             blockrays(*qi)->set(i, all_blockrays(*qi)
                                    ->get(min_indices[i]));
@@ -442,8 +442,8 @@ static void _create_blockrays()
     for (quadrant_iterator qi; qi; ++qi)
         delete all_blockrays(*qi);
 
-    dead_rays  = new bit_array(n_min_rays);
-    smoke_rays = new bit_array(n_min_rays);
+    dead_rays  = new bit_vector(n_min_rays);
+    smoke_rays = new bit_vector(n_min_rays);
 
     dprf("Cellrays: %d Fullrays: %u Minimal cellrays: %u",
           n_cellrays, (unsigned int)fullrays.size(), n_min_rays);
@@ -462,8 +462,7 @@ static int _gcd(int x, int y)
     return x;
 }
 
-static bool _complexity_lt(const std::pair<int,int>& lhs,
-                           const std::pair<int,int>& rhs)
+static bool _complexity_lt(const pair<int,int>& lhs, const pair<int,int>& rhs)
 {
     return lhs.first * lhs.second < rhs.first * rhs.second;
 }
@@ -492,15 +491,15 @@ static void raycast()
 
     // Changing the order a bit. We want to order by the complexity
     // of the beam, which is log(x) + log(y) ~ xy.
-    std::vector<std::pair<int,int> > xyangles;
+    vector<pair<int,int> > xyangles;
     for (int xangle = 1; xangle <= LOS_MAX_ANGLE; ++xangle)
         for (int yangle = 1; yangle <= LOS_MAX_ANGLE; ++yangle)
         {
             if (_gcd(xangle, yangle) == 1)
-                xyangles.push_back(std::pair<int,int>(xangle, yangle));
+                xyangles.push_back(pair<int,int>(xangle, yangle));
         }
 
-    std::sort(xyangles.begin(), xyangles.end(), _complexity_lt);
+    sort(xyangles.begin(), xyangles.end(), _complexity_lt);
     for (unsigned int i = 0; i < xyangles.size(); ++i)
     {
         const int xangle = xyangles[i].first;
@@ -572,7 +571,7 @@ static bool _find_ray_se(const coord_def& target, ray_def& ray,
     // Ensure the precalculations have been done.
     raycast();
 
-    const std::vector<cellray> &min = min_cellrays(target);
+    const vector<cellray> &min = min_cellrays(target);
     ASSERT(!min.empty());
     cellray c = min[0]; // XXX: const cellray &c ?
     unsigned int index = 0;
@@ -595,12 +594,12 @@ static bool _find_ray_se(const coord_def& target, ray_def& ray,
             blocked += opc(c[j]);
     }
     if (blocked >= OPC_OPAQUE)
-        return (false);
+        return false;
 
     ray = c.ray;
     ray.cycle_idx = index;
 
-    return (true);
+    return true;
 }
 
 // Coordinate transformation so we can find_ray quadrant-by-quadrant.
@@ -650,7 +649,7 @@ bool find_ray(const coord_def& source, const coord_def& target,
     opacity_trans opc_trans = opacity_trans(opc, source, signx, signy);
 
     if (!_find_ray_se(abs, ray, opc_trans, bds, cycle))
-        return (false);
+        return false;
 
     if (signx < 0)
         ray.r.start.x = 1.0 - ray.r.start.x;
@@ -662,14 +661,14 @@ bool find_ray(const coord_def& source, const coord_def& target,
     ray.r.start.x += source.x;
     ray.r.start.y += source.y;
 
-    return (true);
+    return true;
 }
 
 bool exists_ray(const coord_def& source, const coord_def& target,
                 const opacity_func& opc, const circle_def &bds)
 {
     ray_def ray;
-    return (find_ray(source, target, ray, opc, bds));
+    return find_ray(source, target, ray, opc, bds);
 }
 
 // Assuming that target is in view of source, but line of
@@ -681,7 +680,7 @@ dungeon_feature_type ray_blocker(const coord_def& source,
     if (!find_ray(source, target, ray, opc_default))
     {
         ASSERT(you.xray_vision);
-        return (NUM_FEATURES);
+        return NUM_FEATURES;
     }
 
     ray.advance();
@@ -694,7 +693,7 @@ dungeon_feature_type ray_blocker(const coord_def& source,
         ray.advance();
     }
     ASSERT(false);
-    return (NUM_FEATURES);
+    return NUM_FEATURES;
 }
 
 // Returns a straight ray from source to target.
@@ -726,7 +725,7 @@ int num_feats_between(const coord_def& source, const coord_def& target,
     ASSERT(map_bounds(source) && map_bounds(target));
 
     if (source == target)
-        return (0); // XXX: might want to count the cell.
+        return 0; // XXX: might want to count the cell.
 
     // We don't need to find the shortest beam, any beam will suffice.
     fallback_ray(source, target, ray);
@@ -752,7 +751,7 @@ int num_feats_between(const coord_def& source, const coord_def& target,
             count++;
 
             if (just_check) // Only needs to be > 0.
-                return (count);
+                return count;
         }
 
         if (reached_target)
@@ -761,7 +760,7 @@ int num_feats_between(const coord_def& source, const coord_def& target,
         ray.advance();
     }
 
-    return (count);
+    return count;
 }
 
 // Is p2 visible from p1, disregarding half-opaque objects?
@@ -849,23 +848,6 @@ static void _losight_quadrant(los_grid& sh, const los_param& dat, int sx, int sy
     }
 }
 
-void losight(los_grid& sh, const los_param& dat)
-{
-    sh.init(false);
-
-    // Do precomputations if necessary.
-    raycast();
-
-    const int quadrant_x[4] = {  1, -1, -1,  1 };
-    const int quadrant_y[4] = {  1,  1, -1, -1 };
-    for (int q = 0; q < 4; ++q)
-        _losight_quadrant(sh, dat, quadrant_x[q], quadrant_y[q]);
-
-    // Center is always visible.
-    const coord_def o = coord_def(0,0);
-    sh(o) = true;
-}
-
 struct los_param_funcs : public los_param
 {
     coord_def center;
@@ -885,14 +867,28 @@ struct los_param_funcs : public los_param
 
     opacity_type opacity(const coord_def& p) const
     {
-        return (opc(p + center));
+        return opc(p + center);
     }
 };
 
 void losight(los_grid& sh, const coord_def& center,
              const opacity_func& opc, const circle_def& bounds)
 {
-    losight(sh, los_param_funcs(center, opc, bounds));
+    const los_param& dat = los_param_funcs(center, opc, bounds);
+
+    sh.init(false);
+
+    // Do precomputations if necessary.
+    raycast();
+
+    const int quadrant_x[4] = {  1, -1, -1,  1 };
+    const int quadrant_y[4] = {  1,  1, -1, -1 };
+    for (int q = 0; q < 4; ++q)
+        _losight_quadrant(sh, dat, quadrant_x[q], quadrant_y[q]);
+
+    // Center is always visible.
+    const coord_def o = coord_def(0,0);
+    sh(o) = true;
 }
 
 opacity_type mons_opacity(const monster* mon, los_type how)
@@ -906,9 +902,11 @@ opacity_type mons_opacity(const monster* mon, los_type how)
         dungeon_feature_type feat = get_mimic_feat(mon);
         if (how == LOS_SOLID)
             return feat_is_solid(feat) ? OPC_OPAQUE : OPC_CLEAR;
-        if (how == LOS_NO_TRANS)
-            if (feat_is_wall(feat) || feat_is_tree(feat))
-                return OPC_OPAQUE;
+        if (how == LOS_NO_TRANS
+            && (feat_is_wall(feat) || feat_is_tree(feat)))
+        {
+            return OPC_OPAQUE;
+        }
         if (feat_is_opaque(get_mimic_feat(mon)))
             return OPC_OPAQUE;
     }
@@ -934,7 +932,7 @@ static bool _mons_block_sight(const monster* mons)
 
 void los_actor_moved(const actor* act, const coord_def& oldpos)
 {
-    if (act->atype() == ACT_MONSTER && _mons_block_sight(act->as_monster()))
+    if (act->is_monster() && _mons_block_sight(act->as_monster()))
     {
         invalidate_los_around(oldpos);
         invalidate_los_around(act->pos());
@@ -953,13 +951,6 @@ void los_monster_died(const monster* mon)
 
 // Might want to pass new/old terrain.
 void los_terrain_changed(const coord_def& p)
-{
-    invalidate_los_around(p);
-    _handle_los_change();
-}
-
-// Might want to pass new/old cloud type.
-void los_cloud_changed(const coord_def& p)
 {
     invalidate_los_around(p);
     _handle_los_change();

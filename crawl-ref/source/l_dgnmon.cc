@@ -5,17 +5,17 @@
 
 #include "AppHdr.h"
 
+#include "branch.h"
 #include "cluautil.h"
+#include "coord.h"
 #include "l_libs.h"
-
 #include "dungeon.h"
 #include "env.h"
 #include "libutil.h"
 #include "mapdef.h"
-#include "mon-util.h"
 #include "mon-place.h"
-#include "coord.h"
 #include "mon-stuff.h"
+#include "mon-util.h"
 
 #define MONSLIST_METATABLE "crawldgn.monster_list"
 
@@ -25,17 +25,17 @@ static mons_list _lua_get_mlist(lua_State *ls, int ndx)
     {
         const char *spec = lua_tostring(ls, ndx);
         mons_list mlist;
-        const std::string err = mlist.add_mons(spec);
+        const string err = mlist.add_mons(spec);
         if (!err.empty())
             luaL_error(ls, err.c_str());
-        return (mlist);
+        return mlist;
     }
     else
     {
         mons_list **mlist =
         clua_get_userdata<mons_list*>(ls, MONSLIST_METATABLE, ndx);
         if (mlist)
-            return (**mlist);
+            return **mlist;
 
         luaL_argerror(ls, ndx, "Expected monster list object or string");
         return mons_list();
@@ -56,12 +56,12 @@ static int dgn_set_random_mon_list(lua_State *ls)
     if (nargs > 2)
     {
         luaL_error(ls, "Too many arguments.");
-        return (0);
+        return 0;
     }
     else if (nargs == 0)
     {
         luaL_error(ls, "Too few arguments.");
-        return (0);
+        return 0;
     }
     else if (nargs == 2)
     {
@@ -76,13 +76,13 @@ static int dgn_set_random_mon_list(lua_State *ls)
     if (mlist.empty())
     {
         luaL_argerror(ls, list_pos, "Mon list is empty.");
-        return (0);
+        return 0;
     }
 
     if (mlist.size() > 1)
     {
         luaL_argerror(ls, list_pos, "Mon list must contain only one slot.");
-        return (0);
+        return 0;
     }
 
     const int num_mons = mlist.slot_size(0);
@@ -90,10 +90,10 @@ static int dgn_set_random_mon_list(lua_State *ls)
     if (num_mons == 0)
     {
         luaL_argerror(ls, list_pos, "Mon list is empty.");
-        return (0);
+        return 0;
     }
 
-    std::vector<mons_spec> mons;
+    vector<mons_spec> mons;
     int num_lords = 0;
     for (int i = 0; i < num_mons; i++)
     {
@@ -107,15 +107,14 @@ static int dgn_set_random_mon_list(lua_State *ls)
             continue;
         }
 
-        std::string name;
+        string name;
         if (mon.place.is_valid())
         {
-            if (mon.place.level_type == LEVEL_LABYRINTH
-                || mon.place.level_type == LEVEL_PORTAL_VAULT)
+            if (!branch_has_monsters(mon.place.branch))
             {
-                std::string err;
-                err = make_stringf("mon #%d: Can't use Lab or Portal as a "
-                                   "monster place.", i + 1);
+                string err;
+                err = make_stringf("mon #%d: Can't use a place with no natural "
+                                   "monsters as a monster place.", i + 1);
                 luaL_argerror(ls, list_pos, err.c_str());
                 return 0;
             }
@@ -125,7 +124,7 @@ static int dgn_set_random_mon_list(lua_State *ls)
         {
             if (mon.type == RANDOM_MONSTER || mon.monbase == RANDOM_MONSTER)
             {
-                std::string err;
+                string err;
                 err = make_stringf("mon #%d: can't use random monster in "
                                    "list specifying random monsters", i + 1);
                 luaL_argerror(ls, list_pos, err.c_str());
@@ -133,7 +132,7 @@ static int dgn_set_random_mon_list(lua_State *ls)
             }
             if (mon.type == -1)
                 mon.type = MONS_PROGRAM_BUG;
-            name = mons_type_name(mon.type, DESC_PLAIN);
+            name = mons_type_name(static_cast<monster_type>(mon.type), DESC_PLAIN);
         }
 
         mons.push_back(mon);
@@ -141,11 +140,6 @@ static int dgn_set_random_mon_list(lua_State *ls)
         if (mon.number != 0)
             mprf(MSGCH_ERROR, "dgn.set_random_mon_list() : number for %s "
                  "being discarded.",
-                 name.c_str());
-
-        if (mon.band)
-            mprf(MSGCH_ERROR, "dgn.set_random_mon_list() : band request for "
-                 "%s being ignored.",
                  name.c_str());
 
         if (mon.colour != BLACK)
@@ -163,7 +157,7 @@ static int dgn_set_random_mon_list(lua_State *ls)
     {
         luaL_argerror(ls, list_pos,
                       "Mon list contains only pandemonium lords.");
-        return (0);
+        return 0;
     }
 
     if (map)
@@ -171,21 +165,21 @@ static int dgn_set_random_mon_list(lua_State *ls)
     else
         set_vault_mon_list(mons);
 
-    return (0);
+    return 0;
 }
 
-static int dgn_mons_from_index(lua_State *ls)
+static int dgn_mons_from_mid(lua_State *ls)
 {
-    const int index = luaL_checkint(ls, 1);
+    const int mid = luaL_checkint(ls, 1);
 
-    monster* mons = &menv[index];
+    monster* mons = monster_by_mid(mid);
 
     if (mons->type != -1)
         push_monster(ls, mons);
     else
         lua_pushnil(ls);
 
-    return (1);
+    return 1;
 }
 
 static int dgn_mons_at(lua_State *ls)
@@ -197,7 +191,7 @@ static int dgn_mons_at(lua_State *ls)
         push_monster(ls, mon);
     else
         lua_pushnil(ls);
-    return (1);
+    return 1;
 }
 
 
@@ -209,22 +203,21 @@ static int dgn_create_monster(lua_State *ls)
     for (int i = 0, size = mlist.size(); i < size; ++i)
     {
         mons_spec mspec = mlist.get_monster(i);
-        if (monster *mon = dgn_place_monster(mspec, you.absdepth0, c,
-                                             false, false, false))
+        if (monster *mon = dgn_place_monster(mspec, -1, c, false, false, false))
         {
             push_monster(ls, mon);
-            return (1);
+            return 1;
         }
     }
     lua_pushnil(ls);
-    return (1);
+    return 1;
 }
 
 static int _dgn_monster_spec(lua_State *ls)
 {
     const mons_list mlist = _lua_get_mlist(ls, 1);
     dlua_push_object_type<mons_list>(ls, MONSLIST_METATABLE, mlist);
-    return (1);
+    return 1;
 }
 
 LUARET1(_dgn_max_monsters, number, MAX_MONSTERS)
@@ -239,7 +232,7 @@ LUAFN(dgn_dismiss_monsters)
 const struct luaL_reg dgn_mons_dlib[] =
 {
 { "set_random_mon_list", dgn_set_random_mon_list },
-{ "mons_from_index", dgn_mons_from_index },
+{ "mons_from_mid", dgn_mons_from_mid },
 { "mons_at", dgn_mons_at },
 { "create_monster", dgn_create_monster },
 { "monster_spec", _dgn_monster_spec },

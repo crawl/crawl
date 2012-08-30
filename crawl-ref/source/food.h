@@ -9,6 +9,8 @@
 
 #define BERSERK_NUTRITION    700
 #define HUNGER_STARVING     1000
+#define HUNGER_DEFAULT      6000
+#define HUNGER_MAXIMUM     12000
 
 int count_corpses_in_pack(bool blood_only = false);
 bool butchery(int which_corpse = -1, bool bottle_blood = false);
@@ -60,7 +62,8 @@ int you_max_hunger();
 int you_min_hunger();
 
 void handle_starvation();
-const char* hunger_cost_string(const int hunger);
+string hunger_cost_string(const int hunger);
 void end_nausea();
 
+maybe_bool drop_spoiled_chunks(int weight_needed, bool whole_slot = false);
 #endif

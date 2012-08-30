@@ -6,17 +6,24 @@
 ###############################################################################
 
 {{
-  -- Vault:8 common loot substitutions
+  -- Vaults:8 common loot substitutions
   function vault8_loot(e)
     e.subst("? = | * .:40 ^:3")
     e.subst("| = | *:2")
     e.subst("* = * |:2")
   end
 
-  -- Vault:8 cross-vault rune subsitution
+  -- Vaults:8 cross-vault rune substitution
   -- Turn 'O' into a rune (if it doesn't exist yet) or a good item
+  --
+  -- Note that this assumes that only one "prize" subvault is ever picked, and
+  -- that it is the first subvault of the four.
   function vault8_rune(e)
-    if dgn.map_by_tag("vault8_rune") then
+    if dgn.map_by_tag("vault8_rune")
+       and (e.has_tag("vault8_quadrant_prize")
+              and crawl.one_chance_in(4)
+            or e.has_tag("vault8_quadrant"))
+    then
       e.subvault("O : vault8_rune")
     else
       e.subvault("O : vault8_norune")
@@ -36,6 +43,30 @@
     end
   end
 
+  -- Header for st's "greater box" vaults
+  function box_setup(e)
+    e.tags("no_item_gen")
+    e.tags("transparent")
+    e.depth("Vaults:1-7")
+    e.weight("20")
+    e.kfeat("& = closed_door")
+    e.marker("& = lua:restrict_door()")
+    e.subst("% = %%%**|$")
+    e.kmons("7 = patrolling vault guard")
+    e.kmons("Z = frost giant / fire giant / titan w:5 / ettin / shadow dragon /\
+             golden dragon w:5 / storm dragon / quicksilver dragon w:2 /\
+             iron dragon w:2 / swamp dragon / dragon / ice dragon /\
+             catoblepas / moth of wrath w:1 / ghost moth w:1 /\
+             eye of draining / giant eyeball / eye of devastation /\
+             giant orange brain / greater naga / guardian serpent /\
+             vampire knight / vampire mage / deep elf sorcerer /\
+             deep elf death mage / deep elf demonologist /\
+             deep elf annihilator / deep elf high priest / orc warlord /\
+             base draconian w:15 / sphinx / shapeshifter /\
+             glowing shapeshifter")
+    e.subst("0 = 0:9 Z:1")
+    e.subst("9 = 9:3 Z:1")
+  end
 }}
 
 ###############################################################################
@@ -44,7 +75,7 @@
 
 # Dummy Vaults entry
 NAME:   vaults_0_dummy
-TAGS:   vault_entry
+TAGS:   vaults_entry
 WEIGHT: 60
 ORIENT: float
 KFEAT:  O = enter_vaults
@@ -56,7 +87,7 @@ ENDMAP
 # Generic Vaults entry
 #
 NAME:    david_vaults_1
-TAGS:    vault_entry
+TAGS:    vaults_entry
 MONS:    weight:20 nothing / weight:30 human / necromancer / wizard
 ORIENT:  float
 SHUFFLE: !=
@@ -79,7 +110,7 @@ ENDMAP
 # Vault monsters near stair
 #
 NAME: david_vaults_2
-TAGS: vault_entry
+TAGS: vaults_entry
 MONS: weight:40 nothing / weight:30 yaktaur / yaktaur captain
 MONS: weight:70 nothing / weight:40 ogre / weight:20 two-headed ogre / ogre mage
 MONS: weight:100 nothing / shapeshifter
@@ -102,7 +133,7 @@ ENDMAP
 # Vaults patterns 0: vanguard
 #
 NAME:    david_vaults_3
-TAGS:    vault_entry
+TAGS:    vaults_entry
 ORIENT:  float
 MONS:    human, human / Donald, human / human / Norris, human / Rupert
 SHUFFLE: 2345
@@ -124,7 +155,7 @@ ENDMAP
 # Vaults patterns I
 #
 NAME:    david_vaults_4
-TAGS:    vault_entry
+TAGS:    vaults_entry
 ORIENT:  float
 SHUFFLE: 123456
 MONS:    dragon / golden dragon / ice dragon / iron dragon / shadow dragon /\
@@ -156,7 +187,7 @@ ENDMAP
 # Vaults patterns II
 #
 NAME:   david_vaults_5
-TAGS:   vault_entry
+TAGS:   vaults_entry
 ORIENT: float
 SUBST:  ! : ! .
 SUBST:  ? : ? .
@@ -180,7 +211,7 @@ ENDMAP
 # The Guard of Blades
 #
 NAME:    erik_vaults_1
-TAGS:    vault_entry
+TAGS:    vaults_entry
 MONS:    dancing weapon
 ORIENT:  float
 SHUFFLE: vcxxx
@@ -201,7 +232,7 @@ ENDMAP
 # Above As Below
 #
 NAME:    erik_vaults_2
-TAGS:    vault_entry
+TAGS:    vaults_entry
 MONS:    vault guard
 ORIENT:  float
 SHUFFLE: vxxx, bcc
@@ -218,6 +249,132 @@ vvvvvv.vvvvvv
 vvvvvv.vvvvvv
 ENDMAP
 
+############################################################
+# HangedMan's map
+#
+NAME:    hangedman_vaults_entry_quadrant_bands
+TAGS:    vaults_entry no_monster_gen no_item_gen patrolling
+ORIENT:  float
+MONS:    centaur warrior, centaur / nothing w:5
+MONS:    ogre mage, two-headed ogre / ogre / nothing w:5
+MONS:    orc knight, orc priest / orc warrior / orc wizard / orc w:15
+KMONS:   7 = yaktaur
+KMONS:   8 = yaktaur / nothing w:5
+KMONS:   9 = deep elf knight
+KMONS:   0 = deep elf mage / deep elf summoner / deep elf soldier / nothing w:15
+KMONS:   A = kobold demonologist
+KMONS:   B = kobold demonologist w:1 / big kobold / kobold w:9
+KMONS:   C = skeletal warrior
+KMONS:   D = skeletal warrior / nothing
+KMONS:   E = boggart
+KMONS:   F = boggart w:15 / nothing w:5
+KMASK:   @` = !no_item_gen
+KFEAT:   O = enter_vaults
+SHUFFLE: 12 / 34 / 56 / 78 / 90 / AB / CD / EF, O%*|
+SUBST:   $ = $$., * = **%, | = **|., ` = .
+MAP
+vvvvvvv@@vvvvvvv
+vO2...v``v...4*v
+v2$v2vv``vv4v$4v
+v.v1v.v``v.v3v.v
+v.2vv.v``v.vv4.v
+v.v....``....v.v
+vvvvv.v``v.vvvvv
+@``````````````@
+@``````````````@
+vvvvv.v``v.vvvvv
+v.v....``....v.v
+v.6vv.v``v.vv8.v
+v.v5v.v``v.v7v.v
+v6$v6vv``vv8v$8v
+v%6...v``v...8|v
+vvvvvvv@@vvvvvvv
+ENDMAP
+
+############################################################
+# Tiered entry
+#
+NAME:   grunt_vaults_entry_tiered
+TAGS:   vaults_entry no_monster_gen no_rtele_into transparent
+MONS:   w:5 nothing / human
+MONS:   human / w:5 necromancer / w:5 wizard
+MONS:   human / w:5 vault guard
+SUBST:  ' : cxv
+KFEAT:  O = enter_vaults
+MAP
+...............
+.'''''''''''''.
+.'%%...'...%%'.
+.'%212.+.323%'.
+.'.1T1.+..O2.'.
+.'.1.1.+.323%'.
+.'.....'...%%'.
+.''+++''''''''.
+.'.....'...%%'.
+.'.111.+....%'.
+.'.2T..+.1T1.'.
+.'%111.+.1.1.'.
+.'%%...'.....'.
+.''''''''+++''.
+.........@@@...
+ENDMAP
+
+###############################################################################
+# Vaults arrivals - keep these less threatening than Vaults entries
+###############################################################################
+
+NAME:   grunt_vaults_arrival_checkpoint
+TAGS:   extra uniq_vaults_arrival no_monster_gen no_item_gen no_trap_gen
+MONS:   vault guard
+DEPTH:  Vaults:1
+ORIENT: float
+MAP
+   .@.
+vvvv+vvvv
+vvv...vvv
+vvv...vvv
+vvvn+nvvv
+v..1.1..v
+vT.....Tv
+v.......v
+vvvn+nvvv
+vvv...vvv
+vvv[{(vvv
+vvvvvvvvv
+ENDMAP
+
+# With apologies to NetHack.
+# You'd expect the second room to be completely full of monsters,
+# but that would be just a little unfair.
+# The rock padding is to (roughly) line it up with the corner of
+# a layout_city map.
+NAME:   grunt_vaults_arrival_ludios
+WEIGHT: 5
+TAGS:   extra uniq_vaults_arrival no_monster_gen no_item_gen no_trap_gen \
+        generate_awake
+DEPTH:  Vaults:1
+SUBST:  0 = 00.
+ORIENT: southwest
+MAP
+xxxxxxxxvvvvvvv.@
+xxxxxxxxv.0.0.v..
+xxxxxxxxv0.0.0+..
+xxxxxxxxv.0.0.v..
+xxxxxxxxv0.0.0v..
+xxxxxxxxv..v+vvvv
+xxxxxxxxv%%v...(v
+xxxxxxxxv%%v..{[v
+xxxxxxxxvvvvvvvvv
+xxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxx
+ENDMAP
+
 ###############################################################################
 # Vaults specific vaults
 ###############################################################################
@@ -230,7 +387,7 @@ MONS:   jelly generate_awake
 TAGS:   uniq_jelly_drop no_wall_fixup
 WEIGHT: 5
 KFEAT:  a = teleport trap
-DEPTH:  Vault
+DEPTH:  Vaults
 MAP
 vvvvvvvvvvvv
 vvv......vvv
@@ -250,7 +407,7 @@ ENDMAP
 #
 NAME:   metal_show
 ORIENT: float
-DEPTH:  Vault:3-7
+DEPTH:  Vaults:3-7
 TAGS:   no_secret_doors no_monster_gen no_item_gen no_wall_fixup
 COLOUR: M = magenta
 COLOUR: K = magenta
@@ -274,7 +431,7 @@ KMONS:  S = human; robe
 KMONS:  B: iron troll / cyclops / stone giant / minotaur / vault guard
 # the fans:
 SUBST:  F = 011112223334455679.........
-MONS:   human; leather armour|ring mail . dagger|club|ankus|whip|nothing
+MONS:   human; leather armour|ring mail . dagger|club|whip|nothing
 MONS:   elf; robe|leather armour . w:24 quarterstaff|w:1 lajatang|w:75 nothing
 # these are Sludge Elves.
 MONS:   ghoul / necrophage / rotting hulk / vampire
@@ -282,7 +439,7 @@ MONS:   wizard / necromancer
 MONS:   big kobold / kobold demonologist
 MONS:   deep elf fighter / w:5 deep elf knight / w:3 deep elf mage /\
         w:2 deep elf priest
-MONS:   Ijyb / Blork the Orc / Urug / Erolcha / Snorg / Terence / Jessica /\
+MONS:   Ijyb / Blork the orc / Urug / Erolcha / Snorg / Terence / Jessica /\
         Sigmund / Psyche / Erica / Agnes / Maud / Louise / Rupert /\
         Wiglaf / Norris / goblin
 KITEM:  ! = any potion / potion of confusion, \
@@ -332,13 +489,11 @@ lua_marker('e', portal_desc { teleport_spot=1})
 lua_marker('m', portal_desc { teleport_spot=2})
 }}
 ORIENT:     float
-DEPTH:      Vault:3-7
+DEPTH:      Vaults:3-7
 TAGS:       no_secret_doors no_monster_gen no_item_gen uniq_the_teleporter \
             patrolling
-COLOUR:     ME = yellow
+KFEAT:      ME = teleporter
 MONS:       iron golem / crystal golem / stone golem
-TILE:       EM = dngn_the_teleporter_vaults
-SUBST:      EM = .
 SUBST:      em = U
 MARKER:     v = lua:props_marker { veto_shatter="veto" }
 MAP
@@ -355,6 +510,159 @@ MAP
 .........
 ENDMAP
 
+#############################################################
+# st's box vaults
+#
+
+# 32 monsters, 38 %
+NAME:    st_greater_box_1
+NSUBST:  ' = 5:9 / 3:0 / *:., " = 8:9 / *:., - = 8:9 / *:., 8 = 2:8 / *:.
+: box_setup(_G)
+MAP
+................................
+.vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv.
+.v''''''''''''''''''''''''''''v.
+.v''''''''''''''''''''''''''''v.
+.v''''''''''''''''''''''''''''v.
+.v''''''''''''''''''''''''''''v.
+.vvvv&&vvvv''''''''''vv&&vvvvvv.
+.v""""""""v''''''''''v----v-8-v.
+.v""""""""v''''''''''v----v---v.
+.v""""""""vvvvv&&vvvvv----v---v.
+.v""""""""v%%%v77v---v----v---v.
+.v""""""""v%%%v77v------------v.
+.v""""""""v%%%v77v------------v.
+.v""""""""v"""v&&v------------v.
+.v"""""""""""8v..v------------v.
+.v""""""""""""v..v------------v.
+.v""""""""v"""v..v------------v.
+.v""""""""v%%%v..v-----8------v.
+.v""""""""v%%%v..v$%%%%%%%%%%$v.
+.v"""8""""v%%%v..v$%%%%%%%%%%$v.
+.vvvvvvvvvvvvvv&&vvvvvvvvvvvvvv.
+...............@@...............
+ENDMAP
+
+# 32 monsters, 36 %
+NAME:    st_greater_box_2
+SHUFFLE: ab
+SUBST:   a = +, b = v, c : v., d : v.
+NSUBST:  ' = 8:9 / *:., " = 8:9 / *:., - = 8:9 / *:., 8 = 2:8 / *:.
+: box_setup(_G)
+MAP
+................................
+.vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv.
+.v%%%---v"""""""8""""""v---%%%v.
+.v%%%---+""""""""""""""+---%%%v.
+.v%%%8--v""""""""""""""v--8%%%v.
+.v------vvvvvvvaavvvvvvv------v.
+.v------v''''''''''''''v------v.
+.vvbbvvvb'c''''dd''''c'vvvvbbvv.
+.v""""v'''c''''dd''''c'''v""""v.
+.v""""v'ccc''''''''''ccc'v""""v.
+.v""""a'''''dd''8'dd'''''a"""8v.
+.v8"""a'''''dd'8''dd'''''a""""v.
+.v""""v'ccc''''''''''ccc'v""""v.
+.v""""v'''c''''dd''''c'''v""""v.
+.vv++vvvv'c''''dd''''c'bvvv++vv.
+.v------v''''''''''''''v------v.
+.v------vvvvvvv&&vvvvvvv------v.
+.v%%%8--v..7........7..v--8%%%v.
+.v%%%---v..7........7..v---%%%v.
+.v%%%---v..7........7..v---%%%v.
+.vvvvvvvvvvvvvv&&vvvvvvvvvvvvvv.
+...............@@...............
+ENDMAP
+
+# 36 monsters, 42 %
+NAME:    st_greater_box_3
+NSUBST:  ' = 12:9 / *:., " = 10:9 / *:.
+: box_setup(_G)
+MAP
+................................
+.vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv.
+.vv''''vv''''vv77vv..9..9..vv"v.
+.v''''vv''''vv....vv......vv""v.
+.v...vv''''vv......vv....vv"""v.
+.v...v....vv........vv++vv""""v.
+.v...+....&7...vv...7&..+"""""v.
+.v...+....&7...vv...7&..+"""""v.
+.v...v....vv........vv++vv""""v.
+.v...vv''''vv......vv""""vv"""v.
+.v''''vv''''vv....vv""""""vv""v.
+.vv''''vv''''vv77vv""""""""vv+v.
+.vvv''''vv''''v&&v""""""""""+8v.
+.v%vv''''vv''vv..vv""""""""vv+v.
+.v%%vv''''vvvv....vv""""""vv$$v.
+.v%%%vv''''vv......vv""""vv$%%v.
+.v%%%%vv'''v0......0vv++vv%%%%v.
+.v%%$%$vv++vv......vv$%%$vv%%%v.
+.v%%%$&v....vv....vv$%%%%$vv%%v.
+.v%%$vv.....8vv..vv$%%%%%%$vv%v.
+.vvvvvvvvvvvvvv++vvvvvvvvvvvvvv.
+...............@@...............
+ENDMAP
+
+# 31 monsters, 28 %, 8 |
+NAME:    st_greater_box_4
+NSUBST:  ' = 5:9 / 3:0 / *:., " = 8:9 / *:., - = 8:9 / 2:8 / *:.
+: box_setup(_G)
+MAP
+................................
+.vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv.
+.v%$%$v------------------v%$%$v.
+.v$%$%v------------------v$%$%v.
+.v%|%$+------------------+%|%$v.
+.v$%|%+------------------+$%|%v.
+.v%$%$v------------------v%$%$v.
+.v$%$%v------------------v$%$%v.
+.vvvvvvvvvvvvvv&&vvvvvvvvvvvvvv.
+.v......."""""""""""""".......v.
+.v......."""""""""""""".......v.
+.v+vvvv+vvvvvvvvvvvvvvvv+vvvv+v.
+.v''''v""""""v%||%v""""""v''''v.
+.v''''v""""""+%||%+""""""v''''v.
+.vvvv+vvvvvvvvvvvvvvvvvvvv+vvvv.
+.v.......''''''''''''''.......v.
+.v.......''''''''''''''.......v.
+.v++vvvvvvvvvvvvvvvvvvvvvvvv++v.
+.v........77........77........v.
+.v........7..........7........v.
+.vvvvvvvvvvvvvv&&vvvvvvvvvvvvvv.
+...............@@...............
+ENDMAP
+
+# 26 monsters, 36 %
+NAME:    st_greater_box_5
+NSUBST:  ' = 15:9 / 3:8 / *:.
+SHUFFLE: abc
+SUBST:   a = +, b = v, c = v
+: box_setup(_G)
+MAP
+................................
+.vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv.
+.v%$%$v''''''''''''''''''v%$%$v.
+.v$%$%+''''''''''''''''''+$%$%v.
+.v%$%$v''''''''''''''''''v%$%$v.
+.vvvvvv''''''''''''''''''vvvvvv.
+.v%%%%v''''''''''''''''''v%%%%v.
+.v%%%%+''''''''''''''''''+%%%%v.
+.v%%%%v''''''''''''''''''v%%%%v.
+.vvvvvv''''''''98''''''''vvvvvv.
+.v$$$$v''''''''''''''''''v$$$$v.
+.v$$$$+''''''''''''''''''+$$$$v.
+.v$$$$v''''''''''''''''''v$$$$v.
+.vvvvvv''''''''''''''''''vvvvvv.
+.v....v''''''''''''''''''v....v.
+.v....+''''''''''''''''''+....v.
+.v....v''''''''''''''''''v....v.
+.vavvvvvvvcvvvvbbvvvvcvvvvvvvav.
+.v.........77......77.........v.
+.v.........7........7.........v.
+.vvvvvvvvvvvvvv&&vvvvvvvvvvvvvv.
+...............@@...............
+ENDMAP
+
 ###############################################################################
 # Vaults:8 last level of the vaults -- dungeon.cc will change all these 'x's
 ###############################################################################
@@ -364,7 +672,7 @@ ENDMAP
 # awkward to reach via teleport, and there is now always a monster on the
 # rune.
 #
-# Vaults:8 extensively uses subvaults. To provide another Vault:8 quadrant
+# Vaults:8 extensively uses subvaults. To provide another Vaults:8 quadrant
 # variation, create a map tagged vault8_quadrant that is 27x24. It should
 # have three blank cells on one corner (see any existing quadrant for an
 # example), which will be used to orient that corner towards the middle of
@@ -376,10 +684,10 @@ ENDMAP
 # vault8_quadrant_prize and come in their own section below.
 
 #############################################################
-# The main vault for Vault:8.
+# The main vault for Vaults:8.
 #
 NAME:     vaults_vault
-PLACE:    Vault:8
+PLACE:    Vaults:$
 ORIENT:   encompass
 TAGS:     no_rotate no_dump
 SHUFFLE:  ABCD
@@ -397,17 +705,8 @@ SUBVAULT: D : vault8_quadrant
 SUBST:    ABCD = .
 MONS: vault guard
 {{
-  local detail = "is etched with murals depicting, in great and gruesome "..
-"detail, exactly what will be done to anyone caught stealing from the "..
-"Vaults. It makes you feel queasy."
-
-  dgn.set_feature_desc_short("metal wall", "heavily etched metal wall")
-  dgn.set_feature_desc_long("metal wall", "This metal wall " .. detail)
-
-  dgn.set_feature_desc_short("wall of green crystal",
-                             "heavily etched wall of green crystal")
-  dgn.set_feature_desc_long("wall of green crystal",
-                            "This wall of green crystal " .. detail)
+  set_feature_name("metal_wall", "heavily etched metal wall")
+  set_feature_name("green_crystal_wall", "heavily etched wall of green crystal")
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -470,7 +769,7 @@ ENDMAP
 
 
 ############################################################
-# Vault:8 - the subvault used to place the rune.
+# Vaults:8 - the subvault used to place the rune.
 #
 # Used by the 'vault8_rune()' function in the prelude.
 #
@@ -483,7 +782,7 @@ O
 ENDMAP
 
 ############################################################
-# Vault:8 - the subvault used for potential rune locations that do not
+# Vaults:8 - the subvault used for potential rune locations that do not
 # contain the real rune.
 #
 # Used by the 'vault8_rune()' function in the prelude.
@@ -501,7 +800,7 @@ o
 ENDMAP
 
 ############################################################
-# Vault:8 - the subvault used for potential rune locations that do not
+# Vaults:8 - the subvault used for potential rune locations that do not
 # contain the rune, but rather a mimic of it!
 #
 # Used by the 'vault8_rune()' function in the prelude.
@@ -2373,7 +2672,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ############################################################
-# Vault:8 - Rooms Quadrant
+# Vaults:8 - Rooms Quadrant
 #
 # This quadrant uses a subvault for each room. Any subvault tagged
 # vault8_room_rune should be guaranteed to provide a rune. Any subvault
@@ -2419,8 +2718,8 @@ x...........H..B..........
 xxxxxxxxxxxxxxxxxxxxxxxxa
 ENDMAP
 
-# Vault:8 - Rooms Quadrant - Traps and Loot Subvault
-#           Replace each square with traps or loot, but mostly floor.
+# Vaults:8 - Rooms Quadrant - Traps and Loot Subvault
+#            Replace each square with traps or loot, but mostly floor.
 NAME: vault8_room_traps_and_loot
 TAGS: vault8_room
 : default_subvault_glyphs()
@@ -2429,8 +2728,8 @@ SUBST: . = ?
 MAP
 ENDMAP
 
-# Vault:8 - Rooms Quadrant - Border Subvault
-#           Fill the room with loot, but leave an empty border.
+# Vaults:8 - Rooms Quadrant - Border Subvault
+#            Fill the room with loot, but leave an empty border.
 NAME: vault8_room_border
 TAGS: vault8_room
 {{
@@ -2452,8 +2751,8 @@ TAGS: vault8_room
 MAP
 ENDMAP
 
-# Vault:8 - Rooms Quadrant - Diamond Subvault
-#           Fill the room with money in a diamond pattern.
+# Vaults:8 - Rooms Quadrant - Diamond Subvault
+#            Fill the room with money in a diamond pattern.
 NAME: vault8_room_diamond
 TAGS: vault8_room
 {{
@@ -2473,8 +2772,8 @@ TAGS: vault8_room
 MAP
 ENDMAP
 
-# Vault:8 - Rooms Quadrant - Rune Subvault
-#           Potentially contains the rune.
+# Vaults:8 - Rooms Quadrant - Rune Subvault
+#            Potentially contains the rune.
 NAME: vault8_room_rune
 TAGS: vault8_room_rune
 SUBST: ^ = ^.

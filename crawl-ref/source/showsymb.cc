@@ -19,12 +19,12 @@
 #include "show.h"
 #include "state.h"
 #include "terrain.h"
+#include "travel.h"
 #include "viewchar.h"
-#include "viewgeom.h"
-#include "coord.h"
 
 static
-unsigned short _cell_feat_show_colour(const map_cell& cell, bool coloured)
+unsigned short _cell_feat_show_colour(const map_cell& cell,
+                                      const coord_def& loc, bool coloured)
 {
     dungeon_feature_type feat = cell.feat();
     unsigned short colour = BLACK;
@@ -33,7 +33,9 @@ unsigned short _cell_feat_show_colour(const map_cell& cell, bool coloured)
     // These aren't shown mossy/bloody/slimy.
     const bool norecolour = is_critical_feature(feat) || feat_is_trap(feat);
 
-    if (!coloured)
+    if (is_stair_exclusion(loc))
+        colour = Options.tc_excluded;
+    else if (!coloured)
     {
         if (cell.flags & MAP_EMPHASIZE)
             colour = fdef.seen_em_colour;
@@ -41,11 +43,13 @@ unsigned short _cell_feat_show_colour(const map_cell& cell, bool coloured)
             colour = fdef.seen_colour;
 
         if (colour)
+        {
+            // Show trails even out of LOS.
+            if (Options.show_travel_trail && travel_trail_index(loc) >= 0)
+                colour |= COLFLAG_REVERSE;
             return colour;
+        }
     }
-
-    else if (cell.flags & MAP_EXCLUDED_STAIRS)
-        colour = Options.tc_excluded;
     else if (feat >= DNGN_MINMOVE && cell.flags & MAP_WITHHELD)
     {
         // Colour grids that cannot be reached due to beholders
@@ -71,8 +75,12 @@ unsigned short _cell_feat_show_colour(const map_cell& cell, bool coloured)
         colour = RED;
     else if (cell.flags & MAP_MOLDY && !norecolour)
         colour = (cell.flags & MAP_GLOWING_MOLDY) ? LIGHTRED : LIGHTGREEN;
-    else if (cell.flags & MAP_CORRODING && !norecolour)
+    else if (cell.flags & MAP_CORRODING && !norecolour
+             && !feat_is_wall(feat) && !feat_is_lava(feat)
+             && !feat_is_water(feat))
+    {
         colour = LIGHTGREEN;
+    }
     else if (cell.feat_colour())
         colour = cell.feat_colour();
     else
@@ -95,7 +103,7 @@ unsigned short _cell_feat_show_colour(const map_cell& cell, bool coloured)
         colour = ETC_LIQUEFIED;
     }
 
-    if (feat >= DNGN_FLOOR_MIN && feat <= DNGN_FLOOR_MAX)
+    if (feat == DNGN_FLOOR)
     {
         if (cell.flags & MAP_HALOED)
         {
@@ -119,12 +127,23 @@ unsigned short _cell_feat_show_colour(const map_cell& cell, bool coloured)
             colour = CYAN; // Silence but no holy/unholy
         else if (cell.flags & MAP_ORB_HALOED)
             colour = ETC_ORB_GLOW;
+        else if (cell.flags & MAP_QUAD_HALOED)
+            colour = BLUE;
+        else if (cell.flags & MAP_SUPPRESSED)
+            colour = LIGHTGREEN;
     }
-    return (colour);
+
+    if (Options.show_travel_trail && travel_trail_index(loc) >= 0)
+        colour |= COLFLAG_REVERSE;
+
+    return colour;
 }
 
 static int _get_mons_colour(const monster_info& mi)
 {
+    if (crawl_state.viewport_monster_hp) // show hp directly on the monster
+        return (dam_colour(mi) | COLFLAG_ITEM_HEAP);
+
     int col = mi.colour;
 
     if (mi.type == MONS_SLIME_CREATURE && mi.number > 1)
@@ -140,13 +159,9 @@ static int _get_mons_colour(const monster_info& mi)
         col = ETC_FIRE;
 
     if (mi.attitude == ATT_FRIENDLY)
-    {
         col |= COLFLAG_FRIENDLY_MONSTER;
-    }
     else if (mi.attitude != ATT_HOSTILE)
-    {
         col |= COLFLAG_NEUTRAL_MONSTER;
-    }
     else if (Options.stab_brand != CHATTR_NORMAL
              && mi.is(MB_STABBABLE))
     {
@@ -180,7 +195,7 @@ static int _get_mons_colour(const monster_info& mi)
         col = DARKGREY;
     }
 
-    return (col);
+    return col;
 }
 
 show_class get_cell_show_class(const map_cell& cell,
@@ -309,7 +324,7 @@ static glyph _get_cell_glyph_with_class(const map_cell& cell,
         show = cell.feat();
 
         if (!gloom)
-            g.col = _cell_feat_show_colour(cell, coloured);
+            g.col = _cell_feat_show_colour(cell, loc, coloured);
 
         if (cell.item())
         {
@@ -335,7 +350,7 @@ static glyph _get_cell_glyph_with_class(const map_cell& cell,
                 if (!feat_is_water(cell.feat()))
                     g.col = eitem->colour;
                 else
-                    g.col = _cell_feat_show_colour(cell, coloured);
+                    g.col = _cell_feat_show_colour(cell, loc, coloured);
 
                 // monster(mimic)-owned items have link = NON_ITEM+1+midx
                 if (cell.flags & MAP_MORE_ITEMS)
@@ -382,6 +397,8 @@ static glyph _get_cell_glyph_with_class(const map_cell& cell,
 glyph get_cell_glyph(const coord_def& loc, bool only_stationary_monsters,
                      int colour_mode)
 {
+    // note: this does NOT determine output of the player glyph;
+    // that's handled by itself in _draw_player() in view.cc
     const map_cell& cell = env.map_knowledge(loc);
     const show_class cell_show_class =
         get_cell_show_class(cell, only_stationary_monsters);
@@ -395,7 +412,7 @@ ucs_t get_feat_symbol(dungeon_feature_type feat)
 
 ucs_t get_item_symbol(show_item_type it)
 {
-    return (get_feature_def(show_type(it)).symbol);
+    return get_feature_def(show_type(it)).symbol;
 }
 
 glyph get_item_glyph(const item_def *item)
@@ -403,7 +420,7 @@ glyph get_item_glyph(const item_def *item)
     glyph g;
     g.ch = get_feature_def(show_type(*item)).symbol;
     g.col = item->colour;
-    return (g);
+    return g;
 }
 
 glyph get_mons_glyph(const monster_info& mi)
@@ -425,13 +442,13 @@ glyph get_mons_glyph(const monster_info& mi)
     else
         g.col = _get_mons_colour(mi);
     g.col = real_colour(g.col);
-    return (g);
+    return g;
 }
 
-std::string glyph_to_tagstr(const glyph& g)
+string glyph_to_tagstr(const glyph& g)
 {
-    std::string col = colour_to_str(g.col);
-    std::string ch = stringize_glyph(g.ch);
+    string col = colour_to_str(g.col);
+    string ch = stringize_glyph(g.ch);
     if (g.ch == '<')
         ch += "<";
     return make_stringf("<%s>%s</%s>", col.c_str(), ch.c_str(), col.c_str());

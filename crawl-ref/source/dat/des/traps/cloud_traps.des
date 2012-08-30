@@ -72,9 +72,9 @@ end
 
 NAME:   cloud_trap_poisonous
 DEPTH:  D:6-15, Lair:4-8, Orc:4, Elf, Snake, Swamp
-TAGS:   allow_dup extra no_dump
+TAGS:   allow_dup extra no_dump transparent
 CHANCE: 10%
-KFEAT:  ^ = pressure plate trap
+KFEAT:  ^ = gas trap
 {{
   local tm = TriggerableFunction:new{func="callback.cloud_trap_stepped",
               repeated=true,
@@ -88,9 +88,9 @@ ENDMAP
 
 NAME:   cloud_trap_fire
 DEPTH:  D:10-27, Zot, Elf:4-5, Geh
-TAGS:   allow_dup extra no_dump
+TAGS:   allow_dup extra no_dump transparent
 CHANCE: 10%
-KFEAT:  ^ = pressure plate trap
+KFEAT:  ^ = gas trap
 {{
   local tm = TriggerableFunction:new{func="callback.cloud_trap_stepped",
               repeated=true,
@@ -105,9 +105,9 @@ ENDMAP
 
 NAME:   cloud_trap_ice
 DEPTH:  D:10-27, Zot, Elf:4-5, Coc
-TAGS:   allow_dup extra no_dump
+TAGS:   allow_dup extra no_dump transparent
 CHANCE: 10%
-KFEAT:  ^ = pressure plate trap
+KFEAT:  ^ = gas trap
 {{
   local tm = TriggerableFunction:new{func="callback.cloud_trap_stepped",
               repeated=true,
@@ -123,8 +123,8 @@ ENDMAP
 NAME:   cloud_trap_chaos
 DEPTH:  D:20-27, Zot:2-4, Abyss
 CHANCE: 10%
-TAGS:   allow_dup extra abyss no_dump
-KFEAT:  ^ = pressure plate trap
+TAGS:   allow_dup extra abyss no_dump transparent
+KFEAT:  ^ = gas trap
 {{
   local tm = TriggerableFunction:new{func="callback.cloud_trap_stepped",
               repeated=true,
@@ -140,8 +140,8 @@ ENDMAP
 NAME:   cloud_trap_miasma
 DEPTH:  D:20-27, Zot, Abyss, Crypt, Tomb, Tar
 CHANCE: 10%
-TAGS:   allow_dup extra abyss no_dump
-KFEAT:  ^ = pressure plate trap
+TAGS:   allow_dup extra abyss no_dump transparent
+KFEAT:  ^ = gas trap
 {{
   local tm = TriggerableFunction:new{func="callback.cloud_trap_stepped",
               repeated=true,
@@ -161,8 +161,8 @@ ENDMAP
 NAME:   cloud_trap_petrify
 DEPTH:  D:8-17, Lair:5-8, Elf, Snake:3-5, Swamp:3-5
 WEIGHT: 0
-TAGS:   allow_dup extra no_dump
-KFEAT:  ^ = pressure plate trap
+TAGS:   allow_dup extra no_dump transparent
+KFEAT:  ^ = gas trap
 {{
   local tm = TriggerableFunction:new{func="callback.cloud_trap_stepped",
               repeated=true,
@@ -178,8 +178,8 @@ ENDMAP
 NAME:   cloud_trap_noxious
 DEPTH:  D:2-10, Lair, Orc, Elf, Swamp, Snake
 WEIGHT: 0
-TAGS:   allow_dup extra no_dump
-KFEAT:  ^ = pressure plate trap
+TAGS:   allow_dup extra no_dump transparent
+KFEAT:  ^ = gas trap
 {{
   local tm = TriggerableFunction:new{func="callback.cloud_trap_stepped",
               repeated=true,

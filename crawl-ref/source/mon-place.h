@@ -56,11 +56,6 @@ void define_zombie(monster* mon, monster_type ztype, monster_type cs);
 
 bool downgrade_zombie_to_skeleton(monster* mon);
 
-// Converts a monster_type involving RANDOM_MONSTER and similar into an
-// explicit monster type usable on the current level.
-monster_type resolve_monster_type(monster_type mon_type,
-                                  dungeon_feature_type feat);
-
 // Picks a monster eligible for random generation at the given place,
 // optionally picking monsters that can be zombified into the target zombie,
 // and optionally increasing monster level by the provided OOD factors.
@@ -77,12 +72,6 @@ class level_id;
 
 monster_type pick_random_monster(const level_id &place,
                                  bool *chose_ood_monster = NULL);
-
-monster_type pick_random_monster(const level_id &place,
-                                 int power,
-                                 int &lev_mons,
-                                 bool *chose_ood_monster,
-                                 bool force_mobile = false);
 
 conduct_type player_will_anger_monster(monster_type type);
 conduct_type player_will_anger_monster(monster* mon);
@@ -113,7 +102,7 @@ bool monster_habitable_grid(
     int flies = -1,
     bool paralysed = false);
 bool monster_can_submerge(const monster* mon, dungeon_feature_type grid);
-coord_def find_newmons_square(int mons_class, const coord_def &p);
+coord_def find_newmons_square(monster_type mons_class, const coord_def &p);
 coord_def find_newmons_square_contiguous(monster_type mons_class,
                                          const coord_def &start,
                                          int maxdistance = 3);
@@ -121,15 +110,15 @@ bool can_spawn_mushrooms(coord_def where);
 
 void spawn_random_monsters();
 
-void set_vault_mon_list(const std::vector<mons_spec> &list);
+void set_vault_mon_list(const vector<mons_spec> &list);
 
 void setup_vault_mon_list();
 
 monster* get_free_monster();
 
-bool can_place_on_trap(int mon_type, trap_type trap);
-bool mons_airborne(int mcls, int flies, bool paralysed);
-void mons_add_blame(monster* mon, const std::string &blame_string);
+bool can_place_on_trap(monster_type mon_type, trap_type trap);
+bool mons_airborne(monster_type mcls, int flies, bool paralysed);
+void mons_add_blame(monster* mon, const string &blame_string);
 
 // Active monster band may influence gear generation on band followers.
 extern band_type active_monster_band;

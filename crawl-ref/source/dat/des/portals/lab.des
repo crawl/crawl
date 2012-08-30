@@ -8,16 +8,8 @@
 #############################################################################
 # Labyrinth entry vaults
 
-NAME:   lab_entry_generic
-TAGS:   transparent trowel_portal extra
-# (Jan 2010) With the reduction in placement of Labyrinths to 10-20 (roughly
-# across 24 levels) and changing to game-unique, chance of NOT having a
-# Labyrinth was (1-285/10^4)^24 = ~49%. Increasing chance to 5% gives you
-# (1-500/10^4)^24 = ~29% chance of NOT placing a Labyrinth, ~71% chance
-# of getting a Labyrinth every game, skewed towards earlier depths.
-CHANCE: 500
-DEPTH:  10-20, !Orc, !Swamp, !Shoals, !Hive, !Snake, !Slime
 {{
+function lab_portal(e)
   local messager =
     timed_msg {
       initmsg = { "You hear a distant snort.",
@@ -28,19 +20,45 @@ DEPTH:  10-20, !Orc, !Swamp, !Shoals, !Hive, !Snake, !Slime
       verb = 'ticking',
       noisemaker = 'clock'
     }
+
+    e.lua_marker('O',
+      timed_marker {
+        low = 400,
+        high = 600,
+        msg = messager,
+        floor = 'stone_arch',
+        feat_tile = 'dngn_portal_labyrinth_gone',
+        single_timed = true,
+        dstname = 'lab' })
+    e.kfeat("O = enter_labyrinth")
+    e.tile("O = dngn_portal_labyrinth")
+end
 }}
-MARKER: O = lua: timed_marker {  \
-                 low=400, high=600, msg=messager, floor = 'stone_arch', \
-                 feat_tile = 'dngn_portal_labyrinth_gone', \
-                 single_timed=true, dstname = 'lab' \
-            }
-KFEAT: O = enter_labyrinth
-TILE:  O = dngn_portal_labyrinth
+
+NAME:   lab_entry_generic
+TAGS:   transparent extra
+# (Jan 2010) With the reduction in placement of Labyrinths to 10-20 (roughly
+# across 24 levels) and changing to game-unique, chance of NOT having a
+# Labyrinth was (1-285/10^4)^24 = ~49%. Increasing chance to 5% gives you
+# (1-500/10^4)^24 = ~29% chance of NOT placing a Labyrinth, ~71% chance
+# of getting a Labyrinth every game, skewed towards earlier depths.
+CHANCE: 500
+DEPTH:  D:11-21, Elf, Dwarf, Lair, Vaults:1-5
+: lab_portal(_G)
 MAP
 O
 ENDMAP
 
+NAME:   lab_entry_trowel
+TAGS:   transparent trowel_portal unrand
+DEPTH:  *, !Lab
+veto {{ return you.is_level_on_stack("Lab") }}
+: lab_portal(_G)
+MAP
+O
+ENDMAP
 
+default-depth: Lab
 #############################################################################
 # Labyrinth exit minivaults
 #############################################################################
@@ -182,7 +200,7 @@ TAGS:    minotaur generate_loot allow_dup
 MONS:    patrolling minotaur
 NSUBST:  g = 1:. / *:b
 NSUBST:  D = 1:. / *:D
-KFEAT:   d = axe trap / dart trap / needle trap / blade trap
+KFEAT:   d = bolt trap / dart trap / needle trap / blade trap
 KFEAT:   D = teleport trap
 SUBST:   b : vvb
 WEIGHT:  2
@@ -368,7 +386,7 @@ ENDMAP
 # Teaser: fake exit
 NAME:  labyrinth_fake_exit
 TAGS:  lab allow_dup
-KFEAT: X = enter_abyss
+KFEAT: X = exit_through_abyss
 MAP
 ........
 .vvvvvv.

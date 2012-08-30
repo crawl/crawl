@@ -11,28 +11,27 @@
 #include "chardump.h"
 #include "dungeon.h"
 #include "env.h"
-#include "map_knowledge.h"
 #include "initfile.h"
 #include "libutil.h"
 #include "maps.h"
 #include "message.h"
-#include "place.h"
+#include "ng-init.h"
 #include "player.h"
 #include "view.h"
 
 #ifdef DEBUG_DIAGNOSTICS
 // Map statistics generation.
 
-static std::map<std::string, int> mapgen_try_count;
-static std::map<std::string, int> mapgen_use_count;
-static std::map<level_id, int> mapgen_level_mapcounts;
-static std::map< level_id, std::pair<int,int> > mapgen_map_builds;
-static std::map< level_id, std::set<std::string> > mapgen_level_mapsused;
+static map<string, int> mapgen_try_count;
+static map<string, int> mapgen_use_count;
+static map<level_id, int> mapgen_level_mapcounts;
+static map< level_id, pair<int,int> > mapgen_map_builds;
+static map< level_id, set<string> > mapgen_level_mapsused;
 
-typedef std::map< std::string, std::set<level_id> > mapname_place_map;
+typedef map< string, set<level_id> > mapname_place_map;
 static mapname_place_map mapgen_map_levelsused;
-static std::map<std::string, std::string> mapgen_errors;
-static std::string mapgen_last_error;
+static map<string, string> mapgen_errors;
+static string mapgen_last_error;
 
 static int mg_levels_tried = 0, mg_levels_failed = 0;
 static int mg_build_attempts = 0, mg_vetoes = 0;
@@ -52,9 +51,11 @@ void mapgen_report_map_veto()
 static bool _mg_is_disconnected_level()
 {
     // Don't care about non-Dungeon levels.
-    if (you.level_type != LEVEL_DUNGEON
+    if (!player_in_connected_branch()
         || (branches[you.where_are_you].branch_flags & BFLAG_ISLANDED))
-        return (false);
+    {
+        return false;
+    }
 
     return dgn_count_disconnected_zones(true);
 }
@@ -79,11 +80,11 @@ static bool mg_do_build_level(int niters)
         if (kbhit() && key_is_escape(getchk()))
         {
             mprf(MSGCH_WARN, "User requested cancel");
-            return (false);
+            return false;
         }
 
         ++mg_levels_tried;
-        if (!builder(you.absdepth0, you.level_type))
+        if (!builder())
         {
             ++mg_levels_failed;
             continue;
@@ -110,7 +111,7 @@ static bool mg_do_build_level(int niters)
         }
         if (_mg_is_disconnected_level())
         {
-            std::string vaults;
+            string vaults;
             for (int j = 0, size = env.level_vaults.size(); j < size; ++j)
             {
                 if (j && !vaults.empty())
@@ -133,50 +134,41 @@ static bool mg_do_build_level(int niters)
 
             dump_map(fp);
 
-            return (false);
+            return false;
         }
     }
-    return (true);
+    return true;
 }
 
-static std::vector<level_id> mg_dungeon_places()
+static vector<level_id> mg_dungeon_places()
 {
-    std::vector<level_id> places;
+    vector<level_id> places;
 
     for (int br = BRANCH_MAIN_DUNGEON; br < NUM_BRANCHES; ++br)
     {
-        if (branches[br].depth == -1)
+        if (brdepth[br] == -1)
             continue;
 
         const branch_type branch = static_cast<branch_type>(br);
-        for (int depth = 1; depth <= branches[br].depth; ++depth)
+        for (int depth = 1; depth <= brdepth[br]; ++depth)
             places.push_back(level_id(branch, depth));
     }
-
-    places.push_back(LEVEL_ABYSS);
-    places.push_back(LEVEL_LABYRINTH);
-    places.push_back(LEVEL_PANDEMONIUM);
-    places.push_back(LEVEL_PORTAL_VAULT);
-
-    return (places);
+    return places;
 }
 
 static bool mg_build_dungeon()
 {
-    const std::vector<level_id> places = mg_dungeon_places();
+    const vector<level_id> places = mg_dungeon_places();
 
     for (int i = 0, size = places.size(); i < size; ++i)
     {
         const level_id &lid = places[i];
-        you.absdepth0 = absdungeon_depth(lid.branch, lid.depth);
         you.where_are_you = lid.branch;
-        you.level_type = lid.level_type;
-        if (you.level_type == LEVEL_PORTAL_VAULT)
-            you.level_type_tag = you.level_type_name = "bazaar";
+        you.depth = lid.depth;
         if (!mg_do_build_level(1))
-            return (false);
+            return false;
     }
-    return (true);
+    return true;
 }
 
 static void mg_build_levels(int niters)
@@ -219,7 +211,7 @@ void mapgen_report_map_use(const map_def &map)
     mapgen_map_levelsused[map.name].insert(level_id::current());
 }
 
-void mapgen_report_error(const map_def &map, const std::string &err)
+void mapgen_report_error(const map_def &map, const string &err)
 {
     mapgen_last_error = err;
 }
@@ -229,10 +221,10 @@ static void _mapgen_report_available_random_vaults(FILE *outf)
     you.uniq_map_tags.clear();
     you.uniq_map_names.clear();
 
-    const std::vector<level_id> places = mg_dungeon_places();
+    const vector<level_id> places = mg_dungeon_places();
     fprintf(outf, "\n\nRandom vaults available by dungeon level:\n");
 
-    for (std::vector<level_id>::const_iterator i = places.begin();
+    for (vector<level_id>::const_iterator i = places.begin();
          i != places.end(); ++i)
     {
         fprintf(outf, "\n%s -------------\n", i->describe().c_str());
@@ -245,7 +237,7 @@ static void _mapgen_report_available_random_vaults(FILE *outf)
     }
 }
 
-static void _check_mapless(const level_id &lid, std::vector<level_id> &mapless)
+static void _check_mapless(const level_id &lid, vector<level_id> &mapless)
 {
     if (mapgen_level_mapsused.find(lid) == mapgen_level_mapsused.end())
         mapless.push_back(lid);
@@ -262,32 +254,27 @@ static void _write_mapgen_stats()
     if (!mapgen_errors.empty())
     {
         fprintf(outf, "\n\nMap errors:\n");
-        for (std::map<std::string, std::string>::const_iterator i =
-                 mapgen_errors.begin(); i != mapgen_errors.end(); ++i)
+        for (map<string, string>::const_iterator i = mapgen_errors.begin();
+             i != mapgen_errors.end(); ++i)
         {
             fprintf(outf, "%s: %s\n",
                     i->first.c_str(), i->second.c_str());
         }
     }
 
-    std::vector<level_id> mapless;
+    vector<level_id> mapless;
     for (int i = BRANCH_MAIN_DUNGEON; i < NUM_BRANCHES; ++i)
     {
-        if (branches[i].depth == -1)
+        if (brdepth[i] == -1)
             continue;
 
         const branch_type br = static_cast<branch_type>(i);
-        for (int dep = 1; dep <= branches[i].depth; ++dep)
+        for (int dep = 1; dep <= brdepth[i]; ++dep)
         {
             const level_id lid(br, dep);
             _check_mapless(lid, mapless);
         }
     }
-
-    _check_mapless(level_id(LEVEL_ABYSS), mapless);
-    _check_mapless(level_id(LEVEL_PANDEMONIUM), mapless);
-    _check_mapless(level_id(LEVEL_LABYRINTH), mapless);
-    _check_mapless(level_id(LEVEL_PORTAL_VAULT), mapless);
 
     if (!mapless.empty())
     {
@@ -298,7 +285,7 @@ static void _write_mapgen_stats()
 
     _mapgen_report_available_random_vaults(outf);
 
-    std::vector<std::string> unused_maps;
+    vector<string> unused_maps;
     for (int i = 0, size = map_count(); i < size; ++i)
     {
         const map_def *map = map_by_index(i);
@@ -312,20 +299,19 @@ static void _write_mapgen_stats()
     if (mg_vetoes)
     {
         fprintf(outf, "\n\nMost vetoed levels:\n");
-        std::multimap<int, level_id> sortedvetos;
-        for (std::map< level_id, std::pair<int, int> >::const_iterator
+        multimap<int, level_id> sortedvetos;
+        for (map< level_id, pair<int, int> >::const_iterator
                  i = mapgen_map_builds.begin(); i != mapgen_map_builds.end();
              ++i)
         {
             if (!i->second.second)
                 continue;
 
-            sortedvetos.insert(
-                std::pair<int, level_id>(i->second.second, i->first));
+            sortedvetos.insert(pair<int, level_id>(i->second.second, i->first));
         }
 
         int count = 0;
-        for (std::multimap<int, level_id>::reverse_iterator
+        for (multimap<int, level_id>::reverse_iterator
                  i = sortedvetos.rbegin(); i != sortedvetos.rend(); ++i)
         {
             const int vetoes = i->first;
@@ -344,15 +330,14 @@ static void _write_mapgen_stats()
     }
 
     fprintf(outf, "\n\nMaps by level:\n\n");
-    for (std::map<level_id, std::set<std::string> >::const_iterator i =
+    for (map<level_id, set<string> >::const_iterator i =
              mapgen_level_mapsused.begin(); i != mapgen_level_mapsused.end();
          ++i)
     {
-        std::string line =
+        string line =
             make_stringf("%s ------------\n", i->first.describe().c_str());
-        const std::set<std::string> &maps = i->second;
-        for (std::set<std::string>::const_iterator j = maps.begin();
-             j != maps.end(); ++j)
+        const set<string> &maps = i->second;
+        for (set<string>::const_iterator j = maps.begin(); j != maps.end(); ++j)
         {
             if (j != maps.begin())
                 line += ", ";
@@ -372,17 +357,18 @@ static void _write_mapgen_stats()
     }
 
     fprintf(outf, "\n\nMaps used:\n\n");
-    std::multimap<int, std::string> usedmaps;
-    for (std::map<std::string, int>::const_iterator i =
-             mapgen_try_count.begin(); i != mapgen_try_count.end(); ++i)
-        usedmaps.insert(std::pair<int, std::string>(i->second, i->first));
+    multimap<int, string> usedmaps;
+    for (map<string, int>::const_iterator i = mapgen_try_count.begin();
+         i != mapgen_try_count.end(); ++i)
+    {
+        usedmaps.insert(pair<int, string>(i->second, i->first));
+    }
 
-    for (std::multimap<int, std::string>::reverse_iterator i =
-             usedmaps.rbegin(); i != usedmaps.rend(); ++i)
+    for (multimap<int, string>::reverse_iterator i = usedmaps.rbegin();
+         i != usedmaps.rend(); ++i)
     {
         const int tries = i->first;
-        std::map<std::string, int>::const_iterator iuse =
-            mapgen_use_count.find(i->second);
+        map<string, int>::const_iterator iuse = mapgen_use_count.find(i->second);
         const int uses = iuse == mapgen_use_count.end()? 0 : iuse->second;
         if (tries == uses)
             fprintf(outf, "%4d       : %s\n", tries, i->second.c_str());
@@ -395,13 +381,13 @@ static void _write_mapgen_stats()
          i != mapgen_map_levelsused.end(); ++i)
     {
         fprintf(outf, "%s ============\n", i->first.c_str());
-        std::string line;
-        for (std::set<level_id>::const_iterator j = i->second.begin();
+        string line;
+        for (set<level_id>::const_iterator j = i->second.begin();
              j != i->second.end(); ++j)
         {
             if (!line.empty())
                 line += ", ";
-            std::string level = j->describe();
+            string level = j->describe();
             if (line.length() + level.length() > 79)
             {
                 fprintf(outf, "%s\n", line.c_str());
@@ -420,6 +406,13 @@ static void _write_mapgen_stats()
 
 void generate_map_stats()
 {
+    // Warn assertions about possible oddities like the artefact list being
+    // cleared.
+    you.wizard = true;
+    // Let "acquire foo" have skill aptitudes to work with.
+    you.species = SP_HUMAN;
+
+    initialise_branch_depths();
     // We have to run map preludes ourselves.
     run_map_global_preludes();
     run_map_local_preludes();

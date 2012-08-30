@@ -152,10 +152,6 @@ function trove.get_trove_item(e, value, base_item)
 end
 
 function trove.portal(e)
-    local desc_long = [[ Once upon a time, an enterprising thief and wizard, terrified of being caught committing an act of burglary, created a system of portals leading into the secret treasure troves and chambers of the rich. Too scared to loot them himself, he instead charged an extortionate fee for entry to anyone who wanted to rifle through them.
-
-The secrets of the gateways died with him when his fellow thieves, disgusted at his betrayal of their 'ideals', had him murdered. With his death, the now-uncontrolled portals began moving rapidly from one dimension to the next, stopping only long enough to absorb magical energy.]]
-
     local item = trove.get_trove_item(e, 1000)
 
     local function stair ()
@@ -164,10 +160,8 @@ The secrets of the gateways died with him when his fellow thieves, disgusted at 
             entity = "portal",
             toll_desc = "to enter a treasure trove",
             desc = "portal to a secret trove of treasure",
-            desc_long = desc_long,
             overview = "Trove",
-            dst = "trove",
-            dstorigin = "in a treasure trove",
+            dst = "Trove",
             floor = "expired_portal",
             feat_tile = "dngn_portal_trove_gone",
         }
@@ -184,14 +178,6 @@ end
 function trove.setup_features(e)
     e.kfeat("< = exit_portal_vault")
     e.colour("< = blue")
-    e.lrockcol("blue")
-    e.lfloorcol("darkgrey")
-    e.lrocktile("wall_vault")
-    e.lfloortile("floor_vault")
-end
-
-function trove.milestone(_G)
-    crawl.mark_milestone("br.enter", "entered a treasure trove.", true)
 end
 
 -- "any scroll good_item" still gets you 'scroll of noise', 'scroll of curse weapon', etc
@@ -239,7 +225,7 @@ function trove.spell_skills (e)
 end
 }}
 
-default-depth: D:10-, Elf:1-, Vault:1-
+default-depth: D:10-, Elf:1-, Vaults:1-
 
 ##############################################################################
 #
@@ -248,7 +234,7 @@ default-depth: D:10-, Elf:1-, Vault:1-
 ##############################################################################
 
 NAME:   enter_trove_0
-TAGS:   uniq_trove no_monster_gen trowel_portal chance_trove
+TAGS:   uniq_trove no_monster_gen chance_trove
 CHANCE: 5%
 : trove.portal(_G)
 MAP
@@ -303,14 +289,10 @@ CHANCE: 5%
 : trove.portal(_G)
 COLOUR: . = blue
 COLOUR: c = blue
-: if you.xl() <= 7 then
-# A pack of gnolls want the treasure more than you do!
-KMONS:  e = gnoll
-KMONS:  l = gnoll / nothing w:5
-: elseif you.xl() <= 15 then
+: if you.absdepth() <= 15 then
 # Got drafted in from Vaults:8, while the mages try and close the portal down.
 KMONS:  e = vault guard
-: elseif you.xl() <= 20 then
+: else
 # And this time he brought some friends...
 KMONS:  e = vault guard
 KMONS:  l = vault guard
@@ -351,6 +333,15 @@ ccc+ccc
    @
 ENDMAP
 
+NAME:   trove_entry_trowel
+TAGS:   transparent trowel_portal unrand uniq_trove
+DEPTH:  *, !Trove
+veto {{ return you.is_level_on_stack("Trove") }}
+: trove.portal(_G)
+MAP
+O
+ENDMAP
+
 ##############################################################################
 #
 # The portal vaults:
@@ -360,21 +351,17 @@ ENDMAP
 #
 ##############################################################################
 
-# Reset default depth to prevent random generation of portal vaults.
-default-depth:
+default-depth: Trove
 
 NAME:    trove_simple
 WEIGHT:  60
 ORIENT:  encompass
-TAGS:    trove no_item_gen no_monster_gen allow_dup
+TAGS:    no_item_gen no_monster_gen allow_dup
 # Loot: 16 items.
 ITEM:   any useful good_item
 ITEM:   acquire jewellery / any useful good_item
 ITEM:   acquire weapon / acquire armour / any useful good_item
 : trove.setup_features(_G)
-epilogue{{
-trove.milestone(_G)
-}}
 MAP
 xxxxxx
 xddddx
@@ -394,7 +381,7 @@ ENDMAP
 NAME:    trove_garden
 WEIGHT:  40
 ORIENT:  encompass
-TAGS:    trove no_item_gen no_monster_gen allow_dup
+TAGS:    no_item_gen no_monster_gen allow_dup
 # Loot: 16 items, spread out a bit.
 KFEAT:   x = X
 COLOUR:  o = blue
@@ -433,9 +420,6 @@ KFEAT:   w = W
 : trove.setup_features(_G)
 : trove.place_fog(_G, "blue smoke", 30)
 KFEAT:  m = .
-epilogue{{
-trove.milestone(_G)
-}}
 MAP
 '"WwwW'"'1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.<
 "'"wwW"'".1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.
@@ -484,14 +468,11 @@ WEIGHT: 30
 WEIGHT: 5
 : end
 ORIENT: encompass
-TAGS:   trove no_item_gen no_monster_gen allow_dup
+TAGS:   no_item_gen no_monster_gen allow_dup
 : trove.setup_features(_G)
 : trove.good_scroll(_G)
 ITEM:   acquire book
 ITEM:   acquire:sif_muna book
-epilogue{{
-trove.milestone(_G)
-}}
 MAP
 xxxxxxxxxxxxx
 xd.........dx
@@ -515,14 +496,10 @@ ENDMAP
 NAME:   trove_jewel_1
 WEIGHT: 20
 ORIENT: encompass
-TAGS:   trove no_item_gen no_monster_gen allow_dup
+TAGS:   no_item_gen no_monster_gen allow_dup
 # Loot: once again, 16 items.
 ITEM:   acquire jewellery / any useful jewellery good_item / any jewellery
-COLOUR: o = blue
 : trove.setup_features(_G)
-epilogue{{
-trove.milestone(_G)
-}}
 MAP
 xxxxxxxx
 x......x
@@ -544,14 +521,11 @@ ENDMAP
 NAME:   trove_jewel_2
 WEIGHT: 20
 ORIENT: encompass
-TAGS:   trove no_item_gen no_monster_gen allow_dup
+TAGS:   no_item_gen no_monster_gen allow_dup
 # Loot: 15 items this time.
 ITEM:   acquire jewellery / any useful jewellery good_item / any jewellery w:2
 COLOUR: x = blue
 : trove.setup_features(_G)
-epilogue{{
-trove.milestone(_G)
-}}
 MAP
 xxxxxxxx
 xddd+<Ax
@@ -570,9 +544,8 @@ WEIGHT: 15
 WEIGHT: 5
 : end
 ORIENT: encompass
-TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe
+TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe
 # Loot: once again, 16 items.
-COLOUR: o = blue
 ITEM:   acquire weapon / any useful weapon good_item / any weapon w:2
 : trove.setup_features(_G)
 MAP
@@ -600,14 +573,11 @@ WEIGHT: 15
 WEIGHT: 5
 : end
 ORIENT: encompass
-TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe
+TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe
 # Loot: 15 items.
 COLOUR: x = blue
 ITEM:   acquire weapon / any useful weapon good_item / any weapon w:2
 : trove.setup_features(_G)
-epilogue{{
-trove.milestone(_G)
-}}
 MAP
 xxxxxxxx
 xddd+<Ax
@@ -622,14 +592,10 @@ ENDMAP
 NAME:   trove_armour_1
 WEIGHT: 15
 ORIENT: encompass
-TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe no_species_op no_species_oc
+TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe no_species_op no_species_oc
 # Loot: once again, 16 items.
-COLOUR: o = blue
 ITEM:   acquire armour / any useful armour good_item / any armour w:2
 : trove.setup_features(_G)
-epilogue{{
-trove.milestone(_G)
-}}
 MAP
 xxxxxxxx
 x......x
@@ -651,14 +617,11 @@ ENDMAP
 NAME:   trove_armour_2
 WEIGHT: 15
 ORIENT: encompass
-TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe no_species_op no_species_oc
+TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe no_species_op no_species_oc
 # Loot: 15 items.
 COLOUR: x = blue
 ITEM:   acquire armour / any useful armour good_item / any armour w:2
 : trove.setup_features(_G)
-epilogue{{
-trove.milestone(_G)
-}}
 MAP
 xxxxxxxx
 xddd+<Ax
@@ -673,10 +636,9 @@ ENDMAP
 NAME:    trove_hunter_1
 WEIGHT:  5
 ORIENT:  encompass
-TAGS:    trove no_item_gen no_monster_gen allow_dup no_species_fe no_species_op no_species_oc
+TAGS:    no_item_gen no_monster_gen allow_dup no_species_fe no_species_op no_species_oc
 # Loot:  15 items, this time.
 COLOUR:  x = blue
-COLOUR:  o = blue
 MONS:    storm dragon zombie
 MONS:    golden dragon zombie
 MONS:    dragon skeleton
@@ -687,9 +649,6 @@ ITEM:    bow good_item / crossbow good_item / any useful weapon good_item
 SHUFFLE: 123
 SHUFFLE: defg
 : trove.setup_features(_G)
-epilogue{{
-trove.milestone(_G)
-}}
 MAP
 xxxxxxx
 x1x2x3x
@@ -707,10 +666,9 @@ ENDMAP
 # A "nasty" monsters-behind-glass map for dpeg.
 NAME:   trove_nasty
 ORIENT: encompass
-TAGS:   trove no_item_gen no_monster_gen allow_dup no_vmirror no_rotate
+TAGS:   no_item_gen no_monster_gen allow_dup no_vmirror no_rotate
 WEIGHT: 2
 COLOUR: x = blue
-COLOUR: m = blue
 COLOUR: = = blue
 NSUBST: " = 1:= / *:x
 NSUBST: ' = 1:= / *:x
@@ -722,9 +680,6 @@ ITEM:   any useful jewellery good_item / any useful good_item
 ITEM:   acquire weapon / acquire armour / any useful good_item
 KFEAT:  m = iron_grate
 : trove.setup_features(_G)
-epilogue{{
-trove.milestone(_G)
-}}
 MAP
         mmmmmmmmmm
         mmm1..1mmm
@@ -742,7 +697,7 @@ ENDMAP
 # Another nasty vault, because dpeg asked.
 NAME:   trove_treasure_island
 ORIENT: encompass
-TAGS:   trove no_item_gen no_monster_gen allow_dup no_vmirror no_rotate no_pool_fixup
+TAGS:   no_item_gen no_monster_gen allow_dup no_vmirror no_rotate no_pool_fixup
 WEIGHT: 2
 COLOUR: x = blue
 COLOUR: o = blue
@@ -756,9 +711,6 @@ ITEM:   acquire weapon / acquire armour / any useful good_item
 ITEM:   potion of cure mutation
 : trove.setup_features(_G)
 : set_border_fill_type("open_sea")
-epilogue{{
-trove.milestone(_G)
-}}
 MAP
 wwwwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwww
@@ -800,7 +752,7 @@ ENDMAP
 # extremely useful or extremely useless.
 #
 NAME:    trove_artefacts
-TAGS:    trove no_item_gen no_monster_gen allow_dup no_species_fe
+TAGS:    no_item_gen no_monster_gen allow_dup no_species_fe
 WEIGHT:  1
 ORIENT:  encompass
 ######## There should be a better way than listing all of the unrandarts...
@@ -816,7 +768,7 @@ ITEM:    chain mail unrand:lears_chain_mail                                  /\
          robe unrand:robe_of_augmentation / robe unrand:robe_of_folly        /\
  randart buckler / randart shield / randart large shield                     /\
          shield unrand:shield_of_resistance / shield unrand:bullseye         /\
-         shield unrand:shield_of_ignorance                                   /\
+         shield unrand:large_shield_of_ignorance                             /\
  randart cloak w:25                                                          /\
          cloak unrand:cloak_of_flash / cloak unrand:cloak_of_starlight       /\
          cloak unrand:cloak_of_the_thief
@@ -854,9 +806,6 @@ ITEM:    dagger unrand:vampires_tooth / dagger unrand:dagger_of_chilly_death /\
          randart demon blade  / blowgun unrand:blowgun_of_the_assassin
 SHUFFLE: def
 : trove.setup_features(_G)
-epilogue{{
-trove.milestone(_G)
-}}
 MAP
 xxxxxxx
 xG...Gx
@@ -871,7 +820,7 @@ ENDMAP
 
 # Alchemist's storehouse, has 14-26 desirable potions
 NAME:    trove_alchemists_storehouse
-TAGS:    trove no_item_gen no_monster_gen allow_dup no_species_mu
+TAGS:    no_item_gen no_monster_gen allow_dup no_species_mu
 WEIGHT:  5
 ORIENT:  encompass
 ITEM:    potion of curing / potion of heal wounds / \
@@ -886,9 +835,6 @@ ITEM:    potion of cure mutation
 SHUFFLE: df
 SHUFFLE: eg
 : trove.setup_features(_G)
-epilogue{{
-trove.milestone(_G)
-}}
 MAP
       xxx xxx xxx
       xdx xfx xfx
@@ -903,7 +849,7 @@ ENDMAP
 
 # 20 items, but you have to dig for them.  Wand is included.
 NAME:    trove_dig
-TAGS:    trove no_item_gen no_monster_gen allow_dup no_species_fe
+TAGS:    no_item_gen no_monster_gen allow_dup no_species_fe
 WEIGHT:  5
 ORIENT:  encompass
 ITEM:    acquire armour / any useful armour good_item / any armour w:2
@@ -913,9 +859,6 @@ ITEM:    acquire jewellery / any useful jewellery good_item / any jewellery w:2
 ITEM:   wand of digging
 SHUFFLE: defg
 : trove.setup_features(_G)
-epilogue{{
-trove.milestone(_G)
-}}
 MAP
   vvvvv
 vvv...vvv
@@ -944,13 +887,10 @@ ENDMAP
 
 # 16 pieces of armour
 NAME:   trove_armour_six_rooms
-TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe no_species_op no_species_oc
+TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe no_species_op no_species_oc
 ORIENT: encompass
 ITEM:   acquire armour / any useful armour good_item / any armour w:2
 : trove.setup_features(_G)
-epilogue{{
-trove.milestone(_G)
-}}
 MAP
 xxxxxxxxxx
 xdd+ddx.Ax
@@ -963,14 +903,11 @@ ENDMAP
 
 # 16 weapons
 NAME:   trove_weapons_four_rooms
-TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe
+TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe
 ORIENT: encompass
 ITEM:   acquire weapon / any useful weapon good_item / any weapon w:2
 NSUBST: " = 16:d / *:.
 : trove.setup_features(_G)
-epilogue{{
-trove.milestone(_G)
-}}
 MAP
 xxxxxxxxxxxxxxx
 xA............x
@@ -991,13 +928,10 @@ ENDMAP
 
 # 16 pieces of jewellery
 NAME:   trove_jewellery_lava
-TAGS:   trove no_item_gen no_monster_gen allow_dup
+TAGS:   no_item_gen no_monster_gen allow_dup
 ORIENT: encompass
 ITEM:   acquire jewellery / any useful jewellery good_item / any jewellery w:2
 : trove.setup_features(_G)
-epilogue{{
-trove.milestone(_G)
-}}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 xlllllllllllllllllllllllllx
@@ -1030,15 +964,12 @@ ENDMAP
 
 # 16 scrolls and books
 NAME:   trove_books_scrolls
-TAGS:   trove no_item_gen no_monster_gen allow_dup
+TAGS:   no_item_gen no_monster_gen allow_dup
 ORIENT: encompass
 ITEM:   acquire magical staff / acquire book / acquire:sif_muna book / any book
 SUBST:  d = de
 : trove.good_scroll(_G)
 : trove.setup_features(_G)
-epilogue{{
-trove.milestone(_G)
-}}
 MAP
      xxxxx
      xd.dx
@@ -1059,15 +990,12 @@ ENDMAP
 
 # 16 scrolls and wands
 NAME:   trove_wands_scrolls
-TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe
+TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe
 ORIENT: encompass
 ITEM:   acquire wand
 SUBST:  e = eeed
 : trove.good_scroll(_G)
 : trove.setup_features(_G)
-epilogue{{
-trove.milestone(_G)
-}}
 MAP
 xxxxx
 x...xxxx

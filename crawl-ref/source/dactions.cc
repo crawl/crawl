@@ -10,6 +10,7 @@
 #include "coordit.h"
 #include "debug.h"
 #include "decks.h"
+#include "dungeon.h"
 #include "env.h"
 #include "libutil.h"
 #include "mon-behv.h"
@@ -20,6 +21,7 @@
 #include "travel.h"
 #include "view.h"
 
+#ifdef DEBUG_DIAGNOSTICS
 static const char *daction_names[] =
 {
     "holy beings go hostile",
@@ -41,12 +43,15 @@ static const char *daction_names[] =
     "reapply passive mapping",
     "remove Jiyva altars",
     "Pikel's slaves go good-neutral",
+    "corpses rot",
+    "Tomb loses -cTele",
 };
+#endif
 
 static bool _mons_matches_counter(const monster* mon, daction_type act)
 {
     if (!mon || !mon->alive())
-        return (false);
+        return false;
 
     switch (act)
     {
@@ -60,15 +65,15 @@ static bool _mons_matches_counter(const monster* mon, daction_type act)
         return (mon->wont_attack() && mon->is_actual_spellcaster());
     case DACT_ALLY_YRED_SLAVE:
         // Changed: we don't force enslavement of those merely marked.
-        return (is_yred_undead_slave(mon));
+        return is_yred_undead_slave(mon);
     case DACT_ALLY_BEOGH: // both orcies and demons summoned by sorcerers
         return (mon->wont_attack() && mons_is_god_gift(mon, GOD_BEOGH));
     case DACT_ALLY_SLIME:
-        return (is_fellow_slime(mon));
+        return is_fellow_slime(mon);
     case DACT_ALLY_PLANT:
         // No check for friendliness since we pretend all plants became friendly
         // the moment you converted to Fedhas.
-        return (mons_is_plant(mon));
+        return mons_is_plant(mon);
 
     // Not a stored counter:
     case DACT_ALLY_TROG:
@@ -85,7 +90,7 @@ static bool _mons_matches_counter(const monster* mon, daction_type act)
                 && mon->mname != "freed slave");
 
     default:
-        return (false);
+        return false;
     }
 }
 
@@ -102,7 +107,9 @@ void update_da_counters(LevelInfo *lev)
 
 void add_daction(daction_type act)
 {
+#ifdef DEBUG_DIAGNOSTICS
     COMPILE_CHECK(ARRAYSZ(daction_names) == NUM_DACTIONS);
+#endif
 
     dprf("scheduling delayed action: %s", daction_names[act]);
     you.dactions.push_back(act);
@@ -138,7 +145,7 @@ static void _apply_daction(daction_type act)
                 dprf("going hostile: %s", mi->name(DESC_PLAIN, true).c_str());
                 mi->attitude = ATT_HOSTILE;
                 mi->del_ench(ENCH_CHARM, true);
-                behaviour_event(*mi, ME_ALERT, MHITYOU);
+                behaviour_event(*mi, ME_ALERT, &you);
                 // For now CREATED_FRIENDLY/WAS_NEUTRAL stays.
                 mons_att_changed(*mi);
 
@@ -177,7 +184,8 @@ static void _apply_daction(daction_type act)
 
                 if (act == DACT_PIKEL_SLAVES)
                 {
-                    mi->flags |= MF_NAME_REPLACE | MF_NAME_DESCRIPTOR;
+                    mi->flags |= MF_NAME_REPLACE | MF_NAME_DESCRIPTOR |
+                                 MF_NAME_NOCORPSE;
                     mi->mname = "freed slave";
                 }
                 else
@@ -198,6 +206,15 @@ static void _apply_daction(daction_type act)
             if (grd(*ri) == DNGN_ALTAR_JIYVA)
                 grd(*ri) = DNGN_FLOOR;
         }
+        break;
+    case DACT_ROT_CORPSES:
+        for (int i = 0; i < MAX_ITEMS; i++)
+            if (mitm[i].base_type == OBJ_CORPSES && mitm[i].sub_type == CORPSE_BODY)
+                mitm[i].special = 1; // thoroughly rotten
+        break;
+    case DACT_TOMB_CTELE:
+        if (player_in_branch(BRANCH_TOMB))
+            unset_level_flags(LFLAG_NO_TELE_CONTROL, you.depth != 3);
         break;
     case NUM_DA_COUNTERS:
     case NUM_DACTIONS:

@@ -10,7 +10,6 @@
 
 #include "abyss.h"
 #include "areas.h"
-#include "branch.h"
 #include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
@@ -33,12 +32,12 @@
 #include "player.h"
 #include "random.h"
 #include "shout.h"
-#include "spl-other.h"
 #include "spl-util.h"
 #include "stash.h"
 #include "state.h"
 #include "teleport.h"
 #include "terrain.h"
+#include "throw.h"
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
@@ -65,7 +64,7 @@ spret_type cast_controlled_blink(int pow, bool fail)
 // a monster being at the target spot), and the player gains no
 // contamination.
 int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
-          std::string *pre_msg)
+          string *pre_msg)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -76,7 +75,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
         crawl_state.cant_cmd_repeat("You can't repeat controlled blinks.");
         crawl_state.cancel_cmd_again();
         crawl_state.cancel_cmd_repeat();
-        return (1);
+        return -1;
     }
 
     // yes, there is a logic to this ordering {dlb}:
@@ -86,7 +85,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
             mpr(pre_msg->c_str());
         canned_msg(MSG_STRANGE_STASIS);
     }
-    else if (you.level_type == LEVEL_ABYSS
+    else if (player_in_branch(BRANCH_ABYSS)
              && _abyss_blocks_teleport(high_level_controlled_blink)
              && !wizard_blink)
     {
@@ -106,8 +105,9 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
         if (pre_msg)
             mpr(pre_msg->c_str());
         mpr("The orb interferes with your control of the blink!", MSGCH_ORB);
+        // abort still wastes the turn
         if (high_level_controlled_blink && coinflip())
-            return (cast_semi_controlled_blink(pow));
+            return (cast_semi_controlled_blink(pow, false) ? 1 : 0);
         random_blink(false);
     }
     else if (!allow_control_teleport(true) && !wizard_blink)
@@ -115,8 +115,9 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
         if (pre_msg)
             mpr(pre_msg->c_str());
         mpr("A powerful magic interferes with your control of the blink.");
+        // FIXME: cancel shouldn't waste a turn here -- need to rework Abyss handling
         if (high_level_controlled_blink)
-            return (cast_semi_controlled_blink(pow));
+            return (cast_semi_controlled_blink(pow, false/*true*/) ? 1 : -1);
         random_blink(false);
     }
     else
@@ -141,7 +142,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
                     continue;
                 }
                 canned_msg(MSG_OK);
-                return (-1);         // early return {dlb}
+                return -1;         // early return {dlb}
             }
 
             monster* beholder = you.get_beholder(beam.target);
@@ -195,6 +196,9 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
             }
         }
 
+        if (!you.attempt_escape(2))
+            return false;
+
         if (pre_msg)
             mpr(pre_msg->c_str());
 
@@ -208,7 +212,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
             mpr("Oops! Maybe something was there already.");
             random_blink(false);
         }
-        else if (you.level_type == LEVEL_ABYSS && !wizard_blink)
+        else if (player_in_branch(BRANCH_ABYSS) && !wizard_blink)
         {
             abyss_teleport(false);
             if (you.pet_target != MHITYOU)
@@ -217,7 +221,9 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
         else
         {
             // Leave a purple cloud.
-            place_cloud(CLOUD_TLOC_ENERGY, you.pos(), 1 + random2(3), &you);
+            if (!wizard_blink)
+                place_cloud(CLOUD_TLOC_ENERGY, you.pos(), 1 + random2(3), &you);
+
             move_player_to_grid(beam.target, false, true);
 
             // Controlling teleport contaminates the player. -- bwr
@@ -229,7 +235,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
     crawl_state.cancel_cmd_again();
     crawl_state.cancel_cmd_repeat();
 
-    return (1);
+    return 1;
 }
 
 spret_type cast_blink(bool allow_partial_control, bool fail)
@@ -247,7 +253,7 @@ void random_blink(bool allow_partial_control, bool override_abyss, bool override
 
     if (item_blocks_teleport(true, true) && !override_stasis)
         canned_msg(MSG_STRANGE_STASIS);
-    else if (you.level_type == LEVEL_ABYSS
+    else if (player_in_branch(BRANCH_ABYSS)
              && !override_abyss
              && _abyss_blocks_teleport(false))
     {
@@ -266,10 +272,11 @@ void random_blink(bool allow_partial_control, bool override_abyss, bool override
              && allow_control_teleport())
     {
         mpr("You may select the general direction of your translocation.");
-        cast_semi_controlled_blink(100);
+        // FIXME: handle aborts here, don't waste the turn
+        cast_semi_controlled_blink(100, false);
         maybe_id_ring_TC();
     }
-    else
+    else if (you.attempt_escape(2))
     {
         canned_msg(MSG_YOU_BLINK);
         coord_def origin = you.pos();
@@ -285,7 +292,6 @@ void random_blink(bool allow_partial_control, bool override_abyss, bool override
 bool allow_control_teleport(bool quiet)
 {
     bool retval = !(testbits(env.level_flags, LFLAG_NO_TELE_CONTROL)
-                    || testbits(get_branch_flags(), BFLAG_NO_TELE_CONTROL)
                     || orb_haloed(you.pos()));
 
     // Tell the player why if they have teleport control.
@@ -297,7 +303,7 @@ bool allow_control_teleport(bool quiet)
             mpr("A powerful magic prevents control of your teleportation.");
     }
 
-    return (retval);
+    return retval;
 }
 
 spret_type cast_teleport_self(bool fail)
@@ -324,7 +330,7 @@ void you_teleport(void)
 
         int teleport_delay = 3 + random2(3);
 
-        if (you.level_type == LEVEL_ABYSS && !one_chance_in(5))
+        if (player_in_branch(BRANCH_ABYSS) && !one_chance_in(5))
         {
             mpr("You have a feeling this translocation may take a while to kick in...");
             teleport_delay += 5 + random2(10);
@@ -340,25 +346,25 @@ void you_teleport(void)
 }
 
 // Should return true if we don't want anyone to teleport here.
-static bool _cell_vetoes_teleport (const coord_def cell, bool check_monsters = true,
-                                   bool wizard_tele = false)
+static bool _cell_vetoes_teleport(const coord_def cell, bool check_monsters = true,
+                                  bool wizard_tele = false)
 {
     // Monsters always veto teleport.
-    if ((monster_at(cell) || mimic_at(cell)) && check_monsters)
-        return (true);
+    if (monster_at(cell) && check_monsters)
+        return true;
 
     // As do all clouds; this may change.
     if (env.cgrid(cell) != EMPTY_CLOUD && !wizard_tele)
-        return (true);
+        return true;
 
     if (cell_is_solid(cell))
-        return (true);
+        return true;
 
     return is_feat_dangerous(grd(cell), true) && !wizard_tele;
 }
 
-static void _handle_teleport_update (bool large_change, bool check_ring_TC,
-                                     const coord_def old_pos)
+static void _handle_teleport_update(bool large_change, bool check_ring_TC,
+                                    const coord_def old_pos)
 {
     if (large_change)
     {
@@ -415,7 +421,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
             && !new_abyss_area)
     {
         canned_msg(MSG_STRANGE_STASIS);
-        return (false);
+        return false;
     }
 
     // After this point, we're guaranteed to teleport. Kill the appropriate
@@ -428,13 +434,13 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
     viewwindow();
     StashTrack.update_stash(you.pos());
 
-    if (you.level_type == LEVEL_ABYSS && !wizard_tele)
+    if (player_in_branch(BRANCH_ABYSS) && !wizard_tele)
     {
         abyss_teleport(new_abyss_area);
         if (you.pet_target != MHITYOU)
             you.pet_target = MHITNOT;
 
-        return (true);
+        return true;
     }
 
     coord_def pos(1, 0);
@@ -469,7 +475,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
                     "cancelling teleport.", MSGCH_ERROR);
                 if (!wizard_tele)
                     contaminate_player(1, true);
-                return (false);
+                return false;
             }
 
             dprf("Target square (%d,%d)", pos.x, pos.y);
@@ -487,7 +493,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
                 if (!wizard_tele)
                     contaminate_player(1, true);
                 maybe_id_ring_TC();
-                return (false);
+                return false;
             }
 
             monster* beholder = you.get_beholder(pos);
@@ -559,7 +565,8 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
             else
             {
                 // Leave a purple cloud.
-                place_cloud(CLOUD_TLOC_ENERGY, old_pos, 1 + random2(3), &you);
+                if (!wizard_tele)
+                    place_cloud(CLOUD_TLOC_ENERGY, old_pos, 1 + random2(3), &you);
 
                 move_player_to_grid(pos, false, true);
 
@@ -578,7 +585,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
         // (Check done for the straight line, no pathfinding involved.)
         bool need_distance_check = false;
         coord_def centre;
-        if (you.level_type == LEVEL_LABYRINTH)
+        if (player_in_branch(BRANCH_LABYRINTH))
         {
             bool success = false;
             for (int xpos = 0; xpos < GXM; xpos++)
@@ -647,12 +654,13 @@ bool you_teleport_to(const coord_def where_to, bool move_monsters)
 
     // Don't bother to calculate a possible new position if it's out of bounds.
     if (!in_bounds(where))
-        return (false);
+        return false;
 
     if (_cell_vetoes_teleport(where))
     {
         if (monster_at(where) && move_monsters && !_cell_vetoes_teleport(where, false))
         {
+            // dlua only, don't heed no_tele
             monster* mons = monster_at(where);
             mons->teleport(true);
         }
@@ -679,7 +687,7 @@ bool you_teleport_to(const coord_def where_to, bool move_monsters)
             }
             // Give up, we can't find a suitable spot.
             if (where == old_where)
-                return (false);
+                return false;
         }
     }
 
@@ -692,7 +700,7 @@ bool you_teleport_to(const coord_def where_to, bool move_monsters)
     move_player_to_grid(where, false, true);
 
     _handle_teleport_update(large_change, check_ring_TC, old_pos);
-    return (true);
+    return true;
 }
 
 void you_teleport_now(bool allow_control, bool new_abyss_area, bool wizard_tele)
@@ -707,10 +715,10 @@ void you_teleport_now(bool allow_control, bool new_abyss_area, bool wizard_tele)
     // *less* dangerous than the old dangerous area.
     // Teleporting in a labyrinth is also funny, more so for non-minotaurs.
     if (randtele
-        && (you.level_type == LEVEL_LABYRINTH
-            || you.level_type != LEVEL_ABYSS && player_in_a_dangerous_place()))
+        && (player_in_branch(BRANCH_LABYRINTH)
+            || !player_in_branch(BRANCH_ABYSS) && player_in_a_dangerous_place()))
     {
-        if (you.level_type == LEVEL_LABYRINTH && you.species == SP_MINOTAUR)
+        if (player_in_branch(BRANCH_LABYRINTH) && you.species == SP_MINOTAUR)
             xom_is_stimulated(100);
         else
             xom_is_stimulated(200);
@@ -751,7 +759,7 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
 {
     const coord_def where = beam.target;
 
-    if (you.trans_wall_blocking(where))
+    if (!cell_see_cell(you.pos(), where, LOS_SOLID))
     {
         mpr("There's something in the way!");
         return SPRET_ABORT;
@@ -803,7 +811,7 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
         else
             mpr("The mass is resisting your pull.");
 
-            return SPRET_SUCCESS;
+        return SPRET_SUCCESS;
     }
 
     // We need to modify the item *before* we move it, because
@@ -816,14 +824,17 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
         // There's also a 1-in-6 flat chance of apport failing.
         if (one_chance_in(6))
         {
-            orb_pickup_noise(where, 30, "The orb shrieks and becomes a dead weight against your magic!",
-                             "The orb lets out a furious burst of light and becomes a dead weight against your magic!");
+            orb_pickup_noise(where, 30,
+                "The orb shrieks and becomes a dead weight against your magic!",
+                "The orb lets out a furious burst of light and becomes "
+                    "a dead weight against your magic!");
             return SPRET_SUCCESS;
         }
         else // Otherwise it's just a noisy little shiny thing
         {
-            orb_pickup_noise(where, 30, "The orb shrieks as your magic touches it!",
-                             "The orb lets out a furious burst of light as your magic touches it!");
+            orb_pickup_noise(where, 30,
+                "The orb shrieks as your magic touches it!",
+                "The orb lets out a furious burst of light as your magic touches it!");
         }
     }
 
@@ -854,13 +865,13 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
     // The maximum number of squares the item will actually move, always
     // at least one square.
     int quantity = item.quantity;
-    int apported_mass = unit_mass * std::min(quantity, max_units);
+    int apported_mass = unit_mass * min(quantity, max_units);
 
-    int max_dist = std::max(60 * pow / (apported_mass + 150), 1);
+    int max_dist = max(60 * pow / (apported_mass + 150), 1);
 
     dprf("Apport dist=%d, max_dist=%d", dist, max_dist);
 
-    int location_on_path = std::max(-1, dist - max_dist);
+    int location_on_path = max(-1, dist - max_dist);
     // Don't move mimics under you.
     if ((item.flags & ISFLAG_MIMIC) && location_on_path == -1)
         location_on_path = 0;
@@ -908,18 +919,15 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
     return SPRET_SUCCESS;
 }
 
-static int _quadrant_blink(coord_def where, int pow, int, actor *)
+static bool _quadrant_blink(coord_def dir, int pow)
 {
-    if (where == you.pos())
-        return (1);
-
     if (pow > 100)
         pow = 100;
 
     const int dist = random2(6) + 2;  // 2-7
 
     // This is where you would *like* to go.
-    const coord_def base = you.pos() + (where - you.pos()) * dist;
+    const coord_def base = you.pos() + dir * dist;
 
     // This can take a while if pow is high and there's lots of translucent
     // walls nearby.
@@ -933,11 +941,12 @@ static int _quadrant_blink(coord_def where, int pow, int, actor *)
         if (!random_near_space(base, target)
             && !random_near_space(base, target, true))
         {
-            return 0;
+            // Uh oh, WHY should this fail the blink?
+            return false;
         }
 
         // ... which is close enough, but also far enough from us.
-        if (distance(base, target) > 10 || distance(you.pos(), target) < 8)
+        if (distance2(base, target) > 10 || distance2(you.pos(), target) < 8)
             continue;
 
         if (!you.see_cell_no_trans(target))
@@ -951,7 +960,7 @@ static int _quadrant_blink(coord_def where, int pow, int, actor *)
     {
         // We've already succeeded at blinking, so the Abyss shouldn't block it.
         random_blink(false, true);
-        return (1);
+        return true;
     }
 
     coord_def origin = you.pos();
@@ -960,18 +969,42 @@ static int _quadrant_blink(coord_def where, int pow, int, actor *)
     // Leave a purple cloud.
     place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), &you);
 
-    return (1);
+    return true;
 }
 
-int cast_semi_controlled_blink(int pow)
+spret_type cast_semi_controlled_blink(int pow, bool cheap_cancel, bool fail)
 {
-    int result = apply_one_neighbouring_square(_quadrant_blink, pow);
+    dist bmove;
+    direction_chooser_args args;
+    args.restricts = DIR_DIR;
+    args.mode = TARG_ANY;
 
-    // Controlled blink causes glowing.
-    if (result)
+    while (1)
+    {
+        mpr("Which direction? [ESC to cancel]", MSGCH_PROMPT);
+        direction(bmove, args);
+
+        if (bmove.isValid && !bmove.delta.origin())
+            break;
+
+        if (cheap_cancel
+            || yesno("Are you sure you want to cancel this blink?", false ,'n'))
+        {
+            canned_msg(MSG_OK);
+            return SPRET_ABORT;
+        }
+    }
+
+    fail_check();
+
+    // Note: this can silently fail, eating the blink -- WHY?
+    if (you.attempt_escape(2) && _quadrant_blink(bmove.delta, pow))
+    {
+        // Controlled blink causes glowing.
         contaminate_player(1, true);
+    }
 
-    return (result);
+    return SPRET_SUCCESS;
 }
 
 spret_type cast_golubrias_passage(const coord_def& where, bool fail)

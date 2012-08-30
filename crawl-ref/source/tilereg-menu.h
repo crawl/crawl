@@ -19,7 +19,8 @@ public:
     virtual void clear();
 
     int maxpagesize() const;
-    void set_entry(int index, const std::string &s, int colour, const MenuEntry *me);
+    void set_entry(int index, const string &s, int colour, const MenuEntry *me,
+                   bool mark_selected = true);
     void set_offset(int lines);
     void set_more(const formatted_string &more);
     void set_num_columns(int columns);
@@ -36,7 +37,7 @@ protected:
         bool heading;
         char key;
         bool valid;
-        std::vector<tile_def> tiles;
+        vector<tile_def> tiles;
     };
 
     ImageManager *m_image;
@@ -46,7 +47,7 @@ protected:
     int m_max_columns;
     bool m_dirty;
 
-    std::vector<MenuRegionEntry> m_entries;
+    vector<MenuRegionEntry> m_entries;
 
     // TODO enne - remove this?
     ShapeBuffer m_shape_buf;

@@ -4,6 +4,7 @@ import os
 import fcntl
 import struct
 import resource
+import signal
 import sys
 import time
 
@@ -43,6 +44,10 @@ class TerminalRecorder(object):
 
         if self.pid == 0:
             # We're the child
+            def handle_signal(signal, f):
+                sys.exit(0)
+            signal.signal(1, handle_signal)
+
             # Set window size
             cols, lines = self.get_terminal_size()
             s = struct.pack("HHHH", lines, cols, 0, 0)
@@ -64,7 +69,10 @@ class TerminalRecorder(object):
             env["COLUMNS"] = str(cols)
             env["LINES"]   = str(lines)
             env["TERM"]    = "linux"
-            os.execvpe(self.command[0], self.command, env)
+            try:
+                os.execvpe(self.command[0], self.command, env)
+            except OSError:
+                sys.exit(1)
 
         # We're the parent
         os.close(errpipe_write)
@@ -159,8 +167,9 @@ class TerminalRecorder(object):
 
             if self.returncode is not None:
                 self.io_loop.remove_handler(self.child_fd)
-                os.close(self.child_fd)
+                self.io_loop.remove_handler(self.errpipe_read)
 
+                os.close(self.child_fd)
                 os.close(self.errpipe_read)
 
                 self.ttyrec.close()

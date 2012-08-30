@@ -33,7 +33,7 @@
 #define MIN_GHOST_SPEED       6
 #define MAX_GHOST_SPEED      13
 
-std::vector<ghost_demon> ghosts;
+vector<ghost_demon> ghosts;
 
 // Order for looking for conjurations for the 1st & 2nd spell slots,
 // when finding spells to be remembered by a player's ghost.
@@ -58,6 +58,7 @@ static spell_type search_order_conj[] = {
     SPELL_DELAYED_FIREBALL,
     SPELL_VENOM_BOLT,
     SPELL_IRON_SHOT,
+    SPELL_FRAGMENTATION,
     SPELL_STONE_ARROW,
     SPELL_THROW_FLAME,
     SPELL_THROW_FROST,
@@ -79,7 +80,6 @@ static spell_type search_order_third[] = {
     SPELL_SUMMON_GREATER_DEMON,
     SPELL_SUMMON_HORRIBLE_THINGS,
     SPELL_SUMMON_DRAGON,
-    SPELL_TUKIMAS_BALL,
     SPELL_HAUNT,
     SPELL_SUMMON_HYDRA,
     SPELL_SUMMON_DEMON,
@@ -110,10 +110,13 @@ static spell_type search_order_third[] = {
 // this fails, go through conjurations.  Note: Dig must be in misc2
 // (5th) position to work.
 static spell_type search_order_misc[] = {
+    SPELL_SHATTER,
     SPELL_AGONY,
     SPELL_BANISHMENT,
     SPELL_FREEZING_CLOUD,
+    SPELL_OZOCUBUS_REFRIGERATION,
     SPELL_DISPEL_UNDEAD,
+    SPELL_CONJURE_BALL_LIGHTNING,
     SPELL_PARALYSE,
     SPELL_CONFUSE,
     SPELL_MEPHITIC_CLOUD,
@@ -121,7 +124,6 @@ static spell_type search_order_misc[] = {
     SPELL_PETRIFY,
     SPELL_POLYMORPH_OTHER,
     SPELL_TELEPORT_OTHER,
-    SPELL_EVAPORATE, // replaced with Mephitic Cloud, though at lower priority
     SPELL_DIG,
     SPELL_CORONA,
     SPELL_NO_SPELL,                        // end search
@@ -152,7 +154,7 @@ void ghost_demon::reset()
     brand            = SPWPN_NORMAL;
     att_type         = AT_HIT;
     att_flav         = AF_PLAIN;
-    resists          = mon_resist_def();
+    resists          = 0;
     spellcaster      = false;
     cycle_colours    = false;
     colour           = BLACK;
@@ -176,30 +178,23 @@ void ghost_demon::init_random_demon()
 
     see_invis = !one_chance_in(10);
 
-    if (!one_chance_in(3))
-        resists.fire = random_range(1, 2);
-    else
-    {
-        resists.fire = 0;
-
-        if (one_chance_in(10))
-            resists.fire = -1;
-    }
+    resists = 0;
 
     if (!one_chance_in(3))
-        resists.cold = random_range(1, 2);
-    else
-    {
-        resists.cold = 0;
+        resists |= MR_RES_FIRE * random_range(1, 2);
+    else if (one_chance_in(10))
+        resists |= MR_VUL_FIRE;
 
-        if (one_chance_in(10))
-            resists.cold = -1;
-    }
+    if (!one_chance_in(3))
+        resists |= MR_RES_COLD * random_range(1, 2);
+    else
+        resists |= MR_VUL_COLD;
 
     // Demons, like ghosts, automatically get poison res. and life prot.
 
     // resist electricity:
-    resists.elec = one_chance_in(3);
+    if (one_chance_in(3))
+        resists |= MR_RES_ELEC; // no rElec++ for Pan lords, because of witches
 
     // HTH damage:
     damage = 20 + roll_dice(2, 20);
@@ -258,11 +253,7 @@ void ghost_demon::init_random_demon()
             spells[1] = RANDOM_ELEMENT(search_order_conj);
 
         if (!one_chance_in(4))
-        {
             spells[2] = RANDOM_ELEMENT(search_order_third);
-            if (spells[2] == SPELL_TUKIMAS_BALL)
-                spells[2] = SPELL_NO_SPELL;
-        }
 
         if (coinflip())
         {
@@ -286,6 +277,11 @@ void ghost_demon::init_random_demon()
             spells[i] = translate_spell(spells[i]);
             if (spells[i] == SPELL_AGONY)
                 spells[i] = SPELL_SYMBOL_OF_TORMENT;
+            if (spells[i] == SPELL_CONJURE_BALL_LIGHTNING
+                || SPELL_OZOCUBUS_REFRIGERATION)
+            {
+                spells[i] = SPELL_NO_SPELL;
+            }
         }
 
         // Give demon a chance for some monster-only spells.
@@ -361,7 +357,7 @@ static int _player_ghost_base_movement_speed()
     else if (speed > MAX_GHOST_SPEED)
         speed = MAX_GHOST_SPEED;
 
-    return (speed);
+    return speed;
 }
 
 void ghost_demon::init_player_ghost()
@@ -377,9 +373,19 @@ void ghost_demon::init_player_ghost()
         ev = MAX_GHOST_EVASION;
 
     see_invis      = you.can_see_invisible();
-    resists.fire   = player_res_fire();
-    resists.cold   = player_res_cold();
-    resists.elec   = player_res_electricity();
+    resists        = 0;
+    set_resist(resists, MR_RES_FIRE, player_res_fire());
+    set_resist(resists, MR_RES_COLD, player_res_cold());
+    set_resist(resists, MR_RES_ELEC, player_res_electricity());
+    // clones might lack innate rPois, copy it.  pghosts don't care.
+    set_resist(resists, MR_RES_POISON, player_res_poison());
+    set_resist(resists, MR_RES_NEG, you.res_negative_energy());
+    set_resist(resists, MR_RES_ACID, player_res_acid());
+    // multi-level for players, boolean as an innate monster resistance
+    set_resist(resists, MR_RES_STEAM, player_res_steam() ? 1 : 0);
+    set_resist(resists, MR_RES_STICKY_FLAME, player_res_sticky_flame());
+    set_resist(resists, MR_RES_ASPHYX, you.res_asphyx());
+    set_resist(resists, MR_RES_ROTTING, you.res_rotting());
     speed          = _player_ghost_base_movement_speed();
 
     damage = 4;
@@ -390,7 +396,7 @@ void ghost_demon::init_player_ghost()
         // This includes ranged weapons, but they're treated as melee.
 
         const item_def& weapon = *you.weapon();
-        if (weapon.base_type == OBJ_WEAPONS || weapon.base_type == OBJ_STAVES)
+        if (is_weapon(weapon))
         {
             damage = property(weapon, PWPN_DAMAGE);
 
@@ -409,6 +415,20 @@ void ghost_demon::init_player_ghost()
                 // Don't copy ranged-only brands from launchers (reaping etc.).
                 if (brand > MAX_PAN_LORD_BRANDS)
                     brand = SPWPN_NORMAL;
+            }
+            else if (weapon.base_type == OBJ_STAVES)
+            {
+                switch (static_cast<stave_type>(weapon.sub_type))
+                {
+                // very bad approximations
+                case STAFF_FIRE: brand = SPWPN_FLAMING; break;
+                case STAFF_COLD: brand = SPWPN_FREEZING; break;
+                case STAFF_POISON: brand = SPWPN_VENOM; break;
+                case STAFF_DEATH: brand = SPWPN_PAIN; break;
+                case STAFF_AIR: brand = SPWPN_ELECTROCUTION; break;
+                case STAFF_EARTH: brand = SPWPN_VORPAL; break;
+                default: ;
+                }
             }
         }
     }
@@ -432,9 +452,7 @@ void ghost_demon::init_player_ghost()
     species = you.species;
     job = you.char_class;
 
-    // Ghosts can't worship good gods.
-    if (!is_good_god(you.religion))
-        religion = you.religion;
+    religion = you.religion;
 
     best_skill = ::best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
     best_skill_level = you.skills[best_skill];
@@ -447,10 +465,10 @@ void ghost_demon::init_player_ghost()
     add_spells();
 }
 
-static uint8_t _ugly_thing_assign_colour(uint8_t force_colour,
-                                         uint8_t force_not_colour)
+static colour_t _ugly_thing_assign_colour(colour_t force_colour,
+                                          colour_t force_not_colour)
 {
-    uint8_t colour;
+    colour_t colour;
 
     if (force_colour != BLACK)
         colour = force_colour;
@@ -461,7 +479,7 @@ static uint8_t _ugly_thing_assign_colour(uint8_t force_colour,
         while (force_not_colour != BLACK && colour == force_not_colour);
     }
 
-    return (colour);
+    return colour;
 }
 
 static attack_flavour _very_ugly_thing_flavour_upgrade(attack_flavour u_att_flav)
@@ -484,10 +502,10 @@ static attack_flavour _very_ugly_thing_flavour_upgrade(attack_flavour u_att_flav
         break;
     }
 
-    return (u_att_flav);
+    return u_att_flav;
 }
 
-static attack_flavour _ugly_thing_colour_to_flavour(uint8_t u_colour)
+static attack_flavour _ugly_thing_colour_to_flavour(colour_t u_colour)
 {
     attack_flavour u_att_flav = AF_PLAIN;
 
@@ -524,11 +542,11 @@ static attack_flavour _ugly_thing_colour_to_flavour(uint8_t u_colour)
     if (is_high_colour(u_colour))
         u_att_flav = _very_ugly_thing_flavour_upgrade(u_att_flav);
 
-    return (u_att_flav);
+    return u_att_flav;
 }
 
 void ghost_demon::init_ugly_thing(bool very_ugly, bool only_mutate,
-                                  uint8_t force_colour)
+                                  colour_t force_colour)
 {
     // Movement speed: 11, the same as in mon-data.h.
     speed = 11;
@@ -605,51 +623,34 @@ void ghost_demon::ugly_thing_to_very_ugly_thing()
     ugly_thing_add_resistance(true, att_flav);
 }
 
-static mon_resist_def _ugly_thing_resists(bool very_ugly, attack_flavour u_att_flav)
+static resists_t _ugly_thing_resists(bool very_ugly, attack_flavour u_att_flav)
 {
-    mon_resist_def resists;
-    resists.elec = 0;
-    resists.poison = 0;
-    resists.fire = 0;
-    resists.sticky_flame = false;
-    resists.cold = 0;
-    resists.acid = 0;
-    resists.rotting = false;
-
     switch (u_att_flav)
     {
     case AF_FIRE:
     case AF_NAPALM:
-        resists.fire = (very_ugly ? 2 : 1);
-        resists.sticky_flame = true;
-        break;
+        return MR_RES_FIRE * (very_ugly ? 2 : 1) | MR_RES_STICKY_FLAME;
 
     case AF_ACID:
-        resists.acid = (very_ugly ? 2 : 1);
-        break;
+        return MR_RES_ACID;
 
     case AF_POISON_NASTY:
     case AF_POISON_MEDIUM:
-        resists.poison = (very_ugly ? 2 : 1);
-        break;
+        return MR_RES_POISON * (very_ugly ? 2 : 1);
 
     case AF_ELEC:
-        resists.elec = (very_ugly ? 2 : 1);
-        break;
+        return MR_RES_ELEC * (very_ugly ? 2 : 1);
 
     case AF_DISEASE:
     case AF_ROT:
-        resists.rotting = true;
-        break;
+        return MR_RES_ROTTING;
 
     case AF_COLD:
-        resists.cold = (very_ugly ? 2 : 1);
-        break;
+        return MR_RES_COLD * (very_ugly ? 2 : 1);
 
     default:
-        break;
+        return 0;
     }
-    return resists;
 }
 
 void ghost_demon::ugly_thing_add_resistance(bool very_ugly,
@@ -696,12 +697,12 @@ void ghost_demon::init_dancing_weapon(const item_def& weapon, int power)
     // If you aren't an awesome spellcaster, nerf the weapons.  Do it in
     // a way that lays most of the penalty on heavy weapons.
 
-    speed = std::max(3, speed - (10 - power / 15));
-    ev    = std::max(3, ev    - (10 - power / 15));
+    speed = max(3, speed - (10 - power / 15));
+    ev    = max(3, ev    - (10 - power / 15));
 
     ac = ac * power / 200;
-    max_hp = std::max(5, max_hp * power / 150);
-    damage = std::max(1, damage * power / 150);
+    max_hp = max(5, max_hp * power / 150);
+    damage = max(1, damage * power / 150);
 
     // For a spellpower 75 character (typical late midgame mage with no Ench
     // focus), we have:
@@ -728,56 +729,53 @@ static bool _know_spell(spell_type spell)
 
 static spell_type search_first_list(int ignore_spell)
 {
-    for (unsigned i = 0;
-         i < sizeof(search_order_conj) / sizeof(*search_order_conj); ++i)
+    for (unsigned i = 0; i < ARRAYSZ(search_order_conj); ++i)
      {
         if (search_order_conj[i] == SPELL_NO_SPELL)
-            return (SPELL_NO_SPELL);
+            return SPELL_NO_SPELL;
 
         if (search_order_conj[i] == ignore_spell)
             continue;
 
         if (_know_spell(search_order_conj[i]))
-            return (search_order_conj[i]);
+            return search_order_conj[i];
     }
 
-    return (SPELL_NO_SPELL);
+    return SPELL_NO_SPELL;
 }
 
 static spell_type search_second_list(int ignore_spell)
 {
-    for (unsigned i = 0;
-         i < sizeof(search_order_third) / sizeof(*search_order_third); ++i)
+    for (unsigned i = 0; i < ARRAYSZ(search_order_third); ++i)
     {
         if (search_order_third[i] == SPELL_NO_SPELL)
-            return (SPELL_NO_SPELL);
+            return SPELL_NO_SPELL;
 
         if (search_order_third[i] == ignore_spell)
             continue;
 
         if (_know_spell(search_order_third[i]))
-            return (search_order_third[i]);
+            return search_order_third[i];
     }
 
-    return (SPELL_NO_SPELL);
+    return SPELL_NO_SPELL;
 }
 
 static spell_type search_third_list(int ignore_spell)
 {
-    for (unsigned i = 0;
-         i < sizeof(search_order_misc) / sizeof(*search_order_misc); ++i)
+    for (unsigned i = 0; i < ARRAYSZ(search_order_misc); ++i)
     {
         if (search_order_misc[i] == SPELL_NO_SPELL)
-            return (SPELL_NO_SPELL);
+            return SPELL_NO_SPELL;
 
         if (search_order_misc[i] == ignore_spell)
             continue;
 
         if (_know_spell(search_order_misc[i]))
-            return (search_order_misc[i]);
+            return search_order_misc[i];
     }
 
-    return (SPELL_NO_SPELL);
+    return SPELL_NO_SPELL;
 }
 
 // Used when creating ghosts: goes through and finds spells for the
@@ -829,34 +827,26 @@ bool ghost_demon::has_spells() const
 
 // When passed the number for a player spell, returns the equivalent
 // monster spell.  Returns SPELL_NO_SPELL on failure (no equivalent).
-spell_type ghost_demon::translate_spell(spell_type spel) const
+spell_type ghost_demon::translate_spell(spell_type spell) const
 {
-    switch (spel)
+    switch (spell)
     {
     case SPELL_CONTROLLED_BLINK:
-        return (SPELL_BLINK);        // approximate
+        return SPELL_BLINK;        // approximate
     case SPELL_DEMONIC_HORDE:
-        return (SPELL_CALL_IMP);
+        return SPELL_SUMMON_MINOR_DEMON;
     case SPELL_DELAYED_FIREBALL:
-        return (SPELL_FIREBALL);
-    case SPELL_EVAPORATE:
-        return (SPELL_MEPHITIC_CLOUD);
-    case SPELL_STICKY_FLAME:
-        return (SPELL_STICKY_FLAME_RANGE);
+        return SPELL_FIREBALL;
     default:
         break;
     }
 
-    return (spel);
+    return spell;
 }
 
-std::vector<ghost_demon> ghost_demon::find_ghosts()
+vector<ghost_demon> ghost_demon::find_ghosts()
 {
-    std::vector<ghost_demon> gs;
-
-    // No ghosts in the Temple.
-    if (player_in_branch(BRANCH_ECUMENICAL_TEMPLE))
-        return (gs);
+    vector<ghost_demon> gs;
 
     if (!you.is_undead)
     {
@@ -871,11 +861,11 @@ std::vector<ghost_demon> ghost_demon::find_ghosts()
     // for the level.
     find_extra_ghosts(gs, n_extra_ghosts() + 1 - gs.size());
 
-    return (gs);
+    return gs;
 }
 
 void ghost_demon::find_transiting_ghosts(
-    std::vector<ghost_demon> &gs, int n)
+    vector<ghost_demon> &gs, int n)
 {
     if (n <= 0)
         return;
@@ -907,7 +897,7 @@ void ghost_demon::announce_ghost(const ghost_demon &g)
 #endif
 }
 
-void ghost_demon::find_extra_ghosts(std::vector<ghost_demon> &gs, int n)
+void ghost_demon::find_extra_ghosts(vector<ghost_demon> &gs, int n)
 {
     for (monster_iterator mi; mi && n > 0; ++mi)
     {
@@ -927,19 +917,8 @@ void ghost_demon::find_extra_ghosts(std::vector<ghost_demon> &gs, int n)
 // Returns the number of extra ghosts allowed on the level.
 int ghost_demon::n_extra_ghosts()
 {
-    if (you.level_type != LEVEL_ABYSS
-        && you.level_type != LEVEL_PANDEMONIUM)
-    {
-        const int subdepth  = level_id::current().depth;
-        // Single ghosts-only: D:1-8, Lair:1, Orc:1, and non-dungeon
-        // areas at this depth, such as portal vaults.
-        if (subdepth < 9 && you.where_are_you == BRANCH_MAIN_DUNGEON
-            || subdepth < 2 && you.where_are_you == BRANCH_LAIR
-            || subdepth < 2 && you.where_are_you == BRANCH_ORCISH_MINES)
-        {
-            return (0);
-        }
-    }
+    if (env.absdepth0 < 10)
+        return 0;
 
     return (MAX_GHOSTS - 1);
 }
@@ -953,62 +932,58 @@ bool debug_check_ghosts()
         // Values greater than the allowed maximum or less then the
         // allowed minimum signalise bugginess.
         if (ghost.damage < 0 || ghost.damage > MAX_GHOST_DAMAGE)
-            return (false);
+            return false;
         if (ghost.max_hp < 1 || ghost.max_hp > MAX_GHOST_HP)
-            return (false);
+            return false;
         if (ghost.xl < 1 || ghost.xl > 27)
-            return (false);
+            return false;
         if (ghost.ev > MAX_GHOST_EVASION)
-            return (false);
+            return false;
         if (ghost.speed < MIN_GHOST_SPEED || ghost.speed > MAX_GHOST_SPEED)
-            return (false);
-        if (ghost.resists.fire < -3 || ghost.resists.fire > 3)
-            return (false);
-        if (ghost.resists.cold < -3 || ghost.resists.cold > 3)
-            return (false);
-        if (ghost.resists.elec < 0)
-            return (false);
+            return false;
+        if (get_resist(ghost.resists, MR_RES_ELEC) < 0)
+            return false;
         if (ghost.brand < SPWPN_NORMAL || ghost.brand > MAX_PAN_LORD_BRANDS)
-            return (false);
+            return false;
         if (ghost.species < 0 || ghost.species >= NUM_SPECIES)
-            return (false);
+            return false;
         if (ghost.job < JOB_FIGHTER || ghost.job >= NUM_JOBS)
-            return (false);
+            return false;
         if (ghost.best_skill < SK_FIGHTING || ghost.best_skill >= NUM_SKILLS)
-            return (false);
+            return false;
         if (ghost.best_skill_level < 0 || ghost.best_skill_level > 27)
-            return (false);
+            return false;
         if (ghost.religion < GOD_NO_GOD || ghost.religion >= NUM_GODS)
-            return (false);
+            return false;
 
-        if (ghost.brand == SPWPN_HOLY_WRATH || is_good_god(ghost.religion))
-            return (false);
+        if (ghost.brand == SPWPN_HOLY_WRATH)
+            return false;
 
         // Only (very) ugly things get non-plain attack types and
         // flavours.
         if (ghost.att_type != AT_HIT || ghost.att_flav != AF_PLAIN)
-            return (false);
+            return false;
 
         // Only Pandemonium lords cycle colours.
         if (ghost.cycle_colours)
-            return (false);
+            return false;
 
         // Name validation.
         if (!validate_player_name(ghost.name, false))
-            return (false);
+            return false;
         // Many combining characters can come per every letter, but if there's
         // that much, it's probably a maliciously forged ghost of some kind.
         if (ghost.name.length() > kNameLen * 10 || ghost.name.empty())
-            return (false);
+            return false;
         if (ghost.name != trimmed_string(ghost.name))
-            return (false);
+            return false;
 
         // Check for non-existing spells.
         for (int sp = 0; sp < NUM_MONSTER_SPELL_SLOTS; ++sp)
             if (ghost.spells[sp] < 0 || ghost.spells[sp] >= NUM_SPELLS)
-                return (false);
+                return false;
     }
-    return (true);
+    return true;
 }
 
 int ghost_level_to_rank(const int xl)
@@ -1026,50 +1001,50 @@ int ghost_level_to_rank(const int xl)
 ///////////////////////////////////////////////////////////////////////////////
 // Laboratory rats!
 
-std::string adjective_for_labrat_colour (uint8_t l_colour)
+string adjective_for_labrat_colour(colour_t l_colour)
 {
     switch (l_colour)
     {
-    case CYAN:           return ("armoured");
-    case YELLOW:         return ("beastly");
-    case RED:            return ("fiery");
-    case LIGHTCYAN:      return ("gaseous");
-    case LIGHTRED:       return ("parasitic");
-    case LIGHTBLUE:      return ("airborne");
-    case LIGHTMAGENTA:   return ("mutated");
-    case MAGENTA:        return ("shifting");
-    case GREEN:          return ("venomous");
-    case LIGHTGRAY:      return ("");
+    case CYAN:           return "armoured";
+    case YELLOW:         return "beastly";
+    case RED:            return "fiery";
+    case LIGHTCYAN:      return "gaseous";
+    case LIGHTRED:       return "parasitic";
+    case LIGHTBLUE:      return "airborne";
+    case LIGHTMAGENTA:   return "mutated";
+    case MAGENTA:        return "shifting";
+    case GREEN:          return "venomous";
+    case LIGHTGRAY:      return "";
     default:
         die("invalid labrat adjective");
         break;
     }
 
-    return ("");
+    return "";
 }
 
 #ifdef USE_TILE
-int tile_offset_for_labrat_colour (uint8_t l_colour)
+int tile_offset_for_labrat_colour(colour_t l_colour)
 {
     switch (l_colour)
     {
-    case LIGHTGRAY:      return (0);
-    case CYAN:           return (1);
-    case YELLOW:         return (2);
-    case RED:            return (3);
-    case LIGHTCYAN:      return (4);
-    case LIGHTRED:       return (5);
-    case LIGHTBLUE:      return (6);
-    case LIGHTMAGENTA:   return (7);
-    case MAGENTA:        return (8);
-    case GREEN:          return (9);
+    case LIGHTGRAY:      return 0;
+    case CYAN:           return 1;
+    case YELLOW:         return 2;
+    case RED:            return 3;
+    case LIGHTCYAN:      return 4;
+    case LIGHTRED:       return 5;
+    case LIGHTBLUE:      return 6;
+    case LIGHTMAGENTA:   return 7;
+    case MAGENTA:        return 8;
+    case GREEN:          return 9;
     default:
-        return (0);
+        return 0;
     }
 }
 #endif
 
-uint8_t colour_for_labrat_adjective (std::string adjective)
+colour_t colour_for_labrat_adjective(string adjective)
 {
     if (adjective == "armoured")    return CYAN;
     if (adjective == "beastly")     return YELLOW;
@@ -1085,16 +1060,16 @@ uint8_t colour_for_labrat_adjective (std::string adjective)
     return BLACK;
 }
 
-static const uint8_t labrat_colour_values[] = {
+static const colour_t labrat_colour_values[] = {
     CYAN, YELLOW, RED, LIGHTCYAN, LIGHTRED, LIGHTBLUE, LIGHTMAGENTA, MAGENTA, GREEN
 };
 
-static uint8_t _labrat_random_colour()
+static colour_t _labrat_random_colour()
 {
-    return (RANDOM_ELEMENT(labrat_colour_values));
+    return RANDOM_ELEMENT(labrat_colour_values);
 }
 
-void ghost_demon::init_labrat (uint8_t force_colour)
+void ghost_demon::init_labrat(colour_t force_colour)
 {
     // Base init for "plain" laboratory rats. Kept in line with mon-data.h.
     xl = 5;
@@ -1110,13 +1085,7 @@ void ghost_demon::init_labrat (uint8_t force_colour)
 
     spells.init(SPELL_NO_SPELL);
 
-    resists.elec = 0;
-    resists.poison = 0;
-    resists.fire = 0;
-    resists.sticky_flame = false;
-    resists.cold = 0;
-    resists.acid = 0;
-    resists.rotting = false;
+    resists = 0;
 
     switch (colour)
     {
@@ -1134,13 +1103,12 @@ void ghost_demon::init_labrat (uint8_t force_colour)
         att_flav = AF_FIRE;
         spells[0] = SPELL_FIRE_BREATH;
         spellcaster = true;
-        resists.fire = 3;
-        resists.sticky_flame = true;
+        resists |= MR_RES_FIRE * 3 | MR_RES_STICKY_FLAME;
         break;
     case LIGHTCYAN: // gaseous
         spells[0] = SPELL_MEPHITIC_CLOUD;
         spellcaster = true;
-        resists.poison = 1; // otherwise it'll confuse itself
+        resists |= MR_RES_POISON; // otherwise it'll confuse itself
         break;
     case LIGHTRED: // leeching
         att_flav = AF_VAMPIRIC;
@@ -1149,7 +1117,7 @@ void ghost_demon::init_labrat (uint8_t force_colour)
         fly = FL_LEVITATE;
         spells[0] = SPELL_SHOCK;
         spellcaster = true;
-        resists.elec = 1;
+        resists |= MR_RES_ELEC;
         speed = 15;
         ev = 15;
         break;
@@ -1168,7 +1136,7 @@ void ghost_demon::init_labrat (uint8_t force_colour)
         break;
     case GREEN:
         att_flav = AF_POISON;
-        resists.poison = 3;
+        resists |= MR_RES_POISON * 3;
         break;
     case LIGHTGRAY:
         break;

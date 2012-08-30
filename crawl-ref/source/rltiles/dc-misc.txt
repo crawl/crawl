@@ -10,6 +10,57 @@ bolt06
 bolt07
 bolt08
 
+crystal_spear0 BOLT_CRYSTAL_SPEAR
+crystal_spear1
+crystal_spear2
+crystal_spear3
+crystal_spear4
+crystal_spear5
+crystal_spear6
+crystal_spear7
+
+iron_shot0 BOLT_IRON_SHOT
+iron_shot1
+iron_shot2
+iron_shot3
+iron_shot4
+iron_shot5
+iron_shot6
+iron_shot7
+
+stone_arrow0 BOLT_STONE_ARROW
+stone_arrow1
+stone_arrow2
+stone_arrow3
+stone_arrow4
+stone_arrow5
+stone_arrow6
+stone_arrow7
+
+flame0 BOLT_FLAME
+flame1
+flame2
+
+frost0 BOLT_FROST
+frost1
+
+magic_dart0 BOLT_MAGIC_DART
+magic_dart1
+magic_dart2
+
+sandblast0 BOLT_SANDBLAST
+sandblast1
+sandblast2
+
+sting0 BOLT_STING
+sting1
+sting2
+
+zap0 BOLT_ZAP
+zap1
+zap2
+zap3
+
 ###### Priority indicators (for Fedhas' growth)
 indicator_1 INDICATOR
 indicator_2
@@ -65,11 +116,16 @@ cloud_magic_trail0 CLOUD_MAGIC_TRAIL_0
 cloud_magic_trail1 CLOUD_MAGIC_TRAIL_1
 cloud_magic_trail2 CLOUD_MAGIC_TRAIL_2
 cloud_magic_trail3 CLOUD_MAGIC_TRAIL_3
+# rolling boulder dust
+cloud_dust_trail0 CLOUD_DUST_TRAIL_0
+cloud_dust_trail1 CLOUD_DUST_TRAIL_1
+cloud_dust_trail2 CLOUD_DUST_TRAIL_2
+cloud_dust_trail3 CLOUD_DUST_TRAIL_3
 cloud_rain1 CLOUD_RAIN
 cloud_rain2
 cloud_grey_smoke CLOUD_MIST
 # ink spurts
-dc-dngn/water/ink_full CLOUD_INK
+dngn/water/ink_full CLOUD_INK
 
 cloud_gloom CLOUD_GLOOM
 
@@ -81,11 +137,11 @@ cloud_calc_dust1
 cloud_calc_dust2
 cloud_calc_dust3
 
-%sdir dc-mon
+%sdir mon
 fungi_plants/giant_spore SPORE_OVERLAY
 
 #########MAP
-%sdir dc-misc
+%sdir misc
 %corpse 0
 %back none
 unseen_weapon UNSEEN_WEAPON
@@ -98,7 +154,7 @@ sensed_monster_easy MONS_SENSED_EASY
 sensed_monster_tough MONS_SENSED_TOUGH
 sensed_monster_nasty MONS_SENSED_NASTY
 %corpse 1
-%back_sdir dc-misc/blood
+%back_sdir misc/blood
 %back blood_puddle_red
 unseen_monster UNSEEN_CORPSE
 %corpse 0

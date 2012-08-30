@@ -1,0 +1,116 @@
+%%%%
+Centaur
+
+Szybkie jak konie, silne jak konie, wielkie jak konie — lecz jedzą bardziej jak
+słonie.
+%%%%
+Deep Dwarf
+
+Żyją głęboką pod ziemią i w ogóle nie zdrowieją w naturalny sposób; są za to
+odporne i mają sposoby na leczenie.
+%%%%
+Deep Elf
+
+Najbardziej magiczne ze wszystkich elfów — ale też i najsłabsze i
+najwrażliwsze.
+%%%%
+Demigod
+
+Nie mogąc wyznawać bogów, Półbogowie sami posiadają boskie cechy i zdrowie.
+%%%%
+Demonspawn
+
+Demonie Pomioty są krzyżówką człowieka i demona, zyskując demoniczne cechy w
+miarę wzrostu.
+%%%%
+Draconian
+
+Smokowcy mają naturalny pancerz, lecz nie mogą nosić zbroi. Na 7ym poziomie
+osiągają dojrzałość i ujawniają swój kolor.
+%%%%
+Felid
+
+Te koty posiadają ludzki umysł, lecz brak im chwytnych kończyn, nie pozwalając
+na użycie większości przedmiotów.
+%%%%
+Ghoul
+
+Nieumarli których ciała wiecznie gniją. Ciągle poszukują zepsutego mięsa które
+może wpaść im w szpony.
+%%%%
+Halfling
+
+Małe lecz odważne, niziołki są zabójcze z procą w ręku.
+%%%%
+High Elf
+
+Dumne elfy, dobre zarówno w czarach jak i w robieniu mieczem.
+%%%%
+Hill Orc
+
+Orki są stworzone do walki wręcz, lecz potrafią sobie radzić z bardziej
+agresywnymi typami magii.
+%%%%
+Human
+
+Zwykli i przeciętni.
+%%%%
+Tengu
+
+Ludzie-ptaki które kochają walczyć, zarówno bronią jak i magią. Są bardzo
+delikatni, za to uzyskują później zdolność lotu.
+%%%%
+Kobold
+
+Małe, złośliwe i mało wytrzymałe, koboldy znają wiele niecnych sztuczek. I
+zjedzą każde mięso.
+%%%%
+Merfolk
+
+Pół-ludzie, pół-ryby, merfolkowie czują się jak w domu zarówno w wodzie jak in
+na lądzie.
+%%%%
+Minotaur
+
+Wielkie osiłki będące ludźmi o byczej głowie. Beznadziejni w magii, lecz
+śmiertelnie groźni w każdej formie fizycznej walki.
+%%%%
+Mummy
+
+Zabalsamowane zwłoki pokryte bandażami, poruszane mocą starożytnej klątwy.
+%%%%
+Naga
+
+Połączenie człowieka i węża: ludzka głowa, ręce i klatka piersiowa, muskularny
+brzuch i ogon węża.
+%%%%
+Octopode
+
+Gatunek głowonogów, zdolny do poruszania się po lądzie. Potrafią użyć broni,
+ośmiu pierścieni lecz niemal żadnych rodzajów zbroi.
+%%%%
+Ogre
+
+Bezmyślne osiłki, kochające wielkie pały. Wbrew pozorom, mają jednak swoje
+sposoby używania magii.
+%%%%
+Sludge Elf
+
+Zdeprawowana rasa elfów, woląca nieuczciwe metody walki i mroczną magię nad
+szlachetniejsze zasady pobratymców.
+%%%%
+Spriggan
+
+Bardzo mali, bardzo delikatni i bardzo szybcy. Sprigganie potrafią wspaniale
+skradać się i robić niecne sztuczki.
+%%%%
+Troll
+
+Wielkie i brutalne, zdolne rozszarpać kogokolwiek swymi szponami, rzadko kiedy
+myślące, zawsze głodne potwory.
+%%%%
+Vampire
+
+Wampiry są częściowo żywe, częściowo nieumarłe. Są dobre w skradaniu się jak i
+w niektórych rodzajach magii.
+%%%%

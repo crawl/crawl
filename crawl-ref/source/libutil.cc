@@ -10,8 +10,8 @@
 #include "libutil.h"
 #include "externs.h"
 #include "files.h"
-#include "macro.h"
 #include "message.h"
+#include "state.h"
 #include "unicode.h"
 #include "viewgeom.h"
 
@@ -90,14 +90,13 @@ description_level_type description_type_by_name(const char *desc)
     return DESC_PLAIN;
 }
 
-static std::string _number_to_string(unsigned number, bool in_words)
+static string _number_to_string(unsigned number, bool in_words)
 {
-    return (in_words? number_in_words(number) : make_stringf("%u", number));
+    return in_words? number_in_words(number) : make_stringf("%u", number);
 }
 
-std::string apply_description(description_level_type desc,
-                              const std::string &name,
-                              int quantity, bool in_words)
+string apply_description(description_level_type desc, const string &name,
+                         int quantity, bool in_words)
 {
     switch (desc)
     {
@@ -110,7 +109,7 @@ std::string apply_description(description_level_type desc,
         return ("your " + name);
     case DESC_PLAIN:
     default:
-        return (name);
+        return name;
     }
 }
 
@@ -141,12 +140,12 @@ void play_sound(const char *file)
 #endif
 }
 
-std::string strip_filename_unsafe_chars(const std::string &s)
+string strip_filename_unsafe_chars(const string &s)
 {
     return replace_all_of(s, " .&`\"\'|;{}()[]<>*%$#@!~?", "");
 }
 
-std::string vmake_stringf(const char* s, va_list args)
+string vmake_stringf(const char* s, va_list args)
 {
     char buf1[8000];
     va_list orig_args;
@@ -154,57 +153,25 @@ std::string vmake_stringf(const char* s, va_list args)
     size_t len = vsnprintf(buf1, sizeof buf1, s, orig_args);
     va_end(orig_args);
     if (len < sizeof buf1)
-        return (buf1);
+        return buf1;
 
     char *buf2 = (char*)malloc(len + 1);
     va_copy(orig_args, args);
     vsnprintf(buf2, len + 1, s, orig_args);
     va_end(orig_args);
-    std::string ret(buf2);
+    string ret(buf2);
     free(buf2);
 
-    return (ret);
-}
-
-std::string make_stringf(const char *s, ...)
-{
-    va_list args;
-    va_start(args, s);
-    std::string ret = vmake_stringf(s, args);
-    va_end(args);
     return ret;
 }
 
-std::string &escape_path_spaces(std::string &s)
+string make_stringf(const char *s, ...)
 {
-    std::string result;
-    result.clear();
-#ifdef UNIX
-    for (const char* ch = s.c_str(); *ch != '\0'; ++ch)
-    {
-        if (*ch == ' ')
-        {
-            result += '\\';
-        }
-        result += *ch;
-    }
-#elif defined(TARGET_OS_WINDOWS)
-    if (s.find(" ") != std::string::npos
-        && s.find("\"") == std::string::npos)
-    {
-        result = "\"" + s + "\"";
-    }
-    else
-    {
-        return s;
-    }
-#else
-    // Not implemented for this platform.  Assume that escaping isn't
-    // necessary.
-    return s;
-#endif
-    s = result;
-    return s;
+    va_list args;
+    va_start(args, s);
+    string ret = vmake_stringf(s, args);
+    va_end(args);
+    return ret;
 }
 
 bool key_is_escape(int key)
@@ -212,34 +179,34 @@ bool key_is_escape(int key)
     switch (key)
     {
     CASE_ESCAPE
-        return (true);
+        return true;
     default:
-        return (false);
+        return false;
     }
 }
 
-std::string &uppercase(std::string &s)
+string &uppercase(string &s)
 {
     for (unsigned i = 0, sz = s.size(); i < sz; ++i)
         s[i] = toupper(s[i]);
 
-    return (s);
+    return s;
 }
 
-std::string &lowercase(std::string &s)
+string &lowercase(string &s)
 {
     s = lowercase_string(s);
-    return (s);
+    return s;
 }
 
-std::string lowercase_string(std::string s)
+string lowercase_string(string s)
 {
-    std::string res;
+    string res;
     ucs_t c;
     char buf[4];
     for (const char *tp = s.c_str(); int len = utf8towc(&c, tp); tp += len)
         res.append(buf, wctoutf8(buf, towlower(c)));
-    return (res);
+    return res;
 }
 
 // Warning: this (and uppercase_first()) relies on no libc (glibc, BSD libc,
@@ -251,7 +218,7 @@ std::string lowercase_string(std::string s)
 //
 // A non-hacky version would be slower for no gain other than sane code; at
 // least unless you use some more powerful API.
-std::string lowercase_first(std::string s)
+string lowercase_first(string s)
 {
     ucs_t c;
     if (!s.empty())
@@ -259,10 +226,10 @@ std::string lowercase_first(std::string s)
         utf8towc(&c, &s[0]);
         wctoutf8(&s[0], towlower(c));
     }
-    return (s);
+    return s;
 }
 
-std::string uppercase_first(std::string s)
+string uppercase_first(string s)
 {
     // Incorrect due to those pesky Dutch having "ij" as a single letter (wtf?).
     // Too bad, there's no standard function to handle that character, and I
@@ -273,81 +240,81 @@ std::string uppercase_first(std::string s)
         utf8towc(&c, &s[0]);
         wctoutf8(&s[0], towupper(c));
     }
-    return (s);
+    return s;
 }
 
-int ends_with(const std::string &s, const char *suffixes[])
+int ends_with(const string &s, const char *suffixes[])
 {
     if (!suffixes)
-        return (0);
+        return 0;
 
     for (int i = 0; suffixes[i]; ++i)
         if (ends_with(s, suffixes[i]))
             return (1 + i);
 
-    return (0);
+    return 0;
 }
 
-bool strip_suffix(std::string &s, const std::string &suffix)
+bool strip_suffix(string &s, const string &suffix)
 {
     if (ends_with(s, suffix))
     {
         s.erase(s.length() - suffix.length(), suffix.length());
         trim_string(s);
-        return (true);
+        return true;
     }
     return false;
 }
 
 // Returns true if s contains tag 'tag', and strips out tag from s.
-bool strip_tag(std::string &s, const std::string &tag, bool skip_padding)
+bool strip_tag(string &s, const string &tag, bool skip_padding)
 {
     if (s == tag)
     {
         s.clear();
-        return (true);
+        return true;
     }
 
-    std::string::size_type pos;
+    string::size_type pos;
 
     if (skip_padding)
     {
-        if ((pos = s.find(tag)) != std::string::npos)
+        if ((pos = s.find(tag)) != string::npos)
         {
             s.erase(pos, tag.length());
             trim_string(s);
-            return (true);
+            return true;
         }
-        return (false);
+        return false;
     }
 
-    if ((pos = s.find(" " + tag + " ")) != std::string::npos)
+    if ((pos = s.find(" " + tag + " ")) != string::npos)
     {
         // Leave one space intact.
         s.erase(pos, tag.length() + 1);
         trim_string(s);
-        return (true);
+        return true;
     }
 
     if ((pos = s.find(tag + " ")) == 0
-        || ((pos = s.find(" " + tag)) != std::string::npos
+        || ((pos = s.find(" " + tag)) != string::npos
             && pos + tag.length() + 1 == s.length()))
     {
         s.erase(pos, tag.length() + 1);
         trim_string(s);
-        return (true);
+        return true;
     }
 
-    return (false);
+    return false;
 }
 
-std::vector<std::string> strip_multiple_tag_prefix (std::string &s, const std::string &tagprefix)
+vector<string> strip_multiple_tag_prefix(string &s, const string &tagprefix)
 {
-    std::vector<std::string> results;
+    vector<string> results;
 
     while (true)
     {
-        std::string this_result = strip_tag_prefix(s, tagprefix);
+        string this_result = strip_tag_prefix(s, tagprefix);
         if (this_result.empty())
             break;
 
@@ -357,34 +324,32 @@ std::vector<std::string> strip_multiple_tag_prefix (std::string &s, const std::s
     return results;
 }
 
-std::string strip_tag_prefix(std::string &s, const std::string &tagprefix)
+string strip_tag_prefix(string &s, const string &tagprefix)
 {
-    std::string::size_type pos = s.find(tagprefix);
+    string::size_type pos = s.find(tagprefix);
 
-    while (pos && pos != std::string::npos && !isspace(s[pos - 1]))
-    {
+    while (pos && pos != string::npos && !isspace(s[pos - 1]))
         pos = s.find(tagprefix, pos + 1);
-    }
 
-    if (pos == std::string::npos)
-        return ("");
+    if (pos == string::npos)
+        return "";
 
-    std::string::size_type ns = s.find(" ", pos);
-    if (ns == std::string::npos)
+    string::size_type ns = s.find(" ", pos);
+    if (ns == string::npos)
         ns = s.length();
 
-    const std::string argument =
-        s.substr(pos + tagprefix.length(), ns - pos - tagprefix.length());
+    const string argument = s.substr(pos + tagprefix.length(),
+                                     ns - pos - tagprefix.length());
 
     s.erase(pos, ns - pos + 1);
     trim_string(s);
 
-    return (argument);
+    return argument;
 }
 
-int strip_number_tag(std::string &s, const std::string &tagprefix)
+int strip_number_tag(string &s, const string &tagprefix)
 {
-    const std::string num = strip_tag_prefix(s, tagprefix);
+    const string num = strip_tag_prefix(s, tagprefix);
     int x;
     if (num.empty() || !parse_int(num.c_str(), x))
         return TAG_UNFOUND;
@@ -404,7 +369,7 @@ bool parse_int(const char *s, int &i)
 }
 
 // Naively prefix A/an to a noun.
-std::string article_a(const std::string &name, bool lowercase)
+string article_a(const string &name, bool lowercase)
 {
     if (!name.length())
         return name;
@@ -431,16 +396,15 @@ const char *standard_plural_qualifiers[] =
 
 // Pluralises a monster or item name.  This'll need to be updated for
 // correctness whenever new monsters/items are added.
-std::string pluralise(const std::string &name,
-                      const char *qualifiers[],
-                      const char *no_qualifier[])
+string pluralise(const string &name, const char *qualifiers[],
+                 const char *no_qualifier[])
 {
-    std::string::size_type pos;
+    string::size_type pos;
 
     if (qualifiers)
     {
         for (int i = 0; qualifiers[i]; ++i)
-            if ((pos = name.find(qualifiers[i])) != std::string::npos
+            if ((pos = name.find(qualifiers[i])) != string::npos
                 && !ends_with(name, no_qualifier))
             {
                 return pluralise(name.substr(0, pos)) + name.substr(pos);
@@ -448,7 +412,13 @@ std::string pluralise(const std::string &name,
     }
 
     if (!name.empty() && name[name.length() - 1] == ')'
-        && (pos = name.rfind(" (")) != std::string::npos)
+        && (pos = name.rfind(" (")) != string::npos)
+    {
+        return (pluralise(name.substr(0, pos)) + name.substr(pos));
+    }
+
+    if (!name.empty() && name[name.length() - 1] == ']'
+        && (pos = name.rfind(" [")) != string::npos)
     {
         return (pluralise(name.substr(0, pos)) + name.substr(pos));
     }
@@ -470,28 +440,17 @@ std::string pluralise(const std::string &name,
         return name.substr(0, name.length() - 2) + "ices";
     }
     else if (ends_with(name, "mosquito") || ends_with(name, "ss"))
-    {
         return name + "es";
-    }
     else if (ends_with(name, "cyclops"))
-    {
         return name.substr(0, name.length() - 1) + "es";
-    }
     else if (name == "catoblepas")
-    {
         return "catoblepae";
-    }
     else if (ends_with(name, "s"))
-    {
         return name;
-    }
     else if (ends_with(name, "y"))
     {
         if (name == "y")
-            return ("ys");
-        // sensibility -> sensibilities
-        else if (name[name.length() - 2] == 'i')
-            return name.substr(0, name.length() - 1) + "es";
+            return "ys";
         // day -> days, boy -> boys, etc
         else if (is_vowel(name[name.length() - 2]))
             return name + "s";
@@ -512,6 +471,7 @@ std::string pluralise(const std::string &name,
     else if (ends_with(name, "f") && !ends_with(name, "ff"))
     {
         // elf -> elves, but not hippogriff -> hippogrives.
+        // TODO: if someone defines a "goblin chief", this should be revisited.
         return name.substr(0, name.length() - 1) + "ves";
     }
     else if (ends_with(name, "mage"))
@@ -522,17 +482,17 @@ std::string pluralise(const std::string &name,
     else if (ends_with(name, "sheep") || ends_with(name, "fish")
              || ends_with(name, "folk") || ends_with(name, "spawn")
              || ends_with(name, "tengu") || ends_with(name, "shedu")
-             || ends_with(name, "swine")
+             || ends_with(name, "swine") || ends_with(name, "efreet")
              // "shedu" is male, "lammasu" is female of the same creature
-             || ends_with(name, "lammasu") || ends_with(name, "lamassu"))
+             || ends_with(name, "lammasu") || ends_with(name, "lamassu")
+             || name == "gold")
     {
         return name;
     }
     else if (ends_with(name, "ch") || ends_with(name, "sh")
              || ends_with(name, "x"))
     {
-        // To handle cockroaches and sphinxes, and in case there's some monster
-        // ending with sh (except fish, which are caught in the previous check).
+        // To handle cockroaches, sphinxes, and bushes.
         return name + "es";
     }
     else if (ends_with(name, "simulacrum") || ends_with(name, "eidolon"))
@@ -540,11 +500,6 @@ std::string pluralise(const std::string &name,
         // simulacrum -> simulacra (correct Latin pluralisation)
         // also eidolon -> eidola (correct Greek pluralisation)
         return name.substr(0, name.length() - 2) + "a";
-    }
-    else if (ends_with(name, "efreet"))
-    {
-        // efreet -> efreeti. Not sure this is correct.
-        return name + "i";
     }
     else if (name == "foot")
         return "feet";
@@ -559,10 +514,10 @@ std::string pluralise(const std::string &name,
     return name + "s";
 }
 
-std::string apostrophise(const std::string &name)
+string apostrophise(const string &name)
 {
     if (name.empty())
-        return (name);
+        return name;
 
     if (name == "you" || name == "You")
         return (name + "r");
@@ -574,16 +529,16 @@ std::string apostrophise(const std::string &name)
     return (name + (lastc == 's' ? "'" : "'s"));
 }
 
-std::string apostrophise_fixup(const std::string &msg)
+string apostrophise_fixup(const string &msg)
 {
     if (msg.empty())
-        return (msg);
+        return msg;
 
     // XXX: This is rather hackish.
-    return (replace_all(msg, "s's", "s'"));
+    return replace_all(msg, "s's", "s'");
 }
 
-static std::string pow_in_words(int pow)
+static string pow_in_words(int pow)
 {
     switch (pow)
     {
@@ -601,7 +556,7 @@ static std::string pow_in_words(int pow)
     }
 }
 
-static std::string tens_in_words(unsigned num)
+static string tens_in_words(unsigned num)
 {
     static const char *numbers[] = {
         "", "one", "two", "three", "four", "five", "six", "seven",
@@ -617,11 +572,10 @@ static std::string tens_in_words(unsigned num)
         return numbers[num];
 
     int ten = num / 10, digit = num % 10;
-    return std::string(tens[ten])
-             + (digit ? std::string("-") + numbers[digit] : "");
+    return string(tens[ten]) + (digit ? string("-") + numbers[digit] : "");
 }
 
-static std::string join_strings(const std::string &a, const std::string &b)
+static string join_strings(const string &a, const string &b)
 {
     if (!a.empty() && !b.empty())
         return (a + " " + b);
@@ -629,22 +583,22 @@ static std::string join_strings(const std::string &a, const std::string &b)
     return (a.empty() ? b : a);
 }
 
-static std::string hundreds_in_words(unsigned num)
+static string hundreds_in_words(unsigned num)
 {
     unsigned dreds = num / 100, tens = num % 100;
-    std::string sdreds = dreds? tens_in_words(dreds) + " hundred" : "";
-    std::string stens  = tens? tens_in_words(tens) : "";
+    string sdreds = dreds? tens_in_words(dreds) + " hundred" : "";
+    string stens  = tens? tens_in_words(tens) : "";
     return join_strings(sdreds, stens);
 }
 
-std::string number_in_words(unsigned num, int pow)
+string number_in_words(unsigned num, int pow)
 {
     if (pow == 12)
         return number_in_words(num, 0) + pow_in_words(pow);
 
     unsigned thousands = num % 1000, rest = num / 1000;
     if (!rest && !thousands)
-        return ("zero");
+        return "zero";
 
     return join_strings((rest? number_in_words(rest, pow + 3) : ""),
                         (thousands? hundreds_in_words(thousands)
@@ -652,82 +606,76 @@ std::string number_in_words(unsigned num, int pow)
                                   : ""));
 }
 
-std::string replace_all(std::string s,
-                        const std::string &find,
-                        const std::string &repl)
+string replace_all(string s, const string &find, const string &repl)
 {
     ASSERT(!find.empty());
-    std::string::size_type start = 0;
-    std::string::size_type found;
+    string::size_type start = 0;
+    string::size_type found;
 
-    while ((found = s.find(find, start)) != std::string::npos)
+    while ((found = s.find(find, start)) != string::npos)
     {
         s.replace(found, find.length(), repl);
         start = found + repl.length();
     }
 
-    return (s);
+    return s;
 }
 
 // Replaces all occurrences of any of the characters in tofind with the
 // replacement string.
-std::string replace_all_of(std::string s,
-                           const std::string &tofind,
-                           const std::string &replacement)
+string replace_all_of(string s, const string &tofind, const string &replacement)
 {
     ASSERT(!tofind.empty());
-    std::string::size_type start = 0;
-    std::string::size_type found;
+    string::size_type start = 0;
+    string::size_type found;
 
-    while ((found = s.find_first_of(tofind, start)) != std::string::npos)
+    while ((found = s.find_first_of(tofind, start)) != string::npos)
     {
         s.replace(found, 1, replacement);
         start = found + replacement.length();
     }
 
-    return (s);
+    return s;
 }
 
-int count_occurrences(const std::string &text, const std::string &s)
+int count_occurrences(const string &text, const string &s)
 {
     ASSERT(!s.empty());
     int nfound = 0;
-    std::string::size_type pos = 0;
+    string::size_type pos = 0;
 
-    while ((pos = text.find(s, pos)) != std::string::npos)
+    while ((pos = text.find(s, pos)) != string::npos)
     {
         ++nfound;
         pos += s.length();
     }
 
-    return (nfound);
+    return nfound;
 }
 
-std::string trimmed_string(std::string s)
+string trimmed_string(string s)
 {
     trim_string(s);
-    return (s);
+    return s;
 }
 
 // also used with macros
-std::string &trim_string(std::string &str)
+string &trim_string(string &str)
 {
     str.erase(0, str.find_first_not_of(" \t\n\r"));
     str.erase(str.find_last_not_of(" \t\n\r") + 1);
 
-    return (str);
+    return str;
 }
 
-std::string &trim_string_right(std::string &str)
+string &trim_string_right(string &str)
 {
     str.erase(str.find_last_not_of(" \t\n\r") + 1);
-    return (str);
+    return str;
 }
 
-static void add_segment(std::vector<std::string> &segs,
-                         std::string s,
-                         bool trim,
-                         bool accept_empty)
+static void add_segment(vector<string> &segs, string s, bool trim,
+                        bool accept_empty)
 {
     if (trim && !s.empty())
         trim_string(s);
@@ -736,17 +684,14 @@ static void add_segment(std::vector<std::string> &segs,
         segs.push_back(s);
 }
 
-std::vector<std::string> split_string(const std::string &sep,
-                                       std::string s,
-                                       bool trim_segments,
-                                       bool accept_empty_segments,
-                                       int nsplits)
+vector<string> split_string(const string &sep, string s, bool trim_segments,
+                            bool accept_empty_segments, int nsplits)
 {
-    std::vector<std::string> segments;
+    vector<string> segments;
     int separator_length = sep.length();
 
-    std::string::size_type pos;
-    while (nsplits && (pos = s.find(sep)) != std::string::npos)
+    string::size_type pos;
+    while (nsplits && (pos = s.find(sep)) != string::npos)
     {
         add_segment(segments, s.substr(0, pos),
                     trim_segments, accept_empty_segments);
@@ -763,8 +708,31 @@ std::vector<std::string> split_string(const std::string &sep,
     return segments;
 }
 
+static const string _get_indent(const string &s)
+{
+    size_t prefix = 0;
+    if (starts_with(s, "\"")    // ASCII quotes
+        || starts_with(s, "“")  // English quotes
+        || starts_with(s, "„")  // Polish/German/... quotes
+        || starts_with(s, "«")  // French quotes
+        || starts_with(s, "»")  // Danish/... quotes
+        || starts_with(s, "•")) // bulleted lists
+    {
+        prefix = 1;
+    }
+    else if (starts_with(s, "「"))  // Chinese/Japanese quotes
+        prefix = 2;
+
+    size_t nspaces = s.find_first_not_of(' ', prefix);
+    if (nspaces == string::npos)
+        nspaces = 0;
+    if (!(prefix += nspaces))
+        return "";
+    return string(prefix, ' ');
+}
+
 // The provided string is consumed!
-std::string wordwrap_line(std::string &s, int width, bool tags)
+string wordwrap_line(string &s, int width, bool tags, bool indent)
 {
     const char *cp0 = s.c_str();
     const char *cp = cp0, *space = 0;
@@ -798,7 +766,7 @@ std::string wordwrap_line(std::string &s, int width, bool tags)
                     if (!*cp)
                     {
                         // Everything so far fitted, report error.
-                        std::string ret = s + ">";
+                        string ret = s + ">";
                         s = "<lightred>ERROR: string above had unterminated tag</lightred>";
                         return ret;
                     }
@@ -818,14 +786,16 @@ std::string wordwrap_line(std::string &s, int width, bool tags)
     if (!c)
     {
         // everything fits
-        std::string ret = s;
+        string ret = s;
         s.clear();
         return ret;
     }
 
     if (space)
         cp = space;
-    const std::string ret = s.substr(0, cp - cp0);
+    const string ret = s.substr(0, cp - cp0);
+
+    const string indentation = (indent && c != '\n') ? _get_indent(s) : "";
 
     // eat all trailing spaces and up to one newline
     while (*cp == ' ')
@@ -833,6 +803,10 @@ std::string wordwrap_line(std::string &s, int width, bool tags)
     if (*cp == '\n')
         cp++;
     s.erase(0, cp - cp0);
+
+    // if we had to break a line, reinsert the indendation
+    if (indent && c != '\n')
+        s = indentation + s;
 
     return ret;
 }
@@ -887,7 +861,7 @@ not_numeric:
 }
 
 // make STL sort happy
-bool numcmpstr(const std::string a, const std::string b)
+bool numcmpstr(const string a, const string b)
 {
     return numcmp(a.c_str(), b.c_str()) == -1;
 }
@@ -903,6 +877,42 @@ bool version_is_stable(const char *v)
             return isadigit(v[1]);
         return true;
     }
+}
+
+static void inline _untag(string &s, const string pre,
+                          const string post, bool onoff)
+{
+    size_t p = 0;
+    while ((p = s.find(pre, p)) != string::npos)
+    {
+        size_t q = s.find(post, p);
+        if (q == string::npos)
+            q = s.length();
+        if (onoff)
+        {
+            s.erase(q, post.length());
+            s.erase(p, pre.length());
+        }
+        else
+            s.erase(p, q - p + post.length());
+    }
+}
+
+string untag_tiles_console(string s)
+{
+    _untag(s, "<tiles>", "</tiles>", is_tiles());
+    _untag(s, "<console>", "</console>", !is_tiles());
+#ifdef USE_TILE_WEB
+    _untag(s, "<webtiles>", "</webtiles>", true);
+#else
+    _untag(s, "<webtiles>", "</webtiles>", false);
+#endif
+#ifdef USE_TILE_LOCAL
+    _untag(s, "<localtiles>", "</localtiles>", true);
+#else
+    _untag(s, "<localtiles>", "</localtiles>", false);
+#endif
+    return s;
 }
 
 #ifndef USE_TILE_LOCAL
@@ -938,8 +948,14 @@ void cgotoxy(int x, int y, GotoRegion region)
     const coord_def tl = _cgettopleft(region);
     const coord_def sz = cgetsize(region);
 
-    ASSERT_SAVE(x >= 1 && x <= sz.x);
-    ASSERT_SAVE(y >= 1 && y <= sz.y);
+#ifdef ASSERTS
+    if (x < 1 || y < 1 || x > sz.x || y > sz.y)
+    {
+        save_game(false); // should be safe
+        die("screen write out of bounds: (%d,%d) into (%d,%d)", x, y,
+            sz.x, sz.y);
+    }
+#endif
 
     gotoxy_sys(tl.x + x - 1, tl.y + y - 1);
 
@@ -950,7 +966,7 @@ void cgotoxy(int x, int y, GotoRegion region)
 
 GotoRegion get_cursor_region()
 {
-    return (_current_region);
+    return _current_region;
 }
 #endif // USE_TILE_LOCAL
 
@@ -980,6 +996,7 @@ void cscroll(int n, GotoRegion region)
 }
 
 
+
 mouse_mode mouse_control::ms_current_mode = MOUSE_MODE_NORMAL;
 
 size_t strlcpy(char *dst, const char *src, size_t n)
@@ -1003,11 +1020,32 @@ size_t strlcpy(char *dst, const char *src, size_t n)
     return s - src - 1;
 }
 
+string unwrap_desc(string desc)
+{
+    // Don't append a newline to an empty description.
+    if (desc == "")
+        return "";
+
+    trim_string_right(desc);
+
+    // An empty line separates paragraphs.
+    desc = replace_all(desc, "\n\n", "\\n\\n");
+    // Indented lines are pre-formatted.
+    desc = replace_all(desc, "\n ", "\\n ");
+
+    // Newlines are still whitespace.
+    desc = replace_all(desc, "\n", " ");
+    // Can force a newline with a literal "\n".
+    desc = replace_all(desc, "\\n", "\n");
+
+    return desc + "\n";
+}
+
 #ifdef TARGET_OS_WINDOWS
 // FIXME: This function should detect if aero is running, but the DwmIsCompositionEnabled
 // function isn't included in msys, so I don't know how to do that. Instead, I just check
 // if we are running vista or higher. -rla
-bool _is_aero()
+static bool _is_aero()
 {
     OSVERSIONINFOEX osvi;
     osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
@@ -1087,10 +1125,16 @@ static BOOL WINAPI console_handler(DWORD sig)
 
 void init_signals()
 {
-    // If there's no console,
+    // If there's no console, this will return an error, which we ignore.
+    // For GUI programs there's no controlling terminal, but there's no hurt in
+    // blindly trying -- this way, we support Cygwin.
     SetConsoleCtrlHandler(console_handler, true);
 }
 
+void text_popup(const string& text, const wchar_t *caption)
+{
+    MessageBoxW(0, OUTW(text), caption, MB_OK);
+}
 #else
 
 /* [ds] This SIGHUP handling is primitive and far from safe, but it

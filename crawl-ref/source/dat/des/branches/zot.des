@@ -9,6 +9,17 @@
 #
 ##############################################################################
 
+{{
+  -- Orb of Zot placement, similar to how Vaults places its rune
+  -- Turn one 'Z' into the orb, the rest into orb mimics or nothing.
+  function zot5_orb(e)
+    e.nsubst("Z = 1:Z / *:O")
+    e.subst("O = O:1 .:9")
+    e.kitem("O = Orb of Zot mimic")
+    e.kitem("Z = Orb of Zot")
+    e.kmask("OZ = no_item_gen")
+  end
+}}
 
 ##############################################################################
 ##############################################################################
@@ -26,6 +37,9 @@ KFEAT:  O = enter_zot
 {{
   hook("post_place", function()
     dgn.place_maps { tag = "zot_entry_secondary", count = 2 }
+    if crawl.one_chance_in(100) then
+      dgn.place_maps { tag = "zot_entry_secondary_mimic", count = 1 }
+    end
   end)
 }}
 MAP
@@ -35,6 +49,13 @@ ENDMAP
 NAME:   zot_entry_traditional_secondary
 TAGS:   zot_entry_secondary allow_dup
 KFEAT:  O = enter_zot
+MAP
+O
+ENDMAP
+
+NAME:   zot_entry_traditional_secondary_mimic
+TAGS:   zot_entry_secondary_mimic
+KFEAT:  O = enter_zot mimic
 MAP
 O
 ENDMAP
@@ -49,7 +70,6 @@ COLOUR: c = lightmagenta
 COLOUR: .+ = magenta
 TILE:   c = wall_zot_magenta
 FTILE:  .O+ = floor_hall
-MONS:   killer klown
 MAP
 xxxxxxxxx
 xxxcccxxx
@@ -107,10 +127,9 @@ NSUBST: O = 1:O / *:n
 SUBST:  ^ = ^.
 SUBST:  s = ccc=
 MARKER: = = lua:restrict_door()
-KFEAT:  ^ = alarm trap / blade trap / axe trap / bolt trap
+KFEAT:  ^ = alarm trap / blade trap / bolt trap
 KFEAT:  O = enter_zot
 KFEAT:  n = stone_arch
-KFEAT:  m = iron_grate
 FTILE:  "OnDx = floor_marble
 COLOUR: " = magenta
 TILE:   x = wall_zot_magenta
@@ -128,19 +147,19 @@ MAP
 'wc1....cccccmccccccmccccccmccccc....1cw'
 'wc.""".+....2.............2....+.""".cw'
 'wc."O".cccccccccccc+cccccccccccc."O".cw'
-'wc.""".s..3.....=4m.m4=......3.s.""".cw'
+'wc.""".s..3.....=4w.w4=......3.s.""".cw'
 'wc.....c.3...cccccc.cccccc.""".c.....cw'
 'wccccccc3....+...3"""3...+."x"3ccc+cccw'
 'wwwwwwccccccccc.""""""".ccc""".c$$$.ccw'
 ''''''wm.......c.""""""".c4=..3.s$$$2mww'
-''''''wc.x3x3x2c"""xxx"""cmcccccccccccw''
+''''''wc.x3x3x2c"""xxx"""cwcccccccccccw''
 ''''''WD"""""""D"""xxx"""+.+^^^^^^^^^+w''
-''''''wc.x3x3x2c"""xxx"""cmcccccccccccw''
+''''''wc.x3x3x2c"""xxx"""cwcccccccccccw''
 ''''''wm.......c.""""""".c4=..3.s$$$2mww'
 'wwwwwwccccccccc.""""""".ccc""".c$$$.ccw'
 'wccccccc3....+...3"""3...+."x"3ccc+cccw'
 'wc.....c.3...cccccc.cccccc.""".c.....cw'
-'wc.""".s..3.....=4m.m4=......3.s.""".cw'
+'wc.""".s..3.....=4w.w4=......3.s.""".cw'
 'wc."O".cccccccccccc+cccccccccccc."O".cw'
 'wc.""".+....2.............2....+.""".cw'
 'wc1....cccccmccccccmccccccmccccc....1cw'
@@ -359,6 +378,16 @@ ENDMAP
 ##############################################################################
 ##############################################################################
 
+# There's few vaults on Zot:5, tone down their chances.
+NAME: dummy_balancer_zot
+DEPTH: Zot:5
+TAGS: dummy
+ORIENT: float
+WEIGHT: 60
+MAP
+x
+ENDMAP
+
 NAME:   lemuel_baited_zot_trap
 DEPTH:  Zot:*
 WEIGHT: 20
@@ -514,10 +543,10 @@ ENDMAP
 NAME:   lemuel_draconian_sentries
 DEPTH:  Zot:1-4
 ORIENT: float
-TAGS:   no_rotate
+TAGS:   no_rotate uniq_draconian_sentries
 MONS:   red draconian scorcher / green draconian zealot / yellow draconian caller
 SUBST:  } = }:80 >, ) = ):80 > , ] = ]:80 >
-SUBST:  1=123, w:w., w=Ww
+SUBST:  w:w., w=Ww
 KFEAT:  m = iron_grate
 MAP
 ............................
@@ -540,10 +569,10 @@ ENDMAP
 NAME:   lemuel_draconian_sentries_small
 DEPTH:  Zot:1-4
 ORIENT: float
-TAGS:   no_rotate
+TAGS:   no_rotate uniq_draconian_sentries
 MONS:   red draconian scorcher / green draconian zealot / yellow draconian caller
 SUBST:  } = }:80 >, ) = ):80 > , ] = ]:80 >
-SUBST:  1=123, w:w., w=Ww
+SUBST:  w:w., w=Ww
 KFEAT:  m = iron_grate
 MAP
 ................
@@ -641,13 +670,12 @@ ORIENT: float
 TAGS:   no_rotate no_hmirror no_monster_gen
 MONS:   killer klown
 MONS:   elephant / w:5 dire elephant / w:2 hellephant
-MONS:   human ; ankus
+MONS:   human ; club
 SUBST:  1 = 1 2:5 3:20
 SUBST:  2 = 2 2 .
-SUBST:  % = !:20 ?:5 $ .:20
+SUBST:  % = !:20 ?:5 .:20
 KITEM:  ! = banana
 KITEM:  ? = wand of random effects
-KITEM:  $ = potion of water
 COLOUR: " : yellow
 MAP
      ................
@@ -786,12 +814,15 @@ NAME:   evilmike_crystal_ball_defense
 TAGS:   no_rotate no_monster_gen
 DEPTH:  Zot:1-4
 ORIENT: float
-MONS:   oklob sapling / oklob plant / burning bush / lightning spire / nothing
-MONS:   ice statue / silver statue / orange crystal statue / curse skull / w:5 nothing
+MONS:   w:4 oklob sapling / w:4 oklob plant / w:6 burning bush / \
+        w:6 lightning spire / nothing
+MONS:   ice statue / silver statue / orange crystal statue / \
+        curse skull / w:5 nothing
+SUBST:  3 = 11.
 # Not quite the orb, but but close enough
 ITEM:   crystal ball of energy
 SUBST:  . = .:9 ~:1
-KFEAT:  ~ = dart trap / arrow trap / bolt trap / axe trap / blade trap / \
+KFEAT:  ~ = dart trap / arrow trap / bolt trap / blade trap / \
             needle trap / spear trap / net trap
 SUBST:  } = }:80 >, ) = ):80 >, ] = ]:80 >
 MAP
@@ -804,16 +835,185 @@ xxxxxxx.....).....xxxxxxx
 xxx.....1..}d]..1.....xxx
 xx...xx.....>.....xx...xx
 @x..xxxxx1.....1xxxxx..x@
-.x.1xxxxxx..1..xxxxxx1.x.
+.x.3xxxxxx..1..xxxxxx3.x.
 .x..xxxxxxx...xxxxxxx..x.
 .x..xxxxxxx...xxxxxxx..x.
 .x..xxxxxxxx.xxxxxxxx..x.
 .x..xxxxxxxx2xxxxxxxx..x.
 .x..xxxxxxxx.xxxxxxxx..x.
-.xx1.................1xx.
+.xx3.................3xx.
 ...x.................x...
-...x......1.1.1......x...
+...x......3.3.3......x...
 xxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+################################################################################
+# Xom's getting in the "make people in Zot scream" bracket, with tricks
+# resembling his overflow altars and effects. Extremely nasty and annoying.
+NAME:    hangedman_xom_zot_hilarity
+TAGS:    no_monster_gen no_trap_gen no_pool_fixup patrolling transparent
+DEPTH:   Zot:1-4
+WEIGHT:  3
+KMONS:   1357 = guardian mummy ; randart dire flail ego:chaos | \
+        randart great mace ego:chaos | randart battleaxe ego:chaos| \
+        randart great sword ego:chaos | randart glaive ego:chaos | \
+        randart scythe ego:chaos | any weapon randart ego:chaos w:4 | \
+        randart dire flail w:5 | randart great mace w:5 | randart battleaxe w:5 | \
+        randart great sword w:5 | randart glaive w:5 | randart scythe w:5 | \
+        any weapon randart w:2 | dire flail ego:chaos w:5 | great mace ego:chaos w:5 | \
+        great sword ego:chaos w:5 | battleaxe ego:chaos w:5 | glaive ego:chaos w:5 | \
+        scythe ego:chaos w:5 | any weapon ego:chaos w:2 | dire flail w:30 | \
+        great mace w:30 | battleaxe w:30 | great sword w:30 | \
+        scythe w:30 | glaive w:30 | any weapon w:12 . \
+        randart sling ego:chaos | randart bow ego:chaos | \
+        randart crossbow ego:chaos | sling | bow | crossbow | \
+        nothing w:15 . sling bullet | arrow | bolt . \
+        lightning rod w:6 | rod of demonology w:4 | rod of summoning w:4 | \
+        rod of destruction w:2 | rod of striking w:6 | wand of hasting w:16 | \
+        wand of confusion | wand of random effects w:6 | \
+        wand of polymorph other w:6 | any wand w:28 | any rod w:2 | \
+        nothing w:45 . randart ring mail | randart chain mail | \
+        randart scale mail | randart splint mail | ring mail | \
+        chain mail | scale mail | splint mail | nothing w:20
+KMONS:   2468 = killer klown
+KMONS:   _ = ghost moth
+KMONS:   90 = moth of wrath / butterfly w:30
+KFEAT:   0 = known zot trap
+KFEAT:   ^~ = teleport trap w:45 / zot trap w:4 / . w:1
+KFEAT:   _ = altar_xom
+KFEAT:   > = } mimic
+KPROP:   ^~> = no_rtele_into
+MARKER:  - = lua:restrict_door()
+COLOUR:  ^~ = warp
+FTILE:   ^ = floor_rough_magenta
+FTILE:   ~ = floor_rough_lightmagenta
+NSUBST:  > = 1:} / 1:) / 1:] / *:>, 9 = 1:0 / *:9, T = 1:. / *:T
+SUBST:   d = tGmcc, c = cccccbbvvx, M = m`, ` = `:195 ':3 ":2
+SUBST:   } = }:80 >, ) = ):80 >, ] = ]:80 >, l = wl, - = +
+SHUFFLE: 56, 78, ^~, cm / xn
+MARKER:  ' = lua:fog_machine { cloud_type = "seething chaos", pow_max = 17, \
+             delay_min = 450, delay_max = 700, size = 1, excl_rad = 0 }
+MARKER:  " = lua:fog_machine { cloud_type = "noxious fumes", pow_max = 17, \
+             delay_min = 350, delay_max = 400, size_min = 2, size_max = 3}
+MAP
+        mmmmmmm
+    @mmmm2.1.2mmmm@
+  @.cmMMmm+m+mmMMmc.@
+  ...clMMl```lMMlc...
+ @c.c.```````````.c.c@
+ mmc.l````.c.````l.cmm
+ mMl``c..`.>.`..c``lMm
+ mMM``.>.`d..`d>.``MMm
+mmmM``.d.^~~^`...``Mmmm
+m3ml`````m--mm^````lm6m
+m.+``...^m999-~d..``+.m
+m4m``c>.~-9_9-~.>c``m5m
+m.+``..d~-999m^...``+.m
+m3ml````^mm--m`````lm6m
+mmmM``...`^~~^.d.``Mmmm
+ mMM``.>d`..d`.>.``MMm
+ mMl``c..`.>.`..c``lMm
+ mmc.l````.c.````l.cmm
+ @c.c.```````````.c.c@
+  ...clMMl```lMMlc...
+  @.cmMMmm+m+mmMMmmc.@
+    @mmmm8.7.8mmmm@
+        mmmmmmm
+ENDMAP
+
+################################################################################
+# Space-filling minivaults by bmh.
+
+NAME: bmh_zot_hilbert_curve
+DEPTH: Zot
+TAGS: extra
+MAP
+xxxxxxxxx
+@...x...@
+xxx.x.xxx
+x...x...x
+x.xxxxx.x
+x.x...x.x
+x...x...x
+xxxxxxxxx
+ENDMAP
+
+NAME: bmh_zot_peano_curve
+DEPTH: Zot
+TAGS: extra
+MAP
+xxxxxxxxxxxxxxxxxxx
+x...x...x...x...x.@
+x.x.x.x.x.x.x.x.x.x
+x.x...x...x.x.x...x
+x.xxxxxxxxx.x.xxxxx
+x.x...x...x.x.x...x
+x.x.x.x.x.x.x.x.x.x
+x...x.x.x...x...x.x
+xxxxx.x.xxxxxxxxx.x
+x...x.x.x...x...x.x
+x.x.x.x.x.x.x.x.x.x
+@.x...x...x...x...x
+xxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   bmh_zot_big_hilbert_curve
+DEPTH:  Zot
+TAGS:   extra
+MAP
+xxxxxxxxxxxxx
+@.....x.....@
+@.....x.....@
+xxxx..x..xxxx
+x.....x.....x
+x.....x.....x
+x..xxxxxxx..x
+x..x.....x..x
+x..x.....x..x
+x.....x.....x
+x.....x.....x
+xxxxxxxxxxxxx
+ENDMAP
+
+NAME:   bmh_zot_zed_curve
+DEPTH:  Zot
+TAGS:   extra
+MAP
+xxxxxxxxxxxx
+@....xx....x
+xxx.xx.xx.xx
+xx.xx.xx.xxx
+x....xx...xx
+xxxxxxxxxx.x
+xx........xx
+x.xxxxxxxxxx
+xx...xx...xx
+xxx.xx.xx.xx
+xx.xx.xx.xxx
+x....xx....@
+xxxxxxxxxxxx
+ENDMAP
+
+NAME:   bmh_zot_levy_curve
+DEPTH:  Zot
+TAGS:   extra mini_float
+SUBST:  W = Ww
+MAP
+          WWW.
+          W.W..
+          W.WWW
+          ....W
+         .....W
+        ....WWW
+       .......W
+      ..www...W
+     ...w.w.WWW
+    ....wwwWW..
+WWW.......W...
+W........WW..
+WWW..W..WW..
+..W..W..W..
+ .WWWWWWW.
 ENDMAP
 
 ##############################################################################
@@ -899,17 +1099,25 @@ XXXXXXXXXXXcc..............ccXXXc...............cXXXcc..............ccXXXXXXXXXX
 XXXXXXXXXXXXccccccccccccccccXXXXcccccccc@ccccccccXXXXccccccccccccccccXXXXXXXXXXX
 ENDMAP
 
+###########################################################
+# Zot:5 Orb chambers
+###########################################################
+#
+# Each Orb chamber must be capable of placing the Orb. This is done by
+# placing one or more Z and calling zot5_orb(_G). One Z will have the Orb,
+# others will have a small chance of being an orb mimic, or will otherwise
+# be replaced with '.' (plain floor).  Avoid using the glyph O, as it is
+# used internally by zot5_orb().
+
 NAME:   orb_original
 TAGS:   orb_chamber
-MARKER: Z = lua:item_pickup_change_flags { \
-            level_flags="!no_tele_control", item="auto" \
-        }
-KITEM:  Z = Orb of Zot
-KMASK:  Z1! = no_item_gen
+WEIGHT: 25
+KMASK:  1! = no_item_gen
 SUBST:  ! = ^ .:40
 SUBST:  . = .:500 ^
 COLOUR: c = magenta
 KMONS:  1 = patrolling Orb Guardian
+: zot5_orb(_G)
 MAP
    ccccccccc
   ccccccccccc
@@ -937,15 +1145,12 @@ ENDMAP
 NAME:   orb_monky_inset
 TAGS:   orb_chamber
 WEIGHT: 5
-MARKER: Z = lua:item_pickup_change_flags { \
-            level_flags="!no_tele_control", item="auto" \
-        }
-KITEM:  Z = Orb of Zot
-KMASK:  Z1! = no_item_gen
+KMASK:  1! = no_item_gen
 SUBST:  ! = ^ .:40
 SUBST:  . = .:500 ^
 COLOUR: c = magenta
 KMONS:  1 = patrolling Orb Guardian
+: zot5_orb(_G)
 MAP
    ccccccccc
   ccccccccccc
@@ -973,22 +1178,18 @@ ENDMAP
 NAME:   orb_two_ways
 TAGS:   orb_chamber
 WEIGHT: 5
-NSUBST: Y = 1:Z / *:.
-MARKER: Z = lua:item_pickup_change_flags { \
-            level_flags="!no_tele_control", item="auto" \
-        }
-KITEM:  Z = Orb of Zot
-KMASK:  YZ1! = no_item_gen
+KMASK:  1! = no_item_gen
 SUBST:  ! = ^ .:40
 SUBST:  . = .:500 ^
 COLOUR: c = magenta
 KMONS:  1 = patrolling Orb Guardian
+: zot5_orb(_G)
 MAP
    ccccccccc
   XXXXXXXXXXX
 cXXXXX.....XXXc
 cXXX!!!1X...XXc
- XXX!Y!XXX..XX
+ XXX!Z!XXX..XX
   XX!!!XX..XX
   XXXXXX..XXX
  XXXX.....XXXX
@@ -1000,7 +1201,7 @@ cXXX!!!1X...XXc
  XXXX.....XXXX
   XXXX..XXXXX
   XXX..XX!!!X
- XXX..XXX!Y!XX
+ XXX..XXX!Z!XX
 cXXX...X1!!!XXc
 cXXXX.....XXXXc
   XXXXXXXXXXX
@@ -1010,16 +1211,13 @@ ENDMAP
 NAME:   orb_monky_within_orb
 TAGS:   orb_chamber
 WEIGHT: 5
-MARKER: Z = lua:item_pickup_change_flags { \
-            level_flags="!no_tele_control", item="auto" \
-        }
-KITEM:  Z = Orb of Zot
-KMASK:  Z1! = no_item_gen
+KMASK:  1! = no_item_gen
 SUBST:  ! = ^ .:40
 SUBST:  . = .:500 ^
 COLOUR: cn = magenta
 TILE:   n = dngn_transparent_wall_magenta
 KMONS:  1 = patrolling Orb Guardian
+: zot5_orb(_G)
 MAP
    ccccccccc
   ccccccccccc
@@ -1047,16 +1245,13 @@ ENDMAP
 NAME:   orb_monky_twist
 TAGS:   orb_chamber
 WEIGHT: 5
-MARKER: Z = lua:item_pickup_change_flags { \
-            level_flags="!no_tele_control", item="auto" \
-        }
-KITEM:  Z = Orb of Zot
-KMASK:  Z1! = no_item_gen
+KMASK:  1! = no_item_gen
 SUBST:  ! = ^ .:40
 SUBST:  . = .:500 ^
 COLOUR: cn = magenta
 TILE:   n = dngn_transparent_wall_magenta
 KMONS:  1 = patrolling Orb Guardian
+: zot5_orb(_G)
 MAP
    ccccccccc
   ccccccccccc
@@ -1083,17 +1278,14 @@ ENDMAP
 
 NAME:   mrperson_orb_statues
 TAGS:   orb_chamber
-MARKER: Z = lua:item_pickup_change_flags { \
-            level_flags="!no_tele_control", item="auto" \
-        }
-KITEM:  Z = Orb of Zot
-KMASK:  Z1! = no_item_gen
+KMASK:  1! = no_item_gen
 SUBST:  ! = ^ .:40
 SUBST:  . = .:500 ^
 COLOUR: G = magenta
 SUBST:  G = G:100 F:1
 KMONS:  F = orange crystal statue / silver statue / ice statue
 KMONS:  1 = patrolling Orb Guardian
+: zot5_orb(_G)
 MAP
    ccccccccc
   ccccccccccc
@@ -1118,6 +1310,106 @@ cccXXGXGXGXXccc
    ccccccccc
 ENDMAP
 
+NAME:   orb_nicolae_swirls
+TAGS:   orb_chamber
+WEIGHT: 5
+KMASK:  1! = no_item_gen
+SUBST:  ! = ^ .:40
+SUBST:  . = .:500 ^
+COLOUR: cn = magenta
+TILE:   n = dngn_transparent_wall_magenta
+KMONS:  1 = patrolling Orb Guardian
+: zot5_orb(_G)
+MAP
+   XXXXXXXXX
+  XX...1...XX
+ccX1!!!...1.Xcc
+ccX.!Z!.....Xcc
+ cXX!!!X..1.Xc
+  cXXXXX....X
+  cXXXXX...XX
+ XXXXXX...XXXX
+ XXXXX.1.nnn..
+ XXX........1.
+ .....nnn.....
+ .1........XXX
+ ..nnn.1.XXXXX
+ XXXX...XXXXXX
+  XX....XXXXc
+  X....XXXXXc
+ cX.1..X!!!XXc
+ccX.....!Z!.Xcc
+ccX.1...!!!1Xcc
+  XX...1...XX
+   XXXXXXXXX
+ENDMAP
+
+NAME:   orb_nicolae_fourfold
+TAGS:   orb_chamber
+WEIGHT: 5
+KMASK:  1! = no_item_gen
+SUBST:  ! = ^ .:40
+SUBST:  . = .:500 ^
+COLOUR: c = magenta
+KMONS:  1 = patrolling Orb Guardian
+: zot5_orb(_G)
+MAP
+   XXXXXXXXX
+  XX...X...XX
+cXX..1...1..XXc
+cX1..XX.XX..1Xc
+ XX..X...X..XX
+  X..X.1.X..X
+  X..X...X..X
+ XX..XX.XX..XX
+ ...XX.1.XX...
+ .1.X.!!!.X.1.
+ XXXX.!Z!.XXXX
+ .1.X.!!!.X.1.
+ ...XX.1.XX...
+ XX..XX.XX..XX
+  X..X...X..X
+  X..X.1.X..X
+ XX..X...X..XX
+cX1..XX.XX..1Xc
+cXX..1...1..XXc
+  XX...X...XX
+   XXXXXXXXX
+ENDMAP
+
+NAME:   orb_grunt_hallway
+TAGS:   orb_chamber
+WEIGHT: 5
+KMASK:  1! = no_item_gen
+SUBST:  ! = ^ .:40
+SUBST:  . = .:500 ^
+SUBST:  : = .
+COLOUR: c = magenta
+KMONS:  1 = patrolling Orb Guardian
+: zot5_orb(_G)
+MAP
+   ccXXXXXcc
+  ccXX.X.XXcc
+ccccX1!!!1XcXXc
+ccccXX!Z!XXccXc
+ cccX1!!!1XcXX
+  ccXX...XXcX
+  XXXX...XXXX
+ XXXXXG:GXXXXX
+ XX.XX...XX.XX
+ X1..X.1.X..1X
+ :...XG:GX...:
+ X1..X...X..1X
+ XX..X...X..XX
+ XX..XG:GX..XX
+  X.1X...X1.X
+  X..X.1.X..X
+ cX..XG:GX..Xc
+ccX..X...X..Xcc
+ccX.........Xcc
+  XX.......XX
+   XXXXXXXXX
+ENDMAP
 
 ##############################################################################
 ##############################################################################
@@ -1128,9 +1420,9 @@ ENDMAP
 ##############################################################################
 
 NAME:       hall_of_Zot_1
-PLACE:      Zot:1
-TAGS:       transparent no_dump
-ORIENT:     float
+DEPTH:      Zot:1
+CHANCE:     100%
+TAGS:       extra transparent allow_dup no_dump
 LFLOORCOL:  lightgrey
 LROCKCOL:   white
 LFLOORTILE: floor_rough_lightgray
@@ -1140,9 +1432,9 @@ MAP
 ENDMAP
 
 NAME:       hall_of_Zot_2
-PLACE:      Zot:2
-TAGS:       transparent no_dump
-ORIENT:     float
+DEPTH:      Zot:2
+CHANCE:     100%
+TAGS:       extra transparent allow_dup no_dump
 LFLOORCOL:  white
 LROCKCOL:   blue
 LFLOORTILE: floor_rough_white
@@ -1152,9 +1444,9 @@ MAP
 ENDMAP
 
 NAME:       hall_of_Zot_3
-PLACE:      Zot:3
-TAGS:       transparent no_dump
-ORIENT:     float
+DEPTH:      Zot:3
+CHANCE:     100%
+TAGS:       extra transparent allow_dup no_dump
 LFLOORCOL:  blue
 LROCKCOL:   lightblue
 LFLOORTILE: floor_rough_blue
@@ -1164,9 +1456,9 @@ MAP
 ENDMAP
 
 NAME:       hall_of_Zot_4
-PLACE:      Zot:4
-TAGS:       transparent no_dump
-ORIENT:     float
+DEPTH:      Zot:4
+CHANCE:     100%
+TAGS:       extra transparent allow_dup no_dump
 LFLOORCOL:  lightblue
 LROCKCOL:   magenta
 LFLOORTILE: floor_rough_lightblue

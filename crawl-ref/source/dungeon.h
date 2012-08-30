@@ -7,6 +7,7 @@
 #ifndef DUNGEON_H
 #define DUNGEON_H
 
+#include "bitary.h"
 #include "fixedarray.h"
 #include "env.h"
 #include "externs.h"
@@ -22,25 +23,12 @@
 #define LAYOUT_TYPE_KEY  "layout_type_key"
 #define LEVEL_VAULTS_KEY "level_vaults_key"
 #define LEVEL_EXTRAS_KEY "level_extras_key"
-#define LEVEL_ID_KEY     "level_id_key"
-
-#define YOU_PORTAL_VAULT_NAMES_KEY  "you_portal_vault_names_key"
 
 // See _build_overflow_temples() in dungeon.cc for details on overflow
 // temples.
 #define TEMPLE_GODS_KEY      "temple_gods_key"
 #define OVERFLOW_TEMPLES_KEY "overflow_temples_key"
 #define TEMPLE_MAP_KEY       "temple_map_key"
-
-enum portal_type
-{
-    PORTAL_NONE = 0,
-    PORTAL_LABYRINTH,
-    PORTAL_HELL,
-    PORTAL_ABYSS,
-    PORTAL_PANDEMONIUM,
-    NUM_PORTALS
-};
 
 const int MAKE_GIFT_ITEM = 350; // worse than the next one
 const int MAKE_GOOD_ITEM = 351;
@@ -64,10 +52,11 @@ enum map_mask_type
     MMT_NO_TRAP    = 0x80,    // No trap generation
     MMT_MIMIC      = 0x100,   // Feature mimics
     MMT_NO_MIMIC   = 0x200,   // This feature shouldn't be turned into a mimic.
+    MMT_WAS_DOOR_MIMIC = 0x400, // There was a door mimic there.
 };
 
 class dgn_region;
-typedef std::vector<dgn_region> dgn_region_list;
+typedef vector<dgn_region> dgn_region_list;
 
 class dgn_region
 {
@@ -144,7 +133,7 @@ public:
 
     map_section_type orient;
     map_def map;
-    std::vector<coord_def> exits;
+    vector<coord_def> exits;
 
     int level_number;
 
@@ -182,23 +171,22 @@ private:
 class unwind_vault_placement_mask
 {
 public:
-    unwind_vault_placement_mask(const map_mask *mask);
+    unwind_vault_placement_mask(const map_bitmask *mask);
     ~unwind_vault_placement_mask();
 private:
-    const map_mask *oldmask;
+    const map_bitmask *oldmask;
 };
 
 extern bool Generating_Level;
-extern std::vector<vault_placement> Temp_Vaults;
+extern vector<vault_placement> Temp_Vaults;
 
-extern const map_mask *Vault_Placement_Mask;
+extern const map_bitmask *Vault_Placement_Mask;
 
 void init_level_connectivity();
 void read_level_connectivity(reader &th);
 void write_level_connectivity(writer &th);
 
-bool builder(int level_number, level_area_type level_type,
-             bool enable_random_maps = true,
+bool builder(bool enable_random_maps = true,
              dungeon_feature_type dest_stairs_type = NUM_FEATURES);
 void dgn_veto_level();
 
@@ -221,27 +209,23 @@ void dgn_set_colours_from_monsters();
 void dgn_set_grid_colour_at(const coord_def &c, int colour);
 
 bool dgn_place_map(const map_def *map,
-                   bool clobber,
+                   bool check_collision,
                    bool make_no_exits,
                    const coord_def &pos = INVALID_COORD);
 
 const map_def *dgn_safe_place_map(const map_def *map,
-                                  bool clobber,
+                                  bool check_collision,
                                   bool make_no_exits,
                                   const coord_def &pos = INVALID_COORD);
 
 void level_clear_vault_memory();
-void level_welcome_messages();
-void run_map_epilogues ();
+void run_map_epilogues();
 
 struct trap_spec;
-bool place_specific_trap(const coord_def& where, trap_type trap_spec);
-bool place_specific_trap(const coord_def& where, trap_spec* spec);
+bool place_specific_trap(const coord_def& where, trap_type trap_spec, int charges = 0);
 
 struct shop_spec;
-void place_spec_shop(int level_number, const coord_def& where,
-                     shop_spec* spec, bool representative = false);
-void place_spec_shop(int level_number, const coord_def& where,
+void place_spec_shop(const coord_def& where,
                      int force_s_type, bool representative = false);
 bool seen_replace_feat(dungeon_feature_type replace,
                        dungeon_feature_type feature);
@@ -266,8 +250,7 @@ void dgn_place_multiple_items(item_list &list,
 bool set_level_flags(uint32_t flags, bool silent = false);
 bool unset_level_flags(uint32_t flags, bool silent = false);
 
-void dgn_set_lt_callback(std::string level_type_name,
-                         std::string callback_name);
+void dgn_set_branch_epilogue(branch_type br, string callback_name);
 
 void dgn_reset_level(bool enable_random_maps = true);
 
@@ -304,14 +287,12 @@ vault_placement *dgn_vault_at(coord_def gp);
 void dgn_seen_vault_at(coord_def gp);
 
 int count_neighbours(int x, int y, dungeon_feature_type feat);
-inline int count_neighbours(const coord_def& p, dungeon_feature_type feat)
+static inline int count_neighbours(const coord_def& p, dungeon_feature_type feat)
 {
     return count_neighbours(p.x, p.y, feat);
 }
 
-void remember_vault_placement(std::string key, const vault_placement &place);
-
-std::string dump_vault_maps();
+string dump_vault_maps();
 
 bool dgn_square_travel_ok(const coord_def &c);
 
@@ -319,4 +300,6 @@ bool join_the_dots(const coord_def &from, const coord_def &to, unsigned mmask);
 int count_feature_in_box(int x0, int y0, int x1, int y1,
                          dungeon_feature_type feat);
 bool door_vetoed(const coord_def pos);
+
+void fixup_misplaced_items(void);
 #endif

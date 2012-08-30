@@ -55,9 +55,8 @@ struct level_exit
 
 
 const item_def *give_mimic_item(monster* mimic);
-const item_def* get_mimic_item(const monster* mimic);
-dungeon_feature_type get_mimic_feat (const monster* mimic);
-bool feature_mimic_at (const coord_def &c);
+dungeon_feature_type get_mimic_feat(const monster* mimic);
+bool feature_mimic_at(const coord_def &c);
 item_def* item_mimic_at(const coord_def &c);
 bool mimic_at(const coord_def &c);
 
@@ -109,7 +108,7 @@ void mons_check_pool(monster* mons, const coord_def &oldpos,
 
 void monster_cleanup(monster* mons);
 
-int dismiss_monsters(std::string pattern);
+int dismiss_monsters(string pattern);
 void zap_los_monsters(bool items_also);
 
 bool curse_an_item(bool quiet = false);
@@ -143,21 +142,18 @@ monster *choose_random_monster_on_level(
     bool in_sight = true, bool near_by = false,
     bool prefer_named = false, bool prefer_priest = false);
 
-bool swap_places(monster* mons);
 bool swap_places(monster* mons, const coord_def &loc);
 bool swap_check(monster* mons, coord_def &loc, bool quiet = false);
 
-
 void print_wounds(const monster* mons);
-bool monster_descriptor(int which_class, mon_desc_type which_descriptor);
+bool monster_descriptor(monster_type which_class, mon_desc_type which_descriptor);
 
 // Return your target, if it still exists and is visible to you.
 monster *get_current_target();
 
 mon_dam_level_type mons_get_damage_level(const monster* mons);
 
-std::string get_damage_level_string(mon_holy_type holi,
-                                    mon_dam_level_type mdam);
+string get_damage_level_string(mon_holy_type holi, mon_dam_level_type mdam);
 
 void seen_monster(monster* mons);
 
@@ -181,27 +177,19 @@ bool can_go_straight(const monster* mon, const coord_def& p1,
 
 bool is_item_jelly_edible(const item_def &item);
 
-bool monster_random_space(const monster* mons, coord_def& target,
-                          bool forbid_sanctuary = false);
-bool monster_random_space(monster_type mon, coord_def& target,
-                          bool forbid_sanctuary = false);
-bool shove_monster(monster* mons);
+bool monster_space_valid(const monster* mons, coord_def target,
+                         bool forbid_sanctuary);
 void monster_teleport(monster* mons, bool instan, bool silent = false);
 void mons_clear_trapping_net(monster* mon);
 
-std::string summoned_poof_msg(const monster* mons, bool plural = false);
-std::string summoned_poof_msg(const int midx, const item_def &item);
-std::string summoned_poof_msg(const monster* mons, const item_def &item);
+string summoned_poof_msg(const monster* mons, bool plural = false);
+string summoned_poof_msg(const int midx, const item_def &item);
+string summoned_poof_msg(const monster* mons, const item_def &item);
 
 struct bolt;
 
 void setup_spore_explosion(bolt & beam, const monster& origin);
 
-bool mons_avoids_cloud(const monster* mons, cloud_type cl_type,
-                       bool placement = false);
-
-// Like the above, but allow a monster to move from one damaging cloud
-// to another.
 bool mons_avoids_cloud(const monster* mons, int cloud_num,
                        bool placement = false);
 
@@ -210,8 +198,5 @@ int exp_rate(int killer);
 int count_monsters(monster_type mtyp, bool friendlyOnly);
 int count_allies();
 void record_monster_defeat(monster* mons, killer_type killer);
-#if TAG_MAJOR_VERSION <= 33
-void note_montiers();
-#endif
 
 #endif

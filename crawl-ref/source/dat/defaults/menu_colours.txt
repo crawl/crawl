@@ -1,0 +1,77 @@
+# Changing colours of items in the inventory and other menus
+
+menu := menu_colour
+ae   := autopickup_exceptions
+
+# Items currently not affecting you.
+menu = darkgrey:(melded)
+
+# Bad items
+menu = lightred:.*bad_item.*
+
+# Useless items, comes here to override artefacts etc.
+menu = darkgrey:.*useless_item.*
+
+: if you.race() == "Spriggan" then
+menu = darkgrey:.*jewellery.*(sustenance)
+ae   = >ring.*(sustenance)
+:end
+
+# Evil items
+menu = $evil:.*evil_item.*
+
+# Handle cursed and equipped items early to override other colour settings.
+menu = lightred:.*equipped.* cursed
+menu = red: (a|the) cursed
+menu = inventory:lightgreen:.*equipped.*
+
+# Important game items
+#
+menu = lightmagenta:.*misc.*rune( of Zot)?
+menu = lightmagenta:.*orb.*Zot
+
+# Artefacts
+#
+menu = white:.*artefact.*
+
+#menu = white:.*identified.*artefact.*
+#menu = lightblue:.*unidentified.*artefact.*
+
+# Ego items
+#
+: if options.menu_colour_prefix_class then
+menu = lightblue:(^identified armour.* pair of .* of )
+menu = lightgrey:(^identified armour.* pair of )
+menu = lightblue:(^identified (weapon|armour).* of )
+menu = lightblue:(^identified weapon.* vampiric .*)
+menu = lightblue:(^identified weapon.* anti-magic .*)
+
+# Possible egos
+menu = lightblue:^unidentified .*weapon.*(runed|glowing)
+menu = lightblue:^unidentified .*armour.*(runed|glowing|embroidered|shiny|dyed)
+:end
+
+# Emergency items
+menu = yellow:.*emergency_item.*
+
+# Good items
+menu = cyan:.*good_item.*
+menu = cyan:.*misc.*[lL]antern
+
+# Dangerous (but still useful) items
+menu = $dangerous:.*dangerous_item.*
+
+# Defaults for normal items
+menu = green:uncursed
+
+
+# Colouring of autoinscribed god gifts
+menu_colour = pickup:green:god gift
+
+# Highlight (partly) selected items
+menu_colour = inventory:white:\w \+\s
+menu_colour = inventory:white:\w \#\s
+
+
+# Not really menu.
+menu_colour = notes:white:Reached XP level

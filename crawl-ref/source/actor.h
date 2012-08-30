@@ -3,7 +3,6 @@
 
 #include "itemprop-enum.h"
 #include "los_def.h"
-#include "itemprop-enum.h"
 
 enum ev_ignore_type
 {
@@ -13,6 +12,12 @@ enum ev_ignore_type
 };
 
 struct bolt;
+
+/* Axe this block soon */
+// (needed for asserts in is_player())
+class player;
+extern player you;
+/***********************/
 
 class actor
 {
@@ -24,10 +29,19 @@ public:
     virtual int       mindex() const = 0;
     virtual actor_type atype() const = 0;
 
-    virtual bool is_player() const
+    bool is_player() const
     {
-        return atype() == ACT_PLAYER;
+        ASSERT(this);
+        if (atype() == ACT_PLAYER)
+        {
+#ifndef DEBUG_GLOBALS
+            ASSERT(this == (actor*)&you); // there can be only one
+#endif
+            return true;
+        }
+        return false;
     }
+    bool is_monster() const { return !is_player(); }
     virtual monster* as_monster() = 0;
     virtual player* as_player() = 0;
     virtual const monster* as_monster() const = 0;
@@ -38,8 +52,11 @@ public:
 
     virtual bool      alive() const = 0;
 
+    // Should return false for perma-summoned things.
     virtual bool is_summoned(int* duration = NULL,
                              int* summon_type = NULL) const = 0;
+
+    virtual bool is_perm_summoned() const = 0;
 
     // [ds] Low-level moveto() - moves the actor without updating relevant
     // grids, such as mgrd.
@@ -73,6 +90,7 @@ public:
 
     virtual int       get_experience_level() const = 0;
 
+    virtual bool shove(const char* feat_name = "") = 0;
     virtual bool can_pass_through_feat(dungeon_feature_type grid) const = 0;
     virtual bool can_pass_through(int x, int y) const;
     virtual bool can_pass_through(const coord_def &c) const;
@@ -93,6 +111,7 @@ public:
     {
         return const_cast<actor*>(this)->weapon(0);
     }
+    virtual int has_claws(bool allow_tran = true) const = 0;
     virtual item_def *shield() = 0;
     virtual item_def *slot_item(equipment_type eq,
                                 bool include_melded=false) = 0;
@@ -118,7 +137,6 @@ public:
                              bool ignore_brand = false,
                              bool ignore_transform = false) const = 0;
 
-    virtual int hunger_level() const { return HS_ENGORGED; }
     virtual void make_hungry(int nutrition, bool silent = true)
     {
     }
@@ -130,23 +148,20 @@ public:
     {
     }
 
-    virtual std::string name(description_level_type type,
-                             bool force_visible = false) const = 0;
-    virtual std::string pronoun(pronoun_type which_pronoun,
-                                bool force_visible = false) const = 0;
-    virtual std::string conj_verb(const std::string &verb) const = 0;
-    virtual std::string hand_name(bool plural,
-                                  bool *can_plural = NULL) const = 0;
-    virtual std::string foot_name(bool plural,
-                                  bool *can_plural = NULL) const = 0;
-    virtual std::string arm_name(bool plural,
-                                 bool *can_plural = NULL) const = 0;
+    virtual string name(description_level_type type,
+                        bool force_visible = false) const = 0;
+    virtual string pronoun(pronoun_type which_pronoun,
+                           bool force_visible = false) const = 0;
+    virtual string conj_verb(const string &verb) const = 0;
+    virtual string hand_name(bool plural, bool *can_plural = NULL) const = 0;
+    virtual string foot_name(bool plural, bool *can_plural = NULL) const = 0;
+    virtual string arm_name(bool plural, bool *can_plural = NULL) const = 0;
 
     virtual bool fumbles_attack(bool verbose = true) = 0;
 
     virtual bool fights_well_unarmed(int heavy_armour_penalty)
     {
-         return (true);
+         return true;
     }
     // Returns true if the actor has no way to attack (plants, statues).
     // (statues have only indirect attacks).
@@ -183,7 +198,7 @@ public:
     virtual bool can_mutate() const = 0;
     virtual bool can_safely_mutate() const = 0;
     virtual bool can_bleed(bool allow_tran = true) const = 0;
-    virtual bool mutate() = 0;
+    virtual bool mutate(const string &reason) = 0;
     virtual bool drain_exp(actor *agent, bool quiet = false, int pow = 3) = 0;
     virtual bool rot(actor *agent, int amount, int immediate = 0,
                      bool quiet = false) = 0;
@@ -191,15 +206,14 @@ public:
                       beam_type flavour = BEAM_MISSILE,
                       bool cleanup_dead = true) = 0;
     virtual bool heal(int amount, bool max_too = false) = 0;
-    virtual void banish(const std::string &who = "") = 0;
+    virtual void banish(actor *agent, const string &who = "") = 0;
     virtual void blink(bool allow_partial_control = true) = 0;
     virtual void teleport(bool right_now = false,
                           bool abyss_shift = false,
                           bool wizard_tele = false) = 0;
     virtual bool poison(actor *attacker, int amount = 1, bool force = false) = 0;
     virtual bool sicken(int amount, bool allow_hint = true) = 0;
-    virtual void paralyse(actor *attacker, int strength,
-                          std::string source = "") = 0;
+    virtual void paralyse(actor *attacker, int strength, string source = "") = 0;
     virtual void petrify(actor *attacker) = 0;
     virtual bool fully_petrify(actor *foe, bool quiet = false) = 0;
     virtual void slow_down(actor *attacker, int strength) = 0;
@@ -212,7 +226,7 @@ public:
     virtual void hibernate(int power = 0) = 0;
     virtual void check_awaken(int disturbance) = 0;
     virtual int beam_resists(bolt &beam, int hurted, bool doEffects,
-                             std::string source = "") = 0;
+                             string source = "") = 0;
 
     virtual int  skill(skill_type sk, int scale = 1, bool real = false) const = 0;
     int  skill_rdiv(skill_type sk, int mult = 1, int div = 1) const;
@@ -241,7 +255,7 @@ public:
     virtual int armour_tohit_penalty(bool random_factor) const = 0;
     virtual int shield_tohit_penalty(bool random_factor) const = 0;
 
-    virtual int mons_species(bool zombie_base = false) const = 0;
+    virtual monster_type mons_species(bool zombie_base = false) const = 0;
 
     virtual mon_holy_type holiness() const = 0;
     virtual bool undead_or_demonic() const = 0;
@@ -268,8 +282,10 @@ public:
     virtual int res_torment() const = 0;
     virtual int res_wind() const = 0;
     virtual int res_petrify(bool temp = true) const = 0;
+    virtual int res_constrict() const = 0;
     virtual int res_magic() const = 0;
     virtual int check_res_magic(int power);
+    virtual bool no_tele(bool calc_unid = true, bool permit_id = true) const = 0;
 
     virtual flight_type flight_mode() const = 0;
     virtual bool is_levitating() const = 0;
@@ -289,7 +305,7 @@ public:
     virtual bool cannot_act() const = 0;
     virtual bool confused() const = 0;
     virtual bool caught() const = 0;
-    virtual bool asleep() const { return (false); }
+    virtual bool asleep() const { return false; }
 
     // check_haloed: include halo
     // self_halo: include own halo (actually if self_halo = false
@@ -304,6 +320,8 @@ public:
     virtual bool haloed() const;
     // Within an umbra?
     virtual bool umbraed() const;
+    // Magically suppressed?
+    virtual bool suppressed() const;
     // Squared halo radius.
     virtual int halo_radius2() const = 0;
     // Squared silence radius.
@@ -311,6 +329,7 @@ public:
     // Squared liquefying radius
     virtual int liquefying_radius2 () const = 0;
     virtual int umbra_radius2 () const = 0;
+    virtual int suppression_radius2 () const = 0;
 
     virtual bool glows_naturally() const = 0;
 
@@ -330,10 +349,9 @@ public:
             || petrifying();
     }
 
-    virtual int warding() const
-    {
-        return (0);
-    }
+    virtual bool wont_attack() const = 0;
+    virtual mon_attitude_type temp_attitude() const = 0;
+    virtual int warding() const = 0;
 
     virtual bool has_spell(spell_type spell) const = 0;
 
@@ -345,31 +363,46 @@ public:
 
     CrawlHashTable props;
 
-    // Constriction stuff
-    unsigned short constricted_by;
-    unsigned short constricting[MAX_CONSTRICT];
+    // Constriction stuff:
+
+    // What is holding us?  Not necessarily a monster.
+    held_type held;
+    mid_t constricted_by;
     int escape_attempts;
-    int dur_been_constricted;
-    int dur_has_constricted[MAX_CONSTRICT];
 
-    // handles non-attack turn constrictions, does not need to be saved
-    bool has_constricted_this_turn;
-    void stop_constricting(int mindex, bool intentional = false);
-    void stop_constricting_all(bool intentional = false);
-    void stop_being_constricted();
+    // Map from mid to duration.
+    typedef map<mid_t, int> constricting_t;
+    // Freed and set to NULL when empty.
+    constricting_t *constricting;
 
+    void start_constricting(actor &whom, int duration = 0);
+
+    void stop_constricting(mid_t whom, bool intentional = false,
+                           bool quiet = false);
+    void stop_constricting_all(bool intentional = false, bool quiet = false);
+    void stop_being_constricted(bool quiet = false);
+
+    bool can_constrict(actor* defender);
     void clear_far_constrictions();
+    void accum_has_constricted();
+    void handle_constriction();
     bool is_constricted() const;
     bool is_constricting() const;
+    int num_constricting() const;
     virtual bool has_usable_tentacle() const = 0;
+    virtual int constriction_damage() const = 0;
+
 
 protected:
+    void clear_constricted();
+    void end_constriction(constricting_t::iterator i, bool intentional,
+                          bool quiet);
+
     // These are here for memory management reasons...
     los_glob los;
     los_glob los_no_trans;
 };
 
 bool actor_slime_wall_immune(const actor *actor);
-actor *mindex_to_actor(short mindex);
 
 #endif

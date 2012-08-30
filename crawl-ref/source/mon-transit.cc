@@ -115,7 +115,8 @@ void add_monster_to_transit(const level_id &lid, const monster& m)
     m_transit_list &mlist = the_lost_ones[lid];
     mlist.push_back(m);
 
-    dprf("Monster in transit: %s", m.name(DESC_PLAIN).c_str());
+    dprf("Monster in transit to %s: %s", lid.describe().c_str(),
+         m.name(DESC_PLAIN, true).c_str());
 
     const int how_many = mlist.size();
     if (how_many > MAX_LOST)
@@ -146,8 +147,8 @@ void place_followers()
 
 static bool place_lost_monster(follower &f)
 {
-    dprf("Placing lost one: %s", f.mons.name(DESC_PLAIN).c_str());
-    return (f.place(false));
+    dprf("Placing lost one: %s", f.mons.name(DESC_PLAIN, true).c_str());
+    return f.place(false);
 }
 
 static void level_place_lost_monsters(m_transit_list &m)
@@ -159,7 +160,7 @@ static void level_place_lost_monsters(m_transit_list &m)
 
         // Monsters transiting to the Abyss have a 50% chance of being
         // placed, otherwise a 100% chance.
-        if (you.level_type == LEVEL_ABYSS && coinflip())
+        if (player_in_branch(BRANCH_ABYSS) && coinflip())
             continue;
 
         if (place_lost_monster(*mon))
@@ -247,42 +248,23 @@ bool follower::place(bool near_player)
     // Copy the saved data.
     *m = mons;
 
-    bool placed = false;
+    // Shafts no longer retain the position, if anything else would
+    // want to request a specific one, it should do so here if !near_player
 
-    // In certain instances (currently, falling through a shaft)
-    // try to place monster as close as possible to its previous
-    // <x,y> coordinates.
-    if (!near_player && you.level_type == LEVEL_DUNGEON
-        && in_bounds(m->pos()))
+    if (m->find_place_to_live(near_player))
     {
-        const coord_def where_to_go =
-            dgn_find_nearby_stair(DNGN_ESCAPE_HATCH_DOWN,
-                                  m->pos(), true);
-
-        if (where_to_go == you.pos())
-            near_player = true;
-        else if (m->find_home_near_place(where_to_go))
-            placed = true;
-    }
-
-    if (!placed)
-        placed = m->find_place_to_live(near_player);
-
-    if (placed)
-    {
-        dprf("Placed follower: %s", m->name(DESC_PLAIN).c_str());
+        dprf("Placed follower: %s", m->name(DESC_PLAIN, true).c_str());
         m->target.reset();
 
-        m->flags &= ~MF_TAKING_STAIRS;
+        m->flags &= ~MF_TAKING_STAIRS & ~MF_BANISHED;
         m->flags |= MF_JUST_SUMMONED;
-
         restore_mons_items(*m);
         env.mid_cache[m->mid] = m->mindex();
-        return (true);
+        return true;
     }
 
     m->reset();
-    return (false);
+    return false;
 }
 
 void follower::restore_mons_items(monster& m)
@@ -315,22 +297,23 @@ static bool _is_religious_follower(const monster* mon)
 static bool _tag_follower_at(const coord_def &pos, bool &real_follower)
 {
     if (!in_bounds(pos) || pos == you.pos())
-        return (false);
+        return false;
 
     monster* fol = monster_at(pos);
     if (fol == NULL)
-        return (false);
+        return false;
 
     if (!fol->alive()
         || fol->speed_increment < 50
         || fol->incapacitated()
+        || mons_is_boulder(fol)
         || mons_is_stationary(fol))
     {
-        return (false);
+        return false;
     }
 
     if (!monster_habitable_grid(fol, DNGN_FLOOR))
-        return (false);
+        return false;
 
     // Only non-wandering friendly monsters or those actively
     // seeking the player will follow up/down stairs.
@@ -338,7 +321,7 @@ static bool _tag_follower_at(const coord_def &pos, bool &real_follower)
           && (!mons_is_seeking(fol) || fol->foe != MHITYOU)
         || fol->foe == MHITNOT)
     {
-        return (false);
+        return false;
     }
 
     // Monsters that are not directly adjacent are subject to more
@@ -346,12 +329,12 @@ static bool _tag_follower_at(const coord_def &pos, bool &real_follower)
     if ((pos - you.pos()).abs() > 2)
     {
         if (!fol->friendly())
-            return (false);
+            return false;
 
         // Undead will follow Yredelemnul worshippers, and orcs will
         // follow Beogh worshippers.
         if (!_is_religious_follower(fol))
-            return (false);
+            return false;
     }
 
     // Monsters that can't use stairs can still be marked as followers
@@ -362,9 +345,9 @@ static bool _tag_follower_at(const coord_def &pos, bool &real_follower)
         if (_is_religious_follower(fol))
         {
             fol->flags |= MF_TAKING_STAIRS;
-            return (true);
+            return true;
         }
-        return (false);
+        return false;
     }
 
     real_follower = true;
@@ -382,7 +365,7 @@ static bool _tag_follower_at(const coord_def &pos, bool &real_follower)
     dprf("%s is marked for following.",
          fol->name(DESC_THE, true).c_str());
 
-    return (true);
+    return true;
 }
 
 static int follower_tag_radius2()
@@ -393,7 +376,7 @@ static int follower_tag_radius2()
     {
         if (const monster* mon = monster_at(*ai))
             if (!mon->friendly())
-                return (2);
+                return 2;
     }
 
     return (6 * 6);
@@ -404,7 +387,7 @@ void tag_followers()
     const int radius2 = follower_tag_radius2();
     int n_followers = 18;
 
-    std::vector<coord_def> places[2];
+    vector<coord_def> places[2];
     int place_set = 0;
 
     places[place_set].push_back(you.pos());

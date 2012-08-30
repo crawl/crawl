@@ -24,10 +24,10 @@ class writer;
 class dlua_chunk
 {
 private:
-    std::string file;
-    std::string chunk;
-    std::string compiled;
-    std::string context;
+    string file;
+    string chunk;
+    string compiled;
+    string context;
     int first, last;     // First and last lines of the original source.
 
     enum chunk_t
@@ -39,36 +39,35 @@ private:
 
 private:
     int check_op(CLua &, int);
-    std::string rewrite_chunk_prefix(const std::string &line,
-                                     bool skip_body = false) const;
-    std::string get_chunk_prefix(const std::string &s) const;
+    string rewrite_chunk_prefix(const string &line, bool skip_body = false) const;
+    string get_chunk_prefix(const string &s) const;
 
 public:
-    mutable std::string error;
+    mutable string error;
 
 public:
-    dlua_chunk(const std::string &_context = "dlua_chunk");
+    dlua_chunk(const string &_context = "dlua_chunk");
     dlua_chunk(lua_State *ls);
 
-    static dlua_chunk precompiled(const std::string &compiled);
+    static dlua_chunk precompiled(const string &compiled);
 
-    std::string describe(const std::string &chunkname) const;
+    string describe(const string &chunkname) const;
     void clear();
-    void add(int line, const std::string &line2);
-    void set_chunk(const std::string &s);
+    void add(int line, const string &line2);
+    void set_chunk(const string &s);
 
     int load(CLua &interp);
     int run(CLua &interp);
     int load_call(CLua &interp, const char *function);
-    void set_file(const std::string &s);
+    void set_file(const string &s);
 
-    const std::string &lua_string() const { return chunk; }
-    std::string orig_error() const;
-    bool rewrite_chunk_errors(std::string &err) const;
+    const string &lua_string() const { return chunk; }
+    string orig_error() const;
+    bool rewrite_chunk_errors(string &err) const;
 
     bool empty() const;
 
-    const std::string &compiled_chunk() const { return compiled; }
+    const string &compiled_chunk() const { return compiled; }
 
     void write(writer&) const;
     void read(reader&);

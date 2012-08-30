@@ -1,4 +1,299 @@
-Stone Soup 0.10 (????????)
+Stone Soup 0.12 (up to 0.12-a0-221-gc8484b0)
+--------------------------------------------
+
+Branches, environment
+---------------------
+* A new Sprint map by evilmike: "Thunderdome".
+* More layouts allowed in Zot.
+* Abyss morphing can push the player.
+
+Character
+---------
+* Stalker is removed.
+
+Monsters
+--------
+* New monster spells: Shatter, LRD.
+
+Spells
+------
+* Removed: Fulsome Distillation, Evaporate, See Invisible and Insulation.
+
+Items
+-----
+* All troll-genus monsters can drop troll hides.
+* Monsters don't drop animal skins.
+* Potion of water is removed.
+
+Interface
+---------
+* New option: auto_sacrifice
+* Removed the hidden special cost of Spellcasting, Stealth, Evocations and
+  Invocations. Aptitudes adjusted.
+* Some colour changes in the skill menu.
+* Swap the cycle ammunition commands. '(' = backward, ')' = forward.
+
+Stone Soup 0.11 (up to 0.11-a0-3206-g559a7a8)
+---------------------------------------------
+
+0.11 Highlights
+----------
+* A new branch: the Spider Nest.
+* The Swamp branch is less annoying now.
+* Missile enchantments are no more.
+* Monster constriction vs the player has been overhauled.
+* New monsters: Arachne, Fannar, orb spider, bog body, Hell Sentinel.
+* Removed monsters: Jozef, bog mummy, midge, Pit Fiend, hairy devil.
+* Lots of new vaults and tiles.
+
+Branches, environment
+---------------------
+* New wizlab: Roulette of Golubria.
+* A metric buttload of new vaults, including several new branch endings and
+  a full-level vault for deeper parts of the main dungeon.
+* A new Sprint map by st, based on the Ziggurat.
+* Vaults are more common.
+* There are three new level layouts for the dungeon and various branches.
+* You don't lose portal vaults after being banished from one.
+* Escaping the Abyss places you where you came from, but grants short-term
+  immunity to most forms of banishment.
+* Pandemonium: slightly fewer exits to the dungeon are placed, but there are
+  many more exits through the abyss (which will return you to the Dungeon).
+* The Elven Halls are only three levels deep.
+* Branch difficulty doesn't depend on where their entrance was anymore.
+* Traps of a given type deal the same damage no matter where they are.
+* Axe traps got axed.
+* Wax walls are no more.
+* There are no more randomly generated secret doors, but they can still be
+  found in vaults.
+* The Swamp has an improved layout, with smaller and more compact levels, and
+  more trees. It is also less misty than before.
+* Swamp trees are now mangroves, and are opaque.
+* Spider Nest: replaces the old spider portal vault, contains the gossamer
+  rune of Zot.
+* Games will have one of the Spider Nest or Snake Pit, and one of the Swamp or
+  Shoals, guaranteeing one poison themed branch and one water themed one.
+
+Character
+---------
+* Humans get slightly more stat increases.
+* Nagas get constriction at XL13 now.
+* Tengu can fly when transformed.
+* Grey Draconians are better at Earth and worse at Air, get more AC, and
+  no longer fumble in water.
+* Felids are better at combat and Evocations, worse at Summonings.
+* Felid pounces (sneak attacks) do more damage.
+* The Evocations skill increases max MP.
+* Forms without some sort of hands can't use wands/etc.
+
+Monsters
+--------
+* Player ghost Sticky Flame autohits but is range 1.
+* Berserk monsters are immune to fear.
+* Plants don't feel torment. Oklob farms ahoy!
+* Monsters attached to the ground are -TELE.
+* Jellies, porcupines, flaming corpses won't get constricted.
+* Magical staves work for monsters as something more than a mere cudgel.
+* Monsters can use rings and amulets.
+* Mindless monsters don't have any skills (zombies with pain weapons, etc.).
+* New uniques:
+    - Arachne, half-human, half-spider.
+    - Fannar, an elven ice elementalist.
+* Margery gets dragon armour.
+* Monsters with arcane spells won't wear heavy armour.
+* Donald can spawn in Labyrinths, and complains about them.
+* Urug is drastically stronger.
+* Mimics can be "inept", (no adjective), "ravenous" or "monstrous", with
+  a progression of strength and abilities.
+* New monster: orb spider. Shoots weak orbs of destruction at you.
+* Removed: Jozef, midges, killer bee larvae, hairy devils.
+* Porcupines get spines.
+* Hell Sentinels replace Pit Fiends.
+* Boulder beetles can roll as a boulder.
+* Jumping spiders can ensnare you with webs in melee.
+* Poison attacks from sea snakes and redbacks can only be partially resisted.
+* Hit dice and damage have been increased for all spider enemies.
+* Emperor scorpions are much stronger.
+* Ghost moths have been nerfed.
+* Vampire mosquitoes lose their sickness attack, gain a stronger vampiric
+  attack.
+* Swamp worms have better melee accuracy.
+* Giant leeches are more dangerous.
+* Bog mummies have been replaced with bog bodies: no death curse, stronger
+  spells, can be decomposed via Fedhas prayer.
+* Monsters who submerge stop fleeing.
+* Umbras don't give bonuses to demons anymore.
+* Monsters (and player ghosts) can cast Ozocubu's Refrigeration.
+* Monsters cast emergency spells more often.
+* Monster constriction has been overhauled. Escape is easier, blinking counts
+  as two escape attempts (rather than always succeeding), and damage values are
+  saner.
+* A "damageless constriction" effect has been implemented for certain
+  monsters, particularly mimics.
+* The Royal Jelly is able to regenerate.
+
+Spells
+------
+* Lee's Rapid Deconstruction works in Slime now.
+* Iskenderun's Mystic Blast often explodes, but can still safely be used at
+  point blank range.
+* Death Channel is level 6.
+* Simulacrum works on beef jerkies, sausages and meat rations.
+* Removed: Projected Noise.
+
+Items
+-----
+* Artefacts can get distortion.
+* Blowguns can get evasion.
+* Wearing/removing armour can be aborted.
+* Fixed artefacts with fixed appearance start identified.
+* Weapons may corrode upon stabbing a jelly.
+* Ambrosia gives more mp, but only as you digest it.
+* Raw troll hides grant regeneration.
+* Jewelry auto-ids when it shows an obvious effect.
+* Ankuses, scrolls of detect curse, amulets of controlled flight, and rods of
+  smiting are no more.
+* Rods of striking are better.
+* Staves of energy reduce spell hunger to 1/3 instead of eliminating it.
+* Missile enchantments are no more, greatly simplifying inventory management.
+    - Formulas have been changed to compensate, with skill filling the role of
+      missile enchantments.
+* All missile brands start visible.
+* Visored helmets don't prevent bite attacks.
+* Identifying weapons by use works instantly but requires a random (per
+  item) level of skill.
+* Unbranded items can't be glowing/runed unless they're cursed.
+* New item: Lightning rod. Has a continuous effect across multiple zaps, and
+  allows you to spray wide cones of electricity at your enemies.
+* Randart weapons have a wider selection of names.
+* Acquirement will not provide you with items your god hates.
+
+Cards
+-----
+* Trowel works everywhere.
+* Sage won't time out or be overwritten on a new draw.
+* Removed: Spade.
+* Map and Dowsing have been combined into one.
+* Walls from the Tomb expire after a while.
+* New: the Mercenary. Allows you to purchase allies.
+* Warpwright teleport traps expire shortly.
+
+Gods
+----
+* Trog accepts kills of holies.
+* Abandoning Kikubaaqudgha rots all currently existing corpses.
+* Kikubaaqudgha no longer guarantees getting all necromancy spells: instead,
+  he gifts books with a random selection of spells.
+* Banishing monsters grants some XP and Lugonu piety.
+* New Xom effect: mass inner flame.
+* Nemelex gives far fewer decks of summoning.
+* Nemelex loses the Mark Four ability, gains Deal Four.
+* Nemelex doesn't try to enforce "genuine" use of cards -- was too
+  inaccurate.
+* Xom can't gift permanent allies anymore.
+* Xom grants far fewer item gifts.
+* Xom acts drastically more often when you're in a tough fight.
+* Elyvilon doesn't take piety when life-saving allies.
+* Non-newbie Elyvilonites can't destroy non-unholy weapons.
+* Fedhas' Sunlight stays in place.
+* Okawaru gives almost no heed to kills and sacrifices of easy monsters,
+  rewards toughest fights more.
+* Concurrent god wraths don't dilute each other anymore.
+
+Interface
+---------
+* Stash tracking, annotations, etc, work for portal levels.
+* Mutation notes mention how it was gained or lost.
+* Removed options: pizza, ood_interesting, rare_interesting, note_all_spells.
+* New options: auto_drop_chunks, autofight_throw, dump_kill_breakdowns,
+  show_travel_trail, sacrifice_before_explore.
+* Webtiles chat is now logged (can be disabled via note_chat_messages).
+* The show_gold_turns and show_game_turns options are now enabled by default:
+  you will see how much gold you have, and how much time your actions take.
+* Fake translations: dwarven, jägerkin, kraut, wide.
+* Loads of new tiles.
+* The unique Pan/Hell lords get special tall tiles.
+* An in-game high scores browser.
+* Picking up stackable items shows how many you picked up.
+* Every item, monster, feature has a description.
+* Many descriptions were improved.
+* Autoexplore stops on items sacrificeable to your god.
+* Rods appear as a separate item class.
+* Autopickup settings can now be configured in-game, via the '\' key.
+* Several improvements have been made to the tutorial.
+* Lantern of shadows no longer makes the whole screen dark grey in console mode.
+* Targetting prompts have been massively improved. Almost all area of effect
+  spells are now supported, and bounce paths (e.g. from lightning bolt) are
+  displayed.
+* Some added or improved status indicators.
+* Message filters are case-insensitive.
+* Webtiles has experimental support for watching console games on servers
+  running both webtiles and dgamelaunch.
+* Local tiles now has an abilities tab.
+
+Wizmode
+-------
+* &^P to polymorph into a form.
+* &P to rebuild a level based on a vault.
+* &^M to memorise a spell.
+* &# to (partially) load a character dump file.
+
+Technical
+---------
+* Local tiles can display non-ASCII characters, in default builds only
+  Latin, Greek and Cyrillic.
+
+Stone Soup 0.10.3 (20120614)
+----------------------------
+* Crash fixes.
+* rPois- doesn't grant rPois+ for potions of poison.
+* Clean chunks are no longer better than permafood when nauseated.
+* The Flight spell is no longer cancellable (could cause a death when
+  swapping a +Lev item above water due to incorrect assumptions).
+* A warning when transforming would meld your last +Lev item.
+* Backlash works for finding portals on the map screen.
+* Remembered traps no longer lose their identity when out of sight.
+* Certain rare monsters don't clutter tile displays with name tags anymore.
+* show_game_turns labels its display as "Time:" not "Turn:".
+* Greatly improved webtiles performance.
+* Fixed miscompiles or compilation failures with GCC 4.7.
+* A bunch of assorted minor fixes.
+* Some new interface functionality:
+  * can annotate remote levels (X[ then !)
+  * picking a stack of items you already had some of shows how many did you
+    just gain
+  * shops show item slot letters assigned to your new purchases
+  * enchantable missiles are listed in the wield menu if you have scrolls
+    of Enchant Weapon
+
+Stone Soup 0.10.2 (20120411)
+----------------------------
+* A bunch of crash fixes.
+* A number of description updates, to match 0.10 changes.
+* Allies cannot smite enemies through glass anymore.
+* Reaching cannot be used while caught in a net/web.
+* Fix a number of oddities with the shopping list.
+* Fix multiple compiles often repeating work -- especially jarring for
+  "make; make install".
+* Unknown items in shop use a neutral tile colour, fixing an information
+  leak (you can't learn the appearances this way anymore).
+* Fix allies not using IOOD at all.
+* A lot of other minor fixes.
+
+Stone Soup 0.10.1 (20120315)
+----------------------------
+* Fix "non tried" question mark in tiles being sometimes missing.
+* Fix grey draconians sometimes drowning.
+* Fix Lua junk appearing in some monster speech.
+* Fix the Slime:6 vault opening soon after banishing the Royal Jelly.
+* Fix pressing <<<<<< getting you scot free from constriction.
+* Fix slaying not working when using magical staves.
+* A bunch of crash fixes.
+* ... including the "hunter" hints mode being totally inoperative.
+* Assorted Webtiles fixes.
+* And a bunch of other minor ones here and there.
+
+Stone Soup 0.10 (20120216)
 --------------------------
 
 0.10 Highlights
@@ -7,11 +302,13 @@ Stone Soup 0.10 (????????)
 * Skill training system reworked. Dancing is really gone this time!
 * All polearms have reaching.
 * Constriction (nagas, octopodes, some snakes, tentacled monstrosities).
+* New version of the Abyss.
 
 Branches, portal vaults, levels
 -------------------------------
 * Remove Hive. Guarantee some limited food supply in the dungeon.
-* Reworked Abyss transformations.
+* Completely reworked Abyss: it now morphs continuously over time, is mappable,
+  and extends infinitely in all directions.
 * Most abyssal runes are in special vaults.
 * Escaping the Abyss returns to place of banishment.
 * Ziggurats have much more colourful holy levels.
@@ -20,8 +317,12 @@ Branches, portal vaults, levels
 * More Volcano portal vaults.
 * Web "traps", can briefly entangle those caught.
 * A "twisting cavern" map layout.
-* Custom shops.
-* Many vaults, including large altar vaults, Abyss vaults and Pan lords maps.
+* Many vaults, including large altar vaults, Abyss vaults, Pan Lord maps,
+  and several branch endings.
+* A number of branches have a completely new set of tiles: Snake Pit,
+  Labyrinth, Vestibule of Hell, Crypt, Dis, Tartarus, Cocytus, Pandemonium.
+* The chance of getting a unique Pandemonium level increases for each level of
+  Pan you visit.
 
 Gods
 ----
@@ -30,8 +331,12 @@ Gods
 * Cheibriados loses the "Make Ponderous" invocation, slows you down all the
   time depending on piety.
 * Cheibriados can slow down Abyss morphing and Orb run monster spawns.
+* New Cheibriados ability: Temporal Distortion, moves nearby monsters forwards
+  in time a few turns.
+* Cheibriados doesn't grant resistances anymore.
 * Makhleb's powers use Health instead of Magic.
 * Makhleb gives more Health for killing but no Magic anymore.
+* Makhleb's Greater Destruction costs less piety.
 * Zin followers pay mandatory tithe for piety. No more piety for waiting.
 * Zin takes some gold upon conversion; this gives more piety than donation.
 * Zin's Vitalisation is proactive, protecting from all bad statuses.
@@ -41,18 +346,18 @@ Gods
 * Elyvilon: piety decays; piety for pacifications doubled.
 * Elyvilon has piety loss for ally deaths instead of penance.
 * Elyvilon doesn't grant piety for non-evil weapons past *** (even if you
-  drop lower later!).  Evil weapons get identified on sight.
+  drop lower later!). Evil weapons get identified on sight.
 * Deaths of plants and non-living beings no longer count as friend deaths for
   god conduct purposes.
 
 Species
 -------
-* Octopodes.
+* Octopodes: sentient octopuses that can wear eight rings.
 * Draconians cannot wear body armour anymore, can wear gloves and boots.
 * Centaurs can survive longer on vegetarian food.
 * Felids gain lives every three levels.
 * Minotaurs instinctively retaliate in melee.
-* Demonspawn can get Foul Stench and Ignite Blood.
+* New Demonspawn mutations: Foul Stench, Ignite Blood, and Augmentation.
 * Kenku are now called Tengu, and get more MP.
 * Mountain Dwarves are no more.
 * Minotaur and Hill Orc aptitudes are a lot better.
@@ -60,6 +365,7 @@ Species
 Character
 ---------
 * Wild Magic mutation: reduced spell success, increased power.
+* Evolution mutation: extra mutations as time passes.
 * Always gain partial nutrition from brown chunks.
 * Bad food causes nausea instead of sickness.
 * Non-full carnivores cannot eat up to "engorged" without gourmand.
@@ -68,22 +374,24 @@ Character
 
 Spells
 ------
-* New: Beastly Appendage (Transmutation 1), Inner Flame (Hex 3).
+* New spell: Beastly Appendage (Transmutation 1).
 * Flame Tongue has slightly longer range.
 * Removed: Maxwell's Silver Hammer, Levitate.
-* Abjuration becomes single-target, its old version (Mass Abj.) is
-  available as a new level 7 spell.
+* Abjuration becomes single-target. The old version (Mass Abj.) is
+  available as a new level 6 spell.
 * Swiftness and Flight no longer give an extra boost when cast together.
 * Swiftness halves stealth and makes it harder to detect traps.
-* Flight is now level 3.
+* Flight lowered to level 3, Dragon Form lowered to level 7.
+* Dispel Undead raised to level 5.
 * Summoned Ugly Things are now always friendly.
 * Shadow Creatures don't last as long anymore.
 * Tornado's damage has been slightly improved.
-* Conjure Ball Lightning improved.
+* Conjure Ball Lightning improved, ball lightnings explode when their duration
+  expires.
 * Mephitic Cloud and Evaporate don't guarantee a 3x3 cloud anymore.
 * Recasting a transformation is no worse than the original cast.
 * Animate Dead animates stacks.
-* Lee's Rapid Deconstruction: prevent abuse.
+* Lee's Rapid Deconstruction: prevent abuse, improve targeting.
 * Summon Greater Demon only has tier 1 demons turn hostile over time.
 * Spider form is susceptible to poison.
 * Shatter doesn't work through walls, unless it manages to destroy them.
@@ -91,6 +399,14 @@ Spells
 * Metabolic Englaciation slows down enemies.
 * Twisted Resurrection is improved: corpses merge into abominations on their
   own without needing to be stacked.
+* Alistair's Intoxication is less reliable, depends on spell power.
+* Boost the effective power of some hexes: Corona, Slow, Mass Confusion,
+  Cause Fear, Control Undead.
+* Olgreb's Toxic Radiance is more effective at high spell power.
+* Confusing Touch is less reliable.
+* Inner Flame leaves clouds of fire when an affected monster explodes.
+* Passage of Golubria creates two portals when cast, and allows more than two
+  portals to exist simultaneously.
 
 Backgrounds
 -----------
@@ -103,8 +419,9 @@ Backgrounds
 Skills
 ------
 * Non-integer values of a skill matter.
-* Stealth is drastically more expensive.
-* Replace unknown skill dance by skill training restrictions.
+* Add skill training restrictions instead of requiring victory dance-style
+  usage of unknown skills.
+* Stealth skill is no longer heavily discounted.
 
 Interface
 ---------
@@ -113,30 +430,34 @@ Interface
 * Throwable starting weapons are autoinscribed with "=f".
 * Leaving an unique Pan level without the rune asks for confirmation.
 * Uniques and player ghosts annotate the level on the overview screen.
-* A character dump option: spell_usage, counts spells you have cast.
+* New character dump options: spell_usage, which counts spells you have cast,
+  and action_counts, which also counts non-spell actions.
 * Ctrl-W toggles weight display in inventory and dropping menu.
 * Better ?/G and ?/B menus.
+* Spell success adjectives are replaced with failure rate percentages. Failure
+  rates are coloured based on potential miscast severity.
+* Many new monster descriptions and quotes.
 
 Monsters
 --------
-* Ignacio no longer uses Torment, he'll appear repeatedly until killed.
-* New monster: profane servitor -- angel corrupted by Yredelemnul (undead).
-* New monster: blizzard demon -- a cold/air rank 2 demon.
-* New holy monsters: silver star, cherub.
+* Ignacio no longer uses Torment, and he'll appear repeatedly until killed.
+* New monster: profane servitor - an angel corrupted by Yredelemnul (undead).
+* New monster: blizzard demon - a cold/air rank 2 demon.
+* New holy monsters: silver star, cherub, phoenix, paladin, seraph.
 * Removed: giant toads, vipers, blue deaths.
-* Renamed: Fiend -> Brimstone Fiend. Imp -> Crimson Imp.
-* Reorganized demon ranks, moving easier 1s to 2.
+* Renamed: Fiend -> Brimstone Fiend, Imp -> Crimson Imp.
+* Reorganized demon ranks, moving easier 1s to 2s.
 * Feature mimics may now masquerade as most features.
 * Item mimics can move once revealed.
 * Monsters will retreat when hit from behind an obstacle they can't walk
   around.
 * Unique Pandemonium lords can hunt you on the Orb run if you've stolen
-  their runes.  Violate the 5th Commandment not 7th!
-* More emergency spell usage.
-* Gnoll shamans and sergeants are actual monsters.
+  their runes. Violate the 5th Commandment, not the 7th!
+* Monsters cast emergency spells more often.
 * Breath timeout for dragons, draconians, drakes.
 * Most monster summoning spells toned down slightly.
 * Monsters flee at lower health thresholds, and less predictably.
+* Queen bees can send nearby killer bees berserk.
 * Killer bee larvae turn into killer bees if they eat honeycombs or royal
   jellies.
 * All abominations are now both demonic and undead.
@@ -145,24 +466,26 @@ Items
 -----
 * Slaying works like weapon enchantments.
 * Acquirement allows choosing missiles.
-* Nagas and centaur get far better chances to acquire bardings.
-* Staff acquirement more random.
-* Miscellaneous item acquirements gives better decks.
+* Nagas and Centaurs get far better chances to acquire bardings.
+* Staff acquirement is more random.
+* Miscellaneous item acquirement gives better decks.
 * Weapon acquirement avoids useless weapon types.
-* Misc items start identified when there's no doubts about them.
+* Misc items start identified when there are no doubts about them.
 * The Orb of Zot has a slightly mutagenic glow and reduces stealth.
 * The Crusade card can no longer give you permanent allies.
 * All polearms have the reaching brand built in.
 * Quarterstaves are split into two weapons: weak "staff" and good
-  "quarterstaff".  Gladiators get to start with the latter.
+  "quarterstaff". Gladiators and Priests get to start with the latter.
 * Common two-handed weapons are easier to use effectively.
 * Several new fixed artefacts: lightning scales, Black Knight's horse barding,
-  ring of Vitality, autumn katana, shillelagh "Devastator", dragonskin cloak.
-* The Sceptre of Asmodeus can be evoked for permanent temporarily friendly
+  ring of Vitality, autumn katana, shillelagh "Devastator", dragonskin cloak,
+  rings of the Octopus King.
+* The Sceptre of Asmodeus can be evoked for temporary charmed unabjurable
   demons (instead of random conjurations or hostile demons).
-* Scrolls of enchant and vorpalise weapon identified upon use.
+* Scrolls of enchant and vorpalise weapon are always identified upon use.
 * Amulet of guardian spirit draws from HP and MP simultaneously.
 * Remove crystal balls of seeing.
+* Crystal ball of energy restores less MP but has less severe failure effects.
 * Scroll of magic mapping detects secret doors.
 * Tomb card is rarer.
 * Portal card does not give instant teleports.
@@ -186,7 +509,7 @@ Webtiles
 
 Zot Defence
 -----------
-* Map selection.
+* You can now choose which map to play on.
 * Disable useless gods.
 * Disable hunger, except for Vampires.
 * Creating altar asks for god, at much higher ability cost.
@@ -197,6 +520,15 @@ Technical
 ---------
 * Tarballs use xz rather than bz2 compression.
 * Wizard mode is compiled in by default unless you specify NOWIZARD=y.
+* Custom shops can be used in vaults.
+* Multithreading, currently only to speed up database loading.
+
+
+Stone Soup 0.9.2 (20120124)
+---------------------------
+* A number of crash fixes.
+* Fix new games overwriting existing saves in one case.
+* Fix Temple overflow gods not being randomized.
 
 
 Stone Soup 0.9.1 (20110904)
@@ -228,7 +560,7 @@ loaded in 0.9, you can not go back to 0.8.
 * New spells: Inner Flame, Shroud of Golubria.
 * Removed spells: Teleport Self, Berserker Rage, Resist Poison.
 * New monsters: Ignacio (unique executioner), catoblepas, basilisk.
-* New subgame: Zot Defence.  Consider it of experimental quality, though.
+* New subgame: Zot Defence. Consider it of experimental quality, though.
 
 Skills
 ------
@@ -409,6 +741,20 @@ Options
 -------
 * Allow hiding the -cTele indicator with show_no_ctele.
 * Allow automatically assigning specific spells to letters with spell_slot.
+
+
+Stone Soup 0.8.1 (20110612)
+---------------------------
+* Fixes a number of crashes.
+* Fixes stair colouring on the map being wrong.
+* Jiyva's wrath won't summon giant spores, abusably by Fedhas.
+* Fixes running not noticing new items.
+* Ashenzari worshippers no longer can change armour under cursed cloaks.
+* Glyphs not present in the locale won't cause display corruption in some
+  cases (mostly LC_CTYPE=C).
+* Fixes massive slowdown for resting felids.
+* Removes (or reduce) chances for save corruption on MacOS X.
+* Fixed Kikubaaqudgha's torment invocation not granting xp.
 
 
 Stone Soup 0.8 (20110426)
@@ -1368,7 +1714,7 @@ Spells
 * Reduced Poison Arrow's irresistible damage component from 60% to 30%.
 * Semi-controlled blink causes glowing.
 * Fulsome Distillation depends only on corpse type - RNG and rotting influence
-  has been removed.  Also doesn't prompt when only one corpse present.
+  has been removed. Also doesn't prompt when only one corpse present.
 * Tukima's Dance weapon strength depends on spell power and weapon weight.
 * Summon Wraiths is replaced by Haunt, a smite-targetted summoning spell.
 * Directed non-enchantment spells make noise when they hit something.
@@ -1879,7 +2225,7 @@ Disclaimer: These are merely the highlights, not an exhaustive list of changes.
 * Fixed secondary monster attacks being branded according to their weapon.
 * Fixed runes not being counted correctly in scoring.
 * Fixed kills by hell effects counting as player kills.
-* Fixed persistent --more-- in wizard mode.
+* Fixed persistent --More-- in wizard mode.
 * Fixed cold/fire always destroying all potions/scrolls on the floor.
 * Fixed Portal Projectile not handling throwing nets or branded ammo correctly.
 * Fixed friendly pickup toggle being inappropriately disallowed.

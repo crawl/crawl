@@ -8,62 +8,48 @@ function dis_setup(e)
    e.place("Dis:7")
    e.tags("dis", "no_rotate")
    e.lflags("no_tele_control")
-   e.lua_marker('O', item_pickup_change_flags {
-                     level_flags="!no_tele_control", item="auto" } )
-   e.kmask('O = no_item_gen')
-   e.kitem('O = iron rune of Zot')
 -- turn granite statues into iron statues
 -- you still have to colour the statues, if desired
-   dgn.set_feature_desc_short("granite statue", "iron statue")
-   dgn.set_feature_desc_long("granite statue", "A heavy-looking iron statue. " ..
-                             "You can't help but feel like it's watching you.\n")
+   e.set_feature_name("granite_statue", "iron statue")
+end
+
+function dis_rune(e)
+   e.kmask('O = no_item_gen')
+   e.kitem('O = iron rune of Zot')
 end
 
 function geh_setup(e)
    e.place("Geh:7")
    e.lflags("no_tele_control")
-   e.lua_marker('O', item_pickup_change_flags {
-                     level_flags="!no_tele_control", item="auto" } )
    e.kmask('O = no_item_gen')
    e.kitem('O = obsidian rune of Zot')
    e.lrockcol("brown")
    e.lfloorcol("lightgrey")
    e.lfloortile("floor_pebble_darkgray")
    e.colour("v = red")
-   dgn.set_feature_desc_short("floor", "Ashen ground")
-   dgn.set_feature_desc_long("floor", "With every step, you walk on ash. " ..
-                             "It is warm and almost comfortable.\n")
-   dgn.set_feature_desc_short("metal wall", "tempered metal wall")
-   dgn.set_feature_desc_long("metal wall", "These metal walls emit heat.\n")
+   e.set_feature_name("floor", "Ashen ground")
+   e.set_feature_name("metal_wall", "tempered metal wall")
 end
 
 function coc_setup(e)
    e.place("Coc:7")
    e.tags("no_rotate")
    e.lflags("no_tele_control")
-   e.lua_marker('O', item_pickup_change_flags {
-                     level_flags="!no_tele_control", item="auto" } )
    e.kmask('O = no_item_gen')
    e.kitem('O = icy rune of Zot')
    e.lrockcol("lightcyan")
    e.lfloorcol("white")
    e.lfloortile("floor_ice")
    e.colour("c = lightblue")
-   dgn.set_feature_desc_short("rock wall", "ice-covered rock wall")
-   dgn.set_feature_desc_long("rock wall", "A rock wall coated in a thick layer of ice.\n")
-   dgn.set_feature_desc_short("stone wall", "ice-covered stone wall")
-   dgn.set_feature_desc_long("stone wall", "A stone wall coated in a thick layer of ice.\n")
-   dgn.set_feature_desc_short("floor", "Frost-covered floor")
-   dgn.set_feature_desc_long("floor", "Frost-covered floor. It crunches " ..
-                             "satisfyingly underfoot.\n")
+   e.set_feature_name("rock_wall", "ice-covered rock wall")
+   e.set_feature_name("stone_wall", "ice-covered stone wall")
+   e.set_feature_name("floor", "Frost-covered floor")
 end
 
 function tar_setup(e)
    e.place("Tar:7")
    e.tags("no_rotate")
    e.lflags("no_tele_control")
-   e.lua_marker('O', item_pickup_change_flags {
-             level_flags="!no_tele_control", item="auto" } )
    e.kmask('O = no_item_gen')
    e.kitem('O = bone rune of Zot')
 end
@@ -87,6 +73,44 @@ function serpent_of_hell_setup(e)
       e.kmons('D = the Serpent of Hell')
    end
 end
+
+function callback.grunt_iron_hall_animate(data,triggerable,trigger,marker,ev)
+    if not dgn.persist.grunt_iron_hall_animated then
+        dgn.persist.grunt_iron_hall_animated = true
+        for slave in iter.slave_iterator("trap_statue", 1) do
+        if crawl.one_chance_in(4) then
+            dgn.terrain_changed(slave.x, slave.y, "floor", false, false, false)
+            dgn.create_monster(slave.x, slave.y,
+                               "patrolling iron golem generate_awake")
+        end
+    end
+    crawl.mpr("You hear the creaking of ancient metal!", "warning")
+    end
+end
+
+function callback.grunt_gauntlet_trap_activate(data,triggerable,trigger,marker,ev)
+    if not dgn.persist.grunt_gauntlet_trap_triggered then
+    for slave in iter.slave_iterator("trap_wall2", 1) do
+        local you_x, you_y = you.pos()
+        if (dgn.mons_at(slave.x, slave.y) ~= nil or (slave.x == you_x and slave.y == you_y)) then
+            return
+        end
+    end
+        dgn.persist.grunt_gauntlet_trap_triggered = true
+    for slave in iter.slave_iterator("trap_wall", 1) do
+        dgn.terrain_changed(slave.x, slave.y, "floor", false, false, false)
+        dgn.place_cloud(slave.x, slave.y, "foul pestilence", crawl.random2(5) + 5)
+    end
+    for slave in iter.slave_iterator("trap_wall2", 1) do
+        dgn.terrain_changed(slave.x, slave.y, "stone_wall", false, false, false)
+        dgn.colour_at(slave.x, slave.y, "lightmagenta")
+    end
+    crawl.mpr("You hear an unearthly scream, and the grinding of stone!",
+             "warning")
+    crawl.mpr("The path is suddenly blocked!", "warning")
+    end
+end
+
 }}
 
 
@@ -96,7 +120,7 @@ end
 
 # This replaces the hardcoded placement of a hell entrance on D:21-27.
 NAME:   hell_entry
-TAGS:   extra allow_dup luniq
+TAGS:   extra allow_dup luniq can_overwrite replace_portal
 DEPTH:  D:21-27
 CHANCE: 100%
 KFEAT:  O = enter_hell
@@ -112,7 +136,7 @@ default-depth: D:12-26
 NAME:   hellmouth_1
 TAGS:   no_rotate
 MONS:   crimson imp / quasit / shadow imp, hellion / rotting devil / iron devil /\
-        hairy devil / hell hound
+        red devil / hell hound
 ITEM:   good_item demon blade / good_item demon whip /\
         good_item demon trident / wand of draining
 ITEM:   wand of fire / ring of fire / Necronomicon / grand grimoire /\
@@ -149,7 +173,7 @@ NAME:   hellmouth_2
 TAGS:   no_monster_gen no_rotate
 ORIENT: float
 MONS:   crimson imp / quasit / shadow imp / iron imp / lemure
-MONS:   hellion / rotting devil / iron devil / hairy devil / hell hound
+MONS:   hellion / rotting devil / iron devil / red devil / hell hound
 ITEM:   good_item demon blade / good_item demon whip /\
         good_item demon trident / wand of draining
 ITEM:   wand of fire / ring of fire / Necronomicon / grand grimoire /\
@@ -221,9 +245,8 @@ ENDMAP
 # Fire storm
 
 NAME:   gehenna_fire_generator
+TAGS:   extra allow_dup
 DEPTH:  Geh:*
-PLACE:  Geh:1
-ORIENT: float
 MARKER: . = lua:fog_machine { \
             pow_max = 15, delay_min = 100, delay_max = 150, size = 1,  \
             size_buildup_amnt = 29, size_buildup_time = 1000, \
@@ -272,6 +295,7 @@ NSUBST: 1:1=) / *=1
 NSUBST: 1:1=] / *=1
 SUBST:  = : =+
 SUBST:  }=}>, )=)>, ]=]>
+TILE:   F = dngn_statue_iron
 # occasionally (12.5%), all downstairs are in this vault
 MAP
 xxxxxxxxxxxxxxxxxxxxxxx
@@ -315,6 +339,66 @@ vvvvvvvvvvvvvvvvv
 ENDMAP
 
 ##############################################################################
+
+NAME: grunt_dis_stairs_iron_hall
+TAGS: transparent patrolling
+DEPTH: Dis:1-6
+MONS: iron dragon / quicksilver dragon, reaper w:7 / tormentor w:6
+MONS: iron troll
+MONS: iron devil / nothing, iron imp / nothing
+{{
+    dgn.persist.grunt_iron_hall_animated = false
+    local trap_marker = TriggerableFunction:new {
+        func = "callback.grunt_iron_hall_animate",
+        repeated = true}
+    trap_marker:add_triggerer(DgnTriggerer:new {
+        type="player_move"})
+    lua_marker(':', trap_marker)
+    lua_marker('1', trap_marker)
+    lua_marker('2', trap_marker)
+    lua_marker('d', trap_marker)
+    lua_marker('e', trap_marker)
+    lua_marker('f', trap_marker)
+    lua_marker('}', trap_marker)
+    lua_marker(']', trap_marker)
+    lua_marker(')', trap_marker)
+    lua_marker('G', props_marker {trap_statue=1,
+                                  veto_fragmentation="veto",
+                                  veto_disintegrate="veto",
+                                  veto_shatter="veto"})
+    set_feature_name("granite_statue", "iron statue")
+}}
+COLOUR: G = cyan
+TILE: G = dngn_statue_iron_golem
+SUBST: d = 3
+SUBST: e = 4
+SUBST: f = 5
+MAP
+...............................
+.vvvvvvvvvvvvvvvvvvvvvvvvvvvvv.
+.vG.+4Gvvv:}:::]:::):vvvG4+.Gv.
+.v..+4.vv::::1::::1:::vv.4+..v.
+.v..v..vG::::::G::::::Gv..v..v.
+.v..v55vv:::G:::::G:::vv55v..v.
+.v55v..vG:2::::1::::2:Gv..v55v.
+.v55v55vv:::::::::::::vv55v55v.
+.v44v..vGf:G:::G:::G:fGv..v44v.
+.v..v44vv::::e:::e::::vv44v..v.
+.v..v..vG::::::2::::::Gv..v..v.
+.v..v55vv:3:G:::::G:d:vv55v..v.
+.v..v..vGf:::::G:::::fGv..v..v.
+.v..v55vv:f:d::e::d:f:vv55v..v.
+.v..v..vvvGvGve:evGvGvvv..v..v.
+.v..v++vvvvvvv+++vvvvvvv++v..v.
+.v..v..vGvGvGv...vGvGvGv..v..v.
+.v55v4....4...3.3...4....4v55v.
+.v55v...4...4.....4...4...v55v.
+.v44vGvGvGvGvv.3.vvGvGvGvGv44v.
+.v++vvvvvvvvvvvvvvvvvvvvvvv++v.
+.G@.G.....................G@.G.
+ENDMAP
+
+##############################################################################
 # lemuel_nasty_pond
 #
 NAME:   lemuel_nasty_pond
@@ -341,6 +425,83 @@ MAP
  ..ZZZZZ4wwww.3......
    3ZZZZwwwww....3.
      .ZZwww3.....
+ENDMAP
+
+##############################################################################
+
+NAME: grunt_tartarus_stairs_gauntlet_trap
+DEPTH: Tar:1-6
+TAGS: generate_awake patrolling no_trap_gen
+MONS: Shadow Fiend, shadow demon / reaper, soul eater, rotting devil, shadow imp
+{{
+    dgn.persist.grunt_gauntlet_trap_triggered = false
+    local trap_marker = TriggerableFunction:new {
+        func = "callback.grunt_gauntlet_trap_activate",
+        repeated = true}
+    trap_marker:add_triggerer(DgnTriggerer:new {
+        type="player_move"})
+    lua_marker(':', trap_marker)
+    lua_marker('H', trap_marker)
+    lua_marker('-', trap_marker)
+    lua_marker('1', trap_marker)
+    lua_marker('e', trap_marker)
+    lua_marker('}', trap_marker)
+    lua_marker(']', trap_marker)
+    lua_marker(')', trap_marker)
+    lua_marker('d', props_marker {trap_wall=1})
+    lua_marker('"', props_marker {trap_wall2=1})
+}}
+SUBST: d = c
+SUBST: e = 2
+COLOUR: c = lightmagenta
+KPROP: "H-}]) = no_rtele_into
+KPROP: "H-}]) = no_ctele_into
+MARKER: H = lua:fog_machine { \
+                pow_min = 10, pow_max = 10, delay = 10, \
+                size = 3, walk_dist = 1, cloud_type = "gloom" }
+MAP
+cccccccccccccccccccccc.......
+c...2...............cG.5.....
+cdcccccccccccccccccdcc...5...
+c--H":e:c9c8c8c0c0c0cG.4..5..
+c}--":::cdcdcdcdcdcdcc3.4..5.
+c]1H":::+............+......@
+c)--":::cdcdcdcdcdcdcc3.4..5.
+c--H":e:c9c8c8c0c0c0cG.4..5..
+cdcccccccccccccccccdcc...5...
+c...2...............cG.5.....
+cccccccccccccccccccccc.......
+ENDMAP
+
+##############################################################################
+
+NAME:   grunt_cocytus_stairs_refrigerator
+TAGS:   transparent mini_float
+DEPTH:  Coc:1-6
+COLOUR: c = blue
+MONS:   Ice Fiend, blizzard demon, ice devil, blue devil, white imp
+KMONS:  H = ice statue
+KMONS:  O = ice statue name:chilling_statue name_replace name_descriptor \
+            hd:15 spells:bolt_of_cold;ozocubu's_refrigeration;\
+            ozocubu's_refrigeration;freezing_cloud;\
+            ozocubu's_refrigeration;ozocubu's_refrigeration \
+            tile:mons_chilling_statue
+MAP
+xwww..4......
+xwwwwww..5...
+xwwwwwwww..5.
+xwwwwwwwww...
+xcccccHwwww4.
+cc.O.ccwwww..
+c}..2.cWWWW4.
+c]1...+.3.3..
+c)..2.cWWWW4.
+cc.O.ccwwww..
+xcccccHwwww4.
+xwwwwwwwww...
+xwwwwwwww..5.
+xwwwwww..5...
+xwww..4......
 ENDMAP
 
 ##############################################################################
@@ -437,6 +598,7 @@ ENDMAP
 NAME:     vestibule_of_hell_mu
 PLACE:    Hell
 ORIENT:   encompass
+WEIGHT:   20
 TAGS:     no_rotate no_dump
 SUBVAULT: A : vestibule_dis
 SUBVAULT: B : vestibule_tar
@@ -659,73 +821,121 @@ ENDMAP
 
 
 ##############################################################################
-# Dispater's castle - rest of level filled up with plan_4 (irregular city)
+# Dispater's castle - subvaulted, with two main versions
 ##############################################################################
+NAME:     iron_city_of_dis
+TAGS:     no_rotate
+WEIGHT:   20
+ORIENT:   north
+SUBVAULT: A : dis_castle
+SUBVAULT: B : dis_divider
+: dis_setup(_G)
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAv
+vBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBv
+vBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBv
+vBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBv
+vBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBv
+vBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBv
+vBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBv
+vBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBv
+vBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBv
+vBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBv
+vBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBv
+ENDMAP
 
 NAME:    dis_old
 ORIENT:  north
-MONS:    patrolling Dispater, brimstone fiend, Ice Fiend, iron devil, metal gargoyle, iron dragon
+TAGS:    dis_castle no_rotate no_vmirror
+MONS:    patrolling Dispater, brimstone fiend, Ice Fiend, iron devil, \
+         metal gargoyle, iron dragon
+KMONS:   7 = hell sentinel
+KMONS:   8 = quicksilver dragon
 : serpent_of_hell_setup(_G)
 SHUFFLE: 23
 SUBST:   4 = 4446
-: dis_setup(_G)
+: dis_rune(_G)
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvxxxxxxxx
-xxxxxxxxv..............................................................vxxxxxxxx
-xxxxxxxxv..vvvvvvvvv........................................vvvvvvvvv..vxxxxxxxx
-xxxxxxxxv..v3.....|v........................................v|.....2v..vxxxxxxxx
-xxxxxxxxv..v.vv+vvvv.v.v.v.v.v.v.v.v.v..v.v.v.v.v.v.v.v.v.v.vvvv+vv.v..vxxxxxxxx
-xxxxxxxxv..v.v.....vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv.....v.v..vxxxxxxxx
-xxxxxxxxv..v|v.....+$$v$$+$$v||vvvvvvvvvvvvvvvvv$$$$v4.4.v$$v.....v|v..vxxxxxxxx
-xxxxxxxxv..vvvv+vvvv$$+$$v$$+||v...............v$$$$+.4.4+$$v+vv+vvvv..vxxxxxxxx
-xxxxxxxxv....vv.vvvvvvvvvvvvvvvv.v..v..v..v..v.v$$$$v4.4.v$$+||v.vv5...vxxxxxxxx
-xxxxxxxxv...vvv................v.......D.......vvvvvvvvvvvvvvvvv.vvv...vxxxxxxxx
-xxxxxxxxv...5vv................+...............+.................vv....vxxxxxxxx
-xxxxxxxxv...vvv+vvvvvvvvvvvvvvvv.v..v..v..v..v.vvvvvvvvvvvvvvvvv.vvv...vxxxxxxxx
-xxxxxxxxv....vv..v.+$$$$$v.....v...............vvvvvvvvvvvvvvvvv.vv5...vxxxxxxxx
-xxxxxxxxv...vvv..v.v$$$$$v.....v...............vv|$|$|vv|$|$|$vv.vvv...vxxxxxxxx
-xxxxxxxxv...5vv..v.vvvvvvv.....vvvvv.......vvvvvv$|$|$++$|$|$|vv.vv....vxxxxxxxx
-xxxxxxxxv...vvv..v...............v.vvvv+vvvvvvvvvvvvvvvvvvvvv+vv.vvv...vxxxxxxxx
-xxxxxxxxv....vvv+v..........vvvvv.4vvv...vvvvvvvvvvvvvvvvvvvv+vv.vv5...vxxxxxxxx
-xxxxxxxxv...vvv..v.v..v..v....2vvv+vv5...5vvvvvvv.4.4.vv.4.4.4vv.vvv...vxxxxxxxx
-xxxxxxxxv...5vv.................vv|vvv...vvvvv.++4.4.4++4.4.4.vv.vv....vxxxxxxxx
-xxxxxxxxv...vvv.................1vOvv5...5vvvv.vvvvvvvvvvvvvvvvv.vvv...vxxxxxxxx
-xxxxxxxxv....vv.................vv|vvv...vvvvv.vvvvvvvvvvvvvvvvv.vv5...vxxxxxxxx
-xxxxxxxxv...vvv.v..v..v..v....3vvv+vv5...5vvvv...................vvv...vxxxxxxxx
-xxxxxxxxv...5vv.............vvvvv.4vvv...vvvvvvvvvvvvvvvvvvvvvvv.vv....vxxxxxxxx
-xxxxxxxxv..vvvv+vvvv.............v.vv5...5vvvvvvvvvvvvvvvvvvvvvv+vvvv..vxxxxxxxx
-xxxxxxxxv..v|v.....vvvvvvvvvvvvvvvvvvv...vvvvvvvvvvvvvvvvvvvv.....v|v..vxxxxxxxx
-xxxxxxxxv..v.v.....vvvvvvvvvvvvvvvvvvvv+vvvvvvvvvvvvvvvvvvvvv.....v.v..vxxxxxxxx
-xxxxxxxxv..v.vv+vvvv5.............5.........5..............5vvvv+vv.v..vxxxxxxxx
-xxxxxxxxv..v2.....|v........................................v|.....3v..vxxxxxxxx
-xxxxxxxxv..vvvvvvvvv........................................vvvvvvvvv..vxxxxxxxx
-xxxxxxxxv............................{.[.(.............................vxxxxxxxx
+....................................................................
+.....vvvvvvvvv........................................vvvvvvvvv.....
+.....v3.....|v........................................v|.....2v.....
+.....v.vv+vvvv.v.v.v.v.v.v.v.v.v..v.v.v.v.v.v.v.v.v.v.vvvv+vv.v.....
+.....v.v.....vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv.....v.v.....
+.....v|v.....+$$v$$+$$v||vvvvvvvvvvvvvvvvv$$$$v4.4.v$$v.....v|v.....
+.....vvvv+vvvv$$+$$v$$+||v...............v$$$$+.4.4+$$v+vv+vvvv.....
+.......vv.vvvvvvvvvvvvvvvv.v..v..v..v..v.v$$$$v4.4.v$$+||v.vv5......
+......vvv................v7.............7vvvvvvvvvvvvvvvvv.vvv......
+......5vv................+...............+.................vv.......
+......vvv+vvvvvvvvvvvvvvvv8v..v..v..v..v8vvvvvvvvvvvvvvvvv.vvv......
+.......vv..v.+$$$$$v.....v...............vvvvvvvvvvvvvvvvv.vv5......
+......vvv.Dv.v$$$$$v.....v...............vv|$|$|vv|$|$|$vv.vvv......
+......5vv7.v.vvvvvvv.....vvvvv.......vvvvvv$|$|$++$|$|$|vv.vv.......
+......vvv..v...............v.vvvv+vvvvvvvvvvvvvvvvvvvvv+vv.vvv......
+.......vvv+v..........vvvvv4.vvv...vvvvvvvvvvvvvvvvvvvv+vv.vv5......
+......vvv..v.v..v..v....2vvv+vv5...5vvvvvvv.4.4.vv.4.4.4vv.vvv......
+......5vv.................vv|vvv...vvvvv.++4.4.4++4.4.4.vv.vv.......
+......vvv.................1vOvv5...5vvvv.vvvvvvvvvvvvvvvvv.vvv......
+.......vv.................vv|vvv...vvvvv.vvvvvvvvvvvvvvvvv.vv5......
+......vvv.v..v..v..v....3vvv+vv5...5vvvv...................vvv......
+......5vv.............vvvvv4.vvv...vvvvvvvvvvvvvvvvvvvvvvv.vv.......
+.....vvvv+vvvv.............v.vv5...5vvvvvvvvvvvvvvvvvvvvvv+vvvv.....
+.....v|v.....vvvvvvvvvvvvvvvvvvv...vvvvvvvvvvvvvvvvvvvv.....v|v.....
+.....v.v.....vvvvvvvvvvvvvvvvvvvv+vvvvvvvvvvvvvvvvvvvvv.....v.v.....
+.....v.vv+vvvv5.............5.........5..............5vvvv+vv.v.....
+.....v2.....|v........................................v|.....3v.....
+.....vvvvvvvvv........................................vvvvvvvvv.....
+....................................................................
+....................................................................
 ENDMAP
-
-
-##############################################################################
-# Dispater - new map by Mu, featuring iron golems and iron trolls
-##############################################################################
 
 NAME:    dis_mu
 ORIENT:  north
+TAGS:    dis_castle no_rotate no_vmirror
 KFEAT:   o = granite_statue
-MONS:    patrolling Dispater, brimstone fiend, ice fiend, iron devil, metal gargoyle, iron dragon
+MONS:    patrolling Dispater, brimstone fiend, ice fiend, iron devil, \
+         metal gargoyle, iron dragon
 MONS:    iron troll
 KMONS:   8 = iron golem
 KFEAT:   8 = .
+KMONS:   9 = hell sentinel
+KMONS:   0 = quicksilver dragon
 : serpent_of_hell_setup(_G)
 SHUFFLE: 23
 SUBST:   4 = 4:20 7
 SUBST:   8 = 8o
 COLOUR:  o : cyan
-: dis_setup(_G)
+TILE:    o = dngn_statue_iron_golem
+: dis_rune(_G)
 # Use master/slave setup.
 MARKER:  o = lua:monster_on_death { \
             death_monster="Dispater", new_monster="generate_awake iron golem", \
@@ -733,57 +943,205 @@ MARKER:  o = lua:monster_on_death { \
             message_unseen="You hear a grinding sound.", \
             monster_place_feature=dgn.fnum("granite_statue"), \
             veto_fragmentation="veto", veto_disintegrate="veto", \
+            veto_shatter="veto" \
          }
+: set_feature_name("granite_statue", "iron statue")
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvxxxxxx
-xxxxxxv..................................................................vxxxxxx
-xxxxxxv..............................................v5v..v5v............vxxxxxx
-xxxxxxv..............................................vvvvvvvv............vxxxxxx
-xxxxxxv..........v5v5v...v5v5v...v5v5v...v5v5v.....vvv...4..vvv..........vxxxxxx
-xxxxxxv..........vvvvv...vvvvv...vvvvv...vvvvv...vvv.+..88..+.vvv........vxxxxxx
-xxxxxxv..........v||3v...v2||v...v$$$v...v$$$v..vv...v...4..v...vv.......vxxxxxx
-xxxxxxv..........v|..v...v..|v...v$|$v...v$|$v.vv..vvvvvvvvvvvv..vv......vxxxxxx
-xxxxxxv..........v...vvvvv...vvvvv.6.vvvvv.6.vvv..vvvvvvvvvvvvvv..vv.....vxxxxxx
-xxxxxxv........vvvv+vvW8Wvv+vvvvvv...+...+...vv..vvv.........vvvv..v.....vxxxxxx
-xxxxxxv.......vv.v...........vvvvvvvvv...vvvvvv.vvvv$$$$vvv...vvvv.vv....vxxxxxx
-xxxxxxv.....vvv..+.......44..vv|$|vvv.....vvvv..vvvv$$vvv...v.vvvv..v....vxxxxxx
-xxxxxxv....vv....v...........vv$$$vv..vvv..vvv+vvvvv||vvo......vvvv+vvv..vxxxxxx
-xxxxxxv..vvv.8W..vvvvvvvvvvvvvv$$$v...v.v...v...vvvv|vvo2......vvv...v5..vxxxxxx
-xxxxxxv..5vv.WW..vv5vv5vv5vv5vvv=vv.........+...vvvv|vv...v.v...vv...vv..vxxxxxx
-xxxxxxv..vvv.WW..+................+..v...v..v...vvvvOv1.........+..o.v...vxxxxxx
-xxxxxxv..vvv.WW..+................+..5.W.5..v...vvvv|v6.........+..o.v...vxxxxxx
-xxxxxxv..5vv.WW..vv5vv5vv5vv5vvv=vv..v.W.v..v...vvvv|vv...v.v...vv...vv..vxxxxxx
-xxxxxxv..vvv.8W..vvvvvvvvvvvvvv$$$v..5.W.5..v..Dvvvv|vvo3......vvv...v5..vxxxxxx
-xxxxxxv....vv....v.......v...vv$$$v..v...v..vv+vvvvv||vvo......vvvv+vvv..vxxxxxx
-xxxxxxv.....vv...+.......+...vv|$|v.........vv..vvvv$$vvv...v.vvvv..v....vxxxxxx
-xxxxxxv......vvv.v.......v...vvvvvv..vv+vv..vvv.vvvv$$$$vvv...vvvv.vv....vxxxxxx
-xxxxxxv........vvvv+vvW8Wv$$$vvvvvv..v...v..vvv..vvv.........vvvv..v.....vxxxxxx
-xxxxxxv..........v...vvvvv$$$vvvvvvvvv...vvvvvvv..vvvvvvvvvvvvvv..vv.....vxxxxxx
-xxxxxxv..........v$2$v...v$3$v...vvvvv...vvvvv.vv..vvvvvvvvvvvv..vv......vxxxxxx
-xxxxxxv..........v|||v...v|||v...vvvvv...vvvvv..vv...v...4..v...vv.......vxxxxxx
-xxxxxxv..........vvvvv...vvvvv...vvv8v+++v8vvv...vvv.+..88..+.vvv........vxxxxxx
-xxxxxxv..........v5v5v...v5v5v...v.v.v...v.v.v.....vvv...4..vvv..........vxxxxxx
-xxxxxxv..............................................vvvvvvvv............vxxxxxx
-xxxxxxv..........................7...........7.......v5v..v5v............vxxxxxx
-xxxxxxv.........................7....{.[.(....7..........................vxxxxxx
-xxxxxxv..........................7...........7...........................vxxxxxx
+....................................................................
+...............................................v5v..v5v.............
+...............................................vvvvvvvv.............
+...........v5v5v...v5v5v...v5v5v...v5v5v.....vvv...4..vvv...........
+...........vvvvv...vvvvv...vvvvv...vvvvv...vvv.+..88..+.vvv.........
+...........v||3v...v2||v...v$$$v...v$$$v..vv...v...4..v...vv........
+...........v|..v...v..|v...v$|$v...v$|$v.vv..vvvvvvvvvvvv..vv.......
+...........v...vvvvv...vvvvv.6.vvvvv.6.vvv..vvvvvvvvvvvvvv..vv......
+.........vvvv+vvW8Wvv+vvvvvv...+...+...vv..vvv.........vvvv..v......
+........vv.v...........vvvvvvvvv...vvvvvv.vvvv$$$$vvv...vvvv.vv.....
+......vvv..+.......44..vv|$|vvv.....vvvv..vvvv$$vvv...v.vvvv..v.....
+.....vv....v...........vv$$$vv..vvv..vvv+vvvvv||vvo......vvvv+vvv...
+...vvv.8W..vvvvvvvvvvvvvv$$$v...v9v...v...vvvv|vvo2......vvv...v5...
+...5vv.WW..vv5vv5vv5vv5vvv=vv.........+...vvvv|vv...v.v...vv9..vv...
+...vvv.WW..+................+..v...v..v...vvvvOv1.........+..o.v....
+...vvv.WW..+................+..5.W.5..v...vvvv|v0.........+..o.v....
+...5vv.WW..vv5vv5vv5vv5vvv=vv..v.W.v..v...vvvv|vv...v.v...vv9..vv...
+...vvv.8W..vvvvvvvvvvvvvv$$$v..5.W.5..v..Dvvvv|vvo3......vvv...v5...
+.....vv....v.......v...vv$$$v..v...v..vv+vvvvv||vvo......vvvv+vvv...
+......vv...+.......+...vv|$|v.........vv..vvvv$$vvv...v.vvvv..v.....
+.......vvv.v.......v...vvvvvv..vv+vv..vvv.vvvv$$$$vvv...vvvv.vv.....
+.........vvvv+vvW8Wv$$$vvvvvv.0v...v0.vvv..vvv.........vvvv..v......
+...........v...vvvvv$$$vvvvvvvvv...vvvvvvv..vvvvvvvvvvvvvv..vv......
+...........v$2$v...v$3$v...vvvvv...vvvvv.vv..vvvvvvvvvvvv..vv.......
+...........v|||v...v|||v...vvvvv...vvvvv..vv...v...4..v...vv........
+...........vvvvv...vvvvv...vvv8v+++v8vvv...vvv.+..88..+.vvv.........
+...........v5v5v...v5v5v...v.v.v...v.v.v.....vvv...4..vvv...........
+............................7.........7........vvvvvvvv.............
+...........................7...........7.......v5v..v5v.............
+............................7.........7.............................
 ENDMAP
 
+NAME:    dis_wall_1
+ORIENT:  north
+TAGS:    dis_divider no_vmirror no_rotate
+MONS:    hell sentinel, iron dragon
+MAP
+....................................................................
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvv++++vv++++vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvv..........vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvv..........vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvv...1..1...vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvv..........vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvv..........vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvv..........vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvv++++vv++++vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvv..............2...2..2................2..2...2..............vvvv
+ENDMAP
+
+NAME:    dis_wall_2
+ORIENT:  north
+TAGS:    dis_divider no_vmirror no_rotate
+MONS:    hell sentinel, iron dragon
+MAP
+....................................................................
+vvvvvvvvvvvv++vvvvvvvvvvvvvvvvvvvnnvvvvvvvvvvvvvvvvvvv++vvvvvvvvvvvv
+vvvvvvvvvvv....vvvvvvvvvvvvvv..........vvvvvvvvvvvvvv....vvvvvvvvvvv
+vvvvvvvvvvv....vvvvvvvvvvvvvv..........vvvvvvvvvvvvvv....vvvvvvvvvvv
+vvvvvvvvvvv.1..+............+...1..1...+............+..1.vvvvvvvvvvv
+vvvvvvvvvvv....vvvvvvvvvvvvvv..........vvvvvvvvvvvvvv....vvvvvvvvvvv
+vvvvvvvvvvv2...vvvvvvvvvvvvvv..........vvvvvvvvvvvvvv...2vvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvv..........vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvv++++vv++++vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvv.......2......2......2................2......2......2.......vvvv
+ENDMAP
+
+NAME:    dis_wall_3
+ORIENT:  north
+TAGS:    dis_divider no_vmirror no_rotate
+MONS:    hell sentinel, iron dragon
+MAP
+....................................................................
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv++vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv..vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvv........vvvvvvvvvvvvvvvvvvvv10vvvvvvvvvvvvvvvvvvvvvv........vvvv
+vvvv.v.21.v..............................................v.12.v.vvvv
+vvvv.v....v..............................................v....v.vvvv
+vvvv........vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv........vvvv
+vvvvvvv++vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv++vvvvvvv
+vvvvvvv++vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv++vvvvvvv
+vvvv.2....2..............................................2....2.vvvv
+ENDMAP
+
+NAME:    dis_wall_4
+ORIENT:  north
+TAGS:    dis_divider no_vmirror no_rotate
+KMONS:   1 = hell sentinel
+KMONS:   2 = iron dragon
+KFEAT:   2 = deep_water
+KMASK:   w = no_monster_gen
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv++++vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvv1..............1vvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvwwwwwwwwwwwwwwwwwwwwww..wwwwwwwwwwww..wwwwwwwwwwwwwwwwwwwwwwvvvv
+vvvvwwwwwwwwwwwwww2wwwwwww..wwwwwwwwwwww..wwwwwww2wwwwwwwwwwwwwwvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvv..vvvvvvvvvvvv..vvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvv++vvvvvvvvvvvv++vvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvv....................................................vvvvvvvv
+vvvvvvvv++vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv++vvvvvvvv
+vvvvwwww..wwwww2wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww2wwwww..wwwwvvvv
+vvvvwwww..wwwww2wwwwwwwwwwwwwwwww22wwwwwwwwwwwwwwwww2wwwww..wwwwvvvv
+ENDMAP
+
+NAME:    dis_wall_5
+ORIENT:  north
+TAGS:    dis_divider no_vmirror no_rotate
+KMONS:   1 = hell sentinel
+KMONS:   2 = iron dragon
+KFEAT:   2 = deep_water
+KMASK:   w = no_monster_gen
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv++++vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv....vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvwwwwwwwwwwwwwwwwwwwwwwwwwwwww..wwwwwwwwwwwwwwwwwwwwwwwwwwwwwvvvv
+vvvvwwww2www2wwwwwwwwwwwwwwwwwwww..wwwwwwwwwwwwwwwwwww2wwww2wwwwvvvv
+vvvvwwwwwwwwwwwwwwwwwwwwwwwwwwwww..wwwwwwwwwwwwwwwwwwwwwwwwwwwwwvvvv
+vvvvwwww....................................................ww2wvvvv
+vvvvww2w.........................11.........................wwwwvvvv
+vvvvwwww..vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv..wwwwvvvv
+vvvvwwww..vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv..wwwwvvvv
+vvvvwwww..vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv..wwwwvvvv
+ENDMAP
+
+NAME:    dis_wall_6
+ORIENT:  north
+TAGS:    dis_divider no_vmirror no_rotate
+KMONS:   1 = hell sentinel
+KMONS:   2 = iron dragon
+MAP
+....................................................................
+vvvvvvvvvvv+++vvvvvvvvvvvvvvvvvv++++vvvvvvvvvvvvvvvvvv+++vvvvvvvvvvv
+vvvvvvvvvvv...vvvvvvvvvvvvvvvvvv....vvvvvvvvvvvvvvvvvv...vvvvvvvvvvv
+vvvvvvvvvv.....vvvvvvvvvvvvvvvv......vvvvvvvvvvvvvvvv.....vvvvvvvvvv
+vvvvvvvvvvv.1.vvvvvvvvvvvvvvvvvv..1.vvvvvvvvvvvvvvvvvv.1.vvvvvvvvvvv
+vvvvvvvvvvv...vvvvvvvvvvvvvvvvvv....vvvvvvvvvvvvvvvvvv...vvvvvvvvvvv
+vvvvvvvvvv2...2vvvvvvvvvvvvvvvv2....2vvvvvvvvvvvvvvvv2...2vvvvvvvvvv
+vvvvvvvvvvv...vvvvvvvvvvvvvvvvvv....vvvvvvvvvvvvvvvvvv...vvvvvvvvvvv
+vvvvvvvvvvv+++vvvvvvvvvvvvvvvvvv++++vvvvvvvvvvvvvvvvvv+++vvvvvvvvvvv
+vvvv............................................................vvvv
+ENDMAP
+
+NAME:    dis_wall_7
+ORIENT:  north
+TAGS:    dis_divider no_vmirror no_rotate
+KMONS:   1 = hell sentinel
+KMONS:   2 = iron dragon
+MAP
+vvvvvvvvvvvvvvvv++vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv++vvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvv....vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv....vvvvvvvvvvvvvvv
+vvvvvvvvvvvvvv...2..vvvvvvvvvv........vvvvvvvvvv..2...vvvvvvvvvvvvvv
+vvvvvvvvvvvvvv..2...vvvvvvvvv..1....1..vvvvvvvvv...2..vvvvvvvvvvvvvv
+vvvvvvvvvvvvvv......vvvvvvvv............vvvvvvvv......vvvvvvvvvvvvvv
+vvvvvvvvvvvvvvv.....+......+............+......+.....vvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvv............vvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvv.2........2.vvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvv............vvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvv............................................................vvvv
+ENDMAP
+
+NAME:    dis_wall_8
+ORIENT:  north
+TAGS:    dis_divider no_vmirror no_rotate
+KMONS:   1 = hell sentinel
+KMONS:   2 = iron dragon
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv++vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv..vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvv2..vvvv....vvvv..2vvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvv2vvv.v........v.vvv2vvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvv.vvv.....11.....vvv.vvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvv.vvv.v........v.vvv.vvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvv...vvvv2..2vvvv...vvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvv.vvvvvvvvvvvvvv.vvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvv+vvvvvvvvvvvvvv+vvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvv............................................................vvvv
+ENDMAP
+
+##############################################################################
+# City of Dis by st
+##############################################################################
 NAME:    dis_st
 ORIENT:  encompass
-MONS:    patrolling Dispater, brimstone fiend, ice fiend, pit fiend
+MONS:    patrolling Dispater, brimstone fiend, ice fiend, hell sentinel
 MONS:    iron troll, iron dragon, cacodemon
 SUBST:   5=5.,6=6.,7=7.,8=4467...,0=09988...
 SHUFFLE: 67
 NSUBST:  A = 1:+ / *:v, B = 1:+ / *:v
 NSUBST:  S = 1:( / 1:[ / 1:{ / *:.
-# four pit fiends in Dispater's building
+# four hell sentinels in Dispater's building
 NSUBST:  _ = 4:4 / *:.
-# Maybe make an iron statue tile for this?
 COLOUR:  G = cyan
+TILE:    G = dngn_statue_iron
 : serpent_of_hell_setup(_G)
 : dis_setup(_G)
+: dis_rune(_G)
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 v...........................v.....v........v.0...v.............v.....v
@@ -1387,10 +1745,18 @@ ENDMAP
 # Ereshkigal (Tartarus)
 ##############################################################################
 
-NAME:   tar_old
-ORIENT: encompass
-MONS:   patrolling Ereshkigal, necrophage, wraith, shadow, small zombie
-MONS:   small skeleton, Shadow Fiend
+NAME:    tar_old
+ORIENT:  encompass
+MONS:    patrolling Ereshkigal, reaper, shadow demon, shadow
+MONS:    lich / ancient lich, shadow dragon / death drake w:1, shadow fiend
+KMONS:   8 = ghoul
+KMONS:   9 = vampire mage / vampire knight
+KMONS:   0 = soul eater
+KMONS:   Z = large skeleton / large zombie / small skeleton / small zombie
+KFEAT:   A = secret_door
+MARKER:  A = lua:restrict_door()
+SUBST:   ? = ?..., ? = 2., 0 = 002
+SHUFFLE: 3569
 : serpent_of_hell_setup(_G)
 : tar_setup(_G)
 MAP
@@ -1401,49 +1767,49 @@ xxxx..............................................................xxxx
 xxxx.................cccc..........ccc............................xxxx
 xxxx.............ccccc..cccc.....ccc.cccc.........................xxxx
 xxxx...........ccc.........ccccccc.....cc.........................xxxx
-xxxx.........ccc.......2............V..cc.........................xxxx
+xxxx.........ccc........6...........V..cc.........................xxxx
 xxxx........cc4........................cc...........xxxxxxxx......xxxx
-xxxx........cc44xxx==xxx......D........cc..........xx......xx.....xxxx
-xxxx........ccxxx......xxx.......ccc++ccc.........xx........xx....xxxx
+xxxx........cc44xxx++xxx......D........cc..........xx......xx.....xxxx
+xxxx........ccxxx......xxx.......ccc++ccc....6....xx........xx....xxxx
 xxxx........cxx..........xxx.....ccc44ccc.........x..........x....xxxx
-xxxx........cx............xx....cccc44cc.........xx..........xx...xxxx
-xxxx.......ccx.G........G.xxx7ccc..c44c..........x.....|......x...xxxx
-xxxx.......cxx............xxxcc..................x......7.....x...xxxx
-xxxx......ccx..............xxc...................xx..........xx...xxxx
+xxxx........cx............xx....cccc44cc.........xx.9......7.xx...xxxx
+xxxx.......ccx.G........G.xxx7ccc..c44c..........x....||||....x...xxxx
+xxxx.......cxx............xxxcc..................x....||||....x...xxxx
+xxxx......ccx..............xxc...................xx.9......9.xx...xxxx
 xxxx......ccx..G........G..xxc..x.........x.......x..........x....xxxx
-xxxx......ccx..............xcc....................xx........xx....xxxx
-xxxx.......cxx............xxc......................xx......xx.....xxxx
-xxxx.......ccx.F........F.xcc.......................xxxxxxxx......xxxx
+xxxx......ccx..............xcc......??............xx........xx....xxxx
+xxxx.......cxx............xxc......2222............xx......xx.....xxxx
+xxxx.......ccx.G........G.xcc.......??..............xxxxxxxx......xxxx
 xxxx........cx............xc......................................xxxx
 xxxx........cxx....17....xxc....x.........x.......................xxxx
 xxxx........ccxxx......xxxcc......................................xxxx
-xxxx........cccc=xxxxxx=cccc......................................xxxx
-xxxx........cc||cccccccc||cc......................................xxxx
-xxxx.........cc||||O|||||cc.......................................xxxx
+xxxx........ccccAxxxxxxAcccc.................................3....xxxx
+xxxx........cc$$cccccccc$$cc......................................xxxx
+xxxx.........cc$$$$O$$$$$cc.......................................xxxx
 xxxx..........cccccccccccc......x.........x............V..........xxxx
 xxxx..............................................................xxxx
-xxxx...........................................xxxxxxxxxxxxxxxx...xxxx
-xxxx...........................................xxxxxxxxxxxxxxxx...xxxx
-xxxx...........................................xx$$$$xxx|||||xx...xxxx
-xxxx.......V........V...........x.........x....xx$$$$xxx|||||xx...xxxx
-xxxx...........................................xxxxxxxxxxxxxxxx...xxxx
-xxxx...........................................xxxxxxxxxxxxxxxx...xxxx
-xxxx...........................................xx44444xx22222xx...xxxx
-xxxx.......xxxxxxxxx+xxxxxxxxx.................xx44444xx22222xx...xxxx
-xxxx.......x3.2..........3...x..x.........x..xxxxxxxxxxxxxxxxxx...xxxx
-xxxx.......x.x.x.x.x.x.x.x.x.x.................xxxxxxxxxxxxxxxx...xxxx
-xxxx.......x...2.3..4..5..4..x......................=.......xxx...xxxx
-xxxx.......xx.x.x.x.x.x.x.x.xx......................=.......xxx...xxxx
-xxxx.......x..65..3..6.6...5.x.................xxxxxxxxxxxxxxxx...xxxx
-xxxx.......x.x.x.x.x.x.x.x.x.x..x.........x..xxxxxxxxxxxxxxxxxx...xxxx
-xxxx.......x...4...3.....4...x.................xx.....xx555555x...xxxx
-xxxx.......xx=xxxxx.x.xxxxxxxx.................xx.....xx555555x...xxxx
-xxxx.......x$$$$$$x.25.x$$$||x.................xxxxxxxxxxxxxxxx...xxxx
-xxxx.......x$x$$x$xx.x.x$x$x|x.................xxxxxxxxxxxxxxxx...xxxx
-xxxx.......x||||||x.556=$$$||x..x.........x....xx$$xx56565xx$|x...xxxx
-xxxx.......xxxxxxxxxxxxxxxxxxx.................xx$$xx65656xx|7x...xxxx
-xxxx...........................................xxxxxxxxxxxxxxxx...xxxx
-xxxx...........................................xxxxxxxxxxxxxxxx...xxxx
+xxxx...........................................cccccccccccccccc...xxxx
+xxxx...........................................cccccccccccccccc...xxxx
+xxxx...........................................cc$$$$$xx|||||cc...xxxx
+xxxx.......3........V...........x....6....x....cc$$$$$xx|||||cc...xxxx
+xxxx...........................................ccxxcccccccccccc...xxxx
+xxxx...........................................ccxxcccccccccccc...xxxx
+xxxx...........................................cc44744xx00000cc...xxxx
+xxxx.......ccccccccc+ccccccccc.................cc44444xx88888cc...xxxx
+xxxx.......c.................c..x.........x..ccccccccccccxxxxcc...xxxx
+xxxx.......c.x.x.x.x.x.x.x.x.c.................ccccccccccxxxxcc...xxxx
+xxxx.......c.................c......................=........cc...xxxx
+xxxx.......cx5x.x.x.x.x.x.x5xc......................=........cc...xxxx
+xxxx.......c.................c.................ccccccccccxxxxcc...xxxx
+xxxx.......c.x.x.x.x5x.x.x.x.c..x.........x..ccccccccccccxxxxcc...xxxx
+xxxx.......c.................c.................ccZZZZZxx88888cc...xxxx
+xxxx.......cxxxxxxx.x.xxxxxxxc.................ccZZZZZxx00000cc...xxxx
+xxxx.......c$$$$$$x....x$$$||c.................ccxxcccccccccccc...xxxx
+xxxx.......c$x$$x$xx.x.x$x$x|c.................ccxxcccccccccccc...xxxx
+xxxx.......c||||||+....+$$$||c..x....3....x....cc||xx444xx|||cc...xxxx
+xxxx.......ccccccccccccccccccc.................cc||xx444xx|7|cc...xxxx
+xxxx...........................................cccccccccccccccc...xxxx
+xxxx...........................................cccccccccccccccc...xxxx
 xxxx..............................................................xxxx
 xxxx..............................................................xxxx
 xxxx........(...........................................[.........xxxx
@@ -1461,30 +1827,32 @@ ENDMAP
 # Ereshkigal (Tartarus) by Mu
 ##############################################################################
 
-NAME:    tar_mu
-ORIENT:  encompass
-MONS:    patrolling Ereshkigal, shadow fiend, reaper, soul eater, shadow demon
-MONS:    shadow dragon, shadow wraith
-KMONS:   8 = shadow imp
+NAME:     tar_mu
+ORIENT:   encompass
+SUBVAULT: Z : eresh_room
+# Ereshkigal is placed in the subvault.
+MONS:     random, shadow fiend, reaper, soul eater, shadow demon
+MONS:     shadow dragon, shadow wraith
+KMONS:    8 = shadow imp
 : serpent_of_hell_setup(_G)
- ## Randomising the secret doors to get into the pyramid.
- ## There may be secret doors that lead nowhere.
-SHUFFLE: FfGgHh
-SUBST:   F = =
-SUBST:   f : fff=c, f = =c
-SUBST:   G : Gcc,   G = =cc
-SUBST:   g : gcccc, g = =cc
-SUBST:   H = c
-SUBST:   h = c
- ## position of the loot chamber varies
-SHUFFLE: AB
-SUBST:   A = %
-SUBST:   B = x
-NSUBST:  " = 1:= / *:x
-KFEAT:   % = .
-KMONS:   % = soul eater / shadow wraith / nothing
-KITEM:   % = | / $
-SUBST:   4 = 3333444455566778
+# Randomising the secret doors to get into the pyramid.
+# There may be secret doors that lead nowhere.
+SHUFFLE:  FfGgHh
+SUBST:    F = =
+SUBST:    f : fff=c, f = =c
+SUBST:    G : Gcc,   G = =cc
+SUBST:    g : gcccc, g = =cc
+SUBST:    H = c
+SUBST:    h = c
+# position of the loot chamber varies
+SHUFFLE:  AB
+SUBST:    A = %
+SUBST:    B = x
+NSUBST:   " = 1:= / *:x
+KFEAT:    % = .
+KMONS:    % = soul eater w:20 / shadow wraith w:15 / reaper w:5 / nothing w:20
+KITEM:    % = | / $
+SUBST:    4 = 3333444455566778
 : tar_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1492,32 +1860,32 @@ xxxx..............................................................xxxx
 xxxx..............................................................xxxx
 xxxx..cccccccccccccccccccccccccccccc..............................xxxx
 xxxx..cccccccccccccccccccccccccccccc..............................xxxx
-xxxx..cc..c.......................cc..............................xxxx
+xxxx..cc..c...........4...........cc..............................xxxx
 xxxx..cc..F.......................cc..............................xxxx
 xxxx..cc..ccGcccccccccccccccccccGFcc..............................xxxx
 xxxx..cc..H.................f..c..cc..............ccccccc.........xxxx
-xxxx..cc..f.................h..H..cc............ccccccccccc.......xxxx
+xxxx..cc..f.........5.......h..H..cc............ccccccccccc.......xxxx
 xxxx..cc..chgccccHccccccccGgc..c..cc...........ccccc$$$ccccc......xxxx
 xxxx..cc..c..F.G............c..c..cc..........cccc$$$$$$$cccc.....xxxx
 xxxx..cc..f..c.ccgcccccccccHc..c..cc..........ccc$$$$$$$$$ccc.....xxxx
-xxxx..cc..c..c.c..........c.c..c..cc.........ccc$$$$$$$$$$$ccc....xxxx
-xxxx..cc..c..c.h...xnnx...f.c..c..cc.........ccc.2.$$$$$.2.ccc....xxxx
-xxxx..cc..c..c.c...x$$x...c.c..c..cc........ccc....xxxxx....ccc...xxxx
-xxxx..cc..c..c.c...x||x...c.c..h..cc........ccc..xxxxxxxxx..ccc...xxxx
-xxxx..cc..c..h.c.xxx..xxx.c.c..c..cc........cc..xxxxxxxxxxx..cc...xxxx
-xxxx..cc..c..c.c.nO..2.1n.c.c..c..cc........cc=cxxxxxxxxxxxc=cc...xxxx
-xxxx..cc..c..c.c.xxx..xxx.c.c..cD.cc........cc.c...........c.cc...xxxx
-xxxx..cc..c..c.c...x||x...c.c..c..cc........cc.c.xxxxxxxxx.c.cc...xxxx
-xxxx..cc..c..c.c...x$$x...c.c..c..cc........cc.c=xxxxxxxxc=c.cc...xxxx
-xxxx..cc..c..G.c...xnnx...c.c..g..cc........cc.c.xx.444.xc.c.cc...xxxx
-xxxx..cc..c..c.c..........c.c..c..cc........cc.c.cx.444.xc.c.cc...xxxx
+xxxx..cc..c..c.cZZZZZZZZZZc.c..c..cc.........ccc$$$$$$$$$$$ccc....xxxx
+xxxx..cc..c..c.hZZZZZZZZZZf.c..c..cc.........ccc.2.$$$$$.2.ccc....xxxx
+xxxx..cc..c..c.cZZZZZZZZZZc.c..c..cc........ccc....xxxxx....ccc...xxxx
+xxxx..cc..c..c.cZZZZZZZZZZc.c..h..cc........ccc..xxxxxxxxx..ccc...xxxx
+xxxx..cc..c..h.cZZZZZZZZZZc.c..c..cc........cc..xxxxxxxxxxx..cc...xxxx
+xxxx..cc.4c..c.cZZZZZZZZZZc.c5.c..cc........cc=cxxxxxxxxxxxc=cc...xxxx
+xxxx..cc..c.5c.cZZZZZZZZZZc.c..cD2cc........cc.c...........c.cc...xxxx
+xxxx..cc..c..c.cZZZZZZZZZZc.c..c..cc........cc.c.xxxxxxxxx.c.cc...xxxx
+xxxx..cc..c..c.cZZZZZZZZZZc.c..c..cc........cc.c=xxxxxxxxc=c.cc...xxxx
+xxxx..cc..c..G.cZZZZZZZZZZc.c..g..cc........cc.c.xx.444.xc.c.cc...xxxx
+xxxx..cc..c..c.cZZZZZZZZZZc.c..c..cc........cc.c.cx.444.xc.c.cc...xxxx
 xxxx..cc..c..cFccHccccGcFcc.H..f..cc........cc.c.cxxxxxxxc.c.cc...xxxx
 xxxx..cc..c..G............c.c..c..cc........cc.c.cccxxxccc.c.cc...xxxx
 xxxx..cc..c..cccccccccccHccfcgcc..cc........cc.c...cxxxc...c.cc...xxxx
-xxxx..cc..F..c.................c..cc........cc.c.cccxxxccc.c.cc...xxxx
+xxxx..cc..F..c......5..........c..cc........cc.c.cccxxxccc.c.cc...xxxx
 xxxx..cc..c..g.................c..cc........cc.c.cx|2.2|xc.c.cc...xxxx
 xxxx..cccHcfcccHcccccccccccccfcc==cc........cc.c.cx|$$$|xc.c.cc...xxxx
-xxxx..cc.......................c..cc........cc.c.ccccxcccc.c.cc...xxxx
+xxxx..cc............4..........c..cc........cc.c.ccccxcccc.c.cc...xxxx
 xxxx..cc.......................c..cc........cc.c....cxc....c.cc...xxxx
 xxxx..cccccccccccccccccccccccccc++cc........cc.c.ccccxcccc.c.cc...xxxx
 xxxx..cccccccccccccccccccccccccc++cc........cc.c.cxx|||xxc.c.cc...xxxx
@@ -1550,6 +1918,90 @@ xxxx...............................(xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+NAME:    eresh_room_1
+TAGS:    eresh_room no_rotate
+WEIGHT:  30
+MONS:    patrolling Ereshkigal, shadow fiend
+MARKER:  = = lua:restrict_door()
+: tar_setup(_G)
+MAP
+..........
+...c==c...
+...c..c...
+...c..c...
+.ccc..ccc.
+.cO.12..c.
+.ccc..ccc.
+...c||c...
+...c||c...
+...cccc...
+..........
+ENDMAP
+
+NAME:    eresh_room_2
+TAGS:    eresh_room no_rotate
+WEIGHT:  10
+MONS:    patrolling Ereshkigal, shadow fiend
+MARKER:  = = lua:restrict_door()
+SHUFFLE: |O
+: tar_setup(_G)
+MAP
+..........
+.G......G.
+..........
+c........c
+cc......cc
+|=..21..=O
+cc......cc
+c........c
+..........
+.G......G.
+..........
+ENDMAP
+
+NAME:    eresh_room_3
+TAGS:    eresh_room no_rotate
+WEIGHT:  10
+MONS:    patrolling Ereshkigal, shadow fiend
+MARKER:  = = lua:restrict_door()
+: tar_setup(_G)
+MAP
+..........
+..........
+..cc++cc..
+.cc....cc.
+.c......c.
+.cG....Gc.
+.c..12..c.
+.c=cccc=c.
+.cc|O||cc.
+..cccccc..
+..........
+ENDMAP
+
+NAME:    eresh_room_4
+TAGS:    eresh_room no_rotate
+WEIGHT:  5
+MONS:    patrolling Ereshkigal, shadow fiend
+NSUBST:  m = 1:==+ / *:nnnnm
+SHUFFLE: 12 / AB
+SUBST:   A=., B=.
+MARKER:  m = lua:restrict_door()
+: tar_setup(_G)
+MAP
+..........
+.G......G.
+....A.....
+...mmmm...
+...m||m...
+..1mO|m2..
+...m||m...
+...mmmm...
+.....B....
+.G......G.
+..........
+ENDMAP
+
 ##############################################################################
 # Ereshkigal (Tartarus) by minmay
 ##############################################################################
@@ -1557,9 +2009,14 @@ ENDMAP
 NAME:   tar_minmay_river
 ORIENT: encompass
 MONS:   patrolling Ereshkigal, reaper, shadow demon, shadow fiend, soul eater
-FTILE:  "5 = floor_green_bones
-SUBST:  " = .:298 *:1 5:1
+FTILE:  "5!?^ = floor_green_bones
+SUBST:  5 = 5:10 3:1
+NSUBST: " = 2:4 / 4:3
+NSUBST: 2 = 3:4 / *:2
 NSUBST: w = 3=Ew / 20=Fw / *:w
+NSUBST: ! = 2:. / *:c
+NSUBST: ? = 2:. / *:c
+NSUBST: ^ = 2:. / *:c
 KMONS:  E = kraken spectre
 KMONS:  F = shark spectre / big fish spectre / electric eel spectre
 KFEAT:  EFw = deep_water
@@ -1567,72 +2024,74 @@ KMASK:  Ww = no_monster_gen
 : serpent_of_hell_setup(_G)
 : tar_setup(_G)
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccx
-xc$$$$$cccc........cccc$$$$$c|||||O||||||c$$$$$cccc........cccc$$$$$cx
-xc$$$ccc....cccccc....ccc$$$c|cccccccccc|c$$$ccc....cccccc....ccc$$$cx
-xc$$cc...cccc....cccc...cc$$c+c........c+c$$cc...cccc....cccc...cc$$cx
-xc$cc..ccc....cc....ccc..cc+cc....14....cc+cc..ccc....cc....ccc..cc$cx
-xc$c..cc...cccccccc...cc...2c............c2...cc...cccccccc...cc..c$cx
-xc+c.cc..ccc......ccc..cc..cc............cc..cc..ccc......ccc..cc.c+cx
-xc2..c..cc...cccc...cc..c..c..............c..c..cc...cccc...cc..c..2cx
-xcc.cc.cc..ccc..ccc..cc.cc.c..............c.cc.cc..ccc..ccc..cc.cc.ccx
-xcc.c..c..cc......cc..c..c.c....cc++cc....c.c..c..cc......cc..c..c.ccx
-xc..c.cc.cc..cccc..cc.cc.c.c...cc....cc...c.c.cc.cc..cccc..cc.cc.c..cx
-xc.cc.c..c..cc..cc..c..c.c.cc..c......c..cc.c.c..c..cc..cc..c..c.cc.cx
-xc.c..c.cc.cc....cc.cc.c....c.cc...D..cc.c....c.cc.cc....cc.cc.c..c.cx
-xc.c.cc.c..c..cc.+2..c.c....c.c........c.c....c.c..2+.cc..c..c.cc.c.cx
-xc.c.cc.c..c..cc.ccc.c.c....c.c........c.c....c.c.ccc.cc..c..c.cc.c.cx
-xc.c..c.cc.cc......c.c.c....c3c........c3c....c.c.c......cc.cc.c..c.cx
-xc.cc.c..c..cc+c...c...c2cc.ccccc++++ccccc.cc2c...c...c+cc..c..c.cc.cx
-xc..c.cc.cc..c2c...ccc.c+c...cc........cc...c+c.ccc...c2c..cc.cc.c..cx
-xcc.c..c..cc...cccc33c...c...c..........c...c...c33cccc...cc..c..c.ccx
-xcc.cc.cc..ccc....c33cccccc..c..c....c..c..cccccc33c....ccc..cc.cc.ccx
-xcc..c..cc...cccc.ccc|||c2c.....c....c.....c2c|||ccc.cccc...cc..c..ccx
-xccc.cc..ccc........c||cc.cc...cc....cc...cc.cc||c........ccc..cc.cccx
-xc2c..cc...cccccccc.c|cc...cc2cccc33cccc2cc...cc|c.cccccccc...cc..c2cx
-xc.cc..ccc.......2+.ccc.....cccc2cccc2cccc.....ccc.+2.......ccc..cc.cx
-xc..cc...cccc....cccc............................cccc....cccc...cc..cx
-x..............WWWWWWWWWWWWWWWWWWWWWWW...............................x
-x..WWWWWWWWWWWWWWwwwwwwwwwwwwwwWwwwwwWWWWWWWW........................x
-xWWWWwwwwwwwwwwwWwwwwwwwwwwwwwWwwwwwwwwwwwwWWWWWWWWWW................x
-xwwwwWwwwwwwwwwwWwwwwwwwwwwwwwWwwwwwwwwwwwwWwwwwwwwwWWWWWWWWWWWWW....x
-xwwwwWwwwwwwwwwwwWwwwwwwwwwwwwWwwwwwwwwwwwWwwwwwwwwwwwWwwwwwwwwwWWWWWx
-xwwwwWwwwwwwwwwwwWwwwwwwwwwwwwWwwwwwwwwwwwWwwwwwwwwwwWwwwwwwwwwwWwwwwx
-xwwwwwWwwwwwwwwwwWwwwwwwwwwwwWwwwwwwwwwwwWwwwwwwwwwwwWwwwwwwwwwwWwwwwx
-xwwwwwWwwwwwwwWWWWWWWWWWWWWWWWWWWwwwwwwwwWwwwwwwwwwwwWwwwwwwwwwwWwwwwx
-xwwwWWWWWWWWWWWcc""""""""""cccccWWWWWWwwwWwwwwwwwwwwWwwwwwwwwwwwWwwwwx
-xWWWW""""""""ccc"""ccccccc""c""c"""""WWWWWWWWwwwwwwwWwwwwwwwwwwWwwwwwx
-x"""""""c""""""c""""c5"c""""c""c""""""""""""WWWWWWWWWWWwwwwwwwwWwwwwwx
-xc"""cccc""c""""""""c""c""""c"""""c"""cccc"""""""""c""WWWWWWWWWWWWWwwx
-xc""""c""""c""c"""ccc"""""""cc""""c""""""cccccc""""cccc"""""""""""WWWx
-xc""ccc""""c""c"""""c""""c""c"""c"c"""c"5c""""""""""""c""""c"""c"""""x
-xc""""c""""c""c"""""""cccc""c5""c"c"""cccc"""""c""""c"c""""c"""c"c""cx
-xcc""""""ccccccccc""""c""c""cccccccc"""c"c"""c"c""ccccc""""c""cccccccx
-xc""""""""c"""c"5cc""""""c""c""""""""""c"""""c"c"""c5""""""cccc5""c"cx
-x""""c""""c""""""c"""""""c"""""""c"""""""""cccccc""c""""c"""""c"""""cx
-x""ccc""""c""""""c""cccccc"""""""c""""""c"""""c""""ccccccc"""cc"""""cx
-x""""c""""""""cccc"""""c"""""""ccc""""""c""""cc""""c"5c"""""""cccc""cx
-x""""ccccc"""""""c"""""c"""""""""c""""""c"""""c""c""""c"""""""""c"""cx
-x"""""5c""""c""""c""""cc"""""c""5c"""cc"ccccc""""c""""c""c""""""c""""x
-x""ccccc""""c""""""""""c"""cccccccc"""c"""c""""""c""ccc""ccc""""c""""x
-x""""""c""""c""""""""""c"""""c""""""""c""5ccccc""c""""c""c"""""""""""x
-xc""""""""""c"c"""""""""""cccc""""""""ccccc""""""c"""""""c""c"""cccc"x
-xc"""""""""ccccccccccc"""""""c""""""""""""c""""""c"""""ccccccc""c5"""x
-xcccc""""ccc"""5c""""""""""""c""""""""""""c"""ccccc"""cc""""""""cc"""x
-xc5""""""""c""""c""""""""c"""""""""ccc""""c"""c""5cc"""""cc"""""c""ccx
-xc""""""""""""""cccc"""""c"""""ccccc""""""""""c"""c"""""""cccc""""""cx
-xccc"""""""""cccc""""""c"c""""""c""cccccc"""""c"""ccc"""ccc"""""""""cx
-x"""""""c""""c"c"""""""cccc"""""c""c5""""""cccc"ccc"""""""c""""c""cccx
-x""""""cc""""c"c""""""""""c""""""""c""""""""""c"""""""""""c""cccc"""cx
-x"""""""c""""c""""""""c""5cccc""""ccc""""""""cc"""""""c"cccccc"c""""cx
-x"""""cccc"""c"""""""cccccc"""""""""c"""""""""""""ccccc"c"""5c"c"""""x
-xc"""""""cc"""""c""""""c""c"""""c"""c""""""c""""""""""ccc""""c"""""c"x
-xc"c"""""c""""""c""""""c""""""ccc""""""""""c""""""""""""c""ccc""c""c"x
-xcccccc""c""""""cccc"""c""""""""ccccccc"""ccc"""""""""""c"""""""cccccx
-xc...c"""""""cccc""""""c""cc""""c...c"""""""c""""""c""""c""""""cc...cx
-xc.{..""""""""c"""""c""""""cc"""c.(.."""c""5cccc"""c"c""""""c"""..[.cx
-xc...c""""""""c"""""c""""""c"""cc...c"""ccccc""""""c"c""""""c"""c...cx
-xcccccccc"""""""""ccccccc"""""""ccccc"""""""""""""ccccc""""ccccccccccx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccXXXXXX
+XXXXXXc$$$$$cccc........cccc$$$$$c|||||O||||||c$$$$$cccc........cccc$$$$$cXXXXXX
+XXXXXXc$$$ccc....cccccc....ccc$$$c|cccccccccc|c$$$ccc....cccccc....ccc$$$cXXXXXX
+XXXXXXc$$cc...cccc....cccc...cc$$c+c........c+c$$cc...cccc....cccc...cc$$cXXXXXX
+XXXXXXc$cc..ccc....cc....ccc..cc+cc....14....cc+cc..ccc....cc....ccc..cc$cXXXXXX
+XXXXXXc$c..cc...cccccccc...cc...2c............c2...cc...cccccccc...cc..c$cXXXXXX
+XXXXXXc+c.cc..ccc......ccc..cc..cc............cc..cc..ccc......ccc..cc.c+cXXXXXX
+XXXXXXc2..c..cc...cccc...cc..c..c..............c..c..cc...cccc...cc..c..2cXXXXXX
+XXXXXXcc.cc.cc..ccc..ccc..cc.cc.c..............c.cc.cc..ccc..ccc..cc.cc.ccXXXXXX
+XXXXXXcc.c..c..cc......cc..c..c.c....cc++cc....c.c..c..cc......cc..c..c.ccXXXXXX
+XXXXXXc..c.cc.cc..cccc..cc.cc.c.c...cc....cc...c.c.cc.cc..cccc..cc.cc.c..cXXXXXX
+XXXXXXc.cc.c..c..cc..cc..c..c.c.cc..c......c..cc.c.c..c..cc..cc..c..c.cc.cXXXXXX
+XXXXXXc.c..c.cc.cc....cc.cc.c....c.cc...D..cc.c....c.cc.cc....cc.cc.c..c.cXXXXXX
+XXXXXXc.c.cc.c..c..cc.+2..c.c....c.c........c.c....c.c..2+.cc..c..c.cc.c.cXXXXXX
+XXXXXXc.c.cc.c..c..cc.ccc.c.c....c.c........c.c....c.c.ccc.cc..c..c.cc.c.cXXXXXX
+XXXXXXc.c..c.cc.cc......c.c.c....c3c........c3c....c.c.c......cc.cc.c..c.cXXXXXX
+XXXXXXc.cc.c..c..cc+c...c...c2cc2ccccc++++ccccc2cc2c...c...c+cc..c..c.cc.cXXXXXX
+XXXXXXc..c.cc.cc..c2c...ccc.c+c...cc........cc...c+c.ccc...c2c..cc.cc.c..cXXXXXX
+XXXXXXcc.c..c..cc...cccc33c...c...c..........c...c...c33cccc...cc..c..c.ccXXXXXX
+XXXXXXcc.cc.cc..ccc....c33cccccc..c..c....c..c..cccccc33c....ccc..cc.cc.ccXXXXXX
+XXXXXXcc..c..cc...cccc.ccc|||c.c.....c....c.....c.c|||ccc.cccc...cc..c..ccXXXXXX
+XXXXXXccc.cc..ccc........c||cc.cc...cc....cc...cc.cc||c........ccc..cc.cccXXXXXX
+XXXXXXc.c..cc...cccccccc.c|cc...cc2cccc33cccc2cc...cc|c.cccccccc...cc..c.cXXXXXX
+XXXXXXc.cc..ccc..2....2+.ccc.....cccc2cccc2cccc.....ccc.+2....2..ccc..cc.cXXXXXX
+XXXXXXc..cc...cccc....cccc............................cccc....cccc...cc..cXXXXXX
+XXXXXX..............WWWWWWWWWWWWWWWWWWWWWWW...............................XXXXXX
+XXXXXX..WWWWWWWWWWWWWWwwwwwwwwwwwwwwWwwwwwWWWWWWWW........................XXXXXX
+XXXXXXWWWWwwwwwwwwwwwWwwwwwwwwwwwwwWwwwwwwwwwwwwWWWWWWWWWW................XXXXXX
+XXXXXXwwwwWwwwwwwwwwwWwwwwwwwwwwwwwWwwwwwwwwwwwwWwwwwwwwwWWWWWWWWWWWWW....XXXXXX
+XXXXXXwwwwWwwwwwwwwwwwWwwwwwwwwwwwwWwwwwwwwwwwwWwwwwwwwwwwwWwwwwwwwwwWWWWWXXXXXX
+XXXXXXwwwwWwwwwwwwwwwwWwwwwwwwwwwwwWwwwwwwwwwwwWwwwwwwwwwwWwwwwwwwwwwWwwwwXXXXXX
+XXXXXXwwwwwWwwwwwwwwwwWwwwwwwwwwwwWwwwwwwwwwwwWwwwwwwwwwwwWwwwwwwwwwwWwwwwXXXXXX
+XXXXXXwwwwwWwwwwwwwWWWWWWWWWWWWWWWWWWWwwwwwwwwWwwwwwwwwwwwWwwwwwwwwwwWwwwwXXXXXX
+XXXXXXwwwWWWWWWWWWWWcc""""""""""cccccWWWWWWwwwWwwwwwwwwwwWwwwwwwwwwwwWwwwwXXXXXX
+XXXXXXWWWW"""^^^^^ccc^^^ccccccc^^c""c"""""WWWWWWWWwwwwwwwWwwwwwwwwwwWwwwwwXXXXXX
+XXXXXX"""""""c""""""c""""c5"c""""c""c""""""""""""WWWWWWWWWWWwwwwwwwwWwwwwwXXXXXX
+XXXXXXc^^^cccc""c""""""""c""c""""c"""""c^^^cccc"""""""""c""WWWWWWWWWWWWWwwXXXXXX
+XXXXXXc""""c""""c""c"""ccc"""""""cc""""c""""""cccccc^^^^cccc"""""""""""WWWXXXXXX
+XXXXXXc""ccc""""c""c"""""c""""c""c"""c"c"""c"5c""""""""""""c^^^^c^^^c"""""XXXXXX
+XXXXXXc""""c""""c""c"""""""cccc""c5""c"c"""cccc"""""c""""c""""""c"""c"c""cXXXXXX
+XXXXXXcc""""""ccccccccc""""c""c""cccccccc"""c"c"""c"c""ccccc""""c""cccccccXXXXXX
+XXXXXXc""""""""c"""c"5cc""""""c""c""""""""""c"""""c"c"""c5""""""""cc5""c"cXXXXXX
+XXXXXX""""c""""c""""""c"""""""c"""""""c"""""""""cccccc??c""""c"""""c"""""cXXXXXX
+XXXXXX""ccc""""c""""""c""cccccc"""""""c""""""c"""""c""""ccccccc"""cc"""""cXXXXXX
+XXXXXX""""c"""??"""cccc"""""c"""""""ccc""""""c""""cc""""c"5c"""""""cccc""cXXXXXX
+XXXXXX""""ccccc"""""""c"""""c"""""""""c""""""c"""??c""c""""c"""""""""c"""cXXXXXX
+XXXXXX"""""5c""""c""""c????cc"""""c""5c"""cc"ccccc""""c""""c""c""""""c""""XXXXXX
+XXXXXX??ccccc""""c""""""""""c???cccccccc???c"""c""""""c""ccc""ccc????c""""XXXXXX
+XXXXXX""""""c""""c""""""""""c"""""c""""""""c""5ccccc""c""""c??c"""""""""""XXXXXX
+XXXXXXc""""""""""c"c"""""""""""cccc""""""""ccccc""""""c"""""""c""c"""cccc"XXXXXX
+XXXXXXc"""""""""ccccccccccc"""""""c""""""""""""c""""""c"""""ccccccc""c5"""XXXXXX
+XXXXXXcccc""""ccc"""5c""""""""""""c""""""""""""c"""ccccc"""cc""""""""cc"""XXXXXX
+XXXXXXc5""""""""c""""c""""""""c"""""""""ccc""""c"""c""5cc"""""cc"""""c""ccXXXXXX
+XXXXXXc""""""""""""""cccc!!!!"c!!!!!ccccc""""""""""c"""c"""""""cccc!!!!!!cXXXXXX
+XXXXXXccc!!!!!!!!!cccc""""""c"c""""""c""cccccc!!!""c"""ccc!!!ccc"""""""""cXXXXXX
+XXXXXX"""""""c""""c"c"""""""cccc"""""c""c5""""""cccc"ccc"""""""c""""c""cccXXXXXX
+XXXXXX""""""cc""""c"c""""""""""c""""""""c""""""""""c"""""""""""c""cccc"""cXXXXXX
+XXXXXX"""""""c""""c""""""""c""5cccc""""ccc""""""""cc"""""""c"cccccc"c""""cXXXXXX
+XXXXXX"""""cccc"""c"""""""cccccc"""""""""c"""""""""""""ccccc"c"""5c"c"""""XXXXXX
+XXXXXXc"""""""cc"""""c""""""c""c"""""c"""c""""""c""""""""""ccc""""c"""""c"XXXXXX
+XXXXXXc"c"""""c""""""c""""""c""""""ccc""""""""""c""""""""""""c""ccc""c""c"XXXXXX
+XXXXXXcccccc""c""""""cccc"""c""""""""ccccccc"""ccc"""""""""""c"""""""cccccXXXXXX
+XXXXXXc...c"""""""cccc""""""c""cc""""c...c"""""""c""""""c""""c""""""cc...cXXXXXX
+XXXXXXc.{..""""""""c"""""c""""""cc"""c.(.."""c""5cccc"""c"c""""""c"""..[.cXXXXXX
+XXXXXXc...c""""""""c"""""c""""""c"""cc...c"""ccccc""""""c"c""""""c"""c...cXXXXXX
+XXXXXXcccccccc"""""""""ccccccc"""""""ccccc"""""""""""""ccccc""""ccccccccccXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ENDMAP

@@ -1,0 +1,24 @@
+### Colouring of corpses, depending on whether you can eat them, and
+### whether it's safe to eat them.
+### Use menu_colour (inv) to colour items in your inventory or the
+### pickup menu.
+
+inv := menu_colour
+
+inv = $inedible:.*inedible.*
+
+inv = $evil:.*evil_eating.*
+
+inv = $preferred:.*preferred.*
+
+# Corpses of undead (necrophages etc.)
+inv = $rot-inducing:.*rot-inducing.*
+
+# Mutagenic corpses/chunks
+inv = $mutagenic:.*mutagenic.*
+
+# Poisonous corpses/chunks
+inv = $poisonous:.*poisonous.*
+
+# Contaminated corpses/chunks
+inv = $contaminated:.*contaminated.*

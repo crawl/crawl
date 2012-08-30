@@ -13,6 +13,9 @@ function fill_special_room(e, mon, lord_mon, pack)
         e.subst('. = 1:30 .')
     end
 
+    -- Limit the number of monsters.
+    e.nsubst('1 = 30:1 / *:.')
+
     if lord_mon then
         e.nsubst('1 = 1:2 / *:1')
         e.kmons('2 = ' .. lord_mon)
@@ -21,19 +24,11 @@ function fill_special_room(e, mon, lord_mon, pack)
     e.kmons('1 = ' .. mon)
 end
 
--- NOTE: To make beehives occur in the Lair with the same absolute frequency
--- as in 0.4, the special room definitions which don't fit there should
--- just do nothing. Can't use dummy vaults to do this since vault
--- frequency is controlled by absolute depth rather than by branch depth.
-function is_in_lair()
-    return you.in_branch("Lair")
-end
-
 function sroom_kobold_lair(e)
     local level = you.absdepth() - 1
 
     -- Return early if we're being called during map validation.
-    if e.is_validating() or is_in_lair() then
+    if e.is_validating() then
         return
     end
 
@@ -59,7 +54,7 @@ function sroom_orc_lair(e)
     local level = you.absdepth() - 1
 
     -- Return early if we're being called during map validation.
-    if e.is_validating() or is_in_lair() then
+    if e.is_validating() then
         return
     end
 
@@ -79,8 +74,6 @@ function sroom_orc_lair(e)
 end
 
 function sroom_beehive(e)
-    local level = you.absdepth() - 1
-
     -- Return early if we're being called during map validation.
     if e.is_validating() then
         return
@@ -93,10 +86,6 @@ function sroom_beehive(e)
 end
 
 function sroom_morgue(e)
-    if is_in_lair() then
-        return
-    end
-
     fill_special_room(e, "small zombie w:500 / wight w:167 / necrophage w:167 / "
                       .. "wraith w:125 / vampire w:42", nil, true)
 end
@@ -137,7 +126,7 @@ end
 ##########################
 
 NAME:   special_room_kobold
-DEPTH:  6-14, !Lair, !Crypt, !Geh, !Tar, !Coc, !Dis
+DEPTH:  D:7-15, Orc, Elf
 TAGS:   special_room allow_dup unrand
 WEIGHT: 11
 : sroom_kobold_lair(_G)
@@ -145,7 +134,7 @@ MAP
 ENDMAP
 
 NAME:   special_room_orc
-DEPTH:  8-, !Lair, !Crypt, !Geh, !Tar, !Coc, !Dis
+DEPTH:  D:9-, Orc, Elf, Snake, Vaults
 TAGS:   special_room allow_dup unrand
 WEIGHT: 59 (8-14), 50 (15-16), 40 (17), 25 (18-20), 15 (21-)
 : sroom_orc_lair(_G)
@@ -153,7 +142,7 @@ MAP
 ENDMAP
 
 NAME:   special_room_bee
-DEPTH:  8-, !Crypt, !Geh, !Tar, !Coc, !Dis
+DEPTH:  D:9-, Lair, Orc, Elf, Snake, Spider, Vaults
 TAGS:   special_room allow_dup unrand
 WEIGHT: 30 (8-14), 25 (15-17), 33 (18-20), 8 (21-)
 : sroom_beehive(_G)
@@ -161,7 +150,7 @@ MAP
 ENDMAP
 
 NAME:   special_room_morgue
-DEPTH:  15-, !Lair
+DEPTH:  D:16-, Vaults, Snake:2-, Crypt, Dis, Tar, Coc, Geh
 TAGS:   special_room allow_dup unrand
 WEIGHT: 25 (15-16), 27 (17), 29 (18-20), 32 (21-)
 : sroom_morgue(_G)
@@ -169,7 +158,7 @@ MAP
 ENDMAP
 
 NAME:   special_room_jelly
-DEPTH:  17-, !Crypt, !Geh, !Tar, !Coc, !Dis
+DEPTH:  D:18-, Vaults, Slime
 TAGS:   special_room allow_dup unrand
 WEIGHT: 9 (17), 13 (18-20), 45 (21-)
 : sroom_jelly_pit(_G)

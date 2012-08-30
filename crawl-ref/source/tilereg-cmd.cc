@@ -49,7 +49,7 @@ int CommandRegion::handle_mouse(MouseEvent &event)
 {
     unsigned int item_idx;
     if (!place_cursor(event, item_idx))
-        return (0);
+        return 0;
 
     if (event.button == MouseEvent::LEFT)
     {
@@ -58,27 +58,27 @@ int CommandRegion::handle_mouse(MouseEvent &event)
         process_command(cmd);
         return CK_MOUSE_CMD;
     }
-    return (0);
+    return 0;
 }
 
-bool CommandRegion::update_tab_tip_text(std::string &tip, bool active)
+bool CommandRegion::update_tab_tip_text(string &tip, bool active)
 {
     const char *prefix = active ? "" : "[L-Click] ";
 
     tip = make_stringf("%s%s",
                        prefix, "Execute commands");
 
-    return (true);
+    return true;
 }
 
-bool CommandRegion::update_tip_text(std::string& tip)
+bool CommandRegion::update_tip_text(string& tip)
 {
     if (m_cursor == NO_CURSOR)
-        return (false);
+        return false;
 
     unsigned int item_idx = cursor_index();
     if (item_idx >= m_items.size() || m_items[item_idx].empty())
-        return (false);
+        return false;
 
     const command_type cmd = (command_type) m_items[item_idx].idx;
     tip = make_stringf("[L-Click] %s",
@@ -92,31 +92,31 @@ bool CommandRegion::update_tip_text(std::string& tip)
 
     // tip += "\n[R-Click] Describe";
 
-    return (true);
+    return true;
 }
 
-bool CommandRegion::update_alt_text(std::string &alt)
+bool CommandRegion::update_alt_text(string &alt)
 {
     if (m_cursor == NO_CURSOR)
-        return (false);
+        return false;
 
     unsigned int item_idx = cursor_index();
     if (item_idx >= m_items.size() || m_items[item_idx].empty())
-        return (false);
+        return false;
 
     if (m_last_clicked_item >= 0
         && item_idx == (unsigned int) m_last_clicked_item)
     {
-        return (false);
+        return false;
     }
 
     int idx = m_items[item_idx].idx;
 
     const command_type cmd = (command_type) idx;
 
-    const std::string desc = get_command_description(cmd, false);
+    const string desc = get_command_description(cmd, false);
     if (desc.empty())
-        return (false);
+        return false;
 
     describe_info inf;
     inf.body << desc;
@@ -125,7 +125,7 @@ bool CommandRegion::update_alt_text(std::string &alt)
     process_description<alt_desc_proc>(proc, inf);
     proc.get_string(alt);
 
-    return (true);
+    return true;
 }
 
 void CommandRegion::pack_buffers()
@@ -172,7 +172,7 @@ static bool _command_not_applicable(const command_type cmd, bool safe)
     case CMD_USE_ABILITY:
         return (your_talents(false).empty());
     default:
-        return (false);
+        return false;
     }
 }
 

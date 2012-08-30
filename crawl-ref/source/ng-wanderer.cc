@@ -4,7 +4,6 @@
 
 #include "itemname.h"
 #include "itemprop.h"
-#include "newgame.h"
 #include "ng-setup.h"
 #include "player.h"
 #include "random.h"
@@ -89,7 +88,7 @@ static bool _give_wanderer_weapon(int & slot, int wpn_skill, int plus)
     you.inv[slot].plus  = random2(plus) + offset;
     you.inv[slot].plus2 = random2(plus) + offset;
 
-    return (true);
+    return true;
 }
 
 // The overall role choice for wanderers is a weighted chance based on
@@ -111,7 +110,7 @@ static stat_type _wanderer_choose_role()
     else
         role = STAT_INT;
 
-    return (role);
+    return role;
 }
 
 static skill_type _apt_weighted_choice(const skill_type * skill_array,
@@ -134,10 +133,10 @@ static skill_type _apt_weighted_choice(const skill_type * skill_array,
         region_covered += reciprocal_apt;
 
         if (probe < region_covered)
-            return (skill_array[i]);
+            return skill_array[i];
     }
 
-    return (NUM_SKILLS);
+    return NUM_SKILLS;
 }
 
 static skill_type _wanderer_role_skill_select(stat_type selected_role,
@@ -210,7 +209,7 @@ static skill_type _wanderer_role_skill_select(stat_type selected_role,
         ASSERT(you.species == SP_FELID);
         selected_skill = SK_UNARMED_COMBAT;
     }
-    return (selected_skill);
+    return selected_skill;
 }
 
 static skill_type _wanderer_role_weapon_select(stat_type role)
@@ -219,13 +218,13 @@ static skill_type _wanderer_role_weapon_select(stat_type role)
     const skill_type str_weapons[] =
         { SK_AXES, SK_MACES_FLAILS, SK_BOWS, SK_CROSSBOWS };
 
-    int str_size = sizeof(str_weapons) / sizeof(skill_type);
+    int str_size = ARRAYSZ(str_weapons);
 
     const skill_type dex_weapons[] =
         { SK_SHORT_BLADES, SK_LONG_BLADES, SK_STAVES, SK_UNARMED_COMBAT,
           SK_POLEARMS };
 
-    int dex_size = sizeof(dex_weapons) / sizeof(skill_type);
+    int dex_size = ARRAYSZ(dex_weapons);
 
     const skill_type casting_schools[] =
         { SK_SUMMONINGS, SK_NECROMANCY, SK_TRANSLOCATIONS,
@@ -233,7 +232,7 @@ static skill_type _wanderer_role_weapon_select(stat_type role)
           SK_HEXES, SK_CHARMS, SK_FIRE_MAGIC, SK_ICE_MAGIC,
           SK_AIR_MAGIC, SK_EARTH_MAGIC };
 
-    int casting_size = sizeof(casting_schools) / sizeof(skill_type);
+    int casting_size = ARRAYSZ(casting_schools);
 
     switch ((int)role)
     {
@@ -250,7 +249,7 @@ static skill_type _wanderer_role_weapon_select(stat_type role)
         break;
     }
 
-    return (skill);
+    return skill;
 }
 
 static void _wanderer_role_skill(stat_type role, int levels)
@@ -286,10 +285,10 @@ static skill_type _weighted_skill_roll()
     {
         covered_region += you.skills[i];
         if (probe < covered_region)
-            return (skill_type(i));
+            return skill_type(i);
     }
 
-    return (NUM_SKILLS);
+    return NUM_SKILLS;
 }
 
 static void _give_wanderer_book(skill_type skill, int & slot)
@@ -308,7 +307,7 @@ static void _give_wanderer_book(skill_type skill, int & slot)
             book_type = BOOK_MINOR_MAGIC;
             break;
         case 1:
-            book_type = BOOK_CONJURATIONS_II;
+            book_type = BOOK_CONJURATIONS;
             break;
         case 2:
             book_type = BOOK_YOUNG_POISONERS;
@@ -337,16 +336,13 @@ static void _give_wanderer_book(skill_type skill, int & slot)
         break;
 
     case SK_TRANSMUTATIONS:
-        switch (random2(3))
+        switch (random2(2))
         {
         case 0:
             book_type = BOOK_GEOMANCY;
             break;
         case 1:
             book_type = BOOK_CHANGES;
-            break;
-        case 2:
-            book_type = BOOK_STALKING;
             break;
         }
         break;
@@ -371,7 +367,7 @@ static void _give_wanderer_book(skill_type skill, int & slot)
             book_type = BOOK_FROST;
             break;
         case 1:
-            book_type = BOOK_CONJURATIONS_II;
+            book_type = BOOK_CONJURATIONS;
             break;
         }
         break;
@@ -383,7 +379,7 @@ static void _give_wanderer_book(skill_type skill, int & slot)
             book_type = BOOK_AIR;
             break;
         case 1:
-            book_type = BOOK_CONJURATIONS_II;
+            book_type = BOOK_CONJURATIONS;
             break;
         }
         break;
@@ -520,7 +516,7 @@ static void _wanderer_good_equipment(skill_type & skill, int & slot)
           SK_SHORT_BLADES, SK_LONG_BLADES, SK_STAVES, SK_UNARMED_COMBAT,
           SK_POLEARMS };
 
-    int total_weapons = sizeof(combined_weapon_skills) / sizeof(skill_type);
+    int total_weapons = ARRAYSZ(combined_weapon_skills);
 
     // Normalise the input type.
     if (skill == SK_FIGHTING)
@@ -668,7 +664,7 @@ static void _give_wanderer_spell(skill_type skill)
 }
 
 static void _wanderer_decent_equipment(skill_type & skill,
-                                       std::set<skill_type> & gift_skills,
+                                       set<skill_type> & gift_skills,
                                        int & slot)
 {
     const skill_type combined_weapon_skills[] =
@@ -676,7 +672,7 @@ static void _wanderer_decent_equipment(skill_type & skill,
           SK_SHORT_BLADES, SK_LONG_BLADES, SK_STAVES, SK_UNARMED_COMBAT,
           SK_POLEARMS };
 
-    int total_weapons = sizeof(combined_weapon_skills) / sizeof(skill_type);
+    int total_weapons = ARRAYSZ(combined_weapon_skills);
 
     // If we already gave an item for this type, just give the player
     // a consumable.
@@ -878,7 +874,7 @@ void create_wanderer(void)
         { SK_THROWING, SK_STABBING, SK_TRAPS_DOORS, SK_STEALTH,
           SK_SHIELDS, SK_EVOCATIONS, SK_INVOCATIONS };
 
-    int util_size = sizeof(util_skills) / sizeof(skill_type);
+    int util_size = ARRAYSZ(util_skills);
 
     // No Invocations for demigods.
     if (you.species == SP_DEMIGOD)
@@ -910,7 +906,7 @@ void create_wanderer(void)
 
     // Keep track of what skills we got items from, mostly to prevent
     // giving a good and then a normal version of the same weapon.
-    std::set<skill_type> gift_skills;
+    set<skill_type> gift_skills;
 
     // Wanderers get 1 good thing, a couple average things, and then
     // 1 last stage to fill any glaring equipment holes (no clothes,

@@ -11,7 +11,7 @@
 #include "enum.h"
 
 class key_recorder;
-typedef std::deque<int> keyseq;
+typedef deque<int> keyseq;
 
 class key_recorder
 {
@@ -33,7 +33,7 @@ public:
     ~pause_all_key_recorders();
 
 private:
-    std::vector<bool> prev_pause_status;
+    vector<bool> prev_pause_status;
 };
 
 int getchm(int (*rgetch)() = NULL);       // keymaps applied (ie for prompts)
@@ -69,7 +69,7 @@ void macro_buf_add_cmd(command_type cmd, bool reverse = false);
 bool is_userfunction(int key);
 bool is_synthetic_key(int key);
 
-std::string get_userfunction(int key);
+string get_userfunction(int key);
 
 void add_key_recorder(key_recorder* recorder);
 void remove_key_recorder(key_recorder* recorder);
@@ -84,17 +84,16 @@ int get_macro_buf_size();
 
 void init_keybindings();
 
-command_type name_to_command(std::string name);
-std::string  command_to_name(command_type cmd);
+command_type name_to_command(string name);
+string  command_to_name(command_type cmd);
 
 command_type  key_to_command(int key, KeymapContext context);
 int           command_to_key(command_type cmd);
-KeymapContext context_for_command(command_type cmd);
 
 void bind_command_to_key(command_type cmd, int key);
 
-std::string command_to_string(command_type cmd, bool tutorial = false);
-void insert_commands(std::string &desc, std::vector<command_type> cmds,
+string command_to_string(command_type cmd, bool tutorial = false);
+void insert_commands(string &desc, vector<command_type> cmds,
                      bool formatted = true);
-void insert_commands(std::string &desc, const int first, ...);
+void insert_commands(string &desc, const int first, ...);
 #endif

@@ -5,7 +5,7 @@
 #include "pattern.h"
 #include "newgame_def.h"
 
-typedef std::map<monster_type, mon_display> mon_glyph_map;
+typedef map<monster_type, mon_display> mon_glyph_map;
 
 class LineInput;
 struct game_options
@@ -14,42 +14,38 @@ public:
     game_options();
     void reset_options();
 
-    void read_option_line(const std::string &s, bool runscripts = false);
+    void read_option_line(const string &s, bool runscripts = false);
     void read_options(LineInput &, bool runscripts,
                       bool clear_aliases = true);
 
-    void include(const std::string &file, bool resolve, bool runscript);
-    void report_error(const std::string &error);
+    void include(const string &file, bool resolve, bool runscript);
+    void report_error(PRINTF(1, ));
 
-    std::string resolve_include(const std::string &file,
-                                const char *type = "");
+    string resolve_include(const string &file, const char *type = "");
 
-    bool was_included(const std::string &file) const;
+    bool was_included(const string &file) const;
 
-    static std::string resolve_include(
-        std::string including_file,
-        std::string included_file,
-        const std::vector<std::string> *rcdirs = NULL)
-               throw (std::string);
+    static string resolve_include(string including_file, string included_file,
+                            const vector<string> *rcdirs = NULL) throw (string);
 
 public:
-    std::string filename;     // The name of the file containing options.
-    std::string basefilename; // Base (pathless) file name
+    string      filename;     // The name of the file containing options.
+    string      basefilename; // Base (pathless) file name
     int         line_num;     // Current line number being processed.
 
     // View options
-    std::vector<feature_override> feature_overrides;
+    vector<feature_override> feature_overrides;
     mon_glyph_map mon_glyph_overrides;
     ucs_t cset_override[NUM_DCHAR_TYPES];
 
-    std::string save_dir;       // Directory where saves and bones go.
-    std::string macro_dir;      // Directory containing macro.txt
-    std::string morgue_dir;     // Directory where character dumps and morgue
+    string      save_dir;       // Directory where saves and bones go.
+    string      macro_dir;      // Directory containing macro.txt
+    string      morgue_dir;     // Directory where character dumps and morgue
                                 // dumps are saved. Overrides crawl_dir.
-    std::string shared_dir;     // Directory where the logfile, scores and bones
+    string      shared_dir;     // Directory where the logfile, scores and bones
                                 // are stored.  On a multi-user system, this dir
                                 // should be accessible by different people.
-    std::vector<std::string> additional_macro_files;
+    vector<string> additional_macro_files;
 
     uint32_t    seed;   // Non-random games.
 
@@ -68,7 +64,7 @@ public:
     int         msg_max_height;
     bool        mlist_allow_alternate_layout;
     bool        messages_at_top;
-    bool        mlist_targeting;
+    bool        mlist_targetting;
     bool        msg_condense_repeats;
     bool        msg_condense_short;
 
@@ -111,6 +107,7 @@ public:
     bool        prompt_for_swap; // Prompt to switch back from butchering
                                  // tool if hostile monsters are around.
     bool        list_rotten;     // list slots for rotting corpses/chunks
+    chunk_drop_type auto_drop_chunks; // drop chunks when overburdened
     bool        prefer_safe_chunks; // prefer clean chunks to contaminated ones
     bool        easy_eat_chunks; // make 'e' auto-eat the oldest safe chunk
     bool        easy_eat_gourmand; // with easy_eat_chunks, and wearing a
@@ -119,18 +116,16 @@ public:
     bool        easy_eat_contaminated; // like easy_eat_gourmand, but
                                        // always active.
     bool        auto_eat_chunks; // allow eating chunks while resting or travelling
-    bool        default_target;  // start targeting on a real target
+    bool        default_target;  // start targetting on a real target
     bool        autopickup_no_burden;   // don't autopickup if it changes burden
     skill_focus_mode skill_focus; // is the focus skills available
 
     bool        note_all_skill_levels;  // take note for all skill levels (1-27)
     bool        note_skill_max;   // take note when skills reach new max
-    bool        note_all_spells;  // take note when learning any spell
-    std::string user_note_prefix; // Prefix for user notes
+    string      user_note_prefix; // Prefix for user notes
     int         note_hp_percent;  // percentage hp for notetaking
     bool        note_xom_effects; // take note of all Xom effects
-    int         ood_interesting;  // how many levels OOD is noteworthy?
-    int         rare_interesting; // what monster rarity is noteworthy?
+    bool        note_chat_messages; // log chat in DGL/Webtiles
     confirm_level_type easy_confirm;    // make yesno() confirming easier
     bool        easy_quit_item_prompts; // make item prompts quitable on space
     confirm_prompt_type allow_self_target;      // yes, no, prompt
@@ -138,7 +133,7 @@ public:
     int         colour[16];      // macro fg colours to other colours
     int         background_colour; // select default background colour
     msg_colour_type channels[NUM_MESSAGE_CHANNELS];  // msg channel colouring
-    bool        darken_beyond_range; // for whether targeting is out of range
+    bool        darken_beyond_range; // for whether targetting is out of range
 
     int         hp_warning;      // percentage hp for danger warning
     int         magic_point_warning;    // percentage mp for danger warning
@@ -152,7 +147,7 @@ public:
                                   // creating macros
 
     int         fire_items_start; // index of first item for fire command
-    std::vector<unsigned> fire_order;   // missile search order for 'f' command
+    vector<unsigned> fire_order;  // missile search order for 'f' command
 
     bool        auto_list;       // automatically jump to appropriate item lists
 
@@ -163,29 +158,30 @@ public:
 
     int         num_colours;     // used for setting up curses colour table (8 or 16)
 
-    std::string pizza;
-
 #ifdef WIZARD
-    int                      wiz_mode;   // no, never, start in wiz mode
-    std::vector<std::string> terp_files; // Lua files to load for luaterp
+    int            wiz_mode;   // no, never, start in wiz mode
+    vector<string> terp_files; // Lua files to load for luaterp
+    bool           no_save;    // don't use persistent save files
 #endif
 
     // internal use only:
     int         sc_entries;      // # of score entries
     int         sc_format;       // Format for score entries
 
-    std::vector<std::pair<int, int> > hp_colour;
-    std::vector<std::pair<int, int> > mp_colour;
-    std::vector<std::pair<int, int> > stat_colour;
+    vector<pair<int, int> > hp_colour;
+    vector<pair<int, int> > mp_colour;
+    vector<pair<int, int> > stat_colour;
+    vector<int> enemy_hp_colour;
+    bool visual_monster_hp;
 
-    std::string map_file_name;   // name of mapping file to use
-    std::vector<std::pair<text_pattern, bool> > force_autopickup;
-    std::vector<text_pattern> note_monsters;  // Interesting monsters
-    std::vector<text_pattern> note_messages;  // Interesting messages
-    std::vector<std::pair<text_pattern, std::string> > autoinscriptions;
-    std::vector<text_pattern> note_items;     // Objects to note
-    std::vector<int> note_skill_levels;       // Skill levels to note
-    std::vector<std::pair<text_pattern, std::string> > auto_spell_letters;
+    string map_file_name;   // name of mapping file to use
+    vector<pair<text_pattern, bool> > force_autopickup;
+    vector<text_pattern> note_monsters;  // Interesting monsters
+    vector<text_pattern> note_messages;  // Interesting messages
+    vector<pair<text_pattern, string> > autoinscriptions;
+    vector<text_pattern> note_items;     // Objects to note
+    FixedBitVector<27+1> note_skill_levels;   // Skill levels to note
+    vector<pair<text_pattern, string> > auto_spell_letters;
 
     bool        autoinscribe_artefacts; // Auto-inscribe identified artefacts.
     bool        autoinscribe_cursed; // Auto-inscribe previosly cursed items.
@@ -194,12 +190,14 @@ public:
     int         travel_delay;   // How long to pause between travel moves
     int         explore_delay;  // How long to pause between explore moves
 
+    bool        show_travel_trail;
+
     int         arena_delay;
     bool        arena_dump_msgs;
     bool        arena_dump_msgs_all;
     bool        arena_list_eq;
 
-    std::vector<message_filter> force_more_message;
+    vector<message_filter> force_more_message;
 
     int         stash_tracking; // How stashes are tracked
 
@@ -208,8 +206,8 @@ public:
     int         tc_exclude_circle; // Colour for squares in the exclusion radius
     int         tc_dangerous;   // Colour for trapped squares, deep water, lava.
     int         tc_disconnected;// Areas that are completely disconnected.
-    std::vector<text_pattern> auto_exclude; // Automatically set an exclusion
-                                            // around certain monsters.
+    vector<text_pattern> auto_exclude; // Automatically set an exclusion
+                                       // around certain monsters.
 
     int         travel_stair_cost;
 
@@ -236,9 +234,11 @@ public:
 
     int         explore_stop_prompt;
 
+    int         sacrifice_before_explore;
+
     // Don't stop greedy explore when picking up an item which matches
     // any of these patterns.
-    std::vector<text_pattern> explore_stop_pickup_ignore;
+    vector<text_pattern> explore_stop_pickup_ignore;
 
     bool        explore_greedy;    // Explore goes after items as well.
 
@@ -253,14 +253,16 @@ public:
 
     bool        travel_key_stop;   // Travel stops on keypress.
 
-    std::vector<sound_mapping> sound_mappings;
-    std::vector<colour_mapping> menu_colour_mappings;
-    std::vector<message_colour_mapping> message_colour_mappings;
+    bool        auto_sacrifice;
+
+    vector<sound_mapping> sound_mappings;
+    vector<colour_mapping> menu_colour_mappings;
+    vector<message_colour_mapping> message_colour_mappings;
 
     bool       menu_colour_prefix_class; // Prefix item class to string
     bool       menu_colour_shops;   // Use menu colours in shops?
 
-    std::vector<menu_sort_condition> sort_menus;
+    vector<menu_sort_condition> sort_menus;
 
     int         dump_kill_places;   // How to dump place information for kills.
     int         dump_message_count; // How many old messages to dump
@@ -270,7 +272,7 @@ public:
     bool        dump_book_spells;
 
     // Order of sections in the character dump.
-    std::vector<std::string> dump_order;
+    vector<string> dump_order;
 
     bool        level_map_title;    // Show title in level map
     bool        target_unshifted_dirs; // Unshifted keys target if cursor is
@@ -287,9 +289,12 @@ public:
 
     bool        restart_after_game; // If true, Crawl will not close on game-end
 
-    std::vector<text_pattern> drop_filter;
+    vector<text_pattern> drop_filter;
 
     FixedArray<bool, NUM_DELAYS, NUM_AINTERRUPTS> activity_interrupts;
+#ifdef DEBUG_DIAGNOSTICS
+    FixedBitVector<NUM_DIAGNOSTICS> quiet_debug_messages;
+#endif
 
     // Previous startup options
     bool        remember_name;      // Remember and reprompt with last name
@@ -311,19 +316,22 @@ public:
     bool        rest_wait_both; // Stop resting only when both HP and MP are
                                 // fully restored.
 
+    lang_t      lang;                // Translation to use.
+    const char* lang_name;           // Database name of the language.
+
 #ifdef WIZARD
     // Parameters for fight simulations.
+    string      fsim_mode;
     int         fsim_rounds;
-    int         fsim_str, fsim_int, fsim_dex;
-    int         fsim_xl;
-    std::string fsim_mons;
-    std::vector<std::string> fsim_kit;
+    string      fsim_mons;
+    vector<string> fsim_scale;
+    vector<string> fsim_kit;
 #endif  // WIZARD
 
 #ifdef USE_TILE
-    char        tile_show_items[20]; // show which item types in tile inventory
-    bool        tile_skip_title;     // wait for a key at title screen?
-    bool        tile_menu_icons;     // display icons in menus?
+    string      tile_show_items; // show which item types in tile inventory
+    bool        tile_skip_title; // wait for a key at title screen?
+    bool        tile_menu_icons; // display icons in menus?
 
     // minimap colours
     char        tile_player_col;
@@ -350,15 +358,15 @@ public:
 #endif
 #ifdef USE_TILE_LOCAL
     // font settings
-    std::string tile_font_crt_file;
+    string      tile_font_crt_file;
     int         tile_font_crt_size;
-    std::string tile_font_msg_file;
+    string      tile_font_msg_file;
     int         tile_font_msg_size;
-    std::string tile_font_stat_file;
+    string      tile_font_stat_file;
     int         tile_font_stat_size;
-    std::string tile_font_lbl_file;
+    string      tile_font_lbl_file;
     int         tile_font_lbl_size;
-    std::string tile_font_tip_file;
+    string      tile_font_tip_file;
     int         tile_font_tip_size;
 #ifdef USE_FT
     bool        tile_font_ft_light;
@@ -383,74 +391,75 @@ public:
     bool        tile_show_minimagicbar;
     bool        tile_show_demon_tier;
     bool        tile_force_regenerate_levels;
-    std::vector<std::string> tile_layout_priority;
+    vector<string> tile_layout_priority;
 #endif
 
-    typedef std::map<std::string, std::string> opt_map;
+    typedef map<string, string> opt_map;
     opt_map     named_options;          // All options not caught above are
                                         // recorded here.
 
     newgame_def game;      // Choices for new game.
 
 private:
-    typedef std::map<std::string, std::string> string_map;
-    string_map               aliases;
-    string_map               variables;
-    std::set<std::string>    constants; // Variables that can't be changed
-    std::set<std::string>    included;  // Files we've included already.
+    typedef map<string, string> string_map;
+    string_map     aliases;
+    string_map     variables;
+    set<string>    constants; // Variables that can't be changed
+    set<string>    included;  // Files we've included already.
 
 public:
     // Convenience accessors for the second-class options in named_options.
     int         o_int(const char *name, int def = 0) const;
     bool        o_bool(const char *name, bool def = false) const;
-    std::string o_str(const char *name, const char *def = NULL) const;
+    string      o_str(const char *name, const char *def = NULL) const;
     int         o_colour(const char *name, int def = LIGHTGREY) const;
 
     // Fix option values if necessary, specifically file paths.
     void fixup_options();
 
 private:
-    std::string unalias(const std::string &key) const;
-    std::string expand_vars(const std::string &field) const;
-    void add_alias(const std::string &alias, const std::string &name);
+    string unalias(const string &key) const;
+    string expand_vars(const string &field) const;
+    void add_alias(const string &alias, const string &name);
 
     void clear_feature_overrides();
     void clear_cset_overrides();
-    void add_cset_override(char_set_type set, const std::string &overrides);
+    void add_cset_override(char_set_type set, const string &overrides);
     void add_cset_override(char_set_type set, dungeon_char_type dc, int symbol);
-    void add_feature_override(const std::string &);
+    void add_feature_override(const string &);
 
-    void add_message_colour_mappings(const std::string &);
-    void add_message_colour_mapping(const std::string &);
-    message_filter parse_message_filter(const std::string &s);
+    void add_message_colour_mappings(const string &);
+    void add_message_colour_mapping(const string &);
+    message_filter parse_message_filter(const string &s);
 
     void set_default_activity_interrupts();
     void clear_activity_interrupts(FixedVector<bool, NUM_AINTERRUPTS> &eints);
-    void set_activity_interrupt(
-        FixedVector<bool, NUM_AINTERRUPTS> &eints,
-        const std::string &interrupt);
-    void set_activity_interrupt(const std::string &activity_name,
-                                const std::string &interrupt_names,
+    void set_activity_interrupt(FixedVector<bool, NUM_AINTERRUPTS> &eints,
+                                const string &interrupt);
+    void set_activity_interrupt(const string &activity_name,
+                                const string &interrupt_names,
                                 bool append_interrupts,
                                 bool remove_interrupts);
-    void set_fire_order(const std::string &full, bool add);
-    void add_fire_order_slot(const std::string &s);
-    void set_menu_sort(std::string field);
-    void new_dump_fields(const std::string &text, bool add = true);
-    void do_kill_map(const std::string &from, const std::string &to);
-    int  read_explore_stop_conditions(const std::string &) const;
+    void set_fire_order(const string &full, bool add);
+    void add_fire_order_slot(const string &s);
+    void set_menu_sort(string field);
+    void str_to_enemy_hp_colour(const string &);
+    void new_dump_fields(const string &text, bool add = true);
+    void do_kill_map(const string &from, const string &to);
+    int  read_explore_stop_conditions(const string &) const;
 
-    void split_parse(const std::string &s, const std::string &separator,
-                     void (game_options::*add)(const std::string &));
-    void add_mon_glyph_overrides(const std::string &mons, mon_display &mdisp);
-    void add_mon_glyph_override(const std::string &);
-    mon_display parse_mon_glyph(const std::string &s) const;
-    void set_option_fragment(const std::string &s);
+    void split_parse(const string &s, const string &separator,
+                     void (game_options::*add)(const string &));
+    void add_mon_glyph_overrides(const string &mons, mon_display &mdisp);
+    void add_mon_glyph_override(const string &);
+    mon_display parse_mon_glyph(const string &s) const;
+    void set_option_fragment(const string &s);
 
-    static const std::string interrupt_prefix;
+    static const string interrupt_prefix;
 };
 
 ucs_t get_glyph_override(int c);
+object_class_type item_class_by_sym(ucs_t c);
 
 #ifdef DEBUG_GLOBALS
 #define Options (*real_Options)

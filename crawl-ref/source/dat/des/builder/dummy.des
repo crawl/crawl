@@ -1,22 +1,75 @@
 ##############################################################################
 # dummy.des: Dummy balancer vaults that control appearance of other vaults.
 ##############################################################################
+# They are toned down in two ways: a static CHANCE and a WEIGHT.
+# The latter matters little in places that have loads of available vaults
+# but will greatly dilute them in places that have but a few.
+
 
 # This represents the old 8/9 chance of *not* placing a regular vault.
+# It's 5/6 now. -- 1KB
 NAME: primary_dummy
 TAGS: dummy
-DEPTH: 1-100, Pan, Abyss
+DEPTH: 1-100, !Zig, !Lab, !Bazaar, !Trove, !Sewer, !Ossuary, !Bailey, !IceCv, !Volcano, !WizLab
 ORIENT: float
-CHANCE: 0 : 0 (D:26-27), 0 : 5000 (D:24-25), 0 : 7500 (D:20-23), 0 : 8888
+CHANCE: 0 : 0 (D:26-27), 0 : 3333 (D:24-25), 0 : 6666 (D:20-23), 0 : 8333
 MAP
 x
 ENDMAP
 
 # This represents the old 2/3 chance of *not* placing a minivault.
+# It's 1/2 now. -- 1KB
 NAME: primary_mini_dummy
 TAGS: dummy
 DEPTH: 1-100, Pan, Abyss
-CHANCE: 0 : 3333 (Swamp), 0 : 6666
+CHANCE: 0 : 1666 (Swamp), 0 : 3333 (Vaults), 0 : 5000
 MAP
 x
+ENDMAP
+
+##############################################################################
+# Probability balancers
+##############################################################################
+
+##############################################################################
+# Regular vaults for depths 1-11.
+#
+# Why this is necessary: there are very few vaults in the 1-11 range (entries
+# are not considered here); to avoid too much repetition of the existing vaults,
+# we use this dummy vault.
+#
+NAME: dummy_balancer
+DEPTH: D:1-11
+# Vaults tagged "dummy" are no-ops when the dungeon builder is looking for maps
+# by depth.
+TAGS: dummy
+ORIENT: float
+WEIGHT: 100
+MAP
+x
+ENDMAP
+
+##############################################################################
+# Regular vaults for non-dungeon branches.
+#
+NAME: dummy_balancer_other
+DEPTH: Orc, Elf, Lair, Snake, Shoals, Swamp, Slime, Vaults, Crypt, Dis, Geh, Tar, Coc, Forest, Spider, Dwarf
+# Vaults tagged "dummy" are no-ops when the dungeon builder is looking for maps
+# by depth.
+TAGS: dummy
+ORIENT: float
+WEIGHT: 60
+MAP
+x
+ENDMAP
+
+##############################################################################
+# Minivaults
+#
+NAME: mini_dummy
+DEPTH: 1-50, !D:1-27
+TAGS: dummy
+WEIGHT: 90
+MAP
+.
 ENDMAP

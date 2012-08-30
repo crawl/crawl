@@ -6,7 +6,6 @@
 # introduced to new features one by one.
 ##############################################################################
 
-##############################################################
 NAME:   minmay_entry_doors
 TAGS:   entry no_monster_gen
 ORIENT: float
@@ -509,7 +508,6 @@ ENDMAP
 NAME:    dpeg_chamrin_entry_tetris
 TAGS:    entry
 ORIENT:  float
-SHUFFLE: bbba
 MAP
           x.@.x
          xx...xx
@@ -933,7 +931,7 @@ ENDMAP
 NAME:    dpeg_entry_rooms_a
 TAGS:    entry no_monster_gen
 ORIENT:  float
-SHUFFLE: {[(, cvba
+SHUFFLE: {[(, cvb
 MAP
 xxxxxxxxx@.xxxxxx
 xvvvvvvvx..xbbbbx
@@ -1294,6 +1292,84 @@ MAP
 ENDMAP
 
 ##############################################################################
+NAME:   ncdulo_lavacross
+TAGS:   entry no_monster_gen no_trap_gen
+ORIENT: float
+MAP
+xx+xxx+xx
+xl.lll.lx
+xll.l.llx
+xll...llx
+@.l.{.l.@
+xll...llx
+xll.l.llx
+xl.lll.lx
+xx+xxx+xx
+ENDMAP
+
+NAME:   ncdulo_wetmaze
+TAGS:   entry no_monster_gen no_trap_gen
+ORIENT: float
+MAP
+xxxx=xxxx
+x[wwwww(x
+xWxW{Wxwx
+xWxxxWxWx
+xxWWWWWWx
+xWxxxxxxx
+xxWWWx..+
+xWxxWxx.x
+x.xx....x
+x+xxxxxxx
+ENDMAP
+
+NAME:   ncdulo_watergridlock
+TAGS:   entry no_monster_gen no_pool_fixup
+ORIENT: float
+MAP
+x.x.x.x.x.x.x
+.x.x.x.x.x.x.
+x.x.wwwww.x.x
+.x.xw.{.wx.x.
+x.x.w[.(w.x.x
+.x.xw...wx.x.
+x.x.WWWWW.x.x
+.x.x.x.x.x.x.
+x.x.x.x.x.x.x
+ENDMAP
+
+NAME:   ncdulo_smallfort
+TAGS:   entry no_monster_gen
+ORIENT: float
+MAP
+xxxxxxxxx
+x[.....(x
+x.xx=xx.x
+x.x...x.x
+x.x.{.x.x
+x.xx+xx.x
+x.....=.+
+xxxxxxx=x
+ENDMAP
+
+NAME:   ncdulo_halloftheorcs
+TAGS:   entry
+ORIENT: float
+MAP
+     ccc+ccc
+    cc.....cc
+   cc.T...T.cc
+  cc....I....cc
+ccc...T...T...ccc
+c...............c
+c.G.G.vvvvv.G.G.c
+c..I..v({[v..I..c
+c.G.G.vv+vv.G.G.c
+c...............c
+ccccccccccccccccc
+ENDMAP
+
+##############################################################################
 # ldierk's gardens
 
 NAME:    ldierk_walled_garden
@@ -1303,7 +1379,7 @@ SHUFFLE: 123t
 SUBST:   W : wW
 SUBST:   R : RWW, R = W.
 SUBST:   T : t
-MONS:    plant, fungus, bush
+MONS:    plant, toadstool, bush
 MAP
 xxxxxx@xxxxxx
 xWWWWTRTWWWWx
@@ -1325,7 +1401,7 @@ ORIENT:  float
 SHUFFLE: 123t
 SUBST:   W : wW
 SUBST:   T : W.
-MONS:    plant, fungus, bush
+MONS:    plant, toadstool, bush
 MAP
   xxx xxx
  xxWx@xWxx
@@ -1344,15 +1420,326 @@ TAGS:    entry no_monster_gen no_pool_fixup
 ORIENT:  float
 SHUFFLE: 123t
 SUBST:   W : wW
-MONS:    plant, fungus, bush
+MONS:    plant, toadstool, bush
 MAP
   W       W
  W1W     W2W
 W1T1WWWWW2T2W
- W1...(...2W
-  W...{...W
- W3...[...tW
+.W1...(...2W.
+@.W...{...W.@
+.W3...[...tW.
 W3T3WWWWWtTtW
  W3W     WtW
   W       W
+ENDMAP
+
+##############################################################################
+# tarquinn's gardens
+
+NAME:   tarquinn_simple_flora_water_a
+TAGS:   entry no_monster_gen
+ORIENT: float
+SHUFFLE: ({[
+MONS:   plant
+MAP
+ttt@ttttttt
+t{t.......t
+t.11111.t.t
+t.1www1.t.t
+t.1wGw1.t.t
+t.1www1.t.t
+t.11111.t.t
+t.......t.t
+ttttttt.t.t
+t[......t(t
+ttttttttttt
+ENDMAP
+
+NAME:   tarquinn_simple_flora_water_b
+TAGS:   entry no_monster_gen
+ORIENT: float
+SHUFFLE: {}
+MONS:   plant
+MAP
+xxxxxxxxxxxxx
++...wwwww...+
+xx..xxxxx..xx
+x..tt1{1tt..x
+xx..tt.tt..xx
+xt.........tx
+xt.t.www.t.tx
+xt..wwGww..tx
+xt.t.www.t.tx
+xt.........tx
+xx..tt.tt..xx
+x..tt1}1tt..x
+xx..xxxxx..xx
++...wwwww...+
+xxxxxxxxxxxxx
+ENDMAP
+
+NAME:   tarquinn_simple_flora_water_c
+TAGS:   entry no_monster_gen
+ORIENT: float
+SHUFFLE: ([{ABC
+SUBST:  A = }11
+SUBST:  ABC = 1
+MONS:   plant
+MAP
+xxxxxxxxxxxxxxxxxxxx
+xttttt..C.wwwwwwwwwx
+xttA.....ww11wwww..+
+xt...B.www111ww....x
+x.....ww111www...[tx
++....wwwwwww.(...ttx
+xwwwwww..{.....ttttx
+xxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   tarquinn_simple_flora_water_d
+TAGS:   entry no_monster_gen
+ORIENT: float
+MONS:   plant, fungus
+MAP
+xxxxxxxxxx
++....t1x2xxx
+xWWW..t1x(txx
+xxWG....{txx
+xWWW..t1x[txx
++....t1x2xxx
+xxxxxxxxxx
+ENDMAP
+
+NAME:   tarquinn_simple_flora_water_e
+TAGS:   entry no_monster_gen
+ORIENT: float
+FTILE:  1 = floor_grass
+MONS:   plant
+MAP
+  xxx
+xxx[xx
+x1w.tx
+x1w{.+
+x1w.tx
+xxx(xx
+  xxx
+ENDMAP
+
+NAME:   tarquinn_simple_flora_water_f
+TAGS:   entry no_monster_gen
+ORIENT: float
+SHUFFLE: 123wwttt
+MONS:   plant, bush, fungus
+MAP
+xxxxxx+xxx
+x12213.1tx
+xw13.....+
+x{....w12x
+x[(w3132wx
+xxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Saegor's simple entries
+
+NAME:   saegor_entry_simple_A
+TAGS:   entry
+ORIENT: float
+MAP
+ccc
+c{c
+.@.
+ENDMAP
+
+NAME:   saegor_entry_simple_B
+TAGS:   entry
+ORIENT: float
+MAP
+ttttt
+ttttt
+xt{tx
+xG.Gx
+xx+xx
+ENDMAP
+
+NAME:   saegor_entry_simple_C
+TAGS:   entry no_monster_gen
+ORIENT: float
+SHUFFLE: {([
+NSUBST: Z = 1:= / *:+
+MAP
+xxxxxxx
+x[.{.(x
+xx...xx
+x.vvv.x
+xGZ=ZGx
+xxv@vxx
+ENDMAP
+
+NAME:   saegor_entry_simple_D
+TAGS:   entry no_monster_gen
+ORIENT: float
+SHUFFLE: {([
+MAP
+xxxcccxxx
+xccc{cccx
+xc(c.c[cx
+xt.....tx
+xwt...twx
+xwwt.twwx
+xwwt.twwx
+xxwt.twxx
+xxxx+xxxx
+ENDMAP
+
+NAME:   saegor_entry_simple_E
+TAGS:   entry no_monster_gen
+ORIENT: float
+MAP
+xxxxxxxxxx
+x.......xx
+x.xxxxGx.x
+xx....xx.x
+xxx.{.xx.x
+x(+...xx.x
+x[xx.xx.xx
+xxxxx=+xxx
+ENDMAP
+
+NAME:   saegor_entry_simple_F
+TAGS:   entry
+ORIENT: float
+MAP
+  xxx
+  x.@
+  x.xxxxxxx
+  x.x.....x
+  x....xx@x
+x@x..{..x
+x.xx....x
+x.....x.x
+xxxxxxx.x
+      @.x
+      xxx
+ENDMAP
+
+##############################################################################
+
+NAME:   scummos_entry_simple_fountains
+TAGS:   entry no_monster_gen transparent
+ORIENT: float
+MAP
+.......
+.T...T.
+..mmm..
+..m{+..
+..mmm..
+.T...T.
+.......
+ENDMAP
+
+NAME:   scummos_entry_simple_crosswalls
+TAGS:   entry no_monster_gen transparent
+ORIENT: float
+MAP
+...........
+..x.....x..
+.xxGxxxGxx.
+..x........
+..x.....x..
+..x..{..x..
+..x.....x..
+........x..
+.xxGxxxGxx.
+. x.....x..
+...........
+ENDMAP
+
+NAME:   scummos_entry_hexagon
+TAGS:   entry no_monster_gen no_rotate transparent
+ORIENT: float
+MAP
+    .......
+   ..xxxxx..
+  ..x.....x..
+ ..x.......x..
+..x....{....x..
+ ..x.......x..
+  ..x.....x..
+   ..xxxxx..
+    .......
+ENDMAP
+
+NAME:   scummos_entry_star
+TAGS:   entry no_monster_gen no_rotate transparent
+ORIENT: float
+MAP
+       ...
+      ..m..
+     ..m.m..
+......m...m......
+.mmmmm.....mmmmm.
+..m...........m..
+ ..m....{....m..
+ ..m...(.[...m..
+..m...........m..
+.mmmmm.....mmmmm.
+......m...m......
+     ..m.m..
+      ..m..
+       ...
+ENDMAP
+
+NAME:   scummos_entry_forest
+TAGS:   entry no_monster_gen no_rotate transparent
+ORIENT: float
+MAP
+...............
+..xxttt.tttxx..
+..xttttTttttx..
+..ttttt.ttttt..
+.....T.{.T.....
+..ttttt.ttttt..
+..xttttTttttx..
+..xxttt.tttxx..
+...............
+ENDMAP
+
+NAME:   scummos_entry_gate
+TAGS:   entry no_monster_gen no_item_gen
+ORIENT: float
+KFEAT:  y = floor
+FTILE:  y = floor_sandstone
+COLOUR: y = yellow
+MAP
+xxxxxxxxxxxxxxxxxx
+x.....x...WWWW...x
+x..{..=..........x
+x.....x..........xG.
+x+xxxxxyyyyyyyyyy+.@
+x.xtt.+yyyyyyyyyy+.@
+x.xt.txyyyyyyyyyy+.@
+x.xt.tx..........xG.
+x.+.ttx..........x
+xtxtttx...llll...x
+xxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   scummos_entry_checkerplants
+TAGS:   entry no_monster_gen no_item_gen transparent
+ORIENT: float
+KMONS:  b = fungus
+MAP
+............
+.ttttttttt..
+.tbb..bb..t.
+.tbb..b...t.
+.t..bb...bt.
+.t..b.{.bbt.
+.tbb.(.b..t.
+.tb...bb..t.
+.t...b..bbt.
+.t..bb..bbt.
+..ttttttttt.
+............
 ENDMAP

@@ -33,9 +33,6 @@ void tilep_race_default(int sp, int level, dolls_data *doll);
 void tilep_job_default(int job, dolls_data *doll);
 void tilep_calc_flags(const dolls_data &data, int flag[]);
 
-void tilep_part_to_str(int number, char *buf);
-int  tilep_str_to_part(char *str);
-
 void tilep_scan_parts(char *fbuf, dolls_data &doll, int species, int level);
 void tilep_print_parts(char *fbuf, const dolls_data &doll);
 

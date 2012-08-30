@@ -1,0 +1,161 @@
+%%%%
+CMD_REST
+
+Paranna ja etsi hetki
+%%%%
+CMD_REST verbose
+
+Käytä korkeintaan 100 vuoroa terveyden ja taikavoiman lataamiseen ja/tai
+etsimiseen. Lepääminen keskeytyy, jos näkyviin tulee hirviö.
+%%%%
+CMD_EXPLORE
+
+Tutki nykyinen taso automaattisesti.
+%%%%
+CMD_EXPLORE verbose
+
+Laittaa hahmosi matkaamaan automaattisesti kohti tutkimattomia alueita
+nykyisessä kerroksessa, keräten samalla autopickup-säädetyt tavarat.
+Liikkuminen loppuu hirviön tullessa näkökenttään, ja myös ilmoittaakseen
+löydettyjä esineitä ja erikoisuuksia.
+%%%%
+CMD_INTERLEVEL_TRAVEL
+
+Matkusta kaukaisiin tasoihin
+%%%%
+CMD_INTERLEVEL_TRAVEL verbose
+
+Matkusta kaukaisiin kerroksiin. Hirviöt pysäyttävät matkanteon.
+%%%%
+CMD_USE_ABILITY
+
+Käytä pyhiä tai synnynnäisiä kykyjä
+%%%%
+CMD_PRAY
+
+Rukoile jumalaasi
+%%%%
+CMD_PRAY verbose
+
+Jos jumalasi pitää uhrauksista, tämä uhraa ruumiin tai jonkin esineen.
+Seistessäsi alttarilla voit myös liittyä tällä vastaavaan uskoon. Joillekin
+jumalille rukoilulla on muitakin vaikutuksia.
+%%%%
+CMD_SEARCH_STASHES
+
+Etsi esineitä/erikoisuuksia
+%%%%
+CMD_SEARCH_STASHES verbose
+
+Etsi esineitä ja erikoisuuksia joita näit muualla, ja matkusta sinne.
+%%%%
+CMD_REPLAY_MESSAGES
+
+Lue uudelleen viimeaikaiset viestit
+%%%%
+CMD_RESISTS_SCREEN
+
+Näytä hahmon kokonaiskatsaus
+%%%%
+CMD_RESISTS_SCREEN verbose
+
+Näyttää tietoa tunnetuista vastustuskyvyistä, taidoista, varusteista jne.
+%%%%
+CMD_DISPLAY_OVERMAP
+
+Näytä luolaston kartta
+%%%%
+CMD_DISPLAY_OVERMAP verbose
+
+Näyttää sivuluolastojen, kauppojen ja muiden kohtaamiesi erikoisuuksien
+sijainnit.
+%%%%
+CMD_DISPLAY_RELIGION
+
+Näytä uskonnon tila
+%%%%
+CMD_DISPLAY_RELIGION verbose
+
+Näyttää jumalaasi miellyttävät ja vihastuttavat asiat, käytöksen, nykyisen
+uskonnollisen arvosi ja pyhät erikoiskyvyt.
+%%%%
+CMD_DISPLAY_MUTATIONS
+
+Näytä mutaatiot
+%%%%
+CMD_DISPLAY_SKILLS
+
+Hallitse taitoja
+%%%%
+CMD_DISPLAY_CHARACTER_STATUS
+
+Näytä hahmon tila
+%%%%
+CMD_DISPLAY_CHARACTER_STATUS verbose
+
+Näyttää aktiiviset taiat ja muutaman muun asian.
+%%%%
+CMD_DISPLAY_KNOWN_OBJECTS
+
+Näytä tunnetut esinetyypit
+%%%%
+CMD_SAVE_GAME_NOW
+
+Tallenna ja poistu
+%%%%
+CMD_SAVE_GAME_NOW verbose
+
+Tallentaa pelin myöhempää jatkoa varten ja poistuu. Kun jatkat peliä, tallennus
+poistuu.
+%%%%
+CMD_EDIT_PLAYER_TILE
+
+Muokkaa pelaajatiiltä
+%%%%
+CMD_EDIT_PLAYER_TILE verbose
+
+Muokkaa pelaajanukella näytettävää varustusta ja muita piirteitä.
+%%%%
+CMD_DISPLAY_COMMANDS
+
+Peliapu
+%%%%
+CMD_DISPLAY_COMMANDS verbose
+
+Lista komennoista, asetuksista jne.
+%%%%
+CMD_CHARACTER_DUMP
+
+Ota vedos hahmon etenemisestä
+%%%%
+CMD_CHARACTER_DUMP verbose
+
+Laittaa valtavan määrän tietoa hahmosta tiedostoon 'pelaajanimi.txt'
+morgue-kansioon, tutkimuksen vuoksi. Tämä sisältää statistiikat, varusteet,
+taiat, taidot, muistiinpanot jne.
+%%%%
+CMD_AUTOFIGHT
+
+Hyökkää lähimmän hirviön kimppuun
+%%%%
+CMD_AUTOFIGHT verbose
+
+Liiku kohti lähintä vaarallista hirviötä ja hyökkää sen kimppuun kädessäsi
+olevalla aseella.
+%%%%
+CMD_AUTOFIGHT_NOMOVE
+
+Hyökkää viereisen hirviön kimppuun
+%%%%
+CMD_AUTOFIGHT_NOMOVE verbose
+
+Hyökkää viereisen hirviön kimppuun kädessäsi olevalla aseella.
+%%%%
+CMD_SEARCH
+
+Odota yksi vuoro
+%%%%
+CMD_SEARCH verbose
+
+Käytä yksi vuoro odottamiseen, lepäämiseen ja etsimiseen.
+%%%%

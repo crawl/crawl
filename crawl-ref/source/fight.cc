@@ -12,50 +12,35 @@
 #include <stdio.h>
 #include <algorithm>
 
-#include "externs.h"
-
 #include "cloud.h"
 #include "coordit.h"
 #include "debug.h"
 #include "delay.h"
 #include "env.h"
+#include "hints.h"
 #include "invent.h"
 #include "itemprop.h"
-#include "mon-behv.h"
-// These all might not be necessary? added on merge
-#include "mon-cast.h"
-#include "mon-clone.h"
-#include "mon-place.h"
-#include "terrain.h"
 #include "mgen_data.h"
-#include "mon-stuff.h"
+#include "mon-behv.h"
+#include "mon-cast.h"
+#include "mon-place.h"
 #include "mon-util.h"
-#include "mutation.h"
 #include "ouch.h"
-#include "options.h"
 #include "player.h"
 #include "random-var.h"
-#include "religion.h"
-#include "godconduct.h"
 #include "shopping.h"
-#include "skills.h"
-#include "species.h"
-#include "spl-clouds.h"
 #include "spl-miscast.h"
-#include "spl-summoning.h"
-#include "spl-util.h"
-// End list
 #include "state.h"
 #include "stuff.h"
+#include "terrain.h"
 #include "travel.h"
-#include "hints.h"
 
 #ifdef NOTE_DEBUG_CHAOS_BRAND
     #define NOTE_DEBUG_CHAOS_EFFECTS
 #endif
 
 #ifdef NOTE_DEBUG_CHAOS_EFFECTS
-#include "notes.h"
+    #include "notes.h"
 #endif
 
 /* Handles melee combat between attacker and defender
@@ -65,35 +50,44 @@
  * for each attack. Combat effects should not go here, if at all possible. This
  * is merely a wrapper function which is used to start combat.
  */
-bool fight_melee(actor *attacker, actor *defender)
+bool fight_melee(actor *attacker, actor *defender, bool *did_hit, bool simu)
 {
-    if (defender->atype() == ACT_PLAYER)
+    if (defender->is_player())
     {
         ASSERT(!crawl_state.game_is_arena());
         // Friendly and good neutral monsters won't attack unless confused.
         if (attacker->as_monster()->wont_attack() &&
             !mons_is_confused(attacker->as_monster()))
-            return (false);
+        {
+            return false;
+        }
 
         // It's hard to attack from within a shell.
         if (attacker->as_monster()->withdrawn())
-            return (false);
+            return false;
+
+        // Boulders can't melee while they're rolling past you
+        if (attacker->as_monster()->rolling())
+            return false;
 
         // In case the monster hasn't noticed you, bumping into it will
         // change that.
-        behaviour_event(attacker->as_monster(), ME_ALERT, MHITYOU);
+        behaviour_event(attacker->as_monster(), ME_ALERT, defender);
     }
-    else if (attacker->atype() == ACT_PLAYER)
+    else if (attacker->is_player())
     {
         ASSERT(!crawl_state.game_is_arena());
         // Can't damage orbs or boulders this way.
         if (mons_is_projectile(defender->type) && !you.confused())
         {
             you.turn_is_over = false;
-            return (false);
+            return false;
         }
 
         melee_attack attk(&you, defender);
+
+        if (simu)
+            attk.simu = true;
 
         // We're trying to hit a monster, break out of travel/explore now.
         if (!travel_kill_monster(defender->type))
@@ -105,7 +99,7 @@ bool fight_melee(actor *attacker, actor *defender)
             && !wielded_weapon_check(attk.weapon))
         {
             you.turn_is_over = false;
-            return (false);
+            return false;
         }
 
         if (!attk.attack())
@@ -113,10 +107,13 @@ bool fight_melee(actor *attacker, actor *defender)
             // Attack was cancelled or unsuccessful...
             if (attk.cancel_attack)
                 you.turn_is_over = false;
-            return (false);
+            return false;
         }
 
-        return (true);
+        if (did_hit)
+            *did_hit = attk.did_hit;
+
+        return true;
     }
 
     // If execution gets here, attacker != Player, so we can safely continue
@@ -136,13 +133,13 @@ bool fight_melee(actor *attacker, actor *defender)
          ++attack_number, ++effective_attack_number)
     {
         if (!attacker->alive())
-            return (false);
+            return false;
 
         // Monster went away?
         if (!defender->alive() || defender->pos() != pos)
         {
             if (attacker == defender
-               || !attacker->as_monster()->has_multitargeting())
+               || !attacker->as_monster()->has_multitargetting())
             {
                 break;
             }
@@ -180,27 +177,18 @@ bool fight_melee(actor *attacker, actor *defender)
         melee_attack melee_attk(attacker, defender, attack_number,
                           effective_attack_number);
 
+        if (simu)
+            melee_attk.simu = true;
+
         // If the attack fails out, keep effective_attack_number up to
         // date so that we don't cause excess energy loss in monsters
         if (!melee_attk.attack())
             effective_attack_number = melee_attk.effective_attack_number;
+        else if (did_hit and not *did_hit)
+            *did_hit = melee_attk.did_hit;
     }
 
-    return (true);
-}
-
-// This function returns the "extra" stats the player gets because of
-// choice of weapon... it's used only for giving warnings when a player
-// wields a less than ideal weapon.
-int effective_stat_bonus(int wepType)
-{
-    int str_weight;
-    if (wepType == -1)
-        str_weight = player_weapon_str_weight();
-    else
-        str_weight = weapon_str_weight(OBJ_WEAPONS, wepType);
-
-    return ((you.strength() - you.dex()) * (str_weight - 5) / 10);
+    return true;
 }
 
 unchivalric_attack_type is_unchivalric_attack(const actor *attacker,
@@ -213,10 +201,10 @@ unchivalric_attack_type is_unchivalric_attack(const actor *attacker,
     // plants) or monsters the attacker can't see (either due to
     // invisibility or being behind opaque clouds).
     if (defender->cannot_fight() || (attacker && !attacker->can_see(defender)))
-        return (unchivalric);
+        return unchivalric;
 
     // Distracted (but not batty); this only applies to players.
-    if (attacker && attacker->atype() == ACT_PLAYER
+    if (attacker && attacker->is_player()
         && def && def->foe != MHITYOU && !mons_is_batty(def))
     {
         unchivalric = UCAT_DISTRACTED;
@@ -258,7 +246,7 @@ unchivalric_attack_type is_unchivalric_attack(const actor *attacker,
     if (defender->asleep())
         unchivalric = UCAT_SLEEPING;
 
-    return (unchivalric);
+    return unchivalric;
 }
 
 static bool is_boolean_resist(beam_type flavour)
@@ -270,9 +258,9 @@ static bool is_boolean_resist(beam_type flavour)
     case BEAM_NAPALM:
     case BEAM_WATER:  // water asphyxiation damage,
                       // bypassed by being water inhabitant.
-        return (true);
+        return true;
     default:
-        return (false);
+        return false;
     }
 }
 
@@ -285,20 +273,20 @@ static inline int get_resistible_fraction(beam_type flavour)
     // Drowning damage from water is resistible by being a water thing, or
     // otherwise asphyx resistant.
     case BEAM_WATER:
-        return (40);
+        return 40;
 
     // Assume ice storm and throw icicle are mostly solid.
     case BEAM_ICE:
-        return (40);
+        return 40;
 
     case BEAM_LAVA:
-        return (55);
+        return 55;
 
     case BEAM_POISON_ARROW:
-        return (70);
+        return 70;
 
     default:
-        return (100);
+        return 100;
     }
 }
 
@@ -314,9 +302,9 @@ int resist_adjust_damage(actor *defender, beam_type flavour,
                          int res, int rawdamage, bool ranged)
 {
     if (!res)
-        return (rawdamage);
+        return rawdamage;
 
-    const bool mons = (defender->atype() == ACT_MONSTER);
+    const bool mons = (defender->is_monster());
 
     const int resistible_fraction = get_resistible_fraction(flavour);
 
@@ -346,20 +334,20 @@ int resist_adjust_damage(actor *defender, beam_type flavour,
     else if (res < 0)
         resistible = resistible * (ranged? 15 : 20) / 10;
 
-    return std::max(resistible + irresistible, 0);
+    return max(resistible + irresistible, 0);
 }
 
 ///////////////////////////////////////////////////////////////////////////
 
 bool is_melee_weapon(const item_def *weapon)
 {
-    if (weapon->base_type == OBJ_STAVES)
-        return (true);
+    if (weapon->base_type == OBJ_STAVES || weapon->base_type == OBJ_RODS)
+        return true;
 
     if (weapon->base_type != OBJ_WEAPONS)
-        return (false);
+        return false;
 
-    return (!is_range_weapon(*weapon));
+    return !is_range_weapon(*weapon);
 }
 
 bool wielded_weapon_check(item_def *weapon, bool no_message)
@@ -391,11 +379,11 @@ bool wielded_weapon_check(item_def *weapon, bool no_message)
         && (weapon_warning || unarmed_warning))
     {
         if (no_message)
-            return (false);
+            return false;
 
-        std::string prompt  = "Really attack while ";
+        string prompt  = "Really attack while ";
         if (unarmed_warning)
-            prompt += "being unarmed?";
+            prompt += "unarmed?";
         else
             prompt += "wielding " + weapon->name(DESC_YOUR) + "? ";
 
@@ -407,10 +395,10 @@ bool wielded_weapon_check(item_def *weapon, bool no_message)
         if (result)
             you.received_weapon_warning = true;
 
-        return (result);
+        return result;
     }
 
-    return (true);
+    return true;
 }
 
 // Returns a value between 0 and 10 representing the weight given to str
@@ -473,7 +461,7 @@ int weapon_str_weight(object_class_type wpn_class, int wpn_type)
             ret = 8;
     }
 
-    return (ret);
+    return ret;
 }
 
 // Returns a value from 0 to 10 representing the weight of strength to
@@ -486,19 +474,19 @@ int player_weapon_str_weight()
     // but then we'd be punishing Trolls and Ghouls who are strong and
     // get special unarmed bonuses.
     if (!weapon)
-        return (4);
+        return 4;
 
     int ret = weapon_str_weight(weapon->base_type, weapon->sub_type);
 
     if (hands_reqd(*weapon, you.body_size()) == HANDS_HALF && !you.shield())
         ret += 1;
 
-    return (ret);
+    return ret;
 }
 
 // weapon_dex_weight() + weapon_str_weight == 10, so we only need to
 // define one of these.
 int player_weapon_dex_weight(void)
 {
-    return (10 - player_weapon_str_weight());
+    return 10 - player_weapon_str_weight();
 }

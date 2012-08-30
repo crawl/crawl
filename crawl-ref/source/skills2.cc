@@ -19,16 +19,13 @@
 #include "artefact.h"
 #include "describe.h"
 #include "externs.h"
-#include "fight.h"
 #include "godabil.h"
-#include "itemprop.h"
 #include "player.h"
 #include "species.h"
-#include "skill_menu.h"
 #include "skills.h"
 
-typedef std::string (*string_fn)();
-typedef std::map<std::string, string_fn> skill_op_map;
+typedef string (*string_fn)();
+typedef map<string, string_fn> skill_op_map;
 
 static skill_op_map Skill_Op_Map;
 
@@ -43,10 +40,10 @@ public:
         Skill_Op_Map[k] = o;
     }
 
-    static std::string get(const std::string &_key)
+    static string get(const string &_key)
     {
         skill_op_map::const_iterator i = Skill_Op_Map.find(_key);
-        return (i == Skill_Op_Map.end()? std::string() : (i->second)());
+        return (i == Skill_Op_Map.end()? string() : (i->second)());
     }
 private:
     const char *key;
@@ -146,7 +143,9 @@ int get_skill_progress(skill_type sk, int level, int points, int scale)
 
     const int needed = skill_exp_needed(level + 1, sk);
     const int prev_needed = skill_exp_needed(level, sk);
-    const int amt_done = points - prev_needed;
+    // A scale as small as 92 would overflow with 31 bits if skill_rdiv()
+    // is involved: needed can be 91985, skill_rdiv() multiplies by 256.
+    const int64_t amt_done = points - prev_needed;
     int prog = (amt_done * scale) / (needed - prev_needed);
 
     ASSERT(prog >= 0);
@@ -169,46 +168,46 @@ const char *skill_name(skill_type which_skill)
     return (skills[which_skill][0]);
 }
 
-skill_type str_to_skill(const std::string &skill)
+skill_type str_to_skill(const string &skill)
 {
     for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
         if (skills[i][0] && skill == skills[i][0])
             return (static_cast<skill_type>(i));
 
-    return (SK_FIGHTING);
+    return SK_FIGHTING;
 }
 
-static std::string _stk_adj_cap()
+static string _stk_adj_cap()
 {
     return species_name(Skill_Species, false, true);
 }
 
-static std::string _stk_genus_cap()
+static string _stk_genus_cap()
 {
     return species_name(Skill_Species, true, false);
 }
 
-static std::string _stk_genus_nocap()
+static string _stk_genus_nocap()
 {
-    std::string s = _stk_genus_cap();
-    return (lowercase(s));
+    string s = _stk_genus_cap();
+    return lowercase(s);
 }
 
-static std::string _stk_genus_short_cap()
+static string _stk_genus_short_cap()
 {
     return (Skill_Species == SP_DEMIGOD ? "God" :
             _stk_genus_cap());
 }
 
-static std::string _stk_walker()
+static string _stk_walker()
 {
-    return (Skill_Species == SP_NAGA    ? "Slider" :
-            Skill_Species == SP_TENGU   ? "Glider" :
+    return (Skill_Species == SP_NAGA     ? "Slider" :
+            Skill_Species == SP_TENGU    ? "Glider" :
             Skill_Species == SP_OCTOPODE ? "Wriggler"
-                                        : "Walker");
+                                         : "Walker");
 }
 
-static std::string _stk_weight()
+static string _stk_weight()
 {
     switch (Skill_Species)
     {
@@ -251,19 +250,19 @@ static skill_title_key_t _skill_title_keys[] = {
     stk("Weight", _stk_weight),
 };
 
-static std::string _replace_skill_keys(const std::string &text)
+static string _replace_skill_keys(const string &text)
 {
-    std::string::size_type at = 0, last = 0;
-    std::ostringstream res;
-    while ((at = text.find('@', last)) != std::string::npos)
+    string::size_type at = 0, last = 0;
+    ostringstream res;
+    while ((at = text.find('@', last)) != string::npos)
     {
         res << text.substr(last, at - last);
-        const std::string::size_type end = text.find('@', at + 1);
-        if (end == std::string::npos)
+        const string::size_type end = text.find('@', at + 1);
+        if (end == string::npos)
             break;
 
-        const std::string key = text.substr(at + 1, end - at - 1);
-        const std::string value = stk::get(key);
+        const string key = text.substr(at + 1, end - at - 1);
+        const string value = stk::get(key);
 
         ASSERT(!value.empty());
 
@@ -288,12 +287,12 @@ unsigned get_skill_rank(unsigned skill_lev)
                             /* level 27 */    : 4);
 }
 
-std::string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
-                                int species, int str, int dex, int god)
+string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
+                           int species, int str, int dex, int god)
 {
     // paranoia
     if (is_invalid_skill(best_skill))
-        return ("Adventurer");
+        return "Adventurer";
 
     if (species == -1)
         species = you.species;
@@ -310,7 +309,7 @@ std::string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
     // Increment rank by one to "skip" skill name in array {dlb}:
     ++skill_rank;
 
-    std::string result;
+    string result;
 
     if (best_skill < NUM_SKILLS)
     {
@@ -345,12 +344,12 @@ std::string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
             break;
 
         case SK_SPELLCASTING:
-            if (you.species == SP_OGRE)
+            if (species == SP_OGRE)
                 result = "Ogre Mage";
             break;
 
         case SK_NECROMANCY:
-            if (you.species == SP_SPRIGGAN && skill_rank == 5)
+            if (species == SP_SPRIGGAN && skill_rank == 5)
                 result = "La Petite Mort";
             break;
 
@@ -367,20 +366,20 @@ std::string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
         result = _replace_skill_keys(result);
     }
 
-    return (result.empty() ? std::string("Invalid Title")
+    return (result.empty() ? string("Invalid Title")
                            : result);
 }
 
-std::string skill_title(skill_type best_skill, uint8_t skill_lev,
-                        int species, int str, int dex, int god)
+string skill_title(skill_type best_skill, uint8_t skill_lev,
+                   int species, int str, int dex, int god)
 {
     return skill_title_by_rank(best_skill, get_skill_rank(skill_lev), species, str, dex, god);
 }
 
-std::string player_title()
+string player_title()
 {
     const skill_type best = best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
-    return (skill_title(best, you.skills[ best ]));
+    return skill_title(best, you.skills[ best ]);
 }
 
 skill_type best_skill(skill_type min_skill, skill_type max_skill,
@@ -468,13 +467,18 @@ void calc_hp()
 void calc_mp()
 {
     you.max_magic_points = get_real_mp(true);
-    you.magic_points = std::min(you.magic_points, you.max_magic_points);
+    you.magic_points = min(you.magic_points, you.max_magic_points);
     you.redraw_magic_points = true;
 }
 
 bool is_useless_skill(skill_type skill)
 {
     return species_apt(skill) == -99;
+}
+
+bool is_harmful_skill(skill_type skill)
+{
+    return is_magic_skill(skill) && you.religion == GOD_TROG;
 }
 
 int skill_bump(skill_type skill, int scale)
@@ -492,23 +496,7 @@ static float _apt_to_factor(int apt)
     return (1 / exp(log(2) * apt / APT_DOUBLE));
 }
 
-// Base skill cost, i.e. old-style human aptitudes.
-static int _base_cost(skill_type sk)
-{
-    switch (sk)
-    {
-    case SK_SPELLCASTING:
-        return 130;
-    case SK_STEALTH:
-    case SK_INVOCATIONS:
-    case SK_EVOCATIONS:
-        return 80;
-    default:
-        return 100;
-    }
-}
-
-unsigned int skill_exp_needed(int lev)
+unsigned int skill_exp_needed(int lev, skill_type sk, species_type sp)
 {
     const int exp[28] = { 0, 50, 150, 300, 500, 750,         // 0-5
                           1050, 1400, 1800, 2250, 2800,      // 6-10
@@ -518,13 +506,8 @@ unsigned int skill_exp_needed(int lev)
                           27000, 29750 };
     ASSERT(lev >= 0);
     ASSERT(lev <= 27);
-    return exp[lev];
-}
 
-unsigned int skill_exp_needed(int lev, skill_type sk, species_type sp)
-{
-    return skill_exp_needed(lev) * species_apt_factor(sk, sp)
-           * _base_cost(sk) / 100;
+    return exp[lev] * species_apt_factor(sk, sp);
 }
 
 int species_apt(skill_type skill, species_type species)
@@ -554,9 +537,9 @@ float species_apt_factor(skill_type sk, species_type sp)
     return _apt_to_factor(species_apt(sk, sp));
 }
 
-static std::vector<skill_type> _get_crosstrain_skills(skill_type sk)
+static vector<skill_type> _get_crosstrain_skills(skill_type sk)
 {
-    std::vector<skill_type> ret;
+    vector<skill_type> ret;
 
     switch (sk)
     {
@@ -587,26 +570,33 @@ static std::vector<skill_type> _get_crosstrain_skills(skill_type sk)
     }
 }
 
+// This threshold is in tenths of a skill point.
+#define CROSSTRAIN_THRESHOLD 1
+
 float crosstrain_bonus(skill_type sk)
 {
     int bonus = 1;
 
-    std::vector<skill_type> crosstrain_skills = _get_crosstrain_skills(sk);
+    vector<skill_type> crosstrain_skills = _get_crosstrain_skills(sk);
 
     for (unsigned int i = 0; i < crosstrain_skills.size(); ++i)
-        if (you.skills[crosstrain_skills[i]] > you.skills[sk])
+        if (you.skill(crosstrain_skills[i], 10, true)
+            >= you.skill(sk, 10, true) + CROSSTRAIN_THRESHOLD)
+        {
             bonus *= 2;
+        }
 
     return bonus;
 }
 
 bool crosstrain_other(skill_type sk, bool show_zero)
 {
-    std::vector<skill_type> crosstrain_skills = _get_crosstrain_skills(sk);
+    vector<skill_type> crosstrain_skills = _get_crosstrain_skills(sk);
 
     for (unsigned int i = 0; i < crosstrain_skills.size(); ++i)
-        if (you.skills[crosstrain_skills[i]] < you.skills[sk]
-            && (you.skills[crosstrain_skills[i]] > 0 || show_zero))
+        if (you.skill(crosstrain_skills[i], 10, true)
+            <= you.skill(sk, 10, true) - CROSSTRAIN_THRESHOLD
+           && (you.skills[crosstrain_skills[i]] > 0 || show_zero))
         {
             return true;
         }
@@ -666,7 +656,7 @@ bool antitrain_other(skill_type sk, bool show_zero)
             && you.skills[opposite] < 27 && _compare_skills(sk, opposite));
 }
 
-void dump_skills(std::string &text)
+void dump_skills(string &text)
 {
     for (uint8_t i = 0; i < NUM_SKILLS; i++)
     {
@@ -697,7 +687,7 @@ int skill_transfer_amount(skill_type sk)
     if (you.skill_points[sk] < 1000)
         return you.skill_points[sk] - skill_exp_needed(1, sk);
     else
-        return std::max<int>(1000, you.skill_points[sk] / 2);
+        return max<int>(1000, you.skill_points[sk] / 2);
 }
 
 // Transfer skill points from one skill to another (Ashenzari transfer
@@ -717,7 +707,6 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
     int tsk_points = you.skill_points[tsk];
     int fsk_ct_points = you.ct_skill_points[fsk];
     int tsk_ct_points = you.ct_skill_points[tsk];
-    int total_skill_points = you.total_skill_points;
 
     if (!simu && you.ct_skill_points[fsk] > 0)
         dprf("ct_skill_points[%s]: %d", skill_name(fsk), you.ct_skill_points[fsk]);
@@ -727,7 +716,7 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
     while (total_skp_lost < skp_max
            && (simu || total_skp_lost < (int)you.transfer_skill_points))
     {
-        int skp_lost = std::min(20, skp_max - total_skp_lost);
+        int skp_lost = min(20, skp_max - total_skp_lost);
         int skp_gained = skp_lost * penalty / 100;
 
         float ct_bonus = crosstrain_bonus(tsk);
@@ -743,14 +732,14 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
 
         int ct_penalty = skp_lost * you.ct_skill_points[fsk]
                           / (you.skill_points[fsk] - you.ct_skill_points[fsk]);
-        ct_penalty = std::min<int>(ct_penalty, you.ct_skill_points[fsk]);
+        ct_penalty = min<int>(ct_penalty, you.ct_skill_points[fsk]);
         you.ct_skill_points[fsk] -= ct_penalty;
         skp_lost += ct_penalty;
 
         if (!simu)
         {
-            skp_lost = std::min<int>(skp_lost, you.transfer_skill_points
-                                               - total_skp_lost);
+            skp_lost = min<int>(skp_lost, you.transfer_skill_points
+                                          - total_skp_lost);
         }
 
         total_skp_lost += skp_lost;
@@ -788,14 +777,12 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
         you.skill_points[tsk] = tsk_points;
         you.ct_skill_points[fsk] = fsk_ct_points;
         you.ct_skill_points[tsk] = tsk_ct_points;
-        you.total_skill_points = total_skill_points;
     }
     else
     {
         // Perform the real level up
         check_skill_level_change(fsk);
         check_skill_level_change(tsk);
-        check_skill_cost_change();
         if ((int)you.transfer_skill_points < total_skp_lost)
             you.transfer_skill_points = 0;
         else
@@ -822,10 +809,10 @@ void skill_state::save()
     skill_points       = you.skill_points;
     ct_skill_points    = you.ct_skill_points;
     skill_cost_level   = you.skill_cost_level;
-    total_skill_points = you.total_skill_points;
     skill_order        = you.skill_order;
     auto_training      = you.auto_training;
     exp_available      = you.exp_available;
+    total_experience   = you.total_experience;
     if (!is_invalid_skill(you.manual_skill))
         manual_charges  = you.inv[you.manual_index].plus2;
     for (int i = 0; i < NUM_SKILLS; i++)
@@ -841,9 +828,9 @@ void skill_state::restore_levels()
     you.skill_points                = skill_points;
     you.ct_skill_points             = ct_skill_points;
     you.skill_cost_level            = skill_cost_level;
-    you.total_skill_points          = total_skill_points;
     you.skill_order                 = skill_order;
     you.exp_available               = exp_available;
+    you.total_experience            = total_experience;
     if (!is_invalid_skill(you.manual_skill))
         you.inv[you.manual_index].plus2 = manual_charges;
 }
@@ -863,8 +850,7 @@ void fixup_skills()
         skill_type sk = static_cast<skill_type>(i);
         if (is_useless_skill(sk))
             you.skill_points[i] = 0;
-        you.skill_points[i] = std::min(you.skill_points[i],
-                                       skill_exp_needed(27, sk));
+        you.skill_points[i] = min(you.skill_points[i], skill_exp_needed(27, sk));
         check_skill_level_change(sk);
     }
     init_can_train();

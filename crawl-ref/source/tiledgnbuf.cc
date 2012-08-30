@@ -2,12 +2,8 @@
 
 #include "tiledgnbuf.h"
 
-#include "cloud.h"
-#include "coord.h"
-#include "coordit.h"
 #include "env.h"
 #include "player.h"
-#include "terrain.h"
 #include "tiledef-dngn.h"
 #include "tiledef-icons.h"
 #include "tiledef-main.h"
@@ -70,9 +66,7 @@ void DungeonCellBuffer::add(const packed_cell &cell, int x, int y)
             m_buf_doll.add(TILEP_MONS_UNKNOWN, x, y, 0, in_water, false);
     }
     else if (fg_idx == TILEP_PLAYER)
-    {
         pack_player(x, y, in_water);
-    }
     else if (fg_idx >= TILE_MAIN_MAX)
     {
         m_buf_doll.add(fg_idx, x, y, TILEP_PART_MAX, in_water, false);
@@ -180,7 +174,7 @@ void DungeonCellBuffer::draw()
 void DungeonCellBuffer::add_blood_overlay(int x, int y, const packed_cell &cell,
                                           bool is_wall)
 {
-    if (cell.is_liquefied)
+    if (cell.is_liquefied && !is_wall)
     {
         int offset = cell.flv.special % tile_dngn_count(TILE_LIQUEFACTION);
         m_buf_feat.add(TILE_LIQUEFACTION + offset, x, y);
@@ -190,8 +184,8 @@ void DungeonCellBuffer::add_blood_overlay(int x, int y, const packed_cell &cell,
         tileidx_t basetile;
         if (is_wall)
         {
-            basetile = TILE_WALL_BLOOD_S + tile_dngn_count(TILE_WALL_BLOOD_S)
-                                           * cell.blood_rotation;
+            basetile = cell.old_blood ? TILE_WALL_OLD_BLOOD : TILE_WALL_BLOOD_S;
+            basetile += tile_dngn_count(basetile) * cell.blood_rotation;
         }
         else
             basetile = TILE_BLOOD;
@@ -215,17 +209,17 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
     const tileidx_t bg = cell.bg;
     const tileidx_t bg_idx = cell.bg & TILE_FLAG_MASK;
 
-    if (cell.swamp_tree_water && bg_idx > TILE_DNGN_UNSEEN)
+    if (cell.mangrove_water && bg_idx > TILE_DNGN_UNSEEN)
         m_buf_feat.add(TILE_DNGN_SHALLOW_WATER, x, y);
 
-    if (bg_idx >= TILE_DNGN_WAX_WALL)
+    if (bg_idx >= TILE_DNGN_FIRST_TRANSPARENT)
         add_dngn_tile(cell.flv.floor, x, y);
 
     // Draw blood beneath feature tiles.
     if (bg_idx > TILE_WALL_MAX)
         add_blood_overlay(x, y, cell);
 
-    add_dngn_tile(bg_idx, x, y, cell.swamp_tree_water);
+    add_dngn_tile(bg_idx, x, y, cell.mangrove_water);
 
     if (bg_idx > TILE_DNGN_UNSEEN)
     {
@@ -268,11 +262,17 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
                 m_buf_feat.add(TILE_SANCTUARY, x, y);
             if (cell.is_silenced)
                 m_buf_feat.add(TILE_SILENCED, x, y);
+            if (cell.is_suppressed)
+                m_buf_feat.add(TILE_SUPPRESSED, x, y);
             if (cell.halo == HALO_RANGE)
                 m_buf_feat.add(TILE_HALO_RANGE, x, y);
+            if (cell.halo == HALO_UMBRA)
+                m_buf_feat.add(TILE_UMBRA, x, y);
 
             if (cell.orb_glow)
                 m_buf_feat.add(TILE_ORB_GLOW + cell.orb_glow - 1, x, y);
+            if (cell.quad_glow)
+                m_buf_feat.add(TILE_QUAD_GLOW, x, y);
 
             // Apply the travel exclusion under the foreground if the cell is
             // visible.  It will be applied later if the cell is unseen.
@@ -322,8 +322,19 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
         m_buf_icons.add(TILEI_SOMETHING_UNDER, x, y);
 
     int status_shift = 0;
-    if (fg & TILE_FLAG_MIMIC)
+    switch (fg & TILE_FLAG_MIMIC_MASK)
+    {
+    case TILE_FLAG_MIMIC_INEPT:
+        m_buf_icons.add(TILEI_INEPT_MIMIC, x, y);
+        break;
+    case TILE_FLAG_MIMIC:
         m_buf_icons.add(TILEI_MIMIC, x, y);
+        break;
+    case TILE_FLAG_MIMIC_RAVEN:
+        m_buf_icons.add(TILEI_RAVENOUS_MIMIC, x, y);
+        break;
+    default: ;
+    }
 
     if (fg & TILE_FLAG_BERSERK)
     {
@@ -392,6 +403,19 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
         m_buf_icons.add(TILEI_CONSTRICTED, x, y, -status_shift, 0);
         status_shift += 13;
     }
+    if (fg & TILE_FLAG_GLOWING)
+    {
+        //if (!cell.halo)
+        //    m_buf_feat.add(TILE_HALO, x, y);
+
+        m_buf_icons.add(TILEI_GLOWING, x, y, -status_shift, 0);
+        status_shift += 10;
+    }
+    if (fg & TILE_FLAG_SLOWED)
+    {
+        m_buf_icons.add(TILEI_SLOWED, x, y, -status_shift, 0);
+        status_shift += 13;
+    }
 
     if (fg & TILE_FLAG_ANIM_WEP)
         m_buf_icons.add(TILEI_ANIMATED_WEAPON, x, y);
@@ -417,9 +441,7 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
 
     // Tutorial cursor takes precedence over other cursors.
     if (bg & TILE_FLAG_TUT_CURSOR)
-    {
         m_buf_icons.add(TILEI_TUTORIAL_CURSOR, x, y);
-    }
     else if (bg & TILE_FLAG_CURSOR)
     {
         int type = ((bg & TILE_FLAG_CURSOR) == TILE_FLAG_CURSOR1) ?
@@ -429,6 +451,17 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
            type = TILEI_CURSOR3;
 
         m_buf_icons.add(type, x, y);
+    }
+
+    if (cell.travel_trail & 0xF)
+    {
+        m_buf_icons.add(TILEI_TRAVEL_PATH_FROM +
+                        (cell.travel_trail & 0xF) - 1, x, y);
+    }
+    if (cell.travel_trail & 0xF0)
+    {
+        m_buf_icons.add(TILEI_TRAVEL_PATH_TO +
+                        ((cell.travel_trail & 0xF0) >> 4) - 1, x, y);
     }
 
     if (fg & TILE_FLAG_MDAM_MASK)

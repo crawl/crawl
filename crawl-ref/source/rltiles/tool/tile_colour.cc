@@ -6,6 +6,7 @@
 #ifdef USE_TILE
  #include <png.h>
 #endif
+using namespace std;
 
 tile_colour tile_colour::background(71, 108, 108, 255);
 tile_colour tile_colour::transparent(0, 0, 0, 0);
@@ -68,28 +69,22 @@ int tile_colour::get_hue() const
     int diff = max_rgb - min_rgb;
 
     if (max_rgb == r)
-    {
         return ((60 * (g - b)) / diff + 360) % 360;
-    }
     else if (max_rgb == g)
-    {
         return (60 * (b - r)) / diff + 120;
-    }
     else // if (max_rgb == b)
-    {
         return (60 * (r - g)) / diff + 240;
-    }
 }
 
 int tile_colour::get_max_rgb() const
 {
-    int max_rgb = std::max(std::max(r, g), b);
+    int max_rgb = max(max(r, g), b);
     return (max_rgb);
 }
 
 int tile_colour::get_min_rgb() const
 {
-    int min_rgb = std::min(std::min(r, g), b);
+    int min_rgb = min(min(r, g), b);
     return (min_rgb);
 }
 
@@ -116,8 +111,8 @@ void tile_colour::set_from_hue(int h, int min_rgb, int max_rgb)
     int t = v - (1.0f - f) * s;
 
     // Sanity bounds.
-    q = std::max(std::min(q, 255), 0);
-    t = std::max(std::min(t, 255), 0);
+    q = max(min(q, 255), 0);
+    t = max(min(t, 255), 0);
 
     int h_idx = (h / 60) % 6;
 
@@ -214,7 +209,7 @@ void tile_colour::set_from_hsl(int hue, float sat, float lum)
             val = p;
 
         int final = val * 255;
-        final = std::max(0, std::min(255, final));
+        final = max(0, min(255, final));
         (*this)[i] = static_cast<unsigned char>(final);
     }
 }
@@ -232,8 +227,8 @@ void tile_colour::change_lum(int lum_percent)
         min_rgb += rgb_change;
         max_rgb += rgb_change;
 
-        min_rgb = std::max(0, std::min(255, min_rgb));
-        max_rgb = std::max(0, std::min(255, max_rgb));
+        min_rgb = max(0, min(255, min_rgb));
+        max_rgb = max(0, min(255, max_rgb));
 
         set_from_hue(get_hue(), min_rgb, max_rgb);
         return;

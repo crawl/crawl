@@ -1,0 +1,179 @@
+# "Ice" by dk
+#
+# Serial vault with an ice theme
+
+{{
+function init_ice(e)
+  e.tags('serial_ice')
+  e.tags('extra')
+  e.tags('mini_float')
+  e.weight('2')
+  e.kmons('.-_ = small simulacrum / large simulacrum / death yak w:1 / \
+                 wolf w:20 / yak / polar bear / white imp w:20 / \
+                 ufetubus / ice beast w:15 / w:2000 nothing')
+  e.subst("- = --.")
+  e.rtile("x = wall_zot_cyan")
+  e.colour("x = white")
+
+  e.colour(".A@G! = white")
+  e.ftile(".A@G! = floor_ice")
+  e.kfeat("A = stone_arch")
+  e.lua_marker("!", fog_machine { pow_max = 15, delay_min = 50, delay_max = 100,
+                                  size = 8, start_clouds = 1 } )
+end
+}}
+
+NAME:   serial_ice
+DEPTH:  D:8-16
+TAGS:   extra luniq_serial
+CHANCE: 1%
+{{
+  local c = 4 + crawl.random2(3) * crawl.random2(4)
+  hook("post_place", function()
+    dgn.place_maps{tag="serial_ice", count=c}
+  end)
+}}
+
+###############################################################################
+
+NAME:   serial_ice_a
+TAGS:   mini_float
+: init_ice(_G)
+MAP
+-----
+-...-
+-.A.-
+-...-
+-----
+ENDMAP
+
+NAME:   serial_ice_b
+TAGS:   mini_float
+SUBST:  ! = ....!
+: init_ice(_G)
+MAP
+-------
+-.....-
+-.x.x.-
+-..!..-
+-.x.x.-
+-.....-
+-------
+ENDMAP
+
+NAME:   serial_ice_c
+SUBST:  ! = ....!
+: init_ice(_G)
+MAP
+  xxxxxx
+ xx....x
+xx..!..xx
+x.......x
+xx.....xx
+ xx...xx
+  xxx.x-
+   -----
+    -@-
+ENDMAP
+
+NAME:   serial_ice_d
+: init_ice(_G)
+MAP
+-------
+--xxx--
+-xx.xx-
+-x...x-
+-xx.xx-
+--x.x--
+--@@@--
+ENDMAP
+
+NAME:   serial_ice_e
+TAGS:   mini_float
+SUBST:  ! = ___!
+: init_ice(_G)
+MAP
+.-.-.-
+-.-.-.
+.-.!.-
+-.-.-.
+ENDMAP
+
+NAME:   serial_ice_f
+TAGS:   mini_float
+SUBST:  w = wwW, . = ...w
+: init_ice(_G)
+MAP
+---------
+-.......-
+-..www..-
+-.wwWww.-
+-.wWWWw.-
+-.wwWww.-
+-..www..-
+-.......-
+---------
+ENDMAP
+
+NAME:   serial_ice_g
+NSUBST: x = . / x
+SUBST:  x = .xx
+SUBST:  Y = .!!
+: init_ice(_G)
+MAP
+-------
+--xxx--
+-xx.xx-
+-x.Y.x-
+-xx.xx-
+--xxx--
+-------
+ENDMAP
+
+NAME:   serial_ice_h
+TAGS:   mini_float
+: init_ice(_G)
+MAP
+-------
+--...--
+-.....-
+-..G..-
+-.....-
+--...--
+-------
+ENDMAP
+
+NAME:   serial_ice_i
+TAGS:   mini_float
+SUBST:  W = wW
+SUBST:  + = Ww.
+: init_ice(_G)
+MAP
+    -------....---
+  ---...wwWW++Www----
+-...wW.WWW+++WWWWww--
+-wwWW+........+++Ww.-
+-wWW....A..A....+Ww.-
+-wwW+++......+++Ww..-
+-....wWW+WWW+Ww....--
+---....wW+WWww..--
+    -----...-----
+ENDMAP
+
+NAME:   serial_ice_j
+TAGS:   mini_float
+KPROP:  +-AwW = no_rtele_into
+SUBST:  w = wwW
+SUBST:  + = Ww.
+: init_ice(_G)
+MAP
+     +++++++++++
++++--+++++-+++++---
+-+++wwwwwwwwwwwwww-+
+-w++++++....ww...w+++
+-wwwwWWWW....w...w++++
+--www...w..A...www+++
+-w+++.........ww.+-+
+-ww++++wwwwwwww++--+
+-++++-------...+++-
+ENDMAP

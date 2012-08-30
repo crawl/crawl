@@ -6,7 +6,6 @@
 #include "delay.h"
 #include "godpassive.h"
 #include "files.h"
-#include "itemname.h"
 #include "item_use.h"
 #include "libutil.h"
 #include "macro.h"
@@ -20,47 +19,47 @@
 #include "transform.h"
 #include "hints.h"
 
-int8_t player::stat(stat_type s, bool nonneg) const
+int player::stat(stat_type s, bool nonneg) const
 {
-    const int8_t val = max_stat(s) - stat_loss[s];
-    return (nonneg ? std::max<int8_t>(val, 0) : val);
+    const int val = max_stat(s) - stat_loss[s];
+    return (nonneg ? max(val, 0) : val);
 }
 
-int8_t player::strength() const
+int player::strength() const
 {
-    return (stat(STAT_STR));
+    return stat(STAT_STR);
 }
 
-int8_t player::intel() const
+int player::intel() const
 {
-    return (stat(STAT_INT));
+    return stat(STAT_INT);
 }
 
-int8_t player::dex() const
+int player::dex() const
 {
-    return (stat(STAT_DEX));
+    return stat(STAT_DEX);
 }
 
 static int _stat_modifier(stat_type stat);
 
-int8_t player::max_stat(stat_type s) const
+int player::max_stat(stat_type s) const
 {
-    return (std::min(base_stats[s] + _stat_modifier(s), 72));
+    return min(base_stats[s] + _stat_modifier(s), 72);
 }
 
-int8_t player::max_strength() const
+int player::max_strength() const
 {
-    return (max_stat(STAT_STR));
+    return max_stat(STAT_STR);
 }
 
-int8_t player::max_intel() const
+int player::max_intel() const
 {
-    return (max_stat(STAT_INT));
+    return max_stat(STAT_INT);
 }
 
-int8_t player::max_dex() const
+int player::max_dex() const
 {
-    return (max_stat(STAT_DEX));
+    return max_stat(STAT_DEX);
 }
 
 static void _handle_stat_change(stat_type stat, const char *aux = NULL,
@@ -126,7 +125,7 @@ void jiyva_stat_action()
     int current_capacity = carrying_capacity(BS_UNENCUMBERED);
     int carrying_strength = cur_stat[0] + (you.burden - current_capacity + 249)/250;
     int evp = you.unadjusted_body_armour_penalty();
-    target_stat[0] = std::max(std::max(9, 2 + 3 * evp), 2 + carrying_strength);
+    target_stat[0] = max(max(9, 2 + 3 * evp), 2 + carrying_strength);
     target_stat[1] = 9;
     target_stat[2] = 9;
     int remaining = stat_total - 18 - target_stat[0];
@@ -153,7 +152,7 @@ void jiyva_stat_action()
         }
         // If you are in really heavy armour, then you already are getting a
         // lot of Str and more won't help much, so weight magic more.
-        other_weights = std::max(other_weights - (evp >= 5 ? 4 : 1) * magic_weights/2, 0);
+        other_weights = max(other_weights - (evp >= 5 ? 4 : 1) * magic_weights/2, 0);
         magic_weights = div_rand_round(remaining * magic_weights, magic_weights + other_weights);
         other_weights = remaining - magic_weights;
         target_stat[1] += magic_weights;
@@ -171,7 +170,8 @@ void jiyva_stat_action()
     for (int x = 0; x < 3; ++x)
         for (int y = 0; y < 3; ++y)
         {
-            if (x != y && target_stat[x] - cur_stat[x] + cur_stat[y] - target_stat[y] > 0)
+            if (x != y && cur_stat[y] > 1
+                && target_stat[x] - cur_stat[x] > target_stat[y] - cur_stat[y])
             {
                 choices++;
                 if (one_chance_in(choices))
@@ -184,8 +184,7 @@ void jiyva_stat_action()
     if (choices)
     {
         simple_god_message("'s power touches on your attributes.");
-        const std::string cause = "the 'helpfulness' of "
-                                  + god_name(you.religion);
+        const string cause = "the 'helpfulness' of " + god_name(you.religion);
         modify_stat(static_cast<stat_type>(stat_up_choice), 1, true, cause.c_str());
         modify_stat(static_cast<stat_type>(stat_down_choice), -1, true, cause.c_str());
     }
@@ -217,7 +216,7 @@ const char* stat_desc(stat_type stat, stat_desc_type desc)
     return (descs[stat][desc]);
 }
 
-void modify_stat(stat_type which_stat, int8_t amount, bool suppress_msg,
+void modify_stat(stat_type which_stat, int amount, bool suppress_msg,
                  const char *cause, bool see_source)
 {
     ASSERT(!crawl_state.game_is_arena());
@@ -245,7 +244,7 @@ void modify_stat(stat_type which_stat, int8_t amount, bool suppress_msg,
     _handle_stat_change(which_stat, cause, see_source);
 }
 
-void notify_stat_change(stat_type which_stat, int8_t amount, bool suppress_msg,
+void notify_stat_change(stat_type which_stat, int amount, bool suppress_msg,
                         const char *cause, bool see_source)
 {
     ASSERT(!crawl_state.game_is_arena());
@@ -271,12 +270,12 @@ void notify_stat_change(stat_type which_stat, int8_t amount, bool suppress_msg,
     _handle_stat_change(which_stat, cause, see_source);
 }
 
-void notify_stat_change(stat_type which_stat, int8_t amount, bool suppress_msg,
+void notify_stat_change(stat_type which_stat, int amount, bool suppress_msg,
                         const item_def &cause, bool removed)
 {
-    std::string name = cause.name(DESC_THE, false, true, false, false,
-                                  ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES);
-    std::string verb;
+    string name = cause.name(DESC_THE, false, true, false, false,
+                             ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES);
+    string verb;
 
     switch (cause.base_type)
     {
@@ -290,6 +289,7 @@ void notify_stat_change(stat_type which_stat, int8_t amount, bool suppress_msg,
 
     case OBJ_WEAPONS:
     case OBJ_STAVES:
+    case OBJ_RODS:
         if (removed)
             verb = "unwielding";
         else
@@ -324,14 +324,17 @@ static int _strength_modifier()
 
     result += che_stat_boost();
 
-    // ego items of strength
-    result += 3 * count_worn_ego(SPARM_STRENGTH);
+    if (!you.suppressed())
+    {
+        // ego items of strength
+        result += 3 * count_worn_ego(SPARM_STRENGTH);
 
-    // rings of strength
-    result += player_equip(EQ_RINGS_PLUS, RING_STRENGTH);
+        // rings of strength
+        result += player_equip(EQ_RINGS_PLUS, RING_STRENGTH);
 
-    // randarts of strength
-    result += scan_artefacts(ARTP_STRENGTH);
+        // randarts of strength
+        result += scan_artefacts(ARTP_STRENGTH);
+    }
 
     // mutations
     result += player_mutation_level(MUT_STRONG)
@@ -350,7 +353,7 @@ static int _strength_modifier()
     default:                                 break;
     }
 
-    return (result);
+    return result;
 }
 
 static int _int_modifier()
@@ -365,20 +368,23 @@ static int _int_modifier()
 
     result += che_stat_boost();
 
-    // ego items of intelligence
-    result += 3 * count_worn_ego(SPARM_INTELLIGENCE);
+    if (!you.suppressed())
+    {
+        // ego items of intelligence
+        result += 3 * count_worn_ego(SPARM_INTELLIGENCE);
 
-    // rings of intelligence
-    result += player_equip(EQ_RINGS_PLUS, RING_INTELLIGENCE);
+        // rings of intelligence
+        result += player_equip(EQ_RINGS_PLUS, RING_INTELLIGENCE);
 
-    // randarts of intelligence
-    result += scan_artefacts(ARTP_INTELLIGENCE);
+        // randarts of intelligence
+        result += scan_artefacts(ARTP_INTELLIGENCE);
+    }
 
     // mutations
     result += player_mutation_level(MUT_CLEVER)
               - player_mutation_level(MUT_DOPEY);
 
-    return (result);
+    return result;
 }
 
 static int _dex_modifier()
@@ -393,14 +399,17 @@ static int _dex_modifier()
 
     result += che_stat_boost();
 
-    // ego items of dexterity
-    result += 3 * count_worn_ego(SPARM_DEXTERITY);
+    if (!you.suppressed())
+    {
+        // ego items of dexterity
+        result += 3 * count_worn_ego(SPARM_DEXTERITY);
 
-    // rings of dexterity
-    result += player_equip(EQ_RINGS_PLUS, RING_DEXTERITY);
+        // rings of dexterity
+        result += player_equip(EQ_RINGS_PLUS, RING_DEXTERITY);
 
-    // randarts of dexterity
-    result += scan_artefacts(ARTP_DEXTERITY);
+        // randarts of dexterity
+        result += scan_artefacts(ARTP_DEXTERITY);
+    }
 
     // mutations
     result += player_mutation_level(MUT_AGILE)
@@ -420,7 +429,7 @@ static int _dex_modifier()
     default:                        break;
     }
 
-    return (result);
+    return result;
 }
 
 static int _stat_modifier(stat_type stat)
@@ -436,7 +445,22 @@ static int _stat_modifier(stat_type stat)
     }
 }
 
-bool lose_stat(stat_type which_stat, int8_t stat_loss, bool force,
+static string _stat_name(stat_type stat)
+{
+    switch (stat)
+    {
+    case STAT_STR:
+        return "strength";
+    case STAT_INT:
+        return "intelligence";
+    case STAT_DEX:
+        return "dexterity";
+    default:
+        die("invalid stat");
+    }
+}
+
+bool lose_stat(stat_type which_stat, int stat_loss, bool force,
                const char *cause, bool see_source)
 {
     if (which_stat == STAT_RANDOM)
@@ -446,6 +470,13 @@ bool lose_stat(stat_type which_stat, int8_t stat_loss, bool force,
     // permissible because stat_loss is unsigned: {dlb}
     if (!force)
     {
+        if (you.duration[DUR_DIVINE_STAMINA] > 0)
+        {
+            mprf("Your divine stamina protects you from %s loss.",
+                 _stat_name(which_stat).c_str());
+            return false;
+        }
+
         int sust = player_sust_abil();
         stat_loss >>= sust;
 
@@ -467,29 +498,29 @@ bool lose_stat(stat_type which_stat, int8_t stat_loss, bool force,
 
     if (stat_loss > 0)
     {
-        you.stat_loss[which_stat] = std::min<int>(100,
+        you.stat_loss[which_stat] = min<int>(100,
                                         you.stat_loss[which_stat] + stat_loss);
         _handle_stat_change(which_stat, cause, see_source);
-        return (true);
+        return true;
     }
     else
-        return (false);
+        return false;
 }
 
-bool lose_stat(stat_type which_stat, int8_t stat_loss, bool force,
-               const std::string cause, bool see_source)
+bool lose_stat(stat_type which_stat, int stat_loss, bool force,
+               const string cause, bool see_source)
 {
     return lose_stat(which_stat, stat_loss, force, cause.c_str(), see_source);
 }
 
-bool lose_stat(stat_type which_stat, int8_t stat_loss,
+bool lose_stat(stat_type which_stat, int stat_loss,
                const monster* cause, bool force)
 {
     if (cause == NULL || invalid_monster(cause))
         return lose_stat(which_stat, stat_loss, force, NULL, true);
 
-    bool        vis  = you.can_see(cause);
-    std::string name = cause->name(DESC_A, true);
+    bool   vis  = you.can_see(cause);
+    string name = cause->name(DESC_A, true);
 
     if (cause->has_ench(ENCH_SHAPESHIFTER))
         name += " (shapeshifter)";
@@ -497,56 +528,6 @@ bool lose_stat(stat_type which_stat, int8_t stat_loss,
         name += " (glowing shapeshifter)";
 
     return lose_stat(which_stat, stat_loss, force, name, vis);
-}
-
-bool lose_stat(stat_type which_stat, int8_t stat_loss,
-               const item_def &cause, bool removed, bool force)
-{
-    std::string name = cause.name(DESC_THE, false, true, false, false,
-                                  ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES);
-    std::string verb;
-
-    switch (cause.base_type)
-    {
-    case OBJ_ARMOUR:
-    case OBJ_JEWELLERY:
-        if (removed)
-            verb = "removing";
-        else
-            verb = "wearing";
-        break;
-
-    case OBJ_WEAPONS:
-    case OBJ_STAVES:
-        if (removed)
-            verb = "unwielding";
-        else
-            verb = "wielding";
-        break;
-
-    case OBJ_WANDS:   verb = "zapping";  break;
-    case OBJ_FOOD:    verb = "eating";   break;
-    case OBJ_SCROLLS: verb = "reading";  break;
-    case OBJ_POTIONS: verb = "drinking"; break;
-    default:          verb = "using";
-    }
-
-    return lose_stat(which_stat, stat_loss, force, verb + " " + name, true);
-}
-
-static std::string _stat_name(stat_type stat)
-{
-    switch (stat)
-    {
-    case STAT_STR:
-        return ("strength");
-    case STAT_INT:
-        return ("intelligence");
-    case STAT_DEX:
-        return ("dexterity");
-    default:
-        die("invalid stat");
-    }
 }
 
 static stat_type _random_lost_stat()
@@ -560,14 +541,14 @@ static stat_type _random_lost_stat()
             if (one_chance_in(found))
                 choice = static_cast<stat_type>(i);
         }
-    return (choice);
+    return choice;
 }
 
 // Restore the stat in which_stat by the amount in stat_gain, displaying
 // a message if suppress_msg is false, and doing so in the recovery
 // channel if recovery is true.  If stat_gain is 0, restore the stat
 // completely.
-bool restore_stat(stat_type which_stat, int8_t stat_gain,
+bool restore_stat(stat_type which_stat, int stat_gain,
                   bool suppress_msg, bool recovery)
 {
     // A bit hackish, but cut me some slack, man! --
@@ -576,17 +557,17 @@ bool restore_stat(stat_type which_stat, int8_t stat_gain,
     {
         bool stat_restored = false;
         for (int i = 0; i < NUM_STATS; ++i)
-            if (restore_stat(static_cast<stat_type>(i), stat_gain, suppress_msg))
+            if (restore_stat((stat_type) i, stat_gain, suppress_msg))
                 stat_restored = true;
 
-        return (stat_restored);
+        return stat_restored;
     }
 
     if (which_stat == STAT_RANDOM)
         which_stat = _random_lost_stat();
 
     if (which_stat >= NUM_STATS || you.stat_loss[which_stat] == 0)
-        return (false);
+        return false;
 
     if (!suppress_msg)
     {
@@ -600,14 +581,14 @@ bool restore_stat(stat_type which_stat, int8_t stat_gain,
 
     you.stat_loss[which_stat] -= stat_gain;
     _handle_stat_change(which_stat);
-    return (true);
+    return true;
 }
 
 static void _normalize_stat(stat_type stat)
 {
     ASSERT(you.stat_loss[stat] >= 0);
     // XXX: this doesn't prevent effective stats over 72.
-    you.base_stats[stat] = std::min<int8_t>(you.base_stats[stat], 72);
+    you.base_stats[stat] = min<int8_t>(you.base_stats[stat], 72);
 }
 
 // Number of turns of stat at zero you start with.
@@ -690,7 +671,7 @@ void update_stat_zero()
         }
 
         int paramax = STAT_DEATH_TURNS - STAT_DEATH_START_PARA;
-        int paradiff = std::max(you.stat_zero[i] - STAT_DEATH_START_PARA, 0);
+        int paradiff = max(you.stat_zero[i] - STAT_DEATH_START_PARA, 0);
         if (x_chance_in_y(paradiff*paradiff, 2*paramax*paramax))
         {
             para_stat = s;

@@ -1,0 +1,433 @@
+%%%%
+Singing Sword
+
+Ten cudowny miecz niczego nie kocha bardziej niż śpiewać swemu właścicielowi —
+czy tego chce czy też nie.
+%%%%
+Wrath of Trog
+
+To była niegdyś ulubiona broń Troga, zanim ją utracił pewnego dnia. Wzbudza
+krwawy berserkerski szał gdy ktokolwiek użyje jej aby uderzyć bliźniego.
+%%%%
+Mace of Variability
+
+Jest raczej niezbyt niezawodna.
+%%%%
+Glaive of Prune
+
+Jest to dzieło jakiegoś szalonego boga, i niesie klątwę która zmienia
+posiadacza tej broni w śliwę. Na szczęście, klątwa ta działa bardzo powoli, i
+można używać tej glewii przez krótki czas bez konsekwencji gorszych niż lekko
+fioletowa skóra i parę zmarszczek.
+%%%%
+Sword of Power
+
+Nagradza silnych siłą, a słabych słabością.
+%%%%
+Staff of Olgreb
+
+To była broń potężnego czarodzieja Olgreba zanim dosięgła go zguba gdzieś w
+tych lochach. Jak każdy kij trucizn, wzmaga zdolności swego posiadacza w tej
+dziedzinie magii, lecz także posiada inne moce które można użyć. Ponadto,
+Olgreb prowadził badania nad rzadkimi jadami które działają na stworzenia
+zwykle odporne na wszelkie powszechnie znane trucizny.
+%%%%
+Staff of Wucad Mu
+
+Jego wartość bojowa zmienia się proporcjonalnie do inteligenci swego
+posiadacza. Można go użyć aby odzyskać spore ilości magicznej mocy, ryzykując
+tymczasowe porażenie umysłu.
+%%%%
+Vampire's Tooth
+
+Ten sztylet wygląda jakby naprawdę mógł zostać zrobiony z kła jakiegoś
+wielkiego drapieżnika — lecz oczywiście nie mógł być to zwykły kriopijca
+rozmiaru człowieka.
+%%%%
+Scythe of Curses
+
+Ta broń niesie w sobie straszną i irytującą klątwę.
+%%%%
+Sceptre of Torment
+
+Jest to prawdziwie przeklęte narzędzie piekieł.
+%%%%
+Sword of Zonguldrok
+
+Tą przerażającą broń używasz na własne ryzyko.
+%%%%
+Sword of Cerebov
+
+Przedziwne płomienie tańczą wokół jego pokręconego ostrza.
+%%%%
+Staff of Dispater
+
+Ten legendarny przedmiot może rozpętać szał piekieł.
+%%%%
+Sceptre of Asmodeus
+
+Niesie część mocy arcy-diabła Asmodeusza.
+%%%%
+faerie dragon armour
+
+Wróżkowe smoki były kiedyś rasą tego samego gatunku co nakrapiane. Na swe
+nieszczęście, ich źywe kolory stały się ich zgubą, alarmując potencjalną
+zdobycz. Dziś już zupełnie wyginęły, a ten cenny relikt jest jednym z ostatnich
+dowodów że kiedykolwiek istniały.
+%%%%
+demon blade "Bloodbane"
+
+Ta broń jest skażona krwią nieludzkiego szaleńca.
+%%%%
+scimitar of Flaming Death
+
+Gorące ostrze!
+%%%%
+mace of Brilliance
+
+Z tą buławą w ręku możesz nieść światło w te lochy, co też zapewnia że twoje
+przybycie będzie dobrze widoczne. Nieumarli bardzo tego nie lubią, podobnie jak
+ci którzy ukrywają swe niecne sprawki za zasłoną niewidzialności.
+%%%%
+demon blade "Leech"
+
+Ta broń wywołuje nieodparte pragnienie nasycenia się cudzą siłą życiową.
+%%%%
+dagger of Chilly Death
+
+Sztylet zrobiony z jednego wielkiego odłamka szafiru.
+%%%%
+dagger "Morg"
+
+Brzydki, stary zardzewiały sztylet.
+
+Przed wielu laty był własnością potężnego maga o imieniu Borys. Ostatnie co o
+nim wiadomo, to że wyruszył w te lochy poszukując Kuli Zot.
+%%%%
+scythe "Finisher"
+
+Długa ostra kosa osadzona na sztorc.
+%%%%
+sling "Punk"
+
+Proca zrobiona z kawałka dziwnej niebieskiej skóry.
+%%%%
+bow of Krishna "Sharnga"
+
+Cudowny złoty łuk.
+
+Podobno należał kiedyś do zamorskiego boga. Najlepiej pasują do niego specjalne
+strzały, lecz o nie tutaj raczej trudno.
+%%%%
+giant club "Skullcrusher"
+
+Ta śliczna pałeczka może sprawić radość każdego ogra — czy to w rozróbie w
+barze, czy masowym morderstwie — albo nawet w jednym i drugim naraz.
+%%%%
+glaive of the Guard
+
+Ta broń kiedyś należała do Gar Dogha, strażnika królewskich skarbów. Podobno
+stracił ją podczas wyprawy w te lochy.
+%%%%
+sword of Jihad
+
+Długi miecz zrobiony z jednego kawałka kryształu. Legendy mówią że był on darem
+Świetlistego dla jednego z wyznawców.
+%%%%
+crossbow "Hellfire"
+
+Płonąca kusza, wykuta w ogniach piekieł.
+%%%%
+sword of the Doom Knight
+
+Wielki miecz z czarnym diamentem w rękojeści.
+%%%%
+morningstar "Eos"
+
+Różanopalca jutrzenka.
+%%%%
+spear of the Botono
+
+Mroczny i złowrogi artefakt, do którego nikt rozsądny nie powinien się nawet
+zbliżać.
+%%%%
+trident of the Octopus King
+
+Ten trójząb został skradziony z ogrodu króla ośmiornic przez nic nieznaczącego
+i już martwego człowieka. Ale uwaga na zemstę króla!
+%%%%
+mithril axe "Arga"
+
+Przepiękny topór z mithrilu, zapewne niegdyś należał do krasnoludzkiego herosa.
+%%%%
+Elemental Staff
+
+Ten potężny kij kiedyś należał do przywódcy Gildii Pięciu Żywiołów.
+%%%%
+crossbow "Sniper"
+
+Kusza zrobiona z jakiegoś czarnego materiału.
+%%%%
+longbow "Piercer"
+
+Wyjątkowo duży metalowy łuk.
+%%%%
+blowgun of the Assassin
+
+Zaprojektowana aby można ją było łatwo schować, lecz wciąż zabójcza.
+%%%%
+lance "Wyrmbane"
+
+Zaczarowana lanca która staje się coraz mocniejsza z każdym smokiem którego
+zabija.
+%%%%
+Spriggan's Knife
+
+Niepozorny mały nożyk, zrobiony przez spriggan, dla spriggan albo może nawet ze
+spriggan. W każdym razie, jest jakoś związany z tym ludkiem.
+%%%%
+plutonium sword
+
+Potrójny miecz z dziwnego świecącego metalu. Ciekawe czy poboczne ostrza
+wyrosły na skutek promieniowania, i czy tobie też wyrosną dwie dodatkowe głowy.
+%%%%
+great mace "Undeadhunter"
+
+Według opowieści, dawno, dawno temu, pewien możny licz spróbował zastąpić
+bezmyślne zombie i szkielety inteligentnymi sługami. Jako że wraz z wolną wolą
+przychodzi możliwość buntu, jako zabezpieczenie ten licz przygotował arsenał
+broni nasyconych magią która może rozproszyć czar podtrzymujący nie-życie
+nieumarłych, czyniąc im wielką szkodę.
+
+Nietrudno zgadnąć jak ów licz skończył. Te bronie rozeszły się po świecie, lecz
+słudzy Świetlistego, twierdząc że użycie nekromancji jest złe nawet wobec
+nieumarłych, zniszczyli wszystkie które wpadły im w ręce. Ta buława może być
+ostatnia.
+%%%%
+whip "Snakebite"
+
+Podwójny bicz zrobiony ze skóry czarnej mamby.
+%%%%
+knife of Accuracy
+
+Jest niemal bezbłędnie celny.
+%%%%
+Lehudib's crystal spear
+
+Prawdopodobnie ten relikt doprowadził do powstania słynnego czaru. Albo może na
+odwrót.
+%%%%
+captain's cutlass
+
+Pewien podły piracki kapitan używał tej ogarniętą niesławą broń do mordowania
+setek niewinnych istot, aż w końcu został pożarty razem ze swym statkiem i całą
+załogą przez krakena. Wszyscy myśleli że ten kordelas przepadł na zawsze, ale
+właśnie trzymasz dowód że tak nie jest we własnym ręku.
+%%%%
+storm bow
+
+Ten łuk ma kolor ciemnych deszczowych chmur, i pachnie ozonem.
+%%%%
+large shield of Ignorance
+
+„Otwarty umysł jest jak twierdza o bramach otwartych i niestrzeżonych.”
+%%%%
+robe of Augmentation
+
+Szata z najlepszego jedwabiu.
+%%%%
+cloak of the Thief
+
+Pozwala nosicielowi przodować w złodziejskich sztukach.
+%%%%
+shield "Bullseye"
+
+Na wypadek jakby twoi wrogowie mieli problemy z trafianiem w ciebie.
+%%%%
+crown of Dyrovepreva
+
+Duża korona z brązu bez połysku, wysadzana wspaniałymi połyskującymi kamieniami
+szlachetnymi.
+%%%%
+hat of the Bear Spirit
+
+Ta czapka kiedyś należała do Ukty, potężnego ogrzego szamana. Nosi w sobie
+ducha ogromnego niedźwiedzia.
+%%%%
+robe of Misfortune
+
+Wspaniała szata z futra i jedwabiu.
+%%%%
+cloak of Flash
+
+Wibrujący płaszcz.
+%%%%
+boots of the Assassin
+
+Para miękkich butów, specjalnie zaprojektowana dla gildii zabójców.
+%%%%
+Lear's chain mail
+
+Kolczuga ze szczerego złota.
+%%%%
+skin of Zhor
+
+Śmierdząca skóra jakiegoś dziwnego zwierzęcia.
+%%%%
+salamander hide armour
+
+Skórzana zbroja zrobiona z salamandry.
+%%%%
+gauntlets of War
+
+Płytowe rękawice z grubej stali, niegdyś dar Okawaru dla dzielnego wordza. Czy
+na nie zasługujesz?
+%%%%
+shield of Resistance
+
+Tarcza ze spiżu.
+%%%%
+robe of Folly
+
+Marna szara szata.
+%%%%
+Maxwell's patent armour
+
+Bardzo dziwnie wyglądająca zbroja.
+%%%%
+mask of the Dragon
+
+Niebieska maska.
+%%%%
+robe of Night
+
+Długa czarna szata z jakiegoś połyskliwego materiału. Według legendy, była
+darem Ratri, bogini nocy, dla jednego z jej wyznawców.
+%%%%
+armour of the Dragon King
+
+Dawno temu, możny złoty smok objął władanie nad wszystkimi smokami z tej części
+świata. Lecz jego rządy nie trwały długo – jakiś zwykły człowiek przebił króla
+włócznią po czym zrobił tą zbroję z jego skóry.
+%%%%
+hat of the Alchemist
+
+Osmalony kapelusz, noszący ślady wielu przedziwnych eksplozji. To że jest wciąż
+w jednym kawałku sugeruje że ma on sposoby chronienia głowy w środku przed
+urazami. A rodzaje ochrony które zapewnia mówią że głowy myślące o takich
+eksperymentach musiały wcześniej ulec jakimś urazom.
+%%%%
+fencer's gloves
+
+Para rękawic z białego jedwabiu.
+%%%%
+cloak of Starlight
+
+Fosforyzujący płaszcz utkany z samych promieni światła.
+%%%%
+ratskin cloak
+
+Jakaś czarodziejka z czarodziejskim krosnem i zbyt dużą ilością czasu zszyła
+ten płaszcz ze skórek setek szczurów, w większości pomarańczowych. Wygląda dość
+głupio, ale zapewne zapewnia jakąś ochronę przed szczurami.
+%%%%
+shield of the gong
+
+To jest wielki gong z brązu z paskami które pozwalają założyć go jako tarczę.
+Jak pewni mędrcy twierdzą, przynosi to duchową ochronę.
+
+A jedno jest pewne: przyniesie to też donośny dźwięk!
+%%%%
+amulet of the Air
+
+Jakiś mag powietrza zaczarował ten błękitny amulet, zaklinając weń większość
+ochronnych uroków swej szkoły magii.
+%%%%
+ring of Shadows
+
+Niepozorny czarny pierścień który pomaga skryć się w cieniu.
+%%%%
+amulet of Cekugob
+
+Ten wisiorek to dziwne kawałek kryształu na sznurku, z nietypowym zestawem
+mocy.
+%%%%
+amulet of the Four Winds
+
+Ten wisior z najczystego jadeitu daje nosicielowi mistyczną siłę aby odeprzeć
+wrogie uroki.
+%%%%
+necklace of Bloodlust
+
+Ciekawe jaki prymityw mógłby wpaść na pomysł aby założyć okrwawiony naszyjnik z
+ludzkich i zwierzęcych zębów... i czegoś co wygląda na kawałek kręgosłupa.
+%%%%
+ring of Shaolin
+
+Pierścień z jadeity bez żadnych ozdób, dający nosicielowi dar poznania własnego
+ciała, pozwalając na niewiarygodne uniki.
+%%%%
+ring of Robustness
+
+Zwykły stalowy pierścień.
+%%%%
+ring of the Mage
+
+Pierścień z magicznym szafirem, pomagający w czarowaniu.
+%%%%
+brooch of Shielding
+
+W dawnych czasach, każdy obieżyświat miał taką. No i kucyka.
+%%%%
+robe of Clouds
+
+Szata z materiału tak delikatnego, jakby to były chmury.
+%%%%
+hat of Pondering
+
+Spiczasty kapelusz, umazany w jakimś śluzie.
+
+Jest to ulubiony kapelusz ślimaczego czarodzieja Brzuchonoka, z czarami
+pomagającymi mu myśleć. Jest także zaklęty aby chronić przed wpływem solą, ale
+podejrzewam że tobie akura się to zbytnio nie przyda.
+%%%%
+obsidian axe
+
+Ten topór niesie w sobie podstępną klątwę jednego z panów Pandemonium, kierując
+nic nie podejrzewających poszukiwaczy twego typu ku swym niecnym celom.
+%%%%
+lightning scales
+
+Z tych łusek zrobiono zbroję pasującą na dolna połowę wężowego ciała naga.
+Lekko skrzą się prądem, i dają nosicielowi zdolność pełzania niemal tak szybko
+jak człowiek idzie.
+%%%%
+Black Knight's horse barding
+
+Ten kropierz z czarnej stali i płytek czarnego diamentu kiedyś był zakładany na
+osobistego rumaka Czarnego Rycerza. Oczywiście, taki ciężar kamienia i metalu
+nie wpływa dobrze na szybkość konia — jednak nie można zaprzeczyć zapewnianej
+przezeń ochronie. Nałożono także nań czar czyniący konia częściowo nieumarłym.
+%%%%
+ring of Vitality
+
+Ten sławny pierścień wielce wzmaga zdrowie nosiciela.
+%%%%
+autumn katana
+
+Ten zamorski miecz jest bronią dla oświeconego szermierza.
+%%%%
+shillelagh "Devastator"
+
+Ten kijaszek jest obciażony czymś cięższym niż ołów.
+%%%%
+dragonskin cloak
+
+Ten dziwny płaszcz błyszczy wszystkimi kolorami smoków. Chroni on swego
+nosiciela przed atakami ze stron wszelkich rodzajów żywiołów, jakkolwiek jest
+niezbyt niezawodny.
+%%%%
+ring of the Octopus King
+
+Pierścień z morskiego koralowca.
+%%%%

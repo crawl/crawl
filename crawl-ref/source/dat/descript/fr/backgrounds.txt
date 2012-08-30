@@ -1,0 +1,71 @@
+%%%%
+Abyssal Knight
+
+Les Chevaliers des Abysses servent Lugonu, et sont envoyés depuis les Abysses
+vers le Donjon pour propager la corruption et le chaos.
+%%%%
+Air Elementalist
+
+Les Élementalistes de l'Air ont appris le sort Choc. Plus tard, le livre de
+l'Air leur fournira la flexibilité nécessaire à leur survie.
+%%%%
+Artificer
+
+Les Artificiers entrent dans le Donjon avec quelques dispositifs magiques et
+les connaissances nécessaires pour les utiliser.
+%%%%
+Assassin
+
+Les Assassins sont tout en furtivité, prêts à poignarder tout adversaire
+inattentif. En plus d'une dague et d'une cape, ils ont de dangereuses aiguilles
+enduites de curare pour leur sarbacane.
+%%%%
+Chaos Knight
+
+Les Chevaliers du Chaos sont les jouets de l'imprévisible dieu Xom, et
+subissent les effets de ses constants changements d'humeur.
+%%%%
+Conjurer
+
+Les Conjurateurs résolvent les problèmes auquel ils sont confrontés avec les
+sorts destructeurs tirés du livre des Conjurations.
+%%%%
+Death Knight
+
+Les Chevaliers de la Mort sont des combattants qui commandent aux morts-vivants
+au nom de Yredelemnul le Ténébreux.
+%%%%
+Enchanter
+
+Les Enchanteurs utilisent des sorts pour se renforcer pendant un combat ou pour
+neutraliser leurs adversaires. Ils commencent aussi avec des fléchettes de
+bonne qualité.
+%%%%
+Fighter
+
+Les Guerriers commencent avec une armure et un bouclier, ainsi qu'une arme de
+leur choix. Ils ont une meilleure santé que les autres professions.
+%%%%
+Gladiator
+
+Les Gladiateurs sont prêts à entrer dans l'arène avec une armure légère, un
+bouclier, des filets et une arme de leur choix.
+%%%%
+Hunter
+
+Les Chasseurs peuvent attaquer à distance sans recourir à la magie.
+%%%%
+Monk
+
+Les Moines sont prêts à affronter tout ce qu'il vont trouver dans le Donjon
+avec juste une robe et la maîtrise de leur corps.
+%%%%
+Priest
+
+Les Prêtres sont les adeptes de Zin, et portent la parole de leur  dieu aux
+habitants du Donjon. Les Orcs des Collines servent le dieu orc Beogh.
+%%%%
+Wanderer
+
+Les Vagabonds commencent avec un équipement et des compétences aléatoires.
+%%%%

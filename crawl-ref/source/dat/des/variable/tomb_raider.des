@@ -1,15 +1,8 @@
 # Tomb raiding (by Ragdoll, tons of help and lua by evilmike)
 # Can contain the ring of vitality.
-# TODO: Statues should be sarcophagi.
 
 {{
 function callback.release_the_mummies(data, triggerable, triggerer, marker, ev)
-    if data.trig == true then
-        return
-    else
-        data.trig = true
-    end
-
     local x, y = marker:pos()
     local you_x, you_y = you.pos()
 
@@ -17,11 +10,7 @@ function callback.release_the_mummies(data, triggerable, triggerer, marker, ev)
         return
     end
 
-    if triggerer.type == "pressure_plate" then
-        crawl.mpr("You hear a click.")
-    elseif triggerer.type == "item_moved" then
-        crawl.mpr("A pressure plate that was under the item clicks.")
-    end
+    crawl.mpr("You hear a click.")
 
     for slave in iter.slave_iterator("stone_door", 1) do
         if (dgn.mons_at(slave.x, slave.y) ~= nil or (slave.x == you_x and slave.y == you_y)) then
@@ -41,27 +30,24 @@ function callback.release_the_mummies(data, triggerable, triggerer, marker, ev)
         dgn.terrain_changed(slave.x, slave.y, "floor", false, false, false)
     end
 
-    for slave in iter.slave_iterator("plate", 1) do
-        dgn.grid(slave.x, slave.y, "floor")
-    end
     crawl.mpr("A number of walls slide open! You sense an ancient evil...", "warning")
 end
 }}
 
 NAME:   ragdoll_tomb_raider
-DEPTH:  D:14-26, Vault:1-7, Crypt:1-4
+DEPTH:  D:14-26, Vaults:1-7, Crypt:1-4
 ORIENT: float
 TAGS:   no_item_gen no_monster_gen
-KFEAT:  $ = pressure plate trap
 KITEM:  $ = ring of regeneration unrand:ring_of_vitality / acquire any
 KITEM:  1234 = gold / any / nothing
 KITEM:  M4 = superb_item / any
 SUBST:  . = .:10 ~:1
 COLOUR: G = yellow
+TILE:   G = dngn_sarcophagus_sealed
 COLOUR: c = yellow
-TILE:   c = wall_lab_stone
+TILE:   c = wall_tomb
 COLOUR: C = white
-TILE:   C = wall_sandstone
+TILE:   C = wall_lab_stone
 COLOUR: X = brown
 TILE:   X = dngn_stone_wall_brown
 FTILE:  .!~>cCXG1234M$ = floor_sandstone
@@ -87,20 +73,16 @@ KMONS: M = mummy priest
 : end
 {{
     local tm = TriggerableFunction:new{func="callback.release_the_mummies",
-               repeated=true, data={trig=false} }
-    tm:add_triggerer(DgnTriggerer:new{type="pressure_plate"})
+               data={trig=false} }
     tm:add_triggerer(DgnTriggerer:new{type="item_moved", target="auto"})
     tm:add_triggerer(DgnTriggerer:new{type="item_pickup", target="auto"})
+    tm:add_triggerer(DgnTriggerer:new{type="player_move"})
     lua_marker('$', tm)
-    lua_marker('$', props_marker {plate=1})
     lua_marker('!', props_marker {stone_door=1})
     lua_marker('X', props_marker {closet=1})
-    lua_marker('X', portal_desc {
-        desc="an engraved stone wall",
-        desc_long="The wall is carved with many mysterious symbols."})
-    lua_marker('C', portal_desc {
-        desc="an engraved stone pillar",
-        desc_long="A stone pillar, carved with strange symbols."})
+    lua_marker('G', portal_desc {
+        veto_fragmentation="veto", veto_disintegrate="veto", veto_shatter="veto" })
+    set_feature_name("granite_statue", "sealed sarcophagus")
 }}
 SUBST:  ! = .
 SUBST:  XC = c

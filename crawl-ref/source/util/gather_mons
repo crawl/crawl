@@ -1,0 +1,90 @@
+#!/usr/bin/perl -w
+
+# Run gather_mons -d if you want dbname: to be heeded (descs, etc).
+my $db = grep /^-d$/, @ARGV;
+
+open IN, "<mon-data.h" or die "Can't read mon-data.h\n";
+while (<IN>)
+{
+    $mons{$1}=1 if /^\ +MONS_[A-Z0-9_]+, +'.', +[A-Z0-9_]+, +"([^"]+)",/; #"
+}
+close IN;
+
+sub vault_mon()
+{
+    s/^ */ /; # easier to parse this way
+    return unless /name:/; # not interesting to us
+    s/ spells:[^ ]+//g; # can have ;
+    s/;.*//s; # items
+    my %tags;
+    $tags{$1}=$2 while (s/ (\w+):([^ ]+)//);
+    s/ generate_awake//;
+    s/ patrolling//;
+    s/ actual_spells//;
+    s/ priest_spells//;
+    s/ seen//;
+    my %flags;
+    $flags{$1}=1 while (s/ n_(\w+)//);
+    $flags{$1}=1 while (s/ name_(\w+)//);
+
+    s/^ *//;
+    s/ *$//;
+    $_="$tags{'name'} $_" if $flags{'adj'} || $flags{'adjective'};
+    $_.=" $tags{'name'}" if $flags{'suf'} || $flags{'suffix'};
+    $_=$tags{'name'} if $flags{'rpl'} || $flags{'replace'};
+    $_=$tags{'dbname'} if $db && $tags{'dbname'};
+    s/_/ /g;
+
+    # The Arena Sprint has teams, sometimes even on a place:X (ie, no name).
+    return if s/ \((?:green|purple) team\)$//;
+
+    $mons{$_} = 1;
+}
+
+for (grep /\.des$/, `git ls-files`)
+{
+    chomp;
+    open IN, "<", $_ or die "Can't read $_\n";
+    { undef local $/; $_ = <IN>; }
+    close IN;
+
+    for (/^ *(?:MONS:|KMONS: *[^=:]+[=:]) *((?:.*\\\n)*.*)/mg)
+    {
+        s/\\\n *//g;
+        vault_mon() for split m{/|,}; #/
+    }
+    for (/(?:mons *\("|kmons *\(" *[^=:]+[=:])(.+?)\)$/smg)
+    {
+        s/"\s*\.\.(?:\n:)?\s*"//g;
+        s/"[^"]*"/LUA/g;
+        s/"$//;
+        s/"[^"]*$/LUA/;
+        vault_mon() for split m{/|,}; #/
+    }
+    for (/(?:mon_set|bs\[\d+\])\s+=\s+\{([^}]+)}/sg)
+    {
+        s/^\s*"//s;
+        s/"\s*,\s*$//sg;
+        s/\\\n *//g;
+        s/--[^\n]*\n//sg;
+        s|"\s*,\s*"|/|sg;
+        vault_mon() for split m{/|,}; #/
+    }
+}
+
+$mons{"freed slave"} = 1;
+
+# Unlike genus-only monsters, these are not even up to name translations.
+delete $mons{$_} for ("base draconian", "greater demon");
+
+unless ($db)
+{
+    open IN, "<spl-summoning.cc" or die "Can't read spl-summoning.cc\n";
+    while (<IN>)
+    {
+        $mons{$1} = 1 if (/^    { MONS_[A-Z0-9_]+, "([A-Za-z0-9 ']+)" },$/);
+    }
+    close IN;
+}
+
+print "$_\n" for sort keys %mons;

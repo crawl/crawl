@@ -5,9 +5,9 @@
 %back none
 
 # idx == 0 must be invalid
-dc-dngn/dngn_unseen
+dngn/unseen
 
-%sdir dc-misc
+%sdir misc
 effect/net_trap TRAP_NET
 mask_deep_water MASK_DEEP_WATER
 mask_shallow_water MASK_SHALLOW_WATER
@@ -21,17 +21,23 @@ cursor_red CURSOR2
 cursor_green CURSOR3
 tutorial_cursor TUTORIAL_CURSOR
 %rim 1
-%sdir dc-misc/icons
+%sdir misc/icons
 heart HEART
 good_neutral GOOD_NEUTRAL
 neutral NEUTRAL
 animated_weapon ANIMATED_WEAPON
 mimic MIMIC
+inept_mimic INEPT_MIMIC
+ravenous_mimic RAVENOUS_MIMIC
+%rim 0
 poison POISON
+%rim 1
 sticky_flame STICKY_FLAME
 inner_flame INNER_FLAME
 constricted CONSTRICTED
 berserk BERSERK
+glowing GLOWING
+slowed SLOWED
 %rim 0
 fleeing FLEEING
 may_stab_brand MAY_STAB_BRAND
@@ -43,14 +49,14 @@ tried TRIED
 new_stair NEW_STAIR
 %rim 0
 
-%sdir dc-misc
+%sdir misc
 out_of_sight MESH
 out_of_range OOR_MESH
 magicmap MAGIC_MAP_MESH
 travel_exclusion TRAVEL_EXCLUSION_FG
 travel_exclusion_centre TRAVEL_EXCLUSION_CENTRE_FG
 
-%sdir dc-misc/numbers
+%sdir misc/numbers
 num0 NUM0
 num1 NUM1
 num2 NUM2
@@ -86,7 +92,7 @@ plus3 NUM_PLUS3
 plus4 NUM_PLUS4
 plus5 NUM_PLUS5
 
-%sdir dc-misc/icons
+%sdir misc/icons
 demon_pentagram1 DEMON_NUM1
 demon_pentagram2 DEMON_NUM2
 demon_pentagram3 DEMON_NUM3
@@ -94,7 +100,7 @@ demon_pentagram4 DEMON_NUM4
 demon_pentagram5 DEMON_NUM5
 %rim 0
 
-%sdir dc-misc
+%sdir misc
 ray ITEM_SLOT_SELECTED
 
 mdam_lightly_damaged MDAM_LIGHTLY_DAMAGED
@@ -102,3 +108,21 @@ mdam_moderately_damaged MDAM_MODERATELY_DAMAGED
 mdam_heavily_damaged MDAM_HEAVILY_DAMAGED
 mdam_severely_damaged MDAM_SEVERELY_DAMAGED
 mdam_almost_dead MDAM_ALMOST_DEAD
+
+travel_path_from1 TRAVEL_PATH_FROM
+travel_path_from2
+travel_path_from3
+travel_path_from4
+travel_path_from5
+travel_path_from6
+travel_path_from7
+travel_path_from8
+
+travel_path_to1 TRAVEL_PATH_TO
+travel_path_to2
+travel_path_to3
+travel_path_to4
+travel_path_to5
+travel_path_to6
+travel_path_to7
+travel_path_to8

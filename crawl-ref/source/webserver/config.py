@@ -1,5 +1,8 @@
 import logging
-from collections import OrderedDict
+try:
+    from collections import OrderedDict
+except ImportError:
+    from ordereddict import OrderedDict
 
 dgl_mode = True
 
@@ -27,6 +30,9 @@ server_id = ""
 # Disable caching of game data files
 game_data_no_cache = True
 
+# Watch socket dirs for games not started by the server
+watch_socket_dirs = False
+
 # Game configs
 # %n in paths is replaced by the current username
 games = OrderedDict([
@@ -37,7 +43,7 @@ games = OrderedDict([
         macro_path = "./rcs/",
         morgue_path = "./rcs/%n",
         inprogress_path = "./rcs/running",
-        ttyrec_path = "./rcs/ttyrecs",
+        ttyrec_path = "./rcs/ttyrecs/%n",
         socket_path = "./rcs",
         client_path = "./webserver/game_data/")),
     ("sprint-web-trunk", dict(
@@ -47,7 +53,7 @@ games = OrderedDict([
         macro_path = "./rcs/",
         morgue_path = "./rcs/%n",
         inprogress_path = "./rcs/running",
-        ttyrec_path = "./rcs/ttyrecs",
+        ttyrec_path = "./rcs/ttyrecs/%n",
         socket_path = "./rcs",
         client_path = "./webserver/game_data/",
         options = ["-sprint"])),
@@ -58,7 +64,7 @@ games = OrderedDict([
         macro_path = "./rcs/",
         morgue_path = "./rcs/%n",
         inprogress_path = "./rcs/running",
-        ttyrec_path = "./rcs/ttyrecs",
+        ttyrec_path = "./rcs/ttyrecs/%n",
         socket_path = "./rcs",
         client_path = "./webserver/game_data/",
         options = ["-zotdef"])),
@@ -69,7 +75,7 @@ games = OrderedDict([
         macro_path = "./rcs/",
         morgue_path = "./rcs/%n",
         inprogress_path = "./rcs/running",
-        ttyrec_path = "./rcs/ttyrecs",
+        ttyrec_path = "./rcs/ttyrecs/%n",
         socket_path = "./rcs",
         client_path = "./webserver/game_data/",
         options = ["-tutorial"])),
@@ -89,7 +95,7 @@ max_connections = 100
 # Script to initialize a user, e.g. make sure the paths
 # and the rc file exist. This is not done by the server
 # at the moment.
-init_player_program = "/bin/echo"
+init_player_program = "./util/webtiles-init-player.sh"
 
 ssl_options = None # No SSL
 #ssl_options = {
@@ -111,10 +117,22 @@ kill_timeout = 10 # Seconds until crawl is killed after HUP is sent
 nick_regex = r"^[a-zA-Z0-9]{3,20}$"
 max_passwd_length = 20
 
+# crypt() algorithm, e.g. "1" for MD5 or "6" for SHA-512; see crypt(3). If
+# false, use traditional DES (but then only the first eight characters of the
+# password are significant). If set to "broken", use traditional DES with
+# the password itself as the salt; this is necessary for compatibility with
+# dgamelaunch, but should be avoided if possible because it leaks the first
+# two characters of the password's plaintext.
+crypt_algorithm = "broken"
+
+# The length of the salt string to use. If crypt_algorithm is false, this
+# setting is ignored and the salt is two characters.
+crypt_salt_length = 16
+
 login_token_lifetime = 7 # Days
 
-uid = None  # If this is not None, the server will setuid to that id after
-gid = None  # binding its sockets.
+uid = None  # If this is not None, the server will setuid to that (numeric) id
+gid = None  # after binding its sockets.
 
 umask = None # e.g. 0077
 

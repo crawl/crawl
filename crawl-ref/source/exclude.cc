@@ -25,22 +25,25 @@
 #include "hints.h"
 #include "view.h"
 
+// defined in dgn-overview.cc
+extern set<pair<string, level_id> > auto_unique_annotations;
+
 static bool _mon_needs_auto_exclude(const monster* mon, bool sleepy = false)
 {
     if (mons_is_stationary(mon))
-        return (!sleepy);
+        return !sleepy;
 
-    // Auto exclusion only makes sense if the monster is still asleep.
-    return (mon->asleep());
+    // Auto exclusion only makes sense if the monster is still asleep or if it
+    // is lurking (discovered mimics).
+    return (mon->asleep() || mons_is_lurking(mon));
 }
 
 // Check whether a given monster is listed in the auto_exclude option.
 static bool _need_auto_exclude(const monster* mon, bool sleepy = false)
 {
     // This only works if the name is lowercased.
-    std::string name = mon->name(DESC_BASENAME,
-                                 mons_is_stationary(mon)
-                                     && testbits(mon->flags, MF_SEEN));
+    string name = mon->name(DESC_BASENAME, mons_is_stationary(mon)
+                                           && testbits(mon->flags, MF_SEEN));
     lowercase(name);
 
     for (unsigned i = 0; i < Options.auto_exclude.size(); ++i)
@@ -49,10 +52,10 @@ static bool _need_auto_exclude(const monster* mon, bool sleepy = false)
             && (mon->attitude == ATT_HOSTILE
                 || mon->type == MONS_HYPERACTIVE_BALLISTOMYCETE))
         {
-            return (true);
+            return true;
         }
 
-    return (false);
+    return false;
 }
 
 // Nightstalker reduces LOS, so reducing the maximum exclusion radius
@@ -81,6 +84,8 @@ void set_auto_exclude(const monster* mon)
         int rad = _get_full_exclusion_radius();
         if (mon->type == MONS_HYPERACTIVE_BALLISTOMYCETE)
             rad = 2;
+        else if (mons_is_mimic(mon->type))
+            rad = 1;
         set_exclude(mon->pos(), rad, true);
         // FIXME: If this happens for several monsters in the same turn
         //        (as is possible for some vaults), this could be really
@@ -111,7 +116,7 @@ void remove_auto_exclude(const monster* mon, bool sleepy)
 
 static opacity_type _feat_opacity(dungeon_feature_type feat)
 {
-    return (feat_is_opaque(feat) ? OPC_OPAQUE : OPC_CLEAR);
+    return feat_is_opaque(feat) ? OPC_OPAQUE : OPC_CLEAR;
 }
 
 // A cell is considered clear unless the player knows it's
@@ -141,7 +146,7 @@ static opacity_excl opc_excl;
 // skip LOS calculation in that case anyway since it doesn't
 // currently short-cut for small bounds. So radius 0, 1 are special-cased.
 travel_exclude::travel_exclude(const coord_def &p, int r,
-                               bool autoexcl, std::string dsc, bool vaultexcl)
+                               bool autoexcl, string dsc, bool vaultexcl)
     : pos(p), radius(r),
       los(los_def(p, opc_excl, circle_def(r, C_ROUND))),
       uptodate(false), autoex(autoexcl), desc(dsc), vault(vaultexcl)
@@ -182,7 +187,7 @@ bool travel_exclude::affects(const coord_def& p) const
     else if (radius == 1)
         return ((p - pos).rdist() <= 1);
     else
-        return (los.see_cell(p));
+        return los.see_cell(p);
 }
 
 bool travel_exclude::in_bounds(const coord_def &p) const
@@ -224,7 +229,7 @@ void exclude_set::add_exclude(travel_exclude &ex)
 }
 
 void exclude_set::add_exclude(const coord_def &p, int radius,
-                              bool autoexcl, std::string desc,
+                              bool autoexcl, string desc,
                               bool vaultexcl)
 {
     travel_exclude ex(p, radius, autoexcl, desc, vaultexcl);
@@ -289,9 +294,9 @@ travel_exclude* exclude_set::get_exclude_root(const coord_def &p)
     exclude_set::iterator it = exclude_roots.find(p);
 
     if (it != exclude_roots.end())
-        return (&(it->second));
+        return &it->second;
 
-    return (NULL);
+    return NULL;
 }
 
 size_t exclude_set::size() const
@@ -347,7 +352,7 @@ void init_exclusion_los()
  * Only exclusions that might have one of the changed points
  * in view are updated.
  */
-void update_exclusion_los(std::vector<coord_def> changed)
+void update_exclusion_los(vector<coord_def> changed)
 {
     if (changed.empty())
         return;
@@ -365,7 +370,7 @@ bool is_excluded(const coord_def &p, const exclude_set &exc)
 
 bool is_exclude_root(const coord_def &p)
 {
-    return (curr_excludes.get_exclude_root(p));
+    return curr_excludes.get_exclude_root(p);
 }
 
 int get_exclusion_radius(const coord_def &p)
@@ -380,7 +385,7 @@ int get_exclusion_radius(const coord_def &p)
     return 0;
 }
 
-std::string get_exclusion_desc(const coord_def &p)
+string get_exclusion_desc(const coord_def &p)
 {
     if (travel_exclude *exc = curr_excludes.get_exclude_root(p))
         return exc->desc;
@@ -456,9 +461,9 @@ void clear_excludes()
 
 static void _exclude_gate(const coord_def &p, bool del = false)
 {
-    std::set<coord_def> all_doors;
+    set<coord_def> all_doors;
     find_connected_identical(p, grd(p), all_doors);
-    for (std::set<coord_def>::const_iterator dc = all_doors.begin();
+    for (set<coord_def>::const_iterator dc = all_doors.begin();
          dc != all_doors.end(); ++dc)
     {
         if (del)
@@ -522,7 +527,7 @@ void set_exclude(const coord_def &p, int radius, bool autoexcl, bool vaultexcl,
     }
     else
     {
-        std::string desc = "";
+        string desc = "";
         if (!defer_updates)
         {
             // Don't list a monster in the exclusion annotation if the
@@ -586,9 +591,9 @@ void maybe_remove_autoexclusion(const coord_def &p)
 }
 
 // Lists all exclusions on the current level.
-std::string exclude_set::get_exclusion_desc()
+string exclude_set::get_exclusion_desc()
 {
-    std::vector<std::string> desc;
+    vector<string> desc;
     int count_other = 0;
     for (exclmap::iterator it = exclude_roots.begin();
          it != exclude_roots.end(); ++it)
@@ -597,6 +602,12 @@ std::string exclude_set::get_exclusion_desc()
 
         // Don't count cloud exclusions.
         if (strstr(ex.desc.c_str(), "cloud"))
+            continue;
+
+        // Don't duplicate if there's already an annotation from unique monsters.
+        set<pair<string, level_id> >::iterator ma
+            = auto_unique_annotations.find(pair<string, level_id>(ex.desc, level_id::current()));
+        if (ma != auto_unique_annotations.end())
             continue;
 
         if (ex.desc != "")
@@ -608,14 +619,14 @@ std::string exclude_set::get_exclusion_desc()
     if (desc.size() > 1)
     {
         // Combine identical descriptions.
-        std::sort(desc.begin(), desc.end());
-        std::vector<std::string> help = desc;
+        sort(desc.begin(), desc.end());
+        vector<string> help = desc;
         desc.clear();
-        std::string old_desc = "";
+        string old_desc = "";
         int count = 1;
         for (unsigned int i = 0; i < help.size(); ++i)
         {
-            std::string tmp = help[i];
+            string tmp = help[i];
             if (i == 0)
                 old_desc = tmp;
             else
@@ -657,7 +668,7 @@ std::string exclude_set::get_exclusion_desc()
     else if (desc.empty())
         return "";
 
-    std::string desc_str = "";
+    string desc_str = "";
     if (desc.size() > 1 || count_other == 0)
     {
         snprintf(info, INFO_SIZE, "exclusion%s: ",
@@ -698,7 +709,7 @@ void unmarshallExcludes(reader& inf, int minorVersion, exclude_set &excludes)
             const coord_def c      = unmarshallCoord(inf);
             const int radius       = unmarshallShort(inf);
             const bool autoexcl    = unmarshallBoolean(inf);
-            const std::string desc = unmarshallString(inf);
+            const string desc      = unmarshallString(inf);
             excludes.add_exclude(c, radius, autoexcl, desc);
         }
     }

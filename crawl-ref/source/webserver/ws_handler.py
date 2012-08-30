@@ -1,4 +1,4 @@
-from tornado.escape import json_encode, json_decode, xhtml_escape, to_unicode
+from tornado.escape import json_encode, json_decode, to_unicode
 import tornado.websocket
 import tornado.ioloop
 import tornado.template
@@ -35,6 +35,11 @@ def update_all_lobbys(game):
     for socket in list(sockets):
         if socket.is_in_lobby():
             socket.send_message("lobby_entry", **lobby_entry)
+def remove_in_lobbys(process):
+    for socket in list(sockets):
+        if socket.is_in_lobby():
+            socket.send_message("lobby_remove", id=process.id)
+
 
 def write_dgl_status_file():
     f = None
@@ -75,25 +80,30 @@ def find_user_sockets(username):
             yield socket
 
 def find_running_game(charname, start):
-    for socket in list(sockets):
-        if (socket.is_running() and
-            socket.process.where.get("name") == charname and
-            socket.process.where.get("start") == start):
-            return socket.process
+    from process_handler import processes
+    for process in processes.values():
+        if (process.where.get("name") == charname and
+            process.where.get("start") == start):
+            return process
     return None
 
-milestone_file_tailer = None
+milestone_file_tailers = []
 def start_reading_milestones():
     if config.milestone_file is None: return
 
-    global milestone_file_tailer
-    milestone_file_tailer = FileTailer(config.milestone_file, handle_new_milestone)
+    if isinstance(config.milestone_file, basestring):
+        files = [config.milestone_file]
+    else:
+        files = config.milestone_file
+
+    for f in files:
+        milestone_file_tailers.append(FileTailer(f, handle_new_milestone))
 
 def handle_new_milestone(line):
     data = parse_where_data(line)
     if "name" not in data: return
     game = find_running_game(data.get("name"), data.get("start"))
-    game.log_milestone(data)
+    if game: game.log_milestone(data)
 
 class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def __init__(self, app, req, **kwargs):
@@ -129,6 +139,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             "set_rc": self.set_rc,
             }
 
+    client_closed = property(lambda self: (not self.ws_connection) or self.ws_connection.client_terminated)
+
     def _process_log_msg(self, msg, kwargs):
         return "#%-5s %s" % (self.id, msg), kwargs
 
@@ -137,6 +149,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def __eq__(self, other):
         return self.id == other.id
+
+    def allow_draft76(self):
+        return True
 
     def open(self):
         self.logger.info("Socket opened from ip %s (fd%s).",
@@ -169,9 +184,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def send_lobby(self):
         self.send_message("lobby_clear")
-        for socket in sockets:
-            if socket.is_running():
-                self.send_message("lobby_entry", **socket.process.lobby_entry())
+        from process_handler import processes
+        for process in processes.values():
+            self.send_message("lobby_entry", **process.lobby_entry())
         self.send_message("lobby_complete")
 
     def send_game_links(self):
@@ -201,7 +216,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 self.logger.info("Stopping crawl after idle time limit.")
                 self.process.stop()
 
-        if not self.client_terminated:
+        if not self.client_closed:
             self.reset_timeout()
 
     def start_crawl(self, game_id):
@@ -229,14 +244,16 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.process = process_handler.DGLLessCrawlProcessHandler(self.logger, self.ioloop)
 
         self.process.end_callback = self._on_crawl_end
-        self.process.add_watcher(self, hide=True)
+        self.process.add_watcher(self)
         try:
             self.process.start()
-        except:
+        except Exception:
             self.logger.warning("Exception starting process!", exc_info=True)
             self.process = None
             self.send_message("go_lobby")
         else:
+            if self.process is None: return # Can happen if the process creation fails
+
             self.send_message("game_started")
 
             if config.dgl_mode:
@@ -248,12 +265,10 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def _on_crawl_end(self):
         if config.dgl_mode:
-            for socket in list(sockets):
-                if socket.is_in_lobby():
-                    socket.send_message("lobby_remove", id=self.process.id)
+            remove_in_lobbys(self.process)
         self.process = None
 
-        if self.client_terminated:
+        if self.client_closed:
             sockets.remove(self)
         else:
             if shutting_down:
@@ -287,7 +302,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.send_message("go_lobby")
 
     def shutdown(self):
-        if not self.client_terminated:
+        if not self.client_closed:
             msg = self.render_string("shutdown.html", game=self)
             self.send_message("close", reason = msg)
             self.close()
@@ -352,11 +367,13 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.received_pong = True
 
     def watch(self, username):
-        procs = [socket.process for socket in find_user_sockets(username)
-                 if socket.is_running()]
+        from process_handler import processes
+        procs = [process for process in processes.values()
+                 if process.username.lower() == username.lower()]
         if len(procs) >= 1:
             process = procs[0]
-            self.logger.info("Started watching %s.", process.username)
+            self.logger.info("Started watching %s (P%s).", process.username,
+                             process.id)
             self.watched_game = process
             process.add_watcher(self)
             self.send_message("watching_started")
@@ -369,8 +386,6 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                               content = 'You need to log in to send messages!')
             return
 
-        chat_msg = ("<span class='chat_sender'>%s</span>: <span class='chat_msg'>%s</span>" %
-                    (self.username, xhtml_escape(text)))
         receiver = None
         if self.process:
             receiver = self.process
@@ -378,7 +393,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             receiver = self.watched_game
 
         if receiver:
-            receiver.send_to_all("chat", content = chat_msg)
+            receiver.handle_chat_message(self.username, text)
 
     def register(self, username, password, email):
         error = register_user(username, password, email)
@@ -423,10 +438,10 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                     handler(**obj)
                 elif self.process:
                     self.process.handle_input(message)
-                else:
+                elif not self.watched_game:
                     self.logger.warning("Didn't know how to handle msg: %s",
                                         obj["msg"])
-            except:
+            except Exception:
                 self.logger.warning("Error while handling JSON message!",
                                     exc_info=True)
 
@@ -438,7 +453,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def write_message(self, msg):
         try:
             msg = to_unicode(msg)
-            if not self.client_terminated:
+            if not self.client_closed:
                 super(CrawlWebSocket, self).write_message(msg)
         except:
             self.logger.warning("Exception trying to send message.", exc_info = True)
@@ -447,7 +462,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def send_message(self, msg, **data):
         """Sends a JSON message to the client."""
         data["msg"] = msg
-        if not self.client_terminated:
+        if not self.client_closed:
             self.write_message(json_encode(data))
 
     def on_close(self):

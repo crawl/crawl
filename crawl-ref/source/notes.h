@@ -27,8 +27,8 @@ enum NOTE_TYPES
     NOTE_GET_GOD,               /* needs: god id */
     NOTE_GOD_GIFT,              /* needs: god id */
     NOTE_GOD_POWER,             /* needs: god id, idx */
-    NOTE_GET_MUTATION,          /* needs: mutation idx */
-    NOTE_LOSE_MUTATION,         /* needs: mutation idx */
+    NOTE_GET_MUTATION,          /* needs: mutation idx, reason (string) */
+    NOTE_LOSE_MUTATION,         /* needs: mutation idx, reason (string) */
     NOTE_ID_ITEM,               /* needs: item name (string) */
     NOTE_GET_ITEM,              /* needs: item name (string) */
     NOTE_GAIN_SKILL,            /* needs: skill id, level */
@@ -61,20 +61,19 @@ struct Note
           const char* d = 0);
     void save(writer& outf) const;
     void load(reader& inf);
-    std::string describe(bool when = true, bool where = true,
-                          bool what = true) const;
+    string describe(bool when = true, bool where = true, bool what = true) const;
     void check_milestone() const;
 
     NOTE_TYPES type;
     int first, second;
-    long turn;
+    int turn;
     unsigned short packed_place;
-    std::string place_abbrev;
-    std::string name;
-    std::string desc;
+
+    string name;
+    string desc;
 };
 
-extern std::vector<Note> note_list;
+extern vector<Note> note_list;
 void activate_notes(bool active);
 bool notes_are_active();
 void take_note(const Note& note, bool force = false);

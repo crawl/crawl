@@ -20,6 +20,7 @@ enum status_type
     STATUS_SICK,
     STATUS_SPEED,
     STATUS_CLINGING,
+    STATUS_SAGE,
     STATUS_STR_ZERO,
     STATUS_INT_ZERO,
     STATUS_DEX_ZERO,
@@ -29,14 +30,17 @@ enum status_type
     STATUS_CONSTRICTED,
     STATUS_MANUAL,
     STATUS_AUGMENTED,
+    STATUS_SUPPRESSED,
+    STATUS_TERRAIN,
+    STATUS_SILENCE,
 };
 
 struct status_info
 {
     int light_colour;
-    std::string light_text; // status light
-    std::string short_text; // @: line
-    std::string long_text;  // @ message
+    string light_text; // status light
+    string short_text; // @: line
+    string long_text;  // @ message
 };
 
 // status should be a duration or status_type

@@ -133,6 +133,10 @@ unseen Holy Word cast
 
 @The_something@ calls on the powers of Heaven!
 %%%%
+Orb of Destruction orb spider cast
+
+@The_monster@ weaves a glowing orb of energy.
+%%%%
 Orb of Destruction cast
 
 @The_monster@ conjures a glowing orb.
@@ -140,6 +144,10 @@ Orb of Destruction cast
 @The_monster@ conjures an orb of pure magic.
 
 @The_monster@ launches a ball of destructive magic.
+%%%%
+Sticky Flame cast
+
+@The_monster@ sprays @target@ with burning goo.
 %%%%
 Sunray cast
 
@@ -161,14 +169,6 @@ unseen Summon Holies cast
 
 Holy kin are called forth!
 %%%%
-Summon Greater Holy cast
-
-@The_monster@ summons a powerful ally!
-%%%%
-unseen Summon Greater Holy cast
-
-A powerful holy being is summoned!
-%%%%
 Holy Flames cast
 
 @The_monster@ calls forth blessed flames!
@@ -176,19 +176,6 @@ Holy Flames cast
 unseen Holy Flames cast
 
 Blessed flames are called forth!
-%%%%
-Tukima's Ball
-
-@The_monster@ hums a lilting melody.
-
-@The_monster@ sings a lively tune!
-
-%%%%
-unseen Tukima's Ball
-
-You hear someone hum a lilting melody!
-
-You hear someone hum a lively tune!
 %%%%
 Silver Blast cast
 
@@ -310,39 +297,6 @@ You hear an invocation said in the dwarven tongue.
 You see a slight glow in a spot of thin air.
 
 Someone prays in loud words.
-
-%%%%
-Terpsichore cast targeted
-
-@The_monster@ looks at @target@ while chanting.
-
-@The_monster@ looks at @target@ and waves @possessive@ arms gracefully.
-
-@The_monster@ casts a spell at @target@.
-
-%%%%
-Terpsichore cast
-
-@The_monster@ weaves a pattern with her spectral knives.
-
-@The_monster@ jumps to perform a pas de chat.
-
-@The_monster@ leaps into a pas de poisson!
-
-@The_monster@ performs a soubresaut!
-
-%%%%
-unseen Terpsichore cast
-
-You hear spectral shoes clatter against the floor.
-
-%%%%
-Mennas cast
-
-@The_monster@ casts a spell.
-
-@The_monster@ gestures silently.
-
 %%%%
 # Roxanne can't gesture or point either.
 Roxanne cast
@@ -361,6 +315,16 @@ Confuse Rupert cast
 
 # Hrm, this could use more variables to sound acceptable.
 @The_monster@ yells loudly, causing @target@ to lose all wits.
+%%%%
+Ensnare Arachne cast
+
+@The_monster@ points her staff at @target@, shooting a whitish beam.
+
+@The_monster@'s staff shoots out a whitish beam.
+%%%%
+unseen Ensnare Arachne cast
+
+A whitish beam shoots out from seemingly nowhere.
 %%%%
 ########################################################################
 # Individual monsters

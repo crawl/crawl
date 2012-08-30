@@ -20,9 +20,8 @@ CHANCE: 30% (Orc)
 CHANCE: 40% (Elf)
 CHANCE: 20% (Shoals)
 CHANCE: 20% (Snake)
-CHANCE: 40% (Vault)
+CHANCE: 40% (Vaults)
 CHANCE: 20% (Forest)
-CHANCE: 20% (Spider)
 CHANCE: 30% (Dwarf)
 CHANCE: 0
 {{
@@ -90,4 +89,137 @@ MAP
 ddd
 dOd
 ddd
+ENDMAP
+
+#####################################################
+# Custom venom shop Vault
+NAME:    guppyfry_shop_venom
+TAGS:    no_monster_gen
+DEPTH:   D:4-
+MONS:    ball python / adder / water moccasin, place:Snake:1
+KFEAT:   v = general shop type:Serpentskin suffix:Sales count:7 ; \
+         w:25 potion of poison | w:5 potion of strong poison | \
+         w:8 blowgun | w:8 needle ego:poisoned | w:4 needle ego:curare | \
+         w:14 arrow ego:poisoned | w:14 dart ego:poisoned | \
+         w:3 ring of poison resistance | w:6 randbook disc:poison | \
+         w:2 rod of venom | w:2 staff of poison | w:4 any weapon ego:venom | \
+         w:4 any armour ego:poison_resistance | w:1 swamp dragon hide
+SUBST:   ? = 2..
+: if you.absdepth() < 13 then
+SUBST:   2 = 1
+: end
+MAP
+xxxxx
+x???x
++?v?+
+x???x
+xxxxx
+ENDMAP
+
+#####################################################
+# Custom earth shop Vault
+NAME:    guppyfry_shop_earth
+TAGS:    no_monster_gen mini_float no_rtele_into
+DEPTH:   D:6-
+KMONS:   1 = gargoyle / boulder beetle / boring beetle / earth elemental / clay golem
+KMONS:   2 = stone giant / earth elemental / crystal golem / iron golem / stone golem
+KMONS:   3 = boring beetle
+ITEM:    stone, wand of digging
+KFEAT:   v = general shop type:Pet suffix:Rocks count:7 ; \
+         w:15 stone | w:15 large rock | \
+         w:8 sling | w:8 sling bullet | w:4 sling bullet ego:steel| \
+         w:14 stone of earth elementals | w:7 crystal ball of energy | \
+         w:4 wand of digging | w:9 randbook disc:earth | \
+         w:4 staff of earth | w:4 wand of disintegration | w:1 crystal plate armour
+SUBST:   ? = 2d.
+SUBST:   - = 3e.
+: if you.absdepth() < 15 then
+SUBST:   2 = 1
+: end
+MAP
+.......
+.xxxxx.
+.x???x.
+-m?v?m-
+.x???x.
+.xxxxx.
+.......
+ENDMAP
+
+#####################################################
+# Custom blood shop Vault
+NAME:    guppyfry_shop_blood
+TAGS:    no_monster_gen
+DEPTH:   D:12-
+KMONS:   1 = vampire / bat
+KMONS:   2 = vampire / vampire mage / vampire knight
+ITEM:    potion of blood
+KFEAT:   v = general shop type:Blood suffix:Bar count:7 ; \
+         w:60 potion of blood | w:20 potion of coagulated blood | \
+         w:10 any weapon ego:vampiricism | w:9 randbook disc:necromancy | w:1 book of annihilations
+SUBST:   ? = 2d.Y
+: if you.absdepth() < 18 then
+SUBST:   2 = 1
+: end
+MAP
+xxxxx
+x???x
++?v?+
+x???x
+xxxxx
+ENDMAP
+
+#####################################################
+# Custom fishing shop Vault
+NAME:    guppyfry_shop_fishing
+TAGS:    no_monster_gen mini_float
+DEPTH:   D:4-
+KMONS:   1 = giant goldfish / big fish
+KMONS:   2 = place:Shoals:1
+KFEAT:   v = general shop type:Fishing suffix:Supplies count:7 ; \
+         w:10 big fish corpse | w:10 giant goldfish corpse | \
+         w:10 shark corpse | w:10 jellyfish corpse | w:10 snapping turtle corpse | \
+         w:10 throwing net | w:5 javelin | w:5 spear | w:5 trident | \
+         w:1 javelin ego:penetration | w:1 spear ego:electrocution | \
+         w:1 trident ego:electrocution | w:1 demon trident | \
+         w:8 potion of levitation | w:5 ring of levitation
+SUBST:   ? = 2Ww
+: if you.absdepth() < 8 then
+SUBST:   2 = 1
+: end
+MAP
+.WWW.
+W???W
+W?v?W
+W???W
+.WWW.
+ENDMAP
+
+#####################################################
+# Off-brand ammo
+NAME:  nicolae_offbrand_ammo
+DEPTH:  D:5-, Orc
+WEIGHT: 1
+TAGS:  no_hmirror no_vmirror mini_float
+KFEAT: S = general shop type:Off-Brand suffix:Ammunition count:7 ; \
+       large rock ego:returning q:3 | large rock ego:exploding q:3 | \
+       large rock ego:chaos q:3 | large rock ego:poisoned q:3 | \
+       large rock ego:dispersal q:3 | large rock ego:flame q:3 | \
+       large rock ego:ice q:3 | stone ego:flame | stone ego:returning | \
+       stone ego:exploding | stone ego:dispersal | stone ego:poisoned | \
+       stone ego:chaos | stone ego:ice | javelin ego:dispersal | \
+       javelin ego:exploding | javelin ego:chaos | arrow ego:silver | \
+       arrow ego:steel | arrow ego:exploding | arrow ego:returning | \
+       arrow ego:penetration | arrow ego:chaos | bolt ego:exploding | \
+       bolt ego:returning | bolt ego:dispersal | bolt ego:chaos | \
+       sling bullet ego:dispersal | sling bullet ego:chaos | \
+       sling bullet ego:returning
+MAP
+.......
+.lllll.
+.lG.Gl.
+.l.S.l.
+.lG.Gl.
+.ll.ll.
+.......
 ENDMAP

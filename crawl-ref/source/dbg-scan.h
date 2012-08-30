@@ -8,5 +8,6 @@
 
 void debug_item_scan();
 void debug_mons_scan();
+void check_map_validity();
 
 #endif

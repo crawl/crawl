@@ -51,6 +51,13 @@
 #    layout: graveyard
 #    colour: darkgrey, lightgrey
 #
+# The Roulette of Golubria
+#    threat: distortion, tloc-themed monsters, Abyss monsters
+#    loot:   tloc-themed consumables / rings / books, abyss escape aides, cloaks
+#    xp:     20000+
+#    layout: large maw shape with roulette through teeth, old-abyss-esque innards
+#    colour: green floor, green/rarely cyan walls
+#
 ## Random maps
 #
 # Cloud Mage's Chambers
@@ -77,16 +84,12 @@
 # *MUST* make these look awesome in tiles, too.
 #
 # Overall todo: random monster lists for each vault (shadows for Wucad Mu)
+# (must have them or Shadow Creatures won't work)
 #
 ##
 
 {{
 function wizlab_portal (e)
-    -- Flavour could use some improvement.
-    local desc_long = "This portal has been left open by a careless wizard. " ..
-                      "It might lead to their secret laboratory, but beware!" ..
-                      " Surely it will be guarded by magical traps and "      ..
-                      "terrible monsters. It seems to be slowly fading away."
     local timeout_turns_long = crawl.random_range(2700, 3300)
     local timeout_turns_short = timeout_turns_long/10
     local messager =
@@ -105,11 +108,8 @@ function wizlab_portal (e)
       timed_marker {
         disappear = "The portal disappears completely.",
         desc = "magical portal",
-        desc_long = desc_long,
         entity = 'portal',
-        dst = 'wizlab',
-        dstname_abbrev = "WizLab",
-        dstorigin = "in a Wizard's Laboratory",
+        dst = 'WizLab',
         overview = "magical portal",
         turns = timeout_turns_long,
         turns_short = timeout_turns_short,
@@ -120,27 +120,19 @@ function wizlab_portal (e)
     e.tile("O = no_random dngn_portal_wizard_lab")
 end
 
-function wizlab_feat_descs()
-end
-
-dgn.set_lt_callback("wizlab", "wizlab_feat_descs")
-
 -- Destinations:
 function wizlab_setup (e, wizlab_desc)
     e.kfeat("< = exit_portal_vault")
     e.tile("< = no_random dngn_portal_wizard_lab")
     -- This is so that the note shows up properly.
-    dgn.set_level_type_origin("in " .. wizlab_desc)
-    dgn.set_feature_desc_short("gate leading back to the Dungeon",
-                               "portal leading out of here")
+    e.set_feature_name("exit_portal_vault", "portal leading out of here")
     if wizlab_desc ~= "Eringya's Formal Garden" then
-      dgn.set_feature_desc_short("empty arch of ancient stone",
-                               "empty arch of stone")
+      e.set_feature_name("stone_arch", "empty arch of stone")
     end
 end
 
 function wizlab_milestone (e, wizlab_desc)
-    crawl.mark_milestone("br.enter", "entered " .. wizlab_desc .. ".", true)
+    crawl.mark_milestone("br.enter", "entered " .. wizlab_desc .. ".", "parent")
 end
 
 function tukima_machine (data, triggerable, triggerer, marker, ev)
@@ -250,7 +242,9 @@ end
 
 local function spawn_zombie (x, y, spec)
     dgn.terrain_changed(x, y, "floor", false, false, false)
-    return dgn.create_monster(x, y, spec)
+    local mons = dgn.create_monster(x, y, spec)
+    mons.set_prop("zonguldrok", 1)
+    return mons
 end
 
 function wizlab_zonguldrok_spawn_zombies(data, triggerable, triggerer,
@@ -277,8 +271,8 @@ function wizlab_zonguldrok_killed_zombie(data, triggerable, triggerer,
         return
     end
 
-    local mons = dgn.mons_from_index(ev:arg1())
-    if not string.find(mons.full_name, "zombie") then
+    local mons = dgn.mons_from_mid(ev:arg1())
+    if not mons.has_prop("zonguldrok") then
         return
     end
 
@@ -288,6 +282,11 @@ function wizlab_zonguldrok_killed_zombie(data, triggerable, triggerer,
         dgn.tile_feat_changed(x, y, nil)
         dgn.terrain_changed(x, y, "closed_door", false, false, false)
         data.door_appeared = true
+        if you.see_cell(x, y) then
+            crawl.mpr("A door appears!")
+        else
+            crawl.mpr("The walls vibrate.")
+        end
     end
 end
 
@@ -359,6 +358,13 @@ function wizlab_wucad_summon_monks(data, triggerable, triggerer, marker, ev)
     return
   end
 
+  -- For now, no spawning during Step From Time; perhaps monks should
+  -- continue to appear, just more slowly. If so, the circle_iterator below
+  -- needs a different centre from (0,0).
+  if you.pos() == 0 then
+    return
+  end
+
   local msp = "human name:monk n_suf col:white hd:10 dur:2 sum:shadow_creatures" ..
             " nas:old_memories tile:mons_human_monk seen / rock troll name:monk n_suf"..
             " dur:2 seen sum:shadow_creatures nas:old_memories tile:mons_rock_troll_monk" ..
@@ -391,9 +397,21 @@ function callback.wizlab_wucad_wucad_died(data, triggerable,
   crawl.mpr("The shadows inhabiting this place fade forever.", "talk_visual")
 end
 
+function teleporter_golubria_switch_fn(data, triggerable, triggerer, marker, ev)
+  local position = dgn.point(marker:pos())
+  my_slaves = dgn.find_marker_positions_by_prop("teleport_spot",
+                                                data.teleport_spot)
+
+  if you.teleport_to(my_slaves[1].x, my_slaves[1].y, true) then
+    crawl.mpr("Your surroundings suddenly seem different!")
+  else
+    crawl.mpr("There is a strange hissing noise.")
+  end
+end
+
 }}
 
-default-depth: Vault:2-7, Crypt, D:22-27, Elf:3-5
+default-depth: Vaults:2-7, Crypt, D:22-27, Elf:3-5
 
 ###############################################################################
 # Portal entrances.
@@ -599,7 +617,7 @@ ENDMAP
 #
 ###############################################################################
 
-default-depth:
+default-depth: WizLab
 
 ###############################################################################
 # And arrivals!
@@ -608,12 +626,12 @@ default-depth:
 #
 NAME:       wizlab_tukima
 ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
 MONS:       dancing weapon
 KFEAT:      M = granite_statue
 TILE:       M = dngn_machine_tukima
 MARKER:     M = lua:props_marker {veto_fragmentation="veto", veto_disintegrate="veto", \
-                                  slaved_to="tukima"}
+                                  veto_shatter="veto", slaved_to="tukima"}
 {{
 local tukima_marker = TriggerableFunction:new {
     func = "tukima_machine",
@@ -669,22 +687,11 @@ KMONS:      9 = ice statue col:silver spells:blink_other;blink_other;blink_other
                     name_replace name_descriptor hd:13 hp:120 \
                     tile:mons_statue_guardian
 KITEM:      9 = scroll of acquirement
-:           dgn.set_feature_desc_short("translucent rock wall",
-:                                      "crystal clear mirror")
-:           dgn.set_feature_desc_long("translucent rock wall",
-:                                     "A glistening mirror, reflecting everything around it.\n")
-:           dgn.set_feature_desc_short("granite statue", "strange machine")
-:           dgn.set_feature_desc_long("granite statue", "A mechanical contraption," ..
-:                                     " all hisses and pops. It is highly reflective.\n")
-:           dgn.set_feature_desc_short("dry fountain", "glistening fountain")
-:           dgn.set_feature_desc_long("dry fountain", "A pristine fountain. " ..
-:                                     "The only thing it lacks is water.\n")
-:           dgn.set_feature_desc_short("stone wall", "black marble wall")
-:           dgn.set_feature_desc_long("stone wall", "The marble glistens and shines. It certainly " ..
-:                                     "is beautiful!\n")
-:           dgn.set_feature_desc_short("Floor", "marble floor")
-:           dgn.set_feature_desc_long("Floor", "Where the walls are black marble, the floor is " ..
-:                                     "a white and silver, with shades of pink here and there.\n")
+:           set_feature_name("clear_rock_wall", "crystal clear mirror")
+:           set_feature_name("granite_statue", "strange machine")
+:           set_feature_name("dry_fountain_blue", "glistening fountain")
+:           set_feature_name("stone_wall", "black marble wall")
+:           set_feature_name("floor", "marble floor")
 :           set_random_mon_list("dancing weapon")
 :           wizlab_setup(_G, "Tukima's Studio")
 epilogue{{
@@ -738,7 +745,7 @@ ENDMAP
 #       on their own - and these could be aggressive ballistos, too!
 NAME:       wizlab_eringya
 ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
 MONS:       centaur col:green, centaur warrior col:lightgreen
 MONS:       oklob plant
 MONS:       stone golem name:vine_covered name_adjective col:lightgreen \
@@ -753,7 +760,7 @@ MARKER:     A = feat:stone_arch
 TILE:       c = wall_brick_vines
 LROCKTILE:  wall_brick_vines
 LFLOORTILE: floor_grass
-ITEM:       any fixed theme book, any fixed level book, any magical staff
+ITEM:       any fixed theme book, any fixed level book, any magical staff / any rod w:2
 {{
 
 local grow_marker = TriggerableFunction:new { func = "wizlab_eringya_grow",
@@ -766,18 +773,10 @@ lua_marker("_", grow_marker)
 }}
 :           set_border_fill_type("stone_wall")
 :           wizlab_setup(_G, "Eringya's Formal Garden")
-:           dgn.set_feature_desc_short("empty arch of ancient stone",
-:                                      "rose-covered archway")
-:           dgn.set_feature_desc_long("empty arch of ancient stone",
-:                                "The roses look beautiful!\n")
-:           dgn.set_feature_desc_short("granite statue", "vine-covered statue")
-:           dgn.set_feature_desc_long("granite statue", "It looks almost like a " ..
-:                                     "monster made entirely from vines.\n")
-:           dgn.set_feature_desc_short("stone wall", "crumbing stone wall")
-:           dgn.set_feature_desc_long("stone wall", "It looks ancient.\n")
-:           dgn.set_feature_desc_short("Floor", "grass-covered ground")
-:           dgn.set_feature_desc_long("Floor", "Strewn with leaves and twigs that" ..
-:                       " crunch loudly underfoot, the grass is crisp and fresh.\n")
+:           set_feature_name("stone_arch", "rose-covered archway")
+:           set_feature_name("granite_statue", "vine-covered statue")
+:           set_feature_name("stone_wall", "crumbling stone wall")
+:           set_feature_name("floor", "the grass-covered ground")
 :           set_random_mon_list ("oklob plant / centaur / centaur warrior")
 epilogue{{
             wizlab_milestone(_G, "Eringya's Formal Garden")
@@ -838,7 +837,7 @@ ENDMAP
 # TODO: Tiles.
 NAME:       wizlab_doroklohe
 ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
 LROCKCOL:   yellow
 KFEAT:      ! = x
 {{
@@ -931,26 +930,34 @@ SUBST:      e=%, f=%, g=%, h=%, i=%, j=%, k=%, l=%, m=%, n=%
 SUBST:      o=*, p=*, q=%, r=*, s=*, t=*, u=*
 :           end
 #           Monsters
-#            0 Tomb set: zombies, mummies
+#            0 Tomb set: zombies, mummies (weight *2)
 #            1 Demons (if demons are added or reclassified, please change!)
 #            2 Golems
-#            3 Holy set (for later)
+#            TODO: 3 Holy set (for later)
 :           local mrnd = crawl.random2(4)
 :           if mrnd == 0 then
 KMONS:      % = clay golem / wood golem / toenail golem w:2
 KMONS:      * = stone golem / crystal golem / iron golem
 KMONS:      | = electric golem
+:           set_random_mon_list("clay golem / wood golem / toenail golem w:2 / " ..
+:                               "stone golem / crystal golem / iron golem")
 :           elseif mrnd == 1 then
 KMONS:      % = blue devil / iron devil / ynoxinul / neqoxec / ice devil /\
                 / chaos spawn / demonic crawler / hellwing / orange demon /\
                 soul eater / sun demon
 KMONS:      * = lorocyproca / reaper / shadow demon / tormentor / hellion
-KMONS:      | = blizzard demon / green death / pit fiend / brimstone fiend /\
+KMONS:      | = blizzard demon / green death / hell sentinel / brimstone fiend /\
                 shadow fiend / ice fiend / executioner / balrug / cacodemon
+:           set_random_mon_list(
+:               "blue devil / iron devil / ynoxinul / neqoxec / ice devil /" ..
+:               "/ chaos spawn / demonic crawler / hellwing / orange demon /" ..
+:               "soul eater / sun demon / " ..
+:               "lorocyproca / reaper / shadow demon / tormentor / hellion")
 :           else
 KMONS:      % = place:D:15 zombie / guardian mummy w:2
 KMONS:      * = place:D:27 zombie / greater mummy w:5
 KMONS:      | = ancient lich
+:           set_random_mon_list("place:D:15 zombie / place:D:27 zombie / guardian mummy")
 :           end
 #           Loot.
 #           0 = scrolls. 1 = armours. 2 = mixed.
@@ -993,16 +1000,10 @@ box_marker:add_triggerer(DgnTriggerer:new { type="turn",
 
 lua_marker("A", box_marker)
 }}
-:           dgn.set_feature_desc_short("rock wall", "strange rock wall")
-:           dgn.set_feature_desc_long("rock wall", "It is decorated with "
-:                                  .. "images you might see in a tomb.\n")
-:           dgn.set_feature_desc_short("stone wall", "highly decorated stone wall")
-:           dgn.set_feature_desc_long("stone wall", "It is covered with disturbing"
-:                                  .. ", horrifying images.\n")
-:           dgn.set_feature_desc_short("Floor", "rough-hewn floor")
-:           dgn.set_feature_desc_long("Floor", "It is rough and uneven in places.\n")
+:           set_feature_name("rock_wall", "strange rock wall")
+:           set_feature_name("stone_wall", "highly decorated stone wall")
+:           set_feature_name("floor", "rough-hewn floor")
 :           wizlab_setup(_G, "Doroklohe's Tomb")
-:           set_random_mon_list("mummy")
 epilogue{{
             wizlab_milestone(_G, "Doroklohe's Tomb")
 }}
@@ -1065,30 +1066,30 @@ ENDMAP
 #           * Cigotuvi's Monster needs a much bigger buff. Convert to unique?
 NAME:       wizlab_cigotuvi
 ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
 KPROP:      . = w:1 bloody / w:15 nothing
 KPROP:      ' = bloody / w:5 nothing
-KMONS:      a = human name:sickly n_adj n_spe tile:mons_deformed_human / \
-            human name:monstrous n_adj n_spe tile:mons_deformed_human  / \
-            human name:deformed n_adj n_spe tile:mons_deformed_human   / \
-            human name:twisted n_adj n_spe tile:mons_deformed_human    / \
-            human name:grotesque n_adj n_spe tile:mons_deformed_human  / \
-            human name:hideous n_adj n_spe tile:mons_deformed_human    / \
-            human name:febrile n_adj n_noc tile:mons_deformed_human
-KMONS:      b = elf name:sickly n_adj n_spe tile:mons_deformed_elf     / \
-            elf name:monstrous n_adj n_spe tile:mons_deformed_elf      / \
-            elf name:deformed n_adj n_spe tile:mons_deformed_elf       / \
-            elf name:twisted n_adj n_spe tile:mons_deformed_elf        / \
-            elf name:grotesque n_adj n_spe tile:mons_deformed_elf      / \
-            elf name:hideous n_adj n_spe tile:mons_deformed_elf        / \
-            elf name:febrile n_adj n_spe n_noc tile:mons_deformed_elf
-KMONS:      d = orc name:sickly n_adj n_spe tile:mons_deformed_orc     / \
-            orc name:monstrous n_adj n_spe tile:mons_deformed_orc      / \
-            orc name:deformed n_adj n_spe tile:mons_deformed_orc       / \
-            orc name:twisted n_adj n_spe tile:mons_deformed_orc        / \
-            orc name:grotesque n_adj n_spe tile:mons_deformed_orc      / \
-            orc name:hideous n_adj n_spe tile:mons_deformed_orc        / \
-            orc name:febrile n_adj n_noc tile:mons_deformed_orc
+KMONS:      a = human name:sickly dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_human / \
+            human name:monstrous dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_human  / \
+            human name:deformed dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_human   / \
+            human name:twisted dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_human    / \
+            human name:grotesque dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_human  / \
+            human name:hideous dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_human    / \
+            human name:febrile dbname:deformed_humanoid n_adj n_noc tile:mons_deformed_human
+KMONS:      b = elf name:sickly dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_elf     / \
+            elf name:monstrous dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_elf      / \
+            elf name:deformed dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_elf       / \
+            elf name:twisted dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_elf        / \
+            elf name:grotesque dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_elf      / \
+            elf name:hideous dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_elf        / \
+            elf name:febrile dbname:deformed_humanoid n_adj n_spe n_noc tile:mons_deformed_elf
+KMONS:      d = orc name:sickly dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_orc     / \
+            orc name:monstrous dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_orc      / \
+            orc name:deformed dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_orc       / \
+            orc name:twisted dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_orc        / \
+            orc name:grotesque dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_orc      / \
+            orc name:hideous dbname:deformed_humanoid n_adj n_spe tile:mons_deformed_orc        / \
+            orc name:febrile dbname:deformed_humanoid n_adj n_noc tile:mons_deformed_orc
 KMONS:      u = ugly thing / w:2 very ugly thing
 KMONS:      U = very ugly thing
 KMONS:      J = pulsating lump
@@ -1100,10 +1101,6 @@ KMONS:      8 = col:red clay golem name:flesh_golem name_replace \
             tile:mons_flesh_golem name_descriptor
 KMONS:      M = col:mutagenic tentacled monstrosity name:Cigotuvi's_Monster \
             name_replace hp:250 tile:mons_cigotuvis_monster
-:           local sickdesc = "This poor creature looks hideously deformed.\n"
-MARKER:     a = lua:MonPropsMarker:new {description=sickdesc, speech_key="Cigotuvi_creatures"}
-MARKER:     b = lua:MonPropsMarker:new {description=sickdesc, speech_key="Cigotuvi_creatures"}
-MARKER:     d = lua:MonPropsMarker:new {description=sickdesc, speech_key="Cigotuvi_creatures"}
 MARKER:     ! = lua:fog_machine { \
                  pow_max = 15, delay_min = 10, delay_max = 40, \
                  size = 2, size_buildup_amnt = 20, \
@@ -1123,19 +1120,10 @@ TILE:       + = no_random dngn_fleshy_orifice
 COLOUR:     m = yellow
 COLOUR:     c+ = lightred
 COLOUR:     W = green
-:           dgn.set_feature_desc_short("Some shallow water", "Viscous fluid")
-:           dgn.set_feature_desc_long("Some shallow water", "This sticky "
-:            .. "fluid seems to be secreted by the nearby walls. It looks "
-:            .. "disgusting.\n")
-:           dgn.set_feature_desc_short("stone wall", "sinewy wall")
-:           dgn.set_feature_desc_long("stone wall", "These walls look"
-:            .. " strangely organic, but incredibly tough and durable.\n")
-:           dgn.set_feature_desc_short("translucent rock wall", "thin membrane")
-:           dgn.set_feature_desc_long("translucent rock wall", "This strange"
-:            .. " membrane is thin enough to see through.\n")
-:           dgn.set_feature_desc_short("Floor", "pulsating floor")
-:           dgn.set_feature_desc_long("Floor", "This slick floor seems to pulse"
-:            .. " to an unknown beat.\n")
+:           set_feature_name("shallow_water", "Viscous fluid")
+:           set_feature_name("stone_wall", "sinewy wall")
+:           set_feature_name("clear_rock_wall", "thin membrane")
+:           set_feature_name("floor", "pulsating floor")
 : lua_marker('+', props_marker {
 :           door_description_noun="fleshy orifice",
 :           door_berserk_verb_open="You part the %s%s",
@@ -1158,7 +1146,7 @@ KITEM:      : = randbook disc:transmutation owner:Cigotuvi
 KITEM:      ^ = book of morphology / randbook disc:transmutation \
                 owner:Cigotuvi spell:cigotuvi's_degeneration
 KITEM:      | = staff of death
-KITEM:      l = scroll of summoning
+KITEM:      l = scroll of unholy creation
 NSUBST:     L = 1:| / *:l
 :           wizlab_setup(_G, "Cigotuvi's Fleshworks")
 :           set_random_mon_list("pulsating lump / small abomination / ugly thing / very ugly thing")
@@ -1215,7 +1203,7 @@ ENDMAP
 #       you're going to get.
 NAME:       wizlab_iskenderun
 ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup patrolling
+TAGS:       no_item_gen no_monster_gen no_rotate allow_dup patrolling
 :           wizlab_setup(_G, "Iskenderun's Mystic Tower")
 MONS:       purple draconian / deep elf mage spells:iskenderun's_mystic_blast \
             / nothing
@@ -1281,11 +1269,12 @@ ENDMAP
 # Zonguldrok's Shrine
 NAME:       wizlab_zonguldrok
 ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
 :           wizlab_setup(_G, "Zonguldrok's Shrine")
 SUBST:      ? = txxx
 SUBST:      ! = t..
 SUBST:      G = G...
+NSUBST:     Z = Z / .
 MONS:       patrolling skeletal warrior
 MONS:       generate_awake ancient lich  col:brown name:antique_lich name_replace \
             name_descriptor tile:mons_zonguldrok_lich
@@ -1298,9 +1287,9 @@ ITEM:       any scroll / any potion / any book w:2
 ITEM:       long sword unrand:sword_of_zonguldrok
 {{
 lua_marker("G", portal_desc { grave = 1 })
-lua_marker("W", portal_desc { wizard_grave = 1,
-        desc="Zonguldrok's gravestone",
-        desc_long="A gravestone. The name 'Zonguldrok' is engraved on it in golden letters.\n"})
+lua_marker("Z", portal_desc { wizard_grave = 1})
+lua_marker("W", portal_desc { desc="Zonguldrok's gravestone",
+        veto_fragmentation="veto", veto_disintegrate="veto", veto_shatter="veto" })
 
 local zombies_appear_marker = TriggerableFunction:new {
     func = "wizlab_zonguldrok_spawn_zombies",
@@ -1344,19 +1333,15 @@ lua_marker("D", zombies_killed_marker)
 lua_marker("L", Triggerable.synchronized_markers(wizard_appear_marker))
 
 }}
-:           dgn.set_feature_desc_short("granite statue", "gravestone")
-:           dgn.set_feature_desc_long("granite statue", "A nameless grave. The question "
-:               .. "remains: is it the grave that is nameless, or the person who lies "
-:               .. "in that grave?\n")
-:           dgn.set_feature_desc_short("Floor", "ground")
-:           dgn.set_feature_desc_long("Floor", "No life grows here. It is completely dead.\n")
+:           set_feature_name("granite_statue", "gravestone")
+:           set_feature_name("floor", "the ground")
 SUBST:      M = x
 SUBST:      D = c
 COLOUR:     W = yellow
 TILE:       W = dngn_gravestone_ornate
 TILE:       G = dngn_gravestone
 SUBST:      W = G
-SUBST:      L = .
+SUBST:      LZ = .
 LFLOORTILE: floor_tomb
 LROCKTILE:  wall_hall_darkgray
 TILE:       c = wall_stone_gray
@@ -1377,16 +1362,16 @@ x?!.G.G.ccdd.c.ddcc.G.G.!?x
 x?!G.Gcccddcc+ccddcccG.G!?x
 x?!.G.c.dd.cLLLc.dd.c.G.!?x
 x?!G.Gc$.ccc...ccc.$cG.G!?x
-x?!.G.c$$c.......c$$c.G.!?x
-x?!G.Gcccc...W...ccccG.G!?x
-x?!.G.c..+.......+..c.G.!?x
+x?!.G.c$$c..ZZZ..c$$c.G.!?x
+x?!G.Gcccc..ZWZ..ccccG.G!?x
+x?!.G.c..+..ZZZ..+..c.G.!?x
 x?!G.Gc.1ccc...ccc1.cG.G!?x
 x?!.G.c..1.c...c.1..c.G.!?x
 x?!G.Gccc.1ccccc1.cccG.G!?x
 x?!.G.G.cc.1.c.1.cc.G.G.!?x
 x?!G.G.G.c...c...c.G.G.G!?x
 x?!.G.G.GccccDccccG.G.G.!?x
-x?!!.G.G.G.G...G.G.G.G.!!?x
+x?!!.G.G.G.GV.VG.G.G.G.!!?x
 xx?!!.G.G.G..<..G.G.G.!!?xx
  xx?!!.G.G.G.A.G.G.G.!!?xx
   xx?!!!!!!!!!!!!!!!!!?xx
@@ -1400,14 +1385,21 @@ ENDMAP
 # TODO: I think this is done, apart from not having "alien"-esque statue tiles.
 NAME:       wizlab_wucad
 ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
 SUBST:      T = t.
-KMONS:      8 = orange crystal statue name:Statue_of_Wucad_Mu n_rpl n_the hd:20 hp:300
+KMONS:      8 = orange crystal statue name:Statue_of_Wucad_Mu n_rpl n_the \
+                hd:20 hp:300 tile:mons_wucad_mu_statue
 KITEM:      8 = staff unrand:staff_of_wucad_mu, book of enchantments
 COLOUR:     =c = darkgrey
 COLOUR:     t = lightred / red w:3
 TILE:       t = dngn_tree_lightred / dngn_tree_red w:4 / dngn_tree_yellow w:4
-TILE:       G = dngn_granite_statue w:1 / dngn_statue_troll w:3 / dngn_statue_ancient_hero w:1
+# This used to specify dngn_statue_troll as the only middle case, but that tile
+# no longer exists.
+TILE:       G = dngn_granite_statue w:1 / \
+                dngn_statue_angel w:1 / \
+                dngn_statue_imp w:1 / \
+                dngn_statue_ancient_evil w:1 / \
+                dngn_statue_ancient_hero w:1
 COLOUR:     AG = red
 COLOUR:     < = lightred
 TILE:       c = dngn_stone_dark
@@ -1479,23 +1471,10 @@ MARKER:     t = lua:props_marker {veto_fragmentation="veto", veto_disintegrate="
 :           wizlab_setup(_G, "Wucad Mu's Monastery")
 :           set_border_fill_type("tree")
 :           set_random_mon_list("shadow / phantom w:1 / flayed ghost w:1 / hungry ghost w:1")
-:           dgn.set_feature_desc_short("tree", "autumnal tree")
-:           dgn.set_feature_desc_long("tree", "These trees, large as they are, appear to be "
-:               .. "permanently locked in an autumnal moment: leaves, coloured red and gold, "
-:               .. "fall from branches and float gracefully to the floor. Before they even "
-:               .. "reach the ground, however, a shadow passes, and when the shimmer is gone, "
-:               .. "the leaves are once more on the branch, ready to fall again.\n")
-:           dgn.set_feature_desc_short("stone wall", "crumbled stone wall")
-:           dgn.set_feature_desc_long("stone wall", "These walls, though they have fallen "
-:               .. "into disrepair, appear as locked in time as the trees, ready to collapse, "
-:               .. "but utterly unable to.\n")
-:           dgn.set_feature_desc_short("granite statue", "strange statue")
-:           dgn.set_feature_desc_long("granite statue", "The features of this statue are strange "
-:               .. "and alien. Is it because the statue is worn and tarnished that it has become "
-:               .. "so unrecognisable? Or is it that the subject was something demonic and evil?\n")
-:           dgn.set_feature_desc_short("Floor", "timeless floor")
-:           dgn.set_feature_desc_long("Floor", "Though a thousand feet may have trod these floors, "
-:               .. "they appear timeless and indestructible.\n")
+:           set_feature_name("tree", "autumnal tree")
+:           set_feature_name("stone_wall", "crumbled stone wall")
+:           set_feature_name("granite_statue", "strange statue")
+:           set_feature_name("floor", "timeless floor")
 epilogue{{
             wizlab_milestone(_G, "Wucad Mu's Monastery")
 }}
@@ -1536,6 +1515,204 @@ tttttttttttttttttttttttttttttttttttttttt
 tttttttttttttttttttttttttttttttttttttttt
 ENDMAP
 
+##################################################################################
+# The Roulette of Golubria (by HangedMan.)
+# Golubria's fascination with translocations led him to warp out a sub-realm
+# of the Abyss into his own translocations playground, with some nasty and wild
+# security systems built in to defend his many assorted possessions.
+#
+NAME:    wizlab_golubria
+TAGS:    no_monster_gen no_item_gen allow_dup no_pool_fixup
+ORIENT:  encompass
+LFLAGS:  no_tele_control
+KMONS:   1 = spatial vortex / blink frog / insubstantial wisp w:1 / nothing w:4
+KMONS:   2 = deep elf summoner w:5 ; dart ego:dispersal w:20 | dart w:5 | nothing / \
+             rakshasa w:5 ; dart ego:dispersal w:20 | dart w:5 | nothing / \
+             boggart ; dart ego:dispersal w:20 | dart w:5 | nothing /  \
+             wizard ; dart ego:dispersal w:20 | dart w:5 | nothing
+KMONS:   3 = rakshasa w:5 ; staff ego:distortion | staff ego:vorpal w:6 | \
+             dagger ego:distortion | dagger ego:vorpal w:6 | \
+             spear ego:distortion | spear ego:vorpal w:6 . dart ego:dispersal / \
+             crimson imp ; staff ego:distortion | staff ego:vorpal w:6 | \
+             dagger ego:distortion | dagger ego:vorpal w:6 | \
+             spear ego:distortion | spear ego:vorpal w:6 . dart ego:dispersal / \
+             boggart w:5 ; staff ego:distortion | staff ego:vorpal w:6 | \
+             dagger ego:distortion | dagger ego:vorpal w:6 | \
+             spear ego:distortion | spear ego:vorpal w:6 . dart ego:dispersal / \
+             wizard ; staff ego:distortion | staff ego:vorpal w:6 | \
+             dagger ego:distortion | dagger ego:vorpal w:6 | \
+             spear ego:distortion | spear ego:vorpal w:6 . dart ego:dispersal
+# Disclaimer: the following three sets are all Abyss spawns.
+KMONS:   04 = large abomination w:40 / small abomination w:40 / large skeleton w:30 / \
+              small skeleton / chaos spawn w:5 / soul eater / hellwing / orange demon / \
+              rotting devil / hell hound / red devil w:5 / lesser demon w:40 / \
+              flying skull / freezing wraith / octopode w:5 / base draconian w:5 / \
+              ugly thing w:30 / fire elemental w:5 / air elemental w:5
+KMONS:   95 = ynoxinul / smoke demon / sun demon w:5 / sixfirhy / efreet w:5 / \
+              hell knight w:5 / demonic crawler / very ugly thing w:5 / \
+              unseen horror / vapour w:5 / stone golem w:5 / \
+              guardian serpent / naga mage w:5 / brain worm / eidolon w:5 / \
+              shadow wraith / anaconda skeleton w:5 / flaming corpse / \
+              great orb of eyes w:5 / giant orange brain w:5
+KMONS:   6 = executioner w:5 / balrug w:5 / cacodemon / shadow demon / hellion w:5 / \
+             tormentor w:5 / lorocyproca w:5 / blizzard demon / green death / \
+             reaper / lich w:5 / angel / death drake w:5 / \
+             tentacled monstrosity / draconian shifter w:5 / profane servitor w:5
+KMONS:   7 = eldritch tentacle
+KMONS:   8 = silver statue
+# Translocations items, abyss escape aides, shrouds, and an immeadiate aide.
+KITEM:   d = scroll of blinking / scroll of teleportation q:2 / \
+             wand of teleportation w:5 / any scroll w:1
+KITEM:   e = ring of teleport control w:5 / ring of teleportation
+KITEM:   f = book of spatial translocations w:5 / book of the warp w:5 / \
+             manual of translocations w:5 / randbook disc:translocation numspells:5 / \
+             randbook disc:translocation owner:Golubria numspells:7 \
+             spells:shroud_of_golubria|passage_of_golubria
+KITEM:   g = ring of levitation / potion of levitation q:2 / \
+             wand of digging w:5 / lantern of shadows / \
+             potion of speed w:5 / scroll of fog / potion of porridge / \
+             any wand w:1 / any potion w:1 / any scroll w:1
+KITEM:   h = pair of boots ego:levitation w:9 / pair of boots ego:running w:1 / \
+             pair of boots ego:stealth w:9 / pair of boots w:1
+KITEM:   i = cloak good_item w:75 / randart cloak w:95 / cloak unrand:cloak_of_flash / \
+             cloak unrand:cloak_of_starlight / cloak unrand:cloak_of_the_thief
+KITEM:   j = wand of disintegration
+KITEM:   * = star_item / any w:5, any w:5 / nothing
+KITEM:   % = any level:3, any level:3 / nothing
+KFEAT:   - = rock_wall
+KFEAT:   J = metal_wall
+KFEAT:   K = green_crystal_wall
+KFEAT:   m = iron_grate
+KFEAT:   l = lava w:6 / deep_water w:4 / shallow_water
+KFEAT:   D = permarock_wall
+KFEAT:   ~ = known teleport trap
+KFEAT:   8_ = altar_lugonu
+KFEAT:   OPQRSTUVWXYZ&?[ = teleporter
+KFEAT:   opsrtuvwxyz@!] = floor
+KPROP:   "_a = no_rtele_into
+MARKER:  ~ = lua:fog_machine { cloud_type = "translocational energy",  \
+             pow_max = 15, delay_min = 30, delay_max = 60, size_min = 2, size_max = 3 }
+SHUFFLE: qtwz / twzq / wzqt / zqtw, ypsv / vyps / svyp / psvy, ]?A}
+NSUBST:  o = 1:o / 1:Q / 1:Y, p = 1:p / 1:R / 1:Z, q = 1:q / 1:S / 1:&
+NSUBST:  r = 1:r / 1:T / 1:O, s = 1:s / 1:U / 1:P, t = 1:t / 1:V / 1:Q
+NSUBST:  u = 1:u / 1:W / 1:R, v = 1:v / 1:X / 1:S, w = 1:w / 1:Y / 1:T
+NSUBST:  x = 1:x / 1:Z / 1:U, y = 1:y / 1:& / 1:V, z = 1:z / 1:O / 1:W
+NSUBST:  @ = 1:@ / 1:P / 1:X / 1:<, 4 = 4:5 / 4:4, ` = 4:d / 4:i / 1:j / 5:% / *:`
+NSUBST:  a = 1:_ / 1:_" / *:a, + = 2:+ / *:c, ( = 1:! / 1:[ / *:<
+NSUBST:  { = 2:< / *:d, 2 = 1:66699 / 1:66993 / 2:9 / 1:993 / 1:92 / *:2
+NSUBST:  d = 2:* / 2:e / 2:f / 3:g / 1:eeggh% / 1:gg% / 3:%
+NSUBST:  7 = 7 / *=7``
+SUBST:   a = ':70 -:40 ncCll, F = ":70 -:40 ncCll, c = cccJK, C = cJK, B = cJKn....
+SUBST:   e = de, % = %%%%g., * = **%, 4 = 444'', 5 = 5555544'', } = <
+: colour("' = " .. dgn.random_colour() )
+COLOUR:  OPQRSTUVWXYZ&?[ = warp
+COLOUR:  opqrstuvwxyz@!] = gold
+COLOUR:  D = darkgrey
+FTILE:   '"GcJKaFn45_+ = floor_demonic_green
+FTILE:   .012369AB{< = floor_rough_green / floor_pebble_green w:15
+FTILE:   `~78m = floor_demonic_green / floor_pebble_green / floor_rough_green w:5
+FTILE:   defghijk*% = floor_rough_green
+LROCKTILE: wall_zot_green
+TILE:    c = dngn_stone_wall_green / dngn_stone_wall_cyan w:5
+TILE:    K = dngn_crystal_green / dngn_crystal_cyan w:5
+TILE:    J = dngn_metal_wall_green / dngn_metal_wall_cyan w:5
+TILE:    n = dngn_transparent_wall_green / dngn_transparen_wall_cyan w:5
+TILE:    D = dngn_dimension_edge
+FTILE:   OPQRSTUVWXYZ&?[ = floor_rough_green
+TILE:    opqrstuvwxyz@!] = floor_black_cobalt
+
+{{
+-- This isn't the prettiest way of handling the teleporters, but it guarantees
+-- they behave exactly the same way as in HangedMan's original version. All I've
+-- done is remove some massive code duplication. [evilmike]
+
+local teleporter_glyph = "OPQRSTUVWXYZ&?["
+local teleport_spot_glyph = "opqrstuvwxyz@!]"
+local tele_marker = {}
+
+for i = 1, #teleporter_glyph do
+    tele_marker[i] = TriggerableFunction:new {
+                     func="teleporter_golubria_switch_fn",
+                     data = {teleport_spot=i},
+                     repeated=true }
+    tele_marker[i]:add_triggerer(DgnTriggerer:new { type="player_move" })
+    lua_marker(teleporter_glyph:sub(i,i), tele_marker[i])
+    lua_marker(teleport_spot_glyph:sub(i,i), portal_desc { teleport_spot=i})
+end
+
+set_random_mon_list([[rakshasa w:15 / deep elf summoner w:15 / wizard w:15 / spatial vortex w:15 /
+                    boggart w:5 / blink frog w:5 / shadow wraith w:5 / unseen horror /
+                    ynoxinul / neqoxec / chaos spawn / giant orange brain /
+                    large abomination w:20 / small abomination w:20 / large skeleton w:20 /
+                    small skeleton w:20 / hellwing w:5 / smoke demon w:5 /
+                    skeletal warrior w:5 / hell hound w:5 / very ugly thing w:5 /
+                    golden eye w:5 / executioner w:2 / shadow demon w:2 / tormentor w:2 / ]])
+
+set_border_fill_type('permarock_wall')
+set_feature_name("clear_permarock_wall", "The dimension's edge")
+set_feature_name("green_crystal_wall", "wall of crystal")
+wizlab_setup(_G, "The Roulette of Golubria")
+}}
+
+epilogue{{
+            wizlab_milestone(_G, "The Roulette of Golubria")
+}}
+MAP
+               DDDDDDDDDD   DDDDDDDDDD
+    DDDDDD    DDccccccccDDDDDccccccccDD    DDDDDD
+  DDDccccDDDDDDcc..o...ccccccc...p..ccDDDDDDccccDDD
+  Dccc.zcccccccco......ocaaacp......pccccccccq.cccD
+ DDcz....ccaaaan........naaan........naaaacc....qcDD
+ Dcc......caaa"n........n"a"n........n"aaac......ccD
+ Dc....B..cnaaan...BBB..naaan..BBB...naaanc..B....cD
+ Dcz..BBB..n"aac...BB2..caaac..2BB...caa"n..BBB..qcD
+ Dcc...BB..ccaacc...B..0caaac0..B...ccaacc..BB...ccD
+ DDcc....2.0caaacc1....ccaaacc....1ccaaac1.2....ccDD
+  Dcccc...{.ccaaacc1.{.caaaaac.{.1ccaaacc1{...ccccD
+  Dcaannc11..ccaaacc...caaaaac...ccaaacc...0cnnaacD
+  Dcaaa"ccc...caaaacc.ccaaaaacc.ccaaaac...ccc"aaacD
+  Dcaaaaaacc..cFaaaFc+cFaaaaaFc+cFaaaFc..ccaaaaaacD
+ DDca"aaaaaccc+FFaFF'F'FaaaaaF'F'FaaFF+cccaaaaa"acDD
+DDccnnnccaaaaFF'FFF'FFFFFF4FFFFFF'FFF'FFaaaaccnnnccDD
+Dccy....ccaaaaFF'F'FFFFFF'G'FFFFFF'F'FFaaaacc....rccD
+Dc.......ccaaaaFF4''FF'F'FFF'F'FF''4FFaaaacc.......cD
+Dc.......1ccaaFF''GF''C'C'F'C'C''FG''FFaacc1.......cD
+Dcy...BB..1ccFF'F'FFCCCCCC(CCCCCCFF'F'FFcc1..BB...rcD
+Dc....BBB...cc'FFF'Cn'C~'CnC'~C'nC'FFF'cc...BBB....cD
+Dc....B2..{..+FFFF'C'@C'``n``'C@'C'FFFF+..{..2B....cD
+Dc..........cc'FF'CCCC`````````CCCC'FF'cc..........cD
+Dccy....0ccccFFFFF'C~'`````````'~C'FFFFFcccc0....rccDDDDDDDD
+DDccnnncccaaaaaFF'CC'````mmm````'CC'FFaaaaacccnnnccDDDnnnnnD
+ Dcaa"aaaaaaaaFF'F'CC'``mm7mm``'CC'F'FFaaaaaaaa"aacDDDn?.}nD
+ DcaaaaaaaaaaaF4GFF(nn``m787m``nn(FFG4FaaaaaaaaaaacDDDn...nD
+ Dcaa"aaaaaaaaFF'F'CC'``mm7mm``'CC'F'FFaaaaaaaa"aacDDDn].AnD
+DDccnnncccaaaaaFF'CC'````mmm````'CC'FFaaaaacccnnnccDDDnnnnnD
+Dccx....0ccccFFFFF'C~'`````````'~C'FFFFFcccc0....sccDDDDDDDD
+Dc..........cc'FF'CCCC`````````CCCC'FF'cc..........cD
+Dc....B2..{..+FFF'CC'@C'`'n'`'C@'C'FFFF+..{..2B....cD
+Dc....BBB...cc'FFF'Cn'C~'CnC'~C'nC'FFF'cc...BBB....cD
+Dcx...BB..1ccFF'F'FFCCCCCC(CCCCCCFF'F'FFcc...BB...scD
+Dc.......1ccaaFF''GF''C'C'F'C'C''FG''FFaacc1.......cD
+Dc.......ccaaaaFF4''FF'F'FFF'F'FF''4FFaaaacc1......cD
+Dccx....ccaaaaaF'F'FFFFFF'G'FFFFFF'F'Faaaaacc....sccD
+DDccnnnccaaaaFF'FFF'FFFFFF4FFFFFF'FFF'FFaaaaccnnnccDD
+ DDca"aaaaaccc+FFaFF'F'FaFFFaF'F'FaaFF+cccaaaaa"acDD
+  Dcaaaaaacc..cFaaaFc+cFaaaaaFc+cFaaaFc..ccaaaaaacD
+  Dcaaa"ccc...caaaacc.ccaaaaacc.ccaaaac...ccc"aaacD
+  Dcaannc0...ccaaacc...caaaaac...ccaaacc..11cnnaacD
+  Dcccc...{1ccaaacc1.{.caaaaac.{.1ccaaacc.{...ccccD
+ DDcc....2.1caaacc1....ccaaacc....1ccaaac0.2....ccDD
+ Dcc...BB..ccaacc...B..0caaac0..B...ccaacc..BB...ccD
+ Dcw..BBB..n"aac...BB2..caaac..2BB...caa"n..BBB..tcD
+ Dc....B..cnaaan...BBB..naaan..BBB...naaanc..B....cD
+ Dcc......caaa"n........n"a"n........n"aaac......ccD
+ DDcw....ccaaaan........naaan........naaaacc....tcDD
+  Dccc.wccccccccv......vcaaacu......ucccccccct.cccD
+  DDDccccDDDDDDcc..v...ccccccc...u..ccDDDDDDccccDDD
+    DDDDDD    DDccccccccDDDDDccccccccDD    DDDDDD
+               DDDDDDDDDD   DDDDDDDDDD
+ENDMAP
+
 ###############################################################################
 # Random and semi-random Wizard vaults
 ###############################################################################
@@ -1547,21 +1724,15 @@ ENDMAP
 #       Most everything else is done, except redescriptions.
 NAME:       wizlab_cloud
 ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
 {{
 wizname = crawl.make_name()
 
-kmons ("    1 = col:silver patrolling wizard name:" .. string.gsub(wizname, " ", "_")
-         .. "_the_Cloud_Mage name_replace tile:mons_cloud_mage"
-         .. " spells:mephitic_cloud;freezing_cloud;poisonous_cloud;"
-         .. "airstrike;blink_range;blink_range hd:20 hp:150 ;"
-         .. " robe unrand:robe_of_clouds . quick blade ego:electrocution |"
+kmons ("    1 = patrolling Cloud Mage dbname:Cloud_Mage name:" .. string.gsub(wizname, " ", "_")
+         .. " ; robe unrand:robe_of_clouds . quick blade ego:electrocution |"
          .. " quick blade ego:freezing | dagger ego:speed | dagger ego:electrocution"
          .. " | dagger ego:freezing")
 }}
-MARKER:     1 = lua:MonPropsMarker:new {description="This strange wizard has " \
-            .. "attained mastery over clouds, and his mystic gestures are as " \
-            .. "deft as they are foreboding.\n"}
 KMONS:      * = w:5 vapour / w:20 air elemental
 SUBST:      . = .:120 *
 MARKER:     ! = lua:fog_machine { \
@@ -1570,15 +1741,14 @@ MARKER:     ! = lua:fog_machine { \
                 size_buildup_time = 25, cloud_type = "grey smoke", \
                 colour = "white", name = "white fluffiness" \
             }
-KITEM:      % = w:20 potion of levitation / w:20 potion of water / \
+KITEM:      % = w:20 potion of levitation / \
             potion of magic / potion of speed / potion of resistance / \
             gold / potion of agility / potion of brilliance
 KITEM:      ? = randbook disc:air
 KITEM:      $ = wand of lightning / staff of air / ring of levitation /\
             gold / scroll of silence / ring of teleport control / \
-            amulet of controlled flight / quick blade / ring of evasion /\
-            ring of see invisible / book of clouds / any book w:15 /\
-            any good_item / any w:20
+            quick blade / ring of evasion / ring of see invisible / \
+            book of clouds / any book w:15 / any good_item / any w:20
 KFEAT:      # = deep_water
 NSUBST:     $ = 2:? / *:$
 SUBST:      $ = $%
@@ -1591,10 +1761,9 @@ COLOUR:     wW# = silver
 :           set_border_fill_type('open_sea')
 :           set_random_mon_list("vapour / air elemental")
 :           wizlab_setup(_G, "The Chambers of " .. wizname .. " the Cloud Mage")
-:           dgn.set_feature_desc_short("Floor", "damp floor")
-:           dgn.set_feature_desc_long("Floor", "Perhaps it is the humidity, or the constant flow of clouds, but the floor here remains forever damp.\n")
-:           dgn.set_feature_desc_short("wall of green crystal", "wall of white crystal")
-:           dgn.set_feature_desc_short("translucent unnaturally hard rock wall", "wall of transparent white crystal")
+:           set_feature_name("floor", "damp floor")
+:           set_feature_name("green_crystal_wall", "wall of white crystal")
+:           set_feature_name("clear_permarock_wall", "wall of transparent white crystal")
 
 epilogue{{
             wizlab_milestone(_G, "The Chambers of " .. wizname .. " the Cloud Mage")
@@ -1669,7 +1838,7 @@ ENDMAP
 # Halls of the Hellbinder (by Mu.)
 NAME:       wizlab_demon
 ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate no_hmirror no_vmirror allow_dup
+TAGS:       no_item_gen no_monster_gen no_rotate no_hmirror no_vmirror allow_dup
 LFLOORCOL:  red
 LROCKCOL:   red
 LFLOORTILE: floor_pebble_lightred
@@ -1729,31 +1898,21 @@ KMONS:      5 = blizzard demon / green death / cacodemon
 {{
 wizname = crawl.make_name()
 
-kmons     ("1 = col:fire patrolling wizard name:" .. string.gsub(wizname, " ", "_")
-              .. "_the_Hellbinder name_replace tile:mons_hellbinder"
-              .." spells:call_imp;summon_demon;haste;hellfire;blink_away;throw_flame"
-              .." hd:20 hp:150 ; demon blade . robe")
+kmons     ("1 = patrolling Hellbinder dbname:Hellbinder name:" .. string.gsub(wizname, " ", "_"))
 }}
-MARKER:     1 = lua:MonPropsMarker:new {description="A mighty spellcaster, " \
-            .. "wreathed in arcane energies, and muttering the most profane incantations " \
-            .. "you might ever have heard.\n"}
-KITEM:      $ = gold / w:1 scroll of torment / w:1 scroll of summoning
+KITEM:      $ = gold / w:1 scroll of torment / w:1 scroll of unholy creation
 KITEM:      i = rod of demonology / ring of fire / ring of protection from fire /\
-            amulet of conservation / scroll of torment / scroll of summoning /\
+            amulet of conservation / scroll of torment / scroll of unholy creation /\
             demon blade w:1 / demon whip w:1 / demon trident w:1 / gold / wand of fire /\
             wand of draining / staff of summoning / any book w:30 / any good_item w:15
 KITEM:      B = randbook disc:summoning
 NSUBST:     i = 2:B / *:i
 :           set_random_mon_list([[crimson imp / shadow imp / lemure / iron imp / quasit / white imp / ]]
-:                        .. [[ufetubus / midge / red devil / rotting devil / hairy devil / ]])
+:                        .. [[ufetubus / red devil / rotting devil / orange demon / ]])
 :           wizlab_setup(_G, "The Hall of " .. wizname .. " the Hellbinder")
-:           dgn.set_feature_desc_short("Floor", "hot floor")
-:           dgn.set_feature_desc_long("Floor", "Deep below the floor burns a fire hotter than any other fire: the fire of hell. The floor is hot to the touch.\n")
-:           dgn.set_feature_desc_short("stone wall", "black wall")
-:           dgn.set_feature_desc_long("stone wall", "Perhaps stone, or solid charcoal, or a substance found only in the deepest hells.\n")
-:           dgn.set_feature_desc_short("rock wall", "carved rock wall")
-:           dgn.set_feature_desc_long("rock wall", "It is decorated with images of death and destruction.\n")
-MARKER:     " = lua:portal_desc { desc="sigil-covered floor", desc_long="This area of floor is marked with strange sigils and symbols. You cannot understand them, but for some reason the sight of them makes you tremble.\n" }
+:           set_feature_name("floor", "hot floor")
+:           set_feature_name("stone_wall", "black wall")
+:           set_feature_name("rock_wall", "carved rock wall")
 epilogue{{
             wizlab_milestone(_G, "The Hall of " .. wizname .. " the Hellbinder")
 }}
@@ -1864,7 +2023,7 @@ ENDMAP
 # TODO: Do.
 NAME:       wizlab_alistair
 ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
 WEIGHT:     0
 :           wizlab_setup(_G, "Alistair's Brewery")
 epilogue{{
@@ -1879,7 +2038,7 @@ ENDMAP
 # TODO: Do.
 NAME:       wizlab_lee
 ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
 WEIGHT:     0
 :           wizlab_setup(_G, "Lee's Rapid Deconstructor")
 epilogue{{
@@ -1894,7 +2053,7 @@ ENDMAP
 # TODO: Do.
 NAME:       wizlab_lehudib
 ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
 WEIGHT:     0
 :           wizlab_setup(_G, "Lehudib's Crystal Spire")
 epilogue{{
@@ -1909,7 +2068,7 @@ ENDMAP
 # TODO: Do.
 NAME:       wizlab_maxwell
 ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
 WEIGHT:     0
 :           wizlab_setup(_G, "Maxwell's Forge")
 epilogue{{
@@ -1924,7 +2083,7 @@ ENDMAP
 # TODO: Do.
 NAME:       wizlab_olgreb
 ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
 WEIGHT:     0
 :           wizlab_setup(_G, "Olgreb's Toxic Laboratory")
 epilogue{{
@@ -1939,7 +2098,7 @@ ENDMAP
 # TODO: Do.
 NAME:       wizlab_ozocubu
 ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
 WEIGHT:     0
 :           wizlab_setup(_G, "Ozocubu's Refrigerator")
 epilogue{{
@@ -1954,7 +2113,7 @@ ENDMAP
 # TODO: Do.
 NAME:       wizlab_cekugob
 ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
 WEIGHT:     0
 :           wizlab_setup(_G, "Cekugob's Oubliette")
 epilogue{{
@@ -1969,7 +2128,7 @@ ENDMAP
 # TODO: Do.
 NAME:       wizlab_botono
 ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
 WEIGHT:     0
 :           wizlab_setup(_G, "Botono's Bayou")
 epilogue{{
@@ -1984,7 +2143,7 @@ ENDMAP
 # TODO: Do.
 NAME:       wizlab_ukta
 ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
 WEIGHT:     0
 :           wizlab_setup(_G, "Ukta's Hut")
 epilogue{{
@@ -1999,7 +2158,7 @@ ENDMAP
 # TODO: Do.
 NAME:       wizlab_alchemist
 ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
 WEIGHT:     0
 :           wizlab_setup(_G, "The Alchemist's Tower")
 epilogue{{

@@ -6,7 +6,7 @@
 %include dc-mon.txt
 
 effect/net_trap TRAP_NET
-dc-misc/cursor CURSOR
+misc/cursor CURSOR
 
 ###BASE
 %parts_ctg BASE
@@ -373,6 +373,8 @@ plate PLATE
 plate2 PLATE2
 plate_black PLATE_BLACK
 crystal_plate CRYSTAL_PLATE
+crystal_plate2
+crystal_plate3
 armor_mummy ARMOR_MUMMY
 
 ##cloth_u_sail SAILOR
@@ -437,6 +439,7 @@ glove_short_blue GLOVE_SHORT_BLUE
 glove_short_gray GLOVE_SHORT_GRAY LAST_NORM
 ## mutations
 claws CLAWS
+player/mutations/octopode1 OCTOPODE_SPIKE
 %end_ctg
 
 # Hand 1
@@ -458,7 +461,6 @@ zonguldrok ZONGULDROK
 sword_of_power SWORD_OF_POWER
 knife_of_accuracy KNIFE_OF_ACCURACY
 vampires_tooth VAMPIRES_TOOTH
-dire_lajatang DIRE_LAJATANG
 spriggans_knife SPRIGGANS_KNIFE
 cutlass CUTLASS
 ## blunt
@@ -544,7 +546,6 @@ mace MACE2
 mace3 MACE
 mace2 GREAT_MACE
 mace_ruby MACE_RUBY
-ankus ANKUS
 morningstar MORNINGSTAR2
 morningstar2 MORNINGSTAR
 eveningstar EVENINGSTAR
@@ -597,6 +598,9 @@ d_glaive D_GLAIVE
 pole_forked POLE_FORKED
 fork2 FORK2
 trishula TRISHULA
+lajatang1 LAJATANG
+lajatang2
+lajatang3
 
 ## staves
 
@@ -620,15 +624,15 @@ staff_fork STAFF_FORK
 ## rods
 # These 10 rods correspond to the same order as item/rod/
 rod_brown ROD_BROWN
-rod_moon ROD_MOON
-rod_aries ROD_ARIES
-rod_blue ROD_BLUE
-rod_magenta ROD_MAGENTA
-rod_hammer ROD_HAMMER
-rod_thick ROD_THICK
-rod_ruby ROD_RUBY
-rod_forked ROD_FORKED
-rod_emerald ROD_EMERALD
+rod_moon
+rod_aries
+rod_blue
+rod_magenta
+rod_hammer
+rod_thick
+rod_ruby
+rod_forked
+rod_emerald
 
 ## axes
 axe_small AXE_SMALL
@@ -697,7 +701,6 @@ fire_dark FIRE_DARK
 fire_white2 FIRE_WHITE2
 
 bladehands BLADEHAND
-tentacle TENTACLE
 %end_ctg
 
 ### Hand 2
@@ -740,7 +743,7 @@ shield_middle_ethn SHIELD_MIDDLE_ETHN
 shield_long_cross SHIELD_LONG_CROSS
 shield_shaman SHIELD_SHAMAN
 shield_of_resistance SHIELD_OF_RESISTANCE
-shield_of_ignorance SHIELD_OF_IGNORANCE
+large_shield_of_ignorance LARGE_SHIELD_OF_IGNORANCE
 gil-galad SHIELD_GILGALAD
 shield_spriggan SHIELD_SPRIGGAN
 
@@ -778,7 +781,6 @@ pj PJ
 torch2 TORCH2
 
 bladehands BLADEHAND
-tentacle TENTACLE
 
 dagger DAGGER
 sabre SABRE
@@ -895,6 +897,18 @@ turban_purple TURBAN_PURPLE WHAT_LAST_NORM
 horns1 HORNS1
 horns2 HORNS2
 horns3 HORNS3
+%sdir player/mutations
+cat1 HORNS_CAT
+cat2
+cat3
+cat4
+cat5
+cat6
+cat7
+cat8
+cat9
+cat10
+%sdir player/head
 
 ## Doll editor tiles, but not randomly picked
 cone_red CONE_RED

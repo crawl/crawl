@@ -1,0 +1,619 @@
+%%%%
+air elemental fan
+
+Un utensilio mágico que sirve para convocar elementales de aire. Es poco
+fiable, y normalmente hacen falta varios intentos para lograr que funcione. Su
+uso conlleva un riesgo, que puede ser mitigado mediante el entrenamiento de la
+magia del aire.
+%%%%
+amulet of clarity
+
+Este amuleto protege a su portador de algunas formas de confusión mental,
+incluyendo la furia involuntaria.
+%%%%
+amulet of conservation
+
+Este amuleto protege de la destrucción algunas de las pertenencias de su
+portador, aunque no de forma infalible.
+%%%%
+amulet of controlled flight
+
+Si el portador consigue comenzar a levitar de alguna forma, este amuleto le
+permitirá ejercer cierto control sobre el movimiento resultante. Por ejemplo,
+podrá descender escaleras, y tomar objetos del suelo. Todo ello, sin perder
+ninguna de las ventajas de levitar.
+%%%%
+amulet of inaccuracy
+
+Este amuleto hace que su portador sea menos preciso en el combate cuerpo a
+cuerpo, y cuando ataque monstruos mediante ataques a distancia o hechizos.
+%%%%
+amulet of rage
+
+Este amuleto permite a su portador entrar en un estado de furia.
+%%%%
+amulet of resist corrosion
+
+Este amuleto protege a su portador y su equipamiento de la corrosión causada
+por ácidos, aunque no de forma infalible.
+%%%%
+amulet of resist mutation
+
+Este amuleto previene que su portador adquiera mutaciones, aunque no es
+infalible.
+%%%%
+amulet of the gourmand
+
+Este amuleto protege a su portador de caer enfermo al comer carne cruda, y le
+permite digerirla incluso cuando no está hambriento. No obstante, estos efectos
+son inicialmente pequeños, y se incrementarán al llevarlo puesto durante un
+periodo de tiempo prolongado.
+%%%%
+amulet of warding
+
+Este amuleto repele los ataques de criaturas que hayan sido convocadas mediante
+magia, y también hace a su portador más resistente a los ataques basados en
+energías negativas.
+%%%%
+amulet of stasis
+
+Un amuleto que ha sido elaborado meticulosamente para bloquear los efectos
+mágicos o físicos que podrían tele-transportar, ralentizar, acelerar, o
+paralizar a su portador.
+
+Aunque el amuleto es efectivo contra la mayoría de las magias de translocación,
+los cambios de plano como el destierro están fuera de su alcance.
+%%%%
+animal skin
+
+La piel de un animal.
+%%%%
+apple
+
+Una deliciosa, y tersa fruta roja, ácida al paladar.
+%%%%
+apricot
+
+Prunus armeniaca, una suculenta fruta amarillenta o anaranjada.
+%%%%
+arrow
+
+Una flecha, hecha para ser disparada con un arco.
+%%%%
+banana
+
+Una deliciosa fruta amarillenta, probablemente cultivada e importada por alguna
+multinacional inmoral, para llevar a cabo un corrupto acuerdo comercial.
+%%%%
+bardiche
+
+Una larga garrocha con una enorme cuchilla en uno de sus extremos.
+%%%%
+battleaxe
+
+Una gran hacha con una cuchilla de doble filo.
+%%%%
+beef jerky
+
+Una tira de carne seca de vaca o toro.
+%%%%
+blowgun
+
+Un largo y ligero canuto abierto por ambos extremos. Incapaz de hacer un gran
+daño, su principal uso es el de disparar dardos envenenados a distancia. Es muy
+silencioso.
+%%%%
+bolt
+
+Un virote para ballesta.
+%%%%
+book of air
+
+Un libro que contiene hechizos mágicos. Sientes una suave brisa al hojear sus
+páginas.
+%%%%
+book of alchemy
+
+Un libro, algo chamuscado, con un orificio que atraviesa su tapa.
+%%%%
+book of beasts
+
+Un libro con hechizos mágicos. ¡Ten cuidado, no vaya a ser que te muerda!
+%%%%
+book of burglary
+
+Un libro desgastado, con una pequeña llave entre dos de sus hojas.
+%%%%
+book of callings
+
+Un libro con hechizos mágicos.
+%%%%
+book of cantrips
+
+Un libro con hechizos mágicos.
+%%%%
+book of changes
+
+Un libro con hechizos mágicos.
+%%%%
+book of card effects
+
+Un libro con hechizos mágicos.
+%%%%
+book of charms
+
+Un libro con hechizos mágicos.
+%%%%
+book of clouds
+
+Un libro con hechizos mágicos.
+%%%%
+book of conjurations
+
+Un libro con hechizos mágicos.
+%%%%
+book of control
+
+Un libro con hechizos mágicos.
+%%%%
+book of death
+
+Un libro negro que contiene hechizos escritos con presura.
+%%%%
+book of debilitation
+
+Un libro con hechizos mágicos.
+%%%%
+book of dreams
+
+Un libro transparente. La luz se refleja de una forma extraña sobre su
+superficie.
+%%%%
+book of enchantments
+
+Un libro con hechizos mágicos.
+%%%%
+book of envenomations
+
+Un libro con hechizos mágicos.
+%%%%
+book of fixed level
+
+Un libro con hechizos mágicos.
+%%%%
+book of fixed theme
+
+Un libro con hechizos mágicos.
+%%%%
+book of fire
+
+Un libro completamente abrasado que contiene hechizos mágicos.
+%%%%
+book of flames
+
+Un libro, algo chamuscado, que contiene hechizos mágicos.
+%%%%
+book of frost
+
+Un libro con hechizos mágicos. Esta helado.
+%%%%
+book of geomancy
+
+Un libro con hechizos mágicos.
+%%%%
+book of hinderance
+
+Un libro con hechizos mágicos.
+%%%%
+book of ice
+
+Un libro con hechizos mágicos. Por un instante, un viento glacial te hiela al
+abrirlo.
+%%%%
+book of maledictions
+
+Un libro con hechizos mágicos.
+%%%%
+book of minor magic
+
+Un libro con hechizos mágicos.
+%%%%
+book of morphology
+
+Un libro con hechizos mágicos.
+%%%%
+book of necromancy
+
+Un polvoriento tomo de magia prohibida.
+%%%%
+book of party tricks
+
+Un libro con hechizos mágicos.
+%%%%
+book of power
+
+Un libro con hechizos mágicos.
+%%%%
+book of spatial translocations
+
+Un libro con hechizos mágicos.
+%%%%
+book of stalking
+
+Un libro con hechizos mágicos.
+%%%%
+book of summonings
+
+Un libro con hechizos mágicos.
+%%%%
+book of the earth
+
+Un libro con hechizos mágicos.
+%%%%
+book of the sky
+
+Un libro con hechizos mágicos. Saltan chispas desde las páginas.
+%%%%
+book of the tempests
+
+Un libro con hechizos mágicos.
+%%%%
+book of the warp
+
+Un libro con hechizos mágicos.
+%%%%
+book of transfigurations
+
+Un libro con hechizos mágicos.
+%%%%
+book of war chants
+
+Un libro con hechizos útiles para el guerrero. Las versiones contenidas en este
+libro están en forma musical, siguiendo las tradiciones de los escaldos. No
+obstante, desde el punto de vista funcional, son lo mismo que hechizos cuyas
+palabras mágicas son simplemente recitadas.
+%%%%
+book of wizardry
+
+Un libro con hechizos mágicos.
+%%%%
+bottled efreet
+
+Un poderoso ifrit, capturado por algún mago y sellado en un matraz de bronce.
+Romper el sello del frasco le hará libre para que cause estragos, quizás sobre
+ti.
+%%%%
+bow
+
+Una pieza curva de madera con una cuerda atada entre sus extremos, diseñada
+para disparar flechas. Hace bastante daño en combate, y alguien con habilidad
+puede usarlo con gran eficiencia.
+%%%%
+box of beasts
+
+Una caja mágica que contiene muchas bestias salvajes. Es posible levantar la
+tapa para permitir que salgan.
+%%%%
+broad axe
+
+Un hacha con una gran cuchilla.
+%%%%
+buckler
+
+Un pequeño escudo.
+%%%%
+cap
+
+Un sombrero de tela o cuero.
+%%%%
+centaur barding
+
+Una armadura para que los centauros la lleven sobre su parte equina.
+%%%%
+chain mail
+
+Una malla de anillos metálicos entrelazados.
+%%%%
+cheese
+
+Un trozo de queso.
+%%%%
+choko
+
+Una fruta verde e insípida que crece en una parra.
+%%%%
+chunk of flesh
+
+Un trozo de carne encontrado en el calabozo.
+%%%%
+cloak
+
+Una capa de tela.
+%%%%
+club
+
+Un pesado trozo de madera que puede ser lanzado o empuñado. Golpear a alguien
+en la cabeza mientras que duerme, parece una gran idea.
+%%%%
+corpse
+
+Un cadáver. Puedes descuartizarlo para conseguir trozos de carne comestible.
+%%%%
+crossbow
+
+Un artilugio usado para disparar pernos, que requiere un cierto tiempo para
+recargar y disparar. Es capaz de hacer un gran daño en combate.
+%%%%
+crystal ball of energy
+
+Un dispositivo mágico que sirve para recuperar energía mágica, pero su uso
+también conlleva el riesgo de vaciar completamente las reservas mágicas de su
+usuario en algunas ocasiones. Este riesgo es inversamente proporcional al
+porcentaje de energía mágica que actualmente posea el usuario. Por tanto, será
+más útil para aquellos que se encuentren cerca de tener llenas las reservas
+mágicas.
+%%%%
+crystal plate armour
+
+Una armadura de cristal, increíblemente pesada, pero extremadamente efectiva.
+%%%%
+dagger
+
+Un largo cuchillo, o pequeña espada, que puede ser empuñada o lanzada. Causa un
+daño enorme cuando se usa para apuñalar a alguien.
+%%%%
+dart
+
+Una pequeña arma arrojadiza.
+%%%%
+deck of changes
+
+Un mazo de cartas mágicas que pueden inducir cambios en su usuario o su
+entorno. Puede contener las siguientes cartas: el Elixir, Sed de Sangre,
+Metamorfosis, el Yelmo, la Cuchilla, la Sombra, el Mercenario, la Poción, Foco,
+Barajar, Experiencia, Magia Salvaje, la Hélice, el Sabio, Agua, el Mapa, el
+Zahorí, la Pala, el Campo Minado.
+%%%%
+deck of defence
+
+Un mazo de cartas mágicas, la mayoría de las cuales protegen a su usuario de
+distintas formas.
+
+Puede contener las siguientes cartas: la Tumba, la Banshee, Condenación,
+Soledad, el Urdidor, Vuelo, Sed de Sangre, Metamorfosis, el Yelmo, la Cuchilla,
+la Sombra, el Mercenario.
+%%%%
+deck of destruction
+
+Un mazo de cartas mágicas, la mayoría de las cuales sirven para sembrar la
+muerte y destrucción de los adversarios de uno (o de uno mismo, si hay mala
+suerte).
+
+Puede contener las siguientes cartas: Vitriolo, Llama, Escarcha, Veneno, la
+Centella, el Martillo, Dolor, el Orbe.
+%%%%
+deck of dungeons
+
+Un mazo de cartas mágicas que versan sobre la forma del calabozo.
+
+Puede contener las siguientes cartas: Agua, Vitrificación, el Mapa, el Zahorí,
+la Pala, Mortero, el Campo Minado.
+%%%%
+deck of escape
+
+Un mazo de cartas mágicas que principalmente versan sobre diversos mecanismos
+de escape. Ten cuidado, ya que el uso incauto de esta baraja puede hacer que
+una situación mala se vuelva aún peor.
+
+Puede contener las siguientes cartas: el Portal, la Urdimbre, Intercambio,
+Velocidad, la Tumba, la Banshee, Condenación, Soledad, el Urdidor, Vuelo.
+%%%%
+deck of punishment
+
+Un mazo de cartas mágicas que causan estragos sobre su usuario.
+
+Puede contener las siguientes cartas: Furia, el Espectro, la Maldición, Xom,
+Hambruna, Magia Salvaje, el Portal, la Tumba, Condenación, el Campo Minado,
+Tormento.
+%%%%
+deck of summonings
+
+Un mazo de cartas mágicas que retratan un extraño y maravilloso elenco de
+criaturas.
+
+Puede contener las siguientes cartas: la Cruzada, la Manada, el Pentagrama, la
+Danza, Foxfire, los Huesos, Repelencia.
+%%%%
+deck of war
+
+Un mazo de cartas mágicas útiles antes, y durante, el combate.
+
+Puede contener las siguientes cartas: el Portal, la Urdimbre, Intercambio,
+Velocidad, la Tumba, la Banshee, Condenación, Soledad, el Urdidor, Vuelo, el
+Elixir, Sed de Sangre, Metamorfosis, el Yelmo, la Cuchilla, la Sombra, el
+Mercenario, la Cruzada, la Manada, el Pentagrama, la Danza, Foxfire, los
+Huesos, Repelencia, Vitriolo, Llama, Escarcha, Veneno, la Centella, el
+Martillo, Dolor, Tormento.
+%%%%
+deck of wonders
+
+Un mazo de cartas mágicas y misteriosas, que pueden alterar, para mejor o peor,
+las condiciones físicas o psíquicas de su usuario.
+
+Puede contener las siguientes cartas: la Poción, Foco, Intercambio,
+Experiencia, Magia Salvaje, la Hélice, el Sabio, el Alquimista.
+%%%%
+demon blade
+
+Un arma terrible, forjada en las llamas del Infierno.
+%%%%
+demon trident
+
+Un arma terrible, moldeada por el fuego y el azufre.
+%%%%
+demon whip
+
+Un arma terrible, fabricada en las profundidades del Hades.
+%%%%
+dire flail
+
+Un flagelo con puntiagudas protuberancias en ambos extremos.
+%%%%
+disc of storms
+
+Este objeto extremadamente poderoso es capaz de de desencadenar una destructiva
+tormenta eléctrica. Su efectividad mejora considerablemente cuando está en las
+manos de alguien habilidoso en el uso de dispositivos mágicos, pero es
+imposible su uso por parte de alguien que no sea conductivo.
+%%%%
+double sword
+
+Un arma mágica con dos cuchillas muy afiladas.
+%%%%
+eggplant
+
+Una berenjena podrida que puedes arrojar a los desarrolladores de Crawl. (Si
+ves este mensaje, se trata de un error del programa.)
+%%%%
+empty ebony casket
+
+Una caja mágica cuyo poder se ha agotado.
+%%%%
+eveningstar
+
+Lo contrario del lucero del alba.
+%%%%
+executioner's axe
+
+Esta terrorífica arma, aunque cubierta de sangre seca y unos bastos grabados
+sobre la tortura y la muerte, aún conserva una cuchilla bien afilada. Su enorme
+cabeza parece muy capaz de desmembrar cualquiera que se haga el loco, y tienes
+la certeza de que un solo golpe bastaría.
+%%%%
+falchion
+
+Una espada con una amplia cuchilla cortante.
+%%%%
+fire dragon armour
+
+Una armadura mágica confeccionada a partir de las escamas de un dragón que
+exhalaba fuego. Proporciona gran protección contra los efectos del fuego, pero
+hace a su usuario más vulnerable a los efectos del frío.
+%%%%
+fire dragon hide
+
+La escamosa piel de un auténtico dragón. Puede usarse para elaborar una
+armadura, pero incluso en su actual estado proporciona gran protección contra
+los efectos del fuego, aunque a costa de hacerte más vulnerable a los efectos
+del frío.
+%%%%
+flail
+
+Parecido a una maza, pero el mango y la masa de metal están unidos por una
+cadena.
+%%%%
+giant club
+
+Un gigantesco trozo de madera, del tamaño ideal para las manos de un ogro.
+%%%%
+giant spiked club
+
+Un gigantesco trozo de madera, con púas en uno de sus extremos.
+%%%%
+glaive
+
+Una garrocha con una enorme y pesada cuchilla en su extremo.
+%%%%
+gold dragon armour
+
+Una armadura mágica elaborada a partir de las escamas de un dragón dorado. Es
+muy pesado y aparatoso, pero proporciona gran protección contra el fuego, el
+frío, y el veneno.
+%%%%
+gold dragon hide
+
+La gruesa y pesada piel un dragón dorado, cubierta por deslumbrantes escamas
+doradas. Confiere resistencia al fuego, el frío, y el veneno a su usuario, pero
+solamente una pequeña parte de su legendaria protección contra ataques físicos,
+a menos que sea encantado.
+%%%%
+gold piece
+
+Una montón de brillantes monedas de oro.
+%%%%
+grape
+
+Una pequeña fruta.
+%%%%
+great mace
+
+Una enorme y pesada maza.
+%%%%
+great sword
+
+Una espada con una larguísima y pesada cuchilla y un gran mango.
+%%%%
+halberd
+
+Una larga garrocha con una prominente hacha en su extremo.
+%%%%
+hammer
+
+La cosa con la que clavas puntillas, modificada para el combate.
+%%%%
+hand axe
+
+Una pequeña hacha ideada para el combate cuerpo a cuerpo, o para ser arrojada.
+%%%%
+helmet
+
+Una protección metálica para la cabeza.
+%%%%
+honeycomb
+
+Un trozo de un panal de miel, creado por abejas gigantes.
+%%%%
+horn of Geryon
+
+La trompa que pertenecía a Geryon, guardián del Vestíbulo del Infierno. Las
+leyendas cuentan que si un mortal desea acceder a uno del Infiernos, primero
+debe usar esta trompa para poder entrar.
+%%%%
+ice dragon armour
+
+Una armadura mágica confeccionada a partir de las escamas de un dragón que
+exhalaba escarcha. Proporciona gran protección contra los efectos del frío,
+pero hace a su usuario más vulnerable a los efectos del fuego.
+%%%%
+ice dragon hide
+
+La escamosa piel de un dragón. Puede usarse para elaborar una armadura, pero
+incluso en su actual estado proporciona gran protección contra los efectos del
+frío, aunque a costa de hacerte más vulnerable a los efectos del fuego.
+%%%%
+javelin
+
+Una larga y ligera vara que puede ser lanzada con la mano. {{
+    if you.race() == "Halfling"
+        or you.race() == "Kobold"
+        or you.race() == "Spriggan"
+    then
+        return "Por desgracia, es demasiada larga y rara para ti, así que eres
+incapaz de usarla."
+    else
+        return ""
+    end
+}}
+%%%%
+lajatang
+
+Una exótica y muy efectiva arma de importación. Consiste en una garrocha, con
+cuchillas en forma de media luna en ambos extremos.
+%%%%
+lamp of fire
+
+Un utensilio mágico que sirve para convocar elementales de fuego. Es poco
+fiable, y normalmente hacen falta varios intentos para lograr que funcione. Su
+uso conlleva un riesgo, que puede ser mitigado mediante el entrenamiento de la
+magia del fuego.
+%%%%

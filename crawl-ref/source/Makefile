@@ -1,3 +1,4 @@
+# vim:set ts=8 sw=4 noexpandtab:
 #
 # Dungeon Crawl Stone Soup
 # GNU Makefile
@@ -27,10 +28,11 @@
 #                     dumps).  Can be relative to "prefix", absolute or placed
 #                     in the user's home dir (~).  Remember to protect the ~
 #                     from your shell!
-#                     Warning, shared directories are no longer supported.
+#                     Warning, as of 0.8, directories shared between
+#                     multiple system users are no longer supported.
 #    SHAREDDIR     -- place to hold writeable data common to multiple
-#                     players (scores, the logfile, ghosts).  Will be placed
-#                     inside the SAVEDIR if not specified.
+#                     versions of Crawl (scores, the logfile, ghosts).  Will
+#                     be placed inside the SAVEDIR if not specified.
 #       Layout examples:
 #         prefix=~/crawl DATADIR=data/ SAVEDIR=saves/
 #                  -- everything under ~/crawl
@@ -42,9 +44,15 @@
 #    USE_ICC       -- set to use Intel's compiler
 #    LTO           -- set for better optimization but slower compilation,
 #                     requires gcc4.6+
-#    ASSERTS       -- set to enable assertion checks (implied in debug mode)
+#    NOASSERTS     -- set to disable assertion checks (ignored in debug mode)
 #    NOWIZARD      -- set to disable wizard mode.  Use if you have untrusted
 #                     remote players without DGL.
+#
+#    PROPORTIONAL_FONT -- set to a .ttf file you want to use for a proportional
+#                         font; if not set, a copy of Bitstream Vera Sans
+#                         shipped with Crawl will be used
+#    MONOSPACED_FONT   -- monospaced font; Bitstream Vera Mono Sans
+#    COPY_FONTS    -- force installing fonts
 #
 #    WEBTILES      -- set to anything to compile for Webtiles
 #    WEBDIR        -- place to hold the Webtiles client data. Can be either
@@ -59,8 +67,6 @@
 #    them somewhere in the near future.
 
 GAME = crawl
-
-ASSERTS = yes
 
 # Disable GNU Make implicit rules and variables. Leaving them enabled will slow
 # down MinGW and Cygwin builds by a very VERY noticeable degree. Besides, we have
@@ -144,6 +150,8 @@ DOXYGEN = doxygen
 DOXYGEN_SIMPLE_CONF = crawl_simple.doxy
 DOXYGEN_ALL_CONF = crawl_all.doxy
 DOXYGEN_HTML_GEN = html/
+TX-MKINI = util/tx-mkini.pl
+TX-MKTXT = util/tx-mktxt.pl
 
 export AR
 export RANLIB
@@ -213,6 +221,7 @@ ifneq (,$(findstring MINGW,$(uname_S)))
 	ifeq ($(shell gcc -v -static-libstdc++ 2>&1 | grep 'unrecognized option'),)
 		EXTRA_LIBS += -static-libgcc -static-libstdc++
 	endif
+	COPY_FONTS = yes
 endif
 ifeq ($(uname_S),Darwin)
 	STRIP := strip -x
@@ -228,6 +237,7 @@ ifeq ($(uname_S),Darwin)
 		BUILD_SDLIMAGE = YesPlease
 		BUILD_LIBPNG = YesPlease
 	endif
+	COPY_FONTS = yes
 endif
 ifdef USE_LUAJIT
 	BUILD_LUA := YesPlease
@@ -253,7 +263,7 @@ ifdef BUILD_ALL
 endif
 
 # Should be the first rule, but must come after $(GAME) is set.
-all: greet $(GAME) docs webserver
+all: greet check-fonts $(GAME) docs webserver
 
 LIBPCRE := contrib/install/$(ARCH)/lib/libpcre.a
 LIBSDL := contrib/install/$(ARCH)/lib/libSDL.a
@@ -269,7 +279,6 @@ endif
 LIBZ := contrib/install/$(ARCH)/lib/libz.a
 
 ifndef CROSSHOST
-	LUA_INCLUDE_DIR := /usr/include/lua5.1
 	SQLITE_INCLUDE_DIR := /usr/include
 else
 	# This is totally wrong, works only with some old-style setups, and
@@ -281,10 +290,8 @@ else
 	#
 	# Needs to be replaced by compile checks.  Guessing the paths is fragile,
 	# while the compiler knows them already.
-	LUA_INCLUDE_DIR := /usr/$(ARCH)/include/lua5.1
 	SQLITE_INCLUDE_DIR := /usr/$(ARCH)/include
 endif
-LUA_LIB := -llua5.1
 SQLITE_LIB := -lsqlite3
 
 #
@@ -293,6 +300,9 @@ SQLITE_LIB := -lsqlite3
 ifdef TILES
 TILES_ANY = YesPlease
 OBJECTS += $(TILES_OBJECTS) $(GLTILES_OBJECTS)
+  ifdef WEBTILES
+    OBJECTS += $(error Web and local tiles are exclusive)
+  endif
 endif
 
 ifdef WEBTILES
@@ -366,7 +376,7 @@ endif
 # If you're installing Crawl for multiple users, you *must* set this to a
 # valid path before building Crawl. This is not necessary if you are building
 # Crawl for a single user.
-# If you're installing to /usr or /usr/local, we have sane defaults.
+# If you're installing to /usr, /usr/local or /opt, we have sane defaults.
 
 # SAVEDIR := saves/
 # DATADIR := data/
@@ -393,9 +403,17 @@ MARCH := $(uname_M)
 
 ifndef NO_AUTO_SDK
 
+# The SDK locations were moved in 10.8; this snippet tries to find them
+# there first, then reverts to the original location.
+ifeq ($(shell test -e /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer || echo NOPE),)
+DEVELOPER_PATH := /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer
+else
+DEVELOPER_PATH := /Developer
+endif
+
 # Find the oldest SDK available, in attempt to make this build as
 # backward-compatible as we possibly can.
-SDK_VER := $(shell ls /Developer/SDKs | sort -n | head -1 | perl -pe 's/^MacOSX//g;s/.sdk$$//g')
+SDK_VER := $(shell ls $(DEVELOPER_PATH)/SDKs | sort -n | head -1 | perl -pe 's/^MacOSX//g;s/.sdk$$//g')
 
 ifeq ($(SDK_VER),10.4u)
 SDK_VER := 10.4
@@ -427,9 +445,9 @@ endif
 # else is much easier to predict the name of.
 ifeq ($(SDK_VER),10.4)
 GCC_VER := 4.0
-SDKROOT := /Developer/SDKs/MacOSX$(SDK_VER)u.sdk
+SDKROOT := $(DEVELOPER_PATH)/SDKs/MacOSX$(SDK_VER)u.sdk
 else
-SDKROOT := /Developer/SDKs/MacOSX$(SDK_VER).sdk
+SDKROOT := $(DEVELOPER_PATH)/SDKs/MacOSX$(SDK_VER).sdk
 endif
 
 ifneq ($(shell test -d $(SDKROOT) || echo NOPE),)
@@ -513,16 +531,27 @@ endif
 endif
 
 ifndef BUILD_LUA
-  ifneq (,$(wildcard $(LUA_INCLUDE_DIR)/lua.h))
-    INCLUDES_L += -I$(LUA_INCLUDE_DIR)
-    LIBS += $(LUA_LIB)
-  else
-    ifneq (,$(wildcard /usr/include/lua.h))
-      LIBS += -llua
-    else
+  ifneq ($(shell $(PKGCONFIG) lua5.1 --exists || echo no),)
+    ifneq ($(shell $(PKGCONFIG) lua --exists || echo no),)
       BUILD_LUA = yes
+    else
+      ifeq ($(shell $(PKGCONFIG) lua --modversion | head -c 3),5.1)
+        LUA_PACKAGE = lua
+      else
+        BUILD_LUA = yes
+      endif
     endif
+  else
+    LUA_PACKAGE = lua5.1
   endif
+endif
+ifndef BUILD_LUA
+  ifndef LUA_PACKAGE
+    LUA_PACKAGE = lua5.1
+  endif
+  INCLUDES_L += $(shell $(PKGCONFIG) $(LUA_PACKAGE) --cflags-only-I)
+  CFLAGS_L  += $(shell $(PKGCONFIG) $(LUA_PACKAGE) --cflags-only-other)
+  LIBS += $(shell $(PKGCONFIG) $(LUA_PACKAGE) --libs)
 endif
 
 ifndef BUILD_SQLITE
@@ -619,17 +648,10 @@ endif
 DEFINES_L += $(PNG_CFLAGS) $(FREETYPE_CFLAGS) $(SDL_CFLAGS)
 INCLUDES_L += $(PNG_INCLUDE) $(FREETYPE_INCLUDE) $(SDL_INCLUDE)
 
-ifdef PROPORTIONAL_FONT
-DEFINES += -DPROPORTIONAL_FONT=\"$(PROPORTIONAL_FONT)\"
-endif
-ifdef MONOSPACED_FONT
-DEFINES += -DMONOSPACED_FONT=\"$(MONOSPACED_FONT)\"
-endif
-
 endif # TILES
 
 # On clang, unknown -Wfoo is merely a warning, thus -Werror.
-CFWARN_L += $(shell w=-Wno-array-bounds;echo|$(GCC) -E - -Werror $$w >/dev/null 2>&1 && echo $$w)
+CFWARN_L += $(shell w=-Wno-array-bounds;echo|$(GXX) -E - -Werror $$w >/dev/null 2>&1 && echo $$w)
 
 CFWARN_L += -Wno-parentheses -Wno-unused-parameter -Wwrite-strings -Wshadow
 CFOTHERS_L = $(EXTERNAL_FLAGS_L) $(EXTRA_FLAGS) $(DEFINES) $(SDL_CFLAGS)
@@ -701,7 +723,7 @@ export CCACHE_CPP2 = yes
 endif
 endif
 
-ifdef ASSERTS
+ifndef NOASSERTS
 DEFINES += -DASSERTS
 endif
 
@@ -764,9 +786,17 @@ ifneq ($(strip $(DATADIR)),)
     endif
   endif
   CFOTHERS_L += -DDATA_DIR_PATH=\"$(abspath $(DATADIR))/\"
+  FONTDIR = $(abspath $(DATADIR))dat/tiles/
 else
   ifneq ($(prefix),)
 	DATADIR := $(strip $(prefix))/$(strip $(DATADIR))
+        FONTDIR = $(strip $(prefix))/$(strip $(DATADIR))dat/tiles/
+  else
+    ifneq ($(DESTDIR),)
+        FONTDIR = dat/tiles/
+    else
+        FONTDIR = contrib/fonts/
+    endif
   endif
 endif
 datadir_fp := $(abspath $(strip $(DESTDIR))$(strip $(DATADIR)))
@@ -785,6 +815,62 @@ else
   endif
 endif
 webdir_fp := $(abspath $(strip $(DESTDIR))$(strip $(WEBDIR)))
+
+
+# Fonts.
+ifdef TILES
+
+OUR_PROPORTIONAL_FONT=DejaVuSans.ttf
+OUR_MONOSPACED_FONT=DejaVuSansMono.ttf
+
+ifdef PROPORTIONAL_FONT
+  DEFINES += -DPROPORTIONAL_FONT=\"$(PROPORTIONAL_FONT)\"
+  ifneq (,$(COPY_FONTS))
+    INSTALL_FONTS += $(PROPORTIONAL_FONT)
+  endif
+else
+  SYS_PROPORTIONAL_FONT = $(shell find /usr/share/fonts -iname $(OUR_PROPORTIONAL_FONT)|head -n 1)
+  ifeq (,$(SYS_PROPORTIONAL_FONT))
+    SYS_PROPORTIONAL_FONT = $(shell find /usr/local/share/fonts -iname $(OUR_PROPORTIONAL_FONT)|head -n 1)
+  endif
+  ifneq (,$(SYS_PROPORTIONAL_FONT))
+    ifeq (,$(COPY_FONTS))
+      DEFINES += -DPROPORTIONAL_FONT=\"$(SYS_PROPORTIONAL_FONT)\"
+    else
+      DEFINES += -DPROPORTIONAL_FONT=\"$(FONTDIR)$(OUR_PROPORTIONAL_FONT)\"
+      INSTALL_FONTS += $(SYS_PROPORTIONAL_FONT)
+    endif
+  else
+    DEFINES += -DPROPORTIONAL_FONT=\"$(FONTDIR)$(OUR_PROPORTIONAL_FONT)\"
+    INSTALL_FONTS += contrib/fonts/$(OUR_PROPORTIONAL_FONT)
+  endif
+endif
+
+ifdef MONOSPACED_FONT
+  DEFINES += -DMONOSPACED_FONT=\"$(MONOSPACED_FONT)\"
+  ifneq (,$(COPY_FONTS))
+    INSTALL_FONTS += $(MONOSPACED_FONT)
+  endif
+else
+  SYS_MONOSPACED_FONT = $(shell find /usr/share/fonts -iname $(OUR_MONOSPACED_FONT)|head -n 1)
+  ifeq (,$(SYS_MONOSPACED_FONT))
+    SYS_MONOSPACED_FONT = $(shell find /usr/local/share/fonts -iname $(OUR_MONOSPACED_FONT)|head -n 1)
+  endif
+  ifneq (,$(SYS_MONOSPACED_FONT))
+    ifeq (,$(COPY_FONTS))
+      DEFINES += -DMONOSPACED_FONT=\"$(SYS_MONOSPACED_FONT)\"
+    else
+      DEFINES += -DMONOSPACED_FONT=\"$(FONTDIR)$(OUR_MONOSPACED_FONT)\"
+      INSTALL_FONTS += $(SYS_MONOSPACED_FONT)
+    endif
+  else
+    DEFINES += -DMONOSPACED_FONT=\"$(FONTDIR)$(OUR_MONOSPACED_FONT)\"
+    INSTALL_FONTS += contrib/fonts/$(OUR_MONOSPACED_FONT)
+  endif
+endif
+
+endif
+
 
 ifndef NO_NCURSES
 
@@ -942,13 +1028,14 @@ LIBS += $(CONTRIB_LIBS) $(EXTRA_LIBS)
 DOC_BASE        := ../docs
 DOC_TEMPLATES   := $(DOC_BASE)/template
 GENERATED_DOCS  := $(DOC_BASE)/aptitudes.txt $(DOC_BASE)/FAQ.html $(DOC_BASE)/crawl_manual.txt
-GENERATED_HEADERS := art-enum.h #the rest are private
-GENERATED_FILES := $(GENERATED_HEADERS) art-data.h mon-mst.h \
-                   $(RLTILES)/dc-unrand.txt build.h compflag.h dat/dlua/tags.lua
+GENERATED_HEADERS := art-enum.h config.h #the rest are private
+GENERATED_FILES := $(GENERATED_HEADERS) art-data.h mon-mst.h mi-enum.h \
+                   $(RLTILES)/dc-unrand.txt build.h compflag.h dat/dlua/tags.lua \
+                   cmd-name.h $(INI_OBJECTS)
 
-GAME_DEPENDS  := $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS) dat/dlua/tags.lua
 SRC_PKG_BASE  := stone_soup
 SRC_VERSION   := $(shell git describe --tags $(MERGE_BASE) 2>/dev/null || cat util/release_ver)
+MAJOR_VERSION = $(shell echo "$(SRC_VERSION)"|sed -r 's/-.*//;s/^([^.]+\.[^.]+).*/\1/')
 
 export SRC_VERSION
 
@@ -958,8 +1045,10 @@ SRC_PKG_TAR_NODEPS := $(PKG_SRC_DIR)-nodeps.tar.xz
 SRC_PKG_ZIP   := $(PKG_SRC_DIR).zip
 
 greet:
-	@printf "  * If you experience any problems building Crawl, please take a second look\\n"\
-	"  * at INSTALL.txt: the solution to your problem just might be in there!\\n"
+	@if [ ! -e $(GAME) ]; then\
+		printf "  * If you experience any problems building Crawl, please take a second look\\n"\
+		"  * at INSTALL.txt: the solution to your problem just might be in there!\\n";\
+	fi
 
 docs: $(GENERATED_DOCS)
 
@@ -978,7 +1067,7 @@ webserver/game_data/static/%.png: dat/tiles/%.png
 
 TILEINFOJS = $(TILEIMAGEFILES) dngn
 TITLEIMGS = denzi_dragon denzi_kitchen_duty denzi_summoner \
-            denzi_undead_warrior omndra_zot_demon omndra_fire_mage \
+            denzi_undead_warrior omndra_zot_demon firemage \
             shadyamish_octm denzi_evil_mage denzi_invasion
 
 STATICFILES = $(TILEIMAGEFILES:%=webserver/game_data/static/%.png) \
@@ -1140,8 +1229,10 @@ endif
 	$(STRIP) $(prefix_fp)/$(bin_prefix)/$(GAME)
 	mkdir -p $(datadir_fp)/dat/des
 	mkdir -p $(datadir_fp)/dat/dlua
+	mkdir -p $(datadir_fp)/dat/clua
 	mkdir -p $(datadir_fp)/dat/lua
 	mkdir -p $(datadir_fp)/dat/database
+	mkdir -p $(datadir_fp)/dat/defaults
 	mkdir -p $(datadir_fp)/dat/descript
 	mkdir -p $(datadir_fp)/docs/develop
 	mkdir -p $(datadir_fp)/docs/develop/levels
@@ -1155,9 +1246,11 @@ endif
           while read x; \
 	    do echo "dgn.load_des_file('$$x')"; \
 	    done >>$(datadir_fp)/dat/dlua/loadmaps.lua
+	$(COPY)   dat/clua/*.lua $(datadir_fp)/dat/clua/
 	$(COPY)   dat/lua/*.lua $(datadir_fp)/dat/lua/
-	$(COPY)   dat/database/*.txt $(datadir_fp)/dat/database/
-	$(COPY)   dat/descript/*.txt $(datadir_fp)/dat/descript/
+	$(COPY_R) dat/database/* $(datadir_fp)/dat/database/
+	$(COPY_R) dat/defaults/* $(datadir_fp)/dat/defaults/
+	$(COPY_R) dat/descript/* $(datadir_fp)/dat/descript/
 	$(COPY) ../docs/*.txt $(datadir_fp)/docs/
 	$(COPY) ../docs/develop/*.txt $(datadir_fp)/docs/develop/
 	$(COPY) ../docs/develop/levels/*.txt $(datadir_fp)/docs/develop/levels/
@@ -1171,11 +1264,8 @@ endif
 ifdef TILES
 	mkdir -p $(datadir_fp)/dat/tiles
 	$(COPY) dat/tiles/*.png $(datadir_fp)/dat/tiles/
-ifndef PROPORTIONAL_FONT
-	$(COPY) dat/tiles/Vera.ttf $(datadir_fp)/dat/tiles/
-endif
-ifndef MONOSPACED_FONT
-	$(COPY) dat/tiles/VeraMono.ttf $(datadir_fp)/dat/tiles/
+ifneq (,$(INSTALL_FONTS))
+	$(COPY) $(INSTALL_FONTS) $(datadir_fp)/dat/tiles/
 endif
 endif
 ifdef WEBTILES
@@ -1212,7 +1302,7 @@ ifeq ($(USE_DGAMELAUNCH),)
 endif
 endif
 
-clean: clean-rltiles clean-webserver
+clean: clean-rltiles clean-webserver tx-clean
 	+$(MAKE) -C $(UTIL) clean
 	$(RM) $(GAME) $(GAME).exe $(GENERATED_FILES) $(EXTRA_OBJECTS) libw32c.o\
 	    libunix.o $(ALL_OBJECTS) $(ALL_OBJECTS:.o=.d) *.ixx  \
@@ -1229,7 +1319,7 @@ distclean: clean clean-contrib clean-rltiles
 	$(RM) -r mac-app-zips
 	$(RM) -r $(DOXYGEN_HTML_GEN)
 
-$(GAME): $(GAME_DEPENDS)
+$(GAME): $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS) dat/dlua/tags.lua
 	+$(QUIET_LINK)$(CXX) $(LDFLAGS) $(EXTRA_OBJECTS) $(OBJECTS) -o $(GAME) $(LIBS)
 
 debug: all
@@ -1248,7 +1338,7 @@ doxygen-all:
 #
 ifndef NO_INLINE_DEPGEN
 # See info node: (gcc) Preprocessor Options
-INLINE_DEPGEN_CFLAGS = -Wp,-MMD,$*.d,-MT,$@
+INLINE_DEPGEN_CFLAGS = -MMD
 endif
 
 $(DEPS): %.d: %.cc
@@ -1286,9 +1376,15 @@ ifdef NO_INLINE_DEPGEN
 	$(QUIET_DEPEND)$(or $(DEPCXX),$(CXX)) -MM $(ALL_CFLAGS) -MT $*.o $< > $*.d
 endif
 	$(QUIET_CXX)$(CXX) $(ALL_CFLAGS) $(INLINE_DEPGEN_CFLAGS) -c $< -o $@
+ifndef NO_INLINE_DEPGEN
+	@if [ -f $(@:%.o=%.d) ]; then touch -r $@ $(@:%.o=%.d); fi
+endif
 
 icon.o: util/crawl.rc util/crawl.ico .cflags
 	$(QUIET_WINDRES)$(WINDRES) util/crawl.rc icon.o
+
+config.h: util/configure .cflags
+	${QUIET_GEN}util/configure "$(CXX)" $(ALL_CFLAGS)
 
 #
 # Contribs
@@ -1315,14 +1411,156 @@ art-enum.h: art-data.h
 mon-mst.h: mon-spll.h util/gen-mst.pl
 	$(QUIET_GEN)util/gen-mst.pl
 
+cmd-name.h: enum.h util/cmd-name.pl
+	$(QUIET_GEN)util/cmd-name.pl
+
 dat/dlua/tags.lua: tag-version.h util/gen-luatags.pl
 	$(QUIET_GEN)util/gen-luatags.pl
+
+mi-enum.h: mon-info.h util/gen-mi-enum
+	$(QUIET_GEN)util/gen-mi-enum
 
 $(RLTILES)/dc-unrand.txt: art-data.h
 
 artefact.o: art-data.h art-enum.h
 mon-util.o: mon-mst.h
 mon-util.d: mon-mst.h
+l_moninf.o: mi-enum.h
+macro.o: cmd-name.h
+
+#############################################################################
+# Translation files
+#
+# Only support a single dir for now
+TX = tx
+TX-CONFIG = .tx/config
+TX-SET = $(TX) set --auto-local --source-lang en_AU -t INI --mode=reviewed --execute
+TX-DIR = dat/descript
+
+# List of languages
+TX-LANG = $(filter-out en, $(notdir $(wildcard $(TX-DIR)/??)))
+
+# Text source files under git versioning
+TX-TSOURCES = $(wildcard $(TX-DIR)/*.txt)
+TX-TTRANS = $(foreach lang, $(TX-LANG), $(wildcard $(TX-DIR)/$(lang)/*.txt))
+TX-TXT = $(TX-TSOURCES) $(TX-TTRANS)
+
+# Files generated from the source. To be pushed to transifex
+TX-SOURCES = $(TX-TSOURCES:.txt=.ini)
+TX-TRANS = $(TX-TTRANS:.txt=.ini)
+TX-INI = $(TX-SOURCES) $(TX-TRANS)
+
+# What file to used to generate the quote files to push to transifex
+# We add placeholder entries in it to allow users to submit new quotes
+TX-QUOTES = $(TX-DIR)/quotes.ini
+TX-QUOTES-ALL = $(TX-DIR)/quotes-all.ini
+TX-HAVE-QUOTES = $(foreach name, branches features items monsters unident, $(TX-DIR)/$(name).ini)
+
+# Files pulled from transifex. It is different than TX-TRANS, because it can
+# contain new files for which we have no .txt yet
+TX-NEW-TRANS = $(foreach lang, $(TX-LANG), $(wildcard $(TX-DIR)/$(lang)/*.ini))
+TX-NEW-TEXT = $(filter-out, quotes, $(wildcard $(TX-DIR)/en/*.ini))
+TX-NEW-QUOTES = $(TX-DIR)/en/quotes.ini
+TX-NEW = $(TX-NEW-TRANS) $(TX-NEW-TEXT) $(TX-NEW-QUOTES)
+
+TX-COMMIT-AUTHOR = "Translators <crawl-ref-discuss@lists.sourceforge.net>"
+
+.PHONY: tx-clean tx-txt tx-init tx-setup tx-check tx-pull tx-push tx-sync
+
+tx-clean:
+	@echo "Removing transifex temporary files"
+	@$(RM) $(TX-INI) $(TX-QUOTES-ALL) $(TX-NEW)
+
+$(TX-QUOTES-ALL): $(TX-QUOTES) $(TX-HAVE-QUOTES)
+	util/tx-quotes.pl $(TX-QUOTES) $(TX-QUOTES-ALL) $(TX-HAVE-QUOTES)
+
+# XXX for database file, we'll need a conditional to remove the -u option.
+%.ini: %.txt
+	$(TX-MKINI) -u $*.txt
+
+tx-txt:
+	-if [ "$(TX-NEW-TRANS)" != "" ]; then\
+		$(TX-MKTXT) -w $(TX-NEW-TRANS);\
+	fi
+	-if [ "$(TX-NEW-TEXT)" != "" ]; then\
+		$(TX-MKTXT) -mw -d $(TX-DIR) $(TX-NEW-TEXT);\
+	fi
+	-if [ "$(TX-NEW-QUOTES)" != "" ]; then\
+		$(TX-MKTXT) -amw -d $(TX-DIR) $(TX-NEW-QUOTES);\
+	fi
+
+tx-init:
+	$(RM) $(TX-CONFIG)
+	if [ -d .tx ]; then\
+		rmdir --ignore-fail-on-non-empty .tx;\
+	fi
+	$(MAKE) tx-setup
+
+tx-setup: $(TX-SOURCES) $(TX-QUOTES-ALL)
+	if [ ! -e $(TX-CONFIG) ]; then\
+		$(TX) init;\
+	fi
+	for FILE in $(TX-SOURCES); do\
+		DIR=$$(dirname $$FILE);\
+		RES=$$(basename $$FILE .ini);\
+		grep -q dcss.$$RES .tx/config;\
+		if [ $$? -ne 0 ]; then\
+			if [ $$RES = quotes ]; then\
+				SRC=$$DIR/quotes-all.ini;\
+			else\
+				SRC=$$DIR/$$RES.ini;\
+			fi;\
+			$(TX-SET) -r dcss.$$RES --source-file $$SRC "$$DIR/<lang>/$$RES.ini";\
+		fi;\
+	done
+
+tx-check: $(TX-INI)
+	@if $(TX-MKTXT) -mtw $(TX-SOURCES) && $(TX-MKTXT) -tw $(TX-TRANS); then\
+		exit 0;\
+	fi;\
+	echo "Changes detected when converting to transifex format.";\
+	git diff --quiet HEAD -- $(TX-TXT) || echo "Warning: some of the text files have uncommited changes!";\
+	read -p "Attempt automatic fix? (Y/n) " RESP;\
+	if [ "$$RESP" = n -o "$$RESP" = N ]; then\
+		exit 1;\
+	fi;\
+	$(TX-MKTXT) -mw $(TX-SOURCES);\
+	$(TX-MKTXT) -w $(TX-TRANS);\
+
+tx-commit:
+	@if git diff --quiet $(TX-TXT); then\
+		exit 0;\
+	fi;\
+	git diff $(TX-TXT);\
+	read -p "Commit? (Y/n) " RESP;\
+	if [ "$$RESP" = n -o "$$RESP" = N ]; then\
+		exit 1;\
+	fi;\
+	if [ -z "$(TX-COMMIT-MSG)" ]; then\
+		MSG="Transifex.";\
+	else\
+		MSG="$(TX-COMMIT-MSG)";\
+	fi;\
+	git add $(TX-TXT);\
+	git commit -e -s -m "$$MSG" --author=$(TX-COMMIT-AUTHOR)
+
+tx-pull:
+	@echo "Cleaning up downloaded translations.";\
+	$(RM) $(TX-NEW)
+	tx pull -a --minimum-perc=1 --mode=reviewed
+
+tx-push: $(TX-INI) $(TX-QUOTES-ALL)
+	$(TX-MKINI) -umd $(TX-DIR)/en $(TX-TSOURCES)
+	tx push -s
+	tx push -t --skip
+
+tx-sync:
+	$(MAKE) tx-check
+	@$(MAKE) tx-commit TX-COMMIT-MSG="Transifex format fix."
+	$(MAKE) tx-pull
+	$(MAKE) tx-txt
+	@$(MAKE) tx-commit TX-COMMIT-MSG="Transifex sync."
+	$(MAKE) tx-push
 
 #############################################################################
 # RLTiles
@@ -1346,6 +1584,14 @@ clean-rltiles:
 
 ifdef TILES_ANY
 $(GAME): $(DESTTILEFILES)
+endif
+
+.PHONY: check-fonts
+check-fonts:
+ifneq (,$(INSTALL_FONTS))
+	@for x in $(INSTALL_FONTS); do if [ ! -e "$$x" ]; then echo \
+	"Font file $${x##contrib/fonts/} not found. Please install it (possibly via contribs)."; \
+	exit 1; fi; done
 endif
 
 #############################################################################
@@ -1415,6 +1661,22 @@ endif
 	mv build-win/crawl.exe build-win/crawl-console.exe
 	mv build-win/docs/CREDITS.txt build-win/
 	echo $(SRC_VERSION) >build-win/version.txt
+
+ZIP_DOCS=../README.txt ../licence.txt
+package-windows-zips:
+ifneq ($(GAME),crawl.exe)
+	@echo "This is only for Windows; please specify CROSSHOST.";false
+endif
+	+$(MAKE) clean
+	+$(MAKE) TILES=y DESTDIR=build-win/stone_soup-tiles-$(MAJOR_VERSION) install
+	cp -p $(ZIP_DOCS) build-win/stone_soup-tiles-$(MAJOR_VERSION)/
+	cd build-win && zip -9r ../stone_soup-$(SRC_VERSION)-tiles-win32.zip *
+	rm -rf build-win
+	+$(MAKE) DESTDIR=build-win/stone_soup-$(MAJOR_VERSION) install
+	cp -p $(ZIP_DOCS) build-win/stone_soup-$(MAJOR_VERSION)/
+	cd build-win && zip -9r ../stone_soup-$(SRC_VERSION)-win32.zip *
+	rm -rf build-win
+	if which advzip >/dev/null;then advzip -z4 stone_soup-$(SRC_VERSION)*-win32.zip;fi
 
 #############################################################################
 # Building Mac app bundles

@@ -14,6 +14,7 @@
 #include "dactions.h"
 #include "env.h"
 #include "items.h"
+#include "libutil.h"
 #include "message.h"
 #include "mgen_data.h"
 #include "mon-behv.h"
@@ -37,7 +38,7 @@
  * @param mons    The monster to be checked.
  * @returns       True if the monster is Pikel, otherwise false.
 **/
-bool mons_is_pikel (monster* mons)
+bool mons_is_pikel(monster* mons)
 {
     return (mons->type == MONS_PIKEL
             || (mons->props.exists("original_name")
@@ -81,7 +82,7 @@ void pikel_band_neutralise()
  * @param mons    The monster to check.
  * @returns       True if Kirke, false otherwise.
 **/
-bool mons_is_kirke (monster* mons)
+bool mons_is_kirke(monster* mons)
 {
     return (mons->type == MONS_KIRKE
             || (mons->props.exists("original_name")
@@ -146,7 +147,7 @@ void hogs_to_humans()
 
         mi->move_to_pos(pos);
         mi->enchantments = enchantments;
-        mi->hit_points   = std::max(1, (int) (mi->max_hit_points * hp));
+        mi->hit_points   = max(1, (int) (mi->max_hit_points * hp));
         mi->flags        = mi->flags | preserve_flags;
 
         const bool can_see = you.can_see(*mi);
@@ -196,11 +197,15 @@ void hogs_to_humans()
     else if (any > 1)
     {
         if (any == human)
+        {
             mpr("No longer under Kirke's spell, all hogs revert to their "
                 "human forms!");
+        }
         else
+        {
             mpr("No longer under Kirke's spell, all hogs revert to their "
                 "original forms!");
+        }
     }
 
     // Revert the player as well.
@@ -314,13 +319,13 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
 
     // If you've stabbed one of them, the other one is likely asleep still.
     if (mons->asleep())
-        behaviour_event(mons, ME_DISTURB, MHITNOT, mons->pos());
+        behaviour_event(mons, ME_DISTURB, 0, mons->pos());
 
     // Will generate strings such as 'Duvessa_Duvessa_dies' or, alternately
     // 'Dowan_Dowan_dies', but as neither will match, these can safely be
     // ignored.
-    std::string key = "_" + mons->name(DESC_THE, true) + "_"
-                          + twin->name(DESC_THE) + "_dies_";
+    string key = mons->name(DESC_THE, true) + "_"
+                 + twin->name(DESC_THE) + "_dies_";
 
     if (mons_near(mons) && !mons->observable())
         key += "invisible_";
@@ -336,7 +341,10 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
         mons->props["speech_prefix"] = "twin_ikilled";
     }
 
-    std::string death_message = getSpeakString(key);
+    // Drop the final '_'.
+    key.erase(key.length() - 1);
+
+    string death_message = getSpeakString(key);
 
     // Check if they can speak or not: they may have been polymorphed.
     if (mons_near(mons) && !death_message.empty() && mons->can_speak())
@@ -347,11 +355,15 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
     if (found_duvessa)
     {
         if (mons_near(mons))
+        {
             // Provides its own flavour message.
             mons->go_berserk(true);
+        }
         else
+        {
             // She'll go berserk the next time she sees you
             mons->props["duvessa_berserk"] = bool(true);
+        }
     }
     else if (found_dowan)
     {
@@ -378,7 +390,7 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
  *
  * @param twin    The orignial monster pacified.
 **/
-void elven_twins_pacify (monster* twin)
+void elven_twins_pacify(monster* twin)
 {
     bool found_duvessa = false;
     bool found_dowan = false;
@@ -433,7 +445,7 @@ void elven_twins_pacify (monster* twin)
  *
  * @param twin    The monster attacked.
 **/
-void elven_twins_unpacify (monster* twin)
+void elven_twins_unpacify(monster* twin)
 {
     bool found_duvessa = false;
     bool found_dowan = false;
@@ -465,7 +477,7 @@ void elven_twins_unpacify (monster* twin)
     if (!found_duvessa && !found_dowan)
         return;
 
-    behaviour_event(mons, ME_WHACK, MHITYOU, you.pos(), false);
+    behaviour_event(mons, ME_WHACK, &you, you.pos(), false);
 }
 
 /**
@@ -477,7 +489,7 @@ void elven_twins_unpacify (monster* twin)
  *
  * @param spirit    The monster that died.
 **/
-void spirit_fades (monster *spirit)
+void spirit_fades(monster *spirit)
 {
     // XXX: No check for silence; summoned?
     if (mons_near(spirit))
@@ -521,12 +533,13 @@ void spirit_fades (monster *spirit)
 /**
  * Determine if a monster is a phoenix.
  *
- * Monsters that were previously phoenixes are not considered phoenixes for phoenix resurrection purposes, I suppose.
+ * Monsters that were previously phoenixes are not considered phoenixes for
+ * phoenix resurrection purposes, I suppose.
  *
  * @param mons      The monster to check.
  * @returns         True if Phoenix, False otherwise.
 **/
-bool mons_is_phoenix (const monster* mons)
+bool mons_is_phoenix(const monster* mons)
 {
     return (mons->type == MONS_PHOENIX);
 }
@@ -536,7 +549,7 @@ bool mons_is_phoenix (const monster* mons)
  *
  * @param mons      The monster that just died.
 **/
-void phoenix_died (monster* mons)
+void phoenix_died(monster* mons)
 {
     int durt = (random2(10) + random2(5) + 10) * BASELINE_DELAY;
     env.markers.add(new map_phoenix_marker(mons->pos(),
@@ -554,11 +567,11 @@ void phoenix_died (monster* mons)
  *
  * @returns     Vector of map_phoenix_markers.
 **/
-std::vector<map_phoenix_marker*> get_phoenix_markers ()
+static vector<map_phoenix_marker*> get_phoenix_markers()
 {
-    std::vector<map_phoenix_marker*> mm_markers;
+    vector<map_phoenix_marker*> mm_markers;
 
-    std::vector<map_marker*> markers = env.markers.get_all(MAT_PHOENIX);
+    vector<map_marker*> markers = env.markers.get_all(MAT_PHOENIX);
     for (int i = 0, size = markers.size(); i < size; ++i)
     {
         map_marker *mark = markers[i];
@@ -578,9 +591,9 @@ std::vector<map_phoenix_marker*> get_phoenix_markers ()
  *
  * @param duration      Duration.
 **/
-void timeout_phoenix_markers (int duration)
+void timeout_phoenix_markers(int duration)
 {
-    std::vector<map_phoenix_marker*> markers = get_phoenix_markers();
+    vector<map_phoenix_marker*> markers = get_phoenix_markers();
 
     for (int i = 0, size = markers.size(); i < size; ++i)
     {
@@ -592,9 +605,9 @@ void timeout_phoenix_markers (int duration)
         if (mmark->duration < 0)
         {
             // Now, look for the corpse
-            bool found_body;
+            bool found_body = false;
             coord_def place_at;
-            bool from_inventory;
+            bool from_inventory = false;
 
             for (radius_iterator ri(mmark->corpse_pos, LOS_RADIUS, C_ROUND, NULL, false); ri; ++ri)
             {
@@ -696,13 +709,13 @@ void timeout_phoenix_markers (int duration)
  *                 shedu.
  * @returns        Either a monster* or NULL if a monster was not found.
 **/
-monster* get_shedu_pair (const monster* mons)
+monster* get_shedu_pair(const monster* mons)
 {
     monster* pair = monster_by_mid(mons->number);
     if (pair)
-        return (pair);
+        return pair;
 
-    return (NULL);
+    return NULL;
 }
 
 /**
@@ -713,12 +726,12 @@ monster* get_shedu_pair (const monster* mons)
  * @param mons    The monster whose pair we are searching for.
  * @returns        True if the pair is alive, False otherwise.
 **/
-bool shedu_pair_alive (const monster* mons)
+bool shedu_pair_alive(const monster* mons)
 {
     if (get_shedu_pair(mons) == NULL)
-        return (false);
+        return false;
 
-    return (true);
+    return true;
 }
 
 /**
@@ -745,7 +758,7 @@ bool mons_is_shedu(const monster* mons)
  *
  * @param mons    The shedu who died.
 **/
-void shedu_do_resurrection (const monster* mons)
+void shedu_do_resurrection(const monster* mons)
 {
     if (!mons_is_shedu(mons))
         return;
@@ -759,7 +772,7 @@ void shedu_do_resurrection (const monster* mons)
 
     // Wake the other one up if it's asleep.
     if (my_pair->asleep())
-        behaviour_event(my_pair, ME_DISTURB, MHITNOT, my_pair->pos());
+        behaviour_event(my_pair, ME_DISTURB, 0, my_pair->pos());
 
     if (you.can_see(my_pair))
         simple_monster_message(my_pair, " ceases action and prepares to resurrect its fallen mate.");
@@ -778,7 +791,7 @@ void shedu_do_resurrection (const monster* mons)
  *
  * @param mons    The shedu who is to perform the resurrection.
 **/
-void shedu_do_actual_resurrection (monster* mons)
+void shedu_do_actual_resurrection(monster* mons)
 {
     // Here is where we actually recreate the dead
     // shedu.

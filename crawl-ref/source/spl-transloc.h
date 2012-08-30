@@ -5,7 +5,7 @@
 
 spret_type cast_controlled_blink(int pow, bool fail);
 int blink(int pow, bool high_level_controlled_blink, bool wizard_blink = false,
-          std::string *pre_msg = NULL);
+          string *pre_msg = NULL);
 spret_type cast_blink(bool allow_partial_control, bool fail);
 void random_blink(bool, bool override_abyss = false, bool override_stasis = false);
 
@@ -22,7 +22,8 @@ spret_type cast_portal_projectile(int pow, bool fail);
 
 struct bolt;
 spret_type cast_apportation(int pow, bolt& beam, bool fail);
-int cast_semi_controlled_blink(int pow);
+spret_type cast_semi_controlled_blink(int pow, bool cheap_cancel,
+                                      bool fail = false);
 spret_type cast_golubrias_passage(const coord_def& where, bool fail);
 
 #endif

@@ -87,7 +87,7 @@ struct mgen_data
 
     // What place we're in, or pretending to be in, usually the place
     // the player is actually in.
-    level_area_type level_type;
+    level_id        place;
 
     // Some predefined vaults (aka maps) include flags to suppress random
     // generation of monsters. When generating monsters, this is a mask of
@@ -105,11 +105,11 @@ struct mgen_data
     // These flags are MF_XXX, rather than MG_XXX flags.
     uint64_t        extra_flags;
 
-    std::string     mname;
+    string          mname;
 
     // This is used to account for non-actor summoners.  Blasted by an Ice
     // Fiend ... summoned by the effects of Hell.
-    std::string     non_actor_summoner;
+    string          non_actor_summoner;
 
     // This simply stores the initial shape-shifter type.
     monster_type    initial_shifter;
@@ -129,20 +129,20 @@ struct mgen_data
               monster_type base = MONS_NO_MONSTER,
               int monnumber = 0,
               int moncolour = BLACK,
-              int monpower = you.absdepth0,
+              int monpower = -1,
               proximity_type prox = PROX_ANYWHERE,
-              level_area_type ltype = you.level_type,
+              level_id _place = level_id::current(),
               int mhd = 0, int mhp = 0,
               uint64_t extflags = 0,
-              std::string monname = "",
-              std::string nas = "",
+              string monname = "",
+              string nas = "",
               monster_type is = RANDOM_MONSTER)
 
         : cls(mt), base_type(base), behaviour(beh), summoner(sner),
           abjuration_duration(abj), summon_type(st), pos(p),
           preferred_grid_feature(DNGN_UNSEEN), foe(mfoe), flags(genflags),
           god(which_god), number(monnumber), colour(moncolour),
-          power(monpower), proximity(prox), level_type(ltype), map_mask(0),
+          power(monpower), proximity(prox), place(_place), map_mask(0),
           hd(mhd), hp(mhp), extra_flags(extflags), mname(monname),
           non_actor_summoner(nas), initial_shifter(is), props()
     {
@@ -171,7 +171,7 @@ struct mgen_data
     }
 
     static mgen_data hostile_at(monster_type mt,
-                                std::string nsummoner,
+                                string nsummoner,
                                 bool alert = false,
                                 int abj = 0,
                                 int st = 0,
@@ -183,8 +183,8 @@ struct mgen_data
     {
         return mgen_data(mt, BEH_HOSTILE, 0, abj, st, p,
                          alert ? MHITYOU : MHITNOT,
-                         genflags, ngod, base, 0, BLACK, you.absdepth0,
-                         PROX_ANYWHERE, you.level_type, 0, 0, 0, "", nsummoner,
+                         genflags, ngod, base, 0, BLACK, -1,
+                         PROX_ANYWHERE, level_id::current(), 0, 0, 0, "", nsummoner,
                          RANDOM_MONSTER);
     }
 };

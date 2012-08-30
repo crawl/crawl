@@ -66,13 +66,13 @@ end
 function TroveMarker:fdesc_long (marker)
   local state
   if self.props.toll_item.base_type == "miscellaneous" then
-    state = "This portal requires the presence of " ..
+    state = "\nThis portal requires the presence of " ..
             self:item_name() .. " to function.\n"
   else
-    state = "This portal needs " ..
+    state = "\nThis portal needs " ..
             self:item_name() .. " to function.\n"
   end
-  return state .. "\n" .. self.props.desc_long
+  return state
 end
 
 function TroveMarker:overview_note (marker)
@@ -179,24 +179,12 @@ function TroveMarker:property(marker, pname)
 end
 
 function TroveMarker:describe(marker)
-  local desc = self:unmangle(self.props.desc_long)
-  if desc then
-    desc = desc .. "\n\n"
-  else
-    desc = ""
-  end
-  return desc .. "The portal requires " .. self.item:name() .. " for entry.\n"
+  return "The portal requires " .. self.item:name() .. " for entry.\n"
 end
 
 function TroveMarker:read(marker, th)
   TroveMarker.super.read(self, marker, th)
   self.toll_item = lmark.unmarshall_table(th)
-
-  if self.toll_item.base_type == "wand" and self.toll_item.sub_type == "healing" then
-    self.toll_item.sub_type = "heal wounds"
-  elseif self.toll_item.base_type == "potion" and self.toll_item.sub_type == "healing" then
-    self.toll_item.sub_type = "curing"
-  end
 
   setmetatable(self, TroveMarker)
   return self

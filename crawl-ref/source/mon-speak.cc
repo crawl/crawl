@@ -36,13 +36,13 @@
 // If that fails, start ignoring hostile/religion/branch/silence, in that order,
 // first skipping hostile, then hostile *and* religion, then hostile, religion
 // *and* branch, then finally all five.
-static std::string __try_exact_string(const std::vector<std::string> &prefixes,
-                                      const std::string &key,
-                                      bool ignore_hostile  = false,
-                                      bool ignore_related  = false,
-                                      bool ignore_religion = false,
-                                      bool ignore_branch   = false,
-                                      bool ignore_silenced = false)
+static string __try_exact_string(const vector<string> &prefixes,
+                                 const string &key,
+                                 bool ignore_hostile  = false,
+                                 bool ignore_related  = false,
+                                 bool ignore_religion = false,
+                                 bool ignore_branch   = false,
+                                 bool ignore_silenced = false)
 {
     bool hostile  = false;
     bool related  = false;
@@ -50,8 +50,8 @@ static std::string __try_exact_string(const std::vector<std::string> &prefixes,
     bool branch   = false;
     bool silenced = false;
 
-    std::string prefix = "";
-    std::string msg = "";
+    string prefix = "";
+    string msg = "";
     const int size = prefixes.size();
     for (int i = 0; i < size; i++)
     {
@@ -127,65 +127,65 @@ static std::string __try_exact_string(const std::vector<std::string> &prefixes,
     return msg;
 }
 
-static bool _invalid_msg(const std::string &msg, bool no_player, bool no_foe,
+static bool _invalid_msg(const string &msg, bool no_player, bool no_foe,
                          bool no_foe_name, bool no_god, bool unseen)
 {
     if (no_player
-        && (msg.find("@player") != std::string::npos
-            || msg.find("@Player") != std::string::npos
-            || msg.find(":You") != std::string::npos))
+        && (msg.find("@player") != string::npos
+            || msg.find("@Player") != string::npos
+            || msg.find(":You") != string::npos))
     {
-        return (true);
+        return true;
     }
 
     if (no_player)
     {
-        std::vector<std::string> lines = split_string("\n", msg);
+        vector<string> lines = split_string("\n", msg);
         for (unsigned int i = 0; i < lines.size(); i++)
         {
             if (starts_with(lines[i], "You")
                 || ends_with(lines[i], "you."))
             {
-                return (true);
+                return true;
             }
         }
     }
 
-    if (no_foe && (msg.find("@foe") != std::string::npos
-                   || msg.find("@Foe") != std::string::npos
-                   || msg.find("foe@") != std::string::npos
-                   || msg.find("@species") != std::string::npos))
+    if (no_foe && (msg.find("@foe") != string::npos
+                   || msg.find("@Foe") != string::npos
+                   || msg.find("foe@") != string::npos
+                   || msg.find("@species") != string::npos))
     {
-        return (true);
+        return true;
     }
 
-    if (no_god && (msg.find("_god@") != std::string::npos
-                   || msg.find("@god_") != std::string::npos))
+    if (no_god && (msg.find("_god@") != string::npos
+                   || msg.find("@god_") != string::npos))
     {
-        return (true);
+        return true;
     }
 
-    if (no_foe_name && msg.find("@foe_name@") != std::string::npos)
-        return (true);
+    if (no_foe_name && msg.find("@foe_name@") != string::npos)
+        return true;
 
-    if (unseen && msg.find("VISUAL") != std::string::npos)
-        return (true);
+    if (unseen && msg.find("VISUAL") != string::npos)
+        return true;
 
-    return (false);
+    return false;
 }
 
-static std::string _try_exact_string(const std::vector<std::string> &prefixes,
-                                     const std::string &key,
-                                     bool no_player, bool no_foe,
-                                     bool no_foe_name, bool no_god,
-                                     bool unseen,
-                                     bool ignore_hostile  = false,
-                                     bool ignore_related  = false,
-                                     bool ignore_religion = false,
-                                     bool ignore_branch   = false,
-                                     bool ignore_silenced = false)
+static string _try_exact_string(const vector<string> &prefixes,
+                                const string &key,
+                                bool no_player, bool no_foe,
+                                bool no_foe_name, bool no_god,
+                                bool unseen,
+                                bool ignore_hostile  = false,
+                                bool ignore_related  = false,
+                                bool ignore_religion = false,
+                                bool ignore_branch   = false,
+                                bool ignore_silenced = false)
 {
-    std::string msg;
+    string msg;
     for (int tries = 0; tries < 10; tries++)
     {
         msg =
@@ -198,7 +198,7 @@ static std::string _try_exact_string(const std::vector<std::string> &prefixes,
         if (msg.empty())
         {
             if (tries == 0)
-                return (msg);
+                return msg;
             else
             {
                 tries--;
@@ -214,25 +214,25 @@ static std::string _try_exact_string(const std::vector<std::string> &prefixes,
         break;
     }
 
-    return (msg);
+    return msg;
 }
 
-static std::string __get_speak_string(const std::vector<std::string> &prefixes,
-                                      const std::string &key,
-                                      const monster* mons,
-                                      bool no_player, bool no_foe,
-                                      bool no_foe_name, bool no_god,
-                                      bool unseen)
+static string __get_speak_string(const vector<string> &prefixes,
+                                 const string &key,
+                                 const monster* mons,
+                                 bool no_player, bool no_foe,
+                                 bool no_foe_name, bool no_god,
+                                 bool unseen)
 {
-    std::string msg = _try_exact_string(prefixes, key, no_player, no_foe,
-                                        no_foe_name, no_god, unseen);
+    string msg = _try_exact_string(prefixes, key, no_player, no_foe,
+                                   no_foe_name, no_god, unseen);
 
     if (!msg.empty())
         return msg;
 
     // Combinations of prefixes by threes
     const int size = prefixes.size();
-    std::string prefix = "";
+    string prefix = "";
     if (size >= 3)
     {
         for (int i = 0; i < (size - 2); i++)
@@ -286,22 +286,22 @@ static std::string __get_speak_string(const std::vector<std::string> &prefixes,
     return msg;
 }
 
-static std::string _get_speak_string(const std::vector<std::string> &prefixes,
-                                     std::string key,
-                                     const monster* mons,
-                                     bool no_player, bool no_foe,
-                                     bool no_foe_name, bool no_god,
-                                     bool unseen)
+static string _get_speak_string(const vector<string> &prefixes,
+                                string key,
+                                const monster* mons,
+                                bool no_player, bool no_foe,
+                                bool no_foe_name, bool no_god,
+                                bool unseen)
 {
     int duration = 1;
     if (mons->hit_points <= 0)
         key += " killed";
-    else if ((mons->flags & MF_BANISHED) && you.level_type != LEVEL_ABYSS)
+    else if ((mons->flags & MF_BANISHED) && !player_in_branch(BRANCH_ABYSS))
         key += " banished";
     else if (mons->is_summoned(&duration) && duration <= 0)
         key += " unsummoned";
 
-    std::string msg;
+    string msg;
     for (int tries = 0; tries < 10; tries++)
     {
         msg =
@@ -314,7 +314,7 @@ static std::string _get_speak_string(const std::vector<std::string> &prefixes,
         if (msg.empty())
         {
             if (tries == 0)
-                return (msg);
+                return msg;
             else
             {
                 tries--;
@@ -331,12 +331,12 @@ static std::string _get_speak_string(const std::vector<std::string> &prefixes,
         break;
     }
 
-    return (msg);
+    return msg;
 }
 
 // Returns true if the monster did speak, false otherwise.
 // Maybe monsters will speak!
-void maybe_mons_speaks (monster* mons)
+void maybe_mons_speaks(monster* mons)
 {
 #define MON_SPEAK_CHANCE 21
 
@@ -374,7 +374,9 @@ void maybe_mons_speaks (monster* mons)
         // a lot of them.  Except for uniques.
         if (testbits(mons->flags, MF_BAND_MEMBER)
             && !mons_is_unique(mons->type))
+        {
             chance *= 10;
+        }
 
         // However, confused and fleeing monsters are more interesting.
         if (mons_is_fleeing(mons))
@@ -397,7 +399,7 @@ bool mons_speaks(monster* mons)
     // Monsters always talk on death, even if invisible/silenced/etc.
     int duration = 1;
     const bool force_speak = !mons->alive()
-        || (mons->flags & MF_BANISHED) && you.level_type != LEVEL_ABYSS
+        || (mons->flags & MF_BANISHED) && !player_in_branch(BRANCH_ABYSS)
         || (mons->is_summoned(&duration) && duration <= 0)
         || crawl_state.prev_cmd == CMD_LOOK_AROUND; // Wizard testing
 
@@ -412,7 +414,7 @@ bool mons_speaks(monster* mons)
        // to not have to deal with cases of speaking monsters which the
        // player can't see.
        if (unseen && !confused)
-           return (false);
+           return false;
 
         // Silenced monsters only "speak" 1/3 as often as non-silenced,
         // unless they're normally silent (S_SILENT).  Use
@@ -422,28 +424,32 @@ bool mons_speaks(monster* mons)
             && get_monster_data(mons->type)->shouts != S_SILENT)
         {
             if (!one_chance_in(3))
-                return (false);
+                return false;
         }
 
         // Berserk monsters just want your hide.
         if (mons->berserk())
-            return (false);
+            return false;
+
+        // Rolling beetles shouldn't twitch antennae
+        if (mons->rolling())
+            return false;
 
         // Monsters in a battle frenzy are likewise occupied.
         // But roused holy creatures are not.
         if (mons->has_ench(ENCH_BATTLE_FRENZY) && !one_chance_in(3))
-            return (false);
+            return false;
 
         // Charmed monsters aren't too expressive.
         if (mons->has_ench(ENCH_CHARM) && !one_chance_in(3))
-            return (false);
+            return false;
     }
 
-    std::vector<std::string> prefixes;
+    vector<string> prefixes;
     if (mons->neutral())
     {
         if (!force_speak && coinflip()) // Neutrals speak half as often.
-            return (false);
+            return false;
 
         prefixes.push_back("neutral");
     }
@@ -474,7 +480,7 @@ bool mons_speaks(monster* mons)
                                     &you : mons->get_foe();
     const monster* m_foe = foe ? foe->as_monster() : NULL;
 
-    if (!foe || foe->atype() == ACT_PLAYER || mons->wont_attack())
+    if (!foe || foe->is_player() || mons->wont_attack())
     {
         // Animals only look at the current player form, smart monsters at the
         // actual player genus.
@@ -510,6 +516,13 @@ bool mons_speaks(monster* mons)
                 prefixes.push_back("unbeliever");
         }
     }
+    else if (mons->type == MONS_PLAYER_GHOST)
+    {
+        // Use the *ghost's* religion, to get speech about its god.  Only
+        // sometimes, though, so we can get skill-based messages as well.
+        if (coinflip())
+            prefixes.push_back(god_name(mons->ghost->religion));
+    }
     else
     {
         // Include our current god's name, too. This means that uniques
@@ -522,11 +535,11 @@ bool mons_speaks(monster* mons)
 
     // Include our current branch, too. It can make speech vary by branch for
     // uniques and other monsters! Specifically, Donald.
-    prefixes.push_back(std::string(branches[you.where_are_you].shortname));
+    prefixes.push_back(string(branches[you.where_are_you].shortname));
 
 #ifdef DEBUG_MONSPEAK
     {
-        std::string prefix;
+        string prefix;
         const int size = prefixes.size();
         for (int i = 0; i < size; i++)
         {
@@ -541,7 +554,7 @@ bool mons_speaks(monster* mons)
     const bool no_foe      = (foe == NULL);
     const bool no_player   = crawl_state.game_is_arena()
                              || (!mons->wont_attack()
-                                 && (!foe || foe->atype() != ACT_PLAYER));
+                                 && (!foe || !foe->is_player()));
     const bool mon_foe     = (m_foe != NULL);
     const bool no_god      = no_foe || (mon_foe && foe->deity() == GOD_NO_GOD);
     const bool named_foe   = !no_foe && (!mon_foe || (m_foe->is_named()
@@ -549,7 +562,7 @@ bool mons_speaks(monster* mons)
     const bool no_foe_name = !named_foe
                              || (mon_foe && (m_foe->flags & MF_NAME_MASK));
 
-    std::string msg;
+    string msg;
 
     // First, try its exact name.
     if (mons->type == MONS_PLAYER_GHOST)
@@ -557,8 +570,8 @@ bool mons_speaks(monster* mons)
         if (one_chance_in(5))
         {
             const ghost_demon &ghost = *(mons->ghost);
-            std::string ghost_skill  = skill_name(ghost.best_skill);
-            std::vector<std::string> with_skill = prefixes;
+            string ghost_skill  = skill_name(ghost.best_skill);
+            vector<string> with_skill = prefixes;
             with_skill.push_back(ghost_skill);
             msg = _get_speak_string(with_skill, "player ghost", mons,
                                     no_player, no_foe, no_foe_name, no_god,
@@ -581,46 +594,10 @@ bool mons_speaks(monster* mons)
     }
     else
     {
-        if (mons->props.exists("speech_func"))
-        {
-#ifdef DEBUG_MONSPEAK
-            mpr("Trying Lua function for monster speech", MSGCH_DIAGNOSTICS);
-#endif
-            lua_stack_cleaner clean(dlua);
-
-            dlua_chunk &chunk = mons->props["speech_func"];
-
-            if (!chunk.load(dlua))
-            {
-                push_monster(dlua, mons);
-                dlua.callfn(NULL, 1, 1);
-                dlua.fnreturns(">s", &msg);
-
-                // __NONE means to be silent, and __NEXT means to try the next
-                // method of getting a speech message.
-                if (msg == "__NONE")
-                {
-#ifdef DEBUG_MONSPEAK
-                    mpr("result: \"__NONE\"!", MSGCH_DIAGNOSTICS);
-#endif
-                    return (false);
-                }
-                if (msg == "__NEXT")
-                    msg.clear();
-            }
-            else
-            {
-                mprf(MSGCH_ERROR,
-                     "Lua speech function for monster '%s' didn't load: %s",
-                     mons->full_name(DESC_PLAIN).c_str(),
-                     dlua.error.c_str());
-            }
-        }
-
-        if (msg.empty() && mons->props.exists("speech_key"))
+        if (msg.empty() && mons->props.exists("dbname"))
         {
             msg = _get_speak_string(prefixes,
-                                     mons->props["speech_key"].get_string(),
+                                     mons->props["dbname"].get_string(),
                                      mons, no_player, no_foe, no_foe_name,
                                      no_god, unseen);
 
@@ -629,9 +606,9 @@ bool mons_speaks(monster* mons)
                 // Try again without the prefixes if the key is empty. Vaults
                 // *really* want monsters to use the key specified, rather than
                 // the key with prefixes.
-                std::vector<std::string> faux_prefixes;
+                vector<string> faux_prefixes;
                 msg = _get_speak_string(faux_prefixes,
-                                     mons->props["speech_key"].get_string(),
+                                     mons->props["dbname"].get_string(),
                                      mons, no_player, no_foe, no_foe_name,
                                      no_god, unseen);
             }
@@ -674,7 +651,7 @@ bool mons_speaks(monster* mons)
 #ifdef DEBUG_MONSPEAK
         mpr("result: \"__NONE\"!", MSGCH_DIAGNOSTICS);
 #endif
-        return (false);
+        return false;
     }
 
     // Now that we're not dealing with a specific monster name, include
@@ -686,7 +663,7 @@ bool mons_speaks(monster* mons)
     // so try the monster's glyph/symbol.
     if (msg.empty() || msg == "__NEXT")
     {
-        std::string key = "'";
+        string key = "'";
 
         // Database keys are case-insensitve.
         if (isaupper(mons_base_char(mons->type)))
@@ -703,7 +680,7 @@ bool mons_speaks(monster* mons)
 #ifdef DEBUG_MONSPEAK
         mpr("result: \"__NONE\"!", MSGCH_DIAGNOSTICS);
 #endif
-        return (false);
+        return false;
     }
 
     // Monster symbol didn't work, try monster shape.  Since we're
@@ -759,7 +736,7 @@ bool mons_speaks(monster* mons)
 #ifdef DEBUG_MONSPEAK
         mpr("result: \"__NONE\"!", MSGCH_DIAGNOSTICS);
 #endif
-        return (false);
+        return false;
     }
 
     // If we failed to get a message with a winged or tailed humanoid,
@@ -780,7 +757,7 @@ bool mons_speaks(monster* mons)
             if (msg.empty() || msg == "__NONE" || msg == "__NEXT")
             {
                 shape = MON_SHAPE_HUMANOID_WINGED;
-                std::string msg2;
+                string msg2;
                 msg2 = _get_speak_string(prefixes, get_mon_shape_str(shape),
                                          mons, no_player, no_foe,
                                          no_foe_name, no_god, unseen);
@@ -790,7 +767,7 @@ bool mons_speaks(monster* mons)
 #ifdef DEBUG_MONSPEAK
                     mpr("result: \"__NONE\"!", MSGCH_DIAGNOSTICS);
 #endif
-                    return (false);
+                    return false;
                 }
 
                 if (msg2 == "__NONE")
@@ -813,37 +790,37 @@ bool mons_speaks(monster* mons)
         mprf(MSGCH_DIAGNOSTICS, "final result: %s!",
              (msg.empty() ? "empty" : "\"__NONE\""));
 #endif
-        return (false);
+        return false;
     }
 
     if (msg == "__NEXT")
     {
         msg::streams(MSGCH_DIAGNOSTICS)
             << "__NEXT used by shape-based speech string for monster '"
-            << mons->name(DESC_PLAIN) << "'" << std::endl;
-        return (false);
+            << mons->name(DESC_PLAIN) << "'" << endl;
+        return false;
     }
 
-    return (mons_speaks_msg(mons, msg, MSGCH_TALK, silence));
+    return mons_speaks_msg(mons, msg, MSGCH_TALK, silence);
 }
 
-bool mons_speaks_msg(monster* mons, const std::string &msg,
+bool mons_speaks_msg(monster* mons, const string &msg,
                      const msg_channel_type def_chan, bool silence)
 {
     if (!mons_near(mons))
-        return (false);
+        return false;
 
     mon_acting mact(mons);
 
     // We have a speech string, now parse and act on it.
-    const std::string _msg = do_mon_str_replacements(msg, mons);
-    const std::vector<std::string> lines = split_string("\n", _msg);
+    const string _msg = do_mon_str_replacements(msg, mons);
+    const vector<string> lines = split_string("\n", _msg);
 
     bool noticed = false;       // Any messages actually printed?
 
     for (int i = 0, size = lines.size(); i < size; ++i)
     {
-        std::string line = lines[i];
+        string line = lines[i];
 
         // This function is a little bit of a problem for the message
         // channels since some of the messages it generates are "fake"
@@ -870,7 +847,8 @@ bool mons_speaks_msg(monster* mons, const std::string &msg,
         // Except for VISUAL, none of the above influence these.
         if (msg_type == MSGCH_TALK_VISUAL)
             silence = false;
-        else if (line == "__MORE" && !silence)
+
+        if (line == "__MORE" && !silence)
             more();
         else if (msg_type == MSGCH_TALK_VISUAL && !you.can_see(mons))
             noticed = old_noticed;
@@ -881,5 +859,5 @@ bool mons_speaks_msg(monster* mons, const std::string &msg,
             mpr(line.c_str(), msg_type);
         }
     }
-    return (noticed);
+    return noticed;
 }

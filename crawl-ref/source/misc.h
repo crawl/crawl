@@ -29,9 +29,8 @@ void merfolk_start_swimming(bool step = false);
 void merfolk_stop_swimming();
 void trackers_init_new_level(bool transit);
 void maybe_drop_monster_hide(const item_def corpse);
-int get_max_corpse_chunks(int mons_class);
+int get_max_corpse_chunks(monster_type mons_class);
 void turn_corpse_into_skeleton(item_def &item);
-void maybe_bleed_monster_corpse(const item_def corpse);
 void turn_corpse_into_chunks(item_def &item, bool bloodspatter = true,
                              bool make_hide = true);
 void butcher_corpse(item_def &item, maybe_bool skeleton = B_MAYBE,
@@ -45,41 +44,42 @@ void remove_newest_blood_potion(item_def &stack, int quant = -1);
 void merge_blood_potion_stacks(item_def &source, item_def &dest, int quant);
 
 bool check_blood_corpses_on_ground();
-bool can_bottle_blood_from_corpse(int mons_class);
-int num_blood_potions_from_corpse(int mons_class, int chunk_type = -1);
-void turn_corpse_into_blood_potions (item_def &item);
+bool can_bottle_blood_from_corpse(monster_type mons_class);
+int num_blood_potions_from_corpse(monster_type mons_class, int chunk_type = -1);
+void turn_corpse_into_blood_potions(item_def &item);
 void turn_corpse_into_skeleton_and_blood_potions(item_def &item);
 
 void bleed_onto_floor(const coord_def& where, monster_type mon, int damage,
                       bool spatter = false, bool smell_alert = true,
-                      const coord_def& from = INVALID_COORD);
+                      const coord_def& from = INVALID_COORD,
+                      const bool old_blood = false);
 void blood_spray(const coord_def& where, monster_type mon, int level);
 void generate_random_blood_spatter_on_level(
-    const map_mask *susceptible_area = NULL);
+    const map_bitmask *susceptible_area = NULL);
 
 // Set FPROP_BLOODY after checking bleedability.
 bool maybe_bloodify_square(const coord_def& where);
 
-std::string weird_glowing_colour();
+string weird_glowing_colour();
 
-std::string weird_writing();
+string weird_writing();
 
-std::string weird_smell();
+string weird_smell();
 
-std::string weird_sound();
+string weird_sound();
 
 bool mons_can_hurt_player(const monster* mon, const bool want_move = false);
 bool mons_is_safe(const monster* mon, const bool want_move = false,
                   const bool consider_user_options = true,
                   const bool check_dist = true);
 
-std::vector<monster* > get_nearby_monsters(bool want_move = false,
-                                           bool just_check = false,
-                                           bool dangerous_only = false,
-                                           bool consider_user_options = true,
-                                           bool require_visible = true,
-                                           bool check_dist = true,
-                                           int range = -1);
+vector<monster* > get_nearby_monsters(bool want_move = false,
+                                      bool just_check = false,
+                                      bool dangerous_only = false,
+                                      bool consider_user_options = true,
+                                      bool require_visible = true,
+                                      bool check_dist = true,
+                                      int range = -1);
 
 bool i_feel_safe(bool announce = false, bool want_move = false,
                  bool just_monsters = false, bool check_dist = true,
@@ -91,8 +91,7 @@ bool there_are_monsters_nearby(bool dangerous_only = false,
 
 void timeout_tombs(int duration);
 
-int count_malign_gateways ();
-std::vector<map_malign_gateway_marker*> get_malign_gateways ();
+int count_malign_gateways();
 void timeout_malign_gateways(int duration);
 
 void setup_environment_effects();
@@ -100,7 +99,7 @@ void setup_environment_effects();
 // Lava smokes, swamp water mists.
 void run_environment_effects();
 
-int str_to_shoptype(const std::string &s);
+int str_to_shoptype(const string &s);
 
 bool player_in_a_dangerous_place(bool *invis = NULL);
 void bring_to_safety();
@@ -117,10 +116,10 @@ bool interrupt_cmd_repeat(activity_interrupt_type ai,
 
 void reveal_secret_door(const coord_def& p);
 
-bool bad_attack(const monster *mon, std::string& adj, std::string& suffix);
+bool bad_attack(const monster *mon, string& adj, string& suffix);
 bool stop_attack_prompt(const monster* mon, bool beam_attack,
                         coord_def beam_target, bool autohit_first = false);
-bool stop_attack_prompt(targetter &hitfunc, std::string verb,
+bool stop_attack_prompt(targetter &hitfunc, string verb,
                         bool (*affects)(const actor *victim) = 0);
 
 bool is_orckind(const actor *act);
@@ -130,13 +129,18 @@ void swap_with_monster(monster* mon_to_swap);
 
 void wear_id_type(item_def &item);
 void maybe_id_ring_TC();
+void maybe_id_ring_hunger();
+void maybe_id_resist(beam_type flavour);
+
+bool maybe_id_weapon(item_def &item, const char *msg = 0);
+void auto_id_inventory();
 
 int apply_chunked_AC(int dam, int ac);
 
 void entered_malign_portal(actor* act);
 
 void handle_real_time(time_t t = time(0));
-std::string part_stack_string(const int num, const int total);
+string part_stack_string(const int num, const int total);
 unsigned int breakpoint_rank(int val, const int breakpoints[],
                              unsigned int num_breakpoints);
 
@@ -199,8 +203,8 @@ struct position_node
 
 struct path_less
 {
-    bool operator()(const std::set<position_node>::iterator & left,
-                    const std::set<position_node>::iterator & right)
+    bool operator()(const set<position_node>::iterator & left,
+                    const set<position_node>::iterator & right)
     {
         return (left->total_dist() > right->total_dist());
     }
@@ -220,15 +224,13 @@ struct simple_connect
     simple_connect()
     {
         for (unsigned i=0; i<8; i++)
-        {
             compass_idx[i] = i;
-        }
     }
 
     void operator()(const position_node & node,
-                    std::vector<position_node> & expansion)
+                    vector<position_node> & expansion)
     {
-        std::random_shuffle(compass_idx, compass_idx + connect);
+        random_shuffle(compass_idx, compass_idx + connect);
 
         for (int i=0; i < connect; i++)
         {
@@ -258,7 +260,7 @@ struct coord_wrapper
     int (*test) (const coord_def & pos);
     int  operator()(const coord_def & pos)
     {
-        return (test(pos));
+        return test(pos);
     }
 
     coord_wrapper()
@@ -271,14 +273,14 @@ template<typename valid_T, typename expand_T>
 void search_astar(position_node & start,
                   valid_T & valid_target,
                   expand_T & expand_node,
-                  std::set<position_node> & visited,
-                  std::vector<std::set<position_node>::iterator > & candidates)
+                  set<position_node> & visited,
+                  vector<set<position_node>::iterator > & candidates)
 {
-    std::priority_queue<std::set<position_node>::iterator,
-                        std::vector<std::set<position_node>::iterator>,
+    priority_queue<set<position_node>::iterator,
+                        vector<set<position_node>::iterator>,
                         path_less  > fringe;
 
-    std::set<position_node>::iterator current = visited.insert(start).first;
+    set<position_node>::iterator current = visited.insert(start).first;
     fringe.push(current);
 
 
@@ -288,20 +290,18 @@ void search_astar(position_node & start,
         current = fringe.top();
         fringe.pop();
 
-        std::vector<position_node> expansion;
+        vector<position_node> expansion;
         expand_node(*current, expansion);
 
         for (unsigned i=0;i < expansion.size(); ++i)
         {
             expansion[i].last = &(*current);
 
-            std::pair<std::set<position_node>::iterator, bool > res;
+            pair<set<position_node>::iterator, bool > res;
             res = visited.insert(expansion[i]);
 
             if (!res.second)
-            {
                 continue;
-            }
 
             if (valid_target(res.first->pos))
             {
@@ -311,9 +311,7 @@ void search_astar(position_node & start,
             }
 
             if (res.first->path_distance < DISCONNECT_DIST)
-            {
                 fringe.push(res.first);
-            }
         }
         if (done)
             break;
@@ -324,8 +322,8 @@ template<typename valid_T, typename expand_T>
 void search_astar(const coord_def & start,
                   valid_T & valid_target,
                   expand_T & expand_node,
-                  std::set<position_node> & visited,
-                  std::vector<std::set<position_node>::iterator > & candidates)
+                  set<position_node> & visited,
+                  vector<set<position_node>::iterator > & candidates)
 {
     position_node temp_node;
     temp_node.pos = start;
@@ -340,8 +338,8 @@ void search_astar(const coord_def & start,
                   valid_T & valid_target,
                   cost_T & connection_cost,
                   est_T & cost_estimate,
-                  std::set<position_node> & visited,
-                  std::vector<std::set<position_node>::iterator > & candidates,
+                  set<position_node> & visited,
+                  vector<set<position_node>::iterator > & candidates,
                   int connect_mode = 8)
 {
     if (connect_mode < 1 || connect_mode > 8)
@@ -357,12 +355,12 @@ void search_astar(const coord_def & start,
 
 struct counted_monster_list
 {
-    typedef std::pair<const monster* ,int> counted_monster;
-    typedef std::vector<counted_monster> counted_list;
+    typedef pair<const monster* ,int> counted_monster;
+    typedef vector<counted_monster> counted_list;
     counted_list list;
     void add(const monster* mons);
     int count();
     bool empty() { return list.empty(); }
-    std::string describe(description_level_type desc = DESC_THE);
+    string describe(description_level_type desc = DESC_THE);
 };
 #endif

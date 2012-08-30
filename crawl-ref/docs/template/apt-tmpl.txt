@@ -33,9 +33,9 @@ There are three special values: HP, MP and Experience:
   points that are gained per level. 0 is the Human standard, -1 is 10%
   fewer points, +1 is 10% more points, etc.
 - The Experience value indicates how much experience has to be earned in
-  order to gain a new level. 100 is the Human standard, and all other
-  species (apart from Halfling, Kobold and Hill Orc) are slower. For
-  example, 150 means 50% more experience must be earned.
+  order to gain a new level. +1 is the Human standard, and all other
+  species (apart from Halfling and Kobold) are slower. These values use
+  the same scale as the skill aptitudes.
 
 The abbreviations used for the skills are:
 
@@ -57,7 +57,7 @@ Exp - experience             Crb - Crossbows             Ear - Earth Magic
                                                          Poi - Poison Magic
 
 
-                 Arm Ddg Sth Stb Shd T&D   Inv Evo        HP  MP   Exp
+                 Arm Ddg Sth Stb Shd T&D   Inv Evo        HP  MP  Exp
 ----------------------------------------------------------------------
 
 

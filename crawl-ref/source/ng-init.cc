@@ -26,56 +26,77 @@
 
 static uint8_t _random_potion_description()
 {
-    int desc, nature, colour;
+    int desc, colour;
 
-    do
-    {
-        desc = random2(PDQ_NQUALS * PDC_NCOLOURS);
+    desc = random2(PDQ_NQUALS * PDC_NCOLOURS);
 
-        if (coinflip())
-            desc %= PDC_NCOLOURS;
+    if (coinflip())
+        desc %= PDC_NCOLOURS;
 
-        nature = PQUAL(desc);
-        colour = PCOLOUR(desc);
+    colour = PCOLOUR(desc);
 
-        // nature and colour correspond to primary and secondary in
-        // itemname.cc.  This check ensures clear potions don't get odd
-        // qualifiers.
-    }
-    while (colour == PDC_CLEAR && nature > PDQ_VISCOUS
-           || desc == PDESCS(PDC_CLEAR));
+    // nature and colour correspond to primary and secondary in
+    // itemname.cc.
+
+#if TAG_MAJOR_VERSION == 34
+    if (colour == PDC_CLEAR) // only water can be clear, re-roll
+        return _random_potion_description();
+#endif
 
     return desc;
-}
-
-void initialise_branches_for_game_type()
-{
-    if (crawl_state.game_is_sprint())
-        branches[BRANCH_MAIN_DUNGEON].depth = 1;
-    else
-        branches[BRANCH_MAIN_DUNGEON].depth = BRANCH_DUNGEON_DEPTH;
 }
 
 // Determine starting depths of branches.
 void initialise_branch_depths()
 {
+    root_branch = BRANCH_MAIN_DUNGEON;
+
     for (int branch = BRANCH_ECUMENICAL_TEMPLE; branch < NUM_BRANCHES; ++branch)
     {
-        Branch *b = &branches[branch];
+        const Branch *b = &branches[branch];
         if (crawl_state.game_is_sprint() || branch_is_unfinished(b->id))
-            b->startdepth = -1;
-        else if (branch <= BRANCH_VESTIBULE_OF_HELL || branch > BRANCH_LAST_HELL)
-            b->startdepth = random_range(b->mindepth, b->maxdepth);
+            startdepth[branch] = -1;
+        else
+            startdepth[branch] = random_range(b->mindepth, b->maxdepth);
     }
 
-    // Disable one of the Swamp/Shoals/Snake Pit.
-    const branch_type disabled_branch =
-            random_choose(BRANCH_SWAMP, BRANCH_SHOALS, BRANCH_SNAKE_PIT, -1);
+    // You will get one of Shoals/Swamp and one of Spider/Snake.
+    // This way you get one "water" branch and one "poison" branch.
+    const branch_type disabled_branch[] =
+    {
+        random_choose(BRANCH_SWAMP, BRANCH_SHOALS, -1),
+        random_choose(BRANCH_SNAKE_PIT, BRANCH_SPIDER_NEST, -1),
+    };
 
-    dprf("Disabling branch: %s", branches[disabled_branch].shortname);
-    branches[disabled_branch].startdepth = -1;
+    for (unsigned int i = 0; i < ARRAYSZ(disabled_branch); ++i)
+    {
+        dprf("Disabling branch: %s", branches[disabled_branch[i]].shortname);
+        startdepth[disabled_branch[i]] = -1;
+    }
 
-    initialise_branches_for_game_type();
+    if (crawl_state.game_is_sprint())
+    {
+        brdepth.init(-1);
+        brdepth[BRANCH_MAIN_DUNGEON] = 1;
+        brdepth[BRANCH_ABYSS] = 1;
+        return;
+    }
+
+    if (crawl_state.game_is_zotdef())
+    {
+        root_branch = BRANCH_HALL_OF_ZOT;
+        brdepth.init(-1);
+        brdepth[BRANCH_HALL_OF_ZOT] = 1;
+        brdepth[BRANCH_BAZAAR] = 1;
+        return;
+    }
+
+    for (int i = 0; i < NUM_BRANCHES; i++)
+        brdepth[i] = branches[i].numlevels;
+
+    // In trunk builds, test variable-length branches.
+    if (numcmp(Version::Long().c_str(), "0.11-b") == -1)
+        brdepth[BRANCH_ELVEN_HALLS] = random_range(3, 4);
 }
 
 #define MAX_OVERFLOW_LEVEL 9
@@ -98,7 +119,7 @@ void initialise_temples()
             end (1, false, "No temples?!");
 
         // Without all this find_glyph() returns 0.
-        std::string err;
+        string err;
               main_temple->load();
               main_temple->reinit();
         err = main_temple->run_lua(true);
@@ -129,7 +150,7 @@ void initialise_temples()
 
     you.props[TEMPLE_MAP_KEY] = main_temple->name;
 
-    const std::vector<coord_def> altar_coords
+    const vector<coord_def> altar_coords
         = main_temple->find_glyph('B');
     const unsigned int main_temple_size = altar_coords.size();
 
@@ -147,11 +168,11 @@ void initialise_temples()
     ///////////////////////////////////
     // Now set up the overflow temples.
 
-    std::vector<god_type> god_list = temple_god_list();
+    vector<god_type> god_list = temple_god_list();
 
-    std::random_shuffle(god_list.begin(), god_list.end());
+    random_shuffle(god_list.begin(), god_list.end());
 
-    std::vector<god_type> overflow_gods;
+    vector<god_type> overflow_gods;
 
     while (god_list.size() > main_temple_size)
     {
@@ -245,7 +266,6 @@ void initialise_item_descriptions()
     // Must remember to check for already existing colours/combinations.
     you.item_description.init(255);
 
-    you.item_description[IDESC_POTIONS][POT_WATER] = PDESCS(PDC_CLEAR);
     you.item_description[IDESC_POTIONS][POT_PORRIDGE]
         = _get_random_porridge_desc();
     you.item_description[IDESC_POTIONS][POT_BLOOD]

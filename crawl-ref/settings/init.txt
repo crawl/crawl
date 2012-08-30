@@ -73,27 +73,13 @@
 
 ##### 3-  Lua Files #################################################
 #
-lua_file = lua/stash.lua
-lua_file = lua/wield.lua
-lua_file = lua/runrest.lua
-lua_file = lua/gearset.lua
-lua_file = lua/trapwalk.lua
-
-# kills.lua yields more information at the cost of huge dumps.
-# lua_file = lua/kills.lua
-
-# autofight.lua allows binding both movement and attack a single key.
-# Use at your own discretion! See options_guide.txt for details.
-lua_file = lua/autofight.lua
 
 ##### 4-  Interface #################################################
 #
 ##### 4-a       Picking up and Dropping ###############
 #
-autopickup = $?!+"/%
-
-# There is a long list of autopickup exceptions in
-include = autopickup_exceptions.txt
+# Rods are \ here.
+# autopickup = $?!:"/%
 
 drop_filter = useless_item
 
@@ -157,14 +143,16 @@ drop_filter = useless_item
 # travel_avoid_terrain = shallow water
 #
 # explore_greedy   = false
-# explore_stop     = items,greedy_pickup_smart,stairs,shops,altars,gates
-# explore_stop    += greedy_visited_item_stack
+# explore_stop     = items,stairs,shops,altars,portals,branches
+# explore_stop    += greedy_pickup_smart,greedy_visited_item_stack
+# sacrifice_before_explore = true
 # explore_improved = true
 # explore_wall_bias = 0
 # travel_key_stop = false
+# auto_sacrifice = true
 #
 # explore_stop_pickup_ignore = curare
-auto_exclude = oklob,statue,curse skull,roxanne,hyperactive,lightning spire
+auto_exclude = oklob,statue,curse skull,roxanne,hyperactive,lightning spire,mimic
 
 # tc_reachable      = blue
 # tc_dangerous      = cyan
@@ -172,17 +160,15 @@ auto_exclude = oklob,statue,curse skull,roxanne,hyperactive,lightning spire
 # tc_excluded       = lightmagenta
 # tc_exclude_circle = red
 
-# runrest options (require runrest.lua to be included above)
+# Interrupting run and rest compound commands:
 runrest_ignore_poison  = 2:30
 runrest_ignore_monster = butterfly:1
 # runrest_ignore_monster = swamp worm:3
-
-# The file runrest_messages.txt contains a list of default
-# runrest message settings. Add your own before this to override
-# later settings.
 # runrest_stop_message = You hear a.* slurping noise
 # runrest_ignore_message = Jiyva's power touches on your attributes
-include = runrest_messages.txt
+
+# A good number of runrest_messages is defined by default; you may want to
+# clear them or override some.
 
 trapwalk_safe_hp = dart:20,needle:15,arrow:35,bolt:45,spear:40,axe:45,blade:95
 
@@ -215,6 +201,8 @@ trapwalk_safe_hp = dart:20,needle:15,arrow:35,bolt:45,spear:40,axe:45,blade:95
 # sort_menus = pickup: true : art, ego, basename, qualname, curse, qty
 sort_menus = inv: true : equipped, freshness, charged
 
+# autofight_stop = 30
+
 ##### 4-j       Messages and Display Enhancements #####
 #
 # hp_warning = 30
@@ -230,8 +218,8 @@ sort_menus = inv: true : equipped, freshness, charged
 # mlist_allow_alternate_layout = true
 # messages_at_top              = true
 # mlist_targetting             = true
-# show_gold_turns              = true
-# show_game_turns              = true
+# show_gold_turns              = false
+# show_game_turns              = false
 # show_newturn_mark            = false
 # clear_messages             = true
 # small_more                 = true
@@ -239,18 +227,19 @@ sort_menus = inv: true : equipped, freshness, charged
 # show_inventory_weights     = true
 # item_stack_summary_minimum = 5
 # list_rotten                = false
+# auto_drop_chunks           = (never | rotten | yes)
 # msg_condense_repeats   = false
 # msg_condense_short     = false
 # show_no_ctele          = false
 # skill_focus            = false
+# show_travel_trail       = true
 
 #####          Colours (messages and menus) #####
 #
 # menu_colour_prefix_class = false
 # menu_colour_shops = false
 
-# Food is colour coded in standard_colours.txt as follows:
-include = standard_colours.txt
+# Food is colour coded by default as follows:
 #
 #   yellow     = preferred food                    ($preferred)
 #   darkgrey   = cannot be eaten at all            ($inedible)
@@ -263,31 +252,22 @@ include = standard_colours.txt
 # You can change colours by using something like
 # $contaminated := magenta
 
-include = food_colouring.txt
-
-# There is elaborate colouring of items in the inventory (and other menus)
-# depending on their usefulness, taking species and other criteria into account.
-include = menu_colours.txt
-
-# Colouring of autoinscribed god gifts
-menu_colour = pickup:green:god gift
-
-# Highlight (partly) selected items
-menu_colour = inventory:white:\w \+\s
-menu_colour = inventory:white:\w \#\s
+# You can redefine inventory items like this:
+# menu_colour = inventory:magenta:shillelagh
+# or ones in pick-up dialogs:
+# menu_colour = pickup:green:god gift
 
 # Colouring of messages
-# Messages are colour coded in standard_colours.txt as follows:
+# Messages are colour coded as follows:
 #
 #   lightred   = really important messages  ($danger)
 #   yellow     = significant messages       ($warning)
 #   lightred   = item damaged/destroyed     ($item_dmg [same as $danger])
 #   darkgrey   = boring, message clutter    ($boring)
 #
-include = messages.txt
 
-# Colouring for the notes
-menu_colour = notes:white:Reached XP level
+# Notes also use, quite misnamed, menu_colour:
+# menu_colour = notes:white:Reached XP level
 
 # These lines will suppress extra feedback messages from travel/shift-running.
 #
@@ -313,6 +293,11 @@ force_more_message = Careful!
 # Announcements of timed portal vaults (bazaar, labyrinths):
 force_more_message = interdimensional caravan
 force_more_message = distant snort
+
+# Abyss exits and rune
+force_more_message = Found a gateway leading out of the Abyss
+force_more_message = Found .* abyssal rune of Zot
+
 
 ##### 4-k       Firing Commands #######################
 #
@@ -341,9 +326,73 @@ force_more_message = distant snort
 # flush.message = true
 
 ##### 4-t       Tile related Options ##################
+#
+# tile_show_items = !?/%=([)x}:|\
 
-# All tiles specific options are in the external file
-include = tiles_options.txt
+# tile_skip_title = true
+# tile_menu_icons = false
+
+### The following lines define the colours of various objects within the
+### tiles minimap. See options_guide.txt for more details.
+
+# tile_player_col      = white
+# tile_monster_col     = red
+# tile_neutral_col     = red
+# tile_peaceful_col    = lightred
+# tile_friendly_col    = lightred
+# tile_plant_col       = darkgreen
+# tile_item_col        = green
+# tile_unseen_col      = black
+# tile_floor_col       = lightgrey
+# tile_wall_col        = darkgrey
+# tile_mapped_wall_col = blue
+# tile_door_col        = brown
+# tile_downstairs_col  = magenta
+# tile_upstairs_col    = blue
+# tile_feature_col     = cyan
+# tile_trap_col        = yellow
+# tile_water_col       = grey
+# tile_lava_col        = grey
+# tile_excluded_col    = darkcyan
+# tile_excl_centre     = darkblue
+# tile_window_col      = yellow
+
+# If Crawl's response rate is too slow, try increasing the update rate.
+# tile_update_rate      = 1000
+
+# If Crawl is lagging when running or resting, try increasing this number.
+# tile_runrest_rate = 100
+
+# tile_key_repeat_delay = 200
+# tile_tooltip_ms       = 500
+
+# tile_tag_pref = enemy
+
+### Note: setting window, map or font sizes to '0' implies auto-sizing.
+
+# tile_full_screen      = true
+# tile_window_width     = 1024
+# tile_window_height    = 768
+# tile_map_pixels       = 3
+# tile_force_overlay    = true
+# tile_layout_priority  = minimap, inventory, gold_turn, command, spell
+# tile_layout_priority += ability, monster
+
+# tile_font_crt_file  = VeraMono.ttf
+# tile_font_crt_size  = 15
+# tile_font_stat_file = VeraMono.ttf
+# tile_font_stat_size = 16
+# tile_font_msg_file  = VeraMono.ttf
+# tile_font_msg_size  = 14
+# tile_font_tip_file  = VeraMono.ttf
+# tile_font_tip_size  = 15
+# tile_font_lbl_file  = Vera.ttf
+# tile_font_lbl_size  = 14
+# tile_font_ft_light  = false
+
+# tile_show_minihealthbar = false
+# tile_show_minimagicbar  = false
+
 
 ##### 5-  Dump File #################################################
 #
@@ -351,28 +400,26 @@ include = tiles_options.txt
 #
 # kill_map = friend:you, other:you
 # dump_kill_places = (single | all | none)
+# dump_kill_breakdowns = true
 # dump_item_origins = all,artifacts,ego_arm,ego_weap,jewellery,runes
 # dump_item_origin_price = -1
 # dump_message_count = 20
 # dump_order  = header, hiscore, stats, misc, notes, inventory,
 # dump_order += turns_by_place, skills, spells, overview, mutations,
 # dump_order += messages, screenshot, monlist, kills_by_place, kills
-# dump_order += spell_usage, action_counts
+# dump_order += action_counts
 # dump_book_spells = false
 
 ##### 5-b       Notes #################################
 #
 # user_note_prefix=@@@
-ood_interesting = 8
-note_hp_percent = 5
-note_skill_levels = 1,5,10,15,27
-#note_all_skill_levels = true
-#note_skill_max  = false
-#note_all_spells = false
-#note_xom_effects = false
+# note_hp_percent = 5
+# note_skill_levels = 1,5,10,15,27
+# note_all_skill_levels = true
+# note_skill_max  = false
+# note_xom_effects = false
+# note_chat_messages = false
 note_items    = rod of, acquirement, preservation, running, of Zot
-note_messages = You pass through the gate
-note_messages = cast .* Abyss
 note_messages = Your scales start
 note_messages = protects you from harm
 note_messages = You fall through a shaft
@@ -387,15 +434,24 @@ note_monsters = orb of fire, ancient lich, Sigmund
 # char_set         = ascii
 # use_fake_player_cursor = false
 #
+# Translation to use (in 0.11, only badly incomplete descriptions; Polish
+# has god messages and a few misc, Greek has sheep).
+# language = pl|fr|zh|ko|fi|ru|el|da|li|pt|de|lv|cs|hu
+#
+# Joke translations (complete!).
+# language = dwarven|jagerkin|kraut|wide
+#
 # colour.lightgray = black
 # colour.lightcyan = cyan
 # colour.yellow    = brown
 #
-# pizza            = Sausage
 # show_player_species = true
 
 # See options_guide.txt for the options
 # cset, feature, mon_glyph
+
+## Highlight the edge of unexplored terrain.
+# feature = explore horizon {',,green}
 
 ##### 6-b   Windows console #######################
 #

@@ -79,9 +79,7 @@ void OGLStateManager::set(const GLState& state)
     if (state.array_colour != m_current_state.array_colour)
     {
         if (state.array_colour)
-        {
             glEnableClientState(GL_COLOR_ARRAY);
-        }
         else
         {
             glDisableClientState(GL_COLOR_ARRAY);
@@ -186,7 +184,8 @@ void OGLStateManager::bind_texture(unsigned int texture)
 }
 
 void OGLStateManager::load_texture(unsigned char *pixels, unsigned int width,
-                                   unsigned int height, MipMapOptions mip_opt)
+                                   unsigned int height, MipMapOptions mip_opt,
+                                   int xoffset, int yoffset)
 {
     // Assumptions...
     const unsigned int bpp = 4;
@@ -216,8 +215,12 @@ void OGLStateManager::load_texture(unsigned char *pixels, unsigned int width,
     {
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexImage2D(GL_TEXTURE_2D, 0, bpp, width, height, 0,
-                     texture_format, format, pixels);
+        if (xoffset >= 0 && yoffset >= 0)
+            glTexSubImage2D(GL_TEXTURE_2D, 0, xoffset, yoffset, width, height,
+                         texture_format, format, pixels);
+        else
+            glTexImage2D(GL_TEXTURE_2D, 0, bpp, width, height, 0,
+                         texture_format, format, pixels);
     }
 }
 
@@ -242,12 +245,12 @@ OGLShapeBuffer::OGLShapeBuffer(bool texture, bool colour, drawing_modes prim) :
 
 const char *OGLShapeBuffer::print_statistics() const
 {
-    return (NULL);
+    return NULL;
 }
 
 unsigned int OGLShapeBuffer::size() const
 {
-    return (m_position_buffer.size());
+    return m_position_buffer.size();
 }
 
 void OGLShapeBuffer::add(const GLWPrim &rect)

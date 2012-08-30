@@ -51,7 +51,7 @@ class SkillMenu;
 class SkillMenuEntry
 {
 public:
-    static menu_letter m_letter;
+    static menu_letter2 m_letter;
     static SkillMenu* m_skm;
 
     SkillMenuEntry() {};
@@ -80,7 +80,7 @@ private:
 
     void _clear();
     COLORS get_colour() const;
-    std::string get_prefix();
+    string get_prefix();
     void set_aptitude();
     void set_level();
     void set_new_level();
@@ -96,10 +96,10 @@ class SkillMenuSwitch : public FormattedTextItem
 public:
     static SkillMenu* m_skm;
 
-    SkillMenuSwitch(std::string name, int hotkey);
+    SkillMenuSwitch(string name, int hotkey);
     void add(skill_menu_state state);
-    std::string get_help();
-    std::string get_name(skill_menu_state state);
+    string get_help();
+    string get_name(skill_menu_state state);
     skill_menu_state get_state();
     void set_state(skill_menu_state state);
     int size() const;
@@ -107,9 +107,9 @@ public:
     void update();
 
 private:
-    std::string m_name;
+    string m_name;
     skill_menu_state m_state;
-    std::vector<skill_menu_state> m_states;
+    vector<skill_menu_state> m_states;
 };
 
 static const int SK_ARR_LN  = (ndisplayed_skills - 1) / 2;
@@ -127,7 +127,6 @@ public:
 
     void add_item(TextItem* item, const int size, coord_def &coord);
     void cancel_help();
-    void clear_selections();
     bool exit();
     int get_raw_skill_level(skill_type sk);
     int get_saved_skill_level(skill_type sk, bool real);
@@ -150,7 +149,7 @@ private:
     NoSelectTextItem*  m_title;
     FormattedTextItem* m_help;
 
-    std::map<skill_menu_switch, SkillMenuSwitch*> m_switches;
+    map<skill_menu_switch, SkillMenuSwitch*> m_switches;
     FormattedTextItem* m_help_button;
 
     skill_state m_skill_backup;
@@ -164,7 +163,7 @@ private:
     void refresh_display();
     void refresh_names();
     void set_default_help();
-    void set_help(std::string msg);
+    void set_help(string msg);
     void set_skills();
     void set_title();
     void shift_bottom_down();

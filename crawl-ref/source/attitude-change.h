@@ -10,7 +10,6 @@ bool yred_slaves_abandon_you();
 bool beogh_followers_abandon_you();
 bool make_god_gifts_disappear();
 void good_god_holy_attitude_change(monster* holy);
-void good_god_holy_fail_attitude_change(monster* holy);
 void beogh_convert_orc(monster* orc, bool emergency,
                        bool converted_by_follower = false);
 #endif

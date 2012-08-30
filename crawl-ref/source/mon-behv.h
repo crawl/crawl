@@ -24,7 +24,7 @@ class monster;
 struct coord_def;
 
 void behaviour_event(monster* mon, mon_event_type event_type,
-                     int src = MHITNOT, coord_def src_pos = coord_def(),
+                     const actor *agent = 0, coord_def src_pos = coord_def(),
                      bool allow_shout = true);
 
 // This function is somewhat low level; you should probably use
@@ -38,6 +38,10 @@ void set_random_target(monster* mon);
 void make_mons_leave_level(monster* mon);
 
 bool monster_can_hit_monster(monster* mons, const monster* targ);
+
+bool summon_can_attack(const monster* mons);
+bool summon_can_attack(const monster* mons, const coord_def &p);
+bool summon_can_attack(const monster* mons, const actor* targ);
 
 // For Zotdef: the target position of MHITYOU monsters is
 // the orb.

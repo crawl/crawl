@@ -16,6 +16,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <time.h>
+#include <math.h>
 
 #include <stack>
 
@@ -34,20 +35,22 @@
 #include "options.h"
 #include "output.h"
 #include "player.h"
+#include "state.h"
+#include "traps.h"
 #include "view.h"
 #include "viewchar.h"
 #include "viewgeom.h"
 
 
 // Crude, but functional.
-std::string make_time_string(time_t abs_time, bool terse)
+string make_time_string(time_t abs_time, bool terse)
 {
     const int days  = abs_time / 86400;
     const int hours = (abs_time % 86400) / 3600;
     const int mins  = (abs_time % 3600) / 60;
     const int secs  = abs_time % 60;
 
-    std::string buff;
+    string buff;
     if (days > 0)
     {
         buff += make_stringf("%d%s ", days, terse ? ","
@@ -56,7 +59,7 @@ std::string make_time_string(time_t abs_time, bool terse)
     return buff + make_stringf("%02d:%02d:%02d", hours, mins, secs);
 }
 
-std::string make_file_time(time_t when)
+string make_file_time(time_t when)
 {
     if (tm *loc = TIME_FN(&when))
     {
@@ -68,7 +71,7 @@ std::string make_file_time(time_t when)
                  loc->tm_min,
                  loc->tm_sec);
     }
-    return ("");
+    return "";
 }
 
 void set_redraw_status(uint64_t flags)
@@ -76,10 +79,10 @@ void set_redraw_status(uint64_t flags)
     you.redraw_status_flags |= flags;
 }
 
-unsigned char get_ch()
+int get_ch()
 {
     mouse_control mc(MOUSE_MODE_MORE);
-    unsigned char gotched = getchm();
+    int gotched = getchm();
 
     if (gotched == 0)
         gotched = getchm();
@@ -113,6 +116,53 @@ void clear_globals_on_exit()
     dgn_clear_vault_placements(env.level_vaults);
 }
 
+#if (defined(TARGET_OS_WINDOWS) && !defined(USE_TILE_LOCAL)) \
+     || defined(DGL_PAUSE_AFTER_ERROR)
+// Print error message on the screen.
+// Ugly, but better than not showing anything at all. (jpeg)
+static bool _print_error_screen(const char *message, ...)
+{
+    if (!crawl_state.io_inited || crawl_state.seen_hups)
+        return false;
+
+    // Get complete error message.
+    string error_msg;
+    {
+        va_list arg;
+        va_start(arg, message);
+        char buffer[1024];
+        vsnprintf(buffer, sizeof buffer, message, arg);
+        va_end(arg);
+
+        error_msg = string(buffer);
+    }
+    if (error_msg.empty())
+        return false;
+
+    // Escape '<'.
+    // NOTE: This assumes that the error message doesn't contain
+    //       any formatting!
+    error_msg = replace_all(error_msg, "<", "<<");
+
+    error_msg += "\n\n\nHit any key to exit...\n";
+
+    // Break message into correctly sized lines.
+    int width = 80;
+#ifdef USE_TILE_LOCAL
+    width = crawl_view.msgsz.x;
+#else
+    width = min(80, get_number_of_cols());
+#endif
+    linebreak_string(error_msg, width);
+
+    // And finally output the message.
+    clrscr();
+    formatted_string::parse_string(error_msg, false).display();
+    getchm();
+    return true;
+}
+#endif
+
 // Used by do_crash_dump() to tell if the crash happened during exit() hooks.
 // Not a part of crawl_state, since that's a global C++ instance which is
 // free'd by exit() hooks when exit() is called, and we don't want to reference
@@ -124,7 +174,7 @@ NORETURN void end(int exit_code, bool print_error, const char *format, ...)
 {
     disable_other_crashes();
 
-    std::string error = print_error? strerror(errno) : "";
+    string error = print_error? strerror(errno) : "";
     if (format)
     {
         va_list arg;
@@ -134,9 +184,9 @@ NORETURN void end(int exit_code, bool print_error, const char *format, ...)
         va_end(arg);
 
         if (error.empty())
-            error = std::string(buffer);
+            error = string(buffer);
         else
-            error = std::string(buffer) + ": " + error;
+            error = string(buffer) + ": " + error;
 
         if (!error.empty() && error[error.length() - 1] != '\n')
             error += "\n";
@@ -147,9 +197,13 @@ NORETURN void end(int exit_code, bool print_error, const char *format, ...)
     bool need_pause = true;
     if (exit_code && !error.empty())
     {
-        if (print_error_screen("%s", error.c_str()))
+        if (_print_error_screen("%s", error.c_str()))
             need_pause = false;
     }
+#endif
+
+#ifdef USE_TILE_WEB
+    tiles.shutdown();
 #endif
 
     cio_cleanup();
@@ -200,7 +254,7 @@ NORETURN void game_ended()
         end(0);
 }
 
-NORETURN void game_ended_with_error(const std::string &message)
+NORETURN void game_ended_with_error(const string &message)
 {
     if (crawl_state.seen_hups)
         end(1);
@@ -223,50 +277,6 @@ NORETURN void game_ended_with_error(const std::string &message)
     {
         end(1, false, "%s", message.c_str());
     }
-}
-
-// Print error message on the screen.
-// Ugly, but better than not showing anything at all. (jpeg)
-bool print_error_screen(const char *message, ...)
-{
-    if (!crawl_state.io_inited || crawl_state.seen_hups)
-        return false;
-
-    // Get complete error message.
-    std::string error_msg;
-    {
-        va_list arg;
-        va_start(arg, message);
-        char buffer[1024];
-        vsnprintf(buffer, sizeof buffer, message, arg);
-        va_end(arg);
-
-        error_msg = std::string(buffer);
-    }
-    if (error_msg.empty())
-        return false;
-
-    // Escape '<'.
-    // NOTE: This assumes that the error message doesn't contain
-    //       any formatting!
-    error_msg = replace_all(error_msg, "<", "<<");
-
-    error_msg += "\n\n\nHit any key to exit...\n";
-
-    // Break message into correctly sized lines.
-    int width = 80;
-#ifdef USE_TILE_LOCAL
-    width = crawl_view.msgsz.x;
-#else
-    width = std::min(80, get_number_of_cols());
-#endif
-    linebreak_string(error_msg, width);
-
-    // And finally output the message.
-    clrscr();
-    formatted_string::parse_string(error_msg, false).display();
-    getchm();
-    return true;
 }
 
 void redraw_screen(void)
@@ -313,66 +323,54 @@ void redraw_screen(void)
     // Display the message window at the end because it places
     // the cursor behind possible prompts.
     display_message_window();
+    update_screen();
 }
 
-// STEPDOWN FUNCTION to replace conditional chains in spells2.cc 12jan2000 {dlb}
-// it is a bit more extensible and optimises the logical structure, as well
-// usage: cast_summon_swarm() cast_haunt() cast_summon_scorpions()
-//        cast_summon_horrible_things()
-// ex(1): stepdown_value (foo, 2, 2, 6, 8) replaces the following block:
-//
+double stepdown(double value, double step)
+{
+    return step * log2(1 + value / step);
+}
 
-/*
-   if (foo > 2)
-     foo = (foo - 2) / 2 + 2;
-   if (foo > 4)
-     foo = (foo - 4) / 2 + 4;
-   if (foo > 6)
-     foo = (foo - 6) / 2 + 6;
-   if (foo > 8)
-     foo = 8;
- */
+int stepdown(int value, int step, rounding_type rounding, int max)
+{
+    double ret = stepdown((double) value, double(step));
 
-//
-// ex(2): bar = stepdown_value(bar, 2, 2, 6, -1) replaces the following block:
-//
+    if (max > 0 && ret > max)
+        return max;
 
-/*
-   if (bar > 2)
-     bar = (bar - 2) / 2 + 2;
-   if (bar > 4)
-     bar = (bar - 4) / 2 + 4;
-   if (bar > 6)
-     bar = (bar - 6) / 2 + 6;
- */
+    // Randomised rounding
+    if (rounding == ROUND_RANDOM)
+    {
+        double intpart;
+        double fracpart = modf(ret, &intpart);
+        if (random_real() < fracpart)
+            ++intpart;
+        return intpart;
+    }
 
-// I hope this permits easier/more experimentation with value stepdowns
-// in the code.  It really needs to be rewritten to accept arbitrary
-// (unevenly spaced) steppings.
+    return ret + (rounding == ROUND_CLOSE ? 0.5 : 0);
+}
+
+// Deprecated definition. Call directly stepdown instead.
 int stepdown_value(int base_value, int stepping, int first_step,
                    int last_step, int ceiling_value)
 {
-    int return_value = base_value;
+    UNUSED(last_step);
 
-    // values up to the first "step" returned unchanged:
-    if (return_value <= first_step)
-        return return_value;
+    // Disabling max used to be -1.
+    if (ceiling_value < 0)
+        ceiling_value = 0;
 
-    for (int this_step = first_step; this_step <= last_step;
-         this_step += stepping)
-    {
-        if (return_value > this_step)
-            return_value = ((return_value - this_step) / 2) + this_step;
-        else
-            break;              // exit loop iff value fully "stepped down"
-    }
+    if (ceiling_value && ceiling_value < first_step)
+        return min(base_value, ceiling_value);
+    if (base_value < first_step)
+        return base_value;
 
-    // "no final ceiling" == -1
-    if (ceiling_value != -1 && return_value > ceiling_value)
-        return ceiling_value;   // highest value to return is "ceiling"
-    else
-        return return_value;    // otherwise, value returned "as is"
-
+    const int diff = first_step - stepping;
+    // Since diff < first_step, we can assume here that ceiling_value > diff
+    // or ceiling_value == 0.
+    return diff + stepdown(base_value - diff, stepping, ROUND_DOWN,
+                           ceiling_value ? ceiling_value - diff : 0);
 }
 
 int div_round_up(int num, int den)
@@ -480,7 +478,30 @@ void canned_msg(canned_message_type which_message)
     case MSG_TOO_HUNGRY:
         mpr("You're too hungry.");
         break;
+    case MSG_DETECT_NOTHING:
+        mpr("You detect nothing.");
+        break;
+    case MSG_CALL_DEAD:
+        mpr("You call on the dead to rise...");
+        break;
+    case MSG_ANIMATE_REMAINS:
+        mpr("You attempt to give life to the dead...");
+        break;
+    case MSG_DECK_EXHAUSTED:
+        mpr("The deck of cards disappears in a puff of smoke.");
+        break;
+    case MSG_EVOCATION_SUPPRESSED:
+        mpr("You may not evoke while suppressed!");
+        break;
     }
+}
+
+const char* held_status(actor *act)
+{
+    if (get_trapping_net(act->pos(), true) != NON_ITEM)
+        return "held in a net";
+    else
+        return "caught in a web";
 }
 
 // Like yesno, but requires a full typed answer.
@@ -498,11 +519,11 @@ bool yes_or_no(const char* fmt, ...)
     mprf(MSGCH_PROMPT, "%s? (Confirm with \"yes\".) ", buf);
 
     if (cancelable_get_line(buf, sizeof buf))
-        return (false);
+        return false;
     if (strcasecmp(buf, "yes") != 0)
-        return (false);
+        return false;
 
-    return (true);
+    return true;
 }
 
 // jmf: general helper (should be used all over in code)
@@ -515,7 +536,7 @@ bool yesno(const char *str, bool safe, int safeanswer, bool clear_after,
     if (interrupt_delays && !crawl_state.is_repeating_cmd())
         interrupt_activity(AI_FORCE_INTERRUPT);
 
-    std::string prompt = make_stringf("%s ", str ? str : "Buggy prompt?");
+    string prompt = make_stringf("%s ", str ? str : "Buggy prompt?");
 
     mouse_control mc(MOUSE_MODE_MORE);
     while (true)
@@ -558,15 +579,14 @@ bool yesno(const char *str, bool safe, int safeanswer, bool clear_after,
             mesclr();
 
         if (tmp == 'N')
-            return (false);
+            return false;
         else if (tmp == 'Y')
-            return (true);
+            return true;
         else if (!noprompt)
         {
             bool upper = (!safe && crawl_state.game_is_hints_tutorial());
-            const std::string pr
-                = make_stringf("%s[Y]es or [N]o only, please.",
-                               upper ? "Uppercase " : "");
+            const string pr = make_stringf("%s[Y]es or [N]o only, please.",
+                                           upper ? "Uppercase " : "");
             if (message)
                 mpr(pr);
             else
@@ -575,11 +595,10 @@ bool yesno(const char *str, bool safe, int safeanswer, bool clear_after,
     }
 }
 
-static std::string _list_alternative_yes(char yes1, char yes2,
-                                         bool lowered = false,
-                                         bool brackets = false)
+static string _list_alternative_yes(char yes1, char yes2, bool lowered = false,
+                                    bool brackets = false)
 {
-    std::string help = "";
+    string help = "";
     bool print_yes = false;
     if (yes1 != 'Y')
     {
@@ -613,33 +632,32 @@ static std::string _list_alternative_yes(char yes1, char yes2,
     return help;
 }
 
-static std::string _list_allowed_keys(char yes1, char yes2,
-                                      bool lowered = false,
-                                      bool allow_all = false)
+static string _list_allowed_keys(char yes1, char yes2, bool lowered = false,
+                                 bool allow_all = false)
 {
-    std::string result = " [";
-                result += (lowered ? "(y)es" : "(Y)es");
-                result += _list_alternative_yes(yes1, yes2, lowered);
-                if (allow_all)
-                    result += (lowered? "/(a)ll" : "/(A)ll");
-                result += (lowered ? "/(n)o/(q)uit" : "/(N)o/(Q)uit");
-                result += "]";
+    string result = " [";
+           result += (lowered ? "(y)es" : "(Y)es");
+           result += _list_alternative_yes(yes1, yes2, lowered);
+           if (allow_all)
+               result += (lowered? "/(a)ll" : "/(A)ll");
+           result += (lowered ? "/(n)o/(q)uit" : "/(N)o/(Q)uit");
+           result += "]";
 
-    return (result);
+    return result;
 }
 
 // Like yesno(), but returns 0 for no, 1 for yes, and -1 for quit.
 // alt_yes and alt_yes2 allow up to two synonyms for 'Y'.
 // FIXME: This function is shaping up to be a monster. Help!
 int yesnoquit(const char* str, bool safe, int safeanswer, bool allow_all,
-               bool clear_after, char alt_yes, char alt_yes2)
+              bool clear_after, char alt_yes, char alt_yes2)
 {
     if (!crawl_state.is_repeating_cmd())
         interrupt_activity(AI_FORCE_INTERRUPT);
 
     mouse_control mc(MOUSE_MODE_MORE);
 
-    std::string prompt =
+    string prompt =
         make_stringf("%s%s ", str ? str : "Buggy prompt?",
                      _list_allowed_keys(alt_yes, alt_yes2,
                                         safe, allow_all).c_str());
@@ -703,11 +721,9 @@ char index_to_letter(int the_index)
 int letter_to_index(int the_letter)
 {
     if (the_letter >= 'a' && the_letter <= 'z')
-        // returns range [0-25] {dlb}
-        return (the_letter - 'a');
+        return (the_letter - 'a'); // returns range [0-25] {dlb}
     else if (the_letter >= 'A' && the_letter <= 'Z')
-        // returns range [26-51] {dlb}
-        return (the_letter - 'A' + 26);
+        return (the_letter - 'A' + 26); // returns range [26-51] {dlb}
 
     die("slot not a letter: %s (%d)", the_letter ?
         stringize_glyph(the_letter).c_str() : "null", the_letter);
@@ -729,12 +745,12 @@ bool tobool(maybe_bool mb, bool def)
     switch (mb)
     {
     case B_TRUE:
-        return (true);
+        return true;
     case B_FALSE:
-        return (false);
+        return false;
     case B_MAYBE:
     default:
-        return (def);
+        return def;
     }
 }
 
@@ -782,5 +798,24 @@ int prompt_for_int(const char *prompt, bool nonneg)
     if (ret < 0 && nonneg || ret == 0 && end == specs)
         ret = (nonneg ? -1 : 0);
 
-    return (ret);
+    return ret;
+}
+
+double prompt_for_float(const char* prompt)
+{
+    char specs[80];
+
+    msgwin_get_line(prompt, specs, sizeof(specs));
+
+    if (specs[0] == '\0')
+        return -1;
+
+    char *end;
+    double ret = strtod(specs, &end);
+
+    if (ret == 0 && end == specs)
+        ret = -1;
+
+    return ret;
+
 }

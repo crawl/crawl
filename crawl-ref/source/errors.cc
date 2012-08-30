@@ -15,7 +15,7 @@ NORETURN void fail(const char *msg, ...)
 {
     va_list args;
     va_start(args, msg);
-    std::string buf = vmake_stringf(msg, args);
+    string buf = vmake_stringf(msg, args);
     va_end(args);
 
     // Do we want to call end() right on when there's no one trying catching,
@@ -27,11 +27,21 @@ NORETURN void sysfail(const char *msg, ...)
 {
     va_list args;
     va_start(args, msg);
-    std::string buf = vmake_stringf(msg, args);
+    string buf = vmake_stringf(msg, args);
     va_end(args);
 
     buf += ": ";
     buf += strerror(errno);
 
     throw ext_fail_exception(buf);
+}
+
+NORETURN void corrupted(const char *msg, ...)
+{
+    va_list args;
+    va_start(args, msg);
+    string buf = vmake_stringf(msg, args);
+    va_end(args);
+
+    throw corrupted_save(buf);
 }

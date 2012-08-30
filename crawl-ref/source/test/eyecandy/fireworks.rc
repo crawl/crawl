@@ -11,7 +11,7 @@
 
 name = Fireworks
 species = mu
-background = st
+background = ar
 restart_after_game = false
 show_gold_turns = true
 show_more = false
@@ -34,18 +34,17 @@ show_more = false
 :                    "dgn.create_monster(40, 40, 'statue hp:10000')" .. eol ..
 :                    "you.teleport_to(40, 32)" .. eol .. esc)
 :     crawl.sendkeys("X" .. string.char(6) .. "y" .. esc)
-:     crawl.sendkeys("&" .. string.char(12) .. "27" .. eol)
+:     crawl.sendkeys("&" .. string.char(12) .. "27" .. eol .. "N")
 :     crawl.sendkeys("&A27" .. eol)
 :     for i = 1, 40 do
 :       crawl.sendkeys("&H")
 :     end
 :   end
 :   if (you.turns() % 7) == 1 then
-:     crawl.sendkeys("&^200" .. eol .. eol .. eol)
-:     crawl.sendkeys("&" .. string.char(20) ..
-:                    "require('dlua/stress.lua')" .. eol ..
-:                    "stress.boost_monster_hp()" .. eol .. esc)
-:     crawl.sendkeys("&corb" .. eol .. eol .. esc .. esc)
+:     crawl.call_dlua("require('dlua/stress.lua')" .. eol ..
+:                     "stress.boost_monster_hp()" .. eol ..
+:                     "you.piety(200)")
+:     crawl.sendkeys("&corb" .. eol .. eol)
 :   end
 :   crawl.sendkeys(".")
 :   crawl.delay(250)

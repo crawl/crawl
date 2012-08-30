@@ -1,0 +1,44 @@
+%%%%
+amulet
+
+Kaulassa pidettävä talismaani, jossa piilee mystisiä, tuntemattomasta lähteestä
+peräisin olevia voimia.
+%%%%
+book
+
+Taikaloitsuja sisältävä kirja. Ole varuillasi, sillä tehokkaimmilla loitsuilla
+ei ole leikkiminen.
+%%%%
+deck of cards
+
+Voimakkaita, demonien verellä piirrettyjä maagisia kortteja sisältävä
+korttipakka. Niillä voi olla lukuisia auttavia tai vaarallisia vaikutuksia
+nostettaessa.
+%%%%
+potion
+
+Pieni nestettä sisältävä pullo.
+%%%%
+ring
+
+Sormeen pujotettava koru, jossa piilee mystisiä, tuntemattomasta lähteestä
+peräisin olevia voimia.
+%%%%
+rod
+
+Maaginen sauva, jota voi pitää kädessä ja käyttää useiden loitsujen
+loihtimiseen. Se käyttää itsestään palautuvia voimavarastoja, ja on kyllin
+jykevä käytettäväksi yksinkertaisena, tylppänä lyömäaseena.
+%%%%
+scroll
+
+Paperikäärö täynnä maagista kirjoitusta.
+%%%%
+magical staff
+
+Salaisilla voimilla vahvistettu taistelusauva.
+%%%%
+wand
+
+Keppi. Ehkä siinä on taikuutta.
+%%%%

@@ -1,182 +1,322 @@
 %%%%
-Buggy
-
-Buggy
-(It's a bug if you ever see this.)
-%%%%
 Fighting
 
-Apart from making you more proficient in hand-to-hand combat, Fighting also increases your maximum hit points.
+Fighting skill increases your accuracy and damage in hand-to-hand combat, and
+also increases your maximum hit points.
 %%%%
 Short Blades
 
-Being skilled with a particular type of weapon will make it easier to fight with all weapons of this type and make you deal more damage with them. It is generally recommended to concentrate your efforts on one or two weapon types to become more powerful in them. Short Blades have a reputation for producing rather little damage in the late game, but, on the other hand, they are the best implements for stabbing.
+Being skilled with a particular type of weapon will allow you to attack more
+quickly with all weapons of this type, as well as increasing your accuracy and
+damage with them. It is generally recommended to concentrate your efforts on
+one or two weapon types to become more powerful in them.
 
-If you're already skilled in Short Blades, it is easier to become skilled in Long Blades.
+Short Blades have a reputation for producing rather little damage in the late
+game, but, on the other hand, they are the best implements for stabbing.
+
+Being skilled with Short Blades makes it easier to become more skilled with
+Long Blades, and vice versa.
 %%%%
 Long Blades
 
-Being skilled with a particular type of weapon will make it easier to fight with all weapons of this type and make you deal more damage with them. It is generally recommended to concentrate your efforts on one or two weapon types to become more powerful in them.
+Being skilled with a particular type of weapon will allow you to attack more
+quickly with all weapons of this type, as well as increasing your accuracy and
+damage with them. It is generally recommended to concentrate your efforts on
+one or two weapon types to become more powerful in them.
 
-If you're already skilled in Short Blades, it is easier to become (more) skilled in Long Blades.
+Being skilled with Long Blades makes it easier to become more skilled with
+Short Blades, and vice versa.
 %%%%
 Axes
 
-Being skilled with a particular type of weapon will make it easier to fight with all weapons of this type and make you deal more damage with them. It is generally recommended to concentrate your efforts on one or two weapon types to become more powerful in them.
+Being skilled with a particular type of weapon will allow you to attack more
+quickly with all weapons of this type, as well as increasing your accuracy and
+damage with them. It is generally recommended to concentrate your efforts on
+one or two weapon types to become more powerful in them.
 
-Being skilled in Axes makes learning to fight with Maces or Polearms easier.
+Axes have some of the strongest two-handed weapons, although they require a lot
+of skill to be used effectively.
+
+Being skilled with Axes makes it easier to become more skilled with Maces &
+Flails or Polearms, and vice versa.
 %%%%
 Maces & Flails
 
-Being skilled with a particular type of weapon will make it easier to fight with all weapons of this type and make you deal more damage with them. It is generally recommended to concentrate your efforts on one or two weapon types to become more powerful in them.
+Being skilled with a particular type of weapon will allow you to attack more
+quickly with all weapons of this type, as well as increasing your accuracy and
+damage with them. It is generally recommended to concentrate your efforts on
+one or two weapon types to become more powerful in them.
 
-Being skilled in Maces & Flails makes it easier to also become skilled when fighting with Axes or Staves.
+Being skilled with Maces & Flails makes it easier to become more skilled with
+Axes or Staves, and vice versa.
 %%%%
 Polearms
 
-Being skilled with a particular type of weapon will make it easier to fight with all weapons of this type and make you deal more damage with them. It is generally recommended to concentrate your efforts on one or two weapon types to become more powerful in them.
+Being skilled with a particular type of weapon will allow you to attack more
+quickly with all weapons of this type, as well as increasing your accuracy and
+damage with them. It is generally recommended to concentrate your efforts on
+one or two weapon types to become more powerful in them.
 
-Being skilled in Polearms eases training in Axes or Staves.
+Polearms can be evoked with 'v' to attack enemies from two spaces away.
+
+Being skilled with Polearms makes it easier to become more skilled with Axes or
+Staves, and vice versa.
 %%%%
 Staves
 
-Being skilled with a particular type of weapon will make it easier to fight with all weapons of this type and make you deal more damage with them. It is generally recommended to concentrate your efforts on one or two weapon types to become more powerful in them.
+Being skilled with a particular type of weapon will allow you to attack more
+quickly with all weapons of this type, as well as increasing your accuracy and
+damage with them. It is generally recommended to concentrate your efforts on
+one or two weapon types to become more powerful in them.
 
-Being skilled in Staves makes becoming skilled in Maces & Flails or Polearms easier.
+Staves require a relatively low amount of skill to be used most effectively,
+although they lack the high damage potential of some other weapon classes.
+
+Being skilled with Staves makes it easier to become more skilled with Maces &
+Flails or Polearms, and vice versa.
 %%%%
 Slings
 
-Being skilled in a particular type of ranged attack will let you deal more damage when using the appropriate launcher and ammunition.
+Being skilled in a particular type of ranged attack will let you deal more
+damage when using the appropriate launcher and ammunition.
 
-If you're already skilled in Slings, it is easier to become (more) skilled in Throwing.
+Being skilled with Slings makes it easier to become more skilled in Throwing,
+and vice versa.
 %%%%
 Bows
 
-Being skilled in a particular type of ranged attack will let you deal more damage when using the appropriate launcher and ammunition.
+Being skilled in a particular type of ranged attack will let you deal more
+damage when using the appropriate launcher and ammunition.
 %%%%
 Crossbows
 
-Being skilled in a particular type of ranged attack will let you deal more damage when using the appropriate launcher and ammunition.
+Being skilled in a particular type of ranged attack will let you deal more
+damage when using the appropriate launcher and ammunition.
 %%%%
 Darts
 
-Being skilled in a particular type of ranged attack will let you deal more damage when using the appropriate launcher and ammunition.
+Being skilled in a particular type of ranged attack will let you deal more
+damage when using the appropriate launcher and ammunition.
 %%%%
 Throwing
 
-Training Throwing will make thrown weapons (as opposed to ones fired from a launcher) more effective. In particular, it makes weapons of returning more likely to actually return to their thrower.
+Training Throwing will make thrown weapons (such as javelins) and blowguns more
+effective. In particular, it makes weapons of returning more likely to return
+to their thrower, and makes certain magical needles more likely to have an
+effect when fired from a blowgun.
 
-If you're already skilled in Throwing, it is easier to become (more) skilled in Slings.
+Being skilled in Throwing makes it easier to become more skilled with Slings,
+and vice versa.
 %%%%
 Armour
 
-Armour skill increases the AC gained by wearing heavy armour, and it also helps lessen the hindrance of heavy armour on moving, spellcasting and other actions.
+Armour skill increases the AC gained by wearing heavy armour, and it also helps
+lessen the hindrance of heavy armour on melee combat and spellcasting.
 %%%%
 Dodging
 
-Unsurprisingly, the Dodging skill will affect your chance of dodging an attack, be it melee, ranged or magical. You cannot dodge enchantments, sadly. Rather, to resist them, you'll need a high resistance to hostile enchantments, something that grows with your experience and can also be influenced by certain items.
+The Dodging skill will affect your chance of dodging an attack, be it melee,
+ranged or magical. Certain types of attack cannot be dodged, however, such as
+enchantments (which must be resisted) and explosions.
 %%%%
 Stealth
 
-By training Stealth, you can make it less likely that monsters will notice you. This skill is trained by moving in the vicinity of unaware monsters. Note that monsters become more suspicious and observant as you descend.
+By training Stealth, you can make it less likely that monsters will notice you
+if they are asleep or otherwise unalert, and increase your chances of monsters
+losing track of you after you leave their vision. Note that monsters become
+more suspicious and observant as you descend.
 %%%%
 Stabbing
 
-Stabbing is the skill that governs the likeliness of doing a great amount of damage on a distracted or helpless creature. Some gods may disapprove of this.
+Stabbing is the skill that governs the likeliness of doing a great amount of
+damage when attacking a distracted or helpless creature (usually with a short
+blade), as well as the amount of extra damage dealt. Some gods may disapprove
+of this.
 %%%%
 Shields
 
-A high Shields skill helps you block melee and ranged attacks with your equipped (or a magical) shield.
+A high Shields skill helps you block melee attacks or projectiles (both magical
+and non-magical) with your equipped (or a magical) shield. Some attacks, such
+as penetrating bolts, cannot be blocked at all.
 %%%%
 Traps & Doors
 
-A character trained in Traps & Doors will be more observant to his or her surroundings and be quicker in noticing traps and secret doors.
+A character trained in Traps & Doors will be more observant to his or her
+surroundings and be quicker in noticing traps and secret doors.
 %%%%
 Unarmed Combat
 
-A character trained in Unarmed Combat will occasionally do an additional melee attack, provided they have the means to do so. Of course, this skill also trains your proficiency in barehanded combat.
+Being skilled in Unarmed Combat increases your accuracy, damage and attack
+speed in melee combat when barehanded. It also allows you to occasionally punch
+with your off hand as an additional melee attack, provided your hand is free to
+do so.
 %%%%
 Spellcasting
 
-Training Spellcasting makes it easier to learn and cast spells, along with increasing your magical reserves. Gaining a level in Spellcasting gives you more "spell slots" to spend on new spells. Spellcasting skill and your intelligence are the only factors countering spell hunger.
+Training Spellcasting makes it easier to learn and cast spells, along with
+increasing your magical reserves. Gaining a level in Spellcasting gives you
+more "spell slots" to spend on new spells. Spellcasting skill and your
+intelligence are the only factors countering spell hunger.
 %%%%
 Conjurations
 
-Being skilled in a magical "school" makes it easier to learn and cast spells of this school. Many spells belong to a combination of several schools, in which case the average skill in these schools will decide on spellcasting success and power.
+Being skilled in a magical "school" makes it easier to learn and cast spells of
+this school. Many spells belong to a combination of several schools, in which
+case spellcasting success and power will depend on the average skill in these
+schools.
 
-Conjurations are battle oriented spells, which work by conjuring up a chunk of short-lived matter and propelling it towards the victim.
+Conjurations are battle oriented spells, which often work by conjuring up a
+chunk of short-lived matter and propelling it towards the victim to deal direct
+damage. Being skilled in Conjurations usually increases the damage of such
+spells, and sometimes affects their range or the size of the area affected.
 %%%%
 Hexes
 
-Being skilled in a magical "school" makes it easier to learn and cast spells of this school. Many spells belong to a combination of several schools, in which case the average skill in these schools will decide on spellcasting success and power.
+Being skilled in a magical "school" makes it easier to learn and cast spells of
+this school. Many spells belong to a combination of several schools, in which
+case spellcasting success and power will depend on the average skill in these
+schools.
 
-Hexes try to bestow various enchantments on nearby things. While none do direct damage, being ensorcelled can effectively take an opponent out of combat. Sadly, Hexes suffer greatly from spell resistance when cast on living beings.
+Hexes try to bestow various enchantments on nearby things. While none do direct
+damage, being ensorcelled can effectively take an opponent out of combat,
+although they often require overcoming an opponent's resistance to hostile
+enchantments to have an effect. Being skilled in Hexes will help overcome this
+resistance.
 %%%%
 Charms
 
-Being skilled in a magical "school" makes it easier to learn and cast spells of this school. Many spells belong to a combination of several schools, in which case the average skill in these schools will decide on spellcasting success and power.
+Being skilled in a magical "school" makes it easier to learn and cast spells of
+this school. Many spells belong to a combination of several schools, in which
+case spellcasting success and power will depend on the average skill in these
+schools.
 
-Charms provide you with a number of self-enhancing auras.
+Charms provide you with a number of self-enhancing auras. Training Charms skill
+will often increase the duration or effectiveness of these auras.
 %%%%
 Summonings
 
-Being skilled in a magical "school" makes it easier to learn and cast spells of this school. Many spells belong to a combination of several schools, in which case the average skill in these schools will decide on spellcasting success and power.
+Being skilled in a magical "school" makes it easier to learn and cast spells of
+this school. Many spells belong to a combination of several schools, in which
+case spellcasting success and power will depend on the average skill in these
+schools.
 
-Summonings, not surprisingly, deals with summoning creatures from another plane of reality to join your army or distract your foes. Note that summoned beings don't leave corpses and don't give experience when killed. Their equipment is as ephemeral as they are.
+Summonings deals with summoning creatures from another plane of reality to join
+your army or distract your foes. Increasing Summonings skill may have a number
+of effects depending on the spell, such as longer duration, more powerful
+allies, or lower chances of creating hostile creatures. Note that summoned
+beings don't leave corpses and don't give experience when killed, and their
+equipment is as ephemeral as they are.
 %%%%
 Necromancy
 
-Being skilled in a magical "school" makes it easier to learn and cast spells of this school. Many spells belong to a combination of several schools, in which case the average skill in these schools will decide on spellcasting success and power.
+Being skilled in a magical "school" makes it easier to learn and cast spells of
+this school. Many spells belong to a combination of several schools, in which
+case spellcasting success and power will depend on the average skill in these
+schools.
 
-Necromancy is the art of draining and gaining life, although most often associated with zombies and other undead.
+Necromancy is the art of draining and gaining life, although most often
+associated with zombies and other undead. As such, Necromancy spells have a
+wide range of effects, ranging from spells to create or control the undead to
+spells granting unholy healing in various forms.
 %%%%
 Translocations
 
-Being skilled in a magical "school" makes it easier to learn and cast spells of this school. Many spells belong to a combination of several schools, in which case the average skill in these schools will decide on spellcasting success and power.
+Being skilled in a magical "school" makes it easier to learn and cast spells of
+this school. Many spells belong to a combination of several schools, in which
+case spellcasting success and power will depend on the average skill in these
+schools.
 
-Translocations focus on spatial movement of beings or objects.
+Translocations focus on the spatial movement of beings or objects, including
+useful spells to translocate yourself over short distances quickly or to
+transport your enemies away from you.
 %%%%
 Transmutations
 
-Being skilled in a magical "school" makes it easier to learn and cast spells of this school. Many spells belong to a combination of several schools, in which case the average skill in these schools will decide on spellcasting success and power.
+Being skilled in a magical "school" makes it easier to learn and cast spells of
+this school. Many spells belong to a combination of several schools, in which
+case spellcasting success and power will depend on the average skill in these
+schools.
 
-Transmutations deal with changing shapes. It is possible to become a powerful dragon, for example.
+Transmutations deal with changing shapes. Many Transmutations involve changing
+your own form, but the school also contains spells to change the shape of
+enemies, or to transform objects around you.
 %%%%
 Fire Magic
 
-Being skilled in a magical "school" makes it easier to learn and cast spells of this school. Many spells belong to a combination of several schools, in which case the average skill in these schools will decide on spellcasting success and power.
+Being skilled in a magical "school" makes it easier to learn and cast spells of
+this school. Many spells belong to a combination of several schools, in which
+case spellcasting success and power will depend on the average skill in these
+schools.
+
+Fire Magic focuses mainly on dealing fire damage over long distances, with many
+effective Conjurations.
 
 Being skilled in Fire Magic makes Ice Magic harder to learn, and vice versa.
 %%%%
 Ice Magic
 
-Being skilled in a magical "school" makes it easier to learn and cast spells of this school. Many spells belong to a combination of several schools, in which case the average skill in these schools will decide on spellcasting success and power.
+Being skilled in a magical "school" makes it easier to learn and cast spells of
+this school. Many spells belong to a combination of several schools, in which
+case spellcasting success and power will depend on the average skill in these
+schools.
+
+Ice Magic contains a range of direct damage spells, as well as some defensive
+effects such as spells to craft temporary shields and armour from ice.
 
 Being skilled in Ice Magic makes Fire Magic harder to learn, and vice versa.
 %%%%
 Air Magic
 
-Being skilled in a magical "school" makes it easier to learn and cast spells of this school. Many spells belong to a combination of several schools, in which case the average skill in these schools will decide on spellcasting success and power.
+Being skilled in a magical "school" makes it easier to learn and cast spells of
+this school. Many spells belong to a combination of several schools, in which
+case spellcasting success and power will depend on the average skill in these
+schools.
+
+Air Magic provides spells to deal damage directly with the wind, as well as
+noisy but powerful lightning conjurations. It also provides some utility
+spells, such as Charms to call the wind to assist your movement or protect you
+from projectile attacks.
 
 Being skilled in Air Magic makes Earth Magic harder to learn, and vice versa.
 %%%%
 Earth Magic
 
-Being skilled in a magical "school" makes it easier to learn and cast spells of this school. Many spells belong to a combination of several schools, in which case the average skill in these schools will decide on spellcasting success and power.
+Being skilled in a magical "school" makes it easier to learn and cast spells of
+this school. Many spells belong to a combination of several schools, in which
+case spellcasting success and power will depend on the average skill in these
+schools.
+
+Earth Magic contains spells able to deal large amounts of direct physical
+damage, which cannot be resisted like fire, cold and lightning damage can. It
+is also linked with some Transmutations, with spells to liquefy the earth
+around you, or to turn your enemies to stone.
 
 Being skilled in Earth Magic makes Air Magic harder to learn, and vice versa.
 %%%%
 Poison Magic
 
-Being skilled in a magical "school" makes it easier to learn and cast spells of this school. Many spells belong to a combination of several schools, in which case the average skill in these schools will decide on spellcasting success and power.
+Being skilled in a magical "school" makes it easier to learn and cast spells of
+this school. Many spells belong to a combination of several schools, in which
+case spellcasting success and power will depend on the average skill in these
+schools.
 
-Poison magic is at its most useful early on, as many monsters are resistant to poison in the later game. There are poison spells of high utility throughout the game, though.
+Poison magic is at its most useful early on, as many monsters are resistant to
+poison in the later game. There are poison spells of high utility throughout
+the game, though.
 %%%%
 Invocations
 
-Your Invocations skill affects the likelihood that an attempt to use a divine ability will be successful. Also, the Invocations skill affects your magical reserve, just as the Spellcasting skill does, but to a lesser degree.
+Your Invocations skill affects the likelihood that an attempt to use a divine
+ability will be successful, and often the power of such abilities. The
+Invocations skill also affects your magical reserve, but to a lesser degree
+than the Spellcasting skill, and only the highest contribution is used.
 %%%%
 Evocations
 
-Evocations is all about using magical items like wands, decks or other uncommon objects. The higher your skill, the more likely is a positive outcome when evoking items. Also, high skill may let you determine the amount of charges a zapped wand has left.
+Evocations is all about using magical items like wands, decks or other uncommon
+objects. The higher your skill, the more likely a positive outcome is when
+evoking items. Also, high skill may let you determine the amount of charges a
+zapped wand has left. The Evocations skill also affects your magical reserve,
+but to a lesser degree than the Spellcasting skill, and only the highest
+contribution is used.
 %%%%

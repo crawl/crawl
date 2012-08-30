@@ -59,7 +59,7 @@ AsgKISS::AsgKISS(uint32_t init_key[], int key_length)
     }
 }
 
-static std::stack<AsgKISS*> states;
+static stack<AsgKISS*> states;
 
 void push_asg_state()
 {

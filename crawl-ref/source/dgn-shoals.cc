@@ -167,7 +167,7 @@ static dgn_island_plan _shoals_island_plan()
     plan.island_aux_radius_range = int_range(2, 7);
     plan.island_aux_point_height_increment = int_range(50, 65);
 
-    return (plan);
+    return plan;
 }
 
 static void _shoals_init_islands(int depth)
@@ -221,9 +221,9 @@ static void _shoals_apply_level()
 }
 
 // Returns all points in deep water with an adjacent square in shallow water.
-static std::vector<coord_def> _shoals_water_depth_change_points()
+static vector<coord_def> _shoals_water_depth_change_points()
 {
-    std::vector<coord_def> points;
+    vector<coord_def> points;
     for (rectangle_iterator ri(1); ri; ++ri)
     {
         coord_def c(*ri);
@@ -243,7 +243,7 @@ static inline void _shoals_deepen_water_at(coord_def p, int distance)
 
 static void _shoals_deepen_water()
 {
-    std::vector<coord_def> pages[2];
+    vector<coord_def> pages[2];
     int current_page = 0;
     pages[current_page] = _shoals_water_depth_change_points();
     FixedArray<bool, GXM, GYM> seen_points(false);
@@ -255,8 +255,8 @@ static void _shoals_deepen_water()
     while (!pages[current_page].empty())
     {
         const int next_page = !current_page;
-        std::vector<coord_def> &cpage(pages[current_page]);
-        std::vector<coord_def> &npage(pages[next_page]);
+        vector<coord_def> &cpage(pages[current_page]);
+        vector<coord_def> &npage(pages[next_page]);
         for (int i = 0, size = cpage.size(); i < size; ++i)
         {
             coord_def c(cpage[i]);
@@ -293,9 +293,9 @@ static void _shoals_furniture(int margin)
         const coord_def p = _pick_shoals_island();
         const char *SHOAL_RUNE_HUT = "shoal_rune_hut";
         const map_def *vault = random_map_for_tag(SHOAL_RUNE_HUT);
-        dgn_ensure_vault_placed(dgn_place_map(vault, false, false, p), false);
+        dgn_ensure_vault_placed(dgn_place_map(vault, true, false, p), false);
 
-        const int nhuts = std::min(8, int(_shoals_islands.islands.size()));
+        const int nhuts = min(8, int(_shoals_islands.islands.size()));
         for (int i = 2; i < nhuts; ++i)
         {
             // Place (non-rune) minivaults on the other islands. We
@@ -306,7 +306,7 @@ static void _shoals_furniture(int margin)
                 vault = random_map_for_tag("shoal_hut");
             while (!vault && --tries > 0);
             if (vault)
-                dgn_place_map(vault, false, false, _pick_shoals_island());
+                dgn_place_map(vault, true, false, _pick_shoals_island());
         }
 
         // Fixup pass to connect vaults.
@@ -350,7 +350,7 @@ static int _shoals_contiguous_feature_flood(
     int nregion,
     int size_limit)
 {
-    std::vector<coord_def> visit;
+    vector<coord_def> visit;
     visit.push_back(c);
     int npoints = 1;
     for (size_t i = 0; i < visit.size() && npoints < size_limit; ++i)
@@ -384,7 +384,7 @@ static coord_def _shoals_region_center(
     int nseen = 0;
 
     double cx = 0.0, cy = 0.0;
-    std::vector<coord_def> visit;
+    vector<coord_def> visit;
     visit.push_back(c);
     FixedArray<bool, GXM, GYM> visited(false);
     for (size_t i = 0; i < visit.size(); ++i)
@@ -441,12 +441,12 @@ struct weighted_region
     }
 };
 
-static std::vector<weighted_region>
+static vector<weighted_region>
 _shoals_point_feat_cluster(dungeon_feature_type feat,
                            const int wanted_count,
                            grid_short &region_map)
 {
-    std::vector<weighted_region> regions;
+    vector<weighted_region> regions;
     int region = 1;
     for (rectangle_iterator ri(1); ri; ++ri)
     {
@@ -464,12 +464,12 @@ _shoals_point_feat_cluster(dungeon_feature_type feat,
                 regions.push_back(weighted_region(featcount, c));
         }
     }
-    return (regions);
+    return regions;
 }
 
 static coord_def _shoals_pick_region(
     grid_short &region_map,
-    const std::vector<weighted_region> &regions)
+    const vector<weighted_region> &regions)
 {
     if (regions.empty())
         return coord_def();
@@ -537,7 +537,7 @@ static void _shoals_plant_supercluster(coord_def c,
                           random_range(3, 9), favoured_feat,
                           verboten);
 
-    const int nadditional_clusters(std::max(0, random_range(-1, 4, 2)));
+    const int nadditional_clusters(max(0, random_range(-1, 4, 2)));
     for (int i = 0; i < nadditional_clusters; ++i)
     {
         const coord_def satellite(
@@ -578,14 +578,14 @@ static coord_def _int_coord(const coord_dbl &c)
     return coord_def(static_cast<int>(c.x), static_cast<int>(c.y));
 }
 
-static std::vector<coord_def> _shoals_windshadows(grid_bool &windy)
+static vector<coord_def> _shoals_windshadows(grid_bool &windy)
 {
     const int wind_angle_degrees = random2(360);
     const double wind_angle(dgn_degrees_to_radians(wind_angle_degrees));
     const coord_dbl wi(cos(wind_angle), sin(wind_angle));
     const double epsilon = 1e-5;
 
-    std::vector<coord_dbl> wind_points;
+    vector<coord_dbl> wind_points;
     if (wi.x > epsilon || wi.x < -epsilon)
     {
         for (int y = 1; y < GYM - 1; ++y)
@@ -621,7 +621,7 @@ static std::vector<coord_def> _shoals_windshadows(grid_bool &windy)
             windy(*ri) = true;
 
     // Now we know the places in the wind shadow:
-    std::vector<coord_def> wind_shadows;
+    vector<coord_def> wind_shadows;
     for (rectangle_iterator ri(1); ri; ++ri)
     {
         const coord_def p(*ri);
@@ -635,8 +635,8 @@ static std::vector<coord_def> _shoals_windshadows(grid_bool &windy)
     return wind_shadows;
 }
 
-static void _shoals_generate_wind_sheltered_plants(
-    std::vector<coord_def> &places, grid_bool &windy)
+static void _shoals_generate_wind_sheltered_plants(vector<coord_def> &places,
+                                                   grid_bool &windy)
 {
     if (places.empty())
         return;
@@ -657,15 +657,15 @@ void dgn_shoals_generate_flora()
     //
     // Yeah, the strong winds aren't there yet, but they could be!
     //
-    const int n_water_clusters = std::max(0, random_range(-1, 6, 2));
-    const int n_wind_clusters = std::max(0, random_range(-2, 2, 2));
+    const int n_water_clusters = max(0, random_range(-1, 6, 2));
+    const int n_wind_clusters = max(0, random_range(-2, 2, 2));
 
     shoals_plant_quota = MAX_SHOAL_PLANTS;
 
     if (n_water_clusters)
     {
         grid_short region_map(0);
-        std::vector<weighted_region> regions(
+        vector<weighted_region> regions(
             _shoals_point_feat_cluster(DNGN_SHALLOW_WATER, 6, region_map));
 
         for (int i = 0; i < n_water_clusters; ++i)
@@ -678,20 +678,19 @@ void dgn_shoals_generate_flora()
     if (n_wind_clusters)
     {
         grid_bool windy(false);
-        std::vector<coord_def> wind_shadows = _shoals_windshadows(windy);
+        vector<coord_def> wind_shadows = _shoals_windshadows(windy);
         for (int i = 0; i < n_wind_clusters; ++i)
             _shoals_generate_wind_sheltered_plants(wind_shadows, windy);
     }
 }
 
-void dgn_build_shoals_level(int level_number)
+void dgn_build_shoals_level()
 {
-    env.level_build_method += make_stringf(" shoals+ [%d]", level_number);
+    env.level_build_method += make_stringf(" shoals+ [%d]", you.depth);
     env.level_layout_types.insert("shoals");
 
-    const int shoals_depth = level_id::current().depth - 1;
-    if (you.level_type != LEVEL_LABYRINTH && you.level_type != LEVEL_PORTAL_VAULT)
-        dgn_replace_area(0, 0, GXM-1, GYM-1, DNGN_ROCK_WALL, DNGN_OPEN_SEA);
+    const int shoals_depth = you.depth - 1;
+    dgn_replace_area(0, 0, GXM-1, GYM-1, DNGN_ROCK_WALL, DNGN_OPEN_SEA);
     _shoals_init_heights();
     _shoals_init_islands(shoals_depth);
     _shoals_cliffs();
@@ -747,9 +746,8 @@ static void _shoals_run_tide(int &tide, int &acc)
         acc = -PEAK_TIDE_VELOCITY;
 
     tide += acc;
-    tide = std::max(std::min(tide, HIGH_TIDE), LOW_TIDE);
-    if ((tide == HIGH_TIDE && acc > 0)
-        || (tide == LOW_TIDE && acc < 0))
+    tide = max(min(tide, HIGH_TIDE), LOW_TIDE);
+    if ((tide == HIGH_TIDE && acc > 0) || (tide == LOW_TIDE && acc < 0))
         acc = -acc;
     bool in_decel_margin =
         (abs(tide - HIGH_TIDE) < TIDE_DECEL_MARGIN)
@@ -788,7 +786,7 @@ static void _clear_net_trapping_status(coord_def c)
     if (!victim)
         return;
 
-    if (victim->atype() == ACT_MONSTER)
+    if (victim->is_monster())
     {
         monster* mvictim = victim->as_monster();
         if (you.can_see(mvictim))
@@ -842,7 +840,7 @@ static bool _shoals_tide_sweep_actors_clear(coord_def c)
     if (!victim || !victim->ground_level() || victim->swimming())
         return true;
 
-    if (victim->atype() == ACT_MONSTER)
+    if (victim->is_monster())
     {
         const monster* mvictim = victim->as_monster();
         // Plants and statues cannot be moved away; the tide cannot
@@ -895,14 +893,14 @@ static dungeon_feature_type _shoals_apply_tide_feature_at(
 
     // Return DNGN_UNSEEN if the feature isn't changed.
     if (feat == current_feat)
-        return (DNGN_UNSEEN);
+        return DNGN_UNSEEN;
 
     if (Generating_Level)
         grd(c) = feat;
     else
         dungeon_terrain_changed(c, feat, true, false, true);
 
-    return (feat);
+    return feat;
 }
 
 // Determines if the tide is rising or falling based on before and
@@ -938,7 +936,7 @@ static void _shoals_apply_tide_at(coord_def c, int tide, bool incremental_tide)
     {
         const int oldfeat_seq = _shoals_feature_sequence_number(oldfeat);
         const int newfeat_seq = _shoals_feature_sequence_number(newfeat);
-        if (std::abs(oldfeat_seq - newfeat_seq) >= 2)
+        if (abs(oldfeat_seq - newfeat_seq) >= 2)
             newfeat = DNGN_SHALLOW_WATER;
     }
 
@@ -972,17 +970,17 @@ static int _shoals_tide_at(coord_def pos, int base_tide)
     if (pos.abs() > sqr(TIDE_CALL_RADIUS) + 1)
         return base_tide;
 
-    return (base_tide + std::max(0, tide_called_peak - pos.range() * 3));
+    return (base_tide + max(0, tide_called_peak - pos.range() * 3));
 }
 
-static std::vector<coord_def> _shoals_extra_tide_seeds()
+static vector<coord_def> _shoals_extra_tide_seeds()
 {
     return find_marker_positions_by_prop("tide_seed");
 }
 
 static void _shoals_apply_tide(int tide, bool incremental_tide)
 {
-    std::vector<coord_def> pages[2];
+    vector<coord_def> pages[2];
     int current_page = 0;
 
     // Start from corners of the map.
@@ -992,7 +990,7 @@ static void _shoals_apply_tide(int tide, bool incremental_tide)
     pages[current_page].push_back(coord_def(GXM - 2, GYM - 2));
 
     // Find any extra seeds -- markers with tide_seed="y".
-    const std::vector<coord_def> extra_seeds(_shoals_extra_tide_seeds());
+    const vector<coord_def> extra_seeds(_shoals_extra_tide_seeds());
     pages[current_page].insert(pages[current_page].end(),
                                extra_seeds.begin(), extra_seeds.end());
 
@@ -1001,8 +999,8 @@ static void _shoals_apply_tide(int tide, bool incremental_tide)
     while (!pages[current_page].empty())
     {
         int next_page = !current_page;
-        std::vector<coord_def> &cpage(pages[current_page]);
-        std::vector<coord_def> &npage(pages[next_page]);
+        vector<coord_def> &cpage(pages[current_page]);
+        vector<coord_def> &npage(pages[next_page]);
 
         for (int i = 0, size = cpage.size(); i < size; ++i)
         {
@@ -1011,8 +1009,10 @@ static void _shoals_apply_tide(int tide, bool incremental_tide)
             const bool was_wet(_shoals_tide_passable_feat(herefeat));
             seen_points(c) = true;
             if (_shoals_tide_susceptible_feat(herefeat))
+            {
                 _shoals_apply_tide_at(c, _shoals_tide_at(c, tide),
                                       incremental_tide);
+            }
 
             const bool is_wet(feat_is_water(grd(c)));
 
@@ -1064,9 +1064,7 @@ static void _shoals_init_tide()
         props[PROPS_SHOALS_TIDE_UPDATE_TIME].get_int() = 0;
     }
     if (!env.properties.exists(PROPS_SHOALS_TIDE_KEY))
-    {
         env.properties[PROPS_SHOALS_TIDE_KEY].get_short() = 0;
-    }
 }
 
 static monster* _shoals_find_tide_caller()
@@ -1096,7 +1094,7 @@ void shoals_apply_tides(int turns_elapsed, bool force, bool incremental_tide)
         const int last_updated_time =
             props[PROPS_SHOALS_TIDE_UPDATE_TIME].get_int();
         const int turn_delta = (you.elapsed_time - last_updated_time) / 10;
-        turns_elapsed = std::min(turns_elapsed, turn_delta);
+        turns_elapsed = min(turns_elapsed, turn_delta);
     }
 
     const int TIDE_UNIT = HIGH_TIDE - LOW_TIDE;
@@ -1112,8 +1110,7 @@ void shoals_apply_tides(int turns_elapsed, bool force, bool incremental_tide)
         tide_called_turns = you.num_turns - tide_called_turns;
         if (tide_called_turns < 1L)
             tide_called_turns = 1L;
-        tide_called_peak  = std::min(HIGH_CALLED_TIDE,
-                                     int(tide_called_turns * 5));
+        tide_called_peak  = min(HIGH_CALLED_TIDE, int(tide_called_turns * 5));
         tide_caller_pos = tide_caller->pos();
     }
 
@@ -1170,7 +1167,7 @@ static void _shoals_force_tide(CrawlHashTable &props, int increment)
 {
     int tide = props[PROPS_SHOALS_TIDE_KEY].get_short();
     tide += increment * TIDE_MULTIPLIER;
-    tide = std::min(HIGH_TIDE, std::max(LOW_TIDE, tide));
+    tide = min(HIGH_TIDE, max(LOW_TIDE, tide));
     props[PROPS_SHOALS_TIDE_KEY] = short(tide);
     _shoals_tide_direction = increment > 0 ? TIDE_RISING : TIDE_FALLING;
     _shoals_apply_tide(tide / TIDE_MULTIPLIER, false);

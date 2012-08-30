@@ -23,8 +23,7 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
                  "broad axe", "battleaxe", "quarterstaff",
                  "lajatang", "morningstar", "great mace"})
   local item = {["No God"]="amulet of Faith",
-         Ashenzari="scroll of detect curse q:5-10 / amulet of clarity /\
-              ring of see invisible",
+         Ashenzari="amulet of clarity / ring of see invisible",
          Beogh="good_item battleaxe ego:orc_slaying / disc of storms /\
               good_item broad axe ego:orc_slaying w:5 /\
               scroll of immolation q:3-6 / scroll of fear q:3-6",
@@ -44,9 +43,9 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
          Makhleb="tome of destruction / rod of demonology",
          ["Nemelex Xobeh"]="scroll of random uselessness q:5-10",
          Okawaru="randbook owner:Lugonu spells:summon_butterflies numspells:1 /\
-              book of Callings / scroll of summoning q:2-3",
+              book of Callings / scroll of unholy creation q:2-3",
          ["Sif Muna"]="staff of channeling / good_item plate armour",
-         ["The Shining One"]="wand of invisibility w:20 / rod of venom /\
+         ["the Shining One"]="wand of invisibility w:20 / rod of venom /\
               book of Envenomations / Young Poisoner's Handbook /\
               potion of invisibility q:3-6",
          Trog="manual of Spellcasting w:100 / manual of Air Magic /\

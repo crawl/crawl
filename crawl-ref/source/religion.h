@@ -28,17 +28,17 @@ bool is_chaotic_god(god_type god);
 // orthogonal to whether the player can worship the god in question.
 bool is_unavailable_god(god_type god);
 
-god_type random_god(bool disallow_no_god = false);
+god_type random_god(bool available = true);
 
 void simple_god_message(const char *event, god_type which_deity = you.religion);
 int piety_breakpoint(int i);
-std::string god_name(god_type which_god, bool long_name = false);
-std::string god_name_jiyva(bool second_name = false);
-god_type str_to_god(const std::string &name, bool exact = true);
+string god_name(god_type which_god, bool long_name = false);
+string god_name_jiyva(bool second_name = false);
+god_type str_to_god(const string &name, bool exact = true);
 
-std::string get_god_powers(god_type which_god);
-std::string get_god_likes(god_type which_god, bool verbose = false);
-std::string get_god_dislikes(god_type which_god, bool verbose = false);
+string get_god_powers(god_type which_god);
+string get_god_likes(god_type which_god, bool verbose = false);
+string get_god_dislikes(god_type which_god, bool verbose = false);
 
 void dec_penance(int val);
 void dec_penance(god_type god, int val);
@@ -52,7 +52,7 @@ void god_speaks(god_type god, const char *mesg);
 void lose_piety(int pgn);
 void handle_god_time(void);
 int god_colour(god_type god);
-uint8_t god_message_altar_colour(god_type god);
+colour_t god_message_altar_colour(god_type god);
 bool player_can_join_god(god_type which_god);
 void god_pitch(god_type which_god);
 int had_gods();
@@ -83,11 +83,9 @@ void mons_make_god_gift(monster* mon, god_type god = you.religion);
 bool mons_is_god_gift(const monster* mon, god_type god = you.religion);
 
 int yred_random_servants(unsigned int threshold, bool force_hostile = false);
-bool is_undead_slave(const monster* mon);
 bool is_yred_undead_slave(const monster* mon);
 bool is_orcish_follower(const monster* mon);
 bool is_fellow_slime(const monster* mon);
-bool is_neutral_plant(const monster* mon);
 bool is_follower(const monster* mon);
 bool bless_follower(monster* follower = NULL,
                     god_type god = you.religion,
@@ -95,9 +93,8 @@ bool bless_follower(monster* follower = NULL,
                     bool force = false);
 
 bool god_hates_attacking_friend(god_type god, const actor *fr);
-bool god_hates_attacking_friend(god_type god, int species);
 bool god_likes_item(god_type god, const item_def& item);
-bool god_likes_items(god_type god);
+bool god_likes_items(god_type god, bool greedy_explore = false);
 
 void get_pure_deck_weights(int weights[]);
 
@@ -110,9 +107,9 @@ int get_fuzzied_monster_difficulty(const monster *mons);
 
 bool do_god_gift(bool forced = false);
 
-std::vector<god_type> temple_god_list();
-std::vector<god_type> nontemple_god_list();
+vector<god_type> temple_god_list();
+vector<god_type> nontemple_god_list();
 
 extern const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES];
-std::string adjust_abil_message(const char *pmsg, bool allow_upgrades = true);
+string adjust_abil_message(const char *pmsg, bool allow_upgrades = true);
 #endif

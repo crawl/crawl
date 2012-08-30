@@ -1,0 +1,58 @@
+%%%%
+Centaur
+
+Nopeita, vahvoja ja isoja, he tarvitsevat muita rotuja enemmän ruokaa.
+%%%%
+Deep Dwarf
+
+He elävät syvällä maan alla eivätkä saa terveyttään takaisin luonnollisesti,
+mutta ovat sitkeitä ja omistavat parannusvälineitä.
+%%%%
+Deep Elf
+
+Magiassa taitavin haltia, mutta myös haurain.
+%%%%
+Demigod
+
+He eivät koskaan seuraa jumalia, mutta Puolijumalilla on sen sijaan pyhät
+ominaisuudet ja terveysvarastot.
+%%%%
+Demonspawn
+
+Demonimies on puoliksi ihminen, puoliksi demoni. Kasvaessaan he saavat
+voimakkaita demonisia mutaatioita.
+%%%%
+Draconian
+
+Draconianit ovat monipuolisia hybridejä. Ne aikuistuvat tasolla 7, kehittäen
+itselleen värin.
+%%%%
+Felid
+
+Näillä kissoilla on älykkyttä, mutta ne eivät pysty panssarin tai aseistuksen
+käyttöön.
+%%%%
+Ghoul
+
+Epäkuollut, kirottu mätänemään ikuisesti. He aina etsivät syötäväksi
+pilaantunutta ruokaa, hakkaamalla kaiken kynsillään.
+%%%%
+Halfling
+
+Pieniä mutta kovapintaisia, he ovat hyviä linkojen kanssa. He pystyvät myös
+puolustautumaan mutaatioefekteiltä jonkin verran.
+%%%%
+High Elf
+
+Ylpeitä haltioita, jotka osaavat taikoa sekä taistella miekalla.
+%%%%
+Hill Orc
+
+Örkit ovat taitavia lähitaistelussa, mutta heikkoja taikuudessa. Useimpien
+vihaamat örkit ovat hyvin ylpeitä ja monet heistä tuntevat itsensä
+ylivertaisiksi.
+%%%%
+Human
+
+Tavanomainen ja keskiverto.
+%%%%

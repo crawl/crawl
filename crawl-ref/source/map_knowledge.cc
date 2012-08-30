@@ -13,21 +13,12 @@
 #include "notes.h"
 #include "options.h"
 #include "show.h"
-#include "showsymb.h"
 #include "terrain.h"
 #ifdef USE_TILE
  #include "tilepick.h"
  #include "tileview.h"
 #endif
 #include "view.h"
-
-void map_knowledge_forget_mons(const coord_def& c)
-{
-    if (!env.map_knowledge(c).detected_monster())
-        return;
-
-    env.map_knowledge(c).clear_monster();
-}
 
 // Used to mark dug out areas, unset when terrain is seen or mapped again.
 void set_terrain_changed(int x, int y)
@@ -71,10 +62,10 @@ int count_detected_mons()
             count++;
     }
 
-    return (count);
+    return count;
 }
 
-void clear_map(bool clear_detected_items, bool clear_detected_monsters)
+void clear_map(bool clear_items, bool clear_mons)
 {
     for (rectangle_iterator ri(BOUNDARY_BORDER - 1); ri; ++ri)
     {
@@ -83,11 +74,12 @@ void clear_map(bool clear_detected_items, bool clear_detected_monsters)
         if (!cell.known() || cell.visible())
             continue;
 
-        if (clear_detected_items || !cell.detected_item())
+        cell.clear_cloud();
+
+        if (clear_items)
             cell.clear_item();
 
-        if ((clear_detected_monsters || !cell.detected_monster())
-            && !mons_class_is_stationary(cell.monster()))
+        if (clear_mons && !mons_class_is_stationary(cell.monster()))
         {
             cell.clear_monster();
 #ifdef USE_TILE
@@ -114,7 +106,7 @@ static int _map_quality()
     // the explanation of this 51 vs max_piety of 200 is left as
     // an exercise to the reader
     if (you.religion == GOD_ASHENZARI && !player_under_penance())
-        passive = std::max(passive, you.piety / 51);
+        passive = max(passive, you.piety / 51);
     return passive;
 }
 
@@ -141,7 +133,7 @@ void set_terrain_seen(int x, int y)
         if (!is_boring_terrain(feat))
         {
             coord_def pos(x, y);
-            std::string desc = feature_description(pos, false, DESC_A);
+            string desc = feature_description_at(pos, false, DESC_A);
             take_note(Note(NOTE_SEEN_FEAT, 0, 0, desc.c_str()));
         }
     }
@@ -169,7 +161,7 @@ void set_terrain_visible(const coord_def &c)
 
 void clear_terrain_visibility()
 {
-    for (std::set<coord_def>::iterator i = env.visible.begin(); i != env.visible.end(); ++i)
+    for (set<coord_def>::iterator i = env.visible.begin(); i != env.visible.end(); ++i)
         env.map_knowledge(*i).flags &=~ MAP_VISIBLE_FLAG;
     env.visible.clear();
 }

@@ -11,7 +11,7 @@ function ($, comm, client, dungeon_renderer, display, minimap, settings, enums) 
         ui_state = -1;
     }
 
-    $(document).bind("game_init", init);
+    $(document).on("game_preinit game_cleanup", init);
 
     function layout_params_differ(old_params, new_params)
     {
@@ -109,6 +109,7 @@ function ($, comm, client, dungeon_renderer, display, minimap, settings, enums) 
         if (state == ui_state) return;
         var old_state = ui_state;
         ui_state = state;
+        if (old_state == -1) client.hide_dialog();
         switch (ui_state)
         {
         case enums.ui.NORMAL:
@@ -153,6 +154,8 @@ function ($, comm, client, dungeon_renderer, display, minimap, settings, enums) 
     settings.set_defaults(glyph_mode_settings);
     $.extend(dungeon_renderer, glyph_mode_settings);
 
+    settings.set_defaults({ tile_scaling: 1 });
+
     $(document).off("settings_changed.game");
     $(document).on("settings_changed.game", function (ev, map) {
         var relayout = false;
@@ -164,14 +167,35 @@ function ($, comm, client, dungeon_renderer, display, minimap, settings, enums) 
                 relayout = true;
             }
         }
+        if ("tile_scaling" in map)
+        {
+            var scaling = Number(settings.get("tile_scaling"));
+            if (Number.isFinite(scaling))
+            {
+                if (scaling != dungeon_renderer.x_scale)
+                {
+                    dungeon_renderer.tile_scaling = scaling;
+                    relayout = true;
+                }
+            }
+            else
+            {
+                settings.set("tile_scaling", dungeon_renderer.tile_scaling);
+            }
+        }
         if (relayout && layout_parameters)
             layout(layout_parameters, true);
     });
 
     $(document).ready(function () {
-        $(window).resize(function () {
-            var params = $.extend({}, layout_parameters);
-            layout(params);
+        $(window)
+            .off("resize.game")
+            .on("resize.game", function () {
+            if (layout_parameters)
+            {
+                var params = $.extend({}, layout_parameters);
+                layout(params);
+            }
         });
     });
 

@@ -8,11 +8,11 @@
 
 #include "religion-enum.h"
 
-std::string god_prayer_reaction();
-bool god_accepts_prayer(god_type god);
+string god_prayer_reaction();
 void pray();
 
 piety_gain_t sacrifice_item_stack(const item_def& item, int *js = 0);
+bool check_nemelex_sacrificing_item_type(const item_def& item);
 int zin_tithe(item_def& item, int quant, bool quiet);
 
 #endif

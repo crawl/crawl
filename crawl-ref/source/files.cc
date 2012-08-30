@@ -32,7 +32,6 @@
 #include "externs.h"
 
 #include "abyss.h"
-#include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
 #include "chardump.h"
@@ -60,14 +59,12 @@
 #include "mapmark.h"
 #include "message.h"
 #include "misc.h"
-#include "mon-act.h"
 #include "mon-death.h"
 #include "mon-place.h"
 #include "mon-iter.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "mon-transit.h"
-#include "ng-init.h"
 #include "notes.h"
 #include "options.h"
 #include "output.h"
@@ -75,6 +72,7 @@
 #include "player.h"
 #include "random.h"
 #include "show.h"
+#include "shopping.h"
 #include "stash.h"
 #include "state.h"
 #include "syscalls.h"
@@ -93,13 +91,11 @@
 
 #include <dirent.h>
 
-static std::vector<SavefileCallback::callback>* _callback_list = NULL;
-
 static void _save_level(const level_id& lid);
 
 static bool _ghost_version_compatible(reader &ghost_reader);
 
-static bool _restore_tagged_chunk(package *save, const std::string name,
+static bool _restore_tagged_chunk(package *save, const string name,
                                   tag_type tag, const char* complaint);
 static bool _read_char_chunk(package *save);
 
@@ -118,7 +114,7 @@ static void _redraw_all(void)
         REDRAW_LINE_1_MASK | REDRAW_LINE_2_MASK | REDRAW_LINE_3_MASK;
 }
 
-static bool is_save_file_name(const std::string &name)
+static bool is_save_file_name(const string &name)
 {
     int off = name.length() - strlen(SAVE_SUFFIX);
     if (off <= 0)
@@ -126,13 +122,8 @@ static bool is_save_file_name(const std::string &name)
     return !strcasecmp(name.c_str() + off, SAVE_SUFFIX);
 }
 
-bool save_exists(const std::string& filename)
-{
-    return file_exists(get_savefile_directory() + filename);
-}
-
 // Returns the save_info from the save.
-player_save_info read_character_info(package *save)
+static player_save_info _read_character_info(package *save)
 {
     player_save_info fromfile;
 
@@ -163,21 +154,20 @@ player_save_info read_character_info(package *save)
 // If recursion_depth is -1, the recursion is infinite, as far as the
 // directory structure and filesystem allows. If recursion_depth is 0,
 // only files in the start directory are returned.
-std::vector<std::string> get_dir_files_recursive(const std::string &dirname,
-                                                 const std::string &ext,
-                                                 int recursion_depth,
-                                                 bool include_directories)
+vector<string> get_dir_files_recursive(const string &dirname, const string &ext,
+                                       int recursion_depth,
+                                       bool include_directories)
 {
-    std::vector<std::string> files;
+    vector<string> files;
 
-    const std::vector<std::string> thisdirfiles = get_dir_files(dirname);
+    const vector<string> thisdirfiles = get_dir_files(dirname);
     const int next_recur_depth =
         recursion_depth == -1? -1 : recursion_depth - 1;
     const bool recur = recursion_depth == -1 || recursion_depth > 0;
 
     for (int i = 0, size = thisdirfiles.size(); i < size; ++i)
     {
-        const std::string filename(thisdirfiles[i]);
+        const string filename(thisdirfiles[i]);
         if (dir_exists(catpath(dirname, filename)))
         {
             if (include_directories
@@ -188,7 +178,7 @@ std::vector<std::string> get_dir_files_recursive(const std::string &dirname,
 
             if (recur)
             {
-                const std::vector<std::string> subdirfiles =
+                const vector<string> subdirfiles =
                     get_dir_files_recursive(catpath(dirname, filename),
                                             ext,
                                             next_recur_depth);
@@ -204,68 +194,63 @@ std::vector<std::string> get_dir_files_recursive(const std::string &dirname,
                 files.push_back(filename);
         }
     }
-    return (files);
+    return files;
 }
 
-std::vector<std::string> get_dir_files_ext(const std::string &dir,
-                                           const std::string &ext)
+vector<string> get_dir_files_ext(const string &dir, const string &ext)
 {
     return get_dir_files_recursive(dir, ext, 0);
 }
 
-std::string get_parent_directory(const std::string &filename)
+string get_parent_directory(const string &filename)
 {
-    std::string::size_type pos = filename.rfind(FILE_SEPARATOR);
-    if (pos != std::string::npos)
+    string::size_type pos = filename.rfind(FILE_SEPARATOR);
+    if (pos != string::npos)
         return filename.substr(0, pos + 1);
 #ifdef ALT_FILE_SEPARATOR
     pos = filename.rfind(ALT_FILE_SEPARATOR);
-    if (pos != std::string::npos)
+    if (pos != string::npos)
         return filename.substr(0, pos + 1);
 #endif
-    return ("");
+    return "";
 }
 
-std::string get_base_filename(const std::string &filename)
+string get_base_filename(const string &filename)
 {
-    std::string::size_type pos = filename.rfind(FILE_SEPARATOR);
-    if (pos != std::string::npos)
+    string::size_type pos = filename.rfind(FILE_SEPARATOR);
+    if (pos != string::npos)
         return filename.substr(pos + 1);
 #ifdef ALT_FILE_SEPARATOR
     pos = filename.rfind(ALT_FILE_SEPARATOR);
-    if (pos != std::string::npos)
+    if (pos != string::npos)
         return filename.substr(pos + 1);
 #endif
-    return (filename);
+    return filename;
 }
 
-std::string get_cache_name(const std::string &filename)
+string get_cache_name(const string &filename)
 {
-    std::string::size_type pos = filename.rfind(FILE_SEPARATOR);
-    while (pos != std::string::npos && filename.find("/des", pos) != pos)
-    {
+    string::size_type pos = filename.rfind(FILE_SEPARATOR);
+    while (pos != string::npos && filename.find("/des", pos) != pos)
         pos = filename.rfind(FILE_SEPARATOR, pos - 1);
-    }
-    if (pos != std::string::npos)
+    if (pos != string::npos)
         return replace_all_of(filename.substr(pos + 5), " /\\:", "_");
 #ifdef ALT_FILE_SEPARATOR
     pos = filename.rfind(ALT_FILE_SEPARATOR);
-    while (pos != std::string::npos && filename.find("/des", pos) != pos)
-    {
+    while (pos != string::npos && filename.find("/des", pos) != pos)
         pos = filename.rfind(ALT_FILE_SEPARATOR, pos - 1);
-    }
-    if (pos != std::string::npos)
+    if (pos != string::npos)
         return replace_all_of(filename.substr(pos + 5), " /\\:", "_");
 #endif
-    return (filename);
+    return filename;
 }
 
-bool is_absolute_path(const std::string &path)
+bool is_absolute_path(const string &path)
 {
     return (!path.empty()
             && (path[0] == FILE_SEPARATOR
 #ifdef TARGET_OS_WINDOWS
-                || path.find(':') != std::string::npos
+                || path.find(':') != string::npos
 #endif
               ));
 }
@@ -275,12 +260,12 @@ bool is_absolute_path(const std::string &path)
 //
 // If the first path is empty, returns the second unchanged. The second path
 // may be absolute in this case.
-std::string catpath(const std::string &first, const std::string &second)
+string catpath(const string &first, const string &second)
 {
     if (first.empty())
-        return (second);
+        return second;
 
-    std::string directory = first;
+    string directory = first;
     if (directory[directory.length() - 1] != FILE_SEPARATOR
         && (second.empty() || second[0] != FILE_SEPARATOR))
     {
@@ -288,40 +273,41 @@ std::string catpath(const std::string &first, const std::string &second)
     }
     directory += second;
 
-    return (directory);
+    return directory;
 }
 
 // Given a relative path and a reference file name, returns the relative path
 // suffixed to the directory containing the reference file name. Assumes that
 // the second path is not absolute.
-std::string get_path_relative_to(const std::string &referencefile,
-                                 const std::string &relativepath)
+string get_path_relative_to(const string &referencefile,
+                            const string &relativepath)
 {
     return catpath(get_parent_directory(referencefile),
                    relativepath);
 }
 
-std::string change_file_extension(const std::string &filename,
-                                  const std::string &ext)
+string change_file_extension(const string &filename, const string &ext)
 {
-    const std::string::size_type pos = filename.rfind('.');
-    return ((pos == std::string::npos? filename : filename.substr(0, pos))
-            + ext);
+    const string::size_type pos = filename.rfind('.');
+    return ((pos == string::npos? filename : filename.substr(0, pos)) + ext);
 }
 
-time_t file_modtime(const std::string &file)
+time_t file_modtime(const string &file)
 {
     struct stat filestat;
     if (stat(file.c_str(), &filestat))
-        return (0);
+        return 0;
 
-    return (filestat.st_mtime);
+    return filestat.st_mtime;
 }
 
-// Returns true if file a is newer than file b.
-bool is_newer(const std::string &a, const std::string &b)
+time_t file_modtime(FILE *f)
 {
-    return (file_modtime(a) > file_modtime(b));
+    struct stat filestat;
+    if (fstat(fileno(f), &filestat))
+        return 0;
+
+    return filestat.st_mtime;
 }
 
 static bool _create_directory(const char *dir)
@@ -333,18 +319,13 @@ static bool _create_directory(const char *dir)
     return false;
 }
 
-static bool _create_dirs(const std::string &dir)
+static bool _create_dirs(const string &dir)
 {
-    std::string sep = " ";
+    string sep = " ";
     sep[0] = FILE_SEPARATOR;
-    std::vector<std::string> segments =
-        split_string(
-                sep.c_str(),
-                dir,
-                false,
-                false);
+    vector<string> segments = split_string(sep.c_str(), dir, false, false);
 
-    std::string path;
+    string path;
     for (int i = 0, size = segments.size(); i < size; ++i)
     {
         path += segments[i];
@@ -354,18 +335,18 @@ static bool _create_dirs(const std::string &dir)
             path = FILE_SEPARATOR + path;
 
         if (!_create_directory(path.c_str()))
-            return (false);
+            return false;
 
         path += FILE_SEPARATOR;
     }
-    return (true);
+    return true;
 }
 
 // Checks whether the given path is safe to read from. A path is safe if:
 // 1. If Unix: It contains no shell metacharacters.
 // 2. If DATA_DIR_PATH is set: the path is not an absolute path.
 // 3. If DATA_DIR_PATH is set: the path contains no ".." sequence.
-void assert_read_safe_path(const std::string &path) throw (std::string)
+void assert_read_safe_path(const string &path) throw (string)
 {
     // Check for rank tomfoolery first:
     if (path.empty())
@@ -381,7 +362,7 @@ void assert_read_safe_path(const std::string &path) throw (std::string)
     if (is_absolute_path(path))
         throw make_stringf("\"%s\" is an absolute path.", path.c_str());
 
-    if (path.find("..") != std::string::npos)
+    if (path.find("..") != string::npos)
     {
         throw make_stringf("\"%s\" contains \"..\" sequences.",
                            path.c_str());
@@ -391,16 +372,16 @@ void assert_read_safe_path(const std::string &path) throw (std::string)
     // Path is okay.
 }
 
-std::string canonicalise_file_separator(const std::string &path)
+string canonicalise_file_separator(const string &path)
 {
-    const std::string sep(1, FILE_SEPARATOR);
-    return (replace_all_of(replace_all_of(path, "/", sep),
-                           "\\", sep));
+    const string sep(1, FILE_SEPARATOR);
+    return replace_all_of(replace_all_of(path, "/", sep),
+                          "\\", sep);
 }
 
-static std::vector<std::string> _get_base_dirs()
+static vector<string> _get_base_dirs()
 {
-    const std::string rawbases[] = {
+    const string rawbases[] = {
 #ifdef DATA_DIR_PATH
         DATA_DIR_PATH,
 #else
@@ -412,29 +393,29 @@ static std::vector<std::string> _get_base_dirs()
 #endif
     };
 
-    const std::string prefixes[] = {
-        std::string("dat") + FILE_SEPARATOR,
+    const string prefixes[] = {
+        string("dat") + FILE_SEPARATOR,
 #ifdef USE_TILE_LOCAL
-        std::string("dat/tiles") + FILE_SEPARATOR,
+        string("dat/tiles") + FILE_SEPARATOR,
 #endif
-        std::string("docs") + FILE_SEPARATOR,
-        std::string("settings") + FILE_SEPARATOR,
+        string("docs") + FILE_SEPARATOR,
+        string("settings") + FILE_SEPARATOR,
 #ifndef DATA_DIR_PATH
-        std::string("..") + FILE_SEPARATOR + "docs" + FILE_SEPARATOR,
-        std::string("..") + FILE_SEPARATOR + "dat" + FILE_SEPARATOR,
+        string("..") + FILE_SEPARATOR + "docs" + FILE_SEPARATOR,
+        string("..") + FILE_SEPARATOR + "dat" + FILE_SEPARATOR,
 #ifdef USE_TILE_LOCAL
-        std::string("..") + FILE_SEPARATOR + "dat/tiles" + FILE_SEPARATOR,
+        string("..") + FILE_SEPARATOR + "dat/tiles" + FILE_SEPARATOR,
 #endif
-        std::string("..") + FILE_SEPARATOR + "settings" + FILE_SEPARATOR,
-        std::string("..") + FILE_SEPARATOR,
+        string("..") + FILE_SEPARATOR + "settings" + FILE_SEPARATOR,
+        string("..") + FILE_SEPARATOR,
 #endif
         "",
     };
 
-    std::vector<std::string> bases;
+    vector<string> bases;
     for (unsigned i = 0; i < ARRAYSZ(rawbases); ++i)
     {
-        std::string base = rawbases[i];
+        string base = rawbases[i];
         if (base.empty())
             continue;
 
@@ -450,23 +431,21 @@ static std::vector<std::string> _get_base_dirs()
     return bases;
 }
 
-std::string datafile_path(std::string basename,
-                          bool croak_on_fail,
-                          bool test_base_path,
-                          bool (*thing_exists)(const std::string&))
+string datafile_path(string basename, bool croak_on_fail, bool test_base_path,
+                     bool (*thing_exists)(const string&))
 {
     basename = canonicalise_file_separator(basename);
 
     if (test_base_path && thing_exists(basename))
-        return (basename);
+        return basename;
 
-    std::vector<std::string> bases = _get_base_dirs();
+    vector<string> bases = _get_base_dirs();
 
     for (unsigned b = 0, size = bases.size(); b < size; ++b)
     {
-        std::string name = bases[b] + basename;
+        string name = bases[b] + basename;
         if (thing_exists(name))
-            return (name);
+            return name;
     }
 
     // Die horribly.
@@ -476,7 +455,7 @@ std::string datafile_path(std::string basename,
             basename.c_str());
     }
 
-    return ("");
+    return "";
 }
 
 // Checks if directory 'dir' exists and tries to create it if it
@@ -490,10 +469,10 @@ std::string datafile_path(std::string basename,
 // guaranteed to have the file separator appended to it, and with any
 // / and \ separators replaced with the one true FILE_SEPARATOR.
 //
-bool check_mkdir(const std::string &whatdir, std::string *dir, bool silent)
+bool check_mkdir(const string &whatdir, string *dir, bool silent)
 {
     if (dir->empty())
-        return (true);
+        return true;
 
     *dir = canonicalise_file_separator(*dir);
 
@@ -507,73 +486,62 @@ bool check_mkdir(const std::string &whatdir, std::string *dir, bool silent)
             fprintf(stderr, "%s \"%s\" does not exist "
                     "and I can't create it.\n",
                     whatdir.c_str(), dir->c_str());
-        return (false);
+        return false;
     }
 
-    return (true);
+    return true;
 }
 
 // Get the directory that contains save files for the current game
 // type. This will not be the same as get_base_savedir() for game
 // types such as Sprint.
-std::string get_savefile_directory(bool ignore_game_type)
+static string _get_savefile_directory()
 {
-    std::string dir = Options.save_dir;
-    if (!ignore_game_type)
-        dir = catpath(dir, crawl_state.game_savedir_path());
+    string dir = catpath(Options.save_dir, crawl_state.game_savedir_path());
     check_mkdir("Save directory", &dir, false);
     if (dir.empty())
         dir = ".";
-    return (dir);
+    return dir;
 }
 
-std::string get_bonefile_directory(bool ignore_game_type)
+static string _get_bonefile_directory()
 {
-    std::string dir = Options.shared_dir;
-    if (!ignore_game_type)
-        dir = catpath(dir, crawl_state.game_savedir_path());
+    string dir = catpath(Options.shared_dir, crawl_state.game_savedir_path());
     check_mkdir("Bones directory", &dir, false);
     if (dir.empty())
         dir = ".";
-    return (dir);
+    return dir;
 }
 
 // Returns a subdirectory of the current savefile directory as returned by
-// get_savefile_directory.
-std::string get_savedir_path(const std::string &shortpath)
+// _get_savefile_directory.
+static string _get_savedir_path(const string &shortpath)
 {
     return canonicalise_file_separator(
-        catpath(get_savefile_directory(), shortpath));
+        catpath(_get_savefile_directory(), shortpath));
 }
 
-// Returns the base save directory that contains all saves and cache
-// directories. Save files for game type != GAME_TYPE_NORMAL may be
-// found in a subdirectory of this dir. Use get_savefile_directory()
-// if you want the directory that contains save games for the current
-// game type.
-std::string get_base_savedir()
+// Returns a subdirectory of the base save directory that contains all saves
+// and cache directories. Save files for game type != GAME_TYPE_NORMAL may
+// be found in a subdirectory of this dir. Use _get_savefile_directory() if
+// you want the directory that contains save games for the current game
+// type.
+static string _get_base_savedir_path(const string &subpath = "")
 {
-    return Options.save_dir;
-}
-
-// Returns a subdirectory of the base save directory as returned by
-// get_base_savedir.
-std::string get_base_savedir_path(const std::string &shortpath)
-{
-    return canonicalise_file_separator(catpath(get_base_savedir(), shortpath));
+    return canonicalise_file_separator(catpath(Options.save_dir, subpath));
 }
 
 // Given a simple (relative) path, returns the path relative to the
 // base save directory and a subdirectory named with the game version.
 // This is useful when writing cache files and similar output that
 // should not be shared between different game versions.
-std::string savedir_versioned_path(const std::string &shortpath)
+string savedir_versioned_path(const string &shortpath)
 {
 #ifdef DGL_VERSIONED_CACHE_DIR
-    const std::string versioned_dir =
-        get_base_savedir_path("cache." + Version::Long());
+    const string versioned_dir =
+        _get_base_savedir_path("cache." + Version::Long());
 #else
-    const std::string versioned_dir = get_base_savedir_path();
+    const string versioned_dir = _get_base_savedir_path();
 #endif
     return catpath(versioned_dir, shortpath);
 }
@@ -628,58 +596,38 @@ static void _fill_player_doll(player_save_info &p, package *save)
 }
 #endif
 
-std::vector<player_save_info> find_all_saved_characters()
-{
-    std::set<std::string> dirs;
-    std::vector<player_save_info> saved_characters;
-    for (int i = 0; i < NUM_GAME_TYPE; ++i)
-    {
-        unwind_var<game_type> gt(
-            crawl_state.type,
-            static_cast<game_type>(i));
-
-        const std::string savedir = get_savefile_directory();
-        if (dirs.find(savedir) != dirs.end())
-            continue;
-
-        dirs.insert(savedir);
-
-        std::vector<player_save_info> chars_in_dir = find_saved_characters();
-        saved_characters.insert(saved_characters.end(),
-                                chars_in_dir.begin(),
-                                chars_in_dir.end());
-    }
-    return (saved_characters);
-}
-
 /*
  * Returns a list of the names of characters that are already saved for the
  * current user.
  */
 
-std::vector<player_save_info> find_saved_characters()
+static vector<player_save_info> _find_saved_characters()
 {
-    std::vector<player_save_info> chars;
+    vector<player_save_info> chars;
+
+    if (Options.no_save)
+        return chars;
+
 #ifndef DISABLE_SAVEGAME_LISTS
-    std::string searchpath = get_savefile_directory();
+    string searchpath = _get_savefile_directory();
 
     if (searchpath.empty())
         searchpath = ".";
 
-    std::vector<std::string> allfiles = get_dir_files(searchpath);
+    vector<string> allfiles = get_dir_files(searchpath);
     for (unsigned int i = 0; i < allfiles.size(); ++i)
     {
-        std::string filename = allfiles[i];
+        string filename = allfiles[i];
 
-        std::string::size_type point_pos = filename.find_first_of('.');
-        std::string basename = filename.substr(0, point_pos);
+        string::size_type point_pos = filename.find_first_of('.');
+        string basename = filename.substr(0, point_pos);
 
         if (is_save_file_name(filename))
         {
             try
             {
-                package save(get_savedir_path(filename).c_str(), false);
-                player_save_info p = read_character_info(&save);
+                package save(_get_savedir_path(filename).c_str(), false);
+                player_save_info p = _read_character_info(&save);
                 if (!p.name.empty())
                 {
                     p.filename = filename;
@@ -698,29 +646,58 @@ std::vector<player_save_info> find_saved_characters()
 
     }
 
-    std::sort(chars.rbegin(), chars.rend());
+    sort(chars.rbegin(), chars.rend());
 #endif // !DISABLE_SAVEGAME_LISTS
-    return (chars);
+    return chars;
 }
 
-std::string get_savedir_filename(const std::string &name)
+vector<player_save_info> find_all_saved_characters()
 {
-    return get_savefile_directory() + get_save_filename(name);
+    set<string> dirs;
+    vector<player_save_info> saved_characters;
+    for (int i = 0; i < NUM_GAME_TYPE; ++i)
+    {
+        unwind_var<game_type> gt(
+            crawl_state.type,
+            static_cast<game_type>(i));
+
+        const string savedir = _get_savefile_directory();
+        if (dirs.find(savedir) != dirs.end())
+            continue;
+
+        dirs.insert(savedir);
+
+        vector<player_save_info> chars_in_dir = _find_saved_characters();
+        saved_characters.insert(saved_characters.end(),
+                                chars_in_dir.begin(),
+                                chars_in_dir.end());
+    }
+    return saved_characters;
 }
 
-std::string get_save_filename(const std::string &name)
+bool save_exists(const string& filename)
+{
+    return file_exists(_get_savefile_directory() + filename);
+}
+
+string get_savedir_filename(const string &name)
+{
+    return _get_savefile_directory() + get_save_filename(name);
+}
+
+string get_save_filename(const string &name)
 {
     return chop_string(strip_filename_unsafe_chars(name), kFileNameLen, false)
            + SAVE_SUFFIX;
 }
 
-std::string get_prefs_filename()
+string get_prefs_filename()
 {
 #ifdef DGL_STARTUP_PREFS_BY_NAME
-    return get_savefile_directory() + "start-"
+    return _get_savefile_directory() + "start-"
            + strip_filename_unsafe_chars(Options.game.name) + "-ns.prf";
 #else
-    return get_savefile_directory() + "start-ns.prf";
+    return _get_savefile_directory() + "start-ns.prf";
 #endif
 }
 
@@ -749,7 +726,7 @@ static void _write_ghost_version(writer &outf)
 class safe_file_writer
 {
 public:
-    safe_file_writer(const std::string &filename,
+    safe_file_writer(const string &filename,
                      const char *mode = "wb",
                      bool _lock = false)
         : target_filename(filename), tmp_filename(target_filename),
@@ -782,7 +759,7 @@ public:
                     filemode,
                     lock? "YES" : "no");
         }
-        return (filep);
+        return filep;
     }
 
     void close()
@@ -798,14 +775,14 @@ public:
     }
 
 private:
-    std::string target_filename, tmp_filename;
+    string target_filename, tmp_filename;
     const char *filemode;
     bool lock;
 
     FILE *filep;
 };
 
-static void _write_tagged_chunk(const std::string &chunkname, tag_type tag)
+static void _write_tagged_chunk(const string &chunkname, tag_type tag)
 {
     writer outf(you.save, chunkname);
 
@@ -816,20 +793,15 @@ static void _write_tagged_chunk(const std::string &chunkname, tag_type tag)
     tag_write(tag, outf);
 }
 
-int get_dest_stair_type(level_area_type old_level_type, branch_type old_branch,
-                        dungeon_feature_type stair_taken, bool &find_first)
+static int _get_dest_stair_type(branch_type old_branch,
+                                dungeon_feature_type stair_taken,
+                                bool &find_first)
 {
     // Order is important here.
-    if (stair_taken == DNGN_EXIT_PANDEMONIUM)
-    {
-        find_first = false;
-        return DNGN_ENTER_PANDEMONIUM;
-    }
-
     if (stair_taken == DNGN_EXIT_ABYSS)
     {
         find_first = false;
-        return DNGN_ENTER_ABYSS;
+        return DNGN_EXIT_DUNGEON;
     }
 
     if (stair_taken == DNGN_EXIT_HELL)
@@ -838,36 +810,32 @@ int get_dest_stair_type(level_area_type old_level_type, branch_type old_branch,
     if (stair_taken == DNGN_ENTER_HELL)
         return DNGN_EXIT_HELL;
 
-    if (stair_taken == DNGN_EXIT_PORTAL_VAULT
-        || (old_level_type == LEVEL_LABYRINTH
-            || old_level_type == LEVEL_PORTAL_VAULT)
-           && feat_is_escape_hatch(stair_taken))
-    {
-        return DNGN_EXIT_PORTAL_VAULT;
-    }
-
     if (player_in_hell() && stair_taken >= DNGN_STONE_STAIRS_DOWN_I
                          && stair_taken <= DNGN_STONE_STAIRS_DOWN_III)
     {
+        find_first = false;
         return DNGN_ENTER_HELL;
     }
 
     if (stair_taken >= DNGN_STONE_STAIRS_DOWN_I
-        && stair_taken <= DNGN_ESCAPE_HATCH_DOWN)
+        && stair_taken <= DNGN_STONE_STAIRS_DOWN_III)
     {
         // Look for corresponding up stair.
         return stair_taken + DNGN_STONE_STAIRS_UP_I - DNGN_STONE_STAIRS_DOWN_I;
     }
 
     if (stair_taken >= DNGN_STONE_STAIRS_UP_I
-        && stair_taken <= DNGN_ESCAPE_HATCH_UP)
+        && stair_taken <= DNGN_STONE_STAIRS_UP_III)
     {
         // Look for coresponding down stair.
         return stair_taken + DNGN_STONE_STAIRS_DOWN_I - DNGN_STONE_STAIRS_UP_I;
     }
 
+    if (feat_is_escape_hatch(stair_taken))
+        return stair_taken;
+
     if (stair_taken >= DNGN_RETURN_FROM_FIRST_BRANCH
-        && stair_taken < 150) // 20 slots reserved
+        && stair_taken <= DNGN_RETURN_FROM_LAST_BRANCH)
     {
         // Find entry point to subdungeon when leaving.
         return stair_taken + DNGN_ENTER_FIRST_BRANCH
@@ -900,16 +868,15 @@ int get_dest_stair_type(level_area_type old_level_type, branch_type old_branch,
     return DNGN_FLOOR;
 }
 
-static void _place_player_on_stair(level_area_type old_level_type,
-                                   branch_type old_branch,
+static void _place_player_on_stair(branch_type old_branch,
                                    int stair_taken, const coord_def& dest_pos)
 
 {
     bool find_first = true;
     dungeon_feature_type stair_type = static_cast<dungeon_feature_type>(
-            get_dest_stair_type(old_level_type, old_branch,
-                                static_cast<dungeon_feature_type>(stair_taken),
-                                find_first));
+            _get_dest_stair_type(old_branch,
+                                 static_cast<dungeon_feature_type>(stair_taken),
+                                 find_first));
 
     if (crawl_state.game_is_zotdef())
     {
@@ -930,14 +897,19 @@ static void _close_level_gates()
 {
     for (rectangle_iterator ri(0); ri; ++ri)
     {
-        if (you.char_direction == GDT_ASCENDING
-            && you.level_type != LEVEL_PANDEMONIUM)
+        switch (grd(*ri))
         {
-            if (feat_sealable_portal(grd(*ri)))
-            {
-                remove_markers_and_listeners_at(*ri);
-                grd(*ri) = DNGN_STONE_ARCH;
-            }
+        case DNGN_ENTER_ABYSS:
+        case DNGN_ENTER_COCYTUS:
+        case DNGN_ENTER_DIS:
+        case DNGN_ENTER_GEHENNA:
+        case DNGN_ENTER_TARTARUS:
+        case DNGN_ENTER_PANDEMONIUM:
+        case DNGN_ENTER_LABYRINTH:
+        case DNGN_ENTER_PORTAL_VAULT:
+            remove_markers_and_listeners_at(*ri);
+            grd(*ri) = DNGN_STONE_ARCH;
+        default: ;
         }
     }
 }
@@ -957,15 +929,15 @@ static void _clear_clouds()
 static bool _grab_follower_at(const coord_def &pos)
 {
     if (pos == you.pos())
-        return (false);
+        return false;
 
     monster* fol = monster_at(pos);
     if (!fol || !fol->alive())
-        return (false);
+        return false;
 
     // The monster has to already be tagged in order to follow.
     if (!testbits(fol->flags, MF_TAKING_STAIRS))
-        return (false);
+        return false;
 
     // If a monster that can't use stairs was marked as a follower,
     // it's because it's an ally and there might be another ally
@@ -973,11 +945,9 @@ static bool _grab_follower_at(const coord_def &pos)
     // This means we don't actually send it on transit, but we do
     // return true, so adjacent real followers are handled correctly. (jpeg)
     if (!mons_can_use_stairs(fol))
-        return (true);
+        return true;
 
     level_id dest = level_id::current();
-    if (you.char_direction == GDT_GAME_START)
-        dest.depth = 1;
 
     dprf("%s is following to %s.", fol->name(DESC_THE, true).c_str(),
          dest.describe().c_str());
@@ -987,12 +957,12 @@ static bool _grab_follower_at(const coord_def &pos)
     monster_cleanup(fol);
     if (could_see)
         view_update_at(pos);
-    return (true);
+    return true;
 }
 
 static void _grab_followers()
 {
-    const bool can_follow = level_type_allows_followers(you.level_type);
+    const bool can_follow = branch_allows_followers(you.where_are_you);
 
     int non_stair_using_allies = 0;
     monster* dowan = NULL;
@@ -1055,7 +1025,7 @@ static void _grab_followers()
                  non_stair_using_allies > 1 ? ""  : "s");
         }
         memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
-        std::vector<coord_def> places[2];
+        vector<coord_def> places[2];
         int place_set = 0;
         places[place_set].push_back(you.pos());
         while (!places[place_set].empty())
@@ -1092,11 +1062,10 @@ static void _do_lost_monsters()
 {
     // Uniques can be considered wandering Pan just like you, so they're not
     // gone forever.  The likes of Cerebov won't be generated elsewhere, but
-    // there's no need to special-case that, and if in the future we'll want
-    // to know whether they're alive, the data will be accurate.
-    if (you.level_type == LEVEL_PANDEMONIUM)
+    // there's no need to special-case that.
+    if (player_in_branch(BRANCH_PANDEMONIUM))
         for (monster_iterator mi; mi; ++mi)
-            if (mons_is_unique(mi->type))
+            if (mons_is_unique(mi->type) && !(mi->flags & MF_TAKING_STAIRS))
                 you.unique_creatures[mi->type] = false;
 }
 
@@ -1119,35 +1088,69 @@ static void _do_lost_items()
     }
 }
 
-static coord_def _stair_destination_pos()
-{
-    map_marker *marker = env.markers.find(you.pos(), MAT_POSITION);
-    if (!marker)
-        return INVALID_COORD;
-
-    map_position_marker *posm = dynamic_cast<map_position_marker*>(marker);
-    return posm->dest;
-}
-
 bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
                 const level_id& old_level)
 {
+    // Did we get here by popping the level stack?
+    bool popped = false;
+
+    coord_def return_pos;
+    if (load_mode != LOAD_VISITOR)
+    {
+        if (!you.level_stack.empty()
+            && you.level_stack.back().id == level_id::current())
+        {
+            return_pos = you.level_stack.back().pos;
+            you.level_stack.pop_back();
+            env.level_state |= LSTATE_DELETED;
+            popped = true;
+        }
+        else if (stair_taken == DNGN_TRANSIT_PANDEMONIUM
+              || stair_taken == DNGN_EXIT_THROUGH_ABYSS
+              || stair_taken == DNGN_STONE_STAIRS_DOWN_I
+                 && old_level.branch == BRANCH_ZIGGURAT
+              || old_level.branch == BRANCH_ABYSS)
+        {
+            env.level_state |= LSTATE_DELETED;
+        }
+
+        if (is_level_on_stack(level_id::current()) && !player_in_branch(BRANCH_ABYSS))
+        {
+            vector<string> stack;
+            for (unsigned int i = 0; i < you.level_stack.size(); i++)
+                stack.push_back(you.level_stack[i].id.describe());
+            if (you.wizard)
+            {
+                // warn about breakage so testers know it's an abnormal situation.
+                mprf(MSGCH_ERROR, "Error: you smelly wizard, how dare you enter "
+                        "the same level (%s) twice! It will be trampled upon return.\n"
+                        "The stack has: %s.",
+                        level_id::current().describe().c_str(),
+                        comma_separated_line(stack.begin(), stack.end(),
+                            ", ", ", ").c_str());
+            }
+            else
+            {
+                die("Attempt to enter a portal (%s) twice; stack: %s",
+                        level_id::current().describe().c_str(),
+                        comma_separated_line(stack.begin(), stack.end(),
+                            ", ", ", ").c_str());
+            }
+        }
+    }
+
     unwind_var<dungeon_feature_type> stair(
         you.transit_stair, stair_taken, DNGN_UNSEEN);
 
     unwind_bool ylev(you.entering_level, load_mode != LOAD_VISITOR, false);
 
 #ifdef DEBUG_LEVEL_LOAD
-    mprf(MSGCH_DIAGNOSTICS, "Loading... level type: %d, branch: %d, level: %d",
-                            you.level_type, you.where_are_you, you.absdepth0);
+    mprf(MSGCH_DIAGNOSTICS, "Loading... branch: %d, level: %d",
+                            you.where_are_you, you.depth);
 #endif
 
-    // Destination position for hatch.
-    coord_def dest_pos = _stair_destination_pos();
-
-    // Shaft destination is random.
-    if (dest_pos == INVALID_COORD)
-        dest_pos = random_in_bounds();
+    // Save position for hatches to place a marker on the destination level.
+    coord_def dest_pos = you.pos();
 
     // Going up/down stairs, going through a portal, or being banished
     // means the previous x/y movement direction is no longer valid.
@@ -1158,21 +1161,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
     bool just_created_level = false;
 
-    std::string level_name = level_id::current().describe();
-
-    if (you.level_type == LEVEL_DUNGEON && old_level.level_type == LEVEL_DUNGEON
-        || load_mode == LOAD_START_GAME && you.char_direction != GDT_GAME_START)
-    {
-        const level_id current(level_id::current());
-        if (Generated_Levels.find(current) == Generated_Levels.end())
-        {
-            // Make sure the old file is gone.
-            you.save->delete_chunk(level_name);
-
-            // Save the information for later deletion -- DML 6/11/99
-            Generated_Levels.insert(current);
-        }
-    }
+    string level_name = level_id::current().describe();
 
     you.prev_targ     = MHITNOT;
     you.prev_grd_targ.reset();
@@ -1188,24 +1177,21 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     // This block is to grab followers and save the old level to disk.
     if (load_mode == LOAD_ENTER_LEVEL)
     {
+        dprf("stair_taken = %s", dungeon_feature_name(stair_taken));
         ASSERT(old_level.depth != -1); // what's this for?
 
         _grab_followers();
 
-        if (old_level.level_type == LEVEL_DUNGEON
-            || old_level.level_type != you.level_type)
-        {
-            _save_level(old_level);
-        }
+        if (env.level_state & LSTATE_DELETED)
+            delete_level(old_level), dprf("<lightmagenta>Deleting level.");
         else
-        {
-            _do_lost_monsters();
-            _do_lost_items();
-        }
+            _save_level(old_level);
 
         // The player is now between levels.
         you.position.reset();
     }
+
+    clear_travel_trail();
 
 #ifdef USE_TILE
     if (load_mode != LOAD_VISITOR)
@@ -1224,15 +1210,12 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         env.turns_on_level = -1;
 
         if (you.char_direction == GDT_GAME_START
-            && you.level_type == LEVEL_DUNGEON)
+            && player_in_branch(BRANCH_MAIN_DUNGEON))
         {
             // If we're leaving the Abyss for the first time as a Chaos
-            // Knight of Lugonu (who start out there), force a return
-            // into the first dungeon level and enable normal monster
+            // Knight of Lugonu (who start out there), enable normal monster
             // generation.
-            you.absdepth0 = 0;
             you.char_direction = GDT_DESCENDING;
-            Generated_Levels.insert(level_id::current());
         }
 
         tile_init_default_flavour();
@@ -1242,16 +1225,17 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         // XXX: This is ugly.
         bool dummy;
         dungeon_feature_type stair_type = static_cast<dungeon_feature_type>(
-            get_dest_stair_type(old_level.level_type, old_level.branch,
-                                static_cast<dungeon_feature_type>(stair_taken),
-                                dummy));
+            _get_dest_stair_type(old_level.branch,
+                                 static_cast<dungeon_feature_type>(stair_taken),
+                                 dummy));
 
         _clear_env_map();
-        builder(you.absdepth0, you.level_type, true, stair_type);
+        builder(true, stair_type);
         just_created_level = true;
 
         if (!crawl_state.game_is_tutorial()
-            && (you.absdepth0 > 1 || you.level_type != LEVEL_DUNGEON)
+            && !crawl_state.game_is_zotdef()
+            && (!player_in_branch(BRANCH_MAIN_DUNGEON) || you.depth > 2)
             && one_chance_in(3))
         {
             load_ghost(true);
@@ -1280,11 +1264,8 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
     // Closes all the gates if you're on the way out.
     // Before marker activation since it removes some.
-    if (make_changes && you.char_direction == GDT_ASCENDING
-        && you.level_type != LEVEL_PANDEMONIUM)
-    {
+    if (make_changes && you.char_direction == GDT_ASCENDING)
         _close_level_gates();
-    }
 
     // Markers must be activated early, since they may rely on
     // events issued later, e.g. DET_ENTERING_LEVEL or
@@ -1305,23 +1286,39 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     if (make_changes)
     {
         _clear_clouds();
-        if (you.level_type != LEVEL_ABYSS)
-        {
-            _place_player_on_stair(old_level.level_type,
-                                   old_level.branch, stair_taken, dest_pos);
-        }
-        else
+
+        if (player_in_branch(BRANCH_ABYSS))
             you.moveto(ABYSS_CENTRE);
+        else if (!return_pos.origin())
+            you.moveto(return_pos);
+        else
+            _place_player_on_stair(old_level.branch, stair_taken, dest_pos);
+
+        // Don't return the player into walls, deep water, or a trap.
+        for (distance_iterator di(you.pos(), true, false); di; ++di)
+            if (you.is_habitable_feat(grd(*di))
+                && !is_feat_dangerous(grd(*di), true)
+                && !feat_is_trap(grd(*di), true))
+            {
+                if (you.pos() != *di)
+                    you.moveto(*di);
+                break;
+            }
 
         // This should fix the "monster occurring under the player" bug.
         if (monster* mon = monster_at(you.pos()))
-            monster_teleport(mon, true, true);
+            for (distance_iterator di(you.pos()); di; ++di)
+                if (!monster_at(*di) && mon->is_habitable(*di))
+                {
+                    mon->move_to_pos(*di);
+                    break;
+                }
     }
 
     crawl_view.set_player_at(you.pos(), load_mode != LOAD_VISITOR);
 
     // Actually "move" the followers if applicable.
-    if (level_type_allows_followers(you.level_type)
+    if (branch_allows_followers(you.where_are_you)
         && load_mode == LOAD_ENTER_LEVEL)
     {
         place_followers();
@@ -1354,9 +1351,6 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     // Things to update for player entering level
     if (load_mode == LOAD_ENTER_LEVEL)
     {
-        if (just_created_level)
-            level_welcome_messages();
-
         // new levels have less wary monsters, and we don't
         // want them to attack players quite as soon:
         you.time_taken *= (just_created_level ? 1 : 2);
@@ -1376,7 +1370,6 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     setup_environment_effects();
 
     setup_vault_mon_list();
-    setup_feature_descs_short();
 
     // Inform user of level's annotation.
     if (load_mode != LOAD_VISITOR
@@ -1398,8 +1391,8 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
         if (load_mode == LOAD_START_GAME
             || (load_mode == LOAD_ENTER_LEVEL
-                && (old_level.branch != you.where_are_you
-                    || old_level.level_type != you.level_type)))
+                && old_level.branch != you.where_are_you
+                && !popped))
         {
             delta.num_visits++;
         }
@@ -1441,10 +1434,9 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
                 && feat_stair_direction(feat) != CMD_NO_CMD
                 && feat_stair_direction(stair_taken) != CMD_NO_CMD)
             {
-                std::string stair_str =
-                    feature_description(feat, NUM_TRAPS, "",
-                                        DESC_THE, false);
-                std::string verb = stair_climb_verb(feat);
+                string stair_str = feature_description_at(you.pos(), "",
+                                                          DESC_THE, false);
+                string verb = stair_climb_verb(feat);
 
                 if (coinflip()
                     && slide_feature_over(you.pos(), coord_def(-1, -1), false))
@@ -1479,6 +1471,11 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     // Initialize halos, etc.
     invalidate_agrid(true);
 
+    // Maybe make a note if we reached a new level.
+    // Don't do so if we are just moving around inside Pan, though.
+    if (just_created_level && stair_taken != DNGN_TRANSIT_PANDEMONIUM)
+        take_note(Note(NOTE_DUNGEON_LEVEL_CHANGE));
+
     return just_created_level;
 }
 
@@ -1499,7 +1496,7 @@ static void _save_level(const level_id& lid)
         savefn(w);                \
     } while (false)
 
-// Stack allocated std::string's go in separate function, so Valgrind doesn't
+// Stack allocated string's go in separate function, so Valgrind doesn't
 // complain.
 static void _save_game_base()
 {
@@ -1537,14 +1534,13 @@ static void _save_game_base()
     _write_tagged_chunk("chr", TAG_CHR);
 }
 
-// Stack allocated std::string's go in separate function, so Valgrind doesn't
+// Stack allocated string's go in separate function, so Valgrind doesn't
 // complain.
 static void _save_game_exit()
 {
     // Prompt for saving macros.
     if (crawl_state.unsaved_macros
         && !crawl_state.seen_hups
-        && !crawl_state.game_wants_emergency_save
         && yesno("Save macros?", true, 'n'))
     {
         macro_save();
@@ -1560,12 +1556,6 @@ static void _save_game_exit()
     whereis_record("saved");
 #endif
 
-    if (_callback_list != NULL)
-    {
-        delete _callback_list;
-        _callback_list = NULL;
-    }
-
     delete you.save;
     you.save = 0;
 }
@@ -1574,9 +1564,7 @@ void save_game(bool leave_game, const char *farewellmsg)
 {
     unwind_bool saving_game(crawl_state.saving_game, true);
 
-    SavefileCallback::pre_save();
-
-    // Stack allocated std::string's go in separate function,
+    // Stack allocated string's go in separate function,
     // so Valgrind doesn't complain.
     _save_game_base();
 
@@ -1587,17 +1575,12 @@ void save_game(bool leave_game, const char *farewellmsg)
         return;
     }
 
-    // Stack allocated std::string's go in separate function,
+    // Stack allocated string's go in separate function,
     // so Valgrind doesn't complain.
     _save_game_exit();
 
-    // Exit unless this is an emergency save, in which case let the
-    // crash handler re-raise the crashy signal.
-    if (!crawl_state.game_wants_emergency_save)
-    {
-        end(0, false, farewellmsg? "%s" : "See you soon, %s!",
-            farewellmsg? farewellmsg : you.your_name.c_str());
-    }
+    end(0, false, farewellmsg? "%s" : "See you soon, %s!",
+        farewellmsg? farewellmsg : you.your_name.c_str());
 }
 
 // Saves the game without exiting.
@@ -1608,19 +1591,10 @@ void save_game_state()
         save_game(true);
 }
 
-static std::string _make_portal_vault_ghost_suffix()
+static string _make_ghost_filename()
 {
-    return you.level_type_ext.empty()? "ptl" : you.level_type_ext;
-}
-
-static std::string _make_ghost_filename()
-{
-    std::string suffix;
-    if (you.level_type == LEVEL_PORTAL_VAULT)
-        suffix = _make_portal_vault_ghost_suffix();
-    else
-        suffix = replace_all(level_id::current().describe(), ":", "-");
-    return get_bonefile_directory() + "bones." + suffix;
+    return _get_bonefile_directory() + "bones."
+           + replace_all(level_id::current().describe(), ":", "-");
 }
 
 #define BONES_DIAGNOSTICS (defined(WIZARD) || defined(DEBUG_BONES) | defined(DEBUG_DIAGNOSTICS))
@@ -1653,13 +1627,13 @@ bool load_ghost(bool creating_level)
 
 #endif // BONES_DIAGNOSTICS
 
-    const std::string ghost_filename = _make_ghost_filename();
+    const string ghost_filename = _make_ghost_filename();
     reader inf(ghost_filename);
     if (!inf.valid())
     {
         if (wiz_cmd && !creating_level)
             mpr("No ghost files for this level.", MSGCH_PROMPT);
-        return (false);                 // no such ghost.
+        return false;                 // no such ghost.
     }
 
     if (_ghost_version_compatible(inf))
@@ -1687,7 +1661,7 @@ bool load_ghost(bool creating_level)
              "Refusing to load buggy ghost from file \"%s\"!",
              ghost_filename.c_str());
 
-        return (false);
+        return false;
     }
 
 #ifdef BONES_DIAGNOSTICS
@@ -1699,39 +1673,38 @@ bool load_ghost(bool creating_level)
 #endif
 
 #ifdef BONES_DIAGNOSTICS
-    unsigned long unplaced_ghosts = ghosts.size();
+    unsigned int  unplaced_ghosts = ghosts.size();
     bool          ghost_errors    = false;
 #endif
 
     // Translate ghost to monster and place.
-    for (int imn = 0; imn < MAX_MONSTERS - 10 && !ghosts.empty(); ++imn)
+    monster* mons;
+    while (!ghosts.empty() && (mons = get_free_monster()))
     {
-        if (menv[imn].alive())
-            continue;
-
-        menv[imn].set_ghost(ghosts[0]);
-        menv[imn].ghost_init();
-        menv[imn].bind_melee_flags();
-        if (menv[imn].has_spells())
-            menv[imn].bind_spell_flags();
-        if (menv[imn].ghost->species == SP_DEEP_DWARF)
-            menv[imn].flags |= MF_NO_REGEN;
+        mons->set_new_monster_id();
+        mons->set_ghost(ghosts[0]);
+        mons->ghost_init();
+        mons->bind_melee_flags();
+        if (mons->has_spells())
+            mons->bind_spell_flags();
+        if (mons->ghost->species == SP_DEEP_DWARF)
+            mons->flags |= MF_NO_REGEN;
 
         ghosts.erase(ghosts.begin());
 #ifdef BONES_DIAGNOSTICS
         if (do_diagnostics)
         {
             unplaced_ghosts--;
-            if (!menv[imn].alive())
+            if (!mons->alive())
             {
                 mpr("Placed ghost is not alive.", MSGCH_DIAGNOSTICS);
                 ghost_errors = true;
             }
-            else if (menv[imn].type != MONS_PLAYER_GHOST)
+            else if (mons->type != MONS_PLAYER_GHOST)
             {
                 mprf(MSGCH_DIAGNOSTICS,
                      "Placed ghost is not MONS_PLAYER_GHOST, but %s",
-                     menv[imn].name(DESC_PLAIN, true).c_str());
+                     mons->name(DESC_PLAIN, true).c_str());
                 ghost_errors = true;
             }
         }
@@ -1749,18 +1722,16 @@ bool load_ghost(bool creating_level)
         more();
 #endif
 
-    return (true);
+    return true;
 }
 
 // returns false if a new game should start instead
-bool restore_game(const std::string& filename)
+static bool _restore_game(const string& filename)
 {
-    // [ds] Set up branch depths for the current game type before
-    // trying to load the game. This is important for Sprint because
-    // it reduces the dungeon to 1 level, making D:1's place name "D"
-    // in save chunks.
-    initialise_branches_for_game_type();
-    you.save = new package((get_savefile_directory() + filename).c_str(), true);
+    if (Options.no_save)
+        return false;
+
+    you.save = new package((_get_savefile_directory() + filename).c_str(), true);
 
     if (!_read_char_chunk(you.save))
     {
@@ -1808,7 +1779,7 @@ bool restore_game(const std::string& filename)
 #ifdef CLUA_BINDINGS
     if (you.save->has_chunk("lua"))
     {
-        std::vector<char> buf;
+        vector<char> buf;
         chunk_reader inf(you.save, "lua");
         inf.read_all(buf);
         buf.push_back(0);
@@ -1848,16 +1819,38 @@ bool restore_game(const std::string& filename)
         load_messages(inf);
     }
 
-    SavefileCallback::post_restore();
     return true;
+}
+
+// returns false if a new game should start instead
+bool restore_game(const string& filename)
+{
+    try
+    {
+        return _restore_game(filename);
+    }
+    catch (corrupted_save &err)
+    {
+        if (yesno(make_stringf(
+                   "There exists a save by that name but it appears to be invalid.\n"
+                   "(Error: %s).  Do you want to delete it?", err.msg.c_str()).c_str(),
+                  true, 'n'))
+        {
+            if (you.save)
+                you.save->unlink();
+            you.save = 0;
+            return false;
+        }
+        // Shouldn't crash probably...
+        fail("Aborting; you may try to recover it somehow.");
+    }
 }
 
 static void _load_level(const level_id &level)
 {
     // Load the given level.
     you.where_are_you = level.branch;
-    you.absdepth0 = level.dungeon_absdepth();
-    you.level_type = level.level_type;
+    you.depth =         level.depth;
 
     load_level(DNGN_STONE_STAIRS_DOWN_I, LOAD_VISITOR, level_id());
 }
@@ -1866,7 +1859,24 @@ static void _load_level(const level_id &level)
 // in this game.
 bool is_existing_level(const level_id &level)
 {
-    return (Generated_Levels.find(level) != Generated_Levels.end());
+    return you.save && you.save->has_chunk(level.describe());
+}
+
+void delete_level(const level_id &level)
+{
+    travel_cache.erase_level_info(level);
+    StashTrack.remove_level(level);
+    shopping_list.del_things_from(level);
+
+    clear_level_exclusion_annotation(level);
+    clear_level_annotations(level);
+
+    if (you.save)
+        you.save->delete_chunk(level.describe());
+    if (level.branch == BRANCH_ABYSS)
+        save_abyss_uniques();
+    _do_lost_monsters();
+    _do_lost_items();
 }
 
 // This class provides a way to walk the dungeon with a bit more flexibility
@@ -1890,9 +1900,6 @@ void level_excursion::go_to(const level_id& next)
     }
 
     you.on_current_level = (level_id::current() == original);
-
-    // Don't let uncommitted writes accumulate.
-    you.save->commit();
 }
 
 level_excursion::~level_excursion()
@@ -1923,13 +1930,13 @@ bool get_save_version(reader &file, int &major, int &minor)
     {
         // Empty file?
         major = minor = -1;
-        return (false);
+        return false;
     }
 
     major = buf[0];
     minor = buf[1];
 
-    return (true);
+    return true;
 }
 
 static bool _read_char_chunk(package *save)
@@ -1945,7 +1952,7 @@ static bool _read_char_chunk(package *save)
         unsigned int len = unmarshallInt(inf);
         if (len > 1024) // something is fishy
             fail("Save file corrupted (info > 1KB)");
-        std::vector<unsigned char> buf;
+        vector<unsigned char> buf;
         buf.resize(len);
         inf.read(&buf[0], len);
         inf.fail_if_not_eof("chr");
@@ -1975,7 +1982,7 @@ static bool _read_char_chunk(package *save)
     };
 }
 
-static bool _tagged_chunk_version_compatible(reader &inf, std::string* reason)
+static bool _tagged_chunk_version_compatible(reader &inf, string* reason)
 {
     int major = 0, minor = TAG_MINOR_INVALID;
     ASSERT(reason);
@@ -1983,7 +1990,7 @@ static bool _tagged_chunk_version_compatible(reader &inf, std::string* reason)
     if (!get_save_version(inf, major, minor))
     {
         *reason = "File is corrupt.";
-        return (false);
+        return false;
     }
 
     if (major != TAG_MAJOR_VERSION)
@@ -2000,14 +2007,14 @@ static bool _tagged_chunk_version_compatible(reader &inf, std::string* reason)
             *reason = make_stringf("Major version mismatch: %d (want %d).",
                                    major, TAG_MAJOR_VERSION);
         }
-        return (false);
+        return false;
     }
 
     if (minor < 0)
     {
         *reason = make_stringf("Minor version %d is negative!",
                                minor);
-        return (false);
+        return false;
     }
 
     if (minor > TAG_MINOR_VERSION)
@@ -2015,18 +2022,18 @@ static bool _tagged_chunk_version_compatible(reader &inf, std::string* reason)
         *reason = make_stringf("Minor version mismatch: %d (want <= %d). "
                                "The save is from a newer version.",
                                minor, TAG_MINOR_VERSION);
-        return (false);
+        return false;
     }
 
     inf.setMinorVersion(minor);
-    return (true);
+    return true;
 }
 
-static bool _restore_tagged_chunk(package *save, const std::string name,
+static bool _restore_tagged_chunk(package *save, const string name,
                                   tag_type tag, const char* complaint)
 {
     reader inf(save, name);
-    std::string reason;
+    string reason;
     if (!_tagged_chunk_version_compatible(inf, &reason))
     {
         if (!complaint)
@@ -2035,9 +2042,7 @@ static bool _restore_tagged_chunk(package *save, const std::string name,
             return false;
         }
         else
-        {
             end(-1, false, "\n%s %s\n", complaint, reason.c_str());
-        }
     }
 
     crawl_state.minorVersion = inf.getMinorVersion();
@@ -2067,14 +2072,14 @@ static bool _ghost_version_compatible(reader &inf)
             dprf("Ghost version mismatch: ghost was %d.%d; wanted %d.%d",
                  majorVersion, minorVersion,
                  TAG_MAJOR_VERSION, TAG_MINOR_VERSION);
-            return (false);
+            return false;
         }
 
         inf.setMinorVersion(minorVersion);
 
         // Check for the DCSS ghost signature.
         if (unmarshallShort(inf) != GHOST_SIGNATURE)
-            return (false);
+            return false;
 
         // Discard three more 32-bit words of padding.
         inf.read(NULL, 3*4);
@@ -2084,9 +2089,9 @@ static bool _ghost_version_compatible(reader &inf)
         mprf(MSGCH_ERROR,
              "Ghost file \"%s\" seems to be invalid (short read); deleting it.",
              inf.filename().c_str());
-        return (false);
+        return false;
     }
-    return (true);
+    return true;
 }
 
 void save_ghost(bool force)
@@ -2103,14 +2108,14 @@ void save_ghost(bool force)
 
 #endif // BONES_DIAGNOSTICS
 
-    // No ghosts on levels 1, 2, or the ET.
-    if (!force && (you.absdepth0 < 2
-                   || you.where_are_you == BRANCH_ECUMENICAL_TEMPLE))
+    // No ghosts on D:1, D:2, or the Temple.
+    if (!force && (you.depth < 3 && player_in_branch(BRANCH_MAIN_DUNGEON)
+                   || player_in_branch(BRANCH_ECUMENICAL_TEMPLE)))
     {
         return;
     }
 
-    const std::string cha_fil = _make_ghost_filename();
+    const string cha_fil = _make_ghost_filename();
     FILE *gfile = fopen_u(cha_fil.c_str(), "rb");
 
     // Don't overwrite existing bones!
@@ -2162,7 +2167,7 @@ bool unlock_file_handle(FILE *handle)
     return unlock_file(fileno(handle));
 }
 
-FILE *lk_open(const char *mode, const std::string &file)
+FILE *lk_open(const char *mode, const string &file)
 {
     FILE *handle = fopen_u(file.c_str(), mode);
     if (!handle)
@@ -2174,7 +2179,7 @@ FILE *lk_open(const char *mode, const std::string &file)
 
     if (handle && !lock_file_handle(handle, locktype))
     {
-        perror("Could not lock file... ");
+        mprf(MSGCH_ERROR, "ERROR: Could not lock file %s", file.c_str());
         fclose(handle);
         handle = NULL;
     }
@@ -2182,7 +2187,7 @@ FILE *lk_open(const char *mode, const std::string &file)
     return handle;
 }
 
-void lk_close(FILE *handle, const char *mode, const std::string &file)
+void lk_close(FILE *handle, const char *mode, const string &file)
 {
     UNUSED(mode);
 
@@ -2200,7 +2205,7 @@ void lk_close(FILE *handle, const char *mode, const std::string &file)
 //
 // Locks a named file (usually an empty lock file), creating it if necessary.
 
-file_lock::file_lock(const std::string &s, const char *_mode, bool die_on_fail)
+file_lock::file_lock(const string &s, const char *_mode, bool die_on_fail)
     : handle(NULL), mode(_mode), filename(s)
 {
     if (!(handle = lk_open(mode, filename)) && die_on_fail)
@@ -2214,60 +2219,6 @@ file_lock::~file_lock()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// SavefileCallback
-//
-// Callbacks which are called before a save and after a restore.  Can be used
-// to move stuff in and out of you.props, or on a restore to recalculate data
-// which isn't stored in the savefile.  Declare a SavefileCallback variable
-// using a C++ global constructor to register the callback.
-//
-// XXX: Due to some weirdness with C++ global constructors (see below) I'm
-// not sure if this will work for all compiler/system combos, so make any
-// code which uses this fail gracefully if the callbacks aren't called.
-
-SavefileCallback::SavefileCallback(callback func)
-{
-    ASSERT(func != NULL);
-
-    // XXX: For some reason (at least with GCC 4.3.2 on Linux) if the
-    // callback list is made with a global contructor then it gets emptied
-    // out by the time that pre_save() or post_restore() is called,
-    // probably having something to do with the fact that global
-    // contructors are also used to add the callbacks.  Thus we have to do
-    // it this way.
-    if (_callback_list == NULL)
-        _callback_list = new std::vector<SavefileCallback::callback>();
-
-    _callback_list->push_back(func);
-}
-
-void SavefileCallback::pre_save()
-{
-    ASSERT(crawl_state.saving_game);
-
-    if (_callback_list == NULL)
-        return;
-
-    for (unsigned int i = 0; i < _callback_list->size(); i++)
-    {
-        callback func = (*_callback_list)[i];
-        (*func)(true);
-    }
-}
-
-void SavefileCallback::post_restore()
-{
-    ASSERT(!crawl_state.saving_game);
-
-    if (_callback_list == NULL)
-        return;
-
-    for (unsigned int i = 0; i < _callback_list->size(); i++)
-    {
-        callback func = (*_callback_list)[i];
-        (*func)(false);
-    }
-}
 
 FILE *fopen_replace(const char *name)
 {
@@ -2282,25 +2233,25 @@ FILE *fopen_replace(const char *name)
 }
 
 // Returns the size of the opened file with the give FILE* handle.
-unsigned long file_size(FILE *handle)
+off_t file_size(FILE *handle)
 {
     struct stat fs;
     const int err = fstat(fileno(handle), &fs);
     return err? 0 : fs.st_size;
 }
 
-std::vector<std::string> get_title_files()
+vector<string> get_title_files()
 {
-    std::vector<std::string> bases = _get_base_dirs();
-    std::vector<std::string> titles;
+    vector<string> bases = _get_base_dirs();
+    vector<string> titles;
     for (unsigned int i = 0; i < bases.size(); ++i)
     {
-        std::vector<std::string> files = get_dir_files(bases[i]);
+        vector<string> files = get_dir_files(bases[i]);
         for (unsigned int j = 0; j < files.size(); ++j)
             if (files[j].substr(0, 6) == "title_")
                 titles.push_back(files[j]);
     }
-    return (titles);
+    return titles;
 }
 
 void sighup_save_and_exit()

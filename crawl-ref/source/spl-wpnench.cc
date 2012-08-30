@@ -43,7 +43,7 @@ static brand_type _convert_to_launcher(brand_type which_brand)
     {
     case SPWPN_FREEZING: return SPWPN_FROST;
     case SPWPN_FLAMING: return SPWPN_FLAME;
-    default: return (which_brand);
+    default: return which_brand;
     }
 }
 
@@ -61,9 +61,9 @@ static bool _ok_for_launchers(brand_type which_brand)
     case SPWPN_RETURNING:
     case SPWPN_CHAOS:
     case SPWPN_VORPAL:
-        return (true);
+        return true;
     default:
-        return (false);
+        return false;
     }
 }
 
@@ -138,7 +138,7 @@ spret_type brand_weapon(brand_type which_brand, int power, bool fail)
         temp_brand = false;
     }
 
-    std::string msg = weapon.name(DESC_YOUR);
+    string msg = weapon.name(DESC_YOUR);
 
     bool emit_special_message = !temp_brand;
     int duration_affected = 10;
@@ -182,8 +182,8 @@ spret_type brand_weapon(brand_type which_brand, int power, bool fail)
         msg += (coinflip() ? " oddly." : " strangely.");
         duration_affected = 5;
 
-        // [dshaligram] Clamping power to 2.
-        power = 2;
+        // Low duration, but power still helps.
+        power /= 2;
         break;
 
     case SPWPN_PAIN:
@@ -251,7 +251,7 @@ spret_type cast_confusing_touch(int power, bool fail)
     fail_check();
     msg::stream << "Your " << you.hand_name(true) << " begin to glow "
                 << (you.duration[DUR_CONFUSING_TOUCH] ? "brighter" : "red")
-                << "." << std::endl;
+                << "." << endl;
 
     you.increase_duration(DUR_CONFUSING_TOUCH, 5 + (random2(power) / 5),
                           50, NULL);

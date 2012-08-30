@@ -390,7 +390,7 @@
        SPELL_CANTRIP,
        SPELL_SMITING,
        SPELL_NO_SPELL,
-       SPELL_MINOR_HEALING
+       SPELL_HEAL_OTHER
       }
     },
 
@@ -401,7 +401,7 @@
        SPELL_SUMMON_DEMON,
        SPELL_SMITING,
        SPELL_ANIMATE_DEAD,
-       SPELL_MINOR_HEALING
+       SPELL_HEAL_OTHER
       }
     },
 
@@ -427,12 +427,12 @@
       }
     },
 
-    {  MST_PIT_FIEND,
+    {  MST_HELL_SENTINEL,
       {
        SPELL_HELLFIRE,
        SPELL_HELLFIRE,
        SPELL_MELEE,
-       SPELL_SYMBOL_OF_TORMENT,
+       SPELL_IRON_SHOT,
        SPELL_MELEE,
        SPELL_NO_SPELL
       }
@@ -510,7 +510,7 @@
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
        SPELL_BRAIN_FEED,
-       SPELL_CALL_IMP,
+       SPELL_SUMMON_MINOR_DEMON,
        SPELL_NO_SPELL
       }
     },
@@ -606,7 +606,7 @@
     {  MST_DEEP_ELF_SUMMONER,
       {
        SPELL_BLINK,
-       SPELL_CALL_IMP,
+       SPELL_SUMMON_MINOR_DEMON,
        SPELL_SUMMON_UFETUBUS,
        SPELL_VAMPIRE_SUMMON,
        SPELL_SUMMON_DEMON,
@@ -664,7 +664,7 @@
        SPELL_BANISHMENT,
        SPELL_SUMMON_DEMON,
        SPELL_SUMMON_GREATER_DEMON,
-       SPELL_CALL_IMP,
+       SPELL_SUMMON_MINOR_DEMON,
        SPELL_NO_SPELL
       }
     },
@@ -704,10 +704,10 @@
 
     {  MST_KOBOLD_DEMONOLOGIST,
       {
-       SPELL_CALL_IMP,
+       SPELL_SUMMON_MINOR_DEMON,
        SPELL_SUMMON_DEMON,
        SPELL_CANTRIP,
-       SPELL_CALL_IMP,
+       SPELL_SUMMON_MINOR_DEMON,
        SPELL_SUMMON_DEMON,
        SPELL_CANTRIP           // this should be cute -- bw
       },
@@ -902,10 +902,10 @@
 
     {  MST_SERPENT_OF_HELL_COCYTUS,
       {
-       SPELL_FREEZING_CLOUD,
+       SPELL_OZOCUBUS_REFRIGERATION,
        SPELL_COLD_BREATH,
        SPELL_NO_SPELL,
-       SPELL_FREEZING_CLOUD,
+       SPELL_OZOCUBUS_REFRIGERATION,
        SPELL_COLD_BREATH,
        SPELL_NO_SPELL
       }
@@ -1166,7 +1166,7 @@
     { MST_EUSTACHIO,
       {
        SPELL_SUMMON_SMALL_MAMMALS,
-       SPELL_CALL_IMP,
+       SPELL_SUMMON_MINOR_DEMON,
        SPELL_BLINK,
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
@@ -1207,17 +1207,6 @@
       }
     },
 
-    {  MST_TERPSICHORE,
-      {
-       SPELL_TUKIMAS_BALL,
-       SPELL_SWIFTNESS,
-       SPELL_CORONA,
-       SPELL_BLINK,
-       SPELL_CANTRIP,
-       SPELL_NO_SPELL
-      }
-    },
-
     {  MST_KIRKE,
       {
        SPELL_PORKALATOR,
@@ -1237,6 +1226,17 @@
        SPELL_THROW_FLAME,
        SPELL_HASTE_OTHER,
        SPELL_MINOR_HEALING,
+      }
+    },
+
+    {  MST_FANNAR,
+      {
+       SPELL_BOLT_OF_COLD,
+       SPELL_OZOCUBUS_REFRIGERATION,
+       SPELL_OZOCUBUS_ARMOUR,
+       SPELL_SUMMON_ICE_BEAST,
+       SPELL_OZOCUBUS_REFRIGERATION,
+       SPELL_BLINK,
       }
     },
 
@@ -1478,7 +1478,7 @@
        SPELL_ISKENDERUNS_MYSTIC_BLAST,
        SPELL_BOLT_OF_COLD,
        SPELL_INVISIBILITY,
-       SPELL_ANIMATE_DEAD,
+       SPELL_NO_SPELL,
        SPELL_IRON_SHOT,
        SPELL_INVISIBILITY
       }
@@ -1596,12 +1596,23 @@
 
     {  MST_JUMPING_SPIDER,
       {
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
        SPELL_BLINK_CLOSE,
-       SPELL_BLINK_CLOSE,
-       SPELL_BLINK_CLOSE,
-       SPELL_BLINK_CLOSE,
-       SPELL_BLINK_CLOSE,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
        SPELL_BLINK_AWAY
+      }
+    },
+
+    {  MST_ORB_SPIDER,
+      {
+       SPELL_IOOD,
+       SPELL_NO_SPELL,
+       SPELL_CANTRIP,
+       SPELL_IOOD,
+       SPELL_NO_SPELL,
+       SPELL_IOOD
       }
     },
 
@@ -1649,12 +1660,12 @@
       }
     },
 
-    {  MST_BOG_MUMMY,
+    {  MST_BOG_BODY,
       {
-       SPELL_THROW_FROST,
+       SPELL_BOLT_OF_COLD,
        SPELL_SLOW,
        SPELL_NO_SPELL,
-       SPELL_CORPSE_ROT,
+       SPELL_BOLT_OF_COLD,
        SPELL_CORPSE_ROT,
        SPELL_NO_SPELL
       }
@@ -1745,6 +1756,39 @@
        SPELL_HASTE_OTHER,
        SPELL_HEAL_OTHER,
        SPELL_MINOR_HEALING
+      }
+    },
+
+    {  MST_ARACHNE,
+      {
+       SPELL_ENSNARE,
+       SPELL_POISON_ARROW,
+       SPELL_BLINK,
+       SPELL_ENSNARE,
+       SPELL_VENOM_BOLT,
+       SPELL_ENSNARE
+      }
+    },
+
+    {  MST_HELLBINDER,
+      {
+       SPELL_SUMMON_MINOR_DEMON,
+       SPELL_SUMMON_DEMON,
+       SPELL_HASTE,
+       SPELL_HELLFIRE,
+       SPELL_BLINK_AWAY,
+       SPELL_THROW_FLAME
+      }
+    },
+
+    {  MST_CLOUD_MAGE,
+      {
+       SPELL_MEPHITIC_CLOUD,
+       SPELL_FREEZING_CLOUD,
+       SPELL_POISONOUS_CLOUD,
+       SPELL_AIRSTRIKE,
+       SPELL_BLINK_RANGE,
+       SPELL_BLINK_RANGE
       }
     },
 

@@ -7,7 +7,7 @@
 
 static void _swamp_slushy_patches(int depth_multiplier)
 {
-    const int margin = 6;
+    const int margin = 11;
     const int yinterval = 4;
     const int xinterval = 4;
     const int fuzz = 9;
@@ -25,19 +25,18 @@ static void _swamp_slushy_patches(int depth_multiplier)
                                   random_range(2, 6),
                                   int_range(8 + depth_offset,
                                             17 + depth_offset),
-                                  margin);
+                                            margin);
         }
     }
 }
 
 static dungeon_feature_type _swamp_feature_for_height(int height)
 {
-    return height >= 14? DNGN_DEEP_WATER :
-        height > 0? DNGN_SHALLOW_WATER :
-        height > -9 ? DNGN_FLOOR :
-        height > -13 ? DNGN_SHALLOW_WATER :
-        height > -17 && coinflip() ? DNGN_SHALLOW_WATER :
-        DNGN_SWAMP_TREE;
+    return height >= 14 ? DNGN_DEEP_WATER :
+        height > (8 - you.depth * 2) ? DNGN_SHALLOW_WATER :
+        height > -8 ? DNGN_FLOOR :
+        height > -10 ? DNGN_SHALLOW_WATER :
+        DNGN_MANGROVE;
 }
 
 static void _swamp_apply_features(int margin)
@@ -49,25 +48,24 @@ static void _swamp_apply_features(int margin)
         {
             if (c.x < margin || c.y < margin || c.x >= GXM - margin
                 || c.y >= GYM - margin)
-                grd(c) = DNGN_SWAMP_TREE;
+            {
+                grd(c) = DNGN_MANGROVE;
+            }
             else
                grd(c) = _swamp_feature_for_height(dgn_height_at(c));
         }
     }
 }
 
-void dgn_build_swamp_level(int level)
+void dgn_build_swamp_level()
 {
     env.level_build_method += " swamp";
     env.level_layout_types.insert("swamp");
 
-    const int swamp_depth = level_id::current().depth - 1;
-    dgn_initialise_heightmap(-17);
+    const int swamp_depth = you.depth - 1;
+    dgn_initialise_heightmap(-19);
     _swamp_slushy_patches(swamp_depth * 3);
     dgn_smooth_heights();
     _swamp_apply_features(2);
     env.heightmap.reset(NULL);
-
-    dgn_place_stone_stairs();
-    process_disconnected_zones(0, 0, GXM - 1, GYM - 1, true, DNGN_SWAMP_TREE);
 }

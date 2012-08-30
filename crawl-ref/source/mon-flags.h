@@ -140,6 +140,9 @@ const uint64_t M_NO_FLEE           = (uint64_t)1<<42;
 // can sense vibrations in web traps
 const uint64_t M_WEB_SENSE         = (uint64_t)1<<43;
 
+// tries to maintain LOS/2 range from its target
+const uint64_t M_MAINTAIN_RANGE    = (uint64_t)1<<44;
+
 // Same for flags for actual monsters.
 typedef uint64_t monster_flag_type;
 const uint64_t MF_NO_REWARD          = BIT(0);  // no benefit from killing
@@ -197,18 +200,17 @@ const uint64_t MF_SPELL_MASK         = MF_SPELLCASTER|MF_ACTUAL_SPELLS|MF_PRIEST
 const uint64_t MF_NO_REGEN           = BIT(26); // This monster cannot regenerate.
 
 const uint64_t MF_NAME_DESCRIPTOR    = BIT(27); // mname should be treated with normal
-                                      // grammar, ie, prevent "You hit red rat"
-                                      // and other such constructs.
+                                     // grammar, ie, prevent "You hit red rat"
+                                     // and other such constructs.
 const uint64_t MF_NAME_DEFINITE      = BIT(28); // give this monster the definite "the"
-                                      // article, instead of the indefinite "a"
-                                      // article.
-const uint64_t MF_INTERLEVEL_FOLLOWER = BIT(29); // will travel with the player regardless
-                                      // of where the monster is at on the level
-const uint64_t MF_DEMONIC_GUARDIAN    = BIT(30); // is a demonic_guardian
-const uint64_t MF_NAME_SPECIES        = BIT(31); // mname should be used for corpses as well,
-const uint64_t MF_NAME_ZOMBIE         = BIT(32); // mname replaces zombies/skeletons, use
-                                      // only for already zombified monsters
-const uint64_t MF_SENSED              = BIT(33); // Player has been warned
-                                      // about this monster being nearby.
-const uint64_t MF_NAME_NOCORPSE       = BIT(34); // mname should not be used for corpses
+                                     // article, instead of the indefinite "a"
+                                     // article.
+const uint64_t MF_DEMONIC_GUARDIAN   = BIT(30); // is a demonic_guardian
+const uint64_t MF_NAME_SPECIES       = BIT(31); // mname should be used for corpses as well,
+const uint64_t MF_NAME_ZOMBIE        = BIT(32); // mname replaces zombies/skeletons, use
+                                     // only for already zombified monsters
+const uint64_t MF_SENSED             = BIT(33); // Player has been warned
+                                     // about this monster being nearby.
+const uint64_t MF_NAME_NOCORPSE      = BIT(34); // mname should not be used for corpses
+const uint64_t MF_SEEN_RANGED        = BIT(35); // known to have a ranged attack
 #endif

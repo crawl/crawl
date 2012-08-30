@@ -72,7 +72,7 @@ bool tile_page::place_images()
             }
 
             if (ycur == ymin)
-                ymax = std::max(ymin + (int)tileh, ymax);
+                ymax = max(ymin + (int)tileh, ymax);
         }
 
         m_height = ymax;
@@ -83,7 +83,7 @@ bool tile_page::place_images()
         m_texcoords.push_back(ycur + tileh);
 
         // Only add downwards, stretching out xmax as we go.
-        xmax = std::max(xmax, xcur + (int)tilew);
+        xmax = max(xmax, xcur + (int)tilew);
         xcur = xmin;
         ycur += tileh;
     }
@@ -91,7 +91,7 @@ bool tile_page::place_images()
     return (true);
 }
 
-int tile_page::find(const std::string &enumname) const
+int tile_page::find(const string &enumname) const
 {
     for (size_t i = 0; i < m_tiles.size(); ++i)
     {
@@ -105,7 +105,7 @@ int tile_page::find(const std::string &enumname) const
     return (-1);
 }
 
-bool tile_page::add_synonym(int idx, const std::string &syn)
+bool tile_page::add_synonym(int idx, const string &syn)
 {
     if (idx < 0 || idx >= (int)m_tiles.size())
         return (false);
@@ -114,7 +114,7 @@ bool tile_page::add_synonym(int idx, const std::string &syn)
     return (true);
 }
 
-bool tile_page::add_synonym(const std::string &enumname, const std::string &syn)
+bool tile_page::add_synonym(const string &enumname, const string &syn)
 {
     int idx = find(enumname);
     if (idx == -1)

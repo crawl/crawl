@@ -87,7 +87,7 @@ Developers often discuss what they are working on on the channel and request
 comments before commits. Therefore the channel is logged to archive
 discussion and decisions made there.
 
-The archive can be found at http://tozt.net/crawl/
+The archive can be found at http://s-z.org/crawl-dev/
 
 Development team structure and decision policy
 ----------------------------------------------

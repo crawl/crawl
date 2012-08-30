@@ -1,31 +1,38 @@
 %%%%
 Abyssal Knight
 
-Abyssal Knights worship Lugonu, and are sent from the Abyss into the Dungeon to spread corruption and chaos.
+Abyssal Knights worship Lugonu, and are sent from the Abyss into the Dungeon to
+spread corruption and chaos.
 %%%%
 Air Elementalist
 
-Air Elementalists have learned the Shock spell. Later on, their book of Air provides them with flexibility to survive.
+Air Elementalists have learned the Shock spell. Later on, their book of Air
+provides them with flexibility to survive.
 %%%%
 Arcane Marksman
 
-Arcane Marksmen carry ranged weapons, and use magic to make their foes more vulnerable to attacks from afar.
+Arcane Marksmen carry ranged weapons, and use magic to make their foes more
+vulnerable to attacks from afar.
 %%%%
 Artificer
 
-Artificers start with a few magical devices and are competent at using such tools.
+Artificers start with a few magical devices and are competent at using such
+tools.
 %%%%
 Assassin
 
-Assassins are all about stealth, ready to stab unaware opponents. Not just dagger and cloak, they carry nasty curare needles for their blowgun.
+Assassins are all about stealth, ready to stab unaware opponents. Not just
+dagger and cloak, they carry nasty curare needles for their blowgun.
 %%%%
 Berserker
 
-Berserkers believe in Trog, the magic-hating god of frenzy. Not much can stop a raging berserker early on, apart from hubris.
+Berserkers believe in Trog, the magic-hating god of frenzy. Not much can stop a
+raging berserker early on, apart from hubris.
 %%%%
 Chaos Knight
 
-Chaos Knights are playthings of the unpredictable Xom, and are subject to the god's constantly changing moods.
+Chaos Knights are playthings of the unpredictable Xom, and are subject to the
+god's constantly changing moods.
 %%%%
 Conjurer
 
@@ -33,71 +40,82 @@ Conjurers confront problems with damaging spells from the book of Conjurations.
 %%%%
 Death Knight
 
-Death Knights are melee fighters who command the undead in the name of Yredelemnul the Dark.
+Death Knights are melee fighters who command the undead in the name of
+Yredelemnul the Dark.
 %%%%
 Earth Elementalist
 
-Earth Elementalists know the Sandblast spell, and carry stones to increase the spell's power. More earthen spells are in their book of Geomancy.
+Earth Elementalists know the Sandblast spell, and carry stones to increase the
+spell's power. More earthen spells are in their book of Geomancy.
 %%%%
 Enchanter
 
-Enchanters use spells to boost themselves in battle, or incapacitate others. They also start with good darts.
+Enchanters use spells to boost themselves in battle, or incapacitate others.
+They also start with good darts.
 %%%%
 Fighter
 
-Fighters come with armour and shield, as well as a weapon of their choice. They have more health than any other background.
+Fighters come with armour and shield, as well as a weapon of their choice. They
+have more health than any other background.
 %%%%
 Fire Elementalist
 
-Fire Elementalists start with the book of Flames and know the Flame Tongue spell. The other spells in their book focus on destruction as well.
+Fire Elementalists start with the book of Flames and know the Flame Tongue
+spell. The other spells in their book focus on destruction as well.
 %%%%
 Gladiator
 
-Gladiators are ready for the arena with light armour, shield, nets and a weapon of their choice.
+Gladiators are ready for the arena with light armour, shield, nets and a weapon
+of their choice.
 %%%%
 Healer
 
-Healers are followers of Elyvilon, ready to heal themselves and others. Such healing will possibly pacify beasts and brutes, yielding experience.
+Healers are followers of Elyvilon, ready to heal themselves and others. Such
+healing will possibly pacify beasts and brutes, yielding experience.
 %%%%
 Hunter
 
-Hunters are able to attack at range, without relying on pesky magic. The hunter's tool depends on species.
+Hunters are able to attack at range, without relying on pesky magic.
 %%%%
 Ice Elementalist
 
-Ice Elementalists start with the book of Frost and the Freeze spell. The book's other spells are quite versatile.
+Ice Elementalists start with the book of Frost and the Freeze spell. The book's
+other spells are quite versatile.
 %%%%
 Monk
 
-Monks are ready to take on everything in the dungeon wearing just a robe and using their body.
+Monks are ready to take on everything in the dungeon wearing just a robe and
+using their body.
 %%%%
 Necromancer
 
-Necromancers are wizards specializing in the practice of death magic. They start out with the Pain spell.
+Necromancers are wizards specializing in the practice of death magic. They
+start out with the Pain spell.
 %%%%
 Priest
 
-Priests are followers of Zin, spreading the god's word to the Dungeon's inhabitants. Hill Orcs instead follow the orc god Beogh.
+Priests are followers of Zin, spreading the god's word to the Dungeon's
+inhabitants. Hill Orcs instead follow the orc god Beogh.
 %%%%
 Skald
 
-Skalds are melee fighters who can boost themselves in battle with spells from the book of War Chants.
-%%%%
-Stalker
-
-Stalkers use stealth and transformative magic to approach and subdue their victims.
+Skalds are melee fighters who can boost themselves in battle with spells from
+the book of War Chants.
 %%%%
 Summoner
 
-Summoners start with the book of Callings and are able to Summon Small Mammals from the start.
+Summoners start with the book of Callings and are able to Summon Small Mammals
+from the start.
 %%%%
 Transmuter
 
-Transmuters shift their form to fight in a beast's shape. They can turn sticks into snakes as well.
+Transmuters shift their form to fight in a beast's shape. They can turn sticks
+into snakes as well.
 %%%%
 Venom Mage
 
-Venom Mages start with the Young Poisoner's Handbook and the Sting spell. They have an easy time early on.
+Venom Mages start with the Young Poisoner's Handbook and the Sting spell. They
+have an easy time early on.
 %%%%
 Wanderer
 
@@ -105,9 +123,11 @@ Wanderers start with random equipment and skills.
 %%%%
 Warper
 
-Warpers start with a weapon of their choice and a Blinking scroll. They can learn spells from the book of Spatial Translocations.
+Warpers start with a weapon of their choice and a Blinking scroll. They can
+learn spells from the book of Spatial Translocations.
 %%%%
 Wizard
 
-Wizards start with a book of Minor Magic, containing a wide range of spells. They have higher magical reserves than any other background.
+Wizards start with a book of Minor Magic, containing a wide range of spells.
+They have higher magical reserves than any other background.
 %%%%

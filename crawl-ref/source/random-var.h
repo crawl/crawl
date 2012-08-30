@@ -12,13 +12,13 @@ typedef int (*weight_func)(int val);
 class random_var
 {
     int start, end;           // can take values with start <= val < end
-    std::vector<int> weights;
+    vector<int> weights;
     int total;                // sum of weights
 
 public:
     random_var(int c);
     random_var(int s, int e, weight_func w_ = NULL);
-    random_var(int s, int e, std::vector<int> ws);
+    random_var(int s, int e, vector<int> ws);
 
     const random_var& operator=(const random_var& other);
 
@@ -26,7 +26,7 @@ public:
     int roll() const;        // evaluate the random variable
     operator int() const
     {
-        return (roll());
+        return roll();
     }
 
     double expected() const; // expected value

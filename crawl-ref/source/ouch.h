@@ -38,7 +38,7 @@ enum kill_method_type
     KILLED_BY_WILD_MAGIC,
     KILLED_BY_XOM,
     KILLED_BY_ROTTING,
-    KILLED_BY_TARGETING,
+    KILLED_BY_TARGETTING,
     KILLED_BY_SPORE,
     KILLED_BY_TSO_SMITING,
     KILLED_BY_PETRIFICATION,
@@ -54,18 +54,21 @@ enum kill_method_type
     KILLED_BY_FALLING_THROUGH_GATE,
     KILLED_BY_DISINT,
     KILLED_BY_HEADBUTT,
+    KILLED_BY_ROLLING,
 
     NUM_KILLBY
 };
 
-int check_your_resists(int hurted, beam_type flavour, std::string source,
+int check_your_resists(int hurted, beam_type flavour, string source,
                        bolt *beam = 0, bool doEffects = true);
 void splash_with_acid(int acid_strength, bool corrode_items = true,
-                      std::string hurt_msg = "");
+                      string hurt_msg = "");
 void weapon_acid(int acid_strength);
 
 class actor;
 int actor_to_death_source(const actor* agent);
+
+string morgue_name(string char_name, time_t when_crawl_got_even);
 
 void reset_damage_counters();
 void ouch(int dam, int death_source, kill_method_type death_type,
@@ -80,6 +83,6 @@ bool expose_items_to_element(beam_type flavour, const coord_def& where,
 bool expose_player_to_element(beam_type flavour, int strength = 0,
                               bool damage_inventory = true);
 
-void screen_end_game(std::string text);
+void screen_end_game(string text);
 int timescale_damage(const actor *act, int damage);
 #endif

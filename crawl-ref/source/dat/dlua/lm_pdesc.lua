@@ -34,8 +34,6 @@ end
 function PortalDescriptor:property(marker, pname)
   if pname == 'feature_description' then
     return self:unmangle(self.props.desc)
-  elseif pname == 'feature_description_long' then
-    return self:unmangle(self.props.desc_long)
   end
 
   return self:unmangle(self.props and self.props[pname] or '')

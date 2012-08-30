@@ -25,9 +25,8 @@ enum unchivalric_attack_type
     UCAT_ALLY,
 };
 
-bool fight_melee(actor *attacker, actor *defender);
-
-int effective_stat_bonus(int wepType = -1);
+bool fight_melee(actor *attacker, actor *defender, bool *did_hit = NULL,
+                 bool simu = false);
 
 int resist_adjust_damage(actor *defender, beam_type flavour,
                          int res, int rawdamage, bool ranged = false);

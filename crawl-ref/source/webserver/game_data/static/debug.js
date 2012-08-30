@@ -46,17 +46,6 @@ function ($, c, r, mm, ml, mk, enums, display, exports) {
                 unmark_cell(view.x + x, view.y + y);
     }
 
-    exports.tile_flags_to_string = function (flags)
-    {
-        var s = "";
-        for (var v in enums)
-        {
-            if (v.match(/^TILE_FLAG_/) && (flags & enums[v]))
-                s = s + " " + v;
-        }
-        return s;
-    }
-
     exports.obj_to_str = function (o)
     {
         var parse = function (_o)

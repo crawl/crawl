@@ -11,6 +11,8 @@ function ($, cr, map_knowledge) {
 
         this.view = { x: 0, y: 0 };
         this.view_center = { x: 0, y: 0 };
+
+        this.tile_scaling = 1.0;
     }
 
     DungeonViewRenderer.prototype = new cr.DungeonCellRenderer();
@@ -42,6 +44,11 @@ function ($, cr, map_knowledge) {
             this.element.width = c * this.cell_width;
             this.element.height = r * this.cell_height;
             this.init(this.element);
+            // The canvas is completely transparent after resizing;
+            // make it opaque to prevent display errors when shifting
+            // around parts of it later.
+            this.ctx.fillStyle = "black";
+            this.ctx.fillRect(0, 0, this.element.width, this.element.height);
         },
 
         set_view_center: function(x, y)
@@ -127,22 +134,27 @@ function ($, cr, map_knowledge) {
 
         fit_to: function(width, height, min_diameter)
         {
+            var cell_size = {
+                w: default_size.w * this.tile_scaling,
+                h: default_size.h * this.tile_scaling
+            };
+
             if (this.display_mode == "glyphs")
             {
                 this.ctx.font = this.glyph_mode_font_name();
                 var metrics = this.ctx.measureText("@");
                 this.set_cell_size(metrics.width + 2, this.glyph_mode_font_size + 2);
             }
-            else if ((min_diameter * default_size.w > width)
-                || (min_diameter * default_size.h > height))
+            else if ((min_diameter * cell_size.w > width)
+                || (min_diameter * cell_size.h > height))
             {
-                var scale = Math.min(width / (min_diameter * default_size.w),
-                                     height / (min_diameter * default_size.h));
-                this.set_cell_size(Math.floor(default_size.w * scale),
-                                   Math.floor(default_size.h * scale));
+                var scale = Math.min(width / (min_diameter * cell_size.w),
+                                     height / (min_diameter * cell_size.h));
+                this.set_cell_size(Math.floor(cell_size.w * scale),
+                                   Math.floor(cell_size.h * scale));
             }
             else
-                this.set_cell_size(default_size.w, default_size.h);
+                this.set_cell_size(cell_size.w, cell_size.h);
 
             var view_width = Math.floor(width / this.cell_width);
             var view_height = Math.floor(height / this.cell_height);
