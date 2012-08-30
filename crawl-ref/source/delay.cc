@@ -1124,6 +1124,9 @@ static void _finish_delay(const delay_queue_item &delay)
                 break;
 
             case DNGN_CLOSED_DOOR:      // open the door
+            case DNGN_RUNED_DOOR:
+                // Once opened, former runed doors become normal doors.
+                // Is that ok?  Keeping it for simplicity for now...
                 grd(pass) = DNGN_OPEN_DOOR;
                 break;
             }

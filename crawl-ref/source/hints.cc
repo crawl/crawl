@@ -1080,6 +1080,7 @@ static bool _rare_hints_event(hints_event_type event)
 {
     switch (event)
     {
+    case HINT_FOUND_RUNED_DOOR:
     case HINT_KILLED_MONSTER:
     case HINT_NEW_LEVEL:
     case HINT_YOU_ENCHANTED:
@@ -1804,6 +1805,22 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
             cmd.push_back(CMD_DISPLAY_MAP);
             cmd.push_back(CMD_DISPLAY_MAP);
         }
+        break;
+
+    case HINT_FOUND_RUNED_DOOR:
+#ifdef USE_TILE
+        tiles.place_cursor(CURSOR_TUTORIAL, gc);
+        tiles.add_text_tag(TAG_TUTORIAL, "Runed door", gc);
+#endif
+        text << "That ";
+#ifndef USE_TILE
+        text << glyph_to_tagstr(get_cell_glyph(gc)) << " ";
+#endif
+        text << "is a runed door. It functions no differently from any other "
+                "door, yet the runic writing covering them warn of a danger. "
+                "Other denizens of the dungeon will typically leave them "
+                "alone, you may elect to disregard the warning and open them "
+                "anyway. Doing so will break the runes.";
         break;
 
     case HINT_KILLED_MONSTER:
@@ -4145,6 +4162,7 @@ static void _hints_describe_feature(int x, int y)
             break;
 
        case DNGN_CLOSED_DOOR:
+       case DNGN_RUNED_DOOR:
             if (!Hints.hints_explored)
             {
                 ostr << "\nTo avoid accidentally opening a door you'd rather "
@@ -4521,7 +4539,7 @@ void hints_observe_cell(const coord_def& gc)
         learned_something_new(HINT_SEEN_ALTAR, gc);
     else if (is_feature('^', gc))
         learned_something_new(HINT_SEEN_TRAP, gc);
-    else if (grd(gc) == DNGN_CLOSED_DOOR)
+    else if (feat_is_closed_door(grd(gc)))
         learned_something_new(HINT_SEEN_DOOR, gc);
     else if (grd(gc) == DNGN_ENTER_SHOP)
         learned_something_new(HINT_SEEN_SHOP, gc);

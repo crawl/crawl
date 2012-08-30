@@ -408,13 +408,13 @@ static int _exploration_estimate(bool seen_only = false, bool debug = false)
         }
 
         bool open = true;
-        if (feat_is_solid(grd(pos)) && grd(pos) != DNGN_CLOSED_DOOR)
+        if (feat_is_solid(grd(pos)) && !feat_is_closed_door(grd(pos)))
         {
             open = false;
             for (adjacent_iterator ai(pos); ai; ++ai)
             {
                 if (map_bounds(*ai) && (!feat_is_opaque(grd(*ai))
-                                        || grd(*ai) == DNGN_CLOSED_DOOR))
+                                        || feat_is_closed_door(grd(*ai))))
                 {
                     open = true;
                     break;
@@ -1978,7 +1978,7 @@ static int _xom_change_scenery(bool debug = false)
         dungeon_feature_type feat = grd(*ri);
         if (feat >= DNGN_FOUNTAIN_BLUE && feat <= DNGN_DRY_FOUNTAIN_BLOOD)
             candidates.push_back(*ri);
-        else if (feat == DNGN_CLOSED_DOOR)
+        else if (feat_is_closed_door(feat))
         {
             // Check whether this door is already included in a gate.
             bool found_door = false;
@@ -2105,6 +2105,7 @@ static int _xom_change_scenery(bool debug = false)
         switch (grd(pos))
         {
         case DNGN_CLOSED_DOOR:
+        case DNGN_RUNED_DOOR:
             grd(pos) = DNGN_OPEN_DOOR;
             set_terrain_changed(pos);
             if (you.see_cell(pos))

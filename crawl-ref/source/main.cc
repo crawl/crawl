@@ -3501,7 +3501,7 @@ static bool _untrap_target(const coord_def move, bool check_confused)
     }
 
     const dungeon_feature_type feat = grd(target);
-    if (feat != DNGN_CLOSED_DOOR || you.confused())
+    if (!feat_is_closed_door(feat) || you.confused())
     {
         switch (feat)
         {
@@ -3577,7 +3577,8 @@ static void _open_door(coord_def move, bool check_confused)
     // The player hasn't picked a direction yet.
     if (move.origin())
     {
-        const int num = _check_adjacent(DNGN_CLOSED_DOOR, move);
+        const int num = _check_adjacent(DNGN_CLOSED_DOOR, move)
+                        + _check_adjacent(DNGN_RUNED_DOOR, move);
 
         if (num == 0)
         {
@@ -3620,7 +3621,7 @@ static void _open_door(coord_def move, bool check_confused)
                                 "door_verb_already_open");
     }
 
-    if (feat != DNGN_CLOSED_DOOR)
+    if (!feat_is_closed_door(feat))
     {
         if (you.confused())
         {
@@ -4037,6 +4038,7 @@ static void _close_door(coord_def move)
         switch (feat)
         {
         case DNGN_CLOSED_DOOR:
+        case DNGN_RUNED_DOOR:
             mpr("It's already closed!");
             break;
         default:
@@ -4365,7 +4367,7 @@ static void _move_player(coord_def move)
     }
 
     // BCR - Easy doors single move
-    if (Options.easy_open && !attacking && targ_grid == DNGN_CLOSED_DOOR)
+    if (Options.easy_open && !attacking && feat_is_closed_door(targ_grid))
     {
         _open_door(move.x, move.y, false);
         you.prev_move = move;

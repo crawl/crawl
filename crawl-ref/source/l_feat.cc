@@ -36,6 +36,7 @@ FEATF(_feat_is_solid, feat_is_solid)
 FEATF(_feat_has_solid_floor, feat_has_solid_floor)
 FEATF(_feat_is_opaque, feat_is_opaque)
 FEATF(_feat_is_door, feat_is_door)
+FEATF(_feat_is_closed_door, feat_is_closed_door)
 FEATF(_feat_is_statue_or_idol, feat_is_statue_or_idol)
 FEATF(_feat_is_rock, feat_is_rock)
 FEATF(_feat_is_permarock, feat_is_permarock)
@@ -61,6 +62,7 @@ const struct luaL_reg feat_dlib[] =
 { "has_solid_floor", _feat_has_solid_floor },
 { "is_opaque", _feat_is_opaque },
 { "is_door", _feat_is_door },
+{ "is_closed_door", _feat_is_closed_door },
 { "is_statue_or_idol", _feat_is_statue_or_idol },
 { "is_rock", _feat_is_rock },
 { "is_permarock", _feat_is_permarock },

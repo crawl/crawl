@@ -268,6 +268,12 @@ A roughly hewn altar of Beogh
 
 An altar to Beogh, unmistakably roughly hewn by orcish artisans.
 %%%%
+A runed door
+
+A door, covered in runic writing warning against danger of some sort. You
+may disregard the warning, opening it like any other door (ie, by walking
+into it or pressing 'O').
+%%%%
 A shaft
 
 A deep hole. Who knows where you might end up if you were to fall through it?

@@ -458,13 +458,13 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
 
         bool open = true;
 
-        if (feat_is_solid(feat) && feat != DNGN_CLOSED_DOOR)
+        if (feat_is_solid(feat) && !feat_is_closed_door(feat))
         {
             open = false;
             for (adjacent_iterator ai(*ri); ai; ++ai)
             {
                 if (map_bounds(*ai) && (!feat_is_opaque(grd(*ai))
-                                        || grd(*ai)) == DNGN_CLOSED_DOOR)
+                                        || feat_is_closed_door(grd(*ai))))
                 {
                     open = true;
                     break;

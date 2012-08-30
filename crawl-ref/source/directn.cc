@@ -2938,6 +2938,8 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
         return "the endless lava";
     case DNGN_CLOSED_DOOR:
         return "closed door";
+    case DNGN_RUNED_DOOR:
+        return "runed door";
     case DNGN_METAL_WALL:
         return "metal wall";
     case DNGN_GREEN_CRYSTAL_WALL:
@@ -3218,7 +3220,7 @@ std::string feature_description_at(const coord_def& where, bool covering,
 
     dungeon_feature_type grid = grd(where);
 
-    if (grid == DNGN_OPEN_DOOR || grid == DNGN_CLOSED_DOOR)
+    if (grid == DNGN_OPEN_DOOR || feat_is_closed_door(grid))
     {
         const std::string door_desc_prefix =
             env.markers.property_at(where, MAT_ANY,
@@ -3251,6 +3253,8 @@ std::string feature_description_at(const coord_def& where, bool covering,
         {
             if (grid == DNGN_OPEN_DOOR)
                 desc += "open ";
+            else if (grid == DNGN_RUNED_DOOR)
+                desc += "runed ";
             else
                 desc += "closed ";
         }

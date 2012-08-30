@@ -318,7 +318,13 @@ bool feat_has_solid_floor(dungeon_feature_type feat)
 
 bool feat_is_door(dungeon_feature_type feat)
 {
-    return (feat == DNGN_CLOSED_DOOR || feat == DNGN_OPEN_DOOR);
+    return (feat == DNGN_CLOSED_DOOR || feat == DNGN_RUNED_DOOR
+            || feat == DNGN_OPEN_DOOR);
+}
+
+bool feat_is_closed_door(dungeon_feature_type feat)
+{
+    return (feat == DNGN_CLOSED_DOOR || feat == DNGN_RUNED_DOOR);
 }
 
 bool feat_is_statue_or_idol(dungeon_feature_type feat)
@@ -466,7 +472,7 @@ void find_connected_identical(const coord_def &d, dungeon_feature_type ft,
 std::set<coord_def> connected_doors(const coord_def& d)
 {
     std::set<coord_def> doors;
-    find_connected_identical(d, DNGN_CLOSED_DOOR, doors);
+    find_connected_identical(d, grd(d), doors);
     return doors;
 }
 
@@ -1537,9 +1543,9 @@ std::string stair_climb_verb(dungeon_feature_type feat)
 
 static const char *dngn_feature_names[] =
 {
-"unseen", "closed_door",
+"unseen", "closed_door", "runed_door",
 #if TAG_MAJOR_VERSION == 33
-"detected_non-secret_door", "non-secret_door",
+"non-secret_door",
 "waxed_wall", "metal_wall", "green_crystal_wall", "rock_wall",
 "slimy_wall", "stone_wall", "permarock_wall",
 "clear_rock_wall", "clear_stone_wall", "clear_permarock_wall", "iron_grate",
@@ -1682,7 +1688,7 @@ void nuke_wall(const coord_def& p)
 bool cell_is_clingable(const coord_def pos)
 {
     for (orth_adjacent_iterator ai(pos); ai; ++ai)
-        if (feat_is_wall(env.grid(*ai)) || env.grid(*ai) == DNGN_CLOSED_DOOR)
+        if (feat_is_wall(env.grid(*ai)) || feat_is_closed_door(env.grid(*ai)))
             return true;
 
     return false;
