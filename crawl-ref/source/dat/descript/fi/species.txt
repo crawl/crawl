@@ -54,5 +54,5 @@ ylivertaisiksi.
 %%%%
 Human
 
-Tylsä ja keskiverto.
+Tavanomainen ja keskiverto.
 %%%%

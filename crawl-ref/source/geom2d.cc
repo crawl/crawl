@@ -14,7 +14,7 @@ namespace geom
 
 static bool double_is_zero(double d)
 {
-    return (std::abs(d) < 0.0000001);
+    return (abs(d) < 0.0000001);
 }
 
 // Is v parallel to the kernel of f?
@@ -83,7 +83,7 @@ bool ray::to_grid(const grid &g, bool half)
     {
         double r = nextintersect(*this, g.ls1);
         double s = nextintersect(*this, g.ls2);
-        t = std::min(r, s);
+        t = min(r, s);
         corner = double_is_zero(r - s);
     }
     advance(half ? 0.5 * t : t);
@@ -166,7 +166,7 @@ double degrees(const vector &v)
 vector degree_to_vector(double d)
 {
     double rad = d / 180.0 * M_PI;
-    return (vector(cos(rad), sin(rad)));
+    return vector(cos(rad), sin(rad));
 }
 
 }

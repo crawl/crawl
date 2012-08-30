@@ -76,7 +76,7 @@ function volcano_portal (e)
     e.tile("O = dngn_portal_volcano")
     e.kfeat("S = .")
     e.colour("O = red")
-    e.rtile("X = wall_pebble_red")
+    e.rtile("X = wall_volcanic")
     e.ftile("OS = floor_rough_red")
 end
 
@@ -437,7 +437,7 @@ end
 
 }}
 
-default-depth: Lair:1-8, Orc:1-4, Hive:1
+default-depth: Lair:1-8, Orc:1-4
 
 ###############################################################################
 # Entries:

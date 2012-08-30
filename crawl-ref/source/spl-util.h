@@ -50,9 +50,9 @@ enum spell_highlight_colours
 bool is_valid_spell(spell_type spell);
 void init_spell_descs(void);
 void init_spell_name_cache();
-spell_type spell_by_name(std::string name, bool partial_match = false);
+spell_type spell_by_name(string name, bool partial_match = false);
 
-spschool_flag_type school_by_name(std::string name);
+spschool_flag_type school_by_name(string name);
 
 int get_spell_slot_by_letter(char letter);
 int get_spell_letter(spell_type spell);
@@ -93,7 +93,7 @@ typedef int cell_func(coord_def where, int pow, int aux, actor *agent);
 typedef int monster_func(monster* mon, int pow);
 typedef int cloud_func(coord_def where, int pow, int spreadrate,
                        cloud_type type, const actor* agent, int colour,
-                       std::string name, std::string tile, int excl_rad);
+                       string name, string tile, int excl_rad);
 
 int apply_area_visible(cell_func cf, int power, actor *agent = NULL);
 
@@ -108,7 +108,7 @@ void apply_area_cloud(cloud_func func, const coord_def& where,
                       int pow, int number, cloud_type ctype,
                       const actor *agent,
                       int spread_rate = -1, int colour = -1,
-                      std::string name = "", std::string tile = "",
+                      string name = "", string tile = "",
                       int excl_rad = -1);
 
 bool spell_direction(dist &spelld, bolt &pbolt,
@@ -136,6 +136,6 @@ int spell_highlight_by_utility(spell_type spell,
                                 int default_color = COL_UNKNOWN,
                                 bool transient = false,
                                 bool rod_spell = false);
-bool spell_no_hostile_in_range(spell_type spell, int minRange);
+bool spell_no_hostile_in_range(spell_type spell);
 
 #endif

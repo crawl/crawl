@@ -309,7 +309,3 @@ El laboratorio de algún mago, cuyo portal se ha dejado abierto descuidadamente.
 ¡Precaución, porque a los magos les encanta proteger sus posesiones con trampas
 y monstruos de creación propia!
 %%%%
-Hive
-
-Escuchas un montón de zumbidos.
-%%%%

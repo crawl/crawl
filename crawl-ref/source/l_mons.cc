@@ -205,7 +205,7 @@ MDEF(muse)
 
 static const char *_moneat_names[] =
 {
-    "nothing", "items", "corpses", "honey", "food",
+    "nothing", "items", "corpses", "food",
 };
 
 static const char *_moneat_to_str(mon_itemeat_type etyp)
@@ -250,8 +250,8 @@ static int l_mons_set_hp(lua_State *ls)
         luaL_argerror(ls, 1, "hp must be positive");
         return 0;
     }
-    hp = std::min(hp, mons->max_hit_points);
-    mons->hit_points = std::min(hp, MAX_MONSTER_HP);
+    hp = min(hp, mons->max_hit_points);
+    mons->hit_points = min(hp, MAX_MONSTER_HP);
     return 0;
 }
 MDEFN(set_hp, set_hp)
@@ -269,7 +269,7 @@ static int l_mons_set_max_hp(lua_State *ls)
         luaL_argerror(ls, 1, "maxhp must be positive");
         return 0;
     }
-    mons->max_hit_points = std::min(maxhp, MAX_MONSTER_HP);
+    mons->max_hit_points = min(maxhp, MAX_MONSTER_HP);
     mons->hit_points = mons->max_hit_points;
     return 0;
 }
@@ -344,7 +344,7 @@ static int l_mons_do_set_prop(lua_State *ls)
     }
     else
     {
-        std::string err
+        string err
             = make_stringf("Don't know how to set monster property of the "
                            "given value type for property '%s'", prop_name);
         luaL_argerror(ls, 2, err.c_str());
@@ -369,7 +369,7 @@ static int l_mons_do_get_prop(lua_State *ls)
     {
         if (lua_isboolean(ls, 2))
         {
-            std::string err = make_stringf("Don't have a property called '%s'.", prop_name);
+            string err = make_stringf("Don't have a property called '%s'.", prop_name);
             luaL_argerror(ls, 2, err.c_str());
         }
 
@@ -431,8 +431,7 @@ static int l_mons_do_add_ench(lua_State *ls)
     enchant_type met = name_to_ench(ench_name);
     if (!met)
     {
-        std::string err
-            = make_stringf("No such enchantment: %s", ench_name);
+        string err = make_stringf("No such enchantment: %s", ench_name);
         luaL_argerror(ls, 1, err.c_str());
         return 0;
     }
@@ -455,8 +454,7 @@ static int l_mons_do_del_ench(lua_State *ls)
     enchant_type met = name_to_ench(ench_name);
     if (!met)
     {
-        std::string err
-            = make_stringf("No such enchantment: %s", ench_name);
+        string err = make_stringf("No such enchantment: %s", ench_name);
         luaL_argerror(ls, 1, err.c_str());
         return 0;
     }
@@ -533,7 +531,7 @@ static int monster_get(lua_State *ls)
 
     for (unsigned i = 0; i < ARRAYSZ(mons_attrs); ++i)
         if (!strcmp(attr, mons_attrs[i].attribute))
-            return (mons_attrs[i].accessor(ls, mons, attr));
+            return mons_attrs[i].accessor(ls, mons, attr);
 
     return 0;
 }
@@ -552,12 +550,12 @@ static const char *_monster_behaviour_names[] = {
 static const char* _behaviour_name(beh_type beh)
 {
     if (0 <= beh && beh < NUM_BEHAVIOURS)
-        return (_monster_behaviour_names[beh]);
+        return _monster_behaviour_names[beh];
     else
         return "invalid";
 }
 
-static beh_type behaviour_by_name(const std::string &name)
+static beh_type behaviour_by_name(const string &name)
 {
     COMPILE_CHECK(ARRAYSZ(_monster_behaviour_names) == NUM_BEHAVIOURS);
 

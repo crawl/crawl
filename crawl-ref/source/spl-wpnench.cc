@@ -138,7 +138,7 @@ spret_type brand_weapon(brand_type which_brand, int power, bool fail)
         temp_brand = false;
     }
 
-    std::string msg = weapon.name(DESC_YOUR);
+    string msg = weapon.name(DESC_YOUR);
 
     bool emit_special_message = !temp_brand;
     int duration_affected = 10;
@@ -251,7 +251,7 @@ spret_type cast_confusing_touch(int power, bool fail)
     fail_check();
     msg::stream << "Your " << you.hand_name(true) << " begin to glow "
                 << (you.duration[DUR_CONFUSING_TOUCH] ? "brighter" : "red")
-                << "." << std::endl;
+                << "." << endl;
 
     you.increase_duration(DUR_CONFUSING_TOUCH, 5 + (random2(power) / 5),
                           50, NULL);

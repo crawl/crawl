@@ -61,7 +61,7 @@ One of the arch-demons who dwell in the depths of Hell, wreathed in fire.
 %%%%
 Azrael
 
-A powerful, belligerent Efreet. (Is there any other kind?)
+A powerful, belligerent efreet. (Is there any other kind?)
 %%%%
 Blork the orc
 
@@ -325,7 +325,7 @@ about Maud, forgot everything else.
 %%%%
 Maurice
 
-A sly, conniving thief. In his profession, Maurice is considered a legend - at
+A sly, conniving thief. In his profession, Maurice is considered a legend — at
 least according to himself. He is skilled, nonetheless, and among all the
 thieves and rogues lured by the Orb, Maurice is undoubtedly the most crafty.
 %%%%
@@ -378,7 +378,7 @@ out of reality.
 Norris
 
 A relaxed peace-in-death cultist with a healthy tan and a soothing voice. He
-doesn't really care if it is you or him who dies - “both” would probably be the
+doesn't really care if it is you or him who dies — “both” would probably be the
 best option.
 %%%%
 Pikel
@@ -433,7 +433,7 @@ Snorg
 
 A particularly corpulent troll with a short temper and a sizable gut.
 Uninterested in the Orb, Snorg delights in the endless parade of adventurers -
-that is, easy meals - it attracts.
+that is, easy meals — it attracts.
 %%%%
 Sonja
 
@@ -450,7 +450,7 @@ Terence
 
 A violent murderer who kills for both pleasure and profit, Terence has been
 forced into hiding after a botched job, and can't really afford to risk letting
-anyone who has seen him leave the dungeon alive - there is a price on his head,
+anyone who has seen him leave the dungeon alive — there is a price on his head,
 after all.
 %%%%
 Tiamat
@@ -466,8 +466,6 @@ remaining eye is not very good, and he has mistaken you for one.
 {{
     if you.can_smell() then
         return "He smells terrible."
-    else
-        return ""
     end
 }}
 %%%%
@@ -476,8 +474,6 @@ Wiglaf
 A fat dwarf wearing a stupid-looking hat. {{
     if you.can_smell() then
         return "He reeks of alcohol. "
-    else
-        return ""
     end
 }}There is something odd to his unsteady walk, as if this unprobable rotund
 person was accustomed to motion more swift than that of a drunken dwarf. His
@@ -609,9 +605,11 @@ ballistomycete
 A lumpy reddish fungus covered in knobbly rhizome growths, growing well in the
 dank underground dungeon. {{
     if you.god() == "Fedhas" then
-        return "Fedhas has suppressed its production of giant spores to protect you from explosions."
+        return "Fedhas has suppressed its production of giant spores to " ..
+               "protect you from explosions."
     else
-        return "It will occasionally produce giant spore balls, which in turn will give rise to more ballistomycetes."
+        return "It will occasionally produce giant spore balls, which in " ..
+               "turn will give rise to more ballistomycetes."
     end
 }}
 %%%%
@@ -1035,7 +1033,7 @@ hand combat.
 dwarf mountain bat
 
 A species of bat that lives in mountain caves. How it got into the dungeon is a
-mystery - probably something related to the sudden demise of dwarves in those
+mystery — probably something related to the sudden demise of dwarves in those
 lands. But don't worry, an eradication team is on the way.
 %%%%
 earth elemental
@@ -1158,6 +1156,11 @@ flying skull
 An undead skull kept aloft and flitting swiftly about by unholy magic. It
 periodically emits loud, blood-curdling shrieks.
 %%%%
+freed slave
+
+A human who has just been released from magical enslavement. It tries to stand
+proudly before you, despite its lingering fear and unkempt appearance.
+%%%%
 freezing wraith
 
 An incorporeal skeletal form surrounded by a cloud of freezing air, likely the
@@ -1208,7 +1211,7 @@ through the dungeons in search of food.
 worker ant
 
 A wingless black insect with sharp mandibles capable of injecting a deadly
-poison. It is a worker, and thus tasked with gathering food - any living being
+poison. It is a worker, and thus tasked with gathering food — any living being
 it encounters is a potential meal.
 %%%%
 bat
@@ -1284,10 +1287,10 @@ energies. Every now and then it seems to pulsate.
 %%%%
 emperor scorpion
 
-The emperor scorpion is the largest arachnid known to exist. The massive barb on
-its tail drips with a deadly venom, and its pincers are big enough to shear you
-in half. Though the ordinary dungeon scorpion may be both large and dangerous,
-this freakish relative puts it to shame.
+The emperor scorpion is the largest arachnid known to exist. The massive barb
+on its tail drips with a deadly venom, and its pincers are big enough to shear
+you in half. Though the ordinary dungeon scorpion may be both large and
+dangerous, this freakish relative puts it to shame.
 %%%%
 giant slug
 
@@ -1627,12 +1630,6 @@ killer bee
 
 A giant bee, bearing a deadly barb which can sting repeatedly.
 %%%%
-killer bee larva
-
-A small, powerless larva of a killer bee. While almost completely harmless on
-its own, there are almost certainly adult killer bees nearby, ready to defend
-the hive's young against any intruder.
-%%%%
 Killer Klown
 
 A comical figure full of life and laughter. It looks very happy to see you...
@@ -1755,7 +1752,7 @@ in water and on land, and fiercely defends its domain.
 %%%%
 merfolk impaler
 
-A powerfully muscled merfolk warrior, bearing a great trident.
+A powerfully muscled merfolk warrior, bearing a deadly weapon.
 %%%%
 merfolk aquamancer
 
@@ -1980,7 +1977,7 @@ mob of its fellows.
 orc wizard
 
 While orcs generally prefer physical combat, some of their kind gain
-proficiency in the occult arts - though still for martial purposes.
+proficiency in the occult arts — though still for martial purposes.
 %%%%
 pale draconian
 
@@ -2059,8 +2056,8 @@ DevTeam.
 %%%%
 pulsating lump
 
-A revolting blob of all kinds of living matter - muscle, gut, nerves, viscera,
-marrow - piled haphazardly into a single writhing mass. This distorted flesh is
+A revolting blob of all kinds of living matter — muscle, gut, nerves, viscera,
+marrow — piled haphazardly into a single writhing mass. This distorted flesh is
 mutagenic on contact, but without any kind of structural arrangement to its
 parts, it lacks the coordination needed to move quickly.
 %%%%
@@ -2173,8 +2170,6 @@ next victim.
         else
             return "It stinks."
         end
-    else
-        return ""
     end
 }}
 %%%%%
@@ -2481,8 +2476,6 @@ A small and slimy dragon, covered in swamp muck.
 {{
     if you.can_smell() then
         return "It smells terrible."
-    else
-        return ""
     end
 }}
 %%%%%
@@ -2765,7 +2758,9 @@ friendly sensed monster
 By the power of Ashenzari, you know there is some creature there, and that it
 is one of your allies.
 %%%%
-# Vault-defined monsters
+##############################################################################
+### Vault-defined monsters
+##############################################################################
 Cloud Mage
 
 This strange wizard has attained mastery over clouds, and his mystic gestures
@@ -2831,6 +2826,11 @@ you.
 
 Or, maybe, it's just a sheep after all.
 %%%%
+centaur hunter
+
+This particularly battle-adept centaur is an extremely precise shot with its
+longbow.
+%%%%
 charred statue
 
 It looks like this statue has been imbued with fire magic, letting it use
@@ -2874,6 +2874,15 @@ decayed bog body
 An undead figure preserved by the brackish waters of a bog. This one seems to
 have decayed quite a bit, and looks weak.
 %%%%
+deep dwarf earth mage
+
+A deep dwarf particularly well-attuned to the powers of earth.
+%%%%
+deep elf scorcher
+
+A deep elf excelling in fire magic, feared for its power to conjure great
+storms of flame.
+%%%%
 deformed humanoid
 
 This poor creature looks hideously deformed.
@@ -2884,6 +2893,32 @@ Just as demons are shaped in a mockery of living beings, this... thing... here
 is a mockery of a plant. The colours don't match, and normal plants don't have
 mysterious appendages and tentacles writhing around. Fortunately, this one
 appears to be harmless, but with demons, you can never be sure.
+%%%%
+drunken dwarf
+
+This short fellow seems to be working as an ale quality tester, and is enjoying
+the job a little too much.
+%%%%
+demonspawn berserker
+
+This humanoid's demonic heritage clearly fuels it with bloodlust.
+%%%%
+demonspawn scorcher
+
+The air shimmers around this demonic-looking humanoid, as though it radiates
+intense heat. Wisps of smoke trail from its fingertips.
+%%%%
+demonspawn sorcerer
+
+The air crackles around this demonic-looking humanoid; it clearly wields
+magic of some power.
+%%%%
+draconian transmuter
+
+A draconian who has eschewed the study of weaponry, training in the art of
+transmutations. While its scaly fists, well-thewed leg, and mighty tail are
+lethal on their own, its combat prowess can be increased even further by
+the spells it wields.
 %%%%
 earth elementalist statue
 
@@ -2925,6 +2960,10 @@ Without a gardener to provide it with something to prop itself over, and not
 being lucky enough to have its seed fall near something it can climb, this
 grape vine is still remarkably hard to step over.
 %%%%
+greater air elemental
+
+<air elemental>
+%%%%
 grey elf
 
 Once considered a unique species of its own, grey elves are now more properly
@@ -2932,11 +2971,22 @@ classified as a sub-species of high elf. Little exists to distinguish them from
 their high elf cousins, aside from their supposed glamour (which is probably
 more myth than fact).
 %%%%
+high elf sorcerer
+
+This apparently adventurous high elf is just as proficient in magic as its
+deep elven brethren.
+%%%%
 hill dwarf
 
 Hill dwarves are a subrace of dwarves who, as their name implies, live on
 hills. Once able adventurers, the hill dwarves no longer have any interest in
 dungeon delving. This one was captured specially for this exhibit.
+%%%%
+halfling berserker
+
+While most halfling adventurers prefer stealth to direct combat, here stands
+one of the exceptions. Size is no diminishment to this stout warrior's
+rage-fuelled strength.
 %%%%
 human monk
 
@@ -2945,12 +2995,22 @@ memory.
 %%%%
 hungry kobold
 
-This kobold seems to be angry about having his meal interrupted.
+This kobold seems to be angry about having his or her meal interrupted.
 %%%%
 iron troll monk
 
 It seems a flimsy representation of a monk; nothing more than a half-formed
 memory.
+%%%%
+kamikaze kobold
+
+This kobold is either mad or a martyr for some obscure kobold faith, being
+enchanted to explode in a blaze of fire. You'd better keep your distance!
+%%%%
+kobold berserker
+
+A particularly blood-thirsty kobold, known for plunging into a battle frenzy
+at the slightest provocation.
 %%%%
 lasher statue
 
@@ -2966,12 +3026,59 @@ malarious mermaid
 A young woman with a fish tail in place of legs. She looks quite sick, but
 still capable of bespelling her audience.
 %%%%
+merfolk berserker
+
+A particularly angry merfolk warrior, toting a sharp and bloody polearm.
+%%%%
+merfolk gelid
+
+An unnaturally pale merfolk, with condensation forming around its hands.
+%%%%
+merfolk gladiator
+
+A particularly fearsome merfolk warrior, hefting a bundle of javelins and
+a sinister-looking polearm.
+%%%%
+minotaur berserker
+
+A particularly adventurous and blood-thirsty minotaur, capable of great
+feats of strength and rage.
+%%%%
+minotaur death knight
+A particularly adventurous and sinister minotaur, capable of calling upon
+the divine powers granted to Yredelemnul's followers.
+%%%%
+minotaur fighter
+
+A particularly adventurous and battle-ready minotaur, capable of out-fighting
+even its mighty brethren.
+%%%%
+minotaur gladiator
+
+A particularly adventurous and sharp-eyed minotaur, capable of landing
+astonishingly precise and brutal blows from afar with javelins.
+%%%%
+minotaur monk
+A particularly adventurous and agile minotaur, capable of tearing apart
+the unwary with naught but its bare hands.
+%%%%
 mountain dwarf
 
 Mountain dwarves are surface-dwelling relatives of the deep dwarves. After
 years of war with the taller but otherwise quite similar hill orcs, the
 mountain dwarves were conquered and driven from these lands. This one has been
 imported from foreign shores.
+%%%%
+mummy sorcerer
+
+An ancient magician, embalmed and cursed to walk in undeath for all eternity.
+Even in undeath, it retains many of its powers of magic.
+%%%%
+mummy summoner
+
+An ancient mystic, embalmed and cursed to walk in undeath for all eternity.
+Even in undeath, it holds the power to call forth great legions of infernal
+creatures.
 %%%%
 mummy warrior
 
@@ -2981,6 +3088,11 @@ musa plant
 
 This bushy plant can grow bananas. Or are they banananas? Or bananananas? Some
 yellow curved thingies, at least.
+%%%%
+ogre berserker
+
+A particularly large, hungry, and blood-thirsty ogre, capable of flying into
+a mighty rage at the slightest hint of food.
 %%%%
 # Sprint only, too unhinged for regular games...
 oklob plant annihilator
@@ -3016,15 +3128,50 @@ oklob sapling wizard
 
 <oklob plant annihilator>
 %%%%
+orb of electricity
+
+A massive floating ball. It resembles ball lightning, but looks far more
+stable. It definitely lacks some heavy-duty insulation, though.
+%%%%
+# I'm not sure how widely cosmogonical Norse myths are known to an average
+# reader; Crawl's audience tends to be far more educated though, so let's
+# hope the concepts of Ginnungagap, Niflheim and Muspelheim are not too
+# obscure.
+orb of ice
+
+A globe of primordial ice, floating in the air. You don't know whether the
+tales about the world's once being a void bracketed by realms of endless fire
+and cold are true, but if they are, this orb may be a relic of that ancient
+time.
+
+Ordinary ice seems to form on the surface, but it is easy to distinguish from
+the perfect ball inside. You'd better stay far away, or you may end up frozen.
+%%%%
+orb slug
+
+A monstrously big slug who apparently ate a mighty conjurer, or maybe an orb
+spider. Or perhaps it's a product of divine experiments, in which case it looks
+like Xom's handiwork...
+%%%%
 orc demonologist
 
 <orc sorcerer>
+%%%%
+orc berserker
+
+A tough, strong, and particularly angry orc.
 %%%%
 petrified plant
 
 Something has turned these ordinary plants into stone. Better not tarry here.
 If whatever petrified these plants gets you as well, we'll be stuck with a
 statue as ugly as you standing here for ages.
+%%%%
+phase spider
+
+An otherworldly spider that can move short and medium distances by
+briefly shifting between the planes of reality, in order to better ensnare
+its prey.
 %%%%
 pristine statue
 
@@ -3051,6 +3198,10 @@ sickly siren
 A young woman with a fish tail in place of legs. She looks quite sick, but
 still capable of bespelling her audience.
 %%%%
+sludge elf earth mage
+
+A sludge elf particularly well-attuned to the powers of earth.
+%%%%
 skeletal archer
 
 Since when is having flesh a requirement to be a master archer? These skeletal
@@ -3070,6 +3221,11 @@ spooky statue
 
 You sense a ghostly presence around this statue, and it's not the slightest bit
 friendly.
+%%%%
+spriggan enchanter
+
+A spriggan particularly skilled in the arts of hexes and charms - and,
+apparently, lethal with a quick blade.
 %%%%
 spriggan necromancer
 
@@ -3093,6 +3249,17 @@ The same radiation that made cockroaches and spiders the size of small dogs
 didn't spare this humble strawberry plant, either. Fortunately, even with its
 size, it appears to be harmless.
 %%%%
+succubus
+
+A female demon who uses her charms to seduce humanoid males. If you wish to
+take advantage of her, however, you will fail: she seems very
+angry right now and has blood more on her mind than fun.
+%%%%
+tengu aerator
+
+This particularly ferocious tengu is well on its way towards mastery of
+air magic.
+%%%%
 water elementalist statue
 
 A smooth, charming statue of a beautiful mermaid bathing in a fountain,
@@ -3104,6 +3271,25 @@ young halfling
 This lad has been caught by kobolds, and was meant to be roasted and eaten
 before you unceremoniously interrupted. Don't you have any manners? Didn't
 mommy tell you to not disrupt people from having a meal?
+%%%%
+young spriggan druid
+
+A junior member of the order of spriggans sworn to protect nature. While less
+dangerous than the elders, this one is perfectly capable of dealing with
+trespassers like you.
+
+{{
+    if you.god() == "Fedhas" then
+        return "Those foul druids care mostly for animals, instead of " ..
+               "taking proper care of plants as Fedhas commands.";
+    end
+}}
+%%%%
+vampire enchanter
+
+An enchanter who, by accident or design, has been afflicted with the curse of
+the vampire. Regardless, undeath merely fuels their abilities; few are aware
+of its presence until they find themselves on the wrong end of a quick blade.
 %%%%
 vampire noble
 
@@ -3126,6 +3312,17 @@ This statue depicts a gruff warrior, wielding a mean two-handed weapon. Since
 it appears to be capable of moving its arms, keeping your distance seems to be
 the only way to keep your vital organs undamaged.
 %%%%
+witch
+
+This old human crone must be spending most of her day just working on her
+looks: it's hard to believe one could reach this level of ugliness
+naturally. Robes stained with what appears to be swamp ooze, cauldron soot
+and brew ingredients don't improve her appearance either.
+
+A woman with such stellar sanity and manners probably has great pets
+as well, so it's better to neutralize her before she has a chance to unleash
+them on you.
+%%%%
 withered plant
 
 This plant lost the war against life-draining influences, and yet its physical
@@ -3147,4 +3344,65 @@ An utterly bizarre statue, hewn from a single piece of dark gabbro
 scintillating with tiny crystals. It is impossible to tell whether the statue
 is intended to represent some creature or personage, or is completely abstract.
 One thing is certain: it is profoundly disturbing.
+%%%%
+### Arena sprint boss renames
+ancient emperor scorpion
+
+<emperor scorpion>
+%%%%
+big bog body
+
+<bog body>
+%%%%
+dark black mamba
+
+<black mamba>
+%%%%
+dire wolf spider
+
+<wolf spider>
+%%%%
+elder swamp dragon
+
+<swamp dragon>
+%%%%
+giant anaconda
+
+<anaconda>
+%%%%
+greater ghost moth
+
+<ghost moth>
+%%%%
+greater orb of eyes
+
+<great orb of eyes>
+%%%%
+hardcore manticore
+
+<manticore>
+%%%%
+harpy queen
+
+<harpy>
+%%%%
+naga archmage
+
+<naga mage>
+%%%%
+naga warlord
+
+<naga warrior>
+%%%%
+stinky swamp drake
+
+<swamp drake>
+%%%%
+sulfuric acid blob
+
+<acid blob>
+%%%%
+vault guard captain
+
+<vault guard>
 %%%%

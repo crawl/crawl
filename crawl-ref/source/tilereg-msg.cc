@@ -34,7 +34,7 @@ int MessageRegion::handle_mouse(MouseEvent &event)
     return command_to_key(CMD_REPLAY_MESSAGES);
 }
 
-bool MessageRegion::update_tip_text(std::string& tip)
+bool MessageRegion::update_tip_text(string& tip)
 {
     if (mouse_control::current_mode() != MOUSE_MODE_COMMAND)
         return false;

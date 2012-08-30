@@ -121,14 +121,12 @@
    gmon_eat explanation:
      MONEAT_ITEMS,
      MONEAT_CORPSES,
-     MONEAT_HONEY,
      MONEAT_FOOD
 
     Monsters with MONEAT_ITEMS are capable of eating most items,
-    monsters with MONEAT_CORPSES are capable of eating corpses, monsters
-    with MONEAT_HONEY are capable of eating honeycombs and royal jellies,
-    and monsters with MONEAT_FOOD are capable of eating food (note that
-    corpses, honeycombs and royal jellies also count as food).
+    monsters with MONEAT_CORPSES are capable of eating corpses, and
+    monsters with MONEAT_FOOD are capable of eating food (note that
+    corpses also count as food).
 
    size:
      SIZE_TINY,              // rats/bats
@@ -194,11 +192,7 @@ static monsterentry mondata[] = {
 },
 
 // Axed monsters.
-
-#if TAG_MAJOR_VERSION == 33
-    AXED_MON(MONS_JOZEF)
-    AXED_MON(MONS_MIDGE)
-#endif
+// AXED_MON(MONS_MOTHER_IN_LAW)
 
 // Real monsters begin here {dlb}:
 
@@ -1187,18 +1181,6 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_KILLER_BEE_LARVA, 'k', LIGHTGREY, "killer bee larva",
-    M_NO_SKELETON,
-    MR_VUL_POISON,
-    100, 5, MONS_KILLER_BEE, MONS_KILLER_BEE_LARVA, MH_NATURAL, -3,
-    { {AT_BITE, AF_PLAIN, 3}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 1, 3, 5, 0 },
-    1, 5, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_SILENT,
-    I_PLANT, HT_LAND, FL_NONE, 5, DEFAULT_ENERGY,
-    MONUSE_NOTHING, MONEAT_HONEY, SIZE_TINY
-},
-
-{
     MONS_FIREFLY, 'k', LIGHTBLUE, "giant firefly",
     M_NO_SKELETON,
     MR_VUL_POISON,
@@ -2173,7 +2155,7 @@ static monsterentry mondata[] = {
 
 { // miscast only
     MONS_TWISTER, 'v', ETC_AIR, "twister",
-    M_CONFUSED | M_INSUBSTANTIAL | M_BATTY | M_NO_POLY_TO,
+    M_CONFUSED | M_INSUBSTANTIAL | M_BATTY | M_NO_EXP_GAIN | M_NO_POLY_TO,
     MR_RES_POISON | MR_RES_FIRE | MR_RES_COLD | mrd(MR_RES_ELEC, 3),
     0, 5, MONS_FIRE_VORTEX, MONS_TWISTER, MH_NONLIVING, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -2261,8 +2243,8 @@ static monsterentry mondata[] = {
     // Coloured with mon-util.cc:random_small_abomination_colour.
 
     // A demonically controlled mass of undead flesh theme-wise, this makes
-    // them MH_DEMONIC|MH_UNDEAD, but this currently is strictly the same
-    // as just MH_UNDEAD.
+    // them MH_DEMONIC|MH_UNDEAD, but this is mostly the same as just
+    // MH_UNDEAD (save for some god interactions).
     MONS_ABOMINATION_SMALL, 'x', BLACK, "small abomination",
     M_NO_FLAGS,
     MR_NO_FLAGS,
@@ -2847,7 +2829,7 @@ static monsterentry mondata[] = {
 {
     MONS_SHADOW_DRAGON, 'D', MAGENTA, "shadow dragon",
     M_SPELLCASTER | M_SEE_INVIS | M_COLD_BLOOD | M_FAKE_SPELLS,
-    MR_RES_POISON | mrd(MR_RES_COLD, 2),
+    MR_RES_POISON | mrd(MR_RES_COLD, 2) | mrd(MR_RES_NEG, 3),
     1800, 12, MONS_DRAGON, MONS_SHADOW_DRAGON, MH_NATURAL, -5,
     { {AT_BITE, AF_DRAIN_XP, 20}, {AT_CLAW, AF_PLAIN, 15},
       {AT_CLAW, AF_PLAIN, 15}, AT_NO_ATK },
@@ -3078,7 +3060,7 @@ static monsterentry mondata[] = {
     0, 17, MONS_GIANT_EYEBALL, MONS_GOLDEN_EYE, MH_NATURAL, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 6, 1, 2, 0 },
-    0, 20, MST_NO_SPELLS, CE_POISONOUS, Z_NOZOMBIE, S_SILENT,
+    0, 20, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
     I_PLANT, HT_LAND, FL_LEVITATE, 13, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_TINY
 },
@@ -3235,7 +3217,7 @@ static monsterentry mondata[] = {
     0, 3, MONS_JELLY, MONS_OOZE, MH_NATURAL, -6,
     { {AT_HIT, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 3, 3, 5, 0 },
-    1, 3, MST_NO_SPELLS, CE_POISONOUS, Z_NOZOMBIE, S_SILENT,
+    1, 3, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
     I_PLANT, HT_LAND, FL_NONE, 8, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LITTLE
 },
@@ -3283,7 +3265,7 @@ static monsterentry mondata[] = {
     0, 3, MONS_JELLY, MONS_PULSATING_LUMP, MH_NATURAL, -3,
     { {AT_HIT, AF_MUTATE, 13}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 10, 3, 5, 0 },
-    2, 6, MST_NO_SPELLS, CE_CONTAMINATED, Z_NOZOMBIE, S_SILENT,
+    2, 6, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
     I_PLANT, HT_LAND, FL_NONE, 5, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_MEDIUM
 },
@@ -3307,7 +3289,7 @@ static monsterentry mondata[] = {
     0, 11, MONS_JELLY, MONS_BROWN_OOZE, MH_NATURAL, -7,
     { {AT_HIT, AF_ACID, 25}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 7, 3, 5, 0 },
-    10, 1, MST_NO_SPELLS, CE_POISON_CONTAM, Z_NOZOMBIE, S_SILENT,
+    10, 1, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
     I_PLANT, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_ITEMS, SIZE_LITTLE
 },
@@ -3321,7 +3303,7 @@ static monsterentry mondata[] = {
     { {AT_HIT, AF_COLD, 12}, {AT_HIT, AF_COLD, 12}, {AT_HIT, AF_PLAIN, 12},
       {AT_HIT, AF_PLAIN, 12} },
     { 15, 3, 5, 0 },
-    5, 10, MST_NO_SPELLS, CE_POISONOUS, Z_NOZOMBIE, S_SILENT,
+    5, 10, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
     I_PLANT, HT_LAND, FL_NONE, 11, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_ITEMS, SIZE_SMALL
 },
@@ -3345,7 +3327,7 @@ static monsterentry mondata[] = {
     0, 12, MONS_JELLY, MONS_ACID_BLOB, MH_NATURAL, -7,
     { {AT_HIT, AF_ACID, 42}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 18, 3, 5, 0 },
-    1, 3, MST_NO_SPELLS, CE_POISON_CONTAM, Z_NOZOMBIE, S_SILENT,
+    1, 3, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
     I_PLANT, HT_LAND, FL_NONE, 12, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_ITEMS, SIZE_SMALL
 },
@@ -3464,7 +3446,7 @@ static monsterentry mondata[] = {
 // nagas ('N')
 {
     MONS_NAGA, 'N', GREEN, "naga",
-    M_SPELLCASTER | M_SEE_INVIS | M_WARM_BLOOD | M_SPEAKS,
+    M_SPELLCASTER | M_FAKE_SPELLS | M_SEE_INVIS | M_WARM_BLOOD | M_SPEAKS,
     MR_RES_POISON,
     1000, 10, MONS_NAGA, MONS_NAGA, MH_NATURAL, -6,
     { {AT_HIT, AF_PLAIN, 17}, {AT_CONSTRICT, AF_CRUSH, 3},
@@ -3490,7 +3472,8 @@ static monsterentry mondata[] = {
 
 {
     MONS_NAGA_WARRIOR, 'N', BLUE, "naga warrior",
-    M_FIGHTER | M_SPELLCASTER | M_SEE_INVIS | M_WARM_BLOOD | M_SPEAKS,
+    M_FIGHTER | M_SPELLCASTER | M_FAKE_SPELLS | M_SEE_INVIS | M_WARM_BLOOD
+        | M_SPEAKS,
     MR_RES_POISON,
     1000, 8, MONS_NAGA, MONS_NAGA, MH_NATURAL, -6,
     { {AT_HIT, AF_PLAIN, 28}, {AT_CONSTRICT, AF_CRUSH, 6},
@@ -4649,7 +4632,7 @@ static monsterentry mondata[] = {
     { {AT_HIT, AF_PLAIN, 4}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 3, 3, 3, 0 },
     3, 14, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SHOUT,
-    I_HIGH, HT_LAND, FL_FLY, 10, DEFAULT_ENERGY,
+    I_NORMAL, HT_LAND, FL_FLY, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_LITTLE
 },
 
@@ -5734,13 +5717,12 @@ static monsterentry mondata[] = {
 // "J"ellies.
 {
     MONS_ROYAL_JELLY, 'J', YELLOW, "the royal jelly",
-    M_SENSE_INVIS | M_ACID_SPLASH | M_NO_REGEN
-        | M_UNIQUE,
+    M_SENSE_INVIS | M_ACID_SPLASH | M_UNIQUE,
     MR_RES_POISON | MR_RES_ASPHYX | MR_RES_ACID,
     0, 20, MONS_JELLY, MONS_JELLY, MH_NATURAL, -7,
     { {AT_HIT, AF_ACID, 50}, {AT_HIT, AF_ACID, 30}, AT_NO_ATK, AT_NO_ATK },
     { 21, 0, 0, 230 },
-    8, 4, MST_NO_SPELLS, CE_CLEAN, Z_NOZOMBIE, S_SILENT,
+    8, 4, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
     I_PLANT, HT_LAND, FL_NONE, 14, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_ITEMS, SIZE_MEDIUM
 },
@@ -5753,7 +5735,7 @@ static monsterentry mondata[] = {
     0, 60, MONS_JELLY, MONS_JELLY, MH_NATURAL, -7,
     { {AT_HIT, AF_ACID, 50}, {AT_HIT, AF_ACID, 30}, AT_NO_ATK, AT_NO_ATK },
     { 12, 0, 0, 180 },
-    10, 1, MST_DISSOLUTION, CE_POISON_CONTAM, Z_NOZOMBIE, S_SILENT,
+    10, 1, MST_DISSOLUTION, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
     I_NORMAL, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_ITEMS, SIZE_LARGE
 },
@@ -5934,7 +5916,7 @@ static monsterentry mondata[] = {
 {
     MONS_AZRAEL, 'R', LIGHTRED, "Azrael",
     M_UNIQUE | M_SPELLCASTER | M_GLOWS_LIGHT | M_SPEAKS,
-    MR_RES_POISON | mrd(MR_RES_FIRE, 3) | MR_VUL_COLD,
+    MR_RES_POISON | MR_RES_HELLFIRE | MR_VUL_COLD,
     0, 12, MONS_EFREET, MONS_EFREET, MH_DEMONIC, -3,
     { {AT_HIT, AF_PLAIN, 12}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 11, 0, 0, 88 },
@@ -6459,8 +6441,8 @@ static monsterentry mondata[] = {
 {
     MONS_TEST_SPAWNER, 'X', WHITE, "test spawner",
     M_SPELLCASTER | M_STATIONARY | M_INSUBSTANTIAL | M_NO_POLY_TO,
-    mrd(MR_RES_ELEC | MR_RES_POISON | MR_RES_FIRE | MR_RES_HELLFIRE
-        | MR_RES_COLD | MR_RES_ACID | MR_RES_STICKY_FLAME | MR_RES_STEAM, 127),
+    mrd(MR_RES_ELEC | MR_RES_POISON | MR_RES_FIRE | MR_RES_COLD
+        | MR_RES_ROTTING, 4) | MR_RES_ACID | MR_RES_STICKY_FLAME,
     0, 15, MONS_TEST_SPAWNER, MONS_TEST_SPAWNER, MH_NONLIVING, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 1000, 1000, 0, 0 },

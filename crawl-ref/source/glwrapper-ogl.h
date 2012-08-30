@@ -24,7 +24,8 @@ public:
     virtual void generate_textures(size_t count, unsigned int *textures);
     virtual void bind_texture(unsigned int texture);
     virtual void load_texture(unsigned char *pixels, unsigned int width,
-                              unsigned int height, MipMapOptions mip_opt);
+                              unsigned int height, MipMapOptions mip_opt,
+                              int xoffset=-1, int yoffset=-1);
 protected:
     GLState m_current_state;
 };
@@ -51,10 +52,10 @@ protected:
     bool m_texture_verts;
     bool m_colour_verts;
 
-    std::vector<GLW_3VF> m_position_buffer;
-    std::vector<GLW_2VF> m_texture_buffer;
-    std::vector<VColour> m_colour_buffer;
-    std::vector<unsigned short int> m_ind_buffer;
+    vector<GLW_3VF> m_position_buffer;
+    vector<GLW_2VF> m_texture_buffer;
+    vector<VColour> m_colour_buffer;
+    vector<unsigned short int> m_ind_buffer;
 };
 
 #endif // USE_GL

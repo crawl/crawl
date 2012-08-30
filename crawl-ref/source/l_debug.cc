@@ -53,7 +53,7 @@ LUAFN(debug_goto_place)
         if (bind_entrance != -1)
             startdepth[you.where_are_you] = bind_entrance;
     }
-    catch (const std::string &err)
+    catch (const string &err)
     {
         luaL_error(ls, err.c_str());
     }
@@ -220,15 +220,15 @@ LUAFN(debug_god_wrath)
     const char *god_name = luaL_checkstring(ls, 1);
     if (!god_name)
     {
-        std::string err = "god_wrath requires a god!";
-        return (luaL_argerror(ls, 1, err.c_str()));
+        string err = "god_wrath requires a god!";
+        return luaL_argerror(ls, 1, err.c_str());
     }
 
     god_type god = strcmp(god_name, "random") ? str_to_god(god_name) : GOD_RANDOM;
     if (god == GOD_NO_GOD)
     {
-        std::string err = make_stringf("'%s' matches no god.", god_name);
-        return (luaL_argerror(ls, 1, err.c_str()));
+        string err = make_stringf("'%s' matches no god.", god_name);
+        return luaL_argerror(ls, 1, err.c_str());
     }
 
     bool no_bonus = lua_toboolean(ls, 2);
@@ -287,7 +287,7 @@ static bool _check_uniques()
 
     for (monster_type mt = MONS_0; mt < NUM_MONSTERS; ++mt)
     {
-        if (!mons_is_unique(mt))
+        if (!mons_is_unique(mt) || mons_species(mt) == MONS_SERPENT_OF_HELL)
             continue;
         bool was_set = saved_uniques[mt];
         bool is_set = you.unique_creatures[mt];

@@ -29,7 +29,7 @@ function pan_lord_epilogue(name)
     crawl.mpr(msgs[name])
     crawl.mpr("You feel a terrible weight on your shoulders! A mighty lord of Pandemonium must reside here.", "warning")
     crawl.take_note('Entered the realm of ' .. name .. '.')
-    crawl.mark_milestone('br.enter', 'entered the realm of ' .. name .. '.')
+    crawl.mark_milestone('br.enter', 'entered the realm of ' .. name .. '.', "")
 end
 
 function pan_lord_setup(_G, name)
@@ -128,12 +128,20 @@ disco_choices = {
 
 colour.add_colour("disco", function(rand, x, y)
     local vault = dgn.vault_at(x, y)
-    local ul = vault:pos()
-    local ulx, uly = ul:xy()
-    x, y = x - ulx, y - uly
+    local ballx = 0
+    local bally = 0
+    if vault then
+        local ul = vault:pos()
+        local ulx, uly = ul:xy()
+        x, y = x - ulx, y - uly
 
-    local map = vault:map()
-    local ballx, bally = dgn.gly_point(map, "D")
+        local map = vault:map()
+        local bx, by = dgn.gly_point(map, "D")
+        if bx ~= nil then
+            ballx = bx
+            bally = by
+        end
+    end
 
     local cycle = disco_choices[math.floor((you.turns() % (16 * #disco_choices)) / 16) + 1]
     return cycle(x, y, ballx, bally, you.turns() % 16, rand)
@@ -157,7 +165,7 @@ end
 
 # 25% chance to appear on D:21-27, and guaranteed on D:24.
 NAME: pan_entry
-TAGS: extra allow_dup can_overwrite
+TAGS: extra allow_dup can_overwrite replace_portal
 DEPTH: D:21-27
 CHANCE: 100% (D:24), 25%
 : if you.where() == 'D:24' then
@@ -174,7 +182,7 @@ ENDMAP
 # Random unguarded exits
 ##############################################################################
 NAME:   pan_exit
-TAGS:   extra allow_dup
+TAGS:   extra allow_dup transparent
 DEPTH:  Pan
 CHANCE: 5%
 KFEAT:  O = exit_pandemonium
@@ -183,7 +191,7 @@ O
 ENDMAP
 
 NAME:   pan_to_abyss
-TAGS:   extra allow_dup
+TAGS:   extra allow_dup transparent
 DEPTH:  Pan
 CHANCE: 25%
 KFEAT:  O = exit_through_abyss
@@ -1573,12 +1581,12 @@ ENDMAP
 # A couple of small vaults featuring blood fountains.
 
 NAME:   pan_blood_fountain
-TAGS:   pan
-SUBST:  ' : '"
-COLOUR: ' = red / none
-COLOUR: " = red / none w:5 / lightred w:2
-COLOUR: . = red / none w:40
-# not sure which FTILE to use here
+TAGS:   extra allow_dup transparent
+DEPTH:  Pan
+CHANCE: 10%
+SUBST:  ' = '..
+SUBST:  . = " / .:80
+KPROP:  '" = bloody
 SUBST:  '=. , "=.
 MAP
  ...
@@ -1589,13 +1597,13 @@ MAP
 ENDMAP
 
 NAME:   pan_blood_fountain_2
-TAGS:   pan
-SUBST:  ' : '"
+TAGS:   extra allow_dup transparent
+DEPTH:  Pan
+CHANCE: 5%
 SUBST:  Y = YYV
-COLOUR: ' = red / none
-COLOUR: " = red / none w:5 / lightred w:2
-COLOUR: . = red / none w:80
-# not sure which FTILE to use here
+SUBST:  ' = '..
+SUBST:  . = " / .:80
+KPROP:  '" = bloody
 SUBST:  '=. , "=.
 MAP
  @.....
@@ -1605,6 +1613,14 @@ MAP
  ..'Y'..
   .'''.
    ...
+ENDMAP
+
+NAME:   pan_blood_fountain_small
+TAGS:   extra allow_dup transparent
+DEPTH:  Pan
+CHANCE: 15%
+MAP
+Y
 ENDMAP
 
 ###################################

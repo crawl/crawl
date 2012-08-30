@@ -2,13 +2,45 @@
 %prefix TILE
 %startvalue TILE_WALL_MAX wall
 
+%weight 10
 %sdir dngn/trees
 tree1 DNGN_TREE
 tree2
+tree3
+tree4
+tree5
+%weight 2
+tree6
+tree6_bright
+%weight 10
+tree7
+tree8
+%weight 6
+tree9
+%weight 10
+tree10
+tree11
+%weight 3
+tree12
+%weight 7
+tree13
+%weight 2
+tree14
+tree14a
+tree14b
+tree14c
+%weight 4
+tree15
+tree15a
+tree16
+%weight 10
 
 %variation DNGN_TREE yellow
 tree1_yellow DNGN_TREE_YELLOW
 tree2_yellow
+%weight 2
+tree6_yellow
+%weight 10
 
 %variation DNGN_TREE lightred
 tree1_lightred DNGN_TREE_LIGHTRED
@@ -17,6 +49,8 @@ tree2_lightred
 %variation DNGN_TREE red
 tree1_red DNGN_TREE_RED
 tree2_red
+tree7_red
+tree10_red
 
 # this may need to change, but it should make things a bit simpler
 %variation DNGN_TREE darkgray
@@ -38,10 +72,16 @@ closed_door DNGN_CLOSED_DOOR
 gate_closed_left DNGN_GATE_CLOSED_LEFT
 gate_closed_middle DNGN_GATE_CLOSED_MIDDLE
 gate_closed_right DNGN_GATE_CLOSED_RIGHT
+vgate_closed_up DNGN_VGATE_CLOSED_UP
+vgate_closed_middle DNGN_VGATE_CLOSED_MIDDLE
+vgate_closed_down DNGN_VGATE_CLOSED_DOWN
 open_door DNGN_OPEN_DOOR
 gate_open_left DNGN_GATE_OPEN_LEFT
 gate_open_middle DNGN_GATE_OPEN_MIDDLE
 gate_open_right DNGN_GATE_OPEN_RIGHT
+vgate_open_up DNGN_VGATE_OPEN_UP
+vgate_open_middle DNGN_VGATE_OPEN_MIDDLE
+vgate_open_down DNGN_VGATE_OPEN_DOWN
 
 ## Alternate doors for vaults, etc. Should be in the order listed above for
 ## doors which also provide gateways; otherwise detected, closed, open, or
@@ -60,16 +100,18 @@ stone_arch DNGN_STONE_ARCH
 orcish_idol DNGN_ORCISH_IDOL
 # dungeon statues
 %weight 5
-statue_dwarf_axe DNGN_GRANITE_STATUE
-%weight 3
-statue_dwarf_mace
+statue_dwarf DNGN_GRANITE_STATUE
+statue_archer
 %weight 2
-statue_dwarf_sword
+statue_sword
+%weight 1
+statue_sigmund
 %weight 5
 statue_centaur
 %syn DNGN_STATUE_CENTAUR
 %weight 3
-statue_centaur2
+statue_angel
+%syn DNGN_STATUE_ANGEL
 %weight 8
 statue_mermaid
 %syn DNGN_STATUE_MERMAID
@@ -77,22 +119,23 @@ statue_naga
 %syn DNGN_STATUE_NAGA
 statue_dragon
 %syn DNGN_STATUE_DRAGON
-statue_head
-statue_eye
+statue_demonic_bust
 %weight 5
 statue_snail
-statue_troll
-%syn DNGN_STATUE_TROLL
 statue_cat
 %syn DNGN_STATUE_CAT
 %weight 3
-statue_skull
-%syn DNGN_STATUE_SKULL
 statue_elephant
 %syn DNGN_STATUE_ELEPHANT
+statue_wraith
+statue_imp
+%syn DNGN_STATUE_IMP
+statue_orb
 %weight 1
 statue_ancient_hero
 %syn DNGN_STATUE_ANCIENT_HERO
+statue_ancient_evil
+%syn DNGN_STATUE_ANCIENT_EVIL
 # damaged statues
 crumbled_column_1 DNGN_CRUMBLED_COLUMN
 crumbled_column_2
@@ -101,6 +144,9 @@ crumbled_column_4
 crumbled_column_5
 crumbled_column_6
 granite_stump DNGN_GRANITE_STUMP
+
+# Statues in Dis
+statue_iron DNGN_STATUE_IRON
 
 ## Features only used in certain minivaults
 %sdir dngn/vaults
@@ -127,6 +173,10 @@ sarcophagus_sealed DNGN_SARCOPHAGUS_SEALED
 ## sideways sarcophagi for tomb:1
 sarcophagus_pedestal_left DNGN_SARCOPHAGUS_PEDESTAL_LEFT
 sarcophagus_pedestal_right DNGN_SARCOPHAGUS_PEDESTAL_RIGHT
+
+## Animating statues for due_jungle_book, dis_mu, and grunt_dis_stairs_iron_hall
+statue_elephant_jade DNGN_STATUE_ELEPHANT_JADE
+statue_iron_golem DNGN_STATUE_IRON_GOLEM
 
 dimension_edge DNGN_DIMENSION_EDGE
 
@@ -183,6 +233,8 @@ stone_stairs_down DNGN_STONE_STAIRS_DOWN
 stone_stairs_up DNGN_STONE_STAIRS_UP
 escape_hatch_down DNGN_ESCAPE_HATCH_DOWN
 escape_hatch_up DNGN_ESCAPE_HATCH_UP
+shoals_stairs_down DNGN_SHOALS_STAIRS_DOWN
+shoals_stairs_up DNGN_SHOALS_STAIRS_UP
 enter DNGN_ENTER
 %rim 1
 return DNGN_RETURN
@@ -208,10 +260,22 @@ abandoned_shop DNGN_ABANDONED_SHOP
 
 ## from here on multiple tile definitions are CHANGEABLE, i.e. they may
 ## change from turn to turn
-floor/lava0 DNGN_LAVA
-floor/lava1
-floor/lava2
-floor/lava3
+floor/lava00 DNGN_LAVA
+floor/lava01
+floor/lava02
+floor/lava03
+floor/lava04
+floor/lava05
+floor/lava06
+floor/lava07
+floor/lava08
+floor/lava09
+floor/lava10
+floor/lava11
+floor/lava04
+floor/lava05
+floor/lava06
+floor/lava07
 
 ## water
 %sdir dngn/water
@@ -334,7 +398,6 @@ liquefaction2
 
 %sdir dngn/gateways
 %rim 1
-enter_hell DNGN_ENTER_HELL
 enter_zot_closed DNGN_ENTER_ZOT_CLOSED
 enter_zot_open DNGN_ENTER_ZOT_OPEN
 %rim 0
@@ -349,13 +412,28 @@ enter_slime DNGN_ENTER_SLIME_PITS
 enter_vaults DNGN_ENTER_VAULTS
 enter_crypt DNGN_ENTER_CRYPT
 enter_tomb DNGN_ENTER_TOMB
-enter_dis DNGN_ENTER_DIS
-enter_gehenna DNGN_ENTER_GEHENNA
-enter_cocytus DNGN_ENTER_COCYTUS
-enter_tartarus DNGN_ENTER_TARTARUS
+enter_hell1 DNGN_ENTER_HELL
+enter_hell2
+enter_hell3
+return_vestibule DNGN_RETURN_VESTIBULE
+stone_arch_hell DNGN_STONE_ARCH_HELL
+enter_dis1 DNGN_ENTER_DIS
+enter_dis2
+enter_dis3
+enter_gehenna1 DNGN_ENTER_GEHENNA
+enter_gehenna2
+enter_gehenna3
+enter_cocytus1 DNGN_ENTER_COCYTUS
+enter_cocytus2
+enter_cocytus3
+enter_tartarus1 DNGN_ENTER_TARTARUS
+enter_tartarus2
+enter_tartarus3
 return_hell DNGN_RETURN_HELL
 
-enter_abyss DNGN_ENTER_ABYSS
+enter_abyss1 DNGN_ENTER_ABYSS
+enter_abyss2
+enter_abyss3
 exit_abyss DNGN_EXIT_ABYSS
 exit_abyss_flickering
 
@@ -392,8 +470,6 @@ bailey_portal DNGN_PORTAL_BAILEY
 bailey_gone DNGN_PORTAL_BAILEY_GONE
 lab_portal DNGN_PORTAL_LABYRINTH
 lab_gone DNGN_PORTAL_LABYRINTH_GONE
-hive_portal DNGN_PORTAL_HIVE
-hive_gone DNGN_PORTAL_HIVE_GONE
 trove_portal DNGN_PORTAL_TROVE
 trove_gone DNGN_PORTAL_TROVE_GONE
 bazaar_portal DNGN_PORTAL_BAZAAR
@@ -401,59 +477,65 @@ bazaar_gone DNGN_PORTAL_BAZAAR_GONE
 zig_portal DNGN_PORTAL_ZIGGURAT
 zig_used DNGN_PORTAL_ZIGGURAT_GONE
 
+portal_unknown DNGN_UNKNOWN_PORTAL
+
 %sdir dngn/altars
-altar DNGN_UNSEEN_ALTAR
-altar_zin DNGN_ALTAR_ZIN
-altar_shining_one DNGN_ALTAR_SHINING_ONE
-altar_kikubaaqudgha DNGN_ALTAR_KIKUBAAQUDGHA
-altar_yredelemnul DNGN_ALTAR_YREDELEMNUL
-altar_xom0 DNGN_ALTAR_XOM
-altar_xom1
-altar_xom2
-altar_xom3
-altar_xom4
-altar_xom5
-altar_xom6
-altar_xom7
-altar_vehumet DNGN_ALTAR_VEHUMET
-altar_okawaru DNGN_ALTAR_OKAWARU
-altar_makhleb_flame1 DNGN_ALTAR_MAKHLEB
-altar_makhleb_flame2
-altar_makhleb_flame3
-altar_makhleb_flame4
-altar_makhleb_flame5
-altar_makhleb_flame6
-altar_makhleb_flame7
-altar_makhleb_flame8
-altar_sif_muna DNGN_ALTAR_SIF_MUNA
-altar_trog DNGN_ALTAR_TROG
-altar_nemelex_xobeh DNGN_ALTAR_NEMELEX_XOBEH
-altar_elyvilon DNGN_ALTAR_ELYVILON
-altar_lugonu DNGN_ALTAR_LUGONU
-altar_beogh DNGN_ALTAR_BEOGH
-altar_jiyva01 DNGN_ALTAR_JIYVA
-altar_jiyva02
-altar_jiyva03
-altar_jiyva04
-altar_jiyva05
-altar_jiyva06
-altar_jiyva07
-altar_jiyva08
-altar_jiyva09
-altar_jiyva10
-altar_jiyva11
-%rim 1
-altar_fedhas DNGN_ALTAR_FEDHAS
-%rim 0
-altar_cheibriados_02 DNGN_ALTAR_CHEIBRIADOS
-altar_cheibriados_03
-altar_cheibriados_04
-altar_cheibriados_06
-altar_cheibriados_08
-altar_cheibriados_09
-altar_cheibriados_10
-altar_cheibriados_12
-altar_ashenzari DNGN_ALTAR_ASHENZARI
+generic DNGN_UNSEEN_ALTAR
+zin DNGN_ALTAR_ZIN
+shining_one DNGN_ALTAR_SHINING_ONE
+kikubaaqudgha DNGN_ALTAR_KIKUBAAQUDGHA
+yredelemnul DNGN_ALTAR_YREDELEMNUL
+xom0 DNGN_ALTAR_XOM
+xom1
+xom2
+xom3
+xom4
+xom5
+xom6
+xom7
+vehumet1 DNGN_ALTAR_VEHUMET
+vehumet2
+okawaru DNGN_ALTAR_OKAWARU
+makhleb_flame1 DNGN_ALTAR_MAKHLEB
+makhleb_flame2
+makhleb_flame3
+makhleb_flame4
+makhleb_flame5
+makhleb_flame6
+makhleb_flame7
+makhleb_flame8
+sif_muna DNGN_ALTAR_SIF_MUNA
+trog DNGN_ALTAR_TROG
+nemelex1 DNGN_ALTAR_NEMELEX_XOBEH
+nemelex2
+nemelex3
+nemelex4
+nemelex5
+elyvilon DNGN_ALTAR_ELYVILON
+lugonu DNGN_ALTAR_LUGONU
+beogh DNGN_ALTAR_BEOGH
+jiyva01 DNGN_ALTAR_JIYVA
+jiyva02
+jiyva03
+jiyva04
+jiyva05
+jiyva06
+jiyva07
+jiyva08
+jiyva09
+jiyva10
+jiyva11
+fedhas DNGN_ALTAR_FEDHAS
+cheibriados_02 DNGN_ALTAR_CHEIBRIADOS
+cheibriados_03
+cheibriados_04
+cheibriados_06
+cheibriados_08
+cheibriados_09
+cheibriados_10
+cheibriados_12
+ashenzari DNGN_ALTAR_ASHENZARI
+unknown DNGN_UNKNOWN_ALTAR
 
 %sdir dngn
 blue_fountain DNGN_FOUNTAIN DNGN_BLUE_FOUNTAIN
@@ -596,6 +678,7 @@ effect/halo_range HALO_RANGE
 effect/umbra UMBRA
 effect/orb_glow0 ORB_GLOW
 effect/orb_glow1
+effect/quad_glow QUAD_GLOW
 ray RAY
 ray_out_of_range RAY_OUT_OF_RANGE
 travel_exclusion TRAVEL_EXCLUSION_BG

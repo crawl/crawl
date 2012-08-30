@@ -4,6 +4,29 @@
 #                use the des file for that branch.
 ###############################################################################
 
+# Setups for the below.
+{{
+    function grunt_profane_halls_setup(e)
+        if you.absdepth() >= 24 then
+            e.kmons('1 = base draconian')
+            e.kmons('2 = nonbase draconian')
+            e.kmons('3 = draconian zealot')
+        else
+            e.kmons('1 = deep elf fighter / deep elf conjurer / '
+                    .. 'deep elf summoner / deep elf knight w:5 / '
+                    .. 'deep elf annihilator w:5 / '
+                    .. 'deep elf demonologist w:5')
+            e.kmons('2 = deep elf knight')
+            e.kmons('3 = deep elf high priest')
+        end
+        e.subst('% = * %:20 .')
+        e.lua_marker(':', fog_machine { cloud_type = "flame",
+                                        pow_min = 10, pow_max = 10, delay = 10,
+                                        size = 1, spread_rate = 0,
+                                        walk_dist = 0, excl_rad = 0 })
+    end
+}}
+
 default-depth: D:12-26
 
 ###############################################################################
@@ -263,7 +286,7 @@ SUBST:   !=%$, &=*%
 SUBST:   _ : _+ , _ = +=
 SUBST:   V = *
 COLOUR:  a = yellow
-TILE:    a = wall_hive
+TILE:    a = wall_wax
 SUBST:   a = x
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -565,4 +588,590 @@ cc              cc.c.c.cccc.c.cccchcccc
  cc             cc     .c.     cc
  ccc++ccccccccccccccEcccccccNcccc
    ....cccccccccccccccccccccccccc
+ENDMAP
+
+################################################################################
+# Profane Halls, by Grunt.
+#
+default-depth:
+
+NAME: grunt_profane_halls
+TAGS: no_monster_gen
+DEPTH: D:19-27
+ORIENT: encompass
+SHUFFLE: {[(<
+: if you.absdepth() == 27 then
+SUBST: }])> = G
+: else
+SHUFFLE: }])>
+: end
+SUBVAULT: d : grunt_profane_temple
+SUBVAULT: e : grunt_profane_temple
+SUBVAULT: f : grunt_profane_temple
+SUBVAULT: g : grunt_profane_temple
+NSUBST: D = 1:K / 1:L / 1:M / 1:N
+: grunt_profane_halls_setup(_G)
+: if you.absdepth() >= 24 then
+KMONS: K = storm dragon
+KMONS: L = shadow dragon
+KMONS: M = quicksilver dragon
+KMONS: N = golden dragon
+: else
+KMONS: K = deep elf blademaster
+KMONS: L = deep elf master archer
+KMONS: M = deep elf death mage
+KMONS: N = deep elf sorcerer
+: end
+KMONS: 0 = 0 band
+KMONS: 9 = 9 band
+KMASK: 1290KLMN = !no_monster_gen
+: if you.absdepth() == 27 then
+SUBVAULT: H : grunt_zot_portal
+: else
+SUBVAULT: H : grunt_profane_loot
+: end
+MAP
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccccccccdddddddddddddddcccccccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccccccccdddddddddddddddcccccccccccccccccccccccccccccccc
+ccccccccccccccc.ccccccccccccccccdddddddddddddddcccccccccccccccc.ccccccccccccccc
+cccccccccccccc..ccccccccccccccccdddddddddddddddcccccccccccccccc..cccccccccccccc
+ccccccccccccc.G.cccGcGcGGcGcGcccdddddddddddddddcccGcGcGGcGcGccc.G.ccccccccccccc
+ccccccccc.......c..............cdddddddddddddddc..............c.......ccccccccc
+ccccccccc.{.....+......0.......+ddddddddddddddd+.......0......+.....[.ccccccccc
+ccccccccc.......+......0.......+ddddddddddddddd+.......0......+.......ccccccccc
+ccccccccc...U...c..............cdddddddddddddddc..............c...U...ccccccccc
+cccccccc........cccGcGcGGcGcGcccdddddddddddddddcccGcGcGGcGcGccc........cccccccc
+ccccccc.G.....}.ccccccccccccccccdddddddddddddddcccccccccccccccc.].....G.ccccccc
+cccccc..........cccccccccccccccccdddddddddddddccccccccccccccccc..........cccccc
+cccccccccc++ccccccccccccccccc...cdddddddddddddc...ccccccccccccccccc++cccccccccc
+ccccccccc....ccccccccccccc......+ddddddddddddd+......ccccccccccccc....ccccccccc
+ccccccccG....Gccccccccccc.......++ddddddddddd++.......cccccccccccG....Gcccccccc
+ccccccccc....cccccccccc%...9.....+ddddddddddd+.....9...%cccccccccc....ccccccccc
+ccccccccG....GccccccccU*.........ccdddddddddcc.........*UccccccccG....Gcccccccc
+ccccccccc.00.cccccccc%*.......cccccdddddddddccccc.......*%cccccccc.00.ccccccccc
+ccccccccG....Gcccccc........ccc%%.ccdddddddcc.%%ccc........ccccccG....Gcccccccc
+ccccccccc....cccccc.......++c......ccdddddcc......c++.......cccccc....ccccccccc
+ccccccccG....Gcccc...9...c+.........ccccccc.........+c...9...ccccG....Gcccccccc
+ccccccccc....cccc.......cc........1....:....1........cc.......cccc....ccccccccc
+cccccccccc++ccccc......cc..............1..............cc......ccccc++cccccccccc
+cccceeeeeeeeeeecc++...cc.....G....1..G...G..1....G.....cc...++ccfffffffffffcccc
+cccceeeeeeeeeeeeee++ccc%...........G...D...G...........%ccc++ffffffffffffffcccc
+cccceeeeeeeeeeeeeeeeccc%.....1..1.2.........2.1..1.....%cccffffffffffffffffcccc
+cccceeeeeeeeeeeeeeeeeecc.........G.:%HHHHH%:.G.........ccffffffffffffffffffcccc
+cccceeeeeeeeeeeeeeeeeeecc..........%HHHHHHH%..........ccfffffffffffffffffffcccc
+cccceeeeeeeeeeeeeeeeeeeec.......G..HHHHHHHHH..G.......cffffffffffffffffffffcccc
+cccceeeeeeeeeeeeeeeeeeeec..........HHHHHHHHH..........cffffffffffffffffffffcccc
+cccceeeeeeeeeeeeeeeeeeeec:.G..1..D.HHHHHHHHH.D..1..G.:cffffffffffffffffffffcccc
+cccceeeeeeeeeeeeeeeeeeeec..........HHHHHHHHH..........cffffffffffffffffffffcccc
+cccceeeeeeeeeeeeeeeeeeeec.......G..HHHHHHHHH..G.......cffffffffffffffffffffcccc
+cccceeeeeeeeeeeeeeeeeeecc..........%HHHHHHH%..........ccfffffffffffffffffffcccc
+cccceeeeeeeeeeeeeeeeeecc.........G.:%HHHHH%:.G.........ccffffffffffffffffffcccc
+cccceeeeeeeeeeeeeeeeccc%.....1..1.2.........2.1..1.....%cccffffffffffffffffcccc
+cccceeeeeeeeeeeeee++ccc%...........G...D...G...........%ccc++ffffffffffffffcccc
+cccceeeeeeeeeeecc++...cc.....G....1..G...G..1....G.....cc...++ccfffffffffffcccc
+cccccccccc++ccccc......cc..............1..............cc......ccccc++cccccccccc
+ccccccccc....cccc.......cc........1....:....1........cc.......cccc....ccccccccc
+ccccccccG....Gcccc...9...c+.........ccccccc.........+c...9...ccccG....Gcccccccc
+ccccccccc....cccccc.......++c......ccgggggcc......c++.......cccccc....ccccccccc
+ccccccccG....Gcccccc........ccc%%.ccgggggggcc.%%ccc........ccccccG....Gcccccccc
+ccccccccc.00.cccccccc%*.......cccccgggggggggccccc.......*%cccccccc.00.ccccccccc
+ccccccccG....GccccccccU*.........ccgggggggggcc.........*UccccccccG....Gcccccccc
+ccccccccc....cccccccccc%...9.....+ggggggggggg+.....9...%cccccccccc....ccccccccc
+ccccccccG....Gccccccccccc.......++ggggggggggg++.......cccccccccccG....Gcccccccc
+ccccccccc....ccccccccccccc......+ggggggggggggg+......ccccccccccccc....ccccccccc
+cccccccccc++ccccccccccccccccc...cgggggggggggggc...ccccccccccccccccc++cccccccccc
+cccccc..........cccccccccccccccccgggggggggggggccccccccccccccccc..........cccccc
+ccccccc.G.....).ccccccccccccccccgggggggggggggggcccccccccccccccc.>.....G.ccccccc
+cccccccc........cccGcGcGGcGcGcccgggggggggggggggccGcGccGGcGcGccc........cccccccc
+ccccccccc...U...c..............cgggggggggggggggc..............c...U...ccccccccc
+ccccccccc.......+......0.......+ggggggggggggggg+.......0......+.......ccccccccc
+ccccccccc.(.....+......0.......+ggggggggggggggg+.......0......+.....<.ccccccccc
+ccccccccc.......c..............cgggggggggggggggc..............c.......ccccccccc
+ccccccccccccc.G.cccGcGcGGcGcGcccgggggggggggggggccGcGccGGcGcGccc.G.ccccccccccccc
+cccccccccccccc..ccccccccccccccccgggggggggggggggcccccccccccccccc..cccccccccccccc
+ccccccccccccccc.ccccccccccccccccgggggggggggggggcccccccccccccccc.ccccccccccccccc
+ccccccccccccccccccccccccccccccccgggggggggggggggcccccccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccccccccgggggggggggggggcccccccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+ENDMAP
+
+# Here just in case people want to see the original base layout.
+NAME: grunt_profane_temple_base
+TAGS: grunt_profane_temple allow_dup
+WEIGHT: 0
+: grunt_profane_halls_setup(_G)
+KFEAT: A = stone_arch
+MARKER: A = lua:props_marker { portal=1 }
+KMASK: 12345 = !no_monster_gen
+MAP
+%%...........%%
+%G...........G%
+...............
+......1.1......
+...............
+.......U.......
+...............
+..1.........1..
+...............
+....1.....1....
+.....G...G.....
+ .............
+ ....G...G....
+ .............
+  ...G...G...
+  ...........
+   ..G...G..
+   ....B....
+    .:%3%:.
+     %2A2%
+ENDMAP
+
+NAME: grunt_profane_temple_geh
+TAGS: grunt_profane_temple no_monster_gen
+: grunt_profane_halls_setup(_G)
+KMONS: 4 = red devil / hell hound / flaming corpse w:5
+KMONS: 5 = hellion / balrug
+KFEAT: A = stone_arch
+MARKER: A = lua:props_marker { portal=1 }
+KMASK: 12345 = !no_monster_gen
+MAP
+ll...l%%%l...ll
+l....l%%%l....l
+...............
+..ll...5...ll..
+..l4..lll..4l..
+..l..lllll..l..
+..l.5lllll5.l..
+..l..lllll..l..
+..l4..lll..4l..
+..ll...5...ll..
+...............
+ ....l...l....
+ ....l4.4l....
+ ....l...l....
+  ...l4.4l...
+  ...l...l...
+   ..l4.4l..
+   ....B....
+    .:%3%:.
+     %2A2%
+ENDMAP
+
+NAME: grunt_profane_temple_coc
+TAGS: grunt_profane_temple no_monster_gen
+: grunt_profane_halls_setup(_G)
+KMONS: 4 = blue devil / large simulacrum / small simulacrum / freezing wraith
+KMONS: 5 = blizzard demon / ice dragon
+KMONS: 8 = ice statue name:chilling_statue name_replace name_descriptor \
+           hd:15 spells:bolt_of_cold;ozocubu's_refrigeration;\
+           ozocubu's_refrigeration;freezing_cloud;\
+           ozocubu's_refrigeration;ozocubu's_refrigeration \
+           tile:mons_chilling_statue
+KFEAT: A = stone_arch
+MARKER: A = lua:props_marker { portal=1 }
+KMASK: 12345 = !no_monster_gen
+MAP
+wwww.......wwww
+www....5....www
+ww...........ww
+w...4.www.4...w
+.....wwwww.....
+....ww%%%ww....
+..4.ww%8%ww.4..
+....ww%%%ww....
+.....wwwww.....
+....4.www.4....
+...W.......W...
+ ..WW.5.5.WW..
+ ...W.....W...
+ ...WW...WW...
+  ..4W4.4W4..
+  ...W...W...
+   .........
+   ....B....
+    .:%3%:.
+     %2A2%
+ENDMAP
+
+NAME: grunt_profane_temple_tar
+TAGS: grunt_profane_temple no_monster_gen
+: grunt_profane_halls_setup(_G)
+KMONS: 4 = skeletal warrior w:5 / small skeleton / large skeleton / \
+           small zombie / large zombie / flying skull band
+KMONS: 5 = bone dragon / tormentor / lich w:5
+KFEAT: A = stone_arch
+MARKER: A = lua:props_marker { portal=1 }
+KMASK: 12345 = !no_monster_gen
+MAP
+.%%%.......%%%.
+.ccc...4...ccc.
+...............
+.4....ccc....4.
+.....c...c.....
+...4..5V5..4...
+.....c...c.....
+.4....ccc....4.
+...............
+.ccc...4...ccc.
+..5..G...G..5..
+ .....4.4.....
+ ....G...G....
+ .............
+  ...G...G...
+  ...........
+   ..G...G..
+   ....B....
+    .:%3%:.
+     %2A2%
+ENDMAP
+
+NAME: grunt_profane_temple_dis
+TAGS: grunt_profane_temple no_monster_gen
+: grunt_profane_halls_setup(_G)
+KMONS: 4 = iron devil
+KMONS: 5 =iron dragon / iron troll / iron golem
+KFEAT: A = stone_arch
+MARKER: A = lua:props_marker { portal=1 }
+COLOUR: G = cyan
+TILE: G = dngn_statue_iron_golem
+: set_feature_name("granite_statue", "iron statue")
+KMASK: 12345 = !no_monster_gen
+MAP
+%%.5.......5.%%
+%G...........G%
+.....4...4.....
+....4.v.v.4....
+.....v...v.....
+...4...G...4...
+.....v...v.....
+....4.v.v.4....
+.....4...4.....
+...............
+.G...G...G...G.
+ ..5.......5..
+ ....G...G....
+ .............
+  ...G...G...
+  ...........
+   ..G...G..
+   ....B....
+    .:%3%:.
+     %2A2%
+ENDMAP
+
+NAME: grunt_profane_loot
+TAGS: grunt_profane_loot no_monster_gen
+: grunt_profane_halls_setup(_G)
+SHUFFLE: }])>
+SHUFFLE: KLMN
+: if you.absdepth() >= 24 then
+KMONS: K = storm dragon
+KMONS: L = shadow dragon
+KMONS: M = quicksilver dragon
+KMONS: N = golden dragon
+: else
+KMONS: K = deep elf blademaster
+KMONS: L = deep elf master archer
+KMONS: M = deep elf death mage
+KMONS: N = deep elf sorcerer
+: end
+KITEM: KLMN> = acquire any
+KITEM: 12 = any
+MAP
+  cc+cc
+ cc1%1cc
+cc2%K%2cc
+c1%***%1c
++%L*>*N%+
+c1%***%1c
+cc2%M%2cc
+ cc1%1cc
+  cc+cc
+ENDMAP
+
+NAME: grunt_zot_portal
+TAGS: grunt_zot_portal
+COLOUR: c = lightmagenta
+TILE: c = wall_zot_magenta
+COLOUR: JO.1+ = magenta
+FTILE: JO.1+ = floor_hall
+KFEAT: O = enter_zot
+KMONS: 1 = place:Zot:1 band
+MARKER: J = lua:fog_machine { cloud_type = "magical condensation", \
+                              pow_min = 3, pow_max = 5, \
+                              delay_min = 5, delay_max = 15, \
+                              size = 1, walk_dist = 4, \
+                              spread_rate = 70 }
+MAP
+  cc+cc
+ cc...cc
+ccJ.1.Jcc
+c.......c
++.1.O.1.+
+c.......c
+ccJ.1.Jcc
+ cc...cc
+  cc+cc
+ENDMAP
+
+################################################################################
+# You are in a maze of twisty little passages, all alike.
+#
+NAME: grunt_twisty_little_passages
+TAGS: no_monster_gen
+DEPTH: D:16-26
+ORIENT: encompass
+SHUFFLE: defghijk
+SUBST: def = c
+SUBST: ghi = v
+SUBST: jk = b
+SHUFFLE: {[(<
+SHUFFLE: }] / )> / HI / JK
+SHUFFLE: }]
+SHUFFLE: )>
+SHUFFLE: HI
+SHUFFLE: JK
+: if you.where() == dgn.level_name(dgn.br_entrance("Vaults")) then
+KFEAT: H = enter_vaults
+: else
+KFEAT: H = stone_arch
+MARKER: H = lua:props_marker { portal=1 }
+: end
+KITEM: J = acquire any
+KFEAT: IK = stone_arch
+MARKER: I = lua:props_marker { portal=1 }
+MARKER: K = lua:props_marker { portal=1 }
+KMONS: 8 = 8 band
+KMONS: 9 = 9 band
+KMONS: 0 = 0 band
+KMASK: 098 = !no_monster_gen
+NSUBST: | = 2:*
+SUBST: % = %.
+MAP
+cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+ccccdeeeeeeeeeeeeeeeeeefffffffffffffffffffffffffffffffffffffffffkkkkkkkkkkkkcccc
+ccccddeeeeeeeeeeeeeeeeecffffffffffffffffffffffffffffffffffffffffkkkkkkkkkkkkcccc
+ccccdd.....eeee........ecff%%.................................%%ik......{.kkcccc
+ccccdd.9....eee.0.......ecf%%..0...........................0...%ik.......[kkcccc
+ccccdd..ce...eee....ee...ecf....ffffffffffffffffffffffffff......ik..kk....kkcccc
+ccccdd..dce...eee...eee...ecf...ffffffffffffffffffffffffff..8...ik..kkk...kkcccc
+ccccdd...dce...eee...eee...ecf...ffff..............%*ffff.....0.ik...kkk..kkcccc
+ccccddc...dce...eee...eee...ecf...fff...89.........%%fff........ikk...kkkkkkcccc
+ccccddcc...dce...eee...eee...ecf...fff......ff......fff.....ii..ikkk...kkkkkcccc
+ccccddccc...dce...eee...eee...ecf...fff.}].fff.....fff.....iii..ikkkk...kkkkcccc
+ccccddcccc...dce...eee...eee.0.ecf...fff|*fff.0...fff.....iiii..ikkkkk...kkkcccc
+ccccdd..ccc...dce...ee...eee...eecf...ffffff.....fff.....iiiii..ik..kkk...kkcccc
+ccccdd.0.ccc..dgge......eee...eeeecf...ffff.....fff.....iiiiii..ik.0.kkk..kkcccc
+ccccdd....cc..dggge..0.eee...eee..ecf...ff.....fff..0..iii%*ii..ik....kk..kkcccc
+ccccdd........dgggce..eee...eee.0..ecf.0......fff.....iii.%%ii..ik........kkcccc
+ccccdd........dg%%gceeee...eee......ecf......fff.....iii....ii..ik........kkcccc
+ccccdd..dd....dg%%.gcee...eee...ee...ecf.%%.fff.....iii.....ii..ik..kk....kkcccc
+ccccdd..ddd.0.dg....gce.0.eee.0.eee...ecf%%fff.....iii......ii..ik..kkk.0.kkcccc
+ccccdd...ddd..dg.....gce...eee...eee...ecffff.....iii.......ii..ik...kkk..kkcccc
+ccccddd...dddddg.0....gce...eee...eee...ecff.....iii...0....ii..ikk...kkkkkkcccc
+ccccdddd...ddddg..gg...gce...eee...eee...ec.....iii.....ii..ii..ikkk...kkkkkcccc
+ccccddddd...dddg..ggg...gce...eee...eee....0...iii.....iii..ii..ikkkk...kkkkcccc
+ccccdddddd...ddg..gggg...gce...eee...eee.9....iii.....iii...ii..ikkkkk...kkkcccc
+ccccdd..ddd...dg..ggggg...gce...eee...eee....cii%%...iii....ii..ik..kkk...kkcccc
+ccccdd.0.ddd..dg..gg.ggg...gce...ee.0.eee...jjci%%..iii|).9.ii..ik.0.kkk..kkcccc
+ccccdd....dd..dg..gg..ggg...gce......eee...jjjjci...iii*>.8.ii..ik....kk..kkcccc
+ccccdd........dg..gg...ggg...gce.0..eee...jjj..jci.0.iii....ii..ik........kkcccc
+ccccdd........dg..gg....ggg.0.gce..eee...jjj..0.jci...iii...ii..ik........kkcccc
+ccccdd..dd....dg..gg.8.H*ggg...gceeee...jjj......jci...iii..ii..ik..kk....kkcccc
+ccccdd..ddd.0.dg..gg.9.I|ggg..%%gcee...jjj.0.jj...jci...iiiiii..ik..kkk.0.kkcccc
+ccccdd...ddd..dg..gg....ggg...%%ggc....jjj...jjj...jci...iiiii..ik...kkk..kkcccc
+ccccddd...dddddg..gg...ggg.....ggg....9.jjj...jjj...jci...iiii..ikk...kkkkkkcccc
+ccccdddd...ddddg..gg..ggg.....ggg...0....jjj...jjj...jci...iii..ikkk...kkkkkcccc
+ccccddddd...dddg..gg..gg.....ggg.....cj...jjj...jjj...jci...ii..ikkkk...kkkkcccc
+ccccdddddd...ddg..gg....0...ggg.....hhcj...jjj...jjj...jci....0.ikkkkk...kkkcccc
+ccccdd..ddd...dg..gg.......ggg.....hhhhcj...jjj...jjj...jci.....ik..kkk...kkcccc
+ccccdd.0.ddd..dg..gg......ggg.....hhh%%hcj...jjj.0.jjj...jci....ik.0.kkk..kkcccc
+ccccdd....dd..dg..gg.....ggg.....hhh.%%.hcj...jj...jjj.0.jjci.%%ik....kk..kkcccc
+ccccdd........dg..gg....ggg.....hhh......hcj......jjj...jjjjci%%ik........kkcccc
+ccccdd........dg..gg%%.ggg.....hhh......0.hcj..0.jjj...jjj..jciiik........kkcccc
+ccccdd..dd....dg..gg*%ggg..0..hhh.....hh...hcj..jjj...jjj.0..jcckk..kk....kkcccc
+ccccdd..ddd.0.dg..gggggg.....hhh.....hhhh...hcjjjj...jjj......jckk..kkk.0.kkcccc
+ccccdd...ddd..dg..ggggg.....hhh.....hhhhhh...hcjj...jjj...jj...jck...kkk..kkcccc
+ccccddd...dddddg..gggg.....hhh...0.hhh*|hhh...hcj.0.jjj...jjj...jck...kkkkkkcccc
+ccccdddd...ddddg..ggg.....hhh.....hhh.JK.hhh...hcj...jjj...jjj...jck...kkkkkcccc
+ccccddddd...dddg..gg.....hhh......hh......hhh...hcj...jjj...jjj...jck...kkkkcccc
+ccccdddddd...ddg........hhh%%.........89...hhh...hcj...jjj...jjj...jck...kkkcccc
+ccccdd..ddd...dg.0.....hhhh*%..............hhhh...hcj...jjj...jjj...jck...kkcccc
+ccccdd...ddd..dg...8..hhhhhhhhhhhhhhhhhhhhhhhhhh...hcj...jjj...jjj...jck..kkcccc
+ccccdd....dd..dg......hhhhhhhhhhhhhhhhhhhhhhhhhh....hcj...jj....jjj...jc..kkcccc
+ccccdd(.......dg%...0...........................0..%%hcj.......0.jjj....9.kkcccc
+ccccdd.<......dg%%.................................%%hhcj........jjjj.....kkcccc
+ccccdddddddddddchhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhcjjjjjjjjjjjjjjjjjkkcccc
+ccccdddddddddddhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhjjjjjjjjjjjjjjjjjjkcccc
+cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+ENDMAP
+
+###############################################################################
+#  This vault excercises varied old ideas for the Vaults branch:
+#  a primarily humanoid-based monster set, a focus on placing groups,
+#  and a pattern-based layout emphasizing lots of distinct rooms.
+#  Of course, HangedMan twisted these ideas thoroughly.
+#  Many thanks to elliott for writing the band placement lua!
+#
+NAME:    hangedman_spin_cycle
+TAGS:    no_monster_gen no_item_gen no_trap_gen patrolling
+DEPTH:   D:16-26
+ORIENT:  encompass
+KMONS:   - = plant
+KMONS:   _ = plant col:random name:demonic name_adjective
+KMONS:   no = human ; dart ego:exploding w:21 | dart ego:dispersal w:2 | \
+                      dart ego:none w:1 | wand of lightning w:1 . \
+                      mundane flail | mundane falchion | mundane trident . \
+                      mundane ring mail | mundane scale mail | mundane chain mail / \
+              human ; mundane blowgun . needle ego:confusion | \
+                      needle ego:slow | needle ego:poisoned w:4 | \
+                      needle ego:paralysis w:4 | needle ego:sleep w:4 . \
+                      mundane flail | mundane falchion | mundane trident . \
+                      mundane ring mail | mundane scale mail | mundane chain mail
+KMONS:   p = giant eyeball
+KMONS:   q = great orb of eyes
+KMONS:   r = vault guard
+: local bands = {
+:     [42 - you.absdepth() * 2] =
+:         { "cyclops", "kobold demonologist", "naga", "Azrael", "Kirke" },
+:     [65 - you.absdepth() * 3] =
+:         { "boggart", "deep elf fighter", "necromancer" },
+:     [29 - you.absdepth()] =
+:         { "centaur warrior", "orc knight", "ogre mage", "skeletal warrior",
+:           "yaktaur", "deep troll" },
+:     [you.absdepth() * 2 - 37] =
+:         { "deep elf knight", "orc high priest" },
+:     [you.absdepth() * 2 - 40] =
+:         { "harpy", "hell knight", "ghoul", "naga mage", "naga warrior",
+:           "orc warlord", "vampire mage", "yaktaur captain" },
+:     [you.absdepth() - 20] =
+:         { "deep dwarf death knight", "deep elf high priest",
+:           "merfolk impaler", "merfolk javelineer", "Margery", "Saint Roka" },
+: }
+: local kmonsters = {}
+: for weight, monsters in pairs(bands) do
+:     if weight > 0 then
+:         for _, mons in ipairs(monsters) do
+:             if not you.uniques(mons) then
+:                 table.insert(kmonsters, mons .. " band w:" .. weight)
+:             end
+:         end
+:     end
+: end
+: kmons("s = " .. table.concat(kmonsters, " / "))
+KITEM:   ? = any ring randart w:390 / ring of hunger unrand:ring_of_the_octopus_king
+KITEM:   ! = ring of invisibility / ring of regeneration / \
+             ring of teleport control / ring of slaying / \
+             ring of wizardry / any good_item ring no_uniq w:75
+KITEM:   | = | / any good_item
+KFEAT:   ^ = known teleport trap
+KFEAT:   ~ = teleport trap
+KFEAT:   aD = stone_arch
+KFEAT:   A = enter_hell
+KFEAT:   & = enter_pandemonium
+KFEAT:   @ = enter_abyss
+KFEAT:   B = enter_vaults
+KFEAT:   C : C / any shop
+SHUFFLE: <d` / {e1 / (f2 / [g3, >h4 / }i5 / )j6 / ]k7, (f2 / )j6, 15
+: if you.absdepth() > 20 then
+SHUFFLE: aA&@
+SUBST:   ( = D
+MARKER:  D = lua:props_marker { portal=1 }
+: else
+SUBST:   A&@ = a, _ = -
+SUBST:   l = W
+:     if you.where() == dgn.level_name(dgn.br_entrance("Vaults")) then
+NSUBST:  ( = 1:B / *:(
+SUBST:   f = r, 2 = '
+:     end
+: end
+SUBST:   {} = **|||, ( = T, ) : TTCCC, [ = !, ] = ?
+NSUBST:  < = 1:{ / 1:( / 1:[, > = 1:} / 1:) / 1:]
+SUBST:   d = 0, e = 009, f = %, g = 0, h = 0, i = 009, j = %, k = 0
+SUBST:   ` = >, 1 = 9988s, 2 = 009, 3 = s, 4 = `, 5 = 998ss, 6 = 009, 7 = s
+SHUFFLE: })]` / {([>, ?!, no / pq, pq / pq / pq / qp / pp / qq
+SHUFFLE: LM / LM / LM / LM / LM / LM / LM / ML / ML / MM
+SHUFFLE: NO / NO / NO / NO / NO / NO / NO / ON / ON / OO
+SHUFFLE: PQ / PQ / PQ / PQ / PQ / QP, RS / RS / RS / RS / SR
+SUBST:   LNPR : x, MOQS : ~, J : ~xxx, K : ~xxxx, c : x:7 c:1, v : v:7 c:1
+NSUBST:  ~ = 2:~ / 1:~. / 75:H / 225:I / *:.
+SUBST:   H = ~ .:4490, I = ~ .:9990
+COLOUR:  "-_ = green
+COLOUR:  '`089%*|!?OPYZ = white
+FTILE:   ^"aA@&-_U = floor_grass
+: if crawl.coinflip() then
+FTILE:   '`<{([>})]089s%*|!?BCTDEF = floor_vault
+: else
+FTILE:   '`<{([>})]089s%*|!?BCTDEF = floor_pebble_darkgray
+: end
+MAP
+                          vvvvvvv
+                         vv'%<%'vv
+                 vvvv    vd'''''dv    vvvv
+                vv%'vvvvvv'''`'''vvvvvv'%vv
+               vv{''evvcccc+ccc+ccccvvg''[vv
+               v%'1'''cc...........cc'''3'%v
+               v'''cc+c.......N.....c+cc'''v
+               vve'c.....L~~~~OO~......c'gvv
+                vv'+....~MM~~~~N~~~....+'vv
+          xxxx xcccc..~~~~L~~~~OO~~~~..ccv  xxxx
+         xxJJxxx~~~..~~~~~MM~~~~N~~Q~~..ccxxxKKxx
+         xJJJJxx~~~~px~~~~~L~~~~OO~~x~~~~~xxKKKKx
+         xJJJJx~~~~~xn~~~~~MM~~~~N~~~P~~~~~xKKKKx
+         xxJJ~~~~~~~~~~~~~~.L...~~~~~~~~~~~~~KKxx
+    vvvv  xxx~www~~~~~~~~~.......~~~~~~~~www~xxxx
+   vv%'vv xx~~www~x~~~.....c+c+c....~~~x~www~~~xx vvvvv
+  vv(''fvvc~~~ww~R~~~.....cc'''cc.....~~R~ww~~~~cvv'%vvv
+  v%'2'''cc~~~~~RS~~..c+ccc''4''ccc+c..~SR~~~~~~cvf''(vv
+  v'''cc+c.~~~~x~~...cc''kch'''hci''cc..~~x~~~~~c'''2'%v
+  vvf'c....~~~~~~....+'7''cc%>%cc''5'+..~~~~~~~.c+cc'''v
+   vv'+...~~P~~~..c+cck''%bbbbbbb%''ic...~~~~xq....c'fvv
+   vvcc..~~x~~~..cc'jbbb%]bbbbbbb}%bbc+c..~~~ox~...+'vv
+   vcc...~Q~~~~..+'6'bbbbbbblllbbbbbbj'cc..~~~~~~..ccvv
+   vc....~~~~~~..c'''%bbbbbbl^lbbbbbb'6'+..~~~~~~...ccv
+ vvvc...~~~ON~~..cj'%)bblllll"llllbb%'''c..~~~~~~....cv
+vvg'c..~~ONO~~..ccccbbbbla""""""Albb)%'jc..~~~~~~~...cvvv
+v'''+..ONO~~~..cc'icbbbbl"""U"_""lbbbbcccc..~~~~~ML..c'evv
+v%''c.NO~~~~~..+'''%bblll"_""""""lbbbbck'cc..~~MLM~..+'''v
+v['3c..~~~~~ML.c'5'}bbl^"""""""U"lllbb%'''+..MLM~~~..c''%v
+v%''c..~~~MLM..+'''%bblll"U"""""""^lbb]'7'c.LM~~~~~..c1'{v
+v'''+..~MLM~~..cc'icbbbbl""""""_"lllbb%'''+..~~~~~ON.c''%v
+vvg'c..LM~~~~~..ccccbbbbl""_"U"""lbbbbck'cc..~~~ONO..+'''v
+ vvvc...~~~~~~~..ch'%>bbl@""""""&lbbbbcccc..~~ONO~~..c'evv
+   vc....~~~~~~..c'''%bbllll"lllllbb>%'hc..~~NO~~~~..cvvv
+   vcc...~~~~~~..+'4'bbbbbbl^lbbbbbb%'''c..~~~~~~~...cv
+   vvcc..~~~~~~..cc'hbbbbbblllbbbbbbb'4'+..~~~~Q~...ccv
+  vvv'+...~xo~~~..c+cbb%]bbbbbbb}%bbbh'cc..~~~x~~..ccvv
+  vvd'c....qx~~~~...ck''%bbbbbbb%''icc+c..~~~P~~...+'vvv
+  v'''cc+c.~~~~~~~..+'7''cc%)%cc''5'+....~~~~~~....c'dvv
+  v%'`'''c~~~~~x~~..cc''kcj'''jci''cc...~~x~~~~.c+cc'''v
+  vv<''dvc~~~~~~RS~..c+ccc''6''ccc+c..~~SR~~~~~cc'''`'%v
+   vv%'vvc~~~~ww~R~~.....cc'''cc.....~~~R~ww~~~cvvd''<vv
+    vvvv cxx~~www~x~~.....c+c+c.....~~~x~www~~xx vv'%vv
+          xxx~www~~~~~~~~.......~~~~~~~~~www~xxx  vvvv
+         xxKK~~~~~~~~~~~~~..L..~~~~~~~~~~~~~~JJxx
+         xKKKKx~~~~~P~~~N~~~MM~~~~~~nx~~~~~xJJJJx
+         xKKKKxx~~~~~x~~OO~~~L~~~~~~xp~~~~xxJJJJx
+         xxKKxxxxc..~~Q~~N~~~MM~~~~~~..~~~xxxJJxx
+          xxxx  vcc..~~~~OO~~~L~~~~~..ccccc xxxx
+               vv'+....~~~N~~~MM~~....+'vv
+              vve'c.....~~OO~~~L~.....c'gvv
+              v'''cc+c.....N.......c+cc'''v
+              v%'1'''cc...........cc'''3'%v
+              vv{''evvcccc+ccc+ccccvvg''[vv
+               vv%'vvvvvv'''2'''vvvvvv'%vv
+                vvvv    vf'''''fv    vvvv
+                        vv'%(%'vv
+                         vvvvvvv
 ENDMAP

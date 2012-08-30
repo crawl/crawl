@@ -89,7 +89,7 @@ SUBST: 1 : 1:15 2 3:2 4:1
 SUBST: * : * R:3
 KITEM: R = w:2 honeycomb / w:1 royal jelly
 COLOUR:a = yellow
-TILE:  a = wall_hive
+TILE:  a = wall_wax
 SUBST: a = x
 MAP
   ????????
@@ -112,7 +112,7 @@ TAGS:  allow_dup
 MONS:  patrolling queen bee, patrolling killer bee
 KITEM: R = w:2 honeycomb / w:1 royal jelly
 COLOUR:a = yellow
-TILE:  a = wall_hive
+TILE:  a = wall_wax
 SUBST: a = x
 MAP
 ............
@@ -152,7 +152,7 @@ ENDMAP
 
 # Anthill
 NAME: minivault_29
-TAGS: allow_dup
+DEPTH: D:8-13, Lair, Spider
 MONS: patrolling queen ant, patrolling soldier ant
 MONS: patrolling worker ant, ant larva
 MAP
@@ -171,7 +171,7 @@ MAP
 ENDMAP
 
 NAME:   zaba_anthell
-DEPTH:  D:12-19, Lair:2-, Spider
+DEPTH:  D:8-13, Lair:2-, Spider
 TAGS:   no_rotate
 MONS:   queen ant, soldier ant, worker ant, soldier ant / w:20 worker ant
 SUBST:  ? = . x
@@ -194,7 +194,7 @@ MAP
 ENDMAP
 
 NAME:  zaba_antful_of_joy
-DEPTH: D:10-17, Lair, Spider
+DEPTH: D:8-13, Lair, Spider
 TAGS:  no_rotate
 MONS:  queen ant, worker ant w:5 / soldier ant, worker ant / nothing w:5
 KFEAT: ^ = alarm trap / .
@@ -240,7 +240,7 @@ WWWxxxxxxxWWW
 ENDMAP
 
 NAME:   minmay_another_anthill
-DEPTH:  D:10-21, Lair:3-, Spider, Snake:1-3
+DEPTH:  D:8-13, Lair:2-, Spider
 MONS:   patrolling ant larva, worker ant, soldier ant, patrolling queen ant
 SUBST:  a = 1223........x
 MAP
@@ -921,6 +921,36 @@ xIx..x1x    xJx..x2x    xKx..x3x    xLx..x4x
 xxx+xxxx    xxx+xxxx    xxx+xxxx    xxx+xxxx
 ENDMAP
 
+NAME:    hangedman_misty_isle
+TAGS:    transparent mini_float no_monster_gen no_pool_fixup patrolling
+DEPTH:   D:8-13
+KMONS:   123 = sky beast
+KMONS:   45 = insubstantial wisp
+KMONS:   6 = steam dragon
+KITEM:   15% = any / gold
+KITEM:   36 = gold, star_item
+KFEAT:   F = shallow_water
+SHUFFLE: Ww, aA, bB, cC, dD
+SUBST:   abcd = ., ABCD = x, X = xx.
+MARKER:  F = lua:fog_machine {cloud_type = "thin mist", \
+             pow_min = 5, pow_max = 12, delay_min = 28, delay_max = 42, \
+             size = 2, spread_rate = 2, start_clouds = 1 }
+MAP
+   ..........
+  ...a....b...
+ ...AWWWWWWB...
+...XFwwwwwwFB..
+..AWWw.x2.wwWb.
+.aWww.16x%.wW..
+..Ww..xxx..wW..
+..Ww.%x35.wwWd.
+.cWww.4x.wWWD..
+..CFwwwwwwFX...
+...CWWWWWWD...
+ ...c....d...
+  ..........
+ENDMAP
+
 ###############################################################################
 #
 # <<3>> Humanoids
@@ -1354,7 +1384,11 @@ NAME:   forest_paths
 DEPTH:  D, Lair
 FTILE:  .t0@*123 = floor_moss
 : if you.absdepth()>15 then
+:   if you.branch()=="Lair" then
+MONS:   spriggan, spriggan druid n_adj n_noc name:young hd:8, spriggan rider
+:   else
 MONS:   spriggan, spriggan druid, spriggan rider
+:   end
 SUBST:  0=1
 : end
 MAP
@@ -1579,6 +1613,95 @@ c..ccc+++ccc..c
 c%%c.......c%%c
 c13c"""U"""c14c
 cccc'''''''cccc
+ENDMAP
+
+NAME:    hangedman_minor_magic
+TAGS:    no_monster_gen
+DEPTH:   D:9-11, Orc
+MONS:    crimson imp, white imp, shadow imp, iron imp
+MONS:    orc, orc wizard w:39 / Blork the orc w:1, swamp drake
+KMONS:   0 = orc ; robe race:orcish . wand of confusion | wand of slowing w:35 | \
+                   wand of magic darts w:35 | wand of flame | wand of frost . \
+                   potion of invisibility | potion of speed | nothing w:980
+KMONS:   89 = deep elf mage
+KITEM:   8d = robe / robe race:orcish, wizard hat w:40 / wizard hat good_item, \
+              wizard hat w:20 / wizard hat good_item
+KITEM:   9e = book of minor magic
+KFEAT:   - = +
+KMASK:   de89 = no_item_gen
+MARKER:  - = lua:restrict_door()
+SHUFFLE: 1234
+COLOUR:  F = red
+FTILE:   F = floor_pebble_lightred
+{{
+  local fog = chained_fog_machine {
+                            cloud_type = 'flame', pow_min = 6, pow_max = 6,
+                            delay = 100, size = 1, walk_dist = 0, excl_rad = -1
+                          }
+  lua_marker('F', fog)
+}}
+MAP
+@@xxxxxxxxxxx
+..xxxxxxxxxxx
+.5xx1xx2xxxxx
+.5xx+xx+xx9xx
+..x..60..xexx
+..x.F..F.x+xx
+@.-...6..-7xx
+@.-...0..-'xx
+..x.F..F.x+xx
+..x..60..xdxx
+.5xx+xx+xx8xx
+.5xx3xx4xxxxx
+..xxxxxxxxxxx
+@@xxxxxxxxxxx
+ENDMAP
+
+NAME:    hangedman_elemental_death_ray
+TAGS:    transparent
+DEPTH:   D:13-, Vaults
+MONS:    deep dwarf artificer ; wand of cold | wand of frost w:5 . \
+         staff of fire w:15 | staff ego:flaming w:14 | rod of destruction w:1 . \
+         robe race:none ego:fire_resistance w:15 | \
+         robe race:none ego:cold_resistance w:14 | \
+         robe race:none ego:resistance w:1
+MONS:    deep dwarf artificer ; wand of fire | wand of flame w:5 . \
+         staff of cold w:15 | staff ego:freezing w:14 | rod of destruction w:1 . \
+         robe race:none ego:fire_resistance w:15 | \
+         robe race:none ego:cold_resistance w:14 | \
+         robe race:none ego:resistance w:1
+MONS:    small simulacrum, fire elemental
+ITEM:    empty ebony casket, lamp of fire
+SHUFFLE: 12, 3df / 4eF
+FTILE:   fF'@ = floor_pebble_darkgray
+COLOUR:  fF'@ = white
+MARKER:  + = lua:restrict_door()
+{{
+  local fog = chained_fog_machine {
+                            cloud_type = 'freezing vapour', pow_min = 6, pow_max = 6,
+                            delay = 150, size_min = 2, size_max = 3, walk_dist = 0
+                          }
+  lua_marker('f', fog)
+  local fog = chained_fog_machine {
+                            cloud_type = 'flame', pow_min = 6, pow_max = 6,
+                            delay = 200, size_min = 2, size_max = 3, walk_dist = 0
+                          }
+  lua_marker('F', fog)
+}}
+MAP
+ ......
+..bbbb..
+.bb31bb..
+.+.3dbfF'fF'
+.b.32bb..  'fF'
+.bbbbb..      'fF@
+.......          'fF'          .......
+                    @fF'      ..bbbbb.
+                       'fF'  ..bb24.b.
+                          'fF'fFbe4.+.
+                             ..bb14bb.
+                              ..bbbb..
+                               ......
 ENDMAP
 
 ################################################################################
@@ -3227,6 +3350,114 @@ cCCCcEEE..c...FFFFc
 cCCCcEEEEEcFFFFFFFc
 cCCCcEEEEEcFFFFFFFc
 ccccccccccccccccccc
+ENDMAP
+
+NAME:    hangedman_feature_mirror
+TAGS:    transparent mini_float extra no_monster_gen
+TAGS:    no_item_gen no_trap_gen no_pool_fixup patrolling
+DEPTH:   D, Orc, Elf, Vaults, Crypt, Snake, Zot
+WEIGHT:  10 (D, Vaults), 1 (Zot), 4
+MONS:    fungus, plant, bush
+ITEM:    large rock q:1
+KFEAT:   A : stone_arch
+KFEAT:   D : any shop
+KFEAT:   ^ : known blade trap / known teleport trap
+SHUFFLE: ACCDDTVY^{[(<>, cccbvwtdGG123, 00099'
+SUBST:   .' : .:99 W:1
+NSUBST:  { = 1:{ / 1:}, [ = 1:} / 1:], ( = 1:} / 1:]
+: if you.branch() == "D" then
+:    if you.absdepth() < 2 then
+SUBST:   CD[{^ : T, 9 = 0
+:    elseif you.absdepth() < 5 then
+SUBST:   CD : T, 9 = 0
+:    elseif you.absdepth() > 20 then
+MARKER:  A = lua:props_marker { portal=1 }
+:    end
+: elseif you.branch() == "Orc" then
+SUBST:   G = I
+: elseif you.branch() == "Crypt" or you.branch() == "Zot" then
+SUBST:   D = V
+: end
+MAP
+...
+.b..
+.0C.
+.b..                                ...
+...                                ..b.
+                                   .C0.
+                                   ..b.
+                                    ...
+ENDMAP
+
+NAME:    hangedman_corner_corridor
+TAGS:    transparent
+WEIGHT:  5 (Snake, Elf), 10
+DEPTH:   D:9-, Snake, Elf
+SHUFFLE: 9* / 9* / *8, 098%* / 098%* / 098%* / !!!!$, y'Y" / 'y"Y, Y" / ??
+SUBST:   Y = y, '"!? = ., y : z:100 ccvbm, z : x:100 ccvbm
+: if you.absdepth() < 13 then
+SUBST:   9 = 0, 8 = 9
+: end
+MAP
+xxxxxxxxxx
+xxxxxxxxxx
+xx0.Y".0xx
+xx.."Y..xx
+@+..zz..+@
+@+..zz..+@
+xx..y'..xx
+xx..'y..xx
+xx..y'..xx
+xx..zz..xxx
+xx..zz..xxxxxx
+xx..'y...xxxxxx
+xx..y'....9%xxx
+xx..'y.....*%xx
+xx..zzy'yzz.9xxx
+xx..zz'y'zz..xxxxxx@@xxxx
+xx.......'y...xxxxx++xxxx
+xxx%.9...y'...........0xx
+xxxxxx*..'y............xx
+ xxxxxx9.zzy'yzz'y'zzY"xx
+    xxx..zz'y'zzy'yzz"Yxx
+     xx%...............xx
+     xxx..............0xx
+     xxxxxxxxxxxxxx++xxxx
+      xxxxxxxxxxxxx@@xxxx
+ENDMAP
+
+NAME:   minmay_small_thing
+DEPTH:  D:4-8
+SUBST:  9 = 999.
+MAP
+ xxxxxxxxxx
+xx........@
+x..xx.x.x.x
+x.xx.xxxxxx
+x..xx.x.x.x
+xx..xx.x.xx
+ xx.xxxxx.x
+xx..x*.x.xx
+x..xxx.x.*x
+xx...9.9.xx
+ xxxxxxxxx
+ENDMAP
+
+NAME:   minmay_crossroads
+DEPTH:  D:4-8
+SUBST:  0 = 0.
+MAP
+                xxxxxxx
+    x@.0.@xx  xxx....{x
+    xx..0..xxxx.....xxx
+     xx.....x.....xxx
+      xx........xxx
+      xxx.....xxx
+    xxx........xx
+  xxx.....x.....xx
+xxx.....xxxx..0..xx
+x}....xxx  xx@.0.@x
+xxxxxxx
 ENDMAP
 
 ################################################################

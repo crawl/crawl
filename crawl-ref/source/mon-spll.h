@@ -510,7 +510,7 @@
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
        SPELL_BRAIN_FEED,
-       SPELL_CALL_IMP,
+       SPELL_SUMMON_MINOR_DEMON,
        SPELL_NO_SPELL
       }
     },
@@ -606,7 +606,7 @@
     {  MST_DEEP_ELF_SUMMONER,
       {
        SPELL_BLINK,
-       SPELL_CALL_IMP,
+       SPELL_SUMMON_MINOR_DEMON,
        SPELL_SUMMON_UFETUBUS,
        SPELL_VAMPIRE_SUMMON,
        SPELL_SUMMON_DEMON,
@@ -664,7 +664,7 @@
        SPELL_BANISHMENT,
        SPELL_SUMMON_DEMON,
        SPELL_SUMMON_GREATER_DEMON,
-       SPELL_CALL_IMP,
+       SPELL_SUMMON_MINOR_DEMON,
        SPELL_NO_SPELL
       }
     },
@@ -704,10 +704,10 @@
 
     {  MST_KOBOLD_DEMONOLOGIST,
       {
-       SPELL_CALL_IMP,
+       SPELL_SUMMON_MINOR_DEMON,
        SPELL_SUMMON_DEMON,
        SPELL_CANTRIP,
-       SPELL_CALL_IMP,
+       SPELL_SUMMON_MINOR_DEMON,
        SPELL_SUMMON_DEMON,
        SPELL_CANTRIP           // this should be cute -- bw
       },
@@ -1166,7 +1166,7 @@
     { MST_EUSTACHIO,
       {
        SPELL_SUMMON_SMALL_MAMMALS,
-       SPELL_CALL_IMP,
+       SPELL_SUMMON_MINOR_DEMON,
        SPELL_BLINK,
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
@@ -1772,7 +1772,7 @@
 
     {  MST_HELLBINDER,
       {
-       SPELL_CALL_IMP,
+       SPELL_SUMMON_MINOR_DEMON,
        SPELL_SUMMON_DEMON,
        SPELL_HASTE,
        SPELL_HELLFIRE,

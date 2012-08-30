@@ -56,7 +56,7 @@ dolls_data player_doll;
 bool save_doll_data(int mode, int num, const dolls_data* dolls)
 {
     // Save mode, num, and all dolls into dolls.txt.
-    std::string dollsTxtString = datafile_path("dolls.txt", false, true);
+    string dollsTxtString = datafile_path("dolls.txt", false, true);
 
     struct stat stFileInfo;
     stat(dollsTxtString.c_str(), &stFileInfo);
@@ -103,7 +103,7 @@ bool load_doll_data(const char *fn, dolls_data *dolls, int max,
     char fbuf[1024];
     FILE *fp  = NULL;
 
-    std::string dollsTxtString = datafile_path(fn, false, true);
+    string dollsTxtString = datafile_path(fn, false, true);
 
     struct stat stFileInfo;
     stat(dollsTxtString.c_str(), &stFileInfo);

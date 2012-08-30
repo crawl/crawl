@@ -22,7 +22,7 @@ public:
     coord_def origin;
     coord_def aim;
     const actor* agent;
-    std::string why_not;
+    string why_not;
 
     virtual bool set_aim(coord_def a);
     virtual bool valid_aim(coord_def a) = 0;
@@ -35,18 +35,30 @@ protected:
 class targetter_beam : public targetter
 {
 public:
-    targetter_beam(const actor *act, int range, beam_type flavour, bool stop,
-                   int min_expl_rad = 0, int max_expl_rad = 0);
+    targetter_beam(const actor *act, int range, zap_type zap, int pow,
+                   bool stop, int min_expl_rad, int max_expl_rad);
     bolt beam;
-    bool set_aim(coord_def a);
+    virtual bool set_aim(coord_def a);
     bool valid_aim(coord_def a);
-    aff_type is_affected(coord_def loc);
+    virtual aff_type is_affected(coord_def loc);
+protected:
+    vector<coord_def> path_taken; // Path beam took.
 private:
     bool penetrates_targets;
-    std::vector<coord_def> path_taken; // Path beam took.
     int range2;
     int min_expl_rad, max_expl_rad;
     explosion_map exp_map_min, exp_map_max;
+};
+
+class targetter_imb : public targetter_beam
+{
+public:
+    targetter_imb(const actor *act, int pow, int range);
+    bool set_aim(coord_def a);
+    aff_type is_affected(coord_def loc);
+private:
+    vector<coord_def> splash;
+    vector<coord_def> splash2;
 };
 
 class targetter_view : public targetter
@@ -105,8 +117,8 @@ public:
     aff_type is_affected(coord_def loc);
     int range2;
     int cnt_min, cnt_max;
-    std::map<coord_def, aff_type> seen;
-    std::vector<std::vector<coord_def> > queue;
+    map<coord_def, aff_type> seen;
+    vector<vector<coord_def> > queue;
 };
 
 class targetter_splash : public targetter
@@ -137,7 +149,7 @@ public:
     bool valid_aim(coord_def a);
     bool set_aim(coord_def a);
     aff_type is_affected(coord_def loc);
-    std::map<coord_def, aff_type> zapped;
+    map<coord_def, aff_type> zapped;
     FixedVector<int, LOS_RADIUS + 1> arc_length;
 private:
     coord_def prev;

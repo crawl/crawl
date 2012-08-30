@@ -4,6 +4,7 @@
 #include <cassert>
 #include <vector>
 #include <stdint.h>
+using namespace std;
 
 typedef uint64_t tileidx_t;
 
@@ -72,7 +73,7 @@ struct tile_variation
 };
 
 template<class F, class R>
-bool binary_search(F find, std::pair<F, R> *arr, int num_pairs,
+bool binary_search(F find, pair<F, R> *arr, int num_pairs,
                    int (*cmpfnc)(F, F), R *result)
 {
     int first = 0;

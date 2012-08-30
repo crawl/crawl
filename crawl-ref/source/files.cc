@@ -95,7 +95,7 @@ static void _save_level(const level_id& lid);
 
 static bool _ghost_version_compatible(reader &ghost_reader);
 
-static bool _restore_tagged_chunk(package *save, const std::string name,
+static bool _restore_tagged_chunk(package *save, const string name,
                                   tag_type tag, const char* complaint);
 static bool _read_char_chunk(package *save);
 
@@ -114,7 +114,7 @@ static void _redraw_all(void)
         REDRAW_LINE_1_MASK | REDRAW_LINE_2_MASK | REDRAW_LINE_3_MASK;
 }
 
-static bool is_save_file_name(const std::string &name)
+static bool is_save_file_name(const string &name)
 {
     int off = name.length() - strlen(SAVE_SUFFIX);
     if (off <= 0)
@@ -154,21 +154,20 @@ static player_save_info _read_character_info(package *save)
 // If recursion_depth is -1, the recursion is infinite, as far as the
 // directory structure and filesystem allows. If recursion_depth is 0,
 // only files in the start directory are returned.
-std::vector<std::string> get_dir_files_recursive(const std::string &dirname,
-                                                 const std::string &ext,
-                                                 int recursion_depth,
-                                                 bool include_directories)
+vector<string> get_dir_files_recursive(const string &dirname, const string &ext,
+                                       int recursion_depth,
+                                       bool include_directories)
 {
-    std::vector<std::string> files;
+    vector<string> files;
 
-    const std::vector<std::string> thisdirfiles = get_dir_files(dirname);
+    const vector<string> thisdirfiles = get_dir_files(dirname);
     const int next_recur_depth =
         recursion_depth == -1? -1 : recursion_depth - 1;
     const bool recur = recursion_depth == -1 || recursion_depth > 0;
 
     for (int i = 0, size = thisdirfiles.size(); i < size; ++i)
     {
-        const std::string filename(thisdirfiles[i]);
+        const string filename(thisdirfiles[i]);
         if (dir_exists(catpath(dirname, filename)))
         {
             if (include_directories
@@ -179,7 +178,7 @@ std::vector<std::string> get_dir_files_recursive(const std::string &dirname,
 
             if (recur)
             {
-                const std::vector<std::string> subdirfiles =
+                const vector<string> subdirfiles =
                     get_dir_files_recursive(catpath(dirname, filename),
                                             ext,
                                             next_recur_depth);
@@ -198,61 +197,60 @@ std::vector<std::string> get_dir_files_recursive(const std::string &dirname,
     return files;
 }
 
-std::vector<std::string> get_dir_files_ext(const std::string &dir,
-                                           const std::string &ext)
+vector<string> get_dir_files_ext(const string &dir, const string &ext)
 {
     return get_dir_files_recursive(dir, ext, 0);
 }
 
-std::string get_parent_directory(const std::string &filename)
+string get_parent_directory(const string &filename)
 {
-    std::string::size_type pos = filename.rfind(FILE_SEPARATOR);
-    if (pos != std::string::npos)
+    string::size_type pos = filename.rfind(FILE_SEPARATOR);
+    if (pos != string::npos)
         return filename.substr(0, pos + 1);
 #ifdef ALT_FILE_SEPARATOR
     pos = filename.rfind(ALT_FILE_SEPARATOR);
-    if (pos != std::string::npos)
+    if (pos != string::npos)
         return filename.substr(0, pos + 1);
 #endif
     return "";
 }
 
-std::string get_base_filename(const std::string &filename)
+string get_base_filename(const string &filename)
 {
-    std::string::size_type pos = filename.rfind(FILE_SEPARATOR);
-    if (pos != std::string::npos)
+    string::size_type pos = filename.rfind(FILE_SEPARATOR);
+    if (pos != string::npos)
         return filename.substr(pos + 1);
 #ifdef ALT_FILE_SEPARATOR
     pos = filename.rfind(ALT_FILE_SEPARATOR);
-    if (pos != std::string::npos)
+    if (pos != string::npos)
         return filename.substr(pos + 1);
 #endif
     return filename;
 }
 
-std::string get_cache_name(const std::string &filename)
+string get_cache_name(const string &filename)
 {
-    std::string::size_type pos = filename.rfind(FILE_SEPARATOR);
-    while (pos != std::string::npos && filename.find("/des", pos) != pos)
+    string::size_type pos = filename.rfind(FILE_SEPARATOR);
+    while (pos != string::npos && filename.find("/des", pos) != pos)
         pos = filename.rfind(FILE_SEPARATOR, pos - 1);
-    if (pos != std::string::npos)
+    if (pos != string::npos)
         return replace_all_of(filename.substr(pos + 5), " /\\:", "_");
 #ifdef ALT_FILE_SEPARATOR
     pos = filename.rfind(ALT_FILE_SEPARATOR);
-    while (pos != std::string::npos && filename.find("/des", pos) != pos)
+    while (pos != string::npos && filename.find("/des", pos) != pos)
         pos = filename.rfind(ALT_FILE_SEPARATOR, pos - 1);
-    if (pos != std::string::npos)
+    if (pos != string::npos)
         return replace_all_of(filename.substr(pos + 5), " /\\:", "_");
 #endif
     return filename;
 }
 
-bool is_absolute_path(const std::string &path)
+bool is_absolute_path(const string &path)
 {
     return (!path.empty()
             && (path[0] == FILE_SEPARATOR
 #ifdef TARGET_OS_WINDOWS
-                || path.find(':') != std::string::npos
+                || path.find(':') != string::npos
 #endif
               ));
 }
@@ -262,12 +260,12 @@ bool is_absolute_path(const std::string &path)
 //
 // If the first path is empty, returns the second unchanged. The second path
 // may be absolute in this case.
-std::string catpath(const std::string &first, const std::string &second)
+string catpath(const string &first, const string &second)
 {
     if (first.empty())
         return second;
 
-    std::string directory = first;
+    string directory = first;
     if (directory[directory.length() - 1] != FILE_SEPARATOR
         && (second.empty() || second[0] != FILE_SEPARATOR))
     {
@@ -281,22 +279,20 @@ std::string catpath(const std::string &first, const std::string &second)
 // Given a relative path and a reference file name, returns the relative path
 // suffixed to the directory containing the reference file name. Assumes that
 // the second path is not absolute.
-std::string get_path_relative_to(const std::string &referencefile,
-                                 const std::string &relativepath)
+string get_path_relative_to(const string &referencefile,
+                            const string &relativepath)
 {
     return catpath(get_parent_directory(referencefile),
                    relativepath);
 }
 
-std::string change_file_extension(const std::string &filename,
-                                  const std::string &ext)
+string change_file_extension(const string &filename, const string &ext)
 {
-    const std::string::size_type pos = filename.rfind('.');
-    return ((pos == std::string::npos? filename : filename.substr(0, pos))
-            + ext);
+    const string::size_type pos = filename.rfind('.');
+    return ((pos == string::npos? filename : filename.substr(0, pos)) + ext);
 }
 
-time_t file_modtime(const std::string &file)
+time_t file_modtime(const string &file)
 {
     struct stat filestat;
     if (stat(file.c_str(), &filestat))
@@ -323,18 +319,13 @@ static bool _create_directory(const char *dir)
     return false;
 }
 
-static bool _create_dirs(const std::string &dir)
+static bool _create_dirs(const string &dir)
 {
-    std::string sep = " ";
+    string sep = " ";
     sep[0] = FILE_SEPARATOR;
-    std::vector<std::string> segments =
-        split_string(
-                sep.c_str(),
-                dir,
-                false,
-                false);
+    vector<string> segments = split_string(sep.c_str(), dir, false, false);
 
-    std::string path;
+    string path;
     for (int i = 0, size = segments.size(); i < size; ++i)
     {
         path += segments[i];
@@ -355,7 +346,7 @@ static bool _create_dirs(const std::string &dir)
 // 1. If Unix: It contains no shell metacharacters.
 // 2. If DATA_DIR_PATH is set: the path is not an absolute path.
 // 3. If DATA_DIR_PATH is set: the path contains no ".." sequence.
-void assert_read_safe_path(const std::string &path) throw (std::string)
+void assert_read_safe_path(const string &path) throw (string)
 {
     // Check for rank tomfoolery first:
     if (path.empty())
@@ -371,7 +362,7 @@ void assert_read_safe_path(const std::string &path) throw (std::string)
     if (is_absolute_path(path))
         throw make_stringf("\"%s\" is an absolute path.", path.c_str());
 
-    if (path.find("..") != std::string::npos)
+    if (path.find("..") != string::npos)
     {
         throw make_stringf("\"%s\" contains \"..\" sequences.",
                            path.c_str());
@@ -381,16 +372,16 @@ void assert_read_safe_path(const std::string &path) throw (std::string)
     // Path is okay.
 }
 
-std::string canonicalise_file_separator(const std::string &path)
+string canonicalise_file_separator(const string &path)
 {
-    const std::string sep(1, FILE_SEPARATOR);
-    return (replace_all_of(replace_all_of(path, "/", sep),
-                           "\\", sep));
+    const string sep(1, FILE_SEPARATOR);
+    return replace_all_of(replace_all_of(path, "/", sep),
+                          "\\", sep);
 }
 
-static std::vector<std::string> _get_base_dirs()
+static vector<string> _get_base_dirs()
 {
-    const std::string rawbases[] = {
+    const string rawbases[] = {
 #ifdef DATA_DIR_PATH
         DATA_DIR_PATH,
 #else
@@ -402,29 +393,29 @@ static std::vector<std::string> _get_base_dirs()
 #endif
     };
 
-    const std::string prefixes[] = {
-        std::string("dat") + FILE_SEPARATOR,
+    const string prefixes[] = {
+        string("dat") + FILE_SEPARATOR,
 #ifdef USE_TILE_LOCAL
-        std::string("dat/tiles") + FILE_SEPARATOR,
+        string("dat/tiles") + FILE_SEPARATOR,
 #endif
-        std::string("docs") + FILE_SEPARATOR,
-        std::string("settings") + FILE_SEPARATOR,
+        string("docs") + FILE_SEPARATOR,
+        string("settings") + FILE_SEPARATOR,
 #ifndef DATA_DIR_PATH
-        std::string("..") + FILE_SEPARATOR + "docs" + FILE_SEPARATOR,
-        std::string("..") + FILE_SEPARATOR + "dat" + FILE_SEPARATOR,
+        string("..") + FILE_SEPARATOR + "docs" + FILE_SEPARATOR,
+        string("..") + FILE_SEPARATOR + "dat" + FILE_SEPARATOR,
 #ifdef USE_TILE_LOCAL
-        std::string("..") + FILE_SEPARATOR + "dat/tiles" + FILE_SEPARATOR,
+        string("..") + FILE_SEPARATOR + "dat/tiles" + FILE_SEPARATOR,
 #endif
-        std::string("..") + FILE_SEPARATOR + "settings" + FILE_SEPARATOR,
-        std::string("..") + FILE_SEPARATOR,
+        string("..") + FILE_SEPARATOR + "settings" + FILE_SEPARATOR,
+        string("..") + FILE_SEPARATOR,
 #endif
         "",
     };
 
-    std::vector<std::string> bases;
+    vector<string> bases;
     for (unsigned i = 0; i < ARRAYSZ(rawbases); ++i)
     {
-        std::string base = rawbases[i];
+        string base = rawbases[i];
         if (base.empty())
             continue;
 
@@ -440,21 +431,19 @@ static std::vector<std::string> _get_base_dirs()
     return bases;
 }
 
-std::string datafile_path(std::string basename,
-                          bool croak_on_fail,
-                          bool test_base_path,
-                          bool (*thing_exists)(const std::string&))
+string datafile_path(string basename, bool croak_on_fail, bool test_base_path,
+                     bool (*thing_exists)(const string&))
 {
     basename = canonicalise_file_separator(basename);
 
     if (test_base_path && thing_exists(basename))
         return basename;
 
-    std::vector<std::string> bases = _get_base_dirs();
+    vector<string> bases = _get_base_dirs();
 
     for (unsigned b = 0, size = bases.size(); b < size; ++b)
     {
-        std::string name = bases[b] + basename;
+        string name = bases[b] + basename;
         if (thing_exists(name))
             return name;
     }
@@ -480,7 +469,7 @@ std::string datafile_path(std::string basename,
 // guaranteed to have the file separator appended to it, and with any
 // / and \ separators replaced with the one true FILE_SEPARATOR.
 //
-bool check_mkdir(const std::string &whatdir, std::string *dir, bool silent)
+bool check_mkdir(const string &whatdir, string *dir, bool silent)
 {
     if (dir->empty())
         return true;
@@ -506,20 +495,18 @@ bool check_mkdir(const std::string &whatdir, std::string *dir, bool silent)
 // Get the directory that contains save files for the current game
 // type. This will not be the same as get_base_savedir() for game
 // types such as Sprint.
-static std::string _get_savefile_directory()
+static string _get_savefile_directory()
 {
-    std::string dir = catpath(Options.save_dir,
-                              crawl_state.game_savedir_path());
+    string dir = catpath(Options.save_dir, crawl_state.game_savedir_path());
     check_mkdir("Save directory", &dir, false);
     if (dir.empty())
         dir = ".";
     return dir;
 }
 
-static std::string _get_bonefile_directory()
+static string _get_bonefile_directory()
 {
-    std::string dir = catpath(Options.shared_dir,
-                              crawl_state.game_savedir_path());
+    string dir = catpath(Options.shared_dir, crawl_state.game_savedir_path());
     check_mkdir("Bones directory", &dir, false);
     if (dir.empty())
         dir = ".";
@@ -528,7 +515,7 @@ static std::string _get_bonefile_directory()
 
 // Returns a subdirectory of the current savefile directory as returned by
 // _get_savefile_directory.
-static std::string _get_savedir_path(const std::string &shortpath)
+static string _get_savedir_path(const string &shortpath)
 {
     return canonicalise_file_separator(
         catpath(_get_savefile_directory(), shortpath));
@@ -539,7 +526,7 @@ static std::string _get_savedir_path(const std::string &shortpath)
 // be found in a subdirectory of this dir. Use _get_savefile_directory() if
 // you want the directory that contains save games for the current game
 // type.
-static std::string _get_base_savedir_path(const std::string &subpath = "")
+static string _get_base_savedir_path(const string &subpath = "")
 {
     return canonicalise_file_separator(catpath(Options.save_dir, subpath));
 }
@@ -548,13 +535,13 @@ static std::string _get_base_savedir_path(const std::string &subpath = "")
 // base save directory and a subdirectory named with the game version.
 // This is useful when writing cache files and similar output that
 // should not be shared between different game versions.
-std::string savedir_versioned_path(const std::string &shortpath)
+string savedir_versioned_path(const string &shortpath)
 {
 #ifdef DGL_VERSIONED_CACHE_DIR
-    const std::string versioned_dir =
+    const string versioned_dir =
         _get_base_savedir_path("cache." + Version::Long());
 #else
-    const std::string versioned_dir = _get_base_savedir_path();
+    const string versioned_dir = _get_base_savedir_path();
 #endif
     return catpath(versioned_dir, shortpath);
 }
@@ -614,26 +601,26 @@ static void _fill_player_doll(player_save_info &p, package *save)
  * current user.
  */
 
-static std::vector<player_save_info> _find_saved_characters()
+static vector<player_save_info> _find_saved_characters()
 {
-    std::vector<player_save_info> chars;
+    vector<player_save_info> chars;
 
     if (Options.no_save)
         return chars;
 
 #ifndef DISABLE_SAVEGAME_LISTS
-    std::string searchpath = _get_savefile_directory();
+    string searchpath = _get_savefile_directory();
 
     if (searchpath.empty())
         searchpath = ".";
 
-    std::vector<std::string> allfiles = get_dir_files(searchpath);
+    vector<string> allfiles = get_dir_files(searchpath);
     for (unsigned int i = 0; i < allfiles.size(); ++i)
     {
-        std::string filename = allfiles[i];
+        string filename = allfiles[i];
 
-        std::string::size_type point_pos = filename.find_first_of('.');
-        std::string basename = filename.substr(0, point_pos);
+        string::size_type point_pos = filename.find_first_of('.');
+        string basename = filename.substr(0, point_pos);
 
         if (is_save_file_name(filename))
         {
@@ -659,28 +646,28 @@ static std::vector<player_save_info> _find_saved_characters()
 
     }
 
-    std::sort(chars.rbegin(), chars.rend());
+    sort(chars.rbegin(), chars.rend());
 #endif // !DISABLE_SAVEGAME_LISTS
     return chars;
 }
 
-std::vector<player_save_info> find_all_saved_characters()
+vector<player_save_info> find_all_saved_characters()
 {
-    std::set<std::string> dirs;
-    std::vector<player_save_info> saved_characters;
+    set<string> dirs;
+    vector<player_save_info> saved_characters;
     for (int i = 0; i < NUM_GAME_TYPE; ++i)
     {
         unwind_var<game_type> gt(
             crawl_state.type,
             static_cast<game_type>(i));
 
-        const std::string savedir = _get_savefile_directory();
+        const string savedir = _get_savefile_directory();
         if (dirs.find(savedir) != dirs.end())
             continue;
 
         dirs.insert(savedir);
 
-        std::vector<player_save_info> chars_in_dir = _find_saved_characters();
+        vector<player_save_info> chars_in_dir = _find_saved_characters();
         saved_characters.insert(saved_characters.end(),
                                 chars_in_dir.begin(),
                                 chars_in_dir.end());
@@ -688,23 +675,23 @@ std::vector<player_save_info> find_all_saved_characters()
     return saved_characters;
 }
 
-bool save_exists(const std::string& filename)
+bool save_exists(const string& filename)
 {
     return file_exists(_get_savefile_directory() + filename);
 }
 
-std::string get_savedir_filename(const std::string &name)
+string get_savedir_filename(const string &name)
 {
     return _get_savefile_directory() + get_save_filename(name);
 }
 
-std::string get_save_filename(const std::string &name)
+string get_save_filename(const string &name)
 {
     return chop_string(strip_filename_unsafe_chars(name), kFileNameLen, false)
            + SAVE_SUFFIX;
 }
 
-std::string get_prefs_filename()
+string get_prefs_filename()
 {
 #ifdef DGL_STARTUP_PREFS_BY_NAME
     return _get_savefile_directory() + "start-"
@@ -739,7 +726,7 @@ static void _write_ghost_version(writer &outf)
 class safe_file_writer
 {
 public:
-    safe_file_writer(const std::string &filename,
+    safe_file_writer(const string &filename,
                      const char *mode = "wb",
                      bool _lock = false)
         : target_filename(filename), tmp_filename(target_filename),
@@ -788,14 +775,14 @@ public:
     }
 
 private:
-    std::string target_filename, tmp_filename;
+    string target_filename, tmp_filename;
     const char *filemode;
     bool lock;
 
     FILE *filep;
 };
 
-static void _write_tagged_chunk(const std::string &chunkname, tag_type tag)
+static void _write_tagged_chunk(const string &chunkname, tag_type tag)
 {
     writer outf(you.save, chunkname);
 
@@ -1038,7 +1025,7 @@ static void _grab_followers()
                  non_stair_using_allies > 1 ? ""  : "s");
         }
         memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
-        std::vector<coord_def> places[2];
+        vector<coord_def> places[2];
         int place_set = 0;
         places[place_set].push_back(you.pos());
         while (!places[place_set].empty())
@@ -1129,7 +1116,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
         if (is_level_on_stack(level_id::current()) && !player_in_branch(BRANCH_ABYSS))
         {
-            std::vector<std::string> stack;
+            vector<string> stack;
             for (unsigned int i = 0; i < you.level_stack.size(); i++)
                 stack.push_back(you.level_stack[i].id.describe());
             if (you.wizard)
@@ -1174,7 +1161,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
     bool just_created_level = false;
 
-    std::string level_name = level_id::current().describe();
+    string level_name = level_id::current().describe();
 
     you.prev_targ     = MHITNOT;
     you.prev_grd_targ.reset();
@@ -1307,9 +1294,11 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         else
             _place_player_on_stair(old_level.branch, stair_taken, dest_pos);
 
-        // Don't return the player into deep water or a trap.
+        // Don't return the player into walls, deep water, or a trap.
         for (distance_iterator di(you.pos(), true, false); di; ++di)
-            if (!is_feat_dangerous(grd(*di), true) && !feat_is_trap(grd(*di), true))
+            if (you.is_habitable_feat(grd(*di))
+                && !is_feat_dangerous(grd(*di), true)
+                && !feat_is_trap(grd(*di), true))
             {
                 if (you.pos() != *di)
                     you.moveto(*di);
@@ -1445,9 +1434,9 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
                 && feat_stair_direction(feat) != CMD_NO_CMD
                 && feat_stair_direction(stair_taken) != CMD_NO_CMD)
             {
-                std::string stair_str =
-                    feature_description_at(you.pos(), "", DESC_THE, false);
-                std::string verb = stair_climb_verb(feat);
+                string stair_str = feature_description_at(you.pos(), "",
+                                                          DESC_THE, false);
+                string verb = stair_climb_verb(feat);
 
                 if (coinflip()
                     && slide_feature_over(you.pos(), coord_def(-1, -1), false))
@@ -1507,7 +1496,7 @@ static void _save_level(const level_id& lid)
         savefn(w);                \
     } while (false)
 
-// Stack allocated std::string's go in separate function, so Valgrind doesn't
+// Stack allocated string's go in separate function, so Valgrind doesn't
 // complain.
 static void _save_game_base()
 {
@@ -1545,7 +1534,7 @@ static void _save_game_base()
     _write_tagged_chunk("chr", TAG_CHR);
 }
 
-// Stack allocated std::string's go in separate function, so Valgrind doesn't
+// Stack allocated string's go in separate function, so Valgrind doesn't
 // complain.
 static void _save_game_exit()
 {
@@ -1575,7 +1564,7 @@ void save_game(bool leave_game, const char *farewellmsg)
 {
     unwind_bool saving_game(crawl_state.saving_game, true);
 
-    // Stack allocated std::string's go in separate function,
+    // Stack allocated string's go in separate function,
     // so Valgrind doesn't complain.
     _save_game_base();
 
@@ -1586,7 +1575,7 @@ void save_game(bool leave_game, const char *farewellmsg)
         return;
     }
 
-    // Stack allocated std::string's go in separate function,
+    // Stack allocated string's go in separate function,
     // so Valgrind doesn't complain.
     _save_game_exit();
 
@@ -1602,7 +1591,7 @@ void save_game_state()
         save_game(true);
 }
 
-static std::string _make_ghost_filename()
+static string _make_ghost_filename()
 {
     return _get_bonefile_directory() + "bones."
            + replace_all(level_id::current().describe(), ":", "-");
@@ -1638,7 +1627,7 @@ bool load_ghost(bool creating_level)
 
 #endif // BONES_DIAGNOSTICS
 
-    const std::string ghost_filename = _make_ghost_filename();
+    const string ghost_filename = _make_ghost_filename();
     reader inf(ghost_filename);
     if (!inf.valid())
     {
@@ -1737,7 +1726,7 @@ bool load_ghost(bool creating_level)
 }
 
 // returns false if a new game should start instead
-static bool _restore_game(const std::string& filename)
+static bool _restore_game(const string& filename)
 {
     if (Options.no_save)
         return false;
@@ -1790,7 +1779,7 @@ static bool _restore_game(const std::string& filename)
 #ifdef CLUA_BINDINGS
     if (you.save->has_chunk("lua"))
     {
-        std::vector<char> buf;
+        vector<char> buf;
         chunk_reader inf(you.save, "lua");
         inf.read_all(buf);
         buf.push_back(0);
@@ -1834,7 +1823,7 @@ static bool _restore_game(const std::string& filename)
 }
 
 // returns false if a new game should start instead
-bool restore_game(const std::string& filename)
+bool restore_game(const string& filename)
 {
     try
     {
@@ -1963,7 +1952,7 @@ static bool _read_char_chunk(package *save)
         unsigned int len = unmarshallInt(inf);
         if (len > 1024) // something is fishy
             fail("Save file corrupted (info > 1KB)");
-        std::vector<unsigned char> buf;
+        vector<unsigned char> buf;
         buf.resize(len);
         inf.read(&buf[0], len);
         inf.fail_if_not_eof("chr");
@@ -1993,7 +1982,7 @@ static bool _read_char_chunk(package *save)
     };
 }
 
-static bool _tagged_chunk_version_compatible(reader &inf, std::string* reason)
+static bool _tagged_chunk_version_compatible(reader &inf, string* reason)
 {
     int major = 0, minor = TAG_MINOR_INVALID;
     ASSERT(reason);
@@ -2040,11 +2029,11 @@ static bool _tagged_chunk_version_compatible(reader &inf, std::string* reason)
     return true;
 }
 
-static bool _restore_tagged_chunk(package *save, const std::string name,
+static bool _restore_tagged_chunk(package *save, const string name,
                                   tag_type tag, const char* complaint)
 {
     reader inf(save, name);
-    std::string reason;
+    string reason;
     if (!_tagged_chunk_version_compatible(inf, &reason))
     {
         if (!complaint)
@@ -2126,7 +2115,7 @@ void save_ghost(bool force)
         return;
     }
 
-    const std::string cha_fil = _make_ghost_filename();
+    const string cha_fil = _make_ghost_filename();
     FILE *gfile = fopen_u(cha_fil.c_str(), "rb");
 
     // Don't overwrite existing bones!
@@ -2178,7 +2167,7 @@ bool unlock_file_handle(FILE *handle)
     return unlock_file(fileno(handle));
 }
 
-FILE *lk_open(const char *mode, const std::string &file)
+FILE *lk_open(const char *mode, const string &file)
 {
     FILE *handle = fopen_u(file.c_str(), mode);
     if (!handle)
@@ -2198,7 +2187,7 @@ FILE *lk_open(const char *mode, const std::string &file)
     return handle;
 }
 
-void lk_close(FILE *handle, const char *mode, const std::string &file)
+void lk_close(FILE *handle, const char *mode, const string &file)
 {
     UNUSED(mode);
 
@@ -2216,7 +2205,7 @@ void lk_close(FILE *handle, const char *mode, const std::string &file)
 //
 // Locks a named file (usually an empty lock file), creating it if necessary.
 
-file_lock::file_lock(const std::string &s, const char *_mode, bool die_on_fail)
+file_lock::file_lock(const string &s, const char *_mode, bool die_on_fail)
     : handle(NULL), mode(_mode), filename(s)
 {
     if (!(handle = lk_open(mode, filename)) && die_on_fail)
@@ -2251,13 +2240,13 @@ off_t file_size(FILE *handle)
     return err? 0 : fs.st_size;
 }
 
-std::vector<std::string> get_title_files()
+vector<string> get_title_files()
 {
-    std::vector<std::string> bases = _get_base_dirs();
-    std::vector<std::string> titles;
+    vector<string> bases = _get_base_dirs();
+    vector<string> titles;
     for (unsigned int i = 0; i < bases.size(); ++i)
     {
-        std::vector<std::string> files = get_dir_files(bases[i]);
+        vector<string> files = get_dir_files(bases[i]);
         for (unsigned int j = 0; j < files.size(); ++j)
             if (files[j].substr(0, 6) == "title_")
                 titles.push_back(files[j]);

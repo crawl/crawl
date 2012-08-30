@@ -15,6 +15,7 @@ class WebtilesSocketConnection(object):
         self.message_callback = None
         self.socket = None
         self.socketpath = None
+        self.open = False
 
         self.msg_buffer = None
 
@@ -50,6 +51,8 @@ class WebtilesSocketConnection(object):
                 "msg": "attach",
                 "primary": primary
                 })
+
+        self.open = True
 
         self.socket.sendto(msg, self.crawl_socketpath)
 

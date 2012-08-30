@@ -21,7 +21,7 @@ struct packed_cell;
 // Initialize the flavour and the tile env when changing or creating levels.
 void tile_new_level(bool first_time, bool init_unseen);
 
-inline void tile_new_level(bool first_time)
+static inline void tile_new_level(bool first_time)
 {
     return tile_new_level(first_time, first_time);
 }
@@ -55,6 +55,8 @@ void tile_wizmap_terrain(const coord_def &gc);
 
 void tile_apply_animations(tileidx_t bg, tile_flavour *flv);
 void tile_apply_properties(const coord_def &gc, packed_cell &cell);
+void apply_variations(const tile_flavour &flv, tileidx_t *bg,
+                      const coord_def &gc);
 
 void tile_clear_map(const coord_def &gc);
 void tile_forget_map(const coord_def &gc);

@@ -20,6 +20,7 @@ class TileRegion;
 class DungeonRegion;
 class GridRegion;
 class InventoryRegion;
+class AbilityRegion;
 class SpellRegion;
 class MemoriseRegion;
 class ActorRegion;
@@ -37,7 +38,7 @@ class MessageRegion;
 
 struct map_cell;
 
-typedef std::map<int, TabbedRegion*>::iterator tab_iterator;
+typedef map<int, TabbedRegion*>::iterator tab_iterator;
 
 enum key_mod
 {
@@ -118,7 +119,7 @@ public:
 
     void place_cursor(cursor_type type, const coord_def &gc);
     void clear_text_tags(text_tag_type type);
-    void add_text_tag(text_tag_type type, const std::string &tag,
+    void add_text_tag(text_tag_type type, const string &tag,
                       const coord_def &gc);
     void add_text_tag(text_tag_type type, const monster_info& mon);
 
@@ -130,7 +131,7 @@ public:
     void clear_overlays();
 
     void draw_title();
-    void update_title_msg(std::string load_msg);
+    void update_title_msg(string load_msg);
     void hide_title();
 
     void draw_doll_edit();
@@ -162,6 +163,7 @@ protected:
         TAB_ITEM,
         TAB_SPELL,
         TAB_MEMORISE,
+        TAB_ABILITY,
         TAB_MONSTER,
         TAB_SKILL,
         TAB_COMMAND,
@@ -180,7 +182,7 @@ protected:
     {
     public:
         // Layers don't own these regions
-        std::vector<Region*> m_regions;
+        vector<Region*> m_regions;
     };
     Layer m_layers[LAYER_MAX];
     LayerID m_active_layer;
@@ -193,13 +195,14 @@ protected:
     MapRegion       *m_region_map;
     TabbedRegion    *m_region_tab;
     InventoryRegion *m_region_inv;
+    AbilityRegion   *m_region_abl;
     SpellRegion     *m_region_spl;
     MemoriseRegion  *m_region_mem;
     MonsterRegion   *m_region_mon;
     SkillRegion     *m_region_skl;
     CommandRegion   *m_region_cmd;
 
-    std::map<int, TabbedRegion*> m_tabs;
+    map<int, TabbedRegion*> m_tabs;
 
     // Full-screen CRT layer
     CRTRegion       *m_region_crt;
@@ -207,12 +210,12 @@ protected:
 
     struct font_info
     {
-        std::string name;
+        string name;
         int size;
         bool outline;
         FontWrapper *font;
     };
-    std::vector<font_info> m_fonts;
+    vector<font_info> m_fonts;
     int m_crt_font;
     int m_msg_font;
     int m_tip_font;
@@ -242,7 +245,7 @@ protected:
     unsigned int m_last_tick_moved;
     unsigned int m_last_tick_redraw;
 
-    std::string m_tooltip;
+    string m_tooltip;
 
     int m_screen_width;
     int m_screen_height;

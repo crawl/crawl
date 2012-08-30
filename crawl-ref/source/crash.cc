@@ -100,9 +100,9 @@ static void _crash_signal_handler(int sig_num)
 
         fprintf(stderr, "Recursive crash.\n");
 
-        std::string dir = (!Options.morgue_dir.empty() ? Options.morgue_dir :
-                           !SysEnv.crawl_dir.empty()   ? SysEnv.crawl_dir
-                                                       : "");
+        string dir = (!Options.morgue_dir.empty() ? Options.morgue_dir :
+                      !SysEnv.crawl_dir.empty()   ? SysEnv.crawl_dir
+                                                  : "");
 
         if (!dir.empty() && dir[dir.length() - 1] != FILE_SEPARATOR)
             dir += FILE_SEPARATOR;
@@ -140,6 +140,10 @@ static void _crash_signal_handler(int sig_num)
 #ifndef USE_TILE_LOCAL
     if (crawl_state.io_inited)
         console_shutdown();
+#endif
+
+#ifdef USE_TILE_WEB
+    tiles.shutdown();
 #endif
 
 #ifdef DGAMELAUNCH
@@ -294,7 +298,7 @@ void write_stack_trace(FILE* file, int ignore_count)
     fprintf(file, "Obtained %d stack frames.\n", num_frames);
 
     // Now we prettify the printout to even show demangled C++ function names.
-    std::string bt = "";
+    string bt = "";
     for (int i = 0; i < num_frames; i++)
     {
 #if defined (TARGET_OS_MACOSX)

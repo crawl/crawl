@@ -6,6 +6,11 @@
 
 #include "tilefont.h"
 
+#include <map>
+
+#include <ft2build.h>
+#include FT_FREETYPE_H
+
 // TODO enne - Fonts could be made better by:
 //
 // * handling kerning
@@ -43,7 +48,7 @@ public:
 
     // FontBuffer helper functions
     virtual void store(FontBuffer &buf, float &x, float &y,
-                       const std::string &s, const VColour &c);
+                       const string &s, const VColour &c);
     virtual void store(FontBuffer &buf, float &x, float &y,
                        const formatted_string &fs);
     virtual void store(FontBuffer &buf, float &x, float &y, ucs_t c,
@@ -52,8 +57,8 @@ public:
     virtual unsigned int char_width() const;
     virtual unsigned int char_height() const;
 
-    virtual unsigned int string_width(const char *text) const;
-    virtual unsigned int string_width(const formatted_string &str) const;
+    virtual unsigned int string_width(const char *text) ;
+    virtual unsigned int string_width(const formatted_string &str) ;
     virtual unsigned int string_height(const char *text) const;
     virtual unsigned int string_height(const formatted_string &str) const;
 
@@ -66,26 +71,48 @@ public:
 
 protected:
     void store(FontBuffer &buf, float &x, float &y,
-               const std::string &s, const VColour &c, float orig_x);
+               const string &s, const VColour &c, float orig_x);
     void store(FontBuffer &buf, float &x, float &y, const formatted_string &fs,
                float orig_x);
 
     int find_index_before_width(const char *str, int max_width);
 
+    unsigned int map_unicode(ucs_t uchar, bool update);
+    unsigned int map_unicode(ucs_t uchar);
+    void load_glyph(unsigned int c, ucs_t uchar);
+    void draw_m_buf(unsigned int x_pos, unsigned int y_pos, bool drop_shadow);
+
     struct GlyphInfo
     {
         // offset before drawing glyph; can be negative
-        char offset;
+        int8_t offset;
 
         // per-glyph horizontal advance
-        char advance;
-
+        int8_t advance;
         // per-glyph width
-        char width;
+        int8_t width;
+        // per-glyph ascender
+        int8_t ascender;
 
+        // does glyph have any pixels?
         bool renderable;
+
+        // index of prev/next glyphs in LRU
+        unsigned int prev; unsigned int next;
+        // charcode of glyph
+        ucs_t uchar;
     };
     GlyphInfo *m_glyphs;
+    map<ucs_t, unsigned int> m_glyphmap;
+    // index of least recently used glyph
+    ucs_t m_glyphs_lru;
+    // index of most recently used glyph
+    ucs_t m_glyphs_mru;
+    // index of last populated glyph until m_glyphs[] is full
+    ucs_t m_glyphs_top;
+
+    // count of glyph loads in the current text block
+    int n_subst;
 
     // cached value of the maximum advance from m_advance
     coord_def m_max_advance;
@@ -93,8 +120,22 @@ protected:
     // minimum offset (likely negative)
     int m_min_offset;
 
+    // size of ascender according to font
+    int m_ascender;
+
+    // other font metrics
+    coord_def charsz;
+    unsigned int m_ft_width;
+    unsigned int m_ft_height;
+    int m_max_width;
+    int m_max_height;
+
     GenericTexture m_tex;
     GLShapeBuffer *m_buf;
+
+    FT_Face face;
+    bool    outl;
+    unsigned char *pixels;
 };
 
 #endif // USE_FT

@@ -125,8 +125,8 @@ public:
 // nodes will get different results.
 class defer_rand
 {
-    std::vector<uint32_t> bits;
-    std::map<int, defer_rand> children;
+    vector<uint32_t> bits;
+    map<int, defer_rand> children;
 
     bool x_chance_in_y_contd(int x, int y, int index);
 public:

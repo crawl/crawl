@@ -16,7 +16,7 @@ struct glyph
     }
 };
 
-std::string glyph_to_tagstr(const glyph& g);
+string glyph_to_tagstr(const glyph& g);
 
 ucs_t get_feat_symbol(dungeon_feature_type feat);
 ucs_t get_item_symbol(show_item_type it);

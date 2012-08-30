@@ -59,7 +59,7 @@ void clua_register_metatable(lua_State *ls, const char *tn,
                              const luaL_reg *lr,
                              int (*gcfn)(lua_State *ls) = NULL);
 
-int clua_stringtable(lua_State *ls, const std::vector<std::string> &s);
+int clua_stringtable(lua_State *ls, const vector<string> &s);
 
 /*
  * User-data templates.
@@ -67,7 +67,7 @@ int clua_stringtable(lua_State *ls, const std::vector<std::string> &s);
  */
 
 template <class T>
-inline static T *clua_get_lightuserdata(lua_State *ls, int ndx)
+static inline T *clua_get_lightuserdata(lua_State *ls, int ndx)
 {
     return (lua_islightuserdata(ls, ndx))?
             static_cast<T *>(lua_touserdata(ls, ndx))
@@ -75,7 +75,7 @@ inline static T *clua_get_lightuserdata(lua_State *ls, int ndx)
 }
 
 template <class T>
-inline static T *clua_get_userdata(lua_State *ls, const char *mt, int ndx = 1)
+static inline T *clua_get_userdata(lua_State *ls, const char *mt, int ndx = 1)
 {
     return static_cast<T*>(luaL_checkudata(ls, ndx, mt));
 }
@@ -99,7 +99,7 @@ template <class T> T *clua_new_userdata(
 }
 
 template <typename T>
-inline void dlua_push_userdata(lua_State *ls, T udata, const char *meta)
+static inline void dlua_push_userdata(lua_State *ls, T udata, const char *meta)
 {
     T *de = clua_new_userdata<T>(ls, meta);
     *de = udata;
@@ -197,7 +197,7 @@ static int clua_gentable(lua_State *ls, const list &strings, lpush push)
     return 1;
 }
 
-int clua_pushcxxstring(lua_State *ls, const std::string &s);
+int clua_pushcxxstring(lua_State *ls, const string &s);
 int clua_pushpoint(lua_State *ls, const coord_def &pos);
 
 #endif

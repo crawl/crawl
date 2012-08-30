@@ -120,7 +120,7 @@ On Debian-based systems (Ubuntu, Mepis, Xandros, ...), you can get all
 dependencies by typing the following as root/sudo:
 apt-get install build-essential libncursesw5-dev bison flex liblua5.1-0-dev \
   libsqlite3-dev libz-dev pkg-config libsdl-image1.2-dev libsdl1.2-dev      \
-  libfreetype6-dev libpng-dev
+  libfreetype6-dev libpng-dev ttf-dejavu-core
 (the last five are needed only for tiles builds).  This is the complete set,
 with it you don't have a need for the bundled "contribs".
 
@@ -135,8 +135,9 @@ Prerequisites (Fedora):
 On Fedora, and possibly other RPM-based systems, you can get the dependencies
 by running the following as root:
 yum install gcc gcc-c++ make bison flex ncurses-devel lua-devel sqlite-devel \
-  zlib-devel pkgconfig SDL-devel SDL_image-devel libpng-devel freetype-devel
-(the last five are needed only for tile builds).  As with Debian, this package
+  zlib-devel pkgconfig SDL-devel SDL_image-devel libpng-devel freetype-devel \
+  dejavu-sans-fonts dejavu-sans-mono-fonts
+(the last six are needed only for tile builds).  As with Debian, this package
 list avoids the need for the bundled "contribs".
 
 ccache can be installed with:

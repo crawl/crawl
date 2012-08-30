@@ -44,4 +44,6 @@ for (grep /\.des|\.des\.disabled|\.lua$/, `git ls-files`)
         for /\bdesc\s*=\s*"([^"]*)"/g;
 }
 
+$features{articled("gleaming silver wall")} = 1;
+
 print join("\n", sort keys %features), "\n";

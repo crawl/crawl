@@ -1,13 +1,13 @@
 %%%%
 amulet
 
-Kaulassa pidettävä talismaani, joka on ladattu mystisillä, tuntemattomasta
-alkuperästä lähtöisin olevilla voimilla.
+Kaulassa pidettävä talismaani, jossa piilee mystisiä, tuntemattomasta lähteestä
+peräisin olevia voimia.
 %%%%
 book
 
-Taikaloitsuja sisältävä kirja. Ole varuillasi, sillä tehokkaimmat loitsut eivät
-ole leikkimistä varten.
+Taikaloitsuja sisältävä kirja. Ole varuillasi, sillä tehokkaimmilla loitsuilla
+ei ole leikkiminen.
 %%%%
 deck of cards
 
@@ -21,13 +21,14 @@ Pieni nestettä sisältävä pullo.
 %%%%
 ring
 
-Sormeen pujotettava koru, joka on ladattu mystisillä voimilla.
+Sormeen pujotettava koru, jossa piilee mystisiä, tuntemattomasta lähteestä
+peräisin olevia voimia.
 %%%%
 rod
 
 Maaginen sauva, jota voi pitää kädessä ja käyttää useiden loitsujen
-loihtimiseen, käyttäen itsestään palautuvia voimavarastoja. Se on myös
-tarpeeksi jykevä toimimaan myös simppelinä, tylppänä lyömäaseena.
+loihtimiseen. Se käyttää itsestään palautuvia voimavarastoja, ja on kyllin
+jykevä käytettäväksi yksinkertaisena, tylppänä lyömäaseena.
 %%%%
 scroll
 

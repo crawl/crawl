@@ -710,12 +710,12 @@ lemon
 %%%%
 lightning rod
 
-Ten pręt strzela ciągłym wyładowaniem elektrycznym.  Podtrzymać to
-wyładowanie można używając piorunogromu w kolejnych turach (jakakolwiek
-przerwa wyłączy go). Potrzebuje on chwili czasu aby się porządnie rozgrzać,
-tak więc moc podczas pierwszej tury nie jest zbyt potężna. Ponadto,
-zgromadzony w powietrzu ładunek lekko osłabia działanie piorunogromu, tak
-więc dla lepszego efektu dobrze jest machać nim pomiędzy pobliskimi celami.
+Ten pręt strzela ciągłym wyładowaniem elektrycznym. Podtrzymać to wyładowanie
+można używając piorunogromu w kolejnych turach (jakakolwiek przerwa wyłączy
+go). Potrzebuje on chwili czasu aby się porządnie rozgrzać, tak więc moc
+podczas pierwszej tury nie jest zbyt potężna. Ponadto, zgromadzony w powietrzu
+ładunek lekko osłabia działanie piorunogromu, tak więc dla lepszego efektu
+dobrze jest machać nim pomiędzy pobliskimi celami.
 %%%%
 long sword
 
@@ -953,10 +953,6 @@ spowodować magiczną skazę!
 potion of strong poison
 
 Wyjątkowo groźna trucizna.
-%%%%
-potion of water
-
-Cudowna substancja, podstawa wszelkiego życia.
 %%%%
 quad damage
 

@@ -373,6 +373,8 @@ plate PLATE
 plate2 PLATE2
 plate_black PLATE_BLACK
 crystal_plate CRYSTAL_PLATE
+crystal_plate2
+crystal_plate3
 armor_mummy ARMOR_MUMMY
 
 ##cloth_u_sail SAILOR
@@ -459,7 +461,6 @@ zonguldrok ZONGULDROK
 sword_of_power SWORD_OF_POWER
 knife_of_accuracy KNIFE_OF_ACCURACY
 vampires_tooth VAMPIRES_TOOTH
-dire_lajatang DIRE_LAJATANG
 spriggans_knife SPRIGGANS_KNIFE
 cutlass CUTLASS
 ## blunt
@@ -597,6 +598,9 @@ d_glaive D_GLAIVE
 pole_forked POLE_FORKED
 fork2 FORK2
 trishula TRISHULA
+lajatang1 LAJATANG
+lajatang2
+lajatang3
 
 ## staves
 
@@ -739,7 +743,7 @@ shield_middle_ethn SHIELD_MIDDLE_ETHN
 shield_long_cross SHIELD_LONG_CROSS
 shield_shaman SHIELD_SHAMAN
 shield_of_resistance SHIELD_OF_RESISTANCE
-shield_of_ignorance SHIELD_OF_IGNORANCE
+large_shield_of_ignorance LARGE_SHIELD_OF_IGNORANCE
 gil-galad SHIELD_GILGALAD
 shield_spriggan SHIELD_SPRIGGAN
 

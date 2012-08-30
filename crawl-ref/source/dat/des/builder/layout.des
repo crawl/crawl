@@ -56,7 +56,8 @@
     end
 
     function random_wall_material(e)
-        if not you.in_branch("Lair") and crawl.one_chance_in(20) then
+        if not you.in_branch("Lair") and not you.in_branch("Zot")
+           and you.absdepth() >= 4 and crawl.one_chance_in(20) then
             e.subst('x : ccv')
         end
     end
@@ -72,7 +73,7 @@ NAME:   layout_forbidden_donut
 DEPTH:  4-22, Pan, !Vaults
 WEIGHT: 10
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand
+TAGS:   overwritable layout no_primary_vault allow_dup unrand
 {{
     local gxm, gym = dgn.max_bounds()
     extend_map{width=gxm, height=gym, fill='x'}
@@ -213,7 +214,7 @@ NAME: layout_big_octagon
 DEPTH:   Pan, 4-22, !Vaults
 WEIGHT:  6 (Pan), 10
 ORIENT:  encompass
-TAGS:    overwritable layout allow_dup unrand
+TAGS:    overwritable layout no_primary_vault allow_dup unrand
 
 {{
     -- Step 1: Big octagon.
@@ -387,8 +388,8 @@ ENDMAP
 # This replaces dungeon.cc:_plan_3().
 #
 NAME: layout_rooms
-DEPTH: Pan, 4-22, !Vaults
-WEIGHT: 60 (Pan), 20
+DEPTH: Pan, 1-, !Vaults
+WEIGHT: 60 (Pan), 10 (Zot), 20
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
@@ -470,7 +471,7 @@ ENDMAP
 # This replaces dungeon.cc:_city_level().
 #
 NAME: layout_city
-DEPTH: Dis, Vaults, 15-, !Pan
+DEPTH: Dis, Vaults, 15-, !Pan, !Zot
 WEIGHT: 1 (Vaults), 10
 CHANCE: 100% (Dis)
 ORIENT: encompass
@@ -585,7 +586,7 @@ ENDMAP
 #
 # This replaces dungeon.cc:_plan_5().
 NAME: layout_misc
-DEPTH: Pan, 4-22, !Vaults
+DEPTH: Pan, 1-, !Vaults
 WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
@@ -622,7 +623,7 @@ MAP
 ENDMAP
 
 NAME: layout_caves
-DEPTH: Hive, Orc, Slime
+DEPTH: Orc, Slime
 CHANCE: 100%
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
@@ -678,6 +679,8 @@ WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
+    layout_type "delve"
+
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym}
     fill_area{fill = 'x', border = 'X'}
@@ -696,10 +699,10 @@ TAGS: overwritable layout allow_dup unrand
 
 ## This replaces dungeon.cc:_roguey_level.
 NAME: layout_roguey
-DEPTH: 1-, !Vaults, !Pan
+DEPTH: 2-, !Vaults, !Pan, !Zot
 WEIGHT: 20
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand
+TAGS: overwritable layout no_primary_vault allow_dup unrand
 {{
     function make_inner_room(room, feat, treasure)
         local inner_room = {
@@ -850,6 +853,17 @@ TAGS: overwritable layout allow_dup unrand
         end
     end
 
+    function room_is_placeable(x1, y1, x2, y2)
+        if is_validating() then return true end
+        for point in iter.rect_iterator(dgn.point(x1, y1),
+                                        dgn.point(x2, y2)) do
+            if dgn.in_vault(point.x, point.y) then
+                return false
+            end
+        end
+        return true
+    end
+
     local gxm, gym = dgn.max_bounds()
 
     extend_map { width = gxm, height = gym, fill = 'x' }
@@ -873,6 +887,19 @@ TAGS: overwritable layout allow_dup unrand
     for y = 0, rows - 1 do
         for x = 0, cols - 1 do
             local base_x, base_y = x * xspace + 8, y * yspace + 8
+            local x1, x2, y1, y2
+            local tries = 50
+            local placeable = true
+            while tries > 0 do
+                x1 = base_x + crawl.random2(4)
+                y1 = base_y + crawl.random2(4)
+                x2 = base_x + xsize + crawl.random2(5)
+                y2 = base_y + ysize + crawl.random2(3)
+                if room_is_placeable(x1, y1, x2, y2) then break end
+                tries = tries - 1
+            end
+
+            if tries == 0 then placeable = false end
 
             local room = {
                 x1 = base_x + crawl.random2(4),
@@ -881,7 +908,7 @@ TAGS: overwritable layout allow_dup unrand
                 y2 = base_y + ysize + crawl.random2(3),
                 -- Rogue has 0-3 rooms per 3x3 level missing;
                 -- this averages to 1.5 in 9, or 1 in 6.
-                present = not crawl.one_chance_in(6),
+                present = placeable and not crawl.one_chance_in(6),
                 maze = (crawl.random2(10) < you.absdepth() - 1 and
                         crawl.one_chance_in(15)),
                 fill = '.',
@@ -979,6 +1006,8 @@ CHANCE: 100%
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
+    layout_type "delve"
+
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym}
     fill_area{fill = 'x', border = 'X'}
@@ -1015,7 +1044,7 @@ TAGS: overwritable layout allow_dup unrand
 # Dummy layouts that just call C++ functions that do all the work.
 NAME: layout_basic
 DEPTH: 1-, !Vaults, !Pan
-WEIGHT: 90, 200 (Geh), 200 (Coc)
+WEIGHT: 90, 10 (D:1), 200 (Geh), 200 (Coc), 10 (Zot)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
@@ -1028,7 +1057,7 @@ NAME: layout_bigger_room
 DEPTH: 9-22, !Vaults, !Crypt, !Pan
 WEIGHT: 10
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand
+TAGS: overwritable layout no_primary_vault allow_dup unrand
 {{
     if not is_validating() then layout_bigger_room() end
 }}
@@ -1036,7 +1065,7 @@ MAP
 ENDMAP
 
 NAME: layout_chaotic_city
-DEPTH: Vaults, Pan, 4-
+DEPTH: Vaults, Pan, 4-, !Zot
 WEIGHT: 2 (Vaults), 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand

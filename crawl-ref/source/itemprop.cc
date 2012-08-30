@@ -203,7 +203,7 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_CRUSHING | DAM_PIERCE, 10 },
     { WPN_DIRE_FLAIL,        "dire flail",         13, -3, 13, 240,  9,
-        SK_MACES_FLAILS, HANDS_DOUBLE, SIZE_LARGE,  MI_NONE, false,
+        SK_MACES_FLAILS, HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
         DAMV_CRUSHING | DAM_PIERCE, 10 },
     { WPN_EVENINGSTAR,       "eveningstar",        14, -1, 15, 180,  8,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
@@ -321,13 +321,13 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
 
     // Staves
     { WPN_STAFF,             "staff",               5,  5, 12, 150,  6,
-        SK_STAVES,       HANDS_DOUBLE, SIZE_MEDIUM, MI_NONE, false,
+        SK_STAVES,       HANDS_HALF,   SIZE_MEDIUM, MI_NONE, false,
         DAMV_CRUSHING, 0 },
     { WPN_QUARTERSTAFF,      "quarterstaff",        10, 3, 13, 180,  7,
-        SK_STAVES,       HANDS_DOUBLE, SIZE_LARGE,  MI_NONE, false,
+        SK_STAVES,       HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
         DAMV_CRUSHING, 10 },
     { WPN_LAJATANG,          "lajatang",            16,-3, 14, 200,  3,
-        SK_STAVES,       HANDS_DOUBLE, SIZE_LARGE,  MI_NONE, false,
+        SK_STAVES,       HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
         DAMV_SLICING, 2 },
 
     // Range weapons
@@ -569,7 +569,7 @@ void do_uncurse_item(item_def &item, bool inscribe, bool no_ash,
     }
 
     if (inscribe && Options.autoinscribe_cursed
-        && item.inscription.find("was cursed") == std::string::npos
+        && item.inscription.find("was cursed") == string::npos
         && !item_ident(item, ISFLAG_SEEN_CURSED)
         && !fully_identified(item))
     {
@@ -673,7 +673,7 @@ void set_ident_flags(item_def &item, iflags_t flags)
     {
         // Clear "was cursed" inscription once the item is identified.
         if (Options.autoinscribe_cursed
-            && item.inscription.find("was cursed") != std::string::npos)
+            && item.inscription.find("was cursed") != string::npos)
         {
             item.inscription = replace_all(item.inscription, ", was cursed", "");
             item.inscription = replace_all(item.inscription, "was cursed, ", "");
@@ -724,10 +724,10 @@ static iflags_t _full_ident_mask(const item_def& item)
     case OBJ_CORPSES:
     case OBJ_MISCELLANY:
     case OBJ_MISSILES:
+    case OBJ_ORBS:
         flagset = 0;
         break;
     case OBJ_BOOKS:
-    case OBJ_ORBS:
     case OBJ_SCROLLS:
     case OBJ_POTIONS:
         flagset = ISFLAG_KNOW_TYPE;
@@ -1012,7 +1012,7 @@ special_missile_type get_ammo_brand(const item_def &item)
     if (item.base_type != OBJ_MISSILES || is_artefact(item))
         return SPMSL_NORMAL;
 
-    return (static_cast<special_missile_type>(item.special));
+    return static_cast<special_missile_type>(item.special);
 }
 
 special_armour_type get_armour_ego_type(const item_def &item)
@@ -1023,11 +1023,11 @@ special_armour_type get_armour_ego_type(const item_def &item)
 
     if (is_artefact(item))
     {
-        return (static_cast<special_armour_type>(
-                    artefact_wpn_property(item, ARTP_BRAND)));
+        return static_cast<special_armour_type>(
+                   artefact_wpn_property(item, ARTP_BRAND));
     }
 
-    return (static_cast<special_armour_type>(item.special));
+    return static_cast<special_armour_type>(item.special);
 }
 
 // Armour information and checking functions.
@@ -1139,12 +1139,12 @@ equipment_type get_armour_slot(const item_def &item)
 {
     ASSERT(item.base_type == OBJ_ARMOUR);
 
-    return (Armour_prop[ Armour_index[item.sub_type] ].slot);
+    return Armour_prop[ Armour_index[item.sub_type] ].slot;
 }
 
 equipment_type get_armour_slot(armour_type arm)
 {
-    return (Armour_prop[ Armour_index[arm] ].slot);
+    return Armour_prop[ Armour_index[arm] ].slot;
 }
 
 bool jewellery_is_amulet(const item_def &item)
@@ -1463,7 +1463,6 @@ hands_reqd_type hands_reqd(const item_def &item, size_type size)
 {
     int         ret = HANDS_ONE;
     int         fit;
-    bool        doub = false;
 
     switch (item.base_type)
     {
@@ -1473,11 +1472,11 @@ hands_reqd_type hands_reqd(const item_def &item, size_type size)
         // as a special case because we want to be very flexible with
         // these useful objects (we want spriggans and ogres to be
         // able to use them).  Rods are always 1-handed.
-        if (item.base_type == OBJ_STAVES || weapon_skill(item) == SK_STAVES)
+        if (item.base_type == OBJ_STAVES)
         {
-            if (size < SIZE_SMALL)
+            if (size < SIZE_MEDIUM)
                 ret = HANDS_TWO;
-            else if (size > SIZE_LARGE)
+            else if (size > SIZE_MEDIUM)
                 ret = HANDS_ONE;
             else
                 ret = HANDS_HALF;
@@ -1485,13 +1484,6 @@ hands_reqd_type hands_reqd(const item_def &item, size_type size)
         }
 
         ret = Weapon_prop[ Weapon_index[item.sub_type] ].hands;
-
-        // Size is the level where we can use one hand for one end.
-        if (ret == HANDS_DOUBLE)
-        {
-            doub = true;
-            ret = HANDS_TWO; // HANDS_HALF once double-ended is implemented.
-        }
 
         // Adjust handedness for size only for non-whip melee weapons.
         if (!is_range_weapon(item) && !is_whip_type(item.sub_type))
@@ -1508,13 +1500,10 @@ hands_reqd_type hands_reqd(const item_def &item, size_type size)
             // Large      XX      XX      0       0     -1      -2
             // Big        XX      XX     XX       0      0      -1
             // Giant      XX      XX     XX      XX      0       0
-
-            // Note the stretching of double weapons for larger characters
-            // by one level since they tend to be larger weapons.
             if (size < SIZE_MEDIUM && fit > 0)
                 ret += fit;
             else if (size > SIZE_MEDIUM && fit < 0)
-                ret += (fit + doub);
+                ret += fit;
         }
         break;
 
@@ -1543,7 +1532,7 @@ hands_reqd_type hands_reqd(const item_def &item, size_type size)
     else if (ret < HANDS_ONE)
         ret = HANDS_ONE;
 
-    return (static_cast< hands_reqd_type >(ret));
+    return static_cast<hands_reqd_type>(ret);
 }
 
 bool is_whip_type(int wpn_type)
@@ -1742,19 +1731,19 @@ int weapon_str_weight(const item_def &wpn)
     ASSERT(is_weapon(wpn));
 
     if (wpn.base_type == OBJ_STAVES)
-        return (Weapon_prop[ Weapon_index[WPN_STAFF] ].str_weight);
+        return Weapon_prop[ Weapon_index[WPN_STAFF] ].str_weight;
 
     if (wpn.base_type == OBJ_RODS)
-        return (Weapon_prop[ Weapon_index[WPN_CLUB] ].str_weight);
+        return Weapon_prop[ Weapon_index[WPN_CLUB] ].str_weight;
 
-    return (Weapon_prop[ Weapon_index[wpn.sub_type] ].str_weight);
+    return Weapon_prop[ Weapon_index[wpn.sub_type] ].str_weight;
 }
 
 // Returns melee skill of item.
 skill_type weapon_skill(const item_def &item)
 {
     if (item.base_type == OBJ_WEAPONS && !is_range_weapon(item))
-        return (Weapon_prop[ Weapon_index[item.sub_type] ].skill);
+        return Weapon_prop[ Weapon_index[item.sub_type] ].skill;
     else if (item.base_type == OBJ_RODS)
         return SK_MACES_FLAILS; // Rods are short and stubby
     else if (item.base_type == OBJ_STAVES)
@@ -1779,7 +1768,7 @@ skill_type weapon_skill(object_class_type wclass, int wtype)
 skill_type range_skill(const item_def &item)
 {
     if (item.base_type == OBJ_WEAPONS && is_range_weapon(item))
-        return (Weapon_prop[ Weapon_index[item.sub_type] ].skill);
+        return Weapon_prop[ Weapon_index[item.sub_type] ].skill;
     else if (item.base_type == OBJ_MISSILES)
     {
         if (!has_launcher(item))
@@ -1853,8 +1842,13 @@ static bool _slot_blocked(const item_def &item)
         }
 
         for (int i = eq_from; i <= eq_to; ++i)
-            if (you.equip[i] == -1 || _item_is_swappable(you.inv[you.equip[i]], false))
+        {
+            if (you.equip[i] == -1
+                || _item_is_swappable(you.inv[you.equip[i]], false))
+            {
                 return false;
+            }
+        }
 
         // No free slot found.
         return true;
@@ -1867,10 +1861,11 @@ static bool _slot_blocked(const item_def &item)
         return true;
     }
 
-    return (you.equip[eq] != -1 && !_item_is_swappable(you.inv[you.equip[eq]], eq, false));
+    return (you.equip[eq] != -1
+            && !_item_is_swappable(you.inv[you.equip[eq]], eq, false));
 }
 
-bool item_skills(const item_def &item, std::set<skill_type> &skills)
+bool item_skills(const item_def &item, set<skill_type> &skills)
 {
     const bool equipped = item_is_equipped(item);
 
@@ -1982,7 +1977,7 @@ missile_type fires_ammo_type(const item_def &item)
     if (item.base_type != OBJ_WEAPONS)
         return MI_NONE;
 
-    return (Weapon_prop[Weapon_index[item.sub_type]].ammo);
+    return Weapon_prop[Weapon_index[item.sub_type]].ammo;
 }
 
 bool is_range_weapon(const item_def &item)
@@ -2018,7 +2013,7 @@ bool is_throwable(const actor *actor, const item_def &wpn, bool force)
     size_type bodysize = actor->body_size();
 
     if (wpn.base_type == OBJ_WEAPONS)
-        return (Weapon_prop[Weapon_index[wpn.sub_type]].throwable);
+        return Weapon_prop[Weapon_index[wpn.sub_type]].throwable;
     else if (wpn.base_type == OBJ_MISSILES)
     {
         if (!force)
@@ -2038,7 +2033,7 @@ bool is_throwable(const actor *actor, const item_def &wpn, bool force)
             }
         }
 
-        return (Missile_prop[Missile_index[wpn.sub_type]].throwable);
+        return Missile_prop[Missile_index[wpn.sub_type]].throwable;
     }
 
     return false;
@@ -2055,7 +2050,7 @@ launch_retval is_launched(const actor *actor, const item_def *launcher,
         return LRET_LAUNCHED;
     }
 
-    return (is_throwable(actor, missile) ? LRET_THROWN : LRET_FUMBLED);
+    return is_throwable(actor, missile) ? LRET_THROWN : LRET_FUMBLED;
 }
 
 //
@@ -2212,7 +2207,7 @@ int food_value(const item_def &item)
 int food_turns(const item_def &item)
 {
     ASSERT(item.defined() && item.base_type == OBJ_FOOD);
-    return (Food_prop[Food_index[item.sub_type]].turns);
+    return Food_prop[Food_index[item.sub_type]].turns;
 }
 
 bool can_cut_meat(const item_def &item)
@@ -2226,11 +2221,6 @@ bool is_fruit(const item_def & item)
         return false;
 
     return (Food_prop[Food_index[item.sub_type]].flags & FFL_FRUIT);
-}
-
-uint32_t item_fruit_mask(const item_def &item)
-{
-    return (is_fruit(item)? (1 << Food_index[item.sub_type]) : 0);
 }
 
 bool food_is_rotten(const item_def &item)
@@ -2567,37 +2557,39 @@ int property(const item_def &item, int prop_type)
     {
     case OBJ_ARMOUR:
         if (prop_type == PARM_AC)
-            return (Armour_prop[ Armour_index[item.sub_type] ].ac);
+            return Armour_prop[ Armour_index[item.sub_type] ].ac;
         else if (prop_type == PARM_EVASION)
-            return (Armour_prop[ Armour_index[item.sub_type] ].ev);
+            return Armour_prop[ Armour_index[item.sub_type] ].ev;
         break;
 
     case OBJ_WEAPONS:
         if (is_unrandom_artefact(item))
         {
-            if (prop_type == PWPN_DAMAGE)
+            switch (prop_type) {
+            case PWPN_DAMAGE:
                 return (Weapon_prop[ Weapon_index[item.sub_type] ].dam
                         + artefact_wpn_property(item, ARTP_BASE_DAM));
-            else if (prop_type == PWPN_HIT)
+            case PWPN_HIT:
                 return (Weapon_prop[ Weapon_index[item.sub_type] ].hit
                         + artefact_wpn_property(item, ARTP_BASE_ACC));
-            else if (prop_type == PWPN_SPEED)
+            case PWPN_SPEED:
                 return (Weapon_prop[ Weapon_index[item.sub_type] ].speed
                         + artefact_wpn_property(item, ARTP_BASE_DELAY));
+            }
         }
         if (prop_type == PWPN_DAMAGE)
-            return (Weapon_prop[ Weapon_index[item.sub_type] ].dam);
+            return Weapon_prop[ Weapon_index[item.sub_type] ].dam;
         else if (prop_type == PWPN_HIT)
-            return (Weapon_prop[ Weapon_index[item.sub_type] ].hit);
+            return Weapon_prop[ Weapon_index[item.sub_type] ].hit;
         else if (prop_type == PWPN_SPEED)
-            return (Weapon_prop[ Weapon_index[item.sub_type] ].speed);
+            return Weapon_prop[ Weapon_index[item.sub_type] ].speed;
         else if (prop_type == PWPN_ACQ_WEIGHT)
-            return (Weapon_prop[ Weapon_index[item.sub_type] ].acquire_weight);
+            return Weapon_prop[ Weapon_index[item.sub_type] ].acquire_weight;
         break;
 
     case OBJ_MISSILES:
         if (prop_type == PWPN_DAMAGE)
-            return (Missile_prop[ Missile_index[item.sub_type] ].dam);
+            return Missile_prop[ Missile_index[item.sub_type] ].dam;
         break;
 
     case OBJ_STAVES:
@@ -2605,11 +2597,11 @@ int property(const item_def &item, int prop_type)
         weapon_sub = (item.base_type == OBJ_RODS) ? WPN_CLUB : WPN_STAFF;
 
         if (prop_type == PWPN_DAMAGE)
-            return (Weapon_prop[ Weapon_index[weapon_sub] ].dam);
+            return Weapon_prop[ Weapon_index[weapon_sub] ].dam;
         else if (prop_type == PWPN_HIT)
-            return (Weapon_prop[ Weapon_index[weapon_sub] ].hit);
+            return Weapon_prop[ Weapon_index[weapon_sub] ].hit;
         else if (prop_type == PWPN_SPEED)
-            return (Weapon_prop[ Weapon_index[weapon_sub] ].speed);
+            return Weapon_prop[ Weapon_index[weapon_sub] ].speed;
         break;
 
     default:
@@ -2709,7 +2701,8 @@ bool gives_resistance(const item_def &item)
     }
     case OBJ_STAVES:
         if (item.sub_type >= STAFF_FIRE && item.sub_type <= STAFF_POISON
-            || item.sub_type == STAFF_AIR)
+            || item.sub_type == STAFF_AIR
+            || item.sub_type == STAFF_DEATH)
         {
             return true;
         }
@@ -2753,7 +2746,7 @@ int item_mass(const item_def &item)
 
             // Truncate to the nearest 5 and reduce the item mass:
             unit_mass -= ((reduc / 5) * 5);
-            unit_mass = std::max(unit_mass, 5);
+            unit_mass = max(unit_mass, 5);
         }
         break;
 
@@ -2900,12 +2893,12 @@ void ident_reflector(item_def *item)
         set_ident_flags(*item, ISFLAG_KNOW_TYPE);
 }
 
-std::string item_base_name(const item_def &item)
+string item_base_name(const item_def &item)
 {
     return item_base_name(item.base_type, item.sub_type);
 }
 
-std::string item_base_name(object_class_type type, int sub_type)
+string item_base_name(object_class_type type, int sub_type)
 {
     switch (type)
     {
@@ -2916,15 +2909,15 @@ std::string item_base_name(object_class_type type, int sub_type)
     case OBJ_ARMOUR:
         return Armour_prop[Armour_index[sub_type]].name;
     case OBJ_JEWELLERY:
-        return (jewellery_is_amulet(sub_type) ? "amulet" : "ring");
+        return jewellery_is_amulet(sub_type) ? "amulet" : "ring";
     default:
         return "";
     }
 }
 
-std::string food_type_name(int sub_type)
+string food_type_name(int sub_type)
 {
-    return (Food_prop[Food_index[sub_type]].name);
+    return Food_prop[Food_index[sub_type]].name;
 }
 
 const char* weapon_base_name(uint8_t subtype)

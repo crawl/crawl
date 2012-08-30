@@ -25,8 +25,9 @@ static const ucs_t dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
         '0', ')', '[', '/', '%', '?', '=', '!', '(',
     //                                §     ♣       ©
         ':', '|', '}', '%', '$', '"', 0xA7, 0x2663, 0xA9,
-        ' ', '!', '#', '%', '+', ')', '*', '+',     // space .. fired_burst
-        '/', '=', '?', 'X', '[', '`', '#'           // fi_stick .. explosion
+    //                                     ÷
+        ' ', '!', '#', '%', '+', ')', '*', 0xF7,       // space .. fired_burst
+        '/', '=', '?', 'X', '[', '`', '#'              // fi_stick .. explosion
     },
     // CSET_ASCII
     {
@@ -47,7 +48,7 @@ static const ucs_t dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
         '0', ')', '[', '/', '%', '?', '=', '!', '(',               // orb .. missile
     //  ∞       \                              ♣       Ω
         0x221e, '\\', '}', '%', '$', '"', '#', 0x2663, 0x3a9,      // book .. teleporter
-        ' ', '!', '#', '%', '+', ')', '*', '+',                    // space .. fired_burst
+        ' ', '!', '#', '%', '+', ')', '*', 0xF7,                   // space .. fired_burst
         '/', '=', '?', 'X', '[', '`', '#'                          // fi_stick .. explosion
     },
 
@@ -80,12 +81,13 @@ static const ucs_t dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
         '0', ')', '[', '/', '%', '?', '=', '!', '(',
     //  ∞                                §     ♣       ©
         0x221E, '|', '}', '%', '$', '"', 0xA7, 0x2663, 0xA9,
-        ' ', '!', '#', '%', '+', ')', '*', '+',        // space .. fired_burst
+    //                                     ÷
+        ' ', '!', '#', '%', '+', ')', '*', 0xF7,       // space .. fired_burst
         '/', '=', '?', 'X', '[', '`', '#'              // fi_stick .. explosion
     },
 };
 
-dungeon_char_type dchar_by_name(const std::string &name)
+dungeon_char_type dchar_by_name(const string &name)
 {
     const char *dchar_names[] =
     {
@@ -134,7 +136,7 @@ ucs_t dchar_glyph(dungeon_char_type dchar)
         return 0;
 }
 
-std::string stringize_glyph(ucs_t glyph)
+string stringize_glyph(ucs_t glyph)
 {
     char buf[5];
     buf[wctoutf8(buf, glyph)] = 0;

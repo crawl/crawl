@@ -1621,3 +1621,124 @@ xxxxxxx.x
       @.x
       xxx
 ENDMAP
+
+##############################################################################
+
+NAME:   scummos_entry_simple_fountains
+TAGS:   entry no_monster_gen transparent
+ORIENT: float
+MAP
+.......
+.T...T.
+..mmm..
+..m{+..
+..mmm..
+.T...T.
+.......
+ENDMAP
+
+NAME:   scummos_entry_simple_crosswalls
+TAGS:   entry no_monster_gen transparent
+ORIENT: float
+MAP
+...........
+..x.....x..
+.xxGxxxGxx.
+..x........
+..x.....x..
+..x..{..x..
+..x.....x..
+........x..
+.xxGxxxGxx.
+. x.....x..
+...........
+ENDMAP
+
+NAME:   scummos_entry_hexagon
+TAGS:   entry no_monster_gen no_rotate transparent
+ORIENT: float
+MAP
+    .......
+   ..xxxxx..
+  ..x.....x..
+ ..x.......x..
+..x....{....x..
+ ..x.......x..
+  ..x.....x..
+   ..xxxxx..
+    .......
+ENDMAP
+
+NAME:   scummos_entry_star
+TAGS:   entry no_monster_gen no_rotate transparent
+ORIENT: float
+MAP
+       ...
+      ..m..
+     ..m.m..
+......m...m......
+.mmmmm.....mmmmm.
+..m...........m..
+ ..m....{....m..
+ ..m...(.[...m..
+..m...........m..
+.mmmmm.....mmmmm.
+......m...m......
+     ..m.m..
+      ..m..
+       ...
+ENDMAP
+
+NAME:   scummos_entry_forest
+TAGS:   entry no_monster_gen no_rotate transparent
+ORIENT: float
+MAP
+...............
+..xxttt.tttxx..
+..xttttTttttx..
+..ttttt.ttttt..
+.....T.{.T.....
+..ttttt.ttttt..
+..xttttTttttx..
+..xxttt.tttxx..
+...............
+ENDMAP
+
+NAME:   scummos_entry_gate
+TAGS:   entry no_monster_gen no_item_gen
+ORIENT: float
+KFEAT:  y = floor
+FTILE:  y = floor_sandstone
+COLOUR: y = yellow
+MAP
+xxxxxxxxxxxxxxxxxx
+x.....x...WWWW...x
+x..{..=..........x
+x.....x..........xG.
+x+xxxxxyyyyyyyyyy+.@
+x.xtt.+yyyyyyyyyy+.@
+x.xt.txyyyyyyyyyy+.@
+x.xt.tx..........xG.
+x.+.ttx..........x
+xtxtttx...llll...x
+xxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   scummos_entry_checkerplants
+TAGS:   entry no_monster_gen no_item_gen transparent
+ORIENT: float
+KMONS:  b = fungus
+MAP
+............
+.ttttttttt..
+.tbb..bb..t.
+.tbb..b...t.
+.t..bb...bt.
+.t..b.{.bbt.
+.tbb.(.b..t.
+.tb...bb..t.
+.t...b..bbt.
+.t..bb..bbt.
+..ttttttttt.
+............
+ENDMAP

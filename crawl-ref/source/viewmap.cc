@@ -376,12 +376,12 @@ static int _find_feature(ucs_t feature, int curs_x, int curs_y,
     return 0;
 }
 
-static int _find_feature(const std::vector<coord_def>& features,
-                          ucs_t feature, int curs_x, int curs_y,
-                          int start_x, int start_y,
-                          int ignore_count,
-                          int *move_x, int *move_y,
-                          bool forward)
+static int _find_feature(const vector<coord_def>& features,
+                         ucs_t feature, int curs_x, int curs_y,
+                         int start_x, int start_y,
+                         int ignore_count,
+                         int *move_x, int *move_y,
+                         bool forward)
 {
     int firstx = -1, firsty = -1, firstmatch = -1;
     int matchcount = 0;
@@ -428,8 +428,8 @@ static int _get_number_of_lines_levelmap()
 static void _draw_level_map(int start_x, int start_y, bool travel_mode,
         bool on_level)
 {
-    const int num_lines = std::min(_get_number_of_lines_levelmap(), GYM);
-    const int num_cols  = std::min(get_number_of_cols(),            GXM);
+    const int num_lines = min(_get_number_of_lines_levelmap(), GYM);
+    const int num_cols  = min(get_number_of_cols(),            GXM);
 
     const coord_def extents(num_cols, num_lines);
     crawl_view_buffer vbuf(extents);
@@ -501,8 +501,7 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode,
 }
 #endif // USE_TILE_LOCAL
 
-static void _reset_travel_colours(std::vector<coord_def> &features,
-        bool on_level)
+static void _reset_travel_colours(vector<coord_def> &features, bool on_level)
 {
     // We now need to redo travel colours.
     features.clear();
@@ -534,7 +533,7 @@ class feature_list
         G_UP, G_DOWN, G_PORTAL, G_OTHER, G_NONE, NUM_GROUPS = G_NONE
     };
 
-    std::vector<glyph> data[NUM_GROUPS];
+    vector<glyph> data[NUM_GROUPS];
 
     static group feat_dir(dungeon_feature_type feat)
     {
@@ -584,7 +583,7 @@ public:
         for (rectangle_iterator ri(0); ri; ++ri)
             maybe_add(*ri);
         for (unsigned int i = 0; i < NUM_GROUPS; ++i)
-            std::sort(data[i].begin(), data[i].end(), _comp_glyphs);
+            sort(data[i].begin(), data[i].end(), _comp_glyphs);
     }
 
     formatted_string format() const
@@ -616,13 +615,13 @@ static void _draw_title(const coord_def& cpos, const feature_list& feats)
     if (columns < titlelen)
         return;
 
-    std::string pstr = "";
+    string pstr = "";
 #ifdef WIZARD
     if (you.wizard)
     {
         char buf[10];
         snprintf(buf, sizeof(buf), " (%d, %d)", cpos.x, cpos.y);
-        pstr = std::string(buf);
+        pstr = string(buf);
     }
 #endif // WIZARD
 
@@ -633,11 +632,11 @@ static void _draw_title(const coord_def& cpos, const feature_list& feats)
                           get_packed_place(), true, true)) + pstr,
                       columns - helplen).c_str());
 
-    cgotoxy(std::max(1, (columns - titlelen) / 2), 1);
+    cgotoxy(max(1, (columns - titlelen) / 2), 1);
     title.display();
 
     textcolor(LIGHTGREY);
-    cgotoxy(std::max(1, columns - helplen + 1), 1);
+    cgotoxy(max(1, columns - helplen + 1), 1);
     help.display();
 }
 #endif
@@ -719,7 +718,7 @@ bool show_map(level_pos &lpos,
         bool new_level = true;
 
         // Vector to track all features we can travel to, in order of distance.
-        std::vector<coord_def> features;
+        vector<coord_def> features;
         // List of all interesting features for display in the (console) title.
         feature_list feats;
 
@@ -1028,7 +1027,7 @@ bool show_map(level_pos &lpos,
                 if (!allow_offlevel)
                     break;
 
-                std::string name;
+                string name;
                 const level_pos pos
                     = prompt_translevel_target(TPF_DEFAULT_OPTIONS, name).p;
 
@@ -1242,8 +1241,8 @@ bool show_map(level_pos &lpos,
             const coord_def oldp = lpos.pos;
             lpos.pos.x += move_x;
             lpos.pos.y += move_y;
-            lpos.pos.x = std::min(std::max(lpos.pos.x, min_x), max_x);
-            lpos.pos.y = std::min(std::max(lpos.pos.y, min_y), max_y);
+            lpos.pos.x = min(max(lpos.pos.x, min_x), max_x);
+            lpos.pos.y = min(max(lpos.pos.y, min_y), max_y);
             move_x = lpos.pos.x - oldp.x;
             move_y = lpos.pos.y - oldp.y;
 #ifndef USE_TILE_LOCAL
@@ -1256,9 +1255,9 @@ bool show_map(level_pos &lpos,
                     const int old_screen_y = screen_y;
                     screen_y += scroll_y;
                     if (scroll_y < 0)
-                        screen_y = std::max(screen_y, min_y + half_screen);
+                        screen_y = max(screen_y, min_y + half_screen);
                     else
-                        screen_y = std::min(screen_y, max_y - half_screen);
+                        screen_y = min(screen_y, max_y - half_screen);
                     curs_y -= (screen_y - old_screen_y);
                     scroll_y = 0;
                 }

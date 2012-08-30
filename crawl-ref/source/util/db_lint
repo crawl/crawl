@@ -179,13 +179,15 @@ if (read_file("descript/cards"))
 
 if (read_file("descript/monsters"))
 {
-    $entries{$_} = 1 for (
+    $entries{$_} = 1 for
+    (
         # described with a suffix
         'the Serpent of Hell',
         # overridden descriptions
         'player', 'player illusion', 'merged slime creature',
         # genus-only monsters
-        'ghost', 'giant', 'golem', 'hell lord', 'bear', 'elemental');
+        'ghost', 'giant', 'golem', 'hell lord', 'bear', 'elemental',
+    );
     delete $keys{'__(_suffix_examine'};
     delete $keys{"the Serpent of Hell $_"} for qw(gehenna cocytus dis tartarus);
     delete $keys{"__cap-${_}_suffix"} for 'A'..'Z';

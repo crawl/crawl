@@ -47,7 +47,7 @@ void calc_hp_artefact()
     hp = hp * new_max / old_max;
     if (hp < 100)
         hp = 100;
-    you.hp = std::min(hp / 100, you.hp_max);
+    you.hp = min(hp / 100, you.hp_max);
     you.hit_points_regeneration = hp % 100;
     if (you.hp_max <= 0) // Borgnjor's abusers...
         ouch(0, NON_MONSTER, KILLED_BY_DRAINING);
@@ -494,7 +494,9 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
 
             if ((you.max_magic_points + 13) *
                 (1.0+player_mutation_level(MUT_HIGH_MAGIC)/10.0) > 50)
+            {
                 mpr("You feel your mana capacity is already quite full.");
+            }
             else
                 canned_msg(MSG_MANA_INCREASE);
 
@@ -745,7 +747,7 @@ static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld)
 
         if (brand != SPWPN_NORMAL)
         {
-            const std::string msg = item.name(DESC_YOUR);
+            const string msg = item.name(DESC_YOUR);
 
             switch (brand)
             {
@@ -811,7 +813,7 @@ static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld)
                     // branded weapon since you can wait it out. This also
                     // fixes problems with unwield prompts (mantis #793).
                     MiscastEffect(&you, WIELD_MISCAST, SPTYP_TRANSLOCATION,
-                                  9, 90, "distortion unwield");
+                                  9, 90, "a distortion unwield");
                 }
                 break;
 
@@ -1267,7 +1269,9 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
     case RING_MAGICAL_POWER:
         if ((you.max_magic_points + 9) *
             (1.0+player_mutation_level(MUT_HIGH_MAGIC)/10.0) > 50)
+        {
             mpr("You feel your mana capacity is already quite full.");
+        }
         else
             canned_msg(MSG_MANA_INCREASE);
 

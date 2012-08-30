@@ -43,7 +43,7 @@ private:
     int nretries;
 };
 
-SQL_DBM::SQL_DBM(const std::string &dbname, bool _readonly, bool do_open)
+SQL_DBM::SQL_DBM(const string &dbname, bool _readonly, bool do_open)
     : error(), errc(SQLITE_OK), db(NULL), s_insert(NULL), s_remove(NULL),
       s_query(NULL), s_iterator(NULL), dbfile(dbname), readonly(_readonly)
 {
@@ -73,7 +73,7 @@ bool SQL_DBM::is_open() const
     return !!db;
 }
 
-int SQL_DBM::open(const std::string &s)
+int SQL_DBM::open(const string &s)
 {
     close();
 
@@ -112,7 +112,7 @@ From SQLite's documentation:
 #endif
               )) != SQLITE_OK)
     {
-        const std::string saveerr = error;
+        const string saveerr = error;
         const int serrc = errc;
         close();
         error = saveerr;
@@ -158,7 +158,7 @@ void SQL_DBM::close()
     }
 }
 
-int SQL_DBM::try_insert(const std::string &key, const std::string &value)
+int SQL_DBM::try_insert(const string &key, const string &value)
 {
     if (init_insert() != SQLITE_OK)
         return errc;
@@ -176,14 +176,14 @@ int SQL_DBM::try_insert(const std::string &key, const std::string &value)
     return errc;
 }
 
-int SQL_DBM::insert(const std::string &key, const std::string &value)
+int SQL_DBM::insert(const string &key, const string &value)
 {
     for (sqlite_retry_iterator ri; ri;
          ri.check(do_insert(key, value)));
     return errc;
 }
 
-int SQL_DBM::do_insert(const std::string &key, const std::string &value)
+int SQL_DBM::do_insert(const string &key, const string &value)
 {
     try_insert(key, value);
     if (errc != SQLITE_OK)
@@ -200,7 +200,7 @@ int SQL_DBM::init_insert()
         prepare_query(&s_insert, "INSERT INTO dbm VALUES (?, ?)");
 }
 
-int SQL_DBM::remove(const std::string &key)
+int SQL_DBM::remove(const string &key)
 {
     if (init_remove() != SQLITE_OK)
         return errc;
@@ -221,7 +221,7 @@ int SQL_DBM::init_remove()
         prepare_query(&s_remove, "DELETE FROM dbm WHERE key = ?");
 }
 
-int SQL_DBM::do_query(const std::string &key, std::string *result)
+int SQL_DBM::do_query(const string &key, string *result)
 {
     if (init_query() != SQLITE_OK)
         return errc;
@@ -233,7 +233,7 @@ int SQL_DBM::do_query(const std::string &key, std::string *result)
     }
 
     int err = SQLITE_OK;
-    std::string res;
+    string res;
     while ((err = ec(sqlite3_step(s_query))) == SQLITE_ROW)
         *result = (const char *) sqlite3_column_text(s_query, 0);
 
@@ -245,34 +245,33 @@ int SQL_DBM::do_query(const std::string &key, std::string *result)
     return ec(err);
 }
 
-std::string SQL_DBM::query(const std::string &key)
+string SQL_DBM::query(const string &key)
 {
-    std::string result;
+    string result;
     for (sqlite_retry_iterator ri; ri;
          ri.check(do_query(key, &result)));
     return result;
 }
 
-std::auto_ptr<std::string> SQL_DBM::firstkey()
+unique_ptr<string> SQL_DBM::firstkey()
 {
     if (init_iterator() != SQLITE_OK)
     {
-        std::auto_ptr<std::string> result;
+        unique_ptr<string> result;
         return result;
     }
 
     return nextkey();
 }
 
-std::auto_ptr<std::string> SQL_DBM::nextkey()
+unique_ptr<string> SQL_DBM::nextkey()
 {
-    std::auto_ptr<std::string> result;
+    unique_ptr<string> result;
     if (s_iterator)
     {
         if (ec(sqlite3_step(s_iterator)) == SQLITE_ROW)
             result.reset(
-                new std::string(
-                    (const char *) sqlite3_column_text(s_iterator, 0)));
+                new string((const char *) sqlite3_column_text(s_iterator, 0)));
         else
             sqlite3_reset(s_iterator);
     }
@@ -322,8 +321,8 @@ sql_datum::sql_datum() : dptr(NULL), dsize(0), need_free(false)
 {
 }
 
-sql_datum::sql_datum(const std::string &s) : dptr(NULL), dsize(s.length()),
-                                             need_free(false)
+sql_datum::sql_datum(const string &s) : dptr(NULL), dsize(s.length()),
+                                        need_free(false)
 {
     if ((dptr = new char [dsize]))
     {
@@ -382,9 +381,9 @@ void sql_datum::init_from(const sql_datum &d)
     }
 }
 
-std::string sql_datum::to_str() const
+string sql_datum::to_str() const
 {
-    return std::string(dptr, dsize);
+    return string(dptr, dsize);
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -409,15 +408,13 @@ int dbm_close(SQL_DBM *db)
 
 sql_datum dbm_fetch(SQL_DBM *db, const sql_datum &key)
 {
-    std::string ans = db->query(std::string(key.dptr, key.dsize));
+    string ans = db->query(string(key.dptr, key.dsize));
     return sql_datum(ans);
 }
 
-static sql_datum dbm_key(
-    SQL_DBM *db,
-    std::auto_ptr<std::string> (SQL_DBM::*key)())
+static sql_datum dbm_key(SQL_DBM *db, unique_ptr<string> (SQL_DBM::*key)())
 {
-    std::auto_ptr<std::string> res = (db->*key)();
+    unique_ptr<string> res = (db->*key)();
     if (res.get())
         return sql_datum(*res.get());
     else

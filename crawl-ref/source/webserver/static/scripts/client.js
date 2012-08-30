@@ -8,8 +8,8 @@ function (exports, $, key_conversion, chat, comm) {
 
     window.debug_mode = false;
 
-    exports.log_messages = false;
-    exports.log_message_size = false;
+    window.log_messages = false;
+    window.log_message_size = false;
 
     var delay_timeout = undefined;
     var message_inhibit = 0;
@@ -408,6 +408,18 @@ function (exports, $, key_conversion, chat, comm) {
     exports.show_dialog = show_dialog;
     exports.hide_dialog = hide_dialog;
     exports.center_element = center_element;
+
+    function handle_dialog(data)
+    {
+        var dialog = $("<div class='floating_dialog'>");
+        dialog.html(data.html);
+        $("body").append(dialog);
+        dialog.find("[data-key]").on("click", function (ev) {
+            var key = $(this).data("key");
+            send_bytes([key.charCodeAt(0)]);
+        });
+        show_dialog(dialog);
+    }
 
     function start_register()
     {
@@ -846,6 +858,8 @@ function (exports, $, key_conversion, chat, comm) {
 
         "set_game_links": set_game_links,
         "html": set_html,
+        "show_dialog": handle_dialog,
+        "hide_dialog": hide_dialog,
 
         "lobby_clear": lobby_clear,
         "lobby_entry": lobby_entry,
@@ -929,11 +943,11 @@ function (exports, $, key_conversion, chat, comm) {
 
             socket.onmessage = function (msg)
             {
-                if (exports.log_messages)
+                if (window.log_messages)
                 {
                     console.log("Message: " + msg.data);
                 }
-                if (exports.log_message_size)
+                if (window.log_message_size)
                 {
                     console.log("Message size: " + msg.data.length);
                 }

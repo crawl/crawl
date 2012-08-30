@@ -31,7 +31,7 @@ tileidx_t get_tile_idx(lua_State *ls, int arg)
     tileidx_t idx;
     if (!tile_dngn_index(tile_name, &idx))
     {
-        std::string error = "Couldn't find tile '";
+        string error = "Couldn't find tile '";
         error += tile_name;
         error += "'";
         luaL_argerror(ls, arg, error.c_str());
@@ -81,12 +81,12 @@ LUAFN(dgn_lfloortile)
 
 LUAFN(dgn_change_rock_tile)
 {
-    std::string tilename = luaL_checkstring(ls, 1);
+    string tilename = luaL_checkstring(ls, 1);
 
     tileidx_t rock;
     if (!tile_dngn_index(tilename.c_str(), &rock))
     {
-        std::string error = "Couldn't find tile '";
+        string error = "Couldn't find tile '";
         error += tilename;
         error += "'";
         luaL_argerror(ls, 1, error.c_str());
@@ -101,12 +101,12 @@ LUAFN(dgn_change_rock_tile)
 
 LUAFN(dgn_change_floor_tile)
 {
-    std::string tilename = luaL_checkstring(ls, 1);
+    string tilename = luaL_checkstring(ls, 1);
 
     tileidx_t floor;
     if (!tile_dngn_index(tilename.c_str(), &floor))
     {
-        std::string error = "Couldn't find tile '";
+        string error = "Couldn't find tile '";
         error += tilename;
         error += "'";
         luaL_argerror(ls, 1, error.c_str());
@@ -145,12 +145,12 @@ LUAFN(dgn_tile_feat_changed)
         return 0;
     }
 
-    std::string tilename = luaL_checkstring(ls, 3);
+    string tilename = luaL_checkstring(ls, 3);
 
     tileidx_t feat;
     if (!tile_dngn_index(tilename.c_str(), &feat))
     {
-        std::string error = "Couldn't find tile '";
+        string error = "Couldn't find tile '";
         error += tilename;
         error += "'";
         luaL_argerror(ls, 1, error.c_str());
@@ -174,12 +174,12 @@ LUAFN(dgn_tile_floor_changed)
         return 0;
     }
 
-    std::string tilename = luaL_checkstring(ls, 3);
+    string tilename = luaL_checkstring(ls, 3);
 
     tileidx_t floor;
     if (!tile_dngn_index(tilename.c_str(), &floor))
     {
-        std::string error = "Couldn't find tile '";
+        string error = "Couldn't find tile '";
         error += tilename;
         error += "'";
         luaL_argerror(ls, 1, error.c_str());

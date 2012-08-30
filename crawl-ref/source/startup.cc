@@ -95,8 +95,7 @@ static void _initialize()
     // Empty messaging string.
     info[0] = 0;
 
-    for (int i = 0; i < MAX_MONSTERS; ++i)
-        menv[i].reset();
+    reset_all_monsters();
 
     igrd.init(NON_ITEM);
     mgrd.init(NON_MONSTER);
@@ -117,7 +116,7 @@ static void _initialize()
         && crawl_state.title_screen)
     {
         tiles.draw_title();
-        tiles.update_title_msg("Loading Databases...");
+        tiles.update_title_msg("Loading databases...");
     }
 #endif
 
@@ -125,7 +124,7 @@ static void _initialize()
     databaseSystemInit();
 #ifdef USE_TILE_LOCAL
     if (crawl_state.title_screen)
-        tiles.update_title_msg("Loading Spells and Features...");
+        tiles.update_title_msg("Loading spells and features...");
 #endif
 
     init_feat_desc_cache();
@@ -253,7 +252,7 @@ static void _post_init(bool newc)
 
 #ifdef CLUA_BINDINGS
     clua.runhook("chk_startgame", "b", newc);
-    std::string yname = you.your_name; // XXX: what's this for?
+    string yname = you.your_name; // XXX: what's this for?
     read_init_file(true);
     Options.fixup_options();
     you.your_name = yname;
@@ -321,7 +320,7 @@ static void _construct_game_modes_menu(MenuScroller* menu)
 #else
     TextItem* tmp = NULL;
 #endif
-    std::string text;
+    string text;
 
 #ifdef USE_TILE_LOCAL
     tmp = new TextTileItem();
@@ -472,7 +471,7 @@ static void _construct_game_modes_menu(MenuScroller* menu)
 }
 
 static void _construct_save_games_menu(MenuScroller* menu,
-                       const std::vector<player_save_info>& chars)
+                                       const vector<player_save_info>& chars)
 {
     if (chars.empty())
     {
@@ -480,9 +479,9 @@ static void _construct_save_games_menu(MenuScroller* menu,
         return;
     }
 
-    std::string text;
+    string text;
 
-    std::vector<player_save_info>::iterator it;
+    vector<player_save_info>::iterator it;
     for (unsigned int i = 0; i < chars.size(); ++i)
     {
 #ifdef USE_TILE_LOCAL
@@ -505,9 +504,8 @@ static void _construct_save_games_menu(MenuScroller* menu,
     }
 }
 
-// Should probably use some std::find invocation instead.
-static int _find_save(const std::vector<player_save_info>& chars,
-                      const std::string& name)
+// Should probably use some find invocation instead.
+static int _find_save(const vector<player_save_info>& chars, const string& name)
 {
     for (int i = 0; i < static_cast<int>(chars.size()); ++i)
         if (chars[i].name == name)
@@ -536,7 +534,7 @@ static void _show_startup_menu(newgame_def* ng_choice,
                                const newgame_def& defaults)
 {
 again:
-    std::vector<player_save_info> chars = find_all_saved_characters();
+    vector<player_save_info> chars = find_all_saved_characters();
     const int num_saves = chars.size();
     const int num_modes = NUM_GAME_TYPE;
     static int type = GAME_TYPE_UNSPECIFIED;
@@ -547,13 +545,13 @@ again:
     const int max_col    = get_number_of_cols();
 #endif
     const int max_line   = get_number_of_lines();
-    const int help_start = std::min(GAME_MODES_START_Y + num_to_lines(num_saves + num_modes) + 2,
-                                    max_line - NUM_MISC_LINES + 1);
+    const int help_start = min(GAME_MODES_START_Y + num_to_lines(num_saves + num_modes) + 2,
+                               max_line - NUM_MISC_LINES + 1);
     const int help_end   = help_start + NUM_HELP_LINES + 1;
 
     const int game_mode_bottom = GAME_MODES_START_Y + num_to_lines(num_modes);
-    const int game_save_top = help_start - 2 - num_to_lines(std::min(2, num_saves));
-    const int save_games_start_y = std::min<int>(game_mode_bottom, game_save_top);
+    const int game_save_top = help_start - 2 - num_to_lines(min(2, num_saves));
+    const int save_games_start_y = min<int>(game_mode_bottom, game_save_top);
 
     clrscr();
     PrecisionMenu menu;
@@ -599,11 +597,11 @@ again:
     }
 
     tmp = new NoSelectTextItem();
-    std::string text = "Use the up/down keys to select the type of game "
-                       "or load a character.\n"
-                       "You can type your name; if you leave it blank "
-                       "you will be asked later.\n"
-                       "Press Enter to start";
+    string text = "Use the up/down keys to select the type of game or load a "
+                  "character.\n"
+                  "You can type your name; if you leave it blank you will be "
+                  "asked later.\n"
+                  "Press Enter to start";
     // TODO: this should include a description of that character.
     if (_game_defined(defaults))
         text += ", Tab to repeat the last game's choice";
@@ -644,7 +642,7 @@ again:
     // Draw legal info etc
     opening_screen();
 
-    std::string input_string = defaults.name;
+    string input_string = defaults.name;
 
     // If the game filled in a complete name, the user will
     // usually want to enter a new name instead of adding
@@ -788,7 +786,7 @@ again:
             }
         }
         // we had a significant action!
-        std::vector<MenuItem*> selected = menu.get_selected_items();
+        vector<MenuItem*> selected = menu.get_selected_items();
         if (selected.empty())
         {
             // Uninteresting action, poll a new key
@@ -877,7 +875,7 @@ static void _choose_arena_teams(newgame_def* choice,
 
 bool startup_step()
 {
-    std::string name;
+    string name;
 
     _initialize();
 

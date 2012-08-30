@@ -272,8 +272,11 @@ NAME:   firewood_loft
 TAGS:   extra
 DEPTH:  D:1-26
 ORIENT: float
+: if you.absdepth() > 8 then
+KITEM:  " = staff, quarterstaff, quarterstaff good_item
+: end
 KITEM:  " = staff, quarterstaff, quarterstaff
-KITEM:  ' = staff, staff / any magical staff w:2 / any rod w:1
+KITEM:  ' = staff, any magical staff / any rod w:1
 MAP
 xxxxx
 x"']x
@@ -3397,6 +3400,7 @@ TILE:   c = dngn_transparent_wall_white
 COLOUR: v = white
 MARKER: D = lua:restrict_door()
 SUBST:  D = +, !' = .
+: set_feature_name("metal_wall", "silver wall")
 MAP
 ............@@@@@@@............
 ....vvvvvvv...T.T...vvvvvvv....
@@ -3472,6 +3476,8 @@ ORIENT: float
 SHUFFLE: )]}>
 SUBST:  } = }>
 SUBST:  ] = ]>
+KMONS:  0 = 0 band
+KMONS:  8 = 8 band
 MAP
    xxxxxxxxxxxxccccc@
    xxxxxxxxxcccc.....
@@ -3551,7 +3557,10 @@ SUBST:  *% = .
 KMONS:  8 = w:35 nonbase draconian / orb of fire / electric golem / \
             killer klown / death cob / w:5 curse toe / w:5 ancient lich
 SUBST:  *% = .
+:else
+KMONS:  8 = 8 band
 : end
+KMONS:  0 = 0 band
 MAP
   xxxxxccccc@
   xxxxcc.....
@@ -3578,4 +3587,1169 @@ xxxxccc.........cc.ccxx
 xxxxxxccccccccccc.ccxxx
             .....ccxxxx
             @cccccxxxxx
+ENDMAP
+
+###############################################################################
+
+NAME:    hangedman_box_tower
+TAGS:    no_monster_gen no_item_gen no_pool_fixup transparent
+DEPTH:   D:16-26
+ORIENT:  float
+KMONS:   1 = patrolling 0 w:40 / nothing
+KMONS:   4 = 9 w:40 / 0 band
+KITEM:   1 = % w:75 / $ w:20 / nothing w:4 / * w:1
+KITEM:   $ = $ w:40 / nothing
+KFEAT:   D = any shop
+SHUFFLE: *|, CT, 23 / CT, 8w / 8w / w8
+SHUFFLE: 1239 / 1239 / 1239 / 1239 / $444, wW / wW / wW / mm
+NSUBST:  = = 1:+ / 1:==XX+ / *:=, - = 1:+ / 1:xxxx+ / *:x
+SUBST:   X = x, 23 = 9, = : y:3 x:1, | : |:4 D:1, C : C:3 T:17
+SUBST:   T = T:5 U:2 V:2 Y:1, x : x:13 y:1 c:1, G : G:1 c:1 y:8
+SUBST:   z : y:3 v:1 b:1 x:1, y : c:13 v:1 b:1
+MAP
+               .........
+               .xxx-xxx......
+          ......x1...1xx-xxx.
+          .xxx-xxxx+xxx1..1x...
+        ...x1..1x.....xxx+xxxx.
+        .xxxx+xxx..2..x....x1x.
+        .x1x....x..G..+..9.+.x.
+        .x.+.9..+..T..x....x.-.x
+       x.-.x....x.....x....x1x......
+   ......x1x....xxx+xxxxx+xxxxx-xxx.
+   .xxx-xxxxx+xxxx1.1xxx.....x1..1x...
+ ...x1..1x.....xxyy=yy1x...3.xxx+xxxx.
+ .xxxx+xxx.3...x1y...y.+..G..x....x1x.
+ .x1x....x..G..+.y.W.=.x.C...+..9.+.x.
+ .x.+.9..+...C.x.=.0.y1x.....x....x.-.
+ .-.x....x.....x1y.%.yyyxx+xxx....x1x...
+..x1x....xxx+xxyyy.z.%9y1..1xxxx+xxxxxx.
+.xxxxx+xxxx1..1y9%....%yy=yyyxx.....x1x.
+.x1x.....xxyy=yy%.8*|8......y1x.....x.x.
+.x.x.....x1y......|ww*.z%0W.=.+.TG2.+.-.
+.-.+.2GT.+.=.W0%z.*ww|......y1x.....x.x.
+.x.x.....x1y......8|*8.%yy=yyxx.....x1x.
+.x1x.....xxyyy=yy%....%9y1..1xxxx+xxxxx.
+.xxxxxx+xxxx1..1y9%.z.yyyxx+xxx....x1x..
+...x1x....xxx+xxyyy.%.y.x.....x....x.-.
+  .-.x....x.....x1y.0.=.x.C...+..9.+.x.
+  .x.+.9..+...C.x.=.W.y.+..G..x....x1x.
+  .x1x....x..G..+.y...y.x...3.xxx+xxxx.
+  .xxxx+xxx.3...x1yy=yyxx.....x1..1x...
+  ...x1..1x.....xxx1.1xxxx+xxxxx-xxx.
+    .xxx-xxxxx+xxxxx+xxx....x1x......
+    ......x1x....x.....x....x.-.x
+        x.-.x....x..T..+..9.+.x.
+         .x.+.9..+..G..x....x1x.
+         .x1x....x..2..xxx+xxxx.
+         .xxxx+xxx.....x1..1x...
+         ...x1..1xxx+xxxx-xxx.
+           .xxx-xx1...1x......
+           ......xxx-xxx.
+                .........
+ENDMAP
+
+###############################################################################
+
+NAME:   minmay_spiral_squares
+DEPTH:  D:12-26
+ORIENT: float
+SUBST:  0 = 0., 9 = 9.
+SUBST:  x : x:7 c:1 v:1 b:1
+MAP
+x@xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x.x|+......+.....+....+...+..+.@
+x+xxx......x.....x....x...x00xxx
+x.0xx......x.....x....x000xxxx|x
+x.0xx......x.....x0000xxxxxxxx+x
+x+xxx......x00000xxxxxx.+0.....x
+x..0x000000xxxxxxx......x0.....x
+x..0x+xxxxxx......xxxxxxx0.....x
+x..0x..x9...xxxxxxx|x..9x0.....x
+x+xxxx.x.xxxx.....9xx.x.x0.....x
+x...0x.x.....xxxxxx.x.x.x0.....x
+x...0x.xxxxxxx......x.x.xxxxxx+x
+x...0x.x|x..x0xxxxxxx.xx.x0....x
+x...0x.xx9x.xx....x0xx.x.x0....x
+x+xxxxx.x.x.x.9xx9.x.x.x.x0....x
+x....0x.x.x.x.xxxx.x.x.x.x0....x
+x....0x.x.x.x.xxxx.x.x.x.x0....x
+x....0x.x.x.x.9xx9.x.x.x.xxxxx+x
+x....0x.x.xx0x....xx.x9xx.x0...x
+x....0x.xx.xxxxxxx0x..x|x.x0...x
+x+xxxxxx.x.x......xxxxxxx.x0...x
+x.....0x.x.x.xxxxxx.....x.x0...x
+x.....0x.x.xx9.....xxxx.x.xxxx+x
+x.....0x9..x|xxxxxxx...9x..x0..x
+x.....0xxxxxxx......xxxxxx+x0..x
+x.....0x......xxxxxxx000000x0..x
+x.....0+.xxxxxx00000x......xxx+x
+x+xxxxxxxx0000x.....x......xx0.x
+x|xxxx000x....x.....x......xx0.x
+xxx00x...x....x.....x......xxx+x
+@.+..+...+....+.....+......+|x.x
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx@x
+ENDMAP
+
+NAME:   minmay_five_octagons
+DEPTH:  D:12-26
+ORIENT: float
+KPROP:  8 = no_rtele_into
+SUBST:  8 = .:130 8 |, 0 = 0 .:240
+MAP
+xxxxxxx@xxxxxxxxxxxxxxxx@xxxxxxx
+xxxx0000000xxxxxxxxxx0000000xxxx
+xxx000000000xxxxxxxx000000000xxx
+xx00000000000xxxxxx00000000000xx
+x0000000000000xxxx0000000000000x
+x0000000000000xxxx0000000000000x
+x0000000000000xxxx0000000000000x
+@0000000000000xxxx0000000000000@
+x0000000000000xxxx0000000000000x
+x0000000000000xxxx0000000000000x
+x0000000000000xxxx0000000000000x
+xx00000000000mmmmmm00000000000xx
+xxx000000000mm8888mm000000000xxx
+xxxx0000000mm888888mm0000000xxxx
+xxxxxxxxxxxm88888888mxxxxxxxxxxx
+xxxxxxxxxxxm88888888mxxxxxxxxxxx
+xxxxxxxxxxxm88888888mxxxxxxxxxxx
+xxxxxxxxxxxm88888888mxxxxxxxxxxx
+xxxx0000000mm888888mm0000000xxxx
+xxx000000000mm8888mm000000000xxx
+xx00000000000mmmmmm00000000000xx
+x0000000000000xxxx0000000000000x
+x0000000000000xxxx0000000000000x
+x0000000000000xxxx0000000000000x
+@0000000000000xxxx0000000000000@
+x0000000000000xxxx0000000000000x
+x0000000000000xxxx0000000000000x
+x0000000000000xxxx0000000000000x
+xx00000000000xxxxxx00000000000xx
+xxx000000000xxxxxxxx000000000xxx
+xxxx0000000xxxxxxxxxx0000000xxxx
+xxxxxxx@xxxxxxxxxxxxxxxx@xxxxxxx
+ENDMAP
+
+NAME:   minmay_imperfect_grid
+DEPTH:  D:8-26
+ORIENT: float
+SUBST:  0 = 0., 9 = 9.
+SUBST:  x : x:7 c:1 v:1 b:1
+MAP
+@xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x.x%xxx%xxx%xxx%xxx%xxx%xxx%xxxx
+xx0x0x0x0x0x0x0x0x0x0x0x0x0x9xxx
+x%x.x.xxx.xxx.xxx.xxx.xxx.xxx9xx
+xx0x.x.x.x.x.x.x.x.x.x.x.x.xxx%x
+xxx.x.x.xxx.xxx.xxx.xxx.xxx.x0xx
+xx0x.x.x.x.x.x.x.x.x.x.x.xxx.xxx
+x%xxx.x.x.xxx.xxx.xxx.xxx.x.x0xx
+xx0x.x.x.x.x.x.x.x.x.x.xxx.xxx%x
+xxx.xxx.x.x.xxx.xxx.xxx.x.x.x0xx
+xx0x.x.x.x.x.x.x.x.x.xxx.xxx.xxx
+x%xxx.xxx.x.x.xxx.xxx.x.x.x.x0xx
+xx0x.x.x.x.x.x.x.x.xxx.xxx.xxx%x
+xxx.xxx.xxx.x.x.xxx.x.x.x.x.x0xx
+xx0x.x.x.x.x.x.x.xxx.xxx.xxx.xxx
+x%xxx.xxx.xxx.x.x.x.x.x.x.x.x0xx
+xx0x.x.x.x.x.x.x.x.xxx.xxx.xxx%x
+xxx.xxx.xxx.xxx.x.x.x.x.x.x.x0xx
+xx0x.x.x.x.x.xxx.x.x.xxx.xxx.xxx
+x%xxx.xxx.xxx.x.x.x.x.x.x.x.x0xx
+xx0x.x.x.x.xxx.xxx.x.x.xxx.xxx%x
+xxx.xxx.xxx.x.x.x.x.x.x.x.x.x0xx
+xx0x.x.x.xxx.xxx.xxx.x.x.xxx.xxx
+x%xxx.xxx.x.x.x.x.x.x.x.x.x.x0xx
+xx0x.x.xxx.xxx.xxx.xxx.x.x.xxx%x
+xxx.xxx.x.x.x.x.x.x.x.x.x.x.x0xx
+xx0x.xxx.xxx.xxx.xxx.xxx.x.x.xxx
+x%xxx.x.x.x.x.x.x.x.x.x.x.x.x0xx
+xx9xxx.xxx.xxx.xxx.xxx.xxx.x.x%x
+xxx9x0x0x0x0x0x0x0x0x0x0x0x0x0xx
+xxxx%xxx%xxx%xxx%xxx%xxx%xxx%x.x
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx@
+ENDMAP
+
+NAME:  minmay_weird_star
+TAGS:  no_pool_fixup no_monster_gen
+DEPTH: D:12-20
+ORIENT: float
+MONS:  plant
+SUBST: x : x:9 c:1
+MAP
+xxxxxxxxxxx@..@xxxxxxxxxxx
+x|11xxxxxx......xxxxxx11|x
+x11llxxxxx..ww..xxxxxll11x
+x1llllxxxx.wwww.xxxxllll1x
+xxlllllxxx.wbbw.xxxlllllxx
+xxxlllllx..wbbw..xlllllxxx
+xxxxllll...wbbw...llllxxxx
+xxxxxll...wwbbww...llxxxxx
+xxxxxx...wwbbbbww...xxxxxx
+xxxxx...wwbbbbbbww...xxxxx
+x......wwbbbbbbbbww......x
+@..wwwwwbbbbbbbbbbwwwww..@
+..wwbbbbbbbbbbbbbbbbbbww..
+..wwbbbbbbbbbbbbbbbbbbww..
+@..wwwwwbbbbbbbbbbwwwww..@
+x......wwbbbbbbbbww......x
+xxxxx...wwbbbbbbww...xxxxx
+xxxxxx...wwbbbbww...xxxxxx
+xxxxxll...wwbbww...llxxxxx
+xxxxllll...wbbw...llllxxxx
+xxxlllllx..wbbw..xlllllxxx
+xxlllllxxx.wbbw.xxxlllllxx
+x1llllxxxx.wwww.xxxxllll1x
+x11llxxxxx..ww..xxxxxll11x
+x|11xxxxxx......xxxxxx11|x
+xxxxxxxxxxx@..@xxxxxxxxxxx
+ENDMAP
+
+NAME:   minmay_quarter_circles
+DEPTH:  D:8-26
+ORIENT: float
+SUBST:  0 = 0., 9 = 99.
+SUBST:  x : x:7 c:1 v:1 b:1
+MAP
+xxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxx
+@.............x*..0...0..+..0..x
+x+xx..........x*..0...0..x..0..x
+x..xxxx.......xx00xxxxx00x00x00x
+x..0..xxx......x..9xxxx..x..x..x
+x..0....xx.....x...xxxx..x..x..x
+x00x.....x.....xx..9xxx..x..x..x
+x..xxx...xx.....x....9x00x..x..x
+x..xxxx...x.....xx....0..x..x..x
+x..xxxxx00x......xxx..0..x..x..x
+x..x...0..xx.......xxxx**x..x..x
+x..x...0...x........+.xxxx00x..x
+x..x00xxxx.+........x...0...x..x
+x..x..x**xxxx.......xx..0...x..x
+x..x..x..0..xxx......x00xxxxx..x
+x..x..x..0....xx.....x...xxxx..x
+x..x..x00x9....x.....xx...xxx..x
+x..x..x..xxx9..xx.....x.....x00x
+x..x..x..xxxx...x.....xx....0..x
+x..x..x..xxxx9..x......xxx..0..x
+x00x00x..xxxxx00xx.......xxxx..x
+x..0..x......0..*x..........xx+x
+x..0..+......0..*x.............@
+xxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxx
+ENDMAP
+
+NAME:   minmay_ornate_pinched
+DEPTH:  D:8-26
+ORIENT: float
+SUBST:  0 = 0., 9 = 99.
+SUBST:  x : x:7 c:1 v:1 b:1
+MAP
+...........       ...........
+.xx.......................xx.
+.xxxxxx...............xxxxxx.
+..xxxx.xxxx.......xxxx.xxxx..
+..xxx.xx.0.xxxxxxx.0.xx.xxx..
+..xx.x..x..xxxxxxx..x..x.xx..
+..x.x.xxxxx..x.x..xxxxx.x.x..
+...xx.xx...xx.0.xx...xx.xx...
+...x.xx.x.0.xx.xx.0.x.xx.x...
+...x0.x..x.x.xxx.x.x..x.0x...
+...x..x.0.xxx...xxx.0.x..x...
+ ...xx.x.xxx..x..xxx.x.xx...
+ ...xx.xx.x.x.9.x.x.xx.xx...
+ ...xxx.xx...x*x...xx.xxx...
+ ...xx.0.x.x9*x*9x.x.0.xx...
+ ...xxx.xx...x*x...xx.xxx...
+ ...xx.xx.x.x.9.x.x.xx.xx...
+ ...xx.x.xxx..x..xxx.x.xx...
+...x..x.0.xxx...xxx.0.x..x...
+...x0.x..x.x.xxx.x.x..x.0x...
+...x.xx.x.0.xx.xx.0.x.xx.x...
+...xx.xx...xx.0.xx...xx.xx...
+..x.x.xxxxx..x.x..xxxxx.x.x..
+..xx.x..x..xxxxxxx..x..x.xx..
+..xxx.xx.0.xxxxxxx.0.xx.xxx..
+..xxxx.xxxx.......xxxx.xxxx..
+.xxxxxx...............xxxxxx.
+.xx.......................xx.
+...........       ...........
+ENDMAP
+
+NAME:   minmay_split_circle
+DEPTH:  D:16-26
+ORIENT: float
+SUBST:  0 = 01., 9 = 91.
+SUBST:  c : cv b:1
+MONS:   shapeshifter / glowing shapeshifter w:1
+MAP
+ccccccccccccccc@ccccccccccccccc
+c.............................c
+c.ccccccccccccc.ccccccccccccc.c
+c.cccccccccc**c.c||cccccccccc.c
+c.ccccccc.....c.c.....ccccccc.c
+c.ccccc...0.c.c.c.c.....ccccc.c
+c.cccc........c.c...9....cccc.c
+c.ccc0........c.c.........ccc.c
+c.ccc.........c.c.........ccc.c
+c.cc....c...c.c.c.c...c....cc.c
+c.cc......0...c.c.........9cc.c
+c.cc..........c.c9.........cc.c
+c.c%..........c.c..........*c.c
+c.c%c...c...c.c.c.c...c...c*c.c
+c.c%..........c.c..........*c.c
+c.c%..0......0c.c..9.......*c.c
+c.c%..........c.c..........*c.c
+c.c%c...c...c.c.c.c...c...c*c.c
+c.c%..........c.c..........*c.c
+c.cc....0.....c.c.9.....9..cc.c
+c.cc..........c.c..........cc.c
+c.cc....c...c.c.c.c...c....cc.c
+c.ccc.........c.c.........ccc.c
+c.ccc0........c.c....9....ccc.c
+c.cccc........c.c.......9cccc.c
+c.ccccc.....c.c.c.c.....ccccc.c
+c.ccccccc.....c.c.....ccccccc.c
+c.cccccccccc0.c.c..cccccccccc.c
+c.ccccccccccc.c.c.ccccccccccc.c
+c.............c.c.............c
+ccccccccccccccc@ccccccccccccccc
+ENDMAP
+
+NAME:   minmay_quantized_circle
+DEPTH:  D:8-26
+ORIENT: float
+SUBST:  0 = 0., 9 = 9., c : ccb, t : ttm, x : xxxxvb
+MAP
+xxxxxxxxxxxxxxx@xxxxxxxxxxxxxxx
+x.x0x.x.x.x0x*x.x*x0x.x.x.x0x.x
+xx.x0x.x.x.x9xx.xx9x.x.x.x0x.xx
+x0x.x0x.x.x0x*x.x*x0x.x.x0x.x0x
+xx0x.xxxxxxxxxx.xxxxxxxxxx.x0xx
+x.x0x.xxxxxxx.....xxxxxxx.x0x.x
+xx.xxx.xxxxx.......xxxxx.xxx.xx
+x.x.xxx.x......t......x.xxx.x.x
+xx.xxxxx......tct......xxxxx.xx
+x.x.xxx...t....t....t...xxx.x.x
+xx.xxxx..tct.......tct..xxxx.xx
+x0x0xxx...t.........t...xxx0x0x
+xx9xxx........ttt........xxx9xx
+x*x*x........tccct........x*x*x
+xxxxx...t...tccccct...t...xxxxx
+@......tct..tccccct..tct......@
+xxxxx...t...tccccct...t...xxxxx
+x*x*x........tccct........x*x*x
+xx9xxx........ttt........xxx9xx
+x0x0xxx...t.........t...xxx0x0x
+xx.xxxx..tct.......tct..xxxx.xx
+x.x.xxx...t....t....t...xxx.x.x
+xx.xxxxx......tct......xxxxx.xx
+x.x.xxx.x......t......x.xxx.x.x
+xx.xxx.xxxxx.......xxxxx.xxx.xx
+x.x0x.xxxxxxx.....xxxxxxx.x0x.x
+xx0x.xxxxxxxxxx.xxxxxxxxxx.x0xx
+x0x.x0x.x.x0x*x.x*x0x.x.x0x.x0x
+xx.x0x.x.x.x9xx.xx9x.x.x.x0x.xx
+x.x0x.x.x.x0x*x.x*x0x.x.x.x0x.x
+xxxxxxxxxxxxxxx@xxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   minmay_four_partial_circles
+DEPTH:  D:8-18
+ORIENT: float
+WEIGHT: 7
+SUBST:  ? : . x:8 b:1 v:1, ! : . x:2, 0 = 00.
+SUBST:  x : x:9 c:1
+MAP
+  xxxxxx        xxxxxx
+ xx0..0xx      xx0..0xx
+xx......xx    xx......xx
+x0..??..0x    x0..??..0x
+x..????..x    x..????..x
+x..????..x@..@x..????..x
+x0..??............??..0x
+xx....................xx
+ xx0......!!!!......0xx
+  xxxx...!!!!!!...xxxx
+     @..!!!!!!!!..@
+     ...!!!!!!!!...
+     ...!!!!!!!!...
+     @..!!!!!!!!..@
+  xxxx...!!!!!!...xxxx
+ xx0......!!!!......0xx
+xx....................xx
+x0..??............??..0x
+x..????..x@..@x..????..x
+x..????..x    x..????..x
+x0..??..0x    x0..??..0x
+xx......xx    xx......xx
+ xx0..0xx      xx0..0xx
+  xxxxxx        xxxxxx
+ENDMAP
+
+NAME:   minmay_eight_partial_circles
+DEPTH:  D:12-26
+ORIENT: float
+WEIGHT: 3
+SUBST:  ? : . x:5 G:2 b:1 c:1 T:1, 0 = 0., 9 = 99., 8 = 8.
+MAP
+  xxxxx     xxxxx     xxxxx
+ xx0.0xx   xx0.0xx   xx0.0xx
+xx.....xx xx.....xx xx.....xx
+x0.....0x x0.....0x x0.....0x
+x...?...x@x...?...x@x...?...x
+x0.........................0x
+xx.........................xx
+ xx0.....................0xx
+  xxx.......xx+xx.......xxx
+    @.....xxx...xxx.....@
+  xxx....xx.......xx....xxx
+ xx0.....x..xxxxx..x.....0xx
+xx......xx.xx|||xx.xx......xx
+x0......x9.x*****x.9x......0x
+x...?...x..x..8..x..x...?...x
+x0......x9.x.8.8.x.9x......0x
+xx......xx.xx.9.xx.xx......xx
+ xx0.....x..xx.xx..x.....0xx
+  xxx....xx...9...xx....xxx
+    @.....xxx9.9xxx.....@
+  xxx.......xxxxx.......xxx
+ xx0.....................0xx
+xx.........................xx
+x0.........................0x
+x...?...x@x...?...x@x...?...x
+x0.....0x x0.....0x x0.....0x
+xx.....xx xx.....xx xx.....xx
+ xx0.0xx   xx0.0xx   xx0.0xx
+  xxxxx     xxxxx     xxxxx
+ENDMAP
+
+NAME:   minmay_swirls_squares
+DEPTH:  D:12-26
+ORIENT: float
+SUBST:  9 = 999.
+SUBST:  x : x:7 c:1 v:1 b:1
+MAP
+...............................
+.xxxxx.........x.xx.xxx......x.
+.....xxx....xx...xx.xxx.xx...x.
+...x...xx...xx......xxx.xx.x.x.
+........xx...................x.
+..xx.x...x..xxx......xxxxx..xx.
+..xx.x...xx.xxx....xxx......x..
+.....x....x.xxx...xx.......xx..
+.xxx.x....x......xx.......xx...
+.xxx.xx...x..xx..x9.....xxx....
+.xxx..x...xx.xx.xx99xxxxx......
+......xx..9x..9.x|xxx..........
+.xx....xx99xx9x9xxx....xxx.xx..
+.xx.....xxx|x***x*9.xx.xxx.xx..
+..........xxxxxxx*x9xx.xxx.....
+.x..........9*xxx*9..........x.
+.....xxx.xx9x*xxxxxxx..........
+..xx.xxx.xx.9*x***x|xxx.....xx.
+..xx.xxx....xxx9x9xx99xx....xx.
+..........xxx|x.9..x9..xx......
+......xxxxx99xx.xx.xx...x..xxx.
+....xxx.....9x..xx..x...xx.xxx.
+...xx.......xx......x....x.xxx.
+..xx.......xx...xxx.x....x.....
+..x......xxx....xxx.xx...x.xx..
+.xx..xxxxx......xxx..x...x.xx..
+.x...................xx........
+.x.x.xx.xxx......xx...xx...x...
+.x...xx.xxx.xx...xx....xxx.....
+.x......xxx.xx.x.........xxxxx.
+...............................
+ENDMAP
+
+NAME:    minmay_big_diamond_grid
+DEPTH:   D:12-26
+ORIENT:  float
+SHUFFLE: ABC
+SUBST:   A = ., B = ., C = x, 0 = 0., 9 = 9.
+SUBST:   x : x:7 c:1 v:1 b:1
+MAP
+x@xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx@x
+x.xxx0......0xx0......0xx0......0xx0......0xxx.x
+x.xxx........xx........xx........xx........xxx.x
+x.x0.x......x..x......x00x......x..x......x.0x.x
+x.x...x....x....x....x....x....x....x....x...x.x
+x.x....x..x......x..x......x..x......x..x....x.x
+x.A.....xx........xx0..**..0xx........xx.....B.x
+x.A.....xx........xx0..**..0xx........xx.....B.x
+x.x....x..x......x00x......x00x......x..x....x.x
+x.x...x....x....x....x....x....x....x....x...x.x
+x.x0.x......x..x......x99x......x..x......x.0x.x
+x.xxx........xx0..**..9xx9..**..0xx........xxx.x
+x.xxx........xx0..**..9xx9..**..0xx........xxx.x
+x.x0.x......x..x......x99x......x..x......x.0x.x
+x.x...x....x....x....x....x....x....x....x...x.x
+x.x....x..x......x00x......x00x......x..x....x.x
+x.B.....xx........xx0..**..0xx........xx.....A.x
+x.B.....xx........xx0..**..0xx........xx.....A.x
+x.x....x..x......x..x......x..x......x..x....x.x
+x.x...x....x....x....x....x....x....x....x...x.x
+x.x0.x......x..x......x00x......x..x......x.0x.x
+x.xxx........xx........xx........xx........xxx.x
+x.xxx0......0xx0......0xx0......0xx0......0xxx.x
+x@xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx@x
+ENDMAP
+
+NAME:   minmay_blocking_statues
+DEPTH:  D:12-26
+ORIENT: float
+SUBST:  0 = 0., 9 = 99.
+MAP
+@xxxxxxxxxxxxxxxxxx
+.xxxxxxxxxxxx99***x
+..GxxG....GxxGxxx*x
+.0.xx.0..0.xx.xxx*x
+...G...xx.....xxx9x
+...G...xx......0x9x
+.0.xx.0..0.xx...x0x
+..GxxG....Gxx...x0x
+.xxxxxx..xxxxxx.00x
+.xxxxxx..xxxxxx.00x
+..GxxG....Gxx...x0x
+.0.xx.0..0.xx...x0x
+.......xx...G..0x9x
+.......xx...G.xxx9x
+.0.xx.0..0.xx.xxx*x
+..GxxG....GxxGxxx*x
+.xxxxxxxxxxxx99***x
+@xxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   minmay_flawed_box
+DEPTH:  D:6-10
+ORIENT: float
+SUBST:  X = x.
+MONS:   orc wizard / nothing
+MAP
+....................
+.xxxxX...........Xx.
+.XxxxxX.XxxX....Xxx.
+..XxxX...XxxX..xxxx.
+...xxX........Xxxxx.
+...xxxX.......Xx.xX.
+...xXxx......xxx.x..
+...X.Xx......xX..x..
+......xX..11Xx...X..
+...X..xxx11Xxx......
+...x...XxXXxx....X..
+..Xx...1xxxxX1...x..
+..xx..1.XxxX1...Xx..
+..xX...1XxxX11..xx..
+..X....1xxxxx...xX..
+......xxxX1XxX..x...
+..X...xX11..xxX.X...
+..x..Xx...1.Xxx.....
+..xXXxx......XxXX...
+.XxxxxX.......xxx...
+.xxxX.........Xxx...
+.xxxxxX.xxX...XxxX..
+.xxX....XxxX.XxxxxX.
+.xX...........Xxxxx.
+....................
+ENDMAP
+
+NAME:   minmay_four_inscribed_fans
+DEPTH:  D:16-
+ORIENT: float
+SUBST:  x : x:7 c:1 v:1 b:1
+SUBST:  9 = 999.
+MAP
+            ....             ....
+            .xx...           .xx...
+   ...     ..xxxx.. ...     ..xxxx..
+   .x..    .xxxxxx...x..    .xxxxxx...
+  ..xx...  .xx%%xxxx.xx...  .xx%%xxxx.
+ ..xxxxx....xx%%xxx.xxxxx....xx%%xxx..
+ .xxxxxxxxxx.9xxxx.xxxxxxxxxx.9xxxx..
+..xx%%xxxxxx...xxx.xx%%xxxxxx...xxx.
+.xxx%%x...x....xx.xxx%%x...x....xx..
+.xxxxx9....9x..xx.xxxxx9....9x..xx.
+...xxx...xxmx.xxx...xxx...xxmx.xxx.
+  ....xx.9m|m9.xx..00..xx.9m|m9.xx....
+     .xxx.xmxx...xxx...xxx.xmxx...xxx...
+     .xx..x9....9xxxxx.xx..x9....9xxxxx.
+    ..xx....x...x%%xxx.xx....x...x%%xxx.
+    .xxx...xxxxxx%%xx.xxx...xxxxxx%%xx..
+   ..xxxx9.xxxxxxxxxx.xxxx9.xxxxxxxxxx.
+  ..xxx%%xx....xxxxx.xxx%%xx....xxxxx..
+  .xxxx%%xx..xx..xx9xxxx%%xx..xx..xx..
+  ...xxxxxx..xxxx.x**9xxxxxx..xxxx.x.
+   .x.xxxx..xxxxxx9**x.xxxx..xxxxxx...
+  ..xx..xx..xx%%xxxx9xx..xx..xx%%xxxx.
+ ..xxxxx....xx%%xxx.xxxxx....xx%%xxx..
+ .xxxxxxxxxx.9xxxx.xxxxxxxxxx.9xxxx..
+..xx%%xxxxxx...xxx.xx%%xxxxxx...xxx.
+.xxx%%x...x....xx.xxx%%x...x....xx..
+.xxxxx9....9x..xx.xxxxx9....9x..xx.
+...xxx...xxmx.xxx...xxx...xxmx.xxx.
+  ....xx.9m|m9.xx......xx.9m|m9.xx....
+     .xxx.xmxx...xxx...xxx.xmxx...xxx...
+     .xx..x9....9xxxxx.xx..x9....9xxxxx.
+    ..xx....x...x%%xxx.xx....x...x%%xxx.
+    .xxx...xxxxxx%%xx.xxx...xxxxxx%%xx..
+   ..xxxx9.xxxxxxxxxx.xxxx9.xxxxxxxxxx.
+  ..xxx%%xx....xxxxx.xxx%%xx....xxxxx..
+  .xxxx%%xx.  ...xx.xxxx%%xx.  ...xx..
+  ...xxxxxx.    ..x...xxxxxx.    ..x.
+    ..xxxx..     ... ..xxxx..     ...
+     ...xx.           ...xx.
+       ....             ....
+ENDMAP
+
+NAME:   minmay_concentric_multi
+DEPTH:  D:12-
+ORIENT: float
+NSUBST: A = 1:+ / *:+xx, B = 1:+ / *:+xx, C = 1:+ / *:+xx
+SUBST:  x : x:7 c:1 v:1 b:1
+SUBST:  9 = 999., 0 = 000.
+MAP
+      .....................
+     ...........x...........
+    ...........xxx...........
+   ...........xx9xx...........
+  ...........xx...xx...........
+ ...........xx.....xx...........
+......xxxAxxx.......xxxAxxx......
+......x.....0.......0.....x......
+......x.....xxxxBxxxx.....x......
+......A....xx.0...0.xx....A......
+......x...xx..x...x..xx...x......
+......x..xx...xx.xx...xx..x......
+.....xx0xx....xxCxx....xx0xx.....
+....xx..x....9x...x9....x..xx....
+...xx...x0xxxxx.9.xxxxx0x...xx...
+..xx....x..xx...|...xx..x....xx..
+.xx9....B...C.9|x|9.C...B....9xx.
+..xx....x..xx...|...xx..x....xx..
+...xx...x0xxxxx.9.xxxxx0x...xx...
+....xx..x....9x...x9....x..xx....
+.....xx0xx....xxCxx....xx0xx.....
+......x..xx...xx.xx...xx..x......
+......x...xx..x...x..xx...x......
+......A....xx.0...0.xx....A......
+......x.....xxxxBxxxx.....x......
+......x.....0.......0.....x......
+......xxxAxxx.......xxxAxxx......
+ ...........xx.....xx...........
+  ...........xx...xx...........
+   ...........xx9xx...........
+    ...........xxx...........
+     ...........x...........
+      .....................
+ENDMAP
+
+NAME:   minmay_diamond_stairs
+DEPTH:  D:8-26
+ORIENT: float
+SUBST:  x : x:7 c:1 v:1 b:1
+SUBST:  F : .:40 GTUb
+SUBST:  9 = 9.
+MAP
+            .......
+          ....9x9....
+        .....xxxxx.....
+      .....xxx<.>xxx.....
+    .....xxx.x.8.x.xxx.....
+  .....xxx...x...x...xxx.....
+.....xxx...F.x...x.F...xxx.....
+..9xxx.......x...x.......xxx9..
+.xxx{........+...+........}xxx.
+..9xxx.......x...x.......xxx9..
+.....xxx...F.x...x.F...xxx.....
+  .....xxx...x...x...xxx.....
+    .....xxx.x.8.x.xxx.....
+      .....xxx<.>xxx.....
+        .....xxxxx.....
+          ....9x9....
+            .......
+ENDMAP
+
+NAME:   minmay_octo_star
+DEPTH:  D:12-
+ORIENT: float
+SUBST:  x : x:7 c:1 v:1 b:1
+SUBST:  9 = 999.
+MAP
+     .....................
+    .........xx+xx.........
+   ..........xx.xx..........
+  ....xx.....x...x.....xx....
+ ....xxxx....x...x....xxxx....
+....xx**xx...x...x...xx**xx....
+...xx**..xx..x...x..xx..**xx...
+...xx*....xx.x...x.xx....*xx...
+....xx..8..xxx.9.xxx..8..xx....
+.....xx.....xx....xx....xx.....
+......xx..9..xx....x+..xx......
+.......xx.....xx....xxxx.......
+........xx..9..xx....xx........
+.xxxxxxxxxx.....x+....xxxxxxxx.
+.xx.......xx..9..xx.........xx.
+.+......9..xx.....xx..9......+.
+.xx.........xx..9..xx.......xx.
+.xxxxxxxx....+x.....xxxxxxxxxx.
+........xx....xx..9..xx........
+.......xxxx....xx.....xx.......
+......xx..+x....xx..9..xx......
+.....xx....xx....xx.....xx.....
+....xx..8..xxx.9.xxx..8..xx....
+...xx*....xx.x...x.xx....*xx...
+...xx**..xx..x...x..xx..**xx...
+....xx**xx...x...x...xx**xx....
+ ....xxxx....x...x....xxxx....
+  ....xx.....x...x.....xx....
+   ..........xx.xx..........
+    .........xx+xx.........
+     .....................
+ENDMAP
+
+NAME:   minmay_central_circle
+DEPTH:  D:16-
+ORIENT: float
+SUBST:  x : x:8 c:1 v:1
+SUBST:  9 = 999., 8 = 888.
+MAP
+.................................
+...xxxxx.......xxx.......xxxxx...
+..xx...xx.....xx.xx.....xx...xx..
+.xx..9..xx....x.9.x....xx..9..xx.
+.x.......x....xx.xx....x.......x.
+.x.9.8.9.x.....x.x.....x.9.8.9.x.
+.x.......x.............x.......x.
+.xx..9...x....xx+xx....x...9..xx.
+..xx........xxx...xxx........xx..
+...xxxxx..xxx.......xxx..xxxxx...
+.........x+.....9.....+x.........
+.........x....9...9....x.........
+........xx..9.xx+xx.9..xx........
+........x....+x***x+....x........
+..xxx..xx..9xx**b**xx9..xx..xxx..
+.xx.xx.x....x***b***x....x.xx.xx.
+.x.9...+..9.+*bbbbb*+.9..+...9.x.
+.xx.xx.x....x***b***x....x.xx.xx.
+..xxx..xx..9xx**b**xx9..xx..xxx..
+........x....+x***x+....x........
+........xx..9.xx+xx.9..xx........
+.........x....9...9....x.........
+.........x+.....9.....+x.........
+...xxxxx..xxx.......xxx..xxxxx...
+..xx........xxx...xxx........xx..
+.xx..9...x....xx+xx....x...9..xx.
+.x.......x.............x.......x.
+.x.9.8.9.x.....x.x.....x.9.8.9.x.
+.x.......x....xx.xx....x.......x.
+.xx..9..xx....x.9.x....xx..9..xx.
+..xx...xx.....xx.xx.....xx...xx..
+...xxxxx.......xxx.......xxxxx...
+.................................
+ENDMAP
+
+NAME:   minmay_strange_plus
+DEPTH:  D:12-
+ORIENT: float
+SUBST:  9 = 999., 8 = 888.
+MAP
+        .............
+       ....nnn.nnn....
+      ....nn.....nn....
+     ....nn.nn.nn.nn....
+    .....n.nn...nn.n.....
+   ......n.n.....n.n......
+  ....9.......9.......9....
+ ........n.n.....n.n........
+........nn.n.....n.nn........
+...nnn.nn.nn.....nn.nn.nnn...
+..nn.....nn.......nn.....nn..
+.nn.nn.nnn....8....nnn.nn.nn.
+.n.nn...................nn.n.
+.n.n.........|||.........n.n.
+......9....8.|||.8....9......
+.n.n.........|||.........n.n.
+.n.nn...................nn.n.
+.nn.nn.nnn....8....nnn.nn.nn.
+..nn.....nn.......nn.....nn..
+...nnn.nn.nn.....nn.nn.nnn...
+........nn.n.....n.nn........
+ ........n.n.....n.n........
+  ....9.......9.......9....
+   ......n.n.....n.n......
+    .....n.nn...nn.n.....
+     ....nn.nn.nn.nn....
+      ....nn.....nn....
+       ....nnn.nnn....
+        .............
+ENDMAP
+
+NAME:   minmay_cut_squares
+DEPTH:  D:8-
+ORIENT: float
+SUBST:  9 = 9.
+SUBST:  x : x:7 c:1 v:1 b:1
+MAP
+.......................
+.xxxxxx....xxxxxx....x.
+.x|........x|..........
+.x.........x......xx...
+.x..9......x..9...xx...
+.x...9.....x...9.......
+.x.........x....x....x.
+.......9.........9...x.
+........9....xx...9..x.
+.............xx......x.
+....................|x.
+.xxxxxx....x....xxxxxx.
+.x|....................
+.x......xx.............
+.x..9...xx....9........
+.x...9.........9.......
+.x....x....x.........x.
+.......9...x.....9...x.
+...xx...9..x......9..x.
+...xx......x.........x.
+..........|x........|x.
+.x....xxxxxx....xxxxxx.
+.......................
+ENDMAP
+
+NAME:   minmay_bad_star
+DEPTH:  D:12-
+ORIENT: float
+SUBST:  9 = 9., 8 = 8.
+SUBST:  x : x:7 c:1 v:1 b:1
+MAP
+... . . . ...... . . . ...
+.x.........x99x.........x.
+..xx.......x..x.......xx..
+ .x*xxx.....xx.....xxx*x.
+...x99xxx...xx...xxx99x...
+ ..x9x..xx..xx..xx..x9x..
+...xx.x..xxx..xxx..x.xx...
+ ...x..x...xxxx...x..x...
+....xx..x.x.xx.x.x..xx....
+ ....xx..xxx**xxx..xx....
+......x.xxx....xxx.x......
+.xx...xx.x.x88x.x.xx...xx.
+.9.xxx*xx*.8xx8.*xx*xxx.9.
+.9.xxx*xx*.8xx8.*xx*xxx.9.
+.xx...xx.x.x88x.x.xx...xx.
+......x.xxx....xxx.x......
+ ....xx..xxx**xxx..xx....
+....xx..x.x.xx.x.x..xx....
+ ...x..x...xxxx...x..x...
+...xx.x..xxx..xxx..x.xx...
+ ..x9x..xx..xx..xx..x9x..
+...x99xxx...xx...xxx99x...
+ .x*xxx.....xx.....xxx*x.
+..xx.......x..x.......xx..
+.x.........x99x.........x.
+... . . . ...... . . . ...
+ENDMAP
+
+NAME:   minmay_door_path
+DEPTH:  D:1-4
+ORIENT: float
+SUBST:  0 = .0%
+SUBST:  ? : .GTV
+MAP
+xxxxxxxxxxxxx
+@...........x
+x.xxxx.xxxx.x
+x.x0.+.+..x.x
+x.x..x.x.?x.x
+x.x+xx.xxxx.x
+x...........x
+x.x+xx.xxxx.x
+x.x..+.+.0x.x
+x.x0.x.x..x.x
+x.xxxx.xx+x.x
+x...........x
+x.xxxx.xx+x.x
+x.x0.+.+..x.x
+x.x..x.x.0x.x
+x.x+xx.xxxx.x
+x...........x
+x.x+xx.xxxx.x
+x.x..+.+.0x.x
+x.x0.x.x..x.x
+x.xxxx.xx+x.x
+x...........x
+x.xxxx.xx+x.x
+x.x..+.+..x.x
+x.x?.x.x.0x.x
+x.xxxx.xxxx.x
+x...........@
+xxxxxxxxxxxxx
+ENDMAP
+
+NAME:   minmay_tri_box
+DEPTH:  D:8-
+ORIENT: float
+SUBST:  9 = 9.
+SUBST:  x : x:7 c:1 v:1 b:1
+MAP
+xxxxxxxxx.@.xxxxxxxxx
+x......xx...xx......x
+x9.xx..x..x..x..xx.9x
+x99x..xx..x..xx..x99x
+x.xx..x..xxx..x..xx.x
+x|x..xx..x|x..xx..x|x
+xxx..x..xx.xx..x..xxx
+xx..xx..x999x..xx..xx
+xx..x..xx...xx..x..xx
+x..xx..x..x..x..xx..x
+x..x..xx..x..xx..x..x
+x.xx..x..xxx..x..xx.x
+x.x..xx..x|x..xx..x.x
+x.x..x..xx.xx..x..x.x
+x...xx..x...x..xx...x
+x...x..xx...xx..x...x
+x..xx..x..x..x..xx..x
+x..x..xx99x99xx..x..x
+x.xx.............xx.x
+x.....xx.....xx.....x
+x.xx.............xx.x
+@...................@
+xxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   minmay_dotted_concentric_squares
+DEPTH:  D:12-
+ORIENT: float
+SUBST:  9 = 9....
+SUBST:  x : x:7 c:1 v:1 b:1
+SUBST:  + : + G:1
+MAP
+...........................
+.xxx9xxx9xxx9x9xxx9xxx9xxx.
+.x.......................x.
+.x.xxx9xxx9xx9xx9xxx9xxx.x.
+.9.x...................x.9.
+.x.x.xxx9xxx9x9xxx9xxx.x.x.
+.x.9.x...............x.9.x.
+.x.x.x.xxx9xx9xx9xxx.x.x.x.
+.9.x.9.x...........x.9.x.9.
+.x.x.x.x.xxx9x9xxx.x.x.x.x.
+.x.9.x.9.x.......x.9.x.9.x.
+.x.x.x.x.x.xxxxx.x.x.x.x.x.
+.9.x.9.x.9.x***x.9.x.9.x.9.
+.x.9.x.9.x.x***x.x.9.x.9.x.
+.9.x.9.x.9.x***x.9.x.9.x.9.
+.x.x.x.x.x.xx+xx.x.x.x.x.x.
+.x.9.x.9.x.......x.9.x.9.x.
+.x.x.x.x.xxx+x+xxx.x.x.x.x.
+.9.x.9.x...........x.9.x.9.
+.x.x.x.xxx+xx+xx+xxx.x.x.x.
+.x.9.x...............x.9.x.
+.x.x.xxx+xxx+x+xxx+xxx.x.x.
+.9.x...................x.9.
+.x.xxx+xxx+xx+xx+xxx+xxx.x.
+.x.......................x.
+.xxx+xxx+xxx+x+xxx+xxx+xxx.
+...........................
+ENDMAP
+
+NAME:   minmay_textured_paths
+DEPTH:  D:12-
+ORIENT: float
+SUBST:  8 = 888., 9 = 9.
+SUBST:  ? = .:70 GTUVm<>
+SUBST:  x : x:7 c:1 v:1 b:1
+MAP
+...........................
+.xxxxxxxxxxxxxxxxxxxx.x.xx.
+.x.x.x.x.x.x.x.x..99x.x..x.
+.x.x.x.x.x.x.x.x...9xx.x.x.
+..x.x.x.x.x.x.x.....x..x.x.
+..x.x.x.x.x.x.x.....x.x.xx.
+.xxxxxxxxxxxxxxx.x.xx.x..x.
+.x99..xxx.x...8xx.x.xx.x.x.
+.x9....x.x.....x.x.xx..x.x.
+.x.....x.x.....xx.x.x.x.xx.
+.x....x.xxx....x.x.xx.x..x.
+.x.x..xxxxx.........xx.x.x.
+.x..x.x8....***.....x..x.x.
+.x..xxx.....*?*.....x.x.xx.
+.xxx..x.....***....8x.x..x.
+.x.x..x.........xxxxxx.x.x.
+.x..x.xx.xxx....x...x....x.
+.x..xxx.xxxx....x.x.x....x.
+.xxx..xx.xxx....x.x.x...9x.
+.x.x..xxx.xx8.....x....99x.
+.x..x.xxxx.xxxxxxxxxxxxxxx.
+.x..xxx......x...x...x...x.
+.xxx..x.....x...x...x...x..
+.x.x..x9...x...x...x...x...
+.x..x.x99.....x...x...x....
+.x..xxxxxxxxxxxxxxxxxxxxxx.
+...........................
+ENDMAP
+
+NAME:   minmay_distorted_concentric_squares
+DEPTH:  D:8-
+ORIENT: float
+SUBST:  9 = 9., 0 = 0.
+SUBST:  x : x:27 c:1 v:1 b:1
+MAP
+...................
+..xxxxxxxx.........
+..x.......xxxxxxxx.
+..x.xxxxxx0......x.
+..x.x0....xxxxxx.x.
+..x.x.xxxx....0x.x.
+..x.x.x9..xxxx.x.x.
+..x.x.x.xx..9x.x.x.
+..x0x.x.x*xx.x.x.x.
+.x.x.x.x***x.x.x.x.
+.x.x.x.xx*x.x.x0x..
+.x.x.x9..xx.x.x.x..
+.x.x.xxxx..9x.x.x..
+.x.x0....xxxx.x.x..
+.x.xxxxxx....0x.x..
+.x......0xxxxxx.x..
+.xxxxxxxx.......x..
+.........xxxxxxxx..
+...................
+ENDMAP
+
+NAME:   minmay_containers
+DEPTH:  D:12-
+ORIENT: float
+SUBST:  C : B C:5
+SUBST:  B : A B:5
+SUBST:  A : x c:1 v:1 b:1
+SUBST:  B : xcvb
+SUBST:  C : .:50 G:50 T U V m
+SUBST:  8 = 88., 9 = 9.
+MAP
+@xxxxxxxxxxxxxxxxxxxxxxx
+x....................xxx
+x.....................xx
+x....AAAAAAAAAAAAAA.9..x
+x...........9..........x
+x..A.9..BBBBB..B..9.A..x
+x..A...BB***B..BB...A..x
+x..A..BBB...B..BBB..A..x
+x..A.BBBB...B..BBBB.A..x
+x..A.B*.............A..x
+x..A.B*...8.........A..x
+x..A.B*....8C..BBBB9A..x
+x..A9BBBB..C8....*B.A..x
+x..A.........8...*B.A..x
+x..A.............*B.A..x
+x..A.BBBB..B...BBBB.A..x
+x..A..BBB..B...BBB..A..x
+x..A...BB..B***BB...A..x
+x..A.9..B..BBBBB..9.A..x
+x..........9...........x
+x..9.AAAAAAAAAAAAAA....x
+xx.....................x
+xxx....................x
+xxxxxxxxxxxxxxxxxxxxxxx@
+ENDMAP
+
+NAME:   minmay_curly_fans
+DEPTH:  D:8-
+ORIENT: float
+SUBST:  x : x:7 c:1 v:1 b:1
+SUBST:  9 = 9.
+MAP
+...................
+.xxxxxxxxx.......x.
+...xxx..xx.......x.
+....x....xx.....xx.
+....x.....xxx.xxxx.
+.......x........xx.
+....x..x9........x.
+....x..xx.9xxx...x.
+...xx..9x*xx9...xx.
+.xxx....***....xxx.
+.xx...9xx*x9..xx...
+.x...xxx9.xx..x....
+.x........9x..x....
+.xx........x.......
+.xxxx.xxx.....x....
+.xx.....xx....x....
+.x.......xx..xxx...
+.x.......xxxxxxxxx.
+...................
+ENDMAP
+
+NAME:   minmay_crescents
+DEPTH:  D:12-
+ORIENT: float
+SUBST:  x : x:7 c:1 v:1 b:1
+SUBST:  G = .GTU
+SUBST:  9 = 9....
+MAP
+  xxxxxxx       xxxxxxx
+ xxxxxxxxx     xxxxxxxxx
+xxxx*99..xxx@xxx..99*xxxx
+xxx999....x...x....999xxx
+xx*99xxxxx.....xxxxx99*xx
+xx99xxxxxxx...xxxxxxx99xx
+xx9.xx*99.......99*xx.9xx
+xx..xx99.........99xx..xx
+xx..xx9.xxx...xxx.9xx..xx
+ xx.xx..xxx...xxx..xx.xx
+  xx.x..xx*.9.*xx..x.xx
+  x........999........x
+  @.......99G99.......@
+  x........999........x
+  xx.x..xx*.9.*xx..x.xx
+ xx.xx..xxx...xxx..xx.xx
+xx..xx9.xxx...xxx.9xx..xx
+xx..xx99.........99xx..xx
+xx9.xx*99.......99*xx.9xx
+xx99xxxxxxx...xxxxxxx99xx
+xx*99xxxxx.....xxxxx99*xx
+xxx999....x...x....999xxx
+xxxx*99..xxx@xxx..99*xxxx
+ xxxxxxxxx     xxxxxxxxx
+  xxxxxxx       xxxxxxx
+ENDMAP
+
+NAME:    minmay_nine_rooms
+DEPTH:   D:16-
+ORIENT:  float
+SHUFFLE: ABCDE
+SUBST:   A : c:7 x:1 b:1 v:1
+SUBST:   B : .:5 c:7 x:1 b:1 v:1
+SUBST:   C : .:10 c:7 x:1 b:1 v:1
+SUBST:   D : .:20 c:7 x:1 b:1 v:1
+SUBST:   E : .:30 c:7 x:1 b:1 v:1
+SUBST:   c : c:8 b:1 v:1
+SUBST:   0 = 0....., 1 = 0...., 2 = 00...
+SUBST:   3 = 9........., 4 = 99....., 5 = 99...
+SUBST:   6 = 8..., 7 = 8888...
+MAP
+ccccccccccccccccccccccccc
+........c...............c
+c.A0EBA.c.C1B1C.c.22B2E.c
+c.BDC0D.c.EA1A1.c.2C2CD.c
+c.0C0C0.c.B1D1B.c.BDADB.c
+c.D0CDB.c.1A1AE.c.DC2C2.c
+c.ABE0A.c.C1B1C.c.E2B22.c
+c...............c.......c
+ccccccccccccccccccccccc.c
+c...............c.......c
+c.DC5AD.c.ECDB4.c.BDA3B.c
+c.A555C.c.C4A4B.c.333ED.c
+c.5EBE5.c.DA4AD.c.A3C3A.c
+c.C555A.c.B4A4C.c.DE333.c
+c.DA5CD.c.4BDCE.c.B3ADB.c
+c.......c...............c
+c.ccccccccccccccccccccccc
+c.......c...............c
+c.6AD6C.c.A7DCB.c.*****.c
+c.ACBD6.c.CB7AE.c.*|||*.c
+c.B6E6B.c.D777D.c.*|G|*.c
+c.6DBCA.c.EA7BC.c.*|||*.c
+c.C6DA6.c.BCD7A.c.*****.c
+c...............c.......c
+ccccccccccccccccccccccccc
 ENDMAP

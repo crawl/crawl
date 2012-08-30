@@ -20,8 +20,8 @@ public:
     bool init_pathfind(coord_def src, coord_def dest,
                        bool diag = true, bool msg = false);
     bool start_pathfind(bool msg = false);
-    std::vector<coord_def> backtrack(void);
-    std::vector<coord_def> calc_waypoints(void);
+    vector<coord_def> backtrack(void);
+    vector<coord_def> calc_waypoints(void);
 
 protected:
     // protected methods
@@ -62,7 +62,7 @@ protected:
     // An array to store where we came from on a given shortest path.
     int prev[GXM][GYM];
 
-    FixedVector<std::vector<coord_def>, GXM * GYM> hash;
+    FixedVector<vector<coord_def>, GXM * GYM> hash;
 };
 
 #endif

@@ -10,6 +10,4 @@ bool backlight_monsters(coord_def where, int pow, int garbage);
 //returns true if it slowed the monster
 bool do_slow_monster(monster* mon, const actor *agent, int dur = 0);
 
-spret_type project_noise(bool fail);
-
 #endif

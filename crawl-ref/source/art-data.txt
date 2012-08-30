@@ -224,6 +224,7 @@ BOOL:    special
 
 NAME:    Vampire's Tooth
 OBJ:     OBJ_WEAPONS/WPN_DAGGER
+# it's a dagger made from a tooth -> no TYPE
 PLUS:    +3/+4
 COLOUR:  ETC_BONE
 TILE:    spwpn_vampires_tooth
@@ -265,6 +266,7 @@ BOOL:    tilerim, special, evil, corpse_violating
 
 NAME:    Sword of Cerebov
 APPEAR:  great serpentine sword
+TYPE:    flamberge
 OBJ:     OBJ_WEAPONS/WPN_GREAT_SWORD
 PLUS:    +6/+6
 COLOUR:  ETC_FIRE
@@ -399,7 +401,7 @@ COLD:    1
 
 ENUM:     KRISHNA
 NAME:     bow of Krishna "Sharnga"
-OBJ:      OBJ_WEAPONS/WPN_BOW
+OBJ:      OBJ_WEAPONS/WPN_LONGBOW
 PLUS:     +8/+8
 COLOUR:   ETC_GOLD
 TILE:     urand_krishna
@@ -547,6 +549,7 @@ BOOL:    inv, tilerim
 
 NAME:    lance "Wyrmbane"
 OBJ:     OBJ_WEAPONS/WPN_SPEAR
+TYPE:    lance
 BASE_DAM: +2
 PLUS:    +9/+6
 COLOUR:  LIGHTGREEN
@@ -559,6 +562,7 @@ BOOL:    poison, berserk, tilerim
 
 NAME:     Spriggan's Knife
 OBJ:      OBJ_WEAPONS/WPN_DAGGER
+TYPE:     knife
 PLUS:     +4/+10
 COLOUR:   LIGHTCYAN
 TILE:     urand_spriggans_knife
@@ -598,6 +602,7 @@ BOOL:    poison, tilerim
 
 NAME:     knife of Accuracy
 OBJ:      OBJ_WEAPONS/WPN_DAGGER
+TYPE:     knife
 PLUS:     +27/-1
 COLOUR:   LIGHTCYAN
 TILE:     urand_knife_of_accuracy
@@ -617,6 +622,7 @@ BRAND:    SPWPN_RETURNING
 
 NAME:     captain's cutlass
 OBJ:      OBJ_WEAPONS/WPN_SABRE
+TYPE:     cutlass
 PLUS:     +6/+7
 BASE_ACC: -1
 BASE_DAM: +2
@@ -633,12 +639,12 @@ TILE:     urand_storm_bow
 TILE_EQ:  bow_blue
 BRAND:    SPWPN_ELECTROCUTION
 
-NAME:    shield of Ignorance
+NAME:    large shield of Ignorance
 OBJ:     OBJ_ARMOUR/ARM_LARGE_SHIELD
 PLUS:    +8
 COLOUR:  BROWN
 TILE:    urand_ignorance
-TILE_EQ: shield_of_ignorance
+TILE_EQ: large_shield_of_ignorance
 AC:      2
 EV:      2
 INT:     -6
@@ -1009,6 +1015,7 @@ TILE:     urand_vitality
 
 NAME:     autumn katana
 OBJ:      OBJ_WEAPONS/WPN_LONG_SWORD
+TYPE:     katana
 TILE:     urand_katana
 TILE_EQ:  katana_slant
 COLOUR:   LIGHTRED
@@ -1021,6 +1028,7 @@ BRAND:    SPWPN_VORPAL
 
 NAME:     shillelagh "Devastator"
 OBJ:      OBJ_WEAPONS/WPN_CLUB
+TYPE:     shillelagh
 TILE:     urand_shillelagh
 TILE_EQ:  shillelagh
 PLUS:     +4/+8

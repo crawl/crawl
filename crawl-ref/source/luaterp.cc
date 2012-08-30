@@ -44,7 +44,7 @@ static int _pushline(lua_State *ls, int firstline)
     char buffer[80];
     char *b = buffer;
     size_t l;
-    std::string prompt = firstline ? "> " : ". ";
+    string prompt = firstline ? "> " : ". ";
     if (msgwin_get_line_autohist(prompt, buffer, sizeof(buffer)))
         return 0;
     l = strlen(b);

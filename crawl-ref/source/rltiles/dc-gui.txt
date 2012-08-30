@@ -25,6 +25,10 @@ high_scores STARTUP_HIGH_SCORES
 
 %include dc-commands.txt
 
+%include dc-abilities.txt
+%include dc-invocations.txt
+%include dc-zotdef.txt
+
 misc/todo TODO
 misc/error ERROR
 
@@ -110,4 +114,17 @@ misc/error ERROR
 %start
 %compose tab_selected
 %compose tab_label_command
+%finish
+
+%start
+%compose tab_unselected
+%compose tab_label_ability
+%finish TAB_ABILITY
+%start
+%compose tab_mouseover
+%compose tab_label_ability
+%finish
+%start
+%compose tab_selected
+%compose tab_label_ability
 %finish

@@ -27,11 +27,11 @@ It rewards the powerful with power and the meek with weakness.
 %%%%
 Staff of Olgreb
 
-It was the magical weapon wielded by the mighty wizard Olgreb before he met his
-fate somewhere within these dungeons. It increases the ability of its wielder
-to use venomous magic, and carries magical powers which can be evoked. The
-tales say that Olgreb researched rare venoms that may have some limited effect
-even on creatures immune to all commonly known poisons.
+This was the magical weapon wielded by the mighty wizard Olgreb before he met
+his fate somewhere within these dungeons. It increases the ability of its
+wielder to use venomous magic, and carries magical powers which can be evoked.
+The tales say that Olgreb researched rare venoms that may have some limited
+effect even on creatures immune to all commonly known poisons.
 %%%%
 Staff of Wucad Mu
 
@@ -124,7 +124,7 @@ not generally available.
 %%%%
 giant club "Skullcrusher"
 
-This lovely cudgel can make any ogre overjoyous - be it a bar brawl, genocide,
+This lovely cudgel can make any ogre overjoyous — be it a bar brawl, genocide,
 or a mixture of both.
 %%%%
 glaive of the Guard
@@ -235,7 +235,7 @@ storm bow
 
 This bow has the colour of dark rain clouds, and the smell of wet ozone.
 %%%%
-shield of Ignorance
+large shield of Ignorance
 
 "An open mind is like a fortress with its gates unbarred and unguarded."
 %%%%
@@ -434,7 +434,7 @@ This exotic sword is a weapon for truly enlightened users.
 %%%%
 shillelagh "Devastator"
 
-You guess this stick is loaded with something else than just lead.
+You guess this stick is loaded with something more than just lead.
 %%%%
 dragonskin cloak
 

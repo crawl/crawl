@@ -56,7 +56,7 @@ struct bolt;
 
 typedef bool (*range_used_func)(const bolt& beam, int &used);
 typedef bool (*beam_damage_func)(bolt& beam, actor* victim, int &dmg,
-                                 std::string &dmg_msg);
+                                 string &dmg_msg);
 typedef bool (*beam_hit_func)(bolt& beam, actor* victim, int dmg);
 typedef bool (*explosion_aoe_func)(bolt& beam, const coord_def& target);
 typedef bool (*beam_affect_func)(const bolt &beam, const actor *victim);
@@ -85,24 +85,24 @@ struct bolt
     // beam_source can be -GOD_ENUM_VALUE besides monster indices
     // and MHITNOT, MHITYOU.
     int         beam_source;           // NON_MONSTER or monster index #
-    std::string source_name;           // The name of the source, if it
+    string      source_name;           // The name of the source, if it
                                        // should be different from
                                        // actor->name(), or the actor dies
                                        // prematurely.
-    std::string name;
-    std::string short_name;
-    std::string hit_verb;              // The verb to use when this beam hits
+    string      name;
+    string      short_name;
+    string      hit_verb;              // The verb to use when this beam hits
                                        // something.  If not set, will use
                                        // "engulfs" if an explosion or cloud
                                        // and "hits" otherwise.
     int         loudness;              // Noise level on hitting or exploding.
-    std::string noise_msg;             // Message to give player if the hit
+    string      noise_msg;             // Message to give player if the hit
                                        // or explosion isn't in view.
     bool        is_beam;               // beam? (can hit multiple targets?)
     bool        is_explosion;
     bool        is_big_cloud;          // expands into big_cloud at endpoint
     bool        aimed_at_spot;         // aimed at (x, y), should not cross
-    std::string aux_source;            // source of KILL_MISC beams
+    string      aux_source;            // source of KILL_MISC beams
 
     bool        affects_nothing;       // should not hit monsters or features
     bool        affects_items;         // hits items on ground/inventory
@@ -120,12 +120,11 @@ struct bolt
     ac_type     ac_rule;               // How does defender's AC affect damage.
 
     // Various callbacks.
-    std::vector<range_used_func>  range_funcs;
-    std::vector<beam_damage_func> damage_funcs;
-    std::vector<beam_hit_func>    hit_funcs;
-    std::vector<explosion_aoe_func> aoe_funcs; // Function for if the
-                                               // explosion only affects
-                                               // certain grid positions.
+    vector<range_used_func>  range_funcs;
+    vector<beam_damage_func> damage_funcs;
+    vector<beam_hit_func>    hit_funcs;
+    vector<explosion_aoe_func> aoe_funcs; // Function for if the explosion only
+                                          // affects certain grid positions.
 
     // Test if the beam can affect a particular actor.
     beam_affect_func affect_func;
@@ -136,11 +135,12 @@ struct bolt
     bool        seen;                  // Has player seen the beam?
     bool        heard;                 // Has the player heard the beam?
 
-    std::vector<coord_def> path_taken; // Path beam took.
+    vector<coord_def> path_taken;      // Path beam took.
 
     // INTERNAL use - should not usually be set outside of beam.cc
     int         extra_range_used;
     bool        is_tracer;       // is this a tracer?
+    bool        is_targetting;   // . . . in particular, a targetting tracer?
     bool        aimed_at_feet;   // this was aimed at self!
     bool        msg_generated;   // an appropriate msg was already mpr'd
     bool        noise_generated; // a noise has already been generated at this pos
@@ -151,7 +151,7 @@ struct bolt
     bool        nightvision;     // tracer firer has nightvision?
     mon_attitude_type attitude;  // attitude of whoever fired tracer
     int         foe_ratio;       // 100* foe ratio (see mons_should_fire())
-    std::map<mid_t, int> hit_count; // how many times targets were affected
+    map<mid_t, int> hit_count;   // how many times targets were affected
 
     tracer_info foe_info;
     tracer_info friend_info;
@@ -195,8 +195,8 @@ public:
 
     // Returns member short_name if set, otherwise some reasonable string
     // for a short name, most likely the name of the beam's flavour.
-    std::string get_short_name() const;
-    std::string get_source_name() const;
+    string get_short_name() const;
+    string get_source_name() const;
 
     // Assume that all saving throws are failed, actually apply
     // the enchantment.
@@ -210,6 +210,8 @@ public:
 
     bool can_affect_actor(const actor *act) const;
 
+    maybe_bool affects_wall(dungeon_feature_type wall) const;
+
 private:
     void do_fire();
     coord_def pos() const;
@@ -217,9 +219,9 @@ private:
 
     // Lots of properties of the beam.
     bool is_blockable() const;
-    bool is_superhot() const;
     bool is_fiery() const;
-    maybe_bool affects_wall(dungeon_feature_type wall) const;
+    bool is_superhot() const;
+    bool can_affect_wall(dungeon_feature_type feat) const;
     bool can_affect_wall_actor(const actor *act) const;
     bool actor_wall_shielded(const actor *act) const;
     bool is_bouncy(dungeon_feature_type feat) const;
@@ -237,16 +239,15 @@ private:
 
     int range_used_on_hit() const;
 
-    std::string zapper() const;
+    string zapper() const;
 
-    std::set<std::string> message_cache;
+    set<string> message_cache;
     void emit_message(msg_channel_type chan, const char* msg);
     void step();
     bool hit_wall();
 
     bool apply_hit_funcs(actor* victim, int dmg);
-    bool apply_dmg_funcs(actor* victim, int &dmg,
-                         std::vector<std::string> &messages);
+    bool apply_dmg_funcs(actor* victim, int &dmg, vector<string> &messages);
     int apply_AC(const actor* victim, int hurted, int &mind);
 
     // Functions which handle actually affecting things. They all
@@ -280,7 +281,7 @@ public:
     bool attempt_block(monster* mon);
     void handle_stop_attack_prompt(monster* mon);
     bool determine_damage(monster* mon, int& preac, int& postac, int& final,
-                          std::vector<std::string> &messages);
+                          vector<string> &messages);
     void monster_post_hit(monster* mon, int dmg);
     bool misses_player();
 
@@ -318,7 +319,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
 bool enchant_monster_with_flavour(monster* mon, actor *atk,
                                   beam_type flavour, int powc = 0);
 
-bool enchant_monster_invisible(monster* mon, const std::string &how);
+bool enchant_monster_invisible(monster* mon, const string &how);
 
 spret_type mass_enchantment(enchant_type wh_enchant, int pow, bool fail = false);
 
@@ -329,6 +330,8 @@ bool napalm_monster(monster* mons, const actor* who, int levels = 1,
                     bool verbose = true);
 void fire_tracer(const monster* mons, struct bolt &pbolt,
                   bool explode_only = false);
+bool imb_can_splash(coord_def origin, coord_def center,
+                    vector<coord_def> path_taken, coord_def target);
 spret_type zapping(zap_type ztype, int power, bolt &pbolt,
                    bool needs_tracer = false, const char* msg = NULL,
                    bool fail = false);
@@ -338,5 +341,6 @@ void init_zap_index();
 void clear_zap_info_on_exit();
 
 int zap_power_cap(zap_type ztype);
+void zappy(zap_type z_type, int power, bolt &pbolt);
 
 #endif

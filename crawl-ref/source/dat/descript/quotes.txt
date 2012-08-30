@@ -42,8 +42,19 @@ A gateway to a ziggurat
 %%%%
 A gateway to Hell
 
-“Lasciate ogne speranza, voi ch’intrate.”
-    -Dante Alighieri, _Divina Commedia_, “L’Inferno”, Canto III. Circa 1315.
+“I am the way into the city of woe.
+ I am the way to a forsaken people.
+ I am the way into eternal sorrow.
+
+ Sacred justice moved my architect.
+ I was raised here by divine omnipotence,
+ Primordial love and ultimate intellect.
+
+ Only those elements time cannot wear
+ Were made before me, and beyond time I stand.
+ Abandon all hope, ye who enter here.”
+    -Dante Alighieri, _The Divine Comedy_, “Inferno”, Canto III. ca. 1315.
+     trans. John Ciardi, 1954.
 %%%%
 A granite statue
 
@@ -234,8 +245,8 @@ long sword
 to have decided to capture a horse. They began with a furious attack, and laid
 hands on a good mare well trained both for sport and battle. Her rider, Pedro
 de Moron, was a fine horseman; and as he charged with three other horsemen into
-the enemy ranks--they had been instructed to charge together for mutual
-support--some of them seized his lance so he could not use it, and others
+the enemy ranks—they had been instructed to charge together for mutual
+support—some of them seized his lance so he could not use it, and others
 slashed at him with their broadswords (maquahuitl), wounding him severely. Then
 they slashed at his mare, cutting her head at the neck so that it only hung by
 the skin. The mare fell dead, and if his mounted comrades had not come to
@@ -271,7 +282,7 @@ Country Housekeeper._ 1792.
 %%%%
 potion
 
-“Then gave I her, -- so tutor’d by my art, --
+“Then gave I her, — so tutor’d by my art, —
  A sleeping potion; which so took effect
  As I intended, for it wrought on her
  The form of death: meantime I writ to Romeo
@@ -427,10 +438,10 @@ __cap-T_suffix
 %%%%
 Aizul
 
-“I went to Heaven --
- ’Twas a small Town --
- Lit -- with a Ruby --
- Lathed -- with Down --”
+“I went to Heaven —
+ ’Twas a small Town —
+ Lit — with a Ruby —
+ Lathed — with Down —”
     -Emily Dickinson, _I went to Heaven_
 %%%%
 Antaeus
@@ -490,7 +501,7 @@ Duvessa
 Edmund
 
 “And my invention thrive, Edmund the base
- Shall top the legitimate. I grow; I prosper.--
+ Shall top the legitimate. I grow; I prosper.—
  Now, gods, stand up for bastards!”
     -Shakespeare, King Lear.
 
@@ -525,7 +536,7 @@ Polyphemus
 “...as soon as he had got through with all his work, he clutched up two more of
 my men, and began eating them for his morning’s meal. Presently, with the
 utmost ease, he rolled the stone away from the door and drove out his sheep,
-but he at once put it back again--as easily as though he were merely clapping
+but he at once put it back again—as easily as though he were merely clapping
 the lid on to a quiver full of arrows.”
     -Homer, _The Odyssey_, Book IX
 %%%%
@@ -740,7 +751,7 @@ ghoul
  Held his heart in his hands,
  And ate of it.
  I said, ‘Is it good, friend?’
- ‘It is bitter - bitter’, he answered,
+ ‘It is bitter — bitter’, he answered,
  ‘But I like it
  Because it is bitter,
  And because it is my heart.’”
@@ -768,9 +779,9 @@ gnoll
 “Then he descended softly and beckoned to Nuth. But the gnoles had watched him
 through knavish holes that they bore in trunks of the trees, and the unearthly
 silence gave way, as it were with a grace, to the rapid screams of Tonker as
-they picked him up from behind -- screams that came faster and faster until
-they were incoherent. And where they took him it is not good to ask, and what
-they did with him I shall not say.”
+they picked him up from behind — screams that came faster and faster until they
+were incoherent. And where they took him it is not good to ask, and what they
+did with him I shall not say.”
     -Lord Dunsany, “How Nuth Would Have Practiced His Art Upon the Gnoles”.
 1912.
 %%%%
@@ -952,7 +963,7 @@ down one thing, you hold down the adjoining.”
 %%%%
 mummy
 
-“I see Egypt and the Egyptians -- I see the pyramids and obelisks;
+“I see Egypt and the Egyptians — I see the pyramids and obelisks;
  I look on chisel’d histories, songs, philosophies, cut in slabs
      of sand-stone, or on granite-blocks;
  I see at Memphis mummy-pits, containing mummies, embalm’d, swathed
@@ -1010,7 +1021,7 @@ profane servitor
  The silence was broken by cries
  A spell was cast and the sky turned red
  The angel's heart froze to ice
- In the gloomy sky - The silence where dead angels lie
+ In the gloomy sky — The silence where dead angels lie
 
  Touch the snow... Caress the lifeless sculptures
  Die!!!”
@@ -1065,7 +1076,7 @@ shadow
  And the response
  Falls the Shadow
      Life is very long”
-    -T.S. Eliot, “The Hollow Men”
+    -T.S. Eliot, “The Hollow Men”. 1925.
 %%%%
 small skeleton
 
@@ -1079,8 +1090,8 @@ toenail golem
 but my toes hardly notice. All they’re interested in is turning out
 toenails—semitransparent, flexible sheets of a hornlike material, as defense
 against—whom?”
-    -Jorge Luis Borges
-    trans. Andrew Hurley
+    -Jorge Luis Borges, “Toenails”. 1960.
+    trans. Andrew Hurley, 1998.
 %%%%
 ugly thing
 
@@ -1104,7 +1115,7 @@ worm
 ####################################################
 Cigotuvi's Monster
 
-“I beheld the wretch - the miserable monster whom I had
+“I beheld the wretch — the miserable monster whom I had
  created. He held up the curtain of the bed; and his eyes, if
  eyes they may be called, were fixed on me. His jaws opened,
  and he muttered some inarticulate sounds, while a grin
@@ -1248,7 +1259,7 @@ bolt
 
 “In the midst of our last assault, which would have carried the gate sure and
 given us Paris and in effect France, Joan was struck down by a crossbow bolt,
-and our men fell back instantly and almost in a panic - for what were they
+and our men fell back instantly and almost in a panic — for what were they
 without her? She was the army, herself.”
     -Mark Twain, _Personal Recollections of Joan of Arc, by the Sieur Louis de
      Conte_, Book II, chap. 40 “Treachery Conquers Joan”. 1896.
@@ -1368,13 +1379,13 @@ brains.”
 %%%%
 executioner's axe
 
-“She danced, and was compelled to dance--to dance in the dark night. The shoes
+“She danced, and was compelled to dance—to dance in the dark night. The shoes
 carried her on over thorn and brier; she scratched herself till she bled; she
 danced away across the heath to a little lonely house. Here she knew the
 executioner dwelt; and she tapped with her fingers on the panes, and
-called,--'Come out, come out! I cannot come in, for I must dance!'
- And the Executioner said,--'You probably don’t know who I am? I cut off the
-bad people’s heads with my axe, and mark how my axe rings!'
+called,—'Come out, come out! I cannot come in, for I must dance!'
+ And the Executioner said,—'You probably don’t know who I am? I cut off the bad
+people’s heads with my axe, and mark how my axe rings!'
  'Do not strike off my head,' said Karen, 'for if you do I cannot repent of my
 sin. But strike off my feet with the red shoes?'
  And then she confessed all her sin, and the Executioner cut off her feet with
@@ -1634,7 +1645,7 @@ ring of invisibility
 
 “With yells of delight the goblins rushed upon him. A pang of fear and loss,
 like an echo of Gollum's misery, smote Bilbo, and forgetting even to draw his
-sword he struck his hands into his pockets. And - there was the ring still, in
+sword he struck his hands into his pockets. And — there was the ring still, in
 his left pocket, and it slipped on his finger. The goblins stopped short. They
 could not see a sign of him. He had vanished.”
     -J.R.R. Tolkien, _The Hobbit, or There and Back Again_. 1937.
@@ -1753,7 +1764,7 @@ scale mail
 scimitar
 
 “The museum-cabinet and huge library arrogated to themselves the entire lower
-floor - there were the controversial and incompatible books that are somehow
+floor — there were the controversial and incompatible books that are somehow
 the history of the nineteenth century; there were scimitars from Nishapur, in
 whose frozen crescents the wind and violence of battle seemed to be living on.”
     -Jorge Luis Borges, _The Form of the Sword_. 1953.
@@ -1982,10 +1993,10 @@ troll hide
  To deal with your Trollish way of living.
  I can easily swear that a cow's a maiden;
  An oath's not a difficult thing to swallow.
- But to know that one never can get one's freedom --
- Not even to die as a human being --
- To end one's days as a Troll of the mountains --
- Never go back, as you tell me plainly --
+ But to know that one never can get one's freedom —
+ Not even to die as a human being —
+ To end one's days as a Troll of the mountains —
+ Never go back, as you tell me plainly —
  That is a thing that I'll not submit to.”
     -Henrik Ibsen, _Peer Gynt_ . 1867.
 %%%%
@@ -2122,7 +2133,7 @@ blue devil
  Though I felt uncommon funky, still this answer put my monkey
  Up, and at the small blue devil in an undertone I swore.
  Then I said I must be dreaming, although broad awake I'm seeming;
- Doubtless I shall have a screaming morning headache - what a bore:
+ Doubtless I shall have a screaming morning headache — what a bore:
  Salmon I will eat no more.”
     -J.T.S, “The Blue Imp”, _Melbourne Punch_. Sept. 4, 1856.
 %%%%
@@ -2166,7 +2177,7 @@ this.'”
  Of what each other mean,
  And prate about an Elephant
  Not one of them has seen!”
-    - John Godfrey Saxe, “The Blind Men and the Elephant”. 1872.
+    -John Godfrey Saxe, “The Blind Men and the Elephant”. 1872.
 %%%%
 fruity bat
 
@@ -2724,9 +2735,9 @@ slime creature
 %%%%
 small abomination
 
-“No - it wasn't that way at all. It was everywhere - a gelatin - a slime yet it
+“No — it wasn't that way at all. It was everywhere — a gelatin — a slime yet it
 had shapes, a thousand shapes of horror beyond all memory. There were eyes -
-and a blemish. It was the pit - the maelstrom - the ultimate abomination.
+and a blemish. It was the pit — the maelstrom — the ultimate abomination.
 Carter, it was the unnamable!”
     -H.P. Lovecraft, _The Unnamable_. 1925.
 %%%%
@@ -3025,7 +3036,7 @@ Frederick
 “I thoroughly disapprove of duels. I consider them unwise and I know they are
 dangerous. Also, sinful. If a man should challenge me, I would take him kindly
 and forgivingly by the hand and lead him to a quiet retired spot and kill him.”
-    - Mark Twain, _Autobiography of Mark Twain_. 1924.
+    -Mark Twain, _Autobiography of Mark Twain_. 1924.
 %%%%
 Ilsuiw
 
@@ -3070,7 +3081,7 @@ Nikola
 
 “One can prophesy with a Daniel's confidence that skilled electricians will
 settle the battles of the near future.”
-    - Nikola Tesla, “The Transmission of Electrical Energy Without Wires As a
+    -Nikola Tesla, “The Transmission of Electrical Energy Without Wires As a
 Means for Furthering Peace”, _Electrical World and Engineer_. January 7, 1905.
 %%%%
 Norris

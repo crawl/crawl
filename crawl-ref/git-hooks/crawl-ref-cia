@@ -180,7 +180,7 @@ $user =~ s/naesten/SamB/;
 $user =~ s/neil/|amethyst/;
 $user =~ s/smelenchuk/Grunt/;
 
-# Other regular contributorss
+# Other regular contributors:
 $user =~ s/homelesspete/Twinge/;
 $user =~ s/yobbobandana/yobbo/;
 $user =~ s/thevalrus/valrus/;
@@ -188,11 +188,15 @@ $user =~ s/akbecker/GreatZebu/;
 $user =~ s/pete/mumra/;
 $user =~ s/bstriegs/Wensley/;
 $user =~ s/lothar.dierkes/ldierk/;
-$user =~ s/brendan/bmh/;
+$user =~ s/brendan/bh/;
 $user =~ s/sbalady/nfogravity/;
 $user =~ s/ben\.striegel/Wensley/;
 $user =~ s/thann/Thann/;
 $user =~ s/policarpocp/CommanderC/;
+$user =~ s/therealchriswest/frogbotherer/;
+
+# Infrastructure:
+$user =~ s/crawl-ref-discuss/translators/; # make tx-commit
 
 $rev = substr($commit, 0, 12);
 

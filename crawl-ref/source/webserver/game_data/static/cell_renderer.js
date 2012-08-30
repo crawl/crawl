@@ -362,20 +362,19 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
         // Much of the following is more or less directly copied from tiledgnbuf.cc
         draw_blood_overlay: function(x, y, cell, is_wall)
         {
-            if (cell.liquefied)
+            if (cell.liquefied && !is_wall)
             {
                 offset = cell.flv.s % dngn.tile_count(dngn.LIQUEFACTION);
                 this.draw_dngn(dngn.LIQUEFACTION + offset, x, y);
             }
             else if (cell.bloody)
-
             {
                 cell.bloodrot = cell.bloodrot || 0;
                 var basetile;
                 if (is_wall)
                 {
                     basetile = cell.old_blood ? dngn.WALL_OLD_BLOOD : dngn.WALL_BLOOD_S;
-                    basetile += tile_dngn_count(basetile) * cell.bloodrot;
+                    basetile += dngn.tile_count(basetile) * cell.bloodrot;
                     basetile = dngn.WALL_BLOOD_S + dngn.tile_count(dngn.WALL_BLOOD_S)
                         * cell.bloodrot;
                 }
@@ -496,6 +495,8 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
                         this.draw_dngn(dngn.UMBRA, x, y);
                     if (cell.orb_glow)
                         this.draw_dngn(dngn.ORB_GLOW + cell.orb_glow - 1, x, y);
+                    if (cell.quad_glow)
+                        this.draw_dngn(dngn.QUAD_GLOW, x, y);
 
                     // Apply the travel exclusion under the foreground if the cell is
                     // visible.  It will be applied later if the cell is unseen.
@@ -579,11 +580,11 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
 
             var status_shift = 0;
             if (fg.MIMIC_INEPT)
-                this.draw_icon(icons.MIMIC_INEPT, x, y);
+                this.draw_icon(icons.INEPT_MIMIC, x, y);
             else if (fg.MIMIC)
                 this.draw_icon(icons.MIMIC, x, y);
             else if (fg.MIMIC_RAVEN)
-                this.draw_icon(icons.MIMIC_RAVENOUS, x, y);
+                this.draw_icon(icons.RAVENOUS_MIMIC, x, y);
 
             if (fg.BERSERK)
             {
@@ -642,6 +643,16 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
             if (fg.CONSTRICTED)
             {
                 this.draw_icon(icons.CONSTRICTED, x, y, -status_shift, 0);
+                status_shift += 13;
+            }
+            if (fg.GLOWING)
+            {
+                this.draw_icon(icons.GLOWING, x, y, -status_shift, 0);
+                status_shift += 10;
+            }
+            if (fg.SLOWED)
+            {
+                this.draw_icon(icons.SLOWED, x, y, -status_shift, 0);
                 status_shift += 13;
             }
 

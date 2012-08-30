@@ -41,6 +41,7 @@ enum areaprop_flag
     APROP_ORB           = (1 << 6),
     APROP_UMBRA         = (1 << 7),
     APROP_SUPPRESSION   = (1 << 8),
+    APROP_QUAD          = (1 << 9),
 };
 
 struct area_centre
@@ -55,7 +56,7 @@ struct area_centre
 // currently, only 4 of 32 bits are used, but meh...
 typedef FixedArray<uint32_t, GXM, GYM> propgrid_t;
 
-static std::vector<area_centre> _agrid_centres;
+static vector<area_centre> _agrid_centres;
 
 static propgrid_t _agrid;
 static bool _agrid_valid = false;
@@ -170,7 +171,7 @@ static void _update_agrid()
 
     }
 
-    if (you.char_direction == GDT_ASCENDING)
+    if (you.char_direction == GDT_ASCENDING && !you.duration[DUR_TIME_STEP])
     {
         ASSERT(!env.orb_pos.origin());
 
@@ -181,6 +182,18 @@ static void _update_agrid()
              ri; ++ri)
         {
             _set_agrid_flag(*ri, APROP_ORB);
+        }
+        no_areas = false;
+    }
+
+    if (you.duration[DUR_QUAD_DAMAGE])
+    {
+        const int r = 5;
+        _agrid_centres.push_back(area_centre(AREA_QUAD, you.pos(), r));
+        for (radius_iterator ri(you.pos(), r, C_CIRCLE, you.get_los());
+             ri; ++ri)
+        {
+            _set_agrid_flag(*ri, APROP_QUAD);
         }
         no_areas = false;
     }
@@ -255,7 +268,7 @@ coord_def find_centre_for(const coord_def& f, area_centre_type at)
         if (a.centre == f)
             return f;
 
-        int d = distance(a.centre, f);
+        int d = distance2(a.centre, f);
         if (d <= a.radius && (d <= dist || dist == 0))
         {
             possible = a.centre;
@@ -333,7 +346,7 @@ void decrease_sanctuary_radius()
 
     for (radius_iterator ri(env.sanctuary_pos, size+1, C_SQUARE); ri; ++ri)
     {
-        int dist = distance(*ri, env.sanctuary_pos);
+        int dist = distance2(*ri, env.sanctuary_pos);
 
         // If necessary overwrite sanctuary property.
         if (dist > size*size)
@@ -371,7 +384,7 @@ void create_sanctuary(const coord_def& center, int time)
     for (radius_iterator ri(center, radius, C_POINTY); ri; ++ri)
     {
         const coord_def pos = *ri;
-        const int dist = distance(center, pos);
+        const int dist = distance2(center, pos);
 
         if (testbits(env.pgrid(pos), FPROP_BLOODY) && you.see_cell(pos))
             blood_count++;
@@ -490,7 +503,7 @@ static int _silence_range(int dur)
     if (dur <= 0)
         return -1;
     dur /= BASELINE_DELAY; // now roughly number of turns
-    return std::max(0, std::min(dur - 6, 37));
+    return max(0, min(dur - 6, 37));
 }
 
 int player::silence_radius2() const
@@ -508,8 +521,8 @@ int monster::silence_radius2() const
 
     const int dur = get_ench(ENCH_SILENCE).duration;
     // The below is arbitrarily chosen to make monster decay look reasonable.
-    const int moddur = BASELINE_DELAY *
-        std::max(7, stepdown_value(dur * 10 - 60, 10, 5, 45, 100));
+    const int moddur = BASELINE_DELAY
+                       * max(7, stepdown_value(dur * 10 - 60, 10, 5, 45, 100));
     return _silence_range(moddur);
 }
 
@@ -536,7 +549,7 @@ bool haloed(const coord_def& p)
 
 bool actor::haloed() const
 {
-    return (::haloed(pos()));
+    return ::haloed(pos());
 }
 
 int player::halo_radius2() const
@@ -549,13 +562,13 @@ int player::halo_radius2() const
         // Preserve the middle of old radii.
         const int r = you.piety - 10;
         // The cap is 64, just less than the LOS of 65.
-        size = std::min(LOS_RADIUS*LOS_RADIUS, r * r / 400);
+        size = min(LOS_RADIUS*LOS_RADIUS, r * r / 400);
     }
 
     // Can't check suppression because this function is called from
     // _update_agrid()---we'd get an infinite recursion.
     if (player_equip_unrand(UNRAND_BRILLIANCE))
-        size = std::max(size, 9);
+        size = max(size, 9);
 
     return size;
 }
@@ -597,7 +610,7 @@ int monster::halo_radius2() const
         return 4;
     case MONS_PALADIN: // If a paladin finds the mace of brilliance
                        // it needs a larger halo
-        return std::max(4, size);  // mere humans
+        return max(4, size);  // mere humans
     case MONS_BLESSED_TOE:
         return 17;
     case MONS_SILVER_STAR:
@@ -625,7 +638,7 @@ int monster::liquefying_radius2() const
     const int dur = get_ench(ENCH_LIQUEFYING).duration;
     // The below is arbitrarily chosen to make monster decay look reasonable.
     const int moddur = BASELINE_DELAY *
-        std::max(7, stepdown_value(dur * 10 - 60, 10, 5, 45, 100));
+        max(7, stepdown_value(dur * 10 - 60, 10, 5, 45, 100));
     return _silence_range(moddur);
 }
 
@@ -664,6 +677,20 @@ bool orb_haloed(const coord_def& p)
 }
 
 /////////////
+// Quad damage glow
+//
+
+bool quad_haloed(const coord_def& p)
+{
+    if (!map_bounds(p))
+        return false;
+    if (!_agrid_valid)
+        _update_agrid();
+
+    return _check_agrid_flag(p, APROP_QUAD);
+}
+
+/////////////
 // Umbra
 //
 
@@ -680,7 +707,7 @@ bool umbraed(const coord_def& p)
 // Whether actor is in an umbra.
 bool actor::umbraed() const
 {
-    return (::umbraed(pos()));
+    return ::umbraed(pos());
 }
 
 // Stub for player umbra.
@@ -726,7 +753,7 @@ int monster::suppression_radius2() const
 
 bool actor::suppressed() const
 {
-    return (::suppressed(pos()));
+    return ::suppressed(pos());
 }
 
 int player::suppression_radius2() const

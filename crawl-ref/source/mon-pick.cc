@@ -30,7 +30,7 @@ int mons_rarity(monster_type mcls, const level_id &place)
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_TESTS)
 void debug_monpick()
 {
-    std::string fails;
+    string fails;
 
     for (int i = 0; i < NUM_BRANCHES; ++i)
     {
@@ -1751,39 +1751,6 @@ int mons_pitslime_rare(monster_type mcls)
     }
 }
 
-// The Hive
-int mons_hive_level(monster_type mcls)
-{
-    switch (mcls)
-    {
-    case MONS_PLANT:
-    case MONS_KILLER_BEE:
-    case MONS_KILLER_BEE_LARVA:
-        return 1;
-
-    default:
-        return DEPTH_NOWHERE;
-    }
-}
-
-int mons_hive_rare(monster_type mcls)
-{
-    switch (mcls)
-    {
-    case MONS_KILLER_BEE:
-        return 300;
-
-    case MONS_PLANT:
-        return 100;
-
-    case MONS_KILLER_BEE_LARVA:
-        return 50;
-
-    default:
-        return 0;
-    }
-}
-
 // The Vaults
 int mons_vaults_level(monster_type mcls)
 {
@@ -2405,7 +2372,6 @@ int mons_gehenna_level(monster_type mcls)
 
     case MONS_FLYING_SKULL:
     case MONS_IRON_GOLEM:
-    case MONS_MUMMY:
     case MONS_PHANTOM:
     case MONS_ROTTING_DEVIL:
     case MONS_SHADOW:
@@ -2451,9 +2417,6 @@ int mons_gehenna_rare(monster_type mcls)
     case MONS_ZOMBIE_LARGE:
     case MONS_ZOMBIE_SMALL:
         return 99;
-
-    case MONS_MUMMY:
-        return 70;
 
     case MONS_SHADOW:
         return 61;

@@ -132,7 +132,7 @@ function wizlab_setup (e, wizlab_desc)
 end
 
 function wizlab_milestone (e, wizlab_desc)
-    crawl.mark_milestone("br.enter", "entered " .. wizlab_desc .. ".", true)
+    crawl.mark_milestone("br.enter", "entered " .. wizlab_desc .. ".", "parent")
 end
 
 function tukima_machine (data, triggerable, triggerer, marker, ev)
@@ -355,6 +355,13 @@ function wizlab_wucad_summon_monks(data, triggerable, triggerer, marker, ev)
   end
 
   if dgn.persist.wucad_mu_died == true then
+    return
+  end
+
+  -- For now, no spawning during Step From Time; perhaps monks should
+  -- continue to appear, just more slowly. If so, the circle_iterator below
+  -- needs a different centre from (0,0).
+  if you.pos() == 0 then
     return
   end
 
@@ -1380,12 +1387,19 @@ NAME:       wizlab_wucad
 ORIENT:     encompass
 TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
 SUBST:      T = t.
-KMONS:      8 = orange crystal statue name:Statue_of_Wucad_Mu n_rpl n_the hd:20 hp:300
+KMONS:      8 = orange crystal statue name:Statue_of_Wucad_Mu n_rpl n_the \
+                hd:20 hp:300 tile:mons_wucad_mu_statue
 KITEM:      8 = staff unrand:staff_of_wucad_mu, book of enchantments
 COLOUR:     =c = darkgrey
 COLOUR:     t = lightred / red w:3
 TILE:       t = dngn_tree_lightred / dngn_tree_red w:4 / dngn_tree_yellow w:4
-TILE:       G = dngn_granite_statue w:1 / dngn_statue_troll w:3 / dngn_statue_ancient_hero w:1
+# This used to specify dngn_statue_troll as the only middle case, but that tile
+# no longer exists.
+TILE:       G = dngn_granite_statue w:1 / \
+                dngn_statue_angel w:1 / \
+                dngn_statue_imp w:1 / \
+                dngn_statue_ancient_evil w:1 / \
+                dngn_statue_ancient_hero w:1
 COLOUR:     AG = red
 COLOUR:     < = lightred
 TILE:       c = dngn_stone_dark
@@ -1727,7 +1741,7 @@ MARKER:     ! = lua:fog_machine { \
                 size_buildup_time = 25, cloud_type = "grey smoke", \
                 colour = "white", name = "white fluffiness" \
             }
-KITEM:      % = w:20 potion of levitation / w:20 potion of water / \
+KITEM:      % = w:20 potion of levitation / \
             potion of magic / potion of speed / potion of resistance / \
             gold / potion of agility / potion of brilliance
 KITEM:      ? = randbook disc:air

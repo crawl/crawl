@@ -16,11 +16,9 @@ spret_type cast_revivification(int pow, bool fail);
 
 spret_type cast_swiftness(int power, bool fail = false);
 spret_type cast_fly(int power, bool fail = false);
-spret_type cast_insulation(int power, bool fail);
 
 spret_type cast_teleport_control(int power, bool fail);
-int cast_selective_amnesia(std::string *pre_msg = NULL);
-spret_type cast_see_invisible(int pow, bool fail);
+int cast_selective_amnesia(string *pre_msg = NULL);
 spret_type cast_silence(int pow, bool fail = false);
 spret_type cast_liquefaction(int pow, bool fail);
 spret_type cast_shroud_of_golubria(int pow, bool fail);

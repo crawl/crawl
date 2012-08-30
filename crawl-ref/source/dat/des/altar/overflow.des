@@ -186,7 +186,7 @@ DEPTH:  D:2-12
 TAGS:   temple_overflow_cheibriados uniq_altar_cheibriados
 TAGS:   no_trap_gen no_monster_gen
 KMONS:  O = statue hd:1 name:snail_statue name_replace name_descriptor \
-            tile:mons_statue_snail \
+            tile:mons_snail_statue \
             spells:leda's_liquefaction;leda's_liquefaction;leda's_liquefaction;\
             leda's_liquefaction;leda's_liquefaction;leda's_liquefaction
 KFEAT:  _ = altar_cheibriados
@@ -574,12 +574,11 @@ KFEAT:   _ = altar_makhleb
 # Either one slow type 3 or 4 demon (iron devil or smoke demon) or
 # three slow type 5 demons (iron imp).
 # The smoke demon can only come up in D:9-11.
-SHUFFLE: 1234
+SHUFFLE: 123
 NSUBST:  1 = 1:1 / *:.
 NSUBST:  2 = 1:2 / *:.
-NSUBST:  3 = 2:3 / *:.
 : if you.absdepth() < 9 then
-SUBST:   3 = 12
+SUBST:   2 = 1
 : end
 MONS:    iron devil, smoke demon, iron imp
 MAP
@@ -824,6 +823,7 @@ NAME:   led_sif_book
 DEPTH:  3-12, Orc
 TAGS:   no_item_gen no_pool_fixup no_monster_gen
 TAGS:   temple_overflow_sif_muna uniq_altar_sif_muna
+KPROP:  1d = no_rtele_into
 KFEAT:  _ = altar_sif_muna
 ITEM:   randbook owner:Sif_Muna numspells:1 slevels:1
 MONS:   orc wizard
@@ -1319,8 +1319,8 @@ NAME:    tso_metal_star
 TAGS:    no_monster_gen no_trap_gen no_pool_fixup no_item_gen
 TAGS:    temple_overflow_the_shining_one uniq_altar_the_shining_one
 KFEAT:   _ = altar_the_shining_one
-KFEAT:   m = iron_grate / w:5 clear_rock_wall
-SUBST:   ! : vmmTG..
+KFEAT:   g = iron_grate
+SUBST:   ! : vmggTG..
 MAP
           @
           .

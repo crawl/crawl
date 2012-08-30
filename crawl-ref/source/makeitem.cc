@@ -33,13 +33,12 @@
 
 static armour_type _get_random_armour_type(int item_level);
 
-int create_item_named(std::string name, coord_def p,
-                      std::string *error)
+int create_item_named(string name, coord_def p, string *error)
 {
     trim_string(name);
 
     item_list ilist;
-    const std::string err = ilist.add_item(name, false);
+    const string err = ilist.add_item(name, false);
     if (!err.empty())
     {
         if (error)
@@ -87,7 +86,7 @@ static int _weapon_colour(const item_def &item)
     int item_colour = BLACK;
     // fixed artefacts get predefined colours
 
-    std::string itname = item.name(DESC_PLAIN);
+    string itname = item.name(DESC_PLAIN);
     lowercase(itname);
 
     if (is_artefact(item))
@@ -184,7 +183,7 @@ static int _missile_colour(const item_def &item)
 static int _armour_colour(const item_def &item)
 {
     int item_colour = BLACK;
-    std::string itname = item.name(DESC_PLAIN);
+    string itname = item.name(DESC_PLAIN);
     lowercase(itname);
 
     switch (item.sub_type)
@@ -2348,8 +2347,13 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
     {
         int i;
         for (i = 0; i < 100; ++i)
-            if (_try_make_armour_artefact(item, force_type, 0, true) && is_artefact(item))
+        {
+            if (_try_make_armour_artefact(item, force_type, 0, true)
+                && is_artefact(item))
+            {
                 return;
+            }
+        }
         // fall back to an ordinary item
         item_level = MAKE_GOOD_ITEM;
     }
@@ -2828,7 +2832,7 @@ static void _generate_book_item(item_def& item, bool allow_uniques,
         make_book_theme_randart(item, 0, 0, 5 + coinflip(), 20);
     else if (item.sub_type == BOOK_RANDART_LEVEL)
     {
-        int max_level  = std::min(9, std::max(1, item_level / 3));
+        int max_level  = min(9, max(1, item_level / 3));
         int spl_level  = random_range(1, max_level);
         make_book_level_randart(item, spl_level);
     }
@@ -2872,11 +2876,14 @@ static void _generate_rod_item(item_def& item, int force_type, int item_level)
 static bool _try_make_jewellery_unrandart(item_def& item, int force_type,
                                           int item_level)
 {
+    int type = (force_type == NUM_RINGS)     ? get_random_ring_type() :
+               (force_type == NUM_JEWELLERY) ? get_random_amulet_type()
+                                             : force_type;
     if (item_level > 2
         && one_chance_in(20)
         && x_chance_in_y(101 + item_level * 3, 2000))
     {
-        if (_try_make_item_unrand(item, force_type))
+        if (_try_make_item_unrand(item, type))
             return true;
     }
 
@@ -2924,15 +2931,22 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
 
     // Determine subtype.
     // Note: removed double probability reduction for some subtypes
-    if (force_type != OBJ_RANDOM)
+    if (force_type != OBJ_RANDOM
+        && force_type != NUM_RINGS
+        && force_type != NUM_JEWELLERY)
         item.sub_type = force_type;
     else
     {
         int tries = 500;
         do
         {
-            item.sub_type = (one_chance_in(4) ? get_random_amulet_type()
-                                              : get_random_ring_type());
+            if (force_type == NUM_RINGS)
+                item.sub_type = get_random_ring_type();
+            else if (force_type == NUM_JEWELLERY)
+                item.sub_type = get_random_amulet_type();
+            else
+                item.sub_type = (one_chance_in(4) ? get_random_amulet_type()
+                                                  : get_random_ring_type());
         }
         while (agent == GOD_XOM
                && _is_boring_item(OBJ_JEWELLERY, item.sub_type)
@@ -2958,8 +2972,10 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
         else
         {
             if (item.plus > 0)
+            {
                 item.plus = 2 + (one_chance_in(3) ? random2(4)
                                                   : 1 + random2avg(5, 2));
+            }
             item.plus2 = 2 + (one_chance_in(3) ? random2(4)
                                                : 1 + random2avg(5, 2));
 
@@ -3113,6 +3129,7 @@ int items(bool allow_uniques,
     }
 
     ASSERT(force_type == OBJ_RANDOM
+           || item.base_type == OBJ_JEWELLERY && force_type == NUM_JEWELLERY
            || force_type < get_max_subtype(item.base_type));
 
     item.quantity = 1;          // generally the case
@@ -3333,6 +3350,9 @@ static bool _weapon_is_visibly_special(const item_def &item)
     if (item.is_mundane())
         return false;
 
+    if (x_chance_in_y(item.plus - 2, 3) || x_chance_in_y(item.plus2 - 2, 3))
+        return true;
+
     if (item.flags & ISFLAG_CURSED && one_chance_in(3))
         return true;
 
@@ -3353,7 +3373,10 @@ static bool _armour_is_visibly_special(const item_def &item)
     if (item.is_mundane())
         return false;
 
-    if (item.flags & ISFLAG_CURSED && !one_chance_in(3))
+    if (x_chance_in_y(item.plus - 2, 3))
+        return true;
+
+    if (item.flags & ISFLAG_CURSED && one_chance_in(3))
         return true;
 
     return false;
@@ -3373,7 +3396,10 @@ jewellery_type get_random_amulet_type()
 
 static jewellery_type _get_raw_random_ring_type()
 {
-    return (jewellery_type) (RING_REGENERATION + random2(NUM_RINGS));
+    jewellery_type ring;
+    do ring = (jewellery_type)(RING_REGENERATION + random2(NUM_RINGS));
+        while (ring == RING_TELEPORTATION && crawl_state.game_is_sprint());
+    return ring;
 }
 
 jewellery_type get_random_ring_type()

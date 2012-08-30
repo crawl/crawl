@@ -272,19 +272,19 @@ static job_type _get_hints_job(unsigned int type)
     }
 }
 
-static void _replace_static_tags(std::string &text)
+static void _replace_static_tags(string &text)
 {
     size_t p;
-    while ((p = text.find("$cmd[")) != std::string::npos)
+    while ((p = text.find("$cmd[")) != string::npos)
     {
         size_t q = text.find("]", p + 5);
-        if (q == std::string::npos)
+        if (q == string::npos)
         {
             text += "<lightred>ERROR: unterminated $cmd</lightred>";
             break;
         }
 
-        std::string command = text.substr(p + 5, q - p - 5);
+        string command = text.substr(p + 5, q - p - 5);
         command_type cmd = name_to_command(command);
 
         command = command_to_string(cmd);
@@ -294,16 +294,16 @@ static void _replace_static_tags(std::string &text)
         text.replace(p, q - p + 1, command);
     }
 
-    while ((p = text.find("$item[")) != std::string::npos)
+    while ((p = text.find("$item[")) != string::npos)
     {
         size_t q = text.find("]", p + 6);
-        if (q == std::string::npos)
+        if (q == string::npos)
         {
             text += "<lightred>ERROR: unterminated $item</lightred>";
             break;
         }
 
-        std::string item = text.substr(p + 6, q - p - 6);
+        string item = text.substr(p + 6, q - p - 6);
         int type;
         for (type = OBJ_WEAPONS; type < NUM_OBJECT_CLASSES; ++type)
             if (item == item_class_name(type, true))
@@ -338,7 +338,7 @@ void hints_starting_screen()
         width = 80;
 #endif
 
-    std::string text = getHintString("welcome");
+    string text = getHintString("welcome");
     _replace_static_tags(text);
 
     linebreak_string(text, width);
@@ -406,10 +406,10 @@ void hints_new_turn()
     }
 }
 
-static void _print_hint(std::string key, const std::string arg1 = "",
-                        const std::string arg2 = "")
+static void _print_hint(string key, const string arg1 = "",
+                        const string arg2 = "")
 {
-    std::string text = getHintString(key);
+    string text = getHintString(key);
     if (text.empty())
         return mprf(MSGCH_ERROR, "Error, no hint for '%s'.", key.c_str());
 
@@ -420,7 +420,7 @@ static void _print_hint(std::string key, const std::string arg1 = "",
 
     // "\n" to preserve indented parts, the rest is unwrapped, or split into
     // paragraphs by "\n\n", split_string() will ignore the empty line.
-    std::vector<std::string> chunks = split_string("\n", text);
+    vector<string> chunks = split_string("\n", text);
     for (size_t i = 0; i < chunks.size(); i++)
         mpr(chunks[i], MSGCH_TUTORIAL);
 
@@ -430,7 +430,7 @@ static void _print_hint(std::string key, const std::string arg1 = "",
 // Once a hints mode character dies, offer some last playing hints.
 void hints_death_screen()
 {
-    std::string text;
+    string text;
 
     _print_hint("death");
     more();
@@ -471,7 +471,7 @@ void hints_death_screen()
 
         if (hint == 5)
         {
-            std::vector<monster* > visible =
+            vector<monster* > visible =
                 get_nearby_monsters(false, true, true, false);
 
             if (visible.size() < 2)
@@ -498,7 +498,7 @@ void hints_death_screen()
 // know by now.
 void hints_finished()
 {
-    std::string text;
+    string text;
 
     crawl_state.type = GAME_TYPE_NORMAL;
 
@@ -616,7 +616,7 @@ static void _hints_healing_reminder()
 
             Hints.hints_just_triggered = true;
 
-            std::string text;
+            string text;
             text =  "Remember to rest between fights and to enter unexplored "
                     "terrain with full hitpoints and magic. Ideally you "
                     "should retreat into areas you've already explored and "
@@ -766,7 +766,7 @@ void hints_gained_new_skill(skill_type skill)
 #ifndef USE_TILE
 // As safely as possible, colourize the passed glyph.
 // Stringizes it and handles quoting "<".
-static std::string _colourize_glyph(int col, unsigned ch)
+static string _colourize_glyph(int col, unsigned ch)
 {
     glyph g;
     g.col = col;
@@ -885,12 +885,12 @@ void hints_monster_seen(const monster& mon)
     tiles.add_text_tag(TAG_TUTORIAL, mi);
 #endif
 
-    std::string text = "That ";
+    string text = "That ";
 
     if (is_tiles())
     {
         text +=
-            std::string("monster is a ") +
+            string("monster is a ") +
             mon.name(DESC_PLAIN).c_str() +
             ". Examples for typical early monsters are rats, giant newts, "
             "kobolds, or goblins. You can gain information about any monster "
@@ -1012,14 +1012,14 @@ static bool _cant_butcher()
     return (wpn->cursed() && !can_cut_meat(*wpn));
 }
 
-static std::string _describe_portal(const coord_def &gc)
+static string _describe_portal(const coord_def &gc)
 {
-    const std::string desc = feature_description_at(gc);
+    const string desc = feature_description_at(gc);
 
-    std::ostringstream text;
+    ostringstream text;
 
     // Ziggurat entrances can rarely appear as early as DL 3.
-    if (desc.find("zig") != std::string::npos)
+    if (desc.find("zig") != string::npos)
     {
         text << "is a portal to a set of special levels filled with very "
                 "tough monsters; you probably shouldn't even think of going "
@@ -1034,7 +1034,7 @@ static std::string _describe_portal(const coord_def &gc)
     }
     // For the sake of completeness, though it's very unlikely that a
     // player will find a bazaar entrance before reaching XL 7.
-    else if (desc.find("bazaar") != std::string::npos)
+    else if (desc.find("bazaar") != string::npos)
     {
         text << "is a portal to an inter-dimensional bazaar filled with "
                 "shops. It will disappear if you don't enter it soon, "
@@ -1173,8 +1173,8 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         return;
     }
 
-    std::ostringstream text;
-    std::vector<command_type> cmd;
+    ostringstream text;
+    vector<command_type> cmd;
 
     Hints.hints_just_triggered    = true;
     Hints.hints_events[seen_what] = false;
@@ -1375,9 +1375,9 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
             else
             {
                 text << "That <console>";
-                std::string glyph = glyph_to_tagstr(get_item_glyph(&mitm[i]));
-                const std::string::size_type found = glyph.find("%");
-                if (found != std::string::npos)
+                string glyph = glyph_to_tagstr(get_item_glyph(&mitm[i]));
+                const string::size_type found = glyph.find("%");
+                if (found != string::npos)
                     glyph.replace(found, 1, "percent");
                 text << glyph;
                 text << " </console> is a corpse.";
@@ -1714,7 +1714,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 #else
         {
             tiles.place_cursor(CURSOR_TUTORIAL, gc);
-            std::string altar = "An altar to ";
+            string altar = "An altar to ";
             altar += god_name(feat_altar_god(grd(gc)));
             tiles.add_text_tag(TAG_TUTORIAL, altar, gc);
         }
@@ -2506,8 +2506,8 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 break;
             }
 
-        const std::string old_god_name  = god_name(old_god);
-        const std::string new_god_name  = god_name(new_god);
+        const string old_god_name  = god_name(old_god);
+        const string new_god_name  = god_name(new_god);
 
         if (new_god == GOD_NO_GOD)
         {
@@ -2970,7 +2970,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "also check ";
         cmd.push_back(CMD_DISPLAY_INVENTORY);
 
-        std::vector<std::string> listed;
+        vector<string> listed;
         if (you.spell_no > 0)
         {
             listed.push_back("your spells (<w>%?</w>)");
@@ -3050,7 +3050,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
     if (!text.str().empty())
     {
-        std::string output = text.str();
+        string output = text.str();
         if (!cmd.empty())
             insert_commands(output, cmd);
         mpr(output, MSGCH_TUTORIAL);
@@ -3061,9 +3061,9 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
 formatted_string hints_abilities_info()
 {
-    std::ostringstream text;
+    ostringstream text;
     text << "<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
-    std::string broken = "This screen shows your character's set of talents. "
+    string broken = "This screen shows your character's set of talents. "
         "You can gain new abilities via certain items, through religion or by "
         "way of mutations. Activation of an ability usually comes at a cost, "
         "e.g. nutrition or Magic power. Press '<w>!</w>' or '<w>?</w>' to "
@@ -3078,12 +3078,12 @@ formatted_string hints_abilities_info()
 
 // Explains the basics of the skill screen. Don't bother the player with the
 // aptitude information.
-std::string hints_skills_info()
+string hints_skills_info()
 {
     textcolor(channel_to_colour(MSGCH_TUTORIAL));
-    std::ostringstream text;
+    ostringstream text;
     text << "<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
-    std::string broken = "This screen shows the skill set of your character. "
+    string broken = "This screen shows the skill set of your character. "
         "The number next to the skill is your current level, the higher the "
         "better. The <brown>brown percent value</brows> shows how much "
         "experience is allocated to go towards that skill. "
@@ -3098,12 +3098,12 @@ std::string hints_skills_info()
     return text.str();
 }
 
-std::string hints_skill_training_info()
+string hints_skill_training_info()
 {
     textcolor(channel_to_colour(MSGCH_TUTORIAL));
-    std::ostringstream text;
+    ostringstream text;
     text << "<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
-    std::string broken = "The training percentage (in <brown>brown</brown>) "
+    string broken = "The training percentage (in <brown>brown</brown>) "
         "shows the relative amount of the experience gained which will be "
         "used to train each skill. It is automatically set depending on "
         "which skills you have used recently. Disabling a skill sets the "
@@ -3114,15 +3114,14 @@ std::string hints_skill_training_info()
     return text.str();
 }
 
-std::string hints_skills_description_info()
+string hints_skills_description_info()
 {
     textcolor(channel_to_colour(MSGCH_TUTORIAL));
-    std::ostringstream text;
+    ostringstream text;
     text << "<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
-    std::string broken = "This screen shows the skill set of your character. "
-                         "Press the letter of a skill to read its description, "
-                         "or press <w>?</w> again to return to the skill "
-                         "selection.";
+    string broken = "This screen shows the skill set of your character. "
+                    "Press the letter of a skill to read its description, or "
+                    "press <w>?</w> again to return to the skill selection.";
 
     linebreak_string(broken, _get_hints_cols());
     text << broken;
@@ -3132,9 +3131,9 @@ std::string hints_skills_description_info()
 }
 
 // A short explanation of Crawl's target mode and its most important commands.
-static std::string _hints_target_mode(bool spells = false)
+static string _hints_target_mode(bool spells = false)
 {
-    std::string result;
+    string result;
     result = "then be taken to target mode with the nearest monster or "
              "previous target already targeted. You can also cycle through "
              "all hostile monsters in sight with <w>+</w> or <w>-</w>. "
@@ -3160,11 +3159,11 @@ static std::string _hints_target_mode(bool spells = false)
     return result;
 }
 
-static std::string _hints_abilities(const item_def& item)
+static string _hints_abilities(const item_def& item)
 {
-    std::string str = "To do this, ";
+    string str = "To do this, ";
 
-    std::vector<command_type> cmd;
+    vector<command_type> cmd;
     if (!item_is_equipped(item))
     {
         switch (item.base_type)
@@ -3196,9 +3195,9 @@ static std::string _hints_abilities(const item_def& item)
     return str;
 }
 
-static std::string _hints_throw_stuff(const item_def &item)
+static string _hints_throw_stuff(const item_def &item)
 {
-    std::string result;
+    string result;
 
     result  = "To do this, type <w>%</w> to fire, then <w>";
     result += item.slot;
@@ -3241,9 +3240,9 @@ void check_item_hint(const item_def &item, unsigned int num_old_talents)
 //       inscription prompt and answer.
 void hints_describe_item(const item_def &item)
 {
-    std::ostringstream ostr;
+    ostringstream ostr;
     ostr << "<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
-    std::vector<command_type> cmd;
+    vector<command_type> cmd;
 
     switch (item.base_type)
     {
@@ -3926,7 +3925,7 @@ void hints_describe_item(const item_def &item)
     }
 
     ostr << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
-    std::string broken = ostr.str();
+    string broken = ostr.str();
     if (!cmd.empty())
         insert_commands(broken, cmd);
     linebreak_string(broken, _get_hints_cols());
@@ -3934,13 +3933,13 @@ void hints_describe_item(const item_def &item)
     display_tagged_block(broken);
 }
 
-void hints_inscription_info(bool autoinscribe, std::string prompt)
+void hints_inscription_info(bool autoinscribe, string prompt)
 {
     // Don't print anything if there's not enough space.
     if (wherey() >= get_number_of_lines() - 1)
         return;
 
-    std::ostringstream text;
+    ostringstream text;
     text << "<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
     bool longtext = false;
@@ -4031,7 +4030,7 @@ static void _hints_describe_feature(int x, int y)
     const dungeon_feature_type feat = grd[x][y];
     const coord_def            where(x, y);
 
-    std::ostringstream ostr;
+    ostringstream ostr;
     ostr << "\n\n<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
     bool boring = false;
@@ -4280,7 +4279,7 @@ static void _hints_describe_feature(int x, int y)
 
     ostr << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
-    std::string broken = ostr.str();
+    string broken = ostr.str();
     linebreak_string(broken, _get_hints_cols());
     display_tagged_block(broken);
 }
@@ -4291,9 +4290,9 @@ static void _hints_describe_cloud(int x, int y)
     if (ctype == CLOUD_NONE)
         return;
 
-    std::string cname = cloud_name_at_index(env.cgrid(coord_def(x, y)));
+    string cname = cloud_name_at_index(env.cgrid(coord_def(x, y)));
 
-    std::ostringstream ostr;
+    ostringstream ostr;
 
     ostr << "\n\n<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
@@ -4343,7 +4342,7 @@ static void _hints_describe_cloud(int x, int y)
 
     ostr << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
-    std::string broken = ostr.str();
+    string broken = ostr.str();
     linebreak_string(broken, _get_hints_cols());
     display_tagged_block(broken);
 }
@@ -4353,7 +4352,7 @@ static void _hints_describe_disturbance(int x, int y)
     if (!_water_is_disturbed(x, y))
         return;
 
-    std::ostringstream ostr;
+    ostringstream ostr;
 
     ostr << "\n\n<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
@@ -4365,7 +4364,7 @@ static void _hints_describe_disturbance(int x, int y)
 
     ostr << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
-    std::string broken = ostr.str();
+    string broken = ostr.str();
     linebreak_string(broken, _get_hints_cols());
     display_tagged_block(broken);
 }
@@ -4397,7 +4396,7 @@ bool hints_monster_interesting(const monster* mons)
 void hints_describe_monster(const monster_info& mi, bool has_stat_desc)
 {
     cgotoxy(1, wherey());
-    std::ostringstream ostr;
+    ostringstream ostr;
     ostr << "\n\n<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
     bool dangerous = false;
@@ -4522,7 +4521,7 @@ void hints_describe_monster(const monster_info& mi, bool has_stat_desc)
 
     ostr << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
-    std::string broken = ostr.str();
+    string broken = ostr.str();
     linebreak_string(broken, _get_hints_cols());
     display_tagged_block(broken);
 }
@@ -4568,7 +4567,7 @@ void hints_observe_cell(const coord_def& gc)
 
 void tutorial_msg(const char *key, bool end)
 {
-    std::string text = getHintString(key);
+    string text = getHintString(key);
     if (text.empty())
         return mprf(MSGCH_ERROR, "Error, no message for '%s'.", key);
 
@@ -4580,7 +4579,7 @@ void tutorial_msg(const char *key, bool end)
 
     // "\n" to preserve indented parts, the rest is unwrapped, or split into
     // paragraphs by "\n\n", split_string() will ignore the empty line.
-    std::vector<std::string> chunks = split_string("\n", text);
+    vector<string> chunks = split_string("\n", text);
     for (size_t i = 0; i < chunks.size(); i++)
         mpr(chunks[i], MSGCH_TUTORIAL);
 

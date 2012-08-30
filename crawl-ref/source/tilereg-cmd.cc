@@ -61,7 +61,7 @@ int CommandRegion::handle_mouse(MouseEvent &event)
     return 0;
 }
 
-bool CommandRegion::update_tab_tip_text(std::string &tip, bool active)
+bool CommandRegion::update_tab_tip_text(string &tip, bool active)
 {
     const char *prefix = active ? "" : "[L-Click] ";
 
@@ -71,7 +71,7 @@ bool CommandRegion::update_tab_tip_text(std::string &tip, bool active)
     return true;
 }
 
-bool CommandRegion::update_tip_text(std::string& tip)
+bool CommandRegion::update_tip_text(string& tip)
 {
     if (m_cursor == NO_CURSOR)
         return false;
@@ -95,7 +95,7 @@ bool CommandRegion::update_tip_text(std::string& tip)
     return true;
 }
 
-bool CommandRegion::update_alt_text(std::string &alt)
+bool CommandRegion::update_alt_text(string &alt)
 {
     if (m_cursor == NO_CURSOR)
         return false;
@@ -114,7 +114,7 @@ bool CommandRegion::update_alt_text(std::string &alt)
 
     const command_type cmd = (command_type) idx;
 
-    const std::string desc = get_command_description(cmd, false);
+    const string desc = get_command_description(cmd, false);
     if (desc.empty())
         return false;
 

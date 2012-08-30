@@ -41,12 +41,6 @@ A burning altar of Makhleb
 An ever-burning altar to Makhleb the Destroyer. Strange, twisting shapes are
 visible in the flames.
 %%%%
-A dart trap
-
-This trap can shoot relatively weak spikes of metal. They are unlikely to kill
-anyone outright, but may be enough to put down someone who's running half-dead
-while chased by some monster.
-%%%%
 A closed door
 
 A wooden door. To open it, try simply walking into it, or press 'O'.
@@ -64,12 +58,29 @@ it was irrevocably corrupted.
 %%%%
 A crawl-hole back to the Lair
 
-You can climb it to get back to less cramped spaces with less cobwebs.
+This passage leads back to less cramped spaces with fewer cobwebs.
+%%%%
+A dart trap
+
+This trap can shoot relatively weak spikes of metal. They are unlikely to kill
+anyone outright, but may be enough to put down someone who's running half-dead
+while chased by some monster.
 %%%%
 A deep blue altar of Sif Muna
 
 An altar of the deepest blue, covered in intricate patterns and writings in
 long forgotten scripts, devoted to Sif Muna the Loreminder.
+%%%%
+A detected altar
+
+An altar of some kind. If you wish to know what deity it is consecrated to,
+you'll have to come closer.
+%%%%
+# mmap/antennae/etc
+A detected shop or portal
+
+A gateway of some kind. You can't tell where it leads without approaching
+nearer.
 %%%%
 A dry fountain
 
@@ -125,8 +136,8 @@ A gate to the Realm of Zot
 This gate leads to the Realm of Zot, the final stage of your quest as its
 deepest level houses the infamous Orb of Zot. Both the Orb and this Realm have
 a fearsome and questionable reputation, but one piece of information seems to
-be for certain: The monsters inhabiting this area and protecting the Orb are
-strong and strange - some of them nowhere encountered but here.
+be certain: The monsters inhabiting this area and protecting the Orb are strong
+and strange — some of them encountered nowhere but here.
 %%%%
 A gateway back into the Dungeon
 
@@ -165,6 +176,11 @@ This place seems to radiate negative energy.
 A gateway to the freezing wastes of Cocytus
 
 From the frost-bitten lands, a cold chill touches your soul.
+%%%%
+A gleaming silver wall
+
+This wall, made of pure silver, was formed by the power of Zin to imprison a
+monster within its confines. It is quickly crumbling, and will not last long.
 %%%%
 A glowing golden altar of the Shining One
 
@@ -227,7 +243,8 @@ attached and rigged to make it fall onto anyone who trips it.
 A one-way gate to the infinite horrors of the Abyss
 
 A one-way gate to a demon-haunted realm, riven by chaos, its very substance
-impermanent and whimsical, filled with creatures out of nightmare.
+impermanent and whimsical, filled with creatures out of nightmare. Easy to
+enter, difficult to leave.
 %%%%
 A passage of Golubria
 
@@ -311,6 +328,10 @@ A sparkling altar of Nemelex Xobeh
 This altar sparkles with a lightshow brighter than any gambling den's to
 attract followers for Nemelex Xobeh.
 %%%%
+A spawn point
+
+Here's one of entrances the opposition may come in through.
+%%%%
 A spear trap
 
 This trap shoots long sharp poles that can skewer tresspassers.
@@ -337,8 +358,8 @@ These stairs lead back to the mighty Vaults.
 %%%%
 A staircase leading out of the dungeon
 
-This exit leads to the Big Blue Room. Sky, singing birds, fresh air -- that
-kind of stuff. Also taxes and whatever else you ran from.
+This exit leads to the Big Blue Room. Sky, singing birds, fresh air — that kind
+of stuff. Also taxes and whatever else you ran from.
 
 Climbing these stairs will end your quest, whether you carry the Orb with you
 or not.
@@ -580,14 +601,15 @@ convection.
 %%%%
 A floor
 
-Dungeon floor.
+A well-worn stone floor made of closely fitted granite flagstones that were
+hewn and set untold ages ago by long-forgotten hands.
 %%%%
 Some deep water
 
-This water is as deep as it is dangerous. No sane traveller would try to set
-foot into it, apart from those who fly or swim. Let it be a warning for you:
-many confused adventurers found their death at the depths, and an untimely end
-of levitation drowned even more hopeful trespassers.
+This water is as deep as it is dangerous. No sane traveller would attempt to
+set foot into it, apart from those able to fly or swim. Be warned: many
+confused adventurers have met their death in the depths, and an unexpected end
+of levitation has drowned even more careless interlopers.
 %%%%
 Some lava
 
@@ -595,13 +617,13 @@ An intensely hot pool of molten rock, emitting clouds of sulphurous smoke.
 %%%%
 Some shallow water
 
-This waist-deep, misty water makes movement and combat cumbersome for
-landlubbers - sometimes dangerous, but never directly fatal.
+This cloudy, waist-deep water makes movement and combat cumbersome for
+landlubbers — this is sometimes dangerous, but never directly fatal.
 %%%%
 The open sea
 
 Nothing but endless wind and waves, and not a lighthouse in sight. You'd be
-lost beyond all hope in short order - better not risk it.
+lost beyond all hope in short order — better not risk it.
 %%%%
 ########################
 ### Vault redefinitions
@@ -903,7 +925,7 @@ help but feel as though it's watching you.
 # due_jungle_book (Lair:8)
 An elephant-shaped statue
 
-This worn granite statue depicts elephants standing guard.
+This worn granite statue depicts an elephant standing guard.
 %%%%
 # pan_disco_hall (Pan)
 A weirdly glowing ball
@@ -932,34 +954,15 @@ better enter the portal before the standard is lowered to the ground.
 # timed bazaar
 A flickering gateway to a bazaar
 
-Aside from the vendors who've set up their stores at various places in the
-dungeon, there are others trying to make a living by traveling from place to
-place. Bazaars feature a number of different shops and often have better stock
-than the sedentary ones, sometimes even at a bargain. Once you hear the
-clinking of coins, be sure to hurry up and find the impromptu marketplace
-before the caravan moves on!
-
-Also be warned that their nomadic lifestyle has taught these sellers to
-appropriate any items an adventurer might leave behind, and then leave quickly,
-probably to sell them elsewhere.
+A glowing portal to a bazaar, where itinerant merchants gather to sell their
+wares. They never stay in one place for very long.
 %%%%
 # permanent bazaar
 A gateway to a bazaar
 
-Aside from the vendors who've set up their stores at various places in the
-dungeon, there are others trying to make a living by traveling from place to
-place. Bazaars feature a number of different shops and often have better stock
-than the sedentary ones, sometimes even at a bargain.
-
-Also be warned that their nomadic lifestyle has taught these sellers to
-appropriate any items an adventurer might leave behind, and then leave quickly,
-probably to sell them elsewhere.
-%%%%
-A gateway to a hive
-
-You hear a manifold buzzing. The waxy walls of this place are dripping with
-honey, but the larvae are hungry, and the queen bee will not tolerate
-intruders.
+A glowing portal to a bazaar, where itinerant merchants gather to sell their
+wares. They will wait for you, but once you get a chance to browse their
+inventory, the merchants will depart in search of other customers.
 %%%%
 A frozen archway
 
@@ -976,25 +979,13 @@ were entombed here.
 %%%%
 A glowing drain
 
-Every settlement brings forth the unpleasant sewers and drains, ignored by most
-but hideaways for others. Old tales speak of dangerous creatures, bathing in
-disgustingly green water, preying on each other without mercy. The tales also
-tell of the valuable items left by daring and unfortunate visitors, left to
-collect dust in the damp caverns. You have an uncanny feeling that the drain
-will fall apart rather soon.
+A glowing drain entrance from which emanates the stench of excrement. It seems
+to be rusting and clogging up fairly rapidly.
 %%%%
 A portal to a secret trove of treasure
 
-Once upon a time, an enterprising thief and wizard, terrified of being caught
-committing an act of burglary, created a system of portals leading into the
-secret treasure troves and chambers of the rich. Too scared to loot them
-himself, he instead charged an extortionate fee for entry to anyone who wanted
-to rifle through them.
-
-The secrets of the gateways died with him when his fellow thieves, disgusted by
-his betrayal of their 'ideals', had him murdered. With his death, the
-now-uncontrolled portals began moving rapidly from one dimension to the next,
-stopping only long enough to absorb magical energy.
+A sumptuously worked golden gate that leads to a very rich trove of valuable
+items. The price of entry is not low.
 %%%%
 A dark tunnel
 

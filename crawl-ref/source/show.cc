@@ -142,6 +142,9 @@ static void _update_feat_at(const coord_def &gp)
     if (orb_haloed(gp))
         env.map_knowledge(gp).flags |= MAP_ORB_HALOED;
 
+    if (quad_haloed(gp))
+        env.map_knowledge(gp).flags |= MAP_QUAD_HALOED;
+
     if (is_sanctuary(gp))
     {
         if (testbits(env.pgrid(gp), FPROP_SANCTUARY_1))
@@ -236,7 +239,7 @@ static void _update_item_at(const coord_def &gp)
     }
     else
     {
-        const std::vector<item_def> stash = item_list_in_stash(gp);
+        const vector<item_def> stash = item_list_in_stash(gp);
         if (stash.empty())
             return;
 
@@ -336,7 +339,7 @@ static int _hashed_rand(const monster* mons, uint32_t id, uint32_t die)
     data.id  = id;
     data.seed = you.attribute[ATTR_SEEN_INVIS_SEED];
 
-    return hash(&data, sizeof(data)) % die;
+    return hash32(&data, sizeof(data)) % die;
 }
 
 /**
@@ -492,7 +495,7 @@ void show_update_emphasis()
    // The only thing that can change is that previously unknown
    // stairs are now known. (see is_unknown_stair(), emphasise())
    LevelInfo& level_info = travel_cache.get_level_info(level_id::current());
-   std::vector<stair_info> stairs = level_info.get_stairs();
+   vector<stair_info> stairs = level_info.get_stairs();
    for (unsigned i = 0; i < stairs.size(); ++i)
        if (stairs[i].destination.is_valid())
            env.map_knowledge(stairs[i].position).flags &= ~MAP_EMPHASIZE;
