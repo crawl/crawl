@@ -712,7 +712,7 @@ static void _debug_destroy_doors()
         for (int x = 0; x < GXM; ++x)
         {
             const dungeon_feature_type feat = grd[x][y];
-            if (feat == DNGN_CLOSED_DOOR)
+            if (feat_is_closed_door(feat))
                 grd[x][y] = DNGN_FLOOR;
         }
 }

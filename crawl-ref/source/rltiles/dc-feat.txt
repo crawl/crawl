@@ -32,6 +32,8 @@ mangrove3
 
 ## doors
 %sdir dngn
+#FIXME
+closed_door DNGN_RUNED_DOOR
 closed_door DNGN_CLOSED_DOOR
 gate_closed_left DNGN_GATE_CLOSED_LEFT
 gate_closed_middle DNGN_GATE_CLOSED_MIDDLE

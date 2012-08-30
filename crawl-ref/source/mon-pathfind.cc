@@ -454,7 +454,7 @@ int monster_pathfind::mons_travel_cost(coord_def npos)
     ASSERT(grid_distance(pos, npos) <= 1);
 
     // Doors need to be opened.
-    if (grd(npos) == DNGN_CLOSED_DOOR)
+    if (feat_is_closed_door(grd(npos)))
         return 2;
 
     const monster_type mt = mons_base_type(mons);

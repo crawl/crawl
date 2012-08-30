@@ -139,6 +139,13 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             f.minimap = MF_DOOR;
             break;
 
+        case DNGN_RUNED_DOOR:
+            f.dchar   = DCHAR_DOOR_CLOSED;
+            f.colour  = LIGHTBLUE;
+            f.minimap = MF_DOOR;
+            f.map_colour = LIGHTBLUE;
+            break;
+
         case DNGN_METAL_WALL:
             f.dchar        = DCHAR_WALL;
             f.colour       = CYAN;

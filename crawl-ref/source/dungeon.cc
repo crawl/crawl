@@ -2308,7 +2308,7 @@ static void _check_doors()
 {
     for (rectangle_iterator ri(1); ri; ++ri)
     {
-        if (grd(*ri) != DNGN_CLOSED_DOOR)
+        if (!feat_is_closed_door(grd(*ri)))
             continue;
 
         int solid_count = 0;
@@ -3525,7 +3525,8 @@ static bool _connect_vault_exit(const coord_def& exit)
 
 static bool _grid_needs_exit(const coord_def& c)
 {
-    return !cell_is_solid(c) || grd(c) == DNGN_CLOSED_DOOR;
+    return (!cell_is_solid(c)
+            || feat_is_closed_door(grd(c)));
 }
 
 static bool _map_feat_is_on_edge(const vault_placement &place,
