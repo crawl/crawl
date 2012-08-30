@@ -52,10 +52,10 @@ MIRET1(number, base_type, base_type)
 MIRET1(number, number, number)
 MIRET1(number, colour, colour)
 
-// const char* here would save a tiny bit of memory, but every std::map
+// const char* here would save a tiny bit of memory, but every map
 // for an unique pair of types costs 35KB of code.  We have
-// std::map<std::string, int> elsewhere.
-static std::map<std::string, int> mi_flags;
+// map<string, int> elsewhere.
+static map<string, int> mi_flags;
 static void _init_mi_flags()
 {
     int f = 0;
@@ -74,12 +74,11 @@ LUAFN(moninf_get_is)
     {
         if (mi_flags.empty())
             _init_mi_flags();
-        std::string flag = luaL_checkstring(ls, 2);
-        const std::map<std::string, int>::const_iterator f =
-            mi_flags.find(lowercase(flag));
+        string flag = luaL_checkstring(ls, 2);
+        const map<string, int>::const_iterator f = mi_flags.find(lowercase(flag));
         if (f == mi_flags.end())
         {
-            luaL_argerror(ls, 2, (std::string("no such moninf flag: '")
+            luaL_argerror(ls, 2, (string("no such moninf flag: '")
                                   + flag + "'").c_str());
             return 0;
         }
@@ -131,7 +130,8 @@ LUAFN(moninf_get_stabbability)
 LUAFN(moninf_get_is_constricted)
 {
     MONINF(ls, 1, mi);
-    lua_pushboolean(ls, !mi->constrictor_name.empty());
+    lua_pushboolean(ls, (mi->constrictor_name.find("constricted by") == 0)
+                     || (mi->constrictor_name.find("held by") == 0));
     return 1;
 }
 
@@ -152,8 +152,11 @@ LUAFN(moninf_get_is_constricting_you)
     }
 
     // yay the interface
-    lua_pushboolean(ls, (std::find(mi->constricting_name.begin(),
-                                   mi->constricting_name.end(), "you")
+    lua_pushboolean(ls, (find(mi->constricting_name.begin(),
+                              mi->constricting_name.end(), "constricting you")
+                         != mi->constricting_name.end())
+                     || (find(mi->constricting_name.begin(),
+                              mi->constricting_name.end(), "holding you")
                          != mi->constricting_name.end()));
     return 1;
 }
@@ -203,7 +206,7 @@ LUAFN(moninf_get_is_unique)
 LUAFN(moninf_get_damage_desc)
 {
     MONINF(ls, 1, mi);
-    std::string s = mi->damage_desc();
+    string s = mi->damage_desc();
     lua_pushstring(ls, s.c_str());
     return 1;
 }
@@ -211,7 +214,7 @@ LUAFN(moninf_get_damage_desc)
 LUAFN(moninf_get_desc)
 {
     MONINF(ls, 1, mi);
-    std::string desc;
+    string desc;
     int col;
     mi->to_string(1, desc, col);
     lua_pushstring(ls, desc.c_str());
@@ -221,7 +224,7 @@ LUAFN(moninf_get_desc)
 LUAFN(moninf_get_name)
 {
     MONINF(ls, 1, mi);
-    std::string s = mi->full_name();
+    string s = mi->full_name();
     lua_pushstring(ls, s.c_str());
     return 1;
 }

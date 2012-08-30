@@ -87,7 +87,7 @@ static int option_get(lua_State *ls)
     game_options::opt_map::iterator i = Options.named_options.find(opt);
     if (i != Options.named_options.end())
     {
-        const std::string &ov = i->second;
+        const string &ov = i->second;
         lua_pushstring(ls, ov.c_str());
         return 1;
     }
@@ -95,7 +95,7 @@ static int option_get(lua_State *ls)
     const option_handler *oh = get_handler(opt);
     if (oh)
 #ifdef DEBUG_GLOBALS
-        return (oh->handler(ls, opt, (char*)real_Options+(intptr_t)oh->data, true));
+        return oh->handler(ls, opt, (char*)real_Options+(intptr_t)oh->data, true);
 #else
         return oh->handler(ls, opt, oh->data, true);
 #endif

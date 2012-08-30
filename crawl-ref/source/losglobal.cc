@@ -28,9 +28,9 @@ static losfield_t* _lookup_globallos(const coord_def& p, const coord_def& q)
         return NULL;
     // p < q iff p.x < q.x || p.x == q.x && p.y < q.y
     if (diff < coord_def(0, 0))
-        return (&globallos[q.x][q.y][-diff.x + o_half_x][-diff.y + o_half_y]);
+        return &globallos[q.x][q.y][-diff.x + o_half_x][-diff.y + o_half_y];
     else
-        return (&globallos[p.x][p.y][ diff.x + o_half_x][ diff.y + o_half_y]);
+        return &globallos[p.x][p.y][ diff.x + o_half_x][ diff.y + o_half_y];
 }
 
 static void _save_los(los_def* los, los_type l)
@@ -52,10 +52,10 @@ static void _save_los(los_def* los, los_type l)
 // Opacity at p has changed.
 void invalidate_los_around(const coord_def& p)
 {
-    int x1 = std::max(p.x - LOS_MAX_RANGE, 0);
-    int y1 = std::max(p.y - LOS_MAX_RANGE, 0);
-    int x2 = std::min(p.x, GXM - 1);
-    int y2 = std::min(p.y + LOS_MAX_RANGE, GYM - 1);
+    int x1 = max(p.x - LOS_MAX_RANGE, 0);
+    int y1 = max(p.y - LOS_MAX_RANGE, 0);
+    int x2 = min(p.x, GXM - 1);
+    int y2 = min(p.y + LOS_MAX_RANGE, GYM - 1);
     for (int y = y1; y <= y2; y++)
         for (int x = x1; x <= x2; x++)
             if (sqr(p.x - x) + sqr(p.y - y) <= sqr(LOS_MAX_RANGE) + 1)

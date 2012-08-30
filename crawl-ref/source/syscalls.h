@@ -6,6 +6,8 @@
 #ifndef SYSCALLS_H
 #define SYSCALLS_H
 
+#include "config.h"
+
 #include <sys/types.h>
 
 bool lock_file(int fd, bool write, bool wait = false);
@@ -21,9 +23,7 @@ int mkstemp(char *dummy);
 # endif
 #endif
 
-// This check is way underinclusive.
-#if !defined(TARGET_OS_LINUX) && !defined(TARGET_OS_WINDOWS) && !defined(TARGET_OS_NETBSD) && !defined(TARGET_OS_SOLARIS)
-# define NEED_FAKE_FDATASYNC
+#ifndef HAVE_FDATASYNC
 int fdatasync(int fd);
 #endif
 

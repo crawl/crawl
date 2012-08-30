@@ -39,8 +39,8 @@ public:
     virtual void update() = 0;
     void place_cursor(const coord_def &cursor);
 
-    virtual const std::string name() const = 0;
-    virtual bool update_tab_tip_text(std::string &tip, bool active) = 0;
+    virtual const string name() const = 0;
+    virtual bool update_tab_tip_text(string &tip, bool active) = 0;
     virtual void activate() = 0;
 
 protected:
@@ -60,7 +60,7 @@ protected:
     coord_def m_cursor;
     int m_last_clicked_item;
 
-    std::vector<InventoryTile> m_items;
+    vector<InventoryTile> m_items;
 
     DungeonCellBuffer m_buf;
 };

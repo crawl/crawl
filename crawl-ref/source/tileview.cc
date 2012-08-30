@@ -7,6 +7,7 @@
 #include "colour.h"
 #include "coord.h"
 #include "coordit.h"
+#include "dungeon.h"
 #include "env.h"
 #include "fprop.h"
 #include "items.h"
@@ -73,16 +74,14 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
     flv.floor   = TILE_FLOOR_NORMAL;
     flv.special = 0;
 
+    flv.wall_idx = 0;
+    flv.floor_idx = 0;
+
     switch (br)
     {
     case BRANCH_MAIN_DUNGEON:
         flv.wall  = TILE_WALL_NORMAL;
         flv.floor = TILE_FLOOR_NORMAL;
-        return;
-
-    case BRANCH_HIVE:
-        flv.wall  = TILE_WALL_HIVE;
-        flv.floor = TILE_FLOOR_ORC;
         return;
 
     case BRANCH_VAULTS:
@@ -194,10 +193,12 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
         switch (random2(6))
         {
         default:
-        case 0: flv.wall = TILE_WALL_HIVE; break;
-        case 1: flv.wall = TILE_WALL_PEBBLE_RED; break;
-        case 2: flv.wall = TILE_WALL_SLIME; break;
-        case 3: flv.wall = TILE_WALL_ICE; break;
+        case 0:
+        case 1:
+        case 2:
+        case 3: flv.wall = TILE_WALL_PEBBLE
+                + random2(15) * (TILE_WALL_PEBBLE_BLUE - TILE_WALL_PEBBLE_RED);
+                break;
         case 4: flv.wall = TILE_WALL_HALL; break;
         case 5: flv.wall = TILE_WALL_UNDEAD; break;
         }
@@ -266,7 +267,7 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
         return;
 
     case BRANCH_VOLCANO:
-        flv.wall  = TILE_WALL_PEBBLE_RED;
+        flv.wall  = TILE_WALL_VOLCANIC;
         flv.floor = TILE_FLOOR_ROUGH_RED;
         return;
 
@@ -282,10 +283,13 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
 
 void tile_clear_flavour(const coord_def &p)
 {
-    env.tile_flv(p).floor   = 0;
-    env.tile_flv(p).wall    = 0;
-    env.tile_flv(p).feat    = 0;
-    env.tile_flv(p).special = 0;
+    env.tile_flv(p).floor     = 0;
+    env.tile_flv(p).wall      = 0;
+    env.tile_flv(p).feat      = 0;
+    env.tile_flv(p).floor_idx = 0;
+    env.tile_flv(p).wall_idx  = 0;
+    env.tile_flv(p).feat_idx  = 0;
+    env.tile_flv(p).special   = 0;
 }
 
 void tile_clear_flavour()
@@ -322,6 +326,11 @@ static tileidx_t _pick_random_dngn_tile(tileidx_t idx, int value = -1)
     return idx;
 }
 
+static bool _same_door_at(dungeon_feature_type feat, const coord_def &gc)
+{
+    return (grd(gc) == feat) || map_masked(gc, MMT_WAS_DOOR_MIMIC);
+}
+
 void tile_init_flavour(const coord_def &gc)
 {
     if (!map_bounds(gc))
@@ -345,25 +354,36 @@ void tile_init_flavour(const coord_def &gc)
         env.tile_flv(gc).wall = _pick_random_dngn_tile(wall_base);
     }
 
+    if (feat_is_stone_stair(grd(gc)) && player_in_branch(BRANCH_SHOALS))
+    {
+        const bool up = feat_stair_direction(grd(gc)) == CMD_GO_UPSTAIRS;
+        env.tile_flv(gc).feat = up ? TILE_DNGN_SHOALS_STAIRS_UP
+                                   : TILE_DNGN_SHOALS_STAIRS_DOWN;
+    }
+
     if (feat_is_door(grd(gc)))
     {
-        // Check for horizontal gates.
+        // Check for gates.
+        bool door_left  = _same_door_at(grd(gc), coord_def(gc.x - 1, gc.y));
+        bool door_right = _same_door_at(grd(gc), coord_def(gc.x + 1, gc.y));
+        bool door_up    = _same_door_at(grd(gc), coord_def(gc.x, gc.y - 1));
+        bool door_down  = _same_door_at(grd(gc), coord_def(gc.x, gc.y + 1));
 
-        const coord_def left(gc.x - 1, gc.y);
-        const coord_def right(gc.x + 1, gc.y);
-
-        bool door_left  = (grd(left) == grd(gc));
-        bool door_right = (grd(right) == grd(gc));
-
-        if (door_left || door_right)
+        if (door_left || door_right || door_up || door_down)
         {
             tileidx_t target;
             if (door_left && door_right)
                 target = TILE_DNGN_GATE_CLOSED_MIDDLE;
+            else if (door_up && door_down)
+                target = TILE_DNGN_VGATE_CLOSED_MIDDLE;
             else if (door_left)
                 target = TILE_DNGN_GATE_CLOSED_RIGHT;
-            else
+            else if (door_right)
                 target = TILE_DNGN_GATE_CLOSED_LEFT;
+            else if (door_up)
+                target = TILE_DNGN_VGATE_CLOSED_DOWN;
+            else
+                target = TILE_DNGN_VGATE_CLOSED_UP;
 
             // NOTE: This requires that closed gates and open gates
             // are positioned in the tile set relative to their
@@ -906,7 +926,15 @@ void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
     {
         flv->special = (flv->special + 1) % tile_dngn_count(bg_idx);
     }
-    else if (bg_idx >= TILE_DNGN_LAVA && bg_idx < TILE_BLOOD)
+    else if (bg_idx == TILE_DNGN_LAVA)
+    {
+        // Lava tiles are four sets of four tiles (the second and fourth
+        // sets are the same). This cycles between the four sets, picking
+        // a random element from each set.
+        flv->special = ((flv->special - ((flv->special % 4)))
+                        + 4 + random2(4)) % tile_dngn_count(bg_idx);
+    }
+    else if (bg_idx > TILE_DNGN_LAVA && bg_idx < TILE_BLOOD)
         flv->special = random2(256);
     else if (bg_idx == TILE_WALL_NORMAL
              && flv->wall >= TILE_WALL_BRICK_TORCH_START
@@ -1002,8 +1030,8 @@ static int _get_door_offset(tileidx_t base_tile, bool opened = false,
     return offset + gateway_type;
 }
 
-static inline void _apply_variations(const tile_flavour &flv, tileidx_t *bg,
-                                     const coord_def &gc)
+void apply_variations(const tile_flavour &flv, tileidx_t *bg,
+                      const coord_def &gc)
 {
     tileidx_t orig = (*bg) & TILE_FLAG_MASK;
     tileidx_t flag = (*bg) & (~TILE_FLAG_MASK);
@@ -1066,6 +1094,11 @@ static inline void _apply_variations(const tile_flavour &flv, tileidx_t *bg,
         if (orig == TILE_DNGN_STONE_WALL)
             orig = TILE_DNGN_STONE_WALL_BROWN;
     }
+    else if (player_in_branch(BRANCH_SLIME_PITS))
+    {
+        if (orig == TILE_DNGN_STONE_WALL)
+            orig = TILE_STONE_WALL_SLIME;
+    }
 
     const bool mimic = monster_at(gc) && mons_is_feat_mimic(monster_at(gc)->type);
 
@@ -1088,7 +1121,7 @@ static inline void _apply_variations(const tile_flavour &flv, tileidx_t *bg,
             *bg = override + offset;
         }
         else
-            *bg = orig + std::min((int)flv.special, 3);
+            *bg = orig + min((int)flv.special, 6);
     }
     else if (orig == TILE_DNGN_PORTAL_WIZARD_LAB
              || orig == TILE_DNGN_ALTAR_CHEIBRIADOS)
@@ -1136,7 +1169,7 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
     if (!map_bounds(gc))
         return;
 
-    _apply_variations(env.tile_flv(gc), &cell.bg, gc);
+    apply_variations(env.tile_flv(gc), &cell.bg, gc);
 
     const map_cell& mc = env.map_knowledge(gc);
 
@@ -1201,6 +1234,9 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
 
     if (mc.flags & MAP_ORB_HALOED)
         cell.orb_glow = get_orb_phase(gc) ? 2 : 1;
+
+    if (mc.flags & MAP_QUAD_HALOED)
+        cell.quad_glow = true;
 
     if (Options.show_travel_trail)
     {

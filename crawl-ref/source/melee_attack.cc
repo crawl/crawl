@@ -137,7 +137,10 @@ melee_attack::melee_attack(actor *attk, actor *defn,
         }
     }
     else
-        attk_type = AT_HIT;
+    {
+        attk_type    = AT_HIT;
+        attk_flavour = AF_PLAIN;
+    }
 
     shield = attacker->shield();
     defender_shield = defender ? defender->shield() : defender_shield;
@@ -193,7 +196,7 @@ bool melee_attack::handle_phase_attempted()
                 && !attacker->res_elec()
                 && !you.received_weapon_warning)
             {
-                std::string prompt = "Really attack with ";
+                string prompt = "Really attack with ";
                 if (weapon)
                     prompt += weapon->name(DESC_YOUR);
                 else
@@ -210,7 +213,7 @@ bool melee_attack::handle_phase_attempted()
             }
             else
             {
-                std::string junk1, junk2;
+                string junk1, junk2;
                 const char *verb = (bad_attack(defender->as_monster(),
                                                junk1, junk2)
                                     ? "attack" : "attack near");
@@ -256,7 +259,13 @@ bool melee_attack::handle_phase_attempted()
         if (weapon)
         {
             if (weapon->base_type == OBJ_WEAPONS)
-                count_action(CACT_MELEE, weapon->sub_type);
+                if (is_unrandom_artefact(*weapon)
+                    && get_unrand_entry(weapon->special)->type_name)
+                {
+                    count_action(CACT_MELEE, weapon->special);
+                }
+                else
+                    count_action(CACT_MELEE, weapon->sub_type);
             else if (weapon->base_type == OBJ_RODS)
                 count_action(CACT_MELEE, WPN_CLUB);
             else if (weapon->base_type == OBJ_STAVES)
@@ -322,7 +331,7 @@ bool melee_attack::handle_phase_attempted()
         && mons_wall_shielded(defender->as_monster())
         && (!crawl_state.game_is_zotdef() || !one_chance_in(20)))
     {
-        std::string feat_name = raw_feature_description(defender->pos());
+        string feat_name = raw_feature_description(defender->pos());
 
         if (attacker->is_player())
         {
@@ -1174,7 +1183,7 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
     case UNAT_BITE:
         aux_attack = aux_verb = "bite";
         aux_damage += you.has_usable_fangs() * 2;
-        aux_damage += div_rand_round(std::max(you.strength()-10, 0), 5);
+        aux_damage += div_rand_round(max(you.strength()-10, 0), 5);
         noise_factor = 75;
 
         // prob of vampiric bite:
@@ -1230,8 +1239,10 @@ unarmed_attack_type melee_attack::player_aux_choose_uc_attack()
     // No punching with a shield or 2-handed wpn, except staves.
     // Octopodes aren't affected by this, though!
     if (you.species != SP_OCTOPODE && uc_attack == UNAT_PUNCH
-            && !you.has_usable_offhand())
+        && !you.has_usable_offhand())
+    {
         uc_attack = UNAT_NO_ATTACK;
+    }
 
     if (_tran_forbid_aux_attack(uc_attack))
         uc_attack = UNAT_NO_ATTACK;
@@ -1390,7 +1401,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
         case UNAT_HEADBUTT:
         {
             const int horns = player_mutation_level(MUT_HORNS);
-            const int stun = bestroll(std::min(damage_done, 7), 1 + horns);
+            const int stun = bestroll(min(damage_done, 7), 1 + horns);
 
             defender->as_monster()->speed_increment -= stun;
             break;
@@ -1473,7 +1484,7 @@ void melee_attack::player_announce_aux_hit()
          attack_strength_punctuation().c_str());
 }
 
-std::string melee_attack::player_why_missed()
+string melee_attack::player_why_missed()
 {
     const int ev = defender->melee_evasion(attacker);
     const int combined_penalty =
@@ -1488,8 +1499,8 @@ std::string melee_attack::player_why_missed()
              && to_hit + attacker_shield_tohit_penalty >= ev);
 
         const item_def *armour = you.slot_item(EQ_BODY_ARMOUR, false);
-        const std::string armour_name =
-            (armour? armour->name(DESC_BASENAME) : std::string("armour"));
+        const string armour_name = armour ? armour->name(DESC_BASENAME)
+                                          : string("armour");
 
         if (armour_miss && !shield_miss)
             return "Your " + armour_name + " prevents you from hitting ";
@@ -1620,7 +1631,7 @@ int melee_attack::player_apply_weapon_bonuses(int damage)
                 damage +=
                     random2avg(
                         div_rand_round(
-                            std::min(static_cast<int>(you.piety), 180), 33), 2);
+                            min(static_cast<int>(you.piety), 180), 33), 2);
 
                 dprf(DIAG_COMBAT, "Damage: %d -> %d, Beogh bonus: %d",
                      orig_damage, damage, damage - orig_damage);
@@ -1648,7 +1659,8 @@ int melee_attack::player_stab_weapon_bonus(int damage)
             || weapon->sub_type == WPN_SPEAR
             || weapon->sub_type == WPN_TRIDENT
             || weapon->sub_type == WPN_DEMON_TRIDENT
-            || weapon->sub_type == WPN_TRISHULA))
+            || weapon->sub_type == WPN_TRISHULA)
+        || !weapon && you.species == SP_FELID)
     {
         goto ok_weaps;
     }
@@ -1702,7 +1714,7 @@ int melee_attack::player_stab(int damage)
     if (stab_bonus)
     {
         // Let's make sure we have some damage to work with...
-        damage = std::max(1, damage);
+        damage = max(1, damage);
 
         damage = player_stab_weapon_bonus(damage);
     }
@@ -2223,7 +2235,7 @@ void melee_attack::antimagic_affects_defender()
 {
     if (defender->is_player())
     {
-        int mp_loss = std::min(you.magic_points, random2(damage_done * 2));
+        int mp_loss = min(you.magic_points, random2(damage_done * 2));
         if (!mp_loss)
             return;
         mpr("You feel your power leaking away.", MSGCH_WARN);
@@ -2361,7 +2373,7 @@ void melee_attack::chaos_affects_defender()
 
     int choice = choose_random_weighted(probs, probs + NUM_CHAOS_TYPES);
 #ifdef NOTE_DEBUG_CHAOS_EFFECTS
-    std::string chaos_effect = "CHAOS effect: ";
+    string chaos_effect = "CHAOS effect: ";
     switch (choice)
     {
     case CHAOS_CLONE:           chaos_effect += "clone"; break;
@@ -2447,9 +2459,9 @@ void melee_attack::chaos_affects_defender()
 
         // At level == 27 there's a 13.9% chance of a level 3 miscast.
         int level0_chance = level;
-        int level1_chance = std::max(0, level - 7);
-        int level2_chance = std::max(0, level - 12);
-        int level3_chance = std::max(0, level - 17);
+        int level1_chance = max(0, level - 7);
+        int level2_chance = max(0, level - 12);
+        int level3_chance = max(0, level - 17);
 
         level = random_choose_weighted(
             level0_chance, 0,
@@ -2592,17 +2604,17 @@ void melee_attack::chaos_affects_attacker()
     if (weapon && player_can_hear(attacker->pos())
         && one_chance_in(200))
     {
-        std::string msg = "";
+        string msg = "";
         if (!you.can_see(attacker))
         {
-            std::string noise = getSpeakString("weapon_noise");
+            string noise = getSpeakString("weapon_noise");
             if (!noise.empty())
                 msg = "You hear " + noise;
         }
         else
         {
             msg = getSpeakString("weapon_noises");
-            std::string wepname = wep_name(DESC_YOUR);
+            string wepname = wep_name(DESC_YOUR);
             if (!msg.empty())
             {
                 msg = replace_all(msg, "@Your_weapon@", wepname);
@@ -2644,10 +2656,10 @@ void melee_attack::do_miscast()
     // If the miscast is happening on the attacker's side and is due to
     // a chaos weapon then make smoke/sand/etc pour out of the weapon
     // instead of the attacker's hands.
-    std::string hand_str;
+    string hand_str;
 
-    std::string cause = atk_name(DESC_THE);
-    int         source;
+    string cause = atk_name(DESC_THE);
+    int    source;
 
     const int ignore_mask = ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES;
 
@@ -2763,7 +2775,9 @@ brand_type melee_attack::random_chaos_brand()
         case SPWPN_ANTIMAGIC:
             if (defender->as_monster() &&
                 !defender->as_monster()->can_use_spells())
+            {
                 susceptible = false;
+            }
             break;
         default:
             break;
@@ -2773,7 +2787,7 @@ brand_type melee_attack::random_chaos_brand()
             break;
     }
 #ifdef NOTE_DEBUG_CHAOS_BRAND
-    std::string brand_name = "CHAOS brand: ";
+    string brand_name = "CHAOS brand: ";
     switch (brand)
     {
     case SPWPN_NORMAL:          brand_name += "(plain)"; break;
@@ -2857,7 +2871,7 @@ bool melee_attack::apply_damage_brand()
         calc_elemental_brand_damage(BEAM_FIRE, res,
                                     defender->is_icy() ? "melt" : "burn");
         defender->expose_to_element(BEAM_FIRE);
-        noise_factor += 400 / std::max(1, damage_done);
+        noise_factor += 400 / max(1, damage_done);
         break;
 
     case SPWPN_FREEZING:
@@ -2881,7 +2895,7 @@ bool melee_attack::apply_damage_brand()
         break;
 
     case SPWPN_ELECTROCUTION:
-        noise_factor += 800 / std::max(1, damage_done);
+        noise_factor += 800 / max(1, damage_done);
         if (defender->airborne() || defender->res_elec() > 0)
             break;
         else if (one_chance_in(3))
@@ -3159,10 +3173,10 @@ void melee_attack::handle_noise(const coord_def & pos)
     int level = noise_factor * damage_done / 100 / 4;
 
     if (noise_factor > 0)
-        level = std::max(1, level);
+        level = max(1, level);
 
     // Cap melee noise at shouting volume.
-    level = std::min(12, level);
+    level = min(12, level);
 
     if (level > 0)
         noisy(level, pos, attacker->mindex());
@@ -3222,8 +3236,10 @@ bool melee_attack::chop_hydra_head(int dam,
         defender->as_monster()->number--;
 
         if (!defender->is_summoned())
+        {
             bleed_onto_floor(defender->pos(), defender->type,
                              defender->as_monster()->hit_points, true);
+        }
 
         defender->hurt(attacker, INSTANT_DEATH);
 
@@ -3361,7 +3377,7 @@ void melee_attack::apply_staff_damage()
                 make_stringf(
                     "%s crush%s %s!",
                     attacker->name(DESC_THE).c_str(),
-                    attacker->is_player() ? "" : "s",
+                    attacker->is_player() ? "" : "es",
                     defender->name(DESC_THE).c_str());
         }
         break;
@@ -3640,7 +3656,9 @@ int melee_attack::calc_to_hit(bool random)
         // This can only help if you're visible!
         if (defender->is_player()
             && player_mutation_level(MUT_TRANSLUCENT_SKIN) >= 3)
+        {
             mhit -= 5;
+        }
 
         if (defender->backlit(true, false))
             mhit += 2 + random2(8);
@@ -3709,7 +3727,7 @@ int melee_attack::calc_attack_delay(bool random, bool scaled)
         dprf(DIAG_COMBAT, "Weapon speed: %d; min: %d; attack time: %d",
              final_delay, min_delay, you.time_taken);
 
-        return std::max(2, div_rand_round(you.time_taken * final_delay, 10));
+        return max(2, div_rand_round(you.time_taken * final_delay, 10));
     }
     else
     {
@@ -3921,7 +3939,7 @@ bool melee_attack::attack_shield_blocked(bool verbose)
  *
  * Returns (attack_verb)
  */
-std::string melee_attack::mons_attack_verb()
+string melee_attack::mons_attack_verb()
 {
     static const char *klown_attack[] =
     {
@@ -3998,12 +4016,12 @@ std::string melee_attack::mons_attack_verb()
     return (attack_types[attk_type]);
 }
 
-std::string melee_attack::mons_attack_desc()
+string melee_attack::mons_attack_desc()
 {
     if (!you.can_see(attacker))
         return "";
 
-    std::string ret;
+    string ret;
     int dist = (attacker->pos() - defender->pos()).abs();
     if (dist > 2)
     {
@@ -4110,7 +4128,7 @@ void melee_attack::mons_do_napalm()
             napalm_monster(
                 defender->as_monster(),
                 attacker,
-                std::min(4, 1 + random2(attacker->get_experience_level())/2));
+                min(4, 1 + random2(attacker->get_experience_level())/2));
         }
     }
 }
@@ -4646,7 +4664,7 @@ void melee_attack::do_minotaur_retaliation()
         int hurt = random2(20) - attacker->armour_class();
         if (you.see_cell(defender->pos()))
         {
-            const std::string defname = defender->name(DESC_THE);
+            const string defname = defender->name(DESC_THE);
             mprf("%s furiously retaliates!", defname.c_str());
             if (hurt <= 0)
             {
@@ -4716,8 +4734,7 @@ bool melee_attack::do_knockback(bool trample)
     {
         monster* def_monster = defender->as_monster();
         if (def_monster && mons_is_stationary(def_monster))
-            // don't even print a message
-            return false;
+            return false; // don't even print a message
 
         int size_diff =
             attacker->body_size(PSIZE_BODY) - defender->body_size(PSIZE_BODY);
@@ -4728,8 +4745,11 @@ bool melee_attack::do_knockback(bool trample)
         coord_def new_pos = defender->pos() + defender->pos() - attacker->pos();
 
         // need a valid tile
-        if (grd(new_pos) < DNGN_SHALLOW_WATER && !defender->is_habitable(new_pos))
+        if (grd(new_pos) < DNGN_SHALLOW_WATER
+            && !defender->is_habitable(new_pos))
+        {
             break;
+        }
 
         // don't trample into a monster - or do we want to cause a chain
         // reaction here?
@@ -4957,15 +4977,6 @@ int melee_attack::calc_base_weapon_damage()
     {
         if (is_weapon(*weapon) && !is_range_weapon(*weapon))
             damage = property(*weapon, PWPN_DAMAGE);
-
-        // Even large staves can be wielded with a worn shield, but they
-        // are much less effective
-        if (shield && weapon->base_type == OBJ_WEAPONS
-            && weapon_skill(*weapon) == SK_STAVES
-            && cmp_weapon_size(*weapon, SIZE_LARGE) >= 0)
-        {
-            damage /= 2;
-        }
     }
 
     return damage;
@@ -5139,8 +5150,8 @@ int melee_attack::calc_damage()
         if (weapon && hands == HANDS_HALF)
         {
             potential_damage =
-                std::max(1,
-                         potential_damage - roll_dice(1, attacker_shield_penalty));
+                max(1,
+                    potential_damage - roll_dice(1, attacker_shield_penalty));
         }
 
         potential_damage = player_stat_modify_damage(potential_damage);
@@ -5157,7 +5168,7 @@ int melee_attack::calc_damage()
         damage_done = apply_defender_ac(damage_done);
 
         set_attack_verb();
-        damage_done = std::max(0, damage_done);
+        damage_done = max(0, damage_done);
 
         return damage_done;
     }
@@ -5183,10 +5194,10 @@ int melee_attack::apply_defender_ac(int damage, int damage_max)
             if (defender->is_player())
             {
                 const int gdr_perc = defender->as_player()->gdr_perc();
-                guaranteed_damage_reduction =
-                    std::min(damage_max * gdr_perc / 100, ac / 2);
-                damage_reduction =
-                    std::max(guaranteed_damage_reduction, damage_reduction);
+                guaranteed_damage_reduction = min(damage_max * gdr_perc / 100,
+                                                  ac / 2);
+                damage_reduction = max(guaranteed_damage_reduction,
+                                       damage_reduction);
             }
 
             damage -= damage_reduction;
@@ -5200,7 +5211,7 @@ int melee_attack::apply_defender_ac(int damage, int damage_max)
         }
     }
 
-    return std::max(0, damage);
+    return max(0, damage);
 }
 
 /* TODO: This code is only used from melee_attack methods, but perhaps it

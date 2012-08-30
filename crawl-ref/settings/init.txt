@@ -81,9 +81,6 @@
 # Rods are \ here.
 # autopickup = $?!:"/%
 
-# There is a long list of autopickup exceptions in
-include = autopickup_exceptions.txt
-
 drop_filter = useless_item
 
 # default_autopickup = false
@@ -148,9 +145,11 @@ drop_filter = useless_item
 # explore_greedy   = false
 # explore_stop     = items,stairs,shops,altars,portals,branches
 # explore_stop    += greedy_pickup_smart,greedy_visited_item_stack
+# sacrifice_before_explore = true
 # explore_improved = true
 # explore_wall_bias = 0
 # travel_key_stop = false
+# auto_sacrifice = true
 #
 # explore_stop_pickup_ignore = curare
 auto_exclude = oklob,statue,curse skull,roxanne,hyperactive,lightning spire,mimic
@@ -161,17 +160,15 @@ auto_exclude = oklob,statue,curse skull,roxanne,hyperactive,lightning spire,mimi
 # tc_excluded       = lightmagenta
 # tc_exclude_circle = red
 
-# runrest options (require runrest.lua to be included above)
+# Interrupting run and rest compound commands:
 runrest_ignore_poison  = 2:30
 runrest_ignore_monster = butterfly:1
 # runrest_ignore_monster = swamp worm:3
-
-# The file runrest_messages.txt contains a list of default
-# runrest message settings. Add your own before this to override
-# later settings.
 # runrest_stop_message = You hear a.* slurping noise
 # runrest_ignore_message = Jiyva's power touches on your attributes
-include = runrest_messages.txt
+
+# A good number of runrest_messages is defined by default; you may want to
+# clear them or override some.
 
 trapwalk_safe_hp = dart:20,needle:15,arrow:35,bolt:45,spear:40,axe:45,blade:95
 
@@ -242,8 +239,7 @@ sort_menus = inv: true : equipped, freshness, charged
 # menu_colour_prefix_class = false
 # menu_colour_shops = false
 
-# Food is colour coded in standard_colours.txt as follows:
-include = standard_colours.txt
+# Food is colour coded by default as follows:
 #
 #   yellow     = preferred food                    ($preferred)
 #   darkgrey   = cannot be eaten at all            ($inedible)
@@ -256,31 +252,22 @@ include = standard_colours.txt
 # You can change colours by using something like
 # $contaminated := magenta
 
-include = food_colouring.txt
-
-# There is elaborate colouring of items in the inventory (and other menus)
-# depending on their usefulness, taking species and other criteria into account.
-include = menu_colours.txt
-
-# Colouring of autoinscribed god gifts
-menu_colour = pickup:green:god gift
-
-# Highlight (partly) selected items
-menu_colour = inventory:white:\w \+\s
-menu_colour = inventory:white:\w \#\s
+# You can redefine inventory items like this:
+# menu_colour = inventory:magenta:shillelagh
+# or ones in pick-up dialogs:
+# menu_colour = pickup:green:god gift
 
 # Colouring of messages
-# Messages are colour coded in standard_colours.txt as follows:
+# Messages are colour coded as follows:
 #
 #   lightred   = really important messages  ($danger)
 #   yellow     = significant messages       ($warning)
 #   lightred   = item damaged/destroyed     ($item_dmg [same as $danger])
 #   darkgrey   = boring, message clutter    ($boring)
 #
-include = messages.txt
 
-# Colouring for the notes
-menu_colour = notes:white:Reached XP level
+# Notes also use, quite misnamed, menu_colour:
+# menu_colour = notes:white:Reached XP level
 
 # These lines will suppress extra feedback messages from travel/shift-running.
 #
@@ -383,12 +370,13 @@ force_more_message = Found .* abyssal rune of Zot
 
 ### Note: setting window, map or font sizes to '0' implies auto-sizing.
 
-# tile_full_screen     = true
-# tile_window_width    = 1024
-# tile_window_height   = 768
-# tile_map_pixels      = 3
-# tile_force_overlay   = true
-# tile_layout_priority = minimap, inventory, gold_turn, command, spell, monster
+# tile_full_screen      = true
+# tile_window_width     = 1024
+# tile_window_height    = 768
+# tile_map_pixels       = 3
+# tile_force_overlay    = true
+# tile_layout_priority  = minimap, inventory, gold_turn, command, spell
+# tile_layout_priority += ability, monster
 
 # tile_font_crt_file  = VeraMono.ttf
 # tile_font_crt_size  = 15
@@ -419,14 +407,14 @@ force_more_message = Found .* abyssal rune of Zot
 # dump_order  = header, hiscore, stats, misc, notes, inventory,
 # dump_order += turns_by_place, skills, spells, overview, mutations,
 # dump_order += messages, screenshot, monlist, kills_by_place, kills
-# dump_order += spell_usage, action_counts
+# dump_order += action_counts
 # dump_book_spells = false
 
 ##### 5-b       Notes #################################
 #
 # user_note_prefix=@@@
 # note_hp_percent = 5
-note_skill_levels = 1,5,10,15,27
+# note_skill_levels = 1,5,10,15,27
 # note_all_skill_levels = true
 # note_skill_max  = false
 # note_xom_effects = false
@@ -446,7 +434,12 @@ note_monsters = orb of fire, ancient lich, Sigmund
 # char_set         = ascii
 # use_fake_player_cursor = false
 #
-# language = polski
+# Translation to use (in 0.11, only badly incomplete descriptions; Polish
+# has god messages and a few misc, Greek has sheep).
+# language = pl|fr|zh|ko|fi|ru|el|da|li|pt|de|lv|cs|hu
+#
+# Joke translations (complete!).
+# language = dwarven|jagerkin|kraut|wide
 #
 # colour.lightgray = black
 # colour.lightcyan = cyan

@@ -128,8 +128,6 @@ enum hands_reqd_type
     HANDS_ONE,
     HANDS_HALF,
     HANDS_TWO,
-
-    HANDS_DOUBLE,       // not a level, marks double ended weapons (== half)
 };
 
 enum helmet_desc_type

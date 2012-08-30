@@ -84,15 +84,19 @@ dagger3
 orcish_dagger WPN_DAGGER_ORC
 orcish_dagger2
 %rim 0
+dwarven_dagger1 WPN_DAGGER_DWARF
+dwarven_dagger2
 elven_dagger1 WPN_DAGGER_ELF
 elven_dagger2
 %rim 1
 
 short_sword1 WPN_SHORT_SWORD
 short_sword2
+%rim 0
+dwarven_short_sword1 WPN_SHORT_SWORD_DWARF
+dwarven_short_sword2
 orcish_short_sword WPN_SHORT_SWORD_ORC
 orcish_short_sword2
-%rim 0
 elven_short_sword1 WPN_SHORT_SWORD_ELF
 elven_short_sword2
 %rim 1
@@ -146,23 +150,35 @@ dwarven_hand_axe1 WPN_HAND_AXE_DWARF
 dwarven_hand_axe2
 orcish_hand_axe1 WPN_HAND_AXE_ORC
 orcish_hand_axe2
-%rim 1
 war_axe1 WPN_WAR_AXE
 war_axe2
-%rim 0
+war_axe3
 dwarven_war_axe1 WPN_WAR_AXE_DWARF
 dwarven_war_axe2
 orcish_war_axe1 WPN_WAR_AXE_ORC
 orcish_war_axe2
-%rim 1
 broad_axe1 WPN_BROAD_AXE
 broad_axe2
 broad_axe3
+dwarven_broad_axe1 WPN_BROAD_AXE_DWARF
+dwarven_broad_axe2
+orcish_broad_axe1 WPN_BROAD_AXE_ORC
+orcish_broad_axe2
 battle_axe1 WPN_BATTLEAXE
 battle_axe2
 battle_axe3
+dwarven_battle_axe1 WPN_BATTLEAXE_DWARF
+dwarven_battle_axe2
+orcish_battle_axe1 WPN_BATTLEAXE_ORC
+orcish_battle_axe2
 executioner_axe1 WPN_EXECUTIONERS_AXE
 executioner_axe2
+executioner_axe3
+dwarven_executioner_axe1 WPN_EXECUTIONERS_AXE_DWARF
+dwarven_executioner_axe2
+orcish_executioner_axe1 WPN_EXECUTIONERS_AXE_ORC
+orcish_executioner_axe2
+%rim 1
 
 ##Polearm
 %rim 0
@@ -174,17 +190,24 @@ orcish_spear1 WPN_SPEAR_ORC
 orcish_spear2
 elven_spear1 WPN_SPEAR_ELF
 elven_spear2
-%rim 1
 trident1 WPN_TRIDENT
 trident2
+trident3
+orcish_trident1 WPN_TRIDENT_ORC
+orcish_trident2
 demon_trident WPN_DEMON_TRIDENT
 halberd1 WPN_HALBERD
 halberd2
+halberd3
+orcish_halberd1 WPN_HALBERD_ORC
+orcish_halberd2
+%rim 1
 scythe1 WPN_SCYTHE
 scythe2
+%rim 0
 glaive1 WPN_GLAIVE
 glaive2
-%rim 0
+glaive3
 orcish_glaive1 WPN_GLAIVE_ORC
 orcish_glaive2
 %rim 1
@@ -192,11 +215,16 @@ bardiche1 WPN_BARDICHE
 bardiche2
 
 ##Staff
+%rim 0
 staff WPN_STAFF
+%rim 1
 quarterstaff WPN_QUARTERSTAFF
 quarterstaff2
+%rim 0
 lajatang1 WPN_LAJATANG
 lajatang2
+lajatang3
+%rim 1
 
 
 ##Ranged
@@ -427,7 +455,6 @@ orcish_plate2
 crystal_plate ARM_CRYSTAL_PLATE_ARMOUR
 crystal_plate2
 crystal_plate3
-crystal_plate4
 
 animal_skin1 ARM_ANIMAL_SKIN
 animal_skin2
@@ -510,7 +537,8 @@ helmet_winged THELM_HELM_WINGED
 glove1 ARM_GLOVES
 glove2
 glove3
-glove4_gauntlets
+glove4
+glove5
 
 ###### BOOTS
 boots1_brown ARM_BOOTS
@@ -560,7 +588,6 @@ gem_lead
 gem_plastic
 
 %sdir item/wand
-%back i-label
 i-flame WAND_FLAME WAND_ID_FIRST
 i-frost WAND_FROST
 i-slowing WAND_SLOWING
@@ -582,7 +609,6 @@ i-draining WAND_DRAINING
 i-random_effects WAND_RANDOM_EFFECTS
 i-disintegration WAND_DISINTEGRATION WAND_ID_LAST
 
-%back none
 #################OBJ_FOOD
 %sdir item/food
 meat_ration FOOD_MEAT_RATION UNSEEN_FOOD
@@ -635,33 +661,52 @@ chunk_brands/i-rotten FOOD_INEDIBLE
 %sdir item/scroll
 scroll SCROLL UNSEEN_SCROLL
 
-%back scroll
+#### These must be in the same order as the enum in item-prop.h!
 %sdir item/scroll
+%back scroll-yellow
 i-identify SCR_IDENTIFY SCR_ID_FIRST
+%back scroll-purple
 i-teleportation SCR_TELEPORTATION
+%back scroll-blue
 i-fear SCR_FEAR
+%back scroll-grey
 i-noise SCR_NOISE
+%back scroll-yellow
 i-remove_curse SCR_REMOVE_CURSE
+%back scroll-brown
 i-unholy_creation SCR_UNHOLY_CREATION
+%back scroll-green
 i-enchant-weapon1 SCR_ENCHANT_WEAPON_I
 i-enchant_armour SCR_ENCHANT_ARMOUR
+%back scroll-red
 i-torment SCR_TORMENT
+%back scroll-grey
 i-random_uselessness SCR_RANDOM_USELESSNESS
+%back scroll-grey
 i-curse_weapon SCR_CURSE_WEAPON
 i-curse_armour SCR_CURSE_ARMOUR
 i-immolation SCR_IMMOLATION
+%back scroll-purple
 i-blinking SCR_BLINKING
+%back scroll-yellow
 i-magic_mapping SCR_MAGIC_MAPPING
+%back scroll-blue
 i-fog SCR_FOG
+%back scroll-cyan
 i-acquirement SCR_ACQUIREMENT
+%back scroll-green
 i-enchant-weapon2 SCR_ENCHANT_WEAPON_II
 i-vorpalize-weapon SCR_VORPALISE_WEAPON
 i-recharging SCR_RECHARGING
 i-enchant-weapon3 SCR_ENCHANT_WEAPON_III
+%back scroll-red
 i-holy_word SCR_HOLY_WORD
 i-vulnerability SCR_VULNERABILITY
+%back scroll-red
 i-silence SCR_SILENCE
+%back scroll-yellow
 i-amnesia SCR_AMNESIA
+%back scroll-grey
 i-curse-jewellery SCR_CURSE_JEWELLERY SCR_ID_LAST
 %back none
 
@@ -778,7 +823,7 @@ i-stasis AMU_STASIS AMU_ID_LAST
 
 ####################OBJ_POTIONS
 %sdir item/potion
-clear POTION_OFFSET UNSEEN_POTION
+unknown POTION_OFFSET UNSEEN_POTION
 brilliant_blue
 black
 silver
@@ -813,8 +858,9 @@ i-confusion POT_CONFUSION
 i-invisibility POT_INVISIBILITY
 i-porridge POT_PORRIDGE
 i-degeneration POT_DEGENERATION
+# please remove when TAG_MAJOR_VERSION is bumped
+i-fizzing POT_REMOVE_ME
 i-decay POT_DECAY
-i-water POT_WATER
 i-experience POT_EXPERIENCE
 i-magic POT_MAGIC
 i-restore-abilities POT_RESTORE_ABILITIES
@@ -825,7 +871,7 @@ i-mutation POT_MUTATION
 i-resistance POT_RESISTANCE
 i-blood POT_BLOOD
 i-coagulated-blood POT_BLOOD_COAGULATED
-i-water POT_FIZZING POT_ID_LAST
+i-fizzing POT_FIZZING POT_ID_LAST
 %back none
 %rim 1
 
@@ -920,16 +966,18 @@ rod07
 rod08
 rod09
 
-i-rod_smiting ROD_LIGHTNING ROD_ID_FIRST
+%rim 0
+i-rod_lightning ROD_LIGHTNING ROD_ID_FIRST
 i-rod_summoning ROD_SUMMONING
 i-rod_destruction_fire ROD_DESTRUCTION_FIRE
 i-rod_destruction_ice ROD_DESTRUCTION_ICE
-i-rod_destruction_lightning ROD_DESTRUCTION_LIGHTNING
+i-rod_iron ROD_DESTRUCTION_IRON
 i-rod_destruction_inaccuracy ROD_DESTRUCTION_INACCURACY
 i-rod_warding ROD_WARDING
 i-rod_demonology ROD_DEMONOLOGY
 i-rod_striking ROD_STRIKING
 i-rod_venom ROD_VENOM ROD_ID_LAST
+%rim 1
 
 #OBJ_ORBS
 %sdir item/misc
@@ -1087,6 +1135,7 @@ rune_demonic_3
 rune_demonic_4
 rune_demonic_5
 rune_demonic_6
+rune_elven MISC_RUNE_ELVEN
 
 #OBJ_CORPSES
 #handled in dc-corpse.txt

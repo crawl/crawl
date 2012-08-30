@@ -1278,8 +1278,8 @@ MONS:   w:5 wraith / phantasmal warrior / eidolon / w:5 freezing wraith / w:5 no
 MONS:   raven skeleton / w:30 nothing
 MONS:   w:3 guardian mummy / w:1 mummy
 MONS:   w:5 patrolling mummy priest / w:1 patrolling greater mummy
-# This statue doesn't have a tile of its own
-KMONS:  8 = statue name:spooky n_adj spells:haunt tile:mons_statue_mage col:death
+KMONS:  8 = statue name:spooky n_adj spells:haunt tile:mons_spooky_statue \
+            col:death
 SHUFFLE: 9H
 : if crawl.coinflip() then
 # Temple of yred

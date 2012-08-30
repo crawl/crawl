@@ -42,13 +42,13 @@ void SkillRegion::draw_tag()
     const skill_type skill = (skill_type) idx;
     const int apt          = species_apt(skill, you.species);
 
-    std::string progress = "";
+    string progress = "";
 
-    std::string desc = make_stringf("%-14s Skill %4.1f Aptitude %c%d",
-                                    skill_name(skill),
-                                    you.skill(skill, 10) / 10.0,
-                                    apt > 0 ? '+' : ' ',
-                                    apt);
+    string desc = make_stringf("%-14s Skill %4.1f Aptitude %c%d",
+                               skill_name(skill),
+                               you.skill(skill, 10) / 10.0,
+                               apt > 0 ? '+' : ' ',
+                               apt);
 
     draw_desc(desc.c_str());
 }
@@ -95,7 +95,7 @@ int SkillRegion::handle_mouse(MouseEvent &event)
     return 0;
 }
 
-bool SkillRegion::update_tab_tip_text(std::string &tip, bool active)
+bool SkillRegion::update_tab_tip_text(string &tip, bool active)
 {
     const char *prefix = active ? "" : "[L-Click] ";
 
@@ -104,7 +104,7 @@ bool SkillRegion::update_tab_tip_text(std::string &tip, bool active)
     return true;
 }
 
-bool SkillRegion::update_tip_text(std::string& tip)
+bool SkillRegion::update_tip_text(string& tip)
 {
     if (m_cursor == NO_CURSOR)
         return false;
@@ -136,7 +136,7 @@ bool SkillRegion::update_tip_text(std::string& tip)
     return true;
 }
 
-bool SkillRegion::update_alt_text(std::string &alt)
+bool SkillRegion::update_alt_text(string &alt)
 {
     if (m_cursor == NO_CURSOR)
         return false;

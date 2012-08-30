@@ -18,7 +18,7 @@ bool actor::see_cell(const coord_def &p) const
     if (!in_bounds(pos()))
         return false; // actor is off the map
 
-    return (cell_see_cell(pos(), p, LOS_DEFAULT));
+    return cell_see_cell(pos(), p, LOS_DEFAULT);
 }
 
 bool player::see_cell(const coord_def &p) const
@@ -39,7 +39,7 @@ bool actor::can_see(const actor *target) const
 
 bool actor::see_cell_no_trans(const coord_def &p) const
 {
-    return (cell_see_cell(pos(), p, LOS_NO_TRANS));
+    return cell_see_cell(pos(), p, LOS_NO_TRANS);
 }
 
 bool player::trans_wall_blocking(const coord_def &p) const
@@ -81,7 +81,7 @@ const los_base* actor::get_los_no_trans()
 bool player::can_see(const actor* a) const
 {
     if (crawl_state.game_is_arena() || crawl_state.arena_suspended)
-        return (see_cell(a->pos()));
+        return see_cell(a->pos());
     else if (xray_vision)
         return see_cell(a->pos());
     else

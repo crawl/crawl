@@ -22,7 +22,7 @@
 int player::stat(stat_type s, bool nonneg) const
 {
     const int val = max_stat(s) - stat_loss[s];
-    return (nonneg ? std::max(val, 0) : val);
+    return (nonneg ? max(val, 0) : val);
 }
 
 int player::strength() const
@@ -44,7 +44,7 @@ static int _stat_modifier(stat_type stat);
 
 int player::max_stat(stat_type s) const
 {
-    return std::min(base_stats[s] + _stat_modifier(s), 72);
+    return min(base_stats[s] + _stat_modifier(s), 72);
 }
 
 int player::max_strength() const
@@ -125,7 +125,7 @@ void jiyva_stat_action()
     int current_capacity = carrying_capacity(BS_UNENCUMBERED);
     int carrying_strength = cur_stat[0] + (you.burden - current_capacity + 249)/250;
     int evp = you.unadjusted_body_armour_penalty();
-    target_stat[0] = std::max(std::max(9, 2 + 3 * evp), 2 + carrying_strength);
+    target_stat[0] = max(max(9, 2 + 3 * evp), 2 + carrying_strength);
     target_stat[1] = 9;
     target_stat[2] = 9;
     int remaining = stat_total - 18 - target_stat[0];
@@ -152,7 +152,7 @@ void jiyva_stat_action()
         }
         // If you are in really heavy armour, then you already are getting a
         // lot of Str and more won't help much, so weight magic more.
-        other_weights = std::max(other_weights - (evp >= 5 ? 4 : 1) * magic_weights/2, 0);
+        other_weights = max(other_weights - (evp >= 5 ? 4 : 1) * magic_weights/2, 0);
         magic_weights = div_rand_round(remaining * magic_weights, magic_weights + other_weights);
         other_weights = remaining - magic_weights;
         target_stat[1] += magic_weights;
@@ -170,7 +170,8 @@ void jiyva_stat_action()
     for (int x = 0; x < 3; ++x)
         for (int y = 0; y < 3; ++y)
         {
-            if (x != y && target_stat[x] - cur_stat[x] + cur_stat[y] - target_stat[y] > 0)
+            if (x != y && cur_stat[y] > 1
+                && target_stat[x] - cur_stat[x] > target_stat[y] - cur_stat[y])
             {
                 choices++;
                 if (one_chance_in(choices))
@@ -183,8 +184,7 @@ void jiyva_stat_action()
     if (choices)
     {
         simple_god_message("'s power touches on your attributes.");
-        const std::string cause = "the 'helpfulness' of "
-                                  + god_name(you.religion);
+        const string cause = "the 'helpfulness' of " + god_name(you.religion);
         modify_stat(static_cast<stat_type>(stat_up_choice), 1, true, cause.c_str());
         modify_stat(static_cast<stat_type>(stat_down_choice), -1, true, cause.c_str());
     }
@@ -273,9 +273,9 @@ void notify_stat_change(stat_type which_stat, int amount, bool suppress_msg,
 void notify_stat_change(stat_type which_stat, int amount, bool suppress_msg,
                         const item_def &cause, bool removed)
 {
-    std::string name = cause.name(DESC_THE, false, true, false, false,
-                                  ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES);
-    std::string verb;
+    string name = cause.name(DESC_THE, false, true, false, false,
+                             ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES);
+    string verb;
 
     switch (cause.base_type)
     {
@@ -445,7 +445,7 @@ static int _stat_modifier(stat_type stat)
     }
 }
 
-static std::string _stat_name(stat_type stat)
+static string _stat_name(stat_type stat)
 {
     switch (stat)
     {
@@ -498,7 +498,7 @@ bool lose_stat(stat_type which_stat, int stat_loss, bool force,
 
     if (stat_loss > 0)
     {
-        you.stat_loss[which_stat] = std::min<int>(100,
+        you.stat_loss[which_stat] = min<int>(100,
                                         you.stat_loss[which_stat] + stat_loss);
         _handle_stat_change(which_stat, cause, see_source);
         return true;
@@ -508,7 +508,7 @@ bool lose_stat(stat_type which_stat, int stat_loss, bool force,
 }
 
 bool lose_stat(stat_type which_stat, int stat_loss, bool force,
-               const std::string cause, bool see_source)
+               const string cause, bool see_source)
 {
     return lose_stat(which_stat, stat_loss, force, cause.c_str(), see_source);
 }
@@ -519,8 +519,8 @@ bool lose_stat(stat_type which_stat, int stat_loss,
     if (cause == NULL || invalid_monster(cause))
         return lose_stat(which_stat, stat_loss, force, NULL, true);
 
-    bool        vis  = you.can_see(cause);
-    std::string name = cause->name(DESC_A, true);
+    bool   vis  = you.can_see(cause);
+    string name = cause->name(DESC_A, true);
 
     if (cause->has_ench(ENCH_SHAPESHIFTER))
         name += " (shapeshifter)";
@@ -557,7 +557,7 @@ bool restore_stat(stat_type which_stat, int stat_gain,
     {
         bool stat_restored = false;
         for (int i = 0; i < NUM_STATS; ++i)
-            if (restore_stat(static_cast<stat_type>(i), stat_gain, suppress_msg))
+            if (restore_stat((stat_type) i, stat_gain, suppress_msg))
                 stat_restored = true;
 
         return stat_restored;
@@ -588,7 +588,7 @@ static void _normalize_stat(stat_type stat)
 {
     ASSERT(you.stat_loss[stat] >= 0);
     // XXX: this doesn't prevent effective stats over 72.
-    you.base_stats[stat] = std::min<int8_t>(you.base_stats[stat], 72);
+    you.base_stats[stat] = min<int8_t>(you.base_stats[stat], 72);
 }
 
 // Number of turns of stat at zero you start with.
@@ -671,7 +671,7 @@ void update_stat_zero()
         }
 
         int paramax = STAT_DEATH_TURNS - STAT_DEATH_START_PARA;
-        int paradiff = std::max(you.stat_zero[i] - STAT_DEATH_START_PARA, 0);
+        int paradiff = max(you.stat_zero[i] - STAT_DEATH_START_PARA, 0);
         if (x_chance_in_y(paradiff*paradiff, 2*paramax*paramax))
         {
             para_stat = s;

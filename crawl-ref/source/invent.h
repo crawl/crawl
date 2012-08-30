@@ -59,16 +59,14 @@ struct SelItem
     }
 };
 
-typedef std::string (*invtitle_annotator)(
-            const Menu *m, const std::string &oldtitle);
+typedef string (*invtitle_annotator)(const Menu *m, const string &oldtitle);
 
 class InvTitle : public MenuEntry
 {
 public:
-    InvTitle(Menu *mn, const std::string &title,
-              invtitle_annotator tfn);
+    InvTitle(Menu *mn, const string &title, invtitle_annotator tfn);
 
-    std::string get_text(const bool = false) const;
+    string get_text(const bool = false) const;
 
 private:
     Menu *m;
@@ -81,8 +79,8 @@ private:
     static bool show_prices;
     static bool show_glyph;
 
-    mutable std::string basename;
-    mutable std::string qualname;
+    mutable string basename;
+    mutable string qualname;
 
 protected:
     static bool show_cursor;
@@ -93,19 +91,19 @@ public:
     const item_def *item;
 
     InvEntry(const item_def &i, bool show_bg = false);
-    std::string get_text(const bool need_cursor = false) const;
+    string get_text(const bool need_cursor = false) const;
     void set_show_glyph(bool doshow);
     static void set_show_cursor(bool doshow);
 
-    const std::string &get_basename() const;
-    const std::string &get_qualname() const;
-    const std::string &get_fullname() const;
-    bool              is_item_cursed() const;
-    bool              is_item_glowing() const;
-    bool              is_item_ego() const;
-    bool              is_item_art() const;
-    bool              is_item_equipped() const;
-    int               item_freshness() const;
+    const string &get_basename() const;
+    const string &get_qualname() const;
+    const string &get_fullname() const;
+    bool         is_item_cursed() const;
+    bool         is_item_glowing() const;
+    bool         is_item_ego() const;
+    bool         is_item_art() const;
+    bool         is_item_equipped() const;
+    int          item_freshness() const;
 
     virtual int highlight_colour() const
     {
@@ -114,10 +112,10 @@ public:
 
     virtual void select(int qty = -1);
 
-    virtual std::string get_filter_text() const;
+    virtual string get_filter_text() const;
 
 #ifdef USE_TILE
-    virtual bool get_tiles(std::vector<tile_def>& tiles) const;
+    virtual bool get_tiles(vector<tile_def>& tiles) const;
 #endif
 
 private:
@@ -132,7 +130,7 @@ public:
 public:
     unsigned char getkey() const;
 
-    void set_preselect(const std::vector<SelItem> *pre);
+    void set_preselect(const vector<SelItem> *pre);
     void set_type(menu_type t);
 
     // Sets function to annotate the title with meta-information if needed.
@@ -141,12 +139,12 @@ public:
     void set_title_annotator(invtitle_annotator fn);
 
     void set_title(MenuEntry *title, bool first = true);
-    void set_title(const std::string &s);
+    void set_title(const string &s);
 
     // Loads items into the menu. If "procfn" is provided, it'll be called
     // for each MenuEntry added.
     // NOTE: Does not set menu title, ever! You *must* set the title explicitly
-    menu_letter load_items(const std::vector<const item_def*> &items,
+    menu_letter load_items(const vector<const item_def*> &items,
                            MenuEntry *(*procfn)(MenuEntry *me) = NULL,
                            menu_letter ckey = 'a');
 
@@ -156,16 +154,14 @@ public:
     void load_inv_items(int item_selector = OSEL_ANY, int excluded_slot = -1,
                         MenuEntry *(*procfn)(MenuEntry *me) = NULL);
 
-    std::vector<SelItem> get_selitems() const;
+    vector<SelItem> get_selitems() const;
 
     // Returns vector of item_def pointers to each item_def in the given
     // vector. Note: make sure the original vector stays around for the lifetime
     // of the use of the item pointers, or mayhem results!
-    static std::vector<const item_def*> xlat_itemvect(
-            const std::vector<item_def> &);
+    static vector<const item_def*> xlat_itemvect(const vector<item_def> &);
     const menu_sort_condition *find_menu_sort_condition() const;
-    void sort_menu(std::vector<InvEntry*> &items,
-                   const menu_sort_condition *cond);
+    void sort_menu(vector<InvEntry*> &items, const menu_sort_condition *cond);
 
 protected:
     bool process_key(int key);
@@ -175,11 +171,13 @@ protected:
 
 protected:
     menu_type type;
-    const std::vector<SelItem> *pre_select;
+    const vector<SelItem> *pre_select;
 
     invtitle_annotator title_annotate;
-    std::string temp_title;
+    string temp_title;
 };
+
+void get_class_hotkeys(const int type, vector<char> &glyphs);
 
 bool any_items_to_select(int type_expect, bool msg = false, int excluded_slot = -1);
 
@@ -195,13 +193,13 @@ int prompt_invent_item(const char *prompt,
                         operation_types oper = OPER_ANY,
                         bool allow_list_known = false);
 
-std::vector<SelItem> select_items(
-                        const std::vector<const item_def*> &items,
+vector<SelItem> select_items(
+                        const vector<const item_def*> &items,
                         const char *title, bool noselect = false,
                         menu_type mtype = MT_PICKUP,
                         invtitle_annotator titlefn = NULL);
 
-std::vector<SelItem> prompt_invent_items(
+vector<SelItem> prompt_invent_items(
                         const char *prompt,
                         menu_type type,
                         int type_expect,
@@ -209,25 +207,25 @@ std::vector<SelItem> prompt_invent_items(
                         bool allow_auto_list = true,
                         bool allow_easy_quit = true,
                         const char other_valid_char = '\0',
-                        std::vector<text_pattern> *filter = NULL,
+                        vector<text_pattern> *filter = NULL,
                         Menu::selitem_tfn fn = NULL,
-                        const std::vector<SelItem> *pre_select = NULL);
+                        const vector<SelItem> *pre_select = NULL);
 
 void browse_inventory();
 unsigned char get_invent(int invent_type);
 
 bool in_inventory(const item_def &i);
 
-std::string item_class_name(int type, bool terse = false);
+string item_class_name(int type, bool terse = false);
 const char* item_slot_name(equipment_type type, bool terse);
 
 bool check_old_item_warning(const item_def& item, operation_types oper);
 bool check_warning_inscriptions(const item_def& item, operation_types oper);
 
 void init_item_sort_comparators(item_sort_comparators &list,
-                                const std::string &set);
+                                const string &set);
 
-bool prompt_failed(int retval, std::string msg = "");
+bool prompt_failed(int retval, string msg = "");
 
 bool item_is_wieldable(const item_def &item);
 bool item_is_evokable(const item_def &item, bool reach = true,

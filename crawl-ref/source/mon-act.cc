@@ -138,7 +138,9 @@ static bool _swap_monsters(monster* mover, monster* moved)
     // with the main body.
     if (mons_is_stationary(moved)
         && moved->type != MONS_KRAKEN_TENTACLE)
+    {
         return false;
+    }
 
     // If the target monster is constricted it is stuck
     // and not eligible to be swapped with
@@ -286,7 +288,7 @@ static bool _ranged_allied_monster_in_dir(monster* mon, coord_def p)
 static bool _allied_monster_at(monster* mon, coord_def a, coord_def b,
                                coord_def c)
 {
-    std::vector<coord_def> pos;
+    vector<coord_def> pos;
     pos.push_back(mon->pos() + a);
     pos.push_back(mon->pos() + b);
     pos.push_back(mon->pos() + c);
@@ -831,6 +833,9 @@ static bool _handle_reaching(monster* mons)
     if (!foe || range <= REACH_NONE)
         return false;
 
+    if (is_sanctuary(mons->pos()) || is_sanctuary(foe->pos()))
+        return false;
+
     if (mons->submerged())
         return false;
 
@@ -1114,7 +1119,7 @@ static bool _thunderbolt_tracer(monster *caster, int pow, coord_def aim)
     mon_attitude_type castatt = caster->temp_attitude();
     int friendly = 0, enemy = 0;
 
-    for (std::map<coord_def, aff_type>::const_iterator p = hitfunc.zapped.begin();
+    for (map<coord_def, aff_type>::const_iterator p = hitfunc.zapped.begin();
          p != hitfunc.zapped.end(); ++p)
     {
         if (p->second <= 0)
@@ -1193,9 +1198,8 @@ static bool _handle_rod(monster *mons, bolt &beem)
         if (mons->props.exists("thunderbolt_last")
             && mons->props["thunderbolt_last"].get_int() + 1 == you.num_turns)
         {
-            int oomph = std::max(1, std::min(5, rod.plus / ROD_CHARGE_MULT));
-            mons->props["thunderbolt_mana"].get_int() = oomph;
-            rate = oomph * ROD_CHARGE_MULT;
+            rate = min(5 * ROD_CHARGE_MULT, (int)rod.plus);
+            mons->props["thunderbolt_mana"].get_int() = rate;
         }
         break;
 
@@ -1215,7 +1219,7 @@ static bool _handle_rod(monster *mons, bolt &beem)
     bool zap = false;
 
     // set up the beam
-    const int power = std::max(_generate_rod_power(mons), 1);
+    const int power = max(_generate_rod_power(mons), 1);
 
     dprf("using rod with power %d", power);
 
@@ -1592,7 +1596,7 @@ static void _monster_add_energy(monster* mons)
     {
         // Randomise to make counting off monster moves harder:
         const int energy_gained =
-            std::max(1, div_rand_round(mons->speed * you.time_taken, 10));
+            max(1, div_rand_round(mons->speed * you.time_taken, 10));
         mons->speed_increment += energy_gained;
     }
 }
@@ -1621,7 +1625,7 @@ static void _confused_move_dir(monster *mons)
                 // Players without a spoiler sheet have no way to know which
                 // monsters are I_HIGH, and this behaviour is obscure.
                 // Thus, give a message.
-                const std::string where = make_stringf("%s@%d,%d",
+                const string where = make_stringf("%s@%d,%d",
                     level_id::current().describe().c_str(),
                     mons->pos().x, mons->pos().y);
                 if (!mons->props.exists("no_conf_move")
@@ -1643,8 +1647,7 @@ static void _confused_move_dir(monster *mons)
 
 void handle_monster_move(monster* mons)
 {
-    mons->hit_points = std::min(mons->max_hit_points,
-                                mons->hit_points);
+    mons->hit_points = min(mons->max_hit_points, mons->hit_points);
 
     // This seems to need to go here to actually get monsters to slow down.
     // XXX: Replace with a new ENCH_LIQUEFIED_GROUND or something.
@@ -1733,8 +1736,8 @@ void handle_monster_move(monster* mons)
         return;
 
     int old_energy      = INT_MAX;
-    int non_move_energy = std::min(entry->energy_usage.move,
-                                   entry->energy_usage.swim);
+    int non_move_energy = min(entry->energy_usage.move,
+                              entry->energy_usage.swim);
 
 #ifdef DEBUG_MONS_SCAN
     bool monster_was_floating = mgrd(mons->pos()) != mons->mindex();
@@ -1806,17 +1809,9 @@ void handle_monster_move(monster* mons)
         }
         old_energy = mons->speed_increment;
 
-        if (mons_is_projectile(mons->type))
+        if (mons_is_projectile(mons->type) || mons_is_boulder(mons))
         {
             if (iood_act(*mons))
-                return;
-            mons->lose_energy(EUT_MOVE);
-            continue;
-        }
-
-        if (mons_is_boulder(mons))
-        {
-            if (boulder_act(*mons))
                 return;
             mons->lose_energy(EUT_MOVE);
             continue;
@@ -1902,7 +1897,7 @@ void handle_monster_move(monster* mons)
             // Same for friendlies if friendly_pickup is set to "none".
             if ((!mons->neutral() && !mons->has_ench(ENCH_CHARM)
                  || (you.religion == GOD_JIYVA && mons_is_slime(mons)))
-                && !mons->is_summoned()
+                && !mons->is_summoned() && !mons->is_perm_summoned()
                 && (!mons->friendly()
                     || you.friendly_pickup != FRIENDLY_PICKUP_NONE))
             {
@@ -2014,7 +2009,9 @@ void handle_monster_move(monster* mons)
             if (friendly_or_near
                 || mons->type == MONS_TEST_SPAWNER
                 // Slime creatures can split when offscreen.
-                || mons->type == MONS_SLIME_CREATURE)
+                || mons->type == MONS_SLIME_CREATURE
+                // Let monsters who have Dig use it off-screen.
+                || mons->has_spell(SPELL_DIG))
             {
                 // [ds] Special abilities shouldn't overwhelm
                 // spellcasting in monsters that have both.  This aims
@@ -2242,7 +2239,7 @@ static bool _jelly_divide(monster* parent)
     if (!mons_class_flag(parent->type, M_SPLITS))
         return false;
 
-    const int reqd = std::max(parent->hit_dice * 8, 50);
+    const int reqd = max(parent->hit_dice * 8, 50);
     if (parent->hit_points < reqd)
         return false;
 
@@ -2252,9 +2249,11 @@ static bool _jelly_divide(monster* parent)
 
     // First, find a suitable spot for the child {dlb}:
     for (adjacent_iterator ai(parent->pos()); ai; ++ai)
-        if (actor_at(*ai) == NULL && parent->can_pass_through(*ai))
-            if (one_chance_in(++num_spots))
-                child_spot = *ai;
+        if (actor_at(*ai) == NULL && parent->can_pass_through(*ai)
+            && one_chance_in(++num_spots))
+        {
+            child_spot = *ai;
+        }
 
     if (num_spots == 0)
         return false;
@@ -2284,9 +2283,11 @@ static bool _jelly_divide(monster* parent)
 
     mgrd(child->pos()) = child->mindex();
 
-    if (!simple_monster_message(parent, " splits in two!"))
-        if (player_can_hear(parent->pos()) || player_can_hear(child->pos()))
-            mpr("You hear a squelching noise.", MSGCH_SOUND);
+    if (!simple_monster_message(parent, " splits in two!")
+        && (player_can_hear(parent->pos()) || player_can_hear(child->pos())))
+    {
+        mpr("You hear a squelching noise.", MSGCH_SOUND);
+    }
 
     if (crawl_state.game_is_arena())
         arena_placed_monster(child);
@@ -2345,7 +2346,7 @@ static bool _monster_eat_item(monster* mons, bool nearby)
 
         if (si->base_type != OBJ_GOLD)
         {
-            quant = std::min(quant, max_eat - eaten);
+            quant = min(quant, max_eat - eaten);
 
             hps_changed += (quant * item_mass(*si))
                            / (crawl_state.game_is_zotdef() ? 30 : 20) + quant;
@@ -2390,15 +2391,17 @@ static bool _monster_eat_item(monster* mons, bool nearby)
             item_was_destroyed(*si, mons->mindex());
 
         if (is_blood_potion(*si))
+        {
             for (int i = 0; i < quant; ++i)
                 remove_oldest_blood_potion(*si);
+        }
         dec_mitm_item_quantity(si.link(), quant);
     }
 
     if (eaten > 0)
     {
-        hps_changed = std::max(hps_changed, 1);
-        hps_changed = std::min(hps_changed, 50);
+        hps_changed = max(hps_changed, 1);
+        hps_changed = min(hps_changed, 50);
 
         if (death_ooze_ate_good)
             mons->hurt(NULL, hps_changed, BEAM_NONE, false);
@@ -2408,10 +2411,9 @@ static bool _monster_eat_item(monster* mons, bool nearby)
             // because that function doesn't work quite this way. - bwr
             const int base_max = mons_avg_hp(mons->type);
             mons->hit_points += hps_changed;
-            mons->hit_points = std::min(MAX_MONSTER_HP,
-                               std::min(base_max * 2, mons->hit_points));
-            mons->max_hit_points = std::max(mons->hit_points,
-                                            mons->max_hit_points);
+            mons->hit_points = min(MAX_MONSTER_HP,
+                                   min(base_max * 2, mons->hit_points));
+            mons->max_hit_points = max(mons->hit_points, mons->max_hit_points);
         }
 
         if (death_ooze_ate_corpse)
@@ -2439,10 +2441,9 @@ static bool _monster_eat_single_corpse(monster* mons, item_def& item,
     {
         const int base_max = mons_avg_hp(mons->type);
         mons->hit_points += 1 + random2(mons_weight(mt)) / 100;
-        mons->hit_points = std::min(MAX_MONSTER_HP,
-                           std::min(base_max * 2, mons->hit_points));
-        mons->max_hit_points = std::max(mons->hit_points,
-                                        mons->max_hit_points);
+        mons->hit_points = min(MAX_MONSTER_HP,
+                               min(base_max * 2, mons->hit_points));
+        mons->max_hit_points = max(mons->hit_points, mons->max_hit_points);
     }
 
     if (nearby)
@@ -2474,52 +2475,6 @@ static bool _monster_eat_corpse(monster* mons, bool do_heal, bool nearby)
     }
 
     return (eaten > 0);
-}
-
-// XXX: This function assumes that only killer bee larvae eat honey.
-static bool _monster_eat_honey(monster* mons, bool nearby)
-{
-    if (!mons_eats_honey(mons))
-        return false;
-
-    if (mons_is_fleeing(mons))
-        return false;
-
-    for (stack_iterator si(mons->pos()); si; ++si)
-    {
-        const bool is_honey = (si->base_type == OBJ_FOOD
-                                  && (si->sub_type == FOOD_HONEYCOMB
-                                      || si->sub_type == FOOD_ROYAL_JELLY));
-
-        if (!is_honey)
-            continue;
-
-        if (!nearby)
-            mpr("You hear a distant popping sound.", MSGCH_SOUND);
-        else
-        {
-            mprf("%s devours %s.", mons->name(DESC_THE).c_str(),
-                 quant_name(*si, 1, DESC_THE).c_str());
-        }
-
-        dec_mitm_item_quantity(si.link(), 1);
-
-        std::string old_name_the = mons->name(DESC_THE);
-
-        mons->upgrade_type(MONS_KILLER_BEE, true, true);
-
-        if (!nearby)
-            mpr("You hear a distant bursting sound.", MSGCH_SOUND);
-        else
-        {
-            mprf("%s metamorphoses into %s!",
-                 old_name_the.c_str(), mons->name(DESC_A).c_str());
-        }
-
-        return true;
-    }
-
-    return false;
 }
 
 static bool _monster_eat_food(monster* mons, bool nearby)
@@ -2613,11 +2568,6 @@ static bool _handle_pickup(monster* mons)
             {
                 return false;
             }
-        }
-        else if (mons_eats_honey(mons))
-        {
-            if (_monster_eat_honey(mons, nearby))
-                return false;
         }
         else if (mons_eats_food(mons))
         {
@@ -2771,10 +2721,10 @@ static void _mons_open_door(monster* mons, const coord_def &pos)
 
     bool was_seen   = false;
 
-    std::set<coord_def> all_door = connected_doors(pos);
+    set<coord_def> all_door = connected_doors(pos);
     get_door_description(all_door.size(), &adj, &noun);
 
-    for (std::set<coord_def>::iterator i = all_door.begin();
+    for (set<coord_def>::iterator i = all_door.begin();
          i != all_door.end(); ++i)
     {
         const coord_def& dc = *i;
@@ -2790,7 +2740,7 @@ static void _mons_open_door(monster* mons, const coord_def &pos)
     {
         viewwindow();
 
-        std::string open_str = "opens the ";
+        string open_str = "opens the ";
         open_str += adj;
         open_str += noun;
         open_str += ".";
@@ -3057,6 +3007,9 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
             return false; // blocks square
         }
 
+        if (!summon_can_attack(mons, targ))
+            return false;
+
         // Cut down plants only when no alternative, or they're
         // our target.
         if (mons_is_firewood(targmonster) && mons->target != targ)
@@ -3105,7 +3058,7 @@ static void _find_good_alternate_move(monster* mons,
 {
     const coord_def target = mons->firing_pos.zero() ? mons->target
                                                      : mons->firing_pos;
-    const int current_distance = distance(mons->pos(), target);
+    const int current_distance = distance2(mons->pos(), target);
 
     int dir = _compass_idx(mmov);
 
@@ -3128,7 +3081,7 @@ static void _find_good_alternate_move(monster* mons,
         {
             const int newdir = (dir + 8 + mod) % 8;
             if (good_move[mon_compass[newdir].x+1][mon_compass[newdir].y+1])
-                dist[i] = distance(mons->pos()+mon_compass[newdir], target);
+                dist[i] = distance2(mons->pos()+mon_compass[newdir], target);
             else
                 dist[i] = mons_is_retreating(mons) ? (-FAR_AWAY) : FAR_AWAY;
         }
@@ -3180,7 +3133,7 @@ static void _jelly_grows(monster* mons)
 
     mons->hit_points += 5;
     // possible with ridiculous farming on a full level
-    mons->hit_points = std::min(mons->hit_points, MAX_MONSTER_HP);
+    mons->hit_points = min(mons->hit_points, MAX_MONSTER_HP);
 
     // note here, that this makes jellies "grow" {dlb}:
     if (mons->hit_points > mons->max_hit_points)
@@ -3289,7 +3242,7 @@ static bool _do_move_monster(monster* mons, const coord_def& delta)
         {
             simple_monster_message(mons, " struggles to escape constriction.");
             _swim_or_move_energy(mons);
-            return(true);
+            return true;
         }
     }
 
@@ -3470,8 +3423,8 @@ static bool _monster_move(monster* mons)
     // of flopping into an adjacent water grid.
     if (mons->has_ench(ENCH_AQUATIC_LAND))
     {
-        std::vector<coord_def> adj_water;
-        std::vector<coord_def> adj_move;
+        vector<coord_def> adj_water;
+        vector<coord_def> adj_move;
         for (adjacent_iterator ai(mons->pos()); ai; ++ai)
         {
             if (!cell_is_solid(*ai))
@@ -3487,7 +3440,7 @@ static bool _monster_move(monster* mons)
             return false;
         }
 
-        std::vector<coord_def> moves = adj_water;
+        vector<coord_def> moves = adj_water;
         if (adj_water.empty() || coinflip())
             moves = adj_move;
 

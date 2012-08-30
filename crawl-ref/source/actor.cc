@@ -394,7 +394,7 @@ void actor::clear_far_constrictions()
     if (!constricting)
         return;
 
-    std::vector<mid_t> need_cleared;
+    vector<mid_t> need_cleared;
     constricting_t::iterator i;
     for (i = constricting->begin(); i != constricting->end(); ++i)
     {
@@ -403,7 +403,7 @@ void actor::clear_far_constrictions()
             need_cleared.push_back(i->first);
     }
 
-    std::vector<mid_t>::iterator j;
+    vector<mid_t>::iterator j;
     for (j = need_cleared.begin(); j != need_cleared.end(); ++j)
         stop_constricting(*j, false, false);
 }
@@ -422,12 +422,12 @@ void actor::start_constricting(actor &whom, int dur)
 
 int actor::num_constricting() const
 {
-    return (constricting ? constricting->size() : 0);
+    return constricting ? constricting->size() : 0;
 }
 
 bool actor::is_constricting() const
 {
-    return (constricting && !constricting->empty());
+    return constricting && !constricting->empty();
 }
 
 bool actor::is_constricted() const
@@ -504,7 +504,7 @@ void actor::handle_constriction()
         damage = defender->hurt(this, damage, BEAM_MISSILE, false);
         DIAG_ONLY(const int infdam = damage);
 
-        std::string exclams;
+        string exclams;
         if (damage <= 0 && is_player()
             && you.can_see(defender))
         {

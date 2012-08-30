@@ -28,7 +28,7 @@ void seed_rng(uint32_t* seed_key, size_t num_keys)
 {
     seed_asg(seed_key, num_keys);
 
-    // for std::random_shuffle()
+    // for random_shuffle()
     uint32_t oneseed = 0;
     for (size_t i = 0; i < num_keys; ++i)
         oneseed += seed_key[i];
@@ -75,7 +75,7 @@ void pop_rng_state()
 
 //-----------------------------------------------------------------------------
 // MurmurHash2, by Austin Appleby
-uint32_t hash(const void *data, int len)
+uint32_t hash32(const void *data, int len)
 {
     // 'm' and 'r' are mixing constants generated offline.
     // They're not really 'magic', they just happen to work well.

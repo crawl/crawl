@@ -2,6 +2,7 @@
 
 #ifdef USE_TILE_LOCAL
 
+#include "abl-show.h"
 #include "artefact.h"
 #include "cio.h"
 #include "coord.h"
@@ -20,6 +21,7 @@
 #include "tiledef-main.h"
 #include "tilefont.h"
 #include "tilereg.h"
+#include "tilereg-abl.h"
 #include "tilereg-cmd.h"
 #include "tilereg-crt.h"
 #include "tilereg-dgn.h"
@@ -126,6 +128,7 @@ void TilesFramework::shutdown()
     delete m_region_inv;
     delete m_region_spl;
     delete m_region_mem;
+    delete m_region_abl;
     delete m_region_mon;
     delete m_region_crt;
     delete m_region_menu;
@@ -138,6 +141,7 @@ void TilesFramework::shutdown()
     m_region_inv   = NULL;
     m_region_spl   = NULL;
     m_region_mem   = NULL;
+    m_region_abl   = NULL;
     m_region_mon   = NULL;
     m_region_crt   = NULL;
     m_region_menu  = NULL;
@@ -187,7 +191,7 @@ void TilesFramework::draw_title()
  * open while the title screen shows, the .at(0) will need
  * to be changed and saved on a variable somewhere instead
  */
-void TilesFramework::update_title_msg(std::string message)
+void TilesFramework::update_title_msg(string message)
 {
     ASSERT(m_layers[LAYER_TILE_CONTROL].m_regions.size() == 1);
     ASSERT(m_active_layer == LAYER_TILE_CONTROL);
@@ -281,7 +285,7 @@ bool TilesFramework::initialise()
     "dat/tiles/stone_soup_icon-32x32.png";
 #endif
 
-    std::string title = CRAWL " " + Version::Long();
+    string title = CRAWL " " + Version::Long();
 
     // Do our initialization here.
 
@@ -337,6 +341,7 @@ bool TilesFramework::initialise()
     m_region_inv  = new InventoryRegion(m_init);
     m_region_spl  = new SpellRegion(m_init);
     m_region_mem  = new MemoriseRegion(m_init);
+    m_region_abl  = new AbilityRegion(m_init);
     m_region_mon  = new MonsterRegion(m_init);
     m_region_skl  = new SkillRegion(m_init);
     m_region_cmd  = new CommandRegion(m_init);
@@ -344,6 +349,7 @@ bool TilesFramework::initialise()
     m_region_tab->set_tab_region(TAB_ITEM, m_region_inv, TILEG_TAB_ITEM);
     m_region_tab->set_tab_region(TAB_SPELL, m_region_spl, TILEG_TAB_SPELL);
     m_region_tab->set_tab_region(TAB_MEMORISE, m_region_mem, TILEG_TAB_MEMORISE);
+    m_region_tab->set_tab_region(TAB_ABILITY, m_region_abl, TILEG_TAB_ABILITY);
     m_region_tab->set_tab_region(TAB_MONSTER, m_region_mon, TILEG_TAB_MONSTER);
     m_region_tab->set_tab_region(TAB_SKILL, m_region_skl, TILEG_TAB_SKILL);
     m_region_tab->set_tab_region(TAB_COMMAND, m_region_cmd, TILEG_TAB_COMMAND);
@@ -521,7 +527,7 @@ int TilesFramework::getch_ck()
     wm->set_timer(res, &_timer_callback);
 
     m_tooltip.clear();
-    std::string prev_alt = m_region_msg->alt_text();
+    string prev_alt = m_region_msg->alt_text();
     m_region_msg->alt_text().clear();
 
     if (need_redraw())
@@ -797,14 +803,14 @@ void TilesFramework::do_layout()
 
     // Then, the optimal situation without the overlay - we can fit both
     // Options.view_max_height and at least Options.msg_min_height in the space.
-    if (std::max(Options.view_max_height, ENV_SHOW_DIAMETER)
+    if (max(Options.view_max_height, ENV_SHOW_DIAMETER)
         * m_region_tile->dy + Options.msg_min_height
         * m_region_msg->dy
         <= m_windowsz.y && !message_overlay)
     {
-        message_y_divider = std::max(Options.view_max_height, ENV_SHOW_DIAMETER)
+        message_y_divider = max(Options.view_max_height, ENV_SHOW_DIAMETER)
                             * m_region_tile->dy;
-        message_y_divider = std::max(message_y_divider, m_windowsz.y -
+        message_y_divider = max(message_y_divider, m_windowsz.y -
                                     Options.msg_max_height * m_region_msg->dy);
     }
     else
@@ -885,7 +891,7 @@ void TilesFramework::autosize_minimap()
     const int vert = (m_statcol_bottom - (m_region_map->sy ? m_region_map->sy
                                                            : m_statcol_top)
                      - map_margin * 2) / GYM;
-    m_region_map->dx = m_region_map->dy = std::min(horiz, vert);
+    m_region_map->dx = m_region_map->dy = min(horiz, vert);
 }
 
 void TilesFramework::place_minimap()
@@ -931,6 +937,17 @@ void TilesFramework::place_tab(int idx)
         }
         max_ln = calc_tab_lines(you.spell_no);
         break;
+    case TAB_ABILITY:
+    {
+        unsigned int talents = your_talents(false).size();
+        if (talents == 0)
+        {
+            m_region_tab->enable_tab(TAB_ABILITY);
+            return;
+        }
+        max_ln = calc_tab_lines(talents);
+        break;
+    }
     case TAB_MONSTER:
         max_ln = max_mon_height;
         break;
@@ -942,8 +959,8 @@ void TilesFramework::place_tab(int idx)
         break;
     }
 
-    int lines = std::min(max_ln, (m_statcol_bottom - m_statcol_top - m_tab_margin)
-                                 / m_region_tab->dy);
+    int lines = min(max_ln, (m_statcol_bottom - m_statcol_top - m_tab_margin)
+                            / m_region_tab->dy);
     if (lines >= min_ln)
     {
         TabbedRegion* region_tab = new TabbedRegion(m_init);
@@ -964,8 +981,8 @@ void TilesFramework::place_tab(int idx)
 
 void TilesFramework::resize_inventory()
 {
-    int lines = std::min(max_inv_height - min_inv_height,
-                        (m_statcol_bottom - m_statcol_top) / m_region_tab->dy);
+    int lines = min(max_inv_height - min_inv_height,
+                    (m_statcol_bottom - m_statcol_top) / m_region_tab->dy);
     if (lines == 0)
         return;
 
@@ -1027,7 +1044,7 @@ void TilesFramework::layout_statcol()
 
     for (int i = 0, size = Options.tile_layout_priority.size(); i < size; ++i)
     {
-        std::string str = Options.tile_layout_priority[i];
+        string str = Options.tile_layout_priority[i];
         if (str == "inventory")
             resize_inventory();
         else if (str == "minimap" || str == "map")
@@ -1214,7 +1231,7 @@ void TilesFramework::clear_text_tags(text_tag_type type)
     m_region_tile->clear_text_tags(type);
 }
 
-void TilesFramework::add_text_tag(text_tag_type type, const std::string &tag,
+void TilesFramework::add_text_tag(text_tag_type type, const string &tag,
                                   const coord_def &gc)
 {
     m_region_tile->add_text_tag(type, tag, gc);

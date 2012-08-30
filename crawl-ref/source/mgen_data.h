@@ -105,11 +105,11 @@ struct mgen_data
     // These flags are MF_XXX, rather than MG_XXX flags.
     uint64_t        extra_flags;
 
-    std::string     mname;
+    string          mname;
 
     // This is used to account for non-actor summoners.  Blasted by an Ice
     // Fiend ... summoned by the effects of Hell.
-    std::string     non_actor_summoner;
+    string          non_actor_summoner;
 
     // This simply stores the initial shape-shifter type.
     monster_type    initial_shifter;
@@ -134,8 +134,8 @@ struct mgen_data
               level_id _place = level_id::current(),
               int mhd = 0, int mhp = 0,
               uint64_t extflags = 0,
-              std::string monname = "",
-              std::string nas = "",
+              string monname = "",
+              string nas = "",
               monster_type is = RANDOM_MONSTER)
 
         : cls(mt), base_type(base), behaviour(beh), summoner(sner),
@@ -171,7 +171,7 @@ struct mgen_data
     }
 
     static mgen_data hostile_at(monster_type mt,
-                                std::string nsummoner,
+                                string nsummoner,
                                 bool alert = false,
                                 int abj = 0,
                                 int st = 0,

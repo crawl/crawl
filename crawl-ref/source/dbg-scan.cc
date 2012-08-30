@@ -31,7 +31,7 @@ static void _dump_item(const char *name, int num, const item_def &item)
          num, item.base_type, item.sub_type,
          item.plus, item.plus2, item.special);
 
-    mprf("    quant: %d; colour: %d; ident: 0x%08"PRIx32"; ident_type: %d",
+    mprf("    quant: %d; colour: %d; ident: 0x%08" PRIx32"; ident_type: %d",
          item.quantity, (int)item.colour, item.flags,
          get_ident_type(item));
 
@@ -168,15 +168,15 @@ void debug_item_scan(void)
         //
         //   -- eggplant is an illegal throwing weapon
         //
-        //   -- bola is an illegal fixed artefact
-        //
         //   -- items described as buggy (typically adjectives out of range)
         //      (note: covers buggy, bugginess, buggily, whatever else)
         //
+        // Theoretically some of these could match random names.
+        //
         if (strstr(name, "questionable") != NULL
             || strstr(name, "eggplant") != NULL
-            || strstr(name, "bola") != NULL
-            || strstr(name, "bugg") != NULL)
+            || strstr(name, "buggy") != NULL
+            || strstr(name, "buggi") != NULL)
         {
             mpr("Bad item:", MSGCH_ERROR);
             _dump_item(name, i, mitm[i]);
@@ -216,8 +216,7 @@ void debug_item_scan(void)
         if (mons.type == MONS_NO_MONSTER)
             continue;
 
-        if (mons.name(DESC_PLAIN, true).find("questionable") !=
-            std::string::npos)
+        if (mons.name(DESC_PLAIN, true).find("questionable") != string::npos)
         {
             mprf(MSGCH_ERROR, "Program bug detected!");
             mprf(MSGCH_ERROR,
@@ -249,9 +248,9 @@ static bool _inside_vault(const vault_placement& place, const coord_def &pos)
             && delta.x < place.size.x && delta.y < place.size.y);
 }
 
-static std::vector<std::string> _in_vaults(const coord_def &pos)
+static vector<string> _in_vaults(const coord_def &pos)
 {
-    std::vector<std::string> out;
+    vector<string> out;
 
     for (unsigned int i = 0; i < env.level_vaults.size(); ++i)
     {
@@ -272,8 +271,8 @@ static std::vector<std::string> _in_vaults(const coord_def &pos)
 
 void debug_mons_scan()
 {
-    std::vector<coord_def> bogus_pos;
-    std::vector<int>       bogus_idx;
+    vector<coord_def> bogus_pos;
+    vector<int>       bogus_idx;
 
     bool warned = false;
     for (int y = 0; y < GYM; ++y)
@@ -321,7 +320,7 @@ void debug_mons_scan()
     ASSERT(you.type == MONS_PLAYER);
     ASSERT(you.mid == MID_PLAYER);
 
-    std::vector<int> floating_mons;
+    vector<int> floating_mons;
     bool             is_floating[MAX_MONSTERS];
 
     for (int i = 0; i < MAX_MONSTERS; ++i)
@@ -362,7 +361,7 @@ void debug_mons_scan()
                 if (m2->pos() != m->pos())
                     continue;
 
-                std::string full = m2->full_name(DESC_PLAIN, true);
+                string full = m2->full_name(DESC_PLAIN, true);
                 if (m2->alive())
                 {
                     mprf(MSGCH_WARN, "Also at (%d, %d): %s, midx = %d",
@@ -451,7 +450,7 @@ void debug_mons_scan()
         ASSERT(monster_by_mid(m->mid) == m);
     } // for (int i = 0; i < MAX_MONSTERS; ++i)
 
-    for (std::map<mid_t, unsigned short>::const_iterator mc = env.mid_cache.begin();
+    for (map<mid_t, unsigned short>::const_iterator mc = env.mid_cache.begin();
          mc != env.mid_cache.end(); ++mc)
     {
         unsigned short idx = mc->second;
@@ -487,12 +486,11 @@ void debug_mons_scan()
     {
         const int       idx = floating_mons[i];
         const monster* mon = &menv[idx];
-        std::vector<std::string> vaults = _in_vaults(mon->pos());
+        vector<string> vaults = _in_vaults(mon->pos());
 
-        std::string str =
-            make_stringf("Floating monster %s (%d, %d)",
-                         mon->name(DESC_PLAIN, true).c_str(),
-                         mon->pos().x, mon->pos().y);
+        string str = make_stringf("Floating monster %s (%d, %d)",
+                                  mon->name(DESC_PLAIN, true).c_str(),
+                                  mon->pos().x, mon->pos().y);
 
         if (vaults.empty())
             mprf(MSGCH_WARN, "%s not in any vaults.", str.c_str());
@@ -511,11 +509,10 @@ void debug_mons_scan()
         const int       idx = bogus_idx[i];
         const monster* mon = &menv[idx];
 
-        std::string str =
-            make_stringf("Bogus mgrd (%d, %d) pointing to %s",
-                         pos.x, pos.y, mon->name(DESC_PLAIN, true).c_str());
+        string str = make_stringf("Bogus mgrd (%d, %d) pointing to %s", pos.x,
+                                  pos.y, mon->name(DESC_PLAIN, true).c_str());
 
-        std::vector<std::string> vaults = _in_vaults(pos);
+        vector<string> vaults = _in_vaults(pos);
 
         if (vaults.empty())
             mprf(MSGCH_WARN, "%s not in any vaults.", str.c_str());

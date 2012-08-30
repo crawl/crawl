@@ -119,9 +119,9 @@ static bool _coords(lua_State *ls, map_lines &lines,
     y2 = _table_int(ls, idx, "y2", lines.height() - 1);
 
     if (x2 < x1)
-        std::swap(x1, x2);
+        swap(x1, x2);
     if (y2 < y1)
-        std::swap(y1, y2);
+        swap(y1, y2);
 
     return (x1 + border <= x2 - border && y1 + border <= y2 - border);
 }
@@ -166,9 +166,9 @@ static void _border_area(map_lines &lines, int x1, int y1, int x2, int y2, char 
 }
 
 // Specifically only deals with horizontal lines.
-static std::vector<coord_def> _box_side(int x1, int y1, int x2, int y2, int side)
+static vector<coord_def> _box_side(int x1, int y1, int x2, int y2, int side)
 {
-    std::vector<coord_def> line;
+    vector<coord_def> line;
 
     int start_x, start_y, stop_x, stop_y, x, y;
 
@@ -184,11 +184,15 @@ static std::vector<coord_def> _box_side(int x1, int y1, int x2, int y2, int side
     x = start_x; y = start_y;
 
     if (start_x == stop_x)
+    {
         for (y = start_y+1; y < stop_y; y++)
             line.push_back(coord_def(x, y));
+    }
     else
+    {
         for (x = start_x+1; x < stop_x; x++)
             line.push_back(coord_def(x, y));
+    }
 
     return line;
 }
@@ -530,7 +534,7 @@ LUAFN(dgn_make_diamond)
 
     for (int ry = -radius; ry <= radius; ++ry)
         for (int rx = -radius; rx <= radius; ++rx)
-            if (std::abs(rx) + std::abs(ry) <= radius)
+            if (abs(rx) + abs(ry) <= radius)
                 lines(x + rx, y + ry) = fill;
 
     return 0;
@@ -550,7 +554,7 @@ LUAFN(dgn_make_rounded_square)
 
     for (int ry = -radius; ry <= radius; ++ry)
         for (int rx = -radius; rx <= radius; ++rx)
-            if (std::abs(rx) != radius || std::abs(ry) != radius)
+            if (abs(rx) != radius || abs(ry) != radius)
                 lines(x + rx, y + ry) = fill;
 
     return 0;
@@ -613,7 +617,7 @@ LUAFN(dgn_make_box_doors)
         if (sides[current_side] >= 2)
             current_side = random2(4);
 
-        std::vector<coord_def> points = _box_side(x1, y1, x2, y2, current_side);
+        vector<coord_def> points = _box_side(x1, y1, x2, y2, current_side);
 
         int total_points = int(points.size());
 
@@ -659,7 +663,7 @@ LUAFN(dgn_octa_room)
 {
     LINES(ls, 1, lines);
 
-    int default_oblique = std::min(lines.width(), lines.height()) / 2 - 1;
+    int default_oblique = min(lines.width(), lines.height()) / 2 - 1;
     TABLE_INT(ls, oblique, default_oblique);
     TABLE_CHAR(ls, outside, 'x');
     TABLE_CHAR(ls, inside, '.');
@@ -680,8 +684,8 @@ LUAFN(dgn_octa_room)
             continue;
 
         int ob = 0;
-        ob += std::max(oblique + tl.x - mc.x, 0);
-        ob += std::max(oblique + mc.x - br.x, 0);
+        ob += max(oblique + tl.x - mc.x, 0);
+        ob += max(oblique + mc.x - br.x, 0);
 
         bool is_inside = (mc.y >= tl.y + ob && mc.y <= br.y - ob);
         lines(mc) = is_inside ? inside : outside;
@@ -768,7 +772,7 @@ LUAFN(dgn_replace_random)
         return 0;
     }
 
-    std::vector<coord_def> loc;
+    vector<coord_def> loc;
     loc.reserve(count);
 
     for (int y = y1; y <= y2; ++y)
@@ -928,7 +932,7 @@ LUAFN(dgn_farthest_from)
     ASSERT(lines.height() <= GYM);
     FixedArray<bool, GXM, GYM> visited;
     visited.init(false);
-    std::vector<coord_def> queue;
+    vector<coord_def> queue;
     unsigned int dc_prev = 0, dc_next; // indices where dist changes to the next value
 
     for (int x = lines.width(); x >= 0; x--)

@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/env python
 import os, os.path, errno, sys
 
 import tornado.httpserver
@@ -158,7 +158,8 @@ def check_config():
             logging.warning("Crawl executable %s doesn't exist!", game_data["crawl_binary"])
             success = False
 
-        if not os.path.exists(game_data["client_path"]):
+        if ("client_path" in game_data and
+            not os.path.exists(game_data["client_path"])):
             logging.warning("Client data path %s doesn't exist!", game_data["client_path"])
             success = False
     return success
@@ -199,6 +200,9 @@ if __name__ == "__main__":
         status_file_timeout()
         purge_login_tokens_timeout()
         start_reading_milestones()
+
+    if watch_socket_dirs:
+        process_handler.watch_socket_dirs()
 
     logging.info("Webtiles server started! (PID: %s)" % os.getpid())
 

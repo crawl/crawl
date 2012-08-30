@@ -48,6 +48,7 @@ struct cloud_info
 #define MAP_ORB_HALOED      0x800000
 #define MAP_UMBRAED        0x1000000
 #define MAP_SUPPRESSED     0X2000000
+#define MAP_QUAD_HALOED    0X4000000
 
 /*
  * A map_cell stores what the player knows about a cell.
@@ -298,19 +299,19 @@ private:
 };
 
 void set_terrain_mapped(int x, int y);
-inline void set_terrain_mapped(const coord_def& c)
+static inline void set_terrain_mapped(const coord_def& c)
 {
     set_terrain_mapped(c.x,c.y);
 }
 
 void set_terrain_seen(int x, int y);
-inline void set_terrain_seen(const coord_def& c)
+static inline void set_terrain_seen(const coord_def& c)
 {
     set_terrain_seen(c.x, c.y);
 }
 
 void set_terrain_changed(int x, int y);
-inline void set_terrain_changed(const coord_def &c)
+static inline void set_terrain_changed(const coord_def &c)
 {
     set_terrain_changed(c.x, c.y);
 }

@@ -37,9 +37,9 @@ enum status_type
 struct status_info
 {
     int light_colour;
-    std::string light_text; // status light
-    std::string short_text; // @: line
-    std::string long_text;  // @ message
+    string light_text; // status light
+    string short_text; // @: line
+    string long_text;  // @ message
 };
 
 // status should be a duration or status_type

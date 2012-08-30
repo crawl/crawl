@@ -9,7 +9,7 @@
 
 # 1/3 chance to appear on D:21-27, and guaranteed on D:25.
 NAME: abyss_entry
-TAGS: extra allow_dup can_overwrite
+TAGS: extra allow_dup can_overwrite replace_portal
 DEPTH: D:21-27
 CHANCE: 100% (D:25), 3333
 : if you.where() == 'D:25' then
@@ -222,6 +222,47 @@ MAP
 d
 ENDMAP
 
+NAME:    hangedman_abyss_feature_spike
+TAGS:    abyss no_item_gen no_pool_fixup
+MONS:    fungus, plant, bush
+ITEM:    stone q:1, large rock q:1
+KFEAT:   ^ : known dart trap / known needle trap / known blade trap
+KFEAT:   A : stone_arch w:99 / abandoned_shop w:1
+KFEAT:   - = altar_lugonu
+KMASK:   wWl = no_monster_gen
+SHUFFLE: fghij / opqrs, fghijopqrs / JKLMNOPQRS
+SHUFFLE: fghij / fffff / fffff / fffff / fffff / fghgf / fgfgf / ffhii / ffhii
+SHUFFLE: opqrs / ooooo / ooooo / ooooo / ooooo / opqpo / opopo / ooqrr / ooqrr
+SHUFFLE: JKLMN / JJJJJ / JJJJJ / JJJJJ / JJJJJ / JKLKJ / JKJKJ / JJLMM / JJLMM
+SHUFFLE: OPQRS / OOOOO / OOOOO / OOOOO / OOOOO / OPQPO / OPOPO / OOQRR / OOQRR
+SUBST:   f = A, g = C, h = T, i = U, j = V
+SUBST:   o = t, p = G, q = w, r = W, s = l
+SUBST:   J = x, K = c, L = v, MN = m, O = 1, P = 2, Q = 3, RS = b
+SUBST:   - = -----A
+SHUFFLE: AACCTTUUVYYdeefghi^, tGGwWlI, xxccvvbbmm+123
+: dgn.delayed_decay(_G, 'f', 'human skeleton')
+: dgn.delayed_decay(_G, 'g', 'elf skeleton')
+: dgn.delayed_decay(_G, 'h', 'dwarf skeleton')
+: dgn.delayed_decay(_G, 'i', 'orc skeleton')
+MAP
+        .....
+        .LqL.
+        .QhQ.
+        .....
+          .
+     .          .
+    ....      ....
+    .pK.      .Mr.
+    .Pg.      .iR.
+    ....      ....
+          -
+ .                 .
+....             ....
+.oJ.             .Ns.
+.Of.             .jS.
+....             ....
+ENDMAP
+
 ###############################################################################
 # abyss rune vaults
 ###############################################################################
@@ -264,6 +305,7 @@ KMONS: K = kraken
 KMONS: T = tentacled monstrosity
 SUBST: T = Tw
 KFEAT: KT = w
+KFEAT: O = W
 SUBST: D : cW
 SUBST: . = w., w = WWWw, C = c., c = ccv
 MAP
@@ -573,7 +615,7 @@ KMONS:   34 = guardian serpent perm_ench:shapeshifter
 # fraction of characters finding the abyssal rune, remove or replace them.
 KITEM:   24d = scroll of curse weapon w:5 q:1 / \
          scroll of random uselessness q:1 / sultana q:1 w:5 / \
-         potion of water w:5 q:1 / club w:5 / staff w:5 / stone q:1 / \
+         club w:5 / staff w:5 / stone q:1 / \
          mundane dart q:1 / needle q:1 ego:sickness / mundane animal skin / \
          empty ebony casket w:5 / gold q:1
 KITEM:   13e = rod of striking w:2 / wand of slowing / wand of magic darts / \

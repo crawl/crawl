@@ -172,7 +172,7 @@ static void _los_cloud_changed(const coord_def& p, cloud_type t)
 static void _new_cloud(int cloud, cloud_type type, const coord_def& p,
                         int decay, kill_category whose, killer_type killer,
                         mid_t source, uint8_t spread_rate, int colour,
-                        std::string name, std::string tile, int excl_rad)
+                        string name, string tile, int excl_rad)
 {
     ASSERT(env.cloud[cloud].type == CLOUD_NONE);
     ASSERT(_killer_whose_match(whose, killer));
@@ -209,8 +209,8 @@ static void _place_new_cloud(cloud_type cltype, const coord_def& p, int decay,
                              kill_category whose, killer_type killer,
                              mid_t source,
                              int spread_rate = -1, int colour = -1,
-                             std::string name = "",
-                             std::string tile = "", int excl_rad = -1)
+                             string name = "",
+                             string tile = "", int excl_rad = -1)
 {
     if (env.cloud_no >= MAX_CLOUDS)
         return;
@@ -314,7 +314,7 @@ static void _cloud_interacts_with_terrain(const cloud_struct &cloud)
             if (in_bounds(p)
                 && feat_is_watery(grd(p))
                 && env.cgrid(p) == EMPTY_CLOUD
-                && one_chance_in(5))
+                && one_chance_in(10))
             {
                 _place_new_cloud(CLOUD_STEAM, p, cloud.decay / 2 + 1,
                                  cloud.whose, cloud.killer, cloud.source);
@@ -367,13 +367,19 @@ void manage_clouds()
         {
             int count = 0;
             for (adjacent_iterator ai(cloud.pos); ai; ++ai)
-                if (env.cgrid(*ai) != EMPTY_CLOUD)
-                    if (env.cloud[env.cgrid(*ai)].type == CLOUD_GLOOM)
+            {
+                if (env.cgrid(*ai) != EMPTY_CLOUD
+                    && env.cloud[env.cgrid(*ai)].type == CLOUD_GLOOM)
+                {
                         count++;
+                }
+            }
 
             if (!umbraed(cloud.pos) && haloed(cloud.pos)
                 && !silenced(cloud.pos))
+            {
                 count = 0;
+            }
 
             if (count < 4)
                 dissipate *= 50;
@@ -519,7 +525,7 @@ void swap_clouds(coord_def p1, coord_def p2)
 // exist at that point.
 void check_place_cloud(cloud_type cl_type, const coord_def& p, int lifetime,
                        const actor *agent, int spread_rate, int colour,
-                       std::string name, std::string tile, int excl_rad)
+                       string name, string tile, int excl_rad)
 {
     if (!in_bounds(p) || env.cgrid(p) != EMPTY_CLOUD)
         return;
@@ -533,8 +539,8 @@ void check_place_cloud(cloud_type cl_type, const coord_def& p, int lifetime,
 
 static int _steam_cloud_damage(int decay)
 {
-    decay = std::min(decay, 60);
-    decay = std::max(decay, 10);
+    decay = min(decay, 60);
+    decay = max(decay, 10);
 
     // Damage in range 3 - 16.
     return ((decay * 13 + 20) / 50);
@@ -569,7 +575,7 @@ static bool cloud_is_stronger(cloud_type ct, int cl)
 //   cloud under some circumstances.
 void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
                  const actor *agent, int _spread_rate, int colour,
-                 std::string name, std::string tile, int excl_rad)
+                 string name, string tile, int excl_rad)
 {
     if (is_sanctuary(ctarget) && !is_harmless_cloud(cl_type))
         return;
@@ -1042,7 +1048,7 @@ static int _cloud_damage_output(actor *actor,
     if (maximum_damage)
         return resist_adjusted_damage;
 
-    return std::max(0, resist_adjusted_damage - random2(actor->armour_class()));
+    return max(0, resist_adjusted_damage - random2(actor->armour_class()));
 }
 
 static int _actor_cloud_damage(actor *act,
@@ -1127,8 +1133,10 @@ int actor_apply_cloud(actor *act)
         actor *oppressor = find_agent(cloud.source, cloud.whose);
 
         if (player)
+        {
             ouch(final_damage, oppressor? oppressor->mindex() : NON_MONSTER,
                  KILLED_BY_CLOUD, cloud.cloud_name("", true).c_str());
+        }
         else
             mons->hurt(oppressor, final_damage, BEAM_MISSILE);
     }
@@ -1147,6 +1155,10 @@ static bool _cloud_is_harmful(actor *act, cloud_struct &cloud,
 
 bool is_damaging_cloud(cloud_type type, bool accept_temp_resistances)
 {
+    // A nasty hack; map_knowledge doesn't preserve whom the cloud belongs to.
+    if (type == CLOUD_TORNADO)
+        return !you.duration[DUR_TORNADO] && !you.duration[DUR_TORNADO_COOLDOWN];
+
     if (accept_temp_resistances)
     {
         cloud_struct cloud;
@@ -1212,10 +1224,10 @@ bool in_what_cloud(cloud_type type)
     return false;
 }
 
-std::string cloud_name_at_index(int cloudno)
+string cloud_name_at_index(int cloudno)
 {
     if (!env.cloud[cloudno].name.empty())
-        return (env.cloud[cloudno].name);
+        return env.cloud[cloudno].name;
     else
         return cloud_type_name(env.cloud[cloudno].type);
 }
@@ -1250,7 +1262,7 @@ static const char *_verbose_cloud_names[] =
     "sparse dust",
 };
 
-std::string cloud_type_name(cloud_type type, bool terse)
+string cloud_type_name(cloud_type type, bool terse)
 {
     COMPILE_CHECK(ARRAYSZ(_terse_cloud_names) == NUM_CLOUD_TYPES);
     COMPILE_CHECK(ARRAYSZ(_verbose_cloud_names) == NUM_CLOUD_TYPES);
@@ -1321,7 +1333,7 @@ void cloud_struct::set_killer(killer_type _killer)
     }
 }
 
-std::string cloud_struct::cloud_name(const std::string &defname,
+string cloud_struct::cloud_name(const string &defname,
                                      bool terse) const
 {
     return (!name.empty()    ? name :
@@ -1365,7 +1377,7 @@ int get_cloud_colour(int cloudno)
 {
     int which_colour = LIGHTGREY;
     if (env.cloud[cloudno].colour != -1)
-        return (env.cloud[cloudno].colour);
+        return env.cloud[cloudno].colour;
 
     switch (env.cloud[cloudno].type)
     {
@@ -1469,4 +1481,18 @@ coord_def get_cloud_originator(const coord_def& pos)
     if (!agent)
         return coord_def();
     return agent->pos();
+}
+
+void remove_tornado_clouds(mid_t whose)
+{
+    // Needed to clean up after the end of tornado cooldown, so we can again
+    // assume all "raging winds" clouds are harmful.  This is needed only
+    // because map_knowledge doesn't preserve the knowledge about whom the
+    // cloud belongs to.  If this changes, please remove this function.  For
+    // example, this approach doesn't work if we ever make Tornado a monster
+    // spell (excluding immobile and mindless casters).
+
+    for (int i = 0; i < MAX_CLOUDS; i++)
+        if (env.cloud[i].type == CLOUD_TORNADO && env.cloud[i].source == whose)
+            delete_cloud(i);
 }

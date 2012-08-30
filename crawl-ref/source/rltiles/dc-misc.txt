@@ -10,6 +10,57 @@ bolt06
 bolt07
 bolt08
 
+crystal_spear0 BOLT_CRYSTAL_SPEAR
+crystal_spear1
+crystal_spear2
+crystal_spear3
+crystal_spear4
+crystal_spear5
+crystal_spear6
+crystal_spear7
+
+iron_shot0 BOLT_IRON_SHOT
+iron_shot1
+iron_shot2
+iron_shot3
+iron_shot4
+iron_shot5
+iron_shot6
+iron_shot7
+
+stone_arrow0 BOLT_STONE_ARROW
+stone_arrow1
+stone_arrow2
+stone_arrow3
+stone_arrow4
+stone_arrow5
+stone_arrow6
+stone_arrow7
+
+flame0 BOLT_FLAME
+flame1
+flame2
+
+frost0 BOLT_FROST
+frost1
+
+magic_dart0 BOLT_MAGIC_DART
+magic_dart1
+magic_dart2
+
+sandblast0 BOLT_SANDBLAST
+sandblast1
+sandblast2
+
+sting0 BOLT_STING
+sting1
+sting2
+
+zap0 BOLT_ZAP
+zap1
+zap2
+zap3
+
 ###### Priority indicators (for Fedhas' growth)
 indicator_1 INDICATOR
 indicator_2

@@ -71,7 +71,7 @@
     some randomness.  I guess that's a bad idea after all...
 */
 
-typedef std::deque<coord_def> store_type;
+typedef deque<coord_def> store_type;
 
 static coord_def _rndpull(store_type& store, int top)
 {
@@ -79,7 +79,7 @@ static coord_def _rndpull(store_type& store, int top)
         return coord_def();
 
     ASSERT(top > 0);
-    top = std::min<int>(top, store.size());
+    top = min<int>(top, store.size());
     ASSERT(top > 0);
 
     // TODO: that ³√size thingy?

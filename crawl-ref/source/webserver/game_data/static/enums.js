@@ -122,11 +122,12 @@ define(function () {
     fg_flags.flags.NET          = 0x00400000;
     fg_flags.flags.POISON       = 0x00800000;
     fg_flags.flags.ANIM_WEP     = 0x01000000;
-    fg_flags.flags.UNUSED       = 0x02000000;
+    fg_flags.flags.GLOWING      = 0x02000000;
     fg_flags.flags.STICKY_FLAME = 0x04000000;
     fg_flags.flags.BERSERK      = 0x08000000;
     fg_flags.flags.INNER_FLAME  = 0x10000000;
     fg_flags.flags.CONSTRICTED  = 0x20000000;
+    fg_flags.flags.SLOWED       = [0, 0x80];
 
     // MDAM has 5 possibilities, so uses 3 bits.
     fg_flags.exclusive_flags.push({

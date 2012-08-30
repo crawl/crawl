@@ -87,7 +87,7 @@ static unsigned int convert_to_curses_attr(int chattr)
 
 static inline short macro_colour(short col)
 {
-    return (Options.colour[ col ]);
+    return Options.colour[ col ];
 }
 
 // Translate DOS colors to curses.
@@ -587,7 +587,7 @@ void enable_smart_cursor(bool dummy)
 {
 }
 
-inline unsigned get_brand(int col)
+static inline unsigned get_brand(int col)
 {
     return (col & COLFLAG_FRIENDLY_MONSTER) ? Options.friend_brand :
            (col & COLFLAG_NEUTRAL_MONSTER)  ? Options.neutral_brand :

@@ -70,7 +70,7 @@
 
 crawl_view_geometry crawl_view;
 
-bool handle_seen_interrupt(monster* mons, std::vector<std::string>* msgs_buf)
+bool handle_seen_interrupt(monster* mons, vector<string>* msgs_buf)
 {
     activity_interrupt_data aid(mons);
     if (mons->seen_context)
@@ -131,6 +131,11 @@ void seen_monsters_react()
            )
         {
             behaviour_event(*mi, ME_ALERT, &you, you.pos(), false);
+
+            // That might have caused a pacified monster to leave the level.
+            if (!(*mi)->alive())
+                continue;
+
             handle_monster_shouts(*mi);
         }
 
@@ -158,14 +163,14 @@ void seen_monsters_react()
     }
 }
 
-static std::string _desc_mons_type_map(std::map<monster_type, int> types)
+static string _desc_mons_type_map(map<monster_type, int> types)
 {
-    std::string message;
+    string message;
     unsigned int count = 1;
-    for (std::map<monster_type, int>::iterator it = types.begin();
+    for (map<monster_type, int>::iterator it = types.begin();
          it != types.end(); ++it)
     {
-        std::string name;
+        string name;
         description_level_type desc;
         if (it->second == 1)
             desc = DESC_A;
@@ -198,12 +203,12 @@ static std::string _desc_mons_type_map(std::map<monster_type, int> types)
  * @param types monster types and the number of monster for each type.
  * @param genera monster genera and the number of monster for each genus.
  */
-static void _genus_factoring(std::map<monster_type, int> &types,
-                             std::map<monster_type, int> &genera)
+static void _genus_factoring(map<monster_type, int> &types,
+                             map<monster_type, int> &genera)
 {
     monster_type genus = MONS_NO_MONSTER;
     int num = 0;
-    std::map<monster_type, int>::iterator it;
+    map<monster_type, int>::iterator it;
     // Find the most represented genus.
     for (it = genera.begin(); it != genera.end(); ++it)
         if (it->second > num)
@@ -245,8 +250,8 @@ void update_monsters_in_view()
 {
     const unsigned int max_msgs = 4;
     int num_hostile = 0;
-    std::vector<std::string> msgs;
-    std::vector<monster*> monsters;
+    vector<string> msgs;
+    vector<monster*> monsters;
 
     for (monster_iterator mi; mi; ++mi)
     {
@@ -284,8 +289,8 @@ void update_monsters_in_view()
     if (!msgs.empty())
     {
         unsigned int size = monsters.size();
-        std::map<monster_type, int> types;
-        std::map<monster_type, int> genera; // This is the plural for genus!
+        map<monster_type, int> types;
+        map<monster_type, int> genera; // This is the plural for genus!
         for (unsigned int i = 0; i < size; ++i)
         {
             monster_type type;
@@ -308,7 +313,7 @@ void update_monsters_in_view()
         }
 
         bool warning = false;
-        std::string warning_msg = "Ashenzari warns you:";
+        string warning_msg = "Ashenzari warns you:";
         warning_msg += " ";
         for (unsigned int i = 0; i < size; ++i)
         {
@@ -323,7 +328,7 @@ void update_monsters_in_view()
             else
                 warning = true;
 
-            std::string monname;
+            string monname;
             if (size == 1)
                 monname = mon->pronoun(PRONOUN_SUBJECTIVE);
             else if (mon->type == MONS_DANCING_WEAPON)
@@ -437,7 +442,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
         {
             int threshold = proportion;
 
-            const int dist = distance(you.pos(), *ri);
+            const int dist = distance2(you.pos(), *ri);
 
             if (dist > very_far)
                 threshold = threshold / 3;
@@ -516,11 +521,13 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
         else
             canned_msg(MSG_DISORIENTED);
 
-        std::vector<std::string> sensed;
+        vector<string> sensed;
 
         if (num_altars > 0)
+        {
             sensed.push_back(make_stringf("%d altar%s", num_altars,
                                           num_altars > 1 ? "s" : ""));
+        }
 
         if (num_shops_portals > 0)
         {
@@ -591,13 +598,13 @@ bool mon_enemies_around(const monster* mons)
 // Returns a string containing a representation of the map.  Leading and
 // trailing spaces are trimmed from each line.  Leading and trailing empty
 // lines are also snipped.
-std::string screenshot()
+string screenshot()
 {
-    std::vector<std::string> lines(crawl_view.viewsz.y);
+    vector<string> lines(crawl_view.viewsz.y);
     unsigned int lsp = GXM;
     for (int y = 0; y < crawl_view.viewsz.y; y++)
     {
-        std::string line;
+        string line;
         for (int x = 0; x < crawl_view.viewsz.x; x++)
         {
             // in grid coords
@@ -631,7 +638,7 @@ std::string screenshot()
     while (!lines.empty() && lines.back().empty())
         lines.pop_back();       // then from the bottom
 
-    std::ostringstream ss;
+    ostringstream ss;
     unsigned int y = 0;
     for (y = 0; y < lines.size() && lines[y].empty(); y++)
         ;                       // ... and from the top
@@ -850,7 +857,7 @@ static int player_view_update_at(const coord_def &gc)
 
 static void player_view_update()
 {
-    std::vector<coord_def> update_excludes;
+    vector<coord_def> update_excludes;
     bool need_update = false;
     for (radius_iterator ri(you.get_los()); ri; ++ri)
     {
@@ -1074,22 +1081,19 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
     // Alter colour if flashing the characters vision.
     if (flash_colour)
     {
-        if (you.see_cell(gc))
-        {
+        if (!you.see_cell(gc))
+            cell->colour = DARKGREY;
 #ifdef USE_TILE_LOCAL
+        else
             cell->colour = real_colour(flash_colour);
 #else
+        else if (gc != you.pos())
+        {
             monster_type mons = env.map_knowledge(gc).monster();
             if (mons == MONS_NO_MONSTER || mons_class_is_firewood(mons))
-            {
                 cell->colour = real_colour(flash_colour);
-            }
+        }
 #endif
-        }
-        else
-        {
-            cell->colour = DARKGREY;
-        }
         cell->flash_colour = cell->colour;
     }
     else if (crawl_state.darken_range)

@@ -10,6 +10,8 @@
 #include "env.h"
 #include "fineff.h"
 #include "libutil.h"
+#include "mgen_data.h"
+#include "mon-place.h"
 #include "ouch.h"
 #include "religion.h"
 #include "view.h"
@@ -34,7 +36,7 @@ void add_final_effect(final_effect_flavour flavour,
     fe.pos     = pos;
     fe.x       = x;
 
-    for (std::vector<final_effect>::iterator fi = env.final_effects.begin();
+    for (vector<final_effect>::iterator fi = env.final_effects.begin();
          fi != env.final_effects.end();
          ++fi)
     {
@@ -50,6 +52,65 @@ void add_final_effect(final_effect_flavour flavour,
         }
     }
     env.final_effects.push_back(fe);
+}
+
+static void _trj_spawns(actor *attacker, actor *trj, coord_def pos, int damage)
+{
+    int tospawn = div_rand_round(damage, 12);
+
+    if (tospawn <= 0)
+        return;
+
+    dprf("Trying to spawn %d jellies.", tospawn);
+
+    unsigned short foe = attacker && attacker->alive() ? attacker->mindex()
+                                                       : MHITNOT;
+
+    int spawned = 0;
+    for (int i = 0; i < tospawn; ++i)
+    {
+        const monster_type jelly = royal_jelly_ejectable_monster();
+        coord_def jpos = find_newmons_square_contiguous(jelly, pos);
+        if (!in_bounds(jpos))
+            continue;
+
+        if (monster *mons = mons_place(
+                              mgen_data(jelly, BEH_HOSTILE, trj, 0, 0,
+                                        jpos, foe, MG_DONT_COME, GOD_JIYVA)))
+        {
+            // Don't allow milking the royal jelly.
+            mons->flags |= MF_NO_REWARD;
+            spawned++;
+        }
+    }
+
+    if (!spawned || !you.see_cell(pos))
+        return;
+
+    if (trj)
+    {
+        const string monnam = trj->name(DESC_THE);
+        mprf("%s shudders%s.", monnam.c_str(),
+             spawned >= 5 ? " alarmingly" :
+             spawned >= 3 ? " violently" :
+             spawned > 1 ? " vigorously" : "");
+
+        if (spawned == 1)
+            mprf("%s spits out another jelly.", monnam.c_str());
+        else
+        {
+            mprf("%s spits out %s more jellies.",
+                 monnam.c_str(),
+                 number_in_words(spawned).c_str());
+        }
+    }
+    else if (spawned == 1)
+        mpr("One of the Royal Jelly's fragments survives.");
+    else
+    {
+        mprf("The dying Royal Jelly spits out %s more jellies.",
+             number_in_words(spawned).c_str());
+    }
 }
 
 // Effects that occur after all other effects, even if the monster is dead.
@@ -123,6 +184,10 @@ void fire_final_effects()
         case FINEFF_DISTORTION_TELEPORT:
             if (defender && defender->alive() && !defender->no_tele(true, false))
                 defender->teleport(true, one_chance_in(5));
+            break;
+
+        case FINEFF_ROYAL_JELLY_SPAWN:
+            _trj_spawns(attacker, defender, fe.pos, fe.x);
             break;
         }
     }

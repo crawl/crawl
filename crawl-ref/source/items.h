@@ -28,6 +28,7 @@ enum item_source_type
 };
 
 int get_max_subtype(object_class_type base_type);
+bool item_type_has_unidentified(object_class_type base_type);
 
 bool dec_inv_item_quantity(int obj, int amount, bool suppress_burden = false);
 bool dec_mitm_item_quantity(int obj, int amount);
@@ -42,6 +43,7 @@ void note_inscribe_item(item_def &item);
 int  move_item_to_player(int obj, int quant_got, bool quiet = false,
                          bool ignore_burden = false);
 void mark_items_non_pickup_at(const coord_def &pos);
+void mark_items_non_visit_at(const coord_def &pos);
 bool is_stackable_item(const item_def &item);
 bool items_similar(const item_def &item1, const item_def &item2);
 bool items_stack(const item_def &item1, const item_def &item2,
@@ -73,13 +75,13 @@ void pickup_menu(int item_link);
 void pickup(bool partial_quantity = false);
 
 bool item_is_branded(const item_def& item);
-void item_list_on_square(std::vector<const item_def*>& items,
-                          int obj, bool force_squelch = false);
+void item_list_on_square(vector<const item_def*>& items,
+                         int obj, bool force_squelch = false);
 
 bool copy_item_to_grid(const item_def &item, const coord_def& p,
-                        int quant_drop = -1,    // item.quantity by default
-                        bool mark_dropped = false,
-                        bool silent = false);
+                       int quant_drop = -1,    // item.quantity by default
+                       bool mark_dropped = false,
+                       bool silent = false);
 coord_def item_pos(const item_def &item);
 
 bool move_top_item(const coord_def &src, const coord_def &dest);
@@ -110,7 +112,7 @@ void origin_set(const coord_def& where);
 void origin_set_monster(item_def &item, const monster* mons);
 bool origin_known(const item_def &item);
 bool origin_describable(const item_def &item);
-std::string origin_desc(const item_def &item);
+string origin_desc(const item_def &item);
 void origin_purchased(item_def &item);
 void origin_acquired(item_def &item, int agent);
 void origin_set_startequip(item_def &item);
@@ -154,8 +156,7 @@ coord_def orb_position();
 // stack_iterator guarantees validity so long as you don't manually
 // mess with item_def.link: i.e., you can kill the item you're
 // examining but you can't kill the item linked to it.
-class stack_iterator : public std::iterator<std::forward_iterator_tag,
-                                            item_def>
+class stack_iterator : public iterator<forward_iterator_tag, item_def>
 {
 public:
     explicit stack_iterator(const coord_def& pos, bool accessible = false);

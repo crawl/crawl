@@ -8,7 +8,21 @@ function callback.grunt_ashenzari_visionary_reveal(data,triggerable,triggerer,ma
     for slave in iter.slave_iterator("revealing_wall", 1) do
         dgn.terrain_changed(slave.x, slave.y, "clear_stone_wall", false, false, false)
     end
-    crawl.god_speaks("Ashenzari", "You have a sudden vision of distant parts of the dungeon!")
+    local msg = ""
+    if #data.branches > 0 then
+      msg = " of"
+      for i, name in ipairs(data.branches) do
+        if i == 1 then
+        elseif i == #data.branches then
+          msg = msg .. " and"
+        else
+          msg = msg .. ","
+        end
+        msg = msg .. " the " .. name
+      end
+      crawl.take_note("Saw a vision" .. msg .. ".")
+    end
+    crawl.god_speaks("Ashenzari", "You have a sudden vision" .. msg .. "!")
 end
 }}
 
@@ -18,31 +32,42 @@ TAGS: temple_overflow_ashenzari uniq_altar_ashenzari no_trap_gen no_monster_gen
 SHUFFLE: ef
 # The branches should be in reverse order here so we don't select the
 # same branch twice.
+: local branches = {}
 : if crawl.game_started() and dgn.br_exists("Swamp") then
+:   table.insert(branches, "Swamp")
 SUBVAULT: e : grunt_ashenzari_visionary_swamp
 : elseif crawl.game_started() and dgn.br_exists("Shoals") then
+:   table.insert(branches, "Shoals")
 SUBVAULT: e : grunt_ashenzari_visionary_shoals
 : elseif crawl.game_started() and dgn.br_exists("Spider") then
+:   table.insert(branches, "Spider Nest")
 SUBVAULT: e : grunt_ashenzari_visionary_spider
 : elseif crawl.game_started() and dgn.br_exists("Snake") then
+:   table.insert(branches, "Snake Pit")
 SUBVAULT: e : grunt_ashenzari_visionary_snake
 : else
 SUBVAULT: e : grunt_ashenzari_visionary
 : end
 : if crawl.game_started() and dgn.br_exists("Snake") then
+:   table.insert(branches, "Snake Pit")
 SUBVAULT: f : grunt_ashenzari_visionary_snake
 : elseif crawl.game_started() and dgn.br_exists("Spider") then
+:   table.insert(branches, "Spider Nest")
 SUBVAULT: f : grunt_ashenzari_visionary_spider
 : elseif crawl.game_started() and dgn.br_exists("Shoals") then
+:   table.insert(branches, "Shoals")
 SUBVAULT: f : grunt_ashenzari_visionary_shoals
 : elseif crawl.game_started() and dgn.br_exists("Swamp") then
+:   table.insert(branches, "Swamp")
 SUBVAULT: f : grunt_ashenzari_visionary_swamp
 : else
 SUBVAULT: f : grunt_ashenzari_visionary
 : end
 {{
+
 lua_marker(":", Triggerable.synchronized_markers(
-    function_at_spot("callback.grunt_ashenzari_visionary_reveal", { trig = false },
+    function_at_spot("callback.grunt_ashenzari_visionary_reveal",
+                     { trig = false, branches = branches },
                      true, { only_at_slave = true, listen_to_slaves = true })))
 lua_marker('d', props_marker {revealing_wall=1})
 }}
@@ -150,7 +175,11 @@ ENDMAP
 
 NAME: grunt_ashenzari_visionary_spider
 TAGS: grunt_ashenzari_visionary_spider no_trap_gen no_monster_gen
-MONS: place:Spider:1 spells:none
+# Monsters specified here to avoid escaping rock worms.
+MONS: giant cockroach w:15 / giant mite w:15 / scorpion w:35 / spider w:40 / \
+      giant centipede w:15 / worm w:20 / \
+      yellow wasp w:15 / redback w:55 / trapdoor spider w:75 / \
+      goliath beetle w:20
 SUBST:  . = ....x1
 COLOUR: 1. = brown
 COLOUR: x = yellow

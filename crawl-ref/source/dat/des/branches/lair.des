@@ -1928,7 +1928,7 @@ SUBST:  y = ., q = .
 SUBST:  c = x
 MONS:   plant, killer bee, queen bee
 COLOUR: a = yellow
-TILE:   a = wall_hive
+TILE:   a = wall_wax
 SUBST:  a = x
 MAP
         ttttttt..t    tt.
@@ -2029,7 +2029,7 @@ MARKER: G = lua:props_marker { veto_fragmentation="veto", \
                                veto_disintegrate="veto", \
                                veto_shatter="veto" }
 COLOUR: oG = green
-TILE:   oG = dngn_statue_elephant
+TILE:   oG = dngn_statue_elephant_jade
 MARKER: o = lua:monster_on_death { \
             target="anaconda_guard", new_monster="generate_awake dire elephant", \
             message_seen="The elephant guardians awaken!", \
@@ -2227,15 +2227,15 @@ ENDMAP
 NAME:   minmay_lair_end_frog_pond
 PLACE:  Lair:$
 ORIENT: float
-MONS:   giant frog / spiny frog
+MONS:   giant frog / spiny frog w:7
 MONS:   blink frog
 MONS:   vampire mosquito
 MONS:   plant
 SUBST:  p = 44W2
-SUBST:  w = W:40 w:10 1:2 3:1 4:5
-SUBST:  . = .:40 W:10 1:2 3:1 4:5
+SUBST:  w = W:80 w:20 1:4 3:1 4:10
+SUBST:  . = .:80 W:20 1:4 3:1 4:10
 KFEAT:  W = W
-KMONS:  W = giant leech / nothing w:1000
+KMONS:  W = giant leech / nothing w:1200
 SUBST:  % = %%*|
 : lair_small_ending(_G)
 MAP
@@ -2274,7 +2274,7 @@ NAME:   minmay_lair_end_enchanted_forest
 PLACE:  Lair:$
 ORIENT: northwest
 MONS:   black bear / grizzly bear, wolf, spriggan
-MONS:   spriggan rider / spriggan druid
+MONS:   spriggan rider / spriggan druid n_adj n_noc name:young hd:8
 SUBST:  T : T:20 .:1 t:1
 SUBST:  T = t.
 # These can't be substituted with floor because it might be disconnected, but if

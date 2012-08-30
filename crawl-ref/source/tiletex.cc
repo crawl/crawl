@@ -48,17 +48,21 @@ bool GenericTexture::load_texture(const char *filename,
 
 bool GenericTexture::load_texture(unsigned char *pixels, unsigned int new_width,
                                   unsigned int new_height,
-                                  MipMapOptions mip_opt)
+                                  MipMapOptions mip_opt,
+                                  int offsetx, int offsety)
 {
-    if (!pixels || !new_width || !new_height)
+    if (!new_width || !new_height)
         return false;
 
-    m_width = new_width;
-    m_height = new_height;
+    if (offsetx == -1 && offsety == -1)
+    {
+        m_width = new_width;
+        m_height = new_height;
+        glmanager->generate_textures(1, &m_handle);
+    }
 
-    glmanager->generate_textures(1, &m_handle);
     bind();
-    glmanager->load_texture(pixels, m_width, m_height, mip_opt);
+    glmanager->load_texture(pixels, new_width, new_height, mip_opt, offsetx, offsety);
 
     return true;
 }
@@ -72,7 +76,6 @@ void GenericTexture::bind() const
 TilesTexture::TilesTexture() :
     GenericTexture(), m_tile_max(0), m_info_func(NULL)
 {
-
 }
 
 void TilesTexture::set_info(int tile_max, tile_info_func *info_func)

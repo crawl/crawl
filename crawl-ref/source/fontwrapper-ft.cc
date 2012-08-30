@@ -18,6 +18,19 @@
 #include "unicode.h"
 #include "options.h"
 
+// maximum number of unique glyphs that can be rendered with this font at once; e.g. 4096, 256, 36
+#define MAX_GLYPHS 256
+// dimensions of glyph grid; GLYPHS_PER_ROWCOL^2 <= MAX_GLYPHS; e.g. 64, 16, 6
+#define GLYPHS_PER_ROWCOL 16
+// char to use if we can't find it in the font (upside-down question mark)
+#define MISSING_CHAR 0xbf
+
+#if 0
+# define dprintf(...) debuglog(__VA_ARGS__)
+#else
+# define dprintf(...) (void)0
+#endif
+
 FontWrapper* FontWrapper::create()
 {
     return (new FTFontWrapper());
@@ -25,8 +38,14 @@ FontWrapper* FontWrapper::create()
 
 FTFontWrapper::FTFontWrapper() :
     m_glyphs(NULL),
+    m_glyphs_lru(0),
+    m_glyphs_mru(0),
+    m_glyphs_top(0),  // reinitialised to 1 in load_font
     m_max_advance(0, 0),
-    m_min_offset(0)
+    m_min_offset(0),
+    charsz(1,1),
+    m_max_width(0),
+    m_max_height(0)
 {
     m_buf = GLShapeBuffer::create(true, true);
 }
@@ -34,15 +53,17 @@ FTFontWrapper::FTFontWrapper() :
 FTFontWrapper::~FTFontWrapper()
 {
     delete[] m_glyphs;
+    delete[] pixels;
     delete m_buf;
 }
 
 bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
-                              bool outl)
+                              bool outline)
 {
     FT_Library library;
-    FT_Face face;
     FT_Error error;
+
+    outl = outline;
 
     error = FT_Init_FreeType(&library);
     if (error)
@@ -51,7 +72,7 @@ bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
     // TODO enne - need to find a cross-platform way to also
     // attempt to locate system fonts by name...
     // 1KB: fontconfig if we are not scared of hefty libraries
-    std::string font_path = datafile_path(font_name, false, true);
+    string font_path = datafile_path(font_name, false, true);
     if (font_path.c_str()[0] == 0)
         die_noline("Could not find font '%s'\n", font_name);
 
@@ -77,153 +98,151 @@ bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
     error = FT_Set_Pixel_Sizes(face, font_size, font_size);
     ASSERT(!error);
 
-    // Get maximum advance
-    m_max_advance = coord_def(0,0);
-    int ascender  = face->ascender >> 6;
-    int min_y     = 100000;
-    int max_y     = 0;
-    int max_width = 0;
-    m_min_offset  = 0;
-    m_glyphs      = new GlyphInfo[256];
-    for (unsigned int c = 0; c < 256; c++)
-    {
-        m_glyphs[c].offset  = 0;
-        m_glyphs[c].advance = 0;
-        m_glyphs[c].renderable = false;
+    // Get maximum advance and other global metrics
+    FT_Size_Metrics metrics = face->size->metrics;
+    m_max_advance   = coord_def(0,0);
+    m_max_advance.x = metrics.max_advance >> 6;
+    m_max_advance.y = (metrics.ascender-metrics.descender)>>6;
+    m_ascender      = (metrics.ascender>>6);
+    m_max_width     = (face->bbox.xMax >> 6) - (face->bbox.xMin >> 6);
+    m_max_height    = (face->bbox.yMax>>6)-(face->bbox.yMin>>6);//m_max_advance.y;
+    m_min_offset    = 0;
+    m_glyphs        = new GlyphInfo[MAX_GLYPHS];
 
-        FT_Int glyph_index = FT_Get_Char_Index(face, c);
-        if (!glyph_index)
-            continue;
-
-        error = FT_Load_Glyph(face, glyph_index, FT_LOAD_RENDER |
-            (Options.tile_font_ft_light ? FT_LOAD_TARGET_LIGHT : 0));
-        ASSERT(!error);
-
-        FT_Bitmap *bmp = &face->glyph->bitmap;
-
-        int advance = face->glyph->advance.x >> 6;
-
-        m_max_advance.x = std::max(m_max_advance.x, advance);
-
-        int bmp_width  = bmp->width;
-        int bmp_top    = ascender - face->glyph->bitmap_top;
-        int bmp_bottom = ascender + bmp->rows - face->glyph->bitmap_top;
-        if (outl)
-        {
-            bmp_width  += 2;
-            bmp_top    -= 1;
-            bmp_bottom += 1;
-        }
-
-        max_width = std::max(max_width, bmp_width);
-        min_y = std::min(min_y, bmp_top);
-        max_y = std::max(max_y, bmp_bottom);
-
-        m_glyphs[c].offset  = face->glyph->bitmap_left;
-        m_glyphs[c].advance = advance;
-        m_glyphs[c].width   = bmp_width;
-
-        m_min_offset = std::min((char)m_min_offset, m_glyphs[c].offset);
-    }
-
-    // The ascender and text height given by FreeType2 is ridiculously large
-    // (e.g. 37 pixels high for 14 pixel font).  Use min and max bounding
-    // heights on the characters we care about to get better values for the
-    // text height and the ascender.
-    m_max_advance.y = max_y - min_y;
-    ascender       -= min_y;
-
-    int max_height  = m_max_advance.y;
+    if (outl)
+        m_max_width += 2, m_max_height += 2;
 
     // Grow character size to power of 2
-    coord_def charsz(1,1);
-    while (charsz.x < max_width)
+    while (charsz.x < m_max_width)
         charsz.x *= 2;
-    while (charsz.y < max_height)
+    while (charsz.y < m_max_height)
         charsz.y *= 2;
 
     // Fill out texture to be (16*charsz.x) X (16*charsz.y) X (32-bit)
     // Having to blow out 8-bit alpha values into full 32-bit textures is
     // kind of frustrating, but not all OpenGL implementations support the
     // "esoteric" ALPHA8 format and it's not like this texture is very large.
-    unsigned int   width  = 16 * charsz.x;
-    unsigned int   height = 16 * charsz.y;
-    unsigned char *pixels = new unsigned char[4 * width * height];
-    memset(pixels, 0, sizeof(unsigned char) * 4 * width * height);
+
+    // [frogbotherer] I think we can get memory usage lower by blowing out
+    // the texture as a whole out to a power of 2, instead of each individual
+    // character. Also, whilst GLES baulks at ALPHA8, there might be some
+    // other compression format that we can use to get the size down a bit
+    m_ft_width  = GLYPHS_PER_ROWCOL * charsz.x;
+    m_ft_height = GLYPHS_PER_ROWCOL * charsz.y;
+
+    pixels = new unsigned char[4 * charsz.x * charsz.y];
+    memset(pixels, 0, sizeof(unsigned char) * 4 * charsz.x * charsz.y);
+
+    dprintf("new font tex %d x %d x 4 = %dpx %d bytes\n",
+            m_ft_width, m_ft_height, m_ft_width * m_ft_height,
+            4 * m_ft_width * m_ft_height);
+
+    // initialise empty texture of correct size
+    m_tex.load_texture(NULL, m_ft_width, m_ft_height, MIPMAP_NONE);
 
     // Special case c = 0 for full block.
     {
+        m_glyphmap[0] = 0;
+        m_glyphs_top = 1;
+        m_glyphs_lru = 1; // otherwise LRU algorithm will overwrite 0
+        m_glyphs_mru = 0;
+        m_glyphs[0].offset  = 0;
+        m_glyphs[0].advance = 0;
+        m_glyphs[0].ascender = 0;
         m_glyphs[0].renderable = false;
-        for (int x = 0; x < max_width; x++)
-            for (int y = 0; y < max_height; y++)
+        m_glyphs[0].uchar   = MISSING_CHAR;
+        m_glyphs[0].prev    = 0;
+        m_glyphs[0].next    = 0;
+        for (int x = 0; x < m_max_width; x++)
+            for (int y = 0; y < m_max_height; y++)
             {
-                unsigned int idx = x + y * width;
+                unsigned int idx = x + y * m_max_width;
                 idx *= 4;
-                pixels[idx] = 255;
+                pixels[idx]     = 255;
                 pixels[idx + 1] = 255;
                 pixels[idx + 2] = 255;
                 pixels[idx + 3] = 255;
             }
+        bool success = m_tex.load_texture(pixels, charsz.x, charsz.y,
+                                          MIPMAP_NONE, 0, 0);
+        ASSERT(success);
     }
 
-    for (unsigned int c = 1; c < 256; c++)
+    // precache common chars
+    for (int i = 0x20; i < 0x7f; i++)
+        map_unicode(i);
+    return true;
+}
+
+void FTFontWrapper::load_glyph(unsigned int c, ucs_t uchar)
+{
+    // get on with rendering the new glyph
+    FT_Error error;
+    m_glyphs[c].offset  = 0;
+    m_glyphs[c].advance = 0;
+    m_glyphs[c].ascender = m_ascender;
+    m_glyphs[c].renderable = false;
+
+    FT_Int glyph_index = FT_Get_Char_Index(face, uchar);
+
+    if (!glyph_index)
+        glyph_index = FT_Get_Char_Index(face, MISSING_CHAR);
+
+    error = FT_Load_Glyph(face, glyph_index, FT_LOAD_RENDER |
+        (Options.tile_font_ft_light ? FT_LOAD_TARGET_LIGHT : 0));
+    ASSERT(!error);
+
+    FT_Bitmap *bmp = &face->glyph->bitmap;
+    ASSERT(bmp);
+
+    int advance = face->glyph->advance.x >> 6;
+
+    int bmp_width  = bmp->width;
+    if (outl)
+        bmp_width  += 2;
+
+    m_glyphs[c].offset  = face->glyph->bitmap_left;
+    m_glyphs[c].advance = advance;
+    m_glyphs[c].ascender = face->glyph->bitmap_top;
+    m_glyphs[c].width   = bmp_width;
+
+    // Some glyphs (e.g. ' ') don't get a buffer.
+    if (bmp->buffer)
     {
-        FT_Int glyph_index = FT_Get_Char_Index(face, c);
-        if (!glyph_index)
-        {
-            // If no mapping for this character, leave blank.
-            continue;
-        }
-
-        error = FT_Load_Glyph(face, glyph_index, FT_LOAD_RENDER |
-            (Options.tile_font_ft_light ? FT_LOAD_TARGET_LIGHT : 0));
-        ASSERT(!error);
-
-        FT_Bitmap *bmp = &face->glyph->bitmap;
-        ASSERT(bmp);
-        // Some glyphs (e.g. ' ') don't get a buffer.
-        if (!bmp->buffer)
-            continue;
-
         m_glyphs[c].renderable = true;
-
-        int vert_offset = ascender - face->glyph->bitmap_top;
 
         ASSERT(bmp->pixel_mode == FT_PIXEL_MODE_GRAY);
         ASSERT(bmp->num_grays == 256);
 
         // Horizontal offset stored in m_glyphs and handled when drawing
-        unsigned int offset_x = (c % 16) * charsz.x;
-        unsigned int offset_y = (c / 16) * charsz.y + vert_offset;
-
+        const unsigned int offset_x = 0;
+        const unsigned int offset_y = 0;
+        memset(pixels, 0, sizeof(unsigned char) * 4 * charsz.x * charsz.y);
         if (outl)
         {
             const int charw = bmp->width;
-            for (int x = -1; x <= bmp->width; x++)
-                for (int y = -1; y <= bmp->rows; y++)
+            for (int x = 0; x < bmp->width; x++)
+                for (int y = 0; y < bmp->rows; y++)
                 {
-                    bool x_valid = x >= 0 && x < bmp->width;
-                    bool y_valid = y >= 0 && y < bmp->rows;
-                    bool valid   = x_valid && y_valid;
-                    unsigned char orig = valid ? bmp->buffer[x + charw * y] : 0;
+                    unsigned int idx = offset_x+x+1 + (offset_y+y+1) * charsz.x;
+                    idx *= 4;
+
+                    unsigned char orig = bmp->buffer[x + charw * y];
 
                     unsigned char edge = 0;
-                    if (y_valid && x > 0)
-                        edge = std::max(bmp->buffer[(x-1) + charw * y], edge);
-                    if (x_valid && y > 0)
-                        edge = std::max(bmp->buffer[x + charw * (y-1)], edge);
-                    if (y_valid && x < bmp->width - 1)
-                        edge = std::max(bmp->buffer[(x+1) + charw * y], edge);
-                    if (x_valid && y < bmp->rows - 1)
-                        edge = std::max(bmp->buffer[x + charw * (y+1)], edge);
-
-                    unsigned int idx = offset_x+x+1 + (offset_y+y+1) * width;
-                    idx *= 4;
+                    if (x > 0)
+                        edge = max(bmp->buffer[(x-1) + charw * y], edge);
+                    if (y > 0)
+                        edge = max(bmp->buffer[x + charw * (y-1)], edge);
+                    if (x < bmp->width - 1)
+                        edge = max(bmp->buffer[(x+1) + charw * y], edge);
+                    if (y < bmp->rows - 1)
+                        edge = max(bmp->buffer[x + charw * (y+1)], edge);
 
                     pixels[idx] = orig;
                     pixels[idx + 1] = orig;
                     pixels[idx + 2] = orig;
-                    pixels[idx + 3] = std::min(orig + edge, 255);
+                    pixels[idx + 3] = min((int)orig + edge, 255);
                 }
         }
         else
@@ -231,32 +250,107 @@ bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
             for (int x = 0; x < bmp->width; x++)
                 for (int y = 0; y < bmp->rows; y++)
                 {
-                    unsigned int idx = offset_x + x + (offset_y + y) * width;
+                    unsigned int idx = offset_x + x + (offset_y + y) * charsz.x;
                     idx *= 4;
-                    unsigned char alpha = bmp->buffer[x + bmp->width * y];
-                    pixels[idx] = 255;
-                    pixels[idx + 1] = 255;
-                    pixels[idx + 2] = 255;
-                    pixels[idx + 3] = alpha;
+                    if (x < bmp->width && y < bmp->rows)
+                    {
+                        unsigned char alpha = bmp->buffer[x + bmp->width * y];
+                        pixels[idx] = 255;
+                        pixels[idx + 1] = 255;
+                        pixels[idx + 2] = 255;
+                        pixels[idx + 3] = alpha;
+                    }
                 }
+        }
+        bool success = m_tex.load_texture(pixels, charsz.x, charsz.y,
+                            MIPMAP_NONE,
+                            (c % GLYPHS_PER_ROWCOL) * charsz.x,
+                            (c / GLYPHS_PER_ROWCOL) * charsz.y);
+        ASSERT(success);
+    }
+}
+
+unsigned int FTFontWrapper::map_unicode(ucs_t uchar)
+{
+    unsigned int c;  // index in m_glyphs
+    if (m_glyphmap.find(uchar) == m_glyphmap.end())
+    {
+        // work out which glyph we can overwrite if we've gone over MAX_GLYPHS
+        if (m_glyphs_top == MAX_GLYPHS)
+        {
+            dprintf("replacing %d (%lc) with %d (%lc)\n",
+                    m_glyphs[m_glyphs_lru].uchar,
+                    m_glyphs[m_glyphs_lru].uchar,
+                    uchar,
+                    uchar);
+            // create a pointer in gmap to the lru entry in gdata
+            c = m_glyphs_lru;
+            // delete lru glyph from map
+            m_glyphmap.erase(m_glyphs[m_glyphs_lru].uchar);
+            // move lru on to next
+            m_glyphs_lru = m_glyphs[c].next;
+            m_glyphs[m_glyphs_lru].prev = 0;
+        }
+        else // glyph data is not full
+        {
+            // create a pointer in m_glyphmap to the top of m_glyphs
+            c = m_glyphs_top;
+            // move top index on
+            m_glyphs_top++;
+        }
+
+        // set some default prev/next values
+        m_glyphs[c].prev = m_glyphs_mru;
+        m_glyphs[m_glyphs_mru].next = c;
+        m_glyphs[c].next = 0;
+        // update links between char and map
+        m_glyphs[c].uchar = uchar;
+        m_glyphmap[uchar] = c;
+
+        load_glyph(c, uchar);
+        n_subst++;
+
+        dprintf("mapped %d (%x; %lc) to %d\n", uchar, uchar, uchar, c);
+    }
+    else // we found uchar in glyphmap
+    {
+        c = m_glyphmap[uchar];
+        if (m_glyphs_mru != c)
+        {
+            // point the <char previous to this one> to the <char after this one> and vice-versa
+            dprintf("moving %lc: %lc -> %lc; %lc <- %lc",
+                    uchar,
+                    m_glyphs[m_glyphs[m_glyphmap[uchar]].prev].uchar,
+                    m_glyphs[m_glyphs[m_glyphmap[uchar]].next].uchar,
+                    m_glyphs[m_glyphs[m_glyphmap[uchar]].next].uchar,
+                    m_glyphs[m_glyphs[m_glyphmap[uchar]].prev].uchar);
+            m_glyphs[m_glyphs[c].prev].next = m_glyphs[c].next;
+            m_glyphs[m_glyphs[c].next].prev = m_glyphs[c].prev;
         }
     }
 
-    bool success = m_tex.load_texture(pixels, width, height,
-                                      MIPMAP_NONE);
+    // regardless of how we came about 'c'
+    if (m_glyphs_mru != c)
+    {
+        // point the last character we wrote out to the one we're writing
+        dprintf("updating %lc, next = %lc",
+                m_glyphs[m_glyphs_mru].uchar, uchar);
+        m_glyphs[m_glyphs_mru].next = c;
+        m_glyphs[c].prev = m_glyphs_mru;
+    }
 
-    delete[] pixels;
+    // update the mru to this one
+    m_glyphs_mru = c;
+    // if we've just used the lru glyph, move onto the next one
+    if (m_glyphs_mru == m_glyphs_lru && m_glyphs[m_glyphs_lru].next != 0)
+        m_glyphs_lru = m_glyphs[m_glyphs_lru].next;
 
-    return success;
-}
+    dprintf("rendering %d (%x; <<<<<<%lc>>>>>>); lru is %lc, next lru is %lc\n",
+            uchar, uchar, uchar,
+            m_glyphs[m_glyphs_lru].uchar,
+            m_glyphs[m_glyphs[m_glyphs_lru].next].uchar);
 
-// This function should be removed once we can support more than ISO-8859-1.
-static ucs_t _fallback_char(ucs_t c)
-{
-    // Weed out characters we can't draw.
-    if (c > 0xFF) // TODO: try to transliterate
-        c = 0xBF; // reversed question mark
-    return c;
+    return m_glyphmap[uchar];
 }
 
 void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
@@ -268,19 +362,19 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
     if (!chars || !colours || !width || !height || !m_glyphs)
         return;
 
-    coord_def adv(std::max(-m_min_offset, 0), 0);
+    coord_def adv(max(-m_min_offset, 0), 0);
     unsigned int i = 0;
 
     ASSERT(m_buf);
     m_buf->clear();
+    n_subst = 0;
 
-    float texcoord_dy = (float)m_max_advance.y / (float)m_tex.height();
-
+    float texcoord_dy = (float)m_max_height / (float)m_tex.height();
     for (unsigned int y = 0; y < height; y++)
     {
         for (unsigned int x = 0; x < width; x++)
         {
-            ucs_t c = _fallback_char(chars[i]);
+            unsigned int c = map_unicode(chars[i]);
             uint8_t col_bg = colours[i] >> 4;
             uint8_t col_fg = colours[i] & 0xF;
 
@@ -302,13 +396,14 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
             {
                 int this_width = m_glyphs[c].width;
 
-                float tex_x = (float)(c % 16) / 16.0f;
-                float tex_y = (float)(c / 16) / 16.0f;
+                float tex_x = (float)(c % GLYPHS_PER_ROWCOL) / (float)GLYPHS_PER_ROWCOL;
+                float tex_y = (float)(c / GLYPHS_PER_ROWCOL) / (float)GLYPHS_PER_ROWCOL;
                 float tex_x2 = tex_x + (float)this_width / (float)m_tex.width();
                 float tex_y2 = tex_y + texcoord_dy;
 
-                GLWPrim rect(adv.x, adv.y, adv.x + this_width,
-                             adv.y + m_max_advance.y);
+                GLWPrim rect(adv.x, adv.y - m_glyphs[c].ascender + m_ascender,
+                             adv.x + this_width, adv.y + m_max_height - m_glyphs[c].ascender + m_ascender);
+
                 VColour col(term_colours[col_fg].r,
                             term_colours[col_fg].g,
                             term_colours[col_fg].b);
@@ -320,12 +415,26 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
 
             i++;
             adv.x += m_glyphs[c].advance - m_glyphs[c].offset;
+
+            // See if we need to flush prematurely.
+            if (n_subst == MAX_GLYPHS - 1)
+            {
+                draw_m_buf(x_pos, y_pos, drop_shadow);
+                m_buf->clear();
+                n_subst = 0;
+            }
         }
 
         adv.x = 0;
         adv.y += m_max_advance.y;
     }
 
+    draw_m_buf(x_pos, y_pos, drop_shadow);
+}
+
+void FTFontWrapper::draw_m_buf(unsigned int x_pos, unsigned int y_pos,
+                               bool drop_shadow)
+{
     if (!m_buf->size())
         return;
 
@@ -361,7 +470,7 @@ static void _draw_box(int x_pos, int y_pos, float width, float height,
                       float box_width, unsigned char box_colour,
                       unsigned char box_alpha)
 {
-    std::auto_ptr<GLShapeBuffer> buf(GLShapeBuffer::create(false, true));
+    unique_ptr<GLShapeBuffer> buf(GLShapeBuffer::create(false, true));
     GLWPrim rect(x_pos - box_width, y_pos - box_width,
                  x_pos + width + box_width, y_pos + height + box_width);
 
@@ -385,7 +494,7 @@ static void _draw_box(int x_pos, int y_pos, float width, float height,
 
 unsigned int FTFontWrapper::string_height(const formatted_string &str) const
 {
-    std::string temp = str.tostring();
+    string temp = str.tostring();
     return string_height(temp.c_str());
 }
 
@@ -399,15 +508,15 @@ unsigned int FTFontWrapper::string_height(const char *text) const
     return char_height() * height;
 }
 
-unsigned int FTFontWrapper::string_width(const formatted_string &str) const
+unsigned int FTFontWrapper::string_width(const formatted_string &str)
 {
-    std::string temp = str.tostring();
+    string temp = str.tostring();
     return string_width(temp.c_str());
 }
 
-unsigned int FTFontWrapper::string_width(const char *text) const
+unsigned int FTFontWrapper::string_width(const char *text)
 {
-    unsigned int base_width = std::max(-m_min_offset, 0);
+    unsigned int base_width = max(-m_min_offset, 0);
     unsigned int max_width = 0;
 
     unsigned int width = base_width;
@@ -416,30 +525,31 @@ unsigned int FTFontWrapper::string_width(const char *text) const
     {
         if (*itr == '\n')
         {
-            max_width = std::max(width + adjust, max_width);
+            max_width = max(width + adjust, max_width);
             width = base_width;
             adjust = 0;
         }
         else
         {
-            width += m_glyphs[*itr].advance;
-            adjust = std::max(0, m_glyphs[*itr].width - m_glyphs[*itr].advance);
+            unsigned int c = map_unicode(*itr);
+            width += m_glyphs[c].advance;
+            adjust = max(0, m_glyphs[c].width - m_glyphs[c].advance);
         }
     }
 
-    max_width = std::max(width + adjust, max_width);
+    max_width = max(width + adjust, max_width);
     return max_width;
 }
 
 int FTFontWrapper::find_index_before_width(const char *text, int max_width)
 {
-    int width = std::max(-m_min_offset, 0);
+    int width = max(-m_min_offset, 0);
 
     for (int i = 0; text[i]; i++)
     {
-        unsigned char c = text[i];
+        unsigned int c = map_unicode(text[i]);
         width += m_glyphs[c].advance;
-        int adjust = std::max(0, m_glyphs[c].width - m_glyphs[c].advance);
+        int adjust = max(0, m_glyphs[c].width - m_glyphs[c].advance);
         if (width + adjust > max_width)
             return i;
     }
@@ -459,7 +569,7 @@ formatted_string FTFontWrapper::split(const formatted_string &str,
     formatted_string ret;
     ret += str;
 
-    std::string base = str.tostring();
+    string base = str.tostring();
     int num_lines = 0;
 
     char *line = &base[0];
@@ -527,7 +637,7 @@ void FTFontWrapper::render_string(unsigned int px, unsigned int py,
         int w = wcwidth(c);
         if (w != -1)
             cols += w;
-        max_cols = std::max(cols, max_cols);
+        max_cols = max(cols, max_cols);
 
         // NOTE: only newlines should be used for tool tips.  Don't use EOL.
         ASSERT(c != '\r');
@@ -614,14 +724,13 @@ void FTFontWrapper::render_string(unsigned int px, unsigned int py,
 }
 
 void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
-                          const std::string &str, const VColour &col)
+                          const string &str, const VColour &col)
 {
     store(buf, x, y, str, col, x);
 }
 
 void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
-                          const std::string &str, const VColour &col,
-                          float orig_x)
+                          const string &str, const VColour &col, float orig_x)
 {
     const char *sp = str.c_str();
     ucs_t c;
@@ -634,9 +743,7 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
             y += m_max_advance.y;
         }
         else
-        {
             store(buf, x, y, c, col);
-        }
     }
 }
 
@@ -668,9 +775,9 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
 }
 
 void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
-                          ucs_t c, const VColour &col)
+                          ucs_t ch, const VColour &col)
 {
-    c = _fallback_char(c);
+    unsigned int c = map_unicode(ch);
     if (!m_glyphs[c].renderable)
     {
         x += m_glyphs[c].advance;
@@ -680,14 +787,14 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
     int this_width = m_glyphs[c].width;
 
     float pos_sx = x + m_glyphs[c].offset;
-    float pos_sy = y;
+    float pos_sy = y - m_glyphs[c].ascender + m_ascender;
     float pos_ex = pos_sx + this_width;
-    float pos_ey = y + m_max_advance.y;
+    float pos_ey = y + m_max_height - m_glyphs[c].ascender + m_ascender;
 
-    float tex_sx = (float)(c % 16) / 16.0f;
-    float tex_sy = (float)(c / 16) / 16.0f;
-    float tex_ex = tex_sx + (float)this_width / (float)m_tex.width();
-    float tex_ey = tex_sy + (float)m_max_advance.y / (float)m_tex.height();
+    float tex_sx = (float)(c % GLYPHS_PER_ROWCOL) / (float)GLYPHS_PER_ROWCOL;
+    float tex_sy = (float)(c / GLYPHS_PER_ROWCOL) / (float)GLYPHS_PER_ROWCOL;
+    float tex_ex = tex_sx + (float)this_width / (float)(GLYPHS_PER_ROWCOL*charsz.x);
+    float tex_ey = tex_sy + (float)m_max_height / (float)(GLYPHS_PER_ROWCOL*charsz.y);
 
     GLWPrim rect(pos_sx, pos_sy, pos_ex, pos_ey);
     rect.set_tex(tex_sx, tex_sy, tex_ex, tex_ey);

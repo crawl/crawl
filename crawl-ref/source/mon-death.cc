@@ -147,7 +147,7 @@ void hogs_to_humans()
 
         mi->move_to_pos(pos);
         mi->enchantments = enchantments;
-        mi->hit_points   = std::max(1, (int) (mi->max_hit_points * hp));
+        mi->hit_points   = max(1, (int) (mi->max_hit_points * hp));
         mi->flags        = mi->flags | preserve_flags;
 
         const bool can_see = you.can_see(*mi);
@@ -197,11 +197,15 @@ void hogs_to_humans()
     else if (any > 1)
     {
         if (any == human)
+        {
             mpr("No longer under Kirke's spell, all hogs revert to their "
                 "human forms!");
+        }
         else
+        {
             mpr("No longer under Kirke's spell, all hogs revert to their "
                 "original forms!");
+        }
     }
 
     // Revert the player as well.
@@ -320,8 +324,8 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
     // Will generate strings such as 'Duvessa_Duvessa_dies' or, alternately
     // 'Dowan_Dowan_dies', but as neither will match, these can safely be
     // ignored.
-    std::string key = mons->name(DESC_THE, true) + "_"
-                    + twin->name(DESC_THE) + "_dies_";
+    string key = mons->name(DESC_THE, true) + "_"
+                 + twin->name(DESC_THE) + "_dies_";
 
     if (mons_near(mons) && !mons->observable())
         key += "invisible_";
@@ -340,7 +344,7 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
     // Drop the final '_'.
     key.erase(key.length() - 1);
 
-    std::string death_message = getSpeakString(key);
+    string death_message = getSpeakString(key);
 
     // Check if they can speak or not: they may have been polymorphed.
     if (mons_near(mons) && !death_message.empty() && mons->can_speak())
@@ -351,11 +355,15 @@ void elven_twin_died(monster* twin, bool in_transit, killer_type killer, int kil
     if (found_duvessa)
     {
         if (mons_near(mons))
+        {
             // Provides its own flavour message.
             mons->go_berserk(true);
+        }
         else
+        {
             // She'll go berserk the next time she sees you
             mons->props["duvessa_berserk"] = bool(true);
+        }
     }
     else if (found_dowan)
     {
@@ -559,11 +567,11 @@ void phoenix_died(monster* mons)
  *
  * @returns     Vector of map_phoenix_markers.
 **/
-static std::vector<map_phoenix_marker*> get_phoenix_markers()
+static vector<map_phoenix_marker*> get_phoenix_markers()
 {
-    std::vector<map_phoenix_marker*> mm_markers;
+    vector<map_phoenix_marker*> mm_markers;
 
-    std::vector<map_marker*> markers = env.markers.get_all(MAT_PHOENIX);
+    vector<map_marker*> markers = env.markers.get_all(MAT_PHOENIX);
     for (int i = 0, size = markers.size(); i < size; ++i)
     {
         map_marker *mark = markers[i];
@@ -585,7 +593,7 @@ static std::vector<map_phoenix_marker*> get_phoenix_markers()
 **/
 void timeout_phoenix_markers(int duration)
 {
-    std::vector<map_phoenix_marker*> markers = get_phoenix_markers();
+    vector<map_phoenix_marker*> markers = get_phoenix_markers();
 
     for (int i = 0, size = markers.size(); i < size; ++i)
     {

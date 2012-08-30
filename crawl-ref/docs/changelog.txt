@@ -1,28 +1,57 @@
-Stone Soup 0.11 (up to 0.11-a0-2724-g330e717)
+Stone Soup 0.12 (up to 0.12-a0-221-gc8484b0)
+--------------------------------------------
+
+Branches, environment
+---------------------
+* A new Sprint map by evilmike: "Thunderdome".
+* More layouts allowed in Zot.
+* Abyss morphing can push the player.
+
+Character
+---------
+* Stalker is removed.
+
+Monsters
+--------
+* New monster spells: Shatter, LRD.
+
+Spells
+------
+* Removed: Fulsome Distillation, Evaporate, See Invisible and Insulation.
+
+Items
+-----
+* All troll-genus monsters can drop troll hides.
+* Monsters don't drop animal skins.
+* Potion of water is removed.
+
+Interface
+---------
+* New option: auto_sacrifice
+* Removed the hidden special cost of Spellcasting, Stealth, Evocations and
+  Invocations. Aptitudes adjusted.
+* Some colour changes in the skill menu.
+* Swap the cycle ammunition commands. '(' = backward, ')' = forward.
+
+Stone Soup 0.11 (up to 0.11-a0-3206-g559a7a8)
 ---------------------------------------------
 
-Highlights
+0.11 Highlights
 ----------
 * A new branch: the Spider Nest.
 * The Swamp branch is less annoying now.
-* Missile enchantments are no more, greatly simplifying inventory management.
-    - Formulas have been changed to compensate, with skill filling the role of
-      missile enchantments.
-* Grey draconians are better.
+* Missile enchantments are no more.
 * Monster constriction vs the player has been overhauled.
-* Greatly improved targetting prompts for area of effect spells and lightning.
-* New monsters: Arachne, Fannar, orb spider, bog body, hell sentinel.
-* Removed monsters: Jozef, bog mummy, midge, pit fiend.
-* New item: lightning rod.
-* Removed items: ankus, scroll of detect curse, amulet of controlled flight,
-  rod of smiting.
-* New card: the Mercenary.
+* New monsters: Arachne, Fannar, orb spider, bog body, Hell Sentinel.
+* Removed monsters: Jozef, bog mummy, midge, Pit Fiend, hairy devil.
+* Lots of new vaults and tiles.
 
 Branches, environment
 ---------------------
 * New wizlab: Roulette of Golubria.
 * A metric buttload of new vaults, including several new branch endings and
   a full-level vault for deeper parts of the main dungeon.
+* A new Sprint map by st, based on the Ziggurat.
 * Vaults are more common.
 * There are three new level layouts for the dungeon and various branches.
 * You don't lose portal vaults after being banished from one.
@@ -33,13 +62,10 @@ Branches, environment
 * The Elven Halls are only three levels deep.
 * Branch difficulty doesn't depend on where their entrance was anymore.
 * Traps of a given type deal the same damage no matter where they are.
-* Gas traps get their own trap type, rather than being "pressure plates".
 * Axe traps got axed.
 * Wax walls are no more.
 * There are no more randomly generated secret doors, but they can still be
   found in vaults.
-* The silver rune of Zot can now appear in any of the four quadrants
-  on Vaults:8.
 * The Swamp has an improved layout, with smaller and more compact levels, and
   more trees. It is also less misty than before.
 * Swamp trees are now mangroves, and are opaque.
@@ -56,6 +82,7 @@ Character
 * Grey Draconians are better at Earth and worse at Air, get more AC, and
   no longer fumble in water.
 * Felids are better at combat and Evocations, worse at Summonings.
+* Felid pounces (sneak attacks) do more damage.
 * The Evocations skill increases max MP.
 * Forms without some sort of hands can't use wands/etc.
 
@@ -65,10 +92,7 @@ Monsters
 * Berserk monsters are immune to fear.
 * Plants don't feel torment. Oklob farms ahoy!
 * Monsters attached to the ground are -TELE.
-* Silver stars are immune to anything polymorph related.
 * Jellies, porcupines, flaming corpses won't get constricted.
-* All abominations get dual demon/undead holiness.
-* Elephant skeletons lose their trunk slap attack.
 * Magical staves work for monsters as something more than a mere cudgel.
 * Monsters can use rings and amulets.
 * Mindless monsters don't have any skills (zombies with pain weapons, etc.).
@@ -82,7 +106,7 @@ Monsters
 * Mimics can be "inept", (no adjective), "ravenous" or "monstrous", with
   a progression of strength and abilities.
 * New monster: orb spider. Shoots weak orbs of destruction at you.
-* Removed: Jozef, midges.
+* Removed: Jozef, midges, killer bee larvae, hairy devils.
 * Porcupines get spines.
 * Hell Sentinels replace Pit Fiends.
 * Boulder beetles can roll as a boulder.
@@ -106,6 +130,7 @@ Monsters
   saner.
 * A "damageless constriction" effect has been implemented for certain
   monsters, particularly mimics.
+* The Royal Jelly is able to regenerate.
 
 Spells
 ------
@@ -114,6 +139,7 @@ Spells
   point blank range.
 * Death Channel is level 6.
 * Simulacrum works on beef jerkies, sausages and meat rations.
+* Removed: Projected Noise.
 
 Items
 -----
@@ -129,6 +155,9 @@ Items
   smiting are no more.
 * Rods of striking are better.
 * Staves of energy reduce spell hunger to 1/3 instead of eliminating it.
+* Missile enchantments are no more, greatly simplifying inventory management.
+    - Formulas have been changed to compensate, with skill filling the role of
+      missile enchantments.
 * All missile brands start visible.
 * Visored helmets don't prevent bite attacks.
 * Identifying weapons by use works instantly but requires a random (per
@@ -136,6 +165,8 @@ Items
 * Unbranded items can't be glowing/runed unless they're cursed.
 * New item: Lightning rod. Has a continuous effect across multiple zaps, and
   allows you to spray wide cones of electricity at your enemies.
+* Randart weapons have a wider selection of names.
+* Acquirement will not provide you with items your god hates.
 
 Cards
 -----
@@ -165,8 +196,8 @@ Gods
 * Elyvilon doesn't take piety when life-saving allies.
 * Non-newbie Elyvilonites can't destroy non-unholy weapons.
 * Fedhas' Sunlight stays in place.
-* Okawaru gives almost no heed to kills of easy monsters, rewards toughest
-  fights more.
+* Okawaru gives almost no heed to kills and sacrifices of easy monsters,
+  rewards toughest fights more.
 * Concurrent god wraths don't dilute each other anymore.
 
 Interface
@@ -175,7 +206,7 @@ Interface
 * Mutation notes mention how it was gained or lost.
 * Removed options: pizza, ood_interesting, rare_interesting, note_all_spells.
 * New options: auto_drop_chunks, autofight_throw, dump_kill_breakdowns,
-  show_travel_trail.
+  show_travel_trail, sacrifice_before_explore.
 * Webtiles chat is now logged (can be disabled via note_chat_messages).
 * The show_gold_turns and show_game_turns options are now enabled by default:
   you will see how much gold you have, and how much time your actions take.
@@ -185,6 +216,7 @@ Interface
 * An in-game high scores browser.
 * Picking up stackable items shows how many you picked up.
 * Every item, monster, feature has a description.
+* Many descriptions were improved.
 * Autoexplore stops on items sacrificeable to your god.
 * Rods appear as a separate item class.
 * Autopickup settings can now be configured in-game, via the '\' key.
@@ -193,6 +225,11 @@ Interface
 * Targetting prompts have been massively improved. Almost all area of effect
   spells are now supported, and bounce paths (e.g. from lightning bolt) are
   displayed.
+* Some added or improved status indicators.
+* Message filters are case-insensitive.
+* Webtiles has experimental support for watching console games on servers
+  running both webtiles and dgamelaunch.
+* Local tiles now has an abilities tab.
 
 Wizmode
 -------
@@ -200,6 +237,11 @@ Wizmode
 * &P to rebuild a level based on a vault.
 * &^M to memorise a spell.
 * &# to (partially) load a character dump file.
+
+Technical
+---------
+* Local tiles can display non-ASCII characters, in default builds only
+  Latin, Greek and Cyrillic.
 
 Stone Soup 0.10.3 (20120614)
 ----------------------------
@@ -221,7 +263,7 @@ Stone Soup 0.10.3 (20120614)
   * picking a stack of items you already had some of shows how many did you
     just gain
   * shops show item slot letters assigned to your new purchases
-  * enchanteable missiles are listed in the wield menu if you have scrolls
+  * enchantable missiles are listed in the wield menu if you have scrolls
     of Enchant Weapon
 
 Stone Soup 0.10.2 (20120411)

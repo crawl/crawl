@@ -25,3 +25,6 @@
 [submodule "crawl-ref/source/contrib/zlib"]
 	path = crawl-ref/source/contrib/zlib
 	url = git://gitorious.org/crawl/crawl-zlib.git
+[submodule "crawl-ref/source/contrib/fonts"]
+	path = crawl-ref/source/contrib/fonts
+	url = git://gitorious.org/crawl/crawl-fonts.git

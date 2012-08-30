@@ -92,7 +92,7 @@ physical damage even to highly fire-resistant enemies.
 Borgnjor's Revivification spell
 
 This spell instantly heals any and all wounds suffered by the caster, but also
-permanently lessens his or her resilience to injury - to a degree dependent on
+permanently lessens his or her resilience to injury — to a degree dependent on
 (and inversely related to) magical skill.
 
 The spell is powerful enough to literally pull someone out of Death's Door,
@@ -141,7 +141,7 @@ induce a state of confusion in the monster.
 Conjure Ball Lightning spell
 
 This spell allows the conjurer to create ball lightning. Using the spell is not
-without risk - ball lightning can be difficult to control.
+without risk — ball lightning can be difficult to control.
 %%%%
 Conjure Flame spell
 
@@ -194,7 +194,7 @@ Death's Door spell
 This spell is extremely powerful, but carries a degree of risk. It renders
 living casters nigh invulnerable to harm for a brief period, but can bring them
 dangerously close to death. So close in fact, that the body believes itself to
-be dead - healing effects will do nothing.
+be dead — healing effects will do nothing.
 
 The caster will receive one warning shortly before the spell expires. Being
 more skilled at Necromancy leaves the caster more resilient. Undead cannot use
@@ -251,14 +251,7 @@ while.
 Ensorcelled Hibernation spell
 
 This spell tries to lower its target's metabolic rate, inducing hypothermic
-hibernation. It may have side effects on cold-blooded creatures.
-%%%%
-Evaporate spell
-
-This spell heats a potion to the point that it explodes when thrown. The
-resultant steam is then transmuted into a large cloud, the type of which varies
-from potion to potion. Of course, the volatile potion must be thrown
-immediately for the spell to work.
+hibernation.
 %%%%
 Excruciating Wounds spell
 
@@ -306,12 +299,6 @@ Freezing Cloud spell
 
 This spell conjures up a large cloud of lethally cold vapour.
 %%%%
-Fulsome Distillation spell
-
-This spell extracts the vile and poisonous essences from a corpse. You probably
-don't want to drink the results. The type of potion produced corresponds
-roughly to the effects of eating said corpse.
-%%%%
 Major Healing spell
 
 This spell heals a large amount of damage to the caster's body.
@@ -353,10 +340,6 @@ Inner Flame spell
 
 This spell fills an enemy with an intense fire, to be explosively released upon
 death. The size of the explosion caused is dependent on the size of the target.
-%%%%
-Insulation spell
-
-This spell protects the caster from electric shocks.
 %%%%
 Invisibility spell
 
@@ -545,11 +528,6 @@ Portal Projectile spell
 This spell teleports a fired or thrown missile directly to its target, greatly
 increasing its accuracy (but not damage).
 %%%%
-Projected Noise spell
-
-This spell produces a noise emanating from a place of the caster's own
-choosing.
-%%%%
 Recall spell
 
 This spell is greatly prized by summoners and necromancers, as it allows the
@@ -579,11 +557,6 @@ Sandblast spell
 This spell creates a short blast of high-velocity particles. It works best when
 the caster provides some source (by wielding a stone), but will do what it can
 with whatever ambient grit is available.
-%%%%
-See Invisible spell
-
-This spell enables the caster to perceive things that are shielded from
-ordinary sight.
 %%%%
 Shadow Creatures spell
 
@@ -711,7 +684,7 @@ Summon Elemental spell
 This spell calls forth a spirit from the elemental planes to aid the caster. A
 large quantity of the desired element must be available; this is rarely a
 problem for earth and air, but may be for fire or water. The elemental will
-usually be friendly to casters - especially those skilled in the appropriate
+usually be friendly to casters — especially those skilled in the appropriate
 form of elemental magic.
 %%%%
 Summon Greater Demon spell

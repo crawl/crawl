@@ -128,8 +128,7 @@ fire_crab MONS_FIRE_CRAB
 %rim 1
 
 ## Worms and larvae ('w')
-killer_bee_larva MONS_ANT_LARVA
-killer_bee_larva MONS_KILLER_BEE_LARVA
+ant_larva MONS_ANT_LARVA
 worm MONS_WORM
 swamp_worm MONS_SWAMP_WORM
 spiny_worm MONS_SPINY_WORM
@@ -385,7 +384,14 @@ silver_statue MONS_SILVER_STATUE
 orange_crystal_statue MONS_ORANGE_STATUE
 wucad_mu_statue MONS_WUCAD_MU_STATUE
 %sdir mon/vault
-statue_snail MONS_STATUE_SNAIL
+spooky_statue MONS_SPOOKY_STATUE
+snail_statue MONS_SNAIL_STATUE
+chilling_statue MONS_CHILLING_STATUE
+air_elementalist_statue MONS_AIR_ELEMENTALIST_STATUE
+earth_elementalist_statue MONS_EARTH_ELEMENTALIST_STATUE
+fire_elementalist_statue MONS_FIRE_ELEMENTALIST_STATUE
+water_elementalist_statue MONS_WATER_ELEMENTALIST_STATUE
+zot_statue MONS_ZOT_STATUE
 
 %sdir mon/statues
 %back statue_base
@@ -611,6 +617,8 @@ tengu MONS_TENGU
 shedu MONS_SHEDU
 %sdir mon/vault
 tengu_conjurer MONS_TENGU_CONJURER
+%sdir mon/unique
+arachne MONS_ARACHNE
 
 ## Various beasts ('I')
 %sdir mon/animals
@@ -913,6 +921,10 @@ murray MONS_MURRAY
 %sdir mon/vault
 ## From a special vault (ancient_champions.des)
 ancient_champion MONS_ANCIENT_CHAMPION
+
+## Sprint specials
+%sdir mon/sprint
+succubus MONS_SUCCUBUS
 
 %include dc-zombie.txt
 

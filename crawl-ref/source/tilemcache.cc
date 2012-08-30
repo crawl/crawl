@@ -242,6 +242,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_VAMPIRE_KNIGHT:
     case TILEP_MONS_SKELETAL_WARRIOR:
     case TILEP_MONS_ANGEL:
+    case TILEP_MONS_SERAPH:
     case TILEP_MONS_CHERUB:
     case TILEP_MONS_MENNAS:
     case TILEP_MONS_PROFANE_SERVITOR:
@@ -350,6 +351,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_SIREN_WATER:
     case TILEP_MONS_ILSUIW:
     case TILEP_MONS_ILSUIW_WATER:
+    case TILEP_MONS_SUCCUBUS:
         *ofs_x = 0;
         *ofs_y = 2;
         break;
@@ -543,7 +545,7 @@ mcache_ghost::mcache_ghost(const monster_info& mon)
 {
     ASSERT(mcache_ghost::valid(mon));
 
-    const uint32_t seed = hash(&mon.mname[0], mon.mname.size());
+    const uint32_t seed = hash32(&mon.mname[0], mon.mname.size());
     rng_save_excursion exc;
     seed_rng(seed);
 
@@ -691,7 +693,7 @@ mcache_demon::mcache_demon(const monster_info& minf)
 {
     ASSERT(minf.type == MONS_PANDEMONIUM_LORD);
 
-    const uint32_t seed = hash(&minf.mname[0], minf.mname.size());
+    const uint32_t seed = hash32(&minf.mname[0], minf.mname.size());
     rng_save_excursion exc;
     seed_rng(seed);
 

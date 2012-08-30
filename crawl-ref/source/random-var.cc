@@ -18,7 +18,7 @@ random_var::random_var(int s, int e, weight_func w)
     init();
 }
 
-random_var::random_var(int s, int e, std::vector<int> ws)
+random_var::random_var(int s, int e, vector<int> ws)
     : start(s), end(e), weights(ws)
 {
     ASSERT(weights.size() == static_cast<unsigned int>(end - start));
@@ -105,7 +105,7 @@ random_var operator+(const random_var& x, const random_var& y)
 {
     const int start = x.min() + y.min();
     const int end = x.max() + y.max() + 1;
-    std::vector<int> weights(end - start, 0);
+    vector<int> weights(end - start, 0);
 
     for (int vx = x.min(); vx <= x.max(); ++vx)
         for (int vy = y.min(); vy <= y.max(); ++vy)
@@ -118,7 +118,7 @@ random_var negate(const random_var& x)
 {
     const int start = -x.max();
     const int end = -x.min() + 1;
-    std::vector<int> weights(end - start, 0);
+    vector<int> weights(end - start, 0);
 
     for (int v = x.min(); v <= x.max(); ++v)
         weights[-v - start] = x.weight(v);
@@ -128,7 +128,7 @@ random_var negate(const random_var& x)
 
 random_var operator-(const random_var& x, const random_var& y)
 {
-    return (x + negate(y));
+    return (x + ::negate(y));
 }
 
 const random_var& operator+=(random_var& x, const random_var& y)
@@ -147,7 +147,7 @@ random_var operator/(const random_var& x, int d)
 {
     const int start = x.min() / d;
     const int end = x.max() / d + 1;
-    std::vector<int> weights(end - start, 0);
+    vector<int> weights(end - start, 0);
 
     for (int v = x.min(); v <= x.max(); ++v)
         weights[v / d - start] += x.weight(v);
@@ -159,7 +159,7 @@ random_var div_rand_round(const random_var& x, int d)
 {
     const int start = x.min() / d;
     const int end = (x.max() + d - 1) / d + 1;
-    std::vector<int> weights(end - start, 0);
+    vector<int> weights(end - start, 0);
 
     for (int v = x.min(); v <= x.max(); ++v)
     {
@@ -174,26 +174,26 @@ random_var div_rand_round(const random_var& x, int d)
 
 random_var rv::max(const random_var& x, const random_var& y)
 {
-    const int start = std::max(x.min(), y.min());
-    const int end = std::max(x.max(), y.max()) + 1;
-    std::vector<int> weights(end - start, 0);
+    const int start = ::max(x.min(), y.min());
+    const int end = ::max(x.max(), y.max()) + 1;
+    vector<int> weights(end - start, 0);
 
     for (int vx = x.min(); vx <= x.max(); ++vx)
         for (int vy = y.min(); vy <= y.max(); ++vy)
-            weights[std::max(vx, vy) - start] += x.weight(vx) * y.weight(vy);
+            weights[::max(vx, vy) - start] += x.weight(vx) * y.weight(vy);
 
     return random_var(start, end, weights);
 }
 
 random_var rv::min(const random_var& x, const random_var& y)
 {
-    const int start = std::min(x.min(), y.min());
-    const int end = std::min(x.max(), y.max()) + 1;
-    std::vector<int> weights(end - start, 0);
+    const int start = ::min(x.min(), y.min());
+    const int end = ::min(x.max(), y.max()) + 1;
+    vector<int> weights(end - start, 0);
 
     for (int vx = x.min(); vx <= x.max(); ++vx)
         for (int vy = y.min(); vy <= y.max(); ++vy)
-            weights[std::min(vx, vy) - start] += x.weight(vx) * y.weight(vy);
+            weights[::min(vx, vy) - start] += x.weight(vx) * y.weight(vy);
 
     return random_var(start, end, weights);
 }
@@ -210,5 +210,5 @@ random_var rv::roll_dice(int d, int n)
 
 random_var rv::random2(int n)
 {
-    return random_var(0, std::max(n, 1));
+    return random_var(0, max(n, 1));
 }

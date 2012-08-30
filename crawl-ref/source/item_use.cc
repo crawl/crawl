@@ -58,7 +58,7 @@
 
 static bool _drink_fountain();
 static int _handle_enchant_armour(int item_slot = -1,
-                                  std::string *pre_msg = NULL);
+                                  string *pre_msg = NULL);
 
 static bool _is_cancellable_scroll(scroll_type scroll);
 static bool _safe_to_remove_or_wear(const item_def &item, bool remove,
@@ -321,7 +321,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
             // Can we safely unwield this item?
             if (needs_handle_warning(*wpn, OPER_WIELD))
             {
-                const std::string prompt =
+                const string prompt =
                     "Really unwield " + wpn->name(DESC_INVENTORY) + "?";
                 if (!yesno(prompt.c_str(), false, 'n'))
                     return false;
@@ -357,8 +357,10 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     if (you.weapon())
     {
         if (unwield_item(show_weff_messages))
+        {
             // Enable skills so they can be re-disabled later
             update_can_train();
+        }
         else
             return false;
     }
@@ -489,7 +491,7 @@ bool item_is_worn(int inv_slot)
 // something legit.
 //
 //---------------------------------------------------------------
-bool armour_prompt(const std::string & mesg, int *index, operation_types oper)
+bool armour_prompt(const string & mesg, int *index, operation_types oper)
 {
     ASSERT(index != NULL);
 
@@ -594,8 +596,10 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     if (player_genus(GENPC_DRACONIAN) && slot == EQ_BODY_ARMOUR)
     {
         if (verbose)
+        {
             mprf("Your wings%s won't fit in that.", you.mutation[MUT_BIG_WINGS]
                  ? "" : ", even vestigial as they are,");
+        }
         return false;
     }
 
@@ -989,7 +993,7 @@ static int _prompt_ring_to_remove(int new_ring)
 
     const int eqslot = (c == lslot || c == '<') ? EQ_LEFT_RING
                                                 : EQ_RIGHT_RING;
-    return (you.equip[eqslot]);
+    return you.equip[eqslot];
 }
 
 static int _prompt_ring_to_remove_octopode(int new_ring)
@@ -1047,7 +1051,7 @@ static int _prompt_ring_to_remove_octopode(int new_ring)
     else if (key_is_escape(c) || eqslot == EQ_NONE)
         return -2;
 
-    return (you.equip[eqslot]);
+    return you.equip[eqslot];
 }
 
 // Checks whether a to-be-worn or to-be-removed item affects
@@ -1127,7 +1131,7 @@ static bool _safe_to_remove_or_wear(const item_def &item, bool remove, bool quie
     if (quiet)
         return false;
 
-    std::string verb = "";
+    string verb = "";
     if (remove)
     {
         if (item.base_type == OBJ_WEAPONS)
@@ -1143,8 +1147,9 @@ static bool _safe_to_remove_or_wear(const item_def &item, bool remove, bool quie
             verb = "Wear";
     }
 
-    std::string prompt = make_stringf("%sing this item will reduce your %s to zero or below. Continue?",
-                                      verb.c_str(), stat_desc(red_stat, SD_NAME));
+    string prompt = make_stringf("%sing this item will reduce your %s to zero "
+                                 "or below. Continue?", verb.c_str(),
+                                 stat_desc(red_stat, SD_NAME));
     if (!yesno(prompt.c_str(), true, 'n', true, false))
     {
         canned_msg(MSG_OK);
@@ -1181,9 +1186,9 @@ bool safe_to_remove(const item_def &item, bool quiet)
             return false;
         else
         {
-            std::string fname = (feat == DNGN_LAVA ? "lava" : "deep water");
-            std::string prompt = "Really remove this item over " + fname + "?";
-            return (yesno(prompt.c_str(), false, 'n'));
+            string fname = (feat == DNGN_LAVA ? "lava" : "deep water");
+            string prompt = "Really remove this item over " + fname + "?";
+            return yesno(prompt.c_str(), false, 'n');
         }
     }
 
@@ -1464,6 +1469,13 @@ static bool _puton_item(int item_slot)
     equip_item(hand_used, item_slot);
 
     check_item_hint(you.inv[item_slot], old_talents);
+#ifdef USE_TILE_LOCAL
+    if (your_talents(false).size() != old_talents)
+    {
+        tiles.layout_statcol();
+        redraw_screen();
+    }
+#endif
 
     // Putting on jewellery is as fast as wielding weapons.
     you.time_taken /= 2;
@@ -1626,7 +1638,17 @@ bool remove_ring(int slot, bool announce)
         return false;
 
     mprf("You remove %s.", you.inv[ring_wear_2].name(DESC_YOUR).c_str());
+#ifdef USE_TILE_LOCAL
+    const unsigned int old_talents = your_talents(false).size();
+#endif
     unequip_item(hand_used);
+#ifdef USE_TILE_LOCAL
+    if (your_talents(false).size() != old_talents)
+    {
+        tiles.layout_statcol();
+        redraw_screen();
+    }
+#endif
 
     you.time_taken /= 2;
     you.turn_is_over = true;
@@ -1668,21 +1690,23 @@ static bool _dont_use_invis()
 static targetter *_wand_targetter(const item_def *wand)
 {
     int range = _wand_range(wand->zap());
+    const int power = 15 + you.skill(SK_EVOCATIONS, 5) / 2;
 
     switch (wand->sub_type)
     {
     case WAND_FIREBALL:
-        return new targetter_beam(&you, range, BEAM_FIRE, true, 1, 1);
+        return new targetter_beam(&you, range, ZAP_FIREBALL, power, true, 1, 1);
     case WAND_LIGHTNING:
-        return new targetter_beam(&you, range, BEAM_ELECTRICITY, false, 0, 0);
+        return new targetter_beam(&you, range, ZAP_LIGHTNING, power, false, 0,
+                                  0);
     case WAND_FLAME:
-        return new targetter_beam(&you, range, BEAM_FIRE, true, 0, 0);
+        return new targetter_beam(&you, range, ZAP_FLAME, power, true, 0, 0);
     case WAND_FIRE:
-        return new targetter_beam(&you, range, BEAM_FIRE, false, 0, 0);
+        return new targetter_beam(&you, range, ZAP_FIRE, power, false, 0, 0);
     case WAND_FROST:
-        return new targetter_beam(&you, range, BEAM_COLD, true, 0, 0);
+        return new targetter_beam(&you, range, ZAP_FROST, power, true, 0, 0);
     case WAND_COLD:
-        return new targetter_beam(&you, range, BEAM_COLD, false, 0, 0);
+        return new targetter_beam(&you, range, ZAP_COLD, power, false, 0, 0);
     default:
         return 0;
     }
@@ -1797,7 +1821,7 @@ void zap_wand(int slot)
     const int tracer_range =
         (alreadyknown && wand.sub_type != WAND_RANDOM_EFFECTS) ?
         _wand_range(type_zapped) : _max_wand_range();
-    const std::string zap_title =
+    const string zap_title =
         "Zapping: " + get_menu_colour_prefix_tags(wand, DESC_INVENTORY);
     direction_chooser_args args;
     args.mode = targ_mode;
@@ -1888,7 +1912,7 @@ void zap_wand(int slot)
 #ifdef WIZARD
     if (you.wizard)
     {
-        std::string str = wand.inscription;
+        string str = wand.inscription;
         int wiz_range = strip_number_tag(str, "range:");
         if (wiz_range != TAG_UNFOUND)
             beam.range = wiz_range;
@@ -2122,7 +2146,7 @@ static bool _drink_fountain()
         return true;
     }
 
-    potion_type fountain_effect = POT_WATER;
+    potion_type fountain_effect = NUM_POTIONS;
     if (feat == DNGN_FOUNTAIN_BLUE)
     {
         if (!yesno("Drink from the fountain?", true, 'n'))
@@ -2146,7 +2170,7 @@ static bool _drink_fountain()
         mpr("You drink the sparkling water.");
 
         fountain_effect =
-            random_choose_weighted(467, POT_WATER,
+            random_choose_weighted(467, NUM_POTIONS,
                                    48,  POT_DECAY,
                                    40,  POT_MUTATION,
                                    40,  POT_CURING,
@@ -2173,7 +2197,7 @@ static bool _drink_fountain()
                                    0);
     }
 
-    if (fountain_effect != POT_WATER && fountain_effect != POT_BLOOD)
+    if (fountain_effect != NUM_POTIONS && fountain_effect != POT_BLOOD)
         xom_is_stimulated(50);
 
     // Good gods do not punish for bad random effects. However, they do
@@ -2222,7 +2246,7 @@ static bool _drink_fountain()
 }
 
 static void _explosion(coord_def where, actor *agent, beam_type flavour,
-                       std::string name, std::string cause)
+                       string name, string cause)
 {
     bolt beam;
     beam.is_explosion = true;
@@ -2272,7 +2296,7 @@ static bool _vorpalise_weapon(bool already_known)
         return false;
 
     // There's a temporary brand, attempt to make it permanent.
-    const std::string itname = wpn.name(DESC_YOUR);
+    const string itname = wpn.name(DESC_YOUR);
     bool success = true;
     bool msg = true;
 
@@ -2413,7 +2437,7 @@ bool enchant_weapon(item_def &wpn, int acc, int dam, const char *colour)
     bool success = false;
 
     // Get item name now before changing enchantment.
-    std::string iname = wpn.name(DESC_YOUR);
+    string iname = wpn.name(DESC_YOUR);
     const char *s = wpn.quantity == 1 ? "s" : "";
 
     // Blowguns only have one stat.
@@ -2549,7 +2573,7 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
     return true;
 }
 
-static int _handle_enchant_armour(int item_slot, std::string *pre_msg)
+static int _handle_enchant_armour(int item_slot, string *pre_msg)
 {
     do
     {
@@ -2583,7 +2607,7 @@ static int _handle_enchant_armour(int item_slot, std::string *pre_msg)
         if (ac_change)
             you.redraw_armour_class = true;
 
-        return (result ? 1 : 0);
+        return result ? 1 : 0;
     }
     while (true);
 
@@ -2935,7 +2959,7 @@ void read_scroll(int slot)
 
     // For cancellable scrolls leave printing this message to their
     // respective functions.
-    std::string pre_succ_msg =
+    string pre_succ_msg =
             make_stringf("As you read the %s, it crumbles to dust.",
                           scroll.name(DESC_QUALNAME).c_str());
     if (you.confused()
@@ -3214,7 +3238,7 @@ void read_scroll(int slot)
     if (id_the_scroll)
         set_ident_flags(scroll, ISFLAG_KNOW_TYPE); // for notes
 
-    std::string scroll_name = scroll.name(DESC_QUALNAME).c_str();
+    string scroll_name = scroll.name(DESC_QUALNAME).c_str();
 
     if (!cancel_scroll)
     {
@@ -3270,10 +3294,8 @@ bool stasis_blocks_effect(bool calc_unid,
 
         if (msg)
         {
-            const std::string name(amulet? amulet->name(DESC_YOUR) :
-                                   "Something");
-            const std::string message =
-                make_stringf(msg, name.c_str());
+            const string name(amulet? amulet->name(DESC_YOUR) : "Something");
+            const string message = make_stringf(msg, name.c_str());
 
             if (noise)
             {
@@ -3374,9 +3396,9 @@ static bool _prompt_eat_bad_food(const item_def food)
     if (!is_bad_food(food))
         return true;
 
-    const std::string food_colour = menu_colour_item_prefix(food);
-    std::string colour            = "";
-    std::string colour_off        = "";
+    const string food_colour = menu_colour_item_prefix(food);
+    string colour            = "";
+    string colour_off        = "";
 
     const int col = menu_colour(food.name(DESC_A), food_colour, "pickup");
     if (col != -1)
@@ -3389,19 +3411,19 @@ static bool _prompt_eat_bad_food(const item_def food)
         colour      = "<" + colour + ">";
     }
 
-    const std::string qualifier = colour
-                                  + (is_poisonous(food)      ? "poisonous" :
-                                     is_mutagenic(food)      ? "mutagenic" :
-                                     causes_rot(food)        ? "rot-inducing" :
-                                     is_forbidden_food(food) ? "forbidden" : "")
-                                  + colour_off;
+    const string qualifier = colour
+                             + (is_poisonous(food)      ? "poisonous" :
+                                is_mutagenic(food)      ? "mutagenic" :
+                                causes_rot(food)        ? "rot-inducing" :
+                                is_forbidden_food(food) ? "forbidden" : "")
+                             + colour_off;
 
-    std::string prompt  = "Really ";
-                prompt += (you.species == SP_VAMPIRE ? "drink from" : "eat");
-                prompt += " this " + qualifier;
-                prompt += (food.base_type == OBJ_CORPSES ? " corpse"
-                                                         : " chunk of meat");
-                prompt += "?";
+    string prompt  = "Really ";
+           prompt += (you.species == SP_VAMPIRE ? "drink from" : "eat");
+           prompt += " this " + qualifier;
+           prompt += (food.base_type == OBJ_CORPSES ? " corpse"
+                                                    : " chunk of meat");
+           prompt += "?";
 
     if (!yesno(prompt.c_str(), false, 'n'))
     {

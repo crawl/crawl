@@ -153,7 +153,7 @@ int spellbook_contents(item_def &book, read_book_action_type action,
 
         out.cprintf("%s", chop_string(spell_title(stype), 29).c_str());
 
-        std::string schools;
+        string schools;
         if (action == RBOOK_USE_ROD)
             schools = "Evocations";
         else
@@ -244,7 +244,6 @@ int book_rarity(uint8_t which_book)
         return 4;
 
     case BOOK_YOUNG_POISONERS:
-    case BOOK_STALKING:
     case BOOK_WAR_CHANTS:
     case BOOK_DEBILITATION:
         return 5;
@@ -296,6 +295,11 @@ int book_rarity(uint8_t which_book)
 
     case BOOK_DESTRUCTION:
         return 30;
+
+#if TAG_MAJOR_VERSION == 34
+    case BOOK_STALKING:
+        return 100;
+#endif
 
     default:
         return 1;
@@ -421,7 +425,7 @@ void mark_had_book(int booktype)
 void inscribe_book_highlevel(item_def &book)
 {
     if (!item_type_known(book)
-        && book.inscription.find("highlevel") == std::string::npos)
+        && book.inscription.find("highlevel") == string::npos)
     {
         add_inscription(book, "highlevel");
     }
@@ -594,8 +598,8 @@ bool player_can_memorise(const item_def &book)
     return false;
 }
 
-typedef std::vector<spell_type>   spell_list;
-typedef std::map<spell_type, int> spells_to_books;
+typedef vector<spell_type>   spell_list;
+typedef map<spell_type, int> spells_to_books;
 
 static void _index_book(item_def& book, spells_to_books &book_hash,
                         unsigned int &num_unreadable, bool &book_errors)
@@ -662,7 +666,7 @@ static bool _get_mem_list(spell_list &mem_spells,
     }
 
     // We also check the ground
-    std::vector<const item_def*> items;
+    vector<const item_def*> items;
     item_list_on_square(items, you.visible_igrd(you.pos()));
 
     for (unsigned int i = 0; i < items.size(); ++i)
@@ -786,7 +790,7 @@ static bool _get_mem_list(spell_list &mem_spells,
     else if (num_race == total || (num_known + num_race) == total)
     {
         const bool lichform = (you.form == TRAN_LICH);
-        const std::string species = "a " + species_name(you.species);
+        const string species = "a " + species_name(you.species);
         mprf(MSGCH_PROMPT,
              "You cannot memorise any of the available spells because you "
              "are %s.", lichform ? "in Lich form"
@@ -854,9 +858,9 @@ static bool _sort_mem_spells(spell_type a, spell_type b)
     return (strcasecmp(spell_title(a), spell_title(b)) < 0);
 }
 
-std::vector<spell_type> get_mem_spell_list(std::vector<int> &books)
+vector<spell_type> get_mem_spell_list(vector<int> &books)
 {
-    std::vector<spell_type> spells;
+    vector<spell_type> spells;
 
     spell_list      mem_spells;
     spells_to_books book_hash;
@@ -866,7 +870,7 @@ std::vector<spell_type> get_mem_spell_list(std::vector<int> &books)
     if (!_get_mem_list(mem_spells, book_hash, num_unreadable, num_race))
         return spells;
 
-    std::sort(mem_spells.begin(), mem_spells.end(), _sort_mem_spells);
+    sort(mem_spells.begin(), mem_spells.end(), _sort_mem_spells);
 
     for (unsigned int i = 0; i < mem_spells.size(); i++)
     {
@@ -885,7 +889,7 @@ static spell_type _choose_mem_spell(spell_list &spells,
                                     unsigned int num_unreadable,
                                     unsigned int num_race)
 {
-    std::sort(spells.begin(), spells.end(), _sort_mem_spells);
+    sort(spells.begin(), spells.end(), _sort_mem_spells);
 
 #ifdef USE_TILE_LOCAL
     const bool text_only = false;
@@ -932,11 +936,11 @@ static spell_type _choose_mem_spell(spell_list &spells,
     spell_menu.action_cycle = Menu::CYCLE_TOGGLE;
     spell_menu.menu_action  = Menu::ACT_EXECUTE;
 
-    std::string more_str = make_stringf("<lightgreen>%d spell level%s left"
-                                        "<lightgreen>",
-                                        player_spell_levels(),
-                                        (player_spell_levels() > 1
-                                         || player_spell_levels() == 0) ? "s" : "");
+    string more_str = make_stringf("<lightgreen>%d spell level%s left"
+                                   "<lightgreen>",
+                                   player_spell_levels(),
+                                   (player_spell_levels() > 1
+                                    || player_spell_levels() == 0) ? "s" : "");
 
     if (num_unreadable > 0)
     {
@@ -976,7 +980,7 @@ static spell_type _choose_mem_spell(spell_list &spells,
         spells_to_books::iterator it = book_hash.find(spell);
         const bool dangerous = is_dangerous_spellbook(it->second);
 
-        std::ostringstream desc;
+        ostringstream desc;
 
         int colour = LIGHTGRAY;
         // Grey out spells for which you lack experience or spell levels.
@@ -995,13 +999,13 @@ static spell_type _choose_mem_spell(spell_list &spells,
 
         desc << "<" << colour_to_str(colour) << ">";
 
-        desc << std::left;
+        desc << left;
         desc << chop_string(spell_title(spell), 30);
         desc << spell_schools_string(spell);
 
         int so_far = strwidth(desc.str()) - (colour_to_str(colour).length()+2);
         if (so_far < 60)
-            desc << std::string(60 - so_far, ' ');
+            desc << string(60 - so_far, ' ');
         desc << "</" << colour_to_str(colour) << ">";
 
         colour = failure_rate_colour(spell);
@@ -1026,7 +1030,7 @@ static spell_type _choose_mem_spell(spell_list &spells,
 
     while (true)
     {
-        std::vector<MenuEntry*> sel = spell_menu.show();
+        vector<MenuEntry*> sel = spell_menu.show();
 
         if (!crawl_state.doing_prev_cmd_again)
             redraw_screen();
@@ -1107,7 +1111,7 @@ bool learn_spell()
 }
 
 // Returns a string about why an undead character can't memorise a spell.
-std::string desc_cannot_memorise_reason(bool undead)
+string desc_cannot_memorise_reason(bool undead)
 {
     if (undead)
         ASSERT(you.is_undead);
@@ -1115,7 +1119,7 @@ std::string desc_cannot_memorise_reason(bool undead)
     const bool lichform = (undead
                            && you.form == TRAN_LICH);
 
-    std::string desc = "You cannot ";
+    string desc = "You cannot ";
     if (lichform)
         desc += "currently ";
     desc += "memorise or cast this spell because you are ";
@@ -1180,7 +1184,7 @@ bool learn_spell(spell_type specspell, int book, bool is_safest_book)
 
     if (chance > 0 && book != NUM_BOOKS && is_dangerous_spellbook(book))
     {
-        std::string prompt;
+        string prompt;
 
         if (is_safest_book)
             prompt = "The only spellbook you have which contains that spell ";
@@ -1297,7 +1301,7 @@ bool learn_spell(spell_type specspell, int book, bool is_safest_book)
 
 bool forget_spell_from_book(spell_type spell, const item_def* book)
 {
-    std::string prompt;
+    string prompt;
 
     prompt += make_stringf("Forgetting %s from %s will destroy the book! "
                            "Are you sure?",
@@ -1424,11 +1428,12 @@ int rod_spell(int rod)
     if (spell == SPELL_THUNDERBOLT && you.props.exists("thunderbolt_last")
         && you.props["thunderbolt_last"].get_int() + 1 == you.num_turns)
     {
-        // Starting it up takes 2 mana, continuing any integer amount up to 5.
+        // Starting it up takes 2 mana, continuing any amount up to 5.
         // You don't get to expend less (other than stopping the zap completely).
-        int oomph = std::max(1, std::min(5, irod.plus / ROD_CHARGE_MULT));
-        you.props["thunderbolt_mana"].get_byte() = oomph;
-        mana = ROD_CHARGE_MULT * oomph;
+        mana = min(5 * ROD_CHARGE_MULT, (int)irod.plus);
+        // Never allow using less than a whole point of charge.
+        mana = max(mana, ROD_CHARGE_MULT);
+        you.props["thunderbolt_mana"].get_int() = mana;
     }
 
     if (irod.plus < mana)
@@ -1506,7 +1511,7 @@ bool is_memorised(spell_type spell)
     return false;
 }
 
-static void _get_spell_list(std::vector<spell_type> &spells, int level,
+static void _get_spell_list(vector<spell_type> &spells, int level,
                             unsigned int disc1, unsigned int disc2,
                             god_type god, bool avoid_uncastable,
                             int &god_discard, int &uncastable_discard,
@@ -1517,7 +1522,7 @@ static void _get_spell_list(std::vector<spell_type> &spells, int level,
     // We store them in an extra vector that (once sorted) can later
     // be checked for each spell with a rarity -1 (i.e. not normally
     // appearing randomly).
-    std::vector<spell_type> special_spells;
+    vector<spell_type> special_spells;
     if (god == GOD_SIF_MUNA)
     {
         for (int i = MIN_GOD_ONLY_BOOK; i <= MAX_GOD_ONLY_BOOK; ++i)
@@ -1533,7 +1538,7 @@ static void _get_spell_list(std::vector<spell_type> &spells, int level,
                 special_spells.push_back(spell);
             }
 
-        std::sort(special_spells.begin(), special_spells.end());
+        sort(special_spells.begin(), special_spells.end());
     }
 
     int specnum = 0;
@@ -1598,7 +1603,7 @@ static void _get_spell_list(std::vector<spell_type> &spells, int level,
     }
 }
 
-static void _get_spell_list(std::vector<spell_type> &spells,
+static void _get_spell_list(vector<spell_type> &spells,
                             unsigned int disc1, unsigned int disc2,
                             god_type god, bool avoid_uncastable,
                             int &god_discard, int &uncastable_discard,
@@ -1609,7 +1614,7 @@ static void _get_spell_list(std::vector<spell_type> &spells,
                     avoid_known);
 }
 
-static void _get_spell_list(std::vector<spell_type> &spells, int level,
+static void _get_spell_list(vector<spell_type> &spells, int level,
                             god_type god, bool avoid_uncastable,
                             int &god_discard, int &uncastable_discard,
                             bool avoid_known = false)
@@ -1633,7 +1638,7 @@ static void _make_book_randart(item_def &book)
 }
 
 bool make_book_level_randart(item_def &book, int level, int num_spells,
-                             std::string owner)
+                             string owner)
 {
     ASSERT(book.base_type == OBJ_BOOKS);
 
@@ -1647,7 +1652,7 @@ bool make_book_level_randart(item_def &book, int level, int num_spells,
     {
         int max_level =
             (completely_random ? 9
-                                 : std::min(9, you.get_experience_level()));
+                               : min(9, you.get_experience_level()));
 
         level = random_range(1, max_level);
     }
@@ -1656,8 +1661,8 @@ bool make_book_level_randart(item_def &book, int level, int num_spells,
     if (num_spells == -1)
     {
         //555666421
-        num_spells = std::min(5 + (level - 1)/3, 18 - 2*level);
-        num_spells = std::max(1, num_spells);
+        num_spells = min(5 + (level - 1)/3, 18 - 2*level);
+        num_spells = max(1, num_spells);
     }
     ASSERT(num_spells > 0 && num_spells <= SPELLBOOK_SIZE);
 
@@ -1670,7 +1675,7 @@ bool make_book_level_randart(item_def &book, int level, int num_spells,
     int god_discard        = 0;
     int uncastable_discard = 0;
 
-    std::vector<spell_type> spells;
+    vector<spell_type> spells;
     _get_spell_list(spells, level, god, !completely_random,
                     god_discard, uncastable_discard);
 
@@ -1717,9 +1722,9 @@ bool make_book_level_randart(item_def &book, int level, int num_spells,
 #endif
     }
 
-    std::vector<bool> spell_used(spells.size(), false);
-    std::vector<bool> avoid_memorised(spells.size(), !completely_random);
-    std::vector<bool> avoid_seen(spells.size(), !completely_random);
+    vector<bool> spell_used(spells.size(), false);
+    vector<bool> avoid_memorised(spells.size(), !completely_random);
+    vector<bool> avoid_seen(spells.size(), !completely_random);
 
     spell_type chosen_spells[SPELLBOOK_SIZE];
     for (int i = 0; i < SPELLBOOK_SIZE; i++)
@@ -1753,8 +1758,7 @@ bool make_book_level_randart(item_def &book, int level, int num_spells,
         spell_used[spell_pos]     = true;
         chosen_spells[book_pos++] = spell;
     }
-    std::sort(chosen_spells, chosen_spells + SPELLBOOK_SIZE,
-              _compare_spells);
+    sort(chosen_spells, chosen_spells + SPELLBOOK_SIZE, _compare_spells);
     ASSERT(chosen_spells[0] != SPELL_NO_SPELL);
 
     CrawlHashTable &props = book.props;
@@ -1768,7 +1772,7 @@ bool make_book_level_randart(item_def &book, int level, int num_spells,
         spell_vec[i].get_int() = chosen_spells[i];
 
     bool has_owner = true;
-    std::string name = "";
+    string name = "";
     if (!owner.empty())
         name = owner;
     else if (god != GOD_NO_GOD)
@@ -1786,7 +1790,7 @@ bool make_book_level_randart(item_def &book, int level, int num_spells,
     // None of these books need a definite article prepended.
     book.props["is_named"].get_bool() = true;
 
-    std::string bookname;
+    string bookname;
     if (god == GOD_XOM && coinflip())
     {
         bookname = getRandNameString("book_noun") + " of "
@@ -1795,7 +1799,7 @@ bool make_book_level_randart(item_def &book, int level, int num_spells,
     }
     else
     {
-        std::string lookup;
+        string lookup;
         if (level == 1)
             lookup = "starting";
         else if (level <= 3 || level == 4 && coinflip())
@@ -1826,9 +1830,9 @@ bool make_book_level_randart(item_def &book, int level, int num_spells,
                 bookname = bookname.substr(3);
         }
 
-        if (bookname.find("@level@", 0) != std::string::npos)
+        if (bookname.find("@level@", 0) != string::npos)
         {
-            std::string number;
+            string number;
             switch (level)
             {
             case 1: number = "One"; break;
@@ -1862,9 +1866,9 @@ static bool _get_weighted_discs(bool completely_random, god_type god,
 {
     // Eliminate disciplines that the god dislikes or from which all
     // spells are discarded.
-    std::vector<int> ok_discs;
-    std::vector<skill_type> skills;
-    std::vector<int> spellcount;
+    vector<int> ok_discs;
+    vector<skill_type> skills;
+    vector<int> spellcount;
     for (int i = 0; i <= SPTYP_LAST_EXPONENT; i++)
     {
         int disc = 1 << i;
@@ -1875,7 +1879,7 @@ static bool _get_weighted_discs(bool completely_random, god_type god,
             continue;
 
         int junk1 = 0, junk2 = 0;
-        std::vector<spell_type> spells;
+        vector<spell_type> spells;
         _get_spell_list(spells, disc, disc, god, !completely_random,
                         junk1, junk2, !completely_random);
 
@@ -1917,7 +1921,7 @@ static bool _get_weighted_discs(bool completely_random, god_type god,
             if (spellcount[i] < 3)
                 weight *= spellcount[i]/3;
 
-            skill_weights[i] = std::max(0, weight);
+            skill_weights[i] = max(0, weight);
             total_skills += skill_weights[i];
         }
 
@@ -1946,7 +1950,7 @@ static bool _get_weighted_discs(bool completely_random, god_type god,
 static void _get_weighted_spells(bool completely_random, god_type god,
                                  int disc1, int disc2,
                                  int num_spells, int max_levels,
-                                 const std::vector<spell_type> &spells,
+                                 const vector<spell_type> &spells,
                                  spell_type chosen_spells[])
 {
     ASSERT(num_spells <= (int) spells.size());
@@ -2000,7 +2004,7 @@ static void _get_weighted_spells(bool completely_random, god_type god,
             int w = 1;
             if (num_skills > 0)
                 w = (2 + (total_skill / num_skills)) / 3;
-            w = std::max(1, w);
+            w = max(1, w);
 
             int l = 5 - abs(3 * spell_difficulty(spell) - Spc) / 7;
 
@@ -2079,7 +2083,7 @@ static void _remove_nondiscipline_spells(spell_type chosen_spells[],
 }
 
 static void _add_included_spells(spell_type chosen_spells[SPELLBOOK_SIZE],
-                                 std::vector<spell_type> incl_spells)
+                                 vector<spell_type> incl_spells)
 {
     for (unsigned int i = 0; i < incl_spells.size(); ++i)
     {
@@ -2111,10 +2115,10 @@ static void _add_included_spells(spell_type chosen_spells[SPELLBOOK_SIZE],
 // containing random spells of the given disciplines (random if none set).
 bool make_book_theme_randart(item_def &book, int disc1, int disc2,
                              int num_spells, int max_levels,
-                             spell_type incl_spell, std::string owner,
-                             std::string title)
+                             spell_type incl_spell, string owner,
+                             string title)
 {
-    std::vector<spell_type> spells;
+    vector<spell_type> spells;
     if (incl_spell != SPELL_NO_SPELL)
         spells.push_back(incl_spell);
     return make_book_theme_randart(book, spells, disc1, disc2,
@@ -2122,10 +2126,10 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
 }
 
 bool make_book_theme_randart(item_def &book,
-                             std::vector<spell_type> incl_spells,
+                             vector<spell_type> incl_spells,
                              int disc1, int disc2,
                              int num_spells, int max_levels,
-                             std::string owner, std::string title)
+                             string owner, string title)
 {
     ASSERT(book.base_type == OBJ_BOOKS);
 
@@ -2181,7 +2185,7 @@ bool make_book_theme_randart(item_def &book,
     int god_discard        = 0;
     int uncastable_discard = 0;
 
-    std::vector<spell_type> spells;
+    vector<spell_type> spells;
     _get_spell_list(spells, disc1, disc2, god, !completely_random,
                     god_discard, uncastable_discard);
 
@@ -2197,7 +2201,7 @@ bool make_book_theme_randart(item_def &book,
     _get_weighted_spells(completely_random, god, disc1, disc2,
                          num_spells, max_levels, spells, chosen_spells);
 
-    std::sort(chosen_spells, chosen_spells + SPELLBOOK_SIZE, _compare_spells);
+    sort(chosen_spells, chosen_spells + SPELLBOOK_SIZE, _compare_spells);
     ASSERT(chosen_spells[0] != SPELL_NO_SPELL);
 
     CrawlHashTable &props = book.props;
@@ -2265,7 +2269,7 @@ bool make_book_theme_randart(item_def &book,
 
     // Resort spells.
     if (!incl_spells.empty())
-        std::sort(chosen_spells, chosen_spells + SPELLBOOK_SIZE, _compare_spells);
+        sort(chosen_spells, chosen_spells + SPELLBOOK_SIZE, _compare_spells);
     ASSERT(chosen_spells[0] != SPELL_NO_SPELL);
 
     // ... and change disc1 and disc2 accordingly.
@@ -2318,11 +2322,11 @@ bool make_book_theme_randart(item_def &book,
 
             if (disc1 != disc2)
             {
-                std::string schools[2];
+                string schools[2];
                 schools[0] = spelltype_long_name(disc1);
                 schools[1] = spelltype_long_name(disc2);
-                std::sort(schools, schools + 2);
-                std::string lookup = schools[0] + " " + schools[1];
+                sort(schools, schools + 2);
+                string lookup = schools[0] + " " + schools[1];
 
                 if (highlevel)
                     owner = getRandNameString("highlevel " + lookup + " owner");
@@ -2336,7 +2340,7 @@ bool make_book_theme_randart(item_def &book,
 
             if (owner.empty() && all_spells_disc1)
             {
-                std::string lookup = spelltype_long_name(disc1);
+                string lookup = spelltype_long_name(disc1);
                 if (highlevel && disc1 == disc2)
                     owner = getRandNameString("highlevel " + lookup + " owner");
 
@@ -2377,7 +2381,7 @@ bool make_book_theme_randart(item_def &book,
         }
     }
 
-    std::string name = "";
+    string name = "";
 
     if (!owner.empty())
     {
@@ -2387,7 +2391,7 @@ bool make_book_theme_randart(item_def &book,
     else
         book.props["is_named"].get_bool() = false;
 
-    std::string bookname = "";
+    string bookname = "";
     if (!title.empty())
         bookname = title;
     else
@@ -2411,10 +2415,10 @@ bool make_book_theme_randart(item_def &book,
         // For the actual name there's a 66% chance of getting something like
         //  <book> of the Fiery Traveller (Translocation/Fire), else
         //  <book> of Displacement and Flames.
-        std::string type_name;
+        string type_name;
         if (disc1 != disc2 && !one_chance_in(3))
         {
-            std::string lookup = spelltype_long_name(disc2);
+            string lookup = spelltype_long_name(disc2);
             type_name = getRandNameString(lookup + " adj");
         }
 
@@ -2448,7 +2452,7 @@ bool make_book_theme_randart(item_def &book,
                 bookname += spelltype_long_name(disc1);
             else
             {
-                if (type_name.find("the ", 0) != std::string::npos)
+                if (type_name.find("the ", 0) != string::npos)
                 {
                     type_name = replace_all(type_name, "the ", "");
                     bookname = "the " + bookname;
@@ -2536,7 +2540,7 @@ void make_book_Kiku_gift(item_def &book, bool first)
         chosen_spells[4] = SPELL_DISPEL_UNDEAD;
     }
 
-    std::sort(chosen_spells, chosen_spells + SPELLBOOK_SIZE, _compare_spells);
+    sort(chosen_spells, chosen_spells + SPELLBOOK_SIZE, _compare_spells);
 
     CrawlHashTable &props = book.props;
     props.erase(SPELL_LIST_KEY);
@@ -2548,10 +2552,10 @@ void make_book_Kiku_gift(item_def &book, bool first)
     for (int i = 0; i < SPELLBOOK_SIZE; i++)
         spell_vec[i].get_int() = chosen_spells[i];
 
-    std::string name = "Kikubaaqudgha's ";
+    string name = "Kikubaaqudgha's ";
     book.props["is_named"].get_bool() = true;
     name += getRandNameString("book_name") + " ";
-    std::string type_name = getRandNameString("Necromancy");
+    string type_name = getRandNameString("Necromancy");
     if (type_name.empty())
         name += "Necromancy";
     else
@@ -2598,7 +2602,7 @@ void destroy_spellbook(const item_def &book)
         spell_type stype = which_spell_in_book(book, j);
         if (stype == SPELL_NO_SPELL)
             continue;
-        maxlevel = std::max(maxlevel, spell_difficulty(stype));
+        maxlevel = max(maxlevel, spell_difficulty(stype));
     }
 
     god_type god;
@@ -2606,6 +2610,5 @@ void destroy_spellbook(const item_def &book)
     // book is a gift of Sif Muna or it contains its name in its title
     did_god_conduct(DID_DESTROY_SPELLBOOK, maxlevel + 5,
                     origin_is_god_gift(book, &god) && god == GOD_SIF_MUNA
-                    || book.name(DESC_PLAIN).find("Sif Muna")
-                       != std::string::npos);
+                    || book.name(DESC_PLAIN).find("Sif Muna") != string::npos);
 }

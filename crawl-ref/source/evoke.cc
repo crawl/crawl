@@ -185,8 +185,10 @@ static bool _reaching_weapon_attack(const item_def& wpn)
         // of invisible monsters.
 
         if (you.confused())
+        {
             mprf("You swing wildly%s", beam.isMe() ?
                                        " and almost hit yourself!" : ".");
+        }
         else
             mpr("You attack empty space.");
         return true;
@@ -346,11 +348,8 @@ bool disc_of_storms(bool drac_breath)
     const int fail_rate = 30 - you.skill(SK_EVOCATIONS);
     bool rc = false;
 
-    if ((player_res_electricity() || x_chance_in_y(fail_rate, 100))
-         && !drac_breath)
-    {
+    if (x_chance_in_y(fail_rate, 100) && !drac_breath)
         canned_msg(MSG_NOTHING_HAPPENS);
-    }
     else if (x_chance_in_y(fail_rate, 100) && !drac_breath)
         mpr("The disc glows for a moment, then fades.");
     else if (x_chance_in_y(fail_rate, 100) && !drac_breath)
@@ -406,7 +405,7 @@ void tome_of_power(int slot)
                  + roll_dice(5, you.skill(SK_EVOCATIONS));
 
     msg::stream << "The book opens to a page covered in "
-                << weird_writing() << '.' << std::endl;
+                << weird_writing() << '.' << endl;
 
     you.turn_is_over = true;
     if (!item_ident(you.inv[slot], ISFLAG_KNOW_TYPE))
@@ -527,7 +526,7 @@ void skill_manual(int slot)
         set_ident_flags(manual, ISFLAG_KNOW_TYPE);
     const skill_type skill = static_cast<skill_type>(manual.plus);
 
-    if (is_useless_skill(skill))
+    if (is_useless_skill(skill) || you.skills[skill] >= 27)
     {
         if (!known)
             mprf("This is a manual of %s.", skill_name(skill));
@@ -544,8 +543,8 @@ void skill_manual(int slot)
 
     if (!known)
     {
-        std::string prompt = make_stringf("This is a manual of %s. Do you want "
-                                          "to study it?", skill_name(skill));
+        string prompt = make_stringf("This is a manual of %s. Do you want "
+                                     "to study it?", skill_name(skill));
         if (!yesno(prompt.c_str(), true, 'n'))
         {
             canned_msg(MSG_OK);
@@ -867,6 +866,7 @@ bool evoke_item(int slot)
             you.duration[DUR_QUAD_DAMAGE] = 30 * BASELINE_DELAY;
             ASSERT(in_inventory(item));
             dec_inv_item_quantity(item.link, 1);
+            invalidate_agrid(true);
             break;
 
         default:

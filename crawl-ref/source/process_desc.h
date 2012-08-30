@@ -17,12 +17,12 @@ template<class T> void process_quote(T &proc, const describe_info &inf);
  * *********************************************************************** */
 // My kingdom for a closure.
 template<class T>
-inline void process_description(T &proc, const describe_info &inf)
+void process_description(T &proc, const describe_info &inf)
 {
     const unsigned int line_width = proc.width();
     const          int height     = proc.height();
 
-    std::string desc;
+    string desc;
     // most stuff goes through translate() twice unnecessarily, yadda yadda yadda
 
     // How many lines is the title; we also seem to be adding 1 to
@@ -65,8 +65,8 @@ inline void process_description(T &proc, const describe_info &inf)
 
     if (!inf.footer.empty() && num_lines + footer_lines <= height)
     {
-        const int bottom_line = std::min(std::max(24, num_lines + 2),
-                                         height - footer_lines + 1);
+        const int bottom_line = min(max(24, num_lines + 2),
+                                    height - footer_lines + 1);
         const int newlines = bottom_line - num_lines;
 
         if (newlines >= 0)
@@ -80,7 +80,7 @@ inline void process_description(T &proc, const describe_info &inf)
     int lineno = 0;
     while (!desc.empty())
     {
-        const std::string line = wordwrap_line(desc, line_width, false, true);
+        const string line = wordwrap_line(desc, line_width, false, true);
 
         // If this is the bottom line of the display but not
         // the last line of text, print an ellipsis instead.
@@ -99,12 +99,12 @@ inline void process_description(T &proc, const describe_info &inf)
 }
 
 template<class T>
-inline void process_quote(T &proc, const describe_info &inf)
+void process_quote(T &proc, const describe_info &inf)
 {
     const unsigned int line_width = proc.width();
     const          int height     = proc.height();
 
-    std::string desc;
+    string desc;
 
     // How many lines is the title; we also seem to be adding 1 to
     // start with.
@@ -131,8 +131,7 @@ inline void process_quote(T &proc, const describe_info &inf)
 
     if (num_lines <= height)
     {
-        const int bottom_line = std::min(std::max(24, num_lines + 2),
-                                         height);
+        const int bottom_line = min(max(24, num_lines + 2), height);
         const int newlines = bottom_line - num_lines;
 
         if (newlines >= 0)
