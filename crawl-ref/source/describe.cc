@@ -3898,7 +3898,8 @@ static std::string _religion_help(god_type god)
     case GOD_NEMELEX_XOBEH:
         result += "You can pray to sacrifice all items on your square. "
                   "Inscribe items with !p, !* or =p to avoid sacrificing "
-                  "them accidentally.";
+                  "them accidentally. See the detailed description to "
+                  "sacrifice only some kinds of items.";
         break;
 
     case GOD_VEHUMET:
@@ -4194,7 +4195,8 @@ static void _detailed_god_description(god_type which_god)
                          "Evocations skill help here, as the power of Nemelex's "
                          "abilities is governed by Evocations instead of "
                          "Invocations. The type of the deck gifts strongly "
-                         "depends on the dominating item class sacrificed:\n";
+                         "depends on the dominating item class sacrificed. "
+                         "Press a letter now to toggle a class:\n";
 
                 for (int i = 0; i < NUM_NEMELEX_GIFT_TYPES; ++i)
                 {
@@ -4220,7 +4222,7 @@ static void _detailed_god_description(god_type which_god)
                                                     "scrolls, wands";
                         break;
                     }
-                    broken += make_stringf(" %c %s%s%s\n",
+                    broken += make_stringf(" <white>%c</white> %s%s%s\n",
                                            'a' + (char) i,
                                            active ? "+ " : "- <darkgrey>",
                                            desc.c_str(),
