@@ -329,6 +329,10 @@ A sparkling altar of Nemelex Xobeh
 This altar sparkles with a lightshow brighter than any gambling den's to
 attract followers for Nemelex Xobeh.
 %%%%
+A spawn point
+
+Here's one of entrances the opposition may come in through.
+%%%%
 A spear trap
 
 This trap shoots long sharp poles that can skewer tresspassers.
