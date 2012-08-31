@@ -575,6 +575,7 @@ void wizard_fight_sim(bool double_scale)
     if (!o)
     {
         mprf(MSGCH_ERROR, "Can't write %s: %s", fightstat, strerror(errno));
+        _uninit_fsim(mon);
         return;
     }
 
@@ -601,6 +602,7 @@ void wizard_fight_sim(bool double_scale)
             break;
         default:
             canned_msg(MSG_OK);
+            _uninit_fsim(mon);
             return;
         }
     }
