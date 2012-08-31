@@ -220,8 +220,11 @@ static monster* _init_fsim()
         args.needs_path = false;
         args.top_prompt = "Select a monster, or hit Escape to use default.";
         direction(moves, args);
-        if (monster_at(moves.target))
+        if (monster_at(moves.target)) {
             mon = clone_mons(monster_at(moves.target), true);
+            if (mon)
+                mon->flags |= MF_HARD_RESET;
+        }
     }
 
     if (!mon)
@@ -243,9 +246,11 @@ static monster* _init_fsim()
                 you.unique_creatures[mtype] = false;
         }
 
-        mon = create_monster(
-            mgen_data::hostile_at(mtype, "fightsim", false, 0, 0, you.pos(),
-                                  MG_DONT_COME));
+        mgen_data temp = mgen_data::hostile_at(mtype, "fightsim", false, 0, 0,
+                                               you.pos(), MG_DONT_COME);
+
+        temp.extra_flags |= MF_HARD_RESET;
+        mon = create_monster(temp);
         if (!mon)
         {
             mprf("Failed to create monster.");
