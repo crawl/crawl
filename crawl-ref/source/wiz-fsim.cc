@@ -312,13 +312,14 @@ static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
     no_messages mx;
     const int hunger = you.hunger;
 
+    const coord_def start_pos = mon.pos();
+
     if (!defend) // you're the attacker
     {
         for (int i = 0; i < iter_limit; i++)
         {
             mon = orig;
             mon.hit_points = mon.max_hit_points;
-            mon.move_to_pos(mon.pos());
             mon.shield_blocks = 0;
             you.time_taken = player_speed();
 
@@ -350,6 +351,9 @@ static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
             cumulative_damage += damage;
             if (damage > fdata.max_dam)
                 fdata.max_dam = damage;
+
+            // Re-place the monster if it e.g. blinked away.
+            mon.move_to_pos(start_pos);
         }
     }
     else // you're defending
@@ -369,6 +373,9 @@ static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
             cumulative_damage += damage;
             if (damage > fdata.max_dam)
                 fdata.max_dam = damage;
+
+            // Re-place the monster if it e.g. blinked away.
+            mon.move_to_pos(start_pos);
         }
         you.hp = yhp;
         you.hp_max = ymhp;
