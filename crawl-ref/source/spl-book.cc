@@ -1942,7 +1942,7 @@ static bool _get_weighted_discs(bool completely_random, god_type god,
     return true;
 }
 
-static void _get_weighted_spells(bool completely_random, god_type god,
+static bool _get_weighted_spells(bool completely_random, god_type god,
                                  int disc1, int disc2,
                                  int num_spells, int max_levels,
                                  const std::vector<spell_type> &spells,
@@ -2043,7 +2043,9 @@ static void _get_weighted_spells(bool completely_random, god_type god,
         max_levels               -= levels;
         spells_left--;
     }
-    ASSERT(book_pos > 0 && max_levels >= 0);
+    ASSERT(max_levels >= 0);
+
+    return book_pos > 0;
 }
 
 static void _remove_nondiscipline_spells(spell_type chosen_spells[],
@@ -2193,8 +2195,17 @@ bool make_book_theme_randart(item_def &book,
 
     _add_included_spells(chosen_spells, incl_spells);
 
-    _get_weighted_spells(completely_random, god, disc1, disc2,
-                         num_spells, max_levels, spells, chosen_spells);
+    // If max_levels is 1, there might not be any suitable spells (for
+    // example, in Charms).  Try one more time with max_levels = 2.
+    while (!_get_weighted_spells(completely_random, god, disc1, disc2,
+                                 num_spells, max_levels, spells,
+                                 chosen_spells))
+    {
+        if (max_levels != 1)
+            die("_get_weighted_spells() failed");
+
+        ++max_levels;
+    }
 
     std::sort(chosen_spells, chosen_spells + SPELLBOOK_SIZE, _compare_spells);
     ASSERT(chosen_spells[0] != SPELL_NO_SPELL);
