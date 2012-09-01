@@ -894,7 +894,6 @@ static bool _offer_items()
         _show_pure_deck_chances();
 #endif
     }
-
     // Explanatory messages if nothing the god likes is sacrificed.
     else if (num_sacced == 0 && num_disliked > 0)
     {
@@ -923,7 +922,7 @@ static bool _offer_items()
     if (num_sacced == 0 && you.religion == GOD_ELYVILON)
     {
         mprf("There are no %sweapons here to destroy!",
-             you.piety_max[GOD_ELYVILON] < piety_breakpoint(2) ? "" : "evil ");
+             you.piety_max[GOD_ELYVILON] < piety_breakpoint(2) ? "" : "unholy or evil ");
     }
 
     return (num_sacced > 0);
