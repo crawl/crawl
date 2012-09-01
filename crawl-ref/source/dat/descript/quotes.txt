@@ -1078,11 +1078,17 @@ shadow
      Life is very long”
     -T.S. Eliot, “The Hollow Men”. 1925.
 %%%%
+small simulacrum
+
+<large simulacrum>
+%%%%
 small skeleton
 
-“God save us from the skeleton
- Who sitteth at the feast!”
-    -James Jeffrey Roche, “The Skeleton at the Feast”. 1890.
+<large skeleton>
+%%%%
+small zombie
+
+<large zombie>
 %%%%
 toenail golem
 
