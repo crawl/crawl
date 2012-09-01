@@ -2641,6 +2641,8 @@ void maybe_id_resist(beam_type flavour)
 
 bool maybe_id_weapon(item_def &item, const char *msg)
 {
+    // Do we need to identify an artefact brand?
+    bool do_art_brand = false;
     iflags_t id = 0;
 
     // Weapons you have wielded or know enough about.
@@ -2659,13 +2661,19 @@ bool maybe_id_weapon(item_def &item, const char *msg)
         else if (is_throwable(&you, item)
                  && you.skill(SK_THROWING, 20, true) > min_skill20)
         {
-            id = ISFLAG_KNOW_PLUSES | ISFLAG_KNOW_TYPE | ISFLAG_KNOW_CURSE;
+            id = ISFLAG_KNOW_PLUSES | ISFLAG_KNOW_CURSE;
+            if (is_artefact(item))
+                do_art_brand = !artefact_known_wpn_property(item, ARTP_BRAND);
+            else
+                id |= ISFLAG_KNOW_TYPE;
         }
     }
 
-    if ((item.flags | id) != item.flags)
+    if ((item.flags | id) != item.flags || do_art_brand)
     {
         set_ident_flags(item, id);
+        if (do_art_brand)
+            artefact_wpn_learn_prop(item, ARTP_BRAND);
         add_autoinscription(item);
         if (msg)
             mprf("%s%s", msg, item.name(DESC_INVENTORY_EQUIP).c_str());
