@@ -1186,7 +1186,7 @@ KITEM: $ = gold
 MAP
 ........................
 wwwwwwwwwwwwwwwwwwwwwwww
-wcccccccccc==ccccccccccw
+wcccccccccc++ccccccccccw
 wc$..................$cw
 wc.........99.........cw
 wc..cccccccccccccccc..cw
@@ -1243,6 +1243,7 @@ SUBST:  1 = 1:70 2:60 3:25
 MONS:   goliath beetle w:20 / giant cockroach w:30 / butterfly w:20
 MONS:   bumblebee / giant centipede / giant mite w:30
 MONS:   killer bee / scorpion / soldier ant w:5
+KFEAT:  = = runed_door
 MAP
 cccccccc+cccccccc
 c...............c
@@ -1269,6 +1270,7 @@ SUBST:  1 = 1:50 2 3:5
 MONS:   troll
 MONS:   rock troll
 MONS:   iron troll
+KFEAT:  = = runed_door
 MAP
 xxxxx...........................xxxxxx
 xwwwx...........................xxxxxx
@@ -1362,11 +1364,11 @@ KITEM:   > = any good_item
 KFEAT:   > = >
 KFEAT:   ; = altar_yredelemnul/altar_kikubaaqudgha
 SHUFFLE: defg
-SUBST:   d = =, e = x, f = x, g = x
-SUBST:   s = =, ! = x, ? = x
+SUBST:   d = +, e = x, f = x, g = x
+# What are s!? for, exactly?
+SUBST:   s = +, ! = x, ? = x
 SUBST:   1 = 1 .:20
 SUBST:   1 : 1:30 2
-SUBST:   + = +=
 SUBST:   w:w.
 NSUBST:  ? = 2:L / *:?
 SUBST:   ? = L:1 x
@@ -1384,7 +1386,7 @@ wwxx..ccccc6ccccc..xxww
 wwx..ccc33+4+33ccc..xww
 wwx.ccccccc+cccc?cc.xww
 wwx.c***x.....x???c4xww
-wwx.c***=..5..x???c.xww
+wwx.c***+..5..x???c.xww
 wwx4cc**x4.;.4x??cc.xww
 wwx..ccxx.....x?cc..xww
 wwxx..ccx..4..xcc..xxww
@@ -1583,7 +1585,7 @@ TAGS:    no_pool_fixup
 MONS:    ogre, two-headed ogre, ogre mage / Erolcha, plant / fungus
 MONS:    ogre zombie, two-headed ogre zombie
 SHUFFLE: WX/ZY , 12/12/67
-SUBST:   W:ww. , X:. , Z:x , Y:+.=
+SUBST:   W:ww. , X:. , Z:x , Y:+.
 SHUFFLE: *5/WW
 SUBST:   *=. , W=wW , !:$.
 SUBST:   5 = 5 6 = ^:5 I:5 F:5
@@ -1709,7 +1711,7 @@ KITEM:   A = w:1 acquire:the_shining_one any / nothing
 : if crawl.one_chance_in(3) then
 SUBST:   | = .
 SUBST:   % = |
-SUBST:   ? = =
+SUBST:   ? = +
 : else
 SUBST:   % = X
 SUBST:   ? = X
@@ -1759,7 +1761,7 @@ KITEM:   A = w:1 acquire:the_shining_one any / nothing
 : if crawl.one_chance_in(3) then
 SUBST:   | = .
 SUBST:   % = |
-SUBST:   ? = =
+SUBST:   ? = +
 : else
 SUBST:   % = X
 SUBST:   ? = X
@@ -1944,7 +1946,7 @@ DEPTH:   D:9-27
 TAGS:    no_monster_gen no_rotate
 MONS:    patrolling guardian serpent
 SHUFFLE: yY/zZ
-SUBST:   y=., Y==, Z=x, z=b
+SUBST:   y=., Y=+, Z=x, z=b
 COLOUR:  *. = lightgreen
 SUBST:   ' = .
 MAP
@@ -2055,7 +2057,6 @@ TAGS:    no_item_gen no_monster_gen
 MONS:    ice beast / nothing
 ITEM:    nothing, nothing
 SHUFFLE: 1ef
-SUBST:   + : +=
 SUBST:   * : *$
 SUBST:   * = ***.|
 MARKER:  1 = lua:fog_machine { cloud_type = "freezing vapour", \
@@ -2104,6 +2105,7 @@ SHUFFLE: Bb/Mm/Mm/Mm
 COLOUR:  B = blue
 SUBST:   M=. , m=n, B=. , b=c
 SUBST:   + : +=
+KFEAT:   = = runed_door
 SUBST:   * : *$
 MARKER:  1 = lua:fog_machine { cloud_type = "freezing vapour", \
               pow_min = 5, pow_max = 5, delay = 120, start_clouds = 1, \
@@ -2756,8 +2758,8 @@ x""""WWwwxcc''''ccxxWWWwwwWWWWx
 x""""Wwwwxcc''''ccxWWWwwwWWWWWx
 x"11Wwxxxxcc.''.ccxWwwwwxxxxxxx
 x1"WWwwwWWxcc++ccxWwwwWW"11""1x
-x"""WWwwwWWxc..cxWWWwwwWW""xx=x
-xx"1"WWwwxxxxx=xxxxWWwwwWW"x''x
+x"""WWwwwWWxc..cxWWWwwwWW""xx+x
+xx"1"WWwwxxxxx+xxxxWWwwwWW"x''x
 xx""1WWwxxWW.....xxxWWwwWWWx''x
 x1"""Wxxx"W..''..WWxxWwwWWWx''x
 x""Wxxx""WW.''''..WWxxWwwW"x''x
@@ -2804,7 +2806,7 @@ x......x.xxxx..xx..xx.0xxx
 ...xx...xxxxx..xx.0xx..xxx
 x......xxxxxx..xx..xx0.xxx
 xx....xxxx.............xxx
-xx....xxxx.xcccccc=ccccccx
+xx....xxxx.xcccccc+ccccccx
 x......xxx.xc..xxx.xxx..cx
 ...xx...xx.xcxxxx...xxxxcx
 ...xxx..+..xcxxxx0'0xxxxcx
@@ -2894,7 +2896,6 @@ ENDMAP
 NAME: wad_mega_maze
 ORIENT: float
 WEIGHT: 4
-NSUBST: ? = 1:n / 1:= / *:X
 SUBST:  X : cccvvb
 MAP
 X@XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -2906,11 +2907,11 @@ X.XXXXX.X.XXXXX...X.X.X....X.X.X.XXX.XX.X......X
 X....XX.X.XXXXXXXXX.X.X.XX.X.X.X.XXX.X%9X.XXXXXX
 XXXX.XX.X...........X.X.XXXX.X.X.XXX.XXXX.XG...X
 X.....X.XXXXXXX.XXXXX.X....X.X.X.XXX......XXXX.X
-X.XX.XX..X....X.....X.X.XX.X.X.X.?X?XXXXXXXXXX.X
-X.XXXXXX.X.XX.XXXXXXX.XGXX.....X.?|?...XX....X.X
-X......X.X.XXXXXXXXXXXXXXXXXXXXX.?|?.X.XX.XX.X.X
-XXXXXX.X.X..........~............?|?.X....XX.X.X
-X.XXXX.X.X.XXXXXXXX.X.XXXXXXXXXX.???XXXXXXXX.X.X
+X.XX.XX..X....X.....X.X.XX.X.X.X.XXXXXXXXXXXXX.X
+X.XXXXXX.X.XX.XXXXXXX.XGXX.....X.X|X...XX....X.X
+X......X.X.XXXXXXXXXXXXXXXXXXXXX.n|X.X.XX.XX.X.X
+XXXXXX.X.X..........~............X|+.X....XX.X.X
+X.XXXX.X.X.XXXXXXXX.X.XXXXXXXXXX.XXXXXXXXXXX.X.X
 X.XXXX.X.X.X.XX...X.X.XXXXX....X.XX..........X.X
 X......X...X....XXX.X.X...X.XX.X.XX.XXX.XXXXXX.X
 XXXXXX.XXXXXXX.XXXX.X.XXX.X.XX.X....XXX........X
@@ -3398,8 +3399,8 @@ FTILE:  '+_!$%*|1234D = floor_vault
 TILE:   v = dngn_metal_wall_white
 TILE:   c = dngn_transparent_wall_white
 COLOUR: v = white
-MARKER: D = lua:restrict_door()
-SUBST:  D = +, !' = .
+KFEAT:  D = runed_door
+SUBST:  !' = .
 : set_feature_name("metal_wall", "silver wall")
 MAP
 ............@@@@@@@............

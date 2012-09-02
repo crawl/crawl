@@ -230,6 +230,7 @@ KFEAT:   ( = . w:25 / ~
 KITEM:   ( = any weapon good_item
 KMONS:   8 = plant
 KFEAT:   8 = floor
+KFEAT:   = = runed_door
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxccccccccccxxccccccccccccx
@@ -496,6 +497,7 @@ ORIENT: southeast
 DEPTH:  D:14-26
 MONS:   yaktaur, death yak, minotaur, random
 MONS:   yak, gnoll, random
+KFEAT:  = = runed_door
 MAP
 .........@....wwwwwwwwwwwwwwwwwxx
 .ccccc.......ww....wwww....wwwwxx
@@ -672,6 +674,7 @@ KMONS:  C = ogre mage / Erolcha, ogre mage
 KMONS:  D = deep elf sorcerer
 KMONS:  E = lich / Boris, lich
 KMONS:  F = ancient lich
+KFEAT:  = = runed_door
 MAP
  cccccccccccccccccccccccccccccc
  cccccccccccccccccccccccccccccc
@@ -1055,7 +1058,6 @@ NSUBST: * = 2:| / *:*
 SUBST:  Z = Y, Y = Y:4 V:1
 SUBST:  v = v:6 b:1, . = .:7 ':1
 KPROP:  'b6 = bloody
-MARKER: = = lua:restrict_door()
 SUBST:  b = v, B = .
 MONS:   hell knight
 MONS:   kobold demonologist, deep elf demonologist
@@ -1073,6 +1075,7 @@ MONS:   human name:sacrificial n_adj n_spe att:neutral
 KMONS:  7 = patrolling hell knight
 ITEM:   acquire any
 SUBST:  '" = ., b = v
+KFEAT:  = = runed_door
 MAP
           xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
           xxxxvvvvvvvvvvvvvvvvvvvvxxvvvvvvv
@@ -1182,6 +1185,7 @@ TAGS:   no_monster_gen no_item_gen
 DEPTH:  D:11-27, Vaults:1-7
 KFEAT:  _ = altar_okawaru
 SUBST:  = = =v
+KFEAT:  = = runed_door
 FTILE:  '+Gvc12345_defghijk = floor_hall
 : if you.absdepth() < 16 then
 MONS:   w:5 deep elf soldier / deep elf fighter / orc warrior
@@ -1249,6 +1253,7 @@ DEPTH:  D:16-
 TAGS:   no_monster_gen
 COLOUR: v'4! = red
 COLOUR: = = red
+KFEAT:  = = runed_door
 TILE:   v = DNGN_STONE_WALL_RED
 FTILE:  v'4! = FLOOR_PEBBLE_RED
 FTILE:  = = FLOOR_PEBBLE_RED
@@ -1258,8 +1263,6 @@ MARKER: ! = lua:fog_machine { \
                 size = 8, size_buildup_amnt = 5, \
                 size_buildup_time = 10, cloud_type = "flame" \
             }
-# let's not have enemies opening the door and roasting themselves...
-MARKER: = = lua:restrict_door()
 KFEAT:  _ = altar_vehumet
 : if you.absdepth() < 22 then
 # Given a special name so they stand out in tiles mode
@@ -1318,7 +1321,7 @@ DEPTH:  D:15-
 TAGS:   no_monster_gen
 #
 # gives a 50% chance of there being at least one shortcut in this vault
-SUBST:  = = c:8 =:1
+SUBST:  = = c:8 +:1
 TILE:   c = WALL_BRICK_GRAY
 # maybe use something darker?
 #
@@ -1388,9 +1391,7 @@ MONS:    guardian serpent
 MONS:    curse skull
 # Randomise wall type: in 50% of maps, you cannot dig to the stairs.
 SUBST:   x : xxxxxxvvvccb
-# Hints at the important secret doors (red colour). On the one hand, we
-# may be too nice here; on the other hand, that's spoily information.
-# (red blood tiles at the claws)
+KFEAT:   = = runed_door
 COLOUR:  ' = red
 FTILE:   ' = floor_rough_red
 SUBST:   ' = .

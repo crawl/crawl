@@ -40,7 +40,7 @@ TAGS:   no_rotate no_vmirror no_hmirror
 NSUBST: C = 5:C / *:.
 SUBST:  X = C
 SUBST:  D = V..
-MARKER: = = lua:restrict_door()
+KFEAT:  = = runed_door
 {{
 local cathedral_bats = TriggerableFunction:new {
     func = "callback.cathedral_bats",

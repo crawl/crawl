@@ -136,7 +136,7 @@ WEIGHT: 1
 DEPTH:  D:15-27, Elf, Vaults
 MONS:   butterfly
 MARKER: X = lua: props_marker { connected_exclude="true" }
-SUBST:  X = =
+KFEAT:  X = runed_door
 MAP
 XXXXXXXXXX
 XxXXXXXXXX
@@ -528,7 +528,7 @@ WEIGHT: 1
 DEPTH:  D:20-27, Elf:3-5, Vaults:4-8
 MONS:   elephant, dire elephant, hellephant
 MARKER: X = lua: props_marker { connected_exclude="true" }
-SUBST:  X = =
+KFEAT:  X = runed_door
 MAP
 XXXXXXXXXX
 XxXXXXXXXX
@@ -556,7 +556,7 @@ MAP
 .xxxx.
 .x**x.
 .x**x.
-.xx=x.
+.xx+x.
 ...1..
 ENDMAP
 
@@ -574,7 +574,7 @@ MAP
 .ccCcc.
 .n%%%n.
 .n%%%n.
-.cc=cc.
+.cc+cc.
 ...1...
 ENDMAP
 
@@ -651,7 +651,6 @@ xxx1...1xxx
 ENDMAP
 
 # A raven's nest, containing some jewellery.
-# The dungeon version maya be hidden.
 # Could be used as a subvault in some forest vault.
 NAME:     roderic_ravens_nest
 TAGS:     extra mini_float
@@ -660,19 +659,16 @@ KMONS:    1 = raven
 KITEM:    % = any jewellery
 KITEM:    1 = any jewellery / nothing
 : if you.branch() == "D" then
-SHUFFLE:  t' / x"
-SUBST:    " = x
-NSUBST:   x = 1:= / *:x
+SHUFFLE:  t / x
 : end
 : if you.branch() == "Swamp" then
 KFEAT:  t = mangrove
 : end
-SUBST:    ' = .
 : kmons("% = nothing w:10 / raven w:"..you.absdepth())
 MAP
 tttt
 t%1t
-ttt'@
+ttt.@
 ENDMAP
 
 NAME:   nicolae_underground_beach
@@ -964,11 +960,11 @@ DEPTH:   D:2-4
 MONS:    goblin / hobgoblin w:5, goblin; sling . stone q:20
 SUBST:   y = .WWw, Y = ...W, . = .....1
 SHUFFLE: >X/_"
-SUBST:   X = x, _ = =, " = @
+SUBST:   X = x, _ = +, " = @
 MAP
    XXX
 xxxx>xxxx
-xxxx=xxxx
+xxxx+xxxx
 xwww2wwwx
 xyywwwyyx
 xYYYYYYYx
@@ -1340,7 +1336,7 @@ MAP
 wwwwwwww..wwwwwwwwwwwww
 wwwwww.11...wwwwwwwwwww
 wwwww........wwwwwwwwww
-wwwww...x=x..wwwwwwwwww
+wwwww...x+x..wwwwwwwwww
 wwww..11x.x..wwwwwwwww
  www...xx>x11wwwwwwwww
  www..xx??x.wwwwwwwww
@@ -1354,6 +1350,7 @@ ENDMAP
 NAME:   hunters_booth_kilobyte
 DEPTH:  D:5-15
 MONS:   centaur, bush
+KFEAT:  = = runed_door
 MAP
 .....xxx
 @....21=@
@@ -1490,7 +1487,7 @@ SUBST:  2 = 1'
 KMONS:  _ = deep dwarf berserker
 KFEAT:  _ = altar_trog
 SUBST:  C : c', B : +', D : +', E : +c
-SUBST:  = = ccc=
+SUBST:  = = ccc+
 FTILE:  *|_1+'c = floor_hall
 FTILE:  # = floor_rough_lightred
 MARKER:  # = lua:fog_machine { cloud_type = "flame", \
@@ -1520,10 +1517,11 @@ MAP
    .....@.....
 ENDMAP
 
-NAME: lookout_dungeons_type
+NAME:  lookout_dungeons_type
 DEPTH: D:4-14
-TAGS: extra no_pool_fixup layout_rooms layout_city
-MONS: w:1 generate_awake centaur / w:4 nothing
+TAGS:  extra no_pool_fixup layout_rooms layout_city
+MONS:  w:1 generate_awake centaur / w:4 nothing
+KFEAT: = = runed_door
 MAP
 ....@....
 .........
@@ -2142,7 +2140,7 @@ ENDMAP
 NAME:   minmay_statue_crystal_thing
 DEPTH:  D:9-26
 MONS:   orange crystal statue w:30 / silver statue / ice statue w:5
-NSUBST: ? = 1:= / 1:n / *:b
+KFEAT:  = = runed_door
 MAP
       .....
     ...b+b...
@@ -3844,7 +3842,7 @@ NAME:   minivault_9
 TAGS:   allow_dup
 DEPTH:  D:15-27, Elf, Vaults, Crypt, Dis, Geh, Tar, Coc, Zot
 MARKER: X = lua: props_marker { connected_exclude="true" }
-SUBST:  X = =
+KFEAT:  X = runed_door
 # Pick interesting monsters for dungeon branches. Vaults and D get normal OOD.
 : if you.branch() == "Elf" then
 KMONS:  8 = deep elf annihilator / deep elf blademaster / deep elf master archer / \
@@ -3890,7 +3888,7 @@ NAME:   reverse_minivault_9
 DEPTH:  D:15-27, Vaults
 WEIGHT: 4
 MARKER: X = lua: props_marker { connected_exclude="true" }
-SUBST:  X = =
+KFEAT:  X = runed_door
 MAP
 xxxxxxxxxxxxxx
 x8.*.8..8.9.8x
