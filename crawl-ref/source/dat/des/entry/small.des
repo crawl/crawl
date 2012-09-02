@@ -3087,3 +3087,90 @@ xxww1..G..1wwxx
 ..xxwwwwwwwxx..
 @..xxxxxxxxx..@
 ENDMAP
+
+##############################################################################
+
+NAME:   lightli_entry_noodles
+ORIENT: float
+TAGS:   entry no_monster_gen
+MAP
+xxxxxxxxxx
+xG..{<..Gx
+xl......lx
+xl......lx
+xl......lx
+xl..GG..lx
+xl......lx
+xl......lx
+xl......lx
+xG......Gx
+xxxx++xxxx
+ENDMAP
+
+##############################################################################
+
+NAME:   lightli_entry_isolated_outpost
+ORIENT: float
+TAGS:   entry no_pool_fixup no_monster_gen
+SUBST:  < = <{
+MAP
+WWWWWWWW@@WWWWWWWW
+W..G..G....G..G..W
+W.cccccn++nccccc.W
+WGcWWWWW..WWWWWcGW
+W.cW..........Wc.W
+w.cW.cccccccc.Wc.W
+W.cW..........Wc.W
+W.cWWWWW..WWWWWc.W
+W.cccccn++nccccc.W
+W.c............c.W
+W.clllll..lllllc.W
+W.clllll..lllllc.W
+W.c............c.W
+W.cvvvvv++vvvvvc.W
+WGc.....{<.....cGW
+W.cccccccccccccc.W
+W..G..........G..W
+WWWWWWWWWWWWWWWWWW
+ENDMAP
+
+##############################################################################
+
+NAME:   lightli_entry_windingriver
+ORIENT: float
+TAGS:   entry no_monster_gen
+KMONS:  P = plant
+SUBST:  p = Pw
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxx
+xpwppwppppppwppp.p.p...x
+xwwwwwwpppppwwppp..w...x
+xwwwwwwwpwpwwwwppwwwwp.x
+xwwwwwwwwwwwwwwwwww..w.+
+xw.wwwwwwwwwwwwwww.....+
+xp..w..wwwww..www..p...x
+x.xp.px.w.w.xx.w.xxx...x
+x{xxxxxx.p.xxxx.xxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+
+NAME:   lightli_entry_boilingwater
+ORIENT: float
+TAGS:   entry no_monster_gen
+SUBST:  ( = (<
+SUBST:  [ = [<
+MAP
+  @@@@@@
+WWWllllWWW
+WGWWllWWGW
+WWGWWWWGWW
+lWWb++bWWl
+llWm{(mWll
+llWm[<mWll
+lWWbmmbWWl
+WWGWWWWGWW
+WGWWllWWGW
+WWWllllWWW
+ENDMAP
