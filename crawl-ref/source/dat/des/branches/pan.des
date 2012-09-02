@@ -804,8 +804,7 @@ SUBST:      C : c, d : c
 : else
 SUBST:      C : ., d : +
 : end
-MARKER:     = = lua:restrict_door()
-SUBST:      = = +
+KFEAT:      = = runed_door
 TILE:       c = dngn_stone_wall_darkgray
 MONS:       patrolling Gloorx Vloq
 MONS:       executioner, shadow demon, shadow wraith, demonic crawler

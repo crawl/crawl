@@ -328,7 +328,7 @@ SUBST:   p = T:40 V:40 U:20
 SUBST:   . = .:92 ~:5 ^:1 %:1 *:1
 SUBST:   q = q:66 ~:33 ^:1
 KFEAT:   q = alarm trap
-MARKER:  + = lua:restrict_door()
+KFEAT:   + = runed_door
 ITEM:    box of beasts / empty ebony casket
 ITEM:    any weapon
 ITEM:    amulet of faith / \
@@ -610,7 +610,7 @@ SUBST:   & = .:15 G H I
 KITEM:   G = griffon corpse
 KITEM:   H = sheep corpse
 KITEM:   I = deep troll corpse
-MARKER:  + = lua:restrict_door()
+KFEAT:   + = runed_door
 : dgn.delayed_decay(_G, 'G', 'griffon corpse')
 : dgn.delayed_decay(_G, 'H', 'hell hound corpse')
 : dgn.delayed_decay(_G, 'I', 'deep troll corpse')
@@ -670,7 +670,7 @@ KITEM:   M = manual of Fighting / manual of Dodging / manual of Armour / \
 KITEM:   Q = potion of poison / potion of strong poison / bottled efreet w:1
 KFEAT:   ? = any shop
 KFEAT:   & = food shop
-MARKER:  = = lua:restrict_door()
+KFEAT:   + = runed_door
 KFEAT:   8 = granite_statue
 MAP
 cccccccccccc.@.ccccc

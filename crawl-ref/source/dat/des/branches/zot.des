@@ -178,7 +178,7 @@ KPROP:  O-X = no_tele_into
 SUBST:  X = c
 SUBST:  - = ., D = +
 KFEAT:  O = enter_zot
-MARKER: + = lua:restrict_door()
+KFEAT:  + = runed_door
 # easy: 1, 2
 : if crawl.coinflip() then
 MONS:   pale draconian, steam dragon
@@ -880,13 +880,13 @@ KFEAT:   ^~ = teleport trap w:45 / zot trap w:4 / . w:1
 KFEAT:   _ = altar_xom
 KFEAT:   > = } mimic
 KPROP:   ^~> = no_rtele_into
-MARKER:  - = lua:restrict_door()
+KFEAT:   - = runed_door
 COLOUR:  ^~ = warp
 FTILE:   ^ = floor_rough_magenta
 FTILE:   ~ = floor_rough_lightmagenta
 NSUBST:  > = 1:} / 1:) / 1:] / *:>, 9 = 1:0 / *:9, T = 1:. / *:T
 SUBST:   d = tGmcc, c = cccccbbvvx, M = m`, ` = `:195 ':3 ":2
-SUBST:   } = }:80 >, ) = ):80 >, ] = ]:80 >, l = wl, - = +
+SUBST:   } = }:80 >, ) = ):80 >, ] = ]:80 >, l = wl
 SHUFFLE: 56, 78, ^~, cm / xn
 MARKER:  ' = lua:fog_machine { cloud_type = "seething chaos", pow_max = 17, \
              delay_min = 450, delay_max = 700, size = 1, excl_rad = 0 }
