@@ -983,12 +983,6 @@ corpse_effect_type mons_corpse_effect(monster_type mc)
     return smc->corpse_thingy;
 }
 
-monster_type mons_species(monster_type mc)
-{
-    const monsterentry *me = get_monster_data(mc);
-    return (me ? me->species : MONS_PROGRAM_BUG);
-}
-
 monster_type mons_genus(monster_type mc)
 {
     if (mc == RANDOM_DRACONIAN || mc == RANDOM_BASE_DRACONIAN
@@ -1005,9 +999,10 @@ monster_type mons_genus(monster_type mc)
     return smc->genus;
 }
 
-monster_type mons_detected_base(monster_type mc)
+monster_type mons_species(monster_type mc)
 {
-    return (monster_symbols[mc].detected);
+    const monsterentry *me = get_monster_data(mc);
+    return (me ? me->species : MONS_PROGRAM_BUG);
 }
 
 monster_type draco_subspecies(const monster* mon)
@@ -1023,6 +1018,11 @@ monster_type draco_subspecies(const monster* mon)
         retval = mon->base_monster;
 
     return retval;
+}
+
+monster_type mons_detected_base(monster_type mc)
+{
+    return (monster_symbols[mc].detected);
 }
 
 int get_shout_noise_level(const shout_type shout)
