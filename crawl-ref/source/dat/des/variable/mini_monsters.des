@@ -951,6 +951,34 @@ MAP
   ..........
 ENDMAP
 
+NAME:  guppyfry_early_lair_pool
+DEPTH: D:2-5
+TAGS:  patrolling no_monster_gen transparent mini_float
+KMONS: 1 = big fish / giant goldfish / jellyfish
+KMONS: 2 = agate snail / giant slug / giant centipede
+KMONS: 3 = plant
+ITEM:  apple / apricot / pear / orange / banana / strawberry
+SUBST: - = wwwwwwWWW1
+SUBST: . = ........33
+SUBST: ? = .wwt3%dd22
+: if you.absdepth() < 4 then
+SUBST: 2 = .
+: end
+MAP
+............
+....?--?....
+..?-----?...
+..--------..
+.----------.
+.----------.
+..-------...
+...-----....
+...?---?....
+.....?--?...
+......?-?...
+............
+ENDMAP
+
 ###############################################################################
 #
 # <<3>> Humanoids
@@ -1722,6 +1750,56 @@ x32*dx
 x213*x
 x3232x
 xx+xxx
+ENDMAP
+
+NAME:  guppyfry_early_elven_hall
+DEPTH: D:3-6
+TAGS:  patrolling no_monster_gen mini_float transparent
+MONS:  deep elf soldier, plant
+ITEM:  any scroll / any food / any book
+SUBST: - = 2.....GTd$
+MARKER: H = lua:props_marker { stop_explore = "statue" }
+SUBST: HI = G
+MAP
+.............
+.xxxxxxxxxxx.
+.x...........
+.x...........
+.x+++xxxxxxH.
+.x-.-+.......
+.x1..+.......
+.x-.-+.......
+.x+++xxxxxxI.
+.x...........
+.x...........
+.xxxxxxxxxxx.
+.............
+ENDMAP
+
+NAME:  guppyfry_early_orc_mine
+DEPTH: D:2-5
+TAGS:  patrolling no_monster_gen mini_float transparent
+MONS:  orc, goblin, hobgoblin
+MONS:  orc / orc warrior / orc priest / orc wizard
+ITEM:  stone / large rock
+SUBST: - = 123.x$dI
+SUBST: ? = .$d
+: if you.absdepth() > 3 then
+SUBST: 1 = 4
+: end
+MAP
+..............
+.x.xxxxxxxxxx.
+.x..xxx.x..xx.
+.xx...xx.xx.x.
+..xx..-.x.xx-.
+..x.x.-?x.xxx.
+..xxx?---?.1x.
+..-xx?---x.xx.
+..xx.?---xxxx.
+.xx....-xxxxx.
+.xxxx.xxxxxxx.
+..............
 ENDMAP
 
 ################################################################################
