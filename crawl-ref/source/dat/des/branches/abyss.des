@@ -136,7 +136,7 @@ xx23xx W
 ENDMAP
 
 # "(He) opened the mailbox. There was nothing inside. Nothing after nothing came pouring out."
-NAME:   not_minivault_9_hangedman
+NAME:   not_door_vault_hangedman
 TAGS:   abyss
 MARKER: X = lua: props_marker { connected_exclude="true" }
 KFEAT:  X = runed_door
