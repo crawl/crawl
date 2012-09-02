@@ -4372,7 +4372,7 @@ void item_list::set_from_slot(const item_list &list, int slot_index)
 // TODO: More checking for innapropriate combinations, like the holy
 // wrath brand on a demonic weapon or the running ego on a helmet.
 // NOTE: Be sure to update the reference in syntax.txt if this gets moved!
-static int str_to_ego(item_spec &spec, string ego_str)
+static int _str_to_ego(item_spec &spec, string ego_str)
 {
     const char* armour_egos[] = {
         "running",
@@ -5090,7 +5090,7 @@ item_spec item_list::parse_single_spec(string s)
         return result;
     }
 
-    const int ego = str_to_ego(result, ego_str);
+    const int ego = _str_to_ego(result, ego_str);
 
     if (ego == 0)
     {
