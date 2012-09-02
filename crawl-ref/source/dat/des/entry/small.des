@@ -1858,7 +1858,7 @@ MAP
 xxxxxxxxxxxxxxxxxxxx
 xccccccx.......x..c.
 xccccccc..ccx'.x..x.
-xcc.(..c..'..c.'=''.
+xcc.(..c..'..c.'+''.
 xcc.[..+..c..+.x.."@
 xcc.{..c..cxxc.'..x.
 xccccccc..x....'xx'.
@@ -2228,7 +2228,7 @@ ITEM:    apple / sausage / nothing / stone
 SHUFFLE: ({[, Aa, Bb, Cc, Ee, Ff
 MONS:    w:30 nothing / w:10 plant / w:5 fungus / w:10 rat
 SUBST:   A=x, B=x, C=x, E=x, F=x, a=., b=., c=., e=., f=.
-SUBST:   X = x =
+SUBST:   X = xxxxxxxxxxxxxxxxx+
 MAP
 xxxxxxxxx@xxxxxxx
 x.......A.a.....x
@@ -2240,7 +2240,7 @@ xEx.x.x.xxxxx.xFx
 x...x.c...1dx...x
 xxxxxCxxxxxxxx.xx
 x...............x
-x.xxxxxX.Xxxxxx.x
+x.xxxxxx.xxxxxx.x
 x.....[x(x{.....x
 xxxxxxxxxxxxxxxxx
 ENDMAP
@@ -2987,7 +2987,7 @@ SUBST:   Y = x .:1 , o : . , p : [
 NSUBST:  { = { / . , ( = ( / . , [ = [ / . , r = + / +c
 : if crawl.one_chance_in(3) then
 NSUBST:  R = + / +c
-NSUBST:  N = n / *=nnc=
+NSUBST:  N = n / *=nnc
 SUBST:   z : c
 : else
 SUBST:   R : c, z : +
