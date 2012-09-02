@@ -281,10 +281,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "gnoll / gnoll shaman / gnoll sergeant / hound / war dog",
                 -- Gimmicks
                 "brain worm", "giant spore hd:3", "orc priest", "vampire bat",
-                "kobold name:kamikaze_kobold n_rpl n_noc n_des perm_ench:inner_flame",
-                -- Teams
-                "place:D:15 name:(purple_team) n_suf n_noc /\
-                    place:D:15 name:(green_team) n_suf n_noc att:friendly",
+                "kobold name:kamikaze_kobold n_rpl n_noc n_des perm_ench:inner_flame"
              }
         elseif round <= 10 then
             mon_set = {
@@ -335,10 +332,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "brain worm", "giant spore hd:3", "deep elf priest always_corpse",
                 "kobold name:kamikaze_kobold n_rpl n_noc n_des perm_ench:inner_flame",
                 "dwarf name:drunken n_adj n_des n_noc perm_ench:confusion",
-                "hungry ghost",
-                -- Teams
-                "tarantella name:(purple_team) n_suf n_noc /\
-                    tarantella name:(green_team) n_suf n_noc att:friendly"
+                "hungry ghost"
             }
         elseif round <= 15 then
             mon_set = {
@@ -388,10 +382,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "neqoxec", "giant spore hd:3", "deep elf priest always_corpse",
                 "moth of wrath / w:20 hill giant", "ball lightning",
                 "boulder beetle", "orb spider", "redback / sea snake w:3",
-                "hungry ghost / w:5 harpy", "shining eye",
-                -- Teams
-                "orc warlord name:(purple_team) n_suf n_noc /\
-                    orc warlord name:(green_team) n_suf n_noc att:friendly",
+                "hungry ghost / w:5 harpy", "shining eye"
             }
         elseif round <= 20 then
             mon_set = {
@@ -460,10 +451,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "moth of wrath / w:20 stone giant", "ball lightning",
                 "boulder beetle", "orb spider",
                 "hungry ghost / harpy", "shining eye", "tormentor",
-                "skeletal warrior / w:5 skeletal warrior ; blowgun . needle ego:confusion",
-                -- Teams
-                "base draconian name:(purple_team) n_suf n_noc /\
-                    base draconian name:(green_team) n_suf n_noc att:friendly"
+                "skeletal warrior / w:5 skeletal warrior ; blowgun . needle ego:confusion"
             }
         elseif round <= 30 then
             mon_set = {
@@ -539,10 +527,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "reaper / hell beast / geryon w:1",
                 "ghost moth / w:30 lorocyproca / eye of draining",
                 "giant eyeball w:5 / ettin",
-                "executioner / w:1 ignacio",
-                -- Teams
-                "lich name:(purple_team) n_suf /\
-                    lich name:(green_team) n_suf att:friendly"
+                "executioner / w:1 ignacio"
             }
         else
             mon_set = {
@@ -621,10 +606,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "orb of fire / w:5 orb of fire name:orb_of_ice n_rpl n_des spells:ice_storm col:lightblue /\
                   orb of fire name:orb_of_electricity n_rpl n_des spells:chain_lightning col:yellow /\
                   w:5 silver star",
-                "hellion / efreet",
-                -- Teams
-                "greater demon name:(purple_team) n_suf /\
-                    greater demon name:(green_team) n_suf att:friendly"
+                "hellion / efreet"
             }
         end
 
