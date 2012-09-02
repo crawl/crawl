@@ -935,6 +935,7 @@ NAME:    statue_cache
 ORIENT:  north
 TAGS:    no_monster_gen
 DEPTH:   D:12-20, Elf, Vaults
+SHUFFLE: 12, 34, 56, 89
 MONS: statue name:archer name_adjective tile:mons_statue_crossbow ; crossbow \
       ego:flame . bolt q:30
 MONS: statue name:archer name_adjective tile:mons_statue_crossbow ; crossbow \
