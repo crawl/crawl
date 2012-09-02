@@ -208,23 +208,25 @@ end
 function arena_sprint_get_monster_set(round, boss)
     if not boss then
         if round == 27 then
-            return {"base draconian w:5 / place:Zot:5 / orb guardian w:15 / tiamat w:3"}
+            return {"place:Zot:5 / orb guardian w:70 / tiamat /\
+                        orb of fire / electric golem / killer klown /\
+                        ancient lich / moth of wrath"}
         end
 
         local mon_set = {}
 
         -- First two rounds have a more limited, less lethal set.
         if round == 1 and crawl.coinflip() then
-            return {"place:D:2 / place:D:4 / w:2 sigmund / w:1 jessica / w:1 terence"}
+            return {"place:D:2 / place:D:4 / w:4 sigmund / w:2 jessica / w:2 terence"}
         elseif round <= 2 then
             mon_set = {
-                "place:D:3 / place:D:5 / w:2 sigmund / w:1 jessica / w:1 terence",
-                "goblin / hobgoblin / kobold / big kobold / ijyb w:3 / pikel w:2",
-                "rat / quokka / grey rat / green rat / porcupine / w:2 orange rat / w:3 purgy",
+                "place:D:3 / place:D:5 / w:4 sigmund / w:2 jessica / w:2 terence",
+                "goblin / hobgoblin / kobold / big kobold / ijyb w:6 / pikel w:4",
+                "rat / quokka / grey rat / green rat / porcupine / w:2 orange rat / w:6 purgy",
                 "ball python / adder w:15 / water moccasin w:5",
-                "orc w:40 / orc wizard w:8 / orc priest w:5 / w:5 orc warrior / blork the orc w:5",
-                "gnoll w:35 / hound w:5 / gnoll sergeant / gnoll shaman / crazy yiuf w:5",
-                "lesser demon w:30 / grinder w:2 / w:1 eustachio",
+                "orc w:40 / orc wizard w:8 / orc priest w:5 / w:5 orc warrior / blork the orc",
+                "gnoll w:35 / hound w:5 / gnoll sergeant / gnoll shaman / crazy yiuf",
+                "lesser demon w:30 / grinder w:3 / w:2 eustachio",
                 "small zombie / small skeleton / wight w:5 / necrophage / large zombie w:5 /\
                     large skeleton w:5 / shadow w:5 / phantom w:5",
                 "worker ant / soldier ant w:2 / queen ant w:1 / ant larva w:1 /\
@@ -453,7 +455,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "hungry ghost / harpy", "shining eye", "tormentor",
                 "skeletal warrior / w:5 skeletal warrior ; blowgun . needle ego:confusion"
             }
-        elseif round <= 30 then
+        elseif round <= 26 then
             mon_set = {
                 -- Branches: Vaults, Orc, Elf, Shoals, Swamp, Spider, Snake, Slime,
                 -- Blade, Forest, Dwarf, Crypt, Pan, Tomb, Hell
@@ -529,7 +531,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "giant eyeball w:5 / ettin",
                 "executioner / w:1 ignacio"
             }
-        else
+        elseif round <= 36 then
             mon_set = {
                 -- Branches: Vaults, Orc, Elf, Shoals, Swamp, Spider, Snake, Slime,
                 -- Blade, Forest, Dwarf, Crypt, Pan, Tomb, Hell
@@ -578,7 +580,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "stone giant / w:15 frost giant / w:15 fire giant / w:15 titan",
                 "w:5 dragon / w:5 ice dragon / w:7 storm dragon / shadow dragon /\
                     golden dragon / quicksilver dragon / iron dragon",
-                "glowing shapeshifter hd:27",
+                "glowing shapeshifter hd:20",
                 "w:5 base draconian / nonbase draconian",
                 "golden eye / shining eye / giant eyeball / eye of devastation /\
                     great orb of eyes / eye of draining / w:5 ophan",
@@ -606,7 +608,80 @@ function arena_sprint_get_monster_set(round, boss)
                 "orb of fire / w:5 orb of fire name:orb_of_ice n_rpl n_des spells:ice_storm col:lightblue /\
                   orb of fire name:orb_of_electricity n_rpl n_des spells:chain_lightning col:yellow /\
                   w:5 silver star",
-                "hellion / efreet"
+                "hellion / w:5 efreet"
+            }
+        else -- Because somehow, the above stuff was too easy.
+            mon_set = {
+                -- Branches: Vaults, Orc, Elf, Shoals, Swamp, Spider, Snake, Slime,
+                -- Blade, Forest, Dwarf, Crypt, Pan, Tomb, Hell
+                "vault guard / ancient lich w:15 / deep elf master archer w:3 /\
+                    titan w:15 / golden dragon w:20 / glowing shapeshifter hd:20",
+                "orc sorcerer / orc warlord w:20 / stone giant w:5 /\
+                    orc high priest / moth of wrath",
+                "deep elf high priest / deep elf demonologist / deep elf annihilator /\
+                    deep elf sorcerer / deep elf blademaster w:20 /\
+                    deep elf master archer w:20",
+                "merfolk javelineer / merfolk impaler / merfolk aquamancer /\
+                    blizzard demon / ice fiend",
+                "green death / death drake w:15",
+                "orb spider w:5 / emperor scorpion / ghost moth / moth of wrath",
+                "w:40 greater naga / guardian serpent / w:5 anaconda",
+                "w:30 acid blob / azure jelly / giant eyeball / eye of draining",
+                "dancing weapon ; bardiche ego:speed",
+                "spriggan air mage",
+                "deep dwarf death knight / deep dwarf berserker / unborn deep dwarf",
+                "w:15 ancient lich / w:6 curse toe",
+                "greater demon / pandemonium lord",
+                "sphinx w:20 / greater mummy",
+                "hellephant w:15 / w:1 nellie",
+                -- Elements/hells, Holy
+                "hell sentinel / quicksilver dragon w:20 / iron elemental / cacodemon",
+                "orb of fire w:20 / brimstone fiend / balrug / hellion w:20 /\
+                    fire giant",
+                "ice fiend / blizzard demon / ice devil /\
+                    white draconian annihilator",
+                "spriggan air mage / titan / electric golem w:20 /\
+                    storm dragon",
+                "shadow fiend / reaper / shadow dragon / death drake /\
+                    deep elf death mage / ancient lich /\
+                    unborn deep dwarf w:5",
+                "daeva / angel / cherub / pearl dragon w:20 / ophan /\
+                    silver star w:20 / apis / paladin",
+                -- Misc
+                "deep elf master archer",
+                "ancient lich",
+                "w:5 stone giant / w:15 frost giant / w:15 fire giant / w:20 titan",
+                "w:7 storm dragon / golden dragon w:15 /\
+                    quicksilver dragon w:15 / iron dragon",
+                "glowing shapeshifter hd:20",
+                "nonbase draconian",
+                "golden eye / shining eye / giant eyeball w:15 / eye of devastation /\
+                    great orb of eyes / eye of draining / w:5 ophan",
+                "w:30 hellion / hell sentinel / hell beast / hell hog / hell knight /\
+                    hell hound / hellephant / w:2 nellie",
+                "profane servitor w:25 / angel w:5 / daeva / cherub w:5 / seraph w:15",
+                -- Gimmicks
+                "neqoxec", "giant spore hd:3", "smoke demon", "catoblepas",
+                "moth of wrath / w:20 ettin", "orb spider", "fire crab",
+                "boulder beetle",
+                "shining eye", "tormentor",
+                "unseen horror / lorocyproca / shadow wraith / ghost moth",
+                "reaper / hell beast / geryon w:1",
+                "ghost moth / w:30 lorocyproca / eye of draining",
+                "giant eyeball w:5 / tentacled monstrosity",
+                "executioner / w:1 ignacio / w:5 death drake",
+                -- Just die already!
+                "daeva",
+                "greater mummy / mummy priest",
+                "air elemental name:greater n_adj perm_ench:tornado col:lightcyan",
+                "elephant slug col:magenta name:orb_slug n_rpl n_des n_spe spells:orb_of_destruction",
+                "brimstone fiend / ice fiend / shadow fiend w:5 / hell sentinel",
+                "titan / spriggan air mage / blizzard demon",
+                "sphinx",
+                "orb of fire / orb of fire name:orb_of_ice n_rpl n_des spells:ice_storm col:lightblue /\
+                  orb of fire name:orb_of_electricity n_rpl n_des spells:chain_lightning col:yellow /\
+                  w:20 silver star",
+                "hellion"
             }
         end
 
@@ -728,8 +803,8 @@ function arena_sprint_init_boss_table()
 
     -- Final (and tenth) boss
     bs[10] = {"pandemonium lord",
-              "ancient lich name:Master_Blaster n_rpl hd:30 hp:1000 col:lightmagenta \
-              spells:fire_storm;ice_storm;hellfire;miasma;teleport_self", "demonic rune of zot"}
+              "ancient lich name:Master_Blaster n_rpl hd:30 hp:1500 col:lightmagenta \
+              spells:fire_storm;fire_storm;ice_storm;miasma;teleport_self", "demonic rune of zot"}
     return bs
 end
 
@@ -1025,7 +1100,7 @@ KFEAT:  H = distillery shop type:Bottled suffix:Wisdom count:5 use_all greed:6 ;
             potion of experience q:2 | potion of experience q:3 |\
             potion of experience q:3
 KFEAT:  R = general shop type:Premium suffix:Goods use_all count:11 greed:20 ; \
-            quad damage | quad damage | quad damage | quad damage | quad damage |\
+            quad damage | quad damage | quad damage |\
             wand of heal wounds charges:5 | wand of heal wounds charges:5 |\
             wand of hasting charges:5 | wand of hasting charges:5 |\
             wand of invisibility charges:5 | crystal ball of energy
