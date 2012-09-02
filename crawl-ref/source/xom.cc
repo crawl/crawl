@@ -1684,11 +1684,11 @@ static int _xom_random_stickable(const int HD)
 {
     unsigned int c;
     // XXX: Unify this with the list in spl-summoning:_snakable_weapon().
-    // It has everything but tridents, demon tridents and bardiches, and
-    // puts the giant club types at the end as special cases.
+    // It has everything but demon tridents and bardiches, and puts the
+    // giant club types at the end as special cases.
     static const int arr[] = {
-        WPN_CLUB,    WPN_SPEAR,      WPN_HALBERD,
-        WPN_SCYTHE,  WPN_GLAIVE,     WPN_QUARTERSTAFF, WPN_QUARTERSTAFF,
+        WPN_CLUB,    WPN_SPEAR,      WPN_TRIDENT,      WPN_HALBERD,
+        WPN_SCYTHE,  WPN_GLAIVE,     WPN_QUARTERSTAFF,
         WPN_BLOWGUN, WPN_BOW,        WPN_LONGBOW,      WPN_GIANT_CLUB,
         WPN_GIANT_SPIKED_CLUB
     };
