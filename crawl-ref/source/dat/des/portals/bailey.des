@@ -162,7 +162,7 @@ O
 ENDMAP
 
 NAME:   bailey_entry_trowel
-TAGS:   transparent trowel_portal unrand
+TAGS:   transparent trowel_portal unrand can_overwrite
 DEPTH:  *, !Bailey
 veto {{ return you.is_level_on_stack("Bailey") }}
 : local rnd = crawl.random2(2)
