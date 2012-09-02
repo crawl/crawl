@@ -2086,7 +2086,7 @@ NAME:   corexii_mini_fake_secret_closet
 DEPTH:  D:4-27
 WEIGHT: 1
 TAGS:   no_monster_gen no_item_gen allow_dup extra luniq_mini
-NSUBST: + = 1:+ / *:x, = = 1:= / *:x
+NSUBST: + = 1:+ / *:x, = = 1:+ / *:x
 SUBST:  d = %%%., e = **%.
 MAP
 xxxxxxx
