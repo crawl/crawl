@@ -1032,7 +1032,7 @@ LFLOORTILE: floor_rough_magenta
 LROCKTILE:  wall_zot_lightmagenta
 
 #traps
-SUBST:    C = X:900 c:100 +
+SUBST:    C = X:900 c:100
 KFEAT:    8 = any trap / w:20 floor
 SHUFFLE:  ABab / ^^FF / ^^FF / ^^FF
 SHUFFLE:  Aa / Bb
