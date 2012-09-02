@@ -1004,7 +1004,7 @@ WWW..W..WW..
  .WWWWWWW.
 ENDMAP
 
-NAME:   lightli_zot_lavaisle
+NAME:   lightli_zot_lavacorridor
 TAGS:   no_monster_gen
 DEPTH:  Zot:1-4
 KPROP:  l = no_cloud_gen
@@ -1012,23 +1012,23 @@ MONS:   w:4 purple draconian / w:1 nonbase purple draconian
 SUBST:  o = **|
 NSUBST:  1 = 1 / 1.
 MAP
-           .@.
-     ..............
-    ..llllllllllll..
-  ...llllllllllllll...
-  .llllllllllllllllll.
- ..llllllllllllllllll..
- .llllllllllllllllllll.
- .llllllllllllllllllll.
-..llllllllllllllllllll..
-.llllllllllllllllllllll.
-.lllllllll11111llllllll.
-.lllllllll1*o*1llllllll.
-.lllllllll1o|o1llllllll.
-.lllllllll1*o*1llllllll.
-.lllllllll11>11llllllll.
-ccccccccccccnccccccccccc
-            @
+c.@@@.c
+clllllc
+clllllc
+clllllc
+clllllc
+clllllc
+clllllc
+clllllc
+clllllc
+clllllc
+c11111c
+c1*o*1c
+c1o|o1c
+c1*o*1c
+c11>11c
+cccnccc
+   @
 ENDMAP
 
 ##############################################################################
