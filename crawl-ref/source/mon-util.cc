@@ -1321,7 +1321,7 @@ bool name_zombie(monster* mon, monster_type mc, const string &mon_name)
     // Also for the Serpent of Hell: treat Serpent of Hell as an
     // adjective to avoid mentions of "the Serpent of Hell the dragon
     // zombie".
-    else if (mc == MONS_SERPENT_OF_HELL)
+    else if (mons_species(mc) == MONS_SERPENT_OF_HELL)
     {
         mon->mname = "Serpent of Hell";
         mon->flags |= MF_NAME_ADJECTIVE;
@@ -3074,6 +3074,8 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
     }
     else if (mons_is_unique(mon_type) && !mons_is_pghost(mon_type))
     {
+        if (mons_species(mon_type) == MONS_SERPENT_OF_HELL)
+            mon_type = MONS_SERPENT_OF_HELL;
         switch (mon_type)
         {
         case MONS_JESSICA:
@@ -3131,7 +3133,7 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
         case PRONOUN_OBJECTIVE:
             return ((gender == GENDER_NEUTER) ? "it"  :
                     (gender == GENDER_MALE)   ? "him" : "her");
-     }
+    }
 
     return "";
 }
