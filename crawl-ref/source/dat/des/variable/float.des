@@ -274,8 +274,9 @@ DEPTH:  D:1-26
 ORIENT: float
 : if you.absdepth() > 8 then
 KITEM:  " = club, quarterstaff, quarterstaff good_item
-: end
+: else
 KITEM:  " = club, quarterstaff, quarterstaff
+: end
 KITEM:  ' = club, any magical staff / any rod w:1
 MAP
 xxxxx
