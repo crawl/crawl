@@ -1801,7 +1801,7 @@ ENDMAP
 # Generated maps
 ##########################################################################
 
-# With Nemelex' bazaars gone, the number of bazaars in a game is sharply
+# With Nemelex's bazaars gone, the number of bazaars in a game is sharply
 # limited.  This one keeps allow_dup, just in case.
 NAME:   bazaar_kb_twisted_cavern
 TAGS:   allow_dup
