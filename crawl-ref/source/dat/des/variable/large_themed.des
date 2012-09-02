@@ -985,7 +985,7 @@ NSUBST: 3 = 3:. / *:3
 SUBST:  ^ : ^mmm
 KFEAT:  ^ = teleport trap
 KFEAT:  m = iron_grate
-KFEAT:  ! = runed_doorr
+KFEAT:  ! = runed_door
 KFEAT:  y = rock_wall
 KMASK:  y = no_wall_fixup
 KPROP:  -d|*$14567^ = no_rtele_into
