@@ -339,7 +339,7 @@ xx??.........??xx
    xx??111??xx
     xx??1??xx
      xxI2Ixx
-      xv=vx
+      xv+vx
       x!!!x
       x!O!x
       x!!!x
@@ -363,6 +363,7 @@ COLOUR: ! = brown
 FTILE:  ! = floor_orc
 SUBST:  ! : .$
 KFEAT:  O = enter_orcish_mines
+NSUBST: = = 1:+ / *:=
 MAP
 xx?xxxxxxx?xx
 x111xxxxx111x
