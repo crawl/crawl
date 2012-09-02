@@ -287,9 +287,9 @@ An altar to Beogh, unmistakably roughly hewn by orcish artisans.
 %%%%
 A runed door
 
-A door, covered in runic writing warning against danger of some sort. You
-may disregard the warning, opening it like any other door (ie, by walking
-into it or pressing 'O').
+A door, covered in runic writing. It looks like there is something special
+behind it — perhaps danger, perhaps treasure. You may break the runes and
+open it like any other door (ie, by walking into it or pressing 'O').
 %%%%
 A shaft
 
