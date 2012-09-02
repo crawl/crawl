@@ -1005,15 +1005,21 @@ KFEAT:  L = armour shop count:17 greed:12 type:Basic suffix:Armour use_all ; \
             mundane not_cursed buckler | mundane not_cursed pair of gloves |\
             mundane not_cursed helmet
 KFEAT:  M = food shop count:17 type:Bee suffix:Food greed:4 ; royal jelly q:3
-KFEAT:  N = antiques shop type:Book suffix:Bin count:17 greed:10 ; any randbook
+KFEAT:  N = weapon shop type:Staff suffix:Store count:10 use_all greed:30 ; \
+            staff of summoning | staff of wizardry |\
+            staff of fire | staff of air | staff of earth | staff of cold |\
+            staff of poison | staff of death | staff of enchantment |\
+            staff of conjuration
 KFEAT:  Q = weapon shop type:Weapon suffix:Rack count:17 use_all greed:30 ; \
             mundane not_cursed quick blade | mundane not_cursed demon blade |\
             mundane not_cursed triple sword | mundane not_cursed broad axe |\
             mundane not_cursed executioner's axe | mundane not_cursed demon whip |\
             mundane not_cursed great mace | mundane not_cursed giant spiked club |\
             mundane not_cursed demon trident | mundane not_cursed bardiche |\
-            mundane not_cursed lajatang | staff of fire | staff of air |\
-            staff of earth | staff of cold | staff of poison | staff of death
+            mundane not_cursed lajatang | mundane not_cursed longbow |\
+            mundane not_cursed sling | mundane not_cursed crossbow |\
+            mundane bolt q:50 | mundane sling bullet q:50 |\
+            mundane arrow q:50
 KFEAT:  H = distillery shop type:Bottled suffix:Wisdom count:5 use_all greed:6 ; \
             potion of experience | potion of experience |\
             potion of experience q:2 | potion of experience q:3 |\
@@ -1023,10 +1029,9 @@ KFEAT:  R = general shop type:Premium suffix:Goods use_all count:11 greed:20 ; \
             wand of heal wounds charges:5 | wand of heal wounds charges:5 |\
             wand of hasting charges:5 | wand of hasting charges:5 |\
             wand of invisibility charges:5 | crystal ball of energy
-KFEAT:  J = general shop type:Miscellaneous suffix:Merchandise count:16 greed:15 use_all ; \
+KFEAT:  J = general shop type:Miscellaneous suffix:Merchandise count:14 greed:15 use_all ; \
             sultana q:200 | potion of blood q:5 | potion of blood q:5 |\
-            potion of blood q:5 | potion of blood q:5 | staff of summoning |\
-            staff of wizardry | ring of poison resistance |\
+            potion of blood q:5 | potion of blood q:5 | ring of poison resistance |\
             ring of protection from fire | ring of protection from cold |\
             ring of protection from magic | ring of regeneration |\
             amulet of the gourmand | amulet of clarity | amulet of stasis |\
