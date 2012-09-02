@@ -375,7 +375,7 @@ MONS:   troll w:20, elf, wight
 MONS:   wight
 MONS:   patrolling deep dwarf
 NSUBST: X = 2:= / *:x
-MARKER: = = lua:restrict_door()
+KFEAT:  = = runed_door
 SUBST:  * = **d
 ITEM:   staff of death / scroll of torment / necronomicon w:1
 MAP
@@ -422,7 +422,6 @@ NAME:   dhfh_guard_house_d2
 TAGS:   dhfh_guard_house allow_dup
 DEPTH:  Dwarf:1
 NSUBST: C = 1:@ / *:c
-NSUBST: S = 1:= / *:c
 KITEM:  * = % w:20 / * / $
 SUBST:  1 = 2 w:2 / 1 / .
 KMONS:  1 = patrolling deep dwarf berserker w:5 / \
@@ -433,12 +432,12 @@ KMONS:  2 = patrolling deep dwarf death knight / \
 MAP
 cccc  cccc
 c*.c  c.*c
-c.SccccS.c
+c.+cccc+.c
 ccc1..1ccc
   c.1..c
   c..1.c
 ccc1..1ccc
-c.ScCCcS.c
+c.+cCCc+.c
 c*.c..c.*c
 cccc@.cccc
 ENDMAP
@@ -447,7 +446,6 @@ NAME:   dhfh_guard_house_d3
 TAGS:   dhfh_guard_house allow_dup
 DEPTH:  Dwarf:1
 NSUBST: C = 1:@ / *:c
-NSUBST: S = 1:= / *:c
 KITEM:  * = % w:20 / * / $
 SUBST:  1 = 2 w:2 / 1 / .
 KMONS:  1 = patrolling deep dwarf berserker / \
@@ -457,12 +455,12 @@ KMONS:  2 = patrolling deep dwarf death knight / patrolling unborn deep dwarf
 MAP
 cccc  cccc
 c*.c  c.*c
-c.SccccS.c
+c.+cccc+.c
 ccc1..1ccc
   c.1..c
   c..1.c
 ccc1..1ccc
-c.ScCCcS.c
+c.+cCCc+.c
 c*.c..c.*c
 cccc@.cccc
 ENDMAP
@@ -471,7 +469,6 @@ NAME:   dhfh_guard_house_d4
 TAGS:   dhfh_guard_house allow_dup
 DEPTH:  Dwarf:1
 NSUBST: C = 1:@ / *:c
-NSUBST: S = 1:= / *:c
 KITEM:  * = % w:20 / * / $
 SUBST:  1 = 2 w:2 / 1 / .
 KMONS:  1 = patrolling deep dwarf berserker / \
@@ -482,12 +479,12 @@ KMONS:  2 = patrolling deep dwarf death knight w:3 / \
 MAP
 cccc  cccc
 c*.c  c.*c
-c.SccccS.c
+c.+cccc+.c
 ccc1..1ccc
   c.1..c
   c..1.c
 ccc1..1ccc
-c.ScCCcS.c
+c.+cCCc+.c
 c*.c..c.*c
 cccc@.cccc
 ENDMAP
@@ -657,7 +654,7 @@ KMONS:   p = patrolling deep dwarf ; potion of porridge
 KMONS:   r = patrolling deep dwarf necromancer ; potion of porridge
 KMONS:   3 = generate_awake wight w:20 / generate_awake troll / \
              generate_awake orange rat
-NSUBST:  s = 1:= / *:c
+NSUBST:  s = 1:+ / *:c
 SUBST:   F = T:40 V:40 U:20
 SUBST:   W = W .
 SUBST:   P = %:25 $ *:2 P:3 R:1 D:1 M:1

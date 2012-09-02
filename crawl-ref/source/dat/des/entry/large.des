@@ -144,8 +144,9 @@ TAGS:    entry no_monster_gen no_rotate
 ORIENT:  float
 MONS:    fungus
 SHUFFLE: {[(, UVW, XYZ
-SUBST:   '=.x, U==, V=x, W=x, X==, Y=x, Z=x, b:xxxbcv
+SUBST:   '=.x, U=+, V=x, W=x, X=+, Y=x, Z=x, b:xxxbcv
 RTILE:   x = wall_vines
+SUBST:   = : + x
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxx''xxxxxxxxxxxxxxxxx.xxxxxxxxxxxxx
@@ -768,7 +769,7 @@ TAGS:    entry
 ORIENT:  northwest
 SUBST:   p = 11., G = G..
 NSUBST:  { = { / ., [ = [ / .
-NSUBST:  + = 4:+ / *=+=
+NSUBST:  + = 1:c / *=+
 SHUFFLE: {[
 MONS:    plant / bush
 MAP

@@ -293,7 +293,7 @@ MONS:   mummy / mummy priest / greater mummy, lich
 NSUBST: 1:1=} / *=1
 NSUBST: 1:1=) / *=1
 NSUBST: 1:1=] / *=1
-SUBST:  = : =+
+SUBST:  = : +
 SUBST:  }=}>, )=)>, ]=]>
 TILE:   F = dngn_statue_iron
 # occasionally (12.5%), all downstairs are in this vault
@@ -694,7 +694,7 @@ MAP
 ccccccccccccccccccccccccccccccccc
  ccczz+'''''';;;;;;;''''''+zzccc
   cczzc''3''c';;T;;'c''3''czzcc
-   c=ccc''''''c;;;c''''''ccc=c
+   c+ccc''''''c;;;c''''''ccc+c
     .cccc'''''''D'''''''cccc.
      ..ccc'''''''''''''ccc..
       .cccc'''cc+cc'''cccc.
@@ -945,6 +945,7 @@ MARKER:  o = lua:monster_on_death { \
             veto_fragmentation="veto", veto_disintegrate="veto", \
             veto_shatter="veto" \
          }
+KFEAT:   = = runed_door
 : set_feature_name("granite_statue", "iron statue")
 MAP
 ....................................................................
@@ -1314,7 +1315,7 @@ COLOUR: = = red
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x...."llvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvlllll"xx
-x.(.."llv......=......................................=......vllll".{x
+x.(.."llv......+......................................+......vllll".{x
 x..."lllv.vvvv.v....4....llllllllllllllllllll.........v.vvvv.vllll".'x
 x..."lllv.v2|v.v.......llllllllllllllllllllllll...4...v.v|2v.vlll"..'x
 x'."llllv.v+vv.v.....llllllllllllllllllllllllllll.....v.vv+v.vll"..'xx
@@ -1327,8 +1328,8 @@ x'."llllv.v....llllccccccccccc....ccccccc+cccccccclllll....v.vlll".'xx
 x'."llllv.v....llllc%%%%%.cccccc..ccccccc+cccccccclllll....v.vlll"..'x
 x'."llllv.v...lllllc%%%%%.c.%%%c..c..........cccccllllll...v.vllll".'x
 x'.."lllv.v...lllllc%%%%%.+.%%%c..c.vvvv.....+...cllllll...v.vllll".[x
-xx."llllv.v...lllllc%%%%%.c.%%%c..c.=||n..4..ccc.cllllll...v.vllll".'x
-x'.."lllv.v...lllllc%%%%%.c....c..c.=||n.....ccc.cllllll...v.vllll".'x
+xx."llllv.v...lllllc%%%%%.c.%%%c..c.+||n..4..ccc.cllllll...v.vllll".'x
+x'.."lllv.v...lllllc%%%%%.c....c..c.+||n.....ccc.cllllll...v.vllll".'x
 x'.."lllv.v...lllllc......cc++cc..c.vvvv..4..+.c+cccclll...v.vlll"..'x
 x'.."lllv.v...lllllcln.|||c....c..c..........+.c...$clll...v.vll"...'x
 x'."llllv.v...lllllc.n.|||c....c..cccccccccccc.c..2$clll...v.vll"...'x
@@ -1665,7 +1666,7 @@ SUBST:   ' = .cc
 SUBST:   ; : ;;;;w , ; = wc
 KFEAT:   # = permarock_wall
 COLOUR:  # = lightcyan
-NSUBST:  - = 1:= / *:c
+NSUBST:  - = 1:+ / *:c
 : coc_setup(_G)
 MAP
 ################################################################################
@@ -1753,8 +1754,7 @@ KMONS:   8 = ghoul
 KMONS:   9 = vampire mage / vampire knight
 KMONS:   0 = soul eater
 KMONS:   Z = large skeleton / large zombie / small skeleton / small zombie
-KFEAT:   A = closed_door
-MARKER:  A = lua:restrict_door()
+KFEAT:   A = runed_door
 SUBST:   ? = ?..., ? = 2., 0 = 002
 SHUFFLE: 3569
 : serpent_of_hell_setup(_G)
@@ -1798,8 +1798,8 @@ xxxx...........................................cc44744xx00000cc...xxxx
 xxxx.......ccccccccc+ccccccccc.................cc44444xx88888cc...xxxx
 xxxx.......c.................c..x.........x..ccccccccccccxxxxcc...xxxx
 xxxx.......c.x.x.x.x.x.x.x.x.c.................ccccccccccxxxxcc...xxxx
-xxxx.......c.................c......................=........cc...xxxx
-xxxx.......cx5x.x.x.x.x.x.x5xc......................=........cc...xxxx
+xxxx.......c.................c......................+........cc...xxxx
+xxxx.......cx5x.x.x.x.x.x.x5xc......................+........cc...xxxx
 xxxx.......c.................c.................ccccccccccxxxxcc...xxxx
 xxxx.......c.x.x.x.x5x.x.x.x.c..x.........x..ccccccccccccxxxxcc...xxxx
 xxxx.......c.................c.................ccZZZZZxx88888cc...xxxx
@@ -1853,6 +1853,8 @@ KFEAT:    % = .
 KMONS:    % = soul eater w:20 / shadow wraith w:15 / reaper w:5 / nothing w:20
 KITEM:    % = | / $
 SUBST:    4 = 3333444455566778
+# TODO: this vault needs to be reworked, for now we simply disable secrets
+SUBST:    = = +
 : tar_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1922,7 +1924,7 @@ NAME:    eresh_room_1
 TAGS:    eresh_room no_rotate
 WEIGHT:  30
 MONS:    patrolling Ereshkigal, shadow fiend
-MARKER:  = = lua:restrict_door()
+KFEAT:   = = runed_door
 : tar_setup(_G)
 MAP
 ..........
@@ -1942,7 +1944,7 @@ NAME:    eresh_room_2
 TAGS:    eresh_room no_rotate
 WEIGHT:  10
 MONS:    patrolling Ereshkigal, shadow fiend
-MARKER:  = = lua:restrict_door()
+KFEAT:   = = runed_door
 SHUFFLE: |O
 : tar_setup(_G)
 MAP
@@ -1963,7 +1965,7 @@ NAME:    eresh_room_3
 TAGS:    eresh_room no_rotate
 WEIGHT:  10
 MONS:    patrolling Ereshkigal, shadow fiend
-MARKER:  = = lua:restrict_door()
+KFEAT:   = = runed_door
 : tar_setup(_G)
 MAP
 ..........
@@ -1986,7 +1988,7 @@ MONS:    patrolling Ereshkigal, shadow fiend
 NSUBST:  m = 1:==+ / *:nnnnm
 SHUFFLE: 12 / AB
 SUBST:   A=., B=.
-MARKER:  m = lua:restrict_door()
+KFEAT:   = = runed_door
 : tar_setup(_G)
 MAP
 ..........

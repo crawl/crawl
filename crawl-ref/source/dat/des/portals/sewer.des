@@ -102,7 +102,7 @@ TAGS:   uniq_sewer no_monster_gen chance_sewer
 CHANCE: 8%
 WEIGHT: 4
 : sewer_portal(_G)
-NSUBST: c = 2:= / 2:n / *:c
+NSUBST: c = 1:+ / 2:n / *:c
 NSUBST: W = 8:1 / *:W
 SUBST:  1 = 111W
 KMONS:  1 = rat w:20 / grey rat w:20 / green rat/ ball python / adder w:2 / \
@@ -138,8 +138,7 @@ TAGS:   uniq_sewer no_monster_gen chance_sewer
 CHANCE: 8%
 : sewer_portal(_G)
 ORIENT: northwest
-NSUBST: X = 2:X / / *:x
-SUBST:  X = ++=
+NSUBST: X = 2:+ / *:x
 SUBST:  w = WW.
 NSUBST: W = 8:1 / *:W
 SUBST:  1 = 111W

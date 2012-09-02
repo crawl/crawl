@@ -1160,15 +1160,15 @@ KMONS:   F = orange crystal statue / silver statue / ice statue
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxx3$$xxxxxxxxxxxxx
-ccxxxxxxxxccc=cccccccccxxxx
+ccxxxxxxxxccc+cccccccccxxxx
 cccxxxxxxxc.....c...1$cxxxc
 @Fcx6$.xxxc..1..c...25ccccc
-cccccc=cccc.62..c...15c$$$c
-@+111.....+.63..=..F11=4||c
-cccccc=cccc.62..c...15c$$$c
+cccccc+cccc.62..c...15c$$$c
+@+111.....+.63..+..F11+4||c
+cccccc+cccc.62..c...15c$$$c
 @Fcx6$.xxxc..1..c...25ccccc
 cccxxxxxxxc.....c...1$cxxxc
-ccxxxxxxxxccc=cccccccccxxxx
+ccxxxxxxxxccc+cccccccccxxxx
 xxxxxxxxxxx3$$xxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
@@ -1588,7 +1588,7 @@ SHUFFLE: WX/ZY , 12/12/67
 SUBST:   W:ww. , X:. , Z:x , Y:+.
 SHUFFLE: *5/WW
 SUBST:   *=. , W=wW , !:$.
-SUBST:   5 = 5 6 = ^:5 I:5 F:5
+SUBST:   5 = 5 6 + ^:5 I:5 F:5
 MAP
               xxxxx
           xxxxxx12xx
@@ -1729,7 +1729,7 @@ MAP
     xxxxxxxxxxxxxxx
   xxxXXXXXXXXXXXXXxxx
   xXXX_____A_____XXXx
-  xX%?Wwwww_wwwwW=|Xx
+  xX%?Wwwww_wwwwW+|Xx
   xXXXxWwww_wwwWxXXXx
   xxxXxxWWw_wWWxxXxxx
    xXXxxxx._.xxxxXXx
@@ -1779,7 +1779,7 @@ MAP
       xxxxxxxxxxx
      xxxxxXXXxxxxx
     xxxxxxX|Xxxxxxx
-    xXXXXXX=XXXXXXx
+    xXXXXXX+XXXXXXx
    xxXWWWWTATWWWWXx
   xxxXW.._____..WXx
   xXXXWt..___..tWXx
@@ -2615,6 +2615,7 @@ NAME:    hangedman_arrow_trap
 ORIENT:  float
 DEPTH:   D:12-
 SHUFFLE: {( / })
+KFEAT:   = = runed_door
 MAP
 xx=xxxxxxxxxxxx=xx
 x.xxxx|x{(x|xxxx.x
@@ -2683,7 +2684,7 @@ KMONS:  b = w:100 nothing / w:5 crimson imp / w:2 white imp / w:2 iron imp \
             / w:1 shadow imp
 KPROP:  b = nothing / w:5 bloody
 KITEM:  b = nothing / w:1 gold
-MARKER: + = lua:restrict_door()
+KFEAT:  = = runed_door
 MARKER:  H = lua:props_marker { stop_explore = "statue" }
 KFEAT:   HI = G
 MAP
@@ -2841,7 +2842,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x""""""1;;;;;;;xxxxxxxxxxxxxxxcxxxxxxxxxxxxxxxx.+.9xx
 x""""""";"t"t";xxxxxGxcxGxcxGxcxGxcxGxcxGxxxxxx.xxxxx
 x""""""1;;;;;;;+.....+.................+.....+;;x'%'x
-x""""""";;"";;xxxx.xGxcxGxcxGc=cGxcxGxcxGx.xxx.;x.'0x
+x""""""";;"";;xxxx.xGxcxGxcxGc+cGxcxGxcxGx.xxx.;x.'0x
 x""""""1;2222;"t"c+ccccccccccc'ccccccccccc+c...;x'0'x
 x"""""1";2tt2;t"tc.cn%xxx'.'.'''.'0'xxx%nc.c...;xxx+x
 x1"1"1"1;2222;"t"c.nc%+...'0'.'9'.'...+%cn.c...;;;;;x
@@ -3008,7 +3009,7 @@ XXXXX+XXXXnXnXXXX+XXXXX
 XXXXX.XXX..*..XXX.XXXXX
 XXXXXX.XXX..0XXX.XXXXXX
 XXXXXXX.XXX9XXX.XXXXXXX
-XXXXXXXX.XX=XX.XXXXXXXX
+XXXXXXXX.XX+XX.XXXXXXXX
 XXXXXXXXX.X.X.XXXXXXXXX
 XXXXXXXGXX.X.XXGXXXXXXX
 X0......XXX.XXX.~...0%X

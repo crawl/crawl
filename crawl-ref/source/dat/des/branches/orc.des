@@ -539,7 +539,6 @@ ENDMAP
 # mage tower -- either orc with assistants, or ogre with guards
 NAME:    mines4_lemuel
 TAGS:    no_rotate
-SUBST:   ? = +=
 SUBST:   d = $d
 SUBST:   I = IG
 SHUFFLE: 112/334
@@ -552,7 +551,7 @@ xx.2xxxxx2.xx
 x..xxd1dxx..x
 x.Ix$$G$$xI.x
 x..xx222xx..x
-xx.2xx?xx2.xx
+xx.2xx+xx2.xx
  xx..2.2..xx
   xxxxxxxxx
 ENDMAP
@@ -626,7 +625,7 @@ ENDMAP
 # treasure chamber with oklob plant
 #
 NAME:  mines3_lemuel
-SUBST: ? = +=.
+SUBST: ? = +.
 SUBST: ! = x@
 SUBST: $ = $:30 *
 MONS:  oklob plant
@@ -661,6 +660,7 @@ MONS:    deep elf fighter / deep elf summoner / deep elf conjurer / deep elf pri
 MONS:    deep elf soldier / deep elf mage / deep elf priest
 MONS:    deep elf soldier
 ITEM:    good_item scimitar race:elven / good_item chain mail race:elven
+SUBST:   = : +x
 MAP
  xxxxx=xxx
 xxXXXI1IXXx

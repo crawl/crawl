@@ -1614,7 +1614,7 @@ ENDMAP
 NAME:    dpeg_entry_rhombi
 TAGS:    entry no_monster_gen
 SHUFFLE: WYZ{/wyz(
-SUBST:   Z=x, Y=x, W=@, C==+x
+SUBST:   Z=x, Y=x, W=@, C=+x
 SUBST:   z=@, y=+, w=x
 NSUBST:  . = 1:d / *:.
 ITEM:    stone / dart
@@ -1901,15 +1901,15 @@ SHUFFLE: {[(
 : if r == 0 then
 :   subst("? = x")
 :   subst("A = .")
-:   subst("a = =")
+:   subst("a = +")
 : elseif r == 1 then
-:   subst("? = =")
+:   subst("? = +")
 :   subst("A = .")
 :   subst("a = x")
 : else
-:   subst("? = =")
+:   subst("? = +")
 :   subst("A = '")
-:   subst("a = =")
+:   subst("a = +")
 : end
 : if crawl.random2(3) == 0 then
 :   subst("B = .")
@@ -1985,7 +1985,7 @@ NAME:    dpeg_entry_short_road
 TAGS:    entry
 ORIENT:  float
 SHUFFLE: {[(, XY
-SUBST:   X==, Y=x, %=%.
+SUBST:   X=+, Y=x, %=%.
 MAP
 xxxxxx@.xxx
 x(.xx..xxxx
@@ -2046,7 +2046,7 @@ NAME:    dpeg_entry_renting
 TAGS:    entry
 ORIENT:  float
 SHUFFLE: [>, {(, T), TcGv, XY
-SUBST:   ':.x, X=+=x, Y=+=x
+SUBST:   ':.x, X=+x, Y=+x
 KMASK:   T = no_monster_gen
 MAP
 xxxxxxxxxxxxxxxxxx..@
@@ -2174,7 +2174,7 @@ NAME:    elethiomel_entry_maze
 TAGS:    entry no_monster_gen
 ORIENT:  float
 SHUFFLE: {[(, WXYZ
-SUBST:   W=., X=X., X=x=., Y=Y., Y=x=., Z=Z., Z=x=.
+SUBST:   W=., X=X., X=x+., Y=Y., Y=x=., Z=Z., Z=x+.
 MAP
 xx@xxxxxxxxxxxxxxxxxxxxxxxxxx
 xx.x.......xxxxx...xx......xx
@@ -2199,7 +2199,7 @@ NAME:    elethiomel_entry_quiet
 TAGS:    entry no_monster_gen
 ORIENT:  float
 SHUFFLE: '"XY/ABVW, !?/CD
-SUBST:   ':., ":=, A:x, B:x, !:., ?:=, C:x, D:x, V=x, W=x, Y=@x
+SUBST:   ':., ":+, A:x, B:x, !:., ?:+, C:x, D:x, V=x, W=x, Y=@x
 SUBST:   c : cxx
 KFEAT:   X = teleport trap / floor
 MAP
@@ -2251,7 +2251,7 @@ WEIGHT:  5
 ORIENT:  float
 ITEM:    apple / sausage / nothing / stone / w:30 nothing
 SHUFFLE: ({[ , AB
-SUBST:   A : x , B = +., X = x=
+SUBST:   A : x , B = +., X = x+
 MONS:    w:30 nothing / w:10 plant / w:3 fungus / w:1 worm
 MAP
 xxxxxxxxx@xxxxxxx
@@ -2275,15 +2275,14 @@ TAGS:    entry
 ORIENT:  float
 MONS:    w:100 rat / w:50 giant cockroach / quokka
 SUBST:   ? = .:30 1:20
-SUBST:   = = = +
 MAP
 xxxxxxxxxx@xxxxxxxxxx
 xxxx?x?x?x.x?x?x?xxxx
-xxxx=x=x=x+x=x=x=xxxx
+xxxx+x+x+x+x+x+x+xxxx
 xxxx.x.x.x.x.x.x.xxxx
-x?=......({[......=?x
+x?+......({[......+?x
 xxxx.x.x.x.x.x.x.xxxx
-xxxx=x=x=x=x=x=x=xxxx
+xxxx+x+x+x+x+x+x+xxxx
 xxxx?x?x?x?x?x?x?xxxx
 xxxxxxxxxxxxxxxxxxxxx
 ENDMAP
@@ -2739,7 +2738,7 @@ xxxx[..xxxx
 ENDMAP
 
 ##############################################################
-# A simple fortress with semi-secret doors.
+# A simple fortress with double doors.
 NAME:    saegor_entry_fortress
 TAGS:    entry no_monster_gen no_pool_fixup
 ORIENT:  float
@@ -2750,21 +2749,21 @@ MAP
 wwwwwwwwwcccccwwwwwwwww
 wcccccccwcWtWcwcccccccw
 wc[...GccccGccccG...>cw
-wc.....=.......=.....cw
+wc.....+.......+.....cw
 wcG...GccGc+cGccG...Gcw
-wccc+cccccc=cccccc+cccw
+wccc+cccccc+cccccc+cccw
 wcWc.cctt.....ttcc.cWcw
 wttG.ctW...1...Wtc.Gttw
 wcWc.Gc.........cG.cWcw
 wccc.cc...WtW...cc.cccw
-@++..=+...tGt...+=..++@
+@++..++...tGt...++..++@
 wccc.cc...WtW...cc.cccw
 wcWc.Gc.........cG.cWcw
 wttG.ctW...1...Wtc.Gttw
 wcWc.cctt.....ttcc.cWcw
 wccc+cccccc+cccccc+cccw
-wcG...GccGc=cGccG...Gcw
-wc.....+.......=.....cw
+wcG...GccGc+cGccG...Gcw
+wc.....+.......+.....cw
 wc(...GccccGccccG...{cw
 wcccccccwcWtWcwcccccccw
 wwwwwwwwwcccccwwwwwwwww
