@@ -250,6 +250,95 @@ ENDMAP
 # The heart stopper
 
 #############################################################################
+# Chooses four corpses, each with their own set of loot, themed around some
+# particular archetypical species/background. Each set of loot has at least
+# three guaranteed items.
+# The dead octopode has a 62% chance of generating only 3 rings,
+# a 93% chance of generating 4 or less rings, and a 99% chance of
+# 5 or less. The chance of all 8 is 0.0006%.
+
+NAME: nicolae_lab_dead_adventurers
+TAGS: minotaur allow_dup
+KMONS: m = patrolling minotaur
+KPROP: ABCD'm = bloody
+KFEAT: ' = floor
+SHUFFLE: bxvc, ABCDEFHIJKLM
+{{
+ -- Dwarven fighter. Maybe the minotaur got the last MD. 3 items.
+dgn.delayed_decay(_G, 'A', 'dwarf skeleton, battleaxe race:dwarven / '
+   .. "eveningstar race:dwarven / executioner's axe race:dwarven w:2 / "
+   .. 'great mace race:dwarven w:2, helmet good_item / '
+   .. 'pair of gloves good_item / pair of boots good_item, '
+   .. 'plate armour race:dwarven / crystal plate armour w:2' )
+
+ -- Elf caster. 4 items.
+dgn.delayed_decay(_G, 'B', 'elf skeleton, robe race:elven, randbook, '
+   .. 'any magical staff, any jewellery' )
+
+ -- Spriggan stabber. 4 items.
+dgn.delayed_decay(_G, 'C', 'spriggan skeleton, dagger good_item / '
+   .. 'quick blade w:1, bread ration, cloak, randbook disc:hexes / any book' )
+
+ -- Centaur hunter of Fedhas. 3-4 (stacks of) items.
+dgn.delayed_decay(_G, 'D', 'centaur skeleton, bow good_item / longbow w:2, '
+   .. 'arrow good_item, apple / orange / pear / apricot / lemon / nothing, '
+   .. 'helmet / centaur barding / pair of gloves' )
+
+ -- Dwarven artificer. 3 items.
+dgn.delayed_decay(_G, 'E', 'dwarf skeleton, any wand, any wand, '
+   .. 'any wand / any misc / any rod' )
+
+ -- Dead octopode. 3 rings, possibly up to 8, though with a very low chance.
+dgn.delayed_decay(_G, 'F', 'octopode corpse, any ring good_item, '
+   .. 'any ring good_item / any ring, any ring, any ring w:1 / nothing w:10, '
+   .. 'any ring w:1 / nothing w:10, any ring w:1 / nothing w:10, '
+   .. 'any ring w:1 / nothing w:10, any ring w:1 / nothing w:10' )
+
+ -- Merfolk skald. 3 items.
+dgn.delayed_decay(_G, 'H', 'merfolk skeleton, leather armour good_item w:30 / '
+   .. 'swamp dragon armour w:2 / fire dragon armour w:2 / '
+   .. 'ice dragon armour w:2, trident / demon trident / glaive / bardiche, '
+   .. 'randbook disc:charms / any book' )
+
+ -- Human wanderer. 3-5 items.
+dgn.delayed_decay(_G, 'I', 'human skeleton, any armour, any weapon, '
+   .. 'any good_item / any book / any jewellery, '
+   .. 'nothing / any scroll, nothing / any potion' )
+
+ -- Orc fighter. 3 items.
+dgn.delayed_decay(_G, 'J', 'orc skeleton, shield / large shield w:2, '
+   .. 'long sword race:orcish / eveningstar race:orcish / '
+   .. 'broad axe race:orcish / demon blade, '
+   .. 'plate armour race:orcish / crystal plate armour w:2' )
+
+ -- Dwarven heavy armor earth elementalist. 3-4 items.
+dgn.delayed_decay(_G, 'K', 'dwarf skeleton, plate armour race:dwarven, '
+   .. 'randbook disc:earth / any book, staff of earth / any magical staff, '
+   .. 'ring of wizardry / any jewellery / nothing w:20' )
+
+ -- Halfling warper. 4-5 items.
+dgn.delayed_decay(_G, 'L', 'halfling skeleton, dart ego:dispersal / dart, '
+   .. 'randbook disc:translocation / any book, scroll of blinking / '
+   .. 'scroll of teleportation / ring of teleportation / '
+   .. 'ring of teleport control w:5 / nothing w:30, robe / leather armour, '
+   .. 'short sword good_item' )
+
+ -- Ogre, maybe an ogre mage of some kind. 4-5 items.
+dgn.delayed_decay(_G, 'M', 'ogre skeleton, giant club good_item / '
+   .. 'giant spiked club good_item, robe, large rock, meat ration, '
+   .. 'any book / nothing' )
+}}
+MAP
+...........
+.xxxxxxxxx.
+.xGAGBG.Gx.
+.x<'''m..+.
+.xGCGDG.Gx.
+.xxxxxxxxx.
+...........
+ENDMAP
+
+#############################################################################
 # Labyrinth flavour minivaults
 #############################################################################
 # One layer of floor space *must* surround the minivault, or the player could
@@ -429,4 +518,319 @@ KFEAT:  x = .
 : dgn.delayed_decay(_G, 'x', 'human skeleton / troll skeleton / centaur skeleton / ogre skeleton')
 MAP
 x
+ENDMAP
+
+############################################################################
+
+# Some basic furniture.
+
+NAME: nicolae_lab_plus
+TAGS: lab allow_dup
+SUBST: x : cvxb
+MAP
+  ...
+ ..x..
+...x...
+.xxxxx.
+...x...
+ ..x..
+  ...
+ENDMAP
+
+NAME: nicolae_lab_t_cross
+TAGS: lab allow_dup
+SUBST: x : cvxb
+MAP
+  .....
+  .xxx.
+....x....
+.x..x..x.
+.xxxxxxx.
+.x..x..x.
+....x....
+  .xxx.
+  .....
+ENDMAP
+
+NAME: nicolae_lab_arrow
+TAGS: lab allow_dup
+SUBST: x : cvxb
+MAP
+  ....
+ ...x..
+.....x..
+.xxxxxx.
+.....x..
+ ...x..
+  ....
+ENDMAP
+
+NAME: nicolae_lab_dead_end
+TAGS: lab allow_dup
+SUBST: x : cvbx
+MAP
+.......
+.xxx.x.
+.x.x.x.
+.x.x.x.
+.x...x.
+.xxxxx.
+.......
+ENDMAP
+
+NAME: nicolae_lab_very_dead_end
+TAGS: lab allow_dup
+SUBST: ' = ''.
+KPROP: z' = bloody
+: dgn.delayed_decay(_G, 'z', 'human skeleton / elf skeleton / dwarf skeleton')
+MAP
+.......
+.xxxxx.
+.x'''x.
+.x'z'x.
+.x'''x.
+.xx.xx.
+.......
+ENDMAP
+
+# Maybe it's time to try starting over from someplace else?
+NAME: nicolae_lab_do_over
+TAGS: lab allow_dup
+KFEAT: t = known teleport trap
+MAP
+.....
+.x.x.
+..t..
+.x.x.
+.....
+ENDMAP
+
+NAME: nicolae_lab_lava
+TAGS: lab allow_dup
+MAP
+....
+.ll.
+.ll.
+....
+ENDMAP
+
+NAME: nicolae_lab_garden
+TAGS: lab allow_dup
+MONS: plant w:3 / nothing
+SUBST: w = wW
+MAP
+11111
+1www1
+1wtw1
+1www1
+11111
+ENDMAP
+
+NAME: nicolae_lab_imaginary_food
+TAGS: lab allow_dup
+KMONS: f = rat sum:shadow_creatures dur:6 / \
+           quokka sum:shadow_creatures dur:6 / \
+           ball python sum:shadow_creatures dur:6 / \
+           bat sum:shadow_creatures dur:6 / \
+           nothing w:20
+MAP
+fff
+fxf
+fff
+ENDMAP
+
+NAME: nicolae_lab_stuck
+TAGS: lab allow_dup
+: dgn.delayed_decay(_G, 'v', 'human skeleton')
+KITEM: w = wand of digging charges:0 / wand of teleportation charges:0
+KPROP: w'v = no_tele_into
+WEIGHT: 50000
+MAP
+......
+.mmmm.
+.mv'm.
+.m'wm.
+.mmmm.
+......
+ENDMAP
+
+##########
+# These furniture vaults all have non-empty outlines.
+# They're still traversible, though: every spot next to the vault
+# orthogonally is still adjacent to at least one empty square
+# inside the vault, and all squares in the vault are connected.
+
+NAME: nicolae_lab_checkerboard
+TAGS: lab allow_dup
+MAP
+x.x.x
+.x.x.
+x.x.x
+.x.x.
+x.x.x
+ENDMAP
+
+NAME: nicolae_lab_starburst
+TAGS: lab allow_dup
+SUBST: m = .xGT
+SUBST: x : cvxb
+MAP
+x..x..x
+.x.x.x.
+.......
+xx.m.xx
+.......
+.x.x.x.
+x..x..x
+ENDMAP
+
+NAME: nicolae_lab_diamond
+TAGS: lab allow_dup
+MONS: plant
+SUBST: x : cvxb1
+MAP
+..x..
+.x.x.
+x...x
+.x.x.
+..x..
+ENDMAP
+
+NAME: nicolae_lab_quarters
+TAGS: lab allow_dup
+SUBST: m = .xGT
+SUBST: x : cvxb
+MAP
+.xx.xx.
+x..x..x
+x..x..x
+.xxmxx.
+x..x..x
+x..x..x
+.xx.xx.
+ENDMAP
+
+NAME: nicolae_lab_blocks
+TAGS: lab allow_dup
+SUBST: x : cvxb
+MAP
+x.xx.xx.x
+.........
+x.xx.xx.x
+x.xx.xx.x
+.........
+x.xx.xx.x
+x.xx.xx.x
+.........
+x.xx.xx.x
+ENDMAP
+
+NAME: nicolae_lab_grate
+TAGS: lab allow_dup
+SUBST: x : cvxb
+MAP
+.x.x.x.x.x.
+...x.x...x.
+.x.x.x.x.x.
+.x.x...x.x.
+.x.x.x.x.x.
+.x...x.x...
+.x.x.x.x.x.
+ENDMAP
+
+NAME: nicolae_lab_grate_2
+TAGS: lab allow_dup
+SUBST: x : cvxb
+MAP
+x.x...x
+..x.x..
+x...x.x
+x.x...x
+..x.x..
+x...x.x
+ENDMAP
+
+NAME: nicolae_lab_statue
+TAGS: lab allow_dup
+MAP
+ .
+.G.
+ .
+ENDMAP
+
+NAME: nicolae_lab_x
+TAGS: lab allow_dup
+SUBST: x : cvxb
+MAP
+x.     .x
+.x.   .x.
+ .x. .x.
+  .x.x.
+   .x.
+  .x.x.
+ .x. .x.
+.x.   .x.
+x.     .x
+ENDMAP
+
+NAME: nicolae_lab_flowing_pool
+TAGS: lab allow_dup
+SHUFFLE: wP/wP/wT/lA
+KFEAT: P = w
+KFEAT: A = exit_through_abyss
+MAP
+ .ww. .w.
+  ..w..w.
+.w.ww.www.
+w.w...w..
+w..www..w
+. .wPwww.
+ wwwww.ww.
+ww...w.w.
+.. .w. .w
+ENDMAP
+
+NAME: nicolae_lab_hexagon
+TAGS: lab allow_dup
+MONS: plant
+SUBST: m : Gxcvb1wl.
+MAP
+ .G.
+G...G
+..m..
+G...G
+ .G.
+ENDMAP
+
+NAME: nicolae_lab_swirl
+TAGS: lab allow_dup
+SUBST: x : cvxb
+MAP
+ .x.
+  .x.   .
+  .x. ..x
+   .x.xx.
+ ..xxx..
+.xx.x.
+x.. .x.
+.   .x.
+     .x.
+ENDMAP
+
+NAME: nicolae_lab_big_swirl
+TAGS: lab allow_dup
+SUBST: x : cvxb
+MAP
+  .x.
+   .x.
+   .x.     .
+    .x.  ..x
+    .x...xx.
+   ..xxxx..
+ ..xxxx..
+.xx...x.
+x..  .x.
+.     .x.
+      .x.
+       .x.
 ENDMAP
