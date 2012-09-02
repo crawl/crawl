@@ -644,7 +644,6 @@ TAGS: lab allow_dup
 : dgn.delayed_decay(_G, 'v', 'human skeleton')
 KITEM: w = wand of digging charges:0 / wand of teleportation charges:0
 KPROP: w'v = no_tele_into
-WEIGHT: 50000
 MAP
 ......
 .mmmm.
