@@ -66,8 +66,6 @@ mangrove3
 
 ## doors
 %sdir dngn
-#FIXME
-closed_door DNGN_RUNED_DOOR
 closed_door DNGN_CLOSED_DOOR
 gate_closed_left DNGN_GATE_CLOSED_LEFT
 gate_closed_middle DNGN_GATE_CLOSED_MIDDLE
@@ -82,6 +80,13 @@ gate_open_right DNGN_GATE_OPEN_RIGHT
 vgate_open_up DNGN_VGATE_OPEN_UP
 vgate_open_middle DNGN_VGATE_OPEN_MIDDLE
 vgate_open_down DNGN_VGATE_OPEN_DOWN
+runed_door DNGN_RUNED_DOOR
+gate_runed_left DNGN_GATE_RUNED_LEFT
+gate_runed_middle DNGN_GATE_RUNED_MIDDLE
+gate_runed_right DNGN_GATE_RUNED_RIGHT
+vgate_runed_up DNGN_VGATE_RUNED_UP
+vgate_runed_middle DNGN_VGATE_RUNED_MIDDLE
+vgate_runed_down DNGN_VGATE_RUNED_DOWN
 
 ## Alternate doors for vaults, etc. Should be in the order listed above for
 ## doors which also provide gateways; otherwise detected, closed, open, or

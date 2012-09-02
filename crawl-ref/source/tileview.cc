@@ -980,13 +980,13 @@ static bool _suppress_blood(tileidx_t bg_idx)
 // can be dealt with. The tile sets should be 2, 3, 8 and 9 respectively. They
 // are:
 //  2. Closed, open.
-//  3. Detected, closed, open.
+//  3. Runed, closed, open.
 //  8. Closed, open, gate left closed, gate middle closed, gate right closed,
 //     gate left open, gate middle open, gate right open.
-//  9. Detected, closed, open, gate left closed, gate middle closed, gate right
+//  9. Runed, closed, open, gate left closed, gate middle closed, gate right
 //     closed, gate left open, gate middle open, gate right open.
-static int _get_door_offset(tileidx_t base_tile, bool opened = false,
-                            bool detected = false, int gateway_type = 0)
+static int _get_door_offset(tileidx_t base_tile, bool opened, bool runed,
+                            int gateway_type)
 {
     int count = tile_dngn_count(base_tile);
     if (count == 1)
@@ -998,20 +998,22 @@ static int _get_door_offset(tileidx_t base_tile, bool opened = false,
     switch (count)
     {
     case 2:
-        return ((opened) ? 1: 0);
+        ASSERT(!runed);
+        return opened ? 1: 0;
     case 3:
         if (opened)
             return 2;
-        else if (detected)
+        else if (runed)
             return 0;
         else
             return 1;
     case 8:
+        ASSERT(!runed);
         // But is BASE_TILE for others.
         offset = 0;
         break;
     case 9:
-        // It's located at BASE_TILE+1 for tile sets with detected doors
+        // It's located at BASE_TILE+1 for tile sets with runed doors
         offset = 1;
         break;
     default:
@@ -1020,11 +1022,10 @@ static int _get_door_offset(tileidx_t base_tile, bool opened = false,
     }
 
     // If we've reached this point, we're dealing with a gate.
-    // Don't believe gateways deal differently with detection.
-    if (detected)
+    if (runed)
         return 0;
 
-    if (!opened && !detected && gateway_type == 0)
+    if (!opened && !runed && gateway_type == 0)
         return 0;
 
     return offset + gateway_type;
@@ -1106,8 +1107,8 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
         *bg = flv.floor;
     else if (orig == TILE_WALL_NORMAL)
         *bg = flv.wall;
-    else if ((orig == TILE_DNGN_CLOSED_DOOR || orig == TILE_DNGN_OPEN_DOOR)
-             && !mimic)
+    else if ((orig == TILE_DNGN_CLOSED_DOOR || orig == TILE_DNGN_OPEN_DOOR
+              || orig == TILE_DNGN_RUNED_DOOR) && !mimic)
     {
         tileidx_t override = flv.feat;
         /*
@@ -1115,9 +1116,9 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
          */
         if (is_door_tile(override))
         {
-            // XXX: This doesn't deal properly with detected doors.
             bool opened = (orig == TILE_DNGN_OPEN_DOOR);
-            int offset = _get_door_offset(override, opened, false, flv.special);
+            bool runed = (orig == TILE_DNGN_RUNED_DOOR);
+            int offset = _get_door_offset(override, opened, runed, flv.special);
             *bg = override + offset;
         }
         else
