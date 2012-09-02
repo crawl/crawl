@@ -3390,11 +3390,11 @@ NAME:   evilmike_silver_temple
 TAGS:   no_monster_gen
 DEPTH:  D:20-27
 ORIENT: float
-MONS:   daeva god:Zin, angel god:Zin, cherub god:Zin
+MONS:   daeva god:Zin, angel god:Zin name:glowing n_adj, cherub god:Zin
 : if you.absdepth() > 24 then
 MONS:   silver star
 : else
-KMONS:  4 = Mennas, angel god:Zin
+KMONS:  4 = Mennas, angel god:Zin name:glowing n_adj
 : end
 NSUBST: A = 3 / '
 KFEAT:  _ = altar_zin
