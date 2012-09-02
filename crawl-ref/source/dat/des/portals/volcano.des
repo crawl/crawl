@@ -618,7 +618,7 @@ ccd$ecc..<..ccd$fcc
 c.$f$.c.....c.$e$.c
 c.g$g.ccc+ccc.g$g.c
 cc.3.ccc...ccc.3.cc
-xc...=..111..=...cx
+xc...+..111..+...cx
 xcccccccG_Gcccccccx
 xxxxxxxc.2.cxxxxxxx
 xxxxxxxcccccxxxxxxx
@@ -628,8 +628,8 @@ NAME:   vgs_dualism
 TAGS:   volcano_grotto_subvault no_item_gen no_monster_gen no_rotate no_vmirror
 KFEAT:  B = altar_makhleb / altar_trog / altar_vehumet
 KFEAT:  C = altar_makhleb / altar_trog / altar_vehumet
-#       Place the secret door.
-NSUBST: X = 1:= / *:x
+#       Place the door.
+NSUBST: X = 1:+ / *:x
 #       Sets up the temple guardians.
 :       fiery_guardians(_G)
 #       Loot: 8 items.
@@ -652,9 +652,9 @@ ENDMAP
 NAME:   vgs_hot_hot_hot
 TAGS:   volcano_grotto_subvault no_item_gen no_monster_gen no_rotate no_vmirror
 KFEAT:  _ = altar_makhleb / altar_trog / altar_vehumet
-#       Place the secret doors.
-NSUBST: X = 1:= / 1:G / *:x
-NSUBST: Y = 1:= / 1:G / *:x
+#       Place the doors.
+NSUBST: X = 1:+ / 1:G / *:x
+NSUBST: Y = 1:+ / 1:G / *:x
 #       Sets up the temple guardians.
 :       fiery_guardians(_G)
 KMONS:  l = lava snake / lava fish w:20 / lava worm w:20 / nothing w:70
@@ -679,9 +679,9 @@ ENDMAP
 NAME:   vgs_many_chambers
 TAGS:   volcano_grotto_subvault no_item_gen no_monster_gen no_rotate no_vmirror
 KFEAT:  _ = altar_makhleb / altar_trog / altar_vehumet
-#       Place the secret doors.
-NSUBST: X = 1:= / *:x
-NSUBST: Y = 1:= / *:x
+#       Place the doors.
+NSUBST: X = 1:+ / *:x
+NSUBST: Y = 1:+ / *:x
 #       Sets up the temple guardians.
 :       fiery_guardians(_G)
 MONS:   clay golem w:50 / molten gargoyle w:2
@@ -825,7 +825,7 @@ MAP
    xy.......LllllllllllllL.c....+.111.+....c.LllllllllllllllL......yxx
    xxy.....Lrrllllllllllll.c.<1.c.G_G.c.1<.c.llllllllllllllLL.......yx
    xy......LllrrVllllllllL.c....c..2..c....c.Lllllllllllluuu.......yxx
-   xxy.....Lllllrrllllllll.ccc==ccc+ccc==ccc.LllllllllluullL......yxx
+   xxy.....Lllllrrllllllll.ccc++ccc+ccc++ccc.LllllllllluullL......yxx
    xy.....LlllllllrllllllL.o......c.c......o.lllllllQuullllL.....yxx
    xxy.....LllllllVrllllll.cccccc.c.c.cccccc.LllllluulllllllL.....yxx
    xy......LllllllllrrlllL.c.$f$c.c.c.cgd$.c.lllluulQlllllllL......yxx
@@ -974,6 +974,7 @@ MARKER:  J = lua:fog_machine { size = 3, pow_min = 7, pow_max = 7, delay = 80, \
                                start_clouds = 1, cloud_type = "flame", excl_rad = -1 }
 MARKER:  K = lua:fog_machine { size = 3, pow_min = 7, pow_max = 7, delay = 80, \
                                start_clouds = 1, cloud_type = "flame", excl_rad = -1 }
+KFEAT:   = = runed_door
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxyyxxx
@@ -1017,6 +1018,8 @@ MONS:    ogre skeleton / troll skeleton / draconian skeleton / naga skeleton / \
          minotaur skeleton
 MONS:    patrolling menkaure / patrolling guardian mummy
 #        Loot: 21 gold, 10 items.
+# TODO: should the ex-secret doors be runed or ordinary?
+SUBST:   = = +
 :        volcano_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1123,7 +1126,6 @@ TAGS:       no_item_gen no_monster_gen no_rotate
 :           volcano_setup(_G)
 ITEM:       apple / choko
 COLOUR:     m = blue
-COLOUR:     = = cyan
 COLOUR:     + = cyan
 MONS:       human ; robe ego:fire_resistance
 MONS:       toenail golem
@@ -1140,12 +1142,12 @@ xxlllVlllllllllllxxxx       v.v22$e$$fv.v
  xxlllllllllllllllllxxx     v.v$$$gddgv.v
 xxllllllllllllllllllllxx    v.+ggdf$$ev.v
  xxllllllllvmvmvmvmvmvvvvvvvvvvvvvvvvvv.v
- xxllllllllm.....vKiii...1...v.....=....v
+ xxllllllllm.....vKiii...1...v.....+....v
   xxlllllllv.121.viWtWW......+.<.vvvvvvvv
    xxllllllm.....vllttW..1...v...vxxx
     xxxllllvvv+vvvvvvvvvvvvvvvv+vv.yxx
       xxlllm.....v.v..1v1.....v..m..yxx
-     xxllllv.<.A.+.v+vvvvv+v+vvv.=..Lyxxx
+     xxllllv.<.A.+.v+vvvvv+v+vvv.+..Lyxxx
     xxlllllm.....v...............mLLllllxx
     xxlllllvmvmvmvmvmvmvmvmvmvmvmvlllllxxx
    xxllVlllllllllllllllllllllllllllllllllxx

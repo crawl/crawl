@@ -91,7 +91,7 @@ MONS:    silver statue, nothing
 SUBST:   E=E.
 SHUFFLE: abcd, $*, |ABCDE, nm, 45
 SUBST:   A=., B=., C=., D=*, E=%, n=9, m=0
-SUBST:   a = = x:8, b = = x:30, c=x, d=x
+SUBST:   a = + x:8, b = + x:30, c=x, d=x
 SUBST:   * = * |:1
 SHUFFLE: opq
 SUBST:   o=+
@@ -420,6 +420,7 @@ DEPTH:  D:14-26
 ORIENT: southeast
 SUBST:  ' = ^ .:50
 MONS:   orange crystal statue
+KFEAT:  = = runed_door
 MAP
 xxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxx^xxxxxxxxxxxxxxxx
@@ -440,7 +441,7 @@ x..b...xxb...........bxx...b..xx
 x..bb..xxbbb..9.9..bbbxx..bb..xx
 x......xxxxbbbb'bbbbxxxx......xx
 x..bb..xxxxxxxb=bxxxxxxx..bb..xx
-x..b...xxxxxxxx=xxxxxxxx...b..xx
+x..b...xxxxxxxx'xxxxxxxx...b..xx
 x...b..xxxxxxxx'xxxxxxxx..b...xx
 x..b....xxxxxxx=xxxxxxx....b..xx
 x...b...'''''''.'''''''...b...xx

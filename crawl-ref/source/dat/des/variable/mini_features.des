@@ -243,12 +243,14 @@ TAGS:   allow_dup extra luniq_mini
 : else
 :   if crawl.random2(3) == 0 then
 :     subst("l = w")
+:     subst("= = +")
 :   end
 :   if crawl.random2(50) == 0 then
 :     subst("= = +")
 :     subst("# = .")
 :   elseif crawl.random2(5) == 0 then
 :     subst("# = .")
+:     subst("= = +")
 :   else
 :     subst("= = x")
 :     subst("# = x")
@@ -1568,11 +1570,11 @@ MAP
   xxxx.xxxxx
  xxx.....xxx
 xx..xx.xx..xx
-x.xxxx=xxxx.x
+x.xxxx+xxxx.x
 @...........@
-xxxxxx=xxxxxx
+xxxxxx+xxxxxx
 @...........@
-x.xxxx=xxxx.x
+x.xxxx+xxxx.x
 xx..xx.xx..xx
  xxx.....xxx
  xxxxx.xxxx
@@ -1878,7 +1880,7 @@ WEIGHT:  3
 MAP
 xxxxxxcccc
 xxxxxxc**c
-@ZZZZZ=**c
+@ZZZZZ+**c
 xxxxxxc**c
 xxxxxxcccc
 ENDMAP

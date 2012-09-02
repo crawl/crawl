@@ -139,7 +139,7 @@ ENDMAP
 NAME:   not_minivault_9_hangedman
 TAGS:   abyss
 MARKER: X = lua: props_marker { connected_exclude="true" }
-SUBST:  X = =
+KFEAT:  X = runed_door
 MONS:   lorocyproca / vapour / ghost moth w:2, unseen horror / shadow wraith
 MAP
 XXXXXXXXXX

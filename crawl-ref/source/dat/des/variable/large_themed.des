@@ -867,8 +867,8 @@ MONS:   raven
 NSUBST: A = 3:v / *:=, B = 3:v / *:=
 NSUBST: C = 2:v / *:=, D = 2:v / *:=
 # Make sure monsters don't wander to much.
-MARKER: + = lua:restrict_door()
-MARKER: = = lua:restrict_door()
+KFEAT:  + = runed_door
+KFEAT:  = = runed_door
 # Colouring
 COLOUR: G = cyan
 COLOUR: I5M% = white

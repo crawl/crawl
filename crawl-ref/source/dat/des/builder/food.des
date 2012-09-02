@@ -31,6 +31,7 @@ ITEM:   bread ration q:2
 : else
 SUBST: =e = x
 : end
+SUBST: = = +
 MONS:   spriggan col:white name:baker n_suf ; robe . dagger
 MAP
 xxxxxx

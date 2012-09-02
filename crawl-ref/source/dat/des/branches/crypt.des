@@ -1215,16 +1215,16 @@ v.cccc.cccc.vvvvvvvvvKvvvvvvvvvvvv.........vvvvvvvvvvvvvvvv
 v.cll...llc.v??......<vvvvvvvvvvvv.........+..;+..........v
 v.clt...tlc.K???.....Kvvvvvvvvvvvvv........+.;.vvvvvvvvvv.v
 v.c...X...c.v????|KKvvwwwwwwwwvvvvvv.......v;...vvvW.R.%v.v
-v...........vRRRRKvwwwwwwwwwwwwwwvvvvvo.ovvv=v...vvW...%v.v
-v..ccc.ccc..vRRKvvwwwwwwwwwwwwwwwwvvvvv=vvvv.vv...vv...$v.v
-v..lc...cl..vvvvwwwwwwwwwwwwwwwwwwwwvvv<v....vvv...vvv=vv.v
+v...........vRRRRKvwwwwwwwwwwwwwwvvvvvo.ovvv+v...vvW...%v.v
+v..ccc.ccc..vRRKvvwwwwwwwwwwwwwwwwvvvvv+vvvv.vv...vv...$v.v
+v..lc...cl..vvvvwwwwwwwwwwwwwwwwwwwwvvv<v....vvv...vvv+vv.v
 v.t.......t.vvvwwwwwwwwwwwwwwwwwwwwwwvvvv.vvvvvvv...vv....v
 v....lll....vvvwwwwwwwwwwwwwwwwwwwwwwvvvv.v%RWvvvv...vvvv.v
 v....lml....vvwwwwwwwwwwwwwwwwwwwwwwwwvvv.v..Wvvvvv...vvv.v
 v....lll....vwwwwwwwwwwwwwwwwwwwwwwwwwwvv.v.vvvvvvvv...vv.v
 v...........vwwwwwwwwwwwwwwwwwwwwwwwwwwvv.v.v%R.Wv%vv...vvv
 vvvv++vvvvvvvwwwwwww..8..wwwwwwwwwwwwwwvv.v.v...WvRWvv...vv
-v........+tvwwwwww.........wwwwwwwwwwwwwv.v+v+vvvv=vvvv...v
+v........+tvwwwwww.........wwwwwwwwwwwwwv.v+v+vvvv+vvvv...v
 v...ll...v+vwwwww...........wwwwwwwwwwwwv............vvv..v
 v...ll...+tvwwww.............wwwwwwwwwwwvvvvvvvvvvvvvvvvv+v
 v...ll...v+vwwww.............wwww..;;.;;+.;;.....R......v.v
@@ -1307,6 +1307,7 @@ KMONS:  F = patrolling reaper
 : end
 SUBST:  n : ncc
 KFEAT: ABCEFH = .
+KFEAT: = = runed_door
 : set_feature_name("granite_statue", "gravestone")
 : set_feature_name("tree", "dead tree")
 MAP
@@ -1403,8 +1404,8 @@ NAME:   due_elkab
 PLACE:  Crypt:$
 ORIENT: float
 TAGS:   no_monster_gen no_item_gen no_pool_fixup no_rotate no_trap_gen
-NSUBST: A = 1:= / *:c
-NSUBST: B = 1:= / *:c
+NSUBST: A = 1:+ / *:c
+NSUBST: B = 1:+ / *:c
 NSUBST: C = 1:6 / *:5
 KFEAT:  YD = closed_door
 KFEAT:  ER = alarm trap
@@ -1456,8 +1457,7 @@ MONS:   guardian mummy
 MONS:   bog body / mummy / guardian mummy
 MONS:   generate_awake sphinx
 : end
-KFEAT:  Q = closed_door
-MARKER: Q = lua:restrict_door()
+KFEAT:  Q = runed_door
 MAP
                  ccccccccccccccccccccccccccccc
                  c*$*c|%*.......**|c.........c

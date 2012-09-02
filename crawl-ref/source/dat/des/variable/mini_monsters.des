@@ -566,12 +566,11 @@ DEPTH: D:9-27, Snake
 TAGS:  no_monster_gen
 MONS:  patrolling guardian serpent
 KPROP: *| = no_rtele_into
-SUBST: C = ===c
 MAP
 .......
 .ccccc.
 .c*|*c.
-.ccCcc.
+.cc+cc.
 .n%%%n.
 .n%%%n.
 .cc+cc.
@@ -1251,8 +1250,8 @@ MARKER: + = lua:props_marker { \
                                   "it anyway?", \
                 door_description_prefix= "warning-scrawled " \
             }
-MARKER: + = lua:restrict_door()
-MARKER: = = lua:restrict_door()
+KFEAT:  + = runed_door
+KFEAT:  = = runed_door
 SUBST:  ! = .
 MAP
 ccccccccccc
@@ -1561,7 +1560,7 @@ MAP
 ....xx.xxxxx.G..G.xxxx....
 ...xx...xxxx......xxxxx...
 ..xxxx.xxxxxx....xxxxxxx..
-.xxxxx=xxxxxx.mm.xxxxxxxx.
+.xxxxx+xxxxxx.mm.xxxxxxxx.
 .xxIx.I.xIx.xx++xx.xxx...x
 @+...m.m...x......x.+.mmm@
 .xxIx.I.xIx.xx++xx.xxx...x
@@ -2316,6 +2315,7 @@ KPROP:   .12 = no_rtele_into
 SUBST:   . = .:80 %$*|
 SHUFFLE: Dd / Ee / Ff / Gg / Hh
 SUBST:   D==, d=o, E=b, e=b, F=b, f=b, G=b, g=b, H=b, h=b
+KFEAT:   = = runed_door
 MAP
 WWWWWWWWWWWWWW
 WbbbbbbbbbbbbW
@@ -2459,7 +2459,7 @@ NAME:   minmay_metal_thing
 DEPTH:  D:12-20
 KPROP:  .1* = no_rtele_into
 MONS:   iron golem
-NSUBST: ? = 1:= / *:v
+NSUBST: ? = 1:+ / *:v
 MAP
 xxxlllllllllllllllllxxx
 xxxlvvvlvlvvvlvlvvvlxxx
@@ -2571,7 +2571,7 @@ ENDMAP
 
 NAME:    onia_ninara_cookie
 SHUFFLE: ABCDEF
-SUBST:   A : !, B : !, C : !, D : !, E : !, F : =, G : ~ l:50 w:50 I
+SUBST:   A : !, B : !, C : !, D : !, E : !, F : +, G : ~ l:50 w:50 I
 SUBST:   ! : xvcb
 SUBST:   H = 0 . ~ , J = 1 0:100 $:20
 ITEM:    any jewellery
@@ -2737,7 +2737,7 @@ NAME:   nicolae_well_that_was_easy
 DEPTH:  D:4-13
 TAGS:   no_hmirror no_vmirror no_monster_gen no_trap_gen no_item_gen mini_float
 WEIGHT: 3
-MARKER: = = lua:restrict_door()
+KFEAT:  = = runed_door
 SUBST:  - = ABCDEFHIJKLMNOPQR
 KITEM:  A = gossamer rune of zot mimic
 KITEM:  B = decaying rune of zot mimic
@@ -2909,6 +2909,7 @@ ENDMAP
 NAME:   minmay_hollow_rounded_squares
 DEPTH:  D:4-
 SUBST:  0 = 0., x : x c:2 v:1 b:1
+KFEAT:  = = runed_door
 MAP
  ........
 ..xxxxxx..
@@ -2956,7 +2957,7 @@ NAME:  minmay_ominous_box
 TAGS:  extra luniq_mini
 DEPTH: D:4-, Vaults
 SUBST: 8 = 8.......
-MARKER: = = lua:restrict_door()
+KFEAT: = = runed_door
 MAP
 .......
 .vvvvv.
@@ -3038,6 +3039,7 @@ NAME:   minmay_evil_grid
 DEPTH:  D:8-
 NSUBST: A = 7:+ / *:c
 NSUBST: B = 1:= / 1:n / *:c
+KFEAT:  = = runed_door
 NSUBST: C = 1:+ / *:c
 SUBST:  * = *|
 MAP
@@ -3216,7 +3218,7 @@ ENDMAP
 NAME:   wad_mini_maze
 DEPTH:  D:7-26
 WEIGHT: 4
-NSUBST: ? = 1:n / 1:= / *:X
+NSUBST: ? = 1:n / 1:+ / *:X
 SUBST:  X : cccvvb
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxx@xx
@@ -3242,6 +3244,7 @@ DEPTH:  D:8-26
 KFEAT:  t = tree
 FTILE:  ' = floor_pebble
 COLOUR: ' = white
+KFEAT:  = = runed_door
 MAP
 xxx...xxxxxxxxxxxxxx...xxx
 xx...xxxxxx........xx...xx
@@ -3672,6 +3675,7 @@ KMONS:  3 = lich / ancient lich
 KITEM:  3 = ring of protection from magic unrand:ring_of_the_mage
 KPROP:  32' = no_tele_into
 SUBST:  ' = .
+KFEAT:  = = runed_door
 MAP
 .......             .......
 .ccccc..           ..ccccc.
@@ -3932,6 +3936,7 @@ KFEAT: ACEH = any trap
 KITEM: ABCD = gold / nothing
 SUBST: F = G:99 F:1
 KMONS: F = orange crystal statue / silver statue / ice statue
+KFEAT: = = runed_door
 MAP
 ............
 .xxxxxxxxxx.

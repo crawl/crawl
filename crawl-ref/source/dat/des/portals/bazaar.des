@@ -1244,14 +1244,14 @@ xk.......kxxxxxxxxxk.......kxxxxxxxxxk.......kx
 x....A....xxxxxxxxx.........xxxxxxxxx....A....x
 x......................A............+.........x
 xk.......kxxxxxxxxxk.......kxxxxxxxxxk.......kx
-xxxxx+xxxxxxxxxxxxxxxxx=xxxxxxxxxxxxxxxxx+xxxxx
+xxxxx+xxxxxxxxxxxxxxxxx+xxxxxxxxxxxxxxxxx+xxxxx
 xxxxx.xxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxx.xxxxx
 xxxxx.xxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxx.xxxxx
 xxxxx.xxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxx.xxxxx
-xxxxx.xxxxxxxxxxxxxxxxx=xxxxxxxxxxxxxxxxx.xxxxx
+xxxxx.xxxxxxxxxxxxxxxxx+xxxxxxxxxxxxxxxxx.xxxxx
 xk.......kxxxxxxxxxk.......kxxxxxxxxxk.......kx
 x.........xxxxxxxxx.........xxxxxxxxx.........x
-x....A....=.......=....B....xxxxxxxxx....A....x
+x....A....+.......+....B....xxxxxxxxx....A....x
 x.........xxxxxxxxx.........xxxxxxxxx.........x
 xk.......kxxxxxxxxxk.......kxxxxxxxxxk.......kx
 xxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxx
@@ -1565,6 +1565,7 @@ KFEAT:   A = armour shop / weapon shop / wand shop
 KFEAT:   B = general shop / food shop
 KFEAT:   C = scroll shop / book shop / distillery shop
 SUBST:   D = >
+SUBST:   = : +x
 :        bazaar_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1623,8 +1624,11 @@ SUBST:    E=>, S=T, T:TUV, D=ABC.
 KFEAT:    A = armour shop / weapon shop / wand shop
 KFEAT:    B = general shop / food shop
 KFEAT:    C = scroll shop / book shop / distillery shop
-SHUFFLE:  '"
-SUBST:    '=+, "==
+: if crawl.coinflip() then
+SUBST:    '=+, "=x, :=x
+: else
+SUBST:    '=x, "=., :=.
+: end
 :         bazaar_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1632,18 +1636,18 @@ xE..xxxxxxx...xx.......xx...xxxxxxx..Ex
 xxx...xxxxx.T.''...A...''.T.xxxxx...xxx
 xxxxx.+...+...xx.......xx...+...+.xxxxx
 xxxxxxx...xxxxxxxxx+xxxxxxxxx...xxxxxxx
-xxxxxxxxx.".xxxxxxx.xxxxxxx.".xxxxxxxxx
-xxxxxxxxxxx....xxxx.xxxxx...xxxxxxxxxxx
-x...xx.S.xxxxx.."xx+xx"...xxx.S.xx...xx
+xxxxxxxxx.":xxxxxxx.xxxxxxx:".xxxxxxxxx
+xxxxxxxxxxx::::xxxx.xxxxx:::xxxxxxxxxxx
+x...xx.S.xxxxx::"xx+xx":::xxx.S.xx...xx
 x...xx...xxxxxxxx.....xxxxxxx...xx...xx
 x...xxx+xxxxxxxxx.....xxxxxxxx+xxx...xx
 x.A.+...........+..<..+..........+.A.xx
 x...xxx+xxxxxxxxx.....xxxxxxxx+xxx...xx
 x...xx...xxxxxxxx.....xxxxxxx...xx...xx
-x...xx.S.xxxx..."xx+xx"...xxx.S.xx...xx
-xxxxxxxxxxx...xxxxx.xxxxx...xxxxxxxxxxx
-xxxxxxxxx...xxxxxxx.xxxxxxx...xxxxxxxxx
-xxxxxxx.".xxxxxxxxx+xxxxxxxxx.".xxxxxxx
+x...xx.S.xxxx:::"xx+xx":::xxx.S.xx...xx
+xxxxxxxxxxx:::xxxxx.xxxxx:::xxxxxxxxxxx
+xxxxxxxxx:::xxxxxxx.xxxxxxx:::xxxxxxxxx
+xxxxxxx.":xxxxxxxxx+xxxxxxxxx:".xxxxxxx
 xxxxx...xxx...xx.......xx...xxx...xxxxx
 xxx.+.....+.T.''...A...''.T.+.....+.xxx
 xE..xxxxxxx...xx.......xx...xxxxxxx..Ex
