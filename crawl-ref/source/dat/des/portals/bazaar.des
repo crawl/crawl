@@ -1800,16 +1800,15 @@ xxxxx       xx.xx
 ENDMAP
 
 ##########################################################################
-# Fallback maps (weights 1, allow_dup)
+# Generated maps
 ##########################################################################
-# Expect to never see them in regular games, but for long Nemelex games
-# they'll drown out the competition.
 
-# A generated bazaar map.
+# With Nemelex' bazaars gone, the number of bazaars in a game is sharply
+# limited.  This one keeps allow_dup, just in case.
 NAME:   bazaar_kb_twisted_cavern
 TAGS:   allow_dup
 ORIENT: encompass
-WEIGHT: 1
+WEIGHT: 500
 {{
     -- Restricting the map to a smaller box might be good (more forks) but
     -- by allowing the whole level we mostly avoid straight borders.
@@ -1818,12 +1817,12 @@ WEIGHT: 1
     fill_area{fill = 'x', border = 'X'}
 
     -- 4th argument is the size of the cavern to be delved.
-    delve(3, 3, 0, 100, 1)
+    delve(3, 3, 0, 150, 1)
 
     -- place one marker (shop / entrance / exit) at random
     nsubst('. = 1:C / *:.')
-    -- then add five more, using a greedy algorithm
-    for i = 1, 5 do
+    -- then add five or six more (for 4-5 shops), using a greedy algorithm
+    for i = 1, 5 + crawl.random2(2) do
       local x, y = farthest_from('C')
       mapgrd[x][y] = 'C'
     end
