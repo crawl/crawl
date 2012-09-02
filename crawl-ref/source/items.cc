@@ -16,6 +16,7 @@
 
 #include "externs.h"
 
+#include "abyss.h"
 #include "arena.h"
 #include "artefact.h"
 #include "beam.h"
@@ -1614,6 +1615,19 @@ void note_inscribe_item(item_def &item)
     _check_note_item(item);
 }
 
+void _abyssal_rune_collected() {
+  if (player_in_branch(BRANCH_ABYSS))
+  {
+    mprf("The Abyss %s %saround you!",
+      coinflip() ? "trembles" : "shudders",
+      silenced(you.pos()) ? "" : "and groans ");
+  }
+  if (player_in_branch(BRANCH_ABYSS))
+  {
+    abyss_teleport(true);
+  }
+}
+
 // Returns quantity of items moved into player's inventory and -1 if
 // the player's inventory is full.
 int move_item_to_player(int obj, int quant_got, bool quiet,
@@ -1673,6 +1687,10 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
             mpr("Press } to see all the runes you have collected.");
         }
 
+        if (mitm[obj].plus == RUNE_ABYSSAL) {
+          _abyssal_rune_collected();
+        }
+
         if (mitm[obj].plus == RUNE_TOMB)
             add_daction(DACT_TOMB_CTELE);
 
@@ -1684,6 +1702,7 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
 
         dec_mitm_item_quantity(obj, quant_got);
         you.turn_is_over = true;
+
         if (you.religion == GOD_ASHENZARI)
         {
             simple_god_message(" appreciates your discovery of this rune.");
