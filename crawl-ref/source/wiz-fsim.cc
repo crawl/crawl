@@ -318,7 +318,10 @@ static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
     {
         for (int i = 0; i < iter_limit; i++)
         {
+            // This sets mgrid(mons.pos()) to NON_MONSTER
             mon = orig;
+            // Re-place the monster if it e.g. blinked away.
+            mon.move_to_pos(start_pos);
             mon.hit_points = mon.max_hit_points;
             mon.shield_blocks = 0;
             you.time_taken = player_speed();
@@ -351,9 +354,6 @@ static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
             cumulative_damage += damage;
             if (damage > fdata.max_dam)
                 fdata.max_dam = damage;
-
-            // Re-place the monster if it e.g. blinked away.
-            mon.move_to_pos(start_pos);
         }
     }
     else // you're defending
