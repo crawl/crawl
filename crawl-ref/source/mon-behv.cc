@@ -902,7 +902,6 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
     int fleeThreshold = min(mon->max_hit_points / 4, 20);
 
     bool isSmart          = (mons_intel(mon) > I_ANIMAL);
-    bool isMobile         = !mons_is_stationary(mon);
     bool wontAttack       = mon->wont_attack();
     bool sourceWontAttack = false;
     bool setTarget        = false;
@@ -1147,7 +1146,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         break;
 
     case ME_HURT:
-        // Smart monsters, undead, plants, and nonliving monsters cannot flee.
+        // Monsters with the M_FLEES flag can flee at low HP.
         // Cannot flee if cornered.
         // Monster can flee if HP is less than 1/4 maxhp or less than 20 hp
         // (whichever is lower). Chance starts quite low, and is near 100% at 1.
@@ -1158,11 +1157,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         //   at 19 hp: 5% chance of fleeing
         //   at 10 hp: 50% chance of fleeing
         //   (chance increases by 5% for every hp lost.)
-        if (!isSmart && isMobile
-            && mon->holiness() != MH_UNDEAD
-            && mon->holiness() != MH_PLANT
-            && mon->holiness() != MH_NONLIVING
-            && !mons_class_flag(mon->type, M_NO_FLEE)
+        if (mons_class_flag(mon->type, M_FLEES)
             && !mons_is_cornered(mon)
             && !mon->berserk()
             && x_chance_in_y(fleeThreshold - mon->hit_points, fleeThreshold))
