@@ -193,7 +193,7 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
         switch (random2(6))
         {
         default:
-        case 0:
+        case 0: flv.wall = TILE_WALL_ABYSS; break;
         case 1:
         case 2:
         case 3: flv.wall = TILE_WALL_PEBBLE

@@ -570,6 +570,15 @@ church3
 #%weight 1
 #church4
 
+abyss0 WALL_ABYSS
+abyss1
+abyss2
+abyss3
+abyss4
+abyss5
+abyss6
+abyss7
+
 hell01 WALL_HELL
 hell02
 hell03
