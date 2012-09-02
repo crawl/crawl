@@ -1912,10 +1912,10 @@ WEIGHT: 5
 DEPTH:  D:5-27, Swamp
 KMONS:  * = fungus
 KFEAT:  * = *
-NSUBST: a = 1:= / *:x
-NSUBST: b = 1:= / *:x
-NSUBST: c = 1:= / *:x
-NSUBST: d = 1:= / *:x
+NSUBST: a = 1:+ / *:x
+NSUBST: b = 1:+ / *:x
+NSUBST: c = 1:+ / *:x
+NSUBST: d = 1:+ / *:x
 MAP
   wwwwwwww
  wwwwwwwwww
@@ -1982,10 +1982,8 @@ DEPTH:  D:1-9
 TAGS:   no_monster_gen allow_dup extra luniq_mini
 ITEM:   bread ration / meat ration / arrow /\
         bolt / spear / any potion w:5
-NSUBST: x = 1:= / *:x
-SUBST:  = = +===
 MAP
-x?xx
+x+xx
 xddx
 xddx
 xxxx
@@ -2012,7 +2010,7 @@ TAGS:    extra allow_dup luniq_mini
 DEPTH:   D:9-27, Vaults
 ITEM:    any weapon, any missile, any armour, any food, any scroll
 ITEM:    any jewellery, any potion, any book
-SUBST:   + = +=, $ : $ZYXW
+SUBST:   $ : $ZYXW
 SUBST:   $ : $%defghijk
 SUBST:   W = $%defghijk
 SUBST:   Z = def
@@ -2025,12 +2023,12 @@ x$$x
 xxxx
 ENDMAP
 
-NAME:   secret_library_closet
+NAME:   library_closet
 DEPTH:  D, Vaults, Elf, Crypt, Snake, Spider, Dwarf, Orc
 TAGS:   allow_dup extra luniq_mini
 ITEM:   any book w:20 / any scroll / nothing
 MAP
-x=xx
+x+xx
 xddx
 xddx
 xxxx
@@ -2048,13 +2046,13 @@ xx...xx
  x...x
 ENDMAP
 
-NAME:   eino_tiny_chamber_secret
+NAME:   eino_tiny_chamber
 TAGS:   allow_dup extra luniq_mini
 DEPTH:  D:2-27, Elf, Vaults, Crypt
 MAP
 xxxxx
 x...x
-x.*.=
+x.*.+
 x...x
 xxxxx
 ENDMAP
@@ -2384,12 +2382,11 @@ ccccc'''ccccc
 ccccc.@.ccccc
 ENDMAP
 
-# High T&D skill or a means of detecting secret doors is helpful here....
 NAME:    lemuel_freeze_loot_1
 DEPTH:   D:12-27, Crypt
 SUBST:   * : **$
 SUBST:   * = **|
-NSUBST:  n = 1:= / *:n
+NSUBST:  N = 1:+ / *:n
 MONS:    nothing, nothing, nothing, nothing
 SHUFFLE: 1234
 MARKER:  1 = lua:fog_machine { cloud_type = "freezing vapour", \
@@ -2409,12 +2406,12 @@ MAP
    .wwwww.
  .wwwwwwwww.
  wwwww1wwwww
-.wwcnnnnncww.
+.wwcnnNnncww.
 wwwn..F..nwww
-ww2n.***.nwww
-wwwn.***.n4ww
+ww2N.***.nwww
+wwwn.***.N4ww
 wwwn..F..nwww
-.wwcnnnnncww.
+.wwcnnNnncww.
  wwwww3wwwww
  .wwwwwwwww.
    .wwwww.
@@ -2596,16 +2593,16 @@ TAGS:  allow_dup extra luniq_mini abyss ruin_abyss
 DEPTH: D:4-
 MAP
 ............
-..xxxx=xxx..
+..xxxx+xxx..
 .xG..x...Gx.
 .x....x...x.
 .x...x....x.
-.xx.x*x.x.=.
-.=.x.x*x.xx.
+.xx.x*x.x.+.
+.+.x.x*x.xx.
 .x....x...x.
 .x...x....x.
 .xG...x..Gx.
-..xxx=xxxx..
+..xxx+xxxx..
 ............
 ENDMAP
 

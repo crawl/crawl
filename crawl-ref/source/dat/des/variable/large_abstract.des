@@ -260,6 +260,7 @@ NAME:   hourglass_vault
 ORIENT: southeast
 DEPTH:  D:12-26
 TAGS:   no_rotate no_hmirror
+KFEAT:  = = runed_door
 MAP
 xxxxxxxxxxxxxx@xxxxxxxxxxxxxxxx
 xxxxxx.................xxxxxxxx
@@ -455,6 +456,7 @@ ENDMAP
 NAME:   impenetrable_vault
 DEPTH:  D:16-26
 ORIENT: southeast
+KFEAT:  = = runed_door
 MAP
        .......@................x
        ........................x
@@ -493,6 +495,7 @@ ORIENT: southwest
 DEPTH:  D:18-27
 MONS:   hell hound, necromancer, wizard, orange demon, rotting devil
 MONS:   hell knight, great orb of eyes
+KFEAT:  = = runed_door
 MAP
 xx.@.xxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxx...xxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -516,7 +519,7 @@ xx.....vvbbb......bbbvv.....xxxx
 xxx....vvb....66....bvvxxxxxxxxx
 xxxxxxvvvb..llllll..bvvvxxxxxxxx
 xvvvvvvvvb..ll45ll..bvvvvvvvvxxx
-xccc***+==..l3.2.l..cccccccccxxx
+xccc***+.+..l3.2.l..cccccccccxxx
 xccc+cccbb....ll....c..$$$$+$*cx
 xcc|||cbb...3llll2...cc%*%*c$|cx
 xcccccccbbbbbbbbbbbccccccccccccx
@@ -740,17 +743,18 @@ KMONS:  9 = 9
 KITEM:  0 = %
 KITEM:  8 = |
 KITEM:  9 = *
+KFEAT:  = = runed_door
 MAP
 @cccccccccccccccc
 c+..ccccccccccccc
 c...0cccccccccccc
 c...9cccccccccccc
-cc09xxccccccccccc
+cc09=xccccccccccc
 ccccxx...cccccccc
 ccccc....0ccccccc
 ccccc...09ccccccc
 ccccc..098ccccccc
-cccccc098xxcccccc
+cccccc098=xcccccc
 cccccccccxx....cc
 cccccccccc.....0c
 cccccccccc....09c
@@ -935,6 +939,7 @@ SUBST:   ' = .:120 0%
 SUBST:   A = $
 SUBST:   B = %*
 SUBST:   C = 9
+KFEAT:   = = runed_door
 MAP
                            xxxxxxx@@xxxxxxx
                            xxxxxxx++xxxxxxx
