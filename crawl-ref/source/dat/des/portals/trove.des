@@ -795,7 +795,8 @@ ITEM:    dagger unrand:vampires_tooth / dagger unrand:dagger_of_chilly_death /\
          dagger unrand:knife_of_accuracy / long sword unrand:plutonium_sword /\
          demon blade unrand:leech / long sword unrand:sword_of_zonguldrok    /\
          staff of poison unrand:staff_of_olgreb / scythe unrand:finisher     /\
-         staff unrand:elemental_staff / glaive unrand:glaive_of_prune        /\
+         quarterstaff unrand:elemental_staff                                 /\
+         glaive unrand:glaive_of_prune                                       /\
          battleaxe unrand:wrath_of_trog / glaive unrand:glaive_of_the_guard  /\
          trident unrand:trident_of_the_octopus_king / spear unrand:wyrmbane  /\
          scythe unrand:scythe_of_curses / giant club unrand:skullcrusher     /\

@@ -2854,9 +2854,10 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
             return TILE_WPN_GLAIVE_ORC;
         return TILE_WPN_GLAIVE;
 
+#if TAG_MAJOR_VERSION == 34
     case WPN_STAFF:
         return TILE_WPN_STAFF;
-
+#endif
     case WPN_QUARTERSTAFF:
         return TILE_WPN_QUARTERSTAFF;
 

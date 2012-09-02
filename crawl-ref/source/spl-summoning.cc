@@ -133,7 +133,9 @@ static bool _snakable_weapon(const item_def& item)
                 || item.sub_type == WPN_DEMON_TRIDENT
                 || item.sub_type == WPN_GLAIVE
                 || item.sub_type == WPN_BARDICHE
+#if TAG_MAJOR_VERSION == 34
                 || item.sub_type == WPN_STAFF
+#endif
                 || item.sub_type == WPN_QUARTERSTAFF
                 || item.sub_type == WPN_BLOWGUN
                 || item.sub_type == WPN_BOW

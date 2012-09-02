@@ -54,7 +54,7 @@ public:
     hands_reqd_type hands;
 
     // Attacker's shield, stored so we can reference it and determine
-    // the attacker's combat effectiveness (staff + shield == bad)
+    // the attacker's combat effectiveness
     item_def  *shield;
 
     // If weapon is an artefact, its properties.
