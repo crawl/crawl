@@ -2363,8 +2363,6 @@ static void _trowel_card(int power, deck_rarity_type rarity)
             // Generate a portal to something.
             const map_def *map = random_map_for_tag("trowel_portal", true, true);
 
-            // Bazaar is the only trowel with allow_dup, pulling more there will
-            // fail if other portals are exhausted.
             if (!map)
                 break;
 
