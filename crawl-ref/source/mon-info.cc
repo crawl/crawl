@@ -341,7 +341,7 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     {
         if (type == MONS_LERNAEAN_HYDRA
             || type == MONS_ROYAL_JELLY
-            || type == MONS_SERPENT_OF_HELL)
+            || mons_species(type) == MONS_SERPENT_OF_HELL)
         {
             mb.set(MB_NAME_THE);
         }
