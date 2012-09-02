@@ -967,3 +967,132 @@ xxxxx...........xxxxx
 xxxxxxx.......xxxxxxx
 xxxxxxxxxx@xxxxxxxxxx
 ENDMAP
+
+###############################################################################
+
+NAME:    nagdon_entry_double_spiral
+TAGS:    entry no_monster_gen no_trap_gen no_pool_fixup
+ORIENT:  float
+MONS:    plant, toadstool
+: if crawl.coinflip() then
+SUBST:   G : G:20 H:20 T:5 V:5 1:5 2:5 t:5 A:1 B:1 C:1
+SUBST:   c : c:40 x:35 v:15 b:10
+: elseif crawl.coinflip() then
+KFEAT:   3456 : W
+SUBST:   . = W
+SUBST:   ' = W.
+SUBST:   G : 2:15 G:10 H:5 1:5 A:1 B:1 C:1
+SUBST:   c : M:60 x:30 c:10
+: else
+:   if crawl.one_chance_in(4) then
+SUBST:   . = W
+SUBST:   ' = WW.
+:   elseif crawl.one_chance_in(6) then
+SUBST:   c = l
+:   end
+SUBST:   c : t:45 m:30 w:20 n:5
+SUBST:   G : G:40 H:30 2:10 1:5 A:3 B:2
+: end
+KFEAT:   A = abandoned_shop
+KFEAT:   B = stone_arch
+NSUBST:  C = AB / c
+KFEAT:   M = mangrove
+NSUBST:  H = 1:[ / 1:( / *: G:60 >:30 <:5 T:5
+SUBST:   '" = .
+MAP
+       ccc
+    ccccGcccc
+   cc.......cc
+  cc.ccccccc.cc
+ cc.cc.....cc.cc
+ c.cc.ccccc.cc.c
+ c.c.cc...cc.c.c
+cc.c.c.cc.Gc.c.cc
+cG.c.c.cG.cc.c.Gc
+cc.c.c.cc....c.cc
+ c.c.cc.ccccGc.c
+ c'cc.cc...ccc.c
+ cc'cc.cccc...cc
+  cc'cc...ccGcc
+   cc'ccc.{ccc
+    cc@"ccccc
+       @@@
+ENDMAP
+
+###############################################################################
+
+NAME:    nagdon_entry_zigzag_paths
+TAGS:    entry no_trap_gen no_monster_gen
+ORIENT:  float
+MONS:    plant, toadstool
+ITEM:    orc skeleton / kobold skeleton / goblin skeleton / place:D:1 skeleton
+: if crawl.one_chance_in(3) then
+  SUBST:   GHIJ = x
+  SUBST:   " = .
+  SUBST:   & = @
+:   if crawl.coinflip() then
+    SUBST:   ' = .
+    SUBST:   + = +:40 .:30 1:5 2:5
+:     if not crawl.one_chance_in(3) then
+      SHUFFLE: [({
+:     end
+:   else
+    SUBST:   '(+ = x
+:   end
+: else
+  SUBST:   "['(& = x
+  SUBST:   + = H
+:   if crawl.coinflip() then
+    SUBST:   GIJ = G
+    SUBST:   G : x.
+    SUBST:   H : xGc
+:   else
+:     if crawl.coinflip() then
+      SUBST:   H = x
+      SHUFFLE: GHI
+      SUBST:   G = I
+      SUBST:   H = x
+      SUBST:   I : G:3 1:5 2
+      SUBST:   J : x d e A V >:5 2:5 1:1
+      SUBST:   e = dx
+:     else
+:       if crawl.coinflip() then
+        SUBST:   H : .:20 + 1:1
+        SUBST:   J = H
+        SUBST:   GI =  x
+:       end
+        SUBST:   GIJ : x b:1
+        SUBST:   H : G T V:5 1:5 2:1 A:1
+:     end
+:   end
+: end
+SUBST:   x : x c:1
+: if crawl.one_chance_in(3) then
+  SUBST:   G = t
+: elseif crawl.one_chance_in(10) then
+  SUBST:   x = t
+  SUBST:   1 : 2 T
+: end
+KFEAT:   A = abandoned_shop / stone_arch / known shaft trap / \
+         known teleport trap
+NSUBST:  A = A / x
+SUBST:   X = x
+MAP
+    XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXxxxxxxxxxxxxxxxxxxxx"xxxxxx
+ Xxxxxxxxxxxxx"xxxxxxxxx"x"xxxxxxx
+ Xxxxxx"xxxxx"x"xxxxxxx"Jxx"xxxxxxx
+XXxx[x"x"xxx"Jxx"xxxxx"GHIxx"xxxxxx
+XXxxx"Jxx"x"GHIxx"xxx"xx.xxxx"xxxxx
+XxxxxGHIxx"xx.xxxx"x"xx.x.xxxx"xxx&
+Xxxxxx.xxxxx.x.xxxx"xx.xxx.xxxx"x"x
+Xxx{x.x.xxx.xxx.xxxxx.xxxxx.xxxx"xx
+Xxxx.xxx.x.xxxxx.xxx.xxxxxxx.xxxxx@
+XxxGHIxxx.xx'xxxx.x.xxxxXxxxx.xxx.@
+XxxxJxx'GHI'x'xxxx.xxxxXXXxxxx.x.xx
+Xxxxxx(x'J'xxx'xxG+IxxXX XXxxxx.xxx
+XXxxxxxxx'xxxxx'x'JxxXX   XXxxGHIxx
+ XXXxxxxxxxxxxxx'xxxxXX    XxxxJxxx
+   XXXXxxxxXXXxxxxxxXX     Xxxxxxxx
+      XXXXXX XXXXXXXXX     XXxxxxx
+ENDMAP
