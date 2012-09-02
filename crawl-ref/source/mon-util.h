@@ -346,8 +346,9 @@ bool mons_eats_items(const monster* mon);
 bool mons_eats_corpses(const monster* mon);
 bool mons_eats_food(const monster* mon);
 monster_type mons_genus(monster_type mc);
-monster_type mons_detected_base(monster_type mt);
 monster_type mons_species(monster_type mc);
+monster_type draco_subspecies(const monster* mon);
+monster_type mons_detected_base(monster_type mt);
 
 bool mons_looks_stabbable(const monster* m);
 bool mons_looks_distracted(const monster* m);
@@ -386,7 +387,6 @@ bool monster_shover(const monster* m);
 
 bool monster_senior(const monster* first, const monster* second,
                     bool fleeing = false);
-monster_type draco_subspecies(const monster* mon);
 string ugly_thing_colour_name(colour_t colour);
 colour_t ugly_thing_random_colour();
 int str_to_ugly_thing_colour(const string &s);
