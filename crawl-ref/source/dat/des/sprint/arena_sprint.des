@@ -153,7 +153,9 @@ function arena_sprint_end_round(data)
     else
         crawl.mpr("You now have 1 arena point.", "intrinsic_gain")
     end
-    crawl.take_note("Arena points: " .. data.style_points)
+    crawl.take_note("Arena points: " .. data.style_points ..
+                    " (+" .. style_gain .. ") [x" .. data.style_mult .. "]",
+                    "intrinsic_gain")
 
     dgn.create_item(you_x, you_y, "gold q:" .. gold_gain)
 
