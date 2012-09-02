@@ -273,10 +273,10 @@ TAGS:   extra
 DEPTH:  D:1-26
 ORIENT: float
 : if you.absdepth() > 8 then
-KITEM:  " = staff, quarterstaff, quarterstaff good_item
+KITEM:  " = club, quarterstaff, quarterstaff good_item
 : end
-KITEM:  " = staff, quarterstaff, quarterstaff
-KITEM:  ' = staff, any magical staff / any rod w:1
+KITEM:  " = club, quarterstaff, quarterstaff
+KITEM:  ' = club, any magical staff / any rod w:1
 MAP
 xxxxx
 x"']x
@@ -1910,7 +1910,7 @@ KMONS:  Z = col:flash wizard hd:15 name_descriptor tile:mons_master_elementalist
 KITEM:  B = randbook disc:air / randbook disc:fire / randbook disc:ice / \
             randbook disc:earth
 KITEM:  | = staff of fire / staff of cold / staff of earth / staff of air / \
-            staff unrand:elemental_staff
+            quarterstaff unrand:elemental_staff
 MAP
        ccccccccc
       ccE+'''cwcc

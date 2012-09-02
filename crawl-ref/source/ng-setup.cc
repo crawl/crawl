@@ -938,8 +938,11 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_ARTIFICER:
-        // Equipment. Staff, wands, and armour or robe.
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_STAFF);
+        // Equipment. Short sword, wands, and armour or robe.
+        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
+
+        if (you.has_claws())
+            _newgame_clear_item(0);
 
         newgame_make_item(1, EQ_NONE, OBJ_WANDS, WAND_FLAME,
                            -1, 1, 15, 0);
@@ -956,7 +959,7 @@ static void _give_items_skills(const newgame_def& ng)
         you.skills[SK_TRAPS_DOORS] = 2;
         you.skills[SK_DODGING]     = 2;
         you.skills[SK_FIGHTING]    = 1;
-        you.skills[SK_STAVES]      = 1;
+        weap_skill                 = 1;
         you.skills[SK_STEALTH]     = 1;
         break;
 

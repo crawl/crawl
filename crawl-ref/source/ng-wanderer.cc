@@ -789,7 +789,7 @@ static void _wanderer_cover_equip_holes(int & slot)
 
     if (you.equip[EQ_WEAPON] == -1)
     {
-        weapon_type weapon = (coinflip() ? WPN_CLUB : WPN_STAFF);
+        weapon_type weapon = WPN_CLUB;
         if (you.dex() > you.strength() || you.skills[SK_STABBING])
             weapon = WPN_DAGGER;
 

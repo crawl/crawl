@@ -1357,7 +1357,6 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             break;
 
         // Staves
-        case WPN_STAFF:
         case WPN_QUARTERSTAFF:
             if (one_chance_in(30))
                 rc = SPWPN_ANTIMAGIC;
@@ -1616,8 +1615,7 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
     // If it's forced to be a good item, reroll the worst weapons.
     if (force_good
         && force_type == OBJ_RANDOM
-        && (item.sub_type == WPN_CLUB || item.sub_type == WPN_SLING
-            || item.sub_type == WPN_STAFF))
+        && (item.sub_type == WPN_CLUB || item.sub_type == WPN_SLING))
     {
         item.sub_type = _determine_weapon_subtype(item_level);
     }
