@@ -905,3 +905,36 @@ xxxxx.x.x.xxx.x.x.xxxxx
    xxxx.........xxxx
    xxxx+xxxxxxx+xxx
 ENDMAP
+
+##############################################################################
+
+NAME:   lightli_hangedman_entry_farm
+ORIENT: float
+TAGS:   no_monster_gen entry
+MONS:   plant
+SUBST:  1 = 1:2 t:2 .:1
+MARKER: F = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
+                              pow_max = 100, delay = 1, size = 1, \
+                              excl_rad = -1 }
+KPROP:  F1 = no_rtele_into
+MAP
+         xxxxxxx
+         x..{..x
+         x(...[x
+         x.....x
+xxxxxxxxxxxx+xxxxxxxxxxxx
+xWWWWWWWWWWW.WWWWWWWWWWWx
+xW111111111W.W111111111Wx
+xW111111111W.W111111111Wx
+xWWWWWWWWWWW.WWWWWWWWWWWx
+xWWWWWWWWW.....WWWWWWWWWx
+xW1111111W.mmm.W1111111Wx
+xW1111111W.mFm.W1111111Wx
+xW1111111W.mmm.W1111111Wx
+xWWWWWWWWW.....WWWWWWWWWx
+xWWWWWWWWWWW.WWWWWWWWWWWx
+xW111111111W.W111111111Wx
+xW111111111W.W111111111Wx
+xWWWWWWWWWWW.WWWWWWWWWWWx
+xxxxxxxxxxxx+xxxxxxxxxxxx
+ENDMAP
