@@ -1112,13 +1112,12 @@ ENDMAP
 ################################################################################
 # Sif Muna library
 #
-NAME:   evilmike_library_of_many_secrets
+NAME:   evilmike_library_of_no_secrets
 ORIENT: southeast
 DEPTH:  D:11-
 TAGS:   no_pool_fixup no_monster_gen
 TILE:   c = DNGN_STONE_WALL_BLUE
 COLOUR: c" = lightblue
-COLOUR: = = lightblue
 FTILE:  .+def12Ubc|* = FLOOR_CRYSTAL_SQUARES
 FTILE:  "_ = FLOOR_MARBLE
 KFEAT:  _ = altar_sif_muna
@@ -1142,7 +1141,7 @@ MONS:   w:25 deep elf sorcerer / w:50 lich / w:25 ancient lich
 ITEM:   any book / w:20 any randbook
 ITEM:   w:18 any magical staff / any rod w:5 / any jewellery
 ITEM:   any randbook / gold
-SUBST:  '" = .
+SUBST:  " = .
 MAP
                 xxxxxxxxxxxxxxxxxxxxxxxxx
                 xcccccccccccccccccccccccc
@@ -1150,29 +1149,29 @@ MAP
                 xccccU............Ucccccc
                 xcwwc..b..b..b..b..cccccc
                 xc|*+..b..b..b..b..cccccc
-                xc||c..2..1..1..1..='cccc
-                xc|*+..b..b..b..b..c'cccc
-  xxxxxxxxxxxxxxxcwwc..b..b..b..b..c'cccc
-  xcccccccccccccccc=cU............Uc'cccc
-  xccc'=''''''''''='ccccccc++ccccccc'cccc
-  xccc'cccccccccccc'ccccccw..wcccccc=cccc
-  xccc'=f...cc...f='=''''=w..w='''''''ccc
-  xccc'c.bb.cc.bb.c'ccccccc++cccc=ccc=ccc
-  xccc'c..1.cc.1..c'cwwwwwwWWwwwc'cwwwwwc
-  xccc=cccc+cc+cccc=cwbb..1..bbwc'cdd.eec
-''cccc..............cwb...U...bwc'ccc+ccc
-'Yc.1c..bbbb..bbbb1.cw..U"""U..wc'c.....c
-@'+..c..............cw.."""""..wc=c..b.2c
+                xc||c..2..1..1..1..cccccc
+                xc|*+..b..b..b..b..cccccc
+  xxxxxxxxxxxxxxxcwwc..b..b..b..b..cccccc
+  xccccccccccccccccccU............Ucccccc
+  xcccccccccccccccccccccccc++cccccccccccc
+  xcccccccccccccccccccccccw..wccccccccccc
+  xcccccf...cc...fccccccccw..wccccccccccc
+  xccccc.bb.cc.bb.ccccccccc++cccccccccccc
+  xccccc..1.cc.1..cccwwwwwwWWwwwcccwwwwwc
+  xcccccccc+cc+ccccccwbb..1..bbwcccdd.eec
+''cccc..............cwb...U...bwccccc+ccc
+'Yc.1c..bbbb..bbbb1.cw..U"""U..wccc.....c
+@'+..c..............cw.."""""..wccc..b.2c
 @Yc..+..bbbb1.bbbb1.+W.U""_""U2W+.+.bUb1c
-@'+..c..............cw.."""""..wc=c..b.2c
-'Yc.1c..bbbb..bbbb1.cw..U"""U..wc'c.....c
-''cccc..............cwb...U...bwc'ccc+ccc
-  xccc=cccc+cc+cccc=cwbb..1..bbwc'cee.ddc
-  xccc'c..c....c..c'cwwwwwwwwwwwc'cwwwwwc
-  xccc'cU.+1bb1+.Uc'cccccc=cccccc=ccc=ccc
-  xccc'=f.c....c.f='='''''''''''''''''ccc
-  xccc'cccccc=ccccc'ccccccccccccccccccccc
-  xccc'=''''''''''='ccccccccccccccccccccc
+@'+..c..............cw.."""""..wccc..b.2c
+'Yc.1c..bbbb..bbbb1.cw..U"""U..wccc.....c
+''cccc..............cwb...U...bwccccc+ccc
+  xcccccccc+cc+ccccccwbb..1..bbwcccee.ddc
+  xccccc..c....c..cccwwwwwwwwwwwcccwwwwwc
+  xcccccU.+1bb1+.Uccccccccccccccccccccccc
+  xcccccf.c....c.fccccccccccccccccccccccc
+  xcccccccccccccccccccccccccccccccccccccc
+  xcccccccccccccccccccccccccccccccccccccc
   xcccccccccccccccccccccccccccccccccccccc
 ENDMAP
 
