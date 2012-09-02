@@ -130,7 +130,7 @@ MAP
 ENDMAP
 
 # Not Minivault 9 (by Mu.)
-NAME:   not_minivault_9_mu
+NAME:   not_door_vault_mu
 TAGS:   allow_dup
 WEIGHT: 1
 DEPTH:  D:15-27, Elf, Vaults
@@ -522,7 +522,7 @@ www!!!?ww.
 ENDMAP
 
 # Not Minivault 9 (or, elephant zoo)
-NAME:   not_minivault_9_due
+NAME:   not_door_vault_due
 TAGS:   allow_dup
 WEIGHT: 1
 DEPTH:  D:20-27, Elf:3-5, Vaults:4-8
@@ -3842,7 +3842,7 @@ ENDMAP
 # The marker affects find_connected_range() so that each door opens and
 # closes separately rather than all of them joining together into a huge
 # gate that opens all at once.
-NAME:   minivault_9
+NAME:   door_vault
 TAGS:   allow_dup
 DEPTH:  D:15-27, Elf, Vaults, Crypt, Dis, Geh, Tar, Coc, Zot
 MARKER: X = lua: props_marker { connected_exclude="true" }
@@ -3888,7 +3888,7 @@ XXXXXXXXXX
 ENDMAP
 
 # No, John. You are the door vault
-NAME:   reverse_minivault_9
+NAME:   reverse_door_vault
 DEPTH:  D:15-27, Vaults
 WEIGHT: 4
 MARKER: X = lua: props_marker { connected_exclude="true" }
