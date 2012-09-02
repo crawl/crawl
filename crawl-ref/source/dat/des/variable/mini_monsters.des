@@ -2846,6 +2846,33 @@ xxxcx;x+x;xcxxx
    xxxx@xxxx
 ENDMAP
 
+NAME:    lasty_cornered_adventurer
+TAGS:    no_monster_gen patrolling
+DEPTH:   D:2-6
+MONS:    jelly, jelly, ooze
+{{
+dgn.delayed_decay(_G, 'A', 'human corpse, damaged shield / nothing, '
+                        .. 'damaged helmet / nothing, % / nothing, '
+                        .. '% / nothing, % / nothing, any damaged armour, '
+                        .. 'any damaged weapon good_item')
+}}
+KMONS:   A = toadstool
+KFEAT:   B = altar_jiyva
+NSUBST:  C = 2:2 / *:.
+NSUBST:  D = 5:1 / *:W
+SUBST:   1 = 13
+MAP
+xxxxxxxxxxxxxx
+xx.xx.xxAxx.xx
+xx..D..CC...xx
+xx...D..D...xx
+@.....D....DBx
+xx.D..D..D..xx
+xx.....D...Dxx
+xx.xx.xx.xx.xx
+xxxxxxxxxxxxxx
+ENDMAP
+
 ###################################################################
 #
 # <<7>> Random monsters
