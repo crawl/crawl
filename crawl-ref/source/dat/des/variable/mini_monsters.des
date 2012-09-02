@@ -1704,6 +1704,26 @@ MAP
                                ......
 ENDMAP
 
+NAME:   lightli_swarmer
+DEPTH:  D:10-18
+: if you.absdepth() < 12 then
+MONS: ogre ; rod of summoning
+: elseif you.absdepth () < 16 then
+MONS: hill giant ; rod of summoning
+: else
+MONS: stone giant ; rod of summoning
+: end
+MONS: killer bee w:3 / wolf spider w:1 / scorpion w:1 / worm w:1
+MONS: worker ant w:3 / vampire mosquito w:1 / goliath beetle w:1  / yellow wasp w:1
+ITEM: royal jelly
+MAP
+xxxxxx
+x32*dx
+x213*x
+x3232x
+xx+xxx
+ENDMAP
+
 ################################################################################
 #
 # <<4>> Demons and undead
