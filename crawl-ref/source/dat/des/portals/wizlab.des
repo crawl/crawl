@@ -1222,7 +1222,7 @@ TILE:       c = wall_zot_magenta
 TILE:       v = dngn_metal_wall_magenta
 LFLOORTILE: floor_rough_magenta
 LFLOORCOL:  magenta
-MARKER:     + = lua:restrict_door()
+KFEAT:      + = runed_door
 MARKER:     R = lua:fog_machine { \
                 pow_max = 10, delay_min = 10, delay_max = 40, \
                 size = 15, cloud_type = "purple smoke" \

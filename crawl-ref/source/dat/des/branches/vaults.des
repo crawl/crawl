@@ -49,8 +49,7 @@
     e.tags("transparent")
     e.depth("Vaults:1-7")
     e.weight("20")
-    e.kfeat("& = closed_door")
-    e.marker("& = lua:restrict_door()")
+    e.kfeat("& = runed_door")
     e.subst("% = %%%**|$")
     e.kmons("7 = patrolling vault guard")
     e.kmons("Z = frost giant / fire giant / titan w:5 / ettin / shadow dragon /\

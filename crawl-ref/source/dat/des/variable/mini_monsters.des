@@ -1624,9 +1624,8 @@ KMONS:   89 = deep elf mage
 KITEM:   8d = robe / robe race:orcish, wizard hat w:40 / wizard hat good_item, \
               wizard hat w:20 / wizard hat good_item
 KITEM:   9e = book of minor magic
-KFEAT:   - = +
+KFEAT:   - = runed_door
 KMASK:   de89 = no_item_gen
-MARKER:  - = lua:restrict_door()
 SHUFFLE: 1234
 COLOUR:  F = red
 FTILE:   F = floor_pebble_lightred
@@ -1672,7 +1671,7 @@ ITEM:    empty ebony casket, lamp of fire
 SHUFFLE: 12, 3df / 4eF
 FTILE:   fF'@ = floor_pebble_darkgray
 COLOUR:  fF'@ = white
-MARKER:  + = lua:restrict_door()
+KFEAT:   + = runed_door
 {{
   local fog = chained_fog_machine {
                             cloud_type = 'freezing vapour', pow_min = 6, pow_max = 6,
@@ -2615,7 +2614,7 @@ KMASK:  m = no_wall_fixup
 KMONS:  1 = eye of devastation
 KMONS:  8 = 8
 KITEM:  18 = star_item w:9 / any w:1
-MARKER: + = lua:restrict_door()
+KFEAT:  + = runed_door
 MAP
 xxx@x
 x8m.xxxxxx
@@ -2714,8 +2713,7 @@ KITEM:   dT = any weapon good_item ego:electrocution, disc of storms
 KFEAT:   E = deep_water
 KFEAT:   d = shallow_water
 KFEAT:   T = teleport trap
-KFEAT:   * = +
-MARKER:  * = lua:restrict_door()
+KFEAT:   * = runed_door
 MARKER:  T = lua:fog_machine { cloud_type = "rain", pow_max = 2, \
                  delay_min = 10, delay_max = 60, size = 4, walk_dist = 2 }
 SHUFFLE: ab, {( / <<
@@ -2784,7 +2782,7 @@ KMONS:   4K = slime creature
 KMONS:   5L = acid blob w:5 / azure jelly / death ooze
 KFEAT:   JKL = altar_jiyva
 KITEM:   $ = $, $ w:5 / nothing
-MARKER:  + = lua:restrict_door()
+KFEAT:   + = runed_door
 : if you.absdepth() > 19 then
 SHUFFLE: CD, 2"6; / 3`5~
 SUBST:   35`~ : xx., '"~- = .

@@ -584,8 +584,7 @@ KMONS:  O = flying skull
 KITEM:  O = abyssal rune of Zot
 KFEAT:  n = iron_grate
 KFEAT:  123456. = shallow_water w:1 / . w:9
-KFEAT:  * = +
-MARKER: * = lua:restrict_door()
+KFEAT:  * = runed_door
 SUBST:  c = ccccvb
 MAP
  .cccccc4@4cccccc.

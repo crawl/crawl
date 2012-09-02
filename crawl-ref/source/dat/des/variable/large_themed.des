@@ -985,10 +985,9 @@ NSUBST: 3 = 3:. / *:3
 SUBST:  ^ : ^mmm
 KFEAT:  ^ = teleport trap
 KFEAT:  m = iron_grate
-KFEAT:  ! = closed_door
+KFEAT:  ! = runed_doorr
 KFEAT:  y = rock_wall
 KMASK:  y = no_wall_fixup
-MARKER: ! = lua:restrict_door()
 KPROP:  -d|*$14567^ = no_rtele_into
 FTILE:  -mcyd|*$14567^! = FLOOR_PEBBLE_DARKGRAY
 FTILE:  .@~+23 = FLOOR_HALL

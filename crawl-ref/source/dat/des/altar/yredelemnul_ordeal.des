@@ -38,7 +38,7 @@ MONS:   goblin zombie / kobold zombie / human zombie / jackal zombie, \
 KMONS:  h = generate_awake human hd:2 att:neutral
 MARKER: h = lua:portal_desc {slave_name="victim"}
 MARKER: h = lua:MonPropsMarker:new{yslave="yslave"}
-MARKER: + = lua:restrict_door()
+KFEAT:  + = runed_door
 KFEAT:  h = .
 KFEAT:  _ = altar_yredelemnul
 KFEAT:  d = .
