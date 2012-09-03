@@ -198,6 +198,7 @@ bool is_feature(ucs_t feature, const coord_def& where)
         case DNGN_ENTER_ABYSS:
         case DNGN_EXIT_THROUGH_ABYSS:
         case DNGN_EXIT_ABYSS:
+        case DNGN_ABYSSAL_STAIR:
         case DNGN_ENTER_PANDEMONIUM:
         case DNGN_EXIT_PANDEMONIUM:
         case DNGN_TRANSIT_PANDEMONIUM:

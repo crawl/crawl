@@ -200,6 +200,7 @@ bool feat_is_gate(dungeon_feature_type feat)
     case DNGN_ENTER_ABYSS:
     case DNGN_EXIT_THROUGH_ABYSS:
     case DNGN_EXIT_ABYSS:
+    case DNGN_ABYSSAL_STAIR:
     case DNGN_ENTER_LABYRINTH:
     case DNGN_ENTER_PANDEMONIUM:
     case DNGN_EXIT_PANDEMONIUM:
@@ -264,6 +265,7 @@ command_type feat_stair_direction(dungeon_feature_type feat)
     case DNGN_ENTER_ABYSS:
     case DNGN_EXIT_THROUGH_ABYSS:
     case DNGN_EXIT_ABYSS:
+    case DNGN_ABYSSAL_STAIR:
     case DNGN_ENTER_PANDEMONIUM:
     case DNGN_EXIT_PANDEMONIUM:
     case DNGN_TRANSIT_PANDEMONIUM:
@@ -1564,9 +1566,9 @@ static const char *dngn_feature_names[] =
 "stone_stairs_up_ii", "stone_stairs_up_iii", "escape_hatch_up",
 
 "enter_dis", "enter_gehenna", "enter_cocytus",
-"enter_tartarus", "enter_abyss", "exit_abyss", "stone_arch",
-"enter_pandemonium", "exit_pandemonium", "transit_pandemonium",
-"exit_dungeon", "exit_through_abyss",
+"enter_tartarus", "enter_abyss", "exit_abyss", "abyssal_stair",
+"stone_arch", "enter_pandemonium", "exit_pandemonium",
+"transit_pandemonium", "exit_dungeon", "exit_through_abyss",
 "exit_hell", "enter_hell", "enter_labyrinth",
 "teleporter", "enter_portal_vault", "exit_portal_vault",
 "expired_portal",

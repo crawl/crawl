@@ -3041,6 +3041,8 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
         return "one-way gate to the infinite horrors of the Abyss";
     case DNGN_EXIT_ABYSS:
         return "gateway leading out of the Abyss";
+    case DNGN_ABYSSAL_STAIR:
+        return "gateway leading deeper into the Abyss";
     case DNGN_EXIT_THROUGH_ABYSS:
         return "exit through the horrors of the Abyss";
     case DNGN_STONE_ARCH:
