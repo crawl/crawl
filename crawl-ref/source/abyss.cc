@@ -175,7 +175,7 @@ static int _abyssal_rune_roll()
     if (depth == 4) {
       return 34;
     }
-    return 50;
+    return 45 + depth;
 }
 
 static void _abyss_create_room(const map_bitmask &abyss_genlevel_mask)
