@@ -329,6 +329,7 @@ static bool _is_reseedable(const coord_def& c, bool ignore_danger = false)
 
     return (feat_is_water(grid)
             || grid == DNGN_LAVA
+            || grid == DNGN_RUNED_DOOR
             || is_trap(c)
             || !ignore_danger && _monster_blocks_travel(cell.monsterinfo())
             || g_Slime_Wall_Check && slime_wall_neighbour(c)
