@@ -19,7 +19,7 @@ SUBST:   Y=], a:+., BbCEG=x
 : else
 SHUFFLE: Aa/Bb, FG, CDE
 NSUBST:  A=1:+/*:x, F=1:+/*:x, D=1:+/*:x, E=1:+/*:x
-SUBST:   a:=., BbCG=x, Y=.
+SUBST:   a:+., BbCG=x, Y=.
 :end
 SHUFFLE: H4/'"
 SUBST:   '=x, ":x"
@@ -678,13 +678,11 @@ xxxxx.........xxxxx
 xxxxx....@....xxxxx
 ENDMAP
 
-# Notes: chances are very good that there is a shallow water path.
-# Even if not, you can always see the door on the other side.
 NAME:    lemuel_entry_river_passageway
 TAGS:    entry no_monster_gen
 ORIENT:  float
 SHUFFLE: {}, ABC
-SUBST:   A:=, B:x, C:x
+SUBST:   A:+, B:x, C:x
 WEIGHT:  1
 MAP
 xxxxxxxxxxxxxxxxxxx
