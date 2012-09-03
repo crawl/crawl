@@ -659,13 +659,6 @@ void item_list_on_square(vector<const item_def*>& items, int obj,
     }
 }
 
-static void _sacrificeable_item_list(vector<const item_def*>& items)
-{
-    for (stack_iterator si(you.visible_igrd(you.pos())); si; ++si)
-        if (si->is_greedy_sacrificeable())
-            items.push_back(& (*si));
-}
-
 bool need_to_autopickup()
 {
     return will_autopickup;
@@ -747,10 +740,8 @@ void item_check(bool verbose)
     ostream& strm = msg::streams(MSGCH_FLOOR_ITEMS);
 
     vector<const item_def*> items;
-    vector<const item_def*> sacrificeable_items;
 
     item_list_on_square(items, you.visible_igrd(you.pos()), true);
-    _sacrificeable_item_list(sacrificeable_items);
 
     if (items.empty())
     {
@@ -765,16 +756,10 @@ void item_check(bool verbose)
         string name = get_menu_colour_prefix_tags(it, DESC_A);
         strm << "You see here " << name << '.' << endl;
         _maybe_give_corpse_hint(it);
-        if (sacrificeable_items.size())
-        {
-            strm << (it.quantity == 1 ? "It" : "They")
-                 << " can be sacrificed." << endl;
-        }
         return;
     }
 
     bool done_init_line = false;
-    bool done_list_sacrificeables = false;
 
     if (static_cast<int>(items.size()) >= Options.item_stack_summary_minimum)
     {
@@ -826,25 +811,9 @@ void item_check(bool verbose)
             mpr_nocap(name);
             _maybe_give_corpse_hint(it);
         }
-        if (items.size() == sacrificeable_items.size())
-        {
-            strm << "They can be sacrificed." << endl;
-            done_list_sacrificeables = true;
-        }
     }
     else if (!done_init_line)
         strm << "There are many items here." << endl;
-
-    if (!done_list_sacrificeables && sacrificeable_items.size())
-    {
-        mprnojoin("Things which can be sacrificed:", MSGCH_FLOOR_ITEMS);
-        for (unsigned int i = 0; i < sacrificeable_items.size(); ++i)
-        {
-            item_def it(*sacrificeable_items[i]);
-            string name = get_menu_colour_prefix_tags(it, DESC_A);
-            mpr_nocap(name);
-        }
-    }
 
     if (items.size() > 2 && crawl_state.game_is_hints_tutorial())
     {

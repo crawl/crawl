@@ -2934,6 +2934,15 @@ void start_explore(bool grab_items)
         const LevelStashes *lev = StashTrack.find_current_level();
         if (lev && lev->sacrificeable(you.pos()))
         {
+            if (Options.sacrifice_before_explore == 2)
+            {
+                mprnojoin("Things which can be sacrificed:", MSGCH_FLOOR_ITEMS);
+                for (stack_iterator si(you.visible_igrd(you.pos())); si; ++si)
+                    if (si->is_greedy_sacrificeable())
+                        mpr_nocap(get_menu_colour_prefix_tags(*si, DESC_A));
+
+            }
+
             if ((Options.sacrifice_before_explore == 1 || Options.auto_sacrifice
                  || Options.sacrifice_before_explore == 2
                     && yesno("Do you want to sacrifice the items here? ", true, 'n'))
