@@ -1529,16 +1529,13 @@ KMONS:   2 = deep elf summoner w:5 ; dart ego:dispersal w:20 | dart w:5 | nothin
              rakshasa w:5 ; dart ego:dispersal w:20 | dart w:5 | nothing / \
              boggart ; dart ego:dispersal w:20 | dart w:5 | nothing /  \
              wizard ; dart ego:dispersal w:20 | dart w:5 | nothing
-KMONS:   3 = rakshasa w:5 ; quarterstaff ego:distortion | quarterstaff \
+KMONS:   3 = rakshasa w:5 ; whip ego:distortion | whip \
              ego:vorpal w:6 | dagger ego:distortion | dagger ego:vorpal w:6 | \
              spear ego:distortion | spear ego:vorpal w:6 . dart ego:dispersal / \
-             crimson imp ; quarterstaff ego:distortion | quarterstaff \
+             boggart w:5 ; whip ego:distortion | whip \
              ego:vorpal w:6 | dagger ego:distortion | dagger ego:vorpal w:6 | \
              spear ego:distortion | spear ego:vorpal w:6 . dart ego:dispersal / \
-             boggart w:5 ; quarterstaff ego:distortion | quarterstaff \
-             ego:vorpal w:6 | dagger ego:distortion | dagger ego:vorpal w:6 | \
-             spear ego:distortion | spear ego:vorpal w:6 . dart ego:dispersal / \
-             wizard ; quarterstaff ego:distortion | quarterstaff \
+             wizard ; whip ego:distortion | whip \
              ego:vorpal w:6 | dagger ego:distortion | dagger ego:vorpal w:6 | \
              spear ego:distortion | spear ego:vorpal w:6 . dart ego:dispersal
 # Disclaimer: the following three sets are all Abyss spawns.
