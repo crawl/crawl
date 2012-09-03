@@ -1214,9 +1214,10 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
                                  _abyss_pick_altar(),
                                  abyss_genlevel_mask)
          ||
+         (level_id::current().depth < 27 && 
          _abyss_check_place_feat(p, 3250, NULL, NULL,
                                  DNGN_ABYSSAL_STAIR,
-                                 abyss_genlevel_mask)
+                                 abyss_genlevel_mask))
          ||
          _abyss_check_place_feat(p, 10000, NULL, NULL,
                                  DNGN_STONE_ARCH,

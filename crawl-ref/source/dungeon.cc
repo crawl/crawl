@@ -789,7 +789,6 @@ static bool _is_upwards_exit_stair(const coord_def &c)
     case DNGN_EXIT_PANDEMONIUM:
     case DNGN_TRANSIT_PANDEMONIUM:
     case DNGN_EXIT_ABYSS:
-    case DNGN_ABYSSAL_STAIR:
         return true;
     default:
         return false;
