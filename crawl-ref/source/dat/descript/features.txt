@@ -626,6 +626,45 @@ Nothing but endless wind and waves, and not a lighthouse in sight. You'd be
 lost beyond all hope in short order — better not risk it.
 %%%%
 ########################
+## Big doors
+########################
+A large open door
+
+<An open door>
+%%%%
+An open gate
+
+<An open door>
+%%%%
+A huge open gate
+
+<An open door>
+%%%%
+A large closed door
+
+<A closed door>
+%%%%
+A closed gate
+
+<A closed door>
+%%%%
+A huge closed gate
+
+<A closed door>
+%%%%
+A large runed door
+
+<A runed door>
+%%%%
+A runed gate
+
+<A runed door>
+%%%%
+A huge runed gate
+
+<A runed door>
+%%%%
+########################
 ### Vault redefinitions
 ########################
 # wizlabs
