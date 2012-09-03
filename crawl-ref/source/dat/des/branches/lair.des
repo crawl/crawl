@@ -454,40 +454,6 @@ ENDMAP
 ##############################################################################
 # Pointless little "vaults" by Lemuel
 #
-NAME:   strawberry_fields_big
-ORIENT: float
-WEIGHT: 1
-DEPTH:  Lair
-SUBST:  . = G:20 B:15 .
-COLOUR: G = green
-FTILE:  G = floor_grass
-COLOUR: B = brown
-FTILE:  B = floor_dirt
-SUBST:  BG = .
-SUBST:  .= d .:150 1:8 2:4
-# "strawberry plant"
-MONS:   plant name:strawberry name_adjective, butterfly
-ITEM:   strawberry q:1 / strawberry q:2 / strawberry q:3 w:5 /\
-        strawberry q:4 w:3 / strawberry q:5 w:2 / strawberry q:6 w:1
-MAP
-.....................
-.....................
-.....................
-.....................
-.....................
-.....................
-.....................
-.....................
-.....................
-.....................
-.....................
-.....................
-.....................
-.....................
-.....................
-.....................
-ENDMAP
-
 NAME:   strawberry_fields_big_rounded
 ORIENT: float
 WEIGHT: 1
@@ -498,11 +464,11 @@ FTILE:  G = floor_grass
 COLOUR: B = brown
 FTILE:  B = floor_dirt
 SUBST:  BG = .
-SUBST:  .= d .:140 1:8 2:4
+SUBST:  .= d:6 .:150 1:10 2:4
 # "strawberry plant"
 MONS:   plant name:strawberry name_adjective, butterfly
-ITEM:   strawberry q:1 / strawberry q:2 / strawberry q:3 w:5 /\
-        strawberry q:4 w:3 / strawberry q:5 w:2 / strawberry q:6 w:1
+ITEM:   strawberry q:1 / strawberry q:2 w:7 / strawberry q:3 w:3 /\
+        strawberry q:4 w:1 / strawberry q:5 w:1 / strawberry q:6 w:1
 MAP
        .......
      ...........
@@ -536,8 +502,8 @@ SUBST:  BG = .
 SUBST:  .= d .:50 1:8 2:4
 # "strawberry plant"
 MONS:   plant name:strawberry name_adjective, butterfly
-ITEM:   strawberry q:1 / strawberry q:2 / strawberry q:3 w:5 /\
-        strawberry q:4 w:3 / strawberry q:5 w:2 / strawberry q:6 w:1
+ITEM:   strawberry q:1 / strawberry q:2 w:7 / strawberry q:3 w:3 /\
+        strawberry q:4 w:1 / strawberry q:5 w:1 / strawberry q:6 w:1
 MAP
    ....
  ........
@@ -562,8 +528,8 @@ SUBST:  BG = .
 SUBST:  .= d .:50 1:8 2:4
 # "strawberry plant"
 MONS:   plant name:strawberry name_adjective, butterfly
-ITEM:   strawberry q:1 / strawberry q:2 / strawberry q:3 w:5 /\
-        strawberry q:4 w:3 / strawberry q:5 w:2 / strawberry q:6 w:1
+ITEM:   strawberry q:1 / strawberry q:2 w:7 / strawberry q:3 w:3 /\
+        strawberry q:4 w:1 / strawberry q:5 w:1 / strawberry q:6 w:1
 MAP
    ..
  ......
@@ -590,8 +556,7 @@ DEPTH:  Lair, Snake
 MONS:   plant, fungus
 SUBST:  ' = . a 2:1
 SUBST:  . = .:90 a:10 2:1
-KITEM:  a : apple / apricot / pear / orange / banana / strawberry q:1 w:5 /\
-            strawberry q:2 w:5 / lemon
+KITEM:  a : apple / apricot / pear / orange / banana / strawberry q:1 / lemon
 KFEAT:  a = .
 WEIGHT: 8
 MAP
@@ -611,8 +576,7 @@ MONS:   plant, fungus
 SUBST:  ' = . 1
 SUBST:  . = .:90 a:10 2:1
 SUBST:  _ = .:90 a:4
-KITEM:  a : apple / apricot / pear / orange / banana / strawberry q:1 w:5 /\
-            strawberry q:2 w:5 / lemon
+KITEM:  a : apple / apricot / pear / orange / banana / strawberry q:1 / lemon
 KFEAT:  a = .
 WEIGHT: 2
 MAP
@@ -850,8 +814,7 @@ MAP
 .....
 ENDMAP
 
-# avg 28.260 strawberries
-# 5.6k/14.1k/0 nutrition
+# avg 14.608 strawberries
 NAME:   blue_anna_strawberry_field
 TAGS:   fruiting_plant allow_dup
 WEIGHT: 2
@@ -861,10 +824,10 @@ FTILE:  G = floor_grass
 COLOUR: B = brown
 FTILE:  B = floor_dirt
 SUBST:  BG = .
-NSUBST: . = 2:1 / *=dddd.1
+NSUBST: . = 2:1 / *=ddd..1
 MONS:   plant name:strawberry name_adjective
-ITEM:   strawberry q:1 / strawberry q:2 / strawberry q:3 w:5 /\
-        strawberry q:4 w:3 / strawberry q:5 w:2 / strawberry q:6 w:1
+ITEM:   strawberry q:1 / strawberry q:2 w:7 / strawberry q:3 w:3 /\
+        strawberry q:4 w:1 / strawberry q:5 w:1 / strawberry q:6 w:1
 MAP
 .....
 .....
