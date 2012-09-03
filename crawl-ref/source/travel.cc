@@ -4130,6 +4130,18 @@ void explore_discoveries::found_feature(const coord_def &pos,
     }
     else if (feat == DNGN_RUNED_DOOR && ES_rdoor)
     {
+        for (orth_adjacent_iterator ai(pos); ai; ++ai)
+        {
+            // If any neighbours have been seen (and thus announced) before,
+            // skip.  For parts seen for the first time this turn, announce
+            // only the upper leftmost cell.
+            if (env.map_shadow(*ai).feat() == DNGN_RUNED_DOOR
+                || env.map_knowledge(*ai).feat() == DNGN_RUNED_DOOR && *ai < pos)
+            {
+                return;
+            }
+        }
+
         const named_thing<int> rdoor(cleaned_feature_description(pos), 1);
         runed_doors.push_back(rdoor);
         es_flags |= ES_RUNED_DOOR;
