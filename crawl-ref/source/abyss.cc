@@ -1059,6 +1059,10 @@ static dungeon_feature_type _abyss_grid(const coord_def &p, double depth,
     return feat;
 }
 
+static int _abyssal_stair_chance() {
+  return 3500 - (200 * you.depth / 3);
+}
+
 static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
                                  bool morph = false)
 {
@@ -1151,7 +1155,7 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
                                  abyss_genlevel_mask)
          ||
          (level_id::current().depth < 27 && 
-         _abyss_check_place_feat(p, 3250, NULL, NULL,
+         _abyss_check_place_feat(p, _abyssal_stair_chance(), NULL, NULL,
                                  DNGN_ABYSSAL_STAIR,
                                  abyss_genlevel_mask))
          ||
