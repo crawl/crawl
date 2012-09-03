@@ -555,6 +555,7 @@ static bool _prompt_stop_explore(int es_why)
 #define ES_altar  (Options.explore_stop & ES_ALTAR)
 #define ES_portal (Options.explore_stop & ES_PORTAL)
 #define ES_branch (Options.explore_stop & ES_BRANCH)
+#define ES_rdoor  (Options.explore_stop & ES_RUNED_DOOR)
 #define ES_stack  (Options.explore_stop & ES_GREEDY_VISITED_ITEM_STACK)
 #define ES_sacrificeable (Options.explore_stop & ES_GREEDY_SACRIFICEABLE)
 
@@ -4068,7 +4069,8 @@ void runrest::clear()
 explore_discoveries::explore_discoveries()
     : can_autopickup(::can_autopickup()),
       sacrifice(god_likes_items(you.religion, true)), es_flags(0),
-      current_level(NULL), items(), stairs(), portals(), shops(), altars()
+      current_level(NULL), items(), stairs(), portals(), shops(), altars(),
+      runed_doors()
 {
 }
 
@@ -4125,6 +4127,12 @@ void explore_discoveries::found_feature(const coord_def &pos,
         const named_thing<int> portal(cleaned_feature_description(pos), 1);
         add_stair(portal);
         es_flags |= ES_PORTAL;
+    }
+    else if (feat == DNGN_RUNED_DOOR && ES_rdoor)
+    {
+        const named_thing<int> rdoor(cleaned_feature_description(pos), 1);
+        runed_doors.push_back(rdoor);
+        es_flags |= ES_RUNED_DOOR;
     }
     else if (feat_is_altar(feat)
              && ES_altar
@@ -4330,6 +4338,7 @@ bool explore_discoveries::prompt_stop() const
     say_any(apply_quantities(altars), "altar");
     say_any(apply_quantities(portals), "portal");
     say_any(apply_quantities(stairs), "stair");
+    say_any(apply_quantities(runed_doors), "runed door");
 
     return ((Options.explore_stop_prompt & es_flags) != es_flags
             || marker_stop

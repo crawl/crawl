@@ -196,9 +196,10 @@ enum explore_stop_type
     ES_ARTEFACT                  = 0x1000,
     ES_RUNE                      = 0x2000,
     ES_BRANCH                    = 0x4000,
+    ES_RUNED_DOOR                = 0x8000,
 
     // Explored into view of an item which can be sacrificied
-    ES_GREEDY_SACRIFICEABLE      = 0x8000,
+    ES_GREEDY_SACRIFICEABLE      = 0x10000,
 };
 
 ////////////////////////////////////////////////////////////////////////////
@@ -269,6 +270,7 @@ private:
     vector< named_thing<int> > portals;
     vector< named_thing<int> > shops;
     vector< named_thing<int> > altars;
+    vector< named_thing<int> > runed_doors;
 
     vector<string> marker_msgs;
     vector<string> marked_feats;
