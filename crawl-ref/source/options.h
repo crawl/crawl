@@ -376,6 +376,7 @@ public:
     int         tile_window_width;
     int         tile_window_height;
     int         tile_map_pixels;
+    int         tile_cell_pixels;
 #endif
 
 #ifdef USE_TILE
