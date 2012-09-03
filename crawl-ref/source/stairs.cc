@@ -889,6 +889,11 @@ void down_stairs(dungeon_feature_type force_stair)
         break;
 
     case BRANCH_ABYSS:
+        if (old_level.branch == BRANCH_ABYSS)
+        {
+            mpr("You plunge deeper into the Abyss.");
+            break;
+        }
         if (!force_stair)
             mpr("You enter the Abyss!");
 
