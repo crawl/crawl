@@ -1978,7 +1978,7 @@ static int _xom_change_scenery(bool debug = false)
         dungeon_feature_type feat = grd(*ri);
         if (feat >= DNGN_FOUNTAIN_BLUE && feat <= DNGN_DRY_FOUNTAIN_BLOOD)
             candidates.push_back(*ri);
-        else if (feat >= DNGN_CLOSED_DOOR && feat <= DNGN_SECRET_DOOR)
+        else if (feat_is_closed_door(feat))
         {
             // Check whether this door is already included in a gate.
             bool found_door = false;
@@ -2105,8 +2105,7 @@ static int _xom_change_scenery(bool debug = false)
         switch (grd(pos))
         {
         case DNGN_CLOSED_DOOR:
-        case DNGN_DETECTED_SECRET_DOOR:
-        case DNGN_SECRET_DOOR:
+        case DNGN_RUNED_DOOR:
             grd(pos) = DNGN_OPEN_DOOR;
             set_terrain_changed(pos);
             if (you.see_cell(pos))

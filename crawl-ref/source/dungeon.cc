@@ -678,7 +678,7 @@ bool dgn_square_travel_ok(const coord_def &c)
         return !(trap && trap->type == TRAP_TELEPORT);
     }
     else
-        return (feat_is_traversable(feat) || feat == DNGN_SECRET_DOOR);
+        return feat_is_traversable(feat);
 }
 
 static bool _dgn_square_is_passable(const coord_def &c)
@@ -1007,10 +1007,10 @@ void dgn_register_place(const vault_placement &place, bool register_vault)
         if (place.map.orient == MAP_ENCOMPASS)
         {
             for (rectangle_iterator ri(0); ri; ++ri)
-                env.level_map_mask(*ri) |= MMT_VAULT | MMT_NO_DOOR;
+                env.level_map_mask(*ri) |= MMT_VAULT;
         }
         else
-            _mask_vault(place, MMT_VAULT | MMT_NO_DOOR);
+            _mask_vault(place, MMT_VAULT);
 
         if (!transparent)
             _mask_vault(place, MMT_OPAQUE);
@@ -3599,8 +3599,7 @@ static bool _connect_vault_exit(const coord_def& exit)
 static bool _grid_needs_exit(const coord_def& c)
 {
     return (!cell_is_solid(c)
-            || feat_is_closed_door(grd(c))
-            || grd(c) == DNGN_SECRET_DOOR);
+            || feat_is_closed_door(grd(c)));
 }
 
 static bool _map_feat_is_on_edge(const vault_placement &place,
@@ -4584,8 +4583,12 @@ static dungeon_feature_type _glyph_to_feat(int glyph,
                                            vault_placement *place = NULL)
 {
     // Please purge this some day.
-    if (glyph == 'a')
-        die("map %s tried to place a wax wall", place ? place->map.name.c_str() : "[NULL]");
+    if (glyph == '=')
+    {
+        die("map %s tried to place a secret door",
+            place ? place->map.name.c_str() : "[NULL]");
+    }
+
     return ((glyph == 'x') ? DNGN_ROCK_WALL :
             (glyph == 'X') ? DNGN_PERMAROCK_WALL :
             (glyph == 'c') ? DNGN_STONE_WALL :
@@ -4596,7 +4599,7 @@ static dungeon_feature_type _glyph_to_feat(int glyph,
             (glyph == 'o') ? DNGN_CLEAR_PERMAROCK_WALL :
             (glyph == 't') ? DNGN_TREE :
             (glyph == '+') ? DNGN_CLOSED_DOOR :
-            (glyph == '=') ? DNGN_SECRET_DOOR :
+            (glyph == '=') ? DNGN_CLOSED_DOOR :
             (glyph == 'w') ? DNGN_DEEP_WATER :
             (glyph == 'W') ? DNGN_SHALLOW_WATER :
             (glyph == 'l') ? DNGN_LAVA :

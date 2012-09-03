@@ -956,7 +956,7 @@ static void _give_items_skills(const newgame_def& ng)
 
         // Skills
         you.skills[SK_EVOCATIONS]  = 3;
-        you.skills[SK_TRAPS_DOORS] = 2;
+        you.skills[SK_TRAPS]       = 2;
         you.skills[SK_DODGING]     = 2;
         you.skills[SK_FIGHTING]    = 1;
         weap_skill                 = 1;
@@ -977,7 +977,7 @@ static void _give_items_skills(const newgame_def& ng)
     if (crawl_state.game_is_zotdef())
     {
         newgame_make_item(-1, EQ_NONE, OBJ_POTIONS, POT_CURING, -1, 2);
-        you.skills[SK_TRAPS_DOORS] += 2;
+        you.skills[SK_TRAPS] += 2;
     }
 
     if (weap_skill)
@@ -1365,7 +1365,7 @@ static void _setup_generic(const newgame_def& ng)
 
         // There's little sense in training these skills in ZotDef
         you.train[SK_STEALTH] = 0;
-        you.train[SK_TRAPS_DOORS] = 0;
+        you.train[SK_TRAPS]   = 0;
     }
 
     // If the item in slot 'a' is a throwable weapon like a dagger,

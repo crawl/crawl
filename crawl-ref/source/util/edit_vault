@@ -1,0 +1,26 @@
+#!/bin/sh
+
+if [ -z "$1" ]
+  then
+    echo >&2 "Usage: edit-vault vault_name"
+    exit 1
+fi
+
+V=`grep -rHn --include='*.des' "NAME: *$1$"`
+if [ -z "$V" ]
+  then
+    echo >&2 "Vault \"$1\" not found."
+    exit 1
+fi
+
+if which sensible-editor >/dev/null
+  then
+    ED=sensible-editor
+  else
+    ED="${EDITOR:-editor}"
+fi
+
+FILE="${V%%:*}"
+LINE="${V#*:}"; LINE="${LINE%%:*}"
+
+"$ED" +"$LINE" "$FILE"

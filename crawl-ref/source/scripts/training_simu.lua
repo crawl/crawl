@@ -28,14 +28,14 @@ if (job == "Fi") then
                [weapon_skill]    = {  1, 1, 18 },
                Armour            = {  3, 1, 27 },
                Shields           = {  3, 1, 27 },
-               ["Traps & Doors"] = { 10, 1,  8 },
+               Traps             = { 10, 1,  8 },
                Evocations        = {  5, 5, 10 },
               }
 elseif (job == "FE") then
     skills = { Dodging           = {  3, 1, 27 },
                Stealth           = {  4, 1,  6 },
                Shields           = {  5, 8,  5 },
-               ["Traps & Doors"] = { 10, 1,  8 },
+               Traps             = { 10, 1,  8 },
 
                Spellcasting      = {  2, 1, 27 },
                Conjurations      = {  1, 1, 27 },
@@ -51,7 +51,7 @@ elseif (job == "Sk") then
                Dodging           = {  3, 1, 27 },
                Stealth           = {  4, 1,  6 },
                Shields           = {  5, 8, 10 },
-               ["Traps & Doors"] = { 10, 1,  8 },
+               Traps             = { 10, 1,  8 },
 
                Spellcasting      = {  2, 2, 27 },
                Charms            = {  1, 2, 12 },

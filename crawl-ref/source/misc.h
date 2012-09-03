@@ -111,8 +111,6 @@ bool scramble(void);
 bool interrupt_cmd_repeat(activity_interrupt_type ai,
                           const activity_interrupt_data &at);
 
-void reveal_secret_door(const coord_def& p);
-
 bool bad_attack(const monster *mon, string& adj, string& suffix);
 bool stop_attack_prompt(const monster* mon, bool beam_attack,
                         coord_def beam_target, bool autohit_first = false);

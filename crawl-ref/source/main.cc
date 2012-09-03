@@ -3560,7 +3560,7 @@ static void _open_door(coord_def move, bool check_confused)
     if (move.origin())
     {
         const int num = _check_adjacent(DNGN_CLOSED_DOOR, move)
-                        + _check_adjacent(DNGN_DETECTED_SECRET_DOOR, move);
+                        + _check_adjacent(DNGN_RUNED_DOOR, move);
 
         if (num == 0)
         {
@@ -3699,8 +3699,7 @@ static void _open_door(coord_def move, bool check_confused)
         }
     }
 
-    int skill = you.dex()
-                + (you.skill_rdiv(SK_TRAPS_DOORS) + you.skill_rdiv(SK_STEALTH)) / 2;
+    int skill = you.dex() + you.skill_rdiv(SK_STEALTH);
 
     string berserk_open = env.markers.property_at(doorpos, MAT_ANY,
                                                   "door_berserk_verb_open");
@@ -3773,7 +3772,6 @@ static void _open_door(coord_def move, bool check_confused)
         mprf(verb, adj, noun);
     }
 
-    bool seen_secret = false;
     vector<coord_def> excludes;
     for (set<coord_def>::iterator i = all_door.begin(); i != all_door.end(); ++i)
     {
@@ -3787,12 +3785,6 @@ static void _open_door(coord_def move, bool check_confused)
 #ifdef USE_TILE
             env.tile_bk_bg(dc) = TILE_DNGN_OPEN_DOOR;
 #endif
-            if (!seen_secret && grd(dc) == DNGN_SECRET_DOOR)
-            {
-                seen_secret = true;
-                mprf("That %s was a secret door!",
-                     feature_description_at(dc, "", DESC_PLAIN, false).c_str());
-            }
         }
         grd(dc) = DNGN_OPEN_DOOR;
         set_terrain_changed(dc);
@@ -3931,8 +3923,7 @@ static void _close_door(coord_def move)
             }
         }
 
-        int skill = you.dex()
-                    + (you.skill_rdiv(SK_TRAPS_DOORS) + you.skill_rdiv(SK_STEALTH)) / 2;
+        int skill = you.dex() + you.skill_rdiv(SK_STEALTH);
 
         if (you.berserk())
         {
@@ -4025,7 +4016,7 @@ static void _close_door(coord_def move)
         switch (feat)
         {
         case DNGN_CLOSED_DOOR:
-        case DNGN_DETECTED_SECRET_DOOR:
+        case DNGN_RUNED_DOOR:
             mpr("It's already closed!");
             break;
         default:

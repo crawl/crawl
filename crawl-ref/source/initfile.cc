@@ -861,7 +861,8 @@ void game_options::reset_options()
     stash_tracking         = STM_ALL;
 
     explore_stop           = (ES_ITEM | ES_STAIR | ES_PORTAL | ES_BRANCH
-                              | ES_SHOP | ES_ALTAR | ES_GREEDY_PICKUP_SMART
+                              | ES_SHOP | ES_ALTAR | ES_RUNED_DOOR
+                              | ES_GREEDY_PICKUP_SMART
                               | ES_GREEDY_VISITED_ITEM_STACK
                               | ES_GREEDY_SACRIFICEABLE);
 
@@ -1773,6 +1774,8 @@ int game_options::read_explore_stop_conditions(const string &field) const
             conditions |= ES_PORTAL;
         else if (c == "altar" || c == "altars")
             conditions |= ES_ALTAR;
+        else if (c == "runed_door")
+            conditions |= ES_RUNED_DOOR;
         else if (c == "greedy_item" || c == "greedy_items")
             conditions |= ES_GREEDY_ITEM;
         else if (c == "greedy_visited_item_stack")

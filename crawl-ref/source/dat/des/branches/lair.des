@@ -264,7 +264,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxx?xxx?x?xx?x.2xx?xxx?x*?xxx?.2.xxxx
 xxxxxxxxxxxxxxx.2.......?xx.x.?xxx?.??xxxx?x.?xxx
 xxxxxxxxxxxxx?....xxx...2....??????..????x..%cccc
-xx?xx???xxxxx..xx??xx??..........?...???..??c=.?c
+xx?xx???xxxxx..xx??xx??..........?...???..??c+.?c
 @......xxx.2.xx?xxxxxx?x?x??.......1...2.x.ccc.?c
 xxx?xxx...xxxxxxxxxxxx?xxxx.??.2...?......?ccc$cc
 xxxxxx?xxx?xxxxxxxxxxxx....xx??...?....??..??cc?c
@@ -1931,7 +1931,7 @@ MAP
  ttttxc''''+''0'xxxxxx'''+~'0'cx0'0'ctt
  t.ttxc''0'xxxx~x''00x'''x''''cx''~'ctt
  tt.txc'0''x''x'x''''x''0x''''cx''''ct1
-tt.t.xc'~''x''='+'''0x'''x'''~cc=cc+ct1tt
+tt.t.xc'~''x''+'+'''0x'''x'''~cc+cc+ct1tt
 t.t.txccc++ccccccxcxcxcxcc++cccx'x2'2tt1tt
 tttt.t.tt''tttttttcttttttt''ttx''x"'"ttt1t
   ttt..tt''''''tttcttt''''''ttxxxx2'2tt1tt
@@ -1941,7 +1941,7 @@ tttt.t.tt''tttttttcttttttt''ttx''x"'"ttt1t
  ttt.ttt..t.t.t..'''tt.t.ttt..x"2''T''2"tt
   ttt...ttt.tt...0'0t.tt...tt.x2""'''""2t
   ttt.t.t..t.t...'''ttt..tt..tx22""'""22tt
-tcccccccccccccccc+c+ccccccccccccccc=ccccct
+tcccccccccccccccc+c+ccccccccccccccc+ccccct
  tttttt.111ttt.1x'x'xtttttttttttttt1ttttt
  ttt%1.tttt1..tt.'''.ttttttttttttt1.1tt
   ttt.tt..1txxxc.'''.cxxxttt1tttttt.tttt
@@ -2001,6 +2001,7 @@ MARKER: o = lua:monster_on_death { \
             veto_fragmentation="veto", veto_disintegrate="veto", \
             veto_shatter="veto", \
          }
+KFEAT: = = runed_door
 MAP
   xxxxxxxxxxx
  xxxxxXX.XXXxx
@@ -2044,7 +2045,7 @@ MONS:   sun demon
 MONS:   hydra / fire drake / dire elephant
 MONS:   wizard col:red hd:13 name:crazed n_adj n_noc tile:mons_hell_wizard
 KITEM:  / = acquire any
-MARKER: = = lua:restrict_door {}
+KFEAT:  = = runed_door
 MAP
    ...TTTT....  .............................
   ..TttttttT.......Tt.TtT....TT..TT......Tt....
@@ -2090,6 +2091,7 @@ SUBST:  P = 11.
 # Give a hint about the dragon cave.
 NSUBST: " = 1:GU / *:.
 KPROP:  = = bloody
+KFEAT:  = = runed_door
 SUBST:  _ = .
 : lair_small_ending(_G)
 MAP

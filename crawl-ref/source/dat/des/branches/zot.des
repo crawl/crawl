@@ -72,7 +72,7 @@ ENDMAP
 
 NAME:   evilmike_zot_entry_round
 TAGS:   no_monster_gen zot_entry
-SUBST:  = = nnn=
+SUBST:  = = nnn+
 SUBST:  c: c:70 v:20 b:10
 SUBST:  v: vcxlmb, n: nnnnvbcx
 FTILE:  })]O-4G: floor_marble
@@ -114,7 +114,7 @@ TAGS:   no_monster_gen zot_entry
 NSUBST: O = 1:O / *:n
 SUBST:  ^ = ^.
 SUBST:  s = ccc=
-MARKER: = = lua:restrict_door()
+KFEAT:  = = runed_door
 KFEAT:  ^ = alarm trap / blade trap / bolt trap
 KFEAT:  O = enter_zot
 KFEAT:  n = stone_arch
@@ -166,7 +166,7 @@ KPROP:  O-X = no_tele_into
 SUBST:  X = c
 SUBST:  - = ., D = +
 KFEAT:  O = enter_zot
-MARKER: + = lua:restrict_door()
+KFEAT:  + = runed_door
 # easy: 1, 2
 : if crawl.coinflip() then
 MONS:   pale draconian, steam dragon
@@ -426,19 +426,17 @@ MONS:   troll /deep troll / iron troll / ogre / two-headed ogre / w:2 iron devil
 MONS:   moth of wrath
 MONS:   hill giant / stone giant / fire giant / frost giant / ettin /\
         w:5 efreet / w:3 titan
-NSUBST: C = 2:= / *=c
-NSUBST: D = 2:= / *=c
 MAP
 cccccccccccccccccccccccc
 n111111111111111111.c..c
 n111111111111111111.c.)c
-cCCCCCCCCCCCCCCcc++cc..c
+ccccccccccccccccc++cc..c
 n....F....F....F....c..c
 +...................+..c
 +...................+.}c
 +...................+..c
 n....F....F....F....c..c
-cDDDDDDDDDDDDDDcc++cc..c
+ccccccccccccccccc++cc..c
 n111111111111111111.c.]c
 n111111111111111111.c..c
 cccccccccccccccccccccccc
@@ -455,7 +453,6 @@ ITEM:   any book mimic:10 w:20 / any scroll mimic:10
 SUBST:  w:w?
 SUBST:  ?=. 1:1
 SUBST:  x:xc
-SUBST:  +=+=
 SUBST:  4 = 4 5:2 .:4
 MAP
 wwwwwwwwwwwwwwwwwwwwwww
@@ -871,13 +868,13 @@ KFEAT:   ^~ = teleport trap w:45 / zot trap w:4 / . w:1
 KFEAT:   _ = altar_xom
 KFEAT:   > = } mimic
 KPROP:   ^~> = no_rtele_into
-MARKER:  - = lua:restrict_door()
+KFEAT:   - = runed_door
 COLOUR:  ^~ = warp
 FTILE:   ^ = floor_rough_magenta
 FTILE:   ~ = floor_rough_lightmagenta
 NSUBST:  > = 1:} / 1:) / 1:] / *:>, 9 = 1:0 / *:9, T = 1:. / *:T
 SUBST:   d = tGmcc, c = cccccbbvvx, M = m`, ` = `:195 ':3 ":2
-SUBST:   } = }:80 >, ) = ):80 >, ] = ]:80 >, l = wl, - = +
+SUBST:   } = }:80 >, ) = ):80 >, ] = ]:80 >, l = wl
 SHUFFLE: 56, 78, ^~, cm / xn
 MARKER:  ' = lua:fog_machine { cloud_type = "seething chaos", pow_max = 17, \
              delay_min = 450, delay_max = 700, size = 1, excl_rad = 0 }
@@ -1050,7 +1047,7 @@ LFLOORTILE: floor_rough_magenta
 LROCKTILE:  wall_zot_lightmagenta
 
 #traps
-SUBST:    C = X:900 c:100 =
+SUBST:    C = X:900 c:100
 KFEAT:    8 = any trap / w:20 floor
 SHUFFLE:  ABab / ^^FF / ^^FF / ^^FF
 SHUFFLE:  Aa / Bb

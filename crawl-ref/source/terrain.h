@@ -41,7 +41,6 @@ bool feat_is_solid(dungeon_feature_type feat);
 bool feat_has_solid_floor(dungeon_feature_type feat);
 bool feat_is_door(dungeon_feature_type feat);
 bool feat_is_closed_door(dungeon_feature_type feat);
-bool feat_is_secret_door(dungeon_feature_type feat);
 bool feat_is_statue_or_idol(dungeon_feature_type feat);
 bool feat_is_rock(dungeon_feature_type feat);
 bool feat_is_permarock(dungeon_feature_type feat);
@@ -85,13 +84,6 @@ bool slime_wall_neighbour(const coord_def& c);
 
 void get_door_description(int door_size, const char** adjective,
                           const char** noun);
-// Returns info about the grid a secret door is mimicing.  Returns true
-// if it finds a grid position to mimic, which will be stored in gc.
-// feat will always be set, even if no square to mimic is found.
-bool find_secret_door_info(const coord_def &where,
-                           dungeon_feature_type *feat,
-                           coord_def *gc);
-dungeon_feature_type grid_secret_door_appearance(const coord_def &where);
 dungeon_feature_type grid_appearance(const coord_def &gc);
 bool feat_destroys_item(dungeon_feature_type feat, const item_def &item, bool noisy = false);
 bool feat_virtually_destroys_item(dungeon_feature_type feat, const item_def &item, bool noisy = false);

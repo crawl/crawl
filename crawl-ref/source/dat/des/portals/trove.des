@@ -270,16 +270,15 @@ NAME:   enter_trove_3
 TAGS:   uniq_trove no_monster_gen no_wall_fixup chance_trove
 CHANCE: 5%
 : trove.portal(_G)
-COLOUR: .cx = blue
-SUBST:  x = c:20 =:6
-TILE:   cx = wall_stone_dark
-FTILE:  =.cxO = floor_marble
+COLOUR: .c = blue
+TILE:   c = wall_stone_dark
+FTILE:  .cO = floor_marble
 MAP
-cxxxc
-x...x
-x.O.x
-x...x
-cxxxc
+ccccc
+c...c
+c.O.c
+c...c
+cc+cc
 ENDMAP
 
 # Of course, not everyone is willing for you to take their treasure...
@@ -320,8 +319,8 @@ TAGS:   uniq_trove no_monster_gen no_wall_fixup chance_trove
 CHANCE: 5%
 : trove.portal(_G)
 MARKER: X = lua: props_marker { connected_exclude="true" }
-SUBST:  X = =
-COLOUR: = = blue
+SUBST:  X = +
+COLOUR: + = blue
 MAP
 ccccccc
 c$$$$$c
@@ -436,9 +435,9 @@ MAP
 .1.1'"'wwW'''o__xxxx+xxxx__o.1.m.1.1.1.1.1
 1.1."'"Www'''o__xddx_xedx__o1.1.1.1.1.1.1.
 .1.1."'"Www''o__xefx_xdex__o.1.1.1.1.1.1.1
-1.1.1."'"Ww''o__xxx=_=xxx__o1.1.1.1.1.1.1.
+1.1.1."'"Ww''o__xxx+_+xxx__o1.1.1.1.1.1.1.
 .1.1.1."'"ww'o__+___1___+__o.1.m.1.1.1.1.1
-1.1.1.1'"'mwWo__xxx=_=xxx__o1.1.1.1.1.1.1.
+1.1.1.1'"'mwWo__xxx+_+xxx__o1.1.1.1.1.1.1.
 .1.1.1.1'"'wwo__xdfx_xdex__o.1.1.1.1.1.1.1
 1.1.1.1."'"WwoV_xdex_xdfx__o1.1.1.1.1.1.1.
 .1.1.1.1.1'"'ovvxxxx+xxxx__o.1.1.1.1.1.1.1
@@ -670,8 +669,8 @@ TAGS:   no_item_gen no_monster_gen allow_dup no_vmirror no_rotate
 WEIGHT: 2
 COLOUR: x = blue
 COLOUR: = = blue
-NSUBST: " = 1:= / *:x
-NSUBST: ' = 1:= / *:x
+NSUBST: " = 1:+ / *:x
+NSUBST: ' = 1:+ / *:x
 # Rock is actually diggable for those people driven mad by hatred.
 MONS:   vampire
 # 24 items, just because we're feeling generous.

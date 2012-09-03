@@ -130,13 +130,14 @@ MAP
 ENDMAP
 
 # Not Minivault 9 (by Mu.)
-NAME:   not_minivault_9_mu
+NAME:   not_door_vault_mu
 TAGS:   allow_dup
 WEIGHT: 1
 DEPTH:  D:15-27, Elf, Vaults
 MONS:   butterfly
-MARKER: X = lua: props_marker { connected_exclude="true" }
-SUBST:  X = =
+MARKER: X = lua: props_marker { connected_exclude="true", \
+                                stop_explore="strange structure made of doors" }
+KFEAT:  X = runed_door
 MAP
 XXXXXXXXXX
 XxXXXXXXXX
@@ -522,16 +523,17 @@ www!!!?ww.
 ENDMAP
 
 # Not Minivault 9 (or, elephant zoo)
-NAME:   not_minivault_9_due
+NAME:   not_door_vault_due
 TAGS:   allow_dup
 WEIGHT: 1
 DEPTH:  D:20-27, Elf:3-5, Vaults:4-8
 MONS:   elephant, dire elephant, hellephant
-MARKER: X = lua: props_marker { connected_exclude="true" }
-SUBST:  X = =
+MARKER: X = lua: props_marker { connected_exclude="true", \
+                                stop_explore="strange structure made of doors" }
+KFEAT:  X = runed_door
 MAP
 XXXXXXXXXX
-XxXXXXXXXX
+XXXXXXXXXX
 XXXXXXXXXX
 XXX1112XXX
 XXX1321XXX
@@ -556,7 +558,7 @@ MAP
 .xxxx.
 .x**x.
 .x**x.
-.xx=x.
+.xx+x.
 ...1..
 ENDMAP
 
@@ -566,15 +568,14 @@ DEPTH: D:9-27, Snake
 TAGS:  no_monster_gen
 MONS:  patrolling guardian serpent
 KPROP: *| = no_rtele_into
-SUBST: C = ===c
 MAP
 .......
 .ccccc.
 .c*|*c.
-.ccCcc.
+.cc+cc.
 .n%%%n.
 .n%%%n.
-.cc=cc.
+.cc+cc.
 ...1...
 ENDMAP
 
@@ -651,7 +652,6 @@ xxx1...1xxx
 ENDMAP
 
 # A raven's nest, containing some jewellery.
-# The dungeon version maya be hidden.
 # Could be used as a subvault in some forest vault.
 NAME:     roderic_ravens_nest
 TAGS:     extra mini_float
@@ -660,19 +660,16 @@ KMONS:    1 = raven
 KITEM:    % = any jewellery
 KITEM:    1 = any jewellery / nothing
 : if you.branch() == "D" then
-SHUFFLE:  t' / x"
-SUBST:    " = x
-NSUBST:   x = 1:= / *:x
+SHUFFLE:  t / x
 : end
 : if you.branch() == "Swamp" then
 KFEAT:  t = mangrove
 : end
-SUBST:    ' = .
 : kmons("% = nothing w:10 / raven w:"..you.absdepth())
 MAP
 tttt
 t%1t
-ttt'@
+ttt.@
 ENDMAP
 
 NAME:   nicolae_underground_beach
@@ -992,11 +989,11 @@ DEPTH:   D:2-4
 MONS:    goblin / hobgoblin w:5, goblin; sling . stone q:20
 SUBST:   y = .WWw, Y = ...W, . = .....1
 SHUFFLE: >X/_"
-SUBST:   X = x, _ = =, " = @
+SUBST:   X = x, _ = +, " = @
 MAP
    XXX
 xxxx>xxxx
-xxxx=xxxx
+xxxx+xxxx
 xwww2wwwx
 xyywwwyyx
 xYYYYYYYx
@@ -1283,8 +1280,8 @@ MARKER: + = lua:props_marker { \
                                   "it anyway?", \
                 door_description_prefix= "warning-scrawled " \
             }
-MARKER: + = lua:restrict_door()
-MARKER: = = lua:restrict_door()
+KFEAT:  + = runed_door
+KFEAT:  = = runed_door
 SUBST:  ! = .
 MAP
 ccccccccccc
@@ -1368,7 +1365,7 @@ MAP
 wwwwwwww..wwwwwwwwwwwww
 wwwwww.11...wwwwwwwwwww
 wwwww........wwwwwwwwww
-wwwww...x=x..wwwwwwwwww
+wwwww...x+x..wwwwwwwwww
 wwww..11x.x..wwwwwwwww
  www...xx>x11wwwwwwwww
  www..xx??x.wwwwwwwww
@@ -1382,6 +1379,7 @@ ENDMAP
 NAME:   hunters_booth_kilobyte
 DEPTH:  D:5-15
 MONS:   centaur, bush
+KFEAT:  = = runed_door
 MAP
 .....xxx
 @....21=@
@@ -1518,7 +1516,7 @@ SUBST:  2 = 1'
 KMONS:  _ = deep dwarf berserker
 KFEAT:  _ = altar_trog
 SUBST:  C : c', B : +', D : +', E : +c
-SUBST:  = = ccc=
+SUBST:  = = ccc+
 FTILE:  *|_1+'c = floor_hall
 FTILE:  # = floor_rough_lightred
 MARKER:  # = lua:fog_machine { cloud_type = "flame", \
@@ -1548,10 +1546,11 @@ MAP
    .....@.....
 ENDMAP
 
-NAME: lookout_dungeons_type
+NAME:  lookout_dungeons_type
 DEPTH: D:4-14
-TAGS: extra no_pool_fixup layout_rooms layout_city
-MONS: w:1 generate_awake centaur / w:4 nothing
+TAGS:  extra no_pool_fixup layout_rooms layout_city
+MONS:  w:1 generate_awake centaur / w:4 nothing
+KFEAT: = = runed_door
 MAP
 ....@....
 .........
@@ -1591,7 +1590,7 @@ MAP
 ....xx.xxxxx.G..G.xxxx....
 ...xx...xxxx......xxxxx...
 ..xxxx.xxxxxx....xxxxxxx..
-.xxxxx=xxxxxx.mm.xxxxxxxx.
+.xxxxx+xxxxxx.mm.xxxxxxxx.
 .xxIx.I.xIx.xx++xx.xxx...x
 @+...m.m...x......x.+.mmm@
 .xxIx.I.xIx.xx++xx.xxx...x
@@ -1655,9 +1654,8 @@ KMONS:   89 = deep elf mage
 KITEM:   8d = robe / robe race:orcish, wizard hat w:40 / wizard hat good_item, \
               wizard hat w:20 / wizard hat good_item
 KITEM:   9e = book of minor magic
-KFEAT:   - = +
+KFEAT:   - = runed_door
 KMASK:   de89 = no_item_gen
-MARKER:  - = lua:restrict_door()
 SHUFFLE: 1234
 COLOUR:  F = red
 FTILE:   F = floor_pebble_lightred
@@ -1703,7 +1701,7 @@ ITEM:    empty ebony casket, lamp of fire
 SHUFFLE: 12, 3df / 4eF
 FTILE:   fF'@ = floor_pebble_darkgray
 COLOUR:  fF'@ = white
-MARKER:  + = lua:restrict_door()
+KFEAT:   + = runed_door
 {{
   local fog = chained_fog_machine {
                             cloud_type = 'freezing vapour', pow_min = 6, pow_max = 6,
@@ -2240,7 +2238,7 @@ ENDMAP
 NAME:   minmay_statue_crystal_thing
 DEPTH:  D:9-26
 MONS:   orange crystal statue w:30 / silver statue / ice statue w:5
-NSUBST: ? = 1:= / 1:n / *:b
+KFEAT:  = = runed_door
 MAP
       .....
     ...b+b...
@@ -2416,6 +2414,7 @@ KPROP:   .12 = no_rtele_into
 SUBST:   . = .:80 %$*|
 SHUFFLE: Dd / Ee / Ff / Gg / Hh
 SUBST:   D==, d=o, E=b, e=b, F=b, f=b, G=b, g=b, H=b, h=b
+KFEAT:   = = runed_door
 MAP
 WWWWWWWWWWWWWW
 WbbbbbbbbbbbbW
@@ -2559,7 +2558,7 @@ NAME:   minmay_metal_thing
 DEPTH:  D:12-20
 KPROP:  .1* = no_rtele_into
 MONS:   iron golem
-NSUBST: ? = 1:= / *:v
+NSUBST: ? = 1:+ / *:v
 MAP
 xxxlllllllllllllllllxxx
 xxxlvvvlvlvvvlvlvvvlxxx
@@ -2671,7 +2670,7 @@ ENDMAP
 
 NAME:    onia_ninara_cookie
 SHUFFLE: ABCDEF
-SUBST:   A : !, B : !, C : !, D : !, E : !, F : =, G : ~ l:50 w:50 I
+SUBST:   A : !, B : !, C : !, D : !, E : !, F : +, G : ~ l:50 w:50 I
 SUBST:   ! : xvcb
 SUBST:   H = 0 . ~ , J = 1 0:100 $:20
 ITEM:    any jewellery
@@ -2715,7 +2714,7 @@ KMASK:  m = no_wall_fixup
 KMONS:  1 = eye of devastation
 KMONS:  8 = 8
 KITEM:  18 = star_item w:9 / any w:1
-MARKER: + = lua:restrict_door()
+KFEAT:  + = runed_door
 MAP
 xxx@x
 x8m.xxxxxx
@@ -2814,8 +2813,7 @@ KITEM:   dT = any weapon good_item ego:electrocution, disc of storms
 KFEAT:   E = deep_water
 KFEAT:   d = shallow_water
 KFEAT:   T = teleport trap
-KFEAT:   * = +
-MARKER:  * = lua:restrict_door()
+KFEAT:   * = runed_door
 MARKER:  T = lua:fog_machine { cloud_type = "rain", pow_max = 2, \
                  delay_min = 10, delay_max = 60, size = 4, walk_dist = 2 }
 SHUFFLE: ab, {( / <<
@@ -2837,7 +2835,7 @@ NAME:   nicolae_well_that_was_easy
 DEPTH:  D:4-13
 TAGS:   no_hmirror no_vmirror no_monster_gen no_trap_gen no_item_gen mini_float
 WEIGHT: 3
-MARKER: = = lua:restrict_door()
+KFEAT:  = = runed_door
 SUBST:  - = ABCDEFHIJKLMNOPQR
 KITEM:  A = gossamer rune of zot mimic
 KITEM:  B = decaying rune of zot mimic
@@ -2884,7 +2882,7 @@ KMONS:   4K = slime creature
 KMONS:   5L = acid blob w:5 / azure jelly / death ooze
 KFEAT:   JKL = altar_jiyva
 KITEM:   $ = $, $ w:5 / nothing
-MARKER:  + = lua:restrict_door()
+KFEAT:   + = runed_door
 : if you.absdepth() > 19 then
 SHUFFLE: CD, 2"6; / 3`5~
 SUBST:   35`~ : xx., '"~- = .
@@ -3036,6 +3034,7 @@ ENDMAP
 NAME:   minmay_hollow_rounded_squares
 DEPTH:  D:4-
 SUBST:  0 = 0., x : x c:2 v:1 b:1
+KFEAT:  = = runed_door
 MAP
  ........
 ..xxxxxx..
@@ -3083,7 +3082,7 @@ NAME:  minmay_ominous_box
 TAGS:  extra luniq_mini
 DEPTH: D:4-, Vaults
 SUBST: 8 = 8.......
-MARKER: = = lua:restrict_door()
+KFEAT: = = runed_door
 MAP
 .......
 .vvvvv.
@@ -3165,6 +3164,7 @@ NAME:   minmay_evil_grid
 DEPTH:  D:8-
 NSUBST: A = 7:+ / *:c
 NSUBST: B = 1:= / 1:n / *:c
+KFEAT:  = = runed_door
 NSUBST: C = 1:+ / *:c
 SUBST:  * = *|
 MAP
@@ -3343,7 +3343,7 @@ ENDMAP
 NAME:   wad_mini_maze
 DEPTH:  D:7-26
 WEIGHT: 4
-NSUBST: ? = 1:n / 1:= / *:X
+NSUBST: ? = 1:n / 1:+ / *:X
 SUBST:  X : cccvvb
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxx@xx
@@ -3369,6 +3369,7 @@ DEPTH:  D:8-26
 KFEAT:  t = tree
 FTILE:  ' = floor_pebble
 COLOUR: ' = white
+KFEAT:  = = runed_door
 MAP
 xxx...xxxxxxxxxxxxxx...xxx
 xx...xxxxxx........xx...xx
@@ -3799,6 +3800,7 @@ KMONS:  3 = lich / ancient lich
 KITEM:  3 = ring of protection from magic unrand:ring_of_the_mage
 KPROP:  32' = no_tele_into
 SUBST:  ' = .
+KFEAT:  = = runed_door
 MAP
 .......             .......
 .ccccc..           ..ccccc.
@@ -3965,11 +3967,12 @@ ENDMAP
 # The marker affects find_connected_range() so that each door opens and
 # closes separately rather than all of them joining together into a huge
 # gate that opens all at once.
-NAME:   minivault_9
+NAME:   door_vault
 TAGS:   allow_dup
 DEPTH:  D:15-27, Elf, Vaults, Crypt, Dis, Geh, Tar, Coc, Zot
-MARKER: X = lua: props_marker { connected_exclude="true" }
-SUBST:  X = =
+MARKER: X = lua: props_marker { connected_exclude="true", \
+                                stop_explore="strange structure made of doors" }
+KFEAT:  X = runed_door
 # Pick interesting monsters for dungeon branches. Vaults and D get normal OOD.
 : if you.branch() == "Elf" then
 KMONS:  8 = deep elf annihilator / deep elf blademaster / deep elf master archer / \
@@ -4011,11 +4014,12 @@ XXXXXXXXXX
 ENDMAP
 
 # No, John. You are the door vault
-NAME:   reverse_minivault_9
+NAME:   reverse_door_vault
 DEPTH:  D:15-27, Vaults
 WEIGHT: 4
-MARKER: X = lua: props_marker { connected_exclude="true" }
-SUBST:  X = =
+MARKER: X = lua: props_marker { connected_exclude="true", \
+                                stop_explore="strange structure made of doors" }
+KFEAT:  X = runed_door
 MAP
 xxxxxxxxxxxxxx
 x8.*.8..8.9.8x
@@ -4059,6 +4063,7 @@ KFEAT: ACEH = any trap
 KITEM: ABCD = gold / nothing
 SUBST: F = G:99 F:1
 KMONS: F = orange crystal statue / silver statue / ice statue
+KFEAT: = = runed_door
 MAP
 ............
 .xxxxxxxxxx.

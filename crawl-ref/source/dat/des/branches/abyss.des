@@ -136,10 +136,11 @@ xx23xx W
 ENDMAP
 
 # "(He) opened the mailbox. There was nothing inside. Nothing after nothing came pouring out."
-NAME:   not_minivault_9_hangedman
+NAME:   not_door_vault_hangedman
 TAGS:   abyss
-MARKER: X = lua: props_marker { connected_exclude="true" }
-SUBST:  X = =
+MARKER: X = lua: props_marker { connected_exclude="true", \
+                                stop_explore="strange structure made of doors" }
+KFEAT:  X = runed_door
 MONS:   lorocyproca / vapour / ghost moth w:2, unseen horror / shadow wraith
 MAP
 XXXXXXXXXX
@@ -193,7 +194,7 @@ NAME:    hangedman_abyss_shoalhut
 TAGS:    abyss no_pool_fixup patrolling
 MONS:    red devil w:30 / smoke demon / eye of devastation w:5 / \
          unseen horror / ynoxinul / snapping turtle skeleton w:15
-NSUBST:  = = 1:x= / *:x
+NSUBST:  = = 1:x+ / *:x
 SUBST:   1 = 1., x = xxxxcccvb, l = wWll
 KMASK:   wWl = no_monster_gen
 MAP
@@ -584,8 +585,7 @@ KMONS:  O = flying skull
 KITEM:  O = abyssal rune of Zot
 KFEAT:  n = iron_grate
 KFEAT:  123456. = shallow_water w:1 / . w:9
-KFEAT:  * = +
-MARKER: * = lua:restrict_door()
+KFEAT:  * = runed_door
 SUBST:  c = ccccvb
 MAP
  .cccccc4@4cccccc.
@@ -750,7 +750,8 @@ NAME:   evilmike_abyss_exit_5
 TAGS:   abyss_exit allow_dup
 KFEAT:  O = exit_abyss
 KFEAT:  n = stone_arch
-NSUBST: n = 1:O / *:n, = = 1:+ / *:=
+NSUBST: n = 1:O / *:n
+KFEAT:  = = runed_door
 MAP
     x   x
   x x x x x
@@ -861,7 +862,7 @@ ENDMAP
 NAME:  evilmike_abyss_exit_12
 TAGS:  abyss_exit allow_dup
 KFEAT: O = exit_abyss
-SUBST: X = x., x = xxx++=1
+SUBST: X = x., x = xxx++1
 MONS:  w:2 trapdoor spider / nothing
 MAP
 XXXxxxXXX
@@ -923,7 +924,7 @@ NAME:   evilmike_abyss_exit_16
 TAGS:   abyss_exit allow_dup
 KFEAT:  O = exit_abyss
 NSUBST: . = 1:O / *:.
-SUBST:  c = cbx, + = +=, . = .....12
+SUBST:  c = cbx, . = .....12
 MONS:   slime creature, pulsating lump / giant amoeba
 MAP
 c+c+c+c+c+c

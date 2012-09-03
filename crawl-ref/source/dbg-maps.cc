@@ -95,8 +95,7 @@ static bool mg_do_build_level(int niters)
             {
                 switch (grd[x][y])
                 {
-                case DNGN_SECRET_DOOR:
-                case DNGN_DETECTED_SECRET_DOOR: // paranoia
+                case DNGN_RUNED_DOOR:
                     grd[x][y] = DNGN_CLOSED_DOOR;
                     break;
                 default:
@@ -180,7 +179,7 @@ static void mg_build_levels(int niters)
     {
         mesclr();
         mprf("On %d of %d; %d g, %d fail, %u err%s, %u uniq, "
-             "%d try, %d (%.2lf%%) vetos",
+             "%d try, %d (%.2lf%%) vetoes",
              i, niters,
              mg_levels_tried, mg_levels_failed,
              (unsigned int)mapgen_errors.size(),

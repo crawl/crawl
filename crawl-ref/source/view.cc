@@ -403,53 +403,6 @@ static const FixedArray<uint8_t, GXM, GYM>& _tile_difficulties(bool random)
     return cache;
 }
 
-static unique_ptr<FixedArray<bool, GXM, GYM> > _tile_detectability()
-{
-    unique_ptr<FixedArray<bool, GXM, GYM> > map(new FixedArray<bool, GXM, GYM>);
-
-    vector<coord_def> flood_from;
-
-    for (int x = X_BOUND_1; x <= X_BOUND_2; ++x)
-        for (int y = Y_BOUND_1; y <= Y_BOUND_2; ++y)
-        {
-            (*map)(coord_def(x,y)) = false;
-
-            if (feat_is_stair(grd[x][y]))
-                flood_from.push_back(coord_def(x, y));
-        }
-
-    flood_from.push_back(you.pos());
-
-    while (!flood_from.empty())
-    {
-        coord_def p = flood_from.back();
-        flood_from.pop_back();
-
-        if (!in_bounds(p))
-            continue;
-
-        if ((*map)(p))
-            continue;
-
-        (*map)(p) = true;
-
-        if (grd(p) == DNGN_SECRET_DOOR)
-        {
-            reveal_secret_door(p);
-            continue;
-        }
-
-        if (grd(p) < DNGN_MINSEE && !feat_is_closed_door(grd(p)))
-            continue;
-
-        for (int dy = -1; dy <= 1; ++dy)
-            for (int dx = -1; dx <= 1; ++dx)
-                flood_from.push_back(p + coord_def(dx,dy));
-    }
-
-    return map;
-}
-
 // Returns true if it succeeded.
 bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
                    bool force, bool deterministic,
@@ -482,11 +435,6 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
     const FixedArray<uint8_t, GXM, GYM>& difficulty =
         _tile_difficulties(!deterministic);
 
-    unique_ptr<FixedArray<bool, GXM, GYM> > detectable;
-
-    if (!deterministic)
-        detectable = _tile_detectability();
-
     for (radius_iterator ri(pos, map_radius, C_ROUND);
          ri; ++ri)
     {
@@ -509,9 +457,6 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
             env.map_knowledge(*ri).clear();
 
         if (!wizard_map && (env.map_knowledge(*ri).seen() || env.map_knowledge(*ri).mapped()))
-            continue;
-
-        if (!wizard_map && !deterministic && !((*detectable)(*ri)))
             continue;
 
         const dungeon_feature_type feat = grd(*ri);

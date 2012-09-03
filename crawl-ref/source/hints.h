@@ -57,7 +57,7 @@ enum hints_event_type
     HINT_SEEN_ALTAR,
     HINT_SEEN_SHOP,
     HINT_SEEN_DOOR,
-    HINT_FOUND_SECRET_DOOR,
+    HINT_FOUND_RUNED_DOOR,
     // other 'first events'
     HINT_SEEN_MONSTER,
     HINT_SEEN_ZERO_EXP_MON,
@@ -146,7 +146,6 @@ void init_hints();
 void tutorial_init_hints();
 void pick_hints(newgame_def* choice);
 void hints_load_game(void);
-void hints_zap_secret_doors(void);
 
 formatted_string hints_starting_info2();
 void hints_starting_screen(void);

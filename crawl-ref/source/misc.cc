@@ -1273,13 +1273,7 @@ void search_around(bool only_adjacent)
             // Making this harsher by removing the old +1...
             int effective = skill / (2*dist - 1);
 
-            if (grd(*ri) == DNGN_SECRET_DOOR && x_chance_in_y(effective+1, 17))
-            {
-                mpr("You found a secret door!");
-                reveal_secret_door(*ri);
-                practise(EX_FOUND_SECRET_DOOR);
-            }
-            else if (grd(*ri) == DNGN_UNDISCOVERED_TRAP
+            if (grd(*ri) == DNGN_UNDISCOVERED_TRAP
                      && x_chance_in_y(effective + 1, 17))
             {
                 trap_def* ptrap = find_trap(*ri);
@@ -2226,27 +2220,6 @@ int speed_to_duration(int speed)
         speed = 100;
 
     return div_rand_round(100, speed);
-}
-
-void reveal_secret_door(const coord_def& p)
-{
-    ASSERT(grd(p) == DNGN_SECRET_DOOR);
-
-    const string door_open_prompt =
-        env.markers.property_at(p, MAT_ANY, "door_open_prompt");
-
-    // Former secret doors become known but are still hidden to monsters
-    // until opened. Transparent secret doors are opened to not change
-    // LOS, unless they have a warning prompt.
-    dungeon_feature_type door = grid_secret_door_appearance(p);
-    if (feat_is_opaque(door) || !door_open_prompt.empty())
-        grd(p) = DNGN_DETECTED_SECRET_DOOR;
-    else
-        grd(p) = DNGN_OPEN_DOOR;
-
-    set_terrain_changed(p);
-    viewwindow();
-    learned_something_new(HINT_FOUND_SECRET_DOOR, p);
 }
 
 bool bad_attack(const monster *mon, string& adj, string& suffix)

@@ -272,17 +272,6 @@ static job_type _get_hints_job(unsigned int type)
     }
 }
 
-// Converts all secret doors in a fixed radius around the player's starting
-// position into normal closed doors.
-// FIXME: Ideally, we'd need to zap secret doors that block the way
-// between entrance and exit.
-void hints_zap_secret_doors()
-{
-    for (radius_iterator ri(you.pos(), 25, true, false); ri; ++ri)
-        if (grd(*ri) == DNGN_SECRET_DOOR)
-            grd(*ri) = DNGN_CLOSED_DOOR;
-}
-
 static void _replace_static_tags(string &text)
 {
     size_t p;
@@ -723,7 +712,7 @@ void hints_gained_new_skill(skill_type skill)
     case SK_ARMOUR:
     case SK_STEALTH:
     case SK_STABBING:
-    case SK_TRAPS_DOORS:
+    case SK_TRAPS:
     case SK_UNARMED_COMBAT:
     case SK_INVOCATIONS:
     case SK_EVOCATIONS:
@@ -1091,7 +1080,7 @@ static bool _rare_hints_event(hints_event_type event)
 {
     switch (event)
     {
-    case HINT_FOUND_SECRET_DOOR:
+    case HINT_FOUND_RUNED_DOOR:
     case HINT_KILLED_MONSTER:
     case HINT_NEW_LEVEL:
     case HINT_YOU_ENCHANTED:
@@ -1818,37 +1807,20 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         }
         break;
 
-    case HINT_FOUND_SECRET_DOOR:
+    case HINT_FOUND_RUNED_DOOR:
 #ifdef USE_TILE
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
-        tiles.add_text_tag(TAG_TUTORIAL, "Secret door", gc);
+        tiles.add_text_tag(TAG_TUTORIAL, "Runed door", gc);
 #endif
         text << "That ";
 #ifndef USE_TILE
         text << glyph_to_tagstr(get_cell_glyph(gc)) << " ";
 #endif
-        if (grd(gc) == DNGN_SECRET_DOOR)
-            text << "is";
-        else
-            text << "was";
-
-        text << " a secret door. You can actively try to find secret doors "
-                "by searching. To search for one turn, press <w>s</w>, "
-                "<w>.</w>, <w>delete</w> or <w>keypad-5</w>. Pressing "
-                "<w>5</w> or <w>shift-and-keypad-5</w> "
-#ifdef USE_TILE
-                ", or clicking into the stat area "
-#endif
-                "will search 100 times, stopping early if you find any "
-                "secret doors or traps, or when your HP or MP fully "
-                "recovers.\n\n"
-
-                "If you can't find all three (or any) of the down stairs "
-                "on a level, you should try searching for secret doors, since "
-                "the missing stairs might be in sections of the level blocked "
-                "off by them. If you really can't find any secret doors, then "
-                "the missing stairs are probably in sections of the level "
-                "totally disconnected from the section you're searching.";
+        text << "is a runed door. It functions no differently from any other "
+                "door, yet the runic writing covering them warn of a danger. "
+                "Other denizens of the dungeon will typically leave them "
+                "alone, you may elect to disregard the warning and open them "
+                "anyway. Doing so will break the runes.";
         break;
 
     case HINT_KILLED_MONSTER:
@@ -4189,7 +4161,7 @@ static void _hints_describe_feature(int x, int y)
             break;
 
        case DNGN_CLOSED_DOOR:
-       case DNGN_DETECTED_SECRET_DOOR:
+       case DNGN_RUNED_DOOR:
             if (!Hints.hints_explored)
             {
                 ostr << "\nTo avoid accidentally opening a door you'd rather "
