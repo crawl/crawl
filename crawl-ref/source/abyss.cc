@@ -163,45 +163,19 @@ static void _write_abyssal_features()
 // Returns the roll to use to check if we want to create an abyssal rune.
 static int _abyssal_rune_roll()
 {
-    if (you.runes[RUNE_ABYSSAL])
+    if (you.runes[RUNE_ABYSSAL] || you.depth < 3)
         return -1;
-
-    // The longer the player's hung around in the Abyss, the more
-    // likely the rune. Never generate a new rune if the player
-    // already found one, but make the Abyssal rune eligible for
-    // generation again if the player fails to find or pick it up.
-
-    // If the player leaves the Abyss turns_on_level resets to 0. So
-    // hang in there if you want your Abyssal rune fix quick. :P
-
-    // Worshippers of Lugonu with decent piety will attract the rune
-    // to themselves.
-
-    // In general, the base chance of an abyssal rune is 1/200 for
-    // every item roll (the item roll is 1/200 for every floor square
-    // in the abyss). Once the player has spent more than 500 turns on
-    // level, the abyss rune chance increases linearly every 228 turns
-    // up to a maximum of 34/200 (17%) per item roll after ~8000
-    // turns.
-
-    // For Lugonu worshippers, the base chance of an abyssal rune is 1
-    // in 200 as for other players, but the rune chance increases
-    // linearly after 50 turns on the level, up to the same 34/200
-    // (17%) chance after ~2000 turns.
-
     const bool lugonu_favoured =
         (you.religion == GOD_LUGONU && !player_under_penance()
          && you.piety > 120);
-
-    const int cutoff = lugonu_favoured ? 50 : 500;
-    const int scale = lugonu_favoured ? 57 : 228;
-
-    const int odds = min(1 + max((env.turns_on_level - cutoff) / scale, 0), 34);
-#ifdef DEBUG_ABYSS
-    dprf("Abyssal rune odds: %d in %d (%.2f%%)",
-         odds, ABYSSAL_RUNE_MAX_ROLL, odds * 100.0 / ABYSSAL_RUNE_MAX_ROLL);
-#endif
-    return odds;
+    const int depth = you.depth + lugonu_favoured;
+    if (depth == 3) {
+      return 15;
+    }
+    if (depth == 4) {
+      return 34;
+    }
+    return 50;
 }
 
 static void _abyss_create_room(const map_bitmask &abyss_genlevel_mask)
