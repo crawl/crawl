@@ -3268,9 +3268,9 @@ light, as if sprinkled in actual water.
 %%%%
 young halfling
 
-This lad has been caught by kobolds, and was meant to be roasted and eaten
+This halfling has been caught by kobolds, and was meant to be roasted and eaten
 before you unceremoniously interrupted. Don't you have any manners? Didn't
-mommy tell you to not disrupt people from having a meal?
+you ever learn not to disrupt people's meals?
 %%%%
 young spriggan druid
 
