@@ -118,7 +118,6 @@ int mons_abyss_rare(monster_type mcls)
     case MONS_STARCURSED_MASS:
     case MONS_SKELETON_LARGE:
     case MONS_SKELETON_SMALL:
-    case MONS_SKELETAL_WARRIOR:
         return 40;
 
     case MONS_ZOMBIE_LARGE:
