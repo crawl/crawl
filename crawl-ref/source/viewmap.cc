@@ -1110,7 +1110,6 @@ bool show_map(level_pos &lpos,
             case CMD_MAP_FIND_TRAP:
             case CMD_MAP_FIND_ALTAR:
             case CMD_MAP_FIND_EXCLUDED:
-            case CMD_MAP_FIND_F:
             case CMD_MAP_FIND_WAYPOINT:
             case CMD_MAP_FIND_STASH:
             case CMD_MAP_FIND_STASH_REVERSE:
@@ -1137,9 +1136,6 @@ bool show_map(level_pos &lpos,
                     break;
                 case CMD_MAP_FIND_EXCLUDED:
                     getty = 'E';
-                    break;
-                case CMD_MAP_FIND_F:
-                    getty = 'F';
                     break;
                 case CMD_MAP_FIND_WAYPOINT:
                     getty = 'W';
