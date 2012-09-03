@@ -43,6 +43,7 @@ dgn-height.o \
 dgn-labyrinth.o \
 dgn-layouts.o \
 dgn-overview.o \
+dgn-proclayouts.o \
 dgn-shoals.o \
 dgn-swamp.o \
 dgnevent.o \

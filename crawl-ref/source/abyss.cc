@@ -19,6 +19,7 @@
 #include "colour.h"
 #include "coordit.h"
 #include "dbg-scan.h"
+#include "dgn-proclayouts.h"
 #include "dungeon.h"
 #include "env.h"
 #include "itemprop.h"
@@ -38,6 +39,7 @@
 #include "mon-transit.h"
 #include "mon-util.h"
 #include "notes.h"
+#include "perlin.h"
 #include "player.h"
 #include "random.h"
 #include "religion.h"
@@ -984,17 +986,17 @@ static bool _abyss_teleport_within_level()
 static dungeon_feature_type _abyss_grid(const coord_def &p, double depth,
                                         cloud_type &cloud, int &cloud_lifetime)
 {
-    double x = (p.x + abyssal_state.major_coord.x);
-    double y = (p.y + abyssal_state.major_coord.y);
-
     const dungeon_feature_type terrain_elements[] =
     {
         DNGN_ROCK_WALL,
         DNGN_ROCK_WALL,
         DNGN_ROCK_WALL,
         DNGN_ROCK_WALL,
+        DNGN_ROCK_WALL,
         DNGN_STONE_WALL,
         DNGN_STONE_WALL,
+        DNGN_STONE_WALL,
+        DNGN_METAL_WALL,
         DNGN_METAL_WALL,
         DNGN_GREEN_CRYSTAL_WALL,
     };
@@ -1010,47 +1012,8 @@ static dungeon_feature_type _abyss_grid(const coord_def &p, double depth,
         CLOUD_TLOC_ENERGY,
         CLOUD_MIST
     };
-
-    const double scale = 1.0 / 5.2;
-    const double sub_scale_x = 17.0;
-    const double sub_scale_y = 31.0;
-    const double sub_scale_depth = 0.1;
-
-    worley::noise_datum noise = worley::worley(x * scale, y * scale, depth);
-    dungeon_feature_type feat = DNGN_FLOOR;
-
-    worley::noise_datum sub_noise = worley::worley(x * sub_scale_x,
-                                                   y * sub_scale_y,
-                                                   depth * sub_scale_depth);
-
-    int dist = noise.distance[0] * 100;
-    bool isWall = (dist > 118 || dist < 30);
-
-    if (noise.id[0] + noise.id[1] % 2  == 0)
-        isWall = sub_noise.id[0] % 2;
-
-    if (sub_noise.id[0] % 3 == 0)
-        isWall = !isWall;
-
-    if (isWall)
-    {
-        int fuzz = (sub_noise.id[1] % 3 ? 0 : sub_noise.id[1] % 2 + 1);
-        int id = (noise.id[0] + fuzz) % n_terrain_elements;
-        feat = terrain_elements[id];
-    }
-
-    if (feat == DNGN_FLOOR && !(noise.id[1] % 3))
-    {
-        // Only used if the feature actually changed.
-        cloud = clouds[sub_noise.id[1] % NUM_CLOUDS];
-        cloud_lifetime = (noise.id[1] % 4)+2;
-    }
-    else
-    {
-        cloud = CLOUD_NONE;
-        cloud_lifetime = 0;
-    }
-
+    ColumnLayout layout(2);
+    dungeon_feature_type feat = layout.get(p);
     _previous_abyss_feature[p.x][p.y] = feat;
     return feat;
 }
@@ -1409,7 +1372,7 @@ void abyss_morph(double duration)
         return;
 
     // Between .02 and .07 per ten ticks, half that for Chei worshippers.
-    double delta_t = you.time_taken * (you.abyss_speed + 40.0) / 20000.0;
+    double delta_t = you.time_taken * (you.abyss_speed + 40.0) / 40000.0;
     if (you.religion == GOD_CHEIBRIADOS)
         delta_t /= 2.0;
 
