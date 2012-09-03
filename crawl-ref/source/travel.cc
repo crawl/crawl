@@ -449,6 +449,9 @@ static bool _is_travelsafe_square(const coord_def& c, bool ignore_hostile,
             return true;
     }
 
+    if (levelmap_cell.feat() == DNGN_RUNED_DOOR)
+        return false;
+
     return feat_is_traversable_now(grid);
 }
 
