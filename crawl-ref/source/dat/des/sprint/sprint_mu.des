@@ -181,7 +181,7 @@ KITEM: * = potion of levitation q:2 / potion of levitation q:1 / any potion, \
 SUBST: T = t.
 
 MAP
-[<x*$=...TTttttt.
+[<x*$+...TTttttt.
 {.x*$x..3.TTtttt.
 x+xxxx....TTtttT.
 .....x....WTtttT.
@@ -217,7 +217,7 @@ MAP
 ...x......xxxxx..
 ..xx.......x**x..
 xx.xx.xx..2x$$x..
-xx.xx.xxx..xx=x..
+xx.xx.xxx..xx+x..
 x.xxxx.xx..xxx.4.
 .xxx1.xx..xxxx...
 x.....xx..xxx....
@@ -537,6 +537,7 @@ MARKER: ~ = lua:restrict_door({ \
                              "it anyway?", \
             door_description_prefix="warning-scrawled " \
          })
+KFEAT: = = runed_door
 
 MAP
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -1218,6 +1219,7 @@ MARKER: # = lua:props_marker({ \
             door_description_noun="gateway", \
          })
 MARKER: # = lua:restrict_door()
+KFEAT: = = runed_door
 MAP
 vvvvvvvvvvvvvvvvv+vvvvvvvvvvvvv
 vtW....Wtvrrsvvv...vvevllllllvv
@@ -1422,6 +1424,7 @@ MARKER: ! = lua:fog_machine { \
                 pow_max = 1000, delay_min = 1, delay_max = 1, \
                 size = 1000, size_buildup_amnt = 111, \
                 size_buildup_time = 1, cloud_type = "gloom" }
+KFEAT: = = runed_door
 MAP
 ccccccc#cccccc
 c!..c....c..!c
@@ -1481,14 +1484,14 @@ mons_gen_marker:add_triggerer(DgnTriggerer:new {
     type = "player_move" })
 lua_marker("e", mons_gen_marker) }}
 SUBST: A = ^
-NSUBST: a = 1:= / *:X
+NSUBST: a = 1:+ / *:X
 KFEAT: - = zot trap
 NSUBST: ^ = 3:- / *:.
 KMONS: k = killer klown
 KMONS: A = plant col:magenta
 KMONS: B = plant col:lightmagenta
 SUBST: p = AAB
-COLOUR: =X = lightmagenta
+COLOUR: X = lightmagenta
 KITEM: $ = orb of zot
 KFEAT: # = closed_door
 KFEAT: ~ = closed_door
@@ -1505,7 +1508,7 @@ MARKER: ~ = lua:props_marker({ \
         door_description_prefix="magically reinforced ", \
         veto_shatter="veto", veto_disintegrate="veto", veto_fragmentation="veto", door_restrict="veto" \
         })
-KPROP: =X#kp+^ag78yL45il%3x21*To$. = no_rtele_into
+KPROP: X#kp+^ag78yL45il%3x21*To$. = no_rtele_into
 MAP
 XXXXXXXXXXXXXXXXXXX
 X.+^^^AX..+...X...X
@@ -1517,6 +1520,6 @@ XpX....X..X...X*X.X
 XXX.78.X..XXxXX.X.X
 X.+..y.XX.X...X.XeX
 X.XXXXXX..X212X.X~X
-X.....L=.XX...=.o$X
+X.....L+.XX...+.o$X
 XXXXXXXXXXXXXXXXXXX
 ENDMAP
