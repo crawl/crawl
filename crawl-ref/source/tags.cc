@@ -2253,6 +2253,13 @@ static void tag_read_you_dungeon(reader &th)
         ASSERT(brdepth[j] <= MAX_BRANCH_DEPTH);
         startdepth[j] = unmarshallInt(th);
     }
+#if TAG_MAJOR_VERSION == 34
+    // Deepen the Abyss; this is okay since new abyssal stairs will be
+    // generated as the place shifts.
+    if (th.getMinorVersion() < TAG_MINOR_DEEP_ABYSS)
+        brdepth[BRANCH_ABYSS] = 5;
+#endif
+
     ASSERT(you.depth <= brdepth[you.where_are_you]);
 
     // Root of the dungeon; usually BRANCH_MAIN_DUNGEON.

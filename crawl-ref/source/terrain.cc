@@ -1566,7 +1566,10 @@ static const char *dngn_feature_names[] =
 "stone_stairs_up_ii", "stone_stairs_up_iii", "escape_hatch_up",
 
 "enter_dis", "enter_gehenna", "enter_cocytus",
-"enter_tartarus", "enter_abyss", "exit_abyss", "abyssal_stair",
+"enter_tartarus", "enter_abyss", "exit_abyss",
+#if TAG_MAJOR_VERSION > 34
+"abyssal_stair",
+#endif
 "stone_arch", "enter_pandemonium", "exit_pandemonium",
 "transit_pandemonium", "exit_dungeon", "exit_through_abyss",
 "exit_hell", "enter_hell", "enter_labyrinth",
@@ -1602,6 +1605,10 @@ static const char *dngn_feature_names[] =
 
 "explore_horizon",
 "unknown_altar", "unknown_portal",
+
+#if TAG_MAJOR_VERSION == 34
+"abyssal_stair",
+#endif
 };
 
 dungeon_feature_type dungeon_feature_by_name(const string &name)
