@@ -759,8 +759,8 @@ static const int stat_width      = 42;
 void TilesFramework::do_layout()
 {
     // View size in pixels is (m_viewsc * crawl_view.viewsz)
-    m_viewsc.x = 32;
-    m_viewsc.y = 32;
+    m_viewsc.x = Options.tile_cell_pixels;
+    m_viewsc.y = Options.tile_cell_pixels;
 
     crawl_view.viewsz.x = Options.view_max_width;
     crawl_view.viewsz.y = Options.view_max_height;

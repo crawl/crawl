@@ -992,6 +992,7 @@ void game_options::reset_options()
     tile_window_width     = -90;
     tile_window_height    = -90;
     tile_map_pixels       = 0;
+    tile_cell_pixels      = 32;
     tile_layout_priority = split_string(",", "minimap, inventory, gold_turn, "
                                              "command, spell, ability, "
                                              "monster");
@@ -3183,6 +3184,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     else INT_OPTION(tile_window_width, INT_MIN, INT_MAX);
     else INT_OPTION(tile_window_height, INT_MIN, INT_MAX);
     else INT_OPTION(tile_map_pixels, 1, INT_MAX);
+    else INT_OPTION(tile_cell_pixels, 1, INT_MAX);
 #endif // USE_TILE_LOCAL
 #ifdef USE_TILE
     else BOOL_OPTION(tile_force_overlay);

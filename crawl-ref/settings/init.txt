@@ -374,6 +374,7 @@ force_more_message = Found .* abyssal rune of Zot
 # tile_window_width     = 1024
 # tile_window_height    = 768
 # tile_map_pixels       = 3
+# tile_cell_pixels      = 32
 # tile_force_overlay    = true
 # tile_layout_priority  = minimap, inventory, gold_turn, command, spell
 # tile_layout_priority += ability, monster
