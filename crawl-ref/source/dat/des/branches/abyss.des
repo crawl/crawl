@@ -138,7 +138,8 @@ ENDMAP
 # "(He) opened the mailbox. There was nothing inside. Nothing after nothing came pouring out."
 NAME:   not_door_vault_hangedman
 TAGS:   abyss
-MARKER: X = lua: props_marker { connected_exclude="true" }
+MARKER: X = lua: props_marker { connected_exclude="true", \
+                                stop_explore="strange structure made of doors" }
 KFEAT:  X = runed_door
 MONS:   lorocyproca / vapour / ghost moth w:2, unseen horror / shadow wraith
 MAP

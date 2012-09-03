@@ -4143,7 +4143,10 @@ void explore_discoveries::found_feature(const coord_def &pos,
             }
         }
 
-        const named_thing<int> rdoor(cleaned_feature_description(pos), 1);
+        string desc = env.markers.property_at(pos, MAT_ANY, "stop_explore");
+        if (desc.empty())
+            desc = cleaned_feature_description(pos);
+        const named_thing<int> rdoor(desc, 1);
         runed_doors.push_back(rdoor);
         es_flags |= ES_RUNED_DOOR;
     }
