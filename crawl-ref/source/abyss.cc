@@ -178,41 +178,6 @@ static int _abyssal_rune_roll()
     return 45 + depth;
 }
 
-static void _abyss_create_room(const map_bitmask &abyss_genlevel_mask)
-{
-    const int largest_room_dimension = 10;
-
-    // Pick the corners
-    const coord_def tl(
-        random_range(MAPGEN_BORDER,
-                     GXM - 1 - (MAPGEN_BORDER + largest_room_dimension)),
-        random_range(MAPGEN_BORDER,
-                     GYM - 1 - (MAPGEN_BORDER + largest_room_dimension)));
-    const coord_def roomsize(random_range(1, largest_room_dimension),
-                             random_range(1, largest_room_dimension));
-    const coord_def br = tl + roomsize;
-
-    // Check if the room is taken.
-    for (rectangle_iterator ri(tl, br); ri; ++ri)
-        if (!abyss_genlevel_mask(*ri))
-            return;
-
-    // Make the room.
-    for (rectangle_iterator ri(tl, br); ri; ++ri)
-        grd(*ri) = DNGN_FLOOR;
-}
-
-static void _abyss_create_rooms(const map_bitmask &abyss_genlevel_mask,
-                                int rooms_to_do)
-{
-    for (int i = 0; i < rooms_to_do; ++i)
-    {
-        if (one_chance_in(100))
-            break;
-        _abyss_create_room(abyss_genlevel_mask);
-    }
-}
-
 static void _abyss_erase_stairs_from(const vault_placement *vp)
 {
     for (vault_place_iterator vi(*vp); vi; ++vi)
@@ -1097,9 +1062,6 @@ static dungeon_feature_type _abyss_grid(const coord_def &p, double depth,
 static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
                                  bool morph = false)
 {
-    if (one_chance_in(3) && !morph)
-        _abyss_create_rooms(abyss_genlevel_mask, random_range(1, 10));
-
     const int exit_chance = _abyss_exit_chance();
 
     // Except for the altar on the starting position, don't place any altars.
