@@ -164,6 +164,7 @@ ouch.o \
 output.o \
 package.o \
 pattern.o \
+perlin.o \
 place-info.o \
 place.o \
 player-act.o \
