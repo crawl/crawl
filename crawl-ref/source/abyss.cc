@@ -997,10 +997,6 @@ static dungeon_feature_type _abyss_grid(const coord_def &p, double depth,
         DNGN_STONE_WALL,
         DNGN_METAL_WALL,
         DNGN_GREEN_CRYSTAL_WALL,
-        DNGN_LAVA,
-        DNGN_DEEP_WATER,
-        DNGN_SHALLOW_WATER,
-        DNGN_SHALLOW_WATER,
     };
     const int n_terrain_elements = ARRAYSZ(terrain_elements);
 
@@ -1015,7 +1011,7 @@ static dungeon_feature_type _abyss_grid(const coord_def &p, double depth,
         CLOUD_MIST
     };
 
-    const double scale = 1.0 / 2.2;
+    const double scale = 1.0 / 5.2;
     const double sub_scale_x = 17.0;
     const double sub_scale_y = 31.0;
     const double sub_scale_depth = 0.1;
