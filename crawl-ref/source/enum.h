@@ -281,7 +281,7 @@ enum transformation_type
     LAST_FORM = TRAN_APPENDAGE
 };
 
-enum beam_type                  // beam[].flavour
+enum beam_type                  // bolt::flavour
 {
     BEAM_NONE,
 
