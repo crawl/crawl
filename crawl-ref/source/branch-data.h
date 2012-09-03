@@ -213,7 +213,7 @@ const Branch branches[NUM_BRANCHES] = {
       mons_forest_rare, mons_forest_level,
       'F', true, 0 },
 
-    { BRANCH_ABYSS, NUM_BRANCHES, -1, -1, 27, 24,
+    { BRANCH_ABYSS, NUM_BRANCHES, -1, -1, 5, 24,
       BFLAG_NO_XLEV_TRAVEL, LFLAG_NO_TELE_CONTROL | LFLAG_NO_MAP,
       DNGN_ENTER_ABYSS, DNGN_EXIT_ABYSS,
       "Abyss", "the Abyss", "Abyss",
