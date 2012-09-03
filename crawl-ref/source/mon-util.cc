@@ -3056,65 +3056,65 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
 {
     gender_type gender = GENDER_NEUTER;
 
-    if (mons_genus(mon_type) == MONS_MERMAID
-        || mon_type == MONS_QUEEN_ANT
-        || mon_type == MONS_QUEEN_BEE
-        || mon_type == MONS_HARPY
-        || mon_type == MONS_SPHINX)
+    if (visible)
     {
-        gender = GENDER_FEMALE;
-    }
-    // Mara's fakes aren't a unique, but should still be classified
-    // as male.
-    else if (mon_type == MONS_MARA_FAKE
-             || mon_type == MONS_HELLBINDER
-             || mon_type == MONS_CLOUD_MAGE)
-    {
-        gender = GENDER_MALE;
-    }
-    else if (mons_is_unique(mon_type) && !mons_is_pghost(mon_type))
-    {
-        if (mons_species(mon_type) == MONS_SERPENT_OF_HELL)
-            mon_type = MONS_SERPENT_OF_HELL;
-        switch (mon_type)
+        if (mons_genus(mon_type) == MONS_MERMAID
+            || mon_type == MONS_QUEEN_ANT
+            || mon_type == MONS_QUEEN_BEE
+            || mon_type == MONS_HARPY
+            || mon_type == MONS_SPHINX)
         {
-        case MONS_JESSICA:
-        case MONS_PSYCHE:
-        case MONS_JOSEPHINE:
-        case MONS_AGNES:
-        case MONS_MAUD:
-        case MONS_LOUISE:
-        case MONS_FRANCES:
-        case MONS_MARGERY:
-        case MONS_EROLCHA:
-        case MONS_ERICA:
-        case MONS_TIAMAT:
-        case MONS_ERESHKIGAL:
-        case MONS_ROXANNE:
-        case MONS_SONJA:
-        case MONS_ILSUIW:
-        case MONS_NERGALLE:
-        case MONS_KIRKE:
-        case MONS_DUVESSA:
-        case MONS_THE_ENCHANTRESS:
-        case MONS_NELLIE:
-        case MONS_ARACHNE:
             gender = GENDER_FEMALE;
-            break;
-        case MONS_ROYAL_JELLY:
-        case MONS_LERNAEAN_HYDRA:
-        case MONS_IRON_GIANT:
-        case MONS_SERPENT_OF_HELL:
-            gender = GENDER_NEUTER;
-            break;
-        default:
+        }
+        // Mara's fakes aren't a unique, but should still be classified
+        // as male.
+        else if (mon_type == MONS_MARA_FAKE
+                 || mon_type == MONS_HELLBINDER
+                 || mon_type == MONS_CLOUD_MAGE)
+        {
             gender = GENDER_MALE;
-            break;
+        }
+        else if (mons_is_unique(mon_type) && !mons_is_pghost(mon_type))
+        {
+            if (mons_species(mon_type) == MONS_SERPENT_OF_HELL)
+                mon_type = MONS_SERPENT_OF_HELL;
+            switch (mon_type)
+            {
+            case MONS_JESSICA:
+            case MONS_PSYCHE:
+            case MONS_JOSEPHINE:
+            case MONS_AGNES:
+            case MONS_MAUD:
+            case MONS_LOUISE:
+            case MONS_FRANCES:
+            case MONS_MARGERY:
+            case MONS_EROLCHA:
+            case MONS_ERICA:
+            case MONS_TIAMAT:
+            case MONS_ERESHKIGAL:
+            case MONS_ROXANNE:
+            case MONS_SONJA:
+            case MONS_ILSUIW:
+            case MONS_NERGALLE:
+            case MONS_KIRKE:
+            case MONS_DUVESSA:
+            case MONS_THE_ENCHANTRESS:
+            case MONS_NELLIE:
+            case MONS_ARACHNE:
+                gender = GENDER_FEMALE;
+                break;
+            case MONS_ROYAL_JELLY:
+            case MONS_LERNAEAN_HYDRA:
+            case MONS_IRON_GIANT:
+            case MONS_SERPENT_OF_HELL:
+                gender = GENDER_NEUTER;
+                break;
+            default:
+                gender = GENDER_MALE;
+                break;
+            }
         }
     }
-
-    if (!visible)
-        gender = GENDER_NEUTER;
 
     switch (variant)
     {
