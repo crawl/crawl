@@ -193,7 +193,7 @@ NAME:    hangedman_abyss_shoalhut
 TAGS:    abyss no_pool_fixup patrolling
 MONS:    red devil w:30 / smoke demon / eye of devastation w:5 / \
          unseen horror / ynoxinul / snapping turtle skeleton w:15
-NSUBST:  = = 1:x= / *:x
+NSUBST:  = = 1:x+ / *:x
 SUBST:   1 = 1., x = xxxxcccvb, l = wWll
 KMASK:   wWl = no_monster_gen
 MAP
@@ -749,7 +749,8 @@ NAME:   evilmike_abyss_exit_5
 TAGS:   abyss_exit allow_dup
 KFEAT:  O = exit_abyss
 KFEAT:  n = stone_arch
-NSUBST: n = 1:O / *:n, = = 1:+ / *:=
+NSUBST: n = 1:O / *:n
+KFEAT:  = = runed_door
 MAP
     x   x
   x x x x x
@@ -860,7 +861,7 @@ ENDMAP
 NAME:  evilmike_abyss_exit_12
 TAGS:  abyss_exit allow_dup
 KFEAT: O = exit_abyss
-SUBST: X = x., x = xxx++=1
+SUBST: X = x., x = xxx++1
 MONS:  w:2 trapdoor spider / nothing
 MAP
 XXXxxxXXX

@@ -595,7 +595,7 @@ MAP
 xxxxxxxxxxx
 x.........+
 x.xxxxxxxxx
-x.x.......=
+x.x.......+
 x.x.xxxxxxxxxxxxxx
 x.x.x.....+......x
 x.x.x.xxxxxxxxxx.x
@@ -2174,7 +2174,7 @@ NAME:    elethiomel_entry_maze
 TAGS:    entry no_monster_gen
 ORIENT:  float
 SHUFFLE: {[(, WXYZ
-SUBST:   W=., X=X., X=x+., Y=Y., Y=x=., Z=Z., Z=x+.
+SUBST:   W=., X=X., X=x+., Y=Y., Y=x., Z=Z., Z=x+.
 MAP
 xx@xxxxxxxxxxxxxxxxxxxxxxxxxx
 xx.x.......xxxxx...xx......xx
@@ -2690,8 +2690,8 @@ TAGS:    entry no_monster_gen
 WEIGHT:  3
 ORIENT:  southeast
 SHUFFLE: {(
-NSUBST:  V = 2:= / 2=v= / *:v
-NSUBST:  U = 2:= / 2=v= / *:v
+NSUBST:  V = 2:+ / 2=v+ / *:v
+NSUBST:  U = 2:+ / 2=v+ / *:v
 SUBST:   ' = .W
 MAP
   '''''''''@'''''x
@@ -3026,7 +3026,7 @@ KMASK:   l = no_monster_gen
 SUBST:   R : +R
 SUBST:   r : +ccc
 NSUBST:  R = + / ccc+
-SUBST:   = : cccc=+
+SUBST:   = : cc+
 SUBST:   t : tT.
 SUBST:   T = tt.
 MAP
