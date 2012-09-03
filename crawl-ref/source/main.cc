@@ -3013,7 +3013,8 @@ static void _player_reacts()
             else
                 you_teleport_now(true, false, false, teleportitis_level * 5);
         }
-        else if (player_in_branch(BRANCH_ABYSS) && one_chance_in(80))
+        else if (player_in_branch(BRANCH_ABYSS) && one_chance_in(80) 
+          && (!map_masked(you.pos(), MMT_VAULT) || one_chance_in(3)))
         {
             mpr("You are suddenly pulled into a different region of the Abyss!",
                 MSGCH_BANISHMENT);
