@@ -1090,7 +1090,7 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
             continue;
 
         // Don't morph a cell with the Rune or the exit.
-        if (_abyssal_rune_at(p) || grd(p) == DNGN_EXIT_ABYSS)
+        if (_abyssal_rune_at(p) || grd(p) == DNGN_EXIT_ABYSS || grd(p) == DNGN_ABYSSAL_STAIR)
             continue;
 
         // Don't morph altars and stone arches.
