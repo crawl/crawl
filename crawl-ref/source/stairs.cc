@@ -525,6 +525,7 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
     case DNGN_STONE_STAIRS_DOWN_I:
     case DNGN_STONE_STAIRS_DOWN_II:
     case DNGN_STONE_STAIRS_DOWN_III:
+    case DNGN_ABYSSAL_STAIR:
     {
         ASSERT(!at_branch_bottom());
         level_id lev = level_id::current();
@@ -535,7 +536,6 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
     case DNGN_TRANSIT_PANDEMONIUM:
         return level_id(BRANCH_PANDEMONIUM);
 
-    case DNGN_ABYSSAL_STAIR:
     case DNGN_EXIT_THROUGH_ABYSS:
         return level_id(BRANCH_ABYSS);
 
