@@ -535,6 +535,7 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
     case DNGN_TRANSIT_PANDEMONIUM:
         return level_id(BRANCH_PANDEMONIUM);
 
+    case DNGN_ABYSSAL_STAIR:
     case DNGN_EXIT_THROUGH_ABYSS:
         return level_id(BRANCH_ABYSS);
 
