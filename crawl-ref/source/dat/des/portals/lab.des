@@ -149,10 +149,10 @@ MAP
 ............
 .bbbbbbbbbb.
 .bxxxxdxxxb.
-.bxxxx=xxxb.
+.bxxxx+xxxb.
 .bxx..U.xxb.
-.bd=U...xxb.
-.bxx...U=db.
+.bd+U...xxb.
+.bxx...U+db.
 .bxx.<..xxb.
 .bxxxx+xxxb.
 .bxxxx1xxxb.
@@ -463,6 +463,7 @@ KFEAT:   Y = teleport trap / zot trap / .
 KITEM:   Y = any good_item
 SHUFFLE: cxv
 WEIGHT:  1
+NSUBST:  = = 1:+ / *:+xx
 MAP
 .....
 .x=x.

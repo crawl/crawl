@@ -291,10 +291,6 @@ static void _post_init(bool newc)
         // for new hints mode games also the items.
         zap_los_monsters(Hints.hints_events[HINT_SEEN_FIRST_OBJECT]);
 
-        // For a newly started hints mode, turn secret doors into normal ones.
-        if (crawl_state.game_is_hints())
-            hints_zap_secret_doors();
-
         if (crawl_state.game_is_zotdef())
             fully_map_level();
     }

@@ -715,8 +715,7 @@ static int _noise_attenuation_millis(const coord_def &pos)
     {
     // Closed doors are excellent at cutting off sound.
     case DNGN_CLOSED_DOOR:
-    case DNGN_DETECTED_SECRET_DOOR:
-    case DNGN_SECRET_DOOR:
+    case DNGN_RUNED_DOOR:
         return BASE_NOISE_ATTENUATION_MILLIS * 8;
     case DNGN_TREE:
     case DNGN_MANGROVE:

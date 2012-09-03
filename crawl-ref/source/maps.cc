@@ -361,7 +361,6 @@ static bool _may_overwrite_feature(const coord_def p,
         && grid != DNGN_FLOOR
         && grid != DNGN_SHALLOW_WATER
         && grid != DNGN_OPEN_DOOR
-        && grid != DNGN_SECRET_DOOR
         && !feat_is_closed_door(grid))
     {
         return false;

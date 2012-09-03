@@ -312,18 +312,13 @@ bool feat_has_solid_floor(dungeon_feature_type feat)
 
 bool feat_is_door(dungeon_feature_type feat)
 {
-    return (feat == DNGN_CLOSED_DOOR || feat == DNGN_DETECTED_SECRET_DOOR
+    return (feat == DNGN_CLOSED_DOOR || feat == DNGN_RUNED_DOOR
             || feat == DNGN_OPEN_DOOR);
 }
 
 bool feat_is_closed_door(dungeon_feature_type feat)
 {
-    return (feat == DNGN_CLOSED_DOOR || feat == DNGN_DETECTED_SECRET_DOOR);
-}
-
-bool feat_is_secret_door(dungeon_feature_type feat)
-{
-    return (feat == DNGN_SECRET_DOOR || feat == DNGN_DETECTED_SECRET_DOOR);
+    return (feat == DNGN_CLOSED_DOOR || feat == DNGN_RUNED_DOOR);
 }
 
 bool feat_is_statue_or_idol(dungeon_feature_type feat)
@@ -335,7 +330,6 @@ bool feat_is_rock(dungeon_feature_type feat)
 {
     return (feat == DNGN_ORCISH_IDOL
             || feat == DNGN_GRANITE_STATUE
-            || feat == DNGN_SECRET_DOOR
             || feat >= DNGN_ROCK_WALL
                && feat <= DNGN_CLEAR_PERMAROCK_WALL);
 }
@@ -469,39 +463,10 @@ void find_connected_identical(const coord_def &d, dungeon_feature_type ft,
     }
 }
 
-// Find all connected cells containing ft_min to ft_max, starting at d.
-static void _find_connected_range(const coord_def& d,
-                                  dungeon_feature_type ft_min,
-                                  dungeon_feature_type ft_max,
-                                  set<coord_def>& out)
-{
-    if (grd(d) < ft_min || grd(d) > ft_max)
-        return;
-
-    string prop = env.markers.property_at(d, MAT_ANY, "connected_exclude");
-
-    if (!prop.empty())
-    {
-        // Even if this square is excluded from being a part of connected
-        // cells, add it if it's the starting square.
-        if (out.empty())
-            out.insert(d);
-        return;
-    }
-
-    if (out.insert(d).second)
-    {
-        _find_connected_range(coord_def(d.x+1, d.y), ft_min, ft_max, out);
-        _find_connected_range(coord_def(d.x-1, d.y), ft_min, ft_max, out);
-        _find_connected_range(coord_def(d.x, d.y+1), ft_min, ft_max, out);
-        _find_connected_range(coord_def(d.x, d.y-1), ft_min, ft_max, out);
-    }
-}
-
 set<coord_def> connected_doors(const coord_def& d)
 {
     set<coord_def> doors;
-    _find_connected_range(d, DNGN_CLOSED_DOOR, DNGN_SECRET_DOOR, doors);
+    find_connected_identical(d, grd(d), doors);
     return doors;
 }
 
@@ -527,70 +492,11 @@ dungeon_feature_type grid_appearance(const coord_def &gc)
     dungeon_feature_type feat = env.grid(gc);
     switch (feat)
     {
-    case DNGN_SECRET_DOOR:
-        return grid_secret_door_appearance(gc);
     case DNGN_UNDISCOVERED_TRAP:
         return DNGN_FLOOR;
     default:
         return feat;
     }
-}
-
-bool find_secret_door_info(const coord_def &where,
-                           dungeon_feature_type *appearance,
-                           coord_def *gc)
-{
-    set<coord_def> doors = connected_doors(where);
-    set<coord_def>::iterator it;
-
-    dungeon_feature_type feat = DNGN_FLOOR;
-    coord_def loc = where;
-
-    int orth[][2] = { {0, 1}, {1, 0,}, {-1, 0}, {0, -1} };
-
-    for (it = doors.begin(); it != doors.end(); ++it)
-    {
-        for (int i = 0; i < 4; i++)
-        {
-            const int x = it->x + orth[i][0];
-            const int y = it->y + orth[i][1];
-
-            if (!in_bounds(x, y))
-                continue;
-
-            const dungeon_feature_type targ = grd[x][y];
-            if (!feat_is_wall(targ) || feat_is_closed_door(targ))
-                continue;
-
-            if (feat == DNGN_FLOOR || targ < feat)
-            {
-                feat = targ;
-                loc = coord_def(x, y);
-            }
-        }
-    }
-
-    if (feat == DNGN_FLOOR)
-    {
-        if (appearance)
-            *appearance = DNGN_ROCK_WALL;
-        return false;
-    }
-    else
-    {
-        if (appearance)
-            *appearance = feat;
-        if (gc)
-            *gc = loc;
-        return true;
-    }
-}
-
-dungeon_feature_type grid_secret_door_appearance(const coord_def &where)
-{
-    dungeon_feature_type feat;
-    find_secret_door_info(where, &feat, NULL);
-    return feat;
 }
 
 coord_def get_random_stair()
@@ -1631,12 +1537,18 @@ string stair_climb_verb(dungeon_feature_type feat)
 
 static const char *dngn_feature_names[] =
 {
-"unseen", "closed_door", "detected_secret_door", "secret_door",
+"unseen", "closed_door", "runed_door",
+#if TAG_MAJOR_VERSION == 34
+"non-secret_door",
+#endif
 "mangrove", "metal_wall", "green_crystal_wall", "rock_wall",
 "slimy_wall", "stone_wall", "permarock_wall",
 "clear_rock_wall", "clear_stone_wall", "clear_permarock_wall", "iron_grate",
 "tree", "open_sea", "endless_lava", "orcish_idol",
 "granite_statue", "malign_gateway", "", "", "", "", "", "", "", "", "",
+#if TAG_MAJOR_VERSION != 34
+"",
+#endif
 
 // DNGN_MINMOVE
 "lava", "deep_water",

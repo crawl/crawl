@@ -647,29 +647,29 @@ tukima_marker:add_triggerer(DgnTriggerer:new {
 lua_marker('?', tukima_marker)
 
 if crawl.coinflip() then
-  subst("Y = =")
+  subst("Y = +")
   subst("y = .")
   subst("Rr = c")
 else
   subst("Y = c")
   subst("y = m")
   subst("R = .")
-  subst("r = =")
+  subst("r = +")
 end
 
 if crawl.coinflip() then
-  subst("X = =")
+  subst("X = +")
   subst("x = .")
   subst("Ll = c")
 else
   subst("X = c")
   subst("x = m")
   subst("L = .")
-  subst("l = =")
+  subst("l = +")
 end
 }}
 SUBST:      ? = .
-COLOUR:     =cA< = darkgrey
+COLOUR:     +cA< = darkgrey
 TILE:       c = wall_stone_dark
 TILE:       V = dngn_dry_fountain_white
 LFLOORTILE: floor_pebble_white
@@ -760,6 +760,7 @@ TILE:       c = wall_brick_vines
 LROCKTILE:  wall_brick_vines
 LFLOORTILE: floor_grass
 ITEM:       any fixed theme book, any fixed level book, any magical staff / any rod w:2
+KFEAT:      = = runed_door
 {{
 
 local grow_marker = TriggerableFunction:new { func = "wizlab_eringya_grow",
@@ -989,6 +990,7 @@ COLOUR:     . = darkgrey / blue w:3 / cyan w:1
 MARKER:     ! = lua:portal_desc {wall_drop=1}
 MARKER:     = = lua:portal_desc {wall_drop=1}
 TILE:       ! = dngn_stone_wall_yellow
+KFEAT:      = = runed_door
 {{
 local box_marker = TriggerableFunction:new {
     func="wizlab_doroklohe_convert_boxes",
@@ -1219,7 +1221,7 @@ TILE:       c = wall_zot_magenta
 TILE:       v = dngn_metal_wall_magenta
 LFLOORTILE: floor_rough_magenta
 LFLOORCOL:  magenta
-MARKER:     + = lua:restrict_door()
+KFEAT:      + = runed_door
 MARKER:     R = lua:fog_machine { \
                 pow_max = 10, delay_min = 10, delay_max = 40, \
                 size = 15, cloud_type = "purple smoke" \
@@ -1417,7 +1419,7 @@ KMONS:      F = human name:monk n_suf col:white hd:10 dur:2 sum:shadow_creatures
             dur:2 seen sum:shadow_creatures nas:old_memories tile:mons_rock_troll_monk \
             / iron troll name:monk n_suf col:white dur:2 sum:shadow_creatures \
             nas:old_memories seen tile:mons_iron_troll_monk w:5
-
+KFEAT:      = = runed_door
 {{
 dgn.persist.wucad_mu_died = false
 

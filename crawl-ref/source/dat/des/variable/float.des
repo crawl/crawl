@@ -1161,15 +1161,15 @@ KMONS:   F = orange crystal statue / silver statue / ice statue
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxx3$$xxxxxxxxxxxxx
-ccxxxxxxxxccc=cccccccccxxxx
+ccxxxxxxxxccc+cccccccccxxxx
 cccxxxxxxxc.....c...1$cxxxc
 @Fcx6$.xxxc..1..c...25ccccc
-cccccc=cccc.62..c...15c$$$c
-@+111.....+.63..=..F11=4||c
-cccccc=cccc.62..c...15c$$$c
+cccccc+cccc.62..c...15c$$$c
+@+111.....+.63..+..F11+4||c
+cccccc+cccc.62..c...15c$$$c
 @Fcx6$.xxxc..1..c...25ccccc
 cccxxxxxxxc.....c...1$cxxxc
-ccxxxxxxxxccc=cccccccccxxxx
+ccxxxxxxxxccc+cccccccccxxxx
 xxxxxxxxxxx3$$xxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
@@ -1187,7 +1187,7 @@ KITEM: $ = gold
 MAP
 ........................
 wwwwwwwwwwwwwwwwwwwwwwww
-wcccccccccc==ccccccccccw
+wcccccccccc++ccccccccccw
 wc$..................$cw
 wc.........99.........cw
 wc..cccccccccccccccc..cw
@@ -1244,6 +1244,7 @@ SUBST:  1 = 1:70 2:60 3:25
 MONS:   goliath beetle w:20 / giant cockroach w:30 / butterfly w:20
 MONS:   bumblebee / giant centipede / giant mite w:30
 MONS:   killer bee / scorpion / soldier ant w:5
+KFEAT:  = = runed_door
 MAP
 cccccccc+cccccccc
 c...............c
@@ -1270,6 +1271,7 @@ SUBST:  1 = 1:50 2 3:5
 MONS:   troll
 MONS:   rock troll
 MONS:   iron troll
+KFEAT:  = = runed_door
 MAP
 xxxxx...........................xxxxxx
 xwwwx...........................xxxxxx
@@ -1363,11 +1365,11 @@ KITEM:   > = any good_item
 KFEAT:   > = >
 KFEAT:   ; = altar_yredelemnul/altar_kikubaaqudgha
 SHUFFLE: defg
-SUBST:   d = =, e = x, f = x, g = x
-SUBST:   s = =, ! = x, ? = x
+SUBST:   d = +, e = x, f = x, g = x
+# What are s!? for, exactly?
+SUBST:   s = +, ! = x, ? = x
 SUBST:   1 = 1 .:20
 SUBST:   1 : 1:30 2
-SUBST:   + = +=
 SUBST:   w:w.
 NSUBST:  ? = 2:L / *:?
 SUBST:   ? = L:1 x
@@ -1385,7 +1387,7 @@ wwxx..ccccc6ccccc..xxww
 wwx..ccc33+4+33ccc..xww
 wwx.ccccccc+cccc?cc.xww
 wwx.c***x.....x???c4xww
-wwx.c***=..5..x???c.xww
+wwx.c***+..5..x???c.xww
 wwx4cc**x4.;.4x??cc.xww
 wwx..ccxx.....x?cc..xww
 wwxx..ccx..4..xcc..xxww
@@ -1584,10 +1586,10 @@ TAGS:    no_pool_fixup
 MONS:    ogre, two-headed ogre, ogre mage / Erolcha, plant / fungus
 MONS:    ogre zombie, two-headed ogre zombie
 SHUFFLE: WX/ZY , 12/12/67
-SUBST:   W:ww. , X:. , Z:x , Y:+.=
+SUBST:   W:ww. , X:. , Z:x , Y:+.
 SHUFFLE: *5/WW
 SUBST:   *=. , W=wW , !:$.
-SUBST:   5 = 5 6 = ^:5 I:5 F:5
+SUBST:   5 = 5 6 + ^:5 I:5 F:5
 MAP
               xxxxx
           xxxxxx12xx
@@ -1668,7 +1670,6 @@ DEPTH:   D:23-27, Vaults
 MONS:    generate_awake angel / generate_awake daeva / w:1 angel / w:1 daeva
 COLOUR:  - : yellow
 SUBST:   - : +
-KMASK:   + = no_secret_doors
 MARKER:  ! = lua:message_at_spot ( "You almost think you hear a voice: \
                                    \"Seek not undue power, mortal.\"", \
                                    "warning" )
@@ -1711,7 +1712,7 @@ KITEM:   A = w:1 acquire:the_shining_one any / nothing
 : if crawl.one_chance_in(3) then
 SUBST:   | = .
 SUBST:   % = |
-SUBST:   ? = =
+SUBST:   ? = +
 : else
 SUBST:   % = X
 SUBST:   ? = X
@@ -1721,7 +1722,6 @@ SUBST:   _ : .
 SUBST:   T = T F:1
 COLOUR:  - : yellow
 SUBST:   - : +
-KMASK:   + = no_secret_doors
 MARKER:  ! = lua:message_at_spot ( "You almost think you hear a voice: \
                                    \"Seek not undue power, mortal.\"", \
                                    "warning" )
@@ -1730,7 +1730,7 @@ MAP
     xxxxxxxxxxxxxxx
   xxxXXXXXXXXXXXXXxxx
   xXXX_____A_____XXXx
-  xX%?Wwwww_wwwwW=|Xx
+  xX%?Wwwww_wwwwW+|Xx
   xXXXxWwww_wwwWxXXXx
   xxxXxxWWw_wWWxxXxxx
    xXXxxxx._.xxxxXXx
@@ -1762,7 +1762,7 @@ KITEM:   A = w:1 acquire:the_shining_one any / nothing
 : if crawl.one_chance_in(3) then
 SUBST:   | = .
 SUBST:   % = |
-SUBST:   ? = =
+SUBST:   ? = +
 : else
 SUBST:   % = X
 SUBST:   ? = X
@@ -1772,7 +1772,6 @@ SUBST:   _ : .
 SUBST:   T = T F:1
 COLOUR:  - : yellow
 SUBST:   - : +
-KMASK:   + = no_secret_doors
 MARKER:  ! = lua:message_at_spot ( "You almost think you hear a voice: \
                                    \"Seek not undue power, mortal.\"", \
                                    "warning" )
@@ -1781,7 +1780,7 @@ MAP
       xxxxxxxxxxx
      xxxxxXXXxxxxx
     xxxxxxX|Xxxxxxx
-    xXXXXXX=XXXXXXx
+    xXXXXXX+XXXXXXx
    xxXWWWWTATWWWWXx
   xxxXW.._____..WXx
   xXXXWt..___..tWXx
@@ -1948,7 +1947,7 @@ DEPTH:   D:9-27
 TAGS:    no_monster_gen no_rotate
 MONS:    patrolling guardian serpent
 SHUFFLE: yY/zZ
-SUBST:   y=., Y==, Z=x, z=b
+SUBST:   y=., Y=+, Z=x, z=b
 COLOUR:  *. = lightgreen
 SUBST:   ' = .
 MAP
@@ -2059,7 +2058,6 @@ TAGS:    no_item_gen no_monster_gen
 MONS:    ice beast / nothing
 ITEM:    nothing, nothing
 SHUFFLE: 1ef
-SUBST:   + : +=
 SUBST:   * : *$
 SUBST:   * = ***.|
 MARKER:  1 = lua:fog_machine { cloud_type = "freezing vapour", \
@@ -2108,6 +2106,7 @@ SHUFFLE: Bb/Mm/Mm/Mm
 COLOUR:  B = blue
 SUBST:   M=. , m=n, B=. , b=c
 SUBST:   + : +=
+KFEAT:   = = runed_door
 SUBST:   * : *$
 MARKER:  1 = lua:fog_machine { cloud_type = "freezing vapour", \
               pow_min = 5, pow_max = 5, delay = 120, start_clouds = 1, \
@@ -2617,6 +2616,7 @@ NAME:    hangedman_arrow_trap
 ORIENT:  float
 DEPTH:   D:12-
 SHUFFLE: {( / })
+KFEAT:   = = runed_door
 MAP
 xx=xxxxxxxxxxxx=xx
 x.xxxx|x{(x|xxxx.x
@@ -2685,7 +2685,7 @@ KMONS:  b = w:100 nothing / w:5 crimson imp / w:2 white imp / w:2 iron imp \
             / w:1 shadow imp
 KPROP:  b = nothing / w:5 bloody
 KITEM:  b = nothing / w:1 gold
-MARKER: + = lua:restrict_door()
+KFEAT:  = = runed_door
 MARKER:  H = lua:props_marker { stop_explore = "statue" }
 KFEAT:   HI = G
 MAP
@@ -2760,8 +2760,8 @@ x""""WWwwxcc''''ccxxWWWwwwWWWWx
 x""""Wwwwxcc''''ccxWWWwwwWWWWWx
 x"11Wwxxxxcc.''.ccxWwwwwxxxxxxx
 x1"WWwwwWWxcc++ccxWwwwWW"11""1x
-x"""WWwwwWWxc..cxWWWwwwWW""xx=x
-xx"1"WWwwxxxxx=xxxxWWwwwWW"x''x
+x"""WWwwwWWxc..cxWWWwwwWW""xx+x
+xx"1"WWwwxxxxx+xxxxWWwwwWW"x''x
 xx""1WWwxxWW.....xxxWWwwWWWx''x
 x1"""Wxxx"W..''..WWxxWwwWWWx''x
 x""Wxxx""WW.''''..WWxxWwwW"x''x
@@ -2808,7 +2808,7 @@ x......x.xxxx..xx..xx.0xxx
 ...xx...xxxxx..xx.0xx..xxx
 x......xxxxxx..xx..xx0.xxx
 xx....xxxx.............xxx
-xx....xxxx.xcccccc=ccccccx
+xx....xxxx.xcccccc+ccccccx
 x......xxx.xc..xxx.xxx..cx
 ...xx...xx.xcxxxx...xxxxcx
 ...xxx..+..xcxxxx0'0xxxxcx
@@ -2843,7 +2843,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x""""""1;;;;;;;xxxxxxxxxxxxxxxcxxxxxxxxxxxxxxxx.+.9xx
 x""""""";"t"t";xxxxxGxcxGxcxGxcxGxcxGxcxGxxxxxx.xxxxx
 x""""""1;;;;;;;+.....+.................+.....+;;x'%'x
-x""""""";;"";;xxxx.xGxcxGxcxGc=cGxcxGxcxGx.xxx.;x.'0x
+x""""""";;"";;xxxx.xGxcxGxcxGc+cGxcxGxcxGx.xxx.;x.'0x
 x""""""1;2222;"t"c+ccccccccccc'ccccccccccc+c...;x'0'x
 x"""""1";2tt2;t"tc.cn%xxx'.'.'''.'0'xxx%nc.c...;xxx+x
 x1"1"1"1;2222;"t"c.nc%+...'0'.'9'.'...+%cn.c...;;;;;x
@@ -2898,7 +2898,6 @@ ENDMAP
 NAME: wad_mega_maze
 ORIENT: float
 WEIGHT: 4
-NSUBST: ? = 1:n / 1:= / *:X
 SUBST:  X : cccvvb
 MAP
 X@XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -2910,11 +2909,11 @@ X.XXXXX.X.XXXXX...X.X.X....X.X.X.XXX.XX.X......X
 X....XX.X.XXXXXXXXX.X.X.XX.X.X.X.XXX.X%9X.XXXXXX
 XXXX.XX.X...........X.X.XXXX.X.X.XXX.XXXX.XG...X
 X.....X.XXXXXXX.XXXXX.X....X.X.X.XXX......XXXX.X
-X.XX.XX..X....X.....X.X.XX.X.X.X.?X?XXXXXXXXXX.X
-X.XXXXXX.X.XX.XXXXXXX.XGXX.....X.?|?...XX....X.X
-X......X.X.XXXXXXXXXXXXXXXXXXXXX.?|?.X.XX.XX.X.X
-XXXXXX.X.X..........~............?|?.X....XX.X.X
-X.XXXX.X.X.XXXXXXXX.X.XXXXXXXXXX.???XXXXXXXX.X.X
+X.XX.XX..X....X.....X.X.XX.X.X.X.XXXXXXXXXXXXX.X
+X.XXXXXX.X.XX.XXXXXXX.XGXX.....X.X|X...XX....X.X
+X......X.X.XXXXXXXXXXXXXXXXXXXXX.n|X.X.XX.XX.X.X
+XXXXXX.X.X..........~............X|+.X....XX.X.X
+X.XXXX.X.X.XXXXXXXX.X.XXXXXXXXXX.XXXXXXXXXXX.X.X
 X.XXXX.X.X.X.XX...X.X.XXXXX....X.XX..........X.X
 X......X...X....XXX.X.X...X.XX.X.XX.XXX.XXXXXX.X
 XXXXXX.XXXXXXX.XXXX.X.XXX.X.XX.X....XXX........X
@@ -3011,7 +3010,7 @@ XXXXX+XXXXnXnXXXX+XXXXX
 XXXXX.XXX..*..XXX.XXXXX
 XXXXXX.XXX..0XXX.XXXXXX
 XXXXXXX.XXX9XXX.XXXXXXX
-XXXXXXXX.XX=XX.XXXXXXXX
+XXXXXXXX.XX+XX.XXXXXXXX
 XXXXXXXXX.X.X.XXXXXXXXX
 XXXXXXXGXX.X.XXGXXXXXXX
 X0......XXX.XXX.~...0%X
@@ -3402,8 +3401,8 @@ FTILE:  '+_!$%*|1234D = floor_vault
 TILE:   v = dngn_metal_wall_white
 TILE:   c = dngn_transparent_wall_white
 COLOUR: v = white
-MARKER: D = lua:restrict_door()
-SUBST:  D = +, !' = .
+KFEAT:  D = runed_door
+SUBST:  !' = .
 : set_feature_name("metal_wall", "silver wall")
 MAP
 ............@@@@@@@............

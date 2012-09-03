@@ -5639,8 +5639,8 @@ string keyed_mapspec::set_mask(const string &s, bool garbage)
     {
         static string flag_list[] =
             {"vault", "no_item_gen", "no_monster_gen", "no_pool_fixup",
-             "no_secret_doors", "no_wall_fixup", "opaque", "no_trap_gen",
-             ""};
+             "UNUSED",
+             "no_wall_fixup", "opaque", "no_trap_gen", ""};
         map_mask = map_flags::parse(flag_list, s);
     }
     catch (const string &error)

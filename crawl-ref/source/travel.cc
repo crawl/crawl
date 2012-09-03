@@ -245,7 +245,7 @@ bool feat_is_traversable_now(dungeon_feature_type grid)
         }
 
         // You can't open doors in bat form.
-        if (grid == DNGN_CLOSED_DOOR || grid == DNGN_DETECTED_SECRET_DOOR)
+        if (grid == DNGN_CLOSED_DOOR || grid == DNGN_RUNED_DOOR)
             return player_can_open_doors();
     }
 
@@ -260,7 +260,7 @@ bool feat_is_traversable(dungeon_feature_type feat)
         return false;
     else if (feat == DNGN_TELEPORTER) // never ever enter it automatically
         return false;
-    else if (feat >= DNGN_MINWALK || feat == DNGN_DETECTED_SECRET_DOOR
+    else if (feat >= DNGN_MINWALK || feat == DNGN_RUNED_DOOR
              || feat == DNGN_CLOSED_DOOR)
     {
         return true;
@@ -329,6 +329,7 @@ static bool _is_reseedable(const coord_def& c, bool ignore_danger = false)
 
     return (feat_is_water(grid)
             || grid == DNGN_LAVA
+            || grid == DNGN_RUNED_DOOR
             || is_trap(c)
             || !ignore_danger && _monster_blocks_travel(cell.monsterinfo())
             || g_Slime_Wall_Check && slime_wall_neighbour(c)
@@ -449,6 +450,9 @@ static bool _is_travelsafe_square(const coord_def& c, bool ignore_hostile,
             return true;
     }
 
+    if (levelmap_cell.feat() == DNGN_RUNED_DOOR)
+        return false;
+
     return feat_is_traversable_now(grid);
 }
 
@@ -552,6 +556,7 @@ static bool _prompt_stop_explore(int es_why)
 #define ES_altar  (Options.explore_stop & ES_ALTAR)
 #define ES_portal (Options.explore_stop & ES_PORTAL)
 #define ES_branch (Options.explore_stop & ES_BRANCH)
+#define ES_rdoor  (Options.explore_stop & ES_RUNED_DOOR)
 #define ES_stack  (Options.explore_stop & ES_GREEDY_VISITED_ITEM_STACK)
 #define ES_sacrificeable (Options.explore_stop & ES_GREEDY_SACRIFICEABLE)
 
@@ -4074,7 +4079,8 @@ void runrest::clear()
 explore_discoveries::explore_discoveries()
     : can_autopickup(::can_autopickup()),
       sacrifice(god_likes_items(you.religion, true)), es_flags(0),
-      current_level(NULL), items(), stairs(), portals(), shops(), altars()
+      current_level(NULL), items(), stairs(), portals(), shops(), altars(),
+      runed_doors()
 {
 }
 
@@ -4131,6 +4137,27 @@ void explore_discoveries::found_feature(const coord_def &pos,
         const named_thing<int> portal(cleaned_feature_description(pos), 1);
         add_stair(portal);
         es_flags |= ES_PORTAL;
+    }
+    else if (feat == DNGN_RUNED_DOOR && ES_rdoor)
+    {
+        for (orth_adjacent_iterator ai(pos); ai; ++ai)
+        {
+            // If any neighbours have been seen (and thus announced) before,
+            // skip.  For parts seen for the first time this turn, announce
+            // only the upper leftmost cell.
+            if (env.map_shadow(*ai).feat() == DNGN_RUNED_DOOR
+                || env.map_knowledge(*ai).feat() == DNGN_RUNED_DOOR && *ai < pos)
+            {
+                return;
+            }
+        }
+
+        string desc = env.markers.property_at(pos, MAT_ANY, "stop_explore");
+        if (desc.empty())
+            desc = cleaned_feature_description(pos);
+        const named_thing<int> rdoor(desc, 1);
+        runed_doors.push_back(rdoor);
+        es_flags |= ES_RUNED_DOOR;
     }
     else if (feat_is_altar(feat)
              && ES_altar
@@ -4336,6 +4363,7 @@ bool explore_discoveries::prompt_stop() const
     say_any(apply_quantities(altars), "altar");
     say_any(apply_quantities(portals), "portal");
     say_any(apply_quantities(stairs), "stair");
+    say_any(apply_quantities(runed_doors), "runed door");
 
     return ((Options.explore_stop_prompt & es_flags) != es_flags
             || marker_stop

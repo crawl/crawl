@@ -2630,6 +2630,10 @@ void unmarshallMapCell(reader &th, map_cell& cell)
 
     if (flags & MAP_SERIALIZE_FEATURE)
         feature = (dungeon_feature_type)unmarshallUnsigned(th);
+#if TAG_MAJOR_VERSION == 34
+    if (feature == DNGN_OLD_SECRET_DOOR)
+        feature = DNGN_CLOSED_DOOR;
+#endif
 
     if (flags & MAP_SERIALIZE_FEATURE_COLOUR)
         feat_colour = unmarshallUnsigned(th);
@@ -2988,6 +2992,10 @@ static void tag_read_level(reader &th)
             dungeon_feature_type feat = static_cast<dungeon_feature_type>(unmarshallUByte(th));
             grd[i][j] = feat;
             ASSERT(feat < NUM_FEATURES);
+#if TAG_MAJOR_VERSION == 34
+            if (feat == DNGN_OLD_SECRET_DOOR)
+                grd[i][j] = DNGN_CLOSED_DOOR;
+#endif
 
             unmarshallMapCell(th, env.map_knowledge[i][j]);
             // Fixup positions

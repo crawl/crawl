@@ -182,10 +182,8 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
         return TILE_WALL_SLIME;
     case DNGN_OPEN_SEA:
         return TILE_DNGN_OPEN_SEA;
-    case DNGN_SECRET_DOOR:
-        return TILE_WALL_NORMAL;
-    case DNGN_DETECTED_SECRET_DOOR:
-        return TILE_DNGN_CLOSED_DOOR;
+    case DNGN_RUNED_DOOR:
+        return TILE_DNGN_RUNED_DOOR;
     case DNGN_GRATE:
         return TILE_DNGN_GRATE;
     case DNGN_CLEAR_ROCK_WALL:
@@ -396,7 +394,7 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
 
 bool is_door_tile(tileidx_t tile)
 {
-    return tile >= TILE_DNGN_DETECTED_SECRET_DOOR &&
+    return tile >= TILE_DNGN_RUNED_DOOR &&
         tile < TILE_DNGN_ORCISH_IDOL;
 }
 
@@ -434,19 +432,7 @@ tileidx_t tileidx_feature(const coord_def &gc)
                 return TILE_FLOOR_SLIME_ACIDIC;
         }
         return _tileidx_feature_base(feat);
-    case DNGN_SECRET_DOOR:
-    case DNGN_DETECTED_SECRET_DOOR:
-    {
-        if (override && !is_door_tile(override))
-            return override;
 
-        coord_def door;
-        dungeon_feature_type door_feat;
-
-        // FIXME: This accesses grd directly, instead of map_knowledge
-        find_secret_door_info(gc, &door_feat, &door);
-        return _tileidx_feature_base(door_feat);
-    }
     case DNGN_TRAP_MECHANICAL:
     case DNGN_TRAP_MAGICAL:
     case DNGN_TRAP_NATURAL:
@@ -4650,7 +4636,7 @@ tileidx_t tileidx_skill(skill_type skill, int train)
     case SK_STEALTH:        ch = TILEG_STEALTH_ON; break;
     case SK_STABBING:       ch = TILEG_STABBING_ON; break;
     case SK_SHIELDS:        ch = TILEG_SHIELDS_ON; break;
-    case SK_TRAPS_DOORS:    ch = TILEG_TRAPS_DOORS_ON; break;
+    case SK_TRAPS:          ch = TILEG_TRAPS_ON; break;
     case SK_UNARMED_COMBAT: ch = TILEG_UNARMED_COMBAT_ON; break;
     case SK_SPELLCASTING:   ch = TILEG_SPELLCASTING_ON; break;
     case SK_CONJURATIONS:   ch = TILEG_CONJURATIONS_ON; break;

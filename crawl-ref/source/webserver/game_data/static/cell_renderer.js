@@ -443,9 +443,6 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
 
             if (bg_idx > dngn.DNGN_UNSEEN)
             {
-                if (bg.WAS_SECRET)
-                    this.draw_dngn(dngn.DNGN_DETECTED_SECRET_DOOR, x, y);
-
                 // Draw blood on top of wall tiles.
                 if (bg_idx <= dngn.WALL_MAX)
                     this.draw_blood_overlay(x, y, cell, bg_idx >= dngn.FLOOR_MAX);
