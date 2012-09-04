@@ -441,19 +441,19 @@ MAP
   ccc~<~ccc
 cccccc+cccccc
 ct1..w.w..1sc
-c=cccw.wccc=c
+c+cccw.wccc+c
 ct1..w.w..1sc
-c=cccw.wccc=c
+c+cccw.wccc+c
 ct1..w.w..1sc
-c=cccw.wccc=c
+c+cccw.wccc+c
 ct1..w.w..1sc
-c=cccw.wccc=c
+c+cccw.wccc+c
 ct1..w.w..1sc
-c=cccw.wccc=c
+c+cccw.wccc+c
 ct1..w.w..1sc
-c=cccw.wccc=c
+c+cccw.wccc+c
 ct1..w.w..1sc
-c=cccw.wccc=c
+c+cccw.wccc+c
 ct1..w.w..1sc
 cccccc+cccccc
     c...c
@@ -493,23 +493,23 @@ ITEM:   potion of experience w:30 / potion of cure mutation w:30 /\
 MAP
 ccc ccc ccccc ccc ccc
 cAccc1ccc2+2ccc1ccc1c
-cc+cc=cc+ccc+cc=cc+cc
+cc+cc+cc+ccc+cc+cc+cc
  cc.....cc cc.....cc
 ccc.....ccccc.....ccc
-c1=..<..=1c1=..T..=1c
+c1+..<..+1c1+..T..+1c
 ccc.....ccccc.....ccc
  cc....dcc ccd....cc
-cc+cc=cc+ccc+cc=cc+cc
+cc+cc+cc+ccc+cc+cc+cc
 c1ccc1ccc2c2ccc1ccc2c
 ccc ccc ccncc ccc c+c
 c1ccc1ccc2c2ccc1ccc2c
-cc+cc=cc+ccc+cc=cc+cc
+cc+cc+cc+ccc+cc+cc+cc
  cce.e.ecc ccd....cc
 ccc.e2e.ccccc.....ccc
-c1=e2U3e=1c1=..Y..=1c
+c1+e2U3e+1c1+..Y..+1c
 ccc.e2e.ccccc.....ccc
  cce.e.ecc cc.....cc
-cc+cc=cc+ccc+cc=cc+cc
+cc+cc+cc+ccc+cc+cc+cc
 c<ccc1ccc2+2ccc1ccc1c
 ccc ccc ccccc ccc ccc
 ENDMAP
@@ -536,6 +536,7 @@ KFEAT:  T = teleport trap
 : hard_axe_fighter(_G)
 #
 : bailey_setup(_G)
+KFEAT: = = runed_door
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxx.....xxxxxxxxxxx
@@ -547,15 +548,15 @@ xxxxxxxxxxxc"""cxxxxxxxxxxx
 xxxxxxxxcccc'''ccccxxxxxxxx
 xxxxxxxccw.......wccxxxxxxx
 xxxcccccww.......wwcccccxxx
-xxxc.=1+ww.......ww+1=.cxxx
+xxxc.+1+ww.......ww+1+.cxxx
 xxxc.cccww.......wwccc.cxxx
-xxxc.=1+ww.......ww+1=.cxxx
+xxxc.+1+ww.......ww+1+.cxxx
 xxxc.cccww.......wwccc.cxxx
-xxxc.=1+ww.......ww+1=.cxxx
+xxxc.+1+ww.......ww+1+.cxxx
 xxxc.cccww.......wwccc.cxxx
-xxxc.=1+ww.......ww+1=.cxxx
+xxxc.+1+ww.......ww+1+.cxxx
 xxxc.cccww.......wwccc.cxxx
-xxxcT=1+ww.......ww+1=Tcxxx
+xxxcT+1+ww.......ww+1+Tcxxx
 xxxcccccww.......wwcccccxxx
 xxxxxxxccw.......wccxxxxxxx
 xxxxxxxxcccc+++ccccxxxxxxxx
@@ -593,12 +594,12 @@ SUBST:   e : eeef
 NSUBST:  f = 1:f / *:.
 SUBST:   e = e..
 SHUFFLE: EB / XY / XY / XY
-SUBST:   X = c, Y = =
-NSUBST:  E = 1:= / *:c
+SUBST:   X = c, Y = +
+NSUBST:  E = 1:+ / *:c
 SUBST:   B = c
 SHUFFLE: CD / XY / XY / XY
-SUBST:   X = c, Y = =
-NSUBST:  C = 1:= / *:c
+SUBST:   X = c, Y = +
+NSUBST:  C = 1:+ / *:c
 SUBST:   D = c
 #
 KFEAT:   ~ = net trap
@@ -619,7 +620,7 @@ cccccccccccccccccccccccccc..??.d.??d<cccccccccccccc
 ccccccccccccccccccccccccc.??..???..?ccccccccccccccc
 ccccccccccccccccccccccccc.ccccccccccccccccccccccccc
 ccccccccccccc.......................ccccccccccccccc
-cccccccccc...........cccc=cccc.......cccccccccccccc
+cccccccccc...........ccccccccc.......cccccccccccccc
 ccccccccc....2....c+cc...3...ccccCc..cccccccccccccc
 cccccccc....2T2...c..c.2.d.2.c.1CdC...ccccccccccccc
 ccccccccc....2..cEc..c.2.~.2.c..cDc...1cwwwwcccwwwc
@@ -671,6 +672,7 @@ ITEM:   potion of gain strength / potion of gain intelligence / \
 MONS:   orc warlord
 : bailey_setup(_G)
 SUBST:  I = t.
+KFEAT:  = = runed_door
 MAP
 ttttttttttttttttttttttttttttttttttttt
 ttttttttttttttttttttttttttttttttttttt
@@ -740,8 +742,8 @@ NAME:   bailey_polearm_1
 WEIGHT: 10
 ORIENT: encompass
 TAGS:   bailey_polearm no_rotate no_pool_fixup
-NSUBST: D = 1:= / *:c
-NSUBST: E = 1:= / *:c
+NSUBST: D = 1:+ / *:c
+NSUBST: E = 1:+ / *:c
 : orc_with_polearm(_G)
 : orc_warrior_with_polearm(_G)
 : orc_knight_with_polearm(_G)
@@ -755,6 +757,7 @@ ITEM:   good_item cloak race:orcish / good_item pair of gloves race:orcish /\
         good_item helmet race:orcish / good_item pair of boots race:orcish /\
         good_item large shield race:orcish / good_item shield race:orcish
 : bailey_setup(_G)
+KFEAT:  = = runed_door
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xAxxxxxxxxxxx.........xxxxxxxxxxxxx
@@ -773,7 +776,7 @@ xx.ww..c+c..ll..TTT..ll..c+c..ww.<x
 x.ww1.cc.cD..ll2...2ll..cc.cc.1ww.x
 x.w..cc...DD..lllllll..cc.$.cc..w.x
 x.w1cc2....Dc.........cc.$$$.cc1w.x
-x.w.ccccccccccccc=ccc+ccccccccc.w.x
+x.w.ccccccccccccc+ccc+ccccccccc.w.x
 x.w1..1..1..1cc.....cc1..1..1..1w.x
 x.wwwwwwwwww..cc.<.cc..wwwwwwwwww.x
 x..........ww.1nc.cn1.ww..........x
@@ -827,13 +830,13 @@ x......wcc.ccwWWWWWWWWWWWWWWWwcc.ccw......x
 x......wwc1cwwWWWWWWcccWWWWWWwwc1cww......x
 x......WwwwwwWWWWcccccccccWWWWwwwwwW......x
 x......WWWWWWWWWccWWWWWWWccWWWWWWWWW......x
-x......WWWWWWWWccWWc=c=cWWccWWWWWWWW......x
+x......WWWWWWWWccWWc+c+cWWccWWWWWWWW......x
 x......WWWWWWWWcWWcc2c2ccWWcWWWWWWWW......x
 x......WWWWWWWccWccvvvvvccWccWWWWWWW......x
-x......WWWWWWWccW=2vd4dv2=WccWWWWWWW......x
+x......WWWWWWWccW+2vd4dv2+WccWWWWWWW......x
 x......WWWWWWWccWccv4X4vccWccWWWWWWW......x
-x......WWWWWWWccW=2v.4.v2=WccWWWWWWW......x
-x......WWWWWWWccWccvv=vvccWccWWWWWWW......x
+x......WWWWWWWccW+2v.4.v2+WccWWWWWWW......x
+x......WWWWWWWccWccvv+vvccWccWWWWWWW......x
 x......WWWWWWWccWWcc<d<ccWWcWWWWWWWW......x
 x......WWWWWWWWWWWcc+++cWWccWWWWWWWW......x
 x......WWWWWWWWWWWccWWWWWccWWWWWWWWW......x
