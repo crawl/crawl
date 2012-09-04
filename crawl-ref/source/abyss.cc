@@ -987,37 +987,8 @@ static dungeon_feature_type _abyss_grid(const coord_def &p, double depth,
                                         cloud_type &cloud, int &cloud_lifetime)
 {
     const coord_def pt = p + abyssal_state.major_coord; 
-    const dungeon_feature_type terrain_elements[] =
-    {
-        DNGN_ROCK_WALL,
-        DNGN_ROCK_WALL,
-        DNGN_ROCK_WALL,
-        DNGN_ROCK_WALL,
-        DNGN_ROCK_WALL,
-        DNGN_STONE_WALL,
-        DNGN_STONE_WALL,
-        DNGN_STONE_WALL,
-        DNGN_METAL_WALL,
-        DNGN_METAL_WALL,
-        DNGN_GREEN_CRYSTAL_WALL,
-    };
-    const int n_terrain_elements = ARRAYSZ(terrain_elements);
-
-    const int NUM_CLOUDS = 6;
-    const cloud_type clouds[NUM_CLOUDS] =
-    {
-        CLOUD_BLACK_SMOKE,
-        CLOUD_GREY_SMOKE,
-        CLOUD_BLUE_SMOKE,
-        CLOUD_PURPLE_SMOKE,
-        CLOUD_TLOC_ENERGY,
-        CLOUD_MIST
-    };
-    ColumnLayout layout1(2);
-    ColumnLayout layout2(2, 4);
-    MaxLayout base(layout1, layout2); 
-    TurbulentLayout layout(base, 4.0, 0.1);
-    dungeon_feature_type feat = layout[pt];
+    ChaoticLayout layout(8675309);
+    dungeon_feature_type feat = layout(pt, depth);
     _previous_abyss_feature[p.x][p.y] = feat;
     return feat;
 }

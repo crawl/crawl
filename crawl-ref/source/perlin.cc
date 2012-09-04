@@ -17,7 +17,7 @@ double primes[] = {
 
 double theta = 0.81649658092;
 
-static double fhash3(int x, int y, int z)
+uint64_t hash3(int x, int y, int z)
 {
     // Some compilers choke on big unsigneds, need to give them in hex.
     uint64_t hash=0xcbf29ce484222325ULL; // 14695981039346656037
@@ -30,7 +30,12 @@ static double fhash3(int x, int y, int z)
     hash*=FNV64;
 
     x=hash ^ (hash >> 27) ^ (hash << 24) ^ (hash >> 48);
-    return x / 2147483648.0;
+    return x;
+}
+
+static double fhash3(int x, int y, int z)
+{
+   return hash3(x, y, z) / 2147483648.0;
 }
 
 static double interpolate(double x, double y, double d)
