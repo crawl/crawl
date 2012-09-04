@@ -1584,18 +1584,6 @@ void note_inscribe_item(item_def &item)
     _check_note_item(item);
 }
 
-static void _abyssal_rune_collected()
-{
-    if (player_in_branch(BRANCH_ABYSS))
-    {
-        mprf("The Abyss %s %saround you!",
-             coinflip() ? "trembles" : "shudders",
-             silenced(you.pos()) ? "" : "and groans ");
-
-        abyss_teleport(true);
-    }
-}
-
 // Returns quantity of items moved into player's inventory and -1 if
 // the player's inventory is full.
 int move_item_to_player(int obj, int quant_got, bool quiet,
@@ -1654,9 +1642,6 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
 
             mpr("Press } to see all the runes you have collected.");
         }
-
-        if (mitm[obj].plus == RUNE_ABYSSAL)
-            _abyssal_rune_collected();
 
         if (mitm[obj].plus == RUNE_TOMB)
             add_daction(DACT_TOMB_CTELE);
