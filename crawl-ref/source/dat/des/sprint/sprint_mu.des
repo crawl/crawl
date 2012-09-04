@@ -1039,7 +1039,6 @@ KITEM: 1234567 = star_item / nothing
 KFEAT: ^ = zot trap
 KFEAT: - = spear trap / needle trap / net trap / blade trap / bolt trap
 NSUBST: ~ = 1:^ / 10:- / *:.
-SUBST: + = +==
 SUBST: ! = +
 
 MAP
