@@ -713,21 +713,12 @@ MONS:    w:30 nothing / ooze
 MONS:    w:20 nothing / jackal / rat
 MONS:    w:30 nothing / ooze / w:2 jelly / giant cockroach / w:2 worm / \
          w:5 jackal / w:5 rat
-# There is a very slight chance that a jelly or an intelligent monster
-# (hobgoblin) might spawn inside near the door. This is okay; added an exit.
 ORIENT:  float
 FTILE:   1234+ABCDEabcdem = floor_dirt
 SHUFFLE: abcde / fghij
-# Don't let auto-explore open the door and unleash the caged monsters.
-MARKER:   + = lua:props_marker { \
-            door_open_prompt="This door is covered in warnings. Open " .. \
-                             "it anyway?", \
-            door_description_prefix="warning-scrawled " \
-         }
 SUBST:   f=A, g=B, h=C, i=D, j=E
 SUBST:   abcde = mx
 SUBST:   ABCDE : mx
-SUBST:   ===++
 KFEAT:   = = runed_door
 SHUFFLE: xc, 123
 KMASK:   T = no_monster_gen
@@ -737,12 +728,12 @@ MAP
 .x4441321331444x.
 .x4312132211324x.
 .x4123213123134x.
-.xABCDEm+medcbax.
+.xABCDEm=medcbax.
 .x.............x.
-.=T....xxx....T=.
+.+T....xxx....T+.
 .x.....({[.....x.
 .x..T...]...T..x.
-.xxx=xxxxxxx=xxx.
+.xxx+xxxxxxx+xxx.
 .................
 ENDMAP
 
