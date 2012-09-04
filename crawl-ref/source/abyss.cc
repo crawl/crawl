@@ -986,6 +986,7 @@ static bool _abyss_teleport_within_level()
 static dungeon_feature_type _abyss_grid(const coord_def &p, double depth,
                                         cloud_type &cloud, int &cloud_lifetime)
 {
+    const coord_def pt = p + abyssal_state.major_coord; 
     const dungeon_feature_type terrain_elements[] =
     {
         DNGN_ROCK_WALL,
@@ -1013,7 +1014,7 @@ static dungeon_feature_type _abyss_grid(const coord_def &p, double depth,
         CLOUD_MIST
     };
     ColumnLayout layout(2);
-    dungeon_feature_type feat = layout.get(p);
+    dungeon_feature_type feat = layout.get(pt);
     _previous_abyss_feature[p.x][p.y] = feat;
     return feat;
 }
