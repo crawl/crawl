@@ -1013,8 +1013,11 @@ static dungeon_feature_type _abyss_grid(const coord_def &p, double depth,
         CLOUD_TLOC_ENERGY,
         CLOUD_MIST
     };
-    ColumnLayout layout(2);
-    dungeon_feature_type feat = layout.get(pt);
+    ColumnLayout layout1(2);
+    ColumnLayout layout2(2, 4);
+    MaxLayout base(layout1, layout2); 
+    TurbulentLayout layout(base, 4.0, 0.1);
+    dungeon_feature_type feat = layout[pt];
     _previous_abyss_feature[p.x][p.y] = feat;
     return feat;
 }

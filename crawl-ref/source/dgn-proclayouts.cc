@@ -6,7 +6,7 @@
 #include "dgn-proclayouts.h"
 
 dungeon_feature_type
-ColumnLayout::get(const coord_def &p)
+ColumnLayout::operator[](const coord_def &p)
 {
   int x = p.x % (_col_width + _col_space);
   int y = p.y % (_row_width + _row_space);
@@ -14,3 +14,16 @@ ColumnLayout::get(const coord_def &p)
     return DNGN_MINWALL;
   return DNGN_FLOOR; 
 }
+
+dungeon_feature_type 
+MaxLayout::operator[](const coord_def &p)
+{
+  return min(_a[p], _b[p]);
+} 
+
+dungeon_feature_type 
+MinLayout::operator[](const coord_def &p)
+{
+  // Dungeon features become 'softer' as they increase in value.
+  return max(_a[p], _b[p]);
+} 
