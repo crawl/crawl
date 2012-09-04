@@ -200,7 +200,7 @@ weapon_type str_to_weapon(const string &str)
         return WPN_SHORT_SWORD;
     else if (str == "falchion")
         return WPN_FALCHION;
-    else if (str == "quarterstaff")
+    else if (str == "quarterstaff" || str == "staff")
         return WPN_QUARTERSTAFF;
     else if (str == "mace")
         return WPN_MACE;
@@ -208,7 +208,7 @@ weapon_type str_to_weapon(const string &str)
         return WPN_SPEAR;
     else if (str == "trident")
         return WPN_TRIDENT;
-    else if (str == "hand axe" || str == "handaxe")
+    else if (str == "hand axe" || str == "handaxe" || str == "axe")
         return WPN_HAND_AXE;
     else if (str == "unarmed" || str == "claws")
         return WPN_UNARMED;
