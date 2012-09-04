@@ -180,12 +180,15 @@ blink_frog MONS_BLINK_FROG
 spiny_frog MONS_SPINY_FROG
 
 ## Snakes ('S')
+%rim 0
 ball_python MONS_BALL_PYTHON
 adder MONS_ADDER
 black_mamba MONS_BLACK_MAMBA
 water_moccasin MONS_WATER_MOCCASIN
 anaconda MONS_ANACONDA
+%rim 1
 lava_snake MONS_LAVA_SNAKE
+%rim 0
 sea_snake MONS_SEA_SNAKE
 
 ## Bears ('U')
