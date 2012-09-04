@@ -531,12 +531,6 @@ MARKER:  * = lua:fog_machine { \
                  size = 2, size_buildup_amnt = 5, \
                  size_buildup_time = 25, cloud_type = "freezing vapour" \
              }
-KFEAT: ~ = closed_door
-MARKER: ~ = lua:restrict_door({ \
-            door_open_prompt="This door is covered in warnings. Open " .. \
-                             "it anyway?", \
-            door_description_prefix="warning-scrawled " \
-         })
 KFEAT: = = runed_door
 
 MAP
@@ -548,10 +542,10 @@ X.6px!!"!"!!!!tttttttx23tttttttttttttttttt
 X.68x!!!"!!!!!tttttttxxx+ttttttttttttttttt
 Xxx+xxxx=xxxxxxxtttttttthxx..xxWWWWWw.icrr
 X...........a...tttttg..xxhxx.xWWWWw..icrr
-Xx~xxxxxxxxxxxxx+ttttt.xxAxxhxx+WWqwwxxcc+
+Xx=mxxxxxxxxxxxx+ttttt.xxAxxhxx+WWqwwxxcc+
 X...xWp.b........ttttt..x.xx...xWw......*.
-X...~WW.fbxxxxxxxxttttt.xx.xx.sxw..=xxxccc
-Xee.xWWW..bf....dpptttt.xx.xxxxx...x....jk
+X...=WW.fbxxxxxxxxttttt.xx.xx.sxw..=xxxccc
+Xee.mWWW..bf....dpptttt.xx.xxxxx...x....jk
 Xee.xWWWWpfbpp...dptttg....xxu.....xttt%_j
 ENDMAP
 

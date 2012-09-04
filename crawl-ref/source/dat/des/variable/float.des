@@ -1333,11 +1333,7 @@ MONS:   hippogriff / griffon
 MONS:   yak / sheep / weight:3 death yak
 MONS:   hound / wolf / hog
 SUBST:  1 = 1:30 2 3 4 .
-MARKER: + = lua:props_marker { \
-            door_open_prompt="This door is covered in warnings. Open " .. \
-                             "it anyway?", \
-            door_description_prefix="warning-scrawled " \
-        }
+KFEAT:  = = runed_door
 MAP
 cccccccccc
 c.1.1.1.1c
@@ -1345,7 +1341,7 @@ c1.1.1.1.c
 c.1.1.1.1c
 c1.1.1.1.c
 c.1.1.1.1c
-cnn++++nnc
+cnn====nnc
 ..........
 @........@
 ..........
