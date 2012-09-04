@@ -1307,7 +1307,6 @@ KMONS:  F = patrolling reaper
 : end
 SUBST:  n : ncc
 KFEAT: ABCEFH = .
-KFEAT: = = runed_door
 : set_feature_name("granite_statue", "gravestone")
 : set_feature_name("tree", "dead tree")
 MAP
@@ -1353,7 +1352,7 @@ ttttttT.......x***x...ccc-xxx--'''--xxx-ccc.T........c$$$$$$$c..vvvvvvvvvv.Ttttt
 tttttttT.t.T..xx-xx....n-------'''-------n.......T...c$$$7$$$c..--4--vT..t.Ttttt
 ttttttttT......x+x.....n-------'''-------n.....t..t..c**666**c....---v..t...Tttt
 tttttttttTt..T.x"x....ccc-xxx--'''--xxx-ccc..T...t..tc-------c....T..t....t..Ttt
-tttttttttT......".....ccc-xxx--'''--xxx-ccc...t....ttcccc=cccct.t.t........tTttt
+tttttttttT......".....ccc-xxx--'''--xxx-ccc...t....ttcccc+cccct.t.t........tTttt
 ttttttttTt..T..."".....n--C----'''----C--n..t..tt.ttttccc-ccctt.....t...t..Ttttt
 tttttttT.........".....nCC-----'''-----CCn....ttttt"""c-----ctttttt...t..Ttttttt
 tttttTT.t..T....."....cccccxxxcDDDcxxxccccc.tttt"""2""cc+++cc""""2tt.t..Tttttttt

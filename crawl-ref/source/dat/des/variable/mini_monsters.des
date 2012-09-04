@@ -1654,7 +1654,7 @@ KMONS:   89 = deep elf mage
 KITEM:   8d = robe / robe race:orcish, wizard hat w:40 / wizard hat good_item, \
               wizard hat w:20 / wizard hat good_item
 KITEM:   9e = book of minor magic
-KFEAT:   - = runed_door
+SUBST:   - = +
 KMASK:   de89 = no_item_gen
 SHUFFLE: 1234
 COLOUR:  F = red
@@ -2882,7 +2882,7 @@ KMONS:   4K = slime creature
 KMONS:   5L = acid blob w:5 / azure jelly / death ooze
 KFEAT:   JKL = altar_jiyva
 KITEM:   $ = $, $ w:5 / nothing
-KFEAT:   + = runed_door
+KFEAT:   = = runed_door
 : if you.absdepth() > 19 then
 SHUFFLE: CD, 2"6; / 3`5~
 SUBST:   35`~ : xx., '"~- = .
@@ -2916,7 +2916,7 @@ xx4-.CB$BC.-4xx
 xxxx.EABAE.xxxx
 xx5~.DECED.~5xx
 xxxx.......xxxx
-xxxcx;x+x;xcxxx
+xxxcx;x=x;xcxxx
   xxx6x.x6xxx
    xxxx+xxxx
    xxxx@xxxx
