@@ -426,7 +426,8 @@ Pole Minowe.
 deck of defence
 
 Talia magicznych kart, zwykle broniących użytkownika przed krzywdą.
- TODO: It may contain the following cards: the Tomb, the Banshee, Damnation,
+
+It may contain the following cards: the Tomb, the Banshee, Damnation,
 Solitude, Warpwright, Flight, the Elixir, Battlelust, Metamorphosis, the Helm,
 the Blade, the Shadow.
 %%%%
@@ -434,39 +435,45 @@ deck of destruction
 
 Talia magicznych kart, ciskających śmierć i zniszczenie we wrogów (lub, czasem,
 w twarz użytkownika).
- TODO: It may contain the following cards: Vitriol, Flame, Frost, Venom, the
+
+It may contain the following cards: Vitriol, Flame, Frost, Venom, the
 Spark, the Hammer, Pain, the Orb.
 %%%%
 deck of dungeons
 
 Talia magicznych kart które wprowadzają zmiany w lochach naokoło ciebie.
- TODO: It may contain the following cards: Water, Vitrification, the Map,
+
+It may contain the following cards: Water, Vitrification, the Map,
 Dowsing, the Spade, Trowel, the Minefield.
 %%%%
 deck of escape
 
 Talia magicznych kart, oparta na różnych formach ucieczki. Czasem potrafią one
 jednak pogorszyć sytuację!
- TODO: It may contain the following cards: the Portal, the Warp, Swap,
+
+It may contain the following cards: the Portal, the Warp, Swap,
 Velocity, the Tomb, the Banshee, Damnation, Solitude, Warpwright, Flight.
 %%%%
 deck of punishment
 
 Talia magicznych kart które potrafią przetrzepać użytkownikowi skórę.
- TODO: It may contain the following cards: Wrath, the Wraith, the Curse, Xom,
+
+It may contain the following cards: Wrath, the Wraith, the Curse, Xom,
 Famine, Wild Magic, the Portal, the Tomb, Damnation, the Minefield, Torment.
 %%%%
 deck of summonings
 
 Talia magicznych kart, z rysunkami przedziwnych istot. Oczywiście, rysunki te
 wchodzą w życie.
- TODO: It may contain the following cards: the Crusade, the Herd, the
+
+It may contain the following cards: the Crusade, the Herd, the
 Pentagram, the Dance, Foxfire, the Bones, Repulsiveness.
 %%%%
 deck of war
 
 Talia magicznych kart, pożytecznych przed jak i w trakcie walki.
- TODO: It may contain the following cards: the Portal, the Warp, Swap,
+
+It may contain the following cards: the Portal, the Warp, Swap,
 Velocity, the Tomb, the Banshee, Damnation, Solitude, Warpwright, Flight, the
 Elixir, Battlelust, Metamorphosis, the Helm, the Blade, the Shadow, the
 Crusade, the Herd, the Pentagram, the Dance, Foxfire, the Bones, Repulsiveness,
@@ -476,7 +483,8 @@ deck of wonders
 
 Talia magicznych kart, zmieniających użytkownika fizycznie lub mentalnie, na
 lepsze lub gorsze.
- TODO: It may contain the following cards: the Potion, Focus, Shuffle,
+
+It may contain the following cards: the Potion, Focus, Shuffle,
 Experience, Wild Magic, the Helix, the Sage, the Alchemist.
 %%%%
 demon blade
