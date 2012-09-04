@@ -4111,6 +4111,9 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
     if (props.exists("unobtainable"))
         item.flags |= ISFLAG_UNOBTAINABLE;
 
+    if (props.exists("no_pickup"))
+        item.flags |= ISFLAG_NO_PICKUP;
+
     if (!monster)
     {
         if (props.exists("mimic"))
