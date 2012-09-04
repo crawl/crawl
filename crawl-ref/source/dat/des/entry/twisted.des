@@ -540,7 +540,7 @@ ENDMAP
 # demanded. But I'd like to keep it on D:1 (dp).
 # Edited: translucent walls are less fun, but perfectly safe.
 NAME:    shiori_entry_elements
-TAGS:    entry no_monster_gen
+TAGS:    entry no_monster_gen no_item_gen no_rtele_into
 ORIENT:  float
 MARKER:  A = lua:fog_machine { \
              pow_max = 10, delay_min = 50, delay_max = 300, \
@@ -579,12 +579,7 @@ SUBST:   e =.
 SHUFFLE: XZ
 NSUBST:  Z = ) / ]
 NSUBST:  X = ( / [
-MARKER:  = = lua:props_marker { \
-            door_open_prompt="This door is covered in warnings. Open " .. \
-                             "it anyway?", \
-            door_description_prefix="warning-scrawled " \
-         }
-KFEAT:   = = runed_door
+SUBST:   = = m
 MAP
           ...
        ccc===ccc
