@@ -3,10 +3,11 @@
  * @brief Procedurally generated dungeon layouts.
 **/  
 
+#include <cmath>
 #include "dgn-proclayouts.h"
 
 dungeon_feature_type
-ColumnLayout::operator[](const coord_def &p)
+ColumnLayout::operator()(const coord_def &p, double offset)
 {
   int x = p.x % (_col_width + _col_space);
   int y = p.y % (_row_width + _row_space);
@@ -16,14 +17,23 @@ ColumnLayout::operator[](const coord_def &p)
 }
 
 dungeon_feature_type 
-MaxLayout::operator[](const coord_def &p)
+ChaoticLayout::feature(uint32_t noise)
 {
-  return min(_a[p], _b[p]);
-} 
-
-dungeon_feature_type 
-MinLayout::operator[](const coord_def &p)
-{
-  // Dungeon features become 'softer' as they increase in value.
-  return max(_a[p], _b[p]);
+  const int NUM_FEATURES = 10;
+  const dungeon_feature_type features[] = {
+    DNGN_ROCK_WALL,
+    DNGN_ROCK_WALL,
+    DNGN_ROCK_WALL,
+    DNGN_ROCK_WALL,
+    DNGN_STONE_WALL,
+    DNGN_STONE_WALL,
+    DNGN_STONE_WALL,
+    DNGN_METAL_WALL,
+    DNGN_METAL_WALL,
+    DNGN_GREEN_CRYSTAL_WALL
+  };
+  if (noise % 1000 < _density) {
+    return features[noise%NUM_FEATURES];
+  }
+  return DNGN_FLOOR;
 } 
