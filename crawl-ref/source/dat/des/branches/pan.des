@@ -931,6 +931,8 @@ ENDMAP
 NAME:  rand_demon_4
 TAGS:  pan allow_dup
 MONS:  pandemonium lord, any demon, any demon
+# release only one or a few at once
+SUBST: = = +=
 KFEAT: = = runed_door
 : pan_demonic_rune(_G, 'P')
 MAP
@@ -1002,10 +1004,10 @@ MAP
 .xxx....xxx.
 .x|xx=xxx|x.
 .xx=....=xx.
-..x.x==x.x..
-..x.=P1=.=..
-..=.=12=.x..
-..x.x==x.x..
+..x.x++x.x..
+..x.+P1+.=..
+..=.+12+.x..
+..x.x++x.x..
 .xx=....=xx.
 .x|xxx=xx|x.
 .xxx....xxx.
@@ -1037,7 +1039,9 @@ ENDMAP
 
 NAME:  rand_demon_9
 TAGS:  pan allow_dup
+# a crapload of greater demons, you fight them in small sets
 MONS:  pandemonium lord, any demon, greater demon
+SUBST: = = =+
 KFEAT: = = runed_door
 : pan_demonic_rune(_G, 'P')
 MAP
