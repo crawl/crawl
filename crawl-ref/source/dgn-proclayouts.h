@@ -10,6 +10,7 @@
 
 #include <vector>
 
+#include "cellular.h"
 #include "enum.h"
 #include "externs.h"
 #include "perlin.h"
@@ -70,4 +71,38 @@ class ChaoticLayout : public ProceduralLayout
     const uint32_t _seed, _density;
     dungeon_feature_type feature(uint32_t noise);
 };
+
+class WorleyLayout : public ProceduralLayout
+{
+  public:
+    WorleyLayout(uint32_t seed, double scale, 
+      ProceduralLayout &a, ProceduralLayout &b)
+      : _seed(seed), _scale(scale), _a(a), _b(b) {}
+   dungeon_feature_type operator()(const coord_def &p, double offset = 0) {
+      double x = p.x * _scale;
+      double y = p.y * _scale;
+      if (worley::worley(x, y, offset).id[0] % 2)
+        return _a(p, offset);
+      return _b(p, offset);
+    } 
+  private:
+    uint32_t _seed;
+    double _scale;
+    ProceduralLayout &_a, &_b;
+
+};
+
+
+class MixedColumnLayout : public ProceduralLayout {
+  public:
+    MixedColumnLayout(uint32_t seed) : _seed(seed) {
+    }
+    dungeon_feature_type operator()(const coord_def &p, double offset) {
+      ColumnLayout a(2), b(2,6);
+      return WorleyLayout(_seed, 0.07, a, b)(p, offset);
+    }
+  private:
+    uint32_t _seed;
+};
+
 #endif /* PROC_LAYOUTS_H */

@@ -987,7 +987,7 @@ static dungeon_feature_type _abyss_grid(const coord_def &p, double depth,
                                         cloud_type &cloud, int &cloud_lifetime)
 {
     const coord_def pt = p + abyssal_state.major_coord; 
-    ChaoticLayout layout(8675309);
+    MixedColumnLayout layout(8675309);
     dungeon_feature_type feat = layout(pt, depth);
     _previous_abyss_feature[p.x][p.y] = feat;
     return feat;
@@ -1176,6 +1176,7 @@ static void abyss_area_shift(void)
 #endif
 
     {
+        abyssal_state.seed = random2(0x7FFFFFFF);
         xom_abyss_feature_amusement_check xomcheck;
 
         // Use a map mask to track the areas that the shift destroys and
