@@ -56,9 +56,7 @@ int mons_rarity(monster_type mcls, branch_type branch)
             // shape (old code had rarities > 100, capped after subtracting
             // the square of distance).
             // The new data pretty accurately represents old state, but only
-            // if depth is known, and mons_rarity() doesn't receive it.  The
-            // argument is level_id rather than branch_type only for extra
-            // confusion.
+            // if depth is known, and mons_rarity() doesn't receive it.
             static int fudge[3] = { 25, 12, 0 };
             int rare = pe->rarity;
             if (rare < 500)
