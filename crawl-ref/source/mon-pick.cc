@@ -34,7 +34,7 @@ typedef struct
 #include "mon-pick-data.h"
 
 // NOTE: The lower the level the earlier a monster may appear.
-int mons_level(monster_type mcls, branch_type branch)
+int mons_depth(monster_type mcls, branch_type branch)
 {
     // legacy function, until ZotDef is ported
     for (pop_entry *pe = population[branch].pop; pe->mons; pe++)
@@ -105,7 +105,7 @@ void debug_monpick()
 
         for (monster_type m = MONS_0; m < NUM_MONSTERS; ++m)
         {
-            int lev = mons_level(m, br);
+            int lev = mons_depth(m, br);
             int rare = mons_rarity(m, br);
 
             if (lev < DEPTH_NOWHERE && !rare)

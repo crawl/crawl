@@ -285,7 +285,7 @@ static bool _need_super_ood(int lev_mons)
                 10000));
 }
 
-static int _fuzz_mons_level(int level)
+static int _fuzz_mons_depth(int level)
 {
     // Apply a fuzz to the monster level we're looking for. The fuzz
     // is intended to mix up monster generation producing moderately
@@ -486,7 +486,7 @@ static monster_type _pick_random_monster(const level_id &place, int power,
         && brdepth[place.branch] > 1)
     {
         // Apply moderate OOD fuzz where appropriate.
-        lev_mons = _fuzz_mons_level(lev_mons);
+        lev_mons = _fuzz_mons_depth(lev_mons);
 
         // Potentially nasty surprise, but very rare.
         if (_need_super_ood(lev_mons))
@@ -528,7 +528,7 @@ static monster_type _pick_random_monster(const level_id &place, int power,
             continue;
         }
 
-        level = mons_level(mon_type, place.branch)
+        level = mons_depth(mon_type, place.branch)
                 + absdungeon_depth(place.branch, 0);
         diff = level - lev_mons;
 #ifdef ASSERTS
@@ -1915,7 +1915,7 @@ monster_type pick_local_zombifiable_monster(int power, bool hack_hd,
         // Check for rarity.. and OOD - identical to mons_place()
         int level, diff, chance;
 
-        level = mons_level(base, place.branch) + eff_depth - 4;
+        level = mons_depth(base, place.branch) + eff_depth - 4;
         diff  = level - power;
 
         chance = (ignore_rarity) ? 100

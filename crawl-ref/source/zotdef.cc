@@ -40,7 +40,7 @@
 
 static monster_type _pick_unique(int level);
 
-static int _fuzz_mons_level(int level)
+static int _fuzz_mons_depth(int level)
 {
     if (level > 1 && one_chance_in(7))
     {
@@ -589,7 +589,7 @@ static monster_type _get_zotdef_monster(level_id &place, int power)
         // get default level
         int lev_mons = (place.branch == NUM_BRANCHES)
                        ? ((strength * 3) / 2)
-                       : mons_level(mon_type, place.branch)
+                       : mons_depth(mon_type, place.branch)
                          + absdungeon_depth(place.branch, 0);
 
         // if >50, bail out - these are special flags
@@ -650,7 +650,7 @@ static void _zotdef_set_random_branch_wave(int power)
     for (int i = 0; i < NSLOTS; i++)
     {
         level_id l(_zotdef_random_branch(), -1);
-        env.mons_alloc[i] = _get_zotdef_monster(l, _fuzz_mons_level(power));
+        env.mons_alloc[i] = _get_zotdef_monster(l, _fuzz_mons_depth(power));
     }
     level_id l(_zotdef_random_branch(), -1);
     env.mons_alloc[BOSS_SLOT] = _get_zotdef_monster(l,
@@ -665,7 +665,7 @@ static void _zotdef_set_branch_wave(branch_type b, int power)
          (b == NUM_BRANCHES) ? "RANDOM" : branches[b].shortname);
     wave_name(buf);
     for (int i = 0; i < NSLOTS; i++)
-        env.mons_alloc[i] = _get_zotdef_monster(l, _fuzz_mons_level(power));
+        env.mons_alloc[i] = _get_zotdef_monster(l, _fuzz_mons_depth(power));
     env.mons_alloc[BOSS_SLOT] = _get_zotdef_monster(l,
                                     power + ZOTDEF_BOSS_EXTRA_POWER);
 }
