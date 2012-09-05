@@ -634,7 +634,7 @@ static bool _is_affordable(const item_def &item)
 
     // Disregard shop stuff above your reach.
     if (_in_shop(item))
-        return (int)item_value(item) < you.gold;
+        return (int)item_value(item) <= you.gold;
 
     // Explicitly marked by a vault.
     if (item.flags & ISFLAG_UNOBTAINABLE)

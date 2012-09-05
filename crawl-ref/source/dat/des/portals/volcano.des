@@ -974,14 +974,14 @@ MARKER:  J = lua:fog_machine { size = 3, pow_min = 7, pow_max = 7, delay = 80, \
                                start_clouds = 1, cloud_type = "flame", excl_rad = -1 }
 MARKER:  K = lua:fog_machine { size = 3, pow_min = 7, pow_max = 7, delay = 80, \
                                start_clouds = 1, cloud_type = "flame", excl_rad = -1 }
-KFEAT:   = = runed_door
+# If mummies ever start to use items, please re-rune the doors.
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxyyxxx
 xxxxxxxxxxxxxxxxxxxy.y..Lxx
 xxxxxxxxxxcccccccxy.y.3Lllx
 xxxxxxxxxxc..Y..cy.xxxLlllx
-cxxxxxxxccc.....=.xxxxxllJx
+cxxxxxxxccc.....+.xxxxxllJx
 cccccccccGc..3..cccxxxxxxxx
 .....+....+.3<3.+Kcxxxxxxxx
 cccccccccGc..3..cccxxxxxxxx
@@ -989,7 +989,7 @@ cxxxxxxxccc.....cxxxxxxxxxx
 xxxxxxxxc1c..Y..cxxxxxxxxxx
 xxxxxxxcc+ccccc+ccxvvvvvvxx
 xxxxxccc.........ccv$defvxx
-xxxxxc2+.lllllll.+4=ge$fvxx
+xxxxxc2+.lllllll.+4+ge$fvxx
 xxxxxccc.........ccv$defvxx
 xxxxxxxcc+ccccc+ccxvvvvvvxx
 xxxxxxxxc1cxxxcKcxxxxxxxxxx

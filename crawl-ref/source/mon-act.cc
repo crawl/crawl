@@ -2588,6 +2588,9 @@ static bool _handle_pickup(monster* mons)
         // (jpeg)
         for (stack_iterator si(mons->pos()); si; ++si)
         {
+            if (si->flags & ISFLAG_NO_PICKUP)
+                continue;
+
             if (mons->pickup_item(*si, nearby))
                 count_pickup++;
 
