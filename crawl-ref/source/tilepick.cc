@@ -2728,6 +2728,12 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
         return TILE_WPN_QUICK_BLADE;
 
     case WPN_SABRE:
+        if (race == ISFLAG_ORCISH)
+            return TILE_WPN_SABRE_ORC;
+        if (race == ISFLAG_DWARVEN)
+            return TILE_WPN_SABRE_DWARF;
+        if (race == ISFLAG_ELVEN)
+            return TILE_WPN_SABRE_ELF;
         return TILE_WPN_SABRE;
 
     case WPN_FALCHION:
