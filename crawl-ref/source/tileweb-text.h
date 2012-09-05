@@ -7,7 +7,7 @@
 class WebTextArea
 {
 public:
-    WebTextArea(std::string name);
+    WebTextArea(string name);
     virtual ~WebTextArea();
 
     void resize(int mx, int my);
@@ -27,7 +27,7 @@ protected:
     ucs_t   *m_old_cbuf;
     uint8_t *m_old_abuf;
 
-    std::string m_client_side_name;
+    string m_client_side_name;
 
     bool m_dirty;
 

@@ -779,9 +779,9 @@ gnoll
 “Then he descended softly and beckoned to Nuth. But the gnoles had watched him
 through knavish holes that they bore in trunks of the trees, and the unearthly
 silence gave way, as it were with a grace, to the rapid screams of Tonker as
-they picked him up from behind — screams that came faster and faster until
-they were incoherent. And where they took him it is not good to ask, and what
-they did with him I shall not say.”
+they picked him up from behind — screams that came faster and faster until they
+were incoherent. And where they took him it is not good to ask, and what they
+did with him I shall not say.”
     -Lord Dunsany, “How Nuth Would Have Practiced His Art Upon the Gnoles”.
 1912.
 %%%%
@@ -1078,11 +1078,17 @@ shadow
      Life is very long”
     -T.S. Eliot, “The Hollow Men”. 1925.
 %%%%
+small simulacrum
+
+<large simulacrum>
+%%%%
 small skeleton
 
-“God save us from the skeleton
- Who sitteth at the feast!”
-    -James Jeffrey Roche, “The Skeleton at the Feast”. 1890.
+<large skeleton>
+%%%%
+small zombie
+
+<large zombie>
 %%%%
 toenail golem
 
@@ -1384,8 +1390,8 @@ carried her on over thorn and brier; she scratched herself till she bled; she
 danced away across the heath to a little lonely house. Here she knew the
 executioner dwelt; and she tapped with her fingers on the panes, and
 called,—'Come out, come out! I cannot come in, for I must dance!'
- And the Executioner said,—'You probably don’t know who I am? I cut off the
-bad people’s heads with my axe, and mark how my axe rings!'
+ And the Executioner said,—'You probably don’t know who I am? I cut off the bad
+people’s heads with my axe, and mark how my axe rings!'
  'Do not strike off my head,' said Karen, 'for if you do I cannot repent of my
 sin. But strike off my feet with the red shoes?'
  And then she confessed all her sin, and the Executioner cut off her feet with

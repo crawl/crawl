@@ -46,7 +46,7 @@ void PlaceInfo::assert_validity() const
                              + elapsed_other));
 }
 
-const std::string PlaceInfo::short_name() const
+const string PlaceInfo::short_name() const
 {
     return branches[branch].shortname;
 }

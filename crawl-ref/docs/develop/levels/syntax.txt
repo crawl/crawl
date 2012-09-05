@@ -30,7 +30,6 @@ Terrain
 
  . - floor                                                    (DNGN_FLOOR)
  + - closed door                                        (DNGN_CLOSED_DOOR)
- = - secret door                                        (DNGN_SECRET_DOOR)
 
  W - shallow water
  w - deep water - can be randomly turned into shallow water by the
@@ -589,6 +588,10 @@ ITEM:     (list of items, separated by comma)
             mimic. The ":N" can also be omitted for a guaranteed mimic.
           * "no_mimic" prevents the item from being randomly turned into a
             mimic by the dungeon builder.
+          * "no_pickup" prevents monsters from picking up the item, for vaults
+            intending to have an impressive display of loot (although in most
+            cases monsters should be allowed to pick up and use loot against
+            the player).
 
           WARNING: While checks are done to make sure that an armour ego
           isn't given to a weapon, a weapon ego to a missile, and so on, and
@@ -1354,8 +1357,6 @@ KMASK:    Z = no_monster_gen
              randomly converted from deep water (the default) to shallow.
           * "no_wall_fixup": prevents (rock) walls from being converted to
              the level's default wall type, such as in Vaults.
-          * "no_secret_doors": prevents a door from randomly being turned
-             into a secret door.
 
           For example
 

@@ -168,10 +168,10 @@ void MapRegion::set(const coord_def &gc, map_feature f)
         return;
 
     // Get map extents
-    m_min_gx = std::min(m_min_gx, gc.x);
-    m_max_gx = std::max(m_max_gx, gc.x);
-    m_min_gy = std::min(m_min_gy, gc.y);
-    m_max_gy = std::max(m_max_gy, gc.y);
+    m_min_gx = min(m_min_gx, gc.x);
+    m_max_gx = max(m_max_gx, gc.x);
+    m_min_gy = min(m_min_gy, gc.y);
+    m_max_gy = max(m_max_gy, gc.y);
 
     recenter();
 }
@@ -195,10 +195,10 @@ void MapRegion::update_bounds()
             if (f == MF_UNSEEN)
                 continue;
 
-            m_min_gx = std::min(m_min_gx, x);
-            m_max_gx = std::max(m_max_gx, x);
-            m_min_gy = std::min(m_min_gy, y);
-            m_max_gy = std::max(m_max_gy, y);
+            m_min_gx = min(m_min_gx, x);
+            m_max_gx = max(m_max_gx, x);
+            m_min_gy = min(m_min_gy, y);
+            m_max_gy = max(m_max_gy, y);
         }
 
     recenter();
@@ -301,7 +301,7 @@ int MapRegion::handle_mouse(MouseEvent &event)
     }
 }
 
-bool MapRegion::update_tip_text(std::string& tip)
+bool MapRegion::update_tip_text(string& tip)
 {
     if (mouse_control::current_mode() != MOUSE_MODE_COMMAND)
         return false;

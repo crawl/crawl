@@ -31,15 +31,15 @@ public:
     virtual ~base_pattern() { }
 
     virtual bool valid() const = 0;
-    virtual bool matches(const std::string &s) const = 0;
-    virtual const std::string &tostring() const = 0;
+    virtual bool matches(const string &s) const = 0;
+    virtual const string &tostring() const = 0;
 };
 
 template <p_compile pcomp, p_free pfree, p_match pmatch>
 class basic_text_pattern : public base_pattern
 {
 public:
-    basic_text_pattern(const std::string &s, bool icase = false)
+    basic_text_pattern(const string &s, bool icase = false)
         : pattern(s), compiled_pattern(NULL),
           isvalid(true), ignore_case(icase)
     {
@@ -80,7 +80,7 @@ public:
         return *this;
     }
 
-    const basic_text_pattern &operator= (const std::string &spattern)
+    const basic_text_pattern &operator= (const string &spattern)
     {
         if (pattern == spattern)
             return *this;
@@ -119,21 +119,21 @@ public:
 
     bool matches(const char *s) const
     {
-        return matches(std::string(s));
+        return matches(string(s));
     }
 
-    bool matches(const std::string &s) const
+    bool matches(const string &s) const
     {
         return matches(s.c_str(), s.length());
     }
 
-    const std::string &tostring() const
+    const string &tostring() const
     {
         return pattern;
     }
 
 private:
-    std::string pattern;
+    string pattern;
     mutable void *compiled_pattern;
     mutable bool isvalid;
     bool ignore_case;

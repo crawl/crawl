@@ -153,22 +153,22 @@ void trap_def::reveal()
     grd(pos) = category();
 }
 
-std::string trap_def::name(description_level_type desc) const
+string trap_def::name(description_level_type desc) const
 {
     if (type >= NUM_TRAPS)
         return "buggy";
 
-    std::string basename = trap_name(type);
+    string basename = trap_name(type);
     if (desc == DESC_A)
     {
-        std::string prefix = "a";
+        string prefix = "a";
         if (is_vowel(basename[0]))
             prefix += 'n';
         prefix += ' ';
         return (prefix + basename);
     }
     else if (desc == DESC_THE)
-        return (std::string("the ") + basename);
+        return (string("the ") + basename);
     else                        // everything else
         return basename;
 }
@@ -470,9 +470,9 @@ static bool _player_caught_in_web()
     return true;
 }
 
-std::vector<coord_def> find_golubria_on_level()
+vector<coord_def> find_golubria_on_level()
 {
-    std::vector<coord_def> ret;
+    vector<coord_def> ret;
     for (rectangle_iterator ri(coord_def(0, 0), coord_def(GXM-1, GYM-1)); ri; ++ri)
     {
         trap_def *trap = find_trap(*ri);
@@ -484,8 +484,8 @@ std::vector<coord_def> find_golubria_on_level()
 
 static bool _find_other_passage_side(coord_def& to)
 {
-    std::vector<coord_def> passages = find_golubria_on_level();
-    std::vector<coord_def> clear_passages;
+    vector<coord_def> passages = find_golubria_on_level();
+    vector<coord_def> clear_passages;
     for (unsigned int i = 0; i < passages.size(); i++)
     {
         if (passages[i] != to && !actor_at(passages[i]))
@@ -503,7 +503,7 @@ static bool _find_other_passage_side(coord_def& to)
 // Returns an empty string if no direction could be
 // determined (if fuzz if false, this is only if
 // you.pos==pos).
-static std::string _direction_string(coord_def pos, bool fuzz)
+static string _direction_string(coord_def pos, bool fuzz)
 {
     int dx = you.pos().x - pos.x;
     if (fuzz)
@@ -517,7 +517,7 @@ static std::string _direction_string(coord_def pos, bool fuzz)
         ew="";
     if (abs(dx) > 2 * abs(dy))
         ns="";
-    return (std::string(ns) + ew);
+    return (string(ns) + ew);
 }
 
 void trap_def::trigger(actor& triggerer, bool flat_footed)
@@ -651,25 +651,22 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         }
         else
         {
-            std::string msg;
+            string msg;
             if (you_trigger)
                 msg = "An alarm trap emits a blaring wail!";
             else
             {
-                std::string dir = _direction_string(pos, !in_sight);
-                msg = std::string("You hear a ") +
-                    ((in_sight) ? "" : "distant ")
-                    + "blaring wail "
-                    + (!dir.empty()? ("to the " + dir + ".") : "behind you!");
+                string dir = _direction_string(pos, !in_sight);
+                msg = string("You hear a ") + ((in_sight) ? "" : "distant ")
+                      + "blaring wail " + (!dir.empty()? ("to the " + dir + ".")
+                                                       : "behind you!");
             }
             // Monsters of normal or greater intelligence will realize that
             // they were the one to set off the trap.
             int source = !m ? you.mindex() :
                          mons_intel(m) >= I_NORMAL ? m->mindex() : -1;
 
-            // Zotdef - Made alarm traps noisier and more noticeable
-            int noiselevel = crawl_state.game_is_zotdef() ? 30 : 12;
-            noisy(noiselevel, pos, msg.c_str(), source, false);
+            noisy(30, pos, msg.c_str(), source, false);
             if (crawl_state.game_is_zotdef())
                 more();
         }
@@ -690,7 +687,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 mpr("A huge blade swings out and slices into you!");
                 const int damage = 48 + random2avg(29, 2)
                     - random2(1 + you.armour_class());
-                std::string n = name(DESC_A) + " trap";
+                string n = name(DESC_A) + " trap";
                 ouch(damage, NON_MONSTER, KILLED_BY_TRAP, n.c_str());
                 bleed_onto_floor(you.pos(), MONS_PLAYER, damage, true);
             }
@@ -721,7 +718,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             {
                 if (in_sight)
                 {
-                    std::string msg = "A huge blade swings out";
+                    string msg = "A huge blade swings out";
                     if (m->visible_to(&you))
                     {
                         msg += " and slices into ";
@@ -1104,7 +1101,7 @@ int reveal_traps(const int range)
         if (!trap.active())
             continue;
 
-        if (distance(you.pos(), trap.pos) < dist_range(range) && !trap.is_known())
+        if (distance2(you.pos(), trap.pos) < dist_range(range) && !trap.is_known())
         {
             traps_found++;
             trap.reveal();
@@ -1184,11 +1181,10 @@ void disarm_trap(const coord_def& where)
     // Prompt for any trap for which you might not survive setting it off.
     if (_disarm_is_deadly(trap))
     {
-        std::string prompt = make_stringf(
-                               "Really try disarming that %s?",
-                               feature_description_at(where,
-                                                   "", DESC_BASENAME,
-                                                   false).c_str());
+        string prompt = make_stringf("Really try disarming that %s?",
+                                     feature_description_at(where, "",
+                                                            DESC_BASENAME,
+                                                            false).c_str());
 
         if (!yesno(prompt.c_str(), true, 'n'))
         {
@@ -1199,7 +1195,7 @@ void disarm_trap(const coord_def& where)
 
     // Make the actual attempt
     you.turn_is_over = true;
-    if (random2(you.skill_rdiv(SK_TRAPS_DOORS) + 2) <= random2(trap.difficulty() + 5))
+    if (random2(you.skill_rdiv(SK_TRAPS) + 2) <= random2(trap.difficulty() + 5))
     {
         mpr("You failed to disarm the trap.");
         if (random2(you.dex()) > 5 + random2(5 + trap.difficulty()))
@@ -1255,10 +1251,10 @@ void remove_net_from(monster* mon)
         invis = 3 + random2(5);
 
     bool net_destroyed = false;
-    if (random2(you.skill_rdiv(SK_TRAPS_DOORS) + 2) + paralys
+    if (random2(you.skill_rdiv(SK_TRAPS) + 2) + paralys
            <= random2(2*mon->body_size(PSIZE_BODY) + 3) + invis)
     {
-        if (x_chance_in_y(2, you.skill(SK_TRAPS_DOORS, 2) + you.dex()))
+        if (x_chance_in_y(2, you.skill(SK_TRAPS, 2) + you.dex()))
         {
             mitm[net].plus--;
             mpr("You tear at the net.");
@@ -1623,7 +1619,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
     }
     else if (!force_hit && pro_block >= con_block)
     {
-        std::string owner;
+        string owner;
         if (act.is_player())
             owner = "your";
         else if (you.can_see(&act))
@@ -1645,13 +1641,13 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
                             || force_poison));
 
         int damage_taken =
-            std::max(shot_damage(act) - random2(act.armour_class()+1),0);
+            max(shot_damage(act) - random2(act.armour_class() + 1), 0);
 
         if (act.is_player())
         {
             mprf("%s shoots out and hits you!", shot.name(DESC_A).c_str());
 
-            std::string n = name(DESC_A) + " trap";
+            string n = name(DESC_A) + " trap";
 
             // Needle traps can poison.
             if (poison)
@@ -1798,7 +1794,7 @@ static level_id _generic_shaft_dest(level_pos lpos, bool known = false)
     else
     {
         // 33.3% for 1, 2, 3 from D:3, less before
-        lid.depth += 1 + random2(std::min(lid.depth, 3));
+        lid.depth += 1 + random2(min(lid.depth, 3));
     }
 
     if (lid.depth > max_depth)

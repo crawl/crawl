@@ -353,7 +353,7 @@ void console_startup()
         exit(0);
     }
 
-    std::string title = CRAWL " " + Version::Long();
+    string title = CRAWL " " + Version::Long();
 
     if (!GetConsoleTitleW(oldTitle, 78))
         *oldTitle = 0;

@@ -26,7 +26,7 @@ int StatRegion::handle_mouse(MouseEvent &event)
     return command_to_key(CMD_REST);
 }
 
-bool StatRegion::update_tip_text(std::string& tip)
+bool StatRegion::update_tip_text(string& tip)
 {
     if (mouse_control::current_mode() != MOUSE_MODE_COMMAND)
         return false;

@@ -436,6 +436,7 @@ COLOUR: = = magenta
 COLOUR: x = magenta
 COLOUR: y = magenta
 COLOUR: z = magenta
+KFEAT:  = = runed_door
 MAP
 cc.
 cxcc
@@ -834,7 +835,7 @@ SUBST:  A = .
 SUBST:  e = .
 KITEM:  Z = Orb of Zot
 NSUBST: a = 3:1 / 3:2 / 27:$ / *:'
-SHUFFLE: ' = '........
+SUBST:  ' = '........
 KFEAT:  ' = net trap / needle trap / bolt trap / spear trap / arrow trap
 KITEM:  $ = gold q:27
 MONS:   quicksilver dragon, Lorocyproca, giant spore

@@ -130,8 +130,8 @@ private:
 private:
     // Monster-attack specific stuff
     void mons_apply_attack_flavour();
-    std::string mons_attack_verb();
-    std::string mons_attack_desc();
+    string mons_attack_verb();
+    string mons_attack_desc();
     // TODO: Unify do_poison and poison_monster
     void mons_do_poison();
     void mons_do_napalm();
@@ -165,7 +165,7 @@ private:
     random_var player_weapon_speed();
     random_var player_unarmed_speed();
     void player_announce_aux_hit();
-    std::string player_why_missed();
+    string player_why_missed();
     void player_warn_miss();
     void player_weapon_upsets_god();
     void _defender_die();

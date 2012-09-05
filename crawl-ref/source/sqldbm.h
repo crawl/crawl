@@ -24,13 +24,13 @@ class sql_datum
 {
 public:
     sql_datum();
-    sql_datum(const std::string &s);
+    sql_datum(const string &s);
     sql_datum(const sql_datum &other);
     virtual ~sql_datum();
 
     sql_datum &operator = (const sql_datum &other);
 
-    std::string to_str() const;
+    string to_str() const;
 
 public:
     char   *dptr;    // Canonically void*, but we're not a real Berkeley DB.
@@ -48,24 +48,23 @@ private:
 class SQL_DBM
 {
 public:
-    SQL_DBM(const std::string &db = "", bool readonly = true,
-            bool open = false);
+    SQL_DBM(const string &db = "", bool readonly = true, bool open = false);
     ~SQL_DBM();
 
     bool is_open() const;
 
-    int open(const std::string &db = "");
+    int open(const string &db = "");
     void close();
 
-    std::auto_ptr<std::string> firstkey();
-    std::auto_ptr<std::string> nextkey();
+    unique_ptr<string> firstkey();
+    unique_ptr<string> nextkey();
 
-    std::string query(const std::string &key);
-    int insert(const std::string &key, const std::string &value);
-    int remove(const std::string &key);
+    string query(const string &key);
+    int insert(const string &key, const string &value);
+    int remove(const string &key);
 
 public:
-    std::string error;
+    string error;
     int errc;
 
 private:
@@ -78,9 +77,9 @@ private:
     int init_schema();
     int ec(int err);
 
-    int try_insert(const std::string &key, const std::string &value);
-    int do_insert(const std::string &key, const std::string &value);
-    int do_query(const std::string &key, std::string *result);
+    int try_insert(const string &key, const string &value);
+    int do_insert(const string &key, const string &value);
+    int do_query(const string &key, string *result);
 
 private:
     sqlite3      *db;
@@ -88,7 +87,7 @@ private:
     sqlite3_stmt *s_remove;
     sqlite3_stmt *s_query;
     sqlite3_stmt *s_iterator;
-    std::string  dbfile;
+    string       dbfile;
     bool readonly;
 };
 

@@ -405,7 +405,7 @@ void tome_of_power(int slot)
                  + roll_dice(5, you.skill(SK_EVOCATIONS));
 
     msg::stream << "The book opens to a page covered in "
-                << weird_writing() << '.' << std::endl;
+                << weird_writing() << '.' << endl;
 
     you.turn_is_over = true;
     if (!item_ident(you.inv[slot], ISFLAG_KNOW_TYPE))
@@ -543,8 +543,8 @@ void skill_manual(int slot)
 
     if (!known)
     {
-        std::string prompt = make_stringf("This is a manual of %s. Do you want "
-                                          "to study it?", skill_name(skill));
+        string prompt = make_stringf("This is a manual of %s. Do you want "
+                                     "to study it?", skill_name(skill));
         if (!yesno(prompt.c_str(), true, 'n'))
         {
             canned_msg(MSG_OK);

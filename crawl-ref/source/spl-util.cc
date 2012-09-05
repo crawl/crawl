@@ -128,7 +128,7 @@ void init_spell_descs(void)
     }
 }
 
-typedef std::map<std::string, spell_type> spell_name_map;
+typedef map<string, spell_type> spell_name_map;
 static spell_name_map spell_name_cache;
 
 void init_spell_name_cache()
@@ -142,12 +142,12 @@ void init_spell_name_cache()
 
         const char *sptitle = spell_title(type);
         ASSERT(sptitle);
-        const std::string spell_name = lowercase_string(sptitle);
+        const string spell_name = lowercase_string(sptitle);
         spell_name_cache[spell_name] = type;
     }
 }
 
-spell_type spell_by_name(std::string name, bool partial_match)
+spell_type spell_by_name(string name, bool partial_match)
 {
     if (name.empty())
         return SPELL_NO_SPELL;
@@ -172,9 +172,9 @@ spell_type spell_by_name(std::string name, bool partial_match)
             continue;
 
         const char *sptitle = spell_title(type);
-        const std::string spell_name = lowercase_string(sptitle);
+        const string spell_name = lowercase_string(sptitle);
 
-        if (spell_name.find(name) != std::string::npos)
+        if (spell_name.find(name) != string::npos)
         {
             if (spell_name == name)
                 return type;
@@ -186,7 +186,7 @@ spell_type spell_by_name(std::string name, bool partial_match)
     return spellmatch;
 }
 
-spschool_flag_type school_by_name(std::string name)
+spschool_flag_type school_by_name(string name)
 {
    spschool_flag_type short_match, long_match;
    int                short_matches, long_matches;
@@ -200,8 +200,8 @@ spschool_flag_type school_by_name(std::string name)
    {
        spschool_flag_type type = (spschool_flag_type) (1 << i);
 
-       std::string short_name = spelltype_short_name(type);
-       std::string long_name  = spelltype_long_name(type);
+       string short_name = spelltype_short_name(type);
+       string long_name  = spelltype_long_name(type);
 
        lowercase(short_name);
        lowercase(long_name);
@@ -211,12 +211,12 @@ spschool_flag_type school_by_name(std::string name)
        if (name == long_name)
            return type;
 
-       if (short_name.find(name) != std::string::npos)
+       if (short_name.find(name) != string::npos)
        {
            short_match = type;
            short_matches++;
        }
-       if (long_name.find(name) != std::string::npos)
+       if (long_name.find(name) != string::npos)
        {
            long_match = type;
            long_matches++;
@@ -276,7 +276,7 @@ bool add_spell_to_memory(spell_type spell)
 {
     int i;
     int j = -1;
-    std::string sname = spell_title(spell);
+    string sname = spell_title(spell);
     lowercase(sname);
     // first we find a slot in our head:
     for (i = 0; i < MAX_KNOWN_SPELLS; i++)
@@ -386,7 +386,7 @@ int spell_hunger(spell_type which_spell, bool rod)
     if (rod)
     {
         hunger -= you.skill(SK_EVOCATIONS, 10);
-        hunger = std::max(hunger, level * 5);
+        hunger = max(hunger, level * 5);
     }
     else
         hunger -= you.skill(SK_SPELLCASTING, you.intel());
@@ -593,7 +593,7 @@ int apply_monsters_around_square(monster_func mf, const coord_def& where,
                                   int power)
 {
     int rv = 0;
-    std::set<const monster*> affected;
+    set<const monster*> affected;
     for (adjacent_iterator ai(where, true); ai; ++ai)
     {
         monster* mon = monster_at(*ai);
@@ -712,7 +712,7 @@ int apply_random_around_square(cell_func cf, const coord_def& where,
         }
     }
 
-    const int targs_found = std::min(count, max_targs);
+    const int targs_found = min(count, max_targs);
 
     if (targs_found)
     {
@@ -732,8 +732,8 @@ int apply_random_around_square(cell_func cf, const coord_def& where,
 void apply_area_cloud(cloud_func func, const coord_def& where,
                        int pow, int number, cloud_type ctype,
                        const actor *agent,
-                       int spread_rate, int colour, std::string name,
-                       std::string tile, int excl_rad)
+                       int spread_rate, int colour, string name,
+                       string tile, int excl_rad)
 {
     if (number <= 0)
         return;
@@ -747,7 +747,7 @@ void apply_area_cloud(cloud_func func, const coord_def& where,
         while (place.queue[dist].empty())
             if (++dist >= place.queue.size())
                 return;
-        std::vector<coord_def> &q = place.queue[dist];
+        vector<coord_def> &q = place.queue[dist];
         int el = random2(q.size());
         coord_def c = q[el];
         q[el] = q[q.size() - 1];
@@ -986,15 +986,15 @@ int spell_range(spell_type spell, int pow, bool player_spell)
     }
 
     if (minrange == maxrange)
-        return std::min(minrange, (int)you.current_vision);
+        return min(minrange, (int)you.current_vision);
 
     const int powercap = spell_power_cap(spell);
 
     if (powercap <= pow)
-        return std::min(maxrange, (int)you.current_vision);
+        return min(maxrange, (int)you.current_vision);
 
     // Round appropriately.
-    return std::min((int)you.current_vision,
+    return min((int)you.current_vision,
            (pow * (maxrange - minrange) + powercap / 2) / powercap + minrange);
 }
 
@@ -1161,10 +1161,6 @@ bool spell_is_useless(spell_type spell, bool transient)
         if (transient && you.duration[DUR_CONTROL_TELEPORT] > 0)
             return true;
         break;
-    case SPELL_SEE_INVISIBLE:
-        if (you.can_see_invisible(false, false))
-            return true;
-        break;
     case SPELL_DARKNESS:
         // mere corona is not enough, but divine light blocks it completely
         if (transient && you.haloed())
@@ -1234,6 +1230,38 @@ bool spell_no_hostile_in_range(spell_type spell)
 
     case SPELL_FIRE_STORM:
         return false;
+
+    // Special handling for cloud spells.
+    case SPELL_FREEZING_CLOUD:
+    case SPELL_POISONOUS_CLOUD:
+    case SPELL_HOLY_BREATH:
+    {
+        targetter_cloud tgt(&you, range);
+        for (radius_iterator ri(you.pos(), range, C_ROUND, you.get_los());
+             ri; ++ri)
+        {
+            if (!tgt.valid_aim(*ri))
+                continue;
+            tgt.set_aim(*ri);
+            for (map<coord_def, aff_type>::iterator it = tgt.seen.begin();
+                 it != tgt.seen.end(); it++)
+            {
+                if (it->second == AFF_NO
+                    || it->second == AFF_TRACER)
+                    continue;
+
+                // Checks here are from get_dist_to_nearest_monster().
+                const monster* mons = monster_at(it->first);
+                if (mons && !mons->wont_attack()
+                    && (!mons_class_flag(mons->type, M_NO_EXP_GAIN)
+                        || (mons->type == MONS_BALLISTOMYCETE
+                            && mons->number != 0)))
+                    return false;
+            }
+        }
+
+        return true;
+    }
     default:
         break;
     }

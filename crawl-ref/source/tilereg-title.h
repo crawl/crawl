@@ -15,7 +15,7 @@ public:
 
     virtual int handle_mouse(MouseEvent &event) { return 0; }
 
-    void update_message(std::string message);
+    void update_message(string message);
 
 protected:
     virtual void on_resize() {}

@@ -11,6 +11,6 @@ bool zotdef_create_altar(bool wizmode = false);
 void zotdef_bosses_check();
 
 void debug_waves();
-std::string zotdef_debug_wave_desc();
+string zotdef_debug_wave_desc();
 
 #endif // ZOTDEF_H

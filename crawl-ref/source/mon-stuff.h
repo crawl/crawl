@@ -108,7 +108,7 @@ void mons_check_pool(monster* mons, const coord_def &oldpos,
 
 void monster_cleanup(monster* mons);
 
-int dismiss_monsters(std::string pattern);
+int dismiss_monsters(string pattern);
 void zap_los_monsters(bool items_also);
 
 bool curse_an_item(bool quiet = false);
@@ -153,8 +153,7 @@ monster *get_current_target();
 
 mon_dam_level_type mons_get_damage_level(const monster* mons);
 
-std::string get_damage_level_string(mon_holy_type holi,
-                                    mon_dam_level_type mdam);
+string get_damage_level_string(mon_holy_type holi, mon_dam_level_type mdam);
 
 void seen_monster(monster* mons);
 
@@ -183,9 +182,9 @@ bool monster_space_valid(const monster* mons, coord_def target,
 void monster_teleport(monster* mons, bool instan, bool silent = false);
 void mons_clear_trapping_net(monster* mon);
 
-std::string summoned_poof_msg(const monster* mons, bool plural = false);
-std::string summoned_poof_msg(const int midx, const item_def &item);
-std::string summoned_poof_msg(const monster* mons, const item_def &item);
+string summoned_poof_msg(const monster* mons, bool plural = false);
+string summoned_poof_msg(const int midx, const item_def &item);
+string summoned_poof_msg(const monster* mons, const item_def &item);
 
 struct bolt;
 

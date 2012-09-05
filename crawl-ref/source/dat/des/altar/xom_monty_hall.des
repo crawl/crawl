@@ -42,7 +42,7 @@ DEPTH:   D:2-7
 KFEAT:   _ = altar_xom
 MONS:    generate_awake sheep hd:1
 MONS:    generate_awake jelly
-MARKER: + = lua:restrict_door()
+KFEAT:   + = runed_door
 {{
 dgn.persist.dk_xom_monty_hall_triggered = false
 

@@ -227,9 +227,8 @@ static bool _can_use_item(const item_def &item, bool equipped)
     return true;
 }
 
-static void _handle_wield_tip(std::string &tip, std::vector<command_type> &cmd,
-                              const std::string prefix = "",
-                              bool unwield = false)
+static void _handle_wield_tip(string &tip, vector<command_type> &cmd,
+                              const string prefix = "", bool unwield = false)
 {
     tip += prefix;
     if (unwield)
@@ -239,7 +238,7 @@ static void _handle_wield_tip(std::string &tip, std::vector<command_type> &cmd,
     cmd.push_back(CMD_WIELD_WEAPON);
 }
 
-bool InventoryRegion::update_tab_tip_text(std::string &tip, bool active)
+bool InventoryRegion::update_tab_tip_text(string &tip, bool active)
 {
     const char *prefix1 = active ? "" : "[L-Click] ";
     const char *prefix2 = active ? "" : "          ";
@@ -251,7 +250,7 @@ bool InventoryRegion::update_tab_tip_text(std::string &tip, bool active)
     return true;
 }
 
-bool InventoryRegion::update_tip_text(std::string& tip)
+bool InventoryRegion::update_tip_text(string& tip)
 {
     if (m_cursor == NO_CURSOR)
         return false;
@@ -268,7 +267,7 @@ bool InventoryRegion::update_tip_text(std::string& tip)
                     && mouse_control::current_mode() == MOUSE_MODE_COMMAND);
 
     // TODO enne - should the command keys here respect keymaps?
-    std::vector<command_type> cmd;
+    vector<command_type> cmd;
     if (m_items[item_idx].flag & TILEI_FLAG_FLOOR)
     {
         const item_def &item = mitm[idx];
@@ -340,8 +339,8 @@ bool InventoryRegion::update_tip_text(std::string& tip)
 
         if (_can_use_item(item, equipped))
         {
-            std::string tip_prefix = "\n[L-Click] ";
-            std::string tmp = "";
+            string tip_prefix = "\n[L-Click] ";
+            string tmp = "";
             if (equipped)
             {
                 if (wielded && !item_is_evokable(item))
@@ -530,7 +529,7 @@ bool InventoryRegion::update_tip_text(std::string& tip)
     return true;
 }
 
-bool InventoryRegion::update_alt_text(std::string &alt)
+bool InventoryRegion::update_alt_text(string &alt)
 {
     if (m_cursor == NO_CURSOR)
         return false;
@@ -653,9 +652,9 @@ void InventoryRegion::update()
         num_ground++;
 
     // If the inventory is full, show at least one row of the ground.
-    int min_ground = std::min(num_ground, mx);
-    max_pack_items = std::min(max_pack_items, mx * my - min_ground);
-    max_pack_items = std::min(ENDOFPACK, max_pack_items);
+    int min_ground = min(num_ground, mx);
+    max_pack_items = min(max_pack_items, mx * my - min_ground);
+    max_pack_items = min(ENDOFPACK, max_pack_items);
 
     ucs_t c;
     const char *tp = Options.tile_show_items.c_str();
@@ -737,8 +736,7 @@ void InventoryRegion::update()
             }
 
             // Add extra rows, if needed.
-            unsigned int ground_rows =
-                std::max((num_ground-1) / mx + 1, 1);
+            unsigned int ground_rows = max((num_ground-1) / mx + 1, 1);
 
             while ((int)(m_items.size() / mx + ground_rows) < my
                    && ((int)m_items.size()) < max_pack_items)

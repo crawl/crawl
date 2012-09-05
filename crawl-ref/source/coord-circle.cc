@@ -14,10 +14,10 @@ bool rect_def::contains(const coord_def& p) const
 rect_def rect_def::intersect(const rect_def& other) const
 {
     rect_def res;
-    res.min.x = std::max(min.x, other.min.x);
-    res.min.y = std::max(min.y, other.min.y);
-    res.max.x = std::min(max.x, other.max.x);
-    res.max.y = std::min(max.y, other.max.y);
+    res.min.x = ::max(min.x, other.min.x);
+    res.min.y = ::max(min.y, other.min.y);
+    res.max.x = ::min(max.x, other.max.x);
+    res.max.y = ::min(max.y, other.max.y);
     return res;
 }
 

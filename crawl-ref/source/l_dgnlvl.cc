@@ -97,7 +97,7 @@ level_id dlua_level_id(lua_State *ls, int ndx)
         {
             return level_id::parse_level_id(s);
         }
-        catch (const std::string &err)
+        catch (const string &err)
         {
             luaL_error(ls, err.c_str());
         }

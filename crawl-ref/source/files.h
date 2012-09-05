@@ -22,51 +22,45 @@ enum load_mode_type
     LOAD_VISITOR,               // Visitor pattern to see all levels
 };
 
-bool file_exists(const std::string &name);
-bool dir_exists(const std::string &dir);
-bool is_absolute_path(const std::string &path);
-void assert_read_safe_path(const std::string &path) throw (std::string);
+bool file_exists(const string &name);
+bool dir_exists(const string &dir);
+bool is_absolute_path(const string &path);
+void assert_read_safe_path(const string &path) throw (string);
 off_t file_size(FILE *handle);
 
-std::vector<std::string> get_dir_files(const std::string &dir);
-std::vector<std::string> get_dir_files_ext(const std::string &dir,
-                                           const std::string &ext);
-std::vector<std::string> get_dir_files_recursive(
-    const std::string &dirname,
-    const std::string &ext = "",
-    int recursion_depth = -1,
-    bool include_directories = false);
+vector<string> get_dir_files(const string &dir);
+vector<string> get_dir_files_ext(const string &dir, const string &ext);
+vector<string> get_dir_files_recursive(const string &dirname,
+                                       const string &ext = "",
+                                       int recursion_depth = -1,
+                                       bool include_directories = false);
 
-std::string datafile_path(
-    std::string basename,
-    bool croak_on_fail = true,
-    bool test_base_path = false,
-    bool (*thing_exists)(const std::string&) = file_exists);
+string datafile_path(string basename, bool croak_on_fail = true,
+                     bool test_base_path = false,
+                     bool (*thing_exists)(const string&) = file_exists);
 
-std::string get_parent_directory(const std::string &filename);
-std::string get_base_filename(const std::string &filename);
-std::string get_cache_name(const std::string &filename);
-std::string get_path_relative_to(const std::string &referencefile,
-                                 const std::string &relativepath);
-std::string catpath(const std::string &first, const std::string &second);
-std::string canonicalise_file_separator(const std::string &path);
+string get_parent_directory(const string &filename);
+string get_base_filename(const string &filename);
+string get_cache_name(const string &filename);
+string get_path_relative_to(const string &referencefile,
+                            const string &relativepath);
+string catpath(const string &first, const string &second);
+string canonicalise_file_separator(const string &path);
 
-bool check_mkdir(const std::string &what, std::string *dir,
-                 bool silent = false);
+bool check_mkdir(const string &what, string *dir, bool silent = false);
 
 // Find saved games for all game types.
-std::vector<player_save_info> find_all_saved_characters();
+vector<player_save_info> find_all_saved_characters();
 
-std::string get_save_filename(const std::string &name);
-std::string get_savedir_filename(const std::string &name);
-std::string savedir_versioned_path(const std::string &subdirs = "");
-std::string get_prefs_filename();
-std::string change_file_extension(const std::string &file,
-                                  const std::string &ext);
+string get_save_filename(const string &name);
+string get_savedir_filename(const string &name);
+string savedir_versioned_path(const string &subdirs = "");
+string get_prefs_filename();
+string change_file_extension(const string &file, const string &ext);
 
-time_t file_modtime(const std::string &file);
+time_t file_modtime(const string &file);
 time_t file_modtime(FILE *f);
-std::vector<std::string> get_title_files();
+vector<string> get_title_files();
 
 
 class level_id;
@@ -82,8 +76,8 @@ void save_game_state();
 
 bool get_save_version(reader &file, int &major, int &minor);
 
-bool save_exists(const std::string& filename);
-bool restore_game(const std::string& filename);
+bool save_exists(const string& filename);
+bool restore_game(const string& filename);
 
 void sighup_save_and_exit();
 
@@ -105,8 +99,8 @@ public:
 void save_ghost(bool force = false);
 bool load_ghost(bool creating_level);
 
-FILE *lk_open(const char *mode, const std::string &file);
-void lk_close(FILE *handle, const char *mode, const std::string &file);
+FILE *lk_open(const char *mode, const string &file);
+void lk_close(FILE *handle, const char *mode, const string &file);
 
 // file locking stuff
 bool lock_file_handle(FILE *handle, bool write);
@@ -115,13 +109,12 @@ bool unlock_file_handle(FILE *handle);
 class file_lock
 {
 public:
-    file_lock(const std::string &filename, const char *mode,
-              bool die_on_fail = true);
+    file_lock(const string &filename, const char *mode, bool die_on_fail = true);
     ~file_lock();
 private:
     FILE *handle;
     const char *mode;
-    std::string filename;
+    string filename;
 };
 
 FILE *fopen_replace(const char *name);

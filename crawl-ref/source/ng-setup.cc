@@ -620,7 +620,7 @@ static void _give_items_skills(const newgame_def& ng)
     case JOB_CHAOS_KNIGHT:
         you.religion = GOD_XOM;
         you.piety = 100;
-        you.gift_timeout = std::max(5, random2(40) + random2(40));
+        you.gift_timeout = max(5, random2(40) + random2(40));
 
         newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD, -1, 1,
                            2, 2);
@@ -938,8 +938,11 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_ARTIFICER:
-        // Equipment. Staff, wands, and armour or robe.
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_STAFF);
+        // Equipment. Short sword, wands, and armour or robe.
+        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
+
+        if (you.has_claws())
+            _newgame_clear_item(0);
 
         newgame_make_item(1, EQ_NONE, OBJ_WANDS, WAND_FLAME,
                            -1, 1, 15, 0);
@@ -953,10 +956,10 @@ static void _give_items_skills(const newgame_def& ng)
 
         // Skills
         you.skills[SK_EVOCATIONS]  = 3;
-        you.skills[SK_TRAPS_DOORS] = 2;
+        you.skills[SK_TRAPS]       = 2;
         you.skills[SK_DODGING]     = 2;
         you.skills[SK_FIGHTING]    = 1;
-        you.skills[SK_STAVES]      = 1;
+        weap_skill                 = 1;
         you.skills[SK_STEALTH]     = 1;
         break;
 
@@ -974,7 +977,7 @@ static void _give_items_skills(const newgame_def& ng)
     if (crawl_state.game_is_zotdef())
     {
         newgame_make_item(-1, EQ_NONE, OBJ_POTIONS, POT_CURING, -1, 2);
-        you.skills[SK_TRAPS_DOORS] += 2;
+        you.skills[SK_TRAPS] += 2;
     }
 
     if (weap_skill)
@@ -1082,7 +1085,7 @@ static void _setup_tutorial_miscs()
     you.skills[SK_SHIELDS] = 0;
 
     // Some spellcasting for the magic tutorial.
-    if (crawl_state.map.find("tutorial_lesson4") != std::string::npos)
+    if (crawl_state.map.find("tutorial_lesson4") != string::npos)
         you.skills[SK_SPELLCASTING] = 1;
 
     // Set Str low enough for the burdened tutorial.
@@ -1171,7 +1174,7 @@ static void _give_basic_spells(job_type which_job)
         break;
     }
 
-    std::string temp;
+    string temp;
     if (which_spell != SPELL_NO_SPELL
         && !spell_is_uncastable(which_spell, temp))
     {
@@ -1362,7 +1365,7 @@ static void _setup_generic(const newgame_def& ng)
 
         // There's little sense in training these skills in ZotDef
         you.train[SK_STEALTH] = 0;
-        you.train[SK_TRAPS_DOORS] = 0;
+        you.train[SK_TRAPS]   = 0;
     }
 
     // If the item in slot 'a' is a throwable weapon like a dagger,

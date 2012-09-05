@@ -8,7 +8,7 @@
 #include "skills.h"
 
 #include <algorithm>
-#include <math.h>
+#include <cmath>
 #include <string.h>
 #include <stdlib.h>
 
@@ -49,12 +49,14 @@ static void _train_skills(int exp, const int cost, const bool simu);
 
 // The progress of skill_cost_level depends only on total experience points,
 // it's independent of species. We try to keep close to the old system
-// and use an experience aptitude of 13 as a reference (Tengu).
-// This means that for a species with 13 exp apt, skill_cost_level should be
+// and use an experience aptitude of 130 as a reference (Tengu).
+// This means that for a species with 130 exp apt, skill_cost_level should be
 // the same as XL (unless the player has been drained).
+
+// 130 exp apt is midway between +0 and -1 now. -- elliptic
 unsigned int skill_cost_needed(int level)
 {
-    return exp_needed(level, 13);
+    return (exp_needed(level, 1) * 13) / 10;
 }
 
 // skill_cost_level makes skills more expensive for more experienced characters
@@ -250,7 +252,7 @@ void check_skill_level_change(skill_type sk, bool do_level_up)
 
 // Fill a queue in random order with the values of the array.
 template <typename T, int SIZE>
-static void _init_queue(std::list<skill_type> &queue, FixedVector<T, SIZE> &array)
+static void _init_queue(list<skill_type> &queue, FixedVector<T, SIZE> &array)
 {
     ASSERT(queue.empty());
 
@@ -323,7 +325,7 @@ static void _check_spell_skills()
 
 static void _check_abil_skills()
 {
-    std::vector<ability_type> abilities = get_god_abilities(true);
+    vector<ability_type> abilities = get_god_abilities(true);
     for (unsigned int i = 0; i < abilities.size(); ++i)
     {
         // Exit early if there's no more skill to check.
@@ -342,9 +344,9 @@ static void _check_abil_skills()
     }
 }
 
-static std::string _skill_names(skill_set &skills)
+static string _skill_names(skill_set &skills)
 {
-    std::string s;
+    string s;
     int i = 0;
     int size = skills.size();
     for (skill_set_iter it = skills.begin(); it != skills.end(); ++it)
@@ -442,7 +444,7 @@ bool training_restricted(skill_type sk)
     case SK_DODGING:
     case SK_STEALTH:
     case SK_STABBING:
-    case SK_TRAPS_DOORS:
+    case SK_TRAPS:
     case SK_UNARMED_COMBAT:
     case SK_SPELLCASTING:
         return false;
@@ -490,8 +492,8 @@ void init_train()
         }
 }
 
-static bool _cmp_rest(const std::pair<skill_type, int64_t>& a,
-                      const std::pair<skill_type, int64_t>& b)
+static bool _cmp_rest(const pair<skill_type, int64_t>& a,
+                      const pair<skill_type, int64_t>& b)
 {
     return a.second < b.second;
 }
@@ -512,7 +514,7 @@ static void _scale_array(FixedVector<T, SIZE> &array, int scale, bool exact)
     for (int i = 0; i < NUM_SKILLS; ++i)
         total += array[i];
 
-    std::vector<std::pair<skill_type, int64_t> > rests;
+    vector<pair<skill_type, int64_t> > rests;
     int scaled_total = 0;
 
     // All skills disabled, nothing to do.
@@ -526,7 +528,7 @@ static void _scale_array(FixedVector<T, SIZE> &array, int scale, bool exact)
             int64_t result = (int64_t)array[i] * (int64_t)scale;
             const int64_t rest = result % total;
             if (rest)
-                rests.push_back(std::pair<skill_type, int64_t>(skill_type(i), rest));
+                rests.push_back(pair<skill_type, int64_t>(skill_type(i), rest));
             array[i] = (int)(result / total);
             scaled_total += array[i];
         }
@@ -538,8 +540,8 @@ static void _scale_array(FixedVector<T, SIZE> &array, int scale, bool exact)
 
     // We ensure that the percentage always add up to 100 by increasing the
     // training for skills which had the higher rest from the above scaling.
-    std::sort(rests.begin(), rests.end(), _cmp_rest);
-    std::vector<std::pair<skill_type, int64_t> >::iterator it = rests.begin();
+    sort(rests.begin(), rests.end(), _cmp_rest);
+    vector<pair<skill_type, int64_t> >::iterator it = rests.begin();
     while (scaled_total < scale && it != rests.end())
     {
         ++array[it->first];
@@ -560,13 +562,13 @@ void init_training()
     skills.init(0);
     for (int i = 0; i < NUM_SKILLS; ++i)
         if (skill_trained(i))
-            skills[i] = pow(you.skill_points[i], 2);
+            skills[i] = pow(you.skill_points[i], 2.0);
 
     _scale_array(skills, EXERCISE_QUEUE_SIZE, true);
     _init_queue(you.exercises, skills);
 
     for (int i = 0; i < NUM_SKILLS; ++i)
-        skills[i] = pow(you.skill_points[i], 2);
+        skills[i] = pow(you.skill_points[i], 2.0);
 
     _scale_array(skills, EXERCISE_QUEUE_SIZE, true);
     _init_queue(you.exercises_all, skills);
@@ -638,7 +640,7 @@ void reset_training()
     // In automatic mode, we fill the array with the content of the queue.
     if (you.auto_training)
     {
-        for (std::list<skill_type>::iterator it = you.exercises.begin();
+        for (list<skill_type>::iterator it = you.exercises.begin();
              it != you.exercises.end(); ++it)
         {
             skill_type sk = *it;
@@ -652,7 +654,7 @@ void reset_training()
         // We count the practise events in the other queue.
         FixedVector<unsigned int, NUM_SKILLS> exer_all;
         exer_all.init(0);
-        for (std::list<skill_type>::iterator it = you.exercises_all.begin();
+        for (list<skill_type>::iterator it = you.exercises_all.begin();
              it != you.exercises_all.end(); ++it)
         {
             skill_type sk = *it;
@@ -665,7 +667,7 @@ void reset_training()
 
         // We keep the highest of the 2 numbers.
         for (int sk = 0; sk < NUM_SKILLS; ++sk)
-            you.training[sk] = std::max(you.training[sk], exer_all[sk]);
+            you.training[sk] = max(you.training[sk], exer_all[sk]);
 
         // The selected skills have not been exercised recently. Give them all
         // a default weight of 1 (or 2 for focus skills).
@@ -743,7 +745,7 @@ void train_skills(bool simu)
             const int next_level = skill_cost_needed(you.skill_cost_level + 1)
                                    - you.total_experience;
             ASSERT(next_level > 0);
-            _train_skills(std::min(exp, next_level + cost - 1), cost, simu);
+            _train_skills(min(exp, next_level + cost - 1), cost, simu);
         }
     }
     while (you.exp_available >= cost && exp != you.exp_available);
@@ -762,7 +764,7 @@ static void _train_skills(int exp, const int cost, const bool simu)
     int magic_gain = 0;
     FixedVector<int, NUM_SKILLS> sk_exp;
     sk_exp.init(0);
-    std::vector<skill_type> training_order;
+    vector<skill_type> training_order;
 #ifdef DEBUG_DIAGNOSTICS
     FixedVector<int, NUM_SKILLS> total_gain;
     total_gain.init(0);
@@ -795,8 +797,8 @@ static void _train_skills(int exp, const int cost, const bool simu)
     {
         // We randomize the order, to avoid a slight bias to first skills.
         // Being trained first can make a difference if skill cost increases.
-        std::random_shuffle(training_order.begin(), training_order.end());
-        for (std::vector<skill_type>::iterator it = training_order.begin();
+        random_shuffle(training_order.begin(), training_order.end());
+        for (vector<skill_type>::iterator it = training_order.begin();
              it != training_order.end(); ++it)
         {
             skill_type sk = *it;
@@ -920,7 +922,7 @@ static int _stat_mult(skill_type exsk, int skill_inc)
         stat = you.intel();
     }
 
-    return (skill_inc * std::max<int>(5, stat) / 10);
+    return (skill_inc * max<int>(5, stat) / 10);
 }
 
 void check_skill_cost_change()
@@ -968,7 +970,7 @@ static int _train(skill_type exsk, int &max_exp, bool simu)
         cost *= ANTITRAIN_PENALTY;
 
     // Scale cost and skill_inc to available experience.
-    const int spending_limit = std::min(MAX_SPENDING_LIMIT, max_exp);
+    const int spending_limit = min(MAX_SPENDING_LIMIT, max_exp);
     if (cost > spending_limit)
     {
         int frac = (spending_limit * 10) / cost;
@@ -983,7 +985,7 @@ static int _train(skill_type exsk, int &max_exp, bool simu)
     if (exsk == you.manual_skill)
     {
         item_def& manual(you.inv[you.manual_index]);
-        const int bonus = std::min<int>(skill_inc, manual.plus2);
+        const int bonus = min<int>(skill_inc, manual.plus2);
         skill_inc += bonus;
         manual.plus2 -= bonus;
         if (!manual.plus2 && !simu)
@@ -998,7 +1000,9 @@ static int _train(skill_type exsk, int &max_exp, bool simu)
     you.total_experience += cost;
     max_exp -= cost;
 
-    redraw_skill(exsk, old_best_skill);
+    if (!simu)
+        redraw_skill(exsk, old_best_skill);
+
     check_skill_cost_change();
     ASSERT(you.exp_available >= 0);
     ASSERT(max_exp >= 0);
@@ -1043,7 +1047,7 @@ void set_skill_level(skill_type skill, double amount)
     {
         int next_level = reduced ? skill_cost_needed(you.skill_cost_level)
                                  : skill_cost_needed(you.skill_cost_level + 1);
-        int max_xp = abs(next_level - you.total_experience);
+        int max_xp = abs(next_level - (int)you.total_experience);
 
         // When reducing, we don't want to stop right at the limit, unless
         // we're at skill cost level 0.
@@ -1054,15 +1058,15 @@ void set_skill_level(skill_type skill, double amount)
         // Maximum number of skill points to transfer in one go.
         // It's max_xp*10/cost rounded up.
         int max_skp = (max_xp * 10 + cost - 1) / cost;
-        max_skp = std::max(max_skp, 1);
-        int delta_skp = std::min<int>(abs(target - you.skill_points[skill]),
-                                      max_skp);
+        max_skp = max(max_skp, 1);
+        int delta_skp = min<int>(abs((int)(target - you.skill_points[skill])),
+                                 max_skp);
         int delta_xp = (delta_skp * cost + 9) / 10;
 
         if (reduced)
         {
-            delta_skp = -std::min<int>(delta_skp, you.skill_points[skill]);
-            delta_xp = -std::min<int>(delta_xp, you.total_experience);
+            delta_skp = -min<int>(delta_skp, you.skill_points[skill]);
+            delta_xp = -min<int>(delta_xp, you.total_experience);
         }
 
 #ifdef DEBUG_TRAINING_COST

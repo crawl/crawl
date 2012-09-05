@@ -477,7 +477,7 @@ static void _hints_inspect_kill()
         learned_something_new(HINT_KILLED_MONSTER);
 }
 
-static std::string _milestone_kill_verb(killer_type killer)
+static string _milestone_kill_verb(killer_type killer)
 {
     return (killer == KILL_BANISHED ? "banished" :
             killer == KILL_PACIFIED ? "pacified" :
@@ -505,7 +505,7 @@ void record_monster_defeat(monster* mons, killer_type killer)
     if (mons->type == MONS_PLAYER_GHOST)
     {
         monster_info mi(mons);
-        std::string milestone = _milestone_kill_verb(killer) + " the ghost of ";
+        string milestone = _milestone_kill_verb(killer) + " the ghost of ";
         milestone += get_ghost_description(mi, true);
         milestone += ".";
         mark_milestone("ghost", milestone);
@@ -754,8 +754,7 @@ static bool _ely_heal_monster(monster* mons, killer_type killer, int i)
 
     dprf("monster hp: %d, max hp: %d", mons->hit_points, mons->max_hit_points);
 
-    mons->hit_points = std::min(1 + random2(ely_penance/3),
-                                   mons->max_hit_points);
+    mons->hit_points = min(1 + random2(ely_penance/3), mons->max_hit_points);
 
     dprf("new hp: %d, ely penance: %d", mons->hit_points, ely_penance);
 
@@ -1107,7 +1106,7 @@ static bool _explode_monster(monster* mons, killer_type killer,
     {
         msg::streams(MSGCH_DIAGNOSTICS) << "Unknown spore type: "
                                         << static_cast<int>(type)
-                                        << std::endl;
+                                        << endl;
         return false;
     }
 
@@ -1182,7 +1181,7 @@ static void _monster_die_cloud(const monster* mons, bool corpse, bool silent,
     if (!summoned)
         return;
 
-    std::string prefix = " ";
+    string prefix = " ";
     if (corpse)
     {
         if (mons_weight(mons_species(mons->type)) == 0)
@@ -1191,12 +1190,12 @@ static void _monster_die_cloud(const monster* mons, bool corpse, bool silent,
         prefix = "'s corpse ";
     }
 
-    std::string msg = summoned_poof_msg(mons) + "!";
+    string msg = summoned_poof_msg(mons) + "!";
 
     cloud_type cloud = CLOUD_NONE;
-    if (msg.find("smoke") != std::string::npos)
+    if (msg.find("smoke") != string::npos)
         cloud = random_smoke_type();
-    else if (msg.find("chaos") != std::string::npos)
+    else if (msg.find("chaos") != string::npos)
         cloud = CLOUD_CHAOS;
 
     if (!silent)
@@ -1342,7 +1341,7 @@ static int _destroy_tentacles(monster* head)
     return tent;
 }
 
-static std::string _killer_type_name(killer_type killer)
+static string _killer_type_name(killer_type killer)
 {
     switch (killer)
     {
@@ -1409,7 +1408,7 @@ static void _make_spectral_thing(monster* mons, bool quiet)
             // case its HP should be rerolled to match.
             if (spectre->hit_dice != mons->hit_dice)
             {
-                spectre->hit_dice = std::max(mons->hit_dice, 1);
+                spectre->hit_dice = max(mons->hit_dice, 1);
                 roll_zombie_hp(spectre);
             }
 
@@ -2163,6 +2162,7 @@ int monster_die(monster* mons, killer_type killer,
 
         // Monster killed by trap/inanimate thing/itself/poison not from you.
         case KILL_MISC:
+        case KILL_MISCAST:
             if (death_message)
             {
                 if (fake_abjuration)
@@ -2180,7 +2180,7 @@ int monster_die(monster* mons, killer_type killer,
                     }
                     else
                     {
-                        std::string msg = " " + summoned_poof_msg(mons) + "!";
+                        string msg = " " + summoned_poof_msg(mons) + "!";
                         simple_monster_message(mons, msg.c_str());
                     }
                 }
@@ -2506,6 +2506,11 @@ void monster_cleanup(monster* mons)
         env.forest_awoken_until = 0;
     }
 
+    // May have been constricting something. No message because that depends
+    // on the order in which things are cleaned up: If the constrictee is
+    // cleaned up first, we wouldn't get a message anyway.
+    mons->stop_constricting_all(false, true);
+
     env.mid_cache.erase(mons->mid);
     unsigned int monster_killed = mons->mindex();
     mons->reset();
@@ -2683,7 +2688,7 @@ void change_monster_type(monster* mons, monster_type targetc)
                            | MF_WAS_IN_VIEW | MF_BAND_MEMBER | MF_KNOWN_SHIFTER
                            | MF_SPELLCASTER);
 
-    std::string name;
+    string name;
 
     // Preserve the names of uniques and named monsters.
     if (!mons->mname.empty())
@@ -2721,7 +2726,7 @@ void change_monster_type(monster* mons, monster_type targetc)
 
         // "Blork the orc" and similar.
         const size_t the_pos = name.find(" the ");
-        if (the_pos != std::string::npos)
+        if (the_pos != string::npos)
             name = name.substr(0, the_pos);
     }
 
@@ -2830,11 +2835,10 @@ void change_monster_type(monster* mons, monster_type targetc)
                                 * ((old_hp * 100) / old_hp_max) / 100
                                 + random2(mons->max_hit_points);
 
-    mons->hit_points = std::min(mons->max_hit_points,
-                                   mons->hit_points);
+    mons->hit_points = min(mons->max_hit_points, mons->hit_points);
 
     // Don't kill it.
-    mons->hit_points = std::max(mons->hit_points, 1);
+    mons->hit_points = max(mons->hit_points, 1);
 
     mons->speed_increment = 67 + random2(6);
 
@@ -2933,8 +2937,8 @@ bool monster_polymorph(monster* mons, monster_type targetc,
 
     bool could_see = you.can_see(mons);
     bool need_note = (could_see && MONST_INTERESTING(mons));
-    std::string old_name_a = mons->full_name(DESC_A);
-    std::string old_name_the = mons->full_name(DESC_THE);
+    string old_name_a = mons->full_name(DESC_A);
+    string old_name_the = mons->full_name(DESC_THE);
     monster_type oldc = mons->type;
 
     change_monster_type(mons, targetc);
@@ -2945,8 +2949,8 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     bool player_messaged = true;
     if (could_see)
     {
-        std::string verb = "";
-        std::string obj = "";
+        string verb = "";
+        string obj = "";
 
         if (!can_see)
             obj = "something you cannot see";
@@ -2983,8 +2987,8 @@ bool monster_polymorph(monster* mons, monster_type targetc,
 
     if (need_note || could_see && can_see && MONST_INTERESTING(mons))
     {
-        std::string new_name = can_see ? mons->full_name(DESC_A)
-                                       : "something unseen";
+        string new_name = can_see ? mons->full_name(DESC_A)
+                                  : "something unseen";
 
         take_note(Note(NOTE_POLY_MONSTER, 0, 0, old_name_a.c_str(),
                        new_name.c_str()));
@@ -3283,6 +3287,9 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
 // monster has tentacles).
 bool monster_can_hit_monster(monster* mons, const monster* targ)
 {
+    if (!summon_can_attack(mons, targ))
+        return false;
+
     if (!targ->submerged() || mons->has_damage_type(DVORP_TENTACLE))
         return true;
 
@@ -3291,6 +3298,32 @@ bool monster_can_hit_monster(monster* mons, const monster* targ)
 
     const item_def *weapon = mons->weapon();
     return (weapon && weapon_skill(*weapon) == SK_POLEARMS);
+}
+
+// Friendly summons can't attack out of the player's LOS, it's too abusable.
+bool summon_can_attack(const monster* mons)
+{
+    if (crawl_state.game_is_arena())
+        return true;
+
+    return !mons->friendly() || !mons->is_summoned()
+           || you.see_cell_no_trans(mons->pos());
+}
+
+bool summon_can_attack(const monster* mons, const coord_def &p)
+{
+    if (crawl_state.game_is_arena())
+        return true;
+
+    if (!mons->friendly() || !mons->is_summoned())
+        return true;
+
+    return you.see_cell_no_trans(mons->pos()) && you.see_cell_no_trans(p);
+}
+
+bool summon_can_attack(const monster* mons, const actor* targ)
+{
+    return summon_can_attack(mons, targ->pos());
 }
 
 mon_dam_level_type mons_get_damage_level(const monster* mons)
@@ -3315,10 +3348,9 @@ mon_dam_level_type mons_get_damage_level(const monster* mons)
         return MDAM_OKAY;
 }
 
-std::string get_damage_level_string(mon_holy_type holi,
-                                    mon_dam_level_type mdam)
+string get_damage_level_string(mon_holy_type holi, mon_dam_level_type mdam)
 {
-    std::ostringstream ss;
+    ostringstream ss;
     switch (mdam)
     {
     case MDAM_ALMOST_DEAD:
@@ -3355,7 +3387,7 @@ void print_wounds(const monster* mons)
         return;
 
     mon_dam_level_type dam_level = mons_get_damage_level(mons);
-    std::string desc = get_damage_level_string(mons->holiness(), dam_level);
+    string desc = get_damage_level_string(mons->holiness(), dam_level);
 
     desc.insert(0, " is ");
     desc += ".";
@@ -3450,7 +3482,7 @@ bool can_go_straight(const monster* mon, const coord_def& p1,
     if (p1 == p2)
         return true;
 
-    if (distance(p1, p2) > get_los_radius_sq())
+    if (distance2(p1, p2) > get_los_radius_sq())
         return false;
 
     // XXX: Hack to improve results for now. See FIXME above.
@@ -3496,8 +3528,7 @@ monster* choose_random_monster_on_level(int weight,
 
     // A radius_iterator with radius == max(GXM, GYM) will sweep the
     // whole level.
-    radius_iterator ri(you.pos(), near_by ? 9 : std::max(GXM, GYM),
-                       true, in_sight);
+    radius_iterator ri(you.pos(), near_by ? 9 : max(GXM, GYM), true, in_sight);
 
     for (; ri; ++ri)
     {
@@ -3554,7 +3585,7 @@ bool simple_monster_message(const monster* mons, const char *event,
         && (channel == MSGCH_MONSTER_SPELL || channel == MSGCH_FRIEND_SPELL
             || mons->visible_to(&you)))
     {
-        std::string msg = mons->name(descrip);
+        string msg = mons->name(descrip);
         msg += event;
         msg = apostrophise_fixup(msg);
 
@@ -3765,7 +3796,7 @@ int mons_thrown_weapon_damage(const item_def *weap,
         return 0;
     }
 
-    return std::max(0, (property(*weap, PWPN_DAMAGE) + weap->plus2 / 2));
+    return max(0, (property(*weap, PWPN_DAMAGE) + weap->plus2 / 2));
 }
 
 int mons_weapon_damage_rating(const item_def &launcher)
@@ -3782,7 +3813,7 @@ int mons_missile_damage(monster* mons, const item_def *launch,
 
     const int missile_damage = property(*missile, PWPN_DAMAGE) / 2 + 1;
     const int launch_damage  = launch? property(*launch, PWPN_DAMAGE) : 0;
-    return std::max(0, launch_damage + missile_damage);
+    return max(0, launch_damage + missile_damage);
 }
 
 // Given the monster's current weapon and alt weapon (either or both of
@@ -3837,8 +3868,7 @@ int mons_pick_best_missile(monster* mons, item_def **launcher,
 int mons_natural_regen_rate(monster* mons)
 {
     // A HD divider ranging from 3 (at 1 HD) to 1 (at 8 HD).
-    int divider =
-        std::max(div_rand_round(15 - mons->hit_dice, 4), 1);
+    int divider = max(div_rand_round(15 - mons->hit_dice, 4), 1);
 
     // The undead have a harder time regenerating.  Golems have it worse.
     switch (mons->holiness())
@@ -3855,7 +3885,7 @@ int mons_natural_regen_rate(monster* mons)
         break;
     }
 
-    return std::max(div_rand_round(mons->hit_dice, divider), 1);
+    return max(div_rand_round(mons->hit_dice, divider), 1);
 }
 
 void mons_check_pool(monster* mons, const coord_def &oldpos,
@@ -4031,7 +4061,7 @@ void seen_monster(monster* mons)
 
         if (MONST_INTERESTING(mons))
         {
-            std::string name = mons->name(DESC_A, true);
+            string name = mons->name(DESC_A, true);
             if (mons->type == MONS_PLAYER_GHOST)
             {
                 name += make_stringf(" (%s)",
@@ -4119,7 +4149,7 @@ static void _vanish_orig_eq(monster* mons)
     }
 }
 
-int dismiss_monsters(std::string pattern)
+int dismiss_monsters(string pattern)
 {
     // Make all of the monsters' original equipment disappear unless "keepitem"
     // is found in the regex (except for fixed arts and unrand arts).
@@ -4363,7 +4393,7 @@ void mons_clear_trapping_net(monster* mon)
     mon->del_ench(ENCH_HELD, true);
 }
 
-std::string summoned_poof_msg(const monster* mons, bool plural)
+string summoned_poof_msg(const monster* mons, bool plural)
 {
     int  summon_type = 0;
     bool valid_mon   = false;
@@ -4373,8 +4403,8 @@ std::string summoned_poof_msg(const monster* mons, bool plural)
         valid_mon = true;
     }
 
-    std::string msg      = "disappear%s in a puff of smoke";
-    bool        no_chaos = false;
+    string msg      = "disappear%s in a puff of smoke";
+    bool   no_chaos = false;
 
     switch (summon_type)
     {
@@ -4425,7 +4455,7 @@ std::string summoned_poof_msg(const monster* mons, bool plural)
     return msg;
 }
 
-std::string summoned_poof_msg(const int midx, const item_def &item)
+string summoned_poof_msg(const int midx, const item_def &item)
 {
     if (midx == NON_MONSTER)
         return summoned_poof_msg(static_cast<const monster* >(NULL), item);
@@ -4433,7 +4463,7 @@ std::string summoned_poof_msg(const int midx, const item_def &item)
         return summoned_poof_msg(&menv[midx], item);
 }
 
-std::string summoned_poof_msg(const monster* mons, const item_def &item)
+string summoned_poof_msg(const monster* mons, const item_def &item)
 {
     ASSERT(item.flags & ISFLAG_SUMMONED);
 

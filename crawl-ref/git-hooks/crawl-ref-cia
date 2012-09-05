@@ -179,6 +179,7 @@ $user =~ s/chriscampbell89/MarvinPA/;
 $user =~ s/naesten/SamB/;
 $user =~ s/neil/|amethyst/;
 $user =~ s/smelenchuk/Grunt/;
+$user =~ s/yokomeshi/ontoclasm/;
 
 # Other regular contributors:
 $user =~ s/homelesspete/Twinge/;

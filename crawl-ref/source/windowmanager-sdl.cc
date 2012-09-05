@@ -295,8 +295,8 @@ int SDLWrapper::init(coord_def *m_windowsz)
         int y = Options.tile_window_height;
         x = (x > 0) ? x : video_info->current_w + x;
         y = (y > 0) ? y : video_info->current_h + y;
-        m_windowsz->x = std::max(800, x);
-        m_windowsz->y = std::max(480, y);
+        m_windowsz->x = max(800, x);
+        m_windowsz->y = max(480, y);
 
 #ifdef TARGET_OS_WINDOWS
         set_window_placement(m_windowsz);
@@ -381,17 +381,17 @@ void SDLWrapper::set_window_placement(coord_def *m_windowsz)
             x += tpos == TASKBAR_LEFT ? overlap : -overlap;
 
         // Keep the window in the screen.
-        x = std::max(x, border);
-        y = std::max(y, title_bar);
+        x = max(x, border);
+        y = max(y, title_bar);
 
         //We resize the window so that it fits in the screen.
-        m_windowsz->x = std::min(m_windowsz->x, wm->desktop_width()
-                                 - (tpos & TASKBAR_V ? tsize : 0)
-                                 - border * 2);
-        m_windowsz->y = std::min(m_windowsz->y, wm->desktop_height()
-                                 - (tpos & TASKBAR_H ? tsize : 0)
-                                 - (tpos & TASKBAR_TOP ? 0 : title_bar)
-                                 - border);
+        m_windowsz->x = min(m_windowsz->x, wm->desktop_width()
+                            - (tpos & TASKBAR_V ? tsize : 0)
+                            - border * 2);
+        m_windowsz->y = min(m_windowsz->y, wm->desktop_height()
+                            - (tpos & TASKBAR_H ? tsize : 0)
+                            - (tpos & TASKBAR_TOP ? 0 : title_bar)
+                            - border);
         sprintf(env_str, "SDL_VIDEO_WINDOW_POS=%d,%d", x, y);
         putenv(env_str);
     }
@@ -613,7 +613,7 @@ unsigned int SDLWrapper::get_event_count(wm_event_type type)
     int count = SDL_PeepEvents(&store, 1, SDL_PEEKEVENT, eventmask);
     assert(count >= 0);
 
-    return std::max(count, 0);
+    return max(count, 0);
 }
 
 bool SDLWrapper::load_texture(GenericTexture *tex, const char *filename,
@@ -623,7 +623,7 @@ bool SDLWrapper::load_texture(GenericTexture *tex, const char *filename,
 {
     char acBuffer[512];
 
-    std::string tex_path = datafile_path(filename);
+    string tex_path = datafile_path(filename);
 
     if (tex_path.c_str()[0] == 0)
     {

@@ -11,11 +11,11 @@ public:
 
     virtual void update();
     virtual int handle_mouse(MouseEvent &event);
-    virtual bool update_tip_text(std::string &tip);
-    virtual bool update_tab_tip_text(std::string &tip, bool active);
-    virtual bool update_alt_text(std::string &alt);
+    virtual bool update_tip_text(string &tip);
+    virtual bool update_tab_tip_text(string &tip, bool active);
+    virtual bool update_alt_text(string &alt);
 
-    virtual const std::string name() const { return "Abilities"; }
+    virtual const string name() const { return "Abilities"; }
 
 protected:
     virtual int get_max_slots();

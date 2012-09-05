@@ -10,7 +10,7 @@ const int KRAKEN_TENTACLE_RANGE = 3;
 
 #define MAX_DAMAGE_COUNTER 10000
 
-typedef std::map<enchant_type, mon_enchant> mon_enchant_list;
+typedef map<enchant_type, mon_enchant> mon_enchant_list;
 
 struct monsterentry;
 
@@ -26,7 +26,7 @@ public:
 
 public:
     // Possibly some of these should be moved into the hash table
-    std::string mname;
+    string mname;
 
     int hit_points;
     int max_hit_points;
@@ -40,7 +40,7 @@ public:
     coord_def firing_pos;
     coord_def patrol_point;
     mutable montravel_target_type travel_target;
-    std::vector<coord_def> travel_path;
+    vector<coord_def> travel_path;
     FixedVector<short, NUM_MONSTER_SLOTS> inv;
     monster_spells spells;
     mon_attitude_type attitude;
@@ -64,7 +64,7 @@ public:
     god_type god;                      // What god the monster worships, if
                                        // any.
 
-    std::auto_ptr<ghost_demon> ghost;  // Ghost information.
+    unique_ptr<ghost_demon> ghost;     // Ghost information.
 
     seen_context_type seen_context;    // Non-standard context for
                                        // AI_SEE_MONSTER
@@ -215,7 +215,7 @@ public:
     bool        extra_balanced() const;
     bool        can_pass_through_feat(dungeon_feature_type grid) const;
     bool        is_habitable_feat(dungeon_feature_type actual_grid) const;
-    bool        shove(const char* name);
+    bool        shove(const char* name = "");
     size_type   body_size(size_part_type psize = PSIZE_TORSO,
                           bool base = false) const;
     int         body_weight(bool base = false) const;
@@ -267,23 +267,21 @@ public:
 
     bool      can_use_missile(const item_def &item) const;
 
-    std::string name(description_level_type type,
-                     bool force_visible = false) const;
+    string name(description_level_type type, bool force_visible = false) const;
 
     // Base name of the monster, bypassing any mname setting. For an orc priest
     // named Arbolt, name() will return "Arbolt", but base_name() will return
     // "orc priest".
-    std::string base_name(description_level_type type,
-                          bool force_visible = false) const;
+    string base_name(description_level_type type,
+                     bool force_visible = false) const;
     // Full name of the monster.  For an orc priest named Arbolt, full_name()
     // will return "Arbolt the orc priest".
-    std::string full_name(description_level_type type,
-                          bool use_comma = false) const;
-    std::string pronoun(pronoun_type pro, bool force_visible = false) const;
-    std::string conj_verb(const std::string &verb) const;
-    std::string hand_name(bool plural, bool *can_plural = NULL) const;
-    std::string foot_name(bool plural, bool *can_plural = NULL) const;
-    std::string arm_name(bool plural, bool *can_plural = NULL) const;
+    string full_name(description_level_type type, bool use_comma = false) const;
+    string pronoun(pronoun_type pro, bool force_visible = false) const;
+    string conj_verb(const string &verb) const;
+    string hand_name(bool plural, bool *can_plural = NULL) const;
+    string foot_name(bool plural, bool *can_plural = NULL) const;
+    string arm_name(bool plural, bool *can_plural = NULL) const;
 
     bool fumbles_attack(bool verbose = true);
     bool cannot_fight() const;
@@ -300,8 +298,8 @@ public:
     bool can_mutate() const;
     bool can_safely_mutate() const;
     bool can_bleed(bool allow_tran = true) const;
-    bool mutate(const std::string &reason);
-    void banish(actor *agent, const std::string &who = "");
+    bool mutate(const string &reason);
+    void banish(actor *agent, const string &who = "");
     void expose_to_element(beam_type element, int strength = 0);
 
     monster_type mons_species(bool zombie_base = false) const;
@@ -401,7 +399,7 @@ public:
     bool poison(actor *agent, int amount = 1, bool force = false);
     bool sicken(int strength, bool unused = true);
     bool bleed(const actor *agent, int amount, int degree);
-    void paralyse(actor *, int str, std::string source = "");
+    void paralyse(actor *, int str, string source = "");
     void petrify(actor *);
     bool fully_petrify(actor *foe, bool quiet = false);
     void slow_down(actor *, int str);
@@ -422,7 +420,7 @@ public:
     void hibernate(int power = 0);
     void put_to_sleep(actor *attacker, int power = 0);
     void check_awaken(int disturbance);
-    int beam_resists(bolt &beam, int hurted, bool doEffects, std::string source = "");
+    int beam_resists(bolt &beam, int hurted, bool doEffects, string source = "");
 
     int stat_hp() const    { return hit_points; }
     int stat_maxhp() const { return max_hit_points; }
@@ -451,7 +449,7 @@ public:
     void check_speed();
     void upgrade_type(monster_type after, bool adjust_hd, bool adjust_hp);
 
-    std::string describe_enchantments() const;
+    string describe_enchantments() const;
 
     int action_energy(energy_use_type et) const;
 

@@ -264,7 +264,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxx?xxx?x?xx?x.2xx?xxx?x*?xxx?.2.xxxx
 xxxxxxxxxxxxxxx.2.......?xx.x.?xxx?.??xxxx?x.?xxx
 xxxxxxxxxxxxx?....xxx...2....??????..????x..%cccc
-xx?xx???xxxxx..xx??xx??..........?...???..??c=.?c
+xx?xx???xxxxx..xx??xx??..........?...???..??c+.?c
 @......xxx.2.xx?xxxxxx?x?x??.......1...2.x.ccc.?c
 xxx?xxx...xxxxxxxxxxxx?xxxx.??.2...?......?ccc$cc
 xxxxxx?xxx?xxxxxxxxxxxx....xx??...?....??..??cc?c
@@ -454,40 +454,6 @@ ENDMAP
 ##############################################################################
 # Pointless little "vaults" by Lemuel
 #
-NAME:   strawberry_fields_big
-ORIENT: float
-WEIGHT: 1
-DEPTH:  Lair
-SUBST:  . = G:20 B:15 .
-COLOUR: G = green
-FTILE:  G = floor_grass
-COLOUR: B = brown
-FTILE:  B = floor_dirt
-SUBST:  BG = .
-SUBST:  .= d .:150 1:8 2:4
-# "strawberry plant"
-MONS:   plant name:strawberry name_adjective, butterfly
-ITEM:   strawberry q:1 / strawberry q:2 / strawberry q:3 w:5 /\
-        strawberry q:4 w:3 / strawberry q:5 w:2 / strawberry q:6 w:1
-MAP
-.....................
-.....................
-.....................
-.....................
-.....................
-.....................
-.....................
-.....................
-.....................
-.....................
-.....................
-.....................
-.....................
-.....................
-.....................
-.....................
-ENDMAP
-
 NAME:   strawberry_fields_big_rounded
 ORIENT: float
 WEIGHT: 1
@@ -498,11 +464,11 @@ FTILE:  G = floor_grass
 COLOUR: B = brown
 FTILE:  B = floor_dirt
 SUBST:  BG = .
-SUBST:  .= d .:140 1:8 2:4
+SUBST:  .= d:6 .:150 1:10 2:4
 # "strawberry plant"
 MONS:   plant name:strawberry name_adjective, butterfly
-ITEM:   strawberry q:1 / strawberry q:2 / strawberry q:3 w:5 /\
-        strawberry q:4 w:3 / strawberry q:5 w:2 / strawberry q:6 w:1
+ITEM:   strawberry q:1 / strawberry q:2 w:7 / strawberry q:3 w:3 /\
+        strawberry q:4 w:1 / strawberry q:5 w:1 / strawberry q:6 w:1
 MAP
        .......
      ...........
@@ -536,8 +502,8 @@ SUBST:  BG = .
 SUBST:  .= d .:50 1:8 2:4
 # "strawberry plant"
 MONS:   plant name:strawberry name_adjective, butterfly
-ITEM:   strawberry q:1 / strawberry q:2 / strawberry q:3 w:5 /\
-        strawberry q:4 w:3 / strawberry q:5 w:2 / strawberry q:6 w:1
+ITEM:   strawberry q:1 / strawberry q:2 w:7 / strawberry q:3 w:3 /\
+        strawberry q:4 w:1 / strawberry q:5 w:1 / strawberry q:6 w:1
 MAP
    ....
  ........
@@ -562,8 +528,8 @@ SUBST:  BG = .
 SUBST:  .= d .:50 1:8 2:4
 # "strawberry plant"
 MONS:   plant name:strawberry name_adjective, butterfly
-ITEM:   strawberry q:1 / strawberry q:2 / strawberry q:3 w:5 /\
-        strawberry q:4 w:3 / strawberry q:5 w:2 / strawberry q:6 w:1
+ITEM:   strawberry q:1 / strawberry q:2 w:7 / strawberry q:3 w:3 /\
+        strawberry q:4 w:1 / strawberry q:5 w:1 / strawberry q:6 w:1
 MAP
    ..
  ......
@@ -590,8 +556,7 @@ DEPTH:  Lair, Snake
 MONS:   plant, fungus
 SUBST:  ' = . a 2:1
 SUBST:  . = .:90 a:10 2:1
-KITEM:  a : apple / apricot / pear / orange / banana / strawberry q:1 w:5 /\
-            strawberry q:2 w:5 / lemon
+KITEM:  a : apple / apricot / pear / orange / banana / strawberry q:1 / lemon
 KFEAT:  a = .
 WEIGHT: 8
 MAP
@@ -611,8 +576,7 @@ MONS:   plant, fungus
 SUBST:  ' = . 1
 SUBST:  . = .:90 a:10 2:1
 SUBST:  _ = .:90 a:4
-KITEM:  a : apple / apricot / pear / orange / banana / strawberry q:1 w:5 /\
-            strawberry q:2 w:5 / lemon
+KITEM:  a : apple / apricot / pear / orange / banana / strawberry q:1 / lemon
 KFEAT:  a = .
 WEIGHT: 2
 MAP
@@ -850,8 +814,7 @@ MAP
 .....
 ENDMAP
 
-# avg 28.260 strawberries
-# 5.6k/14.1k/0 nutrition
+# avg 14.608 strawberries
 NAME:   blue_anna_strawberry_field
 TAGS:   fruiting_plant allow_dup
 WEIGHT: 2
@@ -861,10 +824,10 @@ FTILE:  G = floor_grass
 COLOUR: B = brown
 FTILE:  B = floor_dirt
 SUBST:  BG = .
-NSUBST: . = 2:1 / *=dddd.1
+NSUBST: . = 2:1 / *=ddd..1
 MONS:   plant name:strawberry name_adjective
-ITEM:   strawberry q:1 / strawberry q:2 / strawberry q:3 w:5 /\
-        strawberry q:4 w:3 / strawberry q:5 w:2 / strawberry q:6 w:1
+ITEM:   strawberry q:1 / strawberry q:2 w:7 / strawberry q:3 w:3 /\
+        strawberry q:4 w:1 / strawberry q:5 w:1 / strawberry q:6 w:1
 MAP
 .....
 .....
@@ -1968,7 +1931,7 @@ MAP
  ttttxc''''+''0'xxxxxx'''+~'0'cx0'0'ctt
  t.ttxc''0'xxxx~x''00x'''x''''cx''~'ctt
  tt.txc'0''x''x'x''''x''0x''''cx''''ct1
-tt.t.xc'~''x''='+'''0x'''x'''~cc=cc+ct1tt
+tt.t.xc'~''x''+'+'''0x'''x'''~cc+cc+ct1tt
 t.t.txccc++ccccccxcxcxcxcc++cccx'x2'2tt1tt
 tttt.t.tt''tttttttcttttttt''ttx''x"'"ttt1t
   ttt..tt''''''tttcttt''''''ttxxxx2'2tt1tt
@@ -1978,7 +1941,7 @@ tttt.t.tt''tttttttcttttttt''ttx''x"'"ttt1t
  ttt.ttt..t.t.t..'''tt.t.ttt..x"2''T''2"tt
   ttt...ttt.tt...0'0t.tt...tt.x2""'''""2t
   ttt.t.t..t.t...'''ttt..tt..tx22""'""22tt
-tcccccccccccccccc+c+ccccccccccccccc=ccccct
+tcccccccccccccccc+c+ccccccccccccccc+ccccct
  tttttt.111ttt.1x'x'xtttttttttttttt1ttttt
  ttt%1.tttt1..tt.'''.ttttttttttttt1.1tt
   ttt.tt..1txxxc.'''.cxxxttt1tttttt.tttt
@@ -2038,6 +2001,7 @@ MARKER: o = lua:monster_on_death { \
             veto_fragmentation="veto", veto_disintegrate="veto", \
             veto_shatter="veto", \
          }
+KFEAT: = = runed_door
 MAP
   xxxxxxxxxxx
  xxxxxXX.XXXxx
@@ -2081,7 +2045,7 @@ MONS:   sun demon
 MONS:   hydra / fire drake / dire elephant
 MONS:   wizard col:red hd:13 name:crazed n_adj n_noc tile:mons_hell_wizard
 KITEM:  / = acquire any
-MARKER: = = lua:restrict_door {}
+KFEAT:  = = runed_door
 MAP
    ...TTTT....  .............................
   ..TttttttT.......Tt.TtT....TT..TT......Tt....
@@ -2127,6 +2091,7 @@ SUBST:  P = 11.
 # Give a hint about the dragon cave.
 NSUBST: " = 1:GU / *:.
 KPROP:  = = bloody
+KFEAT:  = = runed_door
 SUBST:  _ = .
 : lair_small_ending(_G)
 MAP

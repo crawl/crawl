@@ -1182,7 +1182,7 @@ Staves player ghost
 
 @The_monster@ says, "I excel at staving off weak adventurers."
 
-VISUAL:@The_monster@ twirls @possessive@ staff.
+VISUAL:@The_monster@ twirls @possessive@ quarterstaff.
 
 @The_monster@ threatens to break your skull. @player_only@
 %%%%
@@ -1264,32 +1264,17 @@ Shields player ghost
 
 @The_monster@ says, "You can hit me, but you can't hurt me."
 %%%%
-Traps & Doors player ghost
+Traps player ghost
 
 @The_monster@ says @to_foe@, "I bet you don't even know how a teleportation trap works."
 
-@The_monster@ says @to_foe@, "You can't escape! I know where all the passages lead!"
-
 VISUAL:@The_monster@ quickly assembles and disassembles an arrow trap before your eyes, then grins. @player_only@
-
-@The_monster@ says @to_foe@, "With tracks like that, I knew you had to be a @foe_genus@."
-
-w:1
-@The_monster@ giggles, and steps all the way around you, then returns to @possessive@ position; suddenly you realise that this is only a game to it.
-
-w:1
-@The_monster@ whirls like a shadow given life, stepping faster than you can keep track, before standing precisely still, watching, waiting for your next assault.
 
 w:1
 VISUAL SPELL:@The_monster@ produces a bizarre clockwork butterfly, ethereal and luminous, from @possessive@ pack, and hurls it at you - so perfect is its making that it comes to life and darts away before touching you.
 
 w:1
 @The_monster@ regards you luminously, comprehending your nature, and seems resigned. @Subjective@ shouts, "Do you know what I know, @foe@..."
-
-w:1
-@The_monster@ whispers, "I have found a way out of unlife even Necromancers could not discover."
-
-@The_monster@ strategises, and dematerialises before your eyes, reforming brighter.
 
 @The_monster@ rises to @possessive@ full height, drawing on the power of @possessive@ mind.
 

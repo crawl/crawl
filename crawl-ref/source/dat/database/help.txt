@@ -241,14 +241,15 @@ Training can be done in two modes, which are toggled with the <w>/</w> key.
 * manual:       Experience is spread evenly across all activated skills.
 
 How fast you train a skill is governed by the following factors:
-* aptitude: Shown <red>red</red> in the Apt column. Higher numbers mean that
+* aptitude: Shown <white>white</white> in the Apt column. Higher numbers mean that
       less experience is needed to advance a skill. Depends on species.
 * cross-training: Some skills are easier to learn when you already are
       proficient with a related one, e.g. Long and Short Blades.
       The aptitude bonus for crosstraining is indicated in <green>green</green>.
 * magic penalties: It is harder to learn an elemental skill if you are
       proficient in the opposing element (Air-Earth, Ice-Fire).
-      The aptitude penalty is indicated in <magenta>magenta</magenta>.
+      The aptitude penalty is indicated in <red>red</red>.
+
 On top of that, there are some effects which directly modify a skill, for
 example god powers. These skill modifiers are shown in <blue>blue</blue>.
 The training percentage (in <brown>brown</brown>) shows the relative amount of experience
@@ -261,7 +262,7 @@ Apart from (de)selecting skills, you also have the following toggles:
 <w>_</w> :   Shows/hides skill modifiers, e.g. from god powers.
 
                                <h>Training restrictions</h>
-Fighting, Throwing, Dodging, Stealth, Stabbing, Traps & Doors, Unarmed Combat,
+Fighting, Throwing, Dodging, Stealth, Stabbing, Traps, Unarmed Combat,
 and Spellcasting can always be trained. For the rest:
 * Weapon skills require carrying a weapon of the appropriate type.
 * Armour requires wearing an armour with an evasion penalty.

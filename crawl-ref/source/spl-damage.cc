@@ -114,7 +114,7 @@ void setup_fire_storm(const actor *source, int pow, bolt &beam)
 
 spret_type cast_fire_storm(int pow, bolt &beam, bool fail)
 {
-    if (distance(beam.target, beam.source) > dist_range(beam.range))
+    if (distance2(beam.target, beam.source) > dist_range(beam.range))
     {
         mpr("That is beyond the maximum range.");
         return SPRET_ABORT;
@@ -235,6 +235,10 @@ spret_type cast_chain_lightning(int pow, const actor *caster, bool fail)
             if (invalid_monster(*mi))
                 continue;
 
+            // Don't arc to orbs of destruction.
+            if (mi->type == MONS_ORB_OF_DESTRUCTION)
+                continue;
+
             dist = grid_distance(source, mi->pos());
 
             // check for the source of this arc
@@ -269,7 +273,7 @@ spret_type cast_chain_lightning(int pow, const actor *caster, bool fail)
                 target = mi->pos();
 
                 // need to set min_dist for first target case
-                dist = std::max(dist, min_dist);
+                dist = max(dist, min_dist);
             }
         }
 
@@ -413,7 +417,7 @@ spret_type cast_toxic_radiance(int pow, bool non_player, bool fail)
 
     if (!affected_monsters.empty())
     {
-        const std::string message =
+        const string message =
             make_stringf("%s %s poisoned.",
                          affected_monsters.describe().c_str(),
                          affected_monsters.count() == 1? "is" : "are");
@@ -496,7 +500,7 @@ spret_type cast_refrigeration(int pow, bool non_player, bool freeze_potions,
 
     if (!affected_monsters.empty())
     {
-        const std::string message =
+        const string message =
             make_stringf("%s %s frozen.",
                          affected_monsters.describe().c_str(),
                          affected_monsters.count() == 1? "is" : "are");
@@ -573,7 +577,7 @@ void sonic_damage(bool scream)
 
     if (!affected_monsters.empty())
     {
-        const std::string message =
+        const string message =
             make_stringf("%s %s hurt by the noise.",
                          affected_monsters.describe().c_str(),
                          affected_monsters.count() == 1? "is" : "are");
@@ -598,9 +602,9 @@ void sonic_damage(bool scream)
         int hurt = (random2(2) + 1) * (random2(2) + 1) * (random2(3) + 1)
                  + (random2(3) + 1) + 1;
         if (scream)
-            hurt = std::max(hurt * 2, 16);
+            hurt = max(hurt * 2, 16);
         int cap = scream ? mi->max_hit_points / 2 : mi->max_hit_points * 3 / 10;
-        hurt = std::min(hurt, std::max(cap, 1));
+        hurt = min(hurt, max(cap, 1));
         // not so much damage if you're a n00b
         hurt = div_rand_round(hurt * you.experience_level, 27);
         /* per dpeg:
@@ -675,8 +679,8 @@ spret_type vampiric_drain(int pow, monster* mons, bool fail)
     // The practical maximum of this is about 25 (pow @ 100). - bwr
     int hp_gain = 3 + random2avg(9, 2) + random2(pow) / 7;
 
-    hp_gain = std::min(mons->hit_points, hp_gain);
-    hp_gain = std::min(you.hp_max - you.hp, hp_gain);
+    hp_gain = min(mons->hit_points, hp_gain);
+    hp_gain = min(you.hp_max - you.hp, hp_gain);
 
     if (!hp_gain)
     {
@@ -704,7 +708,7 @@ spret_type vampiric_drain(int pow, monster* mons, bool fail)
 
 spret_type cast_freeze(int pow, monster* mons, bool fail)
 {
-    pow = std::min(25, pow);
+    pow = min(25, pow);
 
     if (mons == NULL || mons->submerged())
     {
@@ -818,7 +822,7 @@ spret_type cast_airstrike(int pow, const dist &beam, bool fail)
 
     hurted -= random2(1 + mons->armour_class());
 
-    hurted = std::max(0, hurted);
+    hurted = max(0, hurted);
 
     mons->hurt(&you, hurted);
     if (mons->alive())
@@ -908,7 +912,7 @@ static int _shatter_mon_dice(const monster *mon)
     }
 }
 
-int shatter_monsters(coord_def where, int pow, actor *agent)
+static int _shatter_monsters(coord_def where, int pow, actor *agent)
 {
     dice_def dam_dice(0, 5 + pow / 3); // Number of dice set below.
     monster* mon = monster_at(where);
@@ -917,7 +921,7 @@ int shatter_monsters(coord_def where, int pow, actor *agent)
         return 0;
 
     dam_dice.num = _shatter_mon_dice(mon);
-    int damage = std::max(0, dam_dice.roll() - random2(mon->armour_class()));
+    int damage = max(0, dam_dice.roll() - random2(mon->armour_class()));
 
     if (damage <= 0)
         return 0;
@@ -935,7 +939,7 @@ int shatter_monsters(coord_def where, int pow, actor *agent)
     return damage;
 }
 
-int shatter_items(coord_def where, int pow, actor *)
+static int _shatter_items(coord_def where, int pow, actor *)
 {
     UNUSED(pow);
 
@@ -943,10 +947,20 @@ int shatter_items(coord_def where, int pow, actor *)
 
     for (stack_iterator si(where); si; ++si)
     {
-        if (si->base_type == OBJ_POTIONS && !one_chance_in(10))
+        if (si->base_type == OBJ_POTIONS)
         {
-            broke_stuff++;
-            destroy_item(si->index());
+            for (int j = 0; j < si->quantity; ++j)
+            {
+                if (one_chance_in(10))
+                {
+                    broke_stuff++;
+                    if (!dec_mitm_item_quantity(si->index(), 1)
+                        && is_blood_potion(*si))
+                    {
+                       remove_oldest_blood_potion(*si);
+                    }
+                }
+            }
         }
     }
 
@@ -961,7 +975,7 @@ int shatter_items(coord_def where, int pow, actor *)
     return 0;
 }
 
-int shatter_walls(coord_def where, int pow, actor *agent)
+static int _shatter_walls(coord_def where, int pow, actor *agent)
 {
     int chance = 0;
 
@@ -976,14 +990,8 @@ int shatter_walls(coord_def where, int pow, actor *agent)
 
     switch (grid)
     {
-    case DNGN_SECRET_DOOR:
-        if (you.see_cell(where))
-            mpr("A secret door shatters!");
-        chance = 100;
-        break;
-
     case DNGN_CLOSED_DOOR:
-    case DNGN_DETECTED_SECRET_DOOR:
+    case DNGN_RUNED_DOOR:
     case DNGN_OPEN_DOOR:
         if (you.see_cell(where))
             mpr("A door shatters!");
@@ -1020,6 +1028,11 @@ int shatter_walls(coord_def where, int pow, actor *agent)
         chance = 50;
         break;
 
+    case DNGN_TREE:
+    case DNGN_MANGROVE:
+        chance = 33;
+        break;
+
     default:
         break;
     }
@@ -1028,11 +1041,12 @@ int shatter_walls(coord_def where, int pow, actor *agent)
     {
         noisy(30, where);
 
-        grd(where) = DNGN_FLOOR;
-        set_terrain_changed(where);
+        nuke_wall(where);
 
         if (agent->is_player() && grid == DNGN_ORCISH_IDOL)
             did_god_conduct(DID_DESTROY_ORCISH_IDOL, 8);
+        if (agent->is_player() && feat_is_tree(grid))
+            did_god_conduct(DID_KILL_PLANT, 1);
 
         return 1;
     }
@@ -1051,7 +1065,7 @@ spret_type cast_shatter(int pow, bool fail)
 {
     {
         int r_min = 3 + you.skill(SK_EARTH_MAGIC) / 5;
-        targetter_los hitfunc(&you, LOS_ARENA, r_min, std::min(r_min + 1, 8));
+        targetter_los hitfunc(&you, LOS_ARENA, r_min, min(r_min + 1, 8));
         if (stop_attack_prompt(hitfunc, "harm", _shatterable))
             return SPRET_ABORT;
     }
@@ -1076,9 +1090,9 @@ spret_type cast_shatter(int pow, bool fail)
         if (!cell_see_cell(you.pos(), *di, LOS_SOLID))
             continue;
 
-        shatter_items(*di, pow, &you);
-        shatter_monsters(*di, pow, &you);
-        dest += shatter_walls(*di, pow, &you);
+        _shatter_items(*di, pow, &you);
+        _shatter_monsters(*di, pow, &you);
+        dest += _shatter_walls(*di, pow, &you);
     }
 
     if (dest && !silence)
@@ -1087,34 +1101,105 @@ spret_type cast_shatter(int pow, bool fail)
     return SPRET_SUCCESS;
 }
 
-int shatter_player(int pow, actor *wielder)
+static int _shatter_player_dice()
+{
+    if (you.petrified())
+        return 12; // reduced later
+    else if (you.petrifying())
+        return 6;  // reduced later
+    // Same order as for monsters -- petrified flyers get hit hard, skeletal
+    // flyers get no extra damage.
+    else if (you.airborne())
+        return 1;
+    else if (you.form == TRAN_STATUE || you.form == TRAN_LICH)
+        return 6;
+    else if (you.form == TRAN_ICE_BEAST)
+        return 4;
+    else
+        return 3;
+}
+
+static int _shatter_player(int pow, actor *wielder, bool devastator = false)
 {
     if (wielder->is_player())
         return 0;
 
-    dice_def dam_dice(0, 5 + pow / 3); // Number of dice set below.
+    dice_def dam_dice(_shatter_player_dice(), 5 + pow / 3);
 
-    if (you.petrified())
-        dam_dice.num = 12; // reduced later
-    else if (you.petrifying())
-        dam_dice.num = 6;  // reduced later
-    // Same order as for monsters -- petrified flyers get hit hard, skeletal
-    // flyers get no extra damage.
-    else if (you.airborne())
-        dam_dice.num = 1;
-    else if (you.form == TRAN_STATUE || you.form == TRAN_LICH)
-        dam_dice.num = 6;
-    else if (you.form == TRAN_ICE_BEAST)
-        dam_dice.num = 4;
-    else
-        dam_dice.num = 3;
-
-    int damage = std::max(0, dam_dice.roll() - random2(you.armour_class()));
+    int damage = max(0, dam_dice.roll() - random2(you.armour_class()));
 
     if (damage > 0)
-        ouch(damage, wielder->mindex(), KILLED_BY_MONSTER);
+    {
+        mpr(damage > 15 ? "You shudder from the earth-shattering force."
+                        : "You shudder.");
+        if (devastator)
+            ouch(damage, wielder->mindex(), KILLED_BY_MONSTER);
+        else
+            ouch(damage, wielder->mindex(), KILLED_BY_BEAM, "by Shatter");
+    }
 
     return damage;
+}
+
+bool mons_shatter(monster* caster, bool actual)
+{
+    const bool silence = silenced(caster->pos());
+    int foes = 0;
+
+    if (actual)
+    {
+        if (silence)
+            mprf("The dungeon shakes around %s!",
+                 caster->name(DESC_THE).c_str());
+        else
+        {
+            noisy(30, caster->pos(), caster->mindex());
+            mprf(MSGCH_SOUND, "The dungeon rumbles around %s!",
+                 caster->name(DESC_THE).c_str());
+        }
+    }
+
+    int pow = 5 + caster->hit_dice / 3;
+    int rad = 3 + div_rand_round(caster->hit_dice, 5);
+
+    int dest = 0;
+    for (distance_iterator di(caster->pos(), true, true, rad); di; ++di)
+    {
+        // goes from the center out, so newly dug walls recurse
+        if (!cell_see_cell(caster->pos(), *di, LOS_SOLID))
+            continue;
+
+        if (actual)
+        {
+            _shatter_items(*di, pow, caster);
+            _shatter_monsters(*di, pow, caster);
+            if (*di == you.pos())
+                _shatter_player(pow, caster);
+            dest += _shatter_walls(*di, pow, caster);
+        }
+        else
+        {
+            if (you.pos() == *di)
+                foes -= _shatter_player_dice();
+            if (const monster *victim = monster_at(*di))
+            {
+                dprf("[%s]", victim->name(DESC_PLAIN, true).c_str());
+                foes += _shatter_mon_dice(victim)
+                     * (victim->wont_attack() ? -1 : 1);
+            }
+        }
+    }
+
+    if (dest && !silence)
+        mpr("Ka-crash!", MSGCH_SOUND);
+
+    if (!caster->wont_attack())
+        foes *= -1;
+
+    if (!actual)
+        dprf("Shatter foe HD: %d", foes);
+
+    return (foes > 0); // doesn't matter if actual
 }
 
 void shillelagh(actor *wielder, coord_def where, int pow)
@@ -1148,7 +1233,7 @@ void shillelagh(actor *wielder, coord_def where, int pow)
     }
     if (!affected_monsters.empty())
     {
-        const std::string message =
+        const string message =
             make_stringf("%s shudder%s.",
                          affected_monsters.describe().c_str(),
                          affected_monsters.count() == 1? "s" : "");
@@ -1160,10 +1245,10 @@ void shillelagh(actor *wielder, coord_def where, int pow)
 
     // need to do this again to do the actual damage
     for (adjacent_iterator ai(where, false); ai; ++ai)
-        shatter_monsters(*ai, pow * 3 / 2, wielder);
+        _shatter_monsters(*ai, pow * 3 / 2, wielder);
 
     if ((you.pos() - wielder->pos()).abs() <= 2 && in_bounds(you.pos()))
-        shatter_player(pow, wielder);
+        _shatter_player(pow, wielder, true);
 }
 
 static int _ignite_poison_affect_item(item_def& item, bool in_inv)
@@ -1461,7 +1546,7 @@ static bool maybe_abort_ignite()
     if (you.duration[DUR_FIRE_SHIELD] || you.mutation[MUT_IGNITE_BLOOD])
         return false;
 
-    std::string prompt = "You are standing ";
+    string prompt = "You are standing ";
 
     const int i = env.cgrid(you.pos());
     if (i != EMPTY_CLOUD)
@@ -1614,7 +1699,7 @@ static int _discharge_monsters(coord_def where, int pow, int, actor *)
     return damage;
 }
 
-bool _safe_discharge(coord_def where, std::vector<const monster *> &exclude)
+bool _safe_discharge(coord_def where, vector<const monster *> &exclude)
 {
     for (adjacent_iterator ai(where); ai; ++ai)
     {
@@ -1622,7 +1707,7 @@ bool _safe_discharge(coord_def where, std::vector<const monster *> &exclude)
         if (!mon)
             continue;
 
-        if (std::find(exclude.begin(), exclude.end(), mon) == exclude.end())
+        if (find(exclude.begin(), exclude.end(), mon) == exclude.end())
         {
             if (stop_attack_prompt(mon, false, where))
                 return false;
@@ -1640,7 +1725,7 @@ spret_type cast_discharge(int pow, bool fail)
 {
     fail_check();
 
-    std::vector<const monster *> exclude;
+    vector<const monster *> exclude;
     if (!_safe_discharge(you.pos(), exclude))
         return SPRET_ABORT;
 
@@ -1754,7 +1839,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
         {
             beam.ex_size    = petrifying ? 1 : 2;
             beam.name       = "blast of petrified fragments";
-            beam.colour     = mons_class_colour(mon->type);
+            beam.colour     = mons_class_colour(player_mons(true));
             beam.damage.num = petrifying ? 2 : 3;
             return true;
         }
@@ -1903,7 +1988,6 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
             *what = "stone idol";
         // fall-through
     case DNGN_ROCK_WALL:
-    case DNGN_SECRET_DOOR:
     case DNGN_SLIMY_WALL:
     case DNGN_STONE_WALL:
     case DNGN_CLEAR_ROCK_WALL:
@@ -1979,7 +2063,7 @@ bool setup_fragmentation_beam(bolt &beam, int pow, const actor *caster,
 
     case DNGN_OPEN_DOOR:
     case DNGN_CLOSED_DOOR:
-    case DNGN_DETECTED_SECRET_DOOR:
+    case DNGN_RUNED_DOOR:
         // Doors always blow up, stone arches never do (would cause problems).
         if (what)
             *what = "door";
@@ -2190,7 +2274,7 @@ spret_type cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
 #endif
     beam.draw_delay = 0;
 
-    for (std::map<coord_def, aff_type>::const_iterator p = hitfunc.zapped.begin();
+    for (map<coord_def, aff_type>::const_iterator p = hitfunc.zapped.begin();
          p != hitfunc.zapped.end(); ++p)
     {
         if (p->second <= 0)
@@ -2203,7 +2287,7 @@ spret_type cast_thunderbolt(actor *caster, int pow, coord_def aim, bool fail)
 
     beam.glyph = 0; // FIXME: a hack to avoid "appears out of thin air"
 
-    for (std::map<coord_def, aff_type>::const_iterator p = hitfunc.zapped.begin();
+    for (map<coord_def, aff_type>::const_iterator p = hitfunc.zapped.begin();
          p != hitfunc.zapped.end(); ++p)
     {
         if (p->second <= 0)
@@ -2253,7 +2337,7 @@ actor* forest_near_enemy(const actor *mon)
 }
 
 // Print a message only if you can see any affected trees.
-void forest_message(const coord_def pos, const std::string &msg, msg_channel_type ch)
+void forest_message(const coord_def pos, const string &msg, msg_channel_type ch)
 {
     for (radius_iterator ri(pos, LOS_RADIUS); ri; ++ri)
         if (feat_is_tree(grd(*ri))

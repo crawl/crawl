@@ -10,6 +10,7 @@
 #define BITARY_H
 
 #include "debug.h"
+#include "defines.h"
 
 class bit_vector
 {
@@ -33,6 +34,9 @@ protected:
 };
 
 #define LONGSIZE (sizeof(unsigned long)*8)
+#ifndef ULONG_MAX
+#define ULONG_MAX ((unsigned long)(-1))
+#endif
 
 template <unsigned int SIZE> class FixedBitVector
 {
@@ -103,9 +107,20 @@ public:
             data[i] = 0;
     }
 
+    void init(bool def)
+    {
+        for (unsigned int i = 0; i < ARRAYSZ(data); i++)
+            data[i] = def ? ULONG_MAX : 0;
+    }
+
     FixedBitArray()
     {
         reset();
+    }
+
+    FixedBitArray(bool def)
+    {
+        init(def);
     }
 
     inline bool get(int x, int y) const

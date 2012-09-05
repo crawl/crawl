@@ -135,7 +135,7 @@ int spell_zap_power_cap(spell_type spell)
     switch (spell)
     {
     case SPELL_CORONA:
-        return std::max<int>(cap - 10, 0);
+        return max<int>(cap - 10, 0);
     case SPELL_HIBERNATION:
         return 50;
     default:

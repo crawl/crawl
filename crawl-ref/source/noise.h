@@ -37,7 +37,7 @@ struct noise_t
 {
     coord_def noise_source;
 
-    std::string noise_player_msg;
+    string noise_player_msg;
 
     // Thousandths of noise intensity (i.e. the intensity passed to
     // noisy() * 1000)
@@ -50,7 +50,7 @@ struct noise_t
     uint16_t noise_flags;
 
     noise_t(coord_def _noise_source = coord_def(),
-            std::string _noise_player_msg = "",
+            string _noise_player_msg = "",
             int _noise_intensity_millis = 0,
             int16_t _noise_producer_id = -1,
             uint16_t _flags = 0)
@@ -127,7 +127,7 @@ public:
     bool dirty() const { return !noises.empty(); }
 
 #ifdef DEBUG_NOISE_PROPAGATION
-    void dump_noise_grid(const std::string &filename) const;
+    void dump_noise_grid(const string &filename) const;
     void write_noise_grid(FILE *outf) const;
     void write_cell(FILE *outf, coord_def p, int ch) const;
 #endif
@@ -149,7 +149,7 @@ private:
 
 private:
     FixedArray<noise_cell, GXM, GYM> cells;
-    std::vector<noise_t> noises;
+    vector<noise_t> noises;
     int affected_actor_count;
 };
 

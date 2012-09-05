@@ -88,8 +88,8 @@ const char* racial_description_string(const item_def& item, bool terse = false);
 void check_item_knowledge(bool unknown_items = false);
 void display_runes();
 
-std::string quant_name(const item_def &item, int quant,
-                        description_level_type des, bool terse = false);
+string quant_name(const item_def &item, int quant,
+                  description_level_type des, bool terse = false);
 
 bool item_type_known(const item_def &item);
 bool item_type_unknown(const item_def &item);
@@ -103,8 +103,7 @@ bool is_bad_item(const item_def &item, bool temp = false);
 bool is_dangerous_item(const item_def& item, bool temp = false);
 bool is_useless_item(const item_def &item, bool temp = false);
 
-std::string make_name(uint32_t seed, bool all_caps, int maxlen = -1,
-                      char start = 0);
+string make_name(uint32_t seed, bool all_caps, int maxlen = -1, char start = 0);
 
 const char* weapon_brand_name(const item_def& item, bool terse);
 const char* armour_ego_name(const item_def& item, bool terse);
@@ -120,25 +119,24 @@ void set_ident_type(item_def &item, item_type_id_state_type setting,
 void set_ident_type(object_class_type basetype, int subtype,
                      item_type_id_state_type setting, bool force = false);
 
-std::string menu_colour_item_prefix(const item_def &item, bool temp = true);
-std::string filtering_item_prefix(const item_def &item, bool temp = true);
-std::string get_menu_colour_prefix_tags(const item_def &item,
-                                        description_level_type desc);
+string menu_colour_item_prefix(const item_def &item, bool temp = true);
+string filtering_item_prefix(const item_def &item, bool temp = true);
+string get_menu_colour_prefix_tags(const item_def &item,
+                                   description_level_type desc);
 
 void            init_item_name_cache();
-item_kind item_kind_by_name(std::string name);
+item_kind item_kind_by_name(string name);
 
-std::vector<std::string> item_name_list_for_glyph(unsigned glyph);
+vector<string> item_name_list_for_glyph(unsigned glyph);
 
 const char* rune_type_name(int p);
 
-bool        is_named_corpse(const item_def &corpse);
-std::string get_corpse_name(const item_def &corpse,
-                            uint64_t *name_type = NULL);
-std::string base_type_string(object_class_type type, bool known = true);
-std::string base_type_string(const item_def &item, bool known = true);
+bool   is_named_corpse(const item_def &corpse);
+string get_corpse_name(const item_def &corpse, uint64_t *name_type = NULL);
+string base_type_string(object_class_type type, bool known = true);
+string base_type_string(const item_def &item, bool known = true);
 
-std::string sub_type_string(const item_def &item, bool known = true);
+string sub_type_string(const item_def &item, bool known = true);
 
-std::string ego_type_string(const item_def &item);
+string ego_type_string(const item_def &item);
 #endif

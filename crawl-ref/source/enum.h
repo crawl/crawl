@@ -250,7 +250,9 @@ enum attribute_type
                                // player has seen.
     ATTR_NOISES,               // A noisy artefact is equipped.
     ATTR_SHADOWS,              // Lantern of shadows effect.
+#if TAG_MAJOR_VERSION == 34
     ATTR_FRUIT_FOUND,          // Mask of fruit types found.
+#endif
     ATTR_LEV_UNCANCELLABLE,    // Potion or spell of levitation is in effect.
     ATTR_INVIS_UNCANCELLABLE,  // Potion/spell/wand of invis is in effect.
     ATTR_PERM_LEVITATION,      // Tengu flight or boots of lev are on.
@@ -279,7 +281,7 @@ enum transformation_type
     LAST_FORM = TRAN_APPENDAGE
 };
 
-enum beam_type                  // beam[].flavour
+enum beam_type                  // bolt::flavour
 {
     BEAM_NONE,
 
@@ -766,7 +768,6 @@ enum command_type
     CMD_MAP_FIND_TRAP,
     CMD_MAP_FIND_ALTAR,
     CMD_MAP_FIND_EXCLUDED,
-    CMD_MAP_FIND_F,
     CMD_MAP_FIND_WAYPOINT,
     CMD_MAP_FIND_STASH,
     CMD_MAP_FIND_STASH_REVERSE,
@@ -1174,8 +1175,10 @@ enum dungeon_feature_type
 {
     DNGN_UNSEEN,
     DNGN_CLOSED_DOOR,
-    DNGN_DETECTED_SECRET_DOOR,
-    DNGN_SECRET_DOOR,
+    DNGN_RUNED_DOOR,
+#if TAG_MAJOR_VERSION == 34
+    DNGN_OLD_SECRET_DOOR,
+#endif
     DNGN_MANGROVE,
     DNGN_METAL_WALL,
         DNGN_MINWALL = DNGN_METAL_WALL,
@@ -1383,7 +1386,9 @@ enum duration_type
     DUR_DEATH_CHANNEL,
     DUR_DEFLECT_MISSILES,
     DUR_PHASE_SHIFT,
+#if TAG_MAJOR_VERSION == 34
     DUR_SEE_INVISIBLE,
+#endif
     DUR_WEAPON_BRAND,                  // general "branding" spell counter
     DUR_DEMONIC_GUARDIAN,              // demonic guardian timeout
     DUR_POWERED_BY_DEATH,
@@ -1392,7 +1397,9 @@ enum duration_type
     DUR_STONESKIN,
     DUR_GOURMAND,
     DUR_BARGAIN,
+#if TAG_MAJOR_VERSION == 34
     DUR_INSULATION,
+#endif
     DUR_RESISTANCE,
     DUR_SLAYING,
     DUR_STEALTH,
@@ -1716,6 +1723,8 @@ enum item_status_flag_type  // per item flags: ie. ident status, cursed status
 
     ISFLAG_MIMIC             = 0x00100000,  // mimic
     ISFLAG_NO_MIMIC          = 0x00200000,  // Can't be turned into a mimic
+
+    ISFLAG_NO_PICKUP         = 0x00400000,  // Monsters won't pick this up
 
     ISFLAG_NO_RACE           = 0x00000000,  // used for clearing these flags
     ISFLAG_ORCISH            = 0x01000000,  // low quality items
@@ -2878,7 +2887,7 @@ enum skill_type
     SK_STEALTH,
     SK_STABBING,
     SK_SHIELDS,
-    SK_TRAPS_DOORS,
+    SK_TRAPS,
     SK_UNARMED_COMBAT,
     SK_LAST_MUNDANE = SK_UNARMED_COMBAT,
     SK_SPELLCASTING,
@@ -3080,7 +3089,9 @@ enum spell_type
     SPELL_SHOCK,
     SPELL_SWIFTNESS,
     SPELL_FLY,
+#if TAG_MAJOR_VERSION == 34
     SPELL_INSULATION,
+#endif
     SPELL_CURE_POISON,
     SPELL_CONTROL_TELEPORT,
     SPELL_POISON_WEAPON,
@@ -3111,7 +3122,9 @@ enum spell_type
     SPELL_SUMMON_DRAGON,
     SPELL_HIBERNATION,
     SPELL_ENGLACIATION,
+#if TAG_MAJOR_VERSION == 34
     SPELL_SEE_INVISIBLE,
+#endif
     SPELL_PHASE_SHIFT,
     SPELL_SUMMON_BUTTERFLIES,
     SPELL_WARP_BRAND,
@@ -3598,7 +3611,6 @@ enum tile_flags
     TILE_FLAG_OOR        = 0x02000000ULL,
     TILE_FLAG_WATER      = 0x04000000ULL,
     TILE_FLAG_NEW_STAIR  = 0x08000000ULL,
-    TILE_FLAG_WAS_SECRET = 0x10000000ULL,
 
     // Kraken tentacle overlays.
     TILE_FLAG_KRAKEN_NW  = 0x020000000ULL,

@@ -203,7 +203,7 @@ static void _exercise_spell(spell_type spell, bool success)
     // exercise skills in that random order. That way, first skill don't
     // stay in the queue for a shorter time.
     bool conj = false;
-    std::vector<skill_type> disc;
+    vector<skill_type> disc;
     for (int ndx = 0; ndx <= SPTYP_LAST_EXPONENT; ndx++)
     {
         if (!spell_typematch(spell, 1 << ndx))
@@ -220,7 +220,7 @@ static void _exercise_spell(spell_type spell, bool success)
     if (conj && !x_chance_in_y(skillcount, 4))
         return;
 
-    std::random_shuffle(disc.begin(), disc.end());
+    random_shuffle(disc.begin(), disc.end());
 
     for (unsigned int k = 0; k < disc.size(); ++k)
     {
@@ -254,7 +254,7 @@ static bool _check_train_armour(int amount)
     {
         // XXX: animal skin; should be a better way to get at that.
         const int mass_base = 100;
-        const int mass = std::max(item_mass(*armour) - mass_base, 0);
+        const int mass = max(item_mass(*armour) - mass_base, 0);
         if (x_chance_in_y(mass, you.skill(SK_ARMOUR, 50)))
         {
             exercise(SK_ARMOUR, amount);
@@ -399,36 +399,35 @@ void practise(exer_type ex, int param1)
                         ex == EX_DID_CAST);
         break;
 
-    case EX_FOUND_SECRET_DOOR:
     case EX_TRAP_FOUND:
-        exercise(SK_TRAPS_DOORS, 1 + random2(2));
+        exercise(SK_TRAPS, 1 + random2(2));
         break;
 
     case EX_TRAP_PASSIVE:
-        exercise(SK_TRAPS_DOORS, 3);
+        exercise(SK_TRAPS, 3);
         break;
 
     case EX_TRAP_TRIGGER:
-        exercise(SK_TRAPS_DOORS, 1 + random2(2));
+        exercise(SK_TRAPS, 1 + random2(2));
         break;
 
     case EX_TRAP_DISARM:
         // param1 == you.absdepth0
-        exercise(SK_TRAPS_DOORS, 1 + random2(5) + param1 / 5);
+        exercise(SK_TRAPS, 1 + random2(5) + param1 / 5);
         break;
 
     case EX_TRAP_DISARM_FAIL:
         // param1 == you.absdepth0
-        exercise(SK_TRAPS_DOORS, 1 + random2(param1 / 5));
+        exercise(SK_TRAPS, 1 + random2(param1 / 5));
         break;
 
     case EX_TRAP_DISARM_TRIGGER:
         if (coinflip())
-            exercise(SK_TRAPS_DOORS, 1);
+            exercise(SK_TRAPS, 1);
         break;
 
     case EX_REMOVE_NET:
-        exercise(SK_TRAPS_DOORS, 1);
+        exercise(SK_TRAPS, 1);
         break;
 
     case EX_SHIELD_BLOCK:

@@ -32,7 +32,7 @@ function callback.zig_tele(data, triggerable, triggerer, marker, ev)
     crawl.mpr("Welcome to arena " .. data.teleport_spot .. ".")
     crawl.take_note("Entered arena " .. data.teleport_spot .. ".")
 --  crawl.mark_milestone("sprint", "entered arena " .. data.teleport_spot ..
---                       " of Ziggurat Sprint.")
+--                       " of Ziggurat Sprint.", "")
   end
 end
 

@@ -38,7 +38,7 @@ int grid_distance(const coord_def& p1, const coord_def& p2)
     return ((p2 - p1).rdist());
 }
 
-int distance(const coord_def& p1, const coord_def& p2)
+int distance2(const coord_def& p1, const coord_def& p2)
 {
     return ((p2 - p1).abs());
 }

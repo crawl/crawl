@@ -43,9 +43,7 @@ void AbilityRegion::draw_tag()
 
     const ability_type ability = (ability_type) idx;
     char* failure = failure_rate_to_string(get_talent(ability, false).fail);
-    std::string desc = make_stringf("%s    (%s)",
-                                    ability_name(ability),
-                                    failure);
+    string desc = make_stringf("%s    (%s)", ability_name(ability), failure);
     free(failure);
     draw_desc(desc.c_str());
 }
@@ -75,7 +73,7 @@ int AbilityRegion::handle_mouse(MouseEvent &event)
     return 0;
 }
 
-bool AbilityRegion::update_tab_tip_text(std::string &tip, bool active)
+bool AbilityRegion::update_tab_tip_text(string &tip, bool active)
 {
     const char *prefix1 = active ? "" : "[L-Click] ";
     const char *prefix2 = active ? "" : "          ";
@@ -87,7 +85,7 @@ bool AbilityRegion::update_tab_tip_text(std::string &tip, bool active)
     return true;
 }
 
-bool AbilityRegion::update_tip_text(std::string& tip)
+bool AbilityRegion::update_tip_text(string& tip)
 {
     if (m_cursor == NO_CURSOR)
         return false;
@@ -97,7 +95,7 @@ bool AbilityRegion::update_tip_text(std::string& tip)
         return false;
 
     int flag = m_items[item_idx].flag;
-    std::vector<command_type> cmd;
+    vector<command_type> cmd;
     if (flag & TILEI_FLAG_INVALID)
         tip = "You cannot use this ability right now.";
     else
@@ -116,7 +114,7 @@ bool AbilityRegion::update_tip_text(std::string& tip)
     return true;
 }
 
-bool AbilityRegion::update_alt_text(std::string &alt)
+bool AbilityRegion::update_alt_text(string &alt)
 {
     if (m_cursor == NO_CURSOR)
         return false;
@@ -205,7 +203,7 @@ static InventoryTile _tile_for_ability(ability_type ability)
     InventoryTile desc;
     desc.tile     = tileidx_ability(ability);
     desc.idx      = (int) ability;
-    desc.quantity = get_talent(ability, true).fail;
+    desc.quantity = get_ability_def(ability).mp_cost;
 
     if (!check_ability_possible(ability, true, true))
         desc.flag |= TILEI_FLAG_INVALID;
@@ -221,14 +219,14 @@ void AbilityRegion::update()
     if (mx * my == 0)
         return;
 
-    const unsigned int max_abilities = std::min(get_max_slots(), mx*my);
+    const unsigned int max_abilities = min(get_max_slots(), mx*my);
 
-    std::vector<talent> talents = your_talents(false, true);
+    vector<talent> talents = your_talents(false, true);
     if (talents.empty())
         return;
 
-    std::vector<InventoryTile> m_zotdef;
-    std::vector<InventoryTile> m_invoc;
+    vector<InventoryTile> m_zotdef;
+    vector<InventoryTile> m_invoc;
 
     for (unsigned int i = 0; i < talents.size(); ++i)
     {
@@ -243,7 +241,7 @@ void AbilityRegion::update()
             return;
     }
 
-    for (std::vector<InventoryTile>::iterator it = m_zotdef.begin();
+    for (vector<InventoryTile>::iterator it = m_zotdef.begin();
          it != m_zotdef.end(); it++)
     {
         m_items.push_back(*it);
@@ -251,7 +249,7 @@ void AbilityRegion::update()
             return;
     }
 
-    for (std::vector<InventoryTile>::iterator it = m_invoc.begin();
+    for (vector<InventoryTile>::iterator it = m_invoc.begin();
          it != m_invoc.end(); it++)
     {
         m_items.push_back(*it);

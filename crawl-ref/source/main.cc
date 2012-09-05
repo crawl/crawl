@@ -165,11 +165,11 @@ player you;
 
 game_state crawl_state;
 
-std::string init_file_error;    // externed in newgame.cc
+string init_file_error;    // externed in newgame.cc
 
-char info[ INFO_SIZE ];         // messaging queue extern'd everywhere {dlb}
+char info[ INFO_SIZE ];    // messaging queue extern'd everywhere {dlb}
 
-int stealth;                    // externed in view.cc
+int stealth;               // externed in view.cc
 
 void world_reacts();
 
@@ -394,7 +394,7 @@ static void _launch_game()
                     << you.your_name << " the "
                     << species_name(you.species)
                     << " " << you.class_name << ".</yellow>"
-                    << std::endl;
+                    << endl;
     }
 
 #ifdef USE_TILE
@@ -445,7 +445,7 @@ static void _launch_game()
 static void _show_commandline_options_help()
 {
 #if defined(TARGET_OS_WINDOWS) && defined(USE_TILE_LOCAL)
-    std::string help;
+    string help;
 # define puts(x) (help += x, help += '\n')
 #endif
 
@@ -524,7 +524,7 @@ static void _wanderer_startup_message()
 // A one-liner upon game start to mention the orb.
 static void _announce_goal_message()
 {
-    std::string type = crawl_state.game_type_name();
+    string type = crawl_state.game_type_name();
     if (crawl_state.game_is_hints())
         type = "Hints";
     if (!type.empty())
@@ -538,7 +538,7 @@ static void _god_greeting_message(bool game_start)
     if (you.religion == GOD_NO_GOD)
         return;
 
-    std::string msg = god_name(you.religion);
+    string msg = god_name(you.religion);
 
     if (game_start)
         msg += " newgame";
@@ -557,7 +557,7 @@ static void _god_greeting_message(bool game_start)
             msg += " welcome";
     }
 
-    std::string result = getSpeakString(msg);
+    string result = getSpeakString(msg);
 
     if (!result.empty())
         god_speaks(you.religion, result.c_str());
@@ -565,7 +565,7 @@ static void _god_greeting_message(bool game_start)
 
 static void _take_starting_note()
 {
-    std::ostringstream notestr;
+    ostringstream notestr;
     notestr << you.your_name << ", the "
             << species_name(you.species) << " "
             << you.class_name
@@ -600,7 +600,7 @@ static void _startup_hints_mode()
 
     msg::streams(MSGCH_TUTORIAL)
         << "Press any key to start the hints mode intro, or Escape to skip it."
-        << std::endl;
+        << endl;
 
     flush_prev_message();
     const int ch = getch_ck();
@@ -1455,10 +1455,10 @@ static void _go_upstairs()
     if (ygrd == DNGN_EXIT_DUNGEON)
     {
         bool stay = true;
-        std::string prompt = make_stringf("Are you sure you want to leave the "
-                                          "Dungeon?%s",
-                                          crawl_state.game_is_tutorial() ? "" :
-                                          " This will make you lose the game!");
+        string prompt = make_stringf("Are you sure you want to leave the "
+                                     "Dungeon?%s",
+                                     crawl_state.game_is_tutorial() ? "" :
+                                     " This will make you lose the game!");
         if (player_has_orb())
             stay = !yesno("Are you sure you want to win?");
         else
@@ -1616,7 +1616,7 @@ static void _experience_check()
     handle_real_time();
     msg::stream << "Play time: " << make_time_string(you.real_time)
                 << " (" << you.num_turns << " turns)"
-                << std::endl;
+                << endl;
 #ifdef DEBUG_DIAGNOSTICS
     if (wearing_amulet(AMU_THE_GOURMAND))
     {
@@ -1631,7 +1631,7 @@ static void _experience_check()
 
 static void _print_friendly_pickup_setting(bool was_changed)
 {
-    std::string now = (was_changed? "now " : "");
+    string now = (was_changed? "now " : "");
 
     if (you.friendly_pickup == FRIENDLY_PICKUP_NONE)
     {
@@ -2119,8 +2119,8 @@ void process_command(command_type cmd)
     default:
         if (crawl_state.game_is_hints())
         {
-           std::string msg = "Unknown command. (For a list of commands type "
-                             "<w>?\?<lightgrey>.)";
+           string msg = "Unknown command. (For a list of commands type "
+                        "<w>?\?<lightgrey>.)";
            mpr(msg);
         }
         else // well, not examine, but...
@@ -2158,7 +2158,7 @@ static void _prep_input()
     }
     if (you.seen_invis)
     {
-        if (!you.can_see_invisible(false, true))
+        if (!you.can_see_invisible(false))
         {
             item_def *ring = get_only_unided_ring();
             if (ring && !is_artefact(*ring)
@@ -2264,22 +2264,6 @@ static void _decrement_petrification(int delay)
         }
         else if (dur < 15 && old_dur >= 15)
             mpr("Your limbs are stiffening.");
-    }
-}
-
-static void _check_invisibles()
-{
-    for (radius_iterator ri(you.pos(), LOS_RADIUS, C_ROUND); ri; ++ri)
-    {
-        if (!cell_see_cell(you.pos(), *ri, LOS_DEFAULT))
-            continue;
-        const monster* mons = monster_at(*ri);
-        if (mons && !mons->visible_to(&you) && !mons->submerged())
-        {
-            // we _could_ see the monster
-            autotoggle_autopickup(true);
-            return;
-        }
     }
 }
 
@@ -2399,7 +2383,7 @@ static void _decrement_durations()
             const int temp_effect = get_weapon_brand(weapon);
 
             set_item_ego_type(weapon, OBJ_WEAPONS, SPWPN_NORMAL);
-            std::string msg = weapon.name(DESC_YOUR);
+            string msg = weapon.name(DESC_YOUR);
 
             switch (temp_effect)
             {
@@ -2480,9 +2464,6 @@ static void _decrement_durations()
     _decrement_a_duration(DUR_SWIFTNESS, delay,
                           "You feel sluggish.", coinflip(),
                           "You start to feel a little slower.");
-    _decrement_a_duration(DUR_INSULATION, delay,
-                          "You feel conductive.", coinflip(),
-                          "You start to feel a little less insulated.");
     _decrement_a_duration(DUR_RESISTANCE, delay,
                           "Your resistance to elements expires.", coinflip(),
                           "You start to feel less resistant.");
@@ -2499,15 +2480,6 @@ static void _decrement_durations()
                           "You feel less regenerative.");
     if (you.duration[DUR_POWERED_BY_DEATH] > 0)
         handle_pbd_corpses(true);
-
-    if (_decrement_a_duration(DUR_SEE_INVISIBLE, delay, NULL,
-                              coinflip(),
-                              "You begin to squint at shadows.")
-        && !you.can_see_invisible())
-    {
-        mpr("Your eyesight blurs momentarily.", MSGCH_DURATION);
-        _check_invisibles();
-    }
 
     _decrement_a_duration(DUR_TELEPATHY, delay, "You feel less empathic.");
 
@@ -2581,7 +2553,7 @@ static void _decrement_durations()
     _decrement_a_duration(DUR_FINESSE, delay, "Your hands slow down.");
 
     _decrement_a_duration(DUR_CONFUSING_TOUCH, delay,
-                          ((std::string("Your ") + you.hand_name(true)) +
+                          ((string("Your ") + you.hand_name(true)) +
                           " stop glowing.").c_str());
 
     _decrement_a_duration(DUR_SURE_BLADE, delay,
@@ -2686,7 +2658,7 @@ static void _decrement_durations()
         slow_player(dur);
 
         make_hungry(BERSERK_NUTRITION, true);
-        you.hunger = std::max(HUNGER_STARVING - 100, you.hunger);
+        you.hunger = max(HUNGER_STARVING - 100, you.hunger);
 
         // 1KB: No berserk healing.
         you.hp = (you.hp + 1) * 2 / 3;
@@ -2727,7 +2699,7 @@ static void _decrement_durations()
     // Should expire before levitation.
     if (you.duration[DUR_TORNADO])
     {
-        tornado_damage(&you, std::min(delay, you.duration[DUR_TORNADO]));
+        tornado_damage(&you, min(delay, you.duration[DUR_TORNADO]));
         _decrement_a_duration(DUR_TORNADO, delay,
                               "The winds around you start to calm down.");
         if (!you.duration[DUR_TORNADO])
@@ -2992,7 +2964,7 @@ static void _update_mold()
             {
                 // A threshold greater than 5, less than 8 on distance
                 // matches the blast of a radius 2 explosion.
-                int range = distance(mon_it->pos(), *rad_it);
+                int range = distance2(mon_it->pos(), *rad_it);
                 if (range < 6 && is_moldy(*rad_it))
                 {
                     env.pgrid(*rad_it) |= FPROP_MOLD;
@@ -3130,7 +3102,7 @@ static void _player_reacts_to_monsters()
     // We have to do the messaging here, because a simple wand of flame will
     // call _maybe_melt_player_enchantments twice. It also avoid duplicate
     // messages when melting because of several heating sources.
-    std::string what;
+    string what;
     if (you.props.exists("melt_armour"))
     {
         what = "armour";
@@ -3181,8 +3153,8 @@ static void _player_reacts_to_monsters()
 
 static void _update_golubria_traps()
 {
-    std::vector<coord_def> traps = find_golubria_on_level();
-    for (std::vector<coord_def>::const_iterator it = traps.begin(); it != traps.end(); ++it)
+    vector<coord_def> traps = find_golubria_on_level();
+    for (vector<coord_def>::const_iterator it = traps.begin(); it != traps.end(); ++it)
     {
         trap_def *trap = find_trap(*it);
         if (trap && trap->type == TRAP_GOLUBRIA)
@@ -3412,7 +3384,7 @@ static int _check_adjacent(dungeon_feature_type feat, coord_def& delta)
 {
     int num = 0;
 
-    std::vector<coord_def> doors;
+    vector<coord_def> doors;
     for (adjacent_iterator ai(you.pos(), true); ai; ++ai)
     {
         if (grd(*ai) == feat)
@@ -3435,9 +3407,9 @@ static int _check_adjacent(dungeon_feature_type feat, coord_def& delta)
                     continue;
 
                 // Check if it's part of a gate. If so, remember all its doors.
-                std::set<coord_def> all_door;
+                set<coord_def> all_door;
                 find_connected_identical(*ai, grd(*ai), all_door);
-                for (std::set<coord_def>::const_iterator dc = all_door.begin();
+                for (set<coord_def>::const_iterator dc = all_door.begin();
                      dc != all_door.end(); ++dc)
                 {
                      doors.push_back(*dc);
@@ -3463,7 +3435,7 @@ static bool _untrap_target(const coord_def move, bool check_confused)
         if (mon->caught() && mon->friendly() && form_can_wield()
             && !you.confused())
         {
-            const std::string prompt =
+            const string prompt =
                 make_stringf("Do you want to try to take the net off %s?",
                              mon->name(DESC_THE).c_str());
 
@@ -3588,7 +3560,7 @@ static void _open_door(coord_def move, bool check_confused)
     if (move.origin())
     {
         const int num = _check_adjacent(DNGN_CLOSED_DOOR, move)
-                        + _check_adjacent(DNGN_DETECTED_SECRET_DOOR, move);
+                        + _check_adjacent(DNGN_RUNED_DOOR, move);
 
         if (num == 0)
         {
@@ -3624,7 +3596,7 @@ static void _open_door(coord_def move, bool check_confused)
     const coord_def doorpos = you.pos() + door_move.delta;
     const dungeon_feature_type feat = (in_bounds(doorpos) ? grd(doorpos)
                                                           : DNGN_UNSEEN);
-    std::string door_already_open = "";
+    string door_already_open = "";
     if (in_bounds(doorpos))
     {
         door_already_open = env.markers.property_at(doorpos, MAT_ANY,
@@ -3658,8 +3630,8 @@ static void _open_door(coord_def move, bool check_confused)
     }
 
     // Allow doors to be locked.
-    const std::string door_veto_message = env.markers.property_at(doorpos, MAT_ANY,
-                                "veto_reason");
+    const string door_veto_message = env.markers.property_at(doorpos, MAT_ANY,
+                                                             "veto_reason");
     if (door_vetoed(doorpos))
     {
         if (door_veto_message.empty())
@@ -3671,16 +3643,14 @@ static void _open_door(coord_def move, bool check_confused)
     }
 
     // Finally, open the closed door!
-    std::set<coord_def> all_door = connected_doors(doorpos);
+    set<coord_def> all_door = connected_doors(doorpos);
     const char *adj, *noun;
     get_door_description(all_door.size(), &adj, &noun);
 
-    const std::string door_desc_adj  =
-        env.markers.property_at(doorpos, MAT_ANY,
-                                "door_description_adjective");
-    const std::string door_desc_noun =
-        env.markers.property_at(doorpos, MAT_ANY,
-                                "door_description_noun");
+    const string door_desc_adj  =
+        env.markers.property_at(doorpos, MAT_ANY, "door_description_adjective");
+    const string door_desc_noun =
+        env.markers.property_at(doorpos, MAT_ANY, "door_description_noun");
     if (!door_desc_adj.empty())
         adj = door_desc_adj.c_str();
     if (!door_desc_noun.empty())
@@ -3688,7 +3658,7 @@ static void _open_door(coord_def move, bool check_confused)
 
     if (!(check_confused && you.confused()))
     {
-        std::string door_open_prompt =
+        string door_open_prompt =
             env.markers.property_at(doorpos, MAT_ANY, "door_open_prompt");
 
         bool ignore_exclude = false;
@@ -3717,9 +3687,8 @@ static void _open_door(coord_def move, bool check_confused)
 
         if (!ignore_exclude && is_exclude_root(doorpos))
         {
-            std::string prompt =
-                make_stringf("This %s%s is marked as excluded! Open it "
-                             "anyway?", adj, noun);
+            string prompt = make_stringf("This %s%s is marked as excluded! "
+                                         "Open it anyway?", adj, noun);
 
             if (!yesno(prompt.c_str(), true, 'n', true, false))
             {
@@ -3730,19 +3699,18 @@ static void _open_door(coord_def move, bool check_confused)
         }
     }
 
-    int skill = you.dex()
-                + (you.skill_rdiv(SK_TRAPS_DOORS) + you.skill_rdiv(SK_STEALTH)) / 2;
+    int skill = you.dex() + you.skill_rdiv(SK_STEALTH);
 
-    std::string berserk_open = env.markers.property_at(doorpos, MAT_ANY,
-                                        "door_berserk_verb_open");
-    std::string berserk_adjective = env.markers.property_at(doorpos, MAT_ANY,
-                                        "door_berserk_adjective");
-    std::string door_open_creak = env.markers.property_at(doorpos, MAT_ANY,
-                                        "door_noisy_verb_open");
-    std::string door_airborne = env.markers.property_at(doorpos, MAT_ANY,
-                                        "door_airborne_verb_open");
-    std::string door_open_verb = env.markers.property_at(doorpos, MAT_ANY,
-                                        "door_verb_open");
+    string berserk_open = env.markers.property_at(doorpos, MAT_ANY,
+                                                  "door_berserk_verb_open");
+    string berserk_adjective = env.markers.property_at(doorpos, MAT_ANY,
+                                                       "door_berserk_adjective");
+    string door_open_creak = env.markers.property_at(doorpos, MAT_ANY,
+                                                     "door_noisy_verb_open");
+    string door_airborne = env.markers.property_at(doorpos, MAT_ANY,
+                                                   "door_airborne_verb_open");
+    string door_open_verb = env.markers.property_at(doorpos, MAT_ANY,
+                                                    "door_verb_open");
 
     if (you.berserk())
     {
@@ -3804,10 +3772,8 @@ static void _open_door(coord_def move, bool check_confused)
         mprf(verb, adj, noun);
     }
 
-    bool seen_secret = false;
-    std::vector<coord_def> excludes;
-    for (std::set<coord_def>::iterator i = all_door.begin();
-         i != all_door.end(); ++i)
+    vector<coord_def> excludes;
+    for (set<coord_def>::iterator i = all_door.begin(); i != all_door.end(); ++i)
     {
         const coord_def& dc = *i;
         // Even if some of the door is out of LOS, we want the entire
@@ -3819,12 +3785,6 @@ static void _open_door(coord_def move, bool check_confused)
 #ifdef USE_TILE
             env.tile_bk_bg(dc) = TILE_DNGN_OPEN_DOOR;
 #endif
-            if (!seen_secret && grd(dc) == DNGN_SECRET_DOOR)
-            {
-                seen_secret = true;
-                mprf("That %s was a secret door!",
-                     feature_description_at(dc, "", DESC_PLAIN, false).c_str());
-            }
         }
         grd(dc) = DNGN_OPEN_DOOR;
         set_terrain_changed(dc);
@@ -3898,30 +3858,30 @@ static void _close_door(coord_def move)
     const dungeon_feature_type feat = (in_bounds(doorpos) ? grd(doorpos)
                                                           : DNGN_UNSEEN);
 
-    std::string berserk_close = env.markers.property_at(doorpos, MAT_ANY,
-                                        "door_berserk_verb_close");
-    std::string berserk_adjective = env.markers.property_at(doorpos, MAT_ANY,
-                                        "door_berserk_adjective");
-    std::string door_close_creak = env.markers.property_at(doorpos, MAT_ANY,
-                                        "door_noisy_verb_close");
-    std::string door_airborne = env.markers.property_at(doorpos, MAT_ANY,
-                                        "door_airborne_verb_close");
-    std::string door_close_verb = env.markers.property_at(doorpos, MAT_ANY,
-                                        "door_verb_close");
+    string berserk_close = env.markers.property_at(doorpos, MAT_ANY,
+                                                   "door_berserk_verb_close");
+    string berserk_adjective = env.markers.property_at(doorpos, MAT_ANY,
+                                                       "door_berserk_adjective");
+    string door_close_creak = env.markers.property_at(doorpos, MAT_ANY,
+                                                      "door_noisy_verb_close");
+    string door_airborne = env.markers.property_at(doorpos, MAT_ANY,
+                                                   "door_airborne_verb_close");
+    string door_close_verb = env.markers.property_at(doorpos, MAT_ANY,
+                                                     "door_verb_close");
 
     if (feat == DNGN_OPEN_DOOR)
     {
-        std::set<coord_def> all_door;
+        set<coord_def> all_door;
         find_connected_identical(doorpos, grd(doorpos), all_door);
         const char *adj, *noun;
         get_door_description(all_door.size(), &adj, &noun);
-        const std::string waynoun_str = make_stringf("%sway", noun);
+        const string waynoun_str = make_stringf("%sway", noun);
         const char *waynoun = waynoun_str.c_str();
 
-        const std::string door_desc_adj  =
+        const string door_desc_adj  =
             env.markers.property_at(doorpos, MAT_ANY,
                                     "door_description_adjective");
-        const std::string door_desc_noun =
+        const string door_desc_noun =
             env.markers.property_at(doorpos, MAT_ANY,
                                     "door_description_noun");
         if (!door_desc_adj.empty())
@@ -3932,7 +3892,7 @@ static void _close_door(coord_def move)
             waynoun = noun;
         }
 
-        for (std::set<coord_def>::const_iterator i = all_door.begin();
+        for (set<coord_def>::const_iterator i = all_door.begin();
              i != all_door.end(); ++i)
         {
             const coord_def& dc = *i;
@@ -3963,8 +3923,7 @@ static void _close_door(coord_def move)
             }
         }
 
-        int skill = you.dex()
-                    + (you.skill_rdiv(SK_TRAPS_DOORS) + you.skill_rdiv(SK_STEALTH)) / 2;
+        int skill = you.dex() + you.skill_rdiv(SK_STEALTH);
 
         if (you.berserk())
         {
@@ -4023,8 +3982,8 @@ static void _close_door(coord_def move)
             mprf(verb, adj, noun);
         }
 
-        std::vector<coord_def> excludes;
-        for (std::set<coord_def>::const_iterator i = all_door.begin();
+        vector<coord_def> excludes;
+        for (set<coord_def>::const_iterator i = all_door.begin();
              i != all_door.end(); ++i)
         {
             const coord_def& dc = *i;
@@ -4057,7 +4016,7 @@ static void _close_door(coord_def move)
         switch (feat)
         {
         case DNGN_CLOSED_DOOR:
-        case DNGN_DETECTED_SECRET_DOOR:
+        case DNGN_RUNED_DOOR:
             mpr("It's already closed!");
             break;
         default:
@@ -4142,7 +4101,7 @@ static void _move_player(coord_def move)
     {
         dungeon_feature_type dangerous = DNGN_FLOOR;
         monster *bad_mons = 0;
-        std::string bad_suff, bad_adj;
+        string bad_suff, bad_adj;
         for (adjacent_iterator ai(you.pos(), false); ai; ++ai)
         {
             if (is_feat_dangerous(grd(*ai)) && !you.can_cling_to(*ai)
@@ -4153,7 +4112,7 @@ static void _move_player(coord_def move)
             }
             else
             {
-                std::string suffix, adj;
+                string suffix, adj;
                 monster *mons = monster_at(*ai);
                 if (mons && bad_attack(mons, adj, suffix))
                 {
@@ -4166,14 +4125,14 @@ static void _move_player(coord_def move)
         }
         if (dangerous != DNGN_FLOOR || bad_mons)
         {
-            std::string prompt = "Are you sure you want to move while confused "
-                                 "and next to ";
+            string prompt = "Are you sure you want to move while confused "
+                            "and next to ";
 
             if (dangerous != DNGN_FLOOR)
                 prompt += (dangerous == DNGN_LAVA ? "lava" : "deep water");
             else
             {
-                std::string name = bad_mons->name(DESC_PLAIN);
+                string name = bad_mons->name(DESC_PLAIN);
                 if (name.find("the ") == 0)
                     name.erase(0, 4);
                 if (bad_adj.find("your") != 0)
@@ -4270,6 +4229,18 @@ static void _move_player(coord_def move)
 
     coord_def mon_swap_dest;
 
+    string verb;
+    if (you.flight_mode() == FL_FLY)
+        verb = "fly";
+    else if (you.flight_mode() == FL_LEVITATE)
+        verb = "levitate";
+    else if (you.is_wall_clinging())
+        verb = "cling";
+    else if (you.species == SP_NAGA && !form_changed_physiology())
+        verb = "slither";
+    else
+        verb = "walk";
+
     if (targ_monst && !targ_monst->submerged())
     {
         if (can_swap_places && !beholder && !fmonger)
@@ -4286,6 +4257,16 @@ static void _move_player(coord_def move)
             // an invisible monster attacks the monster, thus allowing
             // the player to figure out which adjacent wall an invis
             // monster is in "for free".
+
+            // Don't allow the player to freely locate invisible monsters
+            // with confirmation prompts.
+            if (!you.can_see(targ_monst) && !check_moveto(targ, verb))
+            {
+                stop_running();
+                you.turn_is_over = false;
+                return;
+            }
+
             you.turn_is_over = true;
             fight_melee(&you, targ_monst);
 
@@ -4317,7 +4298,7 @@ static void _move_player(coord_def move)
 
             if (danger && !player_has_orb())
             {
-                std::string prompt = "Are you sure you want to leave the Orb unguarded?";
+                string prompt = "Are you sure you want to leave the Orb unguarded?";
                 if (!yesno(prompt.c_str(), false, 'n'))
                 {
                     canned_msg(MSG_OK);
@@ -4328,18 +4309,6 @@ static void _move_player(coord_def move)
 
         if (!you.attempt_escape()) // false means constricted and did not escape
             return;
-
-        std::string verb;
-        if (you.flight_mode() == FL_FLY)
-            verb = "fly";
-        else if (you.flight_mode() == FL_LEVITATE)
-            verb = "levitate";
-        else if (you.is_wall_clinging())
-            verb = "cling";
-        else if (you.species == SP_NAGA && !form_changed_physiology())
-            verb = "slither";
-        else
-            verb = "walk";
 
         if (!you.confused() && !check_moveto(targ, verb))
         {

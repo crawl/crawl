@@ -19,9 +19,9 @@
 #include <math.h>
 
 static element_colour_calc* element_colours[NUM_COLOURS] = {};
-static std::map<std::string, element_colour_calc*> element_colours_str;
+static map<string, element_colour_calc*> element_colours_str;
 
-typedef std::vector< std::pair<int, int> > random_colour_map;
+typedef vector< pair<int, int> > random_colour_map;
 typedef int (*randomized_element_colour_calculator)(int, const coord_def&,
                                                     random_colour_map);
 
@@ -29,8 +29,8 @@ static int _randomized_element_colour(int, const coord_def&, random_colour_map);
 
 struct random_element_colour_calc : public element_colour_calc
 {
-    random_element_colour_calc(element_type _type, std::string _name,
-                               std::vector< std::pair<int, int> > _rand_vals)
+    random_element_colour_calc(element_type _type, string _name,
+                               vector< pair<int, int> > _rand_vals)
         : element_colour_calc(_type, _name, (element_colour_calculator)_randomized_element_colour),
           rand_vals(_rand_vals)
         {};
@@ -278,7 +278,8 @@ static int _etc_random(int, const coord_def&)
     return random_colour();
 }
 
-static element_colour_calc *_create_random_element_colour_calc(element_type type, std::string name, ...)
+static element_colour_calc *_create_random_element_colour_calc(element_type type,
+                                                               string name, ...)
 {
     random_colour_map rand_vals;
     va_list ap;
@@ -293,7 +294,7 @@ static element_colour_calc *_create_random_element_colour_calc(element_type type
 
         int colour = va_arg(ap, int);
 
-        rand_vals.push_back(std::make_pair(prob, colour));
+        rand_vals.push_back(make_pair(prob, colour));
     }
 
     va_end(ap);
@@ -601,7 +602,7 @@ int element_colour(int element, bool no_random, const coord_def& loc)
 }
 
 #ifdef USE_TILE
-static std::string tile_cols[24] =
+static string tile_cols[24] =
 {
     "black", "darkgrey", "grey", "lightgrey", "white",
     "blue", "lightblue", "darkblue",
@@ -612,7 +613,7 @@ static std::string tile_cols[24] =
     "yellow", "lightyellow", "darkyellow", "brown"
 };
 
-unsigned int str_to_tile_colour(std::string colour)
+unsigned int str_to_tile_colour(string colour)
 {
     if (colour.empty())
         return 0;
@@ -635,14 +636,14 @@ unsigned int str_to_tile_colour(std::string colour)
 }
 #endif
 
-static const std::string cols[16] =
+static const string cols[16] =
 {
     "black", "blue", "green", "cyan", "red", "magenta", "brown",
     "lightgrey", "darkgrey", "lightblue", "lightgreen", "lightcyan",
     "lightred", "lightmagenta", "yellow", "white"
 };
 
-const std::string colour_to_str(colour_t colour)
+const string colour_to_str(colour_t colour)
 {
     if (colour >= 16)
         return "lightgrey";
@@ -651,8 +652,7 @@ const std::string colour_to_str(colour_t colour)
 }
 
 // Returns -1 if unmatched else returns 0-15.
-int str_to_colour(const std::string &str, int default_colour,
-                   bool accept_number)
+int str_to_colour(const string &str, int default_colour, bool accept_number)
 {
     int ret;
 
@@ -674,7 +674,7 @@ int str_to_colour(const std::string &str, int default_colour,
     if (ret == 16)
     {
         // Maybe we have an element colour attribute.
-        std::map<std::string, element_colour_calc*>::const_iterator it
+        map<string, element_colour_calc*>::const_iterator it
             = element_colours_str.find(str);
         if (it != element_colours_str.end())
         {

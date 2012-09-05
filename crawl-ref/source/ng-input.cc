@@ -10,12 +10,12 @@
 #include "stuff.h"
 #include "unicode.h"
 
-extern std::string init_file_error; // defined in main.cc
+extern string init_file_error; // defined in main.cc
 
 // Eventually, this should be something more grand. {dlb}
 void opening_screen(void)
 {
-    std::string msg =
+    string msg =
     "<yellow>Hello, welcome to " CRAWL " " + Version::Long() + "!</yellow>\n"
     "<brown>(c) Copyright 1997-2002 Linley Henzell, "
     "2002-2012 Crawl DevTeam\n"
@@ -63,7 +63,7 @@ static void _show_name_prompt(int where)
     textcolor(LIGHTGREY);
 }
 
-bool is_good_name(const std::string& name, bool blankOK, bool verbose)
+bool is_good_name(const string& name, bool blankOK, bool verbose)
 {
     // verification begins here {dlb}:
     if (name.empty())
@@ -79,7 +79,7 @@ bool is_good_name(const std::string& name, bool blankOK, bool verbose)
     return validate_player_name(name, verbose);
 }
 
-static bool _read_player_name(std::string &name)
+static bool _read_player_name(string &name)
 {
     const int name_x = wherex(), name_y = wherey();
     char buf[kNameLen + 1]; // FIXME: make line_reader handle widths
@@ -127,7 +127,7 @@ void enter_player_name(newgame_def *ng)
     while (!is_good_name(ng->name, false, true));
 }
 
-bool validate_player_name(const std::string &name, bool verbose)
+bool validate_player_name(const string &name, bool verbose)
 {
 #if defined(TARGET_OS_WINDOWS)
     // Quick check for CON -- blows up real good under DOS/Windows.

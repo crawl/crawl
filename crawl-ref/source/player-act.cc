@@ -362,7 +362,7 @@ void player::make_hungry(int hunger_increase, bool silent)
         ::lessen_hunger(-hunger_increase, silent);
 }
 
-std::string player::name(description_level_type dt, bool) const
+string player::name(description_level_type dt, bool) const
 {
     switch (dt)
     {
@@ -377,7 +377,7 @@ std::string player::name(description_level_type dt, bool) const
     }
 }
 
-std::string player::pronoun(pronoun_type pro, bool) const
+string player::pronoun(pronoun_type pro, bool) const
 {
     switch (pro)
     {
@@ -389,19 +389,19 @@ std::string player::pronoun(pronoun_type pro, bool) const
     }
 }
 
-std::string player::conj_verb(const std::string &verb) const
+string player::conj_verb(const string &verb) const
 {
     return verb;
 }
 
-std::string player::hand_name(bool plural, bool *can_plural) const
+string player::hand_name(bool plural, bool *can_plural) const
 {
     bool _can_plural;
     if (can_plural == NULL)
         can_plural = &_can_plural;
     *can_plural = true;
 
-    std::string str;
+    string str;
 
     if (form == TRAN_BAT || form == TRAN_DRAGON)
         str = "foreclaw";
@@ -431,14 +431,14 @@ std::string player::hand_name(bool plural, bool *can_plural) const
     return str;
 }
 
-std::string player::foot_name(bool plural, bool *can_plural) const
+string player::foot_name(bool plural, bool *can_plural) const
 {
     bool _can_plural;
     if (can_plural == NULL)
         can_plural = &_can_plural;
     *can_plural = true;
 
-    std::string str;
+    string str;
 
     if (form == TRAN_SPIDER)
         str = "hind leg";
@@ -475,7 +475,7 @@ std::string player::foot_name(bool plural, bool *can_plural) const
     return str;
 }
 
-std::string player::arm_name(bool plural, bool *can_plural) const
+string player::arm_name(bool plural, bool *can_plural) const
 {
     if (form_changed_physiology())
         return hand_name(plural, can_plural);
@@ -483,8 +483,8 @@ std::string player::arm_name(bool plural, bool *can_plural) const
     if (can_plural != NULL)
         *can_plural = true;
 
-    std::string adj;
-    std::string str = "arm";
+    string adj;
+    string str = "arm";
 
     if (player_genus(GENPC_DRACONIAN) || species == SP_NAGA)
         adj = "scaled";
@@ -700,10 +700,12 @@ bool player::is_web_immune() const
 bool player::shove(const char* feat_name)
 {
     for (distance_iterator di(pos()); di; ++di)
-        if (in_bounds(*di) && !actor_at(*di) && !is_feat_dangerous(grd(*di)))
+        if (in_bounds(*di) && !actor_at(*di) && !is_feat_dangerous(grd(*di))
+            && you.can_pass_through_feat(grd(*di)))
         {
             moveto(*di);
-            mprf("You are pushed out of the %s.", feat_name);
+            if (*feat_name)
+                mprf("You are pushed out of the %s.", feat_name);
             dprf("Moved to (%d, %d).", pos().x, pos().y);
             return true;
         }
