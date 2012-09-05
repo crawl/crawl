@@ -12,7 +12,7 @@
 #define DEPTH_NOWHERE 999
 
 int mons_rarity(monster_type mcls, branch_type branch);
-int mons_level(monster_type mcls, branch_type branch);
+int mons_depth(monster_type mcls, branch_type branch);
 
 monster_type pick_monster_no_rarity(branch_type branch);
 monster_type pick_monster_by_hash(branch_type branch, uint32_t hash);
