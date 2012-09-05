@@ -141,7 +141,9 @@ dwarven_sabre2
 elven_sabre1 WPN_SABRE_ELF
 elven_sabre2
 
-quickblade WPN_QUICK_BLADE
+quickblade1 WPN_QUICK_BLADE
+quickblade2
+quickblade3
 
 double_sword WPN_DOUBLE_SWORD
 triple_sword WPN_TRIPLE_SWORD
