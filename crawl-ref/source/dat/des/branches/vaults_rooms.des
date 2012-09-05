@@ -2423,13 +2423,12 @@ MAP
 .....xx
 ENDMAP
 
-# I think players will realize there is a secret door
 NAME:     vaults_room_7_facing_down3_glass_wall
 TAGS:     vaults_room_7_facing_down3 allow_dup no_monster_gen no_item_gen
 SHUFFLE:  {([ / })]
 SUBST:    {([ = .
 SHUFFLE:  })]
-NSUBST:   = = 1:= / *:m
+NSUBST:   = = 1:+ / *:m
 SUBVAULT: A : vaults_door_7
 MAP
 .....m.
@@ -2549,7 +2548,7 @@ TAGS:     vaults_room_7_dead_end_encounter allow_dup
 TAGS:     no_monster_gen no_item_gen
 SHUFFLE:  %*
 SUBST:    * = .
-NSUBST:   = = 1:=m / *:m
+NSUBST:   = = 1:+m / *:m
 SUBVAULT: A : vaults_door_7
 : vaults_standard_loot(_G)
 MAP
@@ -2667,7 +2666,7 @@ TAGS:     vaults_room_7_dead_end_loot allow_dup
 TAGS:      no_monster_gen no_item_gen
 SHUFFLE:  %*
 SUBST:    * = .
-NSUBST:   = = 1:= / *:m
+NSUBST:   = = 1:+ / *:m
 SUBVAULT: A : vaults_door_7
 : vaults_standard_loot(_G)
 MAP
@@ -2733,9 +2732,9 @@ ENDMAP
 
 NAME:     vaults_room_7_dead_end_stairs1_statues
 TAGS:     vaults_room_7_dead_end_up1 allow_dup no_pool_fixup
-SUBST:    + = +++xx=
+SUBST:    + = +++xx
 NSUBST:   _ = 1:{ / 2:0 / *:_
-KPROP:    =+_%$0 = no_rtele_into
+KPROP:    +_%$0 = no_rtele_into
 SUBVAULT: A : vaults_door_7
 : vaults_ornamental_pool(_G)
 : subvault_place_stair(_G)
@@ -2985,17 +2984,9 @@ AA.....AA
 AAAAAAAAA
 ENDMAP
 
-# Some kobolds to poke you through grates
-#
-# I have removed the secret doors becuase the kobolds come out
-#  through them.  I also converted the iron grates to deep water
-#  so the kobolds could attack the player.  Kobolds cannot stab
-#  characters through iron grates.  ~infiniplex
+# Some kobolds to poke you
 NAME:     vaults_room_7_city_encounter_mumra_kobold_gallery
 TAGS:     vaults_room_7_city_encounter allow_dup no_pool_fixup luniq
-#NSUBST:   A = 2:x / *:=
-#NSUBST:   B = 2:x / *:=
-#KFEAT:    H = iron_grate
 SUBST:    AB = x
 KFEAT:    H : w
 KMONS:    1 = kobold ; trident / kobold ; spear
@@ -3056,7 +3047,7 @@ ENDMAP
 NAME:     vaults_room_7_city_loot_glass_walls
 TAGS:     vaults_room_7_city_loot allow_dup
 SUBST:    G : G..
-NSUBST:   = = 1:= / *:m
+NSUBST:   = = 1:+ / *:m
 NSUBST:   $ = 2:g / 3:f / 2:e / *:d
 SUBVAULT: A : vaults_door_7
 SUBVAULT: B : vaults_door_7
