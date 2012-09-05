@@ -3407,11 +3407,6 @@ void bolt::affect_player_enchantment()
             mpr("This spell isn't strong enough to banish yourself.");
             break;
         }
-        if (player_in_branch(BRANCH_ABYSS))
-        {
-            mpr("You feel trapped.");
-            break;
-        }
         you.banish(agent(), zapper());
         obvious_effect = true;
         break;
@@ -4792,7 +4787,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return MON_AFFECTED;
 
     case BEAM_BANISH:
-        if (player_in_branch(BRANCH_ABYSS))
+        if (player_in_branch(BRANCH_ABYSS) && x_chance_in_y(you.depth, 27))
             simple_monster_message(mon, " wobbles for a moment.");
         else
             mon->banish(agent());

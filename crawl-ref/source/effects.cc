@@ -526,13 +526,16 @@ void banished(const string &who)
     if (crawl_state.game_is_zotdef())
         return;
 
-    mark_milestone("abyss.enter",
-                   "is cast into the Abyss!" + _who_banished(who));
+    if (!player_in_branch(BRANCH_ABYSS)) {
+      mark_milestone("abyss.enter",
+                     "is cast into the Abyss!" + _who_banished(who));
+    }
 
     if (player_in_branch(BRANCH_ABYSS))
     {
-        // Can't happen outside wizmode.
-        mpr("You feel trapped.");
+        you.depth = min(you.depth + 1, 27);
+        abyss_teleport(true);
+        redraw_screen();
         return;
     }
 
