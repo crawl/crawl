@@ -2360,7 +2360,8 @@ static monsterentry mondata[] = {
 
 {
     MONS_MOTH_OF_SUPPRESSION, 'y', LIGHTGREEN, "moth of suppression",
-    M_NO_SKELETON,
+    // The gigantic aura makes shapeshifters weird, hence M_NO_POLY_TO
+    M_NO_SKELETON | M_NO_POLY_TO,
     MR_NO_FLAGS,
     300, 6, MONS_MOTH, MONS_MOTH_OF_SUPPRESSION, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 15}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
