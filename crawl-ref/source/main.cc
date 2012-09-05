@@ -2850,9 +2850,13 @@ static void _check_banished()
         if (!player_in_branch(BRANCH_ABYSS))
         {
             mpr("You are cast into the Abyss!", MSGCH_BANISHMENT);
-            more();
-            banished(you.banished_by);
+        } else if (you.depth != 27) {
+            mpr("You are cast deeper into the Abyss!", MSGCH_BANISHMENT);
+        } else {
+            mpr("The Abyss bends around you!", MSGCH_BANISHMENT);
         }
+        more();
+        banished(you.banished_by);
         you.banished_by.clear();
     }
 }
