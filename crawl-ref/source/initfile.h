@@ -20,18 +20,18 @@ enum drop_mode_type
     DM_MULTI,
 };
 
-int str_to_summon_type(const std::string &str);
-std::string gametype_to_str(game_type type);
+int str_to_summon_type(const string &str);
+string gametype_to_str(game_type type);
 
-std::string read_init_file(bool runscript = false);
+string read_init_file(bool runscript = false);
 
 struct newgame_def;
 newgame_def read_startup_prefs();
 
-void read_options(const std::string &s, bool runscript = false,
+void read_options(const string &s, bool runscript = false,
                   bool clear_aliases = false);
 
-void parse_option_line(const std::string &line, bool runscript = false);
+void parse_option_line(const string &line, bool runscript = false);
 
 void apply_ascii_display(bool ascii);
 
@@ -40,35 +40,35 @@ void get_system_environment(void);
 struct system_environment
 {
 public:
-    std::string crawl_name;
-    std::string crawl_rc;
-    std::string crawl_dir;
+    string crawl_name;
+    string crawl_rc;
+    string crawl_dir;
 
-    std::vector<std::string> rcdirs;   // Directories to search for includes.
+    vector<string> rcdirs;        // Directories to search for includes.
 
-    std::string morgue_dir;
-    std::string macro_dir;
-    std::string crawl_base;        // Directory from argv[0], may be used to
+    string morgue_dir;
+    string macro_dir;
+    string crawl_base;             // Directory from argv[0], may be used to
                                    // locate datafiles.
-    std::string crawl_exe;         // File from argv[0].
-    std::string home;
+    string crawl_exe;              // File from argv[0].
+    string home;
 
 #ifdef DGL_SIMPLE_MESSAGING
-    std::string messagefile;       // File containing messages from other users.
+    string messagefile;            // File containing messages from other users.
     bool have_messages;            // There are messages waiting to be read.
     unsigned  message_check_tick;
 #endif
 
-    std::string scorefile;
-    std::vector<std::string> cmd_args;
+    string scorefile;
+    vector<string> cmd_args;
 
     int map_gen_iters;
 
-    std::vector<std::string> extra_opts_first;
-    std::vector<std::string> extra_opts_last;
+    vector<string> extra_opts_first;
+    vector<string> extra_opts_last;
 
 public:
-    void add_rcdir(const std::string &dir);
+    void add_rcdir(const string &dir);
 };
 
 extern system_environment SysEnv;
@@ -80,35 +80,35 @@ void write_newgame_options_file(const newgame_def& prefs);
 
 void save_player_name(void);
 
-std::string channel_to_str(int ch);
+string channel_to_str(int ch);
 
-int str_to_channel(const std::string &);
-weapon_type str_to_weapon(const std::string &str);
+int str_to_channel(const string &);
+weapon_type str_to_weapon(const string &str);
 
 class StringLineInput : public LineInput
 {
 public:
-    StringLineInput(const std::string &s) : str(s), pos(0) { }
+    StringLineInput(const string &s) : str(s), pos(0) { }
 
     bool eof()
     {
         return pos >= str.length();
     }
 
-    std::string get_line()
+    string get_line()
     {
         if (eof())
             return "";
-        std::string::size_type newl = str.find("\n", pos);
-        if (newl == std::string::npos)
+        string::size_type newl = str.find("\n", pos);
+        if (newl == string::npos)
             newl = str.length();
-        std::string line = str.substr(pos, newl - pos);
+        string line = str.substr(pos, newl - pos);
         pos = newl + 1;
         return line;
     }
 private:
-    const std::string &str;
-    std::string::size_type pos;
+    const string &str;
+    string::size_type pos;
 };
 
 #endif

@@ -88,13 +88,13 @@ static void _surge_power(spell_type spell)
     }
 }
 
-static std::string _spell_base_description(spell_type spell, bool viewing)
+static string _spell_base_description(spell_type spell, bool viewing)
 {
-    std::ostringstream desc;
+    ostringstream desc;
 
     int highlight =  spell_highlight_by_utility(spell, COL_UNKNOWN, !viewing);
 
-    desc << "<" << colour_to_str(highlight) << ">" << std::left;
+    desc << "<" << colour_to_str(highlight) << ">" << left;
 
     // spell name
     desc << chop_string(spell_title(spell), 30);
@@ -104,7 +104,7 @@ static std::string _spell_base_description(spell_type spell, bool viewing)
 
     const int so_far = strwidth(desc.str()) - (strwidth(colour_to_str(highlight))+2);
     if (so_far < 60)
-        desc << std::string(60 - so_far, ' ');
+        desc << string(60 - so_far, ' ');
     desc << "</" << colour_to_str(highlight) <<">";
 
     // spell fail rate, level
@@ -119,19 +119,19 @@ static std::string _spell_base_description(spell_type spell, bool viewing)
     return desc.str();
 }
 
-static std::string _spell_extra_description(spell_type spell, bool viewing)
+static string _spell_extra_description(spell_type spell, bool viewing)
 {
-    std::ostringstream desc;
+    ostringstream desc;
 
     int highlight =  spell_highlight_by_utility(spell, COL_UNKNOWN, !viewing);
 
-    desc << "<" << colour_to_str(highlight) << ">" << std::left;
+    desc << "<" << colour_to_str(highlight) << ">" << left;
 
     // spell name
     desc << chop_string(spell_title(spell), 30);
 
     // spell power, spell range, hunger level, level
-    const std::string rangestring = spell_range_string(spell);
+    const string rangestring = spell_range_string(spell);
 
     desc << chop_string(spell_power_string(spell), 14)
          << chop_string(rangestring, 16 + tagged_string_tag_length(rangestring))
@@ -187,7 +187,7 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
     spell_menu.set_tag("spell");
     spell_menu.add_toggle_key('!');
 
-    std::string more_str = "Press '!' ";
+    string more_str = "Press '!' ";
     if (toggle_with_I)
     {
         spell_menu.add_toggle_key('I');
@@ -256,7 +256,7 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
 
     while (true)
     {
-        std::vector<MenuEntry*> sel = spell_menu.show();
+        vector<MenuEntry*> sel = spell_menu.show();
         if (!crawl_state.doing_prev_cmd_again)
             redraw_screen();
         if (sel.empty())
@@ -445,7 +445,7 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
 
     const int cap = spell_power_cap(spell);
     if (cap > 0 && cap_power)
-        power = std::min(power, cap);
+        power = min(power, cap);
 
     return power;
 }
@@ -831,7 +831,7 @@ bool is_prevented_teleport(spell_type spell)
             && item_blocks_teleport(false, false);
 }
 
-bool spell_is_uncastable(spell_type spell, std::string &msg)
+bool spell_is_uncastable(spell_type spell, string &msg)
 {
     // Normally undead can't memorise these spells, so this check is
     // to catch those in Lich form.  As such, we allow the Lich form
@@ -928,7 +928,7 @@ static bool _spellcasting_aborted(spell_type spell,
                                   bool check_range_usability,
                                   bool wiz_cast)
 {
-    std::string msg;
+    string msg;
     if (!wiz_cast && spell_is_uncastable(spell, msg))
     {
         mpr(msg);
@@ -1072,7 +1072,7 @@ spret_type your_spells(spell_type spell, int powc,
 
         targetter *hitfunc = _spell_targetter(spell, powc, range);
 
-        std::string title = "Aiming: <white>";
+        string title = "Aiming: <white>";
         title += spell_title(spell);
         title += "</white>";
 
@@ -1462,11 +1462,12 @@ static spret_type _do_cast(spell_type spell, int powc,
 
     // Self-enchantments. (Spells that can only affect the player.)
     // Resistances.
+#if TAG_MAJOR_VERSION == 34
     case SPELL_INSULATION:
-        return cast_insulation(powc, fail);
-
     case SPELL_SEE_INVISIBLE:
-        return cast_see_invisible(powc, fail);
+        mpr("Sorry, this spell is gone!");
+        return SPRET_ABORT;
+#endif
 
     case SPELL_CONTROL_TELEPORT:
         return cast_teleport_control(powc, fail);
@@ -1686,7 +1687,7 @@ int failure_rate_to_int(int fail)
     else if (fail == 100)
         return 100;
     else
-        return std::max(1, (int) (100 * _get_true_fail_rate(fail)));
+        return max(1, (int) (100 * _get_true_fail_rate(fail)));
 }
 
 //Note that this char[] is allocated on the heap, so anything calling
@@ -1698,12 +1699,12 @@ char* failure_rate_to_string(int fail)
     return buffer;
 }
 
-std::string spell_hunger_string(spell_type spell, bool rod)
+string spell_hunger_string(spell_type spell, bool rod)
 {
     return hunger_cost_string(spell_hunger(spell, rod));
 }
 
-std::string spell_noise_string(spell_type spell)
+string spell_noise_string(spell_type spell)
 {
     const int casting_noise = spell_noise(spell);
     int effect_noise;
@@ -1762,7 +1763,7 @@ std::string spell_noise_string(spell_type spell)
         effect_noise = 0;
     }
 
-    const int noise = std::max(casting_noise, effect_noise);
+    const int noise = max(casting_noise, effect_noise);
 
     const char* noise_descriptions[] = {
         "Silent", "Almost silent", "Quiet", "A bit loud", "Loud", "Very loud",
@@ -1797,22 +1798,22 @@ static int _spell_power_bars(spell_type spell, bool rod)
     const int cap = spell_power_cap(spell);
     if (cap == 0)
         return -1;
-    const int power = std::min(calc_spell_power(spell, true, false, false, rod), cap);
+    const int power = min(calc_spell_power(spell, true, false, false, rod), cap);
     return _power_to_barcount(power);
 }
 
 #ifdef WIZARD
-static std::string _wizard_spell_power_numeric_string(spell_type spell, bool rod)
+static string _wizard_spell_power_numeric_string(spell_type spell, bool rod)
 {
     const int cap = spell_power_cap(spell);
     if (cap == 0)
         return "N/A";
-    const int power = std::min(calc_spell_power(spell, true, false, false, rod), cap);
+    const int power = min(calc_spell_power(spell, true, false, false, rod), cap);
     return make_stringf("%d (%d)", power, cap);
 }
 #endif
 
-std::string spell_power_string(spell_type spell, bool rod)
+string spell_power_string(spell_type spell, bool rod)
 {
 #ifdef WIZARD
     if (you.wizard)
@@ -1825,7 +1826,7 @@ std::string spell_power_string(spell_type spell, bool rod)
     if (numbars < 0)
         return "N/A";
     else
-        return std::string(numbars, '#') + std::string(capbars - numbars, '.');
+        return string(numbars, '#') + string(capbars - numbars, '.');
 }
 
 int calc_spell_range(spell_type spell, int power, bool rod)
@@ -1837,7 +1838,7 @@ int calc_spell_range(spell_type spell, int power, bool rod)
     return range;
 }
 
-std::string spell_range_string(spell_type spell, bool rod)
+string spell_range_string(spell_type spell, bool rod)
 {
     const int cap      = spell_power_cap(spell);
     const int range    = calc_spell_range(spell, 0, rod);
@@ -1847,14 +1848,14 @@ std::string spell_range_string(spell_type spell, bool rod)
         return "N/A";
     else
     {
-        return std::string("@") + std::string(range - 1, '-')
-               + std::string(">") + std::string(maxrange - range, '.');
+        return string("@") + string(range - 1, '-')
+               + string(">") + string(maxrange - range, '.');
     }
 }
 
-std::string spell_schools_string(spell_type spell)
+string spell_schools_string(spell_type spell)
 {
-    std::string desc;
+    string desc;
 
     bool already = false;
     for (int i = 0; i <= SPTYP_LAST_EXPONENT; ++i)
@@ -1871,7 +1872,7 @@ std::string spell_schools_string(spell_type spell)
     return desc;
 }
 
-void spell_skills(spell_type spell, std::set<skill_type> &skills)
+void spell_skills(spell_type spell, set<skill_type> &skills)
 {
     unsigned int disciplines = get_spell_disciplines(spell);
     for (int i = 0; i <= SPTYP_LAST_EXPONENT; ++i)

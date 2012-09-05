@@ -32,6 +32,14 @@
 #include "traps.h"
 #include "viewgeom.h"
 
+#ifdef COMPILE_CHECKS_NEED_FUNCTION
+// FIXME: this is too ugly to live, pollutes the executable's debug symbols,
+// and stinks of elderberries.  Need a better non-C++11 way to do static
+// asserts in GCC 4.8.
+void tile_compile_checks()
+{
+#endif
+
 // This should not be changed.
 COMPILE_CHECK(TILE_DNGN_UNSEEN == 0);
 
@@ -63,6 +71,10 @@ COMPILE_CHECK(MAX_TERM_COLOUR - 1
               == TILE_AMU_COL_LAST - TILE_AMU_COL_FIRST + 1);
 COMPILE_CHECK(MAX_TERM_COLOUR - 1
               == TILE_BOOK_COL_LAST - TILE_BOOK_COL_FIRST + 1);
+
+#ifdef COMPILE_CHECKS_NEED_FUNCTION
+}
+#endif
 
 TextureID get_dngn_tex(tileidx_t idx)
 {
@@ -170,10 +182,8 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
         return TILE_WALL_SLIME;
     case DNGN_OPEN_SEA:
         return TILE_DNGN_OPEN_SEA;
-    case DNGN_SECRET_DOOR:
-        return TILE_WALL_NORMAL;
-    case DNGN_DETECTED_SECRET_DOOR:
-        return TILE_DNGN_CLOSED_DOOR;
+    case DNGN_RUNED_DOOR:
+        return TILE_DNGN_RUNED_DOOR;
     case DNGN_GRATE:
         return TILE_DNGN_GRATE;
     case DNGN_CLEAR_ROCK_WALL:
@@ -384,7 +394,7 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
 
 bool is_door_tile(tileidx_t tile)
 {
-    return tile >= TILE_DNGN_DETECTED_SECRET_DOOR &&
+    return tile >= TILE_DNGN_RUNED_DOOR &&
         tile < TILE_DNGN_ORCISH_IDOL;
 }
 
@@ -422,38 +432,7 @@ tileidx_t tileidx_feature(const coord_def &gc)
                 return TILE_FLOOR_SLIME_ACIDIC;
         }
         return _tileidx_feature_base(feat);
-    case DNGN_SECRET_DOOR:
-    case DNGN_DETECTED_SECRET_DOOR:
-    {
-        if (override && !is_door_tile(override))
-            return override;
 
-        coord_def door;
-        dungeon_feature_type door_feat;
-
-        // FIXME: This accesses grd directly, instead of map_knowledge
-        find_secret_door_info(gc, &door_feat, &door);
-        return _tileidx_feature_base(door_feat);
-    }
-    case DNGN_CLOSED_DOOR:
-    {
-        const coord_def left(gc.x - 1, gc.y);
-        const coord_def right(gc.x + 1, gc.y);
-
-        bool door_left  = feat_is_closed_door(env.map_knowledge(left).feat());
-        bool door_right = feat_is_closed_door(env.map_knowledge(right).feat());
-
-        if (door_left || door_right)
-        {
-            if (door_left && door_right)
-                return TILE_DNGN_GATE_CLOSED_MIDDLE;
-            else if (door_left)
-                return TILE_DNGN_GATE_CLOSED_RIGHT;
-            else
-                return TILE_DNGN_GATE_CLOSED_LEFT;
-        }
-        return _tileidx_feature_base(feat);
-    }
     case DNGN_TRAP_MECHANICAL:
     case DNGN_TRAP_MAGICAL:
     case DNGN_TRAP_NATURAL:
@@ -732,11 +711,11 @@ static tileidx_t _tileidx_monster_zombified(const monster_info& mon)
             if (_is_skeleton(z_type))
             {
                 return TILEP_MONS_SKELETON_HYDRA
-                       + std::min((int)mon.number, 5) - 1;
+                       + min((int)mon.number, 5) - 1;
             }
 
             z_tile = TILEP_MONS_ZOMBIE_HYDRA
-                     + std::min((int)mon.number, 5) - 1;
+                     + min((int)mon.number, 5) - 1;
             break;
         }
         else if ((mons_genus(subtype) == MONS_GIANT_NEWT
@@ -846,7 +825,7 @@ static tileidx_t _mon_mod(tileidx_t tile, int offset)
 static tileidx_t _mon_clamp(tileidx_t tile, int offset)
 {
     int count = tile_player_count(tile);
-    return (tile + std::min(std::max(offset, 0), count - 1));
+    return (tile + min(max(offset, 0), count - 1));
 }
 
 static tileidx_t _mon_random(tileidx_t tile)
@@ -1705,7 +1684,7 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     case MONS_SHADOW_DEMON:
         return TILEP_MONS_SHADOW_DEMON;
     case MONS_CHAOS_SPAWN:
-        return _mon_mod(TILEP_MONS_CHAOS_SPAWN, tile_num_prop);
+        return _mon_random(TILEP_MONS_CHAOS_SPAWN);
 
     // '2' demon
     case MONS_HELL_BEAST:
@@ -2749,6 +2728,12 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
         return TILE_WPN_QUICK_BLADE;
 
     case WPN_SABRE:
+        if (race == ISFLAG_ORCISH)
+            return TILE_WPN_SABRE_ORC;
+        if (race == ISFLAG_DWARVEN)
+            return TILE_WPN_SABRE_DWARF;
+        if (race == ISFLAG_ELVEN)
+            return TILE_WPN_SABRE_ELF;
         return TILE_WPN_SABRE;
 
     case WPN_FALCHION:
@@ -2861,9 +2846,10 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
             return TILE_WPN_GLAIVE_ORC;
         return TILE_WPN_GLAIVE;
 
+#if TAG_MAJOR_VERSION == 34
     case WPN_STAFF:
         return TILE_WPN_STAFF;
-
+#endif
     case WPN_QUARTERSTAFF:
         return TILE_WPN_QUARTERSTAFF;
 
@@ -4438,7 +4424,6 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_MEPHITIC_CLOUD:           return TILEG_MEPHITIC_CLOUD;
     case SPELL_DISCHARGE:                return TILEG_STATIC_DISCHARGE;
     case SPELL_FLY:                      return TILEG_FLIGHT;
-    case SPELL_INSULATION:               return TILEG_INSULATION;
     case SPELL_LIGHTNING_BOLT:           return TILEG_LIGHTNING_BOLT;
     case SPELL_AIRSTRIKE:                return TILEG_AIRSTRIKE;
     case SPELL_SILENCE:                  return TILEG_SILENCE;
@@ -4507,7 +4492,6 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_SLOW:                     return TILEG_SLOW;
     case SPELL_TUKIMAS_DANCE:            return TILEG_TUKIMAS_DANCE;
     case SPELL_ENSLAVEMENT:              return TILEG_ENSLAVEMENT;
-    case SPELL_SEE_INVISIBLE:            return TILEG_SEE_INVISIBLE;
     case SPELL_PETRIFY:                  return TILEG_PETRIFY;
     case SPELL_CAUSE_FEAR:               return TILEG_CAUSE_FEAR;
     case SPELL_HASTE:                    return TILEG_HASTE;
@@ -4658,7 +4642,7 @@ tileidx_t tileidx_skill(skill_type skill, int train)
     case SK_STEALTH:        ch = TILEG_STEALTH_ON; break;
     case SK_STABBING:       ch = TILEG_STABBING_ON; break;
     case SK_SHIELDS:        ch = TILEG_SHIELDS_ON; break;
-    case SK_TRAPS_DOORS:    ch = TILEG_TRAPS_DOORS_ON; break;
+    case SK_TRAPS:          ch = TILEG_TRAPS_ON; break;
     case SK_UNARMED_COMBAT: ch = TILEG_UNARMED_COMBAT_ON; break;
     case SK_SPELLCASTING:   ch = TILEG_SPELLCASTING_ON; break;
     case SK_CONJURATIONS:   ch = TILEG_CONJURATIONS_ON; break;
@@ -5241,12 +5225,12 @@ tileidx_t tileidx_enchant_equ(const item_def &item, tileidx_t tile, bool player)
     return tile;
 }
 
-std::string tile_debug_string(tileidx_t fg, tileidx_t bg, char prefix)
+string tile_debug_string(tileidx_t fg, tileidx_t bg, char prefix)
 {
     tileidx_t fg_idx = fg & TILE_FLAG_MASK;
     tileidx_t bg_idx = bg & TILE_FLAG_MASK;
 
-    std::string fg_name;
+    string fg_name;
     if (fg_idx < TILE_MAIN_MAX)
         fg_name = tile_main_name(fg_idx);
     else if (fg_idx < TILEP_MCACHE_START)
@@ -5279,9 +5263,9 @@ std::string tile_debug_string(tileidx_t fg, tileidx_t bg, char prefix)
         }
     }
 
-    std::string tile_string = make_stringf(
-        "%cFG: %4"PRIu64" | 0x%8"PRIx64" (%s)\n"
-        "%cBG: %4"PRIu64" | 0x%8"PRIx64" (%s)\n",
+    string tile_string = make_stringf(
+        "%cFG: %4" PRIu64" | 0x%8" PRIx64" (%s)\n"
+        "%cBG: %4" PRIu64" | 0x%8" PRIx64" (%s)\n",
         prefix,
         fg_idx,
         fg & ~TILE_FLAG_MASK,
@@ -5299,7 +5283,7 @@ void tile_init_props(monster* mon)
 {
     // Only those use tile_num.
     if (mon->type != MONS_TOADSTOOL && mon->type != MONS_SLAVE
-        && mon->type != MONS_CHAOS_SPAWN && mon->type != MONS_PLANT)
+        && mon->type != MONS_PLANT)
     {
         return;
     }

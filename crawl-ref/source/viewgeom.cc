@@ -29,7 +29,7 @@
 // Helper for layouts.  Tries to increment lvalue without overflowing it.
 static void _increment(int& lvalue, int delta, int max_value)
 {
-    lvalue = std::min(lvalue+delta, max_value);
+    lvalue = min(lvalue+delta, max_value);
 }
 
 class _layout
@@ -133,7 +133,7 @@ class _inline_layout : public _layout
         else
         {
             viewp  = termp;
-            msgp   = termp + coord_def(0, std::max(viewsz.y, hudsz.y+mlistsz.y));
+            msgp   = termp + coord_def(0, max(viewsz.y, hudsz.y+mlistsz.y));
         }
         hudp   = viewp + coord_def(viewsz.x+hud_gutter, 0);
         mlistp = hudp  + coord_def(0, hudsz.y);
@@ -144,14 +144,14 @@ class _inline_layout : public _layout
 
     int leftover_x() const
     {
-        int width = (viewsz.x + hud_gutter + std::max(hudsz.x, mlistsz.x));
+        int width = (viewsz.x + hud_gutter + max(hudsz.x, mlistsz.x));
         return (termsz.x - width);
     }
     int leftover_rightcol_y() const { return termsz.y-hudsz.y-mlistsz.y-msgsz.y; }
     int leftover_leftcol_y() const  { return termsz.y-viewsz.y-msgsz.y; }
     int leftover_y() const
     {
-        return std::min(leftover_rightcol_y(), leftover_leftcol_y());
+        return min(leftover_rightcol_y(), leftover_leftcol_y());
     }
 };
 
@@ -214,7 +214,7 @@ class _mlist_col_layout : public _layout
     }
     int leftover_y() const
     {
-        const int top_y = std::max(std::max(viewsz.y, hudsz.y), mlistsz.y);
+        const int top_y = max(max(viewsz.y, hudsz.y), mlistsz.y);
         const int height = top_y + msgsz.y;
         return (termsz.y - height);
     }

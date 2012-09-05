@@ -58,7 +58,7 @@
 
 static bool _drink_fountain();
 static int _handle_enchant_armour(int item_slot = -1,
-                                  std::string *pre_msg = NULL);
+                                  string *pre_msg = NULL);
 
 static bool _is_cancellable_scroll(scroll_type scroll);
 static bool _safe_to_remove_or_wear(const item_def &item, bool remove,
@@ -321,7 +321,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
             // Can we safely unwield this item?
             if (needs_handle_warning(*wpn, OPER_WIELD))
             {
-                const std::string prompt =
+                const string prompt =
                     "Really unwield " + wpn->name(DESC_INVENTORY) + "?";
                 if (!yesno(prompt.c_str(), false, 'n'))
                     return false;
@@ -491,7 +491,7 @@ bool item_is_worn(int inv_slot)
 // something legit.
 //
 //---------------------------------------------------------------
-bool armour_prompt(const std::string & mesg, int *index, operation_types oper)
+bool armour_prompt(const string & mesg, int *index, operation_types oper)
 {
     ASSERT(index != NULL);
 
@@ -1131,7 +1131,7 @@ static bool _safe_to_remove_or_wear(const item_def &item, bool remove, bool quie
     if (quiet)
         return false;
 
-    std::string verb = "";
+    string verb = "";
     if (remove)
     {
         if (item.base_type == OBJ_WEAPONS)
@@ -1147,8 +1147,9 @@ static bool _safe_to_remove_or_wear(const item_def &item, bool remove, bool quie
             verb = "Wear";
     }
 
-    std::string prompt = make_stringf("%sing this item will reduce your %s to zero or below. Continue?",
-                                      verb.c_str(), stat_desc(red_stat, SD_NAME));
+    string prompt = make_stringf("%sing this item will reduce your %s to zero "
+                                 "or below. Continue?", verb.c_str(),
+                                 stat_desc(red_stat, SD_NAME));
     if (!yesno(prompt.c_str(), true, 'n', true, false))
     {
         canned_msg(MSG_OK);
@@ -1185,8 +1186,8 @@ bool safe_to_remove(const item_def &item, bool quiet)
             return false;
         else
         {
-            std::string fname = (feat == DNGN_LAVA ? "lava" : "deep water");
-            std::string prompt = "Really remove this item over " + fname + "?";
+            string fname = (feat == DNGN_LAVA ? "lava" : "deep water");
+            string prompt = "Really remove this item over " + fname + "?";
             return yesno(prompt.c_str(), false, 'n');
         }
     }
@@ -1820,7 +1821,7 @@ void zap_wand(int slot)
     const int tracer_range =
         (alreadyknown && wand.sub_type != WAND_RANDOM_EFFECTS) ?
         _wand_range(type_zapped) : _max_wand_range();
-    const std::string zap_title =
+    const string zap_title =
         "Zapping: " + get_menu_colour_prefix_tags(wand, DESC_INVENTORY);
     direction_chooser_args args;
     args.mode = targ_mode;
@@ -1911,7 +1912,7 @@ void zap_wand(int slot)
 #ifdef WIZARD
     if (you.wizard)
     {
-        std::string str = wand.inscription;
+        string str = wand.inscription;
         int wiz_range = strip_number_tag(str, "range:");
         if (wiz_range != TAG_UNFOUND)
             beam.range = wiz_range;
@@ -2245,7 +2246,7 @@ static bool _drink_fountain()
 }
 
 static void _explosion(coord_def where, actor *agent, beam_type flavour,
-                       std::string name, std::string cause)
+                       string name, string cause)
 {
     bolt beam;
     beam.is_explosion = true;
@@ -2295,7 +2296,7 @@ static bool _vorpalise_weapon(bool already_known)
         return false;
 
     // There's a temporary brand, attempt to make it permanent.
-    const std::string itname = wpn.name(DESC_YOUR);
+    const string itname = wpn.name(DESC_YOUR);
     bool success = true;
     bool msg = true;
 
@@ -2436,7 +2437,7 @@ bool enchant_weapon(item_def &wpn, int acc, int dam, const char *colour)
     bool success = false;
 
     // Get item name now before changing enchantment.
-    std::string iname = wpn.name(DESC_YOUR);
+    string iname = wpn.name(DESC_YOUR);
     const char *s = wpn.quantity == 1 ? "s" : "";
 
     // Blowguns only have one stat.
@@ -2572,7 +2573,7 @@ bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
     return true;
 }
 
-static int _handle_enchant_armour(int item_slot, std::string *pre_msg)
+static int _handle_enchant_armour(int item_slot, string *pre_msg)
 {
     do
     {
@@ -2958,7 +2959,7 @@ void read_scroll(int slot)
 
     // For cancellable scrolls leave printing this message to their
     // respective functions.
-    std::string pre_succ_msg =
+    string pre_succ_msg =
             make_stringf("As you read the %s, it crumbles to dust.",
                           scroll.name(DESC_QUALNAME).c_str());
     if (you.confused()
@@ -3237,7 +3238,7 @@ void read_scroll(int slot)
     if (id_the_scroll)
         set_ident_flags(scroll, ISFLAG_KNOW_TYPE); // for notes
 
-    std::string scroll_name = scroll.name(DESC_QUALNAME).c_str();
+    string scroll_name = scroll.name(DESC_QUALNAME).c_str();
 
     if (!cancel_scroll)
     {
@@ -3293,10 +3294,8 @@ bool stasis_blocks_effect(bool calc_unid,
 
         if (msg)
         {
-            const std::string name(amulet? amulet->name(DESC_YOUR) :
-                                   "Something");
-            const std::string message =
-                make_stringf(msg, name.c_str());
+            const string name(amulet? amulet->name(DESC_YOUR) : "Something");
+            const string message = make_stringf(msg, name.c_str());
 
             if (noise)
             {
@@ -3397,9 +3396,9 @@ static bool _prompt_eat_bad_food(const item_def food)
     if (!is_bad_food(food))
         return true;
 
-    const std::string food_colour = menu_colour_item_prefix(food);
-    std::string colour            = "";
-    std::string colour_off        = "";
+    const string food_colour = menu_colour_item_prefix(food);
+    string colour            = "";
+    string colour_off        = "";
 
     const int col = menu_colour(food.name(DESC_A), food_colour, "pickup");
     if (col != -1)
@@ -3412,19 +3411,19 @@ static bool _prompt_eat_bad_food(const item_def food)
         colour      = "<" + colour + ">";
     }
 
-    const std::string qualifier = colour
-                                  + (is_poisonous(food)      ? "poisonous" :
-                                     is_mutagenic(food)      ? "mutagenic" :
-                                     causes_rot(food)        ? "rot-inducing" :
-                                     is_forbidden_food(food) ? "forbidden" : "")
-                                  + colour_off;
+    const string qualifier = colour
+                             + (is_poisonous(food)      ? "poisonous" :
+                                is_mutagenic(food)      ? "mutagenic" :
+                                causes_rot(food)        ? "rot-inducing" :
+                                is_forbidden_food(food) ? "forbidden" : "")
+                             + colour_off;
 
-    std::string prompt  = "Really ";
-                prompt += (you.species == SP_VAMPIRE ? "drink from" : "eat");
-                prompt += " this " + qualifier;
-                prompt += (food.base_type == OBJ_CORPSES ? " corpse"
-                                                         : " chunk of meat");
-                prompt += "?";
+    string prompt  = "Really ";
+           prompt += (you.species == SP_VAMPIRE ? "drink from" : "eat");
+           prompt += " this " + qualifier;
+           prompt += (food.base_type == OBJ_CORPSES ? " corpse"
+                                                    : " chunk of meat");
+           prompt += "?";
 
     if (!yesno(prompt.c_str(), false, 'n'))
     {

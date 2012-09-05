@@ -71,7 +71,7 @@ void map_marker::read(reader &inf)
     pos = unmarshallCoord(inf);
 }
 
-std::string map_marker::property(const std::string &pname) const
+string map_marker::property(const string &pname) const
 {
     return "";
 }
@@ -83,8 +83,8 @@ map_marker *map_marker::read_marker(reader &inf)
     return readers[mtype]? (*readers[mtype])(inf, mtype) : NULL;
 }
 
-map_marker *map_marker::parse_marker(
-    const std::string &s, const std::string &ctx) throw (std::string)
+map_marker *map_marker::parse_marker(const string &s,
+                                     const string &ctx) throw (string)
 {
     for (int i = 0; i < NUM_MAP_MARKER_TYPES; ++i)
     {
@@ -137,12 +137,12 @@ map_marker *map_feature_marker::read(reader &inf, map_marker_type)
     return mapf;
 }
 
-map_marker *map_feature_marker::parse(
-    const std::string &s, const std::string &) throw (std::string)
+map_marker *map_feature_marker::parse(const string &s,
+                                      const string &) throw (string)
 {
     if (s.find("feat:") != 0)
         return NULL;
-    std::string raw = s;
+    string raw = s;
     strip_tag(raw, "feat:", true);
 
     const dungeon_feature_type ft = dungeon_feature_by_name(raw);
@@ -154,7 +154,7 @@ map_marker *map_feature_marker::parse(
     return new map_feature_marker(coord_def(0, 0), ft);
 }
 
-std::string map_feature_marker::debug_describe() const
+string map_feature_marker::debug_describe() const
 {
     return make_stringf("feature (%s)", dungeon_feature_name(feat));
 }
@@ -178,7 +178,7 @@ map_lua_marker::map_lua_marker(const lua_datum &fn)
         check_register_table();
 }
 
-map_lua_marker::map_lua_marker(const std::string &s, const std::string &,
+map_lua_marker::map_lua_marker(const string &s, const string &,
                                bool mapdef_marker)
     : map_marker(MAT_LUA_MARKER, coord_def()), initialised(false)
 {
@@ -267,7 +267,7 @@ void map_lua_marker::write(writer &outf) const
             lua_typename(dlua, lua_type(dlua, -1)));
     }
 
-    const std::string marker_class(lua_tostring(dlua, -1));
+    const string marker_class(lua_tostring(dlua, -1));
     marshallString(outf, marker_class);
 
     // Okay, saved the marker's class. Now ask the writer to do its thing.
@@ -289,7 +289,7 @@ void map_lua_marker::read(reader &inf)
     if (!(initialised = unmarshallByte(inf)))
         return;
 
-    const std::string marker_class = unmarshallString(inf);
+    const string marker_class = unmarshallString(inf);
     lua_pushstring(dlua, marker_class.c_str());
     dlua_push_userdata(dlua, this, MAPMARK_METATABLE);
     lua_pushlightuserdata(dlua, &inf);
@@ -359,24 +359,24 @@ bool map_lua_marker::notify_dgn_event(const dgn_event &e)
     return accepted;
 }
 
-std::string map_lua_marker::call_str_fn(const char *fn) const
+string map_lua_marker::call_str_fn(const char *fn) const
 {
     lua_stack_cleaner cln(dlua);
     if (!callfn(fn))
         return make_stringf("error (%s): %s", fn, dlua.error.c_str());
 
-    std::string result;
+    string result;
     if (lua_isstring(dlua, -1))
         result = lua_tostring(dlua, -1);
     return result;
 }
 
-std::string map_lua_marker::debug_describe() const
+string map_lua_marker::debug_describe() const
 {
     return call_str_fn("describe");
 }
 
-std::string map_lua_marker::property(const std::string &pname) const
+string map_lua_marker::property(const string &pname) const
 {
     lua_stack_cleaner cln(dlua);
     push_fn_args("property");
@@ -388,13 +388,13 @@ std::string map_lua_marker::property(const std::string &pname) const
         return make_stringf("error (prop:%s): %s",
                             pname.c_str(), dlua.error.c_str());
     }
-    std::string result;
+    string result;
     if (lua_isstring(dlua, -1))
         result = lua_tostring(dlua, -1);
     return result;
 }
 
-std::string map_lua_marker::debug_to_string() const
+string map_lua_marker::debug_to_string() const
 {
     lua_stack_cleaner cln(dlua);
 
@@ -404,7 +404,7 @@ std::string map_lua_marker::debug_to_string() const
     if (!dlua.callfn("table_to_string", 1, 1))
         return make_stringf("error (table_to_string): %s", dlua.error.c_str());
 
-    std::string result;
+    string result;
     if (lua_isstring(dlua, -1))
         result = lua_tostring(dlua, -1);
     else
@@ -412,11 +412,11 @@ std::string map_lua_marker::debug_to_string() const
     return result;
 }
 
-map_marker *map_lua_marker::parse(
-    const std::string &s, const std::string &ctx) throw (std::string)
+map_marker *map_lua_marker::parse(const string &s,
+                                  const string &ctx) throw (string)
 {
-    std::string raw           = s;
-    bool        mapdef_marker = true;
+    string raw           = s;
+    bool   mapdef_marker = true;
 
     if (s.find("lua:") == 0)
         strip_tag(raw, "lua:", true);
@@ -472,7 +472,7 @@ map_marker *map_corruption_marker::clone() const
     return mark;
 }
 
-std::string map_corruption_marker::debug_describe() const
+string map_corruption_marker::debug_describe() const
 {
     return make_stringf("Lugonu corrupt (%d)", duration);
 }
@@ -496,8 +496,8 @@ void map_wiz_props_marker::write(writer &outf) const
 {
     map_marker::write(outf);
     marshallShort(outf, properties.size());
-    for (std::map<std::string, std::string>::const_iterator i =
-             properties.begin(); i != properties.end(); ++i)
+    for (map<string, string>::const_iterator i = properties.begin();
+         i != properties.end(); ++i)
     {
         marshallString(outf, i->first);
         marshallString(outf, i->second);
@@ -511,20 +511,19 @@ void map_wiz_props_marker::read(reader &inf)
     short numPairs = unmarshallShort(inf);
     for (short i = 0; i < numPairs; i++)
     {
-        const std::string key = unmarshallString(inf);
-        const std::string val = unmarshallString(inf);
+        const string key = unmarshallString(inf);
+        const string val = unmarshallString(inf);
 
         set_property(key, val);
     }
 }
 
-std::string map_wiz_props_marker::property(const std::string &pname) const
+string map_wiz_props_marker::property(const string &pname) const
 {
     if (pname == "desc")
         return property("feature_description");
 
-    std::map<std::string, std::string>::const_iterator
-        i = properties.find(pname);
+    map<string, string>::const_iterator i = properties.find(pname);
 
     if (i != properties.end())
         return i->second;
@@ -532,10 +531,9 @@ std::string map_wiz_props_marker::property(const std::string &pname) const
         return "";
 }
 
-std::string map_wiz_props_marker::set_property(const std::string &key,
-                                               const std::string &val)
+string map_wiz_props_marker::set_property(const string &key, const string &val)
 {
-    std::string old_val = properties[key];
+    string old_val = properties[key];
     properties[key] = val;
     return old_val;
 }
@@ -552,13 +550,13 @@ map_marker *map_wiz_props_marker::read(reader &inf, map_marker_type)
     return mapf;
 }
 
-map_marker *map_wiz_props_marker::parse(
-    const std::string &s, const std::string &) throw (std::string)
+map_marker *map_wiz_props_marker::parse(const string &s, const string &)
+    throw (string)
 {
     throw make_stringf("map_wiz_props_marker::parse() not implemented");
 }
 
-std::string map_wiz_props_marker::debug_describe() const
+string map_wiz_props_marker::debug_describe() const
 {
     return "Wizard props: " + property("feature_description");
 }
@@ -602,7 +600,7 @@ map_marker *map_tomb_marker::clone() const
     return mark;
 }
 
-std::string map_tomb_marker::debug_describe() const
+string map_tomb_marker::debug_describe() const
 {
     return make_stringf("Tomb (%d, %d, %d)", duration,
                                              source, target);
@@ -612,7 +610,7 @@ std::string map_tomb_marker::debug_describe() const
 // map_malign_gateway_marker
 
 map_malign_gateway_marker::map_malign_gateway_marker(const coord_def &p,
-                                 int dur, bool ip, std::string sum, beh_type b,
+                                 int dur, bool ip, string sum, beh_type b,
                                  god_type gd, int pow)
     : map_marker(MAT_MALIGN, p), duration(dur), is_player(ip), monster_summoned(false),
       summoner_string(sum), behaviour(b), god(gd), power(pow)
@@ -659,7 +657,7 @@ map_marker *map_malign_gateway_marker::clone() const
     return mark;
 }
 
-std::string map_malign_gateway_marker::debug_describe() const
+string map_malign_gateway_marker::debug_describe() const
 {
     return make_stringf("Malign gateway (%d, %s)", duration,
                         is_player ? "player" : "monster");
@@ -713,7 +711,7 @@ map_marker *map_phoenix_marker::clone() const
     return mark;
 }
 
-std::string map_phoenix_marker::debug_describe() const
+string map_phoenix_marker::debug_describe() const
 {
     return make_stringf("Phoenix marker (%d, %d)", duration, mon_num);
 }
@@ -758,7 +756,7 @@ map_marker *map_position_marker::read(reader &inf, map_marker_type)
     return mapf;
 }
 
-std::string map_position_marker::debug_describe() const
+string map_position_marker::debug_describe() const
 {
     return make_stringf("position (%d,%d)", dest.x, dest.y);
 }
@@ -830,15 +828,14 @@ void map_markers::activate_all(bool verbose)
 
 void map_markers::activate_markers_at(coord_def p)
 {
-    const std::vector<map_marker *> activatees = get_markers_at(p);
+    const vector<map_marker *> activatees = get_markers_at(p);
     for (int i = 0, size = activatees.size(); i < size; ++i)
         activatees[i]->activate();
 
-    const std::vector<map_marker *> active_markers = get_markers_at(p);
+    const vector<map_marker *> active_markers = get_markers_at(p);
     for (int i = 0, size = active_markers.size(); i < size; ++i)
     {
-        const std::string prop =
-            active_markers[i]->property("post_activate_remove");
+        const string prop = active_markers[i]->property("post_activate_remove");
         if (!prop.empty())
             remove(active_markers[i]);
     }
@@ -852,7 +849,7 @@ void map_markers::add(map_marker *marker)
 
 void map_markers::unlink_marker(const map_marker *marker)
 {
-    std::pair<dgn_marker_map::iterator, dgn_marker_map::iterator>
+    pair<dgn_marker_map::iterator, dgn_marker_map::iterator>
         els = markers.equal_range(marker->pos);
     for (dgn_marker_map::iterator i = els.first; i != els.second; ++i)
     {
@@ -880,7 +877,7 @@ void map_markers::remove(map_marker *marker)
 void map_markers::remove_markers_at(const coord_def &c,
                                     map_marker_type type)
 {
-    std::pair<dgn_marker_map::iterator, dgn_marker_map::iterator>
+    pair<dgn_marker_map::iterator, dgn_marker_map::iterator>
         els = markers.equal_range(c);
     for (dgn_marker_map::iterator i = els.first; i != els.second;)
     {
@@ -896,7 +893,7 @@ void map_markers::remove_markers_at(const coord_def &c,
 
 map_marker *map_markers::find(const coord_def &c, map_marker_type type)
 {
-    std::pair<dgn_marker_map::const_iterator, dgn_marker_map::const_iterator>
+    pair<dgn_marker_map::const_iterator, dgn_marker_map::const_iterator>
         els = markers.equal_range(c);
     for (dgn_marker_map::const_iterator i = els.first; i != els.second; ++i)
         if (type == MAT_ANY || i->second->get_type() == type)
@@ -918,10 +915,10 @@ map_marker *map_markers::find(map_marker_type type)
 void map_markers::move(const coord_def &from, const coord_def &to)
 {
     unwind_bool inactive(have_inactive_markers);
-    std::pair<dgn_marker_map::iterator, dgn_marker_map::iterator>
+    pair<dgn_marker_map::iterator, dgn_marker_map::iterator>
         els = markers.equal_range(from);
 
-    std::list<map_marker*> tmarkers;
+    list<map_marker*> tmarkers;
     for (dgn_marker_map::iterator i = els.first; i != els.second;)
     {
         dgn_marker_map::iterator curr = i++;
@@ -929,7 +926,7 @@ void map_markers::move(const coord_def &from, const coord_def &to)
         markers.erase(curr);
     }
 
-    for (std::list<map_marker*>::iterator i = tmarkers.begin();
+    for (list<map_marker*>::iterator i = tmarkers.begin();
          i != tmarkers.end(); ++i)
     {
         (*i)->pos = to;
@@ -945,9 +942,9 @@ void map_markers::move_marker(map_marker *marker, const coord_def &to)
     add(marker);
 }
 
-std::vector<map_marker*> map_markers::get_all(map_marker_type mat)
+vector<map_marker*> map_markers::get_all(map_marker_type mat)
 {
-    std::vector<map_marker*> rmarkers;
+    vector<map_marker*> rmarkers;
     for (dgn_marker_map::const_iterator i = markers.begin();
          i != markers.end(); ++i)
     {
@@ -957,16 +954,15 @@ std::vector<map_marker*> map_markers::get_all(map_marker_type mat)
     return rmarkers;
 }
 
-std::vector<map_marker*> map_markers::get_all(const std::string &key,
-                                              const std::string &val)
+vector<map_marker*> map_markers::get_all(const string &key, const string &val)
 {
-    std::vector<map_marker*> rmarkers;
+    vector<map_marker*> rmarkers;
 
     for (dgn_marker_map::const_iterator i = markers.begin();
          i != markers.end(); ++i)
     {
-        map_marker*       marker = i->second;
-        const std::string prop   = marker->property(key);
+        map_marker*  marker = i->second;
+        const string prop   = marker->property(key);
 
         if (val.empty() && !prop.empty() || !val.empty() && val == prop)
             rmarkers.push_back(marker);
@@ -975,24 +971,24 @@ std::vector<map_marker*> map_markers::get_all(const std::string &key,
     return rmarkers;
 }
 
-std::vector<map_marker*> map_markers::get_markers_at(const coord_def &c)
+vector<map_marker*> map_markers::get_markers_at(const coord_def &c)
 {
-    std::pair<dgn_marker_map::const_iterator, dgn_marker_map::const_iterator>
+    pair<dgn_marker_map::const_iterator, dgn_marker_map::const_iterator>
         els = markers.equal_range(c);
-    std::vector<map_marker*> rmarkers;
+    vector<map_marker*> rmarkers;
     for (dgn_marker_map::const_iterator i = els.first; i != els.second; ++i)
         rmarkers.push_back(i->second);
     return rmarkers;
 }
 
-std::string map_markers::property_at(const coord_def &c, map_marker_type type,
-                                     const std::string &key)
+string map_markers::property_at(const coord_def &c, map_marker_type type,
+                                const string &key)
 {
-    std::pair<dgn_marker_map::const_iterator, dgn_marker_map::const_iterator>
+    pair<dgn_marker_map::const_iterator, dgn_marker_map::const_iterator>
         els = markers.equal_range(c);
     for (dgn_marker_map::const_iterator i = els.first; i != els.second; ++i)
     {
-        const std::string prop = i->second->property(key);
+        const string prop = i->second->property(key);
         if (!prop.empty())
             return prop;
     }
@@ -1012,7 +1008,7 @@ void map_markers::write(writer &outf) const
 {
     marshallInt(outf, MARKERS_COOKY);
 
-    std::vector<unsigned char> buf;
+    vector<unsigned char> buf;
 
     marshallShort(outf, markers.size());
     for (dgn_marker_map::const_iterator i = markers.begin();
@@ -1024,7 +1020,7 @@ void map_markers::write(writer &outf) const
 
         // Write the marker data, prefixed by a size
         marshallInt(outf, buf.size());
-        for (std::vector<unsigned char>::const_iterator bi = buf.begin();
+        for (vector<unsigned char>::const_iterator bi = buf.begin();
               bi != buf.end(); ++bi)
         {
             outf.writeByte(*bi);
@@ -1059,7 +1055,7 @@ bool marker_vetoes_operation(const char *op)
 
 bool feature_marker_at(const coord_def &pos, dungeon_feature_type feat)
 {
-    std::vector<map_marker*> markers = env.markers.get_markers_at(pos);
+    vector<map_marker*> markers = env.markers.get_markers_at(pos);
     for (int i = 0, size = markers.size(); i < size; ++i)
     {
         map_marker *mark = markers[i];
@@ -1072,10 +1068,10 @@ bool feature_marker_at(const coord_def &pos, dungeon_feature_type feat)
     return false;
 }
 
-coord_def find_marker_position_by_prop(const std::string &prop,
-                                       const std::string &expected)
+coord_def find_marker_position_by_prop(const string &prop,
+                                       const string &expected)
 {
-    const std::vector<coord_def> markers =
+    const vector<coord_def> markers =
         find_marker_positions_by_prop(prop, expected, 1);
     if (markers.empty())
     {
@@ -1085,16 +1081,14 @@ coord_def find_marker_position_by_prop(const std::string &prop,
     return markers[0];
 }
 
-std::vector<coord_def> find_marker_positions_by_prop(
-    const std::string &prop,
-    const std::string &expected,
-    unsigned maxresults)
+vector<coord_def> find_marker_positions_by_prop(const string &prop,
+                                                const string &expected,
+                                                unsigned maxresults)
 {
-    std::vector<coord_def> marker_positions;
+    vector<coord_def> marker_positions;
     for (rectangle_iterator i(0, 0); i; ++i)
     {
-        const std::string value =
-            env.markers.property_at(*i, MAT_ANY, prop);
+        const string value = env.markers.property_at(*i, MAT_ANY, prop);
         if (!value.empty() && (expected.empty() || value == expected))
         {
             marker_positions.push_back(*i);
@@ -1105,19 +1099,18 @@ std::vector<coord_def> find_marker_positions_by_prop(
     return marker_positions;
 }
 
-std::vector<map_marker*> find_markers_by_prop(
-    const std::string &prop,
-    const std::string &expected,
-    unsigned maxresults)
+vector<map_marker*> find_markers_by_prop(const string &prop,
+                                         const string &expected,
+                                         unsigned maxresults)
 {
-    std::vector<map_marker*> markers;
+    vector<map_marker*> markers;
     for (rectangle_iterator pos(0, 0); pos; ++pos)
     {
-        const std::vector<map_marker*> markers_here =
+        const vector<map_marker*> markers_here =
             env.markers.get_markers_at(*pos);
         for (unsigned i = 0, size = markers_here.size(); i < size; ++i)
         {
-            const std::string value(markers_here[i]->property(prop));
+            const string value(markers_here[i]->property(prop));
             if (!value.empty() && (expected.empty() || value == expected))
             {
                 markers.push_back(markers_here[i]);
@@ -1138,7 +1131,7 @@ void remove_markers_and_listeners_at(coord_def p)
     // non-positional events, (such as bazaar portals listening for
     // turncount changes) and detach them manually from the dungeon
     // event dispatcher.
-    const std::vector<map_marker *> markers = env.markers.get_markers_at(p);
+    const vector<map_marker *> markers = env.markers.get_markers_at(p);
     for (int i = 0, size = markers.size(); i < size; ++i)
     {
         if (markers[i]->get_type() == MAT_LUA_MARKER)

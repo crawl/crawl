@@ -1,13 +1,13 @@
 %%%%
 Centaur
 
-Swift, strong and bulky, Centaurs need more food than other species. They are particularly
-skilled with ranged weaponry.
+Swift, strong and bulky, Centaurs need more food than other species. They are
+particularly skilled with ranged weaponry.
 %%%%
 Deep Dwarf
 
-Deep Dwarves live underground and cannot regenerate health naturally, but they are
-very resilient to damage and carry tools to heal.
+Deep Dwarves live underground and cannot regenerate health naturally, but they
+are very resilient to damage and carry tools to heal.
 %%%%
 Deep Elf
 
@@ -30,8 +30,8 @@ a colour.
 %%%%
 Felid
 
-These many-lived cats possess sentience, but are incapable of advanced item manipulation
-or the use of armour or weapons.
+These many-lived cats possess sentience, but are incapable of advanced item
+manipulation or the use of armour or weapons.
 %%%%
 Ghoul
 
@@ -40,8 +40,8 @@ eat, hacking away with their claws.
 %%%%
 Halfling
 
-Small but hardy, Halflings excel with slings. They have an increased resistance to
-mutagenic effects.
+Small but hardy, Halflings excel with slings. They have an increased resistance
+to mutagenic effects.
 %%%%
 High Elf
 
@@ -68,8 +68,8 @@ eat any meat.
 %%%%
 Merfolk
 
-Half fish, half human, Merfolk are citizens of both water and land. They
-are strong combatants, and adept at using magic to assist in battle.
+Half fish, half human, Merfolk are citizens of both water and land. They are
+strong combatants, and adept at using magic to assist in battle.
 %%%%
 Minotaur
 

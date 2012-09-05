@@ -27,6 +27,7 @@
 #include "options.h"
 #include "random.h"
 #include "religion.h"
+#include "skills2.h"
 #include "stash.h"
 #include "state.h"
 #include "stuff.h"
@@ -49,7 +50,7 @@ static bool _confirm_pray_sacrifice(god_type god)
         if (god_likes_item(god, *si)
             && needs_handle_warning(*si, OPER_PRAY))
         {
-            std::string prompt = "Really sacrifice stack with ";
+            string prompt = "Really sacrifice stack with ";
             prompt += si->name(DESC_A);
             prompt += " in it?";
 
@@ -61,9 +62,9 @@ static bool _confirm_pray_sacrifice(god_type god)
     return true;
 }
 
-std::string god_prayer_reaction()
+string god_prayer_reaction()
 {
-    std::string result = god_name(you.religion);
+    string result = god_name(you.religion);
     if (crawl_state.player_is_dead())
         result += " was ";
     else
@@ -92,7 +93,7 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
         return false;
     }
 
-    std::string prompt = "Do you wish to have " + wpn.name(DESC_YOUR)
+    string prompt = "Do you wish to have " + wpn.name(DESC_YOUR)
                        + " ";
     if (brand == SPWPN_PAIN)
         prompt += "bloodied with pain";
@@ -107,7 +108,7 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
 
     you.duration[DUR_WEAPON_BRAND] = 0;     // just in case
 
-    std::string old_name = wpn.name(DESC_A);
+    string old_name = wpn.name(DESC_A);
     set_equip_desc(wpn, ISFLAG_GLOWING);
     set_item_ego_type(wpn, OBJ_WEAPONS, brand);
     wpn.colour = colour;
@@ -142,7 +143,8 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
 
     you.wield_change = true;
     you.one_time_ability_used[god] = true;
-    std::string desc  = old_name + " ";
+    calc_mp(); // in case the old brand was antimagic
+    string desc  = old_name + " ";
             desc += (god == GOD_SHINING_ONE   ? "blessed by the Shining One" :
                      god == GOD_LUGONU        ? "corrupted by Lugonu" :
                      god == GOD_KIKUBAAQUDGHA ? "bloodied by Kikubaaqudgha"
@@ -390,8 +392,8 @@ int zin_tithe(item_def& item, int quant, bool quiet)
         // Those high enough in the hierarchy get to reap the benefits.
         // You're never big enough to be paid, the top is not having to pay
         // (and even that at 200 piety, for a brief moment until it decays).
-        tithe = std::min(tithe,
-                (you.penance[GOD_ZIN] + MAX_PIETY - you.piety) * 2 / 3);
+        tithe = min(tithe,
+                    (you.penance[GOD_ZIN] + MAX_PIETY - you.piety) * 2 / 3);
         if (tithe <= 0)
         {
             // update the remainder anyway
@@ -481,8 +483,7 @@ static void _zin_donate_gold()
         you.duration[DUR_PIETY_POOL] = 30000;
 
     const int estimated_piety =
-        std::min(MAX_PENANCE + MAX_PIETY,
-                 you.piety + you.duration[DUR_PIETY_POOL]);
+        min(MAX_PENANCE + MAX_PIETY, you.piety + you.duration[DUR_PIETY_POOL]);
 
     if (player_under_penance())
     {
@@ -493,8 +494,7 @@ static void _zin_donate_gold()
         return;
     }
 
-    std::string result = "You feel that " + god_name(GOD_ZIN)
-                       + " will soon be ";
+    string result = "You feel that " + god_name(GOD_ZIN) + " will soon be ";
     result +=
         (estimated_piety > 130) ? "exalted by your worship" :
         (estimated_piety > 100) ? "extremely pleased with you" :
@@ -601,7 +601,7 @@ static piety_gain_t _sac_corpse(const item_def& item)
         // Shouldn't be needed, but just in case an XL:1 spriggan diver walks
         // into a minotaur corpses vault on D:10 ...
         if (item.props.exists("cap_sacrifice"))
-            gain = std::min(gain, 700 * 3);
+            gain = min(gain, 700 * 3);
 
         gain_piety(gain, 700);
         gain = div_rand_round(gain, 700);
@@ -630,7 +630,7 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item,
     // Since the god is taking the items as a sacrifice, they must have at
     // least minimal value, otherwise they wouldn't be taken.
     const int value = (item.base_type == OBJ_CORPSES ?
-                          50 * stepdown_value(std::max(1,
+                          50 * stepdown_value(max(1,
                           get_max_corpse_chunks(item.mon_type)), 4, 4, 12, 12) :
                       (is_worthless_consumable(item) ? 1 : shop_value));
 
@@ -738,8 +738,7 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item,
         // compress into range 0..250
         const int stepped = stepdown_value(value, 50, 50, 200, 250);
         gain_piety(stepped, 50);
-        relative_piety_gain = (piety_gain_t)std::min(2,
-                                div_rand_round(stepped, 50));
+        relative_piety_gain = (piety_gain_t)min(2, div_rand_round(stepped, 50));
         jiyva_slurp_bonus(div_rand_round(stepped, 50), js);
         break;
     }
@@ -865,10 +864,9 @@ static bool _offer_items()
         }
 
         if (god_likes_item(you.religion, item)
-            && (item.inscription.find("=p") != std::string::npos))
+            && (item.inscription.find("=p") != string::npos))
         {
-            const std::string msg =
-                  "Really sacrifice " + item.name(DESC_A) + "?";
+            const string msg = "Really sacrifice " + item.name(DESC_A) + "?";
 
             if (!yesno(msg.c_str(), false, 'n'))
             {
@@ -896,7 +894,6 @@ static bool _offer_items()
         _show_pure_deck_chances();
 #endif
     }
-
     // Explanatory messages if nothing the god likes is sacrificed.
     else if (num_sacced == 0 && num_disliked > 0)
     {
@@ -925,7 +922,7 @@ static bool _offer_items()
     if (num_sacced == 0 && you.religion == GOD_ELYVILON)
     {
         mprf("There are no %sweapons here to destroy!",
-             you.piety_max[GOD_ELYVILON] < piety_breakpoint(2) ? "" : "evil ");
+             you.piety_max[GOD_ELYVILON] < piety_breakpoint(2) ? "" : "unholy or evil ");
     }
 
     return (num_sacced > 0);

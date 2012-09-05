@@ -52,7 +52,6 @@ function init_column_ruins_hut(e)
   e.ftile('+ = floor_rough_brown')
   e.rtile('+ = wall_stone_brick')
   e.kmask('+ = no_wall_fixup')
-  e.kmask('+ = no_secret_doors')
 end
 
 function init_column_ruins_portal(e)

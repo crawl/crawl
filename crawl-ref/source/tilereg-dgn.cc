@@ -309,7 +309,7 @@ void DungeonRegion::draw_minibars()
 
         if (Options.tile_show_minihealthbar)
         {
-            const float min_hp = std::max(0, you.hp);
+            const float min_hp = max(0, you.hp);
             const float health_divider = min_hp / (float) you.hp_max;
 
             const int hp_percent = (you.hp * 100) / you.hp_max;
@@ -372,7 +372,7 @@ static void _add_targetting_commands(const coord_def& pos)
     else
         cmd = CMD_TARGET_RIGHT;
 
-    for (int i = 0; i < std::abs(delta.x); i++)
+    for (int i = 0; i < abs(delta.x); i++)
         macro_buf_add_cmd(cmd);
 
     if (delta.y < 0)
@@ -380,7 +380,7 @@ static void _add_targetting_commands(const coord_def& pos)
     else
         cmd = CMD_TARGET_DOWN;
 
-    for (int i = 0; i < std::abs(delta.y); i++)
+    for (int i = 0; i < abs(delta.y); i++)
         macro_buf_add_cmd(cmd);
 
     macro_buf_add_cmd(CMD_TARGET_MOUSE_SELECT);
@@ -488,7 +488,7 @@ static const bool _have_appropriate_evokable(const actor* target)
 
 static item_def* _get_evokable_item(const actor* target)
 {
-    std::vector<const item_def*> list;
+    vector<const item_def*> list;
 
     for (int i = 0; i < ENDOFPACK; i++)
     {
@@ -509,7 +509,7 @@ static item_def* _get_evokable_item(const actor* target)
     menu.set_title("Wand to zap?");
     menu.load_items(list);
     menu.show();
-    std::vector<SelItem> sel = menu.get_selitems();
+    vector<SelItem> sel = menu.get_selitems();
 
     update_screen();
     redraw_screen();
@@ -743,7 +743,7 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
 
     if (event.event == MouseEvent::MOVE)
     {
-        std::string desc = get_terse_square_desc(gc);
+        string desc = get_terse_square_desc(gc);
         // Suppress floor description
         if (desc == "floor")
             desc = "";
@@ -753,7 +753,7 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
             const int cloudidx = env.cgrid(gc);
             if (cloudidx != EMPTY_CLOUD)
             {
-                std::string terrain_desc = desc;
+                string terrain_desc = desc;
                 desc = cloud_name_at_index(cloudidx);
 
                 if (!terrain_desc.empty())
@@ -937,7 +937,7 @@ void DungeonRegion::place_cursor(cursor_type type, const coord_def &gc)
     }
 }
 
-bool DungeonRegion::update_tip_text(std::string &tip)
+bool DungeonRegion::update_tip_text(string &tip)
 {
     // TODO enne - it would be really nice to use the tutorial
     // descriptions here for features, monsters, etc...
@@ -1010,10 +1010,10 @@ bool DungeonRegion::update_tip_text(std::string &tip)
     return ret;
 }
 
-static std::string _check_spell_evokable(const actor* target,
-                                         std::vector<command_type> &cmd)
+static string _check_spell_evokable(const actor* target,
+                                    vector<command_type> &cmd)
 {
-    std::string str = "";
+    string str = "";
     if (_have_appropriate_spell(target))
     {
         str += "\n[Ctrl + L-Click] Cast spell (%)";
@@ -1022,7 +1022,7 @@ static std::string _check_spell_evokable(const actor* target,
 
     if (_have_appropriate_evokable(target))
     {
-        std::string key = "Alt";
+        string key = "Alt";
 #ifdef UNIX
         // On Unix systems the Alt key is already hogged by
         // the application window, at least when we're not
@@ -1037,19 +1037,19 @@ static std::string _check_spell_evokable(const actor* target,
     return str;
 }
 
-static void _add_tip(std::string &tip, std::string text)
+static void _add_tip(string &tip, string text)
 {
     if (!tip.empty())
         tip += "\n";
     tip += text;
 }
 
-bool tile_dungeon_tip(const coord_def &gc, std::string &tip)
+bool tile_dungeon_tip(const coord_def &gc, string &tip)
 {
     const int attack_dist = you.weapon() ?
         weapon_reach(*you.weapon()) : 2;
 
-    std::vector<command_type> cmd;
+    vector<command_type> cmd;
     tip = "";
     bool has_monster = false;
 
@@ -1173,7 +1173,7 @@ bool tile_dungeon_tip(const coord_def &gc, std::string &tip)
     return true;
 }
 
-bool DungeonRegion::update_alt_text(std::string &alt)
+bool DungeonRegion::update_alt_text(string &alt)
 {
     if (mouse_control::current_mode() != MOUSE_MODE_COMMAND)
         return false;
@@ -1201,7 +1201,7 @@ bool DungeonRegion::update_alt_text(std::string &alt)
     else
     {
         // For plain floor, output the stash description.
-        const std::string stash = get_stash_desc(gc);
+        const string stash = get_stash_desc(gc);
         if (!stash.empty())
             inf.body << "\n" << stash;
     }
@@ -1225,7 +1225,7 @@ void DungeonRegion::clear_text_tags(text_tag_type type)
     m_tags[type].clear();
 }
 
-void DungeonRegion::add_text_tag(text_tag_type type, const std::string &tag,
+void DungeonRegion::add_text_tag(text_tag_type type, const string &tag,
                                  const coord_def &gc)
 {
     TextTag t;

@@ -98,7 +98,7 @@ void FontBuffer::add(const formatted_string &fs, float x, float y)
     m_font->store(*this, x, y, fs);
 }
 
-void FontBuffer::add(const std::string &s, const VColour &col, float x, float y)
+void FontBuffer::add(const string &s, const VColour &col, float x, float y)
 {
     m_font->store(*this, x, y, s, col);
 }
@@ -170,7 +170,7 @@ static unsigned char _get_alpha(float lerp, int alpha_top, int alpha_bottom)
 
     int ret = static_cast<int>(alpha_top * (1.0f - lerp) + alpha_bottom * lerp);
 
-    ret = std::min(std::max(0, ret), 255);
+    ret = min(max(0, ret), 255);
     return (static_cast<unsigned char>(ret));
 }
 

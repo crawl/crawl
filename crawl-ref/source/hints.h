@@ -57,7 +57,7 @@ enum hints_event_type
     HINT_SEEN_ALTAR,
     HINT_SEEN_SHOP,
     HINT_SEEN_DOOR,
-    HINT_FOUND_SECRET_DOOR,
+    HINT_FOUND_RUNED_DOOR,
     // other 'first events'
     HINT_SEEN_MONSTER,
     HINT_SEEN_ZERO_EXP_MON,
@@ -146,7 +146,6 @@ void init_hints();
 void tutorial_init_hints();
 void pick_hints(newgame_def* choice);
 void hints_load_game(void);
-void hints_zap_secret_doors(void);
 
 formatted_string hints_starting_info2();
 void hints_starting_screen(void);
@@ -164,14 +163,14 @@ void hints_first_item(const item_def& item);
 void learned_something_new(hints_event_type seen_what,
                            coord_def gc = coord_def());
 formatted_string hints_abilities_info(void);
-std::string hints_skills_info(void);
-std::string hints_skill_training_info();
-std::string hints_skills_description_info(void);
+string hints_skills_info(void);
+string hints_skill_training_info();
+string hints_skills_description_info(void);
 
 // Additional information for tutorial players.
 void check_item_hint(const item_def &item, unsigned int num_old_talents);
 void hints_describe_item(const item_def &item);
-void hints_inscription_info(bool autoinscribe, std::string prompt);
+void hints_inscription_info(bool autoinscribe, string prompt);
 bool hints_pos_interesting(int x, int y);
 void hints_describe_pos(int x, int y);
 bool hints_monster_interesting(const monster* mons);

@@ -57,8 +57,8 @@ bool is_vowel(const ucs_t chr)
 
 // quant_name is useful since it prints out a different number of items
 // than the item actually contains.
-std::string quant_name(const item_def &item, int quant,
-                       description_level_type des, bool terse)
+string quant_name(const item_def &item, int quant,
+                  description_level_type des, bool terse)
 {
     // item_name now requires a "real" item, so we'll mangle a tmp
     item_def tmp = item;
@@ -67,11 +67,9 @@ std::string quant_name(const item_def &item, int quant,
     return tmp.name(des, terse);
 }
 
-std::string item_def::name(description_level_type descrip,
-                           bool terse, bool ident,
-                           bool with_inscription,
-                           bool quantity_in_words,
-                           iflags_t ignore_flags) const
+string item_def::name(description_level_type descrip, bool terse, bool ident,
+                      bool with_inscription, bool quantity_in_words,
+                      iflags_t ignore_flags) const
 {
     if (crawl_state.game_is_arena())
     {
@@ -82,10 +80,10 @@ std::string item_def::name(description_level_type descrip,
     if (descrip == DESC_NONE)
         return "";
 
-    std::ostringstream buff;
+    ostringstream buff;
 
-    const std::string auxname = name_aux(descrip, terse, ident,
-                                         with_inscription, ignore_flags);
+    const string auxname = name_aux(descrip, terse, ident, with_inscription,
+                                    ignore_flags);
 
     const bool startvowel     = is_vowel(auxname[0]);
 
@@ -250,7 +248,7 @@ std::string item_def::name(description_level_type descrip,
     if (descrip != DESC_BASENAME && descrip != DESC_DBNAME && with_inscription)
     {
         const bool  tried  =  !ident && !equipped && item_type_tried(*this);
-        std::string tried_str;
+        string tried_str;
 
         if (tried)
         {
@@ -287,7 +285,7 @@ std::string item_def::name(description_level_type descrip,
                 tried_str = "tried";
         }
 
-        std::vector<std::string> insparts;
+        vector<string> insparts;
 
         if (tried)
             insparts.push_back(tried_str);
@@ -299,7 +297,7 @@ std::string item_def::name(description_level_type descrip,
         {
             buff << " {";
 
-            std::vector<std::string>::iterator iter = insparts.begin();
+            vector<string>::iterator iter = insparts.begin();
 
             for (;;)
             {
@@ -1043,12 +1041,12 @@ const char* racial_description_string(const item_def& item, bool terse)
     }
 }
 
-std::string base_type_string(const item_def &item, bool known)
+string base_type_string(const item_def &item, bool known)
 {
     return base_type_string(item.base_type, known);
 }
 
-std::string base_type_string(object_class_type type, bool known)
+string base_type_string(object_class_type type, bool known)
 {
     switch (type)
     {
@@ -1071,7 +1069,7 @@ std::string base_type_string(object_class_type type, bool known)
     }
 }
 
-std::string sub_type_string(const item_def &item, bool known)
+string sub_type_string(const item_def &item, bool known)
 {
     const object_class_type type = item.base_type;
     const int sub_type = item.sub_type;
@@ -1093,7 +1091,7 @@ std::string sub_type_string(const item_def &item, bool known)
         {
             if (!known)
                 return "manual";
-            std::string bookname = "manual of ";
+            string bookname = "manual of ";
             bookname += skill_name(static_cast<skill_type>(item.plus));
             return bookname;
         }
@@ -1106,7 +1104,7 @@ std::string sub_type_string(const item_def &item, bool known)
         else if (sub_type == BOOK_YOUNG_POISONERS)
             return "Young Poisoner's Handbook";
 
-        return std::string("book of ") + _book_type_name(sub_type);
+        return string("book of ") + _book_type_name(sub_type);
     }
     case OBJ_STAVES: return staff_type_name(static_cast<stave_type>(sub_type));
     case OBJ_RODS:   return rod_type_name(static_cast<rod_type>(sub_type));
@@ -1123,7 +1121,7 @@ std::string sub_type_string(const item_def &item, bool known)
     }
 }
 
-std::string ego_type_string(const item_def &item)
+string ego_type_string(const item_def &item)
 {
     switch (item.base_type)
     {
@@ -1137,7 +1135,7 @@ std::string ego_type_string(const item_def &item)
         else if (get_weapon_brand(item) == SPWPN_ANTIMAGIC)
             return "anti-magic";
         else if (get_weapon_brand(item) != SPWPN_NORMAL)
-            return std::string(weapon_brand_name(item, false)).substr(4);
+            return string(weapon_brand_name(item, false)).substr(4);
         else
             return "";
     case OBJ_MISSILES:
@@ -1162,9 +1160,8 @@ static const char* _torn_net(int plus)
 
 // Note that "terse" is only currently used for the "in hand" listing on
 // the game screen.
-std::string item_def::name_aux(description_level_type desc,
-                               bool terse, bool ident, bool with_inscription,
-                               iflags_t ignore_flags) const
+string item_def::name_aux(description_level_type desc, bool terse, bool ident,
+                          bool with_inscription, iflags_t ignore_flags) const
 {
     // Shortcuts
     const int item_typ   = sub_type;
@@ -1209,7 +1206,7 @@ std::string item_def::name_aux(description_level_type desc,
 
     const bool need_plural = !basename && !dbname;
 
-    std::ostringstream buff;
+    ostringstream buff;
 
     switch (base_type)
     {
@@ -1780,8 +1777,8 @@ std::string item_def::name_aux(description_level_type desc,
 
         uint64_t name_type, name_flags = 0;
 
-        const std::string _name  = get_corpse_name(*this, &name_flags);
-        const bool        shaped = starts_with(_name, "shaped ");
+        const string _name  = get_corpse_name(*this, &name_flags);
+        const bool   shaped = starts_with(_name, "shaped ");
         name_type = (name_flags & MF_NAME_MASK);
 
         if (!_name.empty() && name_type == MF_NAME_ADJECTIVE)
@@ -2027,7 +2024,7 @@ class KnownMenu : public InvMenu
 {
 public:
     // This loads items in the order they are put into the list (sequentially)
-    menu_letter load_items_seq(const std::vector<const item_def*> &mitems,
+    menu_letter load_items_seq(const vector<const item_def*> &mitems,
                                MenuEntry *(*procfn)(MenuEntry *me) = NULL,
                                menu_letter ckey = 'a')
     {
@@ -2057,12 +2054,12 @@ public:
         selected_qty = inv->selected_qty;
     }
 
-    virtual std::string get_text(bool need_cursor) const
+    virtual string get_text(bool need_cursor) const
     {
         need_cursor = need_cursor && show_cursor;
         int flags = item->base_type == OBJ_WANDS ? 0 : ISFLAG_KNOW_PLUSES;
 
-        std::string name;
+        string name;
 
 
         if (item->base_type == OBJ_FOOD)
@@ -2145,12 +2142,12 @@ public:
     {
     }
 
-    virtual std::string get_text(const bool = false) const
+    virtual string get_text(const bool = false) const
     {
         int flags = item->base_type == OBJ_WANDS ? 0 : ISFLAG_KNOW_PLUSES;
 
-        return std::string(" ") + item->name(DESC_PLAIN, false, true,
-                                             false, false, flags);
+        return string(" ") + item->name(DESC_PLAIN, false, true, false,
+                                        false, flags);
     }
 };
 
@@ -2182,10 +2179,10 @@ static bool _identified_item_names(const item_def *it1,
 
 void check_item_knowledge(bool unknown_items)
 {
-    std::vector<const item_def*> items;
-    std::vector<const item_def*> items_missile; //List of missiles should go after normal items
-    std::vector<const item_def*> items_other;    //List of other items should go after everything
-    std::vector<SelItem> selected_items;
+    vector<const item_def*> items;
+    vector<const item_def*> items_missile; //List of missiles should go after normal items
+    vector<const item_def*> items_other;    //List of other items should go after everything
+    vector<SelItem> selected_items;
 
     bool all_items_known = true;
     for (int ii = 0; ii < NUM_OBJECT_CLASSES; ii++)
@@ -2315,11 +2312,11 @@ void check_item_knowledge(bool unknown_items)
         }
     }
 
-    std::sort(items.begin(), items.end(), _identified_item_names);
-    std::sort(items_missile.begin(), items_missile.end(), _identified_item_names);
+    sort(items.begin(), items.end(), _identified_item_names);
+    sort(items_missile.begin(), items_missile.end(), _identified_item_names);
 
     KnownMenu menu;
-    std::string stitle;
+    string stitle;
 
     if (unknown_items)
         stitle = "Items not yet recognised: (toggle with -)";
@@ -2329,12 +2326,11 @@ void check_item_knowledge(bool unknown_items)
         stitle = "You recognise all items. (Select to toggle autopickup)";
 
 
-    std::string prompt = "(_ for help)";
+    string prompt = "(_ for help)";
     //TODO: when the menu is opened, the text is not justified properly.
-    stitle = stitle + std::string(std::max(0, get_number_of_cols()
-                                                  - strwidth(stitle)
-                                                  - strwidth(prompt)),
-                                      ' ') + prompt;
+    stitle = stitle + string(max(0, get_number_of_cols() - strwidth(stitle)
+                                                         - strwidth(prompt)),
+                             ' ') + prompt;
 
     menu.set_preselect(&selected_items);
     menu.set_flags( MF_QUIET_SELECT | MF_ALLOW_FORMATTING
@@ -2354,7 +2350,7 @@ void check_item_knowledge(bool unknown_items)
 
     char last_char = menu.getkey();
 
-    std::vector<const item_def*>::iterator iter;
+    vector<const item_def*>::iterator iter;
     for (iter = items.begin(); iter != items.end(); ++iter)
          delete *iter;
     for (iter = items_missile.begin(); iter != items_missile.end(); ++iter)
@@ -2368,7 +2364,7 @@ void check_item_knowledge(bool unknown_items)
 
 void display_runes()
 {
-    std::vector<const item_def*> items;
+    vector<const item_def*> items;
     for (int i = 0; i < NUM_RUNE_TYPES; i++)
     {
         if (!you.runes[i])
@@ -2404,7 +2400,7 @@ void display_runes()
     menu.getkey();
     redraw_screen();
 
-    for (std::vector<const item_def*>::iterator iter = items.begin();
+    for (vector<const item_def*>::iterator iter = items.begin();
          iter != items.end(); ++iter)
     {
          delete *iter;
@@ -2412,7 +2408,7 @@ void display_runes()
 }
 
 // Used for: Pandemonium demonlords, shopkeepers, scrolls, random artefacts
-std::string make_name(uint32_t seed, bool all_cap, int maxlen, char start)
+string make_name(uint32_t seed, bool all_cap, int maxlen, char start)
 {
     char name[ITEMNAME_SIZE];
     int  numb[17]; // contains the random seeds used for the name
@@ -2745,8 +2741,8 @@ bool is_interesting_item(const item_def& item)
     if (fully_identified(item) && is_artefact(item))
         return true;
 
-    const std::string iname = menu_colour_item_prefix(item, false) + " "
-                              + item.name(DESC_PLAIN);
+    const string iname = menu_colour_item_prefix(item, false) + " "
+                         + item.name(DESC_PLAIN);
     for (unsigned i = 0; i < Options.note_items.size(); ++i)
         if (Options.note_items[i].matches(iname))
             return true;
@@ -3064,15 +3060,20 @@ bool is_useless_item(const item_def &item, bool temp)
         default:
             return false;
         }
+
     case OBJ_WANDS:
         if (you.species == SP_FELID)
             return true;
 
-        if (item.sub_type == WAND_INVISIBILITY && _invisibility_is_useless(temp))
+        if (item.sub_type == WAND_INVISIBILITY
+            && item_type_known(item)
+                && _invisibility_is_useless(temp))
+        {
             return true;
+        }
 
         return (item.plus2 == ZAPCOUNT_EMPTY)
-               || item_ident(item, ISFLAG_KNOW_PLUSES) && !item.plus;
+                || item_ident(item, ISFLAG_KNOW_PLUSES) && !item.plus;
 
     case OBJ_POTIONS:
     {
@@ -3280,10 +3281,9 @@ bool is_useless_item(const item_def &item, bool temp)
     return false;
 }
 
-static const std::string _item_prefix(const item_def &item, bool temp,
-                                      bool filter)
+static const string _item_prefix(const item_def &item, bool temp, bool filter)
 {
-    std::vector<std::string> prefixes;
+    vector<string> prefixes;
 
     // No identified/unidentified for filtering, since the user might
     // want to filter on "ident" to find scrolls of identify.
@@ -3405,29 +3405,29 @@ static const std::string _item_prefix(const item_def &item, bool temp,
     if (Options.menu_colour_prefix_class && !filter)
         prefixes.push_back(item_class_name(item.base_type, true));
 
-    std::string result = comma_separated_line(prefixes.begin(), prefixes.end(),
-                                              " ", " ");
+    string result = comma_separated_line(prefixes.begin(), prefixes.end(),
+                                         " ", " ");
 
     return result;
 }
 
-std::string menu_colour_item_prefix(const item_def &item, bool temp)
+string menu_colour_item_prefix(const item_def &item, bool temp)
 {
     return _item_prefix(item, temp, false);
 }
 
-std::string filtering_item_prefix(const item_def &item, bool temp)
+string filtering_item_prefix(const item_def &item, bool temp)
 {
     return _item_prefix(item, temp, true);
 }
 
-std::string get_menu_colour_prefix_tags(const item_def &item,
-                                        description_level_type desc)
+string get_menu_colour_prefix_tags(const item_def &item,
+                                   description_level_type desc)
 {
-    std::string cprf       = menu_colour_item_prefix(item);
-    std::string colour     = "";
-    std::string colour_off = "";
-    std::string item_name  = item.name(desc);
+    string cprf       = menu_colour_item_prefix(item);
+    string colour     = "";
+    string colour_off = "";
+    string item_name  = item.name(desc);
     int col = menu_colour(item_name, cprf, "pickup");
 
     if (col != -1)
@@ -3444,10 +3444,10 @@ std::string get_menu_colour_prefix_tags(const item_def &item,
     return item_name;
 }
 
-typedef std::map<std::string, item_kind> item_names_map;
+typedef map<string, item_kind> item_names_map;
 static item_names_map item_names_cache;
 
-typedef std::map<unsigned, std::vector<std::string> > item_names_by_glyph_map;
+typedef map<unsigned, vector<string> > item_names_by_glyph_map;
 static item_names_by_glyph_map item_names_by_glyph_cache;
 
 void init_item_name_cache()
@@ -3484,15 +3484,15 @@ void init_item_name_cache()
             for (int plus = 0; plus <= npluses; plus++)
             {
                 if (plus > 0)
-                    item.plus = std::max(0, plus - 1);
+                    item.plus = max(0, plus - 1);
                 if (is_deck(item))
                 {
                     item.plus = 1;
                     item.special = DECK_RARITY_COMMON;
                     init_deck(item);
                 }
-                std::string name = item.name(plus ? DESC_PLAIN : DESC_DBNAME,
-                                             true, true);
+                string name = item.name(plus ? DESC_PLAIN : DESC_DBNAME,
+                                        true, true);
                 lowercase(name);
                 glyph g = get_item_glyph(&item);
 
@@ -3501,7 +3501,7 @@ void init_item_name_cache()
                 {
                     continue;
                 }
-                else if (name.find("buggy") != std::string::npos)
+                else if (name.find("buggy") != string::npos)
                 {
                     crawl_state.add_startup_error("Bad name for item name "
                                                   " cache: " + name);
@@ -3523,7 +3523,7 @@ void init_item_name_cache()
     ASSERT(!item_names_cache.empty());
 }
 
-item_kind item_kind_by_name(std::string name)
+item_kind item_kind_by_name(string name)
 {
     lowercase(name);
 
@@ -3537,7 +3537,7 @@ item_kind item_kind_by_name(std::string name)
     return err;
 }
 
-std::vector<std::string> item_name_list_for_glyph(unsigned glyph)
+vector<string> item_name_list_for_glyph(unsigned glyph)
 {
     item_names_by_glyph_map::iterator i;
     i = item_names_by_glyph_cache.find(glyph);
@@ -3545,7 +3545,7 @@ std::vector<std::string> item_name_list_for_glyph(unsigned glyph)
     if (i != item_names_by_glyph_cache.end())
         return i->second;
 
-    std::vector<std::string> empty;
+    vector<string> empty;
     return empty;
 }
 
@@ -3556,7 +3556,7 @@ bool is_named_corpse(const item_def &corpse)
     return corpse.props.exists(CORPSE_NAME_KEY);
 }
 
-std::string get_corpse_name(const item_def &corpse, uint64_t *name_type)
+string get_corpse_name(const item_def &corpse, uint64_t *name_type)
 {
     ASSERT(corpse.base_type == OBJ_CORPSES);
 

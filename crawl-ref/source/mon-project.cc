@@ -94,6 +94,12 @@ spret_type cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy,
         : (caster->is_player()) ? "you" : "";
     mon->props["iood_mid"].get_int() = caster->mid;
 
+    if (caster->is_player() || caster->type == MONS_PLAYER_GHOST
+        || caster->type == MONS_PLAYER_ILLUSION)
+    {
+        mon->props["iood_flawed"].get_byte() = true;
+    }
+
     // Move away from the caster's square.
     iood_act(*mon, true);
     // We need to take at least one full move (for the above), but let's
@@ -205,7 +211,7 @@ static bool _boulder_hit(monster& mon, const coord_def &pos)
     actor *victim = actor_at(pos);
     if (victim)
     {
-        simple_monster_message(&mon, (std::string(" smashes into ")
+        simple_monster_message(&mon, (string(" smashes into ")
                                + victim->name(DESC_THE) + "!").c_str());
 
         int dam = roll_dice(3, 20) - random2(1 + victim->armour_class());
@@ -354,11 +360,15 @@ move_again:
         return true;
     }
 
-    if (iood && mon.props["iood_kc"].get_byte() == KC_YOU
-        && (you.pos() - pos).rdist() > LOS_RADIUS)
-    {   // not actual vision, because of the smoke trail
-        _iood_stop(mon);
-        return true;
+    if (iood && mon.props.exists("iood_flawed"))
+    {
+        const actor *caster = actor_by_mid(mon.props["iood_mid"].get_int());
+        if (!caster || caster->pos().origin() ||
+            (caster->pos() - pos).rdist() > LOS_RADIUS)
+        {   // not actual vision, because of the smoke trail
+            _iood_stop(mon);
+            return true;
+        }
     }
 
     if (pos == mon.pos())
@@ -497,10 +507,6 @@ move_again:
             mon.lose_energy(EUT_MOVE);
             goto move_again;
         }
-
-        // Yay for inconsistencies in beam-vs-player and beam-vs-monsters.
-        if (victim && victim->is_player() && !mons_is_boulder(&mon))
-            mprf("%s hits you!", mon.name(DESC_THE, true).c_str());
 
         if (_iood_hit(mon, pos))
         {

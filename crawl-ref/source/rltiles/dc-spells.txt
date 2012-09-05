@@ -18,7 +18,6 @@ chain_lightning CHAIN_LIGHTNING
 conjure_ball_lightning CONJURE_BALL_LIGHTNING
 deflect_missiles DEFLECT_MISSILES
 flight FLIGHT
-insulation INSULATION
 levitation LEVITATION
 lightning_bolt LIGHTNING_BOLT
 repel_missiles REPEL_MISSILES
@@ -59,7 +58,6 @@ extension EXTENSION
 haste HASTE
 invisibility INVISIBILITY
 mass_confusion MASS_CONFUSION
-see_invisible SEE_INVISIBLE
 slow SLOW
 sure_blade SURE_BLADE
 tukimas_dance TUKIMAS_DANCE

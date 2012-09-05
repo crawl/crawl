@@ -7,6 +7,7 @@
 #include "colour.h"
 #include "coord.h"
 #include "coordit.h"
+#include "dungeon.h"
 #include "env.h"
 #include "fprop.h"
 #include "items.h"
@@ -192,7 +193,7 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
         switch (random2(6))
         {
         default:
-        case 0:
+        case 0: flv.wall = TILE_WALL_ABYSS; break;
         case 1:
         case 2:
         case 3: flv.wall = TILE_WALL_PEBBLE
@@ -325,6 +326,11 @@ static tileidx_t _pick_random_dngn_tile(tileidx_t idx, int value = -1)
     return idx;
 }
 
+static bool _same_door_at(dungeon_feature_type feat, const coord_def &gc)
+{
+    return (grd(gc) == feat) || map_masked(gc, MMT_WAS_DOOR_MIMIC);
+}
+
 void tile_init_flavour(const coord_def &gc)
 {
     if (!map_bounds(gc))
@@ -357,23 +363,27 @@ void tile_init_flavour(const coord_def &gc)
 
     if (feat_is_door(grd(gc)))
     {
-        // Check for horizontal gates.
+        // Check for gates.
+        bool door_left  = _same_door_at(grd(gc), coord_def(gc.x - 1, gc.y));
+        bool door_right = _same_door_at(grd(gc), coord_def(gc.x + 1, gc.y));
+        bool door_up    = _same_door_at(grd(gc), coord_def(gc.x, gc.y - 1));
+        bool door_down  = _same_door_at(grd(gc), coord_def(gc.x, gc.y + 1));
 
-        const coord_def left(gc.x - 1, gc.y);
-        const coord_def right(gc.x + 1, gc.y);
-
-        bool door_left  = (grd(left) == grd(gc));
-        bool door_right = (grd(right) == grd(gc));
-
-        if (door_left || door_right)
+        if (door_left || door_right || door_up || door_down)
         {
             tileidx_t target;
             if (door_left && door_right)
                 target = TILE_DNGN_GATE_CLOSED_MIDDLE;
+            else if (door_up && door_down)
+                target = TILE_DNGN_VGATE_CLOSED_MIDDLE;
             else if (door_left)
                 target = TILE_DNGN_GATE_CLOSED_RIGHT;
-            else
+            else if (door_right)
                 target = TILE_DNGN_GATE_CLOSED_LEFT;
+            else if (door_up)
+                target = TILE_DNGN_VGATE_CLOSED_DOWN;
+            else
+                target = TILE_DNGN_VGATE_CLOSED_UP;
 
             // NOTE: This requires that closed gates and open gates
             // are positioned in the tile set relative to their
@@ -382,22 +392,6 @@ void tile_init_flavour(const coord_def &gc)
         }
         else
             env.tile_flv(gc).special = 0;
-    }
-    else if (feat_is_secret_door(grd(gc)))
-    {
-        env.tile_flv(gc).special = 0;
-
-        if (env.tile_flv(gc).feat == 0)
-        {
-            // If surrounding tiles from a secret door are using tile
-            // overrides, then use that tile for the secret door.
-            coord_def door;
-            dungeon_feature_type door_feat;
-            find_secret_door_info(gc, &door_feat, &door);
-
-            if (env.tile_flv(door).feat)
-                env.tile_flv(gc).feat = env.tile_flv(door).feat;
-        }
     }
     else if (!env.tile_flv(gc).special)
         env.tile_flv(gc).special = random2(256);
@@ -669,10 +663,7 @@ static tileidx_t _get_floor_bg(const coord_def& gc)
     {
         bg = tileidx_feature(gc);
 
-        dungeon_feature_type feat = grid_appearance(gc);
-        if (feat == DNGN_DETECTED_SECRET_DOOR)
-            bg |= TILE_FLAG_WAS_SECRET;
-        else if (is_unknown_stair(gc))
+        if (is_unknown_stair(gc))
             bg |= TILE_FLAG_NEW_STAIR;
     }
 
@@ -989,13 +980,13 @@ static bool _suppress_blood(tileidx_t bg_idx)
 // can be dealt with. The tile sets should be 2, 3, 8 and 9 respectively. They
 // are:
 //  2. Closed, open.
-//  3. Detected, closed, open.
+//  3. Runed, closed, open.
 //  8. Closed, open, gate left closed, gate middle closed, gate right closed,
 //     gate left open, gate middle open, gate right open.
-//  9. Detected, closed, open, gate left closed, gate middle closed, gate right
+//  9. Runed, closed, open, gate left closed, gate middle closed, gate right
 //     closed, gate left open, gate middle open, gate right open.
-static int _get_door_offset(tileidx_t base_tile, bool opened = false,
-                            bool detected = false, int gateway_type = 0)
+static int _get_door_offset(tileidx_t base_tile, bool opened, bool runed,
+                            int gateway_type)
 {
     int count = tile_dngn_count(base_tile);
     if (count == 1)
@@ -1007,20 +998,22 @@ static int _get_door_offset(tileidx_t base_tile, bool opened = false,
     switch (count)
     {
     case 2:
-        return ((opened) ? 1: 0);
+        ASSERT(!runed);
+        return opened ? 1: 0;
     case 3:
         if (opened)
             return 2;
-        else if (detected)
+        else if (runed)
             return 0;
         else
             return 1;
     case 8:
+        ASSERT(!runed);
         // But is BASE_TILE for others.
         offset = 0;
         break;
     case 9:
-        // It's located at BASE_TILE+1 for tile sets with detected doors
+        // It's located at BASE_TILE+1 for tile sets with runed doors
         offset = 1;
         break;
     default:
@@ -1029,18 +1022,17 @@ static int _get_door_offset(tileidx_t base_tile, bool opened = false,
     }
 
     // If we've reached this point, we're dealing with a gate.
-    // Don't believe gateways deal differently with detection.
-    if (detected)
+    if (runed)
         return 0;
 
-    if (!opened && !detected && gateway_type == 0)
+    if (!opened && !runed && gateway_type == 0)
         return 0;
 
     return offset + gateway_type;
 }
 
-static inline void _apply_variations(const tile_flavour &flv, tileidx_t *bg,
-                                     const coord_def &gc)
+void apply_variations(const tile_flavour &flv, tileidx_t *bg,
+                      const coord_def &gc)
 {
     tileidx_t orig = (*bg) & TILE_FLAG_MASK;
     tileidx_t flag = (*bg) & (~TILE_FLAG_MASK);
@@ -1115,25 +1107,22 @@ static inline void _apply_variations(const tile_flavour &flv, tileidx_t *bg,
         *bg = flv.floor;
     else if (orig == TILE_WALL_NORMAL)
         *bg = flv.wall;
-    else if ((orig == TILE_DNGN_CLOSED_DOOR || orig == TILE_DNGN_OPEN_DOOR)
-             && !mimic)
+    else if ((orig == TILE_DNGN_CLOSED_DOOR || orig == TILE_DNGN_OPEN_DOOR
+              || orig == TILE_DNGN_RUNED_DOOR) && !mimic)
     {
         tileidx_t override = flv.feat;
         /*
-          If the override is not a door tile (i.e., between
-          TILE_DNGN_DETECTED_SECRET_DOOR and TILE_DNGN_ORCISH_IDOL),
-          it's assumed to be for an undetected secret door and not
-          used here.
+          Was: secret doors.  Is it ever needed anymore?
          */
         if (is_door_tile(override))
         {
-            // XXX: This doesn't deal properly with detected doors.
             bool opened = (orig == TILE_DNGN_OPEN_DOOR);
-            int offset = _get_door_offset(override, opened, false, flv.special);
+            bool runed = (orig == TILE_DNGN_RUNED_DOOR);
+            int offset = _get_door_offset(override, opened, runed, flv.special);
             *bg = override + offset;
         }
         else
-            *bg = orig + std::min((int)flv.special, 3);
+            *bg = orig + min((int)flv.special, 6);
     }
     else if (orig == TILE_DNGN_PORTAL_WIZARD_LAB
              || orig == TILE_DNGN_ALTAR_CHEIBRIADOS)
@@ -1181,7 +1170,7 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
     if (!map_bounds(gc))
         return;
 
-    _apply_variations(env.tile_flv(gc), &cell.bg, gc);
+    apply_variations(env.tile_flv(gc), &cell.bg, gc);
 
     const map_cell& mc = env.map_knowledge(gc);
 

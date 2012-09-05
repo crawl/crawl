@@ -4,22 +4,10 @@
 #
 # Content: Zot entry vaults (these are on D:27 and contain the portal)
 #          Zot vaults, mini and not so mini
-#          Zot hall (on Zot:5), with orb chamber subvaults
+#          Zot hall (on Zot:5)
 #          Vaults that define the floor/wall colours for Zot:1-5
 #
 ##############################################################################
-
-{{
-  -- Orb of Zot placement, similar to how Vaults places its rune
-  -- Turn one 'Z' into the orb, the rest into orb mimics or nothing.
-  function zot5_orb(e)
-    e.nsubst("Z = 1:Z / *:O")
-    e.subst("O = O:1 .:9")
-    e.kitem("O = Orb of Zot mimic")
-    e.kitem("Z = Orb of Zot")
-    e.kmask("OZ = no_item_gen")
-  end
-}}
 
 ##############################################################################
 ##############################################################################
@@ -84,7 +72,7 @@ ENDMAP
 
 NAME:   evilmike_zot_entry_round
 TAGS:   no_monster_gen zot_entry
-SUBST:  = = nnn=
+SUBST:  = = nnn+
 SUBST:  c: c:70 v:20 b:10
 SUBST:  v: vcxlmb, n: nnnnvbcx
 FTILE:  })]O-4G: floor_marble
@@ -126,7 +114,7 @@ TAGS:   no_monster_gen zot_entry
 NSUBST: O = 1:O / *:n
 SUBST:  ^ = ^.
 SUBST:  s = ccc=
-MARKER: = = lua:restrict_door()
+KFEAT:  = = runed_door
 KFEAT:  ^ = alarm trap / blade trap / bolt trap
 KFEAT:  O = enter_zot
 KFEAT:  n = stone_arch
@@ -178,7 +166,7 @@ KPROP:  O-X = no_tele_into
 SUBST:  X = c
 SUBST:  - = ., D = +
 KFEAT:  O = enter_zot
-MARKER: + = lua:restrict_door()
+KFEAT:  + = runed_door
 # easy: 1, 2
 : if crawl.coinflip() then
 MONS:   pale draconian, steam dragon
@@ -438,19 +426,17 @@ MONS:   troll /deep troll / iron troll / ogre / two-headed ogre / w:2 iron devil
 MONS:   moth of wrath
 MONS:   hill giant / stone giant / fire giant / frost giant / ettin /\
         w:5 efreet / w:3 titan
-NSUBST: C = 2:= / *=c
-NSUBST: D = 2:= / *=c
 MAP
 cccccccccccccccccccccccc
 n111111111111111111.c..c
 n111111111111111111.c.)c
-cCCCCCCCCCCCCCCcc++cc..c
+ccccccccccccccccc++cc..c
 n....F....F....F....c..c
 +...................+..c
 +...................+.}c
 +...................+..c
 n....F....F....F....c..c
-cDDDDDDDDDDDDDDcc++cc..c
+ccccccccccccccccc++cc..c
 n111111111111111111.c.]c
 n111111111111111111.c..c
 cccccccccccccccccccccccc
@@ -467,7 +453,6 @@ ITEM:   any book mimic:10 w:20 / any scroll mimic:10
 SUBST:  w:w?
 SUBST:  ?=. 1:1
 SUBST:  x:xc
-SUBST:  +=+=
 SUBST:  4 = 4 5:2 .:4
 MAP
 wwwwwwwwwwwwwwwwwwwwwww
@@ -883,13 +868,13 @@ KFEAT:   ^~ = teleport trap w:45 / zot trap w:4 / . w:1
 KFEAT:   _ = altar_xom
 KFEAT:   > = } mimic
 KPROP:   ^~> = no_rtele_into
-MARKER:  - = lua:restrict_door()
+KFEAT:   - = runed_door
 COLOUR:  ^~ = warp
 FTILE:   ^ = floor_rough_magenta
 FTILE:   ~ = floor_rough_lightmagenta
 NSUBST:  > = 1:} / 1:) / 1:] / *:>, 9 = 1:0 / *:9, T = 1:. / *:T
 SUBST:   d = tGmcc, c = cccccbbvvx, M = m`, ` = `:195 ':3 ":2
-SUBST:   } = }:80 >, ) = ):80 >, ] = ]:80 >, l = wl, - = +
+SUBST:   } = }:80 >, ) = ):80 >, ] = ]:80 >, l = wl
 SHUFFLE: 56, 78, ^~, cm / xn
 MARKER:  ' = lua:fog_machine { cloud_type = "seething chaos", pow_max = 17, \
              delay_min = 450, delay_max = 700, size = 1, excl_rad = 0 }
@@ -1016,6 +1001,33 @@ WWW..W..WW..
  .WWWWWWW.
 ENDMAP
 
+NAME:   lightli_zot_lavacorridor
+TAGS:   no_monster_gen
+DEPTH:  Zot:1-4
+KPROP:  l = no_cloud_gen
+MONS:   w:4 purple draconian / w:1 nonbase purple draconian
+SUBST:  o = **|
+NSUBST:  1 = 1 / 1.
+MAP
+c.@@@.c
+clllllc
+clllllc
+clllllc
+clllllc
+clllllc
+clllllc
+clllllc
+clllllc
+clllllc
+c11111c
+c1*o*1c
+c1o|o1c
+c1*o*1c
+c11>11c
+cccnccc
+   @
+ENDMAP
+
 ##############################################################################
 ##############################################################################
 #
@@ -1035,7 +1047,7 @@ LFLOORTILE: floor_rough_magenta
 LROCKTILE:  wall_zot_lightmagenta
 
 #traps
-SUBST:    C = X:900 c:100 =
+SUBST:    C = X:900 c:100
 KFEAT:    8 = any trap / w:20 floor
 SHUFFLE:  ABab / ^^FF / ^^FF / ^^FF
 SHUFFLE:  Aa / Bb
@@ -1044,6 +1056,8 @@ KFEAT:    B = any trap / w:10 floor
 SUBST:    a=F, b=6 F
 SUBST:    ^ = ^ .:10
 SUBST:    . = .:500 ^
+KMASK:    1! = no_item_gen
+SUBST:    ! = ^ .:40
 
 #monsters
 MONS:     patrolling Orb Guardian, Killer Klown, electric golem, orb of fire
@@ -1056,36 +1070,37 @@ SUBST:    K = 4:30 5 8 9
 SUBST:    L = 4 5:30 8 9
 SUBST:    M = 4 5 8:30 9
 
-SUBVAULT: Y : orb_chamber
 COLOUR:   c = magenta
 TILE:     c = dngn_stone_wall_magenta
+
+KITEM:    Z = Orb of Zot
 
 MAP
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXcccccccccccXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXccYYYYYYYYYccXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXcccYYYYYYYYYYYcccXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXcYYYYYYYYYYYYYYYcXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXX.............XXXXcYYYYYYYYYYYYYYYcXXXX.............XXXXXXXXXXXXXX
-XXXXXXXXXXXX...................XXXYYYYYYYYYYYYYXXX...................XXXXXXXXXXX
-XXXXXXXXXXX..........3...........XXYYYYYYYYYYYXX...........3..........XXXXXXXXXX
-XXXXXXXXXX..8.....................XYYYYYYYYYYYX.....................8..XXXXXXXXX
-XXXXXXXXXX.......?..?.....8.8.....YYYYYYYYYYYYY.....8.8.....?..?.......XXXXXXXXX
-XXXXXXXXXXX.8...........?.........YYYYYYYYYYYYY.........?...........8.XXXXXXXXXX
-XXXXXXXXXXXX......................YYYYYYYYYYYYY......................XXXXXXXXXXX
-XXXXXXXXXXXXX.....4....2....8.8...YYYYYYYYYYYYY...8.8....2....4.....XXXXXXXXXXXX
-XXXXXXXXXXXX....?...?.....?...?...YYYYYYYYYYYYY...?...?.....?....?...XXXXXXXXXXX
-XXXXXXXXXXX.......?....?..........YYYYYYYYYYYYY..........?....2.......XXXXXXXXXX
-XXXXXXXXXX.....8..........8.8.....YYYYYYYYYYYYY.....8.8..........8.....XXXXXXXXX
-XXXXXXXXXX...8....................cYYYYYYYYYYYc....................8...XXXXXXXXX
-XXXXXXXXXXX.....8.8.8..8.........ccYYYYYYYYYYYcc........8...8.8.8.....XXXXXXXXXX
-XXXXXXXXXXXX...............8...XccYYYYYYYYYYYYYccX...8............8..XXXXXXXXXXX
-XXXXXXXXXXXXX........8..8...XXXXcYYYYYYYYYYYYYYYcXXXX...8..8........XXXXXXXXXXXX
-XXXXXXXXXXXXXXa111accCCCCCCXXXXXcYYYYYYYYYYYYYYYcXXXXXCCCCCCccb111bXXXXXXXXXXXXX
-XXXXXXXXXXXcc...............AA1.cccYYYYYYYYYYYccc.1BB...............ccXXXXXXXXXX
-XXXXXXXXXXcc...8.8..8.8.....cc1...ccYYYYYYYYYcc...1cc.......8..8.8.8.ccXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXX.............XXXXXXXXXXXXXXXXXXXXXXXXX.............XXXXXXXXXXXXXX
+XXXXXXXXXXXX...................XXXXXXXXXXXXXXXXXXX...................XXXXXXXXXXX
+XXXXXXXXXXX..........3...........XXXXXXXXXXXXXXX...........3..........XXXXXXXXXX
+XXXXXXXXXX..8.....................XXXXXXXXXXXXX.....................8..XXXXXXXXX
+XXXXXXXXXX.......?..?.....8.8.....XXX...1...XXX.....8.8.....?..?.......XXXXXXXXX
+XXXXXXXXXXX.8...........?.........XX..1...1..XX.........?...........8.XXXXXXXXXX
+XXXXXXXXXXXX......................X1...!!!...1X......................XXXXXXXXXXX
+XXXXXXXXXXXXX.....4....2....8.8......1.!Z!.1......8.8....2....4.....XXXXXXXXXXXX
+XXXXXXXXXXXX....?...?.....?...?...X1...!!!...1X...?...?.....?....?...XXXXXXXXXXX
+XXXXXXXXXXX.......?....?..........XX..1...1..XX..........?....2.......XXXXXXXXXX
+XXXXXXXXXX.....8..........8.8.....XXX...1...XXX.....8.8..........8.....XXXXXXXXX
+XXXXXXXXXX...8....................cXXXXXXXXXXXc....................8...XXXXXXXXX
+XXXXXXXXXXX.....8.8.8..8.........ccccccccccccccc........8...8.8.8.....XXXXXXXXXX
+XXXXXXXXXXXX...............8...XcccccccccccccccccX...8............8..XXXXXXXXXXX
+XXXXXXXXXXXXX........8..8...XXXXcccccccccccccccccXXXX...8..8........XXXXXXXXXXXX
+XXXXXXXXXXXXXXa111accCCCCCCXXXXXcccccccccccccccccXXXXXCCCCCCccb111bXXXXXXXXXXXXX
+XXXXXXXXXXXcc...............AA1.ccccccccccccccccc.1BB...............ccXXXXXXXXXX
+XXXXXXXXXXcc...8.8..8.8.....cc1...ccccccccccccc...1cc.......8..8.8.8.ccXXXXXXXXX
 XXXXXXXXXcc.8...8......8.8...ccc...ccccccccccc...ccc...8.8.8..8.......ccXXXXXXXX
 XXXXXXXXXc.8..8....8.8........ccc...............ccc.....8....8..8.8....cXXXXXXXX
 XXXXXXXXXc..8..8.8....8.8.8.5.cXcc.............ccXc.5.8.8.8....8.8...8.cXXXXXXXX
@@ -1099,318 +1114,6 @@ XXXXXXXXXXXcc..............ccXXXc...............cXXXcc..............ccXXXXXXXXXX
 XXXXXXXXXXXXccccccccccccccccXXXXcccccccc@ccccccccXXXXccccccccccccccccXXXXXXXXXXX
 ENDMAP
 
-###########################################################
-# Zot:5 Orb chambers
-###########################################################
-#
-# Each Orb chamber must be capable of placing the Orb. This is done by
-# placing one or more Z and calling zot5_orb(_G). One Z will have the Orb,
-# others will have a small chance of being an orb mimic, or will otherwise
-# be replaced with '.' (plain floor).  Avoid using the glyph O, as it is
-# used internally by zot5_orb().
-
-NAME:   orb_original
-TAGS:   orb_chamber
-WEIGHT: 25
-KMASK:  1! = no_item_gen
-SUBST:  ! = ^ .:40
-SUBST:  . = .:500 ^
-COLOUR: c = magenta
-KMONS:  1 = patrolling Orb Guardian
-: zot5_orb(_G)
-MAP
-   ccccccccc
-  ccccccccccc
-ccccccccccccccc
-ccccccccccccccc
- ccccccccccccc
-  ccccccccccc
-  XXXXXXXXXXX
- XXX...1...XXX
- XX..1...1..XX
- X1...!!!...1X
- ...1.!Z!.1...
- X1...!!!...1X
- XX..1...1..XX
- XXX...1...XXX
-  XXXXXXXXXXX
-  ccccccccccc
- ccccccccccccc
-ccccccccccccccc
-ccccccccccccccc
-  ccccccccccc
-   ccccccccc
-ENDMAP
-
-NAME:   orb_monky_inset
-TAGS:   orb_chamber
-WEIGHT: 5
-KMASK:  1! = no_item_gen
-SUBST:  ! = ^ .:40
-SUBST:  . = .:500 ^
-COLOUR: c = magenta
-KMONS:  1 = patrolling Orb Guardian
-: zot5_orb(_G)
-MAP
-   ccccccccc
-  ccccccccccc
-ccccccccccccccc
-ccccccccccccccc
- ccccccccccccc
-  ccccccccccc
-  XXXXXXXXXXX
- XXXX.....XXXX
- XXX..X1X..XXX
- X....XXX....X
- ..1.XXXXX.1..
- X....XXX....X
- XXX..X1X..XXX
- XXXX.....XXXX
-  X.XXX.XXX.X
-  X....1....X
- XX..1!!!1..XX
-cX....!Z!....Xc
-cXX...!!!...XXc
-  XXXXXXXXXXX
-   ccccccccc
-ENDMAP
-
-NAME:   orb_two_ways
-TAGS:   orb_chamber
-WEIGHT: 5
-KMASK:  1! = no_item_gen
-SUBST:  ! = ^ .:40
-SUBST:  . = .:500 ^
-COLOUR: c = magenta
-KMONS:  1 = patrolling Orb Guardian
-: zot5_orb(_G)
-MAP
-   ccccccccc
-  XXXXXXXXXXX
-cXXXXX.....XXXc
-cXXX!!!1X...XXc
- XXX!Z!XXX..XX
-  XX!!!XX..XX
-  XXXXXX..XXX
- XXXX.....XXXX
- XXX..X1X..XXX
- X1...XXX...1X
- ....XXXXX....
- X1...XXX...1X
- XXX..X1X..XXX
- XXXX.....XXXX
-  XXXX..XXXXX
-  XXX..XX!!!X
- XXX..XXX!Z!XX
-cXXX...X1!!!XXc
-cXXXX.....XXXXc
-  XXXXXXXXXXX
-   ccccccccc
-ENDMAP
-
-NAME:   orb_monky_within_orb
-TAGS:   orb_chamber
-WEIGHT: 5
-KMASK:  1! = no_item_gen
-SUBST:  ! = ^ .:40
-SUBST:  . = .:500 ^
-COLOUR: cn = magenta
-TILE:   n = dngn_transparent_wall_magenta
-KMONS:  1 = patrolling Orb Guardian
-: zot5_orb(_G)
-MAP
-   ccccccccc
-  ccccccccccc
-ccccccccccccccc
-ccccccccccccccc
- ccccccccccccc
-  ccccccccccc
-  XXXXXXXXXXX
- XXX...1...XXX
- XX1.nn.nn.1XX
- X..n1!!!1n..X
- ...n.!Z!.n...
- X..n1!!!1n..X
- XX1.nn.nn.1XX
- XXX...1...XXX
-  XXXXXXXXXXX
-  ccccccccccc
- ccccccccccccc
-ccccccccccccccc
-ccccccccccccccc
-  ccccccccccc
-   ccccccccc
-ENDMAP
-
-NAME:   orb_monky_twist
-TAGS:   orb_chamber
-WEIGHT: 5
-KMASK:  1! = no_item_gen
-SUBST:  ! = ^ .:40
-SUBST:  . = .:500 ^
-COLOUR: cn = magenta
-TILE:   n = dngn_transparent_wall_magenta
-KMONS:  1 = patrolling Orb Guardian
-: zot5_orb(_G)
-MAP
-   ccccccccc
-  ccccccccccc
-ccccccccccccccc
-ccccccccccccccc
- ccccccccccccc
-  ccXXXXXXXXc
-  XXXnnnnnnXX
- XXXnn...1..XX
- XXnn1...n..1X
- Xnnn.!!!nn..X
- ..nn1!Z!1nn..
- X..nn!!!.nnnX
- X1..n...1nnXX
- XX..1...nnXXX
-  XXnnnnnnXXX
-  cXXXXXXXXcc
- ccccccccccccc
-ccccccccccccccc
-ccccccccccccccc
-  ccccccccccc
-   ccccccccc
-ENDMAP
-
-NAME:   mrperson_orb_statues
-TAGS:   orb_chamber
-KMASK:  1! = no_item_gen
-SUBST:  ! = ^ .:40
-SUBST:  . = .:500 ^
-COLOUR: G = magenta
-SUBST:  G = G:100 F:1
-KMONS:  F = orange crystal statue / silver statue / ice statue
-KMONS:  1 = patrolling Orb Guardian
-: zot5_orb(_G)
-MAP
-   ccccccccc
-  ccccccccccc
-ccccccccccccccc
-ccccccccccccccc
- ccccccccccccc
-  ccccccccccc
-  ccccccccccc
- XXXXXXXXXXXXX
- XX.G.G.G.G.XX
- .............
- .1.........1.
- .............
- X.G.X...X.G.X
- XXXXX1.1XXXXX
-  XX...G...XX
-  XG11XXX11GX
- cXX..!Z!..XXc
-ccXXG.!!!.GXXcc
-cccXXGXGXGXXccc
-  ccXXXXXXXcc
-   ccccccccc
-ENDMAP
-
-NAME:   orb_nicolae_swirls
-TAGS:   orb_chamber
-WEIGHT: 5
-KMASK:  1! = no_item_gen
-SUBST:  ! = ^ .:40
-SUBST:  . = .:500 ^
-COLOUR: cn = magenta
-TILE:   n = dngn_transparent_wall_magenta
-KMONS:  1 = patrolling Orb Guardian
-: zot5_orb(_G)
-MAP
-   XXXXXXXXX
-  XX...1...XX
-ccX1!!!...1.Xcc
-ccX.!Z!.....Xcc
- cXX!!!X..1.Xc
-  cXXXXX....X
-  cXXXXX...XX
- XXXXXX...XXXX
- XXXXX.1.nnn..
- XXX........1.
- .....nnn.....
- .1........XXX
- ..nnn.1.XXXXX
- XXXX...XXXXXX
-  XX....XXXXc
-  X....XXXXXc
- cX.1..X!!!XXc
-ccX.....!Z!.Xcc
-ccX.1...!!!1Xcc
-  XX...1...XX
-   XXXXXXXXX
-ENDMAP
-
-NAME:   orb_nicolae_fourfold
-TAGS:   orb_chamber
-WEIGHT: 5
-KMASK:  1! = no_item_gen
-SUBST:  ! = ^ .:40
-SUBST:  . = .:500 ^
-COLOUR: c = magenta
-KMONS:  1 = patrolling Orb Guardian
-: zot5_orb(_G)
-MAP
-   XXXXXXXXX
-  XX...X...XX
-cXX..1...1..XXc
-cX1..XX.XX..1Xc
- XX..X...X..XX
-  X..X.1.X..X
-  X..X...X..X
- XX..XX.XX..XX
- ...XX.1.XX...
- .1.X.!!!.X.1.
- XXXX.!Z!.XXXX
- .1.X.!!!.X.1.
- ...XX.1.XX...
- XX..XX.XX..XX
-  X..X...X..X
-  X..X.1.X..X
- XX..X...X..XX
-cX1..XX.XX..1Xc
-cXX..1...1..XXc
-  XX...X...XX
-   XXXXXXXXX
-ENDMAP
-
-NAME:   orb_grunt_hallway
-TAGS:   orb_chamber
-WEIGHT: 5
-KMASK:  1! = no_item_gen
-SUBST:  ! = ^ .:40
-SUBST:  . = .:500 ^
-SUBST:  : = .
-COLOUR: c = magenta
-KMONS:  1 = patrolling Orb Guardian
-: zot5_orb(_G)
-MAP
-   ccXXXXXcc
-  ccXX.X.XXcc
-ccccX1!!!1XcXXc
-ccccXX!Z!XXccXc
- cccX1!!!1XcXX
-  ccXX...XXcX
-  XXXX...XXXX
- XXXXXG:GXXXXX
- XX.XX...XX.XX
- X1..X.1.X..1X
- :...XG:GX...:
- X1..X...X..1X
- XX..X...X..XX
- XX..XG:GX..XX
-  X.1X...X1.X
-  X..X.1.X..X
- cX..XG:GX..Xc
-ccX..X...X..Xcc
-ccX.........Xcc
-  XX.......XX
-   XXXXXXXXX
-ENDMAP
-
 ##############################################################################
 ##############################################################################
 #
@@ -1422,7 +1125,7 @@ ENDMAP
 NAME:       hall_of_Zot_1
 DEPTH:      Zot:1
 CHANCE:     100%
-TAGS:       extra transparent no_dump
+TAGS:       extra transparent allow_dup no_dump
 LFLOORCOL:  lightgrey
 LROCKCOL:   white
 LFLOORTILE: floor_rough_lightgray
@@ -1434,7 +1137,7 @@ ENDMAP
 NAME:       hall_of_Zot_2
 DEPTH:      Zot:2
 CHANCE:     100%
-TAGS:       extra transparent no_dump
+TAGS:       extra transparent allow_dup no_dump
 LFLOORCOL:  white
 LROCKCOL:   blue
 LFLOORTILE: floor_rough_white
@@ -1446,7 +1149,7 @@ ENDMAP
 NAME:       hall_of_Zot_3
 DEPTH:      Zot:3
 CHANCE:     100%
-TAGS:       extra transparent no_dump
+TAGS:       extra transparent allow_dup no_dump
 LFLOORCOL:  blue
 LROCKCOL:   lightblue
 LFLOORTILE: floor_rough_blue
@@ -1458,7 +1161,7 @@ ENDMAP
 NAME:       hall_of_Zot_4
 DEPTH:      Zot:4
 CHANCE:     100%
-TAGS:       extra transparent no_dump
+TAGS:       extra transparent allow_dup no_dump
 LFLOORCOL:  lightblue
 LROCKCOL:   magenta
 LFLOORTILE: floor_rough_lightblue

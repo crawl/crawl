@@ -75,11 +75,11 @@ void xom_tick();
 void xom_is_stimulated(int maxinterestingness,
                        xom_message_type message_type = XM_NORMAL,
                        bool force_message = false);
-void xom_is_stimulated(int maxinterestingness, const std::string& message,
+void xom_is_stimulated(int maxinterestingness, const string& message,
                        bool force_message = false);
 bool xom_is_nice(int tension = -1);
 int xom_acts(bool niceness, int sever, int tension = -1, bool debug = false);
-const std::string describe_xom_favour();
+const string describe_xom_favour();
 
 static inline int xom_acts(int sever, int tension = -1)
 {

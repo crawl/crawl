@@ -25,8 +25,8 @@ public:
     virtual bool mouse_pos(int mouse_x, int mouse_y, int &cx, int &cy);
 
     bool inside(int px, int py);
-    virtual bool update_tip_text(std::string &tip) { return false; }
-    virtual bool update_alt_text(std::string &alt) { return false; }
+    virtual bool update_tip_text(string &tip) { return false; }
+    virtual bool update_alt_text(string &alt) { return false; }
     virtual int handle_mouse(MouseEvent &event) = 0;
 
     virtual void render() = 0;

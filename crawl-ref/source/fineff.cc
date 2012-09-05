@@ -36,7 +36,7 @@ void add_final_effect(final_effect_flavour flavour,
     fe.pos     = pos;
     fe.x       = x;
 
-    for (std::vector<final_effect>::iterator fi = env.final_effects.begin();
+    for (vector<final_effect>::iterator fi = env.final_effects.begin();
          fi != env.final_effects.end();
          ++fi)
     {
@@ -89,7 +89,7 @@ static void _trj_spawns(actor *attacker, actor *trj, coord_def pos, int damage)
 
     if (trj)
     {
-        const std::string monnam = trj->name(DESC_THE);
+        const string monnam = trj->name(DESC_THE);
         mprf("%s shudders%s.", monnam.c_str(),
              spawned >= 5 ? " alarmingly" :
              spawned >= 3 ? " violently" :

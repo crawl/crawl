@@ -76,10 +76,10 @@ struct block_header
     len_t next;
 };
 
-typedef std::map<std::string, len_t> directory_t;
-typedef std::pair<len_t, len_t> bm_p;
-typedef std::map<len_t, bm_p> bm_t;
-typedef std::map<len_t, len_t> fb_t;
+typedef map<string, len_t> directory_t;
+typedef pair<len_t, len_t> bm_p;
+typedef map<len_t, bm_p> bm_t;
+typedef map<len_t, len_t> fb_t;
 
 package::package(const char* file, bool writeable, bool empty)
   : n_users(0), dirty(false), aborted(false)
@@ -117,7 +117,7 @@ package::package(const char* file, bool writeable, bool empty)
 
             load();
         }
-        catch (std::exception &e)
+        catch (exception &e)
         {
             close(fd);
             throw;
@@ -270,12 +270,12 @@ void package::seek(len_t to)
         sysfail("failed to seek inside the save file");
 }
 
-chunk_writer* package::writer(const std::string name)
+chunk_writer* package::writer(const string name)
 {
     return new chunk_writer(this, name);
 }
 
-chunk_reader* package::reader(const std::string name)
+chunk_reader* package::reader(const string name)
 {
     directory_t::iterator ch = directory.find(name);
     if (ch == directory.end())
@@ -351,7 +351,7 @@ len_t package::alloc_block(len_t &size)
     return at;
 }
 
-void package::finish_chunk(const std::string name, len_t at)
+void package::finish_chunk(const string name, len_t at)
 {
     free_chunk(name);
     directory[name] = at;
@@ -359,7 +359,7 @@ void package::finish_chunk(const std::string name, len_t at)
     dirty = true;
 }
 
-void package::free_chunk(const std::string name)
+void package::free_chunk(const string name)
 {
     directory_t::iterator ci = directory.find(name);
     if (ci == directory.end())
@@ -374,7 +374,7 @@ void package::free_chunk(const std::string name)
     dirty = true;
 }
 
-void package::delete_chunk(const std::string name)
+void package::delete_chunk(const string name)
 {
     free_chunk(name);
     directory.erase(name);
@@ -384,7 +384,7 @@ len_t package::write_directory()
 {
     delete_chunk("");
 
-    std::stringstream dir;
+    stringstream dir;
     for (directory_t::iterator i = directory.begin();
          i != directory.end(); ++i)
     {
@@ -532,7 +532,7 @@ void package::read_directory(len_t start, uint8_t version)
         {
             if (res != sizeof(dir_entry0))
                 corrupted("save file corrupted -- truncated directory");
-            std::string chname(ch0.name, 4);
+            string chname(ch0.name, 4);
             chname.resize(strlen(chname.c_str()));
             directory[chname] = htole(ch0.start);
             dprintf("* %s\n", chname.c_str());
@@ -545,7 +545,7 @@ void package::read_directory(len_t start, uint8_t version)
         {
             if (res != sizeof(name_len))
                 corrupted("save file corrupted -- truncated directory");
-            std::string chname;
+            string chname;
             chname.resize(name_len);
             if (rd.read(&chname[0], name_len) != name_len)
                 corrupted("save file corrupted -- truncated directory");
@@ -561,14 +561,14 @@ void package::read_directory(len_t start, uint8_t version)
     }
 }
 
-bool package::has_chunk(const std::string name)
+bool package::has_chunk(const string name)
 {
     return !name.empty() && directory.find(name) != directory.end();
 }
 
-std::vector<std::string> package::list_chunks()
+vector<string> package::list_chunks()
 {
-    std::vector<std::string> list;
+    vector<string> list;
     list.reserve(directory.size());
     for (directory_t::iterator i = directory.begin();
          i != directory.end(); ++i)
@@ -642,7 +642,7 @@ len_t package::get_slack()
     return slack;
 }
 
-len_t package::get_chunk_fragmentation(const std::string name)
+len_t package::get_chunk_fragmentation(const string name)
 {
     load_traces();
     ASSERT(directory.find(name) != directory.end()); // not has_chunk(), "" is valid
@@ -658,7 +658,7 @@ len_t package::get_chunk_fragmentation(const std::string name)
     return frags;
 }
 
-len_t package::get_chunk_compressed_length(const std::string name)
+len_t package::get_chunk_compressed_length(const string name)
 {
     load_traces();
     ASSERT(directory.find(name) != directory.end()); // not has_chunk(), "" is valid
@@ -674,7 +674,7 @@ len_t package::get_chunk_compressed_length(const std::string name)
     return len;
 }
 
-chunk_writer::chunk_writer(package *parent, const std::string _name)
+chunk_writer::chunk_writer(package *parent, const string _name)
     : first_block(0), cur_block(0), block_len(0)
 {
     ASSERT(parent);
@@ -831,7 +831,7 @@ chunk_reader::chunk_reader(package *parent, len_t start)
     init(start);
 }
 
-chunk_reader::chunk_reader(package *parent, const std::string _name)
+chunk_reader::chunk_reader(package *parent, const string _name)
 {
     ASSERT(parent);
     if (!parent->has_chunk(_name))
@@ -937,7 +937,7 @@ len_t chunk_reader::read(void *data, len_t len)
 #endif
 }
 
-void chunk_reader::read_all(std::vector<char> &data)
+void chunk_reader::read_all(vector<char> &data)
 {
 #define SPACE 1024
     len_t s, at;

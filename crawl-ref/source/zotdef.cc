@@ -629,7 +629,7 @@ static monster_type _get_zotdef_monster(level_id &place, int power)
             continue;
 
         // Less OOD allowed on early levels
-        if (diff < std::min(-3,-power))
+        if (diff < min(-3,-power))
             continue;
 
         if (random2avg(100, 2) <= chance)
@@ -753,9 +753,9 @@ void zotdef_set_wave()
     dprf("NEW WAVE: %s", zotdef_debug_wave_desc().c_str());
 }
 
-std::string zotdef_debug_wave_desc()
+string zotdef_debug_wave_desc()
 {
-    std::string list = you.zotdef_wave_name + " [";
+    string list = you.zotdef_wave_name + " [";
     for (int i = 0; i <= (crawl_state.game_is_zotdef() ? NSLOTS : 9); i++)
     {
         if (i)
@@ -945,7 +945,7 @@ bool zotdef_create_altar(bool wizmode)
     if (specs[0] == '\0')
         return false;
 
-    std::string spec = lowercase_string(specs);
+    string spec = lowercase_string(specs);
 
     god_type god = GOD_NO_GOD;
 
@@ -956,7 +956,7 @@ bool zotdef_create_altar(bool wizmode)
         if (!wizmode && is_unavailable_god(gi))
             continue;
 
-        if (lowercase_string(god_name(gi)).find(spec) != std::string::npos)
+        if (lowercase_string(god_name(gi)).find(spec) != string::npos)
         {
             god = gi;
             break;
@@ -992,7 +992,7 @@ bool create_zotdef_ally(monster_type mtyp, const char *successmsg)
     }
 
     dist abild;
-    std::string msg = "Make ";
+    string msg = "Make ";
     msg += get_monster_data(mtyp)->name;
     msg += " where?";
 

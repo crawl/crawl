@@ -91,7 +91,7 @@ MONS:    silver statue, nothing
 SUBST:   E=E.
 SHUFFLE: abcd, $*, |ABCDE, nm, 45
 SUBST:   A=., B=., C=., D=*, E=%, n=9, m=0
-SUBST:   a = = x:8, b = = x:30, c=x, d=x
+SUBST:   a = + x:8, b = + x:30, c=x, d=x
 SUBST:   * = * |:1
 SHUFFLE: opq
 SUBST:   o=+
@@ -260,6 +260,7 @@ NAME:   hourglass_vault
 ORIENT: southeast
 DEPTH:  D:12-26
 TAGS:   no_rotate no_hmirror
+KFEAT:  = = runed_door
 MAP
 xxxxxxxxxxxxxx@xxxxxxxxxxxxxxxx
 xxxxxx.................xxxxxxxx
@@ -419,6 +420,7 @@ DEPTH:  D:14-26
 ORIENT: southeast
 SUBST:  ' = ^ .:50
 MONS:   orange crystal statue
+KFEAT:  = = runed_door
 MAP
 xxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxx^xxxxxxxxxxxxxxxx
@@ -439,7 +441,7 @@ x..b...xxb...........bxx...b..xx
 x..bb..xxbbb..9.9..bbbxx..bb..xx
 x......xxxxbbbb'bbbbxxxx......xx
 x..bb..xxxxxxxb=bxxxxxxx..bb..xx
-x..b...xxxxxxxx=xxxxxxxx...b..xx
+x..b...xxxxxxxx'xxxxxxxx...b..xx
 x...b..xxxxxxxx'xxxxxxxx..b...xx
 x..b....xxxxxxx=xxxxxxx....b..xx
 x...b...'''''''.'''''''...b...xx
@@ -455,6 +457,7 @@ ENDMAP
 NAME:   impenetrable_vault
 DEPTH:  D:16-26
 ORIENT: southeast
+KFEAT:  = = runed_door
 MAP
        .......@................x
        ........................x
@@ -463,18 +466,18 @@ MAP
 ...............................x
 .....cccccccccccccccc..........x
 .....c[^...........9cc.........x
-.....c^xxxxx=xxxxxx..cc........x
+.....c^xxxxx+xxxxxx..cc........x
 .....c.x9..^^^...9xx..cc.......x
 .....c.x.xxx=xxxx..xx..cc......x
 .....c.x^x$$$$$$xx..xx.9c......x
-.....c.=^=$*|||*$xx..xx.c......x
+.....c.+^=$*|||*$xx..xx.c......x
 .....c.x^xx$*|||*$xx.9x.c......x
 .....c.x9.xx$*|||*$xx^x.c......x
-.....c.xx..xx$*|||*$=^=.c......x
+.....c.xx..xx$*|||*$=^+.c......x
 .....c9.xx..xx$$$$$$x^x.c......x
 .....cc..xx..xxxx=xxx.x.c......x
 ......cc..xx9...^^^..9x.c......x
-.......cc..xxxxxx=xxxxx^c......x
+.......cc..xxxxxx+xxxxx^c......x
 ........cc9...........^]c......x
 .........cccccccccccccccc......x
 ...............................x
@@ -493,6 +496,7 @@ ORIENT: southwest
 DEPTH:  D:18-27
 MONS:   hell hound, necromancer, wizard, orange demon, rotting devil
 MONS:   hell knight, great orb of eyes
+KFEAT:  = = runed_door
 MAP
 xx.@.xxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxx...xxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -516,7 +520,7 @@ xx.....vvbbb......bbbvv.....xxxx
 xxx....vvb....66....bvvxxxxxxxxx
 xxxxxxvvvb..llllll..bvvvxxxxxxxx
 xvvvvvvvvb..ll45ll..bvvvvvvvvxxx
-xccc***+==..l3.2.l..cccccccccxxx
+xccc***+.+..l3.2.l..cccccccccxxx
 xccc+cccbb....ll....c..$$$$+$*cx
 xcc|||cbb...3llll2...cc%*%*c$|cx
 xcccccccbbbbbbbbbbbccccccccccccx
@@ -740,17 +744,18 @@ KMONS:  9 = 9
 KITEM:  0 = %
 KITEM:  8 = |
 KITEM:  9 = *
+KFEAT:  = = runed_door
 MAP
 @cccccccccccccccc
 c+..ccccccccccccc
 c...0cccccccccccc
 c...9cccccccccccc
-cc09xxccccccccccc
+cc09=xccccccccccc
 ccccxx...cccccccc
 ccccc....0ccccccc
 ccccc...09ccccccc
 ccccc..098ccccccc
-cccccc098xxcccccc
+cccccc098=xcccccc
 cccccccccxx....cc
 cccccccccc.....0c
 cccccccccc....09c
@@ -935,6 +940,7 @@ SUBST:   ' = .:120 0%
 SUBST:   A = $
 SUBST:   B = %*
 SUBST:   C = 9
+KFEAT:   = = runed_door
 MAP
                            xxxxxxx@@xxxxxxx
                            xxxxxxx++xxxxxxx

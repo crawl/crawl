@@ -449,7 +449,7 @@ typedef void (*delayed_callback)(const mgen_data &mg, monster *&mon, int placed)
 
 static void _delayed_monster(const mgen_data &mg,
                              delayed_callback callback = NULL);
-static void _delayed_monster_done(std::string success, std::string failure,
+static void _delayed_monster_done(string success, string failure,
                                   delayed_callback callback = NULL);
 static void _place_delayed_monsters();
 
@@ -509,24 +509,24 @@ god_type random_god(bool available)
     return god;
 }
 
-std::string get_god_powers(god_type which_god)
+string get_god_powers(god_type which_god)
 {
     // Return early for the special cases.
     if (which_god == GOD_NO_GOD)
         return "";
 
-    std::string result = getLongDescription(god_name(which_god) + " powers");
+    string result = getLongDescription(god_name(which_god) + " powers");
     return result;
 }
 
-std::string get_god_likes(god_type which_god, bool verbose)
+string get_god_likes(god_type which_god, bool verbose)
 {
     if (which_god == GOD_NO_GOD || which_god == GOD_XOM)
         return "";
 
-    std::string text = uppercase_first(god_name(which_god));
-    std::vector<std::string> likes;
-    std::vector<std::string> really_likes;
+    string text = uppercase_first(god_name(which_god));
+    vector<string> likes;
+    vector<string> really_likes;
 
     // Unique/unusual piety gain methods first.
     switch (which_god)
@@ -810,15 +810,15 @@ std::string get_god_likes(god_type which_god, bool verbose)
     return text;
 }
 
-std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
+string get_god_dislikes(god_type which_god, bool /*verbose*/)
 {
     // Return early for the special cases.
     if (which_god == GOD_NO_GOD || which_god == GOD_XOM)
         return "";
 
-    std::string text;
-    std::vector<std::string> dislikes;        // Piety loss
-    std::vector<std::string> really_dislikes; // Penance
+    string text;
+    vector<string> dislikes;        // Piety loss
+    vector<string> really_dislikes; // Penance
 
     if (god_hates_cannibalism(which_god))
         really_dislikes.push_back("you perform cannibalism");
@@ -1071,7 +1071,7 @@ static void _inc_penance(god_type god, int val)
         take_note(Note(NOTE_PENANCE, god));
 
         you.penance[god] += val;
-        you.penance[god] = std::min((uint8_t)MAX_PENANCE, you.penance[god]);
+        you.penance[god] = min((uint8_t)MAX_PENANCE, you.penance[god]);
 
         // Orcish bonuses don't apply under penance.
         if (god == GOD_BEOGH)
@@ -1134,7 +1134,7 @@ static void _inc_penance(god_type god, int val)
     else
     {
         you.penance[god] += val;
-        you.penance[god] = std::min((uint8_t)MAX_PENANCE, you.penance[god]);
+        you.penance[god] = min((uint8_t)MAX_PENANCE, you.penance[god]);
     }
 }
 
@@ -1174,9 +1174,8 @@ int yred_random_servants(unsigned int threshold, bool force_hostile)
         threshold = ARRAYSZ(_yred_servants);
     else
     {
-        threshold =
-            std::min(static_cast<unsigned int>(ARRAYSZ(_yred_servants)),
-                     threshold);
+        threshold = min(static_cast<unsigned int>(ARRAYSZ(_yred_servants)),
+                        threshold);
     }
 
     const unsigned int servant = random2(threshold);
@@ -1501,8 +1500,11 @@ static bool _blessing_wpn(monster* mon)
     const int weapon = mon->inv[MSLOT_WEAPON];
     const int alt_weapon = mon->inv[MSLOT_ALT_WEAPON];
 
-    if (weapon == NON_ITEM && alt_weapon == NON_ITEM)
+    if (weapon == NON_ITEM && alt_weapon == NON_ITEM
+        || mon->type == MONS_DANCING_WEAPON)
+    {
         return false;
+    }
 
     int slot;
 
@@ -1598,8 +1600,11 @@ static bool _tso_blessing_holy_wpn(monster* mon)
     const int weapon = mon->inv[MSLOT_WEAPON];
     const int alt_weapon = mon->inv[MSLOT_ALT_WEAPON];
 
-    if (weapon == NON_ITEM && alt_weapon == NON_ITEM)
+    if (weapon == NON_ITEM && alt_weapon == NON_ITEM
+        || mon->type == MONS_DANCING_WEAPON)
+    {
         return false;
+    }
 
     int slot;
 
@@ -1675,7 +1680,7 @@ static bool _increase_ench_duration(monster* mon,
     // Durations are saved as 16-bit signed ints, so clamp at the largest such.
     const int MARSHALL_MAX = (1 << 15) - 1;
 
-    const int newdur = std::min(ench.duration + increase, MARSHALL_MAX);
+    const int newdur = min(ench.duration + increase, MARSHALL_MAX);
     if (ench.duration >= newdur)
         return false;
 
@@ -1698,8 +1703,8 @@ static int _tso_blessing_extend_stay(monster* mon)
     if (mon->is_holy())
         return _increase_ench_duration(mon, abj, 1100 + random2(1100));
     else
-        return _increase_ench_duration(mon, abj, std::min(abj.duration,
-                                                          500 + random2(500)));
+        return _increase_ench_duration(mon, abj, min(abj.duration,
+                                                     500 + random2(500)));
 }
 
 static bool _tso_blessing_friendliness(monster* mon)
@@ -1796,7 +1801,7 @@ bool bless_follower(monster* follower,
                     bool force)
 {
     int chance = (force ? coinflip() : random2(20));
-    std::string result;
+    string result;
 
     // If a follower was specified, and it's suitable, pick it.
     // Otherwise, pick a random follower.
@@ -1935,9 +1940,8 @@ bool bless_follower(monster* follower,
     {
         case GOD_SHINING_ONE:
         {
-            // Extend a monster's stay if it's abjurable, optionally
-            // making it friendly if it's charmed.  If neither is
-            // possible, deliberately fall through.
+            // Extend a monster's stay if it's abjurable, or extend charm
+            // duration. If neither is possible, deliberately fall through.
             int more_time = _tso_blessing_extend_stay(follower);
             bool friendliness = false;
 
@@ -2007,7 +2011,7 @@ bool bless_follower(monster* follower,
 
 blessing_done:
 
-    std::string whom = "";
+    string whom = "";
     if (!follower)
         whom = "you";
     else
@@ -2151,9 +2155,9 @@ bool do_god_gift(bool forced)
             {
                 unsigned int threshold = MIN_YRED_SERVANT_THRESHOLD
                                          + you.num_current_gifts[you.religion] / 2;
-                threshold = std::max(threshold,
+                threshold = max(threshold,
                     static_cast<unsigned int>(MIN_YRED_SERVANT_THRESHOLD));
-                threshold = std::min(threshold,
+                threshold = min(threshold,
                     static_cast<unsigned int>(MAX_YRED_SERVANT_THRESHOLD));
 
                 if (yred_random_servants(threshold) != -1)
@@ -2306,7 +2310,7 @@ bool do_god_gift(bool forced)
     return success;
 }
 
-std::string god_name(god_type which_god, bool long_name)
+string god_name(god_type which_god, bool long_name)
 {
     if (which_god == GOD_JIYVA)
         return (god_name_jiyva(long_name) +
@@ -2314,9 +2318,8 @@ std::string god_name(god_type which_god, bool long_name)
 
     if (long_name)
     {
-        const std::string shortname = god_name(which_god, false);
-        const std::string longname =
-            getMiscString(shortname + " lastname");
+        const string shortname = god_name(which_god, false);
+        const string longname = getMiscString(shortname + " lastname");
         return (longname.empty()? shortname : longname);
     }
 
@@ -2353,18 +2356,18 @@ std::string god_name(god_type which_god, bool long_name)
     return "";
 }
 
-std::string god_name_jiyva(bool second_name)
+string god_name_jiyva(bool second_name)
 {
-    std::string name = "Jiyva";
+    string name = "Jiyva";
     if (second_name)
         name += " " + you.jiyva_second_name;
 
     return name;
 }
 
-god_type str_to_god(const std::string &_name, bool exact)
+god_type str_to_god(const string &_name, bool exact)
 {
-    std::string target(_name);
+    string target(_name);
     trim_string(target);
     lowercase(target);
 
@@ -2376,12 +2379,12 @@ god_type str_to_god(const std::string &_name, bool exact)
     for (int i = 0; i < NUM_GODS; ++i)
     {
         god_type    god  = static_cast<god_type>(i);
-        std::string name = lowercase_string(god_name(god, false));
+        string name = lowercase_string(god_name(god, false));
 
         if (name == target)
             return god;
 
-        if (!exact && name.find(target) != std::string::npos)
+        if (!exact && name.find(target) != string::npos)
         {
             // Return nothing for ambiguous partial names.
             num_partials++;
@@ -2431,38 +2434,36 @@ void religion_turn_end()
     _place_delayed_monsters();
 }
 
-static void _replace(std::string& s,
-                     const std::string &find,
-                     const std::string &repl)
+static void _replace(string& s, const string &find, const string &repl)
 {
-    std::string::size_type start = 0;
-    std::string::size_type found;
+    string::size_type start = 0;
+    string::size_type found;
 
-    while ((found = s.find(find, start)) != std::string::npos)
+    while ((found = s.find(find, start)) != string::npos)
     {
         s.replace(found, find.length(), repl);
         start = found + repl.length();
     }
 }
 
-static void _erase_between(std::string& s,
-                           const std::string &left,
-                           const std::string &right)
+static void _erase_between(string& s, const string &left, const string &right)
 {
-    std::string::size_type left_pos;
-    std::string::size_type right_pos;
+    string::size_type left_pos;
+    string::size_type right_pos;
 
-    while ((left_pos = s.find(left)) != std::string::npos
-           && (right_pos = s.find(right, left_pos + left.size())) != std::string::npos)
+    while ((left_pos = s.find(left)) != string::npos
+           && (right_pos = s.find(right, left_pos + left.size())) != string::npos)
+    {
         s.erase(s.begin() + left_pos, s.begin() + right_pos + right.size());
+    }
 }
 
-std::string adjust_abil_message(const char *pmsg, bool allow_upgrades)
+string adjust_abil_message(const char *pmsg, bool allow_upgrades)
 {
     if (crawl_state.game_is_zotdef() && strstr(pmsg, "Abyss"))
         return "";
 
-    std::string pm = pmsg;
+    string pm = pmsg;
 
     // Message portions in [] sections are ability upgrades.
     if (allow_upgrades)
@@ -2500,7 +2501,7 @@ static bool _abil_chg_message(const char *pmsg, const char *youcanmsg,
     int old_piety = you.piety;
     you.piety = piety_breakpoint(breakpoint);
 
-    std::string pm = adjust_abil_message(pmsg);
+    string pm = adjust_abil_message(pmsg);
     if (pm.empty())
         return false;
 
@@ -2780,8 +2781,8 @@ void lose_piety(int pgn)
 
     // Apply hysteresis.
     const int old_hysteresis = you.piety_hysteresis;
-    you.piety_hysteresis = std::min<int>(
-        PIETY_HYSTERESIS_LIMIT, you.piety_hysteresis + pgn);
+    you.piety_hysteresis = min<int>(PIETY_HYSTERESIS_LIMIT,
+                                    you.piety_hysteresis + pgn);
     const int pgn_borrowed = (you.piety_hysteresis - old_hysteresis);
     pgn -= pgn_borrowed;
 #ifdef DEBUG_PIETY
@@ -2901,7 +2902,7 @@ bool fedhas_neutralises(const monster* target)
     return (target && mons_is_plant(target));
 }
 
-static std::string _god_hates_your_god_reaction(god_type god, god_type your_god)
+static string _god_hates_your_god_reaction(god_type god, god_type your_god)
 {
     if (god_hates_your_god(god, your_god))
     {
@@ -2933,7 +2934,7 @@ void excommunication(god_type new_god)
 
     take_note(Note(NOTE_LOSE_GOD, old_god));
 
-    std::vector<ability_type> abilities = get_god_abilities(true);
+    vector<ability_type> abilities = get_god_abilities(true);
     for (unsigned int i = 0; i < abilities.size(); ++i)
     {
         you.stop_train.insert(abil_skill(abilities[i]));
@@ -3127,8 +3128,8 @@ void excommunication(god_type new_god)
         if (you.transfer_skill_points > 0)
             ashenzari_end_transfer(false, true);
         you.duration[DUR_SCRYING] = 0;
-        you.exp_docked = exp_needed(std::min<int>(you.max_level, 27)  + 1)
-                       - exp_needed(std::min<int>(you.max_level, 27));
+        you.exp_docked = exp_needed(min<int>(you.max_level, 27)  + 1)
+                       - exp_needed(min<int>(you.max_level, 27));
         you.exp_docked_total = you.exp_docked;
         _set_penance(old_god, 50);
         break;
@@ -3160,10 +3161,8 @@ void excommunication(god_type new_god)
     check_selected_skills();
 }
 
-static std::string _sacrifice_message(std::string msg,
-                                      const std::string& itname,
-                                      bool glowing, bool plural,
-                                      piety_gain_t piety_gain)
+static string _sacrifice_message(string msg, const string& itname, bool glowing,
+                                 bool plural, piety_gain_t piety_gain)
 {
     if (glowing)
     {
@@ -3212,9 +3211,9 @@ void print_sacrifice_message(god_type god, const item_def &item,
             GOD_SHINING_ONE);
         return;
     }
-    const std::string itname = item.name(your ? DESC_YOUR : DESC_THE);
+    const string itname = item.name(your ? DESC_YOUR : DESC_THE);
     mpr(_sacrifice_message(_Sacrifice_Messages[god][piety_gain], itname,
-                           itname.find("glowing") != std::string::npos,
+                           itname.find("glowing") != string::npos,
                            item.quantity > 1,
                            piety_gain),
         MSGCH_GOD, god);
@@ -3223,7 +3222,7 @@ void print_sacrifice_message(god_type god, const item_def &item,
 void nemelex_death_message()
 {
     const piety_gain_t piety_gain = static_cast<piety_gain_t>
-            (std::min(random2(you.piety) / 30, (int)PIETY_LOTS));
+            (min(random2(you.piety) / 30, (int)PIETY_LOTS));
     mpr(_sacrifice_message(_Sacrifice_Messages[GOD_NEMELEX_XOBEH][piety_gain],
                            "Your body", you.backlit(), false, piety_gain));
 }
@@ -3257,7 +3256,7 @@ bool god_hates_attacking_friend(god_type god, const actor *fr)
 
 bool god_likes_items(god_type god, bool greedy_explore)
 {
-    if (greedy_explore && (!(Options.explore_stop & ES_GREEDY_SACRIFICIABLE)
+    if (greedy_explore && (!(Options.explore_stop & ES_GREEDY_SACRIFICEABLE)
                            || you.religion == GOD_ASHENZARI))
         // Ash's sacrifice isn't trading items for piety so it shouldn't make
         // explore greedy for ?RC
@@ -3997,7 +3996,7 @@ void handle_god_time()
 // yet another wrapper for mpr() {dlb}:
 void simple_god_message(const char *event, god_type which_deity)
 {
-    std::string msg = uppercase_first(god_name(which_deity)) + event;
+    string msg = uppercase_first(god_name(which_deity)) + event;
     msg = apostrophise_fixup(msg);
     god_speaks(which_deity, msg.c_str());
 }
@@ -4306,7 +4305,7 @@ int get_tension(god_type god)
     if (you.cannot_act())
     {
         tension *= 10;
-        tension  = std::max(1, tension);
+        tension  = max(1, tension);
 
         return tension;
     }
@@ -4329,7 +4328,7 @@ int get_tension(god_type god)
         tension /= 3;
     }
 
-    return std::max(0, tension);
+    return max(0, tension);
 }
 
 int get_fuzzied_monster_difficulty(const monster *mons)
@@ -4344,12 +4343,12 @@ int get_fuzzied_monster_difficulty(const monster *mons)
 // Stuff for placing god gift monsters after the player's turn has ended.
 /////////////////////////////////////////////////////////////////////////////
 
-static std::vector<mgen_data>       _delayed_data;
-static std::deque<delayed_callback> _delayed_callbacks;
-static std::deque<unsigned int>     _delayed_done_trigger_pos;
-static std::deque<delayed_callback> _delayed_done_callbacks;
-static std::deque<std::string>      _delayed_success;
-static std::deque<std::string>      _delayed_failure;
+static vector<mgen_data>       _delayed_data;
+static deque<delayed_callback> _delayed_callbacks;
+static deque<unsigned int>     _delayed_done_trigger_pos;
+static deque<delayed_callback> _delayed_done_callbacks;
+static deque<string>      _delayed_success;
+static deque<string>      _delayed_failure;
 
 static void _delayed_monster(const mgen_data &mg, delayed_callback callback)
 {
@@ -4357,7 +4356,7 @@ static void _delayed_monster(const mgen_data &mg, delayed_callback callback)
     _delayed_callbacks.push_back(callback);
 }
 
-static void _delayed_monster_done(std::string success, std::string failure,
+static void _delayed_monster_done(string success, string failure,
                                   delayed_callback callback)
 {
     const unsigned int size = _delayed_data.size();
@@ -4397,7 +4396,7 @@ static void _place_delayed_monsters()
         {
             cback = _delayed_done_callbacks[0];
 
-            std::string msg;
+            string msg;
             if (placed > 0)
                 msg = _delayed_success[0];
             else
@@ -4489,30 +4488,30 @@ static bool _cmp_god_by_name(god_type god1, god_type god2)
 
 // Vector of temple gods.
 // Sorted by name for the benefit of the overview.
-std::vector<god_type> temple_god_list()
+vector<god_type> temple_god_list()
 {
-    std::vector<god_type> god_list;
+    vector<god_type> god_list;
     for (int i = 0; i < NUM_GODS; i++)
     {
         god_type god = static_cast<god_type>(i);
         if (_is_temple_god(god))
             god_list.push_back(god);
     }
-    std::sort(god_list.begin(), god_list.end(), _cmp_god_by_name);
+    sort(god_list.begin(), god_list.end(), _cmp_god_by_name);
     return god_list;
 }
 
 // Vector of non-temple gods.
 // Sorted by name for the benefit of the overview.
-std::vector<god_type> nontemple_god_list()
+vector<god_type> nontemple_god_list()
 {
-    std::vector<god_type> god_list;
+    vector<god_type> god_list;
     for (int i = 0; i < NUM_GODS; i++)
     {
         god_type god = static_cast<god_type>(i);
         if (_is_nontemple_god(god))
             god_list.push_back(god);
     }
-    std::sort(god_list.begin(), god_list.end(), _cmp_god_by_name);
+    sort(god_list.begin(), god_list.end(), _cmp_god_by_name);
     return god_list;
 }

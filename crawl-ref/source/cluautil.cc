@@ -91,13 +91,13 @@ void clua_register_metatable(lua_State *ls, const char *tn,
         luaL_openlib(ls, NULL, lr, 0);
 }
 
-int clua_pushcxxstring(lua_State *ls, const std::string &s)
+int clua_pushcxxstring(lua_State *ls, const string &s)
 {
     lua_pushstring(ls, s.c_str());
     return 1;
 }
 
-int clua_stringtable(lua_State *ls, const std::vector<std::string> &s)
+int clua_stringtable(lua_State *ls, const vector<string> &s)
 {
     return clua_gentable(ls, s, clua_pushcxxstring);
 }

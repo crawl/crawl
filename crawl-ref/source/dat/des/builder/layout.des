@@ -57,7 +57,7 @@
 
     function random_wall_material(e)
         if not you.in_branch("Lair") and not you.in_branch("Zot")
-           and crawl.one_chance_in(20) then
+           and you.absdepth() >= 4 and crawl.one_chance_in(20) then
             e.subst('x : ccv')
         end
     end
@@ -388,7 +388,7 @@ ENDMAP
 # This replaces dungeon.cc:_plan_3().
 #
 NAME: layout_rooms
-DEPTH: Pan, 4-22, Zot
+DEPTH: Pan, 1-
 WEIGHT: 60 (Pan), 10 (Zot), 20
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
@@ -586,7 +586,7 @@ ENDMAP
 #
 # This replaces dungeon.cc:_plan_5().
 NAME: layout_misc
-DEPTH: Pan, 4-22, Zot
+DEPTH: Pan, 1-
 WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
@@ -699,10 +699,10 @@ TAGS: overwritable layout allow_dup unrand
 
 ## This replaces dungeon.cc:_roguey_level.
 NAME: layout_roguey
-DEPTH: 1-, !Pan, !Zot
+DEPTH: 2-, !Pan, !Zot
 WEIGHT: 20
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand
+TAGS: overwritable layout no_primary_vault allow_dup unrand
 {{
     function make_inner_room(room, feat, treasure)
         local inner_room = {
@@ -992,7 +992,6 @@ TAGS: overwritable layout allow_dup unrand
 
     -- Prevent staircases from being placed in special or inner rooms.
     nsubst('. = { / ( / [ / < / } / ) / ] / > / .')
-    kmask('+ = no_secret_doors')
 
     if special ~= -1 then
         subvault('O : special_room')
@@ -1045,7 +1044,7 @@ TAGS: overwritable layout allow_dup unrand
 # Dummy layouts that just call C++ functions that do all the work.
 NAME: layout_basic
 DEPTH: 1-, !Pan
-WEIGHT: 90, 200 (Geh), 200 (Coc), 10 (Zot)
+WEIGHT: 90, 10 (D:1), 200 (Geh), 200 (Coc), 10 (Zot)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{

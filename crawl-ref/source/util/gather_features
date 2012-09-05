@@ -45,5 +45,11 @@ for (grep /\.des|\.des\.disabled|\.lua$/, `git ls-files`)
 }
 
 $features{articled("gleaming silver wall")} = 1;
+for (qw(open closed runed))
+{
+    $features{articled("large $_ door")} = 1;
+    $features{articled("$_ gate")} = 1;
+    $features{articled("huge $_ gate")} = 1;
+}
 
 print join("\n", sort keys %features), "\n";

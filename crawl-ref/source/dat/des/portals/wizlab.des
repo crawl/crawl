@@ -132,7 +132,7 @@ function wizlab_setup (e, wizlab_desc)
 end
 
 function wizlab_milestone (e, wizlab_desc)
-    crawl.mark_milestone("br.enter", "entered " .. wizlab_desc .. ".", true)
+    crawl.mark_milestone("br.enter", "entered " .. wizlab_desc .. ".", "parent")
 end
 
 function tukima_machine (data, triggerable, triggerer, marker, ev)
@@ -296,14 +296,13 @@ function wizlab_zonguldrok_awaken_wizard(data, triggerable,
         return
     end
 
-    local graves = dgn.find_marker_positions_by_prop("wizard_grave", 1)
-    for _, pos in ipairs(graves) do
-        local lich = spawn_zombie(pos.x, pos.y, "generate_awake ancient lich "
+    local pos = dgn.find_marker_positions_by_prop("wizard_grave", 1)[1]
+    local lich = dgn.create_monster(pos.x, pos.y, "generate_awake ancient lich "
                  .."col:brown name:antique_lich name_replace name_descriptor"
                  .." tile:mons_zonguldrok_lich")
+    if lich then
+        data.awoke = true
     end
-
-    data.awoke = true
 end
 
 function wizlab_wucad_msgfn(data, triggerable, triggerer, marker, ev)
@@ -754,29 +753,29 @@ tukima_marker:add_triggerer(DgnTriggerer:new {
 lua_marker('?', tukima_marker)
 
 if crawl.coinflip() then
-  subst("Y = =")
+  subst("Y = +")
   subst("y = .")
   subst("Rr = c")
 else
   subst("Y = c")
   subst("y = m")
   subst("R = .")
-  subst("r = =")
+  subst("r = +")
 end
 
 if crawl.coinflip() then
-  subst("X = =")
+  subst("X = +")
   subst("x = .")
   subst("Ll = c")
 else
   subst("X = c")
   subst("x = m")
   subst("L = .")
-  subst("l = =")
+  subst("l = +")
 end
 }}
 SUBST:      ? = .
-COLOUR:     =cA< = darkgrey
+COLOUR:     +cA< = darkgrey
 TILE:       c = wall_stone_dark
 TILE:       V = dngn_dry_fountain_white
 LFLOORTILE: floor_pebble_white
@@ -867,6 +866,7 @@ TILE:       c = wall_brick_vines
 LROCKTILE:  wall_brick_vines
 LFLOORTILE: floor_grass
 ITEM:       any fixed theme book, any fixed level book, any magical staff / any rod w:2
+KFEAT:      = = runed_door
 {{
 
 local grow_marker = TriggerableFunction:new { func = "wizlab_eringya_grow",
@@ -1096,6 +1096,7 @@ COLOUR:     . = darkgrey / blue w:3 / cyan w:1
 MARKER:     ! = lua:portal_desc {wall_drop=1}
 MARKER:     = = lua:portal_desc {wall_drop=1}
 TILE:       ! = dngn_stone_wall_yellow
+KFEAT:      = = runed_door
 {{
 local box_marker = TriggerableFunction:new {
     func="wizlab_doroklohe_convert_boxes",
@@ -1326,7 +1327,7 @@ TILE:       c = wall_zot_magenta
 TILE:       v = dngn_metal_wall_magenta
 LFLOORTILE: floor_rough_magenta
 LFLOORCOL:  magenta
-MARKER:     + = lua:restrict_door()
+KFEAT:      + = runed_door
 MARKER:     R = lua:fog_machine { \
                 pow_max = 10, delay_min = 10, delay_max = 40, \
                 size = 15, cloud_type = "purple smoke" \
@@ -1495,7 +1496,7 @@ TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
 SUBST:      T = t.
 KMONS:      8 = orange crystal statue name:Statue_of_Wucad_Mu n_rpl n_the \
                 hd:20 hp:300 tile:mons_wucad_mu_statue
-KITEM:      8 = staff unrand:staff_of_wucad_mu, book of enchantments
+KITEM:      8 = staff of enchantment unrand:staff_of_wucad_mu, book of enchantments
 COLOUR:     =c = darkgrey
 COLOUR:     t = lightred / red w:3
 TILE:       t = dngn_tree_lightred / dngn_tree_red w:4 / dngn_tree_yellow w:4
@@ -1524,7 +1525,7 @@ KMONS:      F = human name:monk n_suf col:white hd:10 dur:2 sum:shadow_creatures
             dur:2 seen sum:shadow_creatures nas:old_memories tile:mons_rock_troll_monk \
             / iron troll name:monk n_suf col:white dur:2 sum:shadow_creatures \
             nas:old_memories seen tile:mons_iron_troll_monk w:5
-
+KFEAT:      = = runed_door
 {{
 dgn.persist.wucad_mu_died = false
 
@@ -1636,17 +1637,14 @@ KMONS:   2 = deep elf summoner w:5 ; dart ego:dispersal w:20 | dart w:5 | nothin
              rakshasa w:5 ; dart ego:dispersal w:20 | dart w:5 | nothing / \
              boggart ; dart ego:dispersal w:20 | dart w:5 | nothing /  \
              wizard ; dart ego:dispersal w:20 | dart w:5 | nothing
-KMONS:   3 = rakshasa w:5 ; staff ego:distortion | staff ego:vorpal w:6 | \
-             dagger ego:distortion | dagger ego:vorpal w:6 | \
+KMONS:   3 = rakshasa w:5 ; whip ego:distortion | whip \
+             ego:vorpal w:6 | dagger ego:distortion | dagger ego:vorpal w:6 | \
              spear ego:distortion | spear ego:vorpal w:6 . dart ego:dispersal / \
-             crimson imp ; staff ego:distortion | staff ego:vorpal w:6 | \
-             dagger ego:distortion | dagger ego:vorpal w:6 | \
+             boggart w:5 ; whip ego:distortion | whip \
+             ego:vorpal w:6 | dagger ego:distortion | dagger ego:vorpal w:6 | \
              spear ego:distortion | spear ego:vorpal w:6 . dart ego:dispersal / \
-             boggart w:5 ; staff ego:distortion | staff ego:vorpal w:6 | \
-             dagger ego:distortion | dagger ego:vorpal w:6 | \
-             spear ego:distortion | spear ego:vorpal w:6 . dart ego:dispersal / \
-             wizard ; staff ego:distortion | staff ego:vorpal w:6 | \
-             dagger ego:distortion | dagger ego:vorpal w:6 | \
+             wizard ; whip ego:distortion | whip \
+             ego:vorpal w:6 | dagger ego:distortion | dagger ego:vorpal w:6 | \
              spear ego:distortion | spear ego:vorpal w:6 . dart ego:dispersal
 # Disclaimer: the following three sets are all Abyss spawns.
 KMONS:   04 = large abomination w:40 / small abomination w:40 / large skeleton w:30 / \

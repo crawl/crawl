@@ -148,19 +148,17 @@ static int file_unmarshall_meta(lua_State *ls)
 // be resolved to an absolute path if necessary using datafile_path.
 LUAFN(_file_datadir_files_recursive)
 {
-    const std::string rawdir(luaL_checkstring(ls, 1));
+    const string rawdir(luaL_checkstring(ls, 1));
     // A filename suffix to match (such as ".des"). If empty, files
     // will be unfiltered.
-    const std::string ext_filter(lua_isnoneornil(ls, 2) ? "" :
-                                 luaL_checkstring(ls, 2));
-    const std::string datadir(
-        datafile_path(rawdir, false, false, dir_exists));
+    const string ext_filter(lua_isnoneornil(ls, 2) ? ""
+                                                   : luaL_checkstring(ls, 2));
+    const string datadir(datafile_path(rawdir, false, false, dir_exists));
 
     if (datadir.empty())
         luaL_error(ls, "Cannot find data directory: '%s'", rawdir.c_str());
 
-    const std::vector<std::string> files =
-        get_dir_files_recursive(datadir, ext_filter);
+    const vector<string> files = get_dir_files_recursive(datadir, ext_filter);
     return clua_stringtable(ls, files);
 }
 
@@ -169,26 +167,25 @@ LUAFN(_file_datadir_files_recursive)
 // be resolved to an absolute path if necessary using datafile_path.
 LUAFN(_file_datadir_files)
 {
-    const std::string rawdir(luaL_checkstring(ls, 1));
+    const string rawdir(luaL_checkstring(ls, 1));
     // A filename suffix to match (such as ".des"). If empty, files
     // will be unfiltered.
-    const std::string ext_filter(lua_isnoneornil(ls, 2) ? "" :
-                                 luaL_checkstring(ls, 2));
-    const std::string datadir(
-        datafile_path(rawdir, false, false, dir_exists));
+    const string ext_filter(lua_isnoneornil(ls, 2) ? ""
+                                                   : luaL_checkstring(ls, 2));
+    const string datadir(datafile_path(rawdir, false, false, dir_exists));
 
     if (datadir.empty())
         luaL_error(ls, "Cannot find data directory: '%s'", rawdir.c_str());
 
-    const std::vector<std::string> files =
-        ext_filter.empty() ? get_dir_files(datadir) :
-        get_dir_files_ext(datadir, ext_filter);
+    const vector<string> files = ext_filter.empty()
+                                 ? get_dir_files(datadir)
+                                 : get_dir_files_ext(datadir, ext_filter);
     return clua_stringtable(ls, files);
 }
 
 LUAFN(_file_writefile)
 {
-    const std::string fname(luaL_checkstring(ls, 1));
+    const string fname(luaL_checkstring(ls, 1));
     FILE *f = fopen_replace(fname.c_str());
     if (f)
     {

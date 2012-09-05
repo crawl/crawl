@@ -1189,6 +1189,7 @@ struct spell_desc
      true
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_INSULATION, "Insulation",
      SPTYP_CHARMS | SPTYP_AIR,
@@ -1201,6 +1202,7 @@ struct spell_desc
      false,
      true
 },
+#endif
 
 {
     SPELL_CURE_POISON, "Cure Poison",
@@ -1593,6 +1595,7 @@ struct spell_desc
      false
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_SEE_INVISIBLE, "See Invisible",
      SPTYP_CHARMS,
@@ -1605,6 +1608,7 @@ struct spell_desc
      false,
      true
 },
+#endif
 
 {
     SPELL_PHASE_SHIFT, "Phase Shift",

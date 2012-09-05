@@ -8,8 +8,8 @@ function (exports, $, key_conversion, chat, comm) {
 
     window.debug_mode = false;
 
-    exports.log_messages = false;
-    exports.log_message_size = false;
+    window.log_messages = false;
+    window.log_message_size = false;
 
     var delay_timeout = undefined;
     var message_inhibit = 0;
@@ -943,11 +943,11 @@ function (exports, $, key_conversion, chat, comm) {
 
             socket.onmessage = function (msg)
             {
-                if (exports.log_messages)
+                if (window.log_messages)
                 {
                     console.log("Message: " + msg.data);
                 }
-                if (exports.log_message_size)
+                if (window.log_message_size)
                 {
                     console.log("Message size: " + msg.data.length);
                 }

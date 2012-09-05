@@ -68,6 +68,7 @@ MONS:    weight:20 nothing / weight:30 human / necromancer / wizard
 ORIENT:  float
 SHUFFLE: !=
 SUBST:   ! = x
+SUBST:   = = +
 SUBST:   ' : cxv
 KFEAT:   O = enter_vaults
 MAP
@@ -453,8 +454,8 @@ ENDMAP
 # about 2 |
 NAME: vaults_end_classical_cross
 TAGS: vaults_end_quadrant
-NSUBST:  U = 1:. / *:xxxx=
-NSUBST:  V = 1:. / *:xxxx=
+NSUBST:  U = 1:. / *:xxxx.
+NSUBST:  V = 1:. / *:xxxx.
 SUBST:   - = 8 9 .:20
 : vaults_end_loot(_G)
 : vaults_end_rune(_G)
@@ -1817,7 +1818,7 @@ SUBST:  $ = | * $
 KFEAT:  l = teleport trap
 KFEAT:  z = zot trap
 KFEAT:  A = alarm trap
-SUBST:  s = x:250 =:1
+SUBST:  s = x:250 +:1
 SUBST:  a = x.
 : vaults_end_loot(_G)
 : vaults_end_rune(_G)
@@ -1891,7 +1892,7 @@ NAME:   vaults_end_mu_triangles
 TAGS:   vaults_end_quadrant_prize
 SUBST:  9 = 8 9 .:20
 NSUBST: ? = 1:O / *:|
-SUBST:  " = =:1 x:99
+SUBST:  " = +:1 x:99
 SUBST:  ! = x:20 .
 : vaults_end_loot(_G)
 : vaults_end_rune(_G)
@@ -2315,8 +2316,8 @@ ENDMAP
 NAME:     vaults_end_classical_rooms
 TAGS:     vaults_end_quadrant_prize
 SHUFFLE:  AC/BD, EG/FH, IKN/MJL
-SUBST:    A=., B=xx=, C=+, D=x, E=+, F=xx=, G=., H=x
-SUBST:    I=., M=xx=, J=x, K=+, N=+, L=xx=
+SUBST:    A=., B=xx+, C=+, D=x, E=+, F=xx+, G=., H=x
+SUBST:    I=., M=xx+, J=x, K=+, N=+, L=xx+
 SUBST:    a:x.
 SHUFFLE:  VXYZ
 SUBVAULT: V : vaults_end_room_rune

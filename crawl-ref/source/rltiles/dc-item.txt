@@ -115,11 +115,11 @@ greatsword2
 %rim 0
 orcish_great_sword1 WPN_GREAT_SWORD_ORC
 orcish_great_sword2
-%rim 1
 
+
+%rim 0
 falchion1 WPN_FALCHION
 falchion2
-%rim 0
 orcish_falchion1 WPN_FALCHION_ORC
 orcish_falchion2
 dwarven_falchion1 WPN_FALCHION_DWARF
@@ -130,8 +130,16 @@ elven_falchion2
 scimitar1 WPN_SCIMITAR
 scimitar2
 
-sabre1_silver WPN_SABRE
+%rim 0
+sabre1 WPN_SABRE
 sabre2
+sabre3
+orcish_sabre1 WPN_SABRE_ORC
+orcish_sabre2
+dwarven_sabre1 WPN_SABRE_DWARF
+dwarven_sabre2
+elven_sabre1 WPN_SABRE_ELF
+elven_sabre2
 
 quickblade WPN_QUICK_BLADE
 

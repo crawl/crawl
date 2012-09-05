@@ -84,6 +84,7 @@ enum monster_info_flags
     MB_RANGED_ATTACK,
     MB_NO_NAME_TAG,
     MB_OZOCUBUS_ARMOUR,
+    MB_STONESKIN,
     NUM_MB_FLAGS
 };
 
@@ -91,7 +92,7 @@ struct monster_info_base
 {
     coord_def pos;
     FixedBitVector<NUM_MB_FLAGS> mb;
-    std::string mname;
+    string mname;
     monster_type type;
     monster_type base_type;
     monster_type draco_type;
@@ -102,8 +103,8 @@ struct monster_info_base
     mon_dam_level_type dam;
     // TODO: maybe we should store the position instead
     dungeon_feature_type fire_blocker;
-    std::string description;
-    std::string quote;
+    string description;
+    string quote;
     mon_holy_type holi;
     mon_intel_type mintel;
     resists_t mresists;
@@ -111,8 +112,8 @@ struct monster_info_base
     int mbase_speed;
     flight_type fly;
     CrawlHashTable props;
-    std::string constrictor_name;
-    std::vector<std::string> constricting_name;
+    string constrictor_name;
+    vector<string> constricting_name;
 
     uint32_t client_id;
 };
@@ -155,10 +156,10 @@ struct monster_info : public monster_info_base
         return *this;
     }
 
-    void to_string(int count, std::string& desc, int& desc_colour, bool fullname = true) const;
+    void to_string(int count, string& desc, int& desc_colour, bool fullname = true) const;
 
     /* only real equipment is visible, miscellany is for mimic items */
-    std::auto_ptr<item_def> inv[MSLOT_LAST_VISIBLE_SLOT + 1];
+    unique_ptr<item_def> inv[MSLOT_LAST_VISIBLE_SLOT + 1];
 
     union
     {
@@ -180,7 +181,7 @@ struct monster_info : public monster_info_base
         return mb[mbflag];
     }
 
-    inline std::string damage_desc() const
+    inline string damage_desc() const
     {
         return get_damage_level_string(holi, dam);
     }
@@ -190,27 +191,27 @@ struct monster_info : public monster_info_base
         return attitude == ATT_NEUTRAL || attitude == ATT_GOOD_NEUTRAL || attitude == ATT_STRICT_NEUTRAL;
     }
 
-    std::string db_name() const;
+    string db_name() const;
     bool has_proper_name() const;
     dungeon_feature_type get_mimic_feature() const;
     const item_def* get_mimic_item() const;
-    std::string mimic_name() const;
-    std::string pluralised_name(bool fullname = true) const;
-    std::string common_name(description_level_type desc = DESC_PLAIN) const;
-    std::string proper_name(description_level_type desc = DESC_PLAIN) const;
-    std::string full_name(description_level_type desc = DESC_PLAIN, bool use_comma = false) const;
+    string mimic_name() const;
+    string pluralised_name(bool fullname = true) const;
+    string common_name(description_level_type desc = DESC_PLAIN) const;
+    string proper_name(description_level_type desc = DESC_PLAIN) const;
+    string full_name(description_level_type desc = DESC_PLAIN, bool use_comma = false) const;
 
-    std::vector<std::string> attributes() const;
+    vector<string> attributes() const;
 
     const char *pronoun(pronoun_type variant) const
     {
         return mons_pronoun(type, variant, true);
     }
 
-    std::string wounds_description_sentence() const;
-    std::string wounds_description(bool colour = false) const;
+    string wounds_description_sentence() const;
+    string wounds_description(bool colour = false) const;
 
-    std::string constriction_description() const;
+    string constriction_description() const;
 
     monster_type draco_subspecies() const
     {
@@ -258,11 +259,11 @@ struct monster_info : public monster_info_base
     }
 
 protected:
-    std::string _core_name() const;
-    std::string _apply_adjusted_description(description_level_type desc, const std::string& s) const;
+    string _core_name() const;
+    string _apply_adjusted_description(description_level_type desc, const string& s) const;
 };
 
-void get_monster_info(std::vector<monster_info>& mons);
+void get_monster_info(vector<monster_info>& mons);
 
-typedef std::vector<std::string> (*desc_filter) (const monster_info& mi);
+typedef vector<string> (*desc_filter) (const monster_info& mi);
 #endif
