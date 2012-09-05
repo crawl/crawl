@@ -243,8 +243,7 @@ large deltas in your distance function, so our 3D search can find
 them! [Alternatively, change the search algorithm for your special
 cases.]
 */
-
-            d2=dx*dx+dy*dy+dz*dz; /* Euclidian distance, squared */
+            d2=fabs(dx)+fabs(dy)+fabs(dz);
 
             if (d2<F[max_order-1]) /* Is this point close enough to rememember? */
             {

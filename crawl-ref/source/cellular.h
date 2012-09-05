@@ -58,6 +58,8 @@
    This can be fixed by increasing the internal points-per-cube
    density in the source code, at the expense of slower
    computation. The book lists the details of this tuning.  */
+#ifndef CELLULAR_H
+#define CELLULAR_H
 namespace worley
 {
 struct noise_datum
@@ -68,3 +70,4 @@ struct noise_datum
 
 noise_datum worley(double x, double y, double z);
 }
+#endif /* CELLULAR_H */
