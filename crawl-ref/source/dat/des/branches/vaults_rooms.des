@@ -4178,7 +4178,7 @@ ENDMAP
 NAME:     vaults_room_10_dead_end_empty_double_glass
 TAGS:     vaults_room_10_dead_end_empty allow_dup
 TAGS:     no_monster_gen no_item_gen
-KPROP:  _ = no_tele_into
+KPROP:  _ = no_rtele_into
 MAP
 xxxxxxxxxx
 xx_______x
@@ -4200,7 +4200,7 @@ SUBST:    C = _:12 C:2 B:3 x:2
 SUBST:    x = _:10 x:3
 KITEM:    C = large rock
 KITEM:    B = stone
-KPROP:  _ = no_tele_into
+KPROP:  _ = no_rtele_into
 SUBVAULT: A : vaults_door_10
 MAP
 xxx____xxx
@@ -4478,7 +4478,7 @@ TAGS:     no_monster_gen no_item_gen
 SUBST:    % = %%.
 MONS:     statue tile:mons_statue_archer name:archer n_adj; \
           longbow . arrow q:30
-KPROP:  _ = no_tele_into
+KPROP:  _ = no_rtele_into
 : vaults_standard_loot(_G)
 MAP
 xxxxxxxxxx
