@@ -115,11 +115,11 @@ greatsword2
 %rim 0
 orcish_great_sword1 WPN_GREAT_SWORD_ORC
 orcish_great_sword2
-%rim 1
 
+
+%rim 0
 falchion1 WPN_FALCHION
 falchion2
-%rim 0
 orcish_falchion1 WPN_FALCHION_ORC
 orcish_falchion2
 dwarven_falchion1 WPN_FALCHION_DWARF
