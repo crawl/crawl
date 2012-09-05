@@ -751,15 +751,14 @@ TAGS:   abyss_exit allow_dup
 KFEAT:  O = exit_abyss
 KFEAT:  n = stone_arch
 NSUBST: n = 1:O / *:n
-KFEAT:  = = runed_door
 MAP
     x   x
   x x x x x
  xxxxxxxxxxx
   xnxnxnxnx
-xxx=x=x=x=xxx
+xxx+x+x+x+xxx
   x.........@
-xxx=x=x=x=xxx
+xxx+x+x+x+xxx
   xnxnxnxnx
  xxxxxxxxxxx
   x x x x x

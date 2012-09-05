@@ -238,7 +238,7 @@ xxxx???xxxxxx?***??xxxxxxxxxxxxx.........7...c...444..cccc..........cx
 xx$$$$$$?xxxx?.6..?xxxxxxxxxeeee..7..........+........+TT+.........5cx
 x?$$$$$$.?xx?.666.xxxxxxee0eexxx7....7.......c........cccc.........1cx
 x.$$$$$$..?x...6..eeeeeeexxxxxxx............7ccccc+ccccccc.........5cx
-x....<.....=?....xxxxxxxxx$$$TTcccc+ccccccccccccccTc(((((+..........cx
+x....<.....+?....xxxxxxxxx$$$TTcccc+ccccccccccccccTc(((((+..........cx
 x?........?xxxx.xxxxxxxx<=$$$TT+.......+TTTTTTTTTTTc(((((c.......***cx
 xx........?xx...xxxxxxxxxxx!xxxc..4.4..ccccccccccccccccccc444....***cx
 xxxx?...?xxxx.xxxxxxxxxxxxxCxxxc...4...cxxxCxxxxxxxxxxxxxxxxxxxxx=xxxx
@@ -504,8 +504,8 @@ MAP
 .c$c%c......ww.ccccccccc.......xx
 .c+c+c......ww.c.%$....ccccccccxx
 .c...+......ww.c*.115..c$$+|*|cxx
-.c1..c.....ww..c...55+ccc+cxx=cxx
-.ccccc.....ww..ccccccc....c|=*cxx
+.c1..c.....ww..c...55+ccc=cxx+cxx
+.ccccc.....ww..ccccccc....c|+*cxx
 ............ww.......c5...cxx=cxx
 ....6.ccccc.ww.w...2.+51..c|1.cxx
 ....63+...c..wwww..21+51..c2.2cxx
@@ -1183,8 +1183,7 @@ ORIENT: southeast
 TAGS:   no_monster_gen no_item_gen
 DEPTH:  D:11-27, Vaults:1-7
 KFEAT:  _ = altar_okawaru
-SUBST:  = = =v
-KFEAT:  = = runed_door
+SUBST:  = = nv
 FTILE:  '+Gvc12345_defghijk = floor_hall
 : if you.absdepth() < 16 then
 MONS:   w:5 deep elf soldier / deep elf fighter / orc warrior
@@ -1390,7 +1389,7 @@ MONS:    guardian serpent
 MONS:    curse skull
 # Randomise wall type: in 50% of maps, you cannot dig to the stairs.
 SUBST:   x : xxxxxxvvvccb
-KFEAT:   = = runed_door
+KFEAT:   = = closed_door
 COLOUR:  ' = red
 FTILE:   ' = floor_rough_red
 SUBST:   ' = .

@@ -1617,6 +1617,7 @@ int mons_spidernest_level(monster_type mcls)
 
     case MONS_GHOST_MOTH:
     case MONS_MOTH_OF_WRATH:
+    case MONS_MOTH_OF_SUPPRESSION:
         return 6;
 
     default:
@@ -1660,6 +1661,7 @@ int mons_spidernest_rare(monster_type mcls)
     case MONS_BOULDER_BEETLE:
     case MONS_EMPEROR_SCORPION:
     case MONS_GHOST_MOTH:
+    case MONS_MOTH_OF_SUPPRESSION:
         return 20;
 
     case MONS_BORING_BEETLE:

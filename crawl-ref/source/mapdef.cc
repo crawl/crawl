@@ -4729,7 +4729,7 @@ item_spec item_list::parse_single_spec(string s)
     if (special != TAG_UNFOUND)
         result.item_special = special;
 
-    // When placing corpses, use place:Elf:5 to choose monsters
+    // When placing corpses, use place:Elf:$ to choose monsters
     // appropriate for that level, as an example.
     const string place = strip_tag_prefix(s, "place:");
     if (!place.empty())
@@ -4857,6 +4857,9 @@ item_spec item_list::parse_single_spec(string s)
         result.props["mimic"] = 1;
     if (strip_tag(s, "no_mimic"))
         result.props["no_mimic"] = true;
+
+    if (strip_tag(s, "no_pickup"))
+        result.props["no_pickup"] = true;
 
     const short charges = strip_number_tag(s, "charges:");
     if (charges >= 0)
