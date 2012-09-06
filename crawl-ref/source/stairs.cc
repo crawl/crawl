@@ -4,6 +4,7 @@
 
 #include <sstream>
 
+#include "abyss.h"
 #include "areas.h"
 #include "branch.h"
 #include "chardump.h"
@@ -521,11 +522,13 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
         else
             die("hell exit without return destination");
 
+    case DNGN_ABYSSAL_STAIR:
+        ASSERT(you.where_are_you == BRANCH_ABYSS);
+        push_features_to_abyss();
     case DNGN_ESCAPE_HATCH_DOWN:
     case DNGN_STONE_STAIRS_DOWN_I:
     case DNGN_STONE_STAIRS_DOWN_II:
     case DNGN_STONE_STAIRS_DOWN_III:
-    case DNGN_ABYSSAL_STAIR:
     {
         ASSERT(!at_branch_bottom());
         level_id lev = level_id::current();
@@ -577,7 +580,9 @@ level_id stair_destination(dungeon_feature_type feat, const string &dst,
                 level_id::current().describe().c_str());
         }
         return you.level_stack.back().id;
-
+    case DNGN_ENTER_ABYSS:
+        push_features_to_abyss();
+        break;
     default:
         break;
     }

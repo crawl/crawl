@@ -1387,6 +1387,7 @@ void abyss_teleport(bool new_area)
 
     // Teleport to a new area of the abyss.
     _abyss_generate_new_area();
+    _write_abyssal_features();
 }
 
 //////////////////////////////////////////////////////////////////////////////

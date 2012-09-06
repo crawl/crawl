@@ -523,6 +523,7 @@ static string _who_banished(const string &who)
 void banished(const string &who)
 {
     ASSERT(!crawl_state.game_is_arena());
+    push_features_to_abyss();
     if (crawl_state.game_is_zotdef())
         return;
 
@@ -533,9 +534,7 @@ void banished(const string &who)
 
     if (player_in_branch(BRANCH_ABYSS))
     {
-        you.depth = min(you.depth + 1, 27);
-        abyss_teleport(true);
-        redraw_screen();
+        down_stairs(DNGN_ABYSSAL_STAIR);
         return;
     }
 
@@ -543,7 +542,6 @@ void banished(const string &who)
     take_note(Note(NOTE_MESSAGE, 0, 0, what.c_str()), true);
 
     stop_delay(true);
-    push_features_to_abyss();
     down_stairs(DNGN_ENTER_ABYSS);  // heh heh
 
     // Xom just might decide to interfere.
