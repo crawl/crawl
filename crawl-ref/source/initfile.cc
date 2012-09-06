@@ -8,6 +8,7 @@
 #include "initfile.h"
 #include "options.h"
 
+#include <algorithm>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
@@ -64,6 +65,11 @@ extern char **NXArgv;
 const string game_options::interrupt_prefix = "interrupt_";
 system_environment SysEnv;
 game_options Options;
+
+// A list of keys used as "key = foo" but meaning "append to a list",
+// where the list was non-empty. Such settings will reset the list and
+// thus have different behaviour in 0.12, so warn about them now.
+static set<string> warn_list_append;
 
 object_class_type item_class_by_sym(ucs_t c)
 {
@@ -1451,6 +1457,18 @@ string read_init_file(bool runscript)
     Options.basefilename = get_base_filename(init_file_name);
     Options.line_num     = -1;
 
+    if (!warn_list_append.empty())
+    {
+        std::string warn =
+            "Your configuration uses = to append to a list option. This "
+            "syntax will override the option in a future version. Use += "
+            "instead to append. Affected options are: ";
+        warn += comma_separated_line(warn_list_append.begin(),
+                                     warn_list_append.end());
+
+        Options.report_error("%s", warn.c_str());
+    }
+
     return "";
 }
 
@@ -2047,6 +2065,43 @@ static void _bindkey(string field)
     bind_command_to_key(cmd, key);
 }
 
+static bool _is_autopickup_ban(pair<text_pattern, bool> entry)
+{
+    return !entry.second;
+}
+
+// Returns true if the semantics of this call are expected to change:
+// that is, if old_semantics is true, add and subtract are both false,
+// and field is non-empty. T must be convertible to from a string.
+template <class T>
+static bool _handle_list(bool old_semantics, vector<T> &value_list,
+                         string field, bool add, bool subtract)
+{
+    bool needs_warning = false;
+    if (!add && !subtract)
+    {
+        if (!old_semantics || field.empty())
+            value_list.clear();
+        else if (!value_list.empty())
+            needs_warning = true;
+    }
+
+    vector<string> parts = split_string(",", field);
+    for (vector<string>::iterator part = parts.begin();
+         part != parts.end(); ++part)
+    {
+        if (part->empty())
+            continue;
+
+        if (subtract)
+            remove(value_list.begin(), value_list.end(), *part);
+        else
+            value_list.push_back(*part);
+    }
+
+    return needs_warning;
+}
+
 void game_options::read_option_line(const string &str, bool runscript)
 {
 #define BOOL_OPTION_NAMED(_opt_str, _opt_var)               \
@@ -2085,11 +2140,18 @@ void game_options::read_option_line(const string &str, bool runscript)
         else if (val > max_val)                                         \
             report_error("Bad %s: %d > %d", _opt_str, val, max_val);    \
         else                                                            \
-            _opt_var = val;                                       \
+            _opt_var = val;                                             \
     } while (false)
 #define INT_OPTION(_opt, _min_val, _max_val) \
     INT_OPTION_NAMED(#_opt, _opt, _min_val, _max_val)
 
+#define LIST_OPTION_NAMED(_opt_str, _opt_var, old)                       \
+    if (key == _opt_str) do {                                            \
+        if (_handle_list(old, _opt_var, field, plus_equal, minus_equal)) \
+            warn_list_append.insert(key);                                \
+    } while (false)
+#define LIST_OPTION(_opt) LIST_OPTION_NAMED(#_opt, _opt, false)
+#define OLD_LIST_OPTION(_opt) LIST_OPTION_NAMED(#_opt, _opt, true)
     string key    = "";
     string subkey = "";
     string field  = "";
@@ -2130,6 +2192,8 @@ void game_options::read_option_line(const string &str, bool runscript)
         add_alias(prequal, field);
         return;
     }
+
+    bool plain = !plus_equal && !minus_equal;
 
     prequal = unalias(prequal);
 
@@ -2620,17 +2684,41 @@ void game_options::read_option_line(const string &str, bool runscript)
     }
     else if (key == "ban_pickup")
     {
+        if (plain && field.empty())
+        {
+            // Only remove negative, not positive, exceptions.
+            remove_if(force_autopickup.begin(), force_autopickup.end(),
+                      _is_autopickup_ban);
+        }
+        else if (plain && !count_if(force_autopickup.begin(),
+                                    force_autopickup.end(),
+                                    _is_autopickup_ban))
+        {
+            warn_list_append.insert(key);
+        }
+
         vector<string> args = split_string(",", field);
         for (int i = 0, size = args.size(); i < size; ++i)
         {
             const string &s = args[i];
             if (s.empty())
                 continue;
-            force_autopickup.push_back(make_pair(s, false));
+
+            const pair<text_pattern, bool> f_a(s, false);
+
+            if (minus_equal)
+                remove(force_autopickup.begin(), force_autopickup.begin(), f_a);
+            else
+                force_autopickup.push_back(f_a);
         }
     }
     else if (key == "autopickup_exceptions")
     {
+        if (plain && field.empty())
+            force_autopickup.clear();
+        else if (plain && !force_autopickup.empty())
+            warn_list_append.insert(key);
+
         vector<string> args = split_string(",", field);
         for (int i = 0, size = args.size(); i < size; ++i)
         {
@@ -2638,17 +2726,22 @@ void game_options::read_option_line(const string &str, bool runscript)
             if (s.empty())
                 continue;
 
+            pair<text_pattern, bool> f_a;
+
             if (s[0] == '>')
-                force_autopickup.push_back(make_pair(s.substr(1), false));
+                f_a = make_pair(s.substr(1), false);
             else if (s[0] == '<')
-                force_autopickup.push_back(make_pair(s.substr(1), true));
+                f_a = make_pair(s.substr(1), true);
             else
-                force_autopickup.push_back(make_pair(s, false));
+                f_a = make_pair(s, false);
+
+            if (minus_equal)
+                remove(force_autopickup.begin(), force_autopickup.begin(), f_a);
+            else
+                force_autopickup.push_back(f_a);
         }
     }
-    else if (key == "note_items")
-        append_vector(note_items, split_string(",", field));
-
+    else OLD_LIST_OPTION(note_items);
 #ifndef _MSC_VER
     // break if-else chain on broken Microsoft compilers with stupid nesting limits
     else
@@ -2656,8 +2749,10 @@ void game_options::read_option_line(const string &str, bool runscript)
 
     if (key == "autoinscribe")
     {
-        if (field.empty())
-            return report_error("Autoinscribe string is empty");
+        if (plain && field.empty())
+            autoinscriptions.clear();
+        else if (plain && !autoinscriptions.empty())
+            warn_list_append.insert(key);
 
         const size_t first = field.find_first_of(':');
         const size_t last  = field.find_last_of(':');
@@ -2674,18 +2769,26 @@ void game_options::read_option_line(const string &str, bool runscript)
         }
 
         if (last == field.length() - 1)
-            return report_error("Autoinscribe result is empty: %s\n", field.c_str());
+        {
+            report_error("Autoinscribe result is empty: %s\n", field.c_str());
+            return;
+        }
 
         vector<string> thesplit = split_string(":", field);
 
         if (thesplit.size() != 2)
         {
-            report_error("Error parsing autoinscribe string: %s\n", field.c_str());
+            report_error("Error parsing autoinscribe string: %s\n",
+                         field.c_str());
             return;
         }
 
-        autoinscriptions.push_back(pair<text_pattern,string>(thesplit[0],
-                                                             thesplit[1]));
+        pair<text_pattern,string> entry(thesplit[0], thesplit[1]);
+
+        if (minus_equal)
+            remove(autoinscriptions.begin(), autoinscriptions.end(), entry);
+        else
+            autoinscriptions.push_back(entry);
     }
     else BOOL_OPTION(autoinscribe_artefacts);
     else BOOL_OPTION(autoinscribe_cursed);
@@ -2695,7 +2798,9 @@ void game_options::read_option_line(const string &str, bool runscript)
 #endif
     else if (key == "hp_colour" || key == "hp_color")
     {
-        hp_colour.clear();
+        if (plain)
+            hp_colour.clear();
+
         vector<string> thesplit = split_string(",", field);
         for (unsigned i = 0; i < thesplit.size(); ++i)
         {
@@ -2713,12 +2818,18 @@ void game_options::read_option_line(const string &str, bool runscript)
                 hp_percent = atoi(insplit[0].c_str());
 
             int scolour = str_to_colour(insplit[(insplit.size() == 1) ? 0 : 1]);
-            hp_colour.push_back(pair<int, int>(hp_percent, scolour));
+            pair<int, int> entry(hp_percent, scolour);
+            if (minus_equal)
+                remove(hp_colour.begin(), hp_colour.end(), entry);
+            else
+                hp_colour.push_back(entry);
         }
     }
     else if (key == "mp_color" || key == "mp_colour")
     {
-        mp_colour.clear();
+        if (plain)
+            mp_colour.clear();
+
         vector<string> thesplit = split_string(",", field);
         for (unsigned i = 0; i < thesplit.size(); ++i)
         {
@@ -2736,12 +2847,18 @@ void game_options::read_option_line(const string &str, bool runscript)
                 mp_percent = atoi(insplit[0].c_str());
 
             int scolour = str_to_colour(insplit[(insplit.size() == 1) ? 0 : 1]);
-            mp_colour.push_back(pair<int, int>(mp_percent, scolour));
+            pair<int, int> entry(mp_percent, scolour);
+            if (minus_equal)
+                remove(mp_colour.begin(), mp_colour.end(), entry);
+            else
+                mp_colour.push_back(entry);
         }
     }
     else if (key == "stat_colour" || key == "stat_color")
     {
-        stat_colour.clear();
+        if (plain)
+            stat_colour.clear();
+
         vector<string> thesplit = split_string(",", field);
         for (unsigned i = 0; i < thesplit.size(); ++i)
         {
@@ -2759,19 +2876,24 @@ void game_options::read_option_line(const string &str, bool runscript)
                 stat_limit = atoi(insplit[0].c_str());
 
             int scolour = str_to_colour(insplit[(insplit.size() == 1) ? 0 : 1]);
-            stat_colour.push_back(pair<int, int>(stat_limit, scolour));
+            pair<int, int> entry(stat_limit, scolour);
+            if (minus_equal)
+                remove(stat_colour.begin(), stat_colour.end(), entry);
+            else
+                stat_colour.push_back(entry);
         }
     }
 
     else if (key == "enemy_hp_colour" || key == "enemy_hp_color")
     {
-        enemy_hp_colour.clear();
+        if (plain)
+            enemy_hp_colour.clear();
         str_to_enemy_hp_colour(field);
     }
 
     else if (key == "note_skill_levels")
     {
-        if (!plus_equal && !minus_equal)
+        if (plain)
             note_skill_levels.reset();
         vector<string> thesplit = split_string(",", field);
         for (unsigned i = 0; i < thesplit.size(); ++i)
@@ -2789,15 +2911,24 @@ void game_options::read_option_line(const string &str, bool runscript)
     }
     else if (key == "spell_slot")
     {
+        if (plain && field.empty())
+            force_autopickup.clear();
+        else if (plain && !force_autopickup.empty())
+            warn_list_append.insert(key);
+
         vector<string> thesplit = split_string(":", field);
         if (thesplit.size() != 2)
         {
             return report_error("Error parsing spell lettering string: %s\n",
                                 field.c_str());
         }
-        lowercase(thesplit[0]);
-        auto_spell_letters.push_back(pair<text_pattern,string>(thesplit[0],
-                                                               thesplit[1]));
+        pair<text_pattern,string> entry(lowercase_string(thesplit[0]),
+                                        thesplit[1]);
+
+        if (minus_equal)
+            remove(auto_spell_letters.begin(), auto_spell_letters.end(), entry);
+        else
+            auto_spell_letters.push_back(entry);
     }
     else BOOL_OPTION(pickup_thrown);
 #ifdef WIZARD
@@ -2860,11 +2991,18 @@ void game_options::read_option_line(const string &str, bool runscript)
     else BOOL_OPTION(show_player_species);
     else if (key == "force_more_message")
     {
+        if (plain && field.empty())
+            force_more_message.clear();
+        else if (plain && !force_more_message.empty())
+            warn_list_append.insert(key);
+
         vector<string> fragments = split_string(",", field);
         for (int i = 0, count = fragments.size(); i < count; ++i)
         {
-            if (fragments[i].length() == 0)
+            if (fragments[i].empty())
                 continue;
+
+            message_filter mf(fragments[i]);
 
             string::size_type pos = fragments[i].find(":");
             if (pos && pos != string::npos)
@@ -2874,21 +3012,22 @@ void game_options::read_option_line(const string &str, bool runscript)
                 if (channel != -1 || prefix == "any")
                 {
                     string s = fragments[i].substr(pos + 1);
-                    trim_string(s);
-                    force_more_message.push_back(
-                        message_filter(channel, s));
-                    continue;
+                    mf = message_filter(channel, trim_string(s));
                 }
             }
 
-            force_more_message.push_back(
-                    message_filter(fragments[i]));
+            if (minus_equal)
+            {
+                remove(force_more_message.begin(), force_more_message.end(), mf);
+            }
+            else
+                force_more_message.push_back(mf);
         }
     }
-    else if (key == "drop_filter")
-        append_vector(drop_filter, split_string(",", field));
+    else OLD_LIST_OPTION(drop_filter);
     else if (key == "travel_avoid_terrain")
     {
+        // TODO: allow resetting (need reset_forbidden_terrain())
         vector<string> seg = split_string(",", field);
         for (int i = 0, count = seg.size(); i < count; ++i)
             prevent_travel_to(seg[i]);
@@ -2906,15 +3045,14 @@ void game_options::read_option_line(const string &str, bool runscript)
         tc_dangerous = str_to_colour(field, tc_dangerous);
     else if (key == "tc_disconnected")
         tc_disconnected = str_to_colour(field, tc_disconnected);
-    else if (key == "auto_exclude")
-        append_vector(auto_exclude, split_string(",", field));
+    else OLD_LIST_OPTION(auto_exclude);
     else BOOL_OPTION(easy_exit_menu);
     else BOOL_OPTION(dos_use_background_intensity);
     else if (key == "item_stack_summary_minimum")
         item_stack_summary_minimum = atoi(field.c_str());
     else if (key == "explore_stop")
     {
-        if (!plus_equal && !minus_equal)
+        if (plain)
             explore_stop = ES_NONE;
 
         const int new_conditions = read_explore_stop_conditions(field);
@@ -2932,7 +3070,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     }
     else if (key == "explore_stop_prompt")
     {
-        if (!plus_equal && !minus_equal)
+        if (plain)
             explore_stop_prompt = ES_NONE;
         const int new_conditions = read_explore_stop_conditions(field);
         if (minus_equal)
@@ -2940,8 +3078,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         else
             explore_stop_prompt |= new_conditions;
     }
-    else if (key == "explore_stop_pickup_ignore")
-        append_vector(explore_stop_pickup_ignore, split_string(",", field));
+    else OLD_LIST_OPTION(explore_stop_pickup_ignore);
     else if (key == "explore_item_greed")
     {
         explore_item_greed = atoi(field.c_str());
@@ -2964,6 +3101,11 @@ void game_options::read_option_line(const string &str, bool runscript)
     else BOOL_OPTION(auto_sacrifice);
     else if (key == "sound")
     {
+        if (plain && field.empty())
+            sound_mappings.clear();
+        else if (plain && !sound_mappings.empty())
+            warn_list_append.insert(key);
+
         vector<string> seg = split_string(",", field);
         for (int i = 0, count = seg.size(); i < count; ++i)
         {
@@ -2971,10 +3113,13 @@ void game_options::read_option_line(const string &str, bool runscript)
             string::size_type cpos = sub.find(":", 0);
             if (cpos != string::npos)
             {
-                sound_mapping mapping;
-                mapping.pattern = sub.substr(0, cpos);
-                mapping.soundfile = sub.substr(cpos + 1);
-                sound_mappings.push_back(mapping);
+                sound_mapping entry;
+                entry.pattern = sub.substr(0, cpos);
+                entry.soundfile = sub.substr(cpos + 1);
+                if (minus_equal)
+                    remove(sound_mappings.begin(), sound_mappings.end(), entry);
+                else
+                    sound_mappings.push_back(entry);
             }
         }
     }
@@ -2984,6 +3129,11 @@ void game_options::read_option_line(const string &str, bool runscript)
 #endif
     if (key == "menu_colour" || key == "menu_color")
     {
+        if (plain && field.empty())
+            menu_colour_mappings.clear();
+        else if (plain && !menu_colour_mappings.empty())
+            warn_list_append.insert(key);
+
         vector<string> seg = split_string(",", field);
         for (int i = 0, count = seg.size(); i < count; ++i)
         {
@@ -3010,7 +3160,14 @@ void game_options::read_option_line(const string &str, bool runscript)
             mapping.pattern = patname;
             mapping.colour  = str_to_colour(colname);
 
-            if (mapping.colour != -1)
+            if (mapping.colour == -1)
+                continue;
+            else if (minus_equal)
+            {
+                remove(menu_colour_mappings.begin(), menu_colour_mappings.end(),
+                       mapping);
+            }
+            else
                 menu_colour_mappings.push_back(mapping);
         }
     }
@@ -3019,10 +3176,18 @@ void game_options::read_option_line(const string &str, bool runscript)
     else BOOL_OPTION(menu_colour_shops);
     else BOOL_OPTION_NAMED("menu_color_shops", menu_colour_shops);
     else if (key == "message_colour" || key == "message_color")
+    {
+        // TODO: support -= here.
+        if (plain && field.empty())
+            message_colour_mappings.clear();
+        else if (plain && !message_colour_mappings.empty())
+            warn_list_append.insert(key);
+
         add_message_colour_mappings(field);
+    }
     else if (key == "dump_order")
     {
-        if (!plus_equal)
+        if (plain)
             dump_order.clear();
 
         new_dump_fields(field, !minus_equal);
@@ -3035,6 +3200,14 @@ void game_options::read_option_line(const string &str, bool runscript)
     }
     else if (key == "kill_map")
     {
+        // TODO: treat this as a map option (e.g. kill_map.you = friendly)
+        if (plain && field.empty())
+        {
+            kill_map[KC_YOU] = KC_YOU;
+            kill_map[KC_FRIENDLY] = KC_FRIENDLY;
+            kill_map[KC_OTHER] = KC_OTHER;
+        }
+
         vector<string> seg = split_string(",", field);
         for (int i = 0, count = seg.size(); i < count; ++i)
         {
@@ -3056,7 +3229,9 @@ void game_options::read_option_line(const string &str, bool runscript)
     }
     else if (key == "dump_item_origins")
     {
-        dump_item_origins = IODS_PRICE;
+        if (plain)
+            dump_item_origins = IODS_PRICE;
+
         vector<string> choices = split_string(",", field);
         for (int i = 0, count = choices.size(); i < count; ++i)
         {
@@ -3126,6 +3301,10 @@ void game_options::read_option_line(const string &str, bool runscript)
     }
     else if (key == "additional_macro_file")
     {
+        // TODO: this option could probably be improved.  For new, keep the
+        // "= means append" behaviour, and don't allow clearing the list;
+        // if we rename to "additional_macro_files" then it could work like
+        // other list options.
         const string resolved = resolve_include(orig_field, "macro ");
         if (!resolved.empty())
             additional_macro_files.push_back(resolved);
@@ -3212,8 +3391,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     else BOOL_OPTION(tile_show_minimagicbar);
     else BOOL_OPTION(tile_show_demon_tier);
     else BOOL_OPTION(tile_force_regenerate_levels);
-    else if (key == "tile_layout_priority")
-        tile_layout_priority = split_string(",", field.c_str());
+    else LIST_OPTION(tile_layout_priority);
     else if (key == "tile_tag_pref")
         tile_tag_pref = _str_to_tag_pref(field.c_str());
 #endif
