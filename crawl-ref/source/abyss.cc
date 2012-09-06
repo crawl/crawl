@@ -991,7 +991,8 @@ static dungeon_feature_type _abyss_grid(const coord_def &p, double depth,
     ChaoticLayout chaoticLayout2(141, 400);
     WorleyLayout chaoticMix(11111, 0.10, chaoticLayout1, chaoticLayout2);
     MixedColumnLayout columnLayout(8675309);
-    WorleyLayout layout(54321, 0.7, chaoticMix, columnLayout);
+    WorleyLayout sublayout(54321, 0.3, chaoticMix, columnLayout);
+    WorleyLayout layout(354, 0.02, sublayout, columnLayout);
     dungeon_feature_type feat = layout(pt, depth);
     _previous_abyss_feature[p.x][p.y] = feat;
     return feat;
