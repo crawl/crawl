@@ -143,7 +143,8 @@ static bool _check_moveto_cloud(const coord_def& p, const string &move_verb)
                 if (player_res_steam() < 0)
                     threshold = threshold * 3 / 2;
                 threshold = threshold * you.time_taken / BASELINE_DELAY;
-                if (you.hp > threshold)
+                // Do prompt if we'd lose icemail, though.
+                if (you.hp > threshold && !you.mutation[MUT_ICEMAIL])
                     return true;
             }
 
