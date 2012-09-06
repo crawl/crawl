@@ -136,6 +136,17 @@ static bool _check_moveto_cloud(const coord_def& p, const string &move_verb)
                 || ctype != env.cloud[ env.cgrid(you.pos()) ].type)
             && !crawl_state.disables[DIS_CONFIRMATIONS])
         {
+            // Don't prompt for steam unless we're at uncomfortably low hp.
+            if (ctype == CLOUD_STEAM)
+            {
+                int threshold = 20;
+                if (player_res_steam() < 0)
+                    threshold = threshold * 3 / 2;
+                threshold = threshold * you.time_taken / BASELINE_DELAY;
+                if (you.hp > threshold)
+                    return true;
+            }
+
             string prompt = make_stringf("Really %s into that cloud of %s?",
                                          move_verb.c_str(),
                                          cloud_name_at_index(cloud).c_str());
