@@ -242,6 +242,7 @@ wretched_star MONS_WRETCHED_STAR
 ### Demonic monsters
 ## Arch demons ('&')
 %sdir mon/unique
+%rim 0
 asmodeus MONS_ASMODEUS
 cerebov MONS_CEREBOV
 dispater MONS_DISPATER
@@ -477,6 +478,7 @@ terence MONS_TERENCE
 wiglaf MONS_WIGLAF
 
 %sdir mon
+%rim 0
 human MONS_HUMAN
 hell_knight MONS_HELL_KNIGHT
 necromancer MONS_NECROMANCER
