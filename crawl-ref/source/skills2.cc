@@ -681,6 +681,7 @@ void dump_skills(std::string &text)
         {
             text += make_stringf(" %c Level %.*f%s %s\n",
                                  real == 270       ? 'O' :
+                                 !you.can_train[i] ? ' ' :
                                  you.train[i] == 2 ? '*' :
                                  you.train[i]      ? '+' :
                                                      '-',
