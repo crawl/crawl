@@ -3671,7 +3671,7 @@ void god_pitch(god_type which_god)
         // rich.  In that case, you have to donate again more...  That the poor
         // widow is not spared doesn't mean the rich can't be milked for more.
         lucre.props["acquired"] = 0;
-        you.gold -= zin_tithe(lucre, lucre.quantity, false);
+        you.gold -= zin_tithe(lucre, lucre.quantity, false, true);
     }
 
     // Refresh wielded/quivered weapons in case we have a new conduct

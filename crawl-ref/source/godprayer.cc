@@ -364,7 +364,7 @@ void pray()
     dprf("piety: %d (-%d)", you.piety, you.piety_hysteresis);
 }
 
-int zin_tithe(item_def& item, int quant, bool quiet)
+int zin_tithe(item_def& item, int quant, bool quiet, bool converting)
 {
     int taken = 0;
     int due = quant += you.attribute[ATTR_TITHE_BASE];
@@ -409,7 +409,7 @@ int zin_tithe(item_def& item, int quant, bool quiet)
         }
         else
         {
-            if (player_in_branch(BRANCH_ORCISH_MINES))
+            if (player_in_branch(BRANCH_ORCISH_MINES) && !converting)
             {
                 // Another special case: Orc gives simply too much compared to
                 // other branches.
