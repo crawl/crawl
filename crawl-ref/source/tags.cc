@@ -283,8 +283,8 @@ static void tag_read_level(reader &th);
 static void tag_read_level_items(reader &th);
 static void tag_read_level_monsters(reader &th);
 static void tag_read_level_tiles(reader &th);
-static void tag_missing_level_tiles();
-static void tag_init_tile_bk();
+static void _regenerate_tile_flavour();
+static void _draw_tiles();
 
 static void tag_construct_ghost(writer &th);
 static void tag_read_ghost(reader &th);
@@ -3334,16 +3334,11 @@ void tag_read_level_tiles(reader &th)
     }
 
     // flavour
-    bool need_reinit = false;
-
     env.tile_default.wall_idx  = unmarshallShort(th);
     env.tile_default.floor_idx = unmarshallShort(th);
     env.tile_default.wall      = unmarshallShort(th);
     env.tile_default.floor     = unmarshallShort(th);
     env.tile_default.special   = unmarshallShort(th);
-
-    if (env.tile_default.wall == 0 || env.tile_default.floor == 0)
-        need_reinit = true;
 
     for (int x = 0; x < gx; x++)
         for (int y = 0; y < gy; y++)
@@ -3352,27 +3347,19 @@ void tag_read_level_tiles(reader &th)
             env.tile_flv[x][y].floor_idx = unmarshallShort(th);
             env.tile_flv[x][y].feat_idx  = unmarshallShort(th);
 
+            // These get overwritten by _regenerate_tile_flavour
             env.tile_flv[x][y].wall    = unmarshallShort(th);
             env.tile_flv[x][y].floor   = unmarshallShort(th);
             env.tile_flv[x][y].feat    = unmarshallShort(th);
             env.tile_flv[x][y].special = unmarshallShort(th);
-
-            if (env.tile_flv[x][y].wall == 0
-                || env.tile_flv[x][y].floor == 0)
-            {
-                need_reinit = true;
-            }
         }
+
     _debug_count_tiles();
 
-    if (unmarshallInt(th) != TILE_WALL_MAX || need_reinit)
-    {
-        dprf("DNGN tilecount has changed -- recreating tile data.");
-        tag_missing_level_tiles();
-    }
+    _regenerate_tile_flavour();
 
     // Draw remembered map
-    tag_init_tile_bk();
+    _draw_tiles();
 }
 
 static tileidx_t _get_tile_from_vector(const unsigned int idx)
@@ -3404,11 +3391,40 @@ static tileidx_t _get_tile_from_vector(const unsigned int idx)
     return tile;
 }
 
-static void _reinit_flavour_tiles()
+static void _regenerate_tile_flavour()
 {
+    /* Remember the wall_idx and floor_idx; tile_init_default_flavour
+       sets them to 0 */
+    tileidx_t default_wall_idx = env.tile_default.wall_idx;
+    tileidx_t default_floor_idx = env.tile_default.floor_idx;
+    tile_init_default_flavour();
+    if (default_wall_idx)
+    {
+        tileidx_t new_wall = _get_tile_from_vector(default_wall_idx);
+        if (new_wall)
+        {
+            env.tile_default.wall_idx = default_wall_idx;
+            env.tile_default.wall = new_wall;
+        }
+    }
+    if (default_floor_idx)
+    {
+        tileidx_t new_floor = _get_tile_from_vector(default_floor_idx);
+        if (new_floor)
+        {
+            env.tile_default.floor_idx = default_floor_idx;
+            env.tile_default.floor = new_floor;
+        }
+    }
+
     for (rectangle_iterator ri(coord_def(0, 0), coord_def(GXM-1, GYM-1));
          ri; ++ri)
     {
+        env.tile_flv(*ri).wall = 0;
+        env.tile_flv(*ri).floor = 0;
+        env.tile_flv(*ri).feat = 0;
+        env.tile_flv(*ri).special = 0;
+
         if (env.tile_flv(*ri).wall_idx)
         {
             tileidx_t new_wall
@@ -3436,40 +3452,12 @@ static void _reinit_flavour_tiles()
             else
                 env.tile_flv(*ri).feat = new_feat;
         }
-   }
-}
-
-static void tag_missing_level_tiles()
-{
-    /* Remember the wall_idx and floor_idx; tile_init_default_flavour
-       sets them to 0 */
-    tileidx_t default_wall_idx = env.tile_default.wall_idx;
-    tileidx_t default_floor_idx = env.tile_default.floor_idx;
-    tile_init_default_flavour();
-    if (default_wall_idx)
-    {
-        tileidx_t new_wall = _get_tile_from_vector(default_wall_idx);
-        if (new_wall)
-        {
-            env.tile_default.wall_idx = default_wall_idx;
-            env.tile_default.wall = new_wall;
-        }
     }
-    if (default_floor_idx)
-    {
-        tileidx_t new_floor = _get_tile_from_vector(default_floor_idx);
-        if (new_floor)
-        {
-            env.tile_default.floor_idx = default_floor_idx;
-            env.tile_default.floor = new_floor;
-        }
-    }
-    _reinit_flavour_tiles();
 
     tile_new_level(true, false);
 }
 
-static void tag_init_tile_bk()
+static void _draw_tiles()
 {
 #ifdef USE_TILE
     for (rectangle_iterator ri(coord_def(0, 0), coord_def(GXM-1, GYM-1));
