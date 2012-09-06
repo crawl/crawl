@@ -1792,6 +1792,17 @@
       }
     },
 
+    {  MST_SOUL_EATER,
+      {
+       SPELL_DRAIN_LIFE,
+       SPELL_MELEE,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL
+      }
+    },
+
     {  MST_TEST_SPAWNER,
       {
        SPELL_SHADOW_CREATURES,
