@@ -1724,7 +1724,7 @@ static void _mons_set_priest_wizard_god(monster* mons, bool& priest,
 
 //---------------------------------------------------------------
 //
-// handle_spell
+// handle_mon_spell
 //
 // Give the monster a chance to cast a spell. Returns true if
 // a spell was cast.
@@ -2150,6 +2150,9 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             if (mons->friendly() && !_animate_dead_okay(spell_cast))
                 return false;
 
+            if (mons->is_summoned())
+                return false;
+
             if (!animate_dead(mons, 100, SAME_ATTITUDE(mons),
                               mons->foe, mons, "", god, false))
             {
@@ -2160,6 +2163,9 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         else if (spell_cast == SPELL_TWISTED_RESURRECTION)
         {
             if (mons->friendly() && !_animate_dead_okay(spell_cast))
+                return false;
+
+            if (mons->is_summoned())
                 return false;
 
             if (!twisted_resurrection(mons, 500, SAME_ATTITUDE(mons),
@@ -3003,7 +3009,6 @@ static bool _mon_spell_bail_out_early(monster* mons, spell_type spell_cast)
     case SPELL_ANIMATE_DEAD:
     case SPELL_TWISTED_RESURRECTION:
     case SPELL_SIMULACRUM:
-        // see special handling in mon-stuff::handle_spell() {dlb}
         if (mons->friendly() && !_animate_dead_okay(spell_cast))
             return true;
         break;
