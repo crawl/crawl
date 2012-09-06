@@ -602,8 +602,7 @@ SUBST:   X = c, Y = +
 NSUBST:  C = 1:+ / *:c
 SUBST:   D = c
 #
-KFEAT:   ~ = net trap
-KFEAT:   ^ = alarm trap / spear trap
+KFEAT:   ^ = known alarm trap
 SUBST:   W = w:2 .:1 W:1
 SUBST:   ? = c.
 SUBST:   N = nc
@@ -623,11 +622,11 @@ ccccccccccccc.......................ccccccccccccccc
 cccccccccc...........ccccccccc.......cccccccccccccc
 ccccccccc....2....c+cc...3...ccccCc..cccccccccccccc
 cccccccc....2T2...c..c.2.d.2.c.1CdC...ccccccccccccc
-ccccccccc....2..cEc..c.2.~.2.c..cDc...1cwwwwcccwwwc
+ccccccccc....2..cEc..c.2...2.c..cDc...1cwwwwcccwwwc
 ccccccccccc.....EdB..cccc+cccc..+dc..Wwwwwwwwwwwwwx
-cccwwwwwwc1.1...cEc...^.^.^.^...ccc1Wwwwwwwwwwwwxxx
-cwwwwwwwwwwwW1.1..c1.cccc=cccc.1c1Wwwwwwwwxxxxxxxxx
-xwwwxxxwwwwwwwwwW1cncc..2~2..ccncwwwwwwxxxxxxxxxxxx
+cccwwwwwwc1.1...cEc...^.....^...ccc1Wwwwwwwwwwwwxxx
+cwwwwwwwwwwwW1.1..c1.cccc+cccc.1c1Wwwwwwwwxxxxxxxxx
+xwwwxxxwwwwwwwwwW1cncc..2.2..ccncwwwwwwxxxxxxxxxxxx
 xxxxxxxxx....Wwwwwww1c.2.2.2.c1wwwwwxxxxxxxxxxxxxxx
 xxxxxxxxxx......Wwwwwccncncnccwwwwxxxxxxxxxxxxxxxxx
 xxxxxxxxxxx...e...Wwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxxx
