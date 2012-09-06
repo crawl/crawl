@@ -92,7 +92,6 @@ class WorleyLayout : public ProceduralLayout
 
 };
 
-
 class MixedColumnLayout : public ProceduralLayout {
   public:
     MixedColumnLayout(uint32_t seed) : _seed(seed) {
