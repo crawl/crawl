@@ -903,27 +903,18 @@ void tile_draw_map_cell(const coord_def& gc, bool foreground_only)
 
     const map_cell& cell = env.map_knowledge(gc);
 
-    switch (get_cell_show_class(cell))
-    {
-    default:
-    case SH_NOTHING:
-    case SH_FEATURE:
-        env.tile_bk_fg(gc) = 0;
-        if (cell.item())
-            _tile_place_item_marker(gc, *cell.item());
-        break;
-    case SH_ITEM:
-        _tile_place_item(gc, *cell.item(), (cell.flags & MAP_MORE_ITEMS) != 0);
-        break;
-    case SH_CLOUD:
-        _tile_place_cloud(gc, *cell.cloudinfo());
-        break;
-    case SH_INVIS_EXPOSED:
+    if (cell.invisible_monster())
         _tile_place_invisible_monster(gc);
-        break;
-    case SH_MONSTER:
+    else if (cell.monsterinfo())
         _tile_place_monster(gc, *cell.monsterinfo());
-        break;
+    else if (cell.cloud() != CLOUD_NONE && cell.cloud() != CLOUD_GLOOM)
+        _tile_place_cloud(gc, *cell.cloudinfo());
+    else if (cell.item())
+    {
+        if (feat_is_stair(cell.feat()))
+            _tile_place_item_marker(gc, *cell.item());
+        else
+            _tile_place_item(gc, *cell.item(), (cell.flags & MAP_MORE_ITEMS) != 0);
     }
 }
 
