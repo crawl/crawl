@@ -81,7 +81,7 @@
 # Rods are \ here.
 # autopickup = $?!:"/%
 
-drop_filter = useless_item
+drop_filter += useless_item
 
 # default_autopickup = false
 # autopickup_no_burden = false
@@ -91,7 +91,7 @@ drop_filter = useless_item
 #
 # drop_mode = (multi | single)
 # pickup_mode = (single | multi | auto:5)
-# drop_filter = skeleton, corpse, useless_item
+# drop_filter += skeleton, corpse, useless_item
 # default_friendly_pickup = (none | friend | player | all)
 
 ##### 4-b       Targetting ############################
@@ -150,8 +150,8 @@ drop_filter = useless_item
 # explore_wall_bias = 0
 # travel_key_stop = false
 #
-# explore_stop_pickup_ignore = curare
-auto_exclude = oklob,statue,curse skull,roxanne,hyperactive,lightning spire,mimic
+# explore_stop_pickup_ignore += curare
+auto_exclude += oklob,statue,curse skull,roxanne,hyperactive,lightning spire,mimic
 
 # tc_reachable      = blue
 # tc_dangerous      = cyan
@@ -161,10 +161,10 @@ auto_exclude = oklob,statue,curse skull,roxanne,hyperactive,lightning spire,mimi
 
 # Interrupting run and rest compound commands:
 runrest_ignore_poison  = 2:30
-runrest_ignore_monster = butterfly:1
-# runrest_ignore_monster = swamp worm:3
-# runrest_stop_message = You hear a.* slurping noise
-# runrest_ignore_message = Jiyva's power touches on your attributes
+runrest_ignore_monster += butterfly:1
+# runrest_ignore_monster += swamp worm:3
+# runrest_stop_message += You hear a.* slurping noise
+# runrest_ignore_message += Jiyva's power touches on your attributes
 
 # A good number of runrest_messages is defined by default; you may want to
 # clear them or override some.
@@ -197,8 +197,8 @@ trapwalk_safe_hp = dart:20,needle:15,arrow:35,bolt:45,spear:40,axe:45,blade:95
 # prompt_for_swap        = false
 # easy_quit_item_prompts = false
 # easy_exit_menu         = true
-# sort_menus = pickup: true : art, ego, basename, qualname, curse, qty
-sort_menus = inv: true : equipped, freshness, charged
+# sort_menus += pickup: true : art, ego, basename, qualname, curse, qty
+sort_menus += inv: true : equipped, freshness, charged
 
 # autofight_stop = 30
 
@@ -252,9 +252,9 @@ sort_menus = inv: true : equipped, freshness, charged
 # $contaminated := magenta
 
 # You can redefine inventory items like this:
-# menu_colour = inventory:magenta:shillelagh
+# menu_colour += inventory:magenta:shillelagh
 # or ones in pick-up dialogs:
-# menu_colour = pickup:green:god gift
+# menu_colour += pickup:green:god gift
 
 # Colouring of messages
 # Messages are colour coded as follows:
@@ -266,36 +266,36 @@ sort_menus = inv: true : equipped, freshness, charged
 #
 
 # Notes also use, quite misnamed, menu_colour:
-# menu_colour = notes:white:Reached XP level
+# menu_colour += notes:white:Reached XP level
 
 # These lines will suppress extra feedback messages from travel/shift-running.
 #
-# message_colour = mute:warning:comes into view
-# message_colour = mute:You start (searching|resting)
-# message_colour = mute:Done searching
-# message_colour = mute:(HP|Magic) restored
-# message_colour = mute:warning:Not with.*(in view|monsters around)
+# message_colour += mute:warning:comes into view
+# message_colour += mute:You start (searching|resting)
+# message_colour += mute:Done searching
+# message_colour += mute:(HP|Magic) restored
+# message_colour += mute:warning:Not with.*(in view|monsters around)
 
 # You can also enforce a --more-- prompt for messages
 
 ## Avoid wasting turns with aborted actions:
-# force_more_message = There are no visible monsters within range
-# force_more_message = This wand has no charges
+# force_more_message += There are no visible monsters within range
+# force_more_message += This wand has no charges
 
-force_more_message = You have reached level
-force_more_message = Your scales start
-force_more_message = You fall through a shaft
+force_more_message += You have reached level
+force_more_message += Your scales start
+force_more_message += You fall through a shaft
 
 ## Reduce chance of drowning because levitation or form runs out:
-force_more_message = Careful!
+force_more_message += Careful!
 
 # Announcements of timed portal vaults (bazaar, labyrinths):
-force_more_message = interdimensional caravan
-force_more_message = distant snort
+force_more_message += interdimensional caravan
+force_more_message += distant snort
 
 # Abyss exits and rune
-force_more_message = Found a gateway leading out of the Abyss
-force_more_message = Found .* abyssal rune of Zot
+force_more_message += Found a gateway leading out of the Abyss
+force_more_message += Found .* abyssal rune of Zot
 
 
 ##### 4-k       Firing Commands #######################
@@ -311,12 +311,12 @@ force_more_message = Found .* abyssal rune of Zot
 
 ##### 4-m       Inscriptions ##########################
 #
-# autoinscribe = bad_item.*potion:!q
-# autoinscribe = potion.*mutation:!q
-# autoinscribe = royal jell:=g
+# autoinscribe += bad_item.*potion:!q
+# autoinscribe += potion.*mutation:!q
+# autoinscribe += royal jell:=g
 # autoinscribe_artefacts = false
 # autoinscribe_cursed = false
-# autoinscribe = fruit:!e
+# autoinscribe += fruit:!e
 
 ##### 4-n       Macro related Options #################
 #
@@ -418,11 +418,11 @@ force_more_message = Found .* abyssal rune of Zot
 # note_skill_max  = false
 # note_xom_effects = false
 # note_chat_messages = false
-note_items    = rod of, acquirement, preservation, running, of Zot
-note_messages = Your scales start
-note_messages = protects you from harm
-note_messages = You fall through a shaft
-note_monsters = orb of fire, ancient lich, Sigmund
+note_items    += rod of, acquirement, preservation, running, of Zot
+note_messages += Your scales start
+note_messages += protects you from harm
+note_messages += You fall through a shaft
+note_monsters += orb of fire, ancient lich, Sigmund
 
 ##### 6-  Miscellaneous #############################################
 #

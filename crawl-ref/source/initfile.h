@@ -72,6 +72,7 @@ public:
 };
 
 extern system_environment SysEnv;
+extern std::set<std::string> warn_list_append;
 
 bool parse_args(int argc, char **argv, bool rc_only);
 

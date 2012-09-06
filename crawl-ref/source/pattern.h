@@ -94,6 +94,14 @@ public:
         return *this;
     }
 
+    const bool operator== (const basic_text_pattern &tp) const
+    {
+        if (this == &tp)
+            return true;
+
+        return (pattern == tp.pattern && ignore_case == tp.ignore_case);
+    }
+
     bool compile() const
     {
         return !empty()?

@@ -4,53 +4,53 @@ msc := message_colour
 
 # Really important messages
 #
-msc = $danger:drains you
-msc = $danger:feel drained
-msc = $danger:strangely unstable
-msc = $danger:curare-tipped.*hits you
-msc = $danger:Space warps.* around you
-msc = $danger:Space bends around you
-msc = $danger:sense of stasis
-msc = $danger:clumsily bash
-msc = $danger:goes berserk!
-msc = $danger:Forgetting.* will destroy the book
-msc = $danger:The blast of calcifying dust hits you!
-msc = $danger:you are engulfed in calcifying dust
-msc = $danger:is moving more slowly
-msc = $danger:^It .* you
-msc = $danger:you block its attack
-msc = $danger:constricts you
-msc = $danger:you convulse
+msc += $danger:drains you
+msc += $danger:feel drained
+msc += $danger:strangely unstable
+msc += $danger:curare-tipped.*hits you
+msc += $danger:Space warps.* around you
+msc += $danger:Space bends around you
+msc += $danger:sense of stasis
+msc += $danger:clumsily bash
+msc += $danger:goes berserk!
+msc += $danger:Forgetting.* will destroy the book
+msc += $danger:The blast of calcifying dust hits you!
+msc += $danger:you are engulfed in calcifying dust
+msc += $danger:is moving more slowly
+msc += $danger:^It .* you
+msc += $danger:you block its attack
+msc += $danger:constricts you
+msc += $danger:you convulse
 
-msc = $item_dmg:acid corrodes
-msc = $item_dmg:catch(es)? fire
-msc = $item_dmg:freezes? and shatters?
-msc = $item_dmg:covered with spores
-msc = $item_dmg:devours some of your food
-msc = $item_dmg:rots? away
+msc += $item_dmg:acid corrodes
+msc += $item_dmg:catch(es)? fire
+msc += $item_dmg:freezes? and shatters?
+msc += $item_dmg:covered with spores
+msc += $item_dmg:devours some of your food
+msc += $item_dmg:rots? away
 
 # Less urgent, but still significant messages
 #
-msc = $warning:ticking.*clock
-msc = $warning:dying ticks
-msc = $warning:distant snort
-msc = $warning:odd grinding sound
-msc = $warning:creaking of ancient gears
-msc = $warning:floor suddenly vibrates
-msc = $warning:a sudden draft
-msc = $warning:coins.*counted
-msc = $warning:tolling.*bell
-msc = lightcyan:LOW MAGIC WARNING
-msc = $warning:fails to return
-msc = $warning:no longer ripe
+msc += $warning:ticking.*clock
+msc += $warning:dying ticks
+msc += $warning:distant snort
+msc += $warning:odd grinding sound
+msc += $warning:creaking of ancient gears
+msc += $warning:floor suddenly vibrates
+msc += $warning:a sudden draft
+msc += $warning:coins.*counted
+msc += $warning:tolling.*bell
+msc += lightcyan:LOW MAGIC WARNING
+msc += $warning:fails to return
+msc += $warning:no longer ripe
 
 # Unimportant messages and combat clutter
 #
-msc = $boring:You start (resting|searching)
-msc = $boring:Unknown command
-msc = $boring:disappears? in a puff of smoke
-msc = $boring:dissolves? into (sparkling lights|shadows)
+msc += $boring:You start (resting|searching)
+msc += $boring:Unknown command
+msc += $boring:disappears? in a puff of smoke
+msc += $boring:dissolves? into (sparkling lights|shadows)
 #
-msc = $boring:plain:miss(es)? (the|you|it)
-msc = $boring:but (do no|doesn't do any) damage
-msc = $boring:(prevent|prevents) you from hitting
+msc += $boring:plain:miss(es)? (the|you|it)
+msc += $boring:but (do no|doesn't do any) damage
+msc += $boring:(prevent|prevents) you from hitting
