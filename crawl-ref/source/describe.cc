@@ -4441,14 +4441,6 @@ void describe_god(god_type which_god, bool give_title)
                 cprintf("%s %s shields your consumables from destruction.\n",
                         uppercase_first(god_name(which_god)).c_str(), how);
             }
-            if (jiyva_can_paralyse_jellies())
-            {
-                have_any = true;
-                _print_final_god_abil_desc(which_god,
-                                           "Your slimes' item consumption is "
-                                           "temporarily halted under prayer.",
-                                           ABIL_JIYVA_JELLY_PARALYSE);
-            }
             if (you.piety >= piety_breakpoint(2))
             {
                 have_any = true;

@@ -1577,14 +1577,14 @@ bool beogh_water_walk()
             && you.piety >= piety_breakpoint(4));
 }
 
-bool jiyva_can_paralyse_jellies()
-{
-    return (you.religion == GOD_JIYVA && !player_under_penance()
-            && you.piety >= piety_breakpoint(2));
-}
-
 void jiyva_paralyse_jellies()
 {
+    mprf(MSGCH_PRAY, "You %s prayer to %s.",
+         you.duration[DUR_JELLY_PRAYER] ? "renew your" : "offer a",
+         god_name(you.religion).c_str());
+
+    you.duration[DUR_JELLY_PRAYER] = 200;
+
     int jelly_count = 0;
     for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
     {

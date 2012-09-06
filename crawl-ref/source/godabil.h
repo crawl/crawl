@@ -33,7 +33,6 @@ bool vehumet_supports_spell(spell_type spell);
 
 bool trog_burn_spellbooks();
 
-bool jiyva_can_paralyse_jellies();
 void jiyva_paralyse_jellies();
 bool jiyva_remove_bad_mutation();
 
