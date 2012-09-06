@@ -109,7 +109,7 @@ SUBST:    hi = b
 COLOUR:   v = white
 TILE:     n = DNGN_TRANSPARENT_WALL_WHITE
 MAP
-.......
+xx...xx
 AAAAAAA
 AAAAAAA
 AAAAAAA
