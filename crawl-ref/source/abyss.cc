@@ -987,7 +987,11 @@ static dungeon_feature_type _abyss_grid(const coord_def &p, double depth,
                                         cloud_type &cloud, int &cloud_lifetime)
 {
     const coord_def pt = p + abyssal_state.major_coord; 
-    MixedColumnLayout layout(8675309);
+    ChaoticLayout chaoticLayout1(12345);
+    ChaoticLayout chaoticLayout2(141, 400);
+    WorleyLayout chaoticMix(11111, 0.10, chaoticLayout1, chaoticLayout2);
+    MixedColumnLayout columnLayout(8675309);
+    WorleyLayout layout(54321, 0.7, chaoticMix, columnLayout);
     dungeon_feature_type feat = layout(pt, depth);
     _previous_abyss_feature[p.x][p.y] = feat;
     return feat;
