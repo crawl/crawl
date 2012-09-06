@@ -343,28 +343,11 @@ void pray()
         return;
     }
 
-    mprf(MSGCH_PRAY, "You %s prayer to %s.",
-         you.duration[DUR_JELLY_PRAYER] ? "renew your" : "offer a",
+    mprf(MSGCH_PRAY, "You offer a prayer to %s.",
          god_name(you.religion).c_str());
 
-    switch (you.religion)
-    {
-    case GOD_JIYVA:
-        you.duration[DUR_JELLY_PRAYER] = 200;
-
-        if (jiyva_can_paralyse_jellies())
-            jiyva_paralyse_jellies();
+    if (you.religion == GOD_FEDHAS && fedhas_fungal_bloom())
         something_happened = true;
-        break;
-
-    case GOD_FEDHAS:
-        if (fedhas_fungal_bloom())
-            something_happened = true;
-        break;
-
-    default:
-        ;
-    }
 
     // All sacrifices affect items you're standing on.
     something_happened |= _offer_items();

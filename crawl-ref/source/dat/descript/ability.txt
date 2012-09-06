@@ -512,6 +512,10 @@ Request Jelly
 
 Create a neutral jelly that will wander the floor and digest items.
 %%%%
+Jelly Paralyse
+
+Pray to temporarily halt your slimes' item consumption.
+%%%%
 Slimify
 
 Coat a wielded weapon or your fists with slime, turning the next living or

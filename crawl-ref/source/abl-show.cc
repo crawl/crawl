@@ -170,7 +170,7 @@ ability_type god_abilities[NUM_GODS][MAX_GOD_ABILITIES] =
     { ABIL_NON_ABILITY, ABIL_BEOGH_SMITING, ABIL_NON_ABILITY,
       ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS, ABIL_NON_ABILITY },
     // Jiyva
-    { ABIL_JIYVA_CALL_JELLY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
+    { ABIL_JIYVA_CALL_JELLY, ABIL_JIYVA_JELLY_PARALYSE, ABIL_NON_ABILITY,
       ABIL_JIYVA_SLIMIFY, ABIL_JIYVA_CURE_BAD_MUTATION },
     // Fedhas
     { ABIL_FEDHAS_EVOLUTION, ABIL_FEDHAS_SUNLIGHT, ABIL_FEDHAS_PLANT_RING,
@@ -1074,6 +1074,7 @@ talent get_talent(ability_type ability, bool check_confused)
     case ABIL_ASHENZARI_END_TRANSFER:
     case ABIL_ASHENZARI_SCRYING:
     case ABIL_JIYVA_CURE_BAD_MUTATION:
+    case ABIL_JIYVA_JELLY_PARALYSE:
         invoc = true;
         failure = 0;
         break;
@@ -2643,7 +2644,7 @@ static bool _do_ability(const ability_def& abil)
     }
 
     case ABIL_JIYVA_JELLY_PARALYSE:
-        // Activated via prayer elsewhere.
+        jiyva_paralyse_jellies();
         break;
 
     case ABIL_JIYVA_SLIMIFY:
