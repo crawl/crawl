@@ -31,7 +31,9 @@ function ch_item_wieldable(it)
 
     if spells["Sandblast"]
             and it.class(true) == "missile"
-            and string.find( it.name("a"), " stones?" )
+            and (string.find( it.name("a"), " stones?" )
+                 or string.find( it.name("a"), " large rocks?" )
+                    and (you.race() == "Troll" or you.race() == "Ogre"))
     then
         return true
     end
