@@ -2478,18 +2478,18 @@ ENDMAP
 #  Dead-end 7x7 subvaults
 #
 
-NAME:     vaults_room_7_dead_end_empty_door_ring_glass
+NAME:     vaults_room_7_dead_end_empty_door_ring_water
 TAGS:     vaults_room_7_dead_end_empty no_monster_gen no_item_gen
 KPROP:    _ = no_rtele_into
 SUBVAULT: A : vaults_door_7
 MAP
-_m___m_
-mxxxxxm
+_W___W_
+WxxxxxW
 _xxxxx.A
 _xxxxx.A
 _xxxxx.A
-mxxxxxm
-_m___m_
+WxxxxxW
+_W___W_
 ENDMAP
 
 NAME:     vaults_room_7_dead_end_empty_flooded
@@ -2536,7 +2536,7 @@ MAP
 .....m.
 .%.*.m.
 .....m.A
-.%.*.m.A
+9%.*.m.A
 .....m.A
 .%.*.m.
 .....m.
@@ -2549,13 +2549,14 @@ TAGS:     no_monster_gen no_item_gen
 SHUFFLE:  %*
 SUBST:    * = .
 NSUBST:   = = 1:+m / *:m
+KFEAT:    + = runed_door
 SUBVAULT: A : vaults_door_7
 : vaults_standard_loot(_G)
 MAP
 .....m0
 .%.*.=.
 .....=.A
-.%.*.=.A
+9%.*.=.A
 .....=.A
 .%.*.=.
 .....m0
@@ -2667,13 +2668,14 @@ TAGS:      no_monster_gen no_item_gen
 SHUFFLE:  %*
 SUBST:    * = .
 NSUBST:   = = 1:+ / *:m
+KFEAT:    + = runed_door
 SUBVAULT: A : vaults_door_7
 : vaults_standard_loot(_G)
 MAP
 .....m.
 .%.*.=.
 .....=.A
-.%.*.=.A
+9%.*.=.A
 .....=.A
 .%.*.=.
 .....m.
