@@ -1322,7 +1322,7 @@ NAME:    roderic_nine_men_s_morris
 WEIGHT:  1
 DEPTH:   D, Elf
 SHUFFLE: defgh
-ITEM:    q:1 $, sausage, choko, sultana, stone
+ITEM:    q:1 $, sausage, choko q:1, sultana q:1, stone q:1
 NSUBST:  ' = 9:d / *:.
 MAP
 '.......'.......'
@@ -1348,7 +1348,7 @@ ENDMAP
 NAME:   roderic_three_in_a_row
 WEIGHT: 1
 DEPTH:  D,Elf
-ITEM:   q:1 $, sultana, stone, choko
+ITEM:   q:1 $, sultana q:1, stone, choko q:1
 SUBST:  ' : TUdefg
 MAP
 @xxxx@xxxx@
