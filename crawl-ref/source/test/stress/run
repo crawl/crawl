@@ -24,6 +24,9 @@ run_one()
     6|arena_miscasts)
         $CRAWL -arena 'miscasts 5 pandemonium lord v 20 20-headed hydra delay:0 t:10'
     ;;
+    7|kraken)
+        $CRAWL -arena 'kraken v spectral kraken arena:small_deep_pool delay:0 t:99'
+    ;;
     *)
         echo "No such test."
         exit 1
@@ -32,7 +35,7 @@ run_one()
 
 if [ "$*" = "all" ]
   then
-    for x in 1 2 3 4 5 6; do run_one "$x";done
+    for x in 1 2 3 4 5 6 7; do run_one "$x";done
     exit $?
 fi
 
