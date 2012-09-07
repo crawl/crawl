@@ -410,7 +410,7 @@ end
 
 }}
 
-default-depth: Vaults:2-7, Crypt, D:22-27, Elf:3-5
+default-depth: Crypt, D:22-27, Elf:3-5
 
 ###############################################################################
 # Portal entrances.
@@ -610,6 +610,112 @@ xabbbbbbbbAax
 xxxxxxxxxxx.x
 @...........x
 xxxxxxxxxxxxx
+ENDMAP
+
+# Vaults Entries #################################
+#  - these are placed by tag, not be CHANCE:
+
+default-depth:
+
+NAME:     vaults_room_1_spin_wizlab_default
+TAGS:     vaults_room_1_spin_wizlab allow_dup uniq_wizlab unrand
+TAGS:     no_monster_gen no_item_gen
+: wizlab_portal(_G)
+MAP
+O
+ENDMAP
+
+NAME:     vaults_room_4_spin_wizlab_magenta
+TAGS:     vaults_room_4_spin_wizlab allow_dup uniq_wizlab unrand
+TAGS:     no_monster_gen no_item_gen
+NSUBST:   O = 1:O / *:.
+COLOUR:   . = magenta
+FTILE:    O. = floor_rough_magenta
+: wizlab_portal(_G)
+MAP
+O...
+.OO.
+....
+....
+ENDMAP
+
+NAME:     vaults_room_7_spin_wizlab_default
+TAGS:     vaults_room_7_spin_wizlab allow_dup uniq_wizlab unrand
+TAGS:     no_monster_gen no_item_gen
+FTILE:    GO_ = floor_rough_magenta
+TILE:     m = dngn_transparent_wall_green
+COLOUR:   m = lightgreen
+COLOUR:   _ = magenta
+TILE:     G = dngn_statue_dragon
+: wizlab_portal(_G)
+MAP
+.......
+.bmmmb.
+.m_O_m.
+.mG_Gm.
+.m___m.
+.bb_bb.
+.......
+ENDMAP
+
+NAME:     vaults_room_10_spin_wizlab_water
+TAGS:     vaults_room_10_spin_wizlab allow_dup uniq_wizlab unrand
+TAGS:     no_monster_gen no_item_gen
+FTILE:    cnO_ = floor_rough_magenta
+TILE:     n = dngn_transparent_wall_magenta
+COLOUR:   n = lightmagenta
+COLOUR:   _ = magenta
+TILE:     c = wall_stone_white
+: wizlab_portal(_G)
+MAP
+ww......ww
+ww.wwww.ww
+...wwww...
+.wwcnncww.
+.wwnO_nww.
+.wwn__nww.
+.wwcnn_ww.
+...wwww...
+ww.wwww.ww
+ww......ww
+ENDMAP
+
+NAME:     vaults_room_15_spin_wizlab_spiral
+TAGS:     vaults_room_15_spin_wizlab allow_dup uniq_wizlab unrand
+TAGS:     no_pool_fixup no_monster_gen no_item_gen
+SUBST:    G : xG.
+SUBST:    x : xx.
+: wizlab_portal(_G)
+MARKER:   ! = lua:fog_machine { \
+               pow_max = 8, delay_min = 20, delay_max = 60, \
+               walk_dist = 3, size = 1, start_clouds = 1, \
+               start_clouds = 1, cloud_type = "freezing vapour" \
+           }
+MARKER:   ? = lua:fog_machine { \
+               pow_max = 8, delay_min = 20, delay_max = 60, \
+               walk_dist = 3, size = 1, start_clouds = 1, \
+               start_clouds = 1, cloud_type = "mutagenic fog" \
+           }
+FTILE:    _! = floor_frozen
+COLOUR:   _! = lightcyan
+FTILE:    -? = floor_rough_magenta
+COLOUR:   -? = magenta
+MAP
+xx...........xx
+xG.bbbbbbbbb.Gx
+...bw..........
+.b.bw.bbbbbbbb.
+.b.bw.bllllllb.
+.b.bw.bl.....b.
+.b.bw..l.bbb.b.
+.b.bwwwO--?b.b.
+.b.bbb._..-b.b.
+.b....._b.?b.b.
+.b!__!_!b.-b.b.
+.bbbbbbbb.-b.b.
+..........?b...
+xG.bbbbbbbbb.Gx
+xx...........xx
 ENDMAP
 
 #
