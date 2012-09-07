@@ -916,6 +916,8 @@ void tile_draw_map_cell(const coord_def& gc, bool foreground_only)
         else
             _tile_place_item(gc, *cell.item(), (cell.flags & MAP_MORE_ITEMS) != 0);
     }
+    else
+        env.tile_bk_fg(gc) = 0;
 }
 
 void tile_wizmap_terrain(const coord_def &gc)
