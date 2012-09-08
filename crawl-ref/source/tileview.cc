@@ -981,6 +981,7 @@ static bool _is_torch(tileidx_t basetile)
 // Unfortunately, these are all hard-coded for now.
 void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
 {
+#ifndef USE_TILE_WEB
     tileidx_t bg_idx = bg & TILE_FLAG_MASK;
     if (bg_idx == TILE_DNGN_PORTAL_WIZARD_LAB
         || bg_idx == TILE_DNGN_ALTAR_CHEIBRIADOS)
@@ -1005,6 +1006,7 @@ void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
             flv->wall = basetile + (flv->wall - basetile + 1) % tile_dngn_count(basetile);
         }
     }
+#endif
 }
 
 static bool _suppress_blood(const map_cell& mc)

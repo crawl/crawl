@@ -1648,6 +1648,18 @@ bool tile_list_processor::write_data(bool image, bool code)
                     m_start_value.c_str());
             fprintf(fp, "}\n\n");
 
+            fprintf(fp, "var _basetiles =\n[\n",
+                    lcname.c_str(), max.c_str(), m_start_value.c_str());
+            for (unsigned int i = 0; i < m_page.m_base_tiles.size(); i++)
+                fprintf(fp, "    %u,\n", m_page.m_base_tiles[i]);
+            fprintf(fp, "];\n\n");
+
+            fprintf(fp, "exports.basetile = function (idx)\n{\n", lcname.c_str());
+            fprintf(fp, "    return _basetiles[idx - %s%s] + %s%s;\n",
+                    m_start_value_module.size() > 0 ? "m." : "", m_start_value.c_str(),
+                    m_start_value_module.size() > 0 ? "m." : "", m_start_value.c_str());
+            fprintf(fp, "};\n\n");
+
             fprintf(fp, "exports.get_img = function (idx) {\n");
             fprintf(fp, "    return \"%s\";\n", lcname.c_str());
             fprintf(fp, "};\n\n");
@@ -1693,6 +1705,10 @@ bool tile_list_processor::write_data(bool image, bool code)
 
             fprintf(fp, "exports.tile_count = function (idx)\n{\n");
             add_abstracts(fp, "return (%s.tile_count(idx));", lc_enum, uc_max_enum);
+            fprintf(fp, "};\n\n");
+
+            fprintf(fp, "exports.basetile = function (idx)\n{\n", lcname.c_str());
+            add_abstracts(fp, "return (%s.basetile(idx));", lc_enum, uc_max_enum);
             fprintf(fp, "};\n\n");
 
             fprintf(fp, "exports.get_img = function (idx) {\n");
