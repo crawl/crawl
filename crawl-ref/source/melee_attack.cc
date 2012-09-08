@@ -588,7 +588,6 @@ bool melee_attack::handle_phase_damaged()
         }
     }
 
-    int blood = 0;
     // We have to check in_bounds() because removed kraken tentacles are
     // temporarily returned to existence (without a position) when they
     // react to damage.
@@ -597,18 +596,22 @@ bool melee_attack::handle_phase_damaged()
         && !defender->submerged()
         && in_bounds(defender->pos()))
     {
-        blood = modify_blood_amount(damage_done, attacker->damage_type());
+        int blood = modify_blood_amount(damage_done, attacker->damage_type());
         if (blood > defender->stat_hp())
             blood = defender->stat_hp();
+        if (blood)
+        {
+            // ugh: bleed_onto_floor need the monster type, but that won't
+            // be valid if the monster is dead.  Assumes that damage and
+            // monster_type each fit into 16 bits.
+            add_final_effect(FINEFF_BLOOD, attacker, defender, defender->pos(),
+                             blood << 16 | defender->type);
+        }
     }
 
     announce_hit();
     // Inflict stored damage
     damage_done = inflict_damage(damage_done);
-
-    // Only create blood now that the damage has been inflicted.
-    if (blood)
-        bleed_onto_floor(defender->pos(), defender->type, blood, true);
 
     // TODO: Unify these, added here so we can get rid of player_attack
     if (attacker->is_player())

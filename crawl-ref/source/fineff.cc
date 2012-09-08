@@ -11,6 +11,7 @@
 #include "fineff.h"
 #include "libutil.h"
 #include "mgen_data.h"
+#include "misc.h"
 #include "mon-place.h"
 #include "ouch.h"
 #include "religion.h"
@@ -189,6 +190,11 @@ void fire_final_effects()
         case FINEFF_ROYAL_JELLY_SPAWN:
             _trj_spawns(attacker, defender, fe.pos, fe.x);
             break;
+
+        case FINEFF_BLOOD:
+            monster_type montype = static_cast<monster_type>(fe.x & 0xffff);
+            int blood = (fe.x >> 16) & 0xffff;
+            bleed_onto_floor(fe.pos, montype, blood, true);
         }
     }
     env.final_effects.clear();

@@ -3465,6 +3465,7 @@ enum final_effect_flavour
     FINEFF_BLINK,
     FINEFF_DISTORTION_TELEPORT,
     FINEFF_ROYAL_JELLY_SPAWN,
+    FINEFF_BLOOD,
 };
 
 enum disable_type
