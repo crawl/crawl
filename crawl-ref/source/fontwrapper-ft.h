@@ -85,7 +85,12 @@ protected:
     struct GlyphInfo
     {
         // offset before drawing glyph; can be negative
+#ifdef __ANDROID__
+        // signed int in android port
+        int offset;
+#else
         int8_t offset;
+#endif
 
         // per-glyph horizontal advance
         int8_t advance;

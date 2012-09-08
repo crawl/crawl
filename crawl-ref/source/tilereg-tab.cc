@@ -8,7 +8,6 @@
 #include "state.h"
 #include "tiledef-gui.h"
 
-
 TabbedRegion::TabbedRegion(const TileRegionInit &init) :
     GridRegion(init),
     m_active(-1),
@@ -294,8 +293,11 @@ int TabbedRegion::get_mouseover_tab(MouseEvent &event) const
 
 int TabbedRegion::handle_mouse(MouseEvent &event)
 {
-    if (mouse_control::current_mode() != MOUSE_MODE_COMMAND)
+    if (mouse_control::current_mode() != MOUSE_MODE_COMMAND
+        && !tiles.get_map_display())
+    {
         return 0;
+    }
 
     int mouse_tab = get_mouseover_tab(event);
     if (mouse_tab != m_mouse_tab)

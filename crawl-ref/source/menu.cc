@@ -26,6 +26,7 @@
  #include "tilefont.h"
  #include "tilereg-crt.h"
  #include "tilereg-menu.h"
+ #include "tilereg-popup.h"
 #endif
 #ifdef USE_TILE
  #include "mon-stuff.h"
@@ -38,6 +39,39 @@
  #include "tilepick.h"
  #include "tilepick-p.h"
  #include "travel.h"
+#endif
+
+#ifdef USE_TILE_LOCAL
+Popup::Popup(string prompt = "") : m_prompt(prompt), m_curr(0)
+{
+}
+
+void Popup::set_prompt(string prompt)
+{
+    m_prompt = prompt;
+}
+
+void Popup::push_entry(MenuEntry *me)
+{
+    m_entries.push_back(me);
+}
+
+MenuEntry* Popup::next_entry()
+{
+    if (m_curr >= m_entries.size())
+    {
+        m_curr = 0;
+        return NULL;
+    }
+    MenuEntry *me = m_entries[m_curr];
+    m_curr ++;
+    return me;
+}
+
+int Popup::pop()
+{
+    return tiles.draw_popup(this);
+}
 #endif
 
 MenuDisplay::MenuDisplay(Menu *menu) : m_menu(menu)
@@ -338,7 +372,12 @@ bool Menu::process_key(int keyin)
         lastch = keyin;
         return false;
     }
+#ifdef TOUCH_UI
+    else if (action_cycle == CYCLE_TOGGLE && (keyin == '!' || keyin == '?'
+             || keyin == CK_TOUCH_DUMMY))
+#else
     else if (action_cycle == CYCLE_TOGGLE && (keyin == '!' || keyin == '?'))
+#endif
     {
         ASSERT(menu_action != ACT_MISC);
         if (menu_action == ACT_EXECUTE)
@@ -350,7 +389,12 @@ bool Menu::process_key(int keyin)
         update_title();
         return true;
     }
+#ifdef TOUCH_UI
+    else if (action_cycle == CYCLE_CYCLE && (keyin == '!' || keyin == '?'
+             || keyin == CK_TOUCH_DUMMY))
+#else
     else if (action_cycle == CYCLE_CYCLE && (keyin == '!' || keyin == '?'))
+#endif
     {
         menu_action = (action)((menu_action+1) % ACT_NUM);
         sel.clear();
@@ -367,8 +411,10 @@ bool Menu::process_key(int keyin)
 
     switch (keyin)
     {
+#ifndef TOUCH_UI
     case 0:
         return true;
+#endif
     case CK_MOUSE_B2:
     case CK_MOUSE_CMD:
     CASE_ESCAPE
@@ -526,6 +572,12 @@ bool Menu::process_key(int keyin)
         repaint = true;
         break;
 
+#ifdef TOUCH_UI
+    case CK_TOUCH_DUMMY:  // mouse click in top/bottom region of menu
+    case 0:               // do the same as <enter> key
+        if (!(flags & MF_MULTISELECT)) // bail out if not a multi-select
+            return true;
+#endif
     case CK_ENTER:
         if (!(flags & MF_PRESELECTED) || !sel.empty())
             return false;
@@ -1922,6 +1974,11 @@ bool formatted_scroller::process_key(int keyin)
 {
     lastch = keyin;
 
+#ifdef TOUCH_UI
+    if(keyin == CK_TOUCH_DUMMY) // mouse click in title area, which
+        return true;            // wouldn't usually be handled
+#endif
+
     if (f_keyfilter)
         keyin = (*f_keyfilter)(keyin);
 
@@ -1986,7 +2043,12 @@ bool formatted_scroller::process_key(int keyin)
 
 int ToggleableMenu::pre_process(int key)
 {
+#ifdef TOUCH_UI
+    if (find(toggle_keys.begin(), toggle_keys.end(), key) != toggle_keys.end()
+        || key == CK_TOUCH_DUMMY)
+#else
     if (find(toggle_keys.begin(), toggle_keys.end(), key) != toggle_keys.end())
+#endif
     {
         // Toggle all menu entries
         for (unsigned int i = 0; i < items.size(); ++i)
@@ -2023,7 +2085,11 @@ int ToggleableMenu::pre_process(int key)
         }
 
         // Don't further process the key
+#ifdef TOUCH_UI
+        return CK_TOUCH_DUMMY;
+#else
         return 0;
+#endif
     }
     return key;
 }
@@ -2127,6 +2193,10 @@ bool PrecisionMenu::process_key(int key)
         }
     }
 
+#ifdef TOUCH_UI
+    if (key == CK_TOUCH_DUMMY)
+        return true; // mouse click in title area, which wouldn't usually be handled
+#endif
     // Handle CK_MOUSE_CLICK separately
     // This signifies a menu ending action
     if (key == CK_MOUSE_CLICK)
@@ -2213,7 +2283,7 @@ int PrecisionMenu::handle_mouse(const MouseEvent &me)
 {
     // Feed input to each attached object that the mouse is over
     // The objects are responsible for processing the input
-    // This includes, if applicaple for instance checking if the mouse
+    // This includes, if applicable for instance checking if the mouse
     // is over the item or not
     MenuObject::InputReturnValue input_return = MenuObject::INPUT_NO_ACTION;
 
@@ -2221,6 +2291,7 @@ int PrecisionMenu::handle_mouse(const MouseEvent &me)
     for (it = m_attached_objects.begin(); it != m_attached_objects.end(); ++it)
     {
         input_return = (*it)->handle_mouse(me);
+
         switch (input_return)
         {
         case MenuObject::INPUT_SELECTED:

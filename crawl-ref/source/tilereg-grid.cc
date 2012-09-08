@@ -115,8 +115,11 @@ bool GridRegion::place_cursor(MouseEvent &event, unsigned int &item_idx)
     const coord_def cursor(cx, cy);
     place_cursor(cursor);
 
-    if (mouse_control::current_mode() != MOUSE_MODE_COMMAND)
+    if (mouse_control::current_mode() != MOUSE_MODE_COMMAND
+        && !tiles.get_map_display())
+    {
         return false;
+    }
 
     if (event.event != MouseEvent::PRESS)
         return false;

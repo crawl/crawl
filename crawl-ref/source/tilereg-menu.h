@@ -9,7 +9,7 @@
 
 class MenuEntry;
 
-class MenuRegion : public Region
+class MenuRegion : public ControlRegion
 {
 public:
     MenuRegion(ImageManager *im, FontWrapper *entry);
@@ -32,6 +32,7 @@ protected:
     struct MenuRegionEntry
     {
         formatted_string text;
+        int colour; // keep it separate from text
         int sx, ex, sy, ey;
         bool selected;
         bool heading;
@@ -46,6 +47,14 @@ protected:
     int m_mouse_idx;
     int m_max_columns;
     bool m_dirty;
+#ifdef TOUCH_UI
+    int m_more_region_start;
+#endif
+
+    virtual void run() {};
+    void _place_entries(const int left_offset, const int top_offset,
+                        const int menu_width);
+    void _clear_buffers();
 
     vector<MenuRegionEntry> m_entries;
 

@@ -408,6 +408,13 @@ static bool _have_corpses_in_pack(bool remind, bool bottle_blood = false)
     return true;
 }
 
+#ifdef TOUCH_UI
+static string _butcher_menu_title(const Menu *menu, const string &oldt)
+{
+    return oldt;
+}
+#endif
+
 bool butchery(int which_corpse, bool bottle_blood)
 {
     if (you.visible_igrd(you.pos()) == NON_ITEM)
@@ -560,10 +567,50 @@ bool butchery(int which_corpse, bool bottle_blood)
     // Now pick what you want to butcher. This is only a problem
     // if there are several corpses on the square.
     bool butcher_all   = false;
-    bool repeat_prompt = false;
     bool did_weap_swap = false;
     bool first_corpse  = true;
+#ifdef TOUCH_UI
+    vector<const item_def*> meat;
+    for (stack_iterator si(you.pos(), true); si; ++si)
+    {
+        if (si->base_type != OBJ_CORPSES || si->sub_type != CORPSE_BODY)
+            continue;
+
+        if (bottle_blood && (food_is_rotten(*si)
+                             || !can_bottle_blood_from_corpse(si->mon_type)))
+        {
+            continue;
+        }
+        meat.push_back(& (*si));
+    }
+
+    corpse_id = -1;
+    vector<SelItem> selected =
+        select_items(meat, bottle_blood ? "Choose a corpse to bottle"
+                                        : "Choose a corpse to butcher",
+                     false, MT_ANY, _butcher_menu_title);
+    redraw_screen();
+    for (int i = 0, count = selected.size(); i < count; ++i)
+    {
+        corpse_id = selected[i].item->index();
+        if (!did_weap_swap)
+        {
+            if (_prepare_butchery(can_butcher, removed_gloves, wpn_switch))
+                did_weap_swap = true;
+            else
+                return false;
+        }
+        if (_corpse_butchery(corpse_id, butcher_tool, first_corpse,
+                             bottle_blood))
+        {
+            success = true;
+            first_corpse = false;
+        }
+    }
+
+#else
     int keyin;
+    bool repeat_prompt = false;
     for (stack_iterator si(you.pos(), true); si; ++si)
     {
         if (si->base_type != OBJ_CORPSES || si->sub_type != CORPSE_BODY)
@@ -652,7 +699,7 @@ bool butchery(int which_corpse, bool bottle_blood)
             }
         }
     }
-
+#endif
     if (!butcher_all && corpse_id == -1)
     {
         mprf("There isn't anything %s to %s here.",
@@ -1121,7 +1168,7 @@ void eat_floor_item(int item_link)
 class compare_by_freshness
 {
 public:
-    bool operator()(item_def *food1, item_def *food2)
+    bool operator()(const item_def *food1, const item_def *food2)
     {
         ASSERT(food1->base_type == OBJ_CORPSES || food1->base_type == OBJ_FOOD);
         ASSERT(food2->base_type == OBJ_CORPSES || food2->base_type == OBJ_FOOD);
@@ -1166,6 +1213,12 @@ public:
     }
 };
 
+#ifdef TOUCH_UI
+static string _floor_eat_menu_title(const Menu *menu, const string &oldt)
+{
+    return oldt;
+}
+#endif
 // Returns -1 for cancel, 1 for eaten, 0 for not eaten.
 int eat_from_floor(bool skip_chunks)
 {
@@ -1185,7 +1238,7 @@ int eat_from_floor(bool skip_chunks)
     item_def wonteat;
     bool found_valid = false;
 
-    vector<item_def *> food_items;
+    vector<const item_def*> food_items;
     for (stack_iterator si(you.pos(), true); si; ++si)
     {
         if (you.species == SP_VAMPIRE)
@@ -1244,10 +1297,36 @@ int eat_from_floor(bool skip_chunks)
 
     if (found_valid)
     {
+#ifdef TOUCH_UI
+        vector<SelItem> selected =
+            select_items(food_items,
+                         you.species == SP_VAMPIRE ? "Drink blood from" : "Eat",
+                         false, MT_SELONE, _floor_eat_menu_title);
+        redraw_screen();
+        for (int i = 0, count = selected.size(); i < count; ++i)
+        {
+            const item_def *item = selected[i].item;
+            if (!check_warning_inscriptions(*item, OPER_EAT))
+                break;
+
+            if (can_ingest(*item, false))
+            {
+                int ilink = item_on_floor(*item, you.pos());
+
+                if (ilink != NON_ITEM)
+                {
+                    eat_floor_item(ilink);
+                    return true;
+                }
+                else
+                    return false;
+            }
+        }
+#else
         sort(food_items.begin(), food_items.end(), compare_by_freshness());
         for (unsigned int i = 0; i < food_items.size(); ++i)
         {
-            item_def *item = food_items[i];
+            const item_def *item = food_items[i];
             string item_name = get_menu_colour_prefix_tags(*item, DESC_A);
 
             mprf(MSGCH_PROMPT, "%s %s%s? (ye/n/q/i?)",
@@ -1289,6 +1368,7 @@ int eat_from_floor(bool skip_chunks)
                 break;
             }
         }
+#endif
     }
     else
     {

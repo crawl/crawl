@@ -698,6 +698,9 @@ bool show_map(level_pos &lpos,
               bool travel_mode, bool allow_esc, bool allow_offlevel)
 {
     bool chose      = false;
+#ifdef USE_TILE_LOCAL
+    bool first_run  = true;
+#endif
     {
         levelview_excursion le(travel_mode);
         level_id original(level_id::current());
@@ -726,8 +729,6 @@ bool show_map(level_pos &lpos,
         const int num_lines   = _get_number_of_lines_levelmap();
         const int half_screen = (num_lines - 1) / 2;
 
-        const int top = 1 + Options.level_map_title;
-
         int map_lines = 0;
 
         // no x scrolling
@@ -746,6 +747,7 @@ bool show_map(level_pos &lpos,
         bool redraw_map = true;
 
 #ifndef USE_TILE_LOCAL
+        const int top = 1 + Options.level_map_title;
         clrscr();
 #endif
         textcolor(DARKGREY);
@@ -861,6 +863,14 @@ bool show_map(level_pos &lpos,
                 // Note: Tile versions just center on the current cursor
                 // location.  It silently ignores everything else going
                 // on in this function.  --Enne
+#ifdef USE_TILE_LOCAL
+                if(first_run)
+                {
+                    tiles.update_tabs();
+                    first_run = false;
+                }
+                else
+#endif
                 tiles.load_dungeon(lpos.pos);
 #endif
 #ifndef USE_TILE_LOCAL
@@ -874,15 +884,31 @@ bool show_map(level_pos &lpos,
             redraw_map = true;
 
             c_input_reset(true);
+#ifdef USE_TILE_LOCAL
+            const int key = tiles.getch_ck();
+            command_type cmd = key_to_command(key, KMC_LEVELMAP);
+#else
             const int key = unmangle_direction_keys(getchm(KMC_LEVELMAP),
                                                     KMC_LEVELMAP,
                                                     false, false);
             command_type cmd = key_to_command(key, KMC_LEVELMAP);
+#endif
             if (cmd < CMD_MIN_OVERMAP || cmd > CMD_MAX_OVERMAP)
                 cmd = CMD_NO_CMD;
 
             if (key == CK_MOUSE_CLICK)
             {
+#ifdef USE_TILE_LOCAL
+                const coord_def grdp = tiles.get_cursor();
+                const coord_def delta = grdp - lpos.pos;
+                move_y = delta.y;
+                move_x = delta.x;
+
+                if (move_y == 0 && move_x == 0) // clicked on current position
+                    cmd = CMD_MAP_GOTO_TARGET; // go to current cursor pos
+                else
+                    cmd = CMD_NEXT_CMD; // a dummy command
+#else
                 const c_mouse_event cme = get_mouse_event();
                 const coord_def grdp =
                     cme.pos + coord_def(start_x - 1, start_y - top);
@@ -903,6 +929,7 @@ bool show_map(level_pos &lpos,
                     move_y = delta.y;
                     move_x = delta.x;
                 }
+#endif
             }
 
             c_input_reset(false);
@@ -1221,6 +1248,11 @@ bool show_map(level_pos &lpos,
                     map_alive = false;
                     break;
                 }
+
+#ifdef USE_TILE_LOCAL
+            case CMD_NEXT_CMD:
+                break; // allow mouse clicks to move cursor without leaving map mode
+#endif
             default:
                 if (travel_mode)
                 {

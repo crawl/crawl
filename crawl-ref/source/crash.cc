@@ -19,7 +19,8 @@
     defined(TARGET_OS_FREEBSD) || \
     defined(TARGET_OS_NETBSD) || \
     defined(TARGET_OS_OPENBSD) || \
-    defined(TARGET_COMPILER_CYGWIN)
+    defined(TARGET_COMPILER_CYGWIN) || \
+    defined(TARGET_CPU_ARM)
         #undef BACKTRACE_SUPPORTED
 #endif
 #endif

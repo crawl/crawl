@@ -16,6 +16,13 @@
 #include "syscalls.h"
 #include "windowmanager.h"
 
+#ifdef __ANDROID__
+#include <android/log.h>
+#include <GLES/gl.h>
+#include <signal.h>
+#include <SDL_mixer.h>
+#endif
+
 WindowManager *wm = NULL;
 
 void WindowManager::create()
@@ -24,12 +31,21 @@ void WindowManager::create()
         return;
 
     wm = new SDLWrapper();
+#ifdef __ANDROID__
+    Mix_Init(MIX_INIT_OGG | MIX_INIT_MP3);
+    Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 4096);
+#endif
 }
 
 void WindowManager::shutdown()
 {
     delete wm;
     wm = NULL;
+#ifdef __ANDROID__
+    Mix_CloseAudio();
+    while(Mix_Init(0))
+        Mix_Quit();
+#endif
 }
 
 static unsigned char _get_modifiers(SDL_keysym &keysym)
@@ -100,6 +116,16 @@ static int _translate_keysym(SDL_keysym &keysym)
     case SDLK_DELETE:
         return (CK_DELETE + offset);
 
+#ifdef __ANDROID__
+    // i think android's SDL port treats these differently? they certainly
+    // shouldn't be interpreted as unicode characters!
+    case SDLK_LSHIFT:
+    case SDLK_RSHIFT:
+    case SDLK_LALT:
+    case SDLK_RALT:
+    case SDLK_LCTRL:
+    case SDLK_RCTRL:
+#endif
     case SDLK_NUMLOCK:
     case SDLK_CAPSLOCK:
     case SDLK_SCROLLOCK:
@@ -239,10 +265,33 @@ SDLWrapper::~SDLWrapper()
     SDL_Quit();
 }
 
+#ifdef __ANDROID__
+void SDLWrapper::appPutToBackground()
+{
+    SDL_ANDROID_PauseAudioPlayback();
+    raise(SIGHUP);
+}
+
+void SDLWrapper::appPutToForeground()
+{
+    SDL_ANDROID_ResumeAudioPlayback();
+    // re-init
+    wm->swap_buffers();
+}
+#endif
+
 int SDLWrapper::init(coord_def *m_windowsz)
 {
+#ifdef __ANDROID__
+    // set up callbacks for background/foreground events
+    SDL_ANDROID_SetApplicationPutToBackgroundCallback(
+            &SDLWrapper::appPutToBackground, &SDLWrapper::appPutToForeground);
+    // Do SDL initialization
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER) != 0)
+#else
     // Do SDL initialization
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) != 0)
+#endif
     {
         printf("Failed to initialise SDL: %s\n", SDL_GetError());
         return false;
@@ -256,22 +305,38 @@ int SDLWrapper::init(coord_def *m_windowsz)
     SDL_EnableUNICODE(true);
 
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    glDebug("SDL_GL_DOUBLEBUFFER");
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 8);
+    glDebug("SDL_GL_DEPTH_SIZE 8");
     SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
+    glDebug("SDL_GL_RED_SIZE 8");
     SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
+    glDebug("SDL_GL_GREEN_SIZE 8");
     SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
+    glDebug("SDL_GL_BLUE_SIZE 8");
     SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
+    glDebug("SDL_GL_ALPHA_SIZE 8");
 
     if (Options.tile_key_repeat_delay > 0)
     {
         const int repdelay    = Options.tile_key_repeat_delay;
         const int interval = SDL_DEFAULT_REPEAT_INTERVAL;
         if (SDL_EnableKeyRepeat(repdelay, interval) != 0)
+#ifdef __ANDROID__
+            __android_log_print(ANDROID_LOG_INFO, "Crawl",
+                                "Failed to set key repeat mode: %s",
+                                SDL_GetError());
+#else
             printf("Failed to set key repeat mode: %s\n", SDL_GetError());
+#endif
     }
 
 #ifdef USE_GLES
+#ifdef __ANDROID__
+    unsigned int flags = SDL_OPENGL | SDL_FULLSCREEN | SDL_INIT_NOPARACHUTE;
+#else
     unsigned int flags = SDL_SWSURFACE;
+#endif
 #else
     unsigned int flags = SDL_OPENGL;
 #endif
@@ -295,8 +360,15 @@ int SDLWrapper::init(coord_def *m_windowsz)
         int y = Options.tile_window_height;
         x = (x > 0) ? x : video_info->current_w + x;
         y = (y > 0) ? y : video_info->current_h + y;
+#ifdef TOUCH_UI
+        // allow *much* smaller windows than default, primarily for testing
+        // touch_ui features in an x86 build
+        m_windowsz->x = x;
+        m_windowsz->y = y;
+#else
         m_windowsz->x = max(800, x);
         m_windowsz->y = max(480, y);
+#endif
 
 #ifdef TARGET_OS_WINDOWS
         set_window_placement(m_windowsz);
@@ -304,12 +376,20 @@ int SDLWrapper::init(coord_def *m_windowsz)
     }
 
     m_context = SDL_SetVideoMode(m_windowsz->x, m_windowsz->y, 0, flags);
+glDebug("SDL_SetVideoMode");
     if (!m_context)
     {
+#ifdef __ANDROID__
+        __android_log_print(ANDROID_LOG_INFO, "Crawl",
+                            "Failed to set video mode: %s", SDL_GetError());
+#endif
         printf("Failed to set video mode: %s\n", SDL_GetError());
         return false;
     }
 
+#ifdef __ANDROID__
+    __android_log_print(ANDROID_LOG_INFO, "Crawl", "Window manager initialised");
+#endif
     return true;
 }
 
@@ -343,6 +423,10 @@ bool SDLWrapper::set_window_icon(const char* icon_name)
     SDL_Surface *surf =load_image(datafile_path(icon_name, true, true).c_str());
     if (!surf)
     {
+#ifdef __ANDROID__
+        __android_log_print(ANDROID_LOG_INFO, "Crawl",
+                            "Failed to load icon: %s", SDL_GetError());
+#endif
         printf("Failed to load icon: %s\n", SDL_GetError());
         return false;
     }
@@ -487,6 +571,12 @@ int SDLWrapper::wait_event(wm_event *event)
 
         if (!event->key.keysym.unicode && event->key.keysym.sym > 0)
             return 0;
+
+/*
+ * LShift = scancode 0x30; key_mod 0x1; unicode 0x130; sym 0x130 SDLK_LSHIFT
+ * LCtrl  = scancode 0x32; key_mod 0x2; unicode 0x132; sym 0x132 SDLK_LCTRL
+ * LAlt   = scancode 0x34; key_mod 0x4; unicode 0x134; sym 0x134 SDLK_LALT
+ */
         break;
     case SDL_KEYUP:
         event->type = WM_KEYUP;
@@ -495,6 +585,7 @@ int SDLWrapper::wait_event(wm_event *event)
         event->key.keysym.key_mod = _get_modifiers(sdlevent.key.keysym);
         event->key.keysym.unicode = sdlevent.key.keysym.unicode;
         event->key.keysym.sym = _translate_keysym(sdlevent.key.keysym);
+
         break;
     case SDL_MOUSEMOTION:
         event->type = WM_MOUSEMOTION;
@@ -821,5 +912,13 @@ SDL_Surface *SDLWrapper::load_image(const char *file) const
     return surf;
 }
 
+void SDLWrapper::glDebug(const char* msg)
+{
+#ifdef __ANDROID__
+    int e = glGetError();
+    if(e>0)
+       __android_log_print(ANDROID_LOG_INFO, "Crawl", "ERROR %x: %s", e, msg);
+#endif
+}
 #endif // USE_SDL
 #endif // USE_TILE_LOCAL

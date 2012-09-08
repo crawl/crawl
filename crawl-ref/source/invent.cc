@@ -1115,6 +1115,13 @@ vector<SelItem> select_items(const vector<const item_def*> &items,
         menu.load_items(items);
         int new_flags = noselect ? MF_NOSELECT
                                  : MF_MULTISELECT | MF_ALLOW_FILTER;
+
+        if (mtype == MT_SELONE)
+        {
+            new_flags |= MF_SINGLESELECT;
+            new_flags &= ~MF_MULTISELECT;
+        }
+
         new_flags |= MF_SHOW_PAGENUMBERS | MF_ALLOW_FORMATTING;
         menu.set_flags(new_flags);
         menu.show();

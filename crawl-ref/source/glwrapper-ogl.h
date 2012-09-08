@@ -5,7 +5,9 @@
 #ifdef USE_GL
 
 #include "glwrapper.h"
-
+#ifdef __ANDROID__
+#include <GLES/gl.h>
+#endif
 class OGLStateManager : public GLStateManager
 {
 public:
@@ -18,6 +20,9 @@ public:
     virtual void reset_view_for_resize(const coord_def &m_windowsz);
     virtual void set_transform(const GLW_3VF &trans, const GLW_3VF &scale);
     virtual void reset_transform();
+#ifdef __ANDROID__
+    virtual void fixup_gl_state();
+#endif
 
     // Texture-specific functinos
     virtual void delete_textures(size_t count, unsigned int *textures);
@@ -28,6 +33,12 @@ public:
                               int xoffset=-1, int yoffset=-1);
 protected:
     GLState m_current_state;
+#ifdef __ANDROID__
+    GLint m_last_tex;
+#endif
+
+private:
+    void glDebug(const char* msg);
 };
 
 class OGLShapeBuffer : public GLShapeBuffer
@@ -56,6 +67,9 @@ protected:
     vector<GLW_2VF> m_texture_buffer;
     vector<VColour> m_colour_buffer;
     vector<unsigned short int> m_ind_buffer;
+
+private:
+    void glDebug(const char* msg);
 };
 
 #endif // USE_GL

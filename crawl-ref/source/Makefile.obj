@@ -261,6 +261,7 @@ tilereg-mem.o \
 tilereg-menu.o \
 tilereg-mon.o \
 tilereg-msg.o \
+tilereg-popup.o \
 tilereg-skl.o \
 tilereg-spl.o \
 tilereg-stat.o \

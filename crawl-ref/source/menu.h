@@ -1132,4 +1132,34 @@ protected:
 int linebreak_string(string& s, int maxcol, bool indent = false);
 string get_linebreak_string(const string& s, int maxcol);
 
+#ifdef USE_TILE_LOCAL
+class Popup
+{
+public:
+    // constructors
+    Popup(string prompt);
+
+    // accessors
+    //  get/set prompt text
+    void set_prompt(string prompt);
+    string get_prompt() { return m_prompt; }
+
+    // methods
+    //  add a menu entry to the popup
+    void push_entry(MenuEntry *me);
+    //  remove a menu entry from the popup
+    MenuEntry* next_entry();
+
+    //  draw the popup and return key pressed
+    int pop();
+
+protected:
+    vector<MenuEntry*> m_entries;
+    string m_prompt;
+
+private:
+    unsigned int m_curr;
+};
+#endif
+
 #endif

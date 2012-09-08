@@ -723,6 +723,12 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
         && event.button == MouseEvent::LEFT)
     {
         m_last_clicked_grid = m_cursor[CURSOR_MOUSE];
+
+        int cx, cy;
+        mouse_pos(event.px, event.py, cx, cy);
+        const coord_def gc(cx + m_cx_to_gx, cy + m_cy_to_gy);
+        tiles.place_cursor(CURSOR_MOUSE, gc);
+
         return CK_MOUSE_CLICK;
     }
 
@@ -801,18 +807,42 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
                     return 0;
             }
 
+            // if there's an item, pick it up, otherwise wait 1 turn
             if (!(event.mod & MOD_SHIFT))
             {
                 const int o = you.visible_igrd(you.pos());
-                // More than a single item -> open menu right away.
-                if (o != NON_ITEM && mitm[o].link != NON_ITEM)
+                if(o == NON_ITEM)
                 {
-                    pickup_menu(o);
-                    flush_prev_message();
-                    redraw_screen();
-                    return CK_MOUSE_CMD;
+                    // if on stairs, travel them
+                    const dungeon_feature_type feat = grd(gc);
+                    switch (feat_stair_direction(feat))
+                    {
+                    case CMD_GO_DOWNSTAIRS:
+                    case CMD_GO_UPSTAIRS:
+                        return command_to_key(feat_stair_direction(feat));
+                    default:
+                        if (feat_is_altar(feat)
+                            && player_can_join_god(feat_altar_god(feat)))
+                        {
+                            return command_to_key(CMD_PRAY);
+                        }
+                    }
+                    // otherwise wait
+                    return command_to_key(CMD_MOVE_NOWHERE);
                 }
-                return command_to_key(CMD_PICKUP);
+                else
+                {
+                    // pick up menu
+                    // More than a single item -> open menu right away.
+                    if (o != NON_ITEM && mitm[o].link != NON_ITEM)
+                    {
+                        pickup_menu(o);
+                        flush_prev_message();
+                        redraw_screen();
+                        return CK_MOUSE_CMD;
+                    }
+                    return command_to_key(CMD_PICKUP);
+                }
             }
 
             const dungeon_feature_type feat = grd(gc);
@@ -1150,6 +1180,36 @@ bool tile_dungeon_tip(const coord_def &gc, string &tip)
     // Right-click.
     if (gc == you.pos())
     {
+        const int o = you.visible_igrd(you.pos());
+        if(o == NON_ITEM)
+        {
+            // if on stairs, travel them
+            const dungeon_feature_type feat = grd(gc);
+            if (feat_stair_direction(feat) == CMD_GO_DOWNSTAIRS
+                || feat_stair_direction(feat) == CMD_GO_UPSTAIRS)
+            {
+                _add_tip(tip, "[L-Click] Use stairs (%)");
+                cmd.push_back(feat_stair_direction(feat));
+            }
+            else if (feat_is_altar(feat)
+                     && player_can_join_god(feat_altar_god(feat)))
+            {
+                _add_tip(tip, "[L-Click] Pray at altar (%)");
+                cmd.push_back(CMD_PRAY);
+            }
+            else
+            {
+                // otherwise wait
+                _add_tip(tip, "[L-Click] Wait one turn (%)");
+                cmd.push_back(CMD_MOVE_NOWHERE);
+            }
+        }
+        else
+        {
+            // pick up menu
+            // this is already added by the code above
+        }
+
         // Character overview.
         _add_tip(tip, "[R-Click] Overview (%)");
         cmd.push_back(CMD_RESISTS_SCREEN);

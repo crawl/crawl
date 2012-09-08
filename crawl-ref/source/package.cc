@@ -39,6 +39,11 @@ Notes:
 #define DO_FSYNC
 #endif
 
+// DO_FSYNC doesn't work on Android
+#ifdef __ANDROID__
+#undef DO_FSYNC
+#endif
+
 // debugging defines
 #undef  FSCK_VERBOSE
 #undef  COSTLY_ASSERTS
