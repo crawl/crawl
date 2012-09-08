@@ -1880,12 +1880,12 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_REMOVE_CURSE:
         remove_curse();
-        lose_stat(STAT_RANDOM, 1, false, "zot ability");
+        lose_stat(STAT_RANDOM, 1, true, "zot ability");
         break;
 
     case ABIL_MAKE_SAGE:
         sage_card(20, DECK_RARITY_RARE);
-        lose_stat(STAT_RANDOM, 1 + random2(3), false, "zot ability");
+        lose_stat(STAT_RANDOM, 1 + random2(3), true, "zot ability");
         break;
 
     case ABIL_MUMMY_RESTORATION:
