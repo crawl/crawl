@@ -10,7 +10,9 @@
 
 #include <errno.h>
 #ifndef TARGET_OS_WINDOWS
-# include <langinfo.h>
+# ifndef __ANDROID__
+#  include <langinfo.h>
+# endif
 #endif
 #include <time.h>
 #include <stdlib.h>
@@ -238,7 +240,9 @@ __attribute__((externally_visible))
 
 int main(int argc, char *argv[])
 {
+#ifndef __ANDROID__
     setlocale(LC_ALL, "");
+#endif
 #ifdef USE_TILE_WEB
     if (strcasecmp(nl_langinfo(CODESET), "UTF-8"))
     {
@@ -1771,6 +1775,9 @@ static void _do_display_map()
     mpr("Move the cursor to view the level map, or type <w>?</w> for "
         "a list of commands.");
     flush_prev_message();
+
+    mouse_control mc(MOUSE_MODE_NORMAL);
+    tiles.do_map_display();
 #endif
 
     level_pos pos;
@@ -1778,6 +1785,7 @@ static void _do_display_map()
 
 #ifdef USE_TILE_LOCAL
     mpr("Returning to the game...");
+    tiles.set_map_display(false);
 #endif
     if (travel)
         start_translevel_travel(pos);
@@ -2116,6 +2124,7 @@ void process_command(command_type cmd)
         break;
 
     case CMD_NO_CMD:
+        break; // we get here after going into map mode and travelling out of it
     default:
         if (crawl_state.game_is_hints())
         {
@@ -2125,6 +2134,7 @@ void process_command(command_type cmd)
         }
         else // well, not examine, but...
            mpr("Unknown command.", MSGCH_EXAMINE_FILTER);
+
         break;
     }
 }

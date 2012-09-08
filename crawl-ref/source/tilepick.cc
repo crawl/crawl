@@ -4724,6 +4724,50 @@ tileidx_t tileidx_command(const command_type cmd)
         return TILEG_CMD_DISPLAY_COMMANDS;
     case CMD_CHARACTER_DUMP:
         return TILEG_CMD_CHARACTER_DUMP;
+    case CMD_DISPLAY_INVENTORY:
+        return TILEG_CMD_DISPLAY_INVENTORY;
+    case CMD_CAST_SPELL:
+        return TILEG_CMD_CAST_SPELL;
+    case CMD_BUTCHER:
+        return TILEG_CMD_BUTCHER;
+    case CMD_MEMORISE_SPELL:
+        return TILEG_CMD_MEMORISE_SPELL;
+    case CMD_DROP:
+        return TILEG_CMD_DROP;
+    case CMD_DISPLAY_MAP:
+        return TILEG_CMD_DISPLAY_MAP;
+    case CMD_MAP_GOTO_TARGET:
+        return TILEG_CMD_MAP_GOTO_TARGET;
+    case CMD_MAP_NEXT_LEVEL:
+        return TILEG_CMD_MAP_NEXT_LEVEL;
+    case CMD_MAP_PREV_LEVEL:
+        return TILEG_CMD_MAP_PREV_LEVEL;
+    case CMD_MAP_GOTO_LEVEL:
+        return TILEG_CMD_MAP_GOTO_LEVEL;
+    case CMD_MAP_EXCLUDE_AREA:
+        return TILEG_CMD_MAP_EXCLUDE_AREA;
+    case CMD_MAP_FIND_EXCLUDED:
+        return TILEG_CMD_MAP_FIND_EXCLUDED;
+    case CMD_MAP_CLEAR_EXCLUDES:
+        return TILEG_CMD_MAP_CLEAR_EXCLUDES;
+    case CMD_MAP_ADD_WAYPOINT:
+        return TILEG_CMD_MAP_ADD_WAYPOINT;
+    case CMD_MAP_FIND_WAYPOINT:
+        return TILEG_CMD_MAP_FIND_WAYPOINT;
+    case CMD_MAP_FIND_UPSTAIR:
+        return TILEG_CMD_MAP_FIND_UPSTAIR;
+    case CMD_MAP_FIND_DOWNSTAIR:
+        return TILEG_CMD_MAP_FIND_DOWNSTAIR;
+    case CMD_MAP_FIND_YOU:
+        return TILEG_CMD_MAP_FIND_YOU;
+    case CMD_MAP_FIND_PORTAL:
+        return TILEG_CMD_MAP_FIND_PORTAL;
+    case CMD_MAP_FIND_TRAP:
+        return TILEG_CMD_MAP_FIND_TRAP;
+    case CMD_MAP_FIND_ALTAR:
+        return TILEG_CMD_MAP_FIND_ALTAR;
+    case CMD_MAP_FIND_STASH:
+        return TILEG_CMD_MAP_FIND_STASH;
     default:
         return TILEG_TODO;
     }

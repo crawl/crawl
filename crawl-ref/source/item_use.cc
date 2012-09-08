@@ -968,6 +968,22 @@ static int _prompt_ring_to_remove(int new_ring)
     const char lslot = index_to_letter(left->link);
     const char rslot = index_to_letter(right->link);
 
+#ifdef TOUCH_UI
+    string prompt = "You're wearing two rings. Remove which one?";
+    Popup *pop = new Popup(prompt);
+    pop->push_entry(new MenuEntry(prompt, MEL_TITLE));
+    InvEntry *me = new InvEntry(*left);
+    pop->push_entry(me);
+    me = new InvEntry(*right);
+    pop->push_entry(me);
+
+    int c;
+    do
+        c = pop->pop();
+    while (c != lslot && c != rslot && c != '<' && c != '>'
+           && !key_is_escape(c) && c != ' ');
+
+#else
     mprf(MSGCH_PROMPT,
          "You're wearing two rings. Remove which one? (%c/%c/<</>/Esc)",
          lslot, rslot);
@@ -985,6 +1001,7 @@ static int _prompt_ring_to_remove(int new_ring)
         c = getchm();
     while (c != lslot && c != rslot && c != '<' && c != '>'
            && !key_is_escape(c) && c != ' ');
+#endif
 
     mesclr();
 

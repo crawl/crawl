@@ -1,0 +1,101 @@
+This document explains how to build DCSS for Android, and some of the
+technical details.
+
+
+Introduction
+------------
+DCSS for Android is based on a port of the SDL library written by
+"pelya" (https://github.com/pelya/commandergenius). The library was
+originally put together for an Android version of Commander Genius, but
+has subsequently been repurposed for other apps. It provides a number of
+features that would otherwise need to be written from scratch:
+ * pop-up keyboard
+ * configurable soft- and hard-keys
+ * a multitude of mouse settings suitable for phones and tablets
+ * bindings for native foreground/background events
+ * .apk packaging
+
+The trade-off is a build process that is somewhat different from the
+traditional "./configure; make; make install" that you might expect.
+
+
+Build Process
+-------------
+
+ * get the latest Android SDK (here:
+   http://developer.android.com/sdk/index.html)
+ * run "android" and fetch the files for the android-14 platform
+ * get the latest CrystaX NDK (here: http://www.crystax.net/en/android/ndk/7)
+ * configure your PATH. Assuming you've installed the SDK in $SDK and the
+   NDK in $NDK: export PATH=$SDK/tools:$SDK/platform-tools:$NDK:$PATH
+ * ensure that you have all of the dependent host libraries required to
+   use the SDK, NDK and build crawl's host tools (libsdl1.2-dev at least).
+   Note that you also need the zip and libvorbis-dev packages.
+ * fetch the crawl-flavoured Android SDL port from here:
+   https://github.com/frogbotherer/commandergenius
+ * cd project/jni/application
+ * Update the src link to point to the root of the crawl's repository
+     example: ln -sf $HOME/crawl src
+ * cd ../../..
+ * Those steps are needed only for the very first build:
+    * ./ChangeAppSettings.sh -a
+    * cd project
+    * android update project -p . --target android-14
+    * cd ..
+    * ./build.sh (for some reason, it always fail the first time)
+ * ./build.sh
+ * If it fails, try running it again.
+ * You should find MainActivity-debug.apk (~10MB) in project/bin. If the file
+   is only ~5MB... guess what? Run build.sh again.
+
+
+Project Structure
+-----------------
+At a high level, the SDL library and DCSS are laid out on disk as
+follows:
+
+commandergenius/
+    build.sh              # script to build DCSS
+	project/
+		bin/			  # where the .apk gets put
+		java/			  # Java code that wraps the native game+libs
+		jni/			  # where contrib libraries live, including SDL
+			application/src # link to the directory containing crawl-ref
+
+Alongside the crawl-ref directory there are some additional
+configuration and build scripts that are required to integrate the
+Android libraries with DCSS:
+
+ * AndroidBuild.sh
+   This is the point of integration between the NDK's build scripts and
+   Crawl's makefile. By default, Android builds want to use an
+   "Android.mk" file to track compiling/linking tasks, which is no good
+   for DCSS. The exact CFLAGS, LDFLAGS, libraries to link, etc., etc.
+   are also passed from this script into make, in place of any kind of
+   "configure" script. Finally, this script takes care of compressing
+   all of tiles' assets into a resource bundle suitable for inclusion
+   with the .apk.
+
+ * AndroidAppSettings.cfg
+   Configuration file that tells the SDL library and its build scripts
+   exactly how to integrate with DCSS, including things like which
+   libraries to use, default key bindings and the like.
+
+
+Technical Notes
+---------------
+ * this port uses CrystaX's version of the Android NDK, *not* the
+   official one. The reason is primarily that the official standard
+   library port doesn't support wchar_t, which DCSS uses for unicode
+   support
+ * there are lots of Android-specifics in the makefile, because (a) the
+   custom toolchain needs lots of CFLAGS and LDFLAGS to work properly
+   and (b) the target paths for the data directory are completely
+   different to where the "executable" lives on Android, and also
+   completely different to the host OS
+ * the majority of the changes to the DCSS code are changing GLES calls
+   so that they work correctly with Android's GLES implementation and
+   integrate properly with the Java-side SDL. The integration is
+   necessary because the SDL library provides overlays for the soft-
+   keyboard and configurable keys, which interferes with some of the
+   OpenGL state

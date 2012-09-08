@@ -91,6 +91,10 @@
 
 #include <dirent.h>
 
+#ifdef __ANDROID__
+#include <android/log.h>
+#endif
+
 static void _save_level(const level_id& lid);
 
 static bool _ghost_version_compatible(reader &ghost_reader);
@@ -483,9 +487,16 @@ bool check_mkdir(const string &whatdir, string *dir, bool silent)
     if (!dir_exists(*dir) && !_create_dirs(*dir))
     {
         if (!silent)
+        {
+#ifdef __ANDROID__
+            __android_log_print(ANDROID_LOG_INFO, "Crawl",
+                                "%s \"%s\" does not exist and I can't create it.",
+                                whatdir.c_str(), dir->c_str());
+#endif
             fprintf(stderr, "%s \"%s\" does not exist "
                     "and I can't create it.\n",
                     whatdir.c_str(), dir->c_str());
+        }
         return false;
     }
 

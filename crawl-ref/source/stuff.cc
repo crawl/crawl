@@ -18,8 +18,6 @@
 #include <time.h>
 #include <math.h>
 
-#include <stack>
-
 #include "cio.h"
 #include "colour.h"
 #include "crash.h"
@@ -41,6 +39,18 @@
 #include "viewchar.h"
 #include "viewgeom.h"
 
+#ifdef TOUCH_UI
+#include "tilepick.h"
+#include "tiledef-gui.h"
+#endif
+
+#ifdef __ANDROID__
+#include <android/log.h>
+double log2( double n )
+{
+    return log(n)/log(2); // :(
+}
+#endif
 
 // Crude, but functional.
 string make_time_string(time_t abs_time, bool terse)
@@ -216,6 +226,10 @@ NORETURN void end(int exit_code, bool print_error, const char *format, ...)
 
     if (!error.empty())
     {
+
+#ifdef __ANDROID__
+        __android_log_print(ANDROID_LOG_INFO, "Crawl", "%s", error.c_str());
+#endif
         fprintf(stderr, "%s", error.c_str());
         error.clear();
     }
@@ -538,9 +552,24 @@ bool yesno(const char *str, bool safe, int safeanswer, bool clear_after,
 
     string prompt = make_stringf("%s ", str ? str : "Buggy prompt?");
 
+#ifdef TOUCH_UI
+    Popup *pop = new Popup(prompt);
+    MenuEntry *status = new MenuEntry("", MEL_SUBTITLE);
+    pop->push_entry(new MenuEntry(prompt, MEL_TITLE ));
+    pop->push_entry(status);
+    MenuEntry *me = new MenuEntry("Yes", MEL_ITEM, 0, 'Y', false);
+    me->add_tile(tile_def(TILEG_PROMPT_YES, TEX_GUI));
+    pop->push_entry(me);
+    me = new MenuEntry("No", MEL_ITEM, 0, 'N', false);
+    me->add_tile(tile_def(TILEG_PROMPT_NO, TEX_GUI));
+    pop->push_entry(me);
+#endif
     mouse_control mc(MOUSE_MODE_MORE);
     while (true)
     {
+#ifdef TOUCH_UI
+        int tmp = pop->pop();
+#else
         if (!noprompt)
         {
             if (message)
@@ -550,6 +579,7 @@ bool yesno(const char *str, bool safe, int safeanswer, bool clear_after,
         }
 
         int tmp = getchm(KMC_CONFIRM);
+#endif
 
         // Prevent infinite loop if Curses HUP signal handling happens;
         // if there is no safe answer, then just save-and-exit immediately,
@@ -587,10 +617,14 @@ bool yesno(const char *str, bool safe, int safeanswer, bool clear_after,
             bool upper = (!safe && crawl_state.game_is_hints_tutorial());
             const string pr = make_stringf("%s[Y]es or [N]o only, please.",
                                            upper ? "Uppercase " : "");
+#ifdef TOUCH_UI
+            status->text = pr;
+#else
             if (message)
                 mpr(pr);
             else
                 cprintf(("\n" + pr + "\n").c_str());
+#endif
         }
     }
 }

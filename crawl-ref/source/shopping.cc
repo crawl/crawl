@@ -38,7 +38,9 @@
 #include "stuff.h"
 #include "travel.h"
 #include "env.h"
-
+#ifdef USE_TILE_LOCAL
+#include "tilereg-crt.h"
+#endif
 #define SHOPPING_LIST_COST_KEY "shopping_list_cost_key"
 
 ShoppingList shopping_list;
@@ -63,6 +65,9 @@ static void _shop_more()
 
 static bool _shop_yesno(const char* prompt, int safeanswer)
 {
+#ifdef TOUCH_UI
+    return yesno(prompt, true, safeanswer, false, false, false, NULL, GOTO_CRT);
+#else
     if (_in_shop_now)
     {
         textcolor(channel_to_colour(MSGCH_PROMPT));
@@ -72,6 +77,7 @@ static bool _shop_yesno(const char* prompt, int safeanswer)
     }
     else
         return yesno(prompt, true, safeanswer, false, false, false);
+#endif
 }
 
 static void _shop_mpr(const char* msg)
@@ -126,9 +132,215 @@ static bool _can_shoplist(level_id lev = level_id::current())
     return is_connected_branch(lev.branch);
 }
 
+#ifdef USE_TILE_LOCAL
 static void _list_shop_keys(const string &purchasable, bool viewing,
                             int total_stock, int num_selected,
-                            int num_in_list)
+                            int num_in_list, MenuFreeform* freeform)
+{
+    ASSERT(total_stock > 0);
+
+    const int numlines = get_number_of_lines();
+    formatted_string fs;
+
+    TextItem* tmp = NULL;
+
+    string shop_list = "";
+    if (!viewing && _can_shoplist())
+    {
+        shop_list = "[$] ";
+        if (num_selected > 0)
+            shop_list += "selected -> shopping list";
+        else if (num_in_list > 0)
+            shop_list += "shopping list -> selected";
+        else
+            shop_list = "";
+    }
+    if (!shop_list.empty())
+    {
+        // set cursor [line 1]
+        cgotoxy(1, numlines - 2, GOTO_CRT);
+        // print formatted string
+        fs = formatted_string::parse_string(shop_list);
+        // print menu item
+        tmp = new TextItem();
+        tmp->set_fg_colour(LIGHTGRAY);
+        tmp->set_bg_colour(BLACK);
+        tmp->set_highlight_colour(WHITE);
+        tmp->set_text(""); //shop_list);
+        tmp->set_bounds(coord_def(1, wherey()),
+                        coord_def(shop_list.size() + 1, wherey() + 1));
+        tmp->add_hotkey('$');
+        tmp->set_id('$');
+        tmp->set_description_text(shop_list);
+        freeform->attach_item(tmp);
+        // draw
+        fs.display();
+        tmp->set_visible(true);
+    }
+
+    // ///////// EXIT //////////
+    // set cursor [line 2]
+    cgotoxy(1, numlines - 1, GOTO_CRT);
+    // print formatted string for EXIT
+    fs = formatted_string::parse_string(make_stringf(
+            "[<w>x</w>/<w>Esc</w>"
+            "/<w>R-Click</w>"
+            "] exit"));
+    // print menu item
+    tmp = new TextItem();
+    tmp->set_fg_colour(LIGHTGRAY);
+    tmp->set_highlight_colour(WHITE);
+    tmp->set_text(""); //fs.tostring());
+    tmp->set_bounds(coord_def(wherex(), wherey()),
+                    coord_def(wherex() + fs.tostring().size(), wherey() + 1));
+    tmp->add_hotkey('x');
+    tmp->set_id('x');
+    tmp->set_description_text(fs.tostring());
+    freeform->attach_item(tmp);
+    // draw
+    fs.display();
+    tmp->set_visible(true);
+
+    // ///////// BUY/EXAMINE ITEMS //////////
+    // set cursor [20 chars of text + 11 spaces + start at 1]
+    cgotoxy(32, numlines - 1, GOTO_CRT);
+    // print formatted string for BUY/EXAMINE ITEMS
+    fs = formatted_string::parse_string(make_stringf(
+            "[<w>!</w>] %s",
+            (viewing ? "buy items" : "examine items") ));
+    // print menu item
+    tmp = new TextItem();
+    tmp->set_fg_colour(LIGHTGRAY);
+    tmp->set_bg_colour(BLACK);
+    tmp->set_highlight_colour(WHITE);
+    tmp->set_text(""); //fs.tostring());
+    tmp->set_bounds(coord_def(wherex(), wherey()),
+                    coord_def(wherex() + fs.tostring().size(), wherey() + 1));
+    tmp->add_hotkey('!');
+    tmp->set_id('!');
+    tmp->set_description_text(fs.tostring());
+    freeform->attach_item(tmp);
+    // draw
+    fs.display();
+    tmp->set_visible(true);
+
+
+    // ///////// SELECT ITEM TO BUY/EXAMINE //////////
+    // set cursor [32 + 16 chars + 5 whitespace]
+    cgotoxy(53, numlines - 1, GOTO_CRT);
+    // calculate and draw formatted text
+    string pkeys = "";
+    if (viewing)
+    {
+        pkeys = "<w>a</w>";
+        if (total_stock > 1)
+        {
+            pkeys += "-<w>";
+            pkeys += 'a' + total_stock - 1;
+            pkeys += "</w>";
+        }
+    }
+    else
+        pkeys = _purchase_keys(purchasable);
+
+    if (!pkeys.empty())
+    {
+        pkeys = "[" + pkeys + "] select item to "
+                + (viewing ? "examine" : "buy");
+    }
+    fs = formatted_string::parse_string(pkeys.c_str());
+    fs.display();
+
+    // ///////// THIRD LINE //////////
+    // ///////// ENTER MAKE PURCHASE //////////
+    // cursor at 1,n
+    cgotoxy(1, numlines, GOTO_CRT);
+    // print formatted string
+    fs = formatted_string::parse_string(
+            "[<w>Space</w>" // sorry! Enter and L-Click really don't work very well :(
+            "] make purchase");
+    // print menu item
+    tmp = new TextItem();
+    tmp->set_fg_colour(LIGHTGRAY);
+    tmp->set_bg_colour(BLACK);
+    tmp->set_highlight_colour(WHITE);
+    tmp->set_text(""); //fs.tostring());
+    tmp->set_bounds(coord_def(wherex(), wherey()),
+                    coord_def(wherex() + fs.tostring().size(), wherey() + 1));
+    tmp->add_hotkey(' ');
+    tmp->set_id(' ');
+    tmp->set_description_text(fs.tostring());
+    freeform->attach_item(tmp);
+    // draw
+    fs.display();
+    tmp->set_visible(true);
+
+    // ///////// LIST KNOWN //////////
+    // cursor at 1 + 21 chars + 2 whitespace
+    cgotoxy(24, numlines, GOTO_CRT);
+    // print formatted string
+    fs = formatted_string::parse_string("[<w>\\</w>] list known items");
+    // print menu item
+    tmp = new TextItem();
+    tmp->set_fg_colour(LIGHTGRAY);
+    tmp->set_bg_colour(BLACK);
+    tmp->set_highlight_colour(WHITE);
+    tmp->set_text(""); //fs.tostring());
+    tmp->set_bounds(coord_def(wherex(), wherey()),
+                    coord_def(wherex() + fs.tostring().size(), wherey() + 1));
+    tmp->add_hotkey('\\');
+    tmp->set_id('\\');
+    tmp->set_description_text(fs.tostring());
+    freeform->attach_item(tmp);
+    // draw
+    fs.display();
+    tmp->set_visible(true);
+
+    // ///////// INVENTORY //////////
+    // cursor at 24 + 20 chars + 1 whitespace
+    cgotoxy(45, numlines, GOTO_CRT);
+    // print formatted string
+    fs = formatted_string::parse_string("[<w>?</w>] inventory");
+    // print menu item
+    tmp = new TextItem();
+    tmp->set_fg_colour(LIGHTGRAY);
+    tmp->set_bg_colour(BLACK);
+    tmp->set_highlight_colour(WHITE);
+    tmp->set_text(""); //fs.tostring());
+    tmp->set_bounds(coord_def(wherex(), wherey()),
+                    coord_def(wherex() + fs.tostring().size(), wherey() + 1));
+    tmp->add_hotkey('?');
+    tmp->set_id('?');
+    tmp->set_description_text(fs.tostring());
+    freeform->attach_item(tmp);
+    // draw
+    fs.display();
+    tmp->set_visible(true);
+
+    // ///////// INVERT SELN //////////
+    // cursor at 45 + 13 chars + 2 whitespace
+    cgotoxy(60, numlines, GOTO_CRT);
+    // print formatted string
+    fs = formatted_string::parse_string("[<w>*</w>] invert selection");
+    // print menu item
+    tmp = new TextItem();
+    tmp->set_fg_colour(LIGHTGRAY);
+    tmp->set_bg_colour(BLACK);
+    tmp->set_highlight_colour(WHITE);
+    tmp->set_text(""); //fs.tostring());
+    tmp->set_bounds(coord_def(wherex(), wherey()),
+                    coord_def(wherex() + fs.tostring().size(), wherey() + 1));
+    tmp->add_hotkey('*');
+    tmp->set_id('*');
+    tmp->set_description_text(fs.tostring());
+    freeform->attach_item(tmp);
+    // draw
+    fs.display();
+    tmp->set_visible(true);
+}
+#else
+static void _list_shop_keys(const string &purchasable, bool viewing,
+                            int total_stock, int num_selected, int num_in_list)
 {
     ASSERT(total_stock > 0);
 
@@ -191,7 +403,9 @@ static void _list_shop_keys(const string &purchasable, bool viewing,
     fs = formatted_string::parse_string(
             "[<w>Enter</w>"
 #ifdef USE_TILE
+#ifndef TOUCH_UI
             "/<w>L-Click</w>"
+#endif
 #endif
             "] make purchase  [<w>\\</w>] list known items "
             "[<w>?</w>] inventory  [<w>*</w>] invert selection");
@@ -199,6 +413,7 @@ static void _list_shop_keys(const string &purchasable, bool viewing,
     fs.cprintf("%*s", get_number_of_cols() - fs.width() - 1, "");
     fs.display();
 }
+#endif
 
 static vector<int> _shop_get_stock(int shopidx)
 {
@@ -230,12 +445,18 @@ static string _shop_print_stock(const vector<int>& stock,
                                 const vector<bool>& selected,
                                 const vector<bool>& in_list,
                                 const shop_struct& shop,
-                                int total_cost,
-                                bool viewing)
+                                int total_cost, bool viewing
+#ifdef USE_TILE_LOCAL
+                                , MenuFreeform* freeform
+#endif
+                                )
 {
     ShopInfo &si  = StashTrack.get_shop(shop.pos);
     const bool id = shoptype_identifies_stock(shop.type);
     string purchasable;
+#ifdef USE_TILE_LOCAL
+    TextItem* tmp = NULL;
+#endif
     for (unsigned int i = 0; i < stock.size(); ++i)
     {
         const item_def& item = mitm[stock[i]];
@@ -299,6 +520,18 @@ static string _shop_print_stock(const vector<int>& stock,
         cprintf("%s%5d gold", chop_string(item_name, 56).c_str(), gp_value);
 
         si.add_item(item, gp_value);
+
+#ifdef USE_TILE_LOCAL
+        tmp = new TextItem();
+        tmp->set_highlight_colour(WHITE);
+        tmp->set_text(""); // will print bounding box around formatted text
+        tmp->set_bounds(coord_def(1 ,wherey()), coord_def(72, wherey() + 1));
+        tmp->add_hotkey(c);
+        tmp->set_id(c);
+        tmp->set_description_text(item_name);
+        freeform->attach_item(tmp);
+        tmp->set_visible(true);
+#endif
     }
     textcolor(LIGHTGREY);
 
@@ -378,6 +611,19 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
 
     while (true)
     {
+#ifdef USE_TILE_LOCAL
+        PrecisionMenu menu;
+        menu.set_select_type(PrecisionMenu::PRECISION_SINGLESELECT);
+        MenuFreeform* freeform = new MenuFreeform();
+        freeform->init(coord_def(1, 1),
+                       coord_def(get_number_of_cols(), get_number_of_lines() + 1),
+                       "freeform");
+        menu.attach_object(freeform);
+        menu.set_active_object(freeform);
+        BoxMenuHighlighter* highlighter = new BoxMenuHighlighter(&menu);
+        highlighter->init(coord_def(0,0), coord_def(0,0), "highlighter");
+        menu.attach_object(highlighter);
+#endif
         ASSERT(total_cost >= 0);
 
         StashTrack.get_shop(shop.pos).reset();
@@ -418,10 +664,18 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
             return bought_something;
         }
 
+#ifdef USE_TILE_LOCAL
+        const string purchasable = _shop_print_stock(stock, selected, in_list,
+                                                     shop, total_cost, viewing,
+                                                     freeform);
+        _list_shop_keys(purchasable, viewing, stock.size(), num_selected,
+                        num_in_list, freeform);
+#else
         const string purchasable = _shop_print_stock(stock, selected, in_list,
                                                      shop, total_cost, viewing);
         _list_shop_keys(purchasable, viewing, stock.size(), num_selected,
                         num_in_list);
+#endif
 
         // Cull shopping list after shop contents have been displayed, but
         // only once.
@@ -500,14 +754,35 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
 
         textcolor(LIGHTGREY);
 
+#ifdef USE_TILE_LOCAL
+        //draw menu over the top of the prompt text
+        tiles.get_crt()->attach_menu(&menu);
+        freeform->set_visible(true);
+        highlighter->set_visible(true);
+        menu.draw_menu();
+
+        int key = getch_ck();
+        if (menu.process_key(key))
+        {
+            vector<MenuItem*> selection = menu.get_selected_items();
+            if( selection.size() == 1 )
+                key = (int)selection.at(0)->get_id();
+        }
+
+#else
         mouse_control mc(MOUSE_MODE_MORE);
         int key = getchm();
+#endif
 
         if (key == '\\')
             check_item_knowledge();
         else if (key == 'x' || key_is_escape(key) || key == CK_MOUSE_CMD)
             break;
+#ifdef TOUCH_UI
+        else if (key == ' ')
+#else
         else if (key == '\r' || key == CK_MOUSE_CLICK)
+#endif
         {
             vector<bool> to_buy;
             int total_purchase = 0;
@@ -681,8 +956,12 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
         }
         else if (!isaalpha(key))
         {
+#ifdef TOUCH_UI
+            // do nothing: this should be arrow key presses and the like
+#else
             _shop_print("Huh?", 1);
             _shop_more();
+#endif
         }
         else
         {
@@ -2636,7 +2915,11 @@ class ShoppingListMenu : public Menu
 {
 public:
     ShoppingListMenu()
+#ifdef USE_TILE_LOCAL
+        : Menu(MF_MULTISELECT,"",false)
+#else
         : Menu()
+#endif
     { }
 
 protected:

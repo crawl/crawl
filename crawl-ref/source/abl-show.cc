@@ -1321,7 +1321,14 @@ bool activate_ability()
             return false;
         }
     }
-
+#ifdef TOUCH_UI
+    int selected = choose_ability_menu(talents);
+    if (selected == -1)
+    {
+        canned_msg(MSG_OK);
+        return (false);
+    }
+#else
     int selected = -1;
     while (selected < 0)
     {
@@ -1366,7 +1373,7 @@ bool activate_ability()
             }
         }
     }
-
+#endif
     return activate_talent(talents[selected]);
 }
 

@@ -58,6 +58,9 @@
 #    WEBDIR        -- place to hold the Webtiles client data. Can be either
 #                     relative to prefix or absolute.
 #
+#    ANDROID       -- perform an Android build (see docs/develop/android.txt)
+#    TOUCH_UI      -- enable UI behaviour more compatible with touch-screens
+#
 #
 # Requirements:
 #    For tile builds, you need pkg-config.
@@ -74,9 +77,9 @@ GAME = crawl
 MAKEFLAGS += -rR # This only works for recursive makes, i.e. contribs ...
 .SUFFIXES:       # ... so zap the suffix list to neutralize most predifined rules, too
 
-.PHONY: all test install clean clean-contrib clean-rltiles distclean debug debug-lite \
-        profile package-source source build-windows package-windows rest docs greet \
-        api
+.PHONY: all test install clean clean-contrib clean-rltiles clean-android \
+        distclean debug debug-lite profile package-source source \
+        build-windows package-windows rest docs greet api
 
 include Makefile.obj
 
@@ -126,7 +129,11 @@ CFWARN_L := -Wundef
 
 DEFINES := $(EXTERNAL_DEFINES)
 
+ifdef ANDROID
+LDFLAGS := $(EXTERNAL_LDFLAGS) $(LDFLAGS)
+else
 LDFLAGS := $(EXTERNAL_LDFLAGS)
+endif
 
 #
 # The GCC and GXX variables are set later.
@@ -325,7 +332,9 @@ endif
 ifdef WIN32
 EXTRA_OBJECTS += icon.o
 else
+ifndef ANDROID
 EXTRA_LIBS += -pthread
+endif
 endif
 
 ifndef TILES
@@ -530,6 +539,14 @@ CFOPTIMIZE += -march=native
 endif
 endif
 
+ifdef ANDROID
+  BUILD_LUA=
+  BUILD_SQLITE=
+  BUILD_ZLIB=
+  BUILD_SDL=
+  BUILD_FREETYPE=
+  NO_PKGCONFIG=Y
+else
 ifndef BUILD_LUA
   ifneq ($(shell $(PKGCONFIG) lua5.1 --exists || echo no),)
     ifneq ($(shell $(PKGCONFIG) lua --exists || echo no),)
@@ -571,6 +588,7 @@ ifndef BUILD_ZLIB
 else
   LIBS += $(LIBZ)
 endif
+endif #ANDROID
 
 RLTILES = rltiles
 INCLUDES_L += -I$(RLTILES)
@@ -587,6 +605,10 @@ ifdef TILES
 
 DEFINES_L += -DUSE_TILE
 DEFINES_L += -DUSE_TILE_LOCAL
+
+ifdef TOUCH_UI
+DEFINES_L += -DTOUCH_UI
+endif
 
 ifdef BUILD_SDL
 INCLUDES_L += -Icontrib/install/$(ARCH)/include/SDL
@@ -634,7 +656,9 @@ LIBS += -lSDL_image $(SDL_LDFLAGS) $(FREETYPE_LDFLAGS)
 endif # pkg-config
 
 ifdef GLES
+ifndef ANDROID
 LIBS += -lSDL_gles -lEGL -lGLES_CM
+endif
 else
 ifneq ($(uname_S),Darwin)
 ifeq (,$(findstring MINGW,$(uname_S)))
@@ -786,11 +810,11 @@ ifneq ($(strip $(DATADIR)),)
     endif
   endif
   CFOTHERS_L += -DDATA_DIR_PATH=\"$(abspath $(DATADIR))/\"
-  FONTDIR = $(abspath $(DATADIR))dat/tiles/
+  FONTDIR = $(abspath $(DATADIR))/dat/tiles/
 else
   ifneq ($(prefix),)
 	DATADIR := $(strip $(prefix))/$(strip $(DATADIR))
-        FONTDIR = $(strip $(prefix))/$(strip $(DATADIR))dat/tiles/
+        FONTDIR = $(strip $(prefix))/$(strip $(DATADIR))/dat/tiles/
   else
     ifneq ($(DESTDIR),)
         FONTDIR = dat/tiles/
@@ -922,7 +946,11 @@ ifdef REPORT
 CFOTHERS += -ftime-report
 endif
 
+ifdef ANDROID
+CFLAGS   := $(CFOPTIMIZE) $(CFOTHERS) $(CFWARN) $(CFLAGS)
+else
 CFLAGS   := $(CFOPTIMIZE) $(CFOTHERS) $(CFWARN)
+endif
 CFLAGS_L := $(CFOPTIMIZE_L) $(DEFINES_L) $(CFWARN_L) $(INCLUDES_L) $(CFOTHERS_L)
 ALL_CFLAGS := $(CFLAGS) $(CFLAGS_L)
 YACC_CFLAGS  := $(ALL_CFLAGS) -Wno-unused-function -Wno-sign-compare -DYYENABLE_NLS=0 -DYYLTYPE_IS_TRIVIAL=0
@@ -1219,6 +1247,14 @@ endif
 ##########################################################################
 # The actual build targets
 #
+ifdef ANDROID
+  # during build, data goes in a different directory to when crawl runs!
+  prefix_fp = ../..
+  datadir_fp = ../../AndroidData
+  savedir_fp = ../../AndroidData
+  shareddir_fp =
+endif
+
 install: all
 ifeq ($(DESTDIR)$(prefix),)
 	@echo Neither "DESTDIR" nor "prefix" defined -- nowhere to install to, aborting.
@@ -1302,7 +1338,7 @@ ifeq ($(USE_DGAMELAUNCH),)
 endif
 endif
 
-clean: clean-rltiles clean-webserver tx-clean
+clean: clean-rltiles clean-webserver clean-android tx-clean
 	+$(MAKE) -C $(UTIL) clean
 	$(RM) $(GAME) $(GAME).exe $(GENERATED_FILES) $(EXTRA_OBJECTS) libw32c.o\
 	    libunix.o $(ALL_OBJECTS) $(ALL_OBJECTS:.o=.d) *.ixx  \
@@ -1312,6 +1348,11 @@ clean: clean-rltiles clean-webserver tx-clean
 
 clean-contrib:
 	+$(MAKE) -C contrib clean
+
+clean-android:
+	$(RM) ../../icon.png ../../libapplication.so
+	$(RM) -r ../../AndroidData
+	$(RM) -r ../../bin
 
 distclean: clean clean-contrib clean-rltiles
 	$(RM) -r morgue saves
@@ -1568,7 +1609,14 @@ tx-sync:
 
 .PHONY: build-rltiles
 build-rltiles: .contrib-libs $(RLTILES)/dc-unrand.txt
+ifdef ANDROID
+	# force submake to run properly
+	env -i - bash -l -c "$(MAKE) -C $(RLTILES) all TILES=1 V=1"
+    # prove that tiles were generated properly
+	grep tile_info rltiles/*.cc| head
+else
 	+$(MAKE) -C $(RLTILES) all ARCH=$(ARCH) TILES=$(TILES)$(WEBTILES)
+endif
 
 $(TILEDEFSRCS) $(TILEDEFHDRS) $(ORIGTILEFILES): build-rltiles
 

@@ -11,11 +11,13 @@
 #include "tilereg.h"
 #include "tiletex.h"
 #include "mon-info.h"
+#include "menu.h"
 
 class Region;
 class CRTRegion;
 class CRTRegionSingleSelect;
 class MenuRegion;
+class PopupRegion;
 class TileRegion;
 class DungeonRegion;
 class GridRegion;
@@ -136,6 +138,11 @@ public:
 
     void draw_doll_edit();
 
+    int draw_popup(Popup *popup);
+    void set_map_display(const bool display);
+    bool get_map_display();
+    void do_map_display();
+
     MenuRegion *get_menu() { return m_region_menu; }
     bool is_fullscreen() { return m_fullscreen; }
 
@@ -148,7 +155,8 @@ protected:
                   bool default_on_fail, bool outline);
     int handle_mouse(MouseEvent &event);
 
-    void use_control_region(ControlRegion *region);
+    void use_control_region(ControlRegion *region, bool use_control_layer = true);
+    bool m_map_mode_enabled;
 
     // screen pixel dimensions
     coord_def m_windowsz;
@@ -160,6 +168,18 @@ protected:
 
     enum TabID
     {
+#ifdef TOUCH_UI
+        TAB_COMMAND,
+        TAB_ITEM,
+        TAB_NAVIGATION,
+        TAB_COMMAND2,
+        TAB_MONSTER,
+        TAB_SPELL,
+        TAB_ABILITY,
+        TAB_SKILL,
+        TAB_MEMORISE,
+        TAB_MAX,
+#else
         TAB_ITEM,
         TAB_SPELL,
         TAB_MEMORISE,
@@ -167,7 +187,10 @@ protected:
         TAB_MONSTER,
         TAB_SKILL,
         TAB_COMMAND,
+        TAB_COMMAND2,
+        TAB_NAVIGATION,
         TAB_MAX,
+#endif
     };
 
     enum LayerID
@@ -201,6 +224,8 @@ protected:
     MonsterRegion   *m_region_mon;
     SkillRegion     *m_region_skl;
     CommandRegion   *m_region_cmd;
+    CommandRegion   *m_region_cmd_meta;
+    CommandRegion   *m_region_cmd_map;
 
     map<int, TabbedRegion*> m_tabs;
 

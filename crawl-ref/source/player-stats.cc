@@ -19,6 +19,12 @@
 #include "transform.h"
 #include "hints.h"
 
+#ifdef TOUCH_UI
+#include "menu.h"
+#include "tiledef-gui.h"
+#include "tilepick.h"
+#endif
+
 int player::stat(stat_type s, bool nonneg) const
 {
     const int val = max_stat(s) - stat_loss[s];
@@ -69,10 +75,28 @@ static void _handle_stat_change(const char *aux = NULL, bool see_source = true);
 void attribute_increase()
 {
     crawl_state.stat_gain_prompt = true;
+#ifdef TOUCH_UI
+    learned_something_new(HINT_CHOOSE_STAT);
+    Popup *pop = new Popup("Increase Attributes");
+    MenuEntry *status = new MenuEntry("", MEL_SUBTITLE);
+    pop->push_entry(new MenuEntry("Your experience leads to an increase in "
+                                  "your attributes! Increase:", MEL_TITLE));
+    pop->push_entry(status);
+    MenuEntry *me = new MenuEntry("Strength", MEL_ITEM, 0, 'S', false);
+    me->add_tile(tile_def(TILEG_FIGHTING_ON, TEX_GUI));
+    pop->push_entry(me);
+    me = new MenuEntry("Intelligence", MEL_ITEM, 0, 'I', false);
+    me->add_tile(tile_def(TILEG_SPELLCASTING_ON, TEX_GUI));
+    pop->push_entry(me);
+    me = new MenuEntry("Dexterity", MEL_ITEM, 0, 'D', false);
+    me->add_tile(tile_def(TILEG_DODGING_ON, TEX_GUI));
+    pop->push_entry(me);
+#else
     mpr("Your experience leads to an increase in your attributes!",
         MSGCH_INTRINSIC_GAIN);
     learned_something_new(HINT_CHOOSE_STAT);
     mpr("Increase (S)trength, (I)ntelligence, or (D)exterity? ", MSGCH_PROMPT);
+#endif
     mouse_control mc(MOUSE_MODE_MORE);
     // Calling a user-defined lua function here to let players reply to the
     // prompt automatically.
@@ -80,7 +104,11 @@ void attribute_increase()
 
     while (true)
     {
+#ifdef TOUCH_UI
+        const int keyin = pop->pop();
+#else
         const int keyin = getchm();
+#endif
 
         switch (keyin)
         {
@@ -106,6 +134,10 @@ void attribute_increase()
         case 'D':
             modify_stat(STAT_DEX, 1, false, "level gain");
             return;
+#ifdef TOUCH_UI
+        default:
+            status->text = "Please choose an option below"; // too naggy?
+#endif
         }
     }
 }

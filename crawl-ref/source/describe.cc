@@ -64,7 +64,9 @@
 #include "hints.h"
 #include "xom.h"
 #include "mon-info.h"
-
+#ifdef USE_TILE_LOCAL
+#include "tilereg-crt.h"
+#endif
 // ========================================================================
 //      Internal Functions
 // ========================================================================
@@ -2439,6 +2441,21 @@ static bool _need_autoinscribe(item_def &item)
 // print a list of actions to be performed on the item
 static bool _actions_prompt(item_def &item, bool allow_inscribe)
 {
+#ifdef USE_TILE_LOCAL
+    PrecisionMenu menu;
+    TextItem* tmp = NULL;
+    MenuFreeform* freeform = new MenuFreeform();
+    menu.set_select_type(PrecisionMenu::PRECISION_SINGLESELECT);
+    freeform->init(coord_def(1, 1),
+                   coord_def(get_number_of_cols(), get_number_of_lines()),
+                   "freeform");
+    menu.attach_object(freeform);
+    menu.set_active_object(freeform);
+
+    BoxMenuHighlighter* highlighter = new BoxMenuHighlighter(&menu);
+    highlighter->init(coord_def(0, 0), coord_def(0, 0), "highlighter");
+    menu.attach_object(highlighter);
+#endif
     string prompt = "You can ";
     int keyin;
     vector<command_type> actions;
@@ -2531,6 +2548,20 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe)
     for (vector<command_type>::const_iterator at = actions.begin();
          at < actions.end(); ++at)
     {
+#ifdef USE_TILE_LOCAL
+        tmp = new TextItem();
+        tmp->set_id(*at);
+        tmp->set_text(act_str[*at]);
+        tmp->set_fg_colour(CYAN);
+        tmp->set_bg_colour(BLACK);
+        tmp->set_highlight_colour(LIGHTGRAY);
+        tmp->set_description_text(act_str[*at]);
+        tmp->set_bounds(coord_def(prompt.size() + 1, wherey()),
+                        coord_def(prompt.size() + act_str[*at].size() + 1,
+                                  wherey() + 1));
+        freeform->attach_item(tmp);
+        tmp->set_visible(true);
+#endif
         prompt += act_str[*at];
         if (at < actions.end() - 2)
             prompt += ", ";
@@ -2538,11 +2569,31 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe)
             prompt += " or ";
     }
     prompt += " the " + item.name(DESC_BASENAME) + ".";
+
     prompt = "<cyan>" + prompt + "</cyan>";
     formatted_string::parse_string(prompt).display();
 
+#ifdef TOUCH_UI
+
+    //draw menu over the top of the prompt text
+    tiles.get_crt()->attach_menu(&menu);
+    freeform->set_visible(true);
+    highlighter->set_visible(true);
+    menu.draw_menu();
+#endif
+
     keyin = tolower(getch_ck());
     command_type action = _get_action(keyin, actions);
+
+#ifdef TOUCH_UI
+    if (menu.process_key(keyin))
+    {
+        vector<MenuItem*> selection = menu.get_selected_items();
+        if( selection.size() == 1 )
+            action = (command_type)selection.at(0)->get_id();
+    }
+#endif
+
     int slot = item.link;
     ASSERT(slot >= 0 && slot < ENDOFPACK);
 

@@ -808,7 +808,11 @@ void game_options::reset_options()
     auto_list              = true;
 
     clear_messages         = false;
+#ifdef TOUCH_UI
+    show_more              = false;
+#else
     show_more              = true;
+#endif
     small_more             = false;
 
     pickup_thrown          = true;
@@ -892,7 +896,11 @@ void game_options::reset_options()
     dump_book_spells       = true;
 
     drop_mode              = DM_MULTI;
+#ifdef TOUCH_UI
+    pickup_mode            = 0;
+#else
     pickup_mode            = -1;
+#endif
 
     flush_input[ FLUSH_ON_FAILURE ]     = true;
     flush_input[ FLUSH_BEFORE_COMMAND ] = false;
@@ -994,9 +1002,15 @@ void game_options::reset_options()
     tile_window_height    = -90;
     tile_map_pixels       = 0;
     tile_cell_pixels      = 32;
+# ifdef TOUCH_UI
+    tile_layout_priority = split_string(",", "minimap, command, gold_turn, "
+                                             "inventory, command2, spell, "
+                                             "ability, monster");
+# else
     tile_layout_priority = split_string(",", "minimap, inventory, gold_turn, "
                                              "command, spell, ability, "
                                              "monster");
+# endif
 #endif
 
 #ifdef USE_TILE

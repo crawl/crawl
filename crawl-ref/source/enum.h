@@ -1893,6 +1893,7 @@ enum menu_type
     MT_PICKUP,
     MT_KNOW,
     MT_RUNES,
+    MT_SELONE,                         // Select one
 };
 
 enum mon_holy_type

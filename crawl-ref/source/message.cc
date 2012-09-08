@@ -1371,7 +1371,11 @@ static void readkey_more(bool user_forced)
         keypress = getch_ck();
     while (keypress != ' ' && keypress != '\r' && keypress != '\n'
            && !key_is_escape(keypress)
+#ifdef TOUCH_UI
+           && (keypress != CK_MOUSE_CLICK));
+#else
            && (user_forced || keypress != CK_MOUSE_CLICK));
+#endif
 
     if (key_is_escape(keypress))
         set_more_autoclear(true);
