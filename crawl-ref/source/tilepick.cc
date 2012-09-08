@@ -3278,6 +3278,41 @@ static tileidx_t _tileidx_food(const item_def &item)
 }
 
 
+// Returns index of skeleton tiles.
+// Parameter item holds the skeleton.
+static tileidx_t _tileidx_bone(const item_def &item)
+{
+    const monster_type mc = item.mon_type;
+    size_type st = (get_monster_data(mc)->size);
+    int cs = 0;
+
+    switch (st)
+    {
+    default: cs = 0; break;
+    case SIZE_MEDIUM:
+        cs = 1; break;
+    case SIZE_LARGE:
+    case SIZE_BIG:
+        cs = 2; break;
+    case SIZE_HUGE:
+    case SIZE_GIANT:
+        cs = 3; break;
+
+    }
+
+    switch (get_mon_shape(item.mon_type))
+    {
+    case MON_SHAPE_HUMANOID:
+    case MON_SHAPE_HUMANOID_TAILED:
+    case MON_SHAPE_HUMANOID_WINGED:
+    case MON_SHAPE_HUMANOID_WINGED_TAILED:
+        return (TILE_FOOD_BONE_HUMANOID + cs);
+    default:
+        return (TILE_FOOD_BONE + cs);
+    }
+}
+
+
 // Returns index of corpse tiles.
 // Parameter item holds the corpse.
 static tileidx_t _tileidx_corpse(const item_def &item)
@@ -4020,7 +4055,7 @@ tileidx_t tileidx_item(const item_def &item)
 
     case OBJ_CORPSES:
         if (item.sub_type == CORPSE_SKELETON)
-            return TILE_FOOD_BONE;
+            return _tileidx_bone(item);
         else
             return _tileidx_corpse(item);
 
