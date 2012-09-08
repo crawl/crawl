@@ -2550,6 +2550,25 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
             return tile;
         }
 
+        case MONS_ARACHNE:
+        {
+            // Arachne normally is drawn with her staff wielded two-handed,
+            // but will use a regular stance if she picks up a shield
+            // (enhancer staves are compatible with those) or Xom does his
+            // weapon swap trick.
+            const item_def* weapon = mon.inv[MSLOT_WEAPON].get();
+            if (!mon.inv[MSLOT_SHIELD].get() && weapon
+                && (weapon->base_type == OBJ_STAVES
+                      && weapon->sub_type == STAFF_POISON
+                    || weapon->base_type == OBJ_WEAPONS
+                      && weapon->special == UNRAND_OLGREB))
+            {
+                return TILEP_MONS_ARACHNE;
+            }
+            else
+                return TILEP_MONS_ARACHNE_STAVELESS;
+        }
+
         case MONS_SENSED:
         {
             // Should be always out of LOS, though...
