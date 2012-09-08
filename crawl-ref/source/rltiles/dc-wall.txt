@@ -946,85 +946,49 @@ iron2-4
 
 dngn/grate DNGN_GRATE
 
-%hue 150 120
-green_crystal_wall DNGN_GREEN_CRYSTAL_WALL DNGN_CRYSTAL DNGN_CRYSTAL_GREEN
-%resetcol
+crystal_wall_green DNGN_GREEN_CRYSTAL_WALL DNGN_CRYSTAL DNGN_CRYSTAL_GREEN
 
 %variation DNGN_CRYSTAL blue
-%hue 120 240
-%repeat DNGN_CRYSTAL DNGN_CRYSTAL_BLUE
-%resetcol
+crystal_wall_blue DNGN_CRYSTAL_BLUE
 
 %variation DNGN_CRYSTAL cyan
-%hue 120 180
-%repeat DNGN_CRYSTAL DNGN_CRYSTAL_CYAN
-%resetcol
+crystal_wall_cyan DNGN_CRYSTAL_CYAN
 
 %variation DNGN_CRYSTAL red
-%hue 120 0
-%repeat DNGN_CRYSTAL DNGN_CRYSTAL_RED
-%resetcol
+crystal_wall_red DNGN_CRYSTAL_RED
 
 %variation DNGN_CRYSTAL magenta
-%hue 120 300
-%repeat DNGN_CRYSTAL DNGN_CRYSTAL_MAGENTA
-%resetcol
+crystal_wall_magenta DNGN_CRYSTAL_MAGENTA
 
 %variation DNGN_CRYSTAL brown
-%hue 120 30
-%repeat DNGN_CRYSTAL DNGN_CRYSTAL_BROWN
-%resetcol
+crystal_wall_brown DNGN_CRYSTAL_BROWN
 
 %variation DNGN_CRYSTAL lightgray
-%desat 120
-%lum 120 -20
-%repeat DNGN_CRYSTAL DNGN_CRYSTAL_LIGHTGRAY
-%resetcol
+crystal_wall_lightgray DNGN_CRYSTAL_LIGHTGRAY
 
 %variation DNGN_CRYSTAL darkgray
-%desat 120
-%lum 120 -40
-%repeat DNGN_CRYSTAL DNGN_CRYSTAL_DARKGRAY
-%resetcol
+crystal_wall_darkgray DNGN_CRYSTAL_DARKGRAY
 
 %variation DNGN_CRYSTAL lightblue
-%hue 120 240
-%lum 120 30
-%repeat DNGN_CRYSTAL DNGN_CRYSTAL_LIGHTBLUE
-%resetcol
+crystal_wall_lightblue DNGN_CRYSTAL_LIGHTBLUE
 
 %variation DNGN_CRYSTAL lightgreen
-%lum 120 30
-%repeat DNGN_CRYSTAL DNGN_CRYSTAL_LIGHTGREEN
-%resetcol
+crystal_wall_lightgreen DNGN_CRYSTAL_LIGHTGREEN
 
 %variation DNGN_CRYSTAL lightcyan
-%hue 120 180
-%lum 120 30
-%repeat DNGN_CRYSTAL DNGN_CRYSTAL_LIGHTCYAN
-%resetcol
+crystal_wall_lightcyan DNGN_CRYSTAL_LIGHTCYAN
 
 %variation DNGN_CRYSTAL lightred
-%hue 120 0
-%lum 120 30
-%repeat DNGN_CRYSTAL DNGN_CRYSTAL_LIGHTRED
-%resetcol
+crystal_wall_lightred DNGN_CRYSTAL_LIGHTRED
 
 %variation DNGN_CRYSTAL lightmagenta
-%hue 120 300
-%lum 120 30
-%repeat DNGN_CRYSTAL DNGN_CRYSTAL_LIGHTMAGENTA
-%resetcol
+crystal_wall_lightmagenta DNGN_CRYSTAL_LIGHTMAGENTA
 
 %variation DNGN_CRYSTAL yellow
-%hue 120 60
-%repeat DNGN_CRYSTAL DNGN_CRYSTAL_YELLOW
-%resetcol
+crystal_wall_yellow DNGN_CRYSTAL_YELLOW
 
 %variation DNGN_CRYSTAL white
-%desat 120
-%repeat DNGN_CRYSTAL DNGN_CRYSTAL_WHITE
-%resetcol
+crystal_wall_white DNGN_CRYSTAL_WHITE
 
 %sdir dngn/wall
 emerald1 WALL_EMERALD
