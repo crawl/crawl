@@ -48,6 +48,7 @@
 #include "effects.h"
 #include "env.h"
 #include "errors.h"
+#include "fineff.h"
 #include "ghost.h"
 #include "godpassive.h"
 #include "initfile.h"
@@ -1270,6 +1271,12 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     show_update_emphasis();
 
     // Shouldn't happen, but this is too unimportant to assert.
+    for (vector<final_effect *>::iterator i = env.final_effects.begin();
+         i != env.final_effects.end(); ++i)
+    {
+        if (*i)
+            delete *i;
+    }
     env.final_effects.clear();
     los_changed();
 

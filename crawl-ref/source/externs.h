@@ -777,14 +777,6 @@ struct mon_display
        : glyph(gly), colour(col), detected(d) { }
 };
 
-struct final_effect
-{
-    final_effect_flavour flavour;
-    mid_t att, def;
-    coord_def pos;
-    int x;
-};
-
 typedef FixedArray<item_type_id_state_type, NUM_OBJECT_CLASSES, MAX_SUBTYPES> id_arr;
 
 #endif // EXTERNS_H

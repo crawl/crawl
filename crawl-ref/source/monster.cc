@@ -4193,10 +4193,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         react_to_damage(agent, amount, flavour);
 
         if (has_ench(ENCH_MIRROR_DAMAGE))
-        {
-            add_final_effect(FINEFF_MIRROR_DAMAGE, agent, this,
-                             coord_def(0, 0), amount);
-        }
+            (new mirror_damage_fineff(agent, this, amount))->schedule();
 
         blame_damage(agent, amount);
         behaviour_event(this, ME_HURT);
@@ -5436,10 +5433,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
 
     // The royal jelly objects to taking damage and will SULK. :-)
     if (type == MONS_ROYAL_JELLY)
-    {
-        add_final_effect(FINEFF_ROYAL_JELLY_SPAWN, oppressor, this,
-                         pos(), damage);
-    }
+        (new trj_spawn_fineff(oppressor, this, pos(), damage))->schedule();
 
     if (!alive())
         return;
@@ -5675,7 +5669,7 @@ void monster::steal_item_from_player()
             {
                 mons_cast_noise(this, beem, SPELL_BLINK);
                 // this can kill us, delay the call
-                add_final_effect(FINEFF_BLINK, 0, this);
+                (new blink_fineff(this))->schedule();
             }
             else
                 mons_cast(this, beem, SPELL_TELEPORT_SELF);

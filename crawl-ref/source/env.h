@@ -15,6 +15,7 @@ typedef set<string> string_set;
 struct vault_placement;
 typedef vector<vault_placement*> vault_placement_refv;
 
+class final_effect;
 struct crawl_environment
 {
     colour_t rock_colour;
@@ -116,7 +117,7 @@ struct crawl_environment
     map<mid_t, unsigned short> mid_cache;
 
     // Temp stuff.
-    vector<final_effect> final_effects;
+    vector<final_effect *> final_effects;
 };
 
 #ifdef DEBUG_GLOBALS
