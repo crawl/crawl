@@ -945,7 +945,7 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     case MONS_TOADSTOOL:
         return _mon_mod(TILEP_MONS_TOADSTOOL, tile_num_prop);
     case MONS_FUNGUS:
-        return TILEP_MONS_FUNGUS;
+        return _mon_mod(TILEP_MONS_FUNGUS, tile_num_prop);
     case MONS_WANDERING_MUSHROOM:
         return TILEP_MONS_WANDERING_MUSHROOM;
 
@@ -5363,7 +5363,7 @@ void tile_init_props(monster* mon)
 {
     // Only those use tile_num.
     if (mon->type != MONS_TOADSTOOL && mon->type != MONS_SLAVE
-        && mon->type != MONS_PLANT)
+        && mon->type != MONS_PLANT && mon->type != MONS_FUNGUS)
     {
         return;
     }

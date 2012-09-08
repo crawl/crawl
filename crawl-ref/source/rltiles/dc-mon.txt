@@ -795,13 +795,23 @@ vault/deep_elf_elementalist MONS_DEEP_ELF_ELEMENTALIST
 
 ## Fungi ('f')
 %sdir mon/fungi_plants
+%rim 0
 toadstool_left MONS_TOADSTOOL
 toadstool_right
-fungus MONS_FUNGUS
+fungus1 MONS_FUNGUS
+fungus2
+fungus3
+fungus4
+fungus5
+fungus6
+fungus7
+fungus8
+fungus9
 ballistomycete MONS_BALLISTOMYCETE_INACTIVE
 active_ballistomycete MONS_BALLISTOMYCETE_ACTIVE
 hyperactive_ballistomycete MONS_HYPERACTIVE_BALLISTOMYCETE
 wandering_mushroom MONS_WANDERING_MUSHROOM
+%rim 1
 
 ## Goblins ('g')
 %sdir mon/unique
