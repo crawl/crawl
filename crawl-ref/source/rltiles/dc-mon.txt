@@ -624,6 +624,7 @@ shedu MONS_SHEDU
 tengu_conjurer MONS_TENGU_CONJURER
 %sdir mon/unique
 arachne MONS_ARACHNE
+arachne_staveless MONS_ARACHNE_STAVELESS
 
 ## Various beasts ('I')
 %sdir mon/animals
