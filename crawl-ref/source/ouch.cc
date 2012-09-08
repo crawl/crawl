@@ -996,8 +996,7 @@ static void _yred_mirrors_injury(int dam, int death_source)
         if (dam <= 0 || invalid_monster_index(death_source))
             return;
 
-        add_final_effect(FINEFF_MIRROR_DAMAGE, &menv[death_source], &you,
-                         coord_def(0, 0), dam);
+        (new mirror_damage_fineff(&menv[death_source], &you, dam))->schedule();
     }
 }
 

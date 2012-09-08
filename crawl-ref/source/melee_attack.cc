@@ -601,11 +601,7 @@ bool melee_attack::handle_phase_damaged()
             blood = defender->stat_hp();
         if (blood)
         {
-            // ugh: bleed_onto_floor need the monster type, but that won't
-            // be valid if the monster is dead.  Assumes that damage and
-            // monster_type each fit into 16 bits.
-            add_final_effect(FINEFF_BLOOD, attacker, defender, defender->pos(),
-                             blood << 16 | defender->type);
+            (new blood_fineff(defender, defender->pos(), blood))->schedule();
         }
     }
 
@@ -2188,7 +2184,7 @@ bool melee_attack::distortion_affects_defender()
         if (defender_visible)
             obvious_effect = true;
         if (!defender->no_tele(true, false))
-            add_final_effect(FINEFF_BLINK, 0, defender);
+            (new blink_fineff(defender))->schedule();
         return false;
     }
 
@@ -2206,7 +2202,7 @@ bool melee_attack::distortion_affects_defender()
             canned_msg(MSG_STRANGE_STASIS);
         }
         else if (coinflip())
-            add_final_effect(FINEFF_DISTORTION_TELEPORT, 0, defender);
+            (new distortion_tele_fineff(defender))->schedule();
         else
             defender->teleport();
         return false;
@@ -2920,10 +2916,7 @@ bool melee_attack::apply_damage_brand()
             // resistant, from above, but we still have to make sure it
             // is in water (and not clinging above it).
             if (_conduction_affected(pos))
-            {
-                add_final_effect(FINEFF_LIGHTNING_DISCHARGE, attacker, defender,
-                                 pos);
-            }
+                (new lightning_fineff(attacker, pos))->schedule();
         }
 
         break;
@@ -4327,7 +4320,7 @@ void melee_attack::mons_apply_attack_flavour()
     case AF_BLINK:
         // blinking can kill, delay the call
         if (one_chance_in(3))
-            add_final_effect(FINEFF_BLINK, 0, attacker);
+            (new blink_fineff(attacker))->schedule();
         break;
 
     case AF_CONFUSE:
@@ -4773,7 +4766,7 @@ bool melee_attack::do_knockback(bool trample)
         // is a player, a shaft trap will unload the level.  If trampling will
         // somehow fail, move attempt will be ignored.
         if (trample)
-            add_final_effect(FINEFF_TRAMPLE_FOLLOW, attacker, 0, old_pos);
+            (new trample_follow_fineff(attacker, old_pos))->schedule();
 
         if (defender->as_player())
             move_player_to_grid(new_pos, false, true);

@@ -789,10 +789,7 @@ static bool _charged_damages_victim(bolt &beam, actor* victim, int &dmg,
     }
 
     if (feat_is_water(grd(victim->pos())))
-    {
-        add_final_effect(FINEFF_LIGHTNING_DISCHARGE, beam.agent(), 0,
-                         victim->pos(), 0);
-    }
+        (new lightning_fineff(beam.agent(), victim->pos()))->schedule();
 
     return false;
 }

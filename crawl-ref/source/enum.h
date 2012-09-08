@@ -3457,17 +3457,6 @@ enum daction_type
     NUM_DACTIONS,
 };
 
-enum final_effect_flavour
-{
-    FINEFF_LIGHTNING_DISCHARGE,
-    FINEFF_MIRROR_DAMAGE,
-    FINEFF_TRAMPLE_FOLLOW,
-    FINEFF_BLINK,
-    FINEFF_DISTORTION_TELEPORT,
-    FINEFF_ROYAL_JELLY_SPAWN,
-    FINEFF_BLOOD,
-};
-
 enum disable_type
 {
     DIS_SPAWNS,
