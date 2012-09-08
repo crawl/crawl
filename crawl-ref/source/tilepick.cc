@@ -3283,12 +3283,13 @@ static tileidx_t _tileidx_food(const item_def &item)
 static tileidx_t _tileidx_bone(const item_def &item)
 {
     const monster_type mc = item.mon_type;
-    size_type st = (get_monster_data(mc)->size);
+    const size_type st = get_monster_data(mc)->size;
     int cs = 0;
 
     switch (st)
     {
-    default: cs = 0; break;
+    default:
+        cs = 0; break;
     case SIZE_MEDIUM:
         cs = 1; break;
     case SIZE_LARGE:
