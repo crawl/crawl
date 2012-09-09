@@ -198,11 +198,6 @@ distance_iterator::distance_iterator(const coord_def& _center, bool _fair,
         advance();
 }
 
-static inline int sgn(int x)
-{
-    return (x < 0) ? -1 : (x > 0) ? 1 : 0;
-}
-
 bool distance_iterator::advance()
 {
 again:
