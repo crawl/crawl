@@ -42,6 +42,7 @@ slowed SLOWED
 fleeing FLEEING
 may_stab_brand MAY_STAB_BRAND
 sleeping STAB_BRAND
+pain_mirror PAIN_MIRROR
 
 something_under SOMETHING_UNDER
 tried TRIED

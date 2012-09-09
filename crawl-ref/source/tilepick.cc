@@ -2609,6 +2609,8 @@ tileidx_t tileidx_monster(const monster_info& mons)
         ch |= TILE_FLAG_GLOWING;
     if (mons.is(MB_SLOWED))
         ch |= TILE_FLAG_SLOWED;
+    if (mons.is(MB_MIRROR_DAMAGE))
+        ch |= TILE_FLAG_PAIN_MIRROR;
 
     if (mons.attitude == ATT_FRIENDLY)
         ch |= TILE_FLAG_PET;
