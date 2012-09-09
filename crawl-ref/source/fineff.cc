@@ -24,7 +24,10 @@ void final_effect::schedule()
     {
         if (mergeable(**fi))
         {
-            (*fi)->merge(*this);
+            final_effect *fe = *fi;
+            merge(*fe);
+            *fi = this;
+            delete fe;
             return;
         }
     }
