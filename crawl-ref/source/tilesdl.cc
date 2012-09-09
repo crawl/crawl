@@ -248,6 +248,8 @@ void TilesFramework::draw_doll_edit()
 void TilesFramework::set_map_display(const bool display)
 {
     m_map_mode_enabled = display;
+    if (!display)
+        m_region_tab->activate_tab(TAB_ITEM);
 }
 
 bool TilesFramework::get_map_display()
