@@ -4,8 +4,8 @@ Paul Du Bois, Florian Diebold, Michael Gagno, Eino Keskitalo, Vsevolod
 Kozlov, Janne Lahdenperä, Raphaël Langella, Nat Lanza, Jesse Luehrs,
 Steve Melenchuk, Neil Middleton, Neil Moore, Steven Noonan, Haran Pilpel,
 Aaron Pixton, David Ploog, Johanna Ploog, Stefan O'Rear, Charles Otto,
-David Lawrence Ramsey, Robert Vollmert, Enne Walker, Samuel Wilson) would
-like to thank:
+David Lawrence Ramsey, Robert Vollmert, Enne Walker, Chris West, Samuel Wilson)
+would like to thank:
 
 * Linley Henzell, the author of Dungeon Crawl, for writing this great game.
 
