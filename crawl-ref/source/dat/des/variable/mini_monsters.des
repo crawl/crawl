@@ -1687,12 +1687,12 @@ NAME:    hangedman_elemental_death_ray
 TAGS:    transparent
 DEPTH:   D:13-
 MONS:    deep dwarf artificer ; wand of cold | wand of frost w:5 . \
-         staff of fire w:15 | staff ego:flaming w:14 | rod of destruction w:1 . \
+         staff of fire w:15 | quarterstaff ego:flaming w:14 | rod of destruction w:1 . \
          robe race:none ego:fire_resistance w:15 | \
          robe race:none ego:cold_resistance w:14 | \
          robe race:none ego:resistance w:1
 MONS:    deep dwarf artificer ; wand of fire | wand of flame w:5 . \
-         staff of cold w:15 | staff ego:freezing w:14 | rod of destruction w:1 . \
+         staff of cold w:15 | quarterstaff ego:freezing w:14 | rod of destruction w:1 . \
          robe race:none ego:fire_resistance w:15 | \
          robe race:none ego:cold_resistance w:14 | \
          robe race:none ego:resistance w:1
