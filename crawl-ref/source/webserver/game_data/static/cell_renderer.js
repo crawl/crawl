@@ -653,6 +653,11 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
             if (fg.SLOWED)
             {
                 this.draw_icon(icons.SLOWED, x, y, -status_shift, 0);
+                status_shift += 11;
+            }
+            if (fg.PAIN_MIRROR)
+            {
+                this.draw_icon(icons.PAIN_MIRROR, x, y, -status_shift, 0);
                 status_shift += 13;
             }
 
