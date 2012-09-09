@@ -2859,7 +2859,7 @@ static bool _mons_drain_life(monster* mons, bool actual)
                 continue;
 
             if (actual)
-                ouch(hurted, mons->mindex(), KILLED_BY_BEAM, mons->name(DESC_A).c_str());
+                ouch(hurted, mons->mindex(), KILLED_BY_BEAM, "by drain life");
 
             success = true;
 
