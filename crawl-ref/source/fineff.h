@@ -7,17 +7,6 @@
 #ifndef FINEFF_H
 #define FINEFF_H
 
-enum final_effect_flavour
-{
-    FINEFF_LIGHTNING_DISCHARGE,
-    FINEFF_MIRROR_DAMAGE,
-    FINEFF_TRAMPLE_FOLLOW,
-    FINEFF_BLINK,
-    FINEFF_DISTORTION_TELEPORT,
-    FINEFF_ROYAL_JELLY_SPAWN,
-    FINEFF_BLOOD,
-};
-
 class final_effect
 {
 public:
@@ -30,7 +19,7 @@ public:
     virtual ~final_effect() {}
 
     virtual bool mergeable(const final_effect &a) const = 0;
-    virtual void merge(const final_effect &a) const
+    virtual void merge(const final_effect &a)
     {
     }
 
