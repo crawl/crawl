@@ -214,7 +214,8 @@ mcache_monster::mcache_monster(const monster_info& mon)
     m_mon_tile = tileidx_monster(mon) & TILE_FLAG_MASK;
 
     m_equ_tile = tilep_equ_weapon(*mon.inv[MSLOT_WEAPON]);
-    m_shd_tile = tilep_equ_shield(*mon.inv[MSLOT_SHIELD]);
+    const item_info* mon_shield = mon.inv[MSLOT_SHIELD].get();
+    m_shd_tile = (mon_shield != NULL) ? tilep_equ_shield(*mon_shield) : 0;
 }
 
 // Returns the amount of pixels necessary to shift a wielded weapon
