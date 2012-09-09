@@ -92,7 +92,7 @@ class KillMaster;
 class ghost_demon;
 struct glyph;
 
-template <typename Z> inline Z sgn(Z x)
+template <typename Z> static inline Z sgn(Z x)
 {
     return (x < 0 ? -1 : (x > 0 ? 1 : 0));
 }
