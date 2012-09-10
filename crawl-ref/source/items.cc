@@ -1647,6 +1647,9 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
             mpr("Press } to see all the runes you have collected.");
         }
 
+        if (mitm[obj].plus == RUNE_ABYSSAL)
+            mpr("You feel the abyssal rune guiding you out of this place.");
+
         if (mitm[obj].plus == RUNE_TOMB)
             add_daction(DACT_TOMB_CTELE);
 
