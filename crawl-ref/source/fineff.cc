@@ -243,9 +243,12 @@ void blood_fineff::fire()
 void fire_final_effects()
 {
     for (unsigned int i = 0; i < env.final_effects.size(); ++i)
-    {
         env.final_effects[i]->fire();
+
+    // Delete the allocated final_effects in a separate pass; otherwise,
+    // if one fineff schedules another, we would dereference a deleted object
+    // when checking mergeability in final_effect::schedule().
+    for (unsigned int i = 0; i < env.final_effects.size(); ++i)
         delete env.final_effects[i];
-    }
     env.final_effects.clear();
 }
