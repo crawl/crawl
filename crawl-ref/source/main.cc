@@ -2734,7 +2734,8 @@ static void _decrement_durations()
 
     if (!you.permanent_flight()
         && _decrement_a_duration(DUR_CONTROLLED_FLIGHT, delay)
-        && you.airborne())
+        && you.airborne()
+        && !player_effect_cfly())
     {
             mpr("You lose control over your flight.", MSGCH_DURATION);
     }
