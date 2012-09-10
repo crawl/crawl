@@ -909,8 +909,11 @@ static bool _in_ood_pack_protected_place()
 static string _abyss_monster_creation_message(monster* mon, bool visible)
 {
   if (mon->type == MONS_DEATH_COB)
-  {
-      return " pops from null space!";
+  {   
+      if (visible) {
+        return coinflip() ? " appears in a burst of microwaves!" : " pops from nullspace!";
+      }
+      return " smells like butter!";
   }
 
   string messages[] = { 
