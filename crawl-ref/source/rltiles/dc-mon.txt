@@ -14,7 +14,7 @@ queen_ant MONS_QUEEN_ANT
 
 ## Batty monsters ('b')
 bat MONS_BAT
-../../player/transform/bat_form MONS_VAMPIRE_BAT
+vampire_bat MONS_VAMPIRE_BAT
 butterfly MONS_BUTTERFLY
 butterfly1
 butterfly2
