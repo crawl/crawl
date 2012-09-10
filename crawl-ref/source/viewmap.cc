@@ -869,7 +869,6 @@ bool show_map(level_pos &lpos,
                     tiles.update_tabs();
                     first_run = false;
                 }
-                else
 #endif
                 tiles.load_dungeon(lpos.pos);
 #endif
