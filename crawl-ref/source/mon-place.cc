@@ -10,6 +10,7 @@
 #include "mon-place.h"
 #include "mgen_data.h"
 
+#include "abyss.h"
 #include "areas.h"
 #include "arena.h"
 #include "branch.h"
@@ -38,6 +39,7 @@
 #include "random.h"
 #include "religion.h"
 #include "shopping.h"
+#include "spl-clouds.h"
 #include "spl-damage.h"
 #include "sprint.h"
 #include "stairs.h"
@@ -904,6 +906,24 @@ static bool _in_ood_pack_protected_place()
     return (env.turns_on_level < 1400 - env.absdepth0 * 117);
 }
 
+static string _abyss_monster_creation_message(monster* mon, bool visible)
+{
+  if (mon->type == MONS_DEATH_COB)
+  {
+      return " pops from null space!";
+  }
+
+  string messages[] = { 
+      (visible ? " appears" : " flickers") + string(" in a shower of sparks"),
+      " materialises.",
+      " emerges from chaos.",
+      " assembles " + string(mons_pronoun(mon->type, PRONOUN_REFLEXIVE, visible)) + ".",
+      " errupts from nowhere.",
+      " is cast out of reality.",
+  };
+  return messages[random2(6)];
+}
+
 monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
 {
 #ifdef DEBUG_MON_CREATION
@@ -1134,44 +1154,55 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
              mon->name(DESC_PLAIN).c_str(), mon->pos().x, mon->pos().y);
 #endif
     }
+    
+    if (player_in_branch(BRANCH_ABYSS))
+    {
+        big_cloud(CLOUD_TLOC_ENERGY, mon, mon->pos(), 3 + random2(3), 3, 3);
+    }
 
     // Message to player from stairwell/gate appearance.
-    if (you.see_cell(mg.pos) && mg.proximity == PROX_NEAR_STAIRS)
+    if (you.see_cell(mg.pos) && 
+       (mg.proximity == PROX_NEAR_STAIRS || player_in_branch(BRANCH_ABYSS)))
     {
         string msg;
-
-        if (mon->visible_to(&you))
+        bool is_visible = mon->visible_to(&you);
+        if (is_visible)
             msg = mon->name(DESC_A);
         else if (shoved)
             msg = "Something";
 
-        if (shoved)
+        if (mg.proximity == PROX_NEAR_STAIRS)
         {
-            msg += " shoves you out of the ";
-            if (stair_type == DCHAR_ARCH)
-                msg += "gateway!";
-            else
-                msg += "stairwell!";
-            mpr(msg.c_str());
-        }
-        else if (!msg.empty())
-        {
-            if (stair_type == DCHAR_STAIRS_DOWN)
-                msg += " comes up the stairs.";
-            else if (stair_type == DCHAR_STAIRS_UP)
-                msg += " comes down the stairs.";
-            else if (stair_type == DCHAR_ARCH)
-                msg += " comes through the gate.";
-            else
-                msg = "";
-
-            if (!msg.empty())
+            if (shoved)
+            {
+                msg += " shoves you out of the ";
+                if (stair_type == DCHAR_ARCH)
+                    msg += "gateway!";
+                else
+                    msg += "stairwell!";
                 mpr(msg.c_str());
+            }
+            else if (!msg.empty())
+            {
+                if (stair_type == DCHAR_STAIRS_DOWN)
+                    msg += " comes up the stairs.";
+                else if (stair_type == DCHAR_STAIRS_UP)
+                    msg += " comes down the stairs.";
+                else if (stair_type == DCHAR_ARCH)
+                    msg += " comes through the gate.";
+                else
+                    msg = "";
+            }
+        } 
+        else if (player_in_branch(BRANCH_ABYSS))
+        {
+            msg += _abyss_monster_creation_message(mon, is_visible);
         }
-
+        if (!msg.empty())
+            mpr(msg.c_str());
         // Special case: must update the view for monsters created
         // in player LOS.
-        viewwindow();
+        viewwindow();  
     }
 
     // Now, forget about banding if the first placement failed, or there are

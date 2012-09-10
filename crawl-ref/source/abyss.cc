@@ -14,7 +14,6 @@
 #include "abyss.h"
 #include "areas.h"
 #include "artefact.h"
-#include "cellular.h"
 #include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
@@ -39,7 +38,6 @@
 #include "mon-transit.h"
 #include "mon-util.h"
 #include "notes.h"
-#include "perlin.h"
 #include "player.h"
 #include "random.h"
 #include "religion.h"
@@ -105,7 +103,7 @@ static coord_def _place_feature_near(const coord_def &centre,
     return INVALID_COORD;
 }
 
-//#define DEBUG_ABYSS
+#define DEBUG_ABYSS
 
 // Returns a feature suitable for use in the proto-Abyss level.
 static dungeon_feature_type _abyss_proto_feature()
@@ -903,15 +901,17 @@ static void _abyss_shift_level_contents_around_player(
 
 static void _abyss_generate_monsters(int nmonsters)
 {
-    mgen_data mons;
-    mons.proximity  = PROX_AWAY_FROM_PLAYER;
+    mgen_data mg;
+    mg.proximity = PROX_ANYWHERE;
 
     for (int mcount = 0; mcount < nmonsters; mcount++)
     {
-        mons.cls = pick_random_monster_for_place(BRANCH_ABYSS, MONS_NO_MONSTER,
-                                                 false, false, false);
-        if (!invalid_monster_type(mons.cls))
-            mons_place(mons);
+        mg.cls = pick_random_monster_for_place(BRANCH_ABYSS, MONS_NO_MONSTER,
+                                               false, false, false);
+        if (!invalid_monster_type(mg.cls))
+        {
+            mons_place(mg);
+        }
     }
 }
 
@@ -987,13 +987,8 @@ static dungeon_feature_type _abyss_grid(const coord_def &p, double depth,
                                         cloud_type &cloud, int &cloud_lifetime)
 {
     const coord_def pt = p + abyssal_state.major_coord; 
-    ChaoticLayout chaoticLayout1(12345);
-    ChaoticLayout chaoticLayout2(141, 400);
-    WorleyLayout chaoticMix(11111, 0.10, chaoticLayout1, chaoticLayout2);
     MixedColumnLayout columnLayout(8675309);
-    WorleyLayout sublayout(54321, 0.3, chaoticMix, columnLayout);
-    WorleyLayout layout(354, 0.02, sublayout, columnLayout);
-    dungeon_feature_type feat = layout(pt, depth);
+    dungeon_feature_type feat = columnLayout(pt, depth);
     _previous_abyss_feature[p.x][p.y] = feat;
     return feat;
 }
