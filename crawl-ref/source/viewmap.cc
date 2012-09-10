@@ -700,6 +700,9 @@ bool show_map(level_pos &lpos,
     bool chose      = false;
 #ifdef USE_TILE_LOCAL
     bool first_run  = true;
+
+    mouse_control mc(MOUSE_MODE_NORMAL);
+    tiles.do_map_display();
 #endif
     {
         levelview_excursion le(travel_mode);
@@ -1308,6 +1311,10 @@ bool show_map(level_pos &lpos,
 #endif
 
     redraw_screen();
+#ifdef USE_TILE_LOCAL
+    tiles.set_map_display(false);
+#endif
+
     return chose;
 }
 
