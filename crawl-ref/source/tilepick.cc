@@ -4302,6 +4302,11 @@ tileidx_t tileidx_cloud(const cloud_info &cl, bool disturbance)
                 ch += random2(tile_main_count(ch));
                 break;
 
+            case CLOUD_CHAOS:
+                ch = TILE_CLOUD_CHAOS;
+                ch += random2(tile_main_count(ch));
+                break;
+
             default:
                 ch = TILE_CLOUD_GREY_SMOKE;
                 break;

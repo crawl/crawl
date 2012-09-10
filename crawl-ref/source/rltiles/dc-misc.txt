@@ -129,6 +129,12 @@ dngn/water/ink_full CLOUD_INK
 
 cloud_gloom CLOUD_GLOOM
 
+cloud_chaos1 CLOUD_CHAOS
+cloud_chaos2
+cloud_chaos3
+cloud_chaos4
+cloud_chaos5
+
 tornado1 CLOUD_RAGING_WINDS_0
 tornado2 CLOUD_RAGING_WINDS_1
 
