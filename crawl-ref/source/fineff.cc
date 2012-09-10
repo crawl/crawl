@@ -44,7 +44,7 @@ bool mirror_damage_fineff::mergeable(const final_effect &fe) const
 {
     const mirror_damage_fineff *o =
         dynamic_cast<const mirror_damage_fineff *>(&fe);
-    return o && att == o->att && def == o->def && posn == o->posn;
+    return o && att == o->att && def == o->def;
 }
 
 bool trample_follow_fineff::mergeable(const final_effect &fe) const
@@ -76,7 +76,7 @@ bool trj_spawn_fineff::mergeable(const final_effect &fe) const
 bool blood_fineff::mergeable(const final_effect &fe) const
 {
     const blood_fineff *o = dynamic_cast<const blood_fineff *>(&fe);
-    return o && posn == o->posn;
+    return o && posn == o->posn && mtype == o->mtype;
 }
 
 
