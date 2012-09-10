@@ -919,12 +919,15 @@ static string _abyss_monster_creation_message(monster* mon, bool visible)
   string messages[] = { 
       (visible ? " appears" : " flickers") + string(" in a shower of sparks"),
       " materialises.",
-      " emerges from chaos.",
-      " assembles " + string(mons_pronoun(mon->type, PRONOUN_REFLEXIVE, visible)) + ".",
-      " errupts from nowhere.",
-      " is cast out of reality.",
+      string(" emerges from ") + (coinflip() ? "chaos" : "the beyond"),
+      " assembles " + string(mons_pronoun(mon->type, PRONOUN_REFLEXIVE, visible)) + "!",
+      (coinflip() ? " erupts" : " bursts") + string(" from nowhere!"),
+      string(" is cast out of ") + (coinflip() ? "space!" : "reality!"),
+      " coalesces out of pure chaos.",
+      " punctures the fabric of time!",
+      " manifests!"
   };
-  return messages[random2(6)];
+  return messages[random2(9)];
 }
 
 monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
