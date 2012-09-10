@@ -952,7 +952,7 @@ void tile_draw_map_cell(const coord_def& gc, bool foreground_only)
         _tile_place_invisible_monster(gc);
     else if (cell.monsterinfo())
         _tile_place_monster(gc, *cell.monsterinfo());
-    else if (cell.cloud() != CLOUD_NONE && cell.cloud() != CLOUD_GLOOM)
+    else if (cell.cloud() != CLOUD_NONE)
         _tile_place_cloud(gc, *cell.cloudinfo());
     else if (cell.item())
     {
