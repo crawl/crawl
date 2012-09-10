@@ -1775,9 +1775,6 @@ static void _do_display_map()
     mpr("Move the cursor to view the level map, or type <w>?</w> for "
         "a list of commands.");
     flush_prev_message();
-
-    mouse_control mc(MOUSE_MODE_NORMAL);
-    tiles.do_map_display();
 #endif
 
     level_pos pos;
@@ -1785,7 +1782,6 @@ static void _do_display_map()
 
 #ifdef USE_TILE_LOCAL
     mpr("Returning to the game...");
-    tiles.set_map_display(false);
 #endif
     if (travel)
         start_translevel_travel(pos);
