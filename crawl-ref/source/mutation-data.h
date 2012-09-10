@@ -552,7 +552,7 @@
 
   {"You are somewhat resistant to further mutation.",
    "You are somewhat resistant to both further mutation and mutation removal.",
-   "Your current mutations are irrevocably fixed, and you can mutate no more."},
+   "You are almost entirely resistant to further mutation and mutation removal."},
 
   {"You feel genetically stable.",
    "You feel genetically stable.",
