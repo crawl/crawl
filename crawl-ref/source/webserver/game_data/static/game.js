@@ -170,7 +170,7 @@ function ($, comm, client, dungeon_renderer, display, minimap, settings, enums) 
         if ("tile_scaling" in map)
         {
             var scaling = Number(settings.get("tile_scaling"));
-            if (Number.isFinite(scaling))
+            if (isFinite(scaling) && scaling > 0)
             {
                 if (scaling != dungeon_renderer.x_scale)
                 {
