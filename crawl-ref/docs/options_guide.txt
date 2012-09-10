@@ -988,8 +988,7 @@ allow_self_target = (yes | no | prompt)
         you cannot target yourself with such spells. When set to
         'prompt' (the default), you will be required to confirm
         self-targetting. This option has no effect on area-effect
-        spells, such as Mephitic Cloud or Evaporate, where you
-        are always a valid target.
+        spells, such as Mephitic Cloud, where you are always a valid target.
 
 confirm_butcher = (always | never | auto)
         If auto (default) you will be prompted for which corpses to butcher if
@@ -1593,21 +1592,17 @@ about inscriptions.
 
 autoinscribe = <regex>:<inscription>
         Any item whose description contains the regex will be
-        automatically inscribed (if autopickup is toggled on). For
-        example, marking all royal jellies and honeycombs eases the Hive
-        (if food is not in the autopickup option):
-             autoinscribe = royal jell:=g
-             autoinscribe = honeycomb:=g
+        automatically inscribed (if autopickup is toggled on).
 
-        Another use of autoinscription is making sure that you don't
-        lose charges of important wands accidentally, as in
+        For example, it can be used to avoid accidentally using charges of
+        important wands, as in
              autoinscribe = wand of heal wounds:!V
 
         The menu colour prefixes (evil_item etc.) can also be used here.
         For example:
-             autoinscribe = bad_item.*potion:!q
-        will protect Transmuters against accidentally drinking their
-        distilled potions.
+             autoinscribe = (bad|dangerous)_item.*scroll:!r
+        will prevent accidentally reading any identified bad or
+        potentially dangerous scrolls.
 
 autoinscribe_artefacts = true
         Automatically inscribes identified artefacts with their properties.
