@@ -52,6 +52,7 @@ public:
     void update_minimap_bounds();
     void update_tabs();
 
+    void mark_for_redraw(const coord_def& gc);
     void set_need_redraw(unsigned int min_tick_delay = 0);
     bool need_redraw() const;
     void redraw();
@@ -182,7 +183,6 @@ protected:
 
     bitset<GXM * GYM> m_dirty_cells;
     bitset<GXM * GYM> m_cells_needing_redraw;
-    void mark_for_redraw(const coord_def& gc);
     void mark_dirty(const coord_def& gc);
     void mark_clean(const coord_def& gc);
     bool is_dirty(const coord_def& gc);

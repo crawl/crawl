@@ -669,7 +669,8 @@ void TilesFramework::_send_cell(const coord_def &gc,
             write_message("g:'%s',", buf);
         }
     }
-    if (current_sc.colour != next_sc.colour)
+    if ((current_sc.colour != next_sc.colour
+         || current_sc.glyph == ' ') && glyph != ' ')
     {
         int col = next_sc.colour;
         col = (_get_brand(col) << 4) | (col & 0xF);
