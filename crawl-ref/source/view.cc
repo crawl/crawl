@@ -747,6 +747,10 @@ void view_update_at(const coord_def &pos)
     // Force colour back to normal, else clrscr() will flood screen
     // with this colour on DOS.
     textcolor(LIGHTGREY);
+
+#endif
+#ifdef USE_TILE_WEB
+    tiles.mark_for_redraw(pos);
 #endif
 }
 
