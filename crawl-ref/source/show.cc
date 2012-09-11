@@ -475,6 +475,9 @@ void show_update_at(const coord_def &gp, bool terrain_only)
 #ifdef USE_TILE
     tile_draw_map_cell(gp, true);
 #endif
+#ifdef USE_TILE_WEB
+    tiles.mark_for_redraw(gp);
+#endif
 }
 
 void show_init(bool terrain_only)
