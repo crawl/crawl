@@ -1907,7 +1907,7 @@ static void cattext(bool trim_right = false, int strip_trailing = 0)
         bool was_alloced = alloced;
         char *newbuf = (char*) malloc(strlen(yylval.text) + strlen(yytext) + 1);
         if (!newbuf)
-            end(1, "Out of memory");
+            end(1, false, "Out of memory");
         alloced = true;
         strcpy(newbuf, yylval.text);
         strcat(newbuf, yytext);
