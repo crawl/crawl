@@ -1775,7 +1775,7 @@ yyreduce:
 #line 82 "levcomp.ypp"
     {
                     dgn_reset_default_depth();
-                    std::string err = dgn_set_default_depth((yyvsp[(2) - (2)].text));
+                    string err = dgn_set_default_depth((yyvsp[(2) - (2)].text));
                     if (!err.empty())
                         yyerror(make_stringf("Bad default-depth: %s (%s)",
                                 (yyvsp[(2) - (2)].text), err.c_str()).c_str());
@@ -1797,7 +1797,7 @@ yyreduce:
                             yyerror( lc_global_prelude.orig_error().c_str() );
                     }
 
-                    std::string err =
+                    string err =
                         lc_map.validate_map_def(lc_default_depths);
                     dump_map(lc_map);
                     if (!err.empty())
@@ -2210,10 +2210,10 @@ yyreduce:
 /* Line 1806 of yacc.c  */
 #line 344 "levcomp.ypp"
     {
-                    std::string key, arg;
+                    string key, arg;
                     int sep(0);
 
-                    const std::string err =
+                    const string err =
                       mapdef_split_key_item((yyvsp[(2) - (2)].text), &key, &sep, &arg);
 
                     if (!err.empty())
