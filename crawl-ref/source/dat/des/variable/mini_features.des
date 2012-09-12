@@ -2360,6 +2360,7 @@ Y
 ENDMAP
 
 NAME:   lemuel_flame_loot_1
+TAGS:   no_rtele_into
 DEPTH:  D, Elf, Zot
 ITEM:   nothing
 SUBST:  * = *.
