@@ -183,6 +183,7 @@ ENDMAP
 # Why be in such a hurry to get to the altar?
 NAME:   grunt_cheibriados_snail_statue
 DEPTH:  D:2-12
+WEIGHT: 0
 TAGS:   temple_overflow_cheibriados uniq_altar_cheibriados
 TAGS:   no_trap_gen no_monster_gen
 KMONS:  O = statue hd:1 name:snail_statue name_replace name_descriptor \
