@@ -980,8 +980,10 @@ static bool _abyss_teleport_within_level()
 static ProceduralSample _abyss_grid(const coord_def &p)
 {
     const coord_def pt = p + abyssal_state.major_coord; 
-    ColumnLayout columnLayout(2);
-    ProceduralSample sample = columnLayout(pt, abyssal_state.depth);
+    ColumnLayout denseColumns(2);
+    ColumnLayout sparseColumns(2, 6);
+    WorleyLayout layout(123, denseColumns, sparseColumns);
+    ProceduralSample sample = layout(pt, abyssal_state.depth);
     return sample;
 }
  
@@ -1064,7 +1066,6 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
                 _update_abyss_terrain(p, abyss_genlevel_mask, morph);
             abyss_terrain_queue.pop();
         }
-
     } 
     for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
     {
@@ -1344,11 +1345,7 @@ retry:
 
 void _increase_depth()
 {
-    // Between 2 and 7 per ten ticks, half that for Chei worshippers.
-    int delta_t = you.time_taken * (you.abyss_speed + 40.0) / 400;
-    if (you.religion == GOD_CHEIBRIADOS)
-        delta_t /= 2;
-    abyssal_state.depth += delta_t;
+    abyssal_state.depth += 4;
 }
 
 void abyss_morph(double duration)

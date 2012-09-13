@@ -37,7 +37,7 @@ class ProceduralSample
 class ProceduralLayout
 {
   public:
-    virtual ProceduralSample operator()(const coord_def &p, const uint32_t offset = 0) = 0;
+    virtual ProceduralSample operator()(const coord_def &p, const uint32_t offset = 0) const = 0;
 };
 
 class ColumnLayout : public ProceduralLayout
@@ -52,9 +52,21 @@ class ColumnLayout : public ProceduralLayout
       _row_space = (rs < 0 ? cs : rs);
     }
     
-    ProceduralSample operator()(const coord_def &p, const uint32_t offset = 0);
+    ProceduralSample operator()(const coord_def &p, const uint32_t offset = 0) const;
   private:
     int _col_width, _col_space, _row_width, _row_space;
+};
+
+class WorleyLayout : public ProceduralLayout
+{
+  public:
+    WorleyLayout(uint32_t _seed, 
+        const ProceduralLayout &_a,
+        const ProceduralLayout &_b) : seed(_seed), a(_a), b(_b) {}
+    ProceduralSample operator()(const coord_def &p, const uint32_t offset = 0) const;
+  private:
+    const uint32_t seed;
+    const ProceduralLayout &a, &b;
 };
 
 #endif /* PROC_LAYOUTS_H */
