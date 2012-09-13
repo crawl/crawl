@@ -22,11 +22,11 @@ struct follower
     void restore_mons_items(monster& m);
 };
 
-typedef std::list<follower> m_transit_list;
-typedef std::map<level_id, m_transit_list> monsters_in_transit;
+typedef list<follower> m_transit_list;
+typedef map<level_id, m_transit_list> monsters_in_transit;
 
-typedef std::list<item_def> i_transit_list;
-typedef std::map<level_id, i_transit_list> items_in_transit;
+typedef list<item_def> i_transit_list;
+typedef map<level_id, i_transit_list> items_in_transit;
 
 extern monsters_in_transit the_lost_ones;
 extern items_in_transit    transiting_items;

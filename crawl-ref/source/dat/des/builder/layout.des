@@ -1,8 +1,8 @@
 ###############################################################################
-# layout.des: All large layout vaults go here. These are defined by having
+# layout.des: Most large layout vaults go here. These are defined by having
 #             both ORIENT: encompass and TAGS: layout. These are not true
 #             vaults, in that the dungeon builder can add other vaults on
-#             top of them.
+#             top of them. For the "loops" level layouts, see layout_loops.des.
 #
 ###############################################################################
 
@@ -56,7 +56,8 @@
     end
 
     function random_wall_material(e)
-        if not you.in_branch("Lair") and crawl.one_chance_in(20) then
+        if not you.in_branch("Lair") and not you.in_branch("Zot")
+           and you.absdepth() >= 4 and crawl.one_chance_in(20) then
             e.subst('x : ccv')
         end
     end
@@ -69,10 +70,10 @@
 # room with a large hole in the middle.
 #
 NAME:   layout_forbidden_donut
-DEPTH:  4-22, Pan, !Vaults
-WEIGHT: 1 (Pan), 10
+DEPTH:  4-22, Pan
+WEIGHT: 10
 ORIENT: encompass
-TAGS:   overwritable layout allow_dup unrand
+TAGS:   overwritable layout no_primary_vault allow_dup unrand
 {{
     local gxm, gym = dgn.max_bounds()
     extend_map{width=gxm, height=gym, fill='x'}
@@ -141,8 +142,8 @@ ENDMAP
 # of varying width.
 #
 NAME:    layout_cross
-DEPTH:   Pan, 4-22, !Vaults
-WEIGHT:  1 (Pan), 10
+DEPTH:   Pan, 4-22
+WEIGHT:  10
 ORIENT:  encompass
 TAGS:    overwritable layout allow_dup unrand
 
@@ -210,10 +211,10 @@ ENDMAP
 #
 
 NAME: layout_big_octagon
-DEPTH:   4-22, !Vaults
-WEIGHT:  1 (Pan), 10
+DEPTH:   Pan, 4-22
+WEIGHT:  6 (Pan), 10
 ORIENT:  encompass
-TAGS:    overwritable layout allow_dup unrand
+TAGS:    overwritable layout no_primary_vault allow_dup unrand
 
 {{
     -- Step 1: Big octagon.
@@ -369,7 +370,11 @@ TAGS:    overwritable layout allow_dup unrand
         mapgrd[40][36] = 'O'
         mapgrd[41][36] = 'O'
         nsubst('O = 1:O / *:.')
-        kfeat('O = exit_through_abyss')
+        if you.in_branch("Pan") then
+            kfeat('O = exit_through_abyss')
+        else
+            kfeat('O = enter_abyss')
+        end
     end
 
     random_wall_material(_G)
@@ -383,8 +388,8 @@ ENDMAP
 # This replaces dungeon.cc:_plan_3().
 #
 NAME: layout_rooms
-DEPTH: Pan, 4-22, !Vaults
-WEIGHT: 6 (Pan), 20
+DEPTH: Pan, 1-
+WEIGHT: 60 (Pan), 10 (Zot), 20
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
@@ -466,8 +471,8 @@ ENDMAP
 # This replaces dungeon.cc:_city_level().
 #
 NAME: layout_city
-DEPTH: Dis, Vaults, 15-, !Pan
-WEIGHT: 1 (Vaults), 10
+DEPTH: Dis, 15-, !Pan, !Zot
+WEIGHT: 10
 CHANCE: 100% (Dis)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
@@ -581,8 +586,8 @@ ENDMAP
 #
 # This replaces dungeon.cc:_plan_5().
 NAME: layout_misc
-DEPTH: Pan, 4-22, !Vaults
-WEIGHT: 1 (Pan), 10
+DEPTH: Pan, 1-
+WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
@@ -618,7 +623,7 @@ MAP
 ENDMAP
 
 NAME: layout_caves
-DEPTH: Hive, Orc, Slime
+DEPTH: Orc, Slime
 CHANCE: 100%
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
@@ -645,7 +650,7 @@ MAP
 ENDMAP
 
 NAME: layout_spotty
-DEPTH: 9-22, !Vaults
+DEPTH: 9-22
 WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
@@ -674,28 +679,30 @@ WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
+    layout_type "delve"
+
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym}
     fill_area{fill = 'x', border = 'X'}
 
     delve(3, 3, 0, -1, 1)
-    _G.subst('X = x')
-    _G.lrocktile('wall_pebble_lightgray')
-    _G.lfloortile('floor_pebble_brown')
+    subst('X = x')
+    lrocktile('wall_pebble_lightgray')
+    lfloortile('floor_pebble_brown')
 
     if (crawl.one_chance_in(5)) then
-      _G.subst('x = b')
-      _G.tile('b = wall_emerald')
-      _G.lfloortile('floor_pebble_green')
+      subst('x = b')
+      tile('b = wall_emerald')
+      lfloortile('floor_pebble_green')
     end
 }}
 
 ## This replaces dungeon.cc:_roguey_level.
 NAME: layout_roguey
-DEPTH: 1-, !Vaults, !Pan
-WEIGHT: 40
+DEPTH: 2-, !Pan, !Zot
+WEIGHT: 20
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand
+TAGS: overwritable layout no_primary_vault allow_dup unrand
 {{
     function make_inner_room(room, feat, treasure)
         local inner_room = {
@@ -710,17 +717,98 @@ TAGS: overwritable layout allow_dup unrand
         make_box_doors(inner_room)
     end
 
+    local maze_startx = 0
+    local maze_starty = 0
+    local maze_endx = 0
+    local maze_endy = 0
+
+    function dig_maze(x, y)
+        local delta = { {x =  2, y =  0},
+                        {x = -2, y =  0},
+                        {x =  0, y =  2},
+                        {x =  0, y = -2} }
+        local count = 0
+        local i = 0
+        local newx = 0
+        local newy = 0
+        local nextx = 0
+        local nexty = 0
+        while true do
+            count = 0
+            for i = 1, 4 do
+                newx = x + delta[i].x
+                newy = y + delta[i].y
+                if newx >= maze_startx
+                    and newx <= maze_endx
+                    and newy >= maze_starty
+                    and newy <= maze_endy then
+                    if mapgrd[newx][newy] ~= '.' then
+                       count = count + 1
+                       if crawl.random2(count) == 0 then
+                           nextx = newx
+                           nexty = newy
+                       end
+                    end
+                end
+            end
+            if count == 0 then
+                return
+            end
+            if nexty == y then
+                newy = y
+                if nextx - x < 0 then
+                    newx = nextx + 1
+                else
+                    newx = nextx - 1
+                end
+            else
+                newx = x
+                if nexty - y < 0 then
+                    newy = nexty + 1
+                else
+                    newy = nexty - 1
+                end
+            end
+            mapgrd[newx][newy] = '.'
+            mapgrd[nextx][nexty] = '.'
+            dig_maze(nextx, nexty)
+        end
+    end
+
+    function make_roguey_maze(room)
+        maze_startx = room.x1
+        maze_starty = room.y1
+        maze_endx = room.x2
+        maze_endy = room.y2
+        local startx = 2*crawl.random2((maze_endx - maze_startx) / 2)
+                     + maze_startx
+        local starty = 2*crawl.random2((maze_endy - maze_starty) / 2)
+                     + maze_starty
+        dig_maze(startx, starty)
+    end
+
     function sign(a)
         return a > 0 and 1 or a < 0 and -1 or 0
     end
 
     function link_rooms(r1, r2, sideways)
+        if not r1.present or not r2.present then
+            return
+        end
         local x1, y1, x2, y2
+        local tries = 100
         if sideways then
             x1 = r1.x2 + 1
             y1 = crawl.random_range(r1.y1 + 1, r1.y2 - 1)
+            while (r1.maze and mapgrd[r1.x2][y1] ~= '.') do
+                y1 = crawl.random_range(r1.y1 + 1, r1.y2 - 1)
+            end
             x2 = r2.x1 - 1
             y2 = crawl.random_range(r2.y1 + 1, r2.y2 - 1)
+            while (r2.maze and mapgrd[r2.x1][y2] ~= '.') or
+                  (y1 == y2 and not crawl.one_chance_in(3)) do
+                y2 = crawl.random_range(r2.y1 + 1, r2.y2 - 1)
+            end
 
             if x2 - x1 >= 2 then
                 mapgrd[x1][y1] = r1.door
@@ -730,8 +818,15 @@ TAGS: overwritable layout allow_dup unrand
             end
         else
             x1 = crawl.random_range(r1.x1 + 1, r1.x2 - 1)
+            while (r1.maze and mapgrd[x1][r1.y2] ~= '.') do
+                x1 = crawl.random_range(r1.x1 + 1, r1.x2 - 1)
+            end
             y1 = r1.y2 + 1
             x2 = crawl.random_range(r2.x1 + 1, r2.x2 - 1)
+            while (r2.maze and mapgrd[x2][r2.y1] ~= '.')
+                  or (x1 == x2 and not crawl.one_chance_in(3)) do
+                x2 = crawl.random_range(r2.x1 + 1, r2.x2 - 1)
+            end
             y2 = r2.y1 - 1
 
             if y2 - y1 >= 2 then
@@ -745,7 +840,10 @@ TAGS: overwritable layout allow_dup unrand
         mapgrd[x1][y1] = '.'
 
         while x1 ~= x2 or y1 ~= y2 do
-            if crawl.coinflip() and x1 ~= x2 then
+            if x1 ~= x2
+               and crawl.x_chance_in_y(math.abs(x2 - x1),
+                                       math.abs(x2 - x1) + math.abs(y2 - y1))
+               then
                 x1 = x1 + sign(x2 - x1)
             else
                 y1 = y1 + sign(y2 - y1)
@@ -755,14 +853,29 @@ TAGS: overwritable layout allow_dup unrand
         end
     end
 
+    function room_is_placeable(x1, y1, x2, y2)
+        if is_validating() then return true end
+        for point in iter.rect_iterator(dgn.point(x1, y1),
+                                        dgn.point(x2, y2)) do
+            if dgn.in_vault(point.x, point.y) then
+                return false
+            end
+        end
+        return true
+    end
+
     local gxm, gym = dgn.max_bounds()
 
     extend_map { width = gxm, height = gym, fill = 'x' }
 
     layout_type "rooms"
 
-    local rows = 5
-    local cols = 5
+    local rows = crawl.random_element({[5] = 10, [4] = 5, [3] = 1})
+    local cols = crawl.random_element({[5] = 10, [4] = 5, [3] = 1})
+    local xspace = 13 + 2*(5-cols)
+    local yspace = 11 + 2*(5-rows)
+    local xsize  = 6 + 2*(5-cols)
+    local ysize  = 6 + 2*(5-rows)
     local special = -1
 
     if crawl.one_chance_in(10) and dgn.map_by_tag('special_room', true) then
@@ -771,18 +884,45 @@ TAGS: overwritable layout allow_dup unrand
 
     local rooms = {}
 
-    for y = 0, cols - 1 do
-        for x = 0, rows - 1 do
-            local base_x, base_y = x * 13 + 8, y * 11 + 8
+    for y = 0, rows - 1 do
+        for x = 0, cols - 1 do
+            local base_x, base_y = x * xspace + 8, y * yspace + 8
+            local x1, x2, y1, y2
+            local tries = 50
+            local placeable = true
+            while tries > 0 do
+                x1 = base_x + crawl.random2(4)
+                y1 = base_y + crawl.random2(4)
+                x2 = base_x + xsize + crawl.random2(5)
+                y2 = base_y + ysize + crawl.random2(3)
+                if room_is_placeable(x1, y1, x2, y2) then break end
+                tries = tries - 1
+            end
+
+            if tries == 0 then placeable = false end
 
             local room = {
                 x1 = base_x + crawl.random2(4),
                 y1 = base_y + crawl.random2(4),
-                x2 = base_x + 6 + crawl.random2(5),
-                y2 = base_y + 6 + crawl.random2(3),
+                x2 = base_x + xsize + crawl.random2(5),
+                y2 = base_y + ysize + crawl.random2(3),
+                -- Rogue has 0-3 rooms per 3x3 level missing;
+                -- this averages to 1.5 in 9, or 1 in 6.
+                present = placeable and not crawl.one_chance_in(6),
+                maze = (crawl.random2(10) < you.absdepth() - 1 and
+                        crawl.one_chance_in(15)),
                 fill = '.',
                 door = crawl.one_chance_in(3) and '.' or '+',
             }
+
+            if room.maze then
+                if ((room.x2 - room.x1) % 2) ~= 0 then
+                    room.x2 = room.x2 + 1
+                end
+                if ((room.y2 - room.y1) % 2) ~= 0 then
+                    room.y2 = room.y2 + 1
+                end
+            end
 
             table.insert(rooms, room)
         end
@@ -790,41 +930,71 @@ TAGS: overwritable layout allow_dup unrand
 
     for i, room in ipairs(rooms) do
         if i == special then
-            room.fill = 'O'
-            room.door = '+'
+            if room.present then
+                room.fill = 'O'
+                room.door = '+'
+            else
+                special = -1
+            end
         end
 
-        fill_area(room)
+        if room.present then
+            if room.maze then
+                make_roguey_maze(room)
+            else
+                fill_area(room)
+            end
 
-        if room.fill == '.'
-           and (room.x2 - room.x1 > 5)
-           and (room.y2 - room.y1 > 5)
-           and (you.in_branch("D") or you.in_branch("Lair"))
-           and crawl.x_chance_in_y(you.absdepth() - 9, 450)
-        then
-            local feat = crawl.random_element { ['v'] = 2, ['c'] = 3, ['x'] = 3 }
-            make_inner_room(room, feat, crawl.coinflip())
+            if not room.maze
+               and room.fill == '.'
+               and (room.x2 - room.x1 > 5)
+               and (room.y2 - room.y1 > 5)
+               and (you.in_branch("D") or you.in_branch("Lair"))
+               and crawl.x_chance_in_y(you.absdepth() - 9, 450)
+            then
+                local feat = crawl.random_element { ['v'] = 2, ['c'] = 3, ['x'] = 3 }
+                make_inner_room(room, feat, crawl.coinflip())
+            end
         end
     end
 
     for i, room in ipairs(rooms) do
-        -- There is a neighbour on the right, connect to it.
-        if i % cols ~= 0 then
-            link_rooms(room, rooms[i + 1], true)
-        end
+        if room.present then
+            -- If there is a neighbour on the right, connect to it.
+            if i % cols ~= 0 then
+                local j = i + 1
+                local done = false
+                while j % cols ~= 1 and not done do
+                    if rooms[j].present then
+                        link_rooms(room, rooms[j], true)
+                        done = true
+                    else
+                        j = j + 1
+                    end
+                end
+            end
 
-        -- There is a neighbour below, connect to it.
-        if i + cols <= #rooms then
-            link_rooms(room, rooms[i + cols], false)
+            -- If there is a neighbour below, connect to it.
+            if i + cols <= #rooms then
+                local j = i + cols
+                local done = false
+                while j <= #rooms and not done do
+                    if rooms[j].present then
+                        link_rooms(room, rooms[j], false)
+                        done = true
+                    else
+                        j = j + cols
+                    end
+                end
+            end
         end
     end
 
     -- Prevent staircases from being placed in special or inner rooms.
-    _G.nsubst('. = { / ( / [ / < / } / ) / ] / > / .')
-    _G.kmask('+ = no_secret_doors')
+    nsubst('. = { / ( / [ / < / } / ) / ] / > / .')
 
     if special ~= -1 then
-        _G.subvault('O : special_room')
+        subvault('O : special_room')
     end
 }}
 MAP
@@ -836,6 +1006,8 @@ CHANCE: 100%
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
+    layout_type "delve"
+
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym}
     fill_area{fill = 'x', border = 'X'}
@@ -861,18 +1033,18 @@ TAGS: overwritable layout allow_dup unrand
     delve(ngb_min, ngb_max, connchance, -1, top)
     if crawl.coinflip() then
       crawl.dpr("delve: adding water");
-      _G.subst('. = @')
+      subst('. = @')
       delve(ngb_min, ngb_max, 100, 100, top)
-      _G.subst('. = w')
-      _G.subst('@ = .')
+      subst('. = w')
+      subst('@ = .')
     end
-    _G.subst('X = x')
+    subst('X = x')
 }}
 
 # Dummy layouts that just call C++ functions that do all the work.
 NAME: layout_basic
-DEPTH: 1-, !Vaults, !Pan
-WEIGHT: 90
+DEPTH: 1-, !Pan
+WEIGHT: 90, 10 (D:1), 200 (Geh), 200 (Coc), 10 (Zot)
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
@@ -882,10 +1054,10 @@ MAP
 ENDMAP
 
 NAME: layout_bigger_room
-DEPTH: 9-22, !Vaults, !Crypt, !Pan
+DEPTH: 9-22, !Crypt, !Pan
 WEIGHT: 10
 ORIENT: encompass
-TAGS: overwritable layout allow_dup unrand
+TAGS: overwritable layout no_primary_vault allow_dup unrand
 {{
     if not is_validating() then layout_bigger_room() end
 }}
@@ -893,8 +1065,8 @@ MAP
 ENDMAP
 
 NAME: layout_chaotic_city
-DEPTH: Vaults, Pan, 4-
-WEIGHT: 1 (Pan), 2 (Vaults), 10
+DEPTH: Pan, 4-, !Zot
+WEIGHT: 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{

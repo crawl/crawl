@@ -80,7 +80,7 @@ SHUFFLE: CD / c+
 COLOUR:  ' = yellow
 COLOUR:  C = yellow
 COLOUR:  D = yellow
-SUBST:   D = =
+SUBST:   D = +
 SUBST:   C = c
 FTILE:   ' = floor_sandstone
 SUBST:   ' = .
@@ -135,20 +135,19 @@ ENDMAP
 NAME:   enter_ossuary_5
 TAGS:   uniq_ossuary no_monster_gen chance_ossuary
 CHANCE: 5%
-COLOUR: c = white, = = white, ' = yellow
-RTILE:  c = wall_tomb, = = wall_tomb
+COLOUR: c = white, + = white, ' = yellow
+RTILE:  c = wall_tomb
 FTILE:  ' = floor_sandstone
-NSUBST: = = 1:= / *:c
 SUBST:  c : cx
 : ossuary_portal(_G)
 MAP
    ...
   ..c..
- ..=c=..
-..=c'c=..
+ ..cc+..
+..cc'cc..
 .cc'O'cc.
-..=c'c=..
- ..=c=..
+..cc'cc..
+ ..ccc..
   ..c..
    ...
 ENDMAP
@@ -207,8 +206,7 @@ ENDMAP
 
 NAME:    ossuary_tomb_2
 # Generally have rooms full of either monsters or traps. To protect the
-# monsters, all doors are secret, no alarm traps, and mostly needle
-# traps.
+# monsters, all doors are runed, no alarm traps, and mostly needle traps.
 WEIGHT:  40
 ORIENT:  encompass
 TAGS:    no_item_gen no_monster_gen no_rotate
@@ -239,6 +237,7 @@ ITEM:    any scroll w:6 / any potion / any potion q:2 w:2
 MONS:    adder zombie / hobgoblin zombie / orc zombie / kobold zombie / nothing
 MONS:    big kobold zombie / water moccasin zombie / gnoll zombie / nothing
 MONS:    mummy
+KFEAT:   = = runed_door
 : ossuary_setup_features(_G)
 MAP
 cccccccccccccccccccccc
@@ -383,8 +382,6 @@ NSUBST:  e = 2:M / *:e
 SUBST:   M = 1f, d = dddf, e = eeef
 NSUBST:  . = 6:^ / *:.
 KFEAT:   ^ = alarm trap / floor w:20
-SUBST:   = : =+
-NSUBST:  = = 1:= / *:+
 : ossuary_setup_features(_G)
 MAP
           vvv
@@ -397,7 +394,7 @@ ccc.c   ccc+ccc   c.ccc
 c2+.cc cc.....cc cc.+2c
 ccc..ccc.......ccc..ccc
 c2+...c.........c...+2c
-ccc...=....U....=...ccc
+ccc...+....U....+...ccc
 c2+...c.........c...+2c
 ccc..ccc.......ccc..ccc
 c2+.cc cc.....cc cc.+2c
@@ -424,6 +421,7 @@ ITEM:   any scroll / any potion / any jewellery w:1 / nothing
 KFEAT:  ~ = needle trap / arrow trap / spear trap w:5 / dart trap w:2 / floor w:50
 SUBST:  1 = 1.
 SUBST:  3 = 3.
+KFEAT:  = = runed_door
 : ossuary_setup_features(_G)
 MAP
 ccccccccccccccccccccccccc
@@ -464,11 +462,11 @@ MONS:    rat zombie / jackal zombie / goblin zombie / hobgoblin zombie / \
 MONS:    mummy
 ITEM:    any scroll / any scroll q:2, any potion / any potion q:2
 SHUFFLE: $de*
-NSUBST:  B = 1:= / *:n
-NSUBST:  C = 1:= / *:n
-NSUBST:  D = 1:= / *:n
-NSUBST:  E = 1:= / *:n
-KFEAT:   ~ = needle trap / arrow trap / spear trap / bolt trap / axe trap
+NSUBST:  B = 1:+ / *:n
+NSUBST:  C = 1:+ / *:n
+NSUBST:  D = 1:+ / *:n
+NSUBST:  E = 1:+ / *:n
+KFEAT:   ~ = needle trap / arrow trap / spear trap
 SUBST:   ~ = ~.
 NSUBST:  X = 1:< / *:.
 : ossuary_setup_features(_G)
@@ -551,7 +549,7 @@ SUBST:   CDJ = 1112
 MONS:    generate_awake zombie place:D:6 /\
          w:5 generate_awake mummy
 MONS:    plant col:darkgrey name:withered n_adj tile:mons_withered_plant /\
-         bog mummy hd:3 /\
+         bog body hd:3 spells:throw_frost;slow;corpse_rot name:decayed n_adj n_noc /\
          w:5 plant col:lightgrey name:withered n_adj tile:mons_withered_plant /\
          w:5 nothing
 ITEM:    any potion / any scroll / any jewellery w:1
@@ -639,6 +637,7 @@ ITEM:    potion of curing / potion of heal wounds / potion of speed / \
 # 10% - part of the loot in the closets, secret doors, bit more loot
 # 45% - doors are secret, traps are nasty, monsters asleep
 # 45% - doors are obvious, traps are softer, monsters are awake
+# TODO: rebalance after secret door removal.
 : if crawl.one_chance_in(10) then
 SUBST:   3 = d
 NSUBST:  d = 6:3 / *:d
@@ -655,12 +654,12 @@ MONS:    mummy
 MONS:    generate_awake centaur zombie / generate_awake hobgoblin zombie / \
          generate_awake big kobold zombie / nothing w:20
 MONS:    centaur zombie / hobgoblin zombie / big kobold zombie / nothing w:20
-KFEAT:   ~ = dart trap w:20 / axe trap w:2 / net trap / needle trap / \
-             alarm trap / floor w:40
+KFEAT:   ~ = dart trap w:20 / net trap / needle trap / alarm trap / floor w:40
 KFEAT:   T = alarm trap w:20 / net trap / floor w:70
-KFEAT:   ^ = net trap w:15 / needle trap w:4 / axe trap w:1 / floor w:20
+KFEAT:   ^ = net trap w:15 / needle trap w:4 / spear trap w:1 / floor w:20
 COLOUR:  ^ = red
 KFEAT:   W = dart trap / floor w:20
+SUBST:   = = +
 : ossuary_setup_features(_G)
 MAP
            cccccccccccccccccccc
@@ -690,8 +689,7 @@ ITEM:    any scroll / any potion / nothing
 ITEM:    any scroll / any potion / nothing
 KITEM:   x = any scroll / any potion
 KMONS:   x = guardian mummy
-: local x = {}
-: lua_marker("=", restrict_door(x))
+KFEAT:   = = runed_door
 : ossuary_setup_features(_G)
 : crawl.mpr("You feel the presence of a powerful and evil guardian...", "warning")
 MAP
@@ -748,9 +746,9 @@ MONS:    mummy
 SHUFFLE: Bb/Zz, Dd/Ww, Ee/Vv
 SUBST:   Z=c, z=c, W=c, w=c, V=c, v=c
 SUBST:   B=X, D=X, E=X
-NSUBST:  b = 1:= / c
-NSUBST:  d = 1:= / c
-NSUBST:  e = 1:= / c
+NSUBST:  b = 1:+ / c
+NSUBST:  d = 1:+ / c
+NSUBST:  e = 1:+ / c
 SUBST:   X = x2
 # Guaranteed 10 items and 10 mummies, two in hidden rooms.
 # 50/50 chance of loot for each of the eleven rats in the rat room.
@@ -772,14 +770,14 @@ ccc cc+cc    c+.x.+.1'''cc  cc'''cc
 cAccc'''cc  ccb...cccxccc   cecc'cc
 c..+..1'+c  cBcc+cc ccc   cceEec+cc
 c<ccc'''cc  ccb''cc   cccccxccc...ccc
-ccc cc+cc   cc''=cccccc''+''''+.x.+Xc
+ccc cc+cc   cc''+cccccc''+''''+.x.+Xc
      c.cc  cc1'cc'cdDd.1ccccccc...ccc
      c1cc cc..cccc'cdd.cc     cc+cc
      c''cccc+cc  cc'cc+cc      cXc
-     cc''cc...cccccc=yyyccccc  ccc
+     cc''cc...cccccc+yyyccccc  ccc
       cc'+..x..+'''+yyyyy+.1cc
        cccc...cccxcccyyyccc''cc
-          cc=cc ccc cc+cc cc''ccccc
+          cc+cc ccc cc+cc cc''ccccc
            cxc       ccc   cc'''+Xc
            ccc              ccccccc
 ENDMAP
@@ -798,12 +796,15 @@ KMONS:   4 = Menkaure, mummy
 # Loot: 1-16 items
 ITEM:    any scroll / any potion / w:5 nothing
 KFEAT:   ^ = arrow trap / dart trap / alarm trap
-KFEAT:   m = bolt trap
+KFEAT:   m = spear trap
 KFEAT:   ~ = alarm trap
 NSUBST:  ' = 2:m / 25:1 / 25:2 / 30:^ / .
-SUBST:   X : XYc
-NSUBST:  X = 6:= / *:c
-NSUBST:  Y = 3:= / *:c
+# 1KB: what's the point of these shortcuts?  Removed for now...
+SUBST:    X : c
+#SUBST:   X : XYc
+#NSUBST:  X = 6:= / *:c
+#NSUBST:  Y = 3:= / *:c
+KFEAT:   = = runed_door
 : ossuary_setup_features(_G)
 MAP
                             cc
@@ -860,7 +861,7 @@ ITEM:   any potion / any scroll / nothing w:1
 #
 # There are not always traps in corridors but they are guaranteed near the loot:
 KFEAT:  ' = arrow trap w:3 / dart trap w:5 / alarm trap w:7 / floor w:85
-KFEAT:  " = bolt trap w:1 / net trap w:3 / arrow trap w:5 / dart trap w:10
+KFEAT:  " = spear trap w:1 / net trap w:3 / arrow trap w:5 / dart trap w:10
 #
 : ossuary_setup_features(_G)
 MAP
@@ -869,8 +870,8 @@ c2c2c2cc...........cc2c2c2c
 c+c+c+c.............c+c+c+c
 c..........G...G..........c
 c.........................c
-c+c=ccccccccc+ccccccccc=c+c
-bScc'ccG2=.......=2Gcc'ccFv
+c+c+ccccccccc+ccccccccc+c+c
+bScc'ccG2+.......+2Gcc'ccFv
 bSScc'ccGc.......cGcc'ccFFv
 bSSScc'ccc.12321.ccc'ccFFFv
 bSSSScc'cc.......cc'ccFFFFv
@@ -880,7 +881,7 @@ bSSSSScc'c.......c'ccFFFFFv
 bSSSScc'cc.""""".cc'ccFFFFv
 bSSScc'ccc."ddd".ccc'ccFFFv
 bSScc'ccGc."ddd".cGcc'ccFFv
-bScc'ccG2=."ddd".=2Gcc'ccFv
+bScc'ccG2+."ddd".+2Gcc'ccFv
 ccc+ccccccccccccccccccc+ccc
 c11111cc1c1c1c1c1c1cc11111c
 c......c+c+c+c+c+c+c......c
@@ -927,11 +928,12 @@ SUBST:   x = c:20 o:8
 SUBST:   z = c:20 o:4
 SUBST:   y = c:20 o:1
 SUBST:   $ = 1:10 2:1
-KFEAT:   L = =
+KFEAT:   L = runed_door
 MARKER:  L = lua:message_at_spot ( \
                  "Something ancient and evil stirs ahead...", \
                  "warning" \
              )
+KFEAT:   = = runed_door
 : ossuary_setup_features(_G)
 MAP
   ccccccccc

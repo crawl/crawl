@@ -39,27 +39,6 @@
 # See setup_loot() for more information.
 #
 ###
-# Index:
-#   volcano_grotto   - forgotten grotto "temple" volcano; a temple to
-#                      the side of a volcano, line 472-523
-#   volcano_lake     - lava lake "temple" volcano; a temple suspended
-#                      in the middle of a volcano, line 531-591
-#   volcano_pools    - many pools "pyramid"; some caves off a central
-#                      chamber, but no pyramid?, line 599-658
-#   volcano_tomb     - volcano "tomb"; based of Tutankhamun's burial
-#                      chamber, has mummies and fire. Line 666-709.
-#   volcano_aerie    - "aerie"; two paths to the loot, including lindwurm
-#                      island! Line 717-775.
-#   volcano_bunker   - "hidden bunker"; "science"-ish portal vault with
-#                      golems and a "conservatory". Line 783-823.
-#   volcano_caves    - "collapsing caverns", you can choose which one you
-#                      want! maybe more than one? Line 830-902.
-#   volcano_village  - by zaba! villagerrs are kinda scary, actually!
-#                      Line 912-967.
-#   volcano_overflow - overflowing lava! idea by dpeg, code by Jude.
-#                      Line 1034+.
-###
-
 {{
 -- ####
 -- # General setup and design functions: (head to line 382 for the maps)
@@ -97,7 +76,7 @@ function volcano_portal (e)
     e.tile("O = dngn_portal_volcano")
     e.kfeat("S = .")
     e.colour("O = red")
-    e.rtile("X = wall_pebble_red")
+    e.rtile("X = wall_volcanic")
     e.ftile("OS = floor_rough_red")
 end
 
@@ -117,10 +96,8 @@ function volcano_setup (e)
     e.colour("c = lightred")
     e.colour("G = lightred")
     e.colour("= = lightred")
-    dgn.set_feature_desc_short("gate leading back out of here",
-                               "rocky tunnel leading out of this place")
-    dgn.set_feature_desc_short("empty arch of ancient stone",
-                               "rock-blocked tunnel")
+    e.set_feature_name("exit_portal_vault", "rocky tunnel leading out of this place")
+    e.set_feature_name("stone_arch", "rock-blocked tunnel")
 end
 
 -- "Volcano" functions. While the sizes may appear extreme, they are carefully
@@ -460,7 +437,7 @@ end
 
 }}
 
-default-depth: Lair:1-8, Orc:1-4, Hive:1
+default-depth: Lair:1-8, Orc:1-4
 
 ###############################################################################
 # Entries:
@@ -550,11 +527,12 @@ ENDMAP
 # This is the "large" one. You might get a clear path, but then again...
 NAME:       enter_volcano_4
 TAGS:       uniq_volcano chance_volcano
+KPROP:      .SLO = no_rtele_into
 CHANCE:     5%
 ORIENT:     float
 COLOUR:     X = red
 COLOUR:     S = red
-NSUBST:     L = 4:. / *:l
+NSUBST:     L = 8:. / *:l
 :           volcano_portal(_G)
 MAP
  xxxxx
@@ -640,7 +618,7 @@ ccd$ecc..<..ccd$fcc
 c.$f$.c.....c.$e$.c
 c.g$g.ccc+ccc.g$g.c
 cc.3.ccc...ccc.3.cc
-xc...=..111..=...cx
+xc...+..111..+...cx
 xcccccccG_Gcccccccx
 xxxxxxxc.2.cxxxxxxx
 xxxxxxxcccccxxxxxxx
@@ -650,8 +628,8 @@ NAME:   vgs_dualism
 TAGS:   volcano_grotto_subvault no_item_gen no_monster_gen no_rotate no_vmirror
 KFEAT:  B = altar_makhleb / altar_trog / altar_vehumet
 KFEAT:  C = altar_makhleb / altar_trog / altar_vehumet
-#       Place the secret door.
-NSUBST: X = 1:= / *:x
+#       Place the door.
+NSUBST: X = 1:+ / *:x
 #       Sets up the temple guardians.
 :       fiery_guardians(_G)
 #       Loot: 8 items.
@@ -674,9 +652,9 @@ ENDMAP
 NAME:   vgs_hot_hot_hot
 TAGS:   volcano_grotto_subvault no_item_gen no_monster_gen no_rotate no_vmirror
 KFEAT:  _ = altar_makhleb / altar_trog / altar_vehumet
-#       Place the secret doors.
-NSUBST: X = 1:= / 1:G / *:x
-NSUBST: Y = 1:= / 1:G / *:x
+#       Place the doors.
+NSUBST: X = 1:+ / 1:G / *:x
+NSUBST: Y = 1:+ / 1:G / *:x
 #       Sets up the temple guardians.
 :       fiery_guardians(_G)
 KMONS:  l = lava snake / lava fish w:20 / lava worm w:20 / nothing w:70
@@ -701,9 +679,9 @@ ENDMAP
 NAME:   vgs_many_chambers
 TAGS:   volcano_grotto_subvault no_item_gen no_monster_gen no_rotate no_vmirror
 KFEAT:  _ = altar_makhleb / altar_trog / altar_vehumet
-#       Place the secret doors.
-NSUBST: X = 1:= / *:x
-NSUBST: Y = 1:= / *:x
+#       Place the doors.
+NSUBST: X = 1:+ / *:x
+NSUBST: Y = 1:+ / *:x
 #       Sets up the temple guardians.
 :       fiery_guardians(_G)
 MONS:   clay golem w:50 / molten gargoyle w:2
@@ -847,7 +825,7 @@ MAP
    xy.......LllllllllllllL.c....+.111.+....c.LllllllllllllllL......yxx
    xxy.....Lrrllllllllllll.c.<1.c.G_G.c.1<.c.llllllllllllllLL.......yx
    xy......LllrrVllllllllL.c....c..2..c....c.Lllllllllllluuu.......yxx
-   xxy.....Lllllrrllllllll.ccc==ccc+ccc==ccc.LllllllllluullL......yxx
+   xxy.....Lllllrrllllllll.ccc++ccc+ccc++ccc.LllllllllluullL......yxx
    xy.....LlllllllrllllllL.o......c.c......o.lllllllQuullllL.....yxx
    xxy.....LllllllVrllllll.cccccc.c.c.cccccc.LllllluulllllllL.....yxx
    xy......LllllllllrrlllL.c.$f$c.c.c.cgd$.c.lllluulQlllllllL......yxx
@@ -996,13 +974,14 @@ MARKER:  J = lua:fog_machine { size = 3, pow_min = 7, pow_max = 7, delay = 80, \
                                start_clouds = 1, cloud_type = "flame", excl_rad = -1 }
 MARKER:  K = lua:fog_machine { size = 3, pow_min = 7, pow_max = 7, delay = 80, \
                                start_clouds = 1, cloud_type = "flame", excl_rad = -1 }
+# If mummies ever start to use items, please re-rune the doors.
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxyyxxx
 xxxxxxxxxxxxxxxxxxxy.y..Lxx
 xxxxxxxxxxcccccccxy.y.3Lllx
 xxxxxxxxxxc..Y..cy.xxxLlllx
-cxxxxxxxccc.....=.xxxxxllJx
+cxxxxxxxccc.....+.xxxxxllJx
 cccccccccGc..3..cccxxxxxxxx
 .....+....+.3<3.+Kcxxxxxxxx
 cccccccccGc..3..cccxxxxxxxx
@@ -1010,7 +989,7 @@ cxxxxxxxccc.....cxxxxxxxxxx
 xxxxxxxxc1c..Y..cxxxxxxxxxx
 xxxxxxxcc+ccccc+ccxvvvvvvxx
 xxxxxccc.........ccv$defvxx
-xxxxxc2+.lllllll.+4=ge$fvxx
+xxxxxc2+.lllllll.+4+ge$fvxx
 xxxxxccc.........ccv$defvxx
 xxxxxxxcc+ccccc+ccxvvvvvvxx
 xxxxxxxxc1cxxxcKcxxxxxxxxxx
@@ -1028,7 +1007,7 @@ KFEAT:   ! = alarm trap
 NSUBST:  r = 2:r / *:.
 NSUBST:  s = 2:s / *:.
 KFEAT:   r = bolt trap
-KFEAT:   s = axe trap
+KFEAT:   s = spear trap
 #        The monsters. The patrolling tag seems to keep them from wandering
 #        around, opening the secret doors. It might also be keeping them from
 #        "answering" the alarm traps though.
@@ -1039,6 +1018,8 @@ MONS:    ogre skeleton / troll skeleton / draconian skeleton / naga skeleton / \
          minotaur skeleton
 MONS:    patrolling menkaure / patrolling guardian mummy
 #        Loot: 21 gold, 10 items.
+# TODO: should the ex-secret doors be runed or ordinary?
+SUBST:   = = +
 :        volcano_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1145,12 +1126,11 @@ TAGS:       no_item_gen no_monster_gen no_rotate
 :           volcano_setup(_G)
 ITEM:       apple / choko
 COLOUR:     m = blue
-COLOUR:     = = cyan
 COLOUR:     + = cyan
 MONS:       human ; robe ego:fire_resistance
 MONS:       toenail golem
 :           place_chained_volcano(_G)
-:           dgn.set_feature_desc_short("translucent rock wall", "glass window")
+:           set_feature_name("clear_rock_wall", "glass window")
 KFEAT:      K = .
 MARKER:     K = lua:fog_machine ( { cloud_type = "rain", walk_dist=3, pow_max=2, \
                                     delay=300, size=3 } )
@@ -1162,12 +1142,12 @@ xxlllVlllllllllllxxxx       v.v22$e$$fv.v
  xxlllllllllllllllllxxx     v.v$$$gddgv.v
 xxllllllllllllllllllllxx    v.+ggdf$$ev.v
  xxllllllllvmvmvmvmvmvvvvvvvvvvvvvvvvvv.v
- xxllllllllm.....vKiii...1...v.....=....v
+ xxllllllllm.....vKiii...1...v.....+....v
   xxlllllllv.121.viWtWW......+.<.vvvvvvvv
    xxllllllm.....vllttW..1...v...vxxx
     xxxllllvvv+vvvvvvvvvvvvvvvv+vv.yxx
       xxlllm.....v.v..1v1.....v..m..yxx
-     xxllllv.<.A.+.v+vvvvv+v+vvv.=..Lyxxx
+     xxllllv.<.A.+.v+vvvvv+v+vvv.+..Lyxxx
     xxlllllm.....v...............mLLllllxx
     xxlllllvmvmvmvmvmvmvmvmvmvmvmvlllllxxx
    xxllVlllllllllllllllllllllllllllllllllxx

@@ -55,6 +55,8 @@ function ($, map_knowledge, dungeon_renderer, view_data,
 
         var block = $("#minimap_block");
         var canvas = $("#minimap")[0];
+        if (!canvas) return;
+
         block.width(width);
         canvas.width = width;
         cell_w = cell_h = Math.floor(width / gxm);

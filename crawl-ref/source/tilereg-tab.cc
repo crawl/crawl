@@ -8,7 +8,6 @@
 #include "state.h"
 #include "tiledef-gui.h"
 
-
 TabbedRegion::TabbedRegion(const TileRegionInit &init) :
     GridRegion(init),
     m_active(-1),
@@ -33,7 +32,7 @@ void TabbedRegion::set_icon_pos(int idx)
     {
         if (i == idx || !m_tabs[i].reg)
             continue;
-        start_y = std::max(m_tabs[i].max_y + 1, start_y);
+        start_y = max(m_tabs[i].max_y + 1, start_y);
     }
     m_tabs[idx].min_y = start_y;
     m_tabs[idx].max_y = start_y + m_tabs[idx].height;
@@ -70,7 +69,7 @@ void TabbedRegion::set_tab_region(int idx, GridRegion *reg, tileidx_t tile_tab)
     }
 
     const tile_info &inf = tile_gui_info(tile_tab);
-    ox = std::max((int)inf.width, ox);
+    ox = max((int)inf.width, ox);
 
     // All tabs should be the same size.
     for (int i = 1; i < TAB_OFS_MAX; ++i)
@@ -92,7 +91,7 @@ void TabbedRegion::set_tab_region(int idx, GridRegion *reg, tileidx_t tile_tab)
 GridRegion *TabbedRegion::get_tab_region(int idx)
 {
     if (invalid_index(idx))
-        return (NULL);
+        return NULL;
 
     return (m_tabs[idx].reg);
 }
@@ -100,7 +99,7 @@ GridRegion *TabbedRegion::get_tab_region(int idx)
 tileidx_t TabbedRegion::get_tab_tile(int idx)
 {
     if (invalid_index(idx))
-        return (0);
+        return 0;
 
     return (m_tabs[idx].tile_tab);
 }
@@ -129,12 +128,12 @@ void TabbedRegion::activate_tab(int idx)
 
 int TabbedRegion::active_tab() const
 {
-    return (m_active);
+    return m_active;
 }
 
 int TabbedRegion::num_tabs() const
 {
-    return (m_tabs.size());
+    return m_tabs.size();
 }
 
 bool TabbedRegion::invalid_index(int idx) const
@@ -175,13 +174,13 @@ void TabbedRegion::disable_tab(int idx)
 bool TabbedRegion::active_is_valid() const
 {
     if (invalid_index(m_active))
-        return (false);
+        return false;
     if (!m_tabs[m_active].enabled)
-        return (false);
+        return false;
     if (!m_tabs[m_active].reg)
-        return (false);
+        return false;
 
-    return (true);
+    return true;
 }
 
 void TabbedRegion::update()
@@ -282,20 +281,23 @@ int TabbedRegion::get_mouseover_tab(MouseEvent &event) const
     int y = event.py - sy;
 
     if (x < 0 || x > ox || y < 0 || y > wy)
-        return (-1);
+        return -1;
 
     for (int i = 0; i < (int)m_tabs.size(); ++i)
     {
         if (y >= m_tabs[i].min_y && y <= m_tabs[i].max_y)
-            return (i);
+            return i;
     }
-    return (-1);
+    return -1;
 }
 
 int TabbedRegion::handle_mouse(MouseEvent &event)
 {
-    if (mouse_control::current_mode() != MOUSE_MODE_COMMAND)
-        return (0);
+    if (mouse_control::current_mode() != MOUSE_MODE_COMMAND
+        && !tiles.get_map_display())
+    {
+        return 0;
+    }
 
     int mouse_tab = get_mouseover_tab(event);
     if (mouse_tab != m_mouse_tab)
@@ -310,52 +312,52 @@ int TabbedRegion::handle_mouse(MouseEvent &event)
         if (event.event == MouseEvent::PRESS)
         {
             activate_tab(m_mouse_tab);
-            return (0);
+            return 0;
         }
     }
 
     // Otherwise, pass input to the active tab.
     if (!active_is_valid())
-        return (0);
+        return 0;
 
     return (get_tab_region(active_tab())->handle_mouse(event));
 }
 
-bool TabbedRegion::update_tab_tip_text(std::string &tip, bool active)
+bool TabbedRegion::update_tab_tip_text(string &tip, bool active)
 {
-    return (false);
+    return false;
 }
 
-bool TabbedRegion::update_tip_text(std::string &tip)
+bool TabbedRegion::update_tip_text(string &tip)
 {
     if (!active_is_valid())
-        return (false);
+        return false;
 
     if (m_mouse_tab != -1)
     {
         GridRegion *reg = m_tabs[m_mouse_tab].reg;
         if (reg)
-            return (reg->update_tab_tip_text(tip, m_mouse_tab == m_active));
+            return reg->update_tab_tip_text(tip, m_mouse_tab == m_active);
     }
 
     return (get_tab_region(active_tab())->update_tip_text(tip));
 }
 
-bool TabbedRegion::update_alt_text(std::string &alt)
+bool TabbedRegion::update_alt_text(string &alt)
 {
     if (!active_is_valid())
-        return (false);
+        return false;
 
     return (get_tab_region(active_tab())->update_alt_text(alt));
 }
 
-int TabbedRegion::find_tab(std::string tab_name) const
+int TabbedRegion::find_tab(string tab_name) const
 {
     lowercase(tab_name);
-    std::string pluralised_name = tab_name + "s";
+    string pluralised_name = pluralise(tab_name);
     for (int i = 0, size = m_tabs.size(); i < size; ++i)
     {
-        std::string reg_name = lowercase_string(m_tabs[i].reg->name());
+        string reg_name = lowercase_string(m_tabs[i].reg->name());
         if (tab_name == reg_name || pluralised_name == reg_name)
             return i;
     }

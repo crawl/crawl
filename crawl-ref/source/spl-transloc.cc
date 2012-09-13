@@ -64,7 +64,7 @@ spret_type cast_controlled_blink(int pow, bool fail)
 // a monster being at the target spot), and the player gains no
 // contamination.
 int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
-          std::string *pre_msg)
+          string *pre_msg)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -75,7 +75,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
         crawl_state.cant_cmd_repeat("You can't repeat controlled blinks.");
         crawl_state.cancel_cmd_again();
         crawl_state.cancel_cmd_repeat();
-        return (1);
+        return -1;
     }
 
     // yes, there is a logic to this ordering {dlb}:
@@ -142,7 +142,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
                     continue;
                 }
                 canned_msg(MSG_OK);
-                return (-1);         // early return {dlb}
+                return -1;         // early return {dlb}
             }
 
             monster* beholder = you.get_beholder(beam.target);
@@ -196,6 +196,9 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
             }
         }
 
+        if (!you.attempt_escape(2))
+            return false;
+
         if (pre_msg)
             mpr(pre_msg->c_str());
 
@@ -232,7 +235,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
     crawl_state.cancel_cmd_again();
     crawl_state.cancel_cmd_repeat();
 
-    return (1);
+    return 1;
 }
 
 spret_type cast_blink(bool allow_partial_control, bool fail)
@@ -273,7 +276,7 @@ void random_blink(bool allow_partial_control, bool override_abyss, bool override
         cast_semi_controlled_blink(100, false);
         maybe_id_ring_TC();
     }
-    else
+    else if (you.attempt_escape(2))
     {
         canned_msg(MSG_YOU_BLINK);
         coord_def origin = you.pos();
@@ -300,7 +303,7 @@ bool allow_control_teleport(bool quiet)
             mpr("A powerful magic prevents control of your teleportation.");
     }
 
-    return (retval);
+    return retval;
 }
 
 spret_type cast_teleport_self(bool fail)
@@ -343,25 +346,25 @@ void you_teleport(void)
 }
 
 // Should return true if we don't want anyone to teleport here.
-static bool _cell_vetoes_teleport (const coord_def cell, bool check_monsters = true,
-                                   bool wizard_tele = false)
+static bool _cell_vetoes_teleport(const coord_def cell, bool check_monsters = true,
+                                  bool wizard_tele = false)
 {
     // Monsters always veto teleport.
     if (monster_at(cell) && check_monsters)
-        return (true);
+        return true;
 
     // As do all clouds; this may change.
     if (env.cgrid(cell) != EMPTY_CLOUD && !wizard_tele)
-        return (true);
+        return true;
 
     if (cell_is_solid(cell))
-        return (true);
+        return true;
 
     return is_feat_dangerous(grd(cell), true) && !wizard_tele;
 }
 
-static void _handle_teleport_update (bool large_change, bool check_ring_TC,
-                                     const coord_def old_pos)
+static void _handle_teleport_update(bool large_change, bool check_ring_TC,
+                                    const coord_def old_pos)
 {
     if (large_change)
     {
@@ -418,7 +421,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
             && !new_abyss_area)
     {
         canned_msg(MSG_STRANGE_STASIS);
-        return (false);
+        return false;
     }
 
     // After this point, we're guaranteed to teleport. Kill the appropriate
@@ -437,7 +440,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
         if (you.pet_target != MHITYOU)
             you.pet_target = MHITNOT;
 
-        return (true);
+        return true;
     }
 
     coord_def pos(1, 0);
@@ -472,7 +475,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
                     "cancelling teleport.", MSGCH_ERROR);
                 if (!wizard_tele)
                     contaminate_player(1, true);
-                return (false);
+                return false;
             }
 
             dprf("Target square (%d,%d)", pos.x, pos.y);
@@ -490,7 +493,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
                 if (!wizard_tele)
                     contaminate_player(1, true);
                 maybe_id_ring_TC();
-                return (false);
+                return false;
             }
 
             monster* beholder = you.get_beholder(pos);
@@ -651,12 +654,13 @@ bool you_teleport_to(const coord_def where_to, bool move_monsters)
 
     // Don't bother to calculate a possible new position if it's out of bounds.
     if (!in_bounds(where))
-        return (false);
+        return false;
 
     if (_cell_vetoes_teleport(where))
     {
         if (monster_at(where) && move_monsters && !_cell_vetoes_teleport(where, false))
         {
+            // dlua only, don't heed no_tele
             monster* mons = monster_at(where);
             mons->teleport(true);
         }
@@ -683,7 +687,7 @@ bool you_teleport_to(const coord_def where_to, bool move_monsters)
             }
             // Give up, we can't find a suitable spot.
             if (where == old_where)
-                return (false);
+                return false;
         }
     }
 
@@ -696,7 +700,7 @@ bool you_teleport_to(const coord_def where_to, bool move_monsters)
     move_player_to_grid(where, false, true);
 
     _handle_teleport_update(large_change, check_ring_TC, old_pos);
-    return (true);
+    return true;
 }
 
 void you_teleport_now(bool allow_control, bool new_abyss_area, bool wizard_tele)
@@ -861,13 +865,13 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
     // The maximum number of squares the item will actually move, always
     // at least one square.
     int quantity = item.quantity;
-    int apported_mass = unit_mass * std::min(quantity, max_units);
+    int apported_mass = unit_mass * min(quantity, max_units);
 
-    int max_dist = std::max(60 * pow / (apported_mass + 150), 1);
+    int max_dist = max(60 * pow / (apported_mass + 150), 1);
 
     dprf("Apport dist=%d, max_dist=%d", dist, max_dist);
 
-    int location_on_path = std::max(-1, dist - max_dist);
+    int location_on_path = max(-1, dist - max_dist);
     // Don't move mimics under you.
     if ((item.flags & ISFLAG_MIMIC) && location_on_path == -1)
         location_on_path = 0;
@@ -942,7 +946,7 @@ static bool _quadrant_blink(coord_def dir, int pow)
         }
 
         // ... which is close enough, but also far enough from us.
-        if (distance(base, target) > 10 || distance(you.pos(), target) < 8)
+        if (distance2(base, target) > 10 || distance2(you.pos(), target) < 8)
             continue;
 
         if (!you.see_cell_no_trans(target))
@@ -994,7 +998,7 @@ spret_type cast_semi_controlled_blink(int pow, bool cheap_cancel, bool fail)
     fail_check();
 
     // Note: this can silently fail, eating the blink -- WHY?
-    if (_quadrant_blink(bmove.delta, pow))
+    if (you.attempt_escape(2) && _quadrant_blink(bmove.delta, pow))
     {
         // Controlled blink causes glowing.
         contaminate_player(1, true);

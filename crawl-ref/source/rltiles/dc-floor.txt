@@ -174,10 +174,10 @@ mesh1
 mesh2
 mesh3
 
-hive0 FLOOR_HIVE FLOOR_ORC
-hive1
-hive2
-hive3
+orc0 FLOOR_ORC
+orc1
+orc2
+orc3
 
 ice0 FLOOR_ICE
 ice1
@@ -212,10 +212,26 @@ moss1
 moss2
 moss3
 
+%weight 10
 bog_green0 FLOOR_SLIME
+%weight 1
 bog_green1
 bog_green2
 bog_green3
+
+acidic_floor0 FLOOR_SLIME_ACIDIC
+acidic_floor1
+acidic_floor2
+acidic_floor3
+
+slime_overlay_N SLIME_OVERLAY
+slime_overlay_E
+slime_overlay_S
+slime_overlay_W
+slime_overlay_NW
+slime_overlay_NE
+slime_overlay_SE
+slime_overlay_SW
 
 %weight 10
 snake-a0 FLOOR_SNAKE_A
@@ -361,16 +377,15 @@ rough_red3
 %resetcol
 
 %weight 5
-floor_sand_stone0 FLOOR_SAND_STONE
-floor_sand_stone1
-floor_sand_stone2
-floor_sand_stone3
+sand1 FLOOR_SAND
+sand2
+sand3
+sand4
 %weight 2
-floor_sand_stone4
-floor_sand_stone5
-floor_sand_stone7
-%weight 1
-floor_sand_stone6
+sand5
+sand6
+sand7
+sand8
 
 %weight 5
 cobble_blood1 FLOOR_COBBLE_BLOOD
@@ -654,10 +669,12 @@ black_cobalt10
 black_cobalt11
 black_cobalt12
 
+%weight 10
 frozen0 FLOOR_FROZEN
 frozen1
 frozen2
 frozen3
+%weight 2
 frozen4
 frozen5
 frozen6

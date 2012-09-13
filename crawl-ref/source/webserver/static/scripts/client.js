@@ -8,8 +8,8 @@ function (exports, $, key_conversion, chat, comm) {
 
     window.debug_mode = false;
 
-    exports.log_messages = false;
-    exports.log_message_size = false;
+    window.log_messages = false;
+    window.log_message_size = false;
 
     var delay_timeout = undefined;
     var message_inhibit = 0;
@@ -409,6 +409,18 @@ function (exports, $, key_conversion, chat, comm) {
     exports.hide_dialog = hide_dialog;
     exports.center_element = center_element;
 
+    function handle_dialog(data)
+    {
+        var dialog = $("<div class='floating_dialog'>");
+        dialog.html(data.html);
+        $("body").append(dialog);
+        dialog.find("[data-key]").on("click", function (ev) {
+            var key = $(this).data("key");
+            send_bytes([key.charCodeAt(0)]);
+        });
+        show_dialog(dialog);
+    }
+
     function start_register()
     {
         show_dialog("#register");
@@ -525,6 +537,7 @@ function (exports, $, key_conversion, chat, comm) {
 
         hide_dialog();
 
+        $(document).trigger("game_cleanup");
         $("#game").html('<div id="crt" style="display: none;"></div>');
 
         $("#username").focus();
@@ -606,7 +619,7 @@ function (exports, $, key_conversion, chat, comm) {
                 $this.data("time", time)
                     .attr("data-time", "" + time);
                 $this.data("sort", "" + time)
-                    .attr("data-sort", "" + sort);
+                    .attr("data-sort", "" + time);
             }
         });
     }
@@ -707,19 +720,25 @@ function (exports, $, key_conversion, chat, comm) {
         send_message("force_terminate", { answer: true });
         hide_dialog();
     }
-    function stale_processes_keydown(ev)
+    function stale_processes_keypress(ev)
     {
-        ev.preventDefault();
-        send_message("stop_stale_process_purge");
-        hide_dialog();
+        if ($("#stale_processes_message").is(":visible"))
+        {
+            ev.preventDefault();
+            send_message("stop_stale_process_purge");
+            hide_dialog();
+        }
     }
-    function force_terminate_keydown(ev)
+    function force_terminate_keypress(ev)
     {
-        ev.preventDefault();
-        if (ev.which == "y".charCodeAt(0))
-            force_terminate_yes();
-        else
-            force_terminate_no();
+        if ($("#force_terminate").is(":visible"))
+        {
+            ev.preventDefault();
+            if (ev.which == "y".charCodeAt(0))
+                force_terminate_yes();
+            else
+                force_terminate_no();
+        }
     }
     function handle_stale_processes(data)
     {
@@ -839,6 +858,8 @@ function (exports, $, key_conversion, chat, comm) {
 
         "set_game_links": set_game_links,
         "html": set_html,
+        "show_dialog": handle_dialog,
+        "hide_dialog": hide_dialog,
 
         "lobby_clear": lobby_clear,
         "lobby_entry": lobby_entry,
@@ -892,8 +913,8 @@ function (exports, $, key_conversion, chat, comm) {
 
         $("#force_terminate_no").click(force_terminate_no);
         $("#force_terminate_yes").click(force_terminate_yes);
-        $("#stale_processes_message").keydown(stale_processes_keydown);
-        $("#force_terminate").keydown(force_terminate_keydown);
+        $(document).on("game_keypress", stale_processes_keypress);
+        $(document).on("game_keypress", force_terminate_keypress);
 
         do_layout();
 
@@ -922,11 +943,11 @@ function (exports, $, key_conversion, chat, comm) {
 
             socket.onmessage = function (msg)
             {
-                if (exports.log_messages)
+                if (window.log_messages)
                 {
                     console.log("Message: " + msg.data);
                 }
-                if (exports.log_message_size)
+                if (window.log_message_size)
                 {
                     console.log("Message size: " + msg.data.length);
                 }

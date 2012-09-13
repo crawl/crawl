@@ -24,8 +24,8 @@ public:
     void resize(const coord_def &sz);
     bool empty() const;
 
-    operator screen_cell_t * () { return (m_buffer); }
-    operator const screen_cell_t * () const { return (m_buffer); }
+    operator screen_cell_t * () { return m_buffer; }
+    operator const screen_cell_t * () const { return m_buffer; }
     const crawl_view_buffer & operator = (const crawl_view_buffer &rhs);
 
     void clear();
@@ -97,12 +97,12 @@ public:
 
     inline coord_def grid2show(const coord_def &pos) const
     {
-        return (view2show(grid2view(pos)));
+        return view2show(grid2view(pos));
     }
 
     inline coord_def show2grid(const coord_def &pos) const
     {
-        return (view2grid(show2view(pos)));
+        return view2grid(show2view(pos));
     }
 
     inline coord_def screen2view(const coord_def& pos) const
@@ -160,42 +160,42 @@ public:
 
 extern crawl_view_geometry crawl_view;
 
-inline coord_def view2grid(const coord_def &pos)
+static inline coord_def view2grid(const coord_def &pos)
 {
     return crawl_view.view2grid(pos);
 }
 
-inline coord_def grid2view(const coord_def &pos)
+static inline coord_def grid2view(const coord_def &pos)
 {
     return crawl_view.grid2view(pos);
 }
 
-inline coord_def view2show(const coord_def &pos)
+static inline coord_def view2show(const coord_def &pos)
 {
     return crawl_view.view2show(pos);
 }
 
-inline coord_def show2view(const coord_def &pos)
+static inline coord_def show2view(const coord_def &pos)
 {
     return crawl_view.show2view(pos);
 }
 
-inline coord_def grid2show(const coord_def &pos)
+static inline coord_def grid2show(const coord_def &pos)
 {
     return crawl_view.grid2show(pos);
 }
 
-inline coord_def show2grid(const coord_def &pos)
+static inline coord_def show2grid(const coord_def &pos)
 {
     return crawl_view.show2grid(pos);
 }
 
-inline bool in_los_bounds_v(const coord_def& pos)
+static inline bool in_los_bounds_v(const coord_def& pos)
 {
     return crawl_view.in_los_bounds_v(pos);
 }
 
-inline bool in_los_bounds_g(const coord_def& pos)
+static inline bool in_los_bounds_g(const coord_def& pos)
 {
     return crawl_view.in_los_bounds_g(pos);
 }

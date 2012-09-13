@@ -38,12 +38,12 @@ public:
     virtual void clear_redraw()  { return; }
 
     // Update the prompt shown at top.
-    virtual void update_top_prompt(std::string* p_top_prompt) {}
+    virtual void update_top_prompt(string* p_top_prompt) {}
 
     // Add relevant descriptions to the target status.
-    virtual std::vector<std::string> get_monster_desc(const monster_info& mi);
+    virtual vector<string> get_monster_desc(const monster_info& mi);
  private:
-    std::string prompt;
+    string prompt;
 
 public:
     bool just_looking;
@@ -83,7 +83,7 @@ struct direction_chooser_args
     bool may_target_monster;
     bool may_target_self;
     const char *target_prefix;
-    std::string top_prompt;
+    string top_prompt;
     targetting_behaviour *behaviour;
     bool cancel_at_self;
     bool show_floor_desc;
@@ -158,7 +158,7 @@ private:
     const coord_def& target() const;
     void set_target(const coord_def& new_target);
 
-    std::string build_targetting_hint_string() const;
+    string build_targetting_hint_string() const;
 
     actor* targeted_actor() const;
     monster* targeted_monster() const;
@@ -194,13 +194,12 @@ private:
     // terrain (i.e. floor.)
     void print_floor_description(bool boring_too) const;
 
-    std::string target_interesting_terrain_description() const;
-    std::string target_cloud_description() const;
-    std::string target_sanctuary_description() const;
-    std::string target_silence_description() const;
-    std::vector<std::string> target_cell_description_suffixes() const;
-    std::vector<std::string> monster_description_suffixes(
-        const monster_info& mi) const;
+    string target_interesting_terrain_description() const;
+    string target_cloud_description() const;
+    string target_sanctuary_description() const;
+    string target_silence_description() const;
+    vector<string> target_cell_description_suffixes() const;
+    vector<string> monster_description_suffixes(const monster_info& mi) const;
 
     void describe_cell() const;
 
@@ -240,7 +239,7 @@ private:
     bool may_target_monster;
     bool may_target_self;       // ?? XXX Used only for _init_mlist() currently
     const char *target_prefix;  // A string displayed before describing target
-    std::string top_prompt;     // Shown at the top of the message window
+    string top_prompt;          // Shown at the top of the message window
     targetting_behaviour *behaviour; // Can be NULL for default
     bool cancel_at_self;        // Disallow self-targetting?
     bool show_floor_desc;       // Describe the floor of the current target
@@ -280,46 +279,35 @@ char mlist_index_to_letter(int index);
 
 void direction(dist &moves, const direction_chooser_args& args);
 
-std::string thing_do_grammar(description_level_type dtype,
-                             bool add_stop,
-                             bool force_article,
-                             std::string desc);
+string thing_do_grammar(description_level_type dtype, bool add_stop,
+                        bool force_article, string desc);
 
-std::string get_terse_square_desc(const coord_def &gc);
+string get_terse_square_desc(const coord_def &gc);
 void terse_describe_square(const coord_def &c, bool in_range = true);
 void full_describe_square(const coord_def &c);
 void get_square_desc(const coord_def &c, describe_info &inf,
                      bool examine_mons = false, bool show_floor = false);
 
 void describe_floor();
-std::string get_monster_equipment_desc(const monster_info& mi,
-                                //bool full_desc = true,
-                                mons_equip_desc_level_type level = DESC_FULL,
-                                description_level_type mondtype = DESC_A,
-                                bool print_attitude = false);
+string get_monster_equipment_desc(const monster_info& mi,
+                                  //bool full_desc = true,
+                                  mons_equip_desc_level_type level = DESC_FULL,
+                                  description_level_type mondtype = DESC_A,
+                                  bool print_attitude = false);
 
 int dos_direction_unmunge(int doskey);
 
-std::string feature_description(const coord_def& where, bool covering = false,
-                                description_level_type dtype = DESC_A,
-                                bool add_stop = true, bool base_desc = false);
-std::string raw_feature_description(dungeon_feature_type grid,
-                                    trap_type tr = NUM_TRAPS,
-                                    bool base_desc = false);
-std::string feature_description(dungeon_feature_type grid,
-                                trap_type trap = NUM_TRAPS,
-                                const std::string & cover_desc = "",
-                                description_level_type dtype = DESC_A,
-                                bool add_stop = true, bool base_desc = false);
+string feature_description_at(const coord_def& where, bool covering = false,
+                              description_level_type dtype = DESC_A,
+                              bool add_stop = true, bool base_desc = false);
+string raw_feature_description(const coord_def& where);
+string feature_description(dungeon_feature_type grid,
+                           trap_type trap = NUM_TRAPS,
+                           const string & cover_desc = "",
+                           description_level_type dtype = DESC_A,
+                           bool add_stop = true, bool base_desc = false);
 
-void set_feature_desc_short(dungeon_feature_type grid,
-                            const std::string &desc);
-void set_feature_desc_short(const std::string &base_name,
-                            const std::string &desc);
-
-void setup_feature_descs_short();
-
-std::vector<dungeon_feature_type> features_by_desc(const base_pattern &pattern);
+vector<dungeon_feature_type> features_by_desc(const base_pattern &pattern);
 
 void full_describe_view(void);
 

@@ -12,13 +12,12 @@
 #include "externs.h"
 #include "enum.h"
 
-bool armour_prompt(const std::string & mesg, int *index, operation_types oper);
+bool armour_prompt(const string & mesg, int *index, operation_types oper);
 
 bool takeoff_armour(int index);
 
 void drink(int slot = -1);
 
-bool safe_to_remove_or_wear(const item_def &item, bool remove, bool quiet = false);
 bool safe_to_remove(const item_def &item, bool quiet = false);
 
 void examine_object(void);

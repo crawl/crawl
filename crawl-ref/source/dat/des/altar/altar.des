@@ -35,7 +35,7 @@ default-depth: D
 
 NAME:    jmf_multi_god_temple
 SHUFFLE: abc
-SUBST:   a:=, b:x, c:x
+SUBST:   a:+, b:x, c:x
 DEPTH:   D:8-21, Vaults
 MAP
 ............
@@ -54,6 +54,7 @@ ENDMAP
 
 NAME:  jmf_multi_god_temple2
 DEPTH: D:8-21, Vaults
+KFEAT: = = runed_door
 MAP
 ............
 ..vvvvvvvv..
@@ -180,16 +181,16 @@ MAP
  2
 ENDMAP
 
-NAME:    lemuel_hidden_altar
+NAME:    lemuel_doored_altar
 DEPTH:   D:1-18, Vaults, Lair, Elf, Crypt
 SHUFFLE: XY
 SUBST:   X = .
-SUBST:   Y = =
+SUBST:   Y = +
 MAP
 .........
-.xxxXxxx.
-.xxx.xxx.
-.xxxYxxx.
+.xxxmxxx.
+.xxxmxxx.
+.xxxmxxx.
 .X.YCY.X.
 .xxxYxxx.
 .xxx.xxx.
@@ -329,6 +330,7 @@ DEPTH: D:3-18, Vaults
 TAGS:  no_trap_gen
 : if you.absdepth() > 12 then
 MONS: patrolling Daeva / patrolling Angel
+KFEAT:  m = iron_grate
 : else
 MONS:  patrolling Angel
 : end
@@ -347,6 +349,55 @@ MAP
  ..xx>xx..
   ..xmx..
    .....
+ENDMAP
+
+NAME:    good_gods_temple_1
+DEPTH:   D:2-27, Lair
+TAGS:    no_monster_gen no_trap_gen uniq_good_god_temple extra
+MONS:    plant
+KFEAT:   D = altar_elyvilon
+KFEAT:   E = altar_zin
+KFEAT:   F = altar_the_shining_one
+SHUFFLE: DEF
+SUBST:   1 : GTV1
+SUBST:   X : GTt
+SUBST:   ? : t@
+MAP
+  ttttttt
+ tt.....tt
+tt...E...tt
+tt.D...F.tt
+tt...1...tt
+ tt.....tt
+  tt...tt
+   ?X@X?
+ENDMAP
+
+NAME:    good_gods_mini_temple
+DEPTH:   D:2-27, Lair
+TAGS:    no_monster_gen no_trap_gen no_pool_fixup uniq_good_god_temple
+TAGS:    no_item_gen extra
+MONS:    plant
+KFEAT:   D = altar_elyvilon
+KFEAT:   E = altar_zin
+KFEAT:   F = altar_the_shining_one
+: if crawl.coinflip() then
+SHUFFLE: x" / t1 / wT / IJ
+: else
+SUBST:   " : ..x
+: end
+SUBST:   HI : x
+SUBST:   x : xcvb
+SUBST:   ' : .
+SHUFFLE: EG/'E
+SUBST:   J : G
+SHUFFLE: DEF
+MAP
+ xxxxx
+xxxGxxx
+xD.E.Fx
+xx+++xx
+ ""@""
 ENDMAP
 
 ##############################################################################

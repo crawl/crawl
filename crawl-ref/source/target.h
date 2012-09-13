@@ -22,22 +22,43 @@ public:
     coord_def origin;
     coord_def aim;
     const actor* agent;
-    std::string why_not;
+    string why_not;
 
     virtual bool set_aim(coord_def a);
     virtual bool valid_aim(coord_def a) = 0;
 
     virtual aff_type is_affected(coord_def loc) = 0;
+protected:
+    bool anyone_there(coord_def loc);
 };
 
 class targetter_beam : public targetter
 {
 public:
-    targetter_beam(const actor *act, int range, beam_type flavour, bool stop);
+    targetter_beam(const actor *act, int range, zap_type zap, int pow,
+                   bool stop, int min_expl_rad, int max_expl_rad);
     bolt beam;
-    bool set_aim(coord_def a);
+    virtual bool set_aim(coord_def a);
     bool valid_aim(coord_def a);
+    virtual aff_type is_affected(coord_def loc);
+protected:
+    vector<coord_def> path_taken; // Path beam took.
+private:
+    bool penetrates_targets;
+    int range2;
+    int min_expl_rad, max_expl_rad;
+    explosion_map exp_map_min, exp_map_max;
+};
+
+class targetter_imb : public targetter_beam
+{
+public:
+    targetter_imb(const actor *act, int pow, int range);
+    bool set_aim(coord_def a);
     aff_type is_affected(coord_def loc);
+private:
+    vector<coord_def> splash;
+    vector<coord_def> splash2;
 };
 
 class targetter_view : public targetter
@@ -54,16 +75,27 @@ public:
     targetter_smite(const actor *act, int range = LOS_RADIUS,
                     int exp_min = 0, int exp_max = 0, bool wall_ok = false,
                     bool (*affects_pos_func)(const coord_def &) = 0);
-    bool set_aim(coord_def a);
-    bool valid_aim(coord_def a);
+    virtual bool set_aim(coord_def a);
+    virtual bool valid_aim(coord_def a);
     aff_type is_affected(coord_def loc);
-private:
-    int range2;
+protected:
     // assumes exp_map is valid only if >0, so let's keep it private
     int exp_range_min, exp_range_max;
     explosion_map exp_map_min, exp_map_max;
+private:
+    int range2;
     bool affects_walls;
     bool (*affects_pos)(const coord_def &);
+};
+
+class targetter_fragment : public targetter_smite
+{
+public:
+    targetter_fragment(const actor *act, int power, int range = LOS_RADIUS);
+    bool set_aim(coord_def a);
+    bool valid_aim(coord_def a);
+private:
+    int pow;
 };
 
 class targetter_reach : public targetter
@@ -85,8 +117,8 @@ public:
     aff_type is_affected(coord_def loc);
     int range2;
     int cnt_min, cnt_max;
-    std::map<coord_def, aff_type> seen;
-    std::vector<std::vector<coord_def> > queue;
+    map<coord_def, aff_type> seen;
+    vector<vector<coord_def> > queue;
 };
 
 class targetter_splash : public targetter
@@ -95,8 +127,6 @@ public:
     targetter_splash(const actor *act);
     bool valid_aim(coord_def a);
     aff_type is_affected(coord_def loc);
-private:
-    bool anyone_there(coord_def loc);
 };
 
 class targetter_los : public targetter
@@ -110,4 +140,20 @@ private:
     los_type los;
     int range2, range_max2;
 };
+
+class targetter_thunderbolt : public targetter
+{
+public:
+    targetter_thunderbolt(const actor *act, int r, coord_def _prev);
+
+    bool valid_aim(coord_def a);
+    bool set_aim(coord_def a);
+    aff_type is_affected(coord_def loc);
+    map<coord_def, aff_type> zapped;
+    FixedVector<int, LOS_RADIUS + 1> arc_length;
+private:
+    coord_def prev;
+    int range2;
+};
+
 #endif

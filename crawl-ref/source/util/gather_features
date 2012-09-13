@@ -25,6 +25,7 @@ for (/"([^"\n]*)"/g)
 {
     next if /^$/;
     next if /^undefined trap$/;
+    next if /^Error/;
 
     $features{articled($_)} = 1;
 }
@@ -37,10 +38,18 @@ for (grep /\.des|\.des\.disabled|\.lua$/, `git ls-files`)
     close IN;
 
     $features{articled($_)} = 1
-        for /set_feature_desc_short\s*\(\s*"[^"\n"]+"\s*,[ \n:]*"([^"\n]+)"\s*\)/sg;
+        for /set_feature_name\s*\(\s*"[^"\n"]+"\s*,[ \n:]*"([^"\n]+)"\s*\)/sg;
 
     $features{articled($_)} = 1
         for /\bdesc\s*=\s*"([^"]*)"/g;
+}
+
+$features{articled("gleaming silver wall")} = 1;
+for (qw(open closed runed))
+{
+    $features{articled("large $_ door")} = 1;
+    $features{articled("$_ gate")} = 1;
+    $features{articled("huge $_ gate")} = 1;
 }
 
 print join("\n", sort keys %features), "\n";

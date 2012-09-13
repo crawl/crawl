@@ -29,15 +29,20 @@ animated_weapon ANIMATED_WEAPON
 mimic MIMIC
 inept_mimic INEPT_MIMIC
 ravenous_mimic RAVENOUS_MIMIC
+%rim 0
 poison POISON
+%rim 1
 sticky_flame STICKY_FLAME
 inner_flame INNER_FLAME
 constricted CONSTRICTED
 berserk BERSERK
+glowing GLOWING
+slowed SLOWED
 %rim 0
 fleeing FLEEING
 may_stab_brand MAY_STAB_BRAND
 sleeping STAB_BRAND
+pain_mirror PAIN_MIRROR
 
 something_under SOMETHING_UNDER
 tried TRIED
@@ -104,3 +109,21 @@ mdam_moderately_damaged MDAM_MODERATELY_DAMAGED
 mdam_heavily_damaged MDAM_HEAVILY_DAMAGED
 mdam_severely_damaged MDAM_SEVERELY_DAMAGED
 mdam_almost_dead MDAM_ALMOST_DEAD
+
+travel_path_from1 TRAVEL_PATH_FROM
+travel_path_from2
+travel_path_from3
+travel_path_from4
+travel_path_from5
+travel_path_from6
+travel_path_from7
+travel_path_from8
+
+travel_path_to1 TRAVEL_PATH_TO
+travel_path_to2
+travel_path_to3
+travel_path_to4
+travel_path_to5
+travel_path_to6
+travel_path_to7
+travel_path_to8

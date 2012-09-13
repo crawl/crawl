@@ -4,7 +4,7 @@
 
 name = CPU_hog
 species = mu
-background = st
+background = ar
 restart_after_game = false
 show_gold_turns = true
 show_more = false
@@ -28,8 +28,8 @@ show_more = false
 :                    "you.teleport_to(40, 32)" .. eol ..
 :                    "you.piety(200)" .. eol .. esc)
 :     crawl.sendkeys("X" .. string.char(6) .. "y" .. esc)
-:     crawl.sendkeys("&" .. string.char(12) .. "27" .. eol)
-:     crawl.sendkeys("&A27" .. eol .. "N")
+:     crawl.sendkeys("&" .. string.char(12) .. "27" .. eol .. "N")
+:     crawl.sendkeys("&A27" .. eol)
 :     for i = 1, 40 do
 :       crawl.sendkeys("&H")
 :     end

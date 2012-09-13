@@ -14,13 +14,13 @@ namespace geom
 
 static bool double_is_zero(double d)
 {
-    return (std::abs(d) < 0.0000001);
+    return (abs(d) < 0.0000001);
 }
 
 // Is v parallel to the kernel of f?
 bool parallel(const vector &v, const form &f)
 {
-    return (double_is_zero(f(v)));
+    return double_is_zero(f(v));
 }
 
 vector ray::shoot(double t) const
@@ -42,7 +42,7 @@ double intersect(const ray &r, const line &l)
     double fp = l.f(r.start);
     double fd = l.f(r.dir);
     double t = (l.val - fp) / fd;
-    return (t);
+    return t;
 }
 
 double lineseq::index(const vector &v) const
@@ -64,7 +64,7 @@ double nextintersect(const ray &r, const lineseq &ls)
     if (double_is_zero(k - a))
         k += (ls.dist*fd > 0 ? 1 : -1);
     double t = (k - a) * ls.dist / fd;
-    return (t);
+    return t;
 }
 
 // Move the ray towards the next grid line.
@@ -83,7 +83,7 @@ bool ray::to_grid(const grid &g, bool half)
     {
         double r = nextintersect(*this, g.ls1);
         double s = nextintersect(*this, g.ls2);
-        t = std::min(r, s);
+        t = min(r, s);
         corner = double_is_zero(r - s);
     }
     advance(half ? 0.5 * t : t);
@@ -95,14 +95,14 @@ bool ray::to_grid(const grid &g, bool half)
 bool ray::to_next_cell(const grid &g)
 {
     if (to_grid(g, false))
-        return (true);
+        return true;
     to_grid(g, true);
-    return (false);
+    return false;
 }
 
 vector normal(const form &f)
 {
-    return (vector(f.a, f.b));
+    return vector(f.a, f.b);
 }
 
 vector reflect(const vector &v, const form &f)
@@ -120,14 +120,14 @@ const vector& vector::operator+=(const vector &v)
 {
     x += v.x;
     y += v.y;
-    return (*this);
+    return *this;
 }
 
 vector vector::operator+(const vector &v) const
 {
     vector copy = *this;
     copy += v;
-    return (copy);
+    return copy;
 }
 
 vector vector::operator-() const
@@ -147,7 +147,7 @@ vector vector::operator-(const vector &v) const
 
 vector operator*(double t, const vector &v)
 {
-    return (vector(t*v.x, t*v.y));
+    return vector(t*v.x, t*v.y);
 }
 
 double form::operator()(const vector& v) const
@@ -166,7 +166,7 @@ double degrees(const vector &v)
 vector degree_to_vector(double d)
 {
     double rad = d / 180.0 * M_PI;
-    return (vector(cos(rad), sin(rad)));
+    return vector(cos(rad), sin(rad));
 }
 
 }

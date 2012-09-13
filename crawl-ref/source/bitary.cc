@@ -9,7 +9,7 @@
 
 #include "debug.h"
 
-bit_array::bit_array(unsigned long s)
+bit_vector::bit_vector(unsigned long s)
     : size(s)
 {
     nwords = static_cast<int>((size + LONGSIZE - 1) / LONGSIZE);
@@ -17,18 +17,18 @@ bit_array::bit_array(unsigned long s)
     reset();
 }
 
-bit_array::~bit_array()
+bit_vector::~bit_vector()
 {
     delete[] data;
 }
 
-void bit_array::reset()
+void bit_vector::reset()
 {
     for (int w = 0; w < nwords; ++w)
         data[w] = 0;
 }
 
-bool bit_array::get(unsigned long index) const
+bool bit_vector::get(unsigned long index) const
 {
     ASSERT(index < size);
     int w = index / LONGSIZE;
@@ -36,7 +36,7 @@ bool bit_array::get(unsigned long index) const
     return (data[w] & (1UL << b));
 }
 
-void bit_array::set(unsigned long index, bool value)
+void bit_vector::set(unsigned long index, bool value)
 {
     ASSERT(index < size);
     int w = index / LONGSIZE;
@@ -47,27 +47,27 @@ void bit_array::set(unsigned long index, bool value)
         data[w] &= ~(1UL << b);
 }
 
-bit_array& bit_array::operator |= (const bit_array& other)
+bit_vector& bit_vector::operator |= (const bit_vector& other)
 {
     ASSERT(size == other.size);
     for (int w = 0; w < nwords; ++w)
         data[w] |= other.data[w];
-    return (*this);
+    return *this;
 }
 
-bit_array& bit_array::operator &= (const bit_array& other)
+bit_vector& bit_vector::operator &= (const bit_vector& other)
 {
     ASSERT(size == other.size);
     for (int w = 0; w < nwords; ++w)
         data[w] &= other.data[w];
-    return (*this);
+    return *this;
 }
 
-bit_array bit_array::operator & (const bit_array& other) const
+bit_vector bit_vector::operator & (const bit_vector& other) const
 {
     ASSERT(size == other.size);
-    bit_array res = bit_array(size);
+    bit_vector res = bit_vector(size);
     for (int w = 0; w < nwords; ++w)
         res.data[w] = data[w] & other.data[w];
-    return (res);
+    return res;
 }

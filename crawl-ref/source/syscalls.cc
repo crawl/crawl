@@ -21,6 +21,7 @@
 #include <sys/stat.h>
 #endif
 
+#include "random.h"
 #include "syscalls.h"
 #include "unicode.h"
 
@@ -102,6 +103,7 @@ bool read_urandom(char *buf, int len)
 
 #ifdef TARGET_OS_WINDOWS
 # ifndef UNIX
+// should check the presence of alarm() instead
 static void CALLBACK _abortion(PVOID dummy, BOOLEAN timedout)
 {
     TerminateProcess(GetCurrentProcess(), 0);
@@ -112,7 +114,9 @@ void alarm(unsigned int seconds)
     HANDLE dummy;
     CreateTimerQueueTimer(&dummy, 0, _abortion, 0, seconds * 1000, 0, 0);
 }
+# endif
 
+# ifndef HAVE_FDATASYNC
 // implementation by Richard W.M. Jones
 // He claims this is the equivalent to fsync(), reading the MSDN doesn't seem
 // to show that vital metadata is indeed flushed, others report that at least
@@ -149,14 +153,38 @@ int fdatasync(int fd)
     return 0;
 }
 # endif
-#endif
 
-#ifdef NEED_FAKE_FDATASYNC
+int mkstemp(char *dummy)
+{
+    HANDLE fh;
+
+    for (int tries = 0; tries < 100; tries++)
+    {
+        wchar_t filename[MAX_PATH];
+        int len = GetTempPathW(MAX_PATH - 8, filename);
+        ASSERT(len);
+        for (int i = 0; i < 6; i++)
+            filename[len + i] = 'a' + random2(26);
+        filename[len + 6] = 0;
+        fh = CreateFileW(filename, GENERIC_READ | GENERIC_WRITE, 0, NULL,
+                         CREATE_NEW,
+                         FILE_FLAG_DELETE_ON_CLOSE | FILE_ATTRIBUTE_TEMPORARY,
+                         NULL);
+        if (fh != INVALID_HANDLE_VALUE)
+            return _open_osfhandle((intptr_t)fh, 0);
+    }
+
+    die("can't create temporary file in %%TMPDIR%%");
+}
+
+#else
+// non-Windows
+# ifndef HAVE_FDATASYNC
 // At least MacOS X 10.6 has it (as required by Posix) but present only
 // as a symbol in the libraries without a proper header.
 int fdatasync(int fd)
 {
-# ifdef F_FULLFSYNC
+#  ifdef F_FULLFSYNC
     // On MacOS X, fsync() doesn't even try to actually do what it was asked.
     // Sane systems might have this problem only on disks that do write caching
     // but ignore flush requests.  fsync() should never return before the disk
@@ -166,10 +194,11 @@ int fdatasync(int fd)
     // F_FULLFSYNC is said to fail (at least on some versions of OS X), while
     // fsync() actually works.  Thus, we need to try both.
     return fcntl(fd, F_FULLFSYNC, 0) && fsync(fd);
-# else
+#  else
     return fsync(fd);
-# endif
+#  endif
 }
+# endif
 #endif
 
 
@@ -203,7 +232,7 @@ void usleep(unsigned long time)
 #endif
 
 
-bool file_exists(const std::string &name)
+bool file_exists(const string &name)
 {
 #ifdef TARGET_OS_WINDOWS
     DWORD lAttr = GetFileAttributesW(OUTW(name));
@@ -217,7 +246,7 @@ bool file_exists(const std::string &name)
 }
 
 // Low-tech existence check.
-bool dir_exists(const std::string &dir)
+bool dir_exists(const string &dir)
 {
 #ifdef TARGET_OS_WINDOWS
     DWORD lAttr = GetFileAttributesW(OUTW(dir));
@@ -233,24 +262,24 @@ bool dir_exists(const std::string &dir)
     if (d)
         closedir(d);
 
-    return (exists);
+    return exists;
 #endif
 }
 
-static inline bool _is_good_filename(const std::string &s)
+static inline bool _is_good_filename(const string &s)
 {
     return (s != "." && s != "..");
 }
 
 // Returns the names of all files in the given directory. Note that the
 // filenames returned are relative to the directory.
-std::vector<std::string> get_dir_files(const std::string &dirname)
+vector<string> get_dir_files(const string &dirname)
 {
-    std::vector<std::string> files;
+    vector<string> files;
 
 #ifdef TARGET_OS_WINDOWS
     WIN32_FIND_DATAW lData;
-    std::string dir = dirname;
+    string dir = dirname;
     if (!dir.empty() && dir[dir.length() - 1] != FILE_SEPARATOR)
         dir += FILE_SEPARATOR;
     dir += "*";
@@ -268,18 +297,18 @@ std::vector<std::string> get_dir_files(const std::string &dirname)
 
     DIR *dir = opendir(OUTS(dirname));
     if (!dir)
-        return (files);
+        return files;
 
     while (dirent *entry = readdir(dir))
     {
-        std::string name = mb_to_utf8(entry->d_name);
+        string name = mb_to_utf8(entry->d_name);
         if (_is_good_filename(name))
             files.push_back(name);
     }
     closedir(dir);
 #endif
 
-    return (files);
+    return files;
 }
 
 int rename_u(const char *oldpath, const char *newpath)

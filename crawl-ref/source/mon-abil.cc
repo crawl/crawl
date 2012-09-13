@@ -54,8 +54,8 @@ template<typename valid_T, typename connect_T>
 static void _search_dungeon(const coord_def & start,
                     valid_T & valid_target,
                     connect_T & connecting_square,
-                    std::set<position_node> & visited,
-                    std::vector<std::set<position_node>::iterator> & candidates,
+                    set<position_node> & visited,
+                    vector<set<position_node>::iterator> & candidates,
                     bool exhaustive = true,
                     int connect_mode = 8)
 {
@@ -74,9 +74,9 @@ static void _search_dungeon(const coord_def & start,
     temp_node.last = NULL;
 
 
-    std::queue<std::set<position_node>::iterator > fringe;
+    queue<set<position_node>::iterator > fringe;
 
-    std::set<position_node>::iterator current = visited.insert(temp_node).first;
+    set<position_node>::iterator current = visited.insert(temp_node).first;
     fringe.push(current);
 
 
@@ -86,7 +86,7 @@ static void _search_dungeon(const coord_def & start,
         current = fringe.front();
         fringe.pop();
 
-        std::random_shuffle(compass_idx, compass_idx + connect_mode);
+        random_shuffle(compass_idx, compass_idx + connect_mode);
 
         for (int i=0; i < connect_mode; ++i)
         {
@@ -95,7 +95,7 @@ static void _search_dungeon(const coord_def & start,
             {
                 temp_node.pos = adjacent;
                 temp_node.last = &(*current);
-                std::pair<std::set<position_node>::iterator, bool > res;
+                pair<set<position_node>::iterator, bool > res;
                 res = visited.insert(temp_node);
 
                 if (!res.second)
@@ -166,7 +166,7 @@ bool ugly_thing_mutate(monster* ugly, bool proximity)
 {
     bool success = false;
 
-    std::string src = "";
+    string src = "";
 
     colour_t mon_colour = BLACK;
 
@@ -229,9 +229,9 @@ bool ugly_thing_mutate(monster* ugly, bool proximity)
         // The maximum number of monsters that can surround this monster
         // is 8, and the maximum mutation chance from each surrounding
         // monster is 3, so the maximum mutation value is 24.
-        you_mutate_chance = std::min(24, you_mutate_chance);
-        ugly_mutate_chance = std::min(24, ugly_mutate_chance);
-        mon_mutate_chance = std::min(24, mon_mutate_chance);
+        you_mutate_chance = min(24, you_mutate_chance);
+        ugly_mutate_chance = min(24, ugly_mutate_chance);
+        mon_mutate_chance = min(24, mon_mutate_chance);
 
         if (!one_chance_in(you_mutate_chance
                            + ugly_mutate_chance
@@ -272,10 +272,10 @@ bool ugly_thing_mutate(monster* ugly, bool proximity)
 
         ugly->uglything_mutate(mon_colour);
 
-        return (true);
+        return true;
     }
 
-    return (false);
+    return false;
 }
 
 // Inflict any enchantments the parent slime has on its offspring,
@@ -448,12 +448,12 @@ static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
                 && merge_to->type == MONS_CRAWLING_CORPSE))
         {
             new_type = MONS_ABOMINATION_SMALL;
-            newhd = std::min(newhd, 15);
+            newhd = min(newhd, 15);
         }
         else
         {
             new_type = MONS_ABOMINATION_LARGE;
-            newhd = std::min(newhd, 30);
+            newhd = min(newhd, 30);
         }
 
         // Recompute in case we limited newhd.
@@ -472,7 +472,7 @@ static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
     }
 
     monster_type old_type = merge_to->type;
-    std::string old_name = merge_to->name(DESC_A);
+    string old_name = merge_to->name(DESC_A);
 
     // Change the monster's type if we need to.
     if (new_type != old_type)
@@ -526,7 +526,7 @@ static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
     // Now kill the other monster
     monster_die(crawlie, KILL_DISMISSED, NON_MONSTER, true);
 
-    return (true);
+    return true;
 }
 
 
@@ -583,7 +583,7 @@ static bool _do_merge_slimes(monster* initial_slime, monster* merge_to)
     // Have to 'kill' the slime doing the merging.
     monster_die(initial_slime, KILL_DISMISSED, NON_MONSTER, true);
 
-    return (true);
+    return true;
 }
 
 // Slime creatures can split but not merge under these conditions.
@@ -612,11 +612,11 @@ static bool _disabled_merge(monster* thing)
 static bool _slime_merge(monster* thing)
 {
     if (!thing || _disabled_merge(thing) || _unoccupied_slime(thing))
-        return (false);
+        return false;
 
     int max_slime_merge = 5;
     int compass_idx[8] = {0, 1, 2, 3, 4, 5, 6, 7};
-    std::random_shuffle(compass_idx, compass_idx + 8);
+    random_shuffle(compass_idx, compass_idx + 8);
     coord_def origin = thing->pos();
 
     int target_distance = grid_distance(thing->target, thing->pos());
@@ -664,10 +664,10 @@ static bool _slime_merge(monster* thing)
     // We found a merge target and didn't find an open square that
     // would reduce distance to target, so we can actually merge.
     if (merge_target)
-        return (_do_merge_slimes(thing, merge_target));
+        return _do_merge_slimes(thing, merge_target);
 
     // No adjacent slime creatures we could merge with.
-    return (false);
+    return false;
 }
 
 static bool _crawlie_is_mergeable(monster *mons)
@@ -691,10 +691,10 @@ static bool _crawlie_is_mergeable(monster *mons)
 static bool _crawling_corpse_merge(monster *crawlie)
 {
     if (!crawlie || _disabled_merge(crawlie))
-        return (false);
+        return false;
 
     int compass_idx[8] = {0, 1, 2, 3, 4, 5, 6, 7};
-    std::random_shuffle(compass_idx, compass_idx + 8);
+    random_shuffle(compass_idx, compass_idx + 8);
     coord_def origin = crawlie->pos();
 
     monster* merge_target = NULL;
@@ -710,10 +710,10 @@ static bool _crawling_corpse_merge(monster *crawlie)
     }
 
     if (merge_target)
-        return (_do_merge_crawlies(crawlie, merge_target));
+        return _do_merge_crawlies(crawlie, merge_target);
 
     // No adjacent crawlies.
-    return (false);
+    return false;
 }
 
 
@@ -756,7 +756,7 @@ static monster *_slime_split(monster* thing, bool force_split)
     }
 
     int compass_idx[] = {0, 1, 2, 3, 4, 5, 6, 7};
-    std::random_shuffle(compass_idx, compass_idx + 8);
+    random_shuffle(compass_idx, compass_idx + 8);
 
     // Anywhere we can place an offspring?
     for (int i = 0; i < 8; ++i)
@@ -775,7 +775,7 @@ static monster *_slime_split(monster* thing, bool force_split)
             // This can fail if placing a new monster fails.  That
             // probably means we have too many monsters on the level,
             // so just return in that case.
-            return (_do_split(thing, target));
+            return _do_split(thing, target);
         }
     }
 
@@ -791,13 +791,13 @@ static bool _slime_split_merge(monster* thing)
         || thing->is_shapeshifter()
         || thing->type != MONS_SLIME_CREATURE)
     {
-        return (false);
+        return false;
     }
 
     if (_slime_split(thing, false))
-        return (true);
+        return true;
 
-    return (_slime_merge(thing));
+    return _slime_merge(thing);
 }
 
 // Splits and polymorphs merged slime creatures.
@@ -818,7 +818,7 @@ bool slime_creature_mutate(monster* slime)
         }
     }
 
-    return (monster_polymorph(slime, RANDOM_MONSTER));
+    return monster_polymorph(slime, RANDOM_MONSTER);
 }
 
 // Returns true if you resist the siren's call.
@@ -880,7 +880,7 @@ static bool _siren_movement_effect(const monster* mons)
                         mprf("Something prevents you from swapping places "
                              "with %s.",
                              mon->name(DESC_THE).c_str());
-                        return (do_resist);
+                        return do_resist;
                     }
 
                     int swap_mon = mgrd(newpos);
@@ -902,7 +902,7 @@ static bool _siren_movement_effect(const monster* mons)
         }
     }
 
-    return (do_resist);
+    return do_resist;
 }
 
 static bool _silver_statue_effects(monster* mons)
@@ -916,14 +916,13 @@ static bool _silver_statue_effects(monster* mons)
         && crawl_state.game_is_zotdef())
     {
         if (!one_chance_in(3))
-            return (false);
+            return false;
         abjuration_duration = 1;
     }
 
     if (foe && mons->can_see(foe) && !one_chance_in(3))
     {
-        const std::string msg =
-            "'s eyes glow " + weird_glowing_colour() + '.';
+        const string msg = "'s eyes glow " + weird_glowing_colour() + '.';
         simple_monster_message(mons, msg.c_str(), MSGCH_WARN);
 
         create_monster(
@@ -932,9 +931,9 @@ static bool _silver_statue_effects(monster* mons)
                                              : DEMON_LESSER)),
                 SAME_ATTITUDE(mons), mons, abjuration_duration, 0,
                 foe->pos(), mons->foe));
-        return (true);
+        return true;
     }
-    return (false);
+    return false;
 }
 
 static bool _orange_statue_effects(monster* mons)
@@ -951,7 +950,7 @@ static bool _orange_statue_effects(monster* mons)
             && crawl_state.game_is_zotdef())
         {
             if (foe->check_res_magic(120) > 0)
-                return (false);
+                return false;
             pow  /= 2;
             fail /= 2;
         }
@@ -970,10 +969,10 @@ static bool _orange_statue_effects(monster* mons)
         MiscastEffect(foe, mons->mindex(), SPTYP_DIVINATION,
                       pow, fail,
                       "an orange crystal statue");
-        return (true);
+        return true;
     }
 
-    return (false);
+    return false;
 }
 
 static void _orc_battle_cry(monster* chief)
@@ -989,7 +988,7 @@ static void _orc_battle_cry(monster* chief)
         && coinflip())
     {
         const int level = chief->hit_dice > 12? 2 : 1;
-        std::vector<monster* > seen_affected;
+        vector<monster* > seen_affected;
         for (monster_iterator mi(chief); mi; ++mi)
         {
             if (*mi != chief
@@ -1010,7 +1009,7 @@ static void _orc_battle_cry(monster* chief)
                     if (ench.ench != ENCH_NONE)
                     {
                         ench.degree   = level;
-                        ench.duration = std::max(ench.duration, dur);
+                        ench.duration = max(ench.duration, dur);
                         mi->update_ench(ench);
                     }
                     else
@@ -1047,7 +1046,7 @@ static void _orc_battle_cry(monster* chief)
 
             if (!seen_affected.empty())
             {
-                std::string who;
+                string who;
                 if (seen_affected.size() == 1)
                 {
                     who = seen_affected[0]->name(DESC_THE);
@@ -1088,7 +1087,7 @@ static void _cherub_hymn(monster* chief)
         && coinflip())
     {
         const int level = chief->hit_dice > 12? 2 : 1;
-        std::vector<monster* > seen_affected;
+        vector<monster* > seen_affected;
         for (monster_iterator mi(chief); mi; ++mi)
         {
             if (*mi != chief
@@ -1109,7 +1108,7 @@ static void _cherub_hymn(monster* chief)
                     if (ench.ench != ENCH_NONE)
                     {
                         ench.degree   = level;
-                        ench.duration = std::max(ench.duration, dur);
+                        ench.duration = max(ench.duration, dur);
                         mi->update_ench(ench);
                     }
                     else
@@ -1146,7 +1145,7 @@ static void _cherub_hymn(monster* chief)
 
             if (!seen_affected.empty())
             {
-                std::string who;
+                string who;
                 if (seen_affected.size() == 1)
                 {
                     who = seen_affected[0]->name(DESC_THE);
@@ -1165,7 +1164,7 @@ static void _cherub_hymn(monster* chief)
 static bool _make_monster_angry(const monster* mon, monster* targ)
 {
     if (mon->friendly() != targ->friendly())
-        return (false);
+        return false;
 
     // targ is guaranteed to have a foe (needs_berserk checks this).
     // Now targ needs to be closer to *its* foe than mon is (otherwise
@@ -1178,7 +1177,7 @@ static bool _make_monster_angry(const monster* mon, monster* targ)
     {
         const monster* vmons = &menv[targ->foe];
         if (!vmons->alive())
-            return (false);
+            return false;
         victim = vmons->pos();
     }
     else
@@ -1189,25 +1188,27 @@ static bool _make_monster_angry(const monster* mon, monster* targ)
 
     // If mon may be blocking targ from its victim, don't try.
     if (victim.distance_from(targ->pos()) > victim.distance_from(mon->pos()))
-        return (false);
+        return false;
 
     if (you.can_see(mon))
     {
+        const string targ_name = (targ->visible_to(&you)) ? targ->name(DESC_THE)
+                                                          : "something";
         if (mon->type == MONS_QUEEN_BEE && targ->type == MONS_KILLER_BEE)
         {
             mprf("%s calls on %s to defend %s!",
                 mon->name(DESC_THE).c_str(),
-                targ->name(DESC_THE).c_str(),
+                targ_name.c_str(),
                 mon->pronoun(PRONOUN_OBJECTIVE).c_str());
         }
         else
             mprf("%s goads %s on!", mon->name(DESC_THE).c_str(),
-                 targ->name(DESC_THE).c_str());
+                 targ_name.c_str());
     }
 
     targ->go_berserk(false);
 
-    return (true);
+    return true;
 }
 
 static bool _moth_incite_monsters(const monster* mon)
@@ -1230,7 +1231,7 @@ static bool _moth_incite_monsters(const monster* mon)
             continue;
 
         if (_make_monster_angry(mon, *mi) && !one_chance_in(3 * ++goaded))
-            return (true);
+            return true;
     }
 
     return goaded != 0;
@@ -1257,7 +1258,7 @@ static bool _queen_incite_worker(const monster* queen)
             continue;
 
         if (_make_monster_angry(queen, *mi) && !one_chance_in(3 * ++goaded))
-            return (true);
+            return true;
     }
 
     return goaded != 0;
@@ -1272,7 +1273,7 @@ static inline void _mons_cast_abil(monster* mons, bolt &pbolt,
 
 static void _establish_connection(int tentacle,
                                   int head,
-                                  std::set<position_node>::iterator path,
+                                  set<position_node>::iterator path,
                                   monster_type connector_type)
 {
     const position_node * last = &(*path);
@@ -1375,9 +1376,9 @@ static void _establish_connection(int tentacle,
 
 struct tentacle_attack_constraints
 {
-    std::vector<coord_def> * target_positions;
+    vector<coord_def> * target_positions;
 
-    std::map<coord_def, std::set<int> > * connection_constraints;
+    map<coord_def, set<int> > * connection_constraints;
     monster *base_monster;
     int max_string_distance;
     int connect_idx[8];
@@ -1402,9 +1403,9 @@ struct tentacle_attack_constraints
     }
 
     void operator()(const position_node & node,
-                    std::vector<position_node> & expansion)
+                    vector<position_node> & expansion)
     {
-        std::random_shuffle(connect_idx, connect_idx + 8);
+        random_shuffle(connect_idx, connect_idx + 8);
 
 //        mprf("expanding %d %d, string dist %d", node.pos.x, node.pos.y, node.string_distance);
         for (unsigned i=0; i < 8; i++)
@@ -1448,7 +1449,7 @@ struct tentacle_attack_constraints
             int connect_level = temp.connect_level;
             int base_connect_level = connect_level;
 
-            std::map<coord_def, std::set<int> >::iterator probe
+            map<coord_def, set<int> >::iterator probe
                         = connection_constraints->find(temp.pos);
 
 
@@ -1503,7 +1504,7 @@ struct tentacle_attack_constraints
 
 struct tentacle_connect_constraints
 {
-    std::map<coord_def, std::set<int> > * connection_constraints;
+    map<coord_def, set<int> > * connection_constraints;
 
     monster* base_monster;
 
@@ -1515,9 +1516,9 @@ struct tentacle_connect_constraints
 
     int connect_idx[8];
     void operator()(const position_node & node,
-                    std::vector<position_node> & expansion)
+                    vector<position_node> & expansion)
     {
-        std::random_shuffle(connect_idx, connect_idx + 8);
+        random_shuffle(connect_idx, connect_idx + 8);
 
         for (unsigned i=0; i < 8; i++)
         {
@@ -1528,7 +1529,7 @@ struct tentacle_connect_constraints
             if (!in_bounds(temp.pos))
                 continue;
 
-            std::map<coord_def, std::set<int> >::iterator probe
+            map<coord_def, set<int> >::iterator probe
                         = connection_constraints->find(temp.pos);
 
             if (probe == connection_constraints->end()
@@ -1554,7 +1555,7 @@ struct tentacle_connect_constraints
             temp.estimate = 0;
             int test_level = node.connect_level;
 
-/*            for (std::set<int>::iterator j = probe->second.begin();
+/*            for (set<int>::iterator j = probe->second.begin();
                  j!= probe->second.end();
                  j++)
             {
@@ -1597,24 +1598,24 @@ struct target_monster
     {
         monster* temp = monster_at(pos);
         if (!temp || temp->mindex() != target_mindex)
-            return (false);
-        return (true);
+            return false;
+        return true;
 
     }
 };
 
 struct multi_target
 {
-    std::vector<coord_def> * targets;
+    vector<coord_def> * targets;
 
     bool operator() (const coord_def & pos)
     {
         for (unsigned i = 0; i < targets->size(); ++i)
         {
             if (pos == targets->at(i))
-                return (true);
+                return true;
         }
-        return (false);
+        return false;
     }
 
 
@@ -1624,21 +1625,22 @@ struct multi_target
 static bool _tentacle_pathfind(monster* tentacle,
                        tentacle_attack_constraints & attack_constraints,
                        coord_def & new_position,
-                       std::vector<coord_def> & target_positions,
+                       vector<coord_def> & target_positions,
                        int total_length)
 {
     multi_target foe_check;
     foe_check.targets = &target_positions;
 
-    std::vector<std::set<position_node>::iterator > tentacle_path;
+    vector<set<position_node>::iterator > tentacle_path;
 
-    std::set<position_node> visited;
+    set<position_node> visited;
     visited.clear();
 
     position_node temp;
     temp.pos = tentacle->pos();
 
-    std::map<coord_def, std::set<int> >::iterator probe = attack_constraints.connection_constraints->find(temp.pos);
+    map<coord_def, set<int> >::iterator probe
+        = attack_constraints.connection_constraints->find(temp.pos);
     ASSERT(probe != attack_constraints.connection_constraints->end());
     temp.connect_level = 0;
     while (probe->second.find(temp.connect_level + 1) != probe->second.end())
@@ -1675,7 +1677,7 @@ static bool _tentacle_pathfind(monster* tentacle,
     }
 
 
-    return (path_found);
+    return path_found;
 }
 
 static bool _try_tentacle_connect(const coord_def & new_pos,
@@ -1693,11 +1695,11 @@ static bool _try_tentacle_connect(const coord_def & new_pos,
             menv[tentacle_idx].props["inwards"].get_int() = -1;
         else
             menv[tentacle_idx].props["inwards"].get_int() = base_idx;
-        return (true);
+        return true;
     }
 
     int start_level = 0;
-    std::map<coord_def, std::set<int> >::iterator it
+    map<coord_def, set<int> >::iterator it
                     = connect_costs.connection_constraints->find(new_pos);
 
     // This condition should never miss
@@ -1714,8 +1716,8 @@ static bool _try_tentacle_connect(const coord_def & new_pos,
     current_target.target_mindex = headnum;
 */
 
-    std::set<position_node> visited;
-    std::vector<std::set<position_node>::iterator> candidates;
+    set<position_node> visited;
+    vector<set<position_node>::iterator> candidates;
 
     position_node temp;
     temp.pos = new_pos;
@@ -1726,15 +1728,15 @@ static bool _try_tentacle_connect(const coord_def & new_pos,
                  visited, candidates);
 
     if (candidates.empty())
-        return (false);
+        return false;
 
     _establish_connection(tentacle_idx, base_idx,candidates[0], connect_type);
 
-    return (true);
+    return true;
 }
 
 static void _collect_tentacles(int headnum,
-                               std::vector<monster_iterator> & tentacles)
+                               vector<monster_iterator> & tentacles)
 {
     // TODO: reorder tentacles based on distance to head or something.
     for (monster_iterator mi; mi; ++mi)
@@ -1781,12 +1783,12 @@ struct complicated_sight_check
 
 static bool _basic_sight_check(monster* mons, actor * test)
 {
-    return (mons->can_see(test));
+    return mons->can_see(test);
 }
 
 template<typename T>
 static void _collect_foe_positions(monster* mons,
-                                   std::vector<coord_def> & foe_positions,
+                                   vector<coord_def> & foe_positions,
                                    T & sight_check)
 {
     coord_def foe_pos(-1, -1);
@@ -1835,7 +1837,7 @@ static bool _valid_demonic_connection(monster* mons)
 // give the kraken head's position as a retract pos.
 static int _collect_connection_data(monster* start_monster,
                bool (*valid_segment_type)(monster*),
-               std::map<coord_def, std::set<int> > & connection_data,
+               map<coord_def, set<int> > & connection_data,
                coord_def & retract_pos)
 {
     int current_count = 0;
@@ -1893,7 +1895,7 @@ void move_demon_tentacle(monster* tentacle)
 
     int tentacle_idx = tentacle->mindex();
 
-    std::vector<coord_def> foe_positions;
+    vector<coord_def> foe_positions;
 
     bool attack_foe = false;
     bool severed = tentacle->has_ench(ENCH_SEVERED);
@@ -1915,7 +1917,7 @@ void move_demon_tentacle(monster* tentacle)
 
 
     coord_def retract_pos;
-    std::map<coord_def, std::set<int> > connection_data;
+    map<coord_def, set<int> > connection_data;
 
     int visited_count = _collect_connection_data(tentacle,
                                                  _valid_demonic_connection,
@@ -1928,7 +1930,7 @@ void move_demon_tentacle(monster* tentacle)
 
     if (severed)
     {
-        std::random_shuffle(compass_idx, compass_idx + 8);
+        random_shuffle(compass_idx, compass_idx + 8);
         for (unsigned i = 0; i < 8; ++i)
         {
             coord_def new_base = base_position + Compass[compass_idx[i]];
@@ -1966,7 +1968,7 @@ void move_demon_tentacle(monster* tentacle)
         // todo: set a random position?
 
         //mprf("pathing failed, target %d %d", new_pos.x, new_pos.y);
-        std::random_shuffle(compass_idx, compass_idx + 8);
+        random_shuffle(compass_idx, compass_idx + 8);
         for (int i=0; i < 8; ++i)
         {
             coord_def test = old_pos + Compass[compass_idx[i]];
@@ -1979,7 +1981,7 @@ void move_demon_tentacle(monster* tentacle)
             }
 
             int escalated = 0;
-            std::map<coord_def, std::set<int> >::iterator probe = connection_data.find(test);
+            map<coord_def, set<int> >::iterator probe = connection_data.find(test);
 
             while (probe->second.find(escalated + 1) != probe->second.end())
                 escalated++;
@@ -2074,7 +2076,7 @@ void move_kraken_tentacles(monster* kraken)
 
     bool no_foe = false;
 
-    std::vector<coord_def> foe_positions;
+    vector<coord_def> foe_positions;
     _collect_foe_positions(kraken, foe_positions, _basic_sight_check);
 
     //if (!kraken->near_foe())
@@ -2084,7 +2086,7 @@ void move_kraken_tentacles(monster* kraken)
     {
         no_foe = true;
     }
-    std::vector<monster_iterator> tentacles;
+    vector<monster_iterator> tentacles;
     int headnum = kraken->mindex();
 
     _collect_tentacles(headnum, tentacles);
@@ -2101,7 +2103,7 @@ void move_kraken_tentacles(monster* kraken)
         }
 
         tentacle_connect_constraints connect_costs;
-        std::map<coord_def, std::set<int> > connection_data;
+        map<coord_def, set<int> > connection_data;
 
 //        connect_costs.kraken = kraken;
 
@@ -2249,7 +2251,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
          && mons->type != MONS_SLIME_CREATURE
          && !_crawlie_is_mergeable(mons))
     {
-        return (false);
+        return false;
     }
 
     const msg_channel_type spl = (mons->friendly() ? MSGCH_FRIEND_SPELL
@@ -2273,14 +2275,14 @@ bool mon_special_ability(monster* mons, bolt & beem)
         // situation.
         used = _slime_split_merge(mons);
         if (!mons->alive())
-            return (true);
+            return true;
         break;
 
     case MONS_CRAWLING_CORPSE:
     case MONS_MACABRE_MASS:
         used = _crawling_corpse_merge(mons);
         if (!mons->alive())
-            return (true);
+            return true;
         break;
 
     case MONS_ORC_KNIGHT:
@@ -2316,7 +2318,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
             break;
 
         if (mons->attitude == ATT_HOSTILE
-            && distance(you.pos(), mons->pos()) <= 5)
+            && distance2(you.pos(), mons->pos()) <= 5)
         {
             mons->suicide();
             used = true;
@@ -2424,8 +2426,11 @@ bool mon_special_ability(monster* mons, bolt & beem)
 
         bool spit = one_chance_in(3);
         if (mons->type == MONS_OKLOB_PLANT)
+        {
+            // reduced chance in zotdef
             spit = x_chance_in_y(mons->hit_dice,
-                crawl_state.game_is_zotdef() ? 40 : 30); // reduced chance in zotdef
+                crawl_state.game_is_zotdef() ? 40 : 30);
+        }
         if (mons->type == MONS_OKLOB_SAPLING)
             spit = one_chance_in(4);
 
@@ -2483,7 +2488,9 @@ bool mon_special_ability(monster* mons, bolt & beem)
     case MONS_QUEEN_BEE:
         if (one_chance_in(4)
             || mons->hit_points < mons->max_hit_points / 3 && one_chance_in(2))
+        {
             used = _queen_incite_worker(mons);
+        }
         break;
 
     case MONS_SNORG:
@@ -2514,6 +2521,8 @@ bool mon_special_ability(monster* mons, bolt & beem)
     case MONS_MARA:
     case MONS_MARA_FAKE:
     case MONS_GOLDEN_EYE:
+        if (mons->no_tele(true, false))
+            break;
         if (one_chance_in(7) || mons->caught() && one_chance_in(3))
             used = monster_blink(mons);
         break;
@@ -2533,7 +2542,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
         }
         break;
 
-    case MONS_BOG_MUMMY:
+    case MONS_BOG_BODY:
         if (one_chance_in(8))
         {
             // A hacky way of making these rot regularly.
@@ -2576,13 +2585,15 @@ bool mon_special_ability(monster* mons, bolt & beem)
                 if (coinflip())
                 {
                 //  behaviour_event(mons, ME_CORNERED);
-                    boulder_flee(mons, &beem);
+                    simple_monster_message(mons, " curls into a ball and rolls away!");
+                    boulder_start(mons, &beem);
                 }
             }
             // Normal check - don't roll at adjacent targets
             else if (one_chance_in(3) &&
                      !adjacent(mons->pos(), beem.target))
             {
+                simple_monster_message(mons, " curls into a ball and starts rolling!");
                 boulder_start(mons, &beem);
             }
         }
@@ -2823,7 +2834,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
     if (used && (mons_genus(mons->type) == MONS_DRAGON || mons_genus(mons->type) == MONS_DRACONIAN))
         setup_breath_timeout(mons);
 
-    return (used);
+    return used;
 }
 
 // Combines code for eyeball-type monsters, etc. to reduce clutter.
@@ -2851,7 +2862,8 @@ void mon_nearby_ability(monster* mons)
     if (!foe
         || !mons->can_see(foe)
         || mons->asleep()
-        || mons->submerged())
+        || mons->submerged()
+        || !summon_can_attack(mons, foe))
     {
         return;
     }
@@ -2907,7 +2919,7 @@ void mon_nearby_ability(monster* mons)
                 {
                     const monster* foe_mons = foe->as_monster();
                     simple_monster_message(foe_mons,
-                           mons_resist_string(foe_mons, res_margin).c_str());
+                           mons_resist_string(foe_mons, res_margin));
                 }
                 break;
             }
@@ -2945,7 +2957,7 @@ void mon_nearby_ability(monster* mons)
 
             interrupt_activity(AI_MONSTER_ATTACKS, mons);
 
-            int mp = std::min(5 + random2avg(13, 3), you.magic_points);
+            int mp = min(5 + random2avg(13, 3), you.magic_points);
             dec_mp(mp);
 
             mons->heal(mp, true); // heh heh {dlb}
@@ -3073,8 +3085,8 @@ void activate_ballistomycetes(monster* mons, const coord_def & origin,
     bool (*valid_target)(const coord_def &) = _ballisto_at;
     bool (*connecting_square) (const coord_def &) = _mold_connected;
 
-    std::set<position_node> visited;
-    std::vector<std::set<position_node>::iterator > candidates;
+    set<position_node> visited;
+    vector<set<position_node>::iterator > candidates;
 
     if (you.religion == GOD_FEDHAS)
     {
@@ -3124,7 +3136,7 @@ void activate_ballistomycetes(monster* mons, const coord_def & origin,
     if (candidates.size() > 25)
         return;
 
-    std::random_shuffle(candidates.begin(), candidates.end());
+    random_shuffle(candidates.begin(), candidates.end());
 
     int index = 0;
 

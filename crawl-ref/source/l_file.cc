@@ -38,7 +38,7 @@ static int file_marshall(lua_State *ls)
         marshallByte(th, lua_toboolean(ls, 2));
     else if (lua_isstring(ls, 2))
         marshallString(th, lua_tostring(ls, 2));
-    return (0);
+    return 0;
 }
 
 static int file_minor_version(lua_State *ls)
@@ -47,13 +47,13 @@ static int file_minor_version(lua_State *ls)
         luaL_error(ls, "Need reader as one argument");
     reader &th(*static_cast<reader*>(lua_touserdata(ls, 1)));
     lua_pushnumber(ls, th.getMinorVersion());
-    return (1);
+    return 1;
 }
 
 static int file_major_version(lua_State *ls)
 {
     lua_pushnumber(ls, TAG_MAJOR_VERSION);
-    return (1);
+    return 1;
 }
 
 static int file_unmarshall_boolean(lua_State *ls)
@@ -62,7 +62,7 @@ static int file_unmarshall_boolean(lua_State *ls)
         luaL_error(ls, "Need reader as one argument");
     reader &th(*static_cast<reader*>(lua_touserdata(ls, 1)));
     lua_pushboolean(ls, unmarshallByte(th));
-    return (1);
+    return 1;
 }
 
 static int file_unmarshall_number(lua_State *ls)
@@ -71,7 +71,7 @@ static int file_unmarshall_number(lua_State *ls)
         luaL_error(ls, "Need reader as one argument");
     reader &th(*static_cast<reader*>(lua_touserdata(ls, 1)));
     lua_pushnumber(ls, unmarshallInt(th));
-    return (1);
+    return 1;
 }
 
 static int file_unmarshall_string(lua_State *ls)
@@ -80,7 +80,7 @@ static int file_unmarshall_string(lua_State *ls)
         luaL_error(ls, "Need reader as one argument");
     reader &th(*static_cast<reader*>(lua_touserdata(ls, 1)));
     lua_pushstring(ls, unmarshallString(th).c_str());
-    return (1);
+    return 1;
 }
 
 enum lua_persist_type
@@ -117,7 +117,7 @@ static int file_marshall_meta(lua_State *ls)
     marshallByte(th, ptype);
     if (ptype != LPT_NIL)
         file_marshall(ls);
-    return (0);
+    return 0;
 }
 
 static int file_unmarshall_meta(lua_State *ls)
@@ -135,12 +135,12 @@ static int file_unmarshall_meta(lua_State *ls)
             return file_unmarshall_string(ls);
         case LPT_NIL:
             lua_pushnil(ls);
-            return (1);
+            return 1;
         default:
             luaL_error(ls, "Unexpected type signature.");
     }
     // Never get here.
-    return (0);
+    return 0;
 }
 
 // Returns a Lua table of filenames in the named directory. The file names
@@ -148,19 +148,17 @@ static int file_unmarshall_meta(lua_State *ls)
 // be resolved to an absolute path if necessary using datafile_path.
 LUAFN(_file_datadir_files_recursive)
 {
-    const std::string rawdir(luaL_checkstring(ls, 1));
+    const string rawdir(luaL_checkstring(ls, 1));
     // A filename suffix to match (such as ".des"). If empty, files
     // will be unfiltered.
-    const std::string ext_filter(lua_isnoneornil(ls, 2) ? "" :
-                                 luaL_checkstring(ls, 2));
-    const std::string datadir(
-        datafile_path(rawdir, false, false, dir_exists));
+    const string ext_filter(lua_isnoneornil(ls, 2) ? ""
+                                                   : luaL_checkstring(ls, 2));
+    const string datadir(datafile_path(rawdir, false, false, dir_exists));
 
     if (datadir.empty())
         luaL_error(ls, "Cannot find data directory: '%s'", rawdir.c_str());
 
-    const std::vector<std::string> files =
-        get_dir_files_recursive(datadir, ext_filter);
+    const vector<string> files = get_dir_files_recursive(datadir, ext_filter);
     return clua_stringtable(ls, files);
 }
 
@@ -169,26 +167,25 @@ LUAFN(_file_datadir_files_recursive)
 // be resolved to an absolute path if necessary using datafile_path.
 LUAFN(_file_datadir_files)
 {
-    const std::string rawdir(luaL_checkstring(ls, 1));
+    const string rawdir(luaL_checkstring(ls, 1));
     // A filename suffix to match (such as ".des"). If empty, files
     // will be unfiltered.
-    const std::string ext_filter(lua_isnoneornil(ls, 2) ? "" :
-                                 luaL_checkstring(ls, 2));
-    const std::string datadir(
-        datafile_path(rawdir, false, false, dir_exists));
+    const string ext_filter(lua_isnoneornil(ls, 2) ? ""
+                                                   : luaL_checkstring(ls, 2));
+    const string datadir(datafile_path(rawdir, false, false, dir_exists));
 
     if (datadir.empty())
         luaL_error(ls, "Cannot find data directory: '%s'", rawdir.c_str());
 
-    const std::vector<std::string> files =
-        ext_filter.empty() ? get_dir_files(datadir) :
-        get_dir_files_ext(datadir, ext_filter);
+    const vector<string> files = ext_filter.empty()
+                                 ? get_dir_files(datadir)
+                                 : get_dir_files_ext(datadir, ext_filter);
     return clua_stringtable(ls, files);
 }
 
 LUAFN(_file_writefile)
 {
-    const std::string fname(luaL_checkstring(ls, 1));
+    const string fname(luaL_checkstring(ls, 1));
     FILE *f = fopen_replace(fname.c_str());
     if (f)
     {
@@ -200,7 +197,7 @@ LUAFN(_file_writefile)
     {
         lua_pushboolean(ls, false);
     }
-    return (1);
+    return 1;
 }
 
 static const struct luaL_reg file_dlib[] =

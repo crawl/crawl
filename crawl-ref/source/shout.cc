@@ -76,7 +76,7 @@ void handle_monster_shouts(monster* mons, bool force)
 
     mon_acting mact(mons);
 
-    std::string default_msg_key = "";
+    string default_msg_key = "";
 
     switch (s_type)
     {
@@ -146,8 +146,8 @@ void handle_monster_shouts(monster* mons, bool force)
     if (s_type == S_DEMON_TAUNT)
         s_type = mons_shouts(mons->type, true);
 
-    std::string msg, suffix;
-    std::string key = mons_type_name(mons->type, DESC_PLAIN);
+    string msg, suffix;
+    string key = mons_type_name(mons->type, DESC_PLAIN);
 
     // Pandemonium demons have random names, so use "pandemonium lord"
     if (mons->type == MONS_PANDEMONIUM_LORD)
@@ -156,7 +156,7 @@ void handle_monster_shouts(monster* mons, bool force)
     else if (mons->type == MONS_PLAYER_GHOST)
     {
         const ghost_demon &ghost = *(mons->ghost);
-        std::string ghost_job    = get_job_name(ghost.job);
+        string ghost_job         = get_job_name(ghost.job);
 
         key = ghost_job + " player ghost";
 
@@ -185,7 +185,7 @@ void handle_monster_shouts(monster* mons, bool force)
 
         // See if there's a shout for all monsters using the
         // same glyph/symbol
-        std::string glyph_key = "'";
+        string glyph_key = "'";
 
         // Database keys are case-insensitve.
         if (isaupper(mchar))
@@ -202,7 +202,7 @@ void handle_monster_shouts(monster* mons, bool force)
     if (default_msg_key == "__BUGGY")
     {
         msg::streams(MSGCH_SOUND) << "You hear something buggy!"
-                                  << std::endl;
+                                  << endl;
     }
     else if (s_type == S_SILENT && (msg.empty() || msg == "__NONE"))
         ; // No "visual shout" defined for silent monster, do nothing.
@@ -210,18 +210,18 @@ void handle_monster_shouts(monster* mons, bool force)
     {
         msg::streams(MSGCH_DIAGNOSTICS)
             << "No shout entry for default shout type '"
-            << default_msg_key << "'" << std::endl;
+            << default_msg_key << "'" << endl;
 
         msg::streams(MSGCH_SOUND) << "You hear something buggy!"
-                                  << std::endl;
+                                  << endl;
     }
     else if (msg == "__NONE")
     {
         msg::streams(MSGCH_DIAGNOSTICS)
             << "__NONE returned as shout for non-silent monster '"
-            << default_msg_key << "'" << std::endl;
+            << default_msg_key << "'" << endl;
         msg::streams(MSGCH_SOUND) << "You hear something buggy!"
-                                  << std::endl;
+                                  << endl;
     }
     else
     {
@@ -263,7 +263,7 @@ void handle_monster_shouts(monster* mons, bool force)
             }
 
             msg = do_mon_str_replacements(msg, mons, s_type);
-            msg::streams(channel) << msg << std::endl;
+            msg::streams(channel) << msg << endl;
         }
     }
 
@@ -279,16 +279,16 @@ bool check_awaken(monster* mons)
     // Usually redundant because we iterate over player LOS,
     // but e.g. for you.xray_vision.
     if (!mons->see_cell(you.pos()))
-        return (false);
+        return false;
 
     // Monsters put to sleep by ensorcelled hibernation will sleep
     // at least one turn.
     if (mons->has_ench(ENCH_SLEEPY))
-        return (false);
+        return false;
 
     // Berserkers aren't really concerned about stealth.
     if (you.berserk())
-        return (true);
+        return true;
 
     // I assume that creatures who can sense invisible are very perceptive.
     int mons_perc = 10 + (mons_intel(mons) * 4) + mons->hit_dice
@@ -330,7 +330,7 @@ bool check_awaken(monster* mons)
         mons_perc = 0;
 
     if (x_chance_in_y(mons_perc + 1, stealth))
-        return (true); // Oops, the monster wakes up!
+        return true; // Oops, the monster wakes up!
 
     // You didn't wake the monster!
     if (you.can_see(mons) // to avoid leaking information
@@ -341,10 +341,10 @@ bool check_awaken(monster* mons)
         practise(unnatural_stealthy ? EX_SNEAK_INVIS : EX_SNEAK);
     }
 
-    return (false);
+    return false;
 }
 
-void item_noise(const item_def &item, std::string msg, int loudness)
+void item_noise(const item_def &item, string msg, int loudness)
 {
     if (is_unrandom_artefact(item))
     {
@@ -357,10 +357,10 @@ void item_noise(const item_def &item, std::string msg, int loudness)
     // Set appropriate channel (will usually be TALK).
     msg_channel_type channel = MSGCH_TALK;
 
-    std::string param;
-    const std::string::size_type pos = msg.find(":");
+    string param;
+    const string::size_type pos = msg.find(":");
 
-    if (pos != std::string::npos)
+    if (pos != string::npos)
         param = msg.substr(0, pos);
 
     if (!param.empty())
@@ -420,7 +420,7 @@ void noisy_equipment()
     if (silenced(you.pos()) || !one_chance_in(20))
         return;
 
-    std::string msg;
+    string msg;
 
     const item_def* weapon = you.weapon();
     if (!weapon)
@@ -428,8 +428,8 @@ void noisy_equipment()
 
     if (is_unrandom_artefact(*weapon))
     {
-        std::string name = weapon->name(DESC_PLAIN, false, true, false, false,
-                                        ISFLAG_IDENT_MASK);
+        string name = weapon->name(DESC_PLAIN, false, true, false, false,
+                                   ISFLAG_IDENT_MASK);
         msg = getSpeakString(name);
         if (msg == "NONE")
             return;
@@ -463,7 +463,7 @@ bool noisy(int original_loudness, const coord_def& where,
            bool mermaid, bool message_if_unseen, bool fake_noise)
 {
     if (original_loudness <= 0)
-        return (false);
+        return false;
 
     // high ambient noise makes sounds harder to hear
     const int ambient = current_level_ambient_noise();
@@ -475,21 +475,21 @@ bool noisy(int original_loudness, const coord_def& where,
          loudness, original_loudness, ambient, where.x, where.y);
 
     if (loudness <= 0)
-        return (false);
+        return false;
 
     // If the origin is silenced there is no noise, unless we're
     // faking it.
     if (silenced(where) && !fake_noise)
-        return (false);
+        return false;
 
     // [ds] Reduce noise propagation for Sprint.
     const int scaled_loudness =
-        crawl_state.game_is_sprint()? std::max(1, div_rand_round(loudness, 2))
+        crawl_state.game_is_sprint()? max(1, div_rand_round(loudness, 2))
                                     : loudness;
 
     // Add +1 to scaled_loudness so that all squares adjacent to a
     // sound of loudness 1 will hear the sound.
-    const std::string noise_msg(msg? msg : "");
+    const string noise_msg(msg? msg : "");
     _noise_grid.register_noise(
         noise_t(where,
                 noise_msg,
@@ -504,16 +504,16 @@ bool noisy(int original_loudness, const coord_def& where,
     // these reasons, use the simple old noise system to check if the
     // player heard the noise:
     const int dist = loudness * loudness + 1;
-    const int player_distance = distance(you.pos(), where);
+    const int player_distance = distance2(you.pos(), where);
 
     // Message the player.
     if (player_distance <= dist && player_can_hear(where))
     {
         if (msg && !fake_noise)
             mpr(msg, MSGCH_SOUND);
-        return (true);
+        return true;
     }
-    return (false);
+    return false;
 }
 
 bool noisy(int loudness, const coord_def& where, int who,
@@ -557,7 +557,7 @@ static const char* _player_spider_senses_web(int dist)
 
 void check_player_sense(sense_type sense, int range, const coord_def& where)
 {
-    const int player_distance = distance(you.pos(), where);
+    const int player_distance = distance2(you.pos(), where);
 
     if (player_distance <= range)
     {
@@ -644,7 +644,7 @@ void check_monsters_sense(sense_type sense, int range, const coord_def& where)
                         int level = ench.degree;
                         if (level < 4 && one_chance_in(2*level))
                             ench.degree++;
-                        ench.duration = std::max(ench.duration, dur);
+                        ench.duration = max(ench.duration, dur);
                         mi->update_ench(ench);
                     }
                     else
@@ -698,8 +698,9 @@ void blood_smell(int strength, const coord_def& where)
             int vamp_range = vamp_strength * vamp_strength;
             check_player_sense(SENSE_SMELL_BLOOD, vamp_range, where);
         }
-        check_monsters_sense(SENSE_SMELL_BLOOD, range, where);
     }
+
+    check_monsters_sense(SENSE_SMELL_BLOOD, range, where);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -714,11 +715,10 @@ static int _noise_attenuation_millis(const coord_def &pos)
     {
     // Closed doors are excellent at cutting off sound.
     case DNGN_CLOSED_DOOR:
-    case DNGN_DETECTED_SECRET_DOOR:
-    case DNGN_SECRET_DOOR:
+    case DNGN_RUNED_DOOR:
         return BASE_NOISE_ATTENUATION_MILLIS * 8;
     case DNGN_TREE:
-    case DNGN_SWAMP_TREE:
+    case DNGN_MANGROVE:
         return BASE_NOISE_ATTENUATION_MILLIS * 3;
     default:
         if (feat_is_statue_or_idol(feat))
@@ -753,23 +753,25 @@ bool noise_cell::apply_noise(int _noise_intensity_millis,
         noise_intensity_millis = _noise_intensity_millis;
         noise_travel_distance = _noise_travel_distance;
         neighbour_delta = _neighbour_delta;
-        return (true);
+        return true;
     }
-    return (false);
+    return false;
 }
 
 int noise_cell::turn_angle(const coord_def &next_delta) const
 {
     if (neighbour_delta.origin())
-        return (0);
+        return 0;
 
     // Going in reverse?
     if (next_delta.x == -neighbour_delta.x
         && next_delta.y == -neighbour_delta.y)
-        return (4);
+    {
+        return 4;
+    }
 
-    const int xdiff = std::abs(neighbour_delta.x - next_delta.x);
-    const int ydiff = std::abs(neighbour_delta.y - next_delta.y);
+    const int xdiff = abs(neighbour_delta.x - next_delta.x);
+    const int ydiff = abs(neighbour_delta.y - next_delta.y);
     return xdiff + ydiff;
 }
 
@@ -808,7 +810,7 @@ void noise_grid::propagate_noise()
 #ifdef DEBUG_NOISE_PROPAGATION
     dprf("noise_grid: %u noises to apply", (unsigned int)noises.size());
 #endif
-    std::vector<coord_def> noise_perimeter[2];
+    vector<coord_def> noise_perimeter[2];
     int circ_index = 0;
 
     for (int i = 0, size = noises.size(); i < size; ++i)
@@ -817,8 +819,8 @@ void noise_grid::propagate_noise()
     int travel_distance = 0;
     while (!noise_perimeter[circ_index].empty())
     {
-        const std::vector<coord_def> &perimeter(noise_perimeter[circ_index]);
-        std::vector<coord_def> &next_perimeter(noise_perimeter[!circ_index]);
+        const vector<coord_def> &perimeter(noise_perimeter[circ_index]);
+        vector<coord_def> &next_perimeter(noise_perimeter[!circ_index]);
         ++travel_distance;
         for (int i = 0, size = perimeter.size(); i < size; ++i)
         {
@@ -886,9 +888,11 @@ bool noise_grid::propagate_noise_to_neighbour(int base_attenuation,
                                               const coord_def &next_pos)
 {
     noise_cell &neighbour(cells(next_pos));
-    if (!neighbour.can_apply_noise(cell.noise_intensity_millis -
-                                   base_attenuation))
-        return (false);
+    if (!neighbour.can_apply_noise(cell.noise_intensity_millis
+                                   - base_attenuation))
+    {
+        return false;
+    }
 
     // Diagonals cost more.
     if ((next_pos - current_pos).abs() == 2)
@@ -912,7 +916,7 @@ bool noise_grid::propagate_noise_to_neighbour(int base_attenuation,
             // cell as a neighbour (presumably with a lower volume).
             return (neighbour_old_distance != travel_distance);
     }
-    return (false);
+    return false;
 }
 
 
@@ -948,8 +952,8 @@ void noise_grid::apply_noise_effects(const coord_def &pos,
 static coord_def _point_clamped_in_bounds(const coord_def &p)
 {
     return coord_def(
-        std::min(X_BOUND_2 - 1, std::max(X_BOUND_1 + 1, p.x)),
-        std::min(Y_BOUND_2 - 1, std::max(Y_BOUND_1 + 1, p.y)));
+        min(X_BOUND_2 - 1, max(X_BOUND_1 + 1, p.x)),
+        min(Y_BOUND_2 - 1, max(Y_BOUND_1 + 1, p.y)));
 }
 
 // Given an actor at affected_pos and a given noise, calculates where
@@ -980,7 +984,7 @@ coord_def noise_grid::noise_perceived_position(actor *act,
 {
     const int noise_travel_distance = cells(affected_pos).noise_travel_distance;
     if (!noise_travel_distance)
-        return (noise.noise_source);
+        return noise.noise_source;
 
     const int cell_grid_distance =
         grid_distance(affected_pos, noise.noise_source);
@@ -988,7 +992,7 @@ coord_def noise_grid::noise_perceived_position(actor *act,
     if (cell_grid_distance <= LOS_RADIUS)
     {
         if (act->see_cell(noise.noise_source))
-            return (noise.noise_source);
+            return noise.noise_source;
     }
 
     const int extra_distance_covered =
@@ -1029,7 +1033,7 @@ coord_def noise_grid::noise_perceived_position(actor *act,
          affected_pos.x, affected_pos.y,
          cell_grid_distance, noise_travel_distance);
 #endif
-    return (final_perceived_point);
+    return final_perceived_point;
 }
 
 #ifdef DEBUG_NOISE_PROPAGATION
@@ -1039,7 +1043,7 @@ coord_def noise_grid::noise_perceived_position(actor *act,
 #include <math.h>
 
 // Return HTML RGB triple given a hue and assuming chroma of 0.86 (220)
-static std::string _hue_rgb(int hue)
+static string _hue_rgb(int hue)
 {
     const int chroma = 220;
     const double hue2 = hue / 60.0;
@@ -1059,7 +1063,7 @@ static std::string _hue_rgb(int hue)
     return make_stringf("%02x%02x%02x", red, green, blue);
 }
 
-static std::string _noise_intensity_styles()
+static string _noise_intensity_styles()
 {
     // Hi-intensity sound will be red (HSV 0), low intensity blue (HSV 240).
     const int hi_hue = 0;
@@ -1067,7 +1071,7 @@ static std::string _noise_intensity_styles()
     const int huespan = lo_hue - hi_hue;
 
     const int max_intensity = 25;
-    std::string styles;
+    string styles;
     for (int intensity = 1; intensity <= max_intensity; ++intensity)
     {
         const int hue = lo_hue - intensity * huespan / max_intensity;
@@ -1091,7 +1095,7 @@ static void _write_noise_grid_css(FILE *outf)
 
 void noise_grid::write_cell(FILE *outf, coord_def p, int ch) const
 {
-    const int intensity = std::min(25, cells(p).noise_intensity_millis / 1000);
+    const int intensity = min(25, cells(p).noise_intensity_millis / 1000);
     if (intensity)
         fprintf(outf,
                 "<span class='i%d'>&#%d;</span>",
@@ -1127,7 +1131,7 @@ void noise_grid::write_noise_grid(FILE *outf) const
     fprintf(outf, "</div>\n");
 }
 
-void noise_grid::dump_noise_grid(const std::string &filename) const
+void noise_grid::dump_noise_grid(const string &filename) const
 {
     FILE *outf = fopen(filename.c_str(), "w");
     fprintf(outf, "<!DOCTYPE html><html><head>");

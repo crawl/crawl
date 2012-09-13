@@ -273,7 +273,7 @@ DEPTH:  Snake
 KITEM:  s = $ / nothing w:25 / * w:1
 KMONS:  s = adder w:5 / ball python w:5 / black mamba / anaconda / \
            water moccasin / sea snake w:1 / nothing w:20
-MARKER: + = lua:restrict_door()
+KFEAT:  + = runed_door
 MAP
  xxxxxxx
 xxsssssxxxxxx
@@ -433,6 +433,7 @@ ENDMAP
 #
 NAME:    snake_hunt
 PLACE:   Snake:$
+WEIGHT:  20
 TAGS:    no_rotate
 ORIENT:  northwest
 KFEAT:   Z = weight:2 teleport trap / .
@@ -501,6 +502,7 @@ ENDMAP
 #
 NAME:   snake_pit
 PLACE:  Snake:$
+WEIGHT: 20
 ORIENT: southwest
 TAGS:   no_rotate
 MONS:   greater naga / nothing
@@ -668,6 +670,8 @@ cc..lllcc...ccc2452ccc...cclll..cc
              cccccccc
 ENDMAP
 
+################################################################################
+
 NAME:   grunt_snake_rune_spirals
 PLACE:  Snake:$
 ORIENT: float
@@ -683,16 +687,16 @@ MAP
   cc.......1.......ccc....c  cc......2......cc
   c1....ccccccc....1cc....c  c1....cccccc...1c
  cc..1ccc..2..cc.....c....c cc.2.ccc....cc12.cc
- c...cc....3...cc1........c c...1c.......cc...c
+ c...cc...23...cc1........c c...1c.......cc...c
 cc...c2....2....cc........c c...cc..4....4c...cc
-c...cc....ccc...2cc....11.c c232c......4..cc...c
-c...c...2ccccc2...cc..2...c c...c.4.O.4c...c...c
-c232c...cc.4.cc...ccc..3..ccc...cc.....c323c...c
-c...c323c.....cc...ccc..3..ccc...cc.4.cc...c232c
-c...c...c4.O.4.c...c c...2..cc...2ccccc2...c...c
-c...cc..4......c232c c.11....cc2...ccc....cc...c
+c...cc.2..ccc..22cc....11.c c232c..4.4.4..cc...c
+c...c...2ccccc2...cc..2...c c...c.4.O.4c.2.c...c
+c232c...cc.4.cc...ccc..3..ccc...cc.4.4.c323c...c
+c...c323c.4.4.cc...ccc..3..ccc...cc.4.cc...c232c
+c...c.2.c4.O.4.c...c c...2..cc...2ccccc2...c...c
+c...cc..4.4.4..c232c c.11....cc22..ccc..2.cc...c
 cc...c4....4..cc...c c........cc....2....2c...cc
- c...cc.......c1...c c........1cc...3....cc...c
+ c...cc.......c1...c c........1cc...32...cc...c
  cc.21cc....ccc.2.cc c....c.....cc..2..ccc1..cc
   c1...cccccc....1c  c....cc1....ccccccc....1c
   cc......2......cc  c....ccc.......1.......cc

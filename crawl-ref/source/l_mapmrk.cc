@@ -11,7 +11,7 @@ static int mapmarker_pos(lua_State *ls)
     MAPMARKER(ls, 1, mark);
     lua_pushnumber(ls, mark->pos.x);
     lua_pushnumber(ls, mark->pos.y);
-    return (2);
+    return 2;
 }
 
 static int mapmarker_move(lua_State *ls)
@@ -19,14 +19,14 @@ static int mapmarker_move(lua_State *ls)
     MAPMARKER(ls, 1, mark);
     const coord_def dest(luaL_checkint(ls, 2), luaL_checkint(ls, 3));
     env.markers.move_marker(mark, dest);
-    return (0);
+    return 0;
 }
 
 static int mapmarker_remove(lua_State *ls)
 {
     MAPMARKER(ls, 1, mark);
     env.markers.remove(mark);
-    return (0);
+    return 0;
 }
 
 const struct luaL_reg mapmarker_dlib[] =

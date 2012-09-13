@@ -18,7 +18,6 @@ chain_lightning CHAIN_LIGHTNING
 conjure_ball_lightning CONJURE_BALL_LIGHTNING
 deflect_missiles DEFLECT_MISSILES
 flight FLIGHT
-insulation INSULATION
 levitation LEVITATION
 lightning_bolt LIGHTNING_BOLT
 repel_missiles REPEL_MISSILES
@@ -59,8 +58,6 @@ extension EXTENSION
 haste HASTE
 invisibility INVISIBILITY
 mass_confusion MASS_CONFUSION
-projected_noise PROJECTED_NOISE
-see_invisible SEE_INVISIBLE
 slow SLOW
 sure_blade SURE_BLADE
 tukimas_dance TUKIMAS_DANCE
@@ -71,7 +68,6 @@ bolt_of_magma BOLT_OF_MAGMA
 conjure_flame CONJURE_FLAME
 delayed_fireball DELAYED_FIREBALL
 dragon_form DRAGON_FORM
-evaporate EVAPORATE
 fire_brand FIRE_BRAND
 fire_storm FIRE_STORM
 fireball FIREBALL
@@ -110,7 +106,6 @@ death_channel DEATH_CHANNEL
 deaths_door DEATHS_DOOR
 dispel_undead DISPEL_UNDEAD
 excruciating_wounds EXCRUCIATING_WOUNDS
-fulsome_distillation FULSOME_DISTILLATION
 haunt HAUNT
 lethal_infusion LETHAL_INFUSION
 necromutation NECROMUTATION

@@ -21,12 +21,53 @@ Pressing <w>Ctrl-W</w> toggles the display of item weights.
 
 <h>Category shortcuts</h>
 You can quickly select items by type by pressing:
-<w>!</w>   potions      <w>(</w>   weapons         <w>[</w>   armour       <w>=</w> or <w>"</w>   jewellery
-<w>?</w>   scrolls      <w>)</w>   ammunition      <w>/</w>   wands        <w>:</w> or <w>+</w>   books
+<w>!</w>   potions      <w>(</w>   weapons        <w>)</w>   ammunition      <w>[</w>   armour
+<w>/</w>   wands        <w>\</w>   rods           <w>|</w>   magical staves  <w>?</w>   scrolls
+<w>"</w>   amulets      <w>=</w>   rings          <w>}</w>   miscellaneous   <w>:</w> or <w>+</w>   books
 <w>%</w>   food         <w>&</w>   carrion (corpses, skeletons, useless chunks)
-Global selects:  <w>,</w>   select all      <w>*</w>   invert all        <w>-</w>   deselect all
+Global selects:  <w>,</w>   select all     <w>*</w>   invert all      <w>-</w>   deselect all
 Note that for dropping, the <w>,</w> command uses the <w>drop_filter</w> option, which
 narrows the range of items to be (de)selected. The default are useless items.
+%%%%
+known-menu
+
+                   <h>Known items menu</h>
+<h>Item letters</h>
+Pressing an item type's letter key selects that item.
+
+<h>Selecting item types</h>
+Items types displayed in grey use the default autopickup options set in your
+configuration file. Selecting a type of item overrides those options
+(indicated by <w>white</w> text), and toggles the item between the states:
+ <w>+</w>  Items of this type will be picked up automatically.
+ <w>-</w>  Items of this type will will not be picked up automatically.
+Autopickup can also be toggled for all unknown items of a given category.
+
+<h>Category shortcuts</h>
+You can quickly select all item types in a given category by pressing:
+<w>!</w>   potions      <w>?</w>   scrolls      <w>(</w>   ammunition        <w>"</w>   amulets
+<w>=</w>   rings        <w>/</w>   wands        <w>|</w>   magical staves
+Global selects:  <w>*</w>   invert all   <w>^</w>   reset all to default
+
+<h>Viewing unknown and known items</h>
+<w>\</w> and <w>-</w> toggle between the known and unknown items menus. Note
+that none of the above features are available from the unknown items menu.
+
+<h>Restoring autopickup defaults</h>
+Pressing <w>Ctrl-D</w> followed by an item letter or a category shortcut
+cancels the override and restores the selected item or items to their default
+settings.
+
+<h>Regular expressions</h>
+You can press <w>Ctrl-F</w> to enter a word (or a regular expression).
+All matching items will be selected.
+
+<h>Cursor</h>
+There are shortcuts to quickly select several items in succession:
+<w>.</w>   selects the next item and moves the cursor down
+<w>'</w>   moves the cursor down without changing selection
+The cursor is usually hidden; pressing <w>.</w> or <w>'</w> makes it appear.
+
 %%%%
 stash-search.prompt
 
@@ -81,7 +122,7 @@ armour slots, you can use <w>helmet</w> (all head gear), <w>gloves</w>, <w>shiel
 
 You can search for dungeon features by name: all shops will be found by a
 search for <w>shop</w> (including shops that do not have "shop" in their name);
-other dungeon features can also be found by name: <w>fountain</w>, <w>axe trap</w>,
+other dungeon features can also be found by name: <w>fountain</w>, <w>spear trap</w>,
 <w>altar</w>, etc. You can also search for altars by deity name: <w>Zin</w>.
 
 <h>Non-regex operators:</h>
@@ -200,14 +241,15 @@ Training can be done in two modes, which are toggled with the <w>/</w> key.
 * manual:       Experience is spread evenly across all activated skills.
 
 How fast you train a skill is governed by the following factors:
-* aptitude: Shown <red>red</red> in the Apt column. Higher numbers mean that
+* aptitude: Shown <white>white</white> in the Apt column. Higher numbers mean that
       less experience is needed to advance a skill. Depends on species.
 * cross-training: Some skills are easier to learn when you already are
       proficient with a related one, e.g. Long and Short Blades.
       The aptitude bonus for crosstraining is indicated in <green>green</green>.
 * magic penalties: It is harder to learn an elemental skill if you are
       proficient in the opposing element (Air-Earth, Ice-Fire).
-      The aptitude penalty is indicated in <magenta>magenta</magenta>.
+      The aptitude penalty is indicated in <red>red</red>.
+
 On top of that, there are some effects which directly modify a skill, for
 example god powers. These skill modifiers are shown in <blue>blue</blue>.
 The training percentage (in <brown>brown</brown>) shows the relative amount of experience
@@ -220,7 +262,7 @@ Apart from (de)selecting skills, you also have the following toggles:
 <w>_</w> :   Shows/hides skill modifiers, e.g. from god powers.
 
                                <h>Training restrictions</h>
-Fighting, Throwing, Dodging, Stealth, Stabbing, Traps & Doors, Unarmed Combat,
+Fighting, Throwing, Dodging, Stealth, Stabbing, Traps, Unarmed Combat,
 and Spellcasting can always be trained. For the rest:
 * Weapon skills require carrying a weapon of the appropriate type.
 * Armour requires wearing an armour with an evasion penalty.

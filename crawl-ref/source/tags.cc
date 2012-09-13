@@ -18,6 +18,7 @@
 #include <cstring>            // for memcpy
 #include <iterator>
 #include <algorithm>
+#include <vector>
 
 #ifdef UNIX
 #include <sys/types.h>
@@ -66,22 +67,20 @@
 #include "travel.h"
 
 // defined in dgn-overview.cc
-extern std::map<branch_type, std::set<level_id> > stair_level;
-extern std::map<level_pos, shop_type> shops_present;
-extern std::map<level_pos, god_type> altars_present;
-extern std::map<level_pos, portal_type> portals_present;
-extern std::map<level_pos, std::string> portal_vaults_present;
-extern std::map<level_pos, std::string> portal_vault_notes;
-extern std::map<level_pos, uint8_t> portal_vault_colours;
-extern std::map<level_id, std::string> level_annotations;
-extern std::map<level_id, std::string> level_exclusions;
-extern std::map<level_id, std::string> level_uniques;
-extern std::set<std::pair<std::string, level_id> > auto_unique_annotations;
+extern map<branch_type, set<level_id> > stair_level;
+extern map<level_pos, shop_type> shops_present;
+extern map<level_pos, god_type> altars_present;
+extern map<level_pos, branch_type> portals_present;
+extern map<level_pos, string> portal_notes;
+extern map<level_id, string> level_annotations;
+extern map<level_id, string> level_exclusions;
+extern map<level_id, string> level_uniques;
+extern set<pair<string, level_id> > auto_unique_annotations;
 
 // defined in abyss.cc
 extern abyss_state abyssal_state;
 
-reader::reader(const std::string &_read_filename, int minorVersion)
+reader::reader(const string &_read_filename, int minorVersion)
     : _filename(_read_filename), _chunk(0), _pbuf(NULL), _read_offset(0),
       _minorVersion(minorVersion), seen_enums()
 {
@@ -89,7 +88,7 @@ reader::reader(const std::string &_read_filename, int minorVersion)
     opened_file = !!_file;
 }
 
-reader::reader(package *save, const std::string &chunkname, int minorVersion)
+reader::reader(package *save, const string &chunkname, int minorVersion)
     : _file(0), _chunk(0), opened_file(false), _pbuf(0), _read_offset(0),
      _minorVersion(minorVersion)
 {
@@ -113,7 +112,14 @@ void reader::close()
 
 void reader::advance(size_t offset)
 {
-    read(NULL, offset);
+    char junk[128];
+
+    while (offset)
+    {
+        const size_t junklen = min(sizeof(junk), offset);
+        offset -= junklen;
+        read(junk, junklen);
+    }
 }
 
 bool reader::valid() const
@@ -186,7 +192,7 @@ void reader::setMinorVersion(int minorVersion)
     _minorVersion = minorVersion;
 }
 
-void reader::fail_if_not_eof(const std::string &name)
+void reader::fail_if_not_eof(const string &name)
 {
     char dummy;
     if (_chunk ? _chunk->read(&dummy, 1) :
@@ -277,17 +283,14 @@ static void tag_read_level(reader &th);
 static void tag_read_level_items(reader &th);
 static void tag_read_level_monsters(reader &th);
 static void tag_read_level_tiles(reader &th);
-static void tag_missing_level_tiles();
-static void tag_init_tile_bk();
+static void _regenerate_tile_flavour();
+static void _draw_tiles();
 
 static void tag_construct_ghost(writer &th);
 static void tag_read_ghost(reader &th);
 
 static void marshallGhost(writer &th, const ghost_demon &ghost);
 static ghost_demon unmarshallGhost(reader &th);
-
-static void marshallResists(writer &th, const mon_resist_def &res);
-static void unmarshallResists(reader &th, mon_resist_def &res);
 
 static void marshallSpells(writer &, const monster_spells &);
 static void unmarshallSpells(reader &, monster_spells &);
@@ -296,13 +299,13 @@ template<typename T, typename T_iter, typename T_marshal>
 static void marshall_iterator(writer &th, T_iter beg, T_iter end,
                               T_marshal marshal);
 template<typename T>
-static void unmarshall_vector(reader& th, std::vector<T>& vec,
+static void unmarshall_vector(reader& th, vector<T>& vec,
                               T (*T_unmarshall)(reader&));
 
 template<int SIZE>
-void marshallFixedBitArray(writer& th, const FixedBitArray<SIZE>& arr);
+void marshallFixedBitVector(writer& th, const FixedBitVector<SIZE>& arr);
 template<int SIZE>
-void unmarshallFixedBitArray(reader& th, FixedBitArray<SIZE>& arr);
+void unmarshallFixedBitVector(reader& th, FixedBitVector<SIZE>& arr);
 
 void marshallByte(writer &th, int8_t data)
 {
@@ -326,16 +329,7 @@ uint8_t unmarshallUByte(reader &th)
     return th.readByte();
 }
 
-// A hack to work around a template breakage.  It accepts shorts and ints
-// directly, but chars need to be passed as reference -- but in just one place.
-// Perhaps someone could understand this nonsense, but not me -- 1KB
-static void marshallUByteRef(writer &th, const uint8_t &data)
-{
-    CHECK_INITIALIZED(data);
-    th.writeByte(data);
-}
-
-void marshallShort(std::vector<unsigned char>& buf, short data)
+void marshallShort(vector<unsigned char>& buf, short data)
 {
     CHECK_INITIALIZED(data);
     COMPILE_CHECK(sizeof(data) == 2);
@@ -362,7 +356,7 @@ int16_t unmarshallShort(reader &th)
     return data;
 }
 
-void marshallInt(std::vector<unsigned char>& buf, int32_t data)
+void marshallInt(vector<unsigned char>& buf, int32_t data)
 {
     CHECK_INITIALIZED(data);
     buf.push_back((unsigned char) ((data & 0xFF000000) >> 24));
@@ -449,7 +443,7 @@ int64_t unmarshallSigned(reader& th)
 // can have invalid length.  For long ones you might want to do this
 // differently to not lose 1/8 bits and speed.
 template<int SIZE>
-void marshallFixedBitArray(writer& th, const FixedBitArray<SIZE>& arr)
+void marshallFixedBitVector(writer& th, const FixedBitVector<SIZE>& arr)
 {
     int last_bit;
     for (last_bit = SIZE - 1; last_bit > 0; last_bit--)
@@ -474,7 +468,7 @@ void marshallFixedBitArray(writer& th, const FixedBitArray<SIZE>& arr)
 }
 
 template<int SIZE>
-void unmarshallFixedBitArray(reader& th, FixedBitArray<SIZE>& arr)
+void unmarshallFixedBitVector(reader& th, FixedBitVector<SIZE>& arr)
 {
     arr.reset();
 
@@ -498,22 +492,22 @@ static void _marshall_as_int(writer& th, const T& t)
 }
 
 template <typename data>
-void marshallSet(writer &th, const std::set<data> &s,
+void marshallSet(writer &th, const set<data> &s,
                  void (*marshall)(writer &, const data &))
 {
     marshallInt(th, s.size());
-    typename std::set<data>::const_iterator i = s.begin();
+    typename set<data>::const_iterator i = s.begin();
     for (; i != s.end(); ++i)
         marshall(th, *i);
 }
 
 template<typename key, typename value>
-void marshallMap(writer &th, const std::map<key,value>& data,
+void marshallMap(writer &th, const map<key,value>& data,
                  void (*key_marshall)(writer&, const key&),
                  void (*value_marshall)(writer&, const value&))
 {
     marshallInt(th, data.size());
-    typename std::map<key,value>::const_iterator ci;
+    typename map<key,value>::const_iterator ci;
     for (ci = data.begin(); ci != data.end(); ++ci)
     {
         key_marshall(th, ci->first);
@@ -525,7 +519,7 @@ template<typename T_iter, typename T_marshall_t>
 static void marshall_iterator(writer &th, T_iter beg, T_iter end,
                               T_marshall_t T_marshall)
 {
-    marshallInt(th, std::distance(beg, end));
+    marshallInt(th, distance(beg, end));
     while (beg != end)
     {
         T_marshall(th, *beg);
@@ -534,7 +528,7 @@ static void marshall_iterator(writer &th, T_iter beg, T_iter end,
 }
 
 template<typename T>
-static void unmarshall_vector(reader& th, std::vector<T>& vec,
+static void unmarshall_vector(reader& th, vector<T>& vec,
                               T (*T_unmarshall)(reader&))
 {
     vec.clear();
@@ -558,7 +552,7 @@ void marshall_level_id(writer& th, const level_id& id)
     marshallShort(th, id.packed_place());
 }
 
-void marshall_level_id_set(writer& th, const std::set<level_id>& id)
+void marshall_level_id_set(writer& th, const set<level_id>& id)
 {
     marshallSet(th, id, marshall_level_id);
 }
@@ -591,13 +585,13 @@ void unmarshallMap(reader& th, map& data,
     for (i = 0; i < len; ++i)
     {
         k = key_unmarshall(th);
-        std::pair<key, value> p(k, value_unmarshall(th));
+        pair<key, value> p(k, value_unmarshall(th));
         data.insert(p);
     }
 }
 
 template<typename T>
-static T unmarshall_long_as(reader& th)
+static T unmarshall_int_as(reader& th)
 {
     return static_cast<T>(unmarshallInt(th));
 }
@@ -607,9 +601,9 @@ level_id unmarshall_level_id(reader& th)
     return level_id::from_packed_place(unmarshallShort(th));
 }
 
-std::set<level_id> unmarshall_level_id_set(reader& th)
+set<level_id> unmarshall_level_id_set(reader& th)
 {
-    std::set<level_id> id;
+    set<level_id> id;
     unmarshallSet(th, id, unmarshall_level_id);
     return id;
 }
@@ -634,7 +628,36 @@ coord_def unmarshallCoord(reader &th)
     coord_def c;
     c.x = unmarshallShort(th);
     c.y = unmarshallShort(th);
-    return (c);
+    return c;
+}
+
+static void _marshall_constriction(writer &th, const actor *who)
+{
+    _marshall_as_int(th, who->held);
+    marshallInt(th, who->constricted_by);
+    marshallInt(th, who->escape_attempts);
+
+    // Assumes an empty map is marshalled as just the int 0.
+    const actor::constricting_t * const cmap = who->constricting;
+    if (cmap)
+        marshallMap(th, *cmap, _marshall_as_int<mid_t>, _marshall_as_int<int>);
+    else
+        marshallInt(th, 0);
+}
+
+static void _unmarshall_constriction(reader &th, actor *who)
+{
+    who->held = unmarshall_int_as<held_type>(th);
+    who->constricted_by = unmarshallInt(th);
+    who->escape_attempts = unmarshallInt(th);
+
+    actor::constricting_t cmap;
+    unmarshallMap(th, cmap, unmarshall_int_as<mid_t>, unmarshallInt);
+
+    if (cmap.size() == 0)
+        who->constricting = 0;
+    else
+        who->constricting = new actor::constricting_t(cmap);
 }
 
 template <typename marshall, typename grid>
@@ -711,7 +734,7 @@ float unmarshallFloat(reader &th)
 }
 
 // string -- 2 byte length, string data
-void marshallString(writer &th, const std::string &data, int maxSize)
+void marshallString(writer &th, const string &data, int maxSize)
 {
     // allow for very long strings (well, up to 32K).
     int len = data.length();
@@ -725,7 +748,7 @@ void marshallString(writer &th, const std::string &data, int maxSize)
 }
 
 // To pass to marshallMap
-static void marshallStringNoMax(writer &th, const std::string &data)
+static void marshallStringNoMax(writer &th, const string &data)
 {
     marshallString(th, data);
 }
@@ -746,38 +769,38 @@ static int unmarshallCString(reader &th, char *data, int maxSize)
     th.read(data, copylen);
     data[copylen] = 0;
 
-    th.read(NULL, len - copylen);
-    return (copylen);
+    th.advance(len - copylen);
+    return copylen;
 }
 
-std::string unmarshallString(reader &th, int maxSize)
+string unmarshallString(reader &th, int maxSize)
 {
     if (maxSize <= 0)
-        return ("");
+        return "";
     char *buffer = new char [maxSize];
     if (!buffer)
-        return ("");
+        return "";
     *buffer = 0;
     const int slen = unmarshallCString(th, buffer, maxSize);
     ASSERT(slen >= 0 && slen < maxSize);
-    const std::string res(buffer, slen);
+    const string res(buffer, slen);
     delete [] buffer;
-    return (res);
+    return res;
 }
 
 // To pass to unmarshallMap
-static std::string unmarshallStringNoMax(reader &th)
+static string unmarshallStringNoMax(reader &th)
 {
     return unmarshallString(th);
 }
 
 // string -- 4 byte length, non-terminated string data.
-void marshallString4(writer &th, const std::string &data)
+void marshallString4(writer &th, const string &data)
 {
     marshallInt(th, data.length());
     th.write(data.c_str(), data.length());
 }
-void unmarshallString4(reader &th, std::string& s)
+void unmarshallString4(reader &th, string& s)
 {
     const int len = unmarshallInt(th);
     s.resize(len);
@@ -797,10 +820,10 @@ bool unmarshallBoolean(reader &th)
 }
 
 // Saving the date as a string so we're not reliant on a particular epoch.
-std::string make_date_string(time_t in_date)
+string make_date_string(time_t in_date)
 {
     if (in_date <= 0)
-        return ("");
+        return "";
 
     struct tm *date = TIME_FN(&in_date);
 
@@ -817,7 +840,7 @@ void marshallEnumVal(writer& wr, const enum_info *ei, int val)
 
     if (!ews.store_type)
     {
-        std::vector<std::pair<int, std::string> > values;
+        vector<pair<int, string> > values;
 
         ei->collect(values);
 
@@ -856,7 +879,7 @@ int unmarshallEnumVal(reader& rd, const enum_info *ei)
 
     if (!ers.store_type)
     {
-        std::vector<std::pair<int, std::string> > values;
+        vector<pair<int, string> > values;
 
         ei->collect(values);
 
@@ -871,8 +894,8 @@ int unmarshallEnumVal(reader& rd, const enum_info *ei)
 
             for (; evi->name; ++evi)
             {
-                if (ers.names.find(std::string(evi->name)) != ers.names.end())
-                    ers.mapping[evi->value] = ers.names[std::string(evi->name)];
+                if (ers.names.find(string(evi->name)) != ers.names.end())
+                    ers.mapping[evi->value] = ers.names[string(evi->name)];
                 else
                     ers.mapping[evi->value] = ei->replacement;
             }
@@ -893,7 +916,7 @@ int unmarshallEnumVal(reader& rd, const enum_info *ei)
 
     ASSERT(rd.getMinorVersion() >= ei->non_historical_first);
 
-    std::string name = unmarshallString(rd);
+    string name = unmarshallString(rd);
 
     if (ers.names.find(name) != ers.names.end())
         ers.mapping[raw] = ers.names[name];
@@ -903,11 +926,12 @@ int unmarshallEnumVal(reader& rd, const enum_info *ei)
     return ers.mapping[raw];
 }
 
+
 // Write a tagged chunk of data to the FILE*.
 // tagId specifies what to write.
 void tag_write(tag_type tagID, writer &outf)
 {
-    std::vector<unsigned char> buf;
+    vector<unsigned char> buf;
     writer th(&buf);
     switch (tagID)
     {
@@ -952,7 +976,7 @@ void tag_write(tag_type tagID, writer &outf)
 void tag_read(reader &inf, tag_type tag_id)
 {
     // Read header info and data
-    std::vector<unsigned char> buf;
+    vector<unsigned char> buf;
     const int data_size = unmarshallInt(inf);
     ASSERT(data_size >= 0);
 
@@ -1053,7 +1077,7 @@ static void tag_construct_you(writer &th)
     marshallInt(th, you.earth_attunement);
     marshallInt(th, you.form);
 
-    j = std::min<int>(you.sage_skills.size(), 32767);
+    j = min<int>(you.sage_skills.size(), 32767);
     marshallShort(th, you.sage_skills.size());
     for (i = 0; i < (int)you.sage_skills.size(); ++i)
     {
@@ -1120,7 +1144,7 @@ static void tag_construct_you(writer &th)
         marshallShort(th, you.ability_letter_table[i]);
 
     marshallUByte(th, you.vehumet_recent_spells.size());
-    for (std::list<spell_type>::iterator it = you.vehumet_recent_spells.begin();
+    for (list<spell_type>::iterator it = you.vehumet_recent_spells.begin();
          it != you.vehumet_recent_spells.end(); ++it)
     {
         marshallByte(th, *it);
@@ -1143,14 +1167,14 @@ static void tag_construct_you(writer &th)
 
     marshallBoolean(th, you.auto_training);
     marshallByte(th, you.exercises.size());
-    for (std::list<skill_type>::iterator it = you.exercises.begin();
+    for (list<skill_type>::iterator it = you.exercises.begin();
          it != you.exercises.end(); ++it)
     {
         marshallInt(th, *it);
     }
 
     marshallByte(th, you.exercises_all.size());
-    for (std::list<skill_type>::iterator it = you.exercises_all.begin();
+    for (list<skill_type>::iterator it = you.exercises_all.begin();
          it != you.exercises_all.end(); ++it)
     {
         marshallInt(th, *it);
@@ -1271,20 +1295,15 @@ static void tag_construct_you(writer &th)
 
     marshallString(th, you.zotdef_wave_name);
 
-#if TAG_MAJOR_VERSION <= 33
-    for (unsigned int k = 0; k < ARRAYSZ(you.montiers); k++)
-        marshallInt(th, you.montiers[k]);
-#endif
-
     // Action counts.
     j = 0;
-    for (std::map<std::pair<caction_type, int>, FixedVector<int, 27> >::const_iterator ac =
+    for (map<pair<caction_type, int>, FixedVector<int, 27> >::const_iterator ac =
          you.action_count.begin(); ac != you.action_count.end(); ++ac)
     {
         j++;
     }
     marshallShort(th, j);
-    for (std::map<std::pair<caction_type, int>, FixedVector<int, 27> >::const_iterator ac =
+    for (map<pair<caction_type, int>, FixedVector<int, 27> >::const_iterator ac =
          you.action_count.begin(); ac != you.action_count.end(); ++ac)
     {
         marshallShort(th, ac->first.first);
@@ -1293,19 +1312,15 @@ static void tag_construct_you(writer &th)
             marshallInt(th, ac->second[k]);
     }
 
+    marshallByte(th, NUM_BRANCHES);
+    for (i = 0; i < NUM_BRANCHES; i++)
+        marshallBoolean(th, you.branches_left[i]);
 
     marshallCoord(th, abyssal_state.major_coord);
     marshallFloat(th, abyssal_state.depth);
     marshallFloat(th, abyssal_state.phase);
 
-    marshallShort(th, you.constricted_by);
-    marshallInt(th, you.escape_attempts);
-    marshallInt(th, you.dur_been_constricted);
-    for (unsigned int k = 0; k < MAX_CONSTRICT; k++)
-    {
-        marshallShort(th, you.constricting[k]);
-        marshallInt(th, you.dur_has_constricted[k]);
-    }
+    _marshall_constriction(th, &you);
 
     marshallUByte(th, you.octopus_king_rings);
 
@@ -1314,7 +1329,7 @@ static void tag_construct_you(writer &th)
 
     // Write a human-readable string out on the off chance that
     // we fail to be able to read this file back in using some later version.
-    std::string revision = "Git:";
+    string revision = "Git:";
     revision += Version::Long();
     marshallString(th, revision);
 
@@ -1330,7 +1345,7 @@ static void tag_construct_you_items(writer &th)
     for (i = 0; i < ENDOFPACK; ++i)
         marshallItem(th, you.inv[i]);
 
-    marshallFixedBitArray<NUM_RUNE_TYPES>(th, you.runes);
+    marshallFixedBitVector<NUM_RUNE_TYPES>(th, you.runes);
     marshallByte(th, you.obtainable_runes);
 
     // Item descrip for each type & subtype.
@@ -1342,6 +1357,7 @@ static void tag_construct_you_items(writer &th)
         for (j = 0; j < MAX_SUBTYPES; ++j)
             marshallByte(th, you.item_description[i][j]);
 
+    marshallUByte(th, NUM_OBJECT_CLASSES);
     for (i = 0; i < NUM_OBJECT_CLASSES; ++i)
     {
         if (!item_type_has_ids((object_class_type)i))
@@ -1374,7 +1390,7 @@ static void tag_construct_you_items(writer &th)
     for (j = 0; j < NUM_ARMOURS; ++j)
         marshallInt(th,you.seen_armour[j]);
 
-    marshallFixedBitArray<NUM_MISCELLANY>(th, you.seen_misc);
+    marshallFixedBitVector<NUM_MISCELLANY>(th, you.seen_misc);
 
     for (i = 0; i < NUM_OBJECT_CLASSES; i++)
         for (j = 0; j < MAX_SUBTYPES; j++)
@@ -1433,13 +1449,9 @@ static void tag_construct_you_dungeon(writer &th)
     marshallMap(th, altars_present,
                 marshall_level_pos, _marshall_as_int<god_type>);
     marshallMap(th, portals_present,
-                marshall_level_pos, _marshall_as_int<portal_type>);
-    marshallMap(th, portal_vaults_present,
+                marshall_level_pos, _marshall_as_int<branch_type>);
+    marshallMap(th, portal_notes,
                 marshall_level_pos, marshallStringNoMax);
-    marshallMap(th, portal_vault_notes,
-                marshall_level_pos, marshallStringNoMax);
-    marshallMap(th, portal_vault_colours,
-                marshall_level_pos, marshallUByteRef);
     marshallMap(th, level_annotations,
                 marshall_level_id, marshallStringNoMax);
     marshallMap(th, level_exclusions,
@@ -1449,7 +1461,7 @@ static void tag_construct_you_dungeon(writer &th)
     marshallUniqueAnnotations(th);
 
     marshallPlaceInfo(th, you.global_info);
-    std::vector<PlaceInfo> list = you.get_all_place_info();
+    vector<PlaceInfo> list = you.get_all_place_info();
     // How many different places we have info on?
     marshallShort(th, list.size());
 
@@ -1515,7 +1527,7 @@ static m_transit_list unmarshall_follower_list(reader &th)
         mlist.push_back(f);
     }
 
-    return (mlist);
+    return mlist;
 }
 
 static i_transit_list unmarshall_item_list(reader &th)
@@ -1531,7 +1543,7 @@ static i_transit_list unmarshall_item_list(reader &th)
         ilist.push_back(item);
     }
 
-    return (ilist);
+    return ilist;
 }
 
 static void marshall_level_map_masks(writer &th)
@@ -1570,6 +1582,8 @@ static void marshall_mapdef(writer &th, const map_def &map)
     map.write_index(th);
     map.write_maplines(th);
     marshallString(th, map.description);
+    marshallMap(th, map.feat_renames,
+                _marshall_as_int<dungeon_feature_type>, marshallStringNoMax);
 }
 
 static map_def unmarshall_mapdef(reader &th)
@@ -1579,6 +1593,9 @@ static map_def unmarshall_mapdef(reader &th)
     map.read_index(th);
     map.read_maplines(th);
     map.description = unmarshallString(th);
+    unmarshallMap(th, map.feat_renames,
+                  unmarshall_int_as<dungeon_feature_type>,
+                  unmarshallStringNoMax);
     return map;
 }
 
@@ -1722,7 +1739,7 @@ static void tag_read_you(reader &th)
     int i,j;
     int count;
 
-    ASSERT(is_valid_species(you.species) && species_exp_modifier(you.species));
+    ASSERT(is_valid_species(you.species));
     ASSERT(you.char_class < NUM_JOBS);
     ASSERT(you.experience_level > 0);
     ASSERT(you.experience_level <= 27);
@@ -1861,7 +1878,7 @@ static void tag_read_you(reader &th)
         you.ability_letter_table[i] = static_cast<ability_type>(a);
     }
 
-#if TAG_MAJOR_VERSION == 33
+#if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() >= TAG_MINOR_VEHUMET_SPELL_GIFT)
     {
 #endif
@@ -1870,7 +1887,7 @@ static void tag_read_you(reader &th)
             you.vehumet_recent_spells.push_back(static_cast<spell_type>(unmarshallUByte(th)));
 
         you.vehumet_gift = static_cast<spell_type>(unmarshallUByte(th));
-#if TAG_MAJOR_VERSION == 33
+#if TAG_MAJOR_VERSION == 34
     }
 #endif
 
@@ -1932,9 +1949,11 @@ static void tag_read_you(reader &th)
         unmarshallInt(th);
 
     count = unmarshallByte(th);
-    ASSERT(count == NUM_OBJECT_CLASSES);
+    ASSERT(count <= NUM_OBJECT_CLASSES);
     for (j = 0; j < count; ++j)
         you.sacrifice_value[j] = unmarshallInt(th);
+    for (j = count; j < NUM_OBJECT_CLASSES; ++j)
+        you.sacrifice_value[j] = 0;
 
     // how many mutations/demon powers?
     count = unmarshallShort(th);
@@ -1975,24 +1994,8 @@ static void tag_read_you(reader &th)
         you.num_current_gifts[i] = unmarshallShort(th);
     for (i = 0; i < count; i++)
         you.num_total_gifts[i] = unmarshallShort(th);
-#if TAG_MAJOR_VERSION == 33
-    if (th.getMinorVersion() >= TAG_MINOR_ONE_TIME_ABILITIES)
-    {
-#endif
     for (i = 0; i < count; i++)
         you.one_time_ability_used[i] = unmarshallBoolean(th);
-#if TAG_MAJOR_VERSION == 33
-    }
-    else
-    {
-        you.one_time_ability_used[GOD_JIYVA] = (bool)you.num_total_gifts[GOD_JIYVA];
-        you.one_time_ability_used[GOD_KIKUBAAQUDGHA] = (bool)you.num_total_gifts[GOD_KIKUBAAQUDGHA];
-        you.num_total_gifts[GOD_KIKUBAAQUDGHA] *= 2;
-        you.one_time_ability_used[GOD_LUGONU] = (bool)you.num_total_gifts[GOD_LUGONU];
-        you.one_time_ability_used[GOD_SHINING_ONE] = (bool)you.num_total_gifts[GOD_SHINING_ONE];
-        you.one_time_ability_used[GOD_ZIN] = (bool)you.num_total_gifts[GOD_ZIN];
-    }
-#endif
     for (i = 0; i < count; i++)
         you.piety_max[i] = unmarshallByte(th);
     count = unmarshallByte(th);
@@ -2069,11 +2072,6 @@ static void tag_read_you(reader &th)
 
     you.zotdef_wave_name = unmarshallString(th);
 
-#if TAG_MAJOR_VERSION <= 33
-    for (unsigned int k = 0; k < ARRAYSZ(you.montiers); k++)
-        you.montiers[k] = unmarshallInt(th);
-#endif
-
     // Counts of actions made, by type.
     count = unmarshallShort(th);
     for (i = 0; i < count; i++)
@@ -2081,26 +2079,42 @@ static void tag_read_you(reader &th)
         caction_type caction = (caction_type)unmarshallShort(th);
         int subtype = unmarshallInt(th);
         for (j = 0; j < 27; j++)
-            you.action_count[std::pair<caction_type, int>(caction, subtype)][j] = unmarshallInt(th);
+            you.action_count[pair<caction_type, int>(caction, subtype)][j] = unmarshallInt(th);
     }
+
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() >= TAG_MINOR_BRANCHES_LEFT)
+    {
+#endif
+    count = unmarshallByte(th);
+    for (i = 0; i < count; i++)
+        you.branches_left[i] = unmarshallBoolean(th);
+#if TAG_MAJOR_VERSION == 34
+    }
+    else
+    {
+        // Assume all branches already exited in transferred games.
+        you.branches_left.init(true);
+    }
+#endif
+
     abyssal_state.major_coord = unmarshallCoord(th);
     abyssal_state.depth = unmarshallFloat(th);
     abyssal_state.phase = unmarshallFloat(th);
 
-    you.constricted_by = unmarshallShort(th);
-    you.escape_attempts = unmarshallInt(th);
-    you.dur_been_constricted = unmarshallInt(th);
-    for (unsigned int k = 0; k < MAX_CONSTRICT; k++)
-    {
-        you.constricting[k] = unmarshallShort(th);
-        you.dur_has_constricted[k] = unmarshallInt(th);
-    }
+    // Don't undo digging on the next tick after a load.
+    if (you.where_are_you == BRANCH_ABYSS)
+        recompute_saved_abyss_features();
+
+    _unmarshall_constriction(th, &you);
+
     you.octopus_king_rings = unmarshallUByte(th);
 
-
     if (!dlua.callfn("dgn_load_data", "u", &th))
+    {
         mprf(MSGCH_ERROR, "Failed to load Lua persist table: %s",
              dlua.error.c_str());
+    }
 
     unmarshallString(th);
 
@@ -2119,57 +2133,42 @@ static void tag_read_you_items(reader &th)
     for (i = 0; i < count; ++i)
         unmarshallItem(th, you.inv[i]);
 
-    unmarshallFixedBitArray<NUM_RUNE_TYPES>(th, you.runes);
+    unmarshallFixedBitVector<NUM_RUNE_TYPES>(th, you.runes);
     you.obtainable_runes = unmarshallByte(th);
 
     // Item descrip for each type & subtype.
     // how many types?
-    count = unmarshallByte(th);
+    count = unmarshallUByte(th);
     ASSERT(count <= NUM_IDESC);
     // how many subtypes?
-    count2 = unmarshallByte(th);
-    ASSERT(count2 == MAX_SUBTYPES); // if not, initialize the rest
+    count2 = unmarshallUByte(th);
+    ASSERT(count2 <= MAX_SUBTYPES);
     for (i = 0; i < count; ++i)
         for (j = 0; j < count2; ++j)
             you.item_description[i][j] = unmarshallByte(th);
-#if TAG_MAJOR_VERSION == 33
-    if (th.getMinorVersion() < TAG_MINOR_DETECT_CURSE_REMOVAL)
-        for (j = SCR_REMOVE_CURSE + 1; j + 1 < count2; ++j)
-        {
-            you.item_description[IDESC_SCROLLS][j] = you.item_description[IDESC_SCROLLS][j+1];
-            you.item_description[IDESC_SCROLLS_II][j] = you.item_description[IDESC_SCROLLS_II][j+1];
-        }
-#endif
+    for (i = 0; i < count; ++i)
+        for (j = count2; j < MAX_SUBTYPES; ++j)
+            you.item_description[i][j] = 0;
+    int iclasses = unmarshallUByte(th);
+    ASSERT(iclasses <= NUM_OBJECT_CLASSES);
 
     // Identification status.
-    for (i = 0; i < NUM_OBJECT_CLASSES; ++i)
+    for (i = 0; i < iclasses; ++i)
     {
         if (!item_type_has_ids((object_class_type)i))
             continue;
-        for (j = 0; j < MAX_SUBTYPES; ++j)
+        for (j = 0; j < count2; ++j)
         {
             uint8_t x = unmarshallUByte(th);
             ASSERT(x < NUM_ID_STATE_TYPES);
             you.type_ids[i][j] = static_cast<item_type_id_state_type>(x);
         }
+        for (j = count2; j < MAX_SUBTYPES; ++j)
+            you.type_ids[i][j] = ID_UNKNOWN_TYPE;
     }
-#if TAG_MAJOR_VERSION == 33
-    if (th.getMinorVersion() < TAG_MINOR_DETECT_CURSE_REMOVAL)
-        for (j = SCR_REMOVE_CURSE + 1; j + 1 < MAX_SUBTYPES; ++j)
-            you.type_ids[OBJ_SCROLLS][j] = you.type_ids[OBJ_SCROLLS][j+1];
-#endif
 
     // Additional identification info
     you.type_id_props.read(th);
-
-#if TAG_MAJOR_VERSION == 33
-    if (th.getMinorVersion() == TAG_MINOR_KNOWN_MISSILES)
-    {
-        count = unmarshallShort(th);
-        for (i = 0; i < count; ++i)
-            unmarshallInt(th);
-    }
-#endif
 
     // how many unique items?
     count = unmarshallUByte(th);
@@ -2192,7 +2191,7 @@ static void tag_read_you_items(reader &th)
     for (j = 0; j < count && j < NUM_FIXED_BOOKS; ++j)
         you.had_book[j] = unmarshallByte(th);
     for (j = count; j < NUM_FIXED_BOOKS; ++j)
-        you.seen_spell[j] = 0;
+        you.had_book[j] = 0;
     for (j = NUM_FIXED_BOOKS; j < count; ++j)
         unmarshallByte(th);
 
@@ -2223,19 +2222,11 @@ static void tag_read_you_items(reader &th)
         you.seen_armour[j] = 0;
     for (j = NUM_ARMOURS; j < count; ++j)
         unmarshallInt(th);
-    unmarshallFixedBitArray<NUM_MISCELLANY>(th, you.seen_misc);
+    unmarshallFixedBitVector<NUM_MISCELLANY>(th, you.seen_misc);
 
-#if TAG_MAJOR_VERSION == 33
-    if (th.getMinorVersion() >= TAG_MINOR_AUTOPICKUP_TABLE)
-#endif
-        for (i = 0; i < NUM_OBJECT_CLASSES; i++)
-            for (j = 0; j < MAX_SUBTYPES; j++)
-                you.force_autopickup[i][j] = unmarshallInt(th);
-#if TAG_MAJOR_VERSION == 33
-    if (th.getMinorVersion() < TAG_MINOR_DETECT_CURSE_REMOVAL)
-        for (j = SCR_REMOVE_CURSE + 1; j + 1 < MAX_SUBTYPES; ++j)
-            you.force_autopickup[OBJ_SCROLLS][j] = you.force_autopickup[OBJ_SCROLLS][j+1];
-#endif
+    for (i = 0; i < iclasses; i++)
+        for (j = 0; j < count2; j++)
+            you.force_autopickup[i][j] = unmarshallInt(th);
 }
 
 static PlaceInfo unmarshallPlaceInfo(reader &th)
@@ -2295,30 +2286,19 @@ static void tag_read_you_dungeon(reader &th)
     ASSERT(you.depth <= brdepth[you.where_are_you]);
 
     // Root of the dungeon; usually BRANCH_MAIN_DUNGEON.
-#if TAG_MAJOR_VERSION == 33
-    if (th.getMinorVersion() >= TAG_MINOR_ROOT_BRANCH)
-#endif
-        root_branch = static_cast<branch_type>(unmarshallInt(th));
-#if TAG_MAJOR_VERSION == 33
-    else
-        root_branch = BRANCH_MAIN_DUNGEON;
-#endif
+    root_branch = static_cast<branch_type>(unmarshallInt(th));
 
     unmarshallMap(th, stair_level,
-                  unmarshall_long_as<branch_type>,
+                  unmarshall_int_as<branch_type>,
                   unmarshall_level_id_set);
     unmarshallMap(th, shops_present,
-                  unmarshall_level_pos, unmarshall_long_as<shop_type>);
+                  unmarshall_level_pos, unmarshall_int_as<shop_type>);
     unmarshallMap(th, altars_present,
-                  unmarshall_level_pos, unmarshall_long_as<god_type>);
+                  unmarshall_level_pos, unmarshall_int_as<god_type>);
     unmarshallMap(th, portals_present,
-                  unmarshall_level_pos, unmarshall_long_as<portal_type>);
-    unmarshallMap(th, portal_vaults_present,
+                  unmarshall_level_pos, unmarshall_int_as<branch_type>);
+    unmarshallMap(th, portal_notes,
                   unmarshall_level_pos, unmarshallStringNoMax);
-    unmarshallMap(th, portal_vault_notes,
-                  unmarshall_level_pos, unmarshallStringNoMax);
-    unmarshallMap(th, portal_vault_colours,
-                  unmarshall_level_pos, unmarshallUByte);
     unmarshallMap(th, level_annotations,
                   unmarshall_level_id, unmarshallStringNoMax);
     unmarshallMap(th, level_exclusions,
@@ -2331,7 +2311,7 @@ static void tag_read_you_dungeon(reader &th)
     ASSERT(place_info.is_global());
     you.set_place_info(place_info);
 
-    std::vector<PlaceInfo> list = you.get_all_place_info();
+    vector<PlaceInfo> list = you.get_all_place_info();
     unsigned short count_p = (unsigned short) unmarshallShort(th);
     // Use "<=" so that adding more branches or non-dungeon places
     // won't break save-file compatibility.
@@ -2344,13 +2324,13 @@ static void tag_read_you_dungeon(reader &th)
         you.set_place_info(place_info);
     }
 
-    typedef std::pair<string_set::iterator, bool> ssipair;
+    typedef pair<string_set::iterator, bool> ssipair;
     unmarshall_container(th, you.uniq_map_tags,
-                         (ssipair (string_set::*)(const std::string &))
+                         (ssipair (string_set::*)(const string &))
                          &string_set::insert,
                          unmarshallStringNoMax);
     unmarshall_container(th, you.uniq_map_names,
-                         (ssipair (string_set::*)(const std::string &))
+                         (ssipair (string_set::*)(const string &))
                          &string_set::insert,
                          unmarshallStringNoMax);
 
@@ -2378,7 +2358,7 @@ static int _last_used_index(const Z &thinglist, int max_things)
     for (int i = max_things - 1; i >= 0; --i)
         if (thinglist[i].defined())
             return (i + 1);
-    return (0);
+    return 0;
 }
 
 // ------------------------------- level tags ---------------------------- //
@@ -2483,11 +2463,24 @@ static void tag_construct_level(writer &th)
     }
 }
 
-void marshallItem(writer &th, const item_def &item)
+void marshallItem(writer &th, const item_def &item, bool iinfo)
 {
     marshallByte(th, item.base_type);
     if (item.base_type == OBJ_UNASSIGNED)
         return;
+
+#if TAG_MAJOR_VERSION == 34
+    if (!item.is_valid(iinfo))
+    {
+        string name;
+        item_def dummy = item;
+        if (!item.quantity)
+            name = "(quantity: 0) ", dummy.quantity = 1;
+        name += dummy.name(DESC_PLAIN, true);
+        die("Invalid item: %s", name.c_str());
+    }
+#endif
+    ASSERT(item.is_valid(iinfo));
 
     marshallByte(th, item.sub_type);
     marshallShort(th, item.plus);
@@ -2522,13 +2515,6 @@ void unmarshallItem(reader &th, item_def &item)
     if (item.base_type == OBJ_UNASSIGNED)
         return;
     item.sub_type    = unmarshallUByte(th);
-#if TAG_MAJOR_VERSION == 33
-    if (th.getMinorVersion() < TAG_MINOR_DETECT_CURSE_REMOVAL
-        && item.base_type == OBJ_SCROLLS && item.sub_type > SCR_REMOVE_CURSE)
-    {
-        --item.sub_type;
-    }
-#endif
     item.plus        = unmarshallShort(th);
     item.plus2       = unmarshallShort(th);
     item.special     = unmarshallInt(th);
@@ -2552,15 +2538,15 @@ void unmarshallItem(reader &th, item_def &item)
     item.props.clear();
     item.props.read(th);
 
-#if TAG_MAJOR_VERSION == 33
-    if (item.base_type == OBJ_MISSILES && item.sub_type != MI_THROWING_NET)
-        item.plus = 0; // allow stacking
-#endif
-
     // Fixup artefact props to handle reloading items when the new version
     // of Crawl has more artefact props.
     if (is_artefact(item))
         artefact_fixup_props(item);
+
+#if TAG_MAJOR_VERSION == 34
+    if (item.base_type == OBJ_POTIONS && item.sub_type == POT_WATER)
+        item.sub_type = POT_CONFUSION;
+#endif
 }
 
 #define MAP_SERIALIZE_FLAGS_MASK 3
@@ -2634,7 +2620,7 @@ void marshallMapCell(writer &th, const map_cell &cell)
     }
 
     if (flags & MAP_SERIALIZE_ITEM)
-        marshallItem(th, *cell.item());
+        marshallItem(th, *cell.item(), true);
 
     if (flags & MAP_SERIALIZE_MONSTER)
         marshallMonsterInfo(th, *cell.monsterinfo());
@@ -2666,6 +2652,10 @@ void unmarshallMapCell(reader &th, map_cell& cell)
 
     if (flags & MAP_SERIALIZE_FEATURE)
         feature = (dungeon_feature_type)unmarshallUnsigned(th);
+#if TAG_MAJOR_VERSION == 34
+    if (feature == DNGN_OLD_SECRET_DOOR)
+        feature = DNGN_CLOSED_DOOR;
+#endif
 
     if (flags & MAP_SERIALIZE_FEATURE_COLOUR)
         feat_colour = unmarshallUnsigned(th);
@@ -2730,8 +2720,8 @@ static void marshall_mon_enchant(writer &th, const mon_enchant &me)
     marshallShort(th, me.degree);
     marshallShort(th, me.who);
     marshallInt(th, me.source);
-    marshallShort(th, std::min(me.duration, INFINITE_DURATION));
-    marshallShort(th, std::min(me.maxduration, INFINITE_DURATION));
+    marshallShort(th, min(me.duration, INFINITE_DURATION));
+    marshallShort(th, min(me.maxduration, INFINITE_DURATION));
 }
 
 static mon_enchant unmarshall_mon_enchant(reader &th)
@@ -2743,7 +2733,7 @@ static mon_enchant unmarshall_mon_enchant(reader &th)
     me.source      = unmarshallInt(th);
     me.duration    = unmarshallShort(th);
     me.maxduration = unmarshallShort(th);
-    return (me);
+    return me;
 }
 
 void marshallMonster(writer &th, const monster& m)
@@ -2788,8 +2778,8 @@ void marshallMonster(writer &th, const monster& m)
     }
     marshallByte(th, m.ench_countdown);
 
-    marshallShort(th, std::min(m.hit_points, MAX_MONSTER_HP));
-    marshallShort(th, std::min(m.max_hit_points, MAX_MONSTER_HP));
+    marshallShort(th, min(m.hit_points, MAX_MONSTER_HP));
+    marshallShort(th, min(m.max_hit_points, MAX_MONSTER_HP));
     marshallInt(th, m.number);
     marshallShort(th, m.base_monster);
     marshallShort(th, m.colour);
@@ -2812,21 +2802,14 @@ void marshallMonster(writer &th, const monster& m)
         marshallGhost(th, *m.ghost);
     }
 
-    marshallShort(th, m.constricted_by);
-    marshallInt(th, m.escape_attempts);
-    marshallInt(th, m.dur_been_constricted);
-    for (unsigned int k = 0; k < MAX_CONSTRICT; k++)
-    {
-        marshallShort(th, m.constricting[k]);
-        marshallInt(th, m.dur_has_constricted[k]);
-    }
+    _marshall_constriction(th, &m);
 
     m.props.write(th);
 }
 
 void marshallMonsterInfo(writer &th, const monster_info& mi)
 {
-    marshallFixedBitArray<NUM_MB_FLAGS>(th, mi.mb);
+    marshallFixedBitVector<NUM_MB_FLAGS>(th, mi.mb);
     marshallString(th, mi.mname);
     marshallUnsigned(th, mi.type);
     marshallUnsigned(th, mi.base_type);
@@ -2842,7 +2825,7 @@ void marshallMonsterInfo(writer &th, const monster_info& mi)
     marshallString(th, mi.quote);
     marshallUnsigned(th, mi.holi);
     marshallUnsigned(th, mi.mintel);
-    marshallResists(th, mi.mresists);
+    marshallInt(th, mi.mresists);
     marshallUnsigned(th, mi.mitemuse);
     marshallByte(th, mi.mbase_speed);
     marshallUnsigned(th, mi.fly);
@@ -2851,7 +2834,7 @@ void marshallMonsterInfo(writer &th, const monster_info& mi)
         if (mi.inv[i].get())
         {
             marshallBoolean(th, true);
-            marshallItem(th, *mi.inv[i].get());
+            marshallItem(th, *mi.inv[i].get(), true);
         }
         else
             marshallBoolean(th, false);
@@ -2873,7 +2856,7 @@ void marshallMonsterInfo(writer &th, const monster_info& mi)
 
 void unmarshallMonsterInfo(reader &th, monster_info& mi)
 {
-    unmarshallFixedBitArray<NUM_MB_FLAGS>(th, mi.mb);
+    unmarshallFixedBitVector<NUM_MB_FLAGS>(th, mi.mb);
     mi.mname = unmarshallString(th);
     unmarshallUnsigned(th, mi.type);
     ASSERT(!invalid_monster_type(mi.type));
@@ -2891,7 +2874,7 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
 
     unmarshallUnsigned(th, mi.holi);
     unmarshallUnsigned(th, mi.mintel);
-    unmarshallResists(th, mi.mresists);
+    mi.mresists = unmarshallInt(th);
     unmarshallUnsigned(th, mi.mitemuse);
     mi.mbase_speed = unmarshallByte(th);
 
@@ -3028,8 +3011,13 @@ static void tag_read_level(reader &th)
     for (int i = 0; i < gx; i++)
         for (int j = 0; j < gy; j++)
         {
-            grd[i][j] = static_cast<dungeon_feature_type>(unmarshallUByte(th));
-            ASSERT(grd[i][j] < NUM_FEATURES);
+            dungeon_feature_type feat = static_cast<dungeon_feature_type>(unmarshallUByte(th));
+            grd[i][j] = feat;
+            ASSERT(feat < NUM_FEATURES);
+#if TAG_MAJOR_VERSION == 34
+            if (feat == DNGN_OLD_SECRET_DOOR)
+                grd[i][j] = DNGN_CLOSED_DOOR;
+#endif
 
             unmarshallMapCell(th, env.map_knowledge[i][j]);
             // Fixup positions
@@ -3127,20 +3115,13 @@ static void tag_read_level(reader &th)
     unmarshall_level_vault_data(th);
     env.density = unmarshallInt(th);
 
-#if TAG_MAJOR_VERSION == 33
-    if (th.getMinorVersion() >= TAG_MINOR_SUNLIGHT)
-    {
-#endif
     int num_lights = unmarshallShort(th);
     env.sunlight.clear();
     while (num_lights-- > 0)
     {
         coord_def c = unmarshallCoord(th);
-        env.sunlight.push_back(std::pair<coord_def, int>(c, unmarshallInt(th)));
+        env.sunlight.push_back(pair<coord_def, int>(c, unmarshallInt(th)));
     }
-#if TAG_MAJOR_VERSION == 33
-    }
-#endif
 }
 
 static void tag_read_level_items(reader &th)
@@ -3253,21 +3234,14 @@ void unmarshallMonster(reader &th, monster& m)
     if (mons_is_ghost_demon(m.type))
         m.set_ghost(unmarshallGhost(th));
 
-    m.constricted_by = unmarshallShort(th);
-    m.escape_attempts = unmarshallInt(th);
-    m.dur_been_constricted = unmarshallInt(th);
-    for (unsigned int k = 0; k < MAX_CONSTRICT; k++)
-    {
-        m.constricting[k] = unmarshallShort(th);
-        m.dur_has_constricted[k] = unmarshallInt(th);
-    }
+    _unmarshall_constriction(th, &m);
 
     m.props.clear();
     m.props.read(th);
 
     if (m.props.exists("monster_tile_name"))
     {
-        std::string tile = m.props["monster_tile_name"].get_string();
+        string tile = m.props["monster_tile_name"].get_string();
         tileidx_t index;
         if (!tile_player_index(tile.c_str(), &index))
         {
@@ -3289,9 +3263,7 @@ static void tag_read_level_monsters(reader &th)
     int i;
     int count;
 
-    for (i = 0; i < MAX_MONSTERS; i++)
-        menv[i].reset();
-    env.mid_cache.clear();
+    reset_all_monsters();
 
     // how many mons_alloc?
     count = unmarshallByte(th);
@@ -3345,7 +3317,7 @@ static void _debug_count_tiles()
 {
 #ifdef DEBUG_DIAGNOSTICS
 # ifdef USE_TILE
-    std::map<int,bool> found;
+    map<int,bool> found;
     int t, cnt = 0;
     for (int i = 0; i < GXM; i++)
         for (int j = 0; j < GYM; j++)
@@ -3375,7 +3347,7 @@ void tag_read_level_tiles(reader &th)
     for (unsigned int i = 0; i < num_tilenames; ++i)
     {
 #ifdef DEBUG_TILE_NAMES
-        std::string temp = unmarshallString(th);
+        string temp = unmarshallString(th);
         mprf("Reading tile_names[%d] = %s", i, temp.c_str());
         env.tile_names.push_back(temp);
 #else
@@ -3397,21 +3369,19 @@ void tag_read_level_tiles(reader &th)
             env.tile_flv[x][y].floor_idx = unmarshallShort(th);
             env.tile_flv[x][y].feat_idx  = unmarshallShort(th);
 
+            // These get overwritten by _regenerate_tile_flavour
             env.tile_flv[x][y].wall    = unmarshallShort(th);
             env.tile_flv[x][y].floor   = unmarshallShort(th);
             env.tile_flv[x][y].feat    = unmarshallShort(th);
             env.tile_flv[x][y].special = unmarshallShort(th);
         }
+
     _debug_count_tiles();
 
-    if (unmarshallInt(th) != TILE_WALL_MAX)
-    {
-        dprf("DNGN tilecount has changed -- recreating tile data.");
-        tag_missing_level_tiles();
-    }
+    _regenerate_tile_flavour();
 
     // Draw remembered map
-    tag_init_tile_bk();
+    _draw_tiles();
 }
 
 static tileidx_t _get_tile_from_vector(const unsigned int idx)
@@ -3424,7 +3394,7 @@ static tileidx_t _get_tile_from_vector(const unsigned int idx)
 #endif
         return 0;
     }
-    std::string tilename = env.tile_names[idx - 1];
+    string tilename = env.tile_names[idx - 1];
 
     tileidx_t tile;
     if (!tile_dngn_index(tilename.c_str(), &tile))
@@ -3443,60 +3413,73 @@ static tileidx_t _get_tile_from_vector(const unsigned int idx)
     return tile;
 }
 
-static void _reinit_flavour_tiles()
+static void _regenerate_tile_flavour()
 {
-    if (env.tile_default.wall_idx)
+    /* Remember the wall_idx and floor_idx; tile_init_default_flavour
+       sets them to 0 */
+    tileidx_t default_wall_idx = env.tile_default.wall_idx;
+    tileidx_t default_floor_idx = env.tile_default.floor_idx;
+    tile_init_default_flavour();
+    if (default_wall_idx)
     {
-        env.tile_default.wall
-            = _get_tile_from_vector(env.tile_default.wall_idx);
-        if (!env.tile_default.wall)
-            env.tile_default.wall_idx = 0;
+        tileidx_t new_wall = _get_tile_from_vector(default_wall_idx);
+        if (new_wall)
+        {
+            env.tile_default.wall_idx = default_wall_idx;
+            env.tile_default.wall = new_wall;
+        }
     }
-    if (env.tile_default.floor_idx)
+    if (default_floor_idx)
     {
-        env.tile_default.floor
-            = _get_tile_from_vector(env.tile_default.floor_idx);
-        if (!env.tile_default.floor)
-            env.tile_default.floor_idx = 0;
+        tileidx_t new_floor = _get_tile_from_vector(default_floor_idx);
+        if (new_floor)
+        {
+            env.tile_default.floor_idx = default_floor_idx;
+            env.tile_default.floor = new_floor;
+        }
     }
 
     for (rectangle_iterator ri(coord_def(0, 0), coord_def(GXM-1, GYM-1));
          ri; ++ri)
     {
+        env.tile_flv(*ri).wall = 0;
+        env.tile_flv(*ri).floor = 0;
+        env.tile_flv(*ri).feat = 0;
+        env.tile_flv(*ri).special = 0;
+
         if (env.tile_flv(*ri).wall_idx)
         {
-            env.tile_flv(*ri).wall
+            tileidx_t new_wall
                 = _get_tile_from_vector(env.tile_flv(*ri).wall_idx);
-            if (!env.tile_flv(*ri).wall)
+            if (!new_wall)
                 env.tile_flv(*ri).wall_idx = 0;
+            else
+                env.tile_flv(*ri).wall = new_wall;
         }
         if (env.tile_flv(*ri).floor_idx)
         {
-            env.tile_flv(*ri).floor
+            tileidx_t new_floor
                 = _get_tile_from_vector(env.tile_flv(*ri).floor_idx);
-            if (!env.tile_flv(*ri).floor)
+            if (!new_floor)
                 env.tile_flv(*ri).floor_idx = 0;
+            else
+                env.tile_flv(*ri).floor = new_floor;
         }
         if (env.tile_flv(*ri).feat_idx)
         {
-            env.tile_flv(*ri).feat
+            tileidx_t new_feat
                 = _get_tile_from_vector(env.tile_flv(*ri).feat_idx);
-            if (!env.tile_flv(*ri).feat)
+            if (!new_feat)
                 env.tile_flv(*ri).feat_idx = 0;
+            else
+                env.tile_flv(*ri).feat = new_feat;
         }
-   }
-}
-
-static void tag_missing_level_tiles()
-{
-    tile_init_default_flavour();
-    tile_clear_flavour();
-    _reinit_flavour_tiles();
+    }
 
     tile_new_level(true, false);
 }
 
-static void tag_init_tile_bk()
+static void _draw_tiles()
 {
 #ifdef USE_TILE
     for (rectangle_iterator ri(coord_def(0, 0), coord_def(GXM-1, GYM-1));
@@ -3507,34 +3490,6 @@ static void tag_init_tile_bk()
 #endif
 }
 // ------------------------------- ghost tags ---------------------------- //
-
-static void marshallResists(writer &th, const mon_resist_def &res)
-{
-    marshallByte(th, res.elec);
-    marshallByte(th, res.poison);
-    marshallByte(th, res.fire);
-    marshallByte(th, res.steam);
-    marshallByte(th, res.cold);
-    marshallByte(th, res.hellfire);
-    marshallByte(th, res.asphyx);
-    marshallByte(th, res.acid);
-    marshallByte(th, res.sticky_flame);
-    marshallByte(th, res.rotting);
-}
-
-static void unmarshallResists(reader &th, mon_resist_def &res)
-{
-    res.elec         = unmarshallByte(th);
-    res.poison       = unmarshallByte(th);
-    res.fire         = unmarshallByte(th);
-    res.steam        = unmarshallByte(th);
-    res.cold         = unmarshallByte(th);
-    res.hellfire     = unmarshallByte(th);
-    res.asphyx       = unmarshallByte(th);
-    res.acid         = unmarshallByte(th);
-    res.sticky_flame = unmarshallByte(th);
-    res.rotting      = unmarshallByte(th);
-}
 
 static void marshallSpells(writer &th, const monster_spells &spells)
 {
@@ -3567,9 +3522,7 @@ static void marshallGhost(writer &th, const ghost_demon &ghost)
     marshallShort(th, ghost.brand);
     marshallShort(th, ghost.att_type);
     marshallShort(th, ghost.att_flav);
-
-    marshallResists(th, ghost.resists);
-
+    marshallInt(th, ghost.resists);
     marshallByte(th, ghost.spellcaster);
     marshallByte(th, ghost.cycle_colours);
     marshallByte(th, ghost.colour);
@@ -3598,9 +3551,7 @@ static ghost_demon unmarshallGhost(reader &th)
     ghost.brand            = static_cast<brand_type>(unmarshallShort(th));
     ghost.att_type = static_cast<attack_type>(unmarshallShort(th));
     ghost.att_flav = static_cast<attack_flavour>(unmarshallShort(th));
-
-    unmarshallResists(th, ghost.resists);
-
+    ghost.resists = unmarshallInt(th);
     ghost.spellcaster      = unmarshallByte(th);
     ghost.cycle_colours    = unmarshallByte(th);
     ghost.colour           = unmarshallByte(th);
@@ -3609,7 +3560,7 @@ static ghost_demon unmarshallGhost(reader &th)
 
     unmarshallSpells(th, ghost.spells);
 
-    return (ghost);
+    return ghost;
 }
 
 static void tag_construct_ghost(writer &th)

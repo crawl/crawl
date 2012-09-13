@@ -42,6 +42,7 @@ function init_column_ruins(e)
   e.tile('G = dngn_crumbled_column')
   e.colour('G = lightgrey')
   e.subst('_ = .')
+  e.set_feature_name("granite_statue", "broken pillar")
 end
 
 function init_column_ruins_hut(e)
@@ -51,7 +52,6 @@ function init_column_ruins_hut(e)
   e.ftile('+ = floor_rough_brown')
   e.rtile('+ = wall_stone_brick')
   e.kmask('+ = no_wall_fixup')
-  e.kmask('+ = no_secret_doors')
 end
 
 function init_column_ruins_portal(e)
@@ -127,7 +127,6 @@ CHANCE: 3%
       dgn.place_maps{tag="serial_column_ruins_simple", count=s}
     end)
   end
-  dgn.set_feature_desc_short("granite statue", "broken pillar")
 }}
 
 

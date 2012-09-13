@@ -12,8 +12,8 @@
 
 struct bolt;
 
-std::string zin_recite_text(int* trits, size_t len, int prayertype, int step);
-bool zin_check_able_to_recite();
+string zin_recite_text(int* trits, size_t len, int prayertype, int step);
+bool zin_check_able_to_recite(bool quiet = false);
 int zin_check_recite_to_monsters(recite_type *prayertype);
 bool zin_recite_to_single_monster(const coord_def& where,
                                   recite_type prayertype);
@@ -33,7 +33,6 @@ bool vehumet_supports_spell(spell_type spell);
 
 bool trog_burn_spellbooks();
 
-bool jiyva_can_paralyse_jellies();
 void jiyva_paralyse_jellies();
 bool jiyva_remove_bad_mutation();
 
@@ -55,8 +54,7 @@ bool fedhas_shoot_through(const bolt & beam, const monster* victim);
 int fedhas_fungal_bloom();
 bool fedhas_sunlight();
 void process_sunlights(bool future = false);
-bool prioritise_adjacent(const coord_def &target,
-                         std::vector<coord_def> &candidates);
+bool prioritise_adjacent(const coord_def &target, vector<coord_def> &candidates);
 bool fedhas_plant_ring_from_fruit();
 int fedhas_rain(const coord_def &target);
 int fedhas_corpse_spores(beh_type behavior = BEH_FRIENDLY,

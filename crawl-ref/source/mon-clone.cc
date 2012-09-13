@@ -27,10 +27,10 @@
 #include "transform.h"
 #include "view.h"
 
-const std::string clone_master_key = "mcloneorig";
-const std::string clone_slave_key  = "mclonedupe";
+const string clone_master_key = "mcloneorig";
+const string clone_slave_key  = "mclonedupe";
 
-static std::string _monster_clone_id_for(monster* mons)
+static string _monster_clone_id_for(monster* mons)
 {
     return make_stringf("%s%d",
                         mons->name(DESC_PLAIN, true).c_str(),
@@ -40,17 +40,17 @@ static std::string _monster_clone_id_for(monster* mons)
 static bool _monster_clone_exists(monster* mons)
 {
     if (!mons->props.exists(clone_master_key))
-        return (false);
+        return false;
 
-    const std::string clone_id = mons->props[clone_master_key].get_string();
+    const string clone_id = mons->props[clone_master_key].get_string();
     for (monster_iterator mi; mi; ++mi)
     {
         monster* thing(*mi);
         if (thing->props.exists(clone_slave_key)
             && thing->props[clone_slave_key].get_string() == clone_id)
-            return (true);
+            return true;
     }
-    return (false);
+    return false;
 }
 
 static bool _mons_is_illusion(monster* mons)
@@ -70,9 +70,9 @@ static bool _player_is_illusion_cloneable()
     for (monster_iterator mi; mi; ++mi)
     {
         if (mi->type == MONS_PLAYER_ILLUSION && mi->mname == you.your_name)
-            return (false);
+            return false;
     }
-    return (true);
+    return true;
 }
 
 bool actor_is_illusion_cloneable(actor *target)
@@ -102,7 +102,7 @@ static void _mons_summon_monster_illusion(monster* caster,
     bool cloning_visible = false;
     if (monster *clone = clone_mons(foe, true, &cloning_visible))
     {
-        const std::string clone_id = _monster_clone_id_for(foe);
+        const string clone_id = _monster_clone_id_for(foe);
         clone->props[clone_slave_key] = clone_id;
         foe->props[clone_master_key] = clone_id;
         mons_add_blame(clone,
@@ -219,7 +219,7 @@ bool mons_clonable(const monster* mon, bool needs_adjacent)
         || mons_is_ghost_demon(mon->type)
         || mon->is_named())
     {
-        return (false);
+        return false;
     }
 
     if (needs_adjacent)
@@ -239,7 +239,7 @@ bool mons_clonable(const monster* mon, bool needs_adjacent)
             }
         }
         if (!square_found)
-            return (false);
+            return false;
     }
 
     // Is the monster carrying an artefact?
@@ -251,10 +251,10 @@ bool mons_clonable(const monster* mon, bool needs_adjacent)
             continue;
 
         if (is_artefact(mitm[index]))
-            return (false);
+            return false;
     }
 
-    return (true);
+    return true;
 }
 
 monster* clone_mons(const monster* orig, bool quiet, bool* obvious,

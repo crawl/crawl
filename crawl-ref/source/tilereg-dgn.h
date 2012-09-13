@@ -11,11 +11,11 @@ class mcache_entry;
 
 struct TextTag
 {
-    std::string tag;
+    string tag;
     coord_def gc;
 };
 
-bool tile_dungeon_tip(const coord_def &gc, std::string &tip);
+bool tile_dungeon_tip(const coord_def &gc, string &tip);
 int tile_click_cell(const coord_def &gc, unsigned char mod);
 
 class DungeonRegion : public TileRegion
@@ -27,8 +27,8 @@ public:
     virtual void render();
     virtual void clear();
     virtual int handle_mouse(MouseEvent &event);
-    virtual bool update_tip_text(std::string &tip);
-    virtual bool update_alt_text(std::string &alt);
+    virtual bool update_tip_text(string &tip);
+    virtual bool update_alt_text(string &alt);
     virtual void on_resize();
 
     void load_dungeon(const crawl_view_buffer &vbuf, const coord_def &gc);
@@ -36,7 +36,7 @@ public:
     bool on_screen(const coord_def &gc) const;
 
     void clear_text_tags(text_tag_type type);
-    void add_text_tag(text_tag_type type, const std::string &tag,
+    void add_text_tag(text_tag_type type, const string &tag,
                       const coord_def &gc);
 
     const coord_def &get_cursor() const { return m_cursor[CURSOR_MOUSE]; }
@@ -58,7 +58,7 @@ protected:
     int m_cy_to_gy;
     coord_def m_cursor[CURSOR_MAX];
     coord_def m_last_clicked_grid;
-    std::vector<TextTag> m_tags[TAG_MAX];
+    vector<TextTag> m_tags[TAG_MAX];
 
     DungeonCellBuffer m_buf_dngn;
     ShapeBuffer m_buf_flash;
@@ -68,7 +68,7 @@ protected:
         coord_def gc;
         tileidx_t idx;
     };
-    std::vector<tile_overlay> m_overlays;
+    vector<tile_overlay> m_overlays;
 };
 
 #endif

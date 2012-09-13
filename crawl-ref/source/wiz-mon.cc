@@ -14,6 +14,7 @@
 #include "colour.h"
 #include "dbg-util.h"
 #include "delay.h"
+#include "directn.h"
 #include "dungeon.h"
 #include "env.h"
 #include "files.h"
@@ -146,7 +147,11 @@ static int _make_mimic_item(object_class_type type)
         break;
 
     case OBJ_STAVES:
-        item.sub_type = random2(STAFF_FIRST_ROD - 1);
+        item.sub_type = random2(NUM_STAVES);
+        break;
+
+    case OBJ_RODS:
+        item.sub_type = random2(NUM_RODS);
         break;
 
     case OBJ_GOLD:
@@ -157,7 +162,7 @@ static int _make_mimic_item(object_class_type type)
 
     item_colour(item); // also sets special vals for scrolls/potions
 
-    return (it);
+    return it;
 }
 
 // Creates a specific monster by name. Uses the same patterns as
@@ -173,11 +178,11 @@ void wizard_create_spec_monster_name()
     }
 
     mons_list mlist;
-    std::string err = mlist.add_mons(specs);
+    string err = mlist.add_mons(specs);
 
     if (!err.empty())
     {
-        std::string newerr;
+        string newerr;
         // Try for a partial match, but not if the user accidentally entered
         // only a few letters.
         monster_type partial = get_monster_by_name(specs);
@@ -357,7 +362,7 @@ static bool _sort_monster_list(int a, int b)
     if (m1->type == m2->type)
     {
         if (!m1->alive() || !m2->alive())
-            return (false);
+            return false;
 
         return (m1->name(DESC_PLAIN, true) < m2->name(DESC_PLAIN, true));
     }
@@ -372,7 +377,7 @@ static bool _sort_monster_list(int a, int b)
 
 void debug_list_monsters()
 {
-    std::vector<std::string> mons;
+    vector<string> mons;
     int nfound = 0;
 
     int mon_nums[MAX_MONSTERS];
@@ -380,12 +385,12 @@ void debug_list_monsters()
     for (int i = 0; i < MAX_MONSTERS; ++i)
         mon_nums[i] = i;
 
-    std::sort(mon_nums, mon_nums + MAX_MONSTERS, _sort_monster_list);
+    sort(mon_nums, mon_nums + MAX_MONSTERS, _sort_monster_list);
 
     int total_exp = 0, total_adj_exp = 0, total_nonuniq_exp = 0;
 
-    std::string prev_name = "";
-    int         count     = 0;
+    string prev_name = "";
+    int    count     = 0;
 
     for (int i = 0; i < MAX_MONSTERS; ++i)
     {
@@ -397,14 +402,16 @@ void debug_list_monsters()
         if (!mi->alive())
             continue;
 
-        std::string name = mi->name(DESC_PLAIN, true);
+        string name = mi->name(DESC_PLAIN, true);
 
         if (prev_name != name && count > 0)
         {
             char buf[80];
             if (count > 1)
+            {
                 snprintf(buf, sizeof(buf), "%d %s", count,
                          pluralise(prev_name).c_str());
+            }
             else
                 snprintf(buf, sizeof(buf), "%s", prev_name.c_str());
             mons.push_back(buf);
@@ -495,7 +502,7 @@ void wizard_spawn_control()
 
         if (!cancelable_get_line(specs, sizeof(specs)))
         {
-            const int num = std::min(atoi(specs), max_spawn);
+            const int num = min(atoi(specs), max_spawn);
             if (num > 0)
             {
                 int curr_rate = env.spawn_random_rate;
@@ -572,7 +579,7 @@ void debug_stethoscope(int mon)
     // Print stats and other info.
     mprf(MSGCH_DIAGNOSTICS,
          "HD=%d (%u) HP=%d/%d AC=%d(%d) EV=%d MR=%d SP=%d "
-         "energy=%d%s%s mid=%u num=%d stealth=%d flags=%04"PRIx64,
+         "energy=%d%s%s mid=%u num=%d stealth=%d flags=%04" PRIx64,
          mons.hit_dice,
          mons.experience,
          mons.hit_points, mons.max_hit_points,
@@ -640,7 +647,7 @@ void debug_stethoscope(int mon)
     mprf(MSGCH_DIAGNOSTICS, "ench: %s",
          mons.describe_enchantments().c_str());
 
-    std::ostringstream spl;
+    ostringstream spl;
     const monster_spells &hspell_pass = mons.spells;
     bool found_spell = false;
     for (int k = 0; k < NUM_MONSTER_SPELL_SLOTS; ++k)
@@ -766,7 +773,7 @@ void debug_make_monster_shout(monster* mon)
 
 static bool _force_suitable(const monster* mon)
 {
-    return (mon->alive());
+    return mon->alive();
 }
 
 void wizard_gain_monster_level(monster* mon)
@@ -834,17 +841,18 @@ void wizard_give_monster_item(monster* mon)
     {
     case OBJ_WEAPONS:
     case OBJ_STAVES:
+    case OBJ_RODS:
         // Let wizard specify which slot to put weapon into via
         // inscriptions.
-        if (item.inscription.find("first") != std::string::npos
-            || item.inscription.find("primary") != std::string::npos)
+        if (item.inscription.find("first") != string::npos
+            || item.inscription.find("primary") != string::npos)
         {
             mpr("Putting weapon into primary slot by inscription");
             mon_slot = MSLOT_WEAPON;
             break;
         }
-        else if (item.inscription.find("second") != std::string::npos
-                 || item.inscription.find("alt") != std::string::npos)
+        else if (item.inscription.find("second") != string::npos
+                 || item.inscription.find("alt") != string::npos)
         {
             mpr("Putting weapon into alt slot by inscription");
             mon_slot = MSLOT_ALT_WEAPON;
@@ -934,6 +942,9 @@ void wizard_give_monster_item(monster* mon)
     case OBJ_MISCELLANY:
         mon_slot = MSLOT_MISCELLANY;
         break;
+    case OBJ_JEWELLERY:
+        mon_slot = MSLOT_JEWELLERY;
+        break;
     default:
         mpr("You can't give that type of item to a monster.");
         return;
@@ -947,6 +958,7 @@ void wizard_give_monster_item(monster* mon)
         case MSLOT_WEAPON:
         case MSLOT_ALT_WEAPON:
         case MSLOT_ARMOUR:
+        case MSLOT_JEWELLERY:
         case MSLOT_MISSILE:
             break;
 
@@ -1259,8 +1271,8 @@ void debug_pathfind(int idx)
     bool success = mp.init_pathfind(&mon, dest, true, true);
     if (success)
     {
-        std::vector<coord_def> path = mp.backtrack();
-        std::string path_str;
+        vector<coord_def> path = mp.backtrack();
+        string path_str;
         mpr("Here's the shortest path: ");
         for (unsigned int i = 0; i < path.size(); ++i)
         {
@@ -1381,7 +1393,7 @@ void debug_miscast(int target_index)
 
     if (strchr(specs, ','))
     {
-        std::vector<std::string> nums = split_string(",", specs);
+        vector<string> nums = split_string(",", specs);
         pow  = atoi(nums[0].c_str());
         fail = atoi(nums[1].c_str());
 

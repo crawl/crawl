@@ -1,7 +1,7 @@
 %%%%
 No God
 
-"God is dead." - Nietzsche (It's a bug if you ever see this.)
+"God is dead." — Nietzsche (It's a bug if you ever see this.)
 %%%%
 random
 
@@ -65,8 +65,10 @@ Okawaru
 
 Okawaru is a dangerous and powerful God of battle. Followers can gain a number
 of powers useful in combat as well as various rewards, but must constantly
-prove themselves through battle and the sacrifice of corpses. Okawaru despises
-those who harm their allies.
+prove themselves through battle and the sacrifice of corpses. Okawaru prefers
+heroic feats against much stronger enemies, and pays little heed to easier
+victories. Furthermore, while fair fights are not required, harming one's
+allies will incur Okawaru's wrath.
 %%%%
 Makhleb
 
@@ -206,7 +208,7 @@ Vehumet powers
 
 Worshippers of Vehumet will quickly be able to recover their magical energy
 upon killing beings. As they gain favour, they will also gain various
-enhancements to their destructive spells - firstly, assistance in casting such
+enhancements to their destructive spells — firstly, assistance in casting such
 spells; then increased range for conjurations; and finally a lowered cost for
 casting higher level destructive spells. Vehumet will offer followers the
 knowledge of increasingly destructive spells as they gain piety.
@@ -255,7 +257,7 @@ when called upon; highly pious followers can be sure of such aid.
 Lugonu powers
 
 Followers of Lugonu gain powers to depart the Abyss at will, to banish monsters
-there, and eventually to gate themselves into this realm of chaos - at the cost
+there, and eventually to gate themselves into this realm of chaos — at the cost
 of a part of their soul. Apart from that, they can cause distortional damage to
 monsters, and gain an ability to corrupt the ordered world, enabling them to
 open a gate for creatures of the Abyss to pass through.

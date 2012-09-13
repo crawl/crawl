@@ -12,9 +12,9 @@
 # for more details.
 ######################################################
 %%%%
-armour_animal
+_armour_animal_
 
-# bacteria
+# microorganisms
 Amoeba
 
 # insects
@@ -24,9 +24,15 @@ Cicada
 
 Cricket
 
-Echidna
-
 Ladybird
+
+Ant
+
+Cockroach
+
+Locust
+
+Louse
 
 # invertebrates
 Slug
@@ -36,6 +42,12 @@ Snail
 Gastropod
 
 Trilobite
+
+Centipede
+
+Cuttlefish
+
+Worm
 
 # arachnids and clams
 Tarantula
@@ -55,7 +67,11 @@ Frog
 
 Komodo Dragon
 
-Dragon
+Lizard
+
+Salamander
+
+Serpent
 
 # birds
 Turtledove
@@ -63,6 +79,18 @@ Turtledove
 Nightingale
 
 Meadowlark
+
+Eagle
+
+Falcon
+
+Heron
+
+Raven
+
+Sparrow
+
+Swan
 
 # mammals
 Hare
@@ -77,8 +105,31 @@ Hippo
 
 Monkey
 
+Bull
+
+Camelopard
+
+Dolphin
+
+Echidna
+
+Hart
+
+Lion
+
+Stallion
+
 # not strictly an animal... :)
 Monkey's Uncle
+
+#classical mythical animals
+Cockatrice
+
+Dragon
+
+Griffon
+
+Kraken
 
 # modern mythical animals
 Dropbear
@@ -89,7 +140,7 @@ Wild Haggis
 
 Chupacabra
 %%%%
-flower_name
+_flower_name_
 
 Lilacs
 
@@ -98,9 +149,19 @@ Daffodils
 the Rose
 
 the Garden
+
+Daisies
+
+the Thistle
+
+Tulips
+
+the Lily
+
+the Lotus Blossom
 %%%%
 # non-Crawl critters
-critter_name
+_critter_name_
 
 Slorg
 
@@ -110,8 +171,17 @@ Alphagorgon
 Hot Ocelot
 
 Eight Boll Weevils
+
+Grue
+
+Jabberwock
+
+w:1
+Were-rabbit
+
+Wumpus
 %%%%
-discomfort_and_inaction
+_discomfort_and_inaction_
 
 # discomfort
 Minor Irritation
@@ -125,6 +195,10 @@ Failure
 Servitude
 
 Submission
+
+Insecurity
+
+Vexation
 
 # inaction
 Lifelessness
@@ -142,8 +216,12 @@ Negligence
 Inaction
 
 Oblivion
+
+the Doldrums
+
+Listlessness
 %%%%
-mental_illness_armour
+_mental_illness_armour_
 
 Paranoia
 
@@ -154,8 +232,22 @@ Agoraphobia
 Dyspraxia
 
 Mental Paralysis
+
+Catatonia
+
+Depression
+
+Hysteria
+
+Kleptomania
+
+Melancholy
+
+Masochism
+
+Narcissism
 %%%%
-good_or_divine
+_good_or_divine_
 
 # good things
 the Good
@@ -196,16 +288,30 @@ Freedom
 
 Amelioration
 
+Awe
+
+Contentment
+
+Mirth
+
 # divine events
 Divine Compulsion
 
 the Invisible Hand
 
 Divine Intervention
+
+Intercession
+
+Miracles
+
+Salvation
+
+the Will of the Gods
 %%%%
-# in contrast to "wacky_armour_name" these do have some
+# in contrast to "_wacky_armour_name_" these do have some
 # connection to armour and protection
-armour_name_shielding
+_armour_name_shielding_
 
 Shielding
 
@@ -228,9 +334,17 @@ Exclusion
 Repulsion
 
 Inviolability
+
+Refuge
+
+the Bulwark
+
+the Ward
+
+Fortification
 %%%%
 # other armour properties (beside protection)
-armour_property_name
+_armour_property_name_
 
 Supple Strength
 
@@ -247,8 +361,14 @@ Disguise
 Least Resistance
 
 Protective Custody
+
+Resilience
+
+Fashionability
+
+Impressiveness
 %%%%
-wacky_armour_name
+_wacky_armour_name_
 
 the Onion
 
@@ -303,9 +423,19 @@ the Loofah
 Love and Death
 
 Indecent Exposure
+
+the Road Less Travelled
+
+the Blind Marksman
+
+Too Many Cooks
+
+Thrice Damned Blessings
+
+Duck's Teeth
 %%%%
 # Lemuel's suggestions
-celestial_bodies
+_celestial_bodies_
 
 Sun
 
@@ -321,10 +451,21 @@ Morning Star
 
 Evening Star
 
+Comet
+
+w:5
+Midnight Sun
+
+w:5
+Blue Moon
+
+w:5
+Harvest Moon
+
 # astrological
 Black Moon
 %%%%
-instrument_name
+_instrument_name_
 
 Trumpets
 
@@ -335,8 +476,18 @@ the Accordion
 the Bagpipe
 
 the Lute
+
+the Bells
+
+Chimes
+
+the Flute
+
+the Harp
+
+the Gusle
 %%%%
-evil_being
+_evil_being_
 
 the Devil
 
@@ -349,9 +500,27 @@ Greater Demons
 the Iron Devil
 
 the Devil's Advocate
+
+the Demon Prince
+
+the Evil One
+
+the Furies
+
+the Prince of Darkness
+
+the Fiend
+
+w:5
+the Archfiend
+
+the Little Devil
+
+the Imp
+
+the Villain
 %%%%
-# um, reeeeally bad weather...
-weather_name
+_weather_name_
 
 the First Snow
 
@@ -360,8 +529,18 @@ Boiling Hail
 Perpetual Drought
 
 the Thunderstorm
+
+the Hurricane
+
+Blue Skies
+
+Pleasant Breezes
+
+the Blizzard
+
+Chill Winds
 %%%%
-profession_name
+_profession_name_
 
 Guilds
 
@@ -388,14 +567,48 @@ Guardian
 Beekeeper
 
 Gardener
+
+Soldier
+
+Farrier
+
+Engineer
+
+Barber Surgeon
+
+Journeyman
+
+Scribe
+
+Bard
+
+Undertaker
+
+Beggar
+
+Merchant
+
+Sailor
+
+Gravedigger
+
+Pirate
+
+Buccaneer
 %%%%
 # something for Xom
-game_name
+_game_name_
 
 # general games
 Fun and Games
 
 the Great Game
+
+the Game Afoot
+
+Parlour Games
+
+the Game of Kings
 
 # children's games
 Peek-a-Boo
@@ -403,6 +616,14 @@ Peek-a-Boo
 Hide-and-Seek
 
 Leapfrog
+
+Hopscotch
+
+Follow the Leader
+
+the King of the Hill
+
+Mumblety Peg
 
 # board games etc.
 the Game of Life
@@ -418,8 +639,12 @@ Jigsaw
 Whack-A-Mole
 
 Ladders and Snakes
+
+Marbles
+
+Noughts and Crosses
 %%%%
-politics_name_armour
+_politics_name_armour_
 
 the King
 
@@ -448,9 +673,32 @@ the Country
 the Suburbs
 
 the Mutiny
-%%%%
-other_armour_name
 
+the Crown
+
+the Duke
+
+the Duchess
+
+the Rabble
+
+the Prince
+
+the Princeling
+
+the Princess
+
+the Oligarchy
+
+the Cast Vote
+
+the Burgomaster
+
+the Failed Coup
+%%%%
+_other_armour_name_
+
+#unpleasantness
 w:5
 Grot
 
@@ -459,10 +707,16 @@ Grottiness
 
 Filth
 
+Slovenliness
+
 # magic
 Magic
 
 Sorcery
+
+Broken Taboos
+
+Bedevilment
 
 # other
 Crawling
@@ -494,10 +748,18 @@ Unambiguity
 the Lost Path
 
 Misanthropy
+
+Wasted Space
+
+the Other World
+
+Inevitability
 %%%%
-plain_armour_name
+_plain_armour_name_
 
 Forget-Me-Not
 
 Hero's Friend
+
+Trusted Companion
 %%%%

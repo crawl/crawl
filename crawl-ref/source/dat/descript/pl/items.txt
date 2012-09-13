@@ -708,6 +708,15 @@ lemon
 
 Żółty, kwaśny owoc.
 %%%%
+lightning rod
+
+Ten pręt strzela ciągłym wyładowaniem elektrycznym. Podtrzymać to wyładowanie
+można używając piorunogromu w kolejnych turach (jakakolwiek przerwa wyłączy
+go). Potrzebuje on chwili czasu aby się porządnie rozgrzać, tak więc moc
+podczas pierwszej tury nie jest zbyt potężna. Ponadto, zgromadzony w powietrzu
+ładunek lekko osłabia działanie piorunogromu, tak więc dla lepszego efektu
+dobrze jest machać nim pomiędzy pobliskimi celami.
+%%%%
 long sword
 
 Miecz o długim prostym ostrzu.
@@ -945,10 +954,6 @@ potion of strong poison
 
 Wyjątkowo groźna trucizna.
 %%%%
-potion of water
-
-Cudowna substancja, podstawa wszelkiego życia.
-%%%%
 quad damage
 
 Zadziwiający magiczny przedmiot w kształcie runy, jednorazowego użytku. Użyty,
@@ -1106,11 +1111,6 @@ ten świat.
 rod of destruction
 
 Ten pręt zawiera czary siejące zniszczenie.
-%%%%
-rod of smiting
-
-Ten pręt pozwala wezwać moc jakiegoś boga, znanego pewnie tylko twórcy tego
-prętu, i użyć jej do uderzenia kogoś na odległość.
 %%%%
 rod of striking
 

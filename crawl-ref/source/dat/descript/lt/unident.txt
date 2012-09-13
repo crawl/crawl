@@ -1,0 +1,43 @@
+%%%%
+amulet
+
+Talismanas, skirtas nešioti ant kaklo, įkrautas nežinomos kilmės magiškomis
+galiomis.
+%%%%
+book
+
+Magijos burtažodžių knyga. Atsargiai, kai kurie galingesni burtų tomai neskirti
+žaidimams.
+%%%%
+deck of cards
+
+Kaladė galingų magiškų kortų, išpaišytų demonų krauju. Ištrauktos jos gali
+turėti bet kokį skaičių naudingų arba pavojingų padarinių.
+%%%%
+potion
+
+Buteliukas skysčio.
+%%%%
+ring
+
+Talismanas, įkrautas nežinomos kilmės magiškomis galiomis, skirtas nešioti ant
+piršto.
+%%%%
+rod
+
+Magiška lazdelė, kurią galima laikyti rankoje ir sužadinti metant vieną iš
+keleto burtų, semiant galią iš atsinaujinančio šaltinio. Ji taip pat pakankamai
+tvirta, kad būtų naudojama kaip paprastas smogiamasis ginklas.
+%%%%
+scroll
+
+Popieriaus ritinys, padengtas magiškais užrašais.
+%%%%
+magical staff
+
+Lazda, sustiprinta nežinomos kilmės magiškomis galiomis.
+%%%%
+wand
+
+Lazda. Galbūt magiška.
+%%%%

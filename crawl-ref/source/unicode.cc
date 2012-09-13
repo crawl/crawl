@@ -113,9 +113,11 @@ int utf8towc(ucs_t *d, const char *s)
     return cnt;
 }
 
-std::wstring utf8_to_16(const char *s)
+#ifdef TARGET_OS_WINDOWS
+// don't pull in wstring templates on other systems
+wstring utf8_to_16(const char *s)
 {
-    std::wstring d;
+    wstring d;
     ucs_t c;
 
     while (int l = utf8towc(&c, s))
@@ -132,10 +134,11 @@ std::wstring utf8_to_16(const char *s)
     }
     return d;
 }
+#endif
 
-std::string utf16_to_8(const wchar_t *s)
+string utf16_to_8(const utf16_t *s)
 {
-    std::string d;
+    string d;
     ucs_t c;
 
     while (*s)
@@ -163,9 +166,9 @@ std::string utf16_to_8(const wchar_t *s)
     return d;
 }
 
-std::string utf8_to_mb(const char *s)
+string utf8_to_mb(const char *s)
 {
-    std::string d;
+    string d;
     ucs_t c;
     int l;
     mbstate_t ps;
@@ -188,9 +191,9 @@ std::string utf8_to_mb(const char *s)
     return d;
 }
 
-std::string mb_to_utf8(const char *s)
+string mb_to_utf8(const char *s)
 {
-    std::string d;
+    string d;
     wchar_t c;
     int l;
     mbstate_t ps;
@@ -215,9 +218,9 @@ std::string mb_to_utf8(const char *s)
     return d;
 }
 
-static std::string utf8_validate(const char *s)
+static string utf8_validate(const char *s)
 {
-    std::string d;
+    string d;
     ucs_t c;
     int l;
 
@@ -289,11 +292,11 @@ FileLineInput::~FileLineInput()
         fclose(f);
 }
 
-std::string FileLineInput::get_line()
+string FileLineInput::get_line()
 {
     ASSERT(f);
-    std::wstring win; // actually, these are more of a lose
-    std::string out;
+    vector<utf16_t> win;
+    string out;
     char buf[512];
     ucs_t c;
     int len;
@@ -349,7 +352,8 @@ std::string FileLineInput::get_line()
             win.push_back(c);
         }
         while (!seen_eof);
-        return utf16_to_8(win.c_str());
+        win.push_back(0);
+        return utf16_to_8(&win[0]);
 
     case BOM_UTF16BE:
         do
@@ -366,7 +370,8 @@ std::string FileLineInput::get_line()
             win.push_back(c);
         }
         while (!seen_eof);
-        return utf16_to_8(win.c_str());
+        win.push_back(0);
+        return utf16_to_8(&win[0]);
 
     case BOM_UTF32LE:
         do
@@ -411,8 +416,7 @@ std::string FileLineInput::get_line()
         return out;
     }
 
-    ASSERT(!"our memory got trampled!");
-    return "говно";
+    die("memory got trampled");
 }
 
 UTF8FileLineInput::UTF8FileLineInput(const char *name)
@@ -432,10 +436,10 @@ UTF8FileLineInput::~UTF8FileLineInput()
         fclose(f);
 }
 
-std::string UTF8FileLineInput::get_line()
+string UTF8FileLineInput::get_line()
 {
     ASSERT(f);
-    std::string out;
+    string out;
     char buf[512];
 
     do
@@ -471,7 +475,7 @@ int strwidth(const char *s)
     return w;
 }
 
-int strwidth(const std::string &s)
+int strwidth(const string &s)
 {
     return strwidth(s.c_str());
 }
@@ -513,7 +517,7 @@ char *next_glyph(char *s)
     return s_cur;
 }
 
-std::string chop_string(const char *s, int width, bool spaces)
+string chop_string(const char *s, int width, bool spaces)
 {
     const char *s0 = s;
     ucs_t c;
@@ -531,11 +535,11 @@ std::string chop_string(const char *s, int width, bool spaces)
     }
 
    if (spaces && width)
-       return std::string(s0, s - s0) + std::string(width, ' ');
-   return std::string(s0, s - s0);;
+       return string(s0, s - s0) + string(width, ' ');
+   return string(s0, s - s0);;
 }
 
-std::string chop_string(const std::string &s, int width, bool spaces)
+string chop_string(const string &s, int width, bool spaces)
 {
     return chop_string(s.c_str(), width, spaces);
 }

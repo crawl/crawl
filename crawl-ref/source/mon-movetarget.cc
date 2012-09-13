@@ -92,8 +92,10 @@ static void _set_no_path_found(monster* mon)
         {
             // You might have used a wizard power to teleport into a wall or
             // a loot chamber.
-            mprf(MSGCH_ERROR, "Monster %s failed to pathfind!",
-                 mon->name(DESC_PLAIN).c_str());
+            mprf(MSGCH_ERROR, "Monster %s failed to pathfind to (%d,%d) (%s)",
+                mon->name(DESC_PLAIN, true).c_str(),
+                env.orb_pos.x, env.orb_pos.y,
+                orb_position().origin() ? "you" : "the Orb");
         }
         else
         {
@@ -105,7 +107,7 @@ static void _set_no_path_found(monster* mon)
             // which is why we check for BRANCH_MAIN_DUNGEON above.
             // (This kind of thing is totally normal in, say, a Bazaar.)
             die("ZotDef: monster %s failed to pathfind to (%d,%d) (%s)",
-                mon->name(DESC_PLAIN).c_str(),
+                mon->name(DESC_PLAIN, true).c_str(),
                 env.orb_pos.x, env.orb_pos.y,
                 orb_position().origin() ? "you" : "the Orb");
         }
@@ -170,7 +172,7 @@ bool try_pathfind(monster* mon)
                 mon->travel_path.clear();
             mon->travel_target = MTRAV_NONE;
         }
-        return (false);
+        return false;
     }
 
     // If the target is "unreachable" (the monster already tried,
@@ -180,7 +182,7 @@ bool try_pathfind(monster* mon)
     if (target_is_unreachable(mon) && !one_chance_in(12)
         && !(mon->can_cling_to_walls() && one_chance_in(4)))
     {
-        return (false);
+        return false;
     }
 
 #ifdef DEBUG_PATHFIND
@@ -205,13 +207,13 @@ bool try_pathfind(monster* mon)
                 if (!mon->travel_path.empty())
                 {
                     mon->target = mon->travel_path[0];
-                    return (true);
+                    return true;
                 }
             }
             else if (can_go_straight(mon, mon->pos(), mon->travel_path[0]))
             {
                 mon->target = mon->travel_path[0];
-                return (true);
+                return true;
             }
         }
     }
@@ -232,7 +234,7 @@ bool try_pathfind(monster* mon)
         mprf("Distance too great, don't attempt pathfinding! (%s)",
              mon->name(DESC_PLAIN).c_str());
 #endif
-        return (false);
+        return false;
     }
 
 #ifdef DEBUG_PATHFIND
@@ -252,32 +254,31 @@ bool try_pathfind(monster* mon)
             // Okay then, we found a path.  Let's use it!
             mon->target = mon->travel_path[0];
             mon->travel_target = MTRAV_PLAYER;
-            return (true);
+            return true;
         }
     }
 
     // We didn't find a path.
     _set_no_path_found(mon);
-    return (false);
+    return false;
 }
 
 static bool _is_level_exit(const coord_def& pos)
 {
     // All types of stairs.
     if (feat_is_stair(grd(pos)))
-        return (true);
+        return true;
 
     // Teleportation and shaft traps.
     const trap_type tt = get_trap_type(pos);
     if (tt == TRAP_TELEPORT || tt == TRAP_SHAFT)
-        return (true);
+        return true;
 
-    return (false);
+    return false;
 }
 
 // Returns true if a monster left the level.
-bool pacified_leave_level(monster* mon, std::vector<level_exit> e,
-                          int e_index)
+bool pacified_leave_level(monster* mon, vector<level_exit> e, int e_index)
 {
     // If a pacified monster is leaving the level, and has reached an
     // exit (whether that exit was its target or not), handle it here.
@@ -285,13 +286,13 @@ bool pacified_leave_level(monster* mon, std::vector<level_exit> e,
     // player, make it leave the level.
     if (_is_level_exit(mon->pos())
         || (e_index != -1 && mon->pos() == e[e_index].target)
-        || distance(mon->pos(), you.pos()) >= dist_range(LOS_RADIUS * 4))
+        || distance2(mon->pos(), you.pos()) >= dist_range(LOS_RADIUS * 4))
     {
         make_mons_leave_level(mon);
-        return (true);
+        return true;
     }
 
-    return (false);
+    return false;
 }
 
 // Counts deep water twice.
@@ -305,7 +306,7 @@ static int _count_water_neighbours(coord_def p)
         else if (grd(*ai) == DNGN_DEEP_WATER)
             water_count += 2;
     }
-    return (water_count);
+    return water_count;
 }
 
 // Pick the nearest water grid that is surrounded by the most
@@ -316,11 +317,11 @@ bool find_siren_water_target(monster* mon)
 
     // Moving away could break the entrancement, so don't do this.
     if ((mon->pos() - you.pos()).rdist() >= 6)
-        return (false);
+        return false;
 
     // Already completely surrounded by deep water.
     if (_count_water_neighbours(mon->pos()) >= 16)
-        return (true);
+        return true;
 
     if (mon->travel_target == MTRAV_SIREN)
     {
@@ -330,7 +331,7 @@ bool find_siren_water_target(monster* mon)
              targ_pos.x, targ_pos.y, (int) (mon->pos() - targ_pos).rdist());
 #endif
         if ((mon->pos() - targ_pos).rdist() > 2)
-            return (true);
+            return true;
     }
 
     int best_water_count = 0;
@@ -387,11 +388,11 @@ bool find_siren_water_target(monster* mon)
     }
 
     if (!best_water_count)
-        return (false);
+        return false;
 
     // We're already optimally placed.
     if (best_target == mon->pos())
-        return (true);
+        return true;
 
     monster_pathfind mp;
 #ifdef WIZARD
@@ -419,11 +420,11 @@ bool find_siren_water_target(monster* mon)
             // Okay then, we found a path.  Let's use it!
             mon->target = mon->travel_path[0];
             mon->travel_target = MTRAV_SIREN;
-            return (true);
+            return true;
         }
     }
 
-    return (false);
+    return false;
 }
 
 bool find_wall_target(monster* mon)
@@ -445,7 +446,7 @@ bool find_wall_target(monster* mon)
                  mon->name(DESC_PLAIN, true).c_str(),
                  targ_pos.x, targ_pos.y, (int) (mon->pos() - targ_pos).rdist());
 #endif
-            return (true);
+            return true;
         }
 
         mon->travel_path.clear();
@@ -485,7 +486,7 @@ bool find_wall_target(monster* mon)
     }
 
     if (best_dist == INT_MAX || !in_bounds(best_target))
-        return (false);
+        return false;
 
     monster_pathfind mp;
 #ifdef WIZARD
@@ -510,10 +511,10 @@ bool find_wall_target(monster* mon)
             // Okay then, we found a path.  Let's use it!
             mon->target = mon->travel_path[0];
             mon->travel_target = MTRAV_WALL;
-            return (true);
+            return true;
         }
     }
-    return (false);
+    return false;
 }
 
 // Returns true if further handling neeeded.
@@ -537,7 +538,7 @@ static bool _handle_monster_travelling(monster* mon)
             mpr("We reached the end of our path: stop travelling.");
 #endif
             mon->travel_target = MTRAV_NONE;
-            return (true);
+            return true;
         }
         else
         {
@@ -545,7 +546,7 @@ static bool _handle_monster_travelling(monster* mon)
 #ifdef DEBUG_PATHFIND
             mprf("Next waypoint: (%d, %d)", mon->target.x, mon->target.y);
 #endif
-            return (false);
+            return false;
         }
     }
 
@@ -609,7 +610,7 @@ static bool _handle_monster_travelling(monster* mon)
                 else
                 {
                     mon->travel_target = MTRAV_NONE;
-                    return (true);
+                    return true;
                 }
             }
             else
@@ -617,14 +618,14 @@ static bool _handle_monster_travelling(monster* mon)
                 // Or just forget about the whole thing.
                 mon->travel_path.clear();
                 mon->travel_target = MTRAV_NONE;
-                return (true);
+                return true;
             }
         }
     }
 
     // Else, we can see the next waypoint and are making good progress.
     // Carry on, then!
-    return (false);
+    return false;
 }
 
 static bool _choose_random_patrol_target_grid(monster* mon)
@@ -637,11 +638,11 @@ static bool _choose_random_patrol_target_grid(monster* mon)
     // just remain there until next turn when this function is called
     // again.
     if (intel == I_PLANT && coinflip())
-        return (true);
+        return true;
 
     // If there's no chance we'll find the patrol point, quit right away.
-    if (distance(mon->pos(), mon->patrol_point) > dist_range(2 * LOS_RADIUS))
-        return (false);
+    if (distance2(mon->pos(), mon->patrol_point) > dist_range(2 * LOS_RADIUS))
+        return false;
 
     // Can the monster see the patrol point from its current position?
     const bool patrol_seen = mon->see_cell(mon->patrol_point);
@@ -650,7 +651,7 @@ static bool _choose_random_patrol_target_grid(monster* mon)
     {
         // Really stupid monsters won't even try to get back into the
         // patrol zone.
-        return (false);
+        return false;
     }
 
     // While the patrol point is in easy reach, monsters of insect/plant
@@ -740,7 +741,7 @@ static bool _choose_random_patrol_target_grid(monster* mon)
             mon->target = *ri;
     }
 
-    return (count_grids);
+    return count_grids;
 }// Returns true if further handling neeeded.
 static bool _handle_monster_patrolling(monster* mon)
 {
@@ -767,7 +768,7 @@ static bool _handle_monster_patrolling(monster* mon)
                 // Stop patrolling.
                 mon->patrol_point.reset();
                 mon->travel_target = MTRAV_NONE;
-                return (true);
+                return true;
             }
         }
         else
@@ -805,7 +806,7 @@ static bool _handle_monster_patrolling(monster* mon)
                 // Stop patrolling.
                 mon->patrol_point.reset();
                 mon->travel_target = MTRAV_NONE;
-                return (true);
+                return true;
             }
         }
     }
@@ -819,7 +820,7 @@ static bool _handle_monster_patrolling(monster* mon)
 #endif
     }
 
-    return (false);
+    return false;
 }
 
 void set_random_target(monster* mon)
@@ -835,6 +836,9 @@ void set_random_target(monster* mon)
         if (!in_bounds(newtarget))
             continue;
 
+        if (!summon_can_attack(mon, newtarget))
+            continue;
+
         mon->target = newtarget;
         break;
     }
@@ -845,12 +849,12 @@ static monster * _active_band_leader(monster * mon)
 {
     // Not a band member
     if (!mon->props.exists("band_leader"))
-        return (NULL);
+        return NULL;
 
     // Try to find our fearless leader.
     unsigned leader_mid = mon->props["band_leader"].get_int();
 
-    return (monster_by_mid(leader_mid));
+    return monster_by_mid(leader_mid);
 }
 
 // Return true if a target still needs to be set. If returns false, mon->target
@@ -860,7 +864,7 @@ static bool _band_wander_target(monster * mon)
     int dist_thresh = LOS_RADIUS + HERD_COMFORT_RANGE;
     monster * band_leader = _active_band_leader(mon);
     if (band_leader == NULL)
-        return (true);
+        return true;
 
     int leader_dist = grid_distance(mon->pos(), band_leader->pos());
     if (leader_dist > dist_thresh)
@@ -876,16 +880,16 @@ static bool _band_wander_target(monster * mon)
                 // Okay then, we found a path.  Let's use it!
                 mon->target = mon->travel_path[0];
                 mon->travel_target = MTRAV_PATROL;
-                return (false);
+                return false;
             }
             else
-                return (true);
+                return true;
         }
 
-        return (true);
+        return true;
     }
 
-    std::vector<coord_def> positions;
+    vector<coord_def> positions;
 
     for (radius_iterator r_it(mon->get_los_no_trans(), mon); r_it; ++r_it)
     {
@@ -898,19 +902,19 @@ static bool _band_wander_target(monster * mon)
     }
 
     if (positions.empty())
-        return (true);
+        return true;
 
     mon->target = positions[random2(positions.size())];
 
     ASSERT(in_bounds(mon->target));
-    return (false);
+    return false;
 }
 
 // Returns true if a movement target still needs to be set
 static bool _herd_wander_target(monster * mon)
 {
-    std::vector<monster_iterator> friends;
-    std::map<int, std::vector<coord_def> > distance_positions;
+    vector<monster_iterator> friends;
+    map<int, vector<coord_def> > distance_positions;
 
     int dist_thresh = LOS_RADIUS + HERD_COMFORT_RANGE;
 
@@ -927,7 +931,7 @@ static bool _herd_wander_target(monster * mon)
     }
 
     if (friends.empty())
-        return (true);
+        return true;
 
     for (radius_iterator r_it(mon->get_los_no_trans(), true) ; r_it; ++r_it)
     {
@@ -946,14 +950,14 @@ static bool _herd_wander_target(monster * mon)
         if (count > 0)
             distance_positions[count].push_back(*r_it);
     }
-    std::map<int, std::vector<coord_def> >::reverse_iterator back =
+    map<int, vector<coord_def> >::reverse_iterator back =
         distance_positions.rbegin();
 
     if (back == distance_positions.rend())
-        return (true);
+        return true;
 
     mon->target = back->second[random2(back->second.size())];
-    return (false);
+    return false;
 }
 
 static bool _herd_ok(monster * mon)
@@ -993,7 +997,7 @@ static bool _band_ok(monster * mon)
     monster * leader = _active_band_leader(mon);
 
     if (!leader)
-        return (true);
+        return true;
 
     int g_dist = grid_distance(leader->pos(), mon->pos());
 
@@ -1002,10 +1006,10 @@ static bool _band_ok(monster * mon)
     if (g_dist < HERD_COMFORT_RANGE && mon->see_cell_no_trans(leader->pos())
         || g_dist >= (LOS_RADIUS + HERD_COMFORT_RANGE))
     {
-        return (true);
+        return true;
     }
 
-    return (false);
+    return false;
 }
 
 
@@ -1048,7 +1052,7 @@ void check_wander_target(monster* mon, bool isPacified)
     }
 }
 
-static void _find_all_level_exits(std::vector<level_exit> &e)
+static void _find_all_level_exits(vector<level_exit> &e)
 {
     e.clear();
 
@@ -1062,8 +1066,7 @@ static void _find_all_level_exits(std::vector<level_exit> &e)
     }
 }
 
-int mons_find_nearest_level_exit(const monster* mon,
-                                 std::vector<level_exit> &e,
+int mons_find_nearest_level_exit(const monster* mon, vector<level_exit> &e,
                                  bool reset)
 {
     if (e.empty() || reset)
@@ -1077,7 +1080,7 @@ int mons_find_nearest_level_exit(const monster* mon,
         if (e[i].unreachable)
             continue;
 
-        int dist = distance(mon->pos(), e[i].target);
+        int dist = distance2(mon->pos(), e[i].target);
 
         if (old_dist == -1 || old_dist >= dist)
         {
@@ -1094,18 +1097,18 @@ int mons_find_nearest_level_exit(const monster* mon,
         }
     }
 
-    return (retval);
+    return retval;
 }
 
 void set_random_slime_target(monster* mon)
 {
     // Strictly neutral slimes will go for the nearest item.
     const coord_def pos = mon->pos();
-    int mindist = LOS_MAX_RADIUS_SQ + 1;
+    int mindist = LOS_RADIUS_SQ + 1;
     for (radius_iterator ri(mon->get_los()); ri; ++ri)
     {
         // XXX: an iterator that spirals out would be nice.
-        if (!in_bounds(*ri) || distance(pos, *ri) >= mindist)
+        if (!in_bounds(*ri) || distance2(pos, *ri) >= mindist)
             continue;
         if (testbits(env.pgrid(*ri), FPROP_NO_JIYVA))
             continue;
@@ -1116,7 +1119,7 @@ void set_random_slime_target(monster* mon)
             if (is_item_jelly_edible(item))
             {
                 mon->target = *ri;
-                mindist = distance(pos, *ri);
+                mindist = distance2(pos, *ri);
                 break;
             }
         }

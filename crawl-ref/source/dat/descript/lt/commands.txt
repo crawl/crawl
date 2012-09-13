@@ -1,0 +1,162 @@
+%%%%
+CMD_REST
+
+Gyti ir šiek tiek apieškoti
+%%%%
+CMD_REST verbose
+
+Praleisti iki 100 ėjimų atgauti sveikatai, atsistatyti maną ir/arba paieškai.
+Poilsis nutraukiamas, kai tik pasirodo priešiškas monstras.
+%%%%
+CMD_EXPLORE
+
+Automatiškai tyrinėti dabartinį lygį
+%%%%
+CMD_EXPLORE verbose
+
+Leidžia jūsų veikėjui autopilotu keliauti link neištirtų dabartinio lygio plotų
+ir pakeliui rinkti automatiškai pakeliamus daiktus. Keliavimas sustoja kai tik
+pasirodo priešiškas monstras, taip pat norint pranešti apie rastus daiktus ar
+ypatybes.
+%%%%
+CMD_INTERLEVEL_TRAVEL
+
+Keliauti į tolimus lygius
+%%%%
+CMD_INTERLEVEL_TRAVEL verbose
+
+Automatiškai keliauti į tolimus lygius. Keliavimas nutraukiamas pasirodančių
+baisūnų.
+%%%%
+CMD_USE_ABILITY
+
+Naudoti dieviškus arba įgimtus gebėjimus
+%%%%
+CMD_PRAY
+
+Melstis savo dievybei
+%%%%
+CMD_PRAY verbose
+
+Jei jūsų dievybė mėgsta aukas, lavonas ar koks kitas daiktas bus pasiūlyti kaip
+auka. Be to, jei stovite ant altoriaus, galite pradėti garbinti atitinkamą
+dievybę. Kai kurių dievybių atveju, malda taip pat turi tam tikrų kitų
+padarinių.
+%%%%
+CMD_SEARCH_STASHES
+
+Ieškoti daiktų/ypatybių.
+%%%%
+CMD_SEARCH_STASHES verbose
+
+Ieškoti kažkur matytų daiktų arba ypatybių ir tada link jų keliauti.
+%%%%
+CMD_REPLAY_MESSAGES
+
+Iš naujo perskaityti paskutinius pranešimus
+%%%%
+CMD_RESISTS_SCREEN
+
+Parodyti veikėjo apžvalgą
+%%%%
+CMD_RESISTS_SCREEN verbose
+
+Parodo informaciją apie žinomus atsparumus, gebėjimus, aprangos statistiką ir
+t.t.
+%%%%
+CMD_DISPLAY_OVERMAP
+
+Parodyti požemio planą
+%%%%
+CMD_DISPLAY_OVERMAP verbose
+
+Parodo iki šiol aptiktų įėjimų į atšakas, parduotuvių ir kitų ypatybių vietas.
+%%%%
+CMD_DISPLAY_RELIGION
+
+Parodyti religinę būseną
+%%%%
+CMD_DISPLAY_RELIGION verbose
+
+Parodo tavo dievybės polinkius ir nemėgstamus dalykus, elgimasį, ttavo
+dabartinę religinę padėtį ir dieviškus gebėjimus.
+%%%%
+CMD_DISPLAY_MUTATIONS
+
+Parodyti mutacijas
+%%%%
+CMD_DISPLAY_SKILLS
+
+Tvarkyti įgūdžius
+%%%%
+CMD_DISPLAY_CHARACTER_STATUS
+
+Parodyti veikėjo būseną
+%%%%
+CMD_DISPLAY_CHARACTER_STATUS verbose
+
+Parodo aktyvius sustiprinimus ir kelis kitus dalykus.
+%%%%
+CMD_DISPLAY_KNOWN_OBJECTS
+
+Atrastų daiktų tipų sąrašas
+%%%%
+CMD_SAVE_GAME_NOW
+
+Išsaugoti ir išeiti
+%%%%
+CMD_SAVE_GAME_NOW verbose
+
+Išsaugo žaidimą ir išeina. Pratęsus žaidimą, išsaugota byla ištrinama.
+%%%%
+CMD_EDIT_PLAYER_TILE
+
+Pakeisti žaidėjo paveikslėlį
+%%%%
+CMD_EDIT_PLAYER_TILE verbose
+
+Pakeisti aprangos ir rūšies paveikslėlį rodomą ant žaidėjo.
+%%%%
+CMD_DISPLAY_COMMANDS
+
+Žaidimo pagalba
+%%%%
+CMD_DISPLAY_COMMANDS verbose
+
+Komandų, pasirinkimų ir t.t. sąrašas
+%%%%
+CMD_CHARACTER_DUMP
+
+Įrašyti veikėjo pažangą
+%%%%
+CMD_CHARACTER_DUMP verbose
+
+Įrašyti didelį informacijos apie veikėją kiekį į bylą 'žaidėjovardas.txt' morgo
+kataloge, vėlesnei peržiūrai. Įrašoma pagrindinė statistika, apranga, burtai,
+įgūdžiai, užrašai ir t.t.
+%%%%
+CMD_AUTOFIGHT
+
+Smogti artimiausiam monstrui
+%%%%
+CMD_AUTOFIGHT verbose
+
+Judėti link artimiausio priešiško monstro ir pulti jį su rankose laikomu
+ginklu.
+%%%%
+CMD_AUTOFIGHT_NOMOVE
+
+Smogti gretimam monstrui
+%%%%
+CMD_AUTOFIGHT_NOMOVE verbose
+
+Pulti šalia esantį monstrą su rankose laikomu ginklu.
+%%%%
+CMD_SEARCH
+
+Palūkėti vieną ėjimą
+%%%%
+CMD_SEARCH verbose
+
+Praleisti vieną ėjimą laukiant, ilsintis ir ieškant.
+%%%%

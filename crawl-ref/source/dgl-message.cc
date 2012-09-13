@@ -7,6 +7,7 @@
 #include "files.h"
 #include "format.h"
 #include "initfile.h"
+#include "libutil.h"
 #include "message.h"
 #include "notes.h"
 #include "options.h"
@@ -18,14 +19,14 @@
 
 static struct stat mfilestat;
 
-static void _show_message_line(std::string line)
+static void _show_message_line(string line)
 {
-    const std::string::size_type sender_pos = line.find(":");
-    if (sender_pos == std::string::npos)
+    const string::size_type sender_pos = line.find(":");
+    if (sender_pos == string::npos)
         mpr(line.c_str());
     else
     {
-        std::string sender = line.substr(0, sender_pos);
+        string sender = line.substr(0, sender_pos);
         line = line.substr(sender_pos + 1);
         trim_string(line);
         formatted_string fs;
@@ -34,8 +35,9 @@ static void _show_message_line(std::string line)
         fs.textcolor(LIGHTGREY);
         fs.cprintf("%s", line.c_str());
         formatted_mpr(fs, MSGCH_PLAIN, 0);
-        take_note(Note(NOTE_MESSAGE, MSGCH_PLAIN, 0,
-                       (sender + ": " + line).c_str()));
+        if (Options.note_chat_messages)
+            take_note(Note(NOTE_MESSAGE, MSGCH_PLAIN, 0,
+                           (sender + ": " + line).c_str()));
     }
 }
 

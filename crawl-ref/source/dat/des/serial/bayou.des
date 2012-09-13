@@ -23,7 +23,7 @@ DEPTH:  D, Snake, Lair
 MONS:   plant
 SUBST:  ? = .WW2
 SUBST:  1 = 11.t
-KFEAT:  2 = swamp_tree
+KFEAT:  2 = mangrove
 MAP
     1..1..1
    1..1??....1
@@ -59,7 +59,7 @@ DEPTH:  D, Snake, Lair
 MONS:   plant
 SUBST:  ? = WWtt2
 SUBST:  . = ..W12
-KFEAT:  t = swamp_tree
+KFEAT:  t = mangrove
 KMONS:  2 = plant
 KFEAT:  2 = W
 MAP
@@ -82,7 +82,7 @@ TAGS:  coolio_serial_bayou allow_dup extra
 DEPTH:  D, Snake, Lair
 SUBST:  1 = 1W.
 SUBST:  W = WWWt
-KFEAT:  t = swamp_tree
+KFEAT:  t = mangrove
 KMONS:  1 = plant
 KFEAT:  1 = W
 MAP
@@ -98,7 +98,7 @@ TAGS:  coolio_serial_bayou allow_dup extra
 DEPTH: D, Snake, Lair
 SUBST: W = WWW1.
 SUBST: . = ..t
-KFEAT: t = swamp_tree
+KFEAT: t = mangrove
 KMONS: 1 = plant
 KFEAT: 1 = W
 MAP
@@ -115,7 +115,7 @@ SUBST: ? = Wt
 SUBST: V = Www
 SUBST: W = WWWW1
 SUBST: ! = W..
-KFEAT: t = swamp_tree
+KFEAT: t = mangrove
 KMONS: 1 = plant
 KFEAT: 1 = W
 MAP
@@ -145,7 +145,7 @@ SUBST:  ? = Wt
 SUBST:  V = Www
 SUBST:  W = WWW1
 SUBST:  ! = W1..
-KFEAT:  t = swamp_tree
+KFEAT:  t = mangrove
 KMONS:  1 = plant
 KFEAT:  1 = W
 MAP
@@ -173,7 +173,7 @@ SUBST:  ? = Wt
 SUBST:  V = Www
 SUBST:  W = WWW1
 SUBST:  ! = W1..
-KFEAT:  t = swamp_tree
+KFEAT:  t = mangrove
 KMONS:  1 = plant
 KFEAT:  1 = W
 MAP
@@ -192,7 +192,7 @@ TAGS:   coolio_serial_bayou transparent extra
 DEPTH:  D, Snake, Lair
 SUBST:  ? = W11.
 SUBST:  w = wwt
-KFEAT:  t = swamp_tree
+KFEAT:  t = mangrove
 KMONS:  1 = plant
 KFEAT:  1 = W
 MAP
@@ -220,7 +220,7 @@ DEPTH: D, Snake, Lair
 SUBST: ? = Wt
 SUBST: V = Www
 SUBST: W = WWWW1
-KFEAT: t = swamp_tree
+KFEAT: t = mangrove
 KMONS: 1 = plant
 KFEAT: 1 = W
 FTILE: . = floor_dirt
@@ -255,7 +255,7 @@ DEPTH: D, Snake, Lair
 SUBST: ? = Wt
 SUBST: V = Www
 SUBST: W = WWWW1
-KFEAT: t = swamp_tree
+KFEAT: t = mangrove
 KMONS: 1 = plant
 KFEAT: 1 = W
 MAP
@@ -282,7 +282,7 @@ TAGS:  coolio_serial_bayou transparent
 DEPTH: D, Snake, Lair
 SUBST: ? = W1tt
 SUBST: W = WWW.
-KFEAT: t = swamp_tree
+KFEAT: t = mangrove
 KMONS: 1 = plant
 KFEAT: 1 = W
 MAP

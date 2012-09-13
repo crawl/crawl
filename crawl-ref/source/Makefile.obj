@@ -150,7 +150,6 @@ mon-stealth.o \
 mon-stuff.o \
 mon-transit.o \
 mon-util.o \
-mon_resist_def.o \
 monster.o \
 mutation.o \
 newgame.o \
@@ -250,6 +249,7 @@ tilebuf.o \
 tiledgnbuf.o \
 tilefont.o \
 tilereg.o \
+tilereg-abl.o \
 tilereg-cmd.o \
 tilereg-crt.o \
 tilereg-dgn.o \
@@ -261,6 +261,7 @@ tilereg-mem.o \
 tilereg-menu.o \
 tilereg-mon.o \
 tilereg-msg.o \
+tilereg-popup.o \
 tilereg-skl.o \
 tilereg-spl.o \
 tilereg-stat.o \

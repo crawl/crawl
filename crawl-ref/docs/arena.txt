@@ -1,23 +1,23 @@
 The crawl arena is a special mode during which the player is absent and
 monsters fight each other, useful for both testing/debugging and for
-entertainment.  It can be invoked on the command line like this:
+entertainment. It can be invoked on the command line like this:
 
     crawl -arena "kobold v goblin"
 
 Which will cause one kobold to fight one goblin, with crawl shutting down once
-one of them has won.  To be considered valid, a monster's name has to fully
+one of them has won. To be considered valid, a monster's name has to fully
 match its definition, e.g. "Blork the orc" rather than simply "Blork".
 
 To make them fight for three rounds you can do:
 
     crawl -arena "t:3 kobold v goblin"
 
-You can make monsters fight for at most 99 rounds.  You can stop the
+You can make monsters fight for at most 99 rounds. You can stop the
 arena simulation early by pressing Escape, 'q' or Control-G (though if
 the arena has lots of monsters it might take a few second before it
 stops).
 
-You can also give each side more than one monster.  For example:
+You can also give each side more than one monster. For example:
 
     crawl -arena "rat, giant cockroach v kobold, goblin"
 
@@ -27,7 +27,7 @@ other team is still alive.
 
 Some monsters have a band (that is, a group of monsters) that will be
 generated with them during normal play. You can use the suffix "band" to
-make a monster appear with its band (if one exists).  For example:
+make a monster appear with its band (if one exists). For example:
 
     crawl -arena "Margery band v Saint Roka band"
 
@@ -67,7 +67,7 @@ and summon monsters with the Shadow Creatures spell:
 
 If you want a *specific* set of monsters to fight each other endlessly,
 you can use the "respawn" tag, which will cause the initally placed
-monsters to be replaced when they die.  For example,
+monsters to be replaced when they die. For example,
 
     crawl -arena "respawn rat v rat"
 
@@ -116,11 +116,11 @@ string which specifies the monsters:
 The parameters include:
 
 * "arena:name" lets you pick the name of the arena to place the monsters
-      in (defaults to "arena:default").  See source/dat/arena.des for
+      in (defaults to "arena:default"). See source/dat/arena.des for
       a list.
 
 * no_force_ai: The monsters in the arena are somewhat smarter than they are
-      than when they're facing the player.  This parameter removes that
+      than when they're facing the player. This parameter removes that
       extra intelligence.
 
 * names: Causes all non-unique monsters to be given random names.
@@ -138,7 +138,7 @@ The parameters include:
       which are forbidden from the arena by default.
 
 * "arena_place:place" sets the place used when determining which monsters the
-      spell Shadow Creatures uses.  So "arena:Lair:5" would make it
+      spell Shadow Creatures uses. So "arena:Lair:5" would make it
       summon the types of monsters you'd find on the 5th lair of the Lair.
       It also controls what type of monster "random" places, assuming
       that "random_uniques" isn't used.
@@ -164,7 +164,7 @@ The parameters include:
       any monster using Shadow Creatures will summon uniques.
 
 * "ban_glyphs:ABC" prevents monsters with the listed ASCII glyphs from
-      being placed in the arena.  For instance, "ban_glyphs:&C" prevents
+      being placed in the arena. For instance, "ban_glyphs:&C" prevents
       demon lords and giants/cyclopses/titans/etc from being placed.
 
 * "delay:N" allows the delay between turns to be specified on the command
@@ -174,7 +174,7 @@ The parameters include:
       random miscast happen to it.
 
 * respawn: When one of the originally replaced monsters is killed it will
-      be replaced by the same type of monster.  This allows for an endless
+      be replaced by the same type of monster. This allows for an endless
       fight between exactly specified factions, rather than the random
       kind you get by pitting two test spawners against each other.
 

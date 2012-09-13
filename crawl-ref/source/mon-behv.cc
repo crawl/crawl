@@ -40,7 +40,7 @@ static void _guess_invis_foe_pos(monster* mon)
     const actor* foe          = mon->get_foe();
     const int    guess_radius = mons_sense_invis(mon) ? 3 : 2;
 
-    std::vector<coord_def> possibilities;
+    vector<coord_def> possibilities;
 
     // NOTE: This depends on ignoring clouds, so that cells hidden by
     // opaque clouds are included as a possibility for the foe's location.
@@ -65,7 +65,7 @@ static void _mon_check_foe_invalid(monster* mon)
         if (actor *foe = mon->get_foe())
         {
             const monster* foe_mons = foe->as_monster();
-            if (foe_mons->alive()
+            if (foe_mons->alive() && summon_can_attack(mon, foe)
                 && (mon->friendly() != foe_mons->friendly()
                     || mon->neutral() != foe_mons->neutral()))
             {
@@ -106,7 +106,7 @@ static void _set_firing_pos(monster* mon, coord_def target)
     const int current_distance = mon->pos().distance_from(target);
 
     // We don't consider getting farther away unless already very close.
-    const int max_range = std::max(ideal_range, current_distance);
+    const int max_range = max(ideal_range, current_distance);
 
     int best_distance = INT_MAX;
     int best_distance_to_ideal_range = INT_MAX;
@@ -133,11 +133,11 @@ static void _set_firing_pos(monster* mon, coord_def target)
 
         if (distance < best_distance
             || distance == best_distance
-               && std::abs(range - ideal_range) < best_distance_to_ideal_range)
+               && abs(range - ideal_range) < best_distance_to_ideal_range)
         {
             best_pos = p;
             best_distance = distance;
-            best_distance_to_ideal_range = std::abs(range - ideal_range);
+            best_distance_to_ideal_range = abs(range - ideal_range);
         }
     }
 
@@ -196,8 +196,8 @@ void handle_behaviour(monster* mon)
     bool isScared   = mon->has_ench(ENCH_FEAR);
     bool isPacified = mon->pacified();
     bool patrolling = mon->is_patrolling();
-    static std::vector<level_exit> e;
-    static int                     e_index = -1;
+    static vector<level_exit> e;
+    static int                e_index = -1;
 
     // Zotdef rotting
     if (crawl_state.game_is_zotdef())
@@ -351,6 +351,10 @@ void handle_behaviour(monster* mon)
         if (mon->foe == MHITNOT && crawl_state.game_is_zotdef())
             mon->foe = MHITYOU;
     }
+
+    // Friendly summons will come back to the player if they go out of sight.
+    if (!summon_can_attack(mon))
+        mon->target = you.pos();
 
     // Monsters do not attack themselves. {dlb}
     if (mon->foe == mon->mindex())
@@ -812,15 +816,18 @@ static bool _mons_check_foe(monster* mon, const coord_def& p,
                             bool friendly, bool neutral)
 {
     if (!in_bounds(p))
-        return (false);
+        return false;
 
     if (p == you.pos())
     {
         // The player: We don't return true here because
         // otherwise wandering monsters will always
         // attack the player.
-        return (false);
+        return false;
     }
+
+    if (!summon_can_attack(mon, p))
+        return false;
 
     if (monster* foe = monster_at(p))
     {
@@ -833,10 +840,10 @@ static bool _mons_check_foe(monster* mon, const coord_def& p,
             && (crawl_state.game_is_zotdef() || !mons_is_firewood(foe)))
                 // Zotdef allies take out firewood
         {
-            return (true);
+            return true;
         }
     }
-    return (false);
+    return false;
 }
 
 // Choose random nearest monster as a foe.
@@ -851,7 +858,7 @@ static void _set_nearest_monster_foe(monster* mon)
 
     for (int k = 1; k <= LOS_RADIUS; ++k)
     {
-        std::vector<coord_def> monster_pos;
+        vector<coord_def> monster_pos;
         for (int i = -k; i <= k; ++i)
             for (int j = -k; j <= k; (abs(i) == k ? j++ : j += 2*k))
             {
@@ -892,16 +899,15 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
 
     const beh_type old_behaviour = mon->behaviour;
 
-    int fleeThreshold = std::min(mon->max_hit_points / 4, 20);
+    int fleeThreshold = min(mon->max_hit_points / 4, 20);
 
     bool isSmart          = (mons_intel(mon) > I_ANIMAL);
-    bool isMobile         = !mons_is_stationary(mon);
     bool wontAttack       = mon->wont_attack();
     bool sourceWontAttack = false;
     bool setTarget        = false;
     bool breakCharm       = false;
     bool was_sleeping     = mon->asleep();
-    std::string msg;
+    string msg;
     int src_idx           = src ? src->mindex() : MHITNOT; // AXE ME
 
     if (src)
@@ -1140,7 +1146,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         break;
 
     case ME_HURT:
-        // Smart monsters, undead, plants, and nonliving monsters cannot flee.
+        // Monsters with the M_FLEES flag can flee at low HP.
         // Cannot flee if cornered.
         // Monster can flee if HP is less than 1/4 maxhp or less than 20 hp
         // (whichever is lower). Chance starts quite low, and is near 100% at 1.
@@ -1151,11 +1157,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
         //   at 19 hp: 5% chance of fleeing
         //   at 10 hp: 50% chance of fleeing
         //   (chance increases by 5% for every hp lost.)
-        if (!isSmart && isMobile
-            && mon->holiness() != MH_UNDEAD
-            && mon->holiness() != MH_PLANT
-            && mon->holiness() != MH_NONLIVING
-            && !mons_class_flag(mon->type, M_NO_FLEE)
+        if (mons_class_flag(mon->type, M_FLEES)
             && !mons_is_cornered(mon)
             && !mon->berserk()
             && x_chance_in_y(fleeThreshold - mon->hit_points, fleeThreshold))

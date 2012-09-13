@@ -5,18 +5,18 @@ NORETURN void fail(PRINTF(0, ));
 NORETURN void sysfail(PRINTF(0, ));
 NORETURN void corrupted(PRINTF(0, ));
 
-class ext_fail_exception : public std::exception
+class ext_fail_exception : public exception
 {
 public:
-    ext_fail_exception(const std::string &_msg) : msg(_msg) {}
+    ext_fail_exception(const string &_msg) : msg(_msg) {}
     ~ext_fail_exception() throw() {}
-    const std::string msg;
+    const string msg;
 };
 
 class corrupted_save : public ext_fail_exception
 {
 public:
-    corrupted_save(const std::string &_msg) : ext_fail_exception(_msg) {}
+    corrupted_save(const string &_msg) : ext_fail_exception(_msg) {}
 };
 
 extern bool CrawlIsCrashing;

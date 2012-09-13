@@ -21,7 +21,7 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
         var bg = 0;
         var attr = (col & 0xF0) >> 4;
         var param = (col & 0xF000) >> 12;
-        return { fg: fg, bg: bg, attr: attr };
+        return { fg: fg, bg: bg, attr: attr, param: param };
     }
 
     function term_colour_apply_attributes(col)
@@ -86,8 +86,8 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
 
         set_cell_size: function(w, h)
         {
-            this.cell_width = w;
-            this.cell_height = h;
+            this.cell_width = Math.floor(w);
+            this.cell_height = Math.floor(h);
             this.x_scale = w / 32;
             this.y_scale = h / 32;
         },
@@ -362,18 +362,19 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
         // Much of the following is more or less directly copied from tiledgnbuf.cc
         draw_blood_overlay: function(x, y, cell, is_wall)
         {
-            if (cell.liquefied)
+            if (cell.liquefied && !is_wall)
             {
                 offset = cell.flv.s % dngn.tile_count(dngn.LIQUEFACTION);
                 this.draw_dngn(dngn.LIQUEFACTION + offset, x, y);
             }
             else if (cell.bloody)
-
             {
                 cell.bloodrot = cell.bloodrot || 0;
                 var basetile;
                 if (is_wall)
                 {
+                    basetile = cell.old_blood ? dngn.WALL_OLD_BLOOD : dngn.WALL_BLOOD_S;
+                    basetile += dngn.tile_count(basetile) * cell.bloodrot;
                     basetile = dngn.WALL_BLOOD_S + dngn.tile_count(dngn.WALL_BLOOD_S)
                         * cell.bloodrot;
                 }
@@ -401,7 +402,7 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
 
             if (cell.swtree && bg_idx > dngn.DNGN_UNSEEN)
                 this.draw_dngn(dngn.DNGN_SHALLOW_WATER, x, y);
-            else if (bg_idx >= dngn.DNGN_WAX_WALL)
+            else if (bg_idx >= dngn.DNGN_FIRST_TRANSPARENT)
                 this.draw_dngn(cell.flv.f, x, y); // f = floor
 
             // Draw blood beneath feature tiles.
@@ -442,9 +443,6 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
 
             if (bg_idx > dngn.DNGN_UNSEEN)
             {
-                if (bg.WAS_SECRET)
-                    this.draw_dngn(dngn.DNGN_DETECTED_SECRET_DOOR, x, y);
-
                 // Draw blood on top of wall tiles.
                 if (bg_idx <= dngn.WALL_MAX)
                     this.draw_blood_overlay(x, y, cell, bg_idx >= dngn.FLOOR_MAX);
@@ -497,6 +495,8 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
                         this.draw_dngn(dngn.UMBRA, x, y);
                     if (cell.orb_glow)
                         this.draw_dngn(dngn.ORB_GLOW + cell.orb_glow - 1, x, y);
+                    if (cell.quad_glow)
+                        this.draw_dngn(dngn.QUAD_GLOW, x, y);
 
                     // Apply the travel exclusion under the foreground if the cell is
                     // visible.  It will be applied later if the cell is unseen.
@@ -580,11 +580,11 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
 
             var status_shift = 0;
             if (fg.MIMIC_INEPT)
-                this.draw_icon(icons.MIMIC_INEPT, x, y);
+                this.draw_icon(icons.INEPT_MIMIC, x, y);
             else if (fg.MIMIC)
                 this.draw_icon(icons.MIMIC, x, y);
             else if (fg.MIMIC_RAVEN)
-                this.draw_icon(icons.MIMIC_RAVENOUS, x, y);
+                this.draw_icon(icons.RAVENOUS_MIMIC, x, y);
 
             if (fg.BERSERK)
             {
@@ -645,6 +645,21 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
                 this.draw_icon(icons.CONSTRICTED, x, y, -status_shift, 0);
                 status_shift += 13;
             }
+            if (fg.GLOWING)
+            {
+                this.draw_icon(icons.GLOWING, x, y, -status_shift, 0);
+                status_shift += 10;
+            }
+            if (fg.SLOWED)
+            {
+                this.draw_icon(icons.SLOWED, x, y, -status_shift, 0);
+                status_shift += 11;
+            }
+            if (fg.PAIN_MIRROR)
+            {
+                this.draw_icon(icons.PAIN_MIRROR, x, y, -status_shift, 0);
+                status_shift += 13;
+            }
 
             if (fg.ANIM_WEP)
                 this.draw_icon(icons.ANIMATED_WEAPON, x, y);
@@ -684,6 +699,17 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
             else if (bg.CURSOR3)
             {
                 this.draw_icon(icons.CURSOR3, x, y);
+            }
+
+            if (cell.tt & 0xF)
+            {
+                this.draw_icon(icons.TRAVEL_PATH_FROM +
+                               (cell.tt & 0xF) - 1, x, y);
+            }
+            if (cell.tt & 0xF0)
+            {
+                this.draw_icon(icons.TRAVEL_PATH_TO +
+                               ((cell.tt & 0xF0) >> 4) - 1, x, y);
             }
 
             if (fg.MDAM_LIGHT)

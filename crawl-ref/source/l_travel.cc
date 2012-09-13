@@ -22,12 +22,12 @@ LUAFN(l_set_exclude)
     s.y = luaL_checkint(ls, 2);
     const coord_def p = player2grid(s);
     if (!in_bounds(p))
-        return (0);
-    int r = LOS_MAX_RADIUS;
+        return 0;
+    int r = LOS_RADIUS;
     if (lua_gettop(ls) > 2)
         r = luaL_checkint(ls, 3);
     set_exclude(p, r);
-    return (0);
+    return 0;
 }
 
 LUAFN(l_del_exclude)
@@ -37,21 +37,21 @@ LUAFN(l_del_exclude)
     s.y = luaL_checkint(ls, 2);
     const coord_def p = player2grid(s);
     if (!in_bounds(p))
-        return (0);
+        return 0;
     del_exclude(p);
-    return (0);
+    return 0;
 }
 
 LUAFN(l_feature_is_traversable)
 {
-    const std::string &name = luaL_checkstring(ls, 1);
+    const string &name = luaL_checkstring(ls, 1);
     const dungeon_feature_type feat = dungeon_feature_by_name(name);
     PLUARET(boolean, feat_is_traversable_now(feat));
 }
 
 LUAFN(l_find_deepest_explored)
 {
-    const std::string &branch = luaL_checkstring(ls, 1);
+    const string &branch = luaL_checkstring(ls, 1);
     const level_id lid(str_to_branch(branch), 1);
     if (lid.branch == NUM_BRANCHES)
         luaL_error(ls, "Bad branch name: '%s'", branch.c_str());

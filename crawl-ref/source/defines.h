@@ -31,25 +31,22 @@
 typedef uint32_t ucs_t;
 
 // length of a single zot defence cycle
-#define CYCLE_LENGTH 100
+#define ZOTDEF_CYCLE_LENGTH 100
 
 // Waiting time before monsters arrive
-#define CYCLE_INTERVAL 50
+#define ZOTDEF_CYCLE_INTERVAL 50
 
 // peak size of a random spawn
-#define SPAWN_SIZE 1
+#define ZOTDEF_SPAWN_SIZE 1
 
 // Extra power to assign to a boss monster
-#define BOSS_MONSTER_EXTRA_POWER 5
+#define ZOTDEF_BOSS_EXTRA_POWER 5
 
 // number of waves to pass between bosses generated with a rune
-#define FREQUENCY_OF_RUNES 7
+#define ZOTDEF_RUNE_FREQ 7
 
 // max size of inventory array {dlb}:
 #define ENDOFPACK 52
-
-// minimum value for strength required on armour and weapons
-const int STR_REQ_THRESHOLD = 10;
 
 // Max ghosts on a level.
 const int MAX_GHOSTS = 10;
@@ -78,7 +75,7 @@ enum extra_monster_index_type
 // size of Pan monster sets. Also used for wave data in ZotDef.
 #define MAX_MONS_ALLOC 20
 
-#define MAX_SUBTYPES    50
+#define MAX_SUBTYPES   60
 
 // max size of item list {dlb}:
 #define MAX_ITEMS 2000
@@ -129,17 +126,14 @@ const int LABYRINTH_BORDER = 4;
 #define Y_BOUND_2               (GYM - BOUNDARY_BORDER)
 #define Y_WIDTH                 (Y_BOUND_2 - Y_BOUND_1 + 1)
 
-// default LOS radius
-#define LOS_RADIUS 8
-// default LOS radius squared, for comparison with distance()
-#define LOS_RADIUS_SQ (LOS_RADIUS * LOS_RADIUS + 1)
 // maximal LOS radius
-#define LOS_MAX_RADIUS LOS_RADIUS
-#define LOS_MAX_RADIUS_SQ (LOS_MAX_RADIUS * LOS_MAX_RADIUS + 1)
+#define LOS_RADIUS 8
+// maximal LOS radius squared, for comparison with distance()
+#define LOS_RADIUS_SQ (LOS_RADIUS * LOS_RADIUS + 1)
 // maximal horizontal or vertical LOS range:
 //   a quadrant needs to fit inside an 2D array with
 //     0 <= x, y <= LOS_MAX_RANGE
-#define LOS_MAX_RANGE LOS_MAX_RADIUS
+#define LOS_MAX_RANGE LOS_RADIUS
 #define ENV_SHOW_OFFSET LOS_MAX_RANGE
 #define ENV_SHOW_DIAMETER (ENV_SHOW_OFFSET * 2 + 1)
 
@@ -241,8 +235,6 @@ const int ANTITRAIN_PENALTY = 2;
 #define berserk_div(x) div_rand_round((x) * 2, 3)
 
 #define MAX_MONSTER_HP 10000
-
-#define MAX_CONSTRICT 8
 
 // some shortcuts:
 #define menv   env.mons

@@ -8,7 +8,7 @@
 
 NAME:   serial_gnoll_camp
 DEPTH:  D:5-10
-TAGS:   layout_open layout_caves layout_cross
+TAGS:   layout_open layout_caves layout_cross extra luniq_serial
 CHANCE: 10%
 {{
   local c = 4 + crawl.random2(3)
@@ -221,7 +221,7 @@ MAP
 ............
 ENDMAP
 
-NAME:   gnoll_camp_mini_secret_sergeant
+NAME:   gnoll_camp_mini_sergeant
 TAGS:   serial_gnoll_camp patrolling
 WEIGHT: 5
 MONS:   gnoll / nothing w:2
@@ -233,8 +233,8 @@ MAP
 .cx...x...1.xc.
 .cx.>.x..11.xc.
 .cx...x.1...xc.
-.cx.2.=.....xc.
-..=xxxxxxxxxx..
+.cx.2.+.....xc.
+..xxxxxxxxxxx..
 ...ccccccccc...
 ...............
 ENDMAP

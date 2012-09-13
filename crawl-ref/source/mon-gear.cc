@@ -207,6 +207,15 @@ static void _give_potion(monster* mon, int level)
     }
 }
 
+static bool make_item_for_monster(
+    monster* mons,
+    object_class_type base,
+    int subtype,
+    int level,
+    item_make_species_type race,
+    int allow_uniques,
+    iflags_t flags);
+
 static item_make_species_type _give_weapon(monster* mon, int level,
                                            bool melee_only = false,
                                            bool give_aux_melee = true,
@@ -258,7 +267,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
             break;
         }
         else
-            return (item_race);
+            return item_race;
         break;
 
     case MONS_HOBGOBLIN:
@@ -271,7 +280,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
             item.sub_type  = WPN_CLUB;
         }
         else
-            return (item_race);
+            return item_race;
         break;
 
     case MONS_GOBLIN:
@@ -293,7 +302,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
             item.sub_type  = (coinflip() ? WPN_DAGGER : WPN_CLUB);
         }
         else
-            return (item_race);
+            return item_race;
         break;
 
     case MONS_WIGHT:
@@ -407,7 +416,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
     case MONS_GNOLL_SHAMAN:
         item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
-        item.sub_type  = random_choose(WPN_STAFF, WPN_CLUB, WPN_WHIP, -1);
+        item.sub_type  = random_choose(WPN_CLUB, WPN_WHIP, -1);
         break;
 
     case MONS_GNOLL_SERGEANT:
@@ -486,7 +495,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
                 0);
         }
         else
-            return (item_race);
+            return item_race;
         break;
 
     case MONS_TERENCE:
@@ -1073,10 +1082,8 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         if (one_chance_in(25))
         {
             dprf("generating a rare rod");
-            const int rand_staff = random2(NUM_STAVES - STAFF_FIRST_ROD)
-                                   + STAFF_FIRST_ROD;
-            item.base_type = OBJ_STAVES;
-            item.sub_type  = rand_staff;
+            item.base_type = OBJ_RODS;
+            item.sub_type  = random2(NUM_RODS);
         }
         else
         {
@@ -1098,9 +1105,23 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         break;
 
     case MONS_FANNAR:
-        item_race = MAKE_ITEM_NO_RACE;
-        item.base_type = OBJ_STAVES;
-        item.sub_type = STAFF_COLD;
+        force_item = true;
+        if (one_chance_in(3))
+        {
+            item.base_type = OBJ_STAVES;
+            item.sub_type = STAFF_COLD;
+        }
+        else
+        {
+            item.base_type = OBJ_WEAPONS;
+            item.sub_type = WPN_QUARTERSTAFF;
+            set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FREEZING);
+            set_equip_race(item, ISFLAG_ELVEN);
+            // this might not be the best place for this logic, but:
+            make_item_for_monster(mon, OBJ_JEWELLERY, RING_ICE,
+                                  0, MAKE_ITEM_NO_RACE, 1, ISFLAG_KNOW_TYPE);
+        }
+        item.flags |= ISFLAG_KNOW_TYPE;
         break;
 
     case MONS_KOBOLD_DEMONOLOGIST:
@@ -1179,6 +1200,8 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item.base_type = OBJ_STAVES;
         item.sub_type = STAFF_POISON;
         item.flags    |= ISFLAG_KNOW_TYPE;
+        if (one_chance_in(100) && !get_unique_item_status(UNRAND_OLGREB))
+            make_item_unrandart(item, UNRAND_OLGREB);
         break;
 
     case MONS_CEREBOV:
@@ -1302,7 +1325,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
 
     // Only happens if something in above switch doesn't set it. {dlb}
     if (item.base_type == OBJ_UNASSIGNED)
-        return (item_race);
+        return item_race;
 
     if (!force_item && mons_is_unique(mon->type))
     {
@@ -1323,7 +1346,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
                                                 level, item_race));
 
     if (thing_created == NON_ITEM)
-        return (item_race);
+        return item_race;
 
     // Copy temporary item into the item array if were forcing it, since
     // items() won't have done it for us.
@@ -1334,7 +1357,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
     if (melee_only && (i.base_type != OBJ_WEAPONS || is_range_weapon(i)))
     {
         destroy_item(thing_created);
-        return (item_race);
+        return item_race;
     }
 
     if (force_item)
@@ -1342,10 +1365,14 @@ static item_make_species_type _give_weapon(monster* mon, int level,
 
     _give_monster_item(mon, thing_created, force_item);
 
-    if (give_aux_melee && (i.base_type != OBJ_WEAPONS || is_range_weapon(i)))
+    if (give_aux_melee &&
+        ((i.base_type != OBJ_WEAPONS && i.base_type != OBJ_STAVES)
+        || is_range_weapon(i)))
+    {
         _give_weapon(mon, level, true, false);
+    }
 
-    return (item_race);
+    return item_race;
 }
 
 // Hands out ammunition fitting the monster's launcher (if any), or else any
@@ -1412,9 +1439,6 @@ static void _give_ammo(monster* mon, int level,
 
             case MONS_JOSEPH:
                 mitm[thing_created].quantity += 2 + random2(7);
-                mitm[thing_created].plus += 2 + random2(2);
-                if (mitm[thing_created].plus > 6)
-                    mitm[thing_created].plus = 6;
                 break;
 
             default:
@@ -1557,20 +1581,23 @@ static bool make_item_for_monster(
     int subtype,
     int level,
     item_make_species_type race = MAKE_ITEM_NO_RACE,
-    int allow_uniques = 0)
+    int allow_uniques = 0,
+    iflags_t flags = 0)
 {
     const int bp = get_mitm_slot();
     if (bp == NON_ITEM)
-        return (false);
+        return false;
 
     const int thing_created =
         items(allow_uniques, base, subtype, true, level, race);
 
     if (thing_created == NON_ITEM)
-        return (false);
+        return false;
+
+    mitm[thing_created].flags |= flags;
 
     _give_monster_item(mons, thing_created);
-    return (true);
+    return true;
 }
 
 static void _give_shield(monster* mon, int level)
@@ -2023,6 +2050,7 @@ static void _give_armour(monster* mon, int level, bool spectral_orcs)
         item.plus = 1 + coinflip();
         set_item_ego_type(item, OBJ_ARMOUR, SPARM_COLD_RESISTANCE);
         set_equip_race(item, ISFLAG_ELVEN);
+        item.flags |= ISFLAG_KNOW_TYPE;
         break;
     }
 

@@ -170,13 +170,18 @@ public:
     virtual void reset_view_for_resize(const coord_def &m_windowsz) = 0;
     virtual void set_transform(const GLW_3VF &trans, const GLW_3VF &scale) = 0;
     virtual void reset_transform() = 0;
+#ifdef __ANDROID__
+    virtual void fixup_gl_state() = 0;
+#endif
+
 
     // Texture-specific functinos
     virtual void delete_textures(size_t count, unsigned int *textures) = 0;
     virtual void generate_textures(size_t count, unsigned int *textures) = 0;
     virtual void bind_texture(unsigned int texture) = 0;
     virtual void load_texture(unsigned char *pixels, unsigned int width,
-                              unsigned int height, MipMapOptions mip_opt) = 0;
+                              unsigned int height, MipMapOptions mip_opt,
+                              int xoffset=-1, int yoffset=-1) = 0;
 
     // Debug
 #ifdef ASSERTS

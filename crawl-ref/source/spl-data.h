@@ -912,6 +912,7 @@ struct spell_desc
      false
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_FULSOME_DISTILLATION, "Fulsome Distillation",
      SPTYP_TRANSMUTATION | SPTYP_NECROMANCY,
@@ -924,6 +925,7 @@ struct spell_desc
      false,
      true
 },
+#endif
 
 {
     SPELL_POISON_ARROW, "Poison Arrow",
@@ -1187,6 +1189,7 @@ struct spell_desc
      true
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_INSULATION, "Insulation",
      SPTYP_CHARMS | SPTYP_AIR,
@@ -1199,6 +1202,7 @@ struct spell_desc
      false,
      true
 },
+#endif
 
 {
     SPELL_CURE_POISON, "Cure Poison",
@@ -1237,19 +1241,6 @@ struct spell_desc
      NULL,
      false,
      true
-},
-
-{
-    SPELL_PROJECTED_NOISE, "Projected Noise",
-     SPTYP_HEXES,
-     SPFLAG_NONE,
-     2,
-     0,
-     LOS_RADIUS, LOS_RADIUS,
-     0,
-     NULL,
-     false,
-     false
 },
 
 {
@@ -1604,6 +1595,7 @@ struct spell_desc
      false
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_SEE_INVISIBLE, "See Invisible",
      SPTYP_CHARMS,
@@ -1616,6 +1608,7 @@ struct spell_desc
      false,
      true
 },
+#endif
 
 {
     SPELL_PHASE_SHIFT, "Phase Shift",
@@ -1734,6 +1727,7 @@ struct spell_desc
      false
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_EVAPORATE, "Evaporate",
      SPTYP_FIRE | SPTYP_TRANSMUTATION,
@@ -1746,6 +1740,7 @@ struct spell_desc
      true,
      false
 },
+#endif
 
 {
     SPELL_FRAGMENTATION, "Lee's Rapid Deconstruction",
@@ -2635,21 +2630,6 @@ struct spell_desc
      false
 },
 
-#if TAG_MAJOR_VERSION == 33
-{
-    SPELL_SUMMON_GREATER_HOLY, "Summon Greater Holy",
-     SPTYP_SUMMONING,
-     SPFLAG_MONSTER,
-     9,
-     0,
-     -1, -1,
-     0,
-     NULL,
-     false,
-     false
-},
-#endif
-
 {
     SPELL_HOLY_WORD, "Holy Word",
      SPTYP_NONE,
@@ -2894,6 +2874,32 @@ struct spell_desc
      0,
      NULL,
      true,
+     false
+},
+
+{
+    SPELL_THUNDERBOLT, "Thunderbolt",
+     SPTYP_CONJURATION | SPTYP_AIR,
+     SPFLAG_DIR_OR_TARGET,
+     2, // 2-5
+     200,
+     6, 6,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
+    SPELL_SUMMON_MINOR_DEMON, "Summon Minor Demon",
+     SPTYP_SUMMONING,
+     SPFLAG_UNHOLY | SPFLAG_BATTLE,
+     2,
+     200,
+     -1, -1,
+     0,
+     NULL,
+     false,
      false
 },
 

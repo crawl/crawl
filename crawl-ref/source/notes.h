@@ -61,8 +61,7 @@ struct Note
           const char* d = 0);
     void save(writer& outf) const;
     void load(reader& inf);
-    std::string describe(bool when = true, bool where = true,
-                          bool what = true) const;
+    string describe(bool when = true, bool where = true, bool what = true) const;
     void check_milestone() const;
 
     NOTE_TYPES type;
@@ -70,11 +69,11 @@ struct Note
     int turn;
     unsigned short packed_place;
 
-    std::string name;
-    std::string desc;
+    string name;
+    string desc;
 };
 
-extern std::vector<Note> note_list;
+extern vector<Note> note_list;
 void activate_notes(bool active);
 bool notes_are_active();
 void take_note(const Note& note, bool force = false);

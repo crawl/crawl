@@ -531,7 +531,7 @@ the Shining One holy evil
 
 Świetlisty woła: „Twe grzechy będą pamiętane aż do końca świata!”
 
-Świetlisty szepcze: „Śiły światła spalą cię na popiół.”
+Świetlisty szepcze: „Siły światła spalą cię na popiół.”
 %%%%
 # a non-good worshipper or atheist has killed a holy being
 the Shining One holy other

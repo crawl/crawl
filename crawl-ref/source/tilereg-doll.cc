@@ -96,8 +96,7 @@ void DollEditRegion::render()
     const int item_line      = 2;
     const int edit_doll_line = 5;
     const int doll_line      = 8;
-    const int info_offset =
-        left_gutter + std::max(max_show, (int)NUM_MAX_DOLLS) + 1;
+    const int info_offset = left_gutter + max(max_show, (int)NUM_MAX_DOLLS) + 1;
 
     const int center_x = left_gutter + max_show / 2;
 
@@ -132,7 +131,7 @@ void DollEditRegion::render()
         max_part = tile_player_count(idx) - 1;
     }
 
-    int show = std::min(max_show, max_part);
+    int show = min(max_show, max_part);
     int half_show = show / 2;
     for (int i = -half_show; i <= show - half_show; i++)
     {
@@ -216,12 +215,12 @@ void DollEditRegion::render()
 
     glmanager->reset_transform();
 
-    std::string item_str = part_name;
+    string item_str = part_name;
     float item_name_x = left_gutter * 32.0f;
     float item_name_y = (item_line + 1) * 32.0f;
     m_font_buf.add(item_str, VColour::white, item_name_x, item_name_y);
 
-    std::string doll_name;
+    string doll_name;
     doll_name = make_stringf("Doll index %d / %d", m_doll_idx, NUM_MAX_DOLLS - 1);
     float doll_name_x = left_gutter * 32.0f;
     float doll_name_y = (doll_line + 1) * 32.0f;
@@ -259,7 +258,7 @@ void DollEditRegion::render()
     };
 
     // Add current doll information:
-    std::string info_str;
+    string info_str;
     float info_x = info_offset * 32.0f;
     float info_y = 0.0f + m_font->char_height();
 

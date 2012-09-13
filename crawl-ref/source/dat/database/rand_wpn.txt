@@ -10,17 +10,17 @@
 # for more details.
 ######################################################
 %%%%
-power_or_anger
+_power_or_anger_
 
-@power_name@
-
-w:7
-@conflict_name@
+@_power_name_@
 
 w:7
-@anger_name@
+@_conflict_name_@
+
+w:7
+@_anger_name_@
 %%%%
-power_name
+_power_name_
 
 Power
 
@@ -43,8 +43,16 @@ Dominance
 Victory
 
 Intimidation
+
+Grandeur
+
+Mastery
+
+Superiority
+
+Magnificence
 %%%%
-conflict_name
+_conflict_name_
 
 Conflict
 
@@ -57,8 +65,14 @@ Division
 Doubt
 
 Internal Strife
+
+Contention
+
+Dissent
+
+Quarrel
 %%%%
-anger_name
+_anger_name_
 
 Anger
 
@@ -73,8 +87,16 @@ Wrath
 Brutal Revenge
 
 Vengeance
+
+Hatred
+
+Indignation
+
+Outrage
+
+Scorn
 %%%%
-battle_or_war
+_battle_or_war_
 
 Battle
 
@@ -85,6 +107,16 @@ War
 Eternal War
 
 the Eternal Warrior
+
+the Onslaught
+
+Skirmishing
+
+the Endless March
+
+Plunder
+
+Ravage
 
 # Lemuel's Suggestions
 the Warrior
@@ -105,10 +137,14 @@ Blood
 
 Fear
 
+Massacring
+
 # was Pain, clashing with the brand
 Insufficient Pleasure
 
 Agony
+
+Trauma
 
 # Lemuel's suggestion
 Hacking and Slashing
@@ -122,6 +158,8 @@ Dullness
 
 Precise Incision
 
+Laceration
+
 #collateral effects
 Mourning
 
@@ -129,6 +167,7 @@ Death's Door
 
 the Grave
 %%%%
+# used from C++'s side
 death_or_doom
 
 # death
@@ -152,7 +191,11 @@ Certain Death
 
 Uncertain Death
 
+Exquisite Death
+
 Pain and Death
+
+Untimely Demise
 
 # doom
 Doom
@@ -171,6 +214,8 @@ Evisceration
 
 Extermination
 
+Extinguishment
+
 # pain and misery
 Infinite Pain
 
@@ -181,19 +226,27 @@ Dismemberment
 Terror
 
 Misery
+
+Woe
+
+Excruciating Pain
+
+Exquisite Torment
+
+Anguish
 %%%%
-strategy_or_justice
+_strategy_or_justice_
 
 w:2
-@strategy_name@
+@_strategy_name_@
 
 w:4
-@valour_name@
+@_valour_name_@
 
 w:3
-@justice_name@
+@_justice_name_@
 %%%%
-strategy_name
+_strategy_name_
 
 #strategy
 Defence
@@ -207,8 +260,16 @@ Reinforcement
 Expedience
 
 Optimality
+
+Overwhelming Force
+
+Subterfuge
+
+Strategic Superiority
+
+Guile
 %%%%
-valour_name
+_valour_name_
 
 Honour
 
@@ -239,8 +300,18 @@ Valiance
 Courage
 
 Eternal Vigilance
+
+Gallantry
+
+Tenacity
+
+True Grit
+
+Indomitability
+
+Conscience
 %%%%
-justice_name
+_justice_name_
 
 Tender Mercy
 
@@ -267,8 +338,14 @@ Wrongful Imprisonment
 Corporal Punishment
 
 Capital Punishment
+
+Forgiveness
+
+Trial by Ordeal
+
+Blind Justice
 %%%%
-diviner_name
+_diviner_name_
 
 Augurer
 
@@ -279,8 +356,16 @@ Soothsayer
 Seeker
 
 Visionary
+
+Oracle
+
+Fortune-Teller
+
+Sybil
+
+Seer
 %%%%
-people_name
+_people_name_
 
 King
 
@@ -300,9 +385,24 @@ Genius
 
 Coward
 
-@diviner_name@
+Philosopher
+
+Hero
+
+Traitor
+
+Enemy
+
+Priest
+
+Madman
+
+Scavenger
+
+w:15
+@_diviner_name_@
 %%%%
-weapon_animal
+_weapon_animal_
 
 # insects
 Pill Bug
@@ -319,6 +419,10 @@ Gnat
 
 Blowfly
 
+Dragonfly
+
+Firefly
+
 # arachnids
 Spider
 
@@ -327,10 +431,18 @@ Scorpion
 # amphibians and reptiles
 Rattle-Snake
 
+Viper
+
+Asp
+
 # fish
 Shark
 
 Lamprey
+
+Eel
+
+Salmon
 
 # birds
 Penguin
@@ -339,31 +451,79 @@ Puffin
 
 Fulmar
 
+Dove
+
+Hawk
+
+Hummingbird
+
+Owl
+
+Stork
+
+Vulture
+
 # mammals
+w:5
 Weasel
 
 Goat
 
 Whale
+
+Ass
+
+Badger
+
+Bear
+
+Boar
+
+Fox
+
+Rat
+
+w:5
+Stoat
+
+Tiger
+
+Wolf
 %%%%
 # plants and fungi
-plant_name
+_plant_name_
 
+#plants
 Eggplant
 
 Turnip
 
+Chickpea
+
+Lettuce
+
+Radish
+
+Sugar Beet
+
+Shallot
+
+Tomato
+
+# er...aren't whelks gastropods?
 Whelk
 
+#fungus and similar
 Mushroom
 
 Toadstool
 
-# ???
 Puffball
+
+Slime-mold
 %%%%
 # undead and evil beings
-evil_stuff
+_evil_stuff_
 
 Curses
 
@@ -396,13 +556,49 @@ Infection
 Corruption
 
 Demonkind
+
+Abuse
+
+the Dead
+
+Defilement
+
+the Evil Eye
+
+the Ghost
+
+the Living Dead
+
+Nightmares
+
+Perversion
+
+Putrescence
+
+the Reaper
+
+the Spectre
+
+the Unliving
+
+the Unspeakable One
+
+the Wraith
 %%%%
 # catastrophes etc.
-catastrophe_name
+_catastrophe_name_
 
 the Inferno
 
 Earthquakes
+
+Cataclysm
+
+Drought
+
+Floods
+
+Ruination
 
 # the Apocalypse
 the Apocalypse
@@ -413,6 +609,12 @@ World's End
 
 Ragnarok
 
+Annihilation
+
+the End of Times
+
+World Downfall
+
 # the Apocalyptic Riders (except Death)
 Pestilence
 
@@ -420,7 +622,7 @@ Plague
 
 Famine
 %%%%
-chaos_name
+_chaos_name_
 
 Chaos
 
@@ -453,8 +655,30 @@ Change
 Extremism
 
 Impermanence
+
+Constant Reorganization
+
+Contradiction
+
+Disarray
+
+Disintegration
+
+Dissolution
+
+Distraction
+
+Forced Transition
+
+the Fray
+
+Revolt
+
+Tumult
+
+Upheaval
 %%%%
-balance_or_order
+_balance_or_order_
 
 the Middle
 
@@ -493,8 +717,22 @@ Linearity
 Law
 
 Order
+
+Accord
+
+Conformity
+
+Due Proportion
+
+Equilibrium
+
+the Establishment
+
+the Final Decision
+
+Propriety
 %%%%
-economics_or_politics
+_economics_or_politics_
 
 # economics
 Inflation
@@ -504,6 +742,40 @@ Deflation
 Supply
 
 Demand
+
+Amortization
+
+Animal Spirits
+
+Bankruptcy
+
+Collusion
+
+Compound Interest
+
+Currency
+
+Debt
+
+Dividends
+
+Exchange
+
+Growth
+
+Income
+
+Luxury
+
+Profit
+
+Risk Management
+
+Taxation
+
+Valuable Assets
+
+Welfare
 
 # politics
 the Imperium
@@ -523,6 +795,30 @@ Wealth
 Poverty
 
 Reapportionment
+
+Checks and Balances
+
+the Common Good
+
+Conservatism
+
+the Dark Horse
+
+the Demagogue
+
+Governance
+
+the Lame Duck
+
+the Lesser Evil
+
+Popular Demand
+
+Radicalism
+
+Royalism
+
+the Silent Majority
 
 # akrasiac patch
 Impeachment
@@ -544,7 +840,7 @@ Termination
 
 Sequestration
 %%%%
-place_name
+_place_name_
 
 the World
 
@@ -557,6 +853,8 @@ the Trees
 the Volcano
 
 the Equator
+
+the Poles
 
 the Old World
 
@@ -577,8 +875,40 @@ the Maze
 the Pit
 
 the Eternal Void
+
+Beyond
+
+the Blessed Realm
+
+the Desert
+
+Distant Shores
+
+the Hidden Vale
+
+the Hills
+
+the Known World
+
+the Land of Plenty
+
+the Other Side
+
+Parts Unknown
+
+Somewhere Else
+
+the Shore
+
+the Tundras
+
+the Valley
+
+the Valley of Death
+
+the Wasteland
 %%%%
-discomfort_weapon
+_discomfort_weapon_
 
 Unpleasantness
 
@@ -603,8 +933,28 @@ Annoyance
 Anxiety
 
 Urgency
+
+Awkwardness
+
+Dissatisfaction
+
+Foul Odors
+
+Flawed Execution
+
+Gloom
+
+Inconvenience
+
+Irritation
+
+Malaise
+
+Stickiness
+
+Uncomfortable Rashes
 %%%%
-mental_illness_weapon
+_mental_illness_weapon_
 
 Psychosis
 
@@ -621,14 +971,28 @@ Obsession
 Compulsion
 
 Fatigue
-%%%%
-philosophy_or_science
 
-@philosophy_name@
+Exhibitionism
 
-@science_name@
+Insomnia
+
+Oenomania
+
+Perfectionism
+
+Pyromania
+
+Satyriasis
+
+Suicidal Tendencies
 %%%%
-philosophy_name
+_philosophy_or_science_
+
+@_philosophy_name_@
+
+@_science_name_@
+%%%%
+_philosophy_name_
 
 Monotheism
 
@@ -679,8 +1043,36 @@ Nihilism
 Pragmatism
 
 Idealism
+
+Activism
+
+Altruism
+
+Anarchy
+
+Dogma
+
+Egalitarianism
+
+Elitism
+
+Ethics
+
+Fallacy
+
+Fanaticism
+
+Free Will
+
+Liberalism
+
+Morality
+
+Mysticism
+
+Rationality
 %%%%
-science_name
+_science_name_
 
 Reason
 
@@ -715,8 +1107,34 @@ Quantum Leap
 Gravity
 
 Rotation
+
+the Big Bang
+
+the Boiling Point
+
+Classification
+
+Evolution
+
+Experimentation
+
+Focus
+
+Inference
+
+Inquiry
+
+Objectivity
+
+Subjectivity
+
+Variability
+
+Patterns
+
+Theory
 %%%%
-item_name
+_item_name_
 
 # items
 Orb
@@ -733,23 +1151,71 @@ Key
 
 Ring
 
+Chain
+
+Coin
+
+Cup
+
+Feather
+
+Girdle
+
+Horn
+
+Pillar
+
+Purse
+
+Scroll
+
+Ship
+
+Tent
+
+Vase
+
+Vine
+
+Walnut
+
+Wheel
+
+Yoke
+
 # body parts
 Heart
 
 Brain
 
 Tooth
+
+Foot
+
+Hand
+
+Head
+
+Mouth
+
+Throat
+
+Kidney
 %%%%
-magic_name
+_magic_name_
 
 the Magi
 
 the Archmagi
 
 the Warrior-Mage
+
+the Hierophant
+
+the Sage
 %%%%
 # substances
-substance_name
+_substance_name_
 
 Bread
 
@@ -766,6 +1232,30 @@ Ash
 Slime
 
 Bile
+
+Bodily Humours
+
+Cobwebs
+
+Cheese
+
+Dried Tears
+
+Dung
+
+Ointment
+
+Paper
+
+Rubbish
+
+Salt
+
+Saltpetre
+
+Sharkskin
+
+Terra Cotta
 
 # these don't really fit
 Mana
@@ -807,11 +1297,31 @@ No Interval
 
 Interdependent Arising
 
+the Blind Eye
+
+the Briny Deep
+
+Broken Luck
+
+Entrepreneurial Spirit
+
+the Vendetta
+
+the Empty Page
+
+the Final Chapter
+
+Hard Scrabble
+
+Red Wine
+
+Undoing
+
 # akrasiac patch
 Irrepressible Laughter
 %%%%
 # single word monster names, to allow for combinations like <Monster>slayer
-short_monster_name
+short_monster_name_
 
 Dragon
 
@@ -834,10 +1344,16 @@ Testudine
 
 w:1
 Pirate
-%%%%
-monster_name
 
-@short_monster_name@
+Beast
+
+Demon
+
+Goblin
+%%%%
+_monster_name_
+
+@short_monster_name_@
 
 @player_species@
 
@@ -847,12 +1363,13 @@ Killer Klown
 
 Orb Guardian
 %%%%
-short_killer_name
+_short_killer_name_
 
 bane
 
 slayer
 %%%%
+# used from the C++ side
 killer_name
 
 's Bane
@@ -864,16 +1381,27 @@ killer_name
 's Foe
 
 's Regret
+
+'s Curse
+
+'s Peril
 %%%%
-long_killer_name
+_long_killer_name_
 
 's Death Toll
 
 's Funeral
 
 's Nightmare
+
+'s Undoing
+
+'s Demise
+
+w:1
+'s Looming Annihilation
 %%%%
-real_weapon_name
+_real_weapon_name_
 
 Grim Tooth
 
@@ -928,13 +1456,13 @@ Undertaker
 
 Embalmer
 
-Trog's @anger_name@
+Trog's @_anger_name_@
 
 Hellblazer
 
 Hell-Harrower
 %%%%
-joke_weapon_name
+_joke_weapon_name_
 
 Secret Weapon
 
@@ -944,7 +1472,7 @@ Thing
 
 Mud Pie of Death
 
-Xom's @xom_esteem@
+Xom's @_xom_esteem_@
 
 String
 
@@ -1003,23 +1531,23 @@ ETAOIN SHRDLU
 
 Lorem Ipsum
 %%%%
-plain_weapon_name
+_plain_weapon_name_
 
 w:15
-@short_monster_name@@short_killer_name@
+@short_monster_name_@@_short_killer_name_@
 
 w:8
-@monster_name@@killer_name@
+@_monster_name_@@killer_name@
 
 w:2
-@short_monster_name@@long_killer_name@
+@short_monster_name_@@_long_killer_name_@
 
 w:1
 @player_death@
 
 w:15
-@real_weapon_name@
+@_real_weapon_name_@
 
 w:5
-@joke_weapon_name@
+@_joke_weapon_name_@
 %%%%

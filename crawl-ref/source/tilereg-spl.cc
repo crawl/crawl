@@ -44,10 +44,8 @@ void SpellRegion::draw_tag()
 
     const spell_type spell = (spell_type) idx;
     char* failure = failure_rate_to_string(spell_fail(spell));
-    std::string desc = make_stringf("%d MP    %s    (%s)",
-                                    spell_difficulty(spell),
-                                    spell_title(spell),
-                                    failure);
+    string desc = make_stringf("%d MP    %s    (%s)", spell_mana(spell),
+                               spell_title(spell), failure);
     free(failure);
     draw_desc(desc.c_str());
 }
@@ -56,7 +54,7 @@ int SpellRegion::handle_mouse(MouseEvent &event)
 {
     unsigned int item_idx;
     if (!place_cursor(event, item_idx))
-        return (0);
+        return 0;
 
     const spell_type spell = (spell_type) m_items[item_idx].idx;
     if (event.button == MouseEvent::LEFT)
@@ -73,10 +71,10 @@ int SpellRegion::handle_mouse(MouseEvent &event)
         redraw_screen();
         return CK_MOUSE_CMD;
     }
-    return (0);
+    return 0;
 }
 
-bool SpellRegion::update_tab_tip_text(std::string &tip, bool active)
+bool SpellRegion::update_tab_tip_text(string &tip, bool active)
 {
     const char *prefix1 = active ? "" : "[L-Click] ";
     const char *prefix2 = active ? "" : "          ";
@@ -85,20 +83,20 @@ bool SpellRegion::update_tab_tip_text(std::string &tip, bool active)
                        prefix1, "Display memorised spells",
                        prefix2, "Cast spells");
 
-    return (true);
+    return true;
 }
 
-bool SpellRegion::update_tip_text(std::string& tip)
+bool SpellRegion::update_tip_text(string& tip)
 {
     if (m_cursor == NO_CURSOR)
-        return (false);
+        return false;
 
     unsigned int item_idx = cursor_index();
     if (item_idx >= m_items.size() || m_items[item_idx].empty())
-        return (false);
+        return false;
 
     int flag = m_items[item_idx].flag;
-    std::vector<command_type> cmd;
+    vector<command_type> cmd;
     if (flag & TILEI_FLAG_INVALID)
         tip = "You cannot cast this spell right now.";
     else
@@ -111,22 +109,22 @@ bool SpellRegion::update_tip_text(std::string& tip)
     cmd.push_back(CMD_DISPLAY_SPELLS);
     insert_commands(tip, cmd);
 
-    return (true);
+    return true;
 }
 
-bool SpellRegion::update_alt_text(std::string &alt)
+bool SpellRegion::update_alt_text(string &alt)
 {
     if (m_cursor == NO_CURSOR)
-        return (false);
+        return false;
 
     unsigned int item_idx = cursor_index();
     if (item_idx >= m_items.size() || m_items[item_idx].empty())
-        return (false);
+        return false;
 
     if (m_last_clicked_item >= 0
         && item_idx == (unsigned int) m_last_clicked_item)
     {
-        return (false);
+        return false;
     }
 
     int idx = m_items[item_idx].idx;
@@ -141,12 +139,12 @@ bool SpellRegion::update_alt_text(std::string &alt)
 
     proc.get_string(alt);
 
-    return (true);
+    return true;
 }
 
 int SpellRegion::get_max_slots()
 {
-    return (MAX_KNOWN_SPELLS);
+    return MAX_KNOWN_SPELLS;
 }
 
 void SpellRegion::pack_buffers()
@@ -204,7 +202,7 @@ void SpellRegion::update()
     if (mx * my == 0)
         return;
 
-    const unsigned int max_spells = std::min(22, mx*my);
+    const unsigned int max_spells = min(22, mx*my);
 
     for (int i = 0; i < 52; ++i)
     {
@@ -216,9 +214,9 @@ void SpellRegion::update()
         InventoryTile desc;
         desc.tile     = tileidx_spell(spell);
         desc.idx      = (int) spell;
-        desc.quantity = spell_difficulty(spell);
+        desc.quantity = spell_mana(spell);
 
-        std::string temp;
+        string temp;
         if (is_prevented_teleport(spell)
             || spell_is_uncastable(spell, temp)
             || spell_mana(spell) > you.magic_points)

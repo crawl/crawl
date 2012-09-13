@@ -40,7 +40,7 @@ public:
 private:
     CLua *lua;
 
-    typedef std::map<lua_State *, CLua *> lua_clua_map;
+    typedef map<lua_State *, CLua *> lua_clua_map;
     static lua_clua_map lua_map;
 };
 
@@ -109,7 +109,7 @@ public:
 
     // Assigns the value on top of the stack to a unique name in the registry
     // and returns the name.
-    std::string setuniqregistry();
+    string setuniqregistry();
 
     void setregistry(const char *name);
     void getregistry(const char *name);
@@ -123,7 +123,7 @@ public:
                  bool die_on_fail = false,
                  bool force = false);
 
-    void pushglobal(const std::string &name);
+    void pushglobal(const string &name);
 
     maybe_bool callmbooleanfn(const char *fn, const char *params, ...);
     bool callbooleanfn(bool defval, const char *fn, const char *params, ...);
@@ -138,14 +138,14 @@ public:
     static int file_write(lua_State *ls);
     static int loadfile(lua_State *ls, const char *file,
                         bool trusted = false, bool die_on_fail = false);
-    static bool is_path_safe(std::string file, bool trusted = false);
+    static bool is_path_safe(string file, bool trusted = false);
 
     static bool is_managed_vm(lua_State *ls);
 
     void print_stack();
 
 public:
-    std::string error;
+    string error;
 
     // If managed_vm is set, we have to take steps to control badly-behaved
     // scripts.
@@ -166,11 +166,11 @@ public:
 
 private:
     lua_State *_state;
-    typedef std::set<std::string> sfset;
+    typedef set<string> sfset;
     sfset sourced_files;
     unsigned int uniqindex;
 
-    std::vector<lua_shutdown_listener*> shutdown_listeners;
+    vector<lua_shutdown_listener*> shutdown_listeners;
 
 private:
     void init_lua();
@@ -208,28 +208,28 @@ private:
 class lua_text_pattern : public base_pattern
 {
 public:
-    lua_text_pattern(const std::string &pattern);
+    lua_text_pattern(const string &pattern);
     ~lua_text_pattern();
 
     bool valid() const;
-    bool matches(const std::string &s) const;
-    const std::string &tostring() const { return pattern; }
+    bool matches(const string &s) const;
+    const string &tostring() const { return pattern; }
 
-    static bool is_lua_pattern(const std::string &s);
+    static bool is_lua_pattern(const string &s);
 
 private:
     bool        translated;
     bool        isvalid;
-    std::string pattern;
-    std::string lua_fn_name;
+    string pattern;
+    string lua_fn_name;
 
     static unsigned int lfndx;
 
     bool translate() const;
-    void pre_pattern(std::string &pat, std::string &fn) const;
-    void post_pattern(std::string &pat, std::string &fn) const;
+    void pre_pattern(string &pat, string &fn) const;
+    void post_pattern(string &pat, string &fn) const;
 
-    static std::string new_fn_name();
+    static string new_fn_name();
 };
 
 // Defined in main.cc
@@ -240,6 +240,6 @@ extern CLua clua;
 
 void lua_set_exclusive_item(const item_def *item = NULL);
 
-std::string quote_lua_string(const std::string &s);
+string quote_lua_string(const string &s);
 
 #endif

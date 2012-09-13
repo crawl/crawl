@@ -181,7 +181,7 @@ KITEM: * = potion of levitation q:2 / potion of levitation q:1 / any potion, \
 SUBST: T = t.
 
 MAP
-[<x*$=...TTttttt.
+[<x*$+...TTttttt.
 {.x*$x..3.TTtttt.
 x+xxxx....TTtttT.
 .....x....WTtttT.
@@ -217,7 +217,7 @@ MAP
 ...x......xxxxx..
 ..xx.......x**x..
 xx.xx.xx..2x$$x..
-xx.xx.xxx..xx=x..
+xx.xx.xxx..xx+x..
 x.xxxx.xx..xxx.4.
 .xxx1.xx..xxxx...
 x.....xx..xxx....
@@ -459,6 +459,10 @@ KFEAT: # = closed_door
 :           door_description_suffix=" to the Hive",
 :           })
 MARKER: # = lua:restrict_door()
+COLOUR: a = yellow
+TILE:   a = wall_wax
+SUBST:  a = x
+
 
 MAP
 aaaaaaaaa
@@ -527,12 +531,7 @@ MARKER:  * = lua:fog_machine { \
                  size = 2, size_buildup_amnt = 5, \
                  size_buildup_time = 25, cloud_type = "freezing vapour" \
              }
-KFEAT: ~ = closed_door
-MARKER: ~ = lua:restrict_door({ \
-            door_open_prompt="This door is covered in warnings. Open " .. \
-                             "it anyway?", \
-            door_description_prefix="warning-scrawled " \
-         })
+KFEAT: = = runed_door
 
 MAP
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -543,10 +542,10 @@ X.6px!!"!"!!!!tttttttx23tttttttttttttttttt
 X.68x!!!"!!!!!tttttttxxx+ttttttttttttttttt
 Xxx+xxxx=xxxxxxxtttttttthxx..xxWWWWWw.icrr
 X...........a...tttttg..xxhxx.xWWWWw..icrr
-Xx~xxxxxxxxxxxxx+ttttt.xxAxxhxx+WWqwwxxcc+
+Xx=mxxxxxxxxxxxx+ttttt.xxAxxhxx+WWqwwxxcc+
 X...xWp.b........ttttt..x.xx...xWw......*.
-X...~WW.fbxxxxxxxxttttt.xx.xx.sxw..=xxxccc
-Xee.xWWW..bf....dpptttt.xx.xxxxx...x....jk
+X...=WW.fbxxxxxxxxttttt.xx.xx.sxw..=xxxccc
+Xee.mWWW..bf....dpptttt.xx.xxxxx...x....jk
 Xee.xWWWWpfbpp...dptttg....xxu.....xttt%_j
 ENDMAP
 
@@ -926,7 +925,7 @@ KMONS: D = dragon
 NSUBST: $ = 1:1 / *:|
 NSUBST: D = 1:D / *:*
 NSUBST: a = 1:+ / *:v
-KFEAT: - = axe trap
+KFEAT: - = spear trap
 NSUBST: - = 3:- / *:.
 MARKER:  ! = lua:fog_machine { \
                 pow_max = 25, delay_min = 100, delay_max = 150, \
@@ -1038,9 +1037,8 @@ KMONS: 7 = patrolling large simulacrum
 SUBST: 1 = 1122334455667
 KITEM: 1234567 = star_item / nothing
 KFEAT: ^ = zot trap
-KFEAT: - = axe trap / needle trap / net trap / blade trap / bolt trap
+KFEAT: - = spear trap / needle trap / net trap / blade trap / bolt trap
 NSUBST: ~ = 1:^ / 10:- / *:.
-SUBST: + = +==
 SUBST: ! = +
 
 MAP
@@ -1061,7 +1059,7 @@ MONS: patrolling iron golem, patrolling necromancer
 MONS: patrolling hell knight, patrolling skeletal warrior
 KMONS: 5 = lich
 KITEM: 5 = star_item, star_item, star_item, star_item, star_item, star_item
-KFEAT: - = axe trap / needle trap / net trap / blade trap / bolt trap
+KFEAT: - = spear trap / needle trap / net trap / blade trap / bolt trap
 NSUBST: . = 6:- / *:.
 
 MAP
@@ -1079,7 +1077,7 @@ ENDMAP
 NAME: sprint_mu_crypt_lich
 TAGS: sprint_mu_crypt no_rotate no_hmirror no_vmirror no_dup
 MONS: ancient lich, skeletal warrior
-KFEAT: - = axe trap / needle trap / net trap / blade trap / bolt trap
+KFEAT: - = spear trap / needle trap / net trap / blade trap / bolt trap
 NSUBST: . = 10:- / *:.
 SUBST: : = .
 
@@ -1101,8 +1099,7 @@ NAME: sprint_mu_tomb_spiral
 TAGS: sprint_mu_tomb no_rotate no_hmirror no_vmirror no_dup
 MONS: patrolling greater mummy, patrolling mummy priest
 MONS: patrolling guardian mummy, patrolling sphinx
-KFEAT: - = axe trap / needle trap / net trap / blade trap / bolt trap /\
-    spear trap / zot trap
+KFEAT: - = needle trap / net trap / blade trap / bolt trap / spear trap / zot trap
 SUBST: . = -----.................332
 KITEM: $ = golden rune of zot
 KITEM: ? = scroll of acquirement q:5
@@ -1135,13 +1132,17 @@ ENDMAP
 NAME:  sprint_mu_d3_branching
 TAGS:  sprint_mu_d3 no_rotate no_hmirror no_vmirror no_dup
 KMONS: a = col:red generate_awake statue name:fire_elementalist name_adjective hp:50 \
- spells:summon_fire_elementals;cantrip
+ spells:summon_fire_elementals;cantrip \
+ tile:mons_fire_elementalist_statue
 KMONS: H = col:blue generate_awake statue name:water_elementalist name_adjective hp:50 \
- spells:summon_water_elementals;cantrip
+ spells:summon_water_elementals;cantrip \
+ tile:mons_water_elementalist_statue
 KMONS: O = col:brown generate_awake statue name:earth_elementalist name_adjective hp:70 \
- spells:summon_earth_elementals;cantrip
+ spells:summon_earth_elementals;cantrip \
+ tile:mons_earth_elementalist_statue
 KMONS: d = col:lightgrey generate_awake statue name:air_elementalist name_adjective hp:25 \
- spells:summon_air_elementals;cantrip
+ spells:summon_air_elementals;cantrip \
+ tile:mons_air_elementalist_statue
 KMONS: e = col:gold skeletal warrior name:ancient_champion name_replace \
        name_descriptor spells:venom_bolt;.;haste;haunt;.;. actual_spells \
        ; plate armour ego:fire_resistance | plate armour ego:cold_resistance . \
@@ -1173,7 +1174,8 @@ KMONS: r = hydra simulacrum / golden dragon zombie / spectral iron dragon / \
  iron troll simulacrum / anaconda zombie / anaconda simulacrum / stone giant skeleton /\
  titan zombie
 KMONS: s = boris
-KMONS: t = col:white generate_awake statue name:pristine name_adjective hp:100 ; crossbow . bolt q:50 ego:silver
+KMONS: t = col:white generate_awake statue name:pristine name_adjective \
+           hp:100 tile:mons_statue_crossbow ; crossbow . bolt q:50 ego:silver
 KMONS: u = Mennas
 KMONS: y = generate_awake roxanne
 KMONS: z = oklob plant
@@ -1210,6 +1212,7 @@ MARKER: # = lua:props_marker({ \
             door_description_noun="gateway", \
          })
 MARKER: # = lua:restrict_door()
+KFEAT: = = runed_door
 MAP
 vvvvvvvvvvvvvvvvv+vvvvvvvvvvvvv
 vtW....Wtvrrsvvv...vvevllllllvv
@@ -1414,6 +1417,7 @@ MARKER: ! = lua:fog_machine { \
                 pow_max = 1000, delay_min = 1, delay_max = 1, \
                 size = 1000, size_buildup_amnt = 111, \
                 size_buildup_time = 1, cloud_type = "gloom" }
+KFEAT: = = runed_door
 MAP
 ccccccc#cccccc
 c!..c....c..!c
@@ -1436,7 +1440,8 @@ NAME: sprint_mu_zot1
 TAGS: sprint_mu_zot no_rotate no_hmirror no_vmirror no_dup
 KMONS: T = col:magenta statue name:zot n_adj \
         spells:summon_eyeballs;polymorph_other;haste;shadow_creatures;\
-        summon_small_mammals;summon_eyeballs hd:30 hp:300
+        summon_small_mammals;summon_eyeballs hd:30 hp:300 \
+        tile:mons_zot_statue
 MARKER: T = lua:fog_machine { \
         pow_max = 15, delay_min = 100, delay_max = 150, \
         size = 2, size_buildup_amnt = 29, \
@@ -1472,14 +1477,14 @@ mons_gen_marker:add_triggerer(DgnTriggerer:new {
     type = "player_move" })
 lua_marker("e", mons_gen_marker) }}
 SUBST: A = ^
-NSUBST: a = 1:= / *:X
+NSUBST: a = 1:+ / *:X
 KFEAT: - = zot trap
 NSUBST: ^ = 3:- / *:.
 KMONS: k = killer klown
 KMONS: A = plant col:magenta
 KMONS: B = plant col:lightmagenta
 SUBST: p = AAB
-COLOUR: =X = lightmagenta
+COLOUR: X = lightmagenta
 KITEM: $ = orb of zot
 KFEAT: # = closed_door
 KFEAT: ~ = closed_door
@@ -1496,7 +1501,7 @@ MARKER: ~ = lua:props_marker({ \
         door_description_prefix="magically reinforced ", \
         veto_shatter="veto", veto_disintegrate="veto", veto_fragmentation="veto", door_restrict="veto" \
         })
-KPROP: =X#kp+^ag78yL45il%3x21*To$. = no_rtele_into
+KPROP: X#kp+^ag78yL45il%3x21*To$. = no_rtele_into
 MAP
 XXXXXXXXXXXXXXXXXXX
 X.+^^^AX..+...X...X
@@ -1508,6 +1513,6 @@ XpX....X..X...X*X.X
 XXX.78.X..XXxXX.X.X
 X.+..y.XX.X...X.XeX
 X.XXXXXX..X212X.X~X
-X.....L=.XX...=.o$X
+X.....L+.XX...+.o$X
 XXXXXXXXXXXXXXXXXXX
 ENDMAP

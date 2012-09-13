@@ -283,7 +283,8 @@ lua_marker('_', tm)
 }}
 KFEAT:  _ = altar_fedhas
 # Bait
-KITEM:  B = pear / apple / choko / snozzcumber / apricot / orange / banana / rambutan / lychee
+KITEM:  B = pear q:1 / apple q:1 / choko q:1 / snozzcumber q:1 / apricot q:1 /\
+            orange q:1 / banana q:1 / rambutan q:1 / lychee q:1
 # Replace it all with floor
 KFEAT:  BA123456 = floor
 FTILE:  BA._123456 = FLOOR_DIRT

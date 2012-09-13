@@ -28,7 +28,7 @@
         else if (lua_isstring(ls, 1)) \
             lua_pushboolean(ls, val(dungeon_feature_by_name(\
                                                 luaL_checkstring(ls, 1))));\
-        return (1); \
+        return 1; \
     }
 
 FEATF(_feat_is_wall, feat_is_wall)
@@ -37,7 +37,6 @@ FEATF(_feat_has_solid_floor, feat_has_solid_floor)
 FEATF(_feat_is_opaque, feat_is_opaque)
 FEATF(_feat_is_door, feat_is_door)
 FEATF(_feat_is_closed_door, feat_is_closed_door)
-FEATF(_feat_is_secret_door, feat_is_secret_door)
 FEATF(_feat_is_statue_or_idol, feat_is_statue_or_idol)
 FEATF(_feat_is_rock, feat_is_rock)
 FEATF(_feat_is_permarock, feat_is_permarock)
@@ -64,7 +63,6 @@ const struct luaL_reg feat_dlib[] =
 { "is_opaque", _feat_is_opaque },
 { "is_door", _feat_is_door },
 { "is_closed_door", _feat_is_closed_door },
-{ "is_secret_door", _feat_is_secret_door },
 { "is_statue_or_idol", _feat_is_statue_or_idol },
 { "is_rock", _feat_is_rock },
 { "is_permarock", _feat_is_permarock },

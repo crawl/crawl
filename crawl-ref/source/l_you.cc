@@ -93,7 +93,8 @@ LUARET1(you_god_likes_fresh_corpses, boolean,
         god_likes_fresh_corpses(you.religion))
 LUARET2(you_hp, number, you.hp, you.hp_max)
 LUARET2(you_mp, number, you.magic_points, you.max_magic_points)
-LUARET1(you_hunger, string, hunger_level())
+LUARET1(you_hunger, number, you.hunger_state)
+LUARET1(you_hunger_name, string, hunger_level())
 LUARET2(you_strength, number, you.strength(), you.max_strength())
 LUARET2(you_intelligence, number, you.intel(), you.max_intel())
 LUARET2(you_dexterity, number, you.dex(), you.max_dex())
@@ -113,7 +114,7 @@ LUARET1(you_res_draining, number, player_prot_life(false))
 LUARET1(you_res_shock, number, player_res_electricity(false))
 LUARET1(you_res_statdrain, number, player_sust_abil(false))
 LUARET1(you_res_mutation, number, wearing_amulet(AMU_RESIST_MUTATION, false))
-LUARET1(you_see_invisible, boolean, you.can_see_invisible(false, true))
+LUARET1(you_see_invisible, boolean, you.can_see_invisible(false))
 LUARET1(you_spirit_shield, number, player_spirit_shield())
 LUARET1(you_gourmand, boolean, wearing_amulet(AMU_THE_GOURMAND, false))
 LUARET1(you_like_chunks, number, player_likes_chunks(true))
@@ -173,18 +174,18 @@ LUARET1(you_constricting, boolean, you.is_constricting())
 static int l_you_genus(lua_State *ls)
 {
     bool plural = lua_toboolean(ls, 1);
-    std::string genus = species_name(you.species, true);
+    string genus = species_name(you.species, true);
     lowercase(genus);
     if (plural)
         genus = pluralise(genus);
     lua_pushstring(ls, genus.c_str());
-    return (1);
+    return 1;
 }
 
 static int you_floor_items(lua_State *ls)
 {
     lua_push_floor_items(ls, env.igrid(you.pos()));
-    return (1);
+    return 1;
 }
 
 static int l_you_spells(lua_State *ls)
@@ -200,7 +201,7 @@ static int l_you_spells(lua_State *ls)
         lua_pushstring(ls, spell_title(spell));
         lua_rawseti(ls, -2, ++index);
     }
-    return (1);
+    return 1;
 }
 
 static int l_you_spell_letters(lua_State *ls)
@@ -221,20 +222,20 @@ static int l_you_spell_letters(lua_State *ls)
         lua_pushstring(ls, buf);
         lua_rawseti(ls, -2, ++index);
     }
-    return (1);
+    return 1;
 }
 
 static int l_you_abils(lua_State *ls)
 {
     lua_newtable(ls);
 
-    std::vector<const char *>abils = get_ability_names();
+    vector<const char *>abils = get_ability_names();
     for (int i = 0, size = abils.size(); i < size; ++i)
     {
         lua_pushstring(ls, abils[i]);
         lua_rawseti(ls, -2, i + 1);
     }
-    return (1);
+    return 1;
 }
 
 static int l_you_abil_letters(lua_State *ls)
@@ -244,14 +245,14 @@ static int l_you_abil_letters(lua_State *ls)
     char buf[2];
     buf[1] = 0;
 
-    std::vector<talent> talents = your_talents(false);
+    vector<talent> talents = your_talents(false);
     for (int i = 0, size = talents.size(); i < size; ++i)
     {
         buf[0] = talents[i].hotkey;
         lua_pushstring(ls, buf);
         lua_rawseti(ls, -2, i + 1);
     }
-    return (1);
+    return 1;
 }
 
 static int you_can_consume_corpses(lua_State *ls)
@@ -260,7 +261,7 @@ static int you_can_consume_corpses(lua_State *ls)
                     can_ingest(OBJ_FOOD, FOOD_CHUNK, true, false)
                     || can_ingest(OBJ_CORPSES, CORPSE_BODY, true, false)
                   );
-    return (1);
+    return 1;
 }
 
 LUAFN(you_caught)
@@ -270,12 +271,12 @@ LUAFN(you_caught)
     else
         lua_pushnil(ls);
 
-    return (1);
+    return 1;
 }
 
 LUAFN(you_mutation)
 {
-    std::string mutname = luaL_checkstring(ls, 1);
+    string mutname = luaL_checkstring(ls, 1);
     for (int i = 0; i < NUM_MUTATIONS; ++i)
     {
         mutation_type mut = static_cast<mutation_type>(i);
@@ -287,19 +288,19 @@ LUAFN(you_mutation)
             PLUARET(integer, you.mutation[mut]);
     }
 
-    std::string err = make_stringf("No such mutation: '%s'.", mutname.c_str());
-    return (luaL_argerror(ls, 1, err.c_str()));
+    string err = make_stringf("No such mutation: '%s'.", mutname.c_str());
+    return luaL_argerror(ls, 1, err.c_str());
 }
 
 LUAFN(you_is_level_on_stack)
 {
-    std::string levname = luaL_checkstring(ls, 1);
+    string levname = luaL_checkstring(ls, 1);
     level_id lev;
     try
     {
         lev = level_id::parse_level_id(levname);
     }
-    catch (const std::string &err)
+    catch (const string &err)
     {
         return luaL_argerror(ls, 1, err.c_str());
     }
@@ -319,7 +320,7 @@ LUAFN(you_train_skill)
     skill_type sk = str_to_skill(luaL_checkstring(ls, 1));
     if (lua_gettop(ls) >= 2 && you.can_train[sk])
     {
-        you.train[sk] = std::min(std::max(luaL_checkint(ls, 2), 0), 2);
+        you.train[sk] = min(max(luaL_checkint(ls, 2), 0), 2);
         reset_training();
     }
 
@@ -347,6 +348,7 @@ static const struct luaL_reg you_clib[] =
     { "hp"          , you_hp },
     { "mp"          , you_mp },
     { "hunger"      , you_hunger },
+    { "hunger_name" , you_hunger_name },
     { "strength"    , you_strength },
     { "intelligence", you_intelligence },
     { "dexterity"   , you_dexterity },
@@ -448,7 +450,7 @@ LUAFN(you_stop_running)
 {
     stop_running();
 
-    return (0);
+    return 0;
 }
 
 LUAFN(you_moveto)
@@ -456,7 +458,7 @@ LUAFN(you_moveto)
     const coord_def place(luaL_checkint(ls, 1), luaL_checkint(ls, 2));
     ASSERT(map_bounds(place));
     you.moveto(place);
-    return (0);
+    return 0;
 }
 
 LUAFN(you_teleport_to)
@@ -468,13 +470,13 @@ LUAFN(you_teleport_to)
 
     lua_pushboolean(ls, you_teleport_to(place, move_monsters));
 
-    return (1);
+    return 1;
 }
 
 LUAFN(you_random_teleport)
 {
     you_teleport_now(false, false);
-    return (0);
+    return 0;
 }
 
 static int _you_uniques(lua_State *ls)
@@ -485,7 +487,7 @@ static int _you_uniques(lua_State *ls)
         unique_found = you.unique_creatures[get_monster_by_name(lua_tostring(ls, 1))];
 
     lua_pushboolean(ls, unique_found);
-    return (1);
+    return 1;
 }
 
 LUARET1(you_num_runes, number, runes_in_pack())
@@ -506,8 +508,10 @@ static int _you_have_rune(lua_State *ls)
     if (which_rune >= 0 && which_rune < NUM_RUNE_TYPES)
         have_rune = you.runes[which_rune];
     lua_pushboolean(ls, have_rune);
-    return (1);
+    return 1;
 }
+
+LUARET1(you_have_orb, boolean, player_has_orb())
 
 static int _you_gold(lua_State *ls)
 {
@@ -515,7 +519,7 @@ static int _you_gold(lua_State *ls)
     {
         const int new_gold = luaL_checkint(ls, 1);
         const int old_gold = you.gold;
-        you.set_gold(std::max(new_gold, 0));
+        you.set_gold(max(new_gold, 0));
         if (new_gold > old_gold)
             you.attribute[ATTR_GOLD_FOUND] += new_gold - old_gold;
         else if (old_gold > new_gold)
@@ -530,7 +534,7 @@ static int _you_piety(lua_State *ls)
 {
     if (lua_gettop(ls) >= 1)
     {
-        const int new_piety = std::min(std::max(luaL_checkint(ls, 1), 0), MAX_PIETY);
+        const int new_piety = min(max(luaL_checkint(ls, 1), 0), MAX_PIETY);
         while (new_piety > you.piety)
             gain_piety(new_piety - you.piety, 1, true, false);
         lose_piety(you.piety - new_piety);
@@ -552,11 +556,11 @@ LUAFN(you_in_branch)
         {
             if (br != NUM_BRANCHES)
             {
-                std::string err = make_stringf(
+                string err = make_stringf(
                     "'%s' matches both branch '%s' and '%s'",
                     name, branches[br].abbrevname,
                     branches[i].abbrevname);
-                return (luaL_argerror(ls, 1, err.c_str()));
+                return luaL_argerror(ls, 1, err.c_str());
             }
             br = i;
         }
@@ -564,8 +568,8 @@ LUAFN(you_in_branch)
 
     if (br == NUM_BRANCHES)
     {
-        std::string err = make_stringf("'%s' matches no branches.", name);
-        return (luaL_argerror(ls, 1, err.c_str()));
+        string err = make_stringf("'%s' matches no branches.", name);
+        return luaL_argerror(ls, 1, err.c_str());
     }
 
     bool in_branch = (br == you.where_are_you);
@@ -620,7 +624,7 @@ LUAWRAP(you_gain_exp, gain_exp(luaL_checkint(ls, 1)))
  */
 LUAFN(you_init)
 {
-    const std::string combo = luaL_checkstring(ls, 1);
+    const string combo = luaL_checkstring(ls, 1);
     newgame_def ng;
     ng.type = GAME_TYPE_NORMAL;
     ng.species = get_species_by_abbrev(combo.substr(0, 2).c_str());
@@ -654,6 +658,7 @@ static const struct luaL_reg you_dlib[] =
 { "uniques",            _you_uniques },
 { "num_runes",          you_num_runes },
 { "have_rune",          _you_have_rune },
+{ "have_orb",           you_have_orb},
 { "die",                _you_die },
 { "piety",              _you_piety },
 { "in_branch",          you_in_branch },

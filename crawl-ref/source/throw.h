@@ -40,7 +40,7 @@ void fire_thing(int item = -1);
 void throw_item_no_quiver(void);
 
 bool setup_missile_beam(const actor *actor, bolt &beam, item_def &item,
-                        std::string &ammo_name, bool &returning);
+                        string &ammo_name, bool &returning);
 
 bool throw_it(bolt &pbolt, int throw_2, bool teleport = false,
               int acc_bonus = 0, dist *target = NULL);

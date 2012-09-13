@@ -40,7 +40,7 @@ void remove_one_equip(equipment_type eq, bool meld = true,
 void unmeld_one_equip(equipment_type eq);
 
 monster_type transform_mons();
-std::string blade_parts(bool terse = false);
+string blade_parts(bool terse = false);
 monster_type dragon_form_dragon_type();
 const char* appendage_name(int app = you.attribute[ATTR_APPENDAGE]);
 const char* transform_name(transformation_type form = you.form);

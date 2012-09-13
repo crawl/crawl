@@ -25,14 +25,14 @@ skill_type abil_skill(ability_type abil)
     case ABIL_EVOKE_BERSERK:
     case ABIL_EVOKE_TURN_INVISIBLE:
     case ABIL_EVOKE_LEVITATE:
-        return (SK_EVOCATIONS);
+        return SK_EVOCATIONS;
 
     case ABIL_NEMELEX_DRAW_ONE:
     case ABIL_NEMELEX_PEEK_TWO:
     case ABIL_NEMELEX_TRIPLE_DRAW:
     case ABIL_NEMELEX_DEAL_FOUR:
     case ABIL_NEMELEX_STACK_FIVE:
-        return (SK_EVOCATIONS);
+        return SK_EVOCATIONS;
 
     case ABIL_YRED_RECALL_UNDEAD_SLAVES:
     case ABIL_MAKHLEB_MINOR_DESTRUCTION:
@@ -78,14 +78,14 @@ skill_type abil_skill(ability_type abil)
     case ABIL_YRED_ENSLAVE_SOUL:
     case ABIL_LUGONU_ABYSS_EXIT:
     case ABIL_CHEIBRIADOS_DISTORTION:
-        return (SK_INVOCATIONS);
+        return SK_INVOCATIONS;
 
     case ABIL_KIKU_RECEIVE_CORPSES:
     case ABIL_KIKU_TORMENT:
-        return (SK_NECROMANCY);
+        return SK_NECROMANCY;
 
     default:
-        return (SK_NONE);
+        return SK_NONE;
     }
 }
 
@@ -98,37 +98,37 @@ static int _abil_degree(ability_type abil)
     case ABIL_EVOKE_BERSERK:
     case ABIL_EVOKE_TURN_INVISIBLE:
     case ABIL_EVOKE_LEVITATE:
-        return (1);
+        return 1;
 
     case ABIL_NEMELEX_DRAW_ONE:
-        return (1 + random2(2));
+        return 1 + random2(2);
     case ABIL_NEMELEX_PEEK_TWO:
-        return (2 + random2(2));
+        return 2 + random2(2);
     case ABIL_NEMELEX_TRIPLE_DRAW:
-        return (3 + random2(3));
+        return 3 + random2(3);
     case ABIL_NEMELEX_DEAL_FOUR:
-        return (4 + random2(4));
+        return 4 + random2(4);
     case ABIL_NEMELEX_STACK_FIVE:
-        return (5 + random2(5));
+        return 5 + random2(5);
 
     case ABIL_YRED_RECALL_UNDEAD_SLAVES:
     case ABIL_MAKHLEB_MINOR_DESTRUCTION:
     case ABIL_ELYVILON_LESSER_HEALING_SELF:
     case ABIL_ELYVILON_LESSER_HEALING_OTHERS:
     case ABIL_BEOGH_RECALL_ORCISH_FOLLOWERS:
-        return (1);
+        return 1;
     case ABIL_SIF_MUNA_CHANNEL_ENERGY:
     case ABIL_OKAWARU_HEROISM:
     case ABIL_JIYVA_CALL_JELLY:
-        return (1 + random2(3));
+        return 1 + random2(3);
 
     case ABIL_ZIN_RECITE:
-        return (2);
+        return 2;
     case ABIL_ZIN_VITALISATION:
     case ABIL_TSO_DIVINE_SHIELD:
     case ABIL_KIKU_RECEIVE_CORPSES:
     case ABIL_BEOGH_SMITING:
-        return (2 + random2(2));
+        return 2 + random2(2);
     case ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB:
     case ABIL_LUGONU_BEND_SPACE:
     case ABIL_FEDHAS_SUNLIGHT:
@@ -137,11 +137,11 @@ static int _abil_degree(ability_type abil)
     case ABIL_FEDHAS_SPAWN_SPORES:
     case ABIL_FEDHAS_EVOLUTION:
     case ABIL_CHEIBRIADOS_TIME_BEND:
-        return (2 + random2(3));
+        return 2 + random2(3);
     case ABIL_YRED_ANIMATE_REMAINS:
     case ABIL_YRED_ANIMATE_DEAD:
     case ABIL_YRED_DRAIN_LIFE:
-        return (2 + random2(4));
+        return 2 + random2(4);
 
     case ABIL_ZIN_IMPRISON:
     case ABIL_MAKHLEB_MAJOR_DESTRUCTION:
@@ -150,37 +150,37 @@ static int _abil_degree(ability_type abil)
     case ABIL_LUGONU_BANISH:
     case ABIL_JIYVA_SLIMIFY:
     case ABIL_CHEIBRIADOS_DISTORTION:
-        return (3 + random2(5));
+        return 3 + random2(5);
     case ABIL_TSO_CLEANSING_FLAME:
-        return (3 + random2(6));
+        return 3 + random2(6);
     case ABIL_OKAWARU_FINESSE:
-        return (3 + random2(7));
+        return 3 + random2(7);
 
     case ABIL_CHEIBRIADOS_SLOUCH:
-        return (4 + random2(4));
+        return 4 + random2(4);
     case ABIL_ELYVILON_PURIFICATION:
-        return (4 + random2(6));
+        return 4 + random2(6);
 
     case ABIL_LUGONU_CORRUPT:
     case ABIL_JIYVA_CURE_BAD_MUTATION:
     case ABIL_CHEIBRIADOS_TIME_STEP:
     case ABIL_KIKU_TORMENT:
-        return (5 + random2(5));
+        return 5 + random2(5);
     case ABIL_ZIN_SANCTUARY:
-        return (5 + random2(8));
+        return 5 + random2(8);
 
     case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
-        return (6 + random2(6));
+        return 6 + random2(6);
     case ABIL_ELYVILON_DIVINE_VIGOUR:
-        return (6 + random2(10));
+        return 6 + random2(10);
 
     case ABIL_TSO_SUMMON_DIVINE_WARRIOR:
     case ABIL_YRED_ENSLAVE_SOUL:
     case ABIL_LUGONU_ABYSS_EXIT:
-        return (8 + random2(10));
+        return 8 + random2(10);
 
     default:
-        return (0);
+        return 0;
     }
 }
 
@@ -203,7 +203,7 @@ static void _exercise_spell(spell_type spell, bool success)
     // exercise skills in that random order. That way, first skill don't
     // stay in the queue for a shorter time.
     bool conj = false;
-    std::vector<skill_type> disc;
+    vector<skill_type> disc;
     for (int ndx = 0; ndx <= SPTYP_LAST_EXPONENT; ndx++)
     {
         if (!spell_typematch(spell, 1 << ndx))
@@ -220,7 +220,7 @@ static void _exercise_spell(spell_type spell, bool success)
     if (conj && !x_chance_in_y(skillcount, 4))
         return;
 
-    std::random_shuffle(disc.begin(), disc.end());
+    random_shuffle(disc.begin(), disc.end());
 
     for (unsigned int k = 0; k < disc.size(); ++k)
     {
@@ -254,14 +254,14 @@ static bool _check_train_armour(int amount)
     {
         // XXX: animal skin; should be a better way to get at that.
         const int mass_base = 100;
-        const int mass = std::max(item_mass(*armour) - mass_base, 0);
+        const int mass = max(item_mass(*armour) - mass_base, 0);
         if (x_chance_in_y(mass, you.skill(SK_ARMOUR, 50)))
         {
             exercise(SK_ARMOUR, amount);
-            return (true);
+            return true;
         }
     }
-    return (false);
+    return false;
 }
 
 static bool _check_train_dodging(int amount)
@@ -271,9 +271,9 @@ static bool _check_train_dodging(int amount)
     if (!x_chance_in_y(mass, 800))
     {
         exercise(SK_DODGING, amount);
-        return (true);
+        return true;
     }
-    return (false);
+    return false;
 }
 
 static void _check_train_sneak(bool invis)
@@ -399,36 +399,35 @@ void practise(exer_type ex, int param1)
                         ex == EX_DID_CAST);
         break;
 
-    case EX_FOUND_SECRET_DOOR:
     case EX_TRAP_FOUND:
-        exercise(SK_TRAPS_DOORS, 1 + random2(2));
+        exercise(SK_TRAPS, 1 + random2(2));
         break;
 
     case EX_TRAP_PASSIVE:
-        exercise(SK_TRAPS_DOORS, 3);
+        exercise(SK_TRAPS, 3);
         break;
 
     case EX_TRAP_TRIGGER:
-        exercise(SK_TRAPS_DOORS, 1 + random2(2));
+        exercise(SK_TRAPS, 1 + random2(2));
         break;
 
     case EX_TRAP_DISARM:
         // param1 == you.absdepth0
-        exercise(SK_TRAPS_DOORS, 1 + random2(5) + param1 / 5);
+        exercise(SK_TRAPS, 1 + random2(5) + param1 / 5);
         break;
 
     case EX_TRAP_DISARM_FAIL:
         // param1 == you.absdepth0
-        exercise(SK_TRAPS_DOORS, 1 + random2(param1 / 5));
+        exercise(SK_TRAPS, 1 + random2(param1 / 5));
         break;
 
     case EX_TRAP_DISARM_TRIGGER:
         if (coinflip())
-            exercise(SK_TRAPS_DOORS, 1);
+            exercise(SK_TRAPS, 1);
         break;
 
     case EX_REMOVE_NET:
-        exercise(SK_TRAPS_DOORS, 1);
+        exercise(SK_TRAPS, 1);
         break;
 
     case EX_SHIELD_BLOCK:

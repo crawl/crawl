@@ -46,7 +46,6 @@
 
 #include <excpt.h>
 #include <stdarg.h>
-#undef ARRAYSZ
 #include <windows.h>
 #undef max
 #undef AF_CHAOS
@@ -188,7 +187,7 @@ void enable_smart_cursor(bool cursor)
 
 bool is_smart_cursor_enabled()
 {
-    return (w32_smart_cursor);
+    return w32_smart_cursor;
 }
 
 void bFlush(void)
@@ -354,7 +353,7 @@ void console_startup()
         exit(0);
     }
 
-    std::string title = CRAWL " " + Version::Long();
+    string title = CRAWL " " + Version::Long();
 
     if (!GetConsoleTitleW(oldTitle, 78))
         *oldTitle = 0;
@@ -447,7 +446,7 @@ void set_cursor_enabled(bool enabled)
 
 bool is_cursor_enabled()
 {
-    return (cursor_is_enabled);
+    return cursor_is_enabled;
 }
 
 static void _setcursortype_internal(bool curstype)
@@ -727,11 +726,11 @@ static int w32_proc_mouse_event(const MOUSE_EVENT_RECORD &mer)
     crawl_view.mousep = pos;
 
     if (!crawl_state.mouse_enabled)
-        return (0);
+        return 0;
 
     c_mouse_event cme(pos);
     if (mer.dwEventFlags & MOUSE_MOVED)
-        return (CK_MOUSE_MOVE);
+        return CK_MOUSE_MOVE;
 
     if (mer.dwButtonState & FROM_LEFT_1ST_BUTTON_PRESSED)
         cme.bstate |= c_mouse_event::BUTTON1;
@@ -749,10 +748,10 @@ static int w32_proc_mouse_event(const MOUSE_EVENT_RECORD &mer)
     if (cme)
     {
         new_mouse_event(cme);
-        return (CK_MOUSE_CLICK);
+        return CK_MOUSE_CLICK;
     }
 
-    return (0);
+    return 0;
 }
 
 int getch_ck(void)
@@ -832,7 +831,7 @@ bool kbhit()
 {
     INPUT_RECORD ir[10];
     DWORD read_count = 0;
-    PeekConsoleInputW(inbuf, ir, sizeof ir / sizeof(ir[0]), &read_count);
+    PeekConsoleInputW(inbuf, ir, ARRAYSZ(ir), &read_count);
     if (read_count > 0)
     {
         for (unsigned i = 0; i < read_count; ++i)
@@ -881,12 +880,12 @@ void update_screen()
 
 int get_number_of_lines()
 {
-    return (screensize.Y);
+    return screensize.Y;
 }
 
 int get_number_of_cols()
 {
-    return (screensize.X);
+    return screensize.X;
 }
 
 int num_to_lines(int num)

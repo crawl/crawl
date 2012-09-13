@@ -84,15 +84,11 @@ MONS:   jelly / ooze / brown ooze / giant amoeba
 MONS:   acid blob / slime creature w:5
 MONS:   azure jelly
 KFEAT:  O = enter_slime_pits
-MARKER: + = lua:restrict_door({ \
-            door_open_prompt="This door is covered in warnings. Open " .. \
-                             "it anyway?", \
-            door_description_prefix="warning-scrawled " \
-         })
+KFEAT:  = = runed_door
 MAP
 ccccc
 c111m.
-cO1_+@
+cO1_=@
 c111m.
 ccccc
 ENDMAP
@@ -105,11 +101,11 @@ KFEAT: _ = altar_jiyva
 MAP
   .....
  .ccccc.
-.ccccccc.
-.cccSccc.
-.ccSO.cc.
-.ccS_..+@
-.cccSccc.
+.ccSSScc.
+.cS...Sc.
+.cS.O.cc.
+.cS.._.+@
+.ccScccc.
 .ccccccc.
  .ccccc.
   .....
@@ -202,12 +198,12 @@ KFEAT:  S = slimy_wall
 MAP
 xxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxx......xxxxxx
-xxxxxx...........xxxx
-xxS11.......xx....xxx
-xxS11.....xxxx....xxx
-xxSO11..xxxxx....xxxx
-xxSS11xxxxxx.....xxxx
-xxxSSSxxxxx.....xxxxx
+xxSSxx...........xxxx
+xxS111......xx....xxx
+xSS.11....xxxx....xxx
+xS..O11.xxxxx....xxxx
+xSS..1xxxxxx.....xxxx
+xxSSSSxxxxx.....xxxxx
 xxxxxxxxxx.....xxxxxx
 xxxxxxxx.....xxxxxxxx
 xxxxxxx.@..xxxxxxxxxx
@@ -215,15 +211,15 @@ ENDMAP
 
 NAME:   dpeg_slime_entry_corner
 TAGS:   slime_entry ruin_lair
-ORIENT: northeast
+ORIENT: northwest
 WEIGHT: 5
 KFEAT:  O = enter_slime_pits
 KFEAT:  S = slimy_wall
 MAP
 xxxxxxxxxxx
 xSSSxxxxxx
-xSO..xxxx
-xS.....xx
+xS...xxxx
+xS.O...xx
 xxxxxx.xx
 xxxx....x
 xxx...xx.
@@ -233,6 +229,64 @@ ENDMAP
 ################################################################################
 # Slime Pit specific non-ending non-entry vaults
 ################################################################################
+NAME:    hangedman_slime_spill
+TAGS:    no_monster_gen no_trap_gen
+DEPTH:   Slime:1-5
+WEIGHT:  1
+MONS:    patrolling eye of devastation
+SHUFFLE: yzZ
+SUBST:   2 = 00xxY, y = ., zZX = x., Y = x', { = {}, 0 : 00'''
+KPROP:   02' = no_rtele_into
+MAP
+   ' ' '''Y.xx.@@@
+  YY'Y'xxx'x.....@
+ Yxxxxxx2xxX......
+xxx222x0xxXX...XyX
+ x20000xx......yXy
+ x2202x.x.{.....1X
+xx20000xx......yXy
+ xx222x0xxXX...XyX
+ Yxxxxxx2xxX......
+  YY'Y'xxx'x.....@
+   ' ' '''x.xx.@@@
+ENDMAP
+
+NAME:    hangedman_slime_tunnels
+TAGS:    no_monster_gen no_trap_gen transparent
+DEPTH:   Slime:1-5
+WEIGHT:  1
+KMONS:   1 = slime creature / brown ooze / giant amoeba / nothing w:2
+KMONS:   2 = shining eye / giant eyeball / eye of devastation w:5 / \
+             great orb of eyes / giant orange brain / random w:1
+KFEAT:   2 = alarm trap / . w:30
+SHUFFLE: AB, CD, EF, GH, ab
+SUBST:   ACEG = ', BDFH = x, 0 = 0 ':4, ab = 0XX
+SUBST:   X = x', Y = x., } = {} .:30, 0 : 00'''
+KMASK:   ' = !no_monster_gen
+KMASK:   '0x = opaque
+KPROP:   '0 = no_rtele_into
+MAP
+  X'            'X
+ X'X'X x  x  x XX'X
+X'xxxxxxxxxxxxxxxx'X
+'xx0x0x00xx00x0x0xx'
+'x'x0x'xx0axx'x0x'x'
+'xAxxxxBxaXxCxxxxDx'
+'xxAxxBxxxxxxCxxDxx'
+.Y.Y..Yx2xY.YY..YY..
+..Y....xx1.........@
+@................}.@
+@..................@
+@.........1xx....Y.@
+..YY..YY.Yx2xY.xY...
+.xxExxFxxxxxxGxxHxx'
+'xExxxxFxbXxGxxxxHx'
+'x'x0x'xx0bxx'x0x'x'
+'xx0x0x00xx00x0x0xx'
+X'xxxxxxxxxxxxxxxx'X
+ X'XX x  x  x X'X'X
+  X'            'X
+ENDMAP
 
 ################################################################################
 # Slime Pit
@@ -293,7 +347,7 @@ fixup_marker:add_triggerer(DgnTriggerer:new {
 : lua_marker("Z", fixup_marker)
 
 {{
-    dgn.set_feature_desc_short("stone wall", "rune carved stone wall")
+    set_feature_name("stone_wall", "rune carved stone wall")
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

@@ -29,7 +29,7 @@ opacity_type opacity_default::operator()(const coord_def& p) const
     dungeon_feature_type f = grid_appearance(p);
     if (feat_is_opaque(f))
         return OPC_OPAQUE;
-    else if (f == DNGN_TREE || f == DNGN_SWAMP_TREE)
+    else if (f == DNGN_TREE || f == DNGN_MANGROVE)
         return OPC_HALF;
     else if (is_opaque_cloud(env.cgrid(p)))
         return OPC_HALF;
@@ -66,7 +66,7 @@ static bool mons_block_immob(const monster* mons)
     // In Zotdef, plants don't block movement as critters
     // will attack them
     if (crawl_state.game_is_zotdef())
-        return (false);
+        return false;
 
     switch (mons->type)
     {
@@ -118,15 +118,15 @@ opacity_type opacity_monmove::operator()(const coord_def& p) const
 {
     dungeon_feature_type feat = env.grid(p);
     if (feat < DNGN_MINMOVE || !mon.can_pass_through_feat(feat))
-        return (OPC_OPAQUE);
+        return OPC_OPAQUE;
     else
-        return (OPC_CLEAR);
+        return OPC_CLEAR;
 }
 
 opacity_type opacity_no_actor::operator()(const coord_def& p) const
 {
     if (feat_is_solid(env.grid(p)) || actor_at(p))
-        return (OPC_OPAQUE);
+        return OPC_OPAQUE;
     else
-        return (OPC_CLEAR);
+        return OPC_CLEAR;
 }

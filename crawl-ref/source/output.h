@@ -43,7 +43,7 @@ void print_stats(void);
 void print_stats_level(void);
 void draw_border(void);
 
-std::string mpr_monster_list(bool past = false);
+string mpr_monster_list(bool past = false);
 int update_monster_pane(void);
 
 const char *equip_slot_to_name(int equip);
@@ -54,9 +54,9 @@ const char *equip_slot_to_name(int equip);
 
 void print_overview_screen(void);
 
-std::string dump_overview_screen(bool full_id);
+string dump_overview_screen(bool full_id);
 
-std::string magic_res_adjective(int mr);
-std::string stealth_desc(int stealth);
+string magic_res_adjective(int mr);
+string stealth_desc(int stealth);
 
 #endif

@@ -6,8 +6,10 @@ of unknown provenance.
 %%%%
 book
 
-A book of magic spells. Beware, for some of the more powerful grimoires are not
-to be toyed with.
+An arcane textbook containing magical spells of unknown origin. Written for
+true adepts, an initiatory knowledge in the occult art of casting spells is
+required to make any use of the tome. Beware, for some of the more powerful
+grimoires are not to be toyed with!
 %%%%
 deck of cards
 
@@ -16,7 +18,7 @@ any number of helpful or dangerous effects when drawn.
 %%%%
 potion
 
-A small bottle of liquid.
+An unlabelled flask containing a single dose of unknown liquid.
 %%%%
 ring
 
@@ -31,11 +33,13 @@ enough to be used as a simple blunt weapon.
 %%%%
 scroll
 
-A scroll of paper covered in magical writing.
+A disposable arcane formula inscribed on parchment by a professional scribe or
+sorcerer. Anyone can evoke the power of the arcane formula by reading it out
+loud, but the nature of that power is not a priori apparent.
 %%%%
 magical staff
 
-A quarterstaff improved with arcane powers of unknown nature.
+A staff improved with arcane powers of unknown nature.
 %%%%
 wand
 

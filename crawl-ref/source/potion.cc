@@ -50,7 +50,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
 {
     bool effect = true;  // current behaviour is all potions id on quaffing
 
-    pow = std::min(pow, 150);
+    pow = min(pow, 150);
 
     int factor = (you.species == SP_VAMPIRE
                   && you.hunger_state < HS_SATIATED
@@ -248,7 +248,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
                  (pot_eff == POT_POISON) ? "very" : "extremely");
 
             int amount;
-            std::string msg;
+            string msg;
             if (pot_eff == POT_POISON)
             {
                 amount = 1 + random2avg(5, 2);
@@ -290,7 +290,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
 
             // And also cancel corona (for whatever good that will do).
             you.duration[DUR_CORONA] = 0;
-            return (true);
+            return true;
         }
 
         if (get_contamination_level() > 1)
@@ -348,12 +348,12 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
 
     // Don't generate randomly - should be rare and interesting.
     case POT_DECAY:
-        if (you.rot(&you, (10 + random2(10)) / factor))
+        if (you.rot(&you, 0, (3 + random2(3)) / factor))
             xom_is_stimulated(50 / xom_factor);
         break;
 
     case POT_FIZZING:
-    case POT_WATER:
+    case NUM_POTIONS:
         if (you.species == SP_VAMPIRE)
             mpr("Blech - this tastes like water.");
         else
@@ -435,9 +435,10 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
         contaminate_player(1, was_known);
         break;
 
-    case NUM_POTIONS:
-        mpr("You feel bugginess flow through your body.");
+#if TAG_MAJOR_VERSION == 34
+    case POT_WATER:
         break;
+#endif
     }
 
     return (!was_known && effect);
