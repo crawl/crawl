@@ -86,8 +86,8 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
 
         set_cell_size: function(w, h)
         {
-            this.cell_width = w;
-            this.cell_height = h;
+            this.cell_width = Math.floor(w);
+            this.cell_height = Math.floor(h);
             this.x_scale = w / 32;
             this.y_scale = h / 32;
         },

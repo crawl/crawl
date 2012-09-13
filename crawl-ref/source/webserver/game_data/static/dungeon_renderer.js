@@ -138,14 +138,15 @@ function ($, cr, map_knowledge, settings, dngn) {
             var cw = this.cell_width;
             var ch = this.cell_height;
 
-            var w = (this.cols - Math.abs(x)) * cw;
-            var h = (this.rows - Math.abs(y)) * ch;
+            var w = Math.floor((this.cols - Math.abs(x)) * cw);
+            var h = Math.floor((this.rows - Math.abs(y)) * ch);
 
             if (w > 0 && h > 0)
             {
+                var floor = Math.floor;
                 this.ctx.drawImage(this.element,
-                                   sx * cw, sy * ch, w, h,
-                                   dx * cw, dy * ch, w, h);
+                                   floor(sx * cw), floor(sy * ch), w, h,
+                                   floor(dx * cw), floor(dy * ch), w, h);
             }
 
             // Render cells that came into view
