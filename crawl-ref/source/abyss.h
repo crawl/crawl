@@ -17,9 +17,10 @@ struct abyss_state
 {
     coord_def major_coord;
     uint32_t seed;
-    double phase;
-    double depth;
+    uint32_t phase;
+    uint32_t depth;
 };
+
 void abyss_morph(double duration);
 void push_features_to_abyss();
 
