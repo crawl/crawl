@@ -1234,8 +1234,9 @@ static void tag_construct_you(writer &th)
         marshallBoolean(th, you.branches_left[i]);
 
     marshallCoord(th, abyssal_state.major_coord);
-    marshallFloat(th, abyssal_state.depth);
-    marshallFloat(th, abyssal_state.phase);
+    marshallInt(th, abyssal_state.seed);
+    marshallInt(th, abyssal_state.depth);
+    marshallInt(th, abyssal_state.phase);
 
     _marshall_constriction(th, &you);
 
@@ -2052,8 +2053,9 @@ static void tag_read_you(reader &th)
 #endif
 
     abyssal_state.major_coord = unmarshallCoord(th);
-    abyssal_state.depth = unmarshallFloat(th);
-    abyssal_state.phase = unmarshallFloat(th);
+    abyssal_state.seed = unmarshallInt(th);
+    abyssal_state.depth = unmarshallInt(th);
+    abyssal_state.phase = unmarshallInt(th);
 
     // Don't undo digging on the next tick after a load.
     if (you.where_are_you == BRANCH_ABYSS)
