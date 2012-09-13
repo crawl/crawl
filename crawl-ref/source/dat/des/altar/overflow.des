@@ -166,10 +166,6 @@ TAGS:    patrolling no_monster_gen no_item_gen
 TAGS:    uniq_golem_altar temple_overflow_cheibriados
 KMONS:   _ = iron golem
 KFEAT:   _ = altar_cheibriados
-SHUFFLE: ac / XX / XX
-SHUFFLE: bd / XX / XX
-SUBST:   a = = , c = * , b = = , d = *
-SUBST:   X : x
 SUBST:   x : xxxcccvb
 MAP
 x..G..x
@@ -181,9 +177,32 @@ x.....x
 x.....x
 x.....x
 x.._..x
-xaxxxbx
-xcxxxdx
 xxxxxxx
+ENDMAP
+
+# Why be in such a hurry to get to the altar?
+NAME:   grunt_cheibriados_snail_statue
+DEPTH:  D:2-12
+TAGS:   temple_overflow_cheibriados uniq_altar_cheibriados
+TAGS:   no_trap_gen no_monster_gen
+KMONS:  O = statue hd:1 name:snail_statue name_replace name_descriptor \
+            tile:mons_snail_statue \
+            spells:leda's_liquefaction;leda's_liquefaction;leda's_liquefaction;\
+            leda's_liquefaction;leda's_liquefaction;leda's_liquefaction
+KFEAT:  _ = altar_cheibriados
+MAP
+ccccccccccc
+c.........c
+c...._....c
+cc.O...O.cc
+xccc...cccx
+xxxx...xxxx
+xxxx...xxxx
+xxxx...xxxx
+xxxx...xxxx
+xxxx...xxxx
+xxxx...xxxx
+xxxx.@.xxxx
 ENDMAP
 
 
@@ -238,8 +257,9 @@ KFEAT:  C = altar_elyvilon
 KMASK:  wW = no_monster_gen
 MONS:   butterfly
 MAP
-        ttttttttttttt
-       ttttttttttttttt
+       xxxxxxxxxxxxxxx
+      xxtttttttttttttxx
+      xtttttttttttttttx
       tttttttt.tttttttt
   .....ttttt..1..ttttt.....
  .......ttt.......ttt.......
@@ -251,8 +271,9 @@ MAP
  .......ttt.......ttt.......
   .....ttttt..1..ttttt.....
       tttttttt.tttttttt
-       ttttttttttttttt
-        ttttttttttttt
+      xtttttttttttttttx
+      xxtttttttttttttxx
+       xxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   elyvilon_altar_4
@@ -445,18 +466,19 @@ FTILE:  d = floor_hall
 COLOUR: fd = brown
 COLOUR: AC. = green
 MAP
-ttttttttttttttt
-ttttttttttttttt
-ttttttgfgtttttt
-tttttgf.fgttttt
-ttttgf.f.fgtttt
-tttgf..C..fgttt
-tttgf.f.f.fgttt
-ttgfffffffffgtt
-ttgt.......tgtt
-ttttttdddtttttt
-ttttttdddtttttt
-tttttdd@ddttttt
+xxxxxxxxxxxxxxxxx
+xtttttttttttttttx
+xtttttttttttttttx
+xttttttgfgttttttx
+xtttttgf.fgtttttx
+xttttgf.f.fgttttx
+xtttgf..C..fgtttx
+xtttgf.f.f.fgtttx
+xttgfffffffffgttx
+xttgt.......tgttx
+xttttttdddttttttx
+xttttttdddttttttx
+xtttttdd@ddtttttx
 ENDMAP
 
 NAME:  fedhas_bush_and_centaur_altar
@@ -471,6 +493,37 @@ MAP
 .22_22.
 ...22..
 .222..
+ENDMAP
+
+NAME:   fedhas_altar_decomposition
+TAGS:   uniq_altar_fedhas temple_overflow_fedhas
+TAGS:   no_item_gen no_monster_gen no_trap_gen
+DEPTH:  D:6-13
+MONS:   bush, plant, necrophage / w:25 nothing
+KFEAT:  _ = altar_fedhas
+FTILE:  '!12@ = floor_moss
+COLOUR: '!@ = green
+: if you.race() ~= "Mummy" and you.race() ~= "Ghoul"
+:   and you.race() ~= "Vampire"
+: then
+MARKER:  ! = lua:message_at_spot("Fedhas urges you to decompose the vile \
+                                 beasts imprisoned behind the altar.", \
+                                 "god")
+: end
+SUBST:  ! = .
+KPROP:  .3 = no_rtele_into
+MAP
+ xxxxxxxxx
+xx33...33xx
+x33.....33x
+x33.111.33x
+x33.1_1.33x
+x33.1'1.33x
+x3..x'x..3x
+x3..x'x..3x
+xxxxx'xxxxx
+   xx!xx
+   x2@2x
 ENDMAP
 
 ### Kikubaaqudgha overflow altars #############################################
@@ -524,12 +577,11 @@ KFEAT:   _ = altar_makhleb
 # Either one slow type 3 or 4 demon (iron devil or smoke demon) or
 # three slow type 5 demons (iron imp).
 # The smoke demon can only come up in D:9-11.
-SHUFFLE: 1234
+SHUFFLE: 123
 NSUBST:  1 = 1:1 / *:.
 NSUBST:  2 = 1:2 / *:.
-NSUBST:  3 = 2:3 / *:.
 : if you.absdepth() < 9 then
-SUBST:   3 = 12
+SUBST:   2 = 1
 : end
 MONS:    iron devil, smoke demon, iron imp
 MAP
@@ -586,7 +638,7 @@ ENDMAP
 # Perhaps could have different parameters for the two types of clouds,
 # and different patterns.
 NAME:   nemelex_altar_shiori
-DEPTH:  *, !Lair, !Orc
+DEPTH:  D, Elf, Vaults
 TAGS:   temple_overflow_nemelex_xobeh uniq_altar_nemelex_xobeh
 TAGS:   no_pool_fixup no_monster_gen no_item_gen
 TAGS:   generate_awake patrolling no_rotate
@@ -770,6 +822,46 @@ MAP
         xxxxx
 ENDMAP
 
+NAME:   led_sif_book
+DEPTH:  3-12, Orc
+TAGS:   no_item_gen no_pool_fixup no_monster_gen
+TAGS:   temple_overflow_sif_muna uniq_altar_sif_muna
+KPROP:  1d = no_rtele_into
+KFEAT:  _ = altar_sif_muna
+ITEM:   randbook owner:Sif_Muna numspells:1 slevels:1
+MONS:   orc wizard
+COLOUR: .@+1deG = blue
+FTILE:  .@+1deG_ = floor_marble
+MAP
+xxxxxxxxx
+xbbbbx..xx
+x1w..xG..x
+xdw..+._.@
+x1w..xG..x
+xbbbbx..xx
+xxxxxxxxx
+ENDMAP
+
+NAME:   led_sif_pool
+DEPTH:  2-9
+TAGS:   no_item_gen no_monster_gen no_pool_fixup
+TAGS:   temple_overflow_sif_muna uniq_altar_sif_muna
+KFEAT:  _ = altar_sif_muna
+COLOUR: . = blue
+FTILE:  ._ = floor_marble
+MAP
+ xxx@xxx
+ xxx+xxx
+xxWW.WWxx
+xWWW.WWWx
+xWW...WWx
+xWW._.WWx
+xWW...WWx
+xWWWWWWWx
+xxWWWWWxx
+ xxxxxxx
+ENDMAP
+
 
 ### Trog overflow altars ######################################################
 
@@ -831,6 +923,39 @@ MAP
     xx.......xx
      xxxx+xxxx
        xx@xx
+ENDMAP
+
+NAME:   trog_eyes_of_draining
+TAGS:   uniq_altar_trog temple_overflow_trog patrolling
+DEPTH:  D:3-9
+WEIGHT: 4
+MONS:   eye of draining / w:20 nothing
+: if you.absdepth() > 5 and crawl.coinflip() then
+KMONS:  2 = ogre god:trog ; giant club ego:anti-magic ident:type | w:3 giant club / \
+        ogre god:trog ; giant spiked club ego:anti-magic ident:type | w:5 giant spiked club / \
+        orc warrior god:trog ; halberd ego:anti-magic ident:type | war axe ego:anti-magic ident:type | \
+        flail ego:anti-magic ident:type | great mace ego:anti-magic ident:type | any weapon / \
+        big kobold god:trog ; short sword ego:anti-magic ident:type | dagger ego:anti-magic ident:type | \
+        sabre ego:anti-magic ident:type | sabre
+: else
+KMONS:  2 = orc god:trog ; spear ego:anti-magic ident:type | hand axe ego:anti-magic ident:type | \
+        war axe ego:anti-magic ident:type | any weapon / \
+        kobold god:trog ; short sword ego:anti-magic ident:type | hand axe ego:anti-magic ident:type | \
+        club ego:anti-magic ident:type | whip ego:anti-magic ident:type | any weapon / \
+        goblin god:trog ; dagger ego:anti-magic ident:type | short sword ego:anti-magic ident:type / \
+        gnoll god:trog ; spear ego:anti-magic ident:type | trident ego:anti-magic ident:type | \
+        halberd ego:anti-magic ident:type | whip ego:anti-magic ident:type | halberd | any weapon
+: end
+KFEAT:  2 = altar_trog
+MAP
+  xxxxx
+ xx111xx
+xx11211xx
+x11...11x
+x.......x
+x.G...G.x
+xx.....xx
+ xx@@@xx
 ENDMAP
 
 
@@ -919,7 +1044,7 @@ ENDMAP
 ### Xom overflow altars #######################################################
 
 NAME:   tgw_xom
-DEPTH:  *, !D:1
+DEPTH:  D:2-27
 TAGS:   no_item_gen no_monster gen temple_overflow_xom uniq_altar_xom
 KFEAT:  _ = altar_xom
 MONS:   orc; club ego:chaos / orc; dagger ego:chaos / orc; spear ego:chaos
@@ -959,7 +1084,7 @@ MAP
 ENDMAP
 
 NAME:    xom_obstacle_run
-DEPTH:   *, !D:1
+DEPTH:   D:2-27
 TAGS:    temple_overflow_xom uniq_altar_xom
 KFEAT:   _ = altar_xom
 SHUFFLE: ABCDEFG
@@ -1034,7 +1159,7 @@ NAME:    xom_redecorated
 TAGS:    temple_overflow_xom uniq_altar_xom
 SUBST:   x = ccbbbv
 NSUBST:  . = 2:T / .
-SUBST:   . = lWwtma_~......
+SUBST:   . = lWwtm_~......
 KFEAT:   _ = altar_xom
 NSUBST:  T = 3:T / .
 KFEAT:   T = teleport trap
@@ -1067,6 +1192,22 @@ X,,o_o,,X
 XX,o.o,XX
  XXX@XXX
 ENDMAP
+
+NAME:   led_xom_imps
+DEPTH:  3-5
+TAGS:   temple_overflow_xom uniq_altar_xom
+KFEAT:  _ = altar_xom
+KFEAT:  T = known teleport trap
+NSUBST: I = 1:1 / 3:2
+MONS: crimson imp ; dagger ego:chaos ident:type, crimson imp ; nothing
+MAP
+xxxx+xxxx
+xIT...TIx
+xxx._.xxx
+xIT...TIx
+xxxx+xxxx
+ENDMAP
+
 
 ### Yredelemnul overflow altars ###############################################
 
@@ -1177,6 +1318,35 @@ xct...tcx
 xccc+cccx
 ENDMAP
 
+NAME:    tso_metal_star
+TAGS:    no_monster_gen no_trap_gen no_pool_fixup no_item_gen
+TAGS:    temple_overflow_the_shining_one uniq_altar_the_shining_one
+KFEAT:   _ = altar_the_shining_one
+KFEAT:   g = iron_grate
+SUBST:   ! : vmggTG..
+MAP
+          @
+          .
+         ...
+         .v.
+        ..v..
+       ..vvv..
+      ..vv.vv..
+     ..vv...vv..
+    ..vm..!..mv..
+  ...vv..!.!..vv...
+@..vvv..!._.!..vvv..@
+  ...vv..!.!..vv...
+    ..vm..!..+v..
+     ..vv...vv..
+      ..vv.vv..
+       ..vvv..
+        ..v..
+         .v.
+         ...
+          .
+          @
+ENDMAP
 
 ### Variable overflow altars ##################################################
 

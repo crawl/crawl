@@ -52,7 +52,7 @@ struct menu_letter
     menu_letter operator ++ (int)
     {
         menu_letter copy = *this;
-        this->operator++();
+        operator++();
         return copy;
     }
 };
@@ -77,7 +77,7 @@ struct menu_letter2
     menu_letter2 operator ++ (int)
     {
         menu_letter2 copy = *this;
-        this->operator++();
+        operator++();
         return copy;
     }
 };
@@ -85,29 +85,29 @@ struct menu_letter2
 struct item_def;
 class Menu;
 
-int menu_colour(const std::string &itemtext,
-                const std::string &prefix = "",
-                const std::string &tag = "");
+int menu_colour(const string &itemtext,
+                const string &prefix = "",
+                const string &tag = "");
 
 const int MENU_ITEM_STOCK_COLOUR = LIGHTGREY;
 class MenuEntry
 {
 public:
-    std::string tag;
-    std::string text;
+    string tag;
+    string text;
     int quantity, selected_qty;
     int colour;
-    std::vector<int> hotkeys;
+    vector<int> hotkeys;
     MenuEntryLevel level;
     bool preselected;
     void *data;
 
 #ifdef USE_TILE
-    std::vector<tile_def> tiles;
+    vector<tile_def> tiles;
 #endif
 
 public:
-    MenuEntry(const std::string &txt = std::string(),
+    MenuEntry(const string &txt = string(),
                MenuEntryLevel lev = MEL_ITEM,
                int qty  = 0,
                int hotk = 0,
@@ -144,7 +144,7 @@ public:
         return (hotkeys.size()? hotkeys[0] == key : false);
     }
 
-    virtual std::string get_text(const bool unused = false) const
+    virtual string get_text(const bool unused = false) const
     {
         if (level == MEL_ITEM && hotkeys.size())
         {
@@ -152,14 +152,14 @@ public:
             snprintf(buf, sizeof buf,
                     " %c %c %s", hotkeys[0], preselected ? '+' : '-',
                                  text.c_str());
-            return std::string(buf);
+            return string(buf);
         }
         return text;
     }
 
     virtual int highlight_colour() const
     {
-        return (menu_colour(get_text(), "", tag));
+        return menu_colour(get_text(), "", tag);
     }
 
     virtual bool selected() const
@@ -179,13 +179,13 @@ public:
             selected_qty = (qty == -1? quantity : qty);
     }
 
-    virtual std::string get_filter_text() const
+    virtual string get_filter_text() const
     {
         return get_text();
     }
 
 #ifdef USE_TILE
-    virtual bool get_tiles(std::vector<tile_def>& tileset) const;
+    virtual bool get_tiles(vector<tile_def>& tileset) const;
 
     virtual void add_tile(tile_def tile);
 #endif
@@ -194,10 +194,10 @@ public:
 class ToggleableMenuEntry : public MenuEntry
 {
 public:
-    std::string alt_text;
+    string alt_text;
 
-    ToggleableMenuEntry(const std::string &txt = std::string(),
-                         const std::string &alt_txt = std::string(),
+    ToggleableMenuEntry(const string &txt = string(),
+                         const string &alt_txt = string(),
                          MenuEntryLevel lev = MEL_ITEM,
                          int qty = 0, int hotk = 0,
                          bool preselect = false) :
@@ -209,10 +209,10 @@ public:
 class MonsterMenuEntry : public MenuEntry
 {
 public:
-    MonsterMenuEntry(const std::string &str, const monster_info* mon, int hotkey);
+    MonsterMenuEntry(const string &str, const monster_info* mon, int hotkey);
 
 #ifdef USE_TILE
-    virtual bool get_tiles(std::vector<tile_def>& tileset) const;
+    virtual bool get_tiles(vector<tile_def>& tileset) const;
 #endif
 };
 
@@ -220,9 +220,9 @@ public:
 class PlayerMenuEntry : public MenuEntry
 {
 public:
-    PlayerMenuEntry(const std::string &str);
+    PlayerMenuEntry(const string &str);
 
-    virtual bool get_tiles(std::vector<tile_def>& tileset) const;
+    virtual bool get_tiles(vector<tile_def>& tileset) const;
 };
 #endif
 
@@ -232,12 +232,12 @@ public:
     coord_def            pos;
     dungeon_feature_type feat;
 
-    FeatureMenuEntry(const std::string &str, const coord_def p, int hotkey);
-    FeatureMenuEntry(const std::string &str, const dungeon_feature_type f,
+    FeatureMenuEntry(const string &str, const coord_def p, int hotkey);
+    FeatureMenuEntry(const string &str, const dungeon_feature_type f,
                      int hotkey);
 
 #ifdef USE_TILE
-    virtual bool get_tiles(std::vector<tile_def>& tileset) const;
+    virtual bool get_tiles(vector<tile_def>& tileset) const;
 #endif
 };
 
@@ -266,6 +266,7 @@ enum MenuFlag
                                     /// select the appropriate items.
     MF_ALLOW_FORMATTING = 0x0100,   /// Parse index for formatted-string
     MF_SHOW_PAGENUMBERS = 0x0200,   /// Show "(page X of Y)" when appropriate
+    MF_TOGGLE_ACTION    = 0x0400,   /// ToggleableMenu toggles action as well
     MF_EASY_EXIT        = 0x1000,
     MF_START_AT_END     = 0x2000,
     MF_PRESELECTED      = 0x4000,   /// Has a preselected entry.
@@ -321,7 +322,7 @@ public:
 class Menu
 {
 public:
-    Menu(int flags = MF_MULTISELECT, const std::string& tagname = "",
+    Menu(int flags = MF_MULTISELECT, const string& tagname = "",
          bool text_only = true);
 
     virtual ~Menu();
@@ -334,9 +335,9 @@ public:
     void set_flags(int new_flags, bool use_options = true);
     int  get_flags() const        { return flags; }
     virtual bool is_set(int flag) const;
-    void set_tag(const std::string& t) { tag = t; }
+    void set_tag(const string& t) { tag = t; }
 
-    bool draw_title_suffix(const std::string &s, bool titlefirst = true);
+    bool draw_title_suffix(const string &s, bool titlefirst = true);
     bool draw_title_suffix(const formatted_string &fs, bool titlefirst = true);
     void update_title();
 
@@ -347,13 +348,13 @@ public:
     void set_highlighter(MenuHighlighter *h);
     void set_title(MenuEntry *e, bool first = true);
     void add_entry(MenuEntry *entry);
-    void get_selected(std::vector<MenuEntry*> *sel) const;
+    void get_selected(vector<MenuEntry*> *sel) const;
     virtual int get_cursor() const;
 
     void set_maxpagesize(int max);
     int maxpagesize() const { return max_pagesize; }
 
-    void set_select_filter(std::vector<text_pattern> filter)
+    void set_select_filter(vector<text_pattern> filter)
     {
         select_filter = filter;
     }
@@ -361,8 +362,8 @@ public:
     int getkey() const { return lastch; }
 
     void reset();
-    virtual std::vector<MenuEntry *> show(bool reuse_selections = false);
-    std::vector<MenuEntry *> selected_entries() const;
+    virtual vector<MenuEntry *> show(bool reuse_selections = false);
+    vector<MenuEntry *> selected_entries() const;
 
     size_t item_count() const    { return items.size(); }
 
@@ -373,7 +374,7 @@ public:
     int get_y_offset() const { return y_offset; }
     int get_pagesize() const { return pagesize; }
 
-    typedef std::string (*selitem_tfn)(const std::vector<MenuEntry*> *sel);
+    typedef string (*selitem_tfn)(const vector<MenuEntry*> *sel);
     typedef void (*drawitem_tfn)(int index, const MenuEntry *me);
     typedef int (*keyfilter_tfn)(int keyin);
 
@@ -394,16 +395,16 @@ protected:
     MenuEntry *title2;
 
     int flags;
-    std::string tag;
+    string tag;
 
     int first_entry, y_offset;
     int pagesize, max_pagesize;
 
     formatted_string more;
 
-    std::vector<MenuEntry*>  items;
-    std::vector<MenuEntry*>  sel;
-    std::vector<text_pattern> select_filter;
+    vector<MenuEntry*>  items;
+    vector<MenuEntry*>  sel;
+    vector<text_pattern> select_filter;
 
     // Class that is queried to colour menu entries.
     MenuHighlighter *highlighter;
@@ -420,9 +421,9 @@ protected:
 
 protected:
     void check_add_formatted_line(int firstcol, int nextcol,
-                                  std::string &line, bool check_eol);
+                                  string &line, bool check_eol);
     void do_menu();
-    virtual std::string get_select_count_string(int count) const;
+    virtual string get_select_count_string(int count) const;
     virtual void draw_select_count(int count, bool force = false);
     virtual void draw_item(int index) const;
     virtual void draw_index_item(int index, const MenuEntry *me) const;
@@ -471,6 +472,8 @@ protected:
     virtual bool is_selectable(int index) const;
 
     virtual bool process_key(int keyin);
+
+    virtual bool allow_easy_exit() const;
 };
 
 /// Allows toggling by specific keys.
@@ -483,7 +486,7 @@ public:
 protected:
     virtual int pre_process(int key);
 
-    std::vector<int> toggle_keys;
+    vector<int> toggle_keys;
 };
 
 // This is only tangentially related to menus, but what the heck.
@@ -496,23 +499,23 @@ public:
 
     void clear();
     void add_formatted(int ncol,
-            const std::string &tagged_text,
+            const string &tagged_text,
             bool  add_separator = true,
             bool  eol_ends_format = true,
-            bool (*text_filter)(const std::string &tag) = NULL,
+            bool (*text_filter)(const string &tag) = NULL,
             int   margin = -1);
 
-    std::vector<formatted_string> formatted_lines() const;
+    vector<formatted_string> formatted_lines() const;
 
     void set_pagesize(int pagesize);
 
 private:
     struct column;
     void compose_formatted_column(
-            const std::vector<formatted_string> &lines,
+            const vector<formatted_string> &lines,
             int start_col,
             int margin);
-    void strip_blank_lines(std::vector<formatted_string> &) const;
+    void strip_blank_lines(vector<formatted_string> &) const;
 
 private:
     struct column
@@ -524,8 +527,8 @@ private:
     };
 
     int ncols, pagesize;
-    std::vector<column> columns;
-    std::vector<formatted_string> flines;
+    vector<column> columns;
+    vector<formatted_string> flines;
 };
 
 // This class is for when (some of) your items are formatted, and
@@ -538,13 +541,13 @@ class formatted_scroller : public Menu
 {
 public:
     formatted_scroller();
-    formatted_scroller(int flags, const std::string& s);
+    formatted_scroller(int flags, const string& s);
     virtual void add_item_formatted_string(const formatted_string& s,
                                            int hotkey = 0);
-    virtual void add_item_string(const std::string& s, int hotkey = 0);
-    virtual void add_text(const std::string& s, bool new_line = false);
+    virtual void add_item_string(const string& s, int hotkey = 0);
+    virtual void add_text(const string& s, bool new_line = false);
     virtual bool jump_to_hotkey(int keyin);
-    virtual std::vector<MenuEntry *> show(bool reuse_selections = false);
+    virtual vector<MenuEntry *> show(bool reuse_selections = false);
     virtual ~formatted_scroller();
 protected:
     virtual bool page_down();
@@ -586,8 +589,8 @@ public:
     virtual const coord_def& get_min_coord() const { return m_min_coord; }
     virtual const coord_def& get_max_coord() const { return m_max_coord; }
 
-    virtual void set_description_text(const std::string& text) { m_description = text; }
-    virtual const std::string& get_description_text() const { return m_description; }
+    virtual void set_description_text(const string& text) { m_description = text; }
+    virtual const string& get_description_text() const { return m_description; }
 
     virtual void select(bool toggle);
     virtual void select(bool toggle, int value);
@@ -607,7 +610,7 @@ public:
     virtual void render() = 0;
 
     void add_hotkey(int key);
-    const std::vector<int>& get_hotkeys() const;
+    const vector<int>& get_hotkeys() const;
     void clear_hotkeys();
 
     void set_link_left(MenuItem* item);
@@ -627,8 +630,8 @@ protected:
     bool m_allow_highlight;
     bool m_dirty;
     bool m_visible;
-    std::vector<int> m_hotkeys;
-    std::string m_description;
+    vector<int> m_hotkeys;
+    string m_description;
 
     COLORS m_fg_colour;
     COLORS m_highlight_colour;
@@ -650,7 +653,7 @@ protected:
 };
 
 /**
- * Basic Item with std::string unformatted text that can be selected
+ * Basic Item with string unformatted text that can be selected
  */
 class TextItem : public MenuItem
 {
@@ -664,13 +667,13 @@ public:
 
     virtual void render();
 
-    void set_text(const std::string& text);
-    const std::string& get_text() const;
+    void set_text(const string& text);
+    const string& get_text() const;
 protected:
     void _wrap_text();
 
-    std::string m_text;
-    std::string m_render_text;
+    string m_text;
+    string m_render_text;
 
 #ifdef USE_TILE_LOCAL
     FontBuffer m_font_buf;
@@ -718,7 +721,7 @@ public:
     void clear_tile() { m_tiles.clear(); };
 
 protected:
-    std::vector<tile_def> m_tiles;
+    vector<tile_def> m_tiles;
     FixedVector<TileBuffer, TEX_MAX> m_tile_buf;
 };
 
@@ -750,7 +753,7 @@ class PrecisionMenu;
  * Abstract base class interface for all attachable objects.
  * Objects are generally containers that hold MenuItems, however special
  * objects are also possible, for instance MenuDescriptor, MenuButton.
- * All objects should have an unique std::string name, although the uniqueness
+ * All objects should have an unique string name, although the uniqueness
  * is not enforced or checked right now.
  */
 class MenuObject
@@ -776,10 +779,10 @@ public:
 
     void set_tile_height();
     void init(const coord_def& min_coord, const coord_def& max_coord,
-              const std::string& name);
+              const string& name);
     const coord_def& get_min_coord() const { return m_min_coord; }
     const coord_def& get_max_coord() const { return m_max_coord; }
-    const std::string& get_name() const { return m_object_name; }
+    const string& get_name() const { return m_object_name; }
 
     virtual void allow_focus(bool toggle);
     virtual bool can_be_focused();
@@ -798,7 +801,7 @@ public:
     virtual void set_visible(bool flag);
     virtual bool is_visible() const;
 
-    virtual std::vector<MenuItem*> get_selected_items();
+    virtual vector<MenuItem*> get_selected_items();
     virtual bool select_item(int index) = 0;
     virtual bool select_item(MenuItem* item) = 0;
     virtual MenuItem* find_item_by_hotkey(int key);
@@ -828,11 +831,11 @@ protected:
 
     coord_def m_min_coord;
     coord_def m_max_coord;
-    std::string m_object_name;
+    string m_object_name;
     // by default, entries are held in a vector
     // if you need a different behaviour, please override the
     // affected methods
-    std::vector<MenuItem*> m_entries;
+    vector<MenuItem*> m_entries;
 #ifdef USE_TILE_LOCAL
     // Holds the conversion values to translate unit values to pixel values
     unsigned int m_unit_width_pixels;
@@ -929,7 +932,7 @@ public:
     virtual ~MenuDescriptor();
 
     void init(const coord_def& min_coord, const coord_def& max_coord,
-              const std::string& name);
+              const string& name);
 
     virtual InputReturnValue process_input(int key);
 #ifdef USE_TILE_LOCAL
@@ -938,7 +941,7 @@ public:
     virtual void render();
 
     // these are not used, clear them
-    virtual std::vector<MenuItem*> get_selected_items();
+    virtual vector<MenuItem*> get_selected_items();
     virtual MenuItem* get_active_item() { return NULL; }
     virtual bool attach_item(MenuItem* item) { return false; }
     virtual void set_active_item(int index) {}
@@ -1009,7 +1012,7 @@ public:
     virtual void render();
 
     // these are not used, clear them
-    virtual std::vector<MenuItem*> get_selected_items();
+    virtual vector<MenuItem*> get_selected_items();
     virtual MenuItem* get_active_item() { return NULL; }
     virtual bool attach_item(MenuItem* item) { return false; }
     virtual void set_active_item(int index) {}
@@ -1102,10 +1105,10 @@ public:
 #endif
 
     // not const on purpose
-    virtual std::vector<MenuItem*> get_selected_items();
+    virtual vector<MenuItem*> get_selected_items();
 
     virtual void attach_object(MenuObject* item);
-    virtual MenuObject* get_object_by_name(const std::string& search);
+    virtual MenuObject* get_object_by_name(const string& search);
     virtual MenuItem* get_active_item();
     virtual void set_active_object(MenuObject* object);
     virtual void clear_selections();
@@ -1120,13 +1123,43 @@ protected:
     };
     MenuObject* _find_object_by_direction(const MenuObject* start, Direction dir);
 
-    std::vector<MenuObject*> m_attached_objects;
+    vector<MenuObject*> m_attached_objects;
     MenuObject* m_active_object;
 
     SelectType m_select_type;
 };
 
-int linebreak_string(std::string& s, int maxcol, bool indent = false);
-std::string get_linebreak_string(const std::string& s, int maxcol);
+int linebreak_string(string& s, int maxcol, bool indent = false);
+string get_linebreak_string(const string& s, int maxcol);
+
+#ifdef USE_TILE_LOCAL
+class Popup
+{
+public:
+    // constructors
+    Popup(string prompt);
+
+    // accessors
+    //  get/set prompt text
+    void set_prompt(string prompt);
+    string get_prompt() { return m_prompt; }
+
+    // methods
+    //  add a menu entry to the popup
+    void push_entry(MenuEntry *me);
+    //  remove a menu entry from the popup
+    MenuEntry* next_entry();
+
+    //  draw the popup and return key pressed
+    int pop();
+
+protected:
+    vector<MenuEntry*> m_entries;
+    string m_prompt;
+
+private:
+    unsigned int m_curr;
+};
+#endif
 
 #endif

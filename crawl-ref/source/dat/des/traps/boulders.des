@@ -10,6 +10,10 @@
 function boulder_generate(x, y, targetx, targety)
   local boulder = dgn.create_monster(x, y, 'generate_awake boulder beetle')
 
+  if boulder == nil then
+    return
+  end
+
   -- Set x, y, velocity
   local tx = targetx - x
   local ty = targety - y

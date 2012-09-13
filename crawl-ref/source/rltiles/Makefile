@@ -76,7 +76,7 @@ JAVASCRIPT := $(INPUTS:%=tileinfo-%.js)
 ifneq ($(findstring $(MAKEFLAGS),s),s)
 ifndef V
         QUIET_HOSTCXX  = @echo '   ' HOSTCXX $@;
-        QUIET_GEN      = @echo '   ' GEN $(lastword $(subst -, ,$*));
+        QUIET_GEN      = @echo '   ' GEN $@;
         QUIET_HOSTLINK = @echo '   ' HOSTLINK $@;
         export V
 endif
@@ -91,8 +91,11 @@ ifdef TILES
 all: $(IMAGES)
 endif
 
-%.png tiledef-%.h tiledef-%.cc tileinfo-%.js: dc-%.txt $(TILEGEN)
-	$(QUIET_GEN)$(TILEGEN) $<
+%.png: dc-%.txt $(TILEGEN)
+	$(QUIET_GEN)$(TILEGEN) -i $<
+
+tiledef-%.h tiledef-%.cc tileinfo-%.js: dc-%.txt $(TILEGEN)
+	$(QUIET_GEN)$(TILEGEN) -c $<
 
 # CFLAGS difference check
 TRACK_CFLAGS = $(subst ','\'',$(HOSTCXX) $(CFLAGS))           # (stray ' for highlights)
@@ -109,7 +112,7 @@ TRACK_CFLAGS = $(subst ','\'',$(HOSTCXX) $(CFLAGS))           # (stray ' for hig
 ##########################################################################
 # Dependencies 
 
-gui.png tiledef-gui.h tileinfo-gui.js: dc-spells.txt dc-skills.txt dc-commands.txt
+gui.png tiledef-gui.h tileinfo-gui.js: dc-spells.txt dc-skills.txt dc-commands.txt dc-abilities.txt dc-invocations.txt dc-zotdef.txt
 main.png tiledef-main.h tileinfo-main.js: dc-item.txt dc-unrand.txt dc-corpse.txt dc-misc.txt
 player.png tiledef-player.h tileinfo-player.js: dc-mon.txt dc-tentacles.txt dc-zombie.txt dc-demon.txt
 

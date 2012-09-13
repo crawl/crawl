@@ -14,23 +14,23 @@ bool rect_def::contains(const coord_def& p) const
 rect_def rect_def::intersect(const rect_def& other) const
 {
     rect_def res;
-    res.min.x = std::max(min.x, other.min.x);
-    res.min.y = std::max(min.y, other.min.y);
-    res.max.x = std::min(max.x, other.max.x);
-    res.max.y = std::min(max.y, other.max.y);
-    return (res);
+    res.min.x = ::max(min.x, other.min.x);
+    res.min.y = ::max(min.y, other.min.y);
+    res.max.x = ::min(max.x, other.max.x);
+    res.max.y = ::min(max.y, other.max.y);
+    return res;
 }
 
 rectangle_iterator rect_def::iter() const
 {
-    return (rectangle_iterator(min, max));
+    return rectangle_iterator(min, max);
 }
 
 circle_def::circle_def()
     : los_radius(true), origin(coord_def(0,0)), check_bounds(false)
 {
     // Set up bounding box and shape.
-    init(LOS_MAX_RADIUS, C_ROUND);
+    init(LOS_RADIUS, C_ROUND);
 }
 
 circle_def::circle_def(const coord_def& origin_, const circle_def& bds)
@@ -91,23 +91,23 @@ void circle_def::init_bbox()
 
 const rect_def& circle_def::get_bbox() const
 {
-    return (bbox);
+    return bbox;
 }
 
 const coord_def& circle_def::get_center() const
 {
-    return (origin);
+    return origin;
 }
 
 circle_iterator circle_def::iter() const
 {
-    return (circle_iterator(*this));
+    return circle_iterator(*this);
 }
 
 bool circle_def::contains(const coord_def &p) const
 {
     if (!bbox.contains(p))
-        return (false);
+        return false;
     switch (shape)
     {
     case SH_SQUARE:
@@ -118,6 +118,6 @@ bool circle_def::contains(const coord_def &p) const
         return ((p - origin).abs() <= r_sq);
     }
     default:
-        return (false);
+        return false;
     }
 }

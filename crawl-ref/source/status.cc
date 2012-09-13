@@ -18,11 +18,11 @@
 struct duration_def
 {
     duration_type dur;
-    bool expire;              // whether to do automat expiring transforms
-    int         light_colour; // status light base colour
-    std::string light_text;   // for the status lights
-    std::string short_text;   // for @: line
-    std::string long_text ;   // for @ message
+    bool expire;         // whether to do automat expiring transforms
+    int    light_colour; // status light base colour
+    string light_text;   // for the status lights
+    string short_text;   // for @: line
+    string long_text ;   // for @ message
 };
 
 static duration_def duration_data[] =
@@ -79,8 +79,6 @@ static duration_def duration_data[] =
       BLUE, "RMsl", "repel missiles", "You are protected from missiles." },
     { DUR_RESISTANCE, true,
       LIGHTBLUE, "Resist", "", "You resist elements." },
-    { DUR_SEE_INVISIBLE, true,
-      BLUE, "SInv", "", "You can see invisible." },
     { DUR_SLAYING, false,
       0, "", "deadly", "" },
     { DUR_SLIMIFY, true,
@@ -97,8 +95,6 @@ static duration_def duration_data[] =
       LIGHTBLUE, "Tele", "about to teleport", "You are about to teleport." },
     { DUR_DEATHS_DOOR, true,
       LIGHTGREY, "DDoor", "death's door", "" },
-    { DUR_INSULATION, true,
-      BLUE, "Ins", "", "You are insulated." },
     { DUR_PHASE_SHIFT, true,
       0, "", "phasing", "You are out of phase with the material plane." },
     { DUR_QUAD_DAMAGE, true,
@@ -154,7 +150,7 @@ static const duration_def* _lookup_duration(duration_type dur)
 {
     ASSERT(dur >= 0 && dur < NUM_DURATIONS);
     if (duration_index[dur] == -1)
-        return (NULL);
+        return NULL;
     else
         return (&duration_data[duration_index[dur]]);
 }
@@ -170,31 +166,31 @@ static void _reset_status_info(status_info* inf)
 static int _bad_ench_colour(int lvl, int orange, int red)
 {
     if (lvl > red)
-        return (RED);
+        return RED;
     else if (lvl > orange)
-        return (LIGHTRED);
+        return LIGHTRED;
 
-    return (YELLOW);
+    return YELLOW;
 }
 
 static int _dur_colour(int exp_colour, bool expiring)
 {
     if (expiring)
-        return (exp_colour);
+        return exp_colour;
     else
     {
         switch (exp_colour)
         {
         case GREEN:
-            return (LIGHTGREEN);
+            return LIGHTGREEN;
         case BLUE:
-            return (LIGHTBLUE);
+            return LIGHTBLUE;
         case MAGENTA:
-            return (LIGHTMAGENTA);
+            return LIGHTMAGENTA;
         case LIGHTGREY:
-            return (WHITE);
+            return WHITE;
         default:
-            return (exp_colour);
+            return exp_colour;
         }
     }
 }
@@ -378,9 +374,7 @@ void fill_status_info(int status, status_info* inf)
         const int dur = you.duration[DUR_CONFUSING_TOUCH];
         const int high = 40 * BASELINE_DELAY;
         const int low  = 20 * BASELINE_DELAY;
-        inf->long_text = std::string("Your ")
-                         + you.hand_name(true)
-                         + " are glowing ";
+        inf->long_text = string("Your ") + you.hand_name(true) + " are glowing ";
         if (dur > high)
             inf->long_text += "an extremely bright ";
         else if (dur > low)
@@ -445,7 +439,7 @@ void fill_status_info(int status, status_info* inf)
     case STATUS_MANUAL:
         if (!is_invalid_skill(you.manual_skill))
         {
-            std::string sk = skill_name(you.manual_skill);
+            string sk = skill_name(you.manual_skill);
             inf->short_text = "studying " + sk;
             inf->long_text = "You are " + inf->short_text + ".";
         }
@@ -456,7 +450,7 @@ void fill_status_info(int status, status_info* inf)
         inf->light_colour = BLUE;
         inf->light_text   = "Blade";
         inf->short_text   = "bonded with blade";
-        std::string desc;
+        string desc;
         if (you.duration[DUR_SURE_BLADE] > 15 * BASELINE_DELAY)
             desc = "strong ";
         else if (you.duration[DUR_SURE_BLADE] >  5 * BASELINE_DELAY)
@@ -512,13 +506,24 @@ void fill_status_info(int status, status_info* inf)
         if (you.is_constricted())
         {
             inf->light_colour = YELLOW;
-            inf->light_text   = "Constr";
-            inf->short_text   = "constricted";
+            inf->light_text   = you.held == HELD_MONSTER ? "Held" : "Constr";
+            inf->short_text   = you.held == HELD_MONSTER ? "held" : "constricted";
         }
         break;
 
     case STATUS_TERRAIN:
         _describe_terrain(inf);
+        break;
+
+    // Silenced by an external source.
+    case STATUS_SILENCE:
+        if (silenced(you.pos()) && !you.duration[DUR_SILENCE])
+        {
+            inf->light_colour = LIGHTMAGENTA;
+            inf->light_text   = "Sil";
+            inf->short_text   = "silenced";
+            inf->long_text    = "You are silenced.";
+        }
         break;
 
     default:
@@ -673,9 +678,10 @@ static void _describe_regen(status_info* inf)
 static void _describe_poison(status_info* inf)
 {
     int pois = you.duration[DUR_POISONING];
-    inf->light_colour = _bad_ench_colour(pois, 5, 10);
+    inf->light_colour = (player_res_poison(false) >= 3
+                         ? DARKGREY : _bad_ench_colour(pois, 5, 10));
     inf->light_text   = "Pois";
-    const std::string adj =
+    const string adj =
          (pois > 10) ? "extremely" :
          (pois > 5)  ? "very" :
          (pois > 3)  ? "quite"
@@ -722,7 +728,7 @@ static void _describe_sage(status_info* inf)
     if (you.sage_skills.empty())
         return;
 
-    std::vector<const char*> sages;
+    vector<const char*> sages;
     for (unsigned long i = 0; i < you.sage_skills.size(); ++i)
         sages.push_back(skill_name(you.sage_skills[i]));
 
@@ -775,7 +781,7 @@ static void _describe_rotting(status_info* inf)
         inf->long_text = "Your flesh is rotting";
         int rot = you.rotting;
         if (you.species == SP_GHOUL)
-            rot += 1 + (1 << std::max(0, HS_SATIATED - you.hunger_state));
+            rot += 1 + (1 << max(0, HS_SATIATED - you.hunger_state));
         if (rot > 15)
             inf->long_text += " before your eyes";
         else if (rot > 8)
@@ -801,9 +807,9 @@ static void _describe_sickness(status_info* inf)
         inf->light_colour   = _bad_ench_colour(you.disease, low, high);
         inf->light_text     = "Sick";
 
-        std::string mod = (you.disease > high) ? "badly "  :
-                          (you.disease >  low) ? ""        :
-                                                 "mildly ";
+        string mod = (you.disease > high) ? "badly "  :
+                     (you.disease >  low) ? ""
+                                          : "mildly ";
 
         inf->short_text = mod + "diseased";
         inf->long_text  = "You are " + mod + "diseased.";
@@ -815,7 +821,7 @@ static void _describe_nausea(status_info* inf)
     if (!you.duration[DUR_NAUSEA])
         return;
 
-    inf->light_colour = BROWN;
+    inf->light_colour = you.is_undead == US_UNDEAD ? DARKGREY : BROWN;
     inf->light_text   = "Nausea";
     inf->short_text   = "nauseated";
     inf->long_text    = (you.hunger_state <= HS_NEAR_STARVING) ?

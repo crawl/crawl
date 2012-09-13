@@ -86,9 +86,9 @@ show_type::show_type(show_item_type t)
 bool show_type::operator < (const show_type &other) const
 {
     if (cls < other.cls)
-        return (false);
+        return false;
     else if (cls > other.cls)
-        return (true);
+        return true;
     switch (cls)
     {
     case SH_FEATURE:
@@ -98,7 +98,7 @@ bool show_type::operator < (const show_type &other) const
     case SH_MONSTER:
         return (mons < other.mons);
     default:
-        return (false);
+        return false;
     }
 }
 
@@ -141,6 +141,9 @@ static void _update_feat_at(const coord_def &gp)
 
     if (orb_haloed(gp))
         env.map_knowledge(gp).flags |= MAP_ORB_HALOED;
+
+    if (quad_haloed(gp))
+        env.map_knowledge(gp).flags |= MAP_QUAD_HALOED;
 
     if (is_sanctuary(gp))
     {
@@ -192,23 +195,24 @@ static show_item_type _item_to_show_code(const item_def &item)
 {
     switch (item.base_type)
     {
-    case OBJ_ORBS:       return (SHOW_ITEM_ORB);
-    case OBJ_WEAPONS:    return (SHOW_ITEM_WEAPON);
-    case OBJ_MISSILES:   return (SHOW_ITEM_MISSILE);
-    case OBJ_ARMOUR:     return (SHOW_ITEM_ARMOUR);
-    case OBJ_WANDS:      return (SHOW_ITEM_WAND);
-    case OBJ_FOOD:       return (SHOW_ITEM_FOOD);
-    case OBJ_SCROLLS:    return (SHOW_ITEM_SCROLL);
+    case OBJ_ORBS:       return SHOW_ITEM_ORB;
+    case OBJ_WEAPONS:    return SHOW_ITEM_WEAPON;
+    case OBJ_MISSILES:   return SHOW_ITEM_MISSILE;
+    case OBJ_ARMOUR:     return SHOW_ITEM_ARMOUR;
+    case OBJ_WANDS:      return SHOW_ITEM_WAND;
+    case OBJ_FOOD:       return SHOW_ITEM_FOOD;
+    case OBJ_SCROLLS:    return SHOW_ITEM_SCROLL;
     case OBJ_JEWELLERY:
         return (jewellery_is_amulet(item)? SHOW_ITEM_AMULET : SHOW_ITEM_RING);
-    case OBJ_POTIONS:    return (SHOW_ITEM_POTION);
-    case OBJ_BOOKS:      return (SHOW_ITEM_BOOK);
-    case OBJ_STAVES:     return (SHOW_ITEM_STAVE);
-    case OBJ_MISCELLANY: return (SHOW_ITEM_MISCELLANY);
-    case OBJ_CORPSES:    return (SHOW_ITEM_CORPSE);
-    case OBJ_GOLD:       return (SHOW_ITEM_GOLD);
-    case OBJ_DETECTED:   return (SHOW_ITEM_DETECTED);
-    default:             return (SHOW_ITEM_ORB); // bad item character
+    case OBJ_POTIONS:    return SHOW_ITEM_POTION;
+    case OBJ_BOOKS:      return SHOW_ITEM_BOOK;
+    case OBJ_STAVES:     return SHOW_ITEM_STAVE;
+    case OBJ_RODS:       return SHOW_ITEM_STAVE;
+    case OBJ_MISCELLANY: return SHOW_ITEM_MISCELLANY;
+    case OBJ_CORPSES:    return SHOW_ITEM_CORPSE;
+    case OBJ_GOLD:       return SHOW_ITEM_GOLD;
+    case OBJ_DETECTED:   return SHOW_ITEM_DETECTED;
+    default:             return SHOW_ITEM_ORB; // bad item character
    }
 }
 
@@ -235,7 +239,7 @@ static void _update_item_at(const coord_def &gp)
     }
     else
     {
-        const std::vector<item_def> stash = item_list_in_stash(gp);
+        const vector<item_def> stash = item_list_in_stash(gp);
         if (stash.empty())
             return;
 
@@ -312,12 +316,12 @@ static bool _valid_invis_spot(const coord_def &where, const monster* mons)
     monster *mons_at = monster_at(where);
 
     if (mons_at && mons_at != mons)
-        return (false);
+        return false;
 
     if (monster_habitable_grid(mons, grd(where)))
-        return (true);
+        return true;
 
-    return (false);
+    return false;
 }
 
 static int _hashed_rand(const monster* mons, uint32_t id, uint32_t die)
@@ -335,7 +339,7 @@ static int _hashed_rand(const monster* mons, uint32_t id, uint32_t die)
     data.id  = id;
     data.seed = you.attribute[ATTR_SEEN_INVIS_SEED];
 
-    return hash(&data, sizeof(data)) % die;
+    return hash32(&data, sizeof(data)) % die;
 }
 
 /**
@@ -391,7 +395,7 @@ static void _update_monster(monster* mons)
         }
 
         bool show_location = (mons->friendly()
-                              || (mons->constricted_by == MHITYOU));
+                              || (mons->constricted_by == MID_PLAYER));
 
         // maybe show unstealthy invis monsters
         if (show_location
@@ -471,6 +475,9 @@ void show_update_at(const coord_def &gp, bool terrain_only)
 #ifdef USE_TILE
     tile_draw_map_cell(gp, true);
 #endif
+#ifdef USE_TILE_WEB
+    tiles.mark_for_redraw(gp);
+#endif
 }
 
 void show_init(bool terrain_only)
@@ -491,7 +498,7 @@ void show_update_emphasis()
    // The only thing that can change is that previously unknown
    // stairs are now known. (see is_unknown_stair(), emphasise())
    LevelInfo& level_info = travel_cache.get_level_info(level_id::current());
-   std::vector<stair_info> stairs = level_info.get_stairs();
+   vector<stair_info> stairs = level_info.get_stairs();
    for (unsigned i = 0; i < stairs.size(); ++i)
        if (stairs[i].destination.is_valid())
            env.map_knowledge(stairs[i].position).flags &= ~MAP_EMPHASIZE;

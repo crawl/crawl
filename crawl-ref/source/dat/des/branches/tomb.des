@@ -185,7 +185,7 @@ SUBST:   3 = 3., 4 = 4., 5 = 5.
 MONS:    mummy, guardian mummy, mummy priest, sphinx, greater mummy
 MONS:    silver statue / orange crystal statue / ice statue
 #
-: dgn.set_feature_desc_short("granite statue", "sarcophagus")
+: set_feature_name("granite_statue", "sarcophagus")
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

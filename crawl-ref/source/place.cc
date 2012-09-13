@@ -13,7 +13,7 @@
 #include "player.h"
 #include "travel.h"
 
-std::string short_place_name(level_id id)
+string short_place_name(level_id id)
 {
     return id.describe();
 }
@@ -44,15 +44,14 @@ bool single_level_branch(branch_type branch)
             && brdepth[branch] == 1);
 }
 
-std::string place_name(unsigned short place, bool long_name,
-                        bool include_number)
+string place_name(unsigned short place, bool long_name, bool include_number)
 {
     branch_type branch = static_cast<branch_type>((place >> 8) & 0xFF);
     int lev = place & 0xFF;
     ASSERT(branch < NUM_BRANCHES);
 
-    std::string result = (long_name ?
-              branches[branch].longname : branches[branch].abbrevname);
+    string result = (long_name ? branches[branch].longname
+                               : branches[branch].abbrevname);
 
     if (include_number && brdepth[branch] != 1)
     {
@@ -75,16 +74,16 @@ std::string place_name(unsigned short place, bool long_name,
 // Takes a packed 'place' and returns a compact stringified place name.
 // XXX: This is done in several other places; a unified function to
 //      describe places would be nice.
-std::string short_place_name(unsigned short place)
+string short_place_name(unsigned short place)
 {
     return place_name(place, false, true);
 }
 
 // Prepositional form of branch level name.  For example, "in the
 // Abyss" or "on level 3 of the Main Dungeon".
-std::string prep_branch_level_name(unsigned short packed_place)
+string prep_branch_level_name(unsigned short packed_place)
 {
-    std::string place = place_name(packed_place, true, true);
+    string place = place_name(packed_place, true, true);
     if (!place.empty() && place != "Pandemonium")
         place[0] = tolower(place[0]);
     return (place.find("level") == 0 ? "on " + place
@@ -92,7 +91,7 @@ std::string prep_branch_level_name(unsigned short packed_place)
 }
 
 // Use current branch and depth
-std::string prep_branch_level_name()
+string prep_branch_level_name()
 {
     return prep_branch_level_name(get_packed_place());
 }
@@ -107,9 +106,9 @@ bool branch_allows_followers(branch_type branch)
     return (is_connected_branch(branch) || branch == BRANCH_PANDEMONIUM);
 }
 
-std::vector<level_id> all_dungeon_ids()
+vector<level_id> all_dungeon_ids()
 {
-    std::vector<level_id> out;
+    vector<level_id> out;
     for (int i = 0; i < NUM_BRANCHES; i++)
     {
         const Branch &branch = branches[i];
@@ -117,7 +116,7 @@ std::vector<level_id> all_dungeon_ids()
         for (int depth = 1; depth <= brdepth[i]; depth++)
             out.push_back(level_id(branch.id, depth));
     }
-    return (out);
+    return out;
 }
 
 bool is_level_on_stack(level_id lev)

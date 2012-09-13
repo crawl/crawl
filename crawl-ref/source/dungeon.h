@@ -7,6 +7,7 @@
 #ifndef DUNGEON_H
 #define DUNGEON_H
 
+#include "bitary.h"
 #include "fixedarray.h"
 #include "env.h"
 #include "externs.h"
@@ -29,16 +30,6 @@
 #define OVERFLOW_TEMPLES_KEY "overflow_temples_key"
 #define TEMPLE_MAP_KEY       "temple_map_key"
 
-enum portal_type
-{
-    PORTAL_NONE = 0,
-    PORTAL_LABYRINTH,
-    PORTAL_HELL,
-    PORTAL_ABYSS,
-    PORTAL_PANDEMONIUM,
-    NUM_PORTALS
-};
-
 const int MAKE_GIFT_ITEM = 350; // worse than the next one
 const int MAKE_GOOD_ITEM = 351;
 const unsigned short INVALID_MAP_INDEX = 10000;
@@ -55,16 +46,16 @@ enum map_mask_type
     MMT_NO_ITEM    = 0x02,    // Random items should not be placed here.
     MMT_NO_MONS    = 0x04,    // Random monsters should not be placed here.
     MMT_NO_POOL    = 0x08,    // Pool fixup should not be applied here.
-    MMT_NO_DOOR    = 0x10,    // No secret-doorisation.
     MMT_NO_WALL    = 0x20,    // Wall fixup should not be applied here.
     MMT_OPAQUE     = 0x40,    // Vault may impede connectivity.
     MMT_NO_TRAP    = 0x80,    // No trap generation
     MMT_MIMIC      = 0x100,   // Feature mimics
     MMT_NO_MIMIC   = 0x200,   // This feature shouldn't be turned into a mimic.
+    MMT_WAS_DOOR_MIMIC = 0x400, // There was a door mimic there.
 };
 
 class dgn_region;
-typedef std::vector<dgn_region> dgn_region_list;
+typedef vector<dgn_region> dgn_region_list;
 
 class dgn_region
 {
@@ -141,7 +132,7 @@ public:
 
     map_section_type orient;
     map_def map;
-    std::vector<coord_def> exits;
+    vector<coord_def> exits;
 
     int level_number;
 
@@ -179,16 +170,16 @@ private:
 class unwind_vault_placement_mask
 {
 public:
-    unwind_vault_placement_mask(const map_mask *mask);
+    unwind_vault_placement_mask(const map_bitmask *mask);
     ~unwind_vault_placement_mask();
 private:
-    const map_mask *oldmask;
+    const map_bitmask *oldmask;
 };
 
 extern bool Generating_Level;
-extern std::vector<vault_placement> Temp_Vaults;
+extern vector<vault_placement> Temp_Vaults;
 
-extern const map_mask *Vault_Placement_Mask;
+extern const map_bitmask *Vault_Placement_Mask;
 
 void init_level_connectivity();
 void read_level_connectivity(reader &th);
@@ -227,16 +218,12 @@ const map_def *dgn_safe_place_map(const map_def *map,
                                   const coord_def &pos = INVALID_COORD);
 
 void level_clear_vault_memory();
-void level_welcome_messages();
-void run_map_epilogues ();
+void run_map_epilogues();
 
 struct trap_spec;
 bool place_specific_trap(const coord_def& where, trap_type trap_spec, int charges = 0);
-bool place_specific_trap(const coord_def& where, trap_spec* spec, int charges = 0);
 
 struct shop_spec;
-void place_spec_shop(const coord_def& where,
-                     shop_spec* spec, bool representative = false);
 void place_spec_shop(const coord_def& where,
                      int force_s_type, bool representative = false);
 bool seen_replace_feat(dungeon_feature_type replace,
@@ -262,7 +249,7 @@ void dgn_place_multiple_items(item_list &list,
 bool set_level_flags(uint32_t flags, bool silent = false);
 bool unset_level_flags(uint32_t flags, bool silent = false);
 
-void dgn_set_branch_epilogue(branch_type br, std::string callback_name);
+void dgn_set_branch_epilogue(branch_type br, string callback_name);
 
 void dgn_reset_level(bool enable_random_maps = true);
 
@@ -299,12 +286,12 @@ vault_placement *dgn_vault_at(coord_def gp);
 void dgn_seen_vault_at(coord_def gp);
 
 int count_neighbours(int x, int y, dungeon_feature_type feat);
-inline int count_neighbours(const coord_def& p, dungeon_feature_type feat)
+static inline int count_neighbours(const coord_def& p, dungeon_feature_type feat)
 {
     return count_neighbours(p.x, p.y, feat);
 }
 
-std::string dump_vault_maps();
+string dump_vault_maps();
 
 bool dgn_square_travel_ok(const coord_def &c);
 
@@ -312,4 +299,6 @@ bool join_the_dots(const coord_def &from, const coord_def &to, unsigned mmask);
 int count_feature_in_box(int x0, int y0, int x1, int y1,
                          dungeon_feature_type feat);
 bool door_vetoed(const coord_def pos);
+
+void fixup_misplaced_items(void);
 #endif

@@ -34,10 +34,13 @@
 #include "player.h"
 #include "spl-book.h"
 #include "stash.h"
+#include "state.h"
 #include "stuff.h"
 #include "travel.h"
 #include "env.h"
-
+#ifdef USE_TILE_LOCAL
+#include "tilereg-crt.h"
+#endif
 #define SHOPPING_LIST_COST_KEY "shopping_list_cost_key"
 
 ShoppingList shopping_list;
@@ -62,6 +65,9 @@ static void _shop_more()
 
 static bool _shop_yesno(const char* prompt, int safeanswer)
 {
+#ifdef TOUCH_UI
+    return yesno(prompt, true, safeanswer, false, false, false, NULL, GOTO_CRT);
+#else
     if (_in_shop_now)
     {
         textcolor(channel_to_colour(MSGCH_PROMPT));
@@ -71,6 +77,7 @@ static bool _shop_yesno(const char* prompt, int safeanswer)
     }
     else
         return yesno(prompt, true, safeanswer, false, false, false);
+#endif
 }
 
 static void _shop_mpr(const char* msg)
@@ -84,9 +91,9 @@ static void _shop_mpr(const char* msg)
         mpr(msg);
 }
 
-static std::string _hyphenated_suffix(char prev, char last)
+static string _hyphenated_suffix(char prev, char last)
 {
-    std::string s;
+    string s;
     if (prev > last + 2)
         s += "</w>-<w>";
     else if (prev == last + 2)
@@ -94,15 +101,15 @@ static std::string _hyphenated_suffix(char prev, char last)
 
     if (prev != last)
         s += prev;
-    return (s);
+    return s;
 }
 
-static std::string _purchase_keys(const std::string &s)
+static string _purchase_keys(const string &s)
 {
     if (s.empty())
         return "";
 
-    std::string list = "<w>" + s.substr(0, 1);
+    string list = "<w>" + s.substr(0, 1);
     char last = s[0];
     for (unsigned int i = 1; i < s.length(); ++i)
     {
@@ -116,7 +123,7 @@ static std::string _purchase_keys(const std::string &s)
 
     list += _hyphenated_suffix(s[s.length() - 1], last);
     list += "</w>";
-    return (list);
+    return list;
 }
 
 static bool _can_shoplist(level_id lev = level_id::current())
@@ -125,16 +132,222 @@ static bool _can_shoplist(level_id lev = level_id::current())
     return is_connected_branch(lev.branch);
 }
 
-static void _list_shop_keys(const std::string &purchasable, bool viewing,
+#ifdef USE_TILE_LOCAL
+static void _list_shop_keys(const string &purchasable, bool viewing,
                             int total_stock, int num_selected,
-                            int num_in_list)
+                            int num_in_list, MenuFreeform* freeform)
 {
     ASSERT(total_stock > 0);
 
     const int numlines = get_number_of_lines();
     formatted_string fs;
 
-    std::string shop_list = "";
+    TextItem* tmp = NULL;
+
+    string shop_list = "";
+    if (!viewing && _can_shoplist())
+    {
+        shop_list = "[$] ";
+        if (num_selected > 0)
+            shop_list += "selected -> shopping list";
+        else if (num_in_list > 0)
+            shop_list += "shopping list -> selected";
+        else
+            shop_list = "";
+    }
+    if (!shop_list.empty())
+    {
+        // set cursor [line 1]
+        cgotoxy(1, numlines - 2, GOTO_CRT);
+        // print formatted string
+        fs = formatted_string::parse_string(shop_list);
+        // print menu item
+        tmp = new TextItem();
+        tmp->set_fg_colour(LIGHTGRAY);
+        tmp->set_bg_colour(BLACK);
+        tmp->set_highlight_colour(WHITE);
+        tmp->set_text(""); //shop_list);
+        tmp->set_bounds(coord_def(1, wherey()),
+                        coord_def(shop_list.size() + 1, wherey() + 1));
+        tmp->add_hotkey('$');
+        tmp->set_id('$');
+        tmp->set_description_text(shop_list);
+        freeform->attach_item(tmp);
+        // draw
+        fs.display();
+        tmp->set_visible(true);
+    }
+
+    // ///////// EXIT //////////
+    // set cursor [line 2]
+    cgotoxy(1, numlines - 1, GOTO_CRT);
+    // print formatted string for EXIT
+    fs = formatted_string::parse_string(make_stringf(
+            "[<w>x</w>/<w>Esc</w>"
+            "/<w>R-Click</w>"
+            "] exit"));
+    // print menu item
+    tmp = new TextItem();
+    tmp->set_fg_colour(LIGHTGRAY);
+    tmp->set_highlight_colour(WHITE);
+    tmp->set_text(""); //fs.tostring());
+    tmp->set_bounds(coord_def(wherex(), wherey()),
+                    coord_def(wherex() + fs.tostring().size(), wherey() + 1));
+    tmp->add_hotkey('x');
+    tmp->set_id('x');
+    tmp->set_description_text(fs.tostring());
+    freeform->attach_item(tmp);
+    // draw
+    fs.display();
+    tmp->set_visible(true);
+
+    // ///////// BUY/EXAMINE ITEMS //////////
+    // set cursor [20 chars of text + 11 spaces + start at 1]
+    cgotoxy(32, numlines - 1, GOTO_CRT);
+    // print formatted string for BUY/EXAMINE ITEMS
+    fs = formatted_string::parse_string(make_stringf(
+            "[<w>!</w>] %s",
+            (viewing ? "buy items" : "examine items") ));
+    // print menu item
+    tmp = new TextItem();
+    tmp->set_fg_colour(LIGHTGRAY);
+    tmp->set_bg_colour(BLACK);
+    tmp->set_highlight_colour(WHITE);
+    tmp->set_text(""); //fs.tostring());
+    tmp->set_bounds(coord_def(wherex(), wherey()),
+                    coord_def(wherex() + fs.tostring().size(), wherey() + 1));
+    tmp->add_hotkey('!');
+    tmp->set_id('!');
+    tmp->set_description_text(fs.tostring());
+    freeform->attach_item(tmp);
+    // draw
+    fs.display();
+    tmp->set_visible(true);
+
+
+    // ///////// SELECT ITEM TO BUY/EXAMINE //////////
+    // set cursor [32 + 16 chars + 5 whitespace]
+    cgotoxy(53, numlines - 1, GOTO_CRT);
+    // calculate and draw formatted text
+    string pkeys = "";
+    if (viewing)
+    {
+        pkeys = "<w>a</w>";
+        if (total_stock > 1)
+        {
+            pkeys += "-<w>";
+            pkeys += 'a' + total_stock - 1;
+            pkeys += "</w>";
+        }
+    }
+    else
+        pkeys = _purchase_keys(purchasable);
+
+    if (!pkeys.empty())
+    {
+        pkeys = "[" + pkeys + "] select item to "
+                + (viewing ? "examine" : "buy");
+    }
+    fs = formatted_string::parse_string(pkeys.c_str());
+    fs.display();
+
+    // ///////// THIRD LINE //////////
+    // ///////// ENTER MAKE PURCHASE //////////
+    // cursor at 1,n
+    cgotoxy(1, numlines, GOTO_CRT);
+    // print formatted string
+    fs = formatted_string::parse_string(
+            "[<w>Space</w>" // sorry! Enter really doesn't work very well :(
+            "] make purchase");
+    // print menu item
+    tmp = new TextItem();
+    tmp->set_fg_colour(LIGHTGRAY);
+    tmp->set_bg_colour(BLACK);
+    tmp->set_highlight_colour(WHITE);
+    tmp->set_text(""); //fs.tostring());
+    tmp->set_bounds(coord_def(wherex(), wherey()),
+                    coord_def(wherex() + fs.tostring().size(), wherey() + 1));
+    tmp->add_hotkey(' ');
+    tmp->set_id(' ');
+    tmp->set_description_text(fs.tostring());
+    freeform->attach_item(tmp);
+    // draw
+    fs.display();
+    tmp->set_visible(true);
+
+    // ///////// LIST KNOWN //////////
+    // cursor at 1 + 21 chars + 2 whitespace
+    cgotoxy(24, numlines, GOTO_CRT);
+    // print formatted string
+    fs = formatted_string::parse_string("[<w>\\</w>] list known items");
+    // print menu item
+    tmp = new TextItem();
+    tmp->set_fg_colour(LIGHTGRAY);
+    tmp->set_bg_colour(BLACK);
+    tmp->set_highlight_colour(WHITE);
+    tmp->set_text(""); //fs.tostring());
+    tmp->set_bounds(coord_def(wherex(), wherey()),
+                    coord_def(wherex() + fs.tostring().size(), wherey() + 1));
+    tmp->add_hotkey('\\');
+    tmp->set_id('\\');
+    tmp->set_description_text(fs.tostring());
+    freeform->attach_item(tmp);
+    // draw
+    fs.display();
+    tmp->set_visible(true);
+
+    // ///////// INVENTORY //////////
+    // cursor at 24 + 20 chars + 1 whitespace
+    cgotoxy(45, numlines, GOTO_CRT);
+    // print formatted string
+    fs = formatted_string::parse_string("[<w>?</w>] inventory");
+    // print menu item
+    tmp = new TextItem();
+    tmp->set_fg_colour(LIGHTGRAY);
+    tmp->set_bg_colour(BLACK);
+    tmp->set_highlight_colour(WHITE);
+    tmp->set_text(""); //fs.tostring());
+    tmp->set_bounds(coord_def(wherex(), wherey()),
+                    coord_def(wherex() + fs.tostring().size(), wherey() + 1));
+    tmp->add_hotkey('?');
+    tmp->set_id('?');
+    tmp->set_description_text(fs.tostring());
+    freeform->attach_item(tmp);
+    // draw
+    fs.display();
+    tmp->set_visible(true);
+
+    // ///////// INVERT SELN //////////
+    // cursor at 45 + 13 chars + 2 whitespace
+    cgotoxy(60, numlines, GOTO_CRT);
+    // print formatted string
+    fs = formatted_string::parse_string("[<w>*</w>] invert selection");
+    // print menu item
+    tmp = new TextItem();
+    tmp->set_fg_colour(LIGHTGRAY);
+    tmp->set_bg_colour(BLACK);
+    tmp->set_highlight_colour(WHITE);
+    tmp->set_text(""); //fs.tostring());
+    tmp->set_bounds(coord_def(wherex(), wherey()),
+                    coord_def(wherex() + fs.tostring().size(), wherey() + 1));
+    tmp->add_hotkey('*');
+    tmp->set_id('*');
+    tmp->set_description_text(fs.tostring());
+    freeform->attach_item(tmp);
+    // draw
+    fs.display();
+    tmp->set_visible(true);
+}
+#else
+static void _list_shop_keys(const string &purchasable, bool viewing,
+                            int total_stock, int num_selected, int num_in_list)
+{
+    ASSERT(total_stock > 0);
+
+    const int numlines = get_number_of_lines();
+    formatted_string fs;
+
+    string shop_list = "";
     if (!viewing && _can_shoplist())
     {
         shop_list = "[<w>$</w>] ";
@@ -155,7 +368,7 @@ static void _list_shop_keys(const std::string &purchasable, bool viewing,
 
     cgotoxy(1, numlines - 1, GOTO_CRT);
 
-    std::string pkeys = "";
+    string pkeys = "";
     if (viewing)
     {
         pkeys = "<w>a</w>";
@@ -190,7 +403,9 @@ static void _list_shop_keys(const std::string &purchasable, bool viewing,
     fs = formatted_string::parse_string(
             "[<w>Enter</w>"
 #ifdef USE_TILE
+#ifndef TOUCH_UI
             "/<w>L-Click</w>"
+#endif
 #endif
             "] make purchase  [<w>\\</w>] list known items "
             "[<w>?</w>] inventory  [<w>*</w>] invert selection");
@@ -198,10 +413,11 @@ static void _list_shop_keys(const std::string &purchasable, bool viewing,
     fs.cprintf("%*s", get_number_of_cols() - fs.width() - 1, "");
     fs.display();
 }
+#endif
 
-static std::vector<int> _shop_get_stock(int shopidx)
+static vector<int> _shop_get_stock(int shopidx)
 {
-    std::vector<int> result;
+    vector<int> result;
     // Shop items are heaped up at this cell.
     const coord_def stack_location(0, 5 + shopidx);
     for (stack_iterator si(stack_location); si; ++si)
@@ -225,16 +441,22 @@ static int _shop_get_item_value(const item_def& item, int greed, bool id,
     return result;
 }
 
-static std::string _shop_print_stock(const std::vector<int>& stock,
-                                      const std::vector<bool>& selected,
-                                      const std::vector<bool>& in_list,
-                                      const shop_struct& shop,
-                                      int total_cost,
-                                      bool viewing)
+static string _shop_print_stock(const vector<int>& stock,
+                                const vector<bool>& selected,
+                                const vector<bool>& in_list,
+                                const shop_struct& shop,
+                                int total_cost, bool viewing
+#ifdef USE_TILE_LOCAL
+                                , MenuFreeform* freeform
+#endif
+                                )
 {
     ShopInfo &si  = StashTrack.get_shop(shop.pos);
     const bool id = shoptype_identifies_stock(shop.type);
-    std::string purchasable;
+    string purchasable;
+#ifdef USE_TILE_LOCAL
+    TextItem* tmp = NULL;
+#endif
     for (unsigned int i = 0; i < stock.size(); ++i)
     {
         const item_def& item = mitm[stock[i]];
@@ -283,7 +505,7 @@ static std::string _shop_print_stock(const std::vector<int>& stock,
         else if (Options.menu_colour_shops)
         {
             // Colour stock according to menu colours.
-            const std::string colprf = menu_colour_item_prefix(item);
+            const string colprf = menu_colour_item_prefix(item);
             const int col = menu_colour(item.name(DESC_A),
                                         colprf, "shop");
             textcolor(col != -1 ? col : LIGHTGREY);
@@ -291,21 +513,32 @@ static std::string _shop_print_stock(const std::vector<int>& stock,
         else
             textcolor(i % 2 ? LIGHTGREY : WHITE);
 
-        std::string item_name = item.name(DESC_A, false, id);
+        string item_name = item.name(DESC_A, false, id);
         if (unknown)
             item_name += " (unknown)";
 
         cprintf("%s%5d gold", chop_string(item_name, 56).c_str(), gp_value);
 
         si.add_item(item, gp_value);
+
+#ifdef USE_TILE_LOCAL
+        tmp = new TextItem();
+        tmp->set_highlight_colour(WHITE);
+        tmp->set_text(""); // will print bounding box around formatted text
+        tmp->set_bounds(coord_def(1 ,wherey()), coord_def(72, wherey() + 1));
+        tmp->add_hotkey(c);
+        tmp->set_id(c);
+        tmp->set_description_text(item_name);
+        freeform->attach_item(tmp);
+        tmp->set_visible(true);
+#endif
     }
     textcolor(LIGHTGREY);
 
-    return (purchasable);
+    return purchasable;
 }
 
-static int _count_identical(const std::vector<int>& stock,
-                            const item_def& item)
+static int _count_identical(const vector<int>& stock, const item_def& item)
 {
     int count = 0;
     for (unsigned int i = 0; i < stock.size(); i++)
@@ -315,7 +548,7 @@ static int _count_identical(const std::vector<int>& stock,
         if (ShoppingList::items_are_same(item, other))
             count++;
     }
-    return (count);
+    return count;
 }
 
 //  Rather than prompting for each individual item, shopping now works more
@@ -349,11 +582,11 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
 
     clrscr();
 
-    const std::string hello = "Welcome to " + shop_name(shop.pos) + "!";
+    const string hello = "Welcome to " + shop_name(shop.pos) + "!";
     bool first = true;
     int total_cost = 0;
 
-    std::vector<int> stock = _shop_get_stock(shopidx);
+    vector<int> stock = _shop_get_stock(shopidx);
 
     // Autoinscribe randarts in the shop.
     for (unsigned int i = 0; i < stock.size(); i++)
@@ -363,8 +596,8 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
             item.inscription = artefact_auto_inscription(item);
     }
 
-    std::vector<bool> selected;
-    std::vector<bool> in_list;
+    vector<bool> selected;
+    vector<bool> in_list;
 
     const bool id_stock         = shoptype_identifies_stock(shop.type);
           bool bought_something = false;
@@ -373,11 +606,24 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
 
     // Store last_pickup in case we need to restore it.
     // Then clear it to fill with items picked up.
-    std::map<int,int> tmp_l_p = you.last_pickup;
+    map<int,int> tmp_l_p = you.last_pickup;
     you.last_pickup.clear();
 
     while (true)
     {
+#ifdef USE_TILE_LOCAL
+        PrecisionMenu menu;
+        menu.set_select_type(PrecisionMenu::PRECISION_SINGLESELECT);
+        MenuFreeform* freeform = new MenuFreeform();
+        freeform->init(coord_def(1, 1),
+                       coord_def(get_number_of_cols(), get_number_of_lines() + 1),
+                       "freeform");
+        menu.attach_object(freeform);
+        menu.set_active_object(freeform);
+        BoxMenuHighlighter* highlighter = new BoxMenuHighlighter(&menu);
+        highlighter->init(coord_def(0,0), coord_def(0,0), "highlighter");
+        menu.attach_object(highlighter);
+#endif
         ASSERT(total_cost >= 0);
 
         StashTrack.get_shop(shop.pos).reset();
@@ -415,15 +661,21 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
         {
             _shop_print("I'm sorry, my shop is empty now.", 1);
             _shop_more();
-            return (bought_something);
+            return bought_something;
         }
 
-        const std::string purchasable = _shop_print_stock(stock, selected,
-                                                          in_list, shop,
-                                                          total_cost,
-                                                          viewing);
+#ifdef USE_TILE_LOCAL
+        const string purchasable = _shop_print_stock(stock, selected, in_list,
+                                                     shop, total_cost, viewing,
+                                                     freeform);
+        _list_shop_keys(purchasable, viewing, stock.size(), num_selected,
+                        num_in_list, freeform);
+#else
+        const string purchasable = _shop_print_stock(stock, selected, in_list,
+                                                     shop, total_cost, viewing);
         _list_shop_keys(purchasable, viewing, stock.size(), num_selected,
                         num_in_list);
+#endif
 
         // Cull shopping list after shop contents have been displayed, but
         // only once.
@@ -502,16 +754,37 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
 
         textcolor(LIGHTGREY);
 
+#ifdef USE_TILE_LOCAL
+        //draw menu over the top of the prompt text
+        tiles.get_crt()->attach_menu(&menu);
+        freeform->set_visible(true);
+        highlighter->set_visible(true);
+        menu.draw_menu();
+
+        int key = getch_ck();
+        if (menu.process_key(key))
+        {
+            vector<MenuItem*> selection = menu.get_selected_items();
+            if( selection.size() == 1 )
+                key = (int)selection.at(0)->get_id();
+        }
+
+#else
         mouse_control mc(MOUSE_MODE_MORE);
         int key = getchm();
+#endif
 
         if (key == '\\')
             check_item_knowledge();
         else if (key == 'x' || key_is_escape(key) || key == CK_MOUSE_CMD)
             break;
-        else if (key == '\r' || key == CK_MOUSE_CLICK)
+#ifdef USE_TILE_LOCAL
+        else if (key == ' ' || key == CK_MOUSE_CLICK)
+#else
+        else if (key == '\r')
+#endif
         {
-            std::vector<bool> to_buy;
+            vector<bool> to_buy;
             int total_purchase = 0;
 
             if (num_selected == 0 && num_in_list > 0)
@@ -620,8 +893,7 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
             browse_inventory();
         else if (key == '$')
         {
-            if (viewing || (num_selected == 0 && num_in_list == 0)
-                || !_can_shoplist())
+            if (viewing || (num_selected == 0 && num_in_list == 0))
             {
                 _shop_print("Huh?", 1);
                 _shop_more();
@@ -684,8 +956,12 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
         }
         else if (!isaalpha(key))
         {
+#ifdef TOUCH_UI
+            // do nothing: this should be arrow key presses and the like
+#else
             _shop_print("Huh?", 1);
             _shop_more();
+#endif
         }
         else
         {
@@ -764,7 +1040,7 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
     if (you.last_pickup.empty())
         you.last_pickup = tmp_l_p;
 
-    return (bought_something);
+    return bought_something;
 }
 
 bool shoptype_identifies_stock(shop_type type)
@@ -800,9 +1076,9 @@ static bool _purchase(int shop, int item_got, int cost, bool id)
     if (num < quant)
     {
         move_item_to_grid(&item_got, env.shop[shop].pos);
-        return (false);
+        return false;
     }
-    return (true);
+    return true;
 }
 
 // This probably still needs some work.  Rings used to be the only
@@ -911,7 +1187,7 @@ unsigned int item_value(item_def item, bool ident)
     {
         const unrandart_entry *entry = get_unrand_entry(item.special);
         if (entry->value != 0)
-            return (entry->value);
+            return entry->value;
     }
 
     int valued = 0;
@@ -1633,10 +1909,6 @@ unsigned int item_value(item_def item, bool ident)
             case POT_BLOOD_COAGULATED:
                 valued += 5;
                 break;
-
-            case POT_WATER:
-                valued++;
-                break;
             }
         }
         break;
@@ -1882,7 +2154,7 @@ unsigned int item_value(item_def item, bool ident)
             }
 
             // Hard minimum, as it's worth 20 to ID a ring.
-            valued = std::max(20, valued);
+            valued = max(20, valued);
         }
         break;
 
@@ -1946,7 +2218,7 @@ unsigned int item_value(item_def item, bool ident)
                 if (count_valid > 3)
                     count_valid = 3;
 
-                std::sort(rarities, rarities + SPELLBOOK_SIZE);
+                sort(rarities, rarities + SPELLBOOK_SIZE);
                 for (int i = SPELLBOOK_SIZE - 1;
                      i >= SPELLBOOK_SIZE - count_valid; i--)
                 {
@@ -1968,18 +2240,20 @@ unsigned int item_value(item_def item, bool ident)
         break;
 
     case OBJ_STAVES:
+        valued = item_type_known(item) ? 250 : 120;
+        break;
+
+    case OBJ_RODS:
         if (!item_type_known(item))
             valued = 120;
-        else if (item.sub_type == STAFF_SMITING
-                || item.sub_type == STAFF_STRIKING
-                || item.sub_type == STAFF_WARDING)
+        else if (item.sub_type == ROD_STRIKING
+                 || item.sub_type == ROD_WARDING)
         {
             valued = 150;
         }
         else
             valued = 250;
-
-        if (item_is_rod(item) && item_ident(item, ISFLAG_KNOW_PLUSES))
+        if (item_ident(item, ISFLAG_KNOW_PLUSES))
             valued += 50 * (item.plus2 / ROD_CHARGE_MULT);
         break;
 
@@ -2016,7 +2290,6 @@ bool is_worthless_consumable(const item_def &item)
         case POT_POISON:
         case POT_SLOWING:
         case POT_STRONG_POISON:
-        case POT_WATER:
             return true;
         default:
             return false;
@@ -2073,7 +2346,7 @@ void shop()
 
           int  num_in_list      = 0;
     const bool bought_something = _in_a_shop(i, num_in_list);
-    const std::string shopname = shop_name(env.shop[i].pos);
+    const string shopname       = shop_name(env.shop[i].pos);
 
     // If the shop is now empty, erase it from the overview.
     if (_shop_get_stock(i).empty())
@@ -2103,7 +2376,7 @@ void destroy_shop_at(coord_def p)
 shop_struct *get_shop(const coord_def& where)
 {
     if (grd(where) != DNGN_ENTER_SHOP)
-        return (NULL);
+        return NULL;
 
     unsigned short t = env.tgrid(where);
     ASSERT(t != NON_ENTITY && t < MAX_SHOPS);
@@ -2112,15 +2385,15 @@ shop_struct *get_shop(const coord_def& where)
     return (&env.shop[t]);
 }
 
-std::string shop_name(const coord_def& where, bool add_stop)
+string shop_name(const coord_def& where, bool add_stop)
 {
-    std::string name(shop_name(where));
+    string name(shop_name(where));
     if (add_stop)
         name += ".";
-    return (name);
+    return name;
 }
 
-static std::string _shop_type_name(shop_type type)
+static string _shop_type_name(shop_type type)
 {
     switch (type)
     {
@@ -2149,26 +2422,26 @@ static std::string _shop_type_name(shop_type type)
         case SHOP_GENERAL:
             return "General Store";
         default:
-            return ("Bug");
+            return "Bug";
     }
 }
 
-static std::string _shop_type_suffix(shop_type type, const coord_def &where)
+static string _shop_type_suffix(shop_type type, const coord_def &where)
 {
     if (type == SHOP_GENERAL
         || type == SHOP_GENERAL_ANTIQUE
         || type == SHOP_DISTILLERY)
     {
-        return ("");
+        return "";
     }
 
     const char* suffixnames[] = {"Shoppe", "Boutique", "Emporium", "Shop"};
     const int temp = (where.x + where.y) % 4;
 
-    return std::string(suffixnames[temp]);
+    return string(suffixnames[temp]);
 }
 
-std::string shop_name(const coord_def& where)
+string shop_name(const coord_def& where)
 {
     const shop_struct *cshop = get_shop(where);
 
@@ -2178,12 +2451,12 @@ std::string shop_name(const coord_def& where)
     if (!cshop)
     {
         mpr("Help! Non-existent shop.");
-        return ("Buggy Shop");
+        return "Buggy Shop";
     }
 
     const shop_type type = cshop->type;
 
-    std::string sh_name = "";
+    string sh_name = "";
 
     if (!cshop->shop_name.empty())
         sh_name += apostrophise(cshop->shop_name) + " ";
@@ -2205,12 +2478,12 @@ std::string shop_name(const coord_def& where)
         sh_name += " " + cshop->shop_suffix_name;
     else
     {
-        std::string sh_suffix = _shop_type_suffix(type, where);
+        string sh_suffix = _shop_type_suffix(type, where);
         if (!sh_suffix.empty())
             sh_name += " " + sh_suffix;
     }
 
-    return (sh_name);
+    return sh_name;
 }
 
 bool is_shop_item(const item_def &item)
@@ -2258,18 +2531,11 @@ bool ShoppingList::add_thing(const item_def &item, int cost,
 
     SETUP_POS();
 
-    if (!_can_shoplist(pos.id.branch))
-    {
-        mpr("The shopping list can only contain things in the dungeon.",
-             MSGCH_ERROR);
-        return (false);
-    }
-
     if (find_thing(item, pos) != -1)
     {
         mprf(MSGCH_ERROR, "%s is already on the shopping list.",
              item.name(DESC_THE).c_str());
-        return (false);
+        return false;
     }
 
     SETUP_THING();
@@ -2277,10 +2543,10 @@ bool ShoppingList::add_thing(const item_def &item, int cost,
     list->push_back(*thing);
     refresh();
 
-    return (true);
+    return true;
 }
 
-bool ShoppingList::add_thing(std::string desc, std::string buy_verb, int cost,
+bool ShoppingList::add_thing(string desc, string buy_verb, int cost,
                              const level_pos* _pos)
 {
     ASSERT(!desc.empty());
@@ -2289,18 +2555,11 @@ bool ShoppingList::add_thing(std::string desc, std::string buy_verb, int cost,
 
     SETUP_POS();
 
-    if (!_can_shoplist(pos.id.branch))
-    {
-        mpr("The shopping list can only contain things in the dungeon.",
-             MSGCH_ERROR);
-        return (false);
-    }
-
     if (find_thing(desc, pos) != -1)
     {
         mprf(MSGCH_ERROR, "%s is already on the shopping list.",
              desc.c_str());
-        return (false);
+        return false;
     }
 
     SETUP_THING();
@@ -2309,21 +2568,19 @@ bool ShoppingList::add_thing(std::string desc, std::string buy_verb, int cost,
     list->push_back(*thing);
     refresh();
 
-    return (true);
+    return true;
 }
 
 #undef SETUP_THING
 
-bool ShoppingList::is_on_list(const item_def &item,
-                              const level_pos* _pos) const
+bool ShoppingList::is_on_list(const item_def &item, const level_pos* _pos) const
 {
     SETUP_POS();
 
     return (find_thing(item, pos) != -1);
 }
 
-bool ShoppingList::is_on_list(std::string desc,
-                              const level_pos* _pos) const
+bool ShoppingList::is_on_list(string desc, const level_pos* _pos) const
 {
     SETUP_POS();
 
@@ -2334,6 +2591,18 @@ void ShoppingList::del_thing_at_index(int idx)
 {
     ASSERT(idx >= 0 && idx < list->size());
     list->erase(idx);
+    refresh();
+}
+
+void ShoppingList::del_things_from(const level_id &lid)
+{
+    for (unsigned int i = 0; i < list->size(); i++)
+    {
+        const CrawlHashTable &thing = (*list)[i];
+
+        if (thing_pos(thing).is_on(lid))
+            list->erase(i--);
+    }
     refresh();
 }
 
@@ -2348,14 +2617,14 @@ bool ShoppingList::del_thing(const item_def &item,
     {
         mprf(MSGCH_ERROR, "%s isn't on shopping list, can't delete it.",
              item.name(DESC_THE).c_str());
-        return (false);
+        return false;
     }
 
     del_thing_at_index(idx);
-    return (true);
+    return true;
 }
 
-bool ShoppingList::del_thing(std::string desc, const level_pos* _pos)
+bool ShoppingList::del_thing(string desc, const level_pos* _pos)
 {
     SETUP_POS();
 
@@ -2365,11 +2634,11 @@ bool ShoppingList::del_thing(std::string desc, const level_pos* _pos)
     {
         mprf(MSGCH_ERROR, "%s isn't on shopping list, can't delete it.",
              desc.c_str());
-        return (false);
+        return false;
     }
 
     del_thing_at_index(idx);
-    return (true);
+    return true;
 }
 
 #undef SETUP_POS
@@ -2389,12 +2658,12 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
 {
     // Dead men can't update their shopping lists.
     if (!crawl_state.need_save)
-        return (0);
+        return 0;
 
     // Can't put items in Bazaar shops in the shopping list, so
     // don't bother transferring shopping list items to Bazaar shops.
     if (cost != -1 && !_can_shoplist())
-        return (0);
+        return 0;
 
     switch (item.base_type)
     {
@@ -2405,21 +2674,21 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
         break;
 
     default:
-        return (0);
+        return 0;
     }
 
     if (!item_type_known(item) || is_artefact(item))
-        return (0);
+        return 0;
 
     // Ignore stat-modification rings which reduce a stat, since they're
     // worthless.
     if (item.base_type == OBJ_JEWELLERY)
     {
         if (item.sub_type == RING_SLAYING && item.plus < 0 && item.plus2 < 0)
-            return (0);
+            return 0;
 
         if (item.plus < 0)
-            return (0);
+            return 0;
     }
 
     // Item is already on shopping-list.
@@ -2435,8 +2704,8 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
 
     bool add_item = false;
 
-    typedef std::pair<item_def, level_pos> list_pair;
-    std::vector<list_pair> to_del;
+    typedef pair<item_def, level_pos> list_pair;
+    vector<list_pair> to_del;
 
     // NOTE: Don't modify the shopping list while iterating over it.
     for (unsigned int i = 0; i < list->size(); i++)
@@ -2500,7 +2769,7 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
                 continue;
             thing[REPLACE_PROMPTED_KEY] = (bool) true;
 
-            std::string prompt =
+            string prompt =
                 make_stringf("Shopping-list: replace %dgp %s with cheaper "
                              "one? (Y/n)", list_cost,
                              describe_thing(thing).c_str());
@@ -2521,18 +2790,16 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
                 continue;
             thing[REMOVE_PROMPTED_KEY] = (bool) true;
 
-            std::string prompt =
-                make_stringf("Shopping-list: remove %s? (Y/n)",
-                             describe_thing(thing, DESC_A).c_str());
+            string prompt = make_stringf("Shopping-list: remove %s? (Y/n)",
+                                         describe_thing(thing, DESC_A).c_str());
 
             if (_shop_yesno(prompt.c_str(), 'y'))
                 to_del.push_back(listed);
         }
         else
         {
-            std::string str =
-                make_stringf("Shopping-list: removing %s",
-                             describe_thing(thing, DESC_A).c_str());
+            string str = make_stringf("Shopping-list: removing %s",
+                                      describe_thing(thing, DESC_A).c_str());
 
             _shop_mpr(str.c_str());
             to_del.push_back(listed);
@@ -2545,14 +2812,14 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
     if (add_item && !on_list)
         add_thing(item, cost);
 
-    return (to_del.size());
+    return to_del.size();
 }
 
 int ShoppingList::size() const
 {
     ASSERT(list);
 
-    return (list->size());
+    return list->size();
 }
 
 bool ShoppingList::items_are_same(const item_def& item_a,
@@ -2564,8 +2831,7 @@ bool ShoppingList::items_are_same(const item_def& item_a,
 void ShoppingList::move_things(const coord_def &_src, const coord_def &_dst)
 {
     if (crawl_state.map_stat_gen || crawl_state.test)
-        // Shopping list is unitialized and uneeded.
-        return;
+        return; // Shopping list is unitialized and uneeded.
 
     const level_pos src(level_id::current(), _src);
     const level_pos dst(level_id::current(), _dst);
@@ -2582,8 +2848,7 @@ void ShoppingList::move_things(const coord_def &_src, const coord_def &_dst)
 void ShoppingList::forget_pos(const level_pos &pos)
 {
     if (!crawl_state.need_save)
-        // Shopping list is unitialized and uneeded.
-        return;
+        return; // Shopping list is unitialized and uneeded.
 
     for (unsigned int i = 0; i < list->size(); i++)
     {
@@ -2606,7 +2871,7 @@ void ShoppingList::gold_changed(int old_amount, int new_amount)
     {
         ASSERT(min_unbuyable_idx < list->size());
 
-        std::vector<std::string> descs;
+        vector<string> descs;
         for (unsigned int i = min_unbuyable_idx; i < list->size(); i++)
         {
             const CrawlHashTable &thing = (*list)[i];
@@ -2618,7 +2883,7 @@ void ShoppingList::gold_changed(int old_amount, int new_amount)
                 break;
             }
 
-            std::string desc;
+            string desc;
 
             if (thing.exists(SHOPPING_THING_VERB_KEY))
                 desc += thing[SHOPPING_THING_VERB_KEY].get_string();
@@ -2650,7 +2915,11 @@ class ShoppingListMenu : public Menu
 {
 public:
     ShoppingListMenu()
+#ifdef USE_TILE_LOCAL
+        : Menu(MF_MULTISELECT,"",false)
+#else
         : Menu()
+#endif
     { }
 
 protected:
@@ -2688,7 +2957,7 @@ void ShoppingList::fill_out_menu(Menu& shopmenu)
         level_pos      pos    = thing_pos(thing);
         int            cost   = thing_cost(thing);
 
-        std::string etitle =
+        string etitle =
             make_stringf("[%s] %s (%d gp)", short_place_name(pos.id).c_str(),
                          name_thing(thing, DESC_A).c_str(),
                          cost);
@@ -2703,7 +2972,7 @@ void ShoppingList::fill_out_menu(Menu& shopmenu)
             // Colour shopping list item according to menu colours.
             const item_def &item = get_thing_item(thing);
 
-            const std::string colprf = menu_colour_item_prefix(item);
+            const string colprf = menu_colour_item_prefix(item);
             const int col = menu_colour(item.name(DESC_A),
                                         colprf, "shop");
 
@@ -2720,13 +2989,11 @@ void ShoppingList::display()
     if (list->empty())
         return;
 
-    const bool travelable = can_travel_interlevel();
-
     ShoppingListMenu shopmenu;
     shopmenu.set_tag("shop");
-    shopmenu.menu_action  = travelable ? Menu::ACT_EXECUTE : Menu::ACT_EXAMINE;
-    shopmenu.action_cycle = travelable ? Menu::CYCLE_CYCLE : Menu::CYCLE_NONE;
-    std::string title     = "thing";
+    shopmenu.menu_action  = Menu::ACT_EXECUTE;
+    shopmenu.action_cycle = Menu::CYCLE_CYCLE;
+    string title          = "thing";
 
     MenuEntry *mtitle = new MenuEntry(title, MEL_TITLE);
     // Abuse of the quantity field.
@@ -2740,8 +3007,7 @@ void ShoppingList::display()
         shopmenu.set_maxpagesize(52);
     }
 
-    std::string more_str = make_stringf("<yellow>You have %d gp</yellow>",
-                                        you.gold);
+    string more_str = make_stringf("<yellow>You have %d gp</yellow>", you.gold);
     shopmenu.set_more(formatted_string::parse_string(more_str));
 
     shopmenu.set_flags(MF_SINGLESELECT | MF_ALWAYS_SHOW_MORE
@@ -2749,7 +3015,7 @@ void ShoppingList::display()
 
     fill_out_menu(shopmenu);
 
-    std::vector<MenuEntry*> sel;
+    vector<MenuEntry*> sel;
     while (true)
     {
         redraw_screen();
@@ -2769,7 +3035,7 @@ void ShoppingList::display()
 
             if (cost > you.gold)
             {
-                std::string prompt =
+                string prompt =
                    make_stringf("You cannot afford %s; travel there "
                                 "anyway? (y/N)",
                                 describe_thing(*thing, DESC_A).c_str());
@@ -2804,9 +3070,8 @@ void ShoppingList::display()
         }
         else if (shopmenu.menu_action == Menu::ACT_MISC)
         {
-            std::string prompt =
-                make_stringf("Delete %s from shopping list? (y/N)",
-                             describe_thing(*thing, DESC_A).c_str());
+            string prompt = make_stringf("Delete %s from shopping list? (y/N)",
+                                         describe_thing(*thing, DESC_A).c_str());
             clrscr();
             if (!yesno(prompt.c_str(), true, 'n'))
                 continue;
@@ -2851,7 +3116,7 @@ void ShoppingList::refresh()
         you.props[SHOPPING_LIST_KEY].new_vector(SV_HASH, SFLAG_CONST_TYPE);
     list = &you.props[SHOPPING_LIST_KEY].get_vector();
 
-    std::sort(list->begin(), list->end(), _compare_shopping_things);
+    sort(list->begin(), list->end(), _compare_shopping_things);
 
     min_unbuyable_cost = INT_MAX;
     min_unbuyable_idx  = -1;
@@ -2898,14 +3163,13 @@ int ShoppingList::find_thing(const item_def &item,
         const item_def &_item = get_thing_item(thing);
 
         if (item_name_simple(item) == item_name_simple(_item))
-            return (i);
+            return i;
     }
 
-    return (-1);
+    return -1;
 }
 
-int ShoppingList::find_thing(const std::string &desc,
-                             const level_pos &pos) const
+int ShoppingList::find_thing(const string &desc, const level_pos &pos) const
 {
     for (unsigned int i = 0; i < list->size(); i++)
     {
@@ -2919,10 +3183,10 @@ int ShoppingList::find_thing(const std::string &desc,
             continue;
 
         if (desc == name_thing(thing))
-            return (i);
+            return i;
     }
 
-    return (-1);
+    return -1;
 }
 
 bool ShoppingList::thing_is_item(const CrawlHashTable& thing)
@@ -2937,15 +3201,15 @@ const item_def& ShoppingList::get_thing_item(const CrawlHashTable& thing)
     const item_def &item = thing[SHOPPING_THING_ITEM_KEY].get_item();
     ASSERT(item.defined());
 
-    return (item);
+    return item;
 }
 
-std::string ShoppingList::get_thing_desc(const CrawlHashTable& thing)
+string ShoppingList::get_thing_desc(const CrawlHashTable& thing)
 {
     ASSERT(thing.exists(SHOPPING_THING_DESC_KEY));
 
-    std::string desc = thing[SHOPPING_THING_DESC_KEY].get_string();
-    return (desc);
+    string desc = thing[SHOPPING_THING_DESC_KEY].get_string();
+    return desc;
 }
 
 int ShoppingList::thing_cost(const CrawlHashTable& thing)
@@ -2960,8 +3224,8 @@ level_pos ShoppingList::thing_pos(const CrawlHashTable& thing)
     return (thing[SHOPPING_THING_POS_KEY].get_level_pos());
 }
 
-std::string ShoppingList::name_thing(const CrawlHashTable& thing,
-                                     description_level_type descrip)
+string ShoppingList::name_thing(const CrawlHashTable& thing,
+                                description_level_type descrip)
 {
     if (thing_is_item(thing))
     {
@@ -2970,28 +3234,28 @@ std::string ShoppingList::name_thing(const CrawlHashTable& thing,
     }
     else
     {
-        std::string desc = get_thing_desc(thing);
+        string desc = get_thing_desc(thing);
         return apply_description(descrip, desc);
     }
 }
 
-std::string ShoppingList::describe_thing(const CrawlHashTable& thing,
-                                         description_level_type descrip)
+string ShoppingList::describe_thing(const CrawlHashTable& thing,
+                                    description_level_type descrip)
 {
     const level_pos pos = thing_pos(thing);
 
-    std::string desc = name_thing(thing, descrip) + " on ";
+    string desc = name_thing(thing, descrip) + " on ";
 
     if (pos.id == level_id::current())
         desc += "this level";
     else
         desc += pos.id.describe();
 
-    return (desc);
+    return desc;
 }
 
 // Item name without curse-status or inscription.
-std::string ShoppingList::item_name_simple(const item_def& item, bool ident)
+string ShoppingList::item_name_simple(const item_def& item, bool ident)
 {
     return item.name(DESC_PLAIN, false, ident, false, false,
                      ISFLAG_KNOW_CURSE);

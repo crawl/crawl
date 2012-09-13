@@ -54,13 +54,13 @@ bool is_connected_branch(level_id place)
     return is_connected_branch(place.branch);
 }
 
-branch_type str_to_branch(const std::string &branch, branch_type err)
+branch_type str_to_branch(const string &branch, branch_type err)
 {
     for (int i = 0; i < NUM_BRANCHES; ++i)
         if (branches[i].abbrevname && branches[i].abbrevname == branch)
-            return (static_cast<branch_type>(i));
+            return static_cast<branch_type>(i);
 
-    return (err);
+    return err;
 }
 
 int current_level_ambient_noise()
@@ -80,6 +80,5 @@ branch_type get_branch_at(const coord_def& pos)
 
 bool branch_is_unfinished(branch_type branch)
 {
-    return branch == BRANCH_FOREST || branch == BRANCH_DWARVEN_HALL
-           || branch == BRANCH_HIVE;
+    return branch == BRANCH_FOREST || branch == BRANCH_DWARVEN_HALL;
 }

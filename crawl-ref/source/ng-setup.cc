@@ -18,6 +18,7 @@
 #include "newgame.h"
 #include "ng-init.h"
 #include "ng-wanderer.h"
+#include "options.h"
 #include "player.h"
 #include "skills.h"
 #include "skills2.h"
@@ -164,7 +165,6 @@ static void _jobs_stat_init(job_type which_job)
     case JOB_PRIEST:            s =  5; i =  4; d =  3; hp = 13; mp = 2; break;
 
     case JOB_ASSASSIN:          s =  3; i =  3; d =  6; hp = 12; mp = 0; break;
-    case JOB_STALKER:           s =  2; i =  4; d =  6; hp = 12; mp = 1; break;
 
     case JOB_HUNTER:            s =  4; i =  3; d =  5; hp = 13; mp = 0; break;
     case JOB_WARPER:            s =  3; i =  5; d =  4; hp = 12; mp = 1; break;
@@ -260,7 +260,7 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_ACUTE_VISION]    = 1;
         you.mutation[MUT_FAST]            = 3;
         you.mutation[MUT_HERBIVOROUS]     = 3;
-        you.mutation[MUT_SLOW_METABOLISM] = 3;
+        you.mutation[MUT_SLOW_METABOLISM] = 2;
         break;
     case SP_CENTAUR:
         you.mutation[MUT_TOUGH_SKIN]      = 3;
@@ -324,7 +324,7 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_ACUTE_VISION]    = 1;
         you.mutation[MUT_FAST]            = 1;
         you.mutation[MUT_CARNIVOROUS]     = 3;
-        you.mutation[MUT_SLOW_METABOLISM] = 2;
+        you.mutation[MUT_SLOW_METABOLISM] = 1;
         break;
     case SP_OCTOPODE:
         you.mutation[MUT_CAMOUFLAGE]      = 1;
@@ -620,7 +620,7 @@ static void _give_items_skills(const newgame_def& ng)
     case JOB_CHAOS_KNIGHT:
         you.religion = GOD_XOM;
         you.piety = 100;
-        you.gift_timeout = std::max(5, random2(40) + random2(40));
+        you.gift_timeout = max(5, random2(40) + random2(40));
 
         newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD, -1, 1,
                            2, 2);
@@ -890,26 +890,6 @@ static void _give_items_skills(const newgame_def& ng)
         you.skills[SK_STEALTH]      = 2;
         break;
 
-    case JOB_STALKER:
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_DAGGER, -1, 1, 2, 2);
-        newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(2, EQ_CLOAK, OBJ_ARMOUR, ARM_CLOAK);
-        newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_STALKING);
-
-        newgame_make_item(4, EQ_NONE, OBJ_POTIONS, POT_CONFUSION, -1, 2);
-
-        if (you.species == SP_OGRE || you.species == SP_TROLL)
-            you.inv[0].sub_type = WPN_CLUB;
-
-        weap_skill = 1;
-        you.skills[SK_FIGHTING]       = 1;
-        you.skills[SK_DODGING]        = 2;
-        you.skills[SK_STEALTH]        = 2;
-        you.skills[SK_STABBING]       = 2;
-        you.skills[SK_SPELLCASTING]   = 1;
-        you.skills[SK_TRANSMUTATIONS] = 2;
-        break;
-
     case JOB_ASSASSIN:
         newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_DAGGER, -1, 1, 2, 2);
         newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_BLOWGUN);
@@ -958,8 +938,11 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_ARTIFICER:
-        // Equipment. Staff, wands, and armour or robe.
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_STAFF);
+        // Equipment. Short sword, wands, and armour or robe.
+        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
+
+        if (you.has_claws())
+            _newgame_clear_item(0);
 
         newgame_make_item(1, EQ_NONE, OBJ_WANDS, WAND_FLAME,
                            -1, 1, 15, 0);
@@ -973,10 +956,10 @@ static void _give_items_skills(const newgame_def& ng)
 
         // Skills
         you.skills[SK_EVOCATIONS]  = 3;
-        you.skills[SK_TRAPS_DOORS] = 2;
+        you.skills[SK_TRAPS]       = 2;
         you.skills[SK_DODGING]     = 2;
         you.skills[SK_FIGHTING]    = 1;
-        you.skills[SK_STAVES]      = 1;
+        weap_skill                 = 1;
         you.skills[SK_STEALTH]     = 1;
         break;
 
@@ -994,7 +977,7 @@ static void _give_items_skills(const newgame_def& ng)
     if (crawl_state.game_is_zotdef())
     {
         newgame_make_item(-1, EQ_NONE, OBJ_POTIONS, POT_CURING, -1, 2);
-        you.skills[SK_TRAPS_DOORS] += 2;
+        you.skills[SK_TRAPS] += 2;
     }
 
     if (weap_skill)
@@ -1102,7 +1085,7 @@ static void _setup_tutorial_miscs()
     you.skills[SK_SHIELDS] = 0;
 
     // Some spellcasting for the magic tutorial.
-    if (crawl_state.map.find("tutorial_lesson4") != std::string::npos)
+    if (crawl_state.map.find("tutorial_lesson4") != string::npos)
         you.skills[SK_SPELLCASTING] = 1;
 
     // Set Str low enough for the burdened tutorial.
@@ -1183,9 +1166,6 @@ static void _give_basic_spells(job_type which_job)
     case JOB_TRANSMUTER:
         which_spell = SPELL_BEASTLY_APPENDAGE;
         break;
-    case JOB_STALKER:
-        which_spell = SPELL_FULSOME_DISTILLATION;
-        break;
     case JOB_WARPER:
         which_spell = SPELL_APPORTATION;
         break;
@@ -1194,7 +1174,7 @@ static void _give_basic_spells(job_type which_job)
         break;
     }
 
-    std::string temp;
+    string temp;
     if (which_spell != SPELL_NO_SPELL
         && !spell_is_uncastable(which_spell, temp))
     {
@@ -1385,7 +1365,7 @@ static void _setup_generic(const newgame_def& ng)
 
         // There's little sense in training these skills in ZotDef
         you.train[SK_STEALTH] = 0;
-        you.train[SK_TRAPS_DOORS] = 0;
+        you.train[SK_TRAPS]   = 0;
     }
 
     // If the item in slot 'a' is a throwable weapon like a dagger,
@@ -1426,6 +1406,9 @@ static void _setup_generic(const newgame_def& ng)
         you.nemelex_sacrificing = true;
 
     // Create the save file.
-    you.save = new package(get_savedir_filename(you.your_name).c_str(),
-                           true, true);
+    if (Options.no_save)
+        you.save = new package();
+    else
+        you.save = new package(get_savedir_filename(you.your_name).c_str(),
+                               true, true);
 }

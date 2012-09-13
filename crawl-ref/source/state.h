@@ -28,7 +28,7 @@ public:
 // Track various aspects of Crawl game state.
 struct game_state
 {
-    std::vector<std::string> command_line_arguments;
+    vector<string> command_line_arguments;
 
     bool game_crashed;      // The game crashed and is now in the process of
                             // dumping crash info.
@@ -59,21 +59,21 @@ struct game_state
     bool test;              // Set if we want to run self-tests and exit.
     bool script;            // Set if we want to run a Lua script and exit.
     bool build_db;          // Set if we want to rebuild the db and exit.
-    std::vector<std::string> tests_selected; // Tests to be run.
-    std::vector<std::string> script_args;    // Arguments to scripts.
+    vector<string> tests_selected; // Tests to be run.
+    vector<string> script_args;    // Arguments to scripts.
 
     bool show_more_prompt;  // Set to false to disable --more-- prompts.
 
-    std::string sprint_map; // Sprint map set on command line, if any.
+    string sprint_map;      // Sprint map set on command line, if any.
 
-    std::string map;        // Map selected in the newgame menu
+    string map;             // Map selected in the newgame menu
 
     void (*terminal_resize_handler)();
     void (*terminal_resize_check)();
 
     bool            doing_prev_cmd_again;
     command_type    prev_cmd;
-    std::deque<int> prev_cmd_keys;
+    deque<int>      prev_cmd_keys;
 
     command_type    repeat_cmd;
     bool            cmd_repeat_start;
@@ -83,7 +83,7 @@ struct game_state
     int             lua_calls_no_turn;
     bool            stat_gain_prompt;
 
-    std::vector<std::string> startup_errors;
+    vector<string> startup_errors;
 
     bool level_annotation_shown;
     bool viewport_monster_hp;
@@ -103,7 +103,7 @@ struct game_state
     // Any changes to macros that need to be changed?
     bool unsaved_macros;
 
-    FixedBitArray<NUM_DISABLEMENTS> disables;
+    FixedBitVector<NUM_DISABLEMENTS> disables;
 
     // Version of the last character save.
     int minorVersion;
@@ -112,29 +112,29 @@ protected:
     void reset_cmd_repeat();
     void reset_cmd_again();
 
-    god_act_state              god_act;
-    std::vector<god_act_state> god_act_stack;
+    god_act_state         god_act;
+    vector<god_act_state> god_act_stack;
 
-    monster*              mon_act;
-    std::vector<monster* > mon_act_stack;
+    monster*          mon_act;
+    vector<monster* > mon_act_stack;
 
 public:
     game_state();
 
-    void add_startup_error(const std::string &error);
+    void add_startup_error(const string &error);
     void show_startup_errors();
 
     bool is_replaying_keys() const;
 
     bool is_repeating_cmd() const;
 
-    void cancel_cmd_repeat(std::string reason = "");
-    void cancel_cmd_again(std::string reason = "");
-    void cancel_cmd_all(std::string reason = "");
+    void cancel_cmd_repeat(string reason = "");
+    void cancel_cmd_again(string reason = "");
+    void cancel_cmd_all(string reason = "");
 
-    void cant_cmd_repeat(std::string reason = "");
-    void cant_cmd_again(std::string reason = "");
-    void cant_cmd_any(std::string reason = "");
+    void cant_cmd_repeat(string reason = "");
+    void cant_cmd_again(string reason = "");
+    void cant_cmd_any(string reason = "");
 
     void zero_turns_taken();
 
@@ -153,7 +153,7 @@ public:
     void     dec_god_acting(god_type which_god);
     void     clear_god_acting();
 
-    std::vector<god_act_state> other_gods_acting() const;
+    vector<god_act_state> other_gods_acting() const;
 
     bool      is_mon_acting() const;
     monster* which_mon_acting() const;
@@ -175,11 +175,11 @@ public:
     bool game_is_hints_tutorial() const;
 
     // Save subdirectory used for games such as Sprint.
-    std::string game_type_name() const;
-    std::string game_savedir_path() const;
-    std::string game_type_qualifier() const;
+    string game_type_name() const;
+    string game_savedir_path() const;
+    string game_type_qualifier() const;
 
-    static std::string game_type_name_for(game_type gt);
+    static string game_type_name_for(game_type gt);
 
     inline void mark_last_game_won()
     {

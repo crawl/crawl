@@ -26,6 +26,7 @@
 #include "place.h"
 #include "religion.h"
 #include "stairs.h"
+#include "state.h"
 #include "tileview.h"
 #include "view.h"
 #include "wiz-dgn.h"
@@ -52,11 +53,11 @@ LUAFN(debug_goto_place)
         if (bind_entrance != -1)
             startdepth[you.where_are_you] = bind_entrance;
     }
-    catch (const std::string &err)
+    catch (const string &err)
     {
         luaL_error(ls, err.c_str());
     }
-    return (0);
+    return 0;
 }
 
 LUAFN(debug_enter_dungeon)
@@ -67,7 +68,7 @@ LUAFN(debug_enter_dungeon)
     you.depth = 1;
 
     load_level(DNGN_STONE_STAIRS_DOWN_I, LOAD_START_GAME, level_id());
-    return (0);
+    return 0;
 }
 
 LUAWRAP(debug_down_stairs, down_stairs(DNGN_STONE_STAIRS_DOWN_I))
@@ -77,7 +78,7 @@ LUAFN(debug_flush_map_memory)
 {
     dgn_flush_map_memory();
     init_level_connectivity();
-    return (0);
+    return 0;
 }
 
 LUAFN(debug_generate_level)
@@ -89,7 +90,7 @@ LUAFN(debug_generate_level)
     tile_clear_flavour();
     tile_new_level(true);
     builder(lua_isboolean(ls, 1)? lua_toboolean(ls, 1) : true);
-    return (0);
+    return 0;
 }
 
 LUAFN(debug_reveal_mimics)
@@ -97,13 +98,13 @@ LUAFN(debug_reveal_mimics)
     for (rectangle_iterator ri(1); ri; ++ri)
         if (mimic_at(*ri))
             discover_mimic(*ri, false);
-    return (0);
+    return 0;
 }
 
 LUAFN(debug_los_changed)
 {
     los_changed();
-    return (0);
+    return 0;
 }
 
 LUAFN(debug_dump_map)
@@ -111,7 +112,7 @@ LUAFN(debug_dump_map)
     const int pos = lua_isuserdata(ls, 1) ? 2 : 1;
     if (lua_isstring(ls, pos))
         dump_map(lua_tostring(ls, pos), true);
-    return (0);
+    return 0;
 }
 
 LUAFN(_debug_test_explore)
@@ -119,7 +120,7 @@ LUAFN(_debug_test_explore)
 #ifdef WIZARD
     debug_test_explore();
 #endif
-    return (0);
+    return 0;
 }
 
 LUAFN(debug_bouncy_beam)
@@ -155,7 +156,7 @@ LUAFN(debug_bouncy_beam)
 
     beam.fire();
 
-    return (0);
+    return 0;
 }
 
 // If menv[] is full, dismiss all monsters not near the player.
@@ -165,7 +166,7 @@ LUAFN(debug_cull_monsters)
     {
         if (menv[il].type == MONS_NO_MONSTER)
             // At least one empty space in menv
-            return (0);
+            return 0;
     }
 
     mpr("menv[] is full, dismissing non-near monsters",
@@ -181,7 +182,7 @@ LUAFN(debug_cull_monsters)
         monster_die(*mi, KILL_DISMISSED, NON_MONSTER);
     }
 
-    return (0);
+    return 0;
 }
 
 LUAFN(debug_dismiss_adjacent)
@@ -197,7 +198,7 @@ LUAFN(debug_dismiss_adjacent)
         }
     }
 
-    return (0);
+    return 0;
 }
 
 LUAFN(debug_dismiss_monsters)
@@ -211,7 +212,7 @@ LUAFN(debug_dismiss_monsters)
         }
     }
 
-    return (0);
+    return 0;
 }
 
 LUAFN(debug_god_wrath)
@@ -219,31 +220,31 @@ LUAFN(debug_god_wrath)
     const char *god_name = luaL_checkstring(ls, 1);
     if (!god_name)
     {
-        std::string err = "god_wrath requires a god!";
-        return (luaL_argerror(ls, 1, err.c_str()));
+        string err = "god_wrath requires a god!";
+        return luaL_argerror(ls, 1, err.c_str());
     }
 
     god_type god = strcmp(god_name, "random") ? str_to_god(god_name) : GOD_RANDOM;
     if (god == GOD_NO_GOD)
     {
-        std::string err = make_stringf("'%s' matches no god.", god_name);
-        return (luaL_argerror(ls, 1, err.c_str()));
+        string err = make_stringf("'%s' matches no god.", god_name);
+        return luaL_argerror(ls, 1, err.c_str());
     }
 
     bool no_bonus = lua_toboolean(ls, 2);
 
     divine_retribution(god, no_bonus);
-    return (0);
+    return 0;
 }
 
 LUAFN(debug_handle_monster_move)
 {
     MonsterWrap *mw = clua_get_userdata< MonsterWrap >(ls, MONS_METATABLE);
     if (!mw || !mw->mons)
-        return (0);
+        return 0;
 
     handle_monster_move(mw->mons);
-    return (0);
+    return 0;
 }
 
 static FixedVector<bool, NUM_MONSTERS> saved_uniques;
@@ -251,13 +252,13 @@ static FixedVector<bool, NUM_MONSTERS> saved_uniques;
 LUAFN(debug_save_uniques)
 {
     saved_uniques = you.unique_creatures;
-    return (0);
+    return 0;
 }
 
 LUAFN(debug_reset_uniques)
 {
     you.unique_creatures.init(false);
-    return (0);
+    return 0;
 }
 
 LUAFN(debug_randomize_uniques)
@@ -269,7 +270,7 @@ LUAFN(debug_randomize_uniques)
             continue;
         you.unique_creatures[mt] = coinflip();
     }
-    return (0);
+    return 0;
 }
 
 // Compare list of uniques on current level with
@@ -286,7 +287,7 @@ static bool _check_uniques()
 
     for (monster_type mt = MONS_0; mt < NUM_MONSTERS; ++mt)
     {
-        if (!mons_is_unique(mt))
+        if (!mons_is_unique(mt) || mons_species(mt) == MONS_SERPENT_OF_HELL)
             continue;
         bool was_set = saved_uniques[mt];
         bool is_set = you.unique_creatures[mt];
@@ -303,25 +304,25 @@ static bool _check_uniques()
             ret = false;
         }
     }
-    return (ret);
+    return ret;
 }
 
 LUAFN(debug_check_uniques)
 {
     lua_pushboolean(ls, _check_uniques());
-    return (1);
+    return 1;
 }
 
 LUAFN(debug_viewwindow)
 {
     viewwindow(lua_toboolean(ls, 1));
-    return (0);
+    return 0;
 }
 
 LUAFN(debug_seen_monsters_react)
 {
     seen_monsters_react();
-    return (0);
+    return 0;
 }
 
 static const char* disablements[] =
@@ -348,12 +349,12 @@ LUAFN(debug_disable)
             if (lua_isboolean(ls, 2))
                 onoff = lua_toboolean(ls, 2);
             crawl_state.disables.set(dis, onoff);
-            return (0);
+            return 0;
         }
     luaL_argerror(ls, 1,
                   make_stringf("unknown thing to disable: %s", what).c_str());
 
-    return (0);
+    return 0;
 }
 
 const struct luaL_reg debug_dlib[] =

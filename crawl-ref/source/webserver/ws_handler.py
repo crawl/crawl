@@ -35,6 +35,11 @@ def update_all_lobbys(game):
     for socket in list(sockets):
         if socket.is_in_lobby():
             socket.send_message("lobby_entry", **lobby_entry)
+def remove_in_lobbys(process):
+    for socket in list(sockets):
+        if socket.is_in_lobby():
+            socket.send_message("lobby_remove", id=process.id)
+
 
 def write_dgl_status_file():
     f = None
@@ -75,19 +80,24 @@ def find_user_sockets(username):
             yield socket
 
 def find_running_game(charname, start):
-    for socket in list(sockets):
-        if (socket.is_running() and
-            socket.process.where.get("name") == charname and
-            socket.process.where.get("start") == start):
-            return socket.process
+    from process_handler import processes
+    for process in processes.values():
+        if (process.where.get("name") == charname and
+            process.where.get("start") == start):
+            return process
     return None
 
-milestone_file_tailer = None
+milestone_file_tailers = []
 def start_reading_milestones():
     if config.milestone_file is None: return
 
-    global milestone_file_tailer
-    milestone_file_tailer = FileTailer(config.milestone_file, handle_new_milestone)
+    if isinstance(config.milestone_file, basestring):
+        files = [config.milestone_file]
+    else:
+        files = config.milestone_file
+
+    for f in files:
+        milestone_file_tailers.append(FileTailer(f, handle_new_milestone))
 
 def handle_new_milestone(line):
     data = parse_where_data(line)
@@ -140,6 +150,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def __eq__(self, other):
         return self.id == other.id
 
+    def allow_draft76(self):
+        return True
+
     def open(self):
         self.logger.info("Socket opened from ip %s (fd%s).",
                          self.request.remote_ip,
@@ -171,9 +184,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def send_lobby(self):
         self.send_message("lobby_clear")
-        for socket in sockets:
-            if socket.is_running():
-                self.send_message("lobby_entry", **socket.process.lobby_entry())
+        from process_handler import processes
+        for process in processes.values():
+            self.send_message("lobby_entry", **process.lobby_entry())
         self.send_message("lobby_complete")
 
     def send_game_links(self):
@@ -212,6 +225,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 self.send_message("go_lobby")
                 return
 
+        if self.process:
+            return
+
         if config.dgl_mode and game_id not in config.games: return
 
         self.game_id = game_id
@@ -231,14 +247,16 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.process = process_handler.DGLLessCrawlProcessHandler(self.logger, self.ioloop)
 
         self.process.end_callback = self._on_crawl_end
-        self.process.add_watcher(self, hide=True)
+        self.process.add_watcher(self)
         try:
             self.process.start()
-        except:
+        except Exception:
             self.logger.warning("Exception starting process!", exc_info=True)
             self.process = None
             self.send_message("go_lobby")
         else:
+            if self.process is None: return # Can happen if the process creation fails
+
             self.send_message("game_started")
 
             if config.dgl_mode:
@@ -250,9 +268,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def _on_crawl_end(self):
         if config.dgl_mode:
-            for socket in list(sockets):
-                if socket.is_in_lobby():
-                    socket.send_message("lobby_remove", id=self.process.id)
+            remove_in_lobbys(self.process)
         self.process = None
 
         if self.client_closed:
@@ -354,11 +370,13 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.received_pong = True
 
     def watch(self, username):
-        procs = [socket.process for socket in find_user_sockets(username)
-                 if socket.is_running()]
+        from process_handler import processes
+        procs = [process for process in processes.values()
+                 if process.username.lower() == username.lower()]
         if len(procs) >= 1:
             process = procs[0]
-            self.logger.info("Started watching %s.", process.username)
+            self.logger.info("Started watching %s (P%s).", process.username,
+                             process.id)
             self.watched_game = process
             process.add_watcher(self)
             self.send_message("watching_started")
@@ -426,7 +444,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 elif not self.watched_game:
                     self.logger.warning("Didn't know how to handle msg: %s",
                                         obj["msg"])
-            except:
+            except Exception:
                 self.logger.warning("Error while handling JSON message!",
                                     exc_info=True)
 

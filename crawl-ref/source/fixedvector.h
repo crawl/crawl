@@ -93,8 +93,8 @@ public:
     iterator begin() { return mData; }
     const_iterator begin() const { return mData; }
 
-    iterator end() { return this->begin() + this->size(); }
-    const_iterator end() const { return this->begin() + this->size(); }
+    iterator end() { return begin() + size(); }
+    const_iterator end() const { return begin() + size(); }
     void init(const TYPE& def);
 
 //-----------------------------------

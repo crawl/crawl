@@ -33,11 +33,13 @@ tileidx_t tileidx_known_base_item(tileidx_t label);
 
 tileidx_t tileidx_cloud(const cloud_info &cl, bool disturbance = false);
 tileidx_t tileidx_bolt(const bolt &bolt);
+tileidx_t vary_bolt_tile(tileidx_t tile, int dist);
 tileidx_t tileidx_zap(int colour);
 tileidx_t tileidx_spell(const spell_type spell);
 tileidx_t tileidx_skill(const skill_type skill, int train);
 tileidx_t tileidx_command(const command_type cmd);
 tileidx_t tileidx_gametype(const game_type gtype);
+tileidx_t tileidx_ability(const ability_type ability);
 
 tileidx_t tileidx_known_brand(const item_def &item);
 tileidx_t tileidx_corpse_brand(const item_def &item);
@@ -49,11 +51,12 @@ tileidx_t tileidx_unseen_flag(const coord_def &gc);
 // Return the level of enchantment as an int.  None is 0, Randart is 4.
 int enchant_to_int(const item_def &item);
 // If tile has variations, select among them based upon the enchant of item.
-tileidx_t tileidx_enchant_equ(const item_def &item, tileidx_t tile);
+tileidx_t tileidx_enchant_equ(const item_def &item, tileidx_t tile,
+                              bool player = false);
 
 // For a given fg/bg set of tile indices and a 1 character prefix,
 // return index, flag, and tile name as a printable string.
-std::string tile_debug_string(tileidx_t fg, tileidx_t bg, char prefix);
+string tile_debug_string(tileidx_t fg, tileidx_t bg, char prefix);
 
 void tile_init_props(monster* mon);
 

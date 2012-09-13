@@ -13,11 +13,11 @@ public:
 
     virtual int handle_mouse(MouseEvent &event);
     virtual void render();
-    virtual bool update_tip_text(std::string &tip);
+    virtual bool update_tip_text(string &tip);
 
-    std::string &alt_text() { return m_alt_text; }
+    string &alt_text() { return m_alt_text; }
 protected:
-    std::string m_alt_text;
+    string m_alt_text;
     bool m_overlay;
 };
 

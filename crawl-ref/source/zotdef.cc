@@ -14,6 +14,7 @@
 #include "godprayer.h"
 #include "items.h"
 #include "itemname.h" // for make_name
+#include "itemprop.h"
 #include "makeitem.h"
 #include "message.h"
 #include "mgen_data.h"
@@ -46,14 +47,14 @@ static int _fuzz_mons_level(int level)
         const int fuzz = random2avg(9, 2);
         return (fuzz > 4 ? level + fuzz - 4 : level);
     }
-    return (level);
+    return level;
 }
 
 // Choose a random branch. Which branches may be chosen is a function of
 // the wave number
 static branch_type _zotdef_random_branch()
 {
-    int wavenum = you.num_turns / CYCLE_LENGTH;
+    int wavenum = you.num_turns / ZOTDEF_CYCLE_LENGTH;
 
     while (true)
     {
@@ -103,9 +104,6 @@ static branch_type _zotdef_random_branch()
             case BRANCH_SLIME_PITS:
                 ok = wavenum > 20 && coinflip();   // 4K-
                 break;        // >4K turns only
-            case BRANCH_HIVE:
-                ok = wavenum > 12 && wavenum < 35; // 2.6-7.5K
-                break;
             case BRANCH_HALL_OF_BLADES:
                 ok = wavenum > 30;                 // 6K-
                 break;
@@ -546,9 +544,9 @@ void debug_waves()
     // Test more than just 15 runes, the player may stay longer, and if
     // for some reason a rune is lost, he will have to, and get extra
     // demonics.
-    for (int i = 0; i < 30 * FREQUENCY_OF_RUNES; i++)
+    for (int i = 0; i < 30 * ZOTDEF_RUNE_FREQ; i++)
     {
-        you.num_turns += CYCLE_LENGTH;
+        you.num_turns += ZOTDEF_CYCLE_LENGTH;
         zotdef_set_wave();
     }
 }
@@ -570,7 +568,7 @@ static monster_type _get_zotdef_monster(level_id &place, int power)
         while (rarity == 0 && count < 2000);
 
         if (rarity == 0)
-            return (MONS_PROGRAM_BUG);
+            return MONS_PROGRAM_BUG;
 
         // Calculate strength
         monsterentry *mentry = get_monster_data(mon_type);
@@ -631,7 +629,7 @@ static monster_type _get_zotdef_monster(level_id &place, int power)
             continue;
 
         // Less OOD allowed on early levels
-        if (diff < std::min(-3,-power))
+        if (diff < min(-3,-power))
             continue;
 
         if (random2avg(100, 2) <= chance)
@@ -646,7 +644,7 @@ static monster_type _get_zotdef_monster(level_id &place, int power)
         }
     }
 
-    return (MONS_PROGRAM_BUG);
+    return MONS_PROGRAM_BUG;
 }
 
 static void _zotdef_set_random_branch_wave(int power)
@@ -659,7 +657,7 @@ static void _zotdef_set_random_branch_wave(int power)
     }
     level_id l(_zotdef_random_branch(), -1);
     env.mons_alloc[BOSS_SLOT] = _get_zotdef_monster(l,
-        power + BOSS_MONSTER_EXTRA_POWER);
+        power + ZOTDEF_BOSS_EXTRA_POWER);
 }
 
 static void _zotdef_set_branch_wave(branch_type b, int power)
@@ -672,14 +670,14 @@ static void _zotdef_set_branch_wave(branch_type b, int power)
     for (int i = 0; i < NSLOTS; i++)
         env.mons_alloc[i] = _get_zotdef_monster(l, _fuzz_mons_level(power));
     env.mons_alloc[BOSS_SLOT] = _get_zotdef_monster(l,
-                                    power + BOSS_MONSTER_EXTRA_POWER);
+                                    power + ZOTDEF_BOSS_EXTRA_POWER);
 }
 
 static void _zotdef_set_boss_unique()
 {
     for (int tries = 0; tries < 100; tries++)
     {
-        int level = random2avg(you.num_turns / CYCLE_LENGTH, 2) + 1;
+        int level = random2avg(you.num_turns / ZOTDEF_CYCLE_LENGTH, 2) + 1;
         monster_type which_unique = _pick_unique(level);
 
         // Sometimes, we just quit if a unique is already placed.
@@ -698,15 +696,15 @@ static void _zotdef_set_boss_unique()
 // mons_alloc[BOSS_SLOT] is the boss.
 //
 // A game lasts for 15 runes, each rune 1400 turns apart
-// (assuming FREQUENCY_OF_RUNES=7, CYCLE_LENGTH=200). That's
+// (assuming ZOTDEF_RUNE_FREQ=7, ZOTDEF_CYCLE_LENGTH=200). That's
 // a total of 105 waves. Set probabilities accordingly.
 void zotdef_set_wave()
 {
     // power ramps up from 1 to 35 over the course of the game.
-    int power = (you.num_turns + CYCLE_LENGTH * 2) / (CYCLE_LENGTH * 3);
+    int power = (you.num_turns + ZOTDEF_CYCLE_LENGTH * 2) / (ZOTDEF_CYCLE_LENGTH * 3);
 
     // Early waves are all DUNGEON
-    if (you.num_turns < CYCLE_LENGTH * 4)
+    if (you.num_turns < ZOTDEF_CYCLE_LENGTH * 4)
     {
         _zotdef_set_branch_wave(BRANCH_MAIN_DUNGEON, power);
         return;
@@ -723,7 +721,7 @@ void zotdef_set_wave()
     {
         branch_type b = _zotdef_random_branch();
         // HoB branch waves v. rare before 10K turns
-        if (b == BRANCH_HALL_OF_BLADES && you.num_turns / CYCLE_LENGTH < 50)
+        if (b == BRANCH_HALL_OF_BLADES && you.num_turns / ZOTDEF_CYCLE_LENGTH < 50)
             b = _zotdef_random_branch();
         _zotdef_set_branch_wave(b, power);
         break;
@@ -755,9 +753,9 @@ void zotdef_set_wave()
     dprf("NEW WAVE: %s", zotdef_debug_wave_desc().c_str());
 }
 
-std::string zotdef_debug_wave_desc()
+string zotdef_debug_wave_desc()
 {
-    std::string list = you.zotdef_wave_name + " [";
+    string list = you.zotdef_wave_name + " [";
     for (int i = 0; i <= (crawl_state.game_is_zotdef() ? NSLOTS : 9); i++)
     {
         if (i)
@@ -802,6 +800,8 @@ monster* zotdef_spawn(bool boss)
         {
             if (!give_monster_proper_name(mon, false))
                 mon->mname = make_name(random_int(), false);
+
+            mon->props["dbname"].get_string() = mons_class_name(mt);
         }
 
         mon->hit_points = mon->hit_points * 3 / 2;
@@ -811,43 +811,25 @@ monster* zotdef_spawn(bool boss)
     return mon;
 }
 
-static rune_type _get_rune(int runenumber)
+static rune_type _get_rune()
 {
-    switch (runenumber)
-    {
-    case 1:
-        return RUNE_DIS;
-    case 2:
-        return RUNE_GEHENNA;
-    case 3:
-        return RUNE_COCYTUS;
-    case 4:
-        return RUNE_TARTARUS;
-    case 5:
-        return RUNE_SLIME_PITS;
-    case 6:
-        return RUNE_VAULTS;
-    case 7:
-        return RUNE_SNAKE_PIT;
-    case 8:
-        return RUNE_TOMB;
-    case 9:
-        return RUNE_SWAMP;
-    case 10:
-        return RUNE_SHOALS;
-    case 11:
-        return RUNE_ABYSSAL;
-    case 12:
-        return RUNE_MNOLEG;
-    case 13:
-        return RUNE_LOM_LOBON;
-    case 14:
-        return RUNE_CEREBOV;
-    case 15:
-        return RUNE_GLOORX_VLOQ;
-    default:
+    FixedBitVector<NUM_RUNE_TYPES> runes = you.runes;
+    for (int i = 0; i < MAX_ITEMS; i++)
+        if (item_is_rune(mitm[i]))
+            runes.set(mitm[i].plus);
+    int already = 0;
+    for (int i = 0; i < NUM_RUNE_TYPES; i++)
+        if (runes[i])
+            already++;
+
+    if (already >= 15) // don't allow sitting for all 18/19
         return RUNE_DEMONIC;
-    }
+
+    rune_type rune;
+    do rune = (rune_type)random2(NUM_RUNE_TYPES);
+    while (runes[rune] || rune == RUNE_FOREST || rune == RUNE_DEMONIC);
+
+    return rune;
 }
 
 // Dowan is automatically placed together with Duvessa.
@@ -931,13 +913,13 @@ bool create_trap(trap_type spec_type)
     {
         if (abild.isCancel)
             canned_msg(MSG_OK);
-        return (false);
+        return false;
     }
     // only try to create on floor squares
     if (grd(abild.target) != DNGN_FLOOR)
     {
         mpr("You can't create a trap there!");
-        return (false);
+        return false;
     }
     bool result = place_specific_trap(abild.target, spec_type);
 
@@ -963,7 +945,7 @@ bool zotdef_create_altar(bool wizmode)
     if (specs[0] == '\0')
         return false;
 
-    std::string spec = lowercase_string(specs);
+    string spec = lowercase_string(specs);
 
     god_type god = GOD_NO_GOD;
 
@@ -974,7 +956,7 @@ bool zotdef_create_altar(bool wizmode)
         if (!wizmode && is_unavailable_god(gi))
             continue;
 
-        if (lowercase_string(god_name(gi)).find(spec) != std::string::npos)
+        if (lowercase_string(god_name(gi)).find(spec) != string::npos)
         {
             god = gi;
             break;
@@ -1010,7 +992,7 @@ bool create_zotdef_ally(monster_type mtyp, const char *successmsg)
     }
 
     dist abild;
-    std::string msg = "Make ";
+    string msg = "Make ";
     msg += get_monster_data(mtyp)->name;
     msg += " where?";
 
@@ -1025,30 +1007,28 @@ bool create_zotdef_ally(monster_type mtyp, const char *successmsg)
     {
         if (abild.isCancel)
             canned_msg(MSG_OK);
-        return (false);
+        return false;
     }
     if (!mons_place(mgen_data(mtyp, BEH_FRIENDLY, &you, 0, 0, abild.target,
                    you.pet_target)))
     {
         mpr("You can't create it there!");
-        return (false);
+        return false;
     }
     mpr(successmsg);
-    return (true);
+    return true;
 }
 
 void zotdef_bosses_check()
 {
-    if ((you.num_turns + 1) % CYCLE_LENGTH == 0)
+    if ((you.num_turns + 1) % ZOTDEF_CYCLE_LENGTH == 0)
     {
         if (monster *mon = zotdef_spawn(true))        // boss monster=true
         {
             const char *msg = "You sense that a powerful threat has arrived.";
-            if (!(((you.num_turns + 1) / CYCLE_LENGTH) % FREQUENCY_OF_RUNES))
+            if (!(((you.num_turns + 1) / ZOTDEF_CYCLE_LENGTH) % ZOTDEF_RUNE_FREQ))
             {
-                const rune_type which_rune =
-                    _get_rune(((you.num_turns + 1) / CYCLE_LENGTH)
-                              / FREQUENCY_OF_RUNES);
+                const rune_type which_rune = _get_rune();
                 int ip = items(1, OBJ_MISCELLANY, MISC_RUNE_OF_ZOT, true,
                                which_rune, which_rune);
                 int *const item_made = &ip;
@@ -1066,7 +1046,7 @@ void zotdef_bosses_check()
         save_game(false);
     }
 
-    if ((you.num_turns + 1) % CYCLE_LENGTH == CYCLE_INTERVAL)
+    if ((you.num_turns + 1) % ZOTDEF_CYCLE_LENGTH == ZOTDEF_CYCLE_INTERVAL)
     {
         // Set the next wave
         zotdef_set_wave();

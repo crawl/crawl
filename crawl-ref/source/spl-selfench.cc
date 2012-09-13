@@ -30,7 +30,7 @@ int allowed_deaths_door_hp(void)
     if (you.religion == GOD_KIKUBAAQUDGHA && !player_under_penance())
         hp += you.piety / 15;
 
-    return std::max(hp, 1);
+    return max(hp, 1);
 }
 
 spret_type cast_deaths_door(int pow, bool fail)
@@ -227,14 +227,6 @@ spret_type cast_fly(int power, bool fail)
     return SPRET_SUCCESS;
 }
 
-spret_type cast_insulation(int power, bool fail)
-{
-    fail_check();
-    you.increase_duration(DUR_INSULATION, 10 + random2(power), 100,
-                          "You feel insulated.");
-    return SPRET_SUCCESS;
-}
-
 spret_type cast_teleport_control(int power, bool fail)
 {
     fail_check();
@@ -247,12 +239,12 @@ spret_type cast_teleport_control(int power, bool fail)
     return SPRET_SUCCESS;
 }
 
-int cast_selective_amnesia(std::string *pre_msg)
+int cast_selective_amnesia(string *pre_msg)
 {
     if (you.spell_no == 0)
     {
         canned_msg(MSG_NO_SPELLS);
-        return (0);
+        return 0;
     }
 
     int keyin = 0;
@@ -268,7 +260,7 @@ int cast_selective_amnesia(std::string *pre_msg)
         if (key_is_escape(keyin))
         {
             canned_msg(MSG_OK);
-            return (-1);
+            return -1;
         }
 
         if (keyin == '?' || keyin == '*')
@@ -305,25 +297,7 @@ int cast_selective_amnesia(std::string *pre_msg)
             "it unravels.");
     }
 
-    return (1);
-}
-
-spret_type cast_see_invisible(int pow, bool fail)
-{
-    fail_check();
-    if (you.can_see_invisible())
-        mpr("You feel as though your vision will be sharpened longer.");
-    else
-    {
-        mpr("Your vision seems to sharpen.");
-
-        // We might have to turn autopickup back on again.
-        autotoggle_autopickup(false);
-    }
-
-    // No message if you already are under the spell.
-    you.increase_duration(DUR_SEE_INVISIBLE, 10 + random2(2 + pow/2), 100);
-    return SPRET_SUCCESS;
+    return 1;
 }
 
 spret_type cast_silence(int pow, bool fail)
@@ -349,13 +323,13 @@ spret_type cast_liquefaction(int pow, bool fail)
             mpr("You can't cast this spell without touching the ground.");
         else
             mpr("You need to be on clear, solid ground to cast this spell.");
-        return (SPRET_ABORT);
+        return SPRET_ABORT;
     }
 
     if (you.duration[DUR_LIQUEFYING] || liquefied(you.pos()))
     {
         mpr("The ground here is already liquefied! You'll have to wait.");
-        return (SPRET_ABORT);
+        return SPRET_ABORT;
     }
 
     fail_check();

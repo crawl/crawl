@@ -15,15 +15,15 @@
 static int dlua_compiled_chunk_writer(lua_State *ls, const void *p,
                                       size_t sz, void *ud)
 {
-    std::ostringstream &out = *static_cast<std::ostringstream*>(ud);
+    ostringstream &out = *static_cast<ostringstream*>(ud);
     out.write(static_cast<const char *>(p), sz);
-    return (0);
+    return 0;
 }
 
 ///////////////////////////////////////////////////////////////////////////
 // dlua_chunk
 
-dlua_chunk::dlua_chunk(const std::string &_context)
+dlua_chunk::dlua_chunk(const string &_context)
     : file(), chunk(), compiled(), context(_context), first(-1),
       last(-1), error()
 {
@@ -38,7 +38,7 @@ dlua_chunk::dlua_chunk(lua_State *ls)
     clear();
 
     lua_stack_cleaner cln(ls);
-    std::ostringstream out;
+    ostringstream out;
     const int err = lua_dump(ls, dlua_compiled_chunk_writer, &out);
     if (err)
     {
@@ -48,14 +48,14 @@ dlua_chunk::dlua_chunk(lua_State *ls)
     compiled = out.str();
 }
 
-dlua_chunk dlua_chunk::precompiled(const std::string &_chunk)
+dlua_chunk dlua_chunk::precompiled(const string &_chunk)
 {
     dlua_chunk dchunk;
     dchunk.compiled = _chunk;
-    return (dchunk);
+    return dchunk;
 }
 
-std::string dlua_chunk::describe(const std::string &name) const
+string dlua_chunk::describe(const string &name) const
 {
     if (chunk.empty())
         return "";
@@ -114,26 +114,28 @@ void dlua_chunk::clear()
     compiled.clear();
 }
 
-void dlua_chunk::set_file(const std::string &s)
+void dlua_chunk::set_file(const string &s)
 {
     file = s;
 }
 
-void dlua_chunk::add(int line, const std::string &s)
+void dlua_chunk::add(int line, const string &s)
 {
     if (first == -1)
         first = line;
 
     if (line != last && last != -1)
+    {
         while (last++ < line)
             chunk += '\n';
+    }
 
     chunk += " ";
     chunk += s;
     last = line;
 }
 
-void dlua_chunk::set_chunk(const std::string &s)
+void dlua_chunk::set_chunk(const string &s)
 {
     chunk = s;
 }
@@ -141,7 +143,7 @@ void dlua_chunk::set_chunk(const std::string &s)
 int dlua_chunk::check_op(CLua &interp, int err)
 {
     error = interp.error;
-    return (err);
+    return err;
 }
 
 int dlua_chunk::load(CLua &interp)
@@ -154,14 +156,14 @@ int dlua_chunk::load(CLua &interp)
     if (empty())
     {
         chunk.clear();
-        return (E_CHUNK_LOAD_FAILURE);
+        return E_CHUNK_LOAD_FAILURE;
     }
 
     int err = check_op(interp,
                         interp.loadstring(chunk.c_str(), context.c_str()));
     if (err)
-        return (err);
-    std::ostringstream out;
+        return err;
+    ostringstream out;
     err = lua_dump(interp, dlua_compiled_chunk_writer, &out);
     if (err)
     {
@@ -170,33 +172,33 @@ int dlua_chunk::load(CLua &interp)
         lua_pop(interp, 2);
     }
     compiled = out.str();
-    return (err);
+    return err;
 }
 
 int dlua_chunk::run(CLua &interp)
 {
     int err = load(interp);
     if (err)
-        return (err);
+        return err;
     // callfn returns true on success, but we want to return 0 on success.
-    return (check_op(interp, !interp.callfn(NULL, 0, 0)));
+    return check_op(interp, !interp.callfn(NULL, 0, 0));
 }
 
 int dlua_chunk::load_call(CLua &interp, const char *fn)
 {
     int err = load(interp);
     if (err == E_CHUNK_LOAD_FAILURE)
-        return (0);
+        return 0;
     if (err)
-        return (err);
+        return err;
 
     return check_op(interp, !interp.callfn(fn, fn? 1 : 0, 0));
 }
 
-std::string dlua_chunk::orig_error() const
+string dlua_chunk::orig_error() const
 {
     rewrite_chunk_errors(error);
-    return (error);
+    return error;
 }
 
 bool dlua_chunk::empty() const
@@ -204,28 +206,28 @@ bool dlua_chunk::empty() const
     return compiled.empty() && trimmed_string(chunk).empty();
 }
 
-bool dlua_chunk::rewrite_chunk_errors(std::string &s) const
+bool dlua_chunk::rewrite_chunk_errors(string &s) const
 {
-    const std::string contextm = "[string \"" + context + "\"]:";
-    std::string::size_type dlwhere = s.find(contextm);
+    const string contextm = "[string \"" + context + "\"]:";
+    string::size_type dlwhere = s.find(contextm);
 
-    if (dlwhere == std::string::npos)
-        return (false);
+    if (dlwhere == string::npos)
+        return false;
 
     if (!dlwhere)
     {
         s = rewrite_chunk_prefix(s);
-        return (true);
+        return true;
     }
 
     // Our chunk is mentioned, go back through and rewrite lines.
-    std::vector<std::string> lines = split_string("\n", s);
-    std::string newmsg = lines[0];
+    vector<string> lines = split_string("\n", s);
+    string newmsg = lines[0];
     bool wrote_prefix = false;
     for (int i = 2, size = lines.size() - 1; i < size; ++i)
     {
-        const std::string &st = lines[i];
-        if (st.find(context) != std::string::npos)
+        const string &st = lines[i];
+        if (st.find(context) != string::npos)
         {
             if (!wrote_prefix)
             {
@@ -237,25 +239,24 @@ bool dlua_chunk::rewrite_chunk_errors(std::string &s) const
         }
     }
     s = newmsg;
-    return (true);
+    return true;
 }
 
-std::string dlua_chunk::rewrite_chunk_prefix(const std::string &line,
-                                             bool skip_body) const
+string dlua_chunk::rewrite_chunk_prefix(const string &line, bool skip_body) const
 {
-    std::string s = line;
-    const std::string contextm = "[string \"" + context + "\"]:";
-    const std::string::size_type ps = s.find(contextm);
-    if (ps == std::string::npos)
-        return (s);
+    string s = line;
+    const string contextm = "[string \"" + context + "\"]:";
+    const string::size_type ps = s.find(contextm);
+    if (ps == string::npos)
+        return s;
 
-    const std::string::size_type lns = ps + contextm.length();
-    std::string::size_type pe = s.find(':', ps + contextm.length());
-    if (pe != std::string::npos)
+    const string::size_type lns = ps + contextm.length();
+    string::size_type pe = s.find(':', ps + contextm.length());
+    if (pe != string::npos)
     {
-        const std::string line_num = s.substr(lns, pe - lns);
+        const string line_num = s.substr(lns, pe - lns);
         const int lnum = atoi(line_num.c_str());
-        const std::string newlnum = make_stringf("%d", lnum + first - 1);
+        const string newlnum = make_stringf("%d", lnum + first - 1);
         s = s.substr(0, lns) + newlnum + s.substr(pe);
         pe = lns + newlnum.length();
     }
@@ -265,7 +266,7 @@ std::string dlua_chunk::rewrite_chunk_prefix(const std::string &line,
                     : s.substr(lns));
 }
 
-std::string dlua_chunk::get_chunk_prefix(const std::string &sorig) const
+string dlua_chunk::get_chunk_prefix(const string &sorig) const
 {
     return rewrite_chunk_prefix(sorig, true);
 }

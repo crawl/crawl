@@ -54,7 +54,7 @@ lua_marker('_', tm)
 }}
 MARKER: b = lua:portal_desc {slave_name="trog_book"}
 KFEAT:  b = .
-KITEM:  b = randbook title:Fetching spells:apportation numspells:1
+KITEM:  b = randbook title:Retrieval spells:apportation numspells:1
 MAP
 xxxxxxx
 x.....xxx

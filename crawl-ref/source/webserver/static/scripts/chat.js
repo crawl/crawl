@@ -1,10 +1,17 @@
 define(["jquery", "comm"], function ($, comm) {
     var new_message_count = 0;
+    var spectators = {
+            count: 0,
+            names: ""
+    };
 
     function update_spectators(data)
     {
+        delete data["msg"];
+        $.extend(spectators, data);
         $("#spectator_count").html(data.count + " spectators");
         $("#spectator_list").html(data.names);
+        $(document).trigger("spectators_changed", [spectators]);
     }
 
     function receive_message(data)
@@ -17,6 +24,7 @@ define(["jquery", "comm"], function ($, comm) {
             new_message_count++;
             update_message_count();
         }
+        $(document).trigger("chat_message", [data.content]);
     }
 
     function update_message_count()
@@ -94,6 +102,7 @@ define(["jquery", "comm"], function ($, comm) {
     });
 
     return {
+        spectators: spectators,
         clear: clear,
         focus: focus,
     }

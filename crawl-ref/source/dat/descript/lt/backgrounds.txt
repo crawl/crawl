@@ -1,0 +1,137 @@
+%%%%
+Abyssal Knight
+
+Pragarmės riteriai garbina Lugonu ir yra siunčiami iš Pragarmės į požemį
+skleisti korupciją ir sumaištį.
+%%%%
+Air Elementalist
+
+Oro burtininkai moka Šoko burtažodį. Vėliau jų turima Oro knyga suteikia jiems
+lankstumą išgyvenimui.
+%%%%
+Arcane Marksman
+
+Šauliai nešiojasi šaunamuosius ginklus ir magijos pagalba paverčia savo priešus
+labiau pažeidžiamus atakoms iš toli.
+%%%%
+Artificer
+
+Mechanikai pradeda su keliais magiškais įrenginiais ir moka jais naudotis.
+%%%%
+Assassin
+
+Žudikai yra itin tylūs, pasiruošę nudurti nieko neįtariančius priešininkus. Be
+durklo ir apsiausto, jie nešiojasi ir grėsmingas kurarės adatas pučiamajam
+vamzdeliui.
+%%%%
+Berserker
+
+Berserkeriai tiki Trogą, nekenčiantį magijos įtūžio dievą. Nedaug kas pradžioje
+gali sustabdyti įsisiautėjusį berserkerį, nebent puikybė.
+%%%%
+Chaos Knight
+
+Sumaišties riteriai yra neprognozuojamo Xom žaisliukai ir priklauso nuo jo
+nuolat besimainančių nuotaikų.
+%%%%
+Conjurer
+
+Magai problemas sprendžia naikinančiais Būrimų knygos burtais.
+%%%%
+Death Knight
+
+Mirties riteriai yra kariai, valdantys nemirėlius Tamsiojo Yredelemnul vardu.
+%%%%
+Earth Elementalist
+
+Žemės burtininkai moka Smėlio Užtaiso burtažodį ir nešiojasi akmenis burto
+galiai sustiprinti. Daugiau žemės burtų yra jų turimoje Geomantijos knygoje.
+%%%%
+Enchanter
+
+Kerėtojai naudojasi burtažodžiais, kad sustiprėtų kovai patys arba išvestų iš
+rikiuotės kitus. Taip pat jie pradeda su geros kokybės strėlytėmis.
+%%%%
+Fighter
+
+Kovotojai atvyksta su šarvais, skydu ir pačių pasirinktu ginklu. Jie turi
+daugiau sveikatos nei bet kuri kita profesija.
+%%%%
+Fire Elementalist
+
+Ugnies burtininkai pradeda su Liepsnų knyga ir moka Ugnies Liežuvio burtažodį.
+Kiti burtažodžiai jų knygoje taip pat skirti naikinimui.
+%%%%
+Gladiator
+
+Gladiatoriai yra pasirengę arenai su lengvais šarvais, skydu, tinklais ir pačių
+pasirinktu ginklu.
+%%%%
+Healer
+
+Gydytojai yra Elyvilon pasekėjai, pasirengę gydyti tiek save, tiek ir kitus.
+Toks gydymas gali nuraminti žvėris ir gyvulius, duodamas  patirties.
+%%%%
+Hunter
+
+Medžiotojai gali pulti iš atstumo, nesikliaudami varginančia magija.
+%%%%
+Ice Elementalist
+
+Ledo burtininkai pradeda su Šalčio knyga ir Šaldymo burtažodžiu. Kiti knygos
+burtažodžiai yra ganėtinai įvairūs.
+%%%%
+Monk
+
+Vienuoliai yra pasiruošę imtis su bet kuo požemyje, dėvedami tik mantiją ir
+naudodami savo kūną.
+%%%%
+Necromancer
+
+Nekromantai yra burtininkai specializuojantys mirties magijos taikyme. Jie
+pradeda su Skausmo burtažodžiu.
+%%%%
+Priest
+
+Dvasininkai yra Zin pasekėjai, skleidžiantys dievo žodį Požemio gyventojams.
+Kalvų Orkai garbina orkų dievą Beogh.
+%%%%
+Skald
+
+Dainiai yra kariai, galintys save sustiprinti burtažodžiais iš Karo Giesmių
+knygos.
+%%%%
+Stalker
+
+Persekiotojai sėlindami ir naudodamiesi transformuojančia magija priartėja prie
+savo aukų ir jas numalšina.
+%%%%
+Summoner
+
+Iššaukėjai pradeda su Šaukimų knyga ir nuo pat pradžių moka Iššaukti Mažus
+Žinduolius.
+%%%%
+Transmuter
+
+Keitėjai keičia savo formą, kad galėtų kovoti žvėries pavidalu. Jie taip pat
+moka paversti lazdas į gyvates.
+%%%%
+Venom Mage
+
+Nuodų Magai pradeda su Jaunojo Nuodytojo Vadovėliu ir Geluonies burtažodžiu.
+Jiems lengva nuo pat pradžių.
+%%%%
+Wanderer
+
+Klajokliai pradeda su atsitiktiniais reikmenimis ir įgūdžiais.
+%%%%
+Warper
+
+Keliautojai Erdve pradeda su pačių pasirinktu ginklu ir Mirktelėjimo ritiniu.
+Jie gali išmokti burtažodžius iš Erdvinių Perkėlimų knygos.
+%%%%
+Wizard
+
+Burtininkai pradeda su Smulkiosios Magijos knyga, turinčia pluoštą burtažodžių.
+Jų magijos atsargos diesnės nei bet kurios kitos profesijos.
+%%%%

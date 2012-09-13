@@ -18,8 +18,6 @@
 #include <time.h>
 #include <math.h>
 
-#include <stack>
-
 #include "cio.h"
 #include "colour.h"
 #include "crash.h"
@@ -35,21 +33,34 @@
 #include "options.h"
 #include "output.h"
 #include "player.h"
+#include "state.h"
 #include "traps.h"
 #include "view.h"
 #include "viewchar.h"
 #include "viewgeom.h"
 
+#ifdef TOUCH_UI
+#include "tilepick.h"
+#include "tiledef-gui.h"
+#endif
+
+#ifdef __ANDROID__
+#include <android/log.h>
+double log2( double n )
+{
+    return log(n)/log(2); // :(
+}
+#endif
 
 // Crude, but functional.
-std::string make_time_string(time_t abs_time, bool terse)
+string make_time_string(time_t abs_time, bool terse)
 {
     const int days  = abs_time / 86400;
     const int hours = (abs_time % 86400) / 3600;
     const int mins  = (abs_time % 3600) / 60;
     const int secs  = abs_time % 60;
 
-    std::string buff;
+    string buff;
     if (days > 0)
     {
         buff += make_stringf("%d%s ", days, terse ? ","
@@ -58,7 +69,7 @@ std::string make_time_string(time_t abs_time, bool terse)
     return buff + make_stringf("%02d:%02d:%02d", hours, mins, secs);
 }
 
-std::string make_file_time(time_t when)
+string make_file_time(time_t when)
 {
     if (tm *loc = TIME_FN(&when))
     {
@@ -70,7 +81,7 @@ std::string make_file_time(time_t when)
                  loc->tm_min,
                  loc->tm_sec);
     }
-    return ("");
+    return "";
 }
 
 void set_redraw_status(uint64_t flags)
@@ -125,7 +136,7 @@ static bool _print_error_screen(const char *message, ...)
         return false;
 
     // Get complete error message.
-    std::string error_msg;
+    string error_msg;
     {
         va_list arg;
         va_start(arg, message);
@@ -133,7 +144,7 @@ static bool _print_error_screen(const char *message, ...)
         vsnprintf(buffer, sizeof buffer, message, arg);
         va_end(arg);
 
-        error_msg = std::string(buffer);
+        error_msg = string(buffer);
     }
     if (error_msg.empty())
         return false;
@@ -150,7 +161,7 @@ static bool _print_error_screen(const char *message, ...)
 #ifdef USE_TILE_LOCAL
     width = crawl_view.msgsz.x;
 #else
-    width = std::min(80, get_number_of_cols());
+    width = min(80, get_number_of_cols());
 #endif
     linebreak_string(error_msg, width);
 
@@ -173,7 +184,7 @@ NORETURN void end(int exit_code, bool print_error, const char *format, ...)
 {
     disable_other_crashes();
 
-    std::string error = print_error? strerror(errno) : "";
+    string error = print_error? strerror(errno) : "";
     if (format)
     {
         va_list arg;
@@ -183,9 +194,9 @@ NORETURN void end(int exit_code, bool print_error, const char *format, ...)
         va_end(arg);
 
         if (error.empty())
-            error = std::string(buffer);
+            error = string(buffer);
         else
-            error = std::string(buffer) + ": " + error;
+            error = string(buffer) + ": " + error;
 
         if (!error.empty() && error[error.length() - 1] != '\n')
             error += "\n";
@@ -215,6 +226,10 @@ NORETURN void end(int exit_code, bool print_error, const char *format, ...)
 
     if (!error.empty())
     {
+
+#ifdef __ANDROID__
+        __android_log_print(ANDROID_LOG_INFO, "Crawl", "%s", error.c_str());
+#endif
         fprintf(stderr, "%s", error.c_str());
         error.clear();
     }
@@ -253,7 +268,7 @@ NORETURN void game_ended()
         end(0);
 }
 
-NORETURN void game_ended_with_error(const std::string &message)
+NORETURN void game_ended_with_error(const string &message)
 {
     if (crawl_state.seen_hups)
         end(1);
@@ -361,7 +376,7 @@ int stepdown_value(int base_value, int stepping, int first_step,
         ceiling_value = 0;
 
     if (ceiling_value && ceiling_value < first_step)
-        return std::min(base_value, ceiling_value);
+        return min(base_value, ceiling_value);
     if (base_value < first_step)
         return base_value;
 
@@ -518,11 +533,11 @@ bool yes_or_no(const char* fmt, ...)
     mprf(MSGCH_PROMPT, "%s? (Confirm with \"yes\".) ", buf);
 
     if (cancelable_get_line(buf, sizeof buf))
-        return (false);
+        return false;
     if (strcasecmp(buf, "yes") != 0)
-        return (false);
+        return false;
 
-    return (true);
+    return true;
 }
 
 // jmf: general helper (should be used all over in code)
@@ -535,11 +550,26 @@ bool yesno(const char *str, bool safe, int safeanswer, bool clear_after,
     if (interrupt_delays && !crawl_state.is_repeating_cmd())
         interrupt_activity(AI_FORCE_INTERRUPT);
 
-    std::string prompt = make_stringf("%s ", str ? str : "Buggy prompt?");
+    string prompt = make_stringf("%s ", str ? str : "Buggy prompt?");
 
+#ifdef TOUCH_UI
+    Popup *pop = new Popup(prompt);
+    MenuEntry *status = new MenuEntry("", MEL_SUBTITLE);
+    pop->push_entry(new MenuEntry(prompt, MEL_TITLE ));
+    pop->push_entry(status);
+    MenuEntry *me = new MenuEntry("Yes", MEL_ITEM, 0, 'Y', false);
+    me->add_tile(tile_def(TILEG_PROMPT_YES, TEX_GUI));
+    pop->push_entry(me);
+    me = new MenuEntry("No", MEL_ITEM, 0, 'N', false);
+    me->add_tile(tile_def(TILEG_PROMPT_NO, TEX_GUI));
+    pop->push_entry(me);
+#endif
     mouse_control mc(MOUSE_MODE_MORE);
     while (true)
     {
+#ifdef TOUCH_UI
+        int tmp = pop->pop();
+#else
         if (!noprompt)
         {
             if (message)
@@ -549,6 +579,7 @@ bool yesno(const char *str, bool safe, int safeanswer, bool clear_after,
         }
 
         int tmp = getchm(KMC_CONFIRM);
+#endif
 
         // Prevent infinite loop if Curses HUP signal handling happens;
         // if there is no safe answer, then just save-and-exit immediately,
@@ -578,28 +609,30 @@ bool yesno(const char *str, bool safe, int safeanswer, bool clear_after,
             mesclr();
 
         if (tmp == 'N')
-            return (false);
+            return false;
         else if (tmp == 'Y')
-            return (true);
+            return true;
         else if (!noprompt)
         {
             bool upper = (!safe && crawl_state.game_is_hints_tutorial());
-            const std::string pr
-                = make_stringf("%s[Y]es or [N]o only, please.",
-                               upper ? "Uppercase " : "");
+            const string pr = make_stringf("%s[Y]es or [N]o only, please.",
+                                           upper ? "Uppercase " : "");
+#ifdef TOUCH_UI
+            status->text = pr;
+#else
             if (message)
                 mpr(pr);
             else
                 cprintf(("\n" + pr + "\n").c_str());
+#endif
         }
     }
 }
 
-static std::string _list_alternative_yes(char yes1, char yes2,
-                                         bool lowered = false,
-                                         bool brackets = false)
+static string _list_alternative_yes(char yes1, char yes2, bool lowered = false,
+                                    bool brackets = false)
 {
-    std::string help = "";
+    string help = "";
     bool print_yes = false;
     if (yes1 != 'Y')
     {
@@ -633,33 +666,32 @@ static std::string _list_alternative_yes(char yes1, char yes2,
     return help;
 }
 
-static std::string _list_allowed_keys(char yes1, char yes2,
-                                      bool lowered = false,
-                                      bool allow_all = false)
+static string _list_allowed_keys(char yes1, char yes2, bool lowered = false,
+                                 bool allow_all = false)
 {
-    std::string result = " [";
-                result += (lowered ? "(y)es" : "(Y)es");
-                result += _list_alternative_yes(yes1, yes2, lowered);
-                if (allow_all)
-                    result += (lowered? "/(a)ll" : "/(A)ll");
-                result += (lowered ? "/(n)o/(q)uit" : "/(N)o/(Q)uit");
-                result += "]";
+    string result = " [";
+           result += (lowered ? "(y)es" : "(Y)es");
+           result += _list_alternative_yes(yes1, yes2, lowered);
+           if (allow_all)
+               result += (lowered? "/(a)ll" : "/(A)ll");
+           result += (lowered ? "/(n)o/(q)uit" : "/(N)o/(Q)uit");
+           result += "]";
 
-    return (result);
+    return result;
 }
 
 // Like yesno(), but returns 0 for no, 1 for yes, and -1 for quit.
 // alt_yes and alt_yes2 allow up to two synonyms for 'Y'.
 // FIXME: This function is shaping up to be a monster. Help!
 int yesnoquit(const char* str, bool safe, int safeanswer, bool allow_all,
-               bool clear_after, char alt_yes, char alt_yes2)
+              bool clear_after, char alt_yes, char alt_yes2)
 {
     if (!crawl_state.is_repeating_cmd())
         interrupt_activity(AI_FORCE_INTERRUPT);
 
     mouse_control mc(MOUSE_MODE_MORE);
 
-    std::string prompt =
+    string prompt =
         make_stringf("%s%s ", str ? str : "Buggy prompt?",
                      _list_allowed_keys(alt_yes, alt_yes2,
                                         safe, allow_all).c_str());
@@ -723,11 +755,9 @@ char index_to_letter(int the_index)
 int letter_to_index(int the_letter)
 {
     if (the_letter >= 'a' && the_letter <= 'z')
-        // returns range [0-25] {dlb}
-        return (the_letter - 'a');
+        return (the_letter - 'a'); // returns range [0-25] {dlb}
     else if (the_letter >= 'A' && the_letter <= 'Z')
-        // returns range [26-51] {dlb}
-        return (the_letter - 'A' + 26);
+        return (the_letter - 'A' + 26); // returns range [26-51] {dlb}
 
     die("slot not a letter: %s (%d)", the_letter ?
         stringize_glyph(the_letter).c_str() : "null", the_letter);
@@ -749,12 +779,12 @@ bool tobool(maybe_bool mb, bool def)
     switch (mb)
     {
     case B_TRUE:
-        return (true);
+        return true;
     case B_FALSE:
-        return (false);
+        return false;
     case B_MAYBE:
     default:
-        return (def);
+        return def;
     }
 }
 
@@ -802,7 +832,7 @@ int prompt_for_int(const char *prompt, bool nonneg)
     if (ret < 0 && nonneg || ret == 0 && end == specs)
         ret = (nonneg ? -1 : 0);
 
-    return (ret);
+    return ret;
 }
 
 double prompt_for_float(const char* prompt)
@@ -820,6 +850,6 @@ double prompt_for_float(const char* prompt)
     if (ret == 0 && end == specs)
         ret = -1;
 
-    return (ret);
+    return ret;
 
 }

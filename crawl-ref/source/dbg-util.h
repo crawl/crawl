@@ -12,21 +12,19 @@ skill_type skill_from_name(const char *name);
 
 int debug_cap_stat(int stat);
 
-void error_message_to_player(void);
-
 void debug_dump_levgen();
 
 struct item_def;
-std::string debug_art_val_str(const item_def& item);
+string debug_art_val_str(const item_def& item);
 
 class monster;
 struct coord_def;
 
-std::string debug_coord_str(const coord_def &pos);
+string debug_coord_str(const coord_def &pos);
 
 void debug_dump_constriction(const actor *act);
 void debug_dump_mon(const monster* mon, bool recurse);
 
-std::string debug_mon_str(const monster* mon);
+string debug_mon_str(const monster* mon);
 
 #endif

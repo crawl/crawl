@@ -483,10 +483,6 @@ Make water
 
 Creas una charca de agua en tu posición
 %%%%
-Make axe trap
-
-Creas una trampa de hachas en la posición señalada.
-%%%%
 Make lightning spire
 
 Construyes una espiral de rayos con la habilidad de lanzar electricidad en la

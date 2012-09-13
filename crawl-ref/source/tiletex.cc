@@ -43,24 +43,28 @@ bool GenericTexture::load_texture(const char *filename,
     success = wm->load_texture(this, filename, mip_opt, m_orig_width,
                                m_orig_height, proc, force_power_of_two);
 
-    return (success);
+    return success;
 }
 
 bool GenericTexture::load_texture(unsigned char *pixels, unsigned int new_width,
                                   unsigned int new_height,
-                                  MipMapOptions mip_opt)
+                                  MipMapOptions mip_opt,
+                                  int offsetx, int offsety)
 {
-    if (!pixels || !new_width || !new_height)
-        return (false);
+    if (!new_width || !new_height)
+        return false;
 
-    m_width = new_width;
-    m_height = new_height;
+    if (offsetx == -1 && offsety == -1)
+    {
+        m_width = new_width;
+        m_height = new_height;
+        glmanager->generate_textures(1, &m_handle);
+    }
 
-    glmanager->generate_textures(1, &m_handle);
     bind();
-    glmanager->load_texture(pixels, m_width, m_height, mip_opt);
+    glmanager->load_texture(pixels, new_width, new_height, mip_opt, offsetx, offsety);
 
-    return (true);
+    return true;
 }
 
 void GenericTexture::bind() const
@@ -72,7 +76,6 @@ void GenericTexture::bind() const
 TilesTexture::TilesTexture() :
     GenericTexture(), m_tile_max(0), m_info_func(NULL)
 {
-
 }
 
 void TilesTexture::set_info(int tile_max, tile_info_func *info_func)
@@ -110,7 +113,7 @@ bool ImageManager::load_textures(bool need_mips)
     for (size_t i = 0; i < ARRAYSZ(_filenames); ++i)
     {
         if (!m_textures[i].load_texture(_filenames[i], mip))
-            return (false);
+            return false;
     }
 
     m_textures[TEX_FLOOR].set_info(TILE_FLOOR_MAX, &tile_floor_info);
@@ -121,7 +124,7 @@ bool ImageManager::load_textures(bool need_mips)
     m_textures[TEX_GUI].set_info(TILEG_GUI_MAX, &tile_gui_info);
     m_textures[TEX_ICONS].set_info(TILEI_ICONS_MAX, &tile_icons_info);
 
-    return (true);
+    return true;
 }
 
 void ImageManager::unload_textures()

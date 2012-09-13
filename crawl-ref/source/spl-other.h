@@ -13,7 +13,6 @@ bool recall(int type_recalled);
 spret_type cast_phase_shift(int pow, bool fail = false);
 spret_type cast_passwall(const coord_def& delta, int pow, bool fail);
 spret_type cast_intoxicate(int pow, bool fail);
-spret_type cast_fulsome_distillation(int pow, bool check_range, bool fail);
 void remove_condensation_shield();
 spret_type cast_condensation_shield(int pow, bool fail);
 spret_type cast_stoneskin(int pow, bool fail = false);

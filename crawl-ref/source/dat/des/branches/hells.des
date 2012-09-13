@@ -10,7 +10,7 @@ function dis_setup(e)
    e.lflags("no_tele_control")
 -- turn granite statues into iron statues
 -- you still have to colour the statues, if desired
-   dgn.set_feature_desc_short("granite statue", "iron statue")
+   e.set_feature_name("granite_statue", "iron statue")
 end
 
 function dis_rune(e)
@@ -27,8 +27,8 @@ function geh_setup(e)
    e.lfloorcol("lightgrey")
    e.lfloortile("floor_pebble_darkgray")
    e.colour("v = red")
-   dgn.set_feature_desc_short("floor", "Ashen ground")
-   dgn.set_feature_desc_short("metal wall", "tempered metal wall")
+   e.set_feature_name("floor", "Ashen ground")
+   e.set_feature_name("metal_wall", "tempered metal wall")
 end
 
 function coc_setup(e)
@@ -41,9 +41,9 @@ function coc_setup(e)
    e.lfloorcol("white")
    e.lfloortile("floor_ice")
    e.colour("c = lightblue")
-   dgn.set_feature_desc_short("rock wall", "ice-covered rock wall")
-   dgn.set_feature_desc_short("stone wall", "ice-covered stone wall")
-   dgn.set_feature_desc_short("floor", "Frost-covered floor")
+   e.set_feature_name("rock_wall", "ice-covered rock wall")
+   e.set_feature_name("stone_wall", "ice-covered stone wall")
+   e.set_feature_name("floor", "Frost-covered floor")
 end
 
 function tar_setup(e)
@@ -73,6 +73,44 @@ function serpent_of_hell_setup(e)
       e.kmons('D = the Serpent of Hell')
    end
 end
+
+function callback.grunt_iron_hall_animate(data,triggerable,trigger,marker,ev)
+    if not dgn.persist.grunt_iron_hall_animated then
+        dgn.persist.grunt_iron_hall_animated = true
+        for slave in iter.slave_iterator("trap_statue", 1) do
+        if crawl.one_chance_in(4) then
+            dgn.terrain_changed(slave.x, slave.y, "floor", false, false, false)
+            dgn.create_monster(slave.x, slave.y,
+                               "patrolling iron golem generate_awake")
+        end
+    end
+    crawl.mpr("You hear the creaking of ancient metal!", "warning")
+    end
+end
+
+function callback.grunt_gauntlet_trap_activate(data,triggerable,trigger,marker,ev)
+    if not dgn.persist.grunt_gauntlet_trap_triggered then
+    for slave in iter.slave_iterator("trap_wall2", 1) do
+        local you_x, you_y = you.pos()
+        if (dgn.mons_at(slave.x, slave.y) ~= nil or (slave.x == you_x and slave.y == you_y)) then
+            return
+        end
+    end
+        dgn.persist.grunt_gauntlet_trap_triggered = true
+    for slave in iter.slave_iterator("trap_wall", 1) do
+        dgn.terrain_changed(slave.x, slave.y, "floor", false, false, false)
+        dgn.place_cloud(slave.x, slave.y, "foul pestilence", crawl.random2(5) + 5)
+    end
+    for slave in iter.slave_iterator("trap_wall2", 1) do
+        dgn.terrain_changed(slave.x, slave.y, "stone_wall", false, false, false)
+        dgn.colour_at(slave.x, slave.y, "lightmagenta")
+    end
+    crawl.mpr("You hear an unearthly scream, and the grinding of stone!",
+             "warning")
+    crawl.mpr("The path is suddenly blocked!", "warning")
+    end
+end
+
 }}
 
 
@@ -82,7 +120,7 @@ end
 
 # This replaces the hardcoded placement of a hell entrance on D:21-27.
 NAME:   hell_entry
-TAGS:   extra allow_dup luniq can_overwrite
+TAGS:   extra allow_dup luniq can_overwrite replace_portal
 DEPTH:  D:21-27
 CHANCE: 100%
 KFEAT:  O = enter_hell
@@ -207,9 +245,8 @@ ENDMAP
 # Fire storm
 
 NAME:   gehenna_fire_generator
+TAGS:   extra allow_dup
 DEPTH:  Geh:*
-PLACE:  Geh:1
-ORIENT: float
 MARKER: . = lua:fog_machine { \
             pow_max = 15, delay_min = 100, delay_max = 150, size = 1,  \
             size_buildup_amnt = 29, size_buildup_time = 1000, \
@@ -256,8 +293,9 @@ MONS:   mummy / mummy priest / greater mummy, lich
 NSUBST: 1:1=} / *=1
 NSUBST: 1:1=) / *=1
 NSUBST: 1:1=] / *=1
-SUBST:  = : =+
+SUBST:  = : +
 SUBST:  }=}>, )=)>, ]=]>
+TILE:   F = dngn_statue_iron
 # occasionally (12.5%), all downstairs are in this vault
 MAP
 xxxxxxxxxxxxxxxxxxxxxxx
@@ -301,6 +339,66 @@ vvvvvvvvvvvvvvvvv
 ENDMAP
 
 ##############################################################################
+
+NAME: grunt_dis_stairs_iron_hall
+TAGS: transparent patrolling
+DEPTH: Dis:1-6
+MONS: iron dragon / quicksilver dragon, reaper w:7 / tormentor w:6
+MONS: iron troll
+MONS: iron devil / nothing, iron imp / nothing
+{{
+    dgn.persist.grunt_iron_hall_animated = false
+    local trap_marker = TriggerableFunction:new {
+        func = "callback.grunt_iron_hall_animate",
+        repeated = true}
+    trap_marker:add_triggerer(DgnTriggerer:new {
+        type="player_move"})
+    lua_marker(':', trap_marker)
+    lua_marker('1', trap_marker)
+    lua_marker('2', trap_marker)
+    lua_marker('d', trap_marker)
+    lua_marker('e', trap_marker)
+    lua_marker('f', trap_marker)
+    lua_marker('}', trap_marker)
+    lua_marker(']', trap_marker)
+    lua_marker(')', trap_marker)
+    lua_marker('G', props_marker {trap_statue=1,
+                                  veto_fragmentation="veto",
+                                  veto_disintegrate="veto",
+                                  veto_shatter="veto"})
+    set_feature_name("granite_statue", "iron statue")
+}}
+COLOUR: G = cyan
+TILE: G = dngn_statue_iron_golem
+SUBST: d = 3
+SUBST: e = 4
+SUBST: f = 5
+MAP
+...............................
+.vvvvvvvvvvvvvvvvvvvvvvvvvvvvv.
+.vG.+4Gvvv:}:::]:::):vvvG4+.Gv.
+.v..+4.vv::::1::::1:::vv.4+..v.
+.v..v..vG::::::G::::::Gv..v..v.
+.v..v55vv:::G:::::G:::vv55v..v.
+.v55v..vG:2::::1::::2:Gv..v55v.
+.v55v55vv:::::::::::::vv55v55v.
+.v44v..vGf:G:::G:::G:fGv..v44v.
+.v..v44vv::::e:::e::::vv44v..v.
+.v..v..vG::::::2::::::Gv..v..v.
+.v..v55vv:3:G:::::G:d:vv55v..v.
+.v..v..vGf:::::G:::::fGv..v..v.
+.v..v55vv:f:d::e::d:f:vv55v..v.
+.v..v..vvvGvGve:evGvGvvv..v..v.
+.v..v++vvvvvvv+++vvvvvvv++v..v.
+.v..v..vGvGvGv...vGvGvGv..v..v.
+.v55v4....4...3.3...4....4v55v.
+.v55v...4...4.....4...4...v55v.
+.v44vGvGvGvGvv.3.vvGvGvGvGv44v.
+.v++vvvvvvvvvvvvvvvvvvvvvvv++v.
+.G@.G.....................G@.G.
+ENDMAP
+
+##############################################################################
 # lemuel_nasty_pond
 #
 NAME:   lemuel_nasty_pond
@@ -327,6 +425,83 @@ MAP
  ..ZZZZZ4wwww.3......
    3ZZZZwwwww....3.
      .ZZwww3.....
+ENDMAP
+
+##############################################################################
+
+NAME: grunt_tartarus_stairs_gauntlet_trap
+DEPTH: Tar:1-6
+TAGS: generate_awake patrolling no_trap_gen
+MONS: Shadow Fiend, shadow demon / reaper, soul eater, rotting devil, shadow imp
+{{
+    dgn.persist.grunt_gauntlet_trap_triggered = false
+    local trap_marker = TriggerableFunction:new {
+        func = "callback.grunt_gauntlet_trap_activate",
+        repeated = true}
+    trap_marker:add_triggerer(DgnTriggerer:new {
+        type="player_move"})
+    lua_marker(':', trap_marker)
+    lua_marker('H', trap_marker)
+    lua_marker('-', trap_marker)
+    lua_marker('1', trap_marker)
+    lua_marker('e', trap_marker)
+    lua_marker('}', trap_marker)
+    lua_marker(']', trap_marker)
+    lua_marker(')', trap_marker)
+    lua_marker('d', props_marker {trap_wall=1})
+    lua_marker('"', props_marker {trap_wall2=1})
+}}
+SUBST: d = c
+SUBST: e = 2
+COLOUR: c = lightmagenta
+KPROP: "H-}]) = no_rtele_into
+KPROP: "H-}]) = no_ctele_into
+MARKER: H = lua:fog_machine { \
+                pow_min = 10, pow_max = 10, delay = 10, \
+                size = 3, walk_dist = 1, cloud_type = "gloom" }
+MAP
+cccccccccccccccccccccc.......
+c...2...............cG.5.....
+cdcccccccccccccccccdcc...5...
+c--H":e:c9c8c8c0c0c0cG.4..5..
+c}--":::cdcdcdcdcdcdcc3.4..5.
+c]1H":::+............+......@
+c)--":::cdcdcdcdcdcdcc3.4..5.
+c--H":e:c9c8c8c0c0c0cG.4..5..
+cdcccccccccccccccccdcc...5...
+c...2...............cG.5.....
+cccccccccccccccccccccc.......
+ENDMAP
+
+##############################################################################
+
+NAME:   grunt_cocytus_stairs_refrigerator
+TAGS:   transparent mini_float
+DEPTH:  Coc:1-6
+COLOUR: c = blue
+MONS:   Ice Fiend, blizzard demon, ice devil, blue devil, white imp
+KMONS:  H = ice statue
+KMONS:  O = ice statue name:chilling_statue name_replace name_descriptor \
+            hd:15 spells:bolt_of_cold;ozocubu's_refrigeration;\
+            ozocubu's_refrigeration;freezing_cloud;\
+            ozocubu's_refrigeration;ozocubu's_refrigeration \
+            tile:mons_chilling_statue
+MAP
+xwww..4......
+xwwwwww..5...
+xwwwwwwww..5.
+xwwwwwwwww...
+xcccccHwwww4.
+cc.O.ccwwww..
+c}..2.cWWWW4.
+c]1...+.3.3..
+c)..2.cWWWW4.
+cc.O.ccwwww..
+xcccccHwwww4.
+xwwwwwwwww...
+xwwwwwwww..5.
+xwwwwww..5...
+xwww..4......
 ENDMAP
 
 ##############################################################################
@@ -519,7 +694,7 @@ MAP
 ccccccccccccccccccccccccccccccccc
  ccczz+'''''';;;;;;;''''''+zzccc
   cczzc''3''c';;T;;'c''3''czzcc
-   c=ccc''''''c;;;c''''''ccc=c
+   c+ccc''''''c;;;c''''''ccc+c
     .cccc'''''''D'''''''cccc.
      ..ccc'''''''''''''ccc..
       .cccc'''cc+cc'''cccc.
@@ -759,6 +934,7 @@ SHUFFLE: 23
 SUBST:   4 = 4:20 7
 SUBST:   8 = 8o
 COLOUR:  o : cyan
+TILE:    o = dngn_statue_iron_golem
 : dis_rune(_G)
 # Use master/slave setup.
 MARKER:  o = lua:monster_on_death { \
@@ -769,6 +945,9 @@ MARKER:  o = lua:monster_on_death { \
             veto_fragmentation="veto", veto_disintegrate="veto", \
             veto_shatter="veto" \
          }
+KITEM:   | = superb_item no_pickup
+KITEM:   $ = gold no_pickup
+: set_feature_name("granite_statue", "iron statue")
 MAP
 ....................................................................
 ...............................................v5v..v5v.............
@@ -783,10 +962,10 @@ MAP
 ......vvv..+.......44..vv|$|vvv.....vvvv..vvvv$$vvv...v.vvvv..v.....
 .....vv....v...........vv$$$vv..vvv..vvv+vvvvv||vvo......vvvv+vvv...
 ...vvv.8W..vvvvvvvvvvvvvv$$$v...v9v...v...vvvv|vvo2......vvv...v5...
-...5vv.WW..vv5vv5vv5vv5vvv=vv.........+...vvvv|vv...v.v...vv9..vv...
+...5vv.WW..vv5vv5vv5vv5vvv+vv.........+...vvvv|vv...v.v...vv9..vv...
 ...vvv.WW..+................+..v...v..v...vvvvOv1.........+..o.v....
 ...vvv.WW..+................+..5.W.5..v...vvvv|v0.........+..o.v....
-...5vv.WW..vv5vv5vv5vv5vvv=vv..v.W.v..v...vvvv|vv...v.v...vv9..vv...
+...5vv.WW..vv5vv5vv5vv5vvv+vv..v.W.v..v...vvvv|vv...v.v...vv9..vv...
 ...vvv.8W..vvvvvvvvvvvvvv$$$v..5.W.5..v..Dvvvv|vvo3......vvv...v5...
 .....vv....v.......v...vv$$$v..v...v..vv+vvvvv||vvo......vvvv+vvv...
 ......vv...+.......+...vv|$|v.........vv..vvvv$$vvv...v.vvvv..v.....
@@ -960,8 +1139,8 @@ NSUBST:  A = 1:+ / *:v, B = 1:+ / *:v
 NSUBST:  S = 1:( / 1:[ / 1:{ / *:.
 # four hell sentinels in Dispater's building
 NSUBST:  _ = 4:4 / *:.
-# Maybe make an iron statue tile for this?
 COLOUR:  G = cyan
+TILE:    G = dngn_statue_iron
 : serpent_of_hell_setup(_G)
 : dis_setup(_G)
 : dis_rune(_G)
@@ -1137,7 +1316,7 @@ COLOUR: = = red
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x...."llvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvlllll"xx
-x.(.."llv......=......................................=......vllll".{x
+x.(.."llv......+......................................+......vllll".{x
 x..."lllv.vvvv.v....4....llllllllllllllllllll.........v.vvvv.vllll".'x
 x..."lllv.v2|v.v.......llllllllllllllllllllllll...4...v.v|2v.vlll"..'x
 x'."llllv.v+vv.v.....llllllllllllllllllllllllllll.....v.vv+v.vll"..'xx
@@ -1150,8 +1329,8 @@ x'."llllv.v....llllccccccccccc....ccccccc+cccccccclllll....v.vlll".'xx
 x'."llllv.v....llllc%%%%%.cccccc..ccccccc+cccccccclllll....v.vlll"..'x
 x'."llllv.v...lllllc%%%%%.c.%%%c..c..........cccccllllll...v.vllll".'x
 x'.."lllv.v...lllllc%%%%%.+.%%%c..c.vvvv.....+...cllllll...v.vllll".[x
-xx."llllv.v...lllllc%%%%%.c.%%%c..c.=||n..4..ccc.cllllll...v.vllll".'x
-x'.."lllv.v...lllllc%%%%%.c....c..c.=||n.....ccc.cllllll...v.vllll".'x
+xx."llllv.v...lllllc%%%%%.c.%%%c..c.+||n..4..ccc.cllllll...v.vllll".'x
+x'.."lllv.v...lllllc%%%%%.c....c..c.+||n.....ccc.cllllll...v.vllll".'x
 x'.."lllv.v...lllllc......cc++cc..c.vvvv..4..+.c+cccclll...v.vlll"..'x
 x'.."lllv.v...lllllcln.|||c....c..c..........+.c...$clll...v.vll"...'x
 x'."llllv.v...lllllc.n.|||c....c..cccccccccccc.c..2$clll...v.vll"...'x
@@ -1488,7 +1667,7 @@ SUBST:   ' = .cc
 SUBST:   ; : ;;;;w , ; = wc
 KFEAT:   # = permarock_wall
 COLOUR:  # = lightcyan
-NSUBST:  - = 1:= / *:c
+NSUBST:  - = 1:+ / *:c
 : coc_setup(_G)
 MAP
 ################################################################################
@@ -1576,8 +1755,7 @@ KMONS:   8 = ghoul
 KMONS:   9 = vampire mage / vampire knight
 KMONS:   0 = soul eater
 KMONS:   Z = large skeleton / large zombie / small skeleton / small zombie
-KFEAT:   A = secret_door
-MARKER:  A = lua:restrict_door()
+KFEAT:   A = runed_door
 SUBST:   ? = ?..., ? = 2., 0 = 002
 SHUFFLE: 3569
 : serpent_of_hell_setup(_G)
@@ -1621,8 +1799,8 @@ xxxx...........................................cc44744xx00000cc...xxxx
 xxxx.......ccccccccc+ccccccccc.................cc44444xx88888cc...xxxx
 xxxx.......c.................c..x.........x..ccccccccccccxxxxcc...xxxx
 xxxx.......c.x.x.x.x.x.x.x.x.c.................ccccccccccxxxxcc...xxxx
-xxxx.......c.................c......................=........cc...xxxx
-xxxx.......cx5x.x.x.x.x.x.x5xc......................=........cc...xxxx
+xxxx.......c.................c......................+........cc...xxxx
+xxxx.......cx5x.x.x.x.x.x.x5xc......................+........cc...xxxx
 xxxx.......c.................c.................ccccccccccxxxxcc...xxxx
 xxxx.......c.x.x.x.x5x.x.x.x.c..x.........x..ccccccccccccxxxxcc...xxxx
 xxxx.......c.................c.................ccZZZZZxx88888cc...xxxx
@@ -1676,6 +1854,8 @@ KFEAT:    % = .
 KMONS:    % = soul eater w:20 / shadow wraith w:15 / reaper w:5 / nothing w:20
 KITEM:    % = | / $
 SUBST:    4 = 3333444455566778
+# TODO: this vault needs to be reworked, for now we simply disable secrets
+SUBST:    = = +
 : tar_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1745,7 +1925,7 @@ NAME:    eresh_room_1
 TAGS:    eresh_room no_rotate
 WEIGHT:  30
 MONS:    patrolling Ereshkigal, shadow fiend
-MARKER:  = = lua:restrict_door()
+KFEAT:   = = runed_door
 : tar_setup(_G)
 MAP
 ..........
@@ -1765,7 +1945,6 @@ NAME:    eresh_room_2
 TAGS:    eresh_room no_rotate
 WEIGHT:  10
 MONS:    patrolling Ereshkigal, shadow fiend
-MARKER:  = = lua:restrict_door()
 SHUFFLE: |O
 : tar_setup(_G)
 MAP
@@ -1774,7 +1953,7 @@ MAP
 ..........
 c........c
 cc......cc
-|=..21..=O
+|+..21..+O
 cc......cc
 c........c
 ..........
@@ -1786,7 +1965,6 @@ NAME:    eresh_room_3
 TAGS:    eresh_room no_rotate
 WEIGHT:  10
 MONS:    patrolling Ereshkigal, shadow fiend
-MARKER:  = = lua:restrict_door()
 : tar_setup(_G)
 MAP
 ..........
@@ -1796,7 +1974,7 @@ MAP
 .c......c.
 .cG....Gc.
 .c..12..c.
-.c=cccc=c.
+.c+cccc+c.
 .cc|O||cc.
 ..cccccc..
 ..........
@@ -1806,20 +1984,18 @@ NAME:    eresh_room_4
 TAGS:    eresh_room no_rotate
 WEIGHT:  5
 MONS:    patrolling Ereshkigal, shadow fiend
-NSUBST:  m = 1:==+ / *:nnnnm
 SHUFFLE: 12 / AB
 SUBST:   A=., B=.
-MARKER:  m = lua:restrict_door()
 : tar_setup(_G)
 MAP
 ..........
 .G......G.
 ....A.....
-...mmmm...
-...m||m...
-..1mO|m2..
-...m||m...
-...mmmm...
+...nnnn...
+...n||n...
+..1nO|+2..
+...n||n...
+...nnnn...
 .....B....
 .G......G.
 ..........

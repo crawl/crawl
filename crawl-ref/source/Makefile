@@ -52,10 +52,14 @@
 #                         font; if not set, a copy of Bitstream Vera Sans
 #                         shipped with Crawl will be used
 #    MONOSPACED_FONT   -- monospaced font; Bitstream Vera Mono Sans
+#    COPY_FONTS    -- force installing fonts
 #
 #    WEBTILES      -- set to anything to compile for Webtiles
 #    WEBDIR        -- place to hold the Webtiles client data. Can be either
 #                     relative to prefix or absolute.
+#
+#    ANDROID       -- perform an Android build (see docs/develop/android.txt)
+#    TOUCH_UI      -- enable UI behaviour more compatible with touch-screens
 #
 #
 # Requirements:
@@ -73,9 +77,9 @@ GAME = crawl
 MAKEFLAGS += -rR # This only works for recursive makes, i.e. contribs ...
 .SUFFIXES:       # ... so zap the suffix list to neutralize most predifined rules, too
 
-.PHONY: all test install clean clean-contrib clean-rltiles distclean debug debug-lite \
-        profile package-source source build-windows package-windows rest docs greet \
-        api
+.PHONY: all test install clean clean-contrib clean-rltiles clean-android \
+        distclean debug debug-lite profile package-source source \
+        build-windows package-windows rest docs greet api
 
 include Makefile.obj
 
@@ -125,7 +129,11 @@ CFWARN_L := -Wundef
 
 DEFINES := $(EXTERNAL_DEFINES)
 
+ifdef ANDROID
+LDFLAGS := $(EXTERNAL_LDFLAGS) $(LDFLAGS)
+else
 LDFLAGS := $(EXTERNAL_LDFLAGS)
+endif
 
 #
 # The GCC and GXX variables are set later.
@@ -220,6 +228,7 @@ ifneq (,$(findstring MINGW,$(uname_S)))
 	ifeq ($(shell gcc -v -static-libstdc++ 2>&1 | grep 'unrecognized option'),)
 		EXTRA_LIBS += -static-libgcc -static-libstdc++
 	endif
+	COPY_FONTS = yes
 endif
 ifeq ($(uname_S),Darwin)
 	STRIP := strip -x
@@ -235,6 +244,7 @@ ifeq ($(uname_S),Darwin)
 		BUILD_SDLIMAGE = YesPlease
 		BUILD_LIBPNG = YesPlease
 	endif
+	COPY_FONTS = yes
 endif
 ifdef USE_LUAJIT
 	BUILD_LUA := YesPlease
@@ -260,7 +270,7 @@ ifdef BUILD_ALL
 endif
 
 # Should be the first rule, but must come after $(GAME) is set.
-all: greet $(GAME) docs webserver
+all: greet check-fonts $(GAME) docs webserver
 
 LIBPCRE := contrib/install/$(ARCH)/lib/libpcre.a
 LIBSDL := contrib/install/$(ARCH)/lib/libSDL.a
@@ -276,7 +286,6 @@ endif
 LIBZ := contrib/install/$(ARCH)/lib/libz.a
 
 ifndef CROSSHOST
-	LUA_INCLUDE_DIR := /usr/include/lua5.1
 	SQLITE_INCLUDE_DIR := /usr/include
 else
 	# This is totally wrong, works only with some old-style setups, and
@@ -288,10 +297,8 @@ else
 	#
 	# Needs to be replaced by compile checks.  Guessing the paths is fragile,
 	# while the compiler knows them already.
-	LUA_INCLUDE_DIR := /usr/$(ARCH)/include/lua5.1
 	SQLITE_INCLUDE_DIR := /usr/$(ARCH)/include
 endif
-LUA_LIB := -llua5.1
 SQLITE_LIB := -lsqlite3
 
 #
@@ -300,6 +307,9 @@ SQLITE_LIB := -lsqlite3
 ifdef TILES
 TILES_ANY = YesPlease
 OBJECTS += $(TILES_OBJECTS) $(GLTILES_OBJECTS)
+  ifdef WEBTILES
+    OBJECTS += $(error Web and local tiles are exclusive)
+  endif
 endif
 
 ifdef WEBTILES
@@ -322,7 +332,9 @@ endif
 ifdef WIN32
 EXTRA_OBJECTS += icon.o
 else
+ifndef ANDROID
 EXTRA_LIBS += -pthread
+endif
 endif
 
 ifndef TILES
@@ -400,9 +412,17 @@ MARCH := $(uname_M)
 
 ifndef NO_AUTO_SDK
 
+# The SDK locations were moved in 10.8; this snippet tries to find them
+# there first, then reverts to the original location.
+ifeq ($(shell test -e /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer || echo NOPE),)
+DEVELOPER_PATH := /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer
+else
+DEVELOPER_PATH := /Developer
+endif
+
 # Find the oldest SDK available, in attempt to make this build as
 # backward-compatible as we possibly can.
-SDK_VER := $(shell ls /Developer/SDKs | sort -n | head -1 | perl -pe 's/^MacOSX//g;s/.sdk$$//g')
+SDK_VER := $(shell ls $(DEVELOPER_PATH)/SDKs | sort -n | head -1 | perl -pe 's/^MacOSX//g;s/.sdk$$//g')
 
 ifeq ($(SDK_VER),10.4u)
 SDK_VER := 10.4
@@ -434,9 +454,9 @@ endif
 # else is much easier to predict the name of.
 ifeq ($(SDK_VER),10.4)
 GCC_VER := 4.0
-SDKROOT := /Developer/SDKs/MacOSX$(SDK_VER)u.sdk
+SDKROOT := $(DEVELOPER_PATH)/SDKs/MacOSX$(SDK_VER)u.sdk
 else
-SDKROOT := /Developer/SDKs/MacOSX$(SDK_VER).sdk
+SDKROOT := $(DEVELOPER_PATH)/SDKs/MacOSX$(SDK_VER).sdk
 endif
 
 ifneq ($(shell test -d $(SDKROOT) || echo NOPE),)
@@ -519,17 +539,36 @@ CFOPTIMIZE += -march=native
 endif
 endif
 
+ifdef ANDROID
+  BUILD_LUA=
+  BUILD_SQLITE=
+  BUILD_ZLIB=
+  BUILD_SDL=
+  BUILD_FREETYPE=
+  NO_PKGCONFIG=Y
+else
 ifndef BUILD_LUA
-  ifneq (,$(wildcard $(LUA_INCLUDE_DIR)/lua.h))
-    INCLUDES_L += -I$(LUA_INCLUDE_DIR)
-    LIBS += $(LUA_LIB)
-  else
-    ifneq (,$(wildcard /usr/include/lua.h))
-      LIBS += -llua
-    else
+  ifneq ($(shell $(PKGCONFIG) lua5.1 --exists || echo no),)
+    ifneq ($(shell $(PKGCONFIG) lua --exists || echo no),)
       BUILD_LUA = yes
+    else
+      ifeq ($(shell $(PKGCONFIG) lua --modversion | head -c 3),5.1)
+        LUA_PACKAGE = lua
+      else
+        BUILD_LUA = yes
+      endif
     endif
+  else
+    LUA_PACKAGE = lua5.1
   endif
+endif
+ifndef BUILD_LUA
+  ifndef LUA_PACKAGE
+    LUA_PACKAGE = lua5.1
+  endif
+  INCLUDES_L += $(shell $(PKGCONFIG) $(LUA_PACKAGE) --cflags-only-I)
+  CFLAGS_L  += $(shell $(PKGCONFIG) $(LUA_PACKAGE) --cflags-only-other)
+  LIBS += $(shell $(PKGCONFIG) $(LUA_PACKAGE) --libs)
 endif
 
 ifndef BUILD_SQLITE
@@ -549,6 +588,7 @@ ifndef BUILD_ZLIB
 else
   LIBS += $(LIBZ)
 endif
+endif #ANDROID
 
 RLTILES = rltiles
 INCLUDES_L += -I$(RLTILES)
@@ -565,6 +605,10 @@ ifdef TILES
 
 DEFINES_L += -DUSE_TILE
 DEFINES_L += -DUSE_TILE_LOCAL
+
+ifdef TOUCH_UI
+DEFINES_L += -DTOUCH_UI
+endif
 
 ifdef BUILD_SDL
 INCLUDES_L += -Icontrib/install/$(ARCH)/include/SDL
@@ -612,7 +656,9 @@ LIBS += -lSDL_image $(SDL_LDFLAGS) $(FREETYPE_LDFLAGS)
 endif # pkg-config
 
 ifdef GLES
+ifndef ANDROID
 LIBS += -lSDL_gles -lEGL -lGLES_CM
+endif
 else
 ifneq ($(uname_S),Darwin)
 ifeq (,$(findstring MINGW,$(uname_S)))
@@ -626,17 +672,10 @@ endif
 DEFINES_L += $(PNG_CFLAGS) $(FREETYPE_CFLAGS) $(SDL_CFLAGS)
 INCLUDES_L += $(PNG_INCLUDE) $(FREETYPE_INCLUDE) $(SDL_INCLUDE)
 
-ifdef PROPORTIONAL_FONT
-DEFINES += -DPROPORTIONAL_FONT=\"$(PROPORTIONAL_FONT)\"
-endif
-ifdef MONOSPACED_FONT
-DEFINES += -DMONOSPACED_FONT=\"$(MONOSPACED_FONT)\"
-endif
-
 endif # TILES
 
 # On clang, unknown -Wfoo is merely a warning, thus -Werror.
-CFWARN_L += $(shell w=-Wno-array-bounds;echo|$(GCC) -E - -Werror $$w >/dev/null 2>&1 && echo $$w)
+CFWARN_L += $(shell w=-Wno-array-bounds;echo|$(GXX) -E - -Werror $$w >/dev/null 2>&1 && echo $$w)
 
 CFWARN_L += -Wno-parentheses -Wno-unused-parameter -Wwrite-strings -Wshadow
 CFOTHERS_L = $(EXTERNAL_FLAGS_L) $(EXTRA_FLAGS) $(DEFINES) $(SDL_CFLAGS)
@@ -771,9 +810,17 @@ ifneq ($(strip $(DATADIR)),)
     endif
   endif
   CFOTHERS_L += -DDATA_DIR_PATH=\"$(abspath $(DATADIR))/\"
+  FONTDIR = $(abspath $(DATADIR))/dat/tiles/
 else
   ifneq ($(prefix),)
 	DATADIR := $(strip $(prefix))/$(strip $(DATADIR))
+        FONTDIR = $(strip $(prefix))/$(strip $(DATADIR))/dat/tiles/
+  else
+    ifneq ($(DESTDIR),)
+        FONTDIR = dat/tiles/
+    else
+        FONTDIR = contrib/fonts/
+    endif
   endif
 endif
 datadir_fp := $(abspath $(strip $(DESTDIR))$(strip $(DATADIR)))
@@ -792,6 +839,62 @@ else
   endif
 endif
 webdir_fp := $(abspath $(strip $(DESTDIR))$(strip $(WEBDIR)))
+
+
+# Fonts.
+ifdef TILES
+
+OUR_PROPORTIONAL_FONT=DejaVuSans.ttf
+OUR_MONOSPACED_FONT=DejaVuSansMono.ttf
+
+ifdef PROPORTIONAL_FONT
+  DEFINES += -DPROPORTIONAL_FONT=\"$(PROPORTIONAL_FONT)\"
+  ifneq (,$(COPY_FONTS))
+    INSTALL_FONTS += $(PROPORTIONAL_FONT)
+  endif
+else
+  SYS_PROPORTIONAL_FONT = $(shell find /usr/share/fonts -iname $(OUR_PROPORTIONAL_FONT)|head -n 1)
+  ifeq (,$(SYS_PROPORTIONAL_FONT))
+    SYS_PROPORTIONAL_FONT = $(shell find /usr/local/share/fonts -iname $(OUR_PROPORTIONAL_FONT)|head -n 1)
+  endif
+  ifneq (,$(SYS_PROPORTIONAL_FONT))
+    ifeq (,$(COPY_FONTS))
+      DEFINES += -DPROPORTIONAL_FONT=\"$(SYS_PROPORTIONAL_FONT)\"
+    else
+      DEFINES += -DPROPORTIONAL_FONT=\"$(FONTDIR)$(OUR_PROPORTIONAL_FONT)\"
+      INSTALL_FONTS += $(SYS_PROPORTIONAL_FONT)
+    endif
+  else
+    DEFINES += -DPROPORTIONAL_FONT=\"$(FONTDIR)$(OUR_PROPORTIONAL_FONT)\"
+    INSTALL_FONTS += contrib/fonts/$(OUR_PROPORTIONAL_FONT)
+  endif
+endif
+
+ifdef MONOSPACED_FONT
+  DEFINES += -DMONOSPACED_FONT=\"$(MONOSPACED_FONT)\"
+  ifneq (,$(COPY_FONTS))
+    INSTALL_FONTS += $(MONOSPACED_FONT)
+  endif
+else
+  SYS_MONOSPACED_FONT = $(shell find /usr/share/fonts -iname $(OUR_MONOSPACED_FONT)|head -n 1)
+  ifeq (,$(SYS_MONOSPACED_FONT))
+    SYS_MONOSPACED_FONT = $(shell find /usr/local/share/fonts -iname $(OUR_MONOSPACED_FONT)|head -n 1)
+  endif
+  ifneq (,$(SYS_MONOSPACED_FONT))
+    ifeq (,$(COPY_FONTS))
+      DEFINES += -DMONOSPACED_FONT=\"$(SYS_MONOSPACED_FONT)\"
+    else
+      DEFINES += -DMONOSPACED_FONT=\"$(FONTDIR)$(OUR_MONOSPACED_FONT)\"
+      INSTALL_FONTS += $(SYS_MONOSPACED_FONT)
+    endif
+  else
+    DEFINES += -DMONOSPACED_FONT=\"$(FONTDIR)$(OUR_MONOSPACED_FONT)\"
+    INSTALL_FONTS += contrib/fonts/$(OUR_MONOSPACED_FONT)
+  endif
+endif
+
+endif
+
 
 ifndef NO_NCURSES
 
@@ -843,7 +946,11 @@ ifdef REPORT
 CFOTHERS += -ftime-report
 endif
 
+ifdef ANDROID
+CFLAGS   := $(CFOPTIMIZE) $(CFOTHERS) $(CFWARN) $(CFLAGS)
+else
 CFLAGS   := $(CFOPTIMIZE) $(CFOTHERS) $(CFWARN)
+endif
 CFLAGS_L := $(CFOPTIMIZE_L) $(DEFINES_L) $(CFWARN_L) $(INCLUDES_L) $(CFOTHERS_L)
 ALL_CFLAGS := $(CFLAGS) $(CFLAGS_L)
 YACC_CFLAGS  := $(ALL_CFLAGS) -Wno-unused-function -Wno-sign-compare -DYYENABLE_NLS=0 -DYYLTYPE_IS_TRIVIAL=0
@@ -949,12 +1056,11 @@ LIBS += $(CONTRIB_LIBS) $(EXTRA_LIBS)
 DOC_BASE        := ../docs
 DOC_TEMPLATES   := $(DOC_BASE)/template
 GENERATED_DOCS  := $(DOC_BASE)/aptitudes.txt $(DOC_BASE)/FAQ.html $(DOC_BASE)/crawl_manual.txt
-GENERATED_HEADERS := art-enum.h #the rest are private
+GENERATED_HEADERS := art-enum.h config.h #the rest are private
 GENERATED_FILES := $(GENERATED_HEADERS) art-data.h mon-mst.h mi-enum.h \
                    $(RLTILES)/dc-unrand.txt build.h compflag.h dat/dlua/tags.lua \
-                   $(INI_OBJECTS)
+                   cmd-name.h $(INI_OBJECTS)
 
-GAME_DEPENDS  := $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS) dat/dlua/tags.lua
 SRC_PKG_BASE  := stone_soup
 SRC_VERSION   := $(shell git describe --tags $(MERGE_BASE) 2>/dev/null || cat util/release_ver)
 MAJOR_VERSION = $(shell echo "$(SRC_VERSION)"|sed -r 's/-.*//;s/^([^.]+\.[^.]+).*/\1/')
@@ -967,8 +1073,10 @@ SRC_PKG_TAR_NODEPS := $(PKG_SRC_DIR)-nodeps.tar.xz
 SRC_PKG_ZIP   := $(PKG_SRC_DIR).zip
 
 greet:
-	@printf "  * If you experience any problems building Crawl, please take a second look\\n"\
-	"  * at INSTALL.txt: the solution to your problem just might be in there!\\n"
+	@if [ ! -e $(GAME) ]; then\
+		printf "  * If you experience any problems building Crawl, please take a second look\\n"\
+		"  * at INSTALL.txt: the solution to your problem just might be in there!\\n";\
+	fi
 
 docs: $(GENERATED_DOCS)
 
@@ -1139,6 +1247,14 @@ endif
 ##########################################################################
 # The actual build targets
 #
+ifdef ANDROID
+  # during build, data goes in a different directory to when crawl runs!
+  prefix_fp = ../..
+  datadir_fp = ../../AndroidData
+  savedir_fp = ../../AndroidData
+  shareddir_fp =
+endif
+
 install: all
 ifeq ($(DESTDIR)$(prefix),)
 	@echo Neither "DESTDIR" nor "prefix" defined -- nowhere to install to, aborting.
@@ -1149,8 +1265,10 @@ endif
 	$(STRIP) $(prefix_fp)/$(bin_prefix)/$(GAME)
 	mkdir -p $(datadir_fp)/dat/des
 	mkdir -p $(datadir_fp)/dat/dlua
+	mkdir -p $(datadir_fp)/dat/clua
 	mkdir -p $(datadir_fp)/dat/lua
 	mkdir -p $(datadir_fp)/dat/database
+	mkdir -p $(datadir_fp)/dat/defaults
 	mkdir -p $(datadir_fp)/dat/descript
 	mkdir -p $(datadir_fp)/docs/develop
 	mkdir -p $(datadir_fp)/docs/develop/levels
@@ -1164,8 +1282,10 @@ endif
           while read x; \
 	    do echo "dgn.load_des_file('$$x')"; \
 	    done >>$(datadir_fp)/dat/dlua/loadmaps.lua
+	$(COPY)   dat/clua/*.lua $(datadir_fp)/dat/clua/
 	$(COPY)   dat/lua/*.lua $(datadir_fp)/dat/lua/
 	$(COPY_R) dat/database/* $(datadir_fp)/dat/database/
+	$(COPY_R) dat/defaults/* $(datadir_fp)/dat/defaults/
 	$(COPY_R) dat/descript/* $(datadir_fp)/dat/descript/
 	$(COPY) ../docs/*.txt $(datadir_fp)/docs/
 	$(COPY) ../docs/develop/*.txt $(datadir_fp)/docs/develop/
@@ -1180,11 +1300,8 @@ endif
 ifdef TILES
 	mkdir -p $(datadir_fp)/dat/tiles
 	$(COPY) dat/tiles/*.png $(datadir_fp)/dat/tiles/
-ifndef PROPORTIONAL_FONT
-	$(COPY) dat/tiles/Vera.ttf $(datadir_fp)/dat/tiles/
-endif
-ifndef MONOSPACED_FONT
-	$(COPY) dat/tiles/VeraMono.ttf $(datadir_fp)/dat/tiles/
+ifneq (,$(INSTALL_FONTS))
+	$(COPY) $(INSTALL_FONTS) $(datadir_fp)/dat/tiles/
 endif
 endif
 ifdef WEBTILES
@@ -1221,7 +1338,7 @@ ifeq ($(USE_DGAMELAUNCH),)
 endif
 endif
 
-clean: clean-rltiles clean-webserver tx-clean
+clean: clean-rltiles clean-webserver clean-android tx-clean
 	+$(MAKE) -C $(UTIL) clean
 	$(RM) $(GAME) $(GAME).exe $(GENERATED_FILES) $(EXTRA_OBJECTS) libw32c.o\
 	    libunix.o $(ALL_OBJECTS) $(ALL_OBJECTS:.o=.d) *.ixx  \
@@ -1232,13 +1349,18 @@ clean: clean-rltiles clean-webserver tx-clean
 clean-contrib:
 	+$(MAKE) -C contrib clean
 
+clean-android:
+	$(RM) ../../icon.png ../../libapplication.so
+	$(RM) -r ../../AndroidData
+	$(RM) -r ../../bin
+
 distclean: clean clean-contrib clean-rltiles
 	$(RM) -r morgue saves
 	$(RM) scores $(GAME) core $(DEPENDENCY_MKF)
 	$(RM) -r mac-app-zips
 	$(RM) -r $(DOXYGEN_HTML_GEN)
 
-$(GAME): $(GAME_DEPENDS)
+$(GAME): $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS) dat/dlua/tags.lua
 	+$(QUIET_LINK)$(CXX) $(LDFLAGS) $(EXTRA_OBJECTS) $(OBJECTS) -o $(GAME) $(LIBS)
 
 debug: all
@@ -1302,6 +1424,9 @@ endif
 icon.o: util/crawl.rc util/crawl.ico .cflags
 	$(QUIET_WINDRES)$(WINDRES) util/crawl.rc icon.o
 
+config.h: util/configure .cflags
+	${QUIET_GEN}util/configure "$(CXX)" $(ALL_CFLAGS)
+
 #
 # Contribs
 #
@@ -1327,6 +1452,9 @@ art-enum.h: art-data.h
 mon-mst.h: mon-spll.h util/gen-mst.pl
 	$(QUIET_GEN)util/gen-mst.pl
 
+cmd-name.h: enum.h util/cmd-name.pl
+	$(QUIET_GEN)util/cmd-name.pl
+
 dat/dlua/tags.lua: tag-version.h util/gen-luatags.pl
 	$(QUIET_GEN)util/gen-luatags.pl
 
@@ -1339,6 +1467,7 @@ artefact.o: art-data.h art-enum.h
 mon-util.o: mon-mst.h
 mon-util.d: mon-mst.h
 l_moninf.o: mi-enum.h
+macro.o: cmd-name.h
 
 #############################################################################
 # Translation files
@@ -1480,7 +1609,14 @@ tx-sync:
 
 .PHONY: build-rltiles
 build-rltiles: .contrib-libs $(RLTILES)/dc-unrand.txt
+ifdef ANDROID
+	# force submake to run properly
+	env -i - bash -l -c "$(MAKE) -C $(RLTILES) all TILES=1 V=1"
+    # prove that tiles were generated properly
+	grep tile_info rltiles/*.cc| head
+else
 	+$(MAKE) -C $(RLTILES) all ARCH=$(ARCH) TILES=$(TILES)$(WEBTILES)
+endif
 
 $(TILEDEFSRCS) $(TILEDEFHDRS) $(ORIGTILEFILES): build-rltiles
 
@@ -1496,6 +1632,14 @@ clean-rltiles:
 
 ifdef TILES_ANY
 $(GAME): $(DESTTILEFILES)
+endif
+
+.PHONY: check-fonts
+check-fonts:
+ifneq (,$(INSTALL_FONTS))
+	@for x in $(INSTALL_FONTS); do if [ ! -e "$$x" ]; then echo \
+	"Font file $${x##contrib/fonts/} not found. Please install it (possibly via contribs)."; \
+	exit 1; fi; done
 endif
 
 #############################################################################
@@ -1566,15 +1710,18 @@ endif
 	mv build-win/docs/CREDITS.txt build-win/
 	echo $(SRC_VERSION) >build-win/version.txt
 
+ZIP_DOCS=../README.txt ../licence.txt
 package-windows-zips:
 ifneq ($(GAME),crawl.exe)
 	@echo "This is only for Windows; please specify CROSSHOST.";false
 endif
 	+$(MAKE) clean
 	+$(MAKE) TILES=y DESTDIR=build-win/stone_soup-tiles-$(MAJOR_VERSION) install
+	cp -p $(ZIP_DOCS) build-win/stone_soup-tiles-$(MAJOR_VERSION)/
 	cd build-win && zip -9r ../stone_soup-$(SRC_VERSION)-tiles-win32.zip *
 	rm -rf build-win
 	+$(MAKE) DESTDIR=build-win/stone_soup-$(MAJOR_VERSION) install
+	cp -p $(ZIP_DOCS) build-win/stone_soup-$(MAJOR_VERSION)/
 	cd build-win && zip -9r ../stone_soup-$(SRC_VERSION)-win32.zip *
 	rm -rf build-win
 	if which advzip >/dev/null;then advzip -z4 stone_soup-$(SRC_VERSION)*-win32.zip;fi

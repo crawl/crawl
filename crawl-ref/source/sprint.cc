@@ -19,6 +19,8 @@ int sprint_modify_exp_inverse(int exp)
 
 int sprint_modify_piety(int piety)
 {
+    if (you.religion == GOD_OKAWARU)
+        return piety;
     return piety * 9;
 }
 

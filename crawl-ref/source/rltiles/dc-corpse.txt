@@ -110,8 +110,7 @@ fire_crab CORPSE_FIRE_CRAB
 
 ## Worms ('w')
 %back blood_green
-killer_bee_larva CORPSE_ANT_LARVA
-killer_bee_larva CORPSE_KILLER_BEE_LARVA
+ant_larva CORPSE_ANT_LARVA
 worm CORPSE_WORM
 swamp_worm CORPSE_SWAMP_WORM
 spiny_worm CORPSE_SPINY_WORM
@@ -202,6 +201,7 @@ siren_water CORPSE_SIREN
 ## Rotting monsters ('n')
 %back blood_green
 %sdir mon/undead
+bog_body CORPSE_BOG_BODY
 necrophage CORPSE_NECROPHAGE
 ghoul CORPSE_GHOUL
 rotting_hulk CORPSE_ROTTING_HULK
@@ -284,6 +284,7 @@ minotaur CORPSE_MINOTAUR
 sphinx CORPSE_SPHINX
 tengu CORPSE_TENGU
 holy/shedu CORPSE_SHEDU
+unique/arachne_staveless CORPSE_ARACHNE
 
 ## Jellies ('J')
 %sdir mon/amorphous

@@ -77,7 +77,12 @@ sub read_file($)
 
         if (/^%%%%/)
         {
-            add_key() if defined $key;
+            if (defined $key)
+            {
+                defined($value)
+                ? add_key()
+                : err("Incomplete entry '$key' at $file:$line\n");
+            }
             next;
         }
 
@@ -121,7 +126,7 @@ sub check_desc_links()
 {
     for (keys %entries)
     {
-        next unless $entries{$_} =~ /^<(.*)>$/;
+        next unless $entries{$_} =~ /^<([^>\n]*)>$/;
         err "$source{$_}: Dangling link '$_' -> '$1'\n" unless $entries{$1};
     }
 }
@@ -174,13 +179,15 @@ if (read_file("descript/cards"))
 
 if (read_file("descript/monsters"))
 {
-    $entries{$_} = 1 for (
+    $entries{$_} = 1 for
+    (
         # described with a suffix
         'the Serpent of Hell',
         # overridden descriptions
         'player', 'player illusion', 'merged slime creature',
         # genus-only monsters
-        'ghost', 'giant', 'golem', 'hell lord', 'bear', 'elemental');
+        'ghost', 'giant', 'golem', 'hell lord', 'bear', 'elemental',
+    );
     delete $keys{'__(_suffix_examine'};
     delete $keys{"the Serpent of Hell $_"} for qw(gehenna cocytus dis tartarus);
     delete $keys{"__cap-${_}_suffix"} for 'A'..'Z';
@@ -215,3 +222,7 @@ __________________________________________________________________________();
 read_file("database/help");
 __________________________________________________________________________();
 read_file("database/FAQ");
+__________________________________________________________________________();
+read_file("descript/hints");
+read_file("descript/tutorial");
+check_desc_links();

@@ -32,7 +32,7 @@ enum gender_type
     GENDER_FEMALE,
 };
 
-// TODO: Unify this and a player_equivilent (if applicable)
+// TODO: Unify this and a player_equivalent (if applicable)
 // and move into attack.h
 enum attack_type
 {
@@ -163,13 +163,14 @@ enum mon_itemeat_type
     MONEAT_NOTHING,
     MONEAT_ITEMS,
     MONEAT_CORPSES,
-    MONEAT_HONEY,
     MONEAT_FOOD,
 
     NUM_MONEAT
 };
 
-// passed as a bizarre structure, needs sanitizing
+typedef uint32_t resists_t;
+#define mrd(res, lev) (resists_t)((res) * ((lev) & 7))
+
 enum mon_resist_flags
 {
     MR_NO_FLAGS          = 0,
@@ -177,29 +178,27 @@ enum mon_resist_flags
     // resistances
     // Notes:
     // - negative energy is mostly handled via monster::res_negative_energy()
-    MR_RES_ELEC          = (1<< 0),
-    MR_RES_POISON        = (1<< 1),
-    MR_RES_FIRE          = (1<< 2),
-    MR_RES_HELLFIRE      = (1<< 3),
-    MR_RES_COLD          = (1<< 4),
-    MR_RES_ASPHYX        = (1<< 5),
-    MR_RES_ACID          = (1<< 6),
+    MR_RES_ELEC          = 1 << 0,
+    MR_RES_POISON        = 1 << 3,
+    MR_RES_FIRE          = 1 << 6,
+    MR_RES_HELLFIRE      = mrd(MR_RES_FIRE, 4),
+    MR_RES_COLD          = 1 << 9,
+    MR_RES_NEG           = 1 << 12,
+    MR_RES_ROTTING       = 1 << 15,
+
+    MR_LAST_MULTI, // must be >= any multi, < any boolean, exact value doesn't matter
+
+    MR_RES_ASPHYX        = 1 << 24,
+    MR_RES_ACID          = 1 << 25,
+    MR_RES_STICKY_FLAME  = 1 << 26,
+    // 1 << 27,
+    MR_RES_STEAM         = 1 << 28,
 
     // vulnerabilities
-    MR_VUL_ELEC          = (1<< 7),
-    MR_VUL_POISON        = (1<< 8),
-    MR_VUL_FIRE          = (1<< 9),
-    MR_VUL_COLD          = (1<<10),
-
-    // 1<<11 .. 1<<16: feel free to reuse
-
-    // Immune to stickiness of sticky flame.
-    MR_RES_STICKY_FLAME  = (1<<17),
-
-    // Immune to rotting.
-    MR_RES_ROTTING       = (1<<18),
-
-    MR_RES_STEAM         = (1<<19),
+    MR_VUL_ELEC          = mrd(MR_RES_ELEC, -1),
+    MR_VUL_POISON        = mrd(MR_RES_POISON, -1),
+    MR_VUL_FIRE          = mrd(MR_RES_FIRE, -1),
+    MR_VUL_COLD          = mrd(MR_RES_COLD, -1),
 };
 
 enum shout_type

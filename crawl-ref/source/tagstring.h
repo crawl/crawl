@@ -6,6 +6,6 @@
 #ifndef TAGSTRING_H
 #define TAGSTRING_H
 
-std::string colour_string(std::string in, int col);
+string colour_string(string in, int col);
 
 #endif

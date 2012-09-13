@@ -1,7 +1,7 @@
 %%%%
 CMD_REST
 
-Paranna ja etsi hieman
+Paranna ja etsi hetki
 %%%%
 CMD_REST verbose
 
@@ -51,7 +51,7 @@ Etsi esineitä ja erikoisuuksia joita näit muualla, ja matkusta sinne.
 %%%%
 CMD_REPLAY_MESSAGES
 
-Uudelleenlue viimeaikaiset viestit
+Lue uudelleen viimeaikaiset viestit
 %%%%
 CMD_RESISTS_SCREEN
 
@@ -136,20 +136,20 @@ taiat, taidot, muistiinpanot jne.
 %%%%
 CMD_AUTOFIGHT
 
-Hyökkää lähintä hirviötä
+Hyökkää lähimmän hirviön kimppuun
 %%%%
 CMD_AUTOFIGHT verbose
 
-Liiku kohti lähintä vaarallista hirviötä ja hyökkää sitä kädessäsi olevalla
-aseella.
+Liiku kohti lähintä vaarallista hirviötä ja hyökkää sen kimppuun kädessäsi
+olevalla aseella.
 %%%%
 CMD_AUTOFIGHT_NOMOVE
 
-Hyökkää viereistä hirviötä
+Hyökkää viereisen hirviön kimppuun
 %%%%
 CMD_AUTOFIGHT_NOMOVE verbose
 
-Hyökkää viereistä hirviötä kädessäsi olevalla aseella.
+Hyökkää viereisen hirviön kimppuun kädessäsi olevalla aseella.
 %%%%
 CMD_SEARCH
 

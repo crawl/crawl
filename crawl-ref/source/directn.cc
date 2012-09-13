@@ -65,12 +65,6 @@
 #include "wiz-mon.h"
 #include "spl-goditem.h"
 
-const std::string SHORT_DESC_KEY = "short_desc_key";
-
-typedef std::map<std::string, std::string> desc_map;
-
-static desc_map base_desc_to_short;
-
 enum LOSSelect
 {
     LOS_ANY      = 0x00,
@@ -126,8 +120,8 @@ static bool _find_square_wrapper(coord_def &mfp, int direction,
 static int  _targetting_cmd_to_compass(command_type command);
 static void _describe_oos_square(const coord_def& where);
 static void _extend_move_to_edge(dist &moves);
-static std::vector<std::string> _get_monster_desc_vector(const monster_info& mi);
-static std::string _get_monster_desc(const monster_info& mi);
+static vector<string> _get_monster_desc_vector(const monster_info& mi);
+static string _get_monster_desc(const monster_info& mi);
 
 #ifdef DEBUG_DIAGNOSTICS
 static void _debug_describe_feature_at(const coord_def &where);
@@ -302,7 +296,7 @@ static command_type shift_direction(command_type cmd)
     case CMD_TARGET_DOWN_RIGHT: return CMD_TARGET_DIR_DOWN_RIGHT;
     case CMD_TARGET_UP_RIGHT:   return CMD_TARGET_DIR_UP_RIGHT;
     case CMD_TARGET_UP_LEFT:    return CMD_TARGET_DIR_UP_LEFT;
-    default: return (cmd);
+    default: return cmd;
     }
 }
 
@@ -323,9 +317,9 @@ monster* direction_chooser::targeted_monster() const
         return NULL;
 }
 
-std::string direction_chooser::build_targetting_hint_string() const
+string direction_chooser::build_targetting_hint_string() const
 {
-    std::string hint_string;
+    string hint_string;
 
     // Hint for 'p' - previous target, and for 'f' - current cell, if
     // applicable.
@@ -353,7 +347,7 @@ void direction_chooser::print_top_prompt() const
 
 void direction_chooser::print_key_hints() const
 {
-    std::string prompt = "Press: ? - help";
+    string prompt = "Press: ? - help";
 
     if (just_looking)
     {
@@ -365,7 +359,7 @@ void direction_chooser::print_key_hints() const
     }
     else
     {
-        const std::string hint_string = build_targetting_hint_string();
+        const string hint_string = build_targetting_hint_string();
         switch (restricts)
         {
         case DIR_NONE:
@@ -456,7 +450,7 @@ static bool _mon_exposed_in_cloud(const monster* mon)
 static bool _mon_exposed(const monster* mon)
 {
     if (!mon || !you.see_cell(mon->pos()) || mon->visible_to(&you))
-        return (false);
+        return false;
 
     return (_mon_exposed_in_water(mon) || _mon_exposed_in_cloud(mon));
 }
@@ -467,7 +461,7 @@ static bool _is_target_in_range(const coord_def& where, int range,
     if (hitfunc)
         return hitfunc->valid_aim(where);
     // range == -1 means that range doesn't matter.
-    return (range == -1 || distance(you.pos(), where) <= range*range + 1);
+    return (range == -1 || distance2(you.pos(), where) <= range*range + 1);
 }
 
 targetting_behaviour direction_chooser::stock_behaviour;
@@ -527,7 +521,7 @@ public:
     }
     int width() { return crawl_view.msgsz.x; }
     int height() { return crawl_view.msgsz.y; }
-    void print(const std::string &str) { cprintf("%s", str.c_str()); }
+    void print(const string &str) { cprintf("%s", str.c_str()); }
     void nextline() { cgotoxy(1, wherey() + 1); }
 };
 
@@ -537,9 +531,9 @@ static void _describe_monster(const monster_info& mon);
 // TODO: Allow sorting of items lists.
 void full_describe_view()
 {
-    std::vector<monster_info> list_mons;
-    std::vector<item_def> list_items;
-    std::vector<coord_def> list_features;
+    vector<monster_info> list_mons;
+    vector<item_def> list_items;
+    vector<coord_def> list_features;
 
     // Grab all items known (or thought) to be in the stashes in view.
     for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
@@ -554,7 +548,7 @@ void full_describe_view()
         if (oid == NON_ITEM)
             continue;
 
-        const std::vector<item_def> items = item_list_in_stash(*ri);
+        const vector<item_def> items = item_list_in_stash(*ri);
 
 #ifdef DEBUG_DIAGNOSTICS
         if (items.empty())
@@ -579,8 +573,8 @@ void full_describe_view()
     InvMenu desc_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
                         | MF_ALLOW_FORMATTING | MF_SELECT_BY_PAGE);
 
-    std::string title = "";
-    std::string action = "";
+    string title = "";
+    string action = "";
     if (!list_mons.empty())
     {
         title  = "Monsters";
@@ -608,7 +602,7 @@ void full_describe_view()
         action += "travel"; // toggle travels to items/features
     }
     title = "Visible " + title;
-    std::string title1 = title + " (select to " + action + ", '!' to examine):";
+    string title1 = title + " (select to " + action + ", '!' to examine):";
     title += " (select for more detail, '!' to " + action + "):";
 
     desc_menu.set_title(new MenuEntry(title, MEL_TITLE), false);
@@ -632,30 +626,29 @@ void full_describe_view()
     if (!list_mons.empty())
     {
         desc_menu.add_entry(new MenuEntry("Monsters", MEL_SUBTITLE));
-        std::vector<monster_info>::const_iterator mi;
+        vector<monster_info>::const_iterator mi;
         for (mi = list_mons.begin(); mi != list_mons.end(); ++mi)
         {
             // List monsters in the form
             // (A) An angel (neutral), wielding a glowing long sword
 
-            std::string prefix = "";
+            string prefix = "";
 #ifndef USE_TILE_LOCAL
             glyph g = get_mons_glyph(*mi);
-            const std::string col_string = colour_to_str(g.col);
+            const string col_string = colour_to_str(g.col);
             prefix = "(<" + col_string + ">"
-                     + stringize_glyph(g.ch)
+                     + (g.ch == '<' ? "<<" : stringize_glyph(g.ch))
                      + "</" + col_string + ">) ";
 #endif
 
-            std::string str = get_monster_equipment_desc(*mi, DESC_FULL,
-                                                         DESC_A, true);
+            string str = get_monster_equipment_desc(*mi, DESC_FULL, DESC_A, true);
             if (mi->is(MB_MESMERIZING))
                 str += ", keeping you mesmerised";
 
             if (mi->dam != MDAM_OKAY)
                 str += ", " + mi->damage_desc();
 
-            std::string consinfo = mi->constriction_description();
+            string consinfo = mi->constriction_description();
             if (!consinfo.empty())
                 str += ", " + consinfo;
 
@@ -663,7 +656,7 @@ void full_describe_view()
             // Wraparound if the description is longer than allowed.
             linebreak_string(str, get_number_of_cols() - 9);
 #endif
-            std::vector<formatted_string> fss;
+            vector<formatted_string> fss;
             formatted_string::parse_string_to_multiple(str, fss);
             MenuEntry *me = NULL;
             for (unsigned int j = 0; j < fss.size(); ++j)
@@ -685,9 +678,9 @@ void full_describe_view()
     // Build menu entries for items.
     if (!list_items.empty())
     {
-        std::vector<InvEntry*> all_items;
+        vector<InvEntry*> all_items;
         for (unsigned int i = 0; i < list_items.size(); ++i)
-            all_items.push_back(new InvEntry(list_items[i]));
+            all_items.push_back(new InvEntry(list_items[i], true));
 
         const menu_sort_condition *cond = desc_menu.find_menu_sort_condition();
         desc_menu.sort_menu(all_items, cond);
@@ -714,10 +707,10 @@ void full_describe_view()
         for (unsigned int i = 0; i < list_features.size(); ++i, hotkey++)
         {
             const coord_def c = list_features[i];
-            std::string desc = "";
+            string desc = "";
 #ifndef USE_TILE_LOCAL
             glyph g = get_cell_glyph(c);
-            const std::string colour_str = colour_to_str(g.col);
+            const string colour_str = colour_to_str(g.col);
             desc = "(<" + colour_str + ">";
             desc += stringize_glyph(g.ch);
             if (g.ch == '<')
@@ -725,7 +718,7 @@ void full_describe_view()
 
             desc += "</" + colour_str +">) ";
 #endif
-            desc += feature_description(c);
+            desc += feature_description_at(c);
             if (is_unknown_stair(c))
                 desc += " (not visited)";
             FeatureMenuEntry *me = new FeatureMenuEntry(desc, c, hotkey);
@@ -743,7 +736,7 @@ void full_describe_view()
     // For ASCII, the 'x' information may include short database descriptions.
 
     // Menu loop
-    std::vector<MenuEntry*> sel;
+    vector<MenuEntry*> sel;
     while (true)
     {
         sel = desc_menu.show();
@@ -763,7 +756,7 @@ void full_describe_view()
             // Highlight selected monster on the screen.
             const coord_def gc(m->pos);
             tiles.place_cursor(CURSOR_TUTORIAL, gc);
-            const std::string &desc = get_terse_square_desc(gc);
+            const string &desc = get_terse_square_desc(gc);
             tiles.clear_text_tags(TAG_TUTORIAL);
             tiles.add_text_tag(TAG_TUTORIAL, desc, gc);
 #endif
@@ -851,10 +844,10 @@ void full_describe_view()
 #ifndef USE_TILE_LOCAL
 // XXX: Hack - can't pass mlist entries into _find_mlist().
 static bool mlist_full_info;
-std::vector<monster_info> mlist;
+vector<monster_info> mlist;
 static void _fill_monster_list(bool full_info)
 {
-    std::vector<monster_info> temp;
+    vector<monster_info> temp;
     get_monster_info(temp);
     mlist_full_info = full_info;
 
@@ -914,7 +907,7 @@ char mlist_index_to_letter(int index)
     if (index >= 'l')
         index++;
 
-    return (index);
+    return index;
 }
 #endif
 
@@ -950,7 +943,7 @@ bool direction_chooser::move_is_ok() const
             else
                 mpr("Sorry, you can't target what you can't see.",
                     MSGCH_EXAMINE_FILTER);
-            return (false);
+            return false;
         }
 
         if (looking_at_you())
@@ -968,7 +961,7 @@ bool direction_chooser::move_is_ok() const
                 if (cancel_at_self || Options.allow_self_target == CONFIRM_CANCEL)
                 {
                     mpr("That would be overly suicidal.", MSGCH_EXAMINE_FILTER);
-                    return (false);
+                    return false;
                 }
                 else if (Options.allow_self_target == CONFIRM_PROMPT)
                     return yesno("Really target yourself?", false, 'n');
@@ -977,7 +970,7 @@ bool direction_chooser::move_is_ok() const
             if (cancel_at_self)
             {
                 mpr("Sorry, you can't target yourself.", MSGCH_EXAMINE_FILTER);
-                return (false);
+                return false;
             }
         }
     }
@@ -986,7 +979,7 @@ bool direction_chooser::move_is_ok() const
     if (!moves.isValid && !moves.isCancel)
         return yesno("Are you sure you want to fizzle?", false, 'n');
 
-    return (true);
+    return true;
 }
 
 // Assuming the target is in view, is line-of-fire
@@ -995,32 +988,32 @@ static bool _blocked_ray(const coord_def &where,
                          dungeon_feature_type* feat = NULL)
 {
     if (exists_ray(you.pos(), where, opc_solid_see))
-        return (false);
+        return false;
     if (feat == NULL)
-        return (true);
+        return true;
     *feat = ray_blocker(you.pos(), where);
-    return (true);
+    return true;
 }
 
-static std::string _targ_mode_name(targ_mode_type mode)
+static string _targ_mode_name(targ_mode_type mode)
 {
     switch (mode)
     {
     case TARG_ANY:
-        return ("any");
+        return "any";
     case TARG_ENEMY:
-        return ("enemies");
+        return "enemies";
     case TARG_FRIEND:
-        return ("friends");
+        return "friends";
     case TARG_INJURED_FRIEND:
-        return ("injured friends");
+        return "injured friends";
     case TARG_HOSTILE:
     case TARG_HOSTILE_SUBMERGED:
-        return ("hostiles");
+        return "hostiles";
     case TARG_EVOLVABLE_PLANTS:
-        return ("plants");
+        return "plants";
     default:
-        return ("buggy");
+        return "buggy";
     }
 }
 
@@ -1157,15 +1150,13 @@ void direction_chooser::draw_beam_if_needed()
     // Use the new API if implemented.
     if (hitfunc)
     {
-        if (!hitfunc->valid_aim(target()))
+        if (!hitfunc->set_aim(target()))
         {
 #ifdef USE_TILE
             viewwindow(true, true);
 #endif
             return;
         }
-
-        hitfunc->set_aim(target());
         for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
             if (aff_type aff = hitfunc->is_affected(*ri))
             {
@@ -1237,7 +1228,7 @@ bool direction_chooser::in_range(const coord_def& p) const
 {
     if (hitfunc)
         return hitfunc->valid_aim(p);
-    return (range < 0 || distance(p, you.pos()) <= range*range + 1);
+    return (range < 0 || distance2(p, you.pos()) <= range*range + 1);
 }
 
 // Cycle to either the next (dir == 1) or previous (dir == -1) object
@@ -1323,7 +1314,7 @@ bool direction_chooser::pickup_item()
     item_info *ii = 0;
     if (in_bounds(target()))
         ii = env.map_knowledge(target()).item();
-    if (!ii || !ii->is_valid())
+    if (!ii || !ii->is_valid(true))
     {
         mpr("You can't see any item there.", MSGCH_EXAMINE_FILTER);
         return false;
@@ -1341,6 +1332,9 @@ bool direction_chooser::pickup_item()
         if (!item->is_valid()
             || ii->base_type != item->base_type
             || ii->sub_type != item->sub_type
+               // TODO: check for different unidentified items of the same base type
+               && (!item_type_has_unidentified(item->base_type)
+                   || ii->sub_type == get_max_subtype(item->base_type))
             || ii->colour != item->colour)
         {
             item = 0;
@@ -1393,7 +1387,7 @@ void direction_chooser::print_target_description(bool &did_cloud) const
         mpr(hitfunc ? hitfunc->why_not : "Out of range.", MSGCH_EXAMINE_FILTER);
 }
 
-std::string direction_chooser::target_interesting_terrain_description() const
+string direction_chooser::target_interesting_terrain_description() const
 {
     const dungeon_feature_type feature = grid_appearance(target());
 
@@ -1408,7 +1402,7 @@ std::string direction_chooser::target_interesting_terrain_description() const
     }
 }
 
-std::string direction_chooser::target_cloud_description() const
+string direction_chooser::target_cloud_description() const
 {
     const int cloud = env.cgrid(target());
     if (cloud != EMPTY_CLOUD)
@@ -1424,18 +1418,17 @@ static void _append_container(C1& container_base, const C2& container_append)
                           container_append.begin(), container_append.end());
 }
 
-std::string direction_chooser::target_sanctuary_description() const
+string direction_chooser::target_sanctuary_description() const
 {
     return is_sanctuary(target()) ? "sanctuary" : "";
 }
 
-std::string direction_chooser::target_silence_description() const
+string direction_chooser::target_silence_description() const
 {
     return silenced(target()) ? "silenced" : "";
 }
 
-static void _push_back_if_nonempty(const std::string& str,
-                                   std::vector<std::string>* vec)
+static void _push_back_if_nonempty(const string& str, vector<string>* vec)
 {
     if (!str.empty())
         vec->push_back(str);
@@ -1454,8 +1447,8 @@ void direction_chooser::print_target_monster_description(bool &did_cloud) const
         return;
 
     // OK, now we know that we have something to describe.
-    std::vector<std::string> suffixes;
-    std::string text;
+    vector<string> suffixes;
+    string text;
     // Cell features go first.
     _append_container(suffixes, target_cell_description_suffixes());
     if (visible)
@@ -1487,10 +1480,9 @@ void direction_chooser::print_target_monster_description(bool &did_cloud) const
 }
 
 // FIXME: this should really take a cell as argument.
-std::vector<std::string>
-direction_chooser::target_cell_description_suffixes() const
+vector<string> direction_chooser::target_cell_description_suffixes() const
 {
-    std::vector<std::string> suffixes;
+    vector<string> suffixes;
     // Things which describe the cell.
     _push_back_if_nonempty(target_cloud_description(), &suffixes);
     _push_back_if_nonempty(target_sanctuary_description(), &suffixes);
@@ -1500,10 +1492,10 @@ direction_chooser::target_cell_description_suffixes() const
     return suffixes;
 }
 
-std::vector<std::string> direction_chooser::monster_description_suffixes(
+vector<string> direction_chooser::monster_description_suffixes(
     const monster_info& mi) const
 {
-    std::vector<std::string> suffixes;
+    vector<string> suffixes;
 
     _push_back_if_nonempty(mi.wounds_description(true), &suffixes);
     _push_back_if_nonempty(mi.constriction_description(), &suffixes);
@@ -1557,7 +1549,7 @@ void direction_chooser::print_floor_description(bool boring_too) const
     _debug_describe_feature_at(target());
 #else
     mprf(MSGCH_EXAMINE_FILTER, "%s",
-         feature_description(target(), true).c_str());
+         feature_description_at(target(), true).c_str());
 #endif
 }
 
@@ -1662,7 +1654,7 @@ void direction_chooser::handle_wizard_command(command_type key_command,
         return;
 
     monster* const m = monster_at(target());
-    std::string marker_result = "";
+    string marker_result = "";
 
     // These commands do something even if there's no monster there.
     switch (key_command)
@@ -2005,10 +1997,10 @@ bool direction_chooser::do_main_loop()
     if (loop_done)
     {
         if (just_looking)
-            return (true);
+            return true;
 
         if (move_is_ok())
-            return (true);
+            return true;
         else
             need_text_redraw = true;
     }
@@ -2098,9 +2090,9 @@ bool direction_chooser::choose_direction()
     return moves.isValid;
 }
 
-std::string get_terse_square_desc(const coord_def &gc)
+string get_terse_square_desc(const coord_def &gc)
 {
-    std::string desc = "";
+    string desc = "";
     const char *unseen_desc = "[unseen terrain]";
 
     if (gc == you.pos())
@@ -2111,7 +2103,7 @@ std::string get_terse_square_desc(const coord_def &gc)
     {
         if (env.map_knowledge(gc).seen())
         {
-            desc = "[" + feature_description(gc, false, DESC_PLAIN, false)
+            desc = "[" + feature_description_at(gc, false, DESC_PLAIN, false)
                        + "]";
         }
         else
@@ -2125,7 +2117,7 @@ std::string get_terse_square_desc(const coord_def &gc)
             desc = mitm[you.visible_igrd(gc)].name(DESC_PLAIN);
     }
     else
-        desc = feature_description(gc, false, DESC_PLAIN, false);
+        desc = feature_description_at(gc, false, DESC_PLAIN, false);
 
     return desc;
 }
@@ -2159,11 +2151,11 @@ void get_square_desc(const coord_def &c, describe_info &inf,
             // If examine_mons is true (currently only for the Tiles
             // mouse-over information), set monster's
             // equipment/woundedness/enchantment description as title.
-            std::string desc         = get_monster_equipment_desc(mi) + ".\n";
-            const std::string wounds = mi.wounds_description_sentence();
+            string desc         = get_monster_equipment_desc(mi) + ".\n";
+            const string wounds = mi.wounds_description_sentence();
             if (!wounds.empty())
                 desc += wounds + "\n";
-            const std::string constrictions = mi.constriction_description();
+            const string constrictions = mi.constriction_description();
             if (!constrictions.empty())
                 desc += constrictions + "\n";
             desc += _get_monster_desc(mi);
@@ -2247,7 +2239,7 @@ static void _extend_move_to_edge(dist &moves)
         my = you.pos().y;
 
     if (mx != 0 && my != 0)
-        mx = my = std::min(mx, my);
+        mx = my = min(mx, my);
 
     moves.target.x = you.pos().x + moves.delta.x * mx;
     moves.target.y = you.pos().y + moves.delta.y * my;
@@ -2288,12 +2280,12 @@ static bool _mons_is_valid_target(const monster* mon, int mode, int range)
         && (mon->type != MONS_BALLISTOMYCETE || mon->number == 0)
         && mon->type != MONS_KRAKEN_TENTACLE)
     {
-        return (false);
+        return false;
     }
 
     // Don't target submerged monsters.
     if (mode != TARG_HOSTILE_SUBMERGED && mon->submerged())
-        return (false);
+        return false;
 
     // Don't usually target unseen monsters...
     if (!mon->visible_to(&you))
@@ -2305,7 +2297,7 @@ static bool _mons_is_valid_target(const monster* mon, int mode, int range)
                 && i_feel_safe(false, false, true, true, range));
     }
 
-    return (true);
+    return true;
 }
 
 #ifndef USE_TILE_LOCAL
@@ -2313,14 +2305,14 @@ static bool _find_mlist(const coord_def& where, int idx, bool need_path,
                         int range, targetter *hitfunc)
 {
     if (static_cast<int>(mlist.size()) <= idx)
-        return (false);
+        return false;
 
     if (!_is_target_in_range(where, range, hitfunc) || !you.see_cell(where))
-        return (false);
+        return false;
 
     const monster_info* mon = env.map_knowledge(where).monsterinfo();
     if (mon == NULL)
-        return (false);
+        return false;
 
     int real_idx = 0;
     for (unsigned int i = 0; i+1 < mlist.size(); ++i)
@@ -2341,15 +2333,15 @@ static bool _find_mlist(const coord_def& where, int idx, bool need_path,
     const monster* real_mon = monster_at(where);
     ASSERT(real_mon);
     if (!_mons_is_valid_target(real_mon, TARG_ANY, range))
-        return (false);
+        return false;
 
     if (need_path && _blocked_ray(where))
-        return (false);
+        return false;
 
     const monster_info* monl = &mlist[real_idx];
 
     if (mon->attitude != monl->attitude)
-        return (false);
+        return false;
 
     if (mon->type != monl->type)
         return (mons_is_mimic(mon->type) && mons_is_mimic(monl->type));
@@ -2367,7 +2359,7 @@ static bool _find_mlist(const coord_def& where, int idx, bool need_path,
         return (mon->mname == monl->mname);
 
     // Else the two monsters are identical.
-    return (true);
+    return true;
 }
 #endif
 
@@ -2376,18 +2368,18 @@ static bool _find_fprop_unoccupied(const coord_def & where, int mode,
 {
     // Don't target out of range.
     if (!_is_target_in_range(where, range, hitfunc))
-        return (false);
+        return false;
 
     monster* mon = monster_at(where);
     if (mon || !you.see_cell(where))
-        return (false);
+        return false;
 
     // Monster in LOS but only via glass walls, so no direct path.
     if (need_path && !you.see_cell_no_trans(where))
-        return (false);
+        return false;
 
     if (need_path && _blocked_ray(where))
-        return (false);
+        return false;
 
     return (env.pgrid(where) & mode);
 }
@@ -2402,60 +2394,60 @@ static bool _find_monster(const coord_def& where, int mode, bool need_path,
         maybe_bool x = clua.callmbooleanfn("ch_target_monster", "dd",
                                            dp.x, dp.y);
         if (x != B_MAYBE)
-            return (tobool(x));
+            return tobool(x);
     }
 #endif
 
     // Target the player for friendly and general spells.
     if ((mode == TARG_FRIEND || mode == TARG_ANY) && where == you.pos())
-        return (true);
+        return true;
 
     // Don't target out of range.
     if (!_is_target_in_range(where, range, hitfunc))
-        return (false);
+        return false;
 
     const monster* mon = monster_at(where);
 
     // No monster or outside LOS.
     if (mon == NULL || !cell_see_cell(you.pos(), where, LOS_DEFAULT))
-        return (false);
+        return false;
 
     // Monster in LOS but only via glass walls, so no direct path.
     if (need_path && !you.see_cell_no_trans(where))
-        return (false);
+        return false;
 
     if (!_mons_is_valid_target(mon, mode, range))
-        return (false);
+        return false;
 
     if (need_path && _blocked_ray(mon->pos()))
-        return (false);
+        return false;
 
     // Now compare target modes.
     if (mode == TARG_ANY)
-        return (true);
+        return true;
 
     if (mode == TARG_HOSTILE || mode == TARG_HOSTILE_SUBMERGED)
         return (mons_attitude(mon) == ATT_HOSTILE);
 
     if (mode == TARG_FRIEND)
-        return (mon->friendly());
+        return mon->friendly();
 
     if (mode == TARG_INJURED_FRIEND)
         return (mon->friendly() && mons_get_damage_level(mon) > MDAM_OKAY
                 || !mon->wont_attack() && !mon->neutral() && is_pacifiable(mon) >= 0);
 
     if (mode == TARG_EVOLVABLE_PLANTS)
-        return (mons_is_evolvable(mon));
+        return mons_is_evolvable(mon);
 
     if (mode == TARG_HOSTILE_UNDEAD)
-        return  !mon->friendly() && mon->holiness() == MH_UNDEAD;
+        return !mon->friendly() && mon->holiness() == MH_UNDEAD;
 
     ASSERT(mode == TARG_ENEMY);
     if (mon->friendly())
-        return (false);
+        return false;
 
     // Don't target zero xp monsters.
-    return (!mons_class_flag(mon->type, M_NO_EXP_GAIN));
+    return !mons_class_flag(mon->type, M_NO_EXP_GAIN);
 }
 
 static bool _find_feature(const coord_def& where, int mode,
@@ -2463,7 +2455,7 @@ static bool _find_feature(const coord_def& where, int mode,
 {
     // The stair need not be in LOS if the square is mapped.
     if (!you.see_cell(where) && !env.map_knowledge(where).seen())
-        return (false);
+        return false;
 
     return is_feature(mode, where);
 }
@@ -2473,10 +2465,10 @@ static bool _find_object(const coord_def& where, int mode,
 {
     // Don't target out of range.
     if (!_is_target_in_range(where, range, hitfunc))
-        return (false);
+        return false;
 
     if (need_path && (!you.see_cell(where) || _blocked_ray(where)))
-        return (false);
+        return false;
 
     return (env.map_knowledge(where).item()
             || (you.see_cell(where) && top_item_at(where)));
@@ -2498,7 +2490,7 @@ static int _next_los(int dir, int los, bool wrap)
     if (wrap)
     {
         if (!flipvh && !fliphv)
-            return (los);
+            return los;
 
         // We have to invert flipvh and fliphv if we're wrapping. Here's
         // why:
@@ -2515,17 +2507,17 @@ static int _next_los(int dir, int los, bool wrap)
     else
     {
         if (!flipvh && !fliphv)
-            return (LOS_NONE);
+            return LOS_NONE;
 
         if (flipvh && vis != (dir == 1))
-            return (LOS_NONE);
+            return LOS_NONE;
 
         if (fliphv && vis == (dir == 1))
-            return (LOS_NONE);
+            return LOS_NONE;
     }
 
     los = (los & ~LOS_VISMASK) | (vis? LOS_HIDDEN : LOS_VISIBLE);
-    return (los);
+    return los;
 }
 
 //---------------------------------------------------------------
@@ -2556,7 +2548,7 @@ static bool _find_square(coord_def &mfp, int direction,
     int i, j;
 
     if (los == LOS_NONE)
-        return (false);
+        return false;
 
     if (los == LOS_FLIPVH || los == LOS_FLIPHV)
     {
@@ -2606,7 +2598,7 @@ static bool _find_square(coord_def &mfp, int direction,
         {
             mfp = vyou;
             if (find_targ(you.pos(), mode, need_path, range, hitfunc))
-                return (true);
+                return true;
             return (_find_square(mfp, direction,
                                  find_targ, need_path, mode, range, hitfunc,
                                  false, _next_los(direction, los, wrap)));
@@ -2739,14 +2731,14 @@ static bool _find_square(coord_def &mfp, int direction,
         if (find_targ(targ, mode, need_path, range, hitfunc))
         {
             mfp.set(temp_xps, temp_yps);
-            return (true);
+            return true;
         }
     }
 
     mfp = (direction > 0 ? coord_def(ctrx, ctry) : coord_def(minx, maxy));
-    return (_find_square(mfp, direction, find_targ, need_path,
-                         mode, range, hitfunc, false,
-                         _next_los(direction, los, wrap)));
+    return _find_square(mfp, direction, find_targ, need_path,
+                        mode, range, hitfunc, false,
+                        _next_los(direction, los, wrap));
 }
 
 // XXX Unbelievably hacky. And to think that my goal was to clean up the code.
@@ -2771,27 +2763,22 @@ static void _describe_oos_feature(const coord_def& where)
     if (!env.map_knowledge(where).seen())
         return;
 
-    dungeon_feature_type feat = env.map_knowledge(where).feat();
-    if (feat == DNGN_SECRET_DOOR)
-        feat = grid_secret_door_appearance(where);
-
-    std::string desc;
-    desc = feature_description(feat, env.map_knowledge(where).trap());
+    string desc = feature_description_at(where);
 
     if (!desc.empty())
         mprf(MSGCH_EXAMINE_FILTER, "[%s]", desc.c_str());
 }
 
 // Returns a vector of features matching the given pattern.
-std::vector<dungeon_feature_type> features_by_desc(const base_pattern &pattern)
+vector<dungeon_feature_type> features_by_desc(const base_pattern &pattern)
 {
-    std::vector<dungeon_feature_type> features;
+    vector<dungeon_feature_type> features;
 
     if (pattern.valid())
     {
         for (int i = 0; i < NUM_FEATURES; ++i)
         {
-            std::string fdesc =
+            string fdesc =
                 feature_description(static_cast<dungeon_feature_type>(i));
             if (fdesc.empty())
                 continue;
@@ -2800,16 +2787,16 @@ std::vector<dungeon_feature_type> features_by_desc(const base_pattern &pattern)
                 features.push_back(dungeon_feature_type(i));
         }
     }
-    return (features);
+    return features;
 }
 
 void describe_floor()
 {
     dungeon_feature_type grid = env.map_knowledge(you.pos()).feat();
 
-    std::string prefix = "There is ";
-    std::string feat;
-    std::string suffix = " here.";
+    string prefix = "There is ";
+    string feat;
+    string suffix = " here.";
 
     switch (grid)
     {
@@ -2824,7 +2811,7 @@ void describe_floor()
         break;
     }
 
-    feat = feature_description(you.pos(), true,
+    feat = feature_description_at(you.pos(), true,
                                DESC_A, false);
     if (feat.empty())
         return;
@@ -2840,10 +2827,8 @@ void describe_floor()
         mpr("Beware, for starvation awaits!", MSGCH_EXAMINE);
 }
 
-std::string thing_do_grammar(description_level_type dtype,
-                             bool add_stop,
-                             bool force_article,
-                             std::string desc)
+string thing_do_grammar(description_level_type dtype, bool add_stop,
+                        bool force_article, string desc)
 {
     if (add_stop && !ends_with(desc, ".") && !ends_with(desc, "!")
         && !ends_with(desc, "?"))
@@ -2871,7 +2856,7 @@ std::string thing_do_grammar(description_level_type dtype,
         {
             desc[0] = tolower(desc[0]);
         }*/
-        return (desc);
+        return desc;
     }
 
     switch (dtype)
@@ -2881,365 +2866,318 @@ std::string thing_do_grammar(description_level_type dtype,
     case DESC_A:
         return article_a(desc, true);
     case DESC_NONE:
-        return ("");
+        return "";
     default:
-        return (desc);
+        return desc;
     }
 }
 
-std::string feature_description(dungeon_feature_type grid,
-                                trap_type trap,
-                                const std::string & cover_desc,
-                                description_level_type dtype,
-                                bool add_stop, bool base_desc)
-{
-    std::string desc = raw_feature_description(grid, trap, base_desc);
-    desc += cover_desc;
-
-    return thing_do_grammar(dtype, add_stop, feat_is_trap(grid), desc);
-}
-
-static std::string _base_feature_desc(dungeon_feature_type grid,
-                                      trap_type trap)
+static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
 {
     if (feat_is_trap(grid) && trap != NUM_TRAPS)
     {
         switch (trap)
         {
         case TRAP_DART:
-            return ("dart trap");
+            return "dart trap";
         case TRAP_ARROW:
-            return ("arrow trap");
+            return "arrow trap";
         case TRAP_NEEDLE:
-            return ("needle trap");
+            return "needle trap";
         case TRAP_BOLT:
-            return ("bolt trap");
+            return "bolt trap";
         case TRAP_SPEAR:
-            return ("spear trap");
-        case TRAP_AXE:
-            return ("axe trap");
+            return "spear trap";
         case TRAP_BLADE:
-            return ("blade trap");
+            return "blade trap";
         case TRAP_NET:
-            return ("net trap");
+            return "net trap";
         case TRAP_GAS:
-            return ("gas trap");
+            return "gas trap";
         case TRAP_ALARM:
-            return ("alarm trap");
+            return "alarm trap";
         case TRAP_SHAFT:
-            return ("shaft");
+            return "shaft";
         case TRAP_TELEPORT:
-            return ("teleportation trap");
+            return "teleportation trap";
         case TRAP_ZOT:
-            return ("Zot trap");
+            return "Zot trap";
         case TRAP_GOLUBRIA:
-            return ("passage of Golubria");
+            return "passage of Golubria";
         case TRAP_PLATE:
-            return ("pressure plate");
+            return "pressure plate";
         case TRAP_WEB:
-            return ("web");
+            return "web";
         default:
-            error_message_to_player();
-            return ("undefined trap");
+            die("Error: invalid trap type %d", trap);
+            return "undefined trap";
         }
     }
 
     switch (grid)
     {
     case DNGN_STONE_WALL:
-        return ("stone wall");
+        return "stone wall";
     case DNGN_ROCK_WALL:
-    case DNGN_SECRET_DOOR:
         if (player_in_branch(BRANCH_PANDEMONIUM))
-            return ("wall of the weird stuff which makes up Pandemonium");
+            return "wall of the weird stuff which makes up Pandemonium";
         else
-            return ("rock wall");
+            return "rock wall";
     case DNGN_SLIMY_WALL:
-        return ("slime covered rock wall");
+        return "slime covered rock wall";
     case DNGN_PERMAROCK_WALL:
-        return ("unnaturally hard rock wall");
+        return "unnaturally hard rock wall";
     case DNGN_OPEN_SEA:
-        return ("the open sea");
+        return "the open sea";
     case DNGN_LAVA_SEA:
-        return ("the endless lava");
+        return "the endless lava";
     case DNGN_CLOSED_DOOR:
-        return ("closed door");
-    case DNGN_DETECTED_SECRET_DOOR:
-        return ("detected secret door");
+        return "closed door";
+    case DNGN_RUNED_DOOR:
+        return "runed door";
     case DNGN_METAL_WALL:
-        return ("metal wall");
+        return "metal wall";
     case DNGN_GREEN_CRYSTAL_WALL:
-        return ("wall of green crystal");
+        return "wall of green crystal";
     case DNGN_CLEAR_ROCK_WALL:
-        return ("translucent rock wall");
+        return "translucent rock wall";
     case DNGN_CLEAR_STONE_WALL:
-        return ("translucent stone wall");
+        return "translucent stone wall";
     case DNGN_CLEAR_PERMAROCK_WALL:
-        return ("translucent unnaturally hard rock wall");
+        return "translucent unnaturally hard rock wall";
     case DNGN_GRATE:
-        return ("iron grate");
+        return "iron grate";
     case DNGN_TREE:
-    case DNGN_SWAMP_TREE: // perhaps "mangrove" or such?
-        return ("tree");
+        return "tree";
+    case DNGN_MANGROVE:
+        return "mangrove";
     case DNGN_ORCISH_IDOL:
         if (you.species == SP_HILL_ORC)
-           return ("idol of Beogh");
+           return "idol of Beogh";
         else
-           return ("orcish idol");
-    case DNGN_WAX_WALL:
-        return ("wall of solid wax");
+           return "orcish idol";
     case DNGN_GRANITE_STATUE:
-        return ("granite statue");
+        return "granite statue";
     case DNGN_LAVA:
-        return ("some lava");
+        return "some lava";
     case DNGN_DEEP_WATER:
-        return ("some deep water");
+        return "some deep water";
     case DNGN_SHALLOW_WATER:
-        return ("some shallow water");
+        return "some shallow water";
     case DNGN_UNDISCOVERED_TRAP:
     case DNGN_FLOOR:
-        return ("floor");
+        return "floor";
     case DNGN_OPEN_DOOR:
-        return ("open door");
+        return "open door";
     case DNGN_ESCAPE_HATCH_DOWN:
-        return ("escape hatch in the floor");
+        return "escape hatch in the floor";
     case DNGN_ESCAPE_HATCH_UP:
-        return ("escape hatch in the ceiling");
+        return "escape hatch in the ceiling";
     case DNGN_STONE_STAIRS_DOWN_I:
     case DNGN_STONE_STAIRS_DOWN_II:
     case DNGN_STONE_STAIRS_DOWN_III:
-        return ("stone staircase leading down");
+        return "stone staircase leading down";
     case DNGN_STONE_STAIRS_UP_I:
     case DNGN_STONE_STAIRS_UP_II:
     case DNGN_STONE_STAIRS_UP_III:
-        return ("stone staircase leading up");
+        return "stone staircase leading up";
     case DNGN_EXIT_DUNGEON:
-        return ("staircase leading out of the dungeon");
+        return "staircase leading out of the dungeon";
     case DNGN_ENTER_HELL:
-        return ("gateway to Hell");
+        return "gateway to Hell";
     case DNGN_EXIT_HELL:
-        return ("gateway back into the Dungeon");
+        return "gateway back into the Dungeon";
     case DNGN_TELEPORTER:
-        return ("teleporter");
+        return "teleporter";
     case DNGN_TRAP_MECHANICAL:
-        return ("mechanical trap");
+        return "mechanical trap";
     case DNGN_TRAP_MAGICAL:
-        return ("magical trap");
+        return "magical trap";
     case DNGN_TRAP_NATURAL:
-        return ("natural trap");
+        return "natural trap";
     case DNGN_TRAP_WEB:
-        return ("web");
+        return "web";
     case DNGN_ENTER_SHOP:
-        return ("shop");
+        return "shop";
     case DNGN_ABANDONED_SHOP:
-        return ("abandoned shop");
+        return "abandoned shop";
     case DNGN_ENTER_LABYRINTH:
-        return ("labyrinth entrance");
+        return "labyrinth entrance";
     case DNGN_ENTER_DIS:
-        return ("gateway to the Iron City of Dis");
+        return "gateway to the Iron City of Dis";
     case DNGN_ENTER_GEHENNA:
-        return ("gateway to the ashen valley of Gehenna");
+        return "gateway to the ashen valley of Gehenna";
     case DNGN_ENTER_COCYTUS:
-        return ("gateway to the freezing wastes of Cocytus");
+        return "gateway to the freezing wastes of Cocytus";
     case DNGN_ENTER_TARTARUS:
-        return ("gateway to the decaying netherworld of Tartarus");
+        return "gateway to the decaying netherworld of Tartarus";
     case DNGN_ENTER_ABYSS:
-        return ("one-way gate to the infinite horrors of the Abyss");
+        return "one-way gate to the infinite horrors of the Abyss";
     case DNGN_EXIT_ABYSS:
-        return ("gateway leading out of the Abyss");
+        return "gateway leading out of the Abyss";
     case DNGN_EXIT_THROUGH_ABYSS:
-        return ("exit through the horrors of the Abyss");
+        return "exit through the horrors of the Abyss";
     case DNGN_STONE_ARCH:
-        return ("empty arch of ancient stone");
+        return "empty arch of ancient stone";
     case DNGN_ENTER_PANDEMONIUM:
-        return ("one-way gate leading to the halls of Pandemonium");
+        return "one-way gate leading to the halls of Pandemonium";
     case DNGN_EXIT_PANDEMONIUM:
-        return ("gate leading out of Pandemonium");
+        return "gate leading out of Pandemonium";
     case DNGN_TRANSIT_PANDEMONIUM:
-        return ("gate leading to another region of Pandemonium");
+        return "gate leading to another region of Pandemonium";
     case DNGN_ENTER_DWARVEN_HALL:
-        return ("staircase to the Dwarven Hall");
+        return "staircase to the Dwarven Hall";
     case DNGN_ENTER_ORCISH_MINES:
-        return ("staircase to the Orcish Mines");
+        return "staircase to the Orcish Mines";
     case DNGN_ENTER_LAIR:
-        return ("staircase to the Lair");
+        return "staircase to the Lair";
     case DNGN_ENTER_SLIME_PITS:
-        return ("staircase to the Slime Pits");
+        return "staircase to the Slime Pits";
     case DNGN_ENTER_VAULTS:
-        return ("staircase to the Vaults");
+        return "staircase to the Vaults";
     case DNGN_ENTER_CRYPT:
-        return ("staircase to the Crypt");
+        return "staircase to the Crypt";
     case DNGN_ENTER_HALL_OF_BLADES:
-        return ("staircase to the Hall of Blades");
+        return "staircase to the Hall of Blades";
     case DNGN_ENTER_ZOT:
-        return ("gate to the Realm of Zot");
+        return "gate to the Realm of Zot";
     case DNGN_ENTER_TEMPLE:
-        return ("staircase to the Ecumenical Temple");
+        return "staircase to the Ecumenical Temple";
     case DNGN_ENTER_SNAKE_PIT:
-        return ("staircase to the Snake Pit");
+        return "staircase to the Snake Pit";
     case DNGN_ENTER_ELVEN_HALLS:
-        return ("staircase to the Elven Halls");
+        return "staircase to the Elven Halls";
     case DNGN_ENTER_TOMB:
-        return ("staircase to the Tomb");
+        return "staircase to the Tomb";
     case DNGN_ENTER_SWAMP:
-        return ("staircase to the Swamp");
+        return "staircase to the Swamp";
     case DNGN_ENTER_SHOALS:
-        return ("staircase to the Shoals");
+        return "staircase to the Shoals";
     case DNGN_ENTER_SPIDER_NEST:
-        return ("hole to the Spider Nest");
+        return "hole to the Spider Nest";
     case DNGN_ENTER_FOREST:
-        return ("staircase to the Enchanted Forest");
+        return "staircase to the Enchanted Forest";
     case DNGN_ENTER_PORTAL_VAULT:
         // The bazaar description should be set in the bazaar marker; this
         // is the description for a portal of unknown type.
-        return ("gate leading to a distant place");
+        return "gate leading to a distant place";
     case DNGN_EXIT_PORTAL_VAULT:
-        return ("gate leading back out of here");
+        return "gate leading back out of here";
     case DNGN_MALIGN_GATEWAY:
-        return ("portal to somewhere");
+        return "portal to somewhere";
     case DNGN_EXPIRED_PORTAL:
         // should be set whenever used
-        return ("collapsed entrance");
+        return "collapsed entrance";
     case DNGN_RETURN_FROM_DWARVEN_HALL:
     case DNGN_RETURN_FROM_ORCISH_MINES:
     case DNGN_RETURN_FROM_LAIR:
     case DNGN_RETURN_FROM_VAULTS:
     case DNGN_RETURN_FROM_TEMPLE:
     case DNGN_RETURN_FROM_FOREST:
-        return ("staircase back to the Dungeon");
+        return "staircase back to the Dungeon";
     case DNGN_RETURN_FROM_SLIME_PITS:
     case DNGN_RETURN_FROM_SNAKE_PIT:
     case DNGN_RETURN_FROM_SWAMP:
     case DNGN_RETURN_FROM_SHOALS:
-        return ("staircase back to the Lair");
+        return "staircase back to the Lair";
     case DNGN_RETURN_FROM_SPIDER_NEST:
-        return ("crawl-hole back to the Lair");
+        return "crawl-hole back to the Lair";
     case DNGN_RETURN_FROM_CRYPT:
     case DNGN_RETURN_FROM_HALL_OF_BLADES:
-        return ("staircase back to the Vaults");
+        return "staircase back to the Vaults";
     case DNGN_RETURN_FROM_ELVEN_HALLS:
-        return ("staircase back to the Mines");
+        return "staircase back to the Mines";
     case DNGN_RETURN_FROM_TOMB:
-        return ("staircase back to the Crypt");
+        return "staircase back to the Crypt";
     case DNGN_RETURN_FROM_ZOT:
-        return ("gate leading back out of this place");
+        return "gate leading back out of this place";
 
     // altars
     case DNGN_ALTAR_ZIN:
-        return ("glowing silver altar of Zin");
+        return "glowing silver altar of Zin";
     case DNGN_ALTAR_SHINING_ONE:
-        return ("glowing golden altar of the Shining One");
+        return "glowing golden altar of the Shining One";
     case DNGN_ALTAR_KIKUBAAQUDGHA:
-        return ("ancient bone altar of Kikubaaqudgha");
+        return "ancient bone altar of Kikubaaqudgha";
     case DNGN_ALTAR_YREDELEMNUL:
-        return ("basalt altar of Yredelemnul");
+        return "basalt altar of Yredelemnul";
     case DNGN_ALTAR_XOM:
-        return ("shimmering altar of Xom");
+        return "shimmering altar of Xom";
     case DNGN_ALTAR_VEHUMET:
-        return ("radiant altar of Vehumet");
+        return "radiant altar of Vehumet";
     case DNGN_ALTAR_OKAWARU:
-        return ("iron altar of Okawaru");
+        return "iron altar of Okawaru";
     case DNGN_ALTAR_MAKHLEB:
-        return ("burning altar of Makhleb");
+        return "burning altar of Makhleb";
     case DNGN_ALTAR_SIF_MUNA:
-        return ("deep blue altar of Sif Muna");
+        return "deep blue altar of Sif Muna";
     case DNGN_ALTAR_TROG:
-        return ("bloodstained altar of Trog");
+        return "bloodstained altar of Trog";
     case DNGN_ALTAR_NEMELEX_XOBEH:
-        return ("sparkling altar of Nemelex Xobeh");
+        return "sparkling altar of Nemelex Xobeh";
     case DNGN_ALTAR_ELYVILON:
-        return ("white marble altar of Elyvilon");
+        return "white marble altar of Elyvilon";
     case DNGN_ALTAR_LUGONU:
-        return ("corrupted altar of Lugonu");
+        return "corrupted altar of Lugonu";
     case DNGN_ALTAR_BEOGH:
-        return ("roughly hewn altar of Beogh");
+        return "roughly hewn altar of Beogh";
     case DNGN_ALTAR_JIYVA:
-        return ("viscous altar of Jiyva");
+        return "viscous altar of Jiyva";
     case DNGN_ALTAR_FEDHAS:
-        return ("blossoming altar of Fedhas");
+        return "blossoming altar of Fedhas";
     case DNGN_ALTAR_CHEIBRIADOS:
-        return ("snail-covered altar of Cheibriados");
+        return "snail-covered altar of Cheibriados";
     case DNGN_ALTAR_ASHENZARI:
-        return ("shattered altar of Ashenzari");
+        return "shattered altar of Ashenzari";
 
     case DNGN_FOUNTAIN_BLUE:
-        return ("fountain of clear blue water");
+        return "fountain of clear blue water";
     case DNGN_FOUNTAIN_SPARKLING:
-        return ("fountain of sparkling water");
+        return "fountain of sparkling water";
     case DNGN_FOUNTAIN_BLOOD:
-        return ("fountain of blood");
+        return "fountain of blood";
     case DNGN_DRY_FOUNTAIN_BLUE:
     case DNGN_DRY_FOUNTAIN_SPARKLING:
     case DNGN_DRY_FOUNTAIN_BLOOD:
     case DNGN_PERMADRY_FOUNTAIN:
-        return ("dry fountain");
+        return "dry fountain";
     case DNGN_EXPLORE_HORIZON:
-        return ("explore horizon");
+        return "explore horizon";
+    case DNGN_UNKNOWN_ALTAR:
+        return "detected altar";
+    case DNGN_UNKNOWN_PORTAL:
+        return "detected shop or portal";
     default:
-        return ("");
+        return "";
     }
 }
 
-std::string raw_feature_description(dungeon_feature_type grid,
-                                    trap_type trap, bool base_desc)
+string feature_description(dungeon_feature_type grid, trap_type trap,
+                           const string & cover_desc,
+                           description_level_type dtype,
+                           bool add_stop, bool base_desc)
 {
-    std::string base_str = _base_feature_desc(grid, trap);
+    string desc = _base_feature_desc(grid, trap);
+    desc += cover_desc;
 
-    if (base_desc)
-        return (base_str);
-
-    desc_map::iterator i = base_desc_to_short.find(base_str);
-
-    if (i != base_desc_to_short.end())
-        return (i->second);
-
-    return (base_str);
+    return thing_do_grammar(dtype, add_stop, feat_is_trap(grid), desc);
 }
 
-void set_feature_desc_short(dungeon_feature_type grid,
-                            const std::string &desc)
+string raw_feature_description(const coord_def &where)
 {
-    set_feature_desc_short(_base_feature_desc(grid, NUM_TRAPS), desc);
-}
+    dungeon_feature_type feat = grd(where);
 
-void set_feature_desc_short(const std::string &base_name,
-                            const std::string &_desc)
-{
-    ASSERT(!base_name.empty());
-
-    CrawlHashTable &props = env.properties;
-
-    if (!props.exists(SHORT_DESC_KEY))
-        props[SHORT_DESC_KEY].new_table();
-
-    CrawlHashTable &desc_table = props[SHORT_DESC_KEY].get_table();
-
-    if (_desc.empty())
+    int mapi = env.level_map_ids(where);
+    if (mapi != INVALID_MAP_INDEX)
     {
-        base_desc_to_short.erase(base_name);
-        desc_table.erase(base_name);
+        const vault_placement *v = env.level_vaults[mapi];
+        map<dungeon_feature_type, string>::const_iterator it =
+            v->map.feat_renames.find(feat);
+        if (it != v->map.feat_renames.end())
+            return it->second;
     }
-    else
-    {
-        base_desc_to_short[base_name] = _desc;
-        desc_table[base_name]         = _desc;
-    }
-}
 
-void setup_feature_descs_short()
-{
-    base_desc_to_short.clear();
-
-    const CrawlHashTable &props = env.properties;
-
-    if (!props.exists(SHORT_DESC_KEY))
-        return;
-
-    const CrawlHashTable &desc_table = props[SHORT_DESC_KEY].get_table();
-
-    CrawlHashTable::const_iterator i;
-    for (i = desc_table.begin(); i != desc_table.end(); ++i)
-        base_desc_to_short[i->first] = i->second.get_string();
+    return _base_feature_desc(feat, get_trap_type(where));
 }
 
 #ifndef DEBUG_DIAGNOSTICS
@@ -3252,14 +3190,14 @@ static bool _interesting_feature(dungeon_feature_type feat)
 }
 #endif
 
-std::string feature_description(const coord_def& where, bool covering,
-                                description_level_type dtype, bool add_stop,
-                                bool base_desc)
+string feature_description_at(const coord_def& where, bool covering,
+                              description_level_type dtype, bool add_stop,
+                              bool base_desc)
 {
-    std::string marker_desc =
-        env.markers.property_at(where, MAT_ANY, "feature_description");
+    string marker_desc = env.markers.property_at(where, MAT_ANY,
+                                                 "feature_description");
 
-    std::string covering_description = "";
+    string covering_description = "";
 
     if (covering)
     {
@@ -3280,33 +3218,30 @@ std::string feature_description(const coord_def& where, bool covering,
 
     dungeon_feature_type grid = grd(where);
 
-    if (grid == DNGN_SECRET_DOOR)
-        grid = grid_secret_door_appearance(where);
-
     if (grid == DNGN_OPEN_DOOR || feat_is_closed_door(grid))
     {
-        const std::string door_desc_prefix =
+        const string door_desc_prefix =
             env.markers.property_at(where, MAT_ANY,
                                     "door_description_prefix");
-        const std::string door_desc_suffix =
+        const string door_desc_suffix =
             env.markers.property_at(where, MAT_ANY,
                                     "door_description_suffix");
-        const std::string door_desc_noun =
+        const string door_desc_noun =
             env.markers.property_at(where, MAT_ANY,
                                     "door_description_noun");
-        const std::string door_desc_adj  =
+        const string door_desc_adj  =
             env.markers.property_at(where, MAT_ANY,
                                     "door_description_adjective");
-        const std::string door_desc_veto =
+        const string door_desc_veto =
             env.markers.property_at(where, MAT_ANY,
                                     "door_description_veto");
 
-        std::set<coord_def> all_door;
+        set<coord_def> all_door;
         find_connected_identical(where, grd(where), all_door);
         const char *adj, *noun;
         get_door_description(all_door.size(), &adj, &noun);
 
-        std::string desc;
+        string desc;
         if (!door_desc_adj.empty())
             desc += door_desc_adj;
         else
@@ -3314,10 +3249,10 @@ std::string feature_description(const coord_def& where, bool covering,
 
         if (door_desc_veto.empty() || door_desc_veto != "veto")
         {
-            if (grid == DNGN_DETECTED_SECRET_DOOR)
-                desc += "detected secret ";
-            else if (grid == DNGN_OPEN_DOOR)
+            if (grid == DNGN_OPEN_DOOR)
                 desc += "open ";
+            else if (grid == DNGN_RUNED_DOOR)
+                desc += "runed ";
             else
                 desc += "closed ";
         }
@@ -3342,9 +3277,9 @@ std::string feature_description(const coord_def& where, bool covering,
     case DNGN_TRAP_MAGICAL:
     case DNGN_TRAP_NATURAL:
     case DNGN_TRAP_WEB:
-        return (feature_description(grid, get_trap_type(where),
-                                    covering_description, dtype,
-                                    add_stop, base_desc));
+        return feature_description(grid, get_trap_type(where),
+                                   covering_description, dtype,
+                                   add_stop, base_desc);
     case DNGN_ABANDONED_SHOP:
         return thing_do_grammar(dtype, add_stop, false, "an abandoned shop");
 
@@ -3353,19 +3288,19 @@ std::string feature_description(const coord_def& where, bool covering,
 
     case DNGN_ENTER_PORTAL_VAULT:
         // Should have been handled at the top of the function.
-        return (thing_do_grammar(
-                    dtype, add_stop, false,
-                    "UNAMED PORTAL VAULT ENTRY"));
+        return thing_do_grammar(
+                   dtype, add_stop, false,
+                   "UNAMED PORTAL VAULT ENTRY");
     default:
-        return (feature_description(grid, NUM_TRAPS, covering_description,
-                                    dtype, add_stop, base_desc));
+        return thing_do_grammar(dtype, add_stop, feat_is_trap(grid),
+                   raw_feature_description(where) + covering_description);
     }
 }
 
-static std::string _describe_monster_weapon(const monster_info& mi, bool ident)
+static string _describe_monster_weapon(const monster_info& mi, bool ident)
 {
-    std::string desc = "";
-    std::string name1, name2;
+    string desc = "";
+    string name1, name2;
     const item_def *weap = mi.inv[MSLOT_WEAPON].get();
     const item_def *alt  = mi.inv[MSLOT_ALT_WEAPON].get();
 
@@ -3393,7 +3328,7 @@ static std::string _describe_monster_weapon(const monster_info& mi, bool ident)
     }
 
     if (name1.empty())
-        return (desc);
+        return desc;
 
     desc += " wielding ";
     desc += name1;
@@ -3404,11 +3339,11 @@ static std::string _describe_monster_weapon(const monster_info& mi, bool ident)
         desc += name2;
     }
 
-    return (desc);
+    return desc;
 }
 
 #ifdef DEBUG_DIAGNOSTICS
-static std::string _stair_destination_description(const coord_def &pos)
+static string _stair_destination_description(const coord_def &pos)
 {
     if (LevelInfo *linf = travel_cache.find_level_info(level_id::current()))
     {
@@ -3416,19 +3351,19 @@ static std::string _stair_destination_description(const coord_def &pos)
         if (si)
             return (" " + si->describe());
         else if (feat_is_stair(grd(pos)))
-            return (" (unknown stair)");
+            return " (unknown stair)";
     }
-    return ("");
+    return "";
 }
 #endif
 
-static std::string _mon_enchantments_string(const monster_info& mi)
+static string _mon_enchantments_string(const monster_info& mi)
 {
-    const std::vector<std::string> enchant_descriptors = mi.attributes();
+    const vector<string> enchant_descriptors = mi.attributes();
 
     if (!enchant_descriptors.empty())
     {
-        return std::string(mi.pronoun(PRONOUN_SUBJECTIVE))
+        return string(mi.pronoun(PRONOUN_SUBJECTIVE))
             + " is "
             + comma_separated_line(enchant_descriptors.begin(),
                                    enchant_descriptors.end())
@@ -3438,9 +3373,9 @@ static std::string _mon_enchantments_string(const monster_info& mi)
         return "";
 }
 
-static std::vector<std::string> _get_monster_behaviour_vector(const monster_info& mi)
+static vector<string> _get_monster_behaviour_vector(const monster_info& mi)
 {
-    std::vector<std::string> descs;
+    vector<string> descs;
 
     if (mi.is(MB_SLEEPING) || mi.is(MB_DORMANT))
         descs.push_back(mi.is(MB_CONFUSED) ? "sleepwalking" : "resting");
@@ -3453,9 +3388,9 @@ static std::vector<std::string> _get_monster_behaviour_vector(const monster_info
 }
 
 // FIXME: this duplicates _get_monster_desc(). Unite them.
-static std::vector<std::string> _get_monster_desc_vector(const monster_info& mi)
+static vector<string> _get_monster_desc_vector(const monster_info& mi)
 {
-    std::vector<std::string> descs;
+    vector<string> descs;
 
     if (mi.is(MB_CLINGING))
         descs.push_back("clinging");
@@ -3500,7 +3435,7 @@ static std::vector<std::string> _get_monster_desc_vector(const monster_info& mi)
 
     if (mi.fire_blocker)
     {
-        descs.push_back("fire blocked by "
+        descs.push_back("fire blocked by " // FIXME, renamed features
                         + feature_description(mi.fire_blocker, NUM_TRAPS, "",
                                               DESC_A, false));
     }
@@ -3510,10 +3445,10 @@ static std::vector<std::string> _get_monster_desc_vector(const monster_info& mi)
 
 // Returns the description string for a given monster, including attitude
 // and enchantments but not equipment or wounds.
-static std::string _get_monster_desc(const monster_info& mi)
+static string _get_monster_desc(const monster_info& mi)
 {
-    std::string text    = "";
-    std::string pronoun = mi.pronoun(PRONOUN_SUBJECTIVE);
+    string text    = "";
+    string pronoun = mi.pronoun(PRONOUN_SUBJECTIVE);
 
     if (mi.is(MB_CLINGING))
         text += pronoun + " is clinging to the wall.\n";
@@ -3565,7 +3500,7 @@ static std::string _get_monster_desc(const monster_info& mi)
 
     if (mi.is(MB_POSSESSABLE))
     {
-        text += std::string(mi.pronoun(PRONOUN_POSSESSIVE))
+        text += string(mi.pronoun(PRONOUN_POSSESSIVE))
                 + " soul is ripe for the taking.\n";
     }
     else if (mi.is(MB_ENSLAVED))
@@ -3579,8 +3514,8 @@ static std::string _get_monster_desc(const monster_info& mi)
 
     if (mi.fire_blocker)
     {
-        text += std::string("Your line of fire to ") + mi.pronoun(PRONOUN_OBJECTIVE)
-              + " is blocked by "
+        text += string("Your line of fire to ") + mi.pronoun(PRONOUN_OBJECTIVE)
+              + " is blocked by " // FIXME: renamed features
               + feature_description(mi.fire_blocker, NUM_TRAPS, "",
                                     DESC_A)
               + "\n";
@@ -3595,11 +3530,11 @@ static std::string _get_monster_desc(const monster_info& mi)
 static void _describe_monster(const monster_info& mi)
 {
     // First print type and equipment.
-    std::string text = get_monster_equipment_desc(mi) + ".";
-    const std::string wounds_desc = mi.wounds_description_sentence();
+    string text = get_monster_equipment_desc(mi) + ".";
+    const string wounds_desc = mi.wounds_description_sentence();
     if (!wounds_desc.empty())
         text += " " + wounds_desc;
-    const std::string constriction_desc = mi.constriction_description();
+    const string constriction_desc = mi.constriction_description();
     if (!constriction_desc.empty())
         text += " " + constriction_desc;
     mpr(text, MSGCH_EXAMINE);
@@ -3613,12 +3548,12 @@ static void _describe_monster(const monster_info& mi)
 // This method is called in two cases:
 // a) Monsters coming into view: "An ogre comes into view. It is wielding ..."
 // b) Monster description via 'x': "An ogre, wielding a club, and wearing ..."
-std::string get_monster_equipment_desc(const monster_info& mi,
-                                       mons_equip_desc_level_type level,
-                                       description_level_type mondtype,
-                                       bool print_attitude)
+string get_monster_equipment_desc(const monster_info& mi,
+                                  mons_equip_desc_level_type level,
+                                  description_level_type mondtype,
+                                  bool print_attitude)
 {
-    std::string desc = "";
+    string desc = "";
     if (mondtype != DESC_NONE)
     {
         if (print_attitude && mons_is_pghost(mi.type))
@@ -3628,7 +3563,7 @@ std::string get_monster_equipment_desc(const monster_info& mi,
 
         if (print_attitude)
         {
-            std::string str = "";
+            string str = "";
             if (mi.is(MB_CHARMED))
                 str = "charmed";
             else if (mi.attitude == ATT_FRIENDLY)
@@ -3673,7 +3608,7 @@ std::string get_monster_equipment_desc(const monster_info& mi,
         }
     }
 
-    std::string weap = "";
+    string weap = "";
 
     // We don't report rakshasa equipment in order not to give away the
     // true rakshasa when it summons. But Mara is fine, because his weapons
@@ -3699,6 +3634,7 @@ std::string get_monster_equipment_desc(const monster_info& mi,
         item_def* mon_qvr = mi.inv[MSLOT_MISSILE].get();
         item_def* mon_alt = mi.inv[MSLOT_ALT_WEAPON].get();
         item_def* mon_wnd = mi.inv[MSLOT_WAND].get();
+        item_def* mon_rng = mi.inv[MSLOT_JEWELLERY].get();
 
 #define no_warn(x) (!item_type_known(*x) || !item_is_branded(*x))
         // For Ashenzari warnings, we only care about ided and branded stuff.
@@ -3710,6 +3646,8 @@ std::string get_monster_equipment_desc(const monster_info& mi,
                 mon_shd = 0;
             if (mon_qvr && no_warn(mon_qvr))
                 mon_qvr = 0;
+            if (mon_rng && no_warn(mon_rng))
+                mon_rng = 0;
             if (mon_alt && (!item_type_known(*mon_alt)
                             || mon_alt->base_type == OBJ_WANDS
                                && !is_offensive_wand(*mon_alt)))
@@ -3730,7 +3668,10 @@ std::string get_monster_equipment_desc(const monster_info& mi,
         if (mon_arm)
         {
             if (found_sth)
-                desc += (!mon_shd && !mon_qvr && !mon_carry) ? " and" : ",";
+            {
+                desc += (!mon_shd && !mon_rng && !mon_qvr && !mon_carry)
+                        ? " and" : ",";
+            }
             else
                 found_sth = true;
 
@@ -3741,12 +3682,23 @@ std::string get_monster_equipment_desc(const monster_info& mi,
         if (mon_shd)
         {
             if (found_sth)
-                desc += (!mon_qvr && !mon_carry) ? " and" : ",";
+                desc += (!mon_rng && !mon_qvr && !mon_carry) ? " and" : ",";
             else
                 found_sth = true;
 
             desc += " wearing ";
             desc += mon_shd->name(DESC_A);
+        }
+
+        if (mon_rng)
+        {
+            if (found_sth)
+                desc += (!mon_qvr && !mon_carry) ? " and" : ",";
+            else
+                found_sth = true;
+
+            desc += " wearing ";
+            desc += mon_rng->name(DESC_A);
         }
 
         if (mon_qvr)
@@ -3789,7 +3741,7 @@ std::string get_monster_equipment_desc(const monster_info& mi,
 
 static bool _print_cloud_desc(const coord_def where)
 {
-    std::vector<std::string> areas;
+    vector<string> areas;
     if (is_sanctuary(where))
         areas.push_back("lies inside a sanctuary");
     if (silenced(where))
@@ -3802,7 +3754,7 @@ static bool _print_cloud_desc(const coord_def where)
         areas.push_back("thrums with a field of magical suppression");
     if (liquefied(where))
         areas.push_back("is liquefied");
-    if (orb_haloed(where))
+    if (orb_haloed(where) || quad_haloed(where))
         areas.push_back("is covered in magical glow");
     if (!areas.empty())
     {
@@ -3825,15 +3777,11 @@ static bool _print_item_desc(const coord_def where)
     if (targ_item == NON_ITEM)
         return false;
 
-    std::string name = get_menu_colour_prefix_tags(mitm[targ_item],
-                                                   DESC_A);
+    string name = get_menu_colour_prefix_tags(mitm[targ_item], DESC_A);
     mprf(MSGCH_FLOOR_ITEMS, "You see %s here.", name.c_str());
 
     if (mitm[ targ_item ].link != NON_ITEM)
-    {
-        mprf(MSGCH_FLOOR_ITEMS,
-             "There is something else lying underneath.");
-    }
+        mpr("There is something else lying underneath.", MSGCH_FLOOR_ITEMS);
 
     return true;
 }
@@ -3841,22 +3789,22 @@ static bool _print_item_desc(const coord_def where)
 #ifdef DEBUG_DIAGNOSTICS
 static void _debug_describe_feature_at(const coord_def &where)
 {
-    const std::string feature_desc = feature_description(where, true);
-    std::string marker;
+    const string feature_desc = feature_description_at(where, true);
+    string marker;
     if (map_marker *mark = env.markers.find(where, MAT_ANY))
     {
-        std::string desc = mark->debug_describe();
+        string desc = mark->debug_describe();
         if (desc.empty())
             desc = "?";
         marker = " (" + desc + ")";
     }
-    const std::string traveldest = _stair_destination_description(where);
-    std::string height_desc;
+    const string traveldest = _stair_destination_description(where);
+    string height_desc;
     if (env.heightmap.get())
         height_desc = make_stringf(" (height: %d)", (*env.heightmap)(where));
     const dungeon_feature_type feat = grd(where);
 
-    std::string vault;
+    string vault;
     const int map_index = env.level_map_ids(where);
     if (map_index != INVALID_MAP_INDEX)
     {
@@ -3937,7 +3885,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
 #endif
         if (crawl_state.game_is_hints() && hints_monster_interesting(mon))
         {
-            std::string msg;
+            string msg;
 #ifdef USE_TILE_LOCAL
             msg = "(<w>Right-click</w> for more information.)";
 #else
@@ -3958,7 +3906,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
     bool cloud_described = _print_cloud_desc(where);
     bool item_described = _print_item_desc(where);
 
-    std::string feature_desc = feature_description(where, true);
+    string feature_desc = feature_description_at(where, true);
     const bool bloody = is_bloodcovered(where);
     if (crawl_state.game_is_hints() && hints_pos_interesting(where.x, where.y))
     {
@@ -4029,7 +3977,7 @@ command_type targetting_behaviour::get_command(int key)
 
     command_type cmd = key_to_command(key, KMC_TARGETTING);
     if (cmd >= CMD_MIN_TARGET && cmd < CMD_TARGET_CYCLE_TARGET_MODE)
-        return (cmd);
+        return cmd;
 
 #ifndef USE_TILE_LOCAL
     // Overrides the movement keys while mlist_targetting is active.
@@ -4041,12 +3989,12 @@ command_type targetting_behaviour::get_command(int key)
     if (cmd == CMD_TARGET_SELECT && key == ' ' && just_looking)
         cmd = CMD_TARGET_CANCEL;
 
-    return (cmd);
+    return cmd;
 }
 
-std::vector<std::string> targetting_behaviour::get_monster_desc(const monster_info& mi)
+vector<string> targetting_behaviour::get_monster_desc(const monster_info& mi)
 {
-    std::vector<std::string> descs;
+    vector<string> descs;
     if (get_desc_func)
         _append_container(descs, (*get_desc_func)(mi));
     return descs;

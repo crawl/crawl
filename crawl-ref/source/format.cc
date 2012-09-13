@@ -17,7 +17,7 @@ formatted_string::formatted_string(int init_colour)
         textcolor(init_colour);
 }
 
-formatted_string::formatted_string(const std::string &s, int init_colour)
+formatted_string::formatted_string(const string &s, int init_colour)
     : ops()
 {
     if (init_colour)
@@ -25,13 +25,13 @@ formatted_string::formatted_string(const std::string &s, int init_colour)
     cprintf(s);
 }
 
-int formatted_string::get_colour(const std::string &tag)
+int formatted_string::get_colour(const string &tag)
 {
     if (tag == "h")
-        return (YELLOW);
+        return YELLOW;
 
     if (tag == "w")
-        return (WHITE);
+        return WHITE;
 
     const int colour = str_to_colour(tag);
     return (colour != -1? colour : LIGHTGREY);
@@ -41,15 +41,15 @@ int formatted_string::get_colour(const std::string &tag)
 // This is important if the text is not supposed
 // to clobber existing text to the right of the lines being displayed
 // (some of the tutorial messages need this).
-void display_tagged_block(const std::string &s)
+void display_tagged_block(const string &s)
 {
-    std::vector<formatted_string> lines;
+    vector<formatted_string> lines;
     formatted_string::parse_string_to_multiple(s, lines);
 
     int x = wherex();
     int y = wherey();
     const unsigned int max_y = cgetsize(GOTO_CRT).y;
-    const int size = std::min<unsigned int>(lines.size(), max_y - y + 1);
+    const int size = min<unsigned int>(lines.size(), max_y - y + 1);
     for (int i = 0; i < size; ++i)
     {
         cgotoxy(x, y);
@@ -58,14 +58,13 @@ void display_tagged_block(const std::string &s)
     }
 }
 
-formatted_string formatted_string::parse_string(
-        const std::string &s,
-        bool  eot_ends_format,
-        bool (*process)(const std::string &tag),
-        int main_colour)
+formatted_string formatted_string::parse_string(const string &s,
+                                                bool eot_ends_format,
+                                                bool (*process)(const string &tag),
+                                                int main_colour)
 {
     // main_colour will usually be LIGHTGREY (default).
-    std::vector<int> colour_stack;
+    vector<int> colour_stack;
     colour_stack.push_back(main_colour);
 
     formatted_string fs;
@@ -81,14 +80,13 @@ formatted_string formatted_string::parse_string(
 
 // Parses a formatted string in much the same way as parse_string, but
 // handles \n by creating a new formatted_string.
-void formatted_string::parse_string_to_multiple(
-    const std::string &s,
-    std::vector<formatted_string> &out)
+void formatted_string::parse_string_to_multiple(const string &s,
+                                                vector<formatted_string> &out)
 {
-    std::vector<int> colour_stack;
+    vector<int> colour_stack;
     colour_stack.push_back(LIGHTGREY);
 
-    std::vector<std::string> lines = split_string("\n", s, false, true);
+    vector<string> lines = split_string("\n", s, false, true);
 
     for (int i = 0, size = lines.size(); i < size; ++i)
     {
@@ -102,31 +100,29 @@ void formatted_string::parse_string_to_multiple(
 }
 
 // Helper for the other parse_ methods.
-void formatted_string::parse_string1(
-        const std::string &s,
-        formatted_string &fs,
-        std::vector<int> &colour_stack,
-        bool (*process)(const std::string &tag))
+void formatted_string::parse_string1(const string &s, formatted_string &fs,
+                                     vector<int> &colour_stack,
+                                     bool (*process)(const string &tag))
 {
     // FIXME: This is a lame mess, just good enough for the task on hand
     // (keyboard help).
-    std::string::size_type tag    = std::string::npos;
-    std::string::size_type length = s.length();
+    string::size_type tag    = string::npos;
+    string::size_type length = s.length();
 
-    std::string currs;
+    string currs;
     bool masked = false;
 
     for (tag = 0; tag < length; ++tag)
     {
         bool revert_colour = false;
-        std::string::size_type endpos = std::string::npos;
+        string::size_type endpos = string::npos;
 
         // Break string up if it gets too big.
         if (currs.size() >= 999)
         {
             // Break the string at the end of a line, if possible, so
             // that none of the broken string ends up overwritten.
-            std::string::size_type bound = currs.rfind("\n", 999);
+            string::size_type bound = currs.rfind("\n", 999);
             if (bound != endpos)
                 bound++;
             else
@@ -159,14 +155,14 @@ void formatted_string::parse_string1(
 
         endpos = s.find('>', tag + 1);
         // No closing >?
-        if (endpos == std::string::npos)
+        if (endpos == string::npos)
         {
             if (!masked)
                 currs += s[tag];
             continue;
         }
 
-        std::string tagtext = s.substr(tag + 1, endpos - tag - 1);
+        string tagtext = s.substr(tag + 1, endpos - tag - 1);
         if (tagtext.empty() || tagtext == "/")
         {
             if (!masked)
@@ -218,34 +214,34 @@ void formatted_string::parse_string1(
         fs.cprintf(currs);
 }
 
-formatted_string::operator std::string() const
+formatted_string::operator string() const
 {
-    std::string s;
+    string s;
     for (unsigned i = 0, size = ops.size(); i < size; ++i)
     {
         if (ops[i] == FSOP_TEXT)
             s += ops[i].text;
     }
-    return (s);
+    return s;
 }
 
-static void _replace_all_in_string(std::string& s, const std::string& search,
-                                   const std::string& replace)
+static void _replace_all_in_string(string& s, const string& search,
+                                   const string& replace)
 {
-    std::string::size_type pos = 0;
-    while ((pos = s.find(search, pos)) != std::string::npos)
+    string::size_type pos = 0;
+    while ((pos = s.find(search, pos)) != string::npos)
     {
         s.replace(pos, search.size(), replace);
         pos += replace.size();
     }
 }
 
-std::string formatted_string::html_dump() const
+string formatted_string::html_dump() const
 {
-    std::string s;
+    string s;
     for (unsigned i = 0; i < ops.size(); ++i)
     {
-        std::string tmp;
+        string tmp;
         switch (ops[i].type)
         {
         case FSOP_TEXT:
@@ -270,14 +266,14 @@ std::string formatted_string::html_dump() const
 
 bool formatted_string::operator < (const formatted_string &other) const
 {
-    return std::string(*this) < std::string(other);
+    return string(*this) < string(other);
 }
 
 const formatted_string &
 formatted_string::operator += (const formatted_string &other)
 {
     ops.insert(ops.end(), other.ops.begin(), other.ops.end());
-    return (*this);
+    return *this;
 }
 
 int formatted_string::width() const
@@ -287,10 +283,10 @@ int formatted_string::width() const
     for (unsigned i = 0, size = ops.size(); i < size; ++i)
         if (ops[i] == FSOP_TEXT)
             len += strwidth(ops[i].text);
-    return (len);
+    return len;
 }
 
-inline void cap(int &i, int max)
+static inline void cap(int &i, int max)
 {
     if (i < 0 && -i <= max)
         i += max;
@@ -319,9 +315,9 @@ char &formatted_string::operator [] (size_t idx)
 }
 
 
-std::string formatted_string::tostring(int s, int e) const
+string formatted_string::tostring(int s, int e) const
 {
-    std::string st;
+    string st;
 
     int size = ops.size();
     cap(s, size);
@@ -335,9 +331,9 @@ std::string formatted_string::tostring(int s, int e) const
     return st;
 }
 
-std::string formatted_string::to_colour_string() const
+string formatted_string::to_colour_string() const
 {
-    std::string st;
+    string st;
     const int size = ops.size();
     for (int i = 0; i < size; ++i)
     {
@@ -350,7 +346,7 @@ std::string formatted_string::to_colour_string() const
             while (true)
             {
                 const size_t left_angle = st.find('<', start);
-                if (left_angle == std::string::npos)
+                if (left_angle == string::npos)
                     break;
 
                 st.insert(left_angle, "<");
@@ -387,9 +383,9 @@ int formatted_string::find_last_colour() const
     {
         for (int i = ops.size() - 1; i >= 0; --i)
             if (ops[i].type == FSOP_COLOUR)
-                return (ops[i].x);
+                return ops[i].x;
     }
-    return (LIGHTGREY);
+    return LIGHTGREY;
 }
 
 formatted_string formatted_string::chop(int length) const
@@ -401,7 +397,7 @@ formatted_string formatted_string::chop(int length) const
         if (op.type == FSOP_TEXT)
         {
             result.ops.push_back(op);
-            std::string& new_string = result.ops[result.ops.size()-1].text;
+            string& new_string = result.ops[result.ops.size()-1].text;
             int w = strwidth(new_string);
             if (w > length)
                 new_string = chop_string(new_string, length, false);
@@ -458,7 +454,7 @@ void formatted_string::clear()
 
 bool formatted_string::empty()
 {
-    return (ops.empty());
+    return ops.empty();
 }
 
 void formatted_string::cprintf(const char *s, ...)
@@ -469,7 +465,7 @@ void formatted_string::cprintf(const char *s, ...)
     va_end(args);
 }
 
-void formatted_string::cprintf(const std::string &s)
+void formatted_string::cprintf(const string &s)
 {
     ops.push_back(s);
 }
@@ -518,13 +514,13 @@ void formatted_string::filter_lang()
 
 int count_linebreaks(const formatted_string& fs)
 {
-    std::string::size_type where = 0;
-    const std::string s = fs;
+    string::size_type where = 0;
+    const string s = fs;
     int count = 0;
     while (1)
     {
         where = s.find("\n", where);
-        if (where == std::string::npos)
+        if (where == string::npos)
             break;
         else
         {
@@ -535,12 +531,12 @@ int count_linebreaks(const formatted_string& fs)
     return count;
 }
 
-static int _tagged_string_printable_length(const std::string& s)
+static int _tagged_string_printable_length(const string& s)
 {
     int len = 0;
     bool in_tag = false;
     int last_taglen = 0;
-    for (std::string::const_iterator ci = s.begin(); ci != s.end(); ++ci)
+    for (string::const_iterator ci = s.begin(); ci != s.end(); ++ci)
     {
         if (in_tag)
         {
@@ -562,12 +558,12 @@ static int _tagged_string_printable_length(const std::string& s)
         else                     // normal, printable character
             ++len;
     }
-    return (len);
+    return len;
 }
 
 
 // Count the length of the tags in the string.
-int tagged_string_tag_length(const std::string& s)
+int tagged_string_tag_length(const string& s)
 {
     return s.size() - _tagged_string_printable_length(s);
 }

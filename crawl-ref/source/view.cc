@@ -70,7 +70,7 @@
 
 crawl_view_geometry crawl_view;
 
-bool handle_seen_interrupt(monster* mons, std::vector<std::string>* msgs_buf)
+bool handle_seen_interrupt(monster* mons, vector<string>* msgs_buf)
 {
     activity_interrupt_data aid(mons);
     if (mons->seen_context)
@@ -131,6 +131,11 @@ void seen_monsters_react()
            )
         {
             behaviour_event(*mi, ME_ALERT, &you, you.pos(), false);
+
+            // That might have caused a pacified monster to leave the level.
+            if (!(*mi)->alive())
+                continue;
+
             handle_monster_shouts(*mi);
         }
 
@@ -158,14 +163,14 @@ void seen_monsters_react()
     }
 }
 
-static std::string _desc_mons_type_map(std::map<monster_type, int> types)
+static string _desc_mons_type_map(map<monster_type, int> types)
 {
-    std::string message;
+    string message;
     unsigned int count = 1;
-    for (std::map<monster_type, int>::iterator it = types.begin();
+    for (map<monster_type, int>::iterator it = types.begin();
          it != types.end(); ++it)
     {
-        std::string name;
+        string name;
         description_level_type desc;
         if (it->second == 1)
             desc = DESC_A;
@@ -198,12 +203,12 @@ static std::string _desc_mons_type_map(std::map<monster_type, int> types)
  * @param types monster types and the number of monster for each type.
  * @param genera monster genera and the number of monster for each genus.
  */
-static void _genus_factoring(std::map<monster_type, int> &types,
-                             std::map<monster_type, int> &genera)
+static void _genus_factoring(map<monster_type, int> &types,
+                             map<monster_type, int> &genera)
 {
     monster_type genus = MONS_NO_MONSTER;
     int num = 0;
-    std::map<monster_type, int>::iterator it;
+    map<monster_type, int>::iterator it;
     // Find the most represented genus.
     for (it = genera.begin(); it != genera.end(); ++it)
         if (it->second > num)
@@ -245,8 +250,8 @@ void update_monsters_in_view()
 {
     const unsigned int max_msgs = 4;
     int num_hostile = 0;
-    std::vector<std::string> msgs;
-    std::vector<monster*> monsters;
+    vector<string> msgs;
+    vector<monster*> monsters;
 
     for (monster_iterator mi; mi; ++mi)
     {
@@ -284,8 +289,8 @@ void update_monsters_in_view()
     if (!msgs.empty())
     {
         unsigned int size = monsters.size();
-        std::map<monster_type, int> types;
-        std::map<monster_type, int> genera; // This is the plural for genus!
+        map<monster_type, int> types;
+        map<monster_type, int> genera; // This is the plural for genus!
         for (unsigned int i = 0; i < size; ++i)
         {
             monster_type type;
@@ -308,7 +313,7 @@ void update_monsters_in_view()
         }
 
         bool warning = false;
-        std::string warning_msg = "Ashenzari warns you:";
+        string warning_msg = "Ashenzari warns you:";
         warning_msg += " ";
         for (unsigned int i = 0; i < size; ++i)
         {
@@ -323,7 +328,7 @@ void update_monsters_in_view()
             else
                 warning = true;
 
-            std::string monname;
+            string monname;
             if (size == 1)
                 monname = mon->pronoun(PRONOUN_SUBJECTIVE);
             else if (mon->type == MONS_DANCING_WEAPON)
@@ -398,53 +403,6 @@ static const FixedArray<uint8_t, GXM, GYM>& _tile_difficulties(bool random)
     return cache;
 }
 
-static std::auto_ptr<FixedArray<bool, GXM, GYM> > _tile_detectability()
-{
-    std::auto_ptr<FixedArray<bool, GXM, GYM> > map(new FixedArray<bool, GXM, GYM>);
-
-    std::vector<coord_def> flood_from;
-
-    for (int x = X_BOUND_1; x <= X_BOUND_2; ++x)
-        for (int y = Y_BOUND_1; y <= Y_BOUND_2; ++y)
-        {
-            (*map)(coord_def(x,y)) = false;
-
-            if (feat_is_stair(grd[x][y]))
-                flood_from.push_back(coord_def(x, y));
-        }
-
-    flood_from.push_back(you.pos());
-
-    while (!flood_from.empty())
-    {
-        coord_def p = flood_from.back();
-        flood_from.pop_back();
-
-        if (!in_bounds(p))
-            continue;
-
-        if ((*map)(p))
-            continue;
-
-        (*map)(p) = true;
-
-        if (grd(p) == DNGN_SECRET_DOOR)
-        {
-            reveal_secret_door(p);
-            continue;
-        }
-
-        if (grd(p) < DNGN_MINSEE && !feat_is_closed_door(grd(p)))
-            continue;
-
-        for (int dy = -1; dy <= 1; ++dy)
-            for (int dx = -1; dx <= 1; ++dx)
-                flood_from.push_back(p + coord_def(dx,dy));
-    }
-
-    return map;
-}
-
 // Returns true if it succeeded.
 bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
                    bool force, bool deterministic,
@@ -458,7 +416,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
         if (!suppress_msg)
             canned_msg(MSG_DISORIENTED);
 
-        return (false);
+        return false;
     }
 
     const bool wizard_map = (you.wizard && map_radius == 1000);
@@ -477,11 +435,6 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
     const FixedArray<uint8_t, GXM, GYM>& difficulty =
         _tile_difficulties(!deterministic);
 
-    std::auto_ptr<FixedArray<bool, GXM, GYM> > detectable;
-
-    if (!deterministic)
-        detectable = _tile_detectability();
-
     for (radius_iterator ri(pos, map_radius, C_ROUND);
          ri; ++ri)
     {
@@ -489,7 +442,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
         {
             int threshold = proportion;
 
-            const int dist = distance(you.pos(), *ri);
+            const int dist = distance2(you.pos(), *ri);
 
             if (dist > very_far)
                 threshold = threshold / 3;
@@ -504,9 +457,6 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
             env.map_knowledge(*ri).clear();
 
         if (!wizard_map && (env.map_knowledge(*ri).seen() || env.map_knowledge(*ri).mapped()))
-            continue;
-
-        if (!wizard_map && !deterministic && !((*detectable)(*ri)))
             continue;
 
         const dungeon_feature_type feat = grd(*ri);
@@ -571,11 +521,13 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
         else
             canned_msg(MSG_DISORIENTED);
 
-        std::vector<std::string> sensed;
+        vector<string> sensed;
 
         if (num_altars > 0)
+        {
             sensed.push_back(make_stringf("%d altar%s", num_altars,
                                           num_altars > 1 ? "s" : ""));
+        }
 
         if (num_shops_portals > 0)
         {
@@ -588,7 +540,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
             mpr_comma_separated_list("You sensed ", sensed);
     }
 
-    return (did_map);
+    return did_map;
 }
 
 void fully_map_level()
@@ -614,7 +566,7 @@ void fully_map_level()
 bool mons_near(const monster* mons)
 {
     if (crawl_state.game_is_arena() || crawl_state.arena_suspended)
-        return (true);
+        return true;
     return (you.see_cell(mons->pos()));
 }
 
@@ -622,13 +574,13 @@ bool mon_enemies_around(const monster* mons)
 {
     // If the monster has a foe, return true.
     if (mons->foe != MHITNOT && mons->foe != MHITYOU)
-        return (true);
+        return true;
 
     if (crawl_state.game_is_arena())
     {
         // If the arena-mode code in _handle_behaviour() hasn't set a foe then
         // we don't have one.
-        return (false);
+        return false;
     }
     else if (mons->wont_attack())
     {
@@ -639,20 +591,20 @@ bool mon_enemies_around(const monster* mons)
     else
     {
         // For hostile monster* you* are the main enemy.
-        return (mons_near(mons));
+        return mons_near(mons);
     }
 }
 
 // Returns a string containing a representation of the map.  Leading and
 // trailing spaces are trimmed from each line.  Leading and trailing empty
 // lines are also snipped.
-std::string screenshot()
+string screenshot()
 {
-    std::vector<std::string> lines(crawl_view.viewsz.y);
+    vector<string> lines(crawl_view.viewsz.y);
     unsigned int lsp = GXM;
     for (int y = 0; y < crawl_view.viewsz.y; y++)
     {
-        std::string line;
+        string line;
         for (int x = 0; x < crawl_view.viewsz.x; x++)
         {
             // in grid coords
@@ -686,23 +638,23 @@ std::string screenshot()
     while (!lines.empty() && lines.back().empty())
         lines.pop_back();       // then from the bottom
 
-    std::ostringstream ss;
+    ostringstream ss;
     unsigned int y = 0;
     for (y = 0; y < lines.size() && lines[y].empty(); y++)
         ;                       // ... and from the top
     for (; y < lines.size(); y++)
         ss << lines[y] << "\n";
-    return (ss.str());
+    return ss.str();
 }
 
 int viewmap_flash_colour()
 {
     if (you.attribute[ATTR_SHADOWS])
-        return (DARKGREY);
+        return LIGHTGREY;
     else if (you.berserk())
-        return (RED);
+        return RED;
 
-    return (BLACK);
+    return BLACK;
 }
 
 // Updates one square of the view area. Should only be called for square
@@ -725,8 +677,7 @@ void view_update_at(const coord_def &pos)
     monster_type mons = env.map_knowledge(pos).monster();
     int cell_colour =
         flash_colour &&
-        (mons == MONS_NO_MONSTER || mons_class_is_firewood(mons) ||
-         !you.berserk())
+        (mons == MONS_NO_MONSTER || mons_class_is_firewood(mons))
             ? real_colour(flash_colour)
             : g.col;
 
@@ -741,6 +692,10 @@ void view_update_at(const coord_def &pos)
     // Force colour back to normal, else clrscr() will flood screen
     // with this colour on DOS.
     textcolor(LIGHTGREY);
+
+#endif
+#ifdef USE_TILE_WEB
+    tiles.mark_for_redraw(pos);
 #endif
 }
 
@@ -771,9 +726,9 @@ bool view_update()
     if (you.num_turns > you.last_view_update)
     {
         viewwindow();
-        return (true);
+        return true;
     }
-    return (false);
+    return false;
 }
 
 void flash_view(colour_t colour, targetter *where)
@@ -901,12 +856,12 @@ static int player_view_update_at(const coord_def &gc)
     env.tile_bk_bg(gc) = env.tile_bg(ep);
 #endif
 
-    return (ret);
+    return ret;
 }
 
 static void player_view_update()
 {
-    std::vector<coord_def> update_excludes;
+    vector<coord_def> update_excludes;
     bool need_update = false;
     for (radius_iterator ri(you.get_los()); ri; ++ri)
     {
@@ -1130,23 +1085,19 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
     // Alter colour if flashing the characters vision.
     if (flash_colour)
     {
-        if (you.see_cell(gc))
-        {
+        if (!you.see_cell(gc))
+            cell->colour = DARKGREY;
 #ifdef USE_TILE_LOCAL
+        else
             cell->colour = real_colour(flash_colour);
 #else
-            monster_type mons = env.map_knowledge(gc).monster();
-            if (mons == MONS_NO_MONSTER || mons_class_is_firewood(mons) ||
-                !you.berserk())
-            {
-                cell->colour = real_colour(flash_colour);
-            }
-#endif
-        }
-        else
+        else if (gc != you.pos())
         {
-            cell->colour = DARKGREY;
+            monster_type mons = env.map_knowledge(gc).monster();
+            if (mons == MONS_NO_MONSTER || mons_class_is_firewood(mons))
+                cell->colour = real_colour(flash_colour);
         }
+#endif
         cell->flash_colour = cell->colour;
     }
     else if (crawl_state.darken_range)

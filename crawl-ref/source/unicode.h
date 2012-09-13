@@ -6,29 +6,33 @@
 #ifndef UNICODE_H
 #define UNICODE_H
 
+
 int wctoutf8(char *d, ucs_t s);
 int utf8towc(ucs_t *d, const char *s);
 #ifdef TARGET_OS_WINDOWS
-std::wstring utf8_to_16(const char *s);
-std::string utf16_to_8(const wchar_t *s);
+typedef wchar_t utf16_t;
+wstring utf8_to_16(const char *s);
+string utf16_to_8(const wchar_t *s);
 
-static inline std::wstring utf8_to_16(const std::string &s)
+static inline wstring utf8_to_16(const string &s)
 {
     return utf8_to_16(s.c_str());
 }
-static inline std::string utf16_to_8(const std::wstring &s)
+static inline string utf16_to_8(const wstring &s)
 {
     return utf16_to_8(s.c_str());
 }
+#else
+typedef uint16_t utf16_t;
 #endif
-std::string utf8_to_mb(const char *s);
-std::string mb_to_utf8(const char *s);
+string utf8_to_mb(const char *s);
+string mb_to_utf8(const char *s);
 
-static inline std::string utf8_to_mb(const std::string &s)
+static inline string utf8_to_mb(const string &s)
 {
     return utf8_to_mb(s.c_str());
 }
-static inline std::string mb_to_utf8(const std::string &s)
+static inline string mb_to_utf8(const string &s)
 {
     return mb_to_utf8(s.c_str());
 }
@@ -51,7 +55,7 @@ public:
     virtual ~LineInput() {}
     virtual bool eof() = 0;
     virtual bool error() { return false; };
-    virtual std::string get_line() = 0;
+    virtual string get_line() = 0;
 };
 
 class FileLineInput : public LineInput
@@ -73,7 +77,7 @@ public:
     ~FileLineInput();
     bool eof() { return seen_eof || !f; };
     bool error() { return !f; };
-    std::string get_line();
+    string get_line();
 };
 
 // The file is always UTF-8, no BOM.
@@ -87,7 +91,7 @@ public:
     ~UTF8FileLineInput();
     bool eof() { return seen_eof || !f; };
     bool error() { return !f; };
-    std::string get_line();
+    string get_line();
 };
 
 extern unsigned short charset_vt100[128];

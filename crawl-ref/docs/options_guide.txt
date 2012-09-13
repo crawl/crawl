@@ -19,31 +19,28 @@ The contents of this text are:
                 default_manual_training
 2-  File System and Sound.
                 crawl_dir, morgue_dir, save_dir, macro_dir, sound
-3-  Lua files.
-                stash.lua, wield.lua, kills.lua, runrest.lua,
-                gearset.lua, trapwalk.lua, autofight.lua
-4-  Interface.
-4-a     Dropping and Picking up.
+3-  Interface.
+3-a     Dropping and Picking up.
                 autopickup, autopickup_exceptions, default_autopickup,
                 autopickup_no_burden, pickup_thrown, chunks_autopickup,
                 assign_item_slot, drop_mode, pickup_mode, drop_filter,
                 default_friendly_pickup
-4-b     Targetting.
+3-b     Targetting.
                 default_target, target_unshifted_dirs, darken_beyond_range
-4-c     Passive Sightings (detected and remembered entities).
+3-c     Passive Sightings (detected and remembered entities).
                 detected_monster_colour, detected_item_colour,
                 remembered_monster_colour, clean_map
-4-d     Branding (Item and Monster Highlighting).
+3-d     Branding (Item and Monster Highlighting).
                 friend_brand, neutral_brand, stab_brand, may_stab_brand,
                 heap_brand, feature_item_brand, trap_item_brand
-4-e     Level Map Functions.
+3-e     Level Map Functions.
                 level_map_cursor_step, level_map_title, show_waypoints
-4-f     Viewport Display Options.
+3-f     Viewport Display Options.
                 view_max_width, view_max_height, view_lock_x,
                 view_lock_y, view_lock, center_on_scroll,
                 symmetric_scroll, scroll_margin_x, scroll_margin_y,
                 scroll_margin
-4-g     Travel and Exploration.
+3-g     Travel and Exploration.
                 travel_delay, explore_delay, travel_avoid_terrain,
                 explore_greedy, explore_stop, explore_stop_pickup_ignore,
                 explore_wall_bias, explore_improved, travel_key_stop,
@@ -52,9 +49,9 @@ The contents of this text are:
                 runrest_ignore_message, runrest_stop_message,
                 runrest_ignore_poison, runrest_ignore_monster,
                 trapwalk_safe_hp, rest_wait_both, auto_exclude
-4-h     Floor items.
+3-h     Floor items.
                 annotate_item_class, annotate_item_dropped
-4-i     Command Enhancements.
+3-i     Command Enhancements.
                 auto_list, auto_switch, easy_open, easy_unequip,
                 equip_unequip, easy_confirm, allow_self_target,
                 confirm_butcher, prefer_safe_chunks, easy_eat_chunks,
@@ -62,7 +59,7 @@ The contents of this text are:
                 prompt_for_swap, easy_quit_item_prompts,
                 easy_exit_menu, sort_menus, spell_slot, autofight_stop,
                 autofight_throw
-4-j     Message and Display Improvements.
+3-j     Message and Display Improvements.
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
                 status_caption_colour, enemy_hp_colour, clear_messages,
                 show_more, small_more, show_inventory_weights,
@@ -73,63 +70,68 @@ The contents of this text are:
                 mlist_allow_alternate_layout, mlist_targetting,
                 menu_colour, menu_colour_prefix_class, menu_colour_shops,
                 message_colour, force_more_message,
-                msg_condense_repeats, msg_condense_short
-4-k     Missiles.
+                msg_condense_repeats, msg_condense_short, show_travel_trail
+3-k     Missiles.
                 fire_items_start, fire_order
-4-l     Message Channels.
+3-l     Message Channels.
                 plain, prompt, god, pray, duration, danger, food, warning,
                 recovery, talk, talk_visual, intrinsic_gain, mutation,
                 monster_spell, monster_enchant, friend_spell, friend_enchant,
                 monster_damage, rotten_meat, equipment, floor, multiturn,
                 examine, examine_filter, diagnostics, error, tutorial
-4-m     Inscriptions.
+3-m     Inscriptions.
                 autoinscribe, autoinscribe_artefacts, autoinscribe_cursed
-4-n     Macro related Options.
+3-n     Macro related Options.
                 flush.failure, flush.command, flush.message,
                 additional_macro_file, bindkey
-4-o     Tiles Options.
+3-o     Tiles Options.
                 tile_show_items, tile_skip_title, tile_menu_icons,
                 tile_player_col, tile_monster_col, tile_neutral_col,
                 tile_peaceful_col, tile_friendly_col, tile_plant_col,
-                tile_item_col, tile_unseen_col, tile_floor_col, tile_wall_col,
-                tile_mapped_wall_col, tile_door_col, tile_downstairs_col,
-                tile_upstairs_col, tile_feature_col, tile_trap_col,
-                tile_water_col, tile_lava_col, tile_excluded_col,
-                tile_excl_centre_col, tile_update_rate, tile_runrest_rate,
-                tile_key_repeat_delay, tile_tooltip_ms, tile_tag_pref,
-                tile_full_screen, tile_window_width, tile_window_height,
-                tile_map_pixels, tile_force_overlay, tile_font_crt_file,
-                tile_font_stat_file, tile_font_msg_file, tile_font_tip_file,
-                tile_font_lbl_file, tile_font_crt_size, tile_font_stat_size,
-                tile_font_msg_size, tile_font_tip_size, tile_font_lbl_size,
+                tile_item_col, tile_unseen_col, tile_floor_col,
+                tile_wall_col, tile_mapped_wall_col, tile_door_col,
+                tile_downstairs_col, tile_upstairs_col,
+                tile_feature_col, tile_trap_col, tile_water_col,
+                tile_lava_col, tile_excluded_col,
+                tile_excl_centre_col, tile_update_rate,
+                tile_runrest_rate, tile_key_repeat_delay,
+                tile_tooltip_ms, tile_tag_pref, tile_full_screen,
+                tile_window_width, tile_window_height,
+                tile_map_pixels, tile_cell_pixels, tile_force_overlay,
+                tile_font_crt_file, tile_font_stat_file,
+                tile_font_msg_file, tile_font_tip_file,
+                tile_font_lbl_file, tile_font_crt_size,
+                tile_font_stat_size, tile_font_msg_size,
+                tile_font_tip_size, tile_font_lbl_size,
                 tile_font_ft_light, tile_show_minihealthbar,
                 tile_show_minimagicbar, tile_show_demon_tier,
                 tile_layout_priority, tile_force_regenerate_levels
-5-  Character Dump.
-5-a     Items and Kills.
-                kill_map, dump_kill_places, dump_item_origins,
-                dump_item_origin_price, dump_message_count, dump_order,
-                dump_book_spells
-5-b     Notes.
+4-  Character Dump.
+4-a     Items and Kills.
+                kill_map, dump_kill_places, dump_kill_breakdowns,
+                dump_item_origins, dump_item_origin_price, dump_message_count,
+                dump_order, dump_book_spells
+4-b     Notes.
                 user_note_prefix, note_items, note_monsters,
                 ood_interesting, note_hp_percent, note_skill_levels,
                 note_all_skill_levels, note_skill_max, note_xom_effects,
-                note_messages
-6-  Miscellaneous.
-6-a     All OS.
+                note_messages, note_chat_messages
+5-  Miscellaneous.
+5-a     All OS.
                 mouse_input, wiz_mode, char_set, classic_item_colours,
                 colour, cset, feature, mon_glyph, use_fake_player_cursor,
                 show_player_species
 
-6-b     DOS and Windows.
+5-b     DOS and Windows.
                 dos_use_background_intensity
-6-c     Unix.
+5-c     Unix.
                 background_colour, use_fake_cursor
 
-7-  Inline Lua.
-7-a     Executing lua.
-7-b     Conditional options.
-7-c     Conditional option caveats.
+6-  Lua.
+6-a     Including lua files.
+6-b     Executing inline lua.
+6-c     Conditional options.
+6-d     Conditional option caveats.
 
 ------------------------------------------------------------------------
 
@@ -335,80 +337,10 @@ sound = <regex>:<path to sound file>
         in the newsgroup rec.games.roguelike.misc.
 
 
-3-  Lua files.
+3-  Interface.
 ==============
 
-Lua files are scripts which can provide existing commands with a new
-meaning or create new commands (to be used in macros). To use Lua
-files, Crawl needs to be compiled with support for user Lua scripts.
-You can if your Crawl has Lua support by hitting ?V in-game. The list
-of features Crawl displays should include "Lua user scripts".
-
-Lua files are included using the lua_file option (one file per line):
-
-lua_file = <path/name.lua>
-
-The available stock Lua scripts are
-  stash.lua     -- annotates the stash file for better searching
-                   (Ctrl-F). Searching for 'Long blades' will also turn
-                   up all weapons with the long blade skill. Similarly,
-                   you can use 'altar','portal' etc. Also, you can look
-                   for spellbooks ('book'), artefacts ('artefact'), and
-                   ego items ('ego').
-  wield.lua     -- shows more intelligent options when using 'w?'
-  kills.lua     -- improves the Vanquished Creatures list in dump files;
-                   currently gives three lists (Vanquished, Friendly,
-                   Others).
-  runrest.lua   -- allows overriding certain stop conditions when
-                   running.
-                   New options: runrest_ignore_poison, runrest_stop_message
-                   runrest_ignore_message, runrest_ignore_monster
-  gearset.lua   -- provides commands for switching of complete sets via
-                   macro.
-                   New macroable functions: rememberkit, swapkit
-  trapwalk.lua  -- allows travel to cross certain traps if you have
-                   enough HP.
-  autofight.lua -- provides a command for moving to and attacking the
-                   nearest monster. Attempts to move towards or attack the
-                   closest hostile monster. If there are several monsters of
-                   equal distance, e.g. adjacent, prefers those that are
-                   sleeping or paralyzed, then those that are most injured,
-                   then those of a higher danger level. "Safe" but hostile
-                   monsters such as ballistomycetes and withdrawn agate snails
-                   will be targeted when there are no other targets. Will use
-                   reaching weapons and launchers, if equipped.
-                   Stops if HP <= (autofight_stop)% * MHP, where
-                   autofight_stop = 30 by default but can be set by the player.
-                   Never moves if hit_adjacent is used instead of hit_closest.
-                   hit_closest Will use thrown weapons only if autofight_throw
-                   is true (off by default), hit_adjacent will do so if
-                   either autofight_throw or autofight_throw_nomove is true
-                   (and it is enabled by default).
-                   Tab is automatically bound to hit_closest and shift-tab to
-                   hit_adjacent.
-                   Requires non-rebound vi keys.
-                   New macroable functions: hit_closest, hit_adjacent
-                   New options: autofight_stop, autofight_throw,
-                   autofight_throw_nomove
-
-
-The above mentioned Lua functions can be macroed in-game by setting the
-macro action to "===", followed by the function name.
-
-Also see section 7 on inline Lua fragments.
-
-The wizard-mode Lua interpreter (&^T) will, the first time it's invoked,
-load all of the files that are specified with the terp_file option:
-
-terp_file = <path/name.lua>
-
-The Lua in these files will have access to all of the Crawl Lua internals
-(that is, will be run in the context of dlua, not clua).
-
-4-  Interface.
-==============
-
-4-a     Picking up and Dropping.
+3-a     Picking up and Dropping.
 --------------------------------
 
 autopickup = $?!+"/%
@@ -463,7 +395,7 @@ autopickup_exceptions = <pickup-regex, >don't-pickup-regex, ...
              autopickup_exceptions = immolation, curse (armour|weapon),
              autopickup_exceptions = uselessness, noise, torment
 
-        Note that if pickup.lua has been sourced, you won't need to set
+        Unless you clear the list of exceptions, you won't need to set
         autopickup exceptions for potions except maybe for very special
         cases.
 
@@ -576,7 +508,7 @@ default_friendly_pickup = (friend | player | none | all)
         Also, friendly jellies won't ever eat any items, regardless of
         this option.
 
-4-b     Targetting.
+3-b     Targetting.
 -------------------
 
 default_target = true
@@ -609,7 +541,7 @@ darken_beyond_range = true
         flash if there are no visible monsters within range, both for
         ASCII and the Tiles version.
 
-4-c     Passive Sightings (detected or remembered entities).
+3-c     Passive Sightings (detected or remembered entities).
 -----------------------------------------------------------
 
 detected_monster_colour = lightred
@@ -628,7 +560,7 @@ clean_map = false
         all the time.
         Setting this to true can be disconcerting for summoners.
 
-4-d     Branding (Item and monster highlighting).
+3-d     Branding (Item and monster highlighting).
 -------------------------------------------------
 
 Branding refers to displaying particular monsters (e.g. summons) or
@@ -647,7 +579,7 @@ depends on OS and terminal):
    highlight:colour -- set background colour of branded monsters to
                        "colour"
 The last can be abbreviated to hi:colour.
-See part Technical (6-) for dos_use_background_intensity under Windows
+See part Technical (5-) for dos_use_background_intensity under Windows
 and DOS.
 
 By default, only two of the item brands are active (and set to reverse):
@@ -692,7 +624,7 @@ trap_item_brand = reverse
         use this brand, the items on the square are hidden by the trap
         symbol (^) and the trap symbol is branded.
 
-4-e     Level Map Functions.
+3-e     Level Map Functions.
 ----------------------------
 
 level_map_cursor_step = 7
@@ -707,7 +639,7 @@ show_waypoints = true
         Whether to display a number on the level map to indicate
         waypoints (placed with the Ctrl-W command).
 
-4-f     Viewport Display Options
+3-f     Viewport Display Options
 --------------------------------
 
 The viewport is the portion of the map that is displayed during normal
@@ -783,7 +715,7 @@ scroll_margin = 2
         An aliased option that sets both scroll_margin_x and
         scroll_margin_y.
 
-4-g     Travel and Exploration.
+3-g     Travel and Exploration.
 -------------------------------
 
 travel_delay = 20
@@ -814,8 +746,9 @@ explore_greedy = true
         disabled if you're temporarily unable to pick up items
         (from uncontrolled levitation, for instance).
 
-explore_stop  = items,stairs,shops,altars,portals,branches
+explore_stop  = items,stairs,shops,altars,portals,branches,runed_doors
 explore_stop += greedy_pickup_smart,greedy_visited_item_stack
+explore_stop += greedy_sacrificeable
         Explore will stop for one of these conditions. Whatever you
         set this option to, anything that stops travel will also stop
         explore. Multiple explore_stop lines are cumulative if you use
@@ -862,12 +795,22 @@ explore_stop += greedy_pickup_smart,greedy_visited_item_stack
             previously unknown to the player, even if the stack contains
             nothing eligible for autopickup.
 
+        greedy_sacrificeable: Visit and stop at stacks containing items which
+            can be sacrificied to your god.
+
         glowing_items: like items, but only for items which are
             glowing/runed/embroidered/etc.
 
         artefacts: like items, but only for artefacts.
 
         runes: like items, but only for runes.
+
+sacrifice_before_explore = false
+        When set to true, if you are standing on items which can be sacricied
+        when you start auto-explore, they will be automatically sacrificied.
+        It can also be set to "prompt", in which case you will have a
+        confirmation prompt before the items are sacrificed.
+        This option has no effect when explore_stop hasn't greedy_sacrificeable.
 
 explore_stop_pickup_ignore = <regex list>
         If explore_stop has greedy_pickup or greedy_pickup_smart set,
@@ -894,6 +837,10 @@ explore_improved = false
         sometimes increasing the turns taken by up to 5%, with
         pathological cases causing a 13% increase.
 
+auto_sacrifice = false
+       If set to true, elligible items will be automatically sacrificed during
+       auto-explore.
+
 travel_key_stop = true
         If set to true then travel will stop at any keypress.
 
@@ -919,7 +866,7 @@ runrest_stop_message = <list of regexes>
         Use these to force messages to interrupt travel and resting, or
         not. These are matched against full message text. To limit a
         substring match to a message channel, prefix the substring with
-        the channel name and a colon (see section 4-l below on Message
+        the channel name and a colon (see section 3-l below on Message
         Channels). For instance, if you want travel to stop when you're
         hit by divine retribution, you could use:
              runrest_stop_message = god:wrath finds you
@@ -941,20 +888,15 @@ runrest_stop_message = <list of regexes>
         explore_stop stops for.
 
 runrest_ignore_poison = <poison damage>:<minimum hp>
-        This only works if runrest.lua has already been sourced in
-        init.txt. Poison damage of x will be ignored if you have at
-        least y hp if you've defined a runrest_ignore_poison = x:y
-        option. Running here means shift-running and resting only. Only
-        one runrest_ignore_poison line is considered. Note that for
-        this work, you should also tell Crawl to ignore the
-        "You feel sick" messages. For example,
+        Poison damage of x will be ignored if you have at least y hp if
+        you've defined a runrest_ignore_poison = x:y option. Running here
+        means shift-running and resting only. Only one runrest_ignore_poison
+        line is considered. Note that for this work, you should also tell
+        Crawl to ignore the "You feel sick" messages. For example,
              runrest_ignore_message = You feel.*sick
              runrest_ignore_poison = 4:100
 
 runrest_ignore_monster = <string>:<distance>
-        This only works if runrest.lua has already been sourced in
-        init.txt.
-
         Any monster containing the string will only interrupt your
         activity if the distance between you and the monster is
         less than the specified number. E.g. with
@@ -964,15 +906,14 @@ runrest_ignore_monster = <string>:<distance>
         distance is at least 3.
 
 trapwalk_safe_hp = <trap_name>:<minimum_hp>, ...
-        This only works if trapwalk.lua has already been sourced in
-        init.txt. Any square containing one of the listed trap types
-        will be considered safe for travel if your hp is greater than or
+        Any square containing one of the listed trap types will be
+        considered safe for travel if your hp is greater than or
         equal to the number connected to the trap in question.
 
         All the existing trap types can be used, but in practice only
-        the mechanical traps (dart, bolt, arrow, needle, spear, axe,
-        blade) make sense. Note that travel tries to avoid traps if this
-        is easily possible. Defaults to none. For example,
+        the mechanical traps (dart, bolt, arrow, needle, spear, blade)
+        make sense. Note that travel tries to avoid traps if this is
+        easily possible. Defaults to none. For example,
               trapwalk_safe_hp = dart:15, needle:25, spear:50
 
 rest_wait_both = false
@@ -988,23 +929,20 @@ auto_exclude = <list of monster names>
         monster dies or wakes up while you are in sight, this exclusion
         is automatically removed again.
 
-4-h     Floor items.
+3-h     Floor items.
 ----------------
 
 You can search for items all around the dungeon with Ctrl-F. It accepts not
 only the real name but can also take certain "annotations":
 
 annotate_item_class = false
-        This only works if stash.lua has already been sourced in
-        init.txt. Automatically annotates items with their object class,
-        e.g. weapon or wand, for floor item searching.
+        Automatically annotates items with their object class, e.g. weapon
+        or wand, for floor item searching.
 
 annotate_item_dropped = false
-        This only works if stash.lua has already been sourced in
-        init.txt. Annotates dropped items with {dropped} for floor
-        searching.
+        Annotates dropped items with {dropped} for floor searching.
 
-4-i     Command Enhancements.
+3-i     Command Enhancements.
 -----------------------------
 
 auto_list = true
@@ -1050,8 +988,7 @@ allow_self_target = (yes | no | prompt)
         you cannot target yourself with such spells. When set to
         'prompt' (the default), you will be required to confirm
         self-targetting. This option has no effect on area-effect
-        spells, such as Mephitic Cloud or Evaporate, where you
-        are always a valid target.
+        spells, such as Mephitic Cloud, where you are always a valid target.
 
 confirm_butcher = (always | never | auto)
         If auto (default) you will be prompted for which corpses to butcher if
@@ -1264,16 +1201,22 @@ spell_slot = <regex>:<list of spell letters>
             spell_slot = .*:ABCDEFGHIJKLMNOPQRSTUVWXYZ
 
 autofight_stop = 30
-        This only works if autofight.lua has already been sourced in
-        init.txt.
-
         Autofight will not act if your HP is at or lower than this
         percentage of your max HP. For example, to remove this stop
         you would want:
             autofight_stop = 0
 
+autofight_throw = false
+        If your quiver contains a throwable item, autofight will throw it
+        at enemies out of melee range. Without this option, only a wielded
+        launcher (a bow, crossbow, sling or blowgun) will be considered.
 
-4-j     Messages and Display Enhancements.
+autofight_throw_nomove = true
+        This works same as above, except that only for ===hit_adjacent
+        rather than ===hit_closest; this is usually bound to shift-Tab.
+
+
+3-j     Messages and Display Enhancements.
 ------------------------------------------
 
 hp_warning = 10
@@ -1339,15 +1282,21 @@ show_newturn_mark = true
         When set to false, this option disable the underscore (_) displayed in
         front of the first line of a turn.
 
-show_gold_turns = false
-        If set to true, this option adds an extra line to the stat area
-        to display the current gold and turn counters. In Tiles, this option is
-        ignored. Use the tile_layout_priority option instead.
+show_gold_turns = true
+        If set to false, this option hides the extra line in the stat area
+        which displays the current gold and turn counters. In Tiles, this
+        option is ignored. Use the tile_layout_priority option instead.
 
-show_game_turns = false
-        If set to true, the turn counter in the stat area will display game
-        turns instead of player turns. A second number is displayed in
-        parenthesis, showing the duration of the last action.
+show_game_turns = true
+        By default, the turn counter in the stat area display game turns, which
+        means absolute turns of constant duration. Most actions take one turn,
+        but some are quicker (putting a ring, wielding a weapon, ...) and
+        others are slower (ending a transformation, changing armour,...). The
+        duration of the last action is displayed in parenthesis, after the turn
+        count.
+        When set to false, the turn counter will display player turns instead,
+        which is the number of actions done, regardless of their duration. It
+        is this turn count which is used for scoring.
 
 item_stack_summary_minimum = 5
         If you step over a stack with this number or more of items in
@@ -1518,7 +1467,7 @@ force_more_message = <list of regexes>
         Any message that contains a regex specified here, will enforce a
         -More- prompt, so it can be used to highlight really important
         events.
-        The syntax is identical to that of runrest_ignore_message (4-g).
+        The syntax is identical to that of runrest_ignore_message (3-g).
 
 msg_condense_repeats = true
         If the same message is repeated multiple times during the same
@@ -1532,6 +1481,12 @@ msg_condense_short = true
         If set, short messages on the same channel don't all start a new
         line.
 
+show_travel_trail = true
+        When set to true, the path taken during autoexplore or travel
+        will be highlighted. If a travel trail is currently being displayed,
+        the Clear Map command (Ctrl-C) clears the trail instead of the map
+        (pressing it a second time then clears the map as usual).
+
 show_no_ctele = true
         If set, -cTele will be displayed in the status light area when
         teleport control is not possible.
@@ -1542,7 +1497,7 @@ skill_focus = true
         and disabled. Setting the option to "toggle" adds a toggle to the skill
         screen to change the behaviour in-game.
 
-4-k     Missiles.
+3-k     Missiles.
 -----------------
 
 fire_items_start = a
@@ -1572,9 +1527,9 @@ fire_order += inscribed
         the "Inscriptions" section of Crawl's manual for more information
         about inscriptions.
 
-(See also pickup_thrown in 4-a.)
+(See also pickup_thrown in 3-a.)
 
-4-l     Message Channels.
+3-l     Message Channels.
 -------------------------
 
 Crawl communicates to the players with its message window. Every message
@@ -1623,13 +1578,13 @@ The channel options are
                (won't do anything silly like "mute" if plain == mute,
                though)
    off       = same as plain
-COLOUR can be any of the colours described in section 6-a (colours
+COLOUR can be any of the colours described in section 5-a (colours
 option).
 
 The only multi-colour channels currently are monster_damage and god. All
 other channels are defaulted to on.
 
-4-m     Inscriptions.
+3-m     Inscriptions.
 ---------------------
 
 See the "Inscriptions" section of the crawl manual for more information
@@ -1637,21 +1592,17 @@ about inscriptions.
 
 autoinscribe = <regex>:<inscription>
         Any item whose description contains the regex will be
-        automatically inscribed (if autopickup is toggled on). For
-        example, marking all royal jellies and honeycombs eases the Hive
-        (if food is not in the autopickup option):
-             autoinscribe = royal jell:=g
-             autoinscribe = honeycomb:=g
+        automatically inscribed (if autopickup is toggled on).
 
-        Another use of autoinscription is making sure that you don't
-        lose charges of important wands accidentally, as in
+        For example, it can be used to avoid accidentally using charges of
+        important wands, as in
              autoinscribe = wand of heal wounds:!V
 
         The menu colour prefixes (evil_item etc.) can also be used here.
         For example:
-             autoinscribe = bad_item.*potion:!q
-        will protect Transmuters against accidentally drinking their
-        distilled potions.
+             autoinscribe = (bad|dangerous)_item.*scroll:!r
+        will prevent accidentally reading any identified bad or
+        potentially dangerous scrolls.
 
 autoinscribe_artefacts = true
         Automatically inscribes identified artefacts with their properties.
@@ -1660,7 +1611,7 @@ autoinscribe_cursed = true
         Automatically inscribes items with "was cursed" when using a scroll of
         remove curse.
 
-4-n     Macro related Options.
+3-n     Macro related Options.
 ------------------------------
 
 flush.failure = true
@@ -1692,13 +1643,13 @@ bindkey = [^D] CMD_BUTCHER
         bind the same command to different keys.
         For a full list of possible commands, see keybind.txt.
 
-4-o     Tiles Options.
+3-o     Tiles Options.
 ----------------------
 In non-tile games the tile options are ignored.
 
 tile_show_items = <glyphs>
         This option controls the order of items in the tiles
-        inventory. By default, its value is "!?/%=([)x}+\".
+        inventory. By default, its value is: !?/%=([)X}:|\
         Items with glyphs not in the list will be shown last.
 
 tile_skip_title = false
@@ -1804,6 +1755,13 @@ tile_map_pixels = 3
         downside is that traveling by clicking on the minimap becomes much
         harder.
 
+tile_cell_pixels = 32
+        The width and height of tiles in the dungeon view. If you want
+        to see the tiles in all their glory and have a large
+        resolution, set this to 48 or even 64; but note that tiles
+        will be automatically scaled down to fit the visible area on
+        the screen.
+
 tile_force_overlay = false
         Setting this option to true will force the message window to appear as
         an overlay on top of the screen. If you use this option, making your
@@ -1863,16 +1821,16 @@ tile_layout_priority = minimap, inventory, gold_turn, command, spell, monster
         be added to the list too, but are not by default.
 
 tile_force_regenerate_levels = false
-
         If set to true, this will cause the tiles information of existing
         levels to be regenerated when loading the level, thus repairing
-        save files where this information has become corrupted.
+        save files where this information has become corrupted. This
+        shouldn't be ever needed anymore.
 
 
-5-  Character Dump.
+4-  Character Dump.
 ===================
 
-5-a     Items and Kills.
+4-a     Items and Kills.
 ------------------------
 
 The character dump or morgue files end with a list of all monsters that
@@ -1937,16 +1895,16 @@ dump_order += monlist,kills
         which happens when you die, quit or win (or in ordinary dumps
         while in wizard mode).
 
-        Also, "spell_usage" will count spells you have used, in total and
-        per every three experience levels. The section "action_counts" is
-        similar, but also counts various non-spell actions.
+        Also, "action_counts" will count various actions you have done (such
+        as casting a spell or using a weapon type), in total and per every
+        three experience levels.
 
 dump_book_spells = true
         By default all randart spellbooks in inventory will have all their
         spells listed in the dump. If this option is set to true, spells will
         also be dumped for non-randart spellbooks.
 
-5-b     Notes.
+4-b     Notes.
 --------------
 
 Crawl can automatically log certain events during play. You can read
@@ -1996,9 +1954,9 @@ note_hp_percent = 5
         repetitions of notes based on the same incident.
 
 note_skill_levels = 1,5,13,27
-        This sets which skill levels are noteworthy. You can have
-        multiple note_skill_levels lines. The default is nothing (no
-        notes.)
+        This sets which skill levels are noteworthy. It's a single line,
+        although you can use += as a continuation. The default is levels
+        1, 5, 10, 15, 27.
 
 note_all_skill_levels = false
         This is a shortcut for note_skill_levels = 1,2,..,27. If you set
@@ -2024,11 +1982,16 @@ note_messages = <regex list>
         If you want a note when your draconian scales turn <colour>, use
              note_messages = Your scales start
 
+note_chat_messages = false
+        If set to false, this will disable logging of chat messages
+        from other players. (This setting only applies on the online
+        servers.)
 
-6-  Miscellaneous.
+
+5-  Miscellaneous.
 ==================
 
-6-a     All OS.
+5-a     All OS.
 ---------------
 
 mouse_input = false
@@ -2221,7 +2184,7 @@ show_player_species = false
         you're a Hill Orc, you will be shown as an 'o' rather than '@'. Has
         no effect in Tiles.
 
-6-b     DOS and Windows.
+5-b     DOS and Windows.
 ------------------------
 
 dos_use_background_intensity = false
@@ -2232,7 +2195,7 @@ dos_use_background_intensity = false
         characters (and setting this option to false may be advisable to
         preserve your sanity in such cases).
 
-6-c     Unix.
+5-c     Unix.
 -------------
 
 background_colour = black
@@ -2249,11 +2212,35 @@ use_fake_cursor = true
         On non-Unix builds this option defaults to false.
 
 
-7-  Inline Lua.
-===============
+6-  Lua.
+========
 
-7-a     Executing lua.
-----------------------
+6-a  Including lua files.
+-------------------------
+
+Lua files are scripts which can provide existing commands with a new
+meaning or create new commands (to be used in macros). To use Lua
+files, Crawl needs to be compiled with support for user Lua scripts.
+You can if your Crawl has Lua support by hitting ?V in-game. The list
+of features Crawl displays should include "Lua user scripts".
+
+Lua files are included using the lua_file option (one file per line):
+
+lua_file = <path/name.lua>
+
+Lua functions can be macroed in-game by setting the macro action to "===",
+followed by the function name.
+
+The wizard-mode Lua interpreter (&^T) will, the first time it's invoked,
+load all of the files that are specified with the terp_file option:
+
+terp_file = <path/name.lua>
+
+The Lua in these files will have access to all of the Crawl Lua internals
+(that is, will be run in the context of dlua, not clua).
+
+6-b     Executing inline lua.
+-----------------------------
 
 Lua code can be used directly in your init.txt/.crawlrc. You can
 execute Lua code using the following syntax.
@@ -2286,7 +2273,7 @@ crawl.mpr("Hi there")
 function ch_autopickup(it) [ ... body omitted ... ] end
 }
 
-7-b     Conditional options.
+6-c     Conditional options.
 ----------------------------
 
 You can use Lua to selectively include parts of your init.txt (based
@@ -2318,7 +2305,7 @@ foobar=true", and then do:
 # Do things here
 :end
 
-7-c     Conditional option caveats.
+6-d     Conditional option caveats.
 -----------------------------------
 
 Note that none of the options listed under "Starting Screen" (section 1)

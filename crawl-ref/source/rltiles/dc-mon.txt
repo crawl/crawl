@@ -14,7 +14,7 @@ queen_ant MONS_QUEEN_ANT
 
 ## Batty monsters ('b')
 bat MONS_BAT
-../../player/transform/bat_form MONS_VAMPIRE_BAT
+vampire_bat MONS_VAMPIRE_BAT
 butterfly MONS_BUTTERFLY
 butterfly1
 butterfly2
@@ -128,8 +128,7 @@ fire_crab MONS_FIRE_CRAB
 %rim 1
 
 ## Worms and larvae ('w')
-killer_bee_larva MONS_ANT_LARVA
-killer_bee_larva MONS_KILLER_BEE_LARVA
+ant_larva MONS_ANT_LARVA
 worm MONS_WORM
 swamp_worm MONS_SWAMP_WORM
 spiny_worm MONS_SPINY_WORM
@@ -181,12 +180,15 @@ blink_frog MONS_BLINK_FROG
 spiny_frog MONS_SPINY_FROG
 
 ## Snakes ('S')
+%rim 0
 ball_python MONS_BALL_PYTHON
 adder MONS_ADDER
 black_mamba MONS_BLACK_MAMBA
 water_moccasin MONS_WATER_MOCCASIN
 anaconda MONS_ANACONDA
+%rim 1
 lava_snake MONS_LAVA_SNAKE
+%rim 0
 sea_snake MONS_SEA_SNAKE
 
 ## Bears ('U')
@@ -243,6 +245,7 @@ wretched_star MONS_WRETCHED_STAR
 ### Demonic monsters
 ## Arch demons ('&')
 %sdir mon/unique
+%rim 0
 asmodeus MONS_ASMODEUS
 cerebov MONS_CEREBOV
 dispater MONS_DISPATER
@@ -307,7 +310,6 @@ crimson_imp MONS_CRIMSON_IMP
 quasit MONS_QUASIT
 lemure MONS_LEMURE
 iron_imp MONS_IRON_IMP
-midge MONS_MIDGE
 %rim 0
 shadow_imp MONS_SHADOW_IMP
 mon/unique/grinder MONS_GRINDER
@@ -385,7 +387,17 @@ ice_statue MONS_ICE_STATUE
 silver_statue MONS_SILVER_STATUE
 orange_crystal_statue MONS_ORANGE_STATUE
 wucad_mu_statue MONS_WUCAD_MU_STATUE
+%sdir mon/vault
+spooky_statue MONS_SPOOKY_STATUE
+snail_statue MONS_SNAIL_STATUE
+chilling_statue MONS_CHILLING_STATUE
+air_elementalist_statue MONS_AIR_ELEMENTALIST_STATUE
+earth_elementalist_statue MONS_EARTH_ELEMENTALIST_STATUE
+fire_elementalist_statue MONS_FIRE_ELEMENTALIST_STATUE
+water_elementalist_statue MONS_WATER_ELEMENTALIST_STATUE
+zot_statue MONS_ZOT_STATUE
 
+%sdir mon/statues
 %back statue_base
 overlay_axe MONS_STATUE_AXE
 overlay_bow MONS_STATUE_ARCHER
@@ -469,6 +481,7 @@ terence MONS_TERENCE
 wiglaf MONS_WIGLAF
 
 %sdir mon
+%rim 0
 human MONS_HUMAN
 hell_knight MONS_HELL_KNIGHT
 necromancer MONS_NECROMANCER
@@ -609,6 +622,9 @@ tengu MONS_TENGU
 shedu MONS_SHEDU
 %sdir mon/vault
 tengu_conjurer MONS_TENGU_CONJURER
+%sdir mon/unique
+arachne MONS_ARACHNE
+arachne_staveless MONS_ARACHNE_STAVELESS
 
 ## Various beasts ('I')
 %sdir mon/animals
@@ -662,7 +678,6 @@ mummy MONS_MUMMY
 guardian_mummy MONS_GUARDIAN_MUMMY
 greater_mummy MONS_GREATER_MUMMY
 mummy_priest MONS_MUMMY_PRIEST
-bog_mummy MONS_BOG_MUMMY
 
 ## Nagas ('N')
 %sdir mon/unique
@@ -781,13 +796,23 @@ vault/deep_elf_elementalist MONS_DEEP_ELF_ELEMENTALIST
 
 ## Fungi ('f')
 %sdir mon/fungi_plants
+%rim 0
 toadstool_left MONS_TOADSTOOL
 toadstool_right
-fungus MONS_FUNGUS
+fungus1 MONS_FUNGUS
+fungus2
+fungus3
+fungus4
+fungus5
+fungus6
+fungus7
+fungus8
+fungus9
 ballistomycete MONS_BALLISTOMYCETE_INACTIVE
 active_ballistomycete MONS_BALLISTOMYCETE_ACTIVE
 hyperactive_ballistomycete MONS_HYPERACTIVE_BALLISTOMYCETE
 wandering_mushroom MONS_WANDERING_MUSHROOM
+%rim 1
 
 ## Goblins ('g')
 %sdir mon/unique
@@ -838,6 +863,7 @@ siren_water MONS_SIREN_WATER
 
 ## Rotting monsters ('n')
 %sdir mon/undead
+bog_body MONS_BOG_BODY
 necrophage MONS_NECROPHAGE
 ghoul MONS_GHOUL
 rotting_hulk MONS_ROTTING_HULK
@@ -900,16 +926,21 @@ skeletal_warrior MONS_SKELETAL_WARRIOR
 %rim 0
 flaming_corpse MONS_FLAMING_CORPSE
 %rim 1
-%sdir mon/unique
-murray MONS_MURRAY
 %sdir mon/undead
 curse_skull MONS_CURSE_SKULL
 curse_toe MONS_CURSE_TOE
 flying_skull MONS_FLYING_SKULL
 crawling_corpse MONS_CRAWLING_CORPSE
 macabre_mass MONS_MACABRE_MASS
+%sdir mon/unique
+murray MONS_MURRAY
+%sdir mon/vault
 ## From a special vault (ancient_champions.des)
-mon/vault/ancient_champion MONS_ANCIENT_CHAMPION
+ancient_champion MONS_ANCIENT_CHAMPION
+
+## Sprint specials
+%sdir mon/sprint
+succubus MONS_SUCCUBUS
 
 %include dc-zombie.txt
 

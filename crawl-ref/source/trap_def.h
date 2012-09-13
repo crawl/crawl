@@ -8,7 +8,7 @@ struct trap_def
     int       ammo_qty;
 
     dungeon_feature_type category() const;
-    std::string name(description_level_type desc = DESC_PLAIN) const;
+    string name(description_level_type desc = DESC_PLAIN) const;
     bool is_known(const actor* act = 0) const;
     bool is_safe(actor* act = 0) const;
     void trigger(actor& triggerer, bool flat_footed = false);
@@ -21,6 +21,7 @@ struct trap_def
     bool active() const;
     bool defined() const { return active(); }
     int max_damage(const actor& act);
+    int difficulty();
 
 private:
     void shoot_ammo(actor& act, bool was_known);

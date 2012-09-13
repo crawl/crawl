@@ -8,15 +8,15 @@
 // Or a character choice, with possibly random/viable entries.
 struct newgame_def
 {
-    std::string name;
+    string name;
     game_type type;
-    std::string filename;
+    string filename;
 
     // map name for sprint (or others in the future)
     // XXX: "random" means a random eligible map
-    std::string map;
+    string map;
 
-    std::string arena_teams;
+    string arena_teams;
 
     species_type species;
     job_type job;

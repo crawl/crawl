@@ -31,7 +31,7 @@ will fail to provide its protection until more power is available.
 %%%%
 amulet of inaccuracy
 
-This amulet makes its wearer less accurate in hand combat and when targetting
+This amulet makes its wearer less accurate in melee combat and when targetting
 monsters via ranged attacks or spells.
 %%%%
 amulet of rage
@@ -169,9 +169,6 @@ feel the sheer impact of arcane fury contained within. It is sought after by
 sorcerers, for it allows the gifted and resourceful to command destruction with
 the ease of a twinkle. Feeble wizards, however, may well meet their doom when
 trying to read this opus.
-
-WARNING: If you fail in an attempt to memorise a spell from this book, the book
-will lash out at you.
 %%%%
 book of beasts
 
@@ -371,12 +368,6 @@ archmage and accomplished Warper Golubria two centuries ago. This book can
 still be found in magical libraries all across the world, although sometimes
 not on the same shelf where the librarian left it.
 %%%%
-book of stalking
-
-An instructional guide to the fundamentals of transmutational Stalking. This
-nondescript, unassuming book tends to blend in with the background, and many
-sorcerers don't give it a second glance.
-%%%%
 book of summonings
 
 An advanced treatise on Summoning magics, detailing ways of summoning and
@@ -448,7 +439,7 @@ slain by jealous rivals using their own spells against them.
 bottled efreet
 
 A mighty efreet, captured by some wizard and bound into a bronze flask.
-Breaking the flask's seal will release it to wreak havoc - possibly on you.
+Breaking the flask's seal will release it to wreak havoc — possibly on you.
 %%%%
 bow
 
@@ -500,7 +491,7 @@ An almost tasteless green vegetable, which grows on a vine.
 %%%%
 chunk of flesh
 
-A piece of meat found in the dungeon.
+A piece of raw meat found in the dungeon. It won't stay fresh for long.
 %%%%
 cloak
 
@@ -638,7 +629,7 @@ disc of storms
 
 This extremely powerful item can unleash a destructive storm of electricity.
 Its effectiveness greatly improves in the hands of one skilled in using magical
-devices, but cannot be used by one who is not a conductor.
+devices.
 %%%%
 double sword
 
@@ -732,9 +723,6 @@ abominable runes, describe how the mighty among summoners can bend to their
 will the terrible things from betwixt the planes. Many have been the unwary
 souls, however, who have toyed with this tome and been driven mad by eldritch
 horrors from beyond imagining.
-
-WARNING: If you fail in an attempt to memorise a spell from this book, the book
-will lash out at you.
 %%%%
 grape
 
@@ -867,6 +855,18 @@ movement.
 lemon
 
 A yellow fruit.
+%%%%
+lightning rod
+
+Once, a wizard ignorant of the workings of mundane items misunderstood the
+purpose of lightning rods. Instead of making one that merely drew lightning, he
+made one that created it instead.
+
+This rod shoots continuous lightning: the discharge is sustained, and can be
+redirected to new targets by evoking the rod in subsequent turns (failing to do
+so will release the trigger). The rod takes a moment to warm up, making short
+bursts rather ineffective. Once the zap is active, one can wave the rod,
+creating impressive and damaging arcs of electricity.
 %%%%
 long sword
 
@@ -1118,10 +1118,6 @@ potion of strong poison
 
 A terribly venomous potion.
 %%%%
-potion of water
-
-A unique substance, vital for the existence of most life.
-%%%%
 quad damage
 
 A mysterious item resembling a rune of some kind. Once evoked, it will make the
@@ -1283,10 +1279,6 @@ rod of destruction
 
 This rod contains spells of mayhem and destruction.
 %%%%
-rod of smiting
-
-This rod allows its wielder to smite foes from afar.
-%%%%
 rod of striking
 
 This rod allows its wielder to strike foes from afar with force bolts.
@@ -1408,7 +1400,7 @@ This scroll surrounds the reader with a dense cloud of fog.
 scroll of holy word
 
 This scroll calls on the powers of Heaven to cause great damage to any nearby
-unholy creature - including you!
+unholy creature — including you!
 %%%%
 scroll of identify
 
@@ -1464,7 +1456,7 @@ short delay.
 scroll of torment
 
 This scroll calls on the powers of darkness to inflict great pain on any nearby
-creature - including you! This halves the resilience of all living creatures,
+creature — including you! This halves the resilience of all living creatures,
 although is never directly fatal.
 %%%%
 scroll of vorpalise weapon
@@ -1618,7 +1610,7 @@ staff of poison
 
 This staff increases the power of poisoning spells cast by its wielder, and
 protects him or her from the effects of poison. If the wielder is skilled in
-both evocations and poison magic, they can poison creatures struck by it - even
+both evocations and poison magic, they can poison creatures struck by it — even
 if the victims were normally resistant.
 %%%%
 staff of power
@@ -1693,8 +1685,6 @@ swamp dragon hide
 The slimy{{
     if you.can_smell() then
         return ", smelly"
-    else
-        return ""
     end
 }} skin of a swamp-dwelling dragon. It confers resistance to poison on its
 wearer, and it may be turned into proper armour by magical means.
@@ -1769,7 +1759,7 @@ A magical device which forms tunnels through unworked rock by liquefying it.
 wand of disintegration
 
 A magical device which disrupts the physical structure of anything but the
-hardest walls - even rigid statues, to say nothing of flesh.
+hardest walls — even rigid statues, to say nothing of flesh.
 %%%%
 wand of draining
 

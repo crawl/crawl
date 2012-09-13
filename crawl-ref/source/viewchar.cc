@@ -25,8 +25,9 @@ static const ucs_t dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
         '0', ')', '[', '/', '%', '?', '=', '!', '(',
     //                                §     ♣       ©
         ':', '|', '}', '%', '$', '"', 0xA7, 0x2663, 0xA9,
-        ' ', '!', '#', '%', '+', ')', '*', '+',     // space .. fired_burst
-        '/', '=', '?', 'X', '[', '`', '#'           // fi_stick .. explosion
+    //                                     ÷
+        ' ', '!', '#', '%', '+', ')', '*', 0xF7,       // space .. fired_burst
+        '/', '=', '?', 'X', '[', '`', '#'              // fi_stick .. explosion
     },
     // CSET_ASCII
     {
@@ -47,7 +48,7 @@ static const ucs_t dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
         '0', ')', '[', '/', '%', '?', '=', '!', '(',               // orb .. missile
     //  ∞       \                              ♣       Ω
         0x221e, '\\', '}', '%', '$', '"', '#', 0x2663, 0x3a9,      // book .. teleporter
-        ' ', '!', '#', '%', '+', ')', '*', '+',                    // space .. fired_burst
+        ' ', '!', '#', '%', '+', ')', '*', 0xF7,                   // space .. fired_burst
         '/', '=', '?', 'X', '[', '`', '#'                          // fi_stick .. explosion
     },
 
@@ -80,12 +81,13 @@ static const ucs_t dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
         '0', ')', '[', '/', '%', '?', '=', '!', '(',
     //  ∞                                §     ♣       ©
         0x221E, '|', '}', '%', '$', '"', 0xA7, 0x2663, 0xA9,
-        ' ', '!', '#', '%', '+', ')', '*', '+',        // space .. fired_burst
+    //                                     ÷
+        ' ', '!', '#', '%', '+', ')', '*', 0xF7,       // space .. fired_burst
         '/', '=', '?', 'X', '[', '`', '#'              // fi_stick .. explosion
     },
 };
 
-dungeon_char_type dchar_by_name(const std::string &name)
+dungeon_char_type dchar_by_name(const string &name)
 {
     const char *dchar_names[] =
     {
@@ -104,11 +106,11 @@ dungeon_char_type dchar_by_name(const std::string &name)
     };
     COMPILE_CHECK(ARRAYSZ(dchar_names) == NUM_DCHAR_TYPES);
 
-    for (unsigned i = 0; i < sizeof(dchar_names) / sizeof(*dchar_names); ++i)
+    for (unsigned i = 0; i < ARRAYSZ(dchar_names); ++i)
         if (dchar_names[i] == name)
             return dungeon_char_type(i);
 
-    return (NUM_DCHAR_TYPES);
+    return NUM_DCHAR_TYPES;
 }
 
 void init_char_table(char_set_type set)
@@ -131,10 +133,10 @@ ucs_t dchar_glyph(dungeon_char_type dchar)
     if (dchar >= 0 && dchar < NUM_DCHAR_TYPES)
         return (Options.char_table[dchar]);
     else
-        return (0);
+        return 0;
 }
 
-std::string stringize_glyph(ucs_t glyph)
+string stringize_glyph(ucs_t glyph)
 {
     char buf[5];
     buf[wctoutf8(buf, glyph)] = 0;

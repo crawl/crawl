@@ -28,15 +28,13 @@ void notify_stat_change(const char* cause);
 void jiyva_stat_action();
 
 bool lose_stat(stat_type which_stat, int stat_loss,
-               bool force = false, const std::string cause = "",
+               bool force = false, const string cause = "",
                bool see_source = true);
 bool lose_stat(stat_type which_stat, int stat_loss,
                bool force = false, const char* cause = NULL,
                bool see_source = true);
 bool lose_stat(stat_type which_stat, int stat_loss,
                const monster* cause, bool force = false);
-bool lose_stat(stat_type which_stat, int stat_loss,
-               const item_def &cause, bool removed, bool force = false);
 
 bool restore_stat(stat_type which_stat, int stat_gain,
                   bool suppress_msg, bool recovery = false);

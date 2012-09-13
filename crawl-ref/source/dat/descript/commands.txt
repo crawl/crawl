@@ -160,3 +160,187 @@ CMD_SEARCH verbose
 
 Spend a single turn waiting, resting and searching.
 %%%%
+CMD_DISPLAY_INVENTORY
+
+Display the contents of your inventory
+%%%%
+CMD_DISPLAY_INVENTORY verbose
+
+Display the contents of your inventory.
+%%%%
+CMD_CAST_SPELL
+
+Cast a spell
+%%%%
+CMD_CAST_SPELL verbose
+
+Cast a spell.
+%%%%
+CMD_BUTCHER
+
+Butcher corpse
+%%%%
+CMD_BUTCHER verbose
+
+Butcher a corpse into chunks.
+%%%%
+CMD_MEMORISE_SPELL
+
+Memorise spell
+%%%%
+CMD_MEMORISE_SPELL verbose
+
+Commit a spell to memory, read from a book you are holding or standing on.
+%%%%
+CMD_DROP
+
+Drop items
+%%%%
+CMD_DROP verbose
+
+Drop one or more items that you are currently holding.
+%%%%
+CMD_DISPLAY_MAP
+
+Enter map mode
+%%%%
+CMD_DISPLAY_MAP verbose
+
+Navigate around the previously explored map.
+%%%%
+CMD_MAP_GOTO_TARGET
+
+Travel to cursor
+%%%%
+CMD_MAP_GOTO_TARGET verbose
+
+Start travelling to the cursor's current location.
+%%%%
+CMD_MAP_ADD_WAYPOINT
+
+Add waypoint
+%%%%
+CMD_MAP_ADD_WAYPOINT verbose
+
+Set waypoint to the current position.
+%%%%
+CMD_MAP_EXCLUDE_AREA
+
+Travel exclusion
+%%%%
+CMD_MAP_EXCLUDE_AREA verbose
+
+Create a travel exclusion, change its radius, or remove it.
+%%%%
+CMD_MAP_CLEAR_EXCLUDES
+
+Clear travel exclusions
+%%%%
+CMD_MAP_CLEAR_EXCLUDES verbose
+
+Erase all travel exclusions on the level.
+%%%%
+CMD_MAP_NEXT_LEVEL
+
+Down one level
+%%%%
+CMD_MAP_NEXT_LEVEL verbose
+
+Examine the next deeper level.
+%%%%
+CMD_MAP_PREV_LEVEL
+
+Up one level
+%%%%
+CMD_MAP_PREV_LEVEL verbose
+
+Examine the next higher level.
+%%%%
+CMD_MAP_GOTO_LEVEL
+
+Go to level
+%%%%
+CMD_MAP_GOTO_LEVEL verbose
+
+Go to another level by branch and depth.
+%%%%
+CMD_MAP_FIND_UPSTAIR
+
+Find stairs up
+%%%%
+CMD_MAP_FIND_UPSTAIR verbose
+
+Cycle through stairs up.
+%%%%
+CMD_MAP_FIND_DOWNSTAIR
+
+Find stairs down
+%%%%
+CMD_MAP_FIND_DOWNSTAIR verbose
+
+Cycle through stairs down.
+%%%%
+CMD_MAP_FIND_YOU
+
+Find me
+%%%%
+CMD_MAP_FIND_YOU verbose
+
+Move the map cursor back to your current position.
+%%%%
+CMD_MAP_FIND_PORTAL
+
+Find shops and portals
+%%%%
+CMD_MAP_FIND_PORTAL verbose
+
+Cycle through shops and portals on the current level.
+%%%%
+CMD_MAP_FIND_TRAP
+
+Find traps
+%%%%
+CMD_MAP_FIND_TRAP verbose
+
+Cycle through traps on the current level.
+%%%%
+CMD_MAP_FIND_ALTAR
+
+Find altars
+%%%%
+CMD_MAP_FIND_ALTAR verbose
+
+Cycle through alters on the current level.
+%%%%
+CMD_MAP_FIND_EXCLUDED
+
+Find travel exclusion
+%%%%
+CMD_MAP_FIND_EXCLUDED verbose
+
+Cycle through travel exclusions on the current level.
+%%%%
+CMD_MAP_FIND_F
+
+Find F
+%%%%
+CMD_MAP_FIND_F verbose
+
+Cycle through F
+%%%%
+CMD_MAP_FIND_WAYPOINT
+
+Find waypoint
+%%%%
+CMD_MAP_FIND_WAYPOINT verbose
+
+Cycle through all waypoints on the current level.
+%%%%
+CMD_MAP_FIND_STASH
+
+Find stash
+%%%%
+CMD_MAP_FIND_STASH verbose
+
+Cycle through all stashes on the current level.
+%%%%

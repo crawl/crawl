@@ -6,7 +6,6 @@
 #include <string>
 #include <map>
 #include <vector>
-#include <stack>
 
 #ifdef USE_ZLIB
 #include <zlib.h>
@@ -22,7 +21,7 @@ class chunk_writer
 {
 private:
     package *pkg;
-    std::string name;
+    string name;
     len_t first_block;
     len_t cur_block;
     len_t block_len;
@@ -33,7 +32,7 @@ private:
     void raw_write(const void *data, len_t len);
     void finish_block(len_t next);
 public:
-    chunk_writer(package *parent, const std::string _name);
+    chunk_writer(package *parent, const string _name);
     ~chunk_writer();
     void write(const void *data, len_t len);
     friend class package;
@@ -45,7 +44,7 @@ private:
     chunk_reader(package *parent, len_t start);
     void init(len_t start);
     package *pkg;
-    len_t next_block;
+    len_t first_block, next_block;
     len_t off, block_left;
 #ifdef USE_ZLIB
     bool eof;
@@ -54,10 +53,10 @@ private:
 #endif
     len_t raw_read(void *data, len_t len);
 public:
-    chunk_reader(package *parent, const std::string _name);
+    chunk_reader(package *parent, const string _name);
     ~chunk_reader();
     len_t read(void *data, len_t len);
-    void read_all(std::vector<char> &data);
+    void read_all(vector<char> &data);
     friend class package;
 };
 
@@ -65,38 +64,40 @@ class package
 {
 public:
     package(const char* file, bool writeable, bool empty = false);
+    package();
     ~package();
-    chunk_writer* writer(const std::string name);
-    chunk_reader* reader(const std::string name);
+    chunk_writer* writer(const string name);
+    chunk_reader* reader(const string name);
     void commit();
-    void delete_chunk(const std::string name);
-    bool has_chunk(const std::string name);
-    std::vector<std::string> list_chunks();
+    void delete_chunk(const string name);
+    bool has_chunk(const string name);
+    vector<string> list_chunks();
     void abort();
     void unlink();
 
     // statistics
     len_t get_slack();
     len_t get_size() const { return file_len; };
-    len_t get_chunk_fragmentation(const std::string name);
-    len_t get_chunk_compressed_length(const std::string name);
+    len_t get_chunk_fragmentation(const string name);
+    len_t get_chunk_compressed_length(const string name);
 private:
-    std::string filename;
+    string filename;
     bool rw;
     int fd;
     len_t file_len;
     int n_users;
     bool dirty;
     bool aborted;
-    std::map<std::string, len_t> directory;
-    std::map<len_t, len_t> free_blocks;
-    std::stack<len_t> unlinked_blocks;
-    std::map<len_t, std::pair<len_t, len_t> > block_map;
-    std::set<len_t> new_chunks;
+    map<string, len_t> directory;
+    map<len_t, len_t> free_blocks;
+    vector<len_t> unlinked_blocks;
+    map<len_t, pair<len_t, len_t> > block_map;
+    set<len_t> new_chunks;
+    map<len_t, uint32_t> reader_count;
     len_t extend_block(len_t at, len_t size, len_t by);
     len_t alloc_block(len_t &size);
-    void finish_chunk(const std::string name, len_t at);
-    void free_chunk(const std::string name);
+    void finish_chunk(const string name, len_t at);
+    void free_chunk(const string name);
     len_t write_directory();
     void collect_blocks();
     void free_block_chain(len_t at);

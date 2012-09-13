@@ -26,7 +26,7 @@
 #define KILLS_MINOR_VERSION 1
 
 #ifdef CLUA_BINDINGS
-static void kill_lua_filltable(std::vector<kill_exp> &v);
+static void kill_lua_filltable(vector<kill_exp> &v);
 #endif
 
 ///////////////////////////////////////////////////////////////////////////
@@ -56,16 +56,16 @@ KillMaster::~KillMaster()
 const char *KillMaster::category_name(kill_category kc) const
 {
     if (kc >= KC_YOU && kc < KC_NCATEGORIES)
-        return (kill_category_names[kc]);
-    return (NULL);
+        return kill_category_names[kc];
+    return NULL;
 }
 
 bool KillMaster::empty() const
 {
     for (int i = 0; i < KC_NCATEGORIES; ++i)
         if (!categorized_kills[i].empty())
-            return (false);
-    return (true);
+            return false;
+    return true;
 }
 
 void KillMaster::save(writer& outf) const
@@ -113,19 +113,19 @@ int KillMaster::total_kills() const
         if (categorized_kills[i].empty())
             continue;
 
-        std::vector<kill_exp> kills;
+        vector<kill_exp> kills;
         int count = categorized_kills[i].get_kills(kills);
         grandtotal += count;
     }
-    return (grandtotal);
+    return grandtotal;
 }
 
-std::string KillMaster::kill_info() const
+string KillMaster::kill_info() const
 {
     if (empty())
-        return ("");
+        return "";
 
-    std::string killtext;
+    string killtext;
 
     bool needseparator = false;
     int categories = 0;
@@ -144,7 +144,7 @@ std::string KillMaster::kill_info() const
             continue;
 
         categories++;
-        std::vector<kill_exp> kills;
+        vector<kill_exp> kills;
         int count = catkills[i].get_kills(kills);
         grandtotal += count;
 
@@ -157,7 +157,7 @@ std::string KillMaster::kill_info() const
         needseparator = true;
     }
 
-    std::string grandt;
+    string grandt;
     if (categories > 1)
     {
         char buf[200];
@@ -168,9 +168,11 @@ std::string KillMaster::kill_info() const
     }
 
 #ifdef CLUA_BINDINGS
+    bool custom = false;
     unwind_var<int> lthrottle(clua.throttle_unit_lines, 500000);
     // Call the kill dump Lua function with null a, to tell it we're done.
-    if (!clua.callfn("c_kill_list", "ss", NULL, grandt.c_str()))
+    if (!clua.callfn("c_kill_list", "ss>b", NULL, grandt.c_str(), &custom)
+        || !custom)
 #endif
     {
         // We can sum up ourselves, if Lua doesn't want to.
@@ -185,8 +187,8 @@ std::string KillMaster::kill_info() const
     return killtext;
 }
 
-void KillMaster::add_kill_info(std::string &killtext,
-                               std::vector<kill_exp> &kills,
+void KillMaster::add_kill_info(string &killtext,
+                               vector<kill_exp> &kills,
                                int count,
                                const char *category,
                                bool separator) const
@@ -208,7 +210,8 @@ void KillMaster::add_kill_info(std::string &killtext,
     lua_pushboolean(clua, separator);
 
     unwind_var<int> lthrottle(clua.throttle_unit_lines, 500000);
-    if (!clua.callfn("c_kill_list", 3, 0))
+    if (!clua.callfn("c_kill_list", 3, 1)
+        || !lua_isboolean(clua, -1) || !lua_toboolean(clua, -1))
 #endif
     {
 #ifdef CLUA_BINDINGS
@@ -223,7 +226,7 @@ void KillMaster::add_kill_info(std::string &killtext,
 
         killtext += "Vanquished Creatures";
         if (category)
-            killtext += std::string(" (") + category + ")";
+            killtext += string(" (") + category + ")";
 
         killtext += "\n";
 
@@ -240,6 +243,9 @@ void KillMaster::add_kill_info(std::string &killtext,
             killtext += numbuf;
         }
     }
+#ifdef CLUA_BINDINGS
+    lua_pop(clua, 1);
+#endif
 }
 
 int KillMaster::num_kills(const monster* mon, kill_category cat) const
@@ -314,7 +320,7 @@ void Kills::record_kill(const monster* mon)
         k = kill_def(mon);
 }
 
-int Kills::get_kills(std::vector<kill_exp> &all_kills) const
+int Kills::get_kills(vector<kill_exp> &all_kills) const
 {
     int count = 0;
     kill_map::const_iterator iter = kills.begin();
@@ -331,8 +337,8 @@ int Kills::get_kills(std::vector<kill_exp> &all_kills) const
         all_kills.push_back(kill_exp(*gi));
     count += ghosts.size();
 
-    std::sort(all_kills.begin(), all_kills.end());
-    return (count);
+    sort(all_kills.begin(), all_kills.end());
+    return count;
 }
 
 void Kills::save(writer& outf) const
@@ -436,7 +442,7 @@ static const char *modifier_suffixes[] =
 
 // For a non-unique monster, prefixes a suitable article if we have only one
 // kill, else prefixes a kill count and pluralises the monster name.
-static std::string n_names(const std::string &name, int n)
+static string n_names(const string &name, int n)
 {
     if (n > 1)
     {
@@ -452,7 +458,7 @@ static std::string n_names(const std::string &name, int n)
 // Returns a string describing the number of times a unique has been killed.
 // Currently required only for Boris.
 //
-static std::string kill_times(int kills)
+static string kill_times(int kills)
 {
     char buf[50];
     switch (kills)
@@ -470,7 +476,7 @@ static std::string kill_times(int kills)
         snprintf(buf, sizeof buf, " (%d times)", kills);
         break;
     }
-    return std::string(buf);
+    return string(buf);
 }
 
 void kill_def::merge(const kill_def &k, bool uniq)
@@ -501,9 +507,9 @@ void kill_def::add_place(unsigned short place, bool force)
         places.push_back(place);
 }
 
-std::string kill_def::base_name(const kill_monster_desc &md) const
+string kill_def::base_name(const kill_monster_desc &md) const
 {
-    std::string name;
+    string name;
     if (md.monnum == MONS_PANDEMONIUM_LORD)
         name = "pandemonium lord";
     else
@@ -535,9 +541,9 @@ std::string kill_def::base_name(const kill_monster_desc &md) const
     return name;
 }
 
-std::string kill_def::info(const kill_monster_desc &md) const
+string kill_def::info(const kill_monster_desc &md) const
 {
-    std::string name = base_name(md);
+    string name = base_name(md);
 
     if (!mons_is_unique(md.monnum))
     {
@@ -564,8 +570,8 @@ std::string kill_def::info(const kill_monster_desc &md) const
     return append_places(md, name);
 }
 
-std::string kill_def::append_places(const kill_monster_desc &md,
-                                const std::string &name) const
+string kill_def::append_places(const kill_monster_desc &md,
+                               const string &name) const
 {
     if (Options.dump_kill_places == KDO_NO_PLACES) return name;
 
@@ -573,10 +579,10 @@ std::string kill_def::append_places(const kill_monster_desc &md,
     if (nplaces == 1 || mons_is_unique(md.monnum)
             || Options.dump_kill_places == KDO_ALL_PLACES)
     {
-        std::string augmented = name;
+        string augmented = name;
         augmented += " (";
-        for (std::vector<unsigned short>::const_iterator iter = places.begin();
-                iter != places.end(); ++iter)
+        for (vector<unsigned short>::const_iterator iter = places.begin();
+             iter != places.end(); ++iter)
         {
             if (iter != places.begin())
                 augmented += " ";
@@ -594,8 +600,8 @@ void kill_def::save(writer& outf) const
     marshallShort(outf, exp);
 
     marshallShort(outf, places.size());
-    for (std::vector<unsigned short>::const_iterator iter = places.begin();
-            iter != places.end(); ++iter)
+    for (vector<unsigned short>::const_iterator iter = places.begin();
+         iter != places.end(); ++iter)
     {
         marshallShort(outf, *iter);
     }
@@ -627,11 +633,11 @@ kill_ghost::kill_ghost(const monster* mon)
     }
 }
 
-std::string kill_ghost::info() const
+string kill_ghost::info() const
 {
     return ghost_name
            + (Options.dump_kill_places != KDO_NO_PLACES?
-                " (" + short_place_name(place) + ")" : std::string(""));
+                " (" + short_place_name(place) + ")" : string(""));
 }
 
 void kill_ghost::save(writer& outf) const
@@ -809,7 +815,7 @@ static int kill_lualc_places(lua_State *ls)
 static int kill_lualc_place_name(lua_State *ls)
 {
     int num = luaL_checkint(ls, 1);
-    std::string plname = short_place_name(num);
+    string plname = short_place_name(num);
     lua_pushstring(ls, plname.c_str());
     return 1;
 }
@@ -853,8 +859,10 @@ static int kill_lualc_holiness(lua_State *ls)
         case MH_PLANT:      verdict = "plant"; break;
         }
         if (ke->modifier != kill_monster_desc::M_NORMAL
-                && ke->modifier != kill_monster_desc::M_SHAPESHIFTER)
+            && ke->modifier != kill_monster_desc::M_SHAPESHIFTER)
+        {
             verdict = "undead";
+        }
         lua_pushstring(ls, verdict);
         return 1;
     }
@@ -913,7 +921,7 @@ static int kill_lualc_rawwrite(lua_State *ls)
         return 0;
     }
 
-    std::string *skill = static_cast<std::string *>(lua_touserdata(ls, -1));
+    string *skill = static_cast<string *>(lua_touserdata(ls, -1));
     // Pop the userdata off the stack.
     lua_settop(ls, -2);
 
@@ -943,8 +951,7 @@ static int kill_lualc_write(lua_State *ls)
             return 0;
         }
 
-        std::string *skill = static_cast<std::string *>(
-                                    lua_touserdata(ls, -1));
+        string *skill = static_cast<string *>(lua_touserdata(ls, -1));
         // Pop the userdata off the stack.
         lua_settop(ls, -2);
 
@@ -986,8 +993,10 @@ static int kill_lualc_summary(lua_State *ls)
     char buf[120];
     *buf = 0;
     if (count)
+    {
         snprintf(buf, sizeof buf, "%u creature%s vanquished.",
                 count, count > 1? "s" : "");
+    }
     lua_pushstring(ls, buf);
     return 1;
 }
@@ -1019,7 +1028,7 @@ void cluaopen_kills(lua_State *ls)
 }
 
 #ifdef CLUA_BINDINGS
-static void kill_lua_filltable(std::vector<kill_exp> &v)
+static void kill_lua_filltable(vector<kill_exp> &v)
 {
     lua_State *ls = clua.state();
     lua_newtable(ls);

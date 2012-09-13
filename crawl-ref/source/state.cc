@@ -48,7 +48,7 @@ game_state::game_state()
     reset_cmd_again();
 }
 
-void game_state::add_startup_error(const std::string &err)
+void game_state::add_startup_error(const string &err)
 {
     startup_errors.push_back(err);
 }
@@ -84,7 +84,7 @@ bool game_state::is_repeating_cmd() const
     return (repeat_cmd != CMD_NO_CMD);
 }
 
-void game_state::cancel_cmd_repeat(std::string reason)
+void game_state::cancel_cmd_repeat(string reason)
 {
     if (!is_repeating_cmd())
         return;
@@ -118,7 +118,7 @@ void game_state::cancel_cmd_repeat(std::string reason)
         mpr(reason.c_str());
 }
 
-void game_state::cancel_cmd_again(std::string reason)
+void game_state::cancel_cmd_again(string reason)
 {
     if (!doing_prev_cmd_again)
         return;
@@ -134,13 +134,13 @@ void game_state::cancel_cmd_again(std::string reason)
         mpr(reason.c_str());
 }
 
-void game_state::cancel_cmd_all(std::string reason)
+void game_state::cancel_cmd_all(string reason)
 {
     cancel_cmd_repeat(reason);
     cancel_cmd_again(reason);
 }
 
-void game_state::cant_cmd_repeat(std::string reason)
+void game_state::cant_cmd_repeat(string reason)
 {
     if (reason.empty())
         reason = "Can't repeat that command.";
@@ -148,7 +148,7 @@ void game_state::cant_cmd_repeat(std::string reason)
     cancel_cmd_repeat(reason);
 }
 
-void game_state::cant_cmd_again(std::string reason)
+void game_state::cant_cmd_again(string reason)
 {
     if (reason.empty())
         reason = "Can't redo that command.";
@@ -156,7 +156,7 @@ void game_state::cant_cmd_again(std::string reason)
     cancel_cmd_again(reason);
 }
 
-void game_state::cant_cmd_any(std::string reason)
+void game_state::cant_cmd_any(string reason)
 {
     cant_cmd_repeat(reason);
     cant_cmd_again(reason);
@@ -177,10 +177,10 @@ bool interrupt_cmd_repeat(activity_interrupt_type ai,
                            const activity_interrupt_data &at)
 {
     if (crawl_state.cmd_repeat_start)
-        return (false);
+        return false;
 
     if (crawl_state.repeat_cmd == CMD_WIZARD)
-        return (false);
+        return false;
 
     switch (ai)
     {
@@ -191,7 +191,7 @@ bool interrupt_cmd_repeat(activity_interrupt_type ai,
     case AI_HP_LOSS:
     case AI_MONSTER_ATTACKS:
         crawl_state.cancel_cmd_repeat("Command repetition interrupted.");
-        return (true);
+        return true;
 
     default:
         break;
@@ -201,12 +201,12 @@ bool interrupt_cmd_repeat(activity_interrupt_type ai,
     {
         const monster* mon = static_cast<const monster* >(at.data);
         if (!you.can_see(mon))
-            return (false);
+            return false;
 
         if (crawl_state.cmd_repeat_started_unsafe
             && at.context != SC_NEWLY_SEEN)
         {
-            return (false);
+            return false;
         }
 
         crawl_state.cancel_cmd_repeat();
@@ -217,7 +217,7 @@ bool interrupt_cmd_repeat(activity_interrupt_type ai,
             monster_info mi(mon);
             set_auto_exclude(mon);
 
-            std::string text = get_monster_equipment_desc(mi, DESC_WEAPON);
+            string text = get_monster_equipment_desc(mi, DESC_WEAPON);
             text += " comes into view.";
             mpr(text, MSGCH_WARN);
         }
@@ -235,7 +235,7 @@ bool interrupt_cmd_repeat(activity_interrupt_type ai,
         formatted_mpr(fs, MSGCH_WARN);
 #endif
 
-        return (true);
+        return true;
     }
 
     // If command repetition is being used to imitate the rest command,
@@ -250,11 +250,11 @@ bool interrupt_cmd_repeat(activity_interrupt_type ai,
         else
             crawl_state.cancel_cmd_repeat("Command repetition interrupted.");
 
-        return (true);
+        return true;
     }
 
     if (crawl_state.cmd_repeat_started_unsafe)
-        return (false);
+        return false;
 
     if (ai == AI_HIT_MONSTER)
     {
@@ -266,14 +266,14 @@ bool interrupt_cmd_repeat(activity_interrupt_type ai,
         if (mons_class_flag(mon->type, M_NO_EXP_GAIN)
             && mon->visible_to(&you))
         {
-            return (false);
+            return false;
         }
 
         crawl_state.cancel_cmd_repeat("Command repetition interrupted.");
-        return (true);
+        return true;
     }
 
-    return (false);
+    return false;
 }
 
 void game_state::reset_cmd_repeat()
@@ -322,7 +322,7 @@ bool game_state::is_god_retribution() const
 {
     ASSERT(is_god_acting());
 
-    return (god_act.retribution);
+    return god_act.retribution;
 }
 
 god_type game_state::which_god_acting() const
@@ -388,7 +388,7 @@ void game_state::clear_god_acting()
     god_act.reset();
 }
 
-std::vector<god_act_state> game_state::other_gods_acting() const
+vector<god_act_state> game_state::other_gods_acting() const
 {
     ASSERT(is_god_acting());
     return god_act_stack;
@@ -401,7 +401,7 @@ bool game_state::is_mon_acting() const
 
 monster* game_state::which_mon_acting() const
 {
-    return (mon_act);
+    return mon_act;
 }
 
 void game_state::inc_mon_acting(monster* mon)
@@ -465,7 +465,7 @@ void game_state::dump()
                   "arena_suspended: %d\n",
             seen_hups, map_stat_gen, type, arena_suspended);
     if (last_winch)
-        fprintf(stderr, "Last resize was %"PRId64" seconds ago.\n",
+        fprintf(stderr, "Last resize was %" PRId64" seconds ago.\n",
                 (int64_t)(time(0) - last_winch));
 
     fprintf(stderr, "\n");
@@ -583,12 +583,12 @@ bool game_state::game_is_hints_tutorial() const
     return (game_is_hints() || game_is_tutorial());
 }
 
-std::string game_state::game_type_name() const
+string game_state::game_type_name() const
 {
     return game_type_name_for(type);
 }
 
-std::string game_state::game_type_name_for(game_type _type)
+string game_state::game_type_name_for(game_type _type)
 {
     switch (_type)
     {
@@ -609,13 +609,13 @@ std::string game_state::game_type_name_for(game_type _type)
     }
 }
 
-std::string game_state::game_savedir_path() const
+string game_state::game_savedir_path() const
 {
     return game_is_sprint()? "sprint/" :
            game_is_zotdef()? "zotdef/" : "";
 }
 
-std::string game_state::game_type_qualifier() const
+string game_state::game_type_qualifier() const
 {
     if (crawl_state.game_is_sprint())
         return "-sprint";

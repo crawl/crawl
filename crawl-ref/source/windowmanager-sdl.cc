@@ -16,6 +16,13 @@
 #include "syscalls.h"
 #include "windowmanager.h"
 
+#ifdef __ANDROID__
+#include <android/log.h>
+#include <GLES/gl.h>
+#include <signal.h>
+#include <SDL_mixer.h>
+#endif
+
 WindowManager *wm = NULL;
 
 void WindowManager::create()
@@ -24,12 +31,21 @@ void WindowManager::create()
         return;
 
     wm = new SDLWrapper();
+#ifdef __ANDROID__
+    Mix_Init(MIX_INIT_OGG | MIX_INIT_MP3);
+    Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 4096);
+#endif
 }
 
 void WindowManager::shutdown()
 {
     delete wm;
     wm = NULL;
+#ifdef __ANDROID__
+    Mix_CloseAudio();
+    while(Mix_Init(0))
+        Mix_Quit();
+#endif
 }
 
 static unsigned char _get_modifiers(SDL_keysym &keysym)
@@ -41,18 +57,18 @@ static unsigned char _get_modifiers(SDL_keysym &keysym)
     {
     case SDLK_LSHIFT:
     case SDLK_RSHIFT:
-        return (MOD_SHIFT);
+        return MOD_SHIFT;
         break;
     case SDLK_LCTRL:
     case SDLK_RCTRL:
-        return (MOD_CTRL);
+        return MOD_CTRL;
         break;
     case SDLK_LALT:
     case SDLK_RALT:
-        return (MOD_ALT);
+        return MOD_ALT;
         break;
     default:
-        return (0);
+        return 0;
     }
 }
 
@@ -100,6 +116,16 @@ static int _translate_keysym(SDL_keysym &keysym)
     case SDLK_DELETE:
         return (CK_DELETE + offset);
 
+#ifdef __ANDROID__
+    // i think android's SDL port treats these differently? they certainly
+    // shouldn't be interpreted as unicode characters!
+    case SDLK_LSHIFT:
+    case SDLK_RSHIFT:
+    case SDLK_LALT:
+    case SDLK_RALT:
+    case SDLK_LCTRL:
+    case SDLK_RCTRL:
+#endif
     case SDLK_NUMLOCK:
     case SDLK_CAPSLOCK:
     case SDLK_SCROLLOCK:
@@ -110,7 +136,7 @@ static int _translate_keysym(SDL_keysym &keysym)
     case SDLK_MODE:
     case SDLK_COMPOSE:
         // Don't handle these.
-        return (0);
+        return 0;
 
     case SDLK_F1:
     case SDLK_F2:
@@ -239,13 +265,36 @@ SDLWrapper::~SDLWrapper()
     SDL_Quit();
 }
 
+#ifdef __ANDROID__
+void SDLWrapper::appPutToBackground()
+{
+    SDL_ANDROID_PauseAudioPlayback();
+    raise(SIGHUP);
+}
+
+void SDLWrapper::appPutToForeground()
+{
+    SDL_ANDROID_ResumeAudioPlayback();
+    // re-init
+    wm->swap_buffers();
+}
+#endif
+
 int SDLWrapper::init(coord_def *m_windowsz)
 {
+#ifdef __ANDROID__
+    // set up callbacks for background/foreground events
+    SDL_ANDROID_SetApplicationPutToBackgroundCallback(
+            &SDLWrapper::appPutToBackground, &SDLWrapper::appPutToForeground);
+    // Do SDL initialization
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER) != 0)
+#else
     // Do SDL initialization
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) != 0)
+#endif
     {
         printf("Failed to initialise SDL: %s\n", SDL_GetError());
-        return (false);
+        return false;
     }
 
     video_info = SDL_GetVideoInfo();
@@ -256,22 +305,38 @@ int SDLWrapper::init(coord_def *m_windowsz)
     SDL_EnableUNICODE(true);
 
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    glDebug("SDL_GL_DOUBLEBUFFER");
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 8);
+    glDebug("SDL_GL_DEPTH_SIZE 8");
     SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
+    glDebug("SDL_GL_RED_SIZE 8");
     SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
+    glDebug("SDL_GL_GREEN_SIZE 8");
     SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
+    glDebug("SDL_GL_BLUE_SIZE 8");
     SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
+    glDebug("SDL_GL_ALPHA_SIZE 8");
 
     if (Options.tile_key_repeat_delay > 0)
     {
         const int repdelay    = Options.tile_key_repeat_delay;
         const int interval = SDL_DEFAULT_REPEAT_INTERVAL;
         if (SDL_EnableKeyRepeat(repdelay, interval) != 0)
+#ifdef __ANDROID__
+            __android_log_print(ANDROID_LOG_INFO, "Crawl",
+                                "Failed to set key repeat mode: %s",
+                                SDL_GetError());
+#else
             printf("Failed to set key repeat mode: %s\n", SDL_GetError());
+#endif
     }
 
 #ifdef USE_GLES
+#ifdef __ANDROID__
+    unsigned int flags = SDL_OPENGL | SDL_FULLSCREEN | SDL_INIT_NOPARACHUTE;
+#else
     unsigned int flags = SDL_SWSURFACE;
+#endif
 #else
     unsigned int flags = SDL_OPENGL;
 #endif
@@ -295,8 +360,15 @@ int SDLWrapper::init(coord_def *m_windowsz)
         int y = Options.tile_window_height;
         x = (x > 0) ? x : video_info->current_w + x;
         y = (y > 0) ? y : video_info->current_h + y;
-        m_windowsz->x = std::max(800, x);
-        m_windowsz->y = std::max(480, y);
+#ifdef TOUCH_UI
+        // allow *much* smaller windows than default, primarily for testing
+        // touch_ui features in an x86 build
+        m_windowsz->x = x;
+        m_windowsz->y = y;
+#else
+        m_windowsz->x = max(800, x);
+        m_windowsz->y = max(480, y);
+#endif
 
 #ifdef TARGET_OS_WINDOWS
         set_window_placement(m_windowsz);
@@ -304,33 +376,41 @@ int SDLWrapper::init(coord_def *m_windowsz)
     }
 
     m_context = SDL_SetVideoMode(m_windowsz->x, m_windowsz->y, 0, flags);
+glDebug("SDL_SetVideoMode");
     if (!m_context)
     {
+#ifdef __ANDROID__
+        __android_log_print(ANDROID_LOG_INFO, "Crawl",
+                            "Failed to set video mode: %s", SDL_GetError());
+#endif
         printf("Failed to set video mode: %s\n", SDL_GetError());
-        return (false);
+        return false;
     }
 
-    return (true);
+#ifdef __ANDROID__
+    __android_log_print(ANDROID_LOG_INFO, "Crawl", "Window manager initialised");
+#endif
+    return true;
 }
 
 int SDLWrapper::screen_width() const
 {
-    return (video_info->current_w);
+    return video_info->current_w;
 }
 
 int SDLWrapper::screen_height() const
 {
-    return (video_info->current_h);
+    return video_info->current_h;
 }
 
 int SDLWrapper::desktop_width() const
 {
-    return (_desktop_width);
+    return _desktop_width;
 }
 
 int SDLWrapper::desktop_height() const
 {
-    return (_desktop_height);
+    return _desktop_height;
 }
 
 void SDLWrapper::set_window_title(const char *title)
@@ -343,12 +423,16 @@ bool SDLWrapper::set_window_icon(const char* icon_name)
     SDL_Surface *surf =load_image(datafile_path(icon_name, true, true).c_str());
     if (!surf)
     {
+#ifdef __ANDROID__
+        __android_log_print(ANDROID_LOG_INFO, "Crawl",
+                            "Failed to load icon: %s", SDL_GetError());
+#endif
         printf("Failed to load icon: %s\n", SDL_GetError());
-        return (false);
+        return false;
     }
     SDL_WM_SetIcon(surf, NULL);
     SDL_FreeSurface(surf);
-    return (true);
+    return true;
 }
 
 #ifdef TARGET_OS_WINDOWS
@@ -381,17 +465,17 @@ void SDLWrapper::set_window_placement(coord_def *m_windowsz)
             x += tpos == TASKBAR_LEFT ? overlap : -overlap;
 
         // Keep the window in the screen.
-        x = std::max(x, border);
-        y = std::max(y, title_bar);
+        x = max(x, border);
+        y = max(y, title_bar);
 
         //We resize the window so that it fits in the screen.
-        m_windowsz->x = std::min(m_windowsz->x, wm->desktop_width()
-                                 - (tpos & TASKBAR_V ? tsize : 0)
-                                 - border * 2);
-        m_windowsz->y = std::min(m_windowsz->y, wm->desktop_height()
-                                 - (tpos & TASKBAR_H ? tsize : 0)
-                                 - (tpos & TASKBAR_TOP ? 0 : title_bar)
-                                 - border);
+        m_windowsz->x = min(m_windowsz->x, wm->desktop_width()
+                            - (tpos & TASKBAR_V ? tsize : 0)
+                            - border * 2);
+        m_windowsz->y = min(m_windowsz->y, wm->desktop_height()
+                            - (tpos & TASKBAR_H ? tsize : 0)
+                            - (tpos & TASKBAR_TOP ? 0 : title_bar)
+                            - border);
         sprintf(env_str, "SDL_VIDEO_WINDOW_POS=%d,%d", x, y);
         putenv(env_str);
     }
@@ -410,7 +494,7 @@ void SDLWrapper::resize(coord_def &m_windowsz)
 
 unsigned int SDLWrapper::get_ticks() const
 {
-    return (SDL_GetTicks());
+    return SDL_GetTicks();
 }
 
 key_mod SDLWrapper::get_mod_state() const
@@ -466,7 +550,7 @@ int SDLWrapper::wait_event(wm_event *event)
 {
     SDL_Event sdlevent;
     if (!SDL_WaitEvent(&sdlevent))
-        return (0);
+        return 0;
 
     // translate the SDL_Event into the almost-analogous wm_event
     switch (sdlevent.type)
@@ -487,6 +571,12 @@ int SDLWrapper::wait_event(wm_event *event)
 
         if (!event->key.keysym.unicode && event->key.keysym.sym > 0)
             return 0;
+
+/*
+ * LShift = scancode 0x30; key_mod 0x1; unicode 0x130; sym 0x130 SDLK_LSHIFT
+ * LCtrl  = scancode 0x32; key_mod 0x2; unicode 0x132; sym 0x132 SDLK_LCTRL
+ * LAlt   = scancode 0x34; key_mod 0x4; unicode 0x134; sym 0x134 SDLK_LALT
+ */
         break;
     case SDL_KEYUP:
         event->type = WM_KEYUP;
@@ -495,6 +585,7 @@ int SDLWrapper::wait_event(wm_event *event)
         event->key.keysym.key_mod = _get_modifiers(sdlevent.key.keysym);
         event->key.keysym.unicode = sdlevent.key.keysym.unicode;
         event->key.keysym.sym = _translate_keysym(sdlevent.key.keysym);
+
         break;
     case SDL_MOUSEMOTION:
         event->type = WM_MOUSEMOTION;
@@ -530,7 +621,7 @@ int SDLWrapper::wait_event(wm_event *event)
         break;
     }
 
-    return (1);
+    return 1;
 }
 
 void SDLWrapper::set_timer(unsigned int interval, wm_timer_callback callback)
@@ -542,7 +633,7 @@ int SDLWrapper::raise_custom_event()
 {
     SDL_Event send_event;
     send_event.type = SDL_USEREVENT;
-    return (SDL_PushEvent(&send_event));
+    return SDL_PushEvent(&send_event);
 }
 
 void SDLWrapper::swap_buffers()
@@ -603,7 +694,7 @@ unsigned int SDLWrapper::get_event_count(wm_event_type type)
 
     default:
         // Error
-        return (0);
+        return 0;
     }
 
     SDL_Event store;
@@ -613,7 +704,7 @@ unsigned int SDLWrapper::get_event_count(wm_event_type type)
     int count = SDL_PeepEvents(&store, 1, SDL_PEEKEVENT, eventmask);
     assert(count >= 0);
 
-    return (std::max(count, 0));
+    return max(count, 0);
 }
 
 bool SDLWrapper::load_texture(GenericTexture *tex, const char *filename,
@@ -623,12 +714,12 @@ bool SDLWrapper::load_texture(GenericTexture *tex, const char *filename,
 {
     char acBuffer[512];
 
-    std::string tex_path = datafile_path(filename);
+    string tex_path = datafile_path(filename);
 
     if (tex_path.c_str()[0] == 0)
     {
         fprintf(stderr, "Couldn't find texture '%s'.\n", filename);
-        return (false);
+        return false;
     }
 
     SDL_Surface *img = load_image(tex_path.c_str());
@@ -636,7 +727,7 @@ bool SDLWrapper::load_texture(GenericTexture *tex, const char *filename,
     if (!img)
     {
         fprintf(stderr, "Couldn't load texture '%s'.\n", tex_path.c_str());
-        return (false);
+        return false;
     }
 
     unsigned int bpp = img->format->BytesPerPixel;
@@ -709,7 +800,7 @@ bool SDLWrapper::load_texture(GenericTexture *tex, const char *filename,
                     if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
                         pixel = p[0] << 16 | p[1] << 8 | p[2];
                     else
-                        pixel = p[0] | p[1] << 8 | p[2];
+                        pixel = p[0] | p[1] << 8 | p[2] << 16;
                     SDL_GetRGBA(pixel, img->format, &pixels[dest],
                                 &pixels[dest+1], &pixels[dest+2],
                                 &pixels[dest+3]);
@@ -774,7 +865,7 @@ bool SDLWrapper::load_texture(GenericTexture *tex, const char *filename,
     {
         printf("Warning: unsupported format, bpp = %d for '%s'\n",
                bpp, acBuffer);
-        return (false);
+        return false;
     }
 
     bool success = false;
@@ -790,14 +881,14 @@ bool SDLWrapper::load_texture(GenericTexture *tex, const char *filename,
 
     SDL_FreeSurface(img);
 
-    return (success);
+    return success;
 }
 
 int SDLWrapper::byte_order()
 {
     if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
-        return (WM_BIG_ENDIAN);
-    return (WM_LIL_ENDIAN);
+        return WM_BIG_ENDIAN;
+    return WM_LIL_ENDIAN;
 }
 
 SDL_Surface *SDLWrapper::load_image(const char *file) const
@@ -816,10 +907,18 @@ SDL_Surface *SDLWrapper::load_image(const char *file) const
     }
 
     if (!surf)
-        return (NULL);
+        return NULL;
 
-    return (surf);
+    return surf;
 }
 
+void SDLWrapper::glDebug(const char* msg)
+{
+#ifdef __ANDROID__
+    int e = glGetError();
+    if(e>0)
+       __android_log_print(ANDROID_LOG_INFO, "Crawl", "ERROR %x: %s", e, msg);
+#endif
+}
 #endif // USE_SDL
 #endif // USE_TILE_LOCAL

@@ -45,20 +45,20 @@ extern void world_reacts();
 
 namespace arena
 {
-    void write_error(const std::string &error);
+    void write_error(const string &error);
 
     // A faction is just a big list of monsters. Monsters will be dropped
     // around the appropriate marker.
     struct faction
     {
-        std::string desc;
+        string desc;
         mons_list   members;
         bool        friendly;
         int         active_members;
         bool        won;
 
-        std::vector<int>       respawn_list;
-        std::vector<coord_def> respawn_pos;
+        vector<int>       respawn_list;
+        vector<coord_def> respawn_pos;
 
         faction(bool fr) : members(), friendly(fr), active_members(0),
                            won(false) { }
@@ -81,7 +81,7 @@ namespace arena
         }
     };
 
-    std::string teams;
+    string teams;
 
     int total_trials = 0;
 
@@ -112,16 +112,16 @@ namespace arena
 
     int  summon_throttle     = INT_MAX;
 
-    std::vector<monster_type> uniques_list;
-    std::vector<int> a_spawners;
-    std::vector<int> b_spawners;
+    vector<monster_type> uniques_list;
+    vector<int> a_spawners;
+    vector<int> b_spawners;
     int8_t           to_respawn[MAX_MONSTERS];
 
     int item_drop_times[MAX_ITEMS];
 
     bool banned_glyphs[128];
 
-    std::string arena_type = "";
+    string arena_type = "";
     faction faction_a(true);
     faction faction_b(false);
     coord_def place_a, place_b;
@@ -161,7 +161,7 @@ namespace arena
         if (!Options.arena_list_eq || file == NULL)
             return;
 
-        std::vector<int> items;
+        vector<int> items;
 
         for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
             if (mon->inv[i] != NON_ITEM)
@@ -211,7 +211,7 @@ namespace arena
         }
     }
 
-    void center_print(unsigned sz, std::string text, int number = -1)
+    void center_print(unsigned sz, string text, int number = -1)
     {
         if (number >= 0)
             text = make_stringf("(%d) %s", number, text.c_str());
@@ -220,7 +220,7 @@ namespace arena
         if (len > sz)
             text = chop_string(text, len = sz);
 
-        cprintf("%s%s", std::string((sz - len) / 2, ' ').c_str(), text.c_str());
+        cprintf("%s%s", string((sz - len) / 2, ' ').c_str(), text.c_str());
     }
 
     void setup_level()
@@ -245,12 +245,12 @@ namespace arena
 
         unwind_bool gen(Generating_Level, true);
 
-        typedef unwind_var< std::set<std::string> > unwind_stringset;
+        typedef unwind_var< set<string> > unwind_stringset;
 
         const unwind_stringset mtags(you.uniq_map_tags);
         const unwind_stringset mnames(you.uniq_map_names);
 
-        std::string map_name = "arena_" + arena_type;
+        string map_name = "arena_" + arena_type;
         const map_def *map = random_map_for_tag(map_name.c_str());
 
         if (!map)
@@ -265,8 +265,10 @@ namespace arena
         ASSERT(map);
         bool success = dgn_place_map(map, false, true);
         if (!success)
+        {
             throw make_stringf("Failed to create arena named \"%s\"",
                                arena_type.c_str());
+        }
         link_items();
 
         if (!env.rock_colour)
@@ -281,33 +283,33 @@ namespace arena
         env.markers.activate_all();
     }
 
-    std::string find_monster_spec()
+    string find_monster_spec()
     {
         if (!teams.empty())
-            return (teams);
+            return teams;
         else
-            return ("random v random");
+            return "random v random";
     }
 
-    void parse_faction(faction &fact, std::string spec)
-        throw (std::string)
+    void parse_faction(faction &fact, string spec)
+        throw (string)
     {
         fact.clear();
         fact.desc = spec;
 
-        std::vector<std::string> monsters = split_string(",", spec);
+        vector<string> monsters = split_string(",", spec);
         for (int i = 0, size = monsters.size(); i < size; ++i)
         {
-            const std::string err = fact.members.add_mons(monsters[i], false);
+            const string err = fact.members.add_mons(monsters[i], false);
             if (!err.empty())
                 throw err;
         }
     }
 
     void parse_monster_spec()
-        throw (std::string)
+        throw (string)
     {
-        std::string spec = find_monster_spec();
+        string spec = find_monster_spec();
 
         allow_chain_summons = !strip_tag(spec, "no_chain_summons");
 
@@ -324,8 +326,7 @@ namespace arena
         summon_throttle = strip_number_tag(spec, "summon_throttle:");
 
         if (real_summons && respawn)
-            throw (std::string("Can't set real_summons and respawn at "
-                               "same time."));
+            throw (string("Can't set real_summons and respawn at same time."));
 
         if (summon_throttle <= 0)
             summon_throttle = INT_MAX;
@@ -337,7 +338,9 @@ namespace arena
         const int ntrials = strip_number_tag(spec, "t:");
         if (ntrials != TAG_UNFOUND && ntrials >= 1 && ntrials <= 99
             && !total_trials)
+        {
             total_trials = ntrials;
+        }
 
         arena_type = strip_tag_prefix(spec, "arena:");
 
@@ -348,14 +351,14 @@ namespace arena
         if (arena_delay >= 0 && arena_delay < 2000)
             Options.arena_delay = arena_delay;
 
-        std::string arena_place = strip_tag_prefix(spec, "arena_place:");
+        string arena_place = strip_tag_prefix(spec, "arena_place:");
         if (!arena_place.empty())
         {
             try
             {
                 place = level_id::parse_level_id(arena_place);
             }
-            catch (const std::string &err)
+            catch (const string &err)
             {
                 throw make_stringf("Bad place '%s': %s",
                                    arena_place.c_str(),
@@ -363,26 +366,28 @@ namespace arena
             }
         }
 
-        const std::string glyphs = strip_tag_prefix(spec, "ban_glyphs:");
+        const string glyphs = strip_tag_prefix(spec, "ban_glyphs:");
         for (unsigned int i = 0; i < glyphs.size(); i++)
             if (!(glyphs[i] & !127))
                 banned_glyphs[static_cast<int>(glyphs[i])] = true;
 
-        std::vector<std::string> factions = split_string(" v ", spec);
+        vector<string> factions = split_string(" v ", spec);
 
         if (factions.size() == 1)
             factions = split_string(" vs ", spec);
 
         if (factions.size() != 2)
+        {
             throw make_stringf("Expected arena monster spec \"xxx v yyy\", "
                                "but got \"%s\"", spec.c_str());
+        }
 
         try
         {
             parse_faction(faction_a, factions[0]);
             parse_faction(faction_b, factions[1]);
         }
-        catch (const std::string &err)
+        catch (const string &err)
         {
             throw make_stringf("Bad monster spec \"%s\": %s",
                                spec.c_str(),
@@ -397,7 +402,7 @@ namespace arena
     }
 
     void setup_monsters()
-        throw (std::string)
+        throw (string)
     {
         faction_a.reset();
         faction_b.reset();
@@ -498,7 +503,7 @@ namespace arena
     }
 
     void setup_fight()
-        throw (std::string)
+        throw (string)
     {
         //no_messages mx;
         parse_monster_spec();
@@ -524,12 +529,16 @@ namespace arena
         int orig_b = faction_b.active_members;
 
         if (orig_a < 0)
+        {
             mpr("Book-keeping says faction_a has negative active members.",
                 MSGCH_ERROR);
+        }
 
         if (orig_b < 0)
+        {
             mpr("Book-keeping says faction_b has negative active members.",
                 MSGCH_ERROR);
+        }
 
         faction_a.active_members = 0;
         faction_b.active_members = 0;
@@ -574,7 +583,7 @@ namespace arena
                 faction_a.won = false;
                 faction_b.won = false;
             }
-            return (true);
+            return true;
         }
 
         // Sync up our book-keeping with the actual state, and report
@@ -614,16 +623,16 @@ namespace arena
         if (!Options.arena_dump_msgs || file == NULL)
             return;
 
-        std::vector<std::string> messages;
-        std::vector<msg_channel_type> channels;
+        vector<string> messages;
+        vector<msg_channel_type> channels;
         get_recent_messages(messages, channels);
 
         for (unsigned int i = 0; i < messages.size(); i++)
         {
-            std::string msg  = messages[i];
+            string msg  = messages[i];
             int         chan = channels[i];
 
-            std::string prefix;
+            string prefix;
             switch (chan)
             {
                 case MSGCH_DIAGNOSTICS:
@@ -908,7 +917,7 @@ namespace arena
 
         show_fight_banner(true);
 
-        std::string msg;
+        string msg;
         if (was_tied)
             msg = "Tie";
         else
@@ -926,7 +935,7 @@ namespace arena
         dump_messages();
     }
 
-    void global_setup(const std::string& arena_teams)
+    void global_setup(const string& arena_teams)
     {
         // [ds] Turning off view_lock crashes arena.
         Options.view_lock_x = Options.view_lock_y = true;
@@ -937,7 +946,7 @@ namespace arena
         {
             parse_monster_spec();
         }
-        catch (const std::string &error)
+        catch (const string &error)
         {
             write_error(error);
             game_ended_with_error(error);
@@ -949,7 +958,7 @@ namespace arena
 
         if (file != NULL)
         {
-            std::string spec = find_monster_spec();
+            string spec = find_monster_spec();
             fprintf(file, "%s\n", spec.c_str());
 
             if (Options.arena_dump_msgs || Options.arena_list_eq)
@@ -990,7 +999,7 @@ namespace arena
         }
     }
 
-    void write_error(const std::string &error)
+    void write_error(const string &error)
     {
         if (file != NULL)
         {
@@ -1009,7 +1018,7 @@ namespace arena
             {
                 setup_fight();
             }
-            catch (const std::string &error)
+            catch (const string &error)
             {
                 write_error(error);
                 game_ended_with_error(error);
@@ -1043,7 +1052,7 @@ monster_type arena_pick_random_monster(const level_id &place, int power,
 {
     if (arena::random_uniques)
     {
-        const std::vector<monster_type> &uniques = arena::uniques_list;
+        const vector<monster_type> &uniques = arena::uniques_list;
 
         const monster_type type = uniques[random2(uniques.size())];
         you.unique_creatures[type] = false;
@@ -1052,7 +1061,7 @@ monster_type arena_pick_random_monster(const level_id &place, int power,
     }
 
     if (!arena::cycle_random)
-        return (RANDOM_MONSTER);
+        return RANDOM_MONSTER;
 
     for (int tries = 0; tries <= NUM_MONSTERS; tries++)
     {
@@ -1066,25 +1075,25 @@ monster_type arena_pick_random_monster(const level_id &place, int power,
         if (arena_veto_random_monster(arena::cycle_random_pos))
             continue;
 
-        return (arena::cycle_random_pos);
+        return arena::cycle_random_pos;
     }
 
     game_ended_with_error(
         make_stringf("No random monsters for place '%s'",
                      arena::place.describe().c_str()));
-    return (NUM_MONSTERS);
+    return NUM_MONSTERS;
 }
 
 bool arena_veto_random_monster(monster_type type)
 {
     if (!arena::allow_immobile && mons_class_is_stationary(type))
-        return (true);
+        return true;
     if (!arena::allow_zero_xp && mons_class_flag(type, M_NO_EXP_GAIN))
-        return (true);
+        return true;
     if (!(mons_char(type) & !127) && arena::banned_glyphs[mons_char(type)])
-        return (true);
+        return true;
 
-    return (false);
+    return false;
 }
 
 bool arena_veto_place_monster(const mgen_data &mg, bool first_band_member,
@@ -1098,12 +1107,12 @@ bool arena_veto_place_monster(const mgen_data &mg, bool first_band_member,
         if (mg.behaviour == BEH_FRIENDLY
             && arena::faction_a.active_members > arena::summon_throttle)
         {
-            return (true);
+            return true;
         }
         else if (mg.behaviour == BEH_HOSTILE
                  && arena::faction_b.active_members > arena::summon_throttle)
         {
-            return (true);
+            return true;
         }
 
     }
@@ -1336,7 +1345,7 @@ static bool _sort_by_age(int a, int b)
 // fair to the arena monsters.
 int arena_cull_items()
 {
-    std::vector<int> items;
+    vector<int> items;
 
     int first_avail = NON_ITEM;
 
@@ -1356,9 +1365,9 @@ int arena_cull_items()
     const int cull_target = items.size() / 2;
           int cull_count  = 0;
 
-    std::sort(items.begin(), items.end(), _sort_by_age);
+    sort(items.begin(), items.end(), _sort_by_age);
 
-    std::vector<int> ammo;
+    vector<int> ammo;
 
     for (unsigned int i = 0, end = items.size(); i < end; i++)
     {
@@ -1389,7 +1398,7 @@ int arena_cull_items()
     {
         dprf("On turn #%d culled %d items dropped by monsters, done.",
              arena::turns, cull_count);
-        return (first_avail);
+        return first_avail;
     }
 
     dprf("On turn #%d culled %d items dropped by monsters, culling some more.",
@@ -1409,12 +1418,12 @@ int arena_cull_items()
     {
         dprf("Culled %d (probably) ammo items, done.",
              cull_count - count1);
-        return (first_avail);
+        return first_avail;
     }
 
     dprf("Culled %d items total, short of target %d.",
          cull_count, cull_target);
-    return (first_avail);
+    return first_avail;
 } // arena_cull_items
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1427,7 +1436,7 @@ static void _init_arena()
     initialise_item_descriptions();
 }
 
-NORETURN void run_arena(const std::string& teams)
+NORETURN void run_arena(const string& teams)
 {
     _init_arena();
 

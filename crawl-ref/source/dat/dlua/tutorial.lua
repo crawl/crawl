@@ -29,11 +29,34 @@ function tutorial_get_cmd (command)
 end
 
 function tutorial_intro (msg)
-  crawl.mesclr(true)
-  crawl.mpr(msg, "tutorial")
-  local text = "You can reread all messages at any time with "
-               .. tutorial_get_cmd("CMD_REPLAY_MESSAGES") .. ".\n"
-               .. "Also, press <white>Space</white> to clear the <cyan>--more--</cyan> prompts."
-  crawl.mpr(text, "tutorial")
+  if msg ~= nil then
+    crawl.mesclr(true)
+    crawl.mpr(msg, "tutorial")
+  end
+  crawl.tutorial_msg("tutorial intro")
   crawl.more()
+end
+
+function tutorial_messenger_db(data, triggerable, triggerer, marker, ev)
+
+  crawl.mesclr(true)
+  crawl.tutorial_msg(data.text, data.exit)
+  if data.onetime == true then
+    triggerable:remove(marker)
+  end
+end
+
+function tutorial_msg(text, onetime, exit)
+  -- defaults to false
+  if onetime == nil then
+    onetime = false
+  end
+
+  if exit == nil then
+    exit = false
+  end
+
+  local data = {text=text, onetime=onetime, exit=exit}
+
+  return function_at_spot('tutorial_messenger_db', data, true)
 end

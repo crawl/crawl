@@ -49,21 +49,21 @@ monster* monster_iterator::operator->() const
 monster_iterator& monster_iterator::operator++()
 {
     advance();
-    return (*this);
+    return *this;
 }
 
 monster_iterator monster_iterator::operator++(int)
 {
     monster_iterator copy = *this;
     ++(*this);
-    return (copy);
+    return copy;
 }
 
 bool monster_iterator::valid(int mid) const
 {
     monster* mon = &env.mons[mid];
     if (!mon->alive())
-        return (false);
+        return false;
     switch (restr)
     {
     case R_CIRC:
@@ -71,9 +71,9 @@ bool monster_iterator::valid(int mid) const
     case R_LOS:
         return (los->see_cell(mon->pos()));
     case R_ACT:
-        return (act->can_see(mon));
+        return act->can_see(mon);
     default:
-        return (true);
+        return true;
     }
 }
 

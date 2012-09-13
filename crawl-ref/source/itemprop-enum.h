@@ -128,8 +128,6 @@ enum hands_reqd_type
     HANDS_ONE,
     HANDS_HALF,
     HANDS_TWO,
-
-    HANDS_DOUBLE,       // not a level, marks double ended weapons (== half)
 };
 
 enum helmet_desc_type
@@ -181,11 +179,12 @@ enum jewellery_type
     RING_ICE,
     RING_TELEPORT_CONTROL,
 
-    NUM_RINGS,                         //   keep as last ring; can overlap
-                                       //   safely with first amulet.
+    NUM_RINGS,                         //   keep as last ring; should not overlap
+                                       //   with amulets!
     // RINGS after num_rings are for unique types for artefacts
     //   (no non-artefact version).
     // Currently none.
+
     AMU_RAGE = 35,
     AMU_FIRST_AMULET = AMU_RAGE,
     AMU_CLARITY,
@@ -384,7 +383,6 @@ enum special_ring_type // jewellery mitm[].special values
 
 enum stave_type
 {
-    // staves
     STAFF_WIZARDRY,
     STAFF_POWER,
     STAFF_FIRE,
@@ -398,20 +396,22 @@ enum stave_type
     STAFF_AIR,
     STAFF_EARTH,
     STAFF_CHANNELING,
-    // rods
-    STAFF_FIRST_ROD,
-    STAFF_SMITING = STAFF_FIRST_ROD,
-    STAFF_SPELL_SUMMONING,
-    STAFF_DESTRUCTION_I,
-    STAFF_DESTRUCTION_II,
-    STAFF_DESTRUCTION_III,
-    STAFF_DESTRUCTION_IV,
-    STAFF_WARDING,
-    STAFF_DEMONOLOGY,
-    STAFF_STRIKING,
-    STAFF_VENOM,
     NUM_STAVES,
-    STAFF_RANDOM_ROD // Hack for item generation.
+};
+
+enum rod_type
+{
+    ROD_LIGHTNING,
+    ROD_SUMMONING,
+    ROD_DESTRUCTION_I,
+    ROD_DESTRUCTION_II,
+    ROD_DESTRUCTION_III,
+    ROD_DESTRUCTION_IV,
+    ROD_WARDING,
+    ROD_DEMONOLOGY,
+    ROD_STRIKING,
+    ROD_VENOM,
+    NUM_RODS,
 };
 
 enum weapon_type
@@ -466,7 +466,7 @@ enum weapon_type
     WPN_DEMON_TRIDENT,
     WPN_SCYTHE,
 
-    WPN_STAFF,
+    WPN_STAFF,          // Just used for the weapon stats for magical staves.
     WPN_QUARTERSTAFF,
     WPN_LAJATANG,
 

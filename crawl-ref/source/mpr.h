@@ -72,19 +72,27 @@ enum msg_colour_type
     MSGCOL_NONE,                // parsing failure, etc
 };
 
+enum diag_type
+{
+    DIAG_NORMAL,
+    DIAG_COMBAT,
+    DIAG_BEAM,
+    NUM_DIAGNOSTICS
+};
+
 msg_colour_type msg_colour(int colour);
 
-void mpr(std::string text, msg_channel_type channel=MSGCH_PLAIN, int param=0,
+void mpr(string text, msg_channel_type channel=MSGCH_PLAIN, int param=0,
          bool nojoin=false, bool cap=true);
 
-inline void mprnojoin(std::string text, msg_channel_type channel=MSGCH_PLAIN,
-                      int param=0)
+static inline void mprnojoin(string text, msg_channel_type channel=MSGCH_PLAIN,
+                             int param=0)
 {
     mpr(text, channel, param, true);
 }
 
-inline void mpr_nocap(std::string text, msg_channel_type channel=MSGCH_PLAIN,
-                      int param=0, bool nojoin=false)
+static inline void mpr_nocap(string text, msg_channel_type channel=MSGCH_PLAIN,
+                             int param=0, bool nojoin=false)
 {
     mpr(text, channel, param, nojoin, false);
 }
@@ -98,9 +106,9 @@ void mprf_nocap(msg_channel_type channel, int param, PRINTF(2, ));
 void mprf_nocap(msg_channel_type channel, PRINTF(1, ));
 void mprf_nocap(PRINTF(0, ));
 
-// Yay for C89 and lack of variadic #defines...
 #ifdef DEBUG_DIAGNOSTICS
 void dprf(PRINTF(0, ));
+void dprf(diag_type param, PRINTF(1, ));
 #else
 # define dprf(...) ((void)0)
 #endif

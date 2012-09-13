@@ -18,7 +18,7 @@
 #include "state.h"
 #include "areas.h"
 
-static bool _mermaid_beholder (const monster* mons)
+static bool _mermaid_beholder(const monster* mons)
 {
     return (mons_genus(mons->type) == MONS_MERMAID);
 }
@@ -36,18 +36,14 @@ void player::add_beholder(const monster* mon, bool axe)
                      mon->name(DESC_THE).c_str());
             }
             else
-            {
                 mpr("The melody is strangely muted, and has no effect on you.");
-            }
         }
         else
         {
             if (you.can_see(mon))
                 mprf("%s's is no longer quite as mesmerising!", mon->name(DESC_THE).c_str());
             else
-            {
                 mpr("Your mesmeriser suddenly seems less interesting!");
-            }
         }
 
         return;
@@ -83,8 +79,8 @@ bool player::beheld_by(const monster* mon) const
 {
     for (unsigned int i = 0; i < beholders.size(); i++)
         if (beholders[i] == mon->mindex())
-            return (true);
-    return (false);
+            return true;
+    return false;
 }
 
 // Checks whether a beholder keeps you from moving to
@@ -98,17 +94,17 @@ monster* player::get_beholder(const coord_def &target) const
         const int newdist = grid_distance(target, mon->pos());
 
         if (olddist < newdist)
-            return (mon);
+            return mon;
     }
-    return (NULL);
+    return NULL;
 }
 
 monster* player::get_any_beholder() const
 {
     if (!beholders.empty())
-        return (&menv[beholders[0]]);
+        return &menv[beholders[0]];
     else
-        return (NULL);
+        return NULL;
 }
 
 // Removes a monster from the list of beholders if present.
@@ -260,7 +256,7 @@ void player::_removed_beholder()
 bool player::possible_beholder(const monster* mon) const
 {
     if (crawl_state.game_is_arena())
-        return (false);
+        return false;
 
     return (mon->alive() && !mon->submerged()
          && see_cell_no_trans(mon->pos()) && mon->see_cell_no_trans(pos())

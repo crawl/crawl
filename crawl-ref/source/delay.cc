@@ -27,6 +27,7 @@
 #include "food.h"
 #include "godabil.h"
 #include "godpassive.h"
+#include "godprayer.h"
 #include "invent.h"
 #include "items.h"
 #include "itemname.h"
@@ -61,7 +62,7 @@
 #include "view.h"
 #include "xom.h"
 
-extern std::vector<SelItem> items_for_multidrop;
+extern vector<SelItem> items_for_multidrop;
 
 class interrupt_block
 {
@@ -85,19 +86,19 @@ static const char *_activity_interrupt_name(activity_interrupt_type ai);
 static int _zin_recite_to_monsters(coord_def where, int prayertype, int, actor *)
 {
     ASSERT(prayertype >= 0 && prayertype < NUM_RECITE_TYPES);
-    return (zin_recite_to_single_monster(where, (recite_type)prayertype));
+    return zin_recite_to_single_monster(where, (recite_type)prayertype);
 }
 
-static std::string _get_zin_recite_speech(int trits[], size_t len, int prayertype, int step)
+static string _get_zin_recite_speech(int trits[], size_t len, int prayertype, int step)
 {
-    const std::string str = zin_recite_text(trits, len, prayertype, step);
+    const string str = zin_recite_text(trits, len, prayertype, step);
 
     if (str.empty())
     {
         // In case nothing is found.
-        return ("mumble mumble buggy mumble");
+        return "mumble mumble buggy mumble";
     }
-    return (str);
+    return str;
 }
 
 // Returns true if this delay can act as a parent to other delays, i.e. if
@@ -124,7 +125,7 @@ static int _push_delay(const delay_queue_item &delay)
         {
             size_t pos = i - you.delay_queue.begin();
             you.delay_queue.insert(i, delay);
-            return (pos);
+            return pos;
         }
     }
     you.delay_queue.push_back(delay);
@@ -180,6 +181,9 @@ void start_delay(delay_type type, int turns, int parm1, int parm2, int parm3)
     if (type == DELAY_WEAPON_SWAP)
         you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
 
+    if (delay_is_run(type))
+        clear_travel_trail();
+
     // Handle zero-turn delays (possible with butchering).
     if (turns == 0)
     {
@@ -229,7 +233,7 @@ void stop_delay(bool stop_stair_travel, bool force_unsafe)
                 break;
             }
 
-        const std::string butcher_verb =
+        const string butcher_verb =
                 (delay.type == DELAY_BUTCHER      ? "butchering" :
                  delay.type == DELAY_BOTTLE_BLOOD ? "bottling blood from"
                                                   : "sacrificing");
@@ -522,7 +526,7 @@ static void _maybe_interrupt_swap(bool force_unsafe)
 
 bool you_are_delayed(void)
 {
-    return (!you.delay_queue.empty());
+    return !you.delay_queue.empty();
 }
 
 delay_type current_delay_action(void)
@@ -539,7 +543,7 @@ bool delay_is_run(delay_type delay)
 bool is_being_drained(const item_def &item)
 {
     if (!you_are_delayed())
-        return (false);
+        return false;
 
     const delay_queue_item &delay = you.delay_queue.front();
 
@@ -548,16 +552,16 @@ bool is_being_drained(const item_def &item)
         const item_def &corpse = mitm[ delay.parm2 ];
 
         if (&corpse == &item)
-            return (true);
+            return true;
     }
 
-    return (false);
+    return false;
 }
 
 bool is_being_butchered(const item_def &item, bool just_first)
 {
     if (!you_are_delayed())
-        return (false);
+        return false;
 
     for (unsigned int i = 0; i < you.delay_queue.size(); ++i)
     {
@@ -566,7 +570,7 @@ bool is_being_butchered(const item_def &item, bool just_first)
         {
             const item_def &corpse = mitm[ you.delay_queue[i].parm1 ];
             if (&corpse == &item)
-                return (true);
+                return true;
 
             if (just_first)
                 break;
@@ -575,13 +579,13 @@ bool is_being_butchered(const item_def &item, bool just_first)
             break;
     }
 
-    return (false);
+    return false;
 }
 
 bool is_vampire_feeding()
 {
     if (!you_are_delayed())
-        return (false);
+        return false;
 
     const delay_queue_item &delay = you.delay_queue.front();
     return (delay.type == DELAY_FEED_VAMPIRE);
@@ -590,7 +594,7 @@ bool is_vampire_feeding()
 bool is_butchering()
 {
     if (!you_are_delayed())
-        return (false);
+        return false;
 
     const delay_queue_item &delay = you.delay_queue.front();
     return (delay.type == DELAY_BUTCHER || delay.type == DELAY_BOTTLE_BLOOD);
@@ -599,7 +603,7 @@ bool is_butchering()
 bool player_stair_delay()
 {
     if (!you_are_delayed())
-        return (false);
+        return false;
 
     const delay_queue_item &delay = you.delay_queue.front();
     return (delay.type == DELAY_ASCENDING_STAIRS
@@ -609,7 +613,7 @@ bool player_stair_delay()
 bool already_learning_spell(int spell)
 {
     if (!you_are_delayed())
-        return (false);
+        return false;
 
     for (unsigned int i = 0; i < you.delay_queue.size(); ++i)
     {
@@ -617,16 +621,16 @@ bool already_learning_spell(int spell)
             continue;
 
         if (spell == -1 || you.delay_queue[i].parm1 == spell)
-            return (true);
+            return true;
     }
-    return (false);
+    return false;
 }
 
 // Xom is amused by a potential food source going to waste, and is
 // more amused the hungrier you are.
 static void _xom_check_corpse_waste()
 {
-    const int food_need = std::max(7000 - you.hunger, 0);
+    const int food_need = max(7000 - you.hunger, 0);
     xom_is_stimulated(50 + (151 * food_need / 6000));
 }
 
@@ -672,7 +676,7 @@ void handle_delay()
             }
             else
             {
-                std::string tool;
+                string tool;
                 switch (delay.parm3)
                 {
                 case SLOT_BUTCHERING_KNIFE: tool = "knife"; break;
@@ -923,7 +927,7 @@ void handle_delay()
             // turns.
             practise(EX_USED_ABIL, ABIL_ZIN_RECITE);
 
-            const std::string shout_verb = you.shout_verb();
+            const string shout_verb = you.shout_verb();
 
             int noise_level = 12; // "shout"
 
@@ -1082,13 +1086,12 @@ static void _finish_delay(const delay_queue_item &delay)
 
     case DELAY_RECITE:
     {
-        std::string speech =
-            _get_zin_recite_speech(const_cast<int*>(delay.trits), delay.len,
-                                   delay.parm1, -1);
+        string speech = _get_zin_recite_speech(const_cast<int*>(delay.trits),
+                                               delay.len, delay.parm1, -1);
         speech += ".";
         if (one_chance_in(9))
         {
-            const std::string closure = getSpeakString("recite_closure");
+            const string closure = getSpeakString("recite_closure");
             if (!closure.empty() && one_chance_in(3))
             {
                 speech += " ";
@@ -1120,10 +1123,10 @@ static void _finish_delay(const delay_queue_item &delay)
                 }
                 break;
 
-            case DNGN_SECRET_DOOR:      // oughtn't happen
             case DNGN_CLOSED_DOOR:      // open the door
-            case DNGN_DETECTED_SECRET_DOOR:
-                // Once opened, former secret doors become normal doors.
+            case DNGN_RUNED_DOOR:
+                // Once opened, former runed doors become normal doors.
+                // Is that ok?  Keeping it for simplicity for now...
                 grd(pass) = DNGN_OPEN_DOOR;
                 break;
             }
@@ -1408,6 +1411,18 @@ static void _handle_run_delays(const delay_queue_item &delay)
                 return;
         }
 
+        if (Options.auto_sacrifice && you.running == RMODE_EXPLORE_GREEDY)
+        {
+            LevelStashes *lev = StashTrack.find_current_level();
+            if (lev && lev->sacrificeable(you.pos()))
+            {
+                const interrupt_block block_interrupts;
+                pray();
+                return;
+            }
+        }
+
+
         switch (delay.type)
         {
         case DELAY_REST:
@@ -1532,7 +1547,7 @@ static maybe_bool _userdef_interrupt_activity(const delay_queue_item &idelay,
     const int delay = idelay.type;
     lua_State *ls = clua.state();
     if (!ls || ai == AI_FORCE_INTERRUPT)
-        return (B_TRUE);
+        return B_TRUE;
 
     const char *interrupt_name = _activity_interrupt_name(ai);
     const char *act_name = delay_name(delay);
@@ -1545,23 +1560,23 @@ static maybe_bool _userdef_interrupt_activity(const delay_queue_item &idelay,
         if (lua_isnil(ls, -1))
         {
             lua_pop(ls, 1);
-            return (B_FALSE);
+            return B_FALSE;
         }
 
         bool stopact = lua_toboolean(ls, -1);
         lua_pop(ls, 1);
         if (stopact)
-            return (B_TRUE);
+            return B_TRUE;
     }
 
     if (delay == DELAY_MACRO && clua.callbooleanfn(true, "c_interrupt_macro",
                                                    "sA", interrupt_name, &at))
     {
-        return (B_TRUE);
+        return B_TRUE;
     }
 
 #endif
-    return (B_MAYBE);
+    return B_MAYBE;
 }
 
 // Returns true if the activity should be interrupted, false otherwise.
@@ -1572,9 +1587,9 @@ static bool _should_stop_activity(const delay_queue_item &item,
     switch (_userdef_interrupt_activity(item, ai, at))
     {
     case B_TRUE:
-        return (true);
+        return true;
     case B_FALSE:
-        return (false);
+        return false;
     case B_MAYBE:
         break;
     }
@@ -1589,12 +1604,12 @@ static bool _should_stop_activity(const delay_queue_item &item,
     // No monster will attack you inside a sanctuary,
     // so presence of monsters won't matter.
     if (ai == AI_SEE_MONSTER && is_sanctuary(you.pos()))
-        return (false);
+        return false;
 
     delay_type curr = current_delay_action();
 
     if (ai == AI_SEE_MONSTER && player_stair_delay())
-        return (false);
+        return false;
 
     if (ai == AI_FULL_HP || ai == AI_FULL_MP)
     {
@@ -1602,7 +1617,7 @@ static bool _should_stop_activity(const delay_queue_item &item,
             && (you.magic_points < you.max_magic_points
                 || you.hp < you.hp_max))
         {
-            return (false);
+            return false;
         }
     }
 
@@ -1618,10 +1633,10 @@ static bool _should_stop_activity(const delay_queue_item &item,
             || Options.activity_interrupts[item.type][ai]);
 }
 
-inline static bool _monster_warning(activity_interrupt_type ai,
+static inline bool _monster_warning(activity_interrupt_type ai,
                                     const activity_interrupt_data &at,
                                     delay_type atype,
-                                    std::vector<std::string>* msgs_buf = NULL)
+                                    vector<string>* msgs_buf = NULL)
 {
     if (ai == AI_SENSE_MONSTER)
     {
@@ -1632,7 +1647,9 @@ inline static bool _monster_warning(activity_interrupt_type ai,
         return false;
     if (!delay_is_run(atype) && !_is_butcher_delay(atype)
         && !(atype == DELAY_NOT_DELAYED))
+    {
         return false;
+    }
     if (at.context != SC_NEWLY_SEEN && atype == DELAY_NOT_DELAYED)
         return false;
 
@@ -1659,7 +1676,7 @@ inline static bool _monster_warning(activity_interrupt_type ai,
         return false;
     else
     {
-        std::string text = mon->full_name(DESC_A);
+        string text = mon->full_name(DESC_A);
         if (mon->type == MONS_PLAYER_GHOST)
         {
             text += make_stringf(" (%s)",
@@ -1703,14 +1720,14 @@ inline static bool _monster_warning(activity_interrupt_type ai,
 
         ash_id_monster_equipment(const_cast<monster* >(mon));
         bool ash_id = mon->props.exists("ash_id") && mon->props["ash_id"];
-        std::string ash_warning;
+        string ash_warning;
 
         monster_info mi(mon);
 
-        const std::string mweap =
-            get_monster_equipment_desc(mi, ash_id ? DESC_IDENTIFIED
-                                                  : DESC_WEAPON,
-                                       DESC_NONE);
+        const string mweap = get_monster_equipment_desc(mi,
+                                                        ash_id ? DESC_IDENTIFIED
+                                                               : DESC_WEAPON,
+                                                        DESC_NONE);
 
         if (!mweap.empty())
         {
@@ -1770,10 +1787,10 @@ void autotoggle_autopickup(bool off)
 // Returns true if any activity was stopped. Not reentrant.
 bool interrupt_activity(activity_interrupt_type ai,
                         const activity_interrupt_data &at,
-                        std::vector<std::string>* msgs_buf)
+                        vector<string>* msgs_buf)
 {
     if (interrupt_block::blocked())
-        return (false);
+        return false;
 
     const interrupt_block block_recursive_interrupts;
     if (ai == AI_HIT_MONSTER || ai == AI_MONSTER_ATTACKS)
@@ -1821,7 +1838,7 @@ bool interrupt_activity(activity_interrupt_type ai,
         // Teleport stops stair delays.
         stop_delay(ai == AI_TELEPORT, ai == AI_MONSTER_ATTACKS);
 
-        return (true);
+        return true;
     }
 
     // Check the other queued delays; the first delay that is interruptible
@@ -1841,18 +1858,18 @@ bool interrupt_activity(activity_interrupt_type ai,
                 {
                     _monster_warning(ai, at, you.delay_queue[j].type, msgs_buf);
                     stop_delay(ai == AI_TELEPORT);
-                    return (true);
+                    return true;
                 }
             }
 
             // Non-run queued delays can be discarded without any processing.
             you.delay_queue.erase(you.delay_queue.begin() + i,
                                   you.delay_queue.end());
-            return (true);
+            return true;
         }
     }
 
-    return (false);
+    return false;
 }
 
 static const char *activity_interrupt_names[] =
@@ -1864,25 +1881,23 @@ static const char *activity_interrupt_names[] =
 
 static const char *_activity_interrupt_name(activity_interrupt_type ai)
 {
-    ASSERT(sizeof(activity_interrupt_names)
-            / sizeof(*activity_interrupt_names) == NUM_AINTERRUPTS);
+    COMPILE_CHECK(ARRAYSZ(activity_interrupt_names) == NUM_AINTERRUPTS);
 
     if (ai == NUM_AINTERRUPTS)
-        return ("");
+        return "";
 
     return activity_interrupt_names[ai];
 }
 
-activity_interrupt_type get_activity_interrupt(const std::string &name)
+activity_interrupt_type get_activity_interrupt(const string &name)
 {
-    ASSERT(sizeof(activity_interrupt_names)
-            / sizeof(*activity_interrupt_names) == NUM_AINTERRUPTS);
+    COMPILE_CHECK(ARRAYSZ(activity_interrupt_names) == NUM_AINTERRUPTS);
 
     for (int i = 0; i < NUM_AINTERRUPTS; ++i)
         if (name == activity_interrupt_names[i])
             return activity_interrupt_type(i);
 
-    return (NUM_AINTERRUPTS);
+    return NUM_AINTERRUPTS;
 }
 
 static const char *delay_names[] =
@@ -1896,7 +1911,7 @@ static const char *delay_names[] =
 
 // Gets a delay given its name.
 // name must be lowercased already!
-delay_type get_delay(const std::string &name)
+delay_type get_delay(const string &name)
 {
     COMPILE_CHECK(ARRAYSZ(delay_names) == NUM_DELAYS);
 
@@ -1908,24 +1923,24 @@ delay_type get_delay(const std::string &name)
 
     // Also check American spellings:
     if (name == "armor_on")
-        return (DELAY_ARMOUR_ON);
+        return DELAY_ARMOUR_ON;
 
     if (name == "armor_off")
-        return (DELAY_ARMOUR_OFF);
+        return DELAY_ARMOUR_OFF;
 
     if (name == "memorize")
-        return (DELAY_MEMORISE);
+        return DELAY_MEMORISE;
 
     if (name == "jewelry_on")
-        return (DELAY_JEWELLERY_ON);
+        return DELAY_JEWELLERY_ON;
 
-    return (NUM_DELAYS);
+    return NUM_DELAYS;
 }
 
 const char *delay_name(int delay)
 {
     if (delay < 0 || delay >= NUM_DELAYS)
-        return ("");
+        return "";
 
     return delay_names[delay];
 }

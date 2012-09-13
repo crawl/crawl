@@ -1,12 +1,12 @@
 
 #include "AppHdr.h"
 
+#include "libutil.h"
 #include "tileweb-text.h"
 #include "tileweb.h"
+#include "unicode.h"
 
-#include <sstream>
-
-WebTextArea::WebTextArea(std::string name) :
+WebTextArea::WebTextArea(string name) :
     mx(0),
     my(0),
     m_cbuf(NULL),
@@ -96,7 +96,7 @@ void WebTextArea::send(bool force)
     int last_col = -1;
     int space_count = 0;
     bool dirty = false;
-    std::wstringstream html;
+    string html;
 
     bool sending = false;
 
@@ -105,7 +105,7 @@ void WebTextArea::send(bool force)
         last_col = -1;
         space_count = 0;
         dirty = false;
-        html.str(L"");
+        html.clear();
 
         for (int x = 0; x < mx; ++x)
         {
@@ -124,7 +124,7 @@ void WebTextArea::send(bool force)
             {
                 while (space_count)
                 {
-                    html << " ";
+                    html.push_back(' ');
                     space_count--;
                 }
             }
@@ -132,9 +132,9 @@ void WebTextArea::send(bool force)
             if (col != last_col && chr != ' ')
             {
                 if (last_col != -1)
-                    html << "</span>";
-                html << "<span class=\\\"fg" << (col & 0xf)
-                     << " bg" << ((col >> 4) & 0xf) << "\\\">";
+                    html += "</span>";
+                html += make_stringf("<span class=\\\"fg%d bg%d\\\">",
+                                     col & 0xf, (col >> 4) & 0xf);
                 last_col = col;
             }
 
@@ -145,28 +145,30 @@ void WebTextArea::send(bool force)
                 switch (chr)
                 {
                 case '<':
-                    html << "&lt;";
+                    html += "&lt;";
                     break;
                 case '>':
-                    html << "&gt;";
+                    html += "&gt;";
                     break;
                 case '&':
-                    html << "&amp;";
+                    html += "&amp;";
                     break;
                 case '\\':
-                    html << "\\\\";
+                    html += "\\\\";
                     break;
                 case '"':
-                    html << "&quot;";
+                    html += "&quot;";
                     break;
                 default:
-                    html.put(chr);
+                    char buf[5];
+                    buf[wctoutf8(buf, chr)] = 0;
+                    html += buf;
                     break;
                 }
             }
         }
 
-        if (dirty || (force && !html.str().empty()))
+        if (dirty || (force && !html.empty()))
         {
             if (!sending)
             {
@@ -178,7 +180,7 @@ void WebTextArea::send(bool force)
                 sending = true;
             }
 
-            tiles.write_message("%u:\"%ls\",", y, html.str().c_str());
+            tiles.write_message("%u:\"%s\",", y, html.c_str());
         }
     }
     if (sending)

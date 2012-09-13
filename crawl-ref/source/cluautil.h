@@ -21,25 +21,25 @@ extern "C" {
     static int name(lua_State *ls) \
     {   \
         wrapexpr; \
-        return (0); \
+        return 0; \
     }
 #define PLUARET(type, val) \
     { \
         lua_push##type(ls, val); \
-        return (1); \
+        return 1; \
     }
 #define LUARET1(name, type, val) \
     static int name(lua_State *ls) \
     { \
         lua_push##type(ls, val); \
-        return (1); \
+        return 1; \
     }
 #define LUARET2(name, type, val1, val2)  \
     static int name(lua_State *ls) \
     { \
         lua_push##type(ls, val1); \
         lua_push##type(ls, val2); \
-        return (2); \
+        return 2; \
     }
 
 #define ASSERT_DLUA \
@@ -59,7 +59,7 @@ void clua_register_metatable(lua_State *ls, const char *tn,
                              const luaL_reg *lr,
                              int (*gcfn)(lua_State *ls) = NULL);
 
-int clua_stringtable(lua_State *ls, const std::vector<std::string> &s);
+int clua_stringtable(lua_State *ls, const vector<string> &s);
 
 /*
  * User-data templates.
@@ -67,7 +67,7 @@ int clua_stringtable(lua_State *ls, const std::vector<std::string> &s);
  */
 
 template <class T>
-inline static T *clua_get_lightuserdata(lua_State *ls, int ndx)
+static inline T *clua_get_lightuserdata(lua_State *ls, int ndx)
 {
     return (lua_islightuserdata(ls, ndx))?
             static_cast<T *>(lua_touserdata(ls, ndx))
@@ -75,7 +75,7 @@ inline static T *clua_get_lightuserdata(lua_State *ls, int ndx)
 }
 
 template <class T>
-inline static T *clua_get_userdata(lua_State *ls, const char *mt, int ndx = 1)
+static inline T *clua_get_userdata(lua_State *ls, const char *mt, int ndx = 1)
 {
     return static_cast<T*>(luaL_checkudata(ls, ndx, mt));
 }
@@ -86,7 +86,7 @@ static int lua_object_gc(lua_State *ls)
     T **pptr = static_cast<T**>(lua_touserdata(ls, 1));
     if (pptr)
         delete *pptr;
-    return (0);
+    return 0;
 }
 
 template <class T> T *clua_new_userdata(
@@ -99,7 +99,7 @@ template <class T> T *clua_new_userdata(
 }
 
 template <typename T>
-inline void dlua_push_userdata(lua_State *ls, T udata, const char *meta)
+static inline void dlua_push_userdata(lua_State *ls, T udata, const char *meta)
 {
     T *de = clua_new_userdata<T>(ls, meta);
     *de = udata;
@@ -113,7 +113,7 @@ static int dlua_push_object_type(lua_State *ls, const char *meta, const T &data)
         *ptr = new T(data);
     else
         lua_pushnil(ls);
-    return (1);
+    return 1;
 }
 
 /*
@@ -140,7 +140,6 @@ struct MonsterWrap
 // XXX: These are currently defined outside cluautil.cc.
 void push_monster(lua_State *ls, monster* mons);
 void clua_push_item(lua_State *ls, item_def *item);
-void clua_push_item_temp(lua_State *ls, const item_def &item);
 item_def *clua_get_item(lua_State *ls, int ndx);
 void lua_push_floor_items(lua_State *ls, int link);
 dungeon_feature_type check_lua_feature(lua_State *ls, int idx);
@@ -195,10 +194,10 @@ static int clua_gentable(lua_State *ls, const list &strings, lpush push)
         push(ls, strings[i]);
         lua_rawseti(ls, -2, i + 1);
     }
-    return (1);
+    return 1;
 }
 
-int clua_pushcxxstring(lua_State *ls, const std::string &s);
+int clua_pushcxxstring(lua_State *ls, const string &s);
 int clua_pushpoint(lua_State *ls, const coord_def &pos);
 
 #endif

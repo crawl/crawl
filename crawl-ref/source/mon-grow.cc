@@ -40,8 +40,6 @@ static const monster_level_up mon_grow[] =
 
     monster_level_up(MONS_ANT_LARVA, MONS_WORKER_ANT),
 
-    monster_level_up(MONS_KILLER_BEE_LARVA, MONS_KILLER_BEE),
-
     monster_level_up(MONS_CENTAUR, MONS_CENTAUR_WARRIOR),
     monster_level_up(MONS_YAKTAUR, MONS_YAKTAUR_CAPTAIN),
 
@@ -86,8 +84,7 @@ mons_experience_levels::mons_experience_levels()
             (monster_xp_base + experience) * 2 * monster_xp_multiplier
             / 500;
         delta =
-            std::min(
-                std::max(delta, monster_xp_base * monster_xp_multiplier / 100),
+            min(max(delta, monster_xp_base * monster_xp_multiplier / 100),
                 40000);
         experience += delta;
     }
@@ -105,11 +102,11 @@ static const monster_level_up *_monster_level_up_target(monster_type type,
             if (static_cast<int>(me->hpdice[0]) == hit_dice
                 && x_chance_in_y(mlup.chance, 1000))
             {
-                return (&mlup);
+                return &mlup;
             }
         }
     }
-    return (NULL);
+    return NULL;
 }
 
 void monster::upgrade_type(monster_type after, bool adjust_hd,
@@ -149,7 +146,7 @@ void monster::upgrade_type(monster_type after, bool adjust_hd,
         {
             hit_points    += minhp - max_hit_points;
             max_hit_points = minhp;
-            hit_points     = std::min(hit_points, max_hit_points);
+            hit_points     = min(hit_points, max_hit_points);
         }
     }
 
@@ -164,15 +161,15 @@ bool monster::level_up_change()
     if (const monster_level_up *lup = _monster_level_up_target(type, hit_dice))
     {
         upgrade_type(lup->after, false, lup->adjust_hp);
-        return (true);
+        return true;
     }
-    return (false);
+    return false;
 }
 
 bool monster::level_up()
 {
     if (hit_dice >= MAX_MONS_HD)
-        return (false);
+        return false;
 
     ++hit_dice;
 
@@ -184,49 +181,49 @@ bool monster::level_up()
             + random2(5);
 
         // Not less than 3 hp, not more than 25.
-        hpboost = std::min(std::max(hpboost, 3), 25);
+        hpboost = min(max(hpboost, 3), 25);
 
         dprf("%s: HD: %d, maxhp: %d, boost: %d",
              name(DESC_PLAIN).c_str(), hit_dice, max_hit_points, hpboost);
 
         max_hit_points += hpboost;
         hit_points     += hpboost;
-        hit_points      = std::min(hit_points, max_hit_points);
+        hit_points      = min(hit_points, max_hit_points);
     }
 
     level_up_change();
 
-    return (true);
+    return true;
 }
 
 void monster::init_experience()
 {
     if (experience || !alive())
         return;
-    hit_dice   = std::max(hit_dice, 1);
-    experience = mexplevs[std::min(hit_dice, MAX_MONS_HD)];
+    hit_dice   = max(hit_dice, 1);
+    experience = mexplevs[min(hit_dice, MAX_MONS_HD)];
 }
 
 bool monster::gain_exp(int exp, int max_levels_to_gain)
 {
     if (!alive())
-        return (false);
+        return false;
 
     init_experience();
     if (hit_dice >= MAX_MONS_HD)
-        return (false);
+        return false;
 
     // Only natural monsters can level-up.
     if (holiness() != MH_NATURAL)
-        return (false);
+        return false;
 
     // Only monsters that you can gain XP from can level-up.
     if (mons_class_flag(type, M_NO_EXP_GAIN))
-        return (false);
+        return false;
 
     // Avoid wrap-around.
     if (experience + exp < experience)
-        return (false);
+        return false;
 
     experience += exp;
 

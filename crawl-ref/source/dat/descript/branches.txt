@@ -4,21 +4,26 @@ Dungeon
 It is still a mystery how this bizarre place was created. Some claim that it is
 the playground of bored gods, whereas others maintain that it was shaped by all
 kinds of species who fled the overworld and shunned the light. No matter what
-the origin of this cave is, it is filled with riches unheard of as well as with
+its origin, this deep cavern is filled with riches unheard of as well as with
 ample dangers to any intruder. Few have escaped alive, and even fewer have kept
-some sliver of sanity to tell the tale.
+some sliver of sanity sufficient to tell the tale.
 
 The dungeon is 27 levels deep, but, honestly, this is only the beginning.
 %%%%
 Temple
 
-A Temple of Gods, a place of peace and refuge from the insanity of the dungeon.
-It is located between the levels 4 and 7 of the main dungeon.
+A Temple of the Gods, a place of peace and refuge from the insanity of the
+dungeon. It usually contains altars to most of the known gods. It is located
+between the levels 4 and 7 of the main dungeon.
 %%%%
 Orcish Mines
 
-The mines of the orcs, filled with their gold, but treacherous and easy to get
-trapped in.
+The well-worked goldmines of the orcish tribes. These tortuous caverns are
+filled with orcs, their humanoid labourers, and piles of their freshly mined
+gold. Enterprising merchants have set up trading posts to help relieve the orcs
+of their auric burden. The haphazard manner in which orcs tend to dig their
+mineshafts has resulted in a complex and treacherous tangle of chambers in
+which it is easy to get trapped.
 
 The Orcish Mines are four levels deep and contain the entrance to the Elven
 Halls.
@@ -34,8 +39,8 @@ The Elven Halls are three levels deep.
 Dwarven Hall
 
 These halls of finely worked stone are the dwelling of the Deep Dwarves. Their
-fine metalworking skills allowed them to forge enough weapons against the likes
-of you.
+fine metalworking skills allowed them to forge plenty weapons for use against
+the likes of you.
 
 It is but a single level.
 %%%%
@@ -78,8 +83,10 @@ the Snake Pit is present, the entrance is located between Lair:3 and Lair:6.
 %%%%
 Spider Nest
 
-And you thought you'll just wield a shoe and be done? If you don't have
-arachnophobia yet, you will soon.
+On the surface a spider could be despatched with the swing of a shoe. Down here
+it is different. If you don't have arachnophobia already, this place, with its
+crumbling, web-choked caverns, poisonous arthropods and assorted
+creepy-crawlies, will give it to you.
 
 The Spider Nest is five levels deep and contains the gossamer rune. A dungeon
 features only two of the Snake Pit, Swamp, Shoals and Spider Nest branches. If
@@ -98,8 +105,8 @@ between Lair:6 and Lair:8.
 Vaults
 
 Possibly constructed by some powerful madman, the Vaults are said to be home to
-great treasures. The blood spots all around the entrance indicate that there is
-a certain amount of violence, too.
+great treasures. The blood spattered liberally around the entrance suggests
+that there is a certain amount of violence, too.
 
 The Vaults are eight levels deep and contain the silver rune. The entrance can
 be found between levels 14 and 19 of the main dungeon.
@@ -115,15 +122,19 @@ Vault:6.
 %%%%
 Crypt
 
-You hear moans and shrieks of tortured souls, suffering in acts of the
-unspeakable.
+A huge repository for the ancient dead. The air is chill and fetid, the walls
+cold and damp. Bones are strewn liberally everywhere and the whole place
+resounds with the keening of the tortured souls of the unquiet dead.
 
-The Crypt is five levels deep and can be found between Vault:2 and Vault:4.
+The Crypt is five levels deep and can be found between Vault:2 and Vault:4. It
+contains the entrance to the Tomb.
 %%%%
 Tomb
 
-The Tomb of the Ancients, a place of damnation, of horrors animated by the
-vilest necromancy.
+The Tomb of the Ancients is a place of damnation, of horrors animated by the
+vilest necromancy. Honest creatures of the surface turn pale at the mere
+mention of its name, The list of those who have returned from this place of
+pure death is exceedingly short.
 
 The Tomb is three levels deep and contains the golden rune. Its entry is either
 on Crypt:2 or Crypt:3.
@@ -146,7 +157,8 @@ Vestibule of Hell.
 %%%%
 Gehenna
 
-The fires of Gehenna burnt many a confident hero, and they will burn evermore.
+The fires of Gehenna have burnt many a confident hero, and they will burn
+evermore.
 
 Gehenna is seven levels deep and contains the obsidian rune. It can be accessed
 via the Vestibule of Hell.
@@ -168,9 +180,10 @@ via the Vestibule of Hell.
 %%%%
 Zot
 
-A region of the dungeon complex, safely locked away and referred to usually by
-madness, frenzy, lunacy. Only the most demented adventurers would dare to break
-the seal and press deeper - in the vain hope for a fabled artefact no one has
+A region of the dungeon that is so terrifying, so full of madness, frenzy and
+lunacy, that it has been locked securely against random trespassers. Only the
+most demented adventurers would dare gather the required keys, break the seal
+and penetrate deeper — all in the vain hope for a fabled artefact no one has
 ever laid eyes on before.
 
 The Realm of Zot is five levels deep and can only be entered when carrying at
@@ -197,26 +210,27 @@ Pandemonium
 Pandemonium is an infinite realm of pain and suffering. While you can find a
 good deal of loot there, all these treasures are guarded by demons and even
 crueller demon lords. Many a hero, confusing confidence with megalomania, has
-died unsuspectingly in the barrage of torment and hellfire.
+died screaming in the barrage of torment and hellfire.
 
 Pandemonium is endless. Portals there are found abundantly in the deeper parts
 of the main dungeon. Note that getting back might be more difficult.
 
-You can find no less than five runes in the Pandemonium:
- • fiery in the well-heated realm of Cerebov
- • glowing in the radioactive domain on Mnoleg
- • magical is guarded by arcane powers of Lom Lobon and his minions
- • dark lies in the shadowy dwelling of Gloorx Vloq
+No fewer than five runes can be found in Pandemonium:
+ • a fiery rune in the well-heated realm of Cerebov
+ • a glowing rune in the contaminated domain of Mnoleg
+ • a magical rune guarded by the arcane powers of Lom Lobon and his minions
+ • a dark rune in the shadowy abode of Gloorx Vloq
  • demonic runes exist in multiple copies, owned by less famous lords
 %%%%
 Ziggurat
 
-A series of arenas, each containing greater wealth and even greater danger than
-the last. Whatever entity created this monstrosity charges a steep price for
-entry. Beware, for a ziggurat is not a place for the faint of heart: even the
-bravest and most skilled adventurers have met their ends in one. While a portal
-to safety will be present on every level, once left, a ziggurat cannot be
-reentered.
+A ziggurat is a strange tower constructed of twenty seven levels of
+incrementally larger combat arenas, each containing greater wealth and even
+greater danger than the last. Whatever entity created this monstrosity charges
+a steep price for entry. Beware, for a ziggurat is not a place for the faint of
+heart: even the bravest and most skilled adventurers have met their ends in
+one. While a portal to safety will be present on every level, once left, a
+ziggurat cannot be re-entered.
 %%%%
 Labyrinth
 
@@ -231,12 +245,12 @@ treasure pile.
 %%%%
 Bazaar
 
-Aside from the vendors who've set up their stores at various places in the
-dungeon, there are others trying to make a living by traveling from place to
-place. Bazaars feature a number of different shops and often have better stock
-than the sedentary ones, sometimes even at a bargain.
+While some merchants set up shop in the dungeon, others travel in caravans from
+place to place. The bazaars of these intinerant traders feature a number of
+different shops and often have better stock than the sedentary ones, sometimes
+even at a bargain.
 
-Also, be warned that their nomadic lifestyle has taught these sellers to
+Also be warned that their nomadic lifestyle has taught these sellers to
 appropriate any items an adventurer might leave behind, and then leave quickly,
 probably to sell them elsewhere.
 %%%%
@@ -254,28 +268,32 @@ long dead, and even while alive he never offered a money-back guarantee.
 %%%%
 Sewer
 
-Every settlement brings forth the unpleasant sewers and drains, ignored by most
-but hideaways for others. Old tales speak of dangerous creatures, bathing in
-disgusting-smelling green water, preying on each other without mercy. The tales
-also allude to valuable items left by daring and unfortunate visitors, left to
-grow mildew in the damp caverns.
+Every inhabited place needs to dispose of its waste products. The Dungeon too
+has its stinking sewers and drains, full of filthy water and ignored by most
+but used as hideaways by the disgusting and the desperate. Old tales speak of
+dangerous creatures stalking through the foul-smelling green water, preying on
+each other without mercy. The tales also allude to valuable items accidentally
+washed into the drainage tunnels, forgotten and left to grow mouldy in the damp
+caverns.
 %%%%
 Ossuary
 
-A small tomb, containing the remains of some distant relatives of the pharaohs.
-It is undoubtedly home to many traps, and its denizens are unlikely to take
-kindly to looting.
+The Ossuary is a smallish tomb containing the remains and grave goods of some
+distant relatives of the pharaohs, along with the corpses of their retainers
+and household animals. It is undoubtedly riddled with many traps, and its
+undead denizens are unlikely to take kindly to looting.
 %%%%
 Bailey
 
-The castle of some lord. It is undoubtedly protected by physical barriers and
-well-trained soldiers.
+The Bailey is the still-occupied and well-guarded fortress of an orcish lord.
+In it his private treasures are protected by both physical barriers and large
+numbers of well armed humanoid warriors.
 %%%%
 Ice Cave
 
-A desolate, echo-filled cavern shaped from solid ice. The intricate carvings
-and statues which once lined its walls have been warped and obscured by
-centuries of slow melting and refreezing.
+A desolate cavern shaped from solid ice and filled with the echoes of bestial
+howls. The intricate carvings and statues which once lined its walls have been
+warped and obscured by centuries of slow melting and refreezing.
 %%%%
 Volcano
 
@@ -286,11 +304,12 @@ volcano's heart never ceases.
 %%%%
 Wizlab
 
-The laboratory of some wizard, the portal to which has been carelessly left
-open. Beware, for wizards love to guard their possessions with traps and
-monsters of their own making!
-%%%%
-Hive
-
-You hear a manifold buzzing.
+In ages past, the most powerful mages — many of whom you may have heard of —
+would frequently find or construct small realms sealed off from the rest of the
+world, where they could isolate themselves in the pursuit of ever-greater
+magical knowledge and power. The mages are long gone, but many of their arcane
+laboratories still exist, filled with the results of their experiments. Those
+willing to explore these laboratories may find powerful magical treasure, but
+be warned: the wizards to whom these labs belonged to deserved their
+reputations.
 %%%%

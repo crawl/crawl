@@ -15,7 +15,7 @@
 #include "mon-pathfind.h"
 #include "mon-place.h"
 
-typedef std::list<coord_def> coord_list;
+typedef list<coord_def> coord_list;
 
 struct dist_feat
 {
@@ -32,7 +32,7 @@ static void _find_maze_neighbours(const coord_def &c,
                                   const dgn_region &region,
                                   coord_list &ns)
 {
-    std::vector<coord_def> coords;
+    vector<coord_def> coords;
 
     for (int yi = -2; yi <= 2; yi += 2)
         for (int xi = -2; xi <= 2; xi += 2)
@@ -102,7 +102,8 @@ static void _labyrinth_place_items(const coord_def &end)
                                        10, OBJ_SCROLLS,
                                        10, OBJ_JEWELLERY,
                                        8, OBJ_BOOKS,
-                                       8, OBJ_STAVES,
+                                       4, OBJ_STAVES,
+                                       4, OBJ_RODS,
                                        0);
 
         const int treasure_item =
@@ -130,18 +131,18 @@ static bool _has_no_floor_neighbours(const coord_def &pos, bool recurse = false)
     {
         const coord_def& p = *ai;
         if (!in_bounds(p))
-            return (true);
+            return true;
 
         if (recurse)
         {
             if (grd(p) == DNGN_FLOOR)
-               return (false);
+               return false;
         }
         else if (_has_no_floor_neighbours(p, true))
-            return (true);
+            return true;
     }
 
-    return (recurse);
+    return recurse;
 }
 
 // Change the borders of the labyrinth to another (undiggable) wall type.
@@ -170,7 +171,7 @@ static void _change_walls_from_centre(const dgn_region &region,
                                       bool  rectangular,
                                       unsigned mmask,
                                       dungeon_feature_type wall,
-                                      const std::vector<dist_feat> &ldist)
+                                      const vector<dist_feat> &ldist)
 {
     if (ldist.empty())
         return;
@@ -214,7 +215,7 @@ static void _change_walls_from_centre(const dgn_region &region,
                                       dungeon_feature_type wall,
                                       ...)
 {
-    std::vector<dist_feat> ldist;
+    vector<dist_feat> ldist;
 
     va_list args;
     va_start(args, wall);
@@ -236,7 +237,7 @@ static void _change_walls_from_centre(const dgn_region &region,
 
 static void _place_extra_lab_minivaults()
 {
-    std::set<const map_def*> vaults_used;
+    set<const map_def*> vaults_used;
     while (true)
     {
         const map_def *vault = random_map_for_tag("lab", false);
@@ -258,10 +259,10 @@ static bool _has_vault_in_radius(const coord_def &pos, int radius,
         if (!in_bounds(*rad))
             continue;
         if (map_masked(*rad, mask))
-            return (true);
+            return true;
     }
 
-    return (false);
+    return false;
 }
 
 // Find an entry point that's:
@@ -285,10 +286,10 @@ static coord_def _labyrinth_find_entry_point(const dgn_region &reg,
         if (_has_vault_in_radius(place, 6, MMT_VAULT))
             continue;
 
-        return (place);
+        return place;
     }
     coord_def unfound;
-    return (unfound);
+    return unfound;
 }
 
 static void _labyrinth_place_entry_point(const dgn_region &region,
@@ -334,10 +335,10 @@ static coord_def _find_random_deadend(const dgn_region &region)
         if (!_is_deadend(pos))
             continue;
 
-        return (pos);
+        return pos;
     }
 
-    return (result);
+    return result;
 }
 
 // Adds a bloody trail ending in a dead end with spattered walls.
@@ -357,7 +358,7 @@ static void _labyrinth_add_blood_trail(const dgn_region &region)
         if (!mp.init_pathfind(dest, start))
             continue;
 
-        const std::vector<coord_def> path = mp.backtrack();
+        const vector<coord_def> path = mp.backtrack();
 
         if (path.size() < 10)
             continue;
@@ -406,9 +407,9 @@ static bool _find_random_nonmetal_wall(const dgn_region &region,
             continue;
 
         if (grd(pos) == DNGN_ROCK_WALL || grd(pos) == DNGN_STONE_WALL)
-            return (true);
+            return true;
     }
-    return (false);
+    return false;
 }
 
 static bool _grid_has_wall_neighbours(const coord_def& pos,
@@ -424,9 +425,9 @@ static bool _grid_has_wall_neighbours(const coord_def& pos,
             continue;
 
         if (grd(p) == DNGN_ROCK_WALL || grd(p) == DNGN_STONE_WALL)
-            return (true);
+            return true;
     }
-    return (false);
+    return false;
 }
 
 static void _vitrify_wall_neighbours(const coord_def& pos, bool first)

@@ -49,7 +49,7 @@ static monster_type _get_misled_monster(monster* mons)
         mt = random_monster_at_grid(mons->pos());
 
     if (_unsuitable_misled_monster(mt))
-        return (MONS_BAT);
+        return MONS_BAT;
 
     return mt;
 }
@@ -63,7 +63,7 @@ bool update_mislead_monster(monster* mons)
         || mons->type == MONS_ORB_OF_DESTRUCTION
         || mons->type == MONS_MARA_FAKE)
     {
-        return (false);
+        return false;
     }
 
     monster misled_as;
@@ -73,9 +73,9 @@ bool update_mislead_monster(monster* mons)
     mons->props["mislead_as"] = misled_as;
 
     if (misled_as.type == MONS_BAT)
-        return (false);
+        return false;
 
-    return (true);
+    return true;
 }
 
 static int _update_mislead_monsters(monster* caster)

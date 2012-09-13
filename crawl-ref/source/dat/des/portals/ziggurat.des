@@ -17,7 +17,7 @@
 
 # Dummy for the trowel card
 NAME:   enter_the_ziggurat
-TAGS:   trowel_portal unrand
+TAGS:   trowel_portal unrand can_overwrite
 DEPTH:  *, !Zig
 veto {{
   for d = 1,27 do
@@ -421,7 +421,7 @@ ENDMAP
 
 NAME:  ziggurat_pillar_centre_j
 TAGS:  ziggurat_pillar centered
-SUBST: x : abcmvxG
+SUBST: x : bcmvxG
 MAP
  x
 xxx

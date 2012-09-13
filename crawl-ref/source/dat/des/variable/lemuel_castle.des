@@ -17,7 +17,7 @@ function castle_lemuel_subvault_setup(e)
          e.tags("no_monster_gen");
          e.tags("no_rotate");
          e.colour("? = brown")
-         e.ftile("? = floor_hive")
+         e.ftile("? = floor_orc")
          e.kfeat("? = floor")
          e.subst("X = c =:1")
          e.subst("~ = ~:2 .")
@@ -26,6 +26,7 @@ function castle_lemuel_subvault_setup(e)
          e.ftile(".~*X|+$ = floor_cobble_blood")
          e.ftile("12348 = floor_cobble_blood")
          e.ftile("= = floor_cobble_blood")
+         e.kfeat("= = runed_door")
          e.kfeat(", = floor")
          e.kfeat("m = iron_grate")
          if you.absdepth() < 7 then
@@ -126,7 +127,7 @@ NAME:   lemuel_castle_interior_carwin_2
 TAGS:   lemuel_castle_interior
 : castle_lemuel_subvault_setup(_G)
 SUBST:  $=$:5 .
-ITEM:   w:5 meat ration / sausage / beef jerky / potion of water
+ITEM:   w:5 meat ration / sausage / beef jerky / potion of confusion
 MAP
 +c....+~~.....1............~$*c+
 ...1..cccccccccccccccccccccccXc.

@@ -35,7 +35,7 @@ dolls_data::dolls_data(const dolls_data& _orig)
 const dolls_data& dolls_data::operator=(const dolls_data& other)
 {
     memcpy(parts, other.parts, TILEP_PART_MAX * sizeof(tileidx_t));
-    return (*this);
+    return *this;
 }
 
 dolls_data::~dolls_data()
@@ -56,7 +56,7 @@ dolls_data player_doll;
 bool save_doll_data(int mode, int num, const dolls_data* dolls)
 {
     // Save mode, num, and all dolls into dolls.txt.
-    std::string dollsTxtString = datafile_path("dolls.txt", false, true);
+    string dollsTxtString = datafile_path("dolls.txt", false, true);
 
     struct stat stFileInfo;
     stat(dollsTxtString.c_str(), &stFileInfo);
@@ -91,10 +91,10 @@ bool save_doll_data(int mode, int num, const dolls_data* dolls)
         }
         fclose(fp);
 
-        return (true);
+        return true;
     }
 
-    return (false);
+    return false;
 }
 
 bool load_doll_data(const char *fn, dolls_data *dolls, int max,
@@ -103,7 +103,7 @@ bool load_doll_data(const char *fn, dolls_data *dolls, int max,
     char fbuf[1024];
     FILE *fp  = NULL;
 
-    std::string dollsTxtString = datafile_path(fn, false, true);
+    string dollsTxtString = datafile_path(fn, false, true);
 
     struct stat stFileInfo;
     stat(dollsTxtString.c_str(), &stFileInfo);
@@ -119,7 +119,7 @@ bool load_doll_data(const char *fn, dolls_data *dolls, int max,
     {
         // File doesn't exist. By default, use equipment settings.
         *mode = TILEP_MODE_EQUIP;
-        return (false);
+        return false;
     }
     else
     {
@@ -154,7 +154,7 @@ bool load_doll_data(const char *fn, dolls_data *dolls, int max,
 
                 // If we don't need to load a doll, return now.
                 fclose(fp);
-                return (true);
+                return true;
             }
 
             int count = 0;
@@ -184,7 +184,7 @@ bool load_doll_data(const char *fn, dolls_data *dolls, int max,
         }
 
         fclose(fp);
-        return (true);
+        return true;
     }
 }
 

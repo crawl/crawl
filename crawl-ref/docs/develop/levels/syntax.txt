@@ -19,19 +19,17 @@ G.   Glyphs
 Terrain
 -------
  x - rock wall                                            (DNGN_ROCK_WALL)
- X - permanent rock wall  - always undiggable        (DNGN_PERMAROCK_WALL)
- c - stone wall - only affected by Shatter               (DNGN_STONE_WALL)
+ X - permanent rock wall - always undiggable         (DNGN_PERMAROCK_WALL)
+ c - stone wall                                          (DNGN_STONE_WALL)
  m - clear rock wall                                (DNGN_CLEAR_ROCK_WALL)
- n - clear stone wall - only affected by Shatter   (DNGN_CLEAR_STONE_WALL)
+ n - clear stone wall                              (DNGN_CLEAR_STONE_WALL)
  o - clear permanent rock wall - always undiggable (DNGN_CLEAR_PERMAROCK_WALL)
  v - metal wall - grounds electricity                    (DNGN_METAL_WALL)
  b - crystal wall - reflects cold and fire       (DNGN_GREEN_CRYSTAL_WALL)
- a - wax wall - can melt                                   (DNGN_WAX_WALL)
  t - tree - a single square doesn't block LOS                  (DNGN_TREE)
 
  . - floor                                                    (DNGN_FLOOR)
  + - closed door                                        (DNGN_CLOSED_DOOR)
- = - secret door                                        (DNGN_SECRET_DOOR)
 
  W - shallow water
  w - deep water - can be randomly turned into shallow water by the
@@ -138,13 +136,8 @@ NAME:     a_string
 DESC:     readable name
           A map may optionally have a description. If provided, and if
           the character dies in the vault, the map description will be
-          shown along with the place at end of game. For instance,
-          Cerebov's castle has DESC: Cerebov's castle, resulting
-          in deaths being described as:
-
-             Killed from afar by a Balrug (32 damage)
-             ... with a bolt of fire
-             ... in Pandemonium (Cerebov's castle).
+          shown along with the place at end of game. This is normally used
+          only for special game types (Sprint, Zot Defence).
 
           Map descriptions are also written to scores and logfile
           entries.
@@ -418,11 +411,12 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
              not use this unless you know what you are doing.
           * "layout_foo": Indicates what sort of level layouts this vault is
              compatible with, for vaults that don't fit in with all layouts;
-             the absence of this type of tags means it can go with any layout.
-             Multiple layout_foo tags can be used if it can be used with
-             multiple layouts.  Current values for "foo" are: rooms, city,
-             open, caves, cross, shoals, swamp, labyrinth (though currently
-             random vaults aren't placed in the last three).
+             the absence of this type of tags means it can go with any
+             layout.  Multiple layout_foo tags can be used if it can be used
+             with multiple layouts.  Current values for "foo" are: rooms,
+             city, open, caves, cross, abyss, basic, delve, misc, shoals,
+             swamp, labyrinth (though currently random vaults aren't placed
+             in the last three).
           * "no_species_xx": Disables the vault for a given player species
              (two-letter abbreviation).  Note that the current design rules
              strictly disallow varying the map generation based on the
@@ -523,7 +517,8 @@ ITEM:     (list of items, separated by comma)
           * "charges:N" sets the number of charges for wands. Does no checks
             against the maximum number of charges.
           * "plus:N" and "plus2:N" set the item pluses for weapons, armour,
-            jewellery (such as rings of intelligence or slaying), and missiles.
+            jewellery (such as rings of intelligence or slaying), and
+            throwing nets.
           * "no_uniq" prevents the item from being turned into an artefact.
           * "good_item" makes the builder try to make the item a good one
             (acquirement quality). This is independent of the level's depth,
@@ -593,14 +588,16 @@ ITEM:     (list of items, separated by comma)
             mimic. The ":N" can also be omitted for a guaranteed mimic.
           * "no_mimic" prevents the item from being randomly turned into a
             mimic by the dungeon builder.
+          * "no_pickup" prevents monsters from picking up the item, for vaults
+            intending to have an impressive display of loot (although in most
+            cases monsters should be allowed to pick up and use loot against
+            the player).
 
           WARNING: While checks are done to make sure that an armour ego
           isn't given to a weapon, a weapon ego to a missile, and so on, and
           also to make sure that egos are only given to armours, weapons and
           missiles, no other checking is done.  Thus it is possible to create
           a demonic weapon of holy wrath or a helmet of running.
-
-          Limitations: You can't specify specific pluses.
 
           Corpses
           -------
@@ -708,7 +705,7 @@ MONS:     (list of monsters)
 
           Individual monsters may be prefixed with the "patrolling"
           (without the quotes). Use this sparingly:
-              MONS: patrolling naga guardian
+              MONS: patrolling guardian serpent
 
           Monsters can also be given colours that override their default
           colour. Use this *very* sparingly:
@@ -787,7 +784,7 @@ MONS:     (list of monsters)
           name with a semi-colon and then with an item list as described
           in ITEM:, but with slashes replaced with pipes and commas replaced
           with periods.  For example:
-              MONS: orc ; katana | quick blade . chain mail | scale mail
+              MONS: orc ; sabre | quick blade . chain mail | scale mail
 
           will generate an orc wielding either a katana or a quick blade
           and wearing either a chain mail or a scale mail.  Randarts are
@@ -807,8 +804,9 @@ MONS:     (list of monsters)
           match the launcher type.
 
           You can specify that a monster will always generate a corpse by
-          using the tag "always_corpse". This should only be used in vaults
-          where it is absolutely necessary, tutorial maps, etc.
+          using the tag "always_corpse", and that it will never generate
+          a corpse by using "never_corpse".  This should only be used in
+          vaults where it is absolutely necessary, tutorial maps, etc.
 
           Overriding Monster Names:
           -------------------------
@@ -1359,8 +1357,6 @@ KMASK:    Z = no_monster_gen
              randomly converted from deep water (the default) to shallow.
           * "no_wall_fixup": prevents (rock) walls from being converted to
              the level's default wall type, such as in Vaults.
-          * "no_secret_doors": prevents a door from randomly being turned
-             into a secret door.
 
           For example
 
@@ -1606,7 +1602,7 @@ Handling long lines
 For most map headers, you can split long lines by ending the line that will be
 continued on the next line with \ as:
 
-KMONS: * = orc ; katana | quick blade . chain mail | scale mail / \
+KMONS: * = orc ; sabre | quick blade . chain mail | scale mail / \
            goblin ; dagger
 
 If you're using continuation lines for comma-separated lists of monsters or

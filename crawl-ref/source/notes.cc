@@ -22,11 +22,12 @@
 #include "religion.h"
 #include "skills2.h"
 #include "spl-util.h"
+#include "state.h"
 #include "tags.h"
 
 #define NOTES_VERSION_NUMBER 1002
 
-std::vector<Note> note_list;
+vector<Note> note_list;
 
 // return the real number of the power (casting out nonexistent powers),
 // starting from 0, or -1 if the power doesn't exist
@@ -43,15 +44,6 @@ static int _real_god_power(int religion, int idx)
     return count;
 }
 
-static bool _is_noteworthy_skill_level(int level)
-{
-    for (unsigned int i = 0; i < Options.note_skill_levels.size(); ++i)
-        if (level == Options.note_skill_levels[i])
-            return (true);
-
-    return (false);
-}
-
 static bool _is_highest_skill(int skill)
 {
     for (int i = 0; i < NUM_SKILLS; ++i)
@@ -59,9 +51,9 @@ static bool _is_highest_skill(int skill)
         if (i == skill)
             continue;
         if (you.skills[i] >= you.skills[skill])
-            return (false);
+            return false;
     }
-    return (true);
+    return true;
 }
 
 static bool _is_noteworthy_hp(int hp, int maxhp)
@@ -84,21 +76,21 @@ static bool _is_noteworthy_dlevel(unsigned short place)
 
     // The Abyss is noted a different way (since we care mostly about the cause).
     if (branch == BRANCH_ABYSS)
-        return (false);
+        return false;
 
     // Other portal levels are always interesting.
     if (!is_connected_branch(static_cast<branch_type>(branch)))
-        return (true);
+        return true;
 
     if (lev == _dungeon_branch_depth(branch)
         || branch == BRANCH_MAIN_DUNGEON && (lev % 5) == 0
         || branch == BRANCH_MAIN_DUNGEON && lev == 14
         || branch != BRANCH_MAIN_DUNGEON && lev == 1)
     {
-        return (true);
+        return true;
     }
 
-    return (false);
+    return false;
 }
 
 // Is a note worth taking?
@@ -133,7 +125,7 @@ static bool _is_noteworthy(const Note& note)
         || note.type == NOTE_ALLY_DEATH
         || note.type == NOTE_FEAT_MIMIC)
     {
-        return (true);
+        return true;
     }
 
     // Never noteworthy, hooked up for fun or future use.
@@ -141,25 +133,25 @@ static bool _is_noteworthy(const Note& note)
         || note.type == NOTE_MAXHP_CHANGE
         || note.type == NOTE_MAXMP_CHANGE)
     {
-        return (false);
+        return false;
     }
 
     // Xom effects are only noteworthy if the option is true.
     if (note.type == NOTE_XOM_EFFECT)
-        return (Options.note_xom_effects);
+        return Options.note_xom_effects;
 
     // God powers might be noteworthy if it's an actual power.
     if (note.type == NOTE_GOD_POWER
         && _real_god_power(note.first, note.second) == -1)
     {
-        return (false);
+        return false;
     }
 
     // HP noteworthiness is handled in its own function.
     if (note.type == NOTE_HP_CHANGE
         && !_is_noteworthy_hp(note.first, note.second))
     {
-        return (false);
+        return false;
     }
 
     // Skills are noteworthy if in the skill value list or if
@@ -167,12 +159,12 @@ static bool _is_noteworthy(const Note& note)
     if (note.type == NOTE_GAIN_SKILL || note.type == NOTE_LOSE_SKILL)
     {
         if (Options.note_all_skill_levels
-            || _is_noteworthy_skill_level(note.second)
+            || note.second <= 27 && Options.note_skill_levels[note.second]
             || Options.note_skill_max && _is_highest_skill(note.first))
         {
-            return (true);
+            return true;
         }
-        return (false);
+        return false;
     }
 
     if (note.type == NOTE_DUNGEON_LEVEL_CHANGE)
@@ -188,7 +180,7 @@ static bool _is_noteworthy(const Note& note)
         {
         case NOTE_GOD_POWER:
             if (rnote.first == note.first && rnote.second == note.second)
-                return (false);
+                return false;
             break;
 
         case NOTE_HP_CHANGE:
@@ -197,7 +189,7 @@ static bool _is_noteworthy(const Note& note)
             if (note.turn - rnote.turn < 5
                 && note.first * 2 >= rnote.first)
             {
-                return (false);
+                return false;
             }
             break;
 
@@ -205,10 +197,10 @@ static bool _is_noteworthy(const Note& note)
             mpr("Buggy note passed: unknown note type");
             // Return now, rather than give a "Buggy note passed" message
             // for each note of the matching type in the note list.
-            return (true);
+            return true;
         }
     }
-    return (true);
+    return true;
 }
 
 static const char* _number_to_ordinal(int number)
@@ -222,12 +214,12 @@ static const char* _number_to_ordinal(int number)
     return ordinals[number-1];
 }
 
-std::string Note::describe(bool when, bool where, bool what) const
+string Note::describe(bool when, bool where, bool what) const
 {
-    std::ostringstream result;
+    ostringstream result;
 
     if (when)
-        result << std::setw(6) << turn << " ";
+        result << setw(6) << turn << " ";
 
     if (where)
     {
@@ -407,9 +399,9 @@ Note::Note(NOTE_TYPES t, int f, int s, const char* n, const char* d) :
     type(t), first(f), second(s)
 {
     if (n)
-        name = std::string(n);
+        name = string(n);
     if (d)
-        desc = std::string(d);
+        desc = string(d);
 
     turn         = you.num_turns;
     packed_place = get_packed_place();
@@ -429,23 +421,23 @@ void Note::check_milestone() const
         if (br != -1 && br != BRANCH_WIZLAB)
         {
             ASSERT(br >= 0 && br < NUM_BRANCHES);
-            std::string branch = place_name(packed_place, true, false).c_str();
+            string branch = place_name(packed_place, true, false).c_str();
             if (branch.find("The ") == 0)
                 branch[0] = tolower(branch[0]);
 
             if (dep == 1)
             {
                 mark_milestone(br == BRANCH_ZIGGURAT ? "zig.enter" : "br.enter",
-                               "entered " + branch + ".", true);
+                               "entered " + branch + ".", "parent");
             }
             else if (dep == _dungeon_branch_depth(br) || dep == 14
                      || br == BRANCH_ZIGGURAT)
             {
-                std::string level = place_name(packed_place, true, true);
+                string level = place_name(packed_place, true, true);
                 if (level.find("Level ") == 0)
                     level[0] = tolower(level[0]);
 
-                std::ostringstream branch_finale;
+                ostringstream branch_finale;
                 branch_finale << "reached " << level << ".";
                 mark_milestone(br == BRANCH_ZIGGURAT ? "zig" :
                                dep == 14 ? "br.mid" : "br.end",
@@ -481,7 +473,7 @@ static bool notes_active = false;
 
 bool notes_are_active()
 {
-    return (notes_active);
+    return notes_active;
 }
 
 void take_note(const Note& note, bool force)

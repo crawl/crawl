@@ -472,11 +472,375 @@ Spell definitions cut from the code:
      true
 },
 
+{
+    SPELL_DISRUPT, "Disrupt",
+     SPTYP_TRANSMUTATION,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_BATTLE | SPFLAG_DEVEL,
+     1,
+     25,
+     7, 7,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_POISON_AMMUNITION, "Poison Ammunition",
+     SPTYP_ENCHANTMENT | SPTYP_POISON,
+     SPFLAG_HELPFUL | SPFLAG_BATTLE,
+     4,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     true
+},
+{
+    SPELL_FLAME_AMMUNITION, "Flame Ammunition",
+     SPTYP_ENCHANTMENT | SPTYP_FIRE,
+     SPFLAG_HELPFUL | SPFLAG_BATTLE,
+     3,
+     0,
+     -1,-1,
+     0,
+     NULL,
+     false,
+     true
+},
+
+{
+    SPELL_FROST_AMMUNITION, "Frost Ammunition",
+     SPTYP_ENCHANTMENT | SPTYP_ICE,
+     SPFLAG_HELPFUL | SPFLAG_BATTLE,
+     3,
+     0,
+     -1,-1,
+     0,
+     NULL,
+     false,
+     true
+},
+
+{
+    SPELL_SHOCKING_AMMUNITION, "Shocking Ammunition",
+     SPTYP_ENCHANTMENT | SPTYP_AIR,
+     SPFLAG_HELPFUL | SPFLAG_BATTLE,
+     5,
+     0,
+     -1,-1,
+     0,
+     NULL,
+     false,
+     true
+},
+
+{
+    SPELL_EXPLODING_AMMUNITION, "Exploding Ammunition",
+     SPTYP_ENCHANTMENT | SPTYP_FIRE | SPTYP_AIR,
+     SPFLAG_HELPFUL | SPFLAG_BATTLE,
+     5,
+     0,
+     -1,-1,
+     0,
+     NULL,
+     false,
+     true
+},
+
+{
+    SPELL_WARP_AMMUNITION, "Warp Ammunition",
+     SPTYP_ENCHANTMENT | SPTYP_TRANSLOCATION,
+     SPFLAG_HELPFUL | SPFLAG_BATTLE,
+     5,
+     0,
+     -1,-1,
+     0,
+     NULL,
+     false,
+     true
+},
+
+{
+    SPELL_REAPING_AMMUNITION, "Reaping Ammunition",
+     SPTYP_ENCHANTMENT | SPTYP_NECROMANCY,
+     SPFLAG_HELPFUL | SPFLAG_BATTLE,
+     7,
+     0,
+     -1,-1,
+     0,
+     NULL,
+     false,
+     true
+},
+
+{
+    SPELL_RETURNING_AMMUNITION, "Returning Ammunition",
+     SPTYP_ENCHANTMENT | SPTYP_TRANSLOCATION,
+     SPFLAG_HELPFUL | SPFLAG_BATTLE,
+     3,
+     0,
+     -1,-1,
+     0,
+     NULL,
+     false,
+     true
+},
+
+{
+    SPELL_SELECTIVE_AMNESIA, "Selective Amnesia",
+     SPTYP_ENCHANTMENT,
+     SPFLAG_NONE,
+     4,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     true
+},
+   
+{
+    SPELL_BURN_SPELLBOOK, "Burn Spellbook",
+    SPTYP_ENCHANTMENT,
+    SPFLAG_AREA,
+    1,
+    200,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    NULL,
+    false,
+    false
+},
+
+{
+    SPELL_BONE_SHARDS, "Bone Shards",
+     SPTYP_NECROMANCY,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_CORPSE_VIOLATING,
+     3,
+     200,
+     6, 6,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
+    SPELL_TUKIMAS_VORPAL_BLADE, "Tukima's Vorpal Blade",
+     SPTYP_CHARMS,
+     SPFLAG_HELPFUL | SPFLAG_BATTLE,
+     2,
+     200,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     true
+},
+
+{
+    SPELL_PORTAL, "Portal",
+     SPTYP_TRANSLOCATION,
+     SPFLAG_ESCAPE,
+     7,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     true
+},
+
+{
+    SPELL_TAME_BEASTS, "Tame Beasts",
+     SPTYP_HEXES,
+     SPFLAG_AREA,
+     5,
+     200,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_DETECT_TRAPS, "Detect Traps",
+     0,
+     SPFLAG_MAPPING,
+     2,
+     50,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     true
+},
+
+{
+    SPELL_DETECT_SECRET_DOORS, "Detect Secret Doors",
+     0,
+     SPFLAG_NONE,
+     1,
+     200,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     true
+},
+
+{
+    SPELL_LEVITATION, "Levitation",
+     SPTYP_CHARMS | SPTYP_AIR,
+     SPFLAG_NONE,
+     3,
+     150,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     true
+},
+
+{
+    SPELL_EXTENSION, "Extension",
+     SPTYP_CHARMS,
+     SPFLAG_NONE,
+     5,
+     200,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     true
+},
+
+{
+    SPELL_DETECT_ITEMS, "Detect Items",
+     0,
+     SPFLAG_MAPPING,
+     2,
+     50,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     true
+},
+
+{
+    SPELL_TUKIMAS_BALL, "Tukima's Ball",
+     SPTYP_HEXES,
+     SPFLAG_NONE,
+     9,
+     200,
+     -1,-1,
+     0,
+     NULL,
+     false,
+     true
+},
+
+{
+    SPELL_STONEMAIL, "Stonemail",
+     SPTYP_CHARMS | SPTYP_EARTH,
+     SPFLAG_NONE,
+     6,
+     200,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     true
+},
+
+{
+    SPELL_DETECT_CREATURES, "Detect Creatures",
+     0,
+     SPFLAG_MAPPING,
+     2,
+     60,                        // not 50, note the fuzz
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_RESIST_POISON, "Resist Poison",
+     SPTYP_CHARMS | SPTYP_POISON,
+     SPFLAG_HELPFUL,
+     4,
+     200,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     true
+},
+
+{
+    SPELL_ALTER_SELF, "Alter Self",
+     SPTYP_TRANSMUTATION,
+     SPFLAG_CHAOTIC,
+     7,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_MAXWELLS_SILVER_HAMMER, "Maxwell's Silver Hammer",
+     SPTYP_CHARMS | SPTYP_EARTH,
+     SPFLAG_HELPFUL | SPFLAG_BATTLE,
+     2,
+     200,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     true
+},
+
+{
+    SPELL_SUMMON_GREATER_HOLY, "Summon Greater Holy",
+     SPTYP_SUMMONING,
+     SPFLAG_MONSTER,
+     9,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_PROJECTED_NOISE, "Projected Noise",
+     SPTYP_HEXES,
+     SPFLAG_NONE,
+     2,
+     0,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     false,
+     false
+},
+
+
 Spell descriptions cut from the code:
 
 [Cure Poison and Abjuration are duplicates of existing spells and are omitted.]
 
-[Summon Angel, Pestilence, Thunderbolt, Flame of Cleansing, Shining Light, Summon Daeva, Orb of Fragmentation and Semi-Controlled Blink have no descriptions and are omitted.
+[Summon Angel, Pestilence, Thunderbolt, Flame of Cleansing, Shining Light, Summon Daeva, Orb of Fragmentation, and Semi-Controlled Blink have no descriptions and are omitted.
 
 %%%%
 Create Noise
@@ -578,4 +942,134 @@ This spell reveals details about the caster's surroundings.
 Remove Curse
 
 This spell removes curses from any items which are being used by the caster.
+%%%%
+Selective Amnesia
+
+This spell allows the caster to selectively erase one spell from memory to recapture the magical energy bound up with it.
+%%%%
+Tukima's Vorpal Blade
+
+This spell bestows a lethal but temporary sharpness on a sword held by the caster. It will not affect weapons otherwise subject to special enchantments.
+%%%%
+Bone Shards
+
+This spell uses the bones of a skeleton to dispense a lethal spray of slicing fragments, allowing its caster to dispense with conjurations in favour of necromancy alone to provide a low-level yet very powerful offensive spell. The use of a large and heavy skeleton (by wielding it) amplifies this spell's effect.
+%%%%
+Tame Beasts
+
+This spell attempts to tame animals in the caster's vicinity. It works best on animals amenable to domestication.
+%%%%
+Portal
+
+This spell creates a gate allowing long-distance travel in relatively ordinary environments (i.e., the Dungeon only). The portal lasts long enough for the caster and nearby creatures to enter. Casters are never taken past the level limits of the current area.
+%%%%
+Alter Self
+
+This spell causes aberrations to form in the caster's body, leaving the caster in a weakened state (though it is not fatal in and of itself). It may fail to affect those who are already heavily mutated.
+%%%%
+Banishment
+
+This spell banishes one creature to the Abyss. This magic cannot be used to relocate the caster.
+%%%%
+Disrupt
+
+This spell disrupts space around another creature, causing injury.
+%%%%
+Extension
+
+This spell extends the duration of most spells influencing the caster. Be wary that using it slowly contaminates you with magical energy.
+
+You must know the inner workings of a spell to be able to extend it.
+%%%%
+Exploding Ammunition
+
+This spell will make ammunition held by the caster extremely unstable. With proper handling, they can still be stored indefinitely, though.
+%%%%
+Flame Ammunition
+
+This spell will make ammunition held by the caster ignite themselves upon being launched. This flammability lasts until the missile is used, at that point it burns away completely.
+%%%%
+Fragmentation
+
+This spell creates a concussive explosion within a large body of rock (or other hard material), to the detriment of any who happen to be standing nearby.
+%%%%
+Frost Ammunition
+
+This spell will freeze ammunition held by the caster. Such missiles will shatter upon use, but won't thaw before that.
+%%%%
+Poison Ammunition
+
+This spell envenoms missile ammunition held by the caster. The poison is permanent.
+%%%%
+Reaping Ammunition
+
+This spell will infuse missiles held by the caster with necromantic magic which may create zombies from enemies slain by them. This magic will last as long as the missiles last.
+%%%%
+Returning Ammunition
+
+This spell will cause the wielded missiles to return to the caster after being fired. This power is permanent.
+%%%%
+Shocking Ammunition
+
+This spell will electrically charge missiles held by the caster. They will retain the charge even after use.
+%%%%
+Symbol of Torment
+
+This spell calls on the powers of Hell to cause agonising injury to any living thing in the caster's vicinity. It carries within itself a degree of danger, for any brave enough to invoke it, for the Symbol also affects its caller and indeed will not function if he or she is immune to its terrible effects. Despite its ominous power, this spell is never lethal.
+%%%%
+Warp Ammunition
+
+This spell will infuse missiles held by the caster with translocational energy. That energy does not dissipate with time.
+%%%%
+Stonemail
+
+This spell covers the caster with chunky scales of stone, the durability of which depends on his or her skill with Earth magic. These scales can coexist with other forms of armour, but are in and of themselves extremely heavy and cumbersome. The effects of this spell are increased if the caster is in Statue Form.
+%%%%
+Berserker Rage
+
+This spell sends the caster into a temporary psychotic rage.
+%%%%
+Resist Poison
+
+This spell protects the caster from exposure to all poisons for a period of time.
+%%%%
+Teleport Self
+
+This spell teleports the caster to a random location.
+%%%%
+Maxwell's Silver Hammer
+
+This spell bestows a lethal but temporary gravitic field to a crushing implement held by the caster. It will not affect weapons otherwise subject to special enchantments.
+%%%%
+Disintegrate
+
+This spell violently rends apart anything in a small volume of space. It can be used to cause severe damage.
+%%%%
+Tukima's Ball
+
+This spell causes weapons on the ground near the caster to all leap into the air and dance together.
+%%%%
+Detect Creatures
+
+This spell allows the caster to detect any creatures within a certain radius.
+%%%%
+Detect Items
+
+This spell detects any items lying about the caster's general vicinity.
+%%%%
+Detect Secret Doors
+
+This spell is beloved by lazy dungeoneers everywhere, for it can greatly reduce time-consuming searches.
+%%%%
+Detect Traps
+
+This spell reveals traps in the caster's vicinity.
+%%%%
+Smiting
+
+This spell smites one creature of the caster's choice.
+%%%%
+Projected Noise spell
+
+This spell produces a noise emanating from a place of the caster's own choosing.
 %%%%

@@ -56,10 +56,23 @@ for (grep /\.des$/, `git ls-files`)
         s/"[^"]*"/LUA/g;
         s/"$//;
         s/"[^"]*$/LUA/;
+        vault_mon() for split m{/|,}; #/
+    }
+    for (/(?:mon_set|bs\[\d+\])\s+=\s+\{([^}]+)}/sg)
+    {
+        s/^\s*"//s;
+        s/"\s*,\s*$//sg;
         s/\\\n *//g;
+        s/--[^\n]*\n//sg;
+        s|"\s*,\s*"|/|sg;
         vault_mon() for split m{/|,}; #/
     }
 }
+
+$mons{"freed slave"} = 1;
+
+# Unlike genus-only monsters, these are not even up to name translations.
+delete $mons{$_} for ("base draconian", "greater demon");
 
 unless ($db)
 {

@@ -46,10 +46,10 @@
 actor* actor_at(const coord_def& c)
 {
     if (!in_bounds(c))
-        return (NULL);
+        return NULL;
     if (c == you.pos())
-        return (&you);
-    return (monster_at(c));
+        return &you;
+    return monster_at(c);
 }
 
 int count_neighbours_with_func(const coord_def& c, bool (*checker)(dungeon_feature_type))
@@ -83,23 +83,23 @@ bool feat_is_stone_stair(dungeon_feature_type feat)
     case DNGN_STONE_STAIRS_DOWN_I:
     case DNGN_STONE_STAIRS_DOWN_II:
     case DNGN_STONE_STAIRS_DOWN_III:
-        return (true);
+        return true;
     default:
-        return (false);
+        return false;
     }
 }
 
 bool feat_is_staircase(dungeon_feature_type feat)
 {
     if (feat_is_stone_stair(feat))
-        return (true);
+        return true;
 
     // All branch entries/exits are staircases, except for Zot.
     if (feat == DNGN_ENTER_ZOT || feat == DNGN_RETURN_FROM_ZOT)
-        return (false);
+        return false;
 
     if (feat == DNGN_EXIT_DUNGEON)
-        return (true);
+        return true;
 
     return (feat >= DNGN_ENTER_FIRST_BRANCH && feat <= DNGN_ENTER_LAST_BRANCH
             || feat >= DNGN_RETURN_FROM_FIRST_BRANCH
@@ -172,9 +172,9 @@ bool feat_is_travelable_stair(dungeon_feature_type feat)
     case DNGN_RETURN_FROM_SHOALS:
     case DNGN_RETURN_FROM_SPIDER_NEST:
     case DNGN_RETURN_FROM_FOREST:
-        return (true);
+        return true;
     default:
-        return (false);
+        return false;
     }
 }
 
@@ -185,9 +185,9 @@ bool feat_is_escape_hatch(dungeon_feature_type feat)
     {
     case DNGN_ESCAPE_HATCH_DOWN:
     case DNGN_ESCAPE_HATCH_UP:
-        return (true);
+        return true;
     default:
-        return (false);
+        return false;
     }
 }
 
@@ -213,9 +213,9 @@ bool feat_is_gate(dungeon_feature_type feat)
     case DNGN_ENTER_GEHENNA:
     case DNGN_ENTER_COCYTUS:
     case DNGN_ENTER_TARTARUS:
-        return (true);
+        return true;
     default:
-        return (false);
+        return false;
     }
 }
 
@@ -247,7 +247,7 @@ command_type feat_stair_direction(dungeon_feature_type feat)
     case DNGN_ENTER_SHOP:
     case DNGN_EXIT_HELL:
     case DNGN_EXIT_PORTAL_VAULT:
-        return (CMD_GO_UPSTAIRS);
+        return CMD_GO_UPSTAIRS;
 
     case DNGN_ENTER_PORTAL_VAULT:
     case DNGN_ENTER_HELL:
@@ -282,10 +282,10 @@ command_type feat_stair_direction(dungeon_feature_type feat)
     case DNGN_ENTER_SHOALS:
     case DNGN_ENTER_SPIDER_NEST:
     case DNGN_ENTER_FOREST:
-        return (CMD_GO_DOWNSTAIRS);
+        return CMD_GO_DOWNSTAIRS;
 
     default:
-        return (CMD_NO_CMD);
+        return CMD_NO_CMD;
     }
 }
 
@@ -301,7 +301,7 @@ bool feat_is_solid(dungeon_feature_type feat)
 
 bool cell_is_solid(const coord_def &c)
 {
-    return (feat_is_solid(grd(c)));
+    return feat_is_solid(grd(c));
 }
 
 bool feat_has_solid_floor(dungeon_feature_type feat)
@@ -312,18 +312,13 @@ bool feat_has_solid_floor(dungeon_feature_type feat)
 
 bool feat_is_door(dungeon_feature_type feat)
 {
-    return (feat == DNGN_CLOSED_DOOR || feat == DNGN_DETECTED_SECRET_DOOR
+    return (feat == DNGN_CLOSED_DOOR || feat == DNGN_RUNED_DOOR
             || feat == DNGN_OPEN_DOOR);
 }
 
 bool feat_is_closed_door(dungeon_feature_type feat)
 {
-    return (feat == DNGN_CLOSED_DOOR || feat == DNGN_DETECTED_SECRET_DOOR);
-}
-
-bool feat_is_secret_door(dungeon_feature_type feat)
-{
-    return (feat == DNGN_SECRET_DOOR || feat == DNGN_DETECTED_SECRET_DOOR);
+    return (feat == DNGN_CLOSED_DOOR || feat == DNGN_RUNED_DOOR);
 }
 
 bool feat_is_statue_or_idol(dungeon_feature_type feat)
@@ -335,7 +330,6 @@ bool feat_is_rock(dungeon_feature_type feat)
 {
     return (feat == DNGN_ORCISH_IDOL
             || feat == DNGN_GRANITE_STATUE
-            || feat == DNGN_SECRET_DOOR
             || feat >= DNGN_ROCK_WALL
                && feat <= DNGN_CLEAR_PERMAROCK_WALL);
 }
@@ -357,7 +351,7 @@ bool feat_is_water(dungeon_feature_type feat)
     return (feat == DNGN_SHALLOW_WATER
             || feat == DNGN_DEEP_WATER
             || feat == DNGN_OPEN_SEA
-            || feat == DNGN_SWAMP_TREE);
+            || feat == DNGN_MANGROVE);
 }
 
 bool feat_is_watery(dungeon_feature_type feat)
@@ -378,7 +372,7 @@ god_type feat_altar_god(dungeon_feature_type feat)
     if (feat >= DNGN_ALTAR_FIRST_GOD && feat <= DNGN_ALTAR_LAST_GOD)
         return (static_cast<god_type>(feat - DNGN_ALTAR_FIRST_GOD + 1));
 
-    return (GOD_NO_GOD);
+    return GOD_NO_GOD;
 }
 
 // Returns DNGN_FLOOR for non-gods, otherwise returns the altar for the
@@ -386,7 +380,7 @@ god_type feat_altar_god(dungeon_feature_type feat)
 dungeon_feature_type altar_for_god(god_type god)
 {
     if (god == GOD_NO_GOD || god >= NUM_GODS)
-        return (DNGN_FLOOR);  // Yeah, lame. Tell me about it.
+        return DNGN_FLOOR;  // Yeah, lame. Tell me about it.
 
     return (static_cast<dungeon_feature_type>(DNGN_ALTAR_FIRST_GOD + god - 1));
 }
@@ -420,7 +414,7 @@ bool feat_is_branchlike(dungeon_feature_type feat)
 
 bool feat_is_tree(dungeon_feature_type feat)
 {
-    return (feat == DNGN_TREE || feat == DNGN_SWAMP_TREE);
+    return (feat == DNGN_TREE || feat == DNGN_MANGROVE);
 }
 
 bool feat_is_bidirectional_portal(dungeon_feature_type feat)
@@ -444,12 +438,12 @@ bool feat_is_reachable_past(dungeon_feature_type feat)
 
 // Find all connected cells containing ft, starting at d.
 void find_connected_identical(const coord_def &d, dungeon_feature_type ft,
-                              std::set<coord_def>& out)
+                              set<coord_def>& out)
 {
     if (grd(d) != ft)
         return;
 
-    std::string prop = env.markers.property_at(d, MAT_ANY, "connected_exclude");
+    string prop = env.markers.property_at(d, MAT_ANY, "connected_exclude");
 
     if (!prop.empty())
     {
@@ -469,40 +463,11 @@ void find_connected_identical(const coord_def &d, dungeon_feature_type ft,
     }
 }
 
-// Find all connected cells containing ft_min to ft_max, starting at d.
-static void _find_connected_range(const coord_def& d,
-                                  dungeon_feature_type ft_min,
-                                  dungeon_feature_type ft_max,
-                                  std::set<coord_def>& out)
+set<coord_def> connected_doors(const coord_def& d)
 {
-    if (grd(d) < ft_min || grd(d) > ft_max)
-        return;
-
-    std::string prop = env.markers.property_at(d, MAT_ANY, "connected_exclude");
-
-    if (!prop.empty())
-    {
-        // Even if this square is excluded from being a part of connected
-        // cells, add it if it's the starting square.
-        if (out.empty())
-            out.insert(d);
-        return;
-    }
-
-    if (out.insert(d).second)
-    {
-        _find_connected_range(coord_def(d.x+1, d.y), ft_min, ft_max, out);
-        _find_connected_range(coord_def(d.x-1, d.y), ft_min, ft_max, out);
-        _find_connected_range(coord_def(d.x, d.y+1), ft_min, ft_max, out);
-        _find_connected_range(coord_def(d.x, d.y-1), ft_min, ft_max, out);
-    }
-}
-
-std::set<coord_def> connected_doors(const coord_def& d)
-{
-    std::set<coord_def> doors;
-    _find_connected_range(d, DNGN_CLOSED_DOOR, DNGN_SECRET_DOOR, doors);
-    return (doors);
+    set<coord_def> doors;
+    find_connected_identical(d, grd(d), doors);
+    return doors;
 }
 
 void get_door_description(int door_size, const char** adjective, const char** noun)
@@ -516,7 +481,7 @@ void get_door_description(int door_size, const char** adjective, const char** no
     };
 
     int max_idx = static_cast<int>(ARRAYSZ(descriptions) - 2);
-    const unsigned int idx = std::min(door_size*2, max_idx);
+    const unsigned int idx = min(door_size*2, max_idx);
 
     *adjective = descriptions[idx];
     *noun = descriptions[idx+1];
@@ -527,8 +492,6 @@ dungeon_feature_type grid_appearance(const coord_def &gc)
     dungeon_feature_type feat = env.grid(gc);
     switch (feat)
     {
-    case DNGN_SECRET_DOOR:
-        return grid_secret_door_appearance(gc);
     case DNGN_UNDISCOVERED_TRAP:
         return DNGN_FLOOR;
     default:
@@ -536,71 +499,15 @@ dungeon_feature_type grid_appearance(const coord_def &gc)
     }
 }
 
-bool find_secret_door_info(const coord_def &where,
-                           dungeon_feature_type *appearance,
-                           coord_def *gc)
-{
-    std::set<coord_def> doors = connected_doors(where);
-    std::set<coord_def>::iterator it;
-
-    dungeon_feature_type feat = DNGN_FLOOR;
-    coord_def loc = where;
-
-    int orth[][2] = { {0, 1}, {1, 0,}, {-1, 0}, {0, -1} };
-
-    for (it = doors.begin(); it != doors.end(); ++it)
-    {
-        for (int i = 0; i < 4; i++)
-        {
-            const int x = it->x + orth[i][0];
-            const int y = it->y + orth[i][1];
-
-            if (!in_bounds(x, y))
-                continue;
-
-            const dungeon_feature_type targ = grd[x][y];
-            if (!feat_is_wall(targ) || feat_is_closed_door(targ))
-                continue;
-
-            if (feat == DNGN_FLOOR || targ < feat)
-            {
-                feat = targ;
-                loc = coord_def(x, y);
-            }
-        }
-    }
-
-    if (feat == DNGN_FLOOR)
-    {
-        if (appearance)
-            *appearance = DNGN_ROCK_WALL;
-        return (false);
-    }
-    else
-    {
-        if (appearance)
-            *appearance = feat;
-        if (gc)
-            *gc = loc;
-        return (true);
-    }
-}
-
-dungeon_feature_type grid_secret_door_appearance(const coord_def &where)
-{
-    dungeon_feature_type feat;
-    find_secret_door_info(where, &feat, NULL);
-    return (feat);
-}
-
 coord_def get_random_stair()
 {
-    std::vector<coord_def> st;
+    vector<coord_def> st;
     for (rectangle_iterator ri(1); ri; ++ri)
     {
         const dungeon_feature_type feat = grd(*ri);
         if (feat_is_travelable_stair(feat) && !feat_is_escape_hatch(feat)
-            && feat != DNGN_EXIT_DUNGEON && feat != DNGN_EXIT_HELL)
+            && (crawl_state.game_is_zotdef() || feat != DNGN_EXIT_DUNGEON)
+            && feat != DNGN_EXIT_HELL)
         {
             st.push_back(*ri);
         }
@@ -611,7 +518,7 @@ coord_def get_random_stair()
 }
 
 
-static std::auto_ptr<map_mask_boolean> _slime_wall_precomputed_neighbour_mask;
+static unique_ptr<map_mask_boolean> _slime_wall_precomputed_neighbour_mask;
 
 static void _precompute_slime_wall_neighbours()
 {
@@ -651,8 +558,8 @@ bool slime_wall_neighbour(const coord_def& c)
 
     for (adjacent_iterator ai(c); ai; ++ai)
         if (env.grid(*ai) == DNGN_SLIMY_WALL)
-            return (true);
-    return (false);
+            return true;
+    return false;
 }
 
 bool feat_destroys_item(dungeon_feature_type feat, const item_def &item,
@@ -664,15 +571,15 @@ bool feat_destroys_item(dungeon_feature_type feat, const item_def &item,
     case DNGN_DEEP_WATER:
         if (noisy)
             mprf(MSGCH_SOUND, "You hear a splash.");
-        return (false);
+        return false;
 
     case DNGN_LAVA:
         if (noisy)
             mprf(MSGCH_SOUND, "You hear a sizzling splash.");
-        return (true);
+        return true;
 
     default:
-        return (false);
+        return false;
     }
 }
 
@@ -686,20 +593,20 @@ bool feat_virtually_destroys_item(dungeon_feature_type feat, const item_def &ite
     case DNGN_SHALLOW_WATER:
         if (noisy)
             mprf(MSGCH_SOUND, "You hear a splash.");
-        return (false);
+        return false;
 
     case DNGN_DEEP_WATER:
         if (noisy)
             mprf(MSGCH_SOUND, "You hear a splash.");
-        return (true);
+        return true;
 
     case DNGN_LAVA:
         if (noisy)
             mprf(MSGCH_SOUND, "You hear a sizzling splash.");
-        return (true);
+        return true;
 
     default:
-        return (false);
+        return false;
     }
 }
 
@@ -711,19 +618,19 @@ static coord_def _dgn_find_nearest_square(
 {
     memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
 
-    std::list<coord_def> points[2];
+    list<coord_def> points[2];
     int iter = 0;
     points[iter].push_back(pos);
 
     while (!points[iter].empty())
     {
-        for (std::list<coord_def>::iterator i = points[iter].begin();
+        for (list<coord_def>::iterator i = points[iter].begin();
              i != points[iter].end(); ++i)
         {
             const coord_def &p = *i;
 
             if (p != pos && acceptable(p, thing))
-                return (p);
+                return p;
 
             travel_point_distance[p.x][p.y] = 1;
             for (int yi = -1; yi <= 1; ++yi)
@@ -748,7 +655,7 @@ static coord_def _dgn_find_nearest_square(
     }
 
     coord_def unfound;
-    return (unfound);
+    return unfound;
 }
 
 static bool _item_safe_square(const coord_def &pos, void *item)
@@ -766,9 +673,9 @@ static bool _dgn_shift_item(const coord_def &pos, item_def &item)
     {
         int index = item.index();
         move_item_to_grid(&index, np);
-        return (true);
+        return true;
     }
-    return (false);
+    return false;
 }
 
 bool is_critical_feature(dungeon_feature_type feat)
@@ -782,7 +689,7 @@ bool is_valid_border_feat(dungeon_feature_type feat)
 {
     return ((feat <= DNGN_MAXWALL && feat >= DNGN_MINWALL)
             || (feat == DNGN_TREE
-               || feat == DNGN_SWAMP_TREE
+               || feat == DNGN_MANGROVE
                || feat == DNGN_OPEN_SEA
                || feat == DNGN_LAVA_SEA));
 }
@@ -948,13 +855,13 @@ static bool _dgn_shift_feature(const coord_def &pos)
 {
     const dungeon_feature_type dfeat = grd(pos);
     if (!is_critical_feature(dfeat) && !env.markers.find(pos, MAT_ANY))
-        return (false);
+        return false;
 
     const coord_def dest =
         _dgn_find_nearest_square(pos, NULL, _is_feature_shift_target);
 
     dgn_move_entities_at(pos, dest, false, false, false);
-    return (true);
+    return true;
 }
 
 static void _dgn_check_terrain_items(const coord_def &pos, bool preserve_items)
@@ -1078,14 +985,14 @@ static void _announce_swap_real(coord_def orig_pos, coord_def dest_pos)
 {
     const dungeon_feature_type orig_feat = grd(dest_pos);
 
-    const std::string orig_name =
-        feature_description(dest_pos, false,
+    const string orig_name =
+        feature_description_at(dest_pos, false,
                             you.see_cell(orig_pos) ? DESC_THE : DESC_A,
                             false);
 
-    std::string prep = feat_preposition(orig_feat, false);
+    string prep = feat_preposition(orig_feat, false);
 
-    std::string orig_actor, dest_actor;
+    string orig_actor, dest_actor;
     if (orig_pos == you.pos())
         orig_actor = "you";
     else if (const monster* m = monster_at(orig_pos))
@@ -1102,7 +1009,7 @@ static void _announce_swap_real(coord_def orig_pos, coord_def dest_pos)
             dest_actor = m->name(DESC_THE);
     }
 
-    std::ostringstream str;
+    ostringstream str;
     str << orig_name << " ";
     if (you.see_cell(orig_pos) && !you.see_cell(dest_pos))
     {
@@ -1165,7 +1072,7 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
     ASSERT(pos1 != pos2);
 
     if (is_sanctuary(pos1) || is_sanctuary(pos2))
-        return (false);
+        return false;
 
     const dungeon_feature_type feat1 = grd(pos1);
     const dungeon_feature_type feat2 = grd(pos2);
@@ -1173,13 +1080,13 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
     if (is_notable_terrain(feat1) && !you.see_cell(pos1)
         && env.map_knowledge(pos1).known())
     {
-        return (false);
+        return false;
     }
 
     if (is_notable_terrain(feat2) && !you.see_cell(pos2)
         && env.map_knowledge(pos2).known())
     {
-        return (false);
+        return false;
     }
 
     const unsigned short col1 = env.grid_colours(pos1);
@@ -1220,7 +1127,7 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
     if (!in_bounds(temp))
     {
         mpr("swap_features(): No boring squares on level?", MSGCH_ERROR);
-        return (false);
+        return false;
     }
 
     // OK, now we guarantee the move.
@@ -1274,7 +1181,7 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
 
         if (announce)
             _announce_swap(pos1, pos2);
-        return (true);
+        return true;
     }
 
     // Swap items.
@@ -1328,7 +1235,7 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
     if (announce)
         _announce_swap(pos1, pos2);
 
-    return (true);
+    return true;
 }
 
 static bool _ok_dest_cell(const actor* orig_actor,
@@ -1338,22 +1245,22 @@ static bool _ok_dest_cell(const actor* orig_actor,
     const dungeon_feature_type dest_feat = grd(dest_pos);
 
     if (orig_feat == dest_feat)
-        return (false);
+        return false;
 
     if (is_notable_terrain(dest_feat))
-        return (false);
+        return false;
 
     if (find_trap(dest_pos))
-        return (false);
+        return false;
 
     actor* dest_actor = actor_at(dest_pos);
 
     if (orig_actor && !orig_actor->is_habitable_feat(dest_feat))
-        return (false);
+        return false;
     if (dest_actor && !dest_actor->is_habitable_feat(orig_feat))
-        return (false);
+        return false;
 
-    return (true);
+    return true;
 }
 
 bool slide_feature_over(const coord_def &src, coord_def preferred_dest,
@@ -1383,7 +1290,7 @@ bool slide_feature_over(const coord_def &src, coord_def preferred_dest,
     }
 
     if (!in_bounds(preferred_dest))
-        return (false);
+        return false;
 
     ASSERT(preferred_dest != src);
     return swap_features(src, preferred_dest, false, announce);
@@ -1400,12 +1307,12 @@ bool fall_into_a_pool(const coord_def& entry, bool allow_shift,
     if (terrain == DNGN_DEEP_WATER)
     {
         if (beogh_water_walk() || form_likes_water())
-            return (false);
+            return false;
 
         if (species_likes_water(you.species) && !you.transform_uncancellable)
         {
             emergency_untransform();
-            return (false);
+            return false;
         }
     }
 
@@ -1425,6 +1332,9 @@ bool fall_into_a_pool(const coord_def& entry, bool allow_shift,
         {
             mpr("The lava burns you to a cinder!");
             ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_LAVA);
+
+            if (you.dead) // felids
+                return false;
         }
         else
         {
@@ -1442,6 +1352,9 @@ bool fall_into_a_pool(const coord_def& entry, bool allow_shift,
                 mpr("The lava scalds you!");
 
             ouch(damage, NON_MONSTER, KILLED_BY_LAVA);
+
+            if (you.dead) // felids
+                return false;
         }
 
         expose_player_to_element(BEAM_LAVA, 14);
@@ -1490,7 +1403,7 @@ bool fall_into_a_pool(const coord_def& entry, bool allow_shift,
             if (terrain == DNGN_LAVA)
                 expose_player_to_element(BEAM_LAVA, 14);
 
-            return (true);
+            return true;
         }
     }
 
@@ -1509,10 +1422,10 @@ bool fall_into_a_pool(const coord_def& entry, bool allow_shift,
     else if (terrain == DNGN_DEEP_WATER)
         ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_WATER);
 
-    return (false);
+    return false;
 }
 
-typedef std::map<std::string, dungeon_feature_type> feat_desc_map;
+typedef map<string, dungeon_feature_type> feat_desc_map;
 static feat_desc_map feat_desc_cache;
 
 void init_feat_desc_cache()
@@ -1520,7 +1433,7 @@ void init_feat_desc_cache()
     for (int i = 0; i < NUM_FEATURES; i++)
     {
         dungeon_feature_type feat = static_cast<dungeon_feature_type>(i);
-        std::string          desc = feature_description(feat);
+        string               desc = feature_description(feat);
 
         lowercase(desc);
         if (feat_desc_cache.find(desc) == feat_desc_cache.end())
@@ -1528,7 +1441,7 @@ void init_feat_desc_cache()
     }
 }
 
-dungeon_feature_type feat_by_desc(std::string desc)
+dungeon_feature_type feat_by_desc(string desc)
 {
     lowercase(desc);
 
@@ -1538,17 +1451,16 @@ dungeon_feature_type feat_by_desc(std::string desc)
     feat_desc_map::iterator i = feat_desc_cache.find(desc);
 
     if (i != feat_desc_cache.end())
-        return (i->second);
+        return i->second;
 
-    return (DNGN_UNSEEN);
+    return DNGN_UNSEEN;
 }
 
 // If active is true, the player is just stepping onto the feature, with the
 // message: "<feature> slides away as you move <prep> it!"
 // Else, the actor is already on the feature:
 // "<feature> moves from <prep origin> to <prep destination>!"
-std::string feat_preposition(dungeon_feature_type feat, bool active,
-                             const actor* who)
+string feat_preposition(dungeon_feature_type feat, bool active, const actor* who)
 {
     const bool         airborne = !who || who->airborne();
     const command_type dir      = feat_stair_direction(feat);
@@ -1611,7 +1523,7 @@ std::string feat_preposition(dungeon_feature_type feat, bool active,
         return "beside";
 }
 
-std::string stair_climb_verb(dungeon_feature_type feat)
+string stair_climb_verb(dungeon_feature_type feat)
 {
     ASSERT(feat_stair_direction(feat) != CMD_NO_CMD);
 
@@ -1625,12 +1537,18 @@ std::string stair_climb_verb(dungeon_feature_type feat)
 
 static const char *dngn_feature_names[] =
 {
-"unseen", "closed_door", "detected_secret_door", "secret_door",
-"wax_wall", "metal_wall", "green_crystal_wall", "rock_wall",
+"unseen", "closed_door", "runed_door",
+#if TAG_MAJOR_VERSION == 34
+"non-secret_door",
+#endif
+"mangrove", "metal_wall", "green_crystal_wall", "rock_wall",
 "slimy_wall", "stone_wall", "permarock_wall",
 "clear_rock_wall", "clear_stone_wall", "clear_permarock_wall", "iron_grate",
-"tree", "swamp_tree", "open_sea", "endless_lava", "orcish_idol",
-"granite_statue", "malign_gateway", "", "", "", "", "", "", "", "",
+"tree", "open_sea", "endless_lava", "orcish_idol",
+"granite_statue", "malign_gateway", "", "", "", "", "", "", "", "", "",
+#if TAG_MAJOR_VERSION != 34
+"",
+#endif
 
 // DNGN_MINMOVE
 "lava", "deep_water",
@@ -1680,14 +1598,15 @@ static const char *dngn_feature_names[] =
 "permadry_fountain",
 
 "explore_horizon",
+"unknown_altar", "unknown_portal",
 };
 
-dungeon_feature_type dungeon_feature_by_name(const std::string &name)
+dungeon_feature_type dungeon_feature_by_name(const string &name)
 {
     COMPILE_CHECK(ARRAYSZ(dngn_feature_names) == NUM_FEATURES);
 
     if (name.empty())
-        return (DNGN_UNSEEN);
+        return DNGN_UNSEEN;
 
     for (unsigned i = 0; i < ARRAYSZ(dngn_feature_names); ++i)
     {
@@ -1698,29 +1617,29 @@ dungeon_feature_type dungeon_feature_by_name(const std::string &name)
             if (feat_is_altar(feat)
                 && is_unavailable_god(feat_altar_god(feat)))
             {
-                return (DNGN_FLOOR);
+                return DNGN_FLOOR;
             }
 
-            return (feat);
+            return feat;
         }
     }
 
-    return (DNGN_UNSEEN);
+    return DNGN_UNSEEN;
 }
 
-std::vector<std::string> dungeon_feature_matches(const std::string &name)
+vector<string> dungeon_feature_matches(const string &name)
 {
-    std::vector<std::string> matches;
+    vector<string> matches;
 
     COMPILE_CHECK(ARRAYSZ(dngn_feature_names) == NUM_FEATURES);
     if (name.empty())
-        return (matches);
+        return matches;
 
     for (unsigned i = 0; i < ARRAYSZ(dngn_feature_names); ++i)
         if (strstr(dngn_feature_names[i], name.c_str()))
             matches.push_back(dngn_feature_names[i]);
 
-    return (matches);
+    return matches;
 }
 
 const char *dungeon_feature_name(dungeon_feature_type rfeat)
@@ -1728,7 +1647,7 @@ const char *dungeon_feature_name(dungeon_feature_type rfeat)
     const unsigned feat = rfeat;
 
     if (feat >= ARRAYSZ(dngn_feature_names))
-        return (NULL);
+        return NULL;
 
     return dngn_feature_names[feat];
 }
@@ -1744,7 +1663,7 @@ void nuke_wall(const coord_def& p)
 
     remove_mold(p);
 
-    grd(p) = (grd(p) == DNGN_SWAMP_TREE) ? DNGN_SHALLOW_WATER : DNGN_FLOOR;
+    grd(p) = (grd(p) == DNGN_MANGROVE) ? DNGN_SHALLOW_WATER : DNGN_FLOOR;
     set_terrain_changed(p);
 }
 
@@ -1798,10 +1717,14 @@ bool cell_can_cling_to(const coord_def& from, const coord_def to)
         return false;
 
     for (orth_adjacent_iterator ai(from); ai; ++ai)
+    {
         if (feat_is_wall(env.grid(*ai)))
+        {
             for (orth_adjacent_iterator ai2(to, false); ai2; ++ai2)
-                if (feat_is_wall(env.grid(*ai2)) && distance(*ai, *ai2) <= 1)
+                if (feat_is_wall(env.grid(*ai2)) && distance2(*ai, *ai2) <= 1)
                     return true;
+        }
+    }
 
         return false;
 }

@@ -15,10 +15,10 @@
 rectangle_iterator::rectangle_iterator(const coord_def& corner1,
                                         const coord_def& corner2)
 {
-    topleft.x = std::min(corner1.x, corner2.x);
-    topleft.y = std::min(corner1.y, corner2.y); // not really necessary
-    bottomright.x = std::max(corner1.x, corner2.x);
-    bottomright.y = std::max(corner1.y, corner2.y);
+    topleft.x = min(corner1.x, corner2.x);
+    topleft.y = min(corner1.y, corner2.y); // not really necessary
+    bottomright.x = max(corner1.x, corner2.x);
+    bottomright.y = max(corner1.y, corner2.y);
     current = topleft;
 }
 
@@ -79,12 +79,12 @@ circle_iterator::circle_iterator(const circle_def &circle_)
 
 circle_iterator::operator bool() const
 {
-    return (iter);
+    return iter;
 }
 
 coord_def circle_iterator::operator*() const
 {
-    return (*iter);
+    return *iter;
 }
 
 void circle_iterator::operator++()
@@ -145,12 +145,12 @@ void radius_iterator::advance(bool may_stay)
 
 radius_iterator::operator bool() const
 {
-    return (iter);
+    return iter;
 }
 
 coord_def radius_iterator::operator *() const
 {
-    return (current);
+    return current;
 }
 
 const coord_def* radius_iterator::operator->() const
@@ -161,10 +161,10 @@ const coord_def* radius_iterator::operator->() const
 bool radius_iterator::is_valid_square(const coord_def &p) const
 {
     if (exclude_center && p == circle.get_center())
-        return (false);
+        return false;
     if (los && !los->see_cell(p))
-        return (false);
-    return (true);
+        return false;
+    return true;
 }
 
 void radius_iterator::operator++()
@@ -198,11 +198,6 @@ distance_iterator::distance_iterator(const coord_def& _center, bool _fair,
         advance();
 }
 
-static inline int sgn(int x)
-{
-    return (x < 0) ? -1 : (x > 0) ? 1 : 0;
-}
-
 bool distance_iterator::advance()
 {
 again:
@@ -211,7 +206,7 @@ again:
     if (icur == iend)
     {
         // Advance to the next radius.
-        std::vector<coord_def> *tmp = vcur;
+        vector<coord_def> *tmp = vcur;
         vcur = vnear;
         vnear = vfar;
         vfar = tmp;

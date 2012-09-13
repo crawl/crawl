@@ -21,19 +21,23 @@ static tileidx_t _modrng(int mod, tileidx_t first, tileidx_t last)
     return (first + mod % (last - first + 1));
 }
 
+static tileidx_t _mon_mod(tileidx_t tile, int offset)
+{
+    int count = tile_player_count(tile);
+    return (tile + offset % count);
+}
+
 tileidx_t tilep_equ_weapon(const item_def &item)
 {
     if (item.base_type == OBJ_STAVES)
     {
-        // Can't just use item.special here as STAFF_POWER abuses
-        // item.special for storing the MP in case of quick re-wield.
         int orig_special = you.item_description[IDESC_STAVES][item.sub_type];
         int desc = (orig_special / NDSC_STAVE_PRI) % NDSC_STAVE_SEC;
-        if (item_is_rod(item))
-            return TILEP_HAND1_ROD_BROWN + desc;
-        else
-            return TILEP_HAND1_STAFF_LARGE + desc;
+        return TILEP_HAND1_STAFF_LARGE + desc;
     }
+
+    if (item.base_type == OBJ_RODS)
+        return _mon_mod(TILEP_HAND1_ROD_BROWN, item.rnd);
 
     if (item.base_type == OBJ_MISCELLANY)
     {
@@ -125,9 +129,13 @@ tileidx_t tilep_equ_weapon(const item_def &item)
     case WPN_SPEAR:         return TILEP_HAND1_SPEAR;
     case WPN_HALBERD:       return TILEP_HAND1_HALBERD;
     case WPN_GLAIVE:        return TILEP_HAND1_GLAIVE;
+#if TAG_MAJOR_VERSION == 34
     case WPN_STAFF:         return TILEP_HAND1_STAFF;
+#endif
     case WPN_QUARTERSTAFF:  return TILEP_HAND1_QUARTERSTAFF1;
-    case WPN_LAJATANG:      return TILEP_HAND1_DIRE_LAJATANG;
+    case WPN_LAJATANG:
+        return tileidx_enchant_equ(item, TILEP_HAND1_LAJATANG, true);
+
     case WPN_SCYTHE:        return TILEP_HAND1_SCYTHE;
     case WPN_HAMMER:        return TILEP_HAND1_HAMMER;
     case WPN_TRIDENT:       return TILEP_HAND1_TRIDENT2;
@@ -190,7 +198,8 @@ tileidx_t tilep_equ_armour(const item_def &item)
     case ARM_SCALE_MAIL:         return TILEP_BODY_SCALEMAIL;
     case ARM_SPLINT_MAIL:        return TILEP_BODY_SPLINT;
     case ARM_PLATE_ARMOUR:       return TILEP_BODY_PLATE_BLACK;
-    case ARM_CRYSTAL_PLATE_ARMOUR:return TILEP_BODY_CRYSTAL_PLATE;
+    case ARM_CRYSTAL_PLATE_ARMOUR:
+        return tileidx_enchant_equ(item, TILEP_BODY_CRYSTAL_PLATE, true);
 
     case ARM_FIRE_DRAGON_HIDE:    return TILEP_BODY_DRAGONSC_GREEN;
     case ARM_ICE_DRAGON_HIDE:     return TILEP_BODY_DRAGONSC_CYAN;
@@ -339,10 +348,10 @@ tileidx_t tilep_equ_boots(const item_def &item)
     }
 
     if (item.sub_type == ARM_NAGA_BARDING)
-        return TILEP_BOOTS_NAGA_BARDING + std::min(etype, 3);
+        return TILEP_BOOTS_NAGA_BARDING + min(etype, 3);
 
     if (item.sub_type == ARM_CENTAUR_BARDING)
-        return TILEP_BOOTS_CENTAUR_BARDING + std::min(etype, 3);
+        return TILEP_BOOTS_CENTAUR_BARDING + min(etype, 3);
 
     if (item.sub_type != ARM_BOOTS)
         return 0;
@@ -437,31 +446,31 @@ static int _draconian_colour(int race, int level)
     {
         switch (race)
         {
-        case MONS_DRACONIAN:        return (0);
-        case MONS_BLACK_DRACONIAN:  return (1);
-        case MONS_YELLOW_DRACONIAN: return (2);
-        case MONS_GREY_DRACONIAN:   return (3);
-        case MONS_GREEN_DRACONIAN:  return (4);
-        case MONS_MOTTLED_DRACONIAN:return (5);
-        case MONS_PALE_DRACONIAN:   return (6);
-        case MONS_PURPLE_DRACONIAN: return (7);
-        case MONS_RED_DRACONIAN:    return (8);
-        case MONS_WHITE_DRACONIAN:  return (9);
+        case MONS_DRACONIAN:        return 0;
+        case MONS_BLACK_DRACONIAN:  return 1;
+        case MONS_YELLOW_DRACONIAN: return 2;
+        case MONS_GREY_DRACONIAN:   return 3;
+        case MONS_GREEN_DRACONIAN:  return 4;
+        case MONS_MOTTLED_DRACONIAN:return 5;
+        case MONS_PALE_DRACONIAN:   return 6;
+        case MONS_PURPLE_DRACONIAN: return 7;
+        case MONS_RED_DRACONIAN:    return 8;
+        case MONS_WHITE_DRACONIAN:  return 9;
         }
     }
     switch (race)
     {
-    case SP_BLACK_DRACONIAN:   return (1);
-    case SP_YELLOW_DRACONIAN:  return (2);
-    case SP_GREY_DRACONIAN:    return (3);
-    case SP_GREEN_DRACONIAN:   return (4);
-    case SP_MOTTLED_DRACONIAN: return (5);
-    case SP_PALE_DRACONIAN:    return (6);
-    case SP_PURPLE_DRACONIAN:  return (7);
-    case SP_RED_DRACONIAN:     return (8);
-    case SP_WHITE_DRACONIAN:   return (9);
+    case SP_BLACK_DRACONIAN:   return 1;
+    case SP_YELLOW_DRACONIAN:  return 2;
+    case SP_GREY_DRACONIAN:    return 3;
+    case SP_GREEN_DRACONIAN:   return 4;
+    case SP_MOTTLED_DRACONIAN: return 5;
+    case SP_PALE_DRACONIAN:    return 6;
+    case SP_PURPLE_DRACONIAN:  return 7;
+    case SP_RED_DRACONIAN:     return 8;
+    case SP_WHITE_DRACONIAN:   return 9;
     }
-    return (0);
+    return 0;
 }
 
 tileidx_t tilep_species_to_base_tile(int sp, int level)
@@ -703,6 +712,7 @@ void tilep_job_default(int job, dolls_data *doll)
             parts[TILEP_PART_LEG]   = TILEP_LEG_BELT_REDBROWN;
             break;
 
+#if TAG_MAJOR_VERSION == 34
         case JOB_STALKER:
             parts[TILEP_PART_HELM]  = TILEP_HELM_HOOD_GREEN;
             parts[TILEP_PART_BODY]  = TILEP_BODY_LEATHER_JACKET;
@@ -713,6 +723,7 @@ void tilep_job_default(int job, dolls_data *doll)
             parts[TILEP_PART_CLOAK] = TILEP_CLOAK_GREEN;
             parts[TILEP_PART_BOOTS] = TILEP_BOOTS_MIDDLE_BROWN2;
             break;
+#endif
 
         case JOB_ASSASSIN:
             parts[TILEP_PART_HELM]  = TILEP_HELM_MASK_NINJA_BLACK;

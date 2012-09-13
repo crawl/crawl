@@ -35,15 +35,13 @@ function init_undead(e)
             name_adjective tile:mons_withered_plant')
 
   e.tile('G = dngn_gravestone')
-  e.lua_marker('G', portal_desc { desc = "a gravestone" })
-  e.lua_marker('G', props_marker { veto_fragmentation="veto",
-                                   veto_disintegrate="veto",
-                                   veto_shatter="veto" })
+  e.set_feature_name("granite_statue", "a gravestone")
 end
 }}
 
 NAME:   serial_undead
 DEPTH:  D:1-18
+TAGS:   extra luniq_serial
 CHANCE: 1%
 {{
   local c = 4 + crawl.random2(3) * crawl.random2(4)

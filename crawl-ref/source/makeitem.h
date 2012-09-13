@@ -19,8 +19,7 @@ enum item_make_species_type
     MAKE_ITEM_RANDOM_RACE = 250,
 };
 
-int create_item_named(std::string name, coord_def pos,
-                      std::string *error);
+int create_item_named(string name, coord_def pos, string *error);
 
 int items(bool allow_uniques, object_class_type force_class, int force_type,
            bool dont_place, int item_level, int item_race,
@@ -32,7 +31,6 @@ void init_rod_mp(item_def &item, int ncharges = -1, int item_level = -1);
 
 jewellery_type get_random_ring_type();
 jewellery_type get_random_amulet_type();
-stave_type get_random_rod_type();
 void item_set_appearance(item_def &item);
 void maybe_set_item_race(item_def &item, int allowed, int num_rolls = 1);
 

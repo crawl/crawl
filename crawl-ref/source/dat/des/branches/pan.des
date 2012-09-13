@@ -26,10 +26,10 @@ function pan_lord_epilogue(name)
         ['Gloorx Vloq'] = "Shadowy figures dance across your vision."
     }
 
-    crawl.mpr(msgs[name])
-    crawl.mpr("You feel a terrible weight on your shoulders! A mighty lord of Pandemonium must reside here.", "warning")
+    crawl.mpr(msgs[name], "warning")
+    crawl.mpr("The mighty Pandemonium lord " .. name .. " resides here.", "warning")
     crawl.take_note('Entered the realm of ' .. name .. '.')
-    crawl.mark_milestone('br.enter', 'entered the realm of ' .. name .. '.')
+    crawl.mark_milestone('br.enter', 'entered the realm of ' .. name .. '.', "")
 end
 
 function pan_lord_setup(_G, name)
@@ -128,12 +128,20 @@ disco_choices = {
 
 colour.add_colour("disco", function(rand, x, y)
     local vault = dgn.vault_at(x, y)
-    local ul = vault:pos()
-    local ulx, uly = ul:xy()
-    x, y = x - ulx, y - uly
+    local ballx = 0
+    local bally = 0
+    if vault then
+        local ul = vault:pos()
+        local ulx, uly = ul:xy()
+        x, y = x - ulx, y - uly
 
-    local map = vault:map()
-    local ballx, bally = dgn.gly_point(map, "D")
+        local map = vault:map()
+        local bx, by = dgn.gly_point(map, "D")
+        if bx ~= nil then
+            ballx = bx
+            bally = by
+        end
+    end
 
     local cycle = disco_choices[math.floor((you.turns() % (16 * #disco_choices)) / 16) + 1]
     return cycle(x, y, ballx, bally, you.turns() % 16, rand)
@@ -157,7 +165,7 @@ end
 
 # 25% chance to appear on D:21-27, and guaranteed on D:24.
 NAME: pan_entry
-TAGS: extra allow_dup can_overwrite
+TAGS: extra allow_dup can_overwrite replace_portal
 DEPTH: D:21-27
 CHANCE: 100% (D:24), 25%
 : if you.where() == 'D:24' then
@@ -174,7 +182,7 @@ ENDMAP
 # Random unguarded exits
 ##############################################################################
 NAME:   pan_exit
-TAGS:   extra allow_dup
+TAGS:   extra allow_dup transparent
 DEPTH:  Pan
 CHANCE: 5%
 KFEAT:  O = exit_pandemonium
@@ -183,7 +191,7 @@ O
 ENDMAP
 
 NAME:   pan_to_abyss
-TAGS:   extra allow_dup
+TAGS:   extra allow_dup transparent
 DEPTH:  Pan
 CHANCE: 25%
 KFEAT:  O = exit_through_abyss
@@ -552,8 +560,7 @@ epilogue{{
 COLOUR:     n = blue
 TILE:       n = dngn_metal_wall_cracked
 TILE:       v = dngn_metal_wall_brown
-:           dgn.set_feature_desc_short("translucent stone wall",
-:                                      "cracked metal wall")
+:           set_feature_name("clear_stone_wall", "cracked metal wall")
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -705,6 +712,7 @@ TAGS:      gloorx_vloq uniq_gloorx_vloq
 ORIENT:    southwest
 : pan_lord_setup(_G, 'Gloorx Vloq')
 TILE:      c = dngn_stone_wall_darkgray
+SHUFFLE:   1O
 MONS:      patrolling Gloorx Vloq, Executioner, demonic crawler, shadow wraith
 epilogue{{
   pan_lord_epilogue('Gloorx Vloq')
@@ -716,23 +724,23 @@ xxxx..............................x
 xxxx..............................x
 xxxx.x.x.x.x.x.x.x..x.x.x.x.x.x.x.x
 xxxx..............................x
-xxxx.x.xxxx=xxxxxxxxxxxx=xxxxxx.x.x
+xxxx.x.xxxx+xxxxxxxxxxxx+xxxxxx.x.x
 xxxx...xx....................xx...x
 xxxx.x.x..ccccc..4..4..ccccc..x.x.x
 xxxx...x.cc.3............3.cc.x...x
 xxxx.x.x.c..ccccc.cc.ccccc..c.x.x.x
 xxxx...x.c.cc.....cc.....cc.c.x...x
 xxxx.x.x.c.c.2...cccc...2.c.c.x.x.x
-xxxx...x...c...ccc..ccc...c...=...x
+xxxx...x...c...ccc..ccc...c...+...x
 xxxx.x.x.3.....2..1O..2.....3.x.x.x
-xxxx...=...c...ccc..ccc...c...x...x
+xxxx...+...c...ccc..ccc...c...x...x
 xxxx.x.x.c.c.2...cccc...2.c.c.x.x.x
 xxxx...x.c.cc.....cc.....cc.c.x...x
 xxxx.x.x.c..ccccc.cc.ccccc..c.x.x.x
 xxxx...x.cc.3............3.cc.x...x
-xxxx.x.x..ccccc..4..4..ccccc..=.x.x
+xxxx.x.x..ccccc..4..4..ccccc..+.x.x
 xxxx...xx....................xx...x
-xxxx.x.xxxx=xxxx=xxxxxxxx=xxxxx.x.x
+xxxx.x.xxxx+xxxx+xxxxxxxx+xxxxx.x.x
 xxxx..............................x
 xxxx.x.x.x.x.x.x.x..x.x.x.x.x.x.x.x
 xxxx..............................x
@@ -779,7 +787,7 @@ xxx.x.xccx.x.x.x.x...x.x.x.x.xccx.x.xxx
 xxxx....ccc2x.x.x.....x.x.x2ccc....xxxx
 xxxxx.....cccc.x.x...x.x.cccc.....xxxxx
 xxxxxxx......ccccx...xcccc......xxxxxxx
-xxxxxxxxx.......cc===cc.......xxxxxxxxx
+xxxxxxxxx.......cc+++cc.......xxxxxxxxx
 xxxxxxxxxxxx.......2.......xxxxxxxxxxxx
 xxxxxxxxxxxxxxx.........xxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -794,9 +802,9 @@ SUBST:      V : x.
 : if crawl.coinflip() then
 SUBST:      C : c, d : c
 : else
-SUBST:      C : ., d : =
+SUBST:      C : ., d : +
 : end
-MARKER:     + = lua:restrict_door()
+KFEAT:      = = runed_door
 TILE:       c = dngn_stone_wall_darkgray
 MONS:       patrolling Gloorx Vloq
 MONS:       executioner, shadow demon, shadow wraith, demonic crawler
@@ -818,11 +826,11 @@ x..x...cxxxxxxxxxxxxx..X.c...V.xx
 x.V....cxxxxxxxxxxx......c..x..xx
 x..x...cxxxxxxxx.....X.X.c...x.xx
 x.x..cccxxxx.............c..V..xx
-x...3c5+.2.........X.X.X.cc..x.xx
-....cc5c.................=3.x..xx
+x...3c5=.2.........X.X.X.cc..x.xx
+....cc5c.................+3.x..xx
 @...cO5c1....2...X.X.X.X.dC..V.xx
-....cc5c.................=3.x..xx
-x...3c5+.2.........X.X.X.cc..x.xx
+....cc5c.................+3.x..xx
+x...3c5=.2.........X.X.X.cc..x.xx
 x.x..cccxxxx.............c..V..xx
 x..x...cxxxxxxxx.....X.X.c...x.xx
 x.V....cxxxxxxxxxxx......c..x..xx
@@ -923,6 +931,9 @@ ENDMAP
 NAME:  rand_demon_4
 TAGS:  pan allow_dup
 MONS:  pandemonium lord, any demon, any demon
+# release only one or a few at once
+SUBST: = = +=
+KFEAT: = = runed_door
 : pan_demonic_rune(_G, 'P')
 MAP
 ............
@@ -986,16 +997,17 @@ ENDMAP
 NAME:  rand_demon_7
 TAGS:  pan allow_dup
 MONS:  any demon, greater demon
+KFEAT: = = runed_door
 : pan_demonic_rune(_G, 'P', true)
 MAP
 ............
 .xxx....xxx.
 .x|xx=xxx|x.
 .xx=....=xx.
-..x.x==x.x..
-..x.=P1=.=..
-..=.=12=.x..
-..x.x==x.x..
+..x.x++x.x..
+..x.+P1+.=..
+..=.+12+.x..
+..x.x++x.x..
 .xx=....=xx.
 .x|xxx=xx|x.
 .xxx....xxx.
@@ -1027,7 +1039,10 @@ ENDMAP
 
 NAME:  rand_demon_9
 TAGS:  pan allow_dup
+# a crapload of greater demons, you fight them in small sets
 MONS:  pandemonium lord, any demon, greater demon
+SUBST: = = =+
+KFEAT: = = runed_door
 : pan_demonic_rune(_G, 'P')
 MAP
 ............
@@ -1126,6 +1141,7 @@ MONS:   greater demon, common demon, any demon
 NSUBST: 1 = 1:P / 3:1 / 2:2 / 2:3 / 1:|
 SHUFFLE: =A
 SUBST:  A = x
+SUBST:  = = +
 : pan_demonic_rune(_G, 'P', true)
 MAP
 .............
@@ -1193,26 +1209,26 @@ WEIGHT: 2
 TAGS:   pan allow_dup
 MONS:   greater demon, any demon, pandemonium lord
 NSUBST: | = 1:P / *:|
-SUBST:  = : +., X : +c, c : cccx
+SUBST:  + : +., X : =c, c : cccx
 # I don't want this vault to be an autoexplore trap
 MARKER: G = lua:props_marker { stop_explore = "ominous statue." }
-MARKER: + = lua:restrict_door()
+KFEAT:  = = runed_door
 : pan_demonic_rune(_G, 'P')
 MAP
 xxxxxxxxxxxxxxxxx
 xcccccccccccccccx
 xc|c.........c|cx
-xcc=..2.1..2.=ccx
+xcc+..2.1..2.+ccx
 xc..1.......1..cx
-xc.2..+++++....cx
-xccccXX...++.2.cx
-...........+...cx
-@.......G..+.3.cx
-...........+...cx
-xccccXX...++...cx
-xc.2..+++++..2.cx
+xc.2..=====....cx
+xccccXX...==.2.cx
+...........=...cx
+@.......G..=.3.cx
+...........=...cx
+xccccXX...==...cx
+xc.2..=====..2.cx
 xc..1.......1..cx
-xcc=.2..1.2..=ccx
+xcc+.2..1.2..+ccx
 xc|c.........c|cx
 xcccccccccccccccx
 xxxxxxxxxxxxxxxxx
@@ -1248,7 +1264,7 @@ ENDMAP
 
 NAME:   evilmike_mini_pan_layers
 TAGS:   pan allow_dup
-SUBST:  x = x:9 =:1
+SUBST:  x = x:9 +:1
 MONS:   greater demon, common demon, any demon
 : pan_demonic_rune(_G, 'P', true)
 MAP
@@ -1406,32 +1422,32 @@ ENDMAP
 
 ###################################
 
-NAME: evilmike_mini_pan_secret
+NAME: evilmike_mini_pan_doors
 TAGS: pan allow_dup
 MONS: greater demon, common demon, any demon
 : pan_demonic_rune(_G, 'P', true)
 MAP
 ............
-..x=xxxx=x..
+..x+xxxx+x..
 .xx......xx.
-.=.x3..2x.=.
-.x.2c==c3.x.
-.x..=|1=..x.
-.x..=1P=..x.
-.x.3c==c2.x.
-.=.x2..3x.=.
+.+.x3..2x.+.
+.x.2c++c3.x.
+.x..+|1+..x.
+.x..+1P+..x.
+.x.3c++c2.x.
+.+.x2..3x.+.
 .xx......xx.
-..x=xxxx=x..
+..x+xxxx+x..
 ............
 ENDMAP
 
 ###################################
 
-NAME:   evilmike_mini_pan_secret_b
+NAME:   evilmike_mini_pan_doors_b
 TAGS:   pan allow_dup
-# The secret doors are not treated as large gates, but individually:
+# The doors are not treated as large gates, but individually:
 MARKER: X = lua: props_marker { connected_exclude="true" }
-SUBST:  X = =
+SUBST:  X = +
 NSUBST: D = 2:1 / 2:2 / 2:3 / 1:P / 1:|
 MONS:   greater demon, common demon, any demon
 : pan_demonic_rune(_G, 'P', true)
@@ -1572,12 +1588,12 @@ ENDMAP
 # A couple of small vaults featuring blood fountains.
 
 NAME:   pan_blood_fountain
-TAGS:   pan
-SUBST:  ' : '"
-COLOUR: ' = red / none
-COLOUR: " = red / none w:5 / lightred w:2
-COLOUR: . = red / none w:40
-# not sure which FTILE to use here
+TAGS:   extra allow_dup transparent
+DEPTH:  Pan
+CHANCE: 10%
+SUBST:  ' = '..
+SUBST:  . = " / .:80
+KPROP:  '" = bloody
 SUBST:  '=. , "=.
 MAP
  ...
@@ -1588,13 +1604,13 @@ MAP
 ENDMAP
 
 NAME:   pan_blood_fountain_2
-TAGS:   pan
-SUBST:  ' : '"
+TAGS:   extra allow_dup transparent
+DEPTH:  Pan
+CHANCE: 5%
 SUBST:  Y = YYV
-COLOUR: ' = red / none
-COLOUR: " = red / none w:5 / lightred w:2
-COLOUR: . = red / none w:80
-# not sure which FTILE to use here
+SUBST:  ' = '..
+SUBST:  . = " / .:80
+KPROP:  '" = bloody
 SUBST:  '=. , "=.
 MAP
  @.....
@@ -1604,6 +1620,14 @@ MAP
  ..'Y'..
   .'''.
    ...
+ENDMAP
+
+NAME:   pan_blood_fountain_small
+TAGS:   extra allow_dup transparent
+DEPTH:  Pan
+CHANCE: 15%
+MAP
+Y
 ENDMAP
 
 ###################################
@@ -1632,6 +1656,9 @@ local function swineherd_die(monster, killer_type, killer_index, silent, wizard)
   local p = dgn.find_marker_positions_by_prop("pigsty_gate", 1)[1]
   if (p == nil) then
     crawl.mpr("Error: someone stolen the pigsty gate!")
+    return
+  end
+  if dgn.grid(p.x, p.y) ~= dgn.fnum("iron_grate") then
     return
   end
   dgn.grid(p.x, p.y, "floor")
@@ -1665,7 +1692,7 @@ COLOUR: D = random
 COLOUR: .x = disco
 COLOUR: 0123456789 = disco
 KFEAT:  D = granite_statue
-MARKER: D = lua:portal_desc { desc="weirdly glowing ball" }
+: set_feature_name("granite_statue", "weirdly glowing ball")
 MARKER: D = lua:props_marker { veto_fragmentation="veto", \
                                veto_disintegrate="veto", \
                                veto_shatter="veto" }
@@ -1676,7 +1703,7 @@ MONS:   red devil ; demon blade good_item ego:distortion
 RTILE:  x = wall_zot_blue / wall_zot_green / wall_zot_cyan / wall_zot_red /\
             wall_zot_magenta / wall_zot_yellow
 # alas, floor tiles are not distinguished from walls enough, commenting out:
-# FTILE: . = floor_moss / floor_dirt / floor_hive / floor_rough_red /\
+# FTILE: . = floor_moss / floor_dirt / floor_orc / floor_rough_red /\
 #            floor_snake / floor_swamp
 KFEAT:  _ = floor
 FTILE:  _ = floor_hall
@@ -1722,7 +1749,6 @@ NAME:   evilmike_holy_pan
 TAGS:   pan no_pool_fixup
 ORIENT: encompass
 NSUBST: . = > / .
-NSUBST: . = 2:6 / *:.
 ITEM:   w:5 any / potion of curing
 ITEM:   any / potion of heal wounds
 ITEM:   acquire any
@@ -1758,12 +1784,10 @@ FTILE:  "E0 = floor_grass
 COLOUR: "0 = green
 FTILE:  -ZBghi&v = floor_vault
 SUBST:  D& = +, '"- = ., H = G, C = c
-: dgn.set_feature_desc_short("granite statue",
-:                            "golden statue")
-: dgn.set_feature_desc_short("metal wall",
-:                            "silver wall")
-: _G.set_random_mon_list("angel / cherub / ophan / daeva / phoenix / " ..
-:                        "apis / paladin / apis / ophan / angel")
+: set_feature_name("granite_statue", "golden statue")
+: set_feature_name("metal_wall", "silver wall")
+: set_random_mon_list("angel / cherub / ophan / daeva / phoenix / " ..
+:                     "apis / paladin / apis / shedu band / angel")
 # Do not place if you are with a holy god. It's just free loot in that case.
 veto {{
     if you.god() == "the Shining One" or you.god() == "Zin" or you.god() == "Elyvilon" then

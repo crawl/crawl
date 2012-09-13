@@ -54,30 +54,39 @@ void dgn_build_basic_level()
                                       : 30 + random2(200));
     int intersect_chance = (one_chance_in(20) ? 400 : random2(20));
 
-    coord_def begin(-1, -1);
-    coord_def end(-1, -1);
+    coord_def begin;
+    coord_def end;
 
     _make_trail(35, 30, 35, 20, corrlength, intersect_chance, no_corr,
                  begin, end);
 
-    grd(begin) = DNGN_STONE_STAIRS_DOWN_I;
-    grd(end)   = DNGN_STONE_STAIRS_UP_I;
+    if (!begin.origin() && !end.origin())
+    {
+        grd(begin) = DNGN_STONE_STAIRS_DOWN_I;
+        grd(end)   = DNGN_STONE_STAIRS_UP_I;
+    }
 
-    begin.set(-1, -1); end.set(-1, -1);
+    begin.reset(); end.reset();
 
     _make_trail(10, 15, 10, 15, corrlength, intersect_chance, no_corr,
                  begin, end);
 
-    grd(begin) = DNGN_STONE_STAIRS_DOWN_II;
-    grd(end)   = DNGN_STONE_STAIRS_UP_II;
+    if (!begin.origin() && !end.origin())
+    {
+        grd(begin) = DNGN_STONE_STAIRS_DOWN_II;
+        grd(end)   = DNGN_STONE_STAIRS_UP_II;
+    }
 
-    begin.set(-1, -1); end.set(-1, -1);
+    begin.reset(); end.reset();
 
     _make_trail(50, 20, 10, 15, corrlength, intersect_chance, no_corr,
                  begin, end);
 
-    grd(begin) = DNGN_STONE_STAIRS_DOWN_III;
-    grd(end)   = DNGN_STONE_STAIRS_UP_III;
+    if (!begin.origin() && !end.origin())
+    {
+        grd(begin) = DNGN_STONE_STAIRS_DOWN_III;
+        grd(end)   = DNGN_STONE_STAIRS_UP_III;
+    }
 
     // Generate a random dead-end that /may/ have a shaft.  Good luck!
     if (is_valid_shaft_level() && !one_chance_in(4)) // 3/4 times
@@ -88,27 +97,47 @@ void dgn_build_basic_level()
         // with making this trap the first trap.
         // If we aren't careful, we'll trigger an assert in _place_traps().
 
-        begin.set(-1, -1); end.set(-1, -1);
+        begin.reset(); end.reset();
 
         _make_trail(50, 20, 40, 20, corrlength, intersect_chance, no_corr,
                      begin, end);
 
         dprf("Placing shaft trail...");
-        if (!one_chance_in(3) && !map_masked(end, MMT_NO_TRAP)) // 2/3 chance it ends in a shaft
+        if (!end.origin())
         {
-            trap_def& ts(env.trap[0]);
-            ts.type = TRAP_SHAFT;
-            ts.pos = end;
-            grd(end) = DNGN_UNDISCOVERED_TRAP;
-            env.tgrid(end) = 0;
-            if (shaft_known(level_number, false))
-                ts.reveal();
-            dprf("Trail ends in shaft.");
-        }
-        else
-        {
-            grd(end) = DNGN_FLOOR;
-            dprf("Trail does not end in shaft.");
+            if (!one_chance_in(3) && !map_masked(end, MMT_NO_TRAP)) // 2/3 chance it ends in a shaft
+            {
+                trap_def* ts = NULL;
+                int i = 0;
+                for (; i < MAX_TRAPS; i++)
+                {
+                    if (env.trap[i].type != TRAP_UNASSIGNED)
+                        continue;
+
+                    ts = &env.trap[i];
+                    break;
+                }
+                if (i < MAX_TRAPS)
+                {
+                    ts->type = TRAP_SHAFT;
+                    ts->pos = end;
+                    grd(end) = DNGN_UNDISCOVERED_TRAP;
+                    env.tgrid(end) = i;
+                    if (shaft_known(level_number, false))
+                        ts->reveal();
+                    dprf("Trail ends in shaft.");
+                }
+                else
+                {
+                    grd(end) = DNGN_FLOOR;
+                    dprf("Trail does not end in shaft.");
+                }
+            }
+            else
+            {
+                grd(end) = DNGN_FLOOR;
+                dprf("Trail does not end in shaft.");
+            }
         }
     }
 
@@ -139,8 +168,11 @@ void dgn_build_bigger_room_level(void)
     env.level_layout_types.insert("open");
 
     for (rectangle_iterator ri(10); ri; ++ri)
-        if (grd(*ri) == DNGN_ROCK_WALL)
+        if (grd(*ri) == DNGN_ROCK_WALL
+            && !map_masked(*ri, MMT_VAULT))
+        {
             grd(*ri) = DNGN_FLOOR;
+        }
 
     dungeon_feature_type pool_type = DNGN_DEEP_WATER;
 
@@ -332,6 +364,7 @@ static void _make_trail(int xs, int xr, int ys, int yr, int corrlength,
 {
     int finish = 0;
     int length = 0;
+    int tries = 200;
 
     coord_def pos;
     coord_def dir(0, 0);
@@ -341,7 +374,11 @@ static void _make_trail(int xs, int xr, int ys, int yr, int corrlength,
         pos.x = xs + random2(xr);
         pos.y = ys + random2(yr);
     }
-    while (grd(pos) != DNGN_ROCK_WALL && grd(pos) != DNGN_FLOOR);
+    while (grd(pos) != DNGN_ROCK_WALL && grd(pos) != DNGN_FLOOR
+           || map_masked(pos, MMT_VAULT) && tries-- > 0);
+
+    if (tries < 0)
+        return;
 
     // assign begin position
     begin = pos;
@@ -357,7 +394,8 @@ static void _make_trail(int xs, int xr, int ys, int yr, int corrlength,
         else
             dir.y = _trail_random_dir(pos.y, GYM, 15);
 
-        if (dir.x == 0 && dir.y == 0)
+        if (dir.x == 0 && dir.y == 0
+            || map_masked(pos + dir, MMT_VAULT))
             continue;
 
         // Corridor length... change only when going vertical?
@@ -377,6 +415,9 @@ static void _make_trail(int xs, int xr, int ys, int yr, int corrlength,
 
             if (pos.y > (Y_BOUND_2 - 4))
                 dir.set(0, -1);
+
+            if (map_masked(pos + dir, MMT_VAULT))
+                break;
 
             // See if we stop due to intersection with another corridor/room.
             if (grd(pos + dir * 2) == DNGN_FLOOR
@@ -492,6 +533,9 @@ static bool _octa_room(dgn_region& region, int oblique_max,
     {
         for (y = tl.y + oblique; y < br.y - oblique; y++)
         {
+            if (map_masked(coord_def(x, y), MMT_VAULT))
+                continue;
+
             if (_is_wall(x, y))
                 grd[x][y] = type_floor;
 
@@ -509,7 +553,7 @@ static bool _octa_room(dgn_region& region, int oblique_max,
             oblique--;
     }
 
-    return (true);
+    return true;
 }
 
 static dungeon_feature_type _random_wall()
@@ -524,7 +568,7 @@ static dungeon_feature_type _random_wall()
     }
     while (wall == DNGN_SLIMY_WALL);
 
-    return (wall);
+    return wall;
 }
 
 // Helper function for chequerboard rooms.
@@ -534,7 +578,7 @@ static void _chequerboard(dgn_region& region, dungeon_feature_type target,
                            dungeon_feature_type floor2)
 {
     for (rectangle_iterator ri(region.pos, region.end()); ri; ++ri)
-        if (grd(*ri) == target)
+        if (grd(*ri) == target && !map_masked(*ri, MMT_VAULT))
             grd(*ri) = ((ri->x + ri->y) % 2) ? floor2 : floor1;
 }
 
@@ -654,7 +698,7 @@ static int _box_room_doors(int bx1, int bx2, int by1, int by2, int new_doors)
         new_doors --;
     }
 
-    return (doors_placed);
+    return doors_placed;
 }
 
 static void _box_room(int bx1, int bx2, int by1, int by2,
@@ -706,12 +750,22 @@ static void _big_room(int level_number)
 
     dgn_region region;
 
+    int overlap_tries = 200;
+
     if (one_chance_in(4))
     {
         int oblique = 5 + random2(20);
 
-        region = dgn_region(8 + random2(30), 8 + random2(22),
-                            21 + random2(10), 21 + random2(8));
+        do
+        {
+            region = dgn_region(8 + random2(30), 8 + random2(22),
+                                21 + random2(10), 21 + random2(8));
+        }
+        while (_find_forbidden_in_area(region, MMT_VAULT)
+               && overlap_tries-- > 0);
+
+        if (overlap_tries < 0)
+            return;
 
         // Usually floor, except at higher levels.
         if (!one_chance_in(5) || level_number < 8 + random2(8))
@@ -732,9 +786,18 @@ static void _big_room(int level_number)
         _octa_room(region, oblique, type_floor);
     }
 
+    overlap_tries = 200;
+
     // What now?
-    region = dgn_region(8 + random2(30), 8 + random2(22),
-                        21 + random2(10), 21 + random2(8));
+    do
+    {
+        region = dgn_region(8 + random2(30), 8 + random2(22),
+                            21 + random2(10), 21 + random2(8));
+    }
+    while (_find_forbidden_in_area(region, MMT_VAULT) && overlap_tries-- > 0);
+
+    if (overlap_tries < 0)
+        return;
 
     if (level_number > 7 && one_chance_in(4))
     {
@@ -821,8 +884,18 @@ static void _diamond_rooms(int level_number)
 
     for (i = 0; i < numb_diam; i++)
     {
-        dgn_region room(8 + random2(43), 8 + random2(35),
-                        6 + random2(15), 6 + random2(10));
+        int overlap_tries = 200;
+        dgn_region room;
+        do
+        {
+            room = dgn_region(8 + random2(43), 8 + random2(35),
+                              6 + random2(15), 6 + random2(10));
+        }
+        while (_find_forbidden_in_area(room, MMT_VAULT)
+               && overlap_tries-- > 0);
+
+        if (overlap_tries < 0)
+            return;
 
         oblique_max = room.size.x / 2;
 
@@ -878,10 +951,10 @@ static bool _make_room(int sx,int sy,int ex,int ey,int max_doors, int doorlevel)
     diag_door += _good_door_spot(ex,ey);
 
     if ((diag_door + find_door) > 1 && max_doors == 1)
-        return (false);
+        return false;
 
     if (find_door == 0 || find_door > max_doors)
-        return (false);
+        return false;
 
     // Convert the area to floor.
     for (rx = sx; rx <= ex; rx++)
@@ -936,20 +1009,31 @@ static bool _make_room(int sx,int sy,int ex,int ey,int max_doors, int doorlevel)
         }
     }
 
-    return (true);
+    return true;
 }
 
 static void _make_random_rooms(int num, int max_doors, int door_level,
                                int max_x, int max_y, int max_room_size)
 {
     int i, sx, sy, ex, ey, time_run = 0;
+    dgn_region room;
 
     for (i = 0; i < num; i++)
     {
-        sx = 8 + random2(max_x);
-        sy = 8 + random2(max_y);
-        ex = sx + 2 + random2(max_room_size);
-        ey = sy + 2 + random2(max_room_size);
+        int overlap_tries = 200;
+        do
+        {
+            sx = 8 + random2(max_x);
+            sy = 8 + random2(max_y);
+            ex = sx + 2 + random2(max_room_size);
+            ey = sy + 2 + random2(max_room_size);
+            room = dgn_region::absolute(sx, sy, ex, ey);
+        }
+        while (_find_forbidden_in_area(room, MMT_VAULT)
+               && overlap_tries-- > 0);
+
+        if (overlap_tries < 0)
+            return;
 
         if (!_make_room(sx, sy, ex, ey, max_doors, door_level))
         {
@@ -1039,8 +1123,10 @@ static void _many_pools(dungeon_feature_type pool_type)
         const int j = random_range(Y_BOUND_1 + 1, Y_BOUND_2 - 21);
         const int k = i + 2 + roll_dice(2, 9);
         const int l = j + 2 + roll_dice(2, 9);
+        dgn_region room = dgn_region::absolute(i, j, k, l);
 
-        if (_count_antifeature_in_box(i, j, k, l, DNGN_FLOOR) == 0)
+        if (_count_antifeature_in_box(i, j, k, l, DNGN_FLOOR) == 0
+            && !_find_forbidden_in_area(room, MMT_VAULT))
         {
             _place_pool(pool_type, i, j, k, l);
             pools++;
@@ -1051,13 +1137,16 @@ static void _many_pools(dungeon_feature_type pool_type)
 // Used for placement of rivers/lakes.
 static bool _may_overwrite_pos(coord_def c)
 {
+    if (map_masked(c, MMT_VAULT))
+        return false;
+
     const dungeon_feature_type grid = grd(c);
 
     // Don't overwrite any stairs or branch entrances.
     if (grid >= DNGN_ENTER_SHOP && grid <= DNGN_EXIT_PORTAL_VAULT
         || grid == DNGN_EXIT_HELL)
     {
-        return (false);
+        return false;
     }
 
     // Don't overwrite feature if there's a monster or item there.

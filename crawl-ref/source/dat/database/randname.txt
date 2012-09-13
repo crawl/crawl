@@ -65,9 +65,9 @@
 weapon
 
 # weapon specific keywords (see rand_wpn.txt)
-of @power_or_anger@
+of @_power_or_anger_@
 
-of @battle_or_war@
+of @_battle_or_war_@
 
 w:1
 of @player_doom@
@@ -76,75 +76,75 @@ w:9
 of @death_or_doom@
 
 w:16
-of @strategy_or_justice@
+of @_strategy_or_justice_@
 
 w:4
-of the @people_name@
+of the @_people_name_@
 
 w:8
-of the @weapon_animal@
+of the @_weapon_animal_@
 
 w:2
-of the @plant_name@
+of the @_plant_name_@
 
 w:7
-of @evil_stuff@
+of @_evil_stuff_@
 
 w:5
-of @catastrophe_name@
+of @_catastrophe_name_@
 
 w:8
-of @chaos_name@
+of @_chaos_name_@
 
 w:8
-of @balance_or_order@
+of @_balance_or_order_@
 
-of @economics_or_politics@
+of @_economics_or_politics_@
 
 w:8
 of @branch_name@
 
 w:7
-of @place_name@
+of @_place_name_@
 
 w:5
-of @discomfort_weapon@
+of @_discomfort_weapon_@
 
 w:3
-of @mental_illness_weapon@
+of @_mental_illness_weapon_@
 
 w:4
-of the @item_name@
+of the @_item_name_@
 
 w:1
-of @magic_name@
+of @_magic_name_@
 
 w:5
-of @substance_name@
+of @_substance_name_@
 
 w:7
-of @science_name@
+of @_science_name_@
 
 w:5
 of @other_weapon_name@
 
 w:30
-"@plain_weapon_name@"
+"@_plain_weapon_name_@"
 
 # general keywords (see rand_all.txt)
 w:5
-of @time_name@
+of @_time_name_@
 
 w:5
-of @sky_or_light@
+of @_sky_or_light_@
 
 w:18
-of @virtue_or_vice@
+of @_virtue_or_vice_@
 
-of @number_or_qualifier@ @thing_names@
+of @_number_or_qualifier_@ @_thing_names_@
 
 w:5
-of @destiny_name@
+of @_destiny_name_@
 
 w:9
 of @god_name@'s @divine_esteem@
@@ -167,73 +167,73 @@ body armour
 armour
 
 # armour specific keywords (see rand_arm.txt)
-of @armour_name_shielding@
+of @_armour_name_shielding_@
 
 w:8
-of @armour_property_name@
+of @_armour_property_name_@
 
 w:20
-of @wacky_armour_name@
+of @_wacky_armour_name_@
 
-of the @profession_name@
+of the @_profession_name_@
 
-of @politics_name_armour@
+of @_politics_name_armour_@
 
 w:3
-of @weather_name@
+of @_weather_name_@
 
 w:17
-of @good_or_divine@
+of @_good_or_divine_@
 
 w:5
-of the @celestial_bodies@
+of the @_celestial_bodies_@
 
 w:5
-of @instrument_name@
+of @_instrument_name_@
 
 w:20
-of the @armour_animal@
+of the @_armour_animal_@
 
 w:3
-of @flower_name@
+of @_flower_name_@
 
 w:3
-of the @critter_name@
+of the @_critter_name_@
 
 w:5
-of @evil_being@
+of @_evil_being_@
 
 w:5
-of @mental_illness_armour@
+of @_mental_illness_armour_@
 
-of @discomfort_and_inaction@
+of @_discomfort_and_inaction_@
 
-of @game_name@
+of @_game_name_@
 
 w:15
-of @other_armour_name@
+of @_other_armour_name_@
 
 w:1
-"@plain_armour_name@"
+"@_plain_armour_name_@"
 
 # weapon specific keywords (see rand_arm.txt)
 w:25
-of @philosophy_or_science@
+of @_philosophy_or_science_@
 
 w:15
-of @place_name@
+of @_place_name_@
 
 # general keywords (see rand_all.txt)
-of @time_name@
+of @_time_name_@
 
 w:8
-of @sky_or_light@
+of @_sky_or_light_@
 
 w:30
-of @virtue_or_vice@
+of @_virtue_or_vice_@
 
 w:16
-of @number_or_qualifier@ @thing_names@
+of @_number_or_qualifier_@ @_thing_names_@
 
 w:20
 of @god_name@'s @divine_esteem@
@@ -252,64 +252,64 @@ jewellery
 
 # jewellery specials (see rand_all.txt)
 w:3
-of the @jewellery_animal@
+of the @_jewellery_animal_@
 
-of @jewellery_special_name@
+of @_jewellery_special_name_@
 
-of @suspicion_name@
+of @_suspicion_name_@
 
 # as defined for weapons (see rand_wpn.txt)
-of the @people_name@
+of the @_people_name_@
 
 w:17
-of @balance_or_order@
+of @_balance_or_order_@
 
 w:14
-of @philosophy_name@
+of @_philosophy_name_@
 
 w:7
-of @mental_illness_weapon@
+of @_mental_illness_weapon_@
 
 of @other_weapon_name@
 
 # as defined for armour (see rand_arm.txt)
 w:20
-of the @armour_animal@
+of the @_armour_animal_@
 
 w:3
-of @flower_name@
+of @_flower_name_@
 
 w:5
-of @evil_being@
+of @_evil_being_@
 
 w:20
-of @good_or_divine@
+of @_good_or_divine_@
 
 w:12
-of @politics_name_armour@
+of @_politics_name_armour_@
 
 w:1
-"@plain_armour_name@"
+"@_plain_armour_name_@"
 
 # same for all three types (see rand_all.txt)
 w:13
-of @time_name@
+of @_time_name_@
 
-of @sky_or_light@
+of @_sky_or_light_@
 
 w:20
 of @god_name@'s @divine_esteem@
 
-of Xom's @xom_esteem@
+of Xom's @_xom_esteem_@
 
 w:7
-of @virtue_name@
+of @_virtue_name_@
 
 w:13
-of @vice_name@
+of @_vice_name_@
 
 w:20
-of @number_or_qualifier@ @thing_names@
+of @_number_or_qualifier_@ @_thing_names_@
 %%%%
 ######################################################
 # GOD GIFT specials
@@ -320,22 +320,22 @@ Trog weapon
 
 # names containing battle and death are more likely
 w:25
-of @power_or_anger@
+of @_power_or_anger_@
 
 w:25
-of @battle_or_war@
+of @_battle_or_war_@
 
 w:25
 of @death_or_doom@
 
 w:7
-of @strategy_name@
+of @_strategy_name_@
 
 w:15
-of @justice_name@
+of @_justice_name_@
 
 w:30
-of @virtue_or_vice@
+of @_virtue_or_vice_@
 
 w:1
 of Trog
@@ -343,56 +343,56 @@ of Trog
 w:20
 of Trog's @divine_esteem@
 
-of Trog's @anger_name@
+of Trog's @_anger_name_@
 
 w:15
-of the @weapon_animal@
+of the @_weapon_animal_@
 
 w:15
-of @evil_stuff@
+of @_evil_stuff_@
 
-of @catastrophe_name@
+of @_catastrophe_name_@
 
 w:15
-of @chaos_name@
+of @_chaos_name_@
 
 w:20
-of @balance_or_order@
+of @_balance_or_order_@
 
 w:20
-of @economics_or_politics@
+of @_economics_or_politics_@
 
 w:15
 of @branch_name@
 
 w:15
-of @place_name@
+of @_place_name_@
 
 w:15
-of @time_name@
+of @_time_name_@
 
-of @sky_or_light@
+of @_sky_or_light_@
 
 w:20
-of @number_or_qualifier@ @thing_names@
+of @_number_or_qualifier_@ @_thing_names_@
 
-of @discomfort_weapon@
+of @_discomfort_weapon_@
 
-of @mental_illness_weapon@
+of @_mental_illness_weapon_@
 
-of the @item_name@
+of the @_item_name_@
 
 w:15
-of @philosophy_name@
+of @_philosophy_name_@
 
-of @science_name@
+of @_science_name_@
 
 of @other_weapon_name@
 
-of @monster_name@@killer_name@
+of @_monster_name_@@killer_name@
 
 w:30
-"@plain_weapon_name@"
+"@_plain_weapon_name_@"
 %%%%
 ######################################################
 # OKAWARU weapon
@@ -405,37 +405,37 @@ w:400
 
 # with a few special cases
 w:2
-of @player_name@'s @valour_name@
+of @player_name@'s @_valour_name_@
 
 w:3
 of Okawaru's @divine_esteem@
 
 # and bonus probability for some of the more harmless themes
-of @strategy_or_justice@
+of @_strategy_or_justice_@
 
 w:5
-of @philosophy_name@
+of @_philosophy_name_@
 
 w:3
-of @balance_or_order@
+of @_balance_or_order_@
 
 w:5
-of @power_name@
+of @_power_name_@
 
 w:2
-of @virtue_name@
+of @_virtue_name_@
 
 w:1
-of the @diviner_name@
+of the @_diviner_name_@
 
 w:5
-of the @weapon_animal@
+of the @_weapon_animal_@
 
 w:5
-of @place_name@
+of @_place_name_@
 
 w:2
-of @item_name@
+of @_item_name_@
 %%%%
 ######################################################
 # OKAWARU armour
@@ -455,28 +455,28 @@ w:400
 @armour@
 
 w:2
-of @player_name@'s @valour_name@
+of @player_name@'s @_valour_name_@
 
 w:2
 of Okawaru's @divine_esteem@
 
 w:2
-of the @armour_animal@
+of the @_armour_animal_@
 
 w:1
-of @good_or_divine@
+of @_good_or_divine_@
 
 w:2
-of @armour_name_shielding@
+of @_armour_name_shielding_@
 
 w:1
-of @armour_property_name@
+of @_armour_property_name_@
 
 w:1
-of @wacky_armour_name@
+of @_wacky_armour_name_@
 
 w:2
-of @politics_name_armour@
+of @_politics_name_armour_@
 %%%%
 ######################################################
 # XOM weapon
@@ -486,10 +486,10 @@ Xom weapon
 
 # increased chances (obviously!)
 w:5
-of @chaos_name@
+of @_chaos_name_@
 
 w:5
-of Xom's @xom_esteem@
+of Xom's @_xom_esteem_@
 
 w:2
 of Xom's @divine_esteem@
@@ -499,7 +499,7 @@ w:1
 of @xom_name@
 
 w:1
-of @game_name@
+of @_game_name_@
 
 w:400
 @weapon@
@@ -524,10 +524,10 @@ Xom armour
 
 # increased chances (obviously!)
 w:5
-of @chaos_name@
+of @_chaos_name_@
 
 w:5
-of Xom's @xom_esteem@
+of Xom's @_xom_esteem_@
 
 w:2
 of Xom's @divine_esteem@
@@ -537,7 +537,7 @@ w:1
 of @xom_name@
 
 w:1
-of @game_name@
+of @_game_name_@
 
 w:1
 of @player_death@
@@ -556,10 +556,10 @@ Xom jewellery
 
 # increased chances (obviously!)
 w:5
-of @chaos_name@
+of @_chaos_name_@
 
 w:5
-of Xom's @xom_esteem@
+of Xom's @_xom_esteem_@
 
 w:2
 of Xom's @divine_esteem@
@@ -569,7 +569,7 @@ w:1
 of @xom_name@
 
 w:1
-of @game_name@
+of @_game_name_@
 
 w:1
 of @player_death@
@@ -583,172 +583,6 @@ w:300
 # why not some other names?
 # (sadly, some weapon names don't make sense even for Xom)
 @armour@
-%%%%
-######################################################
-# CHEIBRIADOS armours, all ponderous
-######################################################
-Cheibriados ponderous
-
-w:50
-of Cheibriados
-
-w:200
-@slow_particle@ @slow_animal_or_thing@
-
-w:100
-@Cheibriados_common@
-
-w:10
-@Cheibriados_rare@
-%%%%
-slow_particle
-
-of the
-
-w:5
-from the
-
-w:3
-by the
-%%%%
-slow_animal_or_thing
-
-@slow_animal@
-
-w:5
-@slow_animal@s
-
-w:3
-@slow_thing@
-
-w:1
-@slow_thing@s
-%%%%
-slow_animal
-
-Beetle
-
-Caterpillar
-
-Possum
-
-Sea Horse
-
-Skunk
-
-Sloth
-
-Slug
-
-Snail
-
-Turtle
-%%%%
-slow_thing
-
-Glacier
-
-Monolith
-
-Moon
-
-Mountain
-
-Tectonic Plate
-%%%%
-Cheibriados_common
-
-of Ambling
-
-of Belated Steps
-
-of Belatedness
-
-of Crawling
-
-of Deliberateness
-
-of Indolence
-
-of Leisure
-
-of Lessening
-
-of Lingering
-
-of Mellow Steps
-
-of Pondering
-
-of Sauntering
-
-of the Stroll
-
-of Strolling
-
-of Unhurriedness
-%%%%
-Cheibriados_rare
-
-of Creeping
-
-of Dawdling
-
-of Delays
-
-of Dilatoriness
-
-of Drowsing
-
-of Dwindling Hours
-
-of Hindrance
-
-of the Impeded
-
-of Inactivity
-
-of Idleness
-
-of the Inert
-
-of the Laggard
-
-of Lagging
-
-of Lethargy
-
-of Limitations
-
-of Loitering
-
-of the Motionless
-
-of Placidity
-
-of Prolongment
-
-of Prolonging
-
-of Slackening
-
-of the Sluggard
-
-of Sluggishness
-
-of Stagnation
-
-of the Supine
-
-of Thoroughness
-
-of Time-consuming
-
-of Torpidity
-
-for the Unagitated
-
-of Unpunctuality
 %%%%
 ######################################################
 # Library of randart APPEARANCE (un-identified).
@@ -824,8 +658,6 @@ robe appearance
 fabulously ornate
 
 dull
-
-see-through
 
 sheer
 
@@ -944,21 +776,19 @@ jet
 
 opal
 
-chrysoberyl
-
 garnet
 
 amethyst
 
 jasper
 
-fluorite
-
 obsidian
 
 agate
 
 jade
+
+pearl
 %%%%
 ######################################################
 # Jewellery appearance
@@ -970,7 +800,7 @@ jade
 # material ("runed wooden ring"), making a description like "runed ring" a bit
 # weird. So give randart jewellery an adjective that no non-artefact jewellery
 # would have, plus a material that a non-artefact might or might not have.
-jewellery appearance
+_jewellery appearance_
 
 scintillating
 
@@ -1012,7 +842,7 @@ vibrating
 
 twitching
 %%%%
-ring material
+_ring material_
 
 wooden
 
@@ -1056,7 +886,7 @@ lapis lazuli
 
 glass
 %%%%
-amulet material
+_amulet material_
 
 ivory
 
@@ -1108,9 +938,9 @@ amethyst
 %%%%
 ring appearance
 
-@jewellery appearance@ @ring material@
+@_jewellery appearance_@ @_ring material_@
 %%%%
 amulet appearance
 
-@jewellery appearance@ @amulet material@
+@_jewellery appearance_@ @_amulet material_@
 %%%%
