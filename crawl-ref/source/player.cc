@@ -5115,10 +5115,9 @@ bool poison_player(int amount, string source, string source_aux, bool force)
     }
 
     const int old_value = you.duration[DUR_POISONING];
-    you.duration[DUR_POISONING] += amount;
-
     if (player_res_poison() < 0)
         amount *= 2;
+    you.duration[DUR_POISONING] += amount;
 
     if (you.duration[DUR_POISONING] > 40)
         you.duration[DUR_POISONING] = 40;
