@@ -225,6 +225,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 self.send_message("go_lobby")
                 return
 
+        if self.process:
+            return
+
         if config.dgl_mode and game_id not in config.games: return
 
         self.game_id = game_id
