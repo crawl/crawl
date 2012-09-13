@@ -17,6 +17,7 @@
 #include "dgn-overview.h"
 #include "dgnevent.h"
 #include "directn.h"
+#include "dungeon.h"
 #include "map_knowledge.h"
 #include "feature.h"
 #include "fprop.h"
@@ -1674,6 +1675,7 @@ void nuke_wall(const coord_def& p)
     remove_mold(p);
 
     grd(p) = (grd(p) == DNGN_MANGROVE) ? DNGN_SHALLOW_WATER : DNGN_FLOOR;
+    env.level_map_mask(p) |= MMT_NUKED;
     set_terrain_changed(p);
 }
 

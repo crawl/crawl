@@ -68,9 +68,6 @@ static list<monster*> displaced_monsters;
 static void abyss_area_shift(void);
 static void _push_items(void);
 
-// The feature chosen last turn, ignoring terrain modification.
-static feature_grid _previous_abyss_feature;
-
 // If not_seen is true, don't place the feature where it can be seen from
 // the centre.  Returns the chosen location, or INVALID_COORD if it
 // could not be placed.
@@ -991,7 +988,6 @@ static ProceduralSample _abyss_grid(const coord_def &p)
     const coord_def pt = p + abyssal_state.major_coord; 
     ColumnLayout columnLayout(2);
     ProceduralSample sample = columnLayout(pt, abyssal_state.depth);
-    _previous_abyss_feature[p.x][p.y] = sample.feat();
     return sample;
 }
  
@@ -1026,7 +1022,6 @@ static void _update_abyss_terrain(const coord_def &p,
 
     // What should have been there previously?  It might not be because
     // of external changes such as digging.
-    const dungeon_feature_type oldfeat = _previous_abyss_feature[rp.x][rp.y];
     const ProceduralSample sample = _abyss_grid(rp);
     abyss_terrain_queue.push(sample);
     const dungeon_feature_type feat = sample.feat();
@@ -1037,7 +1032,7 @@ static void _update_abyss_terrain(const coord_def &p,
 
     // If the selected grid is already there, *or* if we're morphing and
     // the selected grid should have been there, do nothing.
-    if (feat != currfeat && (!morph || feat != oldfeat))
+    if (feat != currfeat)
     {
         grd(rp) = feat;
 
@@ -1062,9 +1057,11 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
     int exits_wanted  = 0;
     int altars_wanted = 0;
     bool use_abyss_exit_map = true;
+    bool used_queue = false;
 
     if (morph && !abyss_terrain_queue.empty())
     {
+        used_queue = true;
         while (!abyss_terrain_queue.empty()
             && abyss_terrain_queue.top().changepoint() < abyssal_state.depth)
         {
@@ -1075,41 +1072,41 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
         }
 
     } 
-    else 
+    for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
     {
-        for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
+        const coord_def p(*ri);
+        const coord_def abyss_coord = p + abyssal_state.major_coord;
+        if (!used_queue || map_masked(p, MMT_NUKED) && one_chance_in(10))
         {
-            const coord_def p(*ri);
-            const coord_def abyss_coord = p + abyssal_state.major_coord;
             _update_abyss_terrain(abyss_coord, abyss_genlevel_mask, morph);
-    
-            if (morph)
-                continue;
+         }
+        if (morph)
+            continue;
 
-            // Place abyss exits, stone arches, and altars to liven up the scene
-            // (only on area creation, not on morphing).
-            (_abyss_check_place_feat(p, exit_chance,
-                                    &exits_wanted,
-                                    &use_abyss_exit_map,
-                                    DNGN_EXIT_ABYSS,
-                                    abyss_genlevel_mask)
-            ||
-            _abyss_check_place_feat(p, altar_chance,
-                                    &altars_wanted,
-                                    NULL,
-                                    _abyss_pick_altar(),
-                                    abyss_genlevel_mask)
-            ||
-            (level_id::current().depth < 27 && 
-            _abyss_check_place_feat(p, _abyssal_stair_chance(), NULL, NULL,
-                                    DNGN_ABYSSAL_STAIR,
-                                    abyss_genlevel_mask))
-            ||
-            _abyss_check_place_feat(p, 10000, NULL, NULL,
-                                    DNGN_STONE_ARCH,
-                                    abyss_genlevel_mask));
-        }
+        // Place abyss exits, stone arches, and altars to liven up the scene
+        // (only on area creation, not on morphing).
+        (_abyss_check_place_feat(p, exit_chance,
+                                &exits_wanted,
+                                &use_abyss_exit_map,
+                                DNGN_EXIT_ABYSS,
+                                abyss_genlevel_mask)
+        ||
+        _abyss_check_place_feat(p, altar_chance,
+                                &altars_wanted,
+                                NULL,
+                                _abyss_pick_altar(),
+                                abyss_genlevel_mask)
+        ||
+        (level_id::current().depth < 27 && 
+        _abyss_check_place_feat(p, _abyssal_stair_chance(), NULL, NULL,
+                                DNGN_ABYSSAL_STAIR,
+                                abyss_genlevel_mask))
+        ||
+        _abyss_check_place_feat(p, 10000, NULL, NULL,
+                                DNGN_STONE_ARCH,
+                                abyss_genlevel_mask));
     }
+    
     dungeon_feature_type feat = grd(you.pos());
     if (!you.can_pass_through_feat(feat) || is_feat_dangerous(feat))
         you.shove();
@@ -1216,8 +1213,6 @@ static void _initialize_abyss_state()
     abyssal_state.depth = random2(0x7FFFFFFF);
 
     abyss_terrain_queue = std::priority_queue<ProceduralSample>();
-    for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
-        _previous_abyss_feature[ri->x][ri->y] = NUM_FEATURES;
 }
 
 static colour_t _roll_abyss_floor_colour()
