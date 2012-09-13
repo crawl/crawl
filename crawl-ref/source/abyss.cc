@@ -857,12 +857,6 @@ static void _abyss_shift_level_contents_around_player(
 
     abyssal_state.major_coord += (source_centre - ABYSS_CENTRE);
 
-    // We could shift around the remembered previous features, but for now
-    // we'll just recompute them; shifts should be infrequent enough that
-    // this isn't a big CPU hit.
-    //
-    recompute_saved_abyss_features();
-
     ASSERT(radius >= LOS_RADIUS);
     // This should only really happen due to wizmode blink/movement.
     // 1KB: ... yet at least Xom "swap with monster" triggers it.
@@ -1079,6 +1073,7 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
         if (!used_queue || map_masked(p, MMT_NUKED) && one_chance_in(10))
         {
             _update_abyss_terrain(abyss_coord, abyss_genlevel_mask, morph);
+            env.level_map_mask(p) &= ~MMT_NUKED;
          }
         if (morph)
             continue;
@@ -1262,6 +1257,7 @@ static colour_t _roll_abyss_rock_colour()
 static void _abyss_generate_new_area()
 {
     _initialize_abyss_state();
+    dprf("Abyss Coord (%d, %d)", abyssal_state.major_coord.x, abyssal_state.major_coord.y);
     remove_sanctuary(false);
 
     env.floor_colour = _roll_abyss_floor_colour();
