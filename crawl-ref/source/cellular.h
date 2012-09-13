@@ -68,6 +68,6 @@ struct noise_datum
     uint32_t id[2];
 };
 
-noise_datum worley(double x, double y, double z);
+noise_datum noise(double x, double y, double z);
 }
 #endif /* CELLULAR_H */

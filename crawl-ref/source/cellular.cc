@@ -280,7 +280,7 @@ cases.]
         return;
     }
 
-    noise_datum worley(double x, double y, double z)
+    noise_datum noise(double x, double y, double z)
     {
         double point[3] = {x,y,z};
         double F[2];
@@ -291,7 +291,7 @@ cases.]
 
         noise_datum datum;
         datum.distance[0] = F[0];
-        datum.distance[1] = F[0];
+        datum.distance[1] = F[1];
         datum.id[0] = id[0];
         datum.id[1] = id[1];
 
