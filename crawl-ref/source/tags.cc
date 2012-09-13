@@ -2057,10 +2057,6 @@ static void tag_read_you(reader &th)
     abyssal_state.depth = unmarshallInt(th);
     abyssal_state.phase = unmarshallInt(th);
 
-    // Don't undo digging on the next tick after a load.
-    if (you.where_are_you == BRANCH_ABYSS)
-        recompute_saved_abyss_features();
-
     _unmarshall_constriction(th, &you);
 
     you.octopus_king_rings = unmarshallUByte(th);
