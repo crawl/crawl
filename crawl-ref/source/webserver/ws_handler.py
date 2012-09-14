@@ -423,7 +423,6 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                                      self.username, config.games[game_id])
         rcfile_path = os.path.join(rcfile_path, self.username + ".rc")
         with open(rcfile_path, 'w') as f:
-            f.write(codecs.BOM_UTF8)
             f.write(contents.encode("utf8"))
 
     def on_message(self, message):
