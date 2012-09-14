@@ -158,6 +158,9 @@ tileidx_t tilep_equ_shield(const item_def &item)
     if (item.base_type != OBJ_ARMOUR)
         return 0;
 
+    if (item.props.exists("worn_tile"))
+        return item.props["worn_tile"].get_short();
+
     if (is_unrandom_artefact(item))
     {
         const tileidx_t tile = unrandart_to_doll_tile(find_unrandart_index(item));

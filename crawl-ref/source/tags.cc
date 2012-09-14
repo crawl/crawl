@@ -59,10 +59,10 @@
 #include "tags.h"
 #include "tiledef-dngn.h"
 #include "tiledef-player.h"
+#include "tilepick.h"
 #include "tileview.h"
 #ifdef USE_TILE
  #include "tilemcache.h"
- #include "tilepick.h"
 #endif
 #include "travel.h"
 
@@ -2525,6 +2525,8 @@ void unmarshallItem(reader &th, item_def &item)
     if (item.base_type == OBJ_POTIONS && item.sub_type == POT_WATER)
         item.sub_type = POT_CONFUSION;
 #endif
+
+    bind_item_tile(item);
 }
 
 #define MAP_SERIALIZE_FLAGS_MASK 3

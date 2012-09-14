@@ -5005,6 +5005,30 @@ item_spec item_list::parse_single_spec(string s)
         return result;
     }
 
+    string tile = strip_tag_prefix(s, "tile:");
+    if (!tile.empty())
+    {
+        tileidx_t index;
+        if (!tile_main_index(tile.c_str(), &index))
+        {
+            error = make_stringf("bad tile name: \"%s\".", tile.c_str());
+            return result;
+        }
+        result.props["item_tile_name"].get_string() = tile;
+    }
+
+    tile = strip_tag_prefix(s, "wtile:");
+    if (!tile.empty())
+    {
+        tileidx_t index;
+        if (!tile_player_index(tile.c_str(), &index))
+        {
+            error = make_stringf("bad tile name: \"%s\".", tile.c_str());
+            return result;
+        }
+        result.props["worn_tile_name"].get_string() = tile;
+    }
+
     // Clean up after any tag brain damage.
     trim_string(s);
 
