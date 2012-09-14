@@ -3980,6 +3980,9 @@ static tileidx_t _tileidx_gold(const item_def &item)
 
 tileidx_t tileidx_item(const item_def &item)
 {
+    if (item.props.exists("item_tile"))
+        return item.props["item_tile"].get_short();
+
     int clas    = item.base_type;
     int type    = item.sub_type;
     int special = item.special;
@@ -5384,6 +5387,39 @@ string tile_debug_string(tileidx_t fg, tileidx_t bg, char prefix)
         tile_dngn_name(bg_idx));
 
     return tile_string;
+}
+
+void bind_item_tile(item_def &item)
+{
+    if (item.props.exists("item_tile_name"))
+    {
+        string tile = item.props["item_tile_name"].get_string();
+        tileidx_t index;
+        if (!tile_main_index(tile.c_str(), &index))
+        {
+            // If invalid tile name, complain and discard the props.
+            dprf("bad tile name: \"%s\".", tile.c_str());
+            item.props.erase("item_tile_name");
+            item.props.erase("item_tile");
+        }
+        else
+            item.props["item_tile"] = short(index);
+    }
+
+    if (item.props.exists("worn_tile_name"))
+    {
+        string tile = item.props["worn_tile_name"].get_string();
+        tileidx_t index;
+        if (!tile_player_index(tile.c_str(), &index))
+        {
+            // If invalid tile name, complain and discard the props.
+            dprf("bad tile name: \"%s\".", tile.c_str());
+            item.props.erase("worn_tile_name");
+            item.props.erase("worn_tile");
+        }
+        else
+            item.props["worn_tile"] = short(index);
+    }
 }
 #endif
 

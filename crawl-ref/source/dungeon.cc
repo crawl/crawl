@@ -67,6 +67,7 @@
 #include "tags.h"
 #include "terrain.h"
 #include "tiledef-dngn.h"
+#include "tilepick.h"
 #include "tileview.h"
 #include "traps.h"
 #include "travel.h"
@@ -4113,6 +4114,12 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
 
     if (props.exists("no_pickup"))
         item.flags |= ISFLAG_NO_PICKUP;
+
+    if (props.exists("item_tile_name"))
+        item.props["item_tile_name"] = props["item_tile_name"].get_string();
+    if (props.exists("worn_tile_name"))
+        item.props["worn_tile_name"] = props["worn_tile_name"].get_string();
+    bind_item_tile(item);
 
     if (!monster)
     {
