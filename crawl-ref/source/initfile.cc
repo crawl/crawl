@@ -2551,10 +2551,8 @@ void game_options::read_option_line(const string &str, bool runscript)
     else BOOL_OPTION(show_no_ctele);
     else INT_OPTION(hp_warning, 0, 100);
     else INT_OPTION_NAMED("mp_warning", magic_point_warning, 0, 100);
-    else if (key == "note_monsters")
-        append_vector(note_monsters, split_string(",", field));
-    else if (key == "note_messages")
-        append_vector(note_messages, split_string(",", field));
+    else OLD_LIST_OPTION(note_monsters);
+    else OLD_LIST_OPTION(note_messages);
     else INT_OPTION(note_hp_percent, 0, 100);
 #ifndef DGAMELAUNCH
     // If DATA_DIR_PATH is set, don't set crawl_dir from .crawlrc.
@@ -2934,10 +2932,8 @@ void game_options::read_option_line(const string &str, bool runscript)
 #ifdef WIZARD
     else if (key == "fsim_mode")
         fsim_mode = field;
-    else if (key == "fsim_scale")
-        append_vector(fsim_scale, split_string(",", field));
-    else if (key == "fsim_kit")
-        append_vector(fsim_kit, split_string(",", field));
+    else OLD_LIST_OPTION(fsim_scale);
+    else OLD_LIST_OPTION(fsim_kit);
     else if (key == "fsim_rounds")
     {
         fsim_rounds = atol(field.c_str());
