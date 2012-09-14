@@ -2957,6 +2957,8 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
         return TILE_WPN_LAJATANG;
 
     case WPN_BARDICHE:
+        if (race == ISFLAG_ORCISH)
+            return TILE_WPN_BARDICHE_ORC;
         return TILE_WPN_BARDICHE;
 
     case WPN_BLESSED_FALCHION:
