@@ -5,20 +5,20 @@
 
 inv := menu_colour
 
-inv = $inedible:.*inedible.*
+inv += $inedible:.*inedible.*
 
-inv = $evil:.*evil_eating.*
+inv += $evil:.*evil_eating.*
 
-inv = $preferred:.*preferred.*
+inv += $preferred:.*preferred.*
 
 # Corpses of undead (necrophages etc.)
-inv = $rot-inducing:.*rot-inducing.*
+inv += $rot-inducing:.*rot-inducing.*
 
 # Mutagenic corpses/chunks
-inv = $mutagenic:.*mutagenic.*
+inv += $mutagenic:.*mutagenic.*
 
 # Poisonous corpses/chunks
-inv = $poisonous:.*poisonous.*
+inv += $poisonous:.*poisonous.*
 
 # Contaminated corpses/chunks
-inv = $contaminated:.*contaminated.*
+inv += $contaminated:.*contaminated.*
