@@ -870,7 +870,6 @@ int player_spec_conj(void);
 int player_spec_death(void);
 int player_spec_earth(void);
 int player_spec_fire(void);
-int player_spec_holy(void);
 int player_spec_poison(void);
 int player_spec_summ(void);
 

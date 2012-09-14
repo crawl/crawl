@@ -1936,13 +1936,6 @@ int player_spec_death()
     return sd;
 }
 
-int player_spec_holy()
-{
-    //if (you.char_class == JOB_PRIEST || you.char_class == JOB_PALADIN)
-    //  return 1;
-    return 0;
-}
-
 int player_spec_fire()
 {
     int sf = 0;
