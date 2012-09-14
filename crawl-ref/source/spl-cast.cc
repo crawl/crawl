@@ -465,7 +465,7 @@ static int _spell_enhancement(unsigned int typeflags)
         enhanced += player_spec_poison();
 
     if (typeflags & SPTYP_NECROMANCY)
-        enhanced += player_spec_death() - player_spec_holy();
+        enhanced += player_spec_death();
 
     if (typeflags & SPTYP_FIRE)
     {
