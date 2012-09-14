@@ -223,6 +223,9 @@ orcish_glaive2
 %rim 1
 bardiche1 WPN_BARDICHE
 bardiche2
+bardiche3
+orcish_bardiche1 WPN_BARDICHE_ORC
+orcish_bardiche2
 
 ##Staff
 %rim 0
