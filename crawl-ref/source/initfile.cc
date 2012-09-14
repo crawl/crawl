@@ -1466,7 +1466,9 @@ string read_init_file(bool runscript)
         warn += comma_separated_line(warn_list_append.begin(),
                                      warn_list_append.end());
 
-        Options.report_error("%s", warn.c_str());
+        // Can't use Options.report_error() as that prevents webtiles from
+        // starting the game.
+        mpr(warn, MSGCH_ERROR);
     }
 
     return "";
