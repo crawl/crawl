@@ -1022,8 +1022,8 @@ H. Spellcasting
 
 Magical spells are a very important part of surviving in the dungeon. Every
 character can make use of magical spells, although those who enter the dungeon
-without magical skills must practise by reading scrolls before they can attempt
-spellcasting.
+without magical skills must first train at least one magic skill before they
+can learn any spells.
 
 There are many skills related to magic, the principal one being Spellcasting.
 Spellcasting determines the number of Magic Points available; it also helps in
@@ -1873,7 +1873,8 @@ Yellow Draconians
 
 Grey Draconians
   have no breath weapon, but also no need to breathe in order to live, which
-  helps them survive in deep water. They are stealthy and good at stabbing.
+  helps them survive in deep water. They are proficient with earth magic but bad
+  with air magic, and also have harder scales than other Draconians.
 
 Black Draconians
   can unleash huge electrical discharges, and are naturally insulated. They are
@@ -2950,7 +2951,7 @@ Regen
   temporary regeneration.
 
 Contam
-  You glow from mutagenic radiation. This can mutate you over time, usually with
+  You glow with mutagenic radiation. This can mutate you over time, usually with
   a bad outcome. The colour indicates the severity: the first level (darkgrey)
   is only a warning, and no mutation or loss of stealth will occur from it.
 
