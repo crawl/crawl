@@ -1251,7 +1251,7 @@ void search_around(bool only_adjacent)
     const int skill = you.traps_skill();
     // Traps and doors stepdown skill:
     // skill/(2x-1) for squares at distance x
-    int max_dist = (skill + 1) / 2;
+    int max_dist = div_rand_round(skill, 2);
     if (max_dist > 5)
         max_dist = 5;
     if (only_adjacent && max_dist > 1 || max_dist < 1)
@@ -1271,7 +1271,7 @@ void search_around(bool only_adjacent)
                 ++dist;
 
             // Making this harsher by removing the old +1...
-            int effective = skill / (2*dist - 1);
+            int effective = div_rand_round(skill, (2*dist - 1));
 
             if (grd(*ri) == DNGN_UNDISCOVERED_TRAP
                      && x_chance_in_y(effective + 1, 17))
