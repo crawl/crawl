@@ -2015,6 +2015,26 @@ int player_spec_conj()
     return sc;
 }
 
+int player_spec_hex()
+{
+    int sh = 0;
+
+    // All effects negated by magical suppression should go in here.
+    if (!you.suppressed())
+    {
+        // Unrands
+        if (player_equip_unrand_effect(UNRAND_BOTONO))
+            sh++;
+    }
+
+    return sh;
+}
+
+int player_spec_charm()
+{
+    // Nothing, for the moment.
+    return 0;
+}
 
 int player_spec_summ()
 {

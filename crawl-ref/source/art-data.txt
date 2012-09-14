@@ -483,8 +483,8 @@ COLOUR:   ETC_UNHOLY
 TILE:     urand_botono
 TILE_EQ:  botono
 BRAND:    SPWPN_REAPING
-HP:       -3
-BOOL:     poison, life, noises
+HP:       -6
+BOOL:     poison, life
 
 NAME:     trident of the Octopus King
 OBJ:      OBJ_WEAPONS/WPN_TRIDENT
