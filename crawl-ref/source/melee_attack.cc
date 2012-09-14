@@ -105,9 +105,9 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     to_hit          = calc_to_hit();
 
     attacker_armour_tohit_penalty =
-        attacker->armour_tohit_penalty(true);
+        div_rand_round(attacker->armour_tohit_penalty(true, 20), 20);
     attacker_shield_tohit_penalty =
-        attacker->shield_tohit_penalty(true);
+        div_rand_round(attacker->shield_tohit_penalty(true, 20), 20);
 
     if (attacker->is_monster())
     {
@@ -159,8 +159,8 @@ melee_attack::melee_attack(actor *attk, actor *defn,
                           && you.see_cell(defender->pos()));
     needs_message      = (attacker_visible || defender_visible);
 
-    attacker_body_armour_penalty = attacker->adjusted_body_armour_penalty(1);
-    attacker_shield_penalty = attacker->adjusted_shield_penalty(1);
+    attacker_body_armour_penalty = attacker->adjusted_body_armour_penalty(20);
+    attacker_shield_penalty = attacker->adjusted_shield_penalty(20);
 }
 
 static bool _conduction_affected(const coord_def &pos)
@@ -3693,23 +3693,29 @@ int melee_attack::calc_attack_delay(bool random, bool scaled)
     {
         random_var attack_delay = weapon ? player_weapon_speed()
                                          : player_unarmed_speed();
+        // At the moment it never gets this low anyway.
+        attack_delay = rv::max(attack_delay, constant(3));
 
+        // Calculate this separately to avoid overflowing the weights in
+        // the random_var.
+        random_var shield_penalty = constant(0);
         if (attacker_shield_penalty)
         {
             if (weapon && hands == HANDS_HALF)
-                attack_delay += rv::roll_dice(1, attacker_shield_penalty);
+                shield_penalty = div_rand_round(rv::roll_dice(1, attacker_shield_penalty), 20);
             else
             {
-                attack_delay += rv::min(rv::random2(1 + attacker_shield_penalty),
-                                        rv::random2(1 + attacker_shield_penalty));
+                shield_penalty = div_rand_round(rv::min(rv::roll_dice(1, attacker_shield_penalty),
+                                                        rv::roll_dice(1, attacker_shield_penalty)),
+                                                20);
             }
         }
         // Give unarmed shield-users a slight penalty always.
         if (!weapon && player_wearing_slot(EQ_SHIELD))
-            attack_delay += rv::random2(2);
+            shield_penalty += rv::random2(2);
 
-        attack_delay = rv::max(attack_delay, constant(3));
-        int final_delay = random ? attack_delay.roll() : attack_delay.expected();
+        int final_delay = random ? attack_delay.roll() + shield_penalty.roll()
+                                 : attack_delay.expected() + shield_penalty.expected();
         // Stop here if we just want the unmodified value.
         if (!scaled)
             return final_delay;
@@ -3842,8 +3848,8 @@ random_var melee_attack::player_unarmed_speed()
 {
     random_var unarmed_delay =
         rv::max(constant(10),
-                 (rv::roll_dice(1, 10) +
-                  rv::roll_dice(2, attacker_body_armour_penalty)));
+                (rv::roll_dice(1, 10) +
+                 div_rand_round(rv::roll_dice(2, attacker_body_armour_penalty), 20)));
 
     // Unarmed speed. Min delay is 10 - 270/54 = 5.
     if (you.burden_state == BS_UNENCUMBERED)
@@ -5150,7 +5156,7 @@ int melee_attack::calc_damage()
         {
             potential_damage =
                 max(1,
-                    potential_damage - roll_dice(1, attacker_shield_penalty));
+                    potential_damage - div_rand_round(roll_dice(1, attacker_shield_penalty), 20));
         }
 
         potential_damage = player_stat_modify_damage(potential_damage);

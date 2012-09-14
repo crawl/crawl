@@ -6169,17 +6169,17 @@ int player::adjusted_shield_penalty(int scale) const
                   / max(1, 5 + _player_evasion_size_factor())));
 }
 
-int player::armour_tohit_penalty(bool random_factor) const
+int player::armour_tohit_penalty(bool random_factor, int scale) const
 {
-    return maybe_roll_dice(1, adjusted_body_armour_penalty(), random_factor);
+    return maybe_roll_dice(1, adjusted_body_armour_penalty(scale), random_factor);
 }
 
-int player::shield_tohit_penalty(bool random_factor) const
+int player::shield_tohit_penalty(bool random_factor, int scale) const
 {
     const item_def* wp = slot_item(EQ_WEAPON);
     int factor = (wp && hands_reqd(*wp, body_size()) == HANDS_HALF) ? 2 : 1;
 
-    return maybe_roll_dice(factor, adjusted_shield_penalty(), random_factor);
+    return maybe_roll_dice(factor, adjusted_shield_penalty(scale), random_factor);
 }
 
 int player::skill(skill_type sk, int scale, bool real) const

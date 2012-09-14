@@ -252,8 +252,8 @@ public:
     virtual int adjusted_body_armour_penalty(int scale = 1,
                                              bool use_size = false) const = 0;
     virtual int adjusted_shield_penalty(int scale) const = 0;
-    virtual int armour_tohit_penalty(bool random_factor) const = 0;
-    virtual int shield_tohit_penalty(bool random_factor) const = 0;
+    virtual int armour_tohit_penalty(bool random_factor, int scale = 1) const = 0;
+    virtual int shield_tohit_penalty(bool random_factor, int scale = 1) const = 0;
 
     virtual monster_type mons_species(bool zombie_base = false) const = 0;
 

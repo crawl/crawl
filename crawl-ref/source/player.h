@@ -667,8 +667,8 @@ public:
     int adjusted_body_armour_penalty(int scale = 1,
                                      bool use_size = false) const;
     int adjusted_shield_penalty(int scale = 1) const;
-    int armour_tohit_penalty(bool random_factor) const;
-    int shield_tohit_penalty(bool random_factor) const;
+    int armour_tohit_penalty(bool random_factor, int scale = 1) const;
+    int shield_tohit_penalty(bool random_factor, int scale = 1) const;
 
     bool wearing_light_armour(bool with_skill = false) const;
     int  skill(skill_type skill, int scale =1, bool real = false) const;
