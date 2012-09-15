@@ -530,6 +530,10 @@ large_shield1 ARM_LARGE_SHIELD
 large_shield2
 large_shield3
 
+shield_dd SHIELD_DEEP_DWARF
+shield_dd_scion SHIELD_DEEP_DWARF_SCION
+lshield_dd_dk LARGE_SHIELD_DEEP_DWARF_DEATH_KNIGHT
+
 %sdir item/armour/headgear
 #####ARM_HELMET
 elven_leather_helm THELM_CAP
