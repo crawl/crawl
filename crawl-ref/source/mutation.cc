@@ -1088,13 +1088,12 @@ bool physiology_mutation_conflict(mutation_type mutat)
     if (you.species != SP_OCTOPODE && mutat == MUT_TENTACLE_SPIKE)
         return true;
 
-    // No bones.
-    if (you.species == SP_OCTOPODE && mutat == MUT_THIN_SKELETAL_STRUCTURE)
+    // No bones for thin skeletal structure, and too squishy for horns.
+    if (you.species == SP_OCTOPODE
+        && (mutat == MUT_THIN_SKELETAL_STRUCTURE || mutat == MUT_HORNS))
+    {
         return true;
-
-    // Too squishy.
-     if (you.species == SP_OCTOPODE && mutat == MUT_HORNS)
-        return true;
+    }
 
     // No feet.
     if (!player_has_feet(false)
