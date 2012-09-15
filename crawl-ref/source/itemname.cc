@@ -996,7 +996,9 @@ static const char* staff_type_name(int stafftype)
     case STAFF_ENERGY:      return "energy";
     case STAFF_DEATH:       return "death";
     case STAFF_CONJURATION: return "conjuration";
+#if TAG_MAJOR_VERSION == 34
     case STAFF_ENCHANTMENT: return "enchantment";
+#endif
     case STAFF_AIR:         return "air";
     case STAFF_EARTH:       return "earth";
     case STAFF_SUMMONING:   return "summoning";

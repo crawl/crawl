@@ -1589,12 +1589,6 @@ This staff increases the power of earth spells cast by its wielder. If the
 wielder is skilled in evocations, it can crush those struck by it, dealing even
 greater damage if they are also skilled in earth magic.
 %%%%
-staff of enchantment
-
-This staff increases the power of charm and hex spells cast by its wielder. In
-the hands of a skilled person, it also increases resistance to hostile
-enchantments.
-%%%%
 staff of energy
 
 This staff greatly reduces the hunger cost of the wielder's magical spells.

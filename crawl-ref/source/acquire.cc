@@ -652,7 +652,14 @@ static int _acquirement_staff_subtype(const has_vector& already_has)
     // Try to pick an enhancer staff matching the player's best skill.
     skill_type best_spell_skill = best_skill(SK_SPELLCASTING, SK_EVOCATIONS);
     bool found_enhancer = false;
-    int result = random2(NUM_STAVES);
+    int result = 0;
+#if TAG_MAJOR_VERSION == 34
+    do
+        result = random2(NUM_STAVES);
+    while (result == STAFF_ENCHANTMENT);
+#else
+    result = random2(NUM_STAVES);
+#endif
 
 #define TRY_GIVE(x) { if (you.type_ids[OBJ_STAVES][x] != ID_KNOWN_TYPE) \
                       {result = x; found_enhancer = true;} }
@@ -665,8 +672,6 @@ static int _acquirement_staff_subtype(const has_vector& already_has)
     case SK_POISON_MAGIC: TRY_GIVE(STAFF_POISON);      break;
     case SK_NECROMANCY:   TRY_GIVE(STAFF_DEATH);       break;
     case SK_CONJURATIONS: TRY_GIVE(STAFF_CONJURATION); break;
-    case SK_CHARMS:       TRY_GIVE(STAFF_ENCHANTMENT); break;
-    case SK_HEXES:        TRY_GIVE(STAFF_ENCHANTMENT); break;
     case SK_SUMMONINGS:   TRY_GIVE(STAFF_SUMMONING);   break;
     default:                                           break;
     }

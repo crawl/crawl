@@ -1087,11 +1087,10 @@ KFEAT:  L = armour shop count:17 greed:12 type:Basic suffix:Armour use_all ; \
             mundane not_cursed buckler | mundane not_cursed pair of gloves |\
             mundane not_cursed helmet
 KFEAT:  M = food shop count:17 type:Bee suffix:Food greed:4 ; royal jelly q:3
-KFEAT:  N = weapon shop type:Staff suffix:Store count:10 use_all greed:30 ; \
+KFEAT:  N = weapon shop type:Staff suffix:Store count:9 use_all greed:30 ; \
             staff of summoning | staff of wizardry |\
             staff of fire | staff of air | staff of earth | staff of cold |\
-            staff of poison | staff of death | staff of enchantment |\
-            staff of conjuration
+            staff of poison | staff of death | staff of conjuration
 KFEAT:  Q = weapon shop type:Weapon suffix:Rack count:17 use_all greed:30 ; \
             mundane not_cursed quick blade | mundane not_cursed demon blade |\
             mundane not_cursed triple sword | mundane not_cursed broad axe |\

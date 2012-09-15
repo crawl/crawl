@@ -3956,10 +3956,6 @@ int monster::res_magic() const
     if (jewellery != NON_ITEM && mitm[jewellery].base_type == OBJ_JEWELLERY)
         u += get_jewellery_res_magic(mitm[jewellery], false);
 
-    const item_def *w = primary_weapon();
-    if (w && w->base_type == OBJ_STAVES && w->sub_type == STAFF_ENCHANTMENT)
-        u += 9 + hit_dice * 2; // assume skill of 2/3 HD
-
     if (has_ench(ENCH_LOWERED_MR))
         u /= 2;
 
