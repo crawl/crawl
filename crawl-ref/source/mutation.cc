@@ -1092,6 +1092,10 @@ bool physiology_mutation_conflict(mutation_type mutat)
     if (you.species == SP_OCTOPODE && mutat == MUT_THIN_SKELETAL_STRUCTURE)
         return true;
 
+    // Too squishy.
+     if (you.species == SP_OCTOPODE && mutat == MUT_HORNS)
+        return true;
+
     // No feet.
     if (!player_has_feet(false)
         && (mutat == MUT_HOOVES || mutat == MUT_TALONS))
