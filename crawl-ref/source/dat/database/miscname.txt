@@ -381,7 +381,7 @@ eating_pizza
 # a type of bell peppers like in Europe.
 @_carni_mmm_@ Pepperoni.
 
-Yeuchh! Anchovies.
+@_carni_mmm_@ Anchovies.
 
 @_carni_mmm_@ Chicken.
 
