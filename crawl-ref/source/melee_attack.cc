@@ -1125,23 +1125,15 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
 
         break;
 
-    case UNAT_HEADBUTT:
-        aux_damage = 5;
+    case UNAT_PECK:
+        aux_damage = 6;
+        noise_factor = 75;
+        aux_attack = aux_verb = "peck";
+        break;
 
-        if (player_mutation_level(MUT_BEAK)
-            && (!player_mutation_level(MUT_HORNS) || coinflip()))
-        {
-            aux_attack = aux_verb = "peck";
-            aux_damage++;
-            noise_factor = 75;
-        }
-        else
-        {
-            aux_attack = aux_verb = "headbutt";
-            // Minotaurs used to get +5 damage here, now they get
-            // +6 because of the horns.
-            aux_damage += player_mutation_level(MUT_HORNS) * 3;
-        }
+    case UNAT_HEADBUTT:
+        aux_damage = 5 + player_mutation_level(MUT_HORNS) * 3;
+        aux_attack = aux_verb = "headbutt";
         break;
 
     case UNAT_TAILSLAP:
@@ -4816,6 +4808,7 @@ bool melee_attack::_tran_forbid_aux_attack(unarmed_attack_type atk)
     switch (atk)
     {
     case UNAT_KICK:
+    case UNAT_PECK:
     case UNAT_HEADBUTT:
     case UNAT_PUNCH:
         return (you.form == TRAN_ICE_BEAST
@@ -4853,10 +4846,14 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk, bool is_uc)
                  || you.has_usable_talons()
                  || player_mutation_level(MUT_TENTACLE_SPIKE));
 
+    case UNAT_PECK:
+        return ((is_uc
+                 || player_mutation_level(MUT_BEAK))
+                && !one_chance_in(3));
+
     case UNAT_HEADBUTT:
         return ((is_uc
-                 || player_mutation_level(MUT_HORNS)
-                 || player_mutation_level(MUT_BEAK))
+                 || player_mutation_level(MUT_HORNS))
                 && !one_chance_in(3));
 
     case UNAT_TAILSLAP:
