@@ -353,6 +353,8 @@ static bool _try_give_plain_armour(item_def &arm)
         // want to try to guess at this by looking at their weapon's handedness
         // because this would encourage switching weapons or putting on a
         // shield right before reading acquirement in some cases. --elliptic
+        // This affects only the "unfilled slot" special-case, not regular
+        // acquirement which can always produce (wearable) shields.
         if (armour_slots[i] == EQ_SHIELD)
             continue;
 
