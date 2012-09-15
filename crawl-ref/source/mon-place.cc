@@ -916,18 +916,20 @@ static string _abyss_monster_creation_message(monster* mon, bool visible)
       return " smells like butter!";
   }
 
-  string messages[] = { 
-      (visible ? " appears" : " flickers") + string(" in a shower of sparks"),
-      " materialises.",
-      string(" emerges from ") + (coinflip() ? "chaos" : "the beyond"),
-      " assembles " + string(mons_pronoun(mon->type, PRONOUN_REFLEXIVE, visible)) + "!",
-      (coinflip() ? " erupts" : " bursts") + string(" from nowhere!"),
-      string(" is cast out of ") + (coinflip() ? "space!" : "reality!"),
-      " coalesces out of pure chaos.",
-      " punctures the fabric of time!",
-      " manifests!"
+    string messages[] = { 
+        (visible ? " appears" : " flickers") + string(" in a shower of")
+            + (one_chance_in(3) ? " translocational energy." : " sparks."),
+        " materialises.",
+        string(" emerges from ") + (one_chance_in(3) ? "chaos." : "the beyond."),
+        " assembles " + string(mons_pronoun(mon->type, PRONOUN_REFLEXIVE, visible)) + "!",
+        (one_chance_in(3) ? " erupts" : " bursts") + string(" from nowhere!"),
+        string(" is cast out of ") + (one_chance_in(3) ? "space!" : "reality!"),
+        string(" coalesces out of ") + (one_chance_in(3) ? "pure" : "seething") 
+            + string(" chaos."),
+        string(" punctures the fabric of ") + (one_chance_in(5) ? " time!" : " the universe."),
+        string(" manifests") + (silenced(you.pos()) ? "!" : " with a bang!")
   };
-  return messages[random2(9)];
+  return messages[min(random2(9), random2(9))];
 }
 
 monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
