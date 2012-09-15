@@ -190,9 +190,26 @@ void MenuRegion::_place_entries(const int left_offset, const int top_offset,
             m_entries[i].sy = height;
             m_entries[i].ey = m_entries[i].sy + text_height;
 
-            m_font_buf.add(m_entries[i].text, m_entries[i].sx, m_entries[i].sy);
+            // wrap titles to two lines if they don't fit
+            if (Options.tile_menu_icons
+                && m_entries[i].ex > m_entries[i].sx + column_width)
+            {
+                int w = column_width;
+                int h = m_font_entry->char_height() * 2;
+                formatted_string split = m_font_entry->split(m_entries[i].text, w, h);
+                int string_height = m_font_entry->string_height(split);
 
-            height += text_height;
+                m_entries[i].ex = w;
+                m_entries[i].ey = m_entries[i].sy + string_height;
+
+                m_font_buf.add(split, m_entries[i].sx, m_entries[i].sy);
+                height += string_height;
+            }
+            else
+            {
+                m_font_buf.add(m_entries[i].text, m_entries[i].sx, m_entries[i].sy);
+                height += text_height;
+            }
         }
         else
         {
