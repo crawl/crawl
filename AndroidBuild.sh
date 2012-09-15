@@ -169,4 +169,7 @@ if [ -e bin/crawl ]; then
 	# symlink a default icon
 	ln -s -f crawl-ref/source/dat/tiles/stone_soup_icon-512x512.png icon.png
 
+  # fixup version string
+  VER=$(sed '/LONG/!d; s/^.*"\(.*\)"$/\1/' < crawl-ref/source/build.h)
+  sed -i "/android:versionName/s/GEN_FROM_HEADER/$VER/" ../../../AndroidManifest.xml
 fi
