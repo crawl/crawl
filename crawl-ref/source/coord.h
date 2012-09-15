@@ -57,5 +57,6 @@ bool adjacent(const coord_def& p1, const coord_def& p2);
 
 coord_def player2grid(const coord_def& pc);
 coord_def grid2player(const coord_def& pc);
+coord_def rotate_adjacent(coord_def vector, int direction);
 
 #endif
