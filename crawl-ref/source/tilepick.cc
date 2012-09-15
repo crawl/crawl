@@ -583,6 +583,8 @@ static tileidx_t _zombie_tile_to_spectral(const tileidx_t z_tile)
         return TILEP_MONS_SPECTRAL_SPIDER;
     case TILEP_MONS_ZOMBIE_DRAGON:
         return TILEP_MONS_SPECTRAL_DRAGON;
+    case TILEP_MONS_ZOMBIE_DRAKE:
+        return TILEP_MONS_SPECTRAL_DRAKE;
     case TILEP_MONS_ZOMBIE_KRAKEN:
         return TILEP_MONS_SPECTRAL_KRAKEN;
     default:
@@ -630,6 +632,8 @@ static tileidx_t _zombie_tile_to_simulacrum(const tileidx_t z_tile)
         return TILEP_MONS_SIMULACRUM_SPIDER;
     case TILEP_MONS_ZOMBIE_DRAGON:
         return TILEP_MONS_SIMULACRUM_DRAGON;
+    case TILEP_MONS_ZOMBIE_DRAKE:
+        return TILEP_MONS_SIMULACRUM_DRAKE;
     case TILEP_MONS_ZOMBIE_KRAKEN:
         return TILEP_MONS_SIMULACRUM_KRAKEN;
     default:
@@ -648,12 +652,10 @@ static tileidx_t _tileidx_monster_zombified(const monster_info& mon)
     const int z_type = mon.type;
     const monster_type subtype = mon.base_type;
 
-    if (subtype == MONS_KRAKEN)
-        return TILEP_MONS_ZOMBIE_KRAKEN;
-
     const int z_size = mons_zombie_size(subtype);
 
     tileidx_t z_tile;
+
     switch (get_mon_shape(subtype))
     {
     case MON_SHAPE_HUMANOID:
@@ -688,7 +690,7 @@ static tileidx_t _tileidx_monster_zombified(const monster_info& mon)
         z_tile = TILEP_MONS_ZOMBIE_NAGA;
         break;
     case MON_SHAPE_QUADRUPED_WINGED:
-        if (_is_zombie(z_type) && mons_genus(subtype) != MONS_DRAGON)
+        if (_is_zombie(z_type) && mons_genus(subtype) != MONS_DRAGON && mons_genus(subtype) != MONS_WYVERN)
         {
             if (mons_genus(subtype) == MONS_GRIFFON)
                 return TILEP_MONS_ZOMBIE_GRIFFON;
@@ -703,8 +705,18 @@ static tileidx_t _tileidx_monster_zombified(const monster_info& mon)
             if (_is_skeleton(z_type))
                 return TILEP_MONS_SKELETON_DRAGON;
 
-            z_tile = TILEP_MONS_ZOMBIE_DRAGON;
-            break;
+            if (subtype == MONS_FIRE_DRAKE
+                || subtype == MONS_DEATH_DRAKE
+                || subtype == MONS_SWAMP_DRAKE
+                || subtype == MONS_MOTTLED_DRAGON
+                || subtype == MONS_STEAM_DRAGON)
+            {
+                    z_tile = TILEP_MONS_ZOMBIE_DRAKE;
+                    break;
+            }
+
+                    z_tile = TILEP_MONS_ZOMBIE_DRAGON;
+                    break;
         }
         else if (mons_genus(subtype) == MONS_HYDRA)
         {
@@ -788,6 +800,9 @@ static tileidx_t _tileidx_monster_zombified(const monster_info& mon)
     default:
         z_tile = TILEP_ERROR;
     }
+
+    if (subtype == MONS_KRAKEN)
+        z_tile = TILEP_MONS_ZOMBIE_KRAKEN;
 
     if (z_type == MONS_SPECTRAL_THING)
         z_tile = _zombie_tile_to_spectral(z_tile);
