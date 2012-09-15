@@ -71,7 +71,7 @@ equipment_type beastly_slot(int mut)
     {
     case MUT_HORNS:
     case MUT_ANTENNAE:
-    case MUT_BEAK:
+    // Not putting MUT_BEAK here because it doesn't conflict with the other two.
         return EQ_HELMET;
     case MUT_CLAWS:
         return EQ_GLOVES;
