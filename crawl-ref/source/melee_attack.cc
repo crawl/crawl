@@ -4809,6 +4809,7 @@ bool melee_attack::do_knockback(bool trample)
 
 //cleave can cover up to 7 cells (not the one opposite to the target), but is
 // stopped by solid features. Allies are passed through without harm.
+void melee_attack::cleave_setup()
 {
     if (feat_is_solid(grd(defender->pos())))
         return;
