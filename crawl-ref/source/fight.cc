@@ -490,3 +490,38 @@ int player_weapon_dex_weight(void)
 {
     return 10 - player_weapon_str_weight();
 }
+
+// Put the potential cleave targets into a list. Up to 3, taken in order by
+// rotating from the def position and stopping at the first solid feature.
+void get_cleave_targets(coord_def atk, coord_def def, int dir,
+                        list<actor*> &targets)
+{
+    coord_def atk_vector = def - atk;
+    int i = 0;
+
+    do
+    {
+        atk_vector = rotate_adjacent(atk_vector, dir);
+        actor * target = actor_at(atk + atk_vector);
+        if (target)
+            targets.push_back(target);
+    }
+    while (++i < 3 && !feat_is_solid(grd(atk + atk_vector)));
+}
+
+void attack_cleave_targets(actor* attacker, list<actor*> &targets,
+                           int attack_number, int effective_attack_number)
+{
+    while (!targets.empty())
+    {
+        actor* def = targets.front();
+        if (attacker->alive() && def && def->alive()
+            && (!mons_aligned(attacker, def) || attacker->confused()))
+        {
+            melee_attack attck(attacker, def, attack_number,
+                               ++effective_attack_number, true);
+            attck.attack();
+        }
+        targets.pop_front();
+    }
+}

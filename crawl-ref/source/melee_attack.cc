@@ -87,14 +87,15 @@
  **************************************************
 */
 melee_attack::melee_attack(actor *attk, actor *defn,
-                           int attack_num, int effective_attack_num)
+                           int attack_num, int effective_attack_num,
+                           bool is_cleaving)
     :  // Call attack's constructor
     attack::attack(attk, defn),
 
     perceived_attack(false), obvious_effect(false), attack_number(attack_num),
     effective_attack_number(effective_attack_num),
     skip_chaos_message(false), special_damage_flavour(BEAM_NONE),
-    stab_attempt(false), stab_bonus(0),
+    stab_attempt(false), stab_bonus(0), cleaving(is_cleaving),
     miscast_level(-1), miscast_type(SPTYP_NONE), miscast_target(NULL),
     simu(false)
 {
@@ -760,12 +761,19 @@ bool melee_attack::handle_phase_end()
     {
         // returns whether an aux attack successfully took place
         if (!defender->as_monster()->friendly()
-            && adjacent(defender->pos(), attacker->pos()))
+            && adjacent(defender->pos(), attacker->pos())
+            && !cleaving) // additional attacks from cleave don't get aux
         {
             player_aux_unarmed();
         }
 
         print_wounds(defender->as_monster());
+    }
+
+    if (!cleave_targets.empty())
+    {
+        attack_cleave_targets(attacker, cleave_targets, attack_number,
+                              effective_attack_number);
     }
 
     // Check for passive mutation effects.
@@ -797,6 +805,10 @@ bool melee_attack::attack()
 
     if (attacker != defender && attacker->self_destructs())
         return (did_hit = perceived_attack = true);
+
+
+    if (!cleaving && wpn_skill == SK_AXES)
+        cleave_setup();
 
     // Apparently I'm insane for believing that we can still stay general past
     // this point in the combat code, mebe I am! --Cryptic
@@ -1576,6 +1588,10 @@ int melee_attack::player_apply_fighting_skill(int damage, bool aux)
 
 int melee_attack::player_apply_misc_modifiers(int damage)
 {
+    //cleave damage modifier
+    if (cleaving)
+        damage = cleave_damage_mod(damage);
+
     if (you.duration[DUR_MIGHT] || you.duration[DUR_BERSERK])
         damage += 1 + random2(10);
 
@@ -4791,6 +4807,29 @@ bool melee_attack::do_knockback(bool trample)
     return false;
 }
 
+//cleave can cover up to 7 cells (not the one opposite to the target), but is
+// stopped by solid features. Allies are passed through without harm.
+{
+    if (feat_is_solid(grd(defender->pos())))
+        return;
+
+    int dir = coinflip() ? -1 : 1;
+    get_cleave_targets(attacker->pos(), defender->pos(), dir, cleave_targets);
+    cleave_targets.reverse();
+    attack_cleave_targets(attacker, cleave_targets, attack_number,
+                          effective_attack_number);
+
+    // We need to get the list of the remaining potential targets now because
+    // if the main target dies, its position will be lost.
+    get_cleave_targets(attacker->pos(), defender->pos(), -dir, cleave_targets);
+}
+
+// cleave damage modifier for additional attacks: 75% of base damage
+int melee_attack::cleave_damage_mod(int dam)
+{
+    return div_rand_round(dam * 3, 4);
+}
+
 void melee_attack::chaos_affect_actor(actor *victim)
 {
     melee_attack attk(victim, victim);
@@ -5139,6 +5178,9 @@ int melee_attack::calc_damage()
                  defender->name(DESC_PLAIN).c_str(),
                  damage);
         }
+
+        if(cleaving)
+            damage = cleave_damage_mod(damage);
 
         return apply_defender_ac(damage, damage_max);
     }

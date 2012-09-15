@@ -1,6 +1,8 @@
 #ifndef MELEE_ATTACK_H
 #define MELEE_ATTACK_H
 
+#include <list>
+
 #include "artefact.h"
 #include "attack.h"
 #include "fight.h"
@@ -44,6 +46,9 @@ public:
     bool    stab_attempt;
     int     stab_bonus;
 
+    list<actor*> cleave_targets;
+    bool         cleaving;        // additional attack from cleaving
+
     // Miscast to cause after special damage is done. If miscast_level == 0
     // the miscast is discarded if special_damage_message isn't empty.
     int    miscast_level;
@@ -54,7 +59,8 @@ public:
 
 public:
     melee_attack(actor *attacker, actor *defender,
-                 int attack_num = -1, int effective_attack_num = -1);
+                 int attack_num = -1, int effective_attack_num = -1,
+                 bool is_cleaving = false);
 
     // Applies attack damage and other effects.
     bool attack();
@@ -98,6 +104,10 @@ private:
     bool chop_hydra_head(int damage_done,
                          int dam_type,
                          brand_type wpn_brand);
+
+    /* Axe cleaving */
+    void cleave_setup();
+    int cleave_damage_mod(int dam);
 
     /* Mutation Effects */
     void do_spines();

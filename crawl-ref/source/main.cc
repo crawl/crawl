@@ -19,6 +19,7 @@
 #include <string.h>
 #include <fcntl.h>
 #include <stdio.h>
+#include <list>
 #include <sstream>
 #include <iostream>
 
@@ -3517,7 +3518,19 @@ static bool _untrap_target(const coord_def move, bool check_confused)
                     dungeon_events.fire_vetoable_position_event(event,
                                                                 target);
             }
-            if (do_msg)
+
+            list<actor*> cleave_targets;
+            if (you.weapon() && weapon_skill(*you.weapon()) == SK_AXES)
+            {
+                int dir = coinflip() ? -1 : 1;
+                get_cleave_targets(you.pos(), target, dir, cleave_targets);
+                cleave_targets.reverse();
+                get_cleave_targets(you.pos(), target, -dir, cleave_targets);
+            }
+
+            if (!cleave_targets.empty())
+                attack_cleave_targets(&you, cleave_targets);
+            else if (do_msg)
                 mpr("You swing at nothing.");
             make_hungry(3, true);
             you.turn_is_over = true;
