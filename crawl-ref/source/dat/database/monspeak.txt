@@ -2169,6 +2169,9 @@ Xom Crazy Yiuf
 # Ralph Waldo Emerson
 @The_monster@ says, "No facts are to me sacred; none are profane; I simply experiment, an endless seeker, with no past at my back."
 
+# Robert Ingersoll
+@The_monster@ says, "The present is the child, and the necessary child, of all the past, and the mother of all the future."
+
 VISUAL:@The_monster@ considers dialectic materialism.
 
 VISUAL:@The_monster@ ponders an existential dilemma.
