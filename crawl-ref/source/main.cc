@@ -2121,7 +2121,6 @@ void process_command(command_type cmd)
         break;
 
     case CMD_NO_CMD:
-        break; // we get here after going into map mode and travelling out of it
     default:
         if (crawl_state.game_is_hints())
         {
