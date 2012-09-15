@@ -2840,7 +2840,13 @@ static void _generate_staff_item(item_def& item, int force_type, int item_level)
 {
     if (force_type == OBJ_RANDOM)
     {
+#if TAG_MAJOR_VERSION == 34
+        do
+            item.sub_type = random2(NUM_STAVES);
+        while (item.sub_type == STAFF_ENCHANTMENT);
+#else
         item.sub_type = random2(NUM_STAVES);
+#endif
 
         // staves of energy/channeling are 25% less common, wizardry/power
         // are more common

@@ -457,8 +457,6 @@ static int _spell_enhancement(unsigned int typeflags)
     if (typeflags & SPTYP_CONJURATION)
         enhanced += player_spec_conj();
 
-    if (typeflags & (SPTYP_HEXES|SPTYP_CHARMS))
-        enhanced += player_spec_ench();
 
     if (typeflags & SPTYP_SUMMONING)
         enhanced += player_spec_summ();

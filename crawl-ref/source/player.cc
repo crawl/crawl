@@ -2022,19 +2022,6 @@ int player_spec_conj()
     return sc;
 }
 
-int player_spec_ench()
-{
-    int se = 0;
-
-    // All effects negated by magical suppression should go in here.
-    if (!you.suppressed())
-    {
-        // Staves
-        se += player_equip(EQ_STAFF, STAFF_ENCHANTMENT);
-    }
-
-    return se;
-}
 
 int player_spec_summ()
 {
@@ -6668,10 +6655,6 @@ int player_res_magic(bool calc_unid, bool temp)
 
         // rings of magic resistance
         rm += 40 * player_equip(EQ_RINGS, RING_PROTECTION_FROM_MAGIC, calc_unid);
-
-        // Enchantment skill through staff of enchantment (up to 90).
-        if (player_equip(EQ_STAFF, STAFF_ENCHANTMENT, calc_unid))
-            rm += 9 + max(you.skill(SK_CHARMS, 3), you.skill(SK_HEXES, 3));
     }
 
     // Mutations

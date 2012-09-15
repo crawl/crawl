@@ -1496,7 +1496,7 @@ TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
 SUBST:      T = t.
 KMONS:      8 = orange crystal statue name:Statue_of_Wucad_Mu n_rpl n_the \
                 hd:20 hp:300 tile:mons_wucad_mu_statue
-KITEM:      8 = staff of enchantment unrand:staff_of_wucad_mu, book of enchantments
+KITEM:      8 = staff of channeling unrand:staff_of_wucad_mu, book of enchantments
 COLOUR:     =c = darkgrey
 COLOUR:     t = lightred / red w:3
 TILE:       t = dngn_tree_lightred / dngn_tree_red w:4 / dngn_tree_yellow w:4
