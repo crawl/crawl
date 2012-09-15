@@ -381,7 +381,13 @@ eating_pizza
 # a type of bell peppers like in Europe.
 @_carni_mmm_@ Pepperoni.
 
-@_carni_mmm_@ Anchovies.
+{{
+if you.race() == "Ghoul" then
+    return "Anchovies... pretty bad, even for you."
+else
+    return "Yeuchh! Anchovies."
+end
+}}
 
 @_carni_mmm_@ Chicken.
 
