@@ -18,6 +18,7 @@ enum unarmed_attack_type
     UNAT_CONSTRICT,  // put constriction first so octopodes will use it
     UNAT_KICK,
     UNAT_HEADBUTT,
+    UNAT_PECK,
     UNAT_TAILSLAP,
     UNAT_PUNCH,
     UNAT_BITE,
