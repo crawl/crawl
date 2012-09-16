@@ -981,11 +981,12 @@ static bool _abyss_teleport_within_level()
 
 static ProceduralSample _abyss_grid(const coord_def &p)
 {
+    const uint32_t seed = abyssal_state.seed;
     const coord_def pt = p + abyssal_state.major_coord; 
-    ColumnLayout denseColumns(2);
-    RoilingChaosLayout chaosLayout(123);
-    WorleyLayout layout(123, denseColumns, chaosLayout);
-    RiverLayout rivers(1, layout);
+    WorleyLayout mixedColumns(seed - 4, ColumnLayout(2), ColumnLayout(2,6));
+    RoilingChaosLayout chaosLayout(seed + 123);
+    WorleyLayout layout(seed + 4321, mixedColumns, chaosLayout);
+    RiverLayout rivers(seed, layout);
     const ProceduralSample sample = rivers(pt, abyssal_state.depth);
     abyss_sample_queue.push(sample);
     return sample;
@@ -1391,7 +1392,6 @@ void _increase_depth()
     const double theta = abyssal_state.phase;
     double depth_change = delta * (0.2 + 2.8 * pow(sin(theta/2), 10.0));
     abyssal_state.depth += depth_change;
-    dprf("Delta: %d Phase: %f (%f)\n", delta, abyssal_state.phase / M_PI, delta / 100.0);
     abyssal_state.phase += delta / 100.0;
     if (abyssal_state.phase > M_PI)
         abyssal_state.phase -= M_PI;
