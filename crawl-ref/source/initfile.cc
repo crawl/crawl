@@ -69,7 +69,7 @@ game_options Options;
 // A list of keys used as "key = foo" but meaning "append to a list",
 // where the list was non-empty. Such settings will reset the list and
 // thus have different behaviour in 0.12, so warn about them now.
-static set<string> warn_list_append;
+set<string> warn_list_append;
 
 object_class_type item_class_by_sym(ucs_t c)
 {
@@ -3414,8 +3414,9 @@ void game_options::read_option_line(const string &str, bool runscript)
     else if (runscript)
     {
 #ifdef CLUA_BINDINGS
-        if (!clua.callbooleanfn(false, "c_process_lua_option", "ss",
-                        key.c_str(), orig_field.c_str()))
+        if (!clua.callbooleanfn(false, "c_process_lua_option", "ssd",
+                        key.c_str(), orig_field.c_str(),
+                        plus_equal ? 1 : minus_equal ? -1 : 0))
 #endif
         {
 #ifdef CLUA_BINDINGS
