@@ -110,7 +110,7 @@ RiverLayout::operator()(const coord_def &p, const uint32_t offset) const
 {   
     const int periodicity = 100;
     const int baseWidth = 12;
-    const double scale = 1000;
+    const double scale = 10000;
     worley::noise_datum n =
         worley::noise(p.x/100.0, p.y/1000.0, offset / 1000.0 + seed);
     if ((n.id[0] + n.id[1]) % 6 || p.x % periodicity > baseWidth * 2)
