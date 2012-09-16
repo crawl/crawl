@@ -53,10 +53,16 @@ uint32_t _get_changepoint(const worley::noise_datum &n, const double scale)
     return max(1, (int) floor((n.distance[1] - n.distance[0]) * scale));
 }
 
+ProceduralSample _maybe_set_changepoint(const ProceduralSample &s,
+    const uint32_t cp)
+{
+    return ProceduralSample(s.coord(), s.feat(), min(s.changepoint(), cp));
+}
+
 ProceduralSample
 WorleyLayout::operator()(const coord_def &p, const uint32_t offset) const
 {
-    const double scale = 100.0;
+    const double scale = 500.0;
     double x = p.x / 5.0;
     double y = p.y / 5.0;
     double z = offset / scale;
@@ -89,7 +95,7 @@ ChaosLayout::operator()(const coord_def &p, const uint32_t offset) const
 ProceduralSample
 RoilingChaosLayout::operator()(const coord_def &p, const uint32_t offset) const
 {   
-    const double scale = 100.0;
+    const double scale = 500.0;
     double x = p.x;
     double y = p.y;
     double z = offset / scale;
@@ -100,20 +106,36 @@ RoilingChaosLayout::operator()(const coord_def &p, const uint32_t offset) const
 }
 
 ProceduralSample
-TheRiver::operator()(const coord_def &p, const uint32_t offset) const
+RiverLayout::operator()(const coord_def &p, const uint32_t offset) const
 {   
-    int xi = p.x + perlin::noise(p.x/4.0, p.y/4.0, offset / 200.0) * 3;
-    int yi = p.y + perlin::noise(p.x/4.0 + 31., p.y/4.0 + 17., offset / 200.0) * 3;
+    const int periodicity = 100;
+    const int baseWidth = 12;
+    const double scale = 1000;
+    worley::noise_datum n =
+        worley::noise(p.x/100.0, p.y/1000.0, offset / 1000.0 + seed);
+    if ((n.id[0] + n.id[1]) % 6 || p.x % periodicity > baseWidth * 2)
+    {
+        int cp = offset + _get_changepoint(n, scale);
+        ProceduralSample sample = layout(p, offset);
+        return _maybe_set_changepoint(sample, cp);
+    }
+    int xi = p.x + perlin::noise(p.x/4.0, p.y/4.0, offset / 1000.0) * 6;
+    int yi = p.y + perlin::noise(p.x/4.0 + 31., p.y/4.0 + 17., offset / 1000.0) * 10;
     int x = xi + sin(yi / 6.0) * 7;
-    int width = 15 + perlin::noise(p.x/5.0, p.y/5.0, seed) * 8;
-    if (x % 100 < width)
+    int width = baseWidth + perlin::noise(p.x/5.0, p.y/5.0, seed) * 6;
+    if (x % periodicity < width)
     {
         dungeon_feature_type feat = DNGN_SHALLOW_WATER;
-        if (width > 15 && (x - 7) % 100 > 12)
+        if (width > baseWidth && (x + baseWidth/2) % periodicity > width/2)
             feat = DNGN_DEEP_WATER;
-        return ProceduralSample(p, feat, offset + random2(50));
+        return ProceduralSample(p, feat, offset + 1);
     }
-    if ((x + 4) % 100 < width + 8)
-        return ProceduralSample(p, DNGN_FLOOR, offset + random2(50));
+    if ((x + 4) % periodicity < width + 8)
+    {
+        dungeon_feature_type feat = DNGN_FLOOR;
+        if (!(hash3(xi, yi, seed) % 20))
+            feat = DNGN_MANGROVE;
+        return ProceduralSample(p, feat, offset + 1);
+    }
     return layout(p, offset);
 }

@@ -96,10 +96,10 @@ class RoilingChaosLayout : public ProceduralLayout
         
 };
 
-class TheRiver : public ProceduralLayout
+class RiverLayout : public ProceduralLayout
 {
     public:
-        TheRiver(uint32_t _seed, const ProceduralLayout &_layout) : seed(_seed), layout(_layout) {}
+        RiverLayout(uint32_t _seed, const ProceduralLayout &_layout) : seed(_seed), layout(_layout) {}
         ProceduralSample operator()(const coord_def &p, const uint32_t offset = 0) const;
     private:
         const uint32_t seed; 

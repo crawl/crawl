@@ -985,7 +985,7 @@ static ProceduralSample _abyss_grid(const coord_def &p)
     ColumnLayout denseColumns(2);
     RoilingChaosLayout chaosLayout(123);
     WorleyLayout layout(123, denseColumns, chaosLayout);
-    TheRiver rivers(1, layout);
+    RiverLayout rivers(1, layout);
     const ProceduralSample sample = rivers(pt, abyssal_state.depth);
     abyss_sample_queue.push(sample);
     return sample;
@@ -1064,9 +1064,6 @@ static void _update_abyss_terrain(const coord_def &p,
     // of external changes such as digging.
     const ProceduralSample sample = _abyss_grid(rp);
     
-    // Apply masks.
-    env.level_map_mask(rp) |= sample.mask();
-
     // Enqueue the update, but don't morph.
     if (_abyssal_rune_at(rp))
         return;
@@ -1388,7 +1385,16 @@ retry:
 
 void _increase_depth()
 {
-    abyssal_state.depth += 1;
+    int delta = you.time_taken * (you.abyss_speed + 40) / 200;
+    if (you.religion == GOD_CHEIBRIADOS && !you.penance[GOD_CHEIBRIADOS])
+        delta /= 2;
+    const double theta = abyssal_state.phase;
+    double depth_change = delta * (0.2 + 2.8 * pow(sin(theta/2), 10.0));
+    abyssal_state.depth += depth_change;
+    dprf("Delta: %d Phase: %f (%f)\n", delta, abyssal_state.phase / M_PI, delta / 100.0);
+    abyssal_state.phase += delta / 100.0;
+    if (abyssal_state.phase > M_PI)
+        abyssal_state.phase -= M_PI;
 }
 
 void abyss_morph(double duration)

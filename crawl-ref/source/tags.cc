@@ -1236,7 +1236,7 @@ static void tag_construct_you(writer &th)
     marshallCoord(th, abyssal_state.major_coord);
     marshallInt(th, abyssal_state.seed);
     marshallInt(th, abyssal_state.depth);
-    marshallInt(th, abyssal_state.phase);
+    marshallFloat(th, abyssal_state.phase);
 
     _marshall_constriction(th, &you);
 
@@ -2055,7 +2055,7 @@ static void tag_read_you(reader &th)
     abyssal_state.major_coord = unmarshallCoord(th);
     abyssal_state.seed = unmarshallInt(th);
     abyssal_state.depth = unmarshallInt(th);
-    abyssal_state.phase = unmarshallInt(th);
+    abyssal_state.phase = unmarshallFloat(th);
 
     _unmarshall_constriction(th, &you);
 
