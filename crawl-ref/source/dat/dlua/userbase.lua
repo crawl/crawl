@@ -26,9 +26,9 @@ function c_save()
 end
 
 -- This function returns true to tell Crawl not to process the option further
-function c_process_lua_option(key, val)
+function c_process_lua_option(key, val, mode)
     if chk_lua_option and chk_lua_option[key] then
-        return chk_lua_option[key](key, val)
+        return chk_lua_option[key](key, val, mode)
     end
     return false
 end
