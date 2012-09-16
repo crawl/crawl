@@ -110,17 +110,17 @@ RiverLayout::operator()(const coord_def &p, const uint32_t offset) const
 {   
     const int periodicity = 100;
     const int baseWidth = 12;
-    const double scale = 10000;
+    const double scale = 20000;
     worley::noise_datum n =
-        worley::noise(p.x/100.0, p.y/1000.0, offset / 1000.0 + seed);
+        worley::noise(p.x/100.0, p.y/1000.0, offset / scale + seed);
     if ((n.id[0] + n.id[1]) % 6 || p.x % periodicity > baseWidth * 2)
     {
         int cp = offset + _get_changepoint(n, scale);
         ProceduralSample sample = layout(p, offset);
         return _maybe_set_changepoint(sample, cp);
     }
-    int xi = p.x + perlin::noise(p.x/4.0, p.y/4.0, offset / 1000.0) * 6;
-    int yi = p.y + perlin::noise(p.x/4.0 + 31., p.y/4.0 + 17., offset / 1000.0) * 10;
+    int xi = p.x + perlin::noise(p.x/4.0, p.y/4.0, offset / scale) * 6;
+    int yi = p.y + perlin::noise(p.x/4.0 + 31., p.y/4.0 + 17., offset / scale) * 10;
     int x = xi + sin(yi / 6.0) * 7;
     int width = baseWidth + perlin::noise(p.x/5.0, p.y/5.0, seed) * 6;
     if (x % periodicity < width)
@@ -133,7 +133,7 @@ RiverLayout::operator()(const coord_def &p, const uint32_t offset) const
     if ((x + 4) % periodicity < width + 8)
     {
         dungeon_feature_type feat = DNGN_FLOOR;
-        if (!(hash3(xi, yi, seed) % 20))
+        if (!(hash3(xi, yi, seed) % 23))
             feat = DNGN_MANGROVE;
         return ProceduralSample(p, feat, offset + 1);
     }
