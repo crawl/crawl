@@ -15,7 +15,6 @@ beam.o \
 behold.o \
 bitary.o \
 branch.o \
-cellular.o \
 chardump.o \
 cio.o \
 cloud.o \
@@ -165,6 +164,7 @@ ouch.o \
 output.o \
 package.o \
 pattern.o \
+perlin.o \
 place-info.o \
 place.o \
 player-act.o \
@@ -233,6 +233,7 @@ wiz-fsim.o \
 wiz-item.o \
 wiz-mon.o \
 wiz-you.o \
+worley.o \
 xom.o \
 zotdef.o \
 tilepick.o \

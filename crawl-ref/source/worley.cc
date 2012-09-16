@@ -34,7 +34,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdint.h>
-#include "cellular.h"  /* Function prototype */
+#include "worley.h"  /* Function prototype */
 
 namespace worley
 {

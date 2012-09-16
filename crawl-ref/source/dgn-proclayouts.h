@@ -10,10 +10,10 @@
 
 #include <vector>
 
-#include "cellular.h"
 #include "dungeon.h"
 #include "enum.h"
 #include "externs.h"
+#include "worley.h"
 
 bool less_dense_than(const dungeon_feature_type &a, const dungeon_feature_type &b);
 

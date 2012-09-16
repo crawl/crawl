@@ -6,9 +6,10 @@
 #include <cmath>
 
 #include "dgn-proclayouts.h"
-#include "cellular.h"
 #include "hash.h"
+#include "perlin.h"
 #include "terrain.h"
+#include "worley.h"
 
 #include "random.h"
 
@@ -101,12 +102,18 @@ RoilingChaosLayout::operator()(const coord_def &p, const uint32_t offset) const
 ProceduralSample
 TheRiver::operator()(const coord_def &p, const uint32_t offset) const
 {   
-    int x = p.x + sin(p.y / 6.0) * 7;
-    if (x % 100 < 30)
+    int xi = p.x + perlin::noise(p.x/4.0, p.y/4.0, offset / 200.0) * 3;
+    int yi = p.y + perlin::noise(p.x/4.0 + 31., p.y/4.0 + 17., offset / 200.0) * 3;
+    int x = xi + sin(yi / 6.0) * 7;
+    int width = 15 + perlin::noise(p.x/5.0, p.y/5.0, seed) * 8;
+    if (x % 100 < width)
     {
-        return ProceduralSample(p, DNGN_SHALLOW_WATER, offset + 4096, MMT_VAULT);
+        dungeon_feature_type feat = DNGN_SHALLOW_WATER;
+        if (width > 15 && (x - 7) % 100 > 12)
+            feat = DNGN_DEEP_WATER;
+        return ProceduralSample(p, feat, offset + random2(50));
     }
-    if ((x + 4) % 100 < 38)
-        return ProceduralSample(p, DNGN_FLOOR, offset + 4096);
+    if ((x + 4) % 100 < width + 8)
+        return ProceduralSample(p, DNGN_FLOOR, offset + random2(50));
     return layout(p, offset);
 }
