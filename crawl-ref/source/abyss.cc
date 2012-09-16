@@ -61,7 +61,9 @@ static const int ABYSSAL_RUNE_MAX_ROLL = 200;
 
 abyss_state abyssal_state;
 
-static priority_queue<ProceduralSample> abyss_terrain_queue;
+typedef std::priority_queue<ProceduralSample, vector<ProceduralSample>, ProceduralSamplePQCompare> sample_queue;
+
+static sample_queue abyss_sample_queue;
 static vector<dungeon_feature_type> abyssal_features;
 static list<monster*> displaced_monsters;
 
@@ -981,16 +983,58 @@ static ProceduralSample _abyss_grid(const coord_def &p)
 {
     const coord_def pt = p + abyssal_state.major_coord; 
     ColumnLayout denseColumns(2);
-    ColumnLayout sparseColumns(2, 6);
-    WorleyLayout layout(123, denseColumns, sparseColumns);
-    ProceduralSample sample = layout(pt, abyssal_state.depth);
+    RoilingChaosLayout chaosLayout(123);
+    WorleyLayout layout(123, denseColumns, chaosLayout);
+    TheRiver rivers(1, layout);
+    const ProceduralSample sample = rivers(pt, abyssal_state.depth);
+    abyss_sample_queue.push(sample);
     return sample;
 }
  
+static cloud_type _cloud_from_feat(const dungeon_feature_type &ft)
+{
+    switch (ft)
+    {
+        case DNGN_CLOSED_DOOR:
+        case DNGN_DETECTED_SECRET_DOOR:
+        case DNGN_SECRET_DOOR:
+            return (coinflip() ? CLOUD_MIST : CLOUD_BLACK_SMOKE);
+        case DNGN_METAL_WALL:
+            return CLOUD_GREY_SMOKE;
+        case DNGN_GREEN_CRYSTAL_WALL:
+        case DNGN_ROCK_WALL:
+        case DNGN_SLIMY_WALL:
+        case DNGN_STONE_WALL:
+        case DNGN_PERMAROCK_WALL:
+            return (coinflip() ? CLOUD_BLUE_SMOKE : CLOUD_PURPLE_SMOKE);
+        case DNGN_CLEAR_ROCK_WALL:
+        case DNGN_CLEAR_STONE_WALL:
+        case DNGN_CLEAR_PERMAROCK_WALL:
+        case DNGN_GRATE:
+            return CLOUD_MIST;
+        case DNGN_ORCISH_IDOL:
+        case DNGN_GRANITE_STATUE:
+        case DNGN_LAVA:
+            return CLOUD_BLACK_SMOKE;
+        case DNGN_DEEP_WATER:
+        case DNGN_SHALLOW_WATER:
+        case DNGN_FOUNTAIN_BLUE:
+            return (one_chance_in(5) ? CLOUD_RAIN : CLOUD_BLUE_SMOKE);
+        case DNGN_FOUNTAIN_SPARKLING:
+            return CLOUD_RAIN;
+        default:
+            return CLOUD_NONE;
+    }
+}
+
 static void _update_abyss_terrain(const coord_def &p,
     const map_bitmask &abyss_genlevel_mask, bool morph)
 {
     const coord_def rp = p - abyssal_state.major_coord;
+    // ignore dead coordinates
+    if (!in_bounds(rp))
+        return;
+     
     const dungeon_feature_type currfeat = grd(rp);
 
     // Don't decay vaults.
@@ -1019,19 +1063,27 @@ static void _update_abyss_terrain(const coord_def &p,
     // What should have been there previously?  It might not be because
     // of external changes such as digging.
     const ProceduralSample sample = _abyss_grid(rp);
-    abyss_terrain_queue.push(sample);
-    const dungeon_feature_type feat = sample.feat();
+    
+    // Apply masks.
+    env.level_map_mask(rp) |= sample.mask();
 
     // Enqueue the update, but don't morph.
     if (_abyssal_rune_at(rp))
         return;
+    
+    const dungeon_feature_type feat = sample.feat();
 
     // If the selected grid is already there, *or* if we're morphing and
     // the selected grid should have been there, do nothing.
     if (feat != currfeat)
     {
         grd(rp) = feat;
-
+        if (feat == DNGN_FLOOR && in_los_bounds_g(rp))
+        {
+            cloud_type cloud = _cloud_from_feat(currfeat);
+            if (cloud != CLOUD_NONE)
+                check_place_cloud(_cloud_from_feat(currfeat), rp, 2 + random2(2), 0, 3);
+        }
         monster* mon = monster_at(rp);
         if (mon && !monster_habitable_grid(mon, feat))
             _push_displaced_monster(mon);
@@ -1054,19 +1106,18 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
     int altars_wanted = 0;
     bool use_abyss_exit_map = true;
     bool used_queue = false;
-
-    if (morph && !abyss_terrain_queue.empty())
+    if (morph && !abyss_sample_queue.empty())
     {
         used_queue = true;
-        while (!abyss_terrain_queue.empty()
-            && abyss_terrain_queue.top().changepoint() < abyssal_state.depth)
+        while (!abyss_sample_queue.empty()
+            && abyss_sample_queue.top().changepoint() < abyssal_state.depth)
         {
-            coord_def p = abyss_terrain_queue.top().coord();
-            if (in_bounds(p))
-                _update_abyss_terrain(p, abyss_genlevel_mask, morph);
-            abyss_terrain_queue.pop();
+            coord_def p = abyss_sample_queue.top().coord();
+            _update_abyss_terrain(p, abyss_genlevel_mask, morph);
+            abyss_sample_queue.pop();
         }
     } 
+    
     for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
     {
         const coord_def p(*ri);
@@ -1106,13 +1157,6 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
     dungeon_feature_type feat = grd(you.pos());
     if (!you.can_pass_through_feat(feat) || is_feat_dangerous(feat))
         you.shove();
-}
-
-void recompute_saved_abyss_features()
-{
-
-    for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
-        abyss_terrain_queue.push(_abyss_grid(*ri));
 }
 
 static int _abyss_place_vaults(const map_bitmask &abyss_genlevel_mask)
@@ -1207,8 +1251,7 @@ static void _initialize_abyss_state()
     abyssal_state.major_coord.y = random2(0x7FFFFFFF);
     abyssal_state.phase = 0.0;
     abyssal_state.depth = random2(0x7FFFFFFF);
-
-    abyss_terrain_queue = std::priority_queue<ProceduralSample>();
+    abyss_sample_queue = sample_queue(ProceduralSamplePQCompare());
 }
 
 static colour_t _roll_abyss_floor_colour()
@@ -1345,7 +1388,7 @@ retry:
 
 void _increase_depth()
 {
-    abyssal_state.depth += 4;
+    abyssal_state.depth += 1;
 }
 
 void abyss_morph(double duration)
