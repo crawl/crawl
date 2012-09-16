@@ -3450,8 +3450,8 @@ void god_pitch(god_type which_god)
 
     if (which_god == GOD_LUGONU && you.penance[GOD_LUGONU])
     {
-        simple_god_message(" is most displeased with you!", which_god);
-        divine_retribution(GOD_LUGONU, true);
+        you.turn_is_over = false;
+        simple_god_message(" refuses to forgive you so easily!", which_god);
         return;
     }
 
