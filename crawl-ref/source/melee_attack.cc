@@ -477,7 +477,8 @@ bool melee_attack::handle_phase_hit()
 
     // Slimify does no damage and serves as an on-hit effect, handle it
     if (attacker->is_player() && you.duration[DUR_SLIMIFY]
-        && mon_can_be_slimified(defender->as_monster()))
+        && mon_can_be_slimified(defender->as_monster())
+        && !cleaving)
     {
         // Bail out after sliming so we don't get aux unarmed and
         // attack a fellow slime.
