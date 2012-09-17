@@ -27,6 +27,9 @@ run_one()
     7|kraken)
         $CRAWL -arena 'kraken v spectral kraken arena:small_deep_pool delay:0 t:99'
     ;;
+    test) # Not in "all".
+        $CRAWL -test
+    ;;
     *)
         echo "No such test."
         exit 1
