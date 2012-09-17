@@ -4680,34 +4680,69 @@ void temperature_check()
         temperature_increment();
     else if (tension*3/4 < you.temperature * 3.2)
         temperature_decrement();
-
-    if (temperature_effect(LORC_STONESKIN) && !you.duration[DUR_STONESKIN])
-    {
-        you.set_duration(DUR_STONESKIN, 500);
-        mpr("Your skin hardens.", MSGCH_DURATION);
-        you.redraw_armour_class = true;
-    }
-
-    if (!temperature_effect(LORC_STONESKIN) && you.duration[DUR_STONESKIN] > 0)
-    {
-        you.set_duration(DUR_STONESKIN, 0);
-        mpr("Your skin softens.", MSGCH_DURATION);
-        you.redraw_armour_class = true;
-    }
-
-    you.redraw_temperature = true;
 }
 
 void temperature_increment()
 {
     if (you.temperature < TEMP_MAX)
+    {
         you.temperature++;
+        temperature_changed(true);
+    }
 }
 
 void temperature_decrement()
 {
     if (you.temperature > TEMP_MIN)
-    you.temperature--;
+    {
+        you.temperature--;
+        temperature_changed(false);
+    }
+
+}
+
+void temperature_changed(bool inc_temp) {
+
+    // Okay, so here's how it works - it gets your current temperature, and it knows
+    // whether that temperature has just risen by one or not.
+    int new_temp = you.temperature;
+    int old_temp = you.temperature + 1;
+
+    if (inc_temp)
+        old_temp -= 2;
+
+    // Stoneskin stuff.
+    if (inc_temp && !temperature_effect(LORC_STONESKIN) && you.duration[DUR_STONESKIN] > 0)
+    {
+        you.set_duration(DUR_STONESKIN, 0);
+        mpr("Your stony skin melts.", MSGCH_DURATION);
+        you.redraw_armour_class = true;
+    }
+
+    if (!inc_temp && temperature_effect(LORC_STONESKIN) && !you.duration[DUR_STONESKIN])
+    {
+        you.set_duration(DUR_STONESKIN, 500);
+        mpr("Your skin cools and hardens.", MSGCH_DURATION);
+        you.redraw_armour_class = true;
+    }
+
+    // Passive heat stuff.
+    if (inc_temp && new_temp == TEMP_HOT)
+        mpr("You're getting fired up.", MSGCH_DURATION);
+
+    if (!inc_temp && old_temp == TEMP_HOT)
+        mpr("You're cooling off.", MSGCH_DURATION);
+
+    // Heat aura stuff.
+    if (inc_temp && new_temp == TEMP_FIRE)
+        mpr("You blaze with the fury of an erupting volcano!", MSGCH_DURATION);
+
+    if (!inc_temp && old_temp == TEMP_FIRE)
+        mpr("The intensity of your heat diminishes.", MSGCH_DURATION);
+
+    // If we're in this function, temperature changed, anyways.
+    you.redraw_temperature = true;
+
 }
 
 bool temperature_effect(int which) {

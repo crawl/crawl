@@ -227,6 +227,7 @@ void record_monster_defeat(monster* mons, killer_type killer);
 void temperature_check();
 void temperature_increment();
 void temperature_decrement();
+void temperature_changed(bool inc_temp);
 bool temperature_effect(int which);
 int temperature_colour();
 void lava_blood(monster* mon, int amount);
