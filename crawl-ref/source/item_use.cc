@@ -2653,6 +2653,12 @@ static void _handle_read_book(int item_slot)
         return;
     }
 
+    if (you.species == SP_LAVA_ORC && temperature_effect(LORC_NO_SCROLLS))
+    {
+        mpr("You'd burn any book you tried to read!");
+        return;
+    }
+
     item_def& book(you.inv[item_slot]);
 
     if (book.sub_type == BOOK_DESTRUCTION)
@@ -2845,6 +2851,12 @@ void read_scroll(int slot)
     if (inv_count() < 1)
     {
         canned_msg(MSG_NOTHING_CARRIED);
+        return;
+    }
+
+    if (you.species == SP_LAVA_ORC && temperature_effect(LORC_NO_SCROLLS))
+    {
+        mpr("You'd burn any scroll you tried to read!");
         return;
     }
 

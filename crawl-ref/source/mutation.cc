@@ -556,7 +556,7 @@ string describe_mutations(bool center_title)
         result += "<" + col + ">You are vulnerable to cold.</" + col + ">\n";
 
         col = (temperature_effect(LORC_NO_SCROLLS)) ? "red" : "darkgrey";
-        result += "<" + col + ">You are too hot to use scrolls.</" + col + ">\n";
+        result += "<" + col + ">You are too hot to use scrolls or read books.</" + col + ">\n";
 
         break;
     }
