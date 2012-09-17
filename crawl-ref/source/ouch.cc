@@ -1115,6 +1115,7 @@ static void _wizard_restore_life()
         if (you.stat(static_cast<stat_type>(i)) <= 0)
         {
             you.stat_loss[i] = 0;
+            you.stat_zero[i] = 0;
             you.redraw_stats[i] = true;
         }
     }
