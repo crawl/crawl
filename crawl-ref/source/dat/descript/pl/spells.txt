@@ -266,14 +266,6 @@ Ensorcelled Hibernation spell
 Ten czar próbuje oziębić metabolizm wybranej istoty, co skutkuje zapadnięciem w
 stan przypominający sen.
 %%%%
-Evaporate spell
-
-Ten czar podgrzewa eliksir trzymany w ręku, powodując gwałtowny wybuch.
-Naturalnie, rozsądny czarodziej zadba o to aby w tym momencie eliksiru w ręce
-już nie było — rzut butelką jest elementem rzucania tego czaru.  Zazwyczaj
-opary eliksiru tworzą zabójczą chmurę utrzymującą się w powietrzu przez dłuższą
-chwilę.
-%%%%
 Excruciating Wounds spell
 
 Ten czar tymczasowo nadaje trzymanej broni magiczną markę cierpienia. Nie
@@ -321,12 +313,6 @@ Freezing Cloud spell
 
 Ten czar przyzywa duży obłok śmiertelnie zimnej pary.
 %%%%
-Fulsome Distillation spell
-
-Ten czar wyciąga najgorsze esencje ze zwłok. Picie rezultatu jest wysoce
-niewskazane — służy on jako komponent niektórych czarów. Typ utworzonego w ten
-sposób eliksiru jest zwykle podobny do efektów spożycia mięsa z tych zwłok.
-%%%%
 Haste spell
 
 Ten czar znacznie przyspiesza wszystkie ruchy jakiegoś stworzenia. Zwykle rzuca
@@ -369,10 +355,6 @@ Ten czar, jeśli nie zostanie odparty, wypełnia ofiarę wewnętrznym ogniem. Ni
 daje to żadnego efektu póki ofiara w jakikolwiek sposób jeszcze żyje (łącznie z
 fałszywym życiem nieumarłych), jednak w momencie śmierci powoduje gwałtowną
 ognistą eksplozję. Rozmiar tego wybuchu zależy od rozmiaru ofiary.
-%%%%
-Insulation spell
-
-Ten czar chroni rzucającego przed porażeniem prądem.
 %%%%
 Invisibility spell
 
@@ -592,10 +574,6 @@ Sandblast spell
 Ten czar ciska strumień ziaren żwiru. Dla dobrego efektu potrzebne jest jakieś
 źródło (np. kamień trzymany w dłoni), jednak wszędzie obecny piasek i brud też
 dają pewien rezultat.
-%%%%
-See Invisible spell
-
-Ten czar pozwala rzucającemu widzieć rzeczy ukryte przed zwykłym wzrokiem.
 %%%%
 Shadow Creatures spell
 
