@@ -5,6 +5,7 @@ enum genus_type
 {
     GENPC_DRACONIAN,
     GENPC_ELVEN,
+    GENPC_ORCISH,
     GENPC_NONE,
 };
 

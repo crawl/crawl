@@ -233,6 +233,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
         case SP_DEEP_ELF:
         case SP_SLUDGE_ELF:
         case SP_HILL_ORC:
+        case SP_LAVA_ORC:
         case SP_MERFOLK:
         case SP_KOBOLD:
         case SP_CENTAUR:
@@ -256,6 +257,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
         {
         case SP_DEEP_DWARF:
         case SP_HILL_ORC:
+        case SP_LAVA_ORC:
         case SP_MERFOLK:
         case SP_HALFLING:
         case SP_KOBOLD:
@@ -275,6 +277,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
         case SP_SLUDGE_ELF:
         case SP_DEEP_DWARF:
         case SP_HILL_ORC:
+        case SP_LAVA_ORC:
         case SP_MERFOLK:
         case SP_HALFLING:
         case SP_KOBOLD:
@@ -298,6 +301,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
         case SP_SLUDGE_ELF:
         case SP_DEEP_DWARF:
         case SP_HILL_ORC:
+        case SP_LAVA_ORC:
         case SP_CENTAUR:
         case SP_OGRE:
         case SP_TROLL:
@@ -321,6 +325,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
         case SP_HIGH_ELF:
         case SP_DEEP_DWARF:
         case SP_HILL_ORC:
+        case SP_LAVA_ORC:
         case SP_MERFOLK:
         case SP_HALFLING:
         case SP_SPRIGGAN:
@@ -397,6 +402,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
         {
         case SP_DEEP_DWARF:
         case SP_HILL_ORC:
+        case SP_LAVA_ORC:
         case SP_HALFLING:
         case SP_SPRIGGAN:
         case SP_CENTAUR:
@@ -415,6 +421,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
         {
         case SP_DEEP_DWARF:
         case SP_HILL_ORC:
+        case SP_LAVA_ORC:
         case SP_MERFOLK:
         case SP_CENTAUR:
         case SP_OGRE:
@@ -454,6 +461,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
         case SP_HIGH_ELF:
         case SP_DEEP_DWARF:
         case SP_HILL_ORC:
+        case SP_LAVA_ORC:
         case SP_HALFLING:
         case SP_CENTAUR:
         case SP_OGRE:
@@ -476,6 +484,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
         case SP_DEEP_ELF:
         case SP_DEEP_DWARF:
         case SP_HILL_ORC:
+        case SP_LAVA_ORC:
         case SP_NAGA:
         case SP_CENTAUR:
         case SP_OGRE:
@@ -499,6 +508,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             return CC_BANNED;
         case SP_DEEP_ELF:
         case SP_HILL_ORC:
+        case SP_LAVA_ORC:
         case SP_MERFOLK:
         case SP_SPRIGGAN:
         case SP_NAGA:
@@ -545,6 +555,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             return CC_BANNED;
         case SP_DEEP_DWARF:
         case SP_HILL_ORC:
+        case SP_LAVA_ORC:
         case SP_MERFOLK:
         case SP_NAGA:
         case SP_TROLL:
@@ -630,6 +641,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         case SP_HUMAN:
         case SP_DEEP_DWARF:
         case SP_HILL_ORC:
+        case SP_LAVA_ORC:
         case SP_MUMMY:
         case SP_CENTAUR:
         case SP_NAGA:
@@ -651,6 +663,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         {
         case SP_HUMAN:
         case SP_HILL_ORC:
+        case SP_LAVA_ORC:
         case SP_MERFOLK:
         case SP_NAGA:
         case SP_OGRE:
@@ -683,6 +696,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         {
         case SP_HUMAN:
         case SP_HILL_ORC:
+        case SP_LAVA_ORC:
         case SP_MERFOLK:
         case SP_NAGA:
         case SP_CENTAUR:
@@ -758,6 +772,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         case SP_MERFOLK:
         case SP_OGRE:
         case SP_HILL_ORC:
+        case SP_LAVA_ORC:
         case SP_SPRIGGAN:
         case SP_TROLL:
         case SP_SLUDGE_ELF:
@@ -777,6 +792,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         case SP_OGRE:
         case SP_TROLL:
         case SP_HILL_ORC:
+        case SP_LAVA_ORC:
         case SP_SLUDGE_ELF:
             return CC_RESTRICTED;
         case SP_FELID:
@@ -795,6 +811,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         case SP_MERFOLK:
         case SP_OGRE:
         case SP_HILL_ORC:
+        case SP_LAVA_ORC:
         case SP_TROLL:
             return CC_RESTRICTED;
         case SP_FELID:

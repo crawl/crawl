@@ -1684,7 +1684,7 @@ int melee_attack::player_apply_weapon_bonuses(int damage)
         }
 
         if (get_equip_race(*weapon) == ISFLAG_ORCISH
-            && you.species == SP_HILL_ORC)
+            && player_genus(GENPC_ORCISH))
         {
             if (you.religion == GOD_BEOGH && !player_under_penance())
             {
