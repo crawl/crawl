@@ -49,6 +49,7 @@
 #include "melee_attack.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-stuff.h"
 #include "mon-util.h"
 #include "mutation.h"
 #include "notes.h"

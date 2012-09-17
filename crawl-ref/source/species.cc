@@ -21,7 +21,7 @@ static species_type species_order[] = {
     SP_HUMAN,          SP_HIGH_ELF,
     SP_DEEP_ELF,       SP_SLUDGE_ELF,
     SP_DEEP_DWARF,     SP_HILL_ORC,
-    SP_MERFOLK,
+    SP_LAVA_ORC, SP_MERFOLK,
     // small species
     SP_HALFLING,       SP_KOBOLD,
     SP_SPRIGGAN,
@@ -59,7 +59,7 @@ static const char * Species_Abbrev_List[NUM_SPECIES] =
       // the draconians
       "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr",
       "Ce", "Dg", "Sp", "Mi", "Ds", "Gh", "Te", "Mf", "Vp", "DD",
-      "Fe", "Op",
+      "Fe", "Op", "LO",
       // placeholders
       "El", "HD", "OM", "GE", "Gn", "MD", };
 
@@ -159,6 +159,21 @@ string species_name(species_type speci, bool genus, bool adj)
             }
         }
         break;
+    case GENPC_ORCISH:
+        if (adj)  // doesn't care about species/genus
+            res = "Orcish";
+        else if (genus)
+            res = "Orc";
+        else
+        {
+            switch (speci)
+            {
+            case SP_HILL_ORC: res = "Hill Orc"; break;
+            case SP_LAVA_ORC: res = "Lava Orc"; break;
+            default:          res = "Orc";      break;
+            }
+        }
+        break;
     case GENPC_NONE:
     default:
         switch (speci)
@@ -242,6 +257,10 @@ genus_type species_genus(species_type species)
     case SP_SLUDGE_ELF:
         return GENPC_ELVEN;
 
+    case SP_HILL_ORC:
+    case SP_LAVA_ORC:
+        return GENPC_ORCISH;
+
     default:
         return GENPC_NONE;
     }
@@ -288,6 +307,8 @@ monster_type player_species_to_mons_species(species_type species)
         return MONS_HALFLING;
     case SP_HILL_ORC:
         return MONS_ORC;
+    case SP_LAVA_ORC:
+        return MONS_LAVA_ORC;
     case SP_KOBOLD:
         return MONS_KOBOLD;
     case SP_MUMMY:
@@ -401,6 +422,7 @@ int species_exp_modifier(species_type species)
     case SP_VAMPIRE:
     case SP_TROLL:
     case SP_DEMONSPAWN:
+    case SP_LAVA_ORC:
         return -1;
     case SP_DEMIGOD:
         return -2;
@@ -442,6 +464,7 @@ int species_hp_modifier(species_type species)
     case SP_PALE_DRACONIAN:
     case SP_GHOUL:
     case SP_HILL_ORC:
+    case SP_LAVA_ORC:
     case SP_MINOTAUR:
         return 1;
     case SP_DEEP_DWARF:

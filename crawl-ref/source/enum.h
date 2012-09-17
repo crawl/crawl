@@ -2158,6 +2158,7 @@ enum monster_type                      // menv[].type
     MONS_ORC_KNIGHT,
     MONS_ORC_SORCERER,
     MONS_ORC_WARLORD,
+    MONS_LAVA_ORC,
     MONS_DWARF,
     MONS_DEEP_DWARF,
     MONS_DEEP_DWARF_SCION,
@@ -3025,6 +3026,7 @@ enum species_type
     SP_DEEP_DWARF,
     SP_FELID,
     SP_OCTOPODE,
+    SP_LAVA_ORC,
 // The high scores viewer still needs enums for removed species.
     SP_ELF,                            // (placeholder)
     SP_HILL_DWARF,                     // (placeholder)

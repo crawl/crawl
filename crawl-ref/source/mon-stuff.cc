@@ -4,6 +4,7 @@
 **/
 
 #include "AppHdr.h"
+#include <math.h>
 #include "mon-stuff.h"
 
 #include "areas.h"
