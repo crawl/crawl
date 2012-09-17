@@ -1191,7 +1191,8 @@ void dgn_reset_level(bool enable_random_maps)
     env.properties[LEVEL_EXTRAS_KEY].new_table();
     env.absdepth0 = absdungeon_depth(you.where_are_you, you.depth);
 
-    dprf("absdepth0 = %d", env.absdepth0);
+    if (!crawl_state.test)
+        dprf("absdepth0 = %d", env.absdepth0);
 
     // Blank level with DNGN_ROCK_WALL.
     env.grid.init(DNGN_ROCK_WALL);
