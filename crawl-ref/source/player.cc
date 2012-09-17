@@ -6010,7 +6010,10 @@ int player::armour_class() const
         AC += 400 + skill(SK_ICE_MAGIC, 100) / 3;    // max 13
 
     if (duration[DUR_STONESKIN])
-        AC += 200 + skill(SK_EARTH_MAGIC, 20);       // max 7
+        if (you.species == SP_LAVA_ORC)
+            AC += 200 + 100 * you.experience_level / 5;       // max 7
+        else
+            AC += 200 + skill(SK_EARTH_MAGIC, 20);       // max 7
 
     if (mutation[MUT_ICEMAIL])
         AC += 100 * player_icemail_armour_class();
