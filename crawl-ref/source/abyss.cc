@@ -1365,7 +1365,7 @@ static colour_t _roll_abyss_rock_colour()
          // no DARKGREY (out of LOS)
          570, LIGHTBLUE,
          705, LIGHTGREEN,
-         952, LIGHTCYAN,
+         // no LIGHTCYAN (glass)
         1456, LIGHTRED,
          377, LIGHTMAGENTA,
          105, YELLOW,
