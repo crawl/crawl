@@ -2486,6 +2486,7 @@ SUBST:   [ = l, ( = l
 SUBST:   ':l...' , '=l. , l:lllWw , n:nv , v:vvvc
 KMONS:   1 = orc / goblin / kobold
 KFEAT:   1 = .
+KPROP:   1 = no_rtele_into
 MAP
 .....................
 .....................
