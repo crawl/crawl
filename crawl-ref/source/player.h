@@ -118,6 +118,8 @@ public:
   bool dead; // ... but pending revival
   int lives;
   int deaths;
+  float temperature; // For lava orcs.
+  float temperature_last;
 
   FixedVector<uint8_t, NUM_SKILLS>  skills; //!< skill level
   FixedVector<int8_t, NUM_SKILLS>  train; //!< 0: disabled, 1: normal, 2: focus.
@@ -332,6 +334,7 @@ public:
   bool redraw_title;
   bool redraw_hit_points;
   bool redraw_magic_points;
+  bool redraw_temperature;
   FixedVector<bool, NUM_STATS> redraw_stats;
   bool redraw_experience;
   bool redraw_armour_class;
