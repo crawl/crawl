@@ -1406,12 +1406,6 @@ Ten kij zwiększa moc czarów Magii Ziemi. Jeśli użytkownik potrafi posługiwa
 się magicznymi przedmiotami, wrogowie uderzeni tym kijem zostaną zmiażdżeni —
 mocniej jeśli użytkownik posiada umiejętności w Magii Ziemi.
 %%%%
-staff of enchantment
-
-Ten kij zwiększa moc Uroków jak i Magii Wspomagania. Przy wystarczających
-umiejętnościach w dowolnej z tych dwóch szkół, także poprawia odporność na
-wrogie uroki.
-%%%%
 staff of energy
 
 Ten kij redukuje głód będący skutkiem rzucania czarów.
