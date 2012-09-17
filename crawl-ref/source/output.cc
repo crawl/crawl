@@ -244,8 +244,7 @@ static void _print_stats_temperature(int x, int y)
     textcolor(HUD_CAPTION_COLOUR);
     cprintf("Temperature: ");
 
-    if (!Options.classic_hud)
-        Temp_Bar.draw(19, y, you.temperature, TEMP_MAX, true);
+    Temp_Bar.draw(19, y, you.temperature, TEMP_MAX, true);
 }
 
 static void _print_stats_mp(int x, int y)

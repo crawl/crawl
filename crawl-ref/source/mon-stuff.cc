@@ -4770,37 +4770,6 @@ bool temperature_effect(int which) {
     }
 }
 
-void lava_blood(monster* mon, int amount)
-{
-    if (mon->type == MONS_LAVA_ORC ||
-        (mon->type == MONS_PLAYER && you.species == SP_LAVA_ORC))
-        return;
-
-    mpr("I am a player still");
-
-    if (!(you.temperature > TEMP_WARM))
-        return;
-
-    bolt beam;
-    beam.flavour = BEAM_LAVA; // Should maybe be just fire...
-    beam.thrower = KILL_YOU;
-
-    const int orig_hurted = random2(amount) + 10;
-    int hurted = mons_adjust_flavoured(mon, beam, orig_hurted);
-
-mpr("We got this far");
-    if (!hurted)
-        return;
-
-    if (mon->observable())
-        mprf("%s is sprayed with searing blood.", mon->name(DESC_CAP_THE).c_str());
-
-    mon->hurt(&you, hurted);
-
-    if (mon->alive())
-        print_wounds(mon);
-}
-
 int temperature_colour() {
 
 return (you.temperature > TEMP_FIRE) ? LIGHTRED  :

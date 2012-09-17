@@ -4621,7 +4621,7 @@ void melee_attack::do_passive_freeze()
     }
 }
 
-void melee_attack::mons_do_passive_heat()
+void melee_attack::do_passive_heat()
 {
     if (you.species == SP_LAVA_ORC && temperature_effect(LORC_PASSIVE_HEAT)
         && attacker->alive()

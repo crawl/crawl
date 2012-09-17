@@ -230,5 +230,4 @@ void temperature_decrement();
 void temperature_changed(bool inc_temp);
 bool temperature_effect(int which);
 int temperature_colour();
-void lava_blood(monster* mon, int amount);
 #endif
