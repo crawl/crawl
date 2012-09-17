@@ -2848,6 +2848,12 @@ void read_scroll(int slot)
         return;
     }
 
+    if (you.species == SP_LAVA_ORC && temperature_effect(LORC_NO_SCROLLS))
+    {
+        mpr("You'd burn any scroll you tried to read!");
+        return;
+    }
+
     int item_slot = (slot != -1) ? slot
                                  : prompt_invent_item("Read which item?",
                                                        MT_INVLIST,
