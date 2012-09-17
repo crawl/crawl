@@ -585,7 +585,7 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_PRIEST:
-        if (you.species == SP_HILL_ORC)
+        if (player_genus(GENPC_ORCISH))
             you.religion = GOD_BEOGH;
         else
             you.religion = GOD_ZIN;

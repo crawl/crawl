@@ -3230,7 +3230,7 @@ bool player_can_join_god(god_type which_god)
     if (which_god == GOD_YREDELEMNUL && you.is_artificial())
         return false;
 
-    if (which_god == GOD_BEOGH && you.species != SP_HILL_ORC)
+    if (which_god == GOD_BEOGH && !player_genus(GENPC_ORCISH))
         return false;
 
     // Fedhas hates undead, but will accept demonspawn.
