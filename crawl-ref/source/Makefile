@@ -1080,9 +1080,6 @@ greet:
 
 docs: $(GENERATED_DOCS)
 
-test:
-	./$(GAME) -test > /dev/null
-
 
 # Webtiles data
 .PHONY: webserver clean-webserver
@@ -1740,7 +1737,7 @@ mac-app-console: all
 # Canned tests
 #
 
-tests: $(foreach i, 1 2 3 4 5 6 7, test-$(i))
+test: $(foreach i, test 1 2 3 4 5 6 7, test-$(i))
 
 test-%: $(GAME) util/fake_pty
 	util/fake_pty test/stress/run $*
