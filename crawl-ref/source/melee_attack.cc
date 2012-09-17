@@ -808,8 +808,11 @@ bool melee_attack::attack()
         return (did_hit = perceived_attack = true);
 
 
-    if (!cleaving && wpn_skill == SK_AXES)
+    if (!cleaving && wpn_skill == SK_AXES
+        && attacker != defender && !attacker->confused())
+    {
         cleave_setup();
+    }
 
     // Apparently I'm insane for believing that we can still stay general past
     // this point in the combat code, mebe I am! --Cryptic
@@ -5181,7 +5184,7 @@ int melee_attack::calc_damage()
                  damage);
         }
 
-        if(cleaving)
+        if (cleaving)
             damage = cleave_damage_mod(damage);
 
         return apply_defender_ac(damage, damage_max);
