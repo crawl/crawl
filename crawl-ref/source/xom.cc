@@ -2505,7 +2505,7 @@ static void _xom_zero_miscast()
 
     if (in_view[DNGN_ORCISH_IDOL])
     {
-        if (you.species == SP_HILL_ORC)
+        if (player_genus(GENPC_ORCISH))
             priority.push_back("The idol of Beogh turns to glare at you.");
         else
             priority.push_back("The orcish idol turns to glare at you.");

@@ -492,6 +492,7 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
     case SP_HALFLING:
         return TILEP_BASE_HALFLING;
     case SP_HILL_ORC:
+    case SP_LAVA_ORC: // Intentional fallthrough... for now.
         return TILEP_BASE_ORC;
     case SP_KOBOLD:
         return TILEP_BASE_KOBOLD;
@@ -589,6 +590,7 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
             beard = TILEP_BEARD_FULL_RED;
             break;
         case SP_HILL_ORC:
+        case SP_LAVA_ORC:
             hair = 0;
             break;
         case SP_KOBOLD:
