@@ -327,6 +327,24 @@ void moveto_location_effects(dungeon_feature_type old_feat,
 
     if (you.ground_level())
     {
+        if (player_likes_lava(false))
+        {
+            if (feat_is_lava(new_grid) && !feat_is_lava(old_feat))
+            {
+                mprf("You %s lava.",
+                     (stepped) ? "immerse yourself in the" : "fall into the");
+
+                // This gets called here because otherwise you wouldn't heat
+                // until your second turn in lava.
+                if (temperature() < TEMP_FIRE)
+                    mpr("The lava instantly superheats you.");
+                temperature_increment(TEMP_MAX*TEMP_MAX);
+            }
+
+            else if (!feat_is_lava(new_grid) && feat_is_lava(old_feat))
+                mpr("You pull yourself out of the lava.");
+        }
+
         if (you.species == SP_MERFOLK)
         {
             if (feat_is_water(new_grid) // We're entering water
@@ -434,7 +452,7 @@ bool is_feat_dangerous(dungeon_feature_type grid, bool permanently,
     if (you.permanent_flight() || you.airborne() && !permanently)
         return false;
     else if (grid == DNGN_DEEP_WATER && !player_likes_water(permanently)
-             || grid == DNGN_LAVA)
+             || grid == DNGN_LAVA && !player_likes_lava(permanently))
     {
         return true;
     }
@@ -462,6 +480,12 @@ bool player_likes_water(bool permanently)
     return (!permanently && beogh_water_walk()
             || (species_likes_water(you.species) || !permanently)
                 && form_likes_water());
+}
+
+bool player_likes_lava(bool permanently)
+{
+    return (species_likes_lava(you.species)
+            || (!permanently && form_likes_lava()));
 }
 
 bool player_in_bat_form()
