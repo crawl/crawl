@@ -1735,3 +1735,15 @@ mac-app-tiles: all
 
 mac-app-console: all
 	+$(MAKE) -j1 -C mac -f Makefile.app-bundle
+
+#############################################################################
+# Canned tests
+#
+
+tests: $(foreach i, 1 2 3 4 5 6 7, test-$(i))
+
+test-%: $(GAME) util/fake_pty
+	util/fake_pty test/stress/run $*
+
+util/fake_pty: util/fake_pty.c
+	$(if $(HOSTCC),$(HOSTCC),$(CC)) -Wall $< -o $@ -lutil
