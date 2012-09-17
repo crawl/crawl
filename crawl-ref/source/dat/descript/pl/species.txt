@@ -2,7 +2,7 @@
 Centaur
 
 Szybkie jak konie, silne jak konie, wielkie jak konie — lecz jedzą bardziej jak
-słonie.
+słonie. Dobrzy w broni miotanej.
 %%%%
 Deep Dwarf
 
@@ -30,8 +30,8 @@ osiągają dojrzałość i ujawniają swój kolor.
 %%%%
 Felid
 
-Te koty posiadają ludzki umysł, lecz brak im chwytnych kończyn, nie pozwalając
-na użycie większości przedmiotów.
+Te koty o wielu żywotach posiadają ludzki umysł, lecz brak im chwytnych
+kończyn, nie pozwalając na użycie większości przedmiotów.
 %%%%
 Ghoul
 
@@ -82,7 +82,7 @@ Zabalsamowane zwłoki pokryte bandażami, poruszane mocą starożytnej klątwy.
 Naga
 
 Połączenie człowieka i węża: ludzka głowa, ręce i klatka piersiowa, muskularny
-brzuch i ogon węża.
+brzuch i ogon węża. Pełzają bardzo powoli.
 %%%%
 Octopode
 

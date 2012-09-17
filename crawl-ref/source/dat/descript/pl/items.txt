@@ -279,10 +279,6 @@ book of spatial translocations
 
 Księga czarów.
 %%%%
-book of stalking
-
-Księga czarów.
-%%%%
 book of summonings
 
 Księga czarów.
@@ -499,7 +495,7 @@ disc of storms
 
 Ten potężny przedmiot potrafi wypuścić niszczące elektryczne wyładowanie,
 zwłaszcza w rękach kogoś kto potrafi dobrze posługiwać się magicznymi
-przedmiotami. Nie zadziała jeśli użytkownik jest elektrycznie odizolowany.
+przedmiotami.
 %%%%
 double sword
 
@@ -1365,11 +1361,6 @@ splint mail
 Zbroja z prostokątnych metalowych płytek, połączonych metalowymi kółkami. Daje
 to bardzo dobrą ochronę przed ciosami — co prawda znacznie gorszą niż pełna
 zbroja płytowa, jednak umożliwia ona dużo większą swobodę ruchów.
-%%%%
-staff
-
-Patyk którym można się podpierać w czasie marszu, a przy braku innej broni,
-nawet użyć w walce.
 %%%%
 staff of air
 
