@@ -527,6 +527,40 @@ string describe_mutations(bool center_title)
         have_any = true;
         break;
 
+    case SP_LAVA_ORC:
+    {
+        have_any = true;
+        std::string col = "darkgrey";
+
+        col = (temperature_effect(LORC_STONESKIN)) ? "brown" : "darkgrey";
+        result += "<" + col + ">You have stony skin.</" + col + ">\n";
+
+        if (temperature_effect(LORC_LAVA_BOOST))
+        {
+            col = "white";
+            result += "<" + col + ">Your lava-based spells are more powerful.<" + col + ">\n";
+        }
+        else if (temperature_effect(LORC_FIRE_BOOST))
+        {
+            col = "lightred";
+            result += "<" + col + ">Your fire spells are more powerful.<" + col + ">\n";
+        }
+
+        col = (temperature_effect(LORC_PASSIVE_HEAT)) ? "lightred" : "darkgrey";
+        result += "<" + col + ">Your heat harms attackers.</" + col + ">\n";
+
+        col = (temperature_effect(LORC_HEAT_AURA)) ? "lightred" : "darkgrey";
+        result += "<" + col + ">You bathe your surroundings in blazing heat.</" + col + ">\n";
+
+        col = (temperature_effect(LORC_COLD_VULN)) ? "red" : "darkgrey";
+        result += "<" + col + ">You are vulnerable to cold.</" + col + ">\n";
+
+        col = (temperature_effect(LORC_NO_SCROLLS)) ? "red" : "darkgrey";
+        result += "<" + col + ">You are too hot to use scrolls.</" + col + ">\n";
+
+        break;
+    }
+
     default:
         break;
     }
@@ -637,12 +671,22 @@ string describe_mutations(bool center_title)
 }
 
 static const string _vampire_Ascreen_footer = (
+#ifndef USE_TILE_LOCAL
     "Press '<w>!</w>'"
-#ifdef USE_TILE_LOCAL
-    " or <w>Right-click</w>"
+#else
+    "<w>Right-click</w>"
 #endif
     " to toggle between mutations and properties depending on your\n"
     "hunger status.\n");
+
+static const std::string _lava_orc_Ascreen_footer = (
+#ifndef USE_TILE_LOCAL
+    "Press '<w>!</w>'"
+#else
+    "<w>Right-click</w>"
+#endif
+    " to toggle between mutations and properties depending on your\n"
+    "temperature.\n");
 
 static void _display_vampire_attributes()
 {
@@ -741,6 +785,82 @@ static void _display_vampire_attributes()
     }
 }
 
+static void _display_temperature()
+{
+    ASSERT(you.species == SP_LAVA_ORC);
+
+    clrscr();
+    cgotoxy(1,1);
+
+    std::string result;
+
+    std::string title = "Temperature Effects";
+
+    // center title
+    int offset = 39 - strwidth(title) / 2;
+    if (offset < 0) offset = 0;
+
+    result += std::string(offset, ' ');
+
+    result += "<white>";
+    result += title;
+    result += "</white>\n\n";
+
+    const int lines = TEMP_MAX + 1; // 15 lines plus one for off-by-one.
+    std::string column[lines];
+
+    for (int t = 1; t <= TEMP_MAX; t++)  // lines
+    {
+        std::string text;
+        std::ostringstream ostr;
+
+        std::string colourname = temperature_string(t);
+        if (t == TEMP_MAX || t == TEMP_MIN)
+            text = "  --------";
+        else if (temperature() < t)
+            text = "  |      |";
+        else if (temperature() == t)
+            text = "  |~~~~~~|";
+        else
+            text = "  |######|";
+        text += "    ";
+
+        ostr << '<' << colourname << '>' << text
+             << "</" << colourname << '>';
+
+        colourname = (temperature() >= t) ? "lightred" : "darkgrey";
+        text = temperature_text(t);
+        ostr << '<' << colourname << '>' << text
+             << "</" << colourname << '>';
+
+       column[t] = ostr.str();
+    }
+
+    for (int y = TEMP_MAX; y >= TEMP_MIN; y--)  // lines
+    {
+        result += column[y];
+        result += "\n";
+    }
+
+    result += "\n";
+
+    result += "You get hot in tense situations, when berserking, or when you enter lava. You \ncool down when your rage ends or when you enter water.";
+    result += "\n";
+    result += "\n";
+
+    result += _lava_orc_Ascreen_footer;
+
+    formatted_scroller temp_menu;
+    temp_menu.add_text(result);
+
+    temp_menu.show();
+    if (temp_menu.getkey() == '!'
+        || temp_menu.getkey() == CK_MOUSE_CMD)
+    {
+        display_mutations();
+    }
+}
+
 void display_mutations()
 {
     string mutation_s = describe_mutations(true);
@@ -764,6 +884,14 @@ void display_mutations()
         extra += _vampire_Ascreen_footer;
     }
 
+    if (you.species == SP_LAVA_ORC)
+    {
+        if (!extra.empty())
+            extra += "\n";
+
+        extra += _lava_orc_Ascreen_footer;
+    }
+
     if (!extra.empty())
     {
         mutation_s += "\n\n\n\n";
@@ -783,6 +911,13 @@ void display_mutations()
     {
         _display_vampire_attributes();
     }
+    if (you.species == SP_LAVA_ORC
+        && (mutation_menu.getkey() == '!'
+            || mutation_menu.getkey() == CK_MOUSE_CMD))
+    {
+        _display_temperature();
+    }
+
 }
 
 static int _calc_mutation_amusement_value(mutation_type which_mutation)

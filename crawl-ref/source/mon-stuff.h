@@ -27,6 +27,34 @@ enum mon_desc_type   // things that cross categorical lines {dlb}
     MDSC_NOMSG_WOUNDS,
 };
 
+enum temperature_level
+{
+    TEMP_MIN = 1, // Minimum (and starting) temperature. Not any warmer than bare rock.
+    TEMP_COLD = 3,
+    TEMP_COOL = 5,
+    TEMP_ROOM = 7,
+    TEMP_WARM = 9, // Warmer than most creatures.
+    TEMP_HOT = 11,
+    TEMP_FIRE = 13, // Hot enough to ignite paper around you.
+    TEMP_MAX = 15, // Maximum temperature. As hot as lava!
+};
+
+enum temperature_effect
+{
+    LORC_LAVA_BOOST,
+    LORC_FIRE_BOOST,
+    LORC_STONESKIN,
+    LORC_SLOW_MOVE,
+    LORC_COLD_VULN,
+    LORC_PASSIVE_HEAT,
+    LORC_HEAT_AURA,
+    LORC_FAST_MOVE,
+    LORC_NO_SCROLLS,
+    LORC_FIRE_RES_I,
+    LORC_FIRE_RES_II,
+    LORC_FIRE_RES_III,
+};
+
 struct level_exit
 {
     coord_def target;
@@ -199,4 +227,13 @@ int count_monsters(monster_type mtyp, bool friendlyOnly);
 int count_allies();
 void record_monster_defeat(monster* mons, killer_type killer);
 
+int temperature();
+void temperature_check();
+void temperature_increment(float degree);
+void temperature_decrement(float degree);
+void temperature_changed(bool inc_temp);
+bool temperature_effect(int which);
+int temperature_colour(int temp);
+std::string temperature_string(int temp);
+std::string temperature_text(int temp);
 #endif
