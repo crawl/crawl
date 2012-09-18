@@ -145,8 +145,8 @@ pueden ser bloqueados de ningún modo.
 %%%%
 Traps
 
-Un carácter entrenado en Trampas será más observador de su entorno y más
-rápido en descubrir trampas.
+Un carácter entrenado en Trampas será más observador de su entorno y más rápido
+en descubrir trampas.
 %%%%
 Unarmed Combat
 

@@ -2910,15 +2910,15 @@ intense heat. Wisps of smoke trail from its fingertips.
 %%%%
 demonspawn sorcerer
 
-The air crackles around this demonic-looking humanoid; it clearly wields
-magic of some power.
+The air crackles around this demonic-looking humanoid; it clearly wields magic
+of some power.
 %%%%
 draconian transmuter
 
 A draconian who has eschewed the study of weaponry, training in the art of
 transmutations. While its scaly fists, well-thewed leg, and mighty tail are
-lethal on their own, its combat prowess can be increased even further by
-the spells it wields.
+lethal on their own, its combat prowess can be increased even further by the
+spells it wields.
 %%%%
 earth elementalist statue
 
@@ -2973,8 +2973,8 @@ more myth than fact).
 %%%%
 high elf sorcerer
 
-This apparently adventurous high elf is just as proficient in magic as its
-deep elven brethren.
+This apparently adventurous high elf is just as proficient in magic as its deep
+elven brethren.
 %%%%
 hill dwarf
 
@@ -3009,8 +3009,8 @@ enchanted to explode in a blaze of fire. You'd better keep your distance!
 %%%%
 kobold berserker
 
-A particularly blood-thirsty kobold, known for plunging into a battle frenzy
-at the slightest provocation.
+A particularly blood-thirsty kobold, known for plunging into a battle frenzy at
+the slightest provocation.
 %%%%
 lasher statue
 
@@ -3036,17 +3036,18 @@ An unnaturally pale merfolk, with condensation forming around its hands.
 %%%%
 merfolk gladiator
 
-A particularly fearsome merfolk warrior, hefting a bundle of javelins and
-a sinister-looking polearm.
+A particularly fearsome merfolk warrior, hefting a bundle of javelins and a
+sinister-looking polearm.
 %%%%
 minotaur berserker
 
-A particularly adventurous and blood-thirsty minotaur, capable of great
-feats of strength and rage.
+A particularly adventurous and blood-thirsty minotaur, capable of great feats
+of strength and rage.
 %%%%
 minotaur death knight
-A particularly adventurous and sinister minotaur, capable of calling upon
-the divine powers granted to Yredelemnul's followers.
+
+A particularly adventurous and sinister minotaur, capable of calling upon the
+divine powers granted to Yredelemnul's followers.
 %%%%
 minotaur fighter
 
@@ -3059,8 +3060,9 @@ A particularly adventurous and sharp-eyed minotaur, capable of landing
 astonishingly precise and brutal blows from afar with javelins.
 %%%%
 minotaur monk
-A particularly adventurous and agile minotaur, capable of tearing apart
-the unwary with naught but its bare hands.
+
+A particularly adventurous and agile minotaur, capable of tearing apart the
+unwary with naught but its bare hands.
 %%%%
 mountain dwarf
 
@@ -3091,8 +3093,8 @@ yellow curved thingies, at least.
 %%%%
 ogre berserker
 
-A particularly large, hungry, and blood-thirsty ogre, capable of flying into
-a mighty rage at the slightest hint of food.
+A particularly large, hungry, and blood-thirsty ogre, capable of flying into a
+mighty rage at the slightest hint of food.
 %%%%
 # Sprint only, too unhinged for regular games...
 oklob plant annihilator
@@ -3169,9 +3171,8 @@ statue as ugly as you standing here for ages.
 %%%%
 phase spider
 
-An otherworldly spider that can move short and medium distances by
-briefly shifting between the planes of reality, in order to better ensnare
-its prey.
+An otherworldly spider that can move short and medium distances by briefly
+shifting between the planes of reality, in order to better ensnare its prey.
 %%%%
 pristine statue
 
@@ -3252,13 +3253,13 @@ size, it appears to be harmless.
 succubus
 
 A female demon who uses her charms to seduce humanoid males. If you wish to
-take advantage of her, however, you will fail: she seems very
-angry right now and has blood more on her mind than fun.
+take advantage of her, however, you will fail: she seems very angry right now
+and has blood more on her mind than fun.
 %%%%
 tengu aerator
 
-This particularly ferocious tengu is well on its way towards mastery of
-air magic.
+This particularly ferocious tengu is well on its way towards mastery of air
+magic.
 %%%%
 water elementalist statue
 
@@ -3269,8 +3270,8 @@ light, as if sprinkled in actual water.
 young halfling
 
 This halfling has been caught by kobolds, and was meant to be roasted and eaten
-before you unceremoniously interrupted. Don't you have any manners? Didn't
-you ever learn not to disrupt people's meals?
+before you unceremoniously interrupted. Don't you have any manners? Didn't you
+ever learn not to disrupt people's meals?
 %%%%
 young spriggan druid
 
@@ -3288,8 +3289,8 @@ trespassers like you.
 vampire enchanter
 
 An enchanter who, by accident or design, has been afflicted with the curse of
-the vampire. Regardless, undeath merely fuels their abilities; few are aware
-of its presence until they find themselves on the wrong end of a quick blade.
+the vampire. Regardless, undeath merely fuels their abilities; few are aware of
+its presence until they find themselves on the wrong end of a quick blade.
 %%%%
 vampire noble
 
@@ -3315,13 +3316,13 @@ the only way to keep your vital organs undamaged.
 witch
 
 This old human crone must be spending most of her day just working on her
-looks: it's hard to believe one could reach this level of ugliness
-naturally. Robes stained with what appears to be swamp ooze, cauldron soot
-and brew ingredients don't improve her appearance either.
+looks: it's hard to believe one could reach this level of ugliness naturally.
+Robes stained with what appears to be swamp ooze, cauldron soot and brew
+ingredients don't improve her appearance either.
 
-A woman with such stellar sanity and manners probably has great pets
-as well, so it's better to neutralize her before she has a chance to unleash
-them on you.
+A woman with such stellar sanity and manners probably has great pets as well,
+so it's better to neutralize her before she has a chance to unleash them on
+you.
 %%%%
 withered plant
 
