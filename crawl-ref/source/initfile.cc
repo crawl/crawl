@@ -2292,18 +2292,38 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         // FIXME: should talk to gettext/etc instead
         if (field == "en" || field == "english")
             lang = LANG_EN, lang_name = 0; // disable the db
-        else if (field == "pl" || field == "polish" || field == "polski")
-            lang = LANG_PL, lang_name = "pl";
+        else if (field == "cs" || field == "czech" || field == "český" || field == "cesky")
+            lang = LANG_CS, lang_name = "cs";
+        else if (field == "da" || field == "danish" || field == "dansk")
+            lang = LANG_DA, lang_name = "da";
         else if (field == "de" || field == "german" || field == "deutch")
             lang = LANG_DE, lang_name = "de";
-        else if (field == "fr" || field == "french" || field == "français" || field == "francais")
-            lang = LANG_FR, lang_name = "fr";
-        else if (field == "es" || field == "spanish" || field == "español" || field == "espanol")
-            lang = LANG_ES, lang_name = "es";
         else if (field == "el" || field == "greek" || field == "ελληνικά" || field == "ελληνικα")
             lang = LANG_EL, lang_name = "el";
+        else if (field == "es" || field == "spanish" || field == "español" || field == "espanol")
+            lang = LANG_ES, lang_name = "es";
         else if (field == "fi" || field == "finnish" || field == "suomi")
             lang = LANG_FI, lang_name = "fi";
+        else if (field == "fr" || field == "french" || field == "français" || field == "francais")
+            lang = LANG_FR, lang_name = "fr";
+        else if (field == "hu" || field == "hungarian" || field == "magyar")
+            lang = LANG_HU, lang_name = "hu";
+        else if (field == "it" || field == "italian" || field == "italiano")
+            lang = LANG_IT, lang_name = "it";
+        else if (field == "ko" || field == "korean" || field == "한국의")
+            lang = LANG_KO, lang_name = "ko";
+        else if (field == "lt" || field == "lithuanian" || field == "Lietuvos")
+            lang = LANG_LT, lang_name = "lt";
+        else if (field == "lv" || field == "latvian" || field == "Latvijas")
+            lang = LANG_LV, lang_name = "lv";
+        else if (field == "pl" || field == "polish" || field == "polski")
+            lang = LANG_PL, lang_name = "pl";
+        else if (field == "pt" || field == "portuguese" || field == "português" || field == "portugues")
+            lang = LANG_PT, lang_name = "pt";
+        else if (field == "ru" || field == "russian" || field == "русский" || field == "русскии")
+            lang = LANG_RU, lang_name = "ru";
+        else if (field == "zh" || field == "chinese" || field == "中国的" || field == "中國的")
+            lang = LANG_ZH, lang_name = "zh";
         // Fake languages do not reset lang_name, allowing a translated
         // database in an actual language.  This is probably pointless for
         // most fake langs, though.
