@@ -103,6 +103,7 @@ static const char* jager[][4] =
   {"some","zum"},
   {"ouble","ubbel"},
   {"bble","bbel"},
+  {"^ex","hex"},
   {"exc","eks"},
   {"ex","eks"},
   {"accident","exident"},
