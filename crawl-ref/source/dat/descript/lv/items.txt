@@ -1,0 +1,79 @@
+%%%%
+amulet of clarity
+
+Šis amulets pasargā tā nēsātāju no dažāda veida garīgajiem apjukumiem, tostarp
+arī pret paša gribu tiekot satracinātam.
+%%%%
+amulet of resist corrosion
+
+Šis amulets pasargā tā nēsātāju no skābes izraisītās korozijas ietekmes uz viņa
+apbruņojumu, lai arī tas nav vienmēr garantēts.
+%%%%
+apricot
+
+Sulīgs dzeltenīgi oranžs auglis, prunus armeniaca.
+%%%%
+bardiche
+
+Garš miets ar milzīgu, asu asmeni tā galā.
+%%%%
+bolt
+
+Metāla šāviņš, kas īsāks par loka bultu, paredzēts šaušanai no stopa.
+%%%%
+book of card effects
+
+Burvestību grāmata.
+%%%%
+book of charms
+
+Burvestību grāmata.
+%%%%
+book of fixed level
+
+Burvestību grāmata.
+%%%%
+book of fixed theme
+
+Burvestību grāmata.
+%%%%
+cap
+
+Auduma vai ādas cepure.
+%%%%
+centaur barding
+
+Kentauriem domātas bruņas, valkāšanai tā zirga daļai.
+%%%%
+cheese
+
+Siera gabals.
+%%%%
+choko
+
+Tikpat kā bezgaršīgs, zaļš dārzenis, kas aug vīteņaugā.
+%%%%
+cloak
+
+Ādas apmetnis.
+%%%%
+corpse
+
+Līķis. Varat to apstrādāt, izgriežot ēdamos gaļas gabalus.
+%%%%
+crystal plate armour
+
+Šausmīgi smags, taču ārkārtīgi iedarbīgs kristāla bruņutērps.
+%%%%
+dart
+
+Mazs, izgrebts un noasināts šāviņš, kas paredzēts mešanai ar roku.
+%%%%
+dire flail
+
+Kaujas sprigulis ar garākiem asumiem un smagāku uzgali.
+%%%%
+gold piece
+
+Kaudze ar mirdzošām zelta monētām.
+%%%%

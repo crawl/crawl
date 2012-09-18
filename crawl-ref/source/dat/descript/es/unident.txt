@@ -30,6 +30,10 @@ de los hechizos que contiene, usando para ello unas reservas propias de magia
 que se regeneran de forma autónoma.  Es los suficientemente robusta como para
 ser simplemente usada como arma de contusión.
 %%%%
+scroll
+
+Un rollo de papel cubierto de escritos mágicos.
+%%%%
 magical staff
 
 Una vara con propiedades mágicas.

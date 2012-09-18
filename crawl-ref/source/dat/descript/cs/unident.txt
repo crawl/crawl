@@ -1,0 +1,9 @@
+%%%%
+potion
+
+Neoznačená baňka obsahující dávku neznámé kapaliny.
+%%%%
+wand
+
+Hůl. Možná, že je kouzelná.
+%%%%

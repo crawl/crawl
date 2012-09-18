@@ -1,0 +1,640 @@
+%%%%
+air elemental fan
+
+Um dispositivo para invocar elementais do ar. Não se deve confiar muito, já que
+geralmente requer várias tentativas para funcionar corretametne. Usá-lo trás
+riscos que são reduzidos se o usuário for habilidoso na magia elemental
+apropriada.
+%%%%
+amulet of clarity
+
+Este amuleto protege o usuário de algumas formas de confusão mental, incluindo
+ser enfurecido contra vontade própria.
+%%%%
+amulet of conservation
+
+Este amuleto protege alguns itens do usuário contra destruição total, mas não é
+infalível.
+%%%%
+amulet of inaccuracy
+
+Este amuleto faz com que o usuário seja menos preciso em combate mano a mano e
+ao lançar ataques a distância e magias em monstros.
+%%%%
+amulet of rage
+
+Este amuleto permite que o usuário tente iniciar um estado de fúria berserk.
+%%%%
+amulet of resist corrosion
+
+Este amuleto protege o usuário e seu equipamento contra corrosão causada por
+ácidos, mas não é infalível.
+%%%%
+amulet of resist mutation
+
+Este amuleto protege o usuário contra mutações, mas não é infalível.
+%%%%
+animal skin
+
+Pele de um animal.
+%%%%
+apple
+
+Uma fruta vermelha, firme e deliciosa.
+%%%%
+apricot
+
+Uma fruta amarelo alaranjada suculenta, prunus armeniaca.
+%%%%
+arrow
+
+Uma flecha, a ser usada com um arco.
+%%%%
+banana
+
+Uma deliciosa fruta amarela, provavelmente plantada e importada por alguma
+multinacional sem escrúpulos como o resultado de um tratado de comércio
+corrupto.
+%%%%
+bardiche
+
+Uma haste longa com uma enorme lâmina cortante em uma ponta.
+%%%%
+battleaxe
+
+Um machado grande com uma lâmina de duas cabeças.
+%%%%
+beef jerky
+
+Uma tira de carne de vaca, ou boi, seca.
+%%%%
+blessed double sword
+
+Uma arma mágica com duas lâminas afiadíssimas. Ela foi aprimorada pelo poder
+Shining One.
+%%%%
+blessed falchion
+
+Uma espada de lâmina lacerante que foi aprimorada com o pode Shining One.
+%%%%
+blowgun
+
+Um tubo longo e leve, aberto de ambos os lados. Causa pouquíssimo dano. O seu
+propósito é arremessar agulhas envenenadas à distância. Quase não faz barulho.
+%%%%
+bolt
+
+Um virote de besta.
+%%%%
+book of air
+
+Um livro de magia. Você sente uma brisa suave quando o abre.
+%%%%
+book of alchemy
+
+Um livro levemente chamuscado, com um buraco queimado na capa.
+%%%%
+book of beasts
+
+Um livro de magia. Cuidado, ele pode morder!
+%%%%
+book of burglary
+
+Um livro de aparência desgastada, com uma pequena chave escondida entre duas
+páginas.
+%%%%
+book of callings
+
+Um livro de magia.
+%%%%
+book of cantrips
+
+Um livro de magia.
+%%%%
+book of changes
+
+Um livro de magia.
+%%%%
+book of card effects
+
+Um livro de magia.
+%%%%
+book of charms
+
+Um livro de magia.
+%%%%
+book of clouds
+
+Um livro de magia.
+%%%%
+book of conjurations
+
+Um livro de magia.
+%%%%
+book of control
+
+Um livro de magia.
+%%%%
+book of death
+
+Um livro negro contendo magias escritas com uma caligrafia apressada.
+%%%%
+book of debilitation
+
+Um livro de magia.
+%%%%
+book of dreams
+
+Um livro translúcido; a luz reflete de forma estranha na sua superfície.
+%%%%
+book of enchantments
+
+Um livro de magia.
+%%%%
+book of envenomations
+
+Um livro de magia.
+%%%%
+book of fixed level
+
+Um livro de magia.
+%%%%
+book of fixed theme
+
+Um livro de magia.
+%%%%
+book of fire
+
+Um livro de magia todo queimado.
+%%%%
+book of flames
+
+Um livro de magia levemente chamuscado.
+%%%%
+book of frost
+
+Um livro de magia gelado ao toque.
+%%%%
+book of geomancy
+
+Um livro de magia.
+%%%%
+book of hinderance
+
+Um livro de magia.
+%%%%
+book of ice
+
+Um livro de magia. Um vento gélido passa por você por um segundo quando você o
+abre.
+%%%%
+book of maledictions
+
+Um livro de magia.
+%%%%
+book of minor magic
+
+Um livro de magia.
+%%%%
+book of morphology
+
+Um livro de magia.
+%%%%
+book of necromancy
+
+Um tomo empoeirado de magia proibida.
+%%%%
+book of party tricks
+
+Um livro de magia.
+%%%%
+book of power
+
+Um livro de magia.
+%%%%
+book of spatial translocations
+
+Um livro de magia.
+%%%%
+book of summonings
+
+Um livro de magia.
+%%%%
+book of the dragon
+
+Um livro de magia quente ao toque.
+%%%%
+book of the earth
+
+Um livro de magia.
+%%%%
+book of the sky
+
+Um livro de magia. Faíscas saltam das páginas.
+%%%%
+book of the tempests
+
+Um livro de magia.
+%%%%
+book of the warp
+
+Um livro de magia.
+%%%%
+book of transfigurations
+
+Um livro de magia.
+%%%%
+book of unlife
+
+Um livro de magia cheio de runas para controlar os mortos.
+%%%%
+book of wizardry
+
+Um livro de magia.
+%%%%
+bread ration
+
+Uma refeição farta de pão dormido mas massudo.
+%%%%
+broad axe
+
+Um machado com uma grande lâmina.
+%%%%
+buckler
+
+Um escudo pequeno.
+%%%%
+centaur barding
+
+Uma armadura feita para centauros vestirem sobre a sua metade equina.
+%%%%
+chain mail
+
+Um traje feito de anéis de metal entrelaçados.
+%%%%
+cheese
+
+Um naco de queijo.
+%%%%
+choko
+
+Um vegetal verde e quase sem gosto que cresce em uma vinha.
+%%%%
+chunk of flesh
+
+Um pedaço de carne encontrado no calabouço.
+%%%%
+cloak
+
+Uma capa de tecido.
+%%%%
+corpse
+
+Um cadáver. Você pode talhá-lo para obter nacos de carne comestível.
+%%%%
+crystal plate armour
+
+Uma armadura de cristal inacreditavelmente pesada, mas extremamente eficiente.
+%%%%
+dart
+
+Uma pequena arma de arremesso.
+%%%%
+demon blade
+
+Uma arma terrível, forjada no fogo do Inferno.
+%%%%
+demon trident
+
+Uma arma terrível, modelada por fogo e enxofre.
+%%%%
+demon whip
+
+Uma arma terrível, tramada nas profundezas do Inferno.
+%%%%
+dire flail
+
+Um mangual com espinhos em ambos extremos.
+%%%%
+double sword
+
+Uma arma mágica com duas lâminas bem afiadas.
+%%%%
+eggplant
+
+Uma berinjela podre pra você jogar nos desenvolvedores do Crawl. (Se você ver
+esta mensagem, é um bug.)
+%%%%
+empty ebony casket
+
+Uma caixa mágica após o seu poder ter sido gasto.
+%%%%
+eveningstar
+
+O oposto de uma maça-estrela.
+%%%%
+falchion
+
+Um espada com uma longa lâmina lacerante.
+%%%%
+flail
+
+Parece uma maça, mas tem uma corrente entre a haste e a bola de metal.
+%%%%
+giant club
+
+Um pedaço de madeira gigante, moldado para as mãos de um ogro.
+%%%%
+giant spiked club
+
+Uma tora de madeira gigante com espinhos afiados em um extremo.
+%%%%
+glaive
+
+Uma haste com uma lâmina grande e pesada em uma ponta.
+%%%%
+gold piece
+
+Uma pilha de moedas de ouro reluzentes.
+%%%%
+grape
+
+Uma frutinha.
+%%%%
+great mace
+
+Uma maça grande e pesada.
+%%%%
+great sword
+
+Uma espada com uma lâmina longa e pesada e com uma empunhadura longa.
+%%%%
+hammer
+
+O tipo de coisa que se usa para martelar pregos, adaptado para combate.
+%%%%
+hand axe
+
+Machadinha de arremesso ou combate mano a mano.
+%%%%
+helm
+
+Uma peça de armadura para a cabeça.
+%%%%
+helmet
+
+Uma peça de armadura para a cabeça.
+%%%%
+honeycomb
+
+Um delicioso naco de favo de mel feito por abelhas gigantes.
+%%%%
+javelin
+
+Esta lança leve foi projetada para ser arremessada e causar muito dano.
+{{
+    if you.race() == "Halfling"
+        or you.race() == "Kobold"
+        or you.race() == "Spriggan"
+    then
+        return "Infelizmente, ela é muito longa e desajeitada para que você."
+    else
+        return ""
+    end
+}}
+%%%%
+large rock
+
+Uma pedra muito grande e muito pesada. {{
+    if string.find(you.race(), "Ogre")
+       or you.race() == "Troll"
+   then
+       return ""
+   else
+       return "Força extraordinária é necessária para se quer carregar uma
+dessas, e " ..
+              "apenas criaturas grandes são capazes de arremessá-la."
+   end
+}}
+%%%%
+leather armour
+
+Um traje feito de couro enrijecido.
+%%%%
+lemon
+
+Uma fruta muito amarela.
+%%%%
+long sword
+
+Uma espada com uma lâmina longa e lacerante.
+%%%%
+lychee
+
+Uma fruta tropical.
+%%%%
+mace
+
+Uma haste com uma bola de metal em uma ponta.
+%%%%
+manual
+
+Um livro valioso que permite que uma habilidade seja treinada com maior
+eficiência.
+%%%%
+morningstar
+
+Uma maça coberta de espinhos.
+%%%%
+needle
+
+Uma agulha. Pode ser arremessada com uma zarabatana.
+%%%%
+orange
+
+Uma deliciosa e suculenta fruta alaranjada.
+%%%%
+pair of boots
+
+Um par de botas.
+%%%%
+pair of bracers
+
+Um par de braceletes.
+%%%%
+pair of gloves
+
+Um par de luvas.
+%%%%
+pear
+
+Uma deliciosa e suculenta fruta.
+%%%%
+potion of slowing
+
+Uma poção que retarda as suas ações.
+%%%%
+potion of strong poison
+
+Uma poção terrivelmente venenosa.
+%%%%
+quarterstaff
+
+Uma haste de madeira robusta feita para combate.
+%%%%
+quick blade
+
+Uma espada pequena e magicamente rápida.
+%%%%
+ring mail
+
+Uma armadura de couro coberta de pequenos anéis.
+%%%%
+ring of hunger
+
+Este anel amaldiçoado faz com que aquele que o veste sinta fome com maior
+frequência.
+%%%%
+ring of magical power
+
+Este anel aumenta as reservas de poder mágico daquele que o veste.
+%%%%
+ring of protection from cold
+
+Este anel oferece proteção contra o frio.
+%%%%
+ring of protection from fire
+
+Este anel oferece proteção contra o calor e o fogo.
+%%%%
+ring of protection from magic
+
+Este anel aumenta a resistência a encantamentos hostis do usuário.
+%%%%
+ring of see invisible
+
+Este anel permite ao usuário ver aquelas coisas ocultadas magicamente.
+%%%%
+robe
+
+Um manto de tecido.
+%%%%
+rune of zot
+
+Um talismã que permite acesso ao domínio de Zot.
+%%%%
+sabre
+
+Uma espada com lâmina média e lacerante.
+%%%%
+sausage
+
+Uma deliciosa e suculenta fruta.
+%%%%
+scale mail
+
+Uma armadura de couro coberta de pequenas placas de metal.
+%%%%
+scimitar
+
+Uma espada longa com uma lâmina curva.
+%%%%
+scythe
+
+Uma ferramenta do campo, normalmente inútil em combate.
+%%%%
+short sword
+
+Uma espada com uma lâmina curta e lacerante.
+%%%%
+skeleton
+
+Um esqueleto em decomposição.
+%%%%
+slice of pizza
+
+Uma fatia de pizza: massa de pão achatada com molho de tomate, muzarela de
+búfala e manjericão.
+%%%%
+snozzcumber
+
+Um vegetal repulsivo no formato de um pepino.
+%%%%
+spear
+
+Uma vara longa com uma lâmina pontiaguda em uma ponta. Pode ser tida em mãos ou
+arremessada.
+%%%%
+spiked flail
+
+Um mangual com grandes espinhos na bola de metal.
+%%%%
+staff
+
+Uma bengala resistente.
+%%%%
+staff of conjuration
+
+Este cajado aumenta o poder das magias de conjuração lançadas pelo seu usuário.
+%%%%
+staff of energy
+
+Este cajado reduz significativamente o custo em fome das magias do usuário.
+%%%%
+staff of power
+
+Este cajado dá ao usuário uma reserva de poder mágico.
+%%%%
+staff of wizardry
+
+Este cajado aumenta significativamente a habilidade mágica do usuário.
+%%%%
+stone
+
+Uma pedra. Pode ser arremessada à mão ou com uma funda.
+%%%%
+strawberry
+
+Uma pequena, porém deliciosa, fruta vermelha.
+%%%%
+sultana
+
+Uma humilde passa.
+%%%%
+swamp dragon armour
+
+Uma armadura mágica feita das escamas de um dragão do pântano, que confere
+resistência a veneno ao usuário.
+%%%%
+wand of frost
+
+Um dispositivo mágico que arremessa pequenos pedaços de gelo.
+%%%%
+wand of heal wounds
+
+Um dispositivo mágico capaz de curar as feridas de uma criatura.
+%%%%
+wand of invisibility
+
+Um dispositivo mágico capaz de ocultar uma criatura das demais.
+%%%%
+wand of lightning
+
+Um dispositivo mágico que arremessa grandes rajadas de raios.
+%%%%
+wand of paralysis
+
+Um dispositivo mágico capaz de imobilizar uma criatura.
+%%%%
+whip
+
+Um chicote.
+%%%%
+wizard hat
+
+Um chapéu de tecido cônico.
+%%%%
+young poisoner's handbook
+
+Um livro de magia.
+%%%%

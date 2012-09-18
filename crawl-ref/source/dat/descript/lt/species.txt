@@ -1,0 +1,118 @@
+%%%%
+Centaur
+
+Greiti, stiprūs ir stambūs, jie reikalauja daugiau maisto negu kitos rūšys.
+%%%%
+Deep Dwarf
+
+Jie gyvena giliai po žeme ir negali regeneruoti sveikatos natūraliai, bet jie
+yra gajūs ir turi įrankius gydymuisi.
+%%%%
+Deep Elf
+
+Gabiausias magijai, bet pats silpniausias elfas.
+%%%%
+Demigod
+
+Jie niekada neseks dievybės, bet pusdieviai tai kompensuoja dieviškomis
+savybėmis ir sveikata.
+%%%%
+Demonspawn
+
+Velnio išpera yra pusiau žmogus, pusiau demonas. Augdami jie įgyja stiprias
+mutacijas.
+%%%%
+Draconian
+
+Drakošai yra įvairiapusiški mišrūnai. Jie subręsta pasiekę 7 lygį ir įgauna
+spalvą.
+%%%%
+Felid
+
+Šie katinai turi sąmonę, bet yra nepajėgūs valdyti sudėtingesnių daiktų, šarvų
+ir ginklų.
+%%%%
+Ghoul
+
+Nemirėliai, prakeikti amžinai pūti. Jie visada ieško supuvusio maisto,
+kapodamiesi savo nagais.
+%%%%
+Halfling
+
+Maži bet atsparūs, jie pranoksta visus kitus naudodami laidynes. Jie turi
+padidintą atsparumą mutageniniams efektams.
+%%%%
+High Elf
+
+Išdidūs elfai, sugebantys svaidyti burtus taip pat gerai kaip ir kautis su
+kardu.
+%%%%
+Hill Orc
+
+Orkai yra įgudę artimoje kovoje ir dažniausiai šiek tiek gaudosi puolamojoje
+magijoje. Daugumos nekenčiami, orkai yra labai išdidūs ir dauguma jų jaučiasi
+pranašesni už kitus.
+%%%%
+Human
+
+Paprastas ir vidutiniškas.
+%%%%
+Tengu
+
+Paukščiažmogiai, mylintys kautynes, tiek ginklais, tiek magija. Jie yra gana
+gležni, bet ilgainiui išmoksta skraidyti.
+%%%%
+Kobold
+
+Maži, išdykę ir šiek tiek silpni, bet daug ką sugebantys. Jie gali valgyti ir
+valgys bet kokią mėsą.
+%%%%
+Merfolk
+
+Pusiau žuvys, pusiau žmonės, vandeniai yra ir vandens ir žemės gyventojai.
+%%%%
+Minotaur
+
+Dideli raumeningi žmonės su jaučio galvomis. Jie yra labai pajėgūs artimoje ir
+tolimoje kovoje.
+%%%%
+Mummy
+
+Nemirėlio figūra padengta raiščiais ir balzamuota, seno prakeiksmo priversta
+vaikščioti.
+%%%%
+Naga
+
+Mišrūnas - žmogus su žvynuotu ir raumeningu liemeniu, pereinančiu į gyvatės
+uodegą.
+%%%%
+Octopode
+
+Amfibinių galvokojų rūšis. Jie gali dėvėti aštuonis žiedus, bet jiems netinka
+beveik jokie šarvai.
+%%%%
+Ogre
+
+Dideli ir stiprūs, jie paprastai laikomi gyvuliais. Vis dėlto žmogėdros yra
+gerai apsipratę su magijos pagrindais.
+%%%%
+Sludge Elf
+
+Pagędęs elfo tipas, kuris labiau mėgsta klastą negu teisingą kovą ir tamsiają
+magiją negu kitus burtus.
+%%%%
+Spriggan
+
+Labai maži, labai gležni ir labai greiti. Spriganai yra labai kompetetingi kai
+reikia ką nors nudurti, taip pat yra labai gabūs burtininkai.
+%%%%
+Troll
+
+Dideli gyvuliai, pasiruošę savo nagais sužaloti bet ką, niekada negalvojantys
+du kartus. Jie visada alkani.
+%%%%
+Vampire
+
+Judantys tarp gyvenimo ir mirties būsenų, jie yra išmano burtus ir žino kaip
+nudurti.
+%%%%

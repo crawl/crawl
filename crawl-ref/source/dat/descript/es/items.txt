@@ -23,6 +23,13 @@ permitirá ejercer cierto control sobre el movimiento resultante. Por ejemplo,
 podrá descender escaleras, y tomar objetos del suelo. Todo ello, sin perder
 ninguna de las ventajas de levitar.
 %%%%
+amulet of guardian spirit
+
+Este amuleto hace que su portador sea un poco menos vulnerable al daño externo.
+Cuando el portador reciba algún daño, una parte de este se descontará de los
+puntos de magia, en lugar de los puntos de vida. Si las reservas mágicas están
+agotadas, este amuleto no tendrá ningún efecto.
+%%%%
 amulet of inaccuracy
 
 Este amuleto hace que su portador sea menos preciso en el combate cuerpo a
@@ -54,6 +61,13 @@ amulet of warding
 Este amuleto repele los ataques de criaturas que hayan sido convocadas mediante
 magia, y también hace a su portador más resistente a los ataques basados en
 energías negativas.
+%%%%
+amulet of faith
+
+Este es un talismán creado para reclamar la atención de los dioses. De esta
+forma, será más fácil agradar a tu dios, pero al mismo tiempo, también será más
+difícil que tu dios perdone tus transgresiones. Al quitarte este amuleto,
+perderás una parte del favor divino logrado.
 %%%%
 amulet of stasis
 
@@ -97,6 +111,36 @@ beef jerky
 
 Una tira de carne seca de vaca o toro.
 %%%%
+blessed double sword
+
+Un arma mágica con dos cuchillas muy afiladas. Ha sido mejorada con el poder de
+El Resplandeciente.
+%%%%
+blessed falchion
+
+Una espada con una amplia cuchilla cortante. Ha sido mejorada con el poder de
+El Resplandeciente.
+%%%%
+blessed great sword
+
+Una espada con una larguísima y pesada cuchilla y un gran mango. Ha sido
+mejorada con el poder de El Resplandeciente.
+%%%%
+blessed long sword
+
+Una espada con una larga cuchilla. Ha sido mejorada con el poder de El
+Resplandeciente.
+%%%%
+blessed scimitar
+
+Una espada con una cuchilla curvada. Ha sido mejorada con el poder de El
+Resplandeciente.
+%%%%
+blessed triple sword
+
+Un arma mágica con tres cuchillas muy afiladas. Ha sido mejorada con el poder
+de El Resplandeciente.
+%%%%
 blowgun
 
 Un largo y ligero canuto abierto por ambos extremos. Incapaz de hacer un gran
@@ -115,6 +159,17 @@ páginas.
 book of alchemy
 
 Un libro, algo chamuscado, con un orificio que atraviesa su tapa.
+%%%%
+book of annihilations
+
+Las andrajosas páginas de este libro rezuman sangre. Incluso un analfabeto
+puede sentir el diáfano impacto de la furia arcana contenida en el libro. Es
+codiciado por los brujos, ya que le permite al dotado e ingenioso ordenar la
+destrucción con un simple chasquido de los dedos. Sin embargo, los magos más
+endebles podrían encontrar su perdición al intentar leer este opus.
+
+ADVERTENCIA: Si fallas al intentar memorizar un hechizo de este libro,
+recibirás un castigo.
 %%%%
 book of beasts
 
@@ -238,13 +293,13 @@ book of spatial translocations
 
 Un libro con hechizos mágicos.
 %%%%
-book of stalking
-
-Un libro con hechizos mágicos.
-%%%%
 book of summonings
 
 Un libro con hechizos mágicos.
+%%%%
+book of the dragon
+
+Un libro con hechizos mágicos. Es cálido al tacto.
 %%%%
 book of the earth
 
@@ -265,6 +320,11 @@ Un libro con hechizos mágicos.
 book of transfigurations
 
 Un libro con hechizos mágicos.
+%%%%
+book of unlife
+
+Un libro con hechizos mágicos. Esta lleno de símbolos para contactar con los
+muertos.
 %%%%
 book of war chants
 
@@ -479,6 +539,12 @@ empty ebony casket
 
 Una caja mágica cuyo poder se ha agotado.
 %%%%
+eudemon blade
+
+Una gloriosa cuchilla creada en los forjas del Cielo, y poseída por un espíritu
+benigno. Es una de las armas preferidas de los sirvientes de El
+Resplandeciente.
+%%%%
 eveningstar
 
 Lo contrario del lucero del alba.
@@ -541,6 +607,19 @@ gold piece
 
 Una montón de brillantes monedas de oro.
 %%%%
+grand grimoire
+
+Un desolador silencio parece rodear a este libro al abrirlo. Incluso el mismo
+aire parece retroceder ante las monstruosidades aquí representadas. Las
+páginas, cubiertas con abominables runas, describen como los más poderosos
+convocadores pueden hacer que se plieguen a su voluntad las cosas más terribles
+halladas en cualquiera de los planos. Sin embargo, han sido muchas las almas
+incautas que han jugado con este tomo y han caído en la locura a causa de
+horrores eldritch que están fuera del alcance de la imaginación.
+
+ADVERTENCIA: Si fallas al intentar memorizar un hechizo de este libro,
+recibirás un castigo.
+%%%%
 grape
 
 Una pequeña fruta.
@@ -564,6 +643,10 @@ La cosa con la que clavas puntillas, modificada para el combate.
 hand axe
 
 Una pequeña hacha ideada para el combate cuerpo a cuerpo, o para ser arrojada.
+%%%%
+helm
+
+Una protección metálica para la cabeza.
 %%%%
 helmet
 
@@ -616,4 +699,461 @@ Un utensilio mágico que sirve para convocar elementales de fuego. Es poco
 fiable, y normalmente hacen falta varios intentos para lograr que funcione. Su
 uso conlleva un riesgo, que puede ser mitigado mediante el entrenamiento de la
 magia del fuego.
+%%%%
+lantern of shadows
+
+Un utensilio profano que sirve para solicitar los servicios de los poderes de
+la oscuridad, aunque con un pequeño coste.
+%%%%
+large rock
+
+Un piedra, usada por los gigantes como proyectil. {{
+    if string.find(you.race(), "Ogre")
+       or you.race() == "Troll"
+    then
+        return ""
+    else
+        return "Por desgracia, es demasiado grande y pesada para ti, así que
+eres incapaz de usarla."
+    end
+}}
+%%%%
+large shield
+
+Parecido a un escudo convencional, pero un poco más grande. {{
+    if string.find(you.race(), "Ogre")
+       or string.find(you.race(), "Draconian")
+       or you.race() == "Troll"
+    then
+        return "Parece que es de tu talla."
+    else
+        return "Es bastante aparatoso de llevar, y ralentiza la velocidad " ..
+               "a la que puedes atacar."
+    end
+}}
+%%%%
+leather armour
+
+Una armadura de cuero endurecido.
+%%%%
+lemon
+
+Una fruta amarillenta.
+%%%%
+long sword
+
+Una espada con una larga cuchilla.
+%%%%
+longbow
+
+Un largo y fuerte arco hecho de madera de tejo. Es capaz de hacer un daño
+excelente en combate y un arquero experimentado puede usarlo muy eficazmente.
+%%%%
+lychee
+
+Una fruta tropical.
+%%%%
+mace
+
+Un largo mango, con una pesada masa de metal en su extremo.
+%%%%
+manual
+
+Un valioso libro que permite entrenar una capacidad más eficientemente.
+%%%%
+meat ration
+
+Una ración nutritiva de carne seca y en conserva.
+%%%%
+morningstar
+
+Una maza cubierta de pinchos.
+%%%%
+mottled dragon armour
+
+Una armadura mágica elaborada a partir de las escamas de un dragón moteado.
+Aunque no proporciona una gran protección mágica, es bastante ligera en
+comparación con las armaduras echas de escamas de dragones más grandes. Es tan
+liviana y cómoda como la armadura de cuero. También es muy suave, de tal forma
+que el fuego adherente se cae como si fuera agua.
+%%%%
+mottled dragon hide
+
+La escamosa piel de un dragón moteado. Puede ser transformada en una armadura
+mediante procedimientos mágicos. Su suave superficie no permite el fuego
+adherente se fije.
+%%%%
+naga barding
+
+Una armadura especial para Nagas, que les sirve para cubrir la cola de
+serpiente.
+%%%%
+necronomicon
+
+Un libro extremadamente raro, poderoso y siniestro. Su envoltorio está hecho de
+fina piel de origen desconocido. Muchos magos inconscientes han tratado de
+estudiar este tomo solo para acabar atrapados bajo fuerzas necrománticas de las
+que no podían esperar su control.
+%%%%
+needle
+
+Un dardo envenenado. Puede ser lanzado con una cerbatana.
+%%%%
+orange
+
+Una deliciosa y jugosa fruta anaranjada.
+%%%%
+orb of zot
+
+Una vez que llegues a la superficie con este artilugio de valor incalculable,
+habrás completado tu misión.
+%%%%
+pair of boots
+
+Un par de botas.
+%%%%
+pair of bracers
+
+Un par de muñequeras.
+%%%%
+pair of gauntlets
+
+Un par de guanteletes.
+%%%%
+pair of gloves
+
+Un par de guantes.
+%%%%
+pear
+
+Una fruta deliciosa y jugosa.
+%%%%
+pearl dragon armour
+
+Una armadura mágica elaborada a partir de las fuertes y flexibles escamas de un
+dragón nacarado. Proporciona protección contra la energía negativa.
+%%%%
+pearl dragon hide
+
+La escamosa piel de un dragón nacarado. Puede usarse para elaborar una armadura
+propiamente dicha, pero incluso en esta basta forma proporciona protección
+contra la energía negativa.
+%%%%
+piece of ambrosia
+
+Un poco una extraña sustancia producida por la polillas fantasma. Su consumo
+proporciona tanto energía mágica como sustento, pero perderás tu concentración
+mental durante un corto periodo de tiempo.
+%%%%
+plate armour
+
+Una armadura completa, hecha de sólidas placas de metal. Consta de peto,
+hombreras, guardabrazos, escarcelas y musleras. Una cota de malla cubre los
+huecos que permiten el movimiento.
+
+Proporciona una protección excelente, pero se tarda una eternidad en ponersela
+o quitarsela.
+%%%%
+potion of agility
+
+Una poción mágica que incrementa muy considerablemente la destreza y elusividad
+de quien la beba.
+%%%%
+potion of berserk rage
+
+Una poción que permite entrar en un estado de trance berserk.
+%%%%
+potion of blood
+
+Una poción que contiene la esencia de la vida. Es vital para todos los seres
+vivos, al igual que para algunos no-muertos. Puede proporcionar nutrición para
+los que puedan alimentarse de carne.
+%%%%
+potion of brilliance
+
+Una poción mágica que aumenta en gran cantidad la inteligencia y el mana de
+aquél que la beba.
+%%%%
+potion of coagulated blood
+
+Una poción que contiene la esencia de la vida. Es vital para todos los seres
+vivos, al igual que para algunos no-muertos. Puede proporcionar nutrición para
+los que puedan alimentarse de carne. La sangre contenida no será degustable por
+mucho más tiempo.
+%%%%
+potion of confusion
+
+Una poción que confunde tus percepciones y reduce el control de las propias
+acciones.
+%%%%
+potion of cure mutation
+
+Una poción que elimina alguna o todas las mutaciones que puedan estar
+afectándote.
+%%%%
+potion of curing
+
+Un fluido bendito que cura algunas heridas, aclara la mente y cura
+enfermedades. Si se usa cuando se está casi o con plena salud, puede restaurar
+ligeramente heridas permanentes.
+%%%%
+potion of decay
+
+Un líquido maldito, vil y pútrido que provoca que tu carne se pudra ante tus
+ojos.
+%%%%
+potion of degeneration
+
+Una pócima tóxica que puede causar cosas terribles en tu cuerpo, cerebro y
+reflejos.
+%%%%
+potion of experience
+
+Una bebida rarísima y verdaderamente maravillosa.
+%%%%
+potion of gain dexterity
+
+Una poción de mutación benigna
+%%%%
+potion of gain intelligence
+
+Una poción de mutación benigna
+%%%%
+potion of gain strength
+
+Una poción de mutación benigna
+%%%%
+potion of heal wounds
+
+Un elixir de curación mágica que hace que las heridas se cierren y sanen casi
+instantáneamente. Si se usa cuando se está casi o con plena salud, puede
+restaurar heridas permanentes.
+%%%%
+potion of invisibility
+
+Una poción que te oculta de la vista de los demás.
+%%%%
+potion of levitation
+
+Una poción que confiere gran flotabilidad a quien la consuma.
+%%%%
+potion of magic
+
+Una valiosa poción que infunde energía mágica.
+%%%%
+potion of might
+
+Una poción mágica que incrementa en gran cantidad la fuerza y la capacidad
+física de quien la beba.
+%%%%
+potion of mutation
+
+Una poción que te provoca cosas muy extrañas.
+%%%%
+potion of paralysis
+
+Una poción que elimina el control sobre tu propio cuerpo.
+%%%%
+potion of poison
+
+Un desagradable líquido venenoso.
+%%%%
+potion of porridge
+
+Una rica y espesa poción con mucha fibra cereal.
+%%%%
+potion of resistance
+
+Una poción que te da temporalmente resistencia a los elementos y al veneno.
+%%%%
+potion of restore abilities
+
+Una poción que restaura las habilidades de quien la beba. También permite usar
+un arma de aliento, cancelando su retardo.
+%%%%
+potion of slowing
+
+Una poción que vuelve más lentas tus acciones.
+%%%%
+potion of speed
+
+Un brebaje encantado que hace más rápidas las acciones de quien lo beba.
+%%%%
+potion of strong poison
+
+Una poción muy venenosa.
+%%%%
+quad damage
+
+Un objeto misterioso semejante a una runa de algún tipo. Una vez se evoque,
+hará que el usuario brille azul y añada reverberaciones a cualquier sonido... y
+puede haber otros efectos además.
+%%%%
+quarterstaff
+
+Un robusto palo de madera, empleado para el combate.
+%%%%
+quick blade
+
+Una pequeña y mágicamente ágil espada
+%%%%
+rambutan
+
+Una pequeña pero deliciosa fruta. Como llegó a este calabozo se lo pregunta
+todo el mundo.
+%%%%
+ring mail
+
+Una armadura de cuero cubierta por pequeñas anillas.
+%%%%
+ring of dexterity
+
+Este anillo aumenta o reduce la destreza de su portador, dependiendo de en qué
+grado ha sido encantado.
+%%%%
+ring of evasion
+
+Este anillo hace que su portador sea más o menos capaz de evitar ataques, en
+función de su grado de encantamiento.
+%%%%
+ring of fire
+
+Este anillo hace que su portador esté más en contacto con los poderes del
+fuego. Ganará resistencia al calor y podrá usar la magia del fuego más
+eficazmente pero será más vulnerable a los efectos del frío.
+%%%%
+ring of hunger
+
+Este anillo maldito hace que su portador tenga hambre considerablemente más
+deprisa.
+%%%%
+ring of ice
+
+Este anillo hace que su portador esté más en contacto con los poderes del
+hielo. Ganará resistencia al frío y podrá usar la magia del hielo más
+eficazmente, pero será más vulnerable a los efectos del fuego.
+%%%%
+ring of intelligence
+
+Este anillo aumenta o reduce la habilidad mental de su portador, en función de
+su grado de encantamiento.
+%%%%
+ring of invisibility
+
+Este poderoso anillo puede ser activado para ocultar a su portador de la vista
+de los demás, pero incrementa la velocidad de su metabolismo en gran medida
+mientras lo hace.
+%%%%
+ring of levitation
+
+Este anillo permite que su portador levite sobre el suelo. El poder de este
+anillo no puede ser evocado si ya se está levitando.
+%%%%
+ring of life protection
+
+Este anillo bendito protege la fuerza vital de su portador de energías
+negativas, haciéndole parcialmente inmune a los efectos de absorción de vida de
+los no-muertos y de la necromancia.
+%%%%
+ring of magical power
+
+Este anillo incrementa las reservas mágicas de su portador.
+%%%%
+ring of poison resistance
+
+Este anillo proporciona protección ante los efectos de los venenos.
+%%%%
+ring of protection
+
+Este anillo bien protege a su portador del daño o bien le hace más vulnerable,
+en función de su grado de encantamiento.
+%%%%
+ring of protection from cold
+
+Este anillo protege del frío.
+%%%%
+ring of protection from fire
+
+Este anillo proporciona protección contra el calor y el fuego.
+%%%%
+ring of protection from magic
+
+Este anillo incrementa la resistencia de su portador contra embrujos adversos.
+%%%%
+ring of regeneration
+
+Este maravilloso anillo incrementa muy considerablemente los poderes
+recuperativos de su portador, pero también acelera su metabolismo al hacerlo.
+%%%%
+scythe
+
+Un ápero de granja, normalmente no apto para el combate.
+%%%%
+shield
+
+Una pieza de metal diseñada para llevarse atada en un brazo. Es pesada de
+llevar y hace algo más lenta la velocidad a la que se puede atacar.
+%%%%
+short sword
+
+Una espada de hoja corta y cortante.
+%%%%
+skeleton
+
+Un esqueleto en descomposición.
+%%%%
+slice of pizza
+
+Un trozo de pizza: un pan plano con salsa de tomate, mozzarela de búfala y
+orégano.
+%%%%
+sling
+
+Un pedazo de tela y cuero para lanzar piedras, que pueden hacer algo de daño al
+impactar. A diferencia de otros lanzadores, llevar un escudo no hace más lenta
+la tasa de disparos.
+%%%%
+sling bullet
+
+Un proyectil pequeño y pesado diseñado específicamente para hondas y más
+efectivo como munición que las piedras. Pueden tener varios encantamientos.
+%%%%
+snozzcumber
+
+Un vegetal repulsivo en forma de pepino.
+%%%%
+spear
+
+Un palo largo con una punta de metal en un extremo, para ser asido o lanzado.
+%%%%
+spiked flail
+
+Un flagelo con largos pinchos en su cabeza de metal.
+%%%%
+staff
+
+Un robusto bastón de paseo.
+%%%%
+staff of air
+
+Este bastón incrementa el poder de los hechizos de aire recitados por su
+portador, y lo aisla de la electricidad. Si el portador del bastón tiene
+capacidad en evocaciones y magia del aire, puede provocar descargas a quienes
+golpee con él.
+%%%%
+staff of channeling
+
+Este bastón permite que su portador canalice la magia ambiental para sus
+propios propósitos.
+%%%%
+staff of cold
+
+Este ste bastón incrementa el poder de los hechizos de hielo recitados por su
+portador y lo protege de los efectos del frío. Si el portador del bastón tiene
+capacidad en evocaciones puede congelar a quienes golpee con él, con mayor
+efecto si también posee conocimiento de la magia del hielo.
+%%%%
+staff of conjuration
+
+Este bastón aumenta el poder de los conjuros lanzados por su portador.
 %%%%
