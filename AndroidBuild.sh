@@ -140,7 +140,7 @@ LOCAL_PATH=`cd $LOCAL_PATH && pwd`
 rm -f libapplication.so
 
 # these are probably right
-PREFIX_P="/sdcard/app-data/org.develz.crawl"
+PREFIX_P="/sdcard/Android/data/org.develz.crawl/files"
 DATADIR_P="."
 SAVES_P="."
 GLES=1
@@ -154,7 +154,7 @@ if [ -e bin/crawl ]; then
 	cp -f bin/crawl libapplication.so
 
 	# compile all the tiles data into a zip archive for the .apk
-	cd AndroidData && rm -f crawl-data.zip* && zip -q -r crawl-data.zip * && split -b 1048576 -d crawl-data.zip crawl-data.zip && rm crawl-data.zip && cd -
+	cd AndroidData && rm -f crawl-data.zip* && zip -q -r crawl-data.zip * && cd -
 
 	# put all the android icons in the right places to be picked up
 	for RES in ldpi mdpi hdpi xhdpi; do
