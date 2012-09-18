@@ -27,9 +27,7 @@ CMD_RESISTS_SCREEN
 
 Exibir a visão geral do seu personagem
 %%%%
-CMD_DISPLAY_OVERMAP
-
-
+#CMD_DISPLAY_OVERMAP
 %%%%
 CMD_DISPLAY_RELIGION
 

@@ -676,7 +676,7 @@ The dimension's edge
 %%%%
 A wall of crystal
 
-<一面绿水晶墙>
+<A wall of green crystal>
 %%%%
 A damp floor
 

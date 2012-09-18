@@ -483,11 +483,11 @@ Un liche qui est devenu très coûteuse au fil d'un temps incalculable.
 %%%%
 apricot tree
 
-<pommier>
+<apple tree>
 %%%%
 citrus tree
 
-<pommier>
+<apple tree>
 %%%%
 deformed humanoid
 
@@ -495,23 +495,23 @@ La pauvre créature semble hideusement déformée.
 %%%%
 lich demonologist
 
-<liche>
+<lich>
 %%%%
 mummy warrior
 
-<momie gardienne>
+<guardian mummy>
 %%%%
 oklob plant conjurer
 
-<plante oklob destructrice>
+<oklob plant annihilator>
 %%%%
 orc demonologist
 
-<orc sorcier>
+<orc sorcerer>
 %%%%
 pyrus tree
 
-<pommier>
+<apple tree>
 %%%%
 vampire noble
 
