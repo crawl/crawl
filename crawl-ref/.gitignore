@@ -121,6 +121,9 @@ makefile.dep
 /source/conftest.cc
 /source/conftest.o
 
+# Test suite.
+/source/util/fake_pty
+
 # Xcode cruft
 /source/build
 *.pbxuser
