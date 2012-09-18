@@ -634,6 +634,10 @@ void update_vision_range()
     if (you.duration[DUR_DARKNESS])
         nom *= 3, denom *= 4;
 
+    // robe of Night.
+    if (player_equip_unrand(UNRAND_NIGHT))
+        nom *= 3, denom *= 4;
+
     you.current_vision = (you.normal_vision * nom + denom / 2) / denom;
     ASSERT(you.current_vision > 0);
     set_los_radius(you.current_vision);
