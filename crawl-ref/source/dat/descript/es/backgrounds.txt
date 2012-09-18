@@ -110,11 +110,6 @@ Skald
 Los Escaldos son guerreros que pueden potenciarse en batalla con hechizos de su
 Libro de Cánticos de Guerra.
 %%%%
-Stalker
-
-Los Asaltadores usan el sigilo y la magia transformativa para aproximarse y
-derrotar a sus victimas.
-%%%%
 Summoner
 
 Los Convocadores comienzan con el Libro de las Llamadas y son capaces de
@@ -133,6 +128,12 @@ Aguijón. Al comienzo no tienen demasiados problemas.
 Wanderer
 
 Los Viajeros comienzan con capacidades y una equipación al azar.
+%%%%
+Warper
+
+Los urdidores comienzan con un arma de que hayan elegido y un pergamino de
+"Blinking". Pueden aprender los hechizos contenidos en el libro de
+Translocaciones Espaciales.
 %%%%
 Wizard
 

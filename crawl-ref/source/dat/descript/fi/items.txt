@@ -368,12 +368,6 @@ Varppaaja Golubria, kahden vuosisadan takaa. Kirjaa voi edelleen löytää
 taikuuden kirjastoista ympäri maailmaa, vaikka se ei aina ole siinä hyllyssä
 mihin kirjastonhoitaja jätti sen.
 %%%%
-book of stalking
-
-Hyödyllinen opas muodonmuutoksia käyttävän Stalkkauksen saloihin. Tällä
-mitättömän näköisellä kirjalla on tapana sekoittua taustaansa, ja monet velhot
-eivät katso siihen kahta kertaa.
-%%%%
 book of summonings
 
 Edistynyt tutkielma Kutsumistaioista, joka kuvailee tapoja kutsua ja sitoa

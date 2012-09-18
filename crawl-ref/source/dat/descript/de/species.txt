@@ -1,0 +1,25 @@
+%%%%
+Centaur
+
+Schnell, stark und massig. Sie brauchen mehr Nahrung als andere Spezies.
+%%%%
+High Elf
+
+Stolze Elfen, die sowohl Zauber sprechen als auch mit dem Schwert kämpfen
+können.
+%%%%
+Minotaur
+
+Ein großer, muskulärer Mensch mit dem Kopf eins Bullen. Sie sind hervorragend
+in allen Formen von Nah- und Fernkampf.
+%%%%
+Octopode
+
+Eine Spezies amphibischer Kopffüßer. Sie können acht Ringe tragen, aber fast
+keine Rüstung passt ihnen.
+%%%%
+Spriggan
+
+Sehr klein, sehr schmächtig und sehr schnell. Spriggans sind kompetente
+Messerstecher und Zauberer.
+%%%%

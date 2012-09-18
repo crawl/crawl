@@ -1,0 +1,54 @@
+%%%%
+Abyssal Knight
+
+verehren Lugonu und wurden aus der Abyssos ausgesandt, um Verderbtheit und
+Chaos zu verbreiten.
+%%%%
+Air Elementalist
+
+kennen den Spruch Stromschlag. Später erlaubt ihnen das breitgefächerte Buch
+der Winde, im Überlebenskampf zu bestehen.
+%%%%
+Arcane Marksman
+
+sind für den Fernkampf bewaffnet und verwenden Magie, um ihre Feinde anfälliger
+für derartige Angriffe zu machen.
+%%%%
+Artificer
+
+beginnen mit einigen magischen Gerätschaften und können mit solchen Werkzeugen
+kompetent umgehen.
+%%%%
+Berserker
+
+Berserker glauben an Trog, den Magiehassenden Gott der Raserei. Nicht viel kann
+einen tobenden Berserker anfangs aufhalten, außer die eigene Hybris
+%%%%
+Fighter
+
+Kämpfer kommen mit Rüstung und Schild, sowie einer Waffe ihrer Wahl. Sie haben
+mehr Lebenspunkte als jeder andere Hintergrund.
+%%%%
+Gladiator
+
+Gladiatoren sind bereit für die Arena mit leichter Rüstung, Schild, Netzen und
+einer Waffe ihrer Wahl.
+%%%%
+Healer
+
+Heiler sind Anhänger Elyvilons, bereit sich selbst und andere zu heilen. Solche
+Heilung kann Bestien und Barbaren befrieden, was Erfahrung einbringt.
+%%%%
+Hunter
+
+Jäger können aus der Ferne angreifen ohne auf nervtötende Magie zurückgreifen
+zu müssen.
+%%%%
+Necromancer
+
+Nekromanten sind Zauberer, die sich auf Todesmagie spezialisieren.
+%%%%
+Wanderer
+
+Wanderer beginnen mit zufälliger Ausrüstung und Fertigkeiten.
+%%%%

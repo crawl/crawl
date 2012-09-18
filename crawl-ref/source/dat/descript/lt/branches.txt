@@ -74,6 +74,15 @@ Gyvačių Irštva yra penkių lygių gylio ir turi gyvatišką runą. Požemyje 
 rasti tik du įėjimus į Gyvačių Irštvos, Pelkės, Seklumų arba Vorų Lizdo
 atšakas. Jei Gyvačių irštva yra, įėjimą į ją rasite tarp Irštva:3 ir Irštva:6.
 %%%%
+Spider Nest
+
+Ir jūs manėte, kad paimsite šlepetę į ranką ir viskas bus baigta? Jei dar
+neturite arachnofobijos, greit turėsite.
+
+Vorų Lizdas yra penkių lygių gylio ir turi voratinklių runą. Požemyje galima
+rasti tik du įėjimus į Gyvačių Irštvos, Pelkės, Seklumų arba Vorų Lizdo
+atšakas. Jei yra Vorų Lizdas, įėjimą į jį rasite tarp Irštva:3 ir Irštva:6.
+%%%%
 Slime Pits
 
 Beformė rūgščių, drebučių ir gleivių karalystė. Bet kokie protingų būtybių
