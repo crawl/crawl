@@ -1737,10 +1737,12 @@ mac-app-console: all
 # Canned tests
 #
 
-test: $(foreach i, test 1 2 3 4 5 6 7, test-$(i))
+TESTS=test woken_rest unwoken_rest fireworks cerebov pan_lords miscasts kraken
+test: $(foreach i, $(TESTS), test-$(i))
 
 test-%: $(GAME) util/fake_pty
 	util/fake_pty test/stress/run $*
+	@echo "Finished: $*"
 
 util/fake_pty: util/fake_pty.c
 	$(if $(HOSTCC),$(HOSTCC),$(CC)) -Wall $< -o $@ -lutil
