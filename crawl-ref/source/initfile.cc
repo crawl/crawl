@@ -2312,9 +2312,9 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             lang = LANG_IT, lang_name = "it";
         else if (field == "ko" || field == "korean" || field == "한국의")
             lang = LANG_KO, lang_name = "ko";
-        else if (field == "lt" || field == "lithuanian" || field == "Lietuvos")
+        else if (field == "lt" || field == "lithuanian" || field == "lietuvos")
             lang = LANG_LT, lang_name = "lt";
-        else if (field == "lv" || field == "latvian" || field == "Latvijas")
+        else if (field == "lv" || field == "latvian" || field == "latvijas")
             lang = LANG_LV, lang_name = "lv";
         else if (field == "pl" || field == "polish" || field == "polski")
             lang = LANG_PL, lang_name = "pl";
