@@ -1309,7 +1309,6 @@ static void _abyss_generate_new_area()
     map_bitmask abyss_genlevel_mask;
     _abyss_wipe_unmasked_area(abyss_genlevel_mask);
     dgn_erase_unused_vault_placements();
-    ASSERT(env.cloud_no == 0);
 
     you.moveto(ABYSS_CENTRE);
     abyss_genlevel_mask.init(true);
