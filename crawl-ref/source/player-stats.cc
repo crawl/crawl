@@ -100,7 +100,7 @@ void attribute_increase()
     mouse_control mc(MOUSE_MODE_MORE);
     // Calling a user-defined lua function here to let players reply to the
     // prompt automatically.
-    clua.callfn("choose_stat_gain", 0);
+    clua.callfn("choose_stat_gain", 0, 0);
 
     while (true)
     {
