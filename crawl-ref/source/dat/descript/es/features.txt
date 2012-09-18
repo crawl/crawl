@@ -40,13 +40,6 @@ A deep blue altar of Sif Muna
 Un altar del azul más oscuro, cubierto de intrincadas formas y escrituras en
 alfabetos ya olvidados hace mucho, dedicado a Sif Muna.
 %%%%
-A detected secret door
-
-Una puerta de madera, astutamente oculta. Solía ser una puerta secreta, pero al
-menos para tí ya no es secreta.
-
-Para abrirla, simplemente camina hacia ella, o usa 'O'
-%%%%
 A dry fountain
 
 Una fuente reseca que ha visto días mejores.
@@ -96,6 +89,11 @@ Reino tienen una temible y cuestionable reputación, pero algo parece ser
 cierto: los monstruos que habitan este área y protegen al Orbe son poderosos y
 extraños - algunos de ellos no se encuentran más que aquí.
 %%%%
+A gateway leading out of the Abyss
+
+Un portal para salir de este maldito sitio, que palpita y se desliza en un
+escenario siempre cambiante.
+%%%%
 A gateway to a ziggurat
 
 Este portal conduce a un antiguo zigurat, un lugar de retos y riquezas por
@@ -141,6 +139,33 @@ A granite statue
 A pesar de la dureza de la piedra, los rasgos de esta estatua han desaparecido
 hace tiempo.
 %%%%
+A hole to the Spider Nest
+
+Parece más bien un precipicio con algo de inclinación que una escalera, pero te
+servirá. Para morir a manos de los más potentes venenos del mundo, claro está.
+%%%%
+A labyrinth entrance
+
+Un portal a un intrincado laberinto diseñado por sutiles y maliciosas mentes,
+cuya salida esta guardada por un temible monstruo. Muchos desafortunados
+aventureros se han extraviado en los retorcidos y cambiantes corredores y
+muerto de inanición.
+%%%%
+A magical trap
+
+Un mecanismo mágico diseñado para causar daño a los saqueadores, que no puede
+ser desactivado.
+%%%%
+A mechanical trap
+
+Un dispositivo mecánico diseñado para causar daño a los invasores. No obstante,
+un aventurero habilidoso puede intentar desarmarlo.
+%%%%
+A metal wall
+
+Un muro de un metal azul grisáceo. Como cualquier electricista del calabozo
+bien sabe, esta pared actúa como un punto de tierra.
+%%%%
 A floor
 
 Suelo de calabozo.
@@ -163,6 +188,11 @@ A black marble wall
 
 El mármol reluce y brilla. ¡En verdad es precioso!
 %%%%
+A marble floor
+
+Mientras que las paredes están echas de mármol negro, el suelo es de mármol
+blanco y plateado, con algunas trazas rosáceas dispersas.
+%%%%
 A crumbling stone wall
 
 Parece antiguo.
@@ -180,6 +210,11 @@ A damp floor
 
 Quizás sea la humedad o el constante flujo de nubes, pero el suelo de este
 lugar siempre está mojado.
+%%%%
+A hot floor
+
+A gran profundidad bajo la tierra arde el más abrasador fuego que existe: el
+fuego del infierno. Al tocar el suelo notas que está caliente.
 %%%%
 A black wall
 
@@ -202,6 +237,43 @@ tan grande como para pasar a través.
 A golden statue
 
 Una estatua de oro macizo de un santo.
+%%%%
+A heavily etched metal wall
+
+Esta pared de metal está grabada con murales que representan, con horripilante
+detalle, lo que le ocurrirá a cualquiera que sea descubierto intentando robar
+de las Cámaras. Verlo, te provoca nauseas.
+%%%%
+A heavily etched wall of green crystal
+
+Esta pared de cristal verdoso está grabada con murales que representan, con
+horripilante detalle, lo que le ocurrirá a cualquiera que sea descubierto
+intentando robar de las Cámaras. Verlo, te provoca nauseas.
+%%%%
+A granite stump
+
+Este tocón de granito probablemente fué una estatua en algún momento del
+pasado.
+%%%%
+A large window
+
+Una ventana empotrada en el lateral de una enorme tubería metálica, que permite
+observar el flujo del agua en su interior.
+%%%%
+A glass window
+
+Un ventana picada y con cristales extremadamente duros.
+%%%%
+A granite statue of a fallen hero
+
+Un estatua a tamaño real de un enano presidiendo esta sala. No puedes evitar
+tener la sensación de que te está observando.
+%%%%
+A flagged portal
+
+Este portal lleva al calabozo prohibido del caballero demente. Lo sabrás por el
+pendón negro mostrando armas en aspa. Parece que sería mejor que entraras antes
+de que estandarte sea descendido.
 %%%%
 A flickering gateway to a bazaar
 
@@ -232,6 +304,16 @@ A frozen archway
 Un frente permanentemente frío parece que rodea a este portal. Lo que quiera
 que viva al otro lado estará lleno de crueldad y furia ártica. Te percatas que
 el arco se está derritiendo.
+%%%%
+A glowing drain
+
+En todo asentamiento figuran las desagradables cloacas y desagües, ignoradas
+por la mayoría, pero lugar de refugio para algunos. Viejas historias hablan de
+peligrosas criaturas bañadas por una asquerosa agua verdosa alimentándose las
+unas de las otras sin ninguna piedad. Las historias también relatan de valiosos
+objetos dejados en el lugar por atrevidos visitantes, aunque desafortunados,
+que se cubren de polvo en húmedas cavernas. Tienes la extraña sensación de que
+el desagüe se desmoronará muy pronto.
 %%%%
 A dark tunnel
 

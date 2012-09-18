@@ -1,0 +1,313 @@
+%%%%
+Dungeon
+
+Comment cet endroit étrange a été créé reste un mystère. Certains disent que
+c'est le terrain de jeu des dieux qui s'ennuyaient, alors que d'autres
+prétendent qu'il a été façonné par toutes sortes d'espèces fuyant la lumière et
+l'outre-monde. Peu importe en vérité l'origine de cette caverne, elle est
+remplie de richesse autant que de terribles dangers. Peu en sont ressortis
+vivants et encore moins on garde suffisamment de santé mentale pour en parler.
+
+Le donjon est profond de 27 niveaux mais honnêtement, c'est seulement le début.
+%%%%
+Temple
+
+Le Temple des Dieux, un lieu de paix et de refuge loin des insanités du donjon.
+Il est localisé entre les niveaux 4 et 7 du donjon principal.
+%%%%
+Orcish Mines
+
+Les mines des orcs, emplies de leur or mais, perfides et il y est très facile
+de s'y faire prendre au piège.
+
+Les Mines Orcs sont profondes de quatre niveaux et contiennent l'entrée des
+Halls Elfiques.
+%%%%
+Elven Halls
+
+Alors que la plupart des elfes refuseraient de venir habiter dans des
+souterrains si sombres et complexes, les elfes profonds osent. Leurs halls sont
+emplies de richesses mais, tout explorateur doit être conscient des prouesses
+magiques légendaires de ce peuple.
+
+Les Halls Elfiques sont profonds de trois niveaux.
+%%%%
+Dwarven Hall
+
+Ces halls de pierre finement gravées sont la demeure des Nains des Profondeurs.
+Leurs compétences inégalées en métallurgie leur permettent de forger
+suffisamment d'armes contre les gens comme vous.
+
+Il n'est composé que d'un unique niveau.
+%%%%
+Lair
+
+La plupart des aventuriers considère le Repaire des Bêtes comme un excitant
+changement de climat. En effet, il y aurait des choses à dire sur comment être
+charcuté, dépecé et mangé plutôt que tranché, brulé ou poignardé.
+
+Le Repaire fait huit niveaux de profondeur et contient des escaliers menant à
+trois autre branches.
+%%%%
+Swamp
+
+Un marécage inhospitalier, plein d'oozes, de mouches, de sangsues et de larges
+monstres carnivores salivant.
+
+Le Marécage est profond de cinq niveaux et contient la rune en décomposition.
+Le donjon ne propose que deux des branches suivantes : la Fossé des Serpents,
+le Marécage, les Côtes et le Nid des Araignées. Si le Marécage est présent, son
+entrée est située entre Repaire:2 et Repaire:5.
+%%%%
+Shoals
+
+De loin, vous entendez le bruit des vagues et sentez les embruns salés. En
+atteignant les Côtes, vous êtes impressionné par les plages exotiques dans ses
+souterrains, créant quelques îles dans une vaste mer. Soudainement, un cri
+effroyable déchire l'air suivi d'un glouglou. Avec impatience, vous observez
+les alentours et vous demandez : Qui est le prédateur ? Et qui est la proie ?
+
+Les Côtes sont profondes de cinq niveaux et contiennent la rune écaillée. Deux
+des branches suivantes sont présentes dans le donjon : la Fosse aux Serpents,
+le Marécage, les Côtes et le Nid des Araignées. Si les Côtes sont présentes,
+leur entrée est située entre Repaire:3 et Repaire:6.
+%%%%
+Snake Pit
+
+Habitat des serpent, repaire des nagas.
+
+La Fosse aux Serpents est profonde de cinq niveaux et contient la rune en
+serpentine. Deux des branches suivantes sont présentes dans le donjon : la
+Fosse aux Serpents, le Marécage, les Côtes et le Nid des Araignées. Si la Fosse
+aux Serpents est présente, son entrée est située entre Repaire:3 et Repaire:6.
+%%%%
+Spider Nest
+
+Vous pensiez qu'il suffirait de soulever une botte pour les écraser ? Si vous
+n'êtes pas encore arachnophobe, c'est pour bientôt.
+
+Le Nid des Araignées est profond de cinq niveaux et contient la rune
+arachnéenne. Deux des branches suivantes sont présentes dans le donjon : la
+Fosse aux Serpents, le Marécage, les Côtes et le Nid des Araignées. Si le Nid
+des Araignées est présente, son entrée est située entre Repaire:3 et Repaire:6.
+%%%%
+Slime Pits
+
+La royaume amorphe des acides, gelées et slimes. Toute trace d'intelligence a
+été depuis longtemps dissoute. Cependant, il y a des rumeurs de trésors
+formidables, cachés en toute sécurité dans des chambres secrètes sans porte ni
+fenêtre, évitant ainsi la corrosion de l'acide.
+
+La Fosse des Gelées est profonde de six niveaux  et contient la rune visqueuse.
+Son entrée est entre Repaire:6 et Repaire:8.
+%%%%
+Vaults
+
+Probablement construite par un puissant fou, les Chambres Fortes sont réputées
+pour garder de grands trésors. Les traces de sang entourant son entrée
+indiquent aussi, qu'elles abritent une grande violence.
+
+Les Chambres Fortes sont profondes de huit niveaux et contiennent la rune
+argentée. Son entrée peut être trouvée entre les niveaux 14 et 19 du donjon
+principal.
+%%%%
+Hall of Blades
+
+Il y a fort longtemps, toutes les dagues, haches et armes d'hast se
+réunissaient la nuit pour danser la valse, rêvant de champs de bataille sans
+homme ni bête. Ce temps est révolu mais, ces armes sont toujours en sommeil
+ici.
+
+Le Hall des Lames est un unique niveau et peut être trouvé entre Chambres
+Fortes:4 et Chambres Fortes:6.
+%%%%
+Crypt
+
+Vous entendez des gémissements et les cris des âmes torturées, souffrant de
+maux inexprimables.
+
+La Crypte est profonde de cinq niveaux et peut être trouvée entre Caveau:2 et
+Caveau:4.
+%%%%
+Tomb
+
+La Tombe des Anciens est un lieu de damnation, peuplé d'horreurs animées par
+une nécromancie abjecte.
+
+LA Tombe est profonde de trois niveaux et contient la rune dorée. Son entrée se
+trouve en Crypte:2 ou Crypte:3.
+%%%%
+Hell
+
+L'antichambre des quatre enfers est gardé par Geryon. Les héros qui prouvent
+leur valeur dans le vestibule et soufflent dans la corne de Geryon peuvent
+explorer les différentes régions des enfers : Dis, Gehenna, Cocytus et
+Tartarus.
+
+Des portails menant au Vestibule des Enfers peuvent être trouvés en abondance
+dans les parties les plus profondes du donjon principal.
+%%%%
+Dis
+
+La Cité d'Acier de Dis. Qui survivra au test de l'acier ?
+
+Dis est profonde de sept niveaux et contient la rune d'acier. Elle peut être
+atteinte depuis le Vestibule de l'Enfer.
+%%%%
+Gehenna
+
+Les feux de Gehenna ont brulé de nombreux héros confiant et, ils continueront à
+en brûler d'avantage.
+
+Gehenna est profonde de sept niveaux et contient la rune d'obsidienne. Elle
+peut être atteinte depuis le Vestibule de l'Enfer.
+%%%%
+Cocytus
+
+Une étendue désertique sombre et gelée.
+
+Cocytus est profond de sept niveaux et contient la rune gelée.  Il peut être
+atteint depuis le Vestibule de l'Enfer.
+%%%%
+Tartarus
+
+Un enfer décadent où, au fil du temps, les morts-vivants, les démons et les
+diables de cet endroit ont drainé toute la vie des chasseurs de trésors..
+
+Tartarus est profond de sept niveau et contient la rune osseuse. Il peut être
+atteint depuis le Vestibule de l'Enfer.
+%%%%
+Zot
+
+Une région du donjon qui est complexe, verrouillée par sécurité et à laquelle
+on fait référence avec les mots "folie", "fureur" et "folie". Seuls les
+aventuriers les plus fous oseront briser le sceau qui protège son entrée et
+plonger dans ses profondeurs - dans le vain espoir de poser les yeux sur le
+légendaire artéfact.
+
+Le Royaume de Zot est profond de cinq niveaux et est uniquement accessible en
+transportant au moins trois runes.
+%%%%
+Forest
+
+Les arbres sont en train d'attaquer !
+%%%%
+Abyss
+
+Les Abysses sont vraiment un endroit bizarre, en perpétuel changement et
+complètement tordu. Elles sont remplies de toutes sortes de monstres, la
+plupart de nature démoniaque, dont le but commun est de se repaitre des
+visiteurs. C'est aussi un dépotoir pour de nombreux sorciers, qui aime à y
+envoyer les pseudo-champions tels que vous. Apparemment, il y aurait une
+structure dans ce chaos, car Lugonu semble concocter un plan pour ce lieu et
+ses habitants.
+
+La rune abyssale peut être trouvée ici. Les Abysses peuvent être intégrées
+volontairement grâce aux portails dans les plus profonds niveaux du donjon
+principal.
+%%%%
+Pandemonium
+
+Pandémonium est un royaume infini de douleur et de souffrance. Bien que vous
+puissiez y voir une source d'objets incroyable, tous ces trésors sont gardés
+par des hordes de démons et de cruels seigneurs démons. Beaucoup de héros,
+confondant confiance et mégalomanie, sont morts malencontreusement dans les
+pires tourments et les feux infernaux.
+
+Pandémonium est sans fin. Des portails pour vous y rendre se trouve en
+abondance dans les plus profonds niveaux du donjon principal. Notez qu'en
+revenir peut s'avérer très difficile.
+
+Vous pouvez trouver pas moins de 5 runes dans le Pandémonium:
+ • la rune ardente dans le royaume brûlant de Cerebov
+ • la rune éclatante dans le domaine radioactif de Mnoleg
+ • la rune magique est gardée par les pouvoirs arcaniques de Lom Lobon et de
+ses serviteurs
+ • la rune sombre git das la demeure fantomatique de Gloorx Vloq
+ • les runes démoniaques existent en de multiples copies, appartenant à des
+seigneurs de moindre envergure
+%%%%
+Ziggurat
+
+Une série d'arènes, chacune contenant des richesses plus grandes et d'encore
+plus grands dangers que les précédents. Quelque soit l'entité qui a créé cette
+monstruosité, son entrée à un prix. Méfiez-vous, car un ziggurat n'est pas un
+lieu pour les cœurs faibles : même les plus braves et talentueux ont rencontré
+leur limite ici. Alors qu'un portail permet de sortir à chaque niveau, une fois
+sorti, un ziggurat ne peut être à nouveau visité.
+%%%%
+Labyrinth
+
+Le Labyrinthe est un vaste et complexe labyrinthe conçu par un esprit subtil et
+malicieux pour une raison qui s'est perdue dans l'histoire. Une vieille légende
+prétend que le labyrinthe aurait été construit comme prison pour un minotaure
+redoutable. Des rumeurs plus récentes disent que la bête vit encore, gardant la
+seule sortie du labyrinthe — autant qu'un lot de trésors pris aux aventuriers
+suffisamment stupides pour y avoir pénétrer et y être mort de faim. Prenez
+garde à l'intérieur car les murs bougent parfois créant de nouveaux passages
+dans le labyrinthe, sinon vos propres possessions pourraient grossir le butin
+du minotaure.
+%%%%
+Bazaar
+
+En dehors des vendeurs qui ont établi leurs échoppes à l'intérieur même du
+donjon, d'autres essayent de gagner leur vie en voyageant d'un endroit à un
+autre. Les Bazars comprennent un certain nombre de magasins, offrant de
+meilleurs articles à un meilleur prix.
+
+De plus, soyez averti que leur mode de vie nomade leur a enseigné à
+s'approprier n'importe quel objet que les aventuriers laissent derrière eux
+avant de partir rapidement, probablement pour aller le vendre ailleurs.
+%%%%
+Trove
+
+Il était une fois un entreprenant voleur et magicien, qui était terrifié à
+l'idée d'être pris sur le fait. Il créa un système de portails menant aux
+coffres des riches et à des chambres secrètes pleine de butins. Trop apeuré
+d'aller les piller lui-même, il préféra permettre à d'autres de les emprunter
+contre une somme exorbitante. En artificier intelligent, il conçu ses portails
+pour diriger un voyageur vers la chambre contenant les trésors les plus
+adaptées à ses besoins.
+
+Les objets à l'intérieur de ces caches seront très certainement très utiles
+mais attention : le magicien est mort depuis longtemps et, même de son vivant,
+il n'a jamais offert de garantie de remboursement.
+%%%%
+Sewer
+
+Chaque établissement a son propre système d'égouts et de drains, ignorés par la
+plupart. Des rumeurs parlent de créatures dangereuses, se baignant dans l'eau
+verte et malodorante, dévorant quiconque s'approche de leur territoire. Les
+histoires racontent aussi la présence d'objets précieux laissés par des
+visiteurs audacieux mais malchanceux.
+%%%%
+Ossuary
+
+Une petite tombe contenant les restes de quelques parents éloignés des
+pharaons. C'est sans nul doute un site largement piégé et, ses habitants ni
+apprécient guère le pillage.
+%%%%
+Bailey
+
+Le château d'un seigneur. Il est sans doute protégé par des remparts et des
+soldats entraînés.
+%%%%
+Ice Cave
+
+Une grotte désolée taillée dans la glace. Les sculptures complexes et les
+statues qui en garnissent les chambres ont été usées par le poids des années et
+le lent processus de fonte et de gel successifs.
+%%%%
+Volcano
+
+Construit dans d'énormes blocs d'obsidienne, cette étonnante chambre a
+probablement été un temple dédiée à une étrange divinité ou, peut-être la
+demeure d'un puissant géant du feu. L'atmosphère est lourde, la chaleur
+accablante et, le grondement du volcan ne cesse de résonner.
+%%%%
+Wizlab
+
+Le laboratoire qu'un magicien dont le portail a été inconsciemment laissé
+ouvert. Méfiez-vous car les mages aiment protéger leurs possessions avec pièges
+et monstres de leur propre fabrication !
+%%%%

@@ -1,0 +1,299 @@
+%%%%
+Fighting
+
+Kovos įgūdis didina taiklumą ir žalą artimoje kovoje, ir taip pat padidina
+gyvybės taškų maksimumą.
+%%%%
+Short Blades
+
+Įgūdžiai naudojant tam tikro tipo ginklus leidžia su to tipo ginklais atakuoti
+greičiau, taikliau ir stipriau. Paprastai rekomenduojama koncentruoti pastangas
+į vieną ar du ginklų tipus.
+
+Kardai turi reputaciją, kad jie daro gana nedaug žalos vėlesnėje žaidimo
+stadijoje, bet iš kitos pusės jie yra geriausi įrankiai nudūrimui.
+
+Įgūdžiai naudojant Kardus palengvina mokymasi naudoti Kalavijus, ir
+atvirkščiai.
+%%%%
+Long Blades
+
+Įgūdžiai naudojant tam tikro tipo ginklus leidžia su to tipo ginklais atakuoti
+greičiau, taikliau ir stipriau. Paprastai rekomenduojama koncentruoti pastangas
+į vieną ar du ginklų tipus.
+
+Įgūdžiai naudojant Kalavijus palengvina mokymasi naudoti Kardus.
+%%%%
+Axes
+
+Įgūdžiai naudojant tam tikro tipo ginklus leidžia su to tipo ginklais atakuoti
+greičiau, taikliau ir stipriau. Paprastai rekomenduojama koncentruoti pastangas
+į vieną ar du ginklų tipus.
+
+Kirviai yra vieni stipriausių dvejų rankų ginklų, bet norint juos efektyviai
+valdyti, reikia gerų įgūdžių.
+
+Įgūdžiai su Kirviais palengvina mokymasi naudotis Vėzdais ir Kovos Spragilais,
+bei Ilgakočiais ginklais, ir atvirkščiai.
+%%%%
+Maces & Flails
+
+Įgūdžiai naudojant tam tikro tipo ginklus leidžia su to tipo ginklais atakuoti
+greičiau, taikliau ir stipriau. Paprastai rekomenduojama koncentruoti pastangas
+į vieną ar du ginklų tipus.
+
+Įgūdžiai Vėzdais ir Kovos Spragilais palengvina mokymasi naudoti Kirvius arba
+Lazdas, ir atvirkščiai.
+%%%%
+Polearms
+
+Įgūdžiai naudojant tam tikro tipo ginklus leidžia su to tipo ginklais atakuoti
+greičiau, taikliau ir stipriau. Paprastai rekomenduojama koncentruoti pastangas
+į vieną ar du ginklų tipus.
+
+Ilgakočius ginklus galima aktyvuoti su 'v' norint atakuoti priešininkus
+esančius dviejų laukelių atstumu.
+
+Įgūdžiai naudojant Ilgakočius ginklus palengvina Kardų arba Lazdų mokymasi, ir
+atvirkščiai.
+%%%%
+Staves
+
+Įgūdžiai naudojant tam tikro tipo ginklus leidžia su to tipo ginklais atakuoti
+greičiau, taikliau ir stipriau. Paprastai rekomenduojama koncentruoti pastangas
+į vieną ar du ginklų tipus.
+
+Lazdos reikalauja gana nedaug įgūdžių, kad būtų naudojamos efektyviausiai, bet
+joms trūksta kitų ginklų rūšių didelio žalos potencialo.
+
+Įgūdžiai naudojant Lazdas palengvina mokymasi naudoti Vėzdus ir Kovos Spragilus
+arba Ilgakočius ginklus, ir atvirkščiai.
+%%%%
+Slings
+
+Įgūždiai su tam tikro tipo tolimosiomis atakomis leidžia padaryti daugiau žalos
+naudojant atitinkamą svaidomąjį ginklą.
+
+Laidynių įgūdžiai palengvina Mėtymo mokimasi, ir atvirkščiai.
+%%%%
+Bows
+
+Įgūždiai su tam tikro tipo tolimosiomis atakomis leidžia padaryti daugiau žalos
+naudojant atitinkamą svaidomąjį ginklą.
+%%%%
+Crossbows
+
+Įgūždiai su tam tikro tipo tolimosiomis atakomis leidžia padaryti daugiau žalos
+naudojant atitinkamą svaidomąjį ginklą.
+%%%%
+Darts
+
+Įgūždiai su tam tikro tipo tolimosiomis atakomis leidžia padaryti daugiau žalos
+naudojant atitinkamą svaidomąjį ginklą.
+%%%%
+Throwing
+
+Mėtymo įgūdžių treniravimas padaro mėtomus ginklus (kaip ietis) ir spjaudykles
+efektyvesnius. Ypatingai šie įgūdžiai padidiną tikimybę, kad grįžtamieji
+ginklai sugrįš, ir kad kai kurios magiškos adatos, iššautos spjaudykle, turės
+poveikį.
+
+Įgūdžiai Mėtyme palengvina mokymasi naudoti Svaidykles, ir atvirkščiai.
+%%%%
+Armour
+
+Šarvų įgūdžiai padidina ŠK, gautą dėvint sunkius šarvus, ir taip pat padeda
+sumenkinti sunkių šarvų trukdžius artimoje kovoje ir naudojant magiją.
+%%%%
+Dodging
+
+Išsisukinėjimo įgūdžiai įtakoja tikimybę išvengti atakos, nepaisant to ar ji
+artimos kovos, per atstumą ar magiška. Kai kurių atakų tipų negalima išvengti.
+kaip pavyzdžiui sustiprinimai (kuriems reikia atsispirti) ir sprogimai.
+%%%%
+Stealth
+
+Treniruojant Slaptumą, sumažėja tikimybė, kad baisūnai tave pastebės, kai jie
+miega arba yra šiaip nėra budrūs, ir padidėja tikimybė, kad jie pames tavo
+pėdsakus, tau pasitraukus iš jų regėjimo lauko. Turėk omeny, kad baisūnai
+darosi įtaresni ir pastabesni, leidžiantis žemyn.
+%%%%
+Stabbing
+
+Nudūrimas yra įgūdis įtakojantis tikimybę, kad išsiblaškiusio arba bejėgio
+padaro užpuolimas (paprastai naudojant kardą), padarys daug žalos, taip pat
+kiek bus padaryta papildomos žalos. Kai kurie dievai gali į tai nepalankiai
+žiūrėti.
+%%%%
+Shields
+
+Aukšto lygio Skydų įgūdžiai padeda blokuoti artimas arba tolimas (magiškas ir
+ne) atakas naudojant laikomą (arba magišką) skydą. Kai kurios atakos, tokios
+kaip pareinantys žaibai, negali būti blokuojamos.
+%%%%
+Unarmed Combat
+
+Įgūdžiai Beginklėje kovoje padidina taiklumą, žalą ir greitį artimoje kovoje,
+kovojant plikomis rankomis. Jie taip pat leidžia kartais smūgiuoti antrąja
+ranka atliekant papildomą ataką artimoje kovoje, su sąlyga, kad ta ranka yra
+laisva.
+%%%%
+Spellcasting
+
+Burtų treniravimas palengvina burtų mokymasi ir naudojimą, taip pat padidinant
+tavo magijos rezervus. Burtų lygio įgyjimas suteikia daugiau "burtažodžių
+taškų", kuriuos galima išleisti naujiems burtams. Burtų įgūdis ir tavo išmintis
+yra vieninteliai faktoriai priešiškai įtakojantys alkį, sukeliamą naudojant
+burtus.
+%%%%
+Conjurations
+
+Įgūdžiai magijos "mokykloje" palengvina tos mokyklos burtažodžių mokymasi ir
+naudojimą. Daug burtažodžių priklauso kelių mokyklų kombinacijoms. Tokiu atveju
+burto sėkmė ir galia priklausys nuo įgūdžio tose mokyklose vidurkio.
+
+Kerai yra koviniai burtažodžiai, kurie dažniausia veikia sukuriant trumpalaikę
+materiją ir siunčiant ją link aukos darant tiesioginę žalą. Įgūdžiai Keruose
+paprastai padidiną šių burtažodžių žalą ir kartais įtakoja burtažodžių atstumą
+ir poveikio plotą.
+%%%%
+Hexes
+
+Įgūdžiai magijos "mokykloje" palengvina tos mokyklos burtažodžių mokymasi ir
+naudojimą. Daug burtažodžių priklauso kelių mokyklų kombinacijoms. Tokiu atveju
+burto sėkmė ir galia priklausys nuo įgūdžio tose mokyklose vidurkio.
+
+Užkerėjimai skirti suteikti įvairius sustiprinimus šalia esantiems objektams.
+Nors jie nedaro tiesioginės žalos, apžavai gali efektyviai išjungti
+priešininką, nors kad tai suveiktų, dažniausiai reikia įveikti priešininko
+pasipriešinimą priešiškiems sustiprinimams. Įgūdžiai Užkerėjimuose padeda
+įveikti šį pasipriešinimą.
+%%%%
+Charms
+
+Įgūdžiai magijos "mokykloje" palengvina tos mokyklos burtažodžių mokymasi ir
+naudojimą. Daug burtažodžių priklauso kelių mokyklų kombinacijoms. Tokiu atveju
+burto sėkmė ir galia priklausys nuo įgūdžio tose mokyklose vidurkio.
+
+Apžavai suteikia įvairių stiprinančių aurų. Apžavų treniravimas dažnai
+prailgins šių aurų veikimo laiką arba sustiprins jų efektus.
+%%%%
+Summonings
+
+Įgūdžiai magijos "mokykloje" palengvina tos mokyklos burtažodžių mokymasi ir
+naudojimą. Daug burtažodžių priklauso kelių mokyklų kombinacijoms. Tokiu atveju
+burto sėkmė ir galia priklausys nuo įgūdžio tose mokyklose vidurkio.
+
+Iškvietimai nagrinėja būtybių iš kitų realybės plotmių iškvietimą prisijungti
+prie tavo armijos arba atitraukti tavo priešų dėmesį. Iškvietimo įgūdžio
+stiprinimas gali turėti skirtingus efektus, priklausomai nuo burtažodžio,
+tikius kaip ilgesnė trukmė, galingesni sąjungininkai arba mažesnė tikimybė
+sukurti priešiškus padarus. Turėk omeny, kad iškviestos būtybės nepalieka
+lavonų ir nesuteikia patirties užmušant, ir kad jų aprūpinimas yra toks pat
+trumpalaikis kaip ir jos pačios.
+%%%%
+Necromancy
+
+Įgūdžiai magijos "mokykloje" palengvina tos mokyklos burtažodžių mokymasi ir
+naudojimą. Daug burtažodžių priklauso kelių mokyklų kombinacijoms. Tokiu atveju
+burto sėkmė ir galia priklausys nuo įgūdžio tose mokyklose vidurkio.
+
+Mirties magija yra gyvybės sekinimo ir įgavimo menas, nors yra dažniausiai
+asocijuojamas su zombiais ir kitais nemirėliais. Mirties magijos burtažodžiai
+turi didelę efektų įvairovę, pradedant burtažodžiais sukurti arba valdyti
+nemirėlius baigiant burtažodžiais suteikiančius įvairių formų velnišką gydymą.
+%%%%
+Translocations
+
+Įgūdžiai magijos "mokykloje" palengvina tos mokyklos burtažodžių mokymasi ir
+naudojimą. Daug burtažodžių priklauso kelių mokyklų kombinacijoms. Tokiu atveju
+burto sėkmė ir galia priklausys nuo įgūdžio tose mokyklose vidurkio.
+
+Translokacijos sutelkia dėmesį būtybių arba objektų judėjimui erdvėje,
+įskaitant naudingus burtažodžius leidžiančius greitai save perkelti per trumpą
+atstumą arba išsiųsti tavo priešus toliau nuo tavęs.
+%%%%
+Transmutations
+
+Įgūdžiai magijos "mokykloje" palengvina tos mokyklos burtažodžių mokymasi ir
+naudojimą. Daug burtažodžių priklauso kelių mokyklų kombinacijoms. Tokiu atveju
+burto sėkmė ir galia priklausys nuo įgūdžio tose mokyklose vidurkio.
+
+Virsmai nagrinėja formų keitimą. Daugelis Virsmų yra susiję su savo formos
+keitimu, bet mokykla taip pat turi burtažodžius pakeisti savo priešų formai
+arba aplinkinių objektų transformavimui.
+%%%%
+Fire Magic
+
+Įgūdžiai magijos "mokykloje" palengvina tos mokyklos burtažodžių mokymasi ir
+naudojimą. Daug burtažodžių priklauso kelių mokyklų kombinacijoms. Tokiu atveju
+burto sėkmė ir galia priklausys nuo įgūdžio tose mokyklose vidurkio.
+
+Ugnies magija daugiausiai dėmesio skiria ugnies žalai iš atstumo, su daug
+efektyvių Kerų.
+
+Įgūdžiai Ugnies Magijoje apsunkina Ledo Magijos mokymasį.
+%%%%
+Ice Magic
+
+Įgūdžiai magijos "mokykloje" palengvina tos mokyklos burtažodžių mokymasi ir
+naudojimą. Daug burtažodžių priklauso kelių mokyklų kombinacijoms. Tokiu atveju
+burto sėkmė ir galia priklausys nuo įgūdžio tose mokyklose vidurkio.
+
+Ledo Magija turi įvairovę tiesioginės žalos burtažodžių, taip pat keletą
+gynybinių efektų, kaip burtažodžiai sukurti laikiną skydą ir šarvus iš ledo.
+
+Įgūdžiai Ledo Magijoje apsunkina Ugnies Magijos mokymasi ir atvirkščiai.
+%%%%
+Air Magic
+
+Įgūdžiai magijos "mokykloje" palengvina tos mokyklos burtažodžių mokymasi ir
+naudojimą. Daug burtažodžių priklauso kelių mokyklų kombinacijoms. Tokiu atveju
+burto sėkmė ir galia priklausys nuo įgūdžio tose mokyklose vidurkio.
+
+Oro Magija suteikia burtus žalojančius tiesiogiai vėju, taip pat ir garsius bet
+labai galingus žaibų burtažodžius. Taip pat suteikia keletą pagalbinių
+burtažodžių, tokių kaip Apžavai, iškviesti vėją palengvinti judėjimui arba
+apginti nuo atakų iš toli.
+
+Įgudimas Oro Magijoje apsunkina Žemės Magijos mokymasį, ir atvirkščiai.
+%%%%
+Earth Magic
+
+Įgūdžiai magijos "mokykloje" palengvina tos mokyklos burtažodžių mokymasi ir
+naudojimą. Daug burtažodžių priklauso kelių mokyklų kombinacijoms. Tokiu atveju
+burto sėkmė ir galia priklausys nuo įgūdžio tose mokyklose vidurkio.
+
+Žemės Magija turi burtažodžius kurie daro daug tiesioginės fizinės žalos,
+kuriai negalima atsispirti taip kaip galima ugnies, šalčio ir žaibo žalai. Ją
+taip pat galima sujungti su kai kuriais Virsmo Magijos burtažodžiais kurie
+leidžia suskystinti žemę aplink arba paversi priešus į akmenis.
+
+Įgūdžiai Žemės Magijoje apsunkina Oro Magijos mokymasi ir atvirkščiai.
+%%%%
+Poison Magic
+
+Įgūdžiai magijos "mokykloje" palengvina tos mokyklos burtažodžių mokymasi ir
+naudojimą. Daug burtažodžių priklauso kelių mokyklų kombinacijoms. Tokiu atveju
+burto sėkmė ir galia priklausys nuo įgūdžio tose mokyklose vidurkio.
+
+Nuodų magija labiausiai naudinga pradžioje, nes daug baisūnų yra atsparūs
+nuodams vėlesnėje žaidimo stadijoje. Nors yra nuodų burtažodžių kurie yra labai
+naudingi viso žaidimo metu.
+%%%%
+Invocations
+
+Iššaukimo įgūdžiai įtakoja tikimybę, kad bandymas naudoti dievišką savybę bus
+sėkmingas, ir neretai šių savybių galią. Iššaukimų įgūdžiai taip pat įtakoja
+magijos rezervą, bet mažiau negu Burtų įgūdžiai, ir tik mažesnis indėlis iš šių
+įgūdžių yra naudojamas.
+%%%%
+Evocations
+
+Aktyvavimai yra įgūždiai naudoti magiškus daiktus, kaip lazdos, kortų malkos ir
+kitus retus objektus. Kuo aukštesnio lygio įgūdžiai, tuo labiau tikėtinos
+teigiamos daiktų aktyvavimo pasekmės. Pakankamai aukšto lygio įgūdžiai leidžia
+nustatyti kiek įkrovų turi magiškos lazdos. Aktyvavimo įgūdžiai taip pat
+įtakoja tavo magijos rezervą, bet mažiau negu Burtų įgūdis, ir yra naudojamas
+tik didesnis įnašas iš šių dviejų įgūdžių.
+%%%%

@@ -1,0 +1,129 @@
+%%%%
+No God
+
+"Dio è morto." — Nietzsche e Francesco Guccini (se vedete questo messaggio si
+tratta di un bug).
+%%%%
+random
+
+Casuale  (se vedete questo messaggio si tratta di un bug).
+%%%%
+Buggy
+
+Bacato  (se vedete questo messaggio si tratta di un bug).
+%%%%
+Zin
+
+Zin è una divinità che si focalizza sulla forza interiore. I seguaci devono
+rimanere puri nel corpo e nell'anima, evitando incantesimi blasfemi, malvagi,
+sporchi o caotici; l'uso di mutazioni e il consumo delle carni di esseri
+intelligenti. Possono predicare o imprigionare coloro che non sono stati
+illuminate e possono infine ottenere un rifugio divino. Zin valorizza la
+generosità e richiede una decima di tutto l'oro guadagnato, oltre naturalmente
+alle donazioni spontanee. I seguaci di Zin possono convertirsi Elyvilon o Colui
+Che Splende mantenendo parte della propria devozione.
+%%%%
+the Shining One
+
+Colui Che Splende è una divinità potente che è dedicata alla crociata contro il
+maligno. I seguaci e i loro alleati possono essere benedetti uccidendo gli
+esseri malvagi e blasfemi, ma non possono utilizzare magia malvagia o blasfema
+e ci si attende che dimostrino la loro superiorità morale combattendo in
+maniera onorevole. La divinità richiede che i seguaci vaghino per il mondo alla
+ricerca di tracce del male da sradicare. I seguaci di Colui Che Splende possono
+convertirsi a Elyvilon o Zin mantenendo parte della propria devozione.
+%%%%
+Kikubaaqudgha
+
+Kikubaaqudgha è una terribile divinità demoniaca che è servita da coloro che
+vogliono servirsi dei poteri della morte. Kikubaaqudgha è malvagio e richiede
+che si uccidano demoni e creature viventi il più spesso possibile.
+%%%%
+Yredelemnul
+
+Yredelemnul l'Oscuro è la divinità malvagio adorato da coloro che cercano il
+potere sulla morte e sui non morti. I seguaci devono opporsi a tutte le cose
+sacre e possono creare legioni di fedeli non morti e ricevere altri poteri
+utili (anche se non sempre piacevoli). Yredelemnul apprezza le uccisioni ma
+preferisce che i cadaveri siano utilizzati piuttosto che sacrificati. Apprezza
+anche la distruzione di esseri artificiali visto che non sono veramente morti o
+soggetti alla morte o alla non morte.
+%%%%
+Xom
+
+Xom è una divinità selvaggia del caos che non cerca seguaci ma burattini con
+cui dilettarsi. Molti scelgono Xom nella speranza di ottenere fantastiche
+ricompense e poteri eccezionali, ma Xom non è altro che capriccioso. Inoltre
+non c'è niente che un seguace possa fare per influenzare l'umore di Xom.
+%%%%
+Vehumet
+
+Vehumet è la divinità dei poteri distruttivi della magia. I seguaci ottengono
+molti poteri utili per migliorare il comando delle arti arcane e i più favoriti
+ottengono accesso agli incantesimi più distruttivi nella sua biblioteca. La
+devozione a Vehumet può essere provata causando quanta più distruzione e
+macello possibile.
+%%%%
+Okawaru
+
+Okawaru è una pericolosa e potente divinità della battaglia. I seguaci
+ottengono alcuni poteri utili in combattimento oltre a delle ricompense ma
+devono dimostrarsi degni in battaglia e tramite il sacrificio dei cadaveri dei
+nemici. Okawaru preferisce atti eroici contro nemici potenti e non considera
+molto le vittorie facili. Inoltre, mentre non ha un codice di combattimento
+vero e proprio, si infuria se i seguaci causano danni ai proprio alleati.
+%%%%
+Makhleb
+
+Makhleb il Distruttore è una terribile divinità dello spargimento di sangue e
+mortificazione della carne. I seguaci devono infliggere sofferenza e morte agli
+altri nel suo nome e possono ottenere altri favori profanando i cadaveri
+freschi, come accesso alla pura energia distruttiva o ai servitori del caos
+schizzati fuori dall'inferno stesso.
+%%%%
+Sif Muna
+
+Sif Muna il Signore del Sapere è una divinità contemplativa ma potente, servita
+da coloro che cercano la conoscenza magica. Apprezza la pratica delle varie
+abilità di lancio degli incantesimi.
+%%%%
+Trog
+
+Trog è un'antica divinità di rabbia e violenza. I seguaci devono uccidere nel
+nome di Trog e sacrificare i morti, in cambio ottengono poteri in battaglia e
+altre ricompense. Trog odia tutti i maghi e ama vedere i loro libri degli
+incantesimi bruciare, per cui i suoi seguaci non possono far uso della magia.
+%%%%
+Nemelex Xobeh
+
+Nemelex è una strana e imprevedibile divinità burlona, i cui poteri possono
+essere evocati tramite l'uso di mazzi di carte magiche disegnate con inchiostro
+ricavato dall'icore dei demoni. I seguaci devono sacrificare oggetti di valore,
+il cui tipo influenza il tipo dei mazzi magici ottenuti come regali, e vengono
+istruiti nella fiducia nelle carte e consigliati di usarle spesso. Comunque
+Nemelex si assicura che la fortuna aiuti gli audaci.
+%%%%
+Elyvilon
+
+Elyvilon il Curatore accetta tutte le buone anime che sono pronte ad aiutare
+gli altri. Costoro guadagnano potenti poteri curativi e professano un credo di
+pacifismo ed evitano di spargere sangue. Elyvilon apprezza la distruzione delle
+armi malvage e blasfeme per aumentare la propria devozione. I seguaci possono
+convertirsi a Colui Che Splende o Zin e mantenere parte della propria
+devozione.
+%%%%
+Lugonu
+
+Lugonu l'Informe gozzoviglia nell'Abisso. I seguaci sono mandati a provocare
+spargimenti di sangue e corruzione nel mondo superiore e devono farlo senza
+sosta per ottenere il favore di questa malvagia divinità.
+%%%%
+Beogh
+
+Beogh è la divinità adorata dagli orchi delle caverne che sono indigeni di
+alcune parti del dungeon. Solo gli orchi possono rendere servizio a Beogh, e
+devono provare la loro devozine attraverso lo spargimento di sangue e la
+benedizione degli orchi defunti. I seguaci devoti possono colpire i propri
+nemici con energia divina e possono ottenere seguaci orchi a loro volta, poiché
+gli orchi ancora cercano il proprio Messia.
+%%%%

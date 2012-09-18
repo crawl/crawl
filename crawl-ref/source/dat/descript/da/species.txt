@@ -1,0 +1,118 @@
+%%%%
+Centaur
+
+De er hurtige, stærke og svært bygget, og de har brug for mere mad end andre
+arter.
+%%%%
+Deep Dwarf
+
+De lever dybt under jorden og genvinder ikke deres helbred naturligt, men til
+gengæld er de hårdføre og har helbredende værktøjer.
+%%%%
+Deep Elf
+
+Den mest magisk talentfulde elver, men også den skrøbeligste.
+%%%%
+Demigod
+
+De følger aldrig en gud, men halvguder kompenserer for det med guddommelige
+egenskaber og helbred.
+%%%%
+Demonspawn
+
+Dæmonyngel er halvt menneske, halvt dæmon. De pådrager sig stærke, dæmoniske
+mutationer, når de vokser.
+%%%%
+Draconian
+
+Drakonere er alsidige hybrider. De modnes og får en farve, når de når niveau 7.
+%%%%
+Felid
+
+Disse katte besidder en bevidsthed, men de er ude af stand til at håndtere
+komplicerede genstande eller at bruge rustning eller våben.
+%%%%
+Ghoul
+
+En udød, som er fordømt til evigt at rådne. De leder altid efter rådden mad, de
+kan spise, og ofre, de kan hakke i med deres kløer.
+%%%%
+Halfling
+
+De er små, men hårdføre, og fremragende til at bruge slynger. De har begrænset
+modstandskraft over for mutagene virkninger.
+%%%%
+High Elf
+
+Stolte elvere, der er lige så gode til at væve besværgelser, som de er til at
+kæmpe med sværd.
+%%%%
+Hill Orc
+
+Orker er dygtige i nærkamp, og de forsøger sig ofte med angrebsmagi. De er
+hadet af de fleste, men orker er meget stolte, og mange af dem føler sig
+overlegne.
+%%%%
+Human
+
+Prosaiske og gennemsnitlige.
+%%%%
+Tengu
+
+Fuglefolk som elsker at slås, både med våben og besværgelser. De er ganske
+skrøbelige, men lærer på et tidspunkt at flyve.
+%%%%
+Kobold
+
+Små, drilske og lidt skrøbelige, men med mange talenter. De kan og vil spise
+enhver form for kød.
+%%%%
+Merfolk
+
+Nøkker er halvt fisk, halvt menneske og kan leve på både vand og land.
+%%%%
+Minotaur
+
+Et stort, muskuløst menneske med tyrehoved. De er fremragende til alle former
+for kamp.
+%%%%
+Mummy
+
+En udød skikkelse, dækket af bandager og balsameringsvæsker, som er tvunget til
+at vandre af en ældgammel forbandelse.
+%%%%
+Naga
+
+En hybrid, der er menneske fra brystet og opefter, men med muskuløs torso,
+dækket af skæl, som snævrer ind som en slange.
+%%%%
+Octopode
+
+En art amfibiske cephalopoda. De kan bære otte ringe, men kun meget få typer
+rustning.
+%%%%
+Ogre
+
+De er store og stærke og ses mest som bøller. Ogrer har det dog udmærket med
+grundlæggende magi.
+%%%%
+Sludge Elf
+
+En depraveret slags elver, som foretrækker list frem for ærlig kamp, og sort
+magi frem for andre besværgelser.
+%%%%
+Spriggan
+
+Meget små, meget skrøbelige og meget hurtige. Sprigger er særdeles dygtige
+dolkere og troldmænd.
+%%%%
+Troll
+
+Store, brutale og klar til at lemlæste hvad som helst med deres kløer uden at
+tøve. De er altid sultne.
+%%%%
+Vampire
+
+De skifter mellem at være levende og udøde, og de er dygtige dolkere og
+troldmænd.
+%%%%

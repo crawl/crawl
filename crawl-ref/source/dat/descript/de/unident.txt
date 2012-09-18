@@ -23,9 +23,20 @@ ring
 Ein Talisman welcher als Schmuck an einem Finger getragen wird, durchströmt von
 Magie unbekannten Ursprungs.
 %%%%
+rod
+
+Ein magischer Stab, der in der Hand gehalten wird und evoziert werden kann, um
+einen von mehreren Zaubern hervorzurufen, die ihre Energie aus einem
+selbstaufladenden Reservoir beziehen. Der Stab ist robust genug, um als eine
+einfache Schlagwaffe zu dienen.
+%%%%
 scroll
 
 Eine von magischen Schriftzügen bedeckte Schriftrolle.
+%%%%
+magical staff
+
+Ein auf magische Weise verbesserter Schlagstock.
 %%%%
 wand
 

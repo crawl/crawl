@@ -1,0 +1,519 @@
+%%%%
+__cap-T_suffix
+
+Vous sentez un bloc au fond de votre estomac.
+%%%%
+__cap-U_suffix
+
+Si effrayé, ça peut devenir méchant !
+%%%%
+__(_suffix_examine
+
+Ça a été enchanté pour danser dans les air et attaquer par sa propre volonté.
+%%%%
+Azrael
+
+Un efreet puissant et belliqueux (en existe-t-il d'autres sortes ?).
+%%%%
+Dispater
+
+Le seigneur de la Cité de Fer de Dis.
+%%%%
+Erolcha
+
+Une Ogre-Mage particulièrement rusée.
+%%%%
+Eustachio
+
+Un apprenti convocateur à l'imposante moustache. Il a de drôles d'idées à
+propos de l'honneur.
+%%%%
+Geryon
+
+Un grand arch-démon ailé à trois têtes, gardien des portes de l'Enfer.
+%%%%
+Gloorx Vloq
+
+Une silhouette sombre enveloppée de profonds ténèbres.
+%%%%
+Joseph
+
+Ressemble à un mercenaire.
+%%%%
+Kirke
+
+Une belle enchanteresse.
+%%%%
+Murray
+
+Un crane démoniaque qui roule sur le sol du donjon.
+%%%%
+Nergalle
+
+Une sorcière flétrie et particulièrement laide, même selon les standards orc.
+%%%%
+Nessos
+
+Un guerrier centaure à la robe noire et au regard sournois.
+%%%%
+Nikola
+
+Un brillant scientifique obsédé par l'électricité. Depuis un terrible accident
+survenu lors d'une de ses tentatives pour parfaire son ire s d'électricité, il
+lui arrive de se déphaser de la réalité.
+%%%%
+Rupert
+
+Un homme avec de terribles manières dont les rugissements rendrait un ogre
+envieux.
+%%%%
+Saint Roka
+
+Un puissant seigneur de guerre. Certains orcs disent même qu'il pourrait être
+l'Elu de Beogh.
+%%%%
+Sigmund
+
+La terreur de tous les jeunes aventuriers, Sigmund combine désillusion de
+grandeur avec tactiques sournoises.
+%%%%
+Tiamat
+
+Un puissant dragon avec de larges ailes. Ses écailles sont chatoyantes et
+changent de couleur alors que vous les regardez.
+%%%%
+acid blob
+
+Une masse de chair purulente d'acide mortel.
+%%%%
+adder
+
+Le serpent commun dans le donjon. Une espèce de reptile troglodyte que l'on
+trouve souvent dans les espaces souterrains.
+%%%%
+apis
+
+Un placide taureau sacré de Elyvilon. Prenez garde malfaisants, car il va
+sûrement se retourner contre vous!
+%%%%
+ball python
+
+Un petit serpent qui utilise la constriction des petites créatures pour les
+mordre plus facilement.
+%%%%
+balrug
+
+Un énorme et puissant démon, recouvert de flammes et d'ombres.
+%%%%
+basilisk
+
+Un lézard à crête de taille moyenne avec un souffle pétrifiant.
+%%%%
+big fish
+
+Un gros poisson avec une large mâchoire pleine de dents.
+%%%%
+big kobold
+
+Un kobold qui est plus gros et fort que la plupart des kobolds, et souvent
+armé.
+%%%%
+black bear
+
+Un petit ours noir. Comme tous les ours, l'ours noir peut devenir enragé si
+gravement blessé au combat.
+%%%%
+black draconian
+
+Un humanoïde recouvert d'écailles, avec un queue reptilienne et de petites
+ailes.
+%%%%
+black mamba
+
+Un grand serpent tropical incroyablement rapide dont la morsure véhicule un
+poison mortel.
+%%%%
+blessed toe
+
+Une relique sacrée provenant du corps d'un pieu saint. Elle flotte dans les air
+et brille d'une lumière divine.
+%%%%
+blizzard demon
+
+Un grand démon, recouvert de neige et parcouru d'éclairs.
+%%%%
+bumblebee
+
+Une énorme abeille solitaire.
+%%%%
+deep elf fighter
+
+Un puissant soldat elfe profond qui porte armes et entrainé à la magie de
+guerre.
+%%%%
+deep elf knight
+
+Un combattant elfe profond aguerri.
+%%%%
+deep elf soldier
+
+Un soldat commun des elfes profonds qui connait quelques sorts utiles en
+combat.
+%%%%
+deep elf summoner
+
+Cet elfe profond est entrainé dans l'art de la convocation de petits démons et
+créatures.
+%%%%
+deep dwarf artificer
+
+Un nain des profondeurs qui a dédié sa vie à l'étude et à l'utilisation des
+instruments arcaniques.
+%%%%
+deep dwarf berserker
+
+Un nain des profondeurs féroce et assoiffé de sang qui exalte dans la fureur
+des combats.
+%%%%
+deep dwarf death knight
+
+Un guerrier-prêtre nain des profondeurs de Yredelemnul, qui chante des hommages
+impies à la gloire du dieu sombre et évoque la mort.
+%%%%
+deep dwarf necromancer
+
+Un vile nain de profondeurs qui a vendu son âme en échange de la maitrise des
+arts occultes de la mort et de la douleur.
+%%%%
+deep dwarf scion
+
+Un nain des profondeurs en armure, formidable combattant au corps-à-corps.
+%%%%
+draconian scorcher
+
+Un draconien rusé qui a maitrisé les secrets des éléments du feu.
+%%%%
+elephant slug
+
+Un gastéropode gris de taille impressionnante à la peau ridée et plissée.
+%%%%
+fire vortex
+
+Un nuage de flammes entortillées.
+%%%%
+fire drake
+
+Un petit mais dangereux dragon qui crache des nuages de fumée.
+%%%%
+megabat
+
+Une énorme chauve-souris noire.
+%%%%
+giant cockroach
+
+Un gros insecte brun qui produit des sifflements désagréables. Contrairement à
+la croyance populaire, ils sont en fait assez sensibles aux énergies mutagènes.
+%%%%
+giant eyeball
+
+Un globe oculaire géant en lévitation au regard hypnotique. Certains disent que
+les globes oculaires géants sont des serviteurs de Jiyva.
+%%%%
+giant mite
+
+Un énorme acarien assoiffé de sang.  Ses mandibules sont empoisonnées.
+%%%%
+gnoll
+
+Un cousin des gobelins et des orcs, plus grand et d'aspect plus canin. Ils sont
+généralement mieux armés.
+%%%%
+gnoll sergeant
+
+Un chef de bande gnoll. Les cicatrices qui courent sur son corps robuste
+témoignent de la manière dont il a obtenu son rang.
+%%%%
+greater naga
+
+Un naga exceptionnel, aussi compétent au combat qu'a la pratique de la magie.
+%%%%
+green rat
+
+Un rongeur au pelage d'un étrange vert vif, et dont la morsure est venimeuse.
+On le trouve souvent rassemblé au sein de grandes colonies.
+%%%%
+grey draconian
+
+Un humanoïde au corps couvert d'écailles avec une queue reptilienne, et de
+petites ailes.
+%%%%
+guardian mummy
+
+Un ancien guerrier, déshonoré et maudit, forcé à errer dans la non-vie pour
+l'éternité.
+%%%%
+hell hound
+
+Un large chien noir, avec des yeux de braise et de la fumée sortant de sa
+gueule pleine de crocs.
+%%%%
+hellion
+
+Un terrifiant démon recouvert de flammes infernales crépitantes.
+%%%%
+hellwing
+
+Un hideux démon squelettique avec des ailes de peau séchée.
+%%%%
+hill giant
+
+Bien qu'étant une des plus petite espèce de géant, ce géant des collines est
+encore bien assez grand pour être dangereux.
+%%%%
+ice bat
+
+Un mort vivant à l'aspect d'une chauve souris, composé de glace.
+%%%%
+ice beast
+
+Une terrible créature composée de neige et de cristaux de glace qui laisse des
+flaques d'eau glacée sur son passage.
+%%%%
+ice devil
+
+Un démon de taille humaine couvert de glace brillante.
+%%%%
+ice dragon
+
+Un dragon blanc irradiant de froid. Des flocons de neige sortent de ses
+naseaux.
+%%%%
+iguana
+
+Un lézard vert avec de puissantes mâchoires et des dents aiguisées, recherché
+pour sa chair.
+%%%%
+inept item mimic
+
+Apparemment un objet abandonné, mais en réalité, une bête déguisée.
+%%%%
+iron imp
+
+Un petit démon mineur, laid et déformé, à la peau métallique.
+%%%%
+jackal
+
+Un petit charognard canin. Ils errent en groupe dans les souterrains, à la
+recherche de carcasses à dévorer.
+%%%%
+killer bee
+
+Une abeille géante qui veut vous piquer sans discontinuer avec son dard mortel.
+%%%%
+kobold demonologist
+
+Un kobold qui a pactisé avec des démons, et peut les convoquer depuis les
+profondeurs des enfers.
+%%%%
+laboratory rat
+
+Un rat qui a été sujet de terribles expérimentations d'un magicien. Qui sait ce
+dont il est capable?
+%%%%
+large simulacrum
+
+Une réplique de glace d'un monstre créée par les pouvoirs de la nécromancie.
+%%%%
+large skeleton
+
+Un grand squelette animé de la non-vie par la nécromancie.
+%%%%
+large zombie
+
+Un grand cadavre animé de la non-vie par la nécromancie.
+%%%%
+lava worm
+
+Un vers rouge vicieux qui nage dans la lave.
+%%%%
+merfolk impaler
+
+Un musculeux guerrier merfolk portant un trident.
+%%%%
+metal gargoyle
+
+Un hideuse statue de métal ayant pris vie.
+%%%%
+mottled dragon
+
+Un petit dragon violet avec des écailles curieusement marbré, sa bouche bave
+d'une étrange flamme liquide.
+%%%%
+oklob sapling
+
+Une jeune plante oklob, mais déjà dangereuse.
+%%%%
+pale draconian
+
+Un humanoïde recouvert d'écailles avec une queue reptilienne et de petites
+ailes.
+%%%%
+paladin
+
+Un guerrier pieu, en armure, combattant au service du Rayonnant.
+%%%%
+pandemonium lord
+
+Un formidable seigneur démon habitant les halls sans fin du Pandémonium. Chacun
+est différent, avec ses propres forces et faiblesses.
+%%%%
+pillar of salt
+
+Un énorme pilier de sel qui est en train de fondre rapidement.
+%%%%
+purple draconian
+
+Un humanoïde recouvert d'écailles avec une queue reptilienne et de petites
+ailes.
+%%%%
+reaper
+
+Une créature squelettique armée d'une faux géante.
+%%%%
+red draconian
+
+Un humanoïde recouvert d'écailles avec une queue reptilienne et de petites
+ailes.
+%%%%
+rock worm
+
+Un large vers qui se déplace dans la roche sans encombre aucune.
+%%%%
+rotten bat
+
+Je suppose que cette chauve-souris à largement dépasser sa date de péremption.
+%%%%
+the royal jelly
+
+Une chose gélatineuse particulièrement riche et dorée.
+%%%%
+shadow imp
+
+Un petit démon mineur couvert d'ombres.
+%%%%
+silver star
+
+Une orbe d'énergie divine, pulsant d'une lumière aveuglante.
+%%%%
+small simulacrum
+
+Une réplique de glace d'une monstre, animée par les pouvoirs de la nécromancie.
+%%%%
+small skeleton
+
+Un squelette animé de non-vie par la nécromancie.
+%%%%
+small zombie
+
+Un cadavre animé de non-vie par la nécromancie.
+%%%%
+spectral thing
+
+Une hideuse apparition brillante.
+%%%%
+spriggan air mage
+
+Un adepte magique spriggan bénit par les secrets du vent.
+%%%%
+spriggan baker
+
+Un spriggan ayant maitrisé les arts culinaires.
+%%%%
+spriggan berserker
+
+Un spriggan particulièrement fort qui devient incontrôlable en combat.
+%%%%
+spriggan defender
+
+Un guerrier d'élite spriggan, particulièrement bien équipé, renommé pour ses
+prouesses.
+%%%%
+spriggan druid
+
+Un spriggan dont la connexion avec les oiseaux et les bêtes est
+exceptionnellement forte. Dans la nature, ces protecteurs de la terre sont la
+perte des non-écologistes.
+%%%%
+training dummy
+
+Un mannequin utilisé pour l'entrainement au combat.
+%%%%
+twister
+
+Un vibrant vortex d'air turbulent.
+%%%%
+ufetubus
+
+Un démon mineur criant et déblatérant.
+%%%%
+vault guard
+
+Un gardien des Chambres Fortes, en armure et lourdement armé.
+%%%%
+white draconian
+
+Un humanoïde couvert d'écailles avec une queue reptilienne et de petites ailes.
+%%%%
+white imp
+
+Un petit et malicieux démon mineur couvert de givre.
+%%%%
+wight
+
+Un ancien guerrier, maintenu dans ce perpétuel état de non-vie par son désir de
+mourir au combat.
+%%%%
+yellow draconian
+
+Un humanoïde couvert d'écailles avec une queue reptilienne et de petites ailes.
+%%%%
+antique lich
+
+Un liche qui est devenu très coûteuse au fil d'un temps incalculable.
+%%%%
+apricot tree
+
+<pommier>
+%%%%
+citrus tree
+
+<pommier>
+%%%%
+deformed humanoid
+
+La pauvre créature semble hideusement déformée.
+%%%%
+lich demonologist
+
+<liche>
+%%%%
+mummy warrior
+
+<momie gardienne>
+%%%%
+oklob plant conjurer
+
+<plante oklob destructrice>
+%%%%
+orc demonologist
+
+<orc sorcier>
+%%%%
+pyrus tree
+
+<pommier>
+%%%%
+vampire noble
+
+<vampire>
+%%%%

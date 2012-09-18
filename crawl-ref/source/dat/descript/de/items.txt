@@ -1,0 +1,186 @@
+%%%%
+amulet of clarity
+
+Dieses Amulett bewahrt den Träger vor einigen Formen geistiger Verwirrtheit -
+unter anderen auch davor, gegen seinen Willen in Rage versetzt zu werden.
+%%%%
+amulet of conservation
+
+Dieses Amulett bewahrt manche Besitztümer seines Trägers vor vollständiger
+Zerstörung, ist aber nicht unfehlbar.
+%%%%
+amulet of controlled flight
+
+Wird der Träger dieses Amuletts durch Magie zum Schweben gebracht, so kann er
+eine gewisse Kontrolle über seine Bewegungen ausüben. Dies ermöglicht unter
+anderem den Abstieg von Treppen und das Aufnehmen von Gegenständen auf dem
+Boden, hebt aber nicht die Vorteile des freien Schwebens auf.
+%%%%
+amulet of rage
+
+Dieses Amulett ermöglicht es dem Träger in einen Zustand der Raserei zu
+verfallen.
+%%%%
+amulet of resist mutation
+
+Dieses Amulett schützt den Träger vor Mutationen, allerdings nicht
+unweigerlich.
+%%%%
+amulet of the gourmand
+
+Dieses Amulett schützt den Träger vor Krankheit durch den Konsum von rohem
+Fleisch und ermöglicht es diesem selbst wenn gesättigt zu verdauen. Diese
+Effekte auf die Verdauung des Trägers  häufen sich jedoch erst mit der Zeit an
+und sind Anfangs klein
+%%%%
+amulet of warding
+
+Dieses Amulett wehrt einige Angriffe von Kreaturen, die auf magische Weise
+beschwört wurden, ab und macht den Träger resistenter gegenüber Angriffen mit
+negativer Energie.
+%%%%
+amulet of faith
+
+Ein Talisman, der die Aufmerksamkeit der Götter auf seinen Träger zu lenken
+vermag. Dies erleichtert es, deiner momentanen Gottheit gefällig zu sein, aber
+Fehltritte wird sie seltener verzeihen. Das Ablegen des Amulett wird deine
+göttliche Gunst deutlich verringern.
+%%%%
+apple
+
+Eine köstliche und kräftig rote Frucht - säuerlich auf der Zunge.
+%%%%
+blessed double sword
+
+Eine magische Waffe mit zwei rasiermesserscharfen Klingen.
+%%%%
+bolt
+
+Ein Metallprojektil. Es ist kürzer als ein Pfeil und zum verschießen mit einer
+Armbrust vorgesehen.
+%%%%
+cap
+
+Eine Stoff- oder Lederkappe.
+%%%%
+centaur barding
+
+Eine Rüstung für Centauren zum Tragen über ihrem Pferdekörper.
+%%%%
+cheese
+
+Ein Stück Käse.
+%%%%
+cloak
+
+Ein Stoffumhang.
+%%%%
+crystal plate armour
+
+Ein unglaublich schwere aber extrem effektive kristalline Rüstung.
+%%%%
+dire flail
+
+Ein gestachelter Flegel mit längeren Stacheln und einem schwererem Kopf.
+%%%%
+eggplant
+
+Eine verrottete Aubergine die du auf Crawlentwickler werfen kannst. (Wenn du
+diese Nachricht jemals siehst ist es ein Fehler.)
+%%%%
+giant club
+
+Ein riesiges Stück Holz, für die Hände eines Ogers geformt.
+%%%%
+giant spiked club
+
+Ein riesiges Stück Holz mit spitzen Stacheln an einem Ende.
+%%%%
+glaive
+
+Eine Stange mit einer großen und schweren Klinge an einem Ende.
+%%%%
+grape
+
+Eine kleine Frucht.
+%%%%
+lemon
+
+Eine gelbe Frucht.
+%%%%
+lychee
+
+Eine tropische Frucht.
+%%%%
+naga barding
+
+Eine speziell für Nagas hergestellte Rüstung zum Tragen über ihren Schwänzen.
+%%%%
+orange
+
+Eine köstliche, saftige und orangene Frucht.
+%%%%
+pair of boots
+
+Ein Paar Stiefel.
+%%%%
+pair of bracers
+
+Ein Paar Armschienen.
+%%%%
+pair of gauntlets
+
+Ein Paar Kampfhandschuhe.
+%%%%
+pair of gloves
+
+Ein Paar Handschuhe
+%%%%
+pear
+
+Eine köstliche und saftige Frucht.
+%%%%
+ring of protection from fire
+
+Dieser Ring schützt vor Hitze und Feuer.
+%%%%
+skeleton
+
+Ein zerfallendes Skelett.
+%%%%
+slice of pizza
+
+Ein Stück Pizza: Ein Fladenbrot mit Tomatensoße, Büffelmozzarella und
+Basilikum.
+%%%%
+sling bullet
+
+Ein kleines, schweres Projektil, das speziell für die Nutzung mit Schleudern
+geformt ist. Als Munition sind diese effektiver als einfache Steine.
+%%%%
+spiked flail
+
+Ein Flegel, der durch eine längere Kette und den Zusatz von Stacheln auf dem
+Schlagkopf verbessert wurde.
+%%%%
+staff
+
+Ein fester Wanderstock.
+%%%%
+strawberry
+
+Eine kleine aber leckere rote Frucht.
+%%%%
+sultana
+
+Eine kleine Rosine.
+%%%%
+swamp dragon armour
+
+Eine magische Rüstung aus den Schuppen eines Sumpfdrachen. Sie verleiht ihrem
+Träger Giftresistenz.
+%%%%
+wizard hat
+
+Ein kegelförmiger Stoffhut.
+%%%%
