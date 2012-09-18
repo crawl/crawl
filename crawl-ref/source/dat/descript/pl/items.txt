@@ -427,65 +427,65 @@ deck of defence
 
 Talia magicznych kart, zwykle broniących użytkownika przed krzywdą.
 
-It may contain the following cards: the Tomb, the Banshee, Damnation,
-Solitude, Warpwright, Flight, the Elixir, Battlelust, Metamorphosis, the Helm,
-the Blade, the Shadow.
+It may contain the following cards: the Tomb, the Banshee, Damnation, Solitude,
+Warpwright, Flight, the Elixir, Battlelust, Metamorphosis, the Helm, the Blade,
+the Shadow.
 %%%%
 deck of destruction
 
 Talia magicznych kart, ciskających śmierć i zniszczenie we wrogów (lub, czasem,
 w twarz użytkownika).
 
-It may contain the following cards: Vitriol, Flame, Frost, Venom, the
-Spark, the Hammer, Pain, the Orb.
+It may contain the following cards: Vitriol, Flame, Frost, Venom, the Spark,
+the Hammer, Pain, the Orb.
 %%%%
 deck of dungeons
 
 Talia magicznych kart które wprowadzają zmiany w lochach naokoło ciebie.
 
-It may contain the following cards: Water, Vitrification, the Map,
-Dowsing, the Spade, Trowel, the Minefield.
+It may contain the following cards: Water, Vitrification, the Map, Dowsing, the
+Spade, Trowel, the Minefield.
 %%%%
 deck of escape
 
 Talia magicznych kart, oparta na różnych formach ucieczki. Czasem potrafią one
 jednak pogorszyć sytuację!
 
-It may contain the following cards: the Portal, the Warp, Swap,
-Velocity, the Tomb, the Banshee, Damnation, Solitude, Warpwright, Flight.
+It may contain the following cards: the Portal, the Warp, Swap, Velocity, the
+Tomb, the Banshee, Damnation, Solitude, Warpwright, Flight.
 %%%%
 deck of punishment
 
 Talia magicznych kart które potrafią przetrzepać użytkownikowi skórę.
 
-It may contain the following cards: Wrath, the Wraith, the Curse, Xom,
-Famine, Wild Magic, the Portal, the Tomb, Damnation, the Minefield, Torment.
+It may contain the following cards: Wrath, the Wraith, the Curse, Xom, Famine,
+Wild Magic, the Portal, the Tomb, Damnation, the Minefield, Torment.
 %%%%
 deck of summonings
 
 Talia magicznych kart, z rysunkami przedziwnych istot. Oczywiście, rysunki te
 wchodzą w życie.
 
-It may contain the following cards: the Crusade, the Herd, the
-Pentagram, the Dance, Foxfire, the Bones, Repulsiveness.
+It may contain the following cards: the Crusade, the Herd, the Pentagram, the
+Dance, Foxfire, the Bones, Repulsiveness.
 %%%%
 deck of war
 
 Talia magicznych kart, pożytecznych przed jak i w trakcie walki.
 
-It may contain the following cards: the Portal, the Warp, Swap,
-Velocity, the Tomb, the Banshee, Damnation, Solitude, Warpwright, Flight, the
-Elixir, Battlelust, Metamorphosis, the Helm, the Blade, the Shadow, the
-Crusade, the Herd, the Pentagram, the Dance, Foxfire, the Bones, Repulsiveness,
-Vitriol, Flame, Frost, Venom, the Spark, the Hammer, Pain, Torment.
+It may contain the following cards: the Portal, the Warp, Swap, Velocity, the
+Tomb, the Banshee, Damnation, Solitude, Warpwright, Flight, the Elixir,
+Battlelust, Metamorphosis, the Helm, the Blade, the Shadow, the Crusade, the
+Herd, the Pentagram, the Dance, Foxfire, the Bones, Repulsiveness, Vitriol,
+Flame, Frost, Venom, the Spark, the Hammer, Pain, Torment.
 %%%%
 deck of wonders
 
 Talia magicznych kart, zmieniających użytkownika fizycznie lub mentalnie, na
 lepsze lub gorsze.
 
-It may contain the following cards: the Potion, Focus, Shuffle,
-Experience, Wild Magic, the Helix, the Sage, the Alchemist.
+It may contain the following cards: the Potion, Focus, Shuffle, Experience,
+Wild Magic, the Helix, the Sage, the Alchemist.
 %%%%
 demon blade
 

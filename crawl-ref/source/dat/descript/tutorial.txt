@@ -478,7 +478,9 @@ can switch to description mode with <w>[!]</w>.
 %%%%
 tutorial3 autoexplore_reminder
 
-Remember, you can explore the level automatically with <w>[$cmd[CMD_EXPLORE]]</w><localtiles> or by <w>[clicking]</w> the autoexplore command button in the <w>command panel</w></localtiles>.
+Remember, you can explore the level automatically with
+<w>[$cmd[CMD_EXPLORE]]</w><localtiles> or by <w>[clicking]</w> the autoexplore
+command button in the <w>command panel</w></localtiles>.
 %%%%
 tutorial3 go_shopping
 
@@ -506,7 +508,6 @@ Well done! To exit the tutorial, simply go down these stairs.
 tutorial3 exit
 
 # A single screen recapping all commands.
-
 <yellow>Item commands</yellow>
 
   <w>$cmd[CMD_PICKUP]</w>  pick up an item
@@ -519,9 +520,11 @@ tutorial3 exit
   <w>$cmd[CMD_REMOVE_JEWELLERY]</w>  remove jewellery
   <w>$cmd[CMD_DROP]</w>  drop an item
 
-  <w></w>Usage commands are also available from the inventory menu (<w>$cmd[CMD_DISPLAY_INVENTORY]</w>), as are the item descriptions.
+  <w></w>Usage commands are also available from the inventory menu
+(<w>$cmd[CMD_DISPLAY_INVENTORY]</w>), as are the item descriptions.
 
-  <localtiles><w></w>And of course, <white>mouseclicks</white> also work.</localtiles>
+  <localtiles><w></w>And of course, <white>mouseclicks</white> also
+work.</localtiles>
 
 <yellow>Other</yellow>
 
@@ -531,9 +534,11 @@ tutorial3 exit
   <w>$cmd[CMD_EXPLORE]</w>  explore automatically
   <w>$cmd[CMD_SEARCH_STASHES]</w>  search for items/features previously seen
 
-  <localtiles><w></w>Several of these commands can also be executed by clicking in the <w>command panel</w>.</localtiles>
+  <localtiles><w></w>Several of these commands can also be executed by clicking
+in the <w>command panel</w>.</localtiles>
 
-                                 <cyan>Press <w>any key</w> to clear this screen...</cyan>
+                                 <cyan>Press <w>any key</w> to clear this
+screen...</cyan>
 %%%%
 ##############################################
 # Tutorial map 5: Gods and divine abilities  #
