@@ -1610,11 +1610,13 @@ static int _xom_swap_weapons(bool debug = false)
     mprf("You wield %s %s!",
          mon->name(DESC_ITS).c_str(),
          you.inv[freeslot].name(DESC_PLAIN).c_str());
+    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "swap weapons"), true);
 
     equip_item(EQ_WEAPON, freeslot);
 
     you.wield_change = true;
     you.m_quiver->on_weapon_changed();
+    more();
 
     return XOM_BAD_SWAP_WEAPONS;
 }
