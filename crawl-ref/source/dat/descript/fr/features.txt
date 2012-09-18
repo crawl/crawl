@@ -565,7 +565,7 @@ Aucune vie ne pousse ici. Tout est complètement mort.
 %%%%
 A wall of crystal
 
-<Un mur de cristal vert>
+<A wall of green crystal>
 %%%%
 A damp floor
 
