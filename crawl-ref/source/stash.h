@@ -54,8 +54,11 @@ public:
     // autopickup.
     bool pickup_eligible() const;
 
-    // Returns true if this Stash contains items that can be sacrificied
+    // Returns true if this Stash contains items that can be sacrificied.
     bool sacrificeable() const;
+
+    // Returns true if this Stash contains items that can be butchered.
+    bool butcherable() const;
 
     // Returns true if this Stash is unverified (a visit by the character will
     // verify the stash).
@@ -250,7 +253,8 @@ public:
 
     // Returns true if the square at c contains potentially interesting
     // swag that merits a personal visit (for EXPLORE_GREEDY).
-    bool  needs_visit(const coord_def& c, bool autopickup, bool sacrifice) const;
+    bool  needs_visit(const coord_def& c, bool autopickup,
+                      bool sacrifice, bool butcher) const;
     bool  shop_needs_visit(const coord_def& c) const;
 
     // Returns true if the items at c are not fully known to the stash-tracker
@@ -258,8 +262,12 @@ public:
     bool  unverified_stash(const coord_def &c) const;
 
     // Returns true if the items at c contains at least one that can be
-    // sacrificied
+    // sacrificied.
     bool sacrificeable(const coord_def &c) const;
+
+    // Returns true if the items at c contains at least one that can be
+    // butchered.
+    bool butcherable(const coord_def &c) const;
 
     // Add stash at (x,y), or player's current location if no parameters are
     // supplied

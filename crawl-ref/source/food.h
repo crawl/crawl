@@ -14,6 +14,7 @@
 
 int count_corpses_in_pack(bool blood_only = false);
 bool player_can_butcher(int *butcher_tool = NULL);
+bool can_autobutcher();
 bool butchery(int which_corpse = -1, bool bottle_blood = false);
 
 bool eat_food(int slot = -1);

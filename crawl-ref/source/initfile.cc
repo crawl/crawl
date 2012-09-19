@@ -874,9 +874,11 @@ void game_options::reset_options()
                               | ES_SHOP | ES_ALTAR | ES_RUNED_DOOR
                               | ES_GREEDY_PICKUP_SMART
                               | ES_GREEDY_VISITED_ITEM_STACK
-                              | ES_GREEDY_SACRIFICEABLE);
+                              | ES_GREEDY_SACRIFICEABLE
+                              | ES_GREEDY_BUTCHERABLE);
 
     sacrifice_before_explore = 0;
+    butcher_before_explore   = 0;
 
     // The prompt conditions will be combined into explore_stop after
     // reading options.
@@ -891,6 +893,7 @@ void game_options::reset_options()
     explore_improved       = false;
     travel_key_stop        = true;
     auto_sacrifice         = false;
+    auto_butcher           = false;
 
     target_unshifted_dirs  = false;
     darken_beyond_range    = true;
@@ -1827,6 +1830,10 @@ int game_options::read_explore_stop_conditions(const string &field) const
                  || c == "greedy_sacrificiable" || c == "greedy_sacrificiables")
         {
             conditions |= ES_GREEDY_SACRIFICEABLE;
+        }
+        else if (c == "greedy_butcherable" || c == "greedy_butcherables")
+        {
+            conditions |= ES_GREEDY_BUTCHERABLE;
         }
     }
     return conditions;
@@ -3066,6 +3073,13 @@ void game_options::read_option_line(const string &str, bool runscript)
         else
             sacrifice_before_explore = _read_bool(field, false);
     }
+    else if (key == "butcher_before_explore")
+    {
+        if (field == "prompt" || field == "ask")
+            butcher_before_explore = 2;
+        else
+            butcher_before_explore = _read_bool(field, false);
+    }
     else if (key == "explore_stop_prompt")
     {
         if (plain)
@@ -3097,6 +3111,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     else BOOL_OPTION(explore_improved);
     else BOOL_OPTION(travel_key_stop);
     else BOOL_OPTION(auto_sacrifice);
+    else BOOL_OPTION(auto_butcher);
     else if (key == "sound")
     {
         if (plain && field.empty())

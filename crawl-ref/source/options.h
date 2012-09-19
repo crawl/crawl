@@ -235,6 +235,7 @@ public:
     int         explore_stop_prompt;
 
     int         sacrifice_before_explore;
+    int         butcher_before_explore;
 
     // Don't stop greedy explore when picking up an item which matches
     // any of these patterns.
@@ -254,6 +255,7 @@ public:
     bool        travel_key_stop;   // Travel stops on keypress.
 
     bool        auto_sacrifice;
+    bool        auto_butcher;
 
     vector<sound_mapping> sound_mappings;
     vector<colour_mapping> menu_colour_mappings;

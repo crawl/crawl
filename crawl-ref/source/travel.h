@@ -200,6 +200,9 @@ enum explore_stop_type
 
     // Explored into view of an item which can be sacrificied
     ES_GREEDY_SACRIFICEABLE      = 0x10000,
+
+    // Explored into view of an item which can be butchered
+    ES_GREEDY_BUTCHERABLE        = 0x20000,
 };
 
 ////////////////////////////////////////////////////////////////////////////
@@ -263,6 +266,7 @@ private:
 
     bool can_autopickup;
     bool sacrifice;
+    bool butcher;
     int es_flags;
     const LevelStashes *current_level;
     vector< named_thing<item_def> > items;
@@ -579,6 +583,9 @@ protected:
 
     // Does god wants sacrifices?
     bool sacrifice;
+
+    // Are we interested in chunks?
+    bool butcher;
 
     // Targets for explore and greedy explore.
     coord_def unexplored_place, greedy_place;

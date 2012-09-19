@@ -1422,6 +1422,16 @@ static void _handle_run_delays(const delay_queue_item &delay)
             }
         }
 
+        if (Options.auto_butcher && you.running == RMODE_EXPLORE_GREEDY)
+        {
+            LevelStashes *lev = StashTrack.find_current_level();
+            if (lev && lev->butcherable(you.pos()))
+            {
+                const interrupt_block block_interrupts;
+                butchery();
+                return;
+            }
+        }
 
         switch (delay.type)
         {

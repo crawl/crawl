@@ -1861,23 +1861,37 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
 
 void mark_items_non_pickup_at(const coord_def &pos)
 {
-    int item = igrd(pos);
-    while (item != NON_ITEM)
+    int i = igrd(pos);
+    while (i != NON_ITEM)
     {
-        mitm[item].flags |= ISFLAG_DROPPED;
-        mitm[item].flags &= ~ISFLAG_THROWN;
-        item = mitm[item].link;
+        item_def &item(mitm[i]);
+        item.flags |= ISFLAG_DROPPED;
+        item.flags &= ~ISFLAG_THROWN;
+        i = item.link;
     }
 }
 
-void mark_items_non_visit_at(const coord_def &pos)
+void mark_items_non_visit_sacrifice_at(const coord_def &pos)
 {
-    int item = igrd(pos);
-    while (item != NON_ITEM)
+    int i = igrd(pos);
+    while (i != NON_ITEM)
     {
-        if (god_likes_item(you.religion, mitm[item]))
-            mitm[item].flags |= ISFLAG_DROPPED;
-        item = mitm[item].link;
+        item_def &item(mitm[i]);
+        if (item.is_greedy_sacrificeable())
+            item.flags |= ISFLAG_DROPPED;
+        i = item.link;
+    }
+}
+
+void mark_items_non_visit_butcher_at(const coord_def &pos)
+{
+    int i = igrd(pos);
+    while (i != NON_ITEM)
+    {
+        item_def &item(mitm[i]);
+        if (item.is_greedy_butcherable())
+            item.flags |= ISFLAG_DROPPED;
+        i = item.link;
     }
 }
 
@@ -3277,6 +3291,29 @@ bool item_def::is_greedy_sacrificeable() const
     }
 
     return god_likes_item(you.religion, *this);
+}
+
+// Does the item cause autoexplore to visit it for butchery.
+bool item_def::is_greedy_butcherable() const
+{
+    if (flags & (ISFLAG_DROPPED | ISFLAG_THROWN))
+        return false;
+
+    if (base_type != OBJ_CORPSES || sub_type != CORPSE_BODY)
+        return false;
+
+    if (!can_autobutcher())
+        return false;
+
+    const bool rotten = food_is_rotten(*this);
+
+    const bool edible = can_ingest(OBJ_FOOD, FOOD_CHUNK, true, false, rotten);
+
+    const bool wants_any = (you.has_spell(SPELL_SIMULACRUM)
+                            || you.has_spell(SPELL_SUBLIMATION_OF_BLOOD));
+
+    return (!is_bad_food(*this) && edible
+            || wants_any && !is_forbidden_food(*this));
 }
 
 static void _rune_from_specs(const char* _specs, item_def &item)

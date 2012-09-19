@@ -43,7 +43,8 @@ void note_inscribe_item(item_def &item);
 int  move_item_to_player(int obj, int quant_got, bool quiet = false,
                          bool ignore_burden = false);
 void mark_items_non_pickup_at(const coord_def &pos);
-void mark_items_non_visit_at(const coord_def &pos);
+void mark_items_non_visit_sacrifice_at(const coord_def &pos);
+void mark_items_non_visit_butcher_at(const coord_def &pos);
 bool is_stackable_item(const item_def &item);
 bool items_similar(const item_def &item1, const item_def &item2);
 bool items_stack(const item_def &item1, const item_def &item2,

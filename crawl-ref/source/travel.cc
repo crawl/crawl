@@ -180,7 +180,7 @@ static bool _loadlev_populate_stair_distances(const level_pos &target);
 static void _populate_stair_distances(const level_pos &target);
 static bool _is_greed_inducing_square(const LevelStashes *ls,
                                       const coord_def &c, bool autopickup,
-                                      bool sacrifice);
+                                      bool sacrifice, bool butcher);
 static bool _is_travelsafe_square(const coord_def& c,
                                   bool ignore_hostile = false,
                                   bool ignore_danger = false);
@@ -559,6 +559,7 @@ static bool _prompt_stop_explore(int es_why)
 #define ES_rdoor  (Options.explore_stop & ES_RUNED_DOOR)
 #define ES_stack  (Options.explore_stop & ES_GREEDY_VISITED_ITEM_STACK)
 #define ES_sacrificeable (Options.explore_stop & ES_GREEDY_SACRIFICEABLE)
+#define ES_butcherable   (Options.explore_stop & ES_GREEDY_BUTCHERABLE)
 
 // Adds interesting stuff on the point p to explore_discoveries.
 static inline void _check_interesting_square(const coord_def pos,
@@ -621,7 +622,8 @@ static bool _is_valid_explore_target(const coord_def& where)
     {
         LevelStashes *lev = StashTrack.find_current_level();
         return (lev && lev->needs_visit(where, can_autopickup(),
-                                        god_likes_items(you.religion, true)));
+                                        god_likes_items(you.religion, true),
+                                        can_autobutcher()));
     }
 
     return false;
@@ -843,6 +845,11 @@ static bool _can_sacrifice(const coord_def p)
             && (!feat_is_altar(feat) || feat_is_player_altar(feat)));
 }
 
+static bool _can_butcher(const coord_def p)
+{
+    return player_can_butcher();
+}
+
 // Top-level travel control (called from input() in main.cc).
 //
 // travel() is responsible for making the individual moves that constitute
@@ -941,28 +948,33 @@ command_type travel()
         // Stop greedy explore when visiting an unverified stash.
         if ((*move_x || *move_y)
             && you.running == RMODE_EXPLORE_GREEDY
-            && (ES_stack || ES_sacrificeable))
+            && (ES_stack || ES_sacrificeable || ES_butcherable))
         {
             const coord_def newpos = you.pos() + coord_def(*move_x, *move_y);
             if (newpos == you.running.pos)
             {
-                const LevelStashes *lev = StashTrack.find_current_level();
-                const bool stack = lev && lev->unverified_stash(newpos)
-                                   && ES_stack;
-                const bool sacrificeable = lev && lev->sacrificeable(newpos)
-                                           && ES_sacrificeable;
-                if (stack || sacrificeable)
+                const LevelStashes *lev  = StashTrack.find_current_level();
+                const bool stack         = (lev && lev->unverified_stash(newpos)
+                                            && ES_stack);
+                const bool sacrificeable = (lev && lev->sacrificeable(newpos)
+                                            && ES_sacrificeable);
+                const bool butcherable   = (lev && lev->butcherable(newpos)
+                                            && ES_butcherable);
+                if (stack && _prompt_stop_explore(ES_GREEDY_VISITED_ITEM_STACK)
+                    || (sacrificeable
+                        && _prompt_stop_explore(ES_GREEDY_SACRIFICEABLE)
+                        && (!Options.auto_sacrifice || !_can_sacrifice(newpos)
+                            || stack || butcherable))
+                    || (butcherable
+                        && _prompt_stop_explore(ES_GREEDY_BUTCHERABLE)
+                        && (!Options.auto_butcher || !_can_butcher(newpos)
+                            || stack || sacrificeable)))
                 {
-                    if ((stack && _prompt_stop_explore(ES_GREEDY_VISITED_ITEM_STACK)
-                         || sacrificeable && _prompt_stop_explore(ES_GREEDY_SACRIFICEABLE))
-                        && (!Options.auto_sacrifice || !sacrificeable || stack
-                            || !_can_sacrifice(newpos)))
-                    {
-                        explore_stopped_pos = newpos;
-                        stop_running();
-                    }
-                    return direction_to_command(*move_x, *move_y);
+                    explore_stopped_pos = newpos;
+                    stop_running();
                 }
+                if (stack || sacrificeable || butcherable)
+                    return direction_to_command(*move_x, *move_y);
             }
         }
 
@@ -1112,7 +1124,7 @@ travel_pathfind::travel_pathfind()
     : runmode(RMODE_NOT_RUNNING), start(), dest(), next_travel_move(),
       floodout(false), double_flood(false), ignore_hostile(false),
       ignore_danger(false), annotate_map(false), ls(NULL),
-      need_for_greed(false), autopickup(false), sacrifice(false),
+      need_for_greed(false), autopickup(false), sacrifice(false), butcher(false),
       unexplored_place(), greedy_place(), unexplored_dist(0), greedy_dist(0),
       refdist(NULL), reseed_points(), features(NULL), unreachables(),
       point_distance(travel_point_distance), points(0), next_iter_points(0),
@@ -1126,14 +1138,14 @@ travel_pathfind::~travel_pathfind()
 
 static bool _is_greed_inducing_square(const LevelStashes *ls,
                                       const coord_def &c, bool autopickup,
-                                      bool sacrifice)
+                                      bool sacrifice, bool butcher)
 {
-    return (ls && ls->needs_visit(c, autopickup, sacrifice));
+    return (ls && ls->needs_visit(c, autopickup, sacrifice, butcher));
 }
 
 bool travel_pathfind::is_greed_inducing_square(const coord_def &c) const
 {
-    return _is_greed_inducing_square(ls, c, autopickup, sacrifice);
+    return _is_greed_inducing_square(ls, c, autopickup, sacrifice, butcher);
 }
 
 void travel_pathfind::set_src_dst(const coord_def &src, const coord_def &dst)
@@ -1223,7 +1235,8 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode)
     {
         autopickup = can_autopickup();
         sacrifice = god_likes_items(you.religion, true);
-        need_for_greed = (autopickup || sacrifice);
+        butcher = can_autobutcher();
+        need_for_greed = (autopickup || sacrifice || butcher);
     }
 
     if (!ls && (annotate_map || need_for_greed))
@@ -2956,7 +2969,33 @@ void start_explore(bool grab_items)
                 pray();
             }
             else
-                mark_items_non_visit_at(you.pos());
+                mark_items_non_visit_sacrifice_at(you.pos());
+        }
+    }
+
+    if (you.running == RMODE_EXPLORE_GREEDY && can_autobutcher())
+    {
+        const LevelStashes *lev = StashTrack.find_current_level();
+        if (lev && lev->butcherable(you.pos()))
+        {
+            if (Options.butcher_before_explore == 2)
+            {
+                mprnojoin("Corpses which can be butchered:", MSGCH_FLOOR_ITEMS);
+                for (stack_iterator si(you.visible_igrd(you.pos())); si; ++si)
+                    if (si->is_greedy_butcherable())
+                        mpr_nocap(get_menu_colour_prefix_tags(*si, DESC_A));
+
+            }
+
+            if ((Options.butcher_before_explore == 1 || Options.auto_butcher
+                 || Options.butcher_before_explore == 2
+                    && yesno("Do you want to butcher the corpses here? ", true, 'n'))
+                && _can_butcher(you.pos()))
+            {
+                butchery();
+            }
+            else
+                mark_items_non_visit_butcher_at(you.pos());
         }
     }
 
@@ -4078,7 +4117,8 @@ void runrest::clear()
 
 explore_discoveries::explore_discoveries()
     : can_autopickup(::can_autopickup()),
-      sacrifice(god_likes_items(you.religion, true)), es_flags(0),
+      sacrifice(god_likes_items(you.religion, true)),
+      butcher(::can_autobutcher()), es_flags(0),
       current_level(NULL), items(), stairs(), portals(), shops(), altars(),
       runed_doors()
 {
@@ -4253,7 +4293,8 @@ void explore_discoveries::found_item(const coord_def &pos, const item_def &i)
             const bool greed_inducing = _is_greed_inducing_square(current_level,
                                                                   pos,
                                                                   can_autopickup,
-                                                                  sacrifice);
+                                                                  sacrifice,
+                                                                  butcher);
 
             if (greed_inducing && (Options.explore_stop & ES_GREEDY_ITEM))
                 ; // Stop for this condition

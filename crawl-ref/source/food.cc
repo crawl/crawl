@@ -476,6 +476,20 @@ bool player_can_butcher(int *butcher_tool)
     return can_butcher || removed_gloves || wpn_switch;
 }
 
+bool can_autobutcher()
+{
+    if (!(Options.explore_stop & ES_GREEDY_BUTCHERABLE))
+        return false;
+
+    if (!player_can_butcher())
+        return false;
+
+    return (can_ingest(OBJ_FOOD, FOOD_CHUNK, true, false)
+            || you.species == SP_VAMPIRE && you.experience_level >= 6
+            || you.has_spell(SPELL_SUBLIMATION_OF_BLOOD)
+            || you.has_spell(SPELL_SIMULACRUM));
+}
+
 bool butchery(int which_corpse, bool bottle_blood)
 {
     if (you.visible_igrd(you.pos()) == NON_ITEM)
