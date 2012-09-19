@@ -815,7 +815,8 @@ bool melee_attack::attack()
     }
 
     // We might have killed the kraken target by cleaving a tentacle.
-    if (!defender->alive()) {
+    if (!defender->alive())
+    {
         handle_phase_killed();
         handle_phase_end();
         return attack_occurred;
