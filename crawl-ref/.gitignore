@@ -190,3 +190,9 @@ source/.tx/config
 .settings
 .settings/
 .metadata/
+
+# generated files for android
+bin/
+AndroidData/
+icon.png
+libapplication.so
