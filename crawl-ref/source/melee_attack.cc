@@ -1390,6 +1390,8 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
 
     aux_damage  = player_apply_slaying_bonuses(aux_damage, true);
 
+    aux_damage  = player_apply_final_multipliers(aux_damage);
+
     const int pre_ac_dmg = aux_damage;
     const int post_ac_dmg = apply_defender_ac(aux_damage);
 
@@ -1589,26 +1591,21 @@ int melee_attack::player_apply_fighting_skill(int damage, bool aux)
     return damage;
 }
 
+// A couple additive modifiers that should be applied to both unarmed and
+// armed attacks.
 int melee_attack::player_apply_misc_modifiers(int damage)
 {
-    //cleave damage modifier
-    if (cleaving)
-        damage = cleave_damage_mod(damage);
-
     if (you.duration[DUR_MIGHT] || you.duration[DUR_BERSERK])
         damage += 1 + random2(10);
 
     if (you.species != SP_VAMPIRE && you.hunger_state == HS_STARVING)
         damage -= random2(5);
 
-    // not additive, statues are supposed to be bad with tiny toothpicks but
-    // deal crushing blows with big weapons
-    if (you.form == TRAN_STATUE)
-        damage = div_rand_round(damage * 3, 2);
-
     return damage;
 }
 
+// Slaying and weapon enchantment. Apply this for slaying even if not
+// using a weapon to attack.
 int melee_attack::player_apply_slaying_bonuses(int damage, bool aux)
 {
     int damage_plus = 0;
@@ -1626,6 +1623,8 @@ int melee_attack::player_apply_slaying_bonuses(int damage, bool aux)
     return damage;
 }
 
+// Modifiers dependent on wielding a weapon. Does not include weapon
+// enchantment, which is handled by player_apply_slaying_bonuses.
 int melee_attack::player_apply_weapon_bonuses(int damage)
 {
     if (weapon && is_weapon(*weapon) && !is_range_weapon(*weapon))
@@ -1668,6 +1667,25 @@ int melee_attack::player_apply_weapon_bonuses(int damage)
         if (get_weapon_brand(*weapon) == SPWPN_SPEED)
             damage = div_rand_round(damage * 9, 10);
     }
+
+    return damage;
+}
+
+// Multipliers to be applied to the final (pre-stab, pre-AC) damage.
+// It might be tempting to try to pick and choose what pieces of the damage
+// get affected by such multipliers, but putting them at the end is the
+// simplest effect to understand if they aren't just going to be applied
+// to the base damage of the weapon.
+int melee_attack::player_apply_final_multipliers(int damage)
+{
+    //cleave damage modifier
+    if (cleaving)
+        damage = cleave_damage_mod(damage);
+
+    // not additive, statues are supposed to be bad with tiny toothpicks but
+    // deal crushing blows with big weapons
+    if (you.form == TRAN_STATUE)
+        damage = div_rand_round(damage * 3, 2);
 
     return damage;
 }
@@ -4730,6 +4748,7 @@ void melee_attack::do_minotaur_retaliation()
         dmg = player_apply_fighting_skill(dmg, true);
         dmg = player_apply_misc_modifiers(dmg);
         dmg = player_apply_slaying_bonuses(dmg, true);
+        dmg = player_apply_final_multipliers(dmg);
         int ac = random2(1 + attacker->armour_class());
         int hurt = dmg - ac;
 
@@ -5219,6 +5238,7 @@ int melee_attack::calc_damage()
         damage_done = player_apply_misc_modifiers(damage_done);
         damage_done = player_apply_slaying_bonuses(damage_done, false);
         damage_done = player_apply_weapon_bonuses(damage_done);
+        damage_done = player_apply_final_multipliers(damage_done);
 
         damage_done = player_stab(damage_done);
         damage_done = apply_defender_ac(damage_done);
