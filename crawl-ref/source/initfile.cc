@@ -2296,7 +2296,7 @@ void game_options::read_option_line(const string &str, bool runscript)
             lang = LANG_CS, lang_name = "cs";
         else if (field == "da" || field == "danish" || field == "dansk")
             lang = LANG_DA, lang_name = "da";
-        else if (field == "de" || field == "german" || field == "deutch")
+        else if (field == "de" || field == "german" || field == "deutsch")
             lang = LANG_DE, lang_name = "de";
         else if (field == "el" || field == "greek" || field == "ελληνικά" || field == "ελληνικα")
             lang = LANG_EL, lang_name = "el";
