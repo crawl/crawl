@@ -415,18 +415,8 @@ static string _butcher_menu_title(const Menu *menu, const string &oldt)
 }
 #endif
 
-bool butchery(int which_corpse, bool bottle_blood)
+bool player_can_butcher(int *butcher_tool)
 {
-    if (you.visible_igrd(you.pos()) == NON_ITEM)
-    {
-        if (!_have_corpses_in_pack(false, bottle_blood))
-            mpr("There isn't anything here!");
-        return false;
-    }
-
-    if (!player_can_reach_floor())
-        return false;
-
     // Vampires' fangs are optimised for biting, not for tearing flesh.
     // (Not that they really need to.) Other species with this mutation
     // might still benefit from it.
@@ -436,31 +426,107 @@ bool butchery(int which_corpse, bool bottle_blood)
     bool birdie_butcher   = (player_mutation_level(MUT_BEAK)
                              && player_mutation_level(MUT_TALONS));
 
-    bool barehand_butcher = (form_can_butcher_barehanded(you.form)
-                                 || you.has_claws())
-                             && !player_wearing_slot(EQ_GLOVES);
+    bool barehand_butcher = ((form_can_butcher_barehanded() || you.has_claws())
+                             && !player_wearing_slot(EQ_GLOVES));
 
-    bool gloved_butcher   = (you.has_claws() && player_wearing_slot(EQ_GLOVES)
+    bool gloved_butcher   = ((form_can_butcher_barehanded() || you.has_claws())
+                             && player_wearing_slot(EQ_GLOVES)
                              && !you.inv[you.equip[EQ_GLOVES]].cursed());
 
-    bool knife_butcher    = !barehand_butcher && !you.weapon() && form_can_wield();
+    bool knife_butcher    = (!barehand_butcher && !you.weapon()
+                             && form_can_wield());
 
     bool can_butcher      = (teeth_butcher || barehand_butcher
                              || birdie_butcher || knife_butcher
                              || you.weapon() && can_cut_meat(*you.weapon()));
 
-    // It makes more sense that you first find out if there's anything
-    // to butcher, *then* decide to actually butcher it.
-    // The old code did it the other way.
-    if (!can_butcher && you.berserk())
+    bool wpn_switch     = false;
+    bool removed_gloves = false;
+
+    if (!can_butcher && you.weapon())
     {
-        // NB: Normally can't get here with bottle_blood == true because it's an
-        // ability and thus also blocked when berserking.  If bottle_blood was
-        // somehow true at the point, the following message would be wrong and
-        // (even worse) bottling success would depend on can_butcher == true.
+        if (!you.weapon()->cursed())
+            wpn_switch = true;
+        else if (gloved_butcher)
+            removed_gloves = true;
+    }
+
+    if (butcher_tool)
+    {
+        if (barehand_butcher || removed_gloves)
+            *butcher_tool = SLOT_CLAWS;
+        else if (birdie_butcher)
+            *butcher_tool = SLOT_BIRDIE;
+        else if (teeth_butcher)
+            *butcher_tool = SLOT_TEETH;
+        else if (knife_butcher || !can_butcher) // catch all failures
+            *butcher_tool = SLOT_BUTCHERING_KNIFE;
+        else
+            *butcher_tool = you.weapon()->link;
+    }
+
+    // All returns are after this point so butcher_tool is always set
+
+    if (!player_can_reach_floor("", true))
+        return false;
+
+    if (you.berserk() && !can_butcher)
+        return false;
+
+    return can_butcher || removed_gloves || wpn_switch;
+}
+
+bool butchery(int which_corpse, bool bottle_blood)
+{
+    if (you.visible_igrd(you.pos()) == NON_ITEM)
+    {
+        if (!_have_corpses_in_pack(false, bottle_blood))
+            mpr("There isn't anything here!");
+        return false;
+    }
+
+    // NB: This is not redundant with the following both because this is noisy
+    // and because it makes can_butcher == false imply berserk or curse issues.
+    if (!player_can_reach_floor())
+        return false;
+
+    int butcher_tool;
+    bool can_butcher = player_can_butcher(&butcher_tool);
+
+    bool wpn_switch     = false;
+    bool removed_gloves = false;
+
+    // Recover need to change equipment based on butcher_tool
+    if (butcher_tool == SLOT_CLAWS && player_wearing_slot(EQ_GLOVES))
+        removed_gloves = true;
+    if (butcher_tool == SLOT_BUTCHERING_KNIFE && you.weapon())
+        wpn_switch = true; // even if cursed; wield_weapon will catch that
+    if (removed_gloves || wpn_switch)
+        can_butcher = false; // so can_butcher means can butcher right now
+
+    if (butcher_tool == SLOT_BUTCHERING_KNIFE && !form_can_wield())
+    {
+        mprf("You can't %s in your present form.",
+             bottle_blood ? "bottle blood" : "butcher");
+        return false;
+    }
+    if (you.berserk() && bottle_blood)
+    {
+        // NB: Normally can't get here with bottle_blood because it's an ability
+        // and thus also blocked when berserking.  bottle_blood via auto_butcher
+        // also can't get here because autoexplore is also blocked when berserk.
+        mpr("You are too berserk to bottle blood right now!");
+        return false;
+    }
+    if (you.berserk() && !can_butcher)
+    {
         mpr("You are too berserk to search for a butchering tool!");
         return false;
     }
+
+    // At this point we know that the player is physically capable of butchery.
+    // We will now check if there's anything to butcher here, and *then* decide
+    // whether or not to butcher it.  The old code did it the other way around.
 
     bool wants_any = you.has_spell(SPELL_SIMULACRUM)
                   || you.has_spell(SPELL_SUBLIMATION_OF_BLOOD);
@@ -513,30 +579,6 @@ bool butchery(int which_corpse, bool bottle_blood)
 
     int old_weapon      = you.equip[EQ_WEAPON];
     int old_gloves      = you.equip[EQ_GLOVES];
-
-    bool wpn_switch     = false;
-    bool removed_gloves = false;
-
-    if (!can_butcher)
-    {
-        if (you.weapon() && you.weapon()->cursed() && gloved_butcher)
-            removed_gloves = true;
-        else
-            wpn_switch = true;
-    }
-
-    int butcher_tool;
-
-    if (barehand_butcher || removed_gloves)
-        butcher_tool = SLOT_CLAWS;
-    else if (teeth_butcher)
-        butcher_tool = SLOT_TEETH;
-    else if (birdie_butcher)
-        butcher_tool = SLOT_BIRDIE;
-    else if (wpn_switch || knife_butcher)
-        butcher_tool = SLOT_BUTCHERING_KNIFE;
-    else
-        butcher_tool = you.weapon()->link;
 
     // Butcher pre-chosen corpse, if found, or if there is only one corpse.
     bool success = false;
