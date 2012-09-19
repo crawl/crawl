@@ -11,6 +11,7 @@
 #endif
 
 #if defined(UNIX)
+#include <unistd.h>
         #define BACKTRACE_SUPPORTED
 #endif
 
