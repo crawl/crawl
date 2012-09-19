@@ -34,7 +34,7 @@
 #include "terrain.h"
 #include "view.h"
 
-static bool _offer_items();
+static bool _offer_items(bool auto_only);
 static bool _zin_donate_gold();
 
 static bool _confirm_pray_sacrifice(god_type god)
@@ -293,7 +293,7 @@ static bool _altar_prayer()
     return did_something;
 }
 
-void pray()
+void pray(bool auto_only)
 {
     if (silenced(you.pos()))
     {
@@ -348,7 +348,7 @@ void pray()
         something_happened = true;
 
     // All sacrifices affect items you're standing on.
-    something_happened |= _offer_items();
+    something_happened |= _offer_items(auto_only);
 
     if (you.religion == GOD_XOM)
         mpr(getSpeakString("Xom prayer"), MSGCH_GOD);
@@ -796,7 +796,7 @@ bool check_nemelex_sacrificing_item_type(const item_def& item)
     }
 }
 
-static bool _offer_items()
+static bool _offer_items(bool auto_only)
 {
     if (!god_likes_items(you.religion))
         return false;
@@ -828,6 +828,13 @@ static bool _offer_items()
                 num_disliked++;
                 disliked_item = &item;
             }
+            continue;
+        }
+
+        // Skip dropped/thrown/etc. items if auto_only
+        if (auto_only && !item.is_greedy_sacrificeable())
+        {
+            i = next;
             continue;
         }
 

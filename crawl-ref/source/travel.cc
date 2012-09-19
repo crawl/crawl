@@ -2966,7 +2966,7 @@ void start_explore(bool grab_items)
                     && yesno("Do you want to sacrifice the items here? ", true, 'n'))
                 && _can_sacrifice(you.pos()))
             {
-                pray();
+                pray(true);
             }
             else
                 mark_items_non_visit_sacrifice_at(you.pos());

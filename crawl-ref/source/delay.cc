@@ -1417,7 +1417,7 @@ static void _handle_run_delays(const delay_queue_item &delay)
             if (lev && lev->sacrificeable(you.pos()))
             {
                 const interrupt_block block_interrupts;
-                pray();
+                pray(true);
                 return;
             }
         }
