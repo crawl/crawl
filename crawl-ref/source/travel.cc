@@ -2926,6 +2926,62 @@ void start_travel(const coord_def& p)
         start_translevel_travel(level_target);
 }
 
+static bool _autosacrifice_maybe_prompt()
+{
+    if (!god_likes_items(you.religion, true))
+        return false;
+
+    bool do_sacrifice =
+        (Options.auto_sacrifice || Options.sacrifice_before_explore == 1);
+
+    if (!_can_sacrifice(you.pos()))
+        do_sacrifice = false;
+    else if (Options.sacrifice_before_explore == 2)
+    {
+        mprnojoin("Things that can be sacrificed:", MSGCH_FLOOR_ITEMS);
+        for (stack_iterator si(you.visible_igrd(you.pos())); si; ++si)
+            if (si->is_greedy_sacrificeable())
+                mpr_nocap(get_menu_colour_prefix_tags(*si, DESC_A));
+        do_sacrifice =
+            yesno("Do you want to sacrifice the items here? ", true, 'n');
+    }
+
+    if (do_sacrifice)
+        pray(true);
+    else
+        mark_items_non_visit_sacrifice_at(you.pos());
+
+    return do_sacrifice;
+}
+
+static bool _autobutcher_maybe_prompt()
+{
+    if (!can_autobutcher())
+        return false;
+
+    bool do_butcher =
+        (Options.auto_butcher || Options.butcher_before_explore == 1);
+
+    if (!_can_butcher(you.pos()))
+        do_butcher = false;
+    else if (Options.butcher_before_explore == 2)
+    {
+        mprnojoin("Corpses that can be butchered:", MSGCH_FLOOR_ITEMS);
+        for (stack_iterator si(you.visible_igrd(you.pos())); si; ++si)
+            if (si->is_greedy_butcherable())
+                mpr_nocap(get_menu_colour_prefix_tags(*si, DESC_A));
+        do_butcher =
+            yesno("Do you want to butcher the corpses here? ", true, 'n');
+    }
+
+    if (do_butcher)
+        butchery(-2);
+    else
+        mark_items_non_visit_butcher_at(you.pos());
+
+    return do_butcher;
+}
+
 void start_explore(bool grab_items)
 {
     if (Hints.hints_explored)
@@ -2947,55 +3003,27 @@ void start_explore(bool grab_items)
         you.running = RMODE_EXPLORE;
     }
 
-    if (you.running == RMODE_EXPLORE_GREEDY && god_likes_items(you.religion, true))
+    LevelStashes *lev = StashTrack.find_current_level();
+
+    if (lev && you.running == RMODE_EXPLORE_GREEDY)
     {
-        const LevelStashes *lev = StashTrack.find_current_level();
-        if (lev && lev->sacrificeable(you.pos()))
+        if (Options.butcher_before_explore == 2)
         {
-            if (Options.sacrifice_before_explore == 2)
+            if (!lev->butcherable(you.pos())
+                || !_autobutcher_maybe_prompt())
             {
-                mprnojoin("Things which can be sacrificed:", MSGCH_FLOOR_ITEMS);
-                for (stack_iterator si(you.visible_igrd(you.pos())); si; ++si)
-                    if (si->is_greedy_sacrificeable())
-                        mpr_nocap(get_menu_colour_prefix_tags(*si, DESC_A));
-
+                if (lev->sacrificeable(you.pos()))
+                    _autosacrifice_maybe_prompt();
             }
-
-            if ((Options.sacrifice_before_explore == 1 || Options.auto_sacrifice
-                 || Options.sacrifice_before_explore == 2
-                    && yesno("Do you want to sacrifice the items here? ", true, 'n'))
-                && _can_sacrifice(you.pos()))
-            {
-                pray(true);
-            }
-            else
-                mark_items_non_visit_sacrifice_at(you.pos());
         }
-    }
-
-    if (you.running == RMODE_EXPLORE_GREEDY && can_autobutcher())
-    {
-        const LevelStashes *lev = StashTrack.find_current_level();
-        if (lev && lev->butcherable(you.pos()))
+        else
         {
-            if (Options.butcher_before_explore == 2)
+            if (!lev->sacrificeable(you.pos())
+                || !_autosacrifice_maybe_prompt())
             {
-                mprnojoin("Corpses which can be butchered:", MSGCH_FLOOR_ITEMS);
-                for (stack_iterator si(you.visible_igrd(you.pos())); si; ++si)
-                    if (si->is_greedy_butcherable())
-                        mpr_nocap(get_menu_colour_prefix_tags(*si, DESC_A));
-
+                if (lev->butcherable(you.pos()))
+                    _autobutcher_maybe_prompt();
             }
-
-            if ((Options.butcher_before_explore == 1 || Options.auto_butcher
-                 || Options.butcher_before_explore == 2
-                    && yesno("Do you want to butcher the corpses here? ", true, 'n'))
-                && _can_butcher(you.pos()))
-            {
-                butchery(-2);
-            }
-            else
-                mark_items_non_visit_butcher_at(you.pos());
         }
     }
 
