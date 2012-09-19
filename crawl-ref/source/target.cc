@@ -32,6 +32,11 @@ bool targetter::set_aim(coord_def a)
     return true;
 }
 
+bool targetter::can_affect_outside_range()
+{
+    return false;
+}
+
 bool targetter::anyone_there(coord_def loc)
 {
     if (!map_bounds(loc))
@@ -122,6 +127,12 @@ bool targetter_beam::valid_aim(coord_def a)
     if ((origin - a).abs() > range2)
         return notify_fail("Out of range.");
     return true;
+}
+
+bool targetter_beam::can_affect_outside_range()
+{
+    // XXX is this everything?
+    return max_expl_rad > 0;
 }
 
 aff_type targetter_beam::is_affected(coord_def loc)
@@ -330,6 +341,12 @@ bool targetter_smite::set_aim(coord_def a)
     return true;
 }
 
+bool targetter_smite::can_affect_outside_range()
+{
+    // XXX is this everything?
+    return exp_range_max > 0;
+}
+
 aff_type targetter_smite::is_affected(coord_def loc)
 {
     if (!valid_aim(aim))
@@ -531,6 +548,11 @@ bool targetter_cloud::set_aim(coord_def a)
         }
     }
 
+    return true;
+}
+
+bool targetter_cloud::can_affect_outside_range()
+{
     return true;
 }
 
