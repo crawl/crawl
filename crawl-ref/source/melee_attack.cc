@@ -814,6 +814,13 @@ bool melee_attack::attack()
         cleave_setup();
     }
 
+    // We might have killed the kraken target by cleaving a tentacle.
+    if (!defender->alive()) {
+        handle_phase_killed();
+        handle_phase_end();
+        return attack_occurred;
+    }
+
     // Apparently I'm insane for believing that we can still stay general past
     // this point in the combat code, mebe I am! --Cryptic
 
