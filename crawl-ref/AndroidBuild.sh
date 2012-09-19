@@ -132,9 +132,8 @@ STRIP="$TOOLCHAIN_DIR/bin/$GCCPREFIX-strip" \
 ########################################################################
 # actually do the compile(!)
 
-# reset LOCAL_PATH
-LOCAL_PATH=`dirname $0`/crawl-ref/source
-LOCAL_PATH=`cd $LOCAL_PATH && pwd`
+CRAWL_PATH=`dirname $0`/source
+CRAWL_PATH=`cd $CRAWL_PATH && pwd`
 
 # remove the final artefact
 rm -f libapplication.so
@@ -146,8 +145,8 @@ SAVES_P="."
 GLES=1
 
 # "make install"
-cd $LOCAL_PATH && setEnv nice make -j2 install TILES=1 TOUCH_UI=1 CROSSHOST=arm-linux-androideabi ANDROID=1  prefix=$PREFIX_P DATADIR=$DATADIR_P SAVEDIR=$SAVES_P GLES=$GLES COPY_FONTS=1
-cd $LOCAL_PATH/../..
+cd $CRAWL_PATH && setEnv nice make -j2 install TILES=1 TOUCH_UI=1 CROSSHOST=arm-linux-androideabi ANDROID=1  prefix=$PREFIX_P DATADIR=$DATADIR_P SAVEDIR=$SAVES_P GLES=$GLES COPY_FONTS=1
+cd $CRAWL_PATH/..
 
 if [ -e bin/crawl ]; then
 	# crawl compiles to bin/crawl - put the lib in the right place
@@ -159,17 +158,18 @@ if [ -e bin/crawl ]; then
 	# put all the android icons in the right places to be picked up
 	for RES in ldpi mdpi hdpi xhdpi; do
 		for ICON in icon; do
-			if [ -f crawl-ref/source/dat/tiles/android/$ICON-$RES.png ]; then
+			if [ -f source/dat/tiles/android/$ICON-$RES.png ]; then
 				mkdir -p ../../../res/drawable-$RES
-				cp crawl-ref/source/dat/tiles/android/$ICON-$RES.png ../../../res/drawable-$RES/$ICON.png
+				cp source/dat/tiles/android/$ICON-$RES.png ../../../res/drawable-$RES/$ICON.png
 			fi
 		done
 	done
 
 	# symlink a default icon
-	ln -s -f crawl-ref/source/dat/tiles/stone_soup_icon-512x512.png icon.png
+	ln -s -f source/dat/tiles/stone_soup_icon-512x512.png icon.png
 
   # fixup version string
-  VER=$(sed '/LONG/!d; s/^.*"\(.*\)"$/\1/' < crawl-ref/source/build.h)
-  sed -i "/android:versionName/s/GEN_FROM_HEADER/$VER/" ../../../AndroidManifest.xml
+  VER=$(sed '/LONG/!d; s/^.*"\(.*\)"$/\1/' < source/build.h)
+  echo `pwd`
+  sed -i "/android:versionName/s/GEN_FROM_HEADER/$VER/" $LOCAL_PATH/../../AndroidManifest.xml
 fi

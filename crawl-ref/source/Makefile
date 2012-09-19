@@ -1252,9 +1252,9 @@ endif
 #
 ifdef ANDROID
   # during build, data goes in a different directory to when crawl runs!
-  prefix_fp = ../..
-  datadir_fp = ../../AndroidData
-  savedir_fp = ../../AndroidData
+  prefix_fp = ..
+  datadir_fp = ../AndroidData
+  savedir_fp = ../AndroidData
   shareddir_fp =
 endif
 
@@ -1353,9 +1353,9 @@ clean-contrib:
 	+$(MAKE) -C contrib clean
 
 clean-android:
-	$(RM) ../../icon.png ../../libapplication.so
-	$(RM) -r ../../AndroidData
-	$(RM) -r ../../bin
+	$(RM) ../icon.png ../libapplication.so
+	$(RM) -r ../AndroidData
+	$(RM) -r ../bin
 
 distclean: clean clean-contrib clean-rltiles
 	$(RM) -r morgue saves
