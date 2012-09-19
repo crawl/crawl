@@ -490,6 +490,7 @@ bool can_autobutcher()
             || you.has_spell(SPELL_SIMULACRUM));
 }
 
+// which_corpse == -2 means auto_butcher good corpses, -1 for no selection
 bool butchery(int which_corpse, bool bottle_blood)
 {
     if (you.visible_igrd(you.pos()) == NON_ITEM)
@@ -593,12 +594,15 @@ bool butchery(int which_corpse, bool bottle_blood)
 
     int old_weapon      = you.equip[EQ_WEAPON];
     int old_gloves      = you.equip[EQ_GLOVES];
+    bool auto_only      = (which_corpse == -2);
 
     // Butcher pre-chosen corpse, if found, or if there is only one corpse.
+    // Also catch CONFIRM_NEVER for the best corpse, but not for auto_only,
+    // which shouldn't un/re-equip for each corpse if there are several.
     bool success = false;
     if (prechosen && corpse_id == which_corpse
         || num_corpses == 1 && Options.confirm_butcher != CONFIRM_ALWAYS
-        || Options.confirm_butcher == CONFIRM_NEVER)
+        || Options.confirm_butcher == CONFIRM_NEVER && !auto_only)
     {
         if (Options.confirm_butcher == CONFIRM_NEVER
             && !_should_butcher(corpse_id, bottle_blood))
@@ -637,18 +641,32 @@ bool butchery(int which_corpse, bool bottle_blood)
         {
             continue;
         }
-        meat.push_back(& (*si));
+
+        if (!auto_only)
+            meat.push_back(& (*si));
+        else if (si->is_greedy_butcherable())
+            meat.push_back(& (*si));
     }
 
-    corpse_id = -1;
-    vector<SelItem> selected =
-        select_items(meat, bottle_blood ? "Choose a corpse to bottle"
-                                        : "Choose a corpse to butcher",
-                     false, MT_ANY, _butcher_menu_title);
-    redraw_screen();
-    for (int i = 0, count = selected.size(); i < count; ++i)
+    int count = meat.size;
+    vector<SelItem> selected;
+    if (!auto_only)
     {
-        corpse_id = selected[i].item->index();
+        selected = select_items(meat,
+                                bottle_blood ? "Choose a corpse to bottle"
+                                             : "Choose a corpse to butcher",
+                                false, MT_ANY, _butcher_menu_title);
+        count = selected.size();
+        redraw_screen();
+    }
+
+    for (int i = 0; i < count; ++i)
+    {
+        if (auto_only)
+            corpse_id = meat[i]->index();
+        else
+            corpse_id = selected[i].item->index();
+
         if (!did_weap_swap)
         {
             if (_prepare_butchery(can_butcher, removed_gloves, wpn_switch))
@@ -656,6 +674,7 @@ bool butchery(int which_corpse, bool bottle_blood)
             else
                 return false;
         }
+
         if (_corpse_butchery(corpse_id, butcher_tool, first_corpse,
                              bottle_blood))
         {
@@ -663,7 +682,6 @@ bool butchery(int which_corpse, bool bottle_blood)
             first_corpse = false;
         }
     }
-
 #else
     int keyin;
     bool repeat_prompt = false;
@@ -678,12 +696,12 @@ bool butchery(int which_corpse, bool bottle_blood)
             continue;
         }
 
-        if (butcher_all)
-            corpse_id = si->index();
-        else
-        {
-            corpse_id = -1;
+        corpse_id = -1;
 
+        if (butcher_all || auto_only && si->is_greedy_butcherable())
+            corpse_id = si->index();
+        else if (!auto_only) // auto_only => !is_greedy_butcherable
+        {
             string corpse_name = si->name(DESC_A);
 
             // We don't need to check for undead because
@@ -708,16 +726,6 @@ bool butchery(int which_corpse, bool bottle_blood)
                 case 'c':
                 case 'd':
                 case 'a':
-                    if (!did_weap_swap)
-                    {
-                        if (_prepare_butchery(can_butcher, removed_gloves,
-                                              wpn_switch))
-                        {
-                            did_weap_swap = true;
-                        }
-                        else
-                            return false;
-                    }
                     corpse_id = si->index();
 
                     if (keyin == 'a')
@@ -747,6 +755,14 @@ bool butchery(int which_corpse, bool bottle_blood)
 
         if (corpse_id != -1)
         {
+            if (!did_weap_swap)
+            {
+                if (_prepare_butchery(can_butcher, removed_gloves, wpn_switch))
+                    did_weap_swap = true;
+                else
+                    return false;
+            }
+
             if (_corpse_butchery(corpse_id, butcher_tool, first_corpse,
                                  bottle_blood))
             {
@@ -756,10 +772,10 @@ bool butchery(int which_corpse, bool bottle_blood)
         }
     }
 #endif
-    if (!butcher_all && corpse_id == -1)
+    if (!auto_only && corpse_id == -1)
     {
-        mprf("There isn't anything %s to %s here.",
-             Options.confirm_butcher == CONFIRM_NEVER ? "suitable" : "else",
+        // Old code specially handled CONFIRM_NEVER, which can't get here
+        mprf("There isn't anything else to %s here.",
              bottle_blood ? "bottle" : "butcher");
     }
     _terminate_butchery(wpn_switch, removed_gloves, old_weapon, old_gloves);

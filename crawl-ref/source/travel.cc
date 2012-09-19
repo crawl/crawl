@@ -2992,7 +2992,7 @@ void start_explore(bool grab_items)
                     && yesno("Do you want to butcher the corpses here? ", true, 'n'))
                 && _can_butcher(you.pos()))
             {
-                butchery();
+                butchery(-2);
             }
             else
                 mark_items_non_visit_butcher_at(you.pos());
