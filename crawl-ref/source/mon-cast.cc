@@ -2813,7 +2813,7 @@ static int _mons_cause_fear(monster* mons, bool actual)
 
 static bool _mons_drain_life(monster* mons, bool actual)
 {
-    if (actual)
+    if (actual && you.see_cell(mons.pos()))
     {
         if (you.can_see(mons))
         {
