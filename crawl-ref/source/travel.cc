@@ -2926,7 +2926,7 @@ void start_travel(const coord_def& p)
         start_translevel_travel(level_target);
 }
 
-static bool _autosacrifice_maybe_prompt()
+static bool _autosacrifice_maybe_prompt(bool butcher_to_follow)
 {
     if (!god_likes_items(you.religion, true))
         return false;
@@ -2949,12 +2949,12 @@ static bool _autosacrifice_maybe_prompt()
     if (do_sacrifice)
         pray(true);
     else
-        mark_items_non_visit_sacrifice_at(you.pos());
+        mark_items_non_visit_sacrifice_at(you.pos(), butcher_to_follow);
 
     return do_sacrifice;
 }
 
-static bool _autobutcher_maybe_prompt()
+static bool _autobutcher_maybe_prompt(bool sacrifice_to_follow)
 {
     if (!can_autobutcher())
         return false;
@@ -2977,7 +2977,7 @@ static bool _autobutcher_maybe_prompt()
     if (do_butcher)
         butchery(-2);
     else
-        mark_items_non_visit_butcher_at(you.pos());
+        mark_items_non_visit_butcher_at(you.pos(), sacrifice_to_follow);
 
     return do_butcher;
 }
@@ -3010,19 +3010,19 @@ void start_explore(bool grab_items)
         if (Options.butcher_before_explore == 2)
         {
             if (!lev->butcherable(you.pos())
-                || !_autobutcher_maybe_prompt())
+                || !_autobutcher_maybe_prompt(true))
             {
                 if (lev->sacrificeable(you.pos()))
-                    _autosacrifice_maybe_prompt();
+                    _autosacrifice_maybe_prompt(false);
             }
         }
         else
         {
             if (!lev->sacrificeable(you.pos())
-                || !_autosacrifice_maybe_prompt())
+                || !_autosacrifice_maybe_prompt(true))
             {
                 if (lev->butcherable(you.pos()))
-                    _autobutcher_maybe_prompt();
+                    _autobutcher_maybe_prompt(false);
             }
         }
     }

@@ -1871,26 +1871,34 @@ void mark_items_non_pickup_at(const coord_def &pos)
     }
 }
 
-void mark_items_non_visit_sacrifice_at(const coord_def &pos)
+void mark_items_non_visit_sacrifice_at(const coord_def &pos,
+                                       bool except_butcherable)
 {
     int i = igrd(pos);
     while (i != NON_ITEM)
     {
         item_def &item(mitm[i]);
-        if (item.is_greedy_sacrificeable())
+        if (item.is_greedy_sacrificeable()
+            && (!except_butcherable || !item.is_greedy_butcherable()))
+        {
             item.flags |= ISFLAG_DROPPED;
+        }
         i = item.link;
     }
 }
 
-void mark_items_non_visit_butcher_at(const coord_def &pos)
+void mark_items_non_visit_butcher_at(const coord_def &pos,
+                                     bool except_sacrificeable)
 {
     int i = igrd(pos);
     while (i != NON_ITEM)
     {
         item_def &item(mitm[i]);
-        if (item.is_greedy_butcherable())
+        if (item.is_greedy_butcherable()
+            && (!except_sacrificeable || !item.is_greedy_sacrificeable()))
+        {
             item.flags |= ISFLAG_DROPPED;
+        }
         i = item.link;
     }
 }
