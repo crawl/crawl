@@ -31,10 +31,9 @@ Build Process
  * ensure that you have all of the dependent host libraries required to
    use the SDK, NDK and build crawl's host tools (libsdl1.2-dev at least).
    Note that you also need the zip and libvorbis-dev packages.
- * fetch the crawl-flavoured Android SDL port from here:
-   https://github.com/frogbotherer/commandergenius
- * cd project/jni/application
- * Update the src link to point to the root of the crawl's repository
+ * cd contrib/sdl-android/project/jni/application
+ * Update the src link to point to the root of the crawl's repository.
+   A relative link (../../../../../..) doesn't work, it needs to be absolute.
      example: ln -sf $HOME/crawl src
  * cd ../../..
  * Those steps are needed only for the very first build:

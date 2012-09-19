@@ -79,7 +79,7 @@ MAKEFLAGS += -rR # This only works for recursive makes, i.e. contribs ...
 
 .PHONY: all test install clean clean-contrib clean-rltiles clean-android \
         distclean debug debug-lite profile package-source source \
-        build-windows package-windows rest docs greet api
+        build-windows package-windows rest docs greet api android
 
 include Makefile.obj
 
@@ -1738,6 +1738,14 @@ mac-app-tiles: all
 
 mac-app-console: all
 	+$(MAKE) -j1 -C mac -f Makefile.app-bundle
+
+#############################################################################
+# Building the Android package
+#
+
+# FIXME: moving the package doesn't work
+android:
+	cd contrib/sdl-android && ./build.sh && mv project/bin/MainActivity-debug.apk ../../crawl_tiles_android-$(SRC_VERSION).apk
 
 #############################################################################
 # Canned tests
