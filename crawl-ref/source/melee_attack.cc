@@ -4849,6 +4849,10 @@ void melee_attack::cleave_setup()
     if (feat_is_solid(grd(defender->pos())))
         return;
 
+    // Don't cleave on a self-attack.
+    if (attacker->pos() == defender->pos())
+        return;
+
     int dir = coinflip() ? -1 : 1;
     get_cleave_targets(attacker->pos(), defender->pos(), dir, cleave_targets);
     cleave_targets.reverse();
