@@ -100,6 +100,8 @@ static bool _find_object(const coord_def& where, int mode, bool need_path,
                            int range, targetter *hitfunc);
 static bool _find_monster(const coord_def& where, int mode, bool need_path,
                            int range, targetter *hitfunc);
+static bool _find_monster_expl(const coord_def& where, int mode, bool need_path,
+                           int range, targetter *hitfunc);
 static bool _find_feature(const coord_def& where, int mode, bool need_path,
                            int range, targetter *hitfunc);
 static bool _find_fprop_unoccupied(const coord_def& where, int mode, bool need_path,
@@ -1076,6 +1078,17 @@ coord_def direction_chooser::find_default_target() const
             success = _find_square_wrapper(result, 1, _find_monster,
                                            needs_path, mode, range, hitfunc,
                                            true);
+
+            // We might be able to hit monsters in LOS that are outside of
+            // normal range, but inside explosion/cloud range
+            if (!success
+                && you.current_vision > range
+                && hitfunc->can_affect_outside_range())
+            {
+                success = _find_square_wrapper(result, 1, _find_monster_expl,
+                                               needs_path, mode, range, hitfunc,
+                                               true);
+            }
 
             // If we couldn't, maybe it was because of line-of-fire issues.
             // Check if that's happening, and inform the user (because it's
@@ -2384,6 +2397,36 @@ static bool _find_fprop_unoccupied(const coord_def & where, int mode,
     return (env.pgrid(where) & mode);
 }
 
+static bool _want_target_monster(const monster *mon, int mode)
+{
+    // Now compare target modes.
+    if (mode == TARG_ANY)
+        return true;
+
+    if (mode == TARG_HOSTILE || mode == TARG_HOSTILE_SUBMERGED)
+        return (mons_attitude(mon) == ATT_HOSTILE);
+
+    if (mode == TARG_FRIEND)
+        return mon->friendly();
+
+    if (mode == TARG_INJURED_FRIEND)
+        return (mon->friendly() && mons_get_damage_level(mon) > MDAM_OKAY
+                || !mon->wont_attack() && !mon->neutral() && is_pacifiable(mon) >= 0);
+
+    if (mode == TARG_EVOLVABLE_PLANTS)
+        return mons_is_evolvable(mon);
+
+    if (mode == TARG_HOSTILE_UNDEAD)
+        return !mon->friendly() && mon->holiness() == MH_UNDEAD;
+
+    ASSERT(mode == TARG_ENEMY);
+    if (mon->friendly())
+        return false;
+
+    // Don't target zero xp monsters.
+    return !mons_class_flag(mon->type, M_NO_EXP_GAIN);
+}
+
 static bool _find_monster(const coord_def& where, int mode, bool need_path,
                            int range, targetter *hitfunc)
 {
@@ -2422,32 +2465,51 @@ static bool _find_monster(const coord_def& where, int mode, bool need_path,
     if (need_path && _blocked_ray(mon->pos()))
         return false;
 
-    // Now compare target modes.
-    if (mode == TARG_ANY)
-        return true;
+    return _want_target_monster(mon, mode);
+}
 
-    if (mode == TARG_HOSTILE || mode == TARG_HOSTILE_SUBMERGED)
-        return (mons_attitude(mon) == ATT_HOSTILE);
+static bool _find_monster_expl(const coord_def& where, int mode, bool need_path,
+                           int range, targetter *hitfunc)
+{
+#ifdef CLUA_BINDINGS
+    {
+        coord_def dp = grid2player(where);
+        // We could pass more info here.
+        maybe_bool x = clua.callmbooleanfn("ch_target_monster_expl", "dd",
+                                           dp.x, dp.y);
+        if (x != B_MAYBE)
+            return tobool(x);
+    }
+#endif
 
-    if (mode == TARG_FRIEND)
-        return mon->friendly();
-
-    if (mode == TARG_INJURED_FRIEND)
-        return (mon->friendly() && mons_get_damage_level(mon) > MDAM_OKAY
-                || !mon->wont_attack() && !mon->neutral() && is_pacifiable(mon) >= 0);
-
-    if (mode == TARG_EVOLVABLE_PLANTS)
-        return mons_is_evolvable(mon);
-
-    if (mode == TARG_HOSTILE_UNDEAD)
-        return !mon->friendly() && mon->holiness() == MH_UNDEAD;
-
-    ASSERT(mode == TARG_ENEMY);
-    if (mon->friendly())
+    // Only check for explosive targetting at the edge of the range
+    if (you.pos().range(where) != range)
         return false;
 
-    // Don't target zero xp monsters.
-    return !mons_class_flag(mon->type, M_NO_EXP_GAIN);
+    // Target outside LOS.
+    if (!cell_see_cell(you.pos(), where, LOS_DEFAULT))
+        return false;
+
+    // Target in LOS but only via glass walls, so no direct path.
+    if (need_path && !you.see_cell_no_trans(where))
+        return false;
+
+    // Target is blocked by something
+    if (need_path && _blocked_ray(where))
+        return false;
+
+    if (hitfunc->set_aim(where))
+        for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
+        {
+            if (hitfunc->is_affected(*ri))
+            {
+                const monster* mon = monster_at(*ri);
+                if (mon != NULL)
+                    return _want_target_monster(mon, mode);
+            }
+        }
+
+    return false;
 }
 
 static bool _find_feature(const coord_def& where, int mode,
