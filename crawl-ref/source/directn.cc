@@ -1083,7 +1083,7 @@ coord_def direction_chooser::find_default_target() const
             // normal range, but inside explosion/cloud range
             if (!success
                 && you.current_vision > range
-                && hitfunc->can_affect_outside_range())
+                && hitfunc && hitfunc->can_affect_outside_range())
             {
                 success = _find_square_wrapper(result, 1, _find_monster_expl,
                                                needs_path, mode, range, hitfunc,
