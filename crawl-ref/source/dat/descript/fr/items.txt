@@ -234,7 +234,7 @@ Un livre de sortilèges magiques.
 book of dreams
 
 Un compte rendu de la transe d'un mystique somniloque, décrivant un certain
-nombre de sorts reflétant l'état ​​de ses rêve. Les détracteurs de l'œuvre font
+nombre de sorts reflétant l'état de ses rêve. Les détracteurs de l'œuvre font
 valoir que les sorts ne sont fonctionnellement pas différents de ceux déjà
 connus, mais le livre reste populaire pour l'extraordinaire bizarrerie de son
 imagerie et pour ses digressions cryptiques.
@@ -1314,21 +1314,21 @@ exotiques.
 %%%%
 scroll of enchant weapon i
 
-Ce parchemin place un enchantement sur ​​l'arme équipé, la rendant plus précise
+Ce parchemin place un enchantement sur l'arme équipé, la rendant plus précise
 en combat. Les chances de succès de l'enchantement diminue suivant le nombre
 d'enchantement déjà réalisé, et ne peut jamais aller au delà de +9. Les
 artefacts ne peuvent pas être enchanté.
 %%%%
 scroll of enchant weapon ii
 
-Ce parchemin place un enchantement sur ​​l'arme équipé, augmentant ses dégâts en
+Ce parchemin place un enchantement sur l'arme équipé, augmentant ses dégâts en
 combat. Les chances de succès de l'enchantement diminue suivant le nombre
 d'enchantement déjà réalisé, et ne peut jamais aller au delà de +9. Les
 artefacts ne peuvent pas être enchanté.
 %%%%
 scroll of enchant weapon iii
 
-Ce parchemin place un enchantement sur ​​l'arme équipé,  la rendant plus précise
+Ce parchemin place un enchantement sur l'arme équipé,  la rendant plus précise
 et augmentant ses dégâts en combat. Les chances de succès de l'enchantement
 diminue suivant le nombre d'enchantement déjà réalisé, et ne peut jamais aller
 au delà de +9. Les artefacts ne peuvent pas être enchanté.
@@ -1410,7 +1410,7 @@ scroll of vorpalise weapon
 
 Ce parchemin enchante l'arme équipé de façon à la rendre beaucoup plus
 efficaces pour infliger des dommages sur les ennemis de son possesseur.
-L'utiliser sur ​​une arme déjà touchés par une sorte de marque permanente n'est
+L'utiliser sur une arme déjà touchés par une sorte de marque permanente n'est
 pas conseillé. D'autre part, le parchemin peut rendre permanente la marque
 temporaire d'une arme obtenue à partir de certains sorts. \ N \ nLes marques
 qui sont étroitement liés à l'un des dieux (Trog, Lugonu, Kikubaaquadgha,
