@@ -580,6 +580,9 @@ public:
     // Returns true if autoexplore should visit this item to butcher it.
     bool is_greedy_butcherable() const;
 
+    // Returns true if is_greedy_butcherable and we can eat it now.
+    bool is_greedy_butcherable_edible_now() const;
+
 private:
     string name_aux(description_level_type desc, bool terse, bool ident,
                     bool with_inscription, iflags_t ignore_flags) const;

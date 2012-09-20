@@ -3007,7 +3007,10 @@ void start_explore(bool grab_items)
 
     if (lev && you.running == RMODE_EXPLORE_GREEDY)
     {
-        if (Options.butcher_before_explore == 2)
+        if (Options.butcher_before_explore == 2
+            || (lev->butcherable_edible_now(you.pos())
+                && Options.sacrifice_before_explore != 2
+                && Options.auto_eat_chunks))
         {
             if (lev->butcherable(you.pos())
                 && autobutcher_maybe_prompt(true))

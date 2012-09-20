@@ -3324,6 +3324,24 @@ bool item_def::is_greedy_butcherable() const
             || wants_any && !is_forbidden_food(*this));
 }
 
+// If we butchered this, could we (auto)eat it now?
+bool item_def::is_greedy_butcherable_edible_now() const
+{
+    if (!is_greedy_butcherable())
+        return false;
+
+    const bool rotten = food_is_rotten(*this);
+    const bool contam = is_contaminated(*this);
+
+    const bool edible = can_ingest(OBJ_FOOD, FOOD_CHUNK, true, true, rotten);
+
+    const bool easy_contam = Options.easy_eat_contaminated
+        || Options.easy_eat_gourmand && player_effect_gourmand();
+
+    return (!you.is_undead && !you.duration[DUR_NAUSEA]
+            && !is_bad_food(*this) && edible && (!contam || easy_contam));
+}
+
 static void _rune_from_specs(const char* _specs, item_def &item)
 {
     char specs[80];
