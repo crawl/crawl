@@ -1580,72 +1580,72 @@ static vector<formatted_string> _get_overview_stats()
     snprintf(buf, sizeof buf, "SH %2d", player_shield_class());
     cols1.add_formatted(1, buf, false);
 
-    if (you.strength() == you.max_strength())
+    if (you.strength(false) == you.max_strength())
     {
         if (boosted_str)
         {
             snprintf(buf, sizeof buf, "Str <lightblue>%2d</lightblue>",
-                     you.strength());
+                     you.strength(false));
         }
         else
-            snprintf(buf, sizeof buf, "Str %2d", you.strength());
+            snprintf(buf, sizeof buf, "Str %2d", you.strength(false));
     }
     else
     {
         if (boosted_str)
         {
             snprintf(buf, sizeof buf, "Str <lightblue>%2d (%d)</lightblue>",
-                     you.strength(), you.max_strength());
+                     you.strength(false), you.max_strength());
         }
         else
             snprintf(buf, sizeof buf, "Str <yellow>%2d</yellow> (%d)",
-                     you.strength(), you.max_strength());
+                     you.strength(false), you.max_strength());
     }
     cols1.add_formatted(2, buf, false);
 
-    if (you.intel() == you.max_intel())
+    if (you.intel(false) == you.max_intel())
     {
         if (boosted_int)
         {
             snprintf(buf, sizeof buf, "Int <lightblue>%2d</lightblue>",
-                     you.intel());
+                     you.intel(false));
         }
         else
-            snprintf(buf, sizeof buf, "Int %2d", you.intel());
+            snprintf(buf, sizeof buf, "Int %2d", you.intel(false));
     }
     else
     {
         if (boosted_int)
         {
             snprintf(buf, sizeof buf, "Int <lightblue>%2d (%d)</lightblue>",
-                     you.intel(), you.max_intel());
+                     you.intel(false), you.max_intel());
         }
         else
             snprintf(buf, sizeof buf, "Int <yellow>%2d</yellow> (%d)",
-                     you.intel(), you.max_intel());
+                     you.intel(false), you.max_intel());
     }
     cols1.add_formatted(2, buf, false);
 
-    if (you.dex() == you.max_dex())
+    if (you.dex(false) == you.max_dex())
     {
         if (boosted_dex)
         {
             snprintf(buf, sizeof buf, "Dex <lightblue>%2d</lightblue>",
-                     you.dex());
+                     you.dex(false));
         }
         else
-            snprintf(buf, sizeof buf, "Dex %2d", you.dex());
+            snprintf(buf, sizeof buf, "Dex %2d", you.dex(false));
     }
     else
     {
         if (boosted_dex)
         {
             snprintf(buf, sizeof buf, "Dex <lightblue>%2d (%d)</lightblue>",
-                     you.dex(), you.max_dex());
+                     you.dex(false), you.max_dex());
         }
         else
             snprintf(buf, sizeof buf, "Dex <yellow>%2d</yellow> (%d)",
-                     you.dex(), you.max_dex());
+                     you.dex(false), you.max_dex());
     }
     cols1.add_formatted(2, buf, false);
 
