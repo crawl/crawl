@@ -1957,13 +1957,35 @@ static void _build_overflow_temples()
     _current_temple_hash = NULL; // XXX: hack!
 }
 
+struct coord_feat
+{
+    coord_def pos;
+    dungeon_feature_type feat;
+    terrain_property_t prop;
+    unsigned int mask;
+
+    coord_feat(const coord_def &c, dungeon_feature_type f)
+        : pos(c), feat(f), prop(0), mask(0)
+    {
+    }
+
+    void set_from(const coord_def &c)
+    {
+        feat = grd(c);
+        // Don't copy mimic-ness.
+        mask = env.level_map_mask(c) & ~(MMT_MIMIC);
+        // Only copy "static" properties.
+        prop = env.pgrid(c) & (FPROP_NO_CLOUD_GEN | FPROP_NO_TELE_INTO
+                               | FPROP_NO_TIDE | FPROP_NO_SUBMERGE);
+    }
+};
+
 template <typename Iterator>
 static void _ruin_level(Iterator ri,
                         unsigned vault_mask = MMT_VAULT,
                         int ruination = 10,
                         int plant_density = 5)
 {
-    typedef pair<coord_def, dungeon_feature_type> coord_feat;
     typedef vector<coord_feat> coord_feats;
     coord_feats to_replace;
 
@@ -1987,7 +2009,7 @@ static void _ruin_level(Iterator ri,
 
         // Pick a random adjacent non-wall, non-door, non-statue
         // feature, and count the number of such features.
-        dungeon_feature_type replacement = DNGN_FLOOR;
+        coord_feat replacement(*ri, DNGN_UNSEEN);
         int floor_count = 0;
         for (adjacent_iterator ai(*ri); ai; ++ai)
         {
@@ -1997,22 +2019,23 @@ static void _ruin_level(Iterator ri,
                 && grd(*ai) != DNGN_MALIGN_GATEWAY)
             {
                 if (one_chance_in(++floor_count))
-                    replacement = grd(*ai);
+                    replacement.set_from(*ai);
             }
         }
 
         /* chance of removing the tile is dependent on the number of adjacent
          * floor(ish) tiles */
         if (x_chance_in_y(floor_count, ruination))
-            to_replace.push_back(coord_feat(*ri, replacement));
+            to_replace.push_back(replacement);
     }
 
     for (coord_feats::const_iterator it = to_replace.begin();
          it != to_replace.end();
          ++it)
     {
-        const coord_def &p(it->first);
-        dungeon_feature_type replacement = it->second;
+        const coord_def &p(it->pos);
+        dungeon_feature_type replacement = it->feat;
+        ASSERT(replacement != DNGN_UNSEEN);
 
         // Don't replace doors with impassable features.
         if (feat_is_door(grd(p)))
@@ -2032,7 +2055,13 @@ static void _ruin_level(Iterator ri,
 
         /* only remove some doors, to preserve tactical options */
         if (feat_is_wall(grd(p)) || coinflip() && feat_is_door(grd(p)))
+        {
+            // Copy the mask and properties too, so that we don't make an
+            // isolated transparent or rtele_into square.
+            env.level_map_mask(p) |= it->mask;
+            env.pgrid(p) |= it->prop;
             _set_grd(p, replacement);
+        }
 
         /* but remove doors if we've removed all adjacent walls */
         for (adjacent_iterator wai(p); wai; ++wai)
@@ -2047,7 +2076,11 @@ static void _ruin_level(Iterator ri,
                 }
                 // It's always safe to replace a door with floor.
                 if (remove)
+                {
+                    env.level_map_mask(p) |= it->mask;
+                    env.pgrid(p) |= it->prop;
                     _set_grd(*wai, DNGN_FLOOR);
+                }
             }
         }
 
