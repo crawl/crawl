@@ -783,7 +783,7 @@ function arena_sprint_init_boss_table()
     end
 
     bs[6] = {"place:Dis:7", "dispater", "iron rune of zot"}
-    bs[7] = {"place:Tar:7", "ereshkigal hp:350", "bone rune of zot"}
+    bs[7] = {"place:Tar:7", "ereshkigal", "bone rune of zot"}
     bs[8] = {"place:Geh:7", "asmodeus", "obsidian rune of zot"}
     bs[9] = {"place:Coc:7", "antaeus", "icy rune of zot"}
     -- Pan sets are taken directly from pan.des
