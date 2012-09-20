@@ -398,9 +398,9 @@ public:
     void reset_prev_move();
 
     int stat(stat_type stat, bool nonneg=true) const;
-    int strength() const;
-    int intel() const;
-    int dex() const;
+    int strength(bool nonneg=true) const;
+    int intel(bool nonneg=true) const;
+    int dex(bool nonneg=true) const;
     int max_stat(stat_type stat) const;
     int max_strength() const;
     int max_intel() const;
