@@ -1803,6 +1803,17 @@
       }
     },
 
+    {  MST_WRETCHED_STAR,
+      {
+       SPELL_ISKENDERUNS_MYSTIC_BLAST,
+       SPELL_ISKENDERUNS_MYSTIC_BLAST,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL
+      }
+    },
+
     {  MST_FRANCES,
       {
        SPELL_THROW_ICICLE,
