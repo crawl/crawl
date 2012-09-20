@@ -64,6 +64,9 @@ public:
     // eaten now.
     bool butcherable_edible_now() const;
 
+    // Returns true if this Stash contains items that can be drained of blood.
+    bool drainable() const;
+
     // Returns true if this Stash is unverified (a visit by the character will
     // verify the stash).
     bool unverified() const;
@@ -276,6 +279,10 @@ public:
     // Returns true if the items at c contains at least one that can be
     // butchered and eaten now.
     bool butcherable_edible_now(const coord_def &c) const;
+
+    // Returns true if the items at c contains at least one that can be
+    // drained of blood.
+    bool drainable(const coord_def &c) const;
 
     // Add stash at (x,y), or player's current location if no parameters are
     // supplied

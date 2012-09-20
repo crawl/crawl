@@ -1903,6 +1903,22 @@ void mark_items_non_visit_butcher_at(const coord_def &pos,
     }
 }
 
+void mark_items_non_visit_drain_at(const coord_def &pos)
+{
+    int i = igrd(pos);
+    while (i != NON_ITEM)
+    {
+        item_def &item(mitm[i]);
+        if (item.is_greedy_drainable()
+            && !item.is_greedy_sacrificeable()
+            && !item.is_greedy_butcherable())
+        {
+            item.flags |= ISFLAG_DROPPED;
+        }
+        i = item.link;
+    }
+}
+
 // Moves mitm[obj] to p... will modify the value of obj to
 // be the index of the final object (possibly different).
 //
@@ -3340,6 +3356,19 @@ bool item_def::is_greedy_butcherable_edible_now() const
 
     return (!you.is_undead && !you.duration[DUR_NAUSEA]
             && !is_bad_food(*this) && edible && (!contam || easy_contam));
+}
+
+// Could a vampire drink blood from this?
+bool item_def::is_greedy_drainable() const
+{
+    if (flags & (ISFLAG_DROPPED | ISFLAG_THROWN))
+        return false;
+
+    if (base_type != OBJ_CORPSES || sub_type != CORPSE_BODY)
+        return false;
+
+    return (you.species == SP_VAMPIRE && mons_has_blood(mon_type)
+            && !is_bad_food(*this) && !food_is_rotten(*this));
 }
 
 static void _rune_from_specs(const char* _specs, item_def &item)

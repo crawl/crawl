@@ -251,6 +251,15 @@ bool Stash::butcherable_edible_now() const
     return false;
 }
 
+bool Stash::drainable() const
+{
+    for (int i = 0, size = items.size(); i < size; ++i)
+        if (items[i].is_greedy_drainable())
+            return true;
+
+    return false;
+}
+
 bool Stash::is_boring_feature(dungeon_feature_type feature)
 {
     switch (feature)
@@ -1164,6 +1173,7 @@ bool LevelStashes::needs_visit(const coord_def& c, bool autopickup,
     if (s && (s->unverified()
               || sacrifice && s->sacrificeable()
               || butcher && s->butcherable()
+              || butcher && s->drainable()
               || autopickup && s->pickup_eligible()))
     {
         return true;
@@ -1193,6 +1203,12 @@ bool LevelStashes::butcherable_edible_now(const coord_def &c) const
 {
     const Stash *s = find_stash(c);
     return (s && s->butcherable_edible_now());
+}
+
+bool LevelStashes::drainable(const coord_def &c) const
+{
+    const Stash *s = find_stash(c);
+    return (s && s->drainable());
 }
 
 ShopInfo &LevelStashes::get_shop(const coord_def& c)

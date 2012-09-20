@@ -481,11 +481,14 @@ bool can_autobutcher()
     if (!(Options.explore_stop & ES_GREEDY_BUTCHERABLE))
         return false;
 
+    // Vampires can always drain corpses
+    if (you.species == SP_VAMPIRE)
+        return true;
+
     if (!player_can_butcher())
         return false;
 
     return (can_ingest(OBJ_FOOD, FOOD_CHUNK, true, false)
-            || you.species == SP_VAMPIRE && you.experience_level >= 6
             || you.has_spell(SPELL_SUBLIMATION_OF_BLOOD)
             || you.has_spell(SPELL_SIMULACRUM));
 }

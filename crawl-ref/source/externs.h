@@ -583,6 +583,9 @@ public:
     // Returns true if is_greedy_butcherable and we can eat it now.
     bool is_greedy_butcherable_edible_now() const;
 
+    // Returns true if vampires might want to visit this item to feed on it.
+    bool is_greedy_drainable() const;
+
 private:
     string name_aux(description_level_type desc, bool terse, bool ident,
                     bool with_inscription, iflags_t ignore_flags) const;

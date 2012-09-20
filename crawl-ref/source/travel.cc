@@ -960,6 +960,8 @@ command_type travel()
                                             && ES_sacrificeable);
                 const bool butcherable   = (lev && lev->butcherable(newpos)
                                             && ES_butcherable);
+                const bool drainable     = (lev && lev->drainable(newpos)
+                                            && ES_butcherable);
                 if (stack && _prompt_stop_explore(ES_GREEDY_VISITED_ITEM_STACK)
                     || (sacrificeable
                         && _prompt_stop_explore(ES_GREEDY_SACRIFICEABLE)
@@ -968,12 +970,13 @@ command_type travel()
                     || (butcherable
                         && _prompt_stop_explore(ES_GREEDY_BUTCHERABLE)
                         && (!Options.auto_butcher || !_can_butcher(newpos)
-                            || stack || sacrificeable)))
+                            || stack || sacrificeable))
+                    || drainable && _prompt_stop_explore(ES_GREEDY_BUTCHERABLE))
                 {
                     explore_stopped_pos = newpos;
                     stop_running();
                 }
-                if (stack || sacrificeable || butcherable)
+                if (stack || sacrificeable || butcherable || drainable)
                     return direction_to_command(*move_x, *move_y);
             }
         }
@@ -3007,6 +3010,10 @@ void start_explore(bool grab_items)
 
     if (lev && you.running == RMODE_EXPLORE_GREEDY)
     {
+        // Drainable corpses are visit-only; clear them without action
+        if (lev->drainable(you.pos()))
+            mark_items_non_visit_drain_at(you.pos());
+
         if (Options.butcher_before_explore == 2
             || (lev->butcherable_edible_now(you.pos())
                 && Options.sacrifice_before_explore != 2
