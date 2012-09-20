@@ -1413,22 +1413,28 @@ static void _handle_run_delays(const delay_queue_item &delay)
 
         if (Options.auto_sacrifice && you.running == RMODE_EXPLORE_GREEDY)
         {
+            if (Options.sacrifice_before_explore)
+                Options.auto_sacrifice = false;
+
             LevelStashes *lev = StashTrack.find_current_level();
             if (lev && lev->sacrificeable(you.pos()))
             {
                 const interrupt_block block_interrupts;
-                pray(true);
+                autosacrifice_maybe_prompt();
                 return;
             }
         }
 
         if (Options.auto_butcher && you.running == RMODE_EXPLORE_GREEDY)
         {
+            if (Options.butcher_before_explore)
+                Options.auto_butcher = false;
+
             LevelStashes *lev = StashTrack.find_current_level();
             if (lev && lev->butcherable(you.pos()))
             {
                 const interrupt_block block_interrupts;
-                butchery(-2);
+                autobutcher_maybe_prompt();
                 return;
             }
         }

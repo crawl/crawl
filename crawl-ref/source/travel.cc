@@ -2926,7 +2926,7 @@ void start_travel(const coord_def& p)
         start_translevel_travel(level_target);
 }
 
-static bool _autosacrifice_maybe_prompt(bool butcher_to_follow)
+bool autosacrifice_maybe_prompt(bool butcher_to_follow)
 {
     if (!god_likes_items(you.religion, true))
         return false;
@@ -2954,7 +2954,7 @@ static bool _autosacrifice_maybe_prompt(bool butcher_to_follow)
     return do_sacrifice;
 }
 
-static bool _autobutcher_maybe_prompt(bool sacrifice_to_follow)
+bool autobutcher_maybe_prompt(bool sacrifice_to_follow)
 {
     if (!can_autobutcher())
         return false;
@@ -3009,21 +3009,28 @@ void start_explore(bool grab_items)
     {
         if (Options.butcher_before_explore == 2)
         {
-            if (!lev->butcherable(you.pos())
-                || !_autobutcher_maybe_prompt(true))
+            if (lev->butcherable(you.pos())
+                && autobutcher_maybe_prompt(true))
             {
-                if (lev->sacrificeable(you.pos()))
-                    _autosacrifice_maybe_prompt(false);
+                // Remember to follow-up with a one-time check for sacrifice.
+                // With sacrifice_before_explore, auto_sac clears next turn.
+                if (Options.sacrifice_before_explore)
+                    Options.auto_sacrifice = true;
             }
+            else if (lev->sacrificeable(you.pos()))
+                autosacrifice_maybe_prompt(false);
         }
         else
         {
-            if (!lev->sacrificeable(you.pos())
-                || !_autosacrifice_maybe_prompt(true))
+            if (lev->sacrificeable(you.pos())
+                && autosacrifice_maybe_prompt(true))
             {
-                if (lev->butcherable(you.pos()))
-                    _autobutcher_maybe_prompt(false);
+                // Ditto following-up with a one-time check for butchery.
+                if (Options.butcher_before_explore)
+                    Options.auto_butcher = true;
             }
+            else if (lev->butcherable(you.pos()))
+                autobutcher_maybe_prompt(false);
         }
     }
 

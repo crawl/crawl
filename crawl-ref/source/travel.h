@@ -73,6 +73,9 @@ void find_travel_pos(const coord_def& youpos, int *move_x, int *move_y,
 
 bool is_stair_exclusion(const coord_def &p);
 
+bool autosacrifice_maybe_prompt(bool butcher_to_follow = false);
+bool autobutcher_maybe_prompt(bool sacrifice_to_follow = false);
+
 /* ***********************************************************************
  * Initiates explore - the character runs around the level to map it. Note
  * that the caller has to ensure that the level is mappable before calling
