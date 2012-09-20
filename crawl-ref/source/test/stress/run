@@ -25,7 +25,7 @@ run_one()
         $CRAWL -arena 'miscasts 5 pandemonium lord v 20 20-headed hydra delay:0 t:10'
     ;;
     7|kraken)
-        $CRAWL -arena 'kraken v spectral kraken arena:small_deep_pool delay:0 t:99'
+        $CRAWL -arena 'kraken v spectral kraken arena:small_deep_pool delay:0 t:20'
     ;;
     test) # Not in "all".
         $CRAWL -test
