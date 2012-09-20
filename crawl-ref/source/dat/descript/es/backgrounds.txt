@@ -110,6 +110,11 @@ Skald
 Los Escaldos son guerreros que pueden potenciarse en batalla con hechizos de su
 Libro de Cánticos de Guerra.
 %%%%
+Stalker
+
+Los Asaltadores usan el sigilo y la magia transformativa para aproximarse y
+derrotar a sus victimas.
+%%%%
 Summoner
 
 Los Convocadores comienzan con el Libro de las Llamadas y son capaces de

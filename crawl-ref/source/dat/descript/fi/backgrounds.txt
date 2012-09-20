@@ -105,6 +105,11 @@ Skald
 Skaldit ovat lähitaistelijoita, jotka nostavat suorituskykyään Sotahymnien
 kirjan taioilla.
 %%%%
+Stalker
+
+Stalkkerit käyttävät hiiviskelyä ja muodonmuutostaikuutta lähestyäkseen
+uhrejaan ja kukistaakseen heidät.
+%%%%
 Summoner
 
 Kutsujat aloittavat Kutsumusten kirjalla ja osaavat aluksi kutsua pieniä

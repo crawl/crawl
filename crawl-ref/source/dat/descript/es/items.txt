@@ -293,6 +293,10 @@ book of spatial translocations
 
 Un libro con hechizos mágicos.
 %%%%
+book of stalking
+
+Un libro con hechizos mágicos.
+%%%%
 book of summonings
 
 Un libro con hechizos mágicos.
