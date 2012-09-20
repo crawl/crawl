@@ -46,6 +46,9 @@ for (@files)
     $_=expand $_, print "tab: $file\n" if !$tab && /\t/;
     print "spaces at eol: $file\n" if s/ +\n/\n/sg;
     print "CR: $file\n" if s/\r//sg;
+    # Note: it's a byte string, as we had to handle invalid encodings above,
+    # and $cont may be invalid.
+    print "zero width space: $file\n" if s/\xe2\x80\x8b//sg; # U+200B
 
     if ($_ ne $cont)
     {
