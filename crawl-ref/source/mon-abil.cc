@@ -2818,6 +2818,19 @@ bool mon_special_ability(monster* mons, bolt & beem)
         break;
     }
 
+    case MONS_WRETCHED_STAR:
+        if (player_or_mon_in_sanct(mons))
+            break;
+
+        if (one_chance_in(3))
+        {
+            flash_view_delay(MAGENTA, 300);
+            simple_monster_message(mons,
+                                   " pulses with an otherworldly light!");
+        }
+
+        break;
+
     default:
         break;
     }
