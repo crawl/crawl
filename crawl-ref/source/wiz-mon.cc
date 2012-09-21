@@ -824,7 +824,7 @@ void wizard_give_monster_item(monster* mon)
     int player_slot = prompt_invent_item("Give which item to monster?",
                                           MT_DROP, -1);
 
-    if (player_slot == PROMPT_ABORT)
+    if (prompt_failed(player_slot))
         return;
 
     for (int i = 0; i < NUM_EQUIP; ++i)

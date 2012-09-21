@@ -432,11 +432,9 @@ void wizard_tweak_object(void)
     int keyin;
 
     int item = prompt_invent_item("Tweak which item? ", MT_INVLIST, -1);
-    if (item == PROMPT_ABORT)
-    {
-        canned_msg(MSG_OK);
+
+    if (prompt_failed(item))
         return;
-    }
 
     if (item == you.equip[EQ_WEAPON])
         you.wield_change = true;
@@ -1301,11 +1299,8 @@ static void _debug_rap_stats(FILE *ostat)
     int i = prompt_invent_item("Generate randart stats on which item?",
                                 MT_INVLIST, -1);
 
-    if (i == PROMPT_ABORT)
-    {
-        canned_msg(MSG_OK);
+    if (prompt_failed(i))
         return;
-    }
 
     // A copy of the item, rather than a reference to the inventory item,
     // so we can fiddle with the item at will.
