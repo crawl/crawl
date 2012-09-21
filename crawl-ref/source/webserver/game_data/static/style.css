@@ -136,6 +136,40 @@ body {
     font-size: 16px;
 }
 
+#game .fg0 { color: #000000; } /* black */
+#game .fg1 { color: #204a87; } /* blue */
+#game .fg2 { color: #4e9a06; } /* green */
+#game .fg3 { color: #06989a; } /* cyan */
+#game .fg4 { color: #a40000; } /* red */
+#game .fg5 { color: #5c3566; } /* magenta */
+#game .fg6 { color: #c4a000; } /* brown */
+#game .fg7 { color: #d3d7cf; } /* lightgray */
+#game .fg8 { color: #555753; } /* darkgray */
+#game .fg9 { color: #729fcf; } /* lightblue */
+#game .fg10 { color: #8ae234; } /* lightgreen */
+#game .fg11 { color: #34e2e2; } /* lightcyan */
+#game .fg12 { color: #ef2929; } /* lightred */
+#game .fg13 { color: #ad7fa8; } /* lightmagenta */
+#game .fg14 { color: #fce94f; } /* yellow */
+#game .fg15 { color: #eeeeec; } /* white */
+
+#game .bg0 { background-color: #000000; } /* black */
+#game .bg1 { background-color: #204a87; } /* blue */
+#game .bg2 { background-color: #4e9a06; } /* green */
+#game .bg3 { background-color: #06989a; } /* cyan */
+#game .bg4 { background-color: #a40000; } /* red */
+#game .bg5 { background-color: #5c3566; } /* magenta */
+#game .bg6 { background-color: #c4a000; } /* brown */
+#game .bg7 { background-color: #d3d7cf; } /* lightgray */
+#game .bg8 { background-color: #555753; } /* darkgray */
+#game .bg9 { background-color: #729fcf; } /* lightblue */
+#game .bg10 { background-color: #8ae234; } /* lightgreen */
+#game .bg11 { background-color: #34e2e2; } /* lightcyan */
+#game .bg12 { background-color: #ef2929; } /* lightred */
+#game .bg13 { background-color: #ad7fa8; } /* lightmagenta */
+#game .bg14 { background-color: #fce94f; } /* yellow */
+#game .bg15 { background-color: #eeeeec; } /* white */
+
 /* A hack to align the columns in the spell menu */
 .menu_spell #menu_title {
     margin-left: 32px;

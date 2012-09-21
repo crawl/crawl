@@ -221,6 +221,7 @@ a:hover {
     z-index: 2000;
 }
 
+/* These are just here for compatibility with older versions */
 .fg0 { color: rgb(  0,   0,   0); }
 .fg1 { color: rgb(  0,  82, 255); }
 .fg2 { color: rgb(100, 185,  70); }
@@ -255,7 +256,6 @@ a:hover {
 .bg14 { background-color: rgb(255, 255,  82); }
 .bg15 { background-color: rgb(255, 255, 255); }
 
-/* These are just here for compatibility with older versions */
 #stats {
     display: inline-block;
     vertical-align: top;
