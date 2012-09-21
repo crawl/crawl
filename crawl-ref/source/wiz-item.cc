@@ -905,7 +905,7 @@ static void _debug_acquirement_stats(FILE *ostat)
     int num_arts     = 0;
 
     int subtype_quants[256];
-    int ego_quants[SPWPN_DEBUG_RANDART];
+    int ego_quants[NUM_SPECIAL_WEAPONS];
 
     memset(subtype_quants, 0, sizeof(subtype_quants));
     memset(ego_quants, 0, sizeof(ego_quants));
@@ -1127,14 +1127,20 @@ static void _debug_acquirement_stats(FILE *ostat)
             "frost",
             "vampiricism",
             "pain",
+            "antimagic",
             "distortion",
             "reaching",
             "returning",
             "chaos",
+            "evasion",
             "confusion",
+            "penetration",
+            "reaping",
+            "acid",
+            "debug randart",
         };
 
-        for (int i = 0; i <= SPWPN_CONFUSE; ++i)
+        for (int i = 0; i < NUM_SPECIAL_WEAPONS; ++i)
             if (ego_quants[i] > 0)
             {
                 fprintf(ostat, "%14s: %5.2f\n", names[i],
@@ -1171,11 +1177,13 @@ static void _debug_acquirement_stats(FILE *ostat)
             "positive energy",
             "archmagi",
             "preservation",
-            "reflection"
+            "reflection",
+            "spirit shield",
+            "archery",
          };
 
         const int non_art = acq_calls - num_arts;
-        for (int i = 0; i <= SPARM_REFLECTION; ++i)
+        for (int i = 0; i < NUM_SPECIAL_ARMOURS; ++i)
         {
            if (ego_quants[i] > 0)
                fprintf(ostat, "%17s: %5.2f\n", names[i],
