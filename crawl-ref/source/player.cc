@@ -5759,6 +5759,7 @@ void player::init()
 
     uniq_map_tags.clear();
     uniq_map_names.clear();
+    vault_list.clear();
 
     global_info = PlaceInfo();
     global_info.make_global();

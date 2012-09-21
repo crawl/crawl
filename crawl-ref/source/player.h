@@ -238,8 +238,11 @@ public:
   FixedVector<int, 52>  spell_letter_table;   // ref to spell by slot
   FixedVector<ability_type, 52>  ability_letter_table; // ref to abil by enum
 
+  // Maps without allow_dup that have been already used.
   set<string> uniq_map_tags;
   set<string> uniq_map_names;
+  // All maps, by level.
+  map<level_id, vector<string> > vault_list;
 
   PlaceInfo global_info;
   player_quiver* m_quiver;

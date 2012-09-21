@@ -14,6 +14,7 @@ enum tag_minor_version
     TAG_MINOR_INVALID         = -1,
     TAG_MINOR_RESET           = 0, // Minor tags were reset
     TAG_MINOR_BRANCHES_LEFT,       // Note the first time branches are left
+    TAG_MINOR_VAULT_LIST,          // Don't try to store you.vault_list as prop
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
 };

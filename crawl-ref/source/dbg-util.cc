@@ -36,18 +36,6 @@ monster_type debug_prompt_for_monster(void)
     return MONS_NO_MONSTER;
 }
 
-static void _dump_vault_table(const CrawlHashTable &table)
-{
-    if (!table.empty())
-    {
-        CrawlHashTable::const_iterator i = table.begin();
-
-        for (; i != table.end(); ++i)
-            mprf("    %s: %s", i->first.c_str(),
-                       i->second.get_string().c_str());
-    }
-}
-
 void debug_dump_levgen()
 {
     if (crawl_state.game_is_arena())
@@ -81,18 +69,11 @@ void debug_dump_levgen()
     mprf("Level build method = %s, level layout type  = %s, absdepth0 = %d",
          method.c_str(), type.c_str(), env.absdepth0);
 
-    if (props.exists(LEVEL_EXTRAS_KEY))
-    {
-        mpr("Level extras:");
-        const CrawlHashTable &extras = props[LEVEL_EXTRAS_KEY].get_table();
-        _dump_vault_table(extras);
-    }
-
-    if (props.exists(LEVEL_VAULTS_KEY))
+    if (!env.level_vault_list.empty())
     {
         mpr("Level vaults:");
-        const CrawlHashTable &vaults = props[LEVEL_VAULTS_KEY].get_table();
-        _dump_vault_table(vaults);
+        for (size_t i = 0; i < env.level_vault_list.size(); ++i)
+            mprf("    %s", env.level_vault_list[i].c_str());
     }
     mpr("");
 }
