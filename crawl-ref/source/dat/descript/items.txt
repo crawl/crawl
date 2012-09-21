@@ -1228,8 +1228,8 @@ This ring allows its wearer to see those things hidden from view by magic.
 %%%%
 ring of slaying
 
-This ring increases or decreases the hand-to-hand and missile combat skills of
-its wearer.
+This ring increases or decreases the melee and ranged combat skills of its
+wearer.
 %%%%
 ring of strength
 
