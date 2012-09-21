@@ -235,8 +235,8 @@ que les zombis et les squelettes ne peuvent quitter l'étage dans lequel ils ont
 %%%%
 Drain Life
 
-Guérir des points de vie en drainer la force vitale des monstres à proximité
-de vous.
+Guérir des points de vie en drainer la force vitale des monstres à proximité de
+vous.
 %%%%
 Enslave Soul
 

@@ -279,7 +279,8 @@ des sortilèges de cette école plus simples. De nombreux sortilèges
 appartiennent à une combinaison de différentes écoles, dans ce cas la réussite
 du lancement et la puissance dépendront du niveau de compétence dans ces
 écoles.
-\La Magie de la Glace contient des sorts de dégâts directs à distance, autant
+
+La Magie de la Glace contient des sorts de dégâts directs à distance, autant
 que quelques effets défensifs comme des sorts pour créer des bouclier et armure
 de glace temporaires.
 
