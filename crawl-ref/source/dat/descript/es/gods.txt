@@ -28,11 +28,10 @@ the Shining One
 El Resplandeciente es una poderosa deidad en una cruzada contra todo mal. A sus
 seguidores y aliados les puede conceder varias bendiciones mientras vayan
 erradicando sin compasión a seres malignos e impíos, y se espera que prueben su
-superioridad moral luchando honorablemente.
-A sus seguidores se les solicita que limpien el mundo, examinando a todos sus
-habitantes en busca de rastros de maldad que deba ser eliminada. Los seguidores
-de El Resplandeciente pueden convertirse en seguidores de Elyvilon o de Zin
-conservando algo de piedad.
+superioridad moral luchando honorablemente. A sus seguidores se les solicita
+que limpien el mundo, examinando a todos sus habitantes en busca de rastros de
+maldad que deba ser eliminada. Los seguidores de El Resplandeciente pueden
+convertirse en seguidores de Elyvilon o de Zin conservando algo de piedad.
 %%%%
 Kikubaaqudgha
 
@@ -184,11 +183,11 @@ presencia. Ganan poder matando a seres malignos. Si los seguidores son dignos
 de su cruzada, El Resplandeciente mantendrá por más tiempo a los aliados
 convocados y encantados. Sus seguidores obtendrán un escudo divino para
 protegerles en las batallas. Más tarde, podrán canalizar llamas purificadoras
-que son particularmente dañinas contra seres impíos.
-Al final, podrán pedir a El Resplandeciente que les envíe poderosos seres
-divinos como aliados. El Resplandeciente puede ocasionalmente intervenir de
-forma directa para salvarle la vida a un seguidor. A medida que crece la piedad
-El Resplandeciente protegerá la fuerza vital de sus seguidores.
+que son particularmente dañinas contra seres impíos. Al final, podrán pedir a
+El Resplandeciente que les envíe poderosos seres divinos como aliados. El
+Resplandeciente puede ocasionalmente intervenir de forma directa para salvarle
+la vida a un seguidor. A medida que crece la piedad El Resplandeciente
+protegerá la fuerza vital de sus seguidores.
 %%%%
 Kikubaaqudgha powers
 
