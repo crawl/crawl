@@ -4060,7 +4060,7 @@ tileidx_t tileidx_item(const item_def &item)
         else if (type <= NUM_RINGS)
         {
             if (is_artefact(item))
-                return TILE_RING_RANDOM_OFFSET + colour - 1;
+                return TILE_RING_RANDART_OFFSET + colour - 1;
             else if (item.flags & ISFLAG_KNOW_TYPE)
                 return TILE_RING_ID_FIRST + type - RING_FIRST_RING;
             else
