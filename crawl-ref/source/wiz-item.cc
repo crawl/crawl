@@ -1531,6 +1531,7 @@ void debug_item_statistics(void)
     }
 
     mpr("Generate stats for: [a] acquirement [b] randart properties");
+    flush_prev_message();
 
     const int keyin = tolower(get_ch());
     switch (keyin)
