@@ -357,4 +357,28 @@ namespace perlin
         // Sum up and scale the result to cover the range [-1,1]
         return 27.0 * (n0 + n1 + n2 + n3 + n4);
     }
+
+    double fBM(double x, double y, double z, uint32_t octaves) {
+        if (octaves < 1)
+            return 0.0;
+        if (octaves == 1)
+            return noise(x, y, z);
+
+        uint32_t divisor = 1;
+        double norm = 0.0;
+        double value = 0;
+        double xi = x;
+        double yi = y;
+        double zi = z;
+        for (uint32_t octave = 0; octave < octaves; ++octave) {
+            value += noise(xi / divisor, yi / divisor, zi / divisor) / divisor;
+            norm += 1/divisor;
+            divisor *= 2;
+            double xt = yi * sin(1.41421356) + cos(1.41421356);
+            yi = yi * cos(1.41421356) + sin(1.41421356);
+            xi = xt;
+            zi += 1.7;
+        }
+        return value / norm;
+    }
 }

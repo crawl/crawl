@@ -66,7 +66,7 @@ typedef std::priority_queue<ProceduralSample, vector<ProceduralSample>, Procedur
 static sample_queue abyss_sample_queue;
 static vector<dungeon_feature_type> abyssal_features;
 static list<monster*> displaced_monsters;
-
+    
 static void abyss_area_shift(void);
 static void _push_items(void);
 
@@ -159,6 +159,7 @@ static void _write_abyssal_features()
     }
 
     _push_items();
+    abyssal_features.clear();
 }
 
 // Returns the roll to use to check if we want to create an abyssal rune.
@@ -983,9 +984,27 @@ static ProceduralSample _abyss_grid(const coord_def &p)
 {
     const uint32_t seed = abyssal_state.seed;
     const coord_def pt = p + abyssal_state.major_coord; 
-    WorleyLayout mixedColumns(seed - 4, ColumnLayout(2), ColumnLayout(2,6));
-    RoilingChaosLayout chaosLayout(seed + 123);
-    WorleyLayout layout(seed + 4321, mixedColumns, chaosLayout);
+
+    const static DiamondLayout diamond30(3,0);
+    const static DiamondLayout diamond21(2,1);
+    const static ColumnLayout column2(2);
+    const static ColumnLayout column26(2,6);
+    const static ProceduralLayout* regularLayouts[] = { 
+        &diamond30, &diamond21, &column2, &column26
+    };
+    static vector<const ProceduralLayout*> layout_vec(regularLayouts, 
+        regularLayouts + 4);
+
+    WorleyLayout worley(seed + 123456, layout_vec);
+    RoilingChaosLayout chaosA(seed + 8675309, 450);
+    RoilingChaosLayout chaosB(seed + 7654321, 400);
+    RoilingChaosLayout chaosC(seed + 24816,   380);
+    RoilingChaosLayout chaosD(seed + 24816,   500);
+    const ProceduralLayout* mixedLayouts[] = {
+        &worley, &chaosA, &chaosB, &chaosC, &chaosD
+    };
+    vector<const ProceduralLayout*> mixed_vec(mixedLayouts, mixedLayouts + 2);
+    WorleyLayout layout(seed + 4321, mixed_vec);
     RiverLayout rivers(seed, layout);
     const ProceduralSample sample = rivers(pt, abyssal_state.depth);
     abyss_sample_queue.push(sample);
@@ -1106,16 +1125,20 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
     bool used_queue = false;
     if (morph && !abyss_sample_queue.empty())
     {
+        int ii = 0;
         used_queue = true;
         while (!abyss_sample_queue.empty()
             && abyss_sample_queue.top().changepoint() < abyssal_state.depth)
         {
+            ++ii;
             coord_def p = abyss_sample_queue.top().coord();
             _update_abyss_terrain(p, abyss_genlevel_mask, morph);
             abyss_sample_queue.pop();
         }
-    } 
-    
+        if (ii)
+            dprf("Examined %d features.", ii);
+    }
+   
     for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
     {
         const coord_def p(*ri);
@@ -1386,8 +1409,8 @@ retry:
 void _increase_depth()
 {
     int delta = you.time_taken * (you.abyss_speed + 40) / 200;
-    if (you.religion == GOD_CHEIBRIADOS && !you.penance[GOD_CHEIBRIADOS])
-        delta /= 2;
+    if (you.religion != GOD_CHEIBRIADOS || you.penance[GOD_CHEIBRIADOS])
+        delta *= 2;
     const double theta = abyssal_state.phase;
     double depth_change = delta * (0.2 + 2.8 * pow(sin(theta/2), 10.0));
     abyssal_state.depth += depth_change;

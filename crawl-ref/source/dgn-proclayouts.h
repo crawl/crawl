@@ -7,8 +7,7 @@
 #define PROC_LAYOUTS_H
 
 #include "AppHdr.h"
-
-#include <vector>
+#include "fixedvector.h"
 
 #include "dungeon.h"
 #include "enum.h"
@@ -65,35 +64,46 @@ class ColumnLayout : public ProceduralLayout
         int _col_width, _col_space, _row_width, _row_space;
 };
 
+class DiamondLayout : public ProceduralLayout
+{
+    public:
+        DiamondLayout(int _w, int _s) : w(_w) , s(_s) { }
+        ProceduralSample operator()(const coord_def &p, const uint32_t offset = 0) const;
+    private:
+        uint32_t w, s;
+};
+ 
 class WorleyLayout : public ProceduralLayout
 {
     public:
-        WorleyLayout(uint32_t _seed,
-                const ProceduralLayout &_a,
-                const ProceduralLayout &_b) : seed(_seed), a(_a), b(_b) {}
+        WorleyLayout(uint32_t _seed, std::vector<const ProceduralLayout*> _layouts)
+                : seed(_seed), layouts(_layouts) {}
         ProceduralSample operator()(const coord_def &p, const uint32_t offset = 0) const;
     private:
         const uint32_t seed;
-        const ProceduralLayout &a, &b;
+        const std::vector<const ProceduralLayout*> layouts;
 };
 
 class ChaosLayout : public ProceduralLayout
 {
     public:
-        ChaosLayout(uint32_t _seed) : seed(_seed) {}
+        ChaosLayout(uint32_t _seed, uint32_t _density = 450)
+            : seed(_seed), baseDensity(_density) {}
         ProceduralSample operator()(const coord_def &p, const uint32_t offset = 0) const;
     private:
         const uint32_t seed;
+        const uint32_t baseDensity;
 };
 
 class RoilingChaosLayout : public ProceduralLayout
 {
     public:
-        RoilingChaosLayout(uint32_t _seed) : seed(_seed) {}
+        RoilingChaosLayout(uint32_t _seed, uint32_t _density = 450)
+            : seed(_seed), density(_density) {}
         ProceduralSample operator()(const coord_def &p, const uint32_t offset = 0) const;
     private:
         const uint32_t seed; 
-        
+        const uint32_t density;
 };
 
 class RiverLayout : public ProceduralLayout
@@ -105,5 +115,4 @@ class RiverLayout : public ProceduralLayout
         const uint32_t seed; 
         const ProceduralLayout &layout;
 };
-
 #endif /* PROC_LAYOUTS_H */
