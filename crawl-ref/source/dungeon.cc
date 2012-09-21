@@ -6424,7 +6424,13 @@ static void _remember_vault_placement(const vault_placement &place, bool extra)
         && !place.map.has_tag_suffix("dummy")
         && !place.map.has_tag("no_dump"))
     {
-        _you_vault_list.push_back(place.map.name);
+        // When generating a level, vaults may be vetoed together with the
+        // whole level after being placed, thus we need to save them in a
+        // temp list.
+        if (Generating_Level)
+            _you_vault_list.push_back(place.map.name);
+        else
+            you.vault_list[level_id::current()].push_back(place.map.name);
     }
 }
 
