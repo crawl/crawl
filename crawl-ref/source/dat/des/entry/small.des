@@ -238,7 +238,7 @@ ORIENT:  float
 SHUFFLE: d'
 : end
 SUBST:   '=.
-MONS:    worm / worm zombie
+MONS:    worm
 ITEM:    stone / dart
 MAP
 xxxxxxxxxxxxxxxxx
