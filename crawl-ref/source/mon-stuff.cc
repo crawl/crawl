@@ -318,17 +318,13 @@ bool explode_corpse(item_def& corpse, const coord_def& where)
 
     ld.update();
 
-    const int max_chunks = get_max_corpse_chunks(corpse.mon_type);
+    turn_corpse_into_chunks(corpse, false, false);
 
-    int nchunks = 1 + random2(max_chunks);
-    nchunks = stepdown_value(nchunks, 4, 4, 12, 12);
+    // Extract number of chunks
+    int nchunks = corpse.quantity;
+    corpse.quantity = 1;
 
     int ntries = 0;
-
-    corpse.base_type = OBJ_FOOD;
-    corpse.sub_type  = FOOD_CHUNK;
-    if (is_bad_food(corpse))
-        corpse.flags |= ISFLAG_DROPPED;
 
     int blood = nchunks * 3;
 

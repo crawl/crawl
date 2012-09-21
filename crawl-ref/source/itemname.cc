@@ -3223,7 +3223,7 @@ bool is_useless_item(const item_def &item, bool temp)
     case OBJ_FOOD:
         if (item.sub_type == NUM_FOODS)
             break;
-        if (!is_inedible(item))
+        if (!is_inedible(item) && !is_bad_food(item))
             return false;
 
         if (item.sub_type == FOOD_CHUNK
