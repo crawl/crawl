@@ -95,7 +95,7 @@ static void _init_test_bindings()
 
 static bool _is_test_selected(const string &testname)
 {
-    if (crawl_state.tests_selected.empty())
+    if (crawl_state.tests_selected.empty() && !starts_with(testname, "big/"))
         return true;
     for (int i = 0, size = crawl_state.tests_selected.size();
          i < size; ++i)
@@ -170,7 +170,7 @@ bool run_tests(bool exit_on_complete)
     // Get a list of Lua files in test. Order of execution of
     // tests should be irrelevant.
     const vector<string> tests(
-        get_dir_files_ext(crawl_state.script? script_dir : test_dir,
+        get_dir_files_recursive(crawl_state.script? script_dir : test_dir,
                           ".lua"));
     for_each(tests.begin(), tests.end(), run_test);
 
