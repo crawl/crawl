@@ -3068,7 +3068,7 @@ void excommunication(god_type new_god)
         else
             add_daction(DACT_HOLY_PETS_GO_NEUTRAL);
 
-        _set_penance(old_god, 50);
+        _set_penance(old_god, 30);
         break;
 
     case GOD_ZIN:
@@ -3622,17 +3622,6 @@ void god_pitch(god_type which_god)
         // Give a piety bonus when switching between good gods.
         if (old_piety > 30)
             gain_piety(old_piety - 30, 2, true, false);
-    }
-    else if (is_evil_god(you.religion))
-    {
-        // Note: Using worshipped[] we could make this sort of grudge
-        // permanent instead of based off of penance. - bwr
-        if (you.penance[GOD_SHINING_ONE])
-        {
-            _set_penance(GOD_SHINING_ONE, 30);
-            god_speaks(GOD_SHINING_ONE,
-                       "\"You will pay for your evil ways, mortal!\"");
-        }
     }
 
     // Note that you.worshipped[] has already been incremented.
