@@ -29,6 +29,8 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
         if (col.attr == enums.CHATTR.HILITE)
         {
             col.bg = col.param;
+            if (col.bg == col.fg)
+                col.fg = 0;
         }
         if (col.attr == enums.CHATTR.REVERSE)
         {
