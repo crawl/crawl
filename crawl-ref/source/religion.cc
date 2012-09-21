@@ -3624,6 +3624,27 @@ void god_pitch(god_type which_god)
             gain_piety(old_piety - 30, 2, true, false);
     }
 
+    // Warn if a good god is starting wrath now.
+    if (old_god != GOD_ELYVILON && you.penance[GOD_ELYVILON]
+        && god_hates_your_god(GOD_ELYVILON, you.religion))
+    {
+        simple_god_message(" says: Your evil deeds will not go unpunished!",
+                           GOD_ELYVILON);
+    }
+    if (old_god != GOD_SHINING_ONE && you.penance[GOD_SHINING_ONE]
+        && god_hates_your_god(GOD_SHINING_ONE, you.religion))
+    {
+        simple_god_message(" says: You will pay for your evil ways, mortal!",
+                           GOD_SHINING_ONE);
+    }
+    if (old_god != GOD_ZIN && you.penance[GOD_ZIN]
+        && god_hates_your_god(GOD_ZIN, you.religion))
+    {
+        simple_god_message(make_stringf(" says: You will suffer for embracing such %s!",
+                                        is_chaotic_god(you.religion) ? "chaos" : "evil").c_str(),
+                           GOD_ZIN);
+    }
+
     // Note that you.worshipped[] has already been incremented.
     if (you.char_class == JOB_MONK && had_gods() <= 1)
     {
