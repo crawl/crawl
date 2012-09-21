@@ -1,12 +1,27 @@
 %%%%
 Centaur
 
-Schnell, stark und massig. Sie brauchen mehr Nahrung als andere Spezies.
+Schnell, stark und massig. Zentauren brauchen mehr Nahrung als andere Spezies.
+Sie sind besonders geschickt im Umgang mit Fernkampfwaffen.
+%%%%
+Demigod
+
+Sie werden niemals einem Gott folgen, aber Halbgötter machen das mit göttlichen
+Attributen und Lebenspunkten wett.
+%%%%
+Ghoul
+
+Ein Untoter, dazu verdammt auf ewig zu verrotten. Sie sind immer auf der Suche
+nach Faulem, um es zu essen...
 %%%%
 High Elf
 
 Stolze Elfen, die sowohl Zauber sprechen als auch mit dem Schwert kämpfen
 können.
+%%%%
+Human
+
+Schlicht und durchschnittlich.
 %%%%
 Minotaur
 

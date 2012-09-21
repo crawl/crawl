@@ -127,3 +127,48 @@ benedizione degli orchi defunti. I seguaci devoti possono colpire i propri
 nemici con energia divina e possono ottenere seguaci orchi a loro volta, poiché
 gli orchi ancora cercano il proprio Messia.
 %%%%
+Fedhas
+
+Fedhas Madash è la divinità delle piante e dei funghi. Fedhas richiede che i
+seguaci aiutino la decomposizione dei cadaveri, proibisce che si danneggino le
+specie sotto la sua protezione e l'uso di effetti negromantici che
+interferiscono con i cadaveri. In cambio Fedhas conferisce delle abilità per
+promuovere la crescita di piante e funghi che possono risultare utili agli
+avventurieri.
+%%%%
+Cheibriados
+
+Cheibriados è una divinità che medita sui misteri del tempo. Coloro che
+scelgono di seguire i dettami di questa divinità impareranno a rinunciare alla
+fretta inutile, a rallentare sé stessi e gli altri e a danneggiare coloro che
+si rifiutano di rallentare. I seguaci particolarmente devoti possono
+abbandonare il flusso del tempo e le sue seccature.
+%%%%
+Ashenzari
+
+Anche sembra inconcepibile che un essere divino possa essere incatenato,
+Ashenzari lo è: inchiodata al cielo per l'eternità, questa divinità immobile è
+onnisciente e onnivedente. I seguaci devoti possono avere frammenti di questa
+conoscenza e preveggenza, ma siate avvisati: la potenza, benedizione e
+maledizione di Ashenzari sono la stessa cosa.
+%%%%
+Jiyva
+
+Jiyva è la divinità antica e caotica dei protoplasmi. I seguaci devono
+supportare la diffusione e l'alimentazione dei protoplasmi amici consentendo
+loro di consumare gli oggetti e è loro vietato di danneggiare i protoplasmi.
+Jiyva farà a volte disciogliere gli oggetti lasciati nel resto del dungeon dai
+suoi seguaci. I seguaci preferiti dalla divinità diventeranno senza forma come
+il loro patrono, dato che le caratteristiche e le mutazioni cambieranno sotto
+l'influenza di Jiyva.
+%%%%
+Zin powers
+
+Zin conferisce ai seguaci  l'abilità di predicare alle masse e il potere di
+dare vitalità al proprio corpo, e ottenere resistenza divina che li protegge da
+varie seccature e sostenere il loro metabolismo. Seguaci potenti possono
+imprigionare temporaneamente i loro nemici e trovare sicurezza in un rifugio
+divino. Con l'aumento della devozione i seguaci saranno preservati dalle
+mutazioni e Zin potrebbe occasionalmente intervenire direttamente per salvare
+la vita di un seguace.
+%%%%

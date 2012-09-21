@@ -16,10 +16,20 @@ eine gewisse Kontrolle über seine Bewegungen ausüben. Dies ermöglicht unter
 anderem den Abstieg von Treppen und das Aufnehmen von Gegenständen auf dem
 Boden, hebt aber nicht die Vorteile des freien Schwebens auf.
 %%%%
+amulet of inaccuracy
+
+Dieses Amulett macht seinen Träger weniger Zielgenau im Nahkampf und wenn
+dieser Ungeheuer mit Fernkampf oder Zaubern angreift.
+%%%%
 amulet of rage
 
 Dieses Amulett ermöglicht es dem Träger in einen Zustand der Raserei zu
 verfallen.
+%%%%
+amulet of resist corrosion
+
+Dieses Amulett schützt den Träger und seine Ausrüstung von der durch Säuren
+verursachten Korrosion, ist aber nicht unfehlbar.
 %%%%
 amulet of resist mutation
 
@@ -50,6 +60,10 @@ apple
 
 Eine köstliche und kräftig rote Frucht - säuerlich auf der Zunge.
 %%%%
+apricot
+
+Eine saftige Gelb-Orangene Frucht, Prunus armeniaca.
+%%%%
 blessed double sword
 
 Eine magische Waffe mit zwei rasiermesserscharfen Klingen.
@@ -65,7 +79,7 @@ Eine Stoff- oder Lederkappe.
 %%%%
 centaur barding
 
-Eine Rüstung für Centauren zum Tragen über ihrem Pferdekörper.
+Eine Rüstung für Zentauren zum Tragen über ihrem Pferdekörper.
 %%%%
 cheese
 
@@ -85,7 +99,7 @@ Ein gestachelter Flegel mit längeren Stacheln und einem schwererem Kopf.
 %%%%
 eggplant
 
-Eine verrottete Aubergine die du auf Crawlentwickler werfen kannst. (Wenn du
+Eine verfaulte Aubergine, die du auf Crawlentwickler werfen kannst. (Wenn du
 diese Nachricht jemals siehst ist es ein Fehler.)
 %%%%
 giant club
@@ -104,6 +118,11 @@ grape
 
 Eine kleine Frucht.
 %%%%
+lajatang
+
+Eine sehr seltene und extrem effektive importierte Waffe aus einem Stab mit
+halbmondförmigen Klingen an beiden Enden.
+%%%%
 lemon
 
 Eine gelbe Frucht.
@@ -119,6 +138,11 @@ Eine speziell für Nagas hergestellte Rüstung zum Tragen über ihren Schwänzen
 orange
 
 Eine köstliche, saftige und orangene Frucht.
+%%%%
+orb of zot
+
+Sobald du zur Oberfläche mit diesem unschätzbaren Artefakt geflüchtet bist, ist
+deine Suche vorbei.
 %%%%
 pair of boots
 
@@ -143,6 +167,10 @@ Eine köstliche und saftige Frucht.
 ring of protection from fire
 
 Dieser Ring schützt vor Hitze und Feuer.
+%%%%
+scroll of remove curse
+
+Das Lesen dieser Schritrolle entfernt Flüche von Gegenständen, die du trägst.
 %%%%
 skeleton
 

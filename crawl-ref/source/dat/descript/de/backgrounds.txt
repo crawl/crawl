@@ -46,7 +46,8 @@ zu müssen.
 %%%%
 Necromancer
 
-Nekromanten sind Zauberer, die sich auf Todesmagie spezialisieren.
+Nekromanten sind Zauberer, die sich auf Todesmagie spezialisieren. Sie beginnen
+mit dem Schmerzfluch.
 %%%%
 Wanderer
 
