@@ -768,7 +768,27 @@ plain_black
 bronze
 moonstone RING_COL_LAST
 
+###########randarts
+%sdir item/ring/randarts
+%rim 0
+four-colour RING_RANDART_OFFSET
+green
+ice
+blood
+dark
+red-blue
+double
+anvil
+eye
+flower
+zircon
+fire
+pink
+bronze-flower
+snake
+
 #########ID-ed
+%sdir item/ring
 %rim 0
 i-regeneration RING_REGENERATION RING_ID_FIRST
 i-protection RING_PROTECTION
