@@ -4,6 +4,7 @@
 #include "l_libs.h"
 
 #include "abl-show.h"
+#include "abyss.h"
 #include "areas.h"
 #include "branch.h"
 #include "chardump.h"
@@ -469,6 +470,7 @@ LUAFN(you_teleport_to)
         move_monsters = lua_toboolean(ls, 3);
 
     lua_pushboolean(ls, you_teleport_to(place, move_monsters));
+    maybe_shift_abyss_around_player();
 
     return 1;
 }
