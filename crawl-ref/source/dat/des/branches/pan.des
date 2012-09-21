@@ -182,7 +182,7 @@ ENDMAP
 # Random unguarded exits
 ##############################################################################
 NAME:   pan_exit
-TAGS:   extra allow_dup transparent
+TAGS:   extra allow_dup transparent no_dump
 DEPTH:  Pan
 CHANCE: 5%
 KFEAT:  O = exit_pandemonium
@@ -191,7 +191,7 @@ O
 ENDMAP
 
 NAME:   pan_to_abyss
-TAGS:   extra allow_dup transparent
+TAGS:   extra allow_dup transparent no_dump
 DEPTH:  Pan
 CHANCE: 25%
 KFEAT:  O = exit_through_abyss
