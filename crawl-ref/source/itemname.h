@@ -68,7 +68,7 @@ enum potion_description_qualifier_type
 // If you change these counts, update itemname.cc.
 enum
 {
-    NDSC_JEWEL_PRI  = 13,
+    NDSC_JEWEL_PRI  = 29,
     NDSC_JEWEL_SEC  = 13,
     NDSC_STAVE_PRI = 4,
     NDSC_STAVE_SEC = 10,

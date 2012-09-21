@@ -457,34 +457,53 @@ void item_colour(item_def &item)
         switch (switchnum)
         {
         case 0:
-        case 5:
+        case 7:
+        case 27:
             item.colour = BROWN;
             break;
         case 1:
         case 8:
         case 11:
+        case 20:
+        case 26:
             item.colour = LIGHTGREY;
             break;
         case 2:
         case 6:
+        case 25:
             item.colour = YELLOW;
             break;
         case 3:
         case 4:
             item.colour = CYAN;
             break;
-        case 7:
-            item.colour = BROWN;
+        case 5:
+        case 22:
+            item.colour = LIGHTMAGENTA;
             break;
         case 9:
-        case 10:
+        case 15:
+        case 16:
+        case 21:
             item.colour = WHITE;
             break;
+        case 10:
+        case 19:
+            item.colour = RED;
+            break;
         case 12:
+        case 14:
+        case 17:
+        case 18:
             item.colour = GREEN;
             break;
         case 13:
             item.colour = LIGHTCYAN;
+            break;
+        case 23:
+        case 24:
+        case 28:
+            item.colour = LIGHTBLUE;
             break;
         }
 
@@ -495,9 +514,13 @@ void item_colour(item_def &item)
             case 0:             // "zirconium amulet"
             case 9:             // "ivory amulet"
             case 11:            // "platinum amulet"
+            case 16:            // "pearl amulet"
+            case 20:            // "diamond amulet"
                 item.colour = WHITE;
                 break;
             case 1:             // "sapphire amulet"
+            case 15:            // "cameo amulet"
+            case 17:            // "blue amulet"
                 item.colour = LIGHTBLUE;
                 break;
             case 2:             // "golden amulet"
@@ -505,10 +528,17 @@ void item_colour(item_def &item)
                 item.colour = YELLOW;
                 break;
             case 3:             // "emerald amulet"
+            case 12:            // "jade amulet"
+            case 14:            // "crystal amulet"
+            case 18:            // "peridot amulet"
+            case 21:            // "malachite amulet"
+            case 25:            // "soapstone amulet"
+            case 28:            // "beryl amulet"
                 item.colour = GREEN;
                 break;
             case 4:             // "garnet amulet"
             case 8:             // "ruby amulet"
+            case 19:            // "jasper amulet"
                 item.colour = RED;
                 break;
             case 5:             // "bronze amulet"
@@ -516,10 +546,16 @@ void item_colour(item_def &item)
                 item.colour = BROWN;
                 break;
             case 10:            // "bone amulet"
+            case 24:            // "silver amulet"
+            case 27:            // "filigree amulet"
                 item.colour = LIGHTGREY;
                 break;
-            case 12:            // "jade amulet"
-                item.colour = GREEN;
+            case 22:            // "steel amulet"
+            case 23:            // "cabochon amulet"
+                item.colour = CYAN;
+                break;
+            case 26:            // "lapis lazuli amulet"
+                item.colour = BLUE;
                 break;
             case 13:            // "fluorescent amulet"
                 item.colour = random_colour();

@@ -730,15 +730,30 @@ static const char* ring_primary_string(int p)
     case 2:  return "golden";
     case 3:  return "iron";
     case 4:  return "steel";
-    case 5:  return "bronze";
+    case 5:  return "tourmaline";
     case 6:  return "brass";
     case 7:  return "copper";
     case 8:  return "granite";
     case 9:  return "ivory";
-    case 10: return "bone";
+    case 10: return "ruby";
     case 11: return "marble";
     case 12: return "jade";
     case 13: return "glass";
+    case 14: return "agate";
+    case 15: return "bone";
+    case 16: return "diamond";
+    case 17: return "emerald";
+    case 18: return "peridot";
+    case 19: return "garnet";
+    case 20: return "opal";
+    case 21: return "pearl";
+    case 22: return "coral";
+    case 23: return "sapphire";
+    case 24: return "cabochon";
+    case 25: return "yellow";
+    case 26: return "black";
+    case 27: return "bronze";
+    case 28: return "moonstone";
     default: return "buggy";
     }
 }
@@ -782,6 +797,21 @@ static const char* amulet_primary_string(int p)
     case 11: return "platinum";
     case 12: return "jade";
     case 13: return "fluorescent";
+    case 14: return "crystal";
+    case 15: return "cameo";
+    case 16: return "pearl";
+    case 17: return "blue";
+    case 18: return "peridot";
+    case 19: return "jasper";
+    case 20: return "diamond";
+    case 21: return "malachite";
+    case 22: return "steel";
+    case 23: return "cabochon";
+    case 24: return "silver";
+    case 25: return "soapstone";
+    case 26: return "lapis lazuli";
+    case 27: return "filigree";
+    case 28: return "beryl";
     default: return "buggy";
     }
 }
