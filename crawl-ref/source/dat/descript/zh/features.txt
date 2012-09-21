@@ -259,6 +259,12 @@ A roughly hewn altar of Beogh
 
 一座供奉比欧弗的祭坛。祭坛做工粗糙，一眼就能看出是出自兽人艺术家之手。
 %%%%
+A runed door
+
+这扇门上面画满了符文记号。门的后面应该有什么特别的东西——可能是宝藏，也可能是危
+险。你可以破除上面的符文然后打开它，方法和打开其他门一样：直接向门的方向移动
+，或者按“O”键。
+%%%%
 A shaft
 
 一个深洞。如果掉进去的话，不知道会掉到哪里。
@@ -292,6 +298,10 @@ A sparkling altar of Nemelex Xobeh
 
 这座祭坛发出的霓虹光比任何一个赌场的招牌都要亮；尼姆莱克斯·索贝就是靠这种手段来
 吸引信徒的。
+%%%%
+A spawn point
+
+你的敌人可能会通过这个入口进入战场。
 %%%%
 A spear trap
 
@@ -563,6 +573,42 @@ The open sea
 
 前方只有无尽的风浪；在你视野可及之处都没有一座灯塔。如果继续前进，过不了多久
 ，你就要永远迷失在海中了——所以还是别那么干的好。
+%%%%
+A large open door
+
+<An open door>
+%%%%
+An open gate
+
+<An open door>
+%%%%
+A huge open gate
+
+<An open door>
+%%%%
+A large closed door
+
+<An open door>
+%%%%
+A closed gate
+
+<An open door>
+%%%%
+A huge closed gate
+
+<An open door>
+%%%%
+A large runed door
+
+<An open door>
+%%%%
+A runed gate
+
+<An open door>
+%%%%
+A huge runed gate
+
+<An open door>
 %%%%
 An empty arch of stone
 

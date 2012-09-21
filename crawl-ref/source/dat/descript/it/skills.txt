@@ -141,6 +141,11 @@ proiettili (sia mondani che magici) con uno scudo utilizzato o con un suo
 equivalente magico. Qualche attacco, come i colpi penetranti, non viene parato
 per niente.
 %%%%
+Traps
+
+Un personaggio abile in trappole sarà più vigile e più lesto a notare trappole,
+nonché più abile a disattivarle.
+%%%%
 Unarmed Combat
 
 L'abilità in combattimento disarmato aumenta la precisione, il danno e la
