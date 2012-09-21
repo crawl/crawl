@@ -742,12 +742,12 @@ silver
 gold
 iron
 steel
-bronze
+tourmaline
 brass
 copper
 granite
 ivory
-clay
+ruby
 tiger_eye
 jade
 glass
