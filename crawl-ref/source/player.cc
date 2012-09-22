@@ -5649,6 +5649,7 @@ void player::init()
 
     mutation.init(0);
     innate_mutations.init(0);
+    temp_mutations.init(0);
     demonic_traits.clear();
 
     earth_attunement = 0;

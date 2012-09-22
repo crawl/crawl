@@ -1217,6 +1217,7 @@ static void tag_construct_you(writer &th)
     {
         marshallByte(th, you.mutation[j]);
         marshallByte(th, you.innate_mutations[j]);
+        marshallByte(th, you.temp_mutations[j]);
     }
 
     marshallByte(th, you.demonic_traits.size());
@@ -1963,6 +1964,14 @@ static void tag_read_you(reader &th)
     {
         you.mutation[j]         = unmarshallUByte(th);
         you.innate_mutations[j] = unmarshallUByte(th);
+#if TAG_MAJOR_VERSION == 34
+        if (th.getMinorVersion() >= TAG_MINOR_TEMP_MUTATIONS)
+        {
+#endif
+        you.temp_mutations[j] = unmarshallUByte(th);
+#if TAG_MAJOR_VERSION == 34
+        }
+#endif
     }
     for (j = count; j < NUM_MUTATIONS; ++j)
         you.mutation[j] = you.innate_mutations[j] = 0;

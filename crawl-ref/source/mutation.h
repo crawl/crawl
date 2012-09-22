@@ -71,7 +71,8 @@ bool mutate(mutation_type which_mutation, const string &reason,
             bool failMsg = true,
             bool force_mutation = false, bool god_gift = false,
             bool stat_gain_potion = false, bool demonspawn = false,
-            bool no_rot = false);
+            bool no_rot = false,
+            bool temporary = false);
 
 static inline bool give_bad_mutation(const string &reason, bool failMsg = true,
                                      bool force_mutation = false)
@@ -97,6 +98,7 @@ string mutation_name(mutation_type which_mutat, int level = -1,
 void roll_demonspawn_mutations();
 
 bool perma_mutate(mutation_type which_mut, int how_much, const string &reason);
+bool temp_mutate(mutation_type which_mut, const string &reason);
 int how_mutated(bool all = false, bool levels = false);
 
 void check_demonic_guardian();
@@ -105,5 +107,7 @@ int handle_pbd_corpses(bool do_rot);
 equipment_type beastly_slot(int mut);
 bool physiology_mutation_conflict(mutation_type mutat);
 int augmentation_amount();
+
+bool delete_temp_mutation();
 
 #endif

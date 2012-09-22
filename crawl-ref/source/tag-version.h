@@ -17,6 +17,7 @@ enum tag_minor_version
     TAG_MINOR_VAULT_LIST,          // Don't try to store you.vault_list as prop
     TAG_MINOR_TRAPS_DETERM,        // Searching for traps is deterministic.
     TAG_MINOR_ACTION_THROW,        // Store base type of throw objects.
+    TAG_MINOR_TEMP_MUTATIONS,      // Enable transient mutations
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
 };
