@@ -272,6 +272,7 @@ enum attribute_type
     ATTR_TITHE_BASE,           // Remainder of untithed gold.
     ATTR_EVOL_XP,              // XP gained since last evolved mutation
     ATTR_LIFE_GAINED,          // XL when a felid gained a life.
+    ATTR_TEMP_MUTATIONS,       // Number of temporary mutations the player has.
     NUM_ATTRIBUTES
 };
 
@@ -1441,6 +1442,7 @@ enum duration_type
     DUR_TORNADO_COOLDOWN,
     DUR_NAUSEA,
     DUR_AMBROSIA,
+    DUR_TEMP_MUTATIONS,
     NUM_DURATIONS
 };
 

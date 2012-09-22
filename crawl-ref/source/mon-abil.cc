@@ -25,6 +25,7 @@
 #include "mon-iter.h"
 #include "mon-place.h"
 #include "mon-project.h"
+#include "mutation.h"
 #include "terrain.h"
 #include "mgen_data.h"
 #include "cloud.h"
@@ -2822,13 +2823,23 @@ bool mon_special_ability(monster* mons, bolt & beem)
         if (player_or_mon_in_sanct(mons))
             break;
 
-        if (one_chance_in(3))
+        if (!you.visible_to(mons))
+            break;
+
+        if (one_chance_in(5))
         {
             flash_view_delay(MAGENTA, 300);
             simple_monster_message(mons,
-                                   " pulses with an otherworldly light!");
+                                   " pulses with an eldritch light!");
+            int num_mutations = 2 + random2(3);
+            for (int i = 0; i < num_mutations; ++i)
+                temp_mutate(RANDOM_BAD_MUTATION, "wretched star");
+
+            used = true;
         }
 
+        // Probably should do something to monsters.
+        // Still uncertain as to exactly what.
         break;
 
     default:

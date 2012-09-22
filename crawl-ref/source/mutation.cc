@@ -248,6 +248,7 @@ static int _num_full_suppressed = 0;
 static int _num_part_suppressed = 0;
 static int _num_form_based = 0;
 static int _num_hunger_based = 0;
+static int _num_transient = 0;
 
 // Can the player transform?  Returns true if the player is ever capable
 // of transforming (i.e. not a mummy or ghoul) and either: is transformed
@@ -316,6 +317,7 @@ string describe_mutations(bool center_title)
 
     _num_full_suppressed = _num_part_suppressed = 0;
     _num_form_based = _num_hunger_based = 0;
+    _num_transient = 0;
 
     if (center_title)
     {
@@ -597,7 +599,20 @@ string describe_mutations(bool center_title)
     // Now add removable mutations.
     for (int i = 0; i < NUM_MUTATIONS; i++)
     {
-        if (you.mutation[i] != 0 && !you.innate_mutations[i])
+        if (you.mutation[i] != 0 && !you.innate_mutations[i]
+                && !you.temp_mutations[i])
+        {
+            mutation_type mut_type = static_cast<mutation_type>(i);
+            result += mutation_name(mut_type, -1, true);
+            result += "\n";
+            have_any = true;
+        }
+    }
+
+    //Finally, temporary mutations.
+    for (int i = 0; i < NUM_MUTATIONS; i++)
+    {
+        if (you.mutation[i] != 0 && you.temp_mutations[i])
         {
             mutation_type mut_type = static_cast<mutation_type>(i);
             result += mutation_name(mut_type, -1, true);
@@ -730,6 +745,8 @@ void display_mutations()
         extra += "<yellow>*</yellow>   : Suppressed by some changes of form.\n";
     if (_num_hunger_based)
         extra += "<lightred>+</lightred>   : Suppressed by thirst.\n";
+    if (_num_transient)
+        extra += "<magenta>[]</magenta>   : Transient mutations.";
     if (you.species == SP_VAMPIRE)
     {
         if (!extra.empty())
@@ -948,7 +965,8 @@ retry:
 // -1 if we should stop processing (failure).
 static int _handle_conflicting_mutations(mutation_type mutation,
                                          bool override,
-                                         const string &reason)
+                                         const string &reason,
+                                         bool temp = false)
 {
     const int conflict[][3] = {
         { MUT_REGENERATION,        MUT_SLOW_METABOLISM,  0},
@@ -1008,8 +1026,16 @@ static int _handle_conflicting_mutations(mutation_type mutation,
                 case 1:
                     // If we have one of the pair, delete a level of the
                     // other, and that's it.
-                    delete_mutation(b, reason, true, true);
-                    return 1;     // Nothing more to do.
+                    //Temporary mutations can co-exist with things they would ordinarily conflict with
+                    if (temp)
+                        return 0;       // Allow conflicting transient mutations
+                    else
+                    {
+                        delete_mutation(b, reason, true, true);
+                        return 1;     // Nothing more to do.
+                    }
+
+
                 default:
                     die("bad mutation conflict resulution");
                 }
@@ -1183,7 +1209,7 @@ static const char* _stat_mut_desc(mutation_type mut, bool gain)
 
 bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
             bool force_mutation, bool god_gift, bool stat_gain_potion,
-            bool demonspawn, bool no_rot)
+            bool demonspawn, bool no_rot, bool temporary)
 {
     if (!god_gift)
     {
@@ -1363,7 +1389,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
     }
 
     // God gifts and forced mutations clear away conflicting mutations.
-    int rc = _handle_conflicting_mutations(mutat, god_gift || force_mutation, reason);
+    int rc = _handle_conflicting_mutations(mutat, god_gift || force_mutation, reason, temporary);
     if (rc == 1)
         return true;
     if (rc == -1)
@@ -1495,12 +1521,16 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
 }
 
 static bool _delete_single_mutation_level(mutation_type mutat,
-                                          const string &reason)
+                                          const string &reason,
+                                          bool transient = false)
 {
     if (you.mutation[mutat] == 0)
         return false;
 
     if (you.innate_mutations[mutat] >= you.mutation[mutat])
+        return false;
+
+    if (!transient && (you.temp_mutations[mutat] >= you.mutation[mutat]))
         return false;
 
     const mutation_def& mdef = get_mutation_def(mutat);
@@ -1666,6 +1696,31 @@ bool delete_all_mutations(const string &reason)
     return !how_mutated();
 }
 
+bool delete_temp_mutation()
+{
+    if (you.attribute[ATTR_TEMP_MUTATIONS] > 0)
+    {
+        mutation_type mutat;
+
+        while (true)
+        {
+            mutat = static_cast<mutation_type>(random2(NUM_MUTATIONS));
+
+            if (you.temp_mutations[mutat] > 0)
+                break;
+        }
+
+        if (_delete_single_mutation_level(mutat, "temp mutation expiry", true))
+        {
+            --you.temp_mutations[mutat];
+            --you.attribute[ATTR_TEMP_MUTATIONS];
+            return true;
+        }
+    }
+
+    return false;
+}
+
 // Return a string describing the mutation.
 // If colour is true, also add the colour annotation.
 string mutation_name(mutation_type mut, int level, bool colour)
@@ -1678,6 +1733,8 @@ string mutation_name(mutation_type mut, int level, bool colour)
     const bool partially_active = (active == MUTACT_PARTIAL
         || active == MUTACT_HUNGER && lowered);
     const bool fully_inactive = (active == MUTACT_INACTIVE);
+
+    const bool temporary   = (you.temp_mutations[mut] > 0);
 
     // level == -1 means default action of current level
     if (level == -1)
@@ -1739,6 +1796,12 @@ string mutation_name(mutation_type mut, int level, bool colour)
         }
     }
 
+    if (temporary)
+    {
+        result = "[" + result + "]";
+        ++_num_transient;
+    }
+
     if (colour)
     {
         const char* colourname = (mdef.bad ? "red" : "lightgrey");
@@ -1775,6 +1838,8 @@ string mutation_name(mutation_type mut, int level, bool colour)
             colourname = "lightgreen";
         else if (_is_slime_mutation(mut))
             colourname = "green";
+        else if (temporary)
+            colourname = "magenta";
 
         // Build the result
         ostringstream ostr;
@@ -2093,6 +2158,42 @@ bool perma_mutate(mutation_type which_mut, int how_much, const string &reason)
     you.innate_mutations[which_mut] += levels;
 
     return (levels > 0);
+}
+
+bool temp_mutate(mutation_type which_mut, const string &reason)
+{
+    switch (which_mut)
+    {
+    case RANDOM_MUTATION:
+    case RANDOM_GOOD_MUTATION:
+    case RANDOM_BAD_MUTATION:
+        which_mut = _get_random_mutation(which_mut);
+        break;
+    case RANDOM_XOM_MUTATION:
+        which_mut = _get_random_xom_mutation();
+        break;
+    case RANDOM_SLIME_MUTATION:
+        which_mut = _get_random_slime_mutation();
+        break;
+    default:
+        break;
+    }
+
+    int old_level = you.mutation[which_mut];
+
+    if (mutate(which_mut, reason, false, true, false, false, false, true, true))
+    {
+        //Only increment temp mutation tracking if we actually gained a mutation
+        if (you.mutation[which_mut] > old_level)
+        {
+            you.temp_mutations[which_mut]++;
+            you.attribute[ATTR_TEMP_MUTATIONS]++;
+            you.increase_duration(DUR_TEMP_MUTATIONS, 20 + roll_dice(3, 10), 50);
+        }
+        return true;
+    }
+
+    return false;
 }
 
 int how_mutated(bool all, bool levels)

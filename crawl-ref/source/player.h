@@ -196,6 +196,7 @@ public:
 
   FixedVector<uint8_t, NUM_MUTATIONS> mutation;
   FixedVector<uint8_t, NUM_MUTATIONS> innate_mutations;
+  FixedVector<uint8_t, NUM_MUTATIONS> temp_mutations;
 
   struct demon_trait
   {
