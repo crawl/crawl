@@ -470,7 +470,8 @@ LUAFN(you_teleport_to)
         move_monsters = lua_toboolean(ls, 3);
 
     lua_pushboolean(ls, you_teleport_to(place, move_monsters));
-    maybe_shift_abyss_around_player();
+    if (player_in_branch(BRANCH_ABYSS))
+        maybe_shift_abyss_around_player();
 
     return 1;
 }
