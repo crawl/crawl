@@ -213,8 +213,8 @@ define(function () {
         "#06989a", // cyan
         "#a40000", // red
         "#5c3566", // magenta
-        "#c4a000", // brown
-        "#d3d7cf", // lightgray
+        "#8f5902", // brown
+        "#babdb6", // lightgray
         "#555753", // darkgray
         "#729fcf", // lightblue
         "#8ae234", // lightgreen

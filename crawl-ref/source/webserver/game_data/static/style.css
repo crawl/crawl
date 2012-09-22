@@ -142,8 +142,8 @@ body {
 #game .fg3 { color: #06989a; } /* cyan */
 #game .fg4 { color: #a40000; } /* red */
 #game .fg5 { color: #5c3566; } /* magenta */
-#game .fg6 { color: #c4a000; } /* brown */
-#game .fg7 { color: #d3d7cf; } /* lightgray */
+#game .fg6 { color: #8f5902; } /* brown */
+#game .fg7 { color: #babdb6; } /* lightgray */
 #game .fg8 { color: #555753; } /* darkgray */
 #game .fg9 { color: #729fcf; } /* lightblue */
 #game .fg10 { color: #8ae234; } /* lightgreen */
@@ -159,8 +159,8 @@ body {
 #game .bg3 { background-color: #06989a; } /* cyan */
 #game .bg4 { background-color: #a40000; } /* red */
 #game .bg5 { background-color: #5c3566; } /* magenta */
-#game .bg6 { background-color: #c4a000; } /* brown */
-#game .bg7 { background-color: #d3d7cf; } /* lightgray */
+#game .bg6 { background-color: #8f5902; } /* brown */
+#game .bg7 { background-color: #babdb6; } /* lightgray */
 #game .bg8 { background-color: #555753; } /* darkgray */
 #game .bg9 { background-color: #729fcf; } /* lightblue */
 #game .bg10 { background-color: #8ae234; } /* lightgreen */
