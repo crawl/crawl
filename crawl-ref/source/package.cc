@@ -87,7 +87,7 @@ typedef map<len_t, bm_p> bm_t;
 typedef map<len_t, len_t> fb_t;
 
 package::package(const char* file, bool writeable, bool empty)
-  : n_users(0), dirty(false), aborted(false)
+  : n_users(0), dirty(false), aborted(false), tmp(false)
 {
     dprintf("package: initializing file=\"%s\" rw=%d\n", file, writeable);
     ASSERT(writeable || !empty);
@@ -131,7 +131,7 @@ package::package(const char* file, bool writeable, bool empty)
 }
 
 package::package()
-  : rw(true), n_users(0), dirty(false), aborted(false)
+  : rw(true), n_users(0), dirty(false), aborted(false), tmp(true)
 {
     dprintf("package: initializing tmp file\n");
     filename = "[tmp]";
@@ -245,14 +245,14 @@ void package::commit()
     head.start = htole(write_directory());
 #ifdef DO_FSYNC
     // We need a barrier before updating the link to point at the new directory.
-    if (fdatasync(fd))
+    if (!tmp && fdatasync(fd))
         sysfail("flush error while saving");
 #endif
     seek(0);
     if (write(fd, &head, sizeof(head)) != sizeof(head))
         sysfail("write error while saving");
 #ifdef DO_FSYNC
-    if (fdatasync(fd))
+    if (!tmp && fdatasync(fd))
         sysfail("flush error while saving");
 #endif
 
