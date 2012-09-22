@@ -8,6 +8,7 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
         this.display_mode = "tiles";
         this.glyph_mode_font_size = 24;
         this.glyph_mode_font = "monospace";
+        this.smooth_scaling = false;
     }
 
     var fg_term_colours, bg_term_colours;
@@ -780,6 +781,9 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
 
             var w = info.ex - info.sx;
             var h = info.ey - info.sy;
+            this.ctx.imageSmoothingEnabled = this.smooth_scaling;
+            this.ctx.webkitImageSmoothingEnabled = this.smooth_scaling;
+            this.ctx.mozImageSmoothingEnabled = this.smooth_scaling;
             this.ctx.drawImage(img,
                                info.sx, info.sy + sy - pos_sy_adjust,
                                w, h + ey - pos_ey_adjust,
