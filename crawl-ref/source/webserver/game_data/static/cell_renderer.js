@@ -10,6 +10,23 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
         this.glyph_mode_font = "monospace";
     }
 
+    var fg_term_colours, bg_term_colours;
+
+    function determine_term_colours()
+    {
+        fg_term_colours = [];
+        bg_term_colours = [];
+        var $game = $("#game");
+        for (var i = 0; i < 16; ++i)
+        {
+            var elem = $("<span class='glyph fg" + i + " bg" + i + "'></span>");
+            $game.append(elem);
+            fg_term_colours.push(elem.css("color"));
+            bg_term_colours.push(elem.css("background-color"));
+            elem.detach();
+        }
+    }
+
     function in_water(cell)
     {
         return ((cell.bg.WATER) && !(cell.fg.FLYING));
@@ -300,10 +317,10 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
 
             if (!omit_bg)
             {
-                this.ctx.fillStyle = enums.term_colours[col.bg];
+                this.ctx.fillStyle = bg_term_colours[col.bg];
                 this.ctx.fillRect(x, y, this.cell_width, this.cell_height);
             }
-            this.ctx.fillStyle = enums.term_colours[col.fg];
+            this.ctx.fillStyle = fg_term_colours[col.fg];
             this.ctx.font = prefix + this.glyph_mode_font_name();
             this.ctx.textAlign = "center";
             this.ctx.textBaseline = "middle";
@@ -798,6 +815,11 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
             this.draw_tile(idx, x, y, mod, ofsx, ofsy);
         },
     });
+
+    $(document).off("game_init.cell_renderer")
+        .on("game_init.cell_renderer", function () {
+            determine_term_colours();
+        });
 
     return {
         DungeonCellRenderer: DungeonCellRenderer,
