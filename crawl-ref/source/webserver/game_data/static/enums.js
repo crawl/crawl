@@ -202,29 +202,6 @@ define(function () {
         return prepare_flags(tileidx, bg_flags);
     }
 
-    function rgb(r, g, b)
-    {
-        return "rgb(" + r + "," + g + "," + b + ")";
-    }
-    exports.term_colours = [
-        "#000000", // black
-        "#204a87", // blue
-        "#4e9a06", // green
-        "#06989a", // cyan
-        "#a40000", // red
-        "#5c3566", // magenta
-        "#8f5902", // brown
-        "#babdb6", // lightgray
-        "#555753", // darkgray
-        "#729fcf", // lightblue
-        "#8ae234", // lightgreen
-        "#34e2e2", // lightcyan
-        "#ef2929", // lightred
-        "#ad7fa8", // lightmagenta
-        "#fce94f", // yellow
-        "#eeeeec" // white
-    ];
-
     // Menu flags -- see menu.h
     var mf = {};
     mf.NOSELECT         = 0x0000;
