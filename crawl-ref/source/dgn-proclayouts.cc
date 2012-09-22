@@ -44,7 +44,11 @@ ColumnLayout::operator()(const coord_def &p, const uint32_t offset) const
     int x = abs(p.x) % (_col_width + _col_space);
     int y = abs(p.y) % (_row_width + _row_space);
     if (x < _col_width && y < _row_width)
-        return ProceduralSample(p, DNGN_ROCK_WALL, offset + 4096);
+    {
+        int w = _col_width + _col_space;
+        dungeon_feature_type feat = _pick_pseudorandom_feature(hash3(p.x/w, p.y/w, 2));
+        return ProceduralSample(p, feat, offset + 4096);
+    }
     return ProceduralSample(p, DNGN_FLOOR, offset + 4096); 
 }
 
@@ -57,14 +61,17 @@ DiamondLayout::operator()(const coord_def &p, const uint32_t offset) const
     uint8_t x = abs(abs(p.x) % cellSize - halfCell);
     uint8_t y = abs(abs(p.y) % cellSize - halfCell);
     if (x+y < w)
-        return ProceduralSample(p, DNGN_ROCK_WALL, offset + 4096);
+    {
+        dungeon_feature_type feat = _pick_pseudorandom_feature(hash3(p.x/w, p.y/w, 2));
+        return ProceduralSample(p, feat, offset + 4096);
+    }
     return ProceduralSample(p, DNGN_FLOOR, offset + 4096); 
 }
  
 
 uint32_t _get_changepoint(const worley::noise_datum &n, const double scale)
 {
-    return max(1, (int) floor((n.distance[1] - n.distance[0]) * scale));
+    return max(1, (int) floor((n.distance[1] - n.distance[0]) * scale) - 5);
 }
 
 ProceduralSample _maybe_set_changepoint(const ProceduralSample &s,
@@ -94,7 +101,7 @@ ChaosLayout::operator()(const coord_def &p, const uint32_t offset) const
 {
    uint64_t base = hash3(p.x, p.y, seed);
    uint32_t density = baseDensity + seed % 50 + (seed >> 16) % 60;
-    if ((base % 1000) > density)
+    if ((base % 1000) < density)
         return ProceduralSample(p, _pick_pseudorandom_feature(base/3), offset + 4096);
     return ProceduralSample(p, DNGN_FLOOR, offset + 4096);
 }
@@ -108,7 +115,7 @@ RoilingChaosLayout::operator()(const coord_def &p, const uint32_t offset) const
     double z = offset / scale;
     worley::noise_datum n = worley::noise(x, y, z);
     const uint32_t changepoint = offset + _get_changepoint(n, scale);
-    ProceduralSample sample = ChaosLayout(n.id[0] + seed)(p, offset);
+    ProceduralSample sample = ChaosLayout(n.id[0] + seed, density)(p, offset);
     return ProceduralSample(p, sample.feat(), min(sample.changepoint(), changepoint));
 }
 
@@ -125,7 +132,7 @@ RiverLayout::operator()(const coord_def &p, const uint32_t offset) const
         return layout(p, offset);
     }
     double delta = n.distance[1] - n.distance[0];
-    if (delta < 1.25/scalar)
+    if (delta < 1.5/scalar)
     {
         dungeon_feature_type feat = DNGN_SHALLOW_WATER;
         uint64_t hash = hash3(p.x, p.y, n.id[0] + seed);
@@ -136,4 +143,42 @@ RiverLayout::operator()(const coord_def &p, const uint32_t offset) const
         return ProceduralSample(p, feat, changepoint);
     }
     return layout(p, offset);
+}
+
+ProceduralSample
+CastleLayout::operator()(const coord_def &p, const uint32_t offset) const
+{
+    uint32_t period = 3200;
+    uint32_t hperiod = period / 2;
+    uint32_t radius = 20;
+    uint32_t x = p.x;
+    uint32_t y = p.y;
+    uint32_t xo = x + ((x % period) - hperiod);
+    uint32_t yo = y + ((y % period) - hperiod);
+    uint32_t d = round(sqrt((xo - x) * (xo - x) + (yo - y) * (yo - y)));
+    uint8_t parity = (d / (radius / 4)) % 4;
+    if (d > radius)
+        return layout(p, offset);
+    if (d < radius / 6)
+    {
+        dungeon_feature_type feat = DNGN_LAVA;
+        if (xo == x && d == (radius / 6 - 1))
+        {
+            static dungeon_feature_type gates[] =
+            {
+                DNGN_ALTAR_LUGONU,
+                DNGN_EXIT_ABYSS,
+                DNGN_ABYSSAL_STAIR
+            };
+            feat = gates[hash3(x, y, seed) % 3];
+        }
+        return ProceduralSample(p, feat, offset + 4096);
+    }
+    if ((xo - x < 2 || x - xo < 2) && d > radius / 2)
+        return RoilingChaosLayout(seed, 200)(p, offset);
+    if ((yo - y < 2 || y - yo < 2) && d < radius / 2)
+        return RoilingChaosLayout(seed, 200)(p, offset);
+    if (d < radius && parity % 2)
+        return ProceduralSample(p, _pick_pseudorandom_feature(hash3(x,y,seed)), offset + 4096);
+    return RoilingChaosLayout(seed, 200)(p, offset);
 }
