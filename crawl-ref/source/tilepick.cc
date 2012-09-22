@@ -4060,7 +4060,10 @@ tileidx_t tileidx_item(const item_def &item)
         else if (type <= NUM_RINGS)
         {
             if (is_artefact(item))
-                return TILE_RING_RANDART_OFFSET + colour - 1;
+            {
+                int offset = item.rnd % tile_main_count(TILE_RING_RANDART_OFFSET);
+                return TILE_RING_RANDART_OFFSET + offset;
+            }
             else if (item.flags & ISFLAG_KNOW_TYPE)
                 return TILE_RING_ID_FIRST + type - RING_FIRST_RING;
             else
@@ -4069,7 +4072,10 @@ tileidx_t tileidx_item(const item_def &item)
         else
         {
             if (is_artefact(item))
-                return TILE_AMU_RANDOM_OFFSET + colour - 1;
+            {
+                int offset = item.rnd % tile_main_count(TILE_AMU_RANDOM_OFFSET);
+                return TILE_AMU_RANDOM_OFFSET + offset;
+            }
             else if (item.flags & ISFLAG_KNOW_TYPE)
                 return TILE_AMU_ID_FIRST + type - AMU_FIRST_AMULET;
             else

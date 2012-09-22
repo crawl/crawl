@@ -443,67 +443,62 @@ void item_colour(item_def &item)
         // unrandarts have already been coloured
         if (is_unrandom_artefact(item))
             break;
+        //randarts are bright, normal jewellery is dark
         else if (is_random_artefact(item))
         {
-            item.colour = random_colour();
+            item.colour = make_high_colour(random_colour());
             break;
         }
 
-        item.colour  = YELLOW;
+        item.colour  = BROWN;
         item.special = you.item_description[IDESC_RINGS][item.sub_type];
 
         switchnum = item.special % NDSC_JEWEL_PRI;
 
         switch (switchnum)
         {
-        case 0:
-        case 7:
-        case 27:
+        case 0:                 // "wooden ring"
+        case 2:                 // "golden ring"
+        case 6:                 // "brass ring"
+        case 7:                 // "copper ring"
+        case 25:                // "gilded ring"
+        case 27:                // "bronze ring"
             item.colour = BROWN;
             break;
-        case 1:
-        case 8:
-        case 11:
-        case 20:
-        case 26:
+        case 1:                 // "silver ring"
+        case 8:                 // "granite ring"
+        case 9:                 // "ivory ring"
+        case 15:                // "bone ring"
+        case 16:                // "diamond ring"
+        case 20:                // "opal ring"
+        case 21:                // "pearl ring"
+        case 26:                // "onyx ring"
             item.colour = LIGHTGREY;
             break;
-        case 2:
-        case 6:
-        case 25:
-            item.colour = YELLOW;
-            break;
-        case 3:
-        case 4:
+        case 3:                 // "iron ring"
+        case 4:                 // "steel ring"
+        case 13:                // "glass ring"
             item.colour = CYAN;
             break;
-        case 5:
-        case 22:
-            item.colour = LIGHTMAGENTA;
+        case 5:                 // "tourmaline ring"
+        case 22:                // "coral ring"
+            item.colour = MAGENTA;
             break;
-        case 9:
-        case 15:
-        case 16:
-        case 21:
-            item.colour = WHITE;
-            break;
-        case 10:
-        case 19:
+        case 10:                // "ruby ring"
+        case 19:                // "garnet ring"
             item.colour = RED;
             break;
-        case 12:
-        case 14:
-        case 17:
-        case 18:
+        case 11:                // "marble ring"
+        case 12:                // "jade ring"
+        case 14:                // "agate ring"
+        case 17:                // "emerald ring"
+        case 18:                // "peridot ring"
             item.colour = GREEN;
             break;
-        case 13:
-            item.colour = LIGHTCYAN;
-            break;
-        case 23:
-        case 24:
-        case 28:
-            item.colour = LIGHTBLUE;
+        case 23:                // "sapphire ring"
+        case 24:                // "cabochon ring"
+        case 28:                // "moonstone ring"
+            item.colour = BLUE;
             break;
         }
 
@@ -513,23 +508,26 @@ void item_colour(item_def &item)
             {
             case 0:             // "zirconium amulet"
             case 9:             // "ivory amulet"
+            case 10:            // "bone amulet"
             case 11:            // "platinum amulet"
             case 16:            // "pearl amulet"
             case 20:            // "diamond amulet"
-                item.colour = WHITE;
+            case 24:            // "silver amulet"
+                item.colour = LIGHTGREY;
                 break;
             case 1:             // "sapphire amulet"
-            case 15:            // "cameo amulet"
             case 17:            // "blue amulet"
-                item.colour = LIGHTBLUE;
+            case 26:            // "lapis lazuli amulet"
+                item.colour = BLUE;
                 break;
             case 2:             // "golden amulet"
+            case 5:             // "bronze amulet"
             case 6:             // "brass amulet"
-                item.colour = YELLOW;
+            case 7:             // "copper amulet"
+                item.colour = BROWN;
                 break;
             case 3:             // "emerald amulet"
             case 12:            // "jade amulet"
-            case 14:            // "crystal amulet"
             case 18:            // "peridot amulet"
             case 21:            // "malachite amulet"
             case 25:            // "soapstone amulet"
@@ -539,26 +537,17 @@ void item_colour(item_def &item)
             case 4:             // "garnet amulet"
             case 8:             // "ruby amulet"
             case 19:            // "jasper amulet"
+            case 15:            // "cameo amulet"
                 item.colour = RED;
-                break;
-            case 5:             // "bronze amulet"
-            case 7:             // "copper amulet"
-                item.colour = BROWN;
-                break;
-            case 10:            // "bone amulet"
-            case 24:            // "silver amulet"
-            case 27:            // "filigree amulet"
-                item.colour = LIGHTGREY;
                 break;
             case 22:            // "steel amulet"
             case 23:            // "cabochon amulet"
+            case 27:            // "filigree amulet"
                 item.colour = CYAN;
                 break;
-            case 26:            // "lapis lazuli amulet"
-                item.colour = BLUE;
-                break;
             case 13:            // "fluorescent amulet"
-                item.colour = random_colour();
+            case 14:            // "crystal amulet"
+                item.colour = MAGENTA;
             }
         }
 

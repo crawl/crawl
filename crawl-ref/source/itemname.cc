@@ -750,8 +750,8 @@ static const char* ring_primary_string(int p)
     case 22: return "coral";
     case 23: return "sapphire";
     case 24: return "cabochon";
-    case 25: return "yellow";
-    case 26: return "black";
+    case 25: return "gilded";
+    case 26: return "onyx";
     case 27: return "bronze";
     case 28: return "moonstone";
     default: return "buggy";
