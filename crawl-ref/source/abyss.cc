@@ -992,21 +992,21 @@ static ProceduralSample _abyss_grid(const coord_def &p)
     const static ProceduralLayout* regularLayouts[] = { 
         &diamond30, &diamond21, &column2, &column26
     };
-    static vector<const ProceduralLayout*> layout_vec(regularLayouts, 
+    const static vector<const ProceduralLayout*> layout_vec(regularLayouts, 
         regularLayouts + 4);
-
-    WorleyLayout worley(seed + 123456, layout_vec);
-    RoilingChaosLayout chaosA(seed + 8675309, 450);
-    RoilingChaosLayout chaosB(seed + 7654321, 400);
-    RoilingChaosLayout chaosC(seed + 24816,   380);
-    RoilingChaosLayout chaosD(seed + 24816,   500);
+    const static WorleyLayout worley(seed + 123456, layout_vec);
+    const static RoilingChaosLayout chaosA(seed + 8675309, 450);
+    const static RoilingChaosLayout chaosB(seed + 7654321, 400);
+    const static RoilingChaosLayout chaosC(seed + 24816,   380);
+    const static RoilingChaosLayout chaosD(seed + 24816,   500);
     const ProceduralLayout* mixedLayouts[] = {
         &worley, &chaosA, &chaosB, &chaosC, &chaosD
     };
-    vector<const ProceduralLayout*> mixed_vec(mixedLayouts, mixedLayouts + 2);
-    WorleyLayout layout(seed + 4321, mixed_vec);
-    RiverLayout rivers(seed, layout);
-    const ProceduralSample sample = rivers(pt, abyssal_state.depth);
+    const static vector<const ProceduralLayout*> mixed_vec(mixedLayouts, mixedLayouts + 2);
+    const static WorleyLayout layout(seed + 4321, mixed_vec);
+    const static RiverLayout rivers(seed, layout);
+    const static CastleLayout castle(seed + 234621, rivers);
+    const ProceduralSample sample = castle(pt, abyssal_state.depth);
     abyss_sample_queue.push(sample);
     return sample;
 }
