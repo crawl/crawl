@@ -536,8 +536,6 @@ static void _give_items_skills(const newgame_def& ng)
         you.skills[SK_DODGING]  = 2;
         if (ng.weapon != WPN_QUARTERSTAFF)
             you.skills[SK_SHIELDS] = 1;
-        else // Staff gladiators get some unarmed skill instead for punches.
-            you.skills[SK_UNARMED_COMBAT] = 2;
         weap_skill = 3;
         break;
 

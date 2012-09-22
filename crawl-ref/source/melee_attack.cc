@@ -1254,7 +1254,7 @@ unarmed_attack_type melee_attack::player_aux_choose_uc_attack()
     // Octopodes get more tentacle-slaps.
     if (you.species == SP_OCTOPODE && coinflip())
         uc_attack = UNAT_PUNCH;
-    // No punching with a shield or 2-handed wpn, except staves.
+    // No punching with a shield or 2-handed wpn.
     // Octopodes aren't affected by this, though!
     if (you.species != SP_OCTOPODE && uc_attack == UNAT_PUNCH
         && !you.has_usable_offhand())
