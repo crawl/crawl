@@ -46,6 +46,7 @@ public:
     bool    stab_attempt;
     int     stab_bonus;
 
+    bool         can_cleave;
     list<actor*> cleave_targets;
     bool         cleaving;        // additional attack from cleaving
 

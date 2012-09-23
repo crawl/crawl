@@ -6,6 +6,7 @@
 #include "coord.h"
 #include "coordit.h"
 #include "env.h"
+#include "fight.h"
 #include "godabil.h"
 #include "itemprop.h"
 #include "libutil.h"
@@ -469,6 +470,25 @@ aff_type targetter_reach::is_affected(coord_def loc)
     return AFF_NO;
 }
 
+targetter_cleave::targetter_cleave(const actor* act, coord_def target)
+{
+    ASSERT(act);
+    agent = act;
+    origin = act->pos();
+    aim = target;
+    list<actor*> act_targets;
+    get_all_cleave_targets(act->pos(), target, act_targets);
+    while (!act_targets.empty())
+    {
+        targets.insert(act_targets.front()->pos());
+        act_targets.pop_front();
+    }
+}
+
+aff_type targetter_cleave::is_affected(coord_def loc)
+{
+    return targets.count(loc) ? AFF_YES : AFF_NO;
+}
 
 targetter_cloud::targetter_cloud(const actor* act, int range,
                                  int count_min, int count_max) :

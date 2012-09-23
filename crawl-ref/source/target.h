@@ -110,6 +110,16 @@ public:
     aff_type is_affected(coord_def loc);
 };
 
+class targetter_cleave : public targetter
+{
+public:
+    targetter_cleave(const actor* act, coord_def target);
+    aff_type is_affected(coord_def loc);
+    bool valid_aim(coord_def a) { return false; }
+private:
+    set<coord_def> targets;
+};
+
 class targetter_cloud : public targetter
 {
 public:

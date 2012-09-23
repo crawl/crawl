@@ -104,6 +104,8 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     damage_brand    = attacker->damage_brand(attack_number);
     wpn_skill       = weapon ? weapon_skill(*weapon) : SK_UNARMED_COMBAT;
     to_hit          = calc_to_hit();
+    can_cleave      = wpn_skill == SK_AXES && attacker != defender
+                      && !attacker->confused();
 
     attacker_armour_tohit_penalty =
         div_rand_round(attacker->armour_tohit_penalty(true, 20), 20);
@@ -230,6 +232,15 @@ bool melee_attack::handle_phase_attempted()
                     cancel_attack = true;
                     return false;
                 }
+            }
+        }
+        else if (can_cleave)
+        {
+            targetter_cleave hitfunc(attacker, defender->pos());
+            if (stop_attack_prompt(hitfunc, "attack"))
+            {
+                cancel_attack = true;
+                return false;
             }
         }
         else if (stop_attack_prompt(defender->as_monster(), false,
@@ -801,18 +812,15 @@ bool melee_attack::handle_phase_end()
  */
 bool melee_attack::attack()
 {
-    if (!handle_phase_attempted())
+    if (!cleaving && !handle_phase_attempted())
         return false;
 
     if (attacker != defender && attacker->self_destructs())
         return (did_hit = perceived_attack = true);
 
 
-    if (!cleaving && wpn_skill == SK_AXES
-        && attacker != defender && !attacker->confused())
-    {
+    if (can_cleave && !cleaving)
         cleave_setup();
-    }
 
     // We might have killed the kraken target by cleaving a tentacle.
     if (!defender->alive())

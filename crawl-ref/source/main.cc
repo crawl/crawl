@@ -3520,12 +3520,7 @@ static bool _untrap_target(const coord_def move, bool check_confused)
 
             list<actor*> cleave_targets;
             if (you.weapon() && weapon_skill(*you.weapon()) == SK_AXES)
-            {
-                int dir = coinflip() ? -1 : 1;
-                get_cleave_targets(you.pos(), target, dir, cleave_targets);
-                cleave_targets.reverse();
-                get_cleave_targets(you.pos(), target, -dir, cleave_targets);
-            }
+                get_all_cleave_targets(you.pos(), target, cleave_targets);
 
             if (!cleave_targets.empty())
                 attack_cleave_targets(&you, cleave_targets);
