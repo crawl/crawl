@@ -4159,7 +4159,8 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         else if (amount <= 0 && hit_points <= max_hit_points)
             return 0;
 
-        if (agent && agent->is_player() && you.duration[DUR_QUAD_DAMAGE])
+        if (agent && agent->is_player() && you.duration[DUR_QUAD_DAMAGE]
+            && flavour != BEAM_TORMENT_DAMAGE)
         {
             amount *= 4;
             if (amount > hit_points + 50)
