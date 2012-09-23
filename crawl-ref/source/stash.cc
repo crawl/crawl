@@ -1741,18 +1741,13 @@ void StashTracker::search_stashes()
     string help = lastsearch;
     lastsearch = csearch;
 
+    if (csearch == "@")
+        csearch = ".";
+    bool curr_lev = (csearch[0] == '@');
+    if (curr_lev)
+        csearch.erase(0, 1);
     if (csearch == ".")
-    {
-#if defined(REGEX_PCRE) || defined(REGEX_POSIX)
-#define RE_ESCAPE "\\"
-#else
-#define RE_ESCAPE ""
-#endif
-
-        csearch = (RE_ESCAPE "{")
-            + level_id::current().describe()
-            + (RE_ESCAPE "}");
-    }
+        curr_lev = true;
 
     vector<stash_search_result> results;
 
@@ -1773,7 +1768,7 @@ void StashTracker::search_stashes()
         return ;
     }
 
-    get_matching_stashes(*search, results);
+    get_matching_stashes(*search, results, curr_lev);
 
     if (results.empty())
     {
@@ -1804,18 +1799,21 @@ void StashTracker::search_stashes()
 
 void StashTracker::get_matching_stashes(
         const base_pattern &search,
-        vector<stash_search_result> &results)
+        vector<stash_search_result> &results,
+        bool curr_lev)
     const
 {
     stash_levels_t::const_iterator iter = levels.begin();
+    level_id curr = level_id::current();
     for (; iter != levels.end(); ++iter)
     {
+        if (curr_lev && curr != iter->first)
+            continue;
         iter->second.get_matching_stashes(search, results);
         if (results.size() > SEARCH_SPAM_THRESHOLD)
             return;
     }
 
-    level_id curr = level_id::current();
     for (unsigned i = 0; i < results.size(); ++i)
     {
         int ldist = level_distance(curr, results[i].pos.id);

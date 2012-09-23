@@ -361,7 +361,8 @@ public:
     void remove_shop(const level_pos &pos);
 private:
     void get_matching_stashes(const base_pattern &search,
-                              vector<stash_search_result> &results) const;
+                              vector<stash_search_result> &results,
+                              bool curr_lev = false) const;
     bool display_search_results(vector<stash_search_result> &results,
                                 bool& sort_by_dist,
                                 bool& show_as_stacks);
