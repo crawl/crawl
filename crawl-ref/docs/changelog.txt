@@ -10,6 +10,8 @@ Stone Soup 0.11 (up to 0.11-a0-3206-g559a7a8)
 * New monsters: Arachne, Fannar, orb spider, bog body, Hell Sentinel.
 * Removed monsters: Jozef, bog mummy, midge, Pit Fiend, hairy devil.
 * Lots of new vaults and tiles.
+* Config file overhaul: lists require += when appending, you don't need to
+  upgrade your config by hand anymore (after this last(?) time).
 
 Branches, environment
 ---------------------
