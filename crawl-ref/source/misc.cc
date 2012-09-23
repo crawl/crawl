@@ -2301,7 +2301,13 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
     snprintf(info, INFO_SIZE, "Really %s%s%s?",
              verb.c_str(), mon_name.c_str(), suffix.c_str());
 
-    return !yesno(info, false, 'n');
+    if (yesno(info, false, 'n'))
+        return false;
+    else
+    {
+        canned_msg(MSG_OK);
+        return true;
+    }
 }
 
 bool stop_attack_prompt(targetter &hitfunc, string verb,
@@ -2344,7 +2350,13 @@ bool stop_attack_prompt(targetter &hitfunc, string verb,
     snprintf(info, INFO_SIZE, "Really %s %s%s?",
              verb.c_str(), mon_name.c_str(), suffix.c_str());
 
-    return !yesno(info, false, 'n');
+    if (yesno(info, false, 'n'))
+        return false;
+    else
+    {
+        canned_msg(MSG_OK);
+        return true;
+    }
 }
 
 bool is_orckind(const actor *act)
