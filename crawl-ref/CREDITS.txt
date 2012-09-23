@@ -116,6 +116,7 @@ Erkki Nurmi
 Mattias Nyberg
 nyra
 Dylan O'Donnell
+Chris Oelmueller
 Yuuma Oohara
 Malwyn P
 William Parker
@@ -142,6 +143,7 @@ Michael Spang
 Jan 'heftig' Steffens
 Johan Strandell
 Ben Striegel
+Derrick Sund
 Pavel 'Curio' Svinarchuk
 Matthew Tadd
 William Tanksley, Jr.

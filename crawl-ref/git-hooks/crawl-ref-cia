@@ -180,6 +180,7 @@ $user =~ s/naesten/SamB/;
 $user =~ s/neil/|amethyst/;
 $user =~ s/smelenchuk/Grunt/;
 $user =~ s/yokomeshi/ontoclasm/;
+$user =~ s/therealchriswest/frogbotherer/;
 
 # Other regular contributors:
 $user =~ s/homelesspete/Twinge/;
@@ -194,7 +195,7 @@ $user =~ s/sbalady/nfogravity/;
 $user =~ s/ben\.striegel/Wensley/;
 $user =~ s/thann/Thann/;
 $user =~ s/policarpocp/CommanderC/;
-$user =~ s/therealchriswest/frogbotherer/;
+$user =~ s/mclaws/HangedMan/;
 
 # Infrastructure:
 $user =~ s/crawl-ref-discuss/translators/; # make tx-commit
