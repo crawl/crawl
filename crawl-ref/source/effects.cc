@@ -308,7 +308,7 @@ int torment_monsters(coord_def where, actor *attacker, int taux)
     if (!mons->alive() || mons->res_torment())
         return retval;
 
-    int hploss = max(0, mons->hit_points / 2 - 1);
+    int hploss = max(0, mons->hit_points * (50 - mons->res_negative_energy() * 5) / 100 - 1);
 
     if (hploss)
     {
