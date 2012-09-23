@@ -3519,12 +3519,22 @@ static bool _untrap_target(const coord_def move, bool check_confused)
             }
 
             list<actor*> cleave_targets;
-            if (you.weapon() && weapon_skill(*you.weapon()) == SK_AXES)
+            if (you.weapon() && weapon_skill(*you.weapon()) == SK_AXES
+                && !you.confused())
+            {
                 get_all_cleave_targets(you.pos(), target, cleave_targets);
+            }
 
             if (!cleave_targets.empty())
-                attack_cleave_targets(&you, cleave_targets);
-            else if (do_msg)
+            {
+                targetter_cleave hitfunc(&you, target);
+                if (stop_attack_prompt(hitfunc, "attack"))
+                    return true;
+
+                if (!you.fumbles_attack())
+                    attack_cleave_targets(&you, cleave_targets);
+            }
+            else if (do_msg && !you.fumbles_attack())
                 mpr("You swing at nothing.");
             make_hungry(3, true);
             you.turn_is_over = true;
