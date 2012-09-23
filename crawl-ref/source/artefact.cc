@@ -1984,7 +1984,7 @@ static void _make_octoring(item_def &item)
 {
     if (you.octopus_king_rings == 255)
     {
-        ASSERT(you.wizard);
+        ASSERT(you.wizard || crawl_state.test);
         item.sub_type = octoring_types[random2(8)];
         return;
     }
