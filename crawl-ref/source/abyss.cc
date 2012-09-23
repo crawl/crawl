@@ -1186,7 +1186,7 @@ static int _abyss_place_vaults(const map_bitmask &abyss_genlevel_mask)
 
     int vaults_placed = 0;
 
-    const int maxvaults = 4;
+    const int maxvaults = 6;
     for (int i = 0; i < maxvaults; ++i)
     {
         const map_def *map = random_map_for_tag("abyss", false, true);

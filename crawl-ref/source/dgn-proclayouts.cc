@@ -83,7 +83,7 @@ ProceduralSample _maybe_set_changepoint(const ProceduralSample &s,
 ProceduralSample
 WorleyLayout::operator()(const coord_def &p, const uint32_t offset) const
 {
-    const double scale = 500.0;
+    const double scale = 5000.0;
     double x = p.x / 5.0;
     double y = p.y / 5.0;
     double z = offset / scale;
@@ -109,7 +109,7 @@ ChaosLayout::operator()(const coord_def &p, const uint32_t offset) const
 ProceduralSample
 RoilingChaosLayout::operator()(const coord_def &p, const uint32_t offset) const
 {   
-    const double scale = (density - 350) + 800;
+    const double scale = (density - 350) + 4800;
     double x = p.x;
     double y = p.y;
     double z = offset / scale;
@@ -122,7 +122,7 @@ RoilingChaosLayout::operator()(const coord_def &p, const uint32_t offset) const
 ProceduralSample
 RiverLayout::operator()(const coord_def &p, const uint32_t offset) const
 {   
-    const double scale = 1000;
+    const double scale = 10000;
     const double scalar = 90.0;
     double x = (p.x + perlin::fBM(p.x/4.0, p.y/4.0, seed, 5) * 3) / scalar;
     double y = (p.y + perlin::fBM(p.x/4.0 + 3.7, p.y/4.0 + 1.9, seed + 4, 5) * 3) / scalar;
