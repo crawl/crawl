@@ -496,6 +496,7 @@ int player_weapon_dex_weight(void)
 void get_cleave_targets(coord_def atk, coord_def def, int dir,
                         list<actor*> &targets)
 {
+    const actor* attacker = actor_at(atk);
     coord_def atk_vector = def - atk;
     int i = 0;
 
@@ -503,10 +504,20 @@ void get_cleave_targets(coord_def atk, coord_def def, int dir,
     {
         atk_vector = rotate_adjacent(atk_vector, dir);
         actor * target = actor_at(atk + atk_vector);
-        if (target)
+        if (target && !mons_aligned(attacker, target))
             targets.push_back(target);
     }
     while (++i < 3 && !feat_is_solid(grd(atk + atk_vector)));
+}
+
+void get_all_cleave_targets(coord_def atk, coord_def def, list<actor*> &targets)
+{
+    int dir = coinflip() ? -1 : 1;
+    get_cleave_targets(you.pos(), def, dir, targets);
+    targets.reverse();
+    if (actor_at(def))
+        targets.push_back(actor_at(def));
+    get_cleave_targets(you.pos(), def, -dir, targets);
 }
 
 void attack_cleave_targets(actor* attacker, list<actor*> &targets,
@@ -515,8 +526,7 @@ void attack_cleave_targets(actor* attacker, list<actor*> &targets,
     while (!targets.empty())
     {
         actor* def = targets.front();
-        if (attacker->alive() && def && def->alive()
-            && (!mons_aligned(attacker, def) || attacker->confused()))
+        if (attacker->alive() && def && def->alive())
         {
             melee_attack attck(attacker, def, attack_number,
                                ++effective_attack_number, true);
