@@ -271,9 +271,6 @@ static bool _corpse_butchery(int corpse_id, int butcher_tool,
 
     const bool rotten = food_is_rotten(mitm[corpse_id]);
 
-    if (!_should_butcher(corpse_id, bottle_blood))
-        return false;
-
     // Start work on the first corpse we butcher.
     if (first_corpse)
         mitm[corpse_id].plus2++;
@@ -607,11 +604,13 @@ bool butchery(int which_corpse, bool bottle_blood)
         || num_corpses == 1 && Options.confirm_butcher != CONFIRM_ALWAYS
         || Options.confirm_butcher == CONFIRM_NEVER && !auto_only)
     {
-        if (Options.confirm_butcher == CONFIRM_NEVER
-            && !_should_butcher(corpse_id, bottle_blood))
+        if (!_should_butcher(corpse_id, bottle_blood))
         {
-            mprf("There isn't anything suitable to %s here.",
-                 bottle_blood ? "bottle" : "butcher");
+            if (Options.confirm_butcher == CONFIRM_NEVER)
+            {
+                mprf("There isn't anything suitable to %s here.",
+                     bottle_blood ? "bottle" : "butcher");
+            }
             return false;
         }
 
@@ -669,6 +668,9 @@ bool butchery(int which_corpse, bool bottle_blood)
             corpse_id = meat[i]->index();
         else
             corpse_id = selected[i].item->index();
+
+        if (!_should_butcher(corpse_id, bottle_blood))
+            continue;
 
         if (!did_weap_swap)
         {
@@ -756,7 +758,7 @@ bool butchery(int which_corpse, bool bottle_blood)
             while (repeat_prompt);
         }
 
-        if (corpse_id != -1)
+        if (corpse_id != -1 && _should_butcher(corpse_id, bottle_blood))
         {
             if (!did_weap_swap)
             {
