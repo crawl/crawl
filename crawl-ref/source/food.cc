@@ -538,6 +538,11 @@ bool butchery(int which_corpse, bool bottle_blood)
         mpr("You are too berserk to search for a butchering tool!");
         return false;
     }
+    if (wpn_switch && you.weapon() && you.weapon()->cursed())
+    {
+        mpr("Your cursed weapon is too dull to butcher anything.");
+        return false;
+    }
 
     // At this point we know that the player is physically capable of butchery.
     // We will now check if there's anything to butcher here, and *then* decide
