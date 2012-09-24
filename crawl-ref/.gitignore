@@ -196,3 +196,4 @@ bin/
 AndroidData/
 icon.png
 libapplication.so
+source/crawl_tiles_android-*
