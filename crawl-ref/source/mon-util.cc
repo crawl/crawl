@@ -2720,7 +2720,9 @@ void mons_pacify(monster* mon, mon_attitude_type att)
 
     if (mon->type == MONS_GERYON)
     {
-        simple_monster_message(mon, " discards his horn.");
+        simple_monster_message(mon,
+            make_stringf(" discards %s horn.",
+                         mon->pronoun(PRONOUN_POSSESSIVE).c_str()).c_str());
         monster_drop_things(mon, false, item_is_horn_of_geryon);
     }
 
