@@ -4119,6 +4119,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
             break;
 
         case CLO_MAPSTAT:
+#ifdef DEBUG_DIAGNOSTICS
             crawl_state.map_stat_gen = true;
             if (next_is_param)
             {
@@ -4131,7 +4132,12 @@ bool parse_args(int argc, char **argv, bool rc_only)
             }
             else
                 SysEnv.map_gen_iters = 100;
+
             break;
+#else
+            fprintf(stderr, "mapstat is available only in DEBUG_DIAGNOSTICS builds.\n");
+            end(1);
+#endif
 
         case CLO_ARENA:
             if (!rc_only)
