@@ -1743,9 +1743,13 @@ mac-app-console: all
 # Building the Android package
 #
 
-# FIXME: moving the package doesn't work
 android:
-	cd contrib/sdl-android && ./build.sh && mv project/bin/MainActivity-debug.apk ../../crawl_tiles_android-$(SRC_VERSION).apk
+	@SRC_LINK=contrib/sdl-android/project/jni/application/src ;\
+	if [ ! -e $$SRC_LINK ]; then \
+		ln -s `cd ..; pwd` $$SRC_LINK; \
+	fi
+	@cd contrib/sdl-android && ./build.sh && \
+	mv project/bin/MainActivity-debug.apk ../../crawl_tiles_android-$(SRC_VERSION).apk
 
 #############################################################################
 # Canned tests
