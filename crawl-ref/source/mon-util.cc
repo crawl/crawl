@@ -2711,6 +2711,12 @@ void mons_pacify(monster* mon, mon_attitude_type att)
         mon->flags |= MF_GOT_HALF_XP;
     }
 
+    if (mon->type == MONS_GERYON)
+    {
+        simple_monster_message(mon, " discards his horn.");
+        monster_drop_things(mon, false, item_is_horn_of_geryon);
+    }
+
     // Cancel fleeing and such.
     mon->behaviour = BEH_WANDER;
 
@@ -2723,8 +2729,6 @@ void mons_pacify(monster* mon, mon_attitude_type att)
         elven_twins_pacify(mon);
     if (mons_is_kirke(mon))
         hogs_to_humans();
-    if (mon->type == MONS_GERYON)
-        monster_drop_things(mon, false, item_is_horn_of_geryon);
 
     mons_att_changed(mon);
 }
