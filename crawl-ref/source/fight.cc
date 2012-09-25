@@ -491,6 +491,12 @@ int player_weapon_dex_weight(void)
     return 10 - player_weapon_str_weight();
 }
 
+static bool _cleave_dont_harm(const actor* attacker, const actor* defender)
+{
+    return (mons_aligned(attacker, defender)
+            || attacker == &you && defender->wont_attack()
+            || defender == &you && attacker->wont_attack());
+}
 // Put the potential cleave targets into a list. Up to 3, taken in order by
 // rotating from the def position and stopping at the first solid feature.
 void get_cleave_targets(coord_def atk, coord_def def, int dir,
@@ -504,7 +510,7 @@ void get_cleave_targets(coord_def atk, coord_def def, int dir,
     {
         atk_vector = rotate_adjacent(atk_vector, dir);
         actor * target = actor_at(atk + atk_vector);
-        if (target && !mons_aligned(attacker, target))
+        if (target && !_cleave_dont_harm(attacker, target))
             targets.push_back(target);
     }
     while (++i < 3 && !feat_is_solid(grd(atk + atk_vector)));
@@ -526,7 +532,8 @@ void attack_cleave_targets(actor* attacker, list<actor*> &targets,
     while (!targets.empty())
     {
         actor* def = targets.front();
-        if (attacker->alive() && def && def->alive())
+        if (attacker->alive() && def && def->alive()
+            && !_cleave_dont_harm(attacker, def))
         {
             melee_attack attck(attacker, def, attack_number,
                                ++effective_attack_number, true);
