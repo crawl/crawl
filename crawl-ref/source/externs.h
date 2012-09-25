@@ -740,6 +740,10 @@ struct message_colour_mapping
 {
     message_filter message;
     msg_colour_type colour;
+    bool operator== (const message_colour_mapping &o) const
+    {
+        return message == o.message && colour == o.colour;
+    }
 };
 
 class InvEntry;

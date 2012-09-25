@@ -429,8 +429,8 @@ private:
     void add_cset_override(char_set_type set, dungeon_char_type dc, int symbol);
     void add_feature_override(const string &);
 
-    void add_message_colour_mappings(const string &);
-    void add_message_colour_mapping(const string &);
+    void add_message_colour_mappings(const string &, bool);
+    void add_message_colour_mapping(const string &, bool);
     message_filter parse_message_filter(const string &s);
 
     void set_default_activity_interrupts();
