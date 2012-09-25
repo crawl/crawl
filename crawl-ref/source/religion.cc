@@ -2295,6 +2295,9 @@ bool do_god_gift(bool forced)
         }                       // switch (you.religion)
     }                           // End of gift giving.
 
+    if (success)
+        you.running.stop();
+
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_GIFTS)
     if (old_num_current_gifts < you.num_current_gifts[you.religion])
     {
