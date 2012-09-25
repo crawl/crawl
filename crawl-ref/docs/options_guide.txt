@@ -363,7 +363,7 @@ sound += <regex>:<path to sound file>, <regex>:<path>, ...
         (List option)
         Plays the sound file if a message contains regex. The regex
         should not include commas or colons. For example
-             sound = LOW HITPOINT WARNING:sound\sounds2\danger3.wav
+             sound += LOW HITPOINT WARNING:sound\sounds2\danger3.wav
         Getting appropriate sound files may be difficult. Check other
         roguelikes or old computer RPGs. Alternatively, ask for help
         in the newsgroup rec.games.roguelike.misc.
@@ -417,7 +417,7 @@ autopickup_exceptions += <pickup-regex, >don't-pickup-regex, ...
         autopickup_exceptions replace the older ban_pickup. Using
              autopickup_exceptions += >uselessness, >inaccuracy
         is the same as using
-             ban_pickup = uselessness, inaccuracy
+             ban_pickup += uselessness, inaccuracy
 
         If the regexes are not prefixed with < or >, > is implied, so
         the option setting above can also be written as
@@ -1505,11 +1505,11 @@ message_colour += <colour>:<channel>:<regex>, <colour>:<regex>, ...
         message_colour allows you to override colours for individual
         messages. For instance, if you find the low hp warning to be
         insufficiently attention grabbing, you could do something like
-             message_colour = yellow:LOW HITPOINT WARNING
+             message_colour += yellow:LOW HITPOINT WARNING
         You can also narrow the message match to a specific channel:
-             message_colour = lightred:god:xom
+             message_colour += lightred:god:xom
         If you don't want to see a message at all, you can mute it:
-             message_colour = mute:You start resting
+             message_colour += mute:You start resting
 
 force_more_message += <regex>, <regex>
         (List option)
