@@ -2725,9 +2725,9 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         if (plain && field.empty())
         {
             // Only remove negative, not positive, exceptions.
-            force_autopickup.erase(remove_if(force_autopickup.begin(),
-                                             force_autopickup.end(),
-                                             _is_autopickup_ban),
+            force_autopickup.erase(std::remove_if(force_autopickup.begin(),
+                                                  force_autopickup.end(),
+                                                  _is_autopickup_ban),
                                    force_autopickup.end());
         }
         else if (plain && !count_if(force_autopickup.begin(),
