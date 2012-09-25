@@ -1903,11 +1903,12 @@ std::string game_options::expand_vars(const std::string &field) const
     return field_out;
 }
 
-void game_options::add_message_colour_mappings(const std::string &field)
+void game_options::add_message_colour_mappings(const std::string &field,
+                                               bool subtract)
 {
     std::vector<std::string> fragments = split_string(",", field);
     for (int i = 0, count = fragments.size(); i < count; ++i)
-        add_message_colour_mapping(fragments[i]);
+        add_message_colour_mapping(fragments[i], subtract);
 }
 
 message_filter game_options::parse_message_filter(const std::string &filter)
@@ -1928,7 +1929,8 @@ message_filter game_options::parse_message_filter(const std::string &filter)
     return message_filter(filter);
 }
 
-void game_options::add_message_colour_mapping(const std::string &field)
+void game_options::add_message_colour_mapping(const std::string &field,
+                                              bool subtract)
 {
     std::vector<std::string> cmap = split_string(":", field, true, true, 1);
 
@@ -1945,7 +1947,13 @@ void game_options::add_message_colour_mapping(const std::string &field)
         mcol = msg_colour(col);
 
     message_colour_mapping m = { parse_message_filter(cmap[1]), mcol };
-    message_colour_mappings.push_back(m);
+    if (subtract)
+    {
+        remove(message_colour_mappings.begin(),
+               message_colour_mappings.end(), m);
+    }
+    else
+        message_colour_mappings.push_back(m);
 }
 
 // Option syntax is:
@@ -3206,7 +3214,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         else if (plain && !message_colour_mappings.empty())
             warn_list_append.insert(key);
 
-        add_message_colour_mappings(field);
+        add_message_colour_mappings(field, minus_equal);
     }
     else if (key == "dump_order")
     {
