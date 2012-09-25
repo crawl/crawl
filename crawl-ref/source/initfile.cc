@@ -71,6 +71,13 @@ game_options Options;
 // thus have different behaviour in 0.12, so warn about them now.
 set<string> warn_list_append;
 
+template <class L, class E>
+static L& remove_matching(L& lis, const E& entry)
+{
+    lis.erase(remove(lis.begin(), lis.end(), entry), lis.end());
+    return lis;
+}
+
 object_class_type item_class_by_sym(ucs_t c)
 {
     switch (c)
@@ -1948,10 +1955,7 @@ void game_options::add_message_colour_mapping(const string &field,
 
     message_colour_mapping m = { parse_message_filter(cmap[1]), mcol };
     if (subtract)
-    {
-        remove(message_colour_mappings.begin(),
-               message_colour_mappings.end(), m);
-    }
+        remove_matching(message_colour_mappings, m);
     else
         message_colour_mappings.push_back(m);
 }
@@ -2105,7 +2109,7 @@ static bool _handle_list(bool old_semantics, vector<T> &value_list,
             continue;
 
         if (subtract)
-            remove(value_list.begin(), value_list.end(), *part);
+            remove_matching(value_list, *part);
         else
             value_list.push_back(*part);
     }
@@ -2720,8 +2724,10 @@ void game_options::read_option_line(const string &str, bool runscript)
         if (plain && field.empty())
         {
             // Only remove negative, not positive, exceptions.
-            remove_if(force_autopickup.begin(), force_autopickup.end(),
-                      _is_autopickup_ban);
+            force_autopickup.erase(remove_if(force_autopickup.begin(),
+                                             force_autopickup.end(),
+                                             _is_autopickup_ban),
+                                   force_autopickup.end());
         }
         else if (plain && !count_if(force_autopickup.begin(),
                                     force_autopickup.end(),
@@ -2740,7 +2746,7 @@ void game_options::read_option_line(const string &str, bool runscript)
             const pair<text_pattern, bool> f_a(s, false);
 
             if (minus_equal)
-                remove(force_autopickup.begin(), force_autopickup.begin(), f_a);
+                remove_matching(force_autopickup, f_a);
             else
                 force_autopickup.push_back(f_a);
         }
@@ -2769,7 +2775,7 @@ void game_options::read_option_line(const string &str, bool runscript)
                 f_a = make_pair(s, false);
 
             if (minus_equal)
-                remove(force_autopickup.begin(), force_autopickup.begin(), f_a);
+                remove_matching(force_autopickup, f_a);
             else
                 force_autopickup.push_back(f_a);
         }
@@ -2819,7 +2825,7 @@ void game_options::read_option_line(const string &str, bool runscript)
         pair<text_pattern,string> entry(thesplit[0], thesplit[1]);
 
         if (minus_equal)
-            remove(autoinscriptions.begin(), autoinscriptions.end(), entry);
+            remove_matching(autoinscriptions, entry);
         else
             autoinscriptions.push_back(entry);
     }
@@ -2853,7 +2859,7 @@ void game_options::read_option_line(const string &str, bool runscript)
             int scolour = str_to_colour(insplit[(insplit.size() == 1) ? 0 : 1]);
             pair<int, int> entry(hp_percent, scolour);
             if (minus_equal)
-                remove(hp_colour.begin(), hp_colour.end(), entry);
+                remove_matching(hp_colour, entry);
             else
                 hp_colour.push_back(entry);
         }
@@ -2882,7 +2888,7 @@ void game_options::read_option_line(const string &str, bool runscript)
             int scolour = str_to_colour(insplit[(insplit.size() == 1) ? 0 : 1]);
             pair<int, int> entry(mp_percent, scolour);
             if (minus_equal)
-                remove(mp_colour.begin(), mp_colour.end(), entry);
+                remove_matching(mp_colour, entry);
             else
                 mp_colour.push_back(entry);
         }
@@ -2911,7 +2917,7 @@ void game_options::read_option_line(const string &str, bool runscript)
             int scolour = str_to_colour(insplit[(insplit.size() == 1) ? 0 : 1]);
             pair<int, int> entry(stat_limit, scolour);
             if (minus_equal)
-                remove(stat_colour.begin(), stat_colour.end(), entry);
+                remove_matching(stat_colour, entry);
             else
                 stat_colour.push_back(entry);
         }
@@ -2959,7 +2965,7 @@ void game_options::read_option_line(const string &str, bool runscript)
                                         thesplit[1]);
 
         if (minus_equal)
-            remove(auto_spell_letters.begin(), auto_spell_letters.end(), entry);
+            remove_matching(auto_spell_letters, entry);
         else
             auto_spell_letters.push_back(entry);
     }
@@ -3048,9 +3054,7 @@ void game_options::read_option_line(const string &str, bool runscript)
             }
 
             if (minus_equal)
-            {
-                remove(force_more_message.begin(), force_more_message.end(), mf);
-            }
+                remove_matching(force_more_message, mf);
             else
                 force_more_message.push_back(mf);
         }
@@ -3148,7 +3152,7 @@ void game_options::read_option_line(const string &str, bool runscript)
                 entry.pattern = sub.substr(0, cpos);
                 entry.soundfile = sub.substr(cpos + 1);
                 if (minus_equal)
-                    remove(sound_mappings.begin(), sound_mappings.end(), entry);
+                    remove_matching(sound_mappings, entry);
                 else
                     sound_mappings.push_back(entry);
             }
@@ -3194,10 +3198,7 @@ void game_options::read_option_line(const string &str, bool runscript)
             if (mapping.colour == -1)
                 continue;
             else if (minus_equal)
-            {
-                remove(menu_colour_mappings.begin(), menu_colour_mappings.end(),
-                       mapping);
-            }
+                remove_matching(menu_colour_mappings, mapping);
             else
                 menu_colour_mappings.push_back(mapping);
         }
