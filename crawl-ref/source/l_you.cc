@@ -268,6 +268,29 @@ static int you_can_consume_corpses(lua_State *ls)
     return 1;
 }
 
+static int _you_have_rune(lua_State *ls)
+{
+    int which_rune = NUM_RUNE_TYPES;
+    if (lua_gettop(ls) >= 1 && lua_isnumber(ls, 1))
+        which_rune = luaL_checkint(ls, 1);
+    else if (lua_gettop(ls) >= 1 && lua_isstring(ls, 1))
+    {
+        const char *spec = lua_tostring(ls, 1);
+        for (which_rune = 0; which_rune < NUM_RUNE_TYPES; which_rune++)
+            if (!strcasecmp(spec, rune_type_name(which_rune)))
+                break;
+    }
+    bool have_rune = false;
+    if (which_rune >= 0 && which_rune < NUM_RUNE_TYPES)
+        have_rune = you.runes[which_rune];
+    lua_pushboolean(ls, have_rune);
+    return 1;
+}
+
+LUARET1(you_num_runes, number, runes_in_pack())
+
+LUARET1(you_have_orb, boolean, player_has_orb())
+
 LUAFN(you_caught)
 {
     if (you.caught())
@@ -430,6 +453,10 @@ static const struct luaL_reg you_clib[] =
 
     { "mutation",          you_mutation },
 
+    { "num_runes",          you_num_runes },
+    { "have_rune",          _you_have_rune },
+    { "have_orb",           you_have_orb},
+
     { NULL, NULL },
 };
 
@@ -498,29 +525,6 @@ static int _you_uniques(lua_State *ls)
     lua_pushboolean(ls, unique_found);
     return 1;
 }
-
-LUARET1(you_num_runes, number, runes_in_pack())
-
-static int _you_have_rune(lua_State *ls)
-{
-    int which_rune = NUM_RUNE_TYPES;
-    if (lua_gettop(ls) >= 1 && lua_isnumber(ls, 1))
-        which_rune = luaL_checkint(ls, 1);
-    else if (lua_gettop(ls) >= 1 && lua_isstring(ls, 1))
-    {
-        const char *spec = lua_tostring(ls, 1);
-        for (which_rune = 0; which_rune < NUM_RUNE_TYPES; which_rune++)
-            if (!strcasecmp(spec, rune_type_name(which_rune)))
-                break;
-    }
-    bool have_rune = false;
-    if (which_rune >= 0 && which_rune < NUM_RUNE_TYPES)
-        have_rune = you.runes[which_rune];
-    lua_pushboolean(ls, have_rune);
-    return 1;
-}
-
-LUARET1(you_have_orb, boolean, player_has_orb())
 
 static int _you_gold(lua_State *ls)
 {
@@ -665,9 +669,6 @@ static const struct luaL_reg you_dlib[] =
 { "teleport_to",        you_teleport_to },
 { "gold",               _you_gold },
 { "uniques",            _you_uniques },
-{ "num_runes",          you_num_runes },
-{ "have_rune",          _you_have_rune },
-{ "have_orb",           you_have_orb},
 { "die",                _you_die },
 { "piety",              _you_piety },
 { "in_branch",          you_in_branch },
