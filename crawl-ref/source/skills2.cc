@@ -503,6 +503,10 @@ unsigned int skill_exp_needed(int lev, skill_type sk, species_type sp)
                           8200, 9450, 10800, 12300, 13950,   // 16-20
                           15750, 17700, 19800, 22050, 24450, // 21-25
                           27000, 29750 };
+
+    if (lev > 27 && you.wizard)
+        lev = 27;
+
     ASSERT(lev >= 0);
     ASSERT(lev <= 27);
 
