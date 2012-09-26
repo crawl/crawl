@@ -2826,6 +2826,8 @@ string hunger_cost_string(const int hunger)
         return "None";
 }
 
+// Simulacrum and Sublimation of Blood are handled elsewhere, as they ignore
+// chunk edibility.
 static int _chunks_needed()
 {
     if (you.form == TRAN_LICH)
