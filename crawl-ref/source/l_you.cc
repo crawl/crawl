@@ -140,6 +140,7 @@ LUARET1(you_nauseous, boolean, you.duration[DUR_NAUSEA])
 LUARET1(you_on_fire, boolean, you.duration[DUR_LIQUID_FLAMES])
 LUARET1(you_petrifying, boolean, you.duration[DUR_PETRIFYING])
 LUARET1(you_silencing, boolean, you.duration[DUR_SILENCE])
+LUARET1(you_regenerating, boolean, you.duration[DUR_REGENERATION])
 LUARET1(you_rotting, boolean, you.rotting)
 LUARET1(you_silenced, boolean, silenced(you.pos()))
 LUARET1(you_sick, boolean, you.disease)
@@ -418,6 +419,7 @@ static const struct luaL_reg you_clib[] =
     { "on_fire",      you_on_fire },
     { "petrifying",   you_petrifying },
     { "silencing",    you_silencing },
+    { "regenerating", you_regenerating },
     { "rotting",      you_rotting },
     { "silenced",     you_silenced },
     { "sick",         you_sick },
