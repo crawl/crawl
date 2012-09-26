@@ -390,7 +390,7 @@
        SPELL_CANTRIP,
        SPELL_SMITING,
        SPELL_NO_SPELL,
-       SPELL_HEAL_OTHER
+       SPELL_MINOR_HEALING
       }
     },
 
@@ -401,7 +401,7 @@
        SPELL_SUMMON_DEMON,
        SPELL_SMITING,
        SPELL_ANIMATE_DEAD,
-       SPELL_HEAL_OTHER
+       SPELL_MINOR_HEALING
       }
     },
 
