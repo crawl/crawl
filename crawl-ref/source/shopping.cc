@@ -2725,8 +2725,6 @@ void ShoppingList::display()
     std::string title     = "thing";
 
     MenuEntry *mtitle = new MenuEntry(title, MEL_TITLE);
-    // Abuse of the quantity field.
-    mtitle->quantity = list->size();
     shopmenu.set_title(mtitle);
 
     // Don't make a menu so tall that we recycle hotkeys on the same page.
@@ -2748,6 +2746,9 @@ void ShoppingList::display()
     std::vector<MenuEntry*> sel;
     while (true)
     {
+        // Abuse of the quantity field.
+        mtitle->quantity = list->size();
+
         redraw_screen();
         sel = shopmenu.show();
 
