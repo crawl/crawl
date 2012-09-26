@@ -389,8 +389,8 @@
        SPELL_NO_SPELL,
        SPELL_CANTRIP,
        SPELL_SMITING,
-       SPELL_NO_SPELL,
-       SPELL_HEAL_OTHER
+       SPELL_HEAL_OTHER,
+       SPELL_NO_SPELL
       }
     },
 
@@ -400,8 +400,8 @@
        SPELL_SUMMON_DEMON,
        SPELL_SUMMON_DEMON,
        SPELL_SMITING,
-       SPELL_ANIMATE_DEAD,
-       SPELL_HEAL_OTHER
+       SPELL_HEAL_OTHER,
+       SPELL_MINOR_HEALING,
       }
     },
 
