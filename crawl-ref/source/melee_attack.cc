@@ -2209,7 +2209,8 @@ bool melee_attack::distortion_affects_defender()
         if (crawl_state.game_is_sprint() && defender->is_player()
             || defender->no_tele())
         {
-            canned_msg(MSG_STRANGE_STASIS);
+            if (defender->is_player())
+                canned_msg(MSG_STRANGE_STASIS);
         }
         else if (coinflip())
             add_final_effect(FINEFF_DISTORTION_TELEPORT, 0, defender);
