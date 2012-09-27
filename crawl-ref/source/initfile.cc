@@ -902,6 +902,7 @@ void game_options::reset_options()
     target_unshifted_dirs  = false;
     darken_beyond_range    = true;
 
+    dump_on_save           = true;
     dump_kill_places       = KDO_ONE_PLACE;
     dump_message_count     = 20;
     dump_item_origins      = IODS_ARTEFACTS | IODS_RODS;
@@ -3224,6 +3225,7 @@ void game_options::read_option_line(const string &str, bool runscript)
 
         new_dump_fields(field, !minus_equal);
     }
+    else BOOL_OPTION(dump_on_save);
     else if (key == "dump_kill_places")
     {
         dump_kill_places = (field == "none" ? KDO_NO_PLACES :
