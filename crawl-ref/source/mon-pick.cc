@@ -151,6 +151,7 @@ int mons_abyss_rare(monster_type mcls)
     case MONS_LICH:
         return 14;
 
+    case MONS_LURKING_HORROR:
     case MONS_INSUBSTANTIAL_WISP:
     case MONS_UNSEEN_HORROR:
     case MONS_GOLDEN_EYE:
