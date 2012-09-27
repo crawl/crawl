@@ -141,6 +141,11 @@ LUARET1(you_on_fire, boolean, you.duration[DUR_LIQUID_FLAMES])
 LUARET1(you_petrifying, boolean, you.duration[DUR_PETRIFYING])
 LUARET1(you_silencing, boolean, you.duration[DUR_SILENCE])
 LUARET1(you_regenerating, boolean, you.duration[DUR_REGENERATION])
+LUARET1(you_breath_timeout, boolean, you.duration[DUR_BREATH_WEAPON])
+LUARET1(you_extra_resistant, boolean, you.duration[DUR_RESISTANCE])
+LUARET1(you_mighty, boolean, you.duration[DUR_MIGHT])
+LUARET1(you_agile, boolean, you.duration[DUR_AGILITY])
+LUARET1(you_brilliant, boolean, you.duration[DUR_BRILLIANCE])
 LUARET1(you_rotting, boolean, you.rotting)
 LUARET1(you_silenced, boolean, silenced(you.pos()))
 LUARET1(you_sick, boolean, you.disease)
@@ -420,6 +425,11 @@ static const struct luaL_reg you_clib[] =
     { "petrifying",   you_petrifying },
     { "silencing",    you_silencing },
     { "regenerating", you_regenerating },
+    { "breath_timeout", you_breath_timeout },
+    { "extra_resistant", you_extra_resistant },
+    { "mighty",       you_mighty },
+    { "agile",        you_agile },
+    { "brilliant",    you_brilliant },
     { "rotting",      you_rotting },
     { "silenced",     you_silenced },
     { "sick",         you_sick },
