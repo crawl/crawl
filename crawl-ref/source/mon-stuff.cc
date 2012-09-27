@@ -22,6 +22,7 @@
 #include "dgn-overview.h"
 #include "dlua.h"
 #include "dungeon.h"
+#include "effects.h"
 #include "env.h"
 #include "exclude.h"
 #include "fprop.h"
@@ -1048,6 +1049,16 @@ static void _setup_lightning_explosion(bolt & beam, const monster& origin)
     beam.ex_size = coinflip() ? 3 : 2;
 }
 
+static void _setup_torment_explosion(bolt & beam, const monster& origin)
+{
+    _setup_base_explosion(beam, origin);
+    beam.flavour = BEAM_NEG;
+    beam.damage  = 0;
+    beam.name    = "wave of negative energy";
+    beam.colour  = LIGHTGRAY;
+    beam.ex_size = 1;
+}
+
 static void _setup_inner_flame_explosion(bolt & beam, const monster& origin,
                                          actor* agent)
 {
@@ -1089,6 +1100,11 @@ static bool _explode_monster(monster* mons, killer_type killer,
         _setup_lightning_explosion(beam, *mons);
         sanct_msg    = "By Zin's power, the ball lightning's explosion "
                        "is contained.";
+    }
+    else if (type == MONS_LURKING_HORROR)
+    {
+        _setup_torment_explosion(beam, *mons);
+        torment(mons, mons->mindex(), mons->pos());
     }
     else if (mons->has_ench(ENCH_INNER_FLAME))
     {
@@ -1600,6 +1616,7 @@ int monster_die(monster* mons, killer_type killer,
 
     if (mons->type == MONS_GIANT_SPORE
         || mons->type == MONS_BALL_LIGHTNING
+        || mons->type == MONS_LURKING_HORROR
         || mons->has_ench(ENCH_INNER_FLAME))
     {
         did_death_message =

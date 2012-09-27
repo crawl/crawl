@@ -5014,6 +5014,7 @@ bool monster::self_destructs()
 {
     if (type == MONS_GIANT_SPORE
         || type == MONS_BALL_LIGHTNING
+        || type == MONS_LURKING_HORROR
         || type == MONS_ORB_OF_DESTRUCTION)
     {
         suicide();
