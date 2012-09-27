@@ -1693,6 +1693,10 @@ lindwurm
 A small serpentine dragon with a pair of strong forelimbs. Its thick scales
 give off an eerie green glow.
 %%%%
+lurking horror
+
+A formless mass of energy. It seems to stop moving when you look at it.
+%%%%
 macabre mass
 
 A fused and twisted collection of body parts, weakly animated by necromancy. It

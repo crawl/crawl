@@ -576,6 +576,7 @@ bool mons_is_object(monster_type mc)
            || mc == MONS_TWISTER
            // unloading seeds helps the species
            || mc == MONS_GIANT_SPORE
+           || mc == MONS_LURKING_HORROR
            || mc == MONS_DANCING_WEAPON;
 }
 
@@ -2562,6 +2563,7 @@ bool mons_self_destructs(const monster* m)
 {
     return (m->type == MONS_GIANT_SPORE
             || m->type == MONS_BALL_LIGHTNING
+            || m->type == MONS_LURKING_HORROR
             || m->type == MONS_ORB_OF_DESTRUCTION);
 }
 
