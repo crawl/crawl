@@ -2027,8 +2027,17 @@ void define_zombie(monster* mon, monster_type ztype, monster_type cs)
 
     monster_type base = mons_species(ztype);
 
-    ASSERT(zombie_class_size(cs) == Z_NOZOMBIE
-           || zombie_class_size(cs) == mons_zombie_size(base));
+#ifdef ASSERTS
+    if (zombie_class_size(cs) != Z_NOZOMBIE
+        && zombie_class_size(cs) != mons_zombie_size(base))
+    {
+        // we don't know the place requested
+        die("invalid zombie size: %s for %s, player on: %s",
+            mons_class_name(cs),
+            mons_class_name(ztype),
+            level_id::current().describe().c_str());
+    }
+#endif
 
     // Set type to the original type to calculate appropriate stats.
     mon->type         = ztype;
