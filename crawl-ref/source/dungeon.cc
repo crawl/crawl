@@ -4771,14 +4771,14 @@ static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
         else if (vgrid == '|')
         {
             which_class = random_choose_weighted(
-                            4, OBJ_WEAPONS,
-                            2, OBJ_ARMOUR,
-                            2, OBJ_JEWELLERY,
-                            2, OBJ_BOOKS,
-                            1, OBJ_STAVES,
-                            1, OBJ_RODS,
-                            2, OBJ_MISCELLANY,
-                            0);
+                            20, OBJ_WEAPONS,
+                            10, OBJ_ARMOUR,
+                            10, OBJ_JEWELLERY,
+                            10, OBJ_BOOKS,
+                             9, OBJ_STAVES,
+                             1, OBJ_RODS,
+                            10, OBJ_MISCELLANY,
+                             0);
             which_depth = MAKE_GOOD_ITEM;
         }
         else if (vgrid == '*')
