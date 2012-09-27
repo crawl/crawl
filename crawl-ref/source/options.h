@@ -264,6 +264,7 @@ public:
 
     vector<menu_sort_condition> sort_menus;
 
+    bool        dump_on_save;       // Automatically dump character when saving.
     int         dump_kill_places;   // How to dump place information for kills.
     int         dump_message_count; // How many old messages to dump
 

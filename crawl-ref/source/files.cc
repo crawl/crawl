@@ -1582,6 +1582,13 @@ void save_game(bool leave_game, const char *farewellmsg)
 {
     unwind_bool saving_game(crawl_state.saving_game, true);
 
+    if (leave_game && Options.dump_on_save && !dump_char(you.your_name, true))
+    {
+        mpr("Char dump unsuccessful! Sorry about that.");
+        if (!crawl_state.seen_hups)
+            more();
+    }
+
     // Stack allocated string's go in separate function,
     // so Valgrind doesn't complain.
     _save_game_base();

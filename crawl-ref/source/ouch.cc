@@ -1499,7 +1499,8 @@ void _end_game(scorefile_entry &se)
             hints_death_screen();
     }
 
-    if (!dump_char(morgue_name(you.your_name, se.get_death_time()), true, &se))
+    if (!dump_char(morgue_name(you.your_name, se.get_death_time()),
+                   true, true, &se))
     {
         mpr("Char dump unsuccessful! Sorry about that.");
         if (!crawl_state.seen_hups)
