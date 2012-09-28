@@ -15,6 +15,7 @@ module "crawl"
 #include "cluautil.h"
 #include "l_libs.h"
 
+#include "chardump.h"
 #include "cio.h"
 #include "command.h"
 #include "delay.h"
@@ -823,6 +824,8 @@ static int crawl_warn_list_append(lua_State *ls)
     return 0;
 }
 
+LUAWRAP(crawl_dump_char, dump_char(you.your_name))
+
 #ifdef WIZARD
 static int crawl_call_dlua(lua_State *ls)
 {
@@ -932,6 +935,7 @@ static const struct luaL_reg crawl_clib[] =
     { "endgame",        crawl_endgame },
     { "tutorial_msg",   crawl_tutorial_msg },
     { "warn_list_append", crawl_warn_list_append },
+    { "dump_char",      crawl_dump_char },
 #ifdef WIZARD
     { "call_dlua",      crawl_call_dlua },
 #endif
