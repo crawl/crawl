@@ -635,6 +635,7 @@ public:
     bool glows_naturally() const;
     bool petrifying() const;
     bool petrified() const;
+    bool liquefied_ground() const;
     bool incapacitated() const
     {
         return actor::incapacitated() || stat_zero[STAT_DEX];

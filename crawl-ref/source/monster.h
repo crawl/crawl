@@ -368,6 +368,7 @@ public:
     bool glows_naturally() const;
     bool petrified() const;
     bool petrifying() const;
+    bool liquefied_ground() const;
 
     bool friendly() const;
     bool neutral() const;

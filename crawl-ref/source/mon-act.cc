@@ -1651,7 +1651,7 @@ void handle_monster_move(monster* mons)
 
     // This seems to need to go here to actually get monsters to slow down.
     // XXX: Replace with a new ENCH_LIQUEFIED_GROUND or something.
-    if (liquefied(mons->pos()) && mons->ground_level() && !mons->is_insubstantial())
+    if (mons->liquefied_ground())
     {
         mon_enchant me = mon_enchant(ENCH_SLOW, 0, 0, 20);
         if (mons->has_ench(ENCH_SLOW))

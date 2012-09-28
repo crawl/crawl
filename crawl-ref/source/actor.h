@@ -336,6 +336,8 @@ public:
     virtual bool petrifying() const = 0;
     virtual bool petrified() const = 0;
 
+    virtual bool liquefied_ground() const = 0;
+
     virtual bool handle_trap();
 
     virtual void god_conduct(conduct_type thing_done, int level) { }
