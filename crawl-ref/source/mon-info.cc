@@ -558,7 +558,7 @@ monster_info::monster_info(const monster* m, int milev)
         mb.set(MB_STABBABLE);
     if (mons_looks_distracted(m))
         mb.set(MB_DISTRACTED);
-    if (liquefied(m->pos()) && m->ground_level() && !m->is_insubstantial())
+    if (m->liquefied_ground())
         mb.set(MB_SLOWED);
     if (m->is_wall_clinging())
         mb.set(MB_CLINGING);

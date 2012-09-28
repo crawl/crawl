@@ -3235,6 +3235,13 @@ bool monster::petrifying() const
     return has_ench(ENCH_PETRIFYING);
 }
 
+bool monster::liquefied_ground() const
+{
+    return (liquefied(pos())
+            && ground_level() && !is_insubstantial()
+            && !mons_class_is_stationary(type));
+}
+
 int monster::warding() const
 {
     const item_def *w = primary_weapon();
@@ -4603,11 +4610,8 @@ void monster::calc_speed()
         break;
     }
 
-    bool is_liquefied = (liquefied(pos()) && ground_level()
-                         && !is_insubstantial());
-
     // Going berserk on liquid ground doesn't speed you up any.
-    if (!is_liquefied && (has_ench(ENCH_BERSERK) || has_ench(ENCH_INSANE)))
+    if (!liquefied_ground() && (has_ench(ENCH_BERSERK) || has_ench(ENCH_INSANE)))
         speed = berserk_mul(speed);
     else if (has_ench(ENCH_HASTE))
         speed = haste_mul(speed);

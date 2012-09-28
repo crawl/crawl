@@ -2200,7 +2200,7 @@ int player_movement_speed(bool ignore_burden)
         mv = 6;
 
     // moving on liquefied ground takes longer
-    if (liquefied(you.pos()) && you.ground_level())
+    if (you.liquefied_ground())
         mv += 3;
 
     // armour
@@ -6087,6 +6087,12 @@ bool player::petrifying() const
 bool player::petrified() const
 {
     return (duration[DUR_PETRIFIED]);
+}
+
+bool player::liquefied_ground() const
+{
+    return (liquefied(pos())
+            && ground_level() && !is_insubstantial());
 }
 
 int player::shield_block_penalty() const
