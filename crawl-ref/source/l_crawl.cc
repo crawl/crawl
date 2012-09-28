@@ -824,7 +824,7 @@ static int crawl_warn_list_append(lua_State *ls)
     return 0;
 }
 
-LUAWRAP(crawl_dump_char, dump_char(you.your_name))
+LUAWRAP(crawl_dump_char, dump_char(you.your_name, true))
 
 #ifdef WIZARD
 static int crawl_call_dlua(lua_State *ls)
