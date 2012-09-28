@@ -1295,17 +1295,23 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         if (no_rot)
             return false;
 
-        mpr("Your body decomposes!", MSGCH_MUTATION);
-
-        if (coinflip())
+        if (temporary)
             lose_stat(STAT_RANDOM, 1, false, reason);
         else
         {
-            ouch(3, NON_MONSTER, KILLED_BY_ROTTING, reason.c_str());
-            rot_hp(roll_dice(1, 3));
+            mpr("Your body decomposes!", MSGCH_MUTATION);
+
+            if (coinflip())
+                lose_stat(STAT_RANDOM, 1, false, reason);
+            else
+            {
+                ouch(3, NON_MONSTER, KILLED_BY_ROTTING, reason.c_str());
+                rot_hp(roll_dice(1, 3));
+            }
+
+            xom_is_stimulated(50);
         }
 
-        xom_is_stimulated(50);
         return true;
     }
 
@@ -2181,7 +2187,7 @@ bool temp_mutate(mutation_type which_mut, const string &reason)
 
     int old_level = you.mutation[which_mut];
 
-    if (mutate(which_mut, reason, false, true, false, false, false, true, true))
+    if (mutate(which_mut, reason, false, true, false, false, false, false, true))
     {
         //Only increment temp mutation tracking if we actually gained a mutation
         if (you.mutation[which_mut] > old_level)
