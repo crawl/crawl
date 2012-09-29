@@ -1232,7 +1232,7 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     case MONS_UNSEEN_HORROR:
         return TILEP_MONS_UNSEEN_HORROR;
     case MONS_ABOMINATION_SMALL:
-        return _mon_mod(TILEP_MONS_ABOMINATION_SMALL, colour);
+        return _mon_mod(TILEP_MONS_ABOMINATION_SMALL, tile_num_prop);
     case MONS_CRAWLING_CORPSE:
         return TILEP_MONS_CRAWLING_CORPSE;
     case MONS_MACABRE_MASS:
@@ -1563,7 +1563,7 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
 
     // large abominations ('X')
     case MONS_ABOMINATION_LARGE:
-        return _mon_mod(TILEP_MONS_ABOMINATION_LARGE, colour);
+        return _mon_mod(TILEP_MONS_ABOMINATION_LARGE, tile_num_prop);
     case MONS_TENTACLED_MONSTROSITY:
         return TILEP_MONS_TENTACLED_MONSTROSITY;
     case MONS_ORB_GUARDIAN:
@@ -5465,7 +5465,9 @@ void tile_init_props(monster* mon)
 {
     // Only those use tile_num.
     if (mon->type != MONS_TOADSTOOL && mon->type != MONS_SLAVE
-        && mon->type != MONS_PLANT && mon->type != MONS_FUNGUS)
+        && mon->type != MONS_PLANT && mon->type != MONS_FUNGUS
+        && mon->type != MONS_ABOMINATION_SMALL
+        && mon->type != MONS_ABOMINATION_LARGE)
     {
         return;
     }
