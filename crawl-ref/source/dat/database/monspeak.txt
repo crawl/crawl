@@ -3757,7 +3757,7 @@ _Duvessa_rare_
 
 @The_monster@ says @to_foe@, "Beauty is only skin deep, and my weapons penetrate much further than that."
 
-@The_monster@ says @to_foe@, "Practice, practice, practice! One day you'll be as good as me." @player_only@
+@The_monster@ says @to_foe@, "Practise, practise, practise! One day you'll be as good as me." @player_only@
 %%%%
 Duvessa_Dowan_dies
 
@@ -6987,7 +6987,7 @@ avoiding mutations.
 just saying no to mutations.
 
 # respecting intelligent beings
-proper burial practice.
+proper burial practise.
 
 # demons
 not dealing with demons.
