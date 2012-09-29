@@ -1257,7 +1257,8 @@ static void abyss_area_shift(void)
     }
 
     // Place some monsters to keep the abyss party going.
-    _abyss_generate_monsters(15);
+    int num_monsters = 15 + div_rand_round(you.depth, 3);
+    _abyss_generate_monsters(num_monsters);
 
     // And allow monsters in transit another chance to return.
     place_transiting_monsters();

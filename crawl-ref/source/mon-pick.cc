@@ -5,6 +5,8 @@
 
 #include "AppHdr.h"
 
+#include <cmath>
+
 #include "mon-pick.h"
 
 #include "externs.h"
@@ -79,6 +81,24 @@ int mons_null_level(monster_type mcls)
 int mons_null_rare(monster_type mcls)
 {
     return 0;
+}
+
+int _abyss_rarity(int rarity, int peak, int half)
+{
+    if (!rarity)
+        return 0;
+
+    if (you.depth < peak)
+    {
+        float t = you.depth / (peak + 1.0);
+        int r = rarity * (t * t * t * (t * (t * 6 - 15) + 10)) * 100;
+        return div_rand_round(r, 100);
+    }
+    if (!half)
+        return rarity;
+    float decay = -abs(you.depth - peak) / float(half);
+    int h = rarity * pow(2, decay) * 100;
+    return div_rand_round(h, 100);
 }
 
 // The Abyss
