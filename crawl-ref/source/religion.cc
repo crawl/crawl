@@ -1553,7 +1553,7 @@ static bool _blessing_AC(monster* mon)
 static bool _blessing_balms(monster* mon)
 {
     // Remove poisoning, sickness, confusion, and rotting, like a potion
-    // of healing, but without the healing.  Also, remove slowing and
+    // of curing, but without the healing. Also, remove slowing and
     // fatigue.
     bool success = false;
 
@@ -1592,85 +1592,6 @@ static bool _blessing_healing(monster* mon)
     }
 
     return false;
-}
-
-static bool _tso_blessing_holy_wpn(monster* mon)
-{
-    // Pick a monster's weapon.
-    const int weapon = mon->inv[MSLOT_WEAPON];
-    const int alt_weapon = mon->inv[MSLOT_ALT_WEAPON];
-
-    if (weapon == NON_ITEM && alt_weapon == NON_ITEM
-        || mon->type == MONS_DANCING_WEAPON)
-    {
-        return false;
-    }
-
-    int slot;
-
-    do
-        slot = (coinflip()) ? weapon : alt_weapon;
-    while (slot == NON_ITEM);
-
-    item_def& wpn(mitm[slot]);
-
-    const int wpn_brand = get_weapon_brand(wpn);
-
-    // Only brand weapons, and only override certain brands.
-    if (is_artefact(wpn)
-        || (wpn_brand != SPWPN_NORMAL && wpn_brand != SPWPN_DRAINING
-            && wpn_brand != SPWPN_PAIN && wpn_brand != SPWPN_VAMPIRICISM
-            && wpn_brand != SPWPN_REAPING && wpn_brand != SPWPN_CHAOS
-            && wpn_brand != SPWPN_VENOM))
-    {
-        return false;
-    }
-
-    // Convert a demonic weapon into a non-demonic weapon.
-    if (is_demonic(wpn))
-        convert2good(wpn, false);
-
-    // And make it holy.
-    set_equip_desc(wpn, ISFLAG_GLOWING);
-    set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_HOLY_WRATH);
-    wpn.colour = YELLOW;
-
-    return true;
-}
-
-static bool _tso_blessing_holy_arm(monster* mon)
-{
-    // If a monster has full negative energy resistance, get out.
-    if (mon->res_negative_energy() == 3)
-        return false;
-
-    // Pick either a monster's armour or its shield.
-    const int armour = mon->inv[MSLOT_ARMOUR];
-    const int shield = mon->inv[MSLOT_SHIELD];
-
-    if (armour == NON_ITEM && shield == NON_ITEM)
-        return false;
-
-    int slot;
-
-    do
-        slot = (coinflip()) ? armour : shield;
-    while (slot == NON_ITEM);
-
-    item_def& arm(mitm[slot]);
-
-    const int arm_brand = get_armour_ego_type(arm);
-
-    // Override certain brands.
-    if (is_artefact(arm) || arm_brand != SPARM_NORMAL)
-        return false;
-
-    // And make it resistant to negative energy.
-    set_equip_desc(arm, ISFLAG_GLOWING);
-    set_item_ego_type(arm, OBJ_ARMOUR, SPARM_POSITIVE_ENERGY);
-    arm.colour = WHITE;
-
-    return true;
 }
 
 static bool _increase_ench_duration(monster* mon,
@@ -1858,51 +1779,16 @@ bool bless_follower(monster* follower,
     }
     ASSERT(follower);
 
-    if (chance <= 1) // 10% chance of holy branding, or priesthood
+    if (chance <= 1 && god == GOD_BEOGH) // 10% chance of priesthood
     {
-        switch (god)
+        // Turn a monster into a priestly monster, if possible.
+        if (_beogh_blessing_priesthood(follower))
         {
-            case GOD_SHINING_ONE:
-                if (coinflip())
-                {
-                    // Brand a monster's weapon with holy wrath, if
-                    // possible.
-                    if (_tso_blessing_holy_wpn(follower))
-                    {
-                        result = "holy attack power";
-                        goto blessing_done;
-                    }
-                    else if (force)
-                        mpr("Couldn't bless monster's weapon.");
-                }
-                else
-                {
-                    // Brand a monster's armour with positive energy, if
-                    // possible.
-                    if (_tso_blessing_holy_arm(follower))
-                    {
-                        result = "life defence";
-                        goto blessing_done;
-                    }
-                    else if (force)
-                        mpr("Couldn't bless monster's armour.");
-                }
-                break;
-
-            case GOD_BEOGH:
-                // Turn a monster into a priestly monster, if possible.
-                if (_beogh_blessing_priesthood(follower))
-                {
-                    result = "priesthood";
-                    goto blessing_done;
-                }
-                else if (force)
-                    mpr("Couldn't promote monster to priesthood.");
-                break;
-
-            default:
-                break;
+            result = "priesthood";
+            goto blessing_done;
         }
+        else if (force)
+            mpr("Couldn't promote monster to priesthood.");
     }
 
     // Enchant a monster's weapon or armour/shield by one point, or at
