@@ -4863,14 +4863,14 @@ void melee_attack::cleave_setup()
         return;
 
     int dir = coinflip() ? -1 : 1;
-    get_cleave_targets(attacker->pos(), defender->pos(), dir, cleave_targets);
+    get_cleave_targets(attacker, defender->pos(), dir, cleave_targets);
     cleave_targets.reverse();
     attack_cleave_targets(attacker, cleave_targets, attack_number,
                           effective_attack_number);
 
     // We need to get the list of the remaining potential targets now because
     // if the main target dies, its position will be lost.
-    get_cleave_targets(attacker->pos(), defender->pos(), -dir, cleave_targets);
+    get_cleave_targets(attacker, defender->pos(), -dir, cleave_targets);
 }
 
 // cleave damage modifier for additional attacks: 75% of base damage

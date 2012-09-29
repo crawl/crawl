@@ -3522,7 +3522,7 @@ static bool _untrap_target(const coord_def move, bool check_confused)
             if (you.weapon() && weapon_skill(*you.weapon()) == SK_AXES
                 && !you.confused())
             {
-                get_all_cleave_targets(you.pos(), target, cleave_targets);
+                get_all_cleave_targets(&you, target, cleave_targets);
             }
 
             if (!cleave_targets.empty())
