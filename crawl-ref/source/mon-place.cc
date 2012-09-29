@@ -1763,7 +1763,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         // player is fighting them one-on-one, while he will often summon
         // several.
         ghost.init_dancing_weapon(*(mon->mslot_item(MSLOT_WEAPON)),
-                                  mg.summoner ? mg.power : 180);
+                                  mg.summoner ? mg.power : 100);
         mon->set_ghost(ghost);
         mon->ghost_demon_init();
     }
