@@ -193,6 +193,9 @@ static monsterentry mondata[] = {
 
 // Axed monsters.
 // AXED_MON(MONS_MOTHER_IN_LAW)
+#if TAG_MAJOR_VERSION == 34
+    AXED_MON(MONS_BUMBLEBEE)
+#endif
 
 // Real monsters begin here {dlb}:
 
@@ -1165,18 +1168,6 @@ static monsterentry mondata[] = {
     { 3, 3, 5, 0 },
     2, 18, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_BUZZ,
     I_INSECT, HT_LAND, FL_FLY, 20, DEFAULT_ENERGY,
-    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_TINY
-},
-
-{
-    MONS_BUMBLEBEE, 'k', RED, "bumblebee",
-    M_NO_SKELETON,
-    MR_VUL_POISON,
-    200, 10, MONS_KILLER_BEE, MONS_BUMBLEBEE, MH_NATURAL, -3,
-    { {AT_STING, AF_POISON_MEDIUM, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 7, 3, 5, 0 },
-    4, 15, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_BUZZ,
-    I_INSECT, HT_LAND, FL_FLY, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_TINY
 },
 

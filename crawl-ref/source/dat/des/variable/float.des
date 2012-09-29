@@ -1242,7 +1242,7 @@ ORIENT: float
 DEPTH:  D:5-12, Elf
 SUBST:  1 = 1:70 2:60 3:25
 MONS:   goliath beetle w:20 / giant cockroach w:30 / butterfly w:20
-MONS:   bumblebee / giant centipede / giant mite w:30
+MONS:   giant centipede w:15 / giant mite w:25
 MONS:   killer bee / scorpion / soldier ant w:5
 KFEAT:  = = runed_door
 MAP
