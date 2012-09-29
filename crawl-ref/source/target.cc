@@ -477,7 +477,7 @@ targetter_cleave::targetter_cleave(const actor* act, coord_def target)
     origin = act->pos();
     aim = target;
     list<actor*> act_targets;
-    get_all_cleave_targets(act->pos(), target, act_targets);
+    get_all_cleave_targets(act, target, act_targets);
     while (!act_targets.empty())
     {
         targets.insert(act_targets.front()->pos());
