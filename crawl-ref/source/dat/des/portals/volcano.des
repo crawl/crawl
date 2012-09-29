@@ -327,7 +327,7 @@ function fiery_guardians (e)
     -- We are now going to use a mixed pack.
     if crawl.one_chance_in(3) then
         -- "Lair"-esque fire-themed monster pack.
-        e.mons("hog / worker ant / redback w:1 / bumblebee w:1 / manticore")
+        e.mons("hog / worker ant / redback w:1 / manticore")
         e.mons("fire drake / lindwurm w:1")
         return
     end

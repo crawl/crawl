@@ -56,7 +56,6 @@ cat4 MONS_FELID
 
 ## Bees ('k')
 killer_bee MONS_KILLER_BEE
-bumblebee MONS_BUMBLEBEE
 queen_bee MONS_QUEEN_BEE
 giant_firefly MONS_FIREFLY
 

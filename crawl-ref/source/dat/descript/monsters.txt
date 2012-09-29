@@ -692,10 +692,6 @@ burning bush
 A mass of blackened twigs wreathed in orange flames. The walls and floor
 surrounding it are covered in scorch marks.
 %%%%
-bumblebee
-
-A huge and solitary bee.
-%%%%
 butterfly
 
 A large, brightly coloured butterfly with beautifully patterned wings,

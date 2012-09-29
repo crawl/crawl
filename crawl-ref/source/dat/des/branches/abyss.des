@@ -119,7 +119,7 @@ ENDMAP
 NAME:   hangedman_abyss_sting
 TAGS:   abyss no_item_gen no_monster_gen
 KMONS:  1 = orange demon
-KMONS:  2 = red wasp / yellow wasp / bumblebee w:2
+KMONS:  2 = red wasp / yellow wasp / killer bee w:2
 KMONS:  3 = death drake / green death
 KFEAT:  123 = W
 KITEM:  23 = honeycomb / royal jelly w:2 / nothing

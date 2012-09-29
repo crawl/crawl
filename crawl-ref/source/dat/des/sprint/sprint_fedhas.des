@@ -11,7 +11,7 @@ KMONS:  E = scorpion
 KMONS:  F = wandering mushroom
 KMONS:  G = burning bush
 KMONS:  H = killer bee
-KMONS:  I = bumblebee
+KMONS:  I = queen bee
 KMONS:  L = oklob plant
 KMONS:  J = spriggan druid
 KMONS:  M = oklob plant hp:30 name:conjurer n_suf spells:stone_arrow;.;.;.;iskenderun's_mystic_blast actual_spells
@@ -33,7 +33,6 @@ KMONS:  e = oklob plant name:demonologist n_suf spells:summon_demon;.;.;summon_d
 KMONS:  f = oklob plant name:annihilator n_suf spells:poison_arrow;orb_of_destruction;.;.;bolt_of_cold actual_spells
 KMONS:  g = the Enchantress
 KMONS:  h = moth of wrath
-KMONS:  i = queen bee
 KMONS:  m = green rat
 KMONS:  n = worker ant
 KMONS:  u = grey rat
@@ -51,9 +50,9 @@ xc{[(Ac....uc.$$$$coooooooooooooc.*+$BBc.E..ccZcc|ccccx
 xcAA..+.%...+.c%%.+ooooooooooooo+.Dc$E$c.F.G+*|cc+ccccx
 xcAAAAc...m.cCcn..coooooooooooooc..ccc+cc.**ccZc$$ccccx
 xccccccccccccccc+ccoooooooooooooc.*ccZZ$+..Fccccc..R.cx
-xcIH.t........+...coooooooooooooccccccccccccccccc...Zcx
-xckH....t.....c$C$ccccccccccccccccccc..L.%*ccc....Tt.cx
-xcIH...t..t..ccccccttttt..t*ccc.+.*+.....*%+Q+..Tt..Zcx
+xcHH.t........+...coooooooooooooccccccccccccccccc...Zcx
+xckI....t.....c$C$ccccccccccccccccccc..L.%*ccc....Tt.cx
+xcHH...t..t..ccccccttttt..t*ccc.+.*+.....*%+Q+..Tt..Zcx
 xcc+cccc+ccccccC|+......t..tccM.c.Nc.A....Pcccccccccccx
 xc*.c$$$$+......Fct..ttt.tJ.ccc.cc+cc.A.O..cccccccccccx
 xcL*cG|cccG...L..c.tt.*t.$$t+..$ct.tccccccccccccccccccx
@@ -77,7 +76,7 @@ xcc........t.Jt..t..t.Rt..t.Ut..t..t..t..t.Wt..t..t..cx
 xccc++++ccccccccccccccccccccccccccccccccccccccccccccccx
 xcc......cccccccccccccc.....ccccc....cccccc...h..cccccx
 xcc......ccccccccc.......h........b................Wtcx
-xccc.......e...............i...............ccccccc..#cx
+xccc.......e...............I...............ccccccc..#cx
 xccc.Q..........a........R........U................Wtcx
 xccc..............cccccc.....cccc....cccccc...h..cccccx
 xccc.......f......ccccccccccccccccccccccccccccccccccccx
