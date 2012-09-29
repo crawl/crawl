@@ -749,7 +749,7 @@ _common_speaking_no_tension_
 
 @The_weapon@ attempts to teach you some tongue twisters.
 
-@The_weapon@ says, "At least you will die some day and escape this tedium!"
+@The_weapon@ says, "At least you will die someday and escape this tedium!"
 
 %%%%
 _rare_speaking_no_tension_
@@ -813,7 +813,7 @@ w:1
 
 @The_weapon@ says, "Unhand me, foul miscreant!"
 
-@The_weapon@ muses, "Why do I have to kill to get some service around here?"
+@The_weapon@ muses, "Whom do I have to kill to get some service around here?"
 
 w:1
 @The_weapon@ says, "All work and no play makes @player_name@ a dull boy!"
@@ -821,7 +821,7 @@ w:1
 # Blue Oyster Cult "Black Blade"
 @The_weapon@ says, "I wish I'd pick another to be my killing tool."
 
-@The_weapon@ hoarsely says, "Need a drink...quick! Stab something."
+@The_weapon@ hoarsely says, "Need a drink... quick! Stab something."
 
 w:1
 @The_weapon@ says, "You haven't happened to see my sheath laying around anywhere? I feel so exposed."
@@ -886,7 +886,7 @@ w:1
 
 @The_weapon@ shouts, "Murder is sin, but it will be washed away with blood."
 
-@The_weapon@ shouts, "Hey monsters! He's over here!"
+@The_weapon@ shouts, "Hey, monsters! @player_name@ is over here!"
 
 # Immortal Defense, Circuit Point quote
 @The_weapon@ shouts, "A winner requires a loser!"
@@ -906,7 +906,7 @@ w:1
 
 @The_weapon@ @_screams_@, "When this war is won, I will wage the next one."
 
-@The_weapon@ @_screams_@, "Blade deep in blood!"
+@The_weapon@ @_screams_@, "Blade-deep in blood!"
 
 @The_weapon@ @_screams_@, "I revel, I sever!"
 
@@ -946,7 +946,7 @@ w:1
 %%%%
 _SCREAM_
 
-@The_weapon@ goes "RWARRR!"
+@The_weapon@ goes, "RWARRR!"
 
 #### Omnipotence phantasies, often with metaphysical or religious undertone ####
 
@@ -978,7 +978,6 @@ _SCREAM_
 @The_weapon@ @_screams_@, "I AM PAIN SEEKING EXPRESSION!" 
 
 #### Battle frenzy ####
-
 @The_weapon@ @_screams_@, "LET'S STRANGLE THE @_MISCREANTS_@, STRANGLE THEM!"
 
 @The_weapon@ @_screams_@, "KILL! KILL!! KILL!!!"
@@ -1554,6 +1553,8 @@ exciting
 
 thrilling
 
-w:1 erotic
+w:1
+erotic
 
-w:1 moving
+w:1
+moving
