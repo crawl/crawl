@@ -4570,7 +4570,7 @@ monster* dgn_place_monster(mons_spec &mspec,
     {
         item_def *wpn = mons->mslot_item(MSLOT_WEAPON);
         ASSERT(wpn);
-        mons->ghost->init_dancing_weapon(*wpn, 180);
+        mons->ghost->init_dancing_weapon(*wpn, 100);
         mons->ghost_demon_init();
     }
 
