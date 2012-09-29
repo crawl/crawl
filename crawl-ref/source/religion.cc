@@ -1611,10 +1611,10 @@ static bool _increase_ench_duration(monster* mon,
     return true;
 }
 
-static int _tso_blessing_extend_stay(monster* mon)
+static bool _tso_blessing_extend_stay(monster* mon)
 {
     if (!mon->has_ench(ENCH_ABJ))
-        return 0;
+        return false;
 
     mon_enchant abj = mon->get_ench(ENCH_ABJ);
 
@@ -1828,7 +1828,7 @@ bool bless_follower(monster* follower,
         {
             // Extend a monster's stay if it's abjurable, or extend charm
             // duration. If neither is possible, deliberately fall through.
-            int more_time = _tso_blessing_extend_stay(follower);
+            bool more_time = _tso_blessing_extend_stay(follower);
             bool friendliness = false;
 
             if (!more_time || coinflip())
@@ -1844,10 +1844,7 @@ bool bless_follower(monster* follower,
             }
 
             if (more_time)
-            {
-                result += (more_time == 2) ? "permanent time in this world"
-                                           : "more time in this world";
-            }
+                result += "more time in this world";
 
             if (more_time || friendliness)
                 break;
@@ -2949,9 +2946,7 @@ void excommunication(god_type new_god)
 
         // Leaving TSO for a non-good god will make all your followers
         // abandon you.  Leaving him for a good god will make your holy
-        // followers (his daeva and angel servants) indifferent, while
-        // leaving your other followers (blessed with friendliness by
-        // his power, but not his servants) alone.
+        // followers (his daeva and angel servants) indifferent.
         if (!is_good_god(new_god))
             add_daction(DACT_ALLY_HOLY);
         else
@@ -2967,7 +2962,7 @@ void excommunication(god_type new_god)
         if (env.sanctuary_time)
             remove_sanctuary();
 
-        // Leaving Zin for a non-good god will make all your followers
+        // Leaving Zin for a non-good god will make neutral holies
         // (originally from TSO) abandon you.
         if (!is_good_god(new_god))
             add_daction(DACT_ALLY_HOLY);
@@ -2980,8 +2975,8 @@ void excommunication(god_type new_god)
         if (you.duration[DUR_DIVINE_VIGOUR])
             elyvilon_remove_divine_vigour();
 
-        // Leaving Elyvilon for a non-good god will make all your
-        // followers (originally from TSO) abandon you.
+        // Leaving Elyvilon for a non-good god neutral holies
+        // (originally from TSO) abandon you.
         if (!is_good_god(new_god))
             add_daction(DACT_ALLY_HOLY);
 
