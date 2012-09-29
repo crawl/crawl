@@ -2506,6 +2506,9 @@ enum monster_type                      // menv[].type
     MONS_ELEMENTAL,             // genus
 
     MONS_FANNAR,
+    
+    MONS_STARSPAWN_TENTACLE,
+    MONS_STARSPAWN_TENTACLE_SEGMENT,
 
     NUM_MONSTERS,               // used for polymorph
 
