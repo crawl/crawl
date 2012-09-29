@@ -504,20 +504,24 @@ void get_cleave_targets(coord_def atk, coord_def def, int dir,
 {
     const actor* attacker = actor_at(atk);
     coord_def atk_vector = def - atk;
-    int i = 0;
 
-    do
+    for (int i = 0; i < 3; ++i)
     {
         atk_vector = rotate_adjacent(atk_vector, dir);
+        if (feat_is_solid(grd(atk + atk_vector)))
+            break;
+
         actor * target = actor_at(atk + atk_vector);
         if (target && !_cleave_dont_harm(attacker, target))
             targets.push_back(target);
     }
-    while (++i < 3 && !feat_is_solid(grd(atk + atk_vector)));
 }
 
 void get_all_cleave_targets(coord_def atk, coord_def def, list<actor*> &targets)
 {
+    if (feat_is_solid(grd(def)))
+        return;
+
     int dir = coinflip() ? -1 : 1;
     get_cleave_targets(you.pos(), def, dir, targets);
     targets.reverse();
