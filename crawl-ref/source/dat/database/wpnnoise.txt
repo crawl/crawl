@@ -533,7 +533,7 @@ w:100
 _singing_no_tension_
 
 # practising
-@The_weapon@ practices its scales.
+@The_weapon@ practises its scales.
 
 @The_weapon@ makes a painfully high-pitched squeak.
 
