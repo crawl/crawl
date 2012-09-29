@@ -1104,7 +1104,7 @@ static bool _explode_monster(monster* mons, killer_type killer,
     else if (type == MONS_LURKING_HORROR)
     {
         _setup_torment_explosion(beam, *mons);
-        torment(mons, mons->mindex(), mons->pos());
+        sanct_msg = "The lurking horror fades away harmlessly.";
     }
     else if (mons->has_ench(ENCH_INNER_FLAME))
     {
@@ -1148,8 +1148,10 @@ static bool _explode_monster(monster* mons, killer_type killer,
     if (is_sanctuary(mons->pos()))
         return false;
 
-    // Inner-flamed monsters leave behind some flame clouds.
-    if (mons->has_ench(ENCH_INNER_FLAME))
+    // Explosion side-effects.
+    if (type == MONS_LURKING_HORROR)
+        torment(mons, mons->mindex(), mons->pos());
+    else if (mons->has_ench(ENCH_INNER_FLAME))
     {
         for (adjacent_iterator ai(mons->pos(), false); ai; ++ai)
             if (!feat_is_solid(grd(*ai)) && env.cgrid(*ai) == EMPTY_CLOUD
