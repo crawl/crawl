@@ -71,8 +71,8 @@ rainbow-coloured suspenders from somewhere. They're not helping.
 Boris
 
 An ancient and powerful lich. Like all true liches, Boris is immortal, and will
-regenerate its desiccated skeletal remains even if completely disintegrated.
-However, while this complicated process can often take months or even years,
+regenerate his desiccated skeletal remains even if completely disintegrated.
+However, while this complicated process would usually take months or even years,
 Boris has mastered it to the point of being able to reintegrate himself in a
 matter of minutes.
 %%%%
@@ -204,7 +204,8 @@ spells: by consuming their former owner, a powerful wizard.
 %%%%
 Geryon
 
-A huge, three-headed, winged arch-demon, guardian of the gates of Hell.
+A huge, three-headed, winged arch-demon, guardian of the four Hells. Legends say
+that his silver horn is used to throw open the gates of Hell themselves.
 %%%%
 Gloorx Vloq
 
@@ -288,8 +289,8 @@ Underworld. What of this is true, you do not know.
 %%%%
 Lom Lobon
 
-An ancient and strangely serene demon. It regards you coldly from the huge
-glowing eye in the centre of its forehead.
+An ancient and strangely serene demon. He regards you coldly from the huge
+glowing eye in the centre of his forehead.
 %%%%
 lorocyproca
 
@@ -395,10 +396,8 @@ an undying fervor through his single massive eye.
 %%%%
 Prince Ribbit
 
-A handsome prince before he was cursed, he now adventures for a cure. Moving
-through the halls with great speed, he often disappears only to pop out of thin
-air somewhere else, usually to an adventurer's misfortune and dismay. On the
-top of his head, he wears a crown tilted jauntily to one side. How it still
+A handsome prince before he was cursed, he now adventures for a cure. On the
+top of his head he wears a crown tilted jauntily to one side. How it still
 stays in place even after his transformation is a mystery.
 %%%%
 Psyche
@@ -414,7 +413,7 @@ You feel a lump in the pit of your stomach.
 Roxanne
 
 A beautiful sapphire statue of a famous earth mage who disappeared after a
-catastrophic spell failure. It is clutching a book.
+catastrophic spell failure. She is clutching a book.
 %%%%
 Rupert
 
@@ -438,13 +437,7 @@ that is, easy meals — it attracts.
 Sonja
 
 A graceful kobold assassin. Admire her graceful pirouettes, thrill at her
-daring leaps! But watch out for her knives! The space around the edge of her
-weapon seems to waver slightly for a split second... or does it?
-
-Her bleak canine body, hidden kindly underneath the flowing green attire, is in
-contrast with a pair of determined eyes, surveying her surroundings from
-beneath the shadow cast by the upper edge of her beryl-coloured cape. The
-nostrils on the exposed tip of her snout throb with excitement.
+daring leaps! But watch out for her knives!
 %%%%
 Terence
 
@@ -475,29 +468,11 @@ A fat dwarf wearing a stupid-looking hat. {{
     if you.can_smell() then
         return "He reeks of alcohol. "
     end
-}}There is something odd to his unsteady walk, as if this unprobable rotund
-person was accustomed to motion more swift than that of a drunken dwarf. His
-right hand is badly burned; judging from the extent of the injury, it must've
-been something big that caused it.
-
-He sports an undersized linen shirt, which seems overly long for his stout
-silhouette. “Wiglaf” is embroidered on the backside. It seems as though the
-letters have been patched over and changed.
+}}
 %%%%
 Xtahua
 
-An ancient and mighty dragon, his scorched body covered with crags of hardened
-lava, towers above the dungeon floor, leaving a pungent smell of sulphur in hos
-rumbling wake. Humongous sets of claws protrude from the ends of his arms, and
-their edges, jagged through years of use, look strong enough to tear a man
-apart without a thought. The warmth emanating from his sole presence makes the
-air uncomfortably hot, bending the dungeon features slightly, not unlike the
-sun on a summer day.
-
-Xtahua grew bitter after he found himself trapped in a dungeon after a weary
-battle with an adventurer hundreds of years ago. Most of his reasons to live
-have been reduced only to that of setting aflame whatever roams these halls
-with a burning passion.
+An ancient and mighty dragon.
 %%%%
 the Serpent of Hell gehenna
 
