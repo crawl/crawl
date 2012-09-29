@@ -381,7 +381,11 @@
 
 ##### 5-  Dump File #################################################
 #
-##### 5-a       Items and Kill List ###################
+##### 5-a       Saving ################################
+#
+# dump_on_save = true
+
+##### 5-b       Items and Kill List ###################
 #
 # kill_map = friend:you, other:you
 # dump_kill_places = (single | all | none)
@@ -395,7 +399,7 @@
 # dump_order += action_counts
 # dump_book_spells = false
 
-##### 5-b       Notes #################################
+##### 5-c       Notes #################################
 #
 # user_note_prefix=@@@
 # note_hp_percent = 5

@@ -27,7 +27,7 @@ Items
 
 Interface
 ---------
-* New option: auto_sacrifice
+* New options: auto_sacrifice, dump_on_save.
 * Removed the hidden special cost of Spellcasting, Stealth, Evocations and
   Invocations. Aptitudes adjusted.
 * Some colour changes in the skill menu.
