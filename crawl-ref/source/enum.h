@@ -1487,7 +1487,9 @@ enum enchant_type
     ENCH_EAT_ITEMS,
     ENCH_AQUATIC_LAND,   // Water monsters lose hp while on land.
     ENCH_SPORE_PRODUCTION,
+#if TAG_MAJOR_VERSION == 34
     ENCH_SLOUCH,
+#endif
     ENCH_SWIFT,
     ENCH_TIDE,
     ENCH_INSANE,
