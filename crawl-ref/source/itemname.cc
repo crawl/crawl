@@ -1510,9 +1510,11 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
             COMPILE_CHECK(ARRAYSZ(potion_qualifiers) == PDQ_NQUALS);
 
             static const char *potion_colours[] = {
-                "clear", "blue", "black", "silvery", "cyan", "purple",
-                "orange", "inky", "red", "yellow", "green", "brown", "pink",
-                "white"
+#if TAG_MAJOR_VERSION == 34
+                "clear",
+#endif
+                "blue", "black", "silvery", "cyan", "purple", "orange",
+                "inky", "red", "yellow", "green", "brown", "pink", "white"
             };
             COMPILE_CHECK(ARRAYSZ(potion_colours) == PDC_NCOLOURS);
 
