@@ -118,6 +118,8 @@ LUARET1(you_res_mutation, number, wearing_amulet(AMU_RESIST_MUTATION, false))
 LUARET1(you_see_invisible, boolean, you.can_see_invisible(false))
 LUARET1(you_spirit_shield, number, player_spirit_shield())
 LUARET1(you_gourmand, boolean, wearing_amulet(AMU_THE_GOURMAND, false))
+LUARET1(you_conservation, boolean, player_item_conserve(false))
+LUARET1(you_res_corr, boolean, player_res_corr(false))
 LUARET1(you_like_chunks, number, player_likes_chunks(true))
 LUARET1(you_saprovorous, number, player_mutation_level(MUT_SAPROVOROUS))
 LUARET1(you_levitating, boolean, you.flight_mode() == FL_LEVITATE)
@@ -403,6 +405,8 @@ static const struct luaL_reg you_clib[] =
     { "saprovorous",  you_saprovorous },
     { "like_chunks",  you_like_chunks },
     { "gourmand",     you_gourmand },
+    { "conservation", you_conservation },
+    { "res_corr",     you_res_corr },
     { "levitating",   you_levitating },
     { "flying",       you_flying },
     { "transform",    you_transform },
