@@ -2,9 +2,10 @@
 # file updates; please remove it together with others in one go.
 
 {
-  crawl.formatted_mpr("Your config file contains obsolete defaults. If you " ..
-    "do have any changes of your own, it's probably easiest to delete " ..
-    "everything you did not touch yourself.  For more information, please " ..
-    "read options_guide.txt", "error")
+  crawl.mpr("Your config file contains obsolete defaults.", "error")
+  crawl.mpr("If you do have any changes of your own, it's probably easiest to delete " ..
+    "everything you did", "error")
+  crawl.mpr("not touch yourself.                                                     " ..
+    "                  ", "error")
   crawl.more()
 }
