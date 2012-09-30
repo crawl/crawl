@@ -2946,7 +2946,7 @@ void excommunication(god_type new_god)
 
         // Leaving TSO for a non-good god will make all your followers
         // abandon you.  Leaving him for a good god will make your holy
-        // followers (his daeva and angel servants) indifferent.
+        // followers (daeva and angel servants) indifferent.
         if (!is_good_god(new_god))
             add_daction(DACT_ALLY_HOLY);
         else
@@ -2975,7 +2975,7 @@ void excommunication(god_type new_god)
         if (you.duration[DUR_DIVINE_VIGOUR])
             elyvilon_remove_divine_vigour();
 
-        // Leaving Elyvilon for a non-good god neutral holies
+        // Leaving Elyvilon for a non-good god will make neutral holies
         // (originally from TSO) abandon you.
         if (!is_good_god(new_god))
             add_daction(DACT_ALLY_HOLY);
