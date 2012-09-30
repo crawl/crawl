@@ -33,8 +33,8 @@ Interface
 * Some colour changes in the skill menu.
 * Swap the cycle ammunition commands. '(' = backward, ')' = forward.
 
-Stone Soup 0.11 (up to 0.11-a0-3206-g559a7a8)
----------------------------------------------
+Stone Soup 0.11 (20121001)
+--------------------------
 
 0.11 Highlights
 ----------
