@@ -647,6 +647,7 @@ static tileidx_t _zombie_tile_to_skeleton(const tileidx_t z_tile)
     {
     case TILEP_MONS_ZOMBIE_SMALL:
         return TILEP_MONS_SKELETON_SMALL;
+    case TILEP_MONS_ZOMBIE_TROLL:
     case TILEP_MONS_ZOMBIE_LARGE:
     case TILEP_MONS_ZOMBIE_DRACONIAN:
         return TILEP_MONS_SKELETON_LARGE;
