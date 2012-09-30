@@ -1016,9 +1016,6 @@ static cloud_type _cloud_from_feat(const dungeon_feature_type &ft)
     switch (ft)
     {
         case DNGN_CLOSED_DOOR:
-        case DNGN_DETECTED_SECRET_DOOR:
-        case DNGN_SECRET_DOOR:
-            return (coinflip() ? CLOUD_MIST : CLOUD_BLACK_SMOKE);
         case DNGN_METAL_WALL:
             return CLOUD_GREY_SMOKE;
         case DNGN_GREEN_CRYSTAL_WALL:
