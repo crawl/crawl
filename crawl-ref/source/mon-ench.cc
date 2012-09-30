@@ -1782,7 +1782,11 @@ static const char *enchant_names[] =
     "sleep_wary", "submerged", "short_lived", "paralysis", "sick",
     "sleepy", "held", "battle_frenzy", "temp_pacif", "petrifying",
     "petrified", "lowered_mr", "soul_ripe", "slowly_dying", "eat_items",
-    "aquatic_land", "spore_production", "slouch", "swift", "tide",
+    "aquatic_land", "spore_production",
+#if TAG_MAJOR_VERSION == 34
+    "slouch",
+#endif
+    "swift", "tide",
     "insane", "silenced", "awaken_forest", "exploding", "bleeding",
     "tethered", "severed", "antimagic", "fading_away", "preparing_resurrect", "regen",
     "magic_res", "mirror_dam", "stoneskin", "fear inspiring", "temporarily pacified",
