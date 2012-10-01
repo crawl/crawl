@@ -1,26 +1,26 @@
 %%%%
 A basalt altar of Yredelemnul
 
-Un autel de Yredelemnul le Sombre, taillé dans une colonne d'orgue basaltique.
+Un autel à Yredelemnul le Sombre, taillé dans une colonne de basalte.
 %%%%
 A blade trap
 
-Vous voyez le bord d'une énorme lame de faux cachée dans une fente; il y a
-probablement un contrepoids qui le fait agir comme un pendule.
+Vous voyez le tranchant d'une énorme lame de faux cachée dans une fente; il y a
+probablement un contrepoids qui agit comme un pendule.
 %%%%
 A bloodstained altar of Trog
 
-Un autel de Trog le Colérique, grossièrement taillé par ce qui ressemble à des
+Un autel à Trog le Furieux, grossièrement taillé par ce qui semble être des
 mains de géants, et couvert de tâches de sang.
 %%%%
 A blossoming altar of Fedhas
 
-Un autel de Fedhas Madash, couvert de végétaux dynamiques et colorés.
+Un autel à Fedhas Madash, couvert de végétaux de couleurs vives.
 %%%%
 A burning altar of Makhleb
 
-Un toujours-flambant autel de Makhleb le Destructeur. Des formes inquiétants,
-changeantes et étranges sont visibles dans les flammes.
+Un autel enflammé à Makhleb le Destructeur. Des formes étranges et sinueuses
+sont visibles dans les flammes.
 %%%%
 A closed door
 
@@ -34,18 +34,18 @@ employé.
 %%%%
 A corrupted altar of Lugonu
 
-Un autel de Lugonu l'Informe, probablement dédié à une autre entité avant son
+Un autel à Lugonu l'Informe, probablement dédié à une autre entité avant son
 irrévocable corruption.
 %%%%
 A crawl-hole back to the Lair
 
-Vous pouvez le remonter pour sortir de ces endroits exiguës et pleins de
-toiles.
+Un passage qui mène vers des endroits moins exiguës et avec moins de toiles
+d'araignée.
 %%%%
 A deep blue altar of Sif Muna
 
 Un autel du bleu le plus pur, couvert de motifs complexes et d'écrits d'une
-langue depuis longtemps oubliée, dédiée à Sif Muna l'Interprète.
+langue depuis longtemps oubliée, dédiée à Sif Muna le Gardien des Savoirs.
 %%%%
 A detected shop or portal
 
@@ -282,6 +282,11 @@ A snail-covered altar of Cheibriados
 
 Ce autel semble, à sa manière, plus stationnaire que les autres.
 %%%%
+A sparkling altar of Nemelex Xobeh
+
+Cet autel brille d'un meilleur jeu de lumière que n'importe quel tripot pour
+attirer de nouveaux adeptes à Nemelex Xobeh.
+%%%%
 A spear trap
 
 Ce piège tire de longues lances aiguisées qui empalent les outrepassants.
@@ -410,10 +415,39 @@ A translucent unnaturally hard rock wall
 Ce mur a été imprégné de magie pour le rendre rendre indestructible mais aussi
 transparent comme du verre.
 %%%%
+A tree
+
+Bien que le donjon soit baigné d'une légère lumière enchantée, la plupart du
+temps elle n'est pas assez forte pour rendre possible la vie de grandes
+plantes. Elle est inégale cependant, et il y a des endroits où, avec la grâce
+de Fedhas, des arbres aussi gros que ceux de la surface peuvent pousser sous
+terre.
+%%%%
+A viscous altar of Jiyva
+
+Un autel visqueux et de forme inconstante, dédié à Jiyva. Vous n'êtes pas sûr
+de quoi il est fait, et vous n'avez pas vraiment envie de savoir.
+%%%%
+A wall of green crystal
+
+Pour une raison quelconque, certains murs du donjon, comme celui-ci, ont été
+fabriqué d'un cristal poli, imprégné de magie obscur. Cette magie permet de le
+consolider, et de lui faire réfléchir la chaleur et le froid.
+%%%%
+A wall of the weird stuff which makes up Pandemonium
+
+Ce mur est fait de la substance étrange qui constitue Pandemonium, mais il
+semble se comporter comme de la roche.
+%%%%
 A white marble altar of Elyvilon
 
 Un autel de Elyvilon le Guérisseur, fait du marbre blanc le plus pur et
 surmonté d'une sculpture du Calice de la Purification.
+%%%%
+A web
+
+L'araignée qui a laissé cette toile devait être immense, car elle semble être
+faite pour piéger des {{ return you.genus(true) }} plutôt que des mouches.
 %%%%
 An abandoned shop
 
@@ -434,6 +468,16 @@ An empty arch of ancient stone
 
 Une arche en pierre qui semble avoir été installée ici pour l'eternité, mais
 qui ne semble conduire nul part en particulier.
+%%%%
+An escape hatch in the ceiling
+
+Une trappe à ressort à sens unique, fixée au plafond.
+%%%%
+An escape hatch in the floor
+
+Une trappe à ressort à sens unique, fixée au sol du donjon, permettant à
+l'aventurier cerné par des ennemies d'échanger les périls de ce niveau par ceux
+du suivant.
 %%%%
 An iron altar of Okawaru
 
@@ -477,10 +521,24 @@ avertissement pour vous : de nombreux aventuriers confus ont trouvé la mort
 dans ces profondeurs, et une fin prématurée de lévitation à noyé des voyageurs
 encore plus expérimentés.
 %%%%
+The open sea
+
+Il n'y a rien à part du vent et des vagues, encore et toujours, et pas un seul
+phare en vue. Vous seriez complètement perdu en peu de temps — mieux vaut ne
+pas s'y risquer.
+%%%%
+An autumnal tree
+
+Ces grands arbres semblent être fixées en permanence dans un moment d'automne:
+les feuilles, de couleur rouge et or, tombent des branches et flottent
+gracieusement vers le sol. Cependant, avant même qu'elles n'atteignent le sol,
+une ombre passe, et quand le chatoiement est parti, les feuilles sont une fois
+de plus sur la branche, prêt à tomber encore.
+%%%%
 A crumbled stone wall
 
-Ces murs, même s'ils sont tombés en désuétude, semblent être figés dans le
-temps, comme ces arbres prêts à tomber mais qui en sont totalement incapables.
+Ces murs, même s'ils sont délabrés, semblent être figés dans le temps comme des
+arbres, prêts à tomber, mais totalement incapables de le faire.
 %%%%
 A timeless floor
 
@@ -489,7 +547,7 @@ indestructible.
 %%%%
 A crystal clear mirror
 
-Un miroir scintillant qui reflète tout ce qui l'entoure.
+Un miroir scintillant qui réfléchit tout ce qui l'entoure.
 %%%%
 A strange machine
 
@@ -518,7 +576,12 @@ Elle ressemble à monstre entièrement composé de lianes.
 %%%%
 A crumbling stone wall
 
-Semble antique.
+Il semble ancien.
+%%%%
+The grass-covered ground
+
+Parsemée de feuilles et de brindilles qui crissent bruyamment sous le pas,
+l'herbe est craquante et fraîche.
 %%%%
 A strange rock wall
 
@@ -563,14 +626,19 @@ The ground
 
 Aucune vie ne pousse ici. Tout est complètement mort.
 %%%%
+The dimension's edge
+
+A la frontière de ce plan minuscule et isolé, l'espace lui-même se dissout dans
+le néant. Pénétrer ou altérer ce vide sombre est impossible.
+%%%%
 A wall of crystal
 
 <A wall of green crystal>
 %%%%
 A damp floor
 
-Peut-être est-ce l'humidité ou, la présence constante des nuages, qui fait que
-le sol est perpétuellement moite.
+Peut-être est-ce du à l'humidité, ou à la présence constante de nuage, mais le
+sol ici est perpétuellement humide.
 %%%%
 A hot floor
 
@@ -584,7 +652,7 @@ trouve que dans les plus profonds enfers.
 %%%%
 A carved rock wall
 
-Orné de dessins de mort de destruction.
+Il est orné de dessins de mort et de destruction.
 %%%%
 A dead tree
 
@@ -617,7 +685,7 @@ Sol couvert de givre qui crisse agréablement sous vos pas.
 A cracked metal wall
 
 Ce mur métallique a subi quelques dommages. Hélas, le trou n'est pas assez gros
-pour vous permettre de passer.
+pour passer à travers.
 %%%%
 A golden statue
 
@@ -756,9 +824,9 @@ précieux. Mais l'entrée est plutôt chère...
 A dark tunnel
 
 Menant directement au cœur de la roche, c'est un tunnel sombre et inquiétant.
-Un air chaud accompagne régulièrement un son sourd alors que les pierres du
-plafond et des parois, secouées par cette lointaine explosion tombent,
-commençant à boucher lentement le passage.
+Par moment, un air assez chaud pour roussir le visage souffle de l'intérieur,
+et des pierres tombent du plafond et des parois du tunnel, remplissant
+lentement le passage.
 %%%%
 A magical portal
 

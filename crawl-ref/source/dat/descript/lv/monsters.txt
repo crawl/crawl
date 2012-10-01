@@ -165,10 +165,6 @@ Brimstone Fiend
 Milzīgs un varens ugunīgām liesmām apvīts dēmons ar lieliem un zvīņainiem
 svārniem. Viens no biedējošākajiem Elles iemītniekiem.
 %%%%
-bumblebee
-
-Liela un vientulīga bite.
-%%%%
 centaur warrior
 
 Neskaitāmas kaujas piedzīvojis muskuļots kentaurs, kurš apbruņots ar labiem
