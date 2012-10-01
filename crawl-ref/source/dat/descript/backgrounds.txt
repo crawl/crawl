@@ -55,8 +55,7 @@ They also start with good darts.
 %%%%
 Fighter
 
-Fighters come with armour and shield, as well as a weapon of their choice. They
-have more health than any other background.
+Fighters come with armour and shield, as well as a weapon of their choice.
 %%%%
 Fire Elementalist
 
