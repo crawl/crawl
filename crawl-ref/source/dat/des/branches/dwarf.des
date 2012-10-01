@@ -375,7 +375,6 @@ MONS:   troll w:20, elf, wight
 MONS:   wight
 MONS:   patrolling deep dwarf
 NSUBST: X = 2:= / *:x
-KFEAT:  = = runed_door
 SUBST:  * = **d
 ITEM:   staff of death / scroll of torment / necronomicon w:1
 MAP

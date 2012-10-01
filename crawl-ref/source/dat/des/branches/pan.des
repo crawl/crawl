@@ -804,7 +804,6 @@ SUBST:      C : c, d : c
 : else
 SUBST:      C : ., d : +
 : end
-KFEAT:      = = runed_door
 TILE:       c = dngn_stone_wall_darkgray
 MONS:       patrolling Gloorx Vloq
 MONS:       executioner, shadow demon, shadow wraith, demonic crawler
@@ -933,7 +932,6 @@ TAGS:  pan allow_dup
 MONS:  pandemonium lord, any demon, any demon
 # release only one or a few at once
 SUBST: = = +=
-KFEAT: = = runed_door
 : pan_demonic_rune(_G, 'P')
 MAP
 ............
@@ -997,7 +995,6 @@ ENDMAP
 NAME:  rand_demon_7
 TAGS:  pan allow_dup
 MONS:  any demon, greater demon
-KFEAT: = = runed_door
 : pan_demonic_rune(_G, 'P', true)
 MAP
 ............
@@ -1042,7 +1039,6 @@ TAGS:  pan allow_dup
 # a crapload of greater demons, you fight them in small sets
 MONS:  pandemonium lord, any demon, greater demon
 SUBST: = = =+
-KFEAT: = = runed_door
 : pan_demonic_rune(_G, 'P')
 MAP
 ............
@@ -1212,7 +1208,6 @@ NSUBST: | = 1:P / *:|
 SUBST:  + : +., X : =c, c : cccx
 # I don't want this vault to be an autoexplore trap
 MARKER: G = lua:props_marker { stop_explore = "ominous statue." }
-KFEAT:  = = runed_door
 : pan_demonic_rune(_G, 'P')
 MAP
 xxxxxxxxxxxxxxxxx

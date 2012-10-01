@@ -84,7 +84,6 @@ MONS:   jelly / ooze / brown ooze / giant amoeba
 MONS:   acid blob / slime creature w:5
 MONS:   azure jelly
 KFEAT:  O = enter_slime_pits
-KFEAT:  = = runed_door
 MAP
 ccccc
 c111m.
