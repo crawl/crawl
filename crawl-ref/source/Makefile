@@ -1572,10 +1572,10 @@ tx-check: $(TX-INI)
 	$(TX-MKTXT) -w $(TX-TRANS);\
 
 tx-commit:
-	@if git diff --quiet $(TX-TXT); then\
+	@if git diff HEAD --quiet $(TX-TXT); then\
 		exit 0;\
 	fi;\
-	git diff $(TX-TXT);\
+	git diff HEAD $(TX-TXT);\
 	read -p "Commit? (Y/n) " RESP;\
 	if [ "$$RESP" = n -o "$$RESP" = N ]; then\
 		exit 1;\
