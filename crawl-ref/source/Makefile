@@ -1503,8 +1503,8 @@ TX-HAVE-QUOTES = $(foreach name, branches features items monsters unident, $(TX-
 # Files pulled from transifex. It is different than TX-TRANS, because it can
 # contain new files for which we have no .txt yet
 TX-NEW-TRANS = $(foreach lang, $(TX-LANG), $(wildcard $(TX-DIR)/$(lang)/*.ini))
-TX-NEW-TEXT = $(filter-out, quotes, $(wildcard $(TX-DIR)/en/*.ini))
 TX-NEW-QUOTES = $(TX-DIR)/en/quotes.ini
+TX-NEW-TEXT = $(filter-out $(TX-NEW-QUOTES), $(wildcard $(TX-DIR)/en/*.ini))
 TX-NEW = $(TX-NEW-TRANS) $(TX-NEW-TEXT) $(TX-NEW-QUOTES)
 
 TX-COMMIT-AUTHOR = "Translators <crawl-ref-discuss@lists.sourceforge.net>"
