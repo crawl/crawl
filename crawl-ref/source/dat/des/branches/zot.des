@@ -114,7 +114,6 @@ TAGS:   no_monster_gen zot_entry
 NSUBST: O = 1:O / *:n
 SUBST:  ^ = ^.
 SUBST:  s = ccc=
-KFEAT:  = = runed_door
 KFEAT:  ^ = alarm trap / blade trap / bolt trap
 KFEAT:  O = enter_zot
 KFEAT:  n = stone_arch

@@ -866,7 +866,6 @@ TILE:       c = wall_brick_vines
 LROCKTILE:  wall_brick_vines
 LFLOORTILE: floor_grass
 ITEM:       any fixed theme book, any fixed level book, any magical staff / any rod w:2
-KFEAT:      = = runed_door
 {{
 
 local grow_marker = TriggerableFunction:new { func = "wizlab_eringya_grow",
@@ -1096,7 +1095,6 @@ COLOUR:     . = darkgrey / blue w:3 / cyan w:1
 MARKER:     ! = lua:portal_desc {wall_drop=1}
 MARKER:     = = lua:portal_desc {wall_drop=1}
 TILE:       ! = dngn_stone_wall_yellow
-KFEAT:      = = runed_door
 {{
 local box_marker = TriggerableFunction:new {
     func="wizlab_doroklohe_convert_boxes",
@@ -1525,7 +1523,6 @@ KMONS:      F = human name:monk n_suf col:white hd:10 dur:2 sum:shadow_creatures
             dur:2 seen sum:shadow_creatures nas:old_memories tile:mons_rock_troll_monk \
             / iron troll name:monk n_suf col:white dur:2 sum:shadow_creatures \
             nas:old_memories seen tile:mons_iron_troll_monk w:5
-KFEAT:      = = runed_door
 {{
 dgn.persist.wucad_mu_died = false
 

@@ -151,12 +151,11 @@ KMONS:  C = slime creature
 KITEM:  C = royal jelly q:4 / royal jelly q:6
 KFEAT:  C = altar_jiyva w:1 / . w:20
 KMASK:  W = no_monster_gen
-KFEAT:  + = runed_door
 MAP
  .Wxxxxx
 .Wxxxxxxx
 @.xBBAxxx
- W+BxA+Cx
+ W=BxA=Cx
 @.xBBAxxx
 .Wxxxxxxx
  .Wxxxxxx
@@ -284,17 +283,16 @@ MARKER:  Y = lua:fog_machine { cloud_type = "steam", pow_min = 1, \
                  pow_max = 10, delay = 60, size = 1, walk_dist = 0 }
 MARKER:  Z = lua:fog_machine { cloud_type = "flame", pow_min = 100, pow_max = 100, \
                  delay = 10, size = 1, walk_dist = 0, excl_rad = -1 }
-KFEAT:   + = runed_door
 NSUBST:  c = 2:a / *:b
 SHUFFLE: ABCDEFGHIJKLMNOPQR
 MAP
  .......
 ..A......
-..vvvv+B.
+..vvvv=B.
 .Zvcccv..
 ..vY1cv..
 .Zvcccv..
-..vvvv+D.
+..vvvv=D.
 ..C......
  .......
 ENDMAP

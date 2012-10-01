@@ -536,7 +536,6 @@ KFEAT:  T = teleport trap
 : hard_axe_fighter(_G)
 #
 : bailey_setup(_G)
-KFEAT: = = runed_door
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxx.....xxxxxxxxxxx
@@ -671,7 +670,6 @@ ITEM:   potion of gain strength / potion of gain intelligence / \
 MONS:   orc warlord
 : bailey_setup(_G)
 SUBST:  I = t.
-KFEAT:  = = runed_door
 MAP
 ttttttttttttttttttttttttttttttttttttt
 ttttttttttttttttttttttttttttttttttttt
@@ -756,7 +754,6 @@ ITEM:   good_item cloak race:orcish / good_item pair of gloves race:orcish /\
         good_item helmet race:orcish / good_item pair of boots race:orcish /\
         good_item large shield race:orcish / good_item shield race:orcish
 : bailey_setup(_G)
-KFEAT:  = = runed_door
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xAxxxxxxxxxxx.........xxxxxxxxxxxxx

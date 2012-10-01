@@ -1755,7 +1755,6 @@ KMONS:   8 = ghoul
 KMONS:   9 = vampire mage / vampire knight
 KMONS:   0 = soul eater
 KMONS:   Z = large skeleton / large zombie / small skeleton / small zombie
-KFEAT:   A = runed_door
 SUBST:   ? = ?..., ? = 2., 0 = 002
 SHUFFLE: 3569
 : serpent_of_hell_setup(_G)
@@ -1784,7 +1783,7 @@ xxxx.......ccx.G........G.xcc.......??..............xxxxxxxx......xxxx
 xxxx........cx............xc......................................xxxx
 xxxx........cxx....17....xxc....x.........x.......................xxxx
 xxxx........ccxxx......xxxcc......................................xxxx
-xxxx........ccccAxxxxxxAcccc.................................3....xxxx
+xxxx........cccc=xxxxxx=cccc.................................3....xxxx
 xxxx........cc$$cccccccc$$cc......................................xxxx
 xxxx.........cc$$$$O$$$$$cc.......................................xxxx
 xxxx..........cccccccccccc......x.........x............V..........xxxx
@@ -1925,7 +1924,6 @@ NAME:    eresh_room_1
 TAGS:    eresh_room no_rotate
 WEIGHT:  30
 MONS:    patrolling Ereshkigal, shadow fiend
-KFEAT:   = = runed_door
 : tar_setup(_G)
 MAP
 ..........

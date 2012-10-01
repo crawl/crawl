@@ -4612,13 +4612,6 @@ static bool _dgn_place_one_monster(const vault_placement &place,
 static dungeon_feature_type _glyph_to_feat(int glyph,
                                            vault_placement *place = NULL)
 {
-    // Please purge this some day.
-    if (glyph == '=')
-    {
-        die("map %s tried to place a secret door",
-            place ? place->map.name.c_str() : "[NULL]");
-    }
-
     return ((glyph == 'x') ? DNGN_ROCK_WALL :
             (glyph == 'X') ? DNGN_PERMAROCK_WALL :
             (glyph == 'c') ? DNGN_STONE_WALL :
@@ -4629,7 +4622,7 @@ static dungeon_feature_type _glyph_to_feat(int glyph,
             (glyph == 'o') ? DNGN_CLEAR_PERMAROCK_WALL :
             (glyph == 't') ? DNGN_TREE :
             (glyph == '+') ? DNGN_CLOSED_DOOR :
-            (glyph == '=') ? DNGN_CLOSED_DOOR :
+            (glyph == '=') ? DNGN_RUNED_DOOR :
             (glyph == 'w') ? DNGN_DEEP_WATER :
             (glyph == 'W') ? DNGN_SHALLOW_WATER :
             (glyph == 'l') ? DNGN_LAVA :

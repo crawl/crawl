@@ -30,6 +30,7 @@ Terrain
 
  . - floor                                                    (DNGN_FLOOR)
  + - closed door                                        (DNGN_CLOSED_DOOR)
+ = - runed door                                          (DNGN_RUNED_DOOR)
 
  W - shallow water
  w - deep water - can be randomly turned into shallow water by the

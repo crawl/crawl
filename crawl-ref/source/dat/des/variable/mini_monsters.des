@@ -1281,7 +1281,6 @@ MARKER: + = lua:props_marker { \
                 door_description_prefix= "warning-scrawled " \
             }
 KFEAT:  + = runed_door
-KFEAT:  = = runed_door
 SUBST:  ! = .
 MAP
 ccccccccccc
@@ -1379,7 +1378,6 @@ ENDMAP
 NAME:   hunters_booth_kilobyte
 DEPTH:  D:5-15
 MONS:   centaur, bush
-KFEAT:  = = runed_door
 MAP
 .....xxx
 @....21=@
@@ -1550,7 +1548,6 @@ NAME:  lookout_dungeons_type
 DEPTH: D:4-14
 TAGS:  extra no_pool_fixup layout_rooms layout_city
 MONS:  w:1 generate_awake centaur / w:4 nothing
-KFEAT: = = runed_door
 MAP
 ....@....
 .........
@@ -2239,7 +2236,6 @@ ENDMAP
 NAME:   minmay_statue_crystal_thing
 DEPTH:  D:9-26
 MONS:   orange crystal statue w:30 / silver statue / ice statue w:5
-KFEAT:  = = runed_door
 MAP
       .....
     ...b+b...
@@ -2415,7 +2411,6 @@ KPROP:   .12 = no_rtele_into
 SUBST:   . = .:80 %$*|
 SHUFFLE: Dd / Ee / Ff / Gg / Hh
 SUBST:   D==, d=o, E=b, e=b, F=b, f=b, G=b, g=b, H=b, h=b
-KFEAT:   = = runed_door
 MAP
 WWWWWWWWWWWWWW
 WbbbbbbbbbbbbW
@@ -2715,11 +2710,10 @@ KMASK:  m = no_wall_fixup
 KMONS:  1 = eye of devastation
 KMONS:  8 = 8
 KITEM:  18 = star_item w:9 / any w:1
-KFEAT:  + = runed_door
 MAP
 xxx@x
 x8m.xxxxxx
-xxm....+1x
+xxm....=1x
 xxx@xxxxxx
 ENDMAP
 
@@ -2836,7 +2830,6 @@ NAME:   nicolae_well_that_was_easy
 DEPTH:  D:4-13
 TAGS:   no_hmirror no_vmirror no_monster_gen no_trap_gen no_item_gen mini_float
 WEIGHT: 3
-KFEAT:  = = runed_door
 SUBST:  - = ABCDEFHIJKLMNOPQR
 KITEM:  A = gossamer rune of zot mimic
 KITEM:  B = decaying rune of zot mimic
@@ -2884,7 +2877,6 @@ KMONS:   4K = slime creature
 KMONS:   5L = acid blob w:5 / azure jelly / death ooze
 KFEAT:   JKL = altar_jiyva
 KITEM:   $ = $, $ w:5 / nothing
-KFEAT:   = = runed_door
 : if you.absdepth() > 19 then
 SHUFFLE: CD, 2"6; / 3`5~
 SUBST:   35`~ : xx., '"~- = .
@@ -3037,7 +3029,6 @@ ENDMAP
 NAME:   minmay_hollow_rounded_squares
 DEPTH:  D:4-
 SUBST:  0 = 0., x : x c:2 v:1 b:1
-KFEAT:  = = runed_door
 MAP
  ........
 ..xxxxxx..
@@ -3088,7 +3079,6 @@ DEPTH: D:4-, Vaults
 : if you.branch() ~= "Vaults" then
 SUBST: 8 = 8.......
 : end
-KFEAT: = = runed_door
 MAP
 .......
 .vvvvv.
@@ -3171,7 +3161,6 @@ NAME:   minmay_evil_grid
 DEPTH:  D:8-
 NSUBST: A = 7:+ / *:c
 NSUBST: B = 1:= / 1:n / *:c
-KFEAT:  = = runed_door
 NSUBST: C = 1:+ / *:c
 SUBST:  * = *|
 MAP
@@ -3376,7 +3365,6 @@ DEPTH:  D:8-26
 KFEAT:  t = tree
 FTILE:  ' = floor_pebble
 COLOUR: ' = white
-KFEAT:  = = runed_door
 MAP
 xxx...xxxxxxxxxxxxxx...xxx
 xx...xxxxxx........xx...xx
@@ -3808,7 +3796,6 @@ KMONS:  3 = lich / ancient lich
 KITEM:  3 = ring of protection from magic unrand:ring_of_the_mage
 KPROP:  32' = no_tele_into
 SUBST:  ' = .
-KFEAT:  = = runed_door
 MAP
 .......             .......
 .ccccc..           ..ccccc.
@@ -4099,7 +4086,6 @@ KFEAT: ACEH = any trap
 KITEM: ABCD = gold / nothing
 SUBST: F = G:99 F:1
 KMONS: F = orange crystal statue / silver statue / ice statue
-KFEAT: = = runed_door
 MAP
 ............
 .xxxxxxxxxx.
