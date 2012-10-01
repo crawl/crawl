@@ -72,9 +72,9 @@ Boris
 
 An ancient and powerful lich. Like all true liches, Boris is immortal, and will
 regenerate his desiccated skeletal remains even if completely disintegrated.
-However, while this complicated process would usually take months or even years,
-Boris has mastered it to the point of being able to reintegrate himself in a
-matter of minutes.
+However, while this complicated process would usually take months or even
+years, Boris has mastered it to the point of being able to reintegrate himself
+in a matter of minutes.
 %%%%
 Cerebov
 
@@ -204,8 +204,8 @@ spells: by consuming their former owner, a powerful wizard.
 %%%%
 Geryon
 
-A huge, three-headed, winged arch-demon, guardian of the four Hells. Legends say
-that his silver horn is used to throw open the gates of Hell themselves.
+A huge, three-headed, winged arch-demon, guardian of the four Hells. Legends
+say that his silver horn is used to throw open the gates of Hell themselves.
 %%%%
 Gloorx Vloq
 
