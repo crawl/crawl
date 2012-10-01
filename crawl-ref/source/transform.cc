@@ -829,6 +829,17 @@ bool transform(int pow, transformation_type which_trans, bool force,
         msg += "something buggy!";
     }
 
+    if (!force && just_check && (str + you.strength() <= 0 || dex + you.dex() <= 0))
+    {
+        string prompt = make_stringf("Transforming will reduce your %s to zero. Continue?",
+                                     str + you.strength() <= 0 ? "strength" : "dexterity");
+        if (!yesno(prompt.c_str(), false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
+    }
+
     // If we're just pretending return now.
     if (just_check)
         return true;
