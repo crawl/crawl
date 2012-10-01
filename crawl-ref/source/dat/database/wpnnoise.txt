@@ -1530,7 +1530,7 @@ tasty carcasses
 w:1
 exquisite cadavers
 %%%%
-@_body_part_@
+_body_part_
 
 skin
 
@@ -1541,7 +1541,7 @@ carcass
 
 flesh
 %%%%
-@_glorious_@
+_glorious_
 
 glorious
 
