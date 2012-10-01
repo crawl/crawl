@@ -1478,7 +1478,7 @@ macro.o: cmd-name.h
 # Only support a single dir for now
 TX = tx
 TX-CONFIG = .tx/config
-TX-SET = $(TX) set --auto-local --source-lang en_AU -t INI --mode=reviewed --execute
+TX-SET = $(TX) set --auto-local --source-lang en_AU -t INI --execute
 TX-DIR = dat/descript
 
 # List of languages
@@ -1591,7 +1591,7 @@ tx-commit:
 tx-pull:
 	@echo "Cleaning up downloaded translations.";\
 	$(RM) $(TX-NEW)
-	tx pull -a --minimum-perc=1 --mode=reviewed
+	tx pull -a
 
 tx-push: $(TX-INI) $(TX-QUOTES-ALL)
 	$(TX-MKINI) -umd $(TX-DIR)/en $(TX-TSOURCES)
