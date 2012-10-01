@@ -11,13 +11,93 @@ __(_suffix_examine
 
 Ça a été enchanté pour danser dans les air et attaquer par sa propre volonté.
 %%%%
+Aizul
+
+Il fut le serpent gardien d'un trésor légendaire, déshonoré après que des
+voleurs l’eurent pillé pendant son sommeil. Maintenant il serpente dans le
+donjon, cherchant sa revanche contre tout apprenti pilleur. C'est un sorcier
+chevronné, mais il ne brille pas plus au corps-à-corps que ceux de son espèce.
+%%%%
+Antaeus
+
+Autrefois un Titan fort et renommé, son arrogance fut sa perte. Corrompu et
+sali, il est devenu un puissant démon, qui règne sur les étendues gelés du
+Cocyte. Son gigantesque corps semble facile à atteindre ; malheureusement il
+semble aussi que toute attaque, sauf peut-être une très forte, le laisserait
+indemne.
+%%%%
+Arachne
+
+Autrefois humaine et tisseuse exceptionnelle, Arachne fut maudite et
+transformée en un être mi-femme mi-araignée. Délivrée des contraintes du temps,
+elle a la beauté d'une jeune humaine mais le corps et les pattes d'une
+monstrueuse araignée.
+
+Âgée de milliers d'années, elle a appris la magie et d'autres tours.
+Préparez-vous à être pris dans ses toiles et ses magies pendant que ses mignons
+vous dissolvent et vous sucent les chairs.
+%%%%
+Asmodeus
+
+Un des Archidémons qui règnent sur l'Enfer, enveloppé de feu.
+%%%%
 Azrael
 
 Un efreet puissant et belliqueux (en existe-t-il d'autres sortes ?).
 %%%%
+Boris
+
+Une ancienne et puissante liche. Comme toutes liches, Boris est immortel et
+capable de régénérer son squelette desséché même s'il venait a se faire
+désintégrer. Bien que ce processus complexe prenne habituellement des mois ou
+des années, Boris le maîtrise au point de pouvoir le faire en quelques minutes.
+%%%%
+Cerebov
+
+Un démon colérique et violent. Cerebov apparaît comme un humain géant, vêtu
+d'une armure dorée étincelante et portant une énorme épée tordue.
+%%%%
+Chuck
+
+Chuck le géant de pierre aimes les rochers, surtout les gros ! Pendant des
+années, il en a amassé toute une collection, dont certains rares et enchantés.
+%%%%
+Crazy Yiuf
+
+Un vieux gnoll desséché qui porte un longue barbe blanche, un bâton de combat
+et une cape. Une vrai figure de mythologie ! Attendez, est-ce que sa barbe
+tient avec des crochets ?
+%%%%
 Dispater
 
 Le seigneur de la Cité de Fer de Dis.
+%%%%
+Dowan
+
+Un elfe beau mais prétentieux, avec un talent en magie mais c'est à peu près
+tout. Ses compétences sont le parfait complément de celles, plus physiques, de
+sa sœur jumelle Duvessa.
+%%%%
+Duvessa
+
+Une combattante elfe sans beauté particulière, ses compétences dans plusieurs
+formes de combats la poussent à la témérité. Elle est soutenue par la magie de
+Dowan, son frère jumeau.
+%%%%
+Edmund
+
+Un frère jaloux de Sigmund (le plus jeune de neuf frères). Il n'a pas les
+facilités de Sigmund en magie mais compense grâce à un talent pour le combat et
+l'argent. Il meurt d'envie de prouver sa supériorité en tuant de malheureux
+aventuriers a l'aide de son coûteux fléau et de son esprit vif.
+%%%%
+Ereshkigal
+
+Un effrayant archi-diable qui règne sur les enfers mortels du Tartare.
+%%%%
+Erica
+
+Une charmante tisseuse de sorts.
 %%%%
 Erolcha
 
@@ -28,9 +108,21 @@ Eustachio
 Un apprenti convocateur à l'imposante moustache. Il a de drôles d'idées à
 propos de l'honneur.
 %%%%
+Frances
+
+Une guerrière robuste qui un jour domina au combat un puissant seigneur du
+Pandemonium, gagnant ainsi le contrôle de son royaumes et de ses barons. La
+bataille lui laissa sur le visage une profonde entaille qu'elle porte comme une
+marque d'honneur plutôt que de honte.
+%%%%
+Frederick
+
+Un combattant-magicien svelte qui porte un monocle cerclé d'or et cherche un
+adversaire approprié et de valeur. Vous ne faites surement pas l'affaire.
+%%%%
 Geryon
 
-Un grand arch-démon ailé à trois têtes, gardien des portes de l'Enfer.
+Un grand archidémon ailé à trois têtes, gardien des portes de l'Enfer.
 %%%%
 Gloorx Vloq
 
@@ -142,9 +234,10 @@ blizzard demon
 
 Un grand démon, recouvert de neige et parcouru d'éclairs.
 %%%%
-bumblebee
+Brimstone Fiend
 
-Une énorme abeille solitaire.
+Un démon puissant et énorme, baigné de flammes infernales et doté de grandes
+ailes écailleuses. Un des plus effrayants habitants de n'importe quel Enfer.
 %%%%
 deep elf fighter
 
@@ -196,6 +289,11 @@ Un draconien rusé qui a maitrisé les secrets des éléments du feu.
 elephant slug
 
 Un gastéropode gris de taille impressionnante à la peau ridée et plissée.
+%%%%
+Executioner
+
+Un démon rapide et affreusement puissant. Sa vrai forme est masquée par un
+nuage de lames de faux virevoltantes.
 %%%%
 fire vortex
 
@@ -484,6 +582,11 @@ Un liche qui est devenu très coûteuse au fil d'un temps incalculable.
 apricot tree
 
 <apple tree>
+%%%%
+Cigotuvi's Monster
+
+Cette assemblage terrifiant semble avoir été construit a partir de morceaux de
+corps de toutes les créatures monstrueuses imaginables.
 %%%%
 citrus tree
 

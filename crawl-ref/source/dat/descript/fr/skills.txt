@@ -149,6 +149,11 @@ les projectiles (autant magique que non magique) avec votre bouclier équipé (o
 magique). Certaines attaques, comme les carreaux pénétrant, ne peuvent pas être
 bloqués du tout.
 %%%%
+Traps
+
+Un personnage formé aux pièges sera plus observateur et remarquera plus
+facilement les pièges, et pourra également plus facilement les désamorcer
+%%%%
 Unarmed Combat
 
 Être compétent en Mains Nues accroit votre précision, vos dégâts et la vitesse

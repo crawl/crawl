@@ -289,8 +289,11 @@ Underworld. What of this is true, you do not know.
 %%%%
 Lom Lobon
 
-An ancient and strangely serene demon. He regards you coldly from the huge
-glowing eye in the centre of his forehead.
+Stoic and inscrutable, Lom Lobon is an ancient demon infamous for his mastery
+of magic. Rumoured to be the most learned being in the halls of Pandemonium, he
+is at times sought out by mortal wizards who offer their souls in exchange for
+the secrets of the arcane. Lacking the terrible wrath present in most demons,
+Lom Lobon's single eye instead hides a cold, impartial cruelty.
 %%%%
 lorocyproca
 
@@ -425,8 +428,11 @@ A mighty warlord. Some orcs even say he is the Chosen One of Beogh.
 %%%%
 Sigmund
 
-The bane of all young adventurers, Sigmund combines delusions of greatness with
-nasty tactics.
+The elder of a pair of brothers who came for the Orb. No one knows what Sigmund
+saw in the dungeon to drive him mad, but his shrewd magical tactics and wicked
+scythe now leave little time for his victims to wonder. Despite his reputation
+as a vicious murderer, his grandiose and dramatic ways have earned him the
+admiration of many denizens of the dungeon.
 %%%%
 Snorg
 
