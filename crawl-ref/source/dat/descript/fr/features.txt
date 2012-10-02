@@ -1,4 +1,13 @@
 %%%%
+A Zot trap
+
+Ce piège possède un enchantement très puissant qui inflige des effets magiques
+dangereux et imprévisibles sur ceux assez malchanceux pour le déclencher. C'est
+souvent pire que de simple dégâts — vous pouvez vous retrouver jeté dans les
+Abysses, être contaminé par d'énormes quantités de radiation magique, avoir de
+puissants démons convoqués pour vous détruire, ou d'autres — c'est quelque
+chose à éviter à tout prix.
+%%%%
 A basalt altar of Yredelemnul
 
 Un autel à Yredelemnul le Sombre, taillé dans une colonne de basalte.
@@ -16,6 +25,11 @@ mains de géants, et couvert de tâches de sang.
 A blossoming altar of Fedhas
 
 Un autel à Fedhas Madash, couvert de végétaux de couleurs vives.
+%%%%
+A broken pillar
+
+Les constructeurs de ce pilier sont morts il y a longtemps. Plus personne ne se
+rappelle pourquoi il a été construit.
 %%%%
 A burning altar of Makhleb
 
@@ -111,10 +125,15 @@ terrible réputation sous remise en question mais, une chose semble certaine :
 les monstres qui y hantent ses couloirs et protège l'Orbe sont puissants et
 étranges - certains ne pouvant être rencontrés qu'en ces lieux.
 %%%%
+A gateway back into the Dungeon
+
+Cet accès permet un exploit que tout le monde pensait impossible: revenir de
+l'Enfer en vie.
+%%%%
 A gateway leading out of the Abyss
 
-Un portail menant hors de ce lieu maudit, elle chatoie et se distord dans cet
-impermanent paysage.
+Un portail menant hors de ces fichus Abysses, il chatoie et se distord dans ce
+paysage changeant.
 %%%%
 A gateway to a ziggurat
 
@@ -330,6 +349,12 @@ A staircase to the Ecumenical Temple
 Une entrée à un temple des Dieux, un lieu de paix et de refuge contre les
 insanités du donjon.
 %%%%
+A staircase to the Elven Halls
+
+Un large escalier descendant vers les sombres halls des elfes des profondeurs,
+habiles guerriers armés d'arcs et d'épées, ainsi que de redoutables sorciers et
+magiciens.
+%%%%
 A staircase to the Hall of Blades
 
 Ces escaliers mènent au Hall des Lames. Les marches ont été ébréchées et
@@ -479,6 +504,12 @@ Une trappe à ressort à sens unique, fixée au sol du donjon, permettant à
 l'aventurier cerné par des ennemies d'échanger les périls de ce niveau par ceux
 du suivant.
 %%%%
+An exit through the horrors of the Abyss
+
+Si vous avez déjà eu envie de tomber de Charybde en Scylla, c'est le moment ou
+jamais. Ce passage vous permet de quitter cet endroit par un joli sentier
+panoramique à travers la folie à l'état pur.
+%%%%
 An iron altar of Okawaru
 
 Un autel de fer et d'acier dédié au Maître de la Guerre Okawaru. Ses arêtes
@@ -509,6 +540,15 @@ An unnaturally hard rock wall
 
 Vous ne pouvez altérer ce mur de quelque manière que ce soit.
 %%%%
+The endless lava
+
+Une mer de feu et de soufre qui va aussi loin que l'horizon. Qui n'est pas loin
+à cause de l'épaisse fumée.
+
+Contrairement aux petites coulées de lave où le vol ou la lévitation peuvent
+permettre de courts trajets, flotter au-dessus de cet enfer vous ferait cuire
+en un temps record à cause de la convection extrême.
+%%%%
 A floor
 
 Sol du Donjon
@@ -521,11 +561,33 @@ avertissement pour vous : de nombreux aventuriers confus ont trouvé la mort
 dans ces profondeurs, et une fin prématurée de lévitation à noyé des voyageurs
 encore plus expérimentés.
 %%%%
+Some lava
+
+Une coulée brûlante de roche en fusion, émettant des nuages de fumée
+sulfureuse.
+%%%%
+Some shallow water
+
+Cette eau trouble, montant jusqu'à la taille rend les mouvements et le combat
+plus difficile pour ceux habitués à la terre ferme — c'est parfois dangereux,
+mais jamais directement fatal.
+%%%%
 The open sea
 
 Il n'y a rien à part du vent et des vagues, encore et toujours, et pas un seul
 phare en vue. Vous seriez complètement perdu en peu de temps — mieux vaut ne
 pas s'y risquer.
+%%%%
+An empty arch of stone
+
+C'est le portail par lequel vous êtes arrivé ; il semble maintenant dépourvu de
+toute magie.
+%%%%
+A portal leading out of here
+
+Ce passage magique scintillant vous mènera hors de la demeure du magicien, vous
+renvoyant à l'endroit d'où vous venez. Vous doutez de ne jamais pouvoir revenir
+ici, alors assurez-vous d'avoir terminer le pillage avant.
 %%%%
 An autumnal tree
 
@@ -539,6 +601,12 @@ A crumbled stone wall
 
 Ces murs, même s'ils sont délabrés, semblent être figés dans le temps comme des
 arbres, prêts à tomber, mais totalement incapables de le faire.
+%%%%
+A strange statue
+
+Les traits de cette statue sont étranges et exotiques. Est-ce parce que la
+statue est usé et terni qu'elle est devenu tellement méconnaissable ? Ou le
+sujet était il quelque chose de démoniaque et malfaisant ?
 %%%%
 A timeless floor
 
@@ -639,6 +707,12 @@ A damp floor
 
 Peut-être est-ce du à l'humidité, ou à la présence constante de nuage, mais le
 sol ici est perpétuellement humide.
+%%%%
+A wall of white crystal
+
+C'est du cristal de mauvaise qualité. Il est à peine translucide, et ses faces
+tordues ne font qu'empirer les choses. L'opalescente lueur est cependant assez
+agréable.
 %%%%
 A hot floor
 
