@@ -622,8 +622,7 @@ void direct_effect(monster* source, spell_type spell,
 
         // Previous method of damage calculation (in line with player
         // airstrike) had absurd variance.
-        damage_taken = random2avg(damage_taken, 3);
-        damage_taken -= random2(defender->armour_class());
+        damage_taken = defender->apply_ac(random2avg(damage_taken, 3));
         break;
 
     case SPELL_BRAIN_FEED:
