@@ -237,7 +237,7 @@ private:
 
     bool apply_hit_funcs(actor* victim, int dmg);
     bool apply_dmg_funcs(actor* victim, int &dmg, vector<string> &messages);
-    int apply_AC(const actor* victim, int hurted, int &mind);
+    int apply_AC(const actor* victim, int hurted);
 
     // Functions which handle actually affecting things. They all
     // operate on the beam's current position (i.e., whatever pos()
