@@ -196,6 +196,7 @@ ENDMAP
 #############################################################################
 # Trapped exits - this is evil!
 NAME:    labyrinth_trapped
+WEIGHT:  0
 TAGS:    minotaur generate_loot allow_dup
 MONS:    patrolling minotaur
 NSUBST:  g = 1:. / *:b
@@ -219,6 +220,7 @@ ENDMAP
 #############################################################################
 # Another trapped exit - most evil again!
 NAME:    labyrinth_trapped_2
+WEIGHT:  0
 TAGS:    minotaur allow_dup generate_loot
 ITEM:    potion of porridge
 SHUFFLE: XYZ
