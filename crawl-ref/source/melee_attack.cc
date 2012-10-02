@@ -4627,10 +4627,9 @@ void melee_attack::do_spines()
             }
 
             int dmg = roll_dice(mut, 6);
-            int ac = random2(1 + attacker->armour_class());
-            int hurt = dmg - ac - evp;
+            int hurt = attacker->apply_ac(dmg) - evp;
 
-            dprf(DIAG_COMBAT, "Spiny: dmg = %d ac = %d hurt = %d", dmg, ac, hurt);
+            dprf(DIAG_COMBAT, "Spiny: dmg = %d hurt = %d", dmg, hurt);
 
             if (hurt <= 0)
                 return;
@@ -4662,9 +4661,8 @@ void melee_attack::do_spines()
         else if (attacker->alive())
         {
             int dmg = roll_dice(level, 4);
-            int ac = random2(1 + attacker->armour_class());
-            int hurt = dmg - ac;
-            dprf(DIAG_COMBAT, "Spiny: dmg = %d ac = %d hurt = %d", dmg, ac, hurt);
+            int hurt = attacker->apply_ac(dmg);
+            dprf(DIAG_COMBAT, "Spiny: dmg = %d hurt = %d", dmg, hurt);
 
             if (hurt <= 0)
                 return;
@@ -4721,7 +4719,7 @@ void melee_attack::do_minotaur_retaliation()
         if (!x_chance_in_y(2, 5))
             return;
 
-        int hurt = random2(20) - attacker->armour_class();
+        int hurt = attacker->apply_ac(random2(21));
         if (you.see_cell(defender->pos()))
         {
             const string defname = defender->name(DESC_THE);
@@ -4766,11 +4764,10 @@ void melee_attack::do_minotaur_retaliation()
         dmg = player_apply_misc_modifiers(dmg);
         dmg = player_apply_slaying_bonuses(dmg, true);
         dmg = player_apply_final_multipliers(dmg);
-        int ac = random2(1 + attacker->armour_class());
-        int hurt = dmg - ac;
+        int hurt = attacker->apply_ac(dmg);
 
         mpr("You furiously retaliate!");
-        dprf(DIAG_COMBAT, "Retaliation: dmg = %d ac = %d hurt = %d", dmg, ac, hurt);
+        dprf(DIAG_COMBAT, "Retaliation: dmg = %d hurt = %d", dmg, hurt);
         if (hurt <= 0)
         {
             mprf("You headbutt %s, but do no damage.",

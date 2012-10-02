@@ -820,12 +820,7 @@ spret_type cast_airstrike(int pow, const dist &beam, bool fail)
 
     bolt pbeam;
     pbeam.flavour = BEAM_AIR;
-    hurted = mons->beam_resists(pbeam, hurted, false);
-    // perhaps we should let the beam subtract AC and do damage too?
-
-    hurted -= random2(1 + mons->armour_class());
-
-    hurted = max(0, hurted);
+    hurted = mons->apply_ac(mons->beam_resists(pbeam, hurted, false));
 
     mons->hurt(&you, hurted);
     if (mons->alive())

@@ -2464,7 +2464,7 @@ void MiscastEffect::_earth(int severity)
                 mon_msg_unseen = "Rocks fall out of nowhere!";
                 break;
             }
-            _ouch(random2avg(13, 2) + 10 - random2(1 + target->armour_class()));
+            _ouch(target->apply_ac(random2avg(13, 2) + 10));
             break;
         }
         break;
