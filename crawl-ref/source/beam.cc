@@ -3775,24 +3775,8 @@ int bolt::apply_AC(const actor *victim, int hurted)
     default: ;
     }
 
-    int ac = victim->armour_class();
-    switch (ac_rule)
-    {
-    case AC_NONE:
-        return hurted;
-    case AC_PROPORTIONAL:
-        return apply_chunked_AC(hurted, ac);
-    case AC_NORMAL:
-        return hurted - random2(1 + ac);
-    case AC_HALF:
-        return hurted - random2(1 + ac) / 2;
-    case AC_TRIPLE:
-        return hurted - random2(1 + ac)
-                      - random2(1 + ac)
-                      - random2(1 + ac);
-    default:
-        die("invalid AC rule");
-    }
+    // beams don't obey GDR -> max_damage is 0
+    return victim->apply_ac(hurted, 0, ac_rule);
 }
 
 const actor* bolt::beam_source_as_target() const

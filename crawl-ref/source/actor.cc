@@ -240,7 +240,8 @@ int actor::body_weight(bool base) const
     }
 }
 
-int actor::apply_ac(int damage, int max_damage, ac_type ac_rule, int stab_bypass)
+int actor::apply_ac(int damage, int max_damage, ac_type ac_rule,
+                    int stab_bypass) const
 {
     int ac = max(armour_class() - stab_bypass, 0);
     int gdr = gdr_perc();
