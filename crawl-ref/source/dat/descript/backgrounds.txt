@@ -64,8 +64,8 @@ spell. The other spells in their book focus on destruction as well.
 %%%%
 Gladiator
 
-Gladiators are ready for the arena with light armour, nets, and a weapon
-of their choice.
+Gladiators are ready for the arena with light armour, nets, and a weapon of
+their choice.
 %%%%
 Healer
 
