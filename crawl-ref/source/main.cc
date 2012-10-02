@@ -1741,7 +1741,7 @@ static void _do_rest()
                     && you.hunger_state == HS_STARVING))
             && you.magic_points == you.max_magic_points)
         {
-            mpr("You start searching.");
+            mpr("You start waiting.");
         }
         else
             mpr("You start resting.");

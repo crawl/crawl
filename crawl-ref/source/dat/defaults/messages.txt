@@ -46,7 +46,7 @@ msc += $warning:no longer ripe
 
 # Unimportant messages and combat clutter
 #
-msc += $boring:You start (resting|searching)
+msc += $boring:You start (resting|waiting)
 msc += $boring:Unknown command
 msc += $boring:disappears? in a puff of smoke
 msc += $boring:dissolves? into (sparkling lights|shadows)

@@ -1370,7 +1370,7 @@ static command_type _get_running_command()
         if (!is_resting() && you.running.hp == you.hp
             && you.running.mp == you.magic_points)
         {
-            mpr("Done searching.");
+            mpr("Done waiting.");
         }
         return CMD_MOVE_NOWHERE;
     }
