@@ -2708,6 +2708,7 @@ static void tag_construct_level_items(writer &th)
             continue;
         marshallCoord(th, env.trap[i].pos);
         marshallShort(th, env.trap[i].ammo_qty);
+        marshallUByte(th, env.trap[i].skill_rnd);
     }
 
     // how many items?
@@ -3140,6 +3141,12 @@ static void tag_read_level_items(reader &th)
             continue;
         env.trap[i].pos      = unmarshallCoord(th);
         env.trap[i].ammo_qty = unmarshallShort(th);
+#if TAG_MAJOR_VERSION == 34
+        if (th.getMinorVersion() < TAG_MINOR_TRAPS_DETERM)
+            env.trap[i].skill_rnd = random2(256);
+        else
+#endif
+        env.trap[i].skill_rnd = unmarshallUByte(th);
         env.tgrid(env.trap[i].pos) = i;
     }
     for (int i = trap_count; i < MAX_TRAPS; ++i)

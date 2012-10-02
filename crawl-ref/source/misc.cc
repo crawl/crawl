@@ -1244,55 +1244,57 @@ void generate_random_blood_spatter_on_level(const map_bitmask *susceptible_area)
     }
 }
 
-void search_around(bool only_adjacent)
+void search_around()
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    const int skill = you.traps_skill();
+    int skill = you.skill(SK_TRAPS, 240);
+    if (you.religion == GOD_ASHENZARI && !player_under_penance())
+        skill += you.piety * 16;
+
+    int farskill = skill;
+    if (int mut = you.mutation[MUT_BLURRY_VISION])
+        farskill >>= mut;
+    if (you.duration[DUR_SWIFTNESS])
+        farskill = farskill * 3 / 4;
     // Traps and doors stepdown skill:
     // skill/(2x-1) for squares at distance x
-    int max_dist = div_rand_round(skill, 2);
+    int max_dist = div_rand_round(farskill, 32);
     if (max_dist > 5)
         max_dist = 5;
-    if (only_adjacent && max_dist > 1 || max_dist < 1)
+    if (max_dist < 1)
         max_dist = 1;
 
     for (radius_iterator ri(you.pos(), max_dist); ri; ++ri)
     {
         // Must have LOS, with no translucent walls in the way.
-        if (you.see_cell_no_trans(*ri))
+        if (grd(*ri) != DNGN_UNDISCOVERED_TRAP || !you.see_cell_no_trans(*ri))
+            continue;
+
+        int dist = ri->range(you.pos());
+
+        // Own square is not excluded; may be levitating.
+        // XXX: Currently, levitating over a trap will always detect it.
+
+        int effective = (dist <= 1) ? skill : farskill - 256 * dist;
+
+        trap_def* ptrap = find_trap(*ri);
+        if (!ptrap)
         {
-            // Maybe we want distance() instead of feat_distance()?
-            int dist = grid_distance(*ri, you.pos());
+            // Maybe we shouldn't kill the trap for debugging
+            // purposes - oh well.
+            grd(*ri) = DNGN_FLOOR;
+            dprf("You found a buggy trap! It vanishes!");
+            continue;
+        }
 
-            // Don't exclude own square; may be levitating.
-            // XXX: Currently, levitating over a trap will always detect it.
-            if (dist == 0)
-                ++dist;
-
-            // Making this harsher by removing the old +1...
-            int effective = div_rand_round(skill, (2*dist - 1));
-
-            if (grd(*ri) == DNGN_UNDISCOVERED_TRAP
-                     && x_chance_in_y(effective + 1, 17))
-            {
-                trap_def* ptrap = find_trap(*ri);
-                if (ptrap)
-                {
-                    ptrap->reveal();
-                    mprf("You found %s trap!",
-                         ptrap->name(DESC_A).c_str());
-                    learned_something_new(HINT_SEEN_TRAP, *ri);
-                    practise(EX_TRAP_FOUND);
-                }
-                else
-                {
-                    // Maybe we shouldn't kill the trap for debugging
-                    // purposes - oh well.
-                    grd(*ri) = DNGN_FLOOR;
-                    dprf("You found a buggy trap! It vanishes!");
-                }
-            }
+        if (effective > ptrap->skill_rnd * 10 - 500)
+        {
+            ptrap->reveal();
+            mprf("You found %s trap!",
+                 ptrap->name(DESC_A).c_str());
+            learned_something_new(HINT_SEEN_TRAP, *ri);
+            practise(EX_TRAP_FOUND);
         }
     }
 }

@@ -167,42 +167,10 @@ static bool _check_moveto_trap(const coord_def& p, const string &move_verb)
 {
     // If there's no trap, let's go.
     trap_def* trap = find_trap(p);
-    if (!trap)
+    if (!trap || env.grid(p) == DNGN_UNDISCOVERED_TRAP)
         return true;
 
-    // If we're walking along, give a chance to avoid traps.
-    const dungeon_feature_type new_grid = env.grid(p);
-    if (new_grid == DNGN_UNDISCOVERED_TRAP)
-    {
-        const int skill =
-            (4 + you.traps_skill()
-             + player_mutation_level(MUT_ACUTE_VISION)
-             - 2 * player_mutation_level(MUT_BLURRY_VISION));
-
-        if (random2(skill) > 6 && (you.duration[DUR_SWIFTNESS] <= 0 || coinflip()))
-        {
-            // We check the safety before revealing it.
-            const bool safe = trap->is_safe();
-            trap->reveal();
-            practise(EX_TRAP_PASSIVE);
-            print_stats();
-
-            if (safe)
-                return true;
-
-            viewwindow();
-
-            mprf(MSGCH_WARN,
-                 "You found %s trap!",
-                 trap->name(DESC_A).c_str());
-
-            if (!you.running.is_any_travel())
-                more();
-
-            return false;
-        }
-    }
-    else if (trap->type == TRAP_ZOT && !crawl_state.disables[DIS_CONFIRMATIONS])
+    if (trap->type == TRAP_ZOT && !crawl_state.disables[DIS_CONFIRMATIONS])
     {
         string prompt = make_stringf(
             "Do you really want to %s into the Zot trap",
@@ -6213,17 +6181,6 @@ int player::skill(skill_type sk, int scale, bool real) const
     }
 
     return level;
-}
-
-// only for purposes of detection, not disarming
-int player::traps_skill() const
-{
-    int val = skill(SK_TRAPS, 15);
-
-    if (you.religion == GOD_ASHENZARI && !player_under_penance())
-        val += you.piety;
-
-    return div_rand_round(val, 15);
 }
 
 int player_icemail_armour_class()
