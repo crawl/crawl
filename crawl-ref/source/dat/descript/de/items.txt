@@ -191,10 +191,6 @@ spiked flail
 Ein Flegel, der durch eine längere Kette und den Zusatz von Stacheln auf dem
 Schlagkopf verbessert wurde.
 %%%%
-staff
-
-Ein fester Wanderstock.
-%%%%
 strawberry
 
 Eine kleine aber leckere rote Frucht.

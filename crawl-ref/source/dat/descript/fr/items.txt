@@ -1496,10 +1496,6 @@ sur sa longueur par dessus un épais support en cuir. Tout en offrant une grande
 protection, Il est assez difficile de se déplacer avec sans un entrainement
 adéquate.
 %%%%
-staff
-
-Un solide bâton de marche.
-%%%%
 staff of air
 
 Ce bâton augmente la puissance des sorts d'air lancés par son porteur, et
