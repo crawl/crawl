@@ -121,7 +121,10 @@ ENDMAP
 #############################################################################
 # Wary orcs
 #
+# Disabled, knowing of guaranteed traps there makes walking here a degenerate
+# piece of spoilage.  Is this vault salvageable somehow?
 NAME: david_orc_4
+WEIGHT: 0
 TAGS: orc_entry no_rotate
 ORIENT: float
 SHUFFLE: XYZ
