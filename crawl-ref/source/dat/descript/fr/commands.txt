@@ -156,13 +156,9 @@ CMD_AUTOFIGHT_NOMOVE verbose
 
 Attaque un monstre à coté de vous avec l'arme tenue en main.
 %%%%
-CMD_SEARCH
+CMD_WAIT
 
 Attend un tour
-%%%%
-CMD_SEARCH verbose
-
-Passe un unique tour à attendre, se reposer, et chercher.
 %%%%
 CMD_DISPLAY_INVENTORY
 

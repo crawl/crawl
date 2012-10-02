@@ -151,11 +151,7 @@ CMD_AUTOFIGHT_NOMOVE verbose
 
 Hyökkää viereisen hirviön kimppuun kädessäsi olevalla aseella.
 %%%%
-CMD_SEARCH
+CMD_WAIT
 
 Odota yksi vuoro
-%%%%
-CMD_SEARCH verbose
-
-Käytä yksi vuoro odottamiseen, lepäämiseen ja etsimiseen.
 %%%%

@@ -674,7 +674,7 @@ enum command_type
     CMD_QUAFF,
     CMD_READ,
     CMD_LOOK_AROUND,
-    CMD_SEARCH,
+    CMD_WAIT,
     CMD_SHOUT,
     CMD_DISARM_TRAP,
     CMD_CHARACTER_DUMP,

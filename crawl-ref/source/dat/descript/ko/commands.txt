@@ -150,13 +150,9 @@ CMD_AUTOFIGHT_NOMOVE verbose
 
 근처에 있는 적을, 현재 장비하고 있는 무기로 공격한다.
 %%%%
-CMD_SEARCH
+CMD_WAIT
 
 1턴간 대기
-%%%%
-CMD_SEARCH verbose
-
-1턴간 대기한다. 그동안 체력, 마력을 회복하고, 주변을 탐색한다.
 %%%%
 CMD_DISPLAY_INVENTORY
 

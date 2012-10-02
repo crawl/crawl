@@ -3,7 +3,7 @@ resting CMD_REST
 explore CMD_EXPLORE
 travel CMD_INTERLEVEL_TRAVEL
 autofight CMD_AUTOFIGHT
-waiting CMD_SEARCH
+waiting CMD_WAIT
 ability CMD_USE_ABILITY
 pray CMD_PRAY
 stash_search CMD_SEARCH_STASHES

@@ -39,11 +39,7 @@ CMD_DISPLAY_COMMANDS verbose
 
 Pavēļu, iespēju utt. uzskaitījums.
 %%%%
-CMD_SEARCH
+CMD_WAIT
 
 Pagaidīt vienu gājienu
-%%%%
-CMD_SEARCH verbose
-
-Patērēt vienu gājienu gaidot, atpūšoties un meklējot.
 %%%%

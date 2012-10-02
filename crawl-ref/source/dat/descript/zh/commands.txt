@@ -143,11 +143,7 @@ CMD_AUTOFIGHT_NOMOVE verbose
 
 用持有的武器攻击邻接的怪物
 %%%%
-CMD_SEARCH
+CMD_WAIT
 
 等一个回合
-%%%%
-CMD_SEARCH verbose
-
-花费一个回合等待、休息并探索
 %%%%

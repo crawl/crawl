@@ -78,11 +78,7 @@ CMD_AUTOFIGHT_NOMOVE
 
 Zasáhnout sousední monstrum
 %%%%
-CMD_SEARCH
+CMD_WAIT
 
 Počkat jedno kolo
-%%%%
-CMD_SEARCH verbose
-
-Strávit jedeno kolo čekáním, odpočinkem a vyhledáváním.
 %%%%

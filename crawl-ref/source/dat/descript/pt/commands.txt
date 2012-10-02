@@ -84,7 +84,7 @@ CMD_AUTOFIGHT_NOMOVE verbose
 
 Atacar um monstro próximo de si com a arma em mãos.
 %%%%
-CMD_SEARCH
+CMD_WAIT
 
 Esperar um turno
 %%%%
