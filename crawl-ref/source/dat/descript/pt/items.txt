@@ -569,10 +569,6 @@ spiked flail
 
 Um mangual com grandes espinhos na bola de metal.
 %%%%
-staff
-
-Uma bengala resistente.
-%%%%
 staff of conjuration
 
 Este cajado aumenta o poder das magias de conjuração lançadas pelo seu usuário.

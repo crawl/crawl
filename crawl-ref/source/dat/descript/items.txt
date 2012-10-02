@@ -1550,10 +1550,6 @@ A heavy suit of body armour consisting of narrow strips of metal which are
 attached lengthwise to a thick leather backing. While offering great
 protection, splint mail is quite difficult to move in without proper training.
 %%%%
-staff
-
-A stout walking stick.
-%%%%
 staff of air
 
 This staff increases the power of air spells cast by its wielder, and insulates

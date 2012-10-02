@@ -1130,10 +1130,6 @@ spiked flail
 
 Un flagelo con largos pinchos en su cabeza de metal.
 %%%%
-staff
-
-Un robusto bastón de paseo.
-%%%%
 staff of air
 
 Este bastón incrementa el poder de los hechizos de aire recitados por su
