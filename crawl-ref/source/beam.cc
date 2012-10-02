@@ -3619,8 +3619,7 @@ void bolt::affect_player()
     vector<string> messages;
     apply_dmg_funcs(&you, hurted, messages);
 
-    int dummy; // why monsters don't estimate damage against the player?
-    hurted = apply_AC(&you, hurted, dummy);
+    hurted = apply_AC(&you, hurted);
 
 #ifdef DEBUG_DIAGNOSTICS
     dprf(DIAG_BEAM, "Player damage: rolled=%d; after AC=%d", roll, hurted);
@@ -3763,7 +3762,7 @@ void bolt::affect_player()
         beam_hits_actor(&you);
 }
 
-int bolt::apply_AC(const actor *victim, int hurted, int &mind)
+int bolt::apply_AC(const actor *victim, int hurted)
 {
     switch (flavour)
     {
@@ -3782,16 +3781,12 @@ int bolt::apply_AC(const actor *victim, int hurted, int &mind)
     case AC_NONE:
         return hurted;
     case AC_PROPORTIONAL:
-        mind = 0;
         return apply_chunked_AC(hurted, ac);
     case AC_NORMAL:
-        mind -= ac;
         return hurted - random2(1 + ac);
     case AC_HALF:
-        mind -= ac / 2;
         return hurted - random2(1 + ac) / 2;
     case AC_TRIPLE:
-        mind -= ac * 3;
         return hurted - random2(1 + ac)
                       - random2(1 + ac)
                       - random2(1 + ac);
@@ -3900,7 +3895,6 @@ bool bolt::determine_damage(monster* mon, int& preac, int& postac, int& final,
     // hurt monsters with low-damage ranged attacks and high-damage
     // melee attacks. I judge this an acceptable compromise (for now).
     //
-    const int preac_min_damage = damage.size? damage.num : 0;
     const int preac_max_damage = damage.num * damage.size;
 
     // preac: damage before AC modifier
@@ -3919,23 +3913,18 @@ bool bolt::determine_damage(monster* mon, int& preac, int& postac, int& final,
     if (!apply_dmg_funcs(mon, preac, messages))
         return false;
 
-    int tracer_postac_min = preac_min_damage;
     int tracer_postac_max = preac_max_damage;
 
-    postac = apply_AC(mon, preac, tracer_postac_min);
+    postac = apply_AC(mon, preac);
 
     if (is_tracer)
     {
-        tracer_postac_min = max(0, tracer_postac_min);
-        postac = div_round_up(tracer_postac_min + tracer_postac_max, 2);
+        postac = div_round_up(tracer_postac_max, 2);
 
         const int adjusted_postac_max =
             mons_adjust_flavoured(mon, *this, tracer_postac_max, false);
-        const int adjusted_postac_min =
-            !tracer_postac_min? 0 :
-            mons_adjust_flavoured(mon, *this, tracer_postac_min, false);
 
-        final = div_round_up(adjusted_postac_max + adjusted_postac_min, 2);
+        final = div_round_up(adjusted_postac_max, 2);
     }
     else
     {
