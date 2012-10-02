@@ -687,8 +687,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             else
             {
                 mpr("A huge blade swings out and slices into you!");
-                const int damage = 48 + random2avg(29, 2)
-                    - random2(1 + you.armour_class());
+                const int damage = you.apply_ac(48 + random2avg(29, 2));
                 string n = name(DESC_A) + " trap";
                 ouch(damage, NON_MONSTER, KILLED_BY_TRAP, n.c_str());
                 bleed_onto_floor(you.pos(), MONS_PLAYER, damage, true);
@@ -730,11 +729,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                     mpr(msg.c_str());
                 }
 
-                int damage_taken = 10 + random2avg(29, 2)
-                                      - random2(1 + m->armour_class());
-
-                if (damage_taken < 0)
-                    damage_taken = 0;
+                int damage_taken = m->apply_ac(10 + random2avg(29, 2));
 
                 if (!m->is_summoned())
                     bleed_onto_floor(m->pos(), m->type, damage_taken, true);
@@ -1642,8 +1637,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
                        && (x_chance_in_y(50 - (3*act.armour_class()) / 2, 100)
                             || force_poison));
 
-        int damage_taken =
-            max(shot_damage(act) - random2(act.armour_class() + 1), 0);
+        int damage_taken = act.apply_ac(shot_damage(act));
 
         if (act.is_player())
         {
