@@ -5,7 +5,8 @@ struct trap_def
 {
     coord_def pos;
     trap_type type;
-    int       ammo_qty;
+    short     ammo_qty;
+    uint8_t   skill_rnd;
 
     dungeon_feature_type category() const;
     string name(description_level_type desc = DESC_PLAIN) const;

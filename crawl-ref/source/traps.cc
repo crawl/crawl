@@ -107,6 +107,8 @@ void trap_def::hide()
 
 void trap_def::prepare_ammo(int charges)
 {
+    skill_rnd = random2(256);
+
     if (charges)
     {
         ammo_qty = charges;

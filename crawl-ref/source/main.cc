@@ -1927,7 +1927,6 @@ void process_command(command_type cmd)
 
     case CMD_MOVE_NOWHERE:
     case CMD_SEARCH:
-        search_around();
         you.check_clinging(false);
         you.turn_is_over = true;
         break;
@@ -2985,17 +2984,8 @@ static void _update_mold()
 
 static void _player_reacts()
 {
-    if (!you.cannot_act() && !player_mutation_level(MUT_BLURRY_VISION))
-    {
-        for (int i = div_rand_round(you.time_taken, player_speed()); i > 0; --i)
-        {
-            if (x_chance_in_y(you.traps_skill(), 50)
-                && (you.duration[DUR_SWIFTNESS] <= 0 || coinflip()))
-            {
-                search_around(false); // Check nonadjacent squares too.
-            }
-        }
-    }
+    if (you.time_taken && !you.cannot_act())
+        search_around();
 
     stealth = check_stealth();
 
