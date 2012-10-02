@@ -106,9 +106,9 @@ przejdzie do ekranu religii.</localtiles>
 
 <yellow>Odpoczynek:</yellow>
 
-  $cmd[CMD_MOVE_NOWHERE]  czekaj, odpoczywaj i szukaj przez jedną turę
+  $cmd[CMD_MOVE_NOWHERE]  czekaj i odpoczywaj przez jedną turę
 
-  $cmd[CMD_REST]  czekaj, odpoczywaj i szukaj przez do 100 tur
+  $cmd[CMD_REST]  czekaj i odpoczywaj przez do 100 tur
 
 
 <yellow>Inne:</yellow>

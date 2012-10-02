@@ -4794,8 +4794,8 @@ tileidx_t tileidx_command(const command_type cmd)
     case CMD_AUTOFIGHT:
         return TILEG_CMD_AUTOFIGHT;
 #endif
-    case CMD_SEARCH:
-        return TILEG_CMD_SEARCH;
+    case CMD_WAIT:
+        return TILEG_CMD_WAIT;
     case CMD_USE_ABILITY:
         return TILEG_CMD_USE_ABILITY;
     case CMD_PRAY:

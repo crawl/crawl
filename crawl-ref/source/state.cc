@@ -241,7 +241,7 @@ bool interrupt_cmd_repeat(activity_interrupt_type ai,
     // If command repetition is being used to imitate the rest command,
     // then everything interrupts it.
     if (crawl_state.repeat_cmd == CMD_MOVE_NOWHERE
-        || crawl_state.repeat_cmd == CMD_SEARCH)
+        || crawl_state.repeat_cmd == CMD_WAIT)
     {
         if (ai == AI_FULL_MP)
             crawl_state.cancel_cmd_repeat("Magic restored.");

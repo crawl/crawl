@@ -2135,18 +2135,13 @@ static void _add_formatted_keyhelp(column_composer &cols)
             "<h>Rest/Search:\n",
             true, true, _cmdhelp_textfilter);
 
-    _add_command(cols, 0, CMD_SEARCH, "wait a turn; searches adjacent", 2);
-    cols.add_formatted(
-            0,
-            "    squares (also <w>numpad-5</w>, <w>.</w>, <w>Del</w>)\n",
-            false, true, _cmdhelp_textfilter);
-
-    _add_command(cols, 0, CMD_REST, "rest and long search; stops when", 2);
+    _add_command(cols, 0, CMD_WAIT, "wait a turn (also <w>.</w>, <w>Del</w>)", 2);
+    _add_command(cols, 0, CMD_REST, "rest and long wait; stops when", 2);
     cols.add_formatted(
             0,
             "    Health or Magic become full,\n"
             "    something is detected, or after\n"
-            "    100 turns over (<w>Shift-numpad-5</w>)\n",
+            "    100 turns over (<w>numpad-5</w>)\n",
             false, true, _cmdhelp_textfilter);
 
     cols.add_formatted(
@@ -2424,18 +2419,13 @@ static void _add_formatted_hints_help(column_composer &cols)
             "<h>Rest/Search:\n",
             true, true, _cmdhelp_textfilter);
 
-    _add_command(cols, 0, CMD_SEARCH, "wait a turn; searches adjacent", 2);
-    cols.add_formatted(
-            0,
-            "    squares (also <w>numpad-5</w>, <w>.</w>, <w>Del</w>)\n",
-            false, true, _cmdhelp_textfilter);
-
-    _add_command(cols, 0, CMD_REST, "rest and long search; stops when", 2);
+    _add_command(cols, 0, CMD_WAIT, "wait a turn (also <w>.</w>, <w>Del</w>)", 2);
+    _add_command(cols, 0, CMD_REST, "rest and long wait; stops when", 2);
     cols.add_formatted(
             0,
             "    Health or Magic become full,\n"
             "    something is detected, or after\n"
-            "    100 turns over (<w>Shift-numpad-5</w>)\n",
+            "    100 turns over (<w>numpad-5</w>)\n",
             false, true, _cmdhelp_textfilter);
 
     cols.add_formatted(

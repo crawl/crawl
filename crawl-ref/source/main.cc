@@ -1006,7 +1006,7 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
 
     case CMD_MOVE_NOWHERE:
     case CMD_REST:
-    case CMD_SEARCH:
+    case CMD_WAIT:
         return i_feel_safe(true);
 
     case CMD_MOVE_LEFT:
@@ -1926,7 +1926,7 @@ void process_command(command_type cmd)
     case CMD_ADJUST_INVENTORY: adjust(); break;
 
     case CMD_MOVE_NOWHERE:
-    case CMD_SEARCH:
+    case CMD_WAIT:
         you.check_clinging(false);
         you.turn_is_over = true;
         break;

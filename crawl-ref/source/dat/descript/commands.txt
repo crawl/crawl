@@ -152,13 +152,13 @@ CMD_AUTOFIGHT_NOMOVE verbose
 
 Attack a monster next to you with your wielded weapon.
 %%%%
-CMD_SEARCH
+CMD_WAIT
 
 Wait a single turn
 %%%%
-CMD_SEARCH verbose
+CMD_WAIT verbose
 
-Spend a single turn waiting, resting and searching.
+Spend a single turn waiting and resting.
 %%%%
 CMD_DISPLAY_INVENTORY
 

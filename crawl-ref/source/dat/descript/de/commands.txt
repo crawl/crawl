@@ -23,7 +23,7 @@ CMD_DISPLAY_COMMANDS verbose
 
 Liste von Kommandos, Optionen, etc.
 %%%%
-CMD_SEARCH
+CMD_WAIT
 
 Warte eine Runde
 %%%%
