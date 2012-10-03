@@ -927,7 +927,9 @@ flaming_corpse MONS_FLAMING_CORPSE
 %rim 1
 %sdir mon/undead
 curse_skull MONS_CURSE_SKULL
+%rim 0
 curse_toe MONS_CURSE_TOE
+%rim 1
 flying_skull MONS_FLYING_SKULL
 crawling_corpse MONS_CRAWLING_CORPSE
 macabre_mass MONS_MACABRE_MASS
