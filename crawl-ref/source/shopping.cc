@@ -257,7 +257,7 @@ static void _list_shop_keys(const string &purchasable, bool viewing,
     cgotoxy(1, numlines, GOTO_CRT);
     // print formatted string
     fs = formatted_string::parse_string(
-            "[<w>Space</w>" // sorry! Enter really doesn't work very well :(
+            "[<w>Enter</w>"
             "] make purchase");
     // print menu item
     tmp = new TextItem();
@@ -762,7 +762,7 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
         menu.draw_menu();
 
         int key = getch_ck();
-        if (menu.process_key(key))
+        if (key != CK_ENTER && menu.process_key(key))
         {
             vector<MenuItem*> selection = menu.get_selected_items();
             if( selection.size() == 1 )
@@ -779,7 +779,7 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
         else if (key == 'x' || key_is_escape(key) || key == CK_MOUSE_CMD)
             break;
 #ifdef USE_TILE_LOCAL
-        else if (key == ' ' || key == CK_MOUSE_CLICK)
+        else if (key == ' ' || key == CK_MOUSE_CLICK || key == CK_ENTER)
 #else
         else if (key == '\r')
 #endif
