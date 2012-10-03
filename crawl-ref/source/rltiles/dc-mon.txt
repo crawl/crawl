@@ -603,7 +603,9 @@ eye_of_draining MONS_EYE_OF_DRAINING
 mon/giant_orange_brain MONS_GIANT_ORANGE_BRAIN
 great_orb_of_eyes MONS_GREAT_ORB_OF_EYES
 shining_eye MONS_SHINING_EYE
+%rim 0
 eye_of_devastation MONS_EYE_OF_DEVASTATION
+%rim 1
 golden_eye MONS_GOLDEN_EYE
 %sdir mon/holy
 ophan MONS_OPHAN
@@ -711,6 +713,7 @@ plant_09
 plant_10
 plant_11
 plant_crypt MONS_WITHERED_PLANT
+plant_demonic MONS_DEMONIC_PLANT
 %rim 1
 bush MONS_BUSH
 %rim 0
