@@ -2106,20 +2106,18 @@ bool vehumet_accept_gift()
                                      spell_difficulty(you.vehumet_gift));
         if (yesno(prompt.c_str(), true, 'n'))
         {
+            take_note(Note(NOTE_GOD_GIFT, you.religion));
             add_spell_to_memory(you.vehumet_gift);
             you.seen_spell[you.vehumet_gift] = true;
             prompt = make_stringf(" grants you knowledge of %s.",
                                   spell_title(you.vehumet_gift));
             simple_god_message(prompt.c_str());
-
+            _inc_gift_timeout(max(spell_difficulty(you.vehumet_gift),
+                                  (spell_difficulty(you.vehumet_gift)^2) / 3));
             you.vehumet_gift = SPELL_NO_SPELL;
             you.duration[DUR_VEHUMET_GIFT] = 0;
             you.num_current_gifts[you.religion]++;
             you.num_total_gifts[you.religion]++;
-
-            take_note(Note(NOTE_GOD_GIFT, you.religion));
-            _inc_gift_timeout(max(spell_difficulty(you.vehumet_gift),
-                                  (spell_difficulty(you.vehumet_gift)^2) / 3));
             return true;
         }
         else
