@@ -2401,7 +2401,8 @@ bool do_god_gift(bool forced)
                     string prompt = make_stringf(" offers you knowledge of %s.",
                                      spell_title(you.vehumet_gift));
                     simple_god_message(prompt.c_str());
-                    you.duration[DUR_VEHUMET_GIFT] = 500;
+                    more();
+                    you.duration[DUR_VEHUMET_GIFT] = (100 + random2avg(100, 2)) * BASELINE_DELAY;
                     success = true;
                 }
                 else
