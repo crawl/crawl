@@ -737,6 +737,7 @@ i-curse-jewellery SCR_CURSE_JEWELLERY SCR_ID_LAST
 ##################OBJ_JEWELLERY
 ############ring
 %sdir item/ring
+%rim 0
 wooden RING_NORMAL_OFFSET UNSEEN_RING
 silver
 gold
@@ -752,6 +753,7 @@ tiger_eye
 jade
 glass
 ###########random
+%rim 0
 agate RING_RANDOM_OFFSET RING_COL_FIRST
 clay
 diamond
