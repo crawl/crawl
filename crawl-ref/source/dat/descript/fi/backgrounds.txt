@@ -71,6 +71,12 @@ Gladiator
 Gladiaattorit ovat valmiita areenakoitoksiin kevyellä panssarilla, kilvellä,
 heittoverkoilla ja valitsemallaan aseella.
 %%%%
+Healer
+
+Parantajat ovat Elyvilonin seuraajia, valmiina parantamaan itseään ja muita.
+Tämä parantaminen saattaa rauhoittaa petoja ja muita vaarallisia vihollisia,
+mistä he saavat kokemusta.
+%%%%
 Hunter
 
 Metsästäjät osaavat hyökätä kaukaa, tukeutumatta ärsyttävään taikuuteen.
@@ -98,11 +104,6 @@ Skald
 
 Skaldit ovat lähitaistelijoita, jotka nostavat suorituskykyään Sotahymnien
 kirjan taioilla.
-%%%%
-Stalker
-
-Stalkkerit käyttävät hiiviskelyä ja muodonmuutostaikuutta lähestyäkseen
-uhrejaan ja kukistaakseen heidät.
 %%%%
 Summoner
 

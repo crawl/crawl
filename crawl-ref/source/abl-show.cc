@@ -1454,9 +1454,9 @@ static bool _check_ability_possible(const ability_def& abil,
         if (!you.disease && !you.rotting && !you.duration[DUR_POISONING]
             && !you.duration[DUR_CONF] && !you.duration[DUR_SLOW]
             && !you.duration[DUR_PARALYSIS] && !you.petrified()
-            && you.strength() == you.max_strength()
-            && you.intel() == you.max_intel()
-            && you.dex() == you.max_dex()
+            && you.strength(false) == you.max_strength()
+            && you.intel(false) == you.max_intel()
+            && you.dex(false) == you.max_dex()
             && !player_rotted()
             && !you.duration[DUR_NAUSEA])
         {
@@ -1467,9 +1467,9 @@ static bool _check_ability_possible(const ability_def& abil,
         return true;
 
     case ABIL_MUMMY_RESTORATION:
-        if (you.strength() == you.max_strength()
-            && you.intel() == you.max_intel()
-            && you.dex() == you.max_dex()
+        if (you.strength(false) == you.max_strength()
+            && you.intel(false) == you.max_intel()
+            && you.dex(false) == you.max_dex()
             && !player_rotted())
         {
             if (!quiet)
@@ -1616,7 +1616,7 @@ bool activate_talent(const talent& tal)
     }
 
     if ((tal.which == ABIL_EVOKE_LEVITATE || tal.which == ABIL_TRAN_BAT)
-        && liquefied(you.pos()) && !you.ground_level())
+        && you.liquefied_ground())
     {
         mpr("You can't escape from the ground with such puny magic!", MSGCH_WARN);
         crawl_state.zero_turns_taken();

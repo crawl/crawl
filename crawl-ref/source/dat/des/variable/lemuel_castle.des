@@ -26,7 +26,6 @@ function castle_lemuel_subvault_setup(e)
          e.ftile(".~*X|+$ = floor_cobble_blood")
          e.ftile("12348 = floor_cobble_blood")
          e.ftile("= = floor_cobble_blood")
-         e.kfeat("= = runed_door")
          e.kfeat(", = floor")
          e.kfeat("m = iron_grate")
          if you.absdepth() < 7 then

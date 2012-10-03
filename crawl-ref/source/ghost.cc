@@ -665,16 +665,15 @@ void ghost_demon::init_dancing_weapon(const item_def& weapon, int power)
     int delay = property(weapon, PWPN_SPEED);
     int damg  = property(weapon, PWPN_DAMAGE);
 
-    if (power > 150)
-        power = 150;
+    if (power > 100)
+        power = 100;
 
     colour = weapon.colour;
     fly = FL_LEVITATE;
 
     // We want Tukima to reward characters who invest heavily in both
-    // carrying capacity and enchantments skill.  Therefore, heavy
-    // weapons are a bit stronger when animated, and benefit much more
-    // from very high skill.
+    // carrying capacity and Hexes skill.  Therefore, heavy weapons are a bit
+    // stronger when animated, and benefit much more from very high skill.
 
     // First set up what the monsters will look like at very high skill.
     // Daggers are weak here! In the table, "44+22" means d44+d22 with
@@ -697,29 +696,12 @@ void ghost_demon::init_dancing_weapon(const item_def& weapon, int power)
     // If you aren't an awesome spellcaster, nerf the weapons.  Do it in
     // a way that lays most of the penalty on heavy weapons.
 
-    speed = max(3, speed - (10 - power / 15));
-    ev    = max(3, ev    - (10 - power / 15));
+    speed = max(3, speed - (10 - power / 10));
+    ev    = max(3, ev    - (10 - power / 10));
 
-    ac = ac * power / 200;
-    max_hp = max(5, max_hp * power / 150);
-    damage = max(1, damage * power / 150);
-
-    // For a spellpower 75 character (typical late midgame mage with no Ench
-    // focus), we have:
-
-    // Giant spiked club: speed 7,  22+22 damage, 17 AC, 35 HP, 11 EV
-    // Bardiche:          speed 5,  20+20 damage, 10 AC, 20 HP, 10 EV
-    // Dagger:            speed 15,  4+4  damage,  1 AC,  5 HP, 15 EV
-    // Quick blade:       speed 18,  5+5  damage,  2 AC,  5 HP, 17 EV
-    // Sabre:             speed 13,  7+7  damage,  4 AC,  9 HP, 14 EV
-
-    // At spellpower 37 (early game character with focus on Ench):
-
-    // Giant spiked club: speed 5, 11+22 damage, 8 AC, 17 HP,  9 EV
-    // Bardiche:          speed 3, 10+20 damage, 5 AC, 10 HP,  8 EV
-    // Dagger:            speed 13, 2+4  damage, 0 AC,  5 HP, 13 EV
-    // Quick blade:       speed 16, 2+5  damage, 1 AC,  5 HP, 15 EV
-    // Sabre:             speed 11, 3+7  damage, 2 AC,  5 HP, 12 EV
+    ac = ac * power / 100;
+    max_hp = max(5, max_hp * power / 100);
+    damage = max(1, damage * power / 100);
 }
 
 static bool _know_spell(spell_type spell)

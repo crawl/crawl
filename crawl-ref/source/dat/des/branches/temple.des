@@ -2671,7 +2671,7 @@ WEIGHT:   10
 ORIENT:   encompass
 NSUBST:   O = 6:B / *:O
 KFEAT:    O = altar_lugonu
-MONS:     plant col:random name:demonic name_adjective
+MONS:     plant col:random name:demonic name_adjective tile:mons_demonic_plant
 SUBST:    . = . x:1 w:1 l:1
 SUBST:    x = xxxcv
 SUBST:    ' = .

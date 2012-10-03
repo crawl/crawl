@@ -368,6 +368,7 @@ public:
     bool glows_naturally() const;
     bool petrified() const;
     bool petrifying() const;
+    bool liquefied_ground() const;
 
     bool friendly() const;
     bool neutral() const;
@@ -436,8 +437,8 @@ public:
     int     unadjusted_body_armour_penalty() const { return 0; }
     int     adjusted_body_armour_penalty(int, bool) const { return 0; }
     int     adjusted_shield_penalty(int) const { return 0; }
-    int     armour_tohit_penalty(bool) const { return 0; }
-    int     shield_tohit_penalty(bool) const { return 0; }
+    int     armour_tohit_penalty(bool, int) const { return 0; }
+    int     shield_tohit_penalty(bool, int) const { return 0; }
 
     actor_type atype() const { return ACT_MONSTER; }
     monster* as_monster() { return this; }

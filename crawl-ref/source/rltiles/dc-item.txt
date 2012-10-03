@@ -223,6 +223,9 @@ orcish_glaive2
 %rim 1
 bardiche1 WPN_BARDICHE
 bardiche2
+bardiche3
+orcish_bardiche WPN_BARDICHE_ORC
+orcish_bardiche2
 
 ##Staff
 %rim 0
@@ -527,6 +530,10 @@ large_shield1 ARM_LARGE_SHIELD
 large_shield2
 large_shield3
 
+shield_dd SHIELD_DEEP_DWARF
+shield_dd_scion SHIELD_DEEP_DWARF_SCION
+lshield_dd_dk LARGE_SHIELD_DEEP_DWARF_DEATH_KNIGHT
+
 %sdir item/armour/headgear
 #####ARM_HELMET
 elven_leather_helm THELM_CAP
@@ -735,12 +742,12 @@ silver
 gold
 iron
 steel
-bronze
+tourmaline
 brass
 copper
 granite
 ivory
-clay
+ruby
 tiger_eye
 jade
 glass
@@ -761,7 +768,27 @@ plain_black
 bronze
 moonstone RING_COL_LAST
 
+###########randarts
+%sdir item/ring/randarts
+%rim 0
+four-colour RING_RANDART_OFFSET
+green
+ice
+blood
+dark
+red-blue
+double
+anvil
+eye
+flower
+zircon
+fire
+pink
+bronze-flower
+snake
+
 #########ID-ed
+%sdir item/ring
 %rim 0
 i-regeneration RING_REGENERATION RING_ID_FIRST
 i-protection RING_PROTECTION

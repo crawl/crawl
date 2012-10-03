@@ -520,24 +520,18 @@ static void _give_items_skills(const newgame_def& ng)
 
         newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
                            ARM_ANIMAL_SKIN);
-        if (ng.weapon != WPN_QUARTERSTAFF)
-            newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR, ARM_BUCKLER, ARM_SHIELD);
-        newgame_make_item(3, EQ_HELMET, OBJ_ARMOUR, ARM_HELMET, ARM_CAP);
+        newgame_make_item(2, EQ_HELMET, OBJ_ARMOUR, ARM_HELMET, ARM_CAP);
 
         // Small species get darts, the others nets.
         if (you.body_size(PSIZE_BODY) < SIZE_MEDIUM)
-            newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 15);
+            newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 15);
         else
-            newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 3);
+            newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 3);
 
         // Skills.
         you.skills[SK_FIGHTING] = 2;
         you.skills[SK_THROWING] = 2;
-        you.skills[SK_DODGING]  = 2;
-        if (ng.weapon != WPN_QUARTERSTAFF)
-            you.skills[SK_SHIELDS] = 1;
-        else // Staff gladiators get some unarmed skill instead for punches.
-            you.skills[SK_UNARMED_COMBAT] = 2;
+        you.skills[SK_DODGING]  = 3;
         weap_skill = 3;
         break;
 
@@ -563,20 +557,8 @@ static void _give_items_skills(const newgame_def& ng)
         you.piety = 35;
 
         // WEAPONS
-        if (you.has_claws())
-            you.equip[EQ_WEAPON] = -1; // Trolls/Ghouls/Felids fight unarmed.
-        else
-        {
-            weapon_type startwep = WPN_HAND_AXE;
-            if (species_apt(SK_MACES_FLAILS) > species_apt(SK_AXES))
-                startwep = WPN_MACE;
-            else if (species_apt(SK_POLEARMS) > species_apt(SK_AXES))
-                startwep = WPN_SPEAR;
-            else if (species_apt(SK_SHORT_BLADES) > species_apt(SK_AXES))
-                startwep = WPN_SHORT_SWORD;
-
-            newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, startwep);
-        }
+        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
+        _update_weapon(ng);
 
         // ARMOUR
         newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ANIMAL_SKIN);

@@ -680,9 +680,9 @@ void wizard_set_stats()
     if (cancelable_get_line_autohist(buf, sizeof buf))
         return;
 
-    int sstr = you.strength(),
-        sdex = you.dex(),
-        sint = you.intel();
+    int sstr = you.strength(false),
+        sdex = you.dex(false),
+        sint = you.intel(false);
 
     sscanf(buf, "%d %d %d", &sstr, &sint, &sdex);
 

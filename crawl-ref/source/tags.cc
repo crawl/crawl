@@ -59,10 +59,10 @@
 #include "tags.h"
 #include "tiledef-dngn.h"
 #include "tiledef-player.h"
+#include "tilepick.h"
 #include "tileview.h"
 #ifdef USE_TILE
  #include "tilemcache.h"
- #include "tilepick.h"
 #endif
 #include "travel.h"
 
@@ -926,6 +926,18 @@ int unmarshallEnumVal(reader& rd, const enum_info *ei)
     return ers.mapping[raw];
 }
 
+static void marshallStringVector(writer &th, const vector<string> &vec)
+{
+    marshall_iterator(th, vec.begin(), vec.end(), marshallStringNoMax);
+}
+
+static vector<string> unmarshallStringVector(reader &th)
+{
+    vector<string> vec;
+    unmarshall_vector(th, vec, unmarshallStringNoMax);
+    return vec;
+}
+
 
 // Write a tagged chunk of data to the FILE*.
 // tagId specifies what to write.
@@ -1472,6 +1484,7 @@ static void tag_construct_you_dungeon(writer &th)
                       marshallStringNoMax);
     marshall_iterator(th, you.uniq_map_names.begin(), you.uniq_map_names.end(),
                       marshallStringNoMax);
+    marshallMap(th, you.vault_list, marshall_level_id, marshallStringVector);
 
     write_level_connectivity(th);
 }
@@ -1650,6 +1663,7 @@ static void marshall_level_vault_data(writer &th)
 
     marshall_level_map_masks(th);
     marshall_level_map_unique_ids(th);
+    marshallStringVector(th, env.level_vault_list);
     marshall_level_vault_placements(th);
 }
 
@@ -1660,6 +1674,10 @@ static void unmarshall_level_vault_data(reader &th)
 
     unmarshall_level_map_masks(th);
     unmarshall_level_map_unique_ids(th);
+#if TAG_MAJOR_VERSION <= 34
+    if (th.getMinorVersion() >= TAG_MINOR_VAULT_LIST)
+#endif
+    env.level_vault_list = unmarshallStringVector(th);
     unmarshall_level_vault_placements(th);
 }
 
@@ -2333,6 +2351,11 @@ static void tag_read_you_dungeon(reader &th)
                          (ssipair (string_set::*)(const string &))
                          &string_set::insert,
                          unmarshallStringNoMax);
+#if TAG_MAJOR_VERSION <= 34
+    if (th.getMinorVersion() >= TAG_MINOR_VAULT_LIST)
+#endif
+    unmarshallMap(th, you.vault_list, unmarshall_level_id,
+                  unmarshallStringVector);
 
     read_level_connectivity(th);
 }
@@ -2547,6 +2570,8 @@ void unmarshallItem(reader &th, item_def &item)
     if (item.base_type == OBJ_POTIONS && item.sub_type == POT_WATER)
         item.sub_type = POT_CONFUSION;
 #endif
+
+    bind_item_tile(item);
 }
 
 #define MAP_SERIALIZE_FLAGS_MASK 3

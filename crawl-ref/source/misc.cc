@@ -1251,7 +1251,7 @@ void search_around(bool only_adjacent)
     const int skill = you.traps_skill();
     // Traps and doors stepdown skill:
     // skill/(2x-1) for squares at distance x
-    int max_dist = (skill + 1) / 2;
+    int max_dist = div_rand_round(skill, 2);
     if (max_dist > 5)
         max_dist = 5;
     if (only_adjacent && max_dist > 1 || max_dist < 1)
@@ -1271,7 +1271,7 @@ void search_around(bool only_adjacent)
                 ++dist;
 
             // Making this harsher by removing the old +1...
-            int effective = skill / (2*dist - 1);
+            int effective = div_rand_round(skill, (2*dist - 1));
 
             if (grd(*ri) == DNGN_UNDISCOVERED_TRAP
                      && x_chance_in_y(effective + 1, 17))
@@ -1712,6 +1712,13 @@ int str_to_shoptype(const string &s)
             return i;
     }
     return -1;
+}
+
+void list_shop_types()
+{
+    mprnojoin("Available shop types: ");
+    for (unsigned i = 0; i < ARRAYSZ(shop_types); ++i)
+        mpr_nocap(shop_types[i]);
 }
 
 // General threat = sum_of_logexpervalues_of_nearby_unfriendly_monsters.
@@ -2301,7 +2308,13 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
     snprintf(info, INFO_SIZE, "Really %s%s%s?",
              verb.c_str(), mon_name.c_str(), suffix.c_str());
 
-    return !yesno(info, false, 'n');
+    if (yesno(info, false, 'n'))
+        return false;
+    else
+    {
+        canned_msg(MSG_OK);
+        return true;
+    }
 }
 
 bool stop_attack_prompt(targetter &hitfunc, string verb,
@@ -2344,7 +2357,13 @@ bool stop_attack_prompt(targetter &hitfunc, string verb,
     snprintf(info, INFO_SIZE, "Really %s %s%s?",
              verb.c_str(), mon_name.c_str(), suffix.c_str());
 
-    return !yesno(info, false, 'n');
+    if (yesno(info, false, 'n'))
+        return false;
+    else
+    {
+        canned_msg(MSG_OK);
+        return true;
+    }
 }
 
 bool is_orckind(const actor *act)

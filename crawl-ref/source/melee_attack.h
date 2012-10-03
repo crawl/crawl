@@ -1,6 +1,8 @@
 #ifndef MELEE_ATTACK_H
 #define MELEE_ATTACK_H
 
+#include <list>
+
 #include "artefact.h"
 #include "attack.h"
 #include "fight.h"
@@ -18,6 +20,7 @@ enum unarmed_attack_type
     UNAT_CONSTRICT,  // put constriction first so octopodes will use it
     UNAT_KICK,
     UNAT_HEADBUTT,
+    UNAT_PECK,
     UNAT_TAILSLAP,
     UNAT_PUNCH,
     UNAT_BITE,
@@ -43,6 +46,10 @@ public:
     bool    stab_attempt;
     int     stab_bonus;
 
+    bool         can_cleave;
+    list<actor*> cleave_targets;
+    bool         cleaving;        // additional attack from cleaving
+
     // Miscast to cause after special damage is done. If miscast_level == 0
     // the miscast is discarded if special_damage_message isn't empty.
     int    miscast_level;
@@ -53,7 +60,8 @@ public:
 
 public:
     melee_attack(actor *attacker, actor *defender,
-                 int attack_num = -1, int effective_attack_num = -1);
+                 int attack_num = -1, int effective_attack_num = -1,
+                 bool is_cleaving = false);
 
     // Applies attack damage and other effects.
     bool attack();
@@ -97,6 +105,10 @@ private:
     bool chop_hydra_head(int damage_done,
                          int dam_type,
                          brand_type wpn_brand);
+
+    /* Axe cleaving */
+    void cleave_setup();
+    int cleave_damage_mod(int dam);
 
     /* Mutation Effects */
     void do_spines();
@@ -153,6 +165,8 @@ private:
     int  player_apply_weapon_skill(int damage);
     int  player_apply_fighting_skill(int damage, bool aux);
     int  player_apply_misc_modifiers(int damage);
+    int  player_apply_slaying_bonuses(int damage, bool aux);
+    int  player_apply_final_multipliers(int damage);
     int  player_stab_weapon_bonus(int damage);
     int  player_stab(int damage);
 

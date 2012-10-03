@@ -3914,6 +3914,7 @@ item_info get_item_info(const item_def& item)
             ii.plus2 = item.plus2; // slaying damage bonus
         }
         ii.special = item.special; // appearance
+        ii.rnd = item.rnd; // randart appearance
         break;
     case OBJ_BOOKS:
         if (item_type_known(item) || !item_is_spellbook(item))
@@ -4021,7 +4022,7 @@ item_info get_item_info(const item_def& item)
 
     const char* copy_props[] = {ARTEFACT_APPEAR_KEY, KNOWN_PROPS_KEY,
                                 CORPSE_NAME_KEY, CORPSE_NAME_TYPE_KEY,
-                                "drawn_cards"};
+                                "drawn_cards", "item_tile", "item_tile_name"};
     for (unsigned i = 0; i < ARRAYSZ(copy_props); ++i)
     {
         if (item.props.exists(copy_props[i]))

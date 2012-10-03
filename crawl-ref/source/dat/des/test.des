@@ -98,7 +98,6 @@ ENDMAP
 # big doors
 NAME:   gate_test
 WEIGHT: 0
-KFEAT:  = = runed_door
 MAP
 ...........
 .+.+.+.+.+.

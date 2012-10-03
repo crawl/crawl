@@ -1944,34 +1944,6 @@ static colour_t _random_butterfly_colour()
     return col;
 }
 
-// Abominations.
-static colour_t _random_large_abomination_colour()
-{
-    colour_t col;
-    // Restricted colours:
-    //  MAGENTA = orb guardian
-    //  GREEN = tentacled monstrosity
-    do
-        col = random_monster_colour();
-    while (col == MAGENTA || col == GREEN);
-
-    return col;
-}
-
-static colour_t _random_small_abomination_colour()
-{
-    colour_t col;
-    // Restricted colours:
-    //  MAGENTA = unseen horror
-    //  BROWN = used for crawling corpses/macabre masses
-    //  LIGHTCYAN = octopode
-    do
-        col = random_monster_colour();
-    while (col == MAGENTA || col == BROWN || col == LIGHTCYAN);
-
-    return col;
-}
-
 bool init_abomination(monster* mon, int hd)
 {
     if (mon->type == MONS_CRAWLING_CORPSE
@@ -2038,7 +2010,6 @@ void define_monster(monster* mons)
 
     case MONS_ABOMINATION_SMALL:
         init_abomination(mons, 4 + random2(4));
-        col = _random_small_abomination_colour();
         break;
 
     case MONS_ZOMBIE_SMALL:
@@ -2047,7 +2018,6 @@ void define_monster(monster* mons)
 
     case MONS_ABOMINATION_LARGE:
         init_abomination(mons, 8 + random2(4));
-        col = _random_large_abomination_colour();
         break;
 
     case MONS_ZOMBIE_LARGE:
@@ -2718,6 +2688,14 @@ void mons_pacify(monster* mon, mon_attitude_type att)
         mon->flags |= MF_GOT_HALF_XP;
     }
 
+    if (mon->type == MONS_GERYON)
+    {
+        simple_monster_message(mon,
+            make_stringf(" discards %s horn.",
+                         mon->pronoun(PRONOUN_POSSESSIVE).c_str()).c_str());
+        monster_drop_things(mon, false, item_is_horn_of_geryon);
+    }
+
     // Cancel fleeing and such.
     mon->behaviour = BEH_WANDER;
 
@@ -2730,8 +2708,6 @@ void mons_pacify(monster* mon, mon_attitude_type att)
         elven_twins_pacify(mon);
     if (mons_is_kirke(mon))
         hogs_to_humans();
-    if (mon->type == MONS_GERYON)
-        monster_drop_things(mon, false, item_is_horn_of_geryon);
 
     mons_att_changed(mon);
 }

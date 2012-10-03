@@ -237,7 +237,6 @@ ITEM:    any scroll w:6 / any potion / any potion q:2 w:2
 MONS:    adder zombie / hobgoblin zombie / orc zombie / kobold zombie / nothing
 MONS:    big kobold zombie / water moccasin zombie / gnoll zombie / nothing
 MONS:    mummy
-KFEAT:   = = runed_door
 : ossuary_setup_features(_G)
 MAP
 cccccccccccccccccccccc
@@ -421,7 +420,6 @@ ITEM:   any scroll / any potion / any jewellery w:1 / nothing
 KFEAT:  ~ = needle trap / arrow trap / spear trap w:5 / dart trap w:2 / floor w:50
 SUBST:  1 = 1.
 SUBST:  3 = 3.
-KFEAT:  = = runed_door
 : ossuary_setup_features(_G)
 MAP
 ccccccccccccccccccccccccc
@@ -689,7 +687,6 @@ ITEM:    any scroll / any potion / nothing
 ITEM:    any scroll / any potion / nothing
 KITEM:   x = any scroll / any potion
 KMONS:   x = guardian mummy
-KFEAT:   = = runed_door
 : ossuary_setup_features(_G)
 : crawl.mpr("You feel the presence of a powerful and evil guardian...", "warning")
 MAP
@@ -804,7 +801,6 @@ SUBST:    X : c
 #SUBST:   X : XYc
 #NSUBST:  X = 6:= / *:c
 #NSUBST:  Y = 3:= / *:c
-KFEAT:   = = runed_door
 : ossuary_setup_features(_G)
 MAP
                             cc
@@ -933,7 +929,6 @@ MARKER:  L = lua:message_at_spot ( \
                  "Something ancient and evil stirs ahead...", \
                  "warning" \
              )
-KFEAT:   = = runed_door
 : ossuary_setup_features(_G)
 MAP
   ccccccccc

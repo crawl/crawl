@@ -267,7 +267,7 @@ static armour_type _acquirement_armour_subtype(bool divine)
 
                 result = static_cast<armour_type>(RANDOM_ELEMENT(armours));
 
-                if (one_chance_in(10) && you.skills[SK_ARMOUR] >= 10)
+                if (x_chance_in_y(you.skills[SK_ARMOUR], 150))
                     result = ARM_CRYSTAL_PLATE_ARMOUR;
 
                 if (one_chance_in(12))
@@ -348,23 +348,15 @@ static bool _try_give_plain_armour(item_def &arm)
         if (!you_can_wear(armour_slots[i], true))
             continue;
 
-        // Consider shield uninteresting in some cases.
+        // Consider shields uninteresting always, since unlike with other slots
+        // players might well prefer an empty slot to wearing one. We don't
+        // want to try to guess at this by looking at their weapon's handedness
+        // because this would encourage switching weapons or putting on a
+        // shield right before reading acquirement in some cases. --elliptic
+        // This affects only the "unfilled slot" special-case, not regular
+        // acquirement which can always produce (wearable) shields.
         if (armour_slots[i] == EQ_SHIELD)
-        {
-            const item_def* weapon = you.weapon();
-
-            // Unarmed fighters don't need shields.
-            if (!weapon && you.skills[SK_UNARMED_COMBAT] > random2(8))
-                continue;
-
-            // Two-handed weapons and ranged weapons conflict with shields.
-            if (weapon
-                && (hands_reqd(*weapon, you.body_size()) == HANDS_TWO
-                    || is_range_weapon(*weapon)))
-            {
-                continue;
-            }
-        }
+            continue;
 
         armour_type result;
         switch (armour_slots[i])
@@ -484,11 +476,10 @@ static int _acquirement_weapon_subtype(bool divine)
 
         // Adding a small constant allows for the occasional
         // weapon in an untrained skill.
-        const int weight = you.skills[sk] + 1;
-        // ... unless it's a scroll acquirement and you're highly skilled in a
-        // different weapon type.
-        if (!divine && you.skills[sk] * 3 < best_sk && you.skills[sk] + 7 < best_sk)
-            continue;
+        int weight = you.skills[sk] + 1;
+        // Exaggerate the weighting if it's a scroll acquirement.
+        if (!divine)
+            weight = (weight + 1) * (weight + 2);
         count += weight;
 
         if (x_chance_in_y(weight, count))
@@ -661,7 +652,14 @@ static int _acquirement_staff_subtype(const has_vector& already_has)
     // Try to pick an enhancer staff matching the player's best skill.
     skill_type best_spell_skill = best_skill(SK_SPELLCASTING, SK_EVOCATIONS);
     bool found_enhancer = false;
-    int result = random2(NUM_STAVES);
+    int result = 0;
+#if TAG_MAJOR_VERSION == 34
+    do
+        result = random2(NUM_STAVES);
+    while (result == STAFF_ENCHANTMENT);
+#else
+    result = random2(NUM_STAVES);
+#endif
 
 #define TRY_GIVE(x) { if (you.type_ids[OBJ_STAVES][x] != ID_KNOWN_TYPE) \
                       {result = x; found_enhancer = true;} }
@@ -674,8 +672,6 @@ static int _acquirement_staff_subtype(const has_vector& already_has)
     case SK_POISON_MAGIC: TRY_GIVE(STAFF_POISON);      break;
     case SK_NECROMANCY:   TRY_GIVE(STAFF_DEATH);       break;
     case SK_CONJURATIONS: TRY_GIVE(STAFF_CONJURATION); break;
-    case SK_CHARMS:       TRY_GIVE(STAFF_ENCHANTMENT); break;
-    case SK_HEXES:        TRY_GIVE(STAFF_ENCHANTMENT); break;
     case SK_SUMMONINGS:   TRY_GIVE(STAFF_SUMMONING);   break;
     default:                                           break;
     }

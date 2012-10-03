@@ -167,7 +167,8 @@ static void dump_section(dump_params &par)
     }
 }
 
-bool dump_char(const string &fname, bool full_id, const scorefile_entry *se)
+bool dump_char(const string &fname, bool quiet, bool full_id,
+               const scorefile_entry *se)
 {
     // Start with enough room for 100 80 character lines.
     string text;
@@ -181,7 +182,7 @@ bool dump_char(const string &fname, bool full_id, const scorefile_entry *se)
         dump_section(par);
     }
 
-    return _write_dump(fname, par, se == NULL);
+    return _write_dump(fname, par, quiet);
 }
 
 static void _sdump_header(dump_params &par)
@@ -1371,8 +1372,7 @@ void dump_map(const char* fname, bool debug, bool dist)
     fclose(fp);
 }
 
-static bool _write_dump(const string &fname, dump_params &par,
-                        bool print_dump_path)
+static bool _write_dump(const string &fname, dump_params &par, bool quiet)
 {
     bool succeeded = false;
 
@@ -1400,7 +1400,7 @@ static bool _write_dump(const string &fname, dump_params &par,
         fputs(OUTS(par.text), handle);
         fclose(handle);
         succeeded = true;
-        if (print_dump_path)
+        if (!quiet)
 #ifdef DGAMELAUNCH
             mprf("Char dumped successfully.");
 #else

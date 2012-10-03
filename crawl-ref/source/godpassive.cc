@@ -638,7 +638,6 @@ map<skill_type, int8_t> ash_get_boosted_skills(eq_type type)
         if (wpn->base_type == OBJ_STAVES
             && (wpn->sub_type == STAFF_POWER
                 || wpn->sub_type == STAFF_CONJURATION
-                || wpn->sub_type == STAFF_ENCHANTMENT
                 || wpn->sub_type == STAFF_ENERGY
                 || wpn->sub_type == STAFF_WIZARDRY))
         {

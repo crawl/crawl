@@ -230,7 +230,6 @@ KFEAT:   ( = . w:25 / ~
 KITEM:   ( = any weapon good_item
 KMONS:   8 = plant
 KFEAT:   8 = floor
-KFEAT:   = = runed_door
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxccccccccccxxccccccccccccx
@@ -497,7 +496,6 @@ ORIENT: southeast
 DEPTH:  D:14-26
 MONS:   yaktaur, death yak, minotaur, random
 MONS:   yak, gnoll, random
-KFEAT:  = = runed_door
 MAP
 .........@....wwwwwwwwwwwwwwwwwxx
 .ccccc.......ww....wwww....wwwwxx
@@ -674,7 +672,6 @@ KMONS:  C = ogre mage / Erolcha, ogre mage
 KMONS:  D = deep elf sorcerer
 KMONS:  E = lich / Boris, lich
 KMONS:  F = ancient lich
-KFEAT:  = = runed_door
 MAP
  cccccccccccccccccccccccccccccc
  cccccccccccccccccccccccccccccc
@@ -868,7 +865,6 @@ NSUBST: A = 3:v / *:=, B = 3:v / *:=
 NSUBST: C = 2:v / *:=, D = 2:v / *:=
 # Make sure monsters don't wander to much.
 KFEAT:  + = runed_door
-KFEAT:  = = runed_door
 # Colouring
 COLOUR: G = cyan
 COLOUR: I5M% = white
@@ -1075,7 +1071,6 @@ MONS:   human name:sacrificial n_adj n_spe att:neutral
 KMONS:  7 = patrolling hell knight
 ITEM:   acquire any
 SUBST:  '" = ., b = v
-KFEAT:  = = runed_door
 MAP
           xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
           xxxxvvvvvvvvvvvvvvvvvvvvxxvvvvvvv
@@ -1251,7 +1246,6 @@ DEPTH:  D:16-
 TAGS:   no_monster_gen
 COLOUR: v'4! = red
 COLOUR: = = red
-KFEAT:  = = runed_door
 TILE:   v = DNGN_STONE_WALL_RED
 FTILE:  v'4! = FLOOR_PEBBLE_RED
 FTILE:  = = FLOOR_PEBBLE_RED

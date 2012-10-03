@@ -2027,9 +2027,9 @@ static void _shuffle_card(int power, deck_rarity_type rarity)
     char buf[128];
     snprintf(buf, sizeof(buf),
              "Shuffle card: Str %d[%d], Int %d[%d], Dex %d[%d]",
-             you.base_stats[STAT_STR], you.strength(),
-             you.base_stats[STAT_INT], you.intel(),
-             you.base_stats[STAT_DEX], you.dex());
+             you.base_stats[STAT_STR], you.strength(false),
+             you.base_stats[STAT_INT], you.intel(false),
+             you.base_stats[STAT_DEX], you.dex(false));
     take_note(Note(NOTE_MESSAGE, 0, 0, buf));
 }
 
@@ -2576,7 +2576,7 @@ static void _summon_animals(int power)
     // Maybe we should just generate a Lair monster instead (and
     // guarantee that it is mobile)?
     const monster_type animals[] = {
-        MONS_BUMBLEBEE, MONS_WAR_DOG, MONS_SHEEP, MONS_YAK,
+        MONS_ORANGE_RAT, MONS_WAR_DOG, MONS_SHEEP, MONS_YAK,
         MONS_HOG, MONS_SOLDIER_ANT, MONS_WOLF,
         MONS_GRIZZLY_BEAR, MONS_POLAR_BEAR, MONS_BLACK_BEAR,
         MONS_AGATE_SNAIL, MONS_BORING_BEETLE, MONS_BASILISK,
@@ -2694,7 +2694,7 @@ static void _summon_flying(int power, deck_rarity_type rarity)
     const int power_level = _get_power_level(power, rarity);
 
     const monster_type flytypes[] = {
-        MONS_BUTTERFLY, MONS_INSUBSTANTIAL_WISP, MONS_BUMBLEBEE,
+        MONS_BUTTERFLY, MONS_FIREFLY, MONS_INSUBSTANTIAL_WISP,
         MONS_VAMPIRE_MOSQUITO, MONS_VAPOUR, MONS_YELLOW_WASP,
         MONS_RED_WASP
     };

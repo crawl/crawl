@@ -613,6 +613,9 @@ void sonic_damage(bool scream)
         */
         dprf("damage done: %d", hurt);
         mi->hurt(&you, hurt);
+
+        if (is_sanctuary(you.pos()) || is_sanctuary(mi->pos()))
+            remove_sanctuary(true);
     }
 }
 

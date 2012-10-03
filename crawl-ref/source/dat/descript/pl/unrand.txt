@@ -34,14 +34,14 @@ zwykle odporne na wszelkie powszechnie znane trucizny.
 %%%%
 Staff of Wucad Mu
 
-Jego wartość bojowa zmienia się proporcjonalnie do inteligenci swego
+Jego wartość bojowa zmienia się proporcjonalnie do inteligencji swego
 posiadacza. Można go użyć aby odzyskać spore ilości magicznej mocy, ryzykując
 tymczasowe porażenie umysłu.
 %%%%
 Vampire's Tooth
 
 Ten sztylet wygląda jakby naprawdę mógł zostać zrobiony z kła jakiegoś
-wielkiego drapieżnika — lecz oczywiście nie mógł być to zwykły kriopijca
+wielkiego drapieżnika — lecz oczywiście nie mógł być to zwykły krwiopijca
 rozmiaru człowieka.
 %%%%
 Scythe of Curses
@@ -148,8 +148,8 @@ Różanopalca jutrzenka.
 %%%%
 spear of the Botono
 
-Mroczny i złowrogi artefakt, do którego nikt rozsądny nie powinien się nawet
-zbliżać.
+Mroczny i złowrogi artefakt, zwiększający moc uroków rzucanych przez kogoś kto
+nierozsądnie weźmie ją w rękę.
 %%%%
 trident of the Octopus King
 
@@ -280,7 +280,7 @@ Skórzana zbroja zrobiona z salamandry.
 %%%%
 gauntlets of War
 
-Płytowe rękawice z grubej stali, niegdyś dar Okawaru dla dzielnego wordza. Czy
+Płytowe rękawice z grubej stali, niegdyś dar Okawaru dla dzielnego wodza. Czy
 na nie zasługujesz?
 %%%%
 shield of Resistance
@@ -364,7 +364,7 @@ ludzkich i zwierzęcych zębów... i czegoś co wygląda na kawałek kręgosłup
 %%%%
 ring of Shaolin
 
-Pierścień z jadeity bez żadnych ozdób, dający nosicielowi dar poznania własnego
+Pierścień z jadeitu bez żadnych ozdób, dający nosicielowi dar poznania własnego
 ciała, pozwalając na niewiarygodne uniki.
 %%%%
 ring of Robustness

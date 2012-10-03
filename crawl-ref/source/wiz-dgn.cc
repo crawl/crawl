@@ -537,6 +537,7 @@ bool debug_make_shop(const coord_def& pos)
     if (new_shop_type == SHOP_UNASSIGNED || new_shop_type == -1)
     {
         mprf("Bad shop type: \"%s\"", requested_shop);
+        list_shop_types();
         return false;
     }
 

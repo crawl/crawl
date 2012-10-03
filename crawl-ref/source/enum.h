@@ -12,12 +12,22 @@
 enum lang_t
 {
     LANG_EN = 0,
-    LANG_PL,
+    LANG_CS,
+    LANG_DA,
     LANG_DE,
-    LANG_FR,
-    LANG_ES,
     LANG_EL,
+    LANG_ES,
     LANG_FI,
+    LANG_FR,
+    LANG_HU,
+    LANG_IT,
+    LANG_KO,
+    LANG_LT,
+    LANG_LV,
+    LANG_PL,
+    LANG_PT,
+    LANG_RU,
+    LANG_ZH,
     // fake languages
     LANG_DWARVEN,
     LANG_JAGERKIN,
@@ -1479,7 +1489,9 @@ enum enchant_type
     ENCH_EAT_ITEMS,
     ENCH_AQUATIC_LAND,   // Water monsters lose hp while on land.
     ENCH_SPORE_PRODUCTION,
+#if TAG_MAJOR_VERSION == 34
     ENCH_SLOUCH,
+#endif
     ENCH_SWIFT,
     ENCH_TIDE,
     ENCH_INSANE,
@@ -2033,7 +2045,9 @@ enum monster_type                      // menv[].type
     MONS_KILLER_BEE,
     MONS_QUEEN_BEE,
     MONS_VAMPIRE_MOSQUITO,
+#if TAG_MAJOR_VERSION == 34
     MONS_BUMBLEBEE,
+#endif
     MONS_YELLOW_WASP,
     MONS_RED_WASP,
     MONS_GOLIATH_BEETLE,

@@ -1638,7 +1638,7 @@ static bool _ms_low_hitpoint_cast(const monster* mon, spell_type monspell)
     switch (monspell)
     {
     case SPELL_HEAL_OTHER:
-        return targ_friendly;
+        return targ_friendly && mon->foe != MHITYOU;
     case SPELL_TELEPORT_OTHER:
         return !targ_sanct && !targ_friendly;
     case SPELL_MINOR_HEALING:
@@ -2813,7 +2813,7 @@ static int _mons_cause_fear(monster* mons, bool actual)
 
 static bool _mons_drain_life(monster* mons, bool actual)
 {
-    if (actual)
+    if (actual && you.see_cell(mons->pos()))
     {
         if (you.can_see(mons))
         {

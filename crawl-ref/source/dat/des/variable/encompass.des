@@ -247,7 +247,6 @@ NAME:    box_level_dp
 DEPTH:   D:20-26
 ORIENT:  encompass
 TAGS:    no_pool_fixup no_rotate
-SHUFFLE: zZ
 NSUBST:  A = 1:+ / *:b
 NSUBST:  B = 1:+ / *:b
 NSUBST:  C = 1:+ / *:b
@@ -266,9 +265,7 @@ KMONS:   l = fire vortex / lava snake / lava fish / fire elemental w:1 /\
              nothing w:50
 KFEAT:   l = l
 KMONS:   z = killer bee
-KMONS:   Z = bumblebee
 KITEM:   z = royal jelly / honeycomb w:20 / nothing w:120
-KITEM:   Z = royal jelly / honeycomb w:20 / nothing w:120
 : if crawl.one_chance_in(3) then
 KMONS:   ! = orc / orc warrior / orc knight / nothing w:30
 KMONS:   & = orc warlord / orc knight / nothing w:20
@@ -1027,7 +1024,7 @@ TAGS:    no_monster_gen no_item_gen no_trap_gen patrolling
 DEPTH:   D:16-26
 ORIENT:  encompass
 KMONS:   - = plant
-KMONS:   _ = plant col:random name:demonic name_adjective
+KMONS:   _ = plant col:random name:demonic name_adjective tile:mons_demonic_plant
 KMONS:   no = human ; dart ego:exploding w:21 | dart ego:dispersal w:2 | \
                       dart ego:none w:1 | wand of lightning w:1 . \
                       mundane flail | mundane falchion | mundane trident . \

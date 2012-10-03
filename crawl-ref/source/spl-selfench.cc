@@ -204,7 +204,7 @@ spret_type cast_swiftness(int power, bool fail)
 
 spret_type cast_fly(int power, bool fail)
 {
-    if (liquefied(you.pos()) && you.ground_level())
+    if (you.liquefied_ground())
     {
         mpr("Such puny magic can't pull you from the ground!", MSGCH_WARN);
         return SPRET_ABORT;

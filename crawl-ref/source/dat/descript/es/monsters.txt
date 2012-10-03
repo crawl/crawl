@@ -1,0 +1,546 @@
+%%%%
+__cap-N_suffix
+
+{{
+    if you.race() == "Naga" then
+        return "Te parece particularmente atractiva."
+    else
+        return "Te parece extraña y repulsiva."
+    end
+}}
+%%%%
+__cap-T_suffix
+
+Sientes algo en la boca de tu estomago.
+%%%%
+__cap-U_suffix
+
+En el caso de que huya, ¡podría enfadarse!.
+%%%%
+__(_suffix_examine
+
+Ha sido encantada para que dance en el aire y pueda atacar por su cuenta.
+%%%%
+Aizul
+
+En una ocasión fue la principal serpiente guardiana de un legendario tesoro,
+pero cayó en desgracia al saquear unos ladrones el tesoro mientras que dormía.
+Ahora se desliza por el calabozo buscando venganza contra cualquier aspirante a
+saqueador.  Es un consumado hechicero, pero en el combate cuerpo a cuerpo no es
+más peligroso que otros de su misma especie.
+%%%%
+Antaeus
+
+En una ocasión un poderoso y afamado Titán, su arrogancia fue su perdición.
+Ahora está corrompido y contaminado. Ahora es un poderoso demonio que reina
+sobre las heladas ruinas de Cocito. Su gigantesco torso parece un blanco fácil
+para tus ataques, pero desgraciadamente saldrá indemne de todos tus ataques,
+excepto los poderosos.
+%%%%
+Arachne
+
+En una ocasión la mejor tejedora de raza humana, Arachne sufrió una maldición
+que le dejo en su forma actual: mitad humana, mitad araña. Incapaz de
+envejecer, posee la belleza y lozanía de una mujer humana, junto con las patas
+y abdomen de una monstruosa araña gigante.
+
+Siendo varios miles de años de vieja, ha aprendido magia y algunos otros
+trucos. Es de esperar que te intente enredar con telarañas y magia, mientras
+sus mascotas te digieren para después beberte y dejarte seco.
+%%%%
+Asmodeus
+
+Uno de los archi-demonios que moran las profundidades del Infierno, envuelto en
+fuego.
+%%%%
+Azrael
+
+Un potente y beligerante Ifrit. (¿Acaso los hay de otra clase?)
+%%%%
+Boris
+
+Un antiquísimo lich. El aire alrededor de su sombría figura chisporrotea
+energía maligna.
+%%%%
+Cerebov
+
+Un violento y furibundo demonio, Cerebov aparece como un gigantesco humano
+cubierto por una resplandeciente armadura dorada y empuñando una enorme espada
+retorcida.
+%%%%
+Chuck
+
+A Chuck, el gigante de piedra, le encantan las rocas. ¡Mientras más grandes,
+mejor! Con el paso de los años, ha amasado una buena colección, incluyendo
+algunas muy raras y encantadas.
+%%%%
+Crazy Yiuf
+
+Un viejo y raquítico gnoll con una larga barba plateada, que empuña un bastón
+largo y lleva una capa. ¡Parece salido de la mitología! Espera, ¿lleva la barba
+sujetada mediante ganchos sobre sus orejas?
+%%%%
+Dispater
+
+El señor de la Ciudad de Hierro de Dis.
+%%%%
+Dissolution
+
+Los Fosos Cenagosos solían albergar una pujante civilización, y Disolución era
+el profeta de su dios. Cuando la ciudad fue asaltada por su actuales moradores,
+solo Disolución consiguió salvarse, ya que él fue el único que abrazó la fe del
+Dios Mucilaginoso. Disolución se convirtió en una tremenda masa de efluvios
+ácidos, pero conservó su inteligencia. Rebosa de odio hacia cualquier cosa que
+tenga forma.
+%%%%
+Donald
+
+{{
+    local descript = "Un aventurero al igual que tú, que intenta encontrar el
+Orbe."
+
+    if you.race() ~= "Merfolk" and you.race() ~= "Octopode" then
+        descript = descript .. " A diferencia de ti, y a"
+    else
+        descript = descript .. " A"
+    end
+
+    descript = descript .. " pesar de odiarla, se zambulle en el agua " ..
+                           "como una gallina."
+
+    return descript
+}}
+%%%%
+Dowan
+
+Un apuesto pero vanidoso elfo con talento para la magia y poco más. Sus
+habilidades son el perfecto complemento para la destreza en el combate de su
+hermana gemela Duvessa.
+%%%%
+Duvessa
+
+Una luchadora élfica aparentemente corriente, que es un genio en muchas formas
+de combate, aunque también demasiado confiada, por esta misma razón. Dowan, su
+hermano gemelo, le complementa con sus habilidades mágicas.
+%%%%
+Edmund
+
+Un celoso hermano menor de Sigmund (de hecho, el menor de nueve hermanos). No
+tiene ninguno de los talentos de Sigmund para la magia, pero lo compensa con su
+destreza para la lucha y una astuta mente para el dinero. Está más que
+dispuesto a probar su superioridad matando a desventurados aventureros con su
+caro flagelo y su mente despierta.
+%%%%
+Ereshkigal
+
+Un terrible archi-demonio que domina el mortal inframundo del Tártaro.
+%%%%
+Erica
+
+Una atractiva tejedora de hechizos.
+%%%%
+Erolcha
+
+Una maga ogresa especialmente astuta.
+%%%%
+Eustachio
+
+Un aprendiz de convocador con un bigote ondeante. Tiene ideas divertidas acerca
+del honor.
+%%%%
+Frances
+
+Una fuerte guerrera que una vez derrotó a un poderoso señor del Pandemonio en
+combate, pasando a tener control de su reino y vasallos. La batalla le dejó una
+cicatriz profunda en su rostro, que exhibe como una medalla al valor más que
+como un motivo de vergüenza.
+%%%%
+Frederick
+
+Un esbelto mago-guerrero que lleva un monóculo dorado y busca un oponente digno
+de él. Probablemente no cumples los requisitos.
+%%%%
+Gastronok
+
+Una voraz babosa sorprendentemente inteligente, dedicada a devorar todo y a
+todo aquél que se encuentre a su paso, con un sombrero puntiagudo que lleva
+desenfadadamente encima de su cabeza. Consiguió el sombrero de la misma forma
+que consiguió su inteligencia y su conocimiento de la magia: consumiendo a su
+antiguo propietario, un poderoso mago.
+%%%%
+Geryon
+
+Un enorme archi-demonio de tres cabezas, el guardián del Vestíbulo del
+Infierno. Las leyendas dicen que su cuerno de plata se usa para abrir las
+puertas del Infierno.
+%%%%
+Gloorx Vloq
+
+Una sombría figura inmersa en profundas tinieblas.
+%%%%
+Grinder
+
+Un ineficiente diablillo de las sombras que previamente trabajaba como
+torturador en uno de los círculos menores del Infierno. Tiene tendencia a
+quejarse y a decir comentarios inanes.
+%%%%
+Grum
+
+Un gnoll de aspecto duro, que viste la piel de uno de sus antiguos perros de
+guerra.
+%%%%
+Harold
+
+Un cazador de recompensas de mediana edad, contratado para asesinarte. Tiene
+prisa.
+%%%%
+Ignacio
+
+Un mortal no puede convertirse en demonio mientras que los dioses no
+intervengan, y esto fue lo que le sucedió a Ignacio cuando Makhleb vio su amor
+a su trabajo y le sonrió. Ahora está destinado a seguir con lo que le divertía
+por toda la eternidad.
+
+Aunque su nueva forma tiene varias cuchillas enormes saliendo de sus apéndices
+de demonio, todavía conserva su hacha favorita y está dispuesto a hacerte
+probar su filo.
+%%%%
+Ijyb
+
+Un pequeño y retorcido goblin que viste harapos azules.
+%%%%
+Ilsuiw
+
+Un astuta sirena bruja del mar, que usa su belleza y hechizos para conducir a
+aventureros poco espabilados a su muerte.
+%%%%
+Jessica
+
+Una malvada aprendiz de hechicera. Entró en el calabozo esperando encontrar un
+lugar tranquilo y apartado donde pudiera estudiar las artes oscuras sin ser
+molestada.
+%%%%
+Jory
+
+El que fuera una vez un simple granjero, Jory se vio transformado en un
+poderoso no-muerto. A través de los incontables siglos desprovisto de vida ha
+entrenado sus habilidades en combate y en magia, amasado grandes riquezas y
+muchas posesiones, y ahora reside en la tranquila Torre del Silencio. No está
+por la labor de dejar que ningún ridículo aventurero arruine su duro trabajo,
+¡por eso quien se lo encuentre debe estar alerta!
+%%%%
+Joseph
+
+Parece un mercenario.
+%%%%
+Josephine
+
+Una fea y anciana figura, vestida con ropas de druida.
+%%%%
+Khufu
+
+Un emperador increíblemente poderoso en pos de conseguir la divinidad.
+%%%%
+Kirke
+
+Una hermosa encantadora.
+%%%%
+Lom Lobon
+
+Un antiguo y extrañamente sereno demonio. Te mira fríamente con el enorme y
+luminoso ojo que tiene en el centro de su frente.
+%%%%
+Louise
+
+Un hechicero inusualmente acorazado.
+%%%%
+Mara
+
+Este alto y poderoso demonio es Mara, Señor de las Ilusiones, poderoso entre
+los que sueñan. Es capaz de crear ilusiones extremadamente detalladas, capaces
+de confundir incluso a las mentes de los magos más poderosos y brillantes.
+%%%%
+Margery
+
+Una grácil y flexible hechicera. Apenas está vestida, aunque lo poco que lleva
+parece armadura de dragón de la más alta calidad, garantizando alta protección.
+Y distraer a humanoides masculinos también tiene su valor en combate, además.
+%%%%
+Maud
+
+Una misteriosa princesa guerrera de un reino muy lejano, en pos de recuperar la
+legendaria espada 'Entarex'. Incontables han sido los admiradores que, pensando
+en Maud, olvidaron todo lo demás.
+%%%%
+Maurice
+
+Un astuto y conspirador ladrón.
+%%%%
+Mennas
+
+Hubo una vez un sacerdote humano llamado Mennas. Viajó a lo largo y a lo ancho
+predicando la palabra de Zin a cualquiera que quisiera escuchar, yendo incluso
+tan lejos como para adentrarse en tierras orcas, predicando a los orcos sobre
+leyes y misericordia. A los orcos no les hizo gracia alguna. Le pidieron que
+jurara que Beogh era el único dios verdadero y cuando Mennas permaneció callado
+le cortaron la lengua.
+
+Tanto si este ángel es o no el mismo Mennas es un misterio, pero parece que le
+cueste hablar.
+
+%%%%
+Menkaure
+
+Un justo y noble soberano de un antiguo y poderoso reino, momificado tras su
+temprana muerte. Sus fieles sacerdotes le infundieron gran y poderosa magia,
+pretendiendo concederle la vida eterna. Ahora ha quedado olvidado y reducido a
+vendajes enmohecidos y huesos secos y quebradizos.
+%%%%
+Mnoleg
+
+Una figura extrañamente luminosa, danzando en los remolinos de aire del
+Pandemonio.
+%%%%
+Murray
+
+Un cráneo demoníaco rodando por el suelo.
+%%%%
+Nellie
+
+Una elefante muy inteligente que viajaba formando parte de un circo. Una noche
+oscura se escapó de su cadena y desapareció en el Pandemonio, para no ser vista
+nunca más.
+%%%%
+Nergalle
+
+Una hechicera arrugada, excepcionalmente fea incluso para los estándares de los
+orcos.
+%%%%
+Nessos
+
+Un guerrero centauro negro con una mirada malintencionada en sus ojos.
+%%%%
+Nikola
+
+Un científico brillante obsesionado con la electricidad. En su tentativa de
+perfeccionar su golem eléctrico, se vio envuelto en un terrible accidente, y
+ahora fluctúa en diferentes fases de la realidad.
+%%%%
+Norris
+
+Un relajado cultista en paz con la muerte, con un saludable bronceado y una voz
+sosegada. No le importa si eres tú o él quien muera - ambos posiblemente sería
+la mejor opción.
+%%%%
+Pikel
+
+Mientras que los kobolds son normalmente esclavos, la dura vida de Pikel, su
+ambición y su gran tamaño hizo que se rebelara y se convirtiera en un tratante
+de esclavos. Va de camino a las Minas Orcas para vender su mercancía, una
+selección de humanos temerosos que se acobardad a cada chasquido de su látigo.
+%%%%
+Polyphemus
+
+Un pastor cíclope, celoso guardián de su rebaño al que vigila con incansable
+fervor mediante su único ojo masivo.
+%%%%
+Prince Ribbit
+
+Un apuesto príncipe antes de que fuera maldecido, ahora, en busca de un remedio
+para su mal. Atravesando las salas a gran velocidad, frecuentemente desaparece
+de donde estaba y sale de la nada en otro sitio, normalmente para desgracia de
+algún aventurero que pase por allí. Sobre su cabeza puedes ver una corona que
+se inclina hacia uno de los lados como si estuviera dándose un paseo por la
+zona. El como se mantiene sobre la cabeza sin caerse es todo un misterio.
+%%%%
+Psyche
+
+Una hechicera rubia aparentemente medio loca que deambula con culpa y pesar.
+%%%%
+Purgy
+
+Un troll inusualmente delgado.
+
+Sientes algo en la boca de tu estómago.
+%%%%
+Roxanne
+
+Un bella estatua de zafiro de una famosa maga de la tierra que desapareció
+después de un desastroso fallo al conjurar un hechizo. Está sujetando un libro.
+%%%%
+Rupert
+
+Un tipo con muy malos modos cuyos rugidos causan la envidia incluso de los
+ogros.
+%%%%
+Saint Roka
+
+Un poderoso señor de la guerra. Algunos orcos llegan incluso a decir que él es
+El Elegido de Beogh.
+%%%%
+Sigmund
+
+La pesadilla de todos los aventureros jóvenes, Sigmund combina ilusiones de
+grandeza con sucias tácticas.
+%%%%
+Snorg
+
+Un troll particularmente corpulento con poco temperamento y una importante
+tripa. Sin ningún interés en el Orbe, Snorg se deleita con el sin fin de
+aventureros - esto es, platos fáciles - a los que atrae.
+%%%%
+Sonja
+
+Una grácil asesina kobold. ¡Admira sus airosas piruetas, emocionate con sus
+atrevidos saltos! El espacio alrededor del filo de su arma parece fluctuar
+ligeramente por un momento... o, ¿es que realmente fluctua?
+
+Su sombrío cuerpo de can, ocultado amablemente por el holgado atuendo de color
+verde, contrasta con sus decididos ojos, que otean las inmediaciones desde la
+sombra creada por el borde superior de su capa del color del berilo. Las fosas
+nasales que se asoman en la punta de su hocico palpitan de entusiasmo.
+%%%%
+Terence
+
+Un violento asesino que mata tanto por placer como por interés, Terence se vio
+obligado a esconderse después de que uno de sus trabajos le saliera torcido, y
+no puede permitir que alguien que le haya visto salga vivo del calabazo - hay
+una recompensa por su cabeza, después de todo.
+%%%%
+Tiamat
+
+Un poderoso dragón con unas potentes alas. Sus escamas parecen relucir y
+cambiar de color mientras las miras.
+%%%%
+Urug
+
+Un tosco y larguirucho orco. Urug perdió un ojo en un combate contra una
+harpía, y juró exterminarlas a todas. Desgraciadamente, la visión con el ojo
+que le queda no es muy buena y te ha confundido con una de ellas.
+{{
+    if you.can_smell() then
+        return "Huele fatal."
+    else
+        return ""
+    end
+}}
+%%%%
+Wiglaf
+
+Un enano gordinflón que lleva un estúpido sombrero. {{
+    if you.can_smell() then
+        return "Apesta a alcohol. "
+    else
+        return ""
+    end
+}}Hay algo extraño en su forma de caminar. Su paso es irregular. Es como si él
+estuviera acostumbrado a moverse a una velocidad muy superior a la que un
+simple enano borracho podría jamás llegar a alcanzar. En su mano derecha puedes
+ver una terrible quemadura. Por su extensión, dirías que debe haber sido
+causada por algo bastante grande.
+
+Luce una ajustada camiseta de lino que parece demasiado larga para su
+corpulenta figura. La palabra "Wiglaf" esta bordada en la parte de atrás. No
+obstante, parece que previamente ponía otra cosa, y luego las letras fueron
+enmendadas y cambiadas.
+%%%%
+Xtahua
+
+Un antiguo y poderoso dragón. Su abrasado cuerpo cubierto con peñascos de lava
+endurecida se eleva sobre el suelo del calabozo, dejando tras de sí una estela
+con un penetrante olor a azufre. Un conjunto de enormes garras resaltan en las
+terminaciones de sus extremidades, y sus filos, aunque algo mellados después
+haber sido usados por tanto tiempo, parecen capaces de despedazar a un hombre
+en un simple instante. La calidez que emana de su sola presencia calienta el
+aire hasta hacerlo insoportable, y hace que las estructuras visibles en el
+calabozo se arqueen ligeramente, como si del mismísimo sol del verano se
+tratara.
+
+Xtahua se fue volviendo cada vez más resentido, al verse atrapado en el
+calabozo después de una agotadora batalla con un aventurero hace siglos. La
+mayoría de su razones para seguir viviendo se han reducido simplemente a la de
+hacer arder cualquier cosa que merodee por estas salas con una pasión
+incombustible.
+
+%%%%
+acid blob
+
+Un amasijo de carne infecta y con pústulas que gotea ácido.
+%%%%
+adder
+
+La serpiente más común del calabozo. Una especie de vetusto reptil que
+habitualmente se halla en lugares subterráneos.
+%%%%
+agate snail
+
+Un enorme y desagradable gasterópodo con una concha de color celadón, dentro de
+la cual se esconde cuando está asustado.
+%%%%
+air elemental
+
+Un espíritu proveniente del plano elemental del aire. Se materializa en este
+plano como un remolino que a menudo se disipa  y se vuelve a formar poco
+después.
+%%%%
+alligator
+
+Un escurridizo cocodriliano que se oculta en el agua y espera pacientemente a
+que su victima se acerque, para abalanzarse sobre ella con gran velocidad y
+aplastarla con sus enormes fauces.
+%%%%
+alligator snapping turtle
+
+Una tortuga mordedora particularmente grande y desagradable.  Al igual que su
+parentela de menor tamaño, es capaz de alcanzarte y morderte desde cierta
+distancia, y se esconderá en su caparazón cuando se vea amenazada.
+%%%%
+anaconda
+
+Una enorme serpiente que se desplaza con una velocidad asombrosa tanto por
+tierra como por agua. No mata a sus victimas mediante venenos sino que las
+asfixia.
+%%%%
+Brimstone Fiend
+
+Un enorme y poderoso demonio bañado en fuego infernal, con amplias alas
+escamosas. Uno de los más temibles habitantes de cualquiera de los Infiernos.
+%%%%
+Executioner
+
+Un horrible, poderoso y ágil demonio cuya forma está oculta en un remolino de
+hojas de guadaña
+%%%%
+Hell Sentinel
+
+Un imponente monolito construido y poseído por fuerzas demoníacas. Unos mil
+ojos miran lascivamente por las rendijas de su armadura dentada y espinosa.
+%%%%
+Ice Fiend
+
+Un enorme y frío demonio cubierto en escarcha y revestido en aire helado. Es
+uno de los habitantes más terribles de los muchos y variados Infiernos.
+%%%%
+Killer Klown
+
+Una figura cómica llena de vida y de risas. Parece muy contento de verte...
+¿pero acaso hay algo levemente malicioso en su proceder? ¿Su cara tiene pintura
+roja o es algo menos agradable?
+%%%%
+Orb Guardian
+
+Una criatura de cuatro extremidades, púrpura, brillante y enorme, con sentidos
+muy desarrollados, creada por el Orbe para custodiarse a sí mismo. Guarda el
+Orbe con enorme dedicación y violencia.
+%%%%
+Shadow Fiend
+
+Un horrible ser que aparece como una gran masa de sombras retorcidas que
+ocasionalmente revelan un enorme esqueleto con cuernos. Es uno de los más
+temibles habitantes de los Infiernos.
+%%%%
+Cigotuvi's Monster
+
+Este terrorífico engendro parece haber sido creado usando las partes de
+cualquier criatura imaginable.
+%%%%

@@ -193,6 +193,9 @@ static monsterentry mondata[] = {
 
 // Axed monsters.
 // AXED_MON(MONS_MOTHER_IN_LAW)
+#if TAG_MAJOR_VERSION == 34
+    AXED_MON(MONS_BUMBLEBEE)
+#endif
 
 // Real monsters begin here {dlb}:
 
@@ -1165,18 +1168,6 @@ static monsterentry mondata[] = {
     { 3, 3, 5, 0 },
     2, 18, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_BUZZ,
     I_INSECT, HT_LAND, FL_FLY, 20, DEFAULT_ENERGY,
-    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_TINY
-},
-
-{
-    MONS_BUMBLEBEE, 'k', RED, "bumblebee",
-    M_NO_SKELETON,
-    MR_VUL_POISON,
-    200, 10, MONS_KILLER_BEE, MONS_BUMBLEBEE, MH_NATURAL, -3,
-    { {AT_STING, AF_POISON_MEDIUM, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 7, 3, 5, 0 },
-    4, 15, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_BUZZ,
-    I_INSECT, HT_LAND, FL_FLY, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_TINY
 },
 
@@ -2240,12 +2231,10 @@ static monsterentry mondata[] = {
 },
 
 {
-    // Coloured with mon-util.cc:random_small_abomination_colour.
-
     // A demonically controlled mass of undead flesh theme-wise, this makes
     // them MH_DEMONIC|MH_UNDEAD, but this is mostly the same as just
     // MH_UNDEAD (save for some god interactions).
-    MONS_ABOMINATION_SMALL, 'x', BLACK, "small abomination",
+    MONS_ABOMINATION_SMALL, 'x', LIGHTRED, "small abomination",
     M_NO_FLAGS,
     MR_NO_FLAGS,
     0, 10, MONS_ABOMINATION_SMALL, MONS_ABOMINATION_SMALL, MH_UNDEAD, -5,
@@ -3951,9 +3940,8 @@ static monsterentry mondata[] = {
 
 // large abominations ('X')
 {
-    // coloured with mon-util.cc:random_large_abomination_colour.
     // See comment under MONS_ABOMINATION_SMALL regarding holiness.
-    MONS_ABOMINATION_LARGE, 'X', BLACK, "large abomination",
+    MONS_ABOMINATION_LARGE, 'X', LIGHTRED, "large abomination",
     M_NO_FLAGS,
     MR_NO_FLAGS,
     0, 10, MONS_ABOMINATION_SMALL, MONS_ABOMINATION_LARGE, MH_UNDEAD, -7,

@@ -79,7 +79,7 @@ MAKEFLAGS += -rR # This only works for recursive makes, i.e. contribs ...
 
 .PHONY: all test install clean clean-contrib clean-rltiles clean-android \
         distclean debug debug-lite profile package-source source \
-        build-windows package-windows rest docs greet api
+        build-windows package-windows rest docs greet api android
 
 include Makefile.obj
 
@@ -547,6 +547,12 @@ ifdef ANDROID
   BUILD_FREETYPE=
   NO_PKGCONFIG=Y
 else
+
+ifndef BUILD_LUA
+  ifdef NO_PKGCONFIG
+    BUILD_LUA = yes
+  endif
+endif
 ifndef BUILD_LUA
   ifneq ($(shell $(PKGCONFIG) lua5.1 --exists || echo no),)
     ifneq ($(shell $(PKGCONFIG) lua --exists || echo no),)
@@ -1080,9 +1086,6 @@ greet:
 
 docs: $(GENERATED_DOCS)
 
-test:
-	./$(GAME) -test > /dev/null
-
 
 # Webtiles data
 .PHONY: webserver clean-webserver
@@ -1249,9 +1252,9 @@ endif
 #
 ifdef ANDROID
   # during build, data goes in a different directory to when crawl runs!
-  prefix_fp = ../..
-  datadir_fp = ../../AndroidData
-  savedir_fp = ../../AndroidData
+  prefix_fp = ..
+  datadir_fp = ../AndroidData
+  savedir_fp = ../AndroidData
   shareddir_fp =
 endif
 
@@ -1350,9 +1353,9 @@ clean-contrib:
 	+$(MAKE) -C contrib clean
 
 clean-android:
-	$(RM) ../../icon.png ../../libapplication.so
-	$(RM) -r ../../AndroidData
-	$(RM) -r ../../bin
+	$(RM) ../icon.png ../libapplication.so
+	$(RM) -r ../AndroidData
+	$(RM) -r ../bin
 
 distclean: clean clean-contrib clean-rltiles
 	$(RM) -r morgue saves
@@ -1475,7 +1478,7 @@ macro.o: cmd-name.h
 # Only support a single dir for now
 TX = tx
 TX-CONFIG = .tx/config
-TX-SET = $(TX) set --auto-local --source-lang en_AU -t INI --mode=reviewed --execute
+TX-SET = $(TX) set --auto-local --source-lang en_AU -t INI --execute
 TX-DIR = dat/descript
 
 # List of languages
@@ -1500,8 +1503,8 @@ TX-HAVE-QUOTES = $(foreach name, branches features items monsters unident, $(TX-
 # Files pulled from transifex. It is different than TX-TRANS, because it can
 # contain new files for which we have no .txt yet
 TX-NEW-TRANS = $(foreach lang, $(TX-LANG), $(wildcard $(TX-DIR)/$(lang)/*.ini))
-TX-NEW-TEXT = $(filter-out, quotes, $(wildcard $(TX-DIR)/en/*.ini))
 TX-NEW-QUOTES = $(TX-DIR)/en/quotes.ini
+TX-NEW-TEXT = $(filter-out $(TX-NEW-QUOTES), $(wildcard $(TX-DIR)/en/*.ini))
 TX-NEW = $(TX-NEW-TRANS) $(TX-NEW-TEXT) $(TX-NEW-QUOTES)
 
 TX-COMMIT-AUTHOR = "Translators <crawl-ref-discuss@lists.sourceforge.net>"
@@ -1569,10 +1572,10 @@ tx-check: $(TX-INI)
 	$(TX-MKTXT) -w $(TX-TRANS);\
 
 tx-commit:
-	@if git diff --quiet $(TX-TXT); then\
+	@if git diff HEAD --quiet $(TX-TXT); then\
 		exit 0;\
 	fi;\
-	git diff $(TX-TXT);\
+	git diff HEAD $(TX-TXT);\
 	read -p "Commit? (Y/n) " RESP;\
 	if [ "$$RESP" = n -o "$$RESP" = N ]; then\
 		exit 1;\
@@ -1588,7 +1591,7 @@ tx-commit:
 tx-pull:
 	@echo "Cleaning up downloaded translations.";\
 	$(RM) $(TX-NEW)
-	tx pull -a --minimum-perc=1 --mode=reviewed
+	tx pull -a
 
 tx-push: $(TX-INI) $(TX-QUOTES-ALL)
 	$(TX-MKINI) -umd $(TX-DIR)/en $(TX-TSOURCES)
@@ -1735,3 +1738,29 @@ mac-app-tiles: all
 
 mac-app-console: all
 	+$(MAKE) -j1 -C mac -f Makefile.app-bundle
+
+#############################################################################
+# Building the Android package
+#
+
+android:
+	@SRC_LINK=contrib/sdl-android/project/jni/application/src ;\
+	if [ ! -e $$SRC_LINK ]; then \
+		ln -s `cd ..; pwd` $$SRC_LINK; \
+	fi
+	@cd contrib/sdl-android && ./build.sh && \
+	mv project/bin/MainActivity-debug.apk ../../crawl_tiles_android-$(SRC_VERSION).apk
+
+#############################################################################
+# Canned tests
+#
+
+TESTS=test woken_rest unwoken_rest fireworks cerebov pan_lords miscasts kraken
+test: $(foreach i, $(TESTS), test-$(i))
+
+test-%: $(GAME) util/fake_pty
+	util/fake_pty test/stress/run $*
+	@echo "Finished: $*"
+
+util/fake_pty: util/fake_pty.c
+	$(if $(HOSTCC),$(HOSTCC),$(CC)) -Wall $< -o $@ -lutil

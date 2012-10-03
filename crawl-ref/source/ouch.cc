@@ -1115,6 +1115,7 @@ static void _wizard_restore_life()
         if (you.stat(static_cast<stat_type>(i)) <= 0)
         {
             you.stat_loss[i] = 0;
+            you.stat_zero[i] = 0;
             you.redraw_stats[i] = true;
         }
     }
@@ -1498,7 +1499,8 @@ void _end_game(scorefile_entry &se)
             hints_death_screen();
     }
 
-    if (!dump_char(morgue_name(you.your_name, se.get_death_time()), true, &se))
+    if (!dump_char(morgue_name(you.your_name, se.get_death_time()),
+                   true, true, &se))
     {
         mpr("Char dump unsuccessful! Sorry about that.");
         if (!crawl_state.seen_hups)

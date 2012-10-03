@@ -31,22 +31,10 @@ Build Process
  * ensure that you have all of the dependent host libraries required to
    use the SDK, NDK and build crawl's host tools (libsdl1.2-dev at least).
    Note that you also need the zip and libvorbis-dev packages.
- * fetch the crawl-flavoured Android SDL port from here:
-   https://github.com/frogbotherer/commandergenius
- * cd project/jni/application
- * Update the src link to point to the root of the crawl's repository
-     example: ln -sf $HOME/crawl src
- * cd ../../..
- * Those steps are needed only for the very first build:
-    * ./ChangeAppSettings.sh -a
-    * cd project
-    * android update project -p . --target android-14
-    * cd ..
-    * ./build.sh (for some reason, it always fail the first time)
- * ./build.sh
- * If it fails, try running it again.
- * You should find MainActivity-debug.apk (~10MB) in project/bin. If the file
-   is only ~5MB... guess what? Run build.sh again.
+ * run make android
+ * If it fails, run it again (happens a lot on the first build).
+ * you'll find the apk in the source directory. It should be more than 10 MB.
+   If it's only 5.5 MB, run make android again.
 
 
 Project Structure

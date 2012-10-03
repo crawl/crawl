@@ -3987,19 +3987,19 @@ static const char *divine_title[NUM_GODS][8] =
      "Bugbear",            "Bugged One",            "Giant Bug",                "Lord of the Bugs"},
 
     // Zin.
-    {"Sinner",             "Anchorite",             "Apologist",                "Pious",
+    {"Blasphemer",         "Anchorite",             "Apologist",                "Pious",
      "Devout",             "Orthodox",              "Immaculate",               "Bringer of Law"},
 
     // The Shining One.
-    {"Sinner",             "Acolyte",               "Righteous",                "Unflinching",
+    {"Honourless",         "Acolyte",               "Righteous",                "Unflinching",
      "Holy Warrior",       "Exorcist",              "Demon Slayer",             "Bringer of Light"},
 
     // Kikubaaqudgha -- scholarly death.
-    {"Sinner",             "Purveyor of Pain",      "Death's Scholar",          "Merchant of Misery",
+    {"Tormented",          "Purveyor of Pain",      "Death's Scholar",          "Merchant of Misery",
      "Death's Artisan",    "Dealer of Despair",     "Black Sun",                "Lord of Darkness"},
 
     // Yredelemnul -- zombie death.
-    {"Sinner",             "Zealot",                "Exhumer",                  "Fey %s",
+    {"Traitor",            "Zealot",                "Exhumer",                  "Fey %s",
      "Soul Tainter",       "Sculptor of Flesh",     "Harbinger of Death",       "Grim Reaper"},
 
     // Xom.
@@ -4023,7 +4023,7 @@ static const char *divine_title[NUM_GODS][8] =
      "Scribe",             "Scholar",               "Sage",                     "Genius of the Arcane"},
 
     // Trog -- anger theme.
-    {"Faithless",          "Troglodyte",            "Angry Troglodyte",         "Frenzied",
+    {"Puny",               "Troglodyte",            "Angry Troglodyte",         "Frenzied",
      "%s of Prey",         "Rampant",               "Wild %s",                  "Bane of Scribes"},
 
     // Nemelex Xobeh -- alluding to Tarot and cards.
@@ -4035,7 +4035,7 @@ static const char *divine_title[NUM_GODS][8] =
      "Pacifier",           "Purifying %s",          "Faith Healer",             "Bringer of Life"},
 
     // Lugonu -- distortion theme.
-    {"Faithless",          "Abyss-Baptised",        "Unweaver",                 "Distorting %s",
+    {"Pure",               "Abyss-Baptised",        "Unweaver",                 "Distorting %s",
      "Agent of Entropy",   "Schismatic",            "Envoy of Void",            "Corrupter of Planes"},
 
     // Beogh -- messiah theme.

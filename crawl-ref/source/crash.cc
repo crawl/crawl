@@ -11,6 +11,7 @@
 #endif
 
 #if defined(UNIX)
+#include <unistd.h>
         #define BACKTRACE_SUPPORTED
 #endif
 
@@ -20,7 +21,7 @@
     defined(TARGET_OS_NETBSD) || \
     defined(TARGET_OS_OPENBSD) || \
     defined(TARGET_COMPILER_CYGWIN) || \
-    defined(TARGET_CPU_ARM)
+    defined(__ANDROID__)
         #undef BACKTRACE_SUPPORTED
 #endif
 #endif

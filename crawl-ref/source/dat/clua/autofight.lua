@@ -217,15 +217,15 @@ local function attack_melee(x,y)
   crawl.process_keys(move)
 end
 
-local function set_stop_level(key, value)
+local function set_stop_level(key, value, mode)
   AUTOFIGHT_STOP = tonumber(value)
 end
 
-local function set_af_throw(key, value)
+local function set_af_throw(key, value, mode)
   AUTOFIGHT_THROW = string.lower(value) ~= "false"
 end
 
-local function set_af_throw_nomove(key, value)
+local function set_af_throw_nomove(key, value, mode)
   AUTOFIGHT_THROW_NOMOVE = string.lower(value) ~= "false"
 end
 

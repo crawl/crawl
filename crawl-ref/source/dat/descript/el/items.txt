@@ -291,10 +291,6 @@ book of spatial translocations
 
 Ένα βιβλίο με ξόρκια.
 %%%%
-book of stalking
-
-Ένα βιβλίο με ξόρκια.
-%%%%
 book of summonings
 
 Ένα βιβλίο με ξόρκια.

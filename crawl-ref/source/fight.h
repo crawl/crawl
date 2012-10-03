@@ -6,6 +6,8 @@
 #ifndef FIGHT_H
 #define FIGHT_H
 
+#include <list>
+
 #include "melee_attack.h"
 #include "mon-enum.h"
 #include "random-var.h"
@@ -43,5 +45,12 @@ unchivalric_attack_type is_unchivalric_attack(const actor *attacker,
 void chaos_affect_actor(actor *victim);
 int player_weapon_str_weight();
 int player_weapon_dex_weight();
+void get_cleave_targets(const actor* attacker, const coord_def& def, int dir,
+                        list<actor*> &targets);
+void get_all_cleave_targets(const actor* attacker, const coord_def& def,
+                            list<actor*> &targets);
+void attack_cleave_targets(actor* attacker, list<actor*> &targets,
+                           int attack_number = 0,
+                           int effective_attack_number = 0);
 
 #endif

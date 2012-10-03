@@ -141,9 +141,8 @@ as penetrating bolts, cannot be blocked at all.
 %%%%
 Traps
 
-A character trained in Traps will be more observant to his or her
-surroundings and be quicker in noticing traps, as well as more able to
-disarm them.
+A character trained in Traps will be more observant to his or her surroundings
+and be quicker in noticing traps, as well as more able to disarm them.
 %%%%
 Unarmed Combat
 

@@ -1,0 +1,49 @@
+%%%%
+CMD_EXPLORE
+
+Automātiski pētīt pašreizējo līmeni
+%%%%
+CMD_REPLAY_MESSAGES
+
+Pārlasīt nesenās ziņas
+%%%%
+CMD_RESISTS_SCREEN
+
+Parādīt tēla pārskatu
+%%%%
+CMD_RESISTS_SCREEN verbose
+
+Parāda ziņas par zināmajām pretestībām, spējām, aprīkojuma statistiku utt.
+%%%%
+CMD_DISPLAY_SKILLS
+
+Pārvaldīt prasmes
+%%%%
+CMD_DISPLAY_CHARACTER_STATUS
+
+Parādīt tēla stāvokli
+%%%%
+CMD_DISPLAY_KNOWN_OBJECTS
+
+Uzskaitīt atklāto priekšmetu veidus.
+%%%%
+CMD_SAVE_GAME_NOW
+
+Saglabāt un iziet
+%%%%
+CMD_DISPLAY_COMMANDS
+
+Spēles palīdzību
+%%%%
+CMD_DISPLAY_COMMANDS verbose
+
+Pavēļu, iespēju utt. uzskaitījums.
+%%%%
+CMD_SEARCH
+
+Pagaidīt vienu gājienu
+%%%%
+CMD_SEARCH verbose
+
+Patērēt vienu gājienu gaidot, atpūšoties un meklējot.
+%%%%

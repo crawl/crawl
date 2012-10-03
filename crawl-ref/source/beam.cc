@@ -4859,7 +4859,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             obvious_effect = true;
 
         if (name.find("agony") != string::npos) // agony
-            mon->hurt(agent(), min((mon->hit_points+1)/2, mon->hit_points-1));
+            mon->hurt(agent(), min((mon->hit_points+1)/2, mon->hit_points-1), BEAM_TORMENT_DAMAGE);
         else                    // pain
             mon->hurt(agent(), damage.roll(), flavour);
         return MON_AFFECTED;

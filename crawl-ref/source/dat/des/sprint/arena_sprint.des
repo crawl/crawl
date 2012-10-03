@@ -260,7 +260,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "w:15 adder / ball python / water moccasin / naga / w:2 black mamba /\
                     w:1 naga mage / w:1 naga warrior",
                 "jelly / w:5 ooze / w:3 brown ooze / giant eyeball / w:2 shining eye",
-                "killer bee w:20 / w:5 queen bee / w:5 bumblebee",
+                "killer bee w:20 / w:5 queen bee",
                 "deep dwarf scion / deep dwarf artificer / deep dwarf",
                 "small zombie / small skeleton / wight / necrophage / large zombie w:5 /\
                     large skeleton w:5 / shadow w:5 / phantom w:5 / w:1 josephine",
@@ -304,7 +304,7 @@ function arena_sprint_get_monster_set(round, boss)
                 "place:Snake",
                 "jelly / w:5 brown ooze / giant eyeball / w:2 shining eye /\
                     w:2 golden eye / w:2 eye of draining / w:1 slime creature",
-                "killer bee w:15 / w:5 queen bee / w:5 bumblebee / w:1 oklob plant",
+                "killer bee w:15 / w:5 queen bee / w:1 oklob plant",
                 "deep dwarf scion / deep dwarf artificer / w:3 deep dwarf death knight /\
                     w:5 deep dwarf berserker",
                 "w:3 skeletal warrior / wight / necrophage / large zombie w:5 /\
@@ -783,7 +783,7 @@ function arena_sprint_init_boss_table()
     end
 
     bs[6] = {"place:Dis:7", "dispater", "iron rune of zot"}
-    bs[7] = {"place:Tar:7", "ereshkigal hp:350", "bone rune of zot"}
+    bs[7] = {"place:Tar:7", "ereshkigal", "bone rune of zot"}
     bs[8] = {"place:Geh:7", "asmodeus", "obsidian rune of zot"}
     bs[9] = {"place:Coc:7", "antaeus", "icy rune of zot"}
     -- Pan sets are taken directly from pan.des
@@ -1087,11 +1087,10 @@ KFEAT:  L = armour shop count:17 greed:12 type:Basic suffix:Armour use_all ; \
             mundane not_cursed buckler | mundane not_cursed pair of gloves |\
             mundane not_cursed helmet
 KFEAT:  M = food shop count:17 type:Bee suffix:Food greed:4 ; royal jelly q:3
-KFEAT:  N = weapon shop type:Staff suffix:Store count:10 use_all greed:30 ; \
+KFEAT:  N = weapon shop type:Staff suffix:Store count:9 use_all greed:30 ; \
             staff of summoning | staff of wizardry |\
             staff of fire | staff of air | staff of earth | staff of cold |\
-            staff of poison | staff of death | staff of enchantment |\
-            staff of conjuration
+            staff of poison | staff of death | staff of conjuration
 KFEAT:  Q = weapon shop type:Weapon suffix:Rack count:17 use_all greed:30 ; \
             mundane not_cursed quick blade | mundane not_cursed demon blade |\
             mundane not_cursed triple sword | mundane not_cursed broad axe |\

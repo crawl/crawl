@@ -1592,7 +1592,7 @@ void CrawlVector::write(writer &th) const
     for (vec_size i = 0; i < size(); i++)
     {
         CrawlStoreValue val = vec[i];
-       val.write(th);
+        val.write(th);
     }
 
     ASSERT_VALIDITY();

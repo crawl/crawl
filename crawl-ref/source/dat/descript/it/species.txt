@@ -1,0 +1,129 @@
+%%%%
+Centaur
+
+I centauri sono forti e di corporatura robusta, hanno bisogno di più cibo delle
+altre specie. Sono particolarmente abili nell'uso delle armi a distanza.
+%%%%
+Deep Dwarf
+
+I nani delle profondità vivono sottoterra e non possono guarire naturalmente
+dalle ferite, ma sono molto resistenti ai danni e portano con sé oggetti per
+curarsi.
+%%%%
+Deep Elf
+
+Gli elfi delle profondità sono la specie più affine alla magia, ma anche la più
+fragile.
+%%%%
+Demigod
+
+I semidei non possono adorare una divinità, ma hanno attributi ultraterreni e
+godono di una salute ugualmente straordinaria.
+%%%%
+Demonspawn
+
+I demoniaci sono mezzi uomini e mezzi demoni. Acquisendo potere subiscono
+potenti mutazioni che derivano dalla loro discendenza.
+%%%%
+Draconian
+
+I draconici sono ibridi versatili. Al raggiungimento del livello sette maturano
+acquisendo il colore che deriva dalla loro parentela e delle relative
+caratteristiche.
+%%%%
+Felid
+
+I felidi sono gatti dalle molte vite sono senzienti, ma non sono in grado di
+manipolare oggetti complessi, né indossare armature e utilizzare le armi.
+%%%%
+Ghoul
+
+I ghoul sono non morti eternamente dannati a cibarsi di cibo avariato e a
+uccidere utilizzando i loro artigli.
+%%%%
+Halfling
+
+Gli halfling sono piccoli ma resistenti e sono molto bravi a usare le fionde.
+Hanno una notevole resistenza contro gli effetti mutagenici.
+%%%%
+High Elf
+
+Gli elfi alti sono elfi orgogliosi che possono combattere bene sia con la spada
+che con la magia.
+%%%%
+Hill Orc
+
+Gli orchi delle colline sono abili nella mischia e spesso possono usare alcuni
+incantesimi offensivi. Odiati dalla maggior parte delle altre specie, gli orchi
+sono molto orgogliosi e molti di essi si credono superiori alle altre razze.
+%%%%
+Human
+
+Gli umani sono diffusi e le loro abilità sono nella media.
+%%%%
+Tengu
+
+I tengu sono uomini uccello che amano combattere, sia con le armi che con la
+magia. Sono abbastanza fragili ma con l'aumentare dell'esperienza imparano a
+usare le loro ali per spiccare il volo.
+%%%%
+Kobold
+
+I coboldi sono piccoli, maligni e un po' fragili, ma possiedono molti talenti.
+Possono mangiare ogni tipo di carne e lo fanno spesso.
+%%%%
+Merfolk
+
+I tritoni sono mezzi pesci e mezzi umani, cittadini sia dell'acqua che della
+terraferma, sono combattenti potenti e competenti nella magia che assiste in
+battaglia.
+%%%%
+Minotaur
+
+I minotauri sono umani particolarmente muscolosi con la testa di un toro. Sono
+formidabili in tutte le forme di combattimento in mischia e con le armi a
+distanza.
+%%%%
+Mummy
+
+Le mummie sono non morti coperti di bende impregnate di fluidi di
+imbalsamazione, obbligate a camminare tra i viventi per via di una maledizione
+antica.
+%%%%
+Naga
+
+I naga sono ibridi umani dalla cintura in su, con un torso muscoloso e coperto
+di scaglie che spunta da un ventre e una coda di serpente. Si muovono
+lentamente ma sono naturalmente resistenti.
+%%%%
+Octopode
+
+Gli ottopodi sono una specie di cefalopode anfibio. Possono indossare sino a
+otto anelli sui tentacoli, ma in pratica non sono adatti ad alcuna armatura.
+%%%%
+Ogre
+
+Gli ogre, grandi e forti, sono spesso visti come esseri brutali, ma conoscono
+comunque le basi della magia.
+%%%%
+Sludge Elf
+
+Gli elfi della melma sono depravati e preferiscono il sotterfugio a un
+combattimento leale, così come la magia nera rispetto ad altri tipi di
+incantesimi.
+%%%%
+Spriggan
+
+Gli spriggan sono molto piccoli, molto fragili ed estremamente veloci. Questo
+fa di loro dei maghi molto potenti e degli straordinari assassini.
+%%%%
+Troll
+
+I troll sono grandi energumeni pronti a lacerare qualsiasi cosa con i loro
+temibili artigli, senza pensarci due volte. Hanno sempre fame.
+%%%%
+Vampire
+
+I vampiri sono perennemente in bilico tra la vita e la non morte, sono
+assassini e maghi competenti.
+%%%%

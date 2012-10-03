@@ -1,0 +1,31 @@
+%%%%
+Battlelust card
+
+Šī kārts padara Jūs spēcīgāku fiziskā cīņā. Tā parasti ir atrodama pārmaiņu,
+aizsardzības un kara kāršu komplektos.
+%%%%
+the Helm card
+
+Šī kārts palielina Jūsu aizsardzību. Tā parasti ir atrodama pārmaiņu,
+aizsardzības  vai kara kāršu komplektos.
+%%%%
+the Mercenary card
+
+Šī kārts izsauc algotņus, kas cīnās Jums līdzās... par samaksu. Tā parasti ir
+atrodama pārmaiņu, aizsardzības vai kara kāršu komplektos.
+%%%%
+Experience card
+
+Šī kārts padara Jūs pieredzējušāku. To parasti var atrast pārmaiņu un brīnumu
+kāršu komplektos.
+%%%%
+Foxfire card
+
+Šī kārts izsauc lidojošus radījumus. Tā parasti ir atrodama izsaucamo radījumu
+un kara kāršu komplektos.
+%%%%
+the Bargain card
+
+Šī kārts Jums veikalos dod īslaicīgas atlaides. Tā parasti nav nevienā no kāršu
+komplektiem.
+%%%%

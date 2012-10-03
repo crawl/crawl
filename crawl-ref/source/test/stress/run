@@ -21,11 +21,14 @@ run_one()
     5|pan_lords)
         $CRAWL -arena 'cerebov, lom lobon, mnoleg, gloorx vloq v ereshkigal, asmodeus, antaeus, dispater delay:0 t:6'
     ;;
-    6|arena_miscasts)
+    6|miscasts)
         $CRAWL -arena 'miscasts 5 pandemonium lord v 20 20-headed hydra delay:0 t:10'
     ;;
     7|kraken)
-        $CRAWL -arena 'kraken v spectral kraken arena:small_deep_pool delay:0 t:99'
+        $CRAWL -arena 'kraken v spectral kraken arena:small_deep_pool delay:0 t:20'
+    ;;
+    test) # Not in "all".
+        $CRAWL -test
     ;;
     *)
         echo "No such test."

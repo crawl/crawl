@@ -1,0 +1,141 @@
+%%%%
+Abyssal Knight
+
+I cavalieri dell'abisso adorano la divinità Lugonu e sono inviati dall'abisso
+al dungeon per diffondere caos e corruzione.
+%%%%
+Air Elementalist
+
+Gli elementalisti dell'aria hanno imparato l'incantesimo Shock. Più avanti il
+loro Libro dell'Aria fornisce loro la flessibilità per sopravvivere.
+%%%%
+Arcane Marksman
+
+Gli arcieri arcani usano le armi a distanza e la magia per rendere gli
+avversari più vulnerabili agli attacchi da lontano.
+%%%%
+Artificer
+
+Gli artefici iniziano il gioco con alcuni oggetti magici e sono competenti nel
+loro uso.
+%%%%
+Assassin
+
+Gli assassini sono abili nella furtività, pronti a pugnalare i nemici ignari.
+Non utilizzano solo mantello e pugnale, ma hanno con sé anche terribili aghi al
+curaro per le loro cerbottane.
+%%%%
+Berserker
+
+I berserker credono in Trog, il dio della furia che odia la magia. Poche cose
+inizialmente possono fermare un berserker infuriato, tranne l'arroganza.
+%%%%
+Chaos Knight
+
+I cavalieri del caos sono burattini dell'imprevedibile divinità Xom e sono
+soggetti al suo continuo cambio di umore.
+%%%%
+Conjurer
+
+I maghi della comparizione affrontano i problemi con incantesimi potenti di
+danno diretto dal Libro della Comparizione.
+%%%%
+Death Knight
+
+I cavalieri della morte sono combattenti in mischia che comandano i non morti
+in nome di Yredelemnul l'Oscuro.
+%%%%
+Earth Elementalist
+
+Gli elementalisti della terra conoscono l'incantesimo Esplosione di Sabbia e
+portano con sé delle pietre per aumentare il suo potere. Nel loro libro di
+Geomanzia ci sono altri incantesimi della terra.
+%%%%
+Enchanter
+
+Gli incantatori usano incantesimi per aumentare le loro capacità in battaglia o
+mettere in difficoltà i nemici. Cominciano anche con dei buoni dardi.
+%%%%
+Fighter
+
+I guerrieri combattono con armatura e scudo oltre che un'arma a scelta. Hanno
+più punti ferita di qualunque altro profilo.
+%%%%
+Fire Elementalist
+
+Gli elementalisti del fuoco cominciano con il Libro delle Fiamme e conoscono
+l'incantesimo Lingua di Fuoco. Gli altri incantesimi del libro sono comunque
+incentrati sulla distruzione.
+%%%%
+Gladiator
+
+I gladiatori sono pronti per l'arena con armature leggere, scudi, reti e
+un'arma a scelta.
+%%%%
+Healer
+
+I curatori sono seguaci di Elyvilon pronti a curare se stessi e gli altri.
+Questa cura potrebbe rendere pacifici bestie ed esseri brutali, conferendo
+esperienza.
+%%%%
+Hunter
+
+I cacciatori sono abili ad attaccare a distanza, senza fare affidamento sulla
+magia.
+%%%%
+Ice Elementalist
+
+Gli elementalisti del ghiaccio cominciano con il Libro del Gelo e l'incantesimo
+Raggelare. Gli altri incantesimi del libro sono piuttosto versatili.
+%%%%
+Monk
+
+I monaci affrontano il dungeon indossando soltanto una tunica e usando il loro
+corpo.
+%%%%
+Necromancer
+
+I negromanti sono maghi specialisti nella magia della morte. Cominciano con
+l'incantesimo Dolore.
+%%%%
+Priest
+
+I sacerdoti sono seguaci di Zin e predicano la parola della divinità agli
+abitanti del dungeon. Gli orchi delle colline, invece, sono seguaci della
+divinità orchesca Beogh.
+%%%%
+Skald
+
+Gli skald sono combattenti in mischia che possono aumentare le loro capacità in
+battaglia con incantesimi dal Libro dei Canti in Guerra.
+%%%%
+Summoner
+
+Gli attrattori cominciano con il Libro delle Chiamate e sono in grado
+inizialmente di attrarre piccoli mammiferi.
+%%%%
+Transmuter
+
+I trasmutatori cambiano la loro forma per combattere con l'aspetto delle
+bestie. Possono anche trasformare bastoni in serpenti.
+%%%%
+Venom Mage
+
+I maghi del veleno cominciano con il Libro del Giovane Avvelenatore e
+l'incantesimo Pungiglione. I loro inizi nel dungeon sono abbastanza facili.
+%%%%
+Wanderer
+
+Gli erranti cominciano con equipaggiamento e abilità casuali.
+%%%%
+Warper
+
+I distorsori cominciano con un'arma a scelta e una pergamena di Lampeggio.
+Possono imparare incantesimi dal Libro delle Traslocazioni dello Spazio.
+%%%%
+Wizard
+
+I maghi cominciano con il Libro della Magia Minore che contiene una gamma di
+incantesimi piuttosto diversi. Hanno la riserva magica più grande di ogni altro
+profilo.
+%%%%

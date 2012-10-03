@@ -247,7 +247,7 @@ function c_kill_list(a, who, needsep)
 end
 
 DUMP_KILL_BREAKDOWNS = false
-local function set_dump_kill_breakdowns(key, value)
+local function set_dump_kill_breakdowns(key, value, mode)
   DUMP_KILL_BREAKDOWNS = string.lower(value) ~= "false"
 end
 chk_lua_option.dump_kill_breakdowns = set_dump_kill_breakdowns

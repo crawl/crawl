@@ -56,7 +56,6 @@ cat4 MONS_FELID
 
 ## Bees ('k')
 killer_bee MONS_KILLER_BEE
-bumblebee MONS_BUMBLEBEE
 queen_bee MONS_QUEEN_BEE
 giant_firefly MONS_FIREFLY
 
@@ -604,7 +603,9 @@ eye_of_draining MONS_EYE_OF_DRAINING
 mon/giant_orange_brain MONS_GIANT_ORANGE_BRAIN
 great_orb_of_eyes MONS_GREAT_ORB_OF_EYES
 shining_eye MONS_SHINING_EYE
+%rim 0
 eye_of_devastation MONS_EYE_OF_DEVASTATION
+%rim 1
 golden_eye MONS_GOLDEN_EYE
 %sdir mon/holy
 ophan MONS_OPHAN
@@ -712,6 +713,7 @@ plant_09
 plant_10
 plant_11
 plant_crypt MONS_WITHERED_PLANT
+plant_demonic MONS_DEMONIC_PLANT
 %rim 1
 bush MONS_BUSH
 %rim 0
@@ -928,7 +930,9 @@ flaming_corpse MONS_FLAMING_CORPSE
 %rim 1
 %sdir mon/undead
 curse_skull MONS_CURSE_SKULL
+%rim 0
 curse_toe MONS_CURSE_TOE
+%rim 1
 flying_skull MONS_FLYING_SKULL
 crawling_corpse MONS_CRAWLING_CORPSE
 macabre_mass MONS_MACABRE_MASS

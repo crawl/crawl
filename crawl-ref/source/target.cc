@@ -6,6 +6,7 @@
 #include "coord.h"
 #include "coordit.h"
 #include "env.h"
+#include "fight.h"
 #include "godabil.h"
 #include "itemprop.h"
 #include "libutil.h"
@@ -30,6 +31,11 @@ bool targetter::set_aim(coord_def a)
 
     aim = a;
     return true;
+}
+
+bool targetter::can_affect_outside_range()
+{
+    return false;
 }
 
 bool targetter::anyone_there(coord_def loc)
@@ -122,6 +128,12 @@ bool targetter_beam::valid_aim(coord_def a)
     if ((origin - a).abs() > range2)
         return notify_fail("Out of range.");
     return true;
+}
+
+bool targetter_beam::can_affect_outside_range()
+{
+    // XXX is this everything?
+    return max_expl_rad > 0;
 }
 
 aff_type targetter_beam::is_affected(coord_def loc)
@@ -330,6 +342,12 @@ bool targetter_smite::set_aim(coord_def a)
     return true;
 }
 
+bool targetter_smite::can_affect_outside_range()
+{
+    // XXX is this everything?
+    return exp_range_max > 0;
+}
+
 aff_type targetter_smite::is_affected(coord_def loc)
 {
     if (!valid_aim(aim))
@@ -452,6 +470,25 @@ aff_type targetter_reach::is_affected(coord_def loc)
     return AFF_NO;
 }
 
+targetter_cleave::targetter_cleave(const actor* act, coord_def target)
+{
+    ASSERT(act);
+    agent = act;
+    origin = act->pos();
+    aim = target;
+    list<actor*> act_targets;
+    get_all_cleave_targets(act, target, act_targets);
+    while (!act_targets.empty())
+    {
+        targets.insert(act_targets.front()->pos());
+        act_targets.pop_front();
+    }
+}
+
+aff_type targetter_cleave::is_affected(coord_def loc)
+{
+    return targets.count(loc) ? AFF_YES : AFF_NO;
+}
 
 targetter_cloud::targetter_cloud(const actor* act, int range,
                                  int count_min, int count_max) :
@@ -531,6 +568,11 @@ bool targetter_cloud::set_aim(coord_def a)
         }
     }
 
+    return true;
+}
+
+bool targetter_cloud::can_affect_outside_range()
+{
     return true;
 }
 
