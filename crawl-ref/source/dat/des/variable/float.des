@@ -1359,15 +1359,9 @@ KFEAT:   > = >
 KFEAT:   ; = altar_yredelemnul/altar_kikubaaqudgha
 SHUFFLE: defg
 SUBST:   d = +, e = x, f = x, g = x
-# What are s!? for, exactly?
-SUBST:   s = +, ! = x, ? = x
 SUBST:   1 = 1 .:20
 SUBST:   1 : 1:30 2
 SUBST:   w:w.
-NSUBST:  ? = 2:L / *:?
-SUBST:   ? = L:1 x
-SUBST:   ? = x
-SUBST:   L = |*$
 MAP
 F..wwwwwwwwwwwwwwwww..F
 ..wwwwwwwwwwwwwwwwwww..
@@ -1378,12 +1372,12 @@ ww11dx..ccccccc..xe11ww
 ww1xx..ccc|>|ccc..xx1ww
 wwxx..ccccc6ccccc..xxww
 wwx..ccc33+4+33ccc..xww
-wwx.ccccccc+cccc?cc.xww
-wwx.c***x.....x???c4xww
-wwx.c***+..5..x???c.xww
-wwx4cc**x4.;.4x??cc.xww
-wwx..ccxx.....x?cc..xww
-wwxx..ccx..4..xcc..xxww
+wwx.ccccccc+ccccccc.xww
+wwx.c***x.....ccccc4xww
+wwx.c***+..5..ccccc.xww
+wwx4cc**x4.;.4ccccc.xww
+wwx..ccxx.....cccc..xww
+wwxx..ccx..4..ccc..xxww
 ww1xx..cc.....cc..xx1ww
 ww11fx..ccc.ccc..xg11ww
 ww111xx..cc+cc..xx111ww
