@@ -1468,7 +1468,7 @@ string read_init_file(bool runscript)
 
     if (!warn_list_append.empty())
     {
-        std::string warn =
+        string warn =
             "Your configuration uses = to append to a list option. This "
             "syntax will override the option in a future version. Use += "
             "instead to append. Affected options are: ";
