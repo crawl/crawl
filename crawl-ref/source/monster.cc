@@ -284,25 +284,22 @@ bool monster::extra_balanced() const
 bool monster::floundering_at(const coord_def p) const
 {
     const dungeon_feature_type grid = grd(p);
-    return liquefied(p)
-           || (feat_is_water(grid)
-               // Can't use monster_habitable_grid() because that'll return
-               // true for non-water monsters in shallow water.
-               && mons_primary_habitat(this) != HT_WATER
-               // Use real_amphibious to detect giant non-water monsters in
-               // deep water, who flounder despite being treated as amphibious.
-               && mons_habitat(this, true) != HT_AMPHIBIOUS
-               && !extra_balanced_at(p))
+    return (liquefied(p)
+            || (feat_is_water(grid)
+                // Can't use monster_habitable_grid() because that'll return
+                // true for non-water monsters in shallow water.
+                && mons_primary_habitat(this) != HT_WATER
+                // Use real_amphibious to detect giant non-water monsters in
+                // deep water, who flounder despite being treated as amphibious.
+                && mons_habitat(this, true) != HT_AMPHIBIOUS
+                && !extra_balanced_at(p)))
            && !cannot_fight()
-           && !mons_flies(this)
-           && !(can_cling_to_walls() && cell_is_clingable(p));
+           && ground_level();
 }
 
 bool monster::floundering() const
 {
-    // We recheck wall_clinging just to be sure. There might be some cases,
-    // where a cell is clingable and the monster is not clinging.
-    return floundering_at(pos()) && !is_wall_clinging();
+    return floundering_at(pos());
 }
 
 bool monster::can_pass_through_feat(dungeon_feature_type grid) const
