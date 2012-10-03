@@ -2370,32 +2370,63 @@ void forest_damage(const actor *mon)
         for (adjacent_iterator ai(*ri); ai; ++ai)
             if (feat_is_tree(grd(*ai)) && cell_see_cell(pos, *ai, LOS_DEFAULT))
             {
-                const int damage = div_rand_round((5 + random2(10)) * hd, 12);
-                if (foe->is_player())
+                int evnp = foe->melee_evasion(mon, EV_IGNORE_PHASESHIFT);
+                int dmg = 0;
+                string msg;
+
+                if (!apply_chunked_AC(1, evnp))
                 {
-                    mpr(random_choose(
-                        "You are hit by a branch!",
-                        "A tree reaches out and hits you!",
-                        "A root smacks you from below.",
-                        0));
-                    ouch(damage, mon->mindex(), KILLED_BY_BEAM,
-                         "angry trees", true);
+                    msg = random_choose(
+                            "@foe@ @is@ waved at by a branch.",
+                            "A tree reaches out but misses @foe@.",
+                            "A root lunges up near @foe@.",
+                            0);
+                }
+                else if (!apply_chunked_AC(1, foe->melee_evasion(mon) - evnp))
+                {
+                    msg = random_choose(
+                            "A branch passes through @foe@!",
+                            "A tree reaches out and and passes through @foe@!",
+                            "A root lunges and passes through @foe@ from below.",
+                            0);
+                }
+                else if (!(dmg = foe->apply_ac(div_rand_round(hd, 2) + random2(hd),
+                                               (hd * 3 - 1) / 2, AC_PROPORTIONAL)))
+                {
+                    msg = random_choose(
+                            "@foe@ @is@ scraped by a branch!",
+                            "A tree reaches out and scrapes @foe@!",
+                            "A root barely touches @foe@ from below.",
+                            0);
                 }
                 else
                 {
-                    if (you.see_cell(foe->pos()))
-                    {
-                        const char *msg = random_choose(
-                            "%s is hit by a branch!",
-                            "A tree reaches out and hits %s!",
-                            "A root smacks %s from below.",
-                            0);
-                        // "it" looks butt-ugly here...
-                        mprf(msg, foe->visible_to(&you) ?
-                                      foe->name(DESC_THE).c_str() : "something");
-                    }
-                    foe->hurt(mon, damage);
+                    msg = random_choose(
+                        "@foe@ @is@ hit by a branch!",
+                        "A tree reaches out and hits @foe@!",
+                        "A root smacks @foe@ from below.",
+                        0);
                 }
+
+                msg = replace_all(replace_all(msg,
+                    // "it" looks butt-ugly here...
+                    "@foe@", foe->visible_to(&you) ? foe->name(DESC_THE)
+                                                   : "something"),
+                    "@is@", foe->is_player() ? "are" : "is");
+                if (you.see_cell(foe->pos()))
+                    mpr(msg.c_str());
+
+                if (dmg <= 0)
+                    break;
+
+                if (foe->is_player())
+                {
+                    ouch(dmg, mon->mindex(), KILLED_BY_BEAM,
+                         "angry trees", true);
+                }
+                else
+                    foe->hurt(mon, dmg);
+
                 break;
             }
     }
