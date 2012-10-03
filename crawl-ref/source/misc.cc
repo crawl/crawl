@@ -1714,6 +1714,13 @@ int str_to_shoptype(const string &s)
     return -1;
 }
 
+void list_shop_types()
+{
+    mprnojoin("Available shop types: ");
+    for (unsigned i = 0; i < ARRAYSZ(shop_types); ++i)
+        mpr_nocap(shop_types[i]);
+}
+
 // General threat = sum_of_logexpervalues_of_nearby_unfriendly_monsters.
 // Highest threat = highest_logexpervalue_of_nearby_unfriendly_monsters.
 static void monster_threat_values(double *general, double *highest,
