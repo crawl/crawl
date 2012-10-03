@@ -531,7 +531,6 @@ MARKER:  * = lua:fog_machine { \
                  size = 2, size_buildup_amnt = 5, \
                  size_buildup_time = 25, cloud_type = "freezing vapour" \
              }
-KFEAT: = = runed_door
 
 MAP
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -1212,7 +1211,6 @@ MARKER: # = lua:props_marker({ \
             door_description_noun="gateway", \
          })
 MARKER: # = lua:restrict_door()
-KFEAT: = = runed_door
 MAP
 vvvvvvvvvvvvvvvvv+vvvvvvvvvvvvv
 vtW....Wtvrrsvvv...vvevllllllvv
@@ -1417,7 +1415,6 @@ MARKER: ! = lua:fog_machine { \
                 pow_max = 1000, delay_min = 1, delay_max = 1, \
                 size = 1000, size_buildup_amnt = 111, \
                 size_buildup_time = 1, cloud_type = "gloom" }
-KFEAT: = = runed_door
 MAP
 ccccccc#cccccc
 c!..c....c..!c

@@ -1,0 +1,23 @@
+%%%%
+Agony spell
+
+Toto kouzlo snižuje odolnost cílové bytosti na polovinu,  nikdy nezpůsobuje
+přímo smrt.
+%%%%
+Airstrike spell
+
+Toto kouzlo způsobuje, že se vzduch kolem tvora točí v zuřivém víru. Toto
+kouzlo je zvláště účinné proti létajícím nepřátelům.
+%%%%
+Blink spell
+
+Toto kouzlo přenese kouzelníka na krátkou náhodnou vzdálenost .
+%%%%
+Bolt of Cold spell
+
+Toto kouzlo vrhne velký úder ledu a mrazu.
+%%%%
+Venom Bolt spell
+
+Toto kouzlo vyvolá úder jedem.
+%%%%

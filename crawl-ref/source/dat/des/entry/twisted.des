@@ -714,7 +714,6 @@ SHUFFLE: abcde / fghij
 SUBST:   f=A, g=B, h=C, i=D, j=E
 SUBST:   abcde = mx
 SUBST:   ABCDE : mx
-KFEAT:   = = runed_door
 SHUFFLE: xc, 123
 KMASK:   T = no_monster_gen
 MAP

@@ -1,0 +1,199 @@
+%%%%
+__cap-U_suffix
+
+To sabiedējot, tas var sadusmoties!
+%%%%
+Asmodeus
+
+Viens no arhidēmoniem, kas mīt liesmu apvītajās pekles dzīlēs.
+%%%%
+Azrael
+
+Varens un kareivīgs ifrīts. (Vai tad ir arī citādāki?)
+%%%%
+Cerebov
+
+Nežēlīgs un trakojošs dēmons, Cerebovs atgādina milzu cilvēku, kas noklāts
+mirdzošās zelta bruņās, rokās turot milzīgu ieliektu zobenu.
+%%%%
+Dowan
+
+Skaists, taču augstprātīgs elfs ar dotībām galvenokārt tikai burvestībās. Viņa
+prasmes ir lielisks papildinājums viņa dvīņumāsas Duvesas cīņas bezbailībai.
+%%%%
+Ereshkigal
+
+Baismīgs arhivelns, kurš valda nāvīgajā Tartaras pazemes pasaulē.
+%%%%
+Erolcha
+
+Īpaši viltīgs cilvēkēdājs-burvis.
+%%%%
+Eustachio
+
+Radījumu izsaucēja māceklis ar gludām ūsām. Viņam ir smieklīgas idejas par
+godu.
+%%%%
+Grum
+
+Sīksta paskata gnolls, valkājam viena no sava bijušo cīņas suņu kažoku.
+%%%%
+Harold
+
+Pusmūža atlīdzības mednieks, kas nevar vien sagaidīt, kad varēs doties pensijā
+pēc viena pēdējā darbiņa paveikšanas. Viņš cer kaut kur apmesties un dzīvot
+mierīgu dzīvi kopā ar savu ģimeni, pārtiekot no naudas, ko saņems par pēdējo
+nogalināšanas pasūtījumu: jūs.
+%%%%
+Ilsuiw
+
+Viltīga ūdenieku ragana, kura izmanto savu daili un zintis nevilšu dēkaiņu
+nonāvēšanai.
+%%%%
+Joseph
+
+Izskatās pēc algotņa.
+%%%%
+Lom Lobon
+
+Sens un savādi rāms dēmons. Tas uz Jums vēsi noraugās ar savu milzīgo un
+mirdzošo pieres vidū esošo aci.
+%%%%
+Maud
+
+Noslēpumaina karotājprincese no tāltālas karaļvalsts, kura ieradusies pēc
+leģendārā 'Entareksa' zobena. Neskaitāmi ir bijuši tās apbrīnotāju, kas
+domādami par Maud, aizmirsa par visu pārējo.
+%%%%
+Maurice
+
+Izmanīgs un maskējies garnadzis. Savā arodā Maurīcijs tiek uzskatīts par
+leģendu, vismaz viņaprāt. Viņš neapšaubāmi ir prasmīgs un starp visiem Orbas
+vilinātajiem zagļiem un blēžiem Maurīcijs ir neapšaubāmi izveicīgākais.
+%%%%
+Menkaure
+
+Krietns un dižciltīgs senas un diženas karaļvalsts valdnieks, kurš tika
+mumificēts pēc savas pāragrās nāves. Pēc viņa nāves viņam uzticīgie priesteri
+tā ķermenī iedvesa varenu un spēcīgu maģiju, mēģinot viņam piešķirt mūžīgu
+dzīvi. Nu viņš ir aizmirsts un izdēdējis līdz irstošām marlēm un izkaltušam un
+trauslam ģindenim.
+%%%%
+Rupert
+
+Vīrs ar ļoti sliktām manierēm, kura aurus, viņu apskauž pat cilvēkēdāji.
+%%%%
+Saint Roka
+
+Varens karakungs. Daži orki pat apgalvo, ka viņš ir Beogas izredzētais.
+%%%%
+Snorg
+
+Īpaši tukls trollis ar strauju raksturu un prāvu vēderu. Neieinteresēts par
+Lodi, Snorgs ir sajūsmā par tās pievilinātajiem nebeidzamajiem dēkaiņu pūļiem
+jeb vieglajām maltītēm.
+%%%%
+Tiamat
+
+Varens pūķis ar platiem spārniem. Uz to noraugoties, tā vien šķiet, ka tā
+zvīņas mirdzot maina krāsu.
+%%%%
+Urug
+
+Noplucis un izstīdzējis orks. Urugs zaudēju savu aci cīņā ar harpiju un kopš
+tās dienas nozvērējās izkaut tās līdz pēdējam. Diemžēl viņa atlikušās acs redze
+nav diez ko laba, tādēļ viņš tevi notur par harpiju.
+{{
+    if you.can_smell() then
+        return "Viņš šausmīgi smako."
+    end
+}}
+%%%%
+Wiglaf
+
+Resns rūķis, kurš valkā ģeķīga paskata cepuri. {{
+    if you.can_smell() then
+        return "Viņš dvako pēc alkohola. "
+    end
+}}Viņa nestabilajā gaitā ir kas savāds, it kā šī neticami tuklā persona būtu
+pieradusi pie spējākām kustībām par tādām, kas piemīt pļēgurīgam rūķim. Viņa
+labā roka ir pamatīgi apsvilināta, spriežot pēc ievainojuma apmēra, to droši
+vien izraisīja kas patiešām liels.
+
+Viņš nēsā palielu linu kreklu, kas šķiet par garu viņa druknajām aprisēm.
+Krekla aizmugurē ir izšūts vārds „Viglafs”, lai arī šķiet, ka sākotnējā vārda
+burtiem pa virsu ir pāršūti ielāpi ar citiem.
+%%%%
+acid blob
+
+Slimīgi sastrutojis miesas blāķis, no kura pil nāvējoša skābe.
+%%%%
+adder
+
+Izplatīta pazemes čūska. Troglodītiska rāpuļa suga, kas bieži sastopama pazemē.
+%%%%
+agate snail
+
+Milzīgs un pretīgs gliemezis zaļpelēkā čaulā, kurā, tiekot nobiedēts, tas
+noslēpjas.
+%%%%
+anaconda
+
+Ļoti liela čūska, kas gan pa zemi, gan ūdenī pārvietojas ar pārsteidzošu
+straujumu. Tas savus upurus nenogalina ar indi, bet gan nožņaudzot.
+%%%%
+ancient lich
+
+Ličs, kurš neskaitāmu gadsimtu laikā, pētot tumšās zintis, ir kļuvis
+neiedomājami spēcīgs.
+%%%%
+big fish
+
+Miesīga zivs ar plašu, zobiem pilnu muti.
+%%%%
+black draconian
+
+Zvīņām klāts cilvēkveidīgais ar rāpuļa asti un maziem spārniņiem.
+%%%%
+blessed toe
+
+Relikvija no dievbijīga svētā ķermeņa, kas planē gaisā, mirdzot dievišķā
+gaismā.
+%%%%
+Brimstone Fiend
+
+Milzīgs un varens ugunīgām liesmām apvīts dēmons ar lieliem un zvīņainiem
+svārniem. Viens no biedējošākajiem Elles iemītniekiem.
+%%%%
+centaur warrior
+
+Neskaitāmas kaujas piedzīvojis muskuļots kentaurs, kurš apbruņots ar labiem
+ieročiem, kurus prot arī prasmīgi likt lietā.
+%%%%
+clay golem
+
+Milzīga māla statuja, kas pārdabiskiem līdzekļiem tikusi atdzīvināta.
+%%%%
+deep dwarf berserker
+
+Negants un asinskārs pazemes rūķis, kas alkst cīņas neprāta.
+%%%%
+deep dwarf scion
+
+Bruņots pazemes rūķis, kas bīstams tuvcīņā.
+%%%%
+Executioner
+
+Briesmīgi varens un spējš dēmons, ap kura tēlu šķind izkaptveidīgu asmeņu
+mākonis.
+%%%%
+ancient champion
+
+Neaptverami sens ģindenis. Tā kaulos iegravētas simtiem zeltītas zīmes, kuras
+pulsē ar šaušalīgu un nešķīstu spēku.
+%%%%
+Cigotuvi's Monster
+
+Izskatās it kā šis šausminošais radījums būtu izveidots no ikkatra briesmīgāka
+iedomājamākā radījuma.
+%%%%

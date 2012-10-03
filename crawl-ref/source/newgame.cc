@@ -1736,6 +1736,7 @@ static bool _choose_weapon(newgame_def* ng, newgame_def* ng_choice,
     {
     case JOB_FIGHTER:
     case JOB_GLADIATOR:
+    case JOB_BERSERKER:
     case JOB_CHAOS_KNIGHT:
     case JOB_DEATH_KNIGHT:
     case JOB_ABYSSAL_KNIGHT:

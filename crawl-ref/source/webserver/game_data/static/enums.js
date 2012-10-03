@@ -202,29 +202,6 @@ define(function () {
         return prepare_flags(tileidx, bg_flags);
     }
 
-    function rgb(r, g, b)
-    {
-        return "rgb(" + r + "," + g + "," + b + ")";
-    }
-    exports.term_colours = [
-        rgb(  0,   0,   0),
-        rgb(  0,  82, 255),
-        rgb(100, 185,  70),
-        rgb(  0, 180, 180),
-        rgb(255,  48,   0),
-        rgb(238,  92, 238),
-        rgb(165,  91,   0),
-        rgb(162, 162, 162),
-        rgb( 82,  82,  82),
-        rgb( 82, 102, 255),
-        rgb( 82, 255,  82),
-        rgb( 82, 255, 255),
-        rgb(255,  82,  82),
-        rgb(255,  82, 255),
-        rgb(255, 255,  82),
-        rgb(255, 255, 255),
-    ];
-
     // Menu flags -- see menu.h
     var mf = {};
     mf.NOSELECT         = 0x0000;

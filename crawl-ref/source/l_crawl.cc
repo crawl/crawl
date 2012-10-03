@@ -15,6 +15,7 @@ module "crawl"
 #include "cluautil.h"
 #include "l_libs.h"
 
+#include "chardump.h"
 #include "cio.h"
 #include "command.h"
 #include "delay.h"
@@ -526,9 +527,20 @@ static int crawl_regex_find(lua_State *ls)
     return 1;
 }
 
+static int crawl_regex_equals(lua_State *ls)
+{
+    text_pattern **pattern =
+            clua_get_userdata< text_pattern* >(ls, REGEX_METATABLE);
+    text_pattern **arg =
+            clua_get_userdata< text_pattern* >(ls, REGEX_METATABLE, 2);
+    lua_pushboolean(ls, pattern && arg && **pattern == **arg);
+    return 1;
+}
+
 static const luaL_reg crawl_regex_ops[] =
 {
     { "matches",        crawl_regex_find },
+    { "equals",         crawl_regex_equals },
     { NULL, NULL }
 };
 
@@ -567,9 +579,20 @@ static int crawl_messf_matches(lua_State *ls)
     return 0;
 }
 
+static int crawl_messf_equals(lua_State *ls)
+{
+    message_filter **mf =
+            clua_get_userdata< message_filter* >(ls, MESSF_METATABLE);
+    message_filter **arg =
+            clua_get_userdata< message_filter* >(ls, MESSF_METATABLE, 2);
+    lua_pushboolean(ls, mf && arg && **mf == **arg);
+    return 1;
+}
+
 static const luaL_reg crawl_messf_ops[] =
 {
     { "matches",        crawl_messf_matches },
+    { "equals",         crawl_messf_equals },
     { NULL, NULL }
 };
 
@@ -653,6 +676,17 @@ static int crawl_is_tiles(lua_State *ls)
 static int crawl_is_webtiles(lua_State *ls)
 {
 #ifdef USE_TILE_WEB
+    lua_pushboolean(ls, true);
+#else
+    lua_pushboolean(ls, false);
+#endif
+
+    return 1;
+}
+
+static int crawl_is_touch_ui(lua_State *ls)
+{
+#ifdef TOUCH_UI
     lua_pushboolean(ls, true);
 #else
     lua_pushboolean(ls, false);
@@ -778,6 +812,20 @@ static int crawl_tutorial_msg(lua_State *ls)
     return 0;
 }
 
+/*
+--- Warn about listopt = value when the semantics are slated to change.
+function l_warn_list_append(key) */
+static int crawl_warn_list_append(lua_State *ls)
+{
+    const char *key = luaL_checkstring(ls, 1);
+    if (!key)
+        return 0;
+    warn_list_append.insert(key);
+    return 0;
+}
+
+LUAWRAP(crawl_dump_char, dump_char(you.your_name, true))
+
 #ifdef WIZARD
 static int crawl_call_dlua(lua_State *ls)
 {
@@ -881,10 +929,13 @@ static const struct luaL_reg crawl_clib[] =
     { "stat_gain_prompt", crawl_stat_gain_prompt },
     { "is_tiles",       crawl_is_tiles },
     { "is_webtiles",    crawl_is_webtiles },
+    { "is_touch_ui",    crawl_is_touch_ui },
     { "err_trace",      crawl_err_trace },
     { "get_command",    crawl_get_command },
     { "endgame",        crawl_endgame },
     { "tutorial_msg",   crawl_tutorial_msg },
+    { "warn_list_append", crawl_warn_list_append },
+    { "dump_char",      crawl_dump_char },
 #ifdef WIZARD
     { "call_dlua",      crawl_call_dlua },
 #endif

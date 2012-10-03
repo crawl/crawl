@@ -264,6 +264,7 @@ public:
 
     vector<menu_sort_condition> sort_menus;
 
+    bool        dump_on_save;       // Automatically dump character when saving.
     int         dump_kill_places;   // How to dump place information for kills.
     int         dump_message_count; // How many old messages to dump
 
@@ -429,8 +430,8 @@ private:
     void add_cset_override(char_set_type set, dungeon_char_type dc, int symbol);
     void add_feature_override(const string &);
 
-    void add_message_colour_mappings(const string &);
-    void add_message_colour_mapping(const string &);
+    void add_message_colour_mappings(const string &, bool);
+    void add_message_colour_mapping(const string &, bool);
     message_filter parse_message_filter(const string &s);
 
     void set_default_activity_interrupts();

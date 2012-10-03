@@ -1,4 +1,8 @@
 %%%%
+No ability
+
+Si lees esta descripción, ha ocurrido un error en el programa.
+%%%%
 Spit Poison
 
 Escupes veneno al monstruo que apuntes.
@@ -86,9 +90,25 @@ Device Recharging
 A costa de perder un punto de magia permanentemente se recarga una vara o una
 barra.
 %%%%
+Evoke Teleportation
+
+Te teleportas a una posición al azar en el nivel.
+%%%%
 Evoke Blink
 
 Translocación aleatoria a corta distancia.
+%%%%
+Evoke Berserk Rage
+
+Te vuelves berserk. Entrar en trance berserk incrementa espectacularmente,
+aunque por poco tiempo, tus puntos de vida y la capacidad de daño en el combate
+cuerpo a cuerpo. Expirará rápidamente si no matas algo, pero puede extenderse
+mediante múltiples muertes. Durante el trance berserk no puedes realizar
+algunas acciones como, por ejemplo,(des)envainar un arma, beber, evocar varas u
+otros artilugios, o  pronunciar hechizos. Tras este tipo de furia usualmente
+uno queda profundamente exhausto, un periodo durante el que quedas ralentizado,
+no puedes volverte berserk nuevamente y, ocasionalmente, incluso podrías
+desmayarte.
 %%%%
 Evoke Invisibility
 
@@ -98,6 +118,13 @@ tu contaminación mágica y puede finalmente causar brillo.
 Turn Visible
 
 Te vuelves visible de nuevo.
+%%%%
+Evoke Levitation
+
+Comienzas a levitar. Durante la levitación puedes cruzar agua y obstáculos
+similares sin peligro. Quedas advertido, sin embargo, de que la levitación
+puede acabarse en un momento inoportuno y provocar una caída mortal. Mientras
+estés levitando no puedes interactuar con objetos en el suelo ni recogerlos.
 %%%%
 Stop Levitating
 
@@ -157,11 +184,23 @@ El Resplandeciente te concede un escudo divino. Dado que se mantiene por
 poderes divinos no interfiere con tu equipación. Sin embargo está controlado
 por tu voluntad y tu capacidad en Escudos lo mejorará.
 %%%%
+Cleansing Flame
+
+Invocas una enorme llamarada de furia divina centrada en ti, dañando
+severamente a los no-muertos y a los demonios. El resto de hostiles también se
+ven afectados, aunque en menor medida, mientras que tus aliados y tú nunca os
+veis afectados.
+%%%%
 Summon Divine Warrior
 
 Convocas a un ángel o daeva, que son unos poderosos guerreros enfrentados al
 mal. Pueden ser bendecidos por El Resplandeciente para permanecer más tiempo en
 este mundo.
+%%%%
+Receive Corpses
+
+Se crean uno o más cadáveres de monstruos reanimables cerca de ti. El número y
+frescor de éstos depende de la capacidad en Necromancia.
 %%%%
 Torment
 
@@ -181,6 +220,11 @@ Recall Undead Slaves
 
 Recuperas a tus seguidores no-muertos desde cualquier lugar del nivel hasta tus
 inmediaciones.
+%%%%
+Injury Mirror
+
+Daña a los monstruos que te ataquen, reflejando hacia ellos el daño que ellos
+te hagan a ti.
 %%%%
 Animate Dead ability
 
@@ -207,14 +251,29 @@ nivel de Invocaciones.
 
 Las almas esclavizadas pueden seguirte más allá del nivel donde fueron creadas.
 %%%%
+Animate Remains or Dead
+
+Si lees esta descripción, ha ocurrido un error en el programa.
+%%%%
 Heroism
 
 Temporalmente se incrementan todas tus capacidades de combate, incluyendo la
 capacidad de pasar desapercibido o de evitar trampas.
 %%%%
+Finesse
+
+Incrementas en gran medida tu velocidad de combate sin perder precisión. Este
+efecto no natural causa pequeñas cantidades de contaminación mágica y la
+exposición prolongada puede ser mala para tu salud.
+%%%%
 Minor Destruction
 
 Disparas un destructivo rayo al monstruo que apuntes
+%%%%
+Lesser Servant of Makhleb
+
+Convoca a un demonio menor, con una probabilidad de ser hostil si tienes un
+nivel bajo de Invocaciones.
 %%%%
 Major Destruction
 
@@ -235,11 +294,33 @@ Forget Spell
 Olvidas cualquier hechizo de los que hayas memorizado, para poder liberar
 memoria para aprender otros.
 %%%%
+Burn Spellbooks
+
+Prendes fuego a todos los libros de magia que estén en tu campo de visión. El
+fuego está alimentado por la ira de Trog, y a Trog le gusta más si ni siquiera
+te molestas en saber que locura de libros arden.
+%%%%
+Berserk
+
+Te vuelves berserk. Entrar en trance berserk incrementa espectacularmente,
+aunque por poco tiempo, tus puntos de vida y la capacidad de daño en el combate
+cuerpo a cuerpo. Expirará rápidamente si no matas algo, pero puede extenderse
+mediante múltiples muertes. Durante el trance berserk no puedes realizar
+algunas acciones como, por ejemplo,(des)envainar un arma, beber, evocar varas u
+otros artilugios, o  pronunciar hechizos. Tras este tipo de furia usualmente
+uno queda profundamente exhausto, un periodo durante el que quedas ralentizado,
+no puedes volverte berserk nuevamente y, ocasionalmente, incluso podrías
+desmayarte.
+%%%%
 Trog's Hand
 
 Invoca una poderosa regeneración que se añade junto con otras fuentes e incluso
 permite que especies sin capacidad de curación se regeneren. También aumenta la
 protección ante efectos mágicos.
+%%%%
+Brothers in Arms
+
+Convocas a aliados enormes y furiosos para causar estragos.
 %%%%
 Divine Protection
 
@@ -252,6 +333,23 @@ siempre es gratis).
 Cuidado: ¡matar a otros mientras pides que se te salve a ti mismo es un pecado
 capital!
 %%%%
+Lesser Healing
+
+En función de tu nivel de Invocaciones, sanas a una criatura que no seas tú por
+una pequeña cantidad. Usar esta habilidad en monstruos hostiles los intentará
+volver neutrales. Esto funciona mejor con animales, algo peor con humanoides de
+tu especie, peor con otros humanoides y mucho peor con demonios y no-muertos.
+Las criaturas sin mente no pueden ser pacificadas, así como los monstruos que
+estén durmiendo. La probabilidad para una pacificación exitosa depende del
+poder de sanación.
+
+Tanto si la pacificación ocurre como si no, la inversión en alimento y puntos
+mágicos se pierden. Si la pacificación tiene éxito, el monstruo es sanado y tu
+ganas la mitad de lo que vale la experiencia del monstruo y posiblemente algo
+de piedad. Si no, el monstruo no se ve afectado y no ganas nada.
+
+Puedes sanar a aliados y a monstruos neutrales.
+%%%%
 Lesser Self-Healing
 
 En función de tu nivel de Invocaciones, sanas una pequeña cantidad de puntos de
@@ -262,6 +360,23 @@ Purification
 Purgas tu cuerpo de todos los efectos nocivos como enfermedad, envenenamiento,
 lentitud, petrificación, confusión y descomposición, y restauras completamente
 tu Fuerza, Destreza e Inteligencia.
+%%%%
+Greater Healing
+
+En función de tu nivel de Invocaciones, sanas a una criatura que no seas tú por
+una pequeña cantidad. Usar esta habilidad en monstruos hostiles los intentará
+volver neutrales. Esto funciona mejor con animales, algo peor con humanoides de
+tu especie, peor con otros humanoides y mucho peor con demonios y no-muertos.
+Las criaturas sin mente no pueden ser pacificadas, así como los monstruos que
+estén durmiendo. La probabilidad para una pacificación exitosa depende del
+poder de sanación.
+
+Tanto si la pacificación ocurre como si no, la inversión en alimento y puntos
+mágicos se pierden. Si la pacificación tiene éxito, el monstruo es sanado y tu
+ganas la mitad de lo que vale la experiencia del monstruo y posiblemente algo
+de piedad. Si no, el monstruo no se ve afectado y no ganas nada.
+
+Puedes sanar a aliados y a monstruos neutrales.
 %%%%
 Greater Self-Healing
 
@@ -316,6 +431,13 @@ Triple Draw
 Sacas tres cartas de un mazo en tu inventario, las miras, y decides cual
 conservar, descartando las otras dos.
 %%%%
+Deal Four
+
+Extraes cuatro cartas de un mazo no marcado en el tiempo que normalmente
+extraerías una. El resto del mazo es descartado. Si el mazo no contiene
+suficientes cartas, Nemelex te dará una carta adicional, pero es posible no sea
+de tu agrado.
+%%%%
 Stack Five
 
 Sacas cinco cartas de cualquier mazo no marcado de tu inventario, perdiendo el
@@ -339,6 +461,14 @@ serán más fáciles de dar. El agua afectada por la luz se evaporará. En
 particular, el agua profunda se volverá superficial, y el agua superficial se
 secará completamente, revelando el suelo.
 %%%%
+Growth
+
+Usa fruta para hacer crecer un anillo de plantas a tu alrededor. Si no se puede
+formar el anillo completo (porque no hay suficiente fruta), las plantas
+crecerán en casillas adyacentes a ti y cercanas a los monstruos. Las plantas
+así creadas ganan un bonus sobre sus puntos de vida, que es proporcional a tu
+nivel de Invocaciones.
+%%%%
 Rain
 
 Provocas que llueva a tu alrededor, convirtiendo el suelo en aguas poco
@@ -356,6 +486,11 @@ de nivel a los hongos requiere piedad mientras que las plantas requieren fruta.
 Las plantas evolucionadas ganan un bonus de ataque proporcional al nivel de
 Invocaciones del usuario, y las plantas oklob son más propensas a escupir ácido
 a mayores niveles de Invocaciones.
+%%%%
+Bend Time
+
+Intentas de ralentizar a cualquiera que este adyacente a ti. Un nivel alto en
+Invocaciones lo hace más difícil de resistir.
 %%%%
 Temporal Distortion
 
@@ -449,6 +584,11 @@ Make net trap
 
 Creas una trampa de red en la posición señalada.
 %%%%
+Make ice statue
+
+Construyes una estatua con varias habilidades glaciares en la posición
+señalada.
+%%%%
 Make spear trap
 
 Creas una trampa de lanzas en la posición señalada.
@@ -509,6 +649,10 @@ Sage
 
 Canalizas algo de tu experiencia lograda hacia una cierta capacidad y la
 entrenas más rápido de lo normal.
+%%%%
+Acquirement
+
+Consigues un objeto de la clase que tu elijas.
 %%%%
 Make blade trap
 

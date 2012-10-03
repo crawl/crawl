@@ -1,9 +1,155 @@
 %%%%
+Aizul
+
+Kadaise jis buvo pagrindinis legendinės lobių sankaupos žaltys sergėtojas, bet
+užsitraukė gėdą, kai jam bemiegant, ją išplėšė vagys. Dabar jis šliaužioja po
+požemį, kerštaudamas visiems galimiems plėšikams. Jis yra prityręs burtininkas,
+tačiau artimoje kovoje pavojingas tiek pat, kiek ir jo giminaičiai.
+%%%%
+Antaeus
+
+Kadaise jis buvo galingas ir garsus Titanas, tačiau jo išdidumas jį pražudė.
+Dabar jis pagedęs ir suteptas, galingas demonas, valdantis užšalusias Kokito
+dykynes. Atrodo, jūsų atakos gali lengvai kliudyti jo gigantišką kūną; deja,
+bet taip pat atrodo, kad tik pačios stipriausios iš jų gali jį sužeisti.
+%%%%
+Arachne
+
+Kadaise geriausia verpėja tarp žmonių, Arachnė buvo prakeikta ir permainyta į
+dabartinę pusiau žmogaus, pusiau voro formą. Nustojusi senti, ji turi moterišką
+grožį ir jaunystę o taip pat ir didžiulio, bjauraus voro liemenį ir kojas.
+
+Per tūkstančius metų ji pramoko magijos bei gana nemažai kitų gudrybių.
+Tikėkitės būti supančiotas voratinklių ir magijos pagalba, kol jos gyvūnėliai
+jus virškins ir gers iki paskutinio kraujo lašo.
+%%%%
+Asmodeus
+
+Vienas archdemonų, gyvenantis Pragaro gelmėse. Jį siaučia liepsnų kamuolys.
+%%%%
+Azrael
+
+Karingas, agresyvus ifritas. (Ar būna kitokių?)
+%%%%
+Boris
+
+Itin senas ir galingas ličas. Kaip ir visi tikri ličai, Borisas yra nemirtingas
+ir gali regeneruoti savo sudžiūvusius ir kaulėtus palaikus net ir visiškai
+jiems suirus. Nors paprastai šis sudėtingas procesas trunka mėnesiais ar netgi
+metais, Borisas jį įvaldė tiek, kad gali atgyti per kelias minutes.
+%%%%
+Cerebov
+
+Rūstus ir smarkus demonas, Cerebovas atrodo lyg milžiniškas žmogus, apsidengęs
+auksiniais šarvais ir laikantis didžiulį suktą kardą rankose.
+%%%%
+Chuck
+
+Čakas akmens milžinas mėgsta akmenis, kuo didesni, tuo geriau! Laikui bėgant,
+jis sugebėjo sukaupti gan nemažą kolekciją, įskaitant ir keletą retų, užburtų
+akmenų.
+%%%%
+Crazy Yiuf
+
+Senas ir sudžiūvęs gnolis ilga sidabriška barzda, laikantis lazdą ir vilkintis
+apsiaustą. Jis atrodo lyg mitinė asmenybė! Pala, ar jo barzda kabliukais
+užkabinta ant jo ausų?
+%%%%
+Dispater
+
+Geležinio Dis Miesto valdovas.
+%%%%
+Dissolution
+
+Gleivių Olos kadaise buvo klestinti civilizacija, o Beformis buvo jų dievybės
+pranašas. Kai miestą užėmė dabartiniai jo gyventojai, išliko tik Beformis, nes
+jis vienintelis pradėjo ištikimai garbinti Gleivių Dievybę. Beformis pavirto
+milžiniška mase rūgštingo dumblo, tačiau išlaikė savo protą. Jis pilnas
+neapykantos viskam, kas turi formą.
+%%%%
+Donald
+
+{{
+    local descript = "Nuotykių ieškotojas kaip ir jūs, bandantis surasti
+Rutulį."
+
+    if you.race() ~= "Merfolk" and you.race() ~= "Octopode" then
+        descript = descript .. " Ne taip, kaip jūs, ir n"
+    else
+        descript = descript .. " N"
+    end
+
+    descript = descript .. "epaisant to, kad jis nemėgsta vandens, jį ten " ..
+                           "nenumaldomai traukia."
+
+    return descript
+}}
+%%%%
+Dowan
+
+Gražus, tačiau tuščiagarbis elfas, gabus magijai ir beveik niekam kitam. Jo
+gabumai puikiai papildo jo sesers dvynės Diuvesos kovos išmanymą.
+%%%%
+Duvessa
+
+Paprastai atrodanti elfų karė, nuostabiai įvaldžiusi daugybės kovos rūšių
+techniką, tačiau dėl to pernelyg savim pasitikinti. Ją papildo jos brolio
+dvynio Dovano magijos įgūdžiai.
+%%%%
+Edmund
+
+Pavydus Sigmundo brolis (iš tikro, jauniausias iš devynių brolių). Ne taip kaip
+Sigmundas, jis visiškai neišmano magijos, tačiau tą atperka jo kovos įgūdžiai
+ir gebėjimas prasimanyti pinigų. Jis nekantrauja įrodyti savo pranašumą žudant
+nelaimėlius nuotykių ieškotojus savuoju brangiai kainavusiu spragilu ir žvitriu
+sąmoju.
+%%%%
+Ereshkigal
+
+Bauginanti išperų išpera, valdanti mirtiną požeminį Tartaro pasaulį.
+%%%%
 Erica
 
 Žavi užkalbėtoja.
 %%%%
+Erolcha
+
+Itin sukta žmogėdra-burtininkė.
+%%%%
+Eustachio
+
+Pradedantysis iššaukėjas ilgais ūsais. Jis turi keistą supratimą apie garbę.
+%%%%
+Frances
+
+Stambi kovotoja, kadaise kovoje įveikusi galingą Pandemoniumo valdovą, taip
+paveldėdama jo karaliją ir didikus.
+%%%%
+Frederick
+
+Manieringas karys-magas su monokliu auksiniais apvadais, ieškantis tinkamo ir
+prideramo priešininko. Jūs greičiausiai netinkate.
+%%%%
+Geryon
+
+Milžiniškas, sparnuotas trigalvis demonas, Pragaro vartų sargas.
+%%%%
 Kirke
 
 Graži žavėtoja.
+%%%%
+Brimstone Fiend
+
+Milžiniškas ir galingas demonas dideliais žvynuotais sparnais, apsuptas pragaro
+liepsnų. Vienas labiausiai bauginančių visų Pragarų gyventojų.
+%%%%
+Executioner
+
+ Siaubingai galingas ir greitas demonas. Jo figūrą temdo sūkuriuojančių panašių
+į dalgio ašmenų debesis.
+%%%%
+Cigotuvi's Monster
+
+Šis bauginantis padaras atrodo lyg sukonstruotas iš visų siaubingų būtybių,
+kokias tik galima įsivaizduoti, kūno dalių.
 %%%%

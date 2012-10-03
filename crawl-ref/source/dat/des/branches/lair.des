@@ -211,8 +211,8 @@ MAP
 ..lllllL.
 ..ll2Ll1.
 .LlLOLll.
-.lllLlll.
-.ll1lll..
+.ll.Llll.
+.l.1lll..
 ..lllL...
 .........
 ENDMAP
@@ -2001,7 +2001,6 @@ MARKER: o = lua:monster_on_death { \
             veto_fragmentation="veto", veto_disintegrate="veto", \
             veto_shatter="veto", \
          }
-KFEAT: = = runed_door
 MAP
   xxxxxxxxxxx
  xxxxxXX.XXXxx
@@ -2045,7 +2044,6 @@ MONS:   sun demon
 MONS:   hydra / fire drake / dire elephant
 MONS:   wizard col:red hd:13 name:crazed n_adj n_noc tile:mons_hell_wizard
 KITEM:  / = acquire any
-KFEAT:  = = runed_door
 MAP
    ...TTTT....  .............................
   ..TttttttT.......Tt.TtT....TT..TT......Tt....
@@ -2091,7 +2089,6 @@ SUBST:  P = 11.
 # Give a hint about the dragon cave.
 NSUBST: " = 1:GU / *:.
 KPROP:  = = bloody
-KFEAT:  = = runed_door
 SUBST:  _ = .
 : lair_small_ending(_G)
 MAP

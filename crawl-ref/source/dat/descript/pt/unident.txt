@@ -1,0 +1,43 @@
+%%%%
+amulet
+
+Um talismã a ser vestido como uma joia ao redor do pescoço, carregado com
+poderes arcanos de origem desconhecida.
+%%%%
+book
+
+Um livro de magia. Tome cuidado, pois dos grimórios mais poderosos não são
+brinquedinhos.
+%%%%
+deck of cards
+
+Um baralho de poderosas cartas mágicas, pintadas com o sangue de demônios. Elas
+podem ter qualquer quantidade de efeitos favoráveis ou daninhos quando
+utilizadas.
+%%%%
+potion
+
+Uma pequena garrafa com um líquido.
+%%%%
+ring
+
+Um talismã carregado com forças arcanas de origem desconhecida a ser vestido
+como uma joia em um dedo.
+%%%%
+rod
+
+Uma barra mágica, que pode ser tida em mãos e evocada para o lançamento de
+vários feitiços, alimentando-se de um reservatório de poder autorrecarregável.
+%%%%
+scroll
+
+Um pergaminho de papel coberto em escritura mágica.
+%%%%
+magical staff
+
+Um bastão imbuído em poderes arcanos de natureza desconhecida.
+%%%%
+wand
+
+Uma vareta. Quem sabe ela seja mágica.
+%%%%

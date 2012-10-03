@@ -525,7 +525,6 @@ static mutation_type appendages[] =
 {
     MUT_HORNS,
     MUT_TENTACLE_SPIKE,
-    MUT_CLAWS,
     MUT_TALONS,
 };
 
@@ -828,6 +827,17 @@ bool transform(int pow, transformation_type which_trans, bool force,
         break;
     default:
         msg += "something buggy!";
+    }
+
+    if (!force && just_check && (str + you.strength() <= 0 || dex + you.dex() <= 0))
+    {
+        string prompt = make_stringf("Transforming will reduce your %s to zero. Continue?",
+                                     str + you.strength() <= 0 ? "strength" : "dexterity");
+        if (!yesno(prompt.c_str(), false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
     }
 
     // If we're just pretending return now.

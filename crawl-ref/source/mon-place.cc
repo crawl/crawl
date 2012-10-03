@@ -1763,7 +1763,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         // player is fighting them one-on-one, while he will often summon
         // several.
         ghost.init_dancing_weapon(*(mon->mslot_item(MSLOT_WEAPON)),
-                                  mg.summoner ? mg.power : 180);
+                                  mg.summoner ? mg.power : 100);
         mon->set_ghost(ghost);
         mon->ghost_demon_init();
     }
@@ -2027,8 +2027,17 @@ void define_zombie(monster* mon, monster_type ztype, monster_type cs)
 
     monster_type base = mons_species(ztype);
 
-    ASSERT(zombie_class_size(cs) == Z_NOZOMBIE
-           || zombie_class_size(cs) == mons_zombie_size(base));
+#ifdef ASSERTS
+    if (zombie_class_size(cs) != Z_NOZOMBIE
+        && zombie_class_size(cs) != mons_zombie_size(base))
+    {
+        // we don't know the place requested
+        die("invalid zombie size: %s for %s, player on: %s",
+            mons_class_name(cs),
+            mons_class_name(ztype),
+            level_id::current().describe().c_str());
+    }
+#endif
 
     // Set type to the original type to calculate appropriate stats.
     mon->type         = ztype;
@@ -2217,10 +2226,6 @@ static band_type _choose_band(monster_type mon_type, int power, int &band_size,
         natural_leader = true;
         band = BAND_WAR_DOGS;
         band_size = 2 + random2(3);
-        break;
-    case MONS_BUMBLEBEE:
-        band = BAND_BUMBLEBEES;
-        band_size = 2 + random2(4);
         break;
     case MONS_CENTAUR_WARRIOR:
         natural_leader = true;
@@ -2654,10 +2659,6 @@ static monster_type _band_member(band_type band, int power)
                                            6, MONS_DEEP_DWARF_NECROMANCER,
                                           31, MONS_DEEP_DWARF,
                                            0);
-        break;
-
-    case BAND_BUMBLEBEES:
-        mon_type = MONS_BUMBLEBEE;
         break;
 
     case BAND_CENTAURS:

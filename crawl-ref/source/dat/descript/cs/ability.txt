@@ -1,0 +1,43 @@
+%%%%
+Blink ability
+
+Náhodně se přemístit na krátkou vzdálenost.
+%%%%
+Breathe Frost
+
+Dýchenout výbuch mrazu na cílené monstrum.
+%%%%
+Animate Remains
+
+Oživit jednu mrtvolu, nebo kostru, jako následovníka. Všimněte si, že zombie a
+kostlivci nemůžou opustit úroveň, na které byly vytvořeny.
+%%%%
+Animate Dead ability
+
+Oživit všechny mrtvoly a kostry ve vašem okolí, jako následovníky. Všimněte si,
+že zombie a kostlivci nemůžou opustit úroveň, na které byly vytvořeny.
+%%%%
+Animate Remains or Dead
+
+Pokud dostanete tento popis, jedná se o chybu.
+%%%%
+Banish
+
+Pokoušet vyhnat monstrum do propasti.
+%%%%
+Transfer Knowledge
+
+Obětovat část jedné z vašich dovedností s cílem zlepšit jinou.
+%%%%
+Zot-teleport
+
+Provádět řízený teleport.
+%%%%
+Acquire gold
+
+Získat velké množství zlata.
+%%%%
+Acquirement
+
+Získat zvolený typ položky.
+%%%%

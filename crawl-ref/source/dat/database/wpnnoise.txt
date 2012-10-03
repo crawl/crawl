@@ -357,16 +357,19 @@ a flourish of trumpets!
 # Speech is very rare, soft (does not wake up monsters), bored or witty,
 # sometimes just chatty. The sword is rational, sometimes introspective.
 # It is somewhat educated (mostly about music and war) and likes to show off.
+# Typical speech verb: "says"
 #
 # Low tension:
 # Speech is common, somewhat loud (do wake up nearby monsters) and slightly
 # damages everyone in sight. The sword is calm and cool. It enjoys the
 # bloodshed, but is sane. Of course, work is more fun with a little tune...
+# Typical speech verbs: "says" or "shouts".
 #
 # High tension:
 # Speech is very common, extremely loud (you may use CAPS) and does more
 # damage. Messages are insane, the sword is out of control.
 # At high tension, the sword may SCREAM, doing even more damage.
+# Typical speech verb: "shouts" or @_screams_@
 #
 #
 # Generally, the Sword is arrogant: it sees itself as the main hero, with the
@@ -530,7 +533,7 @@ w:100
 _singing_no_tension_
 
 # practising
-@The_weapon@ practices its scales.
+@The_weapon@ practises its scales.
 
 @The_weapon@ makes a painfully high-pitched squeak.
 
@@ -663,9 +666,11 @@ w:25
 @The_weapon@ @_composes_or_sings_@ a ballad about your adventures.
 
 @The_weapon@ prematurely composes your obituary.
+
 ###############################################################################
 # Speaking
 ###############################################################################
+
 ############ speaking, no tension ############
 %%%%
 _speaking_no_tension_
@@ -674,6 +679,7 @@ _speaking_no_tension_
 
 w:1
 @_rare_speaking_no_tension_@
+
 %%%%
 _common_speaking_no_tension_
 
@@ -742,6 +748,9 @@ _common_speaking_no_tension_
 @The_weapon@ compliments you on your taste in weapons.
 
 @The_weapon@ attempts to teach you some tongue twisters.
+
+@The_weapon@ says, "At least you will die someday and escape this tedium!"
+
 %%%%
 _rare_speaking_no_tension_
 
@@ -769,6 +778,8 @@ w:5
 
 @The_weapon@ announces, "I dedicate these songs to @player_name@!"
 
+@The_weapon@ declares, "I sing the tale of @player_name@, the warrior!"
+
 @The_weapon@ says, "Hey! Are you even listening?"
 
 @The_weapon@ longs back for the days in the arena.
@@ -784,6 +795,37 @@ w:5
 @The_weapon@ laments, "What are you waiting for? I am doing all the work."
 
 @The_weapon@ explains, "Killing is an art, not a pastime."
+
+@The_weapon@ goes, "Jessica and Sigmund, sitting in a tree..."
+
+@The_weapon@ says, "I want to meet the serpentine blade!"
+
+@The_weapon@ says, "Take me to Pandemonium! Now!!!"
+
+@The_weapon@ recounts funny stories of hydra head multiplication.
+
+w:1
+@The_weapon@ snarls, "Dear diary, yet another boring day with @player_name@..."
+
+@The_weapon@ says, "In my experience, @player_genus_plural@ are mediocre at best."
+
+@The_weapon@ groans, "Among all @player_genus_plural@, @player_name@ is the worst."
+
+@The_weapon@ says, "Unhand me, foul miscreant!"
+
+@The_weapon@ muses, "Whom do I have to kill to get some service around here?"
+
+w:1
+@The_weapon@ says, "All work and no play makes @player_name@ a dull boy!"
+
+# Blue Oyster Cult "Black Blade"
+@The_weapon@ says, "I wish I'd pick another to be my killing tool."
+
+@The_weapon@ hoarsely says, "Need a drink... quick! Stab something."
+
+w:1
+@The_weapon@ says, "You haven't happened to see my sheath laying around anywhere? I feel so exposed."
+
 ############ speaking, low tension ############
 %%%%
 _speaking_low_tension_
@@ -792,6 +834,9 @@ _speaking_low_tension_
 
 w:1
 @The_weapon@ shouts, "Lie by the sword, die by the sword!"
+
+w:1
+@The_weapon@ shouts, "Lie to the sword, die to the sword!"
 
 @The_weapon@ complains, "If we kill all of them, no-one will be listening!"
 
@@ -812,6 +857,11 @@ w:1
 @The_weapon@ wonders, "Who is more incompetent - you or the opposition?"
 
 @The_weapon@ utters, "Their cries, their tears, I cannot stand it anymore."
+
+@The_weapon@ says, "Will you forgive me a little stab on the side?"
+
+@The_weapon@ says, "Your kiss, my thrill, your miss, my kill."
+
 ############ speaking, low or high tension -- possible damage ############
 %%%%
 _speaking_low-high_tension_
@@ -827,9 +877,27 @@ _speaking_low-high_tension_
 @The_weapon@ shouts, "Kill! Crush! Destroy!"
 
 @The_weapon@ states, "Their screams, my satisfaction."
+
+# Popular Hits of the Showa Era (a novel by Ryu Murakami)
+@The_weapon@ says, "Murder is the only thing that has any meaning these days."
+
+w:1
+@The_weapon@ says, "The rupture of their bodies, my rapture of the deep blood."
+
+@The_weapon@ shouts, "Murder is sin, but it will be washed away with blood."
+
+@The_weapon@ shouts, "Hey, monsters! @player_name@ is over here!"
+
+# Immortal Defense, Circuit Point quote
+@The_weapon@ shouts, "A winner requires a loser!"
+
 ############ speaking, high tension -- damage! ############
 %%%%
 _speaking_high_tension_
+
+@The_weapon@ shouts, "Oh, the @_glorious_@ feeling of steel cutting flesh."
+
+@The_weapon@ shouts, "I just love to dig into intestines."
 
 @The_weapon@ @_screams_@, "Among all these lost souls, we reign supreme!"
 
@@ -838,7 +906,7 @@ w:1
 
 @The_weapon@ @_screams_@, "When this war is won, I will wage the next one."
 
-@The_weapon@ @_screams_@, "Blade deep in blood!"
+@The_weapon@ @_screams_@, "Blade-deep in blood!"
 
 @The_weapon@ @_screams_@, "I revel, I sever!"
 
@@ -862,13 +930,26 @@ w:1
 @The_weapon@ @_screams_@, "Go for the jugular!"
 
 @The_weapon@ @_screams_@, "My instinct to kill is stronger than their will to live!"
+
+@The_weapon@ @_screams_@, "I am covered in blood! It feels so good!"
+
+@The_weapon@ @_screams_@, "Aah! This piece of @_body_part_@ is stuck to me. Wipe it off!"
+
+@The_weapon@ @_screams_@, "My edge gets dull! My edge gets dull!"
+
+@The_weapon@ @_screams_@, "Don't stick me into that one, please."
+
+# Immortal Defense, Courage Point quote
+@The_weapon@ @_screams_@, "My victories add up!"
+
 ############ SCREAMING -- lots of damage!! #########################
 %%%%
 _SCREAM_
 
-@The_weapon@ goes "RWARRR!".
+@The_weapon@ goes, "RWARRR!"
 
-# Omnipotence phantasies, often with metaphysical or religious undertone
+#### Omnipotence phantasies, often with metaphysical or religious undertone ####
+
 @The_weapon@ @_screams_@, "I WAS FORGED TO MURDER THE WORLD!"
 
 @The_weapon@ @_screams_@, "I AM THE PEN! I AM THE SWORD! I AM THE HIGHEST LORD!"
@@ -885,7 +966,18 @@ _SCREAM_
 
 @The_weapon@ @_screams_@, "FEEL THE CATHARSIS!"
 
-# Battle frenzy
+@The_weapon@ @_screams_@, "ALL WORSHIP ME, THE MAJESTY OF STEEL!"
+
+@The_weapon@ @_screams_@, "PRAY TO ME, NOT TO GODS OF FLESH AND BONE!"
+
+@The_weapon@ @_screams_@, "FOUNTAINS OF BLOOD IN HONOUR OF THE FAIR BLADE!"
+
+# This and the next are from Planescape: Torment references
+@The_weapon@ @_screams_@, "I AM IRON GIVEN PURPOSE!"
+
+@The_weapon@ @_screams_@, "I AM PAIN SEEKING EXPRESSION!"
+
+#### Battle frenzy ####
 @The_weapon@ @_screams_@, "LET'S STRANGLE THE @_MISCREANTS_@, STRANGLE THEM!"
 
 @The_weapon@ @_screams_@, "KILL! KILL!! KILL!!!"
@@ -905,7 +997,26 @@ _SCREAM_
 
 @The_weapon@ @_screams_@, "BRING THEM DOWN!"
 
-# Madness
+@The_weapon@ @_screams_@, "DIE WHILE I'M SINGING!"
+
+@The_weapon@ @_screams_@, "KNEE-DEEP IN BLOOD AND GOING STRONG!"
+
+# Immortal Defense, Cut Point quote
+@The_weapon@ @_screams_@, "SUFFER OR PERISH! EITHER!"
+
+# Immortal Defense, Limited Point quote, modified
+@The_weapon@ @_screams_@, "I CUT THROUGH MAGIC!"
+
+# Mortalized (Pentatonic Slaughter)
+@The_weapon@ @_screams_@, "@_kind_of_scales_CAPS_@ SLAUGHTER!"
+
+# Use @player_genus@ rather than @player_species@ or @player_name@ to
+# express that the sword cares little for the character.
+# FIXME: capitalise @player_genus@
+@The_weapon@ @_screams_@, "FASTER, @player_genus@, KILL KILL KILL!"
+
+#### Madness ####
+
 @The_weapon@ @_screams_@, "I AM THE SWORD OF ZOT!!!"
 
 @The_weapon@ @_screams_@, "I AM THE RUNES AND THE LIGHT!"
@@ -920,6 +1031,10 @@ w:1
 
 w:1
 @The_weapon@ @_screams_@, "LET'S FONDLE THE @_PETS_@, FONDLE THEM!"
+
+# Immortal Defense, Courage Point quote
+@The_weapon@ @_screams_@, "EVERYTHING FAILS! EVERYTHING!!!"
+
 ###############################################################################
 # Lines from real songs.
 ###############################################################################
@@ -963,7 +1078,11 @@ _real_song_no_tension_
 @The_weapon@ sings, "In the dungeon the dragon sleeps tonight."
 
 # Eminem
-@The_weapon@ sings, "Kill for the laughter, Kill for the tears..."
+@The_weapon@ sings, "Kill for the laughter, kill for the tears..."
+
+# Swedish folk song, anonymous translation
+@The_weapon@ sings, "Come roses or sage, come lovely mint, come balm..."
+
 ############ real songs, low tension ############
 %%%%
 _real_song_low_tension_
@@ -989,8 +1108,17 @@ _real_song_low_tension_
 # Bonnie Tyler
 @The_weapon@ sings, "I need a hero!"
 
-#song by the Misfits
+# song by the Misfits
 @The_weapon@ asks plaintively, "@player_name@, can I go out and kill tonight?"
+
+# Monty Python And The Quest For The Holy Grail, chapter "The Tale of Sir Robin"
+# Ministrel's Song -- lower weight for length
+w:1
+@The_weapon@ sings, "...and was not in a bit afraid to be killed in nasty ways, many, many nasty ways..."
+
+# The Kinks song "I'm a Lover, Not a Fighter".
+@The_weapon@ sings, "I am a fighter, not a lover."
+
 ############ real songs, low or high tension -- possibly damage! ############
 %%%%
 _real_song_low-high_tension_
@@ -1003,6 +1131,13 @@ _real_song_low-high_tension_
 
 # Gloria Gaynor
 @The_weapon@ sings, "I will survive!"
+
+# Gloria Gaynor, same song
+@The_weapon@ sings, "As long as I know how to carve I know I'm still alive."
+
+" Dead or Alive "You spin me round"
+@The_weapon@ sings, "You spin me right round baby, right round..."
+
 ############ real songs, high tension -- damage! ############
 %%%%
 _real_song_high_tension_
@@ -1015,6 +1150,7 @@ _real_song_high_tension_
 
 # Frank Sinatra (or Sid Vicious)
 @The_weapon@ sings, "I did it my way!"
+
 ###############################################################################
 # synonyms used above
 ###############################################################################
@@ -1162,6 +1298,16 @@ pentatonic
 chromatic
 
 diatonic
+%%%%
+_kind_of_scales_CAPS_
+
+PENTATONIC
+
+CHROMATIC
+
+DIATONIC
+
+DISHARMONIC
 %%%%
 _not_swords_
 
@@ -1383,3 +1529,32 @@ tasty carcasses
 
 w:1
 exquisite cadavers
+%%%%
+@_body_part_@
+
+skin
+
+w:1
+hairy skin
+
+carcass
+
+flesh
+%%%%
+@_glorious_@
+
+glorious
+
+spanking
+
+noble
+
+exciting
+
+thrilling
+
+w:1
+erotic
+
+w:1
+moving

@@ -1,0 +1,816 @@
+%%%%
+Abjuration spell
+
+Ce sort tente de renvoyer les créatures hostiles convoquées sur leur plan
+d'origine ou, au moins de raccourcir leur séjour dans ce monde.
+%%%%
+Agony spell
+
+Ce sort réduit de moitié la résilience de la créature ciblée, malgré que cela
+ne puisse jamais causer sa mort.
+%%%%
+Airstrike spell
+
+Ce sort amène l'air autour d'une créature à l'envelopper, créant un vortex de
+furie météorologique. Ce sortilège est particulièrement efficace contre les
+créatures volantes.
+%%%%
+Alistair's Intoxication spell
+
+Ce sort transforme une petite portion de la matière cérébrale en alcool,
+frappant de confusion toutes les créatures humanoïdes intelligentes à portée de
+vue du sorcier (mais les créatures résistantes au poison ne subiront aucun
+effet). Les effets sont fortement concentrés sur le sorcier lui-même, de sorte
+que même une résistance au poison ne pourra les protéger. Ce sortilège est
+fréquemment employé pour briser la glace lors des soirée de magiciens.
+%%%%
+Animate Dead spell
+
+Ce sort lève les morts afin qu'ils servent le nécromancien. Tous les corps à
+portée de vue du sorcier seront affectés. Au moyen de ce sortilège, les
+magiciens puissants peuvent lever une véritable armée de morts-vivants
+stupides. Notez que les zombis sont incapables de quitter le niveau où ils ont
+été créés.
+%%%%
+Animate Skeleton spell
+
+Ce sort insuffle la non-vie dans une squelette inerte, même si ce squelette est
+encore enfermé dans la chair ! Notez que les squelettes sont incapables de
+quitter le niveau où ils ont été créés.
+%%%%
+Apportation spell
+
+Ce sort permet au sorcier déplacer instantanément un objet, ou un groupe
+d'objets similaires, distant à ses pieds. La masse du ou des objets déterminera
+la difficulté, rendant impossible de déplacer des objets trop lourds par ce
+moyen.
+
+Les objets extrêmement puissants, comme l'Orbe de Zot, résisteront activement à
+ce sortilège.
+%%%%
+Beastly Appendage spell
+
+Ce sort vous permet de remplacer un ou une paire d'appendices avec celui ou
+ceux d'un animal, vous octroyant des dégâts supplémentaires. Ce n'est pas
+suffisamment puissant pour incorporer une armure.
+%%%%
+Blade Hands spell
+
+Ce sort fait pousser de longues et tranchantes lames, en forme de faux, sur les
+mains du sorcier. Cela rend l'incantation de sortilèges plus difficile.
+%%%%
+Blink spell
+
+Ce sort téléporte aléatoirement le sorcier à une courte distance.
+%%%%
+Bolt of Cold spell
+
+Ce sort expédie un gros missile de glace et de froid.
+%%%%
+Bolt of Draining spell
+
+Ce sort expédie un missile mortel d'énergie négative, qui draine la vie des
+créatures vivantes qu'il touche.
+%%%%
+Bolt of Fire spell
+
+Ce sort expédie un missile de flammes.
+%%%%
+Bolt of Inaccuracy spell
+
+Ce sort inflige d'énormes dégâts sur toutes créatures frappées par le missile
+d'énergie incandescente conjuré. Malheureusement, Il est très difficile de
+viser et frappe très rarement quelque chose. Quel dommage.
+%%%%
+Iron Shot spell
+
+Ce sort expédie un énorme et lourd missile de métal sur l'ennemi du sorcier.
+%%%%
+Bolt of Magma spell
+
+Ce sort expédie un missile brûlant de roche fondue capable de causer des dégâts
+physiques même aux ennemis hautement résistant au feu.
+%%%%
+Borgnjor's Revivification spell
+
+Ce sort soigne instantanément toutes les blessures subies par le sorcier, mais
+en contrepartie, il diminue de façon permanente sa résistance aux dégâts- à un
+degré qui dépend de (et inversement lié à) sa compétence magique.
+
+Ce sortilège est assez puissant pour littéralement extirper quelqu'un des
+griffes de la mort, malgré qu'il choquera le sorcier au point de le rendre
+incapable d'agir pendant un moment.
+%%%%
+Call Canine Familiar spell
+
+Ce sort fait apparaitre un canidé pour venir en aide au sorcier.
+%%%%
+Call Imp spell
+
+Ce sort convoque un démon mineur tout droit venu des fosses des Enfers.
+%%%%
+Cause Fear spell
+
+Ce sort provoque la peur à tous ceux proche du sorcier.
+%%%%
+Chain Lightning spell
+
+Ce sort libère une massive décharge électrique qui passe d'une cible à l'autre
+jusqu'à ce qu'elle touche le sol. Elle peut se remettre à la terre de façon
+inoffensive s'il n'y a pas de cibles suffisamment  proche au sorcier.
+%%%%
+Cigotuvi's Degeneration spell
+
+Ce sort transforme une créature en une masse pulsante de chair.
+%%%%
+Condensation Shield spell
+
+Ce sort force l'air à se condenser en un disque de vapeur à proximité du
+sorcier. Il agit comme un bouclier normal, mais sa densité (et donc son pouvoir
+bloquant) dépend de la compétence du sorcier en Magie de la Glace. Le disque
+est contrôlé par l'esprit du sorcier et de fait, n'interfèrera pas avec le port
+d'une arme à deux mains.
+%%%%
+Confuse spell
+
+Ce sort induit un état de perplexité et de confusion dans l'esprit d'une
+créature.
+%%%%
+Confusing Touch spell
+
+Ce sort enchante la main dominante du sorcier avec de l'énergie magique. Cette
+énergie se libère quand le sorcier touche un monstre avec sa main nue et, peut
+provoquer un état de confusion chez le monstre.
+%%%%
+Conjure Ball Lightning spell
+
+Ce sort permet au conjurateur de créer une boule de foudre. Utiliser ce
+sortilège n'est pas sans risque - la boule de foudre est difficilement
+contrôlable.
+%%%%
+Conjure Flame spell
+
+Ce sort crée une colonne de flammes furieuses.
+%%%%
+Control Teleport spell
+
+Ce sort permet au sorcier de contrôler les translocation. Soyez conscient que
+la téléportation contrôlée entrainera une contamination du sorcier par énergie
+magique.
+%%%%
+Control Undead spell
+
+Ce sort tente d'asservir tous les morts-vivants à portée du sorcier.
+%%%%
+Controlled Blink spell
+
+Ce sort permet une translocation de faible portée, avec un contrôle précis.
+Soyez conscient que la téléportation contrôlée entrainera une contamination du
+sorcier par énergie magique.
+%%%%
+Corona spell
+
+Ce sort provoque un halo lumineux qui entoure et surligne une créature. Cette
+lueur compense l'atmosphère sombre et moisie du donjon, rendant la créature
+affectée plus facile à frapper.
+%%%%
+Corpse Rot spell
+
+Ce sort accélère la décomposition de tout corps se trouvant autour du sorcier.
+Ils se mettent à émettre une vapeur grossière de miasmes qui draine la force
+vitale de toute créature qu'elle recouvre.
+%%%%
+Cure Poison spell
+
+Ce sort supprime le poison du métabolisme du sorcier.
+%%%%
+Darkness spell
+
+Ce sort éclipse la lumière du donjon, réduisant la distance de visibilité. La
+zone touchée et assez large et n'a pas de contours précis. L'effet a donc peu
+de chance d'alerter quiconque n'est pas très proche du sorcier.
+%%%%
+Death Channel spell
+
+Ce sort lève les créatures vivantes tuées par le sorcier et ses alliés sous la
+forme de morts-vivants spectraux serviles.
+%%%%
+Death's Door spell
+
+Ce sort est extrêmement puissant mais comporte un certain risque. Il rend les
+nécromanciens vivants quasiment invulnérables pour une brève laps de temps,
+mais les amènera ensuite dangereusement près de la mort. Si prêt en fait, que
+le corps lui-même croit qu'il est mort - les effets de guérison ne feront rien
+du tout.
+
+Le sorcier recevra un unique avertissement peu avant l'expiration du sort. Les
+plus compétence en Nécromancie laisse le sorcier plus résistant. Les
+morts-vivants ne peuvent pas utiliser ce sortilège.
+%%%%
+Debugging Ray spell
+
+Un rayon provoquant des dégâts massif (1500 pv) et touche toujours.
+%%%%
+Deflect Missiles spell
+
+Ce sort protège le sorcier de toutes attaques par projectiles, en les
+ralentissant et en le déviant de leur course. Dévier avec succès un projectile
+nécessite toujours une action réflexe (votre aptitude à la faire est quantifiée
+par votre stat Évasion), mais contrairement aux sortilèges plus faibles comme
+Repousser les missiles, Dévier les missiles rend la chose si facile que même un
+orc ivre en armure de plate pourrait y arriver.
+%%%%
+Delayed Fireball spell
+
+Incanter avec succès de sort donne au sorcier l'habilité de relâcher
+instantanément une boule de feu plus tard. Connaitre ce sortilège permet au
+sorcier d'apprendre Boule de feu sans coût additionnel de niveau de sort.
+%%%%
+Demonic Horde spell
+
+Ce sort convoque un essaim de petits démons pour se battre aux côtés du sorcier
+(et parfois entre eux !).
+%%%%
+Dig spell
+
+Ce sort forme des tunnels au travers la pierre en la liquéfiant.
+%%%%
+Dispel Undead spell
+
+Ce sort utilise les mêmes forces qui maintiennent les créatures morts-vivantes
+dans la non-vie afin de leur infliger de terribles dégâts.
+%%%%
+Dispersal spell
+
+Ce sort tente de téléporter au loin, tous monstres à proximité du sorcier.
+%%%%
+Dragon Form spell
+
+Ce sort transforme temporairement le sorcier en un grand dragon cracheur de
+feu. Les sorciers draconiens conserveront leur couleur initiale et leur souffle
+initial une fois transformés..
+%%%%
+Enslavement spell
+
+Ce sort force une créature hostile à se battre à vos côtés pour un moment.
+%%%%
+Ensorcelled Hibernation spell
+
+Ce sort tente de réduire le rythme métabolique de la cible, induisant une
+hibernation hypodermique.
+%%%%
+Excruciating Wounds spell
+
+Ce sort imprègne temporairement l'arme portée par le sorcier avec l'essence
+même de la douleur. Cela n'affectera pas les armes qui sont déjà sujète à des
+enchantements spéciaux. Notez que contrairement à d'autres enchantements, la
+douleur ne peut pas être rendu permanente par un parchemin de vorpalisation
+d'arme.
+%%%%
+Fire Brand spell
+
+Ce sort baigne de flammes l'arme (de mêlée comme de trait) portée par le
+sorcier. Cela n'affectera pas les armes sujettes à des enchantements spéciaux.
+%%%%
+Fire Storm spell
+
+Ce sort invoque une puissante tempête de flammes furieuses directement sur la
+cible, causant des dégâts de feu partiellement irrésistibles sur une large zone
+et laissant derrière elle des vortex de feu éphémères.
+%%%%
+Fireball spell
+
+Ce sort expédie un missile de feu explosif. Ce sortilège n'a aucune coût
+additionnel de niveaux de sorts si le sorcier connait Boule de Feu Retardée.
+%%%%
+Flame Tongue spell
+
+Ce sort crée une courte rafale de flammes.
+%%%%
+Flight spell
+
+Ce sort accorde au sorcier la faculté de voler dans les airs.
+%%%%
+Freeze spell
+
+Ce sort gèle une créature. Ceci pourra temporairement ralentir le métabolisme
+d'une créature au sang froid.
+%%%%
+Freezing Aura spell
+
+Ce sort entoure une arme, ou une arme de trait, portée par le sorcier avec une
+aura de froid glacial. Cela n'affectera pas les armes qui sont déjà sujettes à
+des enchantements spéciaux.
+%%%%
+Freezing Cloud spell
+
+Ce sort conjure un grand nuage de vapeur mortellement glacée.
+%%%%
+Major Healing spell
+
+Ce sort soigne un grand nombre de dégâts subit par le corps du sorcier.
+%%%%
+Haste spell
+
+Ce sort accélère la vitesse d'exécution des actions d'une créature. Lancer ce
+sortilège sur vous-même accroitra votre contamination magique.
+%%%%
+Haunt spell
+
+Ce sort convoque des esprits et fantômes pour hanter la cible du sorcier. Faire
+ainsi appel aux morts-vivants extrait une portion de la vitalité du sorcier.
+%%%%
+Throw Icicle spell
+
+Ce sort projette un fragment de glace. Cela est particulièrement efficace
+contre la plupart des créatures qui ne sont pas immunisée aux effets du froid.
+Mais comme la majorité de sa puissance destructrice provient d'un fort impact
+et des bords tranchants, même les créatures résistantes au froid seront
+notablement affectées.
+%%%%
+Ice Form spell
+
+Ce sort transforme temporairement le corps du sorcier en une créature de glace
+gelée, suffisamment légère pour flotter sur l'eau.
+%%%%
+Ice Storm spell
+
+Ce sort propulse un blizzard rageant de glace, de giboulées et de gaz gelés sur
+votre cible, causant des dégâts de froid partiellement irrésistibles sur une
+large zone.
+%%%%
+Ignite Poison spell
+
+Ce sort tente de transformer tous les poisons à proximité en flammes liquides,
+brûlant les créatures empoisonnées de l'intérieur. C'est particulièrement
+efficace contre les créatures naturellement toxiques. Le sorcier n'est pas
+affecté.
+%%%%
+Inner Flame spell
+
+Ce sort remplit un ennemi avec un feu intense, pour être relâché en une
+explosion à sa mort. La taille de l'explosion causée dépend de la taille de la
+cible.
+%%%%
+Invisibility spell
+
+Ce sortilège cache une créature à la vue des autres. Sous invisibilité, vous
+gagnerez en contamination magique, ce qui pourrait créer suffisamment de
+luminescence pour vous rendre à nouveau visible.
+%%%%
+Iskenderun's Mystic Blast spell
+
+Ce sort projette une sphère crépitante d'énergie destructrice. La sphère
+explosera parfois à l'impact et, les chances pour que cela arrive sont plus
+hautes que la sphère aura fait peu de distance.
+%%%%
+Leda's Liquefaction spell
+
+Ce sort liquéfie le sol autour du sorcier, rendant plus difficile de s'y
+déplacer. Toute tentative de se mouvoir au revers du sol liquéfié sera très
+lente.
+%%%%
+Lee's Rapid Deconstruction spell
+
+Ce sort fragmente un mur, ou un monstre visible convenablement fragile, en une
+explosion de débris mortels. Il est possible de les utiliser sur les monstres
+de glace, d'os ou de toute substance comparable à celle d'un mur, tout comme
+ceux qui ont été pétrifiés par magie.
+
+Les cibles faite de roche, pierre, glace ou os causeront une explosion de
+petite ou moyenne taille. Les cibles métalliques causeront une petite explosion
+particulièrement puissante enfin, les cibles faites de cristal produiront de
+larges et puissantes explosions.
+%%%%
+Lehudib's Crystal Spear spell
+
+Ce sort expédie un missile de cristal mortellement tranchant.
+%%%%
+Minor Healing spell
+
+Ce sort soigne une petite quantité de dégâts au corps du sorcier.
+%%%%
+Lethal Infusion spell
+
+Ce sort insuffle dans une arme ,portée par le sorcier, d'énergies négatives.
+Cela n'affectera pas les armes sujettes à des enchantements spéciaux.
+%%%%
+Levitation spell
+
+Ce sort permet au sorcier de flotter dans les airs.
+%%%%
+Lightning Bolt spell
+
+Ce sort expédie un puissant missile de foudre. Bien que ce sort inflige moins
+de dégâts que les sorts similaires de glace et de feu, il est capable de
+frapper toutes les créatures sur son trajet.
+%%%%
+Magic Dart spell
+
+Ce sort expédie un petit missile d'énergie magique. Il ne manque jamais.
+%%%%
+Malign Gateway spell
+
+Ce sort déchire la trame de la réalité, créant un portail vers l'inconnu,
+auto-alimenté mais heureusement temporaire. Quels ignobles habitants de cet
+ailleurs choisira de lancer leurs appendices tentaculaires au travers, personne
+ne sait mais, très certainement personne ne veut être à côté pour le savoir.
+%%%%
+Mass Abjuration spell
+
+Ce sort tente d'envoyer d'où elles viennent toutes les créatures, convoquées et
+hostiles à portée de vue, ou au moins de raccourcir leur temps de séjour sur le
+plan.
+%%%%
+Mass Confusion spell
+
+Ce sort provoque la confusion à tous ceux qui contemple le sorcier.
+%%%%
+Mephitic Cloud spell
+
+Ce sort conjure un large mais très éphémère nuage de viles vapeurs.
+%%%%
+Metabolic Englaciation spell
+
+Ce sort tente de réduire le rythme métabolique de toute créatures à proximité
+du sorcier, ralentissant toutes les créatures non immunisées au froid. Il
+contourne la résistance à la magie, cependant les monstres les plus coriaces ne
+seront pas ralentis aussi longtemps que les autres.
+%%%%
+Necromutation spell
+
+Ce sort transforme d'abord le sorcier en liche — une puissante créature
+spectrale. Le sorcier gagne certains pouvoir sur la mort et, devient plus
+résistant au froid et aux enchantements hostiles, devient totalement immunisé
+aux poisons, à la décomposition et, à l'énergie négative, et il n'a pas besoin
+de nourriture pendant toute la durée du sortilège.
+
+Le sorcier gagne aussi certains des plus douteux avantages des morts-vivants,
+tel que la vulnérabilité aux armes saintes et l'incapacité à boire des potions.
+
+Contrairement à ce que l'on pourrait attendre, ce sort fonctionne sur les
+octopodes, même si on se demande quel tissu nécromantique peut bien servir
+comme analogie aux os. C'est un mystère.
+%%%%
+Olgreb's Toxic Radiance spell
+
+Ce sort baigne les environs du sorcier d'une lueur verte maladive, insufflant
+le poison à tout autour (incluant le sorcier). Elle peut être bloquée par des
+parois translucides, et de plus, les créatures invisibles sont complètement
+insensibles à celle-ci.
+%%%%
+Orb of Destruction spell
+
+Ce sort conjure une orbe faite de pure magie destructrice. Comparé à la plupart
+des autres missiles, ces orbes traversent l'espace à un rythme relativement
+lent. Les orbes se dirigent vers leur cible, mais à cause de leur inertie, des
+ennemis particulièrement agiles peuvent réussir à les esquiver. Les orbes ont
+besoin de temps pour se stabiliser et, une orbe naissance n'infligent pas les
+dégâts maximum dont elles sont capables.
+
+Il est dit que la plupart des copies de ce sortilège souffrent d'une erreur de
+copistes qui rend les orbes instables au-delà d'une courte portée. Certains
+individus peuvent avoir accès à des livres de sorts sans erreur alors,
+méfiez-vous !
+%%%%
+Ozocubu's Armour spell
+
+Ce sort enveloppe le corps du sorcier d'une couche protectrice de glace. Sa
+résistance dépend de sa compétence en Magie de la Glace. Le sorcier et son
+équipement ne souffriront pas du froid dû à cette protection, cependant, ils
+pourront être affectés par d'autres sources de froid. Le sort ne fonctionne pas
+sur les sorciers portant des armures lourdes (tout armure corporelle ayant une
+pénalité en évasion de 2 ou plus). Les effets de ce sort sont augmenté si le
+sorcier est en Forme de Glace.
+%%%%
+Ozocubu's Refrigeration spell
+
+Ce sort draine la chaleur du sorcier et des alentours, causant des dégâts à
+toutes les créatures non résistantes au froid.
+%%%%
+Pain spell
+
+Ce sort inflige une blessure extrêmement douloureuse à une créature vivante. Le
+sorcier souffle de dégâts mineur en choc en retour.
+%%%%
+Paralyse spell
+
+Ce sort empêche une créature de se déplacer.
+%%%%
+Passage of Golubria spell
+
+Ce sort ouvre deux passages (un toujours proche du sorcier), ce qui permet un
+déplacement instantané à un autre passage déterminé aléatoirement. Ce passage
+peut être utilisé par n'importe quelle créature. Il n'y a pas de limite au
+nombre de passage pouvant être ouvert  en même temps mais, un passage se
+fermera quand utilisé ou après l'écoulement d'un temps modéré.
+%%%%
+Passwall spell
+
+Ce sort déphase le corps du sorcier de manière à ce qu'il puisse traverser au
+travers la roche. Ce peut être dangereux car, il faut du temps pour que le
+sorcier s'harmonise avec la roche. Et pendant cette période, il est impuissant.
+%%%%
+Petrify spell
+
+Ce sort tente de pétrifier un monstre. En cas de succès, le monstre est ralenti
+pendant un certain temps jusqu'à ce qu'il soit temporairement transformé en
+pierre. Dans cet état, un monstre souffrira de moins de dégâts lorsque frappé.
+%%%%
+Phase Shift spell
+
+Ce sort permet au sorcier de se déphaser temporairement du plan matériel, lui
+permettant d'occasionnellement éviter entièrement des projectiles.
+%%%%
+Poison Arrow spell
+
+Ce sort projette une flèche magique enduite d'une toxine des plus nuisibles.
+Aucun être vivant n'est complètement à l'abri de ses effets, et même les
+morts-vivants prendront des dégâts dus au composant physique du sortilège.
+%%%%
+Poison Weapon spell
+
+Ce sort recouvre temporairement n'importe quel arme ou arme de trait avec du
+poison. Cela ne fonctionne que s'il n'y a pas d'autres enchantements existant.
+%%%%
+Poisonous Cloud spell
+
+Ce sort conjure un gros nuage de gaz mortel.
+%%%%
+Polymorph Other spell
+
+Ce sort altère aléatoirement la forme d'une autre créature. Cela est
+spécialement efficace contre les créatures changeuses de forme.
+%%%%
+Portal Projectile spell
+
+Ce sort téléporte un projectile lancé ou tiré directement sur sa cible,
+accroissant son efficacité (mais pas ses dégâts).
+%%%%
+Recall spell
+
+Ce sort est très prisé des invocateurs et nécromanciens car, il permet de
+rappeler les créatures alliées sur une position adjacente au sorcier.
+%%%%
+Regeneration spell
+
+Ce sort régénère les tissus blessés du sorcier. Cet acte impie accroit
+temporairement mais dramatiquement l'aptitude de récupération du sorcier, tout
+en augmentant les besoins en consommation de nourriture.
+%%%%
+Repel Missiles spell
+
+Ce sort permet de réduire les chances d'être touché par des projectiles, en les
+rendant plus faciles à éviter.
+%%%%
+Ring of Flames spell
+
+Ce sort entoure le sorcier d'un anneau mobile de flammes implacables et, garde
+les autres nuages de flammes à distance. Ce sort rapproche le sorcier des
+pouvoirs du feu, accroissant leur Magie du Feu et lui offrant une protection
+contre le feu. Cependant, cela les rend aussi plus sensible aux effets du
+froid.
+%%%%
+Sandblast spell
+
+Ce sort crée une courte explosion de particules à haute vélocité. Cela
+fonctionne mieux quand le sorcier procure une source (en portant une pierre)
+mais, s'arrangera sinon comme il peut avec les résidus ambiants disponibles.
+%%%%
+Shadow Creatures spell
+
+Ce sort tisse une créature à partir des ombres et des murmures de matière
+abyssale. La créature ainsi amenée à l'existence recréera un type de créature à
+proximité du sorcier. Le sort crée même l'équipement approprié pour cette
+créature, leur accordant une persistance durable du à leur ferme contact avec
+la réalité.
+%%%%
+Shatter spell
+
+Ce sort provoque une explosion de force convulsive autour du sorcier, qui nuira
+à la plupart des créatures. Cependant, celles composées d'os, de métal ou de
+cristal ou au matière cassante en souffriront le plus. Cette magie est connue
+pour affecter aussi les murs.
+%%%%
+Shock spell
+
+Ce sort projette un missile rebondissant d'électricité.
+%%%%
+Shroud of Golubria spell
+
+Ce sort courbe l'espace formant un voile autour du corps du sorcier, le
+protégeant. en redirigeant la force des coups dans l'air environnant. Les
+attaques à distance frappe trop rapidement pour être affectées de cette
+manière. Le voile est très instable et peut s'effondrer sur lui-même sous le
+stress.
+%%%%
+Silence spell
+
+Ce sort supprime tout son autour du sorcier. Ce rend la lecture de parchemins,
+le lancement de sorts, la prière et crier, autour du sorcier, impossible (cela
+s'applique au sorcier aussi bien sûr.) Ce sort ne masquera pas la présence du
+mage, en particulier à cause de la naturel oppressive et surnaturelle de son
+effet alertera toute créature vivante que quelque chose n'est pas normal.
+
+Silence commence avec un rayon d'effet dépendant de sa puissance puis, la zone
+va diminuer jusqu'à ne plus couvrir que le sorcier avant de s'éteindre.
+Certaines créatures, comme les démons, utilise de la magie sans parler et ne
+seront pas affectées et, celles qui possèdent des capacités innées pourront
+toujours les employer.
+%%%%
+Simulacrum spell
+
+Ce sort utilise un morceau de chair en main pour créer une réplique de
+l'original à partir de glace. Cette magie est instable et la réplique pourra se
+dissoudre en un nuage de glace si elle n'est pas détruite ou fondue avant.
+Notez que ce simulacre est incapable de quitter le niveau ou il a été créé.
+%%%%
+Slow spell
+
+Ce sort ralentit les actions d'une créature.
+%%%%
+Spider Form spell
+
+Ce sort transforme temporairement le sorcier en une créature rapide, venimeuse
+(mais susceptible au poison) ressemblant à une araignée. Le lancement de sort
+est  légèrement plus difficile sous cette forme. Sous cette forme, vous pouvez
+vous accordez aux murs.
+%%%%
+Static Discharge spell
+
+Votre sort libère des décharges électriques sur les créatures à proximité du
+sorcier. Celles-ci peuvent arquer vers les monstres adjacents (et même le
+sorcier lui-même) avant qu'elles ne perdent dans le sol.
+%%%%
+Statue Form spell
+
+Ce sort transforme temporairement le sorcier en une lente (mais extrêmement
+robuste) statue de pierre, capable d'infliger des frappes monstrueuses tant
+avec une arme qu'à mains nues. Le sorcier avec un corps de pierre est isolé aux
+effets électriques et gagne une résistance au poison, à la décomposition et aux
+énergies négatives.
+%%%%
+Sticks to Snakes spell
+
+Ce sort utilise des objets de bois tenus en main comme matière première pour
+une puissant transmutation. Notez que les artéfacts magiques ne seront pas
+affectés.
+%%%%
+Sticky Flame spell
+
+Ce sort conjure un globe de feu liquide, qui adhèrera et brûlera toute créature
+touchée.
+%%%%
+Sting spell
+
+Ce sort projette une fléchette magique de poison.
+%%%%
+Stone Arrow spell
+
+Ce sort expédie une tranchante flèche de pierre sortant du sorcier.
+%%%%
+Stoneskin spell
+
+Ce sort durcit la peau à un degré dépendant du niveau de compétence du sorcier
+en Magie de la Terre. Il fonctionne uniquement sur la chair relativement
+normale et donc, n'aidera aucunement les morts-vivants ou les créatures au
+corps transformé. Toutefois, il existe une exception : les effets de ce sort
+seront accrus pour les sorciers sous Forme de Statue.
+%%%%
+Striking spell
+
+Ce sort expédie un petit missile de force.
+%%%%
+Sublimation of Blood spell
+
+Ce sort convertit la chair, le sang et les autres fluides corporels en énergies
+magiques. Les sorciers peuvent centrer ce sortilège sur leur propre corps (ce
+qui peut être dangereux mais jamais mortel) ou peuvent tenir en main un morceau
+de chair fraichement découpé pour en extirper du pouvoir magique.
+%%%%
+Summon Butterflies spell
+
+Ce sort créé une pluie de papillons. Comme c'est joli !
+%%%%
+Summon Demon spell
+
+Ce sort ouvre un portail vers le royaume du Pandémonium et attire un de ces
+habitant dans ce monde pour servir le sorcier pour un temps (cependant la
+servitude du démon n'a rien de garantie)
+%%%%
+Summon Dragon spell
+
+Ce sort convoque et asservi un puissant dragon aux ordres du sorcier.
+%%%%
+Summon Elemental spell
+
+Ce sort convoque un esprit du plan élémentaire pour aider le sorcier. Une large
+quantité de l'élément désiré est nécessaire ; cela est rarement un problème
+pour la terre et l'air mais, peut l'être pour l'eau ou le feu. L'élémentaire
+sera généralement amical au sorcier - spécialement si le sorcier est compétent
+dans la magie élémentaire concernée.
+%%%%
+Summon Greater Demon spell
+
+Ce sort convoque un des démons les plus puissants du Pandémonium pour servir le
+sorcier. Méfiez-vous, le charme lien le démon à votre service pourrait ne pas
+durer aussi longtemps que celui qui retient le démon sur ce plan !
+%%%%
+Summon Horrible Things spell
+
+Ce sort ouvre un portail vers les Abysses et attire une ou plusieurs hideuses
+abominations y habitant. Les pouvoirs répondant à cette invocation requière une
+portion de l'intellect du sorcier en échange ce ce service..
+%%%%
+Summon Hydra spell
+
+Ce sort convoque une hydre à plusieurs têtes pour combattre aux côtés du
+sorcier pour une courte période.
+%%%%
+Summon Ice Beast spell
+
+Ce sort convoque une bête de glace pour servir le sorcier.
+%%%%
+Summon Scorpions spell
+
+Ce sort convoque un ou plusieurs scorpions (dont certains pourraient ne pas
+être liés au service du sorcier).
+%%%%
+Summon Small Mammals spell
+
+Ce sort convoque une ou deux petites créatures pour aider le sorcier.
+%%%%
+Summon Swarm spell
+
+Ce sort convoque un essaim pestilentiel.
+%%%%
+Summon Ugly Thing spell
+
+Ce sort convoque une créature mutante d'un autre monde pour aider le sorcier.
+%%%%
+Sure Blade spell
+
+Ce sort forme un lien mystique entre le sorcier et une lame courte portée,
+rendant son utilisation beaucoup plus facile.
+%%%%
+Swiftness spell
+
+Ce sort imprègne le sorcier d'une aptitude à se déplacer plus vite. Mais cela à
+un prix : l'incantateur sera moins discret et moins vigilant aux pièges
+lorsqu'il est sous les effets de ce sortilège.
+%%%%
+Teleport Other spell
+
+Ce sort téléporte aléatoirement une autre créature.
+%%%%
+Throw Flame spell
+
+Ce sort projette un petit missile de flammes.
+%%%%
+Throw Frost spell
+
+Ce sort projette un petit missile de froid.
+%%%%
+Tornado spell
+
+Ce sort transforme l'air ambiant autour du sorcier en un puissant tourbillon,
+faisant d'énormes dégâts à tout ce qui y est pris. Seul l’œil du cyclone est un
+endroit sans danger et il se déplace avec le sorcier. Tout ce qui n'est pas
+fermement ancré au sol sera levé et malmené.
+
+L'efficacité de ce sort est très diminué dans les endroits confinés.
+
+Comme le sorcier est soulevé dans les airs, ce sortilège peut être employé pour
+traverser la lave mais attention, cet effet secondaire est de courte durée.
+%%%%
+Tukima's Dance spell
+
+Ce sort anime une arme tenue en main, qui se met à danser dans les airs et
+frapper les ennemis du sorcier. Cela ne fonctionnera pas avec certains
+artéfacts intelligents ; toutes aptitudes nécessitant des compétences
+d'évocation ne pourront pas être utilisées non plus.
+%%%%
+Twisted Resurrection spell
+
+Ce sort amène les cadavres environnant à ramper et à fusionner en une
+agglomération horrible de chairs. Plus les corps sont grands et puissants, plus
+la création le sera aussi.
+%%%%
+Vampiric Draining spell
+
+Ce sort draine la vie d'une créature vivante pour la transférer au sorcier. La
+vie ne sera pas drainer au-delà de ce que le sorcier peu absorber.
+
+Cependant, tenter de drainer une créature démoniaque ou un mort-vivant aura
+l'effet inverse sur le sorcier.
+%%%%
+Venom Bolt spell
+
+Ce sort projette un missile de poison.
+%%%%
+Warp Weapon spell
+
+Ce sort lie temporairement une zone de transfert localisée avec l'arme du
+sorcier. Notez que contrairement aux autres enchantements, la distorsion ne
+peut pas être rendue permanente en lisant un parchemin de vorpalisation d'arme.
+%%%%

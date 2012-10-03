@@ -1,0 +1,49 @@
+%%%%
+Arcane Marksman
+
+Burvju strēlnieki nēsā tālcīņas ieročus, reizē arī izmantojot burvestības savu
+naidnieku novājināšanai pret uzbrukumiem no attāluma.
+%%%%
+Chaos Knight
+
+Haosa bruņinieki ir neparedzamā Ksorna spēlmantiņas, kas atkarīgas no dieva
+nepārtraukti mainīgās omas.
+%%%%
+Enchanter
+
+Apburēji izmanto burvestības, lai sevi pastiprinātu kaujās vai padarītu
+nespējīgus savus to pretiekus. Viņi arī spēli sāk ar labām šautriņām.
+%%%%
+Fighter
+
+Cīnītāji sāk spēli ar bruņām un vairogu, kā arī paša izvēlētu ieroci. Viņiem ir
+arī vairāk dzīvības, nekā tēliem ar citu izcelsmi.
+%%%%
+Gladiator
+
+Gladiatori ir vienmēr gatavi cīņai, nēsājot vieglas bruņas, vairogu, tīklus un
+izvēlētu ieroci.
+%%%%
+Healer
+
+Dziednieki ir Elvilonas sekotāji, kas gatavi dziedēt gan sevi, gan citus. Šāda
+dziedēšana iespējams nomierinās nezvērus un citus lopus, sniedzot pieredzi.
+%%%%
+Hunter
+
+Mednieki spēj uzbrukt no attāluma, nepaļaujoties uz riebīgajām burvestībām.
+%%%%
+Monk
+
+Mūki ir gatavi stāties pretī visam pazemē sastopamajam valkājot tik vien kā
+talāru un izmantojot savu ķermeni.
+%%%%
+Necromancer
+
+Nekromanti ir burvji, kas specializējas nāves zintīs. Viņi sāk spēli ar Sāpju
+burvestību.
+%%%%
+Wanderer
+
+Klejotāji sāk spēli ar nejauši izvēlētu aprīkojumu un prasmēm.
+%%%%

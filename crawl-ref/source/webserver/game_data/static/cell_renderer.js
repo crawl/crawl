@@ -8,6 +8,24 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
         this.display_mode = "tiles";
         this.glyph_mode_font_size = 24;
         this.glyph_mode_font = "monospace";
+        this.smooth_scaling = false;
+    }
+
+    var fg_term_colours, bg_term_colours;
+
+    function determine_term_colours()
+    {
+        fg_term_colours = [];
+        bg_term_colours = [];
+        var $game = $("#game");
+        for (var i = 0; i < 16; ++i)
+        {
+            var elem = $("<span class='glyph fg" + i + " bg" + i + "'></span>");
+            $game.append(elem);
+            fg_term_colours.push(elem.css("color"));
+            bg_term_colours.push(elem.css("background-color"));
+            elem.detach();
+        }
     }
 
     function in_water(cell)
@@ -29,6 +47,8 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
         if (col.attr == enums.CHATTR.HILITE)
         {
             col.bg = col.param;
+            if (col.bg == col.fg)
+                col.fg = 0;
         }
         if (col.attr == enums.CHATTR.REVERSE)
         {
@@ -298,10 +318,10 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
 
             if (!omit_bg)
             {
-                this.ctx.fillStyle = enums.term_colours[col.bg];
+                this.ctx.fillStyle = bg_term_colours[col.bg];
                 this.ctx.fillRect(x, y, this.cell_width, this.cell_height);
             }
-            this.ctx.fillStyle = enums.term_colours[col.fg];
+            this.ctx.fillStyle = fg_term_colours[col.fg];
             this.ctx.font = prefix + this.glyph_mode_font_name();
             this.ctx.textAlign = "center";
             this.ctx.textBaseline = "middle";
@@ -761,6 +781,9 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
 
             var w = info.ex - info.sx;
             var h = info.ey - info.sy;
+            this.ctx.imageSmoothingEnabled = this.smooth_scaling;
+            this.ctx.webkitImageSmoothingEnabled = this.smooth_scaling;
+            this.ctx.mozImageSmoothingEnabled = this.smooth_scaling;
             this.ctx.drawImage(img,
                                info.sx, info.sy + sy - pos_sy_adjust,
                                w, h + ey - pos_ey_adjust,
@@ -796,6 +819,11 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
             this.draw_tile(idx, x, y, mod, ofsx, ofsy);
         },
     });
+
+    $(document).off("game_init.cell_renderer")
+        .on("game_init.cell_renderer", function () {
+            determine_term_colours();
+        });
 
     return {
         DungeonCellRenderer: DungeonCellRenderer,

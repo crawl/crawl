@@ -7494,7 +7494,7 @@ default-depth: Vaults
 ########
 #  layout_vaults_test
 #
-#  This is a dummy layout for test prurposes.  It prints the
+#  This is a dummy layout for test purposes.  It prints the
 #    room frequencies and builds a big open level.
 #
 

@@ -3235,6 +3235,13 @@ bool monster::petrifying() const
     return has_ench(ENCH_PETRIFYING);
 }
 
+bool monster::liquefied_ground() const
+{
+    return (liquefied(pos())
+            && ground_level() && !is_insubstantial()
+            && !mons_class_is_stationary(type));
+}
+
 int monster::warding() const
 {
     const item_def *w = primary_weapon();
@@ -3956,10 +3963,6 @@ int monster::res_magic() const
     if (jewellery != NON_ITEM && mitm[jewellery].base_type == OBJ_JEWELLERY)
         u += get_jewellery_res_magic(mitm[jewellery], false);
 
-    const item_def *w = primary_weapon();
-    if (w && w->base_type == OBJ_STAVES && w->sub_type == STAFF_ENCHANTMENT)
-        u += 9 + hit_dice * 2; // assume skill of 2/3 HD
-
     if (has_ench(ENCH_LOWERED_MR))
         u /= 2;
 
@@ -4163,7 +4166,8 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         else if (amount <= 0 && hit_points <= max_hit_points)
             return 0;
 
-        if (agent && agent->is_player() && you.duration[DUR_QUAD_DAMAGE])
+        if (agent && agent->is_player() && you.duration[DUR_QUAD_DAMAGE]
+            && flavour != BEAM_TORMENT_DAMAGE)
         {
             amount *= 4;
             if (amount > hit_points + 50)
@@ -4606,11 +4610,8 @@ void monster::calc_speed()
         break;
     }
 
-    bool is_liquefied = (liquefied(pos()) && ground_level()
-                         && !is_insubstantial());
-
     // Going berserk on liquid ground doesn't speed you up any.
-    if (!is_liquefied && (has_ench(ENCH_BERSERK) || has_ench(ENCH_INSANE)))
+    if (!liquefied_ground() && (has_ench(ENCH_BERSERK) || has_ench(ENCH_INSANE)))
         speed = berserk_mul(speed);
     else if (has_ench(ENCH_HASTE))
         speed = haste_mul(speed);

@@ -582,7 +582,6 @@ int mons_dungeon_level(monster_type mcls)
     case MONS_SHINING_EYE:
         return 24;
 
-    case MONS_BUMBLEBEE:
     case MONS_ORC_WARLORD:
     case MONS_IRON_TROLL:
     case MONS_YAKTAUR_CAPTAIN:
@@ -813,7 +812,6 @@ int mons_dungeon_rare(monster_type mcls)
     case MONS_KOBOLD_DEMONOLOGIST:
         return 13;
 
-    case MONS_BUMBLEBEE:
     case MONS_ORC_HIGH_PRIEST:
         return 12;
 
@@ -1168,7 +1166,6 @@ int mons_lair_level(monster_type mcls)
 
     case MONS_BLACK_MAMBA:
     case MONS_BRAIN_WORM:
-    case MONS_BUMBLEBEE:
     case MONS_FIRE_DRAKE:
     case MONS_HYDRA:
     case MONS_OKLOB_PLANT:
@@ -1302,7 +1299,6 @@ int mons_lair_rare(monster_type mcls)
         return 8;
 
     case MONS_BRAIN_WORM:
-    case MONS_BUMBLEBEE:
         return 7;
 
     case MONS_WOLF_SPIDER:

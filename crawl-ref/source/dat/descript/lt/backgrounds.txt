@@ -101,11 +101,6 @@ Skald
 Dainiai yra kariai, galintys save sustiprinti burtažodžiais iš Karo Giesmių
 knygos.
 %%%%
-Stalker
-
-Persekiotojai sėlindami ir naudodamiesi transformuojančia magija priartėja prie
-savo aukų ir jas numalšina.
-%%%%
 Summoner
 
 Iššaukėjai pradeda su Šaukimų knyga ir nuo pat pradžių moka Iššaukti Mažus

@@ -26,7 +26,7 @@ enum item_origin_dump_selector
 
 class scorefile_entry;
 string morgue_directory();
-bool dump_char(const string &fname, bool full_id = false,
+bool dump_char(const string &fname, bool quiet = false, bool full_id = false,
                const scorefile_entry *se = NULL);
 void dump_map(const char* fname, bool debug = false, bool dist = false);
 void dump_map(FILE *fp, bool debug = false, bool dist = false);

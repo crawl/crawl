@@ -310,9 +310,9 @@ void tornado_damage(actor *caster, int dur)
                     continue;
                 }
 
-                leda = liquefied(victim->pos()) && victim->ground_level()
-                    || victim->is_monster()
-                       && _mons_is_unmovable(victim->as_monster());
+                leda = victim->liquefied_ground()
+                       || victim->is_monster()
+                          && _mons_is_unmovable(victim->as_monster());
                 if (!victim->res_wind())
                 {
                     if (victim->is_monster())

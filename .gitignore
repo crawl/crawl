@@ -1,8 +1,0 @@
-# -*- conf-unix -*- vim:ft=conf
-# The above comment makes Emacs and vim treat this file as a configuration file
-
-# generated files for android
-bin/
-AndroidData/
-icon.png
-libapplication.so

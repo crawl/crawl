@@ -320,14 +320,6 @@ CMD_MAP_FIND_EXCLUDED verbose
 
 Cycle through travel exclusions on the current level.
 %%%%
-CMD_MAP_FIND_F
-
-Find F
-%%%%
-CMD_MAP_FIND_F verbose
-
-Cycle through F
-%%%%
 CMD_MAP_FIND_WAYPOINT
 
 Find waypoint

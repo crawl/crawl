@@ -43,7 +43,6 @@ cat1 CORPSE_FELID
 ## Bees ('k')
 %back blood_green
 killer_bee CORPSE_KILLER_BEE
-bumblebee CORPSE_BUMBLEBEE
 queen_bee CORPSE_QUEEN_BEE
 giant_firefly CORPSE_FIREFLY
 

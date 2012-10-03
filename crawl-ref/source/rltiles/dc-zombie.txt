@@ -19,6 +19,7 @@ zombie_lizard MONS_ZOMBIE_LIZARD
 zombie_spider MONS_ZOMBIE_SPIDER
 zombie_dragon MONS_ZOMBIE_DRAGON
 zombie_kraken_head MONS_ZOMBIE_KRAKEN
+zombie_drake MONS_ZOMBIE_DRAKE
 zombie_hydra1 MONS_ZOMBIE_HYDRA
 zombie_hydra2
 zombie_hydra3
@@ -68,6 +69,7 @@ simulacrum_lizard MONS_SIMULACRUM_LIZARD
 simulacrum_spider MONS_SIMULACRUM_SPIDER
 simulacrum_dragon MONS_SIMULACRUM_DRAGON
 simulacrum_kraken MONS_SIMULACRUM_KRAKEN
+simulacrum_drake MONS_SIMULACRUM_DRAKE
 simulacrum_hydra1 MONS_SIMULACRUM_HYDRA
 simulacrum_hydra2
 simulacrum_hydra3
@@ -92,6 +94,7 @@ spectral_lizard MONS_SPECTRAL_LIZARD
 spectral_spider MONS_SPECTRAL_SPIDER
 spectral_dragon MONS_SPECTRAL_DRAGON
 spectral_kraken MONS_SPECTRAL_KRAKEN
+spectral_drake MONS_SPECTRAL_DRAKE
 spectral_hydra1 MONS_SPECTRAL_HYDRA
 spectral_hydra2
 spectral_hydra3

@@ -634,6 +634,10 @@ void update_vision_range()
     if (you.duration[DUR_DARKNESS])
         nom *= 3, denom *= 4;
 
+    // robe of Night.
+    if (player_equip_unrand(UNRAND_NIGHT))
+        nom *= 3, denom *= 4;
+
     you.current_vision = (you.normal_vision * nom + denom / 2) / denom;
     ASSERT(you.current_vision > 0);
     set_los_radius(you.current_vision);
@@ -1936,13 +1940,6 @@ int player_spec_death()
     return sd;
 }
 
-int player_spec_holy()
-{
-    //if (you.char_class == JOB_PRIEST || you.char_class == JOB_PALADIN)
-    //  return 1;
-    return 0;
-}
-
 int player_spec_fire()
 {
     int sf = 0;
@@ -2022,18 +2019,25 @@ int player_spec_conj()
     return sc;
 }
 
-int player_spec_ench()
+int player_spec_hex()
 {
-    int se = 0;
+    int sh = 0;
 
     // All effects negated by magical suppression should go in here.
     if (!you.suppressed())
     {
-        // Staves
-        se += player_equip(EQ_STAFF, STAFF_ENCHANTMENT);
+        // Unrands
+        if (player_equip_unrand_effect(UNRAND_BOTONO))
+            sh++;
     }
 
-    return se;
+    return sh;
+}
+
+int player_spec_charm()
+{
+    // Nothing, for the moment.
+    return 0;
 }
 
 int player_spec_summ()
@@ -2196,7 +2200,7 @@ int player_movement_speed(bool ignore_burden)
         mv = 6;
 
     // moving on liquefied ground takes longer
-    if (liquefied(you.pos()) && you.ground_level())
+    if (you.liquefied_ground())
         mv += 3;
 
     // armour
@@ -5758,6 +5762,7 @@ void player::init()
 
     uniq_map_tags.clear();
     uniq_map_names.clear();
+    vault_list.clear();
 
     global_info = PlaceInfo();
     global_info.make_global();
@@ -6087,6 +6092,12 @@ bool player::petrified() const
     return (duration[DUR_PETRIFIED]);
 }
 
+bool player::liquefied_ground() const
+{
+    return (liquefied(pos())
+            && ground_level() && !is_insubstantial());
+}
+
 int player::shield_block_penalty() const
 {
     return (5 * shield_blocks * shield_blocks);
@@ -6172,17 +6183,17 @@ int player::adjusted_shield_penalty(int scale) const
                   / max(1, 5 + _player_evasion_size_factor())));
 }
 
-int player::armour_tohit_penalty(bool random_factor) const
+int player::armour_tohit_penalty(bool random_factor, int scale) const
 {
-    return maybe_roll_dice(1, adjusted_body_armour_penalty(), random_factor);
+    return maybe_roll_dice(1, adjusted_body_armour_penalty(scale), random_factor);
 }
 
-int player::shield_tohit_penalty(bool random_factor) const
+int player::shield_tohit_penalty(bool random_factor, int scale) const
 {
     const item_def* wp = slot_item(EQ_WEAPON);
     int factor = (wp && hands_reqd(*wp, body_size()) == HANDS_HALF) ? 2 : 1;
 
-    return maybe_roll_dice(factor, adjusted_shield_penalty(), random_factor);
+    return maybe_roll_dice(factor, adjusted_shield_penalty(scale), random_factor);
 }
 
 int player::skill(skill_type sk, int scale, bool real) const
@@ -6671,10 +6682,6 @@ int player_res_magic(bool calc_unid, bool temp)
 
         // rings of magic resistance
         rm += 40 * player_equip(EQ_RINGS, RING_PROTECTION_FROM_MAGIC, calc_unid);
-
-        // Enchantment skill through staff of enchantment (up to 90).
-        if (player_equip(EQ_STAFF, STAFF_ENCHANTMENT, calc_unid))
-            rm += 9 + max(you.skill(SK_CHARMS, 3), you.skill(SK_HEXES, 3));
     }
 
     // Mutations

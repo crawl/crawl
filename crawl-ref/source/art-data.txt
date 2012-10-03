@@ -483,8 +483,8 @@ COLOUR:   ETC_UNHOLY
 TILE:     urand_botono
 TILE_EQ:  botono
 BRAND:    SPWPN_REAPING
-HP:       -3
-BOOL:     poison, life, noises
+HP:       -6
+BOOL:     poison, life
 
 NAME:     trident of the Octopus King
 OBJ:      OBJ_WEAPONS/WPN_TRIDENT
@@ -903,7 +903,7 @@ BOOL:    life, seeinv
 
 NAME:    amulet of Cekugob
 OBJ:     OBJ_JEWELLERY/AMU_WARDING
-COLOUR:  LIGHTGREY
+COLOUR:  ETC_SILVER
 TILE:    urand_cekugob
 AC:      1
 EV:      1
@@ -938,7 +938,7 @@ TILE:    urand_shaolin
 NAME:    ring of Robustness
 OBJ:     OBJ_JEWELLERY/RING_PROTECTION
 PLUS:    +8
-COLOUR:  LIGHTGREY
+COLOUR:  ETC_GOLD
 TILE:    urand_robustness
 
 NAME:    ring of the Mage
@@ -1010,7 +1010,7 @@ BOOL:     life, evil
 NAME:     ring of Vitality
 OBJ:      OBJ_JEWELLERY/RING_REGENERATION
 HP:       +15
-COLOUR:   LIGHTMAGENTA
+COLOUR:   ETC_MUTAGENIC
 TILE:     urand_vitality
 
 NAME:     autumn katana

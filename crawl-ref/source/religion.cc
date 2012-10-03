@@ -1556,7 +1556,7 @@ static bool _blessing_AC(monster* mon)
 static bool _blessing_balms(monster* mon)
 {
     // Remove poisoning, sickness, confusion, and rotting, like a potion
-    // of healing, but without the healing.  Also, remove slowing and
+    // of curing, but without the healing. Also, remove slowing and
     // fatigue.
     bool success = false;
 
@@ -1597,85 +1597,6 @@ static bool _blessing_healing(monster* mon)
     return false;
 }
 
-static bool _tso_blessing_holy_wpn(monster* mon)
-{
-    // Pick a monster's weapon.
-    const int weapon = mon->inv[MSLOT_WEAPON];
-    const int alt_weapon = mon->inv[MSLOT_ALT_WEAPON];
-
-    if (weapon == NON_ITEM && alt_weapon == NON_ITEM
-        || mon->type == MONS_DANCING_WEAPON)
-    {
-        return false;
-    }
-
-    int slot;
-
-    do
-        slot = (coinflip()) ? weapon : alt_weapon;
-    while (slot == NON_ITEM);
-
-    item_def& wpn(mitm[slot]);
-
-    const int wpn_brand = get_weapon_brand(wpn);
-
-    // Only brand weapons, and only override certain brands.
-    if (is_artefact(wpn)
-        || (wpn_brand != SPWPN_NORMAL && wpn_brand != SPWPN_DRAINING
-            && wpn_brand != SPWPN_PAIN && wpn_brand != SPWPN_VAMPIRICISM
-            && wpn_brand != SPWPN_REAPING && wpn_brand != SPWPN_CHAOS
-            && wpn_brand != SPWPN_VENOM))
-    {
-        return false;
-    }
-
-    // Convert a demonic weapon into a non-demonic weapon.
-    if (is_demonic(wpn))
-        convert2good(wpn, false);
-
-    // And make it holy.
-    set_equip_desc(wpn, ISFLAG_GLOWING);
-    set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_HOLY_WRATH);
-    wpn.colour = YELLOW;
-
-    return true;
-}
-
-static bool _tso_blessing_holy_arm(monster* mon)
-{
-    // If a monster has full negative energy resistance, get out.
-    if (mon->res_negative_energy() == 3)
-        return false;
-
-    // Pick either a monster's armour or its shield.
-    const int armour = mon->inv[MSLOT_ARMOUR];
-    const int shield = mon->inv[MSLOT_SHIELD];
-
-    if (armour == NON_ITEM && shield == NON_ITEM)
-        return false;
-
-    int slot;
-
-    do
-        slot = (coinflip()) ? armour : shield;
-    while (slot == NON_ITEM);
-
-    item_def& arm(mitm[slot]);
-
-    const int arm_brand = get_armour_ego_type(arm);
-
-    // Override certain brands.
-    if (is_artefact(arm) || arm_brand != SPARM_NORMAL)
-        return false;
-
-    // And make it resistant to negative energy.
-    set_equip_desc(arm, ISFLAG_GLOWING);
-    set_item_ego_type(arm, OBJ_ARMOUR, SPARM_POSITIVE_ENERGY);
-    arm.colour = WHITE;
-
-    return true;
-}
-
 static bool _increase_ench_duration(monster* mon,
                                     mon_enchant ench,
                                     const int increase)
@@ -1693,10 +1614,10 @@ static bool _increase_ench_duration(monster* mon,
     return true;
 }
 
-static int _tso_blessing_extend_stay(monster* mon)
+static bool _tso_blessing_extend_stay(monster* mon)
 {
     if (!mon->has_ench(ENCH_ABJ))
-        return 0;
+        return false;
 
     mon_enchant abj = mon->get_ench(ENCH_ABJ);
 
@@ -1861,51 +1782,16 @@ bool bless_follower(monster* follower,
     }
     ASSERT(follower);
 
-    if (chance <= 1) // 10% chance of holy branding, or priesthood
+    if (chance <= 1 && god == GOD_BEOGH) // 10% chance of priesthood
     {
-        switch (god)
+        // Turn a monster into a priestly monster, if possible.
+        if (_beogh_blessing_priesthood(follower))
         {
-            case GOD_SHINING_ONE:
-                if (coinflip())
-                {
-                    // Brand a monster's weapon with holy wrath, if
-                    // possible.
-                    if (_tso_blessing_holy_wpn(follower))
-                    {
-                        result = "holy attack power";
-                        goto blessing_done;
-                    }
-                    else if (force)
-                        mpr("Couldn't bless monster's weapon.");
-                }
-                else
-                {
-                    // Brand a monster's armour with positive energy, if
-                    // possible.
-                    if (_tso_blessing_holy_arm(follower))
-                    {
-                        result = "life defence";
-                        goto blessing_done;
-                    }
-                    else if (force)
-                        mpr("Couldn't bless monster's armour.");
-                }
-                break;
-
-            case GOD_BEOGH:
-                // Turn a monster into a priestly monster, if possible.
-                if (_beogh_blessing_priesthood(follower))
-                {
-                    result = "priesthood";
-                    goto blessing_done;
-                }
-                else if (force)
-                    mpr("Couldn't promote monster to priesthood.");
-                break;
-
-            default:
-                break;
+            result = "priesthood";
+            goto blessing_done;
         }
+        else if (force)
+            mpr("Couldn't promote monster to priesthood.");
     }
 
     // Enchant a monster's weapon or armour/shield by one point, or at
@@ -1945,7 +1831,7 @@ bool bless_follower(monster* follower,
         {
             // Extend a monster's stay if it's abjurable, or extend charm
             // duration. If neither is possible, deliberately fall through.
-            int more_time = _tso_blessing_extend_stay(follower);
+            bool more_time = _tso_blessing_extend_stay(follower);
             bool friendliness = false;
 
             if (!more_time || coinflip())
@@ -1961,10 +1847,7 @@ bool bless_follower(monster* follower,
             }
 
             if (more_time)
-            {
-                result += (more_time == 2) ? "permanent time in this world"
-                                           : "more time in this world";
-            }
+                result += "more time in this world";
 
             if (more_time || friendliness)
                 break;
@@ -2411,6 +2294,9 @@ bool do_god_gift(bool forced)
             break;
         }                       // switch (you.religion)
     }                           // End of gift giving.
+
+    if (success)
+        you.running.stop();
 
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_GIFTS)
     if (old_num_current_gifts < you.num_current_gifts[you.religion])
@@ -3177,15 +3063,13 @@ void excommunication(god_type new_god)
 
         // Leaving TSO for a non-good god will make all your followers
         // abandon you.  Leaving him for a good god will make your holy
-        // followers (his daeva and angel servants) indifferent, while
-        // leaving your other followers (blessed with friendliness by
-        // his power, but not his servants) alone.
+        // followers (daeva and angel servants) indifferent.
         if (!is_good_god(new_god))
             add_daction(DACT_ALLY_HOLY);
         else
             add_daction(DACT_HOLY_PETS_GO_NEUTRAL);
 
-        _set_penance(old_god, 50);
+        _set_penance(old_god, 30);
         break;
 
     case GOD_ZIN:
@@ -3195,7 +3079,7 @@ void excommunication(god_type new_god)
         if (env.sanctuary_time)
             remove_sanctuary();
 
-        // Leaving Zin for a non-good god will make all your followers
+        // Leaving Zin for a non-good god will make neutral holies
         // (originally from TSO) abandon you.
         if (!is_good_god(new_god))
             add_daction(DACT_ALLY_HOLY);
@@ -3208,8 +3092,8 @@ void excommunication(god_type new_god)
         if (you.duration[DUR_DIVINE_VIGOUR])
             elyvilon_remove_divine_vigour();
 
-        // Leaving Elyvilon for a non-good god will make all your
-        // followers (originally from TSO) abandon you.
+        // Leaving Elyvilon for a non-good god will make neutral holies
+        // (originally from TSO) abandon you.
         if (!is_good_god(new_god))
             add_daction(DACT_ALLY_HOLY);
 
@@ -3567,8 +3451,8 @@ void god_pitch(god_type which_god)
 
     if (which_god == GOD_LUGONU && you.penance[GOD_LUGONU])
     {
-        simple_god_message(" is most displeased with you!", which_god);
-        divine_retribution(GOD_LUGONU, true);
+        you.turn_is_over = false;
+        simple_god_message(" refuses to forgive you so easily!", which_god);
         return;
     }
 
@@ -3740,16 +3624,26 @@ void god_pitch(god_type which_god)
         if (old_piety > 30)
             gain_piety(old_piety - 30, 2, true, false);
     }
-    else if (is_evil_god(you.religion))
+
+    // Warn if a good god is starting wrath now.
+    if (old_god != GOD_ELYVILON && you.penance[GOD_ELYVILON]
+        && god_hates_your_god(GOD_ELYVILON, you.religion))
     {
-        // Note: Using worshipped[] we could make this sort of grudge
-        // permanent instead of based off of penance. - bwr
-        if (you.penance[GOD_SHINING_ONE])
-        {
-            _set_penance(GOD_SHINING_ONE, 30);
-            god_speaks(GOD_SHINING_ONE,
-                       "\"You will pay for your evil ways, mortal!\"");
-        }
+        simple_god_message(" says: Your evil deeds will not go unpunished!",
+                           GOD_ELYVILON);
+    }
+    if (old_god != GOD_SHINING_ONE && you.penance[GOD_SHINING_ONE]
+        && god_hates_your_god(GOD_SHINING_ONE, you.religion))
+    {
+        simple_god_message(" says: You will pay for your evil ways, mortal!",
+                           GOD_SHINING_ONE);
+    }
+    if (old_god != GOD_ZIN && you.penance[GOD_ZIN]
+        && god_hates_your_god(GOD_ZIN, you.religion))
+    {
+        simple_god_message(make_stringf(" says: You will suffer for embracing such %s!",
+                                        is_chaotic_god(you.religion) ? "chaos" : "evil").c_str(),
+                           GOD_ZIN);
     }
 
     // Note that you.worshipped[] has already been incremented.

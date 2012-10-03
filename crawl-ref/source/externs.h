@@ -700,6 +700,11 @@ struct message_filter
 
     message_filter(const string &s) : channel(-1), pattern(s, true) { }
 
+    bool operator== (const message_filter &mf) const
+    {
+        return channel == mf.channel && pattern == mf.pattern;
+    }
+
     bool is_filtered(int ch, const string &s) const
     {
         bool channel_match = ch == channel || channel == -1;
@@ -714,6 +719,10 @@ struct sound_mapping
 {
     text_pattern pattern;
     string       soundfile;
+    bool operator== (const sound_mapping &o) const
+    {
+        return pattern == o.pattern && soundfile == o.soundfile;
+    }
 };
 
 struct colour_mapping
@@ -721,12 +730,20 @@ struct colour_mapping
     string tag;
     text_pattern pattern;
     int colour;
+    bool operator== (const colour_mapping &o) const
+    {
+        return tag == o.tag && pattern == o.pattern && colour == o.colour;
+    }
 };
 
 struct message_colour_mapping
 {
     message_filter message;
     msg_colour_type colour;
+    bool operator== (const message_colour_mapping &o) const
+    {
+        return message == o.message && colour == o.colour;
+    }
 };
 
 class InvEntry;

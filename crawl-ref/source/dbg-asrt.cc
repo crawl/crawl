@@ -139,8 +139,9 @@ static void _dump_player(FILE *file)
             you.magic_points, you.max_magic_points,
             you.hp_max_temp, you.mp_max_perm);
     fprintf(file, "Stats: %d (%d) %d (%d) %d (%d)\n",
-            you.strength(), you.max_strength(), you.intel(), you.max_intel(),
-            you.dex(), you.max_dex());
+            you.strength(false), you.max_strength(),
+            you.intel(false), you.max_intel(),
+            you.dex(false), you.max_dex());
     fprintf(file, "Position: %s, god:%s (%d), turn_is_over: %d, "
                   "banished: %d\n",
             debug_coord_str(you.pos()).c_str(),

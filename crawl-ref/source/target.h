@@ -26,6 +26,7 @@ public:
 
     virtual bool set_aim(coord_def a);
     virtual bool valid_aim(coord_def a) = 0;
+    virtual bool can_affect_outside_range();
 
     virtual aff_type is_affected(coord_def loc) = 0;
 protected:
@@ -40,6 +41,7 @@ public:
     bolt beam;
     virtual bool set_aim(coord_def a);
     bool valid_aim(coord_def a);
+    bool can_affect_outside_range();
     virtual aff_type is_affected(coord_def loc);
 protected:
     vector<coord_def> path_taken; // Path beam took.
@@ -77,6 +79,7 @@ public:
                     bool (*affects_pos_func)(const coord_def &) = 0);
     virtual bool set_aim(coord_def a);
     virtual bool valid_aim(coord_def a);
+    virtual bool can_affect_outside_range();
     aff_type is_affected(coord_def loc);
 protected:
     // assumes exp_map is valid only if >0, so let's keep it private
@@ -107,6 +110,16 @@ public:
     aff_type is_affected(coord_def loc);
 };
 
+class targetter_cleave : public targetter
+{
+public:
+    targetter_cleave(const actor* act, coord_def target);
+    aff_type is_affected(coord_def loc);
+    bool valid_aim(coord_def a) { return false; }
+private:
+    set<coord_def> targets;
+};
+
 class targetter_cloud : public targetter
 {
 public:
@@ -114,6 +127,7 @@ public:
                     int count_min = 8, int count_max = 10);
     bool set_aim(coord_def a);
     bool valid_aim(coord_def a);
+    bool can_affect_outside_range();
     aff_type is_affected(coord_def loc);
     int range2;
     int cnt_min, cnt_max;

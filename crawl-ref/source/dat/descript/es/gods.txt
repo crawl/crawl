@@ -1,0 +1,320 @@
+%%%%
+No God
+
+"Dios ha muerto." - Nietzsche (Es un bug si alguna vez ves esto).
+%%%%
+random
+
+Random (Es un bug si ves esto).
+%%%%
+Buggy
+
+Buggy (Es un bug si ves esto).
+%%%%
+Zin
+
+Zin es un dios para aquellos que usan su fuerza interior. Los seguidores deben
+permanecer puros de cuerpo y alma, absteniéndose de usar magia maligna, impía,
+impura o caótica; tampoco deben recurrir a mutaciones ni alimentarse de la
+carne de seres dotados de inteligencia. Sus seguidores pueden predicar a los no
+iluminados o bien aprisionarlos, y al final ganan un refugio divino. Zin valora
+el altruismo, pidiendo una limosna (un diezmo) de todo el oro ganado,
+preferiblemente seguida de donaciones de más. Los seguidores de Zin pueden
+convertirse en seguidores de Elyvilon o de El Resplandeciente conservando algo
+de piedad.
+%%%%
+the Shining One
+
+El Resplandeciente es una poderosa deidad en una cruzada contra todo mal. A sus
+seguidores y aliados les puede conceder varias bendiciones mientras vayan
+erradicando sin compasión a seres malignos e impíos, y se espera que prueben su
+superioridad moral luchando honorablemente. A sus seguidores se les solicita
+que limpien el mundo, examinando a todos sus habitantes en busca de rastros de
+maldad que deba ser eliminada. Los seguidores de El Resplandeciente pueden
+convertirse en seguidores de Elyvilon o de Zin conservando algo de piedad.
+%%%%
+Kikubaaqudgha
+
+Kikubaaqudgha es un terrible dios demonio, al que sirven aquellos que quieren
+manipular los poderes de la muerte. Kikubaaqudgha es una deidad maligna y
+demanda muertes de criaturas vivas y de demonios tan a menudo como sea posible.
+%%%%
+Yredelemnul
+
+Yredelemnul el Oscuro es un dios malvado adorado por los que buscan poderes
+sobre la muerte y los no-muertos. Los seguidores, que deben oponerse a todas
+las cosas sagradas, pueden alzar legiones de serviles no-muertos, y ganar
+varios poderes útiles (si bien desagradables). Yredelemnul aprecia las muertes,
+pero prefiere que los cadáveres sean usados en lugar de sacrificados. Destruir
+seres artificiales también se ve favorecido, ya que no son seres vivos ni
+sujetos a la muerte o a la no-muerte.
+%%%%
+Xom
+
+Xom es una deidad del caos, salvaje e impredecible, que no busca adoradores
+sino juguetes con los que divertirse. Muchos eligen seguir a Xom con la
+esperanza de recibir fabulosas recompensas y grandes poderes, pero Xom es
+completamente caprichoso. Además no hay nada que un seguidor pueda hacer para
+influir en el humor de Xom.
+%%%%
+Vehumet
+
+Vehumet es un dios de los poderes destructivos de la magia. Los seguidores
+ganan varios poderes útiles para mejorar su maestría en las artes herméticas y
+los más favorecidos consiguen acceso a algunos de los terribles hechizos de la
+biblioteca de Vehumet. La devoción a Vehumet se logra causando cuanta más
+masacre y destrucción posible.
+%%%%
+Okawaru
+
+Okawaru es un poderoso y peligroso dios de la guerra. Los seguidores pueden
+ganar varios poderes útiles en combate además de ciertas recompensas, pero
+deben constantemente probarse a sí mismos a través de batallas y del sacrificio
+de cuerpos. Okawaru menosprecia a quienes hieren a sus aliados.
+%%%%
+Makhleb
+
+Makhleb, "quien destruye", es una terrible deidad de derramamientos de sangre y
+mortificación de la carne. Sus seguidores purifican a los demás inflingiéndoles
+sufrimiento y muerte en nombre de Makhleb, y pueden ganar más favor destruyendo
+a los cadáveres recientes. Dedicados seguidores pueden acceder a caóticas
+energías en bruto y convocar sirvientes del caos de origen infernal, de modo
+que puedan destruir este mundo impuro y sus leyes falsas para la gloria de este
+malvado dios.
+%%%%
+Sif Muna
+
+Sif Muna, "quien posee el conocimiento" es una deidad contemplativa pero
+poderosa, a quien sirven los que buscan conocimiento de la magia. Aprecia el
+entrenamiento de las capacidades para hacer magia.
+%%%%
+Trog
+
+Trog es un antiguo dios de furia y violencia. Sus seguidores han de matar en
+nombre de Trog y sacrificar a los muertos para obtener poder durante las
+batallas y ocasionalmente alguna recompensa. Trog odia a todos los magos y le
+encanta ver sus libros arder. Sus seguidores tienen prohibido el uso de
+hechizos.
+%%%%
+Nemelex Xobeh
+
+Nemelex es un extraño e impredecible dios tramposo, cuyos poderes pueden ser
+invocados a través de mazos de cartas pintadas con icor de demonios. Sus
+seguidores deben sacrificar diligentemente objetos valiosos, el tipo de los
+cuales influirá en los regalos recibidos. A sus seguidores se les aconseja
+confiar en las cartas y usarlas tanto como sea posible. Nemelex puede asegurar
+que la fortuna favorece a los atrevidos.
+%%%%
+Elyvilon
+
+Elyvilon, "quien sana", acoge a todas las buenas almas que estén preparadas
+para ayudar a los demás. Tales individuos pueden esperar ganar poderosas
+habilidades de sanación. Elyvilon prefiere un credo de pacifismo y ayuda a sus
+seguidores a evitar baños de sangre. Elyvilon aprecia la destrucción de armas,
+aunque los seguidores más piadosos deben encontrar y destruir armás impías o
+malignas para ganar piedad de esta forma. Los seguidores de Elyvilon pueden
+convertirse en seguidores de El Resplandeciente o de Zin conservando algo de
+piedad.
+%%%%
+Lugonu
+
+Lugonu, "informe", se revela en el caos del Abismo. Sus seguidores son enviados
+para causar masacres y corromper al mundo de arriba, y deben hacerlo sin
+descanso para ganar el favor de Lugonu.
+%%%%
+Beogh
+
+Beogh es la deidad adorada por los orcos de las cuevas, nativos de algunas
+regiones del calabozo. Solamente los orcos pueden dedicar su servicio a Beogh y
+deben probar su devoción mediante masacres y la bendición de orcos fallecidos.
+Devotos seguidores de Beogh pueden ganar seguidores propios, ya que los orcos
+todavían buscan a su mesías.
+%%%%
+Fedhas
+
+Fedhas Madash es un dios de las plantas y hongos. Fedhas demanda que sus
+seguidores auspicien la descomposición de cadáveres. Fedhas prohíbe dañar a
+ninguna especie bajo su protección y usar efectos de necromancia que
+interfieran con los cadáveres. En compensación Fedhas da varias habilidades que
+promueven el crecimiento de plantas y hongos. Tales habilidades pueden ser
+útiles para los aventureros.
+%%%%
+Cheibriados
+
+Cheibriados es un dios que medita en el misterio del tiempo. Aquellos que
+elijan seguir su camino aprenderán a desprenderse de las prisas innecesarias,
+enlentecerse y volver lentos a los demás, y a dañar a aquellos que rechacen tal
+situación. Seguidores especialmente devotos pueden incluso abandonar
+temporalmente el flujo del tiempo y sus innecesarias molestias.
+%%%%
+Ashenzari
+
+Aunque pueda parecer inconcebible que algo divino pueda estar encadenado,
+Ashenzari es eso: clavado adrede al cielo para la eternidad, el dios inamovible
+es omnisciente. A sus devotos adoradores se les permite que conozcan retales de
+su conocimiento y visión, pero alerta: para Ashenzari, el poder, las
+bendiciones y las maldiciones son todo la misma cosa.
+%%%%
+Jiyva
+
+Jiyva es la antigua y caótica deidad de las mucosas. Sus seguidores deben
+apoyar la diseminación y alimentación de sus camaradas permitiéndoles consumir
+objetos, y tienen prohibido dañar a cualquier mucosa. Jivya ocasionalmente
+incluso consumirá objetos dejados en alguna parte del calabozo. Seguidores
+especialmente favorecidos se volverán tan carentes de forma como su dios a
+medida que sus atributos y mutaciones van cambiando bajo la influencia de
+Jiyva.
+%%%%
+Zin powers
+
+Zin concede a sus seguidores la habilidad de predicar a las masas, y poderes
+para revitalizar sus cuerpos y ganar resistencia divina, protegiéndoles de
+variadas aflicciones además de dar sustento al hambriento. Más adelante, sus
+seguidores ganan la habilidad de aprisionar a sus enemigos de forma temporal.
+Al final, sus seguidores pueden encontrar seguridad en un refugio divino por
+algo de tiempo. A medida que la piedad crece, sus seguidores se verán
+protegidos de mutaciones, y Zin puede incluso ocasionalmente intervenir de
+forma directa para salvarle la vida a un seguidor.
+%%%%
+the Shining One powers
+
+Los seguidores de El Resplandeciente están envueltos por un halo que revela su
+presencia. Ganan poder matando a seres malignos. Si los seguidores son dignos
+de su cruzada, El Resplandeciente mantendrá por más tiempo a los aliados
+convocados y encantados. Sus seguidores obtendrán un escudo divino para
+protegerles en las batallas. Más tarde, podrán canalizar llamas purificadoras
+que son particularmente dañinas contra seres impíos. Al final, podrán pedir a
+El Resplandeciente que les envíe poderosos seres divinos como aliados. El
+Resplandeciente puede ocasionalmente intervenir de forma directa para salvarle
+la vida a un seguidor. A medida que crece la piedad El Resplandeciente
+protegerá la fuerza vital de sus seguidores.
+%%%%
+Kikubaaqudgha powers
+
+Kikubaaqudgha mandará cadáveres a sus seguidores, mejorará las habilidades
+necrománticas de sus sirvientes obsequiando libros de hechizos, e imbuirá a sus
+armas con dolor. Seguidores especialmente fervientes pueden protegerse del
+tormento, o incluso invocarlo ellos mismos ofreciendo un cadáver a
+Kikubaaqudgha.
+%%%%
+Yredelemnul powers
+
+Yredelemnul otorga el poder de alzar esqueletos y cadáveres para luchar de tu
+lado, traer a tus seguidores cerca de ti, y sanar puntos de vida absorbiendo la
+fuerza vital de criaturas vivas. Al final, podrás ganar el poder de
+%%%%
+Xom powers
+
+Adorar a Xom es vivir con riesgo. De buen humor, Xom puede obsequiarte con una
+lluvia de regalos, mientras que en otras ocasiones este dios caprichoso puede
+decidir poner "algo de salsa" y acabar por condenarte. Si te muestras como el
+más fuerte, tanto mejor; si no, bueno, siempre habrá otros con quien jugar...
+%%%%
+Vehumet powers
+
+Los adoradores de Vehumet pronto serán capaces de recuperar su mana matando
+criaturas. A medida que ganen favor, también ganarán varias mejoras en sus
+hechizos destructivos - en primer lugar, asistencia a la hora de recitar tales
+hechizos; luego se incrementará la distancia de sus conjuros; y finalmente un
+coste menor para lanzar hechizos destructivos de alto nivel.Con el tiempo,
+Vehumet otorgará a sus seguidores raros libros de magia destructiva.
+%%%%
+Okawaru powers
+
+Los seguidores pronto ganarán la habilidad de incrementar su capacidad de
+combate de forma temporal, y, mucho después, inflingir golpes mucho más
+rápidamente. Okawaru con el tiempo dará a sus seguidores armas y armaduras.
+%%%%
+Makhleb powers
+
+Makhleb ofrece a sus seguidores varios métodos de inflingir un daño inmenso, y
+poder pedir auxilio a poderosos demonios, aunque estos poderes conllevan un
+precio en sangre. Sin embargo, Makhleb garantiza una salud renovada en
+compensación por matar seres de toda clase.
+%%%%
+Sif Muna powers
+
+Los seguidores de Sif Muna pueden canalizar mana cuando más lo necesiten, y
+ganan el poder olvidar cualquier hechizo a voluntad para aprender otros nuevos.
+Sif Muna protege a los hechiceros contra los efectos negativos de recitar mal
+un hechizo. Con el tiempo sus seguidores conseguirán libros que contienen todos
+los hechizos existentes en el reino.
+%%%%
+Trog powers
+
+Trog ofrece varios poderes para ayudarte en batalla, en concreto la habilidad
+de volverse berserk a voluntad y la habilidad de curar las heridas mucho más
+rápidamente a la vez que se incrementa la resistencia a efectos mágicos. Luego
+sus seguidores pueden llamar a poderosos y furiosos aliados. Con el tiempo Trog
+dará a sus seguidores armas diseñadas para ejercer daño.
+%%%%
+Nemelex Xobeh powers
+
+Los seguidores de Nemelex ganan varias formas de influir en su destino cuando
+juegan sus cartas.
+%%%%
+Elyvilon powers
+
+Elyvilon ofrece a sus seguidores maneras de sanarse a sí mismos de heridas y de
+otras aflicciones. Elyvilon también permite curar a monstruos hostiles para
+tratar de volverlos neutrales. Elyvilon puede intervenir directamente para
+salvar la vida de un seguidor, especialmente cuando es requerido para ello; los
+seguidores altamente piadosos pueden estar seguros de dicha ayuda.
+%%%%
+Lugonu powers
+
+Los seguidores de Lugonu ganan poderes para salir del Abismo a voluntad, para
+desterrar a monstruos allí y al final para entrar ellos mismos en ese reino de
+caos- con el coste de parte de su alma. Aparte de eso, pueden causar daño
+distorsional a monstruos y ganar la habilidad de corromper el orden del mundo,
+permitiéndoles abrir una puerta para que criaturas del Abismo pasen a través.
+%%%%
+Beogh powers
+
+Beogh anima a sus seguidores a usar la equipación orca que encuentren en el
+calabozo. Sus seguidores pueden golpear a sus enemigos a distancia, e incluso
+conseguirán seguidores orcos propios, que pueden ser bendecidos por Beogh y a
+los que se les puede traer consigo dentro de un nivel cuando sean requeridos.
+Con el tiempo los seguidores de Beogh ganarán el poder de caminar sobre las
+aguas. Beogh a veces intervendrá directamente para salvar la vida de un
+seguidor.
+%%%%
+Fedhas powers
+
+Las plantas y los hongos no atacarán a los adoradores de Fedhas sin provocación
+previa. Los adoradores de Fedhas pueden caminar entre las plantas o los hongos,
+e incluso lanzar proyectiles o hechizos a través de ellas sin causarles daño.
+Fedhas confiere la habilidad de hacer evolucionar a las plantas y hongos en
+especies más fuertes. Sus seguidores pueden eventualmente hacer crecer un muro
+de plantas y crear esporas explosivas de los cadáveres. También se les concede
+algo de control sobre el tiempo, siendo capaces de invocar luz solar y al
+final, tormentas.
+%%%%
+Cheibriados powers
+
+Los seguidores de Cheibriados se mueven más lentamente a medida que ganan
+favor, y son recompensados por matar a criaturas que sean más rápidas que
+ellos. Moverse demasiado deprisa o usar armas mágicamente aceleradas está mal
+visto. Cheibriados recompensa a los fieles con un metabolismo lento, el poder
+de enlentecer a otras criaturas, el poder de distorsionar el flujo del tiempo,
+el poder de dañar a aquellos que se muevan más deprisa que ellos y, finalmente,
+la habilidad de abandonar el flujo del tiempo por completo.
+%%%%
+Jiyva powers
+
+Los seguidores de Jiyva pueden solicitar gelatinas, convertir monstruos en
+mucosa y con el tiempo, eliminar sus mutaciones dañinas. A medida que se gana
+piedad, aumentando la frecuencia, Jiyva irá dejando gelatinas por el calabozo;
+reordenará atributos en función de las capacidades, armadura y carga; y
+concederá mutaciones. Las mucosas nunca dañarán a un seguidor de Jiyva y Jiyva
+demanda la misma conducta. Al final todas las mucosas visibles se unirán en
+oración, evitando que se muevan durante un rato.
+%%%%
+Ashenzari powers
+
+Ashenzari exhorta a sus seguidores que se carguen con maldiciones y recompensa
+por el tiempo transcurrido usando armaduras, joyas o armas malditas. El mayor
+deseo de Ashenzari no es la devoción sino el conocimiento de todas las cosas.
+Los seguidores piadosos que quieran compartir una parte de su conocimiento
+recibirán una gran parte del de Ashenzari.
+%%%%

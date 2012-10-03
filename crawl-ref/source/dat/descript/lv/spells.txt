@@ -1,0 +1,21 @@
+%%%%
+Bolt of Cold spell
+
+Šī burvestība sviež lielu. sasalušu ledus šautru.
+%%%%
+Bolt of Fire spell
+
+Šī burvestība sviež lielu uguns šautru.
+%%%%
+Call Imp spell
+
+Šī burvestība no Elles dzīlēm atsauc šurp kādu dēmoniņu.
+%%%%
+Conjure Flame spell
+
+Šī burvestība uzbur dārdošanas uguns sienu.
+%%%%
+Debugging Ray spell
+
+Stars, kas nodara milzīgus bojājumus (1500 dzīvības punktus) un vienmēr trāpa.
+%%%%

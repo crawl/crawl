@@ -35,7 +35,7 @@
 #include "view.h"
 
 static bool _offer_items();
-static void _zin_donate_gold();
+static bool _zin_donate_gold();
 
 static bool _confirm_pray_sacrifice(god_type god)
 {
@@ -200,11 +200,11 @@ static bool _altar_prayer()
 
     god_acting gdact;
 
-    bool did_bless = false;
+    bool did_something = false;
 
     // donate gold to gain piety distributed over time
     if (you.religion == GOD_ZIN)
-        _zin_donate_gold();
+        did_something = _zin_donate_gold();
 
     // TSO blesses weapons with holy wrath, and long blades and demon
     // whips specially.
@@ -219,8 +219,8 @@ static bool _altar_prayer()
             && (get_weapon_brand(*wpn) != SPWPN_HOLY_WRATH
                 || is_blessed_convertible(*wpn)))
         {
-            did_bless = _bless_weapon(GOD_SHINING_ONE, SPWPN_HOLY_WRATH,
-                                      YELLOW);
+            did_something = _bless_weapon(GOD_SHINING_ONE, SPWPN_HOLY_WRATH,
+                                          YELLOW);
         }
     }
 
@@ -233,7 +233,7 @@ static bool _altar_prayer()
         item_def *wpn = you.weapon();
 
         if (wpn && get_weapon_brand(*wpn) != SPWPN_DISTORTION)
-            did_bless = _bless_weapon(GOD_LUGONU, SPWPN_DISTORTION, MAGENTA);
+            did_something = _bless_weapon(GOD_LUGONU, SPWPN_DISTORTION, MAGENTA);
     }
 
     // Kikubaaqudgha blesses weapons with pain, or gives you a Necronomicon.
@@ -254,7 +254,7 @@ static bool _altar_prayer()
         {
             kiku_did_bless_weapon =
                 _bless_weapon(GOD_KIKUBAAQUDGHA, SPWPN_PAIN, RED);
-            did_bless = kiku_did_bless_weapon;
+            did_something = kiku_did_bless_weapon;
         }
         else
             mpr("You have no weapon to bloody with pain.");
@@ -280,17 +280,17 @@ static bool _altar_prayer()
                 more();
 
                 you.one_time_ability_used[you.religion] = true;
-                did_bless = true;
+                did_something = true;
                 take_note(Note(NOTE_GOD_GIFT, you.religion));
                 mitm[thing_created].inscription = "god gift";
             }
         }
 
         // Return early so we don't offer our Necronomicon to Kiku.
-        return did_bless;
+        return did_something;
     }
 
-    return did_bless;
+    return did_something;
 }
 
 void pray()
@@ -312,11 +312,7 @@ void pray()
             return;
 
         if (you.religion != GOD_NO_GOD && altar_god == you.religion)
-        {
             something_happened = _altar_prayer();
-            // at least "prostrating" took time
-            you.turn_is_over = true;
-        }
         else if (altar_god != GOD_NO_GOD)
         {
             if (you.species == SP_DEMIGOD)
@@ -325,8 +321,10 @@ void pray()
                 return;
             }
 
-            god_pitch(feat_altar_god(grd(you.pos())));
             you.turn_is_over = true;
+            // But if we don't convert then god_pitch
+            // makes it not take a turn after all.
+            god_pitch(feat_altar_god(grd(you.pos())));
             return;
         }
     }
@@ -430,16 +428,16 @@ static int _gold_to_donation(int gold)
     return static_cast<int>((gold * log((float)gold)) / MAX_PIETY);
 }
 
-static void _zin_donate_gold()
+static bool _zin_donate_gold()
 {
     if (you.gold == 0)
     {
         mpr("You don't have anything to sacrifice.");
-        return;
+        return false;
     }
 
     if (!yesno("Do you wish to donate half of your money?", true, 'n'))
-        return;
+        return false;
 
     const int donation_cost = (you.gold / 2) + 1;
     const int donation = _gold_to_donation(donation_cost);
@@ -458,7 +456,7 @@ static void _zin_donate_gold()
     if (donation < 1)
     {
         simple_god_message(" finds your generosity lacking.");
-        return;
+        return false;
     }
 
     you.duration[DUR_PIETY_POOL] += donation;
@@ -474,21 +472,24 @@ static void _zin_donate_gold()
             mpr("You feel that you will soon be absolved of all your sins.");
         else
             mpr("You feel that your burden of sins will soon be lighter.");
-        return;
+    }
+    else
+    {
+        string result = "You feel that " + god_name(GOD_ZIN) + " will soon be ";
+        result +=
+            (estimated_piety > 130) ? "exalted by your worship" :
+            (estimated_piety > 100) ? "extremely pleased with you" :
+            (estimated_piety >  70) ? "greatly pleased with you" :
+            (estimated_piety >  40) ? "most pleased with you" :
+            (estimated_piety >  20) ? "pleased with you" :
+            (estimated_piety >   5) ? "noncommittal"
+                                    : "displeased";
+        result += (donation >= 30 && you.piety <= 170) ? "!" : ".";
+
+        mpr(result.c_str());
     }
 
-    string result = "You feel that " + god_name(GOD_ZIN) + " will soon be ";
-    result +=
-        (estimated_piety > 130) ? "exalted by your worship" :
-        (estimated_piety > 100) ? "extremely pleased with you" :
-        (estimated_piety >  70) ? "greatly pleased with you" :
-        (estimated_piety >  40) ? "most pleased with you" :
-        (estimated_piety >  20) ? "pleased with you" :
-        (estimated_piety >   5) ? "noncommittal"
-                                : "displeased";
-    result += (donation >= 30 && you.piety <= 170) ? "!" : ".";
-
-    mpr(result.c_str());
+    return true;
 }
 
 static int _leading_sacrifice_group()

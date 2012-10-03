@@ -768,3 +768,16 @@ static void _BLACK_KNIGHT_HORSE_world_reacts(item_def *item)
     if (one_chance_in(10))
         did_god_conduct(DID_UNHOLY, 1);
 }
+
+///////////////////////////////////////////////////
+static void _NIGHT_equip(item_def *item, bool *show_msgs, bool unmeld)
+{
+    update_vision_range();
+    _equip_mpr(show_msgs, "The light fades from your surroundings.");
+}
+
+static void _NIGHT_unequip(item_def *item, bool *show_msgs)
+{
+    update_vision_range();
+    _equip_mpr(show_msgs, "The light returns to your surroundings.");
+}

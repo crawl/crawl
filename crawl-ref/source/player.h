@@ -241,8 +241,11 @@ public:
   FixedVector<int, 52>  spell_letter_table;   // ref to spell by slot
   FixedVector<ability_type, 52>  ability_letter_table; // ref to abil by enum
 
+  // Maps without allow_dup that have been already used.
   set<string> uniq_map_tags;
   set<string> uniq_map_names;
+  // All maps, by level.
+  map<level_id, vector<string> > vault_list;
 
   PlaceInfo global_info;
   player_quiver* m_quiver;
@@ -401,9 +404,9 @@ public:
     void reset_prev_move();
 
     int stat(stat_type stat, bool nonneg=true) const;
-    int strength() const;
-    int intel() const;
-    int dex() const;
+    int strength(bool nonneg=true) const;
+    int intel(bool nonneg=true) const;
+    int dex(bool nonneg=true) const;
     int max_stat(stat_type stat) const;
     int max_strength() const;
     int max_intel() const;
@@ -635,6 +638,7 @@ public:
     bool glows_naturally() const;
     bool petrifying() const;
     bool petrified() const;
+    bool liquefied_ground() const;
     bool incapacitated() const
     {
         return actor::incapacitated() || stat_zero[STAT_DEX];
@@ -670,8 +674,8 @@ public:
     int adjusted_body_armour_penalty(int scale = 1,
                                      bool use_size = false) const;
     int adjusted_shield_penalty(int scale = 1) const;
-    int armour_tohit_penalty(bool random_factor) const;
-    int shield_tohit_penalty(bool random_factor) const;
+    int armour_tohit_penalty(bool random_factor, int scale = 1) const;
+    int shield_tohit_penalty(bool random_factor, int scale = 1) const;
 
     bool wearing_light_armour(bool with_skill = false) const;
     int  skill(skill_type skill, int scale =1, bool real = false) const;
@@ -872,9 +876,9 @@ int player_spec_cold(void);
 int player_spec_conj(void);
 int player_spec_death(void);
 int player_spec_earth(void);
-int player_spec_ench(void);
 int player_spec_fire(void);
-int player_spec_holy(void);
+int player_spec_hex(void);
+int player_spec_charm(void);
 int player_spec_poison(void);
 int player_spec_summ(void);
 

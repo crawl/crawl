@@ -1238,7 +1238,9 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
     const map_cell& mc = env.map_knowledge(gc);
 
     bool print_blood = true;
-    if (mc.flags & MAP_HALOED)
+    if (mc.flags & MAP_UMBRAED)
+        cell.halo = HALO_UMBRA;
+    else if (mc.flags & MAP_HALOED)
     {
         monster_info* mon = mc.monsterinfo();
         if (mon && !mons_class_flag(mon->type, M_NO_EXP_GAIN))
@@ -1251,8 +1253,6 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
             cell.halo = HALO_RANGE;
         }
     }
-    else if (mc.flags & MAP_UMBRAED)
-        cell.halo = HALO_UMBRA;
     else
         cell.halo = HALO_NONE;
 

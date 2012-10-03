@@ -12,7 +12,8 @@ The contents of this text are:
 0-a     Standard and additional option files.
 0-b     Options on the command line
 0-c     Options and how to set them.
-0-d     Aliases and variables.
+0-d     List options.
+0-e     Aliases and variables.
 1-  Starting Screen.
                 name, remember_name, weapon, species, background,
                 random_pick, good_random, restart_after_game,
@@ -107,11 +108,13 @@ The contents of this text are:
                 tile_show_minimagicbar, tile_show_demon_tier,
                 tile_layout_priority, tile_force_regenerate_levels
 4-  Character Dump.
-4-a     Items and Kills.
+4-a     Saving.
+                dump_on_save
+4-b     Items and Kills.
                 kill_map, dump_kill_places, dump_kill_breakdowns,
                 dump_item_origins, dump_item_origin_price, dump_message_count,
                 dump_order, dump_book_spells
-4-b     Notes.
+4-c     Notes.
                 user_note_prefix, note_items, note_monsters,
                 ood_interesting, note_hp_percent, note_skill_levels,
                 note_all_skill_levels, note_skill_max, note_xom_effects,
@@ -227,7 +230,37 @@ are as follows:
 and, for Tiles,
    tile_tag_pref       = tutorial
 
-0-d     Aliases and variables.
+0-d     List options.
+---------------------
+
+A number of options can have a list of values. Most but not all of these
+options allow setting multiple values in a single line, separated by commas.
+It is possible to reset, add items to, or remove items from such an option.
+   Add values to the list:
+      drop_filter += useless, enchant
+   Remove values from the list (exact match only):
+      drop_filter -= enchant
+   Reset (empty) the list:
+      drop_filter =
+
+The meaning of the "listopt = value" syntax is in flux. Currently it is a
+synonym for "+=", adding items to the list. In future versions of Crawl, it
+will first reset the list before adding values. If you use "=" in a way that is
+expected to change meaning (appending to an option that already has at least
+one value), you will receive a warning at startup; in this case you can change
+your syntax to obtain either the current or the future behaviour:
+   Old syntax:
+      drop_filter = useless
+   Change to (for old meaning):
+      drop_filter += useless
+   Change to (for future meaning):
+      drop_filter =
+      drop_filter += useless
+
+A few list options already have the future behaviour for "opt = value"; these
+options are flagged as "Overriding list options" in their descriptions.
+
+0-e     Aliases and variables.
 ------------------------------
 
 For long option names, you can define option aliases by doing:
@@ -235,12 +268,12 @@ For long option names, you can define option aliases by doing:
 For instance, you can use:
     ae := autopickup_exceptions
 and thereafter use "ae" instead of "autopickup_exceptions":
-    ae = >uselessness, >inaccuracy
+    ae += >uselessness, >inaccuracy
 
 You can define shortcuts for option values (variables). For example,
     $useless := darkgrey
 could be used in conjunction with
-    menu_colour = $useless:random uselessness
+    menu_colour += $useless:random uselessness
 
 To prevent a variable from being changed you can make it a constant:
     constant = useless
@@ -328,10 +361,11 @@ macro_dir = settings/
         For tile games, wininit.txt will also be stored here.
         It should end with the path delimiter.
 
-sound = <regex>:<path to sound file>
+sound += <regex>:<path to sound file>, <regex>:<path>, ...
+        (List option)
         Plays the sound file if a message contains regex. The regex
         should not include commas or colons. For example
-             sound = LOW HITPOINT WARNING:sound\sounds2\danger3.wav
+             sound += LOW HITPOINT WARNING:sound\sounds2\danger3.wav
         Getting appropriate sound files may be difficult. Check other
         roguelikes or old computer RPGs. Alternatively, ask for help
         in the newsgroup rec.games.roguelike.misc.
@@ -365,7 +399,8 @@ autopickup = $?!+"/%
         items). If you teleport or blink onto a square with interesting
         items, these will not be picked up.
 
-autopickup_exceptions = <pickup-regex, >don't-pickup-regex, ...
+autopickup_exceptions += <pickup-regex, >don't-pickup-regex, ...
+        (List option)
         A set of regexes that force matching items to be picked up (if
         prefixed with <), or never picked up (if prefixed with >).
         Excludes (>) take precedence over includes (<), so if the same
@@ -373,27 +408,27 @@ autopickup_exceptions = <pickup-regex, >don't-pickup-regex, ...
         be subject to autopickup.
 
         An example:
-             autopickup_exceptions = <curare-tipped needle
+             autopickup_exceptions += <curare-tipped needle
         Forces autopickup to grab all curare-tipped needles, even if
         missiles are not set in the "autopickup" option.
 
         Whitespace between <> and the match expression is significant,
         so the following won't work:
-             autopickup_exceptions = <   ebony casket
+             autopickup_exceptions += <   ebony casket
 
         autopickup_exceptions replace the older ban_pickup. Using
-             autopickup_exceptions = >uselessness, >inaccuracy
+             autopickup_exceptions += >uselessness, >inaccuracy
         is the same as using
-             ban_pickup = uselessness, inaccuracy
+             ban_pickup += uselessness, inaccuracy
 
         If the regexes are not prefixed with < or >, > is implied, so
         the option setting above can also be written as
-             autopickup_exceptions = uselessness, inaccuracy
+             autopickup_exceptions += uselessness, inaccuracy
 
         You can use multiple autopickup_exceptions lines. Some examples:
-             autopickup_exceptions = inaccuracy, scrolls? of paper,
-             autopickup_exceptions = immolation, curse (armour|weapon),
-             autopickup_exceptions = uselessness, noise, torment
+             autopickup_exceptions += inaccuracy, scrolls? of paper
+             autopickup_exceptions += immolation, curse (armour|weapon)
+             autopickup_exceptions += uselessness, noise, torment
 
         Unless you clear the list of exceptions, you won't need to set
         autopickup exceptions for potions except maybe for very special
@@ -462,17 +497,18 @@ pickup_mode = (multi | single | auto:X)
         auto:5), then pickup will give a menu if there are at least X
         items on your square, and will prompt one by one otherwise.
 
-drop_filter = <regex>
+drop_filter += <regex>, <regex>, ...
+        (List option)
         When selecting items using the global (de)select keys (',' or
         '-') in a multidrop menu, you can choose to select only items
         that match a search regex using this option.
 
         For instance, to quickly select carrion and rotting chunks of
         meat, you could use:
-             drop_filter = skeleton, rotting, corpse
+             drop_filter += skeleton, rotting, corpse
         Other choices can come in handy as well, e.g. if you want to
         regularly sacrifice all weapons except axes, use:
-             drop_filter = axe, broadaxe
+             drop_filter += axe, broadaxe
 
         drop_filter will match against the same keywords menu_colour uses,
         except that it lacks identification status and corpse/chunk
@@ -738,6 +774,8 @@ travel_avoid_terrain = (shallow water | deep water)
         permanent levitation,
              travel_avoid_terrain = shallow water, deep water
         will prevent travel or explore from going through any water.
+        This option is not a true list option; in particular, it is not
+        possible to reset the option or to remove terrain types.
 
 explore_greedy = true
         Greedy explore travels to items that are eligible for
@@ -749,12 +787,10 @@ explore_greedy = true
 explore_stop  = items,stairs,shops,altars,portals,branches,runed_doors
 explore_stop += greedy_pickup_smart,greedy_visited_item_stack
 explore_stop += greedy_sacrificeable
+        (Overriding list option)
         Explore will stop for one of these conditions. Whatever you
         set this option to, anything that stops travel will also stop
-        explore. Multiple explore_stop lines are cumulative if you use
-        "explore_stop += option"s, otherwise the last "explore_stop ="
-        options line will override all previous explore_stop lines.
-        "explore_stop -=" can be used to remove items from the list.
+        explore.
 
         The "branches" condition stops for branch entrances but not for
         other kinds of stairs or portals.
@@ -812,14 +848,15 @@ sacrifice_before_explore = false
         confirmation prompt before the items are sacrificed.
         This option has no effect when explore_stop hasn't greedy_sacrificeable.
 
-explore_stop_pickup_ignore = <regex list>
+explore_stop_pickup_ignore += <regex>, <regex>, ...
+        (List option)
         If explore_stop has greedy_pickup or greedy_pickup_smart set,
         then picking up any items matching any of the regexes in the list
         will *not* stop auto-explore. For example, by default curare-
         tipped needles are automatically picked up to keep them out of
         the hands of monsters, even if you don't have a blowgun, so to
         not stop auto-explore because of this use
-        "explore_stop_pickup_ignore = curare".
+        "explore_stop_pickup_ignore += curare".
 
         This options has no affect on items which were thrown by the
         player.
@@ -861,21 +898,22 @@ tc_exclude_circle = red
           excluded_circle: the colour for travel exclusions apart from
                            centre
 
-runrest_ignore_message = <list of regexes>
-runrest_stop_message = <list of regexes>
+runrest_ignore_message += <regex>, <regex>, ...
+runrest_stop_message += <regex>, <regex>, ...
+        (List option)
         Use these to force messages to interrupt travel and resting, or
         not. These are matched against full message text. To limit a
         substring match to a message channel, prefix the substring with
         the channel name and a colon (see section 3-l below on Message
         Channels). For instance, if you want travel to stop when you're
         hit by divine retribution, you could use:
-             runrest_stop_message = god:wrath finds you
+             runrest_stop_message += god:wrath finds you
         Or to remind yourself to renew expiring spells:
-             runrest_stop_message = Your transformation is almost over
-             runrest_stop_message = You are starting to lose your buoyancy
+             runrest_stop_message += Your transformation is almost over
+             runrest_stop_message += You are starting to lose your buoyancy
         Or you can explicitly ignore some messages:
-             runrest_ignore_message = offer a prayer,prayer is over
-             runrest_ignore_message = pleased with you,exalted
+             runrest_ignore_message += offer a prayer,prayer is over
+             runrest_ignore_message += pleased with you,exalted
 
         Note that monster talk and dungeon noises already do not
         interrupt running or resting, by default.
@@ -883,6 +921,8 @@ runrest_stop_message = <list of regexes>
         Multiple lines can be used. The earliest match among both
         ignore and stop messages overrides later lines. The file
         runrest_messages.txt contains a number of default settings.
+        
+        Resetting either option has the effect of resetting both.
 
         Note also that runrest_ignore_message has no effect on what
         explore_stop stops for.
@@ -896,11 +936,12 @@ runrest_ignore_poison = <poison damage>:<minimum hp>
              runrest_ignore_message = You feel.*sick
              runrest_ignore_poison = 4:100
 
-runrest_ignore_monster = <string>:<distance>
+runrest_ignore_monster += <string>:<distance>, <string>:<distance>, ...
+        (List option)
         Any monster containing the string will only interrupt your
         activity if the distance between you and the monster is
         less than the specified number. E.g. with
-             runrest_ignore_monster = fish:3
+             runrest_ignore_monster += fish:3
         all of big fish, jellyfish, giant goldfish and lavafish will be
         considered safe for travel, explore and resting as long as the
         distance is at least 3.
@@ -909,6 +950,8 @@ trapwalk_safe_hp = <trap_name>:<minimum_hp>, ...
         Any square containing one of the listed trap types will be
         considered safe for travel if your hp is greater than or
         equal to the number connected to the trap in question.
+        Note that this is not a list option: setting this option always
+        overrides any previous setting.
 
         All the existing trap types can be used, but in practice only
         the mechanical traps (dart, bolt, arrow, needle, spear, blade)
@@ -921,7 +964,8 @@ rest_wait_both = false
         when both HP and MP are fully restored, not when either one of
         them is restored.
 
-auto_exclude = <list of monster names>
+auto_exclude += <monster name>, <monster name>, ...
+        (List option)
         Whenever you encounter a sleeping or stationary monster during
         exploration that is included in this list, automatically a
         travel exclusion is set centered on this monster, meaning
@@ -1183,7 +1227,8 @@ sort_menus = [menu:](true | false | auto:X)[:sort_order]
         the last one matching will always take precedence, i.e. "any"
         as last setting would override any of the others.
 
-spell_slot = <regex>:<list of spell letters>
+spell_slot += <regex>:<list of spell letters>
+        (List option, one value per line)
         When you memorise any spell that matches the regex, it will
         assign itself to the first available letter in the list. (If
         all letters in the list are occupied for each regex the spell
@@ -1191,14 +1236,14 @@ spell_slot = <regex>:<list of spell letters>
 
         Examples:
         * if you want Haste to be placed on H:
-            spell_slot = Haste:H
+            spell_slot += Haste:H
         * if you want Deflect Missiles to be placed on r normally or R if
           r is unavailable:
-            spell_slot = Deflect:rR
+            spell_slot += Deflect:rR
         * if you want to change the default spell slot assignment
           to use capital letters: (place this after all other
           spell_slot lines):
-            spell_slot = .*:ABCDEFGHIJKLMNOPQRSTUVWXYZ
+            spell_slot += .*:ABCDEFGHIJKLMNOPQRSTUVWXYZ
 
 autofight_stop = 30
         Autofight will not act if your HP is at or lower than this
@@ -1231,15 +1276,18 @@ mp_warning = 0
         percentage of their maximum (use 0 to turn off these messages).
 
 hp_colour = 50:yellow, 25:red
+        (Overriding list option)
         hp_colour colours your Health appropriately in the status
         display. In the default setting, your health will appear in
         red if at less than 25%, yellow if at less than 50%, and in
         the default colour otherwise.
 
 mp_colour = 50:yellow, 25:red
+        (Overriding list option)
         mp_colour does to Magic what hp_colour does to Health.
 
 stat_colour = 1:lightred, 3:red
+        (Overriding list option)
         stat_colour colours your stats if they drop below a given value,
         in the order of their definition. This check takes place before
         the ones for e.g. Might or degeneration.
@@ -1350,7 +1398,8 @@ mlist_targetting = false
         feature on and off. This option controls the initial setting
         at game start or reload.
 
-menu_colour = <match>:<colour>:<regex>
+menu_colour += <match>:<colour>:<regex>, <colour>:<regex>, ...
+        (List option)
         This prints a line (of the inventory, a menu, or the discoveries
         screen) containing regex in the stated colour. There can be
         several statements in a list, and also several menu_colour
@@ -1410,33 +1459,33 @@ menu_colour = <match>:<colour>:<regex>
         to items matching the description, or to define autopickup_exceptions.
 
         If you want to colour all items that contain a certain prefix, use
-          menu_colour = lightgreen:poisonous
+          menu_colour += lightgreen:poisonous
 
         To colour worn stuff and highlight cursed items, take
-          menu_colour = inventory:lightred:equipped.* cursed
-          menu_colour = inventory:green:equipped
-          menu_colour = inventory:red: cursed
+          menu_colour += inventory:lightred:equipped.* cursed
+          menu_colour += inventory:green:equipped
+          menu_colour += inventory:red: cursed
 
         To colour identified artefacts, try
-          menu_colour = inventory:white:( [-+] the)
+          menu_colour += inventory:white:( [-+] the)
         or
-          menu_colour = inventory:white:identified.*artefact
+          menu_colour += inventory:white:identified.*artefact
 
         If you frequently die because you forget to use emergency items,
         try
-          menu_colour = inventory:cyan:emergency_item
-          menu_colour = inventory:lightcyan:wand of (fire|cold|draining)
+          menu_colour += inventory:cyan:emergency_item
+          menu_colour += inventory:lightcyan:wand of (fire|cold|draining)
 
         To quickly check what potions were trashed by a mummy curse, use
-          menu_colour = inventory:lightred:potions? of (degeneration|decay)
+          menu_colour += inventory:lightred:potions? of (degeneration|decay)
 
         If you'd like to see rotting chunks and corpses at a glance, use
-          menu_colour = inventory:red: rotting
+          menu_colour += inventory:red: rotting
 
         menu_colour can also be applied to colour the in-game notes (to
         be read with '?:'). The following line will show level ups in
         white:
-          menu_colour = notes:white:Reached XP level
+          menu_colour += notes:white:Reached XP level
 
 menu_colour_prefix_class = true
         Setting this option to true will prefix the string against which
@@ -1453,17 +1502,19 @@ menu_colour_shops = true
         according to the menu colours (using tags "shop" or "any");
         otherwise the lines are coloured alternately white or lightgrey.
 
-message_colour = <colour>:[<channel>:]<regex>
+message_colour += <colour>:<channel>:<regex>, <colour>:<regex>, ...
+        (List option)
         message_colour allows you to override colours for individual
         messages. For instance, if you find the low hp warning to be
         insufficiently attention grabbing, you could do something like
-             message_colour = yellow:LOW HITPOINT WARNING
+             message_colour += yellow:LOW HITPOINT WARNING
         You can also narrow the message match to a specific channel:
-             message_colour = lightred:god:xom
+             message_colour += lightred:god:xom
         If you don't want to see a message at all, you can mute it:
-             message_colour = mute:You start resting
+             message_colour += mute:You start resting
 
-force_more_message = <list of regexes>
+force_more_message += <regex>, <regex>
+        (List option)
         Any message that contains a regex specified here, will enforce a
         -More- prompt, so it can be used to highlight really important
         events.
@@ -1507,10 +1558,10 @@ fire_items_start = a
 fire_order  = launcher, return
 fire_order += javelin / dart / stone / rock / spear / net / handaxe / dagger
 fire_order += inscribed
+        (Overriding list option)
         Controls the order of items autoselected for firing. Items
         should be separated by commas and items that appear first get
-        higher priority. You can use multiple fire_order lines - all
-        lines but the first must use "fire_order +=".
+        higher priority.
 
         Items in any position may be slash-separated to indicate that
         these are of equal priority. If this is the case, the first item
@@ -1590,17 +1641,18 @@ other channels are defaulted to on.
 See the "Inscriptions" section of the crawl manual for more information
 about inscriptions.
 
-autoinscribe = <regex>:<inscription>
+autoinscribe += <regex>:<inscription>
+        (List option, one value per line)
         Any item whose description contains the regex will be
         automatically inscribed (if autopickup is toggled on).
 
         For example, it can be used to avoid accidentally using charges of
         important wands, as in
-             autoinscribe = wand of heal wounds:!V
+             autoinscribe += wand of heal wounds:!V
 
         The menu colour prefixes (evil_item etc.) can also be used here.
         For example:
-             autoinscribe = (bad|dangerous)_item.*scroll:!r
+             autoinscribe += (bad|dangerous)_item.*scroll:!r
         will prevent accidentally reading any identified bad or
         potentially dangerous scrolls.
 
@@ -1808,6 +1860,7 @@ tile_show_demon_tier = true
         builds.
 
 tile_layout_priority = minimap, inventory, gold_turn, command, spell, monster
+        (Overriding list option)
         This option allows you to control the order in which elements are
         placed on the right of the screen, below the stat area. On small
         resolution, there won't be enough room for everything, so only the
@@ -1830,7 +1883,14 @@ tile_force_regenerate_levels = false
 4-  Character Dump.
 ===================
 
-4-a     Items and Kills.
+4-a     Saving.
+---------------
+
+dump_on_save = true
+        If set to true, a character dump will automatically be created or
+        updated when the game is saved.
+
+4-b     Items and Kills.
 ------------------------
 
 The character dump or morgue files end with a list of all monsters that
@@ -1879,9 +1939,8 @@ dump_message_count = 20
 dump_order  = header,hiscore,stats,misc,notes,inventory,
 dump_order += skills,spells,overview,mutations,messages,screenshot,
 dump_order += monlist,kills
-        Controls the order of sections in the dump. You can use multiple
-        dump_order lines - all lines but the first must use
-             dump_order +=
+        (Overriding list option)
+        Controls the order of sections in the dump.
 
         Two optional dump sections are "turns_by_place" and
         "kills_by_place", which add detailed statistics to where turns
@@ -1904,7 +1963,7 @@ dump_book_spells = true
         spells listed in the dump. If this option is set to true, spells will
         also be dumped for non-randart spellbooks.
 
-4-b     Notes.
+4-c     Notes.
 --------------
 
 Crawl can automatically log certain events during play. You can read
@@ -1932,21 +1991,23 @@ user_note_prefix = <string>
         Prefixes manually added notes with the given string, to make
         them easier to find.
 
-note_items = <regexes>
+note_items += <regex>, <regex>, ...
+        (List option)
         When an item is identified for the first time, it will be
         noted if its short description matches a regex. E.g.
-             note_items = rod,book,acquirement
+             note_items += rod,book,acquirement
         Artefacts (fixed, unrand, or random) will always be noted when
         identified, regardless of note_items.
 
         The description matched against has the same prefixes as notes
         for the menu_colour option (e.g., "emergency_item").
 
-note_monsters = <regex list>
+note_monsters += <regex>, <regex>, ...
+        (List option)
         Monsters whose name matches an item in this comma-separated list
         are considered interesting. You can have multiple note_monsters
         lines. E.g.
-             note_monsters = Klown,orb of fire
+             note_monsters += Klown,orb of fire
 
 note_hp_percent = 5
         If your HP falls below a certain note_hp_percentage of your max
@@ -1971,16 +2032,17 @@ note_skill_max = true
 note_xom_effects = true
         This will add a note whenever Xom does something.
 
-note_messages = <regex list>
+note_messages += <regex>, <regex>, ...
+        (List option)
         Messages which match an item in this comma-separated list are
         considered interesting. You can have multiple note_messages
         lines. E.g.
-             note_messages = Something interferes
-             note_messages = protects you from harm
+             note_messages += Something interferes
+             note_messages += protects you from harm
         If you want all banishments to the Abyss noted, use
-             note_messages = [bB]anish.*Abyss
+             note_messages += [bB]anish.*Abyss
         If you want a note when your draconian scales turn <colour>, use
-             note_messages = Your scales start
+             note_messages += Your scales start
 
 note_chat_messages = false
         If set to false, this will disable logging of chat messages

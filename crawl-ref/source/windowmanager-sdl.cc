@@ -21,6 +21,7 @@
 #include <GLES/gl.h>
 #include <signal.h>
 #include <SDL_mixer.h>
+#include <SDL_android.h>
 #endif
 
 WindowManager *wm = NULL;

@@ -1456,7 +1456,6 @@ MONS:   guardian mummy
 MONS:   bog body / mummy / guardian mummy
 MONS:   generate_awake sphinx
 : end
-KFEAT:  Q = runed_door
 MAP
                  ccccccccccccccccccccccccccccc
                  c*$*c|%*.......**|c.........c
@@ -1476,22 +1475,22 @@ ccccc-----------cc..1...............1..c-----c
 ---ccc---------ccc..1...............1..c-----c
 @--cccccc+++cccccc..G..G..G...G..G..G..c-----c
 ---ccc.........cccc...................ccc---cc
----cc..G1...1G..cccQcQcQcQc...cQcQcQcQccc+++cccc
-c..cc...........ccc5c5c5c5c+++c5c5c5c5ccc...cQCc
+---cc..G1...1G..ccc=c=c=c=c...c=c=c=c=ccc+++cccc
+c..cc...........ccc5c5c5c5c+++c5c5c5c5ccc...c=Cc
 c..ccccc.....cccccc+ccccccc---cccccccccc.....ccc
-c..c...c.....c...cc.c.....-----.....ccCQ.....QCc
+c..c...c.....c...cc.c.....-----.....ccC=.....=Cc
 c--c.............cc.c....1-----1....cccc.....ccc
-c---...G.....G...cc.cc....-----....+ccCQ.....QCc
+c---...G.....G...cc.cc....-----....+ccC=.....=Cc
 c---....1...1....cc.cccccc-----ccccc.ccc.....ccc
-c---...G.....G...cc+cc....-----....cc+CQ.....QCc
+c---...G.....G...cc+cc....-----....cc+C=.....=Cc
 c---....1...1....+..+....1-----1....cccc.....ccc
-c---...G.....G...cccc.....-----.....ccCQ.....QCc
+c---...G.....G...cccc.....-----.....ccC=.....=Cc
 c..c.............cccccccccc+++cccccccccc.....ccc
-c..c...c-----c...c.......--------............QCc
+c..c...c-----c...c.......--------............=Cc
 cccccccc-----ccccc...........................ccc
-   c.............c...........................QCc
+   c.............c...........................=Cc
    c.G.G.....G.G.c.cccccc.......ccccccc......ccc
-   c..1.......1..cc+$$$$cc-----cc%....+c.....QCc
+   c..1.......1..cc+$$$$cc-----cc%....+c.....=Cc
    c.G.........G.cc$$$$$cc-----cc%1...cccccccccc
    c..1.......1..cc$$$$1cc-----cc*%%%%cc...----.
    c.G.........G.cccccccc.......ccccccc....----.

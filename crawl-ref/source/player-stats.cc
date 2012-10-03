@@ -31,19 +31,19 @@ int player::stat(stat_type s, bool nonneg) const
     return (nonneg ? max(val, 0) : val);
 }
 
-int player::strength() const
+int player::strength(bool nonneg) const
 {
-    return stat(STAT_STR);
+    return stat(STAT_STR, nonneg);
 }
 
-int player::intel() const
+int player::intel(bool nonneg) const
 {
-    return stat(STAT_INT);
+    return stat(STAT_INT, nonneg);
 }
 
-int player::dex() const
+int player::dex(bool nonneg) const
 {
-    return stat(STAT_DEX);
+    return stat(STAT_DEX, nonneg);
 }
 
 static int _stat_modifier(stat_type stat);
@@ -100,7 +100,7 @@ void attribute_increase()
     mouse_control mc(MOUSE_MODE_MORE);
     // Calling a user-defined lua function here to let players reply to the
     // prompt automatically.
-    clua.callfn("choose_stat_gain", 0);
+    clua.callfn("choose_stat_gain", 0, 0);
 
     while (true)
     {

@@ -1242,9 +1242,8 @@ ORIENT: float
 DEPTH:  D:5-12, Elf
 SUBST:  1 = 1:70 2:60 3:25
 MONS:   goliath beetle w:20 / giant cockroach w:30 / butterfly w:20
-MONS:   bumblebee / giant centipede / giant mite w:30
+MONS:   giant centipede w:15 / giant mite w:25
 MONS:   killer bee / scorpion / soldier ant w:5
-KFEAT:  = = runed_door
 MAP
 cccccccc+cccccccc
 c...............c
@@ -1271,7 +1270,6 @@ SUBST:  1 = 1:50 2 3:5
 MONS:   troll
 MONS:   rock troll
 MONS:   iron troll
-KFEAT:  = = runed_door
 MAP
 xxxxx...........................xxxxxx
 xwwwx...........................xxxxxx
@@ -1333,7 +1331,6 @@ MONS:   hippogriff / griffon
 MONS:   yak / sheep / weight:3 death yak
 MONS:   hound / wolf / hog
 SUBST:  1 = 1:30 2 3 4 .
-KFEAT:  = = runed_door
 MAP
 cccccccccc
 c.1.1.1.1c
@@ -2102,7 +2099,6 @@ SHUFFLE: Bb/Mm/Mm/Mm
 COLOUR:  B = blue
 SUBST:   M=. , m=n, B=. , b=c
 SUBST:   + : +=
-KFEAT:   = = runed_door
 SUBST:   * : *$
 MARKER:  1 = lua:fog_machine { cloud_type = "freezing vapour", \
               pow_min = 5, pow_max = 5, delay = 120, start_clouds = 1, \
@@ -2612,7 +2608,6 @@ NAME:    hangedman_arrow_trap
 ORIENT:  float
 DEPTH:   D:12-
 SHUFFLE: {( / })
-KFEAT:   = = runed_door
 MAP
 xx=xxxxxxxxxxxx=xx
 x.xxxx|x{(x|xxxx.x
@@ -2681,9 +2676,8 @@ KMONS:  b = w:100 nothing / w:5 crimson imp / w:2 white imp / w:2 iron imp \
             / w:1 shadow imp
 KPROP:  b = nothing / w:5 bloody
 KITEM:  b = nothing / w:1 gold
-KFEAT:  = = runed_door
-MARKER:  H = lua:props_marker { stop_explore = "statue" }
-KFEAT:   HI = G
+MARKER: H = lua:props_marker { stop_explore = "statue" }
+KFEAT:  HI = G
 MAP
       xxxxxxx
     xxxbbbbbxxx

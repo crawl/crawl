@@ -1,0 +1,333 @@
+%%%%
+Fighting
+
+L'abilità di combattimento aumenta la precisione degli attacchi,  i danni in
+mischia e i punti ferita.
+%%%%
+Short Blades
+
+Conoscere un particolare tipo di arma consente di attaccare più velocemente con
+tutte le armi di quel tipo e di migliorare la precisione e il danno inflitto
+con esse. È raccomandabile concentrarsi su uno o due tipi di arma per diventare
+più potenti con esse.
+
+Si crede che le lame corte abbiano reputazione di infliggere pochi danni più
+avanti nel gioco ma d'altra parte sono la scelta migliore per pugnalare.
+
+Essere abili con le lame corte rende più facile imparare l'uso delle lame
+lunghe e viceversa.
+%%%%
+Long Blades
+
+Conoscere un particolare tipo di arma consente di attaccare più velocemente con
+tutte le armi di quel tipo e di migliorare la precisione e il danno inflitto
+con esse. È raccomandabile concentrarsi su uno o due tipi di arma per diventare
+più potenti con esse.
+
+Essere abili con le lame lunghe rende più facile imparare l'uso delle lame
+corte, e viceversa.
+%%%%
+Axes
+
+Conoscere un particolare tipo di arma consente di attaccare più velocemente con
+tutte le armi di quel tipo e di migliorare la precisione e il danno inflitto
+con esse. È raccomandabile concentrarsi su uno o due tipi di arma per diventare
+più potenti con esse.
+
+Tra le asce vi sono tra le armi a due mani più potenti ma richiedono una grande
+abilità per essere usate con profitto.
+
+Essere abili con le asce rende più facile imparare l'uso di mazze e flagelli e
+di armi inastate, e viceversa.
+%%%%
+Maces & Flails
+
+Conoscere un particolare tipo di arma consente di attaccare più velocemente con
+tutte le armi di quel tipo e di migliorare la precisione e il danno inflitto
+con esse. È raccomandabile concentrarsi su uno o due tipi di arma per diventare
+più potenti con esse.
+
+Essere abili con mazze e flagelli rende più facile imparare l'uso delle asce e
+dei bastoni, e viceversa.
+%%%%
+Polearms
+
+Conoscere un particolare tipo di arma consente di attaccare più velocemente con
+tutte le armi di quel tipo e di migliorare la precisione e il danno inflitto
+con esse. È raccomandabile concentrarsi su uno o due tipi di arma per diventare
+più potenti con esse.
+
+Le armi inastate possono essere "evocate" come un oggetto magico con il comando
+'v' per attaccare nemici lontani due spazi da voi.
+
+Essere abili con le armi inastate rende più facile imparare l'uso delle asce e
+dei bastoni, e viceversa.
+%%%%
+Staves
+
+Conoscere un particolare tipo di arma consente di attaccare più velocemente con
+tutte le armi di quel tipo e di migliorare la precisione e il danno inflitto
+con esse. È raccomandabile concentrarsi su uno o due tipi di arma per diventare
+più potenti con esse.
+
+I bastoni richiedono relativamente poca abilità per essere usati in modo
+efficace anche se non arrivano potenzialmente a infliggere gli stessi danni di
+altri classi di armi.
+
+Essere abili con i bastoni rende più facile imparare a usare mazze e flagelli e
+armi inastate e viceversa.
+%%%%
+Slings
+
+Conoscere un particolare tipo di attacco a distanza consente di procurare molti
+danni utilizzando la relativa arma e i giusti proiettili.
+
+Essere abili con le fionde rende più facile imparare a lanciare oggetti.
+%%%%
+Bows
+
+Conoscere un particolare tipo di attacco a distanza consente di procurare molti
+danni utilizzando la relativa arma e i giusti proiettili.
+%%%%
+Crossbows
+
+Conoscere un particolare tipo di attacco a distanza consente di procurare molti
+danni utilizzando la relativa arma e i giusti proiettili.
+%%%%
+Darts
+
+Conoscere un particolare tipo di attacco a distanza consente di procurare molti
+danni utilizzando la relativa arma e i giusti proiettili.
+%%%%
+Throwing
+
+Imparare a lanciare oggetti consente di scagliare oggetti (come i giavellotti)
+o lanciare dardi in maniera più efficace. In particolare rende le armi
+ritornanti più affidabili e gli aghi magici più efficienti nei loro effetti
+quando vengono usati con le cerbottane.
+
+Essere abili con le fionde rende più facile imparare a lanciare oggetti.
+%%%%
+Armour
+
+L'abilità in armatura aumenta l'AC ottenuta indossando armature pesanti e aiuta
+a diminuire le penalità indotte dalle armature pesanti durante il combattimento
+in mischia e durante il lancio di incantesimi.
+%%%%
+Dodging
+
+L'abilità in schivare aumenta le probabilità di schivare un attacco, sia esso
+in mischia, a distanza o magico. Certi tipi di attacco, però, non possono
+essere schivati. Tra  questi gli incanti e le malie (a cui bisogna resistere) e
+le esplosioni.
+%%%%
+Stealth
+
+Migliorando l'abilità furtività è possibile diminuire la probabilità di essere
+notati dai mostri dormienti o distratti e incrementa la possibilità di seminare
+mostri che vi tallonano dopo avervi notato. I mostri diventano più sospettosi e
+meno distratti man mano che si scende nel dungeon.
+%%%%
+Stabbing
+
+Pugnalare è l'abilità che controlla la probabilità di infliggere grandi danni
+quando si attacca una creatura distratta o incapacitata (di solito con una lama
+corta). Qualche divinità non approva questo tipo di azioni.
+%%%%
+Shields
+
+Un'alta abilità con gli scudi consente di parare attacchi in mischia o
+proiettili (sia mondani che magici) con uno scudo utilizzato o con un suo
+equivalente magico. Qualche attacco, come i colpi penetranti, non viene parato
+per niente.
+%%%%
+Traps
+
+Un personaggio abile in trappole sarà più vigile e più lesto a notare trappole,
+nonché più abile a disattivarle.
+%%%%
+Unarmed Combat
+
+L'abilità in combattimento disarmato aumenta la precisione, il danno e la
+velocità degli attacchi in mischia a mani nude. Consente anche di attaccare
+occasionalmente con la propria mano secondaria se non è impegnata da un'arma a
+due mani o da uno scudo.
+%%%%
+Spellcasting
+
+Diventare abili a lanciare incantesimi rende più facile impararne e lanciarne
+di nuovi, oltre ad aumentare la propria riserva di mana. Guadagnare un livello
+in lanciare incantesimi conferisce un livello di incantesimi addizionale
+spendibile per imparare nuovi incantesimi. Lanciare incantesimi e la
+caratteristica di intelligenza sono gli unici fattori che aiutano a diminuire
+la fame da incantesimo.
+%%%%
+Conjurations
+
+Conoscere una "scuola" di magia consente di imparare e lanciare incantesimi di
+quella scuola più facilmente. Molti incantesimi appartengono a una combinazione
+di scuole diverse, in questo caso la capacità di lanciare incantesimi e la loro
+potenza dipenderà dalla media dell'abilità in queste scuole.
+
+La scuola di comparizione comprende incantesimi orientati alla battaglia, che
+funzionano facendo comparire delle piccole masse o delle energie che colpiscono
+i nemici e causano danni diretti. Avere l'abilità in comparizione aumenta il
+danno inflitto da questi incantesimi e talvolta aumenta la loro gittata o
+l'aera di effetto.
+%%%%
+Hexes
+
+Conoscere una "scuola" di magia consente di imparare e lanciare incantesimi di
+quella scuola più facilmente. Molti incantesimi appartengono a una combinazione
+di scuole diverse, in questo caso la capacità di lanciare incantesimi e la loro
+potenza dipenderà dalla media dell'abilità in queste scuole.
+
+Le malie infliggono degli incanti sulle cose vicine. Anche se nessuno infligge
+danni diretti, stregare un avversario lo può escludere dal combattimento, anche
+se questo significa superare la sua resistenza agli incantesimi ostili. Avere
+abilità nella scuola di magia delle malie aiuta a superare questa resistenza.
+%%%%
+Charms
+
+Conoscere una "scuola" di magia consente di imparare e lanciare incantesimi di
+quella scuola più facilmente. Molti incantesimi appartengono a una combinazione
+di scuole diverse, in questo caso la capacità di lanciare incantesimi e la loro
+potenza dipenderà dalla media dell'abilità in queste scuole.
+
+Gli incanti consentono di circondarsi di aure che migliorano le proprie
+capacità. Migliorare l'abilità incanti incrementa la durata e la potenza di
+queste aure.
+%%%%
+Summonings
+
+Conoscere una "scuola" di magia consente di imparare e lanciare incantesimi di
+quella scuola più facilmente. Molti incantesimi appartengono a una combinazione
+di scuole diverse, in questo caso la capacità di lanciare incantesimi e la loro
+potenza dipenderà dalla media dell'abilità in queste scuole.
+
+La scuola dell'attrazione consente attrarre mostri da altri piani di esistenza
+che si uniscano al proprio gruppo o per distrarre i nemici. Avere un alto
+punteggio di questa abilità può avere effetti diversi in base all'incantesimo,
+come la durata, la potenza degli alleati o la probabilità di ottenere creature
+ostili. Le creature attirate non lasciano cadaveri e non forniscono esperienza
+quando uccise, e il loro equipaggiamento è ugualmente effimero.
+%%%%
+Necromancy
+
+Conoscere una "scuola" di magia consente di imparare e lanciare incantesimi di
+quella scuola più facilmente. Molti incantesimi appartengono a una combinazione
+di scuole diverse, in questo caso la capacità di lanciare incantesimi e la loro
+potenza dipenderà dalla media dell'abilità in queste scuole.
+
+La negromanzia è l'arte di risucchiare e ottenere la forza vitale, anche se è
+più spesso associata con gli zombi e gli altri non morti. Gli incantesimi
+negromantici hanno un ampia gamma di effetti, da quelli di creare o controllare
+i non morti a quelli di conferire poteri di guarigione blasfemi.
+%%%%
+Translocations
+
+Conoscere una "scuola" di magia consente di imparare e lanciare incantesimi di
+quella scuola più facilmente. Molti incantesimi appartengono a una combinazione
+di scuole diverse, in questo caso la capacità di lanciare incantesimi e la loro
+potenza dipenderà dalla media dell'abilità in queste scuole.
+
+La scuola della traslocazione si occupa del movimento nello spazio di cose e
+oggetti e include incantesimi per muoversi rapidamente in brevi distanze o
+spostare i nemici lontano da sé.
+%%%%
+Transmutations
+
+Conoscere una "scuola" di magia consente di imparare e lanciare incantesimi di
+quella scuola più facilmente. Molti incantesimi appartengono a una combinazione
+di scuole diverse, in questo caso la capacità di lanciare incantesimi e la loro
+potenza dipenderà dalla media dell'abilità in queste scuole.
+
+La scuola di trasmutazione ha a che fare con la modifica delle forme. Molte
+trasmutazioni si occupano di modificare la forma del mago stesso, ma la scuola
+comprende incantesimi per modificare la forma dei nemici o trasformare gli
+oggetti nei paraggi.
+%%%%
+Fire Magic
+
+Conoscere una "scuola" di magia consente di imparare e lanciare incantesimi di
+quella scuola più facilmente. Molti incantesimi appartengono a una combinazione
+di scuole diverse, in questo caso la capacità di lanciare incantesimi e la loro
+potenza dipenderà dalla media dell'abilità in queste scuole.
+
+La magia del fuoco si concentra nell'abilità di infliggere danno da fuoco a
+lunga distanza, con molte efficienti comparizioni.
+
+Avere abilità nella scuola di magia del fuoco rende più difficile imparare
+incantesimi della scuola del ghiaccio.
+%%%%
+Ice Magic
+
+Conoscere una "scuola" di magia consente di imparare e lanciare incantesimi di
+quella scuola più facilmente. Molti incantesimi appartengono a una combinazione
+di scuole diverse, in questo caso la capacità di lanciare incantesimi e la loro
+potenza dipenderà dalla media dell'abilità in queste scuole.
+
+La magia del ghiaccio comprende una gamma di incantesimi di danno diretto e
+anche quale effetto difensivo che creano scudi e armature temporanei fatti di
+ghiaccio.
+
+Avere abilità nella scuola di magia del ghiaccio rende più difficile imparare
+incantesimi della scuola del fuoco.
+%%%%
+Air Magic
+
+Conoscere una "scuola" di magia consente di imparare e lanciare incantesimi di
+quella scuola più facilmente. Molti incantesimi appartengono a una combinazione
+di scuole diverse, in questo caso la capacità di lanciare incantesimi e la loro
+potenza dipenderà dalla media dell'abilità in queste scuole.
+
+La magia dell'aria comprende incantesimi per danneggiare direttamente col vento
+e creare fulmini. Consente di imparare anche incantesimi utili come incanti per
+farsi aiutare dal vento nei movimenti o proteggersi dai proiettili.
+
+Avere abilità nella scuola di magia dell'aria rende più difficile imparare
+incantesimi della scuola della terra.
+%%%%
+Earth Magic
+
+Conoscere una "scuola" di magia consente di imparare e lanciare incantesimi di
+quella scuola più facilmente. Molti incantesimi appartengono a una combinazione
+di scuole diverse, in questo caso la capacità di lanciare incantesimi e la loro
+potenza dipenderà dalla media dell'abilità in queste scuole.
+
+La scuola della terra comprende incantesimi in grado di infliggere grandi
+quantità di danni diretti, ai quali non è possibile resistere come si fa con
+fuoco, freddo o i fulmini. Anche alcune trasformazioni sono comprese in questa
+scuola, come quelle che liquefano la terra o trasformano i nemici in pietra.
+
+Avere abilità nella scuola di magia della terra rende più difficile imparare
+incantesimi della scuola dell'aria.
+%%%%
+Poison Magic
+
+Conoscere una "scuola" di magia consente di imparare e lanciare incantesimi di
+quella scuola più facilmente. Molti incantesimi appartengono a una combinazione
+di scuole diverse, in questo caso la capacità di lanciare incantesimi e la loro
+potenza dipenderà dalla media dell'abilità in queste scuole.
+
+La magia del veleno è utile nei primi passi del dungeon, visto che molti mostri
+sono resistenti al veleno solo più avanti nel gioco. Ci sono però incantesimi
+del veleno che restano utili in ogni parte del dungeon.
+%%%%
+Invocations
+
+L'abilità in invocazioni migliora i tentativi di usare le abilità conferite
+dalle divinità e spesso ne aumenta il potere. L'abilità aumenta anche la
+riserva di mana, ma meno dell'abilità di lanciare incantesimi e solo una delle
+due, quella che conferisce l'aumento maggiore, viene usata.
+%%%%
+Evocations
+
+L'evocazione consiste nell'uso di oggetti magici come bacchette, mazzi o altri
+oggetti poco comuni. Più è alta l'abilità, più è probabile un risultato
+positivo quando si evocano i poteri degli oggetti. L'abilità può anche
+consentire di determinare il numero di cariche rimaste in una bacchetta.
+L'abilità aumenta anche la riserva di mana, ma meno dell'abilità di lanciare
+incantesimi e solo una delle due, quella che conferisce l'aumento maggiore,
+viene usata.
+%%%%

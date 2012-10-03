@@ -73,7 +73,6 @@ KFEAT:  m = iron_grate
 KFEAT:  Y = any shop
 KITEM:  P = any good_item
 KITEM:  Z = Orb of Zot
-KFEAT:  = = runed_door
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccxxx

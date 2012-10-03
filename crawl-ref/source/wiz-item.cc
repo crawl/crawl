@@ -432,11 +432,9 @@ void wizard_tweak_object(void)
     int keyin;
 
     int item = prompt_invent_item("Tweak which item? ", MT_INVLIST, -1);
-    if (item == PROMPT_ABORT)
-    {
-        canned_msg(MSG_OK);
+
+    if (prompt_failed(item))
         return;
-    }
 
     if (item == you.equip[EQ_WEAPON])
         you.wield_change = true;
@@ -907,7 +905,7 @@ static void _debug_acquirement_stats(FILE *ostat)
     int num_arts     = 0;
 
     int subtype_quants[256];
-    int ego_quants[SPWPN_DEBUG_RANDART];
+    int ego_quants[NUM_SPECIAL_WEAPONS];
 
     memset(subtype_quants, 0, sizeof(subtype_quants));
     memset(ego_quants, 0, sizeof(ego_quants));
@@ -1129,14 +1127,20 @@ static void _debug_acquirement_stats(FILE *ostat)
             "frost",
             "vampiricism",
             "pain",
+            "antimagic",
             "distortion",
             "reaching",
             "returning",
             "chaos",
+            "evasion",
             "confusion",
+            "penetration",
+            "reaping",
+            "acid",
+            "debug randart",
         };
 
-        for (int i = 0; i <= SPWPN_CONFUSE; ++i)
+        for (int i = 0; i < NUM_SPECIAL_WEAPONS; ++i)
             if (ego_quants[i] > 0)
             {
                 fprintf(ostat, "%14s: %5.2f\n", names[i],
@@ -1173,11 +1177,13 @@ static void _debug_acquirement_stats(FILE *ostat)
             "positive energy",
             "archmagi",
             "preservation",
-            "reflection"
+            "reflection",
+            "spirit shield",
+            "archery",
          };
 
         const int non_art = acq_calls - num_arts;
-        for (int i = 0; i <= SPARM_REFLECTION; ++i)
+        for (int i = 0; i < NUM_SPECIAL_ARMOURS; ++i)
         {
            if (ego_quants[i] > 0)
                fprintf(ostat, "%17s: %5.2f\n", names[i],
@@ -1301,11 +1307,8 @@ static void _debug_rap_stats(FILE *ostat)
     int i = prompt_invent_item("Generate randart stats on which item?",
                                 MT_INVLIST, -1);
 
-    if (i == PROMPT_ABORT)
-    {
-        canned_msg(MSG_OK);
+    if (prompt_failed(i))
         return;
-    }
 
     // A copy of the item, rather than a reference to the inventory item,
     // so we can fiddle with the item at will.
@@ -1536,6 +1539,7 @@ void debug_item_statistics(void)
     }
 
     mpr("Generate stats for: [a] acquirement [b] randart properties");
+    flush_prev_message();
 
     const int keyin = tolower(get_ch());
     switch (keyin)
