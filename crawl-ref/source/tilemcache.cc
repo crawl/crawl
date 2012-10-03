@@ -245,7 +245,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_RAKSHASA:
     case TILEP_MONS_RAKSHASA_FAKE:
     case TILEP_MONS_VAMPIRE_KNIGHT:
-    case TILEP_MONS_SKELETAL_WARRIOR:
     case TILEP_MONS_ANGEL:
     case TILEP_MONS_SERAPH:
     case TILEP_MONS_CHERUB:
@@ -288,12 +287,15 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_TIAMAT+6:
     case TILEP_MONS_TIAMAT+7:
     case TILEP_MONS_TIAMAT+8:
-    case TILEP_MONS_ANCIENT_CHAMPION:
     case TILEP_MONS_MERFOLK_IMPALER:
     case TILEP_MONS_MERFOLK_IMPALER_WATER:
     case TILEP_MONS_TENGU:
     case TILEP_MONS_TENGU_CONJURER:
         *ofs_x = -2;
+        *ofs_y = 0;
+        break;
+    case TILEP_MONS_SKELETON_LARGE:
+        *ofs_x = -3;
         *ofs_y = 0;
         break;
     // Shift to the right.
@@ -324,6 +326,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_MUMMY:
     case TILEP_MONS_MUMMY_PRIEST:
     case TILEP_MONS_GUARDIAN_MUMMY:
+    case TILEP_MONS_SKELETON_SMALL:
         *ofs_x = 0;
         *ofs_y = -1;
         break;
@@ -378,6 +381,8 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_y = -3;
         break;
     case TILEP_MONS_SONJA:
+    case TILEP_MONS_ANCIENT_CHAMPION:
+    case TILEP_MONS_SKELETAL_WARRIOR:
         *ofs_x = -2;
         *ofs_y = -2;
         break;
