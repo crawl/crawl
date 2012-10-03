@@ -364,7 +364,7 @@ a flourish of trumpets!
 # damages everyone in sight. The sword is calm and cool. It enjoys the
 # bloodshed, but is sane. Of course, work is more fun with a little tune...
 # Typical speech verbs: "says" or "shouts".
-# 
+#
 # High tension:
 # Speech is very common, extremely loud (you may use CAPS) and does more
 # damage. Messages are insane, the sword is out of control.
@@ -878,7 +878,7 @@ _speaking_low-high_tension_
 
 @The_weapon@ states, "Their screams, my satisfaction."
 
-# Popular Hits of the Showa Era (a novel by Ryu Murakami) 
+# Popular Hits of the Showa Era (a novel by Ryu Murakami)
 @The_weapon@ says, "Murder is the only thing that has any meaning these days."
 
 w:1
@@ -975,7 +975,7 @@ _SCREAM_
 # This and the next are from Planescape: Torment references
 @The_weapon@ @_screams_@, "I AM IRON GIVEN PURPOSE!"
 
-@The_weapon@ @_screams_@, "I AM PAIN SEEKING EXPRESSION!" 
+@The_weapon@ @_screams_@, "I AM PAIN SEEKING EXPRESSION!"
 
 #### Battle frenzy ####
 @The_weapon@ @_screams_@, "LET'S STRANGLE THE @_MISCREANTS_@, STRANGLE THEM!"
@@ -1010,7 +1010,7 @@ _SCREAM_
 # Mortalized (Pentatonic Slaughter)
 @The_weapon@ @_screams_@, "@_kind_of_scales_CAPS_@ SLAUGHTER!"
 
-# Use @player_genus@ rather than @player_species@ or @player_name@ to 
+# Use @player_genus@ rather than @player_species@ or @player_name@ to
 # express that the sword cares little for the character.
 # FIXME: capitalise @player_genus@
 @The_weapon@ @_screams_@, "FASTER, @player_genus@, KILL KILL KILL!"
@@ -1136,7 +1136,7 @@ _real_song_low-high_tension_
 @The_weapon@ sings, "As long as I know how to carve I know I'm still alive."
 
 " Dead or Alive "You spin me round"
-@The_weapon@ sings, "You spin me right round baby, right round..." 
+@The_weapon@ sings, "You spin me right round baby, right round..."
 
 ############ real songs, high tension -- damage! ############
 %%%%
