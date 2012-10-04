@@ -57,6 +57,10 @@ public:
     // Returns true if this Stash contains items that can be sacrificied
     bool sacrificeable() const;
 
+    // Returns true if this Stash contain items not handled by autopickup and
+    // auto_sacrifce
+    bool needs_stop() const;
+
     // Returns true if this Stash is unverified (a visit by the character will
     // verify the stash).
     bool unverified() const;
@@ -254,8 +258,8 @@ public:
     bool  shop_needs_visit(const coord_def& c) const;
 
     // Returns true if the items at c are not fully known to the stash-tracker
-    // and can be updated if the character steps on the square.
-    bool  unverified_stash(const coord_def &c) const;
+    // and the items are not all handled by autopickup/auto_sacrifice.
+    bool  needs_stop(const coord_def &c) const;
 
     // Returns true if the items at c contains at least one that can be
     // sacrificied

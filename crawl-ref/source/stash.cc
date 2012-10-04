@@ -233,6 +233,18 @@ bool Stash::sacrificeable() const
     return false;
 }
 
+bool Stash::needs_stop() const
+{
+    for (int i = 0, size = items.size(); i < size; ++i)
+        if (!items[i].is_greedy_sacrificeable()
+            && !item_needs_autopickup(items[i]))
+        {
+            return true;
+        }
+
+    return false;
+}
+
 bool Stash::is_boring_feature(dungeon_feature_type feature)
 {
     switch (feature)
@@ -1152,10 +1164,10 @@ bool LevelStashes::needs_visit(const coord_def& c, bool autopickup,
     return shop_needs_visit(c);
 }
 
-bool LevelStashes::unverified_stash(const coord_def &c) const
+bool LevelStashes::needs_stop(const coord_def &c) const
 {
     const Stash *s = find_stash(c);
-    return (s && s->unverified());
+    return (s && s->unverified() && s->needs_stop());
 }
 
 bool LevelStashes::sacrificeable(const coord_def &c) const
