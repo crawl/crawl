@@ -7,6 +7,15 @@
 
 typedef map<monster_type, mon_display> mon_glyph_map;
 
+// Intended to be somewhat generic
+enum option_value {
+    OPT_AUTO = -1,
+    OPT_NO,
+    OPT_YES,
+    OPT_PROMPT,
+    OPT_BEFORE_EXPLORE
+};
+
 class LineInput;
 struct game_options
 {
@@ -234,8 +243,6 @@ public:
 
     int         explore_stop_prompt;
 
-    int         sacrifice_before_explore;
-
     // Don't stop greedy explore when picking up an item which matches
     // any of these patterns.
     vector<text_pattern> explore_stop_pickup_ignore;
@@ -253,7 +260,7 @@ public:
 
     bool        travel_key_stop;   // Travel stops on keypress.
 
-    bool        auto_sacrifice;
+    option_value auto_sacrifice;
 
     vector<sound_mapping> sound_mappings;
     vector<colour_mapping> menu_colour_mappings;
