@@ -114,7 +114,7 @@ function rr_add_message(s, v, mode)
         end
     else
         local entry = { filter = filter, value = v }
-        local position = table.getn(g_rr_ignored) + 1;
+        local position = table.getn(g_rr_ignored) + 1
         if mode > 1 then
             position = 1
         end
@@ -175,7 +175,7 @@ function rr_add_monster(mons_table, s, mode)
             end
         end
     else
-        local position = table.getn(mons_table[1]) + 1;
+        local position = table.getn(mons_table[1]) + 1
         if mode > 1 then
             position = 1
         end

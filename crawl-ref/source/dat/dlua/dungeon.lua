@@ -142,7 +142,7 @@ function dgn_map_copy_hooks_from(hook_source_mapname, hook_name)
     return
   end
 
-  local target_environment = dgn.map_environment();
+  local target_environment = dgn.map_environment()
   local target_hook = dgn_fixup_hook(target_environment[hook_variable])
   if not target_hook then
     target_hook = source_hook
