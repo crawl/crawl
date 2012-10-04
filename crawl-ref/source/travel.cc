@@ -947,7 +947,7 @@ command_type travel()
             if (newpos == you.running.pos)
             {
                 const LevelStashes *lev = StashTrack.find_current_level();
-                const bool stack = lev && lev->unverified_stash(newpos)
+                const bool stack = lev && lev->needs_stop(newpos)
                                    && ES_stack;
                 const bool sacrificeable = lev && lev->sacrificeable(newpos)
                                            && ES_sacrificeable;
