@@ -1577,17 +1577,19 @@ SUBST:   W:ww. , X:. , Z:x , Y:+.
 SHUFFLE: *5/WW
 SUBST:   *=. , W=wW , !:$.
 SUBST:   5 = 5 6 + ^:5 I:5 F:5
+KFEAT:   A = >
+KITEM:   A = $
 MAP
               xxxxx
           xxxxxx12xx
          xx*..x.122xx
  xxxxxxxxx5xxx...11xx
-xxWxxxxxxx*xxxxx....xx
+xxWxxxxxxx*xxxxx>...xx
 xxWWxxxxxx.xxxxxx**xxxx
 xWWWxxxxxx.xxxxxxx**xxxxx
 WWWW**xxxxx.xxxxxxx5xxxxxxxx
 xWWWW..xxxxx.xxxxxx.xccccccx
-xxWW....1xxx.xxxxx.xxc$$$$cx
+xxWW....1xxx.xxxxx.xxc$$$Acx
 @..X...111..xxxxxx.xxc$$$$cx
 xxWWW...11xxxxxxx.xxxc!!!!cx
 xWWW....*xxxxxxx*..xxc+ccccx
