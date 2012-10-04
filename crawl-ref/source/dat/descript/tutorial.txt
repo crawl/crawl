@@ -355,7 +355,7 @@ them in the inventory panel.</localtiles>
 %%%%
 tutorial3 autopickup
 
-Some types of items<tiles>, marked with a green frame, </tiles>are picked up
+Some types of items<tiles>, marked with a green frame,</tiles> are picked up
 automatically as you step on them.
 %%%%
 tutorial3 scroll
