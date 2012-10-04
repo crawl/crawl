@@ -615,7 +615,8 @@ static int crawl_split(lua_State *ls)
         return 0;
 
     vector<string> segs = split_string(token, s);
-    lua_newtable(ls);
+    if (lua_isboolean(ls, 3) && lua_toboolean(ls, 3))
+        reverse(segs.begin(), segs.end());
     for (int i = 0, count = segs.size(); i < count; ++i)
     {
         lua_pushstring(ls, segs[i].c_str());

@@ -437,8 +437,8 @@ private:
     void add_cset_override(char_set_type set, dungeon_char_type dc, int symbol);
     void add_feature_override(const string &);
 
-    void add_message_colour_mappings(const string &, bool);
-    void add_message_colour_mapping(const string &, bool);
+    void add_message_colour_mappings(const string &, bool, bool);
+    void add_message_colour_mapping(const string &, bool, bool);
     message_filter parse_message_filter(const string &s);
 
     void set_default_activity_interrupts();
@@ -449,11 +449,12 @@ private:
                                 const string &interrupt_names,
                                 bool append_interrupts,
                                 bool remove_interrupts);
-    void set_fire_order(const string &full, bool add);
-    void add_fire_order_slot(const string &s);
+    void set_fire_order(const string &full, bool append, bool prepend);
+    void add_fire_order_slot(const string &s, bool prepend);
     void set_menu_sort(string field);
-    void str_to_enemy_hp_colour(const string &);
-    void new_dump_fields(const string &text, bool add = true);
+    void str_to_enemy_hp_colour(const string &, bool);
+    void new_dump_fields(const string &text, bool add = true,
+                         bool prepend = false);
     void do_kill_map(const string &from, const string &to);
     int  read_explore_stop_conditions(const string &) const;
 

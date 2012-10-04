@@ -114,7 +114,11 @@ function rr_add_message(s, v, mode)
         end
     else
         local entry = { filter = filter, value = v }
-        table.insert(g_rr_ignored, entry)
+        local position = table.getn(g_rr_ignored) + 1;
+        if mode > 1 then
+            position = 1
+        end
+        table.insert(g_rr_ignored, position, entry)
     end
 end
 
@@ -131,7 +135,7 @@ function rr_message_adder(v)
             crawl.warn_list_append(key)
         end
 
-        local segs = crawl.split(value, ',')
+        local segs = crawl.split(value, ',', mode > 1)
         for _, s in ipairs(segs) do
             rr_add_message(s, v, mode)
         end
@@ -171,8 +175,12 @@ function rr_add_monster(mons_table, s, mode)
             end
         end
     else
-        table.insert( mons_table[1], crawl.regex( regexp ) )
-        table.insert( mons_table[2], dist )
+        local position = table.getn(mons_table[1]) + 1;
+        if mode > 1 then
+            position = 1
+        end
+        table.insert( mons_table[1], position, crawl.regex( regexp ) )
+        table.insert( mons_table[2], position, dist )
     end
 end
 
@@ -199,7 +207,7 @@ function rr_add_monsters(key, value, mode)
         crawl.warn_list_append(key)
     end
 
-    local segs = crawl.split(value, ',')
+    local segs = crawl.split(value, ',', mode > 1)
     for _, s in ipairs(segs) do
         rr_add_monster(mons_table, s, mode)
     end
