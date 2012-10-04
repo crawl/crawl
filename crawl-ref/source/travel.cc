@@ -955,8 +955,8 @@ command_type travel()
                 {
                     if ((stack && _prompt_stop_explore(ES_GREEDY_VISITED_ITEM_STACK)
                          || sacrificeable && _prompt_stop_explore(ES_GREEDY_SACRIFICEABLE))
-                        && (!Options.auto_sacrifice || !sacrificeable || stack
-                            || !_can_sacrifice(newpos)))
+                        && (Options.auto_sacrifice != OPT_YES || !sacrificeable
+                            || stack || !_can_sacrifice(newpos)))
                     {
                         explore_stopped_pos = newpos;
                         stop_running();
@@ -2939,7 +2939,7 @@ void start_explore(bool grab_items)
         const LevelStashes *lev = StashTrack.find_current_level();
         if (lev && lev->sacrificeable(you.pos()))
         {
-            if (Options.sacrifice_before_explore == 2)
+            if (Options.auto_sacrifice == OPT_PROMPT)
             {
                 mprnojoin("Things which can be sacrificed:", MSGCH_FLOOR_ITEMS);
                 for (stack_iterator si(you.visible_igrd(you.pos())); si; ++si)
@@ -2948,8 +2948,9 @@ void start_explore(bool grab_items)
 
             }
 
-            if ((Options.sacrifice_before_explore == 1 || Options.auto_sacrifice
-                 || Options.sacrifice_before_explore == 2
+            if ((Options.auto_sacrifice == OPT_YES
+                 || Options.auto_sacrifice == OPT_BEFORE_EXPLORE
+                 || Options.auto_sacrifice == OPT_PROMPT
                     && yesno("Do you want to sacrifice the items here? ", true, 'n'))
                 && _can_sacrifice(you.pos()))
             {

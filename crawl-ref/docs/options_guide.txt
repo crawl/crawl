@@ -841,13 +841,6 @@ explore_stop += greedy_sacrificeable
 
         runes: like items, but only for runes.
 
-sacrifice_before_explore = false
-        When set to true, if you are standing on items which can be sacricied
-        when you start auto-explore, they will be automatically sacrificied.
-        It can also be set to "prompt", in which case you will have a
-        confirmation prompt before the items are sacrificed.
-        This option has no effect when explore_stop hasn't greedy_sacrificeable.
-
 explore_stop_pickup_ignore += <regex>, <regex>, ...
         (List option)
         If explore_stop has greedy_pickup or greedy_pickup_smart set,
@@ -877,6 +870,12 @@ explore_improved = false
 auto_sacrifice = false
        If set to true, elligible items will be automatically sacrificed during
        auto-explore.
+       When set to "before_explore", if you are standing on items which can be
+       sacricied when you start auto-explore, they will be automatically
+       sacrificied.
+       It can also be set to "prompt", in which case you will have a
+       confirmation prompt before the items are sacrificed.
+       This option has no effect when explore_stop hasn't greedy_sacrificeable.
 
 travel_key_stop = true
         If set to true then travel will stop at any keypress.

@@ -1411,7 +1411,8 @@ static void _handle_run_delays(const delay_queue_item &delay)
                 return;
         }
 
-        if (Options.auto_sacrifice && you.running == RMODE_EXPLORE_GREEDY)
+        if (Options.auto_sacrifice == OPT_YES
+            && you.running == RMODE_EXPLORE_GREEDY)
         {
             LevelStashes *lev = StashTrack.find_current_level();
             if (lev && lev->sacrificeable(you.pos()))

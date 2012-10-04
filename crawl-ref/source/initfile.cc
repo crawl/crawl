@@ -883,8 +883,6 @@ void game_options::reset_options()
                               | ES_GREEDY_VISITED_ITEM_STACK
                               | ES_GREEDY_SACRIFICEABLE);
 
-    sacrifice_before_explore = 0;
-
     // The prompt conditions will be combined into explore_stop after
     // reading options.
     explore_stop_prompt    = ES_NONE;
@@ -897,7 +895,7 @@ void game_options::reset_options()
     explore_wall_bias      = 0;
     explore_improved       = false;
     travel_key_stop        = true;
-    auto_sacrifice         = false;
+    auto_sacrifice         = OPT_NO;
 
     target_unshifted_dirs  = false;
     darken_beyond_range    = true;
@@ -3097,13 +3095,6 @@ void game_options::read_option_line(const string &str, bool runscript)
         else
             explore_stop |= new_conditions;
     }
-    else if (key == "sacrifice_before_explore")
-    {
-        if (field == "prompt" || field == "ask")
-            sacrifice_before_explore = 2;
-        else
-            sacrifice_before_explore = _read_bool(field, false);
-    }
     else if (key == "explore_stop_prompt")
     {
         if (plain)
@@ -3134,7 +3125,15 @@ void game_options::read_option_line(const string &str, bool runscript)
     }
     else BOOL_OPTION(explore_improved);
     else BOOL_OPTION(travel_key_stop);
-    else BOOL_OPTION(auto_sacrifice);
+    else if (key == "auto_sacrifice")
+    {
+        if (field == "prompt" || field == "ask")
+            auto_sacrifice = OPT_PROMPT;
+        else if (field == "before_explore")
+            auto_sacrifice = OPT_BEFORE_EXPLORE;
+        else
+            auto_sacrifice = _read_bool(field, false) ? OPT_YES : OPT_NO;
+    }
     else if (key == "sound")
     {
         if (plain && field.empty())
