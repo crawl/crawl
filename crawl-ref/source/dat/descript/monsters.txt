@@ -3177,6 +3177,13 @@ sacrificial human
 From the look of things, she was supposed to be sacrificed in some
 demon-summoning ritual.
 %%%%
+shadowy statue
+
+Made of some black lusterless stone, this statue seems to be the focal point
+for swirling shadows that permeate this room. They seem to be more
+substantial than your usual half-light, and it might be a good idea to blow
+the statue into smithereens before the shadows turn fully real.
+%%%%
 sickly siren
 
 A young woman with a fish tail in place of legs. She looks quite sick, but
