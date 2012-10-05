@@ -2074,6 +2074,10 @@ static void tag_read_you(reader &th)
     {
         caction_type caction = (caction_type)unmarshallShort(th);
         int subtype = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 34
+        if (th.getMinorVersion() < TAG_MINOR_ACTION_THROW && caction == CACT_THROW)
+            subtype = subtype | (OBJ_MISSILES << 16);
+#endif
         for (j = 0; j < 27; j++)
             you.action_count[pair<caction_type, int>(caction, subtype)][j] = unmarshallInt(th);
     }

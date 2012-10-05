@@ -1135,6 +1135,18 @@ static string _describe_action_subtype(caction_type type, int subtype)
 {
     switch (type)
     {
+    case CACT_THROW:
+    {
+        int basetype = subtype >> 16;
+        subtype = (short)(subtype & 0xFFFF);
+
+        if (basetype == OBJ_MISSILES)
+            return uppercase_first(item_base_name(OBJ_MISSILES, subtype));
+        else if (basetype == OBJ_WEAPONS)
+            ; // fallthrough
+        else
+            return "other";
+    }
     case CACT_MELEE:
     case CACT_FIRE:
         if (subtype >= UNRAND_START)
@@ -1147,8 +1159,6 @@ static string _describe_action_subtype(caction_type type, int subtype)
         }
         return ((subtype == -1) ? "Unarmed"
                 : uppercase_first(item_base_name(OBJ_WEAPONS, subtype)));
-    case CACT_THROW:
-        return uppercase_first(item_base_name(OBJ_MISSILES, subtype));
     case CACT_CAST:
         return spell_title((spell_type)subtype);
     case CACT_INVOKE:
