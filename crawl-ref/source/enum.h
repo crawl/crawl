@@ -502,9 +502,9 @@ enum burden_state_type          // you.burden_state
 
 enum caction_type    // Primary categorization of counted actions.
 {                    // A subtype will also be given in each case:
-    CACT_MELEE,      // weapon_type
-    CACT_FIRE,       // weapon_type
-    CACT_THROW,      // missile_type
+    CACT_MELEE,      // weapon subtype
+    CACT_FIRE,       // weapon subtype
+    CACT_THROW,      // item basetype << 16 | subtype
     CACT_CAST,       // spell_type
     CACT_INVOKE,     // ability_type
     CACT_ABIL,       // ability_type
