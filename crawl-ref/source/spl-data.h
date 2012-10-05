@@ -2243,6 +2243,19 @@ struct spell_desc
 },
 
 {
+    SPELL_CHAOS_BREATH, "Chaos Breath",
+     SPTYP_CONJURATION | SPTYP_RANDOM,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_INNATE | SPFLAG_NOISY,
+     5,
+     0,
+     6, 6,
+     0,
+     NULL,
+     true,
+     false
+},
+ 
+{
     SPELL_COLD_BREATH, "Cold Breath",
      SPTYP_CONJURATION | SPTYP_ICE,
      SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER | SPFLAG_INNATE | SPFLAG_NOISY,

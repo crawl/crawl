@@ -2514,6 +2514,8 @@ enum monster_type                      // menv[].type
     MONS_ELEMENTAL,             // genus
 
     MONS_FANNAR,
+    
+    MONS_APOCALYPSE_CRAB,
 
     MONS_STARSPAWN_TENTACLE,
     MONS_STARSPAWN_TENTACLE_SEGMENT,
@@ -3289,7 +3291,8 @@ enum spell_type
     SPELL_THUNDERBOLT,
     SPELL_SUMMON_MINOR_DEMON,
     SPELL_DISJUNCTION,
-
+    SPELL_CHAOS_BREATH,
+    
     NUM_SPELLS
 };
 
