@@ -2235,8 +2235,12 @@ static int _xom_inner_flame(int sever, bool debug = false)
     bool rc = false;
     for (monster_iterator mi(you.get_los()); mi; ++mi)
     {
-        if (mi->wont_attack() || one_chance_in(4))
+        if (mi->wont_attack()
+            || mons_immune_magic(*mi)
+            || one_chance_in(4))
+        {
             continue;
+        }
 
         if (debug)
             return XOM_GOOD_INNER_FLAME;
