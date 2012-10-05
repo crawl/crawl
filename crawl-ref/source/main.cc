@@ -4379,8 +4379,11 @@ static void _move_player(coord_def move)
     }
     else if (!targ_pass && grd(targ) == DNGN_MALIGN_GATEWAY && !attacking)
     {
-        if (!_prompt_dangerous_portal(grd(targ)))
+        if (!crawl_state.disables[DIS_CONFIRMATIONS]
+            && !_prompt_dangerous_portal(grd(targ)))
+        {
             return;
+        }
 
         you.prev_move = move;
         move.reset();
