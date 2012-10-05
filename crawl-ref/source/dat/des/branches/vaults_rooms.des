@@ -2646,7 +2646,7 @@ ENDMAP
 NAME:     vaults_room_7_dead_end_dangerous_shadowmancer
 TAGS:     vaults_room_7_dead_end_dangerous no_monster_gen
 SUBST:    G : G.
-MONS:     generate_awake statue name:shadowmancer n_adj \
+MONS:     generate_awake statue name:shadowy n_adj \
           tile:mons_statue_mage \
           spells:shadow_creatures;shadow_creatures;invisibility;\
                  shadow_creatures;shadow_creatures;shadow_creatures
