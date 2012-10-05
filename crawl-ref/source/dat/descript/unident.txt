@@ -37,7 +37,7 @@ A disposable arcane formula inscribed on parchment by a professional scribe or
 sorcerer. Anyone can evoke the power of the arcane formula by reading it out
 loud, but the nature of that power is not a priori apparent.
 %%%%
-magical staff
+staff
 
 A staff improved with arcane powers of unknown nature.
 %%%%
