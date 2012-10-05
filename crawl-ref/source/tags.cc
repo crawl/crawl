@@ -624,15 +624,27 @@ level_pos unmarshall_level_pos(reader& th)
 
 void marshallCoord(writer &th, const coord_def &c)
 {
-    marshallShort(th, c.x);
-    marshallShort(th, c.y);
+    marshallInt(th, c.x);
+    marshallInt(th, c.y);
 }
 
 coord_def unmarshallCoord(reader &th)
 {
     coord_def c;
-    c.x = unmarshallShort(th);
-    c.y = unmarshallShort(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() >= TAG_MINOR_COORD_SERIALIZER)
+    {
+#endif
+        c.x = unmarshallInt(th);
+        c.y = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 34
+    }
+    else
+    {
+        c.x = unmarshallShort(th);
+        c.y = unmarshallShort(th);
+    }
+#endif
     return c;
 }
 

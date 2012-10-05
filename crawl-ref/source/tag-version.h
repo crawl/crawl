@@ -21,6 +21,7 @@ enum tag_minor_version
     TAG_MINOR_AUTOINSCRIPTIONS,    // Artefact inscriptions are added on the fly
     TAG_MINOR_UNCANCELLABLES,      // Restart uncancellable questions upon save load
     TAG_MINOR_DEEP_ABYSS,          // Multi-level abyss
+    TAG_MINOR_COORD_SERIALIZER,    // Serialize coord_def as int
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
 };
