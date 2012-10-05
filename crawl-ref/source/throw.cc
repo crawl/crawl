@@ -1894,10 +1894,20 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 dice_mult = dice_mult * 130 / 100;
 
             practise(EX_WILL_THROW_MSL, wepType);
-            count_action(CACT_THROW, wepType);
+            count_action(CACT_THROW, wepType | (OBJ_MISSILES << 16));
         }
         else
+        {
             practise(EX_WILL_THROW_WEAPON);
+            if (item.base_type == OBJ_WEAPONS)
+                if (is_unrandom_artefact(item)
+                    && get_unrand_entry(item.special)->type_name)
+                {
+                    count_action(CACT_THROW, item.special | (OBJ_WEAPONS << 16));
+                }
+                else
+                    count_action(CACT_THROW, item.sub_type | (OBJ_WEAPONS << 16));
+        }
     }
 
     // Dexterity bonus, and possible skill increase for silly throwing.
