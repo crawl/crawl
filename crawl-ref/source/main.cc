@@ -2984,8 +2984,7 @@ static void _update_mold()
 
 static void _player_reacts()
 {
-    if (you.time_taken && !you.cannot_act())
-        search_around();
+    search_around();
 
     stealth = check_stealth();
 
