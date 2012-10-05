@@ -311,6 +311,10 @@ NAME:   uniq_urug
 DEPTH:  D:10-16, Orc:2-, Elf:1, Swamp:1, Shoals:1, Snake:1, Spider:1
 : place_unique(_G, "Urug")
 
+NAME:   uniq_warwick
+DEPTH:  Abyss:2-27
+: place_unique(_G, "Warwick von Hugsford")
+ 
 NAME:   uniq_wiglaf
 DEPTH:  D:17-27, Elf:2-, Dwarf, Swamp:2-, Snake:2-, Shoals:2-, Spider:2-, Vaults, Crypt, Blade, Tomb
 : place_unique(_G, "Wiglaf")
