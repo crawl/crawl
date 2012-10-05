@@ -1975,7 +1975,7 @@ void game_options::add_message_colour_mapping(const string &field,
         remove_matching(message_colour_mappings, m);
     else if (prepend)
         message_colour_mappings.insert(message_colour_mappings.begin(), m);
-    else 
+    else
         message_colour_mappings.push_back(m);
 }
 
