@@ -4425,18 +4425,14 @@ tileidx_t tileidx_bolt(const bolt &bolt)
         if (bolt.name == "crystal spear")
             return TILE_BOLT_CRYSTAL_SPEAR + dir;
         else if (bolt.name == "puff of frost")
-        {
             return TILE_BOLT_FROST; // TODO: vary by position
-        }
         break;
 
     case LIGHTCYAN:
         if (bolt.name == "iron shot")
             return TILE_BOLT_IRON_SHOT + dir;
         else if (bolt.name == "zap")
-        {
             return TILE_BOLT_ZAP + dir % tile_main_count(TILE_BOLT_ZAP);
-        }
         break;
 
     case RED:
