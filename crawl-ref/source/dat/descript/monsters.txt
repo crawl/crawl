@@ -2748,6 +2748,12 @@ Hellbinder
 A mighty spellcaster, wreathed in arcane energies, and muttering the most
 profane incantations you might ever have heard.
 %%%%
+# arena sprint final boss
+Master Blaster
+
+A mighty old lich, notorious for blasting people with most powerful
+conjurations at the slightest provocation or, usually, even a lack of one.
+%%%%
 Statue of Wucad Mu
 
 This statue, made of a fine glassy orange crystal, depicts a mystic known as
