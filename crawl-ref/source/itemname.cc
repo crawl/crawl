@@ -191,11 +191,14 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
                 switch (eq)
                 {
                 case EQ_WEAPON:
-                    if (base_type == OBJ_WEAPONS || base_type == OBJ_STAVES)
+                    if (base_type == OBJ_WEAPONS || base_type == OBJ_STAVES
+                        || base_type == OBJ_RODS)
+                    {
                         buff << " (weapon)";
+                    }
                     else if (you.species == SP_FELID)
                         buff << " (in mouth)";
-                    else // including rods -- intentional?
+                    else
                         buff << " (in " << you.hand_name(false) << ")";
                     break;
                 case EQ_CLOAK:
