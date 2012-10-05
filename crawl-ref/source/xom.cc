@@ -2336,6 +2336,7 @@ static int _xom_is_good(int sever, int tension, bool debug = false)
         {
             count++;
             you_teleport_now(false);
+            search_around();
             more();
             if (one_chance_in(10) || count >= 7 + random2(5))
                 break;
@@ -3510,6 +3511,7 @@ static int _xom_is_bad(int sever, int tension, bool debug = false)
             do
             {
                 you_teleport_now(false);
+                search_around();
                 more();
                 if (count++ >= 7 + random2(5))
                     break;
