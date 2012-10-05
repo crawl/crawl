@@ -318,9 +318,7 @@ int MapRegion::handle_mouse(MouseEvent &event)
         return 0;
     case MouseEvent::RELEASE:
         if ((event.button == MouseEvent::RIGHT) && m_far_view)
-        {
             m_far_view = false;
-        }
         return 0;
 #endif
     default:

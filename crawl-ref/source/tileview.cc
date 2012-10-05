@@ -1002,9 +1002,7 @@ void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
     {
         tileidx_t basetile = tile_dngn_basetile(flv->wall);
         if (_is_torch(basetile))
-        {
             flv->wall = basetile + (flv->wall - basetile + 1) % tile_dngn_count(basetile);
-        }
     }
 #endif
 }

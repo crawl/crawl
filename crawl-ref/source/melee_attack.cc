@@ -613,9 +613,7 @@ bool melee_attack::handle_phase_damaged()
         if (blood > defender->stat_hp())
             blood = defender->stat_hp();
         if (blood)
-        {
             (new blood_fineff(defender, defender->pos(), blood))->schedule();
-        }
     }
 
     announce_hit();
