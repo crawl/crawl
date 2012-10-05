@@ -3208,6 +3208,12 @@ soapberry tree
 
 <apple tree>
 %%%%
+spearthrower statue
+
+This statue bristles with sharp shards of green crystal that sparkle with
+every gleam of the light. The shards seem to be in motion, migrating to form
+long spears of crystal that can shoot out and pierce someone throughout.
+%%%%
 spooky statue
 
 You sense a ghostly presence around this statue, and it's not the slightest bit
