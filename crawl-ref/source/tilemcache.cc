@@ -213,7 +213,8 @@ mcache_monster::mcache_monster(const monster_info& mon)
 
     m_mon_tile = tileidx_monster(mon) & TILE_FLAG_MASK;
 
-    m_equ_tile = tilep_equ_weapon(*mon.inv[MSLOT_WEAPON]);
+    const item_info* mon_weapon = mon.inv[MSLOT_WEAPON].get();
+    m_equ_tile = (mon_weapon != NULL) ? tilep_equ_weapon(*mon_weapon) : 0;
     const item_info* mon_shield = mon.inv[MSLOT_SHIELD].get();
     m_shd_tile = (mon_shield != NULL) ? tilep_equ_shield(*mon_shield) : 0;
 }
@@ -502,6 +503,18 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
         *ofs_y = 1;
         break;
 
+    case TILEP_MONS_ZOMBIE_SMALL:
+    case TILEP_MONS_SKELETON_SMALL:
+        *ofs_x = -2;
+        *ofs_y = 1;
+        break;
+
+    case TILEP_MONS_HUMAN:
+    case TILEP_MONS_LOUISE:
+        *ofs_x = 0;
+        *ofs_y = 0;
+        break;
+
     default:
         // This monster cannot be displayed with a shield.
         return false;
@@ -512,13 +525,14 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
 
 int mcache_monster::info(tile_draw_info *dinfo) const
 {
-    int ofs_x, ofs_y;
-    get_weapon_offset(m_mon_tile, &ofs_x, &ofs_y);
-
     int count = 0;
     dinfo[count++].set(m_mon_tile);
-    if (m_equ_tile)
+
+    int ofs_x, ofs_y;
+    if (m_equ_tile && get_weapon_offset(m_mon_tile, &ofs_x, &ofs_y))
+    {
         dinfo[count++].set(m_equ_tile, ofs_x, ofs_y);
+    }
 
     // In some cases, overlay a second weapon tile...
     if (m_mon_tile == TILEP_MONS_DEEP_ELF_BLADEMASTER)
@@ -541,9 +555,8 @@ int mcache_monster::info(tile_draw_info *dinfo) const
         if (eq2)
             dinfo[count++].set(eq2, -ofs_x, ofs_y);
     }
-    else if (m_shd_tile)
+    else if (m_shd_tile && get_shield_offset(m_mon_tile, &ofs_x, &ofs_y))
     {
-        get_shield_offset(m_mon_tile, &ofs_x, &ofs_y);
         dinfo[count++].set(m_shd_tile, ofs_x, ofs_y);
     }
 
@@ -552,13 +565,13 @@ int mcache_monster::info(tile_draw_info *dinfo) const
 
 bool mcache_monster::valid(const monster_info& mon)
 {
-    if (mon.inv[MSLOT_WEAPON].get() == NULL)
-        return false;
-
     tileidx_t mon_tile = tileidx_monster(mon) & TILE_FLAG_MASK;
 
     int ox, oy;
-    return get_weapon_offset(mon_tile, &ox, &oy);
+    return (mon.inv[MSLOT_WEAPON].get() != NULL
+            && get_weapon_offset(mon_tile, &ox, &oy))
+        || (mon.inv[MSLOT_SHIELD].get() != NULL
+            && get_shield_offset(mon_tile, &ox, &oy));
 }
 
 /////////////////////////////////////////////////////////////////////////////
