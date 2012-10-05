@@ -3734,7 +3734,14 @@ bool dgn_place_map(const map_def *mdef,
     if (did_map && !Generating_Level)
     {
         const vault_placement &vp = *env.level_vaults[map_index];
-        ASSERT(mdef->name == vp.map.name);
+#ifdef ASSERTS
+        if (mdef->name != vp.map.name)
+        {
+            die("Placed map '%s', yet vault_placement is '%s'",
+                mdef->name.c_str(), vp.map.name.c_str());
+        }
+#endif
+
         for (vault_place_iterator vpi(vp); vpi; ++vpi)
         {
             const coord_def p = *vpi;
