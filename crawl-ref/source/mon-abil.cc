@@ -2801,6 +2801,11 @@ bool mon_special_ability(monster* mons, bolt & beem)
             spell = SPELL_COLD_BREATH;
     // Intentional fallthrough
 
+    case MONS_APOCALYPSE_CRAB:
+        if (spell == SPELL_NO_SPELL)
+            spell = SPELL_CHAOS_BREATH;
+    // Intentional fallthrough
+
     // Dragon breath weapons:
     case MONS_DRAGON:
     case MONS_HELL_HOUND:
@@ -2833,6 +2838,12 @@ bool mon_special_ability(monster* mons, bolt & beem)
                 beem.is_big_cloud = true;
                 beem.damage       = dice_def(1, (mons->hit_dice*3)/2);
             }
+
+            if (mons->type == MONS_APOCALYPSE_CRAB)
+            {
+                beem.is_big_cloud = true;
+                beem.damage       = dice_def(1, (mons->hit_dice*3)/2);
+            } 
 
             // Fire tracer.
             fire_tracer(mons, beem);

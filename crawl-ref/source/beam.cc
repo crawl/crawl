@@ -2460,7 +2460,10 @@ void bolt::affect_endpoint()
 
     if (origin_spell == SPELL_FIRE_BREATH && is_big_cloud)
         big_cloud(CLOUD_FIRE, agent(), pos(), 0, 8 + random2(5));
-
+    
+    if (origin_spell == SPELL_CHAOS_BREATH && is_big_cloud)
+        big_cloud(CLOUD_CHAOS, agent(), pos(), 0, 8 + random2(5));
+    
     if (name == "foul vapour")
     {
         // death drake; swamp drakes handled earlier
