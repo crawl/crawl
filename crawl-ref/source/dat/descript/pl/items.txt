@@ -720,7 +720,7 @@ Miecz o długim prostym ostrzu.
 longbow
 
 Duży, mocny cisowy łuk. Ma spory naciąg i potrafi zadać poważne obrażenia,
-zwłaszcz w rękach zaawansowanego łucznika.
+zwłaszcza w rękach zaawansowanego łucznika.
 %%%%
 lychee
 
