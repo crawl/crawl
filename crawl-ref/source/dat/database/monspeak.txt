@@ -2623,12 +2623,6 @@ Elven Halls Donald
 w:50
 @_generic_Donald_@
 
-@The_monster@ says, "They're so pretty, I think it must be a glamour."
-
-@The_monster@ says, "This place goes on forever. I hate that."
-
-@The_monster@ says, "This place goes down forever. Maybe there are turtles at the bottom."
-
 @The_monster@ says, "Why would you have your front door in a mine? Stupid."
 
 @The_monster@ says, "I hope this rune is worth it!"
@@ -2745,8 +2739,6 @@ w:50
 @The_monster@ says, "I hate getting stuck."
 
 @The_monster@ says, "Dancing spiders? With no cane or a top hat?"
-
-@The_monster@ says, "Can't they spell 'tarantula' right?"
 
 @The_monster@ says, "Something's up my trousers! Aieee!"
 
@@ -3039,6 +3031,8 @@ w:50
 @The_monster@ says, "Damn, I left my potions of berserk rage outside."
 
 @The_monster@ says, "If I give you twenty gold pieces, can you get rid of this nasty case of scales I've got?"
+
+@The_monster@ covers @possessive@ ears. "Shut up!"
 %%%%
 the Shining One Donald
 
@@ -3323,6 +3317,8 @@ w:50
 @The_monster@ says, "You think you're the Messiah? I met another guy who thought that, too."
 
 @The_monster@ says, "Messiah? I hate messiahs."
+
+@The_monster@ bows and submits to you. "Nah, just kidding."
 %%%%
 Jiyva Donald
 
