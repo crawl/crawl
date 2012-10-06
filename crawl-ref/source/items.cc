@@ -1581,17 +1581,6 @@ void note_inscribe_item(item_def &item)
     _check_note_item(item);
 }
 
-static void _abyssal_rune_collected()
-{
-    if (player_in_branch(BRANCH_ABYSS))
-    {
-        mprf("The Abyss %s %saround you as gateways open!",
-             coinflip() ? "trembles" : "shudders",
-             silenced(you.pos()) ? "" : "and groans ");
-
-    }
-}
-
 // Returns quantity of items moved into player's inventory and -1 if
 // the player's inventory is full.
 int move_item_to_player(int obj, int quant_got, bool quiet,
