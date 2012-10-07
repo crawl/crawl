@@ -470,7 +470,7 @@ remaining eye is not very good, and he has mistaken you for one.
 %%%% 
 Warwick von Hugsford
 
-An enormous taxidermied bear with a gold monocole and a polka dot bow tie.
+An enormous bear with a gold monocole and a polka dot bow tie.
 His {{
     return crawl.random_element({
         ["paws"] = 10, ["eyes"] = 5, ["claws"] = 5,
