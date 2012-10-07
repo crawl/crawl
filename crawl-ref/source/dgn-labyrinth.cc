@@ -255,7 +255,7 @@ static void _place_extra_lab_minivaults()
 static bool _has_vault_in_radius(const coord_def &pos, int radius,
                                  unsigned mask)
 {
-    for (radius_iterator rad(pos, radius, C_SQUARE); rad; ++rad)
+    for (radius_iterator rad(pos, radius, C_ROUND); rad; ++rad)
     {
         if (!in_bounds(*rad))
             continue;
