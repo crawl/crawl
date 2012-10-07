@@ -69,25 +69,25 @@
 
 enum LOSSelect
 {
-    LOS_ANY      = 0x00,
+    LS_ANY      = 0x00,
 
     // Check only visible squares
-    LOS_VISIBLE  = 0x01,
+    LS_VISIBLE  = 0x01,
 
     // Check only hidden squares
-    LOS_HIDDEN   = 0x02,
+    LS_HIDDEN   = 0x02,
 
-    LOS_VISMASK  = 0x03,
+    LS_VISMASK  = 0x03,
 
     // Flip from visible to hidden when going forward,
     // or hidden to visible when going backwards.
-    LOS_FLIPVH   = 0x20,
+    LS_FLIPVH   = 0x20,
 
     // Flip from hidden to visible when going forward,
     // or visible to hidden when going backwards.
-    LOS_FLIPHV   = 0x40,
+    LS_FLIPHV   = 0x40,
 
-    LOS_NONE     = 0xFFFF,
+    LS_NONE     = 0xFFFF,
 };
 
 #ifdef WIZARD
@@ -119,7 +119,7 @@ static bool _find_square_wrapper(coord_def &mfp, int direction,
                                                    bool, int, targetter*),
                                  bool need_path, int mode,
                                  int range, targetter *hitfunc, bool wrap,
-                                 int los = LOS_ANY);
+                                 int los = LS_ANY);
 
 static int  _targetting_cmd_to_compass(command_type command);
 static void _describe_oos_square(const coord_def& where);
@@ -1022,7 +1022,7 @@ coord_def direction_chooser::find_default_target() const
         // Try to find an object.
         success = _find_square_wrapper(result, 1, _find_object,
                                        needs_path, TARG_ANY, range, hitfunc,
-                                       true, LOS_FLIPVH);
+                                       true, LS_FLIPVH);
     }
     else if (mode == TARG_ENEMY || mode == TARG_HOSTILE
              || mode == TARG_HOSTILE_SUBMERGED
@@ -1230,7 +1230,7 @@ void direction_chooser::object_cycle(int dir)
 {
     if (_find_square_wrapper(objfind_pos, dir, _find_object,
                              needs_path, TARG_ANY, range, hitfunc, true,
-                             (dir > 0 ? LOS_FLIPVH : LOS_FLIPHV)))
+                             (dir > 0 ? LS_FLIPVH : LS_FLIPHV)))
     {
         set_target(objfind_pos);
         show_items_once = true;
@@ -1256,7 +1256,7 @@ void direction_chooser::feature_cycle_forward(int feature)
 {
     if (_find_square_wrapper(objfind_pos, 1, _find_feature,
                              needs_path, feature, range, hitfunc, true,
-                             LOS_FLIPVH))
+                             LS_FLIPVH))
     {
         set_target(objfind_pos);
     }
@@ -2500,13 +2500,13 @@ static bool _find_object(const coord_def& where, int mode,
 
 static int _next_los(int dir, int los, bool wrap)
 {
-    if (los == LOS_ANY)
-        return (wrap? los : LOS_NONE);
+    if (los == LS_ANY)
+        return (wrap? los : LS_NONE);
 
-    bool vis    = los & LOS_VISIBLE;
-    bool hidden = los & LOS_HIDDEN;
-    bool flipvh = los & LOS_FLIPVH;
-    bool fliphv = los & LOS_FLIPHV;
+    bool vis    = los & LS_VISIBLE;
+    bool hidden = los & LS_HIDDEN;
+    bool flipvh = los & LS_FLIPVH;
+    bool fliphv = los & LS_FLIPHV;
 
     if (!vis && !hidden)
         vis = true;
@@ -2526,21 +2526,21 @@ static int _next_los(int dir, int los, bool wrap)
         //    so we can go back to the first item in LOS. Unless we set
         //    fliphv, we can't flip from hidden to visible.
         //
-        los = flipvh? LOS_FLIPHV : LOS_FLIPVH;
+        los = flipvh? LS_FLIPHV : LS_FLIPVH;
     }
     else
     {
         if (!flipvh && !fliphv)
-            return LOS_NONE;
+            return LS_NONE;
 
         if (flipvh && vis != (dir == 1))
-            return LOS_NONE;
+            return LS_NONE;
 
         if (fliphv && vis == (dir == 1))
-            return LOS_NONE;
+            return LS_NONE;
     }
 
-    los = (los & ~LOS_VISMASK) | (vis? LOS_HIDDEN : LOS_VISIBLE);
+    los = (los & ~LS_VISMASK) | (vis? LS_HIDDEN : LS_VISIBLE);
     return los;
 }
 
@@ -2571,10 +2571,10 @@ static bool _find_square(coord_def &mfp, int direction,
 
     int i, j;
 
-    if (los == LOS_NONE)
+    if (los == LS_NONE)
         return false;
 
-    if (los == LOS_FLIPVH || los == LOS_FLIPHV)
+    if (los == LS_FLIPVH || los == LS_FLIPHV)
     {
         if (in_los_bounds_v(mfp))
         {
@@ -2582,26 +2582,26 @@ static bool _find_square(coord_def &mfp, int direction,
             // need to find what we're currently on.
             const bool vis = you.see_cell(view2grid(mfp));
 
-            if (wrap && (vis != (los == LOS_FLIPVH)) == (direction == 1))
+            if (wrap && (vis != (los == LS_FLIPVH)) == (direction == 1))
             {
                 // We've already flipped over into the other direction,
                 // so correct the flip direction if we're wrapping.
-                los = (los == LOS_FLIPHV ? LOS_FLIPVH : LOS_FLIPHV);
+                los = (los == LS_FLIPHV ? LS_FLIPVH : LS_FLIPHV);
             }
 
-            los = (los & ~LOS_VISMASK) | (vis ? LOS_VISIBLE : LOS_HIDDEN);
+            los = (los & ~LS_VISMASK) | (vis ? LS_VISIBLE : LS_HIDDEN);
         }
         else
         {
             if (wrap)
-                los = LOS_HIDDEN | (direction > 0 ? LOS_FLIPHV : LOS_FLIPVH);
+                los = LS_HIDDEN | (direction > 0 ? LS_FLIPHV : LS_FLIPVH);
             else
-                los |= LOS_HIDDEN;
+                los |= LS_HIDDEN;
         }
     }
 
-    onlyVis     = (los & LOS_VISIBLE);
-    onlyHidden  = (los & LOS_HIDDEN);
+    onlyVis     = (los & LS_VISIBLE);
+    onlyHidden  = (los & LS_HIDDEN);
 
     int radius = 0;
     if (crawl_view.viewsz.x > crawl_view.viewsz.y)
