@@ -54,8 +54,7 @@ public:
     radius_iterator(const coord_def& center, int radius,
                     bool roguelike_metric = true,
                     bool require_los = true,
-                    bool exclude_center = false,
-                    const los_base* los = NULL);
+                    bool exclude_center = false);
     // Just iterate over a LOS field.
     radius_iterator(const los_base* los,
                     bool exclude_center = false);
