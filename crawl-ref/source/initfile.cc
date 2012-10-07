@@ -1023,6 +1023,7 @@ void game_options::reset_options()
     tile_window_height    = -90;
     tile_map_pixels       = 0;
     tile_cell_pixels      = 32;
+    tile_filter_scaling   = false;
 # ifdef TOUCH_UI
     tile_layout_priority = split_string(",", "minimap, command, gold_turn, "
                                              "inventory, command2, spell, "
@@ -3477,6 +3478,7 @@ void game_options::read_option_line(const string &str, bool runscript)
     else INT_OPTION(tile_window_height, INT_MIN, INT_MAX);
     else INT_OPTION(tile_map_pixels, 1, INT_MAX);
     else INT_OPTION(tile_cell_pixels, 1, INT_MAX);
+    else BOOL_OPTION(tile_filter_scaling);
 #endif // USE_TILE_LOCAL
 #ifdef USE_TILE
     else BOOL_OPTION(tile_force_overlay);

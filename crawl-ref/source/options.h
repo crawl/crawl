@@ -385,6 +385,7 @@ public:
     int         tile_window_height;
     int         tile_map_pixels;
     int         tile_cell_pixels;
+    bool        tile_filter_scaling;
 #endif
 
 #ifdef USE_TILE

@@ -4,6 +4,7 @@
 #ifdef USE_GL
 
 #include "glwrapper-ogl.h"
+#include "options.h"
 
 // How do we get access to the GL calls?
 // If other UI types use the -ogl wrapper they should
@@ -288,8 +289,10 @@ void OGLStateManager::load_texture(unsigned char *pixels, unsigned int width,
     else
 #endif
     {
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+                        Options.tile_filter_scaling ? GL_LINEAR : GL_NEAREST);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
+                        Options.tile_filter_scaling ? GL_LINEAR : GL_NEAREST);
         if (xoffset >= 0 && yoffset >= 0)
         {
             glTexSubImage2D(GL_TEXTURE_2D, 0, xoffset, yoffset, width, height,
