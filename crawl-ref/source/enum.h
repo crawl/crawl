@@ -3518,7 +3518,8 @@ enum seen_context_type
 
 enum los_type
 {
-    LOS_ARENA        = 0,
+    LOS_NONE         = 0,
+    LOS_ARENA        = LOS_NONE,
     LOS_DEFAULT      = (1 << 0),
     LOS_NO_TRANS     = (1 << 1),
     LOS_SOLID        = (1 << 2),
