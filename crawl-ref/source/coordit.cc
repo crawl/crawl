@@ -112,12 +112,11 @@ radius_iterator::radius_iterator(const coord_def& center, int param,
 
 radius_iterator::radius_iterator(const coord_def& _center, int _radius,
                                  bool roguelike, bool _require_los,
-                                 bool _exclude_center,
-                                 const los_base* _los)
+                                 bool _exclude_center)
     : circle(_center, _radius, roguelike ? C_SQUARE : C_POINTY),
       iter(circle.iter()),
       exclude_center(_exclude_center),
-      los(_require_los ? (_los ? _los : you.get_los()) : NULL)
+      los(_require_los ? you.get_los() : NULL)
 {
     advance(true);
 }
