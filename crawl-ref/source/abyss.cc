@@ -853,8 +853,8 @@ static void _abyss_expand_mask_to_cover_vault(map_bitmask *mask,
         mask->set(*vpi);
 }
 
-// Identifies the smallest movement circle around the given source that can
-// be shifted without breaking up any vaults.
+// Identifies the smallest square around the given source that can be
+// shifted without breaking up any vaults.
 static void _abyss_identify_area_to_shift(coord_def source, int radius,
                                           map_bitmask *mask)
 {

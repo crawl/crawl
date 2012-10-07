@@ -886,7 +886,7 @@ LUAFN(dgn_spotty_map)
                && strchr(replace, lines(x, y-2))
                && strchr(replace, lines(x, y+2)));
 
-        for (radius_iterator ai(coord_def(x, y), 1, boxy ? C_SQUARE : C_POINTY,
+        for (radius_iterator ai(coord_def(x, y), boxy ? 2 : 1, C_CIRCLE,
                                 NULL, false); ai; ++ai)
         {
             if (strchr(replace, lines(*ai)))

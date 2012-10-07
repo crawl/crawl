@@ -2366,7 +2366,7 @@ void check_antennae_detect()
                     continue;
                 }
 
-                for (radius_iterator ri2(mon->pos(), 2, C_SQUARE); ri2; ++ri2)
+                for (radius_iterator ri2(mon->pos(), 2, C_ROUND); ri2; ++ri2)
                     if (you.see_cell(*ri2))
                     {
                         mon->flags |= MF_SENSED;
