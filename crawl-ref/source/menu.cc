@@ -3372,11 +3372,12 @@ MenuObject::InputReturnValue MenuFreeform::handle_mouse(const MouseEvent& me)
             return INPUT_NO_ACTION;
     }
 
-    MenuItem* find_item = NULL;
+    MenuItem* find_item = _find_item_by_mouse_coords(coord_def(me.px, me.py));
 
-    if (me.event == MouseEvent::MOVE)
+    if (find_item && find_item->handle_mouse(me))
+        return MenuObject::INPUT_SELECTED; // The object handled the event
+    else if (me.event == MouseEvent::MOVE)
     {
-        find_item = _find_item_by_mouse_coords(coord_def(me.px, me.py));
         if (find_item == NULL)
         {
             if (m_active_item != NULL)
@@ -3397,8 +3398,6 @@ MenuObject::InputReturnValue MenuFreeform::handle_mouse(const MouseEvent& me)
     }
     if (me.event == MouseEvent::PRESS && me.button == MouseEvent::LEFT)
     {
-        find_item = _find_item_by_mouse_coords(coord_def(me.px,
-                                                        me.py));
         if (find_item != NULL)
         {
             select_item(find_item);
@@ -3407,12 +3406,6 @@ MenuObject::InputReturnValue MenuFreeform::handle_mouse(const MouseEvent& me)
             else
                 return MenuObject::INPUT_DESELECTED;
         }
-    }
-    if (me.event == MouseEvent::PRESS && me.button == MouseEvent::LEFT)
-    {
-        // TODO
-        // pass mouse press event to objects, in case we pressed
-        // down on top of an item with such action
     }
     // all the other Mouse Events are uninteresting and are ignored
     return INPUT_NO_ACTION;

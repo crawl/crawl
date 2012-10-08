@@ -26,6 +26,25 @@
 menu_letter2 SkillMenuEntry::m_letter;
 SkillMenu skm;
 
+#ifdef USE_TILE_LOCAL
+bool SkillTextTileItem::handle_mouse(const MouseEvent& me)
+{
+    if (me.event == MouseEvent::PRESS
+        && (me.button == MouseEvent::LEFT && me.mod & MOD_SHIFT
+            || me.button == MouseEvent::RIGHT))
+    {
+        skill_type sk = skill_type(get_id());
+        if (is_invalid_skill(sk))
+            return false;
+
+        skm.select(sk, 'A');
+        return true;
+    }
+    else
+        return false;
+}
+#endif
+
 #define NAME_SIZE 20
 #define LEVEL_SIZE 5
 #define PROGRESS_SIZE 6
@@ -33,7 +52,7 @@ SkillMenu skm;
 SkillMenuEntry::SkillMenuEntry(coord_def coord)
 {
 #ifdef USE_TILE_LOCAL
-    m_name = new TextTileItem();
+    m_name = new SkillTextTileItem();
 #else
     m_name = new TextItem();
 #endif
@@ -917,8 +936,11 @@ void SkillMenu::select(skill_type sk, int keyn)
              || get_state(SKM_DO) == SKM_DO_FOCUS)
     {
         toggle_practise(sk, keyn);
-        if (get_state(SKM_VIEW) == SKM_VIEW_TRAINING || is_set(SKMF_EXPERIENCE))
+        if (get_state(SKM_VIEW) == SKM_VIEW_TRAINING || is_set(SKMF_EXPERIENCE)
+            || keyn >= 'A' && keyn <= 'Z')
+        {
             refresh_display();
+        }
     }
 }
 
