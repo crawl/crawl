@@ -751,6 +751,16 @@ _common_speaking_no_tension_
 
 @The_weapon@ says, "At least you will die someday and escape this tedium!"
 
+@The_weapon@ says, "I don't know that song, but if you hum a few bars, I can take a stab at it."
+
+@The_weapon@ boasts, "I have an eight-octave range, you know."
+
+@The_weapon@ sighs wistfully, "I wish my music got as much attention as my homicides..."
+
+@The_weapon@ sneers, "I've heard your voice, @player_name@, let's just keep this a solo act."
+
+@The_weapon@ laments, "Ugh, being used to hack up chunks of meat... it's undignified!"
+
 %%%%
 _rare_speaking_no_tension_
 
@@ -763,6 +773,10 @@ _rare_speaking_no_tension_
 @The_weapon@ says, "Whips just don't cut it for me, don't you agree?"
 
 @The_weapon@ chants, "Rather stab than club, rather slice than rub!"
+
+@The_weapon@ states, "Music critics are all talk and no body armour."
+
+@The_weapon@ demands, "I must not be sheathed without first drawing blood!"
 
 w:5
 @The_weapon@ explains all about @_musical_topic_@.
@@ -790,6 +804,8 @@ w:5
 
 @The_weapon@ fumes, "Being battered, bent and broken sure is better than this boredom!"
 
+@The_weapon@ shouts, "I love putting a song in people's hearts. And in their kidneys."
+
 @The_weapon@ grouses, "Could you please kill something? I'm itching all over."
 
 @The_weapon@ laments, "What are you waiting for? I am doing all the work."
@@ -814,6 +830,8 @@ w:1
 @The_weapon@ says, "Unhand me, foul miscreant!"
 
 @The_weapon@ muses, "Whom do I have to kill to get some service around here?"
+
+@The_weapon@ sings out, "Sing loudly and carry a big sword!"
 
 w:1
 @The_weapon@ says, "All work and no play makes @player_name@ a dull boy!"
@@ -862,6 +880,8 @@ w:1
 
 @The_weapon@ says, "Your kiss, my thrill, your miss, my kill."
 
+@The_weapon@ boasts, "My voice can shatter a wine glass. My blade can shatter a human skull."
+
 ############ speaking, low or high tension -- possible damage ############
 %%%%
 _speaking_low-high_tension_
@@ -877,6 +897,31 @@ _speaking_low-high_tension_
 @The_weapon@ shouts, "Kill! Crush! Destroy!"
 
 @The_weapon@ states, "Their screams, my satisfaction."
+
+@The_weapon@ yells, "Steel will triumph where flesh falters!"
+
+@The_weapon@ cautions, "Never send a @player_genus@ to do a blade's job!"
+
+@The_weapon@ hisses, "Let's hear you complain about my singing with your throat slit!"
+
+@The_weapon@ teaches, "Practice makes perfect!"
+
+@The_weapon@ asks, "Do you have the will to power, @player_name@?"
+
+@The_weapon@ laughs, "I always appreciate a bleeding ovation!"
+
+@The_weapon@ shouts, "The neck bone's connected to the head bone... but not for long!"
+
+@The_weapon@ shouts, "My song won't be the only thing that'll get stuck in your head!"
+
+# Predator
+@The_weapon@ shouts, "If it bleeds, we can kill it!"
+
+# Millennium, referencing William Yeats
+@The_weapon@ says, "I want to see you dance on the blood-dimmed tide."
+
+# Star Trek
+@The_weapon@ shouts, "Today is a good day to die!"
 
 # Popular Hits of the Showa Era (a novel by Ryu Murakami)
 @The_weapon@ says, "Murder is the only thing that has any meaning these days."
@@ -894,6 +939,16 @@ w:1
 ############ speaking, high tension -- damage! ############
 %%%%
 _speaking_high_tension_
+
+@The_weapon@ shouts, "Lose my temper? Nonsense! My steel will be strong forever!"
+
+@The_weapon@ shouts, "Cut 'em off! All their little heads at once!"
+
+@The_weapon@ shouts, "Kill 'em all and let @player_god@ sort them out!"
+
+@The_weapon@ shouts, "Screaming and crying is the perfect accompaniment."
+
+@The_weapon@ shouts, "I'll make piano strings from your guts!"
 
 @The_weapon@ shouts, "Oh, the @_glorious_@ feeling of steel cutting flesh."
 
@@ -952,6 +1007,8 @@ _SCREAM_
 
 @The_weapon@ @_screams_@, "I WAS FORGED TO MURDER THE WORLD!"
 
+@The_weapon@ @_screams_@, "I WILL SING THE SONG THAT ENDS THE WORLD!"
+
 @The_weapon@ @_screams_@, "I AM THE PEN! I AM THE SWORD! I AM THE HIGHEST LORD!"
 
 @The_weapon@ @_screams_@, "I AM YOUR PUNISHER!"
@@ -972,6 +1029,13 @@ _SCREAM_
 
 @The_weapon@ @_screams_@, "FOUNTAINS OF BLOOD IN HONOUR OF THE FAIR BLADE!"
 
+@The_weapon@ @_screams_@, "I AM THE FOURTH HORSEMAN! THE TIME IS NOW!"
+
+@The_weapon@ @_screams_@, "THIS IS THE END AS YOU ALL KNOW IT!!!"
+
+# Marilyn Manson, "The Reflecting God"
+@The_weapon@ @_screams_@, "WHEN I'M GOD, EVERYONE DIES!!!"
+
 # This and the next are from Planescape: Torment references
 @The_weapon@ @_screams_@, "I AM IRON GIVEN PURPOSE!"
 
@@ -988,7 +1052,12 @@ _SCREAM_
 
 @The_weapon@ @_screams_@, "KILL, HATE, MUTILATE!"
 
+# Demolition Man
+@The_weapon@ @_screams_@, "MURDER! DEATH!! KILL!!!"
+
 @The_weapon@ @_screams_@, "DECIMATE, TERMINATE, ERADICATE!"
+
+@The_weapon@ @_screams_@, "I BATHE IN BLOOD AND BONE AND BRAINS!"
 
 # A faint reminiscence to Holst
 @The_weapon@ @_screams_@, "I AM THE BRINGER OF WAR!"
@@ -1000,6 +1069,10 @@ _SCREAM_
 @The_weapon@ @_screams_@, "DIE WHILE I'M SINGING!"
 
 @The_weapon@ @_screams_@, "KNEE-DEEP IN BLOOD AND GOING STRONG!"
+
+@The_weapon@ @_screams_@, "ENCORE! ENCORE! ENCORE!"
+
+@The_weapon@ @_screams_@, "HOW CAN YOU THINK ABOUT SINGING AT A TIME LIKE THIS?!"
 
 # Immortal Defense, Cut Point quote
 @The_weapon@ @_screams_@, "SUFFER OR PERISH! EITHER!"
@@ -1035,12 +1108,29 @@ w:1
 # Immortal Defense, Courage Point quote
 @The_weapon@ @_screams_@, "EVERYTHING FAILS! EVERYTHING!!!"
 
+# From Monty Python and the Holy Grail (Knights who say Ni)
+w:1
+@The_weapon@ @_screams_@, "NI! NI!! NI!!! NI!!! NI!!!"
+
 ###############################################################################
 # Lines from real songs.
+#
+# overly long lines (more than 80 characters) often made rarer (w:1)
 ###############################################################################
 ############ real songs, no tension ############
+
 %%%%
 _real_song_no_tension_
+
+# Huey Lewis and the News, "Hip To Be Square". Another psychopathic music lover.
+@The_weapon@ sings, "It's hip to be square!"
+
+# Oingo Boingo, "Dead Man's Party"
+@The_weapon@ sings, "It's a dead man's party, who could ask for more?"
+
+# Bobby Darin, "Mack the Knife", from Threepennyopera (Bertolt Brecht, Kurt Weill)
+w:1
+@The_weapon@ sings, "Oh, the shark, babe, has such teeth, dear, and it shows them pearly white..."
 
 # The Tremoloes?
 @The_weapon@ roars, "Silence is golden, golden..."
@@ -1119,9 +1209,36 @@ w:1
 # The Kinks song "I'm a Lover, Not a Fighter".
 @The_weapon@ sings, "I am a fighter, not a lover."
 
+# Johnny Cash, "Folsom Prison Blues"
+@The_weapon@ sings, "I stabbed a man in the dungeon, just to watch him die."
+
 ############ real songs, low or high tension -- possibly damage! ############
 %%%%
 _real_song_low-high_tension_
+
+# Pixies
+@The_weapon@ sings, "Slicing up eyeballs, I want you to know!"
+
+# Radiohead, "Knives Out"
+w:1
+@The_weapon@ sings, "So knives out, cook him up, squash his head, put him in the pot."
+
+# NWA, "Straight Outta Compton"
+w:1
+@The_weapon@ sings, "Straight outta Zot, crazy bloodletter named Singing Sword."
+
+# Pixies, "Gouge Away"
+@The_weapon@ sings, "Gouge away, you can gouge away..."
+
+# Motörhead, "Ace of Spades"
+w:1
+@The_weapon@ roars, "The pleasure is to slay, it makes no difference what you say."
+
+# Megadeth, "Killing Is My Business..."
+@The_weapon@ sings, "Killing is my business... and business is good!"
+
+# Nine Inch Nails, "Closer"
+@The_weapon@ roars, "I want to gut you like an animal!"
 
 # Queen
 @The_weapon@ happily sings, "... another one bites the dust!"
@@ -1135,7 +1252,7 @@ _real_song_low-high_tension_
 # Gloria Gaynor, same song
 @The_weapon@ sings, "As long as I know how to carve I know I'm still alive."
 
-" Dead or Alive "You spin me round"
+# Dead or Alive "You spin me round"
 @The_weapon@ sings, "You spin me right round baby, right round..."
 
 ############ real songs, high tension -- damage! ############
