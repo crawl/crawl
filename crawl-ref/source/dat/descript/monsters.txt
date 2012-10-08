@@ -2751,8 +2751,8 @@ profane incantations you might ever have heard.
 # arena sprint final boss
 Master Blaster
 
-A mighty old lich, notorious for blasting people with powerful
-conjurations at the slightest provocation, or just on a whim.
+A mighty old lich, notorious for blasting people with powerful conjurations at
+the slightest provocation, or just on a whim.
 %%%%
 Statue of Wucad Mu
 
@@ -3180,9 +3180,9 @@ demon-summoning ritual.
 shadowy statue
 
 Made of some black lusterless stone, this statue seems to be the focal point
-for swirling shadows that permeate this room. They seem to be more
-substantial than your usual half-light, so it might be a good idea to blow
-the statue to smithereens before the shadows turn fully real.
+for swirling shadows that permeate this room. They seem to be more substantial
+than your usual half-light, so it might be a good idea to blow the statue to
+smithereens before the shadows turn fully real.
 %%%%
 sickly siren
 
@@ -3210,9 +3210,9 @@ soapberry tree
 %%%%
 spearthrower statue
 
-This statue bristles with sharp shards of green crystal that sparkle with
-every gleam of light. The shards seem to be in motion, migrating to form
-long spears of crystal that the statue can shoot through interlopers.
+This statue bristles with sharp shards of green crystal that sparkle with every
+gleam of light. The shards seem to be in motion, migrating to form long spears
+of crystal that the statue can shoot through interlopers.
 %%%%
 spooky statue
 

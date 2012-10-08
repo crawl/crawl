@@ -5,8 +5,8 @@ Heal and search a bit
 %%%%
 CMD_REST verbose
 
-Spend up to 100 turns for regenerating health and/or recharging magic.
-Resting is interrupted as soon as a hostile monster comes into view.
+Spend up to 100 turns for regenerating health and/or recharging magic. Resting
+is interrupted as soon as a hostile monster comes into view.
 %%%%
 CMD_EXPLORE
 
