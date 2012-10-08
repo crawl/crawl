@@ -383,7 +383,7 @@
 #
 ##### 5-a       Saving ################################
 #
-# dump_on_save = true
+# dump_on_save = false
 
 ##### 5-b       Items and Kill List ###################
 #
