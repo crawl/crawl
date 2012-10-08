@@ -539,6 +539,20 @@ CFOPTIMIZE += -march=native
 endif
 endif
 
+# Okay, we have to assume we're on something else that
+# uses standard UNIX-like methods for finding libs.
+#
+# For instance, on Linux and most other UNIX-likes,
+# the app pkg-config can provide the appropriate
+# CFLAGS and LDFLAGS.
+#
+
+ifndef NO_PKGCONFIG
+ifeq ($(shell which pkg-config 2> /dev/null),)
+NO_PKGCONFIG = YesPlease
+endif
+endif
+
 ifdef ANDROID
   BUILD_LUA=
   BUILD_SQLITE=
@@ -627,20 +641,6 @@ DEFINES_L += -DUSE_SDL -DUSE_GL -DUSE_FT
 
 ifdef GLES
 DEFINES_L += -DUSE_GLES
-endif
-
-# Okay, we have to assume we're on something else that
-# uses standard UNIX-like methods for finding libs.
-#
-# For instance, on Linux and most other UNIX-likes,
-# the app pkg-config can provide the appropriate
-# CFLAGS and LDFLAGS.
-#
-
-ifndef NO_PKGCONFIG
-ifeq ($(shell which pkg-config 2> /dev/null),)
-NO_PKGCONFIG = YesPlease
-endif
 endif
 
 ifndef NO_PKGCONFIG
