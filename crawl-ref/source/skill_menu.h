@@ -70,9 +70,10 @@ public:
 private:
     skill_type m_sk;
 
-    TextItem* m_name;
 #ifdef USE_TILE_LOCAL
-    TextTileItem* m_name_tile;
+    TextTileItem* m_name;
+#else
+    TextItem* m_name;
 #endif
     NoSelectTextItem* m_level;
     NoSelectTextItem* m_progress;
@@ -128,6 +129,9 @@ public:
     void add_item(TextItem* item, const int size, coord_def &coord);
     void cancel_help();
     bool exit();
+#ifdef USE_TILE_LOCAL
+    int get_line_height();
+#endif
     int get_raw_skill_level(skill_type sk);
     int get_saved_skill_level(skill_type sk, bool real);
     skill_menu_state get_state(skill_menu_switch sw);
@@ -143,6 +147,9 @@ private:
     coord_def m_min_coord;
     coord_def m_max_coord;
     coord_def m_pos;
+#ifdef USE_TILE_LOCAL
+    int line_height;
+#endif
 
     SkillMenuEntry  m_skills[SK_ARR_LN][SK_ARR_COL];
 

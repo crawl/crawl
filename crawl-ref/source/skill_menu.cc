@@ -34,25 +34,23 @@ SkillMenu* SkillMenuSwitch::m_skm;
 SkillMenuEntry::SkillMenuEntry(coord_def coord)
 {
 #ifdef USE_TILE_LOCAL
-    if (is_set(SKMF_SKILL_ICONS))
-    {
-        m_name_tile = new TextTileItem();
-        m_name = m_name_tile;
-    }
-    else
+    m_name = new TextTileItem();
+#else
+    m_name = new TextItem();
 #endif
-        m_name = new TextItem();
 
     m_level = new NoSelectTextItem();
     m_progress = new NoSelectTextItem();
     m_aptitude = new FormattedTextItem();
 
 #ifdef USE_TILE_LOCAL
+    const int height = m_skm->get_line_height();
+    m_name->set_height(height);
     if (is_set(SKMF_SKILL_ICONS))
     {
-        m_level->set_tile_height();
-        m_progress->set_tile_height();
-        m_aptitude->set_tile_height();
+        m_level->set_height(height);
+        m_progress->set_height(height);
+        m_aptitude->set_height(height);
     }
 #endif
 
@@ -213,14 +211,13 @@ void SkillMenuEntry::set_name(bool keep_hotkey)
 #ifdef USE_TILE_LOCAL
     if (is_set(SKMF_SKILL_ICONS))
     {
-        m_name_tile->clear_tile();
+        m_name->clear_tile();
         if (you.skills[m_sk] >= 27)
-            m_name_tile->add_tile(tile_def(tileidx_skill(m_sk, -1), TEX_GUI));
+            m_name->add_tile(tile_def(tileidx_skill(m_sk, -1), TEX_GUI));
         else if (!you.training[m_sk])
-            m_name_tile->add_tile(tile_def(tileidx_skill(m_sk, 0), TEX_GUI));
+            m_name->add_tile(tile_def(tileidx_skill(m_sk, 0), TEX_GUI));
         else
-            m_name_tile->add_tile(tile_def(tileidx_skill(m_sk, you.train[m_sk]),
-                                           TEX_GUI));
+            m_name->add_tile(tile_def(tileidx_skill(m_sk, you.train[m_sk]), TEX_GUI));
     }
 #endif
     set_level();
@@ -247,7 +244,7 @@ void SkillMenuEntry::_clear()
     m_name->allow_highlight(false);
 #ifdef USE_TILE_LOCAL
     if (is_set(SKMF_SKILL_ICONS))
-        m_name_tile->clear_tile();
+        m_name->clear_tile();
 #endif
 }
 COLORS SkillMenuEntry::get_colour() const
@@ -667,10 +664,15 @@ SkillMenu::SkillMenu(int flag, int exp) : PrecisionMenu(), m_flags(flag),
     }
 
 #ifdef USE_TILE_LOCAL
-    const int limit = tiles.get_crt_font()->char_height() * 4
-                      + SK_ARR_LN * TILE_Y;
-    if (Options.tile_menu_icons && tiles.get_crt()->wy >= limit)
+    const int char_height = tiles.get_crt_font()->char_height();
+    if (Options.tile_menu_icons)
+    {
+        line_height = min((tiles.get_crt()->wy - char_height * 4) / SK_ARR_LN,
+                          Options.tile_cell_pixels);
         set_flag(SKMF_SKILL_ICONS);
+    }
+    else
+        line_height = char_height;
 #endif
 
     m_min_coord.x = 1;
@@ -684,7 +686,7 @@ SkillMenu::SkillMenu(int flag, int exp) : PrecisionMenu(), m_flags(flag),
     m_max_coord.y = get_number_of_lines();
     if (is_set(SKMF_SKILL_ICONS))
     {
-        m_ff->set_tile_height();
+        m_ff->set_height(line_height);
         m_max_coord.x += 2 * TILES_COL;
     }
 #else
@@ -712,7 +714,7 @@ SkillMenu::SkillMenu(int flag, int exp) : PrecisionMenu(), m_flags(flag),
     m_pos.y += SK_ARR_LN;
 #ifdef USE_TILE_LOCAL
     if (is_set(SKMF_SKILL_ICONS))
-        m_pos.y = tiles.to_lines(m_pos.y);
+        m_pos.y = tiles.to_lines(m_pos.y, line_height);
     else
         ++m_pos.y;
 #endif
@@ -826,6 +828,13 @@ bool SkillMenu::exit()
 
     return true;
 }
+
+#ifdef USE_TILE_LOCAL
+int SkillMenu::get_line_height()
+{
+    return line_height;
+}
+#endif
 
 int SkillMenu::get_raw_skill_level(skill_type sk)
 {

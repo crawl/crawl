@@ -577,7 +577,7 @@ public:
     MenuItem();
     virtual ~MenuItem();
 
-    void set_tile_height();
+    void set_height(const int height);
 
     void set_id(int id) { m_item_id = id; }
     int get_id() const { return m_item_id; }
@@ -777,7 +777,7 @@ public:
     MenuObject();
     virtual ~MenuObject();
 
-    void set_tile_height();
+    void set_height(const int height);
     void init(const coord_def& min_coord, const coord_def& max_coord,
               const string& name);
     const coord_def& get_min_coord() const { return m_min_coord; }
