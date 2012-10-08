@@ -2131,7 +2131,8 @@ PrecisionMenu::~PrecisionMenu()
 {
     clear();
 #ifdef USE_TILE_LOCAL
-    tiles.get_crt()->detach_menu();
+    if (tiles.get_crt())
+        tiles.get_crt()->detach_menu();
 #endif
 }
 

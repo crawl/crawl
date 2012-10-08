@@ -52,7 +52,6 @@ class SkillMenuEntry
 {
 public:
     static menu_letter2 m_letter;
-    static SkillMenu* m_skm;
 
     SkillMenuEntry() {};
     SkillMenuEntry(coord_def coord);
@@ -95,8 +94,6 @@ private:
 class SkillMenuSwitch : public FormattedTextItem
 {
 public:
-    static SkillMenu* m_skm;
-
     SkillMenuSwitch(string name, int hotkey);
     void add(skill_menu_state state);
     string get_help();
@@ -119,9 +116,10 @@ static const int SK_ARR_COL =  2;
 class SkillMenu : public PrecisionMenu
 {
 public:
-    SkillMenu(int flag, int exp);
+    SkillMenu();
 
     void clear_flag(int flag);
+    void init(int flag, int exp);
     bool is_set(int flag) const;
     void set_flag(int flag);
     void toggle_flag(int flag);
