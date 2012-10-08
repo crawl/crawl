@@ -1106,8 +1106,11 @@ a brilliant column of raging flames.
 %%%%
 fire giant
 
-A ruddy giant with bright hair and flashing eyes. It wields a huge sword, and
-glows with an arcane heat.
+A blistering heat rages beneath the obsidian-like skin of this giant, and its
+wild mane of red hair glows and smoulders. It holds aloft a fiery sword, and
+its body erupts with searing flames, seemingly at will. Fire giants believe
+that they are destined to unite and burn the entire world to cinders, but in
+the meantime, they'll settle for adventurers foolish enough to approach them.
 %%%%
 fire vortex
 
@@ -1146,8 +1149,9 @@ dungeon, seeking to share its fate with others.
 %%%%
 frost giant
 
-A bluish giant with frosty hair and glinting eyes. It wields a huge battleaxe,
-and chills the air around it with the breath of winter.
+A giant with blue skin and hair like ice and snow. Its eyes are as bleak as
+winter skies. It marches grimly into battle with a great, frosty axe and
+howling blasts of cold.
 %%%%
 fruity bat
 
@@ -1432,8 +1436,9 @@ A hideous skeletal demon, with wings of ancient withered skin.
 %%%%
 hill giant
 
-Although one of the smaller giant varieties, this hill giant is still big
-enough to be dangerous.
+A massive, burly humanoid standing taller even than an ogre. Hill giants are
+uncivilized in every sense of the word, and have few recreational interests
+beyond smashing things. Such as you.
 %%%%
 hippogriff
 
