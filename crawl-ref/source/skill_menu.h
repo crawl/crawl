@@ -48,6 +48,16 @@ enum skill_menu_switch
 
 class SkillMenu;
 
+#ifdef USE_TILE_LOCAL
+class SkillTextTileItem : public TextTileItem
+{
+public:
+    SkillTextTileItem() {};
+protected:
+    bool handle_mouse(const MouseEvent& me);
+};
+#endif
+
 class SkillMenuEntry
 {
 public:
@@ -70,7 +80,7 @@ private:
     skill_type m_sk;
 
 #ifdef USE_TILE_LOCAL
-    TextTileItem* m_name;
+    SkillTextTileItem* m_name;
 #else
     TextItem* m_name;
 #endif

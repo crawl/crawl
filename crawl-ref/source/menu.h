@@ -592,6 +592,10 @@ public:
     virtual void set_description_text(const string& text) { m_description = text; }
     virtual const string& get_description_text() const { return m_description; }
 
+#ifdef USE_TILE_LOCAL
+    virtual bool handle_mouse(const MouseEvent& me) {return false; }
+#endif
+
     virtual void select(bool toggle);
     virtual void select(bool toggle, int value);
     virtual bool selected() const;
