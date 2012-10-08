@@ -1125,7 +1125,7 @@ void behaviour_event(monster* mon, mon_event_type event, const actor *src,
                 mon->foe = MHITYOU;
                 msg = "PLAIN:@The_monster@ returns to your side!";
             }
-            else if (mon->type != MONS_KRAKEN_TENTACLE)
+            else if (!mon->is_child_tentacle())
             {
                 msg = getSpeakString(mon->name(DESC_PLAIN) + " cornered");
                 if (msg.empty())

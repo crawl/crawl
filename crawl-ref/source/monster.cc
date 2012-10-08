@@ -5461,38 +5461,12 @@ void monster::react_to_damage(const actor *oppressor, int damage,
     if (!alive())
         return;
 
-    if (type == MONS_KRAKEN_TENTACLE && flavour != BEAM_TORMENT_DAMAGE
-        && !invalid_monster_index(number)
-        && mons_base_type(&menv[number]) == MONS_KRAKEN)
+    if (mons_is_tentacle(type) && type != MONS_ELDRITCH_TENTACLE
+            && flavour != BEAM_TORMENT_DAMAGE
+            && !invalid_monster_index(number)
+            && menv[number].is_parent_monster_of(this))
     {
         (new kraken_damage_fineff(oppressor, &menv[number], damage))->schedule();
-    }
-    else if (type == MONS_KRAKEN_TENTACLE_SEGMENT && flavour != BEAM_TORMENT_DAMAGE
-             && !invalid_monster_index(number)
-             && mons_base_type(&menv[number]) == MONS_KRAKEN_TENTACLE)
-    {
-        (new kraken_damage_fineff(oppressor, &menv[number], damage))->schedule();
-    }
-    else if (type == MONS_ELDRITCH_TENTACLE_SEGMENT)
-    {
-        //mprf("in tentacle damage pass");
-        if (!invalid_monster_index(number)
-            && mons_base_type(&menv[number]) == MONS_ELDRITCH_TENTACLE)
-        {
-            if (hit_points < menv[number].hit_points)
-            {
-                int pass_damage = menv[number].hit_points -  hit_points;
-                menv[number].hurt(oppressor, pass_damage, flavour);
-
-                // We could be removed, undo this or certain post-hit
-                // effects will cry.
-                if (invalid_monster(this))
-                {
-                    type = MONS_ELDRITCH_TENTACLE_SEGMENT;
-                    hit_points = -1;
-                }
-            }
-        }
     }
     else if (type == MONS_BUSH && flavour == BEAM_FIRE
              && damage>8 && x_chance_in_y(damage, 20))
@@ -5873,4 +5847,50 @@ bool monster::check_stasis(bool silent, bool calc_unid) const
     }
 
     return false;
+}
+
+bool monster::is_child_tentacle() const
+{
+    return (type == MONS_KRAKEN_TENTACLE || type == MONS_STARSPAWN_TENTACLE);
+}
+
+bool monster::is_child_tentacle_segment() const
+{
+    return (type == MONS_KRAKEN_TENTACLE_SEGMENT
+            || type == MONS_STARSPAWN_TENTACLE_SEGMENT);
+}
+
+bool monster::is_child_monster() const
+{
+    return (type == MONS_KRAKEN_TENTACLE || type == MONS_STARSPAWN_TENTACLE
+            || type == MONS_KRAKEN_TENTACLE_SEGMENT
+            || type == MONS_STARSPAWN_TENTACLE_SEGMENT);
+}
+
+bool monster::is_child_tentacle_of(monster* mons) const
+{
+    if (mons_base_type(mons) == 
+            mons_tentacle_parent_type(this)
+            && number == mons->mindex())
+        return true;
+    else
+        return false;
+}
+
+bool monster::is_parent_monster_of(monster* mons) const
+{
+    if (mons_base_type(this) == 
+            //mons_tentacle_child_type(mons)
+            mons_tentacle_parent_type(mons)
+            && mons->number == mindex())
+        return true;
+    else
+        return false;
+}
+
+//Note: this is whether the monster CAN have child tentacles, not whether any
+//are currently alive
+bool monster::has_child_tentacles() const
+{
+    return (type == MONS_KRAKEN || type == MONS_TENTACLED_STARSPAWN);
 }

@@ -140,7 +140,7 @@ static bool _swap_monsters(monster* mover, monster* moved)
     // Although nominally stationary kraken tentacles can be swapped
     // with the main body.
     if (mons_is_stationary(moved)
-        && moved->type != MONS_KRAKEN_TENTACLE)
+        && !moved->is_child_tentacle())
     {
         return false;
     }
@@ -1762,7 +1762,7 @@ void handle_monster_move(monster* mons)
         if (old_pos != mons->pos()
             && mons_base_type(mons) == MONS_KRAKEN)
         {
-            move_kraken_tentacles(mons);
+            move_child_tentacles(mons);
             kraken_last_update = mons->pos();
         }
 
@@ -2124,7 +2124,7 @@ void handle_monster_move(monster* mons)
                 }
                 // Figure out if they fight.
                 else if ((!mons_is_firewood(targ)
-                          || mons->type == MONS_KRAKEN_TENTACLE)
+                          || mons->is_child_tentacle())
                               && fight_melee(mons, targ))
                 {
                     if (mons_is_batty(mons))
@@ -2169,8 +2169,8 @@ void handle_monster_move(monster* mons)
     if (mons_base_type(mons) == MONS_KRAKEN)
     {
         if (mons->pos() != kraken_last_update)
-            move_kraken_tentacles(mons);
-        move_kraken_tentacles(mons);
+            move_child_tentacles(mons);
+        move_child_tentacles(mons);
     }
 
     mons->handle_constriction();

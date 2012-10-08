@@ -423,7 +423,9 @@ monster_info::monster_info(const monster* m, int milev)
             || type == MONS_SHEDU
             || type == MONS_KRAKEN_TENTACLE
             || type == MONS_KRAKEN_TENTACLE_SEGMENT
-            || type == MONS_ELDRITCH_TENTACLE_SEGMENT)
+            || type == MONS_ELDRITCH_TENTACLE_SEGMENT
+            || type == MONS_STARSPAWN_TENTACLE
+            || type == MONS_STARSPAWN_TENTACLE_SEGMENT)
         {
             number = 0;
         }
@@ -1581,7 +1583,7 @@ void get_monster_info(vector<monster_info>& mons)
     for (unsigned int i = 0; i < visible.size(); i++)
     {
         if (!mons_class_flag(visible[i]->type, M_NO_EXP_GAIN)
-            || visible[i]->type == MONS_KRAKEN_TENTACLE
+            || visible[i]->is_child_tentacle()
             || visible[i]->type == MONS_BALLISTOMYCETE
                 && visible[i]->number > 0)
         {

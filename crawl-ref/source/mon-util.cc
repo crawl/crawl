@@ -302,13 +302,10 @@ void init_monster_symbols()
             monster_symbols[i].glyph = mons_base_char(i);
 }
 
-static bool _get_kraken_head(const monster*& mon)
+static bool _get_tentacle_head(const monster*& mon)
 {
-    if (!valid_kraken_connection(mon))
-        return false;
-
-    // For kraken tentacle segments, find the associated tentacle.
-    if (mon->type == MONS_KRAKEN_TENTACLE_SEGMENT)
+    // For tentacle segments, find the associated tentacle.
+    if (mon->is_child_tentacle_segment())
     {
         if (invalid_monster_index(mon->number))
             return false;
@@ -318,8 +315,8 @@ static bool _get_kraken_head(const monster*& mon)
         mon = &menv[mon->number];
     }
 
-    // For kraken tentacles, find the associated head.
-    if (mon->type == MONS_KRAKEN_TENTACLE)
+    // For tentacles, find the associated head.
+    if (mon->is_child_tentacle())
     {
         if (invalid_monster_index(mon->number))
             return false;
@@ -358,7 +355,7 @@ resists_t get_mons_class_resists(monster_type mc)
 
 resists_t get_mons_resists(const monster* mon)
 {
-    _get_kraken_head(mon);
+    _get_tentacle_head(mon);
 
     resists_t resists = get_mons_class_resists(mon->type);
 
@@ -1211,7 +1208,7 @@ bool mons_class_can_regenerate(monster_type mc)
 
 bool mons_can_regenerate(const monster* mon)
 {
-    _get_kraken_head(mon);
+    _get_tentacle_head(mon);
 
     if (testbits(mon->flags, MF_NO_REGEN))
         return false;
@@ -1226,7 +1223,7 @@ bool mons_class_can_display_wounds(monster_type mc)
 
 bool mons_can_display_wounds(const monster* mon)
 {
-    _get_kraken_head(mon);
+    _get_tentacle_head(mon);
 
     return mons_class_can_display_wounds(mon->type);
 }
@@ -1425,7 +1422,7 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number)
 {
     monster_type mc = mon->type;
 
-    _get_kraken_head(mon);
+    _get_tentacle_head(mon);
 
     const bool zombified = mons_is_zombified(mon);
 
@@ -2435,7 +2432,7 @@ mon_intel_type mons_class_intel(monster_type mc)
 
 mon_intel_type mons_intel(const monster* mon)
 {
-    _get_kraken_head(mon);
+    _get_tentacle_head(mon);
 
     if (mons_enslaved_soul(mon))
         return mons_class_intel(mons_zombie_base(mon));
@@ -4168,13 +4165,16 @@ bool mons_is_tentacle(monster_type mc)
     return (mc == MONS_KRAKEN_TENTACLE
             || mc == MONS_KRAKEN_TENTACLE_SEGMENT
             || mc == MONS_ELDRITCH_TENTACLE
-            || mc == MONS_ELDRITCH_TENTACLE_SEGMENT);
+            || mc == MONS_ELDRITCH_TENTACLE_SEGMENT
+            || mc == MONS_STARSPAWN_TENTACLE
+            || mc == MONS_STARSPAWN_TENTACLE_SEGMENT);
 }
 
 bool mons_is_tentacle_segment(monster_type mc)
 {
     return (mc == MONS_KRAKEN_TENTACLE_SEGMENT
-            || mc == MONS_ELDRITCH_TENTACLE_SEGMENT);
+            || mc == MONS_ELDRITCH_TENTACLE_SEGMENT
+            || mc == MONS_STARSPAWN_TENTACLE_SEGMENT);
 }
 
 void init_anon()
@@ -4221,7 +4221,42 @@ const char* mons_class_name(monster_type mc)
 bool mons_is_tentacle_end(monster_type mtype)
 {
     return (mtype == MONS_KRAKEN_TENTACLE
-            || mtype == MONS_ELDRITCH_TENTACLE);
+            || mtype == MONS_ELDRITCH_TENTACLE
+            || mtype == MONS_STARSPAWN_TENTACLE);
+}
+
+monster_type mons_tentacle_parent_type(const monster* mons)
+{
+    switch (mons_base_type(mons))
+    {
+        case MONS_KRAKEN_TENTACLE:
+            return MONS_KRAKEN;
+        case MONS_KRAKEN_TENTACLE_SEGMENT:
+            return MONS_KRAKEN_TENTACLE;
+        case MONS_STARSPAWN_TENTACLE:
+            return MONS_TENTACLED_STARSPAWN;
+        case MONS_STARSPAWN_TENTACLE_SEGMENT:
+            return MONS_STARSPAWN_TENTACLE;
+        default:
+            return MONS_PROGRAM_BUG;
+    }
+}
+
+monster_type mons_tentacle_child_type(const monster* mons)
+{
+    switch (mons_base_type(mons))
+    {
+        case MONS_KRAKEN:
+            return MONS_KRAKEN_TENTACLE;
+        case MONS_KRAKEN_TENTACLE:
+            return MONS_KRAKEN_TENTACLE_SEGMENT;
+        case MONS_TENTACLED_STARSPAWN:
+            return MONS_STARSPAWN_TENTACLE;
+        case MONS_STARSPAWN_TENTACLE:
+            return MONS_STARSPAWN_TENTACLE_SEGMENT;
+        default:
+            return MONS_PROGRAM_BUG;
+    }
 }
 
 mon_threat_level_type mons_threat_level(const monster *mon, bool real)
