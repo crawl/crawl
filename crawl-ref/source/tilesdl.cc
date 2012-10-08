@@ -1393,8 +1393,8 @@ bool TilesFramework::need_redraw() const
     return m_need_redraw;
 }
 
-int TilesFramework::to_lines(int num_tiles)
+int TilesFramework::to_lines(int num_tiles, int tile_height)
 {
-    return num_tiles * TILE_Y / get_crt_font()->char_height();
+    return num_tiles * tile_height / get_crt_font()->char_height();
 }
 #endif

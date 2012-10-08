@@ -110,7 +110,8 @@ TileBuffer::TileBuffer(const TilesTexture *t) : VertBuffer(true, false, t)
 {
 }
 
-void TileBuffer::add_unscaled(tileidx_t idx, float x, float y, int ymax)
+void TileBuffer::add_unscaled(tileidx_t idx, float x, float y, int ymax,
+                              float scale)
 {
     float pos_sx = x;
     float pos_sy = y;
@@ -119,7 +120,7 @@ void TileBuffer::add_unscaled(tileidx_t idx, float x, float y, int ymax)
     bool drawn = tex->get_coords(idx, 0, 0,
                                  pos_sx, pos_sy, pos_ex, pos_ey,
                                  tex_sx, tex_sy, tex_ex, tex_ey,
-                                 true, -1, ymax, 1.0f, 1.0f);
+                                 true, -1, ymax, 1.0f / scale, 1.0f / scale);
 
     if (!drawn)
         return;

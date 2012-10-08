@@ -2538,9 +2538,9 @@ MenuItem::~MenuItem()
 }
 
 #ifdef USE_TILE_LOCAL
-void MenuItem::set_tile_height()
+void MenuItem::set_height(const int height)
 {
-    m_unit_height_pixels = TILE_Y;
+    m_unit_height_pixels = height;
 }
 #endif
 
@@ -2908,6 +2908,7 @@ TextTileItem::TextTileItem()
 {
     for (int i = 0; i < TEX_MAX; i++)
         m_tile_buf[i].set_tex(&tiles.get_image_manager()->m_textures[i]);
+    m_unit_height_pixels = max<int>(m_unit_height_pixels, TILE_Y);
 }
 
 TextTileItem::~TextTileItem()
@@ -2927,9 +2928,8 @@ void TextTileItem::set_bounds(const coord_def &min_coord, const coord_def &max_c
     // but tiles starts at (0,0)
     m_min_coord.x = (min_coord.x - 1) * m_unit_width_pixels;
     m_max_coord.x = (max_coord.x - 1) * m_unit_width_pixels;
-    m_min_coord.y = (min_coord.y - 1) * TILE_Y;
-    m_max_coord.y = (max_coord.y - 1) * TILE_Y;
-    set_tile_height();
+    m_min_coord.y = (min_coord.y - 1) * m_unit_height_pixels;
+    m_max_coord.y = (max_coord.y - 1) * m_unit_height_pixels;
 }
 
 void TextTileItem::render()
@@ -2947,11 +2947,12 @@ void TextTileItem::render()
             int tile      = m_tiles[t].tile;
             TextureID tex = m_tiles[t].tex;
             m_tile_buf[tex].add_unscaled(tile, m_min_coord.x, m_min_coord.y,
-                                         m_tiles[t].ymax);
+                                         m_tiles[t].ymax,
+                                         (float)m_unit_height_pixels / TILE_Y);
         }
         // center the text
         // TODO wrap / chop the text
-        const int tile_offset = m_tiles.empty() ? 0 : 32;
+        const int tile_offset = m_tiles.empty() ? 0 : m_unit_height_pixels;
         m_font_buf.add(m_text, term_colours[m_fg_colour],
                        m_min_coord.x + tile_offset,
                        m_min_coord.y + get_vertical_offset());
@@ -3079,9 +3080,9 @@ MenuObject::~MenuObject()
 }
 
 #ifdef USE_TILE_LOCAL
-void MenuObject::set_tile_height()
+void MenuObject::set_height(const int height)
 {
-    m_unit_height_pixels = TILE_Y;
+    m_unit_height_pixels = height;
 }
 #endif
 
