@@ -1982,7 +1982,7 @@ ENDMAP
 
 NAME:   supply_closet_lemuel
 DEPTH:  D:1-9
-TAGS:   no_monster_gen allow_dup extra luniq_mini
+TAGS:   no_monster_gen extra luniq_mini
 ITEM:   bread ration / meat ration / arrow /\
         bolt / spear / any potion w:5
 MAP
@@ -2009,7 +2009,7 @@ xx+x
 ENDMAP
 
 NAME:    minmay_variable_closet
-TAGS:    extra allow_dup luniq_mini
+TAGS:    extra luniq_mini
 DEPTH:   D:9-27
 ITEM:    any weapon, any missile, any armour, any food, any scroll
 ITEM:    any jewellery, any potion, any book
@@ -2027,8 +2027,9 @@ xxxx
 ENDMAP
 
 NAME:   library_closet
-DEPTH:  D, Elf, Crypt, Snake, Spider, Dwarf, Orc
-TAGS:   allow_dup extra luniq_mini
+DEPTH:  D:9-27, Elf, Crypt, Snake, Dwarf, Orc
+TAGS:   extra luniq_mini
+WEIGHT: 5
 ITEM:   any book w:20 / any scroll / nothing
 MAP
 x+xx
