@@ -37,7 +37,7 @@ scroll
 
 Eine von magischen Schriftzügen bedeckte Schriftrolle.
 %%%%
-magical staff
+staff
 
 Ein auf magische Weise verbesserter Schlagstock.
 %%%%

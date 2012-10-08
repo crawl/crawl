@@ -33,7 +33,7 @@ scroll
 
 Um pergaminho de papel coberto em escritura mágica.
 %%%%
-magical staff
+staff
 
 Um bastão imbuído em poderes arcanos de natureza desconhecida.
 %%%%

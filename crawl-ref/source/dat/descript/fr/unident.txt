@@ -37,7 +37,7 @@ Une formule magique inscrite sur un parchemin par un scribe professionnel ou un
 sorcier. N'importe qui peut invoquer le pouvoir de la formule magique en la
 lisant à voix haute, mais la nature de ce pouvoir n'est a priori pas apparent.
 %%%%
-magical staff
+staff
 
 Un bâton de combat amélioré avec des pouvoirs obscurs d'origine inconnue.
 %%%%
