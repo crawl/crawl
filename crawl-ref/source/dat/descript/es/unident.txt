@@ -34,7 +34,7 @@ scroll
 
 Un rollo de papel cubierto de escritos mágicos.
 %%%%
-magical staff
+staff
 
 Una vara con propiedades mágicas.
 %%%%

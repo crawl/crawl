@@ -34,7 +34,7 @@ scroll
 
 En rulle papir, som er dækket af magisk skrift.
 %%%%
-magical staff
+staff
 
 En stav, som er forbedret med mystiske kræfter af ukendt art.
 %%%%
