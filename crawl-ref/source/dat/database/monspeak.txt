@@ -849,7 +849,7 @@ VISUAL:@The_monster@ looks really @_rattled_@.
 VISUAL:@The_monster@ tries to recover @possessive@ lost courage.
 ## END fleeing humanoid ##
 %%%%
-friendly_family
+_friendly_family_
 
 @The_monster@ says, "I like you, cousin!"
 
@@ -864,7 +864,7 @@ friendly_family
 default friendly related humanoid
 
 w:2
-@friendly_family@
+@_friendly_family_@
 
 @default friendly humanoid@
 %%%%
@@ -2534,13 +2534,13 @@ action
 ############ DISSOLUTION ### a sentient jelly who used to be human a long time ago
 Dissolution
 
-@dissolution_common@
+@_dissolution_common_@
 
 w:5
-@dissolution_speech@
+@_dissolution_speech_@
 %%%%
 # Dissolution non-speech
-dissolution_common
+_dissolution_common_
 
 @The_monster@ gurgles.
 
@@ -2552,7 +2552,7 @@ VISUAL:@The_monster@ jiggles.
 
 VISUAL:@The_monster@ wobbles.
 %%%%
-dissolution_speech
+_dissolution_speech_
 
 @The_monster@ says, "Join with me for eternity!"
 
@@ -2564,9 +2564,9 @@ dissolution_speech
 
 @The_monster@ says, "Acid to acid, slime to slime."
 
-@dissolution_rare@
+@_dissolution_rare_@
 %%%%
-dissolution_rare
+_dissolution_rare_
 
 @The_monster@ says, "We come from slime, we turn to slime."
 
@@ -4631,7 +4631,7 @@ Kirke
 
 VISUAL:@The_monster@ splashes a potion @at_foe@.
 
-VISUAL:@The_monster@ throws some @strange@ powder @at_foe@.
+VISUAL:@The_monster@ throws some @_strange_@ powder @at_foe@.
 
 @The_monster@ says @to_foe@, "Odis was a nice man, you're awful."
 
@@ -4648,7 +4648,7 @@ VISUAL:@The_monster@ throws some @strange@ powder @at_foe@.
 @_wizard_common_spell_@
 @_fake_spell_effect_@
 %%%%
-strange
+_strange_
 
 strange
 
