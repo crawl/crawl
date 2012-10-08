@@ -1207,7 +1207,7 @@ static void _monster_die_cloud(const monster* mons, bool corpse, bool silent,
 void mons_relocated(monster* mons)
 {
     // If the main body teleports get rid of the tentacles
-    if (mons_base_type(mons) == MONS_KRAKEN)
+    if (mons->has_child_tentacles())
     {
         int headnum = mons->mindex();
 
@@ -1216,13 +1216,11 @@ void mons_relocated(monster* mons)
 
         for (monster_iterator mi; mi; ++mi)
         {
-            if (mi->type == MONS_KRAKEN_TENTACLE
-                && (int)mi->number == headnum)
+            if (mi->is_child_tentacle_of(mons))
             {
                 for (monster_iterator connect; connect; ++connect)
                 {
-                    if (connect->type == MONS_KRAKEN_TENTACLE_SEGMENT
-                        && (int) connect->number == mi->mindex())
+                    if (connect->is_child_tentacle_of(*mi))
                     {
                         monster_die(*connect, KILL_RESET, -1, true, false);
                     }
@@ -1232,28 +1230,28 @@ void mons_relocated(monster* mons)
         }
     }
     // If a tentacle/segment is relocated just kill the tentacle
-    else if (mons->type == MONS_KRAKEN_TENTACLE
-             || mons->type == MONS_KRAKEN_TENTACLE_SEGMENT)
+    else if (mons->is_child_monster())
     {
         int base_id = mons->mindex();
 
-        if (mons->type == MONS_KRAKEN_TENTACLE_SEGMENT)
-            base_id = mons->number;
+        monster* tentacle = mons;
+        
+        if (mons->is_child_tentacle_segment()
+                && !::invalid_monster_index(base_id)
+                && menv[base_id].is_parent_monster_of(mons))
+        {
+            tentacle = &menv[base_id];
+        }
 
         for (monster_iterator connect; connect; ++connect)
         {
-            if (connect->type == MONS_KRAKEN_TENTACLE_SEGMENT
-                && (int) connect->number == base_id)
+            if (connect->is_child_tentacle_of(tentacle))
             {
                 monster_die(*connect, KILL_RESET, -1, true, false);
             }
         }
 
-        if (!::invalid_monster_index(base_id)
-            && menv[base_id].type == MONS_KRAKEN_TENTACLE)
-        {
-            monster_die(&menv[base_id], KILL_RESET, -1, true, false);
-        }
+        monster_die(tentacle, KILL_RESET, -1, true, false);
     }
     else if (mons->type == MONS_ELDRITCH_TENTACLE
              || mons->type == MONS_ELDRITCH_TENTACLE_SEGMENT)
