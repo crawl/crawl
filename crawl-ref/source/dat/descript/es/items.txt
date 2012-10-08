@@ -354,6 +354,10 @@ box of beasts
 Una caja mágica que contiene muchas bestias salvajes. Es posible levantar la
 tapa para permitir que salgan.
 %%%%
+bread ration
+
+Pan un poco rancio, aunque sustancioso.
+%%%%
 broad axe
 
 Un hacha con una gran cuchilla.
@@ -1084,6 +1088,31 @@ ring of regeneration
 
 Este maravilloso anillo incrementa muy considerablemente los poderes
 recuperativos de su portador, pero también acelera su metabolismo al hacerlo.
+%%%%
+ring of see invisible
+
+Este anillo le permita a su portador ver aquellas cosas que la magia ha
+ocultado.
+%%%%
+ring of slaying
+
+Este anillo aumenta o disminuye la habilidad en el combate cuerpo a cuerpo o a
+distancia de su portador.
+%%%%
+ring of strength
+
+Este anillo aumenta o disminuye la fuerza física de su portador, en un grado
+que depende de su poder.
+%%%%
+ring of sustain abilities
+
+Este anillo protege a su portador ante la pérdida de su fuerza, destreza e
+inteligencia.
+%%%%
+ring of sustenance
+
+Este anillo proporciona sustento a su portador, de tal forma que necesita comer
+con menos frecuencia.
 %%%%
 scythe
 
