@@ -87,6 +87,7 @@ static inline int xom_acts(int sever, int tension = -1)
     return xom_acts(xom_is_nice(tension), sever, tension);
 }
 
+int xom_maybe_reverts_banishment(bool xom_banished = true, bool debug = false);
 void xom_check_lost_item(const item_def& item);
 void xom_check_destroyed_item(const item_def& item, int cause = -1);
 void xom_death_message(const kill_method_type killed_by);

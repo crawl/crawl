@@ -3400,20 +3400,22 @@ static bool _allow_xom_banishment()
     return true;
 }
 
-static int _xom_maybe_reverts_banishment(bool debug = false)
+int xom_maybe_reverts_banishment(bool xom_banished, bool debug)
 {
     // Never revert if Xom is bored or the player is under penance.
     if (_xom_feels_nasty())
         return XOM_BAD_BANISHMENT;
 
-    // Sometimes Xom will immediately revert the banishment.
-    // Always so, if the banishment happened below the minimum exp level.
-    if (!_has_min_banishment_level() || x_chance_in_y(you.piety, 1000))
+    // Sometimes Xom will immediately revert banishment.
+    // Always if the banishment happened below the minimum exp level and Xom was responsible.
+    if (xom_banished && !_has_min_banishment_level() || x_chance_in_y(you.piety, 1000))
     {
         if (!debug)
         {
             more();
-            god_speaks(GOD_XOM, _get_xom_speech("revert banishment").c_str());
+            const char* lookup = (xom_banished ? "revert own banishment"
+                                               : "revert other banishment");
+            god_speaks(GOD_XOM, _get_xom_speech(lookup).c_str());
             down_stairs(DNGN_EXIT_ABYSS);
             take_note(Note(NOTE_XOM_EFFECT, you.piety, -1,
                            "revert banishment"), true);
@@ -3429,13 +3431,13 @@ static int _xom_do_banishment(bool debug = false)
         return XOM_DID_NOTHING;
 
     if (debug)
-        return _xom_maybe_reverts_banishment(debug);
+        return xom_maybe_reverts_banishment(true, debug);
 
     god_speaks(GOD_XOM, _get_xom_speech("banishment").c_str());
 
     // Handles note taking.
     banished("Xom");
-    const int result = _xom_maybe_reverts_banishment(debug);
+    const int result = xom_maybe_reverts_banishment(true, debug);
 
     return result;
 }
