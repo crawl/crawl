@@ -912,6 +912,32 @@ static void _abyss_generate_monsters(int nmonsters)
     }
 }
 
+static bool _abyss_teleport_within_level()
+{
+    // Try to find a good spot within the shift zone.
+    for (int i = 0; i < 100; i++)
+    {
+        const coord_def newspot =
+            dgn_random_point_in_margin(MAPGEN_BORDER
+                                       + ABYSS_AREA_SHIFT_RADIUS
+                                       + 1);
+
+        if ((grd(newspot) == DNGN_FLOOR
+             || grd(newspot) == DNGN_SHALLOW_WATER)
+            && !monster_at(newspot)
+            && env.cgrid(newspot) == EMPTY_CLOUD)
+        {
+#ifdef DEBUG_ABYSS
+            dprf("Abyss same-area teleport to (%d,%d).",
+                 newspot.x, newspot.y);
+#endif
+            you.moveto(newspot);
+            return true;
+        }
+    }
+    return false;
+}
+
 void maybe_shift_abyss_around_player()
 {
     ASSERT(player_in_branch(BRANCH_ABYSS));
@@ -952,32 +978,6 @@ void save_abyss_uniques()
         {
             mi->set_transit(level_id(BRANCH_ABYSS));
         }
-}
-
-static bool _abyss_teleport_within_level()
-{
-    // Try to find a good spot within the shift zone.
-    for (int i = 0; i < 100; i++)
-    {
-        const coord_def newspot =
-            dgn_random_point_in_margin(MAPGEN_BORDER
-                                       + ABYSS_AREA_SHIFT_RADIUS
-                                       + 1);
-
-        if ((grd(newspot) == DNGN_FLOOR
-             || grd(newspot) == DNGN_SHALLOW_WATER)
-            && !monster_at(newspot)
-            && env.cgrid(newspot) == EMPTY_CLOUD)
-        {
-#ifdef DEBUG_ABYSS
-            dprf("Abyss same-area teleport to (%d,%d).",
-                 newspot.x, newspot.y);
-#endif
-            you.moveto(newspot);
-            return true;
-        }
-    }
-    return false;
 }
 
 static ProceduralSample _abyss_grid(const coord_def &p)
@@ -1108,6 +1108,14 @@ static int _abyssal_stair_chance() {
   return 3500 - (200 * you.depth / 3);
 }
 
+static void _nuke_all_terrain()
+{
+   for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
+    {
+        env.level_map_mask(*ri) = MMT_NUKED;
+    } 
+}
+
 static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
                                  bool morph = false)
 {
@@ -1136,12 +1144,19 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
             dprf("Examined %d features.", ii);
     }
    
+    int ii = 0;
+    int delta = you.time_taken * (you.abyss_speed + 40) / 200;
     for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
     {
         const coord_def p(*ri);
         const coord_def abyss_coord = p + abyssal_state.major_coord;
-        if (!used_queue || map_masked(p, MMT_NUKED) && one_chance_in(10))
+        bool nuked = map_masked(p, MMT_NUKED);
+        if (used_queue && !nuked)
+            continue;
+
+        if (nuked && x_chance_in_y(delta, 50) || !nuked && !used_queue)
         {
+            ++ii;
             _update_abyss_terrain(abyss_coord, abyss_genlevel_mask, morph);
             env.level_map_mask(p) &= ~MMT_NUKED;
          }
@@ -1171,7 +1186,8 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
                                 DNGN_STONE_ARCH,
                                 abyss_genlevel_mask));
     }
-    
+    if (ii)
+        dprf("Nuked %d features", ii);
     dungeon_feature_type feat = grd(you.pos());
     if (!you.can_pass_through_feat(feat) || is_feat_dangerous(feat))
         you.shove();
@@ -1230,6 +1246,15 @@ static void _generate_area(const map_bitmask &abyss_genlevel_mask)
     env.density = 0;
 }
 
+static void _initialize_abyss_state()
+{
+    abyssal_state.major_coord.x = random2(0x7FFFFFFF);
+    abyssal_state.major_coord.y = random2(0x7FFFFFFF);
+    abyssal_state.phase = 0.0;
+    abyssal_state.depth = random2(0x7FFFFFFF);
+    abyss_sample_queue = sample_queue(ProceduralSamplePQCompare());
+}
+ 
 static void abyss_area_shift(void)
 {
 #ifdef DEBUG_ABYSS
@@ -1238,7 +1263,6 @@ static void abyss_area_shift(void)
 #endif
 
     {
-        abyssal_state.seed = random2(0x7FFFFFFF);
         xom_abyss_feature_amusement_check xomcheck;
 
         // Use a map mask to track the areas that the shift destroys and
@@ -1262,15 +1286,6 @@ static void abyss_area_shift(void)
     place_transiting_items();
 
     check_map_validity();
-}
-
-static void _initialize_abyss_state()
-{
-    abyssal_state.major_coord.x = random2(0x7FFFFFFF);
-    abyssal_state.major_coord.y = random2(0x7FFFFFFF);
-    abyssal_state.phase = 0.0;
-    abyssal_state.depth = random2(0x7FFFFFFF);
-    abyss_sample_queue = sample_queue(ProceduralSamplePQCompare());
 }
 
 static colour_t _roll_abyss_floor_colour()
@@ -1409,6 +1424,8 @@ void _increase_depth()
     int delta = you.time_taken * (you.abyss_speed + 40) / 200;
     if (you.religion != GOD_CHEIBRIADOS || you.penance[GOD_CHEIBRIADOS])
         delta *= 2;
+    if (you.duration[DUR_TELEPORT])
+        delta *= 5;
     const double theta = abyssal_state.phase;
     double depth_change = delta * (0.2 + 2.8 * pow(sin(theta/2), 10.0));
     abyssal_state.depth += depth_change;
@@ -1434,14 +1451,18 @@ void abyss_teleport(bool new_area)
 {
     xom_abyss_feature_amusement_check xomcheck;
 
-    if (!new_area && _abyss_teleport_within_level())
+    if (!new_area)
+    {
+        _abyss_teleport_within_level();
+        abyss_area_shift();
+        _initialize_abyss_state();
+        _nuke_all_terrain();
         return;
+    }
 
 #ifdef DEBUG_ABYSS
     dprf("New area Abyss teleport.");
 #endif
-
-    // Teleport to a new area of the abyss.
     _abyss_generate_new_area();
     _write_abyssal_features();
 }
