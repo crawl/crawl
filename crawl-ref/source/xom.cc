@@ -3440,6 +3440,24 @@ static int _xom_do_banishment(bool debug = false)
     return result;
 }
 
+static int _xom_noise(bool debug = false)
+{
+    if (silenced(you.pos()))
+        return XOM_DID_NOTHING;
+
+    if (debug)
+        return XOM_BAD_NOISE;
+
+    // Ranges from shout to shatter volume, roughly.
+    const int noisiness = 15 + random2(26);
+
+    god_speaks(GOD_XOM, _get_xom_speech("noise").c_str());
+    noisy(noisiness, you.pos());
+
+    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "noise"), true);
+    return XOM_BAD_NOISE;
+}
+
 static int _xom_is_bad(int sever, int tension, bool debug = false)
 {
     int done   = XOM_DID_NOTHING;
@@ -3462,6 +3480,9 @@ static int _xom_is_bad(int sever, int tension, bool debug = false)
             done = _xom_miscast(1, nasty, debug);
         else if (!nasty && tension <= 0 && x_chance_in_y(4, sever))
             done = _xom_colour_smoke_trail(debug);
+        // Sometimes do noise out of combat.
+        else if ((tension > 0 || coinflip()) && x_chance_in_y(5, sever))
+            done    = _xom_noise(debug);
         // It's pointless to confuse player if there's no danger nearby.
         else if (tension > 0 && x_chance_in_y(5, sever))
         {
