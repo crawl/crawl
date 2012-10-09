@@ -1296,6 +1296,11 @@ void mons_relocated(monster* mons)
         }
 
     }
+
+    // Make boulders stop rolling.
+    if (mons_is_boulder(mons))
+        mons->del_ench(ENCH_ROLLING, false);
+
     mons->clear_clinging();
 }
 
