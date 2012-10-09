@@ -1751,9 +1751,6 @@ spret_type cast_discharge(int pow, bool fail)
     return SPRET_SUCCESS;
 }
 
-// Really this is just applying the best of Band/Warp weapon/Warp field
-// into a spell that gives the "make monsters go away" benefit without
-// the insane damage potential. - bwr
 static int _disperse_monster(monster* mon, int pow)
 {
     if (!mon)
@@ -1764,17 +1761,9 @@ static int _disperse_monster(monster* mon, int pow)
     if (mon->no_tele())
         return 1;
 
-    if (int res_margin = mon->check_res_magic(pow) > 0)
+    if (mon->check_res_magic(pow) > 0)
     {
-        // XXX: Note that this might affect magic-immunes!
-        if (coinflip())
-        {
-            simple_monster_message(mon, " partially resists.");
-            monster_blink(mon);
-        }
-        else
-            simple_monster_message(mon, mons_resist_string(mon, res_margin));
-
+        monster_blink(mon);
         return 1;
     }
     else
