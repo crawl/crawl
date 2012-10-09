@@ -3461,7 +3461,7 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
 
     const actor*    foe   = (mons->wont_attack()
                              && invalid_monster_index(mons->foe)) ?
-                            &you : mons->get_foe();
+                                &you : mons->get_foe();
 
     if (s_type < 0 || s_type >= NUM_LOUDNESS || s_type == NUM_SHOUTS)
         s_type = mons_shouts(mons->type);
