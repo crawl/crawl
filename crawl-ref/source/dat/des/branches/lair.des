@@ -2129,7 +2129,7 @@ SUBST:  P = 1111.
 KITEM:  % = honeycomb q:3
 : lair_small_ending(_G)
 MAP
-            xXXxxxXXXxxx
+            x  xxx   xxx
        @...xxxxxxxxxxxxx
        P..Pxxxxxxxxxxxxx
       @...xxxxxxxxxxxxxx
