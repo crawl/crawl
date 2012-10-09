@@ -843,6 +843,15 @@ static bool _can_sacrifice(const coord_def p)
             && (!feat_is_altar(feat) || feat_is_player_altar(feat)));
 }
 
+static bool _sacrificeable_at(const coord_def& p)
+{
+    for (stack_iterator si(p, true); si; ++si)
+        if (si->is_greedy_sacrificeable())
+            return true;
+
+    return false;
+}
+
 // Top-level travel control (called from input() in main.cc).
 //
 // travel() is responsible for making the individual moves that constitute
@@ -949,7 +958,7 @@ command_type travel()
                 const LevelStashes *lev = StashTrack.find_current_level();
                 const bool stack = lev && lev->needs_stop(newpos)
                                    && ES_stack;
-                const bool sacrificeable = lev && lev->sacrificeable(newpos)
+                const bool sacrificeable = _sacrificeable_at(newpos)
                                            && ES_sacrificeable;
                 if (stack || sacrificeable)
                 {
