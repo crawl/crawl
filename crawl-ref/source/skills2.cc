@@ -841,7 +841,10 @@ void skill_state::restore_levels()
 
 void skill_state::restore_training()
 {
-    you.train                       = train;
+    for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
+        if (you.skills[i] < 27)
+            you.train[i] = train[i];
+
     you.auto_training               = auto_training;
     reset_training();
 }
