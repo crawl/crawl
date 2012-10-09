@@ -186,16 +186,6 @@ Xom giggles.
 w:1
 "Running a series of toy crash tests now."
 %%%%
-Xom lose stats
-
-"Suffer!"
-
-Xom's malign attention turns to you for a moment.
-
-Xom's power touches on you for a moment.
-
-You hear Xom's maniacal laughter.
-%%%%
 Xom rearrange the pieces
 
 Xom decides to rearrange the pieces.
@@ -226,7 +216,7 @@ Xom's power touches on your mind for a moment.
 
 Xom titters.
 %%%%
-# 25% chance of draining, else torment
+# 50% stat loss, 25% draining, 25% torment
 Xom draining or torment
 
 "You have displeased me, mortal."
@@ -236,6 +226,10 @@ Xom draining or torment
 Xom's power touches on you for a moment.
 
 You hear Xom's maniacal laughter.
+
+"Suffer!"
+
+Xom's malign attention turns to you for a moment.
 %%%%
 # 25% chance dancing weapon, else summon hostile monster
 Xom hostile monster
