@@ -1109,7 +1109,7 @@ fire giant
 A blistering heat rages beneath the obsidian-like skin of this giant, and its
 wild mane of red hair glows and smoulders. It holds aloft a fiery sword, and
 its body erupts with searing flames, seemingly at will. Fire giants believe
-that they are destined to unite and burn the entire world to cinders, but in
+that they are destined to unite and burn the entire world to cinders, but, in
 the meantime, they'll settle for adventurers foolish enough to approach them.
 %%%%
 fire vortex
@@ -1438,7 +1438,7 @@ hill giant
 
 A massive, burly humanoid standing taller even than an ogre. Hill giants are
 uncivilized in every sense of the word, and have few recreational interests
-beyond smashing things. Such as you.
+beyond smashing things such as you.
 %%%%
 hippogriff
 
