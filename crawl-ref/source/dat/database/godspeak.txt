@@ -296,6 +296,14 @@ Xom makes a sudden noise! You hear @weapon_noise@
 w:1
 Xom does a drum roll.
 %%%%
+Xom blink monsters
+
+"Over there now!"
+
+"Get over here!"
+
+Xom decides to shift things around a little.
+%%%%
 #####################
 # other effects
 #####################
