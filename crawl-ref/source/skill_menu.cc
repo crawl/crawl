@@ -767,6 +767,13 @@ void SkillMenu::init(int flag, int exp)
     m_highlighter->set_visible(true);
 }
 
+void SkillMenu::clear()
+{
+    PrecisionMenu::clear();
+    m_switches.clear();
+    m_help_button = 0;
+}
+
 //Public methods
 void SkillMenu::clear_flag(int flag)
 {

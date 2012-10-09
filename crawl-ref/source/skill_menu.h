@@ -130,6 +130,7 @@ public:
 
     void clear_flag(int flag);
     void init(int flag, int exp);
+    void clear();
     bool is_set(int flag) const;
     void set_flag(int flag);
     void toggle_flag(int flag);
