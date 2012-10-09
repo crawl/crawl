@@ -900,7 +900,7 @@ _speaking_low-high_tension_
 
 @The_weapon@ yells, "Steel will triumph where flesh falters!"
 
-@The_weapon@ cautions, "Never send a @player_genus@ to do a blade's job!"
+@The_weapon@ cautions, "Never send @a_player_genus@ to do a blade's job!"
 
 @The_weapon@ hisses, "Let's hear you complain about my singing with your throat slit!"
 
