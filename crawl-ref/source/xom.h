@@ -68,7 +68,8 @@ enum xom_event_type
     XOM_BAD_BANISHMENT,         //  40
     XOM_BAD_NOISE,
     XOM_BAD_ENCHANT_MONSTER,
-    XOM_LAST_BAD_ACT = XOM_BAD_ENCHANT_MONSTER,
+    XOM_BAD_BLINK_MONSTERS,
+    XOM_LAST_BAD_ACT = XOM_BAD_BLINK_MONSTERS,
 
     XOM_PLAYER_DEAD = 100, // player already dead (shouldn't happen)
     NUM_XOM_EVENTS

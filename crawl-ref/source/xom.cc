@@ -3511,6 +3511,48 @@ static int _xom_noise(bool debug = false)
     return XOM_BAD_NOISE;
 }
 
+static int _xom_blink_monsters(bool debug = false)
+{
+    int blinks = 0;
+    // Sometimes blink towards the player, sometimes randomly. It might
+    // end up being helpful instead of dangerous, but Xom doesn't mind.
+    const bool blink_to_player = _xom_feels_nasty() || coinflip();
+    for (monster_iterator mi(you.get_los()); mi; ++mi)
+    {
+        if (blinks >= 5)
+            break;
+
+        if (mi->wont_attack()
+            || mi->no_tele()
+            || mons_is_projectile(*mi)
+            || coinflip())
+        {
+            continue;
+        }
+
+        if (debug)
+            return XOM_BAD_BLINK_MONSTERS;
+
+        // Only give this message once.
+        if (!blinks)
+            god_speaks(GOD_XOM, _get_xom_speech("blink monsters").c_str());
+
+        if (blink_to_player)
+            blink_other_close(*mi, you.pos());
+        else
+            monster_blink(*mi, false);
+
+        blinks++;
+    }
+
+    if (blinks)
+    {
+        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, "blink monster(s)"), true);
+        return XOM_BAD_BLINK_MONSTERS;
+    }
+    return XOM_DID_NOTHING;
+}
+
 static int _xom_is_bad(int sever, int tension, bool debug = false)
 {
     int done   = XOM_DID_NOTHING;
@@ -3538,30 +3580,32 @@ static int _xom_is_bad(int sever, int tension, bool debug = false)
             done    = _xom_noise(debug);
         else if (tension > 0 && x_chance_in_y(7, sever))
             done    = _xom_enchant_monster(false, debug);
-        // It's pointless to confuse player if there's no danger nearby.
         else if (tension > 0 && x_chance_in_y(8, sever))
+            done    = _xom_blink_monsters(debug);
+        // It's pointless to confuse player if there's no danger nearby.
+        else if (tension > 0 && x_chance_in_y(9, sever))
         {
             done    = _xom_player_confusion_effect(sever, debug);
             badness = (random2(tension) > 5 ? 2 : 1);
         }
-        else if (x_chance_in_y(9, sever))
+        else if (x_chance_in_y(10, sever))
         {
             done    = _xom_lose_stats(debug);
             badness = 2;
         }
-        else if (tension > 0 && x_chance_in_y(10, sever))
+        else if (tension > 0 && x_chance_in_y(11, sever))
             done = _xom_swap_weapons(debug);
-        else if (x_chance_in_y(11, sever))
+        else if (x_chance_in_y(12, sever))
         {
             done    = _xom_miscast(2, nasty, debug);
             badness = 2;
         }
-        else if (x_chance_in_y(12, sever))
+        else if (x_chance_in_y(13, sever))
         {
             done    = _xom_chaos_upgrade_nearby_monster(debug);
             badness = 2 + coinflip();
         }
-        else if (x_chance_in_y(13, sever) && !player_in_branch(BRANCH_ABYSS))
+        else if (x_chance_in_y(14, sever) && !player_in_branch(BRANCH_ABYSS))
         {
             // Try something else if teleportation is impossible.
             if (!_teleportation_check())
@@ -3614,32 +3658,32 @@ static int _xom_is_bad(int sever, int tension, bool debug = false)
                       true);
             done = XOM_BAD_TELEPORT;
         }
-        else if (x_chance_in_y(14, sever))
+        else if (x_chance_in_y(15, sever))
         {
             done    = _xom_polymorph_nearby_monster(false, debug);
             badness = 3;
         }
-        else if (tension > 0 && x_chance_in_y(15, sever))
+        else if (tension > 0 && x_chance_in_y(16, sever))
         {
             done    = _xom_repel_stairs(debug);
             badness = (you.duration[DUR_REPEL_STAIRS_CLIMB] ? 3 : 2);
         }
-        else if (random2(tension) < 11 && x_chance_in_y(16, sever))
+        else if (random2(tension) < 11 && x_chance_in_y(17, sever))
         {
             done    = _xom_give_mutations(false, debug);
             badness = 3;
         }
-        else if (x_chance_in_y(17, sever))
+        else if (x_chance_in_y(18, sever))
         {
             done    = _xom_draining_torment_effect(sever, debug);
             badness = (random2(tension) > 5 ? 3 : 2);
         }
-        else if (x_chance_in_y(18, sever))
+        else if (x_chance_in_y(19, sever))
         {
             done    = _xom_summon_hostiles(sever, debug);
             badness = 3 + coinflip();
         }
-        else if (x_chance_in_y(19, sever))
+        else if (x_chance_in_y(20, sever))
         {
             done    = _xom_miscast(3, nasty, debug);
             badness = 4 + coinflip();
