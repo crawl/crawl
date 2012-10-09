@@ -3467,6 +3467,8 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
         s_type = mons_shouts(mons->type);
 
     // FIXME: Handle player_genus in case it was not generalized to foe_genus.
+    msg = replace_all(msg, "@a_player_genus@",
+                      article_a(species_name(you.species, true)));
     msg = replace_all(msg, "@player_genus@", species_name(you.species, true));
     msg = replace_all(msg, "@player_genus_plural@", _pluralise_player_genus());
 
