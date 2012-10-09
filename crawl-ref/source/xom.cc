@@ -2891,34 +2891,6 @@ static int _xom_miscast(const int max_level, const bool nasty,
     return XOM_BAD_MISCAST_MAJOR;
 }
 
-static int _xom_lose_stats(bool debug = false)
-{
-    if (debug)
-        return XOM_BAD_STATLOSS;
-
-    stat_type stat = static_cast<stat_type>(random2(NUM_STATS));
-    int loss = 1;
-
-    // Don't kill the player unless Xom is being nasty.
-    if (_xom_feels_nasty())
-        loss = 1 + random2(3);
-    else if (you.stat(stat) <= loss)
-        return XOM_DID_NOTHING;
-
-    god_speaks(GOD_XOM, _get_xom_speech("lose stats").c_str());
-    lose_stat(stat, loss, true, "the vengeance of Xom");
-
-    // Take a note.
-    const char* sstr[3] = { "Str", "Int", "Dex" };
-    static char stat_buf[80];
-    snprintf(stat_buf, sizeof(stat_buf), "stat loss: -%d %s (%d/%d)",
-             loss, sstr[stat], you.stat(stat), you.max_stat(stat));
-
-    take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, stat_buf), true);
-
-    return XOM_BAD_STATLOSS;
-}
-
 static int _xom_chaos_upgrade_nearby_monster(bool debug = false)
 {
     monster* mon = choose_random_nearby_monster(0, _choose_chaos_upgrade);
@@ -3277,11 +3249,39 @@ static int _xom_colour_smoke_trail(bool debug = false)
 
 static int _xom_draining_torment_effect(int sever, bool debug = false)
 {
+    // Drains stats or experience, or torments the player.
     const string speech = _get_xom_speech("draining or torment");
     const bool nasty = _xom_feels_nasty();
-    int rc = XOM_DID_NOTHING;
 
-    if (one_chance_in(4))
+    if (coinflip())
+    {
+        // Stat loss (50%).
+        if (debug)
+            return XOM_BAD_STATLOSS;
+
+        stat_type stat = static_cast<stat_type>(random2(NUM_STATS));
+        int loss = 1;
+
+        // Don't kill the player unless Xom is being nasty.
+        if (nasty)
+            loss = 1 + random2(3);
+        else if (you.stat(stat) <= loss)
+            return XOM_DID_NOTHING;
+
+        god_speaks(GOD_XOM, speech.c_str());
+        lose_stat(stat, loss, true, "the vengeance of Xom");
+
+        // Take a note.
+        const char* sstr[3] = { "Str", "Int", "Dex" };
+        static char stat_buf[80];
+        snprintf(stat_buf, sizeof(stat_buf), "stat loss: -%d %s (%d/%d)",
+                 loss, sstr[stat], you.stat(stat), you.max_stat(stat));
+
+        take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, stat_buf), true);
+
+        return XOM_BAD_STATLOSS;
+    }
+    else if (coinflip())
     {
         // XP drain effect (25%).
         if (player_prot_life() < 3 && (nasty || you.experience > 0))
@@ -3302,7 +3302,7 @@ static int _xom_draining_torment_effect(int sever, bool debug = false)
     }
     else
     {
-        // Torment effect (75%).
+        // Torment effect (25%).
         if (!player_res_torment())
         {
             if (debug)
@@ -3320,7 +3320,7 @@ static int _xom_draining_torment_effect(int sever, bool debug = false)
             return XOM_BAD_TORMENT;
         }
     }
-    return rc;
+    return XOM_DID_NOTHING;
 }
 
 static bool _has_min_animated_weapon_level()
@@ -3588,11 +3588,6 @@ static int _xom_is_bad(int sever, int tension, bool debug = false)
             done    = _xom_player_confusion_effect(sever, debug);
             badness = (random2(tension) > 5 ? 2 : 1);
         }
-        else if (x_chance_in_y(10, sever))
-        {
-            done    = _xom_lose_stats(debug);
-            badness = 2;
-        }
         else if (tension > 0 && x_chance_in_y(11, sever))
             done = _xom_swap_weapons(debug);
         else if (x_chance_in_y(12, sever))
@@ -3675,18 +3670,18 @@ static int _xom_is_bad(int sever, int tension, bool debug = false)
         }
         else if (x_chance_in_y(18, sever))
         {
-            done    = _xom_draining_torment_effect(sever, debug);
-            badness = (random2(tension) > 5 ? 3 : 2);
-        }
-        else if (x_chance_in_y(19, sever))
-        {
             done    = _xom_summon_hostiles(sever, debug);
             badness = 3 + coinflip();
         }
-        else if (x_chance_in_y(20, sever))
+        else if (x_chance_in_y(19, sever))
         {
             done    = _xom_miscast(3, nasty, debug);
             badness = 4 + coinflip();
+        }
+        else if (x_chance_in_y(20, sever))
+        {
+            done    = _xom_draining_torment_effect(sever, debug);
+            badness = (random2(tension) > 5 ? 3 : 2);
         }
         else if (one_chance_in(sever) && !player_in_branch(BRANCH_ABYSS))
         {
