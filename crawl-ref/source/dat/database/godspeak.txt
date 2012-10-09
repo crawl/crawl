@@ -280,6 +280,13 @@ Xom's power touches on a nearby weapon.
 
 Xom chortles.
 %%%%
+Xom noise
+
+Xom makes a sudden noise! You hear @weapon_noise@
+
+w:1
+Xom does a drum roll.
+%%%%
 #####################
 # other effects
 #####################
