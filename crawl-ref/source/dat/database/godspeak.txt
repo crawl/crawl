@@ -431,6 +431,14 @@ Xom pokes at a nearby @staircase@.
 
 Xom alters the dungeon around you.
 %%%%
+Xom good enchant monster
+
+@Xom good monster polymorph@
+%%%%
+Xom bad enchant monster
+
+@Xom good enchant monster@
+%%%%
 Xom life saving general
 
 "What? Wait, NO!"
