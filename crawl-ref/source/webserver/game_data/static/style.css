@@ -21,23 +21,23 @@ body {
 #stats {
     display: inline-block;
     position: static;
-    color: lightgray;
+    color: #babdb6; /* lightgray */
 }
 
 #stats_titleline, #stats_species_god {
-    color: yellow;
+    color: #fce94f; /* yellow */
 }
 #stats_piety {
-    color: yellow;
+    color: #fce94f; /* yellow */
 }
 #stats_piety.penance {
-    color: red;
+    color: #a40000; /* red */
 }
 #stats_wizmode {
-    color: blue;
+    color: #204a87; /* blue */
 }
 .stats_caption {
-    color: rgb(165, 91, 0);
+    color: #8f5902; /* brown */
 }
 
 .bar span {
@@ -46,29 +46,29 @@ body {
 }
 
 #stats_hp_bar {
-    background-color: #525252; /* Dark grey */
+    background-color: #555753; /* darkgray */
 }
 #stats_hp_bar_full {
-    background-color: #52FF52; /* Light green */
+    background-color: #8ae234; /* lightgreen */
 }
 #stats_hp_bar_decrease {
-    background-color: #FF3000; /* Red */
+    background-color: #a40000; /* red */
 }
 #stats_hp_bar_increase {
-    background-color: #64B946; /* Green */
+    background-color: #4e9a06; /* green */
 }
 
 #stats_mp_bar {
-    background-color: #525252;
+    background-color: #555753; /* darkgray */
 }
 #stats_mp_bar_full {
-    background-color: #5266FF; /* Light blue */
+    background-color: #729fcf; /* lightblue */
 }
 #stats_mp_bar_decrease {
-    background-color: #EE5CEE; /* Magenta */
+    background-color: #5c3566; /* magenta */
 }
 #stats_mp_bar_increase {
-    background-color: #0052FF; /* Blue */
+    background-color: #204a87; /* blue */
 }
 
 #message_pane {
@@ -130,26 +130,26 @@ body {
 }
 
 #monster_list .trivial {
-    color: darkgray;
+    color: #555753; /* darkgray */
 }
 #monster_list .easy {
-    color: lightgray;
+    color: #babdb6; /* lightgray */
 }
 #monster_list .tough {
-    color: yellow;
+    color: #fce94f; /* yellow */
 }
 #monster_list .nasty {
-    color: rgb(255,  82,  82);
+    color: #ef2929; /* lightred */
 }
 
 #monster_list .friendly {
-    color: green;
+    color: #4e9a06; /* green */
 }
 
 #monster_list .good_neutral,
 #monster_list .neutral,
 #monster_list .strict_neutral {
-    color: brown;
+    color: #8f5902; /* brown */
 }
 
 #monster_list .ellipse {
