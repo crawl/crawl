@@ -3006,8 +3006,8 @@ void game_options::read_option_line(const string &str, bool runscript)
     else if (key == "spell_slot")
     {
         if (plain && field.empty())
-            force_autopickup.clear();
-        else if (plain && !force_autopickup.empty())
+            auto_spell_letters.clear();
+        else if (plain && !auto_spell_letters.empty())
             warn_list_append.insert(key);
 
         vector<string> thesplit = split_string(":", field);
