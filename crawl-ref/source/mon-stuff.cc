@@ -2369,6 +2369,11 @@ int monster_die(monster* mons, killer_type killer,
         if (mons_genus(mons->type) == MONS_MUMMY)
             _mummy_curse(mons, killer, killer_index);
     }
+    
+    if (mons->type == MONS_WARWICK)
+    {
+       cast_summon_butterflies(100, GOD_XOM);  
+    }
 
     if (mons->mons_species() == MONS_BALLISTOMYCETE)
     {
