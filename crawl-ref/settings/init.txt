@@ -163,10 +163,10 @@
 
 # Interrupting run and rest compound commands:
 # runrest_ignore_poison  = 2:30
-# runrest_ignore_monster += butterfly:1
-# runrest_ignore_monster += swamp worm:3
-# runrest_stop_message += You hear a.* slurping noise
-# runrest_ignore_message += Jiyva's power touches on your attributes
+# runrest_ignore_monster ^= butterfly:1
+# runrest_ignore_monster ^= swamp worm:3
+# runrest_stop_message ^= You hear a.* slurping noise
+# runrest_ignore_message ^= Jiyva's power touches on your attributes
 
 # A good number of runrest_messages is defined by default; you may want to
 # clear them or override some.
@@ -254,9 +254,9 @@
 # $contaminated := magenta
 
 # You can redefine inventory items like this:
-# menu_colour += inventory:magenta:shillelagh
+# menu_colour ^= inventory:magenta:shillelagh
 # or ones in pick-up dialogs:
-# menu_colour += pickup:green:god gift
+# menu_colour ^= pickup:green:god gift
 
 # Colouring of messages
 # Messages are colour coded as follows:
@@ -268,15 +268,15 @@
 #
 
 # Notes also use, quite misnamed, menu_colour:
-# menu_colour += notes:white:Reached XP level
+# menu_colour ^= notes:white:Reached XP level
 
 # These lines will suppress extra feedback messages from travel/shift-running.
 #
-# message_colour += mute:warning:comes into view
-# message_colour += mute:You start (searching|resting)
-# message_colour += mute:Done searching
-# message_colour += mute:(HP|Magic) restored
-# message_colour += mute:warning:Not with.*(in view|monsters around)
+# message_colour ^= mute:warning:comes into view
+# message_colour ^= mute:You start (searching|resting)
+# message_colour ^= mute:Done searching
+# message_colour ^= mute:(HP|Magic) restored
+# message_colour ^= mute:warning:Not with.*(in view|monsters around)
 
 # You can also enforce a --more-- prompt for messages
 
