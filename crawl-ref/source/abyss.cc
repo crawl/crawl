@@ -1000,13 +1000,12 @@ static ProceduralSample _abyss_grid(const coord_def &p)
     const static RoilingChaosLayout chaosC(seed + 24816,   380);
     const static RoilingChaosLayout chaosD(seed + 24816,   500);
     const ProceduralLayout* mixedLayouts[] = {
-        &worley, &chaosA, &chaosB, &chaosC, &chaosD
+        &chaosA, &worley, &chaosB, &chaosC, &chaosD
     };
     const static vector<const ProceduralLayout*> mixed_vec(mixedLayouts, mixedLayouts + 2);
     const static WorleyLayout layout(seed + 4321, mixed_vec);
     const static RiverLayout rivers(seed, layout);
-    const static CastleLayout castle(seed + 234621, rivers);
-    const ProceduralSample sample = castle(pt, abyssal_state.depth);
+    const ProceduralSample sample = rivers(pt, abyssal_state.depth);
     abyss_sample_queue.push(sample);
     return sample;
 }
@@ -1450,13 +1449,13 @@ void abyss_morph(double duration)
 void abyss_teleport(bool new_area)
 {
     xom_abyss_feature_amusement_check xomcheck;
-
     if (!new_area)
     {
         _abyss_teleport_within_level();
         abyss_area_shift();
         _initialize_abyss_state();
         _nuke_all_terrain();
+        forget_map(false);
         return;
     }
 
@@ -1465,6 +1464,8 @@ void abyss_teleport(bool new_area)
 #endif
     _abyss_generate_new_area();
     _write_abyssal_features();
+    forget_map(false);
+    clear_excludes();
 }
 
 //////////////////////////////////////////////////////////////////////////////

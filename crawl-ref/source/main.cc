@@ -3022,7 +3022,7 @@ static void _player_reacts()
         {
             mpr("You are suddenly pulled into a different region of the Abyss!",
                 MSGCH_BANISHMENT);
-            you_teleport_now(false, true); // to new area of the Abyss
+            //XXXXyou_teleport_now(false, true); // to new area of the Abyss
 
             // It's effectively a new level, make a checkpoint save so eventual
             // crashes lose less of the player's progress (and fresh new bad
