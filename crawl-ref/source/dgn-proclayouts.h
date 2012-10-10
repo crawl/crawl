@@ -115,14 +115,4 @@ class RiverLayout : public ProceduralLayout
         const uint32_t seed; 
         const ProceduralLayout &layout;
 };
-
-class CastleLayout : public ProceduralLayout
-{
-    public:
-        CastleLayout(uint32_t _seed, const ProceduralLayout &_layout) : seed(_seed), layout(_layout) {}
-        ProceduralSample operator()(const coord_def &p, const uint32_t offset = 0) const;
-    private:
-        const uint32_t seed;
-        const ProceduralLayout &layout;
-};
 #endif /* PROC_LAYOUTS_H */

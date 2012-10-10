@@ -90,7 +90,13 @@ WorleyLayout::operator()(const coord_def &p, const uint32_t offset) const
     worley::noise_datum n = worley::noise(x, y, z + seed);
 
     const uint32_t changepoint = offset + _get_changepoint(n, scale);
-    ProceduralSample sample = (*layouts[n.id[0] % layouts.size()])(p, offset);
+    const uint8_t size = layouts.size();
+    bool parity = n.id[0] % 2;
+    uint32_t id = n.id[0] / 2;
+    const uint8_t choice = parity
+        ? id % size
+        : min(id % size, (id / size) % size);
+    ProceduralSample sample = (*layouts[(choice + seed) % size])(p, offset);
 
     return ProceduralSample(p, sample.feat(), 
                 min(changepoint, sample.changepoint()));
@@ -143,42 +149,4 @@ RiverLayout::operator()(const coord_def &p, const uint32_t offset) const
         return ProceduralSample(p, feat, changepoint);
     }
     return layout(p, offset);
-}
-
-ProceduralSample
-CastleLayout::operator()(const coord_def &p, const uint32_t offset) const
-{
-    uint32_t period = 3200;
-    uint32_t hperiod = period / 2;
-    uint32_t radius = 20;
-    uint32_t x = p.x;
-    uint32_t y = p.y;
-    uint32_t xo = x + ((x % period) - hperiod);
-    uint32_t yo = y + ((y % period) - hperiod);
-    uint32_t d = round(sqrt((xo - x) * (xo - x) + (yo - y) * (yo - y)));
-    uint8_t parity = (d / (radius / 4)) % 4;
-    if (d > radius)
-        return layout(p, offset);
-    if (d < radius / 6)
-    {
-        dungeon_feature_type feat = DNGN_LAVA;
-        if (xo == x && d == (radius / 6 - 1))
-        {
-            static dungeon_feature_type gates[] =
-            {
-                DNGN_ALTAR_LUGONU,
-                DNGN_EXIT_ABYSS,
-                DNGN_ABYSSAL_STAIR
-            };
-            feat = gates[hash3(x, y, seed) % 3];
-        }
-        return ProceduralSample(p, feat, offset + 4096);
-    }
-    if ((xo - x < 2 || x - xo < 2) && d > radius / 2)
-        return RoilingChaosLayout(seed, 200)(p, offset);
-    if ((yo - y < 2 || y - yo < 2) && d < radius / 2)
-        return RoilingChaosLayout(seed, 200)(p, offset);
-    if (d < radius && parity % 2)
-        return ProceduralSample(p, _pick_pseudorandom_feature(hash3(x,y,seed)), offset + 4096);
-    return RoilingChaosLayout(seed, 200)(p, offset);
 }
