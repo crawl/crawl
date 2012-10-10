@@ -6069,7 +6069,7 @@ static monsterentry mondata[] = {
 
 // "U"rsidae (Bears).
 {
-    MONS_WARWICK, 'U', ETC_RANDOM, "Hugford",
+    MONS_WARWICK, 'U', ETC_RANDOM, "Warwick von Hugford",
     M_PRIEST | M_UNIQUE | M_ACTUAL_SPELLS | M_SEE_INVIS | M_SPEAKS,
     MR_RES_COLD,
     1900, 12, MONS_BEAR, MONS_GRIZZLY_BEAR, MH_NATURAL, -5,
