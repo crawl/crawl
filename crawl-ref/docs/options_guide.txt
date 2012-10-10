@@ -236,7 +236,7 @@ and, for Tiles,
 A number of options can have a list of values. Most but not all of these
 options allow setting multiple values in a single line, separated by commas.
 It is possible to reset, add items to, or remove items from such an option.
-   Add values to the end list (append):
+   Add values to the end of the list (append):
       drop_filter += useless, enchant
    Add values to the beginning of the list (prepend):
       drop_filter ^= rotting
