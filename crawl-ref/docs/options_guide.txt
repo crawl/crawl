@@ -236,8 +236,10 @@ and, for Tiles,
 A number of options can have a list of values. Most but not all of these
 options allow setting multiple values in a single line, separated by commas.
 It is possible to reset, add items to, or remove items from such an option.
-   Add values to the list:
+   Add values to the end list (append):
       drop_filter += useless, enchant
+   Add values to the beginning of the list (prepend):
+      drop_filter ^= rotting
    Remove values from the list (exact match only):
       drop_filter -= enchant
    Reset (empty) the list:
@@ -259,6 +261,20 @@ your syntax to obtain either the current or the future behaviour:
 
 A few list options already have the future behaviour for "opt = value"; these
 options are flagged as "Overriding list options" in their descriptions.
+
+For many options, such as drop_filter, there is effectively no difference
+between appending and prepending. However, other options, such as
+message_colour, do care about the order of items; these will be noted as
+"Ordered list options" in their descriptions. In most cases, earlier items
+take precedence over later ones, so += defers to existing matches (including
+defaults) while ^= overrides them. So, for example, with the sequence of
+options:
+   message_colour =
+   message_colour += cyan:hits
+   message_colour ^= red:crimson
+   message_colour += yellow:killer
+the message "The crimson imp hits you!" will be displayed in red, while "The
+killer bee hits you!" will be displayed in cyan.
 
 0-e     Aliases and variables.
 ------------------------------
@@ -361,8 +377,8 @@ macro_dir = settings/
         For tile games, wininit.txt will also be stored here.
         It should end with the path delimiter.
 
-sound += <regex>:<path to sound file>, <regex>:<path>, ...
-        (List option)
+sound ^= <regex>:<path to sound file>, <regex>:<path>, ...
+        (Ordered list option)
         Plays the sound file if a message contains regex. The regex
         should not include commas or colons. For example
              sound += LOW HITPOINT WARNING:sound\sounds2\danger3.wav
@@ -399,8 +415,8 @@ autopickup = $?!+"/%
         items). If you teleport or blink onto a square with interesting
         items, these will not be picked up.
 
-autopickup_exceptions += <pickup-regex, >don't-pickup-regex, ...
-        (List option)
+autopickup_exceptions ^= <pickup-regex, >don't-pickup-regex, ...
+        (Ordered list option)
         A set of regexes that force matching items to be picked up (if
         prefixed with <), or never picked up (if prefixed with >).
         Excludes (>) take precedence over includes (<), so if the same
@@ -935,15 +951,16 @@ runrest_ignore_poison = <poison damage>:<minimum hp>
              runrest_ignore_message = You feel.*sick
              runrest_ignore_poison = 4:100
 
-runrest_ignore_monster += <string>:<distance>, <string>:<distance>, ...
-        (List option)
-        Any monster containing the string will only interrupt your
-        activity if the distance between you and the monster is
-        less than the specified number. E.g. with
-             runrest_ignore_monster += fish:3
+runrest_ignore_monster ^= <regex>:<distance>, <regex>:<distance>, ...
+        (Ordered list option)
+        Any monster matching the regular expression will only interrupt your
+        activity if the distance between you and the monster is less than the
+        specified number. E.g. with
+             runrest_ignore_monster ^= fish:3
         all of big fish, jellyfish, giant goldfish and lavafish will be
         considered safe for travel, explore and resting as long as the
-        distance is at least 3.
+        distance is at least 3. If a monster matches multiple expressions,
+        its distance is compared with the first match.
 
 trapwalk_safe_hp = <trap_name>:<minimum_hp>, ...
         Any square containing one of the listed trap types will be
@@ -1226,19 +1243,21 @@ sort_menus = [menu:](true | false | auto:X)[:sort_order]
         the last one matching will always take precedence, i.e. "any"
         as last setting would override any of the others.
 
-spell_slot += <regex>:<list of spell letters>
-        (List option, one value per line)
+spell_slot ^= <regex>:<list of spell letters>
+        (Ordered list option, one value per line)
         When you memorise any spell that matches the regex, it will
         assign itself to the first available letter in the list. (If
         all letters in the list are occupied for each regex the spell
         matches, it will use the default ordering abc...xyzABC..XYZ.)
+        If a spell matches multiple expressions, only the first is
+        considered.
 
         Examples:
         * if you want Haste to be placed on H:
-            spell_slot += Haste:H
+            spell_slot ^= Haste:H
         * if you want Deflect Missiles to be placed on r normally or R if
           r is unavailable:
-            spell_slot += Deflect:rR
+            spell_slot ^= Deflect:rR
         * if you want to change the default spell slot assignment
           to use capital letters: (place this after all other
           spell_slot lines):
@@ -1397,8 +1416,8 @@ mlist_targetting = false
         feature on and off. This option controls the initial setting
         at game start or reload.
 
-menu_colour += <match>:<colour>:<regex>, <colour>:<regex>, ...
-        (List option)
+menu_colour ^= <match>:<colour>:<regex>, <colour>:<regex>, ...
+        (Ordered list option)
         This prints a line (of the inventory, a menu, or the discoveries
         screen) containing regex in the stated colour. There can be
         several statements in a list, and also several menu_colour
@@ -1458,33 +1477,31 @@ menu_colour += <match>:<colour>:<regex>, <colour>:<regex>, ...
         to items matching the description, or to define autopickup_exceptions.
 
         If you want to colour all items that contain a certain prefix, use
-          menu_colour += lightgreen:poisonous
+          menu_colour ^= lightgreen:poisonous
 
-        To colour worn stuff and highlight cursed items, take
+        To colour worn stuff and highlight cursed items (except where other,
+        presumably more important, message colours match), use
           menu_colour += inventory:lightred:equipped.* cursed
           menu_colour += inventory:green:equipped
           menu_colour += inventory:red: cursed
 
         To colour identified artefacts, try
-          menu_colour += inventory:white:( [-+] the)
+          menu_colour ^= inventory:white:( [-+] the)
         or
-          menu_colour += inventory:white:identified.*artefact
+          menu_colour ^= inventory:white:identified.*artefact
 
         If you frequently die because you forget to use emergency items,
         try
-          menu_colour += inventory:cyan:emergency_item
-          menu_colour += inventory:lightcyan:wand of (fire|cold|draining)
-
-        To quickly check what potions were trashed by a mummy curse, use
-          menu_colour += inventory:lightred:potions? of (degeneration|decay)
+          menu_colour ^= inventory:cyan:emergency_item
+          menu_colour ^= inventory:lightcyan:wand of (fire|cold|draining)
 
         If you'd like to see rotting chunks and corpses at a glance, use
-          menu_colour += inventory:red: rotting
+          menu_colour ^= inventory:red: rotting
 
         menu_colour can also be applied to colour the in-game notes (to
         be read with '?:'). The following line will show level ups in
         white:
-          menu_colour += notes:white:Reached XP level
+          menu_colour ^= notes:white:Reached XP level
 
 menu_colour_prefix_class = true
         Setting this option to true will prefix the string against which
@@ -1501,8 +1518,8 @@ menu_colour_shops = true
         according to the menu colours (using tags "shop" or "any");
         otherwise the lines are coloured alternately white or lightgrey.
 
-message_colour += <colour>:<channel>:<regex>, <colour>:<regex>, ...
-        (List option)
+message_colour ^= <colour>:<channel>:<regex>, <colour>:<regex>, ...
+        (Ordered list option)
         message_colour allows you to override colours for individual
         messages. For instance, if you find the low hp warning to be
         insufficiently attention grabbing, you could do something like
@@ -1557,7 +1574,7 @@ fire_items_start = a
 fire_order  = launcher, return
 fire_order += javelin / dart / stone / rock / spear / net / handaxe / dagger
 fire_order += inscribed
-        (Overriding list option)
+        (Overriding ordered list option)
         Controls the order of items autoselected for firing. Items
         should be separated by commas and items that appear first get
         higher priority.
@@ -1641,9 +1658,9 @@ See the "Inscriptions" section of the crawl manual for more information
 about inscriptions.
 
 autoinscribe += <regex>:<inscription>
-        (List option, one value per line)
-        Any item whose description contains the regex will be
-        automatically inscribed (if autopickup is toggled on).
+        (Ordered list option, one value per line)
+        Any item whose description contains the regex will be automatically
+        inscribed (if autopickup is toggled on).
 
         For example, it can be used to avoid accidentally using charges of
         important wands, as in
@@ -1654,6 +1671,9 @@ autoinscribe += <regex>:<inscription>
              autoinscribe += (bad|dangerous)_item.*scroll:!r
         will prevent accidentally reading any identified bad or
         potentially dangerous scrolls.
+
+        Unlike most ordered list options, multiple matching entries all have
+        an effect: the order only determines the order of the inscriptions.
 
 autoinscribe_artefacts = true
         Automatically inscribes identified artefacts with their properties.
@@ -1863,7 +1883,7 @@ tile_show_demon_tier = true
         builds.
 
 tile_layout_priority = minimap, inventory, gold_turn, command, spell, monster
-        (Overriding list option)
+        (Overriding ordered list option)
         This option allows you to control the order in which elements are
         placed on the right of the screen, below the stat area. On small
         resolution, there won't be enough room for everything, so only the
@@ -1942,7 +1962,7 @@ dump_message_count = 20
 dump_order  = header,hiscore,stats,misc,notes,inventory,
 dump_order += skills,spells,overview,mutations,messages,screenshot,
 dump_order += monlist,kills
-        (Overriding list option)
+        (Overriding ordered list option)
         Controls the order of sections in the dump.
 
         Two optional dump sections are "turns_by_place" and
