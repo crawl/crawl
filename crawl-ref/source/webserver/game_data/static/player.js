@@ -75,9 +75,39 @@ function ($, comm, enums, map_knowledge) {
             return inventory_item_desc(player.quiver_item);
     }
 
+    function stat_class(stat)
+    {
+        var val = player[stat];
+        var max_val = player[stat + "_max"];
+        if (val <= 0)
+            return "zero_stat";
+
+        // TODO: stat colour options
+
+        // TODO: magically increased stats
+
+        if (val < max_val)
+            return "degenerated_stat";
+
+        return "";
+    }
+
+    function update_stat(stat)
+    {
+        var val = player[stat];
+        var max_val = player[stat + "_max"];
+        var elem = $("<span>");
+        elem.text(val);
+        if (val < max_val)
+        {
+            elem.append(" (" + max_val + ")");
+        }
+        elem.addClass(stat_class(stat));
+        $("#stats_" + stat).html(elem);
+    }
+
     var simple_stats = ["hp", "hp_max", "mp", "mp_max",
-                        "ac", "ev", "sh", "xl", "progress", "gold",
-                        "str", "int", "dex"];
+                        "ac", "ev", "sh", "xl", "progress", "gold"];
     function update_stats_pane()
     {
         $("#stats_titleline").text(player.name + " the " + player.title);
@@ -105,6 +135,10 @@ function ($, comm, enums, map_knowledge) {
             $("#stats_real_hp_max").text("");
         update_bar("hp");
         update_bar("mp");
+
+        update_stat("str");
+        update_stat("int");
+        update_stat("dex");
 
         $("#stats_time").text((player.time / 10.0).toFixed(1));
         if (player.time_delta)

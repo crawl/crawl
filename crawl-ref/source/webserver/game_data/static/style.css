@@ -40,6 +40,13 @@ body {
     color: #8f5902; /* brown */
 }
 
+.degenerated_stat {
+    color: #fce94f; /* yellow */
+}
+.zero_stat {
+    color: #a40000; /* red */
+}
+
 .bar span {
     display: inline-block;
     height: 100%;
