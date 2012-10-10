@@ -4533,40 +4533,22 @@ void mons_att_changed(monster* mon)
 {
     const mon_attitude_type att = mon->temp_attitude();
 
-    if (mons_base_type(mon) == MONS_KRAKEN)
+    if (mons_is_tentacle_head(mons_base_type(mon))
+            || mon->type == MONS_ELDRITCH_TENTACLE)
     {
-        const int headnum = mon->mindex();
-
         for (monster_iterator mi; mi; ++mi)
-            if (mi->type == MONS_KRAKEN_TENTACLE
-                && (int)mi->number == headnum)
+            if (mi->is_child_tentacle_of(mon))
             {
                 mi->attitude = att;
-                for (monster_iterator connect; connect; ++connect)
+                if (mon->type != MONS_ELDRITCH_TENTACLE)
                 {
-                    if (connect->type == MONS_KRAKEN_TENTACLE_SEGMENT
-                        && (int) connect->number == mi->mindex())
+                    for (monster_iterator connect; connect; ++connect)
                     {
-                        connect->attitude = att;
+                        if (connect->is_child_tentacle_of(mi->as_monster()))
+                            connect->attitude = att;
                     }
                 }
             }
-    }
-    if (mon->type == MONS_ELDRITCH_TENTACLE_SEGMENT
-        || mon->type == MONS_ELDRITCH_TENTACLE)
-    {
-        unsigned base_idx = mon->type == MONS_ELDRITCH_TENTACLE ?
-                            mon->mindex() : mon->number;
-
-        menv[base_idx].attitude = att;
-        for (monster_iterator mi; mi; ++mi)
-        {
-            if (mi->type == MONS_ELDRITCH_TENTACLE_SEGMENT
-                && mi->number == base_idx)
-            {
-                mi->attitude = att;
-            }
-        }
     }
 }
 
