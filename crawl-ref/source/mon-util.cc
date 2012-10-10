@@ -4177,6 +4177,17 @@ bool mons_is_tentacle_segment(monster_type mc)
             || mc == MONS_STARSPAWN_TENTACLE_SEGMENT);
 }
 
+monster* mons_get_parent_monster(monster* mons)
+{
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->is_parent_monster_of(mons))
+            return mi->as_monster();
+    }
+    
+    return 0;
+}
+
 void init_anon()
 {
     monster &mon = menv[ANON_FRIENDLY_MONSTER];
@@ -4237,6 +4248,8 @@ monster_type mons_tentacle_parent_type(const monster* mons)
             return MONS_TENTACLED_STARSPAWN;
         case MONS_STARSPAWN_TENTACLE_SEGMENT:
             return MONS_STARSPAWN_TENTACLE;
+        case MONS_ELDRITCH_TENTACLE_SEGMENT:
+            return MONS_ELDRITCH_TENTACLE;
         default:
             return MONS_PROGRAM_BUG;
     }
@@ -4254,6 +4267,8 @@ monster_type mons_tentacle_child_type(const monster* mons)
             return MONS_STARSPAWN_TENTACLE;
         case MONS_STARSPAWN_TENTACLE:
             return MONS_STARSPAWN_TENTACLE_SEGMENT;
+        case MONS_ELDRITCH_TENTACLE:
+            return MONS_ELDRITCH_TENTACLE_SEGMENT;
         default:
             return MONS_PROGRAM_BUG;
     }

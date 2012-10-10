@@ -429,6 +429,7 @@ monster *monster_by_mid(mid_t m);
 
 bool mons_is_tentacle(monster_type mc);
 bool mons_is_tentacle_segment(monster_type mc);
+monster* mons_get_parent_monster(monster* mons);
 void init_anon();
 actor *find_agent(mid_t m, kill_category kc);
 const char* mons_class_name(monster_type mc);

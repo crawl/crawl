@@ -5880,7 +5880,6 @@ bool monster::is_child_tentacle_of(monster* mons) const
 bool monster::is_parent_monster_of(monster* mons) const
 {
     if (mons_base_type(this) == 
-            //mons_tentacle_child_type(mons)
             mons_tentacle_parent_type(mons)
             && mons->number == mindex())
         return true;
