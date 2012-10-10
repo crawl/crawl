@@ -4177,6 +4177,12 @@ bool mons_is_tentacle_segment(monster_type mc)
             || mc == MONS_STARSPAWN_TENTACLE_SEGMENT);
 }
 
+bool mons_is_tentacle_head(monster_type mc)
+{
+    return (mc == MONS_KRAKEN
+            || mc == MONS_TENTACLED_STARSPAWN);
+}
+
 monster* mons_get_parent_monster(monster* mons)
 {
     for (monster_iterator mi; mi; ++mi)

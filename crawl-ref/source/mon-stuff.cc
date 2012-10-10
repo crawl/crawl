@@ -1207,7 +1207,7 @@ static void _monster_die_cloud(const monster* mons, bool corpse, bool silent,
 void mons_relocated(monster* mons)
 {
     // If the main body teleports get rid of the tentacles
-    if (mons->has_child_tentacles())
+    if (mons_is_tentacle_head(mons_base_type(mons)))
     {
         int headnum = mons->mindex();
 
