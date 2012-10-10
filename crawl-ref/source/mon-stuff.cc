@@ -2661,7 +2661,7 @@ void change_monster_type(monster* mons, monster_type targetc)
     you.remove_beholder(mons);
     you.remove_fearmonger(mons);
 
-    if (mons->type == MONS_KRAKEN)
+    if (mons_is_tentacle_head(mons_base_type(mons)))
         _destroy_tentacles(mons);
 
     // Inform listeners that the original monster is gone.

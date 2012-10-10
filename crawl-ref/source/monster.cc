@@ -5867,7 +5867,7 @@ bool monster::is_child_monster() const
             || type == MONS_STARSPAWN_TENTACLE_SEGMENT);
 }
 
-bool monster::is_child_tentacle_of(monster* mons) const
+bool monster::is_child_tentacle_of(const monster* mons) const
 {
     if (mons_base_type(mons) == 
             mons_tentacle_parent_type(this)
@@ -5877,7 +5877,7 @@ bool monster::is_child_tentacle_of(monster* mons) const
         return false;
 }
 
-bool monster::is_parent_monster_of(monster* mons) const
+bool monster::is_parent_monster_of(const monster* mons) const
 {
     if (mons_base_type(this) == 
             mons_tentacle_parent_type(mons)
