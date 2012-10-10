@@ -3577,11 +3577,11 @@ static int _xom_is_bad(int sever, int tension, bool debug = false)
             done = _xom_colour_smoke_trail(debug);
         // Sometimes do noise out of combat.
         else if ((tension > 0 || coinflip()) && x_chance_in_y(6, sever))
-            done    = _xom_noise(debug);
+            done = _xom_noise(debug);
         else if (tension > 0 && x_chance_in_y(7, sever))
-            done    = _xom_enchant_monster(false, debug);
+            done = _xom_enchant_monster(false, debug);
         else if (tension > 0 && x_chance_in_y(8, sever))
-            done    = _xom_blink_monsters(debug);
+            done = _xom_blink_monsters(debug);
         // It's pointless to confuse player if there's no danger nearby.
         else if (tension > 0 && x_chance_in_y(9, sever))
         {
