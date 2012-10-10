@@ -2096,10 +2096,10 @@ void handle_monster_move(monster* mons)
 
             // See if we move into (and fight) an unfriendly monster.
             monster* targ = monster_at(mons->pos() + mmov);
-            if (mons_base_type(mons) == MONS_KRAKEN
-                && targ && targ->type == MONS_KRAKEN_TENTACLE_SEGMENT
-                && targ->props.exists("inwards") && targ->props["inwards"].get_int() == mons->mindex()
-                && env.grid(targ->pos()) == DNGN_DEEP_WATER)
+            
+            //If a tentacle owner is attempting to move into an adjacent
+            //segment, kill the segment and adjust connectivity data.
+            if (targ && mons_tentacle_adjacent(mons, targ))
             {
                 bool basis = targ->props.exists("outwards");
                 int out_idx = basis ? targ->props["outwards"].get_int() : -1;
@@ -2778,24 +2778,17 @@ static bool _no_habitable_adjacent_grids(const monster* mon)
     return true;
 }
 
-static bool _same_kraken_parts(const monster* mpusher,
+static bool _same_tentacle_parts(const monster* mpusher,
                                const monster* mpushee)
 {
-    if (mons_base_type(mpusher) != MONS_KRAKEN)
+    if (!mons_is_tentacle_head(mons_base_type(mpusher)))
         return false;
 
-    if (mpushee->type == MONS_KRAKEN_TENTACLE
-        && int(mpushee->number) == mpusher->mindex())
-    {
+    if (mpushee->is_child_tentacle_of(mpusher))
         return true;
-    }
 
-    if (mpushee->type == MONS_KRAKEN_TENTACLE_SEGMENT
-        && int(menv[mpushee->number].number) == mpusher->mindex()
-        && mpushee->props.exists("inwards") && mpushee->props["inwards"].get_int() == mpusher->mindex())
-    {
+    if (mons_tentacle_adjacent(mpusher, mpushee))
         return true;
-    }
 
     return false;
 }
@@ -2812,7 +2805,7 @@ static bool _mons_can_displace(const monster* mpusher,
 
 
     if (immobile_monster[ipushee]
-        && !_same_kraken_parts(mpusher, mpushee))
+        && !_same_tentacle_parts(mpusher, mpushee))
     {
         return false;
     }
@@ -2825,7 +2818,7 @@ static bool _mons_can_displace(const monster* mpusher,
     if (mons_is_confused(mpusher) || mons_is_confused(mpushee)
         || mpusher->cannot_move() || mons_is_stationary(mpusher)
         || mpusher->is_constricted() || mpushee->is_constricted()
-        || (!_same_kraken_parts(mpusher, mpushee)
+        || (!_same_tentacle_parts(mpusher, mpushee)
            && (mpushee->cannot_move()
                || mons_is_stationary(mpushee)))
         || mpusher->asleep() || mpushee->caught())

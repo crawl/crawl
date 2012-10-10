@@ -467,11 +467,10 @@ public:
     bool check_stasis(bool silent, bool calc_unid = true) const;
     
     bool is_child_tentacle() const;
-    bool is_child_tentacle_of(monster* mons) const;
+    bool is_child_tentacle_of(const monster* mons) const;
     bool has_child_tentacles() const;
-    bool is_tentacle_segment_of(monster* mons) const;
     bool is_child_monster() const;
-    bool is_parent_monster_of(monster* mons) const;
+    bool is_parent_monster_of(const monster* mons) const;
     bool is_child_tentacle_segment() const;
 
 private:

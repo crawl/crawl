@@ -4280,6 +4280,16 @@ monster_type mons_tentacle_child_type(const monster* mons)
     }
 }
 
+//Returns whether a given monster is a tentacle segment immediately attached
+//to the parent monster
+bool mons_tentacle_adjacent(const monster* parent, const monster* child)
+{
+    return (mons_is_tentacle_head(mons_base_type(parent))
+            && mons_is_tentacle_segment(child->type)
+            && child->props.exists("inwards")
+            && child->props["inwards"].get_int() == parent->mindex());
+}
+
 mon_threat_level_type mons_threat_level(const monster *mon, bool real)
 {
     const double factor = sqrt(exp_needed(you.experience_level) / 30.0);
