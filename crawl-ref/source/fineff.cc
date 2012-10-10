@@ -22,12 +22,10 @@ void final_effect::schedule()
     for (vector<final_effect *>::iterator fi = env.final_effects.begin();
          fi != env.final_effects.end(); ++fi)
     {
-        if (mergeable(**fi))
+        if ((*fi)->mergeable(*this))
         {
-            final_effect *fe = *fi;
-            merge(*fe);
-            *fi = this;
-            delete fe;
+            (*fi)->merge(*this);
+            delete this;
             return;
         }
     }
