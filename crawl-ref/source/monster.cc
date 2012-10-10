@@ -5886,10 +5886,3 @@ bool monster::is_parent_monster_of(const monster* mons) const
     else
         return false;
 }
-
-//Note: this is whether the monster CAN have child tentacles, not whether any
-//are currently alive
-bool monster::has_child_tentacles() const
-{
-    return (type == MONS_KRAKEN || type == MONS_TENTACLED_STARSPAWN);
-}

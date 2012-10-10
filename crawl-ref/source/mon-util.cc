@@ -482,8 +482,7 @@ bool mons_class_is_firewood(monster_type mc)
 {
     return (mons_class_is_stationary(mc)
             && mons_class_flag(mc, M_NO_EXP_GAIN)
-            && mc != MONS_KRAKEN_TENTACLE
-            && mc != MONS_KRAKEN_TENTACLE_SEGMENT);
+            && !mons_is_tentacle(mc));
 }
 
 bool mons_is_firewood(const monster* mon)
