@@ -383,7 +383,7 @@ function (exports, $, key_conversion, chat, comm) {
     {
         $(".floating_dialog").hide();
         var elem = $(id);
-        elem.fadeIn(100, function () {
+        elem.stop(true, true).fadeIn(100, function () {
             elem.focus();
         });
         center_element(elem);
