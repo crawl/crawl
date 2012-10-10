@@ -1279,20 +1279,25 @@ void mons_relocated(monster* mons)
     mons->clear_clinging();
 }
 
-static int _destroy_tentacle(int tentacle_idx, monster* origin)
+// When given either a tentacle end or segment, kills the end and all segments
+// of that tentacle.
+static int _destroy_tentacle(monster* mons)
 {
     int seen = 0;
-
-    if (invalid_monster_index(tentacle_idx))
+    
+    monster* head = mons_is_tentacle_segment(mons->type)
+            ? mons_get_parent_monster(mons) : mons;
+    
+    //If we tried to find the head, but failed (probably because it is already
+    //dead), cancel trying to kill this tentacle
+    if (head == 0)
         return 0;
 
     // Some issue with using monster_die leading to DEAD_MONSTER
     // or w/e. Using hurt seems to cause more problems though.
     for (monster_iterator mi; mi; ++mi)
     {
-        if (mi->type == MONS_KRAKEN_TENTACLE_SEGMENT
-            && (int)mi->number == tentacle_idx
-            && mi->mindex() != origin->mindex())
+        if (mi->is_child_tentacle_of(head))
         {
             if (mons_near(*mi))
                 seen++;
@@ -1300,47 +1305,36 @@ static int _destroy_tentacle(int tentacle_idx, monster* origin)
             monster_die(*mi, KILL_MISC, NON_MONSTER, true);
         }
     }
-
-    if (origin->mindex() != tentacle_idx)
+    
+    if (mons != head)
     {
-        if (mons_near(&menv[tentacle_idx]))
-            seen++;
+        if (mons_near(head))
+                seen++;
 
         //mprf("killing base, %d %d", origin->mindex(), tentacle_idx);
         //menv[tentacle_idx].hurt(&menv[tentacle_idx], INSTANT_DEATH);
-        monster_die(&menv[tentacle_idx], KILL_MISC, NON_MONSTER, true);
+        monster_die(head, KILL_MISC, NON_MONSTER, true);
     }
-
+    
     return seen;
 }
 
 static int _destroy_tentacles(monster* head)
 {
-    int tent = 0;
-    int headnum = head->mindex();
-
-    if (invalid_monster_index(headnum))
-        return 0;
-
+    int seen = 0;
     for (monster_iterator mi; mi; ++mi)
     {
-        if (mi->type == MONS_KRAKEN_TENTACLE
-            && (int)mi->number == headnum)
+        if (mi->is_child_tentacle_of(head))
         {
-            for (monster_iterator connect; connect; ++connect)
+            if (_destroy_tentacle(*mi))
             {
-                if (connect->type == MONS_KRAKEN_TENTACLE_SEGMENT
-                    && (int) connect->number == mi->mindex())
-                {
-                    connect->hurt(*connect, INSTANT_DEATH);
-                }
+                seen++;
             }
-            if (mons_near(*mi))
-                tent++;
-            mi->hurt(*mi, INSTANT_DEATH);
+            if (!mi->is_child_tentacle_segment())
+                mi->hurt(*mi, INSTANT_DEATH);
         }
     }
-    return tent;
+    return seen;
 }
 
 static string _killer_type_name(killer_type killer)
@@ -2315,29 +2309,11 @@ int monster_die(monster* mons, killer_type killer,
         if (_destroy_tentacles(mons) && !in_transit && you.see_cell(mons->pos()))
             mpr("The dead kraken's tentacles slide back into the water.");
     }
-    else if ((mons->type == MONS_KRAKEN_TENTACLE_SEGMENT
-                  || mons->type == MONS_KRAKEN_TENTACLE)
-              && killer != KILL_MISC)
+    else if (mons_is_tentacle(mons->type) && killer != KILL_MISC
+            && mons->type != MONS_ELDRITCH_TENTACLE_SEGMENT
+            )
     {
-        int t_idx = mons->type == MONS_KRAKEN_TENTACLE
-                    ? mons->mindex() : mons->number;
-        if (_destroy_tentacle(t_idx, mons) && !in_transit)
-        {
-            //mprf("A tentacle died?");
-        }
-
-    }
-    else if (mons->type == MONS_ELDRITCH_TENTACLE)
-    {
-        for (monster_iterator mit; mit; ++mit)
-        {
-            if (mit->alive()
-                && mit->type == MONS_ELDRITCH_TENTACLE_SEGMENT
-                && mit->number == unsigned(mons->mindex()))
-            {
-                monster_die(*mit, KILL_MISC, NON_MONSTER, true);
-            }
-        }
+        _destroy_tentacle(mons);
     }
     else if (mons->type == MONS_ELDRITCH_TENTACLE_SEGMENT
              && killer != KILL_MISC)
