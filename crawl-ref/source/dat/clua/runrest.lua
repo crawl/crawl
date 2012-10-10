@@ -155,7 +155,8 @@ function rr_add_monster(mons_table, s, mode)
         return
     end
 
-    local regexp = parts[1]
+    local re_str = parts[1]
+    local regexp = crawl.regex(re_str)
     local dist   = tonumber(parts[2])
 
     if dist == 0 then
@@ -171,7 +172,7 @@ function rr_add_monster(mons_table, s, mode)
             end
         end
     else
-        table.insert( mons_table[1], crawl.regex( regexp ) )
+        table.insert( mons_table[1], regexp )
         table.insert( mons_table[2], dist )
     end
 end
