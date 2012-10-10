@@ -1273,12 +1273,6 @@ static inline void _mons_cast_abil(monster* mons, bolt &pbolt,
     mons_cast(mons, pbolt, spell_cast, true, true);
 }
 
-static bool _is_tentacle(monster* mons)
-{
-    return (mons->type == MONS_KRAKEN_TENTACLE ||
-            mons->type == MONS_STARSPAWN_TENTACLE);
-}
-
 static void _establish_connection(int tentacle,
                                   int head,
                                   set<position_node>::iterator path,
@@ -1818,13 +1812,6 @@ static void _collect_foe_positions(monster* mons,
     }
 }
 
-bool valid_kraken_connection(const monster* mons)
-{
-    return (mons->type == MONS_KRAKEN_TENTACLE_SEGMENT
-            || mons->type == MONS_KRAKEN_TENTACLE
-            || mons_base_type(mons) == MONS_KRAKEN);
-}
-
 static bool _valid_demonic_connection(monster* mons)
 {
     return (mons->mons_species() == MONS_ELDRITCH_TENTACLE_SEGMENT);
@@ -2064,15 +2051,9 @@ void move_demon_tentacle(monster* tentacle)
     tentacle->apply_location_effects(old_pos);
 }
 
-static bool _has_child_tentacles(monster* mon)
-{
-    return (mons_base_type(mon) == MONS_KRAKEN ||
-            mon->type == MONS_TENTACLED_STARSPAWN);
-}
-
 void move_child_tentacles(monster* mons)
 {
-    if (!_has_child_tentacles(mons)
+    if (!mons_is_tentacle_head(mons_base_type(mons))
         || mons->asleep())
     {
         return;
