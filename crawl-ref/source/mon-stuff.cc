@@ -2310,8 +2310,7 @@ int monster_die(monster* mons, killer_type killer,
             mpr("The dead kraken's tentacles slide back into the water.");
     }
     else if (mons_is_tentacle(mons->type) && killer != KILL_MISC
-            || mons->type != MONS_ELDRITCH_TENTACLE_SEGMENT
-            )
+            || mons->type == MONS_ELDRITCH_TENTACLE)
     {
         _destroy_tentacle(mons);
     }
