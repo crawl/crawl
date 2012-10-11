@@ -997,14 +997,18 @@ static ProceduralSample _abyss_grid(const coord_def &p)
     const static WorleyLayout worley(seed + 123456, layout_vec);
     const static RoilingChaosLayout chaosA(seed + 8675309, 450);
     const static RoilingChaosLayout chaosB(seed + 7654321, 400);
-    const static RoilingChaosLayout chaosC(seed + 24816,   380);
+    const static RoilingChaosLayout chaosC(seed + 24324,   380);
     const static RoilingChaosLayout chaosD(seed + 24816,   500);
+    const static NewAbyssLayout newAbyssLayout(seed + 7629); 
     const ProceduralLayout* mixedLayouts[] = {
-        &chaosA, &worley, &chaosB, &chaosC, &chaosD
+        &chaosA, &worley, &chaosB, &chaosC, &chaosD, &newAbyssLayout                                      
     };
-    const static vector<const ProceduralLayout*> mixed_vec(mixedLayouts, mixedLayouts + 2);
+    const static vector<const ProceduralLayout*> mixed_vec(mixedLayouts, mixedLayouts + 6);
     const static WorleyLayout layout(seed + 4321, mixed_vec);
-    const static RiverLayout rivers(seed, layout);
+    const ProceduralLayout* masterLayouts[] = { &newAbyssLayout, &layout };
+    const static vector<const ProceduralLayout*> master_vec(masterLayouts, masterLayouts + 2);
+    const static WorleyLayout masterLayout(seed + 314159, master_vec, 20.0);
+    const static RiverLayout rivers(seed, masterLayout);
     const ProceduralSample sample = rivers(pt, abyssal_state.depth);
     abyss_sample_queue.push(sample);
     return sample;
@@ -1456,6 +1460,8 @@ void abyss_teleport(bool new_area)
         _initialize_abyss_state();
         _nuke_all_terrain();
         forget_map(false);
+        clear_excludes();
+        more();
         return;
     }
 
@@ -1466,6 +1472,7 @@ void abyss_teleport(bool new_area)
     _write_abyssal_features();
     forget_map(false);
     clear_excludes();
+    more();
 }
 
 //////////////////////////////////////////////////////////////////////////////
