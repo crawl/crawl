@@ -1466,6 +1466,8 @@ Ashenzari player ghost
 @The_monster@ whispers: "Through my death, I saw my mistakes, and the mistakes of many more..."
 
 @The_monster@ says with laughter: "And yet I knew I would end up like that..."
+
+@The_monster@ promises, "I will read your future in your entrails."
 %%%%
 Beogh player ghost
 
