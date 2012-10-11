@@ -31,6 +31,8 @@ Build Process
  * ensure that you have all of the dependent host libraries required to
    use the SDK, NDK and build crawl's host tools (libsdl1.2-dev at least).
    Note that you also need the zip and libvorbis-dev packages.
+ * Get the SDL android port (a modified version of telya's):
+   git submodule update --checkout crawl-ref/source/contrib/sdl-android
  * run make android
  * If it fails, run it again (happens a lot on the first build).
  * you'll find the apk in the source directory. It should be more than 10 MB.
