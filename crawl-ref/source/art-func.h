@@ -358,8 +358,12 @@ static void _SINGING_SWORD_world_reacts(item_def *item)
 
     const char *tenname[] =  {"silenced", "no_tension", "low_tension",
                               "high_tension", "SCREAM"};
-    string key = tenname[tier];
-    const string msg = getSpeakString("singing sword " + key);
+    const string key = tenname[tier];
+    string msg = getSpeakString("singing sword " + key);
+
+    msg = maybe_pick_random_substring(msg);
+    msg = maybe_capitalize_substring(msg);
+
     const int loudness[] = {0, 2, 15, 25, 35};
     item_noise(*item, msg, loudness[tier]);
 

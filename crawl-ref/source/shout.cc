@@ -438,6 +438,9 @@ void noisy_equipment()
     if (msg.empty())
         msg = getSpeakString("noisy weapon");
 
+    msg = maybe_pick_random_substring(msg);
+    msg = maybe_capitalize_substring(msg);
+
     item_noise(*weapon, msg);
 }
 
