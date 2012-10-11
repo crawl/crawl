@@ -76,12 +76,13 @@ class DiamondLayout : public ProceduralLayout
 class WorleyLayout : public ProceduralLayout
 {
     public:
-        WorleyLayout(uint32_t _seed, std::vector<const ProceduralLayout*> _layouts)
-                : seed(_seed), layouts(_layouts) {}
+        WorleyLayout(uint32_t _seed, std::vector<const ProceduralLayout*> _layouts, const float _scale = 5.0)
+                : seed(_seed), layouts(_layouts), scale(_scale) {}
         ProceduralSample operator()(const coord_def &p, const uint32_t offset = 0) const;
     private:
         const uint32_t seed;
         const std::vector<const ProceduralLayout*> layouts;
+        const float scale;
 };
 
 class ChaosLayout : public ProceduralLayout
@@ -114,5 +115,14 @@ class RiverLayout : public ProceduralLayout
     private:
         const uint32_t seed; 
         const ProceduralLayout &layout;
+};
+
+class NewAbyssLayout : public ProceduralLayout
+{
+    public:
+        NewAbyssLayout(uint32_t _seed) : seed(_seed) {}
+        ProceduralSample operator()(const coord_def &p, const uint32_t offset = 0) const;
+    private:
+        const uint32_t seed; 
 };
 #endif /* PROC_LAYOUTS_H */
