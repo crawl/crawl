@@ -650,7 +650,7 @@ class CompatCrawlProcessHandler(CrawlProcessHandlerBase):
         game = self.game_params
         call = self._base_call()
 
-        self.logger.info("Starting crawl (compat-mode).")
+        self.logger.info("Starting %s (compat-mode).", game["id"])
 
         self.process = subprocess.Popen(call,
                                         stdin = subprocess.PIPE,
@@ -670,6 +670,8 @@ class CompatCrawlProcessHandler(CrawlProcessHandlerBase):
         self.last_activity_time = time.time()
 
         self.create_mock_ttyrec()
+
+        processes[os.path.abspath(self.ttyrec_filename)] = self
 
         self.check_where()
 
@@ -695,6 +697,11 @@ class CompatCrawlProcessHandler(CrawlProcessHandlerBase):
             self.process = None
 
             self.logger.info("Crawl terminated. (compat-mode)")
+
+            try:
+                del processes[os.path.abspath(self.ttyrec_filename)]
+            except KeyError:
+                self.logger.warning("Process entry already deleted")
 
             self.delete_mock_ttyrec()
             self.handle_process_end()
