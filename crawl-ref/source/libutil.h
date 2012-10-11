@@ -114,6 +114,9 @@ string replace_all(string s, const string &tofind, const string &replacement);
 
 string replace_all_of(string s, const string &tofind, const string &replacement);
 
+string maybe_capitalize_substring(string s);
+string maybe_pick_random_substring(string s);
+
 int count_occurrences(const string &text, const string &searchfor);
 
 void play_sound(const char *file);

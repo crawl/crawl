@@ -650,6 +650,49 @@ string replace_all_of(string s, const string &tofind, const string &replacement)
     return s;
 }
 
+// Capitalize phrases encased in @CAPS@ ... @NOCAPS@. If @NOCAPS@ is missing, change the rest of the line to uppercase.
+string maybe_capitalize_substring(string s)
+{
+    string::size_type start = 0;
+    while ((start = s.find("@CAPS@", start)) != string::npos)
+    {
+        string::size_type cap_start  = start + 6;
+        string::size_type cap_end    = string::npos;
+        string::size_type end        = s.find("@NOCAPS@", cap_start);
+        string::size_type length     = string::npos;
+        string::size_type cap_length = string::npos;
+        if (end != string::npos)
+        {
+            cap_end = end + 8;
+            cap_length = end - cap_start;
+            length = cap_end - start;
+        }
+        string substring = s.substr(cap_start, cap_length);
+        trim_string(substring);
+        s.replace(start, length, uppercase(substring));
+    }
+    return s;
+}
+
+// For each set of [phrase|term|word] contained in the string, replace the set with a random subphrase.
+// NOTE: Doesn't work for nested patterns!
+string maybe_pick_random_substring(string s)
+{
+    string::size_type start = 0;
+    while ((start = s.find("[", start)) != string::npos)
+    {
+        string::size_type end = s.find("]", start);
+        if (end == string::npos)
+            break;
+
+        string substring = s.substr(start + 1, end - start - 1);
+        vector<string> split = split_string("|", substring, false, false);
+        int index = random2(split.size());
+        s.replace(start, end + 1 - start, split[index]);
+    }
+    return s;
+}
+
 int count_occurrences(const string &text, const string &s)
 {
     ASSERT(!s.empty());

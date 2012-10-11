@@ -3466,6 +3466,8 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
     if (s_type < 0 || s_type >= NUM_LOUDNESS || s_type == NUM_SHOUTS)
         s_type = mons_shouts(mons->type);
 
+    msg = maybe_pick_random_substring(msg);
+
     // FIXME: Handle player_genus in case it was not generalized to foe_genus.
     msg = replace_all(msg, "@a_player_genus@",
                       article_a(species_name(you.species, true)));
@@ -3787,6 +3789,8 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
         msg = replace_all(msg, "@says@", sound_list[s_type]);
 
     msg = apostrophise_fixup(msg);
+
+    msg = maybe_capitalize_substring(msg);
 
     return msg;
 }
