@@ -699,8 +699,8 @@ class CompatCrawlProcessHandler(CrawlProcessHandlerBase):
             self.delete_mock_ttyrec()
             self.handle_process_end()
 
-    def add_watcher(self, watcher, hide = False):
-        super(CompatCrawlProcessHandler, self).add_watcher(watcher, hide)
+    def add_watcher(self, watcher):
+        super(CompatCrawlProcessHandler, self).add_watcher(watcher)
 
         if self.process:
             self.process.stdin.write("^r")
