@@ -872,7 +872,8 @@ w:1
 
 @The_weapon@ says, "They will have to pry me from your cold, dead hands."
 
-@The_weapon@ moans, "By @player_god@, you are such a @_coward_@."
+@The_weapon@ moans, "By {{ if you.god() == "No God" then return "my blade"
+else return "@player_god@"; end }}, you are such a @_coward_@."
 
 @The_weapon@ wonders, "Who is more incompetent - you or the opposition?"
 
@@ -946,7 +947,8 @@ _speaking_high_tension_
 
 @The_weapon@ shouts, "Cut 'em off! All their little heads at once!"
 
-@The_weapon@ shouts, "Kill 'em all and let @player_god@ sort them out!"
+@The_weapon@ shouts, "Kill 'em all and let {{ if you.god() == "No God" then
+return "@_godless_sorter_@"; else return "@player_god@"; end }} sort them out!"
 
 @The_weapon@ shouts, "Screaming and crying is the perfect accompaniment."
 
@@ -998,7 +1000,24 @@ w:1
 
 # Immortal Defense, Courage Point quote
 @The_weapon@ @_screams_@, "My victories add up!"
+%%%%
+_godless_sorter_
 
+w:5
+fate
+
+w:5
+the lot
+
+worms
+
+the godless void
+
+w:1
+autolysis
+
+w:4
+putrefaction
 ############ SCREAMING -- lots of damage!! #########################
 %%%%
 _SCREAM_
