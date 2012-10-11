@@ -31,3 +31,4 @@
 [submodule "crawl-ref/source/contrib/sdl-android"]
 	path = crawl-ref/source/contrib/sdl-android
 	url = git://github.com/frogbotherer/commandergenius.git
+	update = none
