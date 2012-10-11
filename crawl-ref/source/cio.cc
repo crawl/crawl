@@ -282,6 +282,16 @@ void line_reader::cursorto(int ncx)
     cgotoxy(x, y, region);
 }
 
+#ifdef USE_TILE_WEB
+static void _webtiles_abort_get_line()
+{
+    tiles.json_open_object();
+    tiles.json_write_string("msg", "abort_get_line");
+    tiles.json_close_object();
+    tiles.finish_message();
+}
+#endif
+
 int line_reader::read_line(bool clear_previous)
 {
     if (bufsz <= 0)
@@ -329,6 +339,8 @@ int line_reader::read_line(bool clear_previous)
     if (history)
         history->go_end();
 
+    int ret;
+
     while (true)
     {
         int ch = getchm(getch_ck);
@@ -337,7 +349,8 @@ int line_reader::read_line(bool clear_previous)
         if (crawl_state.seen_hups)
         {
             buffer[0] = '\0';
-            return 0;
+            ret = 0;
+            break;
         }
 
         if (keyfn)
@@ -348,19 +361,27 @@ int line_reader::read_line(bool clear_previous)
                 buffer[length] = 0;
                 if (history && length)
                     history->new_input(buffer);
-                return 0;
+                ret = 0;
+                break;
             }
             else if (whattodo == -1)
             {
                 buffer[length] = 0;
-                return ch;
+                ret = ch;
+                break;
             }
         }
 
-        int ret = process_key(ch);
+        ret = process_key(ch);
         if (ret != -1)
-            return ret;
+            break;
     }
+
+#ifdef USE_TILE_WEB
+    _webtiles_abort_get_line();
+#endif
+
+    return ret;
 }
 
 void line_reader::backspace()

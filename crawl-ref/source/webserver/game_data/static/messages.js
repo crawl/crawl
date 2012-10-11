@@ -80,7 +80,6 @@ function ($, comm, util) {
         input.keydown(function (ev) {
             if (ev.which == 27)
             {
-                restore(); // ESC
                 ev.preventDefault();
                 comm.send_message("key", { keycode: 27 }); // Send ESC
                 return false;
@@ -90,12 +89,17 @@ function ($, comm, util) {
                 var enter = String.fromCharCode(13);
                 var text = input.val() + enter;
                 comm.send_message("input", { text: text});
-
-                restore();
                 ev.preventDefault();
                 return false;
             }
         });
+    }
+
+    function abort_get_line()
+    {
+        var input = $("#messages .game_message input");
+        input.blur();
+        input.remove();
     }
 
     function hide_more()
@@ -116,6 +120,7 @@ function ($, comm, util) {
     comm.register_handlers({
         "msgs": handle_messages,
         "get_line": get_line,
+        "abort_get_line": abort_get_line,
         "more": handle_more,
         "hide_more": hide_more
     });
