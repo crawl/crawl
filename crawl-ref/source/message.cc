@@ -735,9 +735,6 @@ static int colour_msg(msg_colour_type col)
 // Returns a colour or MSGCOL_MUTED.
 static msg_colour_type channel_to_msgcol(msg_channel_type channel, int param)
 {
-    if (you.asleep())
-        return MSGCOL_DARKGREY;
-
     msg_colour_type ret;
 
     switch (Options.channels[channel])
