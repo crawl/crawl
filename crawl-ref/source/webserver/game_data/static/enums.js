@@ -1,11 +1,23 @@
 // TODO: Generate this automatically from enum.h?
 define(function () {
-    var exports = {};
+    var exports = {}, val;
     // UI States (tileweb.h)
     exports.ui = {};
     exports.ui.NORMAL   = 0;
     exports.ui.CRT      = 1;
     exports.ui.VIEW_MAP = 2;
+
+    // Mouse modes
+    val = 0;
+    exports.mouse_mode = {};
+    exports.mouse_mode.NORMAL = val++;
+    exports.mouse_mode.COMMAND = val++;
+    exports.mouse_mode.TARGET = val++;
+    exports.mouse_mode.TARGET_DIR = val++;
+    exports.mouse_mode.TARGET_PATH = val++;
+    exports.mouse_mode.MORE = val++;
+    exports.mouse_mode.MACRO = val++;
+    exports.mouse_mode.MAX = val++;
 
     // Cursors
     exports.CURSOR_MOUSE = 0;
@@ -243,7 +255,7 @@ define(function () {
     mf.PRESELECTED      = 0x4000;
     exports.menu_flag = mf;
 
-    var val = 0;
+    val = 0;
     exports.CHATTR = {};
     exports.CHATTR.NORMAL = val++;
     exports.CHATTR.STANDOUT = val++;
@@ -282,6 +294,14 @@ define(function () {
     exports.MF_MAX = val++;
 
     exports.MF_SKIP = val++;
+
+    exports.reverse_lookup = function (e, value) {
+        for (var prop in e)
+        {
+            if (e[prop] == value)
+                return prop;
+        }
+    };
 
     return exports;
 });

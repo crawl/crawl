@@ -15,6 +15,24 @@ function ($, comm, util) {
         $("#messages_container").scrollTop(old_scroll_top);
     }
 
+    var prefix_glyph_classes = "turn_marker command_marker";
+    function set_last_prefix_glyph(html, classes)
+    {
+        var last_msg_elem = $("#messages .game_message").last();
+        var prefix_glyph = last_msg_elem.find(".prefix_glyph");
+        prefix_glyph.html(html);
+        prefix_glyph.removeClass(prefix_glyph_classes);
+        prefix_glyph.addClass(classes);
+    }
+
+    function new_command(new_turn)
+    {
+        if (new_turn)
+            set_last_prefix_glyph("_", "turn_marker");
+        else
+            set_last_prefix_glyph("_", "command_marker");
+    }
+
     function add_message(data)
     {
         var last_message = messages[messages.length-1];
@@ -23,10 +41,7 @@ function ($, comm, util) {
         msg_elem.addClass("game_message");
         var prefix_glyph = $("<span></span>");
         prefix_glyph.addClass("prefix_glyph");
-        if (last_message && last_message.turn < data.turn)
-            prefix_glyph.html("_");
-        else
-            prefix_glyph.html("&nbsp;");
+        prefix_glyph.html("&nbsp;");
         msg_elem.html(prefix_glyph);
         msg_elem.append(util.formatted_string_to_html(data.text));
         if (data.repeats > 1)
@@ -132,6 +147,7 @@ function ($, comm, util) {
 
     return {
         hide: hide,
-        show: show
+        show: show,
+        new_command: new_command
     };
 });

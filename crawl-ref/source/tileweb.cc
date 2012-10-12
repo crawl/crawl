@@ -466,6 +466,17 @@ void TilesFramework::set_ui_state(WebtilesUIState state)
     _send_ui_state(state);
 }
 
+void TilesFramework::update_mouse_mode(mouse_mode mode)
+{
+    webtiles_send_messages();
+
+    json_open_object();
+    json_write_string("msg", "mouse_mode");
+    json_write_int("mode", mode);
+    json_close_object();
+    finish_message();
+}
+
 static bool _update_string(bool force, std::string& current,
                            const std::string& next,
                            const std::string& name,
@@ -1439,6 +1450,8 @@ void TilesFramework::_send_everything()
     finish_message();
 
     webtiles_send_last_messages();
+
+    update_mouse_mode(mouse_control::current_mode());
 
     m_text_crt.send(true);
     m_text_menu.send(true);

@@ -1,5 +1,5 @@
-define(["jquery", "comm", "./enums", "./map_knowledge"],
-function ($, comm, enums, map_knowledge) {
+define(["jquery", "comm", "./enums", "./map_knowledge", "./messages"],
+function ($, comm, enums, map_knowledge, messages) {
     var player = {
         name: "", god: "",
         hp: 0, hp_max: 0,
@@ -174,11 +174,15 @@ function ($, comm, enums, map_knowledge) {
 
         $.extend(player, data);
 
-        if (last_time)
+        if ("time" in data)
         {
-            player.time_delta = player.time - last_time;
+            if (last_time)
+            {
+                player.time_delta = player.time - last_time;
+            }
+            last_time = player.time;
+            messages.new_command(true);
         }
-        last_time = player.time;
 
         update_stats_pane();
 

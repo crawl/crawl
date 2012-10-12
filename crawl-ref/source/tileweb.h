@@ -186,6 +186,7 @@ public:
     WebtilesUIState get_ui_state() { return m_ui_state; }
 
     void dump();
+    void update_mouse_mode(mouse_mode mode);
 
 protected:
     int m_sock;
