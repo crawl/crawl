@@ -2,7 +2,7 @@ define(["jquery", "comm", "client", "./dungeon_renderer", "./display", "./minima
         "./settings", "./enums", "./messages",
         "./text", "./menu", "./player"],
 function ($, comm, client, dungeon_renderer, display, minimap, settings, enums, messages) {
-    var layout_parameters, ui_state;
+    var layout_parameters, ui_state, mouse_mode;
 
     function init()
     {
@@ -138,6 +138,20 @@ function ($, comm, client, dungeon_renderer, display, minimap, settings, enums, 
         set_ui_state(data.state);
     }
 
+    function set_mouse_mode(mode)
+    {
+        if (mode == mouse_mode) return;
+        log("mouse mode: " + mode + "/" + enums.reverse_lookup(enums.mouse_mode, mode));
+        mouse_mode = mode;
+        if (mode == enums.mouse_mode.COMMAND)
+            messages.new_command();
+    }
+
+    function handle_set_mouse_mode(data)
+    {
+        set_mouse_mode(data.mode);
+    }
+
     function handle_delay(data)
     {
         client.delay(data.t);
@@ -210,5 +224,6 @@ function ($, comm, client, dungeon_renderer, display, minimap, settings, enums, 
         "delay": handle_delay,
         "version": handle_version,
         "ui_state": handle_set_ui_state,
+        "mouse_mode": handle_set_mouse_mode,
     });
 });

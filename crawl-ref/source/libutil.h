@@ -230,10 +230,23 @@ public:
     {
         m_previous_mode = ms_current_mode;
         ms_current_mode = mode;
+
+#ifdef USE_TILE_WEB
+        if (m_previous_mode != ms_current_mode)
+        {
+            tiles.update_mouse_mode(mode);
+        }
+#endif
     }
 
     ~mouse_control()
     {
+#ifdef USE_TILE_WEB
+        if (m_previous_mode != ms_current_mode)
+        {
+            tiles.update_mouse_mode(m_previous_mode);
+        }
+#endif
         ms_current_mode = m_previous_mode;
     }
 
