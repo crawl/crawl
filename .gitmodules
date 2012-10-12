@@ -30,5 +30,5 @@
 	url = git://gitorious.org/crawl/crawl-fonts.git
 [submodule "crawl-ref/source/contrib/sdl-android"]
 	path = crawl-ref/source/contrib/sdl-android
-	url = git://github.com/frogbotherer/commandergenius.git
+	url = git://gitorious.org/crawl/sdl-android.git
 	update = none
