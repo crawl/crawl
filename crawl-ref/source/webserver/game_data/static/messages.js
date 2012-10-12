@@ -37,7 +37,18 @@ function ($, comm, util) {
     {
         var last_message = messages[messages.length-1];
         messages.push(data);
-        var msg_elem = $("<div>");
+        var msg_elem;
+        var reusable_msg_elems = $("#messages .game_message.cleared");
+        if (reusable_msg_elems.length > 0)
+        {
+            msg_elem = reusable_msg_elems.first();
+            msg_elem.removeClass("cleared");
+        }
+        else
+        {
+            msg_elem = $("<div>");
+            $("#messages").append(msg_elem);
+        }
         msg_elem.addClass("game_message");
         var prefix_glyph = $("<span></span>");
         prefix_glyph.addClass("prefix_glyph");
@@ -52,7 +63,6 @@ function ($, comm, util) {
             msg_elem.append(" ");
             msg_elem.append(repeats);
         }
-        $("#messages").append(msg_elem);
         $("#messages_container")
             .stop(true, false)
             .animate({
@@ -63,7 +73,8 @@ function ($, comm, util) {
     function rollback(count)
     {
         messages = messages.slice(0, -count);
-        $("#messages .game_message").slice(-count).remove();
+        $("#messages .game_message").not(".cleared").slice(-count)
+            .addClass("cleared").html("&nbsp;");
     }
 
     function handle_messages(msg)
