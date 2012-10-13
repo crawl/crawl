@@ -495,7 +495,7 @@ void formatted_string::all_caps()
             uppercase(ops[i].text);
 }
 
-void formatted_string::capitalize()
+void formatted_string::capitalise()
 {
     for (unsigned int i = 0; i < ops.size(); i++)
         if (ops[i].type == FSOP_TEXT && !ops[i].text.empty())

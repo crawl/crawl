@@ -1127,7 +1127,7 @@ void mpr(string text, msg_channel_type channel, int param, bool nojoin, bool cap
     if (you.duration[DUR_QUAD_DAMAGE])
         fs.all_caps(); // No sound, so we simulate the reverb with all caps.
     else if (cap)
-        fs.capitalize();
+        fs.capitalise();
     if (channel != MSGCH_ERROR && channel != MSGCH_DIAGNOSTICS)
         fs.filter_lang();
     text = fs.to_colour_string();

@@ -100,7 +100,7 @@ string attack::anon_name(description_level_type desc, bool actor_invisible)
 /* Returns an anonymous actor's pronoun
  *
  * Given invisibility (whether out of LOS or just invisible), returns the
- * appropriate possessive, inflexive, capitalized pronoun.
+ * appropriate possessive, inflexive, capitalised pronoun.
  */
 string attack::anon_pronoun(pronoun_type pron)
 {

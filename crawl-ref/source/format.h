@@ -32,7 +32,7 @@ public:
     formatted_string chop(int length) const;
     void del_char();
     void all_caps();
-    void capitalize();
+    void capitalise();
     void filter_lang();
 
     void clear();

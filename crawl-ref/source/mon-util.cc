@@ -3468,7 +3468,7 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
 
     msg = maybe_pick_random_substring(msg);
 
-    // FIXME: Handle player_genus in case it was not generalized to foe_genus.
+    // FIXME: Handle player_genus in case it was not generalised to foe_genus.
     msg = replace_all(msg, "@a_player_genus@",
                       article_a(species_name(you.species, true)));
     msg = replace_all(msg, "@player_genus@", species_name(you.species, true));
@@ -3790,7 +3790,7 @@ string do_mon_str_replacements(const string &in_msg, const monster* mons,
 
     msg = apostrophise_fixup(msg);
 
-    msg = maybe_capitalize_substring(msg);
+    msg = maybe_capitalise_substring(msg);
 
     return msg;
 }
