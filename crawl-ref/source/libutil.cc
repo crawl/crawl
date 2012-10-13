@@ -650,8 +650,9 @@ string replace_all_of(string s, const string &tofind, const string &replacement)
     return s;
 }
 
-// Capitalize phrases encased in @CAPS@ ... @NOCAPS@. If @NOCAPS@ is missing, change the rest of the line to uppercase.
-string maybe_capitalize_substring(string s)
+// Capitalise phrases encased in @CAPS@ ... @NOCAPS@. If @NOCAPS@ is
+// missing, change the rest of the line to uppercase.
+string maybe_capitalise_substring(string s)
 {
     string::size_type start = 0;
     while ((start = s.find("@CAPS@", start)) != string::npos)

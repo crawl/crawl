@@ -362,7 +362,7 @@ static void _SINGING_SWORD_world_reacts(item_def *item)
     string msg = getSpeakString("singing sword " + key);
 
     msg = maybe_pick_random_substring(msg);
-    msg = maybe_capitalize_substring(msg);
+    msg = maybe_capitalise_substring(msg);
 
     const int loudness[] = {0, 2, 15, 25, 35};
     item_noise(*item, msg, loudness[tier]);

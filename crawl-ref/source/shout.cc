@@ -439,7 +439,7 @@ void noisy_equipment()
         msg = getSpeakString("noisy weapon");
 
     msg = maybe_pick_random_substring(msg);
-    msg = maybe_capitalize_substring(msg);
+    msg = maybe_capitalise_substring(msg);
 
     item_noise(*weapon, msg);
 }
