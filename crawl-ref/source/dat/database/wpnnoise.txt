@@ -1106,8 +1106,7 @@ _SCREAM_
 
 # Use @player_genus@ rather than @player_species@ or @player_name@ to
 # express that the sword cares little for the character.
-# FIXME: capitalise @player_genus@
-@The_weapon@ @_screams_@, "FASTER, @player_genus@, KILL KILL KILL!"
+@The_weapon@ @_screams_@, "FASTER, @CAPS@ @player_genus@ @NOCAPS@, KILL KILL KILL!"
 
 #### Madness ####
 
