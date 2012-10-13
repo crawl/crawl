@@ -144,10 +144,10 @@ w:80
 @Your_weapon@ [cackles|giggles|gurgles|sighs|snorts|warbles|wails|whimpers].
 
 w:50
-@Your_weapon@ [coughs|swears|yawns] [|loudly|noisily].
+@Your_weapon@ [coughs|swears|yawns][| loudly| noisily].
 
 w:40
-@Your_weapon@ [burps|cheers|hollers|yelps] [|loudly]!
+@Your_weapon@ [burps|cheers|hollers|yelps][ |loudly]!
 
 w:30
 @Your_weapon@ makes a [horrible|deep, guttural|tutting] noise.
