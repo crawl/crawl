@@ -1083,6 +1083,11 @@ void mpr(string text, msg_channel_type channel, int param, bool nojoin, bool cap
     if (crawl_state.game_is_arena())
         debug_channel_arena(channel);
 
+#ifdef DEBUG_FATAL
+    if (channel == MSGCH_ERROR)
+        die("%s", text.c_str());
+#endif
+
     if (!crawl_state.io_inited)
     {
         if (channel == MSGCH_ERROR)
