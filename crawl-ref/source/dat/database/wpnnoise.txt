@@ -108,13 +108,13 @@ _weapon_chatter_
 
 @Your_weapon@ shouts, "Help!"
 
-@Your_weapon@ cracks jokes of @_questionable_@ humour.
+@Your_weapon@ cracks jokes of [questionable|doubtful|juvenile] humour.
 
-@Your_weapon@ dwells on sagas on the glory of old.
+@Your_weapon@ dwells on sagas on the [glory of old|days of yore].
 
 @Your_weapon@ belts out, "Dying in battle is most honourable!"
 
-@Your_weapon@ gleefully confesses its misdeeds.
+@Your_weapon@ [proudly|gleefully] confesses its [misdeeds|atrocities].
 
 w:30
 @_rare_chatter_@
@@ -140,93 +140,61 @@ _rare_chatter_
 %%%%
 weapon_noises
 
+w:80
+@Your_weapon@ [cackles|giggles|gurgles|sighs|snorts|warbles|wails|whimpers].
+
+w:50
+@Your_weapon@ [coughs|swears|yawns] [|loudly|noisily].
+
+w:40
+@Your_weapon@ [burps|cheers|hollers|yelps] [|loudly]!
+
+w:30
+@Your_weapon@ makes a [horrible|deep, guttural|tutting] noise.
+
+w:20
+@Your_weapon@ makes a [deep moaning|popping] sound.
+
+w:20
+@Your_weapon@ goes [tick-tock.|snicker-snack!]
+
+w:20
+@Your_weapon@ howls [like a wolf.|with laughter!]
+
+w:20
+@Your_weapon@ [erupts|suddenly bursts] into laughter!
+
+w:20
+@Your_weapon@ gives off a [wolf whistle|sizzling sound].
+
+w:20
+@Your_weapon@ lets out a [mournful sigh.|whoop!]
+
+@Your_weapon@ laughs crazily.
+
 @Your_weapon@ growls menacingly.
 
 @Your_weapon@ sputters and hisses.
-
-@Your_weapon@ hollers!
 
 @Your_weapon@ pants and wheezes.
 
 @Your_weapon@ barks abruptly.
 
-@Your_weapon@ sighs.
-
-@Your_weapon@ wails.
-
-@Your_weapon@ howls like a wolf.
-
-@Your_weapon@ whimpers.
-
 @Your_weapon@ screams hysterically.
 
 @Your_weapon@ hiccups loudly.
 
-@Your_weapon@ howls with laughter!
-
-@Your_weapon@ erupts into laughter!
-
-@Your_weapon@ suddenly bursts into laughter!
-
-@Your_weapon@ laughs crazily.
-
 @Your_weapon@ starts to sob noisily.
-
-@Your_weapon@ goes tick-tock.
-
-@Your_weapon@ burps!
-
-@Your_weapon@ goes snicker-snack!
-
-@Your_weapon@ lets out a mournful sigh.
 
 @Your_weapon@ yells in some weird language.
 
-@Your_weapon@ makes a horrible noise.
-
-@Your_weapon@ makes a deep moaning sound.
-
-@Your_weapon@ gives off a wolf whistle.
-
-@Your_weapon@ wails.
-
-@Your_weapon@ giggles.
-
-@Your_weapon@ lets out a whoop!
-
-@Your_weapon@ yawns loudly.
-
 @Your_weapon@ cries out!
-
-@Your_weapon@ swears loudly.
-
-@Your_weapon@ coughs loudly.
 
 @Your_weapon@ burbles away merrily.
 
-@Your_weapon@ gurgles.
-
 @Your_weapon@ suddenly shrieks!
 
-@Your_weapon@ cackles.
-
-@Your_weapon@ warbles.
-
-@Your_weapon@ snorts.
-
-@Your_weapon@ makes a deep, guttural noise.
-
-@Your_weapon@ gives off a sizzling sound.
-
 @Your_weapon@ whistles innocently.
-
-@Your_weapon@ makes a popping sound.
-
-@Your_weapon@ yelps loudly!
-
-@Your_weapon@ cheers!
-
-@Your_weapon@ makes a tutting noise.
 
 @Your_weapon@ parrots the noises around you.
 ###############################################################################
@@ -239,17 +207,15 @@ _instrumental_noises_
 
 @Your_weapon@ makes a twanging sound.
 
-@Your_weapon@ chimes melodiously.
+w:20
+@Your_weapon@ chimes [melodiously|harmoniously].
 
-@Your_weapon@ chimes harmoniously.
+w:20
+@Your_weapon@ imitates [a saxophone|the bagpipes].
 
 @Your_weapon@ tinkles.
 
 @Your_weapon@ rings like a bell.
-
-@Your_weapon@ imitates a saxophone.
-
-@Your_weapon@ imitates the bagpipes.
 
 @Your_weapon@ emits a flourish of trumpets.
 
@@ -345,6 +311,7 @@ the wailing of sirens.
 a flourish of trumpets!
 
 a strangely pleasant explosion.
+
 ###############################################################################
 ###############################################################################
 #
@@ -414,7 +381,7 @@ VISUAL:@The_weapon@ struggles and turns.
 
 VISUAL:@The_weapon@ looks @_exasperated_@.
 
-VISUAL:@The_weapon@ makes a @_sad_@ impression.
+VISUAL:@The_weapon@ makes a [sad|disoriented|forlorn|hopeless] impression.
 
 w:5
 VISUAL:@The_weapon@ sulks.
@@ -525,6 +492,7 @@ w:100
 @The_weapon@ laughs in a fit of madness.
 
 @The_weapon@ makes a horrifying noise.
+
 ###############################################################################
 # Singing or other making of music
 # The Singing Sword will happily sing a song during work (i.e. at low tension).
@@ -539,21 +507,18 @@ _singing_no_tension_
 
 @The_weapon@ makes a painfully high-pitched squeak.
 
-@The_weapon@ sings an ear-splitting high note.
-
-@The_weapon@ sings a sudden staccato note.
-
-@The_weapon@ sings a quivering drawn-out note.
+w:30
+@The_weapon@ sings [a sudden staccato|a quivering drawn-out|an ear-splitting high] note.
 
 @The_weapon@ trains the @_kind_of_scales_@ scales.
 
 @The_weapon@ plays a couple of bars.
 
-@The_weapon@ @_nearly_or_clearly_@ @_hits_or_misses_@ the concert pitch.
+@The_weapon@ [nearly|clearly|] [hits|misses] the concert pitch.
 
 @The_weapon@ repeatedly practises the high pitch.
 
-@The_weapon@ sings @_several_@ chords at once.
+@The_weapon@ sings [several|three or four|a multitude of] chords at once.
 
 @The_weapon@ repeatedly practises counterpoints.
 ############ singing, no or low tension ############
@@ -562,11 +527,9 @@ _singing_no-low_tension_
 
 @The_weapon@ breaks into glorious song!
 
-@The_weapon@ sings.
+@The_weapon@ sings [|off-key].
 
-@The_weapon@ @_sings_or_whistles_@ loudly.
-
-@The_weapon@ sings off-key.
+@The_weapon@ [sings|whistles] [loudly|merrily].
 
 @The_weapon@ whines plaintively.
 
@@ -579,8 +542,6 @@ _singing_no-low_tension_
 @The_weapon@ hums tunelessly.
 
 @The_weapon@ keens wildly.
-
-@The_weapon@ whistles merrily.
 
 #Beethoven
 @The_weapon@ goes "Da-da-da-dum".
@@ -603,13 +564,13 @@ _singing_no-low_tension_
 
 @The_weapon@ merrily whistles a melody.
 
-@The_weapon@ strikes up a @_dance_@.
+@The_weapon@ strikes up a [bolero|bossanova|calypso|fandango|mazurka|menuet|pasodoble|waltz].
 
-@The_weapon@ intones @_an_aria_or_fugue_@.
+@The_weapon@ intones [an aria|a fugue].
 
-@The_weapon@ gives you a private @_audition_@.
+@The_weapon@ gives you a private [audition|concerto].
 
-@The_weapon@ @_sings_or_hums_@ away to itself.
+@The_weapon@ [sings|hums] away to itself.
 
 @The_weapon@ lets out a series of bird calls.
 
@@ -631,41 +592,36 @@ _singing_no-low_tension_
 
 In a hysterical voice, @the_weapon@ strikes up a march.
 
-@The_weapon@ @_sings_hums_whistles_@ a @_what_kind_@ @_tune_or_melody_@.
+@The_weapon@ [sings|hums|whistles] a [little|catchy|merry] [tune|melody].
 
-@The_weapon@ @_sings_or_hums_@ an eerie @_tune_or_melody_@.
+@The_weapon@ [sings|hums] an eerie [tune|melody].
 
 w:5
-@The_weapon@ @_sings_or_hums_@ a slow and mournful tune.
+@The_weapon@ [sings|hums] a slow and mournful tune.
 
 w:25
 @The_weapon@ strikes up @_strikes_up_what_@.
 
 @The_weapon@ sings, "Tra-la-la..."
 
-@The_weapon@ sings a lullaby.
-
-@The_weapon@ sings a folk song.
-
-@The_weapon@ chants a little melody.
-
-@The_weapon@ sings a deeply moving song.
-
-@The_weapon@ plays a requiem for the unknown sword.
+w:40
+@The_weapon@ sings a [lullaby|folk song|deeply moving song|little jingle].
 
 @The_weapon@ hums a slow waltz.
 
-@The_weapon@ sings a little jingle.
+@The_weapon@ chants a little melody.
+
+@The_weapon@ plays a requiem for the unknown sword.
 
 @The_weapon@ plays an overture.
 
-@The_weapon@ @_composes_or_sings_@ a @_hymn_or_song_@ about @_song_theme_@.
+@The_weapon@ launches into a [hymn|song] on @_song_theme_@.
 
-@The_weapon@ @_composes_or_sings_@ a hymn praising @player_god@.
+@The_weapon@ [composes|sings] a [hymn|song] about @_song_theme_@.
 
-@The_weapon@ launches into a @_hymn_or_song_@ on @_song_theme_@.
+@The_weapon@ [composes|sings] a hymn praising @player_god@.
 
-@The_weapon@ @_composes_or_sings_@ a ballad about your adventures.
+@The_weapon@ [composes|sings] a ballad about your adventures.
 
 @The_weapon@ prematurely composes your obituary.
 
@@ -691,7 +647,7 @@ _common_speaking_no_tension_
 
 @The_weapon@ spouts musical wisdom.
 
-@The_weapon@ @_points_out_@ the lack of singing @_not_swords_@.
+@The_weapon@ [points out|remarks in passing on] the lack of singing [axes|clubs|polearms|staves].
 
 @The_weapon@ embarks on a lengthy monologue about murderous music.
 
@@ -707,7 +663,7 @@ _common_speaking_no_tension_
 
 @The_weapon@ asks you for a rhyme on '@_rhyme_word_@'.
 
-@The_weapon@ complains about @_double_or_triple_@ swords.
+@The_weapon@ complains about [double|triple|short] swords.
 
 @The_weapon@ derides short swords.
 
@@ -729,7 +685,7 @@ _common_speaking_no_tension_
 
 @The_weapon@ brightly asks, "How about a duet?"
 
-@The_weapon@ wonders, "Am I just an instrument of @_demise_or_death_@?"
+@The_weapon@ wonders, "Am I just an instrument of [demise|death|downfall]?"
 
 @The_weapon@ yells, "No battle, no fun!"
 
@@ -737,15 +693,17 @@ _common_speaking_no_tension_
 
 @The_weapon@ cries out, "You certainly can't call me dull!"
 
-@The_weapon@ tells you the story of its previous owner's @_demise_or_death_@.
+@The_weapon@ tells you the story of its previous owner's [demise|death|misfortune].
 
 @The_weapon@ brightly announces, "I've got so much to tell you!"
 
 @The_weapon@ says, "You could say something too, you know."
 
-@The_weapon@ complains, "Are you always this @_silent_@?"
+@The_weapon@ complains, "Are you always this [silent|uncommunicative|taciturn|quiet|boring]?
 
 @The_weapon@ grouses, "Silence can be so depressing."
+
+@The_weapon@ grouses, "Silence always makes me sulking."
 
 @The_weapon@ compliments you on your taste in weapons.
 
@@ -780,11 +738,7 @@ _rare_speaking_no_tension_
 
 @The_weapon@ demands, "I must not be sheathed without first drawing blood!"
 
-w:5
-@The_weapon@ explains all about @_musical_topic_@.
-
-w:5
-@The_weapon@ gives a lengthy lecture on @_musical_topic_@.
+@The_weapon@ [explains all about|gives a lengthy lecture on] @_musical_topic_@.
 
 @The_weapon@ curses its smith, "I was supposed to be the Stinging Sword!"
 
@@ -802,7 +756,7 @@ w:5
 
 @The_weapon@ amuses itself with detailed descriptions of past executions.
 
-@The_weapon@ wishes everyone in the dungeon @_unpleasant_or_sudden_@ @_demise_or_death_@.
+@The_weapon@ wishes everyone in the dungeon [unpleasant|sudden] [demise|death].
 
 @The_weapon@ fumes, "Being battered, bent and broken sure is better than this boredom!"
 
@@ -853,12 +807,9 @@ _speaking_low_tension_
 @The_weapon@ shouts, "Live by the sword, die by the sword!"
 
 w:1
-@The_weapon@ shouts, "Lie by the sword, die by the sword!"
+@The_weapon@ shouts, "Lie [by|to] the sword, die by the sword!"
 
-w:1
-@The_weapon@ shouts, "Lie to the sword, die to the sword!"
-
-@The_weapon@ complains, "If we kill all of them, no-one will be listening!"
+@The_weapon@ realises, "If we kill all of them, no-one will be listening!"
 
 @The_weapon@ sighs, "How I wish you were a better fighter."
 
@@ -873,7 +824,7 @@ w:1
 @The_weapon@ says, "They will have to pry me from your cold, dead hands."
 
 @The_weapon@ moans, "By {{ if you.god() == "No God" then return "my blade"
-else return "@player_god@"; end }}, you are such a @_coward_@."
+else return "@player_god@"; end }}, you are such a [coward|dastard|craven|faintheart|poltroon|wuss]."
 
 @The_weapon@ wonders, "Who is more incompetent - you or the opposition?"
 
@@ -984,7 +935,7 @@ w:1
 
 @The_weapon@ @_screams_@, "We will celebrate on a pile of carcasses!"
 
-@The_weapon@ @_screams_@, "@player_name@, you will @_dine_@ on fine @_corpses_@ today!"
+@The_weapon@ @_screams_@, "@player_name@, you will [dine|feast] on fine @_corpses_@ today!"
 
 @The_weapon@ @_screams_@, "Go for the jugular!"
 
@@ -1057,7 +1008,7 @@ _SCREAM_
 # Marilyn Manson, "The Reflecting God"
 @The_weapon@ @_screams_@, "WHEN I'M GOD, EVERYONE DIES!!!"
 
-# This and the next are from Planescape: Torment references
+# This and the next are from Planescape: Torment
 @The_weapon@ @_screams_@, "I AM IRON GIVEN PURPOSE!"
 
 @The_weapon@ @_screams_@, "I AM PAIN SEEKING EXPRESSION!"
@@ -1102,11 +1053,11 @@ _SCREAM_
 @The_weapon@ @_screams_@, "I CUT THROUGH MAGIC!"
 
 # Mortalized (Pentatonic Slaughter)
-@The_weapon@ @_screams_@, "@_kind_of_scales_CAPS_@ SLAUGHTER!"
+@The_weapon@ @_screams_@, "[@CAPS@ @_kind_of_scales_@|DISHARMONIC] SLAUGHTER!"
 
 # Use @player_genus@ rather than @player_species@ or @player_name@ to
 # express that the sword cares little for the character.
-@The_weapon@ @_screams_@, "FASTER, @CAPS@ @player_genus@ @NOCAPS@, KILL KILL KILL!"
+@The_weapon@ @_screams_@, "FASTER, @CAPS@ @player_genus@, KILL KILL KILL!"
 
 #### Madness ####
 
@@ -1207,7 +1158,7 @@ _real_song_low_tension_
 @The_weapon@ sings, "Killing me softly with this song..."
 
 # Monty Python
-@The_weapon@ @_sings_or_whistles_@, "Always look on the bright side of death..."
+@The_weapon@ [sings|whistles], "Always look on the bright side of death..."
 
 # Buddy Holly and the Crickets
 @The_weapon@ sings, "This'll be the day that I die..."
@@ -1291,32 +1242,7 @@ _real_song_high_tension_
 ###############################################################################
 # synonyms used above
 ###############################################################################
-%%%%
-_sings_or_hums_
 
-sings
-
-hums
-%%%%
-_sings_or_whistles_
-
-sings
-
-whistles
-%%%%
-_sings_hums_whistles_
-
-sings
-
-hums
-
-whistles
-%%%%
-_composes_or_sings_
-
-composes
-
-sings
 %%%%
 _screams_
 
@@ -1334,15 +1260,19 @@ yells
 
 shouts
 
-clamours
-
-exclaims
-
 shrieks
 
-vociferates
-
+w:5
 thunders
+
+w:3
+clamours
+
+w:3
+exclaims
+
+w:1
+vociferates
 %%%%
 _screams_how_
 
@@ -1397,36 +1327,16 @@ predator
 
 carnivore
 %%%%
-_what_kind_
-
-little
-
-catchy
-
-merry
-%%%%
 _strikes_up_what_
 
 w:5
 a slow and mournful tune
 
-a merry @_tune_or_melody_@
+a merry tune
+
+a merry melody
 
 a funeral march
-%%%%
-_hymn_or_song_
-
-hymn
-
-song
-%%%%
-_several_
-
-several
-
-three or four
-
-a multitude of
 %%%%
 _kind_of_scales_
 
@@ -1435,94 +1345,6 @@ pentatonic
 chromatic
 
 diatonic
-%%%%
-_kind_of_scales_CAPS_
-
-PENTATONIC
-
-CHROMATIC
-
-DIATONIC
-
-DISHARMONIC
-%%%%
-_not_swords_
-
-clubs
-
-axes
-
-polearms
-
-staves
-%%%%
-_points_out_
-
-points out
-
-remarks in passing on
-%%%%
-_dance_
-
-bossanova
-
-waltz
-
-menuet
-%%%%
-_an_aria_or_fugue_
-
-an aria
-
-a fugue
-%%%%
-_nearly_or_clearly_
-
-nearly
-
-clearly
-%%%%
-_hits_or_misses_
-
-hits
-
-misses
-%%%%
-_tune_or_melody_
-
-tune
-
-melody
-%%%%
-_unpleasant_or_sudden_
-
-an unpleasant
-
-a sudden
-%%%%
-_demise_or_death_
-
-demise
-
-death
-%%%%
-_questionable_
-
-questionable
-
-doubtful
-%%%%
-_double_or_triple_
-
-double
-
-triple
-%%%%
-_audition_
-
-audition
-
-concerto
 %%%%
 _rhyme_word_
 
@@ -1551,43 +1373,17 @@ the history of music
 the theory of melody
 
 rhythms and time
-%%%%
-_silent_
 
-uncommunicative
+w:5
+the counterpoint
 
-taciturn
+w:5
+descant
 
-quiet
+syncopation
 
-silent
-
-boring
-%%%%
-_coward_
-
-coward
-
-dastard
-
-craven
-
-faintheart
-
-poltroon
-
-wuss
-%%%%
-#### "...makes a @_sad_@ impression."
-_sad_
-
-sad
-
-disoriented
-
-forlorn
-
-hopeless
+w:1
+Aeolian mode
 %%%%
 #### "...looks @_exasperated_@."
 _exasperated_
@@ -1650,12 +1446,6 @@ POODLES
 
 w:1
 SPERM WHALES
-%%%%
-_dine_
-
-dine
-
-feast
 %%%%
 _corpses_
 
