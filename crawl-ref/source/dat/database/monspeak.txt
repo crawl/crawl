@@ -777,7 +777,7 @@ VISUAL:@The_monster@ tries to hide somewhere.
 %%%%
 _friendly_fleeing_rare_
 
-@The_monster@ @_shouts_@, "WAIT FOR ME, @player_name@! Could you help me?"
+@The_monster@ @_shouts_@, "WAIT FOR ME, @CAPS@ @player_name@ @NOCAPS@! Could you help me?"
 
 @The_monster@ cries, "Don't forget your friends!"
 
