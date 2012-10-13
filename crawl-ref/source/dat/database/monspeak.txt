@@ -17,12 +17,6 @@
 # monsters are ever given names like "yells" or "begs".
 ############################################################
 %%%%
-_ATTACK_
-
-ATTACK
-
-DIE
-%%%%
 _shouts_
 
 shouts
@@ -68,20 +62,6 @@ supplicates
 w:1
 supplicates abjectly
 %%%%
-_almost_
-
-almost
-
-nearly
-%%%%
-_moans_
-
-moans
-
-wails
-
-cries
-%%%%
 _mutters_
 
 mutters
@@ -91,36 +71,6 @@ mumbles
 w:2
 susurrates
 %%%%
-_blubbers_
-
-blubbers
-
-cries
-%%%%
-_Mommeee_
-
-Mommeee
-
-Daddeee
-
-Meeeeep
-
-Help meeeeeeee
-
-Eeeeekkkk
-
-Oh nooooooo
-
-Waaaaaa
-%%%%
-_rattled_
-
-rattled
-
-scared stiff
-
-petrified
-%%%%
 _pointless_
 
 pointless
@@ -128,24 +78,6 @@ pointless
 senseless
 
 useless
-%%%%
-_ploy_
-
-ploy
-
-trick
-
-gambit
-
-trap
-%%%%
-_smoke_or_steam_
-
-smoke
-
-steam
-
-mist
 %%%%
 ############################################################
 # Library of speeches for types of monsters, like priests,
@@ -351,7 +283,7 @@ _friendly_imp_rare_
 
 @The_monster@ says, "You're so much nicer than my last boss."
 
-@The_monster@ shouts, "Stay back! It could be a @_ploy_@!"
+@The_monster@ shouts, "Stay back! It could be a [ploy|trick|gambit|trap]!"
 
 @The_monster@ shouts, "Over here! I found it!"
 
@@ -484,7 +416,7 @@ VISUAL:@The_monster@ lashes @possessive@ tail.
 
 VISUAL:@The_monster@ grinds @possessive@ teeth.
 
-VISUAL:@The_monster@ breathes @_smoke_or_steam_@ at @foe@.
+VISUAL:@The_monster@ breathes [smoke|steam|mist] at @foe@.
 %%%%
 _hostile_imp_rare_
 
@@ -800,7 +732,7 @@ w:20
 @The_monster@ @_yells_@, "Help!"
 
 # This one won't work for nagas.
-VISUAL:@The_monster@ @_almost_@ stumbles in trying to escape.
+VISUAL:@The_monster@ [almost|nearly] stumbles in trying to escape.
 
 @The_monster@ prays for help.
 
@@ -814,7 +746,7 @@ VISUAL:@The_monster@ @_almost_@ stumbles in trying to escape.
 
 @The_monster@ howls in fear.
 
-@The_monster@ @_moans_@, "Oh dear! Oh dear!"
+@The_monster@ [moans|wails|cries], "Oh dear! Oh dear!"
 
 @The_monster@ @_begs_@ @to_foe@, "Please don't kill me!"
 
@@ -830,11 +762,11 @@ _fleeing_humanoid_rare_
 
 @The_monster@ shouts @at_foe@, "No! I'll never do that again!"
 
-@The_monster@ @_blubbers_@, "@_Mommeee_@!"
+@The_monster@ [blubbers|cries], "[Mommeee|Daddeee|Meeeeep|Help meeeeeeee|Eeeeekkkk|Oh nooooooo|Waaaaaa]!"
 
 @The_monster@ @_begs_@ @to_foe@, "Please! I have a lot of children!"
 
-VISUAL:@The_monster@ looks really @_rattled_@.
+VISUAL:@The_monster@ looks really [rattled|scared stiff|petrified].
 
 @The_monster@ weeps quietly.
 
@@ -5806,7 +5738,7 @@ VISUAL:@The_monster@ bares @possessive@ teeth.
 
 @The_monster@ shouts @at_foe@, "Now you die!"
 
-@The_monster@ shouts @at_foe@, "@_ATTACK_@!!!"
+@The_monster@ shouts @at_foe@, "[ATTACK|DIE]!!!"
 
 @The_monster@ shouts @at_foe@, "Get ready for death!"
 
