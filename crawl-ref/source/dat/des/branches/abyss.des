@@ -1218,7 +1218,6 @@ SUBST:  " = B.
 KFEAT:  0 = exit_abyss
 KFEAT:  B = floor
 KPROP:  B = bloody
-KFEAT: + = runed_door
 MAP
 fffffffffffffffffff
 feeeeeeeeeeeeeeeeef
@@ -1232,7 +1231,7 @@ fed..cwwwWwwwc..def
 fed..clnwwwnlc..def
 fed..c3l"""l4c..def
 fed..ccc"""ccc..def
-fed....c+++c....def
+fed....c===c....def
 fedd...'''''...ddef
 fedddddddddddddddef
 feeeeeeeeeeeeeeeeef
