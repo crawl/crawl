@@ -7,8 +7,9 @@
 **/
 
 #include "AppHdr.h"
-
 #include "ng-restr.h"
+
+#include "newgame_def.h"
 #include "species.h"
 #include "jobs.h"
 

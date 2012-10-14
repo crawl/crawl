@@ -23,6 +23,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "l_defs.h"
+#include "libutil.h"
 #include "output.h"
 #include "player.h"
 #include "skills2.h"

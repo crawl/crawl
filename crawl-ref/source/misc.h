@@ -9,7 +9,6 @@
 #include "coord.h"
 #include "directn.h"
 #include "externs.h"
-#include "mapmark.h"
 
 #include <algorithm>
 #include <queue>

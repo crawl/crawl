@@ -6,6 +6,7 @@
 #include "AppHdr.h"
 
 #include "artefact.h"
+#include "art-enum.h"
 
 #include <cstdlib>
 #include <climits>
@@ -32,6 +33,7 @@
 #include "shout.h"
 #include "species.h"
 #include "spl-book.h"
+#include "state.h"
 #include "stuff.h"
 
 static bool _god_fits_artefact(const god_type which_god, const item_def &item,

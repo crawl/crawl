@@ -13,6 +13,7 @@
 #include "message.h"
 #include "state.h"
 #include "unicode.h"
+#include "version.h"
 #include "viewgeom.h"
 
 #include <sstream>

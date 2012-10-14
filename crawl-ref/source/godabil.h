@@ -8,7 +8,6 @@
 
 #include "enum.h"
 #include "externs.h"
-#include "mon-info.h"
 
 struct bolt;
 

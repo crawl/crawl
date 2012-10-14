@@ -1,15 +1,14 @@
 #ifndef TILEFONT_H
 #define TILEFONT_H
 
-#include "externs.h"
-#include "tilebuf.h"
-#include "tiletex.h"
+#include "defines.h"
+#include "glwrapper.h"
 
 extern const VColour term_colours[MAX_TERM_COLOUR];
 
 class FontBuffer;
-struct VColour;
 class formatted_string;
+class GenericTexture;
 
 class FontWrapper
 {

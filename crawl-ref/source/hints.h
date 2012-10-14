@@ -12,11 +12,12 @@
 #include <stdlib.h>
 
 #include "externs.h"
-#include "mon-info.h"
 
 class formatted_string;
 class writer;
 class reader;
+
+struct monster_info;
 
 enum hints_types
 {

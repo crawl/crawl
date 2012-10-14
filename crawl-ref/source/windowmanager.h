@@ -3,10 +3,6 @@
 
 #ifdef USE_TILE_LOCAL
 
-#include "externs.h"
-#include "glwrapper.h"
-#include "tilereg.h"
-#include "tilesdl.h"
 #include "tiletex.h"
 
 enum wm_endianness

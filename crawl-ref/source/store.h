@@ -23,6 +23,8 @@ class  level_id;
 class  dlua_chunk;
 class monster;
 
+#include "tags.h"
+
 typedef uint8_t hash_size;
 typedef uint8_t vec_size;
 typedef uint8_t store_flags;

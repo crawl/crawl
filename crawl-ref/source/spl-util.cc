@@ -36,6 +36,7 @@
 #include "spl-book.h"
 #include "spl-damage.h"
 #include "spl-zap.h"
+#include "target.h"
 #include "terrain.h"
 #include "item_use.h"
 #include "transform.h"

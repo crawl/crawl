@@ -1,8 +1,6 @@
 #ifndef ITEMPROP_ENUM_H
 #define ITEMPROP_ENUM_H
 
-#include "tags.h"
-
 enum armour_type
 {
     ARM_ROBE,

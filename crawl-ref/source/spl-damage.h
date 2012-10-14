@@ -3,7 +3,6 @@
 
 #include "enum.h"
 #include "spl-cast.h"
-#include "act-iter.h"
 
 struct bolt;
 class dist;

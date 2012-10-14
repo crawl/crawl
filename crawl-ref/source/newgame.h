@@ -7,8 +7,9 @@
 #ifndef NEWGAME_H
 #define NEWGAME_H
 
-#include "newgame_def.h"
-#include "menu.h"
+class MenuFreeform;
+struct menu_letter;
+struct newgame_def;
 
 undead_state_type get_undead_state(const species_type sp);
 void choose_tutorial_character(newgame_def* ng_choice);

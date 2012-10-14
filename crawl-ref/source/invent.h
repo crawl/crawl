@@ -3,7 +3,6 @@
  * @brief Functions for inventory related commands.
 **/
 
-
 #ifndef INVENT_H
 #define INVENT_H
 

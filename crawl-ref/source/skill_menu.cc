@@ -12,7 +12,7 @@
 #include "describe.h"
 #include "fontwrapper-ft.h"
 #include "hints.h"
-#include "menu.h"
+#include "libutil.h"
 #include "options.h"
 #include "player.h"
 #include "religion.h"
@@ -20,8 +20,10 @@
 #include "skills2.h"
 #include "state.h"
 #include "stuff.h"
-#include "tilepick.h"
-#include "tilereg-crt.h"
+#ifdef USE_TILE
+ #include "tilepick.h"
+ #include "tilereg-crt.h"
+#endif
 
 menu_letter2 SkillMenuEntry::m_letter;
 SkillMenu skm;

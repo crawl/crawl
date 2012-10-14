@@ -28,9 +28,9 @@
 #include "godconduct.h"
 #include "goditem.h"
 #include "hints.h"
-#include "invent.h"
 #include "item_use.h"
 #include "items.h"
+#include "libutil.h"
 #include "macro.h"
 #include "menu.h"
 #include "misc.h"
@@ -56,11 +56,11 @@
 #include "spl-selfench.h"
 #include "spl-summoning.h"
 #include "spl-transloc.h"
-#include "spl-util.h"
 #include "spl-wpnench.h"
 #include "spl-zap.h"
 #include "state.h"
 #include "stuff.h"
+#include "target.h"
 #ifdef USE_TILE
  #include "tilepick.h"
 #endif

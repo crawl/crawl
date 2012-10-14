@@ -8,8 +8,6 @@
 
 #include <cstdio>
 
-#include "bitary.h"
-#include "tag-version.h"
 #include "package.h"
 
 struct show_type;

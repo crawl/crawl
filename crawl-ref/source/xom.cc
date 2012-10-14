@@ -68,6 +68,7 @@
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
+#include "unwind.h"
 #include "view.h"
 #include "viewchar.h"
 

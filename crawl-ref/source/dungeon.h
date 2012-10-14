@@ -7,12 +7,8 @@
 #ifndef DUNGEON_H
 #define DUNGEON_H
 
-#include "bitary.h"
-#include "fixedarray.h"
 #include "env.h"
 #include "externs.h"
-#include "terrain.h"
-#include "stuff.h"
 #include "mapdef.h"
 
 #include <vector>

@@ -25,8 +25,10 @@
 #include "fprop.h"
 #include "makeitem.h"
 #include "mon-ench.h"
+#include "tags.h"
 #include "travel_defs.h"
 
+class mon_enchant;
 extern const char *traversable_glyphs;
 
 // Invalid heightmap height.

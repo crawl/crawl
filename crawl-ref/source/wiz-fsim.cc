@@ -4,6 +4,7 @@
 **/
 
 #include "AppHdr.h"
+#include "bitary.h"
 
 #include "wiz-fsim.h"
 
@@ -32,8 +33,11 @@
 #include "skills.h"
 #include "skills2.h"
 #include "species.h"
+#include "state.h"
 #include "stuff.h"
 #include "throw.h"
+#include "unwind.h"
+#include "version.h"
 #include "wiz-you.h"
 
 #ifdef WIZARD

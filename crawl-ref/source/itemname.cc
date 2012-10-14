@@ -17,6 +17,7 @@
 #include "externs.h"
 #include "options.h"
 
+#include "art-enum.h"
 #include "artefact.h"
 #include "colour.h"
 #include "decks.h"
@@ -26,6 +27,7 @@
 #include "item_use.h"
 #include "itemprop.h"
 #include "items.h"
+#include "libutil.h"
 #include "makeitem.h"
 #include "mon-util.h"
 #include "notes.h"

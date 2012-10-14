@@ -13,11 +13,9 @@
 #include <time.h>
 #include "externs.h"
 #include "format.h"
-#include "defines.h"
-#include "libutil.h"
-#include "mon-info.h"
 
 #ifdef USE_TILE
+ #include "tilebuf.h"
  #include "tiledoll.h"
 #endif
 

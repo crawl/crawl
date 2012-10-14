@@ -19,6 +19,7 @@
 #include "religion.h"
 #include "shopping.h"
 #include "skills2.h"
+#include "state.h"
 #include "spl-util.h"
 
 monster_type debug_prompt_for_monster(void)

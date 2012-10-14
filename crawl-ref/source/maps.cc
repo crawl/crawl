@@ -31,6 +31,7 @@
 #include "coord.h"
 #include "random.h"
 #include "state.h"
+#include "stuff.h"
 #include "syscalls.h"
 #include "tags.h"
 #include "terrain.h"

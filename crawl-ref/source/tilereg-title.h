@@ -2,6 +2,7 @@
 #ifndef TILEREG_TITLE_H
 #define TILEREG_TITLE_H
 
+#include "tilebuf.h"
 #include "tilereg.h"
 
 class TitleRegion : public ControlRegion

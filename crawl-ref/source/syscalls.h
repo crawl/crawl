@@ -6,8 +6,6 @@
 #ifndef SYSCALLS_H
 #define SYSCALLS_H
 
-#include "config.h"
-
 #include <sys/types.h>
 
 bool lock_file(int fd, bool write, bool wait = false);

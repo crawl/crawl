@@ -3,6 +3,7 @@
 #include "player-stats.h"
 
 #include "artefact.h"
+#include "clua.h"
 #include "delay.h"
 #include "godpassive.h"
 #include "files.h"

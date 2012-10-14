@@ -20,6 +20,7 @@
 #include "stuff.h"
 #include "env.h"
 #include "tags.h"
+#include "unwind.h"
 
 ////////////////////////////////////////////////////////////////////////
 // Dungeon markers

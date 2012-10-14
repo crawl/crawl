@@ -15,6 +15,7 @@
 #include "invent.h"
 #include "itemprop.h"
 #include "items.h"
+#include "libutil.h"
 #include "options.h"
 #include "player.h"
 #include "stuff.h"

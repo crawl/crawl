@@ -7,6 +7,7 @@
 #include "files.h"
 #include "libutil.h"
 #include "macro.h"
+#include "random.h"
 
 static const string _get_title_image()
 {

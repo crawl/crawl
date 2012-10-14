@@ -12,6 +12,7 @@
 */
 
 #include "AppHdr.h"
+#include "bitary.h"
 
 #include <cstdlib>
 #include <cstdio>
@@ -28,6 +29,7 @@
 #endif
 
 #include "abyss.h"
+#include "art-enum.h"
 #include "artefact.h"
 #include "branch.h"
 #include "coord.h"
@@ -54,9 +56,11 @@
 #include "skills.h"
 #include "skills2.h"
 #include "state.h"
+#include "stuff.h"
 #include "env.h"
 #include "syscalls.h"
 #include "tags.h"
+#include "terrain.h"
 #include "tiledef-dngn.h"
 #include "tiledef-player.h"
 #include "tilepick.h"
@@ -65,6 +69,7 @@
  #include "tilemcache.h"
 #endif
 #include "travel.h"
+#include "version.h"
 
 // defined in dgn-overview.cc
 extern map<branch_type, set<level_id> > stair_level;

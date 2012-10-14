@@ -19,6 +19,8 @@
 #include "religion.h"
 #include "state.h"
 #include "store.h"
+#include "stuff.h"
+#include "version.h"
 
 #ifdef DEBUG_DIAGNOSTICS
 #define DEBUG_TEMPLES

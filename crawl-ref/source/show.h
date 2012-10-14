@@ -1,8 +1,6 @@
 #ifndef SHOW_H
 #define SHOW_H
 
-#include "fixedarray.h"
-
 enum show_item_type
 {
     SHOW_ITEM_NONE,

@@ -20,6 +20,7 @@
 #include "hints.h"
 #include "invent.h"
 #include "itemprop.h"
+#include "melee_attack.h"
 #include "mgen_data.h"
 #include "mon-behv.h"
 #include "mon-cast.h"

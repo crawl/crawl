@@ -25,6 +25,7 @@
 #include "state.h"
 #include "tiledef-dngn.h"
 #include "tileview.h"
+#include "unwind.h"
 #include "view.h"
 
 static const char *VAULT_PLACEMENT_METATABLE = "crawl.vault-placement";

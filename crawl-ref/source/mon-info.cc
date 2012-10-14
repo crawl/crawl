@@ -17,6 +17,7 @@
 #include "fight.h"
 #include "ghost.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "libutil.h"
 #include "message.h"
 #include "misc.h"

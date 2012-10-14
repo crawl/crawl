@@ -9,8 +9,6 @@
 
 #include "enum.h"
 #include "externs.h"
-#include "ouch.h"
-#include "mon-iter.h"
 #include "player.h"
 
 #include "religion-enum.h"

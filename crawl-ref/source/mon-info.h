@@ -2,7 +2,6 @@
 #define MON_INFO_H
 
 #include "mon-stuff.h"
-#include "mon-enum.h"
 #include "mon-util.h"
 
 enum monster_info_flags

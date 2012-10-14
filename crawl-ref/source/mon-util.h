@@ -11,7 +11,6 @@
 #include "enum.h"
 #include "mon-enum.h"
 #include "player.h"
-#include "monster.h"
 
 struct bolt;
 

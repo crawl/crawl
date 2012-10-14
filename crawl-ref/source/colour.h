@@ -1,7 +1,7 @@
 #ifndef COLOUR_H
 #define COLOUR_H
 
-#include "mon-info.h"
+struct monster_info;
 
 // various elemental colour schemes... used for abstracting random
 // short lists. When adding colours, please also add their names in

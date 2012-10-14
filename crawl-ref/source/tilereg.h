@@ -2,9 +2,6 @@
 #ifndef TILEREG_H
 #define TILEREG_H
 
-#include "tilebuf.h"
-#include "tiletex.h"
-
 class ImageManager;
 struct MouseEvent;
 

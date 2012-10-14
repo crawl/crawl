@@ -8,8 +8,6 @@
 
 #include <list>
 
-#include "melee_attack.h"
-#include "mon-enum.h"
 #include "random-var.h"
 
 enum unchivalric_attack_type

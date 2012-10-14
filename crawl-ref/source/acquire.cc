@@ -15,6 +15,7 @@
 #include <set>
 #include <cmath>
 
+#include "art-enum.h"
 #include "artefact.h"
 #include "decks.h"
 #include "dungeon.h"
@@ -36,6 +37,8 @@
 #include "spl-book.h"
 #include "spl-util.h"
 #include "state.h"
+#include "stuff.h"
+#include "terrain.h"
 
 static armour_type _random_nonbody_armour_type()
 {

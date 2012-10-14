@@ -39,6 +39,7 @@
 #include "mon-util.h"
 #include "mutation.h"
 #include "options.h"
+#include "ouch.h"
 #include "jobs.h"
 #include "player.h"
 #include "random.h"

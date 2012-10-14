@@ -4,8 +4,10 @@
 **/
 
 #include "AppHdr.h"
+#include "bitary.h"
 
 #include "branch.h"
+#include "describe.h"
 #include "directn.h"
 #include "dungeon.h" // for Zotdef unique placement
 #include "env.h"
@@ -27,6 +29,7 @@
 #include "random.h"
 #include "religion.h"
 #include "state.h"
+#include "stuff.h"
 #include "terrain.h"
 #include "traps.h"
 #include "libutil.h"

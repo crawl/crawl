@@ -17,7 +17,7 @@
 #include <algorithm>
 
 #include "areas.h"
-#include "artefact.h"
+#include "art-enum.h"
 #include "branch.h"
 #ifdef DGL_WHEREIS
  #include "chardump.h"

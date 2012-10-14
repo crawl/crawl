@@ -37,6 +37,7 @@
 #include "state.h"
 #include "stuff.h"
 #include "travel.h"
+#include "unwind.h"
 #include "env.h"
 #ifdef USE_TILE_LOCAL
 #include "tilereg-crt.h"

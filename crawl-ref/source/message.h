@@ -11,7 +11,6 @@
 #include <iostream>
 
 #include "enum.h"
-#include "mpr.h"
 
 // Write the message window contents out.
 void display_message_window();

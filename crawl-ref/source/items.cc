@@ -6,6 +6,7 @@
 #include "AppHdr.h"
 
 #include "items.h"
+#include "bitary.h"
 #include "cio.h"
 #include "clua.h"
 
@@ -16,13 +17,14 @@
 
 #include "externs.h"
 
-#include "abyss.h"
 #include "arena.h"
+#include "art-enum.h"
 #include "artefact.h"
 #include "beam.h"
 #include "coord.h"
 #include "coordit.h"
 #include "dactions.h"
+#include "describe.h"
 #include "dbg-util.h"
 #include "debug.h"
 #include "decks.h"

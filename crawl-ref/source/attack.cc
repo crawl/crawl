@@ -14,6 +14,8 @@
 #include <stdio.h>
 #include <algorithm>
 
+#include "art-enum.h"
+// #include "artefact.h"
 #include "externs.h"
 #include "enum.h"
 #include "fight.h"

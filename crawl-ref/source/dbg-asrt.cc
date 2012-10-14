@@ -36,6 +36,7 @@
 #include "stuff.h"
 #include "travel.h"
 #include "hiscores.h"
+#include "version.h"
 #include "view.h"
 #include "zotdef.h"
 

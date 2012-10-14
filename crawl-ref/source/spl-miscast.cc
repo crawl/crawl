@@ -18,6 +18,7 @@
 #include "env.h"
 #include "kills.h"
 #include "libutil.h"
+#include "mapmark.h"
 #include "misc.h"
 #include "mon-place.h"
 #include "mgen_data.h"
@@ -37,6 +38,7 @@
 #include "transform.h"
 #include "view.h"
 #include "shout.h"
+#include "unwind.h"
 #include "viewchar.h"
 #include "xom.h"
 

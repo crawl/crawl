@@ -4,6 +4,7 @@
 **/
 
 #include "AppHdr.h"
+#include "stuff.h"
 
 #include <cstdarg>
 #include <sstream>
@@ -26,6 +27,7 @@
 #include "dungeon.h"
 #include "files.h"
 #include "hints.h"
+#include "libutil.h"
 #include "macro.h"
 #include "menu.h"
 #include "message.h"

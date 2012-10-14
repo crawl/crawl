@@ -33,6 +33,7 @@
 #include "random.h"
 #include "religion.h"
 #include "spl-util.h"
+#include "state.h"
 #include "stuff.h"
 #include "terrain.h"
 #include "transform.h"
