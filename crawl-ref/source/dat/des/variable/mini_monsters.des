@@ -3920,20 +3920,13 @@ ENDMAP
 
 # This wizard likes to experiment!
 NAME:    laboratory_2
-TAGS:    laboratory_2
+TAGS:    uniq_laboratory_2
 MONS:    wizard col:lightred name:mad n_adj n_noc spells:polymorph_other;\
          paralyse;blink;bolt_of_fire;bolt_of_fire;teleport_self
-DEPTH:   D:10-26, Vaults
-: if you.branch() == "Vaults" then
-SUBST: d = +
-SUBST: e = c
-: else
-SUBST: d = c
-SUBST: e = +
-: end
+DEPTH:   D:10-26
 MONS:    laboratory rat
 MAP
-cccddddecc
+ccccccc+cc
 c........c
 c........c
 c..1.....c
@@ -3945,21 +3938,24 @@ c||*c2222c
 cccccccccc
 ENDMAP
 
-NAME: laboratory_2_vaults
-TAGS: vaults_room_10_facing_encounter
-SUBVAULT: A : laboratory_2
+NAME:    laboratory_2_vaults
+TAGS:    uniq_laboratory_2 vaults_room_10_facing_encounter
+MONS:    wizard col:lightred name:mad n_adj n_noc spells:polymorph_other;\
+         paralyse;blink;bolt_of_fire;bolt_of_fire;teleport_self
+DEPTH:   Vaults
+MONS:    laboratory rat
 MAP
    ....
-AAAAAAAAAA
-AAAAAAAAAA
-AAAAAAAAAA
-AAAAAAAAAA
-AAAAAAAAAA
-AAAAAAAAAA
-AAAAAAAAAA
-AAAAAAAAAA
-AAAAAAAAAA
-AAAAAAAAAA
+ccc++++ccc
+c........c
+c........c
+c..1.....c
+c........c
+cc+ccccccc
+c***c2222c
+c|**+2222c
+c||*c2222c
+cccccccccc
 ENDMAP
 
 # Lava pond
