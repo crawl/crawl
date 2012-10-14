@@ -84,7 +84,7 @@ TAGS:   vaults_room_7_spin_up1
 WEIGHT: 2
 : place_grate_trap(_G, '^', 'm')
 : if you.branch() == "Vaults" then
-:   e.subst("{ = " .. dng.persist.vault_current_stairs_glyph)
+:   _G.subst("{ = " .. dgn.persist.vault_current_stairs_glyph)
 : end
 MAP
 .......
