@@ -5040,6 +5040,11 @@ static dungeon_feature_type _pick_temple_altar(vault_placement &place)
     {
         if (_current_temple_hash != NULL)
         {
+            // Altar god doesn't matter, setting up the whole machinery would
+            // be too much work.
+            if (crawl_state.map_stat_gen)
+                return DNGN_ALTAR_XOM;
+
             mpr("Ran out of altars for temple!", MSGCH_ERROR);
             return DNGN_FLOOR;
         }
