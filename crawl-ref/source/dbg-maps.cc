@@ -191,6 +191,7 @@ static void mg_build_levels(int niters)
 
         you.uniq_map_tags.clear();
         you.uniq_map_names.clear();
+        you.unique_creatures.init(false);
         init_level_connectivity();
         if (!mg_build_dungeon())
             break;
