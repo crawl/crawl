@@ -23,9 +23,25 @@
 
 #define DEBUG_ITEM_SCAN
 #ifdef DEBUG_ITEM_SCAN
-static void _dump_item(const char *name, int num, const item_def &item)
+static void _dump_item(const char *name, int num, const item_def &item,
+                       PRINTF(3, ));
+
+static void _dump_item(const char *name, int num, const item_def &item,
+                       const char *format, ...)
 {
-    mpr(name, MSGCH_ERROR);
+#ifdef DEBUG_FATAL
+    const msg_channel_type chan = MSGCH_WARN;
+#else
+    const msg_channel_type chan = MSGCH_ERROR;
+#endif
+
+    va_list args;
+    va_start(args, format);
+    string msg = vmake_stringf(format, args);
+    va_end(args);
+
+    mpr(msg.c_str(), chan);
+    mpr(name, chan);
 
     mprf("    item #%d:  base: %d; sub: %d; plus: %d; plus2: %d; special: %d",
          num, item.base_type, item.sub_type,
@@ -37,6 +53,10 @@ static void _dump_item(const char *name, int num, const item_def &item)
 
     mprf("    x: %d; y: %d; link: %d", item.pos.x, item.pos.y, item.link);
 
+#ifdef DEBUG_FATAL
+    if (!crawl_state.game_crashed)
+        die("%s %s", msg.c_str(), name);
+#endif
     crawl_state.cancel_cmd_repeat();
 }
 
@@ -84,18 +104,15 @@ void debug_item_scan(void)
             // Check for invalid (zero quantity) items that are linked in.
             if (!mitm[obj].defined())
             {
-                mprf(MSGCH_ERROR, "Linked invalid item at (%d,%d)!",
-                     ri->x, ri->y);
-                _dump_item(mitm[obj].name(DESC_PLAIN).c_str(), obj, mitm[obj]);
+                _dump_item(mitm[obj].name(DESC_PLAIN).c_str(), obj, mitm[obj],
+                           "Linked invalid item at (%d,%d)!", ri->x, ri->y);
             }
 
             // Check that item knows what stack it's in.
             if (mitm[obj].pos != *ri)
             {
-                mprf(MSGCH_ERROR,"Item position incorrect at (%d,%d)!",
-                     ri->x, ri->y);
-                _dump_item(mitm[obj].name(DESC_PLAIN).c_str(),
-                            obj, mitm[obj]);
+                _dump_item(mitm[obj].name(DESC_PLAIN).c_str(), obj, mitm[obj],
+                           "Item position incorrect at (%d,%d)!", ri->x, ri->y);
             }
 
             // If we run into a premarked item we're in real trouble,
@@ -123,19 +140,12 @@ void debug_item_scan(void)
         // Don't check (-1, -1) player items or (-2, -2) monster items
         // (except to make sure that the monster is alive).
         if (mitm[i].pos.origin())
-        {
-            mpr("Unlinked temporary item:", MSGCH_ERROR);
-            _dump_item(name, i, mitm[i]);
-        }
+            _dump_item(name, i, mitm[i], "Unlinked temporary item:");
         else if (mon != NULL && mon->type == MONS_NO_MONSTER)
-        {
-            mpr("Unlinked item held by dead monster:", MSGCH_ERROR);
-            _dump_item(name, i, mitm[i]);
-        }
+            _dump_item(name, i, mitm[i], "Unlinked item held by dead monster:");
         else if ((mitm[i].pos.x > 0 || mitm[i].pos.y > 0) && !visited[i])
         {
-            mpr("Unlinked item:", MSGCH_ERROR);
-            _dump_item(name, i, mitm[i]);
+            _dump_item(name, i, mitm[i], "Unlinked item:");
 
             if (!in_bounds(mitm[i].pos))
             {
@@ -178,8 +188,7 @@ void debug_item_scan(void)
             || strstr(name, "buggy") != NULL
             || strstr(name, "buggi") != NULL)
         {
-            mpr("Bad item:", MSGCH_ERROR);
-            _dump_item(name, i, mitm[i]);
+            _dump_item(name, i, mitm[i], "Bad item:");
         }
         else if ((mitm[i].base_type == OBJ_WEAPONS
                     && (abs(mitm[i].plus) > 30
@@ -197,14 +206,11 @@ void debug_item_scan(void)
                          || !is_artefact(mitm[i])
                             && mitm[i].special >= NUM_SPECIAL_ARMOURS)))
         {
-            mpr("Bad plus or special value:", MSGCH_ERROR);
-            _dump_item(name, i, mitm[i]);
+            _dump_item(name, i, mitm[i], "Bad plus or special value:");
         }
-        else if (mitm[i].flags & ISFLAG_SUMMONED
-                 && in_bounds(mitm[i].pos))
+        else if (mitm[i].flags & ISFLAG_SUMMONED && in_bounds(mitm[i].pos))
         {
-            mpr("Summoned item on floor:", MSGCH_ERROR);
-            _dump_item(name, i, mitm[i]);
+            _dump_item(name, i, mitm[i], "Summoned item on floor:");
         }
     }
 
@@ -409,12 +415,12 @@ void debug_mons_scan()
             {
                 _announce_level_prob(warned);
                 warned = true;
-                mprf(MSGCH_WARN, "Monster %s (%d, %d) holding non-monster "
-                                 "item (midx = %d)",
-                     m->full_name(DESC_PLAIN, true).c_str(),
-                     pos.x, pos.y, i);
                 _dump_item(item.name(DESC_PLAIN, false, true).c_str(),
-                            idx, item);
+                            idx, item,
+                           "Monster %s (%d, %d) holding non-monster "
+                           "item (midx = %d)",
+                           m->full_name(DESC_PLAIN, true).c_str(),
+                           pos.x, pos.y, i);
                 continue;
             }
 
