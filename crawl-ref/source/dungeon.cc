@@ -3646,10 +3646,17 @@ static void _pick_float_exits(vault_placement &place, vector<coord_def> &targets
 
     if (possible_exits.empty())
     {
-#ifdef DEBUG_DIAGNOSTICS
+        // Empty map (a serial vault master, etc).
+        if (place.size.origin())
+            return;
+
+        // The vault is disconnected, does it have a stair inside?
+        for (rectangle_iterator ri(place.pos, place.pos + place.size - 1); ri; ++ri)
+            if (feat_is_stair(grd(*ri)))
+                return;
+
         mprf(MSGCH_ERROR, "Unable to find exit from %s",
              place.map.name.c_str());
-#endif
         return;
     }
 
