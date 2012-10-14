@@ -15,6 +15,7 @@
 #include "files.h"
 #include "kills.h"
 #include "hiscores.h"
+#include "libutil.h"
 #include "message.h"
 #include "mutation.h"
 #include "options.h"

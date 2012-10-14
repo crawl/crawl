@@ -47,6 +47,8 @@
 #include "throw.h"
 #include "travel.h"
 #include "items.h"
+#include "unwind.h"
+#include "version.h"
 #include "view.h"
 #include "viewchar.h"
 

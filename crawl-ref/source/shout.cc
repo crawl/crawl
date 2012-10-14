@@ -7,6 +7,7 @@
 
 #include "shout.h"
 
+#include "art-enum.h"
 #include "artefact.h"
 #include "branch.h"
 #include "cluautil.h"

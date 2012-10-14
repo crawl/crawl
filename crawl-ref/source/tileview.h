@@ -8,7 +8,6 @@
 #define TILEVIEW_H
 
 #include "target.h"
-#include "tiledef_defines.h"
 
 struct cloud_info;
 struct coord_def;

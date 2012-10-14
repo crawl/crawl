@@ -22,6 +22,7 @@
 #include "invent.h"
 #include "items.h"
 #include "itemprop.h"
+#include "libutil.h"
 #include "misc.h"
 #include "mon-util.h"
 #include "mon-stuff.h"

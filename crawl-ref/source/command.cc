@@ -27,9 +27,9 @@
 #include "directn.h"
 #include "files.h"
 #include "godmenu.h"
-#include "ghost.h"
 #include "invent.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
 #include "macro.h"
@@ -56,6 +56,7 @@
 #endif
 #include "transform.h"
 #include "hints.h"
+#include "version.h"
 #include "view.h"
 #include "viewchar.h"
 

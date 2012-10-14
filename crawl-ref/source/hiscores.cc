@@ -56,8 +56,11 @@
 #include "species.h"
 #include "state.h"
 #include "status.h"
+#include "stuff.h"
 #include "env.h"
 #include "tags.h"
+#include "unwind.h"
+#include "version.h"
 
 #ifdef USE_TILE
  #include "tilepick.h"

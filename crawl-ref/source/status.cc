@@ -4,6 +4,7 @@
 
 #include "areas.h"
 #include "env.h"
+#include "libutil.h"
 #include "misc.h"
 #include "mutation.h"
 #include "player.h"

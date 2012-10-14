@@ -3,6 +3,7 @@
 #define TILEREG_MENU_H
 
 #include "format.h"
+#include "tilebuf.h"
 #include "tilereg.h"
 #include "fixedvector.h"
 #include <vector>

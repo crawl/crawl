@@ -8,6 +8,7 @@
 #include "files.h"
 
 #include "tags.h"
+// #include "version.h"
 
 ///////////////////////////////////////////////////////////
 // User-accessible file operations

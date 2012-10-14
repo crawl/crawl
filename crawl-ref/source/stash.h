@@ -13,7 +13,6 @@
 #include <vector>
 
 #include "externs.h"
-#include "player.h"
 
 class input_history;
 class reader;

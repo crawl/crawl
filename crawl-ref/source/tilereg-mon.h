@@ -2,9 +2,9 @@
 #ifndef TILEREG_MON_H
 #define TILEREG_MON_H
 
-#include "mon-info.h"
 #include "tilereg-grid.h"
 
+struct monster_info;
 class MonsterRegion : public GridRegion
 {
 public:

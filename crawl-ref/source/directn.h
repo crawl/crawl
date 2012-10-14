@@ -7,12 +7,11 @@
 #ifndef DIRECT_H
 #define DIRECT_H
 
-#include "describe.h"
 #include "externs.h"
 #include "enum.h"
-#include "ray.h"
-#include "state.h"
-#include "target.h"
+#include "mon-info.h"
+
+struct describe_info;
 
 class range_view_annotator
 {

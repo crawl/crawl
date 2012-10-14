@@ -8,8 +8,8 @@
 
 #include "externs.h"
 #include "hints.h"
-#include "maps.h"
 #include "message.h"
+#include "mon-ench.h"
 #include "mpr.h"
 #include "player.h"
 #include "skills.h"

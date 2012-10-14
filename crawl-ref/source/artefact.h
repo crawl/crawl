@@ -10,8 +10,6 @@
 
 struct bolt;
 
-#include "art-enum.h"
-
 #define ART_PROPERTIES ARTP_NUM_PROPERTIES
 
 #define KNOWN_PROPS_KEY     "artefact_known_props"

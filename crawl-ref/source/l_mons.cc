@@ -10,6 +10,7 @@
 #include "mon-behv.h"
 #include "mon-util.h"
 #include "mon-stuff.h"
+#include "monster.h"
 
 #define WRAPPED_MONSTER(ls, name)                                       \
     MonsterWrap *___mw = clua_get_userdata< MonsterWrap >(ls, MONS_METATABLE); \

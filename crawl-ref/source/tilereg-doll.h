@@ -2,6 +2,7 @@
 #ifndef TILEREG_DOLL_H
 #define TILEREG_DOLL_H
 
+#include "tilebuf.h"
 #include "tiledoll.h"
 #include "tilereg.h"
 

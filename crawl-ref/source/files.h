@@ -8,11 +8,12 @@
 #define FILES_H
 
 #include "externs.h"
-#include "player.h"
 #include <stdio.h>
 #include <string>
 #include <vector>
 #include <set>
+
+struct player_save_info;
 
 enum load_mode_type
 {

@@ -11,6 +11,7 @@
 #include "externs.h"
 #include "mon-gear.h"
 
+#include "art-enum.h"
 #include "artefact.h"
 #include "dungeon.h"
 #include "env.h"
@@ -23,6 +24,7 @@
 #include "random.h"
 #include "spl-book.h"
 #include "state.h"
+#include "unwind.h"
 
 
 static void _give_monster_item(monster* mon, int thing,

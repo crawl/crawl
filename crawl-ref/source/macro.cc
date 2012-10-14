@@ -43,6 +43,7 @@
 #include "stuff.h"
 #include "syscalls.h"
 #include "unicode.h"
+#include "version.h"
 
 // for trim_string:
 #include "initfile.h"

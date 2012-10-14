@@ -24,6 +24,7 @@
 #include "libutil.h"
 #include "message.h"
 #include "mon-util.h"
+#include "monster.h"
 #include "player.h"
 #include "religion.h"
 #include "skills2.h"

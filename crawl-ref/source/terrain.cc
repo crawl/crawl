@@ -36,6 +36,7 @@
 #include "species.h"
 #include "spl-transloc.h"
 #include "env.h"
+#include "state.h"
 #include "tileview.h"
 #include "travel.h"
 #include "transform.h"

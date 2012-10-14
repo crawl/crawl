@@ -7,8 +7,6 @@
 #ifndef VIEW_H
 #define VIEW_H
 
-#include "externs.h"
-#include "show.h"
 #include "viewgeom.h"
 
 void init_monsters_seens();

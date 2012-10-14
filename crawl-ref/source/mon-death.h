@@ -6,8 +6,6 @@
 #ifndef MONDEATH_H
 #define MONDEATH_H
 
-#include "mapmark.h"
-
 bool mons_is_pikel(monster* mons);
 void pikel_band_neutralise();
 

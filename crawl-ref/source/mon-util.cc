@@ -51,6 +51,7 @@
 #include "tileview.h"
 #include "traps.h"
 #include "unicode.h"
+#include "unwind.h"
 #include "view.h"
 
 static FixedVector < int, NUM_MONSTERS > mon_entry;

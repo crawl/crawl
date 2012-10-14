@@ -18,6 +18,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "item_use.h"
+#include "libutil.h"
 #include "player.h"
 #include "makeitem.h"
 #include "message.h"

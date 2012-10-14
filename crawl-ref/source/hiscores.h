@@ -7,7 +7,6 @@
 #ifndef HISCORES_H
 #define HISCORES_H
 
-#include "menu.h"
 
 class scorefile_entry;
 

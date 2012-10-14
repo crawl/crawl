@@ -8,7 +8,6 @@
 
 #include "dgnevent.h"
 #include "clua.h"
-#include "dlua.h"
 #include <map>
 #include <string>
 #include <vector>

@@ -14,6 +14,7 @@
 #include "misc.h"
 #include "mon-pathfind.h"
 #include "mon-place.h"
+#include "terrain.h"
 
 typedef list<coord_def> coord_list;
 

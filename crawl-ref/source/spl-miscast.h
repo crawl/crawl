@@ -8,7 +8,6 @@
 
 #include "enum.h"
 
-#include "beam.h"
 #include "monster.h"
 #include "mpr.h"
 #include "spl-util.h"
@@ -21,6 +20,7 @@ enum nothing_happens_when_type
 };
 
 class actor;
+// class monster;
 
 class MiscastEffect
 {

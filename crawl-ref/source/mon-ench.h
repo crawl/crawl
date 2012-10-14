@@ -1,9 +1,9 @@
 #ifndef MON_ENCH_H
 #define MON_ENCH_H
 
-#include "actor.h"
-
 #define INFINITE_DURATION  30000
+
+class actor;
 
 class mon_enchant
 {

@@ -19,6 +19,7 @@
 #include "exclude.h"
 #include "fprop.h"
 #include "itemprop.h"
+#include "libutil.h"
 #include "mon-place.h"
 #include "mon-util.h"
 #include "monster.h"

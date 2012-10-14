@@ -8,18 +8,19 @@
 #include <algorithm>
 
 #include "describe.h"
-#include "mon-util.h"
 #include "mon-stuff.h"
 #include "mon-info.h"
 #include "files.h"
 #include "ghost.h"
 #include "libutil.h"
+#include "monster.h"
 #include "place.h"
 #include "travel.h"
 #include "tags.h"
 #include "kills.h"
 #include "clua.h"
 #include "options.h"
+#include "unwind.h"
 #include "viewchar.h"
 
 #define KILLS_MAJOR_VERSION 4

@@ -2,8 +2,6 @@
 #ifndef TILEDOLL_H
 #define TILEDOLL_H
 
-#include "tags.h"
-
 struct dolls_data
 {
     dolls_data();

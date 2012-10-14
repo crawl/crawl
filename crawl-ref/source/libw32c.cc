@@ -65,6 +65,7 @@
 #include "options.h"
 #include "state.h"
 #include "unicode.h"
+#include "version.h"
 #include "view.h"
 #include "viewgeom.h"
 

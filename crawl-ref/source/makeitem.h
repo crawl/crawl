@@ -6,7 +6,6 @@
 #ifndef MAKEITEM_H
 #define MAKEITEM_H
 
-#include "decks.h"
 #include "itemprop-enum.h"
 
 enum item_make_species_type

@@ -5,6 +5,8 @@
 
 #include "AppHdr.h"
 
+#include "menu.h"
+
 #include <cctype>
 
 #include "cio.h"
@@ -14,7 +16,7 @@
 #include "env.h"
 #include "hints.h"
 #include "invent.h"
-#include "menu.h"
+#include "libutil.h"
 #include "macro.h"
 #include "message.h"
 #include "options.h"

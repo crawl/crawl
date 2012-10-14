@@ -6,8 +6,10 @@
 #ifndef GODPASSIVE_H
 #define GODPASSIVE_H
 
-#include "mon-info.h"
-#include "religion-enum.h"
+#include "enum.h"
+#include "player.h"
+
+class monster;
 
 enum jiyva_slurp_results
 {

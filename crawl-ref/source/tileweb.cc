@@ -29,6 +29,7 @@
 #include "tileview.h"
 #include "travel.h"
 #include "unicode.h"
+#include "unwind.h"
 #include "view.h"
 #include "viewgeom.h"
 

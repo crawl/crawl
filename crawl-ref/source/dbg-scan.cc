@@ -19,6 +19,7 @@
 #include "mon-util.h"
 #include "shopping.h"
 #include "state.h"
+#include "terrain.h"
 #include "traps.h"
 
 #define DEBUG_ITEM_SCAN

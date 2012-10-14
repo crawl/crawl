@@ -5,10 +5,12 @@
 
 #include "cio.h"
 #include "files.h"
-#include "menu.h"
+#include "format.h"
+#include "libutil.h"
 #include "options.h"
 #include "stuff.h"
 #include "unicode.h"
+#include "version.h"
 
 extern string init_file_error; // defined in main.cc
 

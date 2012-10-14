@@ -404,8 +404,6 @@ static inline void UNUSED(const volatile T &)
 #endif
 
 #include "externs.h"
-#include "unwind.h"
-#include "version.h"
 
 #ifdef TARGET_COMPILER_VC
 # include "libw32c.h"

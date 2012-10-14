@@ -10,6 +10,7 @@
 #include <math.h>
 
 #include "areas.h"
+#include "art-enum.h"
 #include "artefact.h"
 #include "coordit.h"
 #include "dgnevent.h"

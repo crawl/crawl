@@ -14,6 +14,7 @@
 #include "libutil.h"
 #include "options.h"
 #include "syscalls.h"
+#include "version.h"
 #include "windowmanager.h"
 
 #ifdef __ANDROID__

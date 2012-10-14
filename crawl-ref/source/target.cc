@@ -10,7 +10,7 @@
 #include "godabil.h"
 #include "itemprop.h"
 #include "libutil.h"
-#include "player.h"
+#include "losglobal.h"
 #include "spl-damage.h"
 #include "terrain.h"
 

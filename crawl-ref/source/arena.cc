@@ -33,9 +33,11 @@
 #include "spl-miscast.h"
 #include "spl-util.h"
 #include "state.h"
+#include "stuff.h"
 #ifdef USE_TILE
  #include "tileview.h"
 #endif
+#include "version.h"
 #include "view.h"
 #include "viewgeom.h"
 

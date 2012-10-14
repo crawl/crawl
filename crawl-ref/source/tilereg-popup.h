@@ -2,11 +2,7 @@
 #ifndef TILEREG_POPUP_H
 #define TILEREG_POPUP_H
 
-#include "format.h"
-#include "tilereg.h"
-#include "fixedvector.h"
 #include "tilereg-menu.h"
-#include <vector>
 
 class PopupRegion : public MenuRegion
 {

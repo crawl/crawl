@@ -2,6 +2,7 @@
 #ifndef TILEREG_MAP_H
 #define TILEREG_MAP_H
 
+#include "tilebuf.h"
 #include "tilereg.h"
 
 enum map_colour

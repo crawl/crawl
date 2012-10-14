@@ -2,6 +2,7 @@
 
 #include "tilepick.h"
 
+#include "art-enum.h"
 #include "artefact.h"
 #include "cloud.h"
 #include "colour.h"

@@ -6,7 +6,6 @@
 #ifndef LIBUTIL_H
 #define LIBUTIL_H
 
-#include "defines.h"
 #include "enum.h"
 #include <cctype>
 #include <string>

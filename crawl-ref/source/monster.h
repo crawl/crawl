@@ -2,7 +2,6 @@
 #define MONSTER_H
 
 #include "actor.h"
-#include "bitary.h"
 #include "mon-ench.h"
 
 const int KRAKEN_TENTACLE_RANGE = 3;

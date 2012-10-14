@@ -903,7 +903,7 @@ HEADER_END
 #include "AppHdr.h"
 #include "tiledef-unrand.h"
 
-#include "artefact.h"
+#include "art-enum.h"
 #include "tiledef-main.h"
 #include "tiledef-player.h"
 

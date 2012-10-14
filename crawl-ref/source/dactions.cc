@@ -14,6 +14,7 @@
 #include "env.h"
 #include "libutil.h"
 #include "mon-behv.h"
+#include "mon-iter.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "player.h"

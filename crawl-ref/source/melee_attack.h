@@ -3,13 +3,9 @@
 
 #include <list>
 
-#include "artefact.h"
 #include "attack.h"
 #include "fight.h"
-#include "mon-enum.h"
-#include "itemprop-enum.h"
 #include "random-var.h"
-#include "random.h"
 
 // Forward declaration of the struct
 struct mon_attack_def;

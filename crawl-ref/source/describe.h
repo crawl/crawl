@@ -10,8 +10,8 @@
 #include <sstream>
 #include "externs.h"
 #include "enum.h"
-#include "libutil.h"
-#include "mon-info.h"
+
+struct monster_info;
 
 // If you add any more description types, remember to also
 // change item_description in externs.h

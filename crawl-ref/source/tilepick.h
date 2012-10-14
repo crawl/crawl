@@ -7,13 +7,13 @@
 #define TILEPICK_H
 
 #include "tiledef_defines.h"
-#include "mon-info.h"
 
 struct bolt;
 struct cloud_info;
 struct coord_def;
 struct item_def;
 class monster;
+class monster_info;
 struct show_type;
 
 bool is_door_tile(tileidx_t tile);

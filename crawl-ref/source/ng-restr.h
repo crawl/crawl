@@ -1,7 +1,9 @@
 #ifndef NG_RESTR_H
 #define NG_RESTR_H
 
-#include "newgame.h"
+#include "itemprop-enum.h"
+
+struct newgame_def;
 
 enum char_choice_restriction
 {

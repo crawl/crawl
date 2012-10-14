@@ -76,6 +76,7 @@
 #include "shopping.h"
 #include "stash.h"
 #include "state.h"
+#include "stuff.h"
 #include "syscalls.h"
 #include "tags.h"
 #ifdef USE_TILE
@@ -87,6 +88,8 @@
 #include "terrain.h"
 #include "travel.h"
 #include "hints.h"
+#include "unwind.h"
+#include "version.h"
 #include "view.h"
 #include "viewgeom.h"
 

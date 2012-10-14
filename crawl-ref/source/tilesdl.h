@@ -7,12 +7,9 @@
 #ifndef TILESDL_H
 #define TILESDL_H
 
-#include "externs.h"
 #include "tilereg.h"
-#include "tiletex.h"
-#include "mon-info.h"
-#include "menu.h"
 
+class Popup;
 class Region;
 class CRTRegion;
 class CRTRegionSingleSelect;

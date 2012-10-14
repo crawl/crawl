@@ -2,7 +2,6 @@
 #define SHOWSYMB_H
 
 #include "show.h"
-#include "mon-info.h"
 
 struct map_cell;
 

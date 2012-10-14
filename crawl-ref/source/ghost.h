@@ -7,7 +7,7 @@
 #define GHOST_H
 
 #include "enum.h"
-#include "itemprop.h"
+#include "itemprop-enum.h"
 #include "mon-enum.h"
 
 #ifdef USE_TILE

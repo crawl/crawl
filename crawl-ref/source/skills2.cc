@@ -20,9 +20,11 @@
 #include "describe.h"
 #include "externs.h"
 #include "godabil.h"
+#include "libutil.h"
 #include "player.h"
 #include "species.h"
 #include "skills.h"
+#include "unwind.h"
 
 typedef string (*string_fn)();
 typedef map<string, string_fn> skill_op_map;

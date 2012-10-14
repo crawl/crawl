@@ -23,8 +23,10 @@
 #include "mon-util.h"
 #include "player.h"
 #include "random.h"
+#include "state.h"
 #include "terrain.h"
 #include "transform.h"
+#include "unwind.h"
 #include "view.h"
 
 const string clone_master_key = "mcloneorig";

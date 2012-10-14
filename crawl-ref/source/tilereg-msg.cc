@@ -6,6 +6,7 @@
 
 #include "libutil.h"
 #include "macro.h"
+#include "tilebuf.h"
 #include "tilefont.h"
 
 MessageRegion::MessageRegion(FontWrapper *font) :

@@ -9,9 +9,8 @@
 
 #include "actor.h"
 #include "beam.h"
+#include "bitary.h"
 #include "quiver.h"
-#include "itemprop-enum.h"
-#include "package.h"
 #include "place-info.h"
 #include "religion-enum.h"
 #include "species.h"

@@ -7,7 +7,7 @@
 
 #include "player.h"
 
-#include "artefact.h"
+#include "art-enum.h"
 #include "coord.h"
 #include "debug.h"
 #include "env.h"

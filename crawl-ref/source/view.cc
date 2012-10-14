@@ -53,6 +53,7 @@
 #include "random.h"
 #include "state.h"
 #include "stuff.h"
+#include "target.h"
 #include "terrain.h"
 #include "tilemcache.h"
 #include "traps.h"

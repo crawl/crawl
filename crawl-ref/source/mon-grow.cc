@@ -10,6 +10,7 @@
 #include "mon-util.h"
 #include "mon-place.h"
 #include "mon-stuff.h"
+#include "monster.h"
 #include "random.h"
 
 // Base experience required by a monster to reach HD 1.

@@ -7,7 +7,6 @@
 #ifndef TILEMCACHE_H
 #define TILEMCACHE_H
 
-#include "debug.h"
 #include <vector>
 
 struct dolls_data;

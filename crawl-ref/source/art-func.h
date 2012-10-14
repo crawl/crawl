@@ -27,7 +27,6 @@
 #include "godconduct.h"    // did_god_conduct
 #include "misc.h"
 #include "mgen_data.h"     // For Sceptre of Asmodeus evoke
-#include "mon-info.h"
 #include "mon-place.h"     // For Sceptre of Asmodeus evoke
 #include "mon-stuff.h"     // For Scythe of Curses cursing items
 #include "player.h"

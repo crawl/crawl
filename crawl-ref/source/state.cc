@@ -15,12 +15,14 @@
 #include "menu.h"
 #include "message.h"
 #include "misc.h"
-#include "mon-util.h"
+// #include "mon-util.h"
+#include "monster.h"
 #include "player.h"
 #include "religion.h"
 #include "showsymb.h"
 #include "state.h"
 #include "hints.h"
+#include "unwind.h"
 
 game_state::game_state()
     : game_crashed(false),
