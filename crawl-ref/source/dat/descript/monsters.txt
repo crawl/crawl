@@ -3143,10 +3143,6 @@ A monstrously big slug who apparently ate a mighty conjurer, or maybe an orb
 spider. Or perhaps it's a product of divine experiments, in which case it looks
 like Xom's handiwork...
 %%%%
-orc demonologist
-
-<orc sorcerer>
-%%%%
 orc berserker
 
 A tough, strong, and particularly angry orc.
