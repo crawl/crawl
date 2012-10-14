@@ -411,6 +411,7 @@ void generate_map_stats()
     // Let "acquire foo" have skill aptitudes to work with.
     you.species = SP_HUMAN;
 
+    initialise_item_descriptions();
     initialise_branch_depths();
     // We have to run map preludes ourselves.
     run_map_global_preludes();
