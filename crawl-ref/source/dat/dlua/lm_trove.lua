@@ -273,9 +273,6 @@ function TroveMarker:item_name(do_grammar)
         return "a " .. item.sub_type
       end
     end
-    if not string.find(item.sub_type, "manual") then
-      s = s .. " book of"
-    end
   elseif item.base_type == "wand" then
     s = s .. " wand of"
   end
