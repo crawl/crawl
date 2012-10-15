@@ -1425,7 +1425,8 @@ MONS:   patrolling vampire hd:8 col:green name:noble n_suf / patrolling \
         n_rpl n_des actual_spells ; long sword | great sword | battleaxe | \
         war axe | broad axe . chain mail w:10 | splint mail w:5 | plate armour \
         w:1
-MONS:   vampire knight / Jory
+# Using KMONS with fallback to vampire knight:
+KMONS:  2 = vampire knight / Jory, vampire knight
 MONS:   dancing weapon ; any weapon ego:vampiricism / vampire hd:10 col:blue \
         spells:.;.;haste;.;.;.; name:vampire_warrior n_rpl n_des actual_spells \
         ; long sword | great sword | battleaxe | war axe | broad axe . chain \
