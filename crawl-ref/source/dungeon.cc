@@ -627,15 +627,14 @@ static void _set_grd(const coord_def &c, dungeon_feature_type feat)
     grd(c) = feat;
 }
 
-void dgn_register_vault(const map_def &map)
-{
-    if (!map.has_tag("allow_dup"))
-        you.uniq_map_names.insert(map.name);
+static void _dgn_register_vault(const string name, const string spaced_tags)
+{    if (spaced_tags.find(" allow_dup ") == string::npos)
+        you.uniq_map_names.insert(name);
 
-    if (map.has_tag("luniq"))
-        env.level_uniq_maps.insert(map.name);
+    if (spaced_tags.find(" luniq ") != string::npos)
+        env.level_uniq_maps.insert(name);
 
-    vector<string> tags = split_string(" ", map.tags);
+    vector<string> tags = split_string(" ", spaced_tags);
     for (int t = 0, ntags = tags.size(); t < ntags; ++t)
     {
         const string &tag = tags[t];
@@ -988,7 +987,14 @@ void dgn_register_place(const vault_placement &place, bool register_vault)
 
     if (register_vault)
     {
-        dgn_register_vault(place.map);
+        _dgn_register_vault(place.map.name, place.map.tags);
+        for (int i = env.new_subvault_names.size() - 1; i >= 0; i--)
+        {
+            _dgn_register_vault(env.new_subvault_names[i],
+                                env.new_subvault_tags[i]);
+        }
+        env.new_subvault_names.clear();
+        env.new_subvault_tags.clear();
 
         // Identify each square in the map with its map_index.
         if (!overwritable && !transparent)
@@ -1162,6 +1168,8 @@ void dgn_reset_level(bool enable_random_maps)
     env.level_layout_types.clear();
     level_clear_vault_memory();
     dgn_colour_grid.reset(NULL);
+    env.new_subvault_names.clear();
+    env.new_subvault_tags.clear();
 
     use_random_maps = enable_random_maps;
     dgn_check_connectivity = false;
