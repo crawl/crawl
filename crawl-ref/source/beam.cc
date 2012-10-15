@@ -4309,8 +4309,9 @@ void bolt::affect_monster(monster* mon)
         return;
     }
 
-    // Missiles go past bushes (and chain lightning doesn't).
+    // Missiles go past bushes.
     if (mon->type == MONS_BUSH && !is_beam && !is_explosion
+        && name != "sticky flame"
         && name != "lightning arc")
     {
         apply_hit_funcs(mon, 0);
