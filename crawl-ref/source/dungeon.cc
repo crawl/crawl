@@ -3888,6 +3888,8 @@ static bool _build_vault_impl(const map_def *vault,
             throw dgn_veto_exception("Pan map with disconnected zones");
     }
 
+    unwind_var<string> placing(env.placing_vault, vault->name);
+
     vault_placement place;
 
     place.level_number = env.absdepth0;
