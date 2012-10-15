@@ -1816,7 +1816,7 @@ ENDMAP
 
 # Don't you wish you knew apportation?
 NAME: baited_tele_trap
-DEPTH: *, !Temple, !Slime
+DEPTH: *, !Temple, !Slime, !Geh, !Coc, !Tar, !Dis
 KITEM: x = any good_item, any good_item/nothing, any good_item/nothing
 KFEAT: x = teleport trap
 MAP
