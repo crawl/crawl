@@ -52,6 +52,15 @@ void debug_dump_levgen()
         method = env.level_build_method;
         type   = comma_separated_line(env.level_layout_types.begin(),
                                       env.level_layout_types.end(), ", ");
+
+        if (!env.placing_vault.empty())
+            mprf("Vault being placed: %s", env.placing_vault.c_str());
+        if (!env.new_subvault_names.empty())
+        {
+            mprf("Subvaults: %s", comma_separated_line(
+                 env.new_subvault_names.begin(), env.new_subvault_names.end(),
+                 ", ").c_str());
+        }
     }
     else
     {
