@@ -121,10 +121,6 @@ static bool mg_do_build_level(int niters)
             if (!vaults.empty())
                 vaults = " (" + vaults + ")";
 
-            mprf(MSGCH_ERROR,
-                 "Bad (disconnected) level on %s%s",
-                 level_id::current().describe().c_str(),
-                 vaults.c_str());
             FILE *fp = fopen("map.dump", "w");
             fprintf(fp, "Bad (disconnected) level (%s) on %s%s.\n\n",
                     env.level_build_method.c_str(),
@@ -132,6 +128,12 @@ static bool mg_do_build_level(int niters)
                     vaults.c_str());
 
             dump_map(fp);
+            fclose(fp);
+
+            mprf(MSGCH_ERROR,
+                 "Bad (disconnected) level on %s%s",
+                 level_id::current().describe().c_str(),
+                 vaults.c_str());
 
             return false;
         }
