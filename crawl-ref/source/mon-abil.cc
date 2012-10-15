@@ -1421,7 +1421,7 @@ struct tentacle_attack_constraints
             temp.path_distance = node.path_distance;
             temp.estimate = 0;
 
-            if (!in_bounds(temp.pos))
+            if (!in_bounds(temp.pos) || is_sanctuary(temp.pos))
                 continue;
 
             if (!base_monster->is_habitable(temp.pos))
@@ -1961,7 +1961,7 @@ void move_demon_tentacle(monster* tentacle)
             coord_def test = old_pos + Compass[compass_idx[i]];
             //coord_def test = old_pos;
             //test.x++;
-            if (!in_bounds(test)
+            if (!in_bounds(test) || is_sanctuary(test)
                 || actor_at(test))
             {
                 continue;
