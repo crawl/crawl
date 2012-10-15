@@ -951,6 +951,13 @@ w:1
 
 # Immortal Defense, Courage Point quote
 @The_weapon@ @_screams_@, "My victories add up!"
+
+# Krindle's blood song, rhymes, from Walter Moers' Rumo:
+w:1
+@The_weapon@ @_screams_@, "Blood as far as the eye can see! Blood for all eternity!"
+
+w:1
+@The_weapon@ @_screams_@, "Blood must spurt and blood must flow! Blood must gush from every foe!"
 %%%%
 _godless_sorter_
 
@@ -1058,6 +1065,16 @@ _SCREAM_
 # Use @player_genus@ rather than @player_species@ or @player_name@ to
 # express that the sword cares little for the character.
 @The_weapon@ @_screams_@, "FASTER, @CAPS@ @player_genus@, KILL KILL KILL!"
+
+# Krindle's blood song, from Walter Moers' Rumo:
+@The_weapon@ @_screams_@, "BLOOD! BLOOD! BLOOD MUST SPURT AND BLOOD MUST FLOW!"
+
+@The_weapon@ @_screams_@, "BLOOD! BLOOD! BLOOD MUST GUSH FROM EVERY FOE!"
+
+# Krindle's brain song, from Walter Moers' Rumo:
+@The_weapon@ @_screams_@, "BRAINS! BRAINS! CLEAVE THE SKULL AND OUT THEY SEEP!"
+
+@The_weapon@ @_screams_@, "BRAINS! BRAINS! KILLING'S FUN AND LIFE IS CHEAP!"
 
 #### Madness ####
 
