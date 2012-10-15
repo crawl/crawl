@@ -105,6 +105,10 @@ static map_section_type _write_vault(map_def &mdef,
                                      vault_placement &place,
                                      bool check_place)
 {
+    // We're a regular vault, so clear the subvault stack.
+    env.new_subvault_names.clear();
+    env.new_subvault_tags.clear();
+
     mdef.load();
 
     // Copy the map so we can monkey with it.

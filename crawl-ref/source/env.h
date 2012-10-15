@@ -111,14 +111,20 @@ struct crawl_environment
     int absdepth0;
     vector<pair<coord_def, int> > sunlight;
 
+    //------------------------------------------------------------------------
+
     // Volatile level flags, not saved.
     uint32_t level_state;
 
     // Mapping mid->mindex until the transition is finished.
     map<mid_t, unsigned short> mid_cache;
 
-    // Temp stuff.
+    // Things to happen when the current attack/etc finishes.
     vector<final_effect *> final_effects;
+
+    // A stack that accumulates subvaults being placed. A failure may pop a
+    // part of the stack before retrying.
+    vector<string> new_subvault_names, new_subvault_tags;
 };
 
 #ifdef DEBUG_GLOBALS

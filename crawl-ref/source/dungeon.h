@@ -252,7 +252,6 @@ void dgn_set_branch_epilogue(branch_type br, string callback_name);
 void dgn_reset_level(bool enable_random_maps = true);
 
 void dgn_register_place(const vault_placement &place, bool register_vault);
-void dgn_register_vault(const map_def &map);
 
 void dgn_seen_vault_at(coord_def p);
 

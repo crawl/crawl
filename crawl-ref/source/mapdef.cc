@@ -3158,9 +3158,9 @@ string map_def::apply_subvault(string_spec &spec)
     Matrix<bool> flags(vwidth, vheight);
     map.fill_mask_matrix(spec.key, tl, br, flags);
 
-    // Backup pre-subvault unique tags and names.
-    const set<string> uniq_tags  = you.uniq_map_tags;
-    const set<string> uniq_names = you.uniq_map_names;
+    // Remember the subvault registration pointer, so we can clear it.
+    const int reg_stack = env.new_subvault_names.size();
+    ASSERT(reg_stack == (int)env.new_subvault_tags.size());
 
     const int max_tries = 100;
     int ntries = 0;
@@ -3171,8 +3171,8 @@ string map_def::apply_subvault(string_spec &spec)
         // Each iteration, restore tags and names.  This is because this vault
         // may successfully load a subvault (registering its tag and name), but
         // then itself fail.
-        you.uniq_map_tags = uniq_tags;
-        you.uniq_map_names = uniq_names;
+        env.new_subvault_names.resize(reg_stack);
+        env.new_subvault_tags.resize(reg_stack);
 
         const map_def *orig = random_map_for_tag(tag, true);
         if (!orig)
@@ -3194,14 +3194,15 @@ string map_def::apply_subvault(string_spec &spec)
 
         map.merge_subvault(tl, br, flags, vault);
         copy_hooks_from(vault, "post_place");
-        dgn_register_vault(vault);
+        env.new_subvault_names.push_back(vault.name);
+        env.new_subvault_tags.push_back(vault.tags);
 
         return "";
     }
 
-    // Failure, restore original unique tags and names.
-    you.uniq_map_tags = uniq_tags;
-    you.uniq_map_names = uniq_names;
+    // Failure, drop subvault registrations.
+    env.new_subvault_names.resize(reg_stack);
+    env.new_subvault_tags.resize(reg_stack);
 
     return (make_stringf("Could not fit '%s' in (%d,%d) to (%d, %d).",
                          tag.c_str(), tl.x, tl.y, br.x, br.y));
