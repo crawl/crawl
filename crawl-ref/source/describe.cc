@@ -1542,7 +1542,6 @@ static string _describe_jewellery(const item_def &item, bool verbose)
         string rand_desc = _randart_descrip(item);
         if (!rand_desc.empty())
         {
-            description += "\n";
             description += rand_desc;
         }
         if (!item_ident(item, ISFLAG_KNOW_PROPERTIES) ||
@@ -1806,7 +1805,10 @@ string get_item_description(const item_def &item, bool verbose,
             if (!desc.empty())
             {
                 description << desc;
-                need_base_desc = false;
+                if (item.base_type == OBJ_JEWELLERY)
+                    description << "\n";
+                else
+                    need_base_desc = false;
             }
         }
 
