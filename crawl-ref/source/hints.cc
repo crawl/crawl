@@ -2193,41 +2193,17 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "You can search for stairs from the level map (<w>%</w>) "
                 "by pressing <w>></w>. The cursor will jump to the nearest "
                 "staircase, and by pressing <w>.</w> or <w>Enter</w> your "
-                "character can move there, too. ";
+                "character can move there, too. Each level of Crawl has three "
+#ifndef USE_TILE
+                "white "
+#endif
+                "up and three "
+#ifndef USE_TILE
+                "white "
+#endif
+                "down stairs. Unexplored parts can often be accessed via "
+                "another level.";
         cmd.push_back(CMD_DISPLAY_MAP);
-
-        if (Hints.hints_events[HINT_SEEN_STAIRS])
-        {
-            text << "In rare cases, you may have found no downstairs at all. "
-                    "Try searching for secret doors in suspicious looking "
-                    "spots; use <w>s</w>, <w>.</w> or for 100 turns with "
-                    "<w>%</w> "
-#ifdef USE_TILE
-                    "(or alternatively click into the stat area) "
-#endif
-                    "to do so.";
-        }
-        else
-        {
-            text << "Each level of Crawl has three "
-#ifndef USE_TILE
-                    "white "
-#endif
-                    "up and three "
-#ifndef USE_TILE
-                    "white "
-#endif
-                    "down stairs. Unexplored parts can often be accessed via "
-                    "another level or through secret doors. To find the "
-                    "latter, search the adjacent squares of walls for one "
-                    "turn with <w>.</w> or <w>s</w>, or for 100 turns with "
-                    "<w>%</w> or <w>Shift-numpad 5</w>"
-#ifdef USE_TILE
-                    ", or by clicking on the stat area"
-#endif
-                    ".\n\n";
-        }
-        cmd.push_back(CMD_REST);
         break;
 
     case HINT_AUTO_EXCLUSION:
