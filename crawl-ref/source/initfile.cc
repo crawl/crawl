@@ -1216,7 +1216,7 @@ void game_options::add_fire_order_slot(const string &s, bool prepend)
 }
 
 void game_options::add_mon_glyph_overrides(const string &mons,
-                                           mon_display &mdisp)
+                                           cglyph_t &mdisp)
 {
     // If one character, this is a monster letter.
     int letter = -1;
@@ -1240,18 +1240,19 @@ void game_options::add_mon_glyph_overrides(const string &mons,
         report_error("Unknown monster: \"%s\"", mons.c_str());
 }
 
-mon_display game_options::parse_mon_glyph(const string &s) const
+cglyph_t game_options::parse_mon_glyph(const string &s) const
 {
-    mon_display md;
+    cglyph_t md;
+    md.col = 0;
     vector<string> phrases = split_string(" ", s);
     for (int i = 0, size = phrases.size(); i < size; ++i)
     {
         const string &p = phrases[i];
         const int col = str_to_colour(p, -1, false);
         if (col != -1 && colour)
-            md.colour = col;
+            md.col = col;
         else
-            md.glyph = p == "_"? ' ' : read_symbol(p);
+            md.ch = p == "_"? ' ' : read_symbol(p);
     }
     return md;
 }
@@ -1262,8 +1263,8 @@ void game_options::add_mon_glyph_override(const string &text)
     if (override.size() != 2u)
         return;
 
-    mon_display mdisp = parse_mon_glyph(override[1]);
-    if (mdisp.glyph || mdisp.colour)
+    cglyph_t mdisp = parse_mon_glyph(override[1]);
+    if (mdisp.ch || mdisp.col)
         add_mon_glyph_overrides(override[0], mdisp);
 }
 
@@ -1273,8 +1274,8 @@ void game_options::add_item_glyph_override(const string &text)
     if (override.size() != 2u)
         return;
 
-    mon_display mdisp = parse_mon_glyph(override[1]);
-    if (mdisp.glyph || mdisp.colour)
+    cglyph_t mdisp = parse_mon_glyph(override[1]);
+    if (mdisp.ch || mdisp.col)
         item_glyph_overrides[override[0]] = mdisp;
 }
 

@@ -5,16 +5,6 @@
 #include "mon-info.h"
 
 struct map_cell;
-struct cglyph_t
-{
-    ucs_t ch;
-    unsigned short col; // XXX: real or unreal depending on context...
-
-    cglyph_t(ucs_t _ch = 0, unsigned short _col = LIGHTGREY)
-        : ch(_ch), col(_col)
-    {
-    }
-};
 
 string glyph_to_tagstr(const cglyph_t& g);
 

@@ -212,7 +212,7 @@ static cglyph_t _get_item_override(const item_def &item)
     string name = stash_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item)
                 + item.name(DESC_PLAIN);
 
-    for (map<string, mon_display>::const_iterator ir = Options.item_glyph_overrides.begin();
+    for (map<string, cglyph_t>::const_iterator ir = Options.item_glyph_overrides.begin();
          ir != Options.item_glyph_overrides.end(); ++ir)
     {
         text_pattern tpat(ir->first);
@@ -221,10 +221,10 @@ static cglyph_t _get_item_override(const item_def &item)
             // You may have a rule that sets the glyph but not colour for
             // axes, then another that sets colour only for artefacts
             // (useless items, etc).  Thus, apply only parts that apply.
-            if (ir->second.glyph)
-                g.ch = ir->second.glyph;
-            if (ir->second.colour)
-                g.col = ir->second.colour;
+            if (ir->second.ch)
+                g.ch = ir->second.ch;
+            if (ir->second.col)
+                g.col = ir->second.col;
         }
     }
 

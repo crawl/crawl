@@ -90,7 +90,6 @@ class player;
 class monster;
 class KillMaster;
 class ghost_demon;
-struct cglyph_t;
 
 template <typename Z> static inline Z sgn(Z x)
 {
@@ -783,15 +782,15 @@ private:
     void set_comparators(string &s);
 };
 
-struct mon_display
+struct cglyph_t
 {
-    ucs_t        glyph;
-    unsigned     colour;
-    monster_type detected; // What a monster of type "type" is detected as.
+    ucs_t ch;
+    unsigned short col; // XXX: real or unreal depending on context...
 
-    mon_display(unsigned gly = 0, unsigned col = 0,
-                monster_type d = MONS_NO_MONSTER)
-       : glyph(gly), colour(col), detected(d) { }
+    cglyph_t(ucs_t _ch = 0, unsigned short _col = LIGHTGREY)
+        : ch(_ch), col(_col)
+    {
+    }
 };
 
 typedef FixedArray<item_type_id_state_type, NUM_OBJECT_CLASSES, MAX_SUBTYPES> id_arr;
