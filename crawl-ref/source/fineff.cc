@@ -77,6 +77,12 @@ bool blood_fineff::mergeable(const final_effect &fe) const
     return o && posn == o->posn && mtype == o->mtype;
 }
 
+bool kraken_damage_fineff::mergeable(const final_effect &fe) const
+{
+    const kraken_damage_fineff *o = dynamic_cast<const kraken_damage_fineff *>(&fe);
+    return o && att == o->att && def == o->def;
+}
+
 
 void mirror_damage_fineff::merge(const final_effect &fe)
 {
@@ -99,6 +105,14 @@ void blood_fineff::merge(const final_effect &fe)
     const blood_fineff *bfe = dynamic_cast<const blood_fineff *>(&fe);
     ASSERT(bfe && mergeable(*bfe));
     blood += bfe->blood;
+}
+
+void kraken_damage_fineff::merge(const final_effect &fe)
+{
+    const kraken_damage_fineff *krakfe =
+        dynamic_cast<const kraken_damage_fineff *>(&fe);
+    ASSERT(krakfe && mergeable(*krakfe));
+    damage += krakfe->damage;
 }
 
 
@@ -233,6 +247,12 @@ void trj_spawn_fineff::fire()
 void blood_fineff::fire()
 {
     bleed_onto_floor(posn, mtype, blood, true);
+}
+
+void kraken_damage_fineff::fire()
+{
+    if (actor *df = defender())
+        df->hurt(attacker(), damage);
 }
 
 // Effects that occur after all other effects, even if the monster is dead.
