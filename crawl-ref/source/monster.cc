@@ -5427,44 +5427,17 @@ void monster::react_to_damage(const actor *oppressor, int damage,
     if (!alive())
         return;
 
-    if (type == MONS_KRAKEN_TENTACLE && flavour != BEAM_TORMENT_DAMAGE)
+    if (type == MONS_KRAKEN_TENTACLE && flavour != BEAM_TORMENT_DAMAGE
+        && !invalid_monster_index(number)
+        && mons_base_type(&menv[number]) == MONS_KRAKEN)
     {
-        if (!invalid_monster_index(number)
-            && mons_base_type(&menv[number]) == MONS_KRAKEN)
-        {
-            menv[number].hurt(oppressor, damage, flavour);
-
-            // We could be removed, undo this or certain post-hit
-            // effects will cry.
-            if (invalid_monster(this))
-            {
-                type = MONS_KRAKEN_TENTACLE;
-                hit_points = -1;
-            }
-        }
+        (new kraken_damage_fineff(oppressor, &menv[number], damage))->schedule();
     }
-    else if (type == MONS_KRAKEN_TENTACLE_SEGMENT)
+    else if (type == MONS_KRAKEN_TENTACLE_SEGMENT && flavour != BEAM_TORMENT_DAMAGE
+             && !invalid_monster_index(number)
+             && mons_base_type(&menv[number]) == MONS_KRAKEN_TENTACLE)
     {
-        if (!invalid_monster_index(number)
-            && mons_base_type(&menv[number]) == MONS_KRAKEN_TENTACLE)
-        {
-            // If we are going to die, monster_die hook will handle
-            // purging the tentacle.
-            if (hit_points < menv[number].hit_points
-                && hit_points > 0)
-            {
-                int pass_damage = menv[number].hit_points -  hit_points;
-                menv[number].hurt(oppressor, pass_damage, flavour);
-
-                // We could be removed, undo this or certain post-hit
-                // effects will cry.
-                if (invalid_monster(this))
-                {
-                    type = MONS_KRAKEN_TENTACLE_SEGMENT;
-                    hit_points = -1;
-                }
-            }
-        }
+        (new kraken_damage_fineff(oppressor, &menv[number], damage))->schedule();
     }
     else if (type == MONS_ELDRITCH_TENTACLE_SEGMENT)
     {
