@@ -1516,7 +1516,8 @@ reach_type monster_info::reach_range() const
 
 size_type monster_info::body_size() const
 {
-    const monsterentry *e = get_monster_data(type);
+    const monsterentry *e = base_type != type ? get_monster_data(base_type)
+                                              : get_monster_data(type);
     size_type ret = (e ? e->size : SIZE_MEDIUM);
 
     // Slime creature size is increased by the number merged.
