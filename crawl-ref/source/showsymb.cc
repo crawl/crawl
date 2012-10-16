@@ -81,7 +81,7 @@ unsigned short _cell_feat_show_colour(const map_cell& cell,
     {
         colour = LIGHTGREEN;
     }
-    else if (cell.feat_colour())
+    else if (cell.feat_colour() && !norecolour)
         colour = cell.feat_colour();
     else
     {
