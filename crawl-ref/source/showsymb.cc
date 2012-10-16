@@ -231,7 +231,8 @@ show_class get_cell_show_class(const map_cell& cell,
 }
 
 static const unsigned short ripple_table[] =
-    {BLUE,          // BLACK        => BLUE (default)
+{
+     BLUE,          // BLACK        => BLUE (default)
      BLUE,          // BLUE         => BLUE
      GREEN,         // GREEN        => GREEN
      CYAN,          // CYAN         => CYAN
@@ -246,7 +247,8 @@ static const unsigned short ripple_table[] =
      RED,           // LIGHTRED     => RED
      MAGENTA,       // LIGHTMAGENTA => MAGENTA
      BROWN,         // YELLOW       => BROWN
-     LIGHTGREY};    // WHITE        => LIGHTGREY
+     LIGHTGREY,     // WHITE        => LIGHTGREY
+};
 
 static cglyph_t _get_cell_glyph_with_class(const map_cell& cell,
                                            const coord_def& loc,
@@ -257,22 +259,13 @@ static cglyph_t _get_cell_glyph_with_class(const map_cell& cell,
     cglyph_t g;
     show_type show;
 
+    g.ch = 0;
     const cloud_type cell_cloud = cell.cloud();
-    const bool gloom = cell_cloud == CLOUD_GLOOM;
-
-    if (gloom)
-    {
-        if (coloured)
-            g.col = cell.cloud_colour();
-        else
-            g.col = DARKGREY;
-    }
 
     switch (cls)
     {
     case SH_INVIS_EXPOSED:
-        if (!cell.invisible_monster())
-            return g;
+        ASSERT(cell.invisible_monster());
 
         show.cls = SH_INVIS_EXPOSED;
         if (cell_cloud != CLOUD_NONE)
@@ -282,14 +275,13 @@ static cglyph_t _get_cell_glyph_with_class(const map_cell& cell,
         break;
 
     case SH_MONSTER:
-        if (cell.monster() == MONS_NO_MONSTER)
-            return g;
-
+    {
         show = cell.monster();
+        const monster_info* mi = cell.monsterinfo();
+        ASSERT(mi);
+
         if (cell.detected_monster())
         {
-            const monster_info* mi = cell.monsterinfo();
-            ASSERT(mi);
             ASSERT(mi->type == MONS_SENSED);
             if (mons_is_sensed(mi->base_type))
                 g.col = mons_class_colour(mi->base_type);
@@ -299,16 +291,25 @@ static cglyph_t _get_cell_glyph_with_class(const map_cell& cell,
         else if (!coloured)
             g.col = DARKGRAY;
         else
-        {
-            const monster_info* mi = cell.monsterinfo();
-            ASSERT(mi);
             g.col = _get_mons_colour(*mi);
-        }
+
+        const bool override = Options.mon_glyph_overrides.find(mi->type)
+                              != Options.mon_glyph_overrides.end();
+        if (mi->props.exists("glyph") && !override)
+            g.ch = mi->props["glyph"].get_int();
+        else if (show.mons == MONS_SENSED)
+            g.ch = mons_char(mi->base_type);
+        else
+            g.ch = mons_char(show.mons);
+
+        if (mi->props.exists("glyph") && override)
+            g.col = mons_class_colour(mi->type);
+
         break;
+    }
 
     case SH_CLOUD:
-        if (!cell_cloud)
-            return g;
+        ASSERT(cell_cloud);
 
         show.cls = SH_CLOUD;
         if (coloured)
@@ -318,13 +319,10 @@ static cglyph_t _get_cell_glyph_with_class(const map_cell& cell,
         break;
 
     case SH_FEATURE:
-        if (!cell.feat())
-            return g;
-
         show = cell.feat();
+        ASSERT(show);
 
-        if (!gloom)
-            g.col = _cell_feat_show_colour(cell, loc, coloured);
+        g.col = _cell_feat_show_colour(cell, loc, coloured);
 
         if (cell.item())
         {
@@ -340,52 +338,41 @@ static cglyph_t _get_cell_glyph_with_class(const map_cell& cell,
         break;
 
     case SH_ITEM:
-        if (cell.item())
-        {
-            const item_info* eitem = cell.item();
-            show = *eitem;
+    {
+        const item_info* eitem = cell.item();
+        ASSERT(eitem);
+        show = *eitem;
 
-            if (!gloom)
-            {
-                if (!feat_is_water(cell.feat()))
-                    g.col = eitem->colour;
-                else
-                    g.col = _cell_feat_show_colour(cell, loc, coloured);
-
-                // monster(mimic)-owned items have link = NON_ITEM+1+midx
-                if (cell.flags & MAP_MORE_ITEMS)
-                    g.col |= COLFLAG_ITEM_HEAP;
-            }
-        }
+        if (!feat_is_water(cell.feat()))
+            g.col = eitem->colour;
         else
-            return g;
+            g.col = _cell_feat_show_colour(cell, loc, coloured);
+
+        // monster(mimic)-owned items have link = NON_ITEM+1+midx
+        if (cell.flags & MAP_MORE_ITEMS)
+            g.col |= COLFLAG_ITEM_HEAP;
         break;
+    }
 
     case SH_NOTHING:
     case NUM_SHOW_CLASSES:
-    default:
+        // blackness
+        g.ch = ' ';
         return g;
     }
 
-    if (cls == SH_MONSTER)
-    {
-        const monster_info* mi = cell.monsterinfo();
-        const bool override = Options.mon_glyph_overrides.find(mi->type)
-                              != Options.mon_glyph_overrides.end();
-        if (mi->props.exists("glyph") && !override)
-            g.ch = mi->props["glyph"].get_int();
-        else if (show.mons == MONS_SENSED)
-            g.ch = mons_char(mi->base_type);
-        else
-            g.ch = mons_char(show.mons);
-
-        if (mi->props.exists("glyph") && override)
-            g.col = mons_class_colour(mi->type);
-    }
-    else
+    if (!g.ch)
     {
         const feature_def &fdef = get_feature_def(show);
         g.ch = cell.seen() ? fdef.symbol : fdef.magic_symbol;
+    }
+
+    if (cell_cloud == CLOUD_GLOOM)
+    {
+        if (coloured)
+            g.col = cell.cloud_colour();
+        else
+            g.col = DARKGREY;
     }
 
     if (g.col)
