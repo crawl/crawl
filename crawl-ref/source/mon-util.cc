@@ -256,7 +256,7 @@ void init_monster_symbols()
         }
     }
 
-    for (mon_glyph_map::iterator it = Options.mon_glyph_overrides.begin();
+    for (map<monster_type, mon_display>::iterator it = Options.mon_glyph_overrides.begin();
          it != Options.mon_glyph_overrides.end(); ++it)
     {
         if (it->first == MONS_PROGRAM_BUG)

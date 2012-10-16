@@ -5,8 +5,6 @@
 #include "pattern.h"
 #include "newgame_def.h"
 
-typedef map<monster_type, mon_display> mon_glyph_map;
-
 // Intended to be somewhat generic
 enum option_value {
     OPT_AUTO = -1,
@@ -44,8 +42,9 @@ public:
 
     // View options
     vector<feature_override> feature_overrides;
-    mon_glyph_map mon_glyph_overrides;
+    map<monster_type, mon_display> mon_glyph_overrides;
     ucs_t cset_override[NUM_DCHAR_TYPES];
+    map<string, mon_display> item_glyph_overrides;
 
     string      save_dir;       // Directory where saves and bones go.
     string      macro_dir;      // Directory containing macro.txt
@@ -464,6 +463,7 @@ private:
     void add_mon_glyph_overrides(const string &mons, mon_display &mdisp);
     void add_mon_glyph_override(const string &);
     mon_display parse_mon_glyph(const string &s) const;
+    void add_item_glyph_override(const string &);
     void set_option_fragment(const string &s);
 
     static const string interrupt_prefix;
