@@ -240,13 +240,14 @@ void blood_fineff::fire()
 // to deal with only one creature at a time, so that's handled last.
 void fire_final_effects()
 {
-    for (unsigned int i = 0; i < env.final_effects.size(); ++i)
-        env.final_effects[i]->fire();
+    while (!env.final_effects.empty())
+    {
+        // Remove it first so nothing can merge with it.
+        final_effect *eff = env.final_effects.back();
+        env.final_effects.pop_back();
 
-    // Delete the allocated final_effects in a separate pass; otherwise,
-    // if one fineff schedules another, we would dereference a deleted object
-    // when checking mergeability in final_effect::schedule().
-    for (unsigned int i = 0; i < env.final_effects.size(); ++i)
-        delete env.final_effects[i];
-    env.final_effects.clear();
+        eff->fire();
+
+        delete eff;
+    }
 }
