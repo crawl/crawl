@@ -1023,7 +1023,7 @@ static string _describe_portal(const coord_def &gc)
     {
         text << "is a portal to a set of special levels filled with very "
                 "tough monsters; you probably shouldn't even think of going "
-                "in here. Additionally, entering a ziggurat takes a lot of "
+                "in here. Additionally, entering a ziggurat costs a lot of "
                 "gold, a lot more than you'd have right now; don't bother "
                 "saving gold up for it, since at this point your gold is "
                 "better spent at shops buying items which can help you "
@@ -1203,9 +1203,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
              << "</w>'). Type </console>"
                 "<tiles>. Simply click on it with your <w>left mouse button</w>, or "
                 "type </tiles>"
-                "<w>%</w> to read it, though you might want to wait until "
-                "there's a monster around or you have some more items, so the "
-                "scroll can actually have an effect.";
+                "<w>%</w> to read it.";
         cmd.push_back(CMD_READ);
         break;
 
@@ -1344,8 +1342,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_SEEN_RANDART:
         text << "Weapons and armour that have unusual descriptions like this "
                 "are much more likely to be of higher enchantment or have "
-                "special properties, good or bad. The rarer the description, "
-                "the greater the potential value of an item.";
+                "special properties, good or bad.";
         break;
 
     case HINT_SEEN_FOOD:
@@ -1355,8 +1352,8 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
              << "</w>')</console>"
                 ". You can eat it by typing <w>e</w>"
                 "<tiles> or by clicking on it with your <w>left mouse button</w></tiles>"
-                ". However, it is usually best to conserve rations and fruit "
-                "until you are hungry or even starving.";
+                ". However, it is usually best to conserve rations and fruit, "
+                "since raw meat from corpses is generally plentiful.";
         break;
 
     case HINT_SEEN_CARRION:
@@ -1593,9 +1590,9 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 #endif
         text << "is the entrance to a different branch of the dungeon, "
                 "which might have different terrain, level layout and "
-                "monsters from the current main branch you're in. Branches "
-                "can range from being up to ten levels deep to having only "
-                "a single level. They can also contain entrances to other "
+                "monsters from the current main branch you're in. Some "
+                "branches contain only a single level, and others are many "
+                "levels deep. They can also contain entrances to other "
                 "branches."
 
                 "\n\nThe first three branches you'll encounter are the "
@@ -1816,11 +1813,11 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 #ifndef USE_TILE
         text << glyph_to_tagstr(get_cell_glyph(gc)) << " ";
 #endif
-        text << "is a runed door. It functions no differently from any other "
-                "door, yet the runic writing covering them warn of a danger. "
-                "Other denizens of the dungeon will typically leave them "
-                "alone, you may elect to disregard the warning and open them "
-                "anyway. Doing so will break the runes.";
+        text << "is a runed door. The runic writings covering it are a "
+                "warning of nearby danger. Other denizens of the dungeon will "
+                "typically leave it alone, but other than that it functions "
+                "no differently from a normal door. You may elect to disregard "
+                "the warning and open it anyway. Doing so will break the runes.";
         break;
 
     case HINT_KILLED_MONSTER:
@@ -1983,7 +1980,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "reduce your HP, it also slowly reduces your <w>maximum</w> "
                 "HP (your usual maximum HP will be indicated by a number in "
                 "parentheses).\n"
-                "While you can wait it out, you'll probably want to stop "
+                "While you can wait it out, you'll probably want to stop the "
                 "rotting as soon as possible by <w>%</w>uaffing a potion of "
                 "curing, since the longer you wait the more your maximum HP "
                 "will be reduced. Once you've stopped rotting you can restore "
@@ -2327,7 +2324,9 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                  << apostrophise(god_name(you.religion))
                  << " support you can use your Berserk ability (<w>%</w>) "
                     "to temporarily gain more hitpoints and greater "
-                    "strength. ";
+                    "strength. Bear in mind that berserking at the last "
+                    "minute is often risky, and prevents you from using "
+                    "items to escape!";
             cmd.push_back(CMD_USE_ABILITY);
         }
         break;
@@ -2349,8 +2348,8 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "potions, spell miscasts, and overuse of strong enchantments "
                 "like invisibility. The only reliable way to get rid of "
                 "mutations is with potions of cure mutation. There are about "
-                "as many harmful as beneficial mutations, and most of them "
-                "have three levels. Check your mutations with <w>%</w>.";
+                "as many harmful as beneficial mutations, and some of them "
+                "have multiple levels. Check your mutations with <w>%</w>.";
         cmd.push_back(CMD_DISPLAY_MUTATIONS);
         break;
 
@@ -2871,7 +2870,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                     "accumulated so much contamination over a short amount of "
                     "time that it ";
         }
-        text << "can have nasty effects, such as mutate you or deal direct "
+        text << "can have nasty effects, such as mutating you or dealing direct "
                 "damage. In addition, glowing is going to make you much more "
                 "noticeable.";
         break;
@@ -3340,9 +3339,7 @@ void hints_describe_item(const item_def &item)
             {
                 ostr << "\n\nWeapons and armour that have unusual descriptions "
                      << "like this are much more likely to be of higher "
-                     << "enchantment or have special properties, good or bad. "
-                     << "The rarer the description, the greater the potential "
-                     << "value of an item.";
+                     << "enchantment or have special properties, good or bad."
 
                 Hints.hints_events[HINT_SEEN_RANDART] = false;
             }
@@ -3478,9 +3475,7 @@ void hints_describe_item(const item_def &item)
             {
                 ostr << "\n\nWeapons and armour that have unusual descriptions "
                      << "like this are much more likely to be of higher "
-                     << "enchantment or have special properties, good or bad. "
-                     << "The rarer the description, the greater the potential "
-                     << "value of an item.";
+                     << "enchantment or have special properties, good or bad."
 
                 Hints.hints_events[HINT_SEEN_RANDART] = false;
             }
@@ -4059,7 +4054,7 @@ static void _hints_describe_feature(int x, int y)
        case DNGN_TRAP_WEB:
             ostr << "Some areas of the dungeon, such as Spiders Nest, may "
                     "be strewn with giant webs that may ensnare you for a short "
-                    "time and notify local spiders of your location. "
+                    "time and notify nearby spiders of your location. "
                     "You can attempt to clear away the web by "
                     "standing next to it and then pressing <w>Ctrl</w> "
                     "and the direction of the web. Note that this often "
@@ -4184,21 +4179,8 @@ static void _hints_describe_feature(int x, int y)
                 }
                 else if (you.religion == altar_god)
                 {
-                    if (god_likes_items(you.religion))
-                    {
-                        ostr << "If "
-                             << god_name(you.religion)
-                             << " likes to have certain items or corpses "
-                                "sacrificed on altars, any appropriate item "
-                                "<w>d</w>ropped on an altar during prayer, or "
-                                "already lying on an altar when you start "
-                                "<w>p</w>raying will be automatically "
-                                "sacrificed to "
-                             << god_name(you.religion)
-                             << ".";
-                    }
-                    else // If we don't have anything to say, return early.
-                        return;
+                    // If we don't have anything to say, return early.
+                    return;
                 }
                 else
                 {
@@ -4247,7 +4229,7 @@ static void _hints_describe_feature(int x, int y)
             ostr << "\n\n";
 
         ostr << "Many forms of combat and some forms of magical attack "
-                "will splatter the surrounings with blood (if the victim has "
+                "will splatter the surroundings with blood (if the victim has "
                 "any blood, that is). Some monsters can smell blood from "
                 "a distance and will come looking for whatever the blood "
                 "was spilled from.";
@@ -4333,10 +4315,10 @@ static void _hints_describe_disturbance(int x, int y)
     ostr << "\n\n<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
     ostr << "The strange disturbance means that there's a monster hiding "
-            "under the surface of the shallow water. Other than non-submerged "
-            "monsters, a submerged monster will not be autotargeted when doing "
-            "a ranged attack while there are other, visible targets in sight. "
-            "Of course you can still target it manually if you wish to.";
+            "under the surface of the shallow water. Submerged monsters will "
+            "not be autotargeted when doing a ranged attack while there are "
+            "other, visible targets in sight. Of course you can still target "
+            "it manually if you wish to.";
 
     ostr << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
