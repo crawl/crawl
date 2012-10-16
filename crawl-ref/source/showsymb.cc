@@ -17,6 +17,7 @@
 #include "monster.h"
 #include "options.h"
 #include "show.h"
+#include "stash.h"
 #include "state.h"
 #include "terrain.h"
 #include "travel.h"
@@ -198,6 +199,38 @@ static int _get_mons_colour(const monster_info& mi)
     return col;
 }
 
+static cglyph_t _get_item_override(const item_def &item)
+{
+    cglyph_t g;
+    g.ch = 0;
+    g.col = 0;
+
+    // Skip costly name calculations if not needed.
+    if (Options.item_glyph_overrides.empty())
+        return g;
+
+    string name = stash_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item)
+                + item.name(DESC_PLAIN);
+
+    for (map<string, mon_display>::const_iterator ir = Options.item_glyph_overrides.begin();
+         ir != Options.item_glyph_overrides.end(); ++ir)
+    {
+        text_pattern tpat(ir->first);
+        if (tpat.matches(name))
+        {
+            // You may have a rule that sets the glyph but not colour for
+            // axes, then another that sets colour only for artefacts
+            // (useless items, etc).  Thus, apply only parts that apply.
+            if (ir->second.glyph)
+                g.ch = ir->second.glyph;
+            if (ir->second.colour)
+                g.col = ir->second.colour;
+        }
+    }
+
+    return g;
+}
+
 show_class get_cell_show_class(const map_cell& cell,
                                bool only_stationary_monsters)
 {
@@ -343,10 +376,12 @@ static cglyph_t _get_cell_glyph_with_class(const map_cell& cell,
         ASSERT(eitem);
         show = *eitem;
 
-        if (!feat_is_water(cell.feat()))
-            g.col = eitem->colour;
-        else
+        g = _get_item_override(*eitem);
+
+        if (feat_is_water(cell.feat()))
             g.col = _cell_feat_show_colour(cell, loc, coloured);
+        else if (!g.col)
+            g.col = eitem->colour;
 
         // monster(mimic)-owned items have link = NON_ITEM+1+midx
         if (cell.flags & MAP_MORE_ITEMS)
@@ -404,9 +439,11 @@ ucs_t get_item_symbol(show_item_type it)
 
 cglyph_t get_item_glyph(const item_def *item)
 {
-    cglyph_t g;
-    g.ch = get_feature_def(show_type(*item)).symbol;
-    g.col = item->colour;
+    cglyph_t g = _get_item_override(*item);
+    if (!g.ch)
+        g.ch = get_feature_def(show_type(*item)).symbol;
+    if (!g.col)
+        g.col = item->colour;
     return g;
 }
 

@@ -1114,6 +1114,7 @@ void game_options::reset_options()
 
     clear_feature_overrides();
     mon_glyph_overrides.clear();
+    item_glyph_overrides.clear();
 
     rest_wait_both = false;
 
@@ -1264,6 +1265,17 @@ void game_options::add_mon_glyph_override(const string &text)
     mon_display mdisp = parse_mon_glyph(override[1]);
     if (mdisp.glyph || mdisp.colour)
         add_mon_glyph_overrides(override[0], mdisp);
+}
+
+void game_options::add_item_glyph_override(const string &text)
+{
+    vector<string> override = split_string(":", text);
+    if (override.size() != 2u)
+        return;
+
+    mon_display mdisp = parse_mon_glyph(override[1]);
+    if (mdisp.glyph || mdisp.colour)
+        item_glyph_overrides[override[0]] = mdisp;
 }
 
 void game_options::add_feature_override(const string &text)
@@ -2289,7 +2301,8 @@ void game_options::read_option_line(const string &str, bool runscript)
         && key != "note_monsters" && key != "note_messages"
         && key.find("cset") != 0 && key != "dungeon"
         && key != "feature" && key != "fire_items_start"
-        && key != "mon_glyph" && key != "opt" && key != "option"
+        && key != "mon_glyph" && key != "item_glyph"
+        && key != "opt" && key != "option"
         && key != "menu_colour" && key != "menu_color"
         && key != "message_colour" && key != "message_color"
         && key != "levels" && key != "level" && key != "entries"
@@ -2559,6 +2572,8 @@ void game_options::read_option_line(const string &str, bool runscript)
         split_parse(field, ";", &game_options::add_feature_override);
     else if (key == "mon_glyph")
         split_parse(field, ",", &game_options::add_mon_glyph_override);
+    else if (key == "item_glyph")
+        split_parse(field, ",", &game_options::add_item_glyph_override);
     else CURSES_OPTION(friend_brand);
     else CURSES_OPTION(neutral_brand);
     else CURSES_OPTION(stab_brand);
