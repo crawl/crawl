@@ -212,6 +212,13 @@ static cglyph_t _get_item_override(const item_def &item)
     string name = stash_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item)
                 + item.name(DESC_PLAIN);
 
+    {
+        // Check the cache...
+        map<string, cglyph_t>::const_iterator ir = Options.item_glyph_cache.find(name);
+        if (ir != Options.item_glyph_cache.end())
+            return ir->second;
+    }
+
     for (map<string, cglyph_t>::const_iterator ir = Options.item_glyph_overrides.begin();
          ir != Options.item_glyph_overrides.end(); ++ir)
     {
@@ -227,6 +234,12 @@ static cglyph_t _get_item_override(const item_def &item)
                 g.col = ir->second.col;
         }
     }
+
+    // Matching against a list of regexps can be costly, save up to 1000
+    // last matches.
+    if (Options.item_glyph_cache.size() >= 1000)
+        Options.item_glyph_cache.clear();
+    Options.item_glyph_cache[name] = g;
 
     return g;
 }
