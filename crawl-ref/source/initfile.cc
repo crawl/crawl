@@ -1115,6 +1115,7 @@ void game_options::reset_options()
     clear_feature_overrides();
     mon_glyph_overrides.clear();
     item_glyph_overrides.clear();
+    item_glyph_cache.clear();
 
     rest_wait_both = false;
 
