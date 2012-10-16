@@ -3339,7 +3339,7 @@ void hints_describe_item(const item_def &item)
             {
                 ostr << "\n\nWeapons and armour that have unusual descriptions "
                      << "like this are much more likely to be of higher "
-                     << "enchantment or have special properties, good or bad."
+                     << "enchantment or have special properties, good or bad.";
 
                 Hints.hints_events[HINT_SEEN_RANDART] = false;
             }
@@ -3475,7 +3475,7 @@ void hints_describe_item(const item_def &item)
             {
                 ostr << "\n\nWeapons and armour that have unusual descriptions "
                      << "like this are much more likely to be of higher "
-                     << "enchantment or have special properties, good or bad."
+                     << "enchantment or have special properties, good or bad.";
 
                 Hints.hints_events[HINT_SEEN_RANDART] = false;
             }
