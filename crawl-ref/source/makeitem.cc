@@ -1553,6 +1553,19 @@ bool is_weapon_brand_ok(int type, int brand, bool strict)
     return true;
 }
 
+static void _roll_weapon_type(item_def& item, int item_level)
+{
+    int i;
+    for (i = 0; i < 1000; ++i)
+    {
+        item.sub_type = _determine_weapon_subtype(item_level);
+        if (is_weapon_brand_ok(item.sub_type, item.special, true))
+            break;
+    }
+    if (i == 1000)
+        item.sub_type = SPWPN_NORMAL; // fall back to no brand
+}
+
 static void _generate_weapon_item(item_def& item, bool allow_uniques,
                                   int force_type, int item_level,
                                   int item_race)
@@ -1561,17 +1574,7 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
     if (force_type != OBJ_RANDOM)
         item.sub_type = force_type;
     else
-    {
-        int i;
-        for (i = 0; i < 1000; ++i)
-        {
-            item.sub_type = _determine_weapon_subtype(item_level);
-            if (is_weapon_brand_ok(item.sub_type, item.special, true))
-                break;
-        }
-        if (i == 1000)
-            item.sub_type = SPWPN_NORMAL; // fall back to no brand
-    }
+        _roll_weapon_type(item, item_level);
 
     // Forced randart.
     if (item_level == ISPEC_RANDART)
@@ -1615,12 +1618,12 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_NORMAL);
 
     // If it's forced to be a good item, reroll the worst weapons.
-    if (force_good
-        && force_type == OBJ_RANDOM
-        && (item.sub_type == WPN_CLUB || item.sub_type == WPN_SLING
-            || item.sub_type == WPN_STAFF))
+    while (force_good
+           && force_type == OBJ_RANDOM
+           && (item.sub_type == WPN_CLUB || item.sub_type == WPN_SLING
+               || item.sub_type == WPN_STAFF))
     {
-        item.sub_type = _determine_weapon_subtype(item_level);
+        _roll_weapon_type(item, item_level);
     }
 
     item.plus  = 0;
