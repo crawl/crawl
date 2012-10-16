@@ -669,7 +669,7 @@ void view_update_at(const coord_def &pos)
 #ifndef USE_TILE_LOCAL
     if (!env.map_knowledge(pos).visible())
         return;
-    glyph g = get_cell_glyph(pos);
+    cglyph_t g = get_cell_glyph(pos);
 
     int flash_colour = you.flash_colour == BLACK
         ? viewmap_flash_colour()
@@ -891,7 +891,7 @@ static void _draw_out_of_bounds(screen_cell_t *cell)
 static void _draw_outside_los(screen_cell_t *cell, const coord_def &gc)
 {
     // Outside the env.show area.
-    glyph g = get_cell_glyph(gc, Options.clean_map);
+    cglyph_t g = get_cell_glyph(gc, Options.clean_map);
     cell->glyph  = g.ch;
     cell->colour = g.col;
 
@@ -933,7 +933,7 @@ static void _draw_los(screen_cell_t *cell,
                       const coord_def &gc, const coord_def &ep,
                       bool anim_updates)
 {
-    glyph g = get_cell_glyph(gc);
+    cglyph_t g = get_cell_glyph(gc);
     cell->glyph  = g.ch;
     cell->colour = g.col;
 

@@ -768,7 +768,7 @@ void hints_gained_new_skill(skill_type skill)
 // Stringizes it and handles quoting "<".
 static string _colourize_glyph(int col, unsigned ch)
 {
-    glyph g;
+    cglyph_t g;
     g.col = col;
     g.ch = ch;
     return glyph_to_tagstr(g);
@@ -1682,7 +1682,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "of these nasty constructions";
 #ifndef USE_TILE
         {
-            glyph g = get_cell_glyph(gc);
+            cglyph_t g = get_cell_glyph(gc);
 
             if (g.ch == ' ' || g.col == BLACK)
                 g.col = LIGHTCYAN;

@@ -636,7 +636,7 @@ void full_describe_view()
 
             string prefix = "";
 #ifndef USE_TILE_LOCAL
-            glyph g = get_mons_glyph(*mi);
+            cglyph_t g = get_mons_glyph(*mi);
             const string col_string = colour_to_str(g.col);
             prefix = "(<" + col_string + ">"
                      + (g.ch == '<' ? "<<" : stringize_glyph(g.ch))
@@ -711,7 +711,7 @@ void full_describe_view()
             const coord_def c = list_features[i];
             string desc = "";
 #ifndef USE_TILE_LOCAL
-            glyph g = get_cell_glyph(c);
+            cglyph_t g = get_cell_glyph(c);
             const string colour_str = colour_to_str(g.col);
             desc = "(<" + colour_str + ">";
             desc += stringize_glyph(g.ch);

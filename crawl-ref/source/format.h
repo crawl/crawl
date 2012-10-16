@@ -27,7 +27,7 @@ public:
 
     void cprintf(PRINTF(1, ));
     void cprintf(const string &s);
-    void add_glyph(glyph g);
+    void add_glyph(cglyph_t g);
     void textcolor(int color);
     formatted_string chop(int length) const;
     void del_char();
