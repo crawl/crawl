@@ -451,7 +451,7 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode,
             }
             else
             {
-                glyph g = get_cell_glyph(c, Options.clean_map, -1);
+                cglyph_t g = get_cell_glyph(c, Options.clean_map, -1);
                 cell->glyph = g.ch;
                 cell->colour = g.col;
 
@@ -517,13 +517,13 @@ static void _reset_travel_colours(vector<coord_def> &features, bool on_level)
 }
 
 // Sort glyphs within a group, for the feature list.
-static bool _comp_glyphs(const glyph& g1, const glyph& g2)
+static bool _comp_glyphs(const cglyph_t& g1, const cglyph_t& g2)
 {
     return (g1.ch < g2.ch || g1.ch == g2.ch && g1.col < g2.col);
 }
 
 #ifndef USE_TILE_LOCAL
-static glyph _get_feat_glyph(const coord_def& gc);
+static cglyph_t _get_feat_glyph(const coord_def& gc);
 #endif
 
 class feature_list
@@ -533,7 +533,7 @@ class feature_list
         G_UP, G_DOWN, G_PORTAL, G_OTHER, G_NONE, NUM_GROUPS = G_NONE
     };
 
-    vector<glyph> data[NUM_GROUPS];
+    vector<cglyph_t> data[NUM_GROUPS];
 
     static group feat_dir(dungeon_feature_type feat)
     {
@@ -1327,14 +1327,14 @@ bool emphasise(const coord_def& where)
 #ifndef USE_TILE_LOCAL
 // Get glyph for feature list; here because it's so similar
 // to get_map_col.
-static glyph _get_feat_glyph(const coord_def& gc)
+static cglyph_t _get_feat_glyph(const coord_def& gc)
 {
     // XXX: it's unclear whether we want to display all features
     // or just those not obscured by remembered/detected stuff.
     dungeon_feature_type feat = env.map_knowledge(gc).feat();
     const bool terrain_seen = env.map_knowledge(gc).seen();
     const feature_def &fdef = get_feature_def(feat);
-    glyph g;
+    cglyph_t g;
     g.ch  = terrain_seen ? fdef.symbol : fdef.magic_symbol;
     unsigned col;
     if (_travel_colour_override(gc))

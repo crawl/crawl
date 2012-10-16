@@ -90,7 +90,7 @@ class player;
 class monster;
 class KillMaster;
 class ghost_demon;
-struct glyph;
+struct cglyph_t;
 
 template <typename Z> static inline Z sgn(Z x)
 {

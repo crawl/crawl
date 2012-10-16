@@ -241,9 +241,9 @@ enum prefix_type
 };
 
 // Could also go with coloured glyphs.
-static glyph _prefix_glyph(prefix_type p)
+static cglyph_t _prefix_glyph(prefix_type p)
 {
-    glyph g;
+    cglyph_t g;
     switch (p)
     {
     case P_TURN_START:
@@ -555,7 +555,7 @@ public:
         if (first_col_more())
         {
             cgotoxy(1, last_row, GOTO_MSG);
-            glyph g = _prefix_glyph(full ? P_FULL_MORE : P_OTHER_MORE);
+            cglyph_t g = _prefix_glyph(full ? P_FULL_MORE : P_OTHER_MORE);
             formatted_string f;
             f.add_glyph(g);
             f.display();

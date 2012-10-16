@@ -248,13 +248,13 @@ static const unsigned short ripple_table[] =
      BROWN,         // YELLOW       => BROWN
      LIGHTGREY};    // WHITE        => LIGHTGREY
 
-static glyph _get_cell_glyph_with_class(const map_cell& cell,
-                                        const coord_def& loc,
-                                        const show_class cls,
-                                        int colour_mode)
+static cglyph_t _get_cell_glyph_with_class(const map_cell& cell,
+                                           const coord_def& loc,
+                                           const show_class cls,
+                                           int colour_mode)
 {
     const bool coloured = colour_mode == 0 ? cell.visible() : (colour_mode > 0);
-    glyph g;
+    cglyph_t g;
     show_type show;
 
     const cloud_type cell_cloud = cell.cloud();
@@ -394,8 +394,8 @@ static glyph _get_cell_glyph_with_class(const map_cell& cell,
     return g;
 }
 
-glyph get_cell_glyph(const coord_def& loc, bool only_stationary_monsters,
-                     int colour_mode)
+cglyph_t get_cell_glyph(const coord_def& loc, bool only_stationary_monsters,
+                        int colour_mode)
 {
     // note: this does NOT determine output of the player glyph;
     // that's handled by itself in _draw_player() in view.cc
@@ -415,17 +415,17 @@ ucs_t get_item_symbol(show_item_type it)
     return get_feature_def(show_type(it)).symbol;
 }
 
-glyph get_item_glyph(const item_def *item)
+cglyph_t get_item_glyph(const item_def *item)
 {
-    glyph g;
+    cglyph_t g;
     g.ch = get_feature_def(show_type(*item)).symbol;
     g.col = item->colour;
     return g;
 }
 
-glyph get_mons_glyph(const monster_info& mi)
+cglyph_t get_mons_glyph(const monster_info& mi)
 {
-    glyph g;
+    cglyph_t g;
     const bool override = Options.mon_glyph_overrides.find(mi.type)
                           != Options.mon_glyph_overrides.end();
     if (mi.props.exists("glyph") && !override)
@@ -445,7 +445,7 @@ glyph get_mons_glyph(const monster_info& mi)
     return g;
 }
 
-string glyph_to_tagstr(const glyph& g)
+string glyph_to_tagstr(const cglyph_t& g)
 {
     string col = colour_to_str(g.col);
     string ch = stringize_glyph(g.ch);
