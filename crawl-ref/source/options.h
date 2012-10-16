@@ -42,9 +42,9 @@ public:
 
     // View options
     vector<feature_override> feature_overrides;
-    map<monster_type, mon_display> mon_glyph_overrides;
+    map<monster_type, cglyph_t> mon_glyph_overrides;
     ucs_t cset_override[NUM_DCHAR_TYPES];
-    map<string, mon_display> item_glyph_overrides;
+    map<string, cglyph_t> item_glyph_overrides;
 
     string      save_dir;       // Directory where saves and bones go.
     string      macro_dir;      // Directory containing macro.txt
@@ -460,9 +460,9 @@ private:
 
     void split_parse(const string &s, const string &separator,
                      void (game_options::*add)(const string &));
-    void add_mon_glyph_overrides(const string &mons, mon_display &mdisp);
+    void add_mon_glyph_overrides(const string &mons, cglyph_t &mdisp);
     void add_mon_glyph_override(const string &);
-    mon_display parse_mon_glyph(const string &s) const;
+    cglyph_t parse_mon_glyph(const string &s) const;
     void add_item_glyph_override(const string &);
     void set_option_fragment(const string &s);
 

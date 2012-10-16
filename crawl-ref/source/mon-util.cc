@@ -55,6 +55,17 @@
 
 static FixedVector < int, NUM_MONSTERS > mon_entry;
 
+struct mon_display
+{
+    ucs_t        glyph;
+    unsigned     colour;
+    monster_type detected; // What a monster of type "type" is detected as.
+
+    mon_display(unsigned gly = 0, unsigned col = 0,
+                monster_type d = MONS_NO_MONSTER)
+       : glyph(gly), colour(col), detected(d) { }
+};
+
 static mon_display monster_symbols[NUM_MONSTERS];
 
 static bool initialised_randmons = false;
@@ -256,18 +267,18 @@ void init_monster_symbols()
         }
     }
 
-    for (map<monster_type, mon_display>::iterator it = Options.mon_glyph_overrides.begin();
+    for (map<monster_type, cglyph_t>::iterator it = Options.mon_glyph_overrides.begin();
          it != Options.mon_glyph_overrides.end(); ++it)
     {
         if (it->first == MONS_PROGRAM_BUG)
             continue;
 
-        const mon_display &md = it->second;
+        const cglyph_t &md = it->second;
 
-        if (md.glyph)
-            monster_symbols[it->first].glyph = get_glyph_override(md.glyph);
-        if (md.colour)
-            monster_symbols[it->first].colour = md.colour;
+        if (md.ch)
+            monster_symbols[it->first].glyph = get_glyph_override(md.ch);
+        if (md.col)
+            monster_symbols[it->first].colour = md.col;
     }
 
     // Validate all glyphs, even those which didn't come from an override.
