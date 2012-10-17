@@ -11,6 +11,7 @@
 
 #include "colour.h"
 #include "env.h"
+#include "itemname.h"
 #include "libutil.h"
 #include "map_knowledge.h"
 #include "mon-util.h"
@@ -210,6 +211,7 @@ static cglyph_t _get_item_override(const item_def &item)
         return g;
 
     string name = stash_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item)
+                + " {" + filtering_item_prefix(item, false) + "} "
                 + item.name(DESC_PLAIN);
 
     {
