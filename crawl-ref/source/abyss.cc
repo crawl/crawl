@@ -1007,7 +1007,7 @@ static ProceduralSample _abyss_grid(const coord_def &p)
     const static WorleyLayout layout(seed + 4321, mixed_vec);
     const ProceduralLayout* masterLayouts[] = { &newAbyssLayout, &layout };
     const static vector<const ProceduralLayout*> master_vec(masterLayouts, masterLayouts + 2);
-    const static WorleyLayout masterLayout(seed + 314159, master_vec, 20.0);
+    const static WorleyLayout masterLayout(seed + 314159, master_vec, 5.0);
     const static RiverLayout rivers(seed, masterLayout);
     const ProceduralSample sample = rivers(pt, abyssal_state.depth);
     abyss_sample_queue.push(sample);

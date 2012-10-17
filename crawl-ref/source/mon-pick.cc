@@ -83,6 +83,30 @@ int mons_null_rare(monster_type mcls)
     return 0;
 }
 
+<<<<<<< HEAD
+=======
+int _abyss_rarity(int rarity, int peak, int half, int lim = 0)
+{
+    if (!rarity)
+        return 0;
+
+    if (you.depth < lim)
+        return 0;
+
+    if (you.depth < peak)
+    {
+        float t = you.depth / (peak + 1.0);
+        int r = rarity * (t * t * t * (t * (t * 6 - 15) + 10)) * 100;
+        return div_rand_round(r, 100);
+    }
+    if (!half)
+        return rarity;
+    float decay = -abs(you.depth - peak) / float(half);
+    int h = rarity * pow(2, decay) * 100;
+    return div_rand_round(h, 100);
+}
+
+>>>>>>> Abyss Changes
 // The Abyss
 int mons_abyss_level(monster_type mcls)
 {
