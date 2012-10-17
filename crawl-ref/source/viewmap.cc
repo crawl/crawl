@@ -243,6 +243,8 @@ bool is_feature(ucs_t feature, const coord_def& where)
         case DNGN_STONE_STAIRS_DOWN_I:
         case DNGN_STONE_STAIRS_DOWN_II:
         case DNGN_STONE_STAIRS_DOWN_III:
+        // Not a > glyph, but it goes deeper into the abyss.
+        case DNGN_ABYSSAL_STAIR:
         case DNGN_ENTER_DWARVEN_HALL:
         case DNGN_ENTER_ORCISH_MINES:
         case DNGN_ENTER_LAIR:
