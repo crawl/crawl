@@ -3392,11 +3392,11 @@ static const string _item_prefix(const item_def &item, bool temp, bool filter)
             prefixes.push_back("preferred");
 
         if (is_poisonous(item))
-            prefixes.push_back("poisonous");
+            prefixes.push_back("poisonous"), prefixes.push_back("inedible");
         else if (is_mutagenic(item))
             prefixes.push_back("mutagenic");
         else if (causes_rot(item))
-            prefixes.push_back("rot-inducing");
+            prefixes.push_back("rot-inducing"), prefixes.push_back("inedible");
         else if (is_contaminated(item))
             prefixes.push_back("contaminated");
         break;
