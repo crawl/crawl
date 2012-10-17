@@ -3391,12 +3391,7 @@ static const string _item_prefix(const item_def &item, bool temp, bool filter)
         else if (is_preferred_food(item))
             prefixes.push_back("preferred");
 
-        // Don't include these for filtering, since the user might want
-        // to use "muta" to search for "potion of cure mutation", and
-        // similar.
-        if (filter)
-            ;
-        else if (is_poisonous(item))
+        if (is_poisonous(item))
             prefixes.push_back("poisonous");
         else if (is_mutagenic(item))
             prefixes.push_back("mutagenic");
