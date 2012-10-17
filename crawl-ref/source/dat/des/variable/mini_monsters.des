@@ -135,20 +135,22 @@ TAGS:   allow_dup vaults_room_10_spin_empty
 WEIGHT: 1
 DEPTH:  D:15-27, Elf, Vaults
 MONS:   butterfly
-MARKER: X = lua: props_marker { connected_exclude="true", \
+MARKER: X = lua: props_marker { connected_exclude="true" }
+MARKER: Y = lua: props_marker { connected_exclude="true", \
                                 stop_explore="strange structure made of doors" }
-KFEAT:  X = runed_door
+KFEAT:  X = +
+KFEAT:  Y = runed_door
 MAP
-XXXXXXXXXX
-XxXXXXXXXX
-XXXXXXXXXX
-XXX1111XXX
-XXX1111XXX
-XXX1111XXX
-XXX1111XXX
-XXXXXXXXXX
-XXXXXXXXXX
-XXXXXXXXXX
+YYYYYYYYYY
+YXXXXXXXXY
+YXXXXXXXXY
+YXX1111XXY
+YXX1111XXY
+YXX1111XXY
+YXX1111XXY
+YXXXXXXXXY
+YXXXXXXXXY
+YYYYYYYYYY
 ENDMAP
 
 # Anthill
@@ -528,20 +530,22 @@ TAGS:   allow_dup vaults_room_10_spin_dangerous
 WEIGHT: 1
 DEPTH:  D:20-27, Elf:3-5, Vaults:3-
 MONS:   elephant, dire elephant, hellephant
-MARKER: X = lua: props_marker { connected_exclude="true", \
+MARKER: X = lua: props_marker { connected_exclude="true" }
+MARKER: Y = lua: props_marker { connected_exclude="true", \
                                 stop_explore="strange structure made of doors" }
-KFEAT:  X = runed_door
+KFEAT:  X = +
+KFEAT:  Y = runed_door
 MAP
-XXXXXXXXXX
-XXXXXXXXXX
-XXXXXXXXXX
-XXX1112XXX
-XXX1321XXX
-XXX1221XXX
-XXX2111XXX
-XXXXXXXXXX
-XXXXXXXXXX
-XXXXXXXXXX
+YYYYYYYYYY
+YXXXXXXXXY
+YXXXXXXXXY
+YXX1112XXY
+YXX1321XXY
+YXX1221XXY
+YXX2111XXY
+YXXXXXXXXY
+YXXXXXXXXY
+YYYYYYYYYY
 ENDMAP
 
 # A plain guardian serpent vault. (nrook)
@@ -3989,9 +3993,11 @@ TAGS:   allow_dup
 TAGS:   vaults_room_10_spin_dangerous
 WEIGHT: 1 (Vaults), 10
 DEPTH:  D:15-27, Elf, Vaults, Crypt, Dis, Geh, Tar, Coc, Zot
-MARKER: X = lua: props_marker { connected_exclude="true", \
+MARKER: X = lua: props_marker { connected_exclude="true" }
+MARKER: Y = lua: props_marker { connected_exclude="true", \
                                 stop_explore="strange structure made of doors" }
-KFEAT:  X = runed_door
+KFEAT:  X = +
+KFEAT:  Y = runed_door
 # Pick interesting monsters for dungeon branches. Vaults and D get normal OOD.
 : if you.branch() == "Elf" then
 KMONS:  8 = deep elf annihilator / deep elf blademaster / deep elf master archer / \
@@ -4020,36 +4026,38 @@ KMONS:  8 = w:35 nonbase draconian / orb of fire / electric golem / killer klown
 KITEM:  9 = *
 KMONS:  9 = 9
 MAP
-XXXXXXXXXX
-XXXXXXXXXX
-XXXXXXXXXX
-XXX8888XXX
-XXX8998XXX
-XXX8998XXX
-XXX8888XXX
-XXXXXXXXXX
-XXXXXXXXXX
-XXXXXXXXXX
+YYYYYYYYYY
+YXXXXXXXXY
+YXXXXXXXXY
+YXX8888XXY
+YXX8998XXY
+YXX8998XXY
+YXX8888XXY
+YXXXXXXXXY
+YXXXXXXXXY
+YYYYYYYYYY
 ENDMAP
 
 # No, John. You are the door vault
 NAME:   reverse_door_vault
 DEPTH:  D:15-27
 WEIGHT: 4
-MARKER: X = lua: props_marker { connected_exclude="true", \
+MARKER: X = lua: props_marker { connected_exclude="true" }
+MARKER: Y = lua: props_marker { connected_exclude="true", \
                                 stop_explore="strange structure made of doors" }
-KFEAT:  X = runed_door
+KFEAT:  X = +
+KFEAT:  Y = runed_door
 MAP
 xxxxxxxxxxxxxx
 x8.*.8..8.9.8x
 x.XXXXXXXXXX.x
 x9XXXXXXXXXX*x
-x.XXXXXXXXXX.x
-x8XXX....XXX8x
-x.XXX.{..XXX.x
-x.XXX....XXX.x
-x8XXX....XXX8x
-x.XXXXXXXXXX.x
+x.XXYYYYYYXX.x
+x8XXY....YXX8x
+x.XXY.{..YXX.x
+x.XXY....YXX.x
+x8XXY....YXX8x
+x.XXYYYYYYXX.x
 x*XXXXXXXXXX9x
 x.XXXXXXXXXX.x
 x8.9.8..8.*.8x
