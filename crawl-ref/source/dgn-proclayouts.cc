@@ -42,8 +42,8 @@ dungeon_feature_type _pick_pseudorandom_wall(uint64_t val)
 
 dungeon_feature_type _pick_pseudorandom_feature(uint64_t val)
 {
-    if (val%2)
-        return _pick_pseudorandom_wall(val/2);
+    if (!(val%5))
+        return _pick_pseudorandom_wall(val/5);
     dungeon_feature_type features[] = {
         DNGN_STONE_WALL,
         DNGN_STONE_WALL,
@@ -53,9 +53,8 @@ dungeon_feature_type _pick_pseudorandom_feature(uint64_t val)
         DNGN_SHALLOW_WATER,
         DNGN_SHALLOW_WATER,
         DNGN_DEEP_WATER,
-        DNGN_LAVA
     };
-    return features[(val/2)%9];
+    return features[(val/5)%9];
 }
 
 ProceduralSample
@@ -111,8 +110,8 @@ WorleyLayout::operator()(const coord_def &p, const uint32_t offset) const
 
     const uint32_t changepoint = offset + _get_changepoint(n, offset_scale);
     const uint8_t size = layouts.size();
-    bool parity = n.id[0] % 3;
-    uint32_t id = n.id[0] / 3;
+    bool parity = n.id[0] % 4;
+    uint32_t id = n.id[0] / 4;
     const uint8_t choice = parity
         ? id % size
         : min(id % size, (id / size) % size);
@@ -195,7 +194,7 @@ NewAbyssLayout::operator()(const coord_def &p, const uint32_t offset) const
     if (isWall)
     {
         int fuzz = (base / 3) % 3 ? 0 : (base / 9) % 3 - 1;
-        feat = _pick_pseudorandom_feature(noise.id[0] + fuzz);
+        feat = _pick_pseudorandom_wall(noise.id[0] + fuzz);
     }
 
     return ProceduralSample(p, feat, offset + delta);
