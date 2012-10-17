@@ -1696,6 +1696,36 @@ LUAFN(dgn_is_validating)
     return 1;
 }
 
+LUAFN(_dgn_resolve_map)
+{
+    if (lua_isnil(ls, 1))
+    {
+        lua_pushnil(ls);
+        return 1;
+    }
+
+    MAP(ls, 1, map);
+    const bool check_collisions = _lua_boolean(ls, 2, true);
+
+    // Save the vault_placement into Temp_Vaults because the map_def
+    // will need to be alive through to the end of dungeon gen.
+    Temp_Vaults.push_back(vault_placement());
+
+    vault_placement &place(Temp_Vaults[Temp_Vaults.size() - 1]);
+
+    if (vault_main(place, map, check_collisions) != MAP_NONE)
+    {
+        clua_push_map(ls, &place.map);
+        lua_pushlightuserdata(ls, &place);
+    }
+    else
+    {
+        lua_pushnil(ls);
+        lua_pushnil(ls);
+    }
+    return 2;
+}
+
 LUAFN(_dgn_reuse_map)
 {
     if (!lua_isuserdata(ls, 1))
@@ -1851,6 +1881,7 @@ const struct luaL_reg dgn_dlib[] =
 { "map_by_place", dgn_map_by_place },
 { "place_map", _dgn_place_map },
 { "reuse_map", _dgn_reuse_map },
+{ "resolve_map", _dgn_resolve_map },
 { "in_vault", _dgn_in_vault },
 
 { "map_parameters", _dgn_map_parameters },
