@@ -2913,12 +2913,8 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     {
         do
         {
-            // Pick a monster that's guaranteed happy at this grid.
-            targetc = random_monster_at_grid(mons->pos());
-
-            // Valid targets are always base classes ([ds] which is unfortunate
-            // in that well-populated monster classes will dominate polymorphs).
-            targetc = mons_species(targetc);
+            // Pick a monster species that's guaranteed happy at this grid.
+            targetc = random_monster_at_grid(mons->pos(), true);
 
             target_power = mons_power(targetc);
             // Can't compare tiers in valid_morph, since we want to affect only

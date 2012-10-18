@@ -70,6 +70,7 @@ static mon_display monster_symbols[NUM_MONSTERS];
 
 static bool initialised_randmons = false;
 static vector<monster_type> monsters_by_habitat[NUM_HABITATS];
+static vector<monster_type> species_by_habitat[NUM_HABITATS];
 
 #include "mon-mst.h"
 
@@ -134,6 +135,7 @@ static void _initialise_randmons()
 {
     for (int i = 0; i < NUM_HABITATS; ++i)
     {
+        set<monster_type> tmp_species;
         const dungeon_feature_type grid = habitat2grid(habitat_type(i));
 
         for (monster_type mt = MONS_0; mt < NUM_MONSTERS; ++mt)
@@ -143,18 +145,30 @@ static void _initialise_randmons()
 
             if (monster_habitable_grid(mt, grid))
                 monsters_by_habitat[i].push_back(mt);
+
+            const monster_type species = mons_species(mt);
+            if (monster_habitable_grid(species, grid))
+                tmp_species.insert(species);
+
+        }
+
+        for (set<monster_type>::iterator it = tmp_species.begin();
+             it != tmp_species.end(); ++it)
+        {
+            species_by_habitat[i].push_back(*it);
         }
     }
     initialised_randmons = true;
 }
 
-monster_type random_monster_at_grid(const coord_def& p)
+monster_type random_monster_at_grid(const coord_def& p, bool species)
 {
     if (!initialised_randmons)
         _initialise_randmons();
 
     const habitat_type ht = _grid2habitat(grd(p));
-    const vector<monster_type> &valid_mons = monsters_by_habitat[ht];
+    const vector<monster_type> &valid_mons = species ? species_by_habitat[ht]
+                                                     : monsters_by_habitat[ht];
 
     ASSERT(!valid_mons.empty());
     return (valid_mons.empty() ? MONS_PROGRAM_BUG

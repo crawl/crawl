@@ -395,7 +395,7 @@ int ugly_thing_colour_offset(colour_t colour);
 string  draconian_colour_name(monster_type mon_type);
 monster_type draconian_colour_by_name(const string &colour);
 
-monster_type random_monster_at_grid(const coord_def& p);
+monster_type random_monster_at_grid(const coord_def& p, bool species = false);
 
 void         init_mon_name_cache();
 monster_type get_monster_by_name(string name, bool exact = false);
