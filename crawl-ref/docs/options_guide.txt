@@ -122,8 +122,8 @@ The contents of this text are:
 5-  Miscellaneous.
 5-a     All OS.
                 mouse_input, wiz_mode, char_set, classic_item_colours,
-                colour, cset, feature, mon_glyph, use_fake_player_cursor,
-                show_player_species
+                colour, cset, feature, mon_glyph, item_glyph,
+                use_fake_player_cursor, show_player_species
 
 5-b     DOS and Windows.
                 dos_use_background_intensity
@@ -936,7 +936,7 @@ runrest_stop_message += <regex>, <regex>, ...
         Multiple lines can be used. The earliest match among both
         ignore and stop messages overrides later lines. The file
         runrest_messages.txt contains a number of default settings.
-        
+
         Resetting either option has the effect of resetting both.
 
         Note also that runrest_ignore_message has no effect on what
@@ -2257,6 +2257,18 @@ mon_glyph = <monster name or symbol> : <colour> <glyph>
              demonspawn
              demigod
              halfling
+
+item_glyph = <regexp> : <colour> <glyph>
+        Customizes the symbol and/or colour of all items matching the regexp.
+        Unlike mon_glyph, this is a partial name match.
+
+        Items are prefixed by tags, both those from stash tracking and from
+        menu colouring. Thus, you can colour {artefact} or useless_item.
+
+        Multiple rules can modify a single item, which is useful if you want
+        to change the colour and glyph separately:
+            item_glyph += corpse : x625
+            item_glyph += poisonous.* corpse : lightgreen
 
 use_fake_player_cursor = true
         Makes the main view highlight the player without using the

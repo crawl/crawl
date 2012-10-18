@@ -435,7 +435,7 @@
 # show_player_species = true
 
 # See options_guide.txt for the options
-# cset, feature, mon_glyph
+# cset, feature, mon_glyph, item_glyph
 
 ## Highlight the edge of unexplored terrain.
 # feature = explore horizon {',,green}
