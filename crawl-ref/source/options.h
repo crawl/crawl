@@ -44,7 +44,8 @@ public:
     vector<feature_override> feature_overrides;
     map<monster_type, cglyph_t> mon_glyph_overrides;
     ucs_t cset_override[NUM_DCHAR_TYPES];
-    map<string, cglyph_t> item_glyph_overrides, item_glyph_cache;
+    vector<pair<string, cglyph_t> > item_glyph_overrides;
+    map<string, cglyph_t> item_glyph_cache;
 
     string      save_dir;       // Directory where saves and bones go.
     string      macro_dir;      // Directory containing macro.txt
