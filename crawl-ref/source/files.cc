@@ -1191,14 +1191,17 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     if (load_mode == LOAD_ENTER_LEVEL)
     {
         dprf("stair_taken = %s", dungeon_feature_name(stair_taken));
-        ASSERT(old_level.depth != -1); // what's this for?
+        // Not the case normally, but can happen during recovery of damaged
+        // games.
+        if (old_level.depth != -1)
+        {
+            _grab_followers();
 
-        _grab_followers();
-
-        if (env.level_state & LSTATE_DELETED)
-            delete_level(old_level), dprf("<lightmagenta>Deleting level.");
-        else
-            _save_level(old_level);
+            if (env.level_state & LSTATE_DELETED)
+                delete_level(old_level), dprf("<lightmagenta>Deleting level.");
+            else
+                _save_level(old_level);
+        }
 
         // The player is now between levels.
         you.position.reset();
