@@ -1277,7 +1277,7 @@ void game_options::add_item_glyph_override(const string &text)
 
     cglyph_t mdisp = parse_mon_glyph(override[1]);
     if (mdisp.ch || mdisp.col)
-        item_glyph_overrides[override[0]] = mdisp;
+        item_glyph_overrides.push_back(pair<string, cglyph_t>(override[0], mdisp));
 }
 
 void game_options::add_feature_override(const string &text)
