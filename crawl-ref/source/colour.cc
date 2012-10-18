@@ -790,8 +790,8 @@ static unsigned _colflag2brand(int colflag)
         return Options.feature_item_brand;
     case COLFLAG_TRAP_ITEM:
         return Options.trap_item_brand;
-	case COLFLAG_REVERSE:
-		return CHATTR_REVERSE;
+    case COLFLAG_REVERSE:
+        return CHATTR_REVERSE;
     default:
         return CHATTR_NORMAL;
     }
