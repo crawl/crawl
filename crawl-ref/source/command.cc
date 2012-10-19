@@ -1277,12 +1277,6 @@ static int _do_description(string key, string type, const string &suffix,
                             desc += "This book is beyond your current level "
                                     "of understanding.";
                         }
-                        else if (is_dangerous_spellbook(mitm[thing_created].sub_type))
-                        {
-                            desc += "WARNING: If you fail in an attempt to "
-                                    "memorise a spell from this book, the book "
-                                    "will lash out at you.";
-                        }
                         append_spells(desc, mitm[thing_created]);
                     }
                 }

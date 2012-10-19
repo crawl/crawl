@@ -625,10 +625,8 @@ static void _index_book(item_def& book, spells_to_books &book_hash,
 
         spells_in_book++;
 
-        // XXX: If same spell is in two different dangerous spellbooks,
-        // how to decide which one to use?
         spells_to_books::iterator it = book_hash.find(spell);
-        if (it == book_hash.end() || is_dangerous_spellbook(it->second))
+        if (it == book_hash.end())
             book_hash[spell] = book.sub_type;
     }
 
@@ -978,7 +976,6 @@ static spell_type _choose_mem_spell(spell_list &spells,
         const spell_type spell = spells[i];
 
         spells_to_books::iterator it = book_hash.find(spell);
-        const bool dangerous = is_dangerous_spellbook(it->second);
 
         ostringstream desc;
 
@@ -991,11 +988,6 @@ static spell_type _choose_mem_spell(spell_list &spells,
         }
         else
             colour = spell_highlight_by_utility(spell);
-
-        // Highlight dangerous books magenta, but don't bother if they are
-        // already highlighted as forbidden by the player's god.
-        if (dangerous && colour != COL_FORBIDDEN)
-            colour = MAGENTA;
 
         desc << "<" << colour_to_str(colour) << ">";
 
@@ -1107,7 +1099,7 @@ bool learn_spell()
 
     spells_to_books::iterator it = book_hash.find(specspell);
 
-    return learn_spell(specspell, it->second, true);
+    return learn_spell(specspell, it->second);
 }
 
 // Returns a string about why an undead character can't memorise a spell.
@@ -1172,64 +1164,29 @@ static bool _learn_spell_checks(spell_type specspell)
         mpr("You can't memorise that many levels of magic yet!");
         return false;
     }
+
+    if (spell_fail(specspell) >= 100)
+    {
+        mpr("This spell is too difficult to memorise!");
+        return false;
+    }
+
     return true;
 }
 
-bool learn_spell(spell_type specspell, int book, bool is_safest_book)
+bool learn_spell(spell_type specspell, int book)
 {
     if (!_learn_spell_checks(specspell))
         return false;
 
-    int chance = spell_fail(specspell);
+    double chance = get_miscast_chance(specspell);
 
-    if (chance > 0 && book != NUM_BOOKS && is_dangerous_spellbook(book))
-    {
-        string prompt;
-
-        if (is_safest_book)
-            prompt = "The only spellbook you have which contains that spell ";
-        else
-            prompt = "The spellbook you are reading from ";
-
-        item_def fakebook;
-        fakebook.base_type = OBJ_BOOKS;
-        fakebook.sub_type  = book;
-        fakebook.quantity  = 1;
-        fakebook.flags    |= ISFLAG_IDENT_MASK;
-
-        prompt += make_stringf("is %s, a dangerous spellbook which will "
-                               "strike back at you if your memorisation "
-                               "attempt fails. Attempt to memorise anyway?",
-                               fakebook.name(DESC_THE).c_str());
-
-        // Deactivate choice from tile inventory.
-        mouse_control mc(MOUSE_MODE_MORE);
-        if (!yesno(prompt.c_str(), false, 'n'))
-        {
-            canned_msg(MSG_OK);
-            return false;
-        }
-    }
-
-    const int temp_rand1 = random2(3);
-    const int temp_rand2 = random2(4);
-
-    mprf("This spell is %s %s to %s.",
-         ((chance >= 100) ? "too" :
-           (chance >= 80) ? "very" :
-           (chance >= 60) ? "quite" :
-           (chance >= 45) ? "rather" :
-           (chance >= 30) ? "somewhat"
-                          : "not that"),
-         ((temp_rand1 == 0) ? "difficult" :
-          (temp_rand1 == 1) ? "tricky"
-                            : "challenging"),
-         ((temp_rand2 == 0) ? "memorise" :
-          (temp_rand2 == 1) ? "commit to memory" :
-          (temp_rand2 == 2) ? "learn"
-                            : "absorb"));
-    if (chance >= 100)
-        return false;
+    if (chance >= 0.025)
+        mpr("This spell is very dangerous to cast!", MSGCH_WARN);
+    else if (chance >= 0.005)
+        mpr("This spell is quite dangerous to cast!", MSGCH_WARN);
+    else if (chance >= 0.001)
+        mpr("This spell is slightly dangerous to cast.");
 
     snprintf(info, INFO_SIZE,
              "Memorise %s, consuming %d spell level%s and leaving %d?",
@@ -1243,52 +1200,6 @@ bool learn_spell(spell_type specspell, int book, bool is_safest_book)
     {
         canned_msg(MSG_OK);
         return false;
-    }
-
-    if (player_mutation_level(MUT_BLURRY_VISION) > 0
-        && x_chance_in_y(player_mutation_level(MUT_BLURRY_VISION), 4))
-    {
-        mpr("The writing blurs into unreadable gibberish.");
-        you.turn_is_over = true;
-        return false;
-    }
-
-    if (random2avg(100, 3) < chance && !one_chance_in(10))
-    {
-        mpr("You fail to memorise the spell.");
-        learned_something_new(HINT_MEMORISE_FAILURE);
-        you.turn_is_over = true;
-
-        if (book == BOOK_NECRONOMICON)
-        {
-            mpr("The pages of the Necronomicon glow with a dark malevolence...");
-            MiscastEffect(&you, MISC_MISCAST, SPTYP_NECROMANCY,
-                           8, random2avg(88, 3),
-                           "reading the Necronomicon");
-        }
-        else if (book == BOOK_GRAND_GRIMOIRE)
-        {
-            mpr("This book does not appreciate being disturbed by one of your ineptitude!");
-            MiscastEffect(&you, MISC_MISCAST, SPTYP_SUMMONING,
-                           7, random2avg(88, 3),
-                           "reading the Grand Grimoire");
-        }
-        else if (book == BOOK_ANNIHILATIONS)
-        {
-            mpr("This book does not appreciate being disturbed by one of your ineptitude!");
-            MiscastEffect(&you, MISC_MISCAST, SPTYP_CONJURATION,
-                           8, random2avg(88, 3),
-                           "reading the book of Annihilations");
-        }
-
-#ifdef WIZARD
-        if (!you.wizard)
-            return false;
-        else if (!yesno("Memorise anyway?", true, 'n'))
-            return false;
-#else
-        return false;
-#endif
     }
 
     start_delay(DELAY_MEMORISE, spell_difficulty(specspell), specspell);
@@ -2583,26 +2494,6 @@ bool book_has_title(const item_def &book)
 
     return (book.props.exists("is_named")
             && book.props["is_named"].get_bool() == true);
-}
-
-bool is_dangerous_spellbook(const int book_type)
-{
-    switch (book_type)
-    {
-    case BOOK_NECRONOMICON:
-    case BOOK_GRAND_GRIMOIRE:
-    case BOOK_ANNIHILATIONS:
-        return true;
-    default:
-        break;
-    }
-    return false;
-}
-
-bool is_dangerous_spellbook(const item_def &book)
-{
-    ASSERT(book.base_type == OBJ_BOOKS);
-    return is_dangerous_spellbook(book.sub_type);
 }
 
 void destroy_spellbook(const item_def &book)

@@ -34,8 +34,7 @@ int read_book(item_def &item, read_book_action_type action);
 bool player_can_memorise(const item_def &book);
 bool can_learn_spell(bool silent = false);
 bool learn_spell();
-bool learn_spell(spell_type spell, int book = NUM_BOOKS,
-                 bool is_safest_book = true);
+bool learn_spell(spell_type spell, int book = NUM_BOOKS);
 bool forget_spell_from_book(spell_type spell, const item_def* book);
 
 string desc_cannot_memorise_reason(bool undead);
@@ -75,9 +74,6 @@ void make_book_Roxanne_special(item_def *book);
 void make_book_Kiku_gift(item_def &book, bool first);
 
 bool book_has_title(const item_def &book);
-
-bool is_dangerous_spellbook(const item_def &book);
-bool is_dangerous_spellbook(const int book_type);
 
 void destroy_spellbook(const item_def &book);
 #endif
