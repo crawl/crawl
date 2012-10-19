@@ -396,7 +396,7 @@ void antimagic()
         DUR_CONDENSATION_SHIELD, DUR_STONESKIN, DUR_RESISTANCE,
         DUR_SLAYING, DUR_STEALTH,
         DUR_MAGIC_SHIELD, DUR_PETRIFIED, DUR_LIQUEFYING, DUR_DARKNESS,
-        DUR_PETRIFYING, DUR_SHROUD_OF_GOLUBRIA
+        DUR_SHROUD_OF_GOLUBRIA
     };
 
     bool need_msg = false;
@@ -417,13 +417,19 @@ void antimagic()
     if (you.duration[DUR_TELEPORT] > 0)
     {
         you.duration[DUR_TELEPORT] = 0;
-        mpr("You feel strangely stable.");
+        mpr("You feel strangely stable.", MSGCH_DURATION);
+    }
+
+    if (you.duration[DUR_PETRIFYING] > 0)
+    {
+        you.duration[DUR_PETRIFYING] = 0;
+        mpr("Your limbs stop stiffening.", MSGCH_DURATION);
     }
 
     if (you.attribute[ATTR_DELAYED_FIREBALL])
     {
         you.attribute[ATTR_DELAYED_FIREBALL] = 0;
-        mpr("Your charged fireball dissipates.");
+        mpr("Your charged fireball dissipates.", MSGCH_DURATION);
     }
 
     // Post-berserk slowing isn't magic, so don't remove that.
