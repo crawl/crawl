@@ -1,7 +1,7 @@
 %%%%
 Singing Sword
 
-This blessed weapon loves nothing more than to sing to its owner, whether they
+This enchanted weapon loves nothing more than to sing to its owner, whether they
 want it to or not.
 %%%%
 Wrath of Trog
@@ -17,7 +17,7 @@ It is rather unreliable.
 Glaive of Prune
 
 It is the creation of a mad god, and carries a curse which transforms anyone
-possessing it into a prune. Fortunately, the curse works very slowly, and one
+wielding it into a prune. Fortunately, the curse works very slowly, and one
 can use it briefly with no consequences worse than slightly purple skin and a
 few wrinkles.
 %%%%
@@ -73,9 +73,10 @@ It carries some of the powers of the arch-fiend Asmodeus.
 %%%%
 faerie dragon armour
 
-Faerie dragons used to be a race of the same species as mottled ones. Too bad,
-their vivid colours became their bane, as they alerted potential prey. They are
-now extinct, and this prized relic is one of the last proofs they ever existed.
+Faerie dragons used to be a race of the same species as mottled ones.
+Unfortunately their vivid colours became their bane, as they alerted potential
+prey. They are now extinct, and this prized relic is one of the last proofs
+they ever existed.
 %%%%
 demon blade "Bloodbane"
 
