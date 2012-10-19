@@ -6306,6 +6306,11 @@ __NONE
 good_god_neutral_holy_being_reaction
 
 VISUAL:@The_monster@ is calmed by your holy aura.
+%%%%
+good_god_neutral_holy_being_reaction_humanoid
+
+w:5
+@good_god_neutral_holy_being_reaction@
 
 VISUAL:@The_monster@ relaxes @possessive@ fighting stance.
 
@@ -6322,6 +6327,11 @@ good_god_neutral_holy_being_speech
 good_god_nonneutral_holy_being_reaction
 
 VISUAL:@The_monster@ ignores your imperfect holy aura.
+%%%%
+good_god_nonneutral_holy_being_reaction_humanoid
+
+w:5
+@good_god_nonneutral_holy_being_reaction@
 
 VISUAL:@The_monster@ frowns, and retains @possessive@ fighting stance.
 
