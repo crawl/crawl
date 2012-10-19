@@ -30,6 +30,7 @@
 #include "travel.h"
 #include "unicode.h"
 #include "unwind.h"
+#include "version.h"
 #include "view.h"
 #include "viewgeom.h"
 
@@ -869,9 +870,7 @@ void TilesFramework::_send_map(bool force_full)
                 || last_gc.x + 1 != gc.x
                 || last_gc.y != gc.y)
             {
-                ostringstream xy;
-                xy << "{x:" << (x - m_origin.x) << ",y:" << (y - m_origin.y) << ",";
-                push_prefix(xy.str());
+                push_prefix(make_stringf("{x:%d,y:%d,", (x - m_origin.x), (y - m_origin.y)));
             }
             else
             {
@@ -910,9 +909,7 @@ void TilesFramework::_send_monster(const coord_def &gc, const monster_info* m,
 {
     if (m->client_id)
     {
-        ostringstream id;
-        id << "mon:{id:" << m->client_id << ",";
-        push_prefix(id.str());
+        push_prefix(make_stringf("mon:{id:%d,", m->client_id));
         new_monster_locs[m->client_id] = gc;
     }
     else

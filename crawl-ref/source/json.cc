@@ -21,8 +21,8 @@
   THE SOFTWARE.
 */
 
+#include "AppHdr.h"
 #include "json.h"
-#include "version.h"
 
 #include <stdint.h>
 #include <stdio.h>
