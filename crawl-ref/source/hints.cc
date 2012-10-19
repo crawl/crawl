@@ -1134,7 +1134,9 @@ static bool _tutorial_interesting(hints_event_type event)
     case HINT_HEALING_POTIONS:
     case HINT_GAINED_SPELLCASTING:
     case HINT_FUMBLING_SHALLOW_WATER:
+#if TAG_MAJOR_VERSION == 34
     case HINT_MEMORISE_FAILURE:
+#endif
     case HINT_SPELL_MISCAST:
     case HINT_CLOUD_WARNING:
     case HINT_ANIMATE_CORPSE_SKELETON:
@@ -3000,10 +3002,12 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
              << "to have a look at your skills and manage their training.";
         cmd.push_back(CMD_DISPLAY_SKILLS);
         break;
+#if TAG_MAJOR_VERSION == 34
     case HINT_MEMORISE_FAILURE:
         text << "At low skills, spells may be difficult to learn or cast. "
                 "For now, just keep trying!";
         break;
+#endif
     case HINT_FUMBLING_SHALLOW_WATER:
         text << "Fighting in shallow water will sometimes cause you to slip "
                 "and fumble your attack. If possible, try to fight on "
