@@ -15,8 +15,11 @@
 #include "format.h"
 
 #ifdef USE_TILE
- #include "tilebuf.h"
  #include "tiledoll.h"
+#endif
+
+#ifdef USE_TILE_LOCAL
+ #include "tilebuf.h"
 #endif
 
 class formatted_string;
