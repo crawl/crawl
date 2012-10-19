@@ -1777,7 +1777,7 @@
        SPELL_HASTE,
        SPELL_HELLFIRE,
        SPELL_BLINK_AWAY,
-       SPELL_THROW_FLAME
+       SPELL_NO_SPELL
       }
     },
 
@@ -1800,6 +1800,17 @@
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
        SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_FRANCES,
+      {
+       SPELL_THROW_ICICLE,
+       SPELL_SUMMON_DEMON,
+       SPELL_HASTE,
+       SPELL_IRON_SHOT,
+       SPELL_SUMMON_DEMON,
+       SPELL_HASTE
       }
     },
 
