@@ -324,7 +324,14 @@ void good_god_holy_attitude_change(monster* holy)
 
     if (you.can_see(holy)) // show reaction
     {
-        _print_good_god_holy_being_speech(true, "reaction", holy,
+        string key = "reaction";
+
+        // Quadrupeds can't salute, etc.
+        mon_body_shape shape = get_mon_shape(holy);
+        if (shape >= MON_SHAPE_HUMANOID && shape <= MON_SHAPE_NAGA)
+            key += "_humanoid";
+
+        _print_good_god_holy_being_speech(true, key, holy,
                                           MSGCH_FRIEND_ENCHANT);
 
         if (!one_chance_in(3)
@@ -356,7 +363,14 @@ static void _good_god_holy_fail_attitude_change(monster* holy)
 
     if (you.can_see(holy)) // show reaction
     {
-        _print_good_god_holy_being_speech(false, "reaction", holy,
+        string key = "reaction";
+
+        // Quadrupeds can't salute, etc.
+        mon_body_shape shape = get_mon_shape(holy);
+        if (shape >= MON_SHAPE_HUMANOID && shape <= MON_SHAPE_NAGA)
+            key += "_humanoid";
+
+        _print_good_god_holy_being_speech(false, key, holy,
                                           MSGCH_FRIEND_ENCHANT);
 
         if (!one_chance_in(3)
