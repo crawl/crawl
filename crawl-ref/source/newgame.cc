@@ -422,6 +422,19 @@ static void _choose_char(newgame_def* ng, newgame_def* choice,
     else if (ng->type == GAME_TYPE_HINTS)
         pick_hints(choice);
 
+#ifdef DGAMELAUNCH
+    // Please disable when the tournament is over.
+    // Apologies to non-public servers.
+    if (ng->type == GAME_TYPE_NORMAL)
+    {
+        if (!yesno("Trunk games don't count for the tournament, you want 0.11. "
+                   "Play trunk anyway? (Y/N)", false, 'n'))
+        {
+            game_ended();
+        }
+    }
+#endif
+
     while (true)
     {
         _choose_species_job(ng, choice, defaults);
