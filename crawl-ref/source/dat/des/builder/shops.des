@@ -120,7 +120,7 @@ ENDMAP
 # Custom earth shop Vault
 NAME:    guppyfry_shop_earth
 TAGS:    no_monster_gen mini_float no_rtele_into
-DEPTH:   D:6-
+DEPTH:   D:11-
 KMONS:   1 = gargoyle / boulder beetle / boring beetle / earth elemental / clay golem
 KMONS:   2 = stone giant / earth elemental / crystal golem / iron golem / stone golem
 KMONS:   3 = boring beetle
