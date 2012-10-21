@@ -70,7 +70,7 @@ struct spell_desc
     bool         ms_utility;
 };
 
-static struct spell_desc spelldata[] =
+static const struct spell_desc spelldata[] =
 {
     #include "spl-data.h"
 };
@@ -79,7 +79,7 @@ static int spell_list[NUM_SPELLS];
 
 #define SPELLDATASIZE (sizeof(spelldata)/sizeof(struct spell_desc))
 
-static struct spell_desc *_seekspell(spell_type spellid);
+static const struct spell_desc *_seekspell(spell_type spellid);
 
 //
 //             BEGIN PUBLIC FUNCTIONS
@@ -93,7 +93,7 @@ void init_spell_descs(void)
 
     for (unsigned int i = 0; i < SPELLDATASIZE; i++)
     {
-        spell_desc &data = spelldata[i];
+        const spell_desc &data = spelldata[i];
 
 #ifdef DEBUG
         if (data.id < SPELL_NO_SPELL || data.id >= NUM_SPELLS)
@@ -913,7 +913,7 @@ skill_type spell_type2skill(unsigned int spelltype)
  */
 
 //jmf: Simplified; moved init code to top function, init_spell_descs().
-static spell_desc *_seekspell(spell_type spell)
+static const spell_desc *_seekspell(spell_type spell)
 {
     ASSERT(spell >= 0 && spell < NUM_SPELLS);
     const int index = spell_list[spell];

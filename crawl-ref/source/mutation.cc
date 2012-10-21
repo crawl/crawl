@@ -49,9 +49,7 @@
 static int _body_covered();
 
 static mutation_def mut_data[] = {
-
 #include "mutation-data.h"
-
 };
 
 static const body_facet_def _body_facets[] =

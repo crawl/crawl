@@ -3588,7 +3588,7 @@ bool get_item_by_name(item_def *item, char* specs,
                 for (int unrand = 0; unrand < NO_UNRANDARTS; ++unrand)
                 {
                     int index = unrand + UNRAND_START;
-                    unrandart_entry* entry = get_unrand_entry(index);
+                    const unrandart_entry* entry = get_unrand_entry(index);
 
                     size_t pos = lowercase_string(entry->name).find(specs);
                     if (pos != string::npos && entry->base_type == class_wanted)

@@ -1731,7 +1731,7 @@ void handle_monster_move(monster* mons)
 
     mons->check_speed();
 
-    monsterentry* entry = get_monster_data(mons->type);
+    const monsterentry* entry = get_monster_data(mons->type);
     if (!entry)
         return;
 
