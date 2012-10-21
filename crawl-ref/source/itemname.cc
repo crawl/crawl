@@ -881,18 +881,17 @@ static const char* misc_type_name(int type, bool known)
     case MISC_DECK_OF_CHANGES:     return "deck of changes";
     case MISC_DECK_OF_DEFENCE:     return "deck of defence";
 
-    case MISC_CRYSTAL_BALL_OF_ENERGY:   return "crystal ball of energy";
-    case MISC_BOX_OF_BEASTS:            return "box of beasts";
-    case MISC_EMPTY_EBONY_CASKET:       return "empty ebony casket";
-    case MISC_AIR_ELEMENTAL_FAN:        return "air elemental fan";
-    case MISC_LAMP_OF_FIRE:             return "lamp of fire";
-    case MISC_LANTERN_OF_SHADOWS:       return "lantern of shadows";
-    case MISC_HORN_OF_GERYON:           return "horn of Geryon";
-    case MISC_DISC_OF_STORMS:           return "disc of storms";
-    case MISC_BOTTLED_EFREET:           return "bottled efreet";
-    case MISC_STONE_OF_EARTH_ELEMENTALS:
-        return "stone of earth elementals";
-    case MISC_QUAD_DAMAGE:              return "quad damage";
+    case MISC_CRYSTAL_BALL_OF_ENERGY:    return "crystal ball of energy";
+    case MISC_BOX_OF_BEASTS:             return "box of beasts";
+    case MISC_EMPTY_EBONY_CASKET:        return "empty ebony casket";
+    case MISC_AIR_ELEMENTAL_FAN:         return "air elemental fan";
+    case MISC_LAMP_OF_FIRE:              return "lamp of fire";
+    case MISC_LANTERN_OF_SHADOWS:        return "lantern of shadows";
+    case MISC_HORN_OF_GERYON:            return "horn of Geryon";
+    case MISC_DISC_OF_STORMS:            return "disc of storms";
+    case MISC_BOTTLED_EFREET:            return "bottled efreet";
+    case MISC_STONE_OF_EARTH_ELEMENTALS: return "stone of earth elementals";
+    case MISC_QUAD_DAMAGE:               return "quad damage";
 
     case MISC_RUNE_OF_ZOT:
     default:

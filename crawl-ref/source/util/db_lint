@@ -145,13 +145,17 @@ sub check_db_locals()
 }
 
 __________________________________________________________________________();
-read_file("descript/items");
 read_file("descript/unident");
 read_file("descript/spells");
 read_file("descript/gods");
 read_file("descript/skills");
 read_file("descript/ability");
 read_file("descript/commands");
+
+if (read_file("descript/items"))
+{
+    check_desc_needed("item", `util/gather_items -d`);
+}
 
 if (read_file("descript/branches"))
 {
