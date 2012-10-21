@@ -2,7 +2,7 @@
 
 my $db = grep /^-d$/, @ARGV;
 
-open IN, "<itemname.cc" or die "Can't read itemname.cc\n";
+open IN, "util/cpp_version itemname.cc|" or die "Can't read itemname.cc\n";
 { undef local $/; $_ = <IN>; }
 close IN;
 
@@ -22,7 +22,7 @@ $items{"staff of $_"} = 1 for /STAFF_[A-Z_]+: *return "([^"]+)";/g;
 $items{"rod of $_"} = 1 for /ROD_[A-Z_]+: *return "([^"]+)";/g;
 $items{$_} = 1 for /FOOD_[A-Z_]+: buff << "([^"]+)";/g;
 
-open IN, "<itemprop.cc" or die "Can't read itemprop.cc\n";
+open IN, "util/cpp_version itemprop.cc|" or die "Can't read itemprop.cc\n";
 { undef local $/; $_ = <IN>; }
 close IN;
 
