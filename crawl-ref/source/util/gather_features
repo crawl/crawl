@@ -13,7 +13,7 @@ sub articled($)
     return /^[aeiou]/i ? "An $_" : "A $_";
 }
 
-open IN, "<directn.cc" or die "Can't read directn.cc\n";
+open IN, "util/cpp_version directn.cc|" or die "Can't read directn.cc\n";
 { undef local $/; $_ = <IN>; }
 close IN;
 

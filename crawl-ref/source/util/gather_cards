@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 
 undef $/;
-open IN, "<decks.cc" or die "Can't read decks.cc\n";
+open IN, "util/cpp_version decks.cc|" or die "Can't read decks.cc\n";
 $_ = <IN>;
 close IN;
 

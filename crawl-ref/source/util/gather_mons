@@ -3,7 +3,7 @@
 # Run gather_mons -d if you want dbname: to be heeded (descs, etc).
 my $db = grep /^-d$/, @ARGV;
 
-open IN, "<mon-data.h" or die "Can't read mon-data.h\n";
+open IN, "util/cpp_version mon-data.h|" or die "Can't read mon-data.h\n";
 while (<IN>)
 {
     $mons{$1}=1 if /^\ +MONS_[A-Z0-9_]+, +'.', +[A-Z0-9_]+, +"([^"]+)",/; #"
@@ -76,7 +76,7 @@ delete $mons{$_} for ("base draconian", "greater demon");
 
 unless ($db)
 {
-    open IN, "<spl-summoning.cc" or die "Can't read spl-summoning.cc\n";
+    open IN, "util/cpp_version spl-summoning.cc|" or die "Can't read spl-summoning.cc\n";
     while (<IN>)
     {
         $mons{$1} = 1 if (/^    { MONS_[A-Z0-9_]+, "([A-Za-z0-9 ']+)" },$/);
