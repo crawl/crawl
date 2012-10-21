@@ -3343,7 +3343,7 @@ static int _xom_summon_hostiles(int sever, bool debug = false)
 
     // Nasty, but fun.
     if (player_weapon_wielded() && _has_min_animated_weapon_level()
-        && one_chance_in(4))
+        && one_chance_in(4) && !player_in_branch(BRANCH_ABYSS))
     {
         if (debug)
             return XOM_BAD_ANIMATE_WPN;
@@ -3588,8 +3588,11 @@ static int _xom_is_bad(int sever, int tension, bool debug = false)
             done    = _xom_player_confusion_effect(sever, debug);
             badness = (random2(tension) > 5 ? 2 : 1);
         }
-        else if (tension > 0 && x_chance_in_y(11, sever))
+        else if (tension > 0 && x_chance_in_y(11, sever)
+                 && !player_in_branch(BRANCH_ABYSS))
+        {
             done = _xom_swap_weapons(debug);
+        }
         else if (x_chance_in_y(12, sever))
         {
             done    = _xom_miscast(2, nasty, debug);
