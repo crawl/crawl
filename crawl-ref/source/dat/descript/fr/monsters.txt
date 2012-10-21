@@ -608,10 +608,6 @@ oklob plant conjurer
 
 <oklob plant annihilator>
 %%%%
-orc demonologist
-
-<orc sorcerer>
-%%%%
 pyrus tree
 
 <apple tree>
