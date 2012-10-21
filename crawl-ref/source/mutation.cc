@@ -152,6 +152,10 @@ const mutation_def& get_mutation_def(mutation_type mut)
 
 void fixup_mutations()
 {
+    _seek_mutation(MUT_STINGER)->rarity = 0;
+    _seek_mutation(MUT_BIG_WINGS)->rarity = 0;
+    _seek_mutation(MUT_TENTACLE_SPIKE)->rarity = 0;
+
     if (player_genus(GENPC_DRACONIAN))
     {
         ASSERT(is_valid_mutation(MUT_STINGER));
