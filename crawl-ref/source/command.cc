@@ -893,7 +893,7 @@ static vector<string> _get_monster_keys(ucs_t showchar)
         if (i == MONS_PROGRAM_BUG)
             continue;
 
-        monsterentry *me = get_monster_data(i);
+        const monsterentry *me = get_monster_data(i);
 
         if (me == NULL || me->name == NULL || me->name[0] == '\0')
             continue;

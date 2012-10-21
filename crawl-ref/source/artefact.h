@@ -133,11 +133,11 @@ bool randart_is_bad(const item_def &item, artefact_properties_t &proprt);
 
 int find_unrandart_index(const item_def& artefact);
 
-unrandart_entry* get_unrand_entry(int unrand_index);
+const unrandart_entry* get_unrand_entry(int unrand_index);
 
 void artefact_set_property(item_def           &item,
-                            artefact_prop_type  prop,
-                            int                 val);
+                           artefact_prop_type  prop,
+                           int                 val);
 
 int get_unrandart_num(const char *name);
 

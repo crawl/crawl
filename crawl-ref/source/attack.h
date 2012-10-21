@@ -61,7 +61,7 @@ public:
     artefact_properties_t art_props;
 
     // If a weapon is an unrandart, its unrandart entry.
-    unrandart_entry *unrand_entry;
+    const unrandart_entry *unrand_entry;
 
     int     attacker_to_hit_penalty;
 

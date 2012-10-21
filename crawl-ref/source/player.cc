@@ -1075,7 +1075,7 @@ bool player_equip_unrand_effect(int unrand_index)
 // and armour type-id on wield/wear.
 bool player_equip_unrand(int unrand_index)
 {
-    unrandart_entry* entry = get_unrand_entry(unrand_index);
+    const unrandart_entry* entry = get_unrand_entry(unrand_index);
     equipment_type   slot  = get_item_slot(entry->base_type,
                                            entry->sub_type);
 

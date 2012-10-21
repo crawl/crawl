@@ -80,7 +80,7 @@ struct mon_spellbook
     spell_type spells[NUM_MONSTER_SPELL_SLOTS];
 };
 
-static mon_spellbook mspell_list[] =
+static const mon_spellbook mspell_list[] =
 {
 #include "mon-spll.h"
 };
@@ -4048,7 +4048,7 @@ mon_body_shape get_mon_shape(const monster_type mc)
     {
         // Assume that a demon has wings if it can fly, and that it has
         // a tail if it has a sting or tail-slap attack.
-        monsterentry *mon_data = get_monster_data(mc);
+        const monsterentry *mon_data = get_monster_data(mc);
         bool tailed = false;
         for (int i = 0; i < 4; ++i)
             if (mon_data->attack[i].type == AT_STING

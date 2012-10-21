@@ -56,7 +56,7 @@ struct armour_def
 // flexible and adjustable and can be worn by any player character...
 // providing they also pass the shape test, of course.
 static int Armour_index[NUM_ARMOURS];
-static armour_def Armour_prop[NUM_ARMOURS] =
+static const armour_def Armour_prop[NUM_ARMOURS] =
 {
     { ARM_ANIMAL_SKIN,          "animal skin",            2,  0,  100,
         true,  EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
@@ -172,7 +172,7 @@ struct weapon_def
 };
 
 static int Weapon_index[NUM_WEAPONS];
-static weapon_def Weapon_prop[NUM_WEAPONS] =
+static const weapon_def Weapon_prop[NUM_WEAPONS] =
 {
     // Maces & Flails
     { WPN_CLUB,              "club",                5,  3, 13,  50,  7,
@@ -364,7 +364,7 @@ struct missile_def
 };
 
 static int Missile_index[NUM_MISSILES];
-static missile_def Missile_prop[NUM_MISSILES] =
+static const missile_def Missile_prop[NUM_MISSILES] =
 {
     { MI_NEEDLE,        "needle",        0,    1, false },
     { MI_STONE,         "stone",         4,    6, true  },
@@ -401,7 +401,7 @@ struct food_def
 // (like ghoul chunks) to guarantee that the special thing is only
 // done once.  See the ghoul eating code over in food.cc.
 static int Food_index[NUM_FOODS];
-static food_def Food_prop[NUM_FOODS] =
+static const food_def Food_prop[NUM_FOODS] =
 {
     { FOOD_MEAT_RATION,  "meat ration",  5000,   500, -1500,  80, 4, FFL_NONE },
     { FOOD_SAUSAGE,      "sausage",      1200,   150,  -400,  40, 2, FFL_NONE },

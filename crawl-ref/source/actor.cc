@@ -201,7 +201,7 @@ bool actor::can_sleep() const
 void actor::shield_block_succeeded(actor *foe)
 {
     item_def *sh = shield();
-    unrandart_entry *unrand_entry;
+    const unrandart_entry *unrand_entry;
 
     if (sh
         && sh->base_type == OBJ_ARMOUR

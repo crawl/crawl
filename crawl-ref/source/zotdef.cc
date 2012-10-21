@@ -128,7 +128,7 @@ static branch_type _zotdef_random_branch()
 
 static int _mon_strength(monster_type mon_type)
 {
-    monsterentry *mentry = get_monster_data(mon_type);
+    const monsterentry *mentry = get_monster_data(mon_type);
     if (!mentry)
         return 0; // sanity
     int strength = (mentry->hpdice[0] * mentry->exp_mod) / 10;
@@ -467,7 +467,7 @@ static void _pan_wave(int power)
         while (env.mons_alloc[i] == MONS_PROGRAM_BUG)
         {
             monster_type mon_type = static_cast<monster_type>(random2(NUM_MONSTERS));
-            monsterentry *mentry = get_monster_data(mon_type);
+            const monsterentry *mentry = get_monster_data(mon_type);
             int pow = random2avg(power, 2);
             switch (mentry->basechar)
             {
@@ -571,7 +571,7 @@ static monster_type _get_zotdef_monster(level_id &place, int power)
             return MONS_PROGRAM_BUG;
 
         // Calculate strength
-        monsterentry *mentry = get_monster_data(mon_type);
+        const monsterentry *mentry = get_monster_data(mon_type);
         if (!mentry)
             continue;        // sanity
         if (mentry == get_monster_data(MONS_PROGRAM_BUG))
@@ -760,7 +760,7 @@ string zotdef_debug_wave_desc()
     {
         if (i)
             list += ", ";
-        monsterentry *mentry = get_monster_data(env.mons_alloc[i]);
+        const monsterentry *mentry = get_monster_data(env.mons_alloc[i]);
         if (!env.mons_alloc[i])
             list += "EMPTY";
         else if (mentry)

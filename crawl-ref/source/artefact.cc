@@ -303,11 +303,11 @@ string replace_name_parts(const string &name_in, const item_def& item)
 // Functions defined in art-func.h are referenced in art-data.h
 #include "art-func.h"
 
-static unrandart_entry unranddata[] = {
+static const unrandart_entry unranddata[] = {
 #include "art-data.h"
 };
 
-static unrandart_entry *_seekunrandart(const item_def &item);
+static const unrandart_entry *_seekunrandart(const item_def &item);
 
 bool is_known_artefact(const item_def &item)
 {
@@ -1542,7 +1542,7 @@ int find_unrandart_index(const item_def& artefact)
     return artefact.special;
 }
 
-unrandart_entry* get_unrand_entry(int unrand_index)
+const unrandart_entry* get_unrand_entry(int unrand_index)
 {
     unrand_index -= UNRAND_START;
 
@@ -1552,7 +1552,7 @@ unrandart_entry* get_unrand_entry(int unrand_index)
         return &unranddata[unrand_index];
 }
 
-static unrandart_entry *_seekunrandart(const item_def &item)
+static const unrandart_entry *_seekunrandart(const item_def &item)
 {
     return get_unrand_entry(item.special);
 }
@@ -2071,7 +2071,7 @@ void unrand_reacts()
         if (you.unrand_reacts & (1 << i))
         {
             item_def&        item  = you.inv[you.equip[i]];
-            unrandart_entry* entry = get_unrand_entry(item.special);
+            const unrandart_entry* entry = get_unrand_entry(item.special);
 
             entry->world_reacts_func(&item);
         }

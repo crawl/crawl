@@ -397,7 +397,7 @@ static monster* _do_split(monster* thing, coord_def & target)
 // monster has already moved this turn.
 static void _lose_turn(monster* mons, bool has_gone)
 {
-    monsterentry* entry = get_monster_data(mons->type);
+    const monsterentry* entry = get_monster_data(mons->type);
 
     // We want to find out if mons will move next time it has a turn
     // (assuming for the sake of argument the next delay is 10).  If it's
@@ -2877,7 +2877,7 @@ void mon_nearby_ability(monster* mons)
         && !mons_is_lurking(mons)  // Handled elsewhere.
         && mons->wants_submerge())
     {
-        monsterentry* entry = get_monster_data(mons->type);
+        const monsterentry* entry = get_monster_data(mons->type);
 
         mons->add_ench(ENCH_SUBMERGED);
         mons->speed_increment -= ENERGY_SUBMERGE(entry);
