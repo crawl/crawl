@@ -199,14 +199,6 @@ book of changes
 
 Un livre de sortilèges magiques.
 %%%%
-book of card effects
-
-Un livre de sortilèges magiques.
-%%%%
-book of charms
-
-Un livre de sortilèges magiques.
-%%%%
 book of clouds
 
 Un livre de sortilèges magiques.

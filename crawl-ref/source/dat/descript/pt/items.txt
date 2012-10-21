@@ -115,14 +115,6 @@ book of changes
 
 Um livro de magia.
 %%%%
-book of card effects
-
-Um livro de magia.
-%%%%
-book of charms
-
-Um livro de magia.
-%%%%
 book of clouds
 
 Um livro de magia.

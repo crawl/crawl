@@ -210,14 +210,6 @@ tentakler i stedet for ben. Teksten er fyldt med forsikringer om, at den slags
 ikke kan ske længere, selvom en del spirende transmutanister vælger at slå ind
 på fortryllelser i stedet.
 %%%%
-book of card effects
-
-En bog med magiske besværgelser.
-%%%%
-book of charms
-
-En bog med magiske besværgelser.
-%%%%
 book of clouds
 
 En bog med magiske besværgelser, der skaber forskellige skyer, som er indhyllet

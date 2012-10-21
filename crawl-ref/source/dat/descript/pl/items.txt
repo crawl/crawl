@@ -179,14 +179,6 @@ book of changes
 
 Księga czarów.
 %%%%
-book of card effects
-
-Księga czarów.
-%%%%
-book of charms
-
-Księga czarów.
-%%%%
 book of clouds
 
 Księga czarów.
