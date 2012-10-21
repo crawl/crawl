@@ -205,14 +205,6 @@ of legs. The text is full of reassurances that this kind of thing doesn't
 happen anymore, though some potential Transmuters decide to take up Charms
 instead.
 %%%%
-book of card effects
-
-A book of magic spells.
-%%%%
-book of charms
-
-A book of magic spells.
-%%%%
 book of clouds
 
 A book of magic spells for creating an assortment of clouds, sheathed in a fine

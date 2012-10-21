@@ -202,14 +202,6 @@ lonkeroita jalkojen paikalla. Teksti on täynnä vakuuttelua, että tällaista e
 enää tapahdu, mutta silti jotkut mahdolliset Muodonmuuttajat opiskelevat
 mieluummin Lumouksia.
 %%%%
-book of card effects
-
-Taikoja sisältävä kirja.
-%%%%
-book of charms
-
-Taikoja sisältävä kirja.
-%%%%
 book of clouds
 
 Loitsukirja erilaisten pilvien luomiseen, verhottuna kauniiseen sumuun jonka

@@ -17,14 +17,6 @@ apricot
 
 Sukulentní žlutooranžové ovoce, prunus armeniaca.
 %%%%
-book of card effects
-
-Kniha kouzel.
-%%%%
-book of charms
-
-Kniha kouzel.
-%%%%
 book of fixed level
 
 Kniha kouzel.

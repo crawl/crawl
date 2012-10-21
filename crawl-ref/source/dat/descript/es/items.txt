@@ -191,14 +191,6 @@ book of changes
 
 Un libro con hechizos mágicos.
 %%%%
-book of card effects
-
-Un libro con hechizos mágicos.
-%%%%
-book of charms
-
-Un libro con hechizos mágicos.
-%%%%
 book of clouds
 
 Un libro con hechizos mágicos.

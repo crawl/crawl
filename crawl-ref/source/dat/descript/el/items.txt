@@ -189,14 +189,6 @@ book of changes
 
 Ένα βιβλίο με ξόρκια.
 %%%%
-book of card effects
-
-Ένα βιβλίο με ξόρκια.
-%%%%
-book of charms
-
-Ένα βιβλίο με ξόρκια.
-%%%%
 book of clouds
 
 Ένα βιβλίο με ξόρκια.

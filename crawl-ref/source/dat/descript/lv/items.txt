@@ -21,14 +21,6 @@ bolt
 
 Metāla šāviņš, kas īsāks par loka bultu, paredzēts šaušanai no stopa.
 %%%%
-book of card effects
-
-Burvestību grāmata.
-%%%%
-book of charms
-
-Burvestību grāmata.
-%%%%
 book of fixed level
 
 Burvestību grāmata.
