@@ -987,7 +987,7 @@ void MiscastEffect::_enchantment(int severity)
         break;
 
     case 1:         // slightly annoying
-        switch (random2(crawl_state.game_is_arena() ? 1 : 2))
+        switch (random2(target->is_player() ? 2 : 1))
         {
         case 0:
             if (target->is_player() && !liquefied(you.pos())
@@ -1012,7 +1012,6 @@ void MiscastEffect::_enchantment(int severity)
             }
             break;
         case 1:
-            // XXX: Something else for monsters?
             random_uselessness();
             break;
         }
@@ -1941,7 +1940,7 @@ void MiscastEffect::_transmutation(int severity)
         break;
 
     case 1:         // slightly annoying
-        switch (random2(crawl_state.game_is_arena() ? 1 : 2))
+        switch (random2(target->is_player() ? 2 : 1))
         {
         case 0:
             you_msg      = "Your body is twisted painfully.";
