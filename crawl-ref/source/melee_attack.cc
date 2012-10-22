@@ -1078,12 +1078,45 @@ void melee_attack::adjust_noise()
 
 void melee_attack::check_autoberserk()
 {
-    if (weapon
-        && art_props[ARTP_ANGRY] >= 1
-        && !one_chance_in(1 + art_props[ARTP_ANGRY])
-        && !attacker->suppressed())
+    if (attacker->suppressed())
+        return;
+
+    if (attacker->is_player())
     {
-        attacker->go_berserk(false);
+        for (int i = EQ_WEAPON; i < NUM_EQUIP; ++i)
+        {
+            const item_def *item = you.slot_item(static_cast<equipment_type>(i));
+            if (!item)
+                continue;
+
+            if (!is_artefact(*item))
+                continue;
+
+            if (x_chance_in_y(artefact_wpn_property(*item, ARTP_ANGRY), 100))
+            {
+                attacker->go_berserk(false)
+                return;
+            }
+        }
+    }
+    else
+    {
+        for (int i = MSLOT_WEAPON; i <= MSLOT_JEWELLERY; ++i)
+        {
+            const item_def *item =
+                attacker->as_monster()->mslot_item(static_cast<mon_inv_type>(i));
+            if (!item)
+                continue;
+
+            if (!is_artefact(*item))
+                continue;
+
+            if (x_chance_in_y(artefact_wpn_property(*item, ARTP_ANGRY), 100))
+            {
+                attacker->go_berserk(false)
+                return;
+            }
+        }
     }
 }
 

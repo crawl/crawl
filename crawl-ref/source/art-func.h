@@ -424,13 +424,6 @@ static void _TROG_unequip(item_def *item, bool *show_msgs)
     _equip_mpr(show_msgs, "You feel less violent.");
 }
 
-static void _TROG_melee_effect(item_def* weapon, actor* attacker,
-                               actor* defender, bool mondied, int dam)
-{
-    if (coinflip() && !attacker->suppressed())
-        attacker->go_berserk(false);
-}
-
 ////////////////////////////////////////////////////
 
 static void _wucad_miscast(actor* victim, int power,int fail)

@@ -332,9 +332,7 @@ bool is_hasty_item(const item_def& item)
         {
         const int item_brand = get_weapon_brand(item);
         retval = (item_brand == SPWPN_SPEED
-                  || item.sub_type == WPN_QUICK_BLADE
-                  || is_unrandom_artefact(item)
-                     && item.special == UNRAND_TROG);
+                  || item.sub_type == WPN_QUICK_BLADE);
         }
         break;
     case OBJ_ARMOUR:

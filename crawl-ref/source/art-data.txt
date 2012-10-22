@@ -121,8 +121,7 @@
 # AC:       Armour class modifier (for non-armour artefacts).
 # ACC:      Accuracy modifier (for non-weapon artefacts).
 # ANGRY     Each time the wielder of the weapon strikes a victim there's
-#           a chance of the wielder going berserk, with the chance
-#           increasing with the value of ANGRY.
+#           a num-in-100 chance of the wielder going berserk.
 # APPEAR:   Unidentified appearance of artifact.
 # COLD:     Cold resistance/vulnerability.
 # COLOUR:   The colour of the artifact, either as listed in defines.h
@@ -175,6 +174,7 @@ COLOUR:  ETC_BLOOD
 TILE:    spwpn_wrath_of_trog
 TILE_EQ: axe_trog
 VALUE:   1000
+ANGRY:   50
 BRAND:   SPWPN_ANTIMAGIC
 
 NAME:    Mace of Variability
@@ -318,7 +318,7 @@ COLOUR:  ETC_DARK
 TILE:    urand_bloodbane
 TILE_EQ: bloodbane
 BRAND:   SPWPN_VORPAL
-ANGRY:   1
+ANGRY:   9
 BOOL:    berserk
 STEALTH: -20
 
@@ -438,7 +438,7 @@ TILE_EQ:  jihad
 BRAND:    SPWPN_HOLY_WRATH
 EV:       3
 MAGIC:    20
-ANGRY:    1
+ANGRY:    3
 STEALTH:  -50
 BOOL:     life
 
@@ -922,7 +922,7 @@ TILE:    urand_bloodlust
 STR:     2
 INT:     -2
 MAGIC:   30
-ANGRY:   1
+ANGRY:   9
 DAM:     5
 CURSED:  3
 STEALTH: -20
@@ -1072,7 +1072,7 @@ OBJ:     OBJ_JEWELLERY/AMU_STASIS
 COLOUR:  BROWN
 TILE:    urand_air
 ACC:     60
-ANGRY:   1
+ANGRY:   100
 COLD:    3
 DAM:     60
 DEX:     3

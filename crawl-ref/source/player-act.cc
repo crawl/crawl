@@ -531,32 +531,6 @@ bool player::cannot_fight() const
     return false;
 }
 
-// If you have a randart equipped that has the ARTP_ANGRY property,
-// there's a 1/100 chance of it becoming activated whenever you
-// attack a monster. (Same as the berserk mutation at level 1.)
-// The probabilities for actually going berserk are cumulative!
-static bool _equipment_make_berserk()
-{
-    if (you.suppressed())
-        return false;
-
-    for (int eq = EQ_WEAPON; eq < NUM_EQUIP; eq++)
-    {
-        const item_def *item = you.slot_item((equipment_type) eq, false);
-        if (!item)
-            continue;
-
-        if (!is_artefact(*item))
-            continue;
-
-        if (artefact_wpn_property(*item, ARTP_ANGRY) && one_chance_in(100))
-            return true;
-    }
-
-    // nothing found
-    return false;
-}
-
 void player::attacking(actor *other)
 {
     ASSERT(!crawl_state.game_is_arena());
@@ -569,11 +543,8 @@ void player::attacking(actor *other)
     }
 
     const int chance = pow(3, player_mutation_level(MUT_BERSERK) - 1);
-    if (player_mutation_level(MUT_BERSERK) && x_chance_in_y(chance, 100)
-        || _equipment_make_berserk())
-    {
+    if (player_mutation_level(MUT_BERSERK) && x_chance_in_y(chance, 100))
         go_berserk(false);
-    }
 }
 
 void player::go_berserk(bool intentional, bool potion)
