@@ -1037,10 +1037,10 @@ static void _get_randart_properties(const item_def &item,
             proprt[ARTP_BLINK] = 0;
             proprt[ARTP_PREVENT_TELEPORTATION] = 1;
             break;
-        case 4:                     // berserk on attack
+        case 4:                     // berserk on num-in-100 attacks
             if (aclass != OBJ_WEAPONS || is_range_weapon(item))
                 break;
-            proprt[ARTP_ANGRY] = 1 + random2(8);
+            proprt[ARTP_ANGRY] = 1 + random2(9);
             break;
         case 5:                     // susceptible to fire
             if (aclass == OBJ_JEWELLERY

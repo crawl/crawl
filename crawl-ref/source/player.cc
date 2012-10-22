@@ -4293,8 +4293,7 @@ int player_effect_angry()
     // All effects negated by magical suppression should go in here.
     if (!you.suppressed())
     {
-        return (scan_artefacts(ARTP_ANGRY)
-                || player_equip_unrand_effect(UNRAND_TROG));
+        return (scan_artefacts(ARTP_ANGRY));
     }
     else
     {
