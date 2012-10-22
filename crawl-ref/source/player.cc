@@ -4183,16 +4183,10 @@ int player_effect_inaccuracy()
     }
 }
 
-// See if the player has an ongoing effect as per the *MUT or +MUT properties.
+// Magical contamination over time, not caused by anything currently.
 int player_effect_mutagenic()
 {
-    // All effects negated by magical suppression should go in here.
-    if (!you.suppressed())
-        return scan_artefacts(ARTP_MUTAGENIC);
-    else
-    {
-        return 0;
-    }
+    return 0;
 }
 
 int player_res_mutation_from_item(bool calc_unid)

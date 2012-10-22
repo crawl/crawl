@@ -1165,9 +1165,8 @@ int artefact_value(const item_def &item)
     if (prop[ ARTP_PREVENT_SPELLCASTING ])
         ret -= 10;
 
-    // ranges from 2-5
     if (prop[ ARTP_MUTAGENIC ])
-        ret -= (5 + 3 * prop[ ARTP_MUTAGENIC ]);
+        ret -= 8;
 
     // ranges from 1-3
     if (prop[ ARTP_METABOLISM ])
