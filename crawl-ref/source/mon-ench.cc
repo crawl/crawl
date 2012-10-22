@@ -660,14 +660,22 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             }
             else if (!quiet)
             {
+                msg_channel_type channel = MSGCH_PLAIN;
+                if (!seen_context)
+                {
+                    channel = MSGCH_WARN;
+                    seen_context = SC_ALREADY_SEEN;
+                }
+
                 if (type == MONS_AIR_ELEMENTAL)
                 {
-                    mprf("%s forms itself from the air!",
-                         name(DESC_A, true).c_str());
+                    mprf(channel, "%s forms itself from the air!",
+                                  name(DESC_A, true).c_str());
                 }
                 else if (type == MONS_TRAPDOOR_SPIDER)
                 {
-                    mprf("%s leaps out from its hiding place under the floor!",
+                    mprf(channel,
+                         "%s leaps out from its hiding place under the floor!",
                          name(DESC_A, true).c_str());
                 }
                 else if (crawl_state.game_is_arena())
