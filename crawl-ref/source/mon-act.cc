@@ -3364,7 +3364,7 @@ static bool _monster_move(monster* mons)
         if (mons->submerged())
             return false;
 
-        // Trapdoor spiders hide if they can't see their foe.
+        // Trapdoor spiders sometime hide if they can't see their foe.
         // (Note that friendly trapdoor spiders will thus hide even
         // if they can see you.)
         const actor *foe = mons->get_foe();
@@ -3373,7 +3373,8 @@ static bool _monster_move(monster* mons)
         if (monster_can_submerge(mons, grd(mons->pos()))
             && !can_see && !mons_is_confused(mons)
             && !mons->caught()
-            && !mons->berserk())
+            && !mons->berserk()
+            && one_chance_in(5))
         {
             mons->add_ench(ENCH_SUBMERGED);
             mons->behaviour = BEH_LURK;
