@@ -1094,7 +1094,7 @@ void melee_attack::check_autoberserk()
 
             if (x_chance_in_y(artefact_wpn_property(*item, ARTP_ANGRY), 100))
             {
-                attacker->go_berserk(false)
+                attacker->go_berserk(false);
                 return;
             }
         }
@@ -1113,7 +1113,7 @@ void melee_attack::check_autoberserk()
 
             if (x_chance_in_y(artefact_wpn_property(*item, ARTP_ANGRY), 100))
             {
-                attacker->go_berserk(false)
+                attacker->go_berserk(false);
                 return;
             }
         }
