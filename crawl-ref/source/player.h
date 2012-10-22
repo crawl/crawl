@@ -830,7 +830,6 @@ bool player_item_conserve(bool calc_unid = true);
 int player_mental_clarity(bool calc_unid = true, bool items = true);
 int player_spirit_shield(bool calc_unid = true);
 int player_effect_inaccuracy();
-int player_effect_mutagenic();
 int player_res_mutation_from_item(bool calc_unid = true);
 int player_effect_gourmand();
 int player_effect_stasis(bool calc_unid = true);
