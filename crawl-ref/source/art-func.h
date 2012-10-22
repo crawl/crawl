@@ -785,3 +785,24 @@ static void _NIGHT_unequip(item_def *item, bool *show_msgs)
     update_vision_range();
     _equip_mpr(show_msgs, "The light returns to your surroundings.");
 }
+
+///////////////////////////////////////////////////
+
+static void _plutonium_sword_miscast(actor* victim, int power, int fail)
+{
+    MiscastEffect(victim, MELEE_MISCAST, SPTYP_TRANSMUTATION, power, fail,
+                  "the plutonium sword", NH_NEVER);
+}
+
+static void _PLUTONIUM_SWORD_melee_effect(item_def* weapon, actor* attacker,
+                                          actor* defender, bool mondied, int dam)
+{
+    if (!mondied && one_chance_in(5))
+    {
+        mpr("Mutagenic energy flows through the plutonium sword!");
+        _plutonium_sword_miscast(defender, random2(9), random2(70));
+
+        if (attacker->is_player())
+            did_god_conduct(DID_CHAOS, 3);
+    }
+}
