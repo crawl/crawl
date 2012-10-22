@@ -627,7 +627,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         monster_die(this, KILL_TIMEOUT, NON_MONSTER);
         break;
     case ENCH_SUBMERGED:
-        if (mons_is_wandering(this))
+        if (mons_is_wandering(this) || mons_is_lurking(this))
         {
             behaviour = BEH_SEEK;
             behaviour_event(this, ME_EVAL);
