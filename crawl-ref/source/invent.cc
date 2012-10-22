@@ -1716,6 +1716,9 @@ bool needs_handle_warning(const item_def &item, operation_types oper)
 
         if (item_known_cursed(item) && !_is_wielded(item))
             return true;
+
+        if (is_artefact(item) && artefact_wpn_property(item, ARTP_MUTAGENIC))
+            return true;
     }
     else if (oper == OPER_PUTON || oper == OPER_WEAR)
     {

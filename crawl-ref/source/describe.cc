@@ -210,7 +210,7 @@ static vector<string> _randart_propnames(const item_def& item,
         // These come first, so they don't get chopped off!
         { "-Cast",  ARTP_PREVENT_SPELLCASTING,  2 },
         { "-Tele",  ARTP_PREVENT_TELEPORTATION, 2 },
-        { "Contam", ARTP_MUTAGENIC,             2 }, // handled specially
+        { "Contam", ARTP_MUTAGENIC,             2 },
         { "*Rage",  ARTP_ANGRY,                 2 },
         { "*Tele",  ARTP_CAUSE_TELEPORTATION,   2 },
         { "Hunger", ARTP_METABOLISM,            2 }, // handled specially
@@ -328,11 +328,8 @@ static vector<string> _randart_propnames(const item_def& item,
                 work << propanns[i].name;
 
                 // these need special handling, so we don't give anything away
-                if (propanns[i].prop == ARTP_METABOLISM && val > 2
-                    || propanns[i].prop == ARTP_MUTAGENIC && val > 3)
-                {
+                if (propanns[i].prop == ARTP_METABOLISM && val > 2)
                     work << "+";
-                }
                 else if (propanns[i].prop == ARTP_METABOLISM && val < 0)
                     work << "-";
                 else if (propanns[i].prop == ARTP_STEALTH)
@@ -459,6 +456,7 @@ static string _randart_descrip(const item_def &item)
         { ARTP_ANGRY,  "It makes you angry.", false},
         { ARTP_CURSED, "It may recurse itself.", false},
         { ARTP_CLARITY, "It protects you against confusion.", false},
+        { ARTP_MUTAGENIC, "It causes magical contamination when unequipped.", false},
     };
 
     for (unsigned i = 0; i < ARRAYSZ(propdescs); ++i)
@@ -523,14 +521,6 @@ static string _randart_descrip(const item_def &item)
                  (stval < -20 || stval > 20) ? "much " : "",
                  (stval < 0) ? "less" : "more");
         description += buf;
-    }
-
-    if (known_proprt(ARTP_MUTAGENIC))
-    {
-        if (proprt[ARTP_MUTAGENIC] > 3)
-            description += "\nIt glows with mutagenic radiation.";
-        else
-            description += "\nIt emits mutagenic radiation.";
     }
 
     return description;

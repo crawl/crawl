@@ -398,6 +398,12 @@ static void _unequip_artefact_effect(item_def &item,
     if (proprt[ARTP_MAGICAL_POWER])
         calc_mp();
 
+    if (proprt[ARTP_MUTAGENIC])
+    {
+        mpr("Mutagenic energies flood into your body!");
+        contaminate_player(6, true);
+    }
+
     if (is_unrandom_artefact(item))
     {
         const unrandart_entry *entry = get_unrand_entry(item.special);

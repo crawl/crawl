@@ -1082,10 +1082,9 @@ static void _get_randart_properties(const item_def &item,
             proprt[ARTP_METABOLISM] = 1 + random2(3);
             break;
         case 8:
-            // emits mutagenic radiation - increases
-            // magic_contamination; property is chance (1 in ...) of
-            // increasing magic_contamination
-            proprt[ARTP_MUTAGENIC] = 2 + random2(4);
+            // emits mutagenic radiation - causes
+            // magic contamination when unequipped
+            proprt[ARTP_MUTAGENIC] = 1;
             break;
         }
     }

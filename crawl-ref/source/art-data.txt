@@ -92,6 +92,7 @@
 #             can't be affected by Tukima's Dance.
 # * tilerim:  Adds a black outline to the tile, see above section.
 # * unided:   Properties start unidentified.
+# * mutate:   Causes high magical contamination when unequipped.
 
 # ENUM: Forces the artefact's enumeration literal to something specific.
 # For example, "ENUM: FOO" gives the enumeration "UNRAND_FOO".  The
@@ -136,7 +137,6 @@
 # METAB:    Hunger modifier.
 # MP:       Mana capacity modifier.
 # NAME:     Name of artefact when identified.
-# MUTATE:   Gives artifact mutagenic glow.
 # STEALTH:  Stealth modifier.
 # STR:      Strength modifier.
 # TILE:     The file containing the artefact's tile, with file type png.
@@ -577,8 +577,7 @@ PLUS:    +12/+16
 COLOUR:  ETC_RANDOM
 TILE:    urand_plutonium
 TILE_EQ: plutonium_sword
-MUTATE:  6
-CURSED:  1
+BOOL:    mutate
 STEALTH: -20
 
 NAME:     great mace "Undeadhunter"
@@ -709,10 +708,9 @@ EV:       -4
 STR:      -2
 INT:      -2
 DEX:      -2
-MUTATE:   5
 CURSED:   1
 STEALTH:  -80
-BOOL:     nospell, rnd_tele, randapp, unided
+BOOL:     nospell, rnd_tele, randapp, unided, mutate
 
 NAME:     cloak of Flash
 OBJ:      OBJ_ARMOUR/ARM_CLOAK
@@ -1083,10 +1081,9 @@ MAGIC:   100
 METAB:   10
 HP:      10
 MP:      10
-MUTATE:  6
 STEALTH: 100
 STR:     3
-BOOL:    nogen, berserk, blink, clarity, elec, inv, lev, life, nospell, notelep, poison, seeinv
+BOOL:    nogen, berserk, blink, clarity, elec, inv, lev, life, nospell, notelep, poison, seeinv, mutate
 
 # This is the second of two amulets used to test suppression. See above.
 NAME:    dark chocolate
