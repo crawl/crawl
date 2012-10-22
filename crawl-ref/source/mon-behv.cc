@@ -432,10 +432,12 @@ void handle_behaviour(monster* mon)
             break;
 
         case BEH_LURK:
-            // Lurking mimics stay put when player is away.
-            if (mons_is_mimic(mon->type) && !proxPlayer)
-                break;
-            //Else Fall through
+            // Make sure trapdoor spiders are not hiding in plain sight
+            if (mon->type == MONS_TRAPDOOR_SPIDER && !mon->submerged())
+                mon->add_ench(ENCH_SUBMERGED);
+            // Lurking monsters stay put when player is away.
+            break;
+
         case BEH_SEEK:
             // No foe?  Then wander or seek the player.
             if (mon->foe == MHITNOT)
