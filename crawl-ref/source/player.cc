@@ -4183,12 +4183,6 @@ int player_effect_inaccuracy()
     }
 }
 
-// Magical contamination over time, not caused by anything currently.
-int player_effect_mutagenic()
-{
-    return 0;
-}
-
 int player_res_mutation_from_item(bool calc_unid)
 {
     // All effects negated by magical suppression should go in here.

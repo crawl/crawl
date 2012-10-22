@@ -2105,22 +2105,6 @@ void handle_time()
     if (you.duration[DUR_FINESSE] && x_chance_in_y(4, 10))
         added_contamination++;
 
-    bool mutagenic_randart = false;
-    const int artefact_glow = player_effect_mutagenic();
-    if (artefact_glow)
-    {
-        // Reduced randart glow. Note that one randart will contribute
-        // 2 - 5 units of glow to artefact_glow. A randart with a mutagen
-        // index of 2 does about 0.58 points of contamination per turn.
-        // A randart with a mutagen index of 5 does about 0.7 points of
-        // contamination per turn.
-
-        const int mean_glow   = 500 + artefact_glow * 40;
-        const int actual_glow = mean_glow / 2 + random2(mean_glow);
-        added_contamination += div_rand_round(actual_glow, 1000);
-        mutagenic_randart = true;
-    }
-
     // The Orb adds .25 points per turn (effectively halving dissipation),
     // but won't cause glow on its own -- otherwise it'd spam the player
     // with messages about contamination oscillating near zero.
@@ -2131,9 +2115,9 @@ void handle_time()
     if (!you.duration[DUR_INVIS] && !you.duration[DUR_HASTE] && coinflip())
         added_contamination--;
 
-    // Only punish if contamination caused by mutagenic randarts.
-    // (Haste and invisibility already penalised earlier.)
-    contaminate_player(added_contamination, mutagenic_randart);
+    // Don't punish for this contamination.
+    // (Haste and invisibility already penalised earlier).
+    contaminate_player(added_contamination, false);
 
     // Only check for badness once every other turn.
     if (coinflip())
