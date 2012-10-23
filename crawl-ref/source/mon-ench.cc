@@ -668,7 +668,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
                 if (!seen_context)
                 {
                     channel = MSGCH_WARN;
-                    seen_context = SC_ALREADY_SEEN;
+                    seen_context = SC_JUST_SEEN;
                 }
 
                 if (type == MONS_AIR_ELEMENTAL)
