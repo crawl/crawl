@@ -4085,7 +4085,7 @@ static string _describe_ash_skill_boost()
     static const char* bonus_level[3] = { "Low", "Medium", "High" };
     ostringstream desc;
     desc.setf(ios::left);
-    desc << setw(18) << "Bounded part";
+    desc << setw(18) << "Bound part";
     desc << setw(30) << "Boosted skills";
     desc << "Bonus\n";
 
