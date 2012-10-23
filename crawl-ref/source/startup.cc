@@ -192,8 +192,7 @@ static void _post_init(bool newc)
 {
     ASSERT(strwidth(you.your_name) <= kNameLen);
 
-    // Fix the mutation definitions for the species we're playing.
-    fixup_mutations();
+    // Sanitize skills, init can_train[].
     fixup_skills();
 
     // Load macros

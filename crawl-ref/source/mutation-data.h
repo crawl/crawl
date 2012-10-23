@@ -785,7 +785,7 @@
 },
 
 // Octopode only
-{ MUT_TENTACLE_SPIKE,            0,  3, false,  true, true,
+{ MUT_TENTACLE_SPIKE,           10,  3, false,  true, true,
   "spike",
 
   {"One of your tentacles bears a spike.",
@@ -803,7 +803,7 @@
   "tentacle spike"
 },
 
-// Naga only
+// Naga only; getting it is special-cased.
 { MUT_BREATHE_POISON,             0,  1, false, false, true,
   "breathe poison",
 
@@ -815,7 +815,7 @@
 },
 
 // Naga and Draconian only
-{ MUT_STINGER,                    0,  3, false,  true, true,
+{ MUT_STINGER,                    8,  3, false,  true, true,
   "stinger",
 
   {"Your tail ends in a poisonous barb.",
@@ -834,7 +834,7 @@
 },
 
 // Draconian only
-{ MUT_BIG_WINGS,                  0,  1, false,  true, true,
+{ MUT_BIG_WINGS,                  4,  1, false,  true, true,
   "large and strong wings",
 
   {"Your wings are large and strong.", "", ""},
