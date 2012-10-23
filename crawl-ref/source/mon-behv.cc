@@ -435,8 +435,8 @@ void handle_behaviour(monster* mon)
             // Make sure trapdoor spiders are not hiding in plain sight
             if (mon->type == MONS_TRAPDOOR_SPIDER && !mon->submerged())
                 mon->add_ench(ENCH_SUBMERGED);
-            // Lurking monsters stay put when player is away.
-            break;
+
+            // Fall through to get a target, but don't change to wandering.
 
         case BEH_SEEK:
             // No foe?  Then wander or seek the player.
@@ -447,7 +447,8 @@ void handle_behaviour(monster* mon)
                     || isNeutral || patrolling
                     || mon->type == MONS_GIANT_SPORE)
                 {
-                    new_beh = BEH_WANDER;
+                    if (mon->behaviour != BEH_LURK)
+                        new_beh = BEH_WANDER;
                 }
                 else
                 {
