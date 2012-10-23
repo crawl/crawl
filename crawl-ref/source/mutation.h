@@ -67,8 +67,6 @@ bool is_valid_mutation(mutation_type mut);
 bool is_body_facet(mutation_type mut);
 const mutation_def& get_mutation_def(mutation_type mut);
 
-void fixup_mutations();
-
 bool mutate(mutation_type which_mutation, const string &reason,
             bool failMsg = true,
             bool force_mutation = false, bool god_gift = false,

@@ -48,7 +48,7 @@
 
 static int _body_covered();
 
-static mutation_def mut_data[] = {
+static const mutation_def mut_data[] = {
 #include "mutation-data.h"
 };
 
@@ -82,12 +82,22 @@ equipment_type beastly_slot(int mut)
     }
 }
 
+enum mut_total
+{
+    MT_GOOD,
+    MT_BAD,
+    MT_ALL,
+    NUM_MT
+};
+
 static int mut_index[NUM_MUTATIONS];
+static int total_rarity[NUM_MT];
 
 void init_mut_index()
 {
     for (int i = 0; i < NUM_MUTATIONS; ++i)
         mut_index[i] = -1;
+    memset(total_rarity, 0, sizeof(total_rarity));
 
     for (unsigned int i = 0; i < ARRAYSZ(mut_data); ++i)
     {
@@ -95,10 +105,12 @@ void init_mut_index()
         ASSERT(mut >= 0 && mut < NUM_MUTATIONS);
         ASSERT(mut_index[mut] == -1);
         mut_index[mut] = i;
+        total_rarity[MT_ALL] += mut_data[i].rarity;
+        total_rarity[mut_data[i].bad ? MT_BAD : MT_GOOD] += mut_data[i].rarity;
     }
 }
 
-static mutation_def* _seek_mutation(mutation_type mut)
+static const mutation_def* _seek_mutation(mutation_type mut)
 {
     ASSERT(mut >= 0 && mut < NUM_MUTATIONS);
     if (mut_index[mut] == -1)
@@ -146,33 +158,6 @@ const mutation_def& get_mutation_def(mutation_type mut)
 {
     ASSERT(is_valid_mutation(mut));
     return (*_seek_mutation(mut));
-}
-
-void fixup_mutations()
-{
-    _seek_mutation(MUT_STINGER)->rarity = 0;
-    _seek_mutation(MUT_BIG_WINGS)->rarity = 0;
-    _seek_mutation(MUT_TENTACLE_SPIKE)->rarity = 0;
-
-    if (player_genus(GENPC_DRACONIAN))
-    {
-        ASSERT(is_valid_mutation(MUT_STINGER));
-        _seek_mutation(MUT_STINGER)->rarity = 8;
-        ASSERT(is_valid_mutation(MUT_BIG_WINGS));
-        _seek_mutation(MUT_BIG_WINGS)->rarity = 4;
-    }
-
-    if (you.species == SP_NAGA)
-    {
-        ASSERT(is_valid_mutation(MUT_STINGER));
-        _seek_mutation(MUT_STINGER)->rarity = 8;
-    }
-
-    if (you.species == SP_OCTOPODE)
-    {
-        ASSERT(is_valid_mutation(MUT_TENTACLE_SPIKE));
-        _seek_mutation(MUT_TENTACLE_SPIKE)->rarity = 10;
-    }
 }
 
 mutation_activity_type mutation_activity_level(mutation_type mut)
@@ -840,6 +825,9 @@ static bool _accept_mutation(mutation_type mutat, bool ignore_rarity = false)
     if (!is_valid_mutation(mutat))
         return false;
 
+    if (physiology_mutation_conflict(mutat))
+        return false;
+
     const mutation_def& mdef = get_mutation_def(mutat);
 
     if (you.mutation[mutat] >= mdef.levels)
@@ -916,48 +904,37 @@ static mutation_type _get_random_xom_mutation()
     return mutat;
 }
 
-static bool _mut_matches_class(mutation_type mutclass, const mutation_def& mdef)
-{
-    switch (mutclass)
-    {
-    case RANDOM_MUTATION:
-        return true;
-    case RANDOM_BAD_MUTATION:
-        return mdef.bad;
-    case RANDOM_GOOD_MUTATION:
-        return (!mdef.bad);
-    default:
-        die("invalid mutation class: %d", mutclass);
-    }
-}
-
 static mutation_type _get_random_mutation(mutation_type mutclass)
 {
-    int cweight = 0;
-    mutation_type chosen = NUM_MUTATIONS;
-    for (unsigned i = 0; i < NUM_MUTATIONS; ++i)
+    mut_total mt;
+    switch (mutclass)
     {
-        const mutation_type curr = static_cast<mutation_type>(i);
-        if (!is_valid_mutation(curr))
-            continue;
-
-        const mutation_def& mdef = get_mutation_def(curr);
-        if (!mdef.rarity)
-            continue;
-
-        if (!_mut_matches_class(mutclass, mdef))
-            continue;
-
-        if (!_accept_mutation(curr, true))
-            continue;
-
-        cweight += mdef.rarity;
-
-        if (x_chance_in_y(mdef.rarity, cweight))
-            chosen = curr;
+    case RANDOM_MUTATION:      mt = MT_ALL; break;
+    case RANDOM_BAD_MUTATION:  mt = MT_BAD; break;
+    case RANDOM_GOOD_MUTATION: mt = MT_GOOD; break;
+    default: die("invalid mutation class: %d", mutclass);
     }
 
-    return chosen;
+    int tries = 0;
+retry:
+
+    int cweight = random2(total_rarity[mt]);
+    for (unsigned i = 0; i < ARRAYSZ(mut_data); ++i)
+    {
+        if (!mut_data[i].bad == mt)
+            continue;
+        if ((cweight -= mut_data[i].rarity) >= 0)
+            continue;
+
+        if (_accept_mutation(mut_data[i].mutation, true))
+            return mut_data[i].mutation;
+
+        if (tries++ > 100)
+            return NUM_MUTATIONS;
+        goto retry;
+    }
+
+    die("mutation total changed???");
 }
 
 // Tries to give you the mutation by deleting a conflicting
