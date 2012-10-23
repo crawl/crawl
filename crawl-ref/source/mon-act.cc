@@ -1646,6 +1646,16 @@ static void _confused_move_dir(monster *mons)
         }
 }
 
+int _tentacle_move_speed(monster_type type)
+{
+    if (type == MONS_KRAKEN)
+        return 10;
+    else if (type == MONS_TENTACLED_STARSPAWN)
+        return 18;
+    else
+        return 0;
+}
+
 void handle_monster_move(monster* mons)
 {
     mons->hit_points = min(mons->max_hit_points, mons->hit_points);
@@ -1760,7 +1770,7 @@ void handle_monster_move(monster* mons)
             break;
 
         if (old_pos != mons->pos()
-            && mons_base_type(mons) == MONS_KRAKEN)
+            && mons_is_tentacle_head(mons_base_type(mons)))
         {
             move_child_tentacles(mons);
             kraken_last_update = mons->pos();
@@ -2166,11 +2176,19 @@ void handle_monster_move(monster* mons)
         }
     }
 
-    if (mons_base_type(mons) == MONS_KRAKEN)
+    if (mons_is_tentacle_head(mons_base_type(mons)))
     {
         if (mons->pos() != kraken_last_update)
             move_child_tentacles(mons);
-        move_child_tentacles(mons);
+        
+        mons->number += you.time_taken * _tentacle_move_speed(mons_base_type(mons));
+//        mprf(MSGCH_DIAGNOSTICS, "Adding %d time taken.", you.time_taken);
+        while (mons->number >= 100)
+        {
+//            mprf(MSGCH_DIAGNOSTICS, "Energy is %d.", mons->number);
+            move_child_tentacles(mons);
+            mons->number -= 100;
+        }
     }
 
     mons->handle_constriction();
