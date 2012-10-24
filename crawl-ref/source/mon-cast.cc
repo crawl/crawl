@@ -2969,6 +2969,63 @@ static coord_def _mons_fragment_target(monster *mons)
     return target;
 }
 
+static int _mon_create_tentacles(monster* head)
+{
+        int kraken_index = head->mindex();
+
+        int tentacle_count = 0;
+
+        for (monster_iterator mi; mi; ++mi)
+        {
+            if (mi->is_child_tentacle_of(head))
+                tentacle_count++;
+        }
+
+        int possible_count = MAX_ACTIVE_KRAKEN_TENTACLES - tentacle_count;
+
+        if (possible_count <= 0)
+            return 0;
+
+        vector<coord_def> adj_squares;
+
+        // collect open adjacent squares, candidate squares must be
+        // water and not already occupied.
+        for (adjacent_iterator adj_it(head->pos()); adj_it; ++adj_it)
+        {
+            if (!monster_at(*adj_it)
+                && feat_is_water(env.grid(*adj_it))
+                && env.grid(*adj_it) != DNGN_OPEN_SEA)
+            {
+                adj_squares.push_back(*adj_it);
+            }
+        }
+
+        if (unsigned(possible_count) > adj_squares.size())
+            possible_count = adj_squares.size();
+        else if (adj_squares.size() > unsigned(possible_count))
+            random_shuffle(adj_squares.begin(), adj_squares.end());
+
+        int created_count = 0;
+
+        for (int i=0;i<possible_count;++i)
+        {
+            if (monster *tentacle = create_monster(
+                mgen_data(MONS_KRAKEN_TENTACLE, SAME_ATTITUDE(head), head,
+                          0, 0, adj_squares[i], head->foe,
+                          MG_FORCE_PLACE, head->god, MONS_NO_MONSTER, kraken_index,
+                          head->colour, -1, PROX_CLOSE_TO_PLAYER)))
+            {
+                created_count++;
+                tentacle->props["inwards"].get_int() = kraken_index;
+
+                if (head->holiness() == MH_UNDEAD)
+                    tentacle->flags |= MF_FAKE_UNDEAD;
+            }
+        }
+        
+        return created_count;
+}
+
 static bool _mon_spell_bail_out_early(monster* mons, spell_type spell_cast)
 {
     // single calculation permissible {dlb}
@@ -3367,70 +3424,8 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_KRAKEN_TENTACLES:
     {
-        int kraken_index = mons->mindex();
-        if (invalid_monster_index(kraken_index))
-        {
-            mpr("Error! Kraken is not a part of the current environment!",
-                MSGCH_ERROR);
-            return;
-        }
-        int tentacle_count = 0;
-
-        for (monster_iterator mi; mi; ++mi)
-        {
-            if (int (mi->number) == kraken_index
-                    && mi->type == MONS_KRAKEN_TENTACLE)
-            {
-                tentacle_count++;
-            }
-        }
-
-        int possible_count = MAX_ACTIVE_KRAKEN_TENTACLES - tentacle_count;
-
-        if (possible_count <= 0)
-            return;
-
-        vector<coord_def> adj_squares;
-
-        // collect open adjacent squares, candidate squares must be
-        // water and not already occupied.
-        for (adjacent_iterator adj_it(mons->pos()); adj_it; ++adj_it)
-        {
-            if (!monster_at(*adj_it)
-                && feat_is_water(env.grid(*adj_it))
-                && env.grid(*adj_it) != DNGN_OPEN_SEA)
-            {
-                adj_squares.push_back(*adj_it);
-            }
-        }
-
-        if (unsigned(possible_count) > adj_squares.size())
-            possible_count = adj_squares.size();
-        else if (adj_squares.size() > unsigned(possible_count))
-            random_shuffle(adj_squares.begin(), adj_squares.end());
-
-
-        int visible_count = 0;
-
-        for (int i = 0; i < possible_count; ++i)
-        {
-            if (monster *tentacle = create_monster(
-                mgen_data(MONS_KRAKEN_TENTACLE, SAME_ATTITUDE(mons), mons,
-                          0, 0, adj_squares[i], mons->foe,
-                          MG_FORCE_PLACE, god, MONS_NO_MONSTER, kraken_index,
-                          mons->colour, -1, PROX_CLOSE_TO_PLAYER)))
-            {
-                if (you.can_see(tentacle))
-                    visible_count++;
-
-                tentacle->props["inwards"].get_int() = kraken_index;
-
-                if (mons->holiness() == MH_UNDEAD)
-                    tentacle->flags |= MF_FAKE_UNDEAD;
-            }
-        }
-
-        if (visible_count == 1)
+        int created_count = _mon_create_tentacles(mons);
+        if (created_count == 1)
             mpr("A tentacle rises from the water!");
         else if (visible_count > 1)
             mpr("Tentacles burst out of the water!");
