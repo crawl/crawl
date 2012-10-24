@@ -3408,7 +3408,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_KRAKEN_TENTACLES:
     {
         int kraken_index = mons->mindex();
-        if (invalid_monster_index(duration))
+        if (invalid_monster_index(kraken_index))
         {
             mpr("Error! Kraken is not a part of the current environment!",
                 MSGCH_ERROR);
