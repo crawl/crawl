@@ -66,6 +66,7 @@ static bool _mons_drain_life(monster* mons, bool actual = true);
 static bool _mons_ozocubus_refrigeration(monster *mons, bool actual = true);
 static int  _mons_mesmerise(monster* mons, bool actual = true);
 static int  _mons_cause_fear(monster* mons, bool actual = true);
+static int _mons_available_tentacles(monster* head);
 static coord_def _mons_fragment_target(monster *mons);
 
 void init_mons_spells()
@@ -2183,6 +2184,12 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             if (!mons_shatter(mons, false))
                 return false;
         }
+        // Check if it's possible to spawn more tentacles. If not, don't bother trying.
+        else if (spell_cast == SPELL_CREATE_TENTACLES)
+        {
+            if (!_mons_available_tentacles(mons))
+                return false;
+        }
 
         if (mons->type == MONS_BALL_LIGHTNING)
             mons->suicide();
@@ -2990,65 +2997,85 @@ static int _max_tentacles(const monster* mon)
         return 0;
 }
 
-static int _mon_create_tentacles(monster* head)
+static int _mons_available_tentacles(monster* head)
 {
-        int head_index = head->mindex();
-        if (invalid_monster_index(head_index))
+    int tentacle_count = 0;
+
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->is_child_tentacle_of(head))
+            tentacle_count++;
+    }
+
+    return _max_tentacles(head) - tentacle_count;
+}
+
+static int _mons_create_tentacles(monster* head)
+{
+    int head_index = head->mindex();
+    if (invalid_monster_index(head_index))
+    {
+        mpr("Error! Tentacle head is not a part of the current environment!",
+            MSGCH_ERROR);
+        return 0;
+    }
+
+    int possible_count = _mons_available_tentacles(head);
+    
+    if (possible_count <= 0)
+        return 0;
+
+    monster_type tent_type = mons_tentacle_child_type(head);
+
+    vector<coord_def> adj_squares;
+
+    // collect open adjacent squares, candidate squares must be
+    // water and not already occupied.
+    for (adjacent_iterator adj_it(head->pos()); adj_it; ++adj_it)
+    {
+        if (_tentacle_can_spawn_at(tent_type, *adj_it))
+            adj_squares.push_back(*adj_it);
+    }
+
+    if (unsigned(possible_count) > adj_squares.size())
+        possible_count = adj_squares.size();
+    else if (adj_squares.size() > unsigned(possible_count))
+        random_shuffle(adj_squares.begin(), adj_squares.end());
+
+    int created_count = 0;
+
+    for (int i=0;i<possible_count;++i)
+    {
+        if (monster *tentacle = create_monster(
+            mgen_data(tent_type, SAME_ATTITUDE(head), head,
+                        0, 0, adj_squares[i], head->foe,
+                        MG_FORCE_PLACE, head->god, MONS_NO_MONSTER, head_index,
+                        head->colour, -1, PROX_CLOSE_TO_PLAYER)))
         {
-            mpr("Error! Tentacle head is not a part of the current environment!",
-                MSGCH_ERROR);
-            return 0;
+            created_count++;
+            tentacle->props["inwards"].get_int() = head_index;
+
+            if (head->holiness() == MH_UNDEAD)
+                tentacle->flags |= MF_FAKE_UNDEAD;
         }
+    }
 
-        int tentacle_count = 0;
+    if (mons_base_type(head) == MONS_KRAKEN)
+    {
+        if (created_count == 1)
+            mpr("A tentacle rises from the water!");
+        else if (created_count > 1)
+            mpr("Tentacles burst out of the water!");
+    }
+    else if (head->type == MONS_TENTACLED_STARSPAWN)
+    {
+        if (created_count == 1)
+            mpr("A tentacle flies out from the starspawn's body!");
+        else if (created_count > 1)
+            mpr("Tentacles burst from the starspawn's body!");
+    }
 
-        for (monster_iterator mi; mi; ++mi)
-        {
-            if (mi->is_child_tentacle_of(head))
-                tentacle_count++;
-        }
-
-        int possible_count = _max_tentacles(head) - tentacle_count;
-        
-        if (possible_count <= 0)
-            return 0;
-        
-        monster_type tent_type = mons_tentacle_child_type(head);
-
-        vector<coord_def> adj_squares;
-
-        // collect open adjacent squares, candidate squares must be
-        // water and not already occupied.
-        for (adjacent_iterator adj_it(head->pos()); adj_it; ++adj_it)
-        {
-            if (_tentacle_can_spawn_at(tent_type, *adj_it))
-                adj_squares.push_back(*adj_it);
-        }
-
-        if (unsigned(possible_count) > adj_squares.size())
-            possible_count = adj_squares.size();
-        else if (adj_squares.size() > unsigned(possible_count))
-            random_shuffle(adj_squares.begin(), adj_squares.end());
-
-        int created_count = 0;
-
-        for (int i=0;i<possible_count;++i)
-        {
-            if (monster *tentacle = create_monster(
-                mgen_data(tent_type, SAME_ATTITUDE(head), head,
-                          0, 0, adj_squares[i], head->foe,
-                          MG_FORCE_PLACE, head->god, MONS_NO_MONSTER, head_index,
-                          head->colour, -1, PROX_CLOSE_TO_PLAYER)))
-            {
-                created_count++;
-                tentacle->props["inwards"].get_int() = head_index;
-
-                if (head->holiness() == MH_UNDEAD)
-                    tentacle->flags |= MF_FAKE_UNDEAD;
-            }
-        }
-        
-        return created_count;
+    return created_count;
 }
 
 static bool _mon_spell_bail_out_early(monster* mons, spell_type spell_cast)
@@ -3448,9 +3475,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         return;
 
     case SPELL_CREATE_TENTACLES:
-    {
         int created_count = _mon_create_tentacles(mons);
- 
         if (mons_base_type(mons) == MONS_KRAKEN)
         {
             if (created_count == 1)
@@ -3466,7 +3491,6 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                 mpr("Tentacles burst from the starspawn's body!");
         }
         return;
-    }
 
     case SPELL_FAKE_MARA_SUMMON:
         // We only want there to be two fakes, which, plus Mara, means
