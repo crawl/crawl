@@ -50,7 +50,7 @@ O
 ENDMAP
 
 NAME:   lab_entry_trowel
-TAGS:   transparent trowel_portal unrand
+TAGS:   transparent trowel_portal can_overwrite unrand
 DEPTH:  *, !Lab
 veto {{ return you.is_level_on_stack("Lab") }}
 : lab_portal(_G)
