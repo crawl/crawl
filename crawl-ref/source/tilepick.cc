@@ -79,7 +79,7 @@ COMPILE_CHECK(MAX_TERM_COLOUR - 1
 
 TextureID get_dngn_tex(tileidx_t idx)
 {
-    assert(idx < TILE_FEAT_MAX);
+    ASSERT(idx < TILE_FEAT_MAX);
     if (idx < TILE_FLOOR_MAX)
         return TEX_FLOOR;
     else if (idx < TILE_WALL_MAX)

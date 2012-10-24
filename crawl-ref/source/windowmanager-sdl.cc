@@ -704,7 +704,7 @@ unsigned int SDLWrapper::get_event_count(wm_event_type type)
 
     // Note: this returns -1 for error.
     int count = SDL_PeepEvents(&store, 1, SDL_PEEKEVENT, eventmask);
-    assert(count >= 0);
+    ASSERT(count >= 0);
 
     return max(count, 0);
 }

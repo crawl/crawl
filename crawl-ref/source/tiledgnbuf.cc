@@ -85,7 +85,7 @@ void DungeonCellBuffer::add(const packed_cell &cell, int x, int y)
 void DungeonCellBuffer::add_dngn_tile(int tileidx, int x, int y,
                                       bool in_water)
 {
-    assert(tileidx < TILE_FEAT_MAX);
+    ASSERT(tileidx < TILE_FEAT_MAX);
 
     if (tileidx < TILE_FLOOR_MAX)
         m_buf_floor.add(tileidx, x, y);
