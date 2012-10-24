@@ -1080,7 +1080,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_EARTH_ELEMENTALS:
     case SPELL_IRON_ELEMENTALS:
     case SPELL_SUMMON_ELEMENTAL:
-    case SPELL_KRAKEN_TENTACLES:
+    case SPELL_CREATE_TENTACLES:
     case SPELL_BLINK:
     case SPELL_CONTROLLED_BLINK:
     case SPELL_BLINK_RANGE:
@@ -3447,13 +3447,24 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         _mons_cast_summon_illusion(mons, spell_cast);
         return;
 
-    case SPELL_KRAKEN_TENTACLES:
+    case SPELL_CREATE_TENTACLES:
     {
         int created_count = _mon_create_tentacles(mons);
-        if (created_count == 1)
-            mpr("A tentacle rises from the water!");
-        else if (visible_count > 1)
-            mpr("Tentacles burst out of the water!");
+ 
+        if (mons_base_type(mons) == MONS_KRAKEN)
+        {
+            if (created_count == 1)
+                mpr("A tentacle rises from the water!");
+            else if (created_count > 1)
+                mpr("Tentacles burst out of the water!");
+        }
+        else if (mons->type == MONS_TENTACLED_STARSPAWN)
+        {
+            if (created_count == 1)
+                mpr("A tentacle flies out from the starspawn's body!");
+            else if (created_count > 1)
+                mpr("Tentacles burst from the starspawn's body!");
+        }
         return;
     }
 

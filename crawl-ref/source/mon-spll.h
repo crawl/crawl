@@ -253,8 +253,8 @@
 
     {  MST_KRAKEN,
       {
-       SPELL_KRAKEN_TENTACLES,
-       SPELL_KRAKEN_TENTACLES,
+       SPELL_CREATE_TENTACLES,
+       SPELL_CREATE_TENTACLES,
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
@@ -1799,6 +1799,17 @@
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
+       SPELL_NO_SPELL
+      }
+    },
+            
+    {  MST_TENTACLED_STARSPAWN,
+      {
+       SPELL_CREATE_TENTACLES,
+       SPELL_CREATE_TENTACLES,
+       SPELL_NO_SPELL,
+       SPELL_CREATE_TENTACLES,
+       SPELL_CREATE_TENTACLES,
        SPELL_NO_SPELL
       }
     },
