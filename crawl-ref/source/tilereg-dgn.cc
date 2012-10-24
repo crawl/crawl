@@ -386,8 +386,7 @@ static void _add_targetting_commands(const coord_def& pos)
     macro_buf_add_cmd(CMD_TARGET_MOUSE_SELECT);
 }
 
-static const bool _is_appropriate_spell(spell_type spell,
-                                        const actor* target)
+static bool _is_appropriate_spell(spell_type spell, const actor* target)
 {
     ASSERT(is_valid_spell(spell));
 
@@ -437,8 +436,8 @@ static const bool _is_appropriate_spell(spell_type spell,
     return (friendly == helpful);
 }
 
-static const bool _is_appropriate_evokable(const item_def& item,
-                                           const actor* target)
+static bool _is_appropriate_evokable(const item_def& item,
+                                     const actor* target)
 {
     if (!item_is_evokable(item, false, false, true))
         return false;
@@ -466,7 +465,7 @@ static const bool _is_appropriate_evokable(const item_def& item,
     return _is_appropriate_spell(spell, target);
 }
 
-static const bool _have_appropriate_evokable(const actor* target)
+static bool _have_appropriate_evokable(const actor* target)
 {
     // Felids cannot use wands.
     if (you.species == SP_FELID)
@@ -634,7 +633,7 @@ static bool _cast_spell_on_target(actor* target)
     return true;
 }
 
-static const bool _have_appropriate_spell(const actor* target)
+static bool _have_appropriate_spell(const actor* target)
 {
     for (size_t i = 0; i < you.spells.size(); i++)
     {

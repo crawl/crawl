@@ -44,7 +44,7 @@
 #endif
 
 #ifdef USE_TILE_LOCAL
-Popup::Popup(string prompt = "") : m_prompt(prompt), m_curr(0)
+Popup::Popup(string prompt) : m_prompt(prompt), m_curr(0)
 {
 }
 

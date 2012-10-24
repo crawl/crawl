@@ -94,7 +94,7 @@ public:
         return *this;
     }
 
-    const bool operator== (const basic_text_pattern &tp) const
+    bool operator== (const basic_text_pattern &tp) const
     {
         if (this == &tp)
             return true;
