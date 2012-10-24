@@ -1726,6 +1726,13 @@ bool needs_handle_warning(const item_def &item, operation_types oper)
             return true;
     }
 
+    if (oper == OPER_PUTON || oper == OPER_WEAR || oper == OPER_TAKEOFF
+        || oper == OPER_REMOVE)
+    {
+        if (is_artefact(item) && artefact_wpn_property(item, ARTP_MUTAGENIC))
+            return true;
+    }
+
     return false;
 }
 
