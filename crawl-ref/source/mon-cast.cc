@@ -58,6 +58,7 @@
 
 // kraken stuff
 const int MAX_ACTIVE_KRAKEN_TENTACLES = 4;
+const int MAX_ACTIVE_STARSPAWN_TENTACLES = 2;
 
 static bool _valid_mon_spells[NUM_SPELLS];
 
@@ -2969,9 +2970,35 @@ static coord_def _mons_fragment_target(monster *mons)
     return target;
 }
 
+static bool _tentacle_can_spawn_at(monster_type type, const coord_def &pos)
+{
+    if (monster_at(pos))
+        return false;
+    else if (type == MONS_KRAKEN_TENTACLE && !feat_is_water(env.grid(pos)))
+        return false;
+    else
+        return true;
+}
+
+static int _max_tentacles(const monster* mon)
+{
+    if (mons_base_type(mon) == MONS_KRAKEN)
+        return MAX_ACTIVE_KRAKEN_TENTACLES;
+    else if (mon->type == MONS_TENTACLED_STARSPAWN)
+        return MAX_ACTIVE_STARSPAWN_TENTACLES;
+    else
+        return 0;
+}
+
 static int _mon_create_tentacles(monster* head)
 {
-        int kraken_index = head->mindex();
+        int head_index = head->mindex();
+        if (invalid_monster_index(head_index))
+        {
+            mpr("Error! Tentacle head is not a part of the current environment!",
+                MSGCH_ERROR);
+            return 0;
+        }
 
         int tentacle_count = 0;
 
@@ -2981,10 +3008,12 @@ static int _mon_create_tentacles(monster* head)
                 tentacle_count++;
         }
 
-        int possible_count = MAX_ACTIVE_KRAKEN_TENTACLES - tentacle_count;
-
+        int possible_count = _max_tentacles(head) - tentacle_count;
+        
         if (possible_count <= 0)
             return 0;
+        
+        monster_type tent_type = mons_tentacle_child_type(head);
 
         vector<coord_def> adj_squares;
 
@@ -2992,12 +3021,8 @@ static int _mon_create_tentacles(monster* head)
         // water and not already occupied.
         for (adjacent_iterator adj_it(head->pos()); adj_it; ++adj_it)
         {
-            if (!monster_at(*adj_it)
-                && feat_is_water(env.grid(*adj_it))
-                && env.grid(*adj_it) != DNGN_OPEN_SEA)
-            {
+            if (_tentacle_can_spawn_at(tent_type, *adj_it))
                 adj_squares.push_back(*adj_it);
-            }
         }
 
         if (unsigned(possible_count) > adj_squares.size())
@@ -3010,13 +3035,13 @@ static int _mon_create_tentacles(monster* head)
         for (int i=0;i<possible_count;++i)
         {
             if (monster *tentacle = create_monster(
-                mgen_data(MONS_KRAKEN_TENTACLE, SAME_ATTITUDE(head), head,
+                mgen_data(tent_type, SAME_ATTITUDE(head), head,
                           0, 0, adj_squares[i], head->foe,
-                          MG_FORCE_PLACE, head->god, MONS_NO_MONSTER, kraken_index,
+                          MG_FORCE_PLACE, head->god, MONS_NO_MONSTER, head_index,
                           head->colour, -1, PROX_CLOSE_TO_PLAYER)))
             {
                 created_count++;
-                tentacle->props["inwards"].get_int() = kraken_index;
+                tentacle->props["inwards"].get_int() = head_index;
 
                 if (head->holiness() == MH_UNDEAD)
                     tentacle->flags |= MF_FAKE_UNDEAD;
