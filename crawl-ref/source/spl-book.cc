@@ -975,8 +975,6 @@ static spell_type _choose_mem_spell(spell_list &spells,
     {
         const spell_type spell = spells[i];
 
-        spells_to_books::iterator it = book_hash.find(spell);
-
         ostringstream desc;
 
         int colour = LIGHTGRAY;
