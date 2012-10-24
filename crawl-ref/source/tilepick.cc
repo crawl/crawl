@@ -2588,6 +2588,8 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
         case MONS_KRAKEN_TENTACLE_SEGMENT:
         case MONS_ELDRITCH_TENTACLE:
         case MONS_ELDRITCH_TENTACLE_SEGMENT:
+        case MONS_STARSPAWN_TENTACLE:
+        case MONS_STARSPAWN_TENTACLE_SEGMENT:        
         {
             tileidx_t tile = _tileidx_tentacle(mon);
             const bool is_kraken = _mons_is_kraken_tentacle(mon.type);
