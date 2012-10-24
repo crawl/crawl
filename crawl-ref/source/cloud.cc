@@ -965,9 +965,7 @@ bool _actor_apply_cloud_side_effects(actor *act,
                           cloud.cloud_name());
         }
         else
-        {
             poison_monster(mons, find_agent(cloud.source, cloud.whose));
-        }
         return true;
 
 
@@ -981,9 +979,7 @@ bool _actor_apply_cloud_side_effects(actor *act,
                 miasma_player(cloud.cloud_name());
         }
         else
-        {
             miasma_monster(mons, find_agent(cloud.source, cloud.whose));
-        }
         break;
 
     case CLOUD_MUTAGENIC:

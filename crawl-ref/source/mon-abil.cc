@@ -1440,9 +1440,7 @@ struct tentacle_attack_constraints
                 }
                 // An actor we can't path through is there
                 else
-                {
                     temp.path_distance = DISCONNECT_DIST;
-                }
 
             }
 
@@ -2135,9 +2133,7 @@ void move_kraken_tentacles(monster* kraken)
                 }
             }
             else
-            {
                 current_mon = NULL;
-            }
             current_count++;
         }
 

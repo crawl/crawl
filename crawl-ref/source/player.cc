@@ -4167,9 +4167,7 @@ int player_spirit_shield(bool calc_unid)
                + player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_SPIRIT_SHIELD);
     }
     else
-    {
         return 0;
-    }
 }
 
 int player_effect_inaccuracy()
@@ -4178,9 +4176,7 @@ int player_effect_inaccuracy()
     if (!you.suppressed())
         return wearing_amulet(AMU_INACCURACY);
     else
-    {
         return 0;
-    }
 }
 
 int player_res_mutation_from_item(bool calc_unid)
@@ -4189,9 +4185,7 @@ int player_res_mutation_from_item(bool calc_unid)
     if (!you.suppressed())
         return wearing_amulet(AMU_RESIST_MUTATION, calc_unid);
     else
-    {
         return 0;
-    }
 }
 
 int player_effect_gourmand()
@@ -4200,9 +4194,7 @@ int player_effect_gourmand()
     if (!you.suppressed())
         return wearing_amulet(AMU_THE_GOURMAND);
     else
-    {
         return 0;
-    }
 }
 
 int player_effect_stasis(bool calc_unid)
@@ -4211,9 +4203,7 @@ int player_effect_stasis(bool calc_unid)
     if (!you.suppressed())
         return wearing_amulet(AMU_STASIS, calc_unid);
     else
-    {
         return 0;
-    }
 }
 
 // This is a bit confusing. This is not the function that determines whether or
@@ -4227,9 +4217,7 @@ int player_effect_notele(bool calc_unid)
     if (!you.suppressed())
         return scan_artefacts(ARTP_PREVENT_TELEPORTATION, calc_unid);
     else
-    {
         return 0;
-    }
 }
 
 // permaswift effects like boots of running and lightning scales
@@ -4239,9 +4227,7 @@ int player_effect_running()
     if (!you.suppressed())
         return player_equip_ego_type(EQ_BOOTS, SPARM_RUNNING);
     else
-    {
         return 0;
-    }
 }
 
 int player_effect_cfly(bool calc_unid)
@@ -4250,9 +4236,7 @@ int player_effect_cfly(bool calc_unid)
     if (!you.suppressed())
         return wearing_amulet(AMU_CONTROLLED_FLIGHT, calc_unid);
     else
-    {
         return 0;
-    }
 }
 
 int player_effect_faith()
@@ -4261,9 +4245,7 @@ int player_effect_faith()
     if (!you.suppressed())
         return wearing_amulet(AMU_FAITH);
     else
-    {
         return 0;
-    }
 }
 
 int player_effect_archmagi()
@@ -4272,9 +4254,7 @@ int player_effect_archmagi()
     if (!you.suppressed())
         return player_equip_ego_type(EQ_BODY_ARMOUR, SPARM_ARCHMAGI);
     else
-    {
         return 0;
-    }
 }
 
 int player_effect_nocast()
@@ -4283,22 +4263,16 @@ int player_effect_nocast()
     if (!you.suppressed())
         return scan_artefacts(ARTP_PREVENT_SPELLCASTING);
     else
-    {
         return 0;
-    }
 }
 
 int player_effect_angry()
 {
     // All effects negated by magical suppression should go in here.
     if (!you.suppressed())
-    {
         return (scan_artefacts(ARTP_ANGRY));
-    }
     else
-    {
         return 0;
-    }
 }
 
 // Returns whether the player has the effect of the amulet from a

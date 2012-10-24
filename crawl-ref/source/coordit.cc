@@ -55,9 +55,7 @@ void rectangle_iterator::operator ++()
         current.y++;
     }
     else
-    {
         current.x++;
-    }
 }
 
 

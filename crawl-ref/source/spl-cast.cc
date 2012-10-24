@@ -674,9 +674,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
             return false;
         }
         else
-        {
             spell = get_spell_by_letter(keyin);
-        }
     }
 
     if (spell == SPELL_NO_SPELL)

@@ -329,9 +329,7 @@ bool dec_inv_item_quantity(int obj, int amount, bool suppress_burden)
         crawl_state.cancel_cmd_again();
     }
     else
-    {
         you.inv[obj].quantity -= amount;
-    }
 
     if (!suppress_burden)
         burden_change();

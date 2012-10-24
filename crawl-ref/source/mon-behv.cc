@@ -786,9 +786,7 @@ void handle_behaviour(monster* mon)
                     new_beh = BEH_WANDER;
             }
             else
-            {
                 mon->target = foepos;
-            }
             break;
 
         default:

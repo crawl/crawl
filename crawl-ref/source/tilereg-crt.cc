@@ -30,9 +30,7 @@ int CRTRegion::handle_mouse(MouseEvent &event)
         }
     }
     else
-    {
         ret_val = m_attached_menu->handle_mouse(event);
-    }
     return ret_val;
 }
 

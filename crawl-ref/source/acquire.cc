@@ -1497,9 +1497,7 @@ int acquirement_create_item(object_class_type class_wanted,
                     }
                 }
                 else
-                {
                     set_item_ego_type(thing, OBJ_WEAPONS, SPWPN_VORPAL);
-                }
             }
             break;
         }

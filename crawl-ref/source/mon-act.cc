@@ -3566,9 +3566,7 @@ static bool _monster_move(monster* mons)
                     noisy(25, target);
                 }
                 else
-                {
                     noisy(25, target, "You hear a crashing sound.");
-                }
             }
             else if (player_can_hear(mons->pos() + mmov))
             {

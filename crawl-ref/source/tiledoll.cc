@@ -293,9 +293,7 @@ void fill_doll_equipment(dolls_data &result)
         else if (item == -1)
             result.parts[TILEP_PART_HAND2] = 0;
         else
-        {
             result.parts[TILEP_PART_HAND2] = tilep_equ_shield(you.inv[item]);
-        }
     }
     // Body armour.
     if (result.parts[TILEP_PART_BODY] == TILEP_SHOW_EQUIP)

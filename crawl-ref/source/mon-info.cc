@@ -1213,9 +1213,7 @@ string monster_info::pluralised_name(bool fullname) const
         return pluralise(mons_type_name(type, DESC_PLAIN));
     }
     else
-    {
         return pluralise(common_name());
-    }
 }
 
 void monster_info::to_string(int count, string& desc,

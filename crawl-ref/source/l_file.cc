@@ -195,9 +195,7 @@ LUAFN(_file_writefile)
         lua_pushboolean(ls, true);
     }
     else
-    {
         lua_pushboolean(ls, false);
-    }
     return 1;
 }
 

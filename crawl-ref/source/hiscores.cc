@@ -2385,9 +2385,7 @@ string scorefile_entry::death_description(death_desc_verbosity verbosity) const
                         desc += _hiscore_newline_string();
                     }
                     else
-                    {
                         desc += " (" + *it;
-                    }
                 }
 
                 if (semiverbose)

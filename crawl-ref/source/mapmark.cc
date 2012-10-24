@@ -235,9 +235,7 @@ bool map_lua_marker::get_table() const
         return lua_istable(dlua, -1);
     }
     else
-    {
         return false;
-    }
 }
 
 void map_lua_marker::write(writer &outf) const

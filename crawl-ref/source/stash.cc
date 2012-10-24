@@ -1739,9 +1739,7 @@ void StashTracker::search_stashes()
             redraw_screen();
         }
         else
-        {
             break;
-        }
     }
     msgwin_reply(validline ? buf : "");
 

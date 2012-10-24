@@ -2423,9 +2423,7 @@ void bolt::affect_endpoint()
             noisy(25, pos());
         }
         else
-        {
             noisy(25, pos(), "You hear a splash.");
-        }
         _create_feat_splash(pos(),
                             DNGN_FLOOR,
                             DNGN_SHALLOW_WATER,

@@ -3325,9 +3325,7 @@ void hints_describe_item(const item_def &item)
                     cmd.push_back(CMD_FIRE);
                 }
                 else
-                {
                     ostr << "To attack a monster, you can simply walk into it.";
-                }
             }
 
             if (is_throwable(&you, item) && !long_text)

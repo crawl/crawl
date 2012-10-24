@@ -2461,9 +2461,7 @@ static void _pan_level()
         && !all_demons_generated)
     {
         do
-        {
             which_demon = random2(4);
-        }
         while (you.uniq_map_tags.count(string("uniq_")
                                        + pandemon_level_names[which_demon]));
     }
@@ -2488,9 +2486,7 @@ static void _pan_level()
         {
             const map_def *layout;
             do
-            {
                 layout = random_map_for_tag("layout", true, true);
-            }
             while (layout->has_tag("no_primary_vault"));
 
             dgn_ensure_vault_placed(_build_primary_vault(layout), true);
@@ -5294,9 +5290,7 @@ static void _place_spec_shop(const coord_def& where,
             item_level = level_number + random2((level_number + 1) * 2);
         }
         else
-        {
             item_level = level_number + random2((level_number + 1) * 3);
-        }
 
         // Make bazaar items more valuable (up to double value).
         if (player_in_branch(BRANCH_BAZAAR))
@@ -5554,14 +5548,10 @@ static void _add_plant_clumps(int frequency /* = 10 */,
                 mg.cls = type;
             }
             else
-            {
                 continue;
-            }
         }
         else
-        {
             continue;
-        }
 
         vector<coord_def> to_place;
         to_place.push_back(*ri);

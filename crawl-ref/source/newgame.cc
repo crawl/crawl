@@ -659,9 +659,7 @@ static void _construct_species_menu(const newgame_def* ng,
     if (ng->job != JOB_UNKNOWN)
         tmp->set_id(M_VIABLE);
     else
-    {
         tmp->set_id(M_RANDOM);
-    }
     tmp->set_highlight_colour(LIGHTGRAY);
     tmp->set_description_text("Picks a random viable species based on your current job choice");
     menu->attach_item(tmp);
@@ -925,9 +923,7 @@ static void _prompt_species(newgame_def* ng, newgame_def* ng_choice,
                     return;
                 }
                 else
-                {
                     continue;
-                }
             }
         }
     }
@@ -1057,9 +1053,7 @@ static void _construct_backgrounds_menu(const newgame_def* ng,
     if (ng->species != SP_UNKNOWN)
         tmp->set_id(M_VIABLE);
     else
-    {
         tmp->set_id(M_RANDOM);
-    }
     tmp->set_highlight_colour(LIGHTGRAY);
     tmp->set_description_text("Picks a random viable background based on your current species choice");
     menu->attach_item(tmp);

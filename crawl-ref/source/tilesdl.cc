@@ -932,9 +932,7 @@ void TilesFramework::do_layout()
             }
         }
         else
-        {
             message_y_divider = available_height_in_tiles * m_region_tile->dy;
-        }
     }
 
     // Resize and place the dungeon region.

@@ -5401,9 +5401,7 @@ string tile_debug_string(tileidx_t fg, tileidx_t bg, char prefix)
             }
         }
         else
-        {
             fg_name += "[not found]";
-        }
     }
 
     string tile_string = make_stringf(
