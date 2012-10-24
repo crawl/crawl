@@ -1743,7 +1743,7 @@ bool monster::is_summoned(int* duration, int* summon_type) const
     case MON_SUMM_CLONE:
 
     // Nor are body parts.
-    case SPELL_KRAKEN_TENTACLES:
+    case SPELL_CREATE_TENTACLES:
 
     // Some object which was animated, and thus not really summoned.
     case MON_SUMM_ANIMATE:
