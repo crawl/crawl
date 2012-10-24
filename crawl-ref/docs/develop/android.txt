@@ -45,12 +45,12 @@ At a high level, the SDL library and DCSS are laid out on disk as
 follows:
 
 commandergenius/
-    build.sh              # script to build DCSS
-	project/
-		bin/			  # where the .apk gets put
-		java/			  # Java code that wraps the native game+libs
-		jni/			  # where contrib libraries live, including SDL
-			application/src # link to the directory containing crawl-ref
+  build.sh              # script to build DCSS
+  project/
+    bin/                # where the .apk gets put
+    java/               # Java code that wraps the native game+libs
+    jni/                # where contrib libraries live, including SDL
+      application/src   # link to the directory containing crawl-ref
 
 Alongside the crawl-ref directory there are some additional
 configuration and build scripts that are required to integrate the
