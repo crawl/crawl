@@ -1331,7 +1331,10 @@ static int _destroy_tentacles(monster* head)
                 seen++;
             }
             if (!mi->is_child_tentacle_segment())
-                mi->hurt(*mi, INSTANT_DEATH);
+            {
+                monster_die(mi->as_monster(), KILL_MISC, NON_MONSTER, true);
+                seen++;
+            }
         }
     }
     return seen;
@@ -2304,10 +2307,17 @@ int monster_die(monster* mons, killer_type killer,
     }
     else if (mons->is_named() && created_friendly)
         take_note(Note(NOTE_ALLY_DEATH, 0, 0, mons->mname.c_str()));
-    else if (mons_base_type(mons) == MONS_KRAKEN)
+    else if (mons_is_tentacle_head(mons_base_type(mons)))
     {
-        if (_destroy_tentacles(mons) && !in_transit && you.see_cell(mons->pos()))
-            mpr("The dead kraken's tentacles slide back into the water.");
+        if (_destroy_tentacles(mons)
+            && !in_transit 
+            && you.see_cell(mons->pos()))
+        {
+            if (mons_base_type(mons) == MONS_KRAKEN)
+                mpr("The dead kraken's tentacles slide back into the water.");
+            else if (mons->type == MONS_TENTACLED_STARSPAWN)
+                mpr("The starspawn's tentacles wither and die.");
+        }
     }
     else if (mons_is_tentacle(mons->type) && killer != KILL_MISC
             || mons->type == MONS_ELDRITCH_TENTACLE)
