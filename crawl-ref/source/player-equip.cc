@@ -401,7 +401,7 @@ static void _unequip_artefact_effect(item_def &item,
     if (proprt[ARTP_MUTAGENIC])
     {
         mpr("Mutagenic energies flood into your body!");
-        contaminate_player(6, true);
+        contaminate_player(7, true);
     }
 
     if (is_unrandom_artefact(item))
