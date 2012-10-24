@@ -15,9 +15,7 @@ static int _clamp_stealth(int stealth)
     else if (stealth < -3)
         return -3;
     else
-    {
         return stealth;
-    }
 }
 
 // Monster stealth is a value between:

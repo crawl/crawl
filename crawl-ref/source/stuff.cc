@@ -290,9 +290,7 @@ NORETURN void game_ended_with_error(const string &message)
         game_ended();
     }
     else
-    {
         end(1, false, "%s", message.c_str());
-    }
 }
 
 void redraw_screen(void)

@@ -1028,9 +1028,7 @@ _random_map_in_list(const map_selector &sel,
                 chance.push_back(&vdefs[i]);
         }
         else
-        {
             eligible.push_back(&vdefs[i]);
-        }
     }
 
     for (vault_chance_roll_iterator vc(chance); vc; ++vc)

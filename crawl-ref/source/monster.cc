@@ -5761,9 +5761,7 @@ bool monster::attempt_escape(int attempts)
         randfact += roll_dice(1, themonst->hit_dice);
     }
     else
-    {
         randfact = roll_dice(1, you.strength());
-    }
 
     if (attfactor > randfact)
     {

@@ -759,9 +759,7 @@ static int l_item_do_identified(lua_State *ls)
         }
     }
     else
-    {
         known_status = item_ident(*item, ISFLAG_IDENT_MASK);
-    }
 
     lua_pushboolean(ls, known_status);
     return 1;

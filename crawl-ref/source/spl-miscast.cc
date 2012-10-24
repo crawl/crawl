@@ -275,9 +275,7 @@ string MiscastEffect::get_default_cause(bool attribute_to_user) const
                 + " miscasting " + spell_title(spell));
     }
     else
-    {
         return string("miscast of ") + spell_title(spell);
-    }
 }
 
 bool MiscastEffect::neither_end_silenced()

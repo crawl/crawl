@@ -201,9 +201,7 @@ void formatted_string::parse_string1(const string &s, formatted_string &fs,
                 die("Stack underflow in string \"%s\"", s.c_str());
         }
         else
-        {
             colour_stack.push_back(get_colour(tagtext));
-        }
 
         // fs.cprintf("%d%d", colour_stack.size(), colour_stack.back());
         fs.textcolor(colour_stack.back());

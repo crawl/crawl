@@ -3183,9 +3183,7 @@ public:
             best_distance = traveled_distance;
         }
         else
-        {
             good_square(dc);
-        }
         return false;
     }
 };

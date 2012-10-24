@@ -210,9 +210,7 @@ void debug_item_scan(void)
             _dump_item(name, i, mitm[i], "Bad plus or special value:");
         }
         else if (mitm[i].flags & ISFLAG_SUMMONED && in_bounds(mitm[i].pos))
-        {
             _dump_item(name, i, mitm[i], "Summoned item on floor:");
-        }
     }
 
     // Quickly scan monsters for "program bug"s.

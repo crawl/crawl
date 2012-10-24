@@ -3329,9 +3329,7 @@ bool stasis_blocks_effect(bool calc_unid,
                 }
             }
             else
-            {
                 mpr(message.c_str());
-            }
         }
 
         // In all cases, the amulet auto-ids if requested.

@@ -35,9 +35,7 @@ public:
             usleep(1000);
         }
         else
-        {
             nretries = 0;
-        }
     }
 private:
     int nretries;

@@ -1021,9 +1021,7 @@ static void _setup_base_explosion(bolt & beam, const monster& origin)
         beam.thrower = KILL_YOU;
     }
     else
-    {
         beam.thrower = KILL_MON;
-    }
 
     beam.aux_source.clear();
     beam.attitude = origin.attitude;

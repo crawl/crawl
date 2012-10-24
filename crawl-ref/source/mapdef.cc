@@ -3924,9 +3924,7 @@ void mons_list::get_zombie_type(string s, mons_spec &spec) const
         }
     }
     else
-    {
         s = s.substr(0, s.length() - strlen(zombie_types[mod - 1]));
-    }
 
     trim_string(s);
 

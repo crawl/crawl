@@ -606,9 +606,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 know_trap_destroyed = you_trigger;
             }
             else
-            {
                 mpr("But it is blocked!");
-            }
         }
         break;
     }
@@ -1545,9 +1543,7 @@ item_def trap_def::generate_trap_item()
                           (sub == MI_NEEDLE) ? SPMSL_POISONED : SPMSL_NORMAL);
     }
     else
-    {
         set_item_ego_type(item, base, SPWPN_NORMAL);
-    }
 
     item_colour(item);
     return item;

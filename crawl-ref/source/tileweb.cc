@@ -400,9 +400,7 @@ bool TilesFramework::await_input(wint_t& c, bool block)
             return false;
         }
         else
-        {
             die("select error: %s", strerror(errno));
-        }
     }
 }
 
@@ -873,9 +871,7 @@ void TilesFramework::_send_map(bool force_full)
                 push_prefix(make_stringf("{x:%d,y:%d,", (x - m_origin.x), (y - m_origin.y)));
             }
             else
-            {
                 push_prefix("{");
-            }
 
             const screen_cell_t& sc = force_full ? default_cell
                 : m_current_view(gc);

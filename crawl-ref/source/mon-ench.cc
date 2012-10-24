@@ -1258,9 +1258,7 @@ void monster::apply_enchantment(const mon_enchant &me)
                              name(DESC_THE).c_str());
                     }
                     else
-                    {
                         mpr("All of a sudden the net rips apart!");
-                    }
                 }
                 destroy_item(net);
 

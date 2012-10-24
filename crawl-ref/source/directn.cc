@@ -1259,9 +1259,7 @@ void direction_chooser::object_cycle(int dir)
         target_unshifted = false;
     }
     else
-    {
         flush_input_buffer(FLUSH_ON_FAILURE);
-    }
 }
 
 void direction_chooser::monster_cycle(int dir)
@@ -1273,9 +1271,7 @@ void direction_chooser::monster_cycle(int dir)
         target_unshifted = false;
     }
     else
-    {
         flush_input_buffer(FLUSH_ON_FAILURE);
-    }
 }
 
 void direction_chooser::feature_cycle_forward(int feature)
@@ -1287,9 +1283,7 @@ void direction_chooser::feature_cycle_forward(int feature)
         set_target(objfind_pos);
     }
     else
-    {
         flush_input_buffer(FLUSH_ON_FAILURE);
-    }
 }
 
 void direction_chooser::update_previous_target() const
@@ -1474,9 +1468,7 @@ void direction_chooser::print_target_monster_description(bool &did_cloud) const
         text = get_monster_equipment_desc(mi);
     }
     else
-    {
         text = "Disturbance";
-    }
 
     // Build the final description string.
     if (!suffixes.empty())
@@ -1849,9 +1841,7 @@ void direction_chooser::handle_mlist_cycle_command(command_type key_command)
             set_target(monsfind_pos);
         }
         else
-        {
             flush_input_buffer(FLUSH_ON_FAILURE);
-        }
     }
 #endif
 }

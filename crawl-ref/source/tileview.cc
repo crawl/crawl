@@ -651,9 +651,7 @@ void tile_floor_halo(dungeon_feature_type target, tileidx_t tile)
             else if (d_spc && r_spc)
                 env.tile_flv[x][y].floor = tile + SPECIAL_NW;
             else
-            {
                 env.tile_flv[x][y].floor = tile + SPECIAL_FULL;
-            }
         }
     }
 
@@ -1247,9 +1245,7 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
             print_blood = false;
         }
         else
-        {
             cell.halo = HALO_RANGE;
-        }
     }
     else
         cell.halo = HALO_NONE;

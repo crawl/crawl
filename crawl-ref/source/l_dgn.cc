@@ -1590,9 +1590,7 @@ LUAFN(_dgn_place_map)
                               env.level_vaults[env.level_vaults.size() - 1]);
     }
     else
-    {
         lua_pushnil(ls);
-    }
     return 1;
 }
 

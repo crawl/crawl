@@ -269,9 +269,7 @@ void MenuRegion::_place_entries(const int left_offset, const int top_offset,
                         text.del_char();
                 }
                 else
-                {
                     text += m_entries[i].text;
-                }
 
                 int w = entry_start + column_width - text_sx - tile_indent;
                 int h = m_font_entry->char_height() * 2;

@@ -824,9 +824,7 @@ static void _sdump_inventory(dump_params &par)
                             text += munge_description(text2);
                         }
                         else
-                        {
                             text += "\n";
-                        }
                     }
                 }
             }

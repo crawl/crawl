@@ -238,9 +238,7 @@ void SubmergedTileBuffer::add(tileidx_t idx, int x, int y, int z, bool submerged
                           alpha_top, alpha_top);
     }
     else
-    {
         m_above_water.add(idx, x, y, z, ox, oy, -1, ymax, alpha_top, alpha_top);
-    }
 }
 
 void SubmergedTileBuffer::draw() const

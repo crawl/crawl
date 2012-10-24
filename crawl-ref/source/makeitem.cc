@@ -3420,9 +3420,7 @@ jewellery_type get_random_amulet_type()
 {
     int res;
     do
-    {
         res = (AMU_FIRST_AMULET + random2(NUM_JEWELLERY - AMU_FIRST_AMULET));
-    }
     // Do not generate cFly (now used for amulet of the Air only)
     while (res == AMU_CONTROLLED_FLIGHT);
     return jewellery_type(res);

@@ -530,9 +530,7 @@ int mcache_monster::info(tile_draw_info *dinfo) const
 
     int ofs_x, ofs_y;
     if (m_equ_tile && get_weapon_offset(m_mon_tile, &ofs_x, &ofs_y))
-    {
         dinfo[count++].set(m_equ_tile, ofs_x, ofs_y);
-    }
 
     // In some cases, overlay a second weapon tile...
     if (m_mon_tile == TILEP_MONS_DEEP_ELF_BLADEMASTER)
@@ -556,9 +554,7 @@ int mcache_monster::info(tile_draw_info *dinfo) const
             dinfo[count++].set(eq2, -ofs_x, ofs_y);
     }
     else if (m_shd_tile && get_shield_offset(m_mon_tile, &ofs_x, &ofs_y))
-    {
         dinfo[count++].set(m_shd_tile, ofs_x, ofs_y);
-    }
 
     return count;
 }

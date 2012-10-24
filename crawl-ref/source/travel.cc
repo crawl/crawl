@@ -2390,9 +2390,7 @@ bool travel_kill_monster(monster_type mons)
             return true;
         }
         else
-        {
             return false;
-        }
     }
 
     return true;
