@@ -827,7 +827,6 @@ bool SkillMenu::exit()
         return true;
     }
 
-    bool maxed_out = true;
     bool enabled_skill = false;
 
     for (int i = 0; i < NUM_SKILLS; ++i)
@@ -837,16 +836,9 @@ bool SkillMenu::exit()
             enabled_skill = true;
             break;
         }
-
-        if (you.skills[i] < 27 && you.can_train[i]
-            && !is_useless_skill((skill_type) i)
-            && !is_harmful_skill((skill_type) i))
-        {
-            maxed_out = false;
-        }
     }
 
-    if (!enabled_skill && !maxed_out)
+    if (!enabled_skill && !all_skills_maxed())
     {
         set_help("You need to enable at least one skill.");
         return false;
@@ -1443,6 +1435,13 @@ void SkillMenu::set_links()
 
 void skill_menu(int flag, int exp)
 {
+    // potion or card; you may elect to sin against Trog
+    if (flag & SKMF_EXPERIENCE && all_skills_maxed(true))
+    {
+        mpr("You feel omnipotent.");
+        return;
+    }
+
 #ifdef USE_TILE_WEB
     tiles_crt_control show_as_menu(CRT_MENU, "skills");
 #endif

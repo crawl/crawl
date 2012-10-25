@@ -59,6 +59,7 @@ void calc_mp();
 void calc_hp();
 bool is_useless_skill(skill_type skill);
 bool is_harmful_skill(skill_type skill);
+bool all_skills_maxed(bool inc_harmful = false);
 
 int species_apt(skill_type skill, species_type species = you.species);
 float species_apt_factor(skill_type sk, species_type sp = you.species);
