@@ -2210,7 +2210,6 @@ void move_child_tentacles(monster* mons)
 
         tentacle->check_redraw(old_pos);
         tentacle->apply_location_effects(old_pos);
-
     }
 }
 
