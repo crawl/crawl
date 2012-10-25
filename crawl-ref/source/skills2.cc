@@ -482,6 +482,21 @@ bool is_harmful_skill(skill_type skill)
     return is_magic_skill(skill) && you.religion == GOD_TROG;
 }
 
+bool all_skills_maxed(bool inc_harmful)
+{
+    for (int i = 0; i < NUM_SKILLS; ++i)
+    {
+        if (you.skills[i] < 27 && you.can_train[i]
+            && !is_useless_skill((skill_type) i)
+            && (inc_harmful || !is_harmful_skill((skill_type) i)))
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 int skill_bump(skill_type skill, int scale)
 {
     int sk = you.skill_rdiv(skill, scale);
