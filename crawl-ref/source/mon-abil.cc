@@ -2146,15 +2146,30 @@ void move_child_tentacles(monster* mons)
         attack_constraints.max_string_distance = MAX_KRAKEN_TENTACLE_DIST;
         attack_constraints.connection_constraints = &connection_data;
         attack_constraints.target_positions = &foe_positions;
+        
+        //If this tentacle is constricting a creature, attempt to pull it back
+        //towards the head.
+        bool pull_constrictee = false;
+        actor* constrictee = NULL;
+        if (tentacle->is_constricting() && retract_found)
+        {
+            actor::constricting_t::const_iterator it = tentacle->constricting->begin();
+            constrictee = actor_by_mid(it->first);
+//            if (!constrictee->is_habitable(old_pos))
+//                mpr("old_pos is not habitable.");
+            if (grd(old_pos) >= DNGN_SHALLOW_WATER 
+                    && constrictee->is_habitable(old_pos))
+                pull_constrictee = true;
+        }
 
-        if (!no_foe)
+        if (!no_foe && !pull_constrictee)
         {
             path_found = _tentacle_pathfind(tentacle, attack_constraints, new_pos,
                                             foe_positions,
                                             current_count);
         }
 
-        if (no_foe || !path_found)
+        if (no_foe || !path_found || pull_constrictee)
         {
             if (retract_found)
                 new_pos = retract_pos;
@@ -2187,6 +2202,23 @@ void move_child_tentacles(monster* mons)
         // the search fails (sometimes), Don't know why. -cao
         tentacle->set_position(new_pos);
         mgrd(tentacle->pos()) = tentacle->mindex();
+        
+        if (pull_constrictee)
+        {
+            mprf("The tentacle pulls %s backwards!",
+                 constrictee->name(DESC_THE).c_str());
+            
+            if (constrictee->as_player())
+                move_player_to_grid(old_pos, false, true);
+            else
+                constrictee->move_to_pos(old_pos);
+
+            // Interrupt stair travel and passwall.
+            if (constrictee->is_player())
+                stop_delay(true);
+            
+            
+        }
         tentacle->clear_far_constrictions();
 
         connect_costs.connection_constraints = &connection_data;
