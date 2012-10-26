@@ -7085,43 +7085,40 @@ bool player::can_see_invisible(bool calc_unid) const
     if (crawl_state.game_is_arena())
         return true;
 
-    int si = 0;
-
     // All effects negated by magical suppression should go in here.
     if (!you.suppressed())
     {
-        si += player_equip(EQ_RINGS, RING_SEE_INVISIBLE, calc_unid);
-
-        // armour: (checks head armour only)
-        si += player_equip_ego_type(EQ_HELMET, SPARM_SEE_INVISIBLE);
-
-        // randart wpns
-        int artefacts = scan_artefacts(ARTP_EYESIGHT, calc_unid);
-
-        if (artefacts > 0)
-            si += artefacts;
+        if (player_equip(EQ_RINGS, RING_SEE_INVISIBLE, calc_unid)
+            // armour: (checks head armour only)
+            || player_equip_ego_type(EQ_HELMET, SPARM_SEE_INVISIBLE)
+            // randart gear
+            || scan_artefacts(ARTP_EYESIGHT, calc_unid) > 0)
+        {
+            return true;
+        }
     }
 
-    if (player_mutation_level(MUT_ACUTE_VISION) > 0)
-        si += player_mutation_level(MUT_ACUTE_VISION);
+    // Possible to have both with a temp mutation.
+    if (player_mutation_level(MUT_ACUTE_VISION)
+        && !player_mutation_level(MUT_BLURRY_VISION))
+    {
+        return true;
+    }
 
     // antennae give sInvis at 3
     if (player_mutation_level(MUT_ANTENNAE) == 3)
-        si++;
+        return true;
 
     if (player_mutation_level(MUT_EYEBALLS) == 3)
-        si++;
+        return true;
 
     if (you.religion == GOD_ASHENZARI && you.piety >= piety_breakpoint(2)
         && !player_under_penance())
     {
-        si++;
+        return true;
     }
 
-    if (si > 1)
-        si = 1;
-
-    return si;
+    return false;
 }
 
 bool player::can_see_invisible() const
