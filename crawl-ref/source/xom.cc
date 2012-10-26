@@ -29,7 +29,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
-#include "los.h"
+#include "losglobal.h"
 #include "makeitem.h"
 #include "map_knowledge.h"
 #include "message.h"
@@ -3161,8 +3161,11 @@ static int _xom_repel_stairs(bool debug = false)
 
     std::vector<coord_def> stairs_avail;
     bool real_stairs = false;
-    for (radius_iterator ri(you.get_los()); ri; ++ri)
+    for (radius_iterator ri(you.pos(), LOS_RADIUS, C_ROUND); ri; ++ri)
     {
+        if (!cell_see_cell(you.pos(), *ri, LOS_SOLID_SEE))
+            continue;
+
         dungeon_feature_type feat = grd(*ri);
         if (feat_stair_direction(feat) != CMD_NO_CMD
             && feat != DNGN_ENTER_SHOP)
