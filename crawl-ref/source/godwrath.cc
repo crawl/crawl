@@ -210,10 +210,10 @@ static bool _zin_retribution()
             confuse_player(3 + random2(10), false);
             break;
         case 1:
-            you.hibernate();
+            you.put_to_sleep(NULL, 30 + random2(20));
             break;
         case 2:
-            paralyse_player("the wrath of Zin", 3 + random2(10));
+            paralyse_player("the wrath of Zin");
             break;
         }
         break;
