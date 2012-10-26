@@ -2792,7 +2792,7 @@ apricot tree
 %%%%
 archer statue
 
-The likeness of a beatiful elven archer, sculpted in finest marble. It holds a
+The likeness of a beautiful elven archer, sculpted in finest marble. It holds a
 bow aloft, and appears to be magically animated, letting it use the bow to
 riddle you with arrows.
 
