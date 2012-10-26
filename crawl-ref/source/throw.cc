@@ -1966,7 +1966,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     if (acc_bonus != DEBUG_COOKIE)
         pbolt.hit += acc_bonus;
 
-    if (player_effect_inaccuracy())
+    if (you.inaccuracy())
         pbolt.hit -= 5;
 
     scale_dice(pbolt.damage);
@@ -2426,13 +2426,8 @@ bool mons_throw(monster* mons, struct bolt &beam, int msl)
         beam.damage.size = beam.damage.size * 120 / 100;
     }
 
-    const int jewellery = mons->inv[MSLOT_JEWELLERY];
-    if (jewellery != NON_ITEM
-        && mitm[jewellery].base_type == OBJ_JEWELLERY
-        && mitm[jewellery].sub_type == AMU_INACCURACY)
-    {
+    if (mons->inaccuracy())
         beam.hit -= 5;
-    }
 
     if (speed_brand)
         beam.damage.size = div_rand_round(beam.damage.size * 9, 10);

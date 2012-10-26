@@ -3984,6 +3984,15 @@ bool monster::no_tele(bool calc_unid, bool permit_id) const
     return false;
 }
 
+bool monster::inaccuracy() const
+{
+    const int jewellery = inv[MSLOT_JEWELLERY];
+    return jewellery != NON_ITEM
+           && mitm[jewellery].base_type == OBJ_JEWELLERY
+           && mitm[jewellery].sub_type == AMU_INACCURACY
+           && !suppressed();
+}
+
 flight_type monster::flight_mode() const
 {
     return mons_flies(this);

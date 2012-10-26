@@ -333,6 +333,7 @@ public:
     int res_constrict() const;
     int res_magic() const;
     bool no_tele(bool calc_unid = true, bool permit_id = true) const;
+    bool inaccuracy() const;
 
     flight_type flight_mode() const;
     bool is_levitating() const;

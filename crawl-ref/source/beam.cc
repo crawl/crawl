@@ -452,7 +452,7 @@ void zappy(zap_type z_type, int power, bolt &pbolt)
     else
     {
         pbolt.hit = (*zinfo->tohit)(power);
-        if (player_effect_inaccuracy() && pbolt.hit != AUTOMATIC_HIT)
+        if (you.inaccuracy() && pbolt.hit != AUTOMATIC_HIT)
             pbolt.hit = max(0, pbolt.hit - 5);
     }
 
