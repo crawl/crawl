@@ -1248,9 +1248,9 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     case MONS_TENTACLED_STARSPAWN:
         return TILEP_MONS_TENTACLED_STARSPAWN;
     case MONS_THRASHING_HORROR:
-        return MONS_THRASHING_HORROR;
+        return TILEP_MONS_THRASHING_HORROR;
     case MONS_WRETCHED_STAR:
-        return MONS_WRETCHED_STAR;
+        return TILEP_MONS_WRETCHED_STAR;
 
     // flying insects ('y')
     case MONS_YELLOW_WASP:
