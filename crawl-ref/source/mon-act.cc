@@ -2182,10 +2182,8 @@ void handle_monster_move(monster* mons)
             move_child_tentacles(mons);
         
         mons->number += you.time_taken * _tentacle_move_speed(mons_base_type(mons));
-//        mprf(MSGCH_DIAGNOSTICS, "Adding %d time taken.", you.time_taken);
         while (mons->number >= 100)
         {
-//            mprf(MSGCH_DIAGNOSTICS, "Energy is %d.", mons->number);
             move_child_tentacles(mons);
             mons->number -= 100;
         }
