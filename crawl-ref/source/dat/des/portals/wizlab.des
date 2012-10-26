@@ -1207,8 +1207,8 @@ KMONS:      8 = col:red clay golem name:flesh_golem name_replace \
 KMONS:      M = col:mutagenic tentacled monstrosity name:Cigotuvi's_Monster \
             name_replace hp:250 tile:mons_cigotuvis_monster
 MARKER:     ! = lua:fog_machine { \
-                 pow_max = 15, delay_min = 10, delay_max = 40, \
-                 size = 2, size_buildup_amnt = 20, \
+                 pow_max = 10, delay_min = 10, delay_max = 40, \
+                 size = 1, size_buildup_amnt = 10, \
                  size_buildup_time = 500, cloud_type = "mutagenic fog", \
                  excl_rad = -1 }
 MARKER:     ? = lua:fog_machine { \
