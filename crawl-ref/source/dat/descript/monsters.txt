@@ -2398,6 +2398,17 @@ spriggan rider
 Mounted on giant fireflies, these riders make sure no one who dares to intrude
 on the spriggan forests and cairns will be able to just walk away.
 %%%%
+starspawn tentacle
+
+The writhing appendage of a tentacled starspawn, capable of grasping nearly
+any prey and dragging it back to be devoured. Any damage dealt to it hurts
+the whole creature.
+%%%%
+starspawn tentacle segment
+
+A sinuous length of an extended starspawn tentacle. Any damage dealt to it
+hurts the whole creature.
+%%%%
 statue
 
 At first glance, this piece of sculpted granite appears inert. The red glow
@@ -2465,6 +2476,11 @@ creature.
 tentacled monstrosity
 
 A writhing mass of tentacles, all covered in putrid mucus.
+%%%%
+tentacled starspawn
+
+A lumbering maw shrouded in a mass of sinuous tentacles. Every now and again
+one slithers out to drag unfortunate prey back into its waiting gullet.
 %%%%
 terrified wizard
 
