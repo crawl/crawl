@@ -1235,10 +1235,10 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         if (!god_gift)
         {
             if ((player_res_mutation_from_item()
-                 && !one_chance_in(10) && !stat_gain_potion)
+                 && !one_chance_in(temporary ? 3 : 10) && !stat_gain_potion)
                 || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
                 || (player_mutation_level(MUT_MUTATION_RESISTANCE)
-                    && !one_chance_in(3)))
+                    && !one_chance_in(temporary ? 2 : 3)))
             {
                 if (failMsg)
                 {
@@ -2187,9 +2187,9 @@ bool temp_mutate(mutation_type which_mut, const string &reason)
 
     int old_level = you.mutation[which_mut];
 
-    if (mutate(which_mut, reason, false, true, false, false, false, false, true))
+    if (mutate(which_mut, reason, false, false, false, false, false, false, true))
     {
-        //Only increment temp mutation tracking if we actually gained a mutation
+        // Only increment temp mutation tracking if we actually gained a mutation.
         if (you.mutation[which_mut] > old_level)
         {
             you.temp_mutations[which_mut]++;
