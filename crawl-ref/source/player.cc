@@ -4170,15 +4170,6 @@ int player_spirit_shield(bool calc_unid)
         return 0;
 }
 
-int player_effect_inaccuracy()
-{
-    // All effects negated by magical suppression should go in here.
-    if (!you.suppressed())
-        return wearing_amulet(AMU_INACCURACY);
-    else
-        return 0;
-}
-
 int player_res_mutation_from_item(bool calc_unid)
 {
     // All effects negated by magical suppression should go in here.
@@ -6623,6 +6614,11 @@ bool player::no_tele(bool calc_unid, bool permit_id) const
         return true;
 
     return item_blocks_teleport(calc_unid, permit_id);
+}
+
+bool player::inaccuracy() const
+{
+    return !you.suppressed() && wearing_amulet(AMU_INACCURACY);
 }
 
 bool player::fights_well_unarmed(int heavy_armour_penalty)
