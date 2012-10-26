@@ -13,6 +13,7 @@
 #include "misc.h"
 #include "mon-util.h"
 #include "monster.h"
+#include "notes.h"
 #include "ouch.h"
 #include "player.h"
 #include "religion.h"
@@ -640,6 +641,8 @@ static void _handle_stat_change(stat_type stat, const char* cause, bool see_sour
         you.stat_zero[stat] = STAT_ZERO_START;
         you.stat_zero_cause[stat] = cause;
         mprf(MSGCH_WARN, "You have lost your %s.", stat_desc(stat, SD_NAME));
+        take_note(Note(NOTE_MESSAGE, 0, 0, make_stringf("Lost %s.",
+            stat_desc(stat, SD_NAME)).c_str()), true);
         // 2 to 5 turns of paralysis (XXX: decremented right away?)
         you.increase_duration(DUR_PARALYSIS, 2 + random2(3));
     }
