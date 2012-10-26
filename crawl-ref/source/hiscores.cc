@@ -1124,8 +1124,7 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
     // would look odd in the "screenshot", but having DUR_MISLED as a non-zero
     // value at his point in time will generate such odities as "killed by a
     // golden eye, wielding an orcish crossbo [19 damage]", etc. {due}
-    int misled = you.duration[DUR_MISLED];
-    you.duration[DUR_MISLED] = 0;
+    unwind_var<int> misled(you.duration[DUR_MISLED], 0);
 
     // Set the default aux data value...
     // If aux is passed in (ie for a trap), we'll default to that.
@@ -1252,9 +1251,6 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
         death_source_name = you.props["poisoner"].get_string();
         auxkilldata = you.props["poison_aux"].get_string();
     }
-
-    // And restore it here.
-    you.duration[DUR_MISLED] = misled;
 }
 
 void scorefile_entry::reset()
