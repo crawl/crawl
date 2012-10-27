@@ -28,6 +28,7 @@ KMONS:  h = generate_awake human / generate_awake elf / generate_awake gnome
 : dgn.delayed_decay(_G, 'h', 'elf chunk / q:2 human chunk / q:2 gnome chunk')
 KFEAT:  = = floor
 FTILE:  =E79 = floor_grass
+COLOUR: =E7 = green
 SUBST:  E = e
 SUBST:  e = e.
 : kitem("$ = q:" .. crawl.random_range(50, 200) .. " gold")
