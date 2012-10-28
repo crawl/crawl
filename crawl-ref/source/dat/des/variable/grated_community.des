@@ -56,7 +56,7 @@ KFEAT:  C = distillery shop type:Miraculous suffix:Elixirs count:10 \
             greed:50 ; potion of confusion
 : kfeat("D = armour shop name:The_Legendary_" .. crawl.make_name() .. " \
 :        type:Legendary suffix:Smithy count:10 greed:40 ;\
-:	     damaged plate armour ego:none | damaged chain mail ego:none |\
+:        damaged plate armour ego:none | damaged chain mail ego:none |\
 :        damaged long sword ego:none | damaged shield ego:none |\
 :        damaged large shield ego:none | damaged battleaxe ego:none ")
 SHUFFLE:  QRSTUVX
