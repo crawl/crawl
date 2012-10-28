@@ -55,7 +55,11 @@ function ($, comm, enums, map_knowledge, messages) {
     function inventory_item_desc(index)
     {
         var item = player.inv[index];
-        return index_to_letter(index) + ") " + item.name;
+        var elem = $("<span>");
+        elem.text(index_to_letter(index) + ") " + item.name);
+        if (item.col != -1)
+            elem.addClass("fg" + item.col);
+        return elem;
     }
 
     function wielded_weapon()
