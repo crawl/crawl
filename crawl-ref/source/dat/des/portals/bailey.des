@@ -287,12 +287,13 @@ COLOUR: ; : red / lightred
 SUBST:  ; = .
 TAGS:   uniq_bailey no_rotate chance_bailey
 CHANCE: 5%
+KPROP:  d = no_rtele_into
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
-ITEM:   unobtainable war axe / unobtainable battleaxe
+KITEM:  d = unobtainable war axe / unobtainable battleaxe
 :   bailey_portal_axe(_G)
 : elseif rnd == 1 then
-ITEM:   unobtainable glaive / unobtainable bardiche
+KITEM:  d = unobtainable glaive / unobtainable bardiche
 :   bailey_portal_polearm(_G)
 : end
 MAP
@@ -344,12 +345,13 @@ TAGS:   uniq_bailey no_rotate chance_bailey
 CHANCE: 5%
 WEIGHT: 3
 COLOUR: n = red
+KPROP:  d = no_rtele_into
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
-ITEM:   unobtainable war axe / unobtainable battleaxe
+KITEM:  d = unobtainable war axe / unobtainable battleaxe
 :   bailey_portal_axe(_G)
 : elseif rnd == 1 then
-ITEM:   unobtainable glaive / unobtainable bardiche
+KITEM:  d = unobtainable glaive / unobtainable bardiche
 :   bailey_portal_polearm(_G)
 : end
 MAP
