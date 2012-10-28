@@ -2336,6 +2336,9 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
 bool stop_attack_prompt(targetter &hitfunc, std::string verb,
                         bool (*affects)(const actor *victim))
 {
+    if (crawl_state.which_god_acting() == GOD_XOM)
+        return false;
+
     if (you.confused())
         return false;
 
