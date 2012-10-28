@@ -1530,6 +1530,7 @@ enum enchant_type
     ENCH_DEATHS_DOOR,
     ENCH_ROLLING,       // Boulder Beetle in ball form
     ENCH_OZOCUBUS_ARMOUR,
+    ENCH_WRETCHED,      // An abstract placeholder for monster mutations
     // Update enchantment names in monster.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

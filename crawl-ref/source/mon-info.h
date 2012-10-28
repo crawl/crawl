@@ -84,6 +84,7 @@ enum monster_info_flags
     MB_NO_NAME_TAG,
     MB_OZOCUBUS_ARMOUR,
     MB_STONESKIN,
+    MB_WRETCHED,
     NUM_MB_FLAGS
 };
 

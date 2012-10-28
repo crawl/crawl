@@ -786,6 +786,15 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(this, " is no longer regenerating.");
          break;
 
+    case ENCH_WRETCHED:
+         if (!quiet)
+         {
+            snprintf(info, INFO_SIZE, " seems to return to %s normal shape.",
+                     pronoun(PRONOUN_POSSESSIVE, true).c_str());
+            simple_monster_message(this, info);
+         }
+         break;
+
     default:
         break;
     }
@@ -889,7 +898,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_MIRROR_DAMAGE: case ENCH_STONESKIN: case ENCH_LIQUEFYING:
         case ENCH_SILVER_CORONA: case ENCH_DAZED: case ENCH_FAKE_ABJURATION:
         case ENCH_ROUSED: case ENCH_BREATH_WEAPON: case ENCH_DEATHS_DOOR:
-        case ENCH_OZOCUBUS_ARMOUR:
+        case ENCH_OZOCUBUS_ARMOUR: case ENCH_WRETCHED:
             lose_ench_levels(i->second, levels);
             break;
 
@@ -1097,6 +1106,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_BREATH_WEAPON:
     case ENCH_DEATHS_DOOR:
     case ENCH_OZOCUBUS_ARMOUR:
+    case ENCH_WRETCHED:
     // case ENCH_ROLLING:
         decay_enchantment(me);
         break;
@@ -1804,7 +1814,7 @@ static const char *enchant_names[] =
     "liquefying", "tornado", "fake_abjuration",
     "dazed", "mute", "blind", "dumb", "mad", "silver_corona", "recite timer",
     "inner_flame", "roused", "breath timer", "deaths_door", "rolling",
-    "ozocubus_armour", "buggy",
+    "ozocubus_armour", "wretched", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
@@ -1930,7 +1940,7 @@ int mon_enchant::calc_duration(const monster* mons,
     const int deg = newdegree ? newdegree : 1;
 
     // Beneficial enchantments (like Haste) should not be throttled by
-    // monster HD via modded_speed(). Use mod_speed instead!
+    // monster HD via modded_speed(). Use _mod_speed instead!
     switch (ench)
     {
     case ENCH_WITHDRAWN:
@@ -2065,6 +2075,9 @@ int mon_enchant::calc_duration(const monster* mons,
         return (16 + random2avg(13, 2)) * 10;
     case ENCH_ROLLING:
         cturn = 10000 / _mod_speed(25, mons->speed);
+        break;
+    case ENCH_WRETCHED:
+        cturn = (20 + roll_dice(3, 10)) * 10 / _mod_speed(10, mons->speed);
         break;
     default:
         break;

@@ -3322,8 +3322,17 @@ int monster::missile_deflection() const
 
 int monster::armour_class() const
 {
+    int a = ac;
+
     // Extra AC for snails/turtles drawn into their shells.
-    return max(ac + (has_ench(ENCH_WITHDRAWN) ? 10 : 0), 0);
+    if (has_ench(ENCH_WITHDRAWN))
+        a += 10;
+
+    // Penalty due to bad temp mutations.
+    if (has_ench(ENCH_WRETCHED))
+        a -= get_ench(ENCH_WRETCHED).degree;
+
+    return max(a, 0);
 }
 
 int monster::melee_evasion(const actor *act, ev_ignore_type evit) const
@@ -4140,6 +4149,13 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
 
     if (alive())
     {
+        if (amount != INSTANT_DEATH && agent && agent->is_monster()
+            && agent->as_monster()->has_ench(ENCH_WRETCHED))
+        {
+            int degree = agent->as_monster()->get_ench(ENCH_WRETCHED).degree;
+            amount = div_rand_round(amount * (10 - min(degree, 5)), 10);
+        }
+
         if (amount != INSTANT_DEATH
             && mons_species(true) == MONS_DEEP_DWARF)
         {
@@ -4609,6 +4625,9 @@ void monster::calc_speed()
     default:
         break;
     }
+
+    if (has_ench(ENCH_WRETCHED) && speed > 3)
+        speed--;
 
     // Going berserk on liquid ground doesn't speed you up any.
     if (!liquefied_ground() && (has_ench(ENCH_BERSERK) || has_ench(ENCH_INSANE)))
