@@ -3092,33 +3092,45 @@ bool mon_can_be_slimified(monster* mons)
 
 void slimify_monster(monster* mon, bool hostile)
 {
-    if (mon->holiness() == MH_UNDEAD)
-        monster_polymorph(mon, MONS_DEATH_OOZE);
+    monster_type target = MONS_JELLY;
+
+    const int x = mon->hit_dice + (coinflip() ? 1 : -1) * random2(5);
+
+    if (x < 3)
+        target = MONS_OOZE;
+    else if (x >= 3 && x < 5)
+        target = MONS_JELLY;
+    else if (x >= 5 && x < 7)
+        target = MONS_BROWN_OOZE;
+    else if (x >= 7 && x <= 11)
+    {
+        if (coinflip())
+            target = MONS_SLIME_CREATURE;
+        else
+            target = MONS_GIANT_AMOEBA;
+    }
     else
     {
-        const int x = mon->hit_dice + (coinflip() ? 1 : -1) * random2(5);
-
-        if (x < 3)
-            monster_polymorph(mon, MONS_OOZE);
-        else if (x >= 3 && x < 5)
-            monster_polymorph(mon, MONS_JELLY);
-        else if (x >= 5 && x < 7)
-            monster_polymorph(mon, MONS_BROWN_OOZE);
-        else if (x >= 7 && x <= 11)
-        {
-            if (coinflip())
-                monster_polymorph(mon, MONS_SLIME_CREATURE);
-            else
-                monster_polymorph(mon, MONS_GIANT_AMOEBA);
-        }
+        if (coinflip())
+            target = MONS_ACID_BLOB;
         else
-        {
-            if (coinflip())
-                monster_polymorph(mon, MONS_ACID_BLOB);
-            else
-                monster_polymorph(mon, MONS_AZURE_JELLY);
-        }
+            target = MONS_AZURE_JELLY;
     }
+
+    if (feat_is_water(grd(mon->pos()))) // Pick something amphibious.
+        target = (x < 7) ? MONS_JELLY : MONS_SLIME_CREATURE;
+
+    if (mon->holiness() == MH_UNDEAD)
+        target = MONS_DEATH_OOZE;
+
+    // Bail out if jellies can't live here.
+    if (!monster_habitable_grid(target, grd(mon->pos())))
+    {
+        simple_monster_message(mon, " quivers momentarily.");
+        return;
+    }
+
+    monster_polymorph(mon, target);
 
     if (!mons_eats_items(mon))
         mon->add_ench(ENCH_EAT_ITEMS);
