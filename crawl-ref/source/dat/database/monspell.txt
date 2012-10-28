@@ -236,6 +236,10 @@ You hear a spitting sound.
 Petrifying Cloud cast
 
 @The_monster@ breathes a plume of calcifying dust @at@ @target@.
+%%%%
+Chaos Breath cast
+
+@The_monster@ breathes @beam@ @at@ @target@.
 ########################################################################
 # Unique monsters
 ########################################################################
