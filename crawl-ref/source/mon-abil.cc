@@ -2820,26 +2820,57 @@ bool mon_special_ability(monster* mons, bolt & beem)
     }
 
     case MONS_WRETCHED_STAR:
-        if (player_or_mon_in_sanct(mons))
-            break;
-
-        if (!you.visible_to(mons))
+        if (is_sanctuary(mons->pos()))
             break;
 
         if (one_chance_in(5))
         {
-            flash_view_delay(MAGENTA, 300);
-            simple_monster_message(mons,
-                                   " pulses with an eldritch light!");
-            int num_mutations = 2 + random2(3);
-            for (int i = 0; i < num_mutations; ++i)
-                temp_mutate(RANDOM_BAD_MUTATION, "wretched star");
+            if (you.visible_to(mons))
+            {
+                flash_view_delay(MAGENTA, 300);
+                simple_monster_message(mons, " pulses with an eldritch light!");
+
+                if (!is_sanctuary(you.pos())
+                    // Doesn't work through glass, but you still see pulses.
+                    && cell_see_cell(you.pos(), mons->pos(), LOS_SOLID_SEE))
+                {
+                    int num_mutations = 2 + random2(3);
+                    for (int i = 0; i < num_mutations; ++i)
+                        temp_mutate(RANDOM_BAD_MUTATION, "wretched star");
+                }
+            }
+
+            for (radius_iterator ri(mons->pos(), LOS_RADIUS, C_ROUND); ri; ++ri)
+            {
+                monster *m = monster_at(*ri);
+                if (m && cell_see_cell(mons->pos(), *ri, LOS_SOLID_SEE)
+                    && m->can_mutate())
+                {
+                    switch (m->type)
+                    {
+                    // colour/attack/resistances change
+                    case MONS_UGLY_THING:
+                    case MONS_VERY_UGLY_THING:
+                        m->mutate("wretched star");
+                        break;
+
+                    // tile change, already mutated wrecks
+                    case MONS_ABOMINATION_SMALL:
+                    case MONS_ABOMINATION_LARGE:
+                        m->props["tile_num"].get_short() = random2(256);
+                    case MONS_WRETCHED_STAR:
+                    case MONS_CHAOS_SPAWN:
+                    case MONS_PULSATING_LUMP:
+                        break;
+
+                    default:
+                        m->add_ench(mon_enchant(ENCH_WRETCHED, 1));
+                    }
+                }
+            }
 
             used = true;
         }
-
-        // Probably should do something to monsters.
-        // Still uncertain as to exactly what.
         break;
 
     default:

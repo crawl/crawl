@@ -151,6 +151,8 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_STONESKIN;
     case ENCH_OZOCUBUS_ARMOUR:
         return MB_OZOCUBUS_ARMOUR;
+    case ENCH_WRETCHED:
+        return MB_WRETCHED;
     default:
         return NUM_MB_FLAGS;
     }
@@ -1366,6 +1368,8 @@ vector<string> monster_info::attributes() const
         v.push_back("stone skin");
     if (is(MB_OZOCUBUS_ARMOUR))
         v.push_back("covered in an icy film");
+    if (is(MB_WRETCHED))
+        v.push_back("misshapen and mutated");
     return v;
 }
 

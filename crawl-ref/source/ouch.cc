@@ -1142,6 +1142,17 @@ void ouch(int dam, int death_source, kill_method_type death_type,
     if (you.dead) // ... but eligible for revival
         return;
 
+    if (dam != INSTANT_DEATH && !invalid_monster_index(death_source)
+        && menv[death_source].has_ench(ENCH_WRETCHED))
+    {
+        // An abstract boring simulation of reduced stats/etc due to bad muts
+        // reducing the monster's melee damage, spell power, etc.  This is
+        // wrong eg. for clouds that would be smaller and with a shorter
+        // duration but do the same damage, etc.
+        int degree = menv[death_source].get_ench(ENCH_WRETCHED).degree;
+        dam = div_rand_round(dam * (10 - min(degree, 5)), 10);
+    }
+
     if (dam != INSTANT_DEATH && you.species == SP_DEEP_DWARF)
     {
         // Deep Dwarves get to shave any hp loss.
