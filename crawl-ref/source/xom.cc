@@ -456,7 +456,7 @@ static bool _spell_weapon_check(const spell_type spell)
     {
     case SPELL_TUKIMAS_DANCE:
         // Requires a wielded weapon.
-        return player_weapon_wielded();
+        return player_weapon_wielded() && !player_in_branch(BRANCH_ABYSS);
     case SPELL_FIRE_BRAND:
     case SPELL_FREEZING_AURA:
     case SPELL_POISON_WEAPON:
