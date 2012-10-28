@@ -2062,7 +2062,6 @@ bool do_god_gift(bool forced)
                     _inc_gift_timeout(15 + roll_dice(2, 4));
                     you.num_current_gifts[you.religion]++;
                     you.num_total_gifts[you.religion]++;
-                    take_note(Note(NOTE_GOD_GIFT, you.religion));
                 }
                 else
                     mpr("You feel as though nothing has changed.");
