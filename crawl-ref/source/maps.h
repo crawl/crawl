@@ -28,7 +28,6 @@ bool resolve_subvault(map_def &vault);
 const map_def *map_by_index(int index);
 void strip_all_maps();
 int map_count();
-int map_count_for_tag(const string &tag, bool check_depth = false);
 
 const map_def *find_map_by_name(const string &name);
 const map_def *random_map_for_place(const level_id &place, bool minivault);

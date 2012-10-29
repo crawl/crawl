@@ -966,8 +966,8 @@ static bool _rage_hit_victim(bolt &beam, actor* victim, int dmg)
     return true;
 }
 
-bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
-                        string &ammo_name, bool &returning)
+static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
+                                string &ammo_name, bool &returning)
 {
     dungeon_char_type zapsym = NUM_DCHAR_TYPES;
     switch (item.base_type)
@@ -1420,7 +1420,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
     string ammo_name;
 
-    if (setup_missile_beam(&you, pbolt, item, ammo_name, returning))
+    if (_setup_missile_beam(&you, pbolt, item, ammo_name, returning))
     {
         you.turn_is_over = false;
         return false;
@@ -2131,7 +2131,7 @@ bool mons_throw(monster* mons, struct bolt &beam, int msl)
     // FIXME we should actually determine a sensible range here
     beam.range         = you.current_vision;
 
-    if (setup_missile_beam(mons, beam, item, ammo_name, returning))
+    if (_setup_missile_beam(mons, beam, item, ammo_name, returning))
         return false;
 
     beam.aimed_at_spot = returning;

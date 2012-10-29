@@ -869,9 +869,9 @@ static bool _is_exit_stair(const coord_def &c)
 //
 // If fill is non-zero, it fills any disconnected regions with fill.
 //
-int process_disconnected_zones(int x1, int y1, int x2, int y2,
-                               bool choose_stairless,
-                               dungeon_feature_type fill)
+static int _process_disconnected_zones(int x1, int y1, int x2, int y2,
+                                       bool choose_stairless,
+                                       dungeon_feature_type fill)
 {
     memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
     int nzones = 0;
@@ -941,8 +941,8 @@ int process_disconnected_zones(int x1, int y1, int x2, int y2,
 int dgn_count_disconnected_zones(bool choose_stairless,
                                  dungeon_feature_type fill)
 {
-    return process_disconnected_zones(0, 0, GXM-1, GYM-1, choose_stairless,
-                                      fill);
+    return _process_disconnected_zones(0, 0, GXM-1, GYM-1, choose_stairless,
+                                       fill);
 }
 
 static void _fixup_hell_stairs()
@@ -3958,7 +3958,7 @@ static bool _build_vault_impl(const map_def *vault,
     if (!build_only && (placed_vault_orientation != MAP_ENCOMPASS || is_layout)
         && player_in_branch(BRANCH_SWAMP))
     {
-        process_disconnected_zones(0, 0, GXM-1, GYM-1, true, DNGN_MANGROVE);
+        _process_disconnected_zones(0, 0, GXM-1, GYM-1, true, DNGN_MANGROVE);
     }
 
     // Fire any post-place hooks defined for this map; any failure
