@@ -14,6 +14,64 @@ enum option_value {
     OPT_BEFORE_EXPLORE
 };
 
+struct message_filter
+{
+    int             channel;        // Use -1 to match any channel.
+    text_pattern    pattern;        // Empty pattern matches any message
+
+    message_filter(int ch, const string &s)
+        : channel(ch), pattern(s)
+    {
+    }
+
+    message_filter(const string &s) : channel(-1), pattern(s, true) { }
+
+    bool operator== (const message_filter &mf) const
+    {
+        return channel == mf.channel && pattern == mf.pattern;
+    }
+
+    bool is_filtered(int ch, const string &s) const
+    {
+        bool channel_match = ch == channel || channel == -1;
+        if (!channel_match || pattern.empty())
+            return channel_match;
+        return pattern.matches(s);
+    }
+
+};
+
+struct sound_mapping
+{
+    text_pattern pattern;
+    string       soundfile;
+    bool operator== (const sound_mapping &o) const
+    {
+        return pattern == o.pattern && soundfile == o.soundfile;
+    }
+};
+
+struct colour_mapping
+{
+    string tag;
+    text_pattern pattern;
+    int colour;
+    bool operator== (const colour_mapping &o) const
+    {
+        return tag == o.tag && pattern == o.pattern && colour == o.colour;
+    }
+};
+
+struct message_colour_mapping
+{
+    message_filter message;
+    msg_colour_type colour;
+    bool operator== (const message_colour_mapping &o) const
+    {
+        return message == o.message && colour == o.colour;
+    }
+};
+
 class LineInput;
 struct game_options
 {
