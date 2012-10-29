@@ -88,7 +88,6 @@ bool move_top_item(const coord_def &src, const coord_def &dest);
 
 // Get the top item in a given cell. If there are no items, return NULL.
 const item_def* top_item_at(const coord_def& where);
-item_def *corpse_at(coord_def pos, int *num_corpses = NULL);
 
 // Returns whether there is more than one item in a given cell.
 bool multiple_items_at(const coord_def& where);

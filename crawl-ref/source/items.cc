@@ -2114,29 +2114,6 @@ const item_def* top_item_at(const coord_def& where)
     return (link == NON_ITEM) ? NULL : &mitm[link];
 }
 
-item_def *corpse_at(coord_def pos, int *num_corpses)
-{
-    item_def *corpse = NULL;
-    if (num_corpses)
-        *num_corpses = 0;
-    // Determine how many corpses are available.
-    for (stack_iterator si(pos, true); si; ++si)
-    {
-        if (item_is_corpse(*si))
-        {
-            if (!corpse)
-            {
-                corpse = &*si;
-                if (!num_corpses)
-                    return corpse;
-            }
-            if (num_corpses)
-                ++*num_corpses;
-        }
-    }
-    return corpse;
-}
-
 bool multiple_items_at(const coord_def& where)
 {
     int found_count = 0;

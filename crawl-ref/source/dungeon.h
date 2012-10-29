@@ -251,10 +251,6 @@ void dgn_register_place(const vault_placement &place, bool register_vault);
 
 void dgn_seen_vault_at(coord_def p);
 
-int process_disconnected_zones(int x1, int y1, int x2, int y2,
-                               bool choose_stairless,
-                               dungeon_feature_type fill);
-
 // Count number of mutually isolated zones. If choose_stairless, only count
 // zones with no stairs in them. If fill is set to anything other than
 // DNGN_UNSEEN, chosen zones will be filled with the provided feature.

@@ -1105,13 +1105,6 @@ int map_count()
     return vdefs.size();
 }
 
-int map_count_for_tag(const string &tag,
-                      bool check_depth)
-{
-    return _eligible_maps_for_selector(
-        map_selector::by_tag(tag, check_depth, false)).size();
-}
-
 /////////////////////////////////////////////////////////////////////////////
 // Reading maps from .des files.
 
