@@ -3119,6 +3119,7 @@ bool mon_can_be_slimified(monster* mons)
 
     return (!(mons->flags & MF_GOD_GIFT)
             && !mons->is_insubstantial()
+            && !mons_is_tentacle(mons->type)
             && (holi == MH_UNDEAD
                  || holi == MH_NATURAL && !mons_is_slime(mons))
           );
