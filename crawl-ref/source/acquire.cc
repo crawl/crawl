@@ -1619,9 +1619,9 @@ bool acquirement(object_class_type class_wanted, int agent,
         mprf("%-29s[c] Jewellery [d] Book%s",
             you.species == SP_FELID ? "" : "[a] Weapon [b] Armour",
             you.species == SP_FELID ? "" : " [e] Staff");
-        mprf("%-11s[g] Miscellaneous [h] %-5s     [i] Gold %s",
+        mprf("%-11s[g] Miscellaneous %-9s     [i] Gold %s",
             you.species == SP_FELID ? "" : "[f] Wand",
-            you.religion == GOD_FEDHAS ? "Fruit" : "Food ",
+            you.species == SP_MUMMY ? "" : you.religion == GOD_FEDHAS ? "[h] Fruit" : "[h] Food ",
             you.species == SP_FELID ? "" : "[j] Ammunition");
         mpr("What kind of item would you like to acquire? (\\ to view known items)", MSGCH_PROMPT);
 
@@ -1660,7 +1660,8 @@ bool acquirement(object_class_type class_wanted, int agent,
 
         if (you.species == SP_FELID
             && (class_wanted == OBJ_WEAPONS || class_wanted == OBJ_ARMOUR
-             || class_wanted == OBJ_STAVES  || class_wanted == OBJ_WANDS))
+                || class_wanted == OBJ_STAVES  || class_wanted == OBJ_WANDS)
+            || you.species == SP_MUMMY && class_wanted == OBJ_FOOD)
         {
             class_wanted = OBJ_RANDOM;
         }
