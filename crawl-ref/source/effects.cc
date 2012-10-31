@@ -1004,13 +1004,21 @@ void yell(bool force)
     {
     case '!':    // for players using the old keyset
     case 't':
-        mprf(MSGCH_SOUND, "You %s for attention!", shout_verb.c_str());
+        mprf(MSGCH_SOUND, "You %s%s!",
+             shout_verb.c_str(),
+             you.berserk() ? "wildly" : " for attention");
         noisy(noise_level, you.pos());
         you.turn_is_over = true;
         return;
 
     case 'f':
     case 's':
+        if (you.berserk())
+        {
+            canned_msg(MSG_TOO_BERSERK);
+            return;
+        }
+
         mons_targd = MHITYOU;
         if (keyn == 'f')
         {
@@ -1023,6 +1031,12 @@ void yell(bool force)
         break;
 
     case 'w':
+        if (you.berserk())
+        {
+            canned_msg(MSG_TOO_BERSERK);
+            return;
+        }
+
         mpr("Wait here!");
         mons_targd = MHITNOT;
         _set_allies_patrol_point();
@@ -1086,14 +1100,14 @@ void yell(bool force)
 
             if (cancel)
             {
-                mpr("Yeah, whatever.");
+                canned_msg(MSG_NOTHING_THERE);
                 return;
             }
         }
         break;
 
     default:
-        mpr("Okely-dokely.");
+        canned_msg(MSG_OK);
         return;
     }
 
