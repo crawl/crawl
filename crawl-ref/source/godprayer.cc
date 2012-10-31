@@ -86,7 +86,8 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
     item_def& wpn = *you.weapon();
 
     if (wpn.base_type != OBJ_WEAPONS
-        || (is_range_weapon(wpn) && brand != SPWPN_HOLY_WRATH)
+        || (is_range_weapon(wpn)
+            && (brand != SPWPN_HOLY_WRATH || wpn.sub_type == WPN_BLOWGUN))
         || is_artefact(wpn))
     {
         return false;
