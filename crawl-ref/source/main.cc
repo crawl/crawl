@@ -3257,6 +3257,9 @@ void world_reacts()
         mpr("Outside, the world ends.");
         mpr("Sorry, but your quest for the Orb is now rather pointless. "
             "You quit...");
+        // Please do not give it a custom ktyp or make it cool in any way
+        // whatsoever, because players are insane.  Usually, not being dragged
+        // down by sanity is good, but this is not the case here.
         ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_QUITTING);
     }
 
