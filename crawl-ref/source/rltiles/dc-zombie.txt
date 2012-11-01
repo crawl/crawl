@@ -31,6 +31,11 @@ zombie_griffon MONS_ZOMBIE_GRIFFON
 zombie_quadruped_winged MONS_ZOMBIE_QUADRUPED_WINGED
 zombie_harpy MONS_ZOMBIE_HARPY
 zombie_octopode MONS_ZOMBIE_OCTOPODE
+%rim 0
+turtle MONS_ZOMBIE_TURTLE
+spiked_turtle MONS_ZOMBIE_SPIKED_TURTLE
+crab MONS_ZOMBIE_CRAB
+%rim 1
 
 %sdir mon/undead/skeletons
 ## Skeletons
