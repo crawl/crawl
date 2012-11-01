@@ -686,6 +686,11 @@ void do_crash_dump()
     debug_mons_scan();
 #endif
 
+    // Dump Webtiles message buffer.
+#ifdef USE_TILE_WEB
+    tiles.dump();
+#endif
+
     // Now a screenshot
     fprintf(file, "\nScreenshot:\n");
     fprintf(file, "%s\n", screenshot().c_str());

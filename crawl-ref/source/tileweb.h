@@ -141,6 +141,8 @@ public:
     void set_ui_state(WebtilesUIState state);
     WebtilesUIState get_ui_state() { return m_ui_state; }
 
+    void dump();
+
 protected:
     int m_sock;
     int m_max_msg_size;

@@ -422,6 +422,11 @@ bool TilesFramework::prefix_popped()
     return m_prefixes.empty();
 }
 
+void TilesFramework::dump()
+{
+    fprintf(stderr, "Webtiles message buffer: %s\n", m_msg_buf.c_str());
+}
+
 void TilesFramework::_send_version()
 {
 #ifdef WEB_DIR_PATH
