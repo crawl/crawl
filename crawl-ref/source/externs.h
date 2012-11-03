@@ -42,6 +42,9 @@ struct tile_flavour
 
     // Used as a random value or for special cases e.g. (bazaars, gates).
     unsigned short special;
+
+    tile_flavour(): floor_idx(0), wall_idx(0), feat_idx(0),
+                    floor(0), wall(0), feat(0), special(0) {}
 };
 
 // A glorified unsigned int that assists with ref-counting the mcache.
