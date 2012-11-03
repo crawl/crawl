@@ -2804,6 +2804,8 @@ void handle_starvation()
         {
             mpr("You have starved to death.", MSGCH_FOOD);
             ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_STARVATION);
+            if (!you.dead) // if we're still here...
+                set_hunger(HUNGER_DEFAULT, true);
         }
     }
 }
