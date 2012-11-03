@@ -425,6 +425,7 @@ bool TilesFramework::prefix_popped()
 void TilesFramework::dump()
 {
     fprintf(stderr, "Webtiles message buffer: %s\n", m_msg_buf.c_str());
+    fprintf(stderr, "Webtiles prefix count: %d\n", (int) m_prefixes.size());
 }
 
 void TilesFramework::_send_version()
