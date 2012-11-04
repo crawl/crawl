@@ -849,7 +849,8 @@ static void _display_temperature()
 
     result += "\n";
 
-    result += "You get hot in tense situations, when berserking, or when you enter lava. You cool down when your rage ends or when you enter water.";
+    result += "You get hot in tense situations, when berserking, or when you enter lava. You \ncool down when your rage ends or when you enter water.";
+    result += "\n";
     result += "\n";
 
     result += _lava_orc_Ascreen_footer;
