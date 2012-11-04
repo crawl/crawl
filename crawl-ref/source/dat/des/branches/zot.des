@@ -9,6 +9,22 @@
 #
 ##############################################################################
 
+{{
+-- Stuff for st's various vaults.
+function st_zot_vaults_setup(e)
+    e.tags("no_item_gen")
+    e.depth("Zot:1-4")
+    e.kmons("D = mottled dragon / dragon w:25 / ice dragon w:25 /\
+               storm dragon w:20 / shadow dragon w:20 / golden dragon /\
+               iron dragon w:5 / quicksilver dragon w:5 / bone dragon w:5 /\
+               lindwurm w:2 / fire drake w:2 / death drake w:2 /\
+               swamp dragon w:5")
+    e.kmons("d = base draconian / nonbase draconian")
+    e.kmons("Y = patrolling golden dragon")
+    e.kitem("Y = |")
+end
+}}
+
 ##############################################################################
 ##############################################################################
 #
@@ -1025,6 +1041,254 @@ c1*o*1c
 c11>11c
 cccnccc
    @
+ENDMAP
+
+#################
+# Dragon hoards.
+#
+# These range from small, essentially just flavour vaults,
+# to large vaults with many dragons.
+NAME:   st_single_dragon_hoard_1
+TAGS:   extra
+: st_zot_vaults_setup(_G)
+MAP
+ xxxxx
+xx$x$xx
+xx**xxx
+x$xY*$x
+xx$*$xx
+ xx@xx
+ENDMAP
+
+NAME:   st_single_dragon_hoard_2
+TAGS:   extra
+: st_zot_vaults_setup(_G)
+MAP
+xxxxx
+xx*Yx
+x.$*x
+x.xxx
+x..xx
+xx@xx
+ENDMAP
+
+NAME:   st_single_dragon_hoard_3
+TAGS:   extra
+: st_zot_vaults_setup(_G)
+MAP
+xxxxxxxx
+xxxx$*xx
+xx.$$Y*x
+x...$*$x
+xx.xx$xx
+x...xxxx
+xxx..xxx
+xxxx@xxx
+ENDMAP
+
+NAME:   st_single_dragon_hoard_4
+TAGS:   extra
+: st_zot_vaults_setup(_G)
+MAP
+xxxxxxxxx
+@.xxx**xx
+xx..x$Y*x
+x.xx.$$xx
+xxx.xx$xx
+xxxxxxxxx
+ENDMAP
+
+NAME:   st_small_dragon_hoard_1
+TAGS:   extra
+KITEM:  D = $
+: st_zot_vaults_setup(_G)
+MAP
+xxxxxxxx
+xxx*$xDx
+xx*Y*x$x
+xxx*$$xx
+xD$$$x.x
+xx$...xx
+x.x....x
+xx....xx
+xxx..xxx
+xxx@xxxx
+ENDMAP
+
+NAME:   st_small_dragon_hoard_2
+TAGS:   extra
+KITEM:  D = $
+: st_zot_vaults_setup(_G)
+MAP
+xxxxxxxxxx
+xxx$$$xxxx
+xx$x*$$xxx
+x*$*Y*xDxx
+xD$x*$$$*x
+xxx$$$$xxx
+xxxx@xxxxx
+ENDMAP
+
+NAME:   st_small_dragon_hoard_3
+TAGS:   extra
+KITEM:  D = $
+: st_zot_vaults_setup(_G)
+MAP
+xxxxxxxxxxxxxxxx
+xxD$$xxD..xxx$xx
+xx$x$$xx.x.x$x*x
+x$*Y*$...xx.$$Yx
+xx$*x$xx...xx$*x
+xxxDxxx..xxxD$xx
+xxxxxxx@x.xxxxxx
+ENDMAP
+
+NAME:   st_small_dragon_hoard_4
+TAGS:   extra
+KITEM:  D = $
+: st_zot_vaults_setup(_G)
+MAP
+xxx@x.xxxxxxxxxxxx
+xx.x.xxxxxxxxx.$xx
+xxx..xxxxxxx..x$Dx
+xxxx...xxx..xx$**x
+xDxxxx....xxxDxYxx
+x**x$x.x.x..xxxx*x
+xxY$..xxxxx..xxxxx
+xD*$xxxxxxxx...xxx
+xxxxxxxxxxxx.xx@xx
+ENDMAP
+
+NAME:   st_small_dragon_hoard_5
+TAGS:   extra
+KITEM:  D = $
+: st_zot_vaults_setup(_G)
+MAP
+xx..xxxxxxxxxxxxxx
+x.xxxxxxxD*lxD*xxx
+@x.xxxxx$xl$$l$**x
+xx...xxx*$lllllYxx
+..xx..xxx$.llll*Dx
+xxxxx.xxxxx.llllxx
+xxxxx...xx..lxllxx
+xxxxxxx....xxlxxxx
+xxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   st_large_dragon_hoard_1
+SUBST:  D = DD$
+KITEM:  D = $
+: st_zot_vaults_setup(_G)
+MAP
+xxxxxxx@xxxxxxxx
+xxxx.x...lxxlxxx
+xxx|x.llllxl.xxx
+xxD$llxlllllx..x
+xDxllxl|DDll....
+x.lllD|Y*Dlllx.x
+.xlxllD*Dlll$$xx
+xx.llxllllxx*Dxx
+xxx...xll.$Dxxxx
+xxxxxx...xxxxxxx
+xxxxxxx@xxxxxxxx
+ENDMAP
+
+NAME:   st_large_dragon_hoard_2
+SUBST:  D = D$
+KITEM:  D = $
+: st_zot_vaults_setup(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxx
+xxxxD$$Dxxxxxxxxxxxxxxx
+xxxY*xx$$D$$xxxx...xxxx
+xxx|$$|D$x*$$.x..x...xx
+xxD$x|Y|D$Y*$...xxx.$$x
+xxx$$D*$x$|$xx..xxx*$xx
+xx$D$|$D$*xxxx.xxD|Y*xx
+xxx$xY*$*Dxxx..xx$x|xDx
+xxxxx|$D$xxx....xxD$Dxx
+xxxxxxxxxxx..xx.xxxxxxx
+xxxxxxxxxx..xxx...xxxxx
+xxxxxxxx..x@xxxx.x..xxx
+ENDMAP
+
+NAME:   st_large_dragon_hoard_3
+SUBST:  D = DDD$
+KITEM:  D = $
+: st_zot_vaults_setup(_G)
+MAP
+x.xx@xxxxxx.xxxxxxxxxxx
+.xx...xxxxxx.xxxxxxxxxx
+...xx..x......xxx....xx
+xxxxxxx...xxxx....xx..x
+xD$*xx..xxxx...xxxx$$xx
+xxD$xxxx.x..xxxxxx$*$xx
+xDx$$.x...x...xxxD*Y*Dx
+xxxxxx..xxxxx..xxx$|$xx
+xxxlx.x.lxlxxx.xxxx$$*x
+xxlxll.lllxlxx..xxxDxDx
+xxllxl$$Dlllxxx..xxx*xx
+xxxlllxD*Dlxlxxx..xxxxx
+xxlllDD|Y*llxxxxxx.xxxx
+xxxxlx*D|Dxlllxxx....x.
+xlllllD|Dlllxlxxx.xxx..
+xxlxllllxllllllxxx.x.xx
+xxxllxxlllxxlxxxxx..xxx
+xxxxxxxxxxxxxxxx@.xxxxx
+ENDMAP
+
+# draconians are a bit more organised with their hoards.
+NAME:   st_large_dragon_hoard_4
+SUBST:  D = DDD$
+KITEM:  D = $
+KMONS:  1 = nonbase draconian band
+: st_zot_vaults_setup(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x$$$$xxxx.......xxxxxxxxxxxxxxxx
+x$$$$xx......1....x*$*xxxx...xxx
+xxx+xx..x.........+$|$xxx.....xx
+xxx....xxxx......xx*$*xxx.xx...x
+xx..xxxxxxxxxx..xxxxxxxx.xxx..xx
+xxx..xxxD*Dxxxx...xxxxx..xxxx..x
+xDxx.xx$*Y*$Dxxxx..x....xxxx..xx
+xD$x.xxD$|D$$*xxxx...xxxxxxx..xx
+xxx..xxx*$$$$$xxxxxxx$Dxxxx..xxx
+xx.xxxxxxD$.1..x|*|xD|Dxx...xxxx
+xxx..xxxxxx....+*|*xxDxx.x.xxxxx
+xxxx.....x....xx|*|xxxx.x.xxxxxx
+xxxxxx......xxxxxxxxx..x...xxxxx
+xxxxxxxxxxxxxxxxxxxx.xxx@xx.xxxx
+ENDMAP
+
+# A mighty hoard indeed...
+# Intented to be an extreme visual spectacle.
+# Obviously lowering the amount of gold in stacks in necessary.
+# There's about 800 gold.
+NAME:   st_grand_hoard_of_tiamat
+TAGS:   no_monster_gen
+KMONS:  1 = patrolling Tiamat w:100 / patrolling golden dragon w:1
+SUBST:  D = DDD$
+KITEM:  D = $
+KITEM:  $ = gold q:1
+: st_zot_vaults_setup(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxx*x$$x$x$$xxxxxxxxx
+xxxxx*xxD*$xxD$$$xD$x$xxxxx
+xxx$xD$x$$$$$$x$*$$$$x$$xxx
+xx$$x$$$*xx$$$$*Yx$$$$$xxxx
+xx$x*$x*Y*$D$$$$*$$xD$x$*xx
+xxxxD$x$*$$$D|DD$$$x$$$$Dxx
+xx$$x$$$$$DD*|*$DD$$$x$$xx.
+xxx$$$$D$$$||1||$$$$$$$$$..
+xx$x$x$$$$$D*|*$D$D$x$$$x.@
+xxxD*$$x$*$D$|DD$$x*$$$xxx.
+xx*xx$$$xY*xxD$$$$*Y*xxD$xx
+xxx$$$x$$*$$$$Dx$xx*$x$$xxx
+xxxxx$$xDxx$$x$$x$$x$$xxxxx
+xxxxxxxxx$$x$$xx*Dxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
