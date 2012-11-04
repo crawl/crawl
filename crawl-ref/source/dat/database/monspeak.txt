@@ -17,12 +17,6 @@
 # monsters are ever given names like "yells" or "begs".
 ############################################################
 %%%%
-_ATTACK_
-
-ATTACK
-
-DIE
-%%%%
 _shouts_
 
 shouts
@@ -68,20 +62,6 @@ supplicates
 w:1
 supplicates abjectly
 %%%%
-_almost_
-
-almost
-
-nearly
-%%%%
-_moans_
-
-moans
-
-wails
-
-cries
-%%%%
 _mutters_
 
 mutters
@@ -91,36 +71,6 @@ mumbles
 w:2
 susurrates
 %%%%
-_blubbers_
-
-blubbers
-
-cries
-%%%%
-_Mommeee_
-
-Mommeee
-
-Daddeee
-
-Meeeeep
-
-Help meeeeeeee
-
-Eeeeekkkk
-
-Oh nooooooo
-
-Waaaaaa
-%%%%
-_rattled_
-
-rattled
-
-scared stiff
-
-petrified
-%%%%
 _pointless_
 
 pointless
@@ -128,24 +78,6 @@ pointless
 senseless
 
 useless
-%%%%
-_ploy_
-
-ploy
-
-trick
-
-gambit
-
-trap
-%%%%
-_smoke_or_steam_
-
-smoke
-
-steam
-
-mist
 %%%%
 ############################################################
 # Library of speeches for types of monsters, like priests,
@@ -351,7 +283,7 @@ _friendly_imp_rare_
 
 @The_monster@ says, "You're so much nicer than my last boss."
 
-@The_monster@ shouts, "Stay back! It could be a @_ploy_@!"
+@The_monster@ shouts, "Stay back! It could be a [ploy|trick|gambit|trap]!"
 
 @The_monster@ shouts, "Over here! I found it!"
 
@@ -484,7 +416,7 @@ VISUAL:@The_monster@ lashes @possessive@ tail.
 
 VISUAL:@The_monster@ grinds @possessive@ teeth.
 
-VISUAL:@The_monster@ breathes @_smoke_or_steam_@ at @foe@.
+VISUAL:@The_monster@ breathes [smoke|steam|mist] at @foe@.
 %%%%
 _hostile_imp_rare_
 
@@ -777,7 +709,7 @@ VISUAL:@The_monster@ tries to hide somewhere.
 %%%%
 _friendly_fleeing_rare_
 
-@The_monster@ @_shouts_@, "WAIT FOR ME, @player_name@! Could you help me?"
+@The_monster@ @_shouts_@, "WAIT FOR ME, @CAPS@ @player_name@ @NOCAPS@! Could you help me?"
 
 @The_monster@ cries, "Don't forget your friends!"
 
@@ -800,7 +732,7 @@ w:20
 @The_monster@ @_yells_@, "Help!"
 
 # This one won't work for nagas.
-VISUAL:@The_monster@ @_almost_@ stumbles in trying to escape.
+VISUAL:@The_monster@ [almost|nearly] stumbles in trying to escape.
 
 @The_monster@ prays for help.
 
@@ -814,7 +746,7 @@ VISUAL:@The_monster@ @_almost_@ stumbles in trying to escape.
 
 @The_monster@ howls in fear.
 
-@The_monster@ @_moans_@, "Oh dear! Oh dear!"
+@The_monster@ [moans|wails|cries], "Oh dear! Oh dear!"
 
 @The_monster@ @_begs_@ @to_foe@, "Please don't kill me!"
 
@@ -830,11 +762,11 @@ _fleeing_humanoid_rare_
 
 @The_monster@ shouts @at_foe@, "No! I'll never do that again!"
 
-@The_monster@ @_blubbers_@, "@_Mommeee_@!"
+@The_monster@ [blubbers|cries], "[Mommeee|Daddeee|Meeeeep|Help meeeeeeee|Eeeeekkkk|Oh nooooooo|Waaaaaa]!"
 
 @The_monster@ @_begs_@ @to_foe@, "Please! I have a lot of children!"
 
-VISUAL:@The_monster@ looks really @_rattled_@.
+VISUAL:@The_monster@ looks really [rattled|scared stiff|petrified].
 
 @The_monster@ weeps quietly.
 
@@ -849,7 +781,7 @@ VISUAL:@The_monster@ looks really @_rattled_@.
 VISUAL:@The_monster@ tries to recover @possessive@ lost courage.
 ## END fleeing humanoid ##
 %%%%
-friendly_family
+_friendly_family_
 
 @The_monster@ says, "I like you, cousin!"
 
@@ -864,7 +796,7 @@ friendly_family
 default friendly related humanoid
 
 w:2
-@friendly_family@
+@_friendly_family_@
 
 @default friendly humanoid@
 %%%%
@@ -1182,7 +1114,7 @@ Staves player ghost
 
 @The_monster@ says, "I excel at staving off weak adventurers."
 
-VISUAL:@The_monster@ twirls @possessive@ staff.
+VISUAL:@The_monster@ twirls @possessive@ quarterstaff.
 
 @The_monster@ threatens to break your skull. @player_only@
 %%%%
@@ -1264,32 +1196,17 @@ Shields player ghost
 
 @The_monster@ says, "You can hit me, but you can't hurt me."
 %%%%
-Traps & Doors player ghost
+Traps player ghost
 
 @The_monster@ says @to_foe@, "I bet you don't even know how a teleportation trap works."
 
-@The_monster@ says @to_foe@, "You can't escape! I know where all the passages lead!"
-
 VISUAL:@The_monster@ quickly assembles and disassembles an arrow trap before your eyes, then grins. @player_only@
-
-@The_monster@ says @to_foe@, "With tracks like that, I knew you had to be a @foe_genus@."
-
-w:1
-@The_monster@ giggles, and steps all the way around you, then returns to @possessive@ position; suddenly you realise that this is only a game to it.
-
-w:1
-@The_monster@ whirls like a shadow given life, stepping faster than you can keep track, before standing precisely still, watching, waiting for your next assault.
 
 w:1
 VISUAL SPELL:@The_monster@ produces a bizarre clockwork butterfly, ethereal and luminous, from @possessive@ pack, and hurls it at you - so perfect is its making that it comes to life and darts away before touching you.
 
 w:1
 @The_monster@ regards you luminously, comprehending your nature, and seems resigned. @Subjective@ shouts, "Do you know what I know, @foe@..."
-
-w:1
-@The_monster@ whispers, "I have found a way out of unlife even Necromancers could not discover."
-
-@The_monster@ strategises, and dematerialises before your eyes, reforming brighter.
 
 @The_monster@ rises to @possessive@ full height, drawing on the power of @possessive@ mind.
 
@@ -1481,6 +1398,8 @@ Ashenzari player ghost
 @The_monster@ whispers: "Through my death, I saw my mistakes, and the mistakes of many more..."
 
 @The_monster@ says with laughter: "And yet I knew I would end up like that..."
+
+@The_monster@ promises, "I will read your future in your entrails."
 %%%%
 Beogh player ghost
 
@@ -2184,6 +2103,9 @@ Xom Crazy Yiuf
 # Ralph Waldo Emerson
 @The_monster@ says, "No facts are to me sacred; none are profane; I simply experiment, an endless seeker, with no past at my back."
 
+# Robert Ingersoll
+@The_monster@ says, "The present is the child, and the necessary child, of all the past, and the mother of all the future."
+
 VISUAL:@The_monster@ considers dialectic materialism.
 
 VISUAL:@The_monster@ ponders an existential dilemma.
@@ -2546,13 +2468,13 @@ action
 ############ DISSOLUTION ### a sentient jelly who used to be human a long time ago
 Dissolution
 
-@dissolution_common@
+@_dissolution_common_@
 
 w:5
-@dissolution_speech@
+@_dissolution_speech_@
 %%%%
 # Dissolution non-speech
-dissolution_common
+_dissolution_common_
 
 @The_monster@ gurgles.
 
@@ -2564,7 +2486,7 @@ VISUAL:@The_monster@ jiggles.
 
 VISUAL:@The_monster@ wobbles.
 %%%%
-dissolution_speech
+_dissolution_speech_
 
 @The_monster@ says, "Join with me for eternity!"
 
@@ -2576,9 +2498,9 @@ dissolution_speech
 
 @The_monster@ says, "Acid to acid, slime to slime."
 
-@dissolution_rare@
+@_dissolution_rare_@
 %%%%
-dissolution_rare
+_dissolution_rare_
 
 @The_monster@ says, "We come from slime, we turn to slime."
 
@@ -2634,12 +2556,6 @@ Elven Halls Donald
 
 w:50
 @_generic_Donald_@
-
-@The_monster@ says, "They're so pretty, I think it must be a glamour."
-
-@The_monster@ says, "This place goes on forever. I hate that."
-
-@The_monster@ says, "This place goes down forever. Maybe there are turtles at the bottom."
 
 @The_monster@ says, "Why would you have your front door in a mine? Stupid."
 
@@ -2757,8 +2673,6 @@ w:50
 @The_monster@ says, "I hate getting stuck."
 
 @The_monster@ says, "Dancing spiders? With no cane or a top hat?"
-
-@The_monster@ says, "Can't they spell 'tarantula' right?"
 
 @The_monster@ says, "Something's up my trousers! Aieee!"
 
@@ -2991,7 +2905,7 @@ w:50
 
 @The_monster@ says, "The Crypt, the Tomb, what's next? The Coffin?"
 %%%%
-Lab Donald
+Labyrinth Donald
 
 w:50
 @_generic_Donald_@
@@ -3051,6 +2965,8 @@ w:50
 @The_monster@ says, "Damn, I left my potions of berserk rage outside."
 
 @The_monster@ says, "If I give you twenty gold pieces, can you get rid of this nasty case of scales I've got?"
+
+@The_monster@ covers @possessive@ ears. "Shut up!"
 %%%%
 the Shining One Donald
 
@@ -3335,6 +3251,8 @@ w:50
 @The_monster@ says, "You think you're the Messiah? I met another guy who thought that, too."
 
 @The_monster@ says, "Messiah? I hate messiahs."
+
+@The_monster@ bows and submits to you. "Nah, just kidding."
 %%%%
 Jiyva Donald
 
@@ -3769,7 +3687,7 @@ _Duvessa_rare_
 
 @The_monster@ says @to_foe@, "Beauty is only skin deep, and my weapons penetrate much further than that."
 
-@The_monster@ says @to_foe@, "Practice, practice, practice! One day you'll be as good as me." @player_only@
+@The_monster@ says @to_foe@, "Practise, practise, practise! One day you'll be as good as me." @player_only@
 %%%%
 Duvessa_Dowan_dies
 
@@ -4647,7 +4565,7 @@ Kirke
 
 VISUAL:@The_monster@ splashes a potion @at_foe@.
 
-VISUAL:@The_monster@ throws some @strange@ powder @at_foe@.
+VISUAL:@The_monster@ throws some @_strange_@ powder @at_foe@.
 
 @The_monster@ says @to_foe@, "Odis was a nice man, you're awful."
 
@@ -4664,7 +4582,7 @@ VISUAL:@The_monster@ throws some @strange@ powder @at_foe@.
 @_wizard_common_spell_@
 @_fake_spell_effect_@
 %%%%
-strange
+_strange_
 
 strange
 
@@ -5820,7 +5738,7 @@ VISUAL:@The_monster@ bares @possessive@ teeth.
 
 @The_monster@ shouts @at_foe@, "Now you die!"
 
-@The_monster@ shouts @at_foe@, "@_ATTACK_@!!!"
+@The_monster@ shouts @at_foe@, "[ATTACK|DIE]!!!"
 
 @The_monster@ shouts @at_foe@, "Get ready for death!"
 
@@ -6388,6 +6306,11 @@ __NONE
 good_god_neutral_holy_being_reaction
 
 VISUAL:@The_monster@ is calmed by your holy aura.
+%%%%
+good_god_neutral_holy_being_reaction_humanoid
+
+w:5
+@good_god_neutral_holy_being_reaction@
 
 VISUAL:@The_monster@ relaxes @possessive@ fighting stance.
 
@@ -6404,6 +6327,11 @@ good_god_neutral_holy_being_speech
 good_god_nonneutral_holy_being_reaction
 
 VISUAL:@The_monster@ ignores your imperfect holy aura.
+%%%%
+good_god_nonneutral_holy_being_reaction_humanoid
+
+w:5
+@good_god_nonneutral_holy_being_reaction@
 
 VISUAL:@The_monster@ frowns, and retains @possessive@ fighting stance.
 
@@ -6999,7 +6927,7 @@ avoiding mutations.
 just saying no to mutations.
 
 # respecting intelligent beings
-proper burial practice.
+proper burial practise.
 
 # demons
 not dealing with demons.
@@ -7024,9 +6952,9 @@ the importance of the Law.
 # anti-mutation
 mutations, and how to avoid them.
 
-potions of Mutation - the devil's brew!
+potions of mutation - the devil's brew!
 
-Neqoxecs and Cacodemons - may they all be destroyed!
+neqoxecs and cacodemons - may they all be destroyed!
 
 # respecting intelligent beings
 a proper diet respecting intelligent beings.

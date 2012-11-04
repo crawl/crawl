@@ -234,7 +234,7 @@ ziggurat cannot be re-entered.
 %%%%
 Labyrinth
 
-The Labyrinth is a vast and complex maze designed by subtle and malicious minds
+The Labyrinth is a large, complex maze designed by subtle and malicious minds
 for reasons long lost to history. Old stories say that the labyrinth was
 constructed as a prison for a fearsome minotaur. More recent stories say this
 beast dwells there still, guarding the labyrinth's sole exit — as well as a

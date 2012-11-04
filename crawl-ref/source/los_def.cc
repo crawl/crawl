@@ -6,6 +6,7 @@
 #include "AppHdr.h"
 
 #include "los_def.h"
+#include "losglobal.h"
 
 #include "coord-circle.h"
 

@@ -7,7 +7,6 @@
 #ifndef TILEMCACHE_H
 #define TILEMCACHE_H
 
-#include "debug.h"
 #include <vector>
 
 struct dolls_data;
@@ -74,7 +73,7 @@ public:
     bool empty() { return m_entries.empty(); }
 
 protected:
-    std::vector<mcache_entry*> m_entries;
+    vector<mcache_entry*> m_entries;
 };
 
 // The global monster cache.

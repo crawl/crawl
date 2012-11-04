@@ -139,10 +139,10 @@ A high Shields skill helps you block melee attacks or projectiles (both magical
 and non-magical) with your equipped (or a magical) shield. Some attacks, such
 as penetrating bolts, cannot be blocked at all.
 %%%%
-Traps & Doors
+Traps
 
-A character trained in Traps & Doors will be more observant to his or her
-surroundings and be quicker in noticing traps and secret doors.
+A character trained in Traps will be more observant to his or her surroundings
+and be quicker in noticing traps, as well as more able to disarm them.
 %%%%
 Unarmed Combat
 

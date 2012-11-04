@@ -42,7 +42,8 @@ enum xom_event_type
     XOM_GOOD_SCENERY,
     XOM_GOOD_SNAKES,
     XOM_GOOD_INNER_FLAME,       //  20
-    XOM_LAST_GOOD_ACT = XOM_GOOD_INNER_FLAME,
+    XOM_GOOD_ENCHANT_MONSTER,
+    XOM_LAST_GOOD_ACT = XOM_GOOD_ENCHANT_MONSTER,
 
     // bad acts
     XOM_BAD_NOTHING,  // bad act suppressed
@@ -63,9 +64,12 @@ enum xom_event_type
     XOM_BAD_TORMENT,
     XOM_BAD_ANIMATE_WPN,
     XOM_BAD_SUMMON_DEMONS,
-    XOM_BAD_PSEUDO_BANISHMENT,  //  39
-    XOM_BAD_BANISHMENT,
-    XOM_LAST_BAD_ACT = XOM_BAD_BANISHMENT,  // 40
+    XOM_BAD_PSEUDO_BANISHMENT,
+    XOM_BAD_BANISHMENT,         //  40
+    XOM_BAD_NOISE,
+    XOM_BAD_ENCHANT_MONSTER,
+    XOM_BAD_BLINK_MONSTERS,
+    XOM_LAST_BAD_ACT = XOM_BAD_BLINK_MONSTERS,
 
     XOM_PLAYER_DEAD = 100, // player already dead (shouldn't happen)
     NUM_XOM_EVENTS
@@ -75,17 +79,18 @@ void xom_tick();
 void xom_is_stimulated(int maxinterestingness,
                        xom_message_type message_type = XM_NORMAL,
                        bool force_message = false);
-void xom_is_stimulated(int maxinterestingness, const std::string& message,
+void xom_is_stimulated(int maxinterestingness, const string& message,
                        bool force_message = false);
 bool xom_is_nice(int tension = -1);
 int xom_acts(bool niceness, int sever, int tension = -1, bool debug = false);
-const std::string describe_xom_favour();
+const string describe_xom_favour();
 
 static inline int xom_acts(int sever, int tension = -1)
 {
     return xom_acts(xom_is_nice(tension), sever, tension);
 }
 
+int xom_maybe_reverts_banishment(bool xom_banished = true, bool debug = false);
 void xom_check_lost_item(const item_def& item);
 void xom_check_destroyed_item(const item_def& item, int cause = -1);
 void xom_death_message(const kill_method_type killed_by);

@@ -4,6 +4,7 @@
 #include "l_libs.h"
 
 #include "mapdef.h"
+#include "mon-ench.h"
 
 /////////////////////////////////////////////////////////////////////
 // mapgrd and mapgrd_col handling (i.e. map_lines in a metatable)

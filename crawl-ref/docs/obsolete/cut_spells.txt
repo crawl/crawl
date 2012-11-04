@@ -600,7 +600,7 @@ Spell definitions cut from the code:
      false,
      true
 },
-   
+
 {
     SPELL_BURN_SPELLBOOK, "Burn Spellbook",
     SPTYP_ENCHANTMENT,

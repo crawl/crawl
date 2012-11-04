@@ -529,21 +529,20 @@ MONS:  small skeleton / small zombie
 KFEAT: v = w:5 ~ / .
 KITEM: v = $ / %
 SUBST: $ = $.*|
-SUBST: + = +=
 MAP
     ccccc
  ccccv.vcccc
- c$.=.Y..=$c
+ c$.+.Y..+$c
  c.ccv.vcc.c
  c+ccc+ccc+c
  c..$c.c$..c
 @n.1.c.c.1.c
  c$.$c.c$.$c
- ccc=c.ccccc
+ ccc+c.ccccc
  cccZcZc$c
- c.=.cZczc
- cZcccZc=c
- c.=2+Z+2c
+ c.+.cZczc
+ cZcccZc+c
+ c.+2+Z+2c
  cccccZccc
      c.c
      c@c
@@ -895,7 +894,7 @@ MAP
      xxc/;cccv...WWWb.b.b.bWWW...vccc;/cxx
      xxc;;;ccvv..WWWWWWWWWWWWW..vvcc;;;cxx
 xxxxxxxc;;;/ccvv..WWWWWWWWWWW..vvcc/;;;cxxxxxxx
-xxccccccc=cccccv...............vccccc=cccccccxx
+xxccccccc+cccccv...............vccccc+cccccccxx
 xxcU......cxxxxvv....2...2....vvxxxxc......Ucxx
 xxc..3....cxxxxxvv.....6.....vvxxxxxc....3..cxx
 xxc.......cxxxxxvvv.6.....6.vvvxxxxxc.......cxx
@@ -909,7 +908,7 @@ xxxxxxc;cxxxxxxxvc.U.cc+cc.U.cvxxxxxxxc;cxxxxxx
     xxc;cccccccG.......C.......Gccccccc;cxx
     xxc.c;;;+;ccc56.........65cccxxxxcc.cxx
   xxxxc;c/;;c;ccc5...........5cccxxxxcc;cxxxx
-xxxxccc+ccc/c;=7+.............+7ccccccc+cccxxxx
+xxxxccc+ccc/c;+7+.............+7ccccccc+cccxxxx
 xxccc.5.5.ccccccc..c.......c..ccccccc.5.5.cccxx
 xxc7+.....+7ccc7+.............+7ccc7+.....+7cxx
 xxccc.....ccccccc..c.......c..ccccccc.....cccxx
@@ -919,7 +918,7 @@ xxc7+.....+7ccc7+.............+7ccc7+.....+7cxx
 xxccc.....ccccccc..c6.6.6.6c..ccccccc.....cccxx
 xxc7+.....+7ccc7+.............+7ccc7+.....+7cxx
 xxccc.5.5.ccccccc..c.......c..ccccccc.5.5.cccxx
-xxxxccc+cccxxxc7+.............+7=;;cccc+cccxxxx
+xxxxccc+cccxxxc7+.............+7+;;cccc+cccxxxx
    xxc...cxxxxccc..c.......c..ccc;/ccc...cxx
    xxc.4.cxxxxc7+.............+7cccccc.4.cxx
    xxc./.cxxxxccc..c.......c..cccxxxxc./.cxx
@@ -970,11 +969,12 @@ KFEAT:  h = .
 KMONS:  h = titan zombie/dragon zombie/golden dragon zombie/ghoul
 # red metal walls
 COLOUR: = = red
+SUBST:  = = +
 COLOUR: r = red
 TILE:   r = wall_hell
 SUBST:  r = c
 # emergency exits; most are closed
-NSUBST: ? = 3:= / *:v
+NSUBST: ? = 3:+ / *:v
 SUBST:  / = |**
 SUBST:  * = *%
 SUBST:  % = %$
@@ -1172,24 +1172,24 @@ KMONS:  X = w:1 curse skull / w:19 flaming corpse
 KMONS:  t = w:20 hell knight / smoke demon / red devil
 KMONS:  X = w:1 curse skull / w:19 hell knight
 : end
-####### Randomisation of secret doors
+####### Randomisation of doors
 SUBST:  K : Kvvv
-NSUBST: K = 1:= / *:v
-NSUBST: ' = 1:= / *:v
-NSUBST: " = 1:= / *:v
+NSUBST: K = 1:+ / *:v
+NSUBST: ' = 1:+ / *:v
+NSUBST: " = 1:+ / *:v
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 vccccccccccccccccccccccccc......"...Bvvvvvvvvvvvvvvvvvvvvvv
 vc..D..c.....c....Bc;;+;;c.ffff.vvvBDvvvvvvvvvvvvvvvvvvvvvv
-vc.c.c.+.....+....cc;;+;;c.ffFf.vvvv"vvvvvvvvvvvvvnP=.....v
+vc.c.c.+.....+....cc;;+;;c.ffFf.vvvv"vvvvvvvvvvvvvnP+.....v
 vc.._..+...D.c....Bc;;c;;m.ffFf.v????||$$$.vvvvv..nPn|????v
 vc.c.c.c.....c....cc..c..c.ffff.v$$$$$$$$$.vvvv...nPn$$$$$v
-vc.....ccc=ccc....Bc..cGGc.ffff.vnnnnnnnnn=vvv..H.nPn$$$$$v
+vc.....ccc+ccc....Bc..cGGc.ffff.vnnnnnnnnn+vvv..H.nPn$$$$$v
 vc.....c.....c....cc..c..c.ffff.v;;;;;;;;;;vv.....nPn$$$$$v
 vc.....c?....c..A.Bc..c..m..fff.v;;;;;;;;;;vv.uvu.nPn$$$$$v
 vc.....c|?...c....cc..c..c...ff.v;;vvvvvvvvv..vvv.nPnnnnnnv
 vc.....c||?EEcBcBcc...c..c....f.v;;;;;;;;;;+..uvu.nPPPPPPPv
-vc++cccccccccccccc...cc..c......v;;;;;;;;;;+......nnnnnnn=v
+vc++cccccccccccccc...cc..c......v;;;;;;;;;;+......nnnnnnn+v
 vc.....G............cc...m..G...vvvvvvvvvvvv.H............v
 vc.....G...........cc...cc......v....vvvvvvv..............v
 vccccccccccccccccccc...cc...ff..v.JJ...vvvvvv....v..v..v..v
@@ -1202,45 +1202,45 @@ v.G.ffff...ffff...G....ffffffff.v......vv...v;..;.I;..;..;v
 v...ffff...fffff.......fffffff..v.......v...+.;..;..;..;..v
 v....ffff....ffff.......f.ffff..v.......v...+..;..;..;..;.v
 v......f.f....ffff..............v.......v...v;..;.I;..;..;v
-vvvvvvvvvvvvvv==vvvvvvvvvvvvvvvvvvvvvvv=vvvvvvvvvvvvvvvvvvv
+vvvvvvvvvvvvvv++vvvvvvvvvvvvvvvvvvvvvvv+vvvvvvvvvvvvvvvvvvv
 vvvvvvvvvvvvv....v??llv??llv??llvvvvvvo.ovvvWWWWWWW.......v
 vvvvvlllvvvvv....v?.tlv?.tlv?.tlvvvv.......vvWWWWWWZ.mmmm;v
 vvv.......vvv....v....v....v....vvv.........vvWWWWWWWm*|m.v
 vv.........vv....v....v....v....vv...........vWWWWWWWW*|m;v
-v..ccc.ccc..vv++vvv==vvv==vvv==vvv...R.Q.R...vvWWWWmWW%|m.v
+v..ccc.ccc..vv++vvv++vvv++vvv++vvv...R.Q.R...vvWWWWmWW%|m.v
 v...lc.cl...v...................vo...........ovWWWWmmmmmm;v
-v..t.c.c.t..+.;;;;;;;;;;;;;;;;;.=......U......=...........v
+v..t.c.c.t..+.;;;;;;;;;;;;;;;;;.+......U......+...........v
 v...........v...................vo...........ov...........v
 v.cccc.cccc.vvvvvvvvvKvvvvvvvvvvvv.........vvvvvvvvvvvvvvvv
-v.cll...llc.v??......<vvvvvvvvvvvv.........+..;=..........v
+v.cll...llc.v??......<vvvvvvvvvvvv.........+..;+..........v
 v.clt...tlc.K???.....Kvvvvvvvvvvvvv........+.;.vvvvvvvvvv.v
 v.c...X...c.v????|KKvvwwwwwwwwvvvvvv.......v;...vvvW.R.%v.v
-v...........vRRRRKvwwwwwwwwwwwwwwvvvvvo.ovvv=v...vvW...%v.v
-v..ccc.ccc..vRRKvvwwwwwwwwwwwwwwwwvvvvv=vvvv.vv...vv...$v.v
-v..lc...cl..vvvvwwwwwwwwwwwwwwwwwwwwvvv<v....vvv...vvv=vv.v
+v...........vRRRRKvwwwwwwwwwwwwwwvvvvvo.ovvv+v...vvW...%v.v
+v..ccc.ccc..vRRKvvwwwwwwwwwwwwwwwwvvvvv+vvvv.vv...vv...$v.v
+v..lc...cl..vvvvwwwwwwwwwwwwwwwwwwwwvvv<v....vvv...vvv+vv.v
 v.t.......t.vvvwwwwwwwwwwwwwwwwwwwwwwvvvv.vvvvvvv...vv....v
 v....lll....vvvwwwwwwwwwwwwwwwwwwwwwwvvvv.v%RWvvvv...vvvv.v
 v....lml....vvwwwwwwwwwwwwwwwwwwwwwwwwvvv.v..Wvvvvv...vvv.v
 v....lll....vwwwwwwwwwwwwwwwwwwwwwwwwwwvv.v.vvvvvvvv...vv.v
 v...........vwwwwwwwwwwwwwwwwwwwwwwwwwwvv.v.v%R.Wv%vv...vvv
 vvvv++vvvvvvvwwwwwww..8..wwwwwwwwwwwwwwvv.v.v...WvRWvv...vv
-v........=tvwwwwww.........wwwwwwwwwwwwwv.v=v=vvvv=vvvv...v
-v...ll...v=vwwwww...........wwwwwwwwwwwwv............vvv..v
-v...ll...=tvwwww.............wwwwwwwwwwwvvvvvvvvvvvvvvvvv+v
-v...ll...v=vwwww.............wwww..;;.;;+.;;.....R......v.v
-v...ll...=tvwww...............ww...;;.;;+.;;.V.S.R.V....v.v
-v.llllll.v=vwww...................wwwwwwv.;;...S........v.v
-v.llllll.=tvwww8.............8...wwwwwwwv.;;.V.S.R.V....v.v
-v...ll...v=vwww.................wwwwwwwwv.;;.....R......v.v
+v........+tvwwwwww.........wwwwwwwwwwwwwv.v+v+vvvv+vvvv...v
+v...ll...v+vwwwww...........wwwwwwwwwwwwv............vvv..v
+v...ll...+tvwwww.............wwwwwwwwwwwvvvvvvvvvvvvvvvvv+v
+v...ll...v+vwwww.............wwww..;;.;;+.;;.....R......v.v
+v...ll...+tvwww...............ww...;;.;;+.;;.V.S.R.V....v.v
+v.llllll.v+vwww...................wwwwwwv.;;...S........v.v
+v.llllll.+tvwww8.............8...wwwwwwwv.;;.V.S.R.V....v.v
+v...ll...v+vwww.................wwwwwwwwv.;;.....R......v.v
 v.t.ll...vtvvww...............wwwwwwwwwvvvvvv''vvvvvvv+vv+v
 v.t.ll...v.*vwww.{...........wwwwwwwwwwv...;...'o$.....vv.v
 v...ll...v.%vwww..[..........wwwwwwwwwwv....;..v$;....vvv.v
-v........=.*vvwww..(........wwwwwwwwwwvv..W..;.v..;..vvv..v
+v........+.*vvwww..(........wwwwwwwwwwvv..W..;.v..;..vvv..v
 vvvvvvvvvvvvvvvwww.........wwwwwwwwwwvv..SW...;v.S.;vvv.S.v
 vvvvvvvvvvvvvvvwwwww..8..wwwwwwwwwwwwv;.WWWWW..'...vvv;...v
 vvvvvvvvvvvvvvvvwwwwwwwwwwwwwwwwwwwwvv.;..W....v..vvv..;..v
 vvvvvvvvvvvvvvvvvvwwwwwwwwwwwwwwwwvvvo..;.W....v+vvv....;$v
-vvvvvvvvvvvvvvvvvvvwwwwwwwwwwwwwwvv!=....;..R..'........$ov
+vvvvvvvvvvvvvvvvvvvwwwwwwwwwwwwwwvv!+....;..R..'........$ov
 vvvvvvvvvvvvvvvvvvvvvvwwwwwwwwvvvvvvvovvvvvvvvvvvvvvvvvvvvv
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 ENDMAP
@@ -1268,7 +1268,7 @@ FTILE:  .tT5f?<8 = FLOOR_GREY_DIRT, "G2{[( = FLOOR_PEBBLE_BROWN
 FTILE:  '_D = FLOOR_SANDSTONE
 TILE:   x = WALL_STONE_GRAY, t = DNGN_TREE_DEAD, G = DNGN_GRAVESTONE
 SUBST:  x: c, -'": ., ?: |
-SUBST:  D = +, d = cc=
+SUBST:  D = +, d = cc+
 NSUBST: * = 12:* / 12:% / *:$
 KFEAT:  m = iron_grate
 MONS:   w:3 patrolling lich / w:1 patrolling ancient lich
@@ -1350,9 +1350,9 @@ tttttttT......x*1*x....n---B---'''---B---n..555......ccccccccc....--Tv..t.Tttttt
 ttttttT.t..T..x*|*x...ccc-xxx--'''--xxx-ccc...T......c$$$$$$$c...--44vT...tTtttt
 ttttttT.......x***x...ccc-xxx--'''--xxx-ccc.T........c$$$$$$$c..vvvvvvvvvv.Ttttt
 tttttttT.t.T..xx-xx....n-------'''-------n.......T...c$$$7$$$c..--4--vT..t.Ttttt
-ttttttttT......x=x.....n-------'''-------n.....t..t..c**666**c....---v..t...Tttt
+ttttttttT......x+x.....n-------'''-------n.....t..t..c**666**c....---v..t...Tttt
 tttttttttTt..T.x"x....ccc-xxx--'''--xxx-ccc..T...t..tc-------c....T..t....t..Ttt
-tttttttttT......".....ccc-xxx--'''--xxx-ccc...t....ttcccc=cccct.t.t........tTttt
+tttttttttT......".....ccc-xxx--'''--xxx-ccc...t....ttcccc+cccct.t.t........tTttt
 ttttttttTt..T..."".....n--C----'''----C--n..t..tt.ttttccc-ccctt.....t...t..Ttttt
 tttttttT.........".....nCC-----'''-----CCn....ttttt"""c-----ctttttt...t..Ttttttt
 tttttTT.t..T....."....cccccxxxcDDDcxxxccccc.tttt"""2""cc+++cc""""2tt.t..Tttttttt
@@ -1403,8 +1403,8 @@ NAME:   due_elkab
 PLACE:  Crypt:$
 ORIENT: float
 TAGS:   no_monster_gen no_item_gen no_pool_fixup no_rotate no_trap_gen
-NSUBST: A = 1:= / *:c
-NSUBST: B = 1:= / *:c
+NSUBST: A = 1:+ / *:c
+NSUBST: B = 1:+ / *:c
 NSUBST: C = 1:6 / *:5
 KFEAT:  YD = closed_door
 KFEAT:  ER = alarm trap
@@ -1425,7 +1425,8 @@ MONS:   patrolling vampire hd:8 col:green name:noble n_suf / patrolling \
         n_rpl n_des actual_spells ; long sword | great sword | battleaxe | \
         war axe | broad axe . chain mail w:10 | splint mail w:5 | plate armour \
         w:1
-MONS:   vampire knight / Jory
+# Using KMONS with fallback to vampire knight:
+KMONS:  2 = vampire knight / Jory, vampire knight
 MONS:   dancing weapon ; any weapon ego:vampiricism / vampire hd:10 col:blue \
         spells:.;.;haste;.;.;.; name:vampire_warrior n_rpl n_des actual_spells \
         ; long sword | great sword | battleaxe | war axe | broad axe . chain \
@@ -1456,9 +1457,6 @@ MONS:   guardian mummy
 MONS:   bog body / mummy / guardian mummy
 MONS:   generate_awake sphinx
 : end
-KFEAT:  Q = closed_door
-NSUBST: T = 1:= / 1:+
-MARKER: Q = lua:restrict_door()
 MAP
                  ccccccccccccccccccccccccccccc
                  c*$*c|%*.......**|c.........c
@@ -1466,7 +1464,7 @@ MAP
                  c...c|%|.......|%|c.........c
                  cc+cccccc.....ccccccc+cccBBBc
                  c...c---ccc+ccc---c-----c$$$c
-                 c.4.c-G-4-RRR-4-G-=--G--c$$$c
+                 c.4.c-G-4-RRR-4-G-+--G--c$$$c
                  c...c-------------c-----c%%*c
 ccccccccccccccccccc+ccccccc+++ccccccc+cccccccc
 c$$A...c|...*c%.*cc...ccc-------ccc...cc%*|%*c
@@ -1478,22 +1476,22 @@ ccccc-----------cc..1...............1..c-----c
 ---ccc---------ccc..1...............1..c-----c
 @--cccccc+++cccccc..G..G..G...G..G..G..c-----c
 ---ccc.........cccc...................ccc---cc
----cc..G1...1G..cccQcQcQcQc...cQcQcQcQccc+++cccc
-c..cc...........ccc5c5c5c5c+++c5c5c5c5ccc...cQCc
-c..ccccc.....cccccc=ccccccc---cccccccccc.....ccc
-c..c...c.....c...cc.c.....-----.....ccCQ.....QCc
+---cc..G1...1G..ccc=c=c=c=c...c=c=c=c=ccc+++cccc
+c..cc...........ccc5c5c5c5c+++c5c5c5c5ccc...c=Cc
+c..ccccc.....cccccc+ccccccc---cccccccccc.....ccc
+c..c...c.....c...cc.c.....-----.....ccC=.....=Cc
 c--c.............cc.c....1-----1....cccc.....ccc
-c---...G.....G...cc.cc....-----....=ccCQ.....QCc
+c---...G.....G...cc.cc....-----....+ccC=.....=Cc
 c---....1...1....cc.cccccc-----ccccc.ccc.....ccc
-c---...G.....G...cc=cc....-----....cc=CQ.....QCc
+c---...G.....G...cc+cc....-----....cc+C=.....=Cc
 c---....1...1....+..+....1-----1....cccc.....ccc
-c---...G.....G...cccc.....-----.....ccCQ.....QCc
+c---...G.....G...cccc.....-----.....ccC=.....=Cc
 c..c.............cccccccccc+++cccccccccc.....ccc
-c..c...c-----c...c.......--------............QCc
+c..c...c-----c...c.......--------............=Cc
 cccccccc-----ccccc...........................ccc
-   c.............c...........................QCc
+   c.............c...........................=Cc
    c.G.G.....G.G.c.cccccc.......ccccccc......ccc
-   c..1.......1..ccT$$$$cc-----cc%....Tc.....QCc
+   c..1.......1..cc+$$$$cc-----cc%....+c.....=Cc
    c.G.........G.cc$$$$$cc-----cc%1...cccccccccc
    c..1.......1..cc$$$$1cc-----cc*%%%%cc...----.
    c.G.........G.cccccccc.......ccccccc....----.

@@ -3,7 +3,6 @@
 
 #include "enum.h"
 #include "spl-cast.h"
-#include "act-iter.h"
 
 struct bolt;
 class dist;
@@ -19,10 +18,6 @@ spret_type cast_toxic_radiance(int pow, bool non_player = false, bool fail = fal
 spret_type cast_refrigeration(int pow, bool non_player = false,
                               bool freeze_potions = true, bool fail = false);
 void sonic_damage(bool scream);
-int shatter_monsters(coord_def where, int pow, actor *agent);
-int shatter_items(coord_def where, int pow, actor *agent);
-int shatter_walls(coord_def where, int pow, actor *agent);
-int shatter_player(int pow, actor *wielder, bool devastator = false);
 bool mons_shatter(monster* caster, bool actual = true);
 void shillelagh(actor *wielder, coord_def where, int pow);
 spret_type vampiric_drain(int pow, monster* mons, bool fail);
@@ -50,7 +45,7 @@ spret_type cast_thunderbolt(actor *caster, int pow, coord_def aim,
                             bool fail = false);
 
 actor* forest_near_enemy(const actor *mon);
-void forest_message(const coord_def pos, const std::string &msg,
+void forest_message(const coord_def pos, const string &msg,
                     msg_channel_type ch = MSGCH_PLAIN);
-                    void forest_damage(const actor *mon);
+void forest_damage(const actor *mon);
 #endif

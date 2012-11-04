@@ -41,30 +41,6 @@ A burning altar of Makhleb
 An ever-burning altar to Makhleb the Destroyer. Strange, twisting shapes are
 visible in the flames.
 %%%%
-A dart trap
-
-This trap can shoot relatively weak spikes of metal. They are unlikely to kill
-anyone outright, but may be enough to put down someone who's running half-dead
-while chased by some monster.
-%%%%
-A detected altar
-
-An altar of some kind. If you wish to know what deity it is consecrated to,
-you'll have to come closer.
-%%%%
-A detected secret door
-
-A wooden door, cunningly hidden. It used to be a secret door, but, at least for
-you, it's not a secret anymore.
-
-To open it, try simply walking into it, or press 'O'.
-%%%%
-# mmap/antennae/etc
-A detected shop or portal
-
-A gateway of some kind. You can't tell where it leads without approaching
-nearer.
-%%%%
 A closed door
 
 A wooden door. To open it, try simply walking into it, or press 'O'.
@@ -84,10 +60,27 @@ A crawl-hole back to the Lair
 
 This passage leads back to less cramped spaces with fewer cobwebs.
 %%%%
+A dart trap
+
+This trap can shoot relatively weak spikes of metal. They are unlikely to kill
+anyone outright, but may be enough to put down someone who's running half-dead
+while chased by some monster.
+%%%%
 A deep blue altar of Sif Muna
 
 An altar of the deepest blue, covered in intricate patterns and writings in
 long forgotten scripts, devoted to Sif Muna the Loreminder.
+%%%%
+A detected altar
+
+An altar of some kind. If you wish to know what deity it is consecrated to,
+you'll have to come closer.
+%%%%
+# mmap/antennae/etc
+A detected shop or portal
+
+A gateway of some kind. You can't tell where it leads without approaching
+nearer.
 %%%%
 A dry fountain
 
@@ -292,6 +285,12 @@ A roughly hewn altar of Beogh
 
 An altar to Beogh, unmistakably roughly hewn by orcish artisans.
 %%%%
+A runed door
+
+A door, covered in runic writing. It looks like there is something special
+behind it — perhaps danger, perhaps treasure. You may break the runes and open
+it like any other door (ie, by walking into it or pressing 'O').
+%%%%
 A shaft
 
 A deep hole. Who knows where you might end up if you were to fall through it?
@@ -328,6 +327,10 @@ A sparkling altar of Nemelex Xobeh
 
 This altar sparkles with a lightshow brighter than any gambling den's to
 attract followers for Nemelex Xobeh.
+%%%%
+A spawn point
+
+Here's one of the entrances that the opposition may come in through.
 %%%%
 A spear trap
 
@@ -621,6 +624,45 @@ The open sea
 
 Nothing but endless wind and waves, and not a lighthouse in sight. You'd be
 lost beyond all hope in short order — better not risk it.
+%%%%
+########################
+## Big doors
+########################
+A large open door
+
+<An open door>
+%%%%
+An open gate
+
+<An open door>
+%%%%
+A huge open gate
+
+<An open door>
+%%%%
+A large closed door
+
+<A closed door>
+%%%%
+A closed gate
+
+<A closed door>
+%%%%
+A huge closed gate
+
+<A closed door>
+%%%%
+A large runed door
+
+<A runed door>
+%%%%
+A runed gate
+
+<A runed door>
+%%%%
+A huge runed gate
+
+<A runed door>
 %%%%
 ########################
 ### Vault redefinitions

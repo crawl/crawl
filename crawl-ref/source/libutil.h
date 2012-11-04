@@ -6,7 +6,6 @@
 #ifndef LIBUTIL_H
 #define LIBUTIL_H
 
-#include "defines.h"
 #include "enum.h"
 #include <cctype>
 #include <string>
@@ -18,18 +17,16 @@ extern const char *standard_plural_qualifiers[];
 // Applies a description type to a name, but does not pluralise! You
 // must pluralise the name if needed. The quantity is used to prefix the
 // name with a quantity if appropriate.
-std::string apply_description(description_level_type desc,
-                              const std::string &name,
-                              int quantity = 1,
-                              bool num_in_words = false);
+string apply_description(description_level_type desc, const string &name,
+                         int quantity = 1, bool num_in_words = false);
 
 description_level_type description_type_by_name(const char *desc);
 
-std::string lowercase_string(std::string s);
-std::string &lowercase(std::string &s);
-std::string &uppercase(std::string &s);
-std::string uppercase_first(std::string);
-std::string lowercase_first(std::string);
+string lowercase_string(string s);
+string &lowercase(string &s);
+string &uppercase(string &s);
+string uppercase_first(string);
+string lowercase_first(string);
 
 bool key_is_escape(int key);
 
@@ -69,36 +66,35 @@ static inline int isaalnum(int c)
 }
 
 int numcmp(const char *a, const char *b, int limit = 0);
-bool numcmpstr(std::string a, std::string b);
+bool numcmpstr(string a, string b);
 size_t strlcpy(char *dst, const char *src, size_t n);
 
 int strwidth(const char *s);
-int strwidth(const std::string &s);
-std::string chop_string(const char *s, int width, bool spaces = true);
-std::string chop_string(const std::string &s, int width, bool spaces = true);
-std::string wordwrap_line(std::string &s, int cols, bool tags = false,
-                          bool indent = false);
+int strwidth(const string &s);
+string chop_string(const char *s, int width, bool spaces = true);
+string chop_string(const string &s, int width, bool spaces = true);
+string wordwrap_line(string &s, int cols, bool tags = false,
+                     bool indent = false);
 
 bool version_is_stable(const char *ver);
 
 // String "tags"
 #define TAG_UNFOUND -20404
-bool strip_tag(std::string &s, const std::string &tag, bool nopad = false);
-bool strip_suffix(std::string &s, const std::string &suffix);
-int strip_number_tag(std::string &s, const std::string &tagprefix);
-std::vector<std::string> strip_multiple_tag_prefix(std::string &s, const std::string &tagprefix);
-std::string strip_tag_prefix(std::string &s, const std::string &tagprefix);
+bool strip_tag(string &s, const string &tag, bool nopad = false);
+bool strip_suffix(string &s, const string &suffix);
+int strip_number_tag(string &s, const string &tagprefix);
+vector<string> strip_multiple_tag_prefix(string &s, const string &tagprefix);
+string strip_tag_prefix(string &s, const string &tagprefix);
 bool parse_int(const char *s, int &i);
 
-std::string article_a(const std::string &name, bool lowercase = true);
-std::string pluralise(
-    const std::string &name,
-    const char *stock_plural_quals[] = standard_plural_qualifiers,
-    const char *no_of[] = NULL);
-std::string apostrophise(const std::string &name);
-std::string apostrophise_fixup(const std::string &msg);
+string article_a(const string &name, bool lowercase = true);
+string pluralise(const string &name,
+                 const char *stock_plural_quals[] = standard_plural_qualifiers,
+                 const char *no_of[] = NULL);
+string apostrophise(const string &name);
+string apostrophise_fixup(const string &msg);
 
-std::string number_in_words(unsigned number, int pow = 0);
+string number_in_words(unsigned number, int pow = 0);
 
 bool shell_safe(const char *file);
 
@@ -106,39 +102,38 @@ bool shell_safe(const char *file);
  * Returns 1 + the index of the first suffix that matches the given string,
  * 0 if no suffixes match.
  */
-int  ends_with(const std::string &s, const char *suffixes[]);
+int ends_with(const string &s, const char *suffixes[]);
 
-std::string strip_filename_unsafe_chars(const std::string &s);
+string strip_filename_unsafe_chars(const string &s);
 
-std::string vmake_stringf(const char *format, va_list args);
-std::string make_stringf(PRINTF(0, ));
+string vmake_stringf(const char *format, va_list args);
+string make_stringf(PRINTF(0, ));
 
-std::string replace_all(std::string s,
-                        const std::string &tofind,
-                        const std::string &replacement);
+string replace_all(string s, const string &tofind, const string &replacement);
 
-std::string replace_all_of(std::string s,
-                           const std::string &tofind,
-                           const std::string &replacement);
+string replace_all_of(string s, const string &tofind, const string &replacement);
 
-int count_occurrences(const std::string &text, const std::string &searchfor);
+string maybe_capitalise_substring(string s);
+string maybe_pick_random_substring(string s);
+
+int count_occurrences(const string &text, const string &searchfor);
 
 void play_sound(const char *file);
 
-std::string &trim_string(std::string &str);
-std::string &trim_string_right(std::string &str);
-std::string trimmed_string(std::string s);
+string &trim_string(string &str);
+string &trim_string_right(string &str);
+string trimmed_string(string s);
 
-static inline bool starts_with(const std::string &s, const std::string &prefix)
+static inline bool starts_with(const string &s, const string &prefix)
 {
-    return (s.rfind(prefix, 0) != std::string::npos);
+    return (s.rfind(prefix, 0) != string::npos);
 }
 
-static inline bool ends_with(const std::string &s, const std::string &suffix)
+static inline bool ends_with(const string &s, const string &suffix)
 {
     if (s.length() < suffix.length())
         return false;
-    return (s.find(suffix, s.length() - suffix.length()) != std::string::npos);
+    return (s.find(suffix, s.length() - suffix.length()) != string::npos);
 }
 
 // Splits string 's' on the separator 'sep'. If trim == true, trims each
@@ -146,19 +141,14 @@ static inline bool ends_with(const std::string &s, const std::string &suffix)
 // splits on the first nsplits occurrences of the separator, and stores the
 // remainder of the string as the last segment; negative values of nsplits
 // split on all occurrences of the separator.
-std::vector<std::string> split_string(
-    const std::string &sep,
-    std::string s,
-    bool trim = true,
-    bool accept_empties = false,
-    int nsplits = -1);
+vector<string> split_string(const string &sep, string s, bool trim = true,
+                            bool accept_empties = false, int nsplits = -1);
 
 template <typename Z>
-std::string comma_separated_line(Z start, Z end,
-                                 const std::string &andc = " and ",
-                                 const std::string &comma = ", ")
+string comma_separated_line(Z start, Z end, const string &andc = " and ",
+                            const string &comma = ", ")
 {
-    std::string text;
+    string text;
     for (Z i = start; i != end; ++i)
     {
         if (i != start)
@@ -175,10 +165,10 @@ std::string comma_separated_line(Z start, Z end,
     return text;
 }
 
-std::string unwrap_desc(std::string desc);
+string unwrap_desc(string desc);
 
 template <typename Z>
-void erase_any(std::vector<Z> &vec, unsigned long which)
+void erase_any(vector<Z> &vec, unsigned long which)
 {
     if (which != vec.size() - 1)
         vec[which] = vec[vec.size() - 1];
@@ -209,7 +199,7 @@ static inline bool testbits(uint64_t flags, uint64_t test)
 coord_def cgetsize(GotoRegion region = GOTO_CRT);
 void cscroll(int n, GotoRegion region);
 
-std::string untag_tiles_console(std::string s);
+string untag_tiles_console(string s);
 
 #ifdef TARGET_OS_WINDOWS
 enum taskbar_pos
@@ -225,7 +215,7 @@ enum taskbar_pos
 
 int get_taskbar_size();
 taskbar_pos get_taskbar_pos();
-void text_popup(const std::string& text, const wchar_t *caption);
+void text_popup(const string& text, const wchar_t *caption);
 #endif
 
 class mouse_control

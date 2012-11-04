@@ -28,7 +28,7 @@
 #include "terrain.h"
 #include "viewchar.h"
 
-static void _fuzz_direction(monster& mon, int pow);
+static void _fuzz_direction(const actor *caster, monster& mon, int pow);
 
 spret_type cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy,
                      int foe, bool fail)
@@ -72,7 +72,7 @@ spret_type cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy,
         mon->props["iood_y"].get_float() = beam->ray.r.start.y - 0.5;
         mon->props["iood_vx"].get_float() = beam->ray.r.dir.x;
         mon->props["iood_vy"].get_float() = beam->ray.r.dir.y;
-        _fuzz_direction(*mon, pow);
+        _fuzz_direction(caster, *mon, pow);
     }
     else
     {
@@ -93,6 +93,12 @@ spret_type cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy,
         ? caster->name(DESC_PLAIN, true)
         : (caster->is_player()) ? "you" : "";
     mon->props["iood_mid"].get_int() = caster->mid;
+
+    if (caster->is_player() || caster->type == MONS_PLAYER_GHOST
+        || caster->type == MONS_PLAYER_ILLUSION)
+    {
+        mon->props["iood_flawed"].get_byte() = true;
+    }
 
     // Move away from the caster's square.
     iood_act(*mon, true);
@@ -161,7 +167,7 @@ static void _iood_stop(monster& mon, bool msg = true)
     monster_die(&mon, KILL_DISMISSED, NON_MONSTER);
 }
 
-static void _fuzz_direction(monster& mon, int pow)
+static void _fuzz_direction(const actor *caster, monster& mon, int pow)
 {
     const float x = mon.props["iood_x"];
     const float y = mon.props["iood_y"];
@@ -175,7 +181,7 @@ static void _fuzz_direction(monster& mon, int pow)
     const float off = (coinflip() ? -1 : 1) * 0.25;
     float tan = (random2(31) - 15) * 0.019; // approx from degrees
     tan *= 75.0 / pow;
-    if (player_effect_inaccuracy())
+    if (caster && caster->inaccuracy())
         tan *= 2;
 
     // Cast either from left or right hand.
@@ -205,10 +211,10 @@ static bool _boulder_hit(monster& mon, const coord_def &pos)
     actor *victim = actor_at(pos);
     if (victim)
     {
-        simple_monster_message(&mon, (std::string(" smashes into ")
+        simple_monster_message(&mon, (string(" smashes into ")
                                + victim->name(DESC_THE) + "!").c_str());
 
-        int dam = roll_dice(3, 20) - random2(1 + victim->armour_class());
+        int dam = victim->apply_ac(roll_dice(3, 20));
         if (victim->is_player())
             ouch(dam, mon.mindex(), KILLED_BY_ROLLING);
         else
@@ -354,11 +360,15 @@ move_again:
         return true;
     }
 
-    if (iood && mon.props["iood_kc"].get_byte() == KC_YOU
-        && (you.pos() - pos).rdist() > LOS_RADIUS)
-    {   // not actual vision, because of the smoke trail
-        _iood_stop(mon);
-        return true;
+    if (iood && mon.props.exists("iood_flawed"))
+    {
+        const actor *caster = actor_by_mid(mon.props["iood_mid"].get_int());
+        if (!caster || caster->pos().origin() ||
+            (caster->pos() - pos).rdist() > LOS_RADIUS)
+        {   // not actual vision, because of the smoke trail
+            _iood_stop(mon);
+            return true;
+        }
     }
 
     if (pos == mon.pos())

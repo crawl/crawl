@@ -1,0 +1,29 @@
+%%%%
+CMD_EXPLORE
+
+Die aktuelle Ebene automatisch erforschen
+%%%%
+CMD_PRAY
+
+Bete deinen Gott an
+%%%%
+CMD_DISPLAY_RELIGION
+
+Religiösen Status anzeigen.
+%%%%
+CMD_DISPLAY_MUTATIONS
+
+Mutationen anzeigen
+%%%%
+CMD_SAVE_GAME_NOW
+
+Speichern und verlassen
+%%%%
+CMD_DISPLAY_COMMANDS verbose
+
+Liste von Kommandos, Optionen, etc.
+%%%%
+CMD_WAIT
+
+Warte eine Runde
+%%%%

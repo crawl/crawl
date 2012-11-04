@@ -21,7 +21,7 @@ hostile et aussi pour annoncer les objets et les points d'intérêt.
 %%%%
 CMD_INTERLEVEL_TRAVEL
 
-Voyage vers d'autres niveaux.
+Déplacement vers d'autres niveaux.
 %%%%
 CMD_INTERLEVEL_TRAVEL verbose
 
@@ -30,7 +30,7 @@ interrompu si vous apercevez des monstres.
 %%%%
 CMD_USE_ABILITY
 
-Utiliser des pouvoirs divins ou naturels.
+Utilise des pouvoirs divins ou naturels.
 %%%%
 CMD_PRAY
 
@@ -156,11 +156,184 @@ CMD_AUTOFIGHT_NOMOVE verbose
 
 Attaque un monstre à coté de vous avec l'arme tenue en main.
 %%%%
-CMD_SEARCH
+CMD_WAIT
 
 Attend un tour
 %%%%
-CMD_SEARCH verbose
+CMD_DISPLAY_INVENTORY
 
-Passe un unique tour à attendre, se reposer, et chercher.
+Affiche le contenu de votre inventaire
+%%%%
+CMD_DISPLAY_INVENTORY verbose
+
+Affiche le contenu de votre inventaire.
+%%%%
+CMD_CAST_SPELL
+
+Lance un sort
+%%%%
+CMD_CAST_SPELL verbose
+
+Lance un sort.
+%%%%
+CMD_BUTCHER
+
+Débite un cadavre
+%%%%
+CMD_BUTCHER verbose
+
+Découpe un cadavre en morceaux.
+%%%%
+CMD_MEMORISE_SPELL
+
+Mémorise un sort
+%%%%
+CMD_MEMORISE_SPELL verbose
+
+Mémorise un sort, en le lisant depuis un livre que vous détenez ou qui est à
+vos pieds.
+%%%%
+CMD_DROP
+
+Jette un objet
+%%%%
+CMD_DROP verbose
+
+Jette un ou plusieurs objets que vous détenez.
+%%%%
+CMD_DISPLAY_MAP
+
+Passe en mode carte
+%%%%
+CMD_DISPLAY_MAP verbose
+
+Parcourt la carte déjà explorée.
+%%%%
+CMD_MAP_GOTO_TARGET
+
+Déplacement jusqu'au curseur
+%%%%
+CMD_MAP_GOTO_TARGET verbose
+
+Commence à se déplacer jusqu'à la position du curseur.
+%%%%
+CMD_MAP_ADD_WAYPOINT
+
+Ajoute un point de passage
+%%%%
+CMD_MAP_ADD_WAYPOINT verbose
+
+Définit un point de passage à la position actuelle.
+%%%%
+CMD_MAP_EXCLUDE_AREA
+
+Exclusion de déplacement
+%%%%
+CMD_MAP_EXCLUDE_AREA verbose
+
+Crée une exclusion de déplacement, change son rayon ou la supprime.
+%%%%
+CMD_MAP_CLEAR_EXCLUDES
+
+Supprime les exclusions de déplacement
+%%%%
+CMD_MAP_CLEAR_EXCLUDES verbose
+
+Efface toutes les exclusions de déplacement du niveau.
+%%%%
+CMD_MAP_NEXT_LEVEL
+
+Descend d'un niveau
+%%%%
+CMD_MAP_NEXT_LEVEL verbose
+
+Examine le niveau en dessous.
+%%%%
+CMD_MAP_PREV_LEVEL
+
+Monte d'un niveau
+%%%%
+CMD_MAP_PREV_LEVEL verbose
+
+Examine le niveau au dessus.
+%%%%
+CMD_MAP_GOTO_LEVEL
+
+Va au niveau
+%%%%
+CMD_MAP_GOTO_LEVEL verbose
+
+Va à un autre niveau par branche et profondeur.
+%%%%
+CMD_MAP_FIND_UPSTAIR
+
+Trouve des escaliers montants
+%%%%
+CMD_MAP_FIND_UPSTAIR verbose
+
+Parcours les escaliers montants.
+%%%%
+CMD_MAP_FIND_DOWNSTAIR
+
+Trouve des escaliers descendants
+%%%%
+CMD_MAP_FIND_DOWNSTAIR verbose
+
+Parcours les escaliers descendants.
+%%%%
+CMD_MAP_FIND_YOU
+
+Centre sur moi
+%%%%
+CMD_MAP_FIND_YOU verbose
+
+Replace le curseur de carte à ma position
+%%%%
+CMD_MAP_FIND_PORTAL
+
+Trouver des boutiques et des portails
+%%%%
+CMD_MAP_FIND_PORTAL verbose
+
+Parcourir les boutiques et les portails sur le niveau courant.
+%%%%
+CMD_MAP_FIND_TRAP
+
+Trouver des pièges
+%%%%
+CMD_MAP_FIND_TRAP verbose
+
+Parcourir les pièges sur le niveau courant.
+%%%%
+CMD_MAP_FIND_ALTAR
+
+Trouver des autels
+%%%%
+CMD_MAP_FIND_ALTAR verbose
+
+Parcourir les autels sur le niveau courant.
+%%%%
+CMD_MAP_FIND_EXCLUDED
+
+Trouver les exclusions de déplacement
+%%%%
+CMD_MAP_FIND_EXCLUDED verbose
+
+Parcours les exclusions de déplacement sur le niveau courant.
+%%%%
+CMD_MAP_FIND_WAYPOINT
+
+Trouve des points de passage
+%%%%
+CMD_MAP_FIND_WAYPOINT verbose
+
+Parcours les points de passage du niveau courant.
+%%%%
+CMD_MAP_FIND_STASH
+
+Trouve des piles d'objets
+%%%%
+CMD_MAP_FIND_STASH verbose
+
+Parcours les piles d'objets du niveau courant.
 %%%%

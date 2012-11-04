@@ -87,7 +87,7 @@ static const ucs_t dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
     },
 };
 
-dungeon_char_type dchar_by_name(const std::string &name)
+dungeon_char_type dchar_by_name(const string &name)
 {
     const char *dchar_names[] =
     {
@@ -136,7 +136,7 @@ ucs_t dchar_glyph(dungeon_char_type dchar)
         return 0;
 }
 
-std::string stringize_glyph(ucs_t glyph)
+string stringize_glyph(ucs_t glyph)
 {
     char buf[5];
     buf[wctoutf8(buf, glyph)] = 0;

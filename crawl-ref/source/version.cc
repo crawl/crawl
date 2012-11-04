@@ -12,19 +12,19 @@
 
 namespace Version
 {
-    std::string Major()
+    string Major()
     {
-        return std::string(CRAWL_VERSION_MAJOR);
+        return string(CRAWL_VERSION_MAJOR);
     }
 
-    std::string Short()
+    string Short()
     {
-        return std::string(CRAWL_VERSION_SHORT);
+        return string(CRAWL_VERSION_SHORT);
     }
 
-    std::string Long()
+    string Long()
     {
-        return std::string(CRAWL_VERSION_LONG);
+        return string(CRAWL_VERSION_LONG);
     }
 
     rel_type ReleaseType()
@@ -32,7 +32,7 @@ namespace Version
         return CRAWL_VERSION_RELEASE;
     }
 
-    std::string Compiler()
+    string Compiler()
     {
 #if defined(__GNUC__) && defined(__VERSION__)
         return make_stringf("GCC %s", __VERSION__);
@@ -51,29 +51,29 @@ namespace Version
 #endif
     }
 
-    std::string BuildArch()
+    string BuildArch()
     {
         return CRAWL_HOST;
     }
-    std::string Arch()
+    string Arch()
     {
         return CRAWL_ARCH;
     }
 
-    std::string CFLAGS()
+    string CFLAGS()
     {
         return CRAWL_CFLAGS;
     }
 
-    std::string LDFLAGS()
+    string LDFLAGS()
     {
         return CRAWL_LDFLAGS;
     }
 }
 
-std::string compilation_info()
+string compilation_info()
 {
-    std::string out = "";
+    string out = "";
 
     out += make_stringf("Compiled with %s on %s at %s\n",
                         Version::Compiler().c_str(), __DATE__, __TIME__);

@@ -6,8 +6,10 @@ d'origine inconnue.
 %%%%
 book
 
-Un livre de sorts. Attention, car certains des plus puissants grimoires doivent
-être manipulés avec précautions.
+Un livre obscur contenant des sorts magiques d'origine inconnue. Ecrit pour les
+vrais experts, une connaissance initiatique dans l'art occulte du lancement de
+sort est requise pour pouvoir utiliser le volume. Attention, car certains des
+plus puissants grimoires doivent être manipulés avec précautions.
 %%%%
 deck of cards
 
@@ -16,7 +18,7 @@ peuvent provoquer de précieux ou dangereux effets quand elles sont tirées.
 %%%%
 potion
 
-Une petite bouteille pleine de liquide.
+Un flacon sans étiquette contenant une seule dose d'un liquide inconnu.
 %%%%
 ring
 
@@ -31,9 +33,11 @@ suffisamment solide pour être utilisé comme une simple arme contondante.
 %%%%
 scroll
 
-un parchemin de papier couvert d'inscriptions magiques.
+Une formule magique inscrite sur un parchemin par un scribe professionnel ou un
+sorcier. N'importe qui peut invoquer le pouvoir de la formule magique en la
+lisant à voix haute, mais la nature de ce pouvoir n'est a priori pas apparent.
 %%%%
-magical staff
+staff
 
 Un bâton de combat amélioré avec des pouvoirs obscurs d'origine inconnue.
 %%%%

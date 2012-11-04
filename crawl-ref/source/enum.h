@@ -12,12 +12,22 @@
 enum lang_t
 {
     LANG_EN = 0,
-    LANG_PL,
+    LANG_CS,
+    LANG_DA,
     LANG_DE,
-    LANG_FR,
-    LANG_ES,
     LANG_EL,
+    LANG_ES,
     LANG_FI,
+    LANG_FR,
+    LANG_HU,
+    LANG_IT,
+    LANG_KO,
+    LANG_LT,
+    LANG_LV,
+    LANG_PL,
+    LANG_PT,
+    LANG_RU,
+    LANG_ZH,
     // fake languages
     LANG_DWARVEN,
     LANG_JAGERKIN,
@@ -262,6 +272,7 @@ enum attribute_type
     ATTR_TITHE_BASE,           // Remainder of untithed gold.
     ATTR_EVOL_XP,              // XP gained since last evolved mutation
     ATTR_LIFE_GAINED,          // XL when a felid gained a life.
+    ATTR_TEMP_MUTATIONS,       // Number of temporary mutations the player has.
     NUM_ATTRIBUTES
 };
 
@@ -281,7 +292,7 @@ enum transformation_type
     LAST_FORM = TRAN_APPENDAGE
 };
 
-enum beam_type                  // beam[].flavour
+enum beam_type                  // bolt::flavour
 {
     BEAM_NONE,
 
@@ -492,9 +503,9 @@ enum burden_state_type          // you.burden_state
 
 enum caction_type    // Primary categorization of counted actions.
 {                    // A subtype will also be given in each case:
-    CACT_MELEE,      // weapon_type
-    CACT_FIRE,       // weapon_type
-    CACT_THROW,      // missile_type
+    CACT_MELEE,      // weapon subtype
+    CACT_FIRE,       // weapon subtype
+    CACT_THROW,      // item basetype << 16 | subtype
     CACT_CAST,       // spell_type
     CACT_INVOKE,     // ability_type
     CACT_ABIL,       // ability_type
@@ -664,7 +675,7 @@ enum command_type
     CMD_QUAFF,
     CMD_READ,
     CMD_LOOK_AROUND,
-    CMD_SEARCH,
+    CMD_WAIT,
     CMD_SHOUT,
     CMD_DISARM_TRAP,
     CMD_CHARACTER_DUMP,
@@ -768,7 +779,6 @@ enum command_type
     CMD_MAP_FIND_TRAP,
     CMD_MAP_FIND_ALTAR,
     CMD_MAP_FIND_EXCLUDED,
-    CMD_MAP_FIND_F,
     CMD_MAP_FIND_WAYPOINT,
     CMD_MAP_FIND_STASH,
     CMD_MAP_FIND_STASH_REVERSE,
@@ -1176,8 +1186,10 @@ enum dungeon_feature_type
 {
     DNGN_UNSEEN,
     DNGN_CLOSED_DOOR,
-    DNGN_DETECTED_SECRET_DOOR,
-    DNGN_SECRET_DOOR,
+    DNGN_RUNED_DOOR,
+#if TAG_MAJOR_VERSION == 34
+    DNGN_OLD_SECRET_DOOR,
+#endif
     DNGN_MANGROVE,
     DNGN_METAL_WALL,
         DNGN_MINWALL = DNGN_METAL_WALL,
@@ -1430,6 +1442,7 @@ enum duration_type
     DUR_TORNADO_COOLDOWN,
     DUR_NAUSEA,
     DUR_AMBROSIA,
+    DUR_TEMP_MUTATIONS,
     NUM_DURATIONS
 };
 
@@ -1476,7 +1489,9 @@ enum enchant_type
     ENCH_EAT_ITEMS,
     ENCH_AQUATIC_LAND,   // Water monsters lose hp while on land.
     ENCH_SPORE_PRODUCTION,
+#if TAG_MAJOR_VERSION == 34
     ENCH_SLOUCH,
+#endif
     ENCH_SWIFT,
     ENCH_TIDE,
     ENCH_INSANE,
@@ -1515,6 +1530,7 @@ enum enchant_type
     ENCH_DEATHS_DOOR,
     ENCH_ROLLING,       // Boulder Beetle in ball form
     ENCH_OZOCUBUS_ARMOUR,
+    ENCH_WRETCHED,      // An abstract placeholder for monster mutations
     // Update enchantment names in monster.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -1723,6 +1739,8 @@ enum item_status_flag_type  // per item flags: ie. ident status, cursed status
     ISFLAG_MIMIC             = 0x00100000,  // mimic
     ISFLAG_NO_MIMIC          = 0x00200000,  // Can't be turned into a mimic
 
+    ISFLAG_NO_PICKUP         = 0x00400000,  // Monsters won't pick this up
+
     ISFLAG_NO_RACE           = 0x00000000,  // used for clearing these flags
     ISFLAG_ORCISH            = 0x01000000,  // low quality items
     ISFLAG_DWARVEN           = 0x02000000,  // strong and robust items
@@ -1890,6 +1908,7 @@ enum menu_type
     MT_PICKUP,
     MT_KNOW,
     MT_RUNES,
+    MT_SELONE,                         // Select one
 };
 
 enum mon_holy_type
@@ -2027,7 +2046,9 @@ enum monster_type                      // menv[].type
     MONS_KILLER_BEE,
     MONS_QUEEN_BEE,
     MONS_VAMPIRE_MOSQUITO,
+#if TAG_MAJOR_VERSION == 34
     MONS_BUMBLEBEE,
+#endif
     MONS_YELLOW_WASP,
     MONS_RED_WASP,
     MONS_GOLIATH_BEETLE,
@@ -2884,7 +2905,7 @@ enum skill_type
     SK_STEALTH,
     SK_STABBING,
     SK_SHIELDS,
-    SK_TRAPS_DOORS,
+    SK_TRAPS,
     SK_UNARMED_COMBAT,
     SK_LAST_MUNDANE = SK_UNARMED_COMBAT,
     SK_SPELLCASTING,
@@ -3453,16 +3474,6 @@ enum daction_type
     NUM_DACTIONS,
 };
 
-enum final_effect_flavour
-{
-    FINEFF_LIGHTNING_DISCHARGE,
-    FINEFF_MIRROR_DAMAGE,
-    FINEFF_TRAMPLE_FOLLOW,
-    FINEFF_BLINK,
-    FINEFF_DISTORTION_TELEPORT,
-    FINEFF_ROYAL_JELLY_SPAWN,
-};
-
 enum disable_type
 {
     DIS_SPAWNS,
@@ -3500,6 +3511,17 @@ enum los_type
     LOS_NO_TRANS     = (1 << 1),
     LOS_SOLID        = (1 << 2),
     LOS_SOLID_SEE    = (1 << 3),
+};
+
+enum ac_type
+{
+    AC_NONE,
+    // These types block small amounts of damage, hardly affecting big hits.
+    AC_NORMAL,
+    AC_HALF,
+    AC_TRIPLE,
+    // This one stays fair over arbitrary splits.
+    AC_PROPORTIONAL,
 };
 
 // Tiles stuff.
@@ -3564,7 +3586,8 @@ enum tile_flags
     TILE_FLAG_INNER_FLAME= 0x10000000ULL,
     TILE_FLAG_CONSTRICTED= 0x20000000ULL,
     TILE_FLAG_SLOWED     = 0x8000000000ULL,
-    //TILE_FLAG_UNUSED     = 0x10000000000ULL,
+    TILE_FLAG_PAIN_MIRROR = 0x10000000000ULL,
+    //TILE_FLAG_UNUSED     = 0x20000000000ULL,
 
     // MDAM has 5 possibilities, so uses 3 bits.
     TILE_FLAG_MDAM_MASK  = 0x1C0000000ULL,
@@ -3608,7 +3631,6 @@ enum tile_flags
     TILE_FLAG_OOR        = 0x02000000ULL,
     TILE_FLAG_WATER      = 0x04000000ULL,
     TILE_FLAG_NEW_STAIR  = 0x08000000ULL,
-    TILE_FLAG_WAS_SECRET = 0x10000000ULL,
 
     // Kraken tentacle overlays.
     TILE_FLAG_KRAKEN_NW  = 0x020000000ULL,

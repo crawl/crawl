@@ -1,0 +1,149 @@
+%%%%
+CMD_REST
+
+回血及探索
+%%%%
+CMD_REST verbose
+
+花费100个回合自动回血、法杖充能、或者探索。休息过程中如果发现有敌意的怪物会立即
+打断
+%%%%
+CMD_EXPLORE
+
+在当前层自动探索
+%%%%
+CMD_EXPLORE verbose
+
+让角色在当前层自动探索尚未去过的地方，根据自动拾取的设置自动收集物品。如遇有敌
+意的怪、发现物品、或特殊地点，移动自行会中止。
+%%%%
+CMD_INTERLEVEL_TRAVEL
+
+长距离移动到指定的层
+%%%%
+CMD_INTERLEVEL_TRAVEL verbose
+
+远距离自动移动到指定的层，移动过程中如遇怪会打断
+%%%%
+CMD_USE_ABILITY
+
+使用神术、或内在能力
+%%%%
+CMD_PRAY
+
+向神祈祷
+%%%%
+CMD_PRAY verbose
+
+如果你信仰的神接受献祭，祈祷会献祭尸体或其他物品。如果站在神坛的位置，祈祷的操
+作会让你加入相应的神。对某些神来说，祈祷有其他特殊效果。
+%%%%
+CMD_SEARCH_STASHES
+
+查找物品、特殊地点
+%%%%
+CMD_SEARCH_STASHES verbose
+
+查找曾经发现过的物品、特殊地点，并移动到指定地方
+%%%%
+CMD_REPLAY_MESSAGES
+
+重读游戏提示信息
+%%%%
+CMD_RESISTS_SCREEN
+
+显示角色的概况
+%%%%
+CMD_RESISTS_SCREEN verbose
+
+显示抗性、能力、装备情况等
+%%%%
+CMD_DISPLAY_OVERMAP
+
+显示地城概况
+%%%%
+CMD_DISPLAY_OVERMAP verbose
+
+显示曾经发现的特殊关、商店和特殊地点的位置
+%%%%
+CMD_DISPLAY_RELIGION
+
+显示信仰状况
+%%%%
+CMD_DISPLAY_RELIGION verbose
+
+显示神的喜好厌恶、行为，以及当前的信仰值和可用的神术
+%%%%
+CMD_DISPLAY_MUTATIONS
+
+显示变异
+%%%%
+CMD_DISPLAY_SKILLS
+
+管理技能
+%%%%
+CMD_DISPLAY_CHARACTER_STATUS
+
+显示角色状况
+%%%%
+CMD_DISPLAY_CHARACTER_STATUS verbose
+
+显示激活的附魔情况和其他信息
+%%%%
+CMD_DISPLAY_KNOWN_OBJECTS
+
+显示物品类别
+%%%%
+CMD_SAVE_GAME_NOW
+
+保存并退出
+%%%%
+CMD_SAVE_GAME_NOW verbose
+
+保存游戏并退出，一旦继续游戏，存档会一度删除
+%%%%
+CMD_EDIT_PLAYER_TILE
+
+修改角色的贴图
+%%%%
+CMD_EDIT_PLAYER_TILE verbose
+
+修改角色显示的装备和贴图
+%%%%
+CMD_DISPLAY_COMMANDS
+
+游戏帮助
+%%%%
+CMD_DISPLAY_COMMANDS verbose
+
+列出命令及设置等
+%%%%
+CMD_CHARACTER_DUMP
+
+输出角色进度
+%%%%
+CMD_CHARACTER_DUMP verbose
+
+将角色资料输出到morgue文件夹下的‘playername.txt’，适合空闲时间再度利用。文件包
+含主要属性、装备、魔法、技能、记录等。
+%%%%
+CMD_AUTOFIGHT
+
+攻击最近的怪物
+%%%%
+CMD_AUTOFIGHT verbose
+
+向最近的有敌意怪物移动，用持有的武器进行攻击
+%%%%
+CMD_AUTOFIGHT_NOMOVE
+
+攻击邻接的怪物
+%%%%
+CMD_AUTOFIGHT_NOMOVE verbose
+
+用持有的武器攻击邻接的怪物
+%%%%
+CMD_WAIT
+
+等一个回合
+%%%%

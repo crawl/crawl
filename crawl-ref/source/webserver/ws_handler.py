@@ -225,6 +225,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 self.send_message("go_lobby")
                 return
 
+        if self.process:
+            return
+
         if config.dgl_mode and game_id not in config.games: return
 
         self.game_id = game_id
@@ -247,11 +250,13 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.process.add_watcher(self)
         try:
             self.process.start()
-        except:
+        except Exception:
             self.logger.warning("Exception starting process!", exc_info=True)
             self.process = None
             self.send_message("go_lobby")
         else:
+            if self.process is None: return # Can happen if the process creation fails
+
             self.send_message("game_started")
 
             if config.dgl_mode:
@@ -423,7 +428,6 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                                      self.username, config.games[game_id])
         rcfile_path = os.path.join(rcfile_path, self.username + ".rc")
         with open(rcfile_path, 'w') as f:
-            f.write(codecs.BOM_UTF8)
             f.write(contents.encode("utf8"))
 
     def on_message(self, message):
@@ -439,7 +443,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 elif not self.watched_game:
                     self.logger.warning("Didn't know how to handle msg: %s",
                                         obj["msg"])
-            except:
+            except Exception:
                 self.logger.warning("Error while handling JSON message!",
                                     exc_info=True)
 

@@ -144,8 +144,9 @@ TAGS:    entry no_monster_gen no_rotate
 ORIENT:  float
 MONS:    fungus
 SHUFFLE: {[(, UVW, XYZ
-SUBST:   '=.x, U==, V=x, W=x, X==, Y=x, Z=x, b:xxxbcv
+SUBST:   '=.x, U=+, V=x, W=x, X=+, Y=x, Z=x, b:xxxbcv
 RTILE:   x = wall_vines
+SUBST:   = : + x
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxx''xxxxxxxxxxxxxxxxx.xxxxxxxxxxxxx
@@ -249,9 +250,7 @@ ENDMAP
 # 29x23
 # Morbid curiosity
 # Monsters are easier. Made it harder for them to get out. The single orc
-# can pack a punch, though. His window is secret, so autoexploring won't
-# notice, except for characters with starting Traps and Doors skill, who
-# will then bring Stealth and Evasion as well.
+# can pack a punch, though.
 NAME:    dpeg_entry_morbid_curiosity
 TAGS:    entry no_rotate no_monster_gen
 ORIENT:  float
@@ -259,17 +258,17 @@ MONS:    goblin ; stone
 MONS:    hobgoblin ; stone
 MONS:    kobold ; dart . mace
 SHUFFLE: ABCD
-NSUBST:  X = 1:= / *:x
+NSUBST:  X = 1:+ / *:x
 NSUBST:  Y = 1:+ / *:x
 SUBST:   A=@, B=@xx, C=@xxxx, D=x
 MAP
      xxxxxxxxxBxxxxxxxxx
     xxxxx...........xxxxx
-   xxx...xxxxx=xxxxx...xxx
+   xxx...xxxxx+xxxxx...xxx
   xx..xxxxxlllllllxxxxx..xx
  xx.xxxxxlll.....lllxxxxx.xx
 xx.xxxxxx3..........xxxxxx.xx
-xx.xxxxxxxxxxx=xxxxxxxxxxx.xx
+xx.xxxxxxxxxxx+xxxxxxxxxxx.xx
 xx.xxxxxxxxxGXGXGxxxxxxxxx.xx
 x.xx...xxx.........xxx..lxx.x
 x.x....xx...........xx1.llx.x
@@ -278,8 +277,8 @@ A.+...........{.....G+..1l+.C
 x.x....x............Yx...lx.x
 x.x....xx...........xx..llx.x
 x.xx...xxx.........xxx..lxx.x
-xx.xxxxxxxxxxG=Gxxxxxxxxxxx.x
-xx.xxxxxxxxxxx=xxxxxxxxxxx.xx
+xx.xxxxxxxxxxG+Gxxxxxxxxxxx.x
+xx.xxxxxxxxxxx+xxxxxxxxxxx.xx
 xx.xxxxxx...........xxxxxx.xx
 xxx.xxxxxlll2..2.lllxxxxx.xx
  xxx..xxxxxlllllllxxxxx..xx
@@ -367,7 +366,7 @@ TAGS:   entry no_monster_gen no_rotate
 WEIGHT: 3
 ORIENT: float
 NSUBST: . = 1:d / *:.
-NSUBST: = = 3:= / *:x
+NSUBST: = = 3:+ / *:x
 ITEM:   stone / dart
 MAP
           xxxxxxxx.@.xx
@@ -476,7 +475,7 @@ MAP
 .cccccc...cccccc...cccccc...cccccc.
 .c....c...c....c...c....c...c....c.
 .c.(..c...c.{..c...c..[.c...c..>.c.
-.c....cc=cc....cc=cc....cc=cc....c.
+.c....cc+cc....cc+cc....cc+cc....c.
 .cc+ccc...cc+ccc...ccc+cc...ccc+cc.
 ..!...+...+....+...+....+...+...!..
 ..!!??!???!????!?.?!????!???!??!!..
@@ -770,7 +769,7 @@ TAGS:    entry
 ORIENT:  northwest
 SUBST:   p = 11., G = G..
 NSUBST:  { = { / ., [ = [ / .
-NSUBST:  + = 4:+ / *=+=
+NSUBST:  + = 1:c / *=+
 SHUFFLE: {[
 MONS:    plant / bush
 MAP
@@ -904,4 +903,37 @@ xxxxx.x.x.xxx.x.x.xxxxx
    xxx...xxxxx...xxx
    xxxx.........xxxx
    xxxx+xxxxxxx+xxx
+ENDMAP
+
+##############################################################################
+
+NAME:   lightli_hangedman_entry_farm
+ORIENT: float
+TAGS:   no_monster_gen entry
+MONS:   plant
+SUBST:  1 = 1:2 t:2 .:1
+MARKER: F = lua:fog_machine { cloud_type = "flame", pow_min = 100, \
+                              pow_max = 100, delay = 1, size = 1, \
+                              excl_rad = -1 }
+KPROP:  F1 = no_rtele_into
+MAP
+         xxxxxxx
+         x..{..x
+         x(...[x
+         x.....x
+xxxxxxxxxxxx+xxxxxxxxxxxx
+xWWWWWWWWWWW.WWWWWWWWWWWx
+xW111111111W.W111111111Wx
+xW111111111W.W111111111Wx
+xWWWWWWWWWWW.WWWWWWWWWWWx
+xWWWWWWWWW.....WWWWWWWWWx
+xW1111111W.mmm.W1111111Wx
+xW1111111W.mFm.W1111111Wx
+xW1111111W.mmm.W1111111Wx
+xWWWWWWWWW.....WWWWWWWWWx
+xWWWWWWWWWWW.WWWWWWWWWWWx
+xW111111111W.W111111111Wx
+xW111111111W.W111111111Wx
+xWWWWWWWWWWW.WWWWWWWWWWWx
+xxxxxxxxxxxx+xxxxxxxxxxxx
 ENDMAP

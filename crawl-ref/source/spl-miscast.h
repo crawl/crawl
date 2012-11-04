@@ -8,7 +8,6 @@
 
 #include "enum.h"
 
-#include "beam.h"
 #include "monster.h"
 #include "mpr.h"
 #include "spl-util.h"
@@ -21,25 +20,26 @@ enum nothing_happens_when_type
 };
 
 class actor;
+// class monster;
 
 class MiscastEffect
 {
 public:
     MiscastEffect(actor* _target, int _source, spell_type _spell, int _pow,
-                  int _fail, std::string _cause = "",
+                  int _fail, string _cause = "",
                   nothing_happens_when_type _nothing_happens = NH_DEFAULT,
                   int _lethality_margin = 0,
-                  std::string _hand_str = "", bool _can_plural_hand = true);
+                  string _hand_str = "", bool _can_plural_hand = true);
     MiscastEffect(actor* _target, int _source, spschool_flag_type _school,
-                  int _level, std::string _cause,
+                  int _level, string _cause,
                   nothing_happens_when_type _nothing_happens = NH_DEFAULT,
                   int _lethality_margin = 0,
-                  std::string _hand_str = "", bool _can_plural_hand = true);
+                  string _hand_str = "", bool _can_plural_hand = true);
     MiscastEffect(actor* _target, int _source, spschool_flag_type _school,
-                  int _pow, int _fail, std::string _cause,
+                  int _pow, int _fail, string _cause,
                   nothing_happens_when_type _nothing_happens = NH_DEFAULT,
                   int _lethality_margin = 0,
-                  std::string _hand_str = "", bool _can_plural_hand = true);
+                  string _hand_str = "", bool _can_plural_hand = true);
 
 
     ~MiscastEffect();
@@ -50,7 +50,7 @@ private:
     actor* target;
     int    source;
 
-    std::string cause;
+    string cause;
 
     spell_type         spell;
     spschool_flag_type school;
@@ -67,7 +67,7 @@ private:
 
     int lethality_margin;
 
-    std::string hand_str;
+    string hand_str;
     bool        can_plural_hand;
 
     int    kill_source;
@@ -79,11 +79,11 @@ private:
 
     bolt beam;
 
-    std::string all_msg;
-    std::string you_msg;
-    std::string mon_msg;
-    std::string mon_msg_seen;
-    std::string mon_msg_unseen;
+    string all_msg;
+    string you_msg;
+    string mon_msg;
+    string mon_msg_seen;
+    string mon_msg_unseen;
 
     msg_channel_type msg_ch;
 
@@ -94,7 +94,7 @@ private:
 
 private:
     void init();
-    std::string get_default_cause(bool attribute_to_user) const;
+    string get_default_cause(bool attribute_to_user) const;
 
     monster* target_as_monster()
     {

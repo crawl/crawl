@@ -1,0 +1,237 @@
+{{
+function grunt_burn_victim_die(monster, killer_type, killer_index, silent, wizard)
+      if you.branch() == "Geh" then
+           local pp = dgn.point(you.pos())
+           local x = monster.x + pp.x
+           local y = monster.y + pp.y
+           if (you.see_cell(x, y)) then
+               crawl.mpr("The corpse bursts into flame!", "warning")
+           end
+           dgn.create_monster(x, y, "flaming corpse")
+      end
+end
+
+function callback.grunt_victim_ignite (data, triggerable, triggerer, marker, ev)
+     if triggerer.type == "player_los" and not data.seen then
+          local mp = dgn.point(marker:pos())
+          local pp = dgn.point(you.pos())
+          if (mp == pp) or (monster.get_monster_at(mp.x - pp.x, mp.y - pp.y)) then
+               data.seen = true
+               return
+          end
+          local mons = nil
+          if (you.branch() == "Geh") or (you.branch() == "D" and you.absdepth() > 14) then
+              mons = dgn.create_monster(mp.x, mp.y,
+                       "human att:neutral never_corpse ; nothing / " ..
+                       "elf att:neutral never_corpse ; nothing / " ..
+                       "dwarf att:neutral never_corpse ; nothing / " ..
+                       "orc att:neutral never_corpse ; nothing / " ..
+                       "merfolk w:5 att:neutral never_corpse ; nothing / " ..
+                       "halfling w:5 att:neutral never_corpse ; nothing / " ..
+                       "kobold w:5 att:neutral never_corpse ; nothing / " ..
+                       "spriggan w:5 att:neutral never_corpse ; nothing / " ..
+                       "naga w:5 att:neutral never_corpse ; nothing / " ..
+                       "centaur w:5 att:neutral never_corpse ; nothing / " ..
+                       "ogre w:5 att:neutral never_corpse ; nothing / " ..
+                       "tengu w:5 att:neutral never_corpse ; nothing / " ..
+                       "felid w:2 att:neutral never_corpse ; nothing / " ..
+                       "octopode w:2 att:neutral never_corpse ; nothing")
+          else
+              mons = dgn.create_monster(mp.x, mp.y,
+                        "human w:20 att:neutral never_corpse ; nothing / " ..
+                        "elf att:neutral never_corpse ; nothing / " ..
+                        "dwarf att:neutral never_corpse ; nothing / " ..
+                        "orc att:neutral never_corpse ; nothing / " ..
+                        "halfling w:5 att:neutral never_corpse ; nothing / " ..
+                        "kobold w:5 att:neutral never_corpse ; nothing / " ..
+                        "spriggan w:2 att:neutral never_corpse ; nothing / ")
+          end
+          if mons == nil then
+              return
+          end
+          data.seen = true
+          mons.set_prop("monster_dies_lua_key", grunt_burn_victim_die)
+          dgn.place_cloud(mp.x, mp.y, "flame", 10)
+          mons.add_ench("sticky_flame",1,5000)
+     end
+end
+}}
+
+NAME: grunt_burning_victim
+TAGS: allow_dup grunt_burning_victim no_item_gen no_monster_gen
+{{
+
+local burnmarker = TriggerableFunction:new {
+  func = "callback.grunt_victim_ignite",
+  repeated = true,
+  data={seen=false}
+  }
+
+burnmarker:add_triggerer(DgnTriggerer:new { type = "player_los" })
+
+lua_marker("#", burnmarker)
+}}
+MAP
+#
+ENDMAP
+
+NAME: grunt_makhleb_burn_the_innocent
+TAGS: transparent uniq_altar_makhleb temple_overflow_makhleb mini_float
+DEPTH: D:2-12, Orc
+KFEAT: _ = altar_makhleb
+KPROP: defghijk. = bloody / nothing
+SUBVAULT: d : grunt_burning_victim
+SUBVAULT: e : grunt_burning_victim
+SUBVAULT: f : grunt_burning_victim
+SUBVAULT: g : grunt_burning_victim
+SUBVAULT: h : grunt_burning_victim
+SUBVAULT: i : grunt_burning_victim
+SUBVAULT: j : grunt_burning_victim
+SUBVAULT: k : grunt_burning_victim
+MARKER: H = lua:fog_machine { cloud_type="flame", pow_min=10, pow_max = 10, \
+                              delay = 10, walk_dist = 0, size = 1, \
+                              excl_rad = 0 }
+MAP
+ .......
+..mm+mm..
+.mmd.emm.
+.mfH.Hgm.
+.+.._..+.
+.mhH.Him.
+.mmj.kmm.
+..mm+mm..
+ .......
+ENDMAP
+
+NAME: grunt_fire_pit_1
+TAGS: transparent mini_float
+DEPTH: D:19-26, Geh:1-6
+SUBVAULT: d : grunt_burning_victim
+SUBVAULT: e : grunt_burning_victim
+SUBVAULT: f : grunt_burning_victim
+SUBVAULT: g : grunt_burning_victim
+MONS: crimson imp, red devil
+NSUBST: O = 2:1, 2:2
+MARKER: H = lua:fog_machine { cloud_type = "flame", \
+            pow_min = 10, pow_max = 10, delay = 10, \
+            size = 2, walk_dist = 1 }
+MAP
+ .....
+.Om+mO.
+.mmdmm.
+.+eHf+.
+.mmgmm.
+.Om+mO.
+ .....
+ENDMAP
+
+NAME: grunt_fire_pit_2
+TAGS: transparent
+DEPTH: D:19-26, Geh:1-6
+SUBVAULT: d : grunt_burning_victim
+SUBVAULT: e : grunt_burning_victim
+SUBVAULT: f : grunt_burning_victim
+SUBVAULT: g : grunt_burning_victim
+SUBVAULT: h : grunt_burning_victim
+SUBVAULT: i : grunt_burning_victim
+SUBVAULT: j : grunt_burning_victim
+SUBVAULT: k : grunt_burning_victim
+MONS: red devil
+KMONS: H = crimson imp
+MARKER: H = lua:fog_machine { cloud_type = "flame", \
+            pow_min = 10, pow_max = 10, delay = 10, \
+            size = 2, walk_dist = 1 }
+MAP
+ mmm@
+mmdm.
+memm.
+mH+1.mmm
+mfmm.mhmm
+mmgm.mmim
+.mmm.1+Hm
+    .mmjm
+    .mkmm
+    @mmm
+ENDMAP
+
+NAME: grunt_hell_entry_fire_pits
+ORIENT: float
+DEPTH: D:19-26
+SUBVAULT: d : grunt_burning_victim
+SUBVAULT: e : grunt_burning_victim
+SUBVAULT: f : grunt_burning_victim
+SUBVAULT: g : grunt_burning_victim
+SUBVAULT: h : grunt_burning_victim
+SUBVAULT: i : grunt_burning_victim
+SUBVAULT: j : grunt_burning_victim
+SUBVAULT: k : grunt_burning_victim
+MONS: sun demon, red devil, crimson imp
+KFEAT: O = enter_hell
+KMONS: O = balrug / hellion
+KPROP: . = nothing / w:5 bloody
+MARKER: H = lua:fog_machine { cloud_type = "flame", \
+            pow_min = 10, pow_max = 10, delay = 10, \
+            size = 2, walk_dist = 1 }
+MAP
+    ..mmmmm..
+   ..mmdHemm..
+  ...m3m+m3m...
+ ....mmm.mmm....
+........3........
+.mmm..2...2..mmm.
+mm3m.2..1..2.m3mm
+mfmm...3.3...mmgm
+mH+.3.1.O.1.3.+Hm
+mhmm...3.3...mmim
+mm3m.2..1..2.m3mm
+.mmm..2...2..mmm.
+........3........
+ ....mmm.mmm....
+  ...m3m+m3m...
+   ..mmjHkmm..
+    ..mmmmm..
+ENDMAP
+
+NAME: grunt_gehenna_stairs_fire_pit
+ORIENT: float
+DEPTH: Geh:1-6
+COLOUR: c = brown
+TILE: c = DNGN_STONE_WALL_BROWN
+SUBVAULT: d : grunt_burning_victim
+SUBVAULT: e : grunt_burning_victim
+SUBVAULT: f : grunt_burning_victim
+SUBVAULT: g : grunt_burning_victim
+SUBVAULT: h : grunt_burning_victim
+SUBVAULT: i : grunt_burning_victim
+SUBVAULT: j : grunt_burning_victim
+SUBVAULT: k : grunt_burning_victim
+MONS: Brimstone Fiend / Hell Sentinel, balrug / hellion, sun demon, \
+      red devil, crimson imp
+KMONS: H : crimson imp
+MARKER: H = lua:fog_machine { cloud_type = "flame", \
+            pow_min = 10, pow_max = 10, delay = 10, \
+            size = 3, walk_dist = 2, spread_rate = 3 }
+MAP
+xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxcccccccxxxxxxx
+xxxxxccc}.).]cccxxxxx
+xxxccc.........cccxxx
+xxxc....G1.1G....cxxx
+xxcc.G.........G.ccxx
+xxc....2..G..2....cxx
+xccnn..G..3..G..nnccx
+xcd.nn..3...3..nn.hcx
+xc4e5nn.......nn5i4cx
+xcH.54+...1...+45.Hcx
+xc4g5nn.2...2.nn5j4cx
+xcf.nn.........nn.kcx
+xccnn..G3...3G..nnccx
+xxc.2.3..3G3..3.2.cxx
+xxcc.G.3.....3.G.ccxx
+xxxc....G...G....cxxx
+xxxccc...3.3...cccxxx
+xxxxxccc44.44cccxxxxx
+xxxxxcccc+++ccccxxxxx
+xxxxxccc.....cccxxxxx
+xxxxxcc@@@@@@@ccxxxxx
+ENDMAP

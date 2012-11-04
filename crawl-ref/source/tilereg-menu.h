@@ -3,13 +3,14 @@
 #define TILEREG_MENU_H
 
 #include "format.h"
+#include "tilebuf.h"
 #include "tilereg.h"
 #include "fixedvector.h"
 #include <vector>
 
 class MenuEntry;
 
-class MenuRegion : public Region
+class MenuRegion : public ControlRegion
 {
 public:
     MenuRegion(ImageManager *im, FontWrapper *entry);
@@ -19,7 +20,8 @@ public:
     virtual void clear();
 
     int maxpagesize() const;
-    void set_entry(int index, const std::string &s, int colour, const MenuEntry *me, bool mark_selected = true);
+    void set_entry(int index, const string &s, int colour, const MenuEntry *me,
+                   bool mark_selected = true);
     void set_offset(int lines);
     void set_more(const formatted_string &more);
     void set_num_columns(int columns);
@@ -31,12 +33,13 @@ protected:
     struct MenuRegionEntry
     {
         formatted_string text;
+        int colour; // keep it separate from text
         int sx, ex, sy, ey;
         bool selected;
         bool heading;
         char key;
         bool valid;
-        std::vector<tile_def> tiles;
+        vector<tile_def> tiles;
     };
 
     ImageManager *m_image;
@@ -45,8 +48,16 @@ protected:
     int m_mouse_idx;
     int m_max_columns;
     bool m_dirty;
+#ifdef TOUCH_UI
+    int m_more_region_start;
+#endif
 
-    std::vector<MenuRegionEntry> m_entries;
+    virtual void run() {};
+    void _place_entries(const int left_offset, const int top_offset,
+                        const int menu_width);
+    void _clear_buffers();
+
+    vector<MenuRegionEntry> m_entries;
 
     // TODO enne - remove this?
     ShapeBuffer m_shape_buf;

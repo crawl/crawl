@@ -12,7 +12,7 @@
 #include "externs.h"
 #include "enum.h"
 
-bool armour_prompt(const std::string & mesg, int *index, operation_types oper);
+bool armour_prompt(const string & mesg, int *index, operation_types oper);
 
 bool takeoff_armour(int index);
 

@@ -34,7 +34,7 @@ public:
 
     void assert_validity() const;
 
-    const std::string short_name() const;
+    const string short_name() const;
 
     const PlaceInfo &operator += (const PlaceInfo &other);
     const PlaceInfo &operator -= (const PlaceInfo &other);

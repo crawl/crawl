@@ -189,14 +189,6 @@ book of changes
 
 Ένα βιβλίο με ξόρκια.
 %%%%
-book of card effects
-
-Ένα βιβλίο με ξόρκια.
-%%%%
-book of charms
-
-Ένα βιβλίο με ξόρκια.
-%%%%
 book of clouds
 
 Ένα βιβλίο με ξόρκια.
@@ -288,10 +280,6 @@ book of power
 Ένα βιβλίο με ξόρκια.
 %%%%
 book of spatial translocations
-
-Ένα βιβλίο με ξόρκια.
-%%%%
-book of stalking
 
 Ένα βιβλίο με ξόρκια.
 %%%%

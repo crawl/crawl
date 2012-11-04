@@ -45,7 +45,6 @@ NAME:    lemuel_river_lethe
 ORIENT:  encompass
 TAGS:    no_rotate
 DEPTH:   D:16-26
-SUBST:   + = +=
 SUBST:   . = .:100 !:1 6:4
 SUBST:   ; = .:200 !:1 1:3
 SUBST:   1 = 1:20 .
@@ -72,7 +71,7 @@ SUBST:   b = b|
 SUBST:   | = |*
 ITEM:    any scroll, potion of experience
 SHUFFLE: dD/eE/fF/gG
-SUBST:   D==, d=|, E=x, e=%%*, F=x, f=%, G=x, g=%
+SUBST:   D=+, d=|, E=x, e=%%*, F=x, f=%, G=x, g=%
 SHUFFLE: PQ
 SUBST:   Q=xw
 KMONS:   P = orange crystal statue
@@ -80,7 +79,7 @@ KFEAT:   P = floor
 KMONS:   k = giant eyeball
 KITEM:   k = potion of experience / any good_item
 NSUBST:  r = 1:+ / *:x
-NSUBST:  R = 1:= / *:x
+NSUBST:  R = 1:+ / *:x
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxccccccccccccxxxxxx
@@ -163,7 +162,7 @@ KMONS:   9 = Xtahua, hellephant
 KMONS:   $ = 0 / nothing w:90
 KITEM:   $ = $
 NSUBST:  = = 1:= / *:v
-SUBST:   = = =v
+SUBST:   = = +v
 SUBST:   ' : l.
 : _G.set_random_mon_list("fire bat w:30 / fire drake / dragon / hell hound / " ..
 :     "efreet / fire crab / fire giant w:3 / mottled dragon / " ..
@@ -248,12 +247,11 @@ NAME:    box_level_dp
 DEPTH:   D:20-26
 ORIENT:  encompass
 TAGS:    no_pool_fixup no_rotate
-SHUFFLE: zZ
-NSUBST:  A = 1:= / *:b
-NSUBST:  B = 1:= / *:b
-NSUBST:  C = 1:= / *:b
-NSUBST:  D = 1:= / *:b
-NSUBST:  E = 1:= / *:x
+NSUBST:  A = 1:+ / *:b
+NSUBST:  B = 1:+ / *:b
+NSUBST:  C = 1:+ / *:b
+NSUBST:  D = 1:+ / *:b
+NSUBST:  E = 1:+ / *:x
 KFEAT:   ^ = teleport trap / Zot trap
 SUBST:   ':''l. , '=l.
 SUBST:   ":""W. , "=Ww..
@@ -267,9 +265,7 @@ KMONS:   l = fire vortex / lava snake / lava fish / fire elemental w:1 /\
              nothing w:50
 KFEAT:   l = l
 KMONS:   z = killer bee
-KMONS:   Z = bumblebee
 KITEM:   z = royal jelly / honeycomb w:20 / nothing w:120
-KITEM:   Z = royal jelly / honeycomb w:20 / nothing w:120
 : if crawl.one_chance_in(3) then
 KMONS:   ! = orc / orc warrior / orc knight / nothing w:30
 KMONS:   & = orc warlord / orc knight / nothing w:20
@@ -283,7 +279,6 @@ KMONS:   & = naga warrior / greater naga
 SUBST:   * = * % % $ $ f
 SUBST:   ; = 9 0
 SUBST:   !=%$, &=*%
-SUBST:   _ : _+ , _ = +=
 SUBST:   V = *
 COLOUR:  a = yellow
 TILE:    a = wall_wax
@@ -305,7 +300,7 @@ xx..""ww".......www....."wwwwwwwwww........."www"......wwwww"....xxxxx
 xxx.........."wwww"..""wwwwwwwwwwwwwwwwww".www"...wwwwwwwwwwww.....xxx
 xxxxx....""wwwwwwwwwwwwwwww.......wwwwwwwwwwwwwwwwwwwwwww.....xx....xx
 xxx..""wwwwwwwwwwwwwwww"......G.G......"wwwwxxww".........xxxxx.....xx
-x."wwwwwwwwwwwwwxxx__xxxxxxxxxx=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx....x
+x."wwwwwwwwwwwwwxxx__xxxxxxxxxx+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx....x
 xwwwwwwww".."wwwxww.."w........................................>xx...x
 xxwwww""....."xwxw"...ww........................................xx...x
 xxww".........xxxw..............................................xx..xx
@@ -334,13 +329,13 @@ x.........xxxxxxx.....c.......bbbbbbbbbb.bbbbbbbbbb.......c.....xxx..x
 xxxx......x***99+.....c...................................c.....xxxx.x
 xxxx..xx..xxxxxxx.....c*..;...;...;...;...;...;...;...;..*c.....x....x
 x.....xx........x.....c...................................c.....x.xx.x
-x.xx.....xxx....x.....c...*...*...*...*...*...*...*...*..^c.....x.xx=x
+x.xx.....xxx....x.....c...*...*...*...*...*...*...*...*..^c.....x.xx+x
 x.xx....1+!x..xxx.....ccccccccccccccccccncccccccccccccccccc.....xxx..x
 x....xx..xxx..xxx...............................................xx..xx
 x....xx.......xxx.........................................z..z..x....x
 xx............xxx<.............................................zxa...x
-xx..x......xx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx_x_x_xxazzxx
-xxx........xx.....xxx...xx.x..xx...xxaaaaaaaeaaea.a..aaaaaaa.aaaaazzxx
+xx..x......xx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxazzxx
+xxx........xx.....xxx...xx.x..xx...xxaaaaaaaeaaea.a..aaaaaaaaaaaaazzxx
 xxxx..xx..............x...x...xx.xx.xaaazazzaaza.a.aa.za.z.aaaa.a.aazx
 xxxxxxxxxxx....x..xx.x.xx.x..x..xx}..xaeazaazzazzaa..aa..aa....z.aeaxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1029,7 +1024,7 @@ TAGS:    no_monster_gen no_item_gen no_trap_gen patrolling
 DEPTH:   D:16-26
 ORIENT:  encompass
 KMONS:   - = plant
-KMONS:   _ = plant col:random name:demonic name_adjective
+KMONS:   _ = plant col:random name:demonic name_adjective tile:mons_demonic_plant
 KMONS:   no = human ; dart ego:exploding w:21 | dart ego:dispersal w:2 | \
                       dart ego:none w:1 | wand of lightning w:1 . \
                       mundane flail | mundane falchion | mundane trident . \

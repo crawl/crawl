@@ -1,8 +1,6 @@
 #ifndef ITEMPROP_ENUM_H
 #define ITEMPROP_ENUM_H
 
-#include "tags.h"
-
 enum armour_type
 {
     ARM_ROBE,
@@ -391,7 +389,9 @@ enum stave_type
     STAFF_ENERGY,
     STAFF_DEATH,
     STAFF_CONJURATION,
+#if TAG_MAJOR_VERSION == 34
     STAFF_ENCHANTMENT,
+#endif
     STAFF_SUMMONING,
     STAFF_AIR,
     STAFF_EARTH,
@@ -466,7 +466,7 @@ enum weapon_type
     WPN_DEMON_TRIDENT,
     WPN_SCYTHE,
 
-    WPN_STAFF,
+    WPN_STAFF,          // Just used for the weapon stats for magical staves.
     WPN_QUARTERSTAFF,
     WPN_LAJATANG,
 

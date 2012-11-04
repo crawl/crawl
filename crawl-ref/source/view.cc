@@ -53,6 +53,7 @@
 #include "random.h"
 #include "state.h"
 #include "stuff.h"
+#include "target.h"
 #include "terrain.h"
 #include "tilemcache.h"
 #include "traps.h"
@@ -70,7 +71,7 @@
 
 crawl_view_geometry crawl_view;
 
-bool handle_seen_interrupt(monster* mons, std::vector<std::string>* msgs_buf)
+bool handle_seen_interrupt(monster* mons, vector<string>* msgs_buf)
 {
     activity_interrupt_data aid(mons);
     if (mons->seen_context)
@@ -163,14 +164,14 @@ void seen_monsters_react()
     }
 }
 
-static std::string _desc_mons_type_map(std::map<monster_type, int> types)
+static string _desc_mons_type_map(map<monster_type, int> types)
 {
-    std::string message;
+    string message;
     unsigned int count = 1;
-    for (std::map<monster_type, int>::iterator it = types.begin();
+    for (map<monster_type, int>::iterator it = types.begin();
          it != types.end(); ++it)
     {
-        std::string name;
+        string name;
         description_level_type desc;
         if (it->second == 1)
             desc = DESC_A;
@@ -203,12 +204,12 @@ static std::string _desc_mons_type_map(std::map<monster_type, int> types)
  * @param types monster types and the number of monster for each type.
  * @param genera monster genera and the number of monster for each genus.
  */
-static void _genus_factoring(std::map<monster_type, int> &types,
-                             std::map<monster_type, int> &genera)
+static void _genus_factoring(map<monster_type, int> &types,
+                             map<monster_type, int> &genera)
 {
     monster_type genus = MONS_NO_MONSTER;
     int num = 0;
-    std::map<monster_type, int>::iterator it;
+    map<monster_type, int>::iterator it;
     // Find the most represented genus.
     for (it = genera.begin(); it != genera.end(); ++it)
         if (it->second > num)
@@ -250,8 +251,8 @@ void update_monsters_in_view()
 {
     const unsigned int max_msgs = 4;
     int num_hostile = 0;
-    std::vector<std::string> msgs;
-    std::vector<monster*> monsters;
+    vector<string> msgs;
+    vector<monster*> monsters;
 
     for (monster_iterator mi; mi; ++mi)
     {
@@ -289,8 +290,8 @@ void update_monsters_in_view()
     if (!msgs.empty())
     {
         unsigned int size = monsters.size();
-        std::map<monster_type, int> types;
-        std::map<monster_type, int> genera; // This is the plural for genus!
+        map<monster_type, int> types;
+        map<monster_type, int> genera; // This is the plural for genus!
         for (unsigned int i = 0; i < size; ++i)
         {
             monster_type type;
@@ -313,7 +314,7 @@ void update_monsters_in_view()
         }
 
         bool warning = false;
-        std::string warning_msg = "Ashenzari warns you:";
+        string warning_msg = "Ashenzari warns you:";
         warning_msg += " ";
         for (unsigned int i = 0; i < size; ++i)
         {
@@ -328,7 +329,7 @@ void update_monsters_in_view()
             else
                 warning = true;
 
-            std::string monname;
+            string monname;
             if (size == 1)
                 monname = mon->pronoun(PRONOUN_SUBJECTIVE);
             else if (mon->type == MONS_DANCING_WEAPON)
@@ -403,53 +404,6 @@ static const FixedArray<uint8_t, GXM, GYM>& _tile_difficulties(bool random)
     return cache;
 }
 
-static std::auto_ptr<FixedArray<bool, GXM, GYM> > _tile_detectability()
-{
-    std::auto_ptr<FixedArray<bool, GXM, GYM> > map(new FixedArray<bool, GXM, GYM>);
-
-    std::vector<coord_def> flood_from;
-
-    for (int x = X_BOUND_1; x <= X_BOUND_2; ++x)
-        for (int y = Y_BOUND_1; y <= Y_BOUND_2; ++y)
-        {
-            (*map)(coord_def(x,y)) = false;
-
-            if (feat_is_stair(grd[x][y]))
-                flood_from.push_back(coord_def(x, y));
-        }
-
-    flood_from.push_back(you.pos());
-
-    while (!flood_from.empty())
-    {
-        coord_def p = flood_from.back();
-        flood_from.pop_back();
-
-        if (!in_bounds(p))
-            continue;
-
-        if ((*map)(p))
-            continue;
-
-        (*map)(p) = true;
-
-        if (grd(p) == DNGN_SECRET_DOOR)
-        {
-            reveal_secret_door(p);
-            continue;
-        }
-
-        if (grd(p) < DNGN_MINSEE && !feat_is_closed_door(grd(p)))
-            continue;
-
-        for (int dy = -1; dy <= 1; ++dy)
-            for (int dx = -1; dx <= 1; ++dx)
-                flood_from.push_back(p + coord_def(dx,dy));
-    }
-
-    return map;
-}
-
 // Returns true if it succeeded.
 bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
                    bool force, bool deterministic,
@@ -482,11 +436,6 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
     const FixedArray<uint8_t, GXM, GYM>& difficulty =
         _tile_difficulties(!deterministic);
 
-    std::auto_ptr<FixedArray<bool, GXM, GYM> > detectable;
-
-    if (!deterministic)
-        detectable = _tile_detectability();
-
     for (radius_iterator ri(pos, map_radius, C_ROUND);
          ri; ++ri)
     {
@@ -494,7 +443,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
         {
             int threshold = proportion;
 
-            const int dist = distance(you.pos(), *ri);
+            const int dist = distance2(you.pos(), *ri);
 
             if (dist > very_far)
                 threshold = threshold / 3;
@@ -509,9 +458,6 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
             env.map_knowledge(*ri).clear();
 
         if (!wizard_map && (env.map_knowledge(*ri).seen() || env.map_knowledge(*ri).mapped()))
-            continue;
-
-        if (!wizard_map && !deterministic && !((*detectable)(*ri)))
             continue;
 
         const dungeon_feature_type feat = grd(*ri);
@@ -576,7 +522,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
         else
             canned_msg(MSG_DISORIENTED);
 
-        std::vector<std::string> sensed;
+        vector<string> sensed;
 
         if (num_altars > 0)
         {
@@ -653,13 +599,13 @@ bool mon_enemies_around(const monster* mons)
 // Returns a string containing a representation of the map.  Leading and
 // trailing spaces are trimmed from each line.  Leading and trailing empty
 // lines are also snipped.
-std::string screenshot()
+string screenshot()
 {
-    std::vector<std::string> lines(crawl_view.viewsz.y);
+    vector<string> lines(crawl_view.viewsz.y);
     unsigned int lsp = GXM;
     for (int y = 0; y < crawl_view.viewsz.y; y++)
     {
-        std::string line;
+        string line;
         for (int x = 0; x < crawl_view.viewsz.x; x++)
         {
             // in grid coords
@@ -693,7 +639,7 @@ std::string screenshot()
     while (!lines.empty() && lines.back().empty())
         lines.pop_back();       // then from the bottom
 
-    std::ostringstream ss;
+    ostringstream ss;
     unsigned int y = 0;
     for (y = 0; y < lines.size() && lines[y].empty(); y++)
         ;                       // ... and from the top
@@ -724,7 +670,7 @@ void view_update_at(const coord_def &pos)
 #ifndef USE_TILE_LOCAL
     if (!env.map_knowledge(pos).visible())
         return;
-    glyph g = get_cell_glyph(pos);
+    cglyph_t g = get_cell_glyph(pos);
 
     int flash_colour = you.flash_colour == BLACK
         ? viewmap_flash_colour()
@@ -747,6 +693,10 @@ void view_update_at(const coord_def &pos)
     // Force colour back to normal, else clrscr() will flood screen
     // with this colour on DOS.
     textcolor(LIGHTGREY);
+
+#endif
+#ifdef USE_TILE_WEB
+    tiles.mark_for_redraw(pos);
 #endif
 }
 
@@ -912,7 +862,7 @@ static int player_view_update_at(const coord_def &gc)
 
 static void player_view_update()
 {
-    std::vector<coord_def> update_excludes;
+    vector<coord_def> update_excludes;
     bool need_update = false;
     for (radius_iterator ri(you.get_los()); ri; ++ri)
     {
@@ -942,7 +892,7 @@ static void _draw_out_of_bounds(screen_cell_t *cell)
 static void _draw_outside_los(screen_cell_t *cell, const coord_def &gc)
 {
     // Outside the env.show area.
-    glyph g = get_cell_glyph(gc, Options.clean_map);
+    cglyph_t g = get_cell_glyph(gc, Options.clean_map);
     cell->glyph  = g.ch;
     cell->colour = g.col;
 
@@ -984,7 +934,7 @@ static void _draw_los(screen_cell_t *cell,
                       const coord_def &gc, const coord_def &ep,
                       bool anim_updates)
 {
-    glyph g = get_cell_glyph(gc);
+    cglyph_t g = get_cell_glyph(gc);
     cell->glyph  = g.ch;
     cell->colour = g.col;
 
@@ -1013,7 +963,9 @@ static bool _show_terrain = false;
 //---------------------------------------------------------------
 void viewwindow(bool show_updates, bool tiles_only)
 {
-    if (you.duration[DUR_TIME_STEP])
+    // The player could be at (0,0) if we are called during level-gen; this can
+    // happen via mpr -> interrupt_activity -> stop_delay -> runrest::stop
+    if (you.duration[DUR_TIME_STEP] || you.pos().origin())
         return;
 
     screen_cell_t *cell(crawl_view.vbuf);

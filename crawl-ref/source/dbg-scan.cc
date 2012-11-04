@@ -19,24 +19,45 @@
 #include "mon-util.h"
 #include "shopping.h"
 #include "state.h"
+#include "terrain.h"
 #include "traps.h"
 
 #define DEBUG_ITEM_SCAN
 #ifdef DEBUG_ITEM_SCAN
-static void _dump_item(const char *name, int num, const item_def &item)
+static void _dump_item(const char *name, int num, const item_def &item,
+                       PRINTF(3, ));
+
+static void _dump_item(const char *name, int num, const item_def &item,
+                       const char *format, ...)
 {
-    mpr(name, MSGCH_ERROR);
+#ifdef DEBUG_FATAL
+    const msg_channel_type chan = MSGCH_WARN;
+#else
+    const msg_channel_type chan = MSGCH_ERROR;
+#endif
+
+    va_list args;
+    va_start(args, format);
+    string msg = vmake_stringf(format, args);
+    va_end(args);
+
+    mpr(msg.c_str(), chan);
+    mpr(name, chan);
 
     mprf("    item #%d:  base: %d; sub: %d; plus: %d; plus2: %d; special: %d",
          num, item.base_type, item.sub_type,
          item.plus, item.plus2, item.special);
 
-    mprf("    quant: %d; colour: %d; ident: 0x%08"PRIx32"; ident_type: %d",
+    mprf("    quant: %d; colour: %d; ident: 0x%08" PRIx32"; ident_type: %d",
          item.quantity, (int)item.colour, item.flags,
          get_ident_type(item));
 
     mprf("    x: %d; y: %d; link: %d", item.pos.x, item.pos.y, item.link);
 
+#ifdef DEBUG_FATAL
+    if (!crawl_state.game_crashed)
+        die("%s %s", msg.c_str(), name);
+#endif
     crawl_state.cancel_cmd_repeat();
 }
 
@@ -84,18 +105,15 @@ void debug_item_scan(void)
             // Check for invalid (zero quantity) items that are linked in.
             if (!mitm[obj].defined())
             {
-                mprf(MSGCH_ERROR, "Linked invalid item at (%d,%d)!",
-                     ri->x, ri->y);
-                _dump_item(mitm[obj].name(DESC_PLAIN).c_str(), obj, mitm[obj]);
+                _dump_item(mitm[obj].name(DESC_PLAIN).c_str(), obj, mitm[obj],
+                           "Linked invalid item at (%d,%d)!", ri->x, ri->y);
             }
 
             // Check that item knows what stack it's in.
             if (mitm[obj].pos != *ri)
             {
-                mprf(MSGCH_ERROR,"Item position incorrect at (%d,%d)!",
-                     ri->x, ri->y);
-                _dump_item(mitm[obj].name(DESC_PLAIN).c_str(),
-                            obj, mitm[obj]);
+                _dump_item(mitm[obj].name(DESC_PLAIN).c_str(), obj, mitm[obj],
+                           "Item position incorrect at (%d,%d)!", ri->x, ri->y);
             }
 
             // If we run into a premarked item we're in real trouble,
@@ -123,19 +141,12 @@ void debug_item_scan(void)
         // Don't check (-1, -1) player items or (-2, -2) monster items
         // (except to make sure that the monster is alive).
         if (mitm[i].pos.origin())
-        {
-            mpr("Unlinked temporary item:", MSGCH_ERROR);
-            _dump_item(name, i, mitm[i]);
-        }
+            _dump_item(name, i, mitm[i], "Unlinked temporary item:");
         else if (mon != NULL && mon->type == MONS_NO_MONSTER)
-        {
-            mpr("Unlinked item held by dead monster:", MSGCH_ERROR);
-            _dump_item(name, i, mitm[i]);
-        }
+            _dump_item(name, i, mitm[i], "Unlinked item held by dead monster:");
         else if ((mitm[i].pos.x > 0 || mitm[i].pos.y > 0) && !visited[i])
         {
-            mpr("Unlinked item:", MSGCH_ERROR);
-            _dump_item(name, i, mitm[i]);
+            _dump_item(name, i, mitm[i], "Unlinked item:");
 
             if (!in_bounds(mitm[i].pos))
             {
@@ -178,8 +189,7 @@ void debug_item_scan(void)
             || strstr(name, "buggy") != NULL
             || strstr(name, "buggi") != NULL)
         {
-            mpr("Bad item:", MSGCH_ERROR);
-            _dump_item(name, i, mitm[i]);
+            _dump_item(name, i, mitm[i], "Bad item:");
         }
         else if ((mitm[i].base_type == OBJ_WEAPONS
                     && (abs(mitm[i].plus) > 30
@@ -197,15 +207,10 @@ void debug_item_scan(void)
                          || !is_artefact(mitm[i])
                             && mitm[i].special >= NUM_SPECIAL_ARMOURS)))
         {
-            mpr("Bad plus or special value:", MSGCH_ERROR);
-            _dump_item(name, i, mitm[i]);
+            _dump_item(name, i, mitm[i], "Bad plus or special value:");
         }
-        else if (mitm[i].flags & ISFLAG_SUMMONED
-                 && in_bounds(mitm[i].pos))
-        {
-            mpr("Summoned item on floor:", MSGCH_ERROR);
-            _dump_item(name, i, mitm[i]);
-        }
+        else if (mitm[i].flags & ISFLAG_SUMMONED && in_bounds(mitm[i].pos))
+            _dump_item(name, i, mitm[i], "Summoned item on floor:");
     }
 
     // Quickly scan monsters for "program bug"s.
@@ -216,8 +221,7 @@ void debug_item_scan(void)
         if (mons.type == MONS_NO_MONSTER)
             continue;
 
-        if (mons.name(DESC_PLAIN, true).find("questionable") !=
-            std::string::npos)
+        if (mons.name(DESC_PLAIN, true).find("questionable") != string::npos)
         {
             mprf(MSGCH_ERROR, "Program bug detected!");
             mprf(MSGCH_ERROR,
@@ -249,9 +253,9 @@ static bool _inside_vault(const vault_placement& place, const coord_def &pos)
             && delta.x < place.size.x && delta.y < place.size.y);
 }
 
-static std::vector<std::string> _in_vaults(const coord_def &pos)
+static vector<string> _in_vaults(const coord_def &pos)
 {
-    std::vector<std::string> out;
+    vector<string> out;
 
     for (unsigned int i = 0; i < env.level_vaults.size(); ++i)
     {
@@ -272,8 +276,8 @@ static std::vector<std::string> _in_vaults(const coord_def &pos)
 
 void debug_mons_scan()
 {
-    std::vector<coord_def> bogus_pos;
-    std::vector<int>       bogus_idx;
+    vector<coord_def> bogus_pos;
+    vector<int>       bogus_idx;
 
     bool warned = false;
     for (int y = 0; y < GYM; ++y)
@@ -321,7 +325,7 @@ void debug_mons_scan()
     ASSERT(you.type == MONS_PLAYER);
     ASSERT(you.mid == MID_PLAYER);
 
-    std::vector<int> floating_mons;
+    vector<int> floating_mons;
     bool             is_floating[MAX_MONSTERS];
 
     for (int i = 0; i < MAX_MONSTERS; ++i)
@@ -362,7 +366,7 @@ void debug_mons_scan()
                 if (m2->pos() != m->pos())
                     continue;
 
-                std::string full = m2->full_name(DESC_PLAIN, true);
+                string full = m2->full_name(DESC_PLAIN, true);
                 if (m2->alive())
                 {
                     mprf(MSGCH_WARN, "Also at (%d, %d): %s, midx = %d",
@@ -410,12 +414,12 @@ void debug_mons_scan()
             {
                 _announce_level_prob(warned);
                 warned = true;
-                mprf(MSGCH_WARN, "Monster %s (%d, %d) holding non-monster "
-                                 "item (midx = %d)",
-                     m->full_name(DESC_PLAIN, true).c_str(),
-                     pos.x, pos.y, i);
                 _dump_item(item.name(DESC_PLAIN, false, true).c_str(),
-                            idx, item);
+                            idx, item,
+                           "Monster %s (%d, %d) holding non-monster "
+                           "item (midx = %d)",
+                           m->full_name(DESC_PLAIN, true).c_str(),
+                           pos.x, pos.y, i);
                 continue;
             }
 
@@ -451,7 +455,7 @@ void debug_mons_scan()
         ASSERT(monster_by_mid(m->mid) == m);
     } // for (int i = 0; i < MAX_MONSTERS; ++i)
 
-    for (std::map<mid_t, unsigned short>::const_iterator mc = env.mid_cache.begin();
+    for (map<mid_t, unsigned short>::const_iterator mc = env.mid_cache.begin();
          mc != env.mid_cache.end(); ++mc)
     {
         unsigned short idx = mc->second;
@@ -487,12 +491,11 @@ void debug_mons_scan()
     {
         const int       idx = floating_mons[i];
         const monster* mon = &menv[idx];
-        std::vector<std::string> vaults = _in_vaults(mon->pos());
+        vector<string> vaults = _in_vaults(mon->pos());
 
-        std::string str =
-            make_stringf("Floating monster %s (%d, %d)",
-                         mon->name(DESC_PLAIN, true).c_str(),
-                         mon->pos().x, mon->pos().y);
+        string str = make_stringf("Floating monster %s (%d, %d)",
+                                  mon->name(DESC_PLAIN, true).c_str(),
+                                  mon->pos().x, mon->pos().y);
 
         if (vaults.empty())
             mprf(MSGCH_WARN, "%s not in any vaults.", str.c_str());
@@ -511,11 +514,10 @@ void debug_mons_scan()
         const int       idx = bogus_idx[i];
         const monster* mon = &menv[idx];
 
-        std::string str =
-            make_stringf("Bogus mgrd (%d, %d) pointing to %s",
-                         pos.x, pos.y, mon->name(DESC_PLAIN, true).c_str());
+        string str = make_stringf("Bogus mgrd (%d, %d) pointing to %s", pos.x,
+                                  pos.y, mon->name(DESC_PLAIN, true).c_str());
 
-        std::vector<std::string> vaults = _in_vaults(pos);
+        vector<string> vaults = _in_vaults(pos);
 
         if (vaults.empty())
             mprf(MSGCH_WARN, "%s not in any vaults.", str.c_str());

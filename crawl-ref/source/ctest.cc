@@ -32,9 +32,9 @@
 #include <algorithm>
 #include <vector>
 
-static const std::string test_dir = "test";
-static const std::string script_dir = "scripts";
-static const std::string test_player_name = "Superbug99";
+static const string test_dir = "test";
+static const string script_dir = "scripts";
+static const string test_player_name = "Superbug99";
 static const species_type test_player_species = SP_HUMAN;
 static const job_type test_player_job = JOB_FIGHTER;
 static const char *activity = "test";
@@ -42,8 +42,8 @@ static const char *activity = "test";
 static int ntests = 0;
 static int nsuccess = 0;
 
-typedef std::pair<std::string, std::string> file_error;
-static std::vector<file_error> failures;
+typedef pair<string, string> file_error;
+static vector<file_error> failures;
 
 static void _reset_test_data()
 {
@@ -93,21 +93,21 @@ static void _init_test_bindings()
     initialise_branch_depths();
 }
 
-static bool _is_test_selected(const std::string &testname)
+static bool _is_test_selected(const string &testname)
 {
-    if (crawl_state.tests_selected.empty())
+    if (crawl_state.tests_selected.empty() && !starts_with(testname, "big/"))
         return true;
     for (int i = 0, size = crawl_state.tests_selected.size();
          i < size; ++i)
     {
-        const std::string &phrase(crawl_state.tests_selected[i]);
-        if (testname.find(phrase) != std::string::npos)
+        const string &phrase(crawl_state.tests_selected[i]);
+        if (testname.find(phrase) != string::npos)
             return true;
     }
     return false;
 }
 
-static void run_test(const std::string &file)
+static void run_test(const string &file)
 {
     if (!_is_test_selected(file))
         return;
@@ -117,8 +117,7 @@ static void run_test(const std::string &file)
          activity, ntests, file.c_str());
     flush_prev_message();
 
-    const std::string path(
-        catpath(crawl_state.script? script_dir : test_dir, file));
+    const string path(catpath(crawl_state.script? script_dir : test_dir, file));
     dlua.execfile(path.c_str(), true, false);
     if (dlua.error.empty())
         ++nsuccess;
@@ -126,16 +125,16 @@ static void run_test(const std::string &file)
         failures.push_back(file_error(file, dlua.error));
 }
 
-static bool _has_test(const std::string& test)
+static bool _has_test(const string& test)
 {
     if (crawl_state.script)
         return false;
     if (crawl_state.tests_selected.empty())
         return true;
-    return crawl_state.tests_selected[0].find(test) != std::string::npos;
+    return crawl_state.tests_selected[0].find(test) != string::npos;
 }
 
-static void _run_test(const std::string &name, void (*func)(void))
+static void _run_test(const string &name, void (*func)(void))
 {
     if (!_has_test(name))
         return;
@@ -170,10 +169,10 @@ bool run_tests(bool exit_on_complete)
 
     // Get a list of Lua files in test. Order of execution of
     // tests should be irrelevant.
-    const std::vector<std::string> tests(
-        get_dir_files_ext(crawl_state.script? script_dir : test_dir,
+    const vector<string> tests(
+        get_dir_files_recursive(crawl_state.script? script_dir : test_dir,
                           ".lua"));
-    std::for_each(tests.begin(), tests.end(), run_test);
+    for_each(tests.begin(), tests.end(), run_test);
 
     if (failures.empty() && !ntests && crawl_state.script)
         failures.push_back(

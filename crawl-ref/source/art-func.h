@@ -27,7 +27,6 @@
 #include "godconduct.h"    // did_god_conduct
 #include "misc.h"
 #include "mgen_data.h"     // For Sceptre of Asmodeus evoke
-#include "mon-info.h"
 #include "mon-place.h"     // For Sceptre of Asmodeus evoke
 #include "mon-stuff.h"     // For Scythe of Curses cursing items
 #include "player.h"
@@ -281,7 +280,7 @@ static void _OLGREB_melee_effect(item_def* weapon, actor* attacker,
 
 static void _power_pluses(item_def *item)
 {
-    item->plus  = std::min(you.hp / 10, 27);
+    item->plus  = min(you.hp / 10, 27);
     item->plus2 = item->plus;
 }
 
@@ -331,8 +330,8 @@ static void _SINGING_SWORD_world_reacts(item_def *item)
     int tier = (tension <= 0) ? 1 : (tension < 40) ? 2 : 3;
     bool silent = silenced(you.pos());
 
-    std::string old_name = get_artefact_name(*item);
-    std::string new_name;
+    string old_name = get_artefact_name(*item);
+    string new_name;
     if (silent)
         new_name = "Sulking Sword";
     else if (tier < 3)
@@ -358,8 +357,12 @@ static void _SINGING_SWORD_world_reacts(item_def *item)
 
     const char *tenname[] =  {"silenced", "no_tension", "low_tension",
                               "high_tension", "SCREAM"};
-    std::string key = tenname[tier];
-    const std::string msg = getSpeakString("singing sword " + key);
+    const string key = tenname[tier];
+    string msg = getSpeakString("singing sword " + key);
+
+    msg = maybe_pick_random_substring(msg);
+    msg = maybe_capitalise_substring(msg);
+
     const int loudness[] = {0, 2, 15, 25, 35};
     item_noise(*item, msg, loudness[tier]);
 
@@ -420,13 +423,6 @@ static void _TROG_unequip(item_def *item, bool *show_msgs)
     _equip_mpr(show_msgs, "You feel less violent.");
 }
 
-static void _TROG_melee_effect(item_def* weapon, actor* attacker,
-                               actor* defender, bool mondied, int dam)
-{
-    if (coinflip() && !attacker->suppressed())
-        attacker->go_berserk(false);
-}
-
 ////////////////////////////////////////////////////
 
 static void _wucad_miscast(actor* victim, int power,int fail)
@@ -437,8 +433,8 @@ static void _wucad_miscast(actor* victim, int power,int fail)
 
 static void _wucad_pluses(item_def *item)
 {
-    item->plus  = std::min(you.intel() - 3, 22);
-    item->plus2 = std::min(you.intel() / 2, 13);
+    item->plus  = min(you.intel() - 3, 22);
+    item->plus2 = min(you.intel() / 2, 13);
 }
 
 static void _WUCAD_MU_equip(item_def *item, bool *show_msgs, bool unmeld)
@@ -570,7 +566,7 @@ static void _GONG_melee_effect(item_def* item, actor* wearer,
     if (silenced(wearer->pos()))
         return;
 
-    std::string msg = getSpeakString("shield of the gong");
+    string msg = getSpeakString("shield of the gong");
     if (msg.empty())
         msg = "You hear a strange loud sound.";
     mpr(msg.c_str(), MSGCH_SOUND);
@@ -696,7 +692,7 @@ static void _WYRMBANE_melee_effect(item_def* weapon, actor* attacker,
     // * bone dragon, Serpent of Hell (20)
     // * Tiamat (22)
     // * pghosts (up to 27)
-    int hd = std::min(defender->as_monster()->hit_dice, 18);
+    int hd = min(defender->as_monster()->hit_dice, 18);
     dprf("Killed a drac with hd %d.", hd);
     bool boosted = false;
     if (weapon->plus < hd)
@@ -767,4 +763,38 @@ static void _BLACK_KNIGHT_HORSE_world_reacts(item_def *item)
 {
     if (one_chance_in(10))
         did_god_conduct(DID_UNHOLY, 1);
+}
+
+///////////////////////////////////////////////////
+static void _NIGHT_equip(item_def *item, bool *show_msgs, bool unmeld)
+{
+    update_vision_range();
+    _equip_mpr(show_msgs, "The light fades from your surroundings.");
+}
+
+static void _NIGHT_unequip(item_def *item, bool *show_msgs)
+{
+    update_vision_range();
+    _equip_mpr(show_msgs, "The light returns to your surroundings.");
+}
+
+///////////////////////////////////////////////////
+
+static void _plutonium_sword_miscast(actor* victim, int power, int fail)
+{
+    MiscastEffect(victim, MELEE_MISCAST, SPTYP_TRANSMUTATION, power, fail,
+                  "the plutonium sword", NH_NEVER);
+}
+
+static void _PLUTONIUM_SWORD_melee_effect(item_def* weapon, actor* attacker,
+                                          actor* defender, bool mondied, int dam)
+{
+    if (!mondied && one_chance_in(5))
+    {
+        mpr("Mutagenic energy flows through the plutonium sword!");
+        _plutonium_sword_miscast(defender, random2(9), random2(70));
+
+        if (attacker->is_player())
+            did_god_conduct(DID_CHAOS, 3);
+    }
 }

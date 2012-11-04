@@ -7,7 +7,7 @@
 
 #include "player.h"
 
-#include "artefact.h"
+#include "art-enum.h"
 #include "coord.h"
 #include "debug.h"
 #include "env.h"
@@ -165,9 +165,7 @@ static void _removed_beholder_msg(const monster* mon)
             if (you.can_see(mon))
                 mprf("%s's is no longer quite as mesmerising!", mon->name(DESC_THE).c_str());
             else
-            {
                 mpr("Your mesmeriser suddenly seems less interesting!");
-            }
         }
 
         return;
@@ -183,9 +181,7 @@ static void _removed_beholder_msg(const monster* mon)
                      mon->name(DESC_THE).c_str());
             }
             else
-            {
                 mpr("The silence clears your mind.");
-            }
             return;
         }
 

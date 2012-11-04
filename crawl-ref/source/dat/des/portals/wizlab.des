@@ -296,14 +296,13 @@ function wizlab_zonguldrok_awaken_wizard(data, triggerable,
         return
     end
 
-    local graves = dgn.find_marker_positions_by_prop("wizard_grave", 1)
-    for _, pos in ipairs(graves) do
-        local lich = spawn_zombie(pos.x, pos.y, "generate_awake ancient lich "
+    local pos = dgn.find_marker_positions_by_prop("wizard_grave", 1)[1]
+    local lich = dgn.create_monster(pos.x, pos.y, "generate_awake ancient lich "
                  .."col:brown name:antique_lich name_replace name_descriptor"
                  .." tile:mons_zonguldrok_lich")
+    if lich then
+        data.awoke = true
     end
-
-    data.awoke = true
 end
 
 function wizlab_wucad_msgfn(data, triggerable, triggerer, marker, ev)
@@ -411,7 +410,7 @@ end
 
 }}
 
-default-depth: Vaults:2-7, Crypt, D:22-27, Elf:3-5
+default-depth: Crypt, D:22-27, Elf:3-5
 
 ###############################################################################
 # Portal entrances.
@@ -613,6 +612,112 @@ xxxxxxxxxxx.x
 xxxxxxxxxxxxx
 ENDMAP
 
+# Vaults Entries #################################
+#  - these are placed by tag, not be CHANCE:
+
+default-depth:
+
+NAME:     vaults_room_1_spin_wizlab_default
+TAGS:     vaults_room_1_spin_wizlab allow_dup uniq_wizlab unrand
+TAGS:     no_monster_gen no_item_gen
+: wizlab_portal(_G)
+MAP
+O
+ENDMAP
+
+NAME:     vaults_room_4_spin_wizlab_magenta
+TAGS:     vaults_room_4_spin_wizlab allow_dup uniq_wizlab unrand
+TAGS:     no_monster_gen no_item_gen
+NSUBST:   O = 1:O / *:.
+COLOUR:   . = magenta
+FTILE:    O. = floor_rough_magenta
+: wizlab_portal(_G)
+MAP
+O...
+.OO.
+....
+....
+ENDMAP
+
+NAME:     vaults_room_7_spin_wizlab_default
+TAGS:     vaults_room_7_spin_wizlab allow_dup uniq_wizlab unrand
+TAGS:     no_monster_gen no_item_gen
+FTILE:    GO_ = floor_rough_magenta
+TILE:     m = dngn_transparent_wall_green
+COLOUR:   m = lightgreen
+COLOUR:   _ = magenta
+TILE:     G = dngn_statue_dragon
+: wizlab_portal(_G)
+MAP
+.......
+.bmmmb.
+.m_O_m.
+.mG_Gm.
+.m___m.
+.bb_bb.
+.......
+ENDMAP
+
+NAME:     vaults_room_10_spin_wizlab_water
+TAGS:     vaults_room_10_spin_wizlab allow_dup uniq_wizlab unrand
+TAGS:     no_monster_gen no_item_gen
+FTILE:    cnO_ = floor_rough_magenta
+TILE:     n = dngn_transparent_wall_magenta
+COLOUR:   n = lightmagenta
+COLOUR:   _ = magenta
+TILE:     c = wall_stone_white
+: wizlab_portal(_G)
+MAP
+ww......ww
+ww.wwww.ww
+...wwww...
+.wwcnncww.
+.wwnO_nww.
+.wwn__nww.
+.wwcnn_ww.
+...wwww...
+ww.wwww.ww
+ww......ww
+ENDMAP
+
+NAME:     vaults_room_15_spin_wizlab_spiral
+TAGS:     vaults_room_15_spin_wizlab allow_dup uniq_wizlab unrand
+TAGS:     no_pool_fixup no_monster_gen no_item_gen
+SUBST:    G : xG.
+SUBST:    x : xx.
+: wizlab_portal(_G)
+MARKER:   ! = lua:fog_machine { \
+               pow_max = 8, delay_min = 20, delay_max = 60, \
+               walk_dist = 3, size = 1, start_clouds = 1, \
+               start_clouds = 1, cloud_type = "freezing vapour" \
+           }
+MARKER:   ? = lua:fog_machine { \
+               pow_max = 8, delay_min = 20, delay_max = 60, \
+               walk_dist = 3, size = 1, start_clouds = 1, \
+               start_clouds = 1, cloud_type = "mutagenic fog" \
+           }
+FTILE:    _! = floor_frozen
+COLOUR:   _! = lightcyan
+FTILE:    -? = floor_rough_magenta
+COLOUR:   -? = magenta
+MAP
+xx...........xx
+xG.bbbbbbbbb.Gx
+...bw..........
+.b.bw.bbbbbbbb.
+.b.bw.bllllllb.
+.b.bw.bl.....b.
+.b.bw..l.bbb.b.
+.b.bwwwO--?b.b.
+.b.bbb._..-b.b.
+.b....._b.?b.b.
+.b!__!_!b.-b.b.
+.bbbbbbbb.-b.b.
+..........?b...
+xG.bbbbbbbbb.Gx
+xx...........xx
+ENDMAP
+
 #
 #
 ###############################################################################
@@ -648,29 +753,29 @@ tukima_marker:add_triggerer(DgnTriggerer:new {
 lua_marker('?', tukima_marker)
 
 if crawl.coinflip() then
-  subst("Y = =")
+  subst("Y = +")
   subst("y = .")
   subst("Rr = c")
 else
   subst("Y = c")
   subst("y = m")
   subst("R = .")
-  subst("r = =")
+  subst("r = +")
 end
 
 if crawl.coinflip() then
-  subst("X = =")
+  subst("X = +")
   subst("x = .")
   subst("Ll = c")
 else
   subst("X = c")
   subst("x = m")
   subst("L = .")
-  subst("l = =")
+  subst("l = +")
 end
 }}
 SUBST:      ? = .
-COLOUR:     =cA< = darkgrey
+COLOUR:     +cA< = darkgrey
 TILE:       c = wall_stone_dark
 TILE:       V = dngn_dry_fountain_white
 LFLOORTILE: floor_pebble_white
@@ -1102,8 +1207,8 @@ KMONS:      8 = col:red clay golem name:flesh_golem name_replace \
 KMONS:      M = col:mutagenic tentacled monstrosity name:Cigotuvi's_Monster \
             name_replace hp:250 tile:mons_cigotuvis_monster
 MARKER:     ! = lua:fog_machine { \
-                 pow_max = 15, delay_min = 10, delay_max = 40, \
-                 size = 2, size_buildup_amnt = 20, \
+                 pow_max = 10, delay_min = 10, delay_max = 40, \
+                 size = 1, size_buildup_amnt = 10, \
                  size_buildup_time = 500, cloud_type = "mutagenic fog", \
                  excl_rad = -1 }
 MARKER:     ? = lua:fog_machine { \
@@ -1220,7 +1325,7 @@ TILE:       c = wall_zot_magenta
 TILE:       v = dngn_metal_wall_magenta
 LFLOORTILE: floor_rough_magenta
 LFLOORCOL:  magenta
-MARKER:     + = lua:restrict_door()
+KFEAT:      + = runed_door
 MARKER:     R = lua:fog_machine { \
                 pow_max = 10, delay_min = 10, delay_max = 40, \
                 size = 15, cloud_type = "purple smoke" \
@@ -1389,7 +1494,7 @@ TAGS:       no_item_gen no_monster_gen no_rotate allow_dup
 SUBST:      T = t.
 KMONS:      8 = orange crystal statue name:Statue_of_Wucad_Mu n_rpl n_the \
                 hd:20 hp:300 tile:mons_wucad_mu_statue
-KITEM:      8 = staff unrand:staff_of_wucad_mu, book of enchantments
+KITEM:      8 = staff of channeling unrand:staff_of_wucad_mu, book of enchantments
 COLOUR:     =c = darkgrey
 COLOUR:     t = lightred / red w:3
 TILE:       t = dngn_tree_lightred / dngn_tree_red w:4 / dngn_tree_yellow w:4
@@ -1418,7 +1523,6 @@ KMONS:      F = human name:monk n_suf col:white hd:10 dur:2 sum:shadow_creatures
             dur:2 seen sum:shadow_creatures nas:old_memories tile:mons_rock_troll_monk \
             / iron troll name:monk n_suf col:white dur:2 sum:shadow_creatures \
             nas:old_memories seen tile:mons_iron_troll_monk w:5
-
 {{
 dgn.persist.wucad_mu_died = false
 
@@ -1530,17 +1634,14 @@ KMONS:   2 = deep elf summoner w:5 ; dart ego:dispersal w:20 | dart w:5 | nothin
              rakshasa w:5 ; dart ego:dispersal w:20 | dart w:5 | nothing / \
              boggart ; dart ego:dispersal w:20 | dart w:5 | nothing /  \
              wizard ; dart ego:dispersal w:20 | dart w:5 | nothing
-KMONS:   3 = rakshasa w:5 ; staff ego:distortion | staff ego:vorpal w:6 | \
-             dagger ego:distortion | dagger ego:vorpal w:6 | \
+KMONS:   3 = rakshasa w:5 ; whip ego:distortion | whip \
+             ego:vorpal w:6 | dagger ego:distortion | dagger ego:vorpal w:6 | \
              spear ego:distortion | spear ego:vorpal w:6 . dart ego:dispersal / \
-             crimson imp ; staff ego:distortion | staff ego:vorpal w:6 | \
-             dagger ego:distortion | dagger ego:vorpal w:6 | \
+             boggart w:5 ; whip ego:distortion | whip \
+             ego:vorpal w:6 | dagger ego:distortion | dagger ego:vorpal w:6 | \
              spear ego:distortion | spear ego:vorpal w:6 . dart ego:dispersal / \
-             boggart w:5 ; staff ego:distortion | staff ego:vorpal w:6 | \
-             dagger ego:distortion | dagger ego:vorpal w:6 | \
-             spear ego:distortion | spear ego:vorpal w:6 . dart ego:dispersal / \
-             wizard ; staff ego:distortion | staff ego:vorpal w:6 | \
-             dagger ego:distortion | dagger ego:vorpal w:6 | \
+             wizard ; whip ego:distortion | whip \
+             ego:vorpal w:6 | dagger ego:distortion | dagger ego:vorpal w:6 | \
              spear ego:distortion | spear ego:vorpal w:6 . dart ego:dispersal
 # Disclaimer: the following three sets are all Abyss spawns.
 KMONS:   04 = large abomination w:40 / small abomination w:40 / large skeleton w:30 / \

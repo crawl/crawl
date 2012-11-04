@@ -22,6 +22,7 @@
 #include "invent.h"
 #include "items.h"
 #include "itemprop.h"
+#include "libutil.h"
 #include "misc.h"
 #include "mon-util.h"
 #include "mon-stuff.h"
@@ -56,7 +57,7 @@ struct armour_def
 // flexible and adjustable and can be worn by any player character...
 // providing they also pass the shape test, of course.
 static int Armour_index[NUM_ARMOURS];
-static armour_def Armour_prop[NUM_ARMOURS] =
+static const armour_def Armour_prop[NUM_ARMOURS] =
 {
     { ARM_ANIMAL_SKIN,          "animal skin",            2,  0,  100,
         true,  EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
@@ -172,7 +173,7 @@ struct weapon_def
 };
 
 static int Weapon_index[NUM_WEAPONS];
-static weapon_def Weapon_prop[NUM_WEAPONS] =
+static const weapon_def Weapon_prop[NUM_WEAPONS] =
 {
     // Maces & Flails
     { WPN_CLUB,              "club",                5,  3, 13,  50,  7,
@@ -283,13 +284,13 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
     { WPN_WAR_AXE,           "war axe",            11,  0, 15, 180,  7,
         SK_AXES,         HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_CHOPPING, 10 },
-    { WPN_BROAD_AXE,         "broad axe",          14, -2, 16, 230,  8,
+    { WPN_BROAD_AXE,         "broad axe",          13, -2, 16, 230,  8,
         SK_AXES,         HANDS_HALF,   SIZE_MEDIUM, MI_NONE, false,
         DAMV_CHOPPING, 10 },
-    { WPN_BATTLEAXE,         "battleaxe",          17, -4, 17, 250,  8,
+    { WPN_BATTLEAXE,         "battleaxe",          15, -4, 17, 250,  8,
         SK_AXES,         HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
         DAMV_CHOPPING, 10 },
-    { WPN_EXECUTIONERS_AXE,  "executioner\'s axe", 20, -6, 20, 280,  9,
+    { WPN_EXECUTIONERS_AXE,  "executioner's axe", 18, -6, 20, 280,  9,
         SK_AXES,         HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
         DAMV_CHOPPING, 2 },
 
@@ -320,6 +321,7 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
         DAMV_CHOPPING, 2 },
 
     // Staves
+    // WPN_STAFF is for weapon stats for magical staves only.
     { WPN_STAFF,             "staff",               5,  5, 12, 150,  6,
         SK_STAVES,       HANDS_HALF,   SIZE_MEDIUM, MI_NONE, false,
         DAMV_CRUSHING, 0 },
@@ -363,7 +365,7 @@ struct missile_def
 };
 
 static int Missile_index[NUM_MISSILES];
-static missile_def Missile_prop[NUM_MISSILES] =
+static const missile_def Missile_prop[NUM_MISSILES] =
 {
     { MI_NEEDLE,        "needle",        0,    1, false },
     { MI_STONE,         "stone",         4,    6, true  },
@@ -400,7 +402,7 @@ struct food_def
 // (like ghoul chunks) to guarantee that the special thing is only
 // done once.  See the ghoul eating code over in food.cc.
 static int Food_index[NUM_FOODS];
-static food_def Food_prop[NUM_FOODS] =
+static const food_def Food_prop[NUM_FOODS] =
 {
     { FOOD_MEAT_RATION,  "meat ration",  5000,   500, -1500,  80, 4, FFL_NONE },
     { FOOD_SAUSAGE,      "sausage",      1200,   150,  -400,  40, 2, FFL_NONE },
@@ -569,7 +571,7 @@ void do_uncurse_item(item_def &item, bool inscribe, bool no_ash,
     }
 
     if (inscribe && Options.autoinscribe_cursed
-        && item.inscription.find("was cursed") == std::string::npos
+        && item.inscription.find("was cursed") == string::npos
         && !item_ident(item, ISFLAG_SEEN_CURSED)
         && !fully_identified(item))
     {
@@ -633,7 +635,7 @@ static bool _is_affordable(const item_def &item)
 
     // Disregard shop stuff above your reach.
     if (_in_shop(item))
-        return (int)item_value(item) < you.gold;
+        return (int)item_value(item) <= you.gold;
 
     // Explicitly marked by a vault.
     if (item.flags & ISFLAG_UNOBTAINABLE)
@@ -673,7 +675,7 @@ void set_ident_flags(item_def &item, iflags_t flags)
     {
         // Clear "was cursed" inscription once the item is identified.
         if (Options.autoinscribe_cursed
-            && item.inscription.find("was cursed") != std::string::npos)
+            && item.inscription.find("was cursed") != string::npos)
         {
             item.inscription = replace_all(item.inscription, ", was cursed", "");
             item.inscription = replace_all(item.inscription, "was cursed, ", "");
@@ -1357,7 +1359,6 @@ int weapon_rarity(int w_type)
     case WPN_BROAD_AXE:
     case WPN_SPIKED_FLAIL:
     case WPN_WHIP:
-    case WPN_STAFF:
         return 4;
 
     case WPN_GREAT_MACE:
@@ -1391,6 +1392,7 @@ int weapon_rarity(int w_type)
     case WPN_BLESSED_TRIPLE_SWORD:
     case WPN_SACRED_SCOURGE:
     case WPN_TRISHULA:
+    case WPN_STAFF:
         // Zero value weapons must be placed specially -- see make_item() {dlb}
         return 0;
 
@@ -1865,7 +1867,7 @@ static bool _slot_blocked(const item_def &item)
             && !_item_is_swappable(you.inv[you.equip[eq]], eq, false));
 }
 
-bool item_skills(const item_def &item, std::set<skill_type> &skills)
+bool item_skills(const item_def &item, set<skill_type> &skills)
 {
     const bool equipped = item_is_equipped(item);
 
@@ -2221,11 +2223,6 @@ bool is_fruit(const item_def & item)
         return false;
 
     return (Food_prop[Food_index[item.sub_type]].flags & FFL_FRUIT);
-}
-
-uint32_t item_fruit_mask(const item_def &item)
-{
-    return (is_fruit(item)? (1 << Food_index[item.sub_type]) : 0);
 }
 
 bool food_is_rotten(const item_def &item)
@@ -2751,7 +2748,7 @@ int item_mass(const item_def &item)
 
             // Truncate to the nearest 5 and reduce the item mass:
             unit_mass -= ((reduc / 5) * 5);
-            unit_mass = std::max(unit_mass, 5);
+            unit_mass = max(unit_mass, 5);
         }
         break;
 
@@ -2898,12 +2895,12 @@ void ident_reflector(item_def *item)
         set_ident_flags(*item, ISFLAG_KNOW_TYPE);
 }
 
-std::string item_base_name(const item_def &item)
+string item_base_name(const item_def &item)
 {
     return item_base_name(item.base_type, item.sub_type);
 }
 
-std::string item_base_name(object_class_type type, int sub_type)
+string item_base_name(object_class_type type, int sub_type)
 {
     switch (type)
     {
@@ -2920,7 +2917,7 @@ std::string item_base_name(object_class_type type, int sub_type)
     }
 }
 
-std::string food_type_name(int sub_type)
+string food_type_name(int sub_type)
 {
     return Food_prop[Food_index[sub_type]].name;
 }

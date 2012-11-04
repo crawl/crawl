@@ -12,7 +12,7 @@ when the mind has a passive sensibility, but no active strength; when the
 imagination is a mirror, imparting vividness to all ideas, without the power of
 selecting or controlling them; then pray that your grieves may slumber, and the
 brotherhood of remorse not break their chain.”
-    -Nathaniel Hawthorne
+    -Nathaniel Hawthorne, "The Haunted Mind". 1835.
 %%%%
 ####################################################
 # Features
@@ -84,11 +84,31 @@ single (there is one physical structure) and double: they simultaneously
 incorporate order and disorder, clarity and confusion, unity and multiplicity,
 artistry and chaos.”
     -Mark Z. Danielewski, “House of Leaves”. 2000.
+
+“Since I emerged that day from the labyrinth,
+ Dazed with the tall and echoing passages,
+ The swift recoils, so many I almost feared
+ I’d meet myself returning at some smooth corner,
+ Myself or my ghost, for all there was unreal
+ After the straw ceased rustling and the bull
+ Lay dead upon the straw and I remained,
+ Blood-splashed, if dead or alive I could not tell
+ In the twilight nothingness”
+    -Edwin Muir, “The Labyrinth”. 1949.
 %%%%
 A one-way gate to the infinite horrors of the Abyss
 
 “And if you gaze for long into an abyss, the abyss gazes also into you.”
-    -Friedrich Nietzsche, “Beyond Good and Evil”
+    -Friedrich Nietzsche, _Beyond Good and Evil_ , Aphorism 146. 1886.
+
+“Well, in our country,” said Alice, still panting a little, “you’d generally
+get to somewhere else - if you ran very fast for a long time, as we’ve been
+doing.” “A slow sort of country!” said the Queen. “Now here, you see, it takes
+all the running you can do, to keep in the same place. If you want to get
+somewhere else, you must run at least twice as fast as that!”
+    -Lewis Carroll, _Through the Looking-Glass, and What Alice Found There_,
+ch. 2
+    "The Garden of Live Flowers". 1871.
 %%%%
 A portal to a secret trove of treasure
 
@@ -100,7 +120,8 @@ they run, pell-mell, helter-skelter, slap-dash: tearing, yelling, screaming,
 knocking down the passengers as they turn the corners, rousing up the dogs, and
 astonishing the fowls: and streets, squares, and courts, re-echo with the
 sound.”
-    -Charles Dickens, “Oliver Twist”
+    -Charles Dickens, _Oliver Twist; or, The parish boy's progress_, ch. X.
+1838.
 %%%%
 A rock wall
 
@@ -110,7 +131,7 @@ A rock wall
    Is that the wall is strong;
  And that each day is like a year,
    A year whose days are long.”
-    -Oscar Wilde, “Ballad of Reading Gaol”
+    -Oscar Wilde, “The Ballad of Reading Gaol”. 1898.
 %%%%
 A staircase to the Tomb
 
@@ -122,12 +143,14 @@ when the mind has a passive sensibility, but no active strength; when the
 imagination is a mirror, imparting vividness to all ideas, without the power of
 selecting or controlling them; then pray that your grieves may slumber, and the
 brotherhood of remorse not break their chain.”
-    -Nathaniel Hawthorne
+    -Nathaniel Hawthorne, "The Haunted Mind". 1835.
 %%%%
 A tree
 
-“Only YOU can prevent forest fires!”
-    -Smokey the Bear
+I like trees because they seem more resigned to the way they have to live than
+other things do.
+
+    -Willa Cather, _O Pioneers_. 1913.
 %%%%
 ####################################################
 # Spells
@@ -150,7 +173,7 @@ beauty. It happened thus: At the nuptials of Peleus and Thetis all the gods
 were invited with the exception of Eris, or Discord. Enraged at her exclusion,
 the goddess threw a golden apple among the guests, with the inscription, ‘For
 the fairest.’”
-    -Bullfinch’s Mythology, Chap. XXVII. a.
+    -Thomas Bulfinch, _Bulfinch’s Mythology_, ch.. XXVII. a. 1855.
 %%%%
 apricot
 
@@ -214,7 +237,8 @@ daeva
 upon them as they took counsel together, so that they chose the Worst Thought.
 Then they rushed together to Violence, that they might enfeeble the world of
 men.”
-    -the Avesta, Ahunavaiti Gatha 30.6
+    -the Avesta, Yasna XXX, 6, Ahunavaiti Gatha.
+    trans. Christian Bartholomae, 1951.
 %%%%
 dagger
 
@@ -236,7 +260,8 @@ in the chimney corner, offered him a present of gold; but he sent them away
 with this saying; that he, who was content with such a supper, had no need of
 gold; and that he thought it more honourable to conquer those who possessed the
 gold, than to possess the gold itself.”
-    -Plutarch, “Marcus Cato”
+    -Plutarch, “Marcus Cato”, _Lives_. 75 AD.
+    trans. John Dryden, 1683.
 %%%%
 long sword
 
@@ -317,7 +342,7 @@ Foreign Countries, in the United States Frigate Columbia_. 1847.
 slice of pizza
 
 “When the moon hits your eye like a big pizza pie, that’s amore.”
-    -Jack Brooks, “That’s Amore”
+    -Jack Brooks, “That’s Amore”. 1952.
 %%%%
 strawberry
 
@@ -353,12 +378,23 @@ his will: wounded, he reared up at his enemy and beat the hero down with his
 hooves. Peleus received the resounding blows on helmet and shield, and
 defending his upper arms, and controlling the weapon he held out, with one blow
 through the arm he pierced the bi-formed breast.”
-    -Ovid, _Metamorphoses_, XII 330
+    -Ovid, _Metamorphoses_, XII, 330. 8 AD.
+%%%%
+__d_suffix
+
+“Trogdor was a man!
+ I mean, he was a dragon-man!
+ Or... maybe he was just a dragon.
+ ...
+ And the Trogdor comes in the night!”
+    -The Brothers Chaps, “Trogdor”. 2003.
 %%%%
 __r_suffix
 
-“How now? a rat? Dead, for a ducat, dead!”
-    -William Shakespeare, Hamlet, Act III, 4
+HAMLET [Drawing his sword.]: How now! a rat? Dead, for a ducat, dead [Stabs
+through the arras.]
+    -William Shakespeare, _The Tragedy of Hamlet, Prince of Denmark_, III, 4.
+1603.
 %%%%
 __cap-D_suffix
 
@@ -388,7 +424,8 @@ __cap-K_suffix
 
 “The Parts Septentrionall are with these Sp’ryts Much haunted.. About the
 places where they dig for Oare. The Greekes and Germans call them Cobali.”
-    -Heywood, Hierarch. ix. 568, circa 1635
+    -Thomas Heywood, _The Hierarchy of the Blessed Angels_, Book IX, l. 568.
+1635.
 %%%%
 __cap-O_suffix
 
@@ -414,14 +451,14 @@ young were full grown, they stood beside him at each of his shoulders as he
 slept, and they purged his ears with their tongues. He started up in a great
 fright, but understood the voices of the birds flying overhead, and from what
 he learned from them he foretold to men what should come to pass.”
-    -Apollodorus (apocryphal), Library and Epitome, 1.9.11. circa 150 BC. Sir
-James George Frazer, translator.
+    -Pseudo-Apollodorus , _Library and Epitome_, 1.9.11. circa 150 BC.
+    trans. Sir James George Frazer, 1913.
 
 “A snake, with mottles rare,
  Surveyed my chamber floor,
  In feature as the worm before,
  But ringed with power.”
-    -Emily Dickinson, “In Winter In My Room”
+    -Emily Dickinson, “In Winter In My Room”. circa 1860.
 %%%%
 __cap-T_suffix
 
@@ -434,7 +471,7 @@ __cap-T_suffix
  Which bellowed like a wrathful bear;
  Down to the bottom the vessel sank,
  A laidly Trold has dragged it there.”
-    -George Borrow, _Lavengro_
+    -George Borrow, _Lavengro: The Scholar, the Gypsy, the Priest_. 1851.
 %%%%
 Aizul
 
@@ -442,7 +479,7 @@ Aizul
  ’Twas a small Town —
  Lit — with a Ruby —
  Lathed — with Down —”
-    -Emily Dickinson, _I went to Heaven_
+    -Emily Dickinson, _I went to Heaven_. ca. 1860.
 %%%%
 Antaeus
 
@@ -451,8 +488,8 @@ strangers by forcing them to wrestle. Being forced to wrestle with him,
 Hercules hugged him, lifted him aloft, broke and killed him; for when he
 touched earth so it was that he waxed stronger, wherefore some said that he was
 a son of Earth.”
-    -Apollodorus (apocryphal), _Library and Epitome_, 2.5.11, circa 150 BC. Sir
-James George Frazer, translator.
+    -Pseudo-Apollodorus , _Library and Epitome_, 2.5.11. ca. 150 BC.
+    trans. Sir James George Frazer, 1913.
 %%%%
 Asmodeus
 
@@ -487,7 +524,7 @@ Dowan
 
 “Skill and grace, the twin brother and sister, are dancing playfully on your
 finger tips.”
-    -Rabindranath Tagore, _Chitra, Act I, Scene IV_
+    -Rabindranath Tagore, _Chitra_, Act I, Scene iv. 1914.
 %%%%
 Duvessa
 
@@ -496,14 +533,15 @@ Duvessa
  ‘Let him brag of his looks,’
  Father said; ‘mind your books!
  The best beauty is bred in the brain.’”
-    -Aesop & Walter Crane, _The Baby’s Own Aesop: Brother & Sister_
+    -Aesop & Walter Crane, _The Baby’s Own Aesop_, 36: "Brother & Sister".
+1887.
 %%%%
 Edmund
 
 “And my invention thrive, Edmund the base
  Shall top the legitimate. I grow; I prosper.—
  Now, gods, stand up for bastards!”
-    -Shakespeare, King Lear.
+    -William Shakespeare, _King Lear_, I, ii. 1606.
 
 “When the forces stood in array Edmund proposed to decide their claims by
 single combat; but Canute saying that he, a man of small stature, would have
@@ -538,7 +576,8 @@ my men, and began eating them for his morning’s meal. Presently, with the
 utmost ease, he rolled the stone away from the door and drove out his sheep,
 but he at once put it back again—as easily as though he were merely clapping
 the lid on to a quiver full of arrows.”
-    -Homer, _The Odyssey_, Book IX
+    -Homer, _The Odyssey_, Book IX.
+    trans. Samuel Butler, 1900.
 %%%%
 Psyche
 
@@ -552,8 +591,8 @@ Psyche
  With mighty love be subject to his might.
  The rivers black and deadly floods of pain
  And darkness eke as thrall to him remain.”
-    -Apuleius, _Asinus aureus_, “Cupid and Psyche”
-    circa 160 AD. William Adlington, Translator, 1566.
+    -Apuleius, _Asinus aureus_, “Cupid and Psyche”. circa. 160 AD.
+    trans. William Adlington, 1566.
 %%%%
 Sigmund
 
@@ -569,7 +608,7 @@ Sigmund
 
  So he said: ‘Well seen, my fosterling; let the lip then strain it out.’”
     -William Morris, _The Story of Sigurd the Volsung and the Fall of the
-Niblungs. 1891.
+Niblungs_. 1891.
 %%%%
 Tiamat
 
@@ -599,7 +638,7 @@ agate snail
  I will throw thee out of the door,
  For the crow in the gutter,
  To eat for bread and butter.”
-    -Silesian rhyme, _Notes and Queries, Number 69_, 1851.
+    -Silesian rhyme, _Notes and Queries_, Number 69. 1851.
 %%%%
 bat
 
@@ -616,7 +655,7 @@ bat
 big fish
 
 “And what are you, reader, but a Loose-Fish and a Fast-Fish, too?”
-    -Herman Melville, _Moby Dick_. 1851.
+    -Herman Melville, _Moby Dick_, ch. lxxxix. 1851.
 %%%%
 boggart
 
@@ -632,14 +671,6 @@ feels more acutely than that of the maltreatment of his offspring, the feelings
 of the father and more particularly of his good dame, were daily, ay, and
 nightly, harrowed up by the malice of this malignant and invisible boggart.”
     -C.J.T., _Folk-lore and Legends: English_  1890.
-%%%%
-bumblebee
-
-“How doth the little busy Bee
-     Improve each shining Hour,
- And gather Honey all the day
-     From every opening Flower!”
-    -Isaac Watts. 1715.
 %%%%
 bush
 
@@ -733,7 +764,8 @@ flying skull
 “Alas, poor Yorick! I knew him, Horatio, a fellow of infinite jest, of most
 excellent fancy. He hath bore me on his back a thousand times, and now how
 abhorr’d in my imagination it is! My gorge rises at it.”
-    -William Shakespeare, _Hamlet_, V, 1. 1600.
+    -William Shakespeare, _The Tragedy of Hamlet, Prince of Denmark_, V, 1.
+1603.
 %%%%
 ghost moth
 
@@ -1078,11 +1110,17 @@ shadow
      Life is very long”
     -T.S. Eliot, “The Hollow Men”. 1925.
 %%%%
+small simulacrum
+
+<large simulacrum>
+%%%%
 small skeleton
 
-“God save us from the skeleton
- Who sitteth at the feast!”
-    -James Jeffrey Roche, “The Skeleton at the Feast”. 1890.
+<large skeleton>
+%%%%
+small zombie
+
+<large zombie>
 %%%%
 toenail golem
 
@@ -1101,6 +1139,18 @@ even perceive deformity, where another is sensible of beauty; and every
 individual ought to acquiesce in his own sentiment, without pretending to
 regulate those of others.”
     -David Hume
+%%%%
+vampire
+
+ • Scuze me. My friend Burt says you're a vampire hunter. 'zat so?
+ - Uh yes. Yes it is.
+ • Well you n'ain't gonna find one round here, mate. They ain't no vampires.
+ - You don't believe in vampires?
+ • 'course not!
+ • But I do believe in con artists. And charletans who like to stir up trouble!
+ • Dead people who get up at night and suck blood. How stupid do you think we are?
+ • My place is haunted with 16 ghosts and they all say there n'ain't no vampires!
+    -Rich Morris
 %%%%
 worm
 
@@ -1881,10 +1931,6 @@ end. One end slays the living, and the other end brings the dead to life.’”
      Memory of Gertrude Schoepperle Loomis_. 1927.
 %%%%
 staff of earth
-
-<staff>
-%%%%
-staff of enchantment
 
 <staff>
 %%%%
@@ -2880,7 +2926,7 @@ battle-cry.”
 %%%%
 toadstool
 
- “Ale Wojski zbierał muchomory.”
+“Ale Wojski zbierał muchomory.”
  “But the Seneschal gathered the toadstool fly-bane.”
     -Adam Mickiewicz, _Pan Tadeusz_, III. 1834.
      trans. G.R. Noyes, 1917.

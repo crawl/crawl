@@ -38,12 +38,12 @@ MAP
  xx....xxx.....xxx....xx
 xx.....xxx.I.I.xxx..I..x
 xx......x.......x......xx
-x..x.x..x..x=x..x..x+x..x
-x.xx.xx.x.xx=xx.x.xx~xx.x
+x..x.x..x..x+x..x..x+x..x
+x.xx.xx.x.xx.xx.x.xx~xx.x
 x.x%1.x.x.x2e2x.x.x3d3x.x
 x.x.%1x.x.x2e2x.x.xd3dx.x
-x.xx.xx.x.xx=xx.x.xx~xx.x
-x..x.x..x..x=x..x..x+x..x
+x.xx.xx.x.xx.xx.x.xx~xx.x
+x..x.x..x..x+x..x..x+x..x
 x.......+.......+.......x
 xx.....xxx.I.I.xxx..I..xx
  xx...xx xx...xx xx...xx
@@ -121,7 +121,10 @@ ENDMAP
 #############################################################################
 # Wary orcs
 #
+# Disabled, knowing of guaranteed traps there makes walking here a degenerate
+# piece of spoilage.  Is this vault salvageable somehow?
 NAME: david_orc_4
+WEIGHT: 0
 TAGS: orc_entry no_rotate
 ORIENT: float
 SHUFFLE: XYZ
@@ -233,13 +236,13 @@ MAP
 .............................
 .Iwwwwwwwwwwwwwwwwwwwwwwwwww.
 .wIwwwwwwwwwwwwwwwwwwwwwwwww.
-.ww2=cccccccccccccccccccccww.
+.ww2+cccccccccccccccccccccww.
 .ww.c.......3.3.3......w2cww.
 .wwxx........3.3.......cccww.
 .122........3.I.3.....G4Ocww.
 .wwxx........3.3.......cccww.
 .ww.c.......3.3.3......w2cww.
-.ww2=cccccccccccccccccccccww.
+.ww2+cccccccccccccccccccccww.
 .wIwwwwwwwwwwwwwwwwwwwwwwwww.
 .Iwwwwwwwwwwwwwwwwwwwwwwwwww.
 .............................
@@ -339,7 +342,7 @@ xx??.........??xx
    xx??111??xx
     xx??1??xx
      xxI2Ixx
-      xv=vx
+      xv+vx
       x!!!x
       x!O!x
       x!!!x
@@ -358,7 +361,7 @@ COLOUR: 1 = none / brown w:5
 FTILE:  1 = floor_normal / floor_orc w:5
 COLOUR: . = none / brown
 FTILE:  . = floor_normal / floor_orc
-SUBST:  ? = @ x:20 + =
+SUBST:  ? = @ x:20 +
 COLOUR: ! = brown
 FTILE:  ! = floor_orc
 SUBST:  ! : .$
@@ -368,11 +371,11 @@ xx?xxxxxxx?xx
 x111xxxxx111x
 ?1I1aaaaa1I1?
 x111xxxxx111x
-xxbx=xxx=xcxx
+xxbx+xxx+xcxx
 xxbxx!!!xxcxx
 xxbxx!O!xxcxx
 xxbxx!!!xxcxx
-xxbx=xxx=xcxx
+xxbx+xxx+xcxx
 x111xxxxx111x
 ?1I1ddddd1I1x
 x111xxxxx111?
@@ -539,7 +542,6 @@ ENDMAP
 # mage tower -- either orc with assistants, or ogre with guards
 NAME:    mines4_lemuel
 TAGS:    no_rotate
-SUBST:   ? = +=
 SUBST:   d = $d
 SUBST:   I = IG
 SHUFFLE: 112/334
@@ -552,7 +554,7 @@ xx.2xxxxx2.xx
 x..xxd1dxx..x
 x.Ix$$G$$xI.x
 x..xx222xx..x
-xx.2xx?xx2.xx
+xx.2xx+xx2.xx
  xx..2.2..xx
   xxxxxxxxx
 ENDMAP
@@ -609,12 +611,12 @@ MAP
 ENDMAP
 
 ###################################
-# hidden treasure chamber
+# treasure chamber
 #
 NAME: mines2_lemuel
 SUBST: ? = x@
 MAP
-  ?x=x?
+  ?x+x?
  ?xx.xx?
 ?xx$$$xx?
 ?xx$$$xx?
@@ -626,7 +628,7 @@ ENDMAP
 # treasure chamber with oklob plant
 #
 NAME:  mines3_lemuel
-SUBST: ? = +=.
+SUBST: ? = +.
 SUBST: ! = x@
 SUBST: $ = $:30 *
 MONS:  oklob plant
@@ -661,6 +663,7 @@ MONS:    deep elf fighter / deep elf summoner / deep elf conjurer / deep elf pri
 MONS:    deep elf soldier / deep elf mage / deep elf priest
 MONS:    deep elf soldier
 ITEM:    good_item scimitar race:elven / good_item chain mail race:elven
+SUBST:   = : +x
 MAP
  xxxxx=xxx
 xxXXXI1IXXx

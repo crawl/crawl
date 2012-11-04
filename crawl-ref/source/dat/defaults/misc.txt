@@ -1,0 +1,18 @@
+drop_filter += useless_item
+
+auto_exclude += oklob,statue,curse skull,roxanne,hyperactive,lightning spire
+auto_exclude += mimic
+
+# Interrupting run and rest compound commands:
+runrest_ignore_poison  = 2:30
+runrest_ignore_monster += butterfly:1
+
+trapwalk_safe_hp = dart:20,needle:15,arrow:35,bolt:45,spear:40,blade:95
+
+sort_menus += inv: true : equipped, freshness, charged
+
+note_items    += rod of, acquirement, preservation, running, of Zot
+note_messages += Your scales start
+note_messages += protects you from harm
+note_messages += You fall through a shaft
+note_monsters += orb of fire, ancient lich, Sigmund

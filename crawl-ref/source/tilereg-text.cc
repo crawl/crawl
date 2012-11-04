@@ -226,9 +226,7 @@ void TextRegion::render()
         abuf[idx] = col_back;
     }
     else
-    {
         m_font->render_textblock(sx + ox, sy + oy, cbuf, abuf, mx, my);
-    }
 }
 
 void TextRegion::clear()

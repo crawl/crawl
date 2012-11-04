@@ -8,6 +8,7 @@
 #include "coordit.h"
 #include "dungeon.h"
 #include "libutil.h"
+#include "terrain.h"
 #include "traps.h"
 
 static bool _find_forbidden_in_area(dgn_region& area, unsigned int mask);

@@ -26,8 +26,8 @@ function pan_lord_epilogue(name)
         ['Gloorx Vloq'] = "Shadowy figures dance across your vision."
     }
 
-    crawl.mpr(msgs[name])
-    crawl.mpr("You feel a terrible weight on your shoulders! A mighty lord of Pandemonium must reside here.", "warning")
+    crawl.mpr(msgs[name], "warning")
+    crawl.mpr("The mighty Pandemonium lord " .. name .. " resides here.", "warning")
     crawl.take_note('Entered the realm of ' .. name .. '.')
     crawl.mark_milestone('br.enter', 'entered the realm of ' .. name .. '.', "")
 end
@@ -182,7 +182,7 @@ ENDMAP
 # Random unguarded exits
 ##############################################################################
 NAME:   pan_exit
-TAGS:   extra allow_dup transparent
+TAGS:   extra allow_dup transparent no_dump
 DEPTH:  Pan
 CHANCE: 5%
 KFEAT:  O = exit_pandemonium
@@ -191,7 +191,7 @@ O
 ENDMAP
 
 NAME:   pan_to_abyss
-TAGS:   extra allow_dup transparent
+TAGS:   extra allow_dup transparent no_dump
 DEPTH:  Pan
 CHANCE: 25%
 KFEAT:  O = exit_through_abyss
@@ -724,23 +724,23 @@ xxxx..............................x
 xxxx..............................x
 xxxx.x.x.x.x.x.x.x..x.x.x.x.x.x.x.x
 xxxx..............................x
-xxxx.x.xxxx=xxxxxxxxxxxx=xxxxxx.x.x
+xxxx.x.xxxx+xxxxxxxxxxxx+xxxxxx.x.x
 xxxx...xx....................xx...x
 xxxx.x.x..ccccc..4..4..ccccc..x.x.x
 xxxx...x.cc.3............3.cc.x...x
 xxxx.x.x.c..ccccc.cc.ccccc..c.x.x.x
 xxxx...x.c.cc.....cc.....cc.c.x...x
 xxxx.x.x.c.c.2...cccc...2.c.c.x.x.x
-xxxx...x...c...ccc..ccc...c...=...x
+xxxx...x...c...ccc..ccc...c...+...x
 xxxx.x.x.3.....2..1O..2.....3.x.x.x
-xxxx...=...c...ccc..ccc...c...x...x
+xxxx...+...c...ccc..ccc...c...x...x
 xxxx.x.x.c.c.2...cccc...2.c.c.x.x.x
 xxxx...x.c.cc.....cc.....cc.c.x...x
 xxxx.x.x.c..ccccc.cc.ccccc..c.x.x.x
 xxxx...x.cc.3............3.cc.x...x
-xxxx.x.x..ccccc..4..4..ccccc..=.x.x
+xxxx.x.x..ccccc..4..4..ccccc..+.x.x
 xxxx...xx....................xx...x
-xxxx.x.xxxx=xxxx=xxxxxxxx=xxxxx.x.x
+xxxx.x.xxxx+xxxx+xxxxxxxx+xxxxx.x.x
 xxxx..............................x
 xxxx.x.x.x.x.x.x.x..x.x.x.x.x.x.x.x
 xxxx..............................x
@@ -787,7 +787,7 @@ xxx.x.xccx.x.x.x.x...x.x.x.x.xccx.x.xxx
 xxxx....ccc2x.x.x.....x.x.x2ccc....xxxx
 xxxxx.....cccc.x.x...x.x.cccc.....xxxxx
 xxxxxxx......ccccx...xcccc......xxxxxxx
-xxxxxxxxx.......cc===cc.......xxxxxxxxx
+xxxxxxxxx.......cc+++cc.......xxxxxxxxx
 xxxxxxxxxxxx.......2.......xxxxxxxxxxxx
 xxxxxxxxxxxxxxx.........xxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -802,9 +802,8 @@ SUBST:      V : x.
 : if crawl.coinflip() then
 SUBST:      C : c, d : c
 : else
-SUBST:      C : ., d : =
+SUBST:      C : ., d : +
 : end
-MARKER:     + = lua:restrict_door()
 TILE:       c = dngn_stone_wall_darkgray
 MONS:       patrolling Gloorx Vloq
 MONS:       executioner, shadow demon, shadow wraith, demonic crawler
@@ -826,11 +825,11 @@ x..x...cxxxxxxxxxxxxx..X.c...V.xx
 x.V....cxxxxxxxxxxx......c..x..xx
 x..x...cxxxxxxxx.....X.X.c...x.xx
 x.x..cccxxxx.............c..V..xx
-x...3c5+.2.........X.X.X.cc..x.xx
-....cc5c.................=3.x..xx
+x...3c5=.2.........X.X.X.cc..x.xx
+....cc5c.................+3.x..xx
 @...cO5c1....2...X.X.X.X.dC..V.xx
-....cc5c.................=3.x..xx
-x...3c5+.2.........X.X.X.cc..x.xx
+....cc5c.................+3.x..xx
+x...3c5=.2.........X.X.X.cc..x.xx
 x.x..cccxxxx.............c..V..xx
 x..x...cxxxxxxxx.....X.X.c...x.xx
 x.V....cxxxxxxxxxxx......c..x..xx
@@ -931,6 +930,8 @@ ENDMAP
 NAME:  rand_demon_4
 TAGS:  pan allow_dup
 MONS:  pandemonium lord, any demon, any demon
+# release only one or a few at once
+SUBST: = = +=
 : pan_demonic_rune(_G, 'P')
 MAP
 ............
@@ -1000,10 +1001,10 @@ MAP
 .xxx....xxx.
 .x|xx=xxx|x.
 .xx=....=xx.
-..x.x==x.x..
-..x.=P1=.=..
-..=.=12=.x..
-..x.x==x.x..
+..x.x++x.x..
+..x.+P1+.=..
+..=.+12+.x..
+..x.x++x.x..
 .xx=....=xx.
 .x|xxx=xx|x.
 .xxx....xxx.
@@ -1035,7 +1036,9 @@ ENDMAP
 
 NAME:  rand_demon_9
 TAGS:  pan allow_dup
+# a crapload of greater demons, you fight them in small sets
 MONS:  pandemonium lord, any demon, greater demon
+SUBST: = = =+
 : pan_demonic_rune(_G, 'P')
 MAP
 ............
@@ -1134,6 +1137,7 @@ MONS:   greater demon, common demon, any demon
 NSUBST: 1 = 1:P / 3:1 / 2:2 / 2:3 / 1:|
 SHUFFLE: =A
 SUBST:  A = x
+SUBST:  = = +
 : pan_demonic_rune(_G, 'P', true)
 MAP
 .............
@@ -1201,26 +1205,25 @@ WEIGHT: 2
 TAGS:   pan allow_dup
 MONS:   greater demon, any demon, pandemonium lord
 NSUBST: | = 1:P / *:|
-SUBST:  = : +., X : +c, c : cccx
+SUBST:  + : +., X : =c, c : cccx
 # I don't want this vault to be an autoexplore trap
 MARKER: G = lua:props_marker { stop_explore = "ominous statue." }
-MARKER: + = lua:restrict_door()
 : pan_demonic_rune(_G, 'P')
 MAP
 xxxxxxxxxxxxxxxxx
 xcccccccccccccccx
 xc|c.........c|cx
-xcc=..2.1..2.=ccx
+xcc+..2.1..2.+ccx
 xc..1.......1..cx
-xc.2..+++++....cx
-xccccXX...++.2.cx
-...........+...cx
-@.......G..+.3.cx
-...........+...cx
-xccccXX...++...cx
-xc.2..+++++..2.cx
+xc.2..=====....cx
+xccccXX...==.2.cx
+...........=...cx
+@.......G..=.3.cx
+...........=...cx
+xccccXX...==...cx
+xc.2..=====..2.cx
 xc..1.......1..cx
-xcc=.2..1.2..=ccx
+xcc+.2..1.2..+ccx
 xc|c.........c|cx
 xcccccccccccccccx
 xxxxxxxxxxxxxxxxx
@@ -1256,7 +1259,7 @@ ENDMAP
 
 NAME:   evilmike_mini_pan_layers
 TAGS:   pan allow_dup
-SUBST:  x = x:9 =:1
+SUBST:  x = x:9 +:1
 MONS:   greater demon, common demon, any demon
 : pan_demonic_rune(_G, 'P', true)
 MAP
@@ -1414,32 +1417,32 @@ ENDMAP
 
 ###################################
 
-NAME: evilmike_mini_pan_secret
+NAME: evilmike_mini_pan_doors
 TAGS: pan allow_dup
 MONS: greater demon, common demon, any demon
 : pan_demonic_rune(_G, 'P', true)
 MAP
 ............
-..x=xxxx=x..
+..x+xxxx+x..
 .xx......xx.
-.=.x3..2x.=.
-.x.2c==c3.x.
-.x..=|1=..x.
-.x..=1P=..x.
-.x.3c==c2.x.
-.=.x2..3x.=.
+.+.x3..2x.+.
+.x.2c++c3.x.
+.x..+|1+..x.
+.x..+1P+..x.
+.x.3c++c2.x.
+.+.x2..3x.+.
 .xx......xx.
-..x=xxxx=x..
+..x+xxxx+x..
 ............
 ENDMAP
 
 ###################################
 
-NAME:   evilmike_mini_pan_secret_b
+NAME:   evilmike_mini_pan_doors_b
 TAGS:   pan allow_dup
-# The secret doors are not treated as large gates, but individually:
+# The doors are not treated as large gates, but individually:
 MARKER: X = lua: props_marker { connected_exclude="true" }
-SUBST:  X = =
+SUBST:  X = +
 NSUBST: D = 2:1 / 2:2 / 2:3 / 1:P / 1:|
 MONS:   greater demon, common demon, any demon
 : pan_demonic_rune(_G, 'P', true)
@@ -1688,7 +1691,7 @@ KFEAT:  D = granite_statue
 MARKER: D = lua:props_marker { veto_fragmentation="veto", \
                                veto_disintegrate="veto", \
                                veto_shatter="veto" }
-MONS:   col:random name:demonic name_adjective plant
+MONS:   col:random name:demonic name_adjective plant tile:mons_demonic_plant
 MONS:   red devil ; demon trident good_item ego:distortion
 MONS:   red devil ; lajatang good_item ego:distortion
 MONS:   red devil ; demon blade good_item ego:distortion

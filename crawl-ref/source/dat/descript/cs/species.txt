@@ -1,0 +1,47 @@
+%%%%
+Centaur
+
+Rychlý silni a objemní, potřebují více jídla, než jiné druhy.
+%%%%
+Deep Dwarf
+
+Bydlí hluboko pod zemí a nemůžou zdraví regenerovat přirozeně, ale jsou odolní
+a mají nástroje k léčbě.
+%%%%
+High Elf
+
+Hrdí elfové, kteří mohou sesílat kouzla, stejně tak jako mohou bojovat s mečem.
+%%%%
+Hill Orc
+
+Orkové jsou zruční v boji zblízka a často zkoušejí útočné kouzlo. Nejvíce
+nenávistní. Orkové jsou velmi hrdí a mnoho z nich cítí být nadřazenými.
+%%%%
+Human
+
+Všední a průměrní.
+%%%%
+Tengu
+
+Ptačí lidé, milují jak boj se zbraní , tak kouzely. Jsou velmi křehcí, ale
+později se naučí létat.
+%%%%
+Merfolk
+
+Napůl ryby, napůl lidé, Merfolkové jsou obyvatelé obou živlů vody i země.
+%%%%
+Minotaur
+
+Velcí svalnatí lidé s hlavou býka. Vynikají ve všech formách blízkého a
+pohyblivého boje.
+%%%%
+Naga
+
+Kříženeci; lidé od hrudi nahoru, s šupinatými svalnatými trupy přecházející v
+těla hadů.
+%%%%
+Troll
+
+Velcí surovci, připraveni cokoliv zmrzačit svými drápy, nikdy dvakrát
+nepřemýšlí. Jsou vždy hladoví.
+%%%%

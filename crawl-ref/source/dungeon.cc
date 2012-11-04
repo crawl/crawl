@@ -22,6 +22,7 @@
 #include "chardump.h"
 #include "coordit.h"
 #include "defines.h"
+#include "describe.h"
 #include "dgn-delve.h"
 #include "dgn-shoals.h"
 #include "dgn-swamp.h"
@@ -64,9 +65,11 @@
 #include "spl-transloc.h"
 #include "spl-util.h"
 #include "state.h"
+#include "stuff.h"
 #include "tags.h"
 #include "terrain.h"
 #include "tiledef-dngn.h"
+#include "tilepick.h"
 #include "tileview.h"
 #include "traps.h"
 #include "travel.h"
@@ -81,8 +84,6 @@
 #include "cio.h" // for cancelable_get_line()
 #endif
 
-#define YOU_DUNGEON_VAULTS_KEY    "you_dungeon_vaults_key"
-
 // DUNGEON BUILDERS
 static bool _build_level_vetoable(bool enable_random_maps,
                                   dungeon_feature_type dest_stairs_type);
@@ -95,7 +96,7 @@ static void _builder_items();
 static void _builder_monsters();
 static coord_def _place_specific_feature(dungeon_feature_type feat);
 static void _place_specific_stair(dungeon_feature_type stair,
-                                  const std::string &tag = "");
+                                  const string &tag = "");
 static void _place_spec_shop(const coord_def& where,
                              shop_spec* spec, bool representative = false);
 static bool _place_specific_trap(const coord_def& where, trap_spec* spec,
@@ -113,7 +114,7 @@ static void _add_plant_clumps(int frequency = 10, int clump_density = 12,
                               int clump_radius = 4);
 
 static void _pick_float_exits(vault_placement &place,
-                              std::vector<coord_def> &targets);
+                              vector<coord_def> &targets);
 static bool _connect_spotty(const coord_def& from);
 static bool _connect_vault_exit(const coord_def& exit);
 
@@ -153,7 +154,7 @@ static void _dgn_load_colour_grid();
 static void _dgn_map_colour_fixup();
 
 static void _dgn_unregister_vault(const map_def &map);
-static void _remember_vault_placement(std::string key, const vault_placement &place);
+static void _remember_vault_placement(const vault_placement &place, bool extra);
 
 // Returns true if the given square is okay for use by any character,
 // but always false for squares in non-transparent vaults.
@@ -171,7 +172,7 @@ static int                  _setup_temple_altars(CrawlHashTable &temple);
 static dungeon_feature_type _pick_temple_altar(vault_placement &place);
 static dungeon_feature_type _pick_an_altar();
 
-static std::vector<god_type> _temple_altar_list;
+static vector<god_type> _temple_altar_list;
 static CrawlHashTable*       _current_temple_hash = NULL; // XXX: hack!
 
 // MISC FUNCTIONS
@@ -186,7 +187,7 @@ static void _calc_density();
 // Static data
 
 // A mask of vaults and vault-specific flags.
-std::vector<vault_placement> Temp_Vaults;
+vector<vault_placement> Temp_Vaults;
 static FixedVector<bool, NUM_MONSTERS> temp_unique_creatures;
 static FixedVector<unique_item_status_type, MAX_UNRANDARTS> temp_unique_items;
 
@@ -198,19 +199,19 @@ static bool use_random_maps = true;
 static bool dgn_check_connectivity = false;
 static int  dgn_zones = 0;
 
-static CrawlHashTable _you_vault_list;
+static vector<string> _you_vault_list;
 
-class dgn_veto_exception : public std::exception
+class dgn_veto_exception : public exception
 {
 public:
-    dgn_veto_exception(const std::string& _msg) : msg(_msg) { }
+    dgn_veto_exception(const string& _msg) : msg(_msg) { }
     ~dgn_veto_exception() throw () { }
     const char *what() const throw ()
     {
         return msg.c_str();
     }
 private:
-    std::string msg;
+    string msg;
 };
 
 struct coloured_feature
@@ -239,9 +240,9 @@ struct dgn_colour_override_manager
 };
 
 typedef FixedArray< coloured_feature, GXM, GYM > dungeon_colour_grid;
-static std::auto_ptr<dungeon_colour_grid> dgn_colour_grid;
+static unique_ptr<dungeon_colour_grid> dgn_colour_grid;
 
-static std::string branch_epilogues[NUM_BRANCHES];
+static string branch_epilogues[NUM_BRANCHES];
 
 /**********************************************************************
  * builder() - kickoff for the dungeon generator.
@@ -255,8 +256,8 @@ bool builder(bool enable_random_maps, dungeon_feature_type dest_stairs_type)
     ASSERT(you.depth > 0);
     ASSERT(you.depth <= brdepth[you.where_are_you]);
 
-    const std::set<std::string> uniq_tags  = you.uniq_map_tags;
-    const std::set<std::string> uniq_names = you.uniq_map_names;
+    const set<string> uniq_tags  = you.uniq_map_tags;
+    const set<string> uniq_names = you.uniq_map_names;
 
     // Save a copy of unique creatures for vetoes.
     temp_unique_creatures = you.unique_creatures;
@@ -356,7 +357,7 @@ static bool _build_level_vetoable(bool enable_random_maps,
         env.level_build_method = env.level_build_method.substr(1);
     }
 
-    std::string level_layout_type = comma_separated_line(
+    string level_layout_type = comma_separated_line(
         env.level_layout_types.begin(),
         env.level_layout_types.end(), ", ");
 
@@ -364,18 +365,6 @@ static bool _build_level_vetoable(bool enable_random_maps,
     // so we can include it in crash reports.
     env.properties[BUILD_METHOD_KEY] = env.level_build_method;
     env.properties[LAYOUT_TYPE_KEY]  = level_layout_type;
-
-    // Save information in the player's properties has table so
-    // we can include it in the character dump.
-    if (!_you_vault_list.empty())
-    {
-        const std::string lev = level_id::current().describe();
-        CrawlHashTable &all_vaults =
-            you.props[YOU_DUNGEON_VAULTS_KEY].get_table();
-
-        CrawlHashTable &this_level = all_vaults[lev].get_table();
-        this_level = _you_vault_list;
-    }
 
     _dgn_postprocess_level();
 
@@ -398,6 +387,12 @@ static bool _build_level_vetoable(bool enable_random_maps,
     strip_all_maps();
 
     check_map_validity();
+
+    if (!_you_vault_list.empty())
+    {
+        vector<string> &vec(you.vault_list[level_id::current()]);
+        vec.insert(vec.end(), _you_vault_list.begin(), _you_vault_list.end());
+    }
 
     return true;
 }
@@ -440,7 +435,7 @@ void dgn_clear_vault_placements(vault_placement_refv &vps)
 // the level_vaults array.
 void dgn_erase_unused_vault_placements()
 {
-    std::set<int> referenced_vault_indexes;
+    set<int> referenced_vault_indexes;
     for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
     {
         const int map_index = env.level_map_ids(*ri);
@@ -449,7 +444,7 @@ void dgn_erase_unused_vault_placements()
     }
 
     // Walk backwards and toss unused vaults.
-    std::map<int, int> new_vault_index_map;
+    map<int, int> new_vault_index_map;
     const int nvaults = env.level_vaults.size();
     for (int i = nvaults - 1; i >= 0; --i)
     {
@@ -474,8 +469,7 @@ void dgn_erase_unused_vault_placements()
             // still referenced.
             for (int j = i + 1; j < nvaults; ++j)
             {
-                std::map<int, int>::iterator imap =
-                    new_vault_index_map.find(j);
+                map<int, int>::iterator imap = new_vault_index_map.find(j);
                 if (imap != new_vault_index_map.end())
                     --imap->second;
             }
@@ -493,8 +487,7 @@ void dgn_erase_unused_vault_placements()
         const int map_index = env.level_map_ids(*ri);
         if (map_index != INVALID_MAP_INDEX)
         {
-            std::map<int, int>::iterator imap =
-                new_vault_index_map.find(map_index);
+            map<int, int>::iterator imap = new_vault_index_map.find(map_index);
             if (imap != new_vault_index_map.end())
                 env.level_map_ids(*ri) = imap->second;
         }
@@ -636,18 +629,17 @@ static void _set_grd(const coord_def &c, dungeon_feature_type feat)
     grd(c) = feat;
 }
 
-void dgn_register_vault(const map_def &map)
-{
-    if (!map.has_tag("allow_dup"))
-        you.uniq_map_names.insert(map.name);
+static void _dgn_register_vault(const string name, const string spaced_tags)
+{    if (spaced_tags.find(" allow_dup ") == string::npos)
+        you.uniq_map_names.insert(name);
 
-    if (map.has_tag("luniq"))
-        env.level_uniq_maps.insert(map.name);
+    if (spaced_tags.find(" luniq ") != string::npos)
+        env.level_uniq_maps.insert(name);
 
-    std::vector<std::string> tags = split_string(" ", map.tags);
+    vector<string> tags = split_string(" ", spaced_tags);
     for (int t = 0, ntags = tags.size(); t < ntags; ++t)
     {
-        const std::string &tag = tags[t];
+        const string &tag = tags[t];
         if (tag.find("uniq_") == 0)
             you.uniq_map_tags.insert(tag);
         else if (tag.find("luniq_") == 0)
@@ -660,10 +652,10 @@ static void _dgn_unregister_vault(const map_def &map)
     you.uniq_map_names.erase(map.name);
     env.level_uniq_maps.erase(map.name);
 
-    std::vector<std::string> tags = split_string(" ", map.tags);
+    vector<string> tags = split_string(" ", map.tags);
     for (int t = 0, ntags = tags.size(); t < ntags; ++t)
     {
-        const std::string &tag = tags[t];
+        const string &tag = tags[t];
         if (tag.find("uniq_") == 0)
             you.uniq_map_tags.erase(tag);
         else if (tag.find("luniq_") == 0)
@@ -680,7 +672,7 @@ bool dgn_square_travel_ok(const coord_def &c)
         return !(trap && trap->type == TRAP_TELEPORT);
     }
     else
-        return (feat_is_traversable(feat) || feat == DNGN_SECRET_DOOR);
+        return feat_is_traversable(feat);
 }
 
 static bool _dgn_square_is_passable(const coord_def &c)
@@ -704,7 +696,7 @@ static bool _dgn_fill_zone(
     bool (*iswanted)(const coord_def &) = NULL)
 {
     bool ret = false;
-    std::list<coord_def> points[2];
+    list<coord_def> points[2];
     int cur = 0;
 
     // No bounds checks, assuming the level has at least one layer of
@@ -712,7 +704,7 @@ static bool _dgn_fill_zone(
 
     for (points[cur].push_back(start); !points[cur].empty();)
     {
-        for (std::list<coord_def>::const_iterator i = points[cur].begin();
+        for (list<coord_def>::const_iterator i = points[cur].begin();
              i != points[cur].end(); ++i)
         {
             const coord_def &c(*i);
@@ -877,9 +869,9 @@ static bool _is_exit_stair(const coord_def &c)
 //
 // If fill is non-zero, it fills any disconnected regions with fill.
 //
-int process_disconnected_zones(int x1, int y1, int x2, int y2,
-                               bool choose_stairless,
-                               dungeon_feature_type fill)
+static int _process_disconnected_zones(int x1, int y1, int x2, int y2,
+                                       bool choose_stairless,
+                                       dungeon_feature_type fill)
 {
     memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
     int nzones = 0;
@@ -898,7 +890,7 @@ int process_disconnected_zones(int x1, int y1, int x2, int y2,
             const bool found_exit_stair =
                 _dgn_fill_zone(coord_def(x, y), ++nzones,
                                _dgn_point_record_stub,
-                               dgn_square_travel_ok,
+                               _dgn_square_is_passable,
                                choose_stairless ? (at_branch_bottom() ?
                                                    _is_upwards_exit_stair :
                                                    _is_exit_stair) : NULL);
@@ -914,7 +906,7 @@ int process_disconnected_zones(int x1, int y1, int x2, int y2,
                 // from the rest of the level, this will cause the level to be
                 // vetoed later on.
                 bool veto = false;
-                std::vector<coord_def> coords;
+                vector<coord_def> coords;
                 for (int fy = y1; fy <= y2 ; ++fy)
                 {
                     for (int fx = x1; fx <= x2; ++fx)
@@ -934,7 +926,7 @@ int process_disconnected_zones(int x1, int y1, int x2, int y2,
                         break;
                 }
                 if (!veto)
-                    for (std::vector<coord_def>::iterator it = coords.begin();
+                    for (vector<coord_def>::iterator it = coords.begin();
                          it != coords.end(); it++)
                     {
                         _set_grd(*it, fill);
@@ -949,8 +941,8 @@ int process_disconnected_zones(int x1, int y1, int x2, int y2,
 int dgn_count_disconnected_zones(bool choose_stairless,
                                  dungeon_feature_type fill)
 {
-    return process_disconnected_zones(0, 0, GXM-1, GYM-1, choose_stairless,
-                                      fill);
+    return _process_disconnected_zones(0, 0, GXM-1, GYM-1, choose_stairless,
+                                       fill);
 }
 
 static void _fixup_hell_stairs()
@@ -997,7 +989,14 @@ void dgn_register_place(const vault_placement &place, bool register_vault)
 
     if (register_vault)
     {
-        dgn_register_vault(place.map);
+        _dgn_register_vault(place.map.name, place.map.tags);
+        for (int i = env.new_subvault_names.size() - 1; i >= 0; i--)
+        {
+            _dgn_register_vault(env.new_subvault_names[i],
+                                env.new_subvault_tags[i]);
+        }
+        env.new_subvault_names.clear();
+        env.new_subvault_tags.clear();
 
         // Identify each square in the map with its map_index.
         if (!overwritable && !transparent)
@@ -1009,10 +1008,10 @@ void dgn_register_place(const vault_placement &place, bool register_vault)
         if (place.map.orient == MAP_ENCOMPASS)
         {
             for (rectangle_iterator ri(0); ri; ++ri)
-                env.level_map_mask(*ri) |= MMT_VAULT | MMT_NO_DOOR;
+                env.level_map_mask(*ri) |= MMT_VAULT;
         }
         else
-            _mask_vault(place, MMT_VAULT | MMT_NO_DOOR);
+            _mask_vault(place, MMT_VAULT);
 
         if (!transparent)
             _mask_vault(place, MMT_OPAQUE);
@@ -1080,11 +1079,7 @@ void dgn_register_place(const vault_placement &place, bool register_vault)
 
     env.level_vaults.push_back(new vault_placement(place));
     if (register_vault)
-    {
-        _remember_vault_placement(place.map.has_tag("extra")
-                                  ? LEVEL_EXTRAS_KEY: LEVEL_VAULTS_KEY,
-                                  place);
-    }
+        _remember_vault_placement(place, place.map.has_tag("extra"));
 }
 
 bool dgn_ensure_vault_placed(bool vault_success,
@@ -1165,6 +1160,7 @@ void dgn_reset_level(bool enable_random_maps)
 {
     env.level_uniq_maps.clear();
     env.level_uniq_map_tags.clear();
+    env.level_vault_list.clear();
 
     you.unique_creatures = temp_unique_creatures;
     you.unique_items = temp_unique_items;
@@ -1174,6 +1170,8 @@ void dgn_reset_level(bool enable_random_maps)
     env.level_layout_types.clear();
     level_clear_vault_memory();
     dgn_colour_grid.reset(NULL);
+    env.new_subvault_names.clear();
+    env.new_subvault_tags.clear();
 
     use_random_maps = enable_random_maps;
     dgn_check_connectivity = false;
@@ -1186,12 +1184,10 @@ void dgn_reset_level(bool enable_random_maps)
     env.properties.clear();
     env.heightmap.reset(NULL);
 
-    // Set up containers for storing some level generation info.
-    env.properties[LEVEL_VAULTS_KEY].new_table();
-    env.properties[LEVEL_EXTRAS_KEY].new_table();
     env.absdepth0 = absdungeon_depth(you.where_are_you, you.depth);
 
-    dprf("absdepth0 = %d", env.absdepth0);
+    if (!crawl_state.test)
+        dprf("absdepth0 = %d", env.absdepth0);
 
     // Blank level with DNGN_ROCK_WALL.
     env.grid.init(DNGN_ROCK_WALL);
@@ -1331,11 +1327,11 @@ static void _fixup_walls()
 
     case BRANCH_VAULTS:
     {
-        if (you.depth > 6 && one_chance_in(10))
+        if (you.depth > 2 && one_chance_in(10))
             wall_type = DNGN_GREEN_CRYSTAL_WALL;
-        else if (you.depth > 4)
+        else if (x_chance_in_y(you.depth - 1, 3))
             wall_type = DNGN_METAL_WALL;
-        else if (you.depth > 2)
+        else if (x_chance_in_y(you.depth + 1, 3))
             wall_type = DNGN_STONE_WALL;
 
         break;
@@ -1776,7 +1772,7 @@ static void _dgn_verify_connectivity(unsigned nvaults)
         const int newzones = dgn_count_disconnected_zones(false);
 
 #ifdef DEBUG_DIAGNOSTICS
-        std::ostringstream vlist;
+        ostringstream vlist;
         for (unsigned i = nvaults; i < env.level_vaults.size(); ++i)
         {
             if (i > nvaults)
@@ -1873,7 +1869,7 @@ static void _build_overflow_temples()
 
         if (temple.exists(TEMPLE_MAP_KEY))
         {
-            std::string name = temple[TEMPLE_MAP_KEY].get_string();
+            string name = temple[TEMPLE_MAP_KEY].get_string();
 
             vault = find_map_by_name(name);
             if (vault == NULL)
@@ -1885,7 +1881,7 @@ static void _build_overflow_temples()
         }
         else
         {
-            std::string vault_tag;
+            string vault_tag;
 
             // For a single-altar temple, first try to find a temple specialized
             // for that god.
@@ -1894,7 +1890,7 @@ static void _build_overflow_temples()
                 CrawlVector &god_vec = temple[TEMPLE_GODS_KEY];
                 god_type     god     = (god_type) god_vec[0].get_byte();
 
-                std::string name = god_name(god);
+                string name = god_name(god);
                 name = replace_all(name, " ", "_");
                 lowercase(name);
 
@@ -1957,14 +1953,36 @@ static void _build_overflow_temples()
     _current_temple_hash = NULL; // XXX: hack!
 }
 
+struct coord_feat
+{
+    coord_def pos;
+    dungeon_feature_type feat;
+    terrain_property_t prop;
+    unsigned int mask;
+
+    coord_feat(const coord_def &c, dungeon_feature_type f)
+        : pos(c), feat(f), prop(0), mask(0)
+    {
+    }
+
+    void set_from(const coord_def &c)
+    {
+        feat = grd(c);
+        // Don't copy mimic-ness.
+        mask = env.level_map_mask(c) & ~(MMT_MIMIC);
+        // Only copy "static" properties.
+        prop = env.pgrid(c) & (FPROP_NO_CLOUD_GEN | FPROP_NO_TELE_INTO
+                               | FPROP_NO_TIDE | FPROP_NO_SUBMERGE);
+    }
+};
+
 template <typename Iterator>
 static void _ruin_level(Iterator ri,
                         unsigned vault_mask = MMT_VAULT,
                         int ruination = 10,
                         int plant_density = 5)
 {
-    typedef std::pair<coord_def, dungeon_feature_type> coord_feat;
-    typedef std::vector<coord_feat> coord_feats;
+    typedef vector<coord_feat> coord_feats;
     coord_feats to_replace;
 
     for (; ri; ++ri)
@@ -1987,7 +2005,7 @@ static void _ruin_level(Iterator ri,
 
         // Pick a random adjacent non-wall, non-door, non-statue
         // feature, and count the number of such features.
-        dungeon_feature_type replacement = DNGN_FLOOR;
+        coord_feat replacement(*ri, DNGN_UNSEEN);
         int floor_count = 0;
         for (adjacent_iterator ai(*ri); ai; ++ai)
         {
@@ -1997,22 +2015,23 @@ static void _ruin_level(Iterator ri,
                 && grd(*ai) != DNGN_MALIGN_GATEWAY)
             {
                 if (one_chance_in(++floor_count))
-                    replacement = grd(*ai);
+                    replacement.set_from(*ai);
             }
         }
 
         /* chance of removing the tile is dependent on the number of adjacent
          * floor(ish) tiles */
         if (x_chance_in_y(floor_count, ruination))
-            to_replace.push_back(coord_feat(*ri, replacement));
+            to_replace.push_back(replacement);
     }
 
     for (coord_feats::const_iterator it = to_replace.begin();
          it != to_replace.end();
          ++it)
     {
-        const coord_def &p(it->first);
-        dungeon_feature_type replacement = it->second;
+        const coord_def &p(it->pos);
+        dungeon_feature_type replacement = it->feat;
+        ASSERT(replacement != DNGN_UNSEEN);
 
         // Don't replace doors with impassable features.
         if (feat_is_door(grd(p)))
@@ -2032,7 +2051,13 @@ static void _ruin_level(Iterator ri,
 
         /* only remove some doors, to preserve tactical options */
         if (feat_is_wall(grd(p)) || coinflip() && feat_is_door(grd(p)))
+        {
+            // Copy the mask and properties too, so that we don't make an
+            // isolated transparent or rtele_into square.
+            env.level_map_mask(p) |= it->mask;
+            env.pgrid(p) |= it->prop;
             _set_grd(p, replacement);
+        }
 
         /* but remove doors if we've removed all adjacent walls */
         for (adjacent_iterator wai(p); wai; ++wai)
@@ -2047,7 +2072,11 @@ static void _ruin_level(Iterator ri,
                 }
                 // It's always safe to replace a door with floor.
                 if (remove)
+                {
+                    env.level_map_mask(p) |= it->mask;
+                    env.pgrid(p) |= it->prop;
                     _set_grd(*wai, DNGN_FLOOR);
+                }
             }
         }
 
@@ -2144,12 +2173,12 @@ static void _place_feature_mimics(dungeon_feature_type dest_stairs_type)
 
             // If we're mimicing a unique portal vault, give a chance for
             // another one to spawn.
-            std::string dst = env.markers.property_at(pos, MAT_ANY, "dstname");
+            string dst = env.markers.property_at(pos, MAT_ANY, "dstname");
             if (dst.empty())
                 dst = env.markers.property_at(pos, MAT_ANY, "dst");
             if (!dst.empty())
             {
-                const std::string tag = "uniq_" + lowercase_string(dst);
+                const string tag = "uniq_" + lowercase_string(dst);
                 if (you.uniq_map_tags.find(tag) != you.uniq_map_tags.end())
                     you.uniq_map_tags.erase(tag);
             }
@@ -2418,7 +2447,7 @@ static void _pan_level()
 
     for (int i = 0; i < 4; i++)
     {
-        if (!you.uniq_map_tags.count(std::string("uniq_") + pandemon_level_names[i]))
+        if (!you.uniq_map_tags.count(string("uniq_") + pandemon_level_names[i]))
         {
             all_demons_generated = false;
             break;
@@ -2432,11 +2461,9 @@ static void _pan_level()
         && !all_demons_generated)
     {
         do
-        {
             which_demon = random2(4);
-        }
-        while (you.uniq_map_tags.count(std::string("uniq_")
-                                     + pandemon_level_names[which_demon]));
+        while (you.uniq_map_tags.count(string("uniq_")
+                                       + pandemon_level_names[which_demon]));
     }
 
     if (which_demon >= 0)
@@ -2459,9 +2486,7 @@ static void _pan_level()
         {
             const map_def *layout;
             do
-            {
                 layout = random_map_for_tag("layout", true, true);
-            }
             while (layout->has_tag("no_primary_vault"));
 
             dgn_ensure_vault_placed(_build_primary_vault(layout), true);
@@ -2494,7 +2519,7 @@ static const map_def *_dgn_random_map_for_place(bool minivault)
     if (!minivault && player_in_branch(BRANCH_ECUMENICAL_TEMPLE))
     {
         // Temple vault determined at new game time.
-        const std::string name = you.props[TEMPLE_MAP_KEY];
+        const string name = you.props[TEMPLE_MAP_KEY];
 
         // Tolerate this for a little while, for old games.
         if (!name.empty())
@@ -2620,10 +2645,9 @@ static int _min_transitive_label(map_component & component)
 // 8-way connected component analysis on the current level map.
 template<typename comp>
 static void _ccomps_8(FixedArray<int, GXM, GYM > & connectivity_map,
-                      std::vector<map_component> & components,
-                      comp & connected)
+                      vector<map_component> & components, comp & connected)
 {
-    std::map<int, map_component> intermediate_components;
+    map<int, map_component> intermediate_components;
 
     connectivity_map.init(0);
     components.clear();
@@ -2642,7 +2666,7 @@ static void _ccomps_8(FixedArray<int, GXM, GYM > & connectivity_map,
         if (connected(*pos))
         {
             int absolute_min_label = INT_MAX;
-            std::set<int> neighbor_labels;
+            set<int> neighbor_labels;
             for (unsigned i = 0; i < adjacent_size; i++)
             {
                 coord_def test = *pos + offsets[i];
@@ -2672,7 +2696,7 @@ static void _ccomps_8(FixedArray<int, GXM, GYM > & connectivity_map,
                 map_component * absolute_min = &intermediate_components[absolute_min_label];
 
                 absolute_min->add_coord(*pos);
-                for (std::set<int>::iterator i = neighbor_labels.begin();
+                for (set<int>::iterator i = neighbor_labels.begin();
                      i != neighbor_labels.end();i++)
                 {
                     map_component * current = &intermediate_components[*i];
@@ -2692,7 +2716,7 @@ static void _ccomps_8(FixedArray<int, GXM, GYM > & connectivity_map,
 
     int reindexed_label = 1;
     // Reindex root labels, and move them to output
-    for (std::map<int, map_component>::iterator i = intermediate_components.begin();
+    for (map<int, map_component>::iterator i = intermediate_components.begin();
          i != intermediate_components.end(); ++i)
     {
         if (i->second.min_equivalent == NULL)
@@ -2766,7 +2790,7 @@ static void _slime_connectivity_fixup()
     // Generate a connectivity map considering any non wall, non vault square
     // passable
     FixedArray<int, GXM, GYM> connectivity_map;
-    std::vector<map_component> components;
+    vector<map_component> components;
     _ccomps_8(connectivity_map, components, _passable_square);
 
     // Next we will generate a connectivity map with the above restrictions,
@@ -2777,7 +2801,7 @@ static void _slime_connectivity_fixup()
     // counts will define the costs of a search used to connect components in
     // the basic connectivity map that are broken apart in the restricted map
     FixedArray<int, GXM, GYM> non_adjacent_connectivity;
-    std::vector<map_component> non_adj_components;
+    vector<map_component> non_adj_components;
     adjacency_test adjacent_check;
 
     for (rectangle_iterator ri(1); ri; ++ri)
@@ -2816,7 +2840,7 @@ static void _slime_connectivity_fixup()
     {
         // Collect the components in the restricted connectivity map that
         // occupy part of the current component
-        std::map<int, map_component *> present;
+        map<int, map_component *> present;
         for (rectangle_iterator ri(components[i].min_coord, components[i].max_coord); ri; ++ri)
         {
             int new_label = non_adjacent_connectivity(*ri);
@@ -2829,7 +2853,7 @@ static void _slime_connectivity_fixup()
 
         // Set one restricted component as the base point, and search to all
         // other restricted components
-        std::map<int, map_component * >::iterator target_components = present.begin();
+        map<int, map_component * >::iterator target_components = present.begin();
 
         // No non-wall adjacent squares in this component? This probably
         // shouldn't happen, but just move on.
@@ -2853,8 +2877,8 @@ static void _slime_connectivity_fixup()
         {
             valid_label.target_label = target_components->second->label;
 
-            std::vector<std::set<position_node>::iterator >path;
-            std::set<position_node> visited;
+            vector<set<position_node>::iterator >path;
+            set<position_node> visited;
             search_astar(base_component->seed_position, valid_label,
                          connection_costs, dummy, visited, path);
 
@@ -2897,7 +2921,7 @@ static void _place_chance_vaults()
     // [ds] If there are multiple CHANCE maps that share an luniq_ or
     // uniq_ tag, only the first such map will be placed. Shuffle the
     // order of chosen maps so we don't have a first-map bias.
-    std::random_shuffle(maps.begin(), maps.end());
+    random_shuffle(maps.begin(), maps.end());
     for (int i = 0, size = maps.size(); i < size; ++i)
     {
         const map_def *map = maps[i];
@@ -3212,7 +3236,7 @@ static coord_def _place_specific_feature(dungeon_feature_type feat)
     return c;
 }
 
-static bool _place_vault_by_tag(const std::string &tag)
+static bool _place_vault_by_tag(const string &tag)
 {
     const map_def *vault = random_map_for_tag(tag, true);
     if (!vault)
@@ -3221,8 +3245,7 @@ static bool _place_vault_by_tag(const std::string &tag)
     return _build_secondary_vault(vault);
 }
 
-static void _place_specific_stair(dungeon_feature_type stair,
-                                  const std::string &tag)
+static void _place_specific_stair(dungeon_feature_type stair, const string &tag)
 {
     if (tag.empty() || !_place_vault_by_tag(tag))
         _place_specific_feature(stair);
@@ -3289,7 +3312,7 @@ static void _place_branch_entrances()
             // Place a stair.
             dprf("Placing stair to %s", b->shortname);
 
-            std::string entry_tag = std::string(b->abbrevname);
+            string entry_tag = string(b->abbrevname);
             entry_tag += "_entry";
             lowercase(entry_tag);
 
@@ -3394,8 +3417,7 @@ static int _place_uniques()
     return num_placed;
 }
 
-static int _place_monster_vector(std::vector<monster_type> montypes,
-                                 int num_to_place)
+static int _place_monster_vector(vector<monster_type> montypes, int num_to_place)
 {
     int result = 0;
 
@@ -3437,7 +3459,7 @@ static int _place_monster_vector(std::vector<monster_type> montypes,
 static void _place_aquatic_monsters()
 {
     int lava_spaces = 0, water_spaces = 0;
-    std::vector<monster_type> swimming_things(4u, MONS_NO_MONSTER);
+    vector<monster_type> swimming_things(4u, MONS_NO_MONSTER);
     int level_number = env.absdepth0;
 
     // [ds] Shoals relies on normal monster generation to place its monsters.
@@ -3475,7 +3497,7 @@ static void _place_aquatic_monsters()
                 swimming_things[i] = MONS_SALAMANDER;
         }
 
-        _place_monster_vector(swimming_things, std::min(random2avg(9, 2)
+        _place_monster_vector(swimming_things, min(random2avg(9, 2)
                                        + (random2(lava_spaces) / 10), 15));
     }
 
@@ -3511,7 +3533,7 @@ static void _place_aquatic_monsters()
         if (level_number >= 25 && one_chance_in(5))
             swimming_things[0] = MONS_WATER_ELEMENTAL;
 
-        _place_monster_vector(swimming_things, std::min(random2avg(9, 2)
+        _place_monster_vector(swimming_things, min(random2avg(9, 2)
                                 + (random2(water_spaces) / 10), 15));
     }
 }
@@ -3602,8 +3624,7 @@ static bool _connect_vault_exit(const coord_def& exit)
 static bool _grid_needs_exit(const coord_def& c)
 {
     return (!cell_is_solid(c)
-            || feat_is_closed_door(grd(c))
-            || grd(c) == DNGN_SECRET_DOOR);
+            || feat_is_closed_door(grd(c)));
 }
 
 static bool _map_feat_is_on_edge(const vault_placement &place,
@@ -3619,10 +3640,9 @@ static bool _map_feat_is_on_edge(const vault_placement &place,
     return false;
 }
 
-static void _pick_float_exits(vault_placement &place,
-                              std::vector<coord_def> &targets)
+static void _pick_float_exits(vault_placement &place, vector<coord_def> &targets)
 {
-    std::vector<coord_def> possible_exits;
+    vector<coord_def> possible_exits;
 
     for (rectangle_iterator ri(place.pos, place.pos + place.size - 1); ri; ++ri)
         if (_grid_needs_exit(*ri) && _map_feat_is_on_edge(place, *ri))
@@ -3630,10 +3650,17 @@ static void _pick_float_exits(vault_placement &place,
 
     if (possible_exits.empty())
     {
-#ifdef DEBUG_DIAGNOSTICS
+        // Empty map (a serial vault master, etc).
+        if (place.size.origin())
+            return;
+
+        // The vault is disconnected, does it have a stair inside?
+        for (rectangle_iterator ri(place.pos, place.pos + place.size - 1); ri; ++ri)
+            if (feat_is_stair(grd(*ri)))
+                return;
+
         mprf(MSGCH_ERROR, "Unable to find exit from %s",
              place.map.name.c_str());
-#endif
         return;
     }
 
@@ -3718,7 +3745,14 @@ bool dgn_place_map(const map_def *mdef,
     if (did_map && !Generating_Level)
     {
         const vault_placement &vp = *env.level_vaults[map_index];
-        ASSERT(mdef->name == vp.map.name);
+#ifdef ASSERTS
+        if (mdef->name != vp.map.name)
+        {
+            die("Placed map '%s', yet vault_placement is '%s'",
+                mdef->name.c_str(), vp.map.name.c_str());
+        }
+#endif
+
         for (vault_place_iterator vpi(vp); vpi; ++vpi)
         {
             const coord_def p = *vpi;
@@ -3747,7 +3781,7 @@ const map_def *dgn_safe_place_map(const map_def *mdef,
                                   bool make_no_exits,
                                   const coord_def &where)
 {
-    const std::string mapname(mdef->name);
+    const string mapname(mdef->name);
     int retries = 10;
     while (true)
     {
@@ -3803,7 +3837,7 @@ static bool _vault_wants_damage(const vault_placement &vp)
 
     // Some vaults may want to be ruined only in certain places with
     // tags like "ruin_abyss" or "ruin_lair"
-    std::string place_desc = level_id::current().describe(false, false);
+    string place_desc = level_id::current().describe(false, false);
     lowercase(place_desc);
     return map.has_tag("ruin_" + place_desc);
 }
@@ -3849,6 +3883,8 @@ static bool _build_vault_impl(const map_def *vault,
         if (player_in_branch(BRANCH_PANDEMONIUM) && dgn_zones > 1)
             throw dgn_veto_exception("Pan map with disconnected zones");
     }
+
+    unwind_var<string> placing(env.placing_vault, vault->name);
 
     vault_placement place;
 
@@ -3918,7 +3954,7 @@ static bool _build_vault_impl(const map_def *vault,
     if (!build_only && (placed_vault_orientation != MAP_ENCOMPASS || is_layout)
         && player_in_branch(BRANCH_SWAMP))
     {
-        process_disconnected_zones(0, 0, GXM-1, GYM-1, true, DNGN_MANGROVE);
+        _process_disconnected_zones(0, 0, GXM-1, GYM-1, true, DNGN_MANGROVE);
     }
 
     // Fire any post-place hooks defined for this map; any failure
@@ -4031,11 +4067,11 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
 
     if (props.exists("make_book_theme_randart"))
     {
-        std::string owner = props["randbook_owner"].get_string();
+        string owner = props["randbook_owner"].get_string();
         if (owner == "player")
             owner = you.your_name;
 
-        std::vector<spell_type> spells;
+        vector<spell_type> spells;
         CrawlVector spell_list = props["randbook_spells"].get_vector();
         for (unsigned int i = 0; i < spell_list.size(); ++i)
             spells.push_back((spell_type) spell_list[i].get_int());
@@ -4113,6 +4149,15 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
     }
     if (props.exists("unobtainable"))
         item.flags |= ISFLAG_UNOBTAINABLE;
+
+    if (props.exists("no_pickup"))
+        item.flags |= ISFLAG_NO_PICKUP;
+
+    if (props.exists("item_tile_name"))
+        item.props["item_tile_name"] = props["item_tile_name"].get_string();
+    if (props.exists("worn_tile_name"))
+        item.props["worn_tile_name"] = props["worn_tile_name"].get_string();
+    bind_item_tile(item);
 
     if (!monster)
     {
@@ -4472,7 +4517,7 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
         if (mons_class_is_zombified(mg.cls))
             mg.base_type = MONS_NO_MONSTER;
         else
-            std::swap(mg.base_type, mg.cls);
+            swap(mg.base_type, mg.cls);
     }
 
     if (m_patrolling)
@@ -4533,7 +4578,7 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
     {
         item_def *wpn = mons->mslot_item(MSLOT_WEAPON);
         ASSERT(wpn);
-        mons->ghost->init_dancing_weapon(*wpn, 180);
+        mons->ghost->init_dancing_weapon(*wpn, 100);
         mons->ghost_demon_init();
     }
 
@@ -4573,9 +4618,6 @@ static bool _dgn_place_one_monster(const vault_placement &place,
 static dungeon_feature_type _glyph_to_feat(int glyph,
                                            vault_placement *place = NULL)
 {
-    // Please purge this some day.
-    if (glyph == 'a')
-        die("map %s tried to place a wax wall", place ? place->map.name.c_str() : "[NULL]");
     return ((glyph == 'x') ? DNGN_ROCK_WALL :
             (glyph == 'X') ? DNGN_PERMAROCK_WALL :
             (glyph == 'c') ? DNGN_STONE_WALL :
@@ -4586,7 +4628,7 @@ static dungeon_feature_type _glyph_to_feat(int glyph,
             (glyph == 'o') ? DNGN_CLEAR_PERMAROCK_WALL :
             (glyph == 't') ? DNGN_TREE :
             (glyph == '+') ? DNGN_CLOSED_DOOR :
-            (glyph == '=') ? DNGN_SECRET_DOOR :
+            (glyph == '=') ? DNGN_RUNED_DOOR :
             (glyph == 'w') ? DNGN_DEEP_WATER :
             (glyph == 'W') ? DNGN_SHALLOW_WATER :
             (glyph == 'l') ? DNGN_LAVA :
@@ -4728,14 +4770,14 @@ static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
         else if (vgrid == '|')
         {
             which_class = random_choose_weighted(
-                            4, OBJ_WEAPONS,
-                            2, OBJ_ARMOUR,
-                            2, OBJ_JEWELLERY,
-                            2, OBJ_BOOKS,
-                            1, OBJ_STAVES,
-                            1, OBJ_RODS,
-                            2, OBJ_MISCELLANY,
-                            0);
+                            20, OBJ_WEAPONS,
+                            10, OBJ_ARMOUR,
+                            10, OBJ_JEWELLERY,
+                            10, OBJ_BOOKS,
+                             9, OBJ_STAVES,
+                             1, OBJ_RODS,
+                            10, OBJ_MISCELLANY,
+                             0);
             which_depth = MAKE_GOOD_ITEM;
         }
         else if (vgrid == '*')
@@ -4896,7 +4938,7 @@ struct coord_comparator
     static int dist(const coord_def &a, const coord_def &b)
     {
         const coord_def del = a - b;
-        return std::abs(del.x) * GYM + std::abs(del.y);
+        return abs(del.x) * GYM + abs(del.y);
     }
 
     bool operator () (const coord_def &a, const coord_def &b) const
@@ -4905,7 +4947,7 @@ struct coord_comparator
     }
 };
 
-typedef std::set<coord_def, coord_comparator> coord_set;
+typedef set<coord_def, coord_comparator> coord_set;
 
 static void _jtd_init_surrounds(coord_set &coords, uint32_t mapmask,
                                 const coord_def &c)
@@ -4982,12 +5024,17 @@ static dungeon_feature_type _pick_temple_altar(vault_placement &place)
     {
         if (_current_temple_hash != NULL)
         {
+            // Altar god doesn't matter, setting up the whole machinery would
+            // be too much work.
+            if (crawl_state.map_stat_gen)
+                return DNGN_ALTAR_XOM;
+
             mpr("Ran out of altars for temple!", MSGCH_ERROR);
             return DNGN_FLOOR;
         }
         // Randomized altar list for mini-temples.
         _temple_altar_list = temple_god_list();
-        std::random_shuffle(_temple_altar_list.begin(), _temple_altar_list.end());
+        random_shuffle(_temple_altar_list.begin(), _temple_altar_list.end());
     }
 
     const god_type god = _temple_altar_list.back();
@@ -5219,9 +5266,7 @@ static void _place_spec_shop(const coord_def& where,
             item_level = level_number + random2((level_number + 1) * 2);
         }
         else
-        {
             item_level = level_number + random2((level_number + 1) * 3);
-        }
 
         // Make bazaar items more valuable (up to double value).
         if (player_in_branch(BRANCH_BAZAAR))
@@ -5370,9 +5415,9 @@ static bool _spotty_seed_ok(const coord_def& p)
 // it stops pretty much as soon as connectivity is attained.
 static bool _connect_spotty(const coord_def& from)
 {
-    std::set<coord_def> flatten;
-    std::set<coord_def> border;
-    std::set<coord_def>::const_iterator it;
+    set<coord_def> flatten;
+    set<coord_def> border;
+    set<coord_def>::const_iterator it;
     bool success = false;
 
     for (adjacent_iterator ai(from); ai; ++ai)
@@ -5479,16 +5524,12 @@ static void _add_plant_clumps(int frequency /* = 10 */,
                 mg.cls = type;
             }
             else
-            {
                 continue;
-            }
         }
         else
-        {
             continue;
-        }
 
-        std::vector<coord_def> to_place;
+        vector<coord_def> to_place;
         to_place.push_back(*ri);
         for (int i = 1; i < clump_radius; ++i)
         {
@@ -5498,8 +5539,8 @@ static void _add_plant_clumps(int frequency /* = 10 */,
                     continue;
 
                 /* make sure the iterator stays valid */
-                std::vector<coord_def> more_to_place;
-                for (std::vector<coord_def>::const_iterator it = to_place.begin();
+                vector<coord_def> more_to_place;
+                for (vector<coord_def>::const_iterator it = to_place.begin();
                      it != to_place.end();
                      ++it)
                 {
@@ -5516,7 +5557,7 @@ static void _add_plant_clumps(int frequency /* = 10 */,
             }
         }
 
-        for (std::vector<coord_def>::const_iterator it = to_place.begin();
+        for (vector<coord_def>::const_iterator it = to_place.begin();
              it != to_place.end();
              ++it)
         {
@@ -5596,7 +5637,7 @@ coord_def dgn_random_point_from(const coord_def &c, int radius, int margin)
 
 coord_def dgn_find_feature_marker(dungeon_feature_type feat)
 {
-    std::vector<map_marker*> markers = env.markers.get_all();
+    vector<map_marker*> markers = env.markers.get_all();
     for (int i = 0, size = markers.size(); i < size; ++i)
     {
         map_marker *mark = markers[i];
@@ -5828,7 +5869,7 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
     die("Can't find any floor to put the player on.");
 }
 
-void dgn_set_branch_epilogue(branch_type branch, std::string func_name)
+void dgn_set_branch_epilogue(branch_type branch, string func_name)
 {
     ASSERT(!func_name.empty());
 
@@ -5933,7 +5974,7 @@ struct StairConnectivity
     bool connected[3];
 };
 
-FixedVector<std::vector<StairConnectivity>, NUM_BRANCHES> connectivity;
+FixedVector<vector<StairConnectivity>, NUM_BRANCHES> connectivity;
 
 void init_level_connectivity()
 {
@@ -5951,7 +5992,7 @@ void read_level_connectivity(reader &th)
     {
         unsigned int depth = brdepth[i] > 0 ? brdepth[i] : 0;
         unsigned int num_entries = unmarshallInt(th);
-        connectivity[i].resize(std::max(depth, num_entries));
+        connectivity[i].resize(max(depth, num_entries));
 
         for (unsigned int e = 0; e < num_entries; e++)
             connectivity[i][e].read(th);
@@ -5999,7 +6040,7 @@ static bool _fixup_interlevel_connectivity()
     FixedVector<int, 3> up_region;
     FixedVector<int, 3> down_region;
     FixedVector<bool, 3> has_down;
-    std::vector<bool> region_connected;
+    vector<bool> region_connected;
 
     up_region[0] = up_region[1] = up_region[2] = -1;
     down_region[0] = down_region[1] = down_region[2] = -1;
@@ -6039,7 +6080,7 @@ static bool _fixup_interlevel_connectivity()
             {
                 down_region[idx] = travel_point_distance[ri->x][ri->y];
                 down_gc[idx] = *ri;
-                max_region = std::max(down_region[idx], max_region);
+                max_region = max(down_region[idx], max_region);
             }
             else
             {
@@ -6057,7 +6098,7 @@ static bool _fixup_interlevel_connectivity()
             {
                 up_region[idx] = travel_point_distance[ri->x][ri->y];
                 up_gc[idx] = *ri;
-                max_region = std::max(up_region[idx], max_region);
+                max_region = max(up_region[idx], max_region);
             }
             else
             {
@@ -6342,7 +6383,7 @@ void vault_placement::draw_at(const coord_def &c)
 
 void vault_placement::connect(bool spotty) const
 {
-    for (std::vector<coord_def>::const_iterator i = exits.begin();
+    for (vector<coord_def>::const_iterator i = exits.begin();
          i != exits.end(); ++i)
     {
         if (spotty && _connect_spotty(*i))
@@ -6353,22 +6394,17 @@ void vault_placement::connect(bool spotty) const
     }
 }
 
-static void _remember_vault_placement(std::string key, const vault_placement &place)
+static void _remember_vault_placement(const vault_placement &place, bool extra)
 {
-    // First we store some info on the vault into the level's properties
-    // hash table, so that if there's a crash the crash report can list
-    // them all.
-    CrawlHashTable &table = env.properties[key].get_table();
-
-    std::string name = make_stringf("%s [%d]", place.map.name.c_str(),
-                                    table.size() + 1);
-
-    std::string place_str
-        = make_stringf("(%d,%d) (%d,%d) orient: %d",
-                       place.pos.x, place.pos.y, place.size.x, place.size.y,
-                       place.orient);
-
-    table[name] = place_str;
+    // First we store some info on the vault, so that if there's a crash the
+    // crash report can list them all.
+    env.level_vault_list.push_back(
+        make_stringf("%s%s: (%d,%d) (%d,%d) orient: %d",
+                     place.map.name.c_str(),
+                     extra ? " (extra)" : "",
+                     place.pos.x, place.pos.y,
+                     place.size.x, place.size.y,
+                     place.orient));
 
     // Second we setup some info to be saved in the player's properties
     // hash table, so the information can be included in the character
@@ -6377,53 +6413,36 @@ static void _remember_vault_placement(std::string key, const vault_placement &pl
         && !place.map.has_tag_suffix("dummy")
         && !place.map.has_tag("no_dump"))
     {
-        const std::string type = place.map.has_tag("extra")
-            ? "extra" : "normal";
-
-        _you_vault_list[type].get_vector().push_back(place.map.name);
+        // When generating a level, vaults may be vetoed together with the
+        // whole level after being placed, thus we need to save them in a
+        // temp list.
+        if (Generating_Level)
+            _you_vault_list.push_back(place.map.name);
+        else
+            you.vault_list[level_id::current()].push_back(place.map.name);
     }
 }
 
-std::string dump_vault_maps()
+string dump_vault_maps()
 {
-    std::string out = "";
+    string out = "";
 
-    std::vector<level_id> levels = all_dungeon_ids();
+    vector<level_id> levels = all_dungeon_ids();
 
-    CrawlHashTable &vaults = you.props[YOU_DUNGEON_VAULTS_KEY].get_table();
     for (unsigned int i = 0; i < levels.size(); i++)
     {
         level_id    &lid = levels[i];
-        std::string  lev = lid.describe();
 
-        if (!vaults.exists(lev))
+        if (you.vault_list.find(lid) == you.vault_list.end())
             continue;
 
         out += lid.describe() + ":\n";
 
-        CrawlHashTable &lists = vaults[lev].get_table();
+        vector<string> &maps(you.vault_list[lid]);
 
-        const char *types[] = {"normal", "extra"};
-        for (int j = 0; j < 2; j++)
-        {
-            if (!lists.exists(types[j]))
-                continue;
-
-            out += "  ";
-            out += types[j];
-            out += ": ";
-
-            CrawlVector &vec = lists[types[j]].get_vector();
-
-            for (unsigned int k = 0, size = vec.size(); k < size; k++)
-            {
-                out += vec[k].get_string();
-                if (k < (size - 1))
-                    out += ", ";
-            }
-
-            out += "\n";
-        }
+        string vaults = comma_separated_line(maps.begin(), maps.end(), ", ");
+        while (!vaults.empty())
+            out += "  " + wordwrap_line(vaults, 78) + "\n";
         out += "\n";
     }
     return out;

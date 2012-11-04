@@ -14,6 +14,7 @@
 #include <stdio.h>
 #include <cmath>
 
+#include "art-enum.h"
 #include "artefact.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -62,7 +63,7 @@ bool is_holy_item(const item_def& item)
 
     if (is_unrandom_artefact(item))
     {
-        unrandart_entry* entry = get_unrand_entry(item.special);
+        const unrandart_entry* entry = get_unrand_entry(item.special);
 
         if (entry->flags & UNRAND_FLAG_HOLY)
             return true;
@@ -95,7 +96,7 @@ bool is_unholy_item(const item_def& item)
 
     if (is_unrandom_artefact(item))
     {
-        unrandart_entry* entry = get_unrand_entry(item.special);
+        const unrandart_entry* entry = get_unrand_entry(item.special);
 
         if (entry->flags & UNRAND_FLAG_UNHOLY)
             return true;
@@ -159,7 +160,7 @@ bool is_corpse_violating_item(const item_def& item)
 
     if (is_unrandom_artefact(item))
     {
-        unrandart_entry* entry = get_unrand_entry(item.special);
+        const unrandart_entry* entry = get_unrand_entry(item.special);
 
         if (entry->flags & UNRAND_FLAG_CORPSE_VIOLATING)
             return true;
@@ -191,7 +192,7 @@ bool is_evil_item(const item_def& item)
 {
     if (is_unrandom_artefact(item))
     {
-        unrandart_entry* entry = get_unrand_entry(item.special);
+        const unrandart_entry* entry = get_unrand_entry(item.special);
 
         if (entry->flags & UNRAND_FLAG_EVIL)
             return true;
@@ -229,7 +230,7 @@ bool is_unclean_item(const item_def& item)
 {
     if (is_unrandom_artefact(item))
     {
-        unrandart_entry* entry = get_unrand_entry(item.special);
+        const unrandart_entry* entry = get_unrand_entry(item.special);
 
         if (entry->flags & UNRAND_FLAG_UNCLEAN)
             return true;
@@ -247,7 +248,7 @@ bool is_chaotic_item(const item_def& item)
 
     if (is_unrandom_artefact(item))
     {
-        unrandart_entry* entry = get_unrand_entry(item.special);
+        const unrandart_entry* entry = get_unrand_entry(item.special);
 
         if (entry->flags & UNRAND_FLAG_CHAOTIC)
             return true;
@@ -332,9 +333,7 @@ bool is_hasty_item(const item_def& item)
         {
         const int item_brand = get_weapon_brand(item);
         retval = (item_brand == SPWPN_SPEED
-                  || item.sub_type == WPN_QUICK_BLADE
-                  || is_unrandom_artefact(item)
-                     && item.special == UNRAND_TROG);
+                  || item.sub_type == WPN_QUICK_BLADE);
         }
         break;
     case OBJ_ARMOUR:

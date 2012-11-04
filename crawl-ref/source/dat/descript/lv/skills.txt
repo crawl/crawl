@@ -1,0 +1,26 @@
+%%%%
+Fighting
+
+Cīņas prasme palielina precizitāti un nodarītos bojājumus dūru cīņā, kā arī
+maksimālo dzīvības punktu skaitu.
+%%%%
+Dodging
+
+Izvairīšanās prasme palielina iespēju izvairīties no uzbrukuma, vienalga vai
+tas ir tuvcīņas, tālcīņas vai maģijas. Tomēr no dažiem uzbrukuma veidiem,
+piemēram, noburšanas (pret ko var pretoties) vai sprādzieniem izvairīties nav
+iespējams.
+%%%%
+Stealth
+
+Apgūstot lavīšanos, gulošiem un nevienu nepamanījušiem briesmoņiem būs mazāka
+iespēja Jūs ievērot, kā, pazūdot no briesmoņu redzesloka, ir lielāka iespēja,
+ka tie pazaudēs Jūsu pēdas. Ņemiet vērā, ka, dodoties dziļāk, briesmoņi kļūst
+aizdomīgāki un vērīgāki.
+%%%%
+Shields
+
+Augsta vairoga prasme palīdz atvairīt tuvcīņas uzbrukumus, kā arī lidojošos
+šāviņus (gan maģiskos, gan nemaģiskos) ar savu rokā turamo (vai maģisko)
+vairogu.
+%%%%

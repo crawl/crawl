@@ -124,7 +124,7 @@ TAGS:    dwarf_entry no_monster_gen
 COLOUR:  c = white, = = white, ' = yellow
 RTILE:   c = wall_tomb, = = wall_tomb
 FTILE:   ='GO = floor_sandstone
-NSUBST:  = = 1:= / *:c
+NSUBST:  = = 1:+ / *:c
 SUBST:   c : cx
 KFEAT:   O = enter_dwarven_hall
 MAP
@@ -145,10 +145,8 @@ MONS:    elf / w:5 deep dwarf / deep dwarf necromancer / \
          deep dwarf artificer
 MONS:    shadow wraith / wraith / wight w:5 / troll / rock troll w:5 / \
          deep dwarf necromancer w:2 / deep dwarf artificer w:1
-FTILE:   12O.A = floor_sandstone
-# crawl will rotate for the rest of possibilities
-NSUBST:  A = 1:= / *:c
-FTILE:   =12O. = floor_limestone
+FTILE:   12O.+ = floor_sandstone
+FTILE:   +12O. = floor_limestone
 FTILE:   @ = floor_sandstone
 COLOUR:  12 = yellow
 KFEAT:   O = enter_dwarven_hall
@@ -159,7 +157,7 @@ c.ccccc.c
 c.c.2.c.c
 @.c.O.c.@
 c.c...c.c
-c.cAAcc.c
+c.cc+cc.c
 c1.....1c
 cccc@cccc
 ENDMAP
@@ -330,7 +328,7 @@ SUBST:   p = T:40 V:40 U:20
 SUBST:   . = .:92 ~:5 ^:1 %:1 *:1
 SUBST:   q = q:66 ~:33 ^:1
 KFEAT:   q = alarm trap
-MARKER:  + = lua:restrict_door()
+KFEAT:   + = runed_door
 ITEM:    box of beasts / empty ebony casket
 ITEM:    any weapon
 ITEM:    amulet of faith / \
@@ -377,7 +375,6 @@ MONS:   troll w:20, elf, wight
 MONS:   wight
 MONS:   patrolling deep dwarf
 NSUBST: X = 2:= / *:x
-MARKER: = = lua:restrict_door()
 SUBST:  * = **d
 ITEM:   staff of death / scroll of torment / necronomicon w:1
 MAP
@@ -424,7 +421,6 @@ NAME:   dhfh_guard_house_d2
 TAGS:   dhfh_guard_house allow_dup
 DEPTH:  Dwarf:1
 NSUBST: C = 1:@ / *:c
-NSUBST: S = 1:= / *:c
 KITEM:  * = % w:20 / * / $
 SUBST:  1 = 2 w:2 / 1 / .
 KMONS:  1 = patrolling deep dwarf berserker w:5 / \
@@ -435,12 +431,12 @@ KMONS:  2 = patrolling deep dwarf death knight / \
 MAP
 cccc  cccc
 c*.c  c.*c
-c.SccccS.c
+c.+cccc+.c
 ccc1..1ccc
   c.1..c
   c..1.c
 ccc1..1ccc
-c.ScCCcS.c
+c.+cCCc+.c
 c*.c..c.*c
 cccc@.cccc
 ENDMAP
@@ -449,7 +445,6 @@ NAME:   dhfh_guard_house_d3
 TAGS:   dhfh_guard_house allow_dup
 DEPTH:  Dwarf:1
 NSUBST: C = 1:@ / *:c
-NSUBST: S = 1:= / *:c
 KITEM:  * = % w:20 / * / $
 SUBST:  1 = 2 w:2 / 1 / .
 KMONS:  1 = patrolling deep dwarf berserker / \
@@ -459,12 +454,12 @@ KMONS:  2 = patrolling deep dwarf death knight / patrolling unborn deep dwarf
 MAP
 cccc  cccc
 c*.c  c.*c
-c.SccccS.c
+c.+cccc+.c
 ccc1..1ccc
   c.1..c
   c..1.c
 ccc1..1ccc
-c.ScCCcS.c
+c.+cCCc+.c
 c*.c..c.*c
 cccc@.cccc
 ENDMAP
@@ -473,7 +468,6 @@ NAME:   dhfh_guard_house_d4
 TAGS:   dhfh_guard_house allow_dup
 DEPTH:  Dwarf:1
 NSUBST: C = 1:@ / *:c
-NSUBST: S = 1:= / *:c
 KITEM:  * = % w:20 / * / $
 SUBST:  1 = 2 w:2 / 1 / .
 KMONS:  1 = patrolling deep dwarf berserker / \
@@ -484,12 +478,12 @@ KMONS:  2 = patrolling deep dwarf death knight w:3 / \
 MAP
 cccc  cccc
 c*.c  c.*c
-c.SccccS.c
+c.+cccc+.c
 ccc1..1ccc
   c.1..c
   c..1.c
 ccc1..1ccc
-c.ScCCcS.c
+c.+cCCc+.c
 c*.c..c.*c
 cccc@.cccc
 ENDMAP
@@ -526,8 +520,7 @@ NAME:     dhfh_hall
 TAGS:     no_monster_gen no_item_gen no_wall_fixup
 ORIENT:   northwest
 PLACE:    Dwarf
-NSUBST:   s = 1:= / *:c
-MARKER:   = = lua:restrict_door()
+NSUBST:   s = 1:+ / *:c
 SUBST:    ? = w * |:3
 KITEM:    w : wand of heal wounds
 SUBVAULT: O : dhfh_hall_top
@@ -558,8 +551,8 @@ MAP
  c....1....s..c
 cccccG.Gcccsc.c
 cZZ.c...c.AAs.c
-c.....1.....c.cccccccc
-c...........c.s.s...Uc
+c.....1.....c.c cccccc
+c...........c.c c...Uc
 cYY.c.1.c.BBs.ccc....c
 c...........c...c.2..c
 c.1...2...1.c..2+..2.c
@@ -616,7 +609,7 @@ SUBST:   & = .:15 G H I
 KITEM:   G = griffon corpse
 KITEM:   H = sheep corpse
 KITEM:   I = deep troll corpse
-MARKER:  + = lua:restrict_door()
+KFEAT:   + = runed_door
 : dgn.delayed_decay(_G, 'G', 'griffon corpse')
 : dgn.delayed_decay(_G, 'H', 'hell hound corpse')
 : dgn.delayed_decay(_G, 'I', 'deep troll corpse')
@@ -660,7 +653,7 @@ KMONS:   p = patrolling deep dwarf ; potion of porridge
 KMONS:   r = patrolling deep dwarf necromancer ; potion of porridge
 KMONS:   3 = generate_awake wight w:20 / generate_awake troll / \
              generate_awake orange rat
-NSUBST:  s = 1:= / *:c
+NSUBST:  s = 1:+ / *:c
 SUBST:   F = T:40 V:40 U:20
 SUBST:   W = W .
 SUBST:   P = %:25 $ *:2 P:3 R:1 D:1 M:1
@@ -676,7 +669,7 @@ KITEM:   M = manual of Fighting / manual of Dodging / manual of Armour / \
 KITEM:   Q = potion of poison / potion of strong poison / bottled efreet w:1
 KFEAT:   ? = any shop
 KFEAT:   & = food shop
-MARKER:  = = lua:restrict_door()
+KFEAT:   + = runed_door
 KFEAT:   8 = granite_statue
 MAP
 cccccccccccc.@.ccccc

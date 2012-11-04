@@ -127,7 +127,8 @@ define(function () {
     fg_flags.flags.BERSERK      = 0x08000000;
     fg_flags.flags.INNER_FLAME  = 0x10000000;
     fg_flags.flags.CONSTRICTED  = 0x20000000;
-    fg_flags.flags.SLOWED       = [0, 0x80];
+    fg_flags.flags.SLOWED       = [0, 0x080];
+    fg_flags.flags.PAIN_MIRROR  = [0, 0x100];
 
     // MDAM has 5 possibilities, so uses 3 bits.
     fg_flags.exclusive_flags.push({
@@ -177,7 +178,6 @@ define(function () {
     bg_flags.flags.OOR        = 0x02000000;
     bg_flags.flags.WATER      = 0x04000000;
     bg_flags.flags.NEW_STAIR  = 0x08000000;
-    bg_flags.flags.WAS_SECRET = 0x10000000;
 
     // Kraken tentacle overlays.
     bg_flags.flags.KRAKEN_NW  = 0x20000000;
@@ -201,29 +201,6 @@ define(function () {
     {
         return prepare_flags(tileidx, bg_flags);
     }
-
-    function rgb(r, g, b)
-    {
-        return "rgb(" + r + "," + g + "," + b + ")";
-    }
-    exports.term_colours = [
-        rgb(  0,   0,   0),
-        rgb(  0,  82, 255),
-        rgb(100, 185,  70),
-        rgb(  0, 180, 180),
-        rgb(255,  48,   0),
-        rgb(238,  92, 238),
-        rgb(165,  91,   0),
-        rgb(162, 162, 162),
-        rgb( 82,  82,  82),
-        rgb( 82, 102, 255),
-        rgb( 82, 255,  82),
-        rgb( 82, 255, 255),
-        rgb(255,  82,  82),
-        rgb(255,  82, 255),
-        rgb(255, 255,  82),
-        rgb(255, 255, 255),
-    ];
 
     // Menu flags -- see menu.h
     var mf = {};

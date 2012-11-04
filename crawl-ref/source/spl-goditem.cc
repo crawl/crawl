@@ -33,13 +33,14 @@
 #include "random.h"
 #include "religion.h"
 #include "spl-util.h"
+#include "state.h"
 #include "stuff.h"
 #include "terrain.h"
 #include "transform.h"
 #include "traps.h"
 #include "view.h"
 
-int identify(int power, int item_slot, std::string *pre_msg)
+int identify(int power, int item_slot, string *pre_msg)
 {
     int id_used = 1;
     int identified = 0;
@@ -215,9 +216,9 @@ static int _can_pacify_monster(const monster* mon, const int healed,
     return 0;
 }
 
-static std::vector<std::string> _desc_mindless(const monster_info& mi)
+static vector<string> _desc_mindless(const monster_info& mi)
 {
-    std::vector<std::string> descs;
+    vector<string> descs;
     if (mi.intel() <= I_PLANT)
         descs.push_back("mindless");
     return descs;
@@ -373,8 +374,8 @@ static int _healing_spell(int healed, int max_healed, bool divine_ability,
 int cast_healing(int pow, int max_pow, bool divine_ability,
                  const coord_def& where, bool not_self, targ_mode_type mode)
 {
-    pow = std::min(50, pow);
-    max_pow = std::min(50, max_pow);
+    pow = min(50, pow);
+    max_pow = min(50, max_pow);
     return (_healing_spell(pow + roll_dice(2, pow) - 2, (3 * max_pow) - 2,
                            divine_ability, where, not_self, mode));
 }
@@ -396,7 +397,7 @@ void antimagic()
         DUR_CONDENSATION_SHIELD, DUR_STONESKIN, DUR_RESISTANCE,
         DUR_SLAYING, DUR_STEALTH,
         DUR_MAGIC_SHIELD, DUR_PETRIFIED, DUR_LIQUEFYING, DUR_DARKNESS,
-        DUR_PETRIFYING, DUR_SHROUD_OF_GOLUBRIA
+        DUR_SHROUD_OF_GOLUBRIA
     };
 
     bool need_msg = false;
@@ -417,18 +418,24 @@ void antimagic()
     if (you.duration[DUR_TELEPORT] > 0)
     {
         you.duration[DUR_TELEPORT] = 0;
-        mpr("You feel strangely stable.");
+        mpr("You feel strangely stable.", MSGCH_DURATION);
+    }
+
+    if (you.duration[DUR_PETRIFYING] > 0)
+    {
+        you.duration[DUR_PETRIFYING] = 0;
+        mpr("Your limbs stop stiffening.", MSGCH_DURATION);
     }
 
     if (you.attribute[ATTR_DELAYED_FIREBALL])
     {
         you.attribute[ATTR_DELAYED_FIREBALL] = 0;
-        mpr("Your charged fireball dissipates.");
+        mpr("Your charged fireball dissipates.", MSGCH_DURATION);
     }
 
     // Post-berserk slowing isn't magic, so don't remove that.
     if (you.duration[DUR_SLOW] > you.duration[DUR_EXHAUSTED])
-        you.duration[DUR_SLOW] = std::max(you.duration[DUR_EXHAUSTED], 1);
+        you.duration[DUR_SLOW] = max(you.duration[DUR_EXHAUSTED], 1);
 
     for (unsigned int i = 0; i < ARRAYSZ(dur_list); ++i)
     {
@@ -453,7 +460,7 @@ void antimagic()
 
 int detect_traps(int pow)
 {
-    pow = std::min(50, pow);
+    pow = min(50, pow);
 
     // Trap detection moved to traps.cc. -am
     const int range = 8 + random2(8) + pow;
@@ -470,7 +477,7 @@ int detect_items(int pow)
     else
     {
         ASSERT(you.religion == GOD_ASHENZARI);
-        map_radius = std::min(you.piety / 20, LOS_RADIUS);
+        map_radius = min(you.piety / 20, LOS_RADIUS);
         if (map_radius <= 0)
             return 0;
     }
@@ -503,7 +510,7 @@ static void _fuzz_detect_creatures(int pow, int *fuzz_radius, int *fuzz_chance)
 {
     dprf("dc_fuzz: Power is %d", pow);
 
-    pow = std::max(1, pow);
+    pow = max(1, pow);
 
     *fuzz_radius = pow >= 50 ? 1 : 2;
 
@@ -592,7 +599,7 @@ int detect_creatures(int pow, bool telepathic)
     return creatures_found;
 }
 
-static bool _selectively_remove_curse(std::string *pre_msg)
+static bool _selectively_remove_curse(string *pre_msg)
 {
     bool used = false;
 
@@ -629,7 +636,7 @@ static bool _selectively_remove_curse(std::string *pre_msg)
     }
 }
 
-bool remove_curse(bool alreadyknown, std::string *pre_msg)
+bool remove_curse(bool alreadyknown, string *pre_msg)
 {
     if (you.religion == GOD_ASHENZARI && alreadyknown)
     {
@@ -684,7 +691,7 @@ bool remove_curse(bool alreadyknown, std::string *pre_msg)
     return success;
 }
 
-static bool _selectively_curse_item(bool armour, std::string *pre_msg)
+static bool _selectively_curse_item(bool armour, string *pre_msg)
 {
     while (1)
     {
@@ -716,7 +723,7 @@ static bool _selectively_curse_item(bool armour, std::string *pre_msg)
     }
 }
 
-bool curse_item(bool armour, bool alreadyknown, std::string *pre_msg)
+bool curse_item(bool armour, bool alreadyknown, string *pre_msg)
 {
     // make sure there's something to curse first
     int count = 0;
@@ -778,7 +785,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
 
     bool proceed;
     monster *mon;
-    std::string targname;
+    string targname;
 
     if (zin)
     {

@@ -1,0 +1,307 @@
+%%%%
+the Portal card
+
+Cette carte vous téléporte aléatoirement ailleurs, vous permettant un contrôle
+de la destination à haut niveau. On la trouve en général dans les paquets
+d'évasion et de guerre, ou dans le paquet de punition de Nemelex Xeboh.
+%%%%
+the Warp card
+
+Cette carte vous téléporte sur une courte distance, soit aléatoirement, soit,
+avec un haut niveau de pouvoir, où vous désirez. On la trouve en général dans
+les paquets d'évasion et de guerre.
+%%%%
+Swap card
+
+Cette carte change votre position avec celle d'une créature à proximité. On la
+trouve habituellement dans les paquets d'évasion et de guerre.
+%%%%
+Velocity card
+
+Cette carte vous permet de vous déplacer et agir encore plus rapidement. On la
+trouve habituellement dans les paquets d'évasion et de guerre.
+%%%%
+the Tomb card
+
+Cette carte entoure l'aventurier de murs de pierre protecteurs. A bas niveau,
+cette tombe pourra s'avérer imparfaite. A utiliser avec précaution ! On la
+trouve en général dans les paquets de défense, d'évasion et de guerre ou, dans
+le paquet de punition de Nemelex Xobeh.
+%%%%
+the Banshee card
+
+Le cri de la Banshee insuffle la peur dans toutes les créatures à proximité. On
+la trouve généralement dans les paquets de défense, d'évasion et de guerre.
+%%%%
+Damnation card
+
+Cette carte bannit une ou plusieurs créatures proches vers les Abysses,
+probablement vous avec. On la trouve généralement dans les paquets de défense,
+d'évasion et de guerre ou, dans le paquet de punition de Nemelex Xobeh.
+%%%%
+Solitude card
+
+Cette carte téléporte aléatoirement les créatures qui vous sont adjacentes. On
+la trouve généralement dans les paquets de défense, d'évasion et de guerre.
+%%%%
+Warpwright card
+
+Cette carte peut créer des téléporteurs. On la trouve en général dans les
+paquets de défense, d'évasion et de guerre.
+%%%%
+Flight card
+
+Ce carte vous aide à fuir en vous transformant, en vous accélérant ou en créant
+de nouveaux couloirs pour fuir. On la trouve communément dans les paquet de
+défense, d'évasion et de guerre.
+%%%%
+the Elixir card
+
+Cette carte vous soigne mais peu aussi, drainer ou restaurer votre énergie
+magique dans le processus. On la trouve normalement dans les paquets de
+changements, de défense et de guerre.
+%%%%
+Battlelust card
+
+Cette carte peut vous rendre plus puissant en combat physique. On la trouve
+habituellement dans les paquets de changements, de défense et de guerre.
+%%%%
+Metamorphosis card
+
+Cette carte vous transforme temporairement. On la trouve en général dans les
+paquets de changements, de défense et de guerre.
+%%%%
+the Helm card
+
+Cette carte accroit votre défense. On peut la trouver habituellement dans les
+paquets de changements, de défense et de guerre.
+%%%%
+the Blade card
+
+Cette carte enchante temporairement, voir anime, votre arme. on la trouve
+normalement dans les paquets de changements, de défense et de guerre.
+%%%%
+the Shadow card
+
+Cette carte vous permet de vous fondre dans les ombres, vous rendant plus
+discret. On peut la trouver généralement dans les paquets de changements, de
+défense et de guerre.
+%%%%
+the Mercenary card
+
+Cette carte convoque des mercenaires pour combattre à vos côtés... mais à un
+prix. On la trouve en général dans les paquets de changements, de défense et de
+guerre.
+%%%%
+the Potion card
+
+Cette carte a le même effet, positif ou négatif, que boire une potion magique
+inconnu. On la trouve habituellement dans les paquets de changements et de
+merveilles.
+%%%%
+Focus card
+
+Cette carte améliore votre attribut le plus puissant au prix du plus faible. On
+la trouve communément dans les paquets de changements et de merveilles.
+%%%%
+Shuffle card
+
+Cette carte inter-change vos trois attributs. A utiliser avec modération ! On
+la trouve communément dans les paquets de changements et de merveilles.
+%%%%
+Experience card
+
+Cette carte vous rend plus expérimenté. On la trouve généralement dans les
+paquets de changements et de merveilles.
+%%%%
+Wild Magic card
+
+Cette carte provoque une magie sauvage contre vous, comme si vous aviez mal
+lancé un sortilège. On la trouve habituellement dans les paquets de changements
+et de merveilles.
+%%%%
+the Helix card
+
+Cette carte change vos mutations. Avec un haut niveau de pouvoir, ces
+changements pourraient être bénéfiques. On peut la trouver normalement dans les
+paquets de changements et de merveilles.
+%%%%
+the Sage card
+
+Cette carte va concentrer votre expérience gagnée vers une compétence
+spécifique afin de l'entrainer plu rapidement qu'elle ne devrait normalement.
+On peut la trouver habituellement dans les paquets de changements et de
+merveilles.
+%%%%
+the Alchemist card
+
+Cette carte transforme un peu de votre or en vitalité et énergie magique. On la
+trouve habituellement dans les paquets de changements et merveilles.
+%%%%
+Water card
+
+Cette carte transforme le sol autour de vous en eau. On la trouve généralement
+dans les paquets de changements et donjons.
+%%%%
+Vitrification card
+
+Cette carte rend les murs translucides. On la trouve en général dans les
+paquets de changements et de donjons.
+%%%%
+Dowsing card
+
+Ce carte vous permet de détecter les passages secrets, les pièges, les
+créatures ou une combinaison d'un peu tout cela. On la trouve habituellement
+dans les paquets de changements et donjons.
+%%%%
+the Trowel card
+
+Cette carte peut créer un autel, une statue, un golem ou même un portail, mais
+fonctionne mieux dans le donjon principal et ses branches. on la trouve
+généralement dans les paquets de changements et de donjons.
+%%%%
+the Minefield card
+
+Cette carte rend votre environnement proche plus dangereux. on la trouve en
+général dans les paquets de changements et de donjons ou, dans le paquet de
+punition de Nemelex Xobeh.
+%%%%
+the Crusade card
+
+Cette carte tente de convertir les créatures à proximité à votre cause. On la
+trouve normalement dans les paquets de convocation et de guerre.
+%%%%
+the Herd card
+
+Cette carte convoque des animaux. On peut la trouver dans les paquets de
+convocations et de guerre.
+%%%%
+the Pentagram card
+
+Cette carte convoque un démon à votre aide. On la trouve en général dans les
+paquets de convocations et de guerre.
+%%%%
+the Dance card
+
+Cette carte convoque une arme dansante. On la trouve normalement dans les
+paquets de convocations et de guerre.
+%%%%
+Foxfire card
+
+Cette carte convoque des créatures volantes. On la trouve communément dans les
+paquets de convocations et de guerre.
+%%%%
+the Bones card
+
+Cette carte convoque une créature squelettique. On la trouve normalement dans
+les paquets de convocations et de guerre.
+%%%%
+Repulsiveness card
+
+Cette carte convoque une chose hideuse ou très hideuse. On la trouve
+communément dans les paquets de convocations et de guerre.
+%%%%
+Vitriol card
+
+Cette carte déchaine un sort d'attaque corrosif ou dégénérant. On la trouve
+généralement dans les paquet de destruction et de guerre.
+%%%%
+Flame card
+
+Cette carte déchaine un sort d'attaque flamboyant. On la trouve en général dans
+les paquets de destruction et de guerre.
+%%%%
+Frost card
+
+Cette carte libère un sort d'attaque glaciale. On la trouve en général dans les
+paquets de destruction et de guerre.
+%%%%
+Venom card
+
+Cette carte libère un sort d'attaque venimeux qui pourrait vous affecter par la
+même occasion. On la trouve habituellement dans les paquets de destruction et
+de guerre.
+%%%%
+the Spark card
+
+Cette carte libère un sort d'attaque électrique. On peut la trouve en général
+dans les paquets de destruction et de guerre.
+%%%%
+the Hammer card
+
+Cette carte libère un sort d'attaque physique. on la trouve en général dans les
+paquets de destruction et de guerre.
+%%%%
+Pain card
+
+Cette carte libère un sort d'attaque nécromantique, qui pourra vous affecté
+aussi. On la trouve en général dans les paquets de destruction et de guerre.
+%%%%
+Torment card
+
+Cette carte appelle les pouvoirs des ténèbres pour causer des blessures
+d'agonie à toutes les créatures à proximité. On la trouve généralement dans les
+paquets de destruction et de guerre.
+%%%%
+the Orb card
+
+Cette carte libère une orbe de pure magie destructrice, parfois plusieurs même.
+on la trouve habituellement dans les paquets de destruction et de guerre.
+%%%%
+Wrath card
+
+Cette carte lance la colère d'un dieu contre vous. On la trouve uniquement dans
+le paquet de punition de Nemelex Xobeh.
+%%%%
+the Wraith card
+
+Cette carte draine votre vie. On peut la trouver uniquement dans le paquet de
+punition de Nemelex Xobeh.
+%%%%
+the Curse card
+
+Cette carte place une malédiction sur vos possessions. On la trouve uniquement
+dans le paquet de punition de Nemelex Xobeh.
+%%%%
+Xom card
+
+Cette carte attire l'attention de Xom sur vous. On ne la trouve que dans le
+paquet de punition de Nemelex Xobeh.
+%%%%
+Famine card
+
+Cette carte vous affame. On la trouve habituellement et uniquement dans le
+paquet de punition de Nemelex Xobeh.
+%%%%
+the Swine card
+
+Cette carte vous rendra tout rose et avide de truffes. on la trouve uniquement
+dans le paquet de punition de Nemelex Xobeh.
+%%%%
+the Bargain card
+
+Cette carte vous accorde temporairement des réductions dans les échoppes. On ne
+la trouve normalement dans aucun paquet.
+%%%%
+the Genie card
+
+Ce Génie pourrait vous faire un don ou vous punir pour avoir essayé. On ne la
+trouve normalement dans aucun paquet.
+%%%%
+the Feast card
+
+Cette carte vous nourrit. On ne la trouve normalement dans aucun paquet.
+%%%%
+the Stairs card
+
+Cette carte permet de rapprocher ou d'éloigner les escaliers de vous (Si vous
+voyez cette carte, c'est un bug).
+%%%%
+a buggy card
+
+Bug (Si vous voyez ceci, c'est un bug)
+%%%%
+a very buggy card
+
+Bug (Si vous voyez ceci, c'est un bug)
+%%%%

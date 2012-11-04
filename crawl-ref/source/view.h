@@ -7,8 +7,6 @@
 #ifndef VIEW_H
 #define VIEW_H
 
-#include "externs.h"
-#include "show.h"
 #include "viewgeom.h"
 
 void init_monsters_seens();
@@ -25,7 +23,7 @@ void fully_map_level();
 
 bool is_feature(ucs_t feature, const coord_def& where);
 
-std::string screenshot();
+string screenshot();
 
 int viewmap_flash_colour();
 bool view_update();
@@ -44,8 +42,7 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
                bool anim_updates, int flash_colour);
 
 void update_monsters_in_view();
-bool handle_seen_interrupt(monster* mons,
-                           std::vector<std::string>* msgs_buf = NULL);
+bool handle_seen_interrupt(monster* mons, vector<string>* msgs_buf = NULL);
 void flush_comes_into_view();
 
 void toggle_show_terrain();

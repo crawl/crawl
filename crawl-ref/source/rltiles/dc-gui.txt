@@ -128,3 +128,32 @@ misc/error ERROR
 %compose tab_selected
 %compose tab_label_ability
 %finish
+
+%start
+%compose tab_unselected
+%compose tab_label_metacommands
+%finish TAB_COMMAND2
+%start
+%compose tab_mouseover
+%compose tab_label_metacommands
+%finish
+%start
+%compose tab_selected
+%compose tab_label_metacommands
+%finish
+
+%start
+%compose tab_unselected
+%compose tab_label_navigation
+%finish TAB_NAVIGATION
+%start
+%compose tab_mouseover
+%compose tab_label_navigation
+%finish
+%start
+%compose tab_selected
+%compose tab_label_navigation
+%finish
+
+prompt_yes PROMPT_YES
+prompt_no PROMPT_NO

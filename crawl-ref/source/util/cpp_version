@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# Includes may depend on a generated header, let's not unnecesarily require
+# compilation just to gather strings.
+#
+# Use a future version tag, we remove descs immediately even though the item/
+# monster is fully removed only after a save compat bump.
+sed '/^ *# *include/d' "$1"|cpp -DTAG_MAJOR_VERSION=999 -

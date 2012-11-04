@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+using namespace std;
 
 class tile;
 
@@ -15,17 +16,17 @@ public:
     bool place_images();
     bool write_image(const char *filename);
 
-    int find(const std::string &enumname) const;
-    bool add_synonym(const std::string &enumname, const std::string &syn);
-    bool add_synonym(int idx, const std::string &syn);
+    int find(const string &enumname) const;
+    bool add_synonym(const string &enumname, const string &syn);
+    bool add_synonym(int idx, const string &syn);
     void add_variation(int var_idx, int base_idx, int colour);
 
-    std::vector<tile*> m_tiles;
-    std::vector<unsigned int> m_counts;
-    std::vector<int> m_texcoords;
-    std::vector<int> m_offsets;
-    std::vector<unsigned int> m_probs;
-    std::vector<unsigned int> m_base_tiles;
+    vector<tile*> m_tiles;
+    vector<unsigned int> m_counts;
+    vector<int> m_texcoords;
+    vector<int> m_offsets;
+    vector<unsigned int> m_probs;
+    vector<unsigned int> m_base_tiles;
 
 protected:
     int m_width;

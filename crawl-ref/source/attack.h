@@ -54,22 +54,22 @@ public:
     hands_reqd_type hands;
 
     // Attacker's shield, stored so we can reference it and determine
-    // the attacker's combat effectiveness (staff + shield == bad)
+    // the attacker's combat effectiveness
     item_def  *shield;
 
     // If weapon is an artefact, its properties.
     artefact_properties_t art_props;
 
     // If a weapon is an unrandart, its unrandart entry.
-    unrandart_entry *unrand_entry;
+    const unrandart_entry *unrand_entry;
 
     int     attacker_to_hit_penalty;
 
     // Attack messages
-    std::string     attack_verb, verb_degree;
-    std::string     no_damage_message;
-    std::string     special_damage_message;
-    std::string     aux_attack, aux_verb;
+    string     attack_verb, verb_degree;
+    string     no_damage_message;
+    string     special_damage_message;
+    string     aux_attack, aux_verb;
 
     // Adjusted EV penalties for defender and attacker
     int             defender_body_armour_penalty;
@@ -90,12 +90,11 @@ public:
     virtual int calc_to_hit(bool) = 0;
 
     // Exact copies of their melee_attack predecessors
-    std::string actor_name(const actor *a, description_level_type desc,
-                           bool actor_visible, bool actor_invisible);
-    std::string actor_pronoun(const actor *a, pronoun_type ptyp,
-                              bool actor_visible);
-    std::string anon_name(description_level_type desc, bool actor_invisible);
-    std::string anon_pronoun(pronoun_type ptyp);
+    string actor_name(const actor *a, description_level_type desc,
+                      bool actor_visible, bool actor_invisible);
+    string actor_pronoun(const actor *a, pronoun_type ptyp, bool actor_visible);
+    string anon_name(description_level_type desc, bool actor_invisible);
+    string anon_pronoun(pronoun_type ptyp);
 
 // Private Methods
 protected:
@@ -122,24 +121,24 @@ protected:
     virtual bool check_unrand_effects() = 0;
 
     /* Output */
-    std::string debug_damage_number();
-    std::string special_attack_punctuation();
-    std::string attack_strength_punctuation();
-    std::string get_exclams(int dmg);
-    std::string evasion_margin_adverb();
+    string debug_damage_number();
+    string special_attack_punctuation();
+    string attack_strength_punctuation();
+    string get_exclams(int dmg);
+    string evasion_margin_adverb();
 
-    std::string atk_name(description_level_type desc);
-    std::string def_name(description_level_type desc);
-    std::string wep_name(description_level_type desc = DESC_YOUR,
-                         iflags_t ignore_flags = ISFLAG_KNOW_CURSE
-                                               | ISFLAG_KNOW_PLUSES);
+    string atk_name(description_level_type desc);
+    string def_name(description_level_type desc);
+    string wep_name(description_level_type desc = DESC_YOUR,
+                    iflags_t ignore_flags = ISFLAG_KNOW_CURSE
+                                            | ISFLAG_KNOW_PLUSES);
 
     int modify_blood_amount(const int damage, const int dam_type);
     // TODO: Used in elemental brand dmg, definitely want to get rid of this
     // which we can't really do until we refactor the whole pronoun / desc
     // usage from these lowly classes all the way up to monster/player (and
     // actor) classes.
-    std::string defender_name();
+    string defender_name();
 };
 
 #endif

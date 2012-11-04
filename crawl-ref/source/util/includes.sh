@@ -2,7 +2,7 @@
 # Relies on appropriate versions of etags, grep, tr, awk and maybe bash.
 #
 # To use:
-#   $ . util/include.sh
+#   $ . util/includes.sh
 #   $ checkall
 
 # Tries to list all names defined in the header file $1.

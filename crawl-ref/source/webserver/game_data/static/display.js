@@ -52,6 +52,8 @@ function ($, comm, map_knowledge, view_data, monster_list, minimap,
         }
         map_knowledge.reset_dirty();
 
+        dungeon_renderer.animate();
+
         monster_list.update();
 
         var render_time = (new Date() - t1);

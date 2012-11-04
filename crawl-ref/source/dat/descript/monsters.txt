@@ -71,10 +71,10 @@ rainbow-coloured suspenders from somewhere. They're not helping.
 Boris
 
 An ancient and powerful lich. Like all true liches, Boris is immortal, and will
-regenerate its desiccated skeletal remains even if completely disintegrated.
-However, while this complicated process can often take months or even years,
-Boris has mastered it to the point of being able to reintegrate himself in a
-matter of minutes.
+regenerate his desiccated skeletal remains even if completely disintegrated.
+However, while this complicated process would usually take months or even
+years, Boris has mastered it to the point of being able to reintegrate himself
+in a matter of minutes.
 %%%%
 Cerebov
 
@@ -204,7 +204,8 @@ spells: by consuming their former owner, a powerful wizard.
 %%%%
 Geryon
 
-A huge, three-headed, winged arch-demon, guardian of the gates of Hell.
+A huge, three-headed, winged arch-demon, guardian of the four Hells. Legends
+say that his silver horn is used to throw open the gates of Hell themselves.
 %%%%
 Gloorx Vloq
 
@@ -288,8 +289,11 @@ Underworld. What of this is true, you do not know.
 %%%%
 Lom Lobon
 
-An ancient and strangely serene demon. It regards you coldly from the huge
-glowing eye in the centre of its forehead.
+Stoic and inscrutable, Lom Lobon is an ancient demon infamous for his mastery
+of magic. Rumoured to be the most learned being in the halls of Pandemonium, he
+is at times sought out by mortal wizards who offer their souls in exchange for
+the secrets of the arcane. Lacking the terrible wrath present in most demons,
+Lom Lobon's single eye instead hides a cold, impartial cruelty.
 %%%%
 lorocyproca
 
@@ -395,10 +399,8 @@ an undying fervor through his single massive eye.
 %%%%
 Prince Ribbit
 
-A handsome prince before he was cursed, he now adventures for a cure. Moving
-through the halls with great speed, he often disappears only to pop out of thin
-air somewhere else, usually to an adventurer's misfortune and dismay. On the
-top of his head, he wears a crown tilted jauntily to one side. How it still
+A handsome prince before he was cursed, he now adventures for a cure. On the
+top of his head he wears a crown tilted jauntily to one side. How it still
 stays in place even after his transformation is a mystery.
 %%%%
 Psyche
@@ -414,7 +416,7 @@ You feel a lump in the pit of your stomach.
 Roxanne
 
 A beautiful sapphire statue of a famous earth mage who disappeared after a
-catastrophic spell failure. It is clutching a book.
+catastrophic spell failure. She is clutching a book.
 %%%%
 Rupert
 
@@ -426,8 +428,11 @@ A mighty warlord. Some orcs even say he is the Chosen One of Beogh.
 %%%%
 Sigmund
 
-The bane of all young adventurers, Sigmund combines delusions of greatness with
-nasty tactics.
+The elder of a pair of brothers who came for the Orb. No one knows what Sigmund
+saw in the dungeon to drive him mad, but his shrewd magical tactics and wicked
+scythe now leave little time for his victims to wonder. Despite his reputation
+as a vicious murderer, his grandiose and dramatic ways have earned him the
+admiration of many denizens of the dungeon.
 %%%%
 Snorg
 
@@ -438,13 +443,7 @@ that is, easy meals — it attracts.
 Sonja
 
 A graceful kobold assassin. Admire her graceful pirouettes, thrill at her
-daring leaps! But watch out for her knives! The space around the edge of her
-weapon seems to waver slightly for a split second... or does it?
-
-Her bleak canine body, hidden kindly underneath the flowing green attire, is in
-contrast with a pair of determined eyes, surveying her surroundings from
-beneath the shadow cast by the upper edge of her beryl-coloured cape. The
-nostrils on the exposed tip of her snout throb with excitement.
+daring leaps! But watch out for her knives!
 %%%%
 Terence
 
@@ -475,29 +474,11 @@ A fat dwarf wearing a stupid-looking hat. {{
     if you.can_smell() then
         return "He reeks of alcohol. "
     end
-}}There is something odd to his unsteady walk, as if this unprobable rotund
-person was accustomed to motion more swift than that of a drunken dwarf. His
-right hand is badly burned; judging from the extent of the injury, it must've
-been something big that caused it.
-
-He sports an undersized linen shirt, which seems overly long for his stout
-silhouette. “Wiglaf” is embroidered on the backside. It seems as though the
-letters have been patched over and changed.
+}}
 %%%%
 Xtahua
 
-An ancient and mighty dragon, his scorched body covered with crags of hardened
-lava, towers above the dungeon floor, leaving a pungent smell of sulphur in hos
-rumbling wake. Humongous sets of claws protrude from the ends of his arms, and
-their edges, jagged through years of use, look strong enough to tear a man
-apart without a thought. The warmth emanating from his sole presence makes the
-air uncomfortably hot, bending the dungeon features slightly, not unlike the
-sun on a summer day.
-
-Xtahua grew bitter after he found himself trapped in a dungeon after a weary
-battle with an adventurer hundreds of years ago. Most of his reasons to live
-have been reduced only to that of setting aflame whatever roams these halls
-with a burning passion.
+An ancient and mighty dragon.
 %%%%
 the Serpent of Hell gehenna
 
@@ -716,10 +697,6 @@ burning bush
 
 A mass of blackened twigs wreathed in orange flames. The walls and floor
 surrounding it are covered in scorch marks.
-%%%%
-bumblebee
-
-A huge and solitary bee.
 %%%%
 butterfly
 
@@ -1129,8 +1106,11 @@ a brilliant column of raging flames.
 %%%%
 fire giant
 
-A ruddy giant with bright hair and flashing eyes. It wields a huge sword, and
-glows with an arcane heat.
+A blistering heat rages beneath the obsidian-like skin of this giant, and its
+wild mane of red hair glows and smoulders. It holds aloft a fiery sword, and
+its body erupts with searing flames, seemingly at will. Fire giants believe
+that they are destined to unite and burn the entire world to cinders, but, in
+the meantime, they'll settle for adventurers foolish enough to approach them.
 %%%%
 fire vortex
 
@@ -1169,8 +1149,9 @@ dungeon, seeking to share its fate with others.
 %%%%
 frost giant
 
-A bluish giant with frosty hair and glinting eyes. It wields a huge battleaxe,
-and chills the air around it with the breath of winter.
+A giant with blue skin and hair like ice and snow. Its eyes are as bleak as
+winter skies. It marches grimly into battle with a great, frosty axe and
+howling blasts of cold.
 %%%%
 fruity bat
 
@@ -1455,8 +1436,9 @@ A hideous skeletal demon, with wings of ancient withered skin.
 %%%%
 hill giant
 
-Although one of the smaller giant varieties, this hill giant is still big
-enough to be dangerous.
+A massive, burly humanoid standing taller even than an ogre. Hill giants are
+uncivilized in every sense of the word, and have few recreational interests
+beyond smashing things such as you.
 %%%%
 hippogriff
 
@@ -2679,6 +2661,12 @@ This undead spirit appears as a cloud of black mist surrounding an
 insubstantial skeletal form. Its eyes burn bright with unholy malevolence and
 hunger for life essence, on which it feeds.
 %%%%
+wretched star
+
+A conflux of unearthly light and energy, awash in unnatural colours and
+strange forms no normal being was meant to perceive. Merely being near it
+fills your body with the disorder of the Abyss.
+%%%%
 wyvern
 
 A dragon-like creature with a long, sharply pointed tail. Although smaller and
@@ -2771,6 +2759,12 @@ Hellbinder
 A mighty spellcaster, wreathed in arcane energies, and muttering the most
 profane incantations you might ever have heard.
 %%%%
+# arena sprint final boss
+Master Blaster
+
+A mighty old lich, notorious for blasting people with powerful conjurations at
+the slightest provocation, or just on a whim.
+%%%%
 Statue of Wucad Mu
 
 This statue, made of a fine glassy orange crystal, depicts a mystic known as
@@ -2804,7 +2798,7 @@ apricot tree
 %%%%
 archer statue
 
-The likeness of a beatiful elven archer, sculpted in finest marble. It holds a
+The likeness of a beautiful elven archer, sculpted in finest marble. It holds a
 bow aloft, and appears to be magically animated, letting it use the bow to
 riddle you with arrows.
 
@@ -2910,15 +2904,15 @@ intense heat. Wisps of smoke trail from its fingertips.
 %%%%
 demonspawn sorcerer
 
-The air crackles around this demonic-looking humanoid; it clearly wields
-magic of some power.
+The air crackles around this demonic-looking humanoid; it clearly wields magic
+of some power.
 %%%%
 draconian transmuter
 
 A draconian who has eschewed the study of weaponry, training in the art of
 transmutations. While its scaly fists, well-thewed leg, and mighty tail are
-lethal on their own, its combat prowess can be increased even further by
-the spells it wields.
+lethal on their own, its combat prowess can be increased even further by the
+spells it wields.
 %%%%
 earth elementalist statue
 
@@ -2973,8 +2967,8 @@ more myth than fact).
 %%%%
 high elf sorcerer
 
-This apparently adventurous high elf is just as proficient in magic as its
-deep elven brethren.
+This apparently adventurous high elf is just as proficient in magic as its deep
+elven brethren.
 %%%%
 hill dwarf
 
@@ -3009,8 +3003,8 @@ enchanted to explode in a blaze of fire. You'd better keep your distance!
 %%%%
 kobold berserker
 
-A particularly blood-thirsty kobold, known for plunging into a battle frenzy
-at the slightest provocation.
+A particularly blood-thirsty kobold, known for plunging into a battle frenzy at
+the slightest provocation.
 %%%%
 lasher statue
 
@@ -3036,17 +3030,18 @@ An unnaturally pale merfolk, with condensation forming around its hands.
 %%%%
 merfolk gladiator
 
-A particularly fearsome merfolk warrior, hefting a bundle of javelins and
-a sinister-looking polearm.
+A particularly fearsome merfolk warrior, hefting a bundle of javelins and a
+sinister-looking polearm.
 %%%%
 minotaur berserker
 
-A particularly adventurous and blood-thirsty minotaur, capable of great
-feats of strength and rage.
+A particularly adventurous and blood-thirsty minotaur, capable of great feats
+of strength and rage.
 %%%%
 minotaur death knight
-A particularly adventurous and sinister minotaur, capable of calling upon
-the divine powers granted to Yredelemnul's followers.
+
+A particularly adventurous and sinister minotaur, capable of calling upon the
+divine powers granted to Yredelemnul's followers.
 %%%%
 minotaur fighter
 
@@ -3059,8 +3054,9 @@ A particularly adventurous and sharp-eyed minotaur, capable of landing
 astonishingly precise and brutal blows from afar with javelins.
 %%%%
 minotaur monk
-A particularly adventurous and agile minotaur, capable of tearing apart
-the unwary with naught but its bare hands.
+
+A particularly adventurous and agile minotaur, capable of tearing apart the
+unwary with naught but its bare hands.
 %%%%
 mountain dwarf
 
@@ -3091,8 +3087,8 @@ yellow curved thingies, at least.
 %%%%
 ogre berserker
 
-A particularly large, hungry, and blood-thirsty ogre, capable of flying into
-a mighty rage at the slightest hint of food.
+A particularly large, hungry, and blood-thirsty ogre, capable of flying into a
+mighty rage at the slightest hint of food.
 %%%%
 # Sprint only, too unhinged for regular games...
 oklob plant annihilator
@@ -3153,10 +3149,6 @@ A monstrously big slug who apparently ate a mighty conjurer, or maybe an orb
 spider. Or perhaps it's a product of divine experiments, in which case it looks
 like Xom's handiwork...
 %%%%
-orc demonologist
-
-<orc sorcerer>
-%%%%
 orc berserker
 
 A tough, strong, and particularly angry orc.
@@ -3166,6 +3158,11 @@ petrified plant
 Something has turned these ordinary plants into stone. Better not tarry here.
 If whatever petrified these plants gets you as well, we'll be stuck with a
 statue as ugly as you standing here for ages.
+%%%%
+phase spider
+
+An otherworldly spider that can move short and medium distances by briefly
+shifting between the planes of reality, in order to better ensnare its prey.
 %%%%
 pristine statue
 
@@ -3186,6 +3183,13 @@ sacrificial human
 
 From the look of things, she was supposed to be sacrificed in some
 demon-summoning ritual.
+%%%%
+shadowy statue
+
+Made of some black lusterless stone, this statue seems to be the focal point
+for swirling shadows that permeate this room. They seem to be more substantial
+than your usual half-light, so it might be a good idea to blow the statue to
+smithereens before the shadows turn fully real.
 %%%%
 sickly siren
 
@@ -3210,6 +3214,12 @@ its presence into difficult-to-slog-through mud.
 soapberry tree
 
 <apple tree>
+%%%%
+spearthrower statue
+
+This statue bristles with sharp shards of green crystal that sparkle with every
+gleam of light. The shards seem to be in motion, migrating to form long spears
+of crystal that the statue can shoot through interlopers.
 %%%%
 spooky statue
 
@@ -3243,10 +3253,16 @@ The same radiation that made cockroaches and spiders the size of small dogs
 didn't spare this humble strawberry plant, either. Fortunately, even with its
 size, it appears to be harmless.
 %%%%
+succubus
+
+A female demon who uses her charms to seduce humanoid males. If you wish to
+take advantage of her, however, you will fail: she seems very angry right now
+and has blood more on her mind than fun.
+%%%%
 tengu aerator
 
-This particularly ferocious tengu is well on its way towards mastery of
-air magic.
+This particularly ferocious tengu is well on its way towards mastery of air
+magic.
 %%%%
 water elementalist statue
 
@@ -3256,9 +3272,9 @@ light, as if sprinkled in actual water.
 %%%%
 young halfling
 
-This lad has been caught by kobolds, and was meant to be roasted and eaten
-before you unceremoniously interrupted. Don't you have any manners? Didn't
-mommy tell you to not disrupt people from having a meal?
+This halfling has been caught by kobolds, and was meant to be roasted and eaten
+before you unceremoniously interrupted. Don't you have any manners? Didn't you
+ever learn not to disrupt people's meals?
 %%%%
 young spriggan druid
 
@@ -3276,8 +3292,8 @@ trespassers like you.
 vampire enchanter
 
 An enchanter who, by accident or design, has been afflicted with the curse of
-the vampire. Regardless, undeath merely fuels their abilities; few are aware
-of its presence until they find themselves on the wrong end of a quick blade.
+the vampire. Regardless, undeath merely fuels their abilities; few are aware of
+its presence until they find themselves on the wrong end of a quick blade.
 %%%%
 vampire noble
 
@@ -3300,6 +3316,17 @@ This statue depicts a gruff warrior, wielding a mean two-handed weapon. Since
 it appears to be capable of moving its arms, keeping your distance seems to be
 the only way to keep your vital organs undamaged.
 %%%%
+witch
+
+This old human crone must be spending most of her day just working on her
+looks: it's hard to believe one could reach this level of ugliness naturally.
+Robes stained with what appears to be swamp ooze, cauldron soot and brew
+ingredients don't improve her appearance either.
+
+A woman with such stellar sanity and manners probably has great pets as well,
+so it's better to neutralize her before she has a chance to unleash them on
+you.
+%%%%
 withered plant
 
 This plant lost the war against life-draining influences, and yet its physical
@@ -3321,4 +3348,65 @@ An utterly bizarre statue, hewn from a single piece of dark gabbro
 scintillating with tiny crystals. It is impossible to tell whether the statue
 is intended to represent some creature or personage, or is completely abstract.
 One thing is certain: it is profoundly disturbing.
+%%%%
+### Arena sprint boss renames
+ancient emperor scorpion
+
+<emperor scorpion>
+%%%%
+big bog body
+
+<bog body>
+%%%%
+dark black mamba
+
+<black mamba>
+%%%%
+dire wolf spider
+
+<wolf spider>
+%%%%
+elder swamp dragon
+
+<swamp dragon>
+%%%%
+giant anaconda
+
+<anaconda>
+%%%%
+greater ghost moth
+
+<ghost moth>
+%%%%
+greater orb of eyes
+
+<great orb of eyes>
+%%%%
+hardcore manticore
+
+<manticore>
+%%%%
+harpy queen
+
+<harpy>
+%%%%
+naga archmage
+
+<naga mage>
+%%%%
+naga warlord
+
+<naga warrior>
+%%%%
+stinky swamp drake
+
+<swamp drake>
+%%%%
+sulfuric acid blob
+
+<acid blob>
+%%%%
+vault guard captain
+
+<vault guard>
 %%%%

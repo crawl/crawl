@@ -179,14 +179,6 @@ book of changes
 
 Księga czarów.
 %%%%
-book of card effects
-
-Księga czarów.
-%%%%
-book of charms
-
-Księga czarów.
-%%%%
 book of clouds
 
 Księga czarów.
@@ -276,10 +268,6 @@ book of power
 Księga czarów.
 %%%%
 book of spatial translocations
-
-Księga czarów.
-%%%%
-book of stalking
 
 Księga czarów.
 %%%%
@@ -499,7 +487,7 @@ disc of storms
 
 Ten potężny przedmiot potrafi wypuścić niszczące elektryczne wyładowanie,
 zwłaszcza w rękach kogoś kto potrafi dobrze posługiwać się magicznymi
-przedmiotami. Nie zadziała jeśli użytkownik jest elektrycznie odizolowany.
+przedmiotami.
 %%%%
 double sword
 
@@ -724,7 +712,7 @@ Miecz o długim prostym ostrzu.
 longbow
 
 Duży, mocny cisowy łuk. Ma spory naciąg i potrafi zadać poważne obrażenia,
-zwłaszcz w rękach zaawansowanego łucznika.
+zwłaszcza w rękach zaawansowanego łucznika.
 %%%%
 lychee
 
@@ -1366,11 +1354,6 @@ Zbroja z prostokątnych metalowych płytek, połączonych metalowymi kółkami. 
 to bardzo dobrą ochronę przed ciosami — co prawda znacznie gorszą niż pełna
 zbroja płytowa, jednak umożliwia ona dużo większą swobodę ruchów.
 %%%%
-staff
-
-Patyk którym można się podpierać w czasie marszu, a przy braku innej broni,
-nawet użyć w walce.
-%%%%
 staff of air
 
 Ten kij zwiększa moc czarów Magii Powietrza, a także zapewnia ochronę przed
@@ -1405,12 +1388,6 @@ staff of earth
 Ten kij zwiększa moc czarów Magii Ziemi. Jeśli użytkownik potrafi posługiwać
 się magicznymi przedmiotami, wrogowie uderzeni tym kijem zostaną zmiażdżeni —
 mocniej jeśli użytkownik posiada umiejętności w Magii Ziemi.
-%%%%
-staff of enchantment
-
-Ten kij zwiększa moc Uroków jak i Magii Wspomagania. Przy wystarczających
-umiejętnościach w dowolnej z tych dwóch szkół, także poprawia odporność na
-wrogie uroki.
 %%%%
 staff of energy
 

@@ -914,7 +914,7 @@ SUBST:   . = .:50 1:4 3:1
 SUBST:   > = <>
 SUBST:   }=} .:4
 SHUFFLE: {}
-SUBST:   == +:5 = .:3
+SUBST:   == +:15 .:3
 SUBST:   ? = x.
 MAP
        xxxxxx

@@ -14,8 +14,9 @@
 #include "misc.h"
 #include "mon-pathfind.h"
 #include "mon-place.h"
+#include "terrain.h"
 
-typedef std::list<coord_def> coord_list;
+typedef list<coord_def> coord_list;
 
 struct dist_feat
 {
@@ -32,7 +33,7 @@ static void _find_maze_neighbours(const coord_def &c,
                                   const dgn_region &region,
                                   coord_list &ns)
 {
-    std::vector<coord_def> coords;
+    vector<coord_def> coords;
 
     for (int yi = -2; yi <= 2; yi += 2)
         for (int xi = -2; xi <= 2; xi += 2)
@@ -171,7 +172,7 @@ static void _change_walls_from_centre(const dgn_region &region,
                                       bool  rectangular,
                                       unsigned mmask,
                                       dungeon_feature_type wall,
-                                      const std::vector<dist_feat> &ldist)
+                                      const vector<dist_feat> &ldist)
 {
     if (ldist.empty())
         return;
@@ -215,7 +216,7 @@ static void _change_walls_from_centre(const dgn_region &region,
                                       dungeon_feature_type wall,
                                       ...)
 {
-    std::vector<dist_feat> ldist;
+    vector<dist_feat> ldist;
 
     va_list args;
     va_start(args, wall);
@@ -237,7 +238,7 @@ static void _change_walls_from_centre(const dgn_region &region,
 
 static void _place_extra_lab_minivaults()
 {
-    std::set<const map_def*> vaults_used;
+    set<const map_def*> vaults_used;
     while (true)
     {
         const map_def *vault = random_map_for_tag("lab", false);
@@ -358,7 +359,7 @@ static void _labyrinth_add_blood_trail(const dgn_region &region)
         if (!mp.init_pathfind(dest, start))
             continue;
 
-        const std::vector<coord_def> path = mp.backtrack();
+        const vector<coord_def> path = mp.backtrack();
 
         if (path.size() < 10)
             continue;

@@ -10,8 +10,8 @@
 #include <sstream>
 #include "externs.h"
 #include "enum.h"
-#include "libutil.h"
-#include "mon-info.h"
+
+struct monster_info;
 
 // If you add any more description types, remember to also
 // change item_description in externs.h
@@ -35,22 +35,22 @@ enum book_mem_or_forget
 
 struct describe_info
 {
-    std::ostringstream body;
-    std::string title;
-    std::string prefix;
-    std::string suffix;
-    std::string footer;
-    std::string quote;
+    ostringstream body;
+    string title;
+    string prefix;
+    string suffix;
+    string footer;
+    string quote;
 };
 
-void append_spells(std::string &desc, const item_def &item);
+void append_spells(string &desc, const item_def &item);
 
 bool is_dumpable_artefact(const item_def &item, bool verbose);
 
-std::string get_item_description(const item_def &item, bool verbose,
-                                  bool dump = false, bool noquote = false);
+string get_item_description(const item_def &item, bool verbose,
+                            bool dump = false, bool noquote = false);
 
-std::string god_title(god_type which_god, species_type which_species);
+string god_title(god_type which_god, species_type which_species);
 void describe_god(god_type which_god, bool give_title);
 
 void describe_feature_wide(const coord_def& pos, bool show_quote = false);
@@ -62,12 +62,12 @@ void get_item_desc(const item_def &item, describe_info &inf,
                    bool terse = false);
 void inscribe_item(item_def &item, bool msgwin);
 
-void append_weapon_stats(std::string &description, const item_def &item);
-void append_armour_stats(std::string &description, const item_def &item);
-void append_missile_info(std::string &description);
+void append_weapon_stats(string &description, const item_def &item);
+void append_armour_stats(string &description, const item_def &item);
+void append_missile_info(string &description);
 
 int describe_monsters(const monster_info &mi, bool force_seen = false,
-                      const std::string &footer = "");
+                      const string &footer = "");
 
 void get_monster_db_desc(const monster_info &mi, describe_info &inf,
                          bool &has_stat_desc, bool force_seen = false);
@@ -75,31 +75,30 @@ void get_monster_db_desc(const monster_info &mi, describe_info &inf,
 void get_spell_desc(const spell_type spell, describe_info &inf);
 void describe_spell(spell_type spelled, const item_def* item = NULL);
 
-std::string short_ghost_description(const monster *mon, bool abbrev = false);
-std::string get_ghost_description(const monster_info &mi, bool concise = false);
+string short_ghost_description(const monster *mon, bool abbrev = false);
+string get_ghost_description(const monster_info &mi, bool concise = false);
 
-std::string get_skill_description(skill_type skill, bool need_title = false);
+string get_skill_description(skill_type skill, bool need_title = false);
 
 void describe_skill(skill_type skill);
 
 #ifdef USE_TILE
-std::string get_command_description(const command_type cmd,
-                                    bool terse);
+string get_command_description(const command_type cmd, bool terse);
 #endif
 
-void print_description(const std::string &desc);
+void print_description(const string &desc);
 void print_description(const describe_info &inf);
 
 void trim_randart_inscrip(item_def& item);
 void trim_god_gift_inscrip(item_def& item);
-std::string artefact_auto_inscription(const item_def& item);
+string artefact_auto_inscription(const item_def& item);
 void add_autoinscription(item_def &item);
-void add_inscription(item_def &item, std::string inscrip);
+void add_inscription(item_def &item, string inscrip);
 
-std::string trap_name(trap_type trap);
-int str_to_trap(const std::string &s);
+string trap_name(trap_type trap);
+int str_to_trap(const string &s);
 
-int count_desc_lines(const std::string& _desc, const int width);
+int count_desc_lines(const string& _desc, const int width);
 
 class alt_desc_proc
 {
@@ -110,20 +109,20 @@ public:
     int height() { return h; }
 
     void nextline();
-    void print(const std::string &str);
-    static int count_newlines(const std::string &str);
+    void print(const string &str);
+    static int count_newlines(const string &str);
 
     // Remove trailing newlines.
-    static void trim(std::string &str);
+    static void trim(string &str);
     // rfind consecutive newlines and truncate.
-    static bool chop(std::string &str);
+    static bool chop(string &str);
 
-    void get_string(std::string &str);
+    void get_string(string &str);
 
 protected:
     int w;
     int h;
-    std::ostringstream ostr;
+    ostringstream ostr;
 };
 
 #endif

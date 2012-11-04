@@ -257,8 +257,9 @@ KFEAT:  C = altar_elyvilon
 KMASK:  wW = no_monster_gen
 MONS:   butterfly
 MAP
-        ttttttttttttt
-       ttttttttttttttt
+       xxxxxxxxxxxxxxx
+      xxtttttttttttttxx
+      xtttttttttttttttx
       tttttttt.tttttttt
   .....ttttt..1..ttttt.....
  .......ttt.......ttt.......
@@ -270,8 +271,9 @@ MAP
  .......ttt.......ttt.......
   .....ttttt..1..ttttt.....
       tttttttt.tttttttt
-       ttttttttttttttt
-        ttttttttttttt
+      xtttttttttttttttx
+      xxtttttttttttttxx
+       xxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:   elyvilon_altar_4
@@ -464,18 +466,19 @@ FTILE:  d = floor_hall
 COLOUR: fd = brown
 COLOUR: AC. = green
 MAP
-ttttttttttttttt
-ttttttttttttttt
-ttttttgfgtttttt
-tttttgf.fgttttt
-ttttgf.f.fgtttt
-tttgf..C..fgttt
-tttgf.f.f.fgttt
-ttgfffffffffgtt
-ttgt.......tgtt
-ttttttdddtttttt
-ttttttdddtttttt
-tttttdd@ddttttt
+xxxxxxxxxxxxxxxxx
+xtttttttttttttttx
+xtttttttttttttttx
+xttttttgfgttttttx
+xtttttgf.fgtttttx
+xttttgf.f.fgttttx
+xtttgf..C..fgtttx
+xtttgf.f.f.fgtttx
+xttgfffffffffgttx
+xttgt.......tgttx
+xttttttdddttttttx
+xttttttdddttttttx
+xtttttdd@ddtttttx
 ENDMAP
 
 NAME:  fedhas_bush_and_centaur_altar
@@ -635,7 +638,7 @@ ENDMAP
 # Perhaps could have different parameters for the two types of clouds,
 # and different patterns.
 NAME:   nemelex_altar_shiori
-DEPTH:  *, !Lair, !Orc
+DEPTH:  D, Elf, Vaults
 TAGS:   temple_overflow_nemelex_xobeh uniq_altar_nemelex_xobeh
 TAGS:   no_pool_fixup no_monster_gen no_item_gen
 TAGS:   generate_awake patrolling no_rotate
@@ -1041,7 +1044,7 @@ ENDMAP
 ### Xom overflow altars #######################################################
 
 NAME:   tgw_xom
-DEPTH:  *, !D:1
+DEPTH:  D:2-27
 TAGS:   no_item_gen no_monster gen temple_overflow_xom uniq_altar_xom
 KFEAT:  _ = altar_xom
 MONS:   orc; club ego:chaos / orc; dagger ego:chaos / orc; spear ego:chaos
@@ -1081,7 +1084,7 @@ MAP
 ENDMAP
 
 NAME:    xom_obstacle_run
-DEPTH:   *, !D:1
+DEPTH:   D:2-27
 TAGS:    temple_overflow_xom uniq_altar_xom
 KFEAT:   _ = altar_xom
 SHUFFLE: ABCDEFG
@@ -1316,7 +1319,7 @@ xccc+cccx
 ENDMAP
 
 NAME:    tso_metal_star
-TAGS:    no_monster_gen no_trap_gen no_pool_fixup no_item_gen no_secret_doors
+TAGS:    no_monster_gen no_trap_gen no_pool_fixup no_item_gen
 TAGS:    temple_overflow_the_shining_one uniq_altar_the_shining_one
 KFEAT:   _ = altar_the_shining_one
 KFEAT:   g = iron_grate

@@ -1,7 +1,24 @@
 #!/bin/sh
 
+if [ -z $1 ]; then
+    CMD="git diff-index --raw --name-status HEAD"
+else
+    CMD="git diff --raw --name-status $1^ $1"
+fi
+
+echo_exit()
+{
+    echo $1
+    exit
+}
+
+find_files()
+{
+    $CMD | grep '^\(A\|M\).*png$' | sed 's/^.\t//'
+}
+
 cd "$(git rev-parse --show-toplevel)"
-[ $(git diff-index --raw --name-only HEAD | grep "\.png$" | wc -l) != 0 ] \
-    || (echo "No changed .png files -- please 'git add' them first." && exit)
-git diff-index --raw --name-only -z HEAD | grep -zZ --color=never "\.png$" | xargs -0 optipng -o4 -i0 -fix
-git diff-index --raw --name-only -z HEAD | grep -zZ --color=never "\.png$" | xargs -0 advpng -z4
+[ $(find_files | wc -l) != 0 ] \
+    || echo_exit "No changed .png files -- please 'git add' them first."
+find_files | xargs -d "\n" optipng -o4 -i0 -fix
+find_files | xargs -d "\n" advpng -z4

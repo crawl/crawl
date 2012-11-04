@@ -23,7 +23,7 @@ namespace Version
      * all of 0.10-a0, 0.10, and 0.10.1 (assuming this last is even
      * released).
      */
-    std::string Major();
+    string Major();
 
     //! The short version string.
     /*!
@@ -34,7 +34,7 @@ namespace Version
      * hash and the number of revisions since the tag). For that extra information,
      * use Version::Long() instead.
      */
-    std::string Short();
+    string Short();
 
     //! The long version string.
     /*!
@@ -44,7 +44,7 @@ namespace Version
      * tag, this string will also include the number of commits since the tag
      * and the Git commit id (the SHA-1 hash).
      */
-    std::string Long();
+    string Long();
 
     //! The release type.
     /*!
@@ -56,33 +56,33 @@ namespace Version
     /*!
      * Names the compiler used to genrate the executable.
      */
-    std::string Compiler();
+    string Compiler();
 
     //! Build architecture.
     /*!
      * Host triplet of the architecture used for build.
      */
-    std::string BuildArch();
+    string BuildArch();
 
     //! Target architecture.
     /*!
      * Host triplet of the architecture Crawl was compiled for.
      */
-    std::string Arch();
+    string Arch();
 
     //! The CFLAGS.
     /*!
      * Returns the CFLAGS the executable was compiled with.
      */
-    std::string CFLAGS();
+    string CFLAGS();
 
     //! The LDFLAGS.
     /*!
      * Returns the flags the executable was linked with.
      */
-    std::string LDFLAGS();
+    string LDFLAGS();
 }
 
-std::string compilation_info();
+string compilation_info();
 
 #endif

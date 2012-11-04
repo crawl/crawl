@@ -18,7 +18,7 @@ dodging DODGING_ON
 stealth STEALTH_ON
 stabbing STABBING_ON
 shields SHIELDS_ON
-traps_doors TRAPS_DOORS_ON
+traps TRAPS_ON
 unarmed_combat UNARMED_COMBAT_ON
 spellcasting SPELLCASTING_ON
 conjurations CONJURATIONS_ON
@@ -54,7 +54,7 @@ dodging DODGING_FOCUS
 stealth STEALTH_FOCUS
 stabbing STABBING_FOCUS
 shields SHIELDS_FOCUS
-traps_doors TRAPS_DOORS_FOCUS
+traps TRAPS_FOCUS
 unarmed_combat UNARMED_COMBAT_FOCUS
 spellcasting SPELLCASTING_FOCUS
 conjurations CONJURATIONS_FOCUS
@@ -90,7 +90,7 @@ dodging DODGING_OFF
 stealth STEALTH_OFF
 stabbing STABBING_OFF
 shields SHIELDS_OFF
-traps_doors TRAPS_DOORS_OFF
+traps TRAPS_OFF
 unarmed_combat UNARMED_COMBAT_OFF
 spellcasting SPELLCASTING_OFF
 conjurations CONJURATIONS_OFF
@@ -126,7 +126,7 @@ dodging DODGING_MAX
 stealth STEALTH_MAX
 stabbing STABBING_MAX
 shields SHIELDS_MAX
-traps_doors TRAPS_DOORS_MAX
+traps TRAPS_MAX
 unarmed_combat UNARMED_COMBAT_MAX
 spellcasting SPELLCASTING_MAX
 conjurations CONJURATIONS_MAX

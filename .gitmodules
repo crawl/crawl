@@ -28,3 +28,7 @@
 [submodule "crawl-ref/source/contrib/fonts"]
 	path = crawl-ref/source/contrib/fonts
 	url = git://gitorious.org/crawl/crawl-fonts.git
+[submodule "crawl-ref/source/contrib/sdl-android"]
+	path = crawl-ref/source/contrib/sdl-android
+	url = git://gitorious.org/crawl/sdl-android.git
+	update = none

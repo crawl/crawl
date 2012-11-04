@@ -1,0 +1,90 @@
+%%%%
+CMD_REST
+
+Curar-se e olhar em volta um pouco
+%%%%
+CMD_INTERLEVEL_TRAVEL
+
+Viajar para níveis distantes
+%%%%
+CMD_USE_ABILITY
+
+Utilizar habilidades divinas ou inatas
+%%%%
+CMD_PRAY
+
+Rezar para o seu deus
+%%%%
+CMD_SEARCH_STASHES
+
+Procurar itens/recursos
+%%%%
+CMD_REPLAY_MESSAGES
+
+Ler as mensagens recentes
+%%%%
+CMD_RESISTS_SCREEN
+
+Exibir a visão geral do seu personagem
+%%%%
+CMD_DISPLAY_RELIGION
+
+Exibir status de religião
+%%%%
+CMD_DISPLAY_MUTATIONS
+
+Exibir mutações
+%%%%
+CMD_DISPLAY_SKILLS
+
+Gerenciar habilidades
+%%%%
+CMD_DISPLAY_CHARACTER_STATUS
+
+Exibir o status do personagem
+%%%%
+CMD_DISPLAY_CHARACTER_STATUS verbose
+
+Exibe os encantamentos ativos e outras coisas.
+%%%%
+CMD_DISPLAY_KNOWN_OBJECTS
+
+Listar tipo de itens descobertos
+%%%%
+CMD_SAVE_GAME_NOW
+
+Salvar e sair
+%%%%
+CMD_EDIT_PLAYER_TILE
+
+Mudar o título do jogador
+%%%%
+CMD_DISPLAY_COMMANDS
+
+Ajuda do jogo
+%%%%
+CMD_DISPLAY_COMMANDS verbose
+
+Lista de comandos, opções etc.
+%%%%
+CMD_AUTOFIGHT
+
+Atacar o monstro mais próximo
+%%%%
+CMD_AUTOFIGHT verbose
+
+Mover-se em direção ao monstro hostil mais próximo e atacá-lo como a arma em
+mãos.
+%%%%
+CMD_AUTOFIGHT_NOMOVE
+
+Atacar o monstro adjacente
+%%%%
+CMD_AUTOFIGHT_NOMOVE verbose
+
+Atacar um monstro próximo de si com a arma em mãos.
+%%%%
+CMD_WAIT
+
+Esperar um turno
+%%%%

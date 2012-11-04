@@ -15,6 +15,7 @@ module "crawl"
 #include "cluautil.h"
 #include "l_libs.h"
 
+#include "chardump.h"
 #include "cio.h"
 #include "command.h"
 #include "delay.h"
@@ -26,13 +27,16 @@ module "crawl"
 #include "itemname.h"
 #include "libutil.h"
 #include "macro.h"
+#include "menu.h"
 #include "message.h"
 #include "notes.h"
 #include "options.h"
+#include "ouch.h"
 #include "output.h"
 #include "player.h"
 #include "random.h"
 #include "religion.h"
+#include "state.h"
 #include "stuff.h"
 #include "tutorial.h"
 #include "view.h"
@@ -446,7 +450,7 @@ static int crawl_bindkey(lua_State *ls)
         return 0;
 
     lua_pushvalue(ls, 2);
-    std::string name = clua.setuniqregistry();
+    string name = clua.setuniqregistry();
     if (lua_gettop(ls) != 2)
     {
         fprintf(stderr, "Stack top has changed!\n");
@@ -472,7 +476,7 @@ static int crawl_msgch_num(lua_State *ls)
 static int crawl_msgch_name(lua_State *ls)
 {
     int num = luaL_checkint(ls, 1);
-    std::string name = channel_to_str(num);
+    string name = channel_to_str(num);
     lua_pushstring(ls, name.c_str());
     return 1;
 }
@@ -526,9 +530,20 @@ static int crawl_regex_find(lua_State *ls)
     return 1;
 }
 
+static int crawl_regex_equals(lua_State *ls)
+{
+    text_pattern **pattern =
+            clua_get_userdata< text_pattern* >(ls, REGEX_METATABLE);
+    text_pattern **arg =
+            clua_get_userdata< text_pattern* >(ls, REGEX_METATABLE, 2);
+    lua_pushboolean(ls, pattern && arg && **pattern == **arg);
+    return 1;
+}
+
 static const luaL_reg crawl_regex_ops[] =
 {
     { "matches",        crawl_regex_find },
+    { "equals",         crawl_regex_equals },
     { NULL, NULL }
 };
 
@@ -567,9 +582,20 @@ static int crawl_messf_matches(lua_State *ls)
     return 0;
 }
 
+static int crawl_messf_equals(lua_State *ls)
+{
+    message_filter **mf =
+            clua_get_userdata< message_filter* >(ls, MESSF_METATABLE);
+    message_filter **arg =
+            clua_get_userdata< message_filter* >(ls, MESSF_METATABLE, 2);
+    lua_pushboolean(ls, mf && arg && **mf == **arg);
+    return 1;
+}
+
 static const luaL_reg crawl_messf_ops[] =
 {
     { "matches",        crawl_messf_matches },
+    { "equals",         crawl_messf_equals },
     { NULL, NULL }
 };
 
@@ -578,7 +604,7 @@ static int crawl_trim(lua_State *ls)
     const char *s = luaL_checkstring(ls, 1);
     if (!s)
         return 0;
-    std::string text = s;
+    string text = s;
     trim_string(text);
     lua_pushstring(ls, text.c_str());
     return 1;
@@ -591,7 +617,9 @@ static int crawl_split(lua_State *ls)
     if (!s || !token)
         return 0;
 
-    std::vector<std::string> segs = split_string(token, s);
+    vector<string> segs = split_string(token, s);
+    if (lua_isboolean(ls, 3) && lua_toboolean(ls, 3))
+        reverse(segs.begin(), segs.end());
     lua_newtable(ls);
     for (int i = 0, count = segs.size(); i < count; ++i)
     {
@@ -661,6 +689,17 @@ static int crawl_is_webtiles(lua_State *ls)
     return 1;
 }
 
+static int crawl_is_touch_ui(lua_State *ls)
+{
+#ifdef TOUCH_UI
+    lua_pushboolean(ls, true);
+#else
+    lua_pushboolean(ls, false);
+#endif
+
+    return 1;
+}
+
 static int crawl_get_command(lua_State *ls)
 {
     if (lua_gettop(ls) == 0)
@@ -671,7 +710,7 @@ static int crawl_get_command(lua_State *ls)
 
     const command_type cmd = name_to_command(luaL_checkstring(ls, 1));
 
-    std::string cmd_name = command_to_string(cmd, true);
+    string cmd_name = command_to_string(cmd, true);
     if (strcmp(cmd_name.c_str(), "<") == 0)
         cmd_name = "<<";
 
@@ -745,7 +784,7 @@ static int crawl_err_trace(lua_State *ls)
     {
         // This code from lua.c:traceback() (mostly)
         const char *errs = lua_tostring(ls, 1);
-        std::string errstr = errs? errs : "";
+        string errstr = errs? errs : "";
         lua_getfield(ls, LUA_GLOBALSINDEX, "debug");
         if (!lua_istable(ls, -1))
         {
@@ -777,6 +816,20 @@ static int crawl_tutorial_msg(lua_State *ls)
     tutorial_msg(key, lua_isboolean(ls, 2) && lua_toboolean(ls, 2));
     return 0;
 }
+
+/*
+--- Warn about listopt = value when the semantics are slated to change.
+function l_warn_list_append(key) */
+static int crawl_warn_list_append(lua_State *ls)
+{
+    const char *key = luaL_checkstring(ls, 1);
+    if (!key)
+        return 0;
+    warn_list_append.insert(key);
+    return 0;
+}
+
+LUAWRAP(crawl_dump_char, dump_char(you.your_name, true))
 
 #ifdef WIZARD
 static int crawl_call_dlua(lua_State *ls)
@@ -881,10 +934,13 @@ static const struct luaL_reg crawl_clib[] =
     { "stat_gain_prompt", crawl_stat_gain_prompt },
     { "is_tiles",       crawl_is_tiles },
     { "is_webtiles",    crawl_is_webtiles },
+    { "is_touch_ui",    crawl_is_touch_ui },
     { "err_trace",      crawl_err_trace },
     { "get_command",    crawl_get_command },
     { "endgame",        crawl_endgame },
     { "tutorial_msg",   crawl_tutorial_msg },
+    { "warn_list_append", crawl_warn_list_append },
+    { "dump_char",      crawl_dump_char },
 #ifdef WIZARD
     { "call_dlua",      crawl_call_dlua },
 #endif
@@ -960,7 +1016,7 @@ LUAFN(_crawl_millis)
 }
 #endif
 
-static std::string _crawl_make_name(lua_State *ls)
+static string _crawl_make_name(lua_State *ls)
 {
     // A quick wrapper around itemname:make_name. Seed is random_int().
     // Possible parameters: all caps, max length, char start. By default
@@ -991,14 +1047,14 @@ static int _crawl_god_speaks(lua_State *ls)
     const char *god_name = luaL_checkstring(ls, 1);
     if (!god_name)
     {
-        std::string err = "god_speaks requires a god!";
+        string err = "god_speaks requires a god!";
         return luaL_argerror(ls, 1, err.c_str());
     }
 
     god_type god = str_to_god(god_name);
     if (god == GOD_NO_GOD)
     {
-        std::string err = make_stringf("'%s' matches no god.", god_name);
+        string err = make_stringf("'%s' matches no god.", god_name);
         return luaL_argerror(ls, 1, err.c_str());
     }
 

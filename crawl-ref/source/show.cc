@@ -19,6 +19,7 @@
 #include "exclude.h"
 #include "fprop.h"
 #include "itemprop.h"
+#include "libutil.h"
 #include "mon-place.h"
 #include "mon-util.h"
 #include "monster.h"
@@ -239,7 +240,7 @@ static void _update_item_at(const coord_def &gp)
     }
     else
     {
-        const std::vector<item_def> stash = item_list_in_stash(gp);
+        const vector<item_def> stash = item_list_in_stash(gp);
         if (stash.empty())
             return;
 
@@ -339,7 +340,7 @@ static int _hashed_rand(const monster* mons, uint32_t id, uint32_t die)
     data.id  = id;
     data.seed = you.attribute[ATTR_SEEN_INVIS_SEED];
 
-    return hash(&data, sizeof(data)) % die;
+    return hash32(&data, sizeof(data)) % die;
 }
 
 /**
@@ -475,6 +476,9 @@ void show_update_at(const coord_def &gp, bool terrain_only)
 #ifdef USE_TILE
     tile_draw_map_cell(gp, true);
 #endif
+#ifdef USE_TILE_WEB
+    tiles.mark_for_redraw(gp);
+#endif
 }
 
 void show_init(bool terrain_only)
@@ -495,7 +499,7 @@ void show_update_emphasis()
    // The only thing that can change is that previously unknown
    // stairs are now known. (see is_unknown_stair(), emphasise())
    LevelInfo& level_info = travel_cache.get_level_info(level_id::current());
-   std::vector<stair_info> stairs = level_info.get_stairs();
+   vector<stair_info> stairs = level_info.get_stairs();
    for (unsigned i = 0; i < stairs.size(); ++i)
        if (stairs[i].destination.is_valid())
            env.map_knowledge(stairs[i].position).flags &= ~MAP_EMPHASIZE;

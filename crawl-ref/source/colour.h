@@ -1,7 +1,7 @@
 #ifndef COLOUR_H
 #define COLOUR_H
 
-#include "mon-info.h"
+struct monster_info;
 
 // various elemental colour schemes... used for abstracting random
 // short lists. When adding colours, please also add their names in
@@ -64,9 +64,9 @@ typedef int (*element_colour_calculator)(int, const coord_def&);
 struct element_colour_calc
 {
     element_type type;
-    std::string name;
+    string name;
 
-    element_colour_calc(element_type _type, std::string _name,
+    element_colour_calc(element_type _type, string _name,
                         element_colour_calculator _calc)
         : type(_type), name(_name), calc(_calc)
         {};
@@ -82,10 +82,10 @@ protected:
     element_colour_calculator calc;
 };
 
-int str_to_colour(const std::string &str, int default_colour = -1,
+int str_to_colour(const string &str, int default_colour = -1,
                   bool accept_number = true);
-const std::string colour_to_str(colour_t colour);
-unsigned int str_to_tile_colour(std::string colour);
+const string colour_to_str(colour_t colour);
+unsigned int str_to_tile_colour(string colour);
 
 void init_element_colours();
 void add_element_colour(element_colour_calc *colour);

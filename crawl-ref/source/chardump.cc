@@ -22,6 +22,7 @@
 #include "options.h"
 
 #include "abl-show.h"
+#include "art-enum.h"
 #include "artefact.h"
 #include "branch.h"
 #include "debug.h"
@@ -36,6 +37,7 @@
 #include "itemname.h"
 #include "items.h"
 #include "kills.h"
+#include "libutil.h"
 #include "message.h"
 #include "menu.h"
 #include "mutation.h"
@@ -52,10 +54,12 @@
 #include "spl-util.h"
 #include "stash.h"
 #include "state.h"
+#include "stuff.h"
 #include "env.h"
 #include "transform.h"
 #include "travel.h"
 #include "unicode.h"
+#include "version.h"
 #include "view.h"
 #include "viewchar.h"
 #include "xom.h"
@@ -92,7 +96,7 @@ static void _sdump_separator(dump_params &);
 #ifdef CLUA_BINDINGS
 static void _sdump_lua(dump_params &);
 #endif
-static bool _write_dump(const std::string &fname, dump_params &,
+static bool _write_dump(const string &fname, dump_params &,
                         bool print_dump_path = false);
 
 struct dump_section_handler
@@ -103,12 +107,12 @@ struct dump_section_handler
 
 struct dump_params
 {
-    std::string &text;
-    std::string section;
+    string &text;
+    string section;
     bool full_id;
     const scorefile_entry *se;
 
-    dump_params(std::string &_text, const std::string &sec = "",
+    dump_params(string &_text, const string &sec = "",
                 bool id = false, const scorefile_entry *s = NULL)
         : text(_text), section(sec), full_id(id), se(s)
     {
@@ -167,11 +171,11 @@ static void dump_section(dump_params &par)
     }
 }
 
-bool dump_char(const std::string &fname, bool full_id,
+bool dump_char(const string &fname, bool quiet, bool full_id,
                const scorefile_entry *se)
 {
     // Start with enough room for 100 80 character lines.
-    std::string text;
+    string text;
     text.reserve(100 * 80);
 
     dump_params par(text, "", full_id, se);
@@ -182,12 +186,12 @@ bool dump_char(const std::string &fname, bool full_id,
         dump_section(par);
     }
 
-    return _write_dump(fname, par, se == NULL);
+    return _write_dump(fname, par, quiet);
 }
 
 static void _sdump_header(dump_params &par)
 {
-    std::string type = crawl_state.game_type_name();
+    string type = crawl_state.game_type_name();
     if (type.empty())
         type = CRAWL;
     else
@@ -215,7 +219,7 @@ static void _sdump_stats(dump_params &par)
 
 static void _sdump_burden(dump_params &par)
 {
-    std::string verb = par.se? "were" : "are";
+    string verb = par.se? "were" : "are";
 
     switch (you.burden_state)
     {
@@ -243,10 +247,10 @@ static void _sdump_hunger(dump_params &par)
 
 static void _sdump_transform(dump_params &par)
 {
-    std::string &text(par.text);
+    string &text(par.text);
     if (you.form)
     {
-        std::string verb = par.se? "were" : "are";
+        string verb = par.se? "were" : "are";
 
         switch (you.form)
         {
@@ -311,18 +315,17 @@ static branch_type single_portals[] =
 
 static void _sdump_visits(dump_params &par)
 {
-    std::string &text(par.text);
+    string &text(par.text);
 
-    std::string have = "have ";
-    std::string seen = "seen";
+    string have = "have ";
+    string seen = "seen";
     if (par.se) // you died -> past tense
     {
         have = "";
         seen = "saw";
     }
 
-    std::vector<PlaceInfo> branches_visited =
-        you.get_all_place_info(true, true);
+    vector<PlaceInfo> branches_visited = you.get_all_place_info(true, true);
 
     PlaceInfo branches_total;
     for (unsigned int i = 0; i < branches_visited.size(); i++)
@@ -359,7 +362,7 @@ static void _sdump_visits(dump_params &par)
     place_info = you.get_place_info(BRANCH_BAZAAR);
     if (place_info.num_visits > 0)
     {
-        text += make_stringf("You %svisited %d bazaars",
+        text += make_stringf("You %svisited %d bazaar",
                              have.c_str(), place_info.num_visits);
         if (place_info.num_visits > 1)
             text += "s";
@@ -387,14 +390,14 @@ static void _sdump_visits(dump_params &par)
         text += ".\n";
     }
 
-    std::vector<std::string> misc_portals;
+    vector<string> misc_portals;
     for (unsigned int i = 0; i < ARRAYSZ(single_portals); i++)
     {
         branch_type br = single_portals[i];
         place_info = you.get_place_info(br);
         if (!place_info.num_visits)
             continue;
-        std::string name = branches[br].shortname;
+        string name = branches[br].shortname;
         if (place_info.num_visits > 1)
             name += make_stringf(" (%d times)", place_info.num_visits);
         misc_portals.push_back(name);
@@ -412,7 +415,7 @@ static void _sdump_visits(dump_params &par)
 
 static void _sdump_gold(dump_params &par)
 {
-    std::string &text(par.text);
+    string &text(par.text);
 
     int lines = 0;
 
@@ -466,11 +469,10 @@ static void _sdump_misc(dump_params &par)
 
 #define TO_PERCENT(x, y) (100.0f * (static_cast<float>(x)) / (static_cast<float>(y)))
 
-static std::string _sdump_turns_place_info(PlaceInfo place_info,
-                                           std::string name = "")
+static string _sdump_turns_place_info(PlaceInfo place_info, string name = "")
 {
     PlaceInfo   gi = you.global_info;
-    std::string out;
+    string out;
 
     if (name.empty())
         name = place_info.short_name();
@@ -501,10 +503,9 @@ static std::string _sdump_turns_place_info(PlaceInfo place_info,
 
 static void _sdump_turns_by_place(dump_params &par)
 {
-    std::string &text(par.text);
+    string &text(par.text);
 
-    std::vector<PlaceInfo> all_visited =
-        you.get_all_place_info(true);
+    vector<PlaceInfo> all_visited = you.get_all_place_info(true);
 
     text +=
 "Table legend:\n"
@@ -547,7 +548,7 @@ static void _sdump_newline(dump_params &par)
 
 static void _sdump_separator(dump_params &par)
 {
-    par.text += std::string(79, '-') + "\n";
+    par.text += string(79, '-') + "\n";
 }
 
 #ifdef CLUA_BINDINGS
@@ -555,7 +556,7 @@ static void _sdump_separator(dump_params &par)
 // dump whatever it returns.
 static void _sdump_lua(dump_params &par)
 {
-    std::string luatext;
+    string luatext;
     if (!clua.callfn(par.section.c_str(), ">s", &luatext)
         && !clua.error.empty())
     {
@@ -574,9 +575,9 @@ static void _sdump_lua(dump_params &par)
  // XXX: should be replaced by some other linewrapping function
  //      now EOL munging is gone
  //---------------------------------------------------------------
-std::string munge_description(std::string inStr)
+string munge_description(string inStr)
 {
-    std::string outStr;
+    string outStr;
 
     outStr.reserve(inStr.length() + 32);
 
@@ -587,9 +588,9 @@ std::string munge_description(std::string inStr)
 
     while (!inStr.empty())
     {
-        outStr += std::string(kIndent, ' ')
-                + wordwrap_line(inStr, 79 - kIndent)
-                + "\n";
+        outStr += string(kIndent, ' ')
+                  + wordwrap_line(inStr, 79 - kIndent)
+                  + "\n";
     }
 
     return outStr;
@@ -613,7 +614,7 @@ static void _sdump_screenshot(dump_params &par)
 
 static void _sdump_notes(dump_params &par)
 {
-    std::string &text(par.text);
+    string &text(par.text);
     if (note_list.empty())
         return;
 
@@ -647,7 +648,7 @@ static void _sdump_location(dump_params &par)
 
 static void _sdump_religion(dump_params &par)
 {
-    std::string &text(par.text);
+    string &text(par.text);
     if (you.religion != GOD_NO_GOD)
     {
         if (par.se)
@@ -666,7 +667,7 @@ static void _sdump_religion(dump_params &par)
             }
             else
             {
-                std::string verb = par.se ? "was" : "is";
+                string verb = par.se ? "was" : "is";
 
                 text += god_name(you.religion);
                 text += " " + verb + " demanding penance.\n";
@@ -743,8 +744,8 @@ static void _sdump_inventory(dump_params &par)
 {
     int i, j;
 
-    std::string &text(par.text);
-    std::string text2;
+    string &text(par.text);
+    string text2;
 
     int inv_class2[NUM_OBJECT_CLASSES];
     int inv_count = 0;
@@ -823,9 +824,7 @@ static void _sdump_inventory(dump_params &par)
                             text += munge_description(text2);
                         }
                         else
-                        {
                             text += "\n";
-                        }
                     }
                 }
             }
@@ -841,7 +840,7 @@ static void _sdump_inventory(dump_params &par)
 //---------------------------------------------------------------
 static void _sdump_skills(dump_params &par)
 {
-    std::string &text(par.text);
+    string &text(par.text);
 
     text += "   Skills:\n";
 
@@ -855,9 +854,9 @@ static void _sdump_skills(dump_params &par)
 // Return string of the i-th spell type, with slash if required
 //
 //---------------------------------------------------------------
-static std::string spell_type_shortname(int spell_class, bool slash)
+static string spell_type_shortname(int spell_class, bool slash)
 {
-    std::string ret;
+    string ret;
 
     if (slash)
         ret = "/";
@@ -874,11 +873,11 @@ static std::string spell_type_shortname(int spell_class, bool slash)
 //---------------------------------------------------------------
 static void _sdump_spells(dump_params &par)
 {
-    std::string &text(par.text);
+    string &text(par.text);
 
     int spell_levels = player_spell_levels();
 
-    std::string verb = par.se? "had" : "have";
+    string verb = par.se? "had" : "have";
 
     if (spell_levels == 1)
         text += "You " + verb + " one spell level left.";
@@ -920,7 +919,7 @@ static void _sdump_spells(dump_params &par)
 
             if (spell != SPELL_NO_SPELL)
             {
-                std::string spell_line;
+                string spell_line;
 
                 spell_line += letter;
                 spell_line += " - ";
@@ -969,10 +968,9 @@ static void _sdump_kills(dump_params &par)
     par.text += you.kills->kill_info();
 }
 
-static std::string _sdump_kills_place_info(PlaceInfo place_info,
-                                          std::string name = "")
+static string _sdump_kills_place_info(PlaceInfo place_info, string name = "")
 {
-    std::string out;
+    string out;
 
     if (name.empty())
         name = place_info.short_name();
@@ -1015,14 +1013,13 @@ static std::string _sdump_kills_place_info(PlaceInfo place_info,
 
 static void _sdump_kills_by_place(dump_params &par)
 {
-    std::string &text(par.text);
+    string &text(par.text);
 
-    std::vector<PlaceInfo> all_visited =
-        you.get_all_place_info(true);
+    vector<PlaceInfo> all_visited = you.get_all_place_info(true);
 
-    std::string result = "";
+    string result = "";
 
-    std::string header =
+    string header =
     "Table legend:\n"
     " A = Kills in this place as a percentage of kills in entire the game.\n"
     " B = Kills by you in this place as a percentage of kills by you in\n"
@@ -1041,7 +1038,7 @@ static void _sdump_kills_by_place(dump_params &par)
     header += "               ";
     header += "+-------+-------+-------+-------+-------+----------------------\n";
 
-    std::string footer = "               ";
+    string footer = "               ";
     footer += "+-------+-------+-------+-------+-------+----------------------\n";
 
     result += _sdump_kills_place_info(you.global_info, "Total");
@@ -1058,7 +1055,7 @@ static void _sdump_kills_by_place(dump_params &par)
 
 static void _sdump_overview(dump_params &par)
 {
-    std::string overview =
+    string overview =
         formatted_string::parse_string(overview_description_string(false));
     trim_string(overview);
     par.text += overview;
@@ -1070,7 +1067,7 @@ static void _sdump_hiscore(dump_params &par)
     if (!par.se)
         return;
 
-    std::string hiscore = hiscores_format_single_long(*(par.se), true);
+    string hiscore = hiscores_format_single_long(*(par.se), true);
     trim_string(hiscore);
     par.text += hiscore;
     par.text += "\n\n";
@@ -1078,7 +1075,7 @@ static void _sdump_hiscore(dump_params &par)
 
 static void _sdump_monster_list(dump_params &par)
 {
-    std::string monlist = mpr_monster_list(par.se);
+    string monlist = mpr_monster_list(par.se);
     trim_string(monlist);
     while (!monlist.empty())
         par.text += wordwrap_line(monlist, 80) + "\n";
@@ -1098,8 +1095,8 @@ static void _sdump_vault_list(dump_params &par)
     }
 }
 
-static bool _sort_by_first(std::pair<int, FixedVector<int, 28> > a,
-                           std::pair<int, FixedVector<int, 28> > b)
+static bool _sort_by_first(pair<int, FixedVector<int, 28> > a,
+                           pair<int, FixedVector<int, 28> > b)
 {
     for (int i = 0; i < 27; i++)
     {
@@ -1111,7 +1108,7 @@ static bool _sort_by_first(std::pair<int, FixedVector<int, 28> > a,
     return false;
 }
 
-static std::string _describe_action(caction_type type)
+static string _describe_action(caction_type type)
 {
     switch (type)
     {
@@ -1136,10 +1133,22 @@ static std::string _describe_action(caction_type type)
     }
 }
 
-static std::string _describe_action_subtype(caction_type type, int subtype)
+static string _describe_action_subtype(caction_type type, int subtype)
 {
     switch (type)
     {
+    case CACT_THROW:
+    {
+        int basetype = subtype >> 16;
+        subtype = (short)(subtype & 0xFFFF);
+
+        if (basetype == OBJ_MISSILES)
+            return uppercase_first(item_base_name(OBJ_MISSILES, subtype));
+        else if (basetype == OBJ_WEAPONS)
+            ; // fallthrough
+        else
+            return "other";
+    }
     case CACT_MELEE:
     case CACT_FIRE:
         if (subtype >= UNRAND_START)
@@ -1152,8 +1161,6 @@ static std::string _describe_action_subtype(caction_type type, int subtype)
         }
         return ((subtype == -1) ? "Unarmed"
                 : uppercase_first(item_base_name(OBJ_WEAPONS, subtype)));
-    case CACT_THROW:
-        return uppercase_first(item_base_name(OBJ_MISSILES, subtype));
     case CACT_CAST:
         return spell_title((spell_type)subtype);
     case CACT_INVOKE:
@@ -1184,7 +1191,7 @@ static void _sdump_action_counts(dump_params &par)
 {
     if (you.action_count.empty())
         return;
-    int max_lt = (std::min<int>(you.max_level, 27) - 1) / 3;
+    int max_lt = (min<int>(you.max_level, 27) - 1) / 3;
 
     // Don't show both a total and 1..3 when there's only one tier.
     if (max_lt)
@@ -1201,10 +1208,9 @@ static void _sdump_action_counts(dump_params &par)
 
     for (int cact = 0; cact < NUM_CACTIONS; cact++)
     {
-        std::vector<std::pair<int, FixedVector<int, 28> > > action_vec;
-        for (std::map<std::pair<caction_type, int>,
-                                FixedVector<int, 27> >::const_iterator ac =
-                 you.action_count.begin(); ac != you.action_count.end(); ++ac)
+        vector<pair<int, FixedVector<int, 28> > > action_vec;
+        for (map<pair<caction_type, int>, FixedVector<int, 27> >::const_iterator
+              ac = you.action_count.begin(); ac != you.action_count.end(); ++ac)
         {
             if (ac->first.first != cact)
                 continue;
@@ -1215,13 +1221,12 @@ static void _sdump_action_counts(dump_params &par)
                 v[i] = ac->second[i];
                 v[27] += v[i];
             }
-            action_vec.push_back(std::pair<int, FixedVector<int, 28> >(ac->first.second, v));
+            action_vec.push_back(pair<int, FixedVector<int, 28> >(ac->first.second, v));
         }
-        std::sort(action_vec.begin(), action_vec.end(), _sort_by_first);
+        sort(action_vec.begin(), action_vec.end(), _sort_by_first);
 
-        for (std::vector<std::pair<int, FixedVector<int, 28> > >
-                 ::const_iterator ac = action_vec.begin();
-             ac != action_vec.end(); ++ac)
+        for (vector<pair<int, FixedVector<int, 28> > >::const_iterator ac =
+                action_vec.begin(); ac != action_vec.end(); ++ac)
         {
             if (ac == action_vec.begin())
             {
@@ -1250,7 +1255,7 @@ static void _sdump_action_counts(dump_params &par)
 
 static void _sdump_mutations(dump_params &par)
 {
-    std::string &text(par.text);
+    string &text(par.text);
 
     if (how_mutated(true, false))
     {
@@ -1300,11 +1305,11 @@ const char *hunger_level(void)
     return hunger_names[you.hunger_state];
 }
 
-std::string morgue_directory()
+string morgue_directory()
 {
-    std::string dir = (!Options.morgue_dir.empty() ? Options.morgue_dir :
-                       !SysEnv.crawl_dir.empty()   ? SysEnv.crawl_dir
-                                                   : "");
+    string dir = (!Options.morgue_dir.empty() ? Options.morgue_dir :
+                  !SysEnv.crawl_dir.empty()   ? SysEnv.crawl_dir
+                                              : "");
 
     if (!dir.empty() && dir[dir.length() - 1] != FILE_SEPARATOR)
         dir += FILE_SEPARATOR;
@@ -1379,23 +1384,22 @@ void dump_map(const char* fname, bool debug, bool dist)
     fclose(fp);
 }
 
-static bool _write_dump(const std::string &fname, dump_params &par,
-                        bool print_dump_path)
+static bool _write_dump(const string &fname, dump_params &par, bool quiet)
 {
     bool succeeded = false;
 
-    std::string file_name = morgue_directory();
+    string file_name = morgue_directory();
 
     file_name += strip_filename_unsafe_chars(fname);
 
     StashTrack.update_corpses();
 
-    std::string stash_file_name;
+    string stash_file_name;
     stash_file_name = file_name;
     stash_file_name += ".lst";
     StashTrack.dump(stash_file_name.c_str(), par.full_id);
 
-    std::string map_file_name = file_name + ".map";
+    string map_file_name = file_name + ".map";
     dump_map(map_file_name.c_str());
 
     file_name += ".txt";
@@ -1408,7 +1412,7 @@ static bool _write_dump(const std::string &fname, dump_params &par,
         fputs(OUTS(par.text), handle);
         fclose(handle);
         succeeded = true;
-        if (print_dump_path)
+        if (!quiet)
 #ifdef DGAMELAUNCH
             mprf("Char dumped successfully.");
 #else
@@ -1430,8 +1434,8 @@ void display_notes()
     scr.set_title(new MenuEntry("Turn   | Place    | Note"));
     for (unsigned int i = 0; i < note_list.size(); ++i)
     {
-        std::string prefix = note_list[i].describe(true, true, false);
-        std::string suffix = note_list[i].describe(false, false, true);
+        string prefix = note_list[i].describe(true, true, false);
+        string suffix = note_list[i].describe(false, false, true);
         if (suffix.empty())
             continue;
 
@@ -1440,15 +1444,15 @@ void display_notes()
             return;
 
         linebreak_string(suffix, spaceleft);
-        std::vector<std::string> parts = split_string("\n", suffix);
+        vector<string> parts = split_string("\n", suffix);
         if (parts.empty()) // Disregard pure-whitespace notes.
             continue;
 
         scr.add_entry(new MenuEntry(prefix + parts[0]));
         for (unsigned int j = 1; j < parts.size(); ++j)
         {
-            scr.add_entry(new MenuEntry(std::string(prefix.length()-2, ' ') +
-                                        std::string("| ") + parts[j]));
+            scr.add_entry(new MenuEntry(string(prefix.length()-2, ' ') +
+                                        string("| ") + parts[j]));
         }
     }
     scr.show();
@@ -1460,10 +1464,9 @@ void display_notes()
 // whereis player
 void whereis_record(const char *status)
 {
-    const std::string file_name =
-        morgue_directory()
-        + strip_filename_unsafe_chars(you.your_name)
-        + std::string(".where");
+    const string file_name = morgue_directory()
+                             + strip_filename_unsafe_chars(you.your_name)
+                             + string(".where");
 
     if (FILE *handle = fopen_replace(file_name.c_str()))
     {
@@ -1505,16 +1508,16 @@ const int TIMESTAMP_SIZE = sizeof(uint32_t);
 
 // Returns the name of the timestamp file based on the morgue_dir,
 // character name and the game start time.
-std::string dgl_timestamp_filename()
+string dgl_timestamp_filename()
 {
-    const std::string filename =
-        ("timestamp-" + you.your_name + "-" + make_file_time(you.birth_time));
+    const string filename = "timestamp-" + you.your_name + "-"
+                            + make_file_time(you.birth_time);
     return morgue_directory() + strip_filename_unsafe_chars(filename) + ".ts";
 }
 
 // Returns true if the given file exists and is not a timestamp file
 // of a known version.
-bool dgl_unknown_timestamp_file(const std::string &filename)
+bool dgl_unknown_timestamp_file(const string &filename)
 {
     if (FILE *inh = fopen_u(filename.c_str(), "rb"))
     {
@@ -1536,7 +1539,7 @@ FILE *dgl_timestamp_filehandle()
     {
         opened_file = true;
 
-        const std::string filename = dgl_timestamp_filename();
+        const string filename = dgl_timestamp_filename();
         // First check if there's already a timestamp file. If it exists
         // but has a different version, we cannot safely modify it, so bail.
         if (!dgl_unknown_timestamp_file(filename))

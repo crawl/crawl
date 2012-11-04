@@ -83,7 +83,7 @@ ENDMAP
 NAME:   temple_green
 TAGS:   temple_entry
 ORIENT: float
-SUBST:  ? = =+b
+SUBST:  ? = +bb
 KFEAT:  O = enter_temple
 MAP
 bbbb+bbbb
@@ -95,8 +95,8 @@ b.......b
 bbbb?bbbb
 ENDMAP
 
-# Hidden entry A: weight 1 (out of 10)
-NAME:   temple_secret_doors_a
+# weight 1 (out of 10)
+NAME:   temple_doors_a
 WEIGHT: 1
 TAGS:   temple_entry
 ORIENT: float
@@ -108,20 +108,20 @@ MAP
 cccccccccc
 ccccmmmmmc
 ccccm?.?mc
-@...=.O.mc
+@...+.O.mc
 ccccm?.?mc
 ccccmmmmmc
 cccccccccc
 ENDMAP
 
-# Hidden entry B: weight 1 (out of 10)
-NAME:   temple_secret_doors_b
+# weight 1 (out of 10)
+NAME:   temple_doors_b
 WEIGHT: 1
 TAGS:   temple_entry
 ORIENT: float
 SUBST:  ? : ?:40 T:30 U, ? = T:30 U
 SUBST:  c:cxxx
-NSUBST: X = 1:= / *=m=
+NSUBST: X = 1:+ / *=m+
 KMASK:  TU = no_monster_gen
 KFEAT:  O = enter_temple
 MAP
@@ -134,14 +134,13 @@ cccmmmmmccc
 ccccccccccc
 ENDMAP
 
-# Hidden entry C: weight 1 (out of 10)
-NAME:   temple_secret_doors_c
+NAME:   temple_doors_c
 WEIGHT: 1
 TAGS:   temple_entry
 ORIENT: float
 SUBST:  ? : ?:40 T:30 U, ? = T:30 U
 SUBST:  c:cxxx
-NSUBST: X = 1:= / *=m=
+NSUBST: X = 1:+ / *=m+
 KMASK:  TU = no_monster_gen
 KFEAT:  O = enter_temple
 MAP
@@ -156,14 +155,14 @@ ccccc.ccc
 ccccc@ccc
 ENDMAP
 
-# Hidden entry D: weight 1 (out of 10)
-NAME:   temple_secret_doors_d
+# weight 1 (out of 10)
+NAME:   temple_doors_d
 WEIGHT: 1
 TAGS:   temple_entry
 ORIENT: float
 SUBST:  ? : ?:40 T:30 U, ? = T:30 U
 SUBST:  c:cxxx
-NSUBST: X = 1:= / *=m=
+NSUBST: X = 1:+ / *=m+
 KMASK:  TU = no_monster_gen
 KFEAT:  O = enter_temple
 MAP
@@ -178,14 +177,14 @@ ccccc.ccccc
 ccccc@ccccc
 ENDMAP
 
-# Hidden entry E: weight 6 (out of 10)
-NAME:   temple_secret_doors_e
+# weight 6 (out of 10)
+NAME:   temple_doors_e
 WEIGHT: 6
 TAGS:   temple_entry no_rotate
 ORIENT: float
 SUBST:  ? : ?:40 T:30 U, ? = T:30 U
 SUBST:  c:cxxx
-NSUBST: X = 1:= / *=m=
+NSUBST: X = 1:+ / *=m+
 KMASK:  TU = no_monster_gen
 KFEAT:  O = enter_temple
 MAP
@@ -664,15 +663,14 @@ x.........x
 xx@xx@xx@xx
 ENDMAP
 
-NAME:   minmay_temple_entry_secret_door
+NAME:   minmay_temple_entry_glassed_door
 TAGS:   temple_entry
 ORIENT: float
-NSUBST: m = 1:= / *:m
 KFEAT:  O = enter_temple
 MAP
 xxx+xxx
 x.....x
-x.mmm.x
+x.m+m.x
 +.mOm.+
 x.mmm.x
 x.....x
@@ -2673,7 +2671,7 @@ WEIGHT:   10
 ORIENT:   encompass
 NSUBST:   O = 6:B / *:O
 KFEAT:    O = altar_lugonu
-MONS:     plant col:random name:demonic name_adjective
+MONS:     plant col:random name:demonic name_adjective tile:mons_demonic_plant
 SUBST:    . = . x:1 w:1 l:1
 SUBST:    x = xxxcv
 SUBST:    ' = .

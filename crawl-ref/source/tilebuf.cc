@@ -98,7 +98,7 @@ void FontBuffer::add(const formatted_string &fs, float x, float y)
     m_font->store(*this, x, y, fs);
 }
 
-void FontBuffer::add(const std::string &s, const VColour &col, float x, float y)
+void FontBuffer::add(const string &s, const VColour &col, float x, float y)
 {
     m_font->store(*this, x, y, s, col);
 }
@@ -110,7 +110,8 @@ TileBuffer::TileBuffer(const TilesTexture *t) : VertBuffer(true, false, t)
 {
 }
 
-void TileBuffer::add_unscaled(tileidx_t idx, float x, float y, int ymax)
+void TileBuffer::add_unscaled(tileidx_t idx, float x, float y, int ymax,
+                              float scale)
 {
     float pos_sx = x;
     float pos_sy = y;
@@ -119,7 +120,7 @@ void TileBuffer::add_unscaled(tileidx_t idx, float x, float y, int ymax)
     bool drawn = tex->get_coords(idx, 0, 0,
                                  pos_sx, pos_sy, pos_ex, pos_ey,
                                  tex_sx, tex_sy, tex_ex, tex_ey,
-                                 true, -1, ymax, 1.0f, 1.0f);
+                                 true, -1, ymax, 1.0f / scale, 1.0f / scale);
 
     if (!drawn)
         return;
@@ -170,7 +171,7 @@ static unsigned char _get_alpha(float lerp, int alpha_top, int alpha_bottom)
 
     int ret = static_cast<int>(alpha_top * (1.0f - lerp) + alpha_bottom * lerp);
 
-    ret = std::min(std::max(0, ret), 255);
+    ret = min(max(0, ret), 255);
     return (static_cast<unsigned char>(ret));
 }
 
@@ -237,9 +238,7 @@ void SubmergedTileBuffer::add(tileidx_t idx, int x, int y, int z, bool submerged
                           alpha_top, alpha_top);
     }
     else
-    {
         m_above_water.add(idx, x, y, z, ox, oy, -1, ymax, alpha_top, alpha_top);
-    }
 }
 
 void SubmergedTileBuffer::draw() const

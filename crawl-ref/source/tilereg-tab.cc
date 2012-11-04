@@ -8,7 +8,6 @@
 #include "state.h"
 #include "tiledef-gui.h"
 
-
 TabbedRegion::TabbedRegion(const TileRegionInit &init) :
     GridRegion(init),
     m_active(-1),
@@ -33,7 +32,7 @@ void TabbedRegion::set_icon_pos(int idx)
     {
         if (i == idx || !m_tabs[i].reg)
             continue;
-        start_y = std::max(m_tabs[i].max_y + 1, start_y);
+        start_y = max(m_tabs[i].max_y + 1, start_y);
     }
     m_tabs[idx].min_y = start_y;
     m_tabs[idx].max_y = start_y + m_tabs[idx].height;
@@ -70,7 +69,7 @@ void TabbedRegion::set_tab_region(int idx, GridRegion *reg, tileidx_t tile_tab)
     }
 
     const tile_info &inf = tile_gui_info(tile_tab);
-    ox = std::max((int)inf.width, ox);
+    ox = max((int)inf.width, ox);
 
     // All tabs should be the same size.
     for (int i = 1; i < TAB_OFS_MAX; ++i)
@@ -294,8 +293,11 @@ int TabbedRegion::get_mouseover_tab(MouseEvent &event) const
 
 int TabbedRegion::handle_mouse(MouseEvent &event)
 {
-    if (mouse_control::current_mode() != MOUSE_MODE_COMMAND)
+    if (mouse_control::current_mode() != MOUSE_MODE_COMMAND
+        && !tiles.get_map_display())
+    {
         return 0;
+    }
 
     int mouse_tab = get_mouseover_tab(event);
     if (mouse_tab != m_mouse_tab)
@@ -321,12 +323,12 @@ int TabbedRegion::handle_mouse(MouseEvent &event)
     return (get_tab_region(active_tab())->handle_mouse(event));
 }
 
-bool TabbedRegion::update_tab_tip_text(std::string &tip, bool active)
+bool TabbedRegion::update_tab_tip_text(string &tip, bool active)
 {
     return false;
 }
 
-bool TabbedRegion::update_tip_text(std::string &tip)
+bool TabbedRegion::update_tip_text(string &tip)
 {
     if (!active_is_valid())
         return false;
@@ -341,7 +343,7 @@ bool TabbedRegion::update_tip_text(std::string &tip)
     return (get_tab_region(active_tab())->update_tip_text(tip));
 }
 
-bool TabbedRegion::update_alt_text(std::string &alt)
+bool TabbedRegion::update_alt_text(string &alt)
 {
     if (!active_is_valid())
         return false;
@@ -349,13 +351,13 @@ bool TabbedRegion::update_alt_text(std::string &alt)
     return (get_tab_region(active_tab())->update_alt_text(alt));
 }
 
-int TabbedRegion::find_tab(std::string tab_name) const
+int TabbedRegion::find_tab(string tab_name) const
 {
     lowercase(tab_name);
-    std::string pluralised_name = pluralise(tab_name);
+    string pluralised_name = pluralise(tab_name);
     for (int i = 0, size = m_tabs.size(); i < size; ++i)
     {
-        std::string reg_name = lowercase_string(m_tabs[i].reg->name());
+        string reg_name = lowercase_string(m_tabs[i].reg->name());
         if (tab_name == reg_name || pluralised_name == reg_name)
             return i;
     }

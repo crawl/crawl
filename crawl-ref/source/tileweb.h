@@ -52,13 +52,14 @@ public:
     void update_minimap_bounds();
     void update_tabs();
 
+    void mark_for_redraw(const coord_def& gc);
     void set_need_redraw(unsigned int min_tick_delay = 0);
     bool need_redraw() const;
     void redraw();
 
     void place_cursor(cursor_type type, const coord_def &gc);
     void clear_text_tags(text_tag_type type);
-    void add_text_tag(text_tag_type type, const std::string &tag,
+    void add_text_tag(text_tag_type type, const string &tag,
                       const coord_def &gc);
     void add_text_tag(text_tag_type type, const monster_info& mon);
 
@@ -76,7 +77,7 @@ public:
     void clear_to_end_of_line();
 
     void push_menu(Menu* m);
-    void push_crt_menu(std::string tag);
+    void push_crt_menu(string tag);
     void pop_menu();
     void close_all_menus();
 
@@ -113,24 +114,24 @@ public:
        data is sent until pop_prefix is called. The suffix
        passed to pop_prefix will only be sent if the prefix
        was sent. */
-    void push_prefix(const std::string& prefix);
-    void pop_prefix(const std::string& suffix);
+    void push_prefix(const string& prefix);
+    void pop_prefix(const string& suffix);
     bool prefix_popped();
 
     // Helper functions for writing JSON
-    void write_message_escaped(const std::string& s);
-    void json_open_object(const std::string& name = "");
+    void write_message_escaped(const string& s);
+    void json_open_object(const string& name = "");
     void json_close_object();
-    void json_open_array(const std::string& name = "");
+    void json_open_array(const string& name = "");
     void json_close_array();
     void json_write_comma();
-    void json_write_name(const std::string& name);
+    void json_write_name(const string& name);
     void json_write_int(int value);
-    void json_write_int(const std::string& name, int value);
-    void json_write_string(const std::string& value);
-    void json_write_string(const std::string& name, const std::string& value);
+    void json_write_int(const string& name, int value);
+    void json_write_string(const string& value);
+    void json_write_string(const string& name, const string& value);
 
-    std::string m_sock_name;
+    string m_sock_name;
     bool m_await_connection;
 
     WebtilesCRTMode m_crt_mode;
@@ -140,28 +141,30 @@ public:
     void set_ui_state(WebtilesUIState state);
     WebtilesUIState get_ui_state() { return m_ui_state; }
 
+    void dump();
+
 protected:
     int m_sock;
     int m_max_msg_size;
-    std::string m_msg_buf;
-    std::vector<sockaddr_un> m_dest_addrs;
+    string m_msg_buf;
+    vector<sockaddr_un> m_dest_addrs;
 
     bool m_controlled_from_web;
 
     void _await_connection();
-    wint_t _handle_control_message(sockaddr_un addr, std::string data);
+    wint_t _handle_control_message(sockaddr_un addr, string data);
     wint_t _receive_control_message();
 
-    std::vector<std::string> m_prefixes;
+    vector<string> m_prefixes;
     int json_object_level;
     bool need_comma;
 
     struct MenuInfo
     {
-        std::string tag;
+        string tag;
         Menu* menu;
     };
-    std::vector<MenuInfo> m_menu_stack;
+    vector<MenuInfo> m_menu_stack;
 
     WebtilesUIState m_ui_state;
 
@@ -180,9 +183,8 @@ protected:
     coord_def m_next_view_tl;
     coord_def m_next_view_br;
 
-    std::bitset<GXM * GYM> m_dirty_cells;
-    std::bitset<GXM * GYM> m_cells_needing_redraw;
-    void mark_for_redraw(const coord_def& gc);
+    bitset<GXM * GYM> m_dirty_cells;
+    bitset<GXM * GYM> m_cells_needing_redraw;
     void mark_dirty(const coord_def& gc);
     void mark_clean(const coord_def& gc);
     bool is_dirty(const coord_def& gc);
@@ -192,7 +194,7 @@ protected:
     int m_next_flash_colour;
 
     FixedArray<map_cell, GXM, GYM> m_current_map_knowledge;
-    std::map<uint32_t, coord_def> m_monster_locs;
+    map<uint32_t, coord_def> m_monster_locs;
     bool m_need_full_map;
 
     coord_def m_cursor[CURSOR_MAX];
@@ -221,10 +223,10 @@ protected:
     void _send_cell(const coord_def &gc,
                     const screen_cell_t &current_sc, const screen_cell_t &next_sc,
                     const map_cell &current_mc, const map_cell &next_mc,
-                    std::map<uint32_t, coord_def>& new_monster_locs,
+                    map<uint32_t, coord_def>& new_monster_locs,
                     bool force_full);
     void _send_monster(const coord_def &gc, const monster_info* m,
-                       std::map<uint32_t, coord_def>& new_monster_locs,
+                       map<uint32_t, coord_def>& new_monster_locs,
                        bool force_full);
 };
 
@@ -241,7 +243,7 @@ public:
     }
 
     tiles_crt_control(WebtilesCRTMode mode,
-                      std::string tag = "")
+                      string tag = "")
         : m_old_mode(tiles.m_crt_mode)
     {
         tiles.m_crt_mode = mode;

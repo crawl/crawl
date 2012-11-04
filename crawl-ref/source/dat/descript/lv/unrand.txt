@@ -1,0 +1,60 @@
+%%%%
+Sword of Power
+
+Tās atalgo spēcīgos ar spēku un vāros ar vārumu.
+%%%%
+scythe "Finisher"
+
+Gara un asa izkapts, kas īpaši pielāgota kaujai.
+%%%%
+bow of Krishna "Sharnga"
+
+Brīnumains zelta loks.
+
+Tas reiz piederēja citzemju dievam. Loks vislabāk der kopā ar īpašām bultām,
+kuras ir grūti pieejamas.
+%%%%
+mithril axe "Arga"
+
+Skaists mitrila cirvis, ko visdrīzāk pazaudējis kāds rūķu varonis.
+%%%%
+crossbow "Sniper"
+
+No kāda melna materiāla izgatavots stops.
+%%%%
+knife of Accuracy
+
+Tas ir gandrīz nekļūdīgi precīzs.
+%%%%
+Lear's chain mail
+
+Ķēžu bruņas, kas izgatavotas no tīra zelta.
+%%%%
+salamander hide armour
+
+Ādas bruņas, kas izgatavotas no salamandru ādas.
+%%%%
+shield of Resistance
+
+Bronzas vairogs.
+%%%%
+Maxwell's patent armour
+
+Dīvaina paskata bruņas.
+%%%%
+mask of the Dragon
+
+Zils vieplis.
+%%%%
+fencer's gloves
+
+No balta zīda izgatavots cimdu pāris.
+%%%%
+ring of Shadows
+
+Melns gredzens, kas padara tā nēsātāju par vienu no ēnām.
+%%%%
+ring of Robustness
+
+Parasts tērauda gredzens.
+%%%%

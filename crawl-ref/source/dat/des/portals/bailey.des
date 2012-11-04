@@ -162,7 +162,7 @@ O
 ENDMAP
 
 NAME:   bailey_entry_trowel
-TAGS:   transparent trowel_portal unrand
+TAGS:   transparent trowel_portal unrand can_overwrite
 DEPTH:  *, !Bailey
 veto {{ return you.is_level_on_stack("Bailey") }}
 : local rnd = crawl.random2(2)
@@ -287,12 +287,13 @@ COLOUR: ; : red / lightred
 SUBST:  ; = .
 TAGS:   uniq_bailey no_rotate chance_bailey
 CHANCE: 5%
+KPROP:  d = no_rtele_into
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
-ITEM:   unobtainable war axe / unobtainable battleaxe
+KITEM:  d = unobtainable war axe / unobtainable battleaxe
 :   bailey_portal_axe(_G)
 : elseif rnd == 1 then
-ITEM:   unobtainable glaive / unobtainable bardiche
+KITEM:  d = unobtainable glaive / unobtainable bardiche
 :   bailey_portal_polearm(_G)
 : end
 MAP
@@ -344,12 +345,13 @@ TAGS:   uniq_bailey no_rotate chance_bailey
 CHANCE: 5%
 WEIGHT: 3
 COLOUR: n = red
+KPROP:  d = no_rtele_into
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
-ITEM:   unobtainable war axe / unobtainable battleaxe
+KITEM:  d = unobtainable war axe / unobtainable battleaxe
 :   bailey_portal_axe(_G)
 : elseif rnd == 1 then
-ITEM:   unobtainable glaive / unobtainable bardiche
+KITEM:  d = unobtainable glaive / unobtainable bardiche
 :   bailey_portal_polearm(_G)
 : end
 MAP
@@ -441,19 +443,19 @@ MAP
   ccc~<~ccc
 cccccc+cccccc
 ct1..w.w..1sc
-c=cccw.wccc=c
+c+cccw.wccc+c
 ct1..w.w..1sc
-c=cccw.wccc=c
+c+cccw.wccc+c
 ct1..w.w..1sc
-c=cccw.wccc=c
+c+cccw.wccc+c
 ct1..w.w..1sc
-c=cccw.wccc=c
+c+cccw.wccc+c
 ct1..w.w..1sc
-c=cccw.wccc=c
+c+cccw.wccc+c
 ct1..w.w..1sc
-c=cccw.wccc=c
+c+cccw.wccc+c
 ct1..w.w..1sc
-c=cccw.wccc=c
+c+cccw.wccc+c
 ct1..w.w..1sc
 cccccc+cccccc
     c...c
@@ -493,23 +495,23 @@ ITEM:   potion of experience w:30 / potion of cure mutation w:30 /\
 MAP
 ccc ccc ccccc ccc ccc
 cAccc1ccc2+2ccc1ccc1c
-cc+cc=cc+ccc+cc=cc+cc
+cc+cc+cc+ccc+cc+cc+cc
  cc.....cc cc.....cc
 ccc.....ccccc.....ccc
-c1=..<..=1c1=..T..=1c
+c1+..<..+1c1+..T..+1c
 ccc.....ccccc.....ccc
  cc....dcc ccd....cc
-cc+cc=cc+ccc+cc=cc+cc
+cc+cc+cc+ccc+cc+cc+cc
 c1ccc1ccc2c2ccc1ccc2c
 ccc ccc ccncc ccc c+c
 c1ccc1ccc2c2ccc1ccc2c
-cc+cc=cc+ccc+cc=cc+cc
+cc+cc+cc+ccc+cc+cc+cc
  cce.e.ecc ccd....cc
 ccc.e2e.ccccc.....ccc
-c1=e2U3e=1c1=..Y..=1c
+c1+e2U3e+1c1+..Y..+1c
 ccc.e2e.ccccc.....ccc
  cce.e.ecc cc.....cc
-cc+cc=cc+ccc+cc=cc+cc
+cc+cc+cc+ccc+cc+cc+cc
 c<ccc1ccc2+2ccc1ccc1c
 ccc ccc ccccc ccc ccc
 ENDMAP
@@ -547,15 +549,15 @@ xxxxxxxxxxxc"""cxxxxxxxxxxx
 xxxxxxxxcccc'''ccccxxxxxxxx
 xxxxxxxccw.......wccxxxxxxx
 xxxcccccww.......wwcccccxxx
-xxxc.=1+ww.......ww+1=.cxxx
+xxxc.+1+ww.......ww+1+.cxxx
 xxxc.cccww.......wwccc.cxxx
-xxxc.=1+ww.......ww+1=.cxxx
+xxxc.+1+ww.......ww+1+.cxxx
 xxxc.cccww.......wwccc.cxxx
-xxxc.=1+ww.......ww+1=.cxxx
+xxxc.+1+ww.......ww+1+.cxxx
 xxxc.cccww.......wwccc.cxxx
-xxxc.=1+ww.......ww+1=.cxxx
+xxxc.+1+ww.......ww+1+.cxxx
 xxxc.cccww.......wwccc.cxxx
-xxxcT=1+ww.......ww+1=Tcxxx
+xxxcT+1+ww.......ww+1+Tcxxx
 xxxcccccww.......wwcccccxxx
 xxxxxxxccw.......wccxxxxxxx
 xxxxxxxxcccc+++ccccxxxxxxxx
@@ -593,16 +595,15 @@ SUBST:   e : eeef
 NSUBST:  f = 1:f / *:.
 SUBST:   e = e..
 SHUFFLE: EB / XY / XY / XY
-SUBST:   X = c, Y = =
-NSUBST:  E = 1:= / *:c
+SUBST:   X = c, Y = +
+NSUBST:  E = 1:+ / *:c
 SUBST:   B = c
 SHUFFLE: CD / XY / XY / XY
-SUBST:   X = c, Y = =
-NSUBST:  C = 1:= / *:c
+SUBST:   X = c, Y = +
+NSUBST:  C = 1:+ / *:c
 SUBST:   D = c
 #
-KFEAT:   ~ = net trap
-KFEAT:   ^ = alarm trap / spear trap
+KFEAT:   ^ = known alarm trap
 SUBST:   W = w:2 .:1 W:1
 SUBST:   ? = c.
 SUBST:   N = nc
@@ -619,14 +620,14 @@ cccccccccccccccccccccccccc..??.d.??d<cccccccccccccc
 ccccccccccccccccccccccccc.??..???..?ccccccccccccccc
 ccccccccccccccccccccccccc.ccccccccccccccccccccccccc
 ccccccccccccc.......................ccccccccccccccc
-cccccccccc...........cccc=cccc.......cccccccccccccc
+cccccccccc...........ccccccccc.......cccccccccccccc
 ccccccccc....2....c+cc...3...ccccCc..cccccccccccccc
 cccccccc....2T2...c..c.2.d.2.c.1CdC...ccccccccccccc
-ccccccccc....2..cEc..c.2.~.2.c..cDc...1cwwwwcccwwwc
+ccccccccc....2..cEc..c.2...2.c..cDc...1cwwwwcccwwwc
 ccccccccccc.....EdB..cccc+cccc..+dc..Wwwwwwwwwwwwwx
-cccwwwwwwc1.1...cEc...^.^.^.^...ccc1Wwwwwwwwwwwwxxx
-cwwwwwwwwwwwW1.1..c1.cccc=cccc.1c1Wwwwwwwwxxxxxxxxx
-xwwwxxxwwwwwwwwwW1cncc..2~2..ccncwwwwwwxxxxxxxxxxxx
+cccwwwwwwc1.1...cEc...^.....^...ccc1Wwwwwwwwwwwwxxx
+cwwwwwwwwwwwW1.1..c1.cccc+cccc.1c1Wwwwwwwwxxxxxxxxx
+xwwwxxxwwwwwwwwwW1cncc..2.2..ccncwwwwwwxxxxxxxxxxxx
 xxxxxxxxx....Wwwwwww1c.2.2.2.c1wwwwwxxxxxxxxxxxxxxx
 xxxxxxxxxx......Wwwwwccncncnccwwwwxxxxxxxxxxxxxxxxx
 xxxxxxxxxxx...e...Wwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxxx
@@ -740,8 +741,8 @@ NAME:   bailey_polearm_1
 WEIGHT: 10
 ORIENT: encompass
 TAGS:   bailey_polearm no_rotate no_pool_fixup
-NSUBST: D = 1:= / *:c
-NSUBST: E = 1:= / *:c
+NSUBST: D = 1:+ / *:c
+NSUBST: E = 1:+ / *:c
 : orc_with_polearm(_G)
 : orc_warrior_with_polearm(_G)
 : orc_knight_with_polearm(_G)
@@ -773,7 +774,7 @@ xx.ww..c+c..ll..TTT..ll..c+c..ww.<x
 x.ww1.cc.cD..ll2...2ll..cc.cc.1ww.x
 x.w..cc...DD..lllllll..cc.$.cc..w.x
 x.w1cc2....Dc.........cc.$$$.cc1w.x
-x.w.ccccccccccccc=ccc+ccccccccc.w.x
+x.w.ccccccccccccc+ccc+ccccccccc.w.x
 x.w1..1..1..1cc.....cc1..1..1..1w.x
 x.wwwwwwwwww..cc.<.cc..wwwwwwwwww.x
 x..........ww.1nc.cn1.ww..........x
@@ -827,13 +828,13 @@ x......wcc.ccwWWWWWWWWWWWWWWWwcc.ccw......x
 x......wwc1cwwWWWWWWcccWWWWWWwwc1cww......x
 x......WwwwwwWWWWcccccccccWWWWwwwwwW......x
 x......WWWWWWWWWccWWWWWWWccWWWWWWWWW......x
-x......WWWWWWWWccWWc=c=cWWccWWWWWWWW......x
+x......WWWWWWWWccWWc+c+cWWccWWWWWWWW......x
 x......WWWWWWWWcWWcc2c2ccWWcWWWWWWWW......x
 x......WWWWWWWccWccvvvvvccWccWWWWWWW......x
-x......WWWWWWWccW=2vd4dv2=WccWWWWWWW......x
+x......WWWWWWWccW+2vd4dv2+WccWWWWWWW......x
 x......WWWWWWWccWccv4X4vccWccWWWWWWW......x
-x......WWWWWWWccW=2v.4.v2=WccWWWWWWW......x
-x......WWWWWWWccWccvv=vvccWccWWWWWWW......x
+x......WWWWWWWccW+2v.4.v2+WccWWWWWWW......x
+x......WWWWWWWccWccvv+vvccWccWWWWWWW......x
 x......WWWWWWWccWWcc<d<ccWWcWWWWWWWW......x
 x......WWWWWWWWWWWcc+++cWWccWWWWWWWW......x
 x......WWWWWWWWWWWccWWWWWccWWWWWWWWW......x

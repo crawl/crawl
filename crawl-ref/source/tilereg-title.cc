@@ -7,10 +7,11 @@
 #include "files.h"
 #include "libutil.h"
 #include "macro.h"
+#include "random.h"
 
-static const std::string _get_title_image()
+static const string _get_title_image()
 {
-    std::vector<std::string> files = get_title_files();
+    vector<string> files = get_title_files();
     return files[random2(files.size())];
 }
 
@@ -57,7 +58,7 @@ void TitleRegion::run()
  * We only want to show one line of message by default so clear the
  * font buffer before adding the new message.
  */
-void TitleRegion::update_message(std::string message)
+void TitleRegion::update_message(string message)
 {
     m_font_buf.clear();
     m_font_buf.add(message, VColour::white, 0, 0);

@@ -65,6 +65,7 @@
 #include "options.h"
 #include "state.h"
 #include "unicode.h"
+#include "version.h"
 #include "view.h"
 #include "viewgeom.h"
 
@@ -353,7 +354,7 @@ void console_startup()
         exit(0);
     }
 
-    std::string title = CRAWL " " + Version::Long();
+    string title = CRAWL " " + Version::Long();
 
     if (!GetConsoleTitleW(oldTitle, 78))
         *oldTitle = 0;

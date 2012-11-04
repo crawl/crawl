@@ -75,20 +75,19 @@ void pickup_menu(int item_link);
 void pickup(bool partial_quantity = false);
 
 bool item_is_branded(const item_def& item);
-void item_list_on_square(std::vector<const item_def*>& items,
-                          int obj, bool force_squelch = false);
+void item_list_on_square(vector<const item_def*>& items,
+                         int obj, bool force_squelch = false);
 
 bool copy_item_to_grid(const item_def &item, const coord_def& p,
-                        int quant_drop = -1,    // item.quantity by default
-                        bool mark_dropped = false,
-                        bool silent = false);
+                       int quant_drop = -1,    // item.quantity by default
+                       bool mark_dropped = false,
+                       bool silent = false);
 coord_def item_pos(const item_def &item);
 
 bool move_top_item(const coord_def &src, const coord_def &dest);
 
 // Get the top item in a given cell. If there are no items, return NULL.
 const item_def* top_item_at(const coord_def& where);
-item_def *corpse_at(coord_def pos, int *num_corpses = NULL);
 
 // Returns whether there is more than one item in a given cell.
 bool multiple_items_at(const coord_def& where);
@@ -112,7 +111,7 @@ void origin_set(const coord_def& where);
 void origin_set_monster(item_def &item, const monster* mons);
 bool origin_known(const item_def &item);
 bool origin_describable(const item_def &item);
-std::string origin_desc(const item_def &item);
+string origin_desc(const item_def &item);
 void origin_purchased(item_def &item);
 void origin_acquired(item_def &item, int agent);
 void origin_set_startequip(item_def &item);
@@ -156,8 +155,7 @@ coord_def orb_position();
 // stack_iterator guarantees validity so long as you don't manually
 // mess with item_def.link: i.e., you can kill the item you're
 // examining but you can't kill the item linked to it.
-class stack_iterator : public std::iterator<std::forward_iterator_tag,
-                                            item_def>
+class stack_iterator : public iterator<forward_iterator_tag, item_def>
 {
 public:
     explicit stack_iterator(const coord_def& pos, bool accessible = false);

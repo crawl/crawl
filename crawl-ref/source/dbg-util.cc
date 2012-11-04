@@ -19,6 +19,7 @@
 #include "religion.h"
 #include "shopping.h"
 #include "skills2.h"
+#include "state.h"
 #include "spl-util.h"
 
 monster_type debug_prompt_for_monster(void)
@@ -36,18 +37,6 @@ monster_type debug_prompt_for_monster(void)
     return MONS_NO_MONSTER;
 }
 
-static void _dump_vault_table(const CrawlHashTable &table)
-{
-    if (!table.empty())
-    {
-        CrawlHashTable::const_iterator i = table.begin();
-
-        for (; i != table.end(); ++i)
-            mprf("    %s: %s", i->first.c_str(),
-                       i->second.get_string().c_str());
-    }
-}
-
 void debug_dump_levgen()
 {
     if (crawl_state.game_is_arena())
@@ -55,8 +44,8 @@ void debug_dump_levgen()
 
     CrawlHashTable &props = env.properties;
 
-    std::string method;
-    std::string type;
+    string method;
+    string type;
 
     if (Generating_Level)
     {
@@ -64,6 +53,15 @@ void debug_dump_levgen()
         method = env.level_build_method;
         type   = comma_separated_line(env.level_layout_types.begin(),
                                       env.level_layout_types.end(), ", ");
+
+        if (!env.placing_vault.empty())
+            mprf("Vault being placed: %s", env.placing_vault.c_str());
+        if (!env.new_subvault_names.empty())
+        {
+            mprf("Subvaults: %s", comma_separated_line(
+                 env.new_subvault_names.begin(), env.new_subvault_names.end(),
+                 ", ").c_str());
+        }
     }
     else
     {
@@ -81,35 +79,28 @@ void debug_dump_levgen()
     mprf("Level build method = %s, level layout type  = %s, absdepth0 = %d",
          method.c_str(), type.c_str(), env.absdepth0);
 
-    if (props.exists(LEVEL_EXTRAS_KEY))
-    {
-        mpr("Level extras:");
-        const CrawlHashTable &extras = props[LEVEL_EXTRAS_KEY].get_table();
-        _dump_vault_table(extras);
-    }
-
-    if (props.exists(LEVEL_VAULTS_KEY))
+    if (!env.level_vault_list.empty())
     {
         mpr("Level vaults:");
-        const CrawlHashTable &vaults = props[LEVEL_VAULTS_KEY].get_table();
-        _dump_vault_table(vaults);
+        for (size_t i = 0; i < env.level_vault_list.size(); ++i)
+            mprf("    %s", env.level_vault_list[i].c_str());
     }
     mpr("");
 }
 
-std::string debug_coord_str(const coord_def &pos)
+string debug_coord_str(const coord_def &pos)
 {
     return make_stringf("(%d, %d)%s", pos.x, pos.y,
                         !in_bounds(pos) ? " <OoB>" : "");
 }
 
-std::string debug_mon_str(const monster* mon)
+string debug_mon_str(const monster* mon)
 {
     const int midx = mon->mindex();
     if (invalid_monster_index(midx))
         return make_stringf("Invalid monster index %d", midx);
 
-    std::string out = "Monster '" + mon->full_name(DESC_PLAIN, true) + "' ";
+    string out = "Monster '" + mon->full_name(DESC_PLAIN, true) + "' ";
     out += make_stringf("%s [midx = %d]", debug_coord_str(mon->pos()).c_str(),
                         midx);
 
@@ -129,7 +120,7 @@ static void _debug_mid_name(mid_t mid)
         if (mons)
             fprintf(stderr, "%s", debug_mon_str(mons).c_str());
         else
-            fprintf(stderr, "bad monster[%"PRImidt"]", mid);
+            fprintf(stderr, "bad monster[%" PRImidt"]", mid);
     }
 }
 
@@ -170,8 +161,7 @@ void debug_dump_mon(const monster* mon, bool recurse)
 
     if (in_bounds(mon->pos()))
     {
-        std::string feat =
-            raw_feature_description(mon->pos());
+        string feat = raw_feature_description(mon->pos());
         fprintf(stderr, "On/in/over feature: %s\n\n", feat.c_str());
     }
 
@@ -313,7 +303,7 @@ void debug_dump_mon(const monster* mon, bool recurse)
         fprintf(stderr, "\n");
     }
 
-    fprintf(stderr, "attitude: %d, behaviour: %d, number: %d, flags: 0x%"PRIx64"\n",
+    fprintf(stderr, "attitude: %d, behaviour: %d, number: %d, flags: 0x%" PRIx64"\n",
             mon->attitude, mon->behaviour, mon->number, mon->flags);
 
     fprintf(stderr, "colour: %d, foe_memory: %d, shield_blocks:%d, "
@@ -363,10 +353,10 @@ skill_type skill_from_name(const char *name)
     {
         skill_type sk = static_cast<skill_type>(i);
 
-        std::string sk_name = lowercase_string(skill_name(sk));
+        string sk_name = lowercase_string(skill_name(sk));
 
         size_t pos = sk_name.find(name);
-        if (pos != std::string::npos)
+        if (pos != string::npos)
         {
             skill = sk;
             // We prefer prefixes over partial matches.
@@ -378,7 +368,7 @@ skill_type skill_from_name(const char *name)
     return skill;
 }
 
-std::string debug_art_val_str(const item_def& item)
+string debug_art_val_str(const item_def& item)
 {
     ASSERT(is_artefact(item));
 

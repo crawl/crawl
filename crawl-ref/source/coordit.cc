@@ -15,10 +15,10 @@
 rectangle_iterator::rectangle_iterator(const coord_def& corner1,
                                         const coord_def& corner2)
 {
-    topleft.x = std::min(corner1.x, corner2.x);
-    topleft.y = std::min(corner1.y, corner2.y); // not really necessary
-    bottomright.x = std::max(corner1.x, corner2.x);
-    bottomright.y = std::max(corner1.y, corner2.y);
+    topleft.x = min(corner1.x, corner2.x);
+    topleft.y = min(corner1.y, corner2.y); // not really necessary
+    bottomright.x = max(corner1.x, corner2.x);
+    bottomright.y = max(corner1.y, corner2.y);
     current = topleft;
 }
 
@@ -55,9 +55,7 @@ void rectangle_iterator::operator ++()
         current.y++;
     }
     else
-    {
         current.x++;
-    }
 }
 
 
@@ -198,11 +196,6 @@ distance_iterator::distance_iterator(const coord_def& _center, bool _fair,
         advance();
 }
 
-static inline int sgn(int x)
-{
-    return (x < 0) ? -1 : (x > 0) ? 1 : 0;
-}
-
 bool distance_iterator::advance()
 {
 again:
@@ -211,7 +204,7 @@ again:
     if (icur == iend)
     {
         // Advance to the next radius.
-        std::vector<coord_def> *tmp = vcur;
+        vector<coord_def> *tmp = vcur;
         vcur = vnear;
         vnear = vfar;
         vfar = tmp;

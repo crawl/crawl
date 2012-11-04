@@ -56,7 +56,7 @@ dolls_data player_doll;
 bool save_doll_data(int mode, int num, const dolls_data* dolls)
 {
     // Save mode, num, and all dolls into dolls.txt.
-    std::string dollsTxtString = datafile_path("dolls.txt", false, true);
+    string dollsTxtString = datafile_path("dolls.txt", false, true);
 
     struct stat stFileInfo;
     stat(dollsTxtString.c_str(), &stFileInfo);
@@ -103,7 +103,7 @@ bool load_doll_data(const char *fn, dolls_data *dolls, int max,
     char fbuf[1024];
     FILE *fp  = NULL;
 
-    std::string dollsTxtString = datafile_path(fn, false, true);
+    string dollsTxtString = datafile_path(fn, false, true);
 
     struct stat stFileInfo;
     stat(dollsTxtString.c_str(), &stFileInfo);
@@ -293,9 +293,7 @@ void fill_doll_equipment(dolls_data &result)
         else if (item == -1)
             result.parts[TILEP_PART_HAND2] = 0;
         else
-        {
             result.parts[TILEP_PART_HAND2] = tilep_equ_shield(you.inv[item]);
-        }
     }
     // Body armour.
     if (result.parts[TILEP_PART_BODY] == TILEP_SHOW_EQUIP)

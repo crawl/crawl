@@ -5,12 +5,14 @@
 #include "abl-show.h"
 #include "artefact.h"
 #include "cio.h"
+#include "command.h"
 #include "coord.h"
 #include "env.h"
 #include "files.h"
 #include "glwrapper.h"
 #include "libutil.h"
 #include "map_knowledge.h"
+#include "menu.h"
 #include "message.h"
 #include "mon-util.h"
 #include "options.h"
@@ -32,6 +34,7 @@
 #include "tilereg-menu.h"
 #include "tilereg-mon.h"
 #include "tilereg-msg.h"
+#include "tilereg-popup.h"
 #include "tilereg-spl.h"
 #include "tilereg-skl.h"
 #include "tilereg-stat.h"
@@ -41,9 +44,16 @@
 #include "tilesdl.h"
 #include "tileview.h"
 #include "travel.h"
+#include "unwind.h"
+#include "version.h"
 #include "view.h"
 #include "viewgeom.h"
 #include "windowmanager.h"
+
+#ifdef __ANDROID__
+#include <android/log.h>
+#include <GLES/gl.h>
+#endif
 
 #ifdef TARGET_OS_WINDOWS
 
@@ -59,7 +69,11 @@
 
 // Default Screen Settings
 // width, height, map, crt, stat, msg, tip, lbl
+#ifdef __ANDROID__
+static int _screen_sizes[5][8] =
+#else
 static int _screen_sizes[4][8] =
+#endif
 {
     // Default
     {1024, 700, 3, 15, 16, 14, 15, 14},
@@ -69,6 +83,10 @@ static int _screen_sizes[4][8] =
     {800, 600, 2, 14, 11, 12, 13, 12},
     // Eee PC
     {800, 480, 2, 13, 12, 10, 13, 11}
+#ifdef __ANDROID__
+    // puny mobile screens
+    ,{480, 320, 2, 9, 8, 8, 9, 8}
+#endif
 };
 
 TilesFramework tiles;
@@ -191,7 +209,7 @@ void TilesFramework::draw_title()
  * open while the title screen shows, the .at(0) will need
  * to be changed and saved on a variable somewhere instead
  */
-void TilesFramework::update_title_msg(std::string message)
+void TilesFramework::update_title_msg(string message)
 {
     ASSERT(m_layers[LAYER_TILE_CONTROL].m_regions.size() == 1);
     ASSERT(m_active_layer == LAYER_TILE_CONTROL);
@@ -230,15 +248,58 @@ void TilesFramework::draw_doll_edit()
     delete reg;
 }
 
-void TilesFramework::use_control_region(ControlRegion *reg)
+void TilesFramework::set_map_display(const bool display)
 {
-    m_layers[LAYER_TILE_CONTROL].m_regions.push_back(reg);
-    m_active_layer = LAYER_TILE_CONTROL;
+    m_map_mode_enabled = display;
+    if (!display)
+        m_region_tab->activate_tab(TAB_ITEM);
+}
+
+bool TilesFramework::get_map_display()
+{
+    return m_map_mode_enabled;
+}
+
+void TilesFramework::do_map_display()
+{
+    m_map_mode_enabled = true;
+    m_region_tab->activate_tab(TAB_NAVIGATION);
+}
+
+int TilesFramework::draw_popup(Popup *popup)
+{
+    PopupRegion* reg = new PopupRegion(m_image, m_fonts[m_crt_font].font);
+    // place popup region to cover screen
+    reg->place(0, 0, 0);
+    reg->resize_to_fit(m_windowsz.x, m_windowsz.y);
+
+    // get menu items to draw
+    int col = 0;
+    while(MenuEntry *me = popup->next_entry())
+    {
+        col++;
+        reg->set_entry(col, me->get_text(true), me->colour, me, false);
+    }
+    // fetch a return value
+    use_control_region(reg,false);
+    int retval = reg->get_retval();
+
+    // clean up and return
+    delete reg;
+    return retval;
+}
+
+void TilesFramework::use_control_region(ControlRegion *reg,
+                                        bool use_control_layer)
+{
+    LayerID new_layer = use_control_layer ? LAYER_TILE_CONTROL : m_active_layer;
+    LayerID old_layer = m_active_layer;
+    m_layers[new_layer].m_regions.push_back(reg);
+    m_active_layer = new_layer;
     set_need_redraw();
-
     reg->run();
-
-    m_layers[LAYER_TILE_CONTROL].m_regions.clear();
+    m_layers[new_layer].m_regions.pop_back();
+    m_active_layer = old_layer;
 }
 
 void TilesFramework::calculate_default_options()
@@ -277,7 +338,9 @@ bool TilesFramework::initialise()
 
     const char *icon_name =
 #ifdef DATA_DIR_PATH
+#ifndef __ANDROID__
     DATA_DIR_PATH
+#endif
 #endif
 #ifdef TARGET_OS_MACOSX
     "dat/tiles/stone_soup_icon-512x512.png";
@@ -285,7 +348,7 @@ bool TilesFramework::initialise()
     "dat/tiles/stone_soup_icon-32x32.png";
 #endif
 
-    std::string title = CRAWL " " + Version::Long();
+    string title = CRAWL " " + Version::Long();
 
     // Do our initialization here.
 
@@ -344,8 +407,28 @@ bool TilesFramework::initialise()
     m_region_abl  = new AbilityRegion(m_init);
     m_region_mon  = new MonsterRegion(m_init);
     m_region_skl  = new SkillRegion(m_init);
-    m_region_cmd  = new CommandRegion(m_init);
+    m_region_cmd  = new CommandRegion(m_init, ct_action_commands,
+                                      ARRAYSZ(ct_action_commands));
+    m_region_cmd_meta = new CommandRegion(m_init, ct_system_commands,
+                                          ARRAYSZ(ct_system_commands),
+                                          "System Commands",
+                                          "Execute system commands");
+    m_region_cmd_map = new CommandRegion(m_init, ct_map_commands,
+                                         ARRAYSZ(ct_map_commands),
+                                         "Navigation", "Navigate around map");
 
+#ifdef TOUCH_UI
+    m_region_tab->set_tab_region(TAB_ITEM, m_region_inv, TILEG_TAB_ITEM);
+    m_region_tab->set_tab_region(TAB_SPELL, m_region_spl, TILEG_TAB_SPELL);
+    m_region_tab->set_tab_region(TAB_ABILITY, m_region_abl, TILEG_TAB_ABILITY);
+    m_region_tab->set_tab_region(TAB_MONSTER, m_region_mon, TILEG_TAB_MONSTER);
+    m_region_tab->set_tab_region(TAB_COMMAND, m_region_cmd, TILEG_TAB_COMMAND);
+    m_region_tab->set_tab_region(TAB_COMMAND2, m_region_cmd_meta,
+                                 TILEG_TAB_COMMAND2);
+    m_region_tab->set_tab_region(TAB_NAVIGATION, m_region_cmd_map,
+                                 TILEG_TAB_NAVIGATION);
+    m_region_tab->activate_tab(TAB_COMMAND);
+#else
     m_region_tab->set_tab_region(TAB_ITEM, m_region_inv, TILEG_TAB_ITEM);
     m_region_tab->set_tab_region(TAB_SPELL, m_region_spl, TILEG_TAB_SPELL);
     m_region_tab->set_tab_region(TAB_MEMORISE, m_region_mem, TILEG_TAB_MEMORISE);
@@ -353,7 +436,13 @@ bool TilesFramework::initialise()
     m_region_tab->set_tab_region(TAB_MONSTER, m_region_mon, TILEG_TAB_MONSTER);
     m_region_tab->set_tab_region(TAB_SKILL, m_region_skl, TILEG_TAB_SKILL);
     m_region_tab->set_tab_region(TAB_COMMAND, m_region_cmd, TILEG_TAB_COMMAND);
+    m_region_tab->set_tab_region(TAB_COMMAND2, m_region_cmd_meta,
+                                 TILEG_TAB_COMMAND2);
+    m_region_tab->set_tab_region(TAB_NAVIGATION, m_region_cmd_map,
+                                 TILEG_TAB_NAVIGATION);
     m_region_tab->activate_tab(TAB_ITEM);
+#endif
+
 
     m_region_msg  = new MessageRegion(m_fonts[m_msg_font].font);
     m_region_stat = new StatRegion(m_fonts[stat_font].font);
@@ -451,14 +540,20 @@ int TilesFramework::handle_mouse(MouseEvent &event)
     // we want to be able to start some GUI event (e.g. far viewing) and
     // stop if it moves to another region.
     int return_key = 0;
-    for (unsigned int i = 0; i < m_layers[m_active_layer].m_regions.size(); i++)
+    for (int i = m_layers[m_active_layer].m_regions.size() - 1; i >= 0 ; --i)
     {
         // TODO enne - what if two regions give a key?
-        int key = 0;
-        key = m_layers[m_active_layer].m_regions[i]->handle_mouse(event);
-        if (key)
-            return_key = key;
+        return_key = m_layers[m_active_layer].m_regions[i]->handle_mouse(event);
+        // break after first key handled; to (a) prevent UI cues from
+        // interfering with one another and (b) make popups work nicely :D
+        if (return_key)
+            break;
     }
+    // more popup botching - i want the top layer to return a key (to prevent
+    // other layers from trying to handle mouse event) and then return zero
+    // anyway
+    if (return_key == CK_NO_KEY)
+        return 0;
 
     // Let regions take priority in any mouse mode.
     if (return_key)
@@ -527,7 +622,7 @@ int TilesFramework::getch_ck()
     wm->set_timer(res, &_timer_callback);
 
     m_tooltip.clear();
-    std::string prev_alt = m_region_msg->alt_text();
+    string prev_alt = m_region_msg->alt_text();
     m_region_msg->alt_text().clear();
 
     if (need_redraw())
@@ -759,8 +854,8 @@ static const int stat_width      = 42;
 void TilesFramework::do_layout()
 {
     // View size in pixels is (m_viewsc * crawl_view.viewsz)
-    m_viewsc.x = 32;
-    m_viewsc.y = 32;
+    m_viewsc.x = Options.tile_cell_pixels;
+    m_viewsc.y = Options.tile_cell_pixels;
 
     crawl_view.viewsz.x = Options.view_max_width;
     crawl_view.viewsz.y = Options.view_max_height;
@@ -803,14 +898,14 @@ void TilesFramework::do_layout()
 
     // Then, the optimal situation without the overlay - we can fit both
     // Options.view_max_height and at least Options.msg_min_height in the space.
-    if (std::max(Options.view_max_height, ENV_SHOW_DIAMETER)
+    if (max(Options.view_max_height, ENV_SHOW_DIAMETER)
         * m_region_tile->dy + Options.msg_min_height
         * m_region_msg->dy
         <= m_windowsz.y && !message_overlay)
     {
-        message_y_divider = std::max(Options.view_max_height, ENV_SHOW_DIAMETER)
+        message_y_divider = max(Options.view_max_height, ENV_SHOW_DIAMETER)
                             * m_region_tile->dy;
-        message_y_divider = std::max(message_y_divider, m_windowsz.y -
+        message_y_divider = max(message_y_divider, m_windowsz.y -
                                     Options.msg_max_height * m_region_msg->dy);
     }
     else
@@ -837,9 +932,7 @@ void TilesFramework::do_layout()
             }
         }
         else
-        {
             message_y_divider = available_height_in_tiles * m_region_tile->dy;
-        }
     }
 
     // Resize and place the dungeon region.
@@ -891,7 +984,7 @@ void TilesFramework::autosize_minimap()
     const int vert = (m_statcol_bottom - (m_region_map->sy ? m_region_map->sy
                                                            : m_statcol_top)
                      - map_margin * 2) / GYM;
-    m_region_map->dx = m_region_map->dy = std::min(horiz, vert);
+    m_region_map->dx = m_region_map->dy = min(horiz, vert);
 }
 
 void TilesFramework::place_minimap()
@@ -952,15 +1045,21 @@ void TilesFramework::place_tab(int idx)
         max_ln = max_mon_height;
         break;
     case TAB_COMMAND:
-        min_ln = max_ln = calc_tab_lines(n_common_commands);
+        min_ln = max_ln = calc_tab_lines(m_region_cmd->n_common_commands);
+        break;
+    case TAB_COMMAND2:
+        min_ln = max_ln = calc_tab_lines(m_region_cmd_meta->n_common_commands);
+        break;
+    case TAB_NAVIGATION:
+        min_ln = max_ln = calc_tab_lines(m_region_cmd_map->n_common_commands);
         break;
     case TAB_SKILL:
         min_ln = max_ln = calc_tab_lines(NUM_SKILLS);
         break;
     }
 
-    int lines = std::min(max_ln, (m_statcol_bottom - m_statcol_top - m_tab_margin)
-                                 / m_region_tab->dy);
+    int lines = min(max_ln, (m_statcol_bottom - m_statcol_top - m_tab_margin)
+                            / m_region_tab->dy);
     if (lines >= min_ln)
     {
         TabbedRegion* region_tab = new TabbedRegion(m_init);
@@ -981,8 +1080,8 @@ void TilesFramework::place_tab(int idx)
 
 void TilesFramework::resize_inventory()
 {
-    int lines = std::min(max_inv_height - min_inv_height,
-                        (m_statcol_bottom - m_statcol_top) / m_region_tab->dy);
+    int lines = min(max_inv_height - min_inv_height,
+                    (m_statcol_bottom - m_statcol_top) / m_region_tab->dy);
     if (lines == 0)
         return;
 
@@ -1044,7 +1143,7 @@ void TilesFramework::layout_statcol()
 
     for (int i = 0, size = Options.tile_layout_priority.size(); i < size; ++i)
     {
-        std::string str = Options.tile_layout_priority[i];
+        string str = Options.tile_layout_priority[i];
         if (str == "inventory")
             resize_inventory();
         else if (str == "minimap" || str == "map")
@@ -1165,6 +1264,10 @@ void TilesFramework::redraw()
     }
     wm->swap_buffers();
 
+#ifdef __ANDROID__
+    glmanager->fixup_gl_state();
+#endif
+
     m_last_tick_redraw = wm->get_ticks();
 }
 
@@ -1231,7 +1334,7 @@ void TilesFramework::clear_text_tags(text_tag_type type)
     m_region_tile->clear_text_tags(type);
 }
 
-void TilesFramework::add_text_tag(text_tag_type type, const std::string &tag,
+void TilesFramework::add_text_tag(text_tag_type type, const string &tag,
                                   const coord_def &gc)
 {
     m_region_tile->add_text_tag(type, tag, gc);
@@ -1291,8 +1394,8 @@ bool TilesFramework::need_redraw() const
     return m_need_redraw;
 }
 
-int TilesFramework::to_lines(int num_tiles)
+int TilesFramework::to_lines(int num_tiles, int tile_height)
 {
-    return num_tiles * TILE_Y / get_crt_font()->char_height();
+    return num_tiles * tile_height / get_crt_font()->char_height();
 }
 #endif

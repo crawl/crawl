@@ -90,7 +90,7 @@ monsters, i.e. all intelligent humanoid monsters, but of course it is
 possible we've overlooked something, so if you find that your
 carefully constructed monster speech never gets printed, and this
 documentation also doesn't help you solve the problem, you might want
-to post a bug report on Stone Soup's Mantis site [1].
+to post a bug report on Stone Soup's Mantis site [2].
 
 The exception to the above is when the monster goes away due to dying,
 being banished, or a summoned monster being abjured or having it's time
@@ -530,6 +530,18 @@ name)", "your (weapon name)", and the plain weapon name, respectively.
 @player_name@ is expanded as above, as is @player_god@, though for
 atheists it returns "atheism".
 
+Any of these keywords' values can be changed to uppercase if you encase
+them by the keywords @CAPS@ and @NOCAPS@. For example,
+
+  "Go to hell, @CAPS@ @player_name@ @NOCAPS@!"
+
+will result in the monster yelling "Go to hell, PLAYER NAME!" with the
+actual player name being fully printed in capital letters. For
+convenience, leading and dangling spaces within the substring encased
+by the two keywords (which can be one or several words, or even the
+entire line) are trimmed. If the @NOCAPS@ keyword is left out, the
+entire rest of the line gets capitalised.
+
 Note that the Singing Sword, being unique, cannot be referred to by
 the possessive variants, so they will be replaced with the appropriate
 definite article ones.
@@ -545,6 +557,41 @@ end of wpnnoise.txt.
 
 The best way to learn about how variables and other concepts can be
 used is probably to see how it has been done for existing messages.
+
+
+Random substrings
+-----------------
+
+As explained above, you also can use the @@ pattern to define some more
+complex parts of a phrase. Here's an example from the Singing Sword:
+
+  @The_weapon@ @_sings_or_hums_@ an eerie @_tune_or_melody_@.
+  %%%%
+  _sings_or_hums_
+
+  sings
+
+  hums
+  %%%%
+  _tune_or_melody_
+
+  tune
+
+  melody
+  %%%%
+
+This is really useful if a certain pattern turns up a lot, if you want
+to assign different weights to the possible choices, or if the
+replacements may themselves contain random elements.
+
+However, in all other cases you can greatly simplify the syntax by
+putting all possible values, separated by "|", inside square brackets:
+
+  @The_weapon@ [sings|hums] an eerie [tune|melody].
+
+Other than in this example, the choices may also consist of multi-word
+phrases. Note that spaces within the patterns don't get trimmed and
+that an empty phrase is considered a valid choice.
 
 
 Speaking to the player vs to another monster
@@ -764,8 +811,7 @@ will have to compile the game for yourself.
 To build Crawl yourself, download the source code from the Crawl
 homepage [1] and read the "INSTALL" file in the main directory for
 instructions. Should you still have any questions after reading the
-documentation and checking the archives of the Crawl newsgroup [2],
-ask away!
+documentation you can ask for help e.g. in the Tavern [3].
 
 If you have WIZARD mode compiled in, you can access special wizard
 commands by pressing '&'. First answer "yes" to the safety question
@@ -809,22 +855,19 @@ F.  Publishing your changes
 If you feel that your additions really add something to the game and
 would like to make them available to the general public, you can post
 them (in the form of a diff file, or in plain text) as a feature
-request on our Mantis tracker [2] or in the newsgroup [3].
+request on our Mantis tracker [2] or in the Tavern forum [3].
 
 
-.. [1] http://crawl-ref.sourceforge.net
+.. [1] http://crawl.develz.org/wordpress/
    The official Dungeon Crawl Stone Soup homepage, always linking
    to the latest release.
 
 .. [2] http://crawl.develz.org/mantis/main_page.php
    The Mantis bug tracker.
 
-.. [3] rec.games.roguelike.misc
-   Since this newsgroup is being shared with a number of other
-   roguelike games, it is generally considered polite to flag
-   subjects of posts pertaining only to Crawl with "-crawl-" or
-   a similar marker.
-
+.. [3] https://crawl.develz.org/tavern/
+   If you're looking for help you're probably most interested in the
+   Contributions and Coding subfora.
 
 APPENDIX: List of monster glyphs
 ================================

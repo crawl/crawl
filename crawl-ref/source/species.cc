@@ -94,7 +94,7 @@ int ng_num_species()
 }
 
 // Does a case-sensitive lookup of the species name supplied.
-species_type str_to_species(const std::string &species)
+species_type str_to_species(const string &species)
 {
     species_type sp;
     if (species.empty())
@@ -110,10 +110,10 @@ species_type str_to_species(const std::string &species)
     return SP_UNKNOWN;
 }
 
-std::string species_name(species_type speci, bool genus, bool adj)
+string species_name(species_type speci, bool genus, bool adj)
 // defaults:                                 false       false
 {
-    std::string res;
+    string res;
 
     switch (species_genus(speci))
     {
@@ -367,22 +367,20 @@ int species_exp_modifier(species_type species)
     {
     case SP_HUMAN:
     case SP_HALFLING:
-    case SP_HILL_ORC:
     case SP_KOBOLD:
-        return 10;
+        return 1;
+    case SP_HILL_ORC:
     case SP_OGRE:
-        return 11;
     case SP_SLUDGE_ELF:
     case SP_NAGA:
     case SP_GHOUL:
     case SP_MERFOLK:
     case SP_OCTOPODE:
-        return 12;
-    case SP_SPRIGGAN:
     case SP_TENGU:
+        return 0;
+    case SP_SPRIGGAN:
     case SP_DEEP_DWARF:
     case SP_MINOTAUR:
-        return 13;
     case SP_BASE_DRACONIAN:
     case SP_RED_DRACONIAN:
     case SP_WHITE_DRACONIAN:
@@ -397,14 +395,13 @@ int species_exp_modifier(species_type species)
     case SP_CENTAUR:
     case SP_MUMMY:
     case SP_FELID:
-        return 14;
     case SP_HIGH_ELF:
     case SP_VAMPIRE:
     case SP_TROLL:
     case SP_DEMONSPAWN:
-        return 15;
+        return -1;
     case SP_DEMIGOD:
-        return 16;
+        return -2;
     default:
         return 0;
     }

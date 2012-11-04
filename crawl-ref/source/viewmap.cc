@@ -376,12 +376,12 @@ static int _find_feature(ucs_t feature, int curs_x, int curs_y,
     return 0;
 }
 
-static int _find_feature(const std::vector<coord_def>& features,
-                          ucs_t feature, int curs_x, int curs_y,
-                          int start_x, int start_y,
-                          int ignore_count,
-                          int *move_x, int *move_y,
-                          bool forward)
+static int _find_feature(const vector<coord_def>& features,
+                         ucs_t feature, int curs_x, int curs_y,
+                         int start_x, int start_y,
+                         int ignore_count,
+                         int *move_x, int *move_y,
+                         bool forward)
 {
     int firstx = -1, firsty = -1, firstmatch = -1;
     int matchcount = 0;
@@ -428,8 +428,8 @@ static int _get_number_of_lines_levelmap()
 static void _draw_level_map(int start_x, int start_y, bool travel_mode,
         bool on_level)
 {
-    const int num_lines = std::min(_get_number_of_lines_levelmap(), GYM);
-    const int num_cols  = std::min(get_number_of_cols(),            GXM);
+    const int num_lines = min(_get_number_of_lines_levelmap(), GYM);
+    const int num_cols  = min(get_number_of_cols(),            GXM);
 
     const coord_def extents(num_cols, num_lines);
     crawl_view_buffer vbuf(extents);
@@ -451,7 +451,7 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode,
             }
             else
             {
-                glyph g = get_cell_glyph(c, Options.clean_map, -1);
+                cglyph_t g = get_cell_glyph(c, Options.clean_map, -1);
                 cell->glyph = g.ch;
                 cell->colour = g.col;
 
@@ -501,8 +501,7 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode,
 }
 #endif // USE_TILE_LOCAL
 
-static void _reset_travel_colours(std::vector<coord_def> &features,
-        bool on_level)
+static void _reset_travel_colours(vector<coord_def> &features, bool on_level)
 {
     // We now need to redo travel colours.
     features.clear();
@@ -518,13 +517,13 @@ static void _reset_travel_colours(std::vector<coord_def> &features,
 }
 
 // Sort glyphs within a group, for the feature list.
-static bool _comp_glyphs(const glyph& g1, const glyph& g2)
+static bool _comp_glyphs(const cglyph_t& g1, const cglyph_t& g2)
 {
     return (g1.ch < g2.ch || g1.ch == g2.ch && g1.col < g2.col);
 }
 
 #ifndef USE_TILE_LOCAL
-static glyph _get_feat_glyph(const coord_def& gc);
+static cglyph_t _get_feat_glyph(const coord_def& gc);
 #endif
 
 class feature_list
@@ -534,7 +533,7 @@ class feature_list
         G_UP, G_DOWN, G_PORTAL, G_OTHER, G_NONE, NUM_GROUPS = G_NONE
     };
 
-    std::vector<glyph> data[NUM_GROUPS];
+    vector<cglyph_t> data[NUM_GROUPS];
 
     static group feat_dir(dungeon_feature_type feat)
     {
@@ -584,7 +583,7 @@ public:
         for (rectangle_iterator ri(0); ri; ++ri)
             maybe_add(*ri);
         for (unsigned int i = 0; i < NUM_GROUPS; ++i)
-            std::sort(data[i].begin(), data[i].end(), _comp_glyphs);
+            sort(data[i].begin(), data[i].end(), _comp_glyphs);
     }
 
     formatted_string format() const
@@ -616,13 +615,13 @@ static void _draw_title(const coord_def& cpos, const feature_list& feats)
     if (columns < titlelen)
         return;
 
-    std::string pstr = "";
+    string pstr = "";
 #ifdef WIZARD
     if (you.wizard)
     {
         char buf[10];
         snprintf(buf, sizeof(buf), " (%d, %d)", cpos.x, cpos.y);
-        pstr = std::string(buf);
+        pstr = string(buf);
     }
 #endif // WIZARD
 
@@ -633,11 +632,11 @@ static void _draw_title(const coord_def& cpos, const feature_list& feats)
                           get_packed_place(), true, true)) + pstr,
                       columns - helplen).c_str());
 
-    cgotoxy(std::max(1, (columns - titlelen) / 2), 1);
+    cgotoxy(max(1, (columns - titlelen) / 2), 1);
     title.display();
 
     textcolor(LIGHTGREY);
-    cgotoxy(std::max(1, columns - helplen + 1), 1);
+    cgotoxy(max(1, columns - helplen + 1), 1);
     help.display();
 }
 #endif
@@ -699,6 +698,12 @@ bool show_map(level_pos &lpos,
               bool travel_mode, bool allow_esc, bool allow_offlevel)
 {
     bool chose      = false;
+#ifdef USE_TILE_LOCAL
+    bool first_run  = true;
+
+    mouse_control mc(MOUSE_MODE_NORMAL);
+    tiles.do_map_display();
+#endif
     {
         levelview_excursion le(travel_mode);
         level_id original(level_id::current());
@@ -719,15 +724,13 @@ bool show_map(level_pos &lpos,
         bool new_level = true;
 
         // Vector to track all features we can travel to, in order of distance.
-        std::vector<coord_def> features;
+        vector<coord_def> features;
         // List of all interesting features for display in the (console) title.
         feature_list feats;
 
         int min_x = INT_MAX, max_x = INT_MIN, min_y = INT_MAX, max_y = INT_MIN;
         const int num_lines   = _get_number_of_lines_levelmap();
         const int half_screen = (num_lines - 1) / 2;
-
-        const int top = 1 + Options.level_map_title;
 
         int map_lines = 0;
 
@@ -747,6 +750,7 @@ bool show_map(level_pos &lpos,
         bool redraw_map = true;
 
 #ifndef USE_TILE_LOCAL
+        const int top = 1 + Options.level_map_title;
         clrscr();
 #endif
         textcolor(DARKGREY);
@@ -862,6 +866,13 @@ bool show_map(level_pos &lpos,
                 // Note: Tile versions just center on the current cursor
                 // location.  It silently ignores everything else going
                 // on in this function.  --Enne
+#ifdef USE_TILE_LOCAL
+                if(first_run)
+                {
+                    tiles.update_tabs();
+                    first_run = false;
+                }
+#endif
                 tiles.load_dungeon(lpos.pos);
 #endif
 #ifndef USE_TILE_LOCAL
@@ -875,15 +886,31 @@ bool show_map(level_pos &lpos,
             redraw_map = true;
 
             c_input_reset(true);
+#ifdef USE_TILE_LOCAL
+            const int key = tiles.getch_ck();
+            command_type cmd = key_to_command(key, KMC_LEVELMAP);
+#else
             const int key = unmangle_direction_keys(getchm(KMC_LEVELMAP),
                                                     KMC_LEVELMAP,
                                                     false, false);
             command_type cmd = key_to_command(key, KMC_LEVELMAP);
+#endif
             if (cmd < CMD_MIN_OVERMAP || cmd > CMD_MAX_OVERMAP)
                 cmd = CMD_NO_CMD;
 
             if (key == CK_MOUSE_CLICK)
             {
+#ifdef USE_TILE_LOCAL
+                const coord_def grdp = tiles.get_cursor();
+                const coord_def delta = grdp - lpos.pos;
+                move_y = delta.y;
+                move_x = delta.x;
+
+                if (move_y == 0 && move_x == 0) // clicked on current position
+                    cmd = CMD_MAP_GOTO_TARGET; // go to current cursor pos
+                else
+                    cmd = CMD_NEXT_CMD; // a dummy command
+#else
                 const c_mouse_event cme = get_mouse_event();
                 const coord_def grdp =
                     cme.pos + coord_def(start_x - 1, start_y - top);
@@ -904,6 +931,7 @@ bool show_map(level_pos &lpos,
                     move_y = delta.y;
                     move_x = delta.x;
                 }
+#endif
             }
 
             c_input_reset(false);
@@ -1028,7 +1056,7 @@ bool show_map(level_pos &lpos,
                 if (!allow_offlevel)
                     break;
 
-                std::string name;
+                string name;
                 const level_pos pos
                     = prompt_translevel_target(TPF_DEFAULT_OPTIONS, name).p;
 
@@ -1111,7 +1139,6 @@ bool show_map(level_pos &lpos,
             case CMD_MAP_FIND_TRAP:
             case CMD_MAP_FIND_ALTAR:
             case CMD_MAP_FIND_EXCLUDED:
-            case CMD_MAP_FIND_F:
             case CMD_MAP_FIND_WAYPOINT:
             case CMD_MAP_FIND_STASH:
             case CMD_MAP_FIND_STASH_REVERSE:
@@ -1138,9 +1165,6 @@ bool show_map(level_pos &lpos,
                     break;
                 case CMD_MAP_FIND_EXCLUDED:
                     getty = 'E';
-                    break;
-                case CMD_MAP_FIND_F:
-                    getty = 'F';
                     break;
                 case CMD_MAP_FIND_WAYPOINT:
                     getty = 'W';
@@ -1226,6 +1250,11 @@ bool show_map(level_pos &lpos,
                     map_alive = false;
                     break;
                 }
+
+#ifdef USE_TILE_LOCAL
+            case CMD_NEXT_CMD:
+                break; // allow mouse clicks to move cursor without leaving map mode
+#endif
             default:
                 if (travel_mode)
                 {
@@ -1242,8 +1271,8 @@ bool show_map(level_pos &lpos,
             const coord_def oldp = lpos.pos;
             lpos.pos.x += move_x;
             lpos.pos.y += move_y;
-            lpos.pos.x = std::min(std::max(lpos.pos.x, min_x), max_x);
-            lpos.pos.y = std::min(std::max(lpos.pos.y, min_y), max_y);
+            lpos.pos.x = min(max(lpos.pos.x, min_x), max_x);
+            lpos.pos.y = min(max(lpos.pos.y, min_y), max_y);
             move_x = lpos.pos.x - oldp.x;
             move_y = lpos.pos.y - oldp.y;
 #ifndef USE_TILE_LOCAL
@@ -1256,9 +1285,9 @@ bool show_map(level_pos &lpos,
                     const int old_screen_y = screen_y;
                     screen_y += scroll_y;
                     if (scroll_y < 0)
-                        screen_y = std::max(screen_y, min_y + half_screen);
+                        screen_y = max(screen_y, min_y + half_screen);
                     else
-                        screen_y = std::min(screen_y, max_y - half_screen);
+                        screen_y = min(screen_y, max_y - half_screen);
                     curs_y -= (screen_y - old_screen_y);
                     scroll_y = 0;
                 }
@@ -1282,6 +1311,10 @@ bool show_map(level_pos &lpos,
 #endif
 
     redraw_screen();
+#ifdef USE_TILE_LOCAL
+    tiles.set_map_display(false);
+#endif
+
     return chose;
 }
 
@@ -1294,14 +1327,14 @@ bool emphasise(const coord_def& where)
 #ifndef USE_TILE_LOCAL
 // Get glyph for feature list; here because it's so similar
 // to get_map_col.
-static glyph _get_feat_glyph(const coord_def& gc)
+static cglyph_t _get_feat_glyph(const coord_def& gc)
 {
     // XXX: it's unclear whether we want to display all features
     // or just those not obscured by remembered/detected stuff.
     dungeon_feature_type feat = env.map_knowledge(gc).feat();
     const bool terrain_seen = env.map_knowledge(gc).seen();
     const feature_def &fdef = get_feature_def(feat);
-    glyph g;
+    cglyph_t g;
     g.ch  = terrain_seen ? fdef.symbol : fdef.magic_symbol;
     unsigned col;
     if (_travel_colour_override(gc))

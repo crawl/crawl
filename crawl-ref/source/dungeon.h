@@ -7,12 +7,8 @@
 #ifndef DUNGEON_H
 #define DUNGEON_H
 
-#include "bitary.h"
-#include "fixedarray.h"
 #include "env.h"
 #include "externs.h"
-#include "terrain.h"
-#include "stuff.h"
 #include "mapdef.h"
 #include "mon-pick.h"
 
@@ -22,8 +18,6 @@
 
 #define BUILD_METHOD_KEY "build_method_key"
 #define LAYOUT_TYPE_KEY  "layout_type_key"
-#define LEVEL_VAULTS_KEY "level_vaults_key"
-#define LEVEL_EXTRAS_KEY "level_extras_key"
 
 // See _build_overflow_temples() in dungeon.cc for details on overflow
 // temples.
@@ -47,7 +41,6 @@ enum map_mask_type
     MMT_NO_ITEM    = 0x02,    // Random items should not be placed here.
     MMT_NO_MONS    = 0x04,    // Random monsters should not be placed here.
     MMT_NO_POOL    = 0x08,    // Pool fixup should not be applied here.
-    MMT_NO_DOOR    = 0x10,    // No secret-doorisation.
     MMT_NO_WALL    = 0x20,    // Wall fixup should not be applied here.
     MMT_OPAQUE     = 0x40,    // Vault may impede connectivity.
     MMT_NO_TRAP    = 0x80,    // No trap generation
@@ -57,7 +50,7 @@ enum map_mask_type
 };
 
 class dgn_region;
-typedef std::vector<dgn_region> dgn_region_list;
+typedef vector<dgn_region> dgn_region_list;
 
 class dgn_region
 {
@@ -134,7 +127,7 @@ public:
 
     map_section_type orient;
     map_def map;
-    std::vector<coord_def> exits;
+    vector<coord_def> exits;
 
     // The PC has seen at least one square of this vault.
     bool seen;
@@ -177,7 +170,7 @@ private:
 };
 
 extern bool Generating_Level;
-extern std::vector<vault_placement> Temp_Vaults;
+extern vector<vault_placement> Temp_Vaults;
 
 extern const map_bitmask *Vault_Placement_Mask;
 
@@ -247,18 +240,13 @@ void dgn_place_multiple_items(item_list &list,
 bool set_level_flags(uint32_t flags, bool silent = false);
 bool unset_level_flags(uint32_t flags, bool silent = false);
 
-void dgn_set_branch_epilogue(branch_type br, std::string callback_name);
+void dgn_set_branch_epilogue(branch_type br, string callback_name);
 
 void dgn_reset_level(bool enable_random_maps = true);
 
 void dgn_register_place(const vault_placement &place, bool register_vault);
-void dgn_register_vault(const map_def &map);
 
 void dgn_seen_vault_at(coord_def p);
-
-int process_disconnected_zones(int x1, int y1, int x2, int y2,
-                               bool choose_stairless,
-                               dungeon_feature_type fill);
 
 // Count number of mutually isolated zones. If choose_stairless, only count
 // zones with no stairs in them. If fill is set to anything other than
@@ -289,7 +277,7 @@ static inline int count_neighbours(const coord_def& p, dungeon_feature_type feat
     return count_neighbours(p.x, p.y, feat);
 }
 
-std::string dump_vault_maps();
+string dump_vault_maps();
 
 bool dgn_square_travel_ok(const coord_def &c);
 

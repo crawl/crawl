@@ -6,7 +6,7 @@
 
 name = Abyss_walker
 species = mu
-background = ak
+background = ck
 weapon = mace
 restart_after_game = false
 show_gold_turns = true
@@ -33,7 +33,6 @@ function ready()
     crawl.sendkeys("&" .. string.char(12) .. "27" .. eol .. "N")
     crawl.sendkeys("&A27" .. eol)
     crawl.sendkeys("&@27 12 12" .. eol)
-    crawl.sendkeys("&^200" .. eol)
     crawl.sendkeys("&o)demon whip" .. eol .. "chaos" .. eol)
     crawl.sendkeys("g&o[boots" .. eol .. "running" .. eol)
     crawl.sendkeys("g&o[gold dragon armour" .. eol .. "levitation" .. eol)
@@ -42,7 +41,7 @@ function ready()
     crawl.sendkeys("g&o[gloves" .. eol .. "strength" .. eol)
     crawl.sendkeys("g&o[cloak" .. eol .. "preservation" .. eol)
     --# somehow ga doesn't work... why?
-    crawl.sendkeys("gwcWdWeWfWgWh")
+    crawl.sendkeys("gwcWdWeWfWgWhWi")
     crawl.sendkeys("&tca9" .. eol .. "b9" .. eol .. esc)
     crawl.sendkeys("&tda2" .. eol .. esc)
     crawl.sendkeys("&tea12" .. eol .. esc)
@@ -55,7 +54,7 @@ function ready()
     crawl.sendkeys("&" .. string.char(20) ..
                    "debug.disable('mon_act', false)" .. eol .. esc)
     --# exit the Abyss then go back, so it's not the special starting Abyss
-    crawl.sendkeys("&~D1" .. eol .. "&B")
+    crawl.sendkeys("&B")
   end
   if you.turns() ~= last_turn then
     command = 1

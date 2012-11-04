@@ -8,6 +8,7 @@
 #include "initfile.h"
 #include "options.h"
 
+#include <algorithm>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
@@ -46,6 +47,8 @@
 #include "throw.h"
 #include "travel.h"
 #include "items.h"
+#include "unwind.h"
+#include "version.h"
 #include "view.h"
 #include "viewchar.h"
 
@@ -61,9 +64,21 @@ extern char **NXArgv;
 #include <unistd.h>
 #endif
 
-const std::string game_options::interrupt_prefix = "interrupt_";
+const string game_options::interrupt_prefix = "interrupt_";
 system_environment SysEnv;
 game_options Options;
+
+// A list of keys used as "key = foo" but meaning "append to a list",
+// where the list was non-empty. Such settings will reset the list and
+// thus have different behaviour in 0.12, so warn about them now.
+set<string> warn_list_append;
+
+template <class L, class E>
+static L& remove_matching(L& lis, const E& entry)
+{
+    lis.erase(remove(lis.begin(), lis.end(), entry), lis.end());
+    return lis;
+}
 
 object_class_type item_class_by_sym(ucs_t c)
 {
@@ -116,13 +131,14 @@ object_class_type item_class_by_sym(ucs_t c)
 
 }
 
-template<class A, class B> static void append_vector(A &dest, const B &src)
+template<class A, class B> static void _merge_lists(A &dest, const B &src,
+                                                    bool prepend)
 {
-    dest.insert(dest.end(), src.begin(), src.end());
+    dest.insert(prepend ? dest.begin() : dest.end(), src.begin(), src.end());
 }
 
 // Returns -1 if unmatched else returns 0-15.
-static msg_colour_type _str_to_channel_colour(const std::string &str)
+static msg_colour_type _str_to_channel_colour(const string &str)
 {
     int col = str_to_colour(str);
     msg_colour_type ret = MSGCOL_NONE;
@@ -143,7 +159,7 @@ static msg_colour_type _str_to_channel_colour(const std::string &str)
     return ret;
 }
 
-static const std::string message_channel_names[] =
+static const string message_channel_names[] =
 {
     "plain", "friend_action", "prompt", "god", "pray", "duration", "danger",
     "warning", "food", "recovery", "sound", "talk", "talk_visual",
@@ -154,7 +170,7 @@ static const std::string message_channel_names[] =
 };
 
 // returns -1 if unmatched else returns 0--(NUM_MESSAGE_CHANNELS-1)
-int str_to_channel(const std::string &str)
+int str_to_channel(const string &str)
 {
     COMPILE_CHECK(ARRAYSZ(message_channel_names) == NUM_MESSAGE_CHANNELS);
 
@@ -173,7 +189,7 @@ int str_to_channel(const std::string &str)
     return -1;
 }
 
-std::string channel_to_str(int channel)
+string channel_to_str(int channel)
 {
     if (channel < 0 || channel >= NUM_MESSAGE_CHANNELS)
         return "";
@@ -181,13 +197,13 @@ std::string channel_to_str(int channel)
     return message_channel_names[channel];
 }
 
-weapon_type str_to_weapon(const std::string &str)
+weapon_type str_to_weapon(const string &str)
 {
     if (str == "shortsword" || str == "short sword")
         return WPN_SHORT_SWORD;
     else if (str == "falchion")
         return WPN_FALCHION;
-    else if (str == "quarterstaff")
+    else if (str == "quarterstaff" || str == "staff")
         return WPN_QUARTERSTAFF;
     else if (str == "mace")
         return WPN_MACE;
@@ -195,7 +211,7 @@ weapon_type str_to_weapon(const std::string &str)
         return WPN_SPEAR;
     else if (str == "trident")
         return WPN_TRIDENT;
-    else if (str == "hand axe" || str == "handaxe")
+    else if (str == "hand axe" || str == "handaxe" || str == "axe")
         return WPN_HAND_AXE;
     else if (str == "unarmed" || str == "claws")
         return WPN_UNARMED;
@@ -217,7 +233,7 @@ weapon_type str_to_weapon(const std::string &str)
     return WPN_UNKNOWN;
 }
 
-static std::string _weapon_to_str(int weapon)
+static string _weapon_to_str(int weapon)
 {
     switch (weapon)
     {
@@ -257,7 +273,7 @@ static std::string _weapon_to_str(int weapon)
 
 // Summon types can be any of mon_summon_type (enum.h), or a relevant summoning
 // spell.
-int str_to_summon_type(const std::string &str)
+int str_to_summon_type(const string &str)
 {
     if (str == "clone")
         return MON_SUMM_CLONE;
@@ -277,7 +293,7 @@ int str_to_summon_type(const std::string &str)
     return spell_by_name(str);
 }
 
-static fire_type _str_to_fire_types(const std::string &str)
+static fire_type _str_to_fire_types(const string &str)
 {
     if (str == "launcher")
         return FIRE_LAUNCHER;
@@ -307,7 +323,7 @@ static fire_type _str_to_fire_types(const std::string &str)
     return FIRE_NONE;
 }
 
-std::string gametype_to_str(game_type type)
+string gametype_to_str(game_type type)
 {
     switch (type)
     {
@@ -327,7 +343,7 @@ std::string gametype_to_str(game_type type)
 }
 
 #ifndef DGAMELAUNCH
-static game_type _str_to_gametype(const std::string& s)
+static game_type _str_to_gametype(const string& s)
 {
     for (int i = 0; i < NUM_GAME_TYPE; ++i)
     {
@@ -339,7 +355,7 @@ static game_type _str_to_gametype(const std::string& s)
 }
 #endif
 
-static std::string _species_to_str(species_type sp)
+static string _species_to_str(species_type sp)
 {
     if (sp == SP_RANDOM)
         return "random";
@@ -349,7 +365,7 @@ static std::string _species_to_str(species_type sp)
         return species_name(sp);
 }
 
-static species_type _str_to_species(const std::string &str)
+static species_type _str_to_species(const string &str)
 {
     if (str == "random")
         return SP_RANDOM;
@@ -370,7 +386,7 @@ static species_type _str_to_species(const std::string &str)
     return ret;
 }
 
-static std::string _job_to_str(job_type job)
+static string _job_to_str(job_type job)
 {
     if (job == JOB_RANDOM)
         return "random";
@@ -380,7 +396,7 @@ static std::string _job_to_str(job_type job)
         return get_job_name(job);
 }
 
-static job_type _str_to_job(const std::string &str)
+static job_type _str_to_job(const string &str)
 {
     if (str == "random")
         return JOB_RANDOM;
@@ -407,7 +423,7 @@ static job_type _str_to_job(const std::string &str)
     return job;
 }
 
-static bool _read_bool(const std::string &field, bool def_value)
+static bool _read_bool(const string &field, bool def_value)
 {
     bool ret = def_value;
 
@@ -423,8 +439,8 @@ static bool _read_bool(const std::string &field, bool def_value)
 // read a value which can be either a boolean (in which case return
 // 0 for true, -1 for false), or a string of the form PREFIX:NUMBER
 // (e.g., auto:7), in which case return NUMBER as an int.
-static int _read_bool_or_number(const std::string &field, int def_value,
-                                 const std::string& num_prefix)
+static int _read_bool_or_number(const string &field, int def_value,
+                                const string& num_prefix)
 {
     int ret = def_value;
 
@@ -441,7 +457,7 @@ static int _read_bool_or_number(const std::string &field, int def_value,
 }
 
 
-static unsigned curses_attribute(const std::string &field)
+static unsigned curses_attribute(const string &field)
 {
     if (field == "standout")               // probably reverses
         return CHATTR_STANDOUT;
@@ -471,11 +487,19 @@ static unsigned curses_attribute(const std::string &field)
     return CHATTR_NORMAL;
 }
 
-void game_options::str_to_enemy_hp_colour(const std::string &colours)
+void game_options::str_to_enemy_hp_colour(const string &colours, bool prepend)
 {
-    std::vector<std::string> colour_list = split_string(" ", colours, true, true);
+    vector<string> colour_list = split_string(" ", colours, true, true);
+    if (prepend)
+        reverse(colour_list.begin(), colour_list.end());
     for (int i = 0, csize = colour_list.size(); i < csize; i++)
-        enemy_hp_colour.push_back(str_to_colour(colour_list[i]));
+    {
+        const int col = str_to_colour(colour_list[i]);
+        if (prepend)
+            enemy_hp_colour.insert(enemy_hp_colour.begin(), col);
+        else
+            enemy_hp_colour.push_back(col);
+    }
 }
 
 #ifdef USE_TILE
@@ -494,12 +518,12 @@ static tag_pref _str_to_tag_pref(const char *opt)
 }
 #endif
 
-void game_options::new_dump_fields(const std::string &text, bool add)
+void game_options::new_dump_fields(const string &text, bool add, bool prepend)
 {
     // Easy; chardump.cc has most of the intelligence.
-    std::vector<std::string> fields = split_string(",", text, true, true);
+    vector<string> fields = split_string(",", text, true, true);
     if (add)
-        append_vector(dump_order, fields);
+        _merge_lists(dump_order, fields, prepend);
     else
     {
         for (int f = 0, size = fields.size(); f < size; ++f)
@@ -564,11 +588,11 @@ void game_options::clear_activity_interrupts(
 
 void game_options::set_activity_interrupt(
         FixedVector<bool, NUM_AINTERRUPTS> &eints,
-        const std::string &interrupt)
+        const string &interrupt)
 {
     if (interrupt.find(interrupt_prefix) == 0)
     {
-        std::string delay_name = interrupt.substr(interrupt_prefix.length());
+        string delay_name = interrupt.substr(interrupt_prefix.length());
         delay_type delay = get_delay(delay_name);
         if (delay == NUM_DELAYS)
             return report_error("Unknown delay: %s\n", delay_name.c_str());
@@ -593,8 +617,8 @@ void game_options::set_activity_interrupt(
     eints[ai] = true;
 }
 
-void game_options::set_activity_interrupt(const std::string &activity_name,
-                                          const std::string &interrupt_names,
+void game_options::set_activity_interrupt(const string &activity_name,
+                                          const string &interrupt_names,
                                           bool append_interrupts,
                                           bool remove_interrupts)
 {
@@ -602,7 +626,7 @@ void game_options::set_activity_interrupt(const std::string &activity_name,
     if (delay == NUM_DELAYS)
         return report_error("Unknown delay: %s\n", activity_name.c_str());
 
-    std::vector<std::string> interrupts = split_string(",", interrupt_names);
+    vector<string> interrupts = split_string(",", interrupt_names);
     FixedVector<bool, NUM_AINTERRUPTS> &eints = activity_interrupts[ delay ];
 
     if (remove_interrupts)
@@ -629,13 +653,13 @@ void game_options::set_activity_interrupt(const std::string &activity_name,
 }
 
 #if defined(DGAMELAUNCH)
-static std::string _resolve_dir(const char* path, const char* suffix)
+static string _resolve_dir(const char* path, const char* suffix)
 {
     return catpath(path, "");
 }
 #else
 
-static std::string _user_home_dir()
+static string _user_home_dir()
 {
 #ifdef TARGET_OS_WINDOWS
     wchar_t home[MAX_PATH];
@@ -652,15 +676,15 @@ static std::string _user_home_dir()
 #endif
 }
 
-static std::string _user_home_subpath(const std::string subpath)
+static string _user_home_subpath(const string subpath)
 {
     return catpath(_user_home_dir(), subpath);
 }
 
-static std::string _resolve_dir(const char* path, const char* suffix)
+static string _resolve_dir(const char* path, const char* suffix)
 {
     if (path[0] != '~')
-        return catpath(std::string(path), suffix);
+        return catpath(string(path), suffix);
     else
         return _user_home_subpath(catpath(path + 1, suffix));
 }
@@ -698,7 +722,7 @@ void game_options::reset_options()
 #endif
 
 #if defined(TARGET_OS_MACOSX)
-    const std::string tmp_path_base =
+    const string tmp_path_base =
         _user_home_subpath("Library/Application Support/" CRAWL);
     save_dir   = tmp_path_base + "/saves/";
     morgue_dir = tmp_path_base + "/morgue/";
@@ -727,11 +751,11 @@ void game_options::reset_options()
 
     mouse_input = false;
 
-    view_max_width   = std::max(33, VIEW_MIN_WIDTH);
-    view_max_height  = std::max(21, VIEW_MIN_HEIGHT);
+    view_max_width   = max(33, VIEW_MIN_WIDTH);
+    view_max_height  = max(21, VIEW_MIN_HEIGHT);
     mlist_min_height = 4;
-    msg_min_height   = std::max(7, MSG_MIN_HEIGHT);
-    msg_max_height   = std::max(10, MSG_MIN_HEIGHT);
+    msg_min_height   = max(7, MSG_MIN_HEIGHT);
+    msg_max_height   = max(10, MSG_MIN_HEIGHT);
     mlist_allow_alternate_layout = false;
     messages_at_top  = false;
     mlist_targetting = false;
@@ -808,7 +832,11 @@ void game_options::reset_options()
     auto_list              = true;
 
     clear_messages         = false;
+#ifdef TOUCH_UI
+    show_more              = false;
+#else
     show_more              = true;
+#endif
     small_more             = false;
 
     pickup_thrown          = true;
@@ -861,11 +889,10 @@ void game_options::reset_options()
     stash_tracking         = STM_ALL;
 
     explore_stop           = (ES_ITEM | ES_STAIR | ES_PORTAL | ES_BRANCH
-                              | ES_SHOP | ES_ALTAR | ES_GREEDY_PICKUP_SMART
+                              | ES_SHOP | ES_ALTAR | ES_RUNED_DOOR
+                              | ES_GREEDY_PICKUP_SMART
                               | ES_GREEDY_VISITED_ITEM_STACK
                               | ES_GREEDY_SACRIFICEABLE);
-
-    sacrifice_before_explore = 0;
 
     // The prompt conditions will be combined into explore_stop after
     // reading options.
@@ -879,11 +906,12 @@ void game_options::reset_options()
     explore_wall_bias      = 0;
     explore_improved       = false;
     travel_key_stop        = true;
-    auto_sacrifice         = false;
+    auto_sacrifice         = OPT_NO;
 
     target_unshifted_dirs  = false;
     darken_beyond_range    = true;
 
+    dump_on_save           = true;
     dump_kill_places       = KDO_ONE_PLACE;
     dump_message_count     = 20;
     dump_item_origins      = IODS_ARTEFACTS | IODS_RODS;
@@ -891,7 +919,11 @@ void game_options::reset_options()
     dump_book_spells       = true;
 
     drop_mode              = DM_MULTI;
+#ifdef TOUCH_UI
+    pickup_mode            = 0;
+#else
     pickup_mode            = -1;
+#endif
 
     flush_input[ FLUSH_ON_FAILURE ]     = true;
     flush_input[ FLUSH_BEFORE_COMMAND ] = false;
@@ -904,7 +936,7 @@ void game_options::reset_options()
     set_fire_order("launcher, return, "
                    "javelin / dart / stone / rock /"
                    " spear / net / handaxe / dagger / club, inscribed",
-                   false);
+                   false, false);
 
     item_stack_summary_minimum = 5;
 
@@ -992,9 +1024,17 @@ void game_options::reset_options()
     tile_window_width     = -90;
     tile_window_height    = -90;
     tile_map_pixels       = 0;
+    tile_cell_pixels      = 32;
+    tile_filter_scaling   = false;
+# ifdef TOUCH_UI
+    tile_layout_priority = split_string(",", "minimap, command, gold_turn, "
+                                             "inventory, command2, spell, "
+                                             "ability, monster");
+# else
     tile_layout_priority = split_string(",", "minimap, inventory, gold_turn, "
                                              "command, spell, ability, "
                                              "monster");
+# endif
 #endif
 
 #ifdef USE_TILE
@@ -1015,25 +1055,8 @@ void game_options::reset_options()
 #endif
 
     // map each colour to itself as default
-    // If USE_8_COLOUR_TERM_MAP is defined, then we force 8 colors.
-    // Otherwise, do a check to see if we're using Apple_Terminal.
-#ifndef USE_8_COLOUR_TERM_MAP
-    const char *term_program = getenv("TERM_PROGRAM");
-    if (term_program && strcmp(term_program, "Apple_Terminal") == 0)
-    {
-#endif
-        for (int i = 0; i < 16; ++i)
-            colour[i] = i % 8;
-
-        colour[ DARKGREY ] = COL_TO_REPLACE_DARKGREY;
-#ifndef USE_8_COLOUR_TERM_MAP
-    }
-    else
-    {
-        for (int i = 0; i < 16; ++i)
-            colour[i] = i;
-    }
-#endif
+    for (int i = 0; i < 16; ++i)
+        colour[i] = i;
 
     // map each channel to plain (well, default for now since I'm testing)
     for (int i = 0; i < NUM_MESSAGE_CHANNELS; ++i)
@@ -1046,13 +1069,13 @@ void game_options::reset_options()
                     "screenshot,monlist,kills,notes");
 
     hp_colour.clear();
-    hp_colour.push_back(std::pair<int,int>(50, YELLOW));
-    hp_colour.push_back(std::pair<int,int>(25, RED));
+    hp_colour.push_back(pair<int,int>(50, YELLOW));
+    hp_colour.push_back(pair<int,int>(25, RED));
     mp_colour.clear();
-    mp_colour.push_back(std::pair<int, int>(50, YELLOW));
-    mp_colour.push_back(std::pair<int, int>(25, RED));
+    mp_colour.push_back(pair<int, int>(50, YELLOW));
+    mp_colour.push_back(pair<int, int>(25, RED));
     stat_colour.clear();
-    stat_colour.push_back(std::pair<int, int>(3, RED));
+    stat_colour.push_back(pair<int, int>(3, RED));
     enemy_hp_colour.clear();
     // I think these defaults are pretty ugly but apparently OS X has problems
     // with lighter colours
@@ -1093,6 +1116,8 @@ void game_options::reset_options()
 
     clear_feature_overrides();
     mon_glyph_overrides.clear();
+    item_glyph_overrides.clear();
+    item_glyph_cache.clear();
 
     rest_wait_both = false;
 
@@ -1138,7 +1163,7 @@ ucs_t get_glyph_override(int c)
     return c;
 }
 
-static int read_symbol(std::string s)
+static int read_symbol(string s)
 {
     if (s.empty())
         return 0;
@@ -1166,28 +1191,35 @@ static int read_symbol(std::string s)
     return -strtoul(s.c_str(), &tail, base);
 }
 
-void game_options::set_fire_order(const std::string &s, bool add)
+void game_options::set_fire_order(const string &s, bool append, bool prepend)
 {
-    if (!add)
+    if (!append && !prepend)
         fire_order.clear();
-    std::vector<std::string> slots = split_string(",", s);
+    vector<string> slots = split_string(",", s);
+    if (prepend)
+        reverse(slots.begin(), slots.end());
     for (int i = 0, size = slots.size(); i < size; ++i)
-        add_fire_order_slot(slots[i]);
+        add_fire_order_slot(slots[i], prepend);
 }
 
-void game_options::add_fire_order_slot(const std::string &s)
+void game_options::add_fire_order_slot(const string &s, bool prepend)
 {
     unsigned flags = 0;
-    std::vector<std::string> alts = split_string("/", s);
+    vector<string> alts = split_string("/", s);
     for (int i = 0, size = alts.size(); i < size; ++i)
         flags |= _str_to_fire_types(alts[i]);
 
     if (flags)
-        fire_order.push_back(flags);
+    {
+        if (prepend)
+            fire_order.insert(fire_order.begin(), flags);
+        else
+            fire_order.push_back(flags);
+    }
 }
 
-void game_options::add_mon_glyph_overrides(const std::string &mons,
-                                           mon_display &mdisp)
+void game_options::add_mon_glyph_overrides(const string &mons,
+                                           cglyph_t &mdisp)
 {
     // If one character, this is a monster letter.
     int letter = -1;
@@ -1211,46 +1243,58 @@ void game_options::add_mon_glyph_overrides(const std::string &mons,
         report_error("Unknown monster: \"%s\"", mons.c_str());
 }
 
-mon_display game_options::parse_mon_glyph(const std::string &s) const
+cglyph_t game_options::parse_mon_glyph(const string &s) const
 {
-    mon_display md;
-    std::vector<std::string> phrases = split_string(" ", s);
+    cglyph_t md;
+    md.col = 0;
+    vector<string> phrases = split_string(" ", s);
     for (int i = 0, size = phrases.size(); i < size; ++i)
     {
-        const std::string &p = phrases[i];
+        const string &p = phrases[i];
         const int col = str_to_colour(p, -1, false);
         if (col != -1 && colour)
-            md.colour = col;
+            md.col = col;
         else
-            md.glyph = p == "_"? ' ' : read_symbol(p);
+            md.ch = p == "_"? ' ' : read_symbol(p);
     }
     return md;
 }
 
-void game_options::add_mon_glyph_override(const std::string &text)
+void game_options::add_mon_glyph_override(const string &text)
 {
-    std::vector<std::string> override = split_string(":", text);
+    vector<string> override = split_string(":", text);
     if (override.size() != 2u)
         return;
 
-    mon_display mdisp = parse_mon_glyph(override[1]);
-    if (mdisp.glyph || mdisp.colour)
+    cglyph_t mdisp = parse_mon_glyph(override[1]);
+    if (mdisp.ch || mdisp.col)
         add_mon_glyph_overrides(override[0], mdisp);
 }
 
-void game_options::add_feature_override(const std::string &text)
+void game_options::add_item_glyph_override(const string &text)
 {
-    std::string::size_type epos = text.rfind("}");
-    if (epos == std::string::npos)
+    vector<string> override = split_string(":", text);
+    if (override.size() != 2u)
         return;
 
-    std::string::size_type spos = text.rfind("{", epos);
-    if (spos == std::string::npos)
+    cglyph_t mdisp = parse_mon_glyph(override[1]);
+    if (mdisp.ch || mdisp.col)
+        item_glyph_overrides.push_back(pair<string, cglyph_t>(override[0], mdisp));
+}
+
+void game_options::add_feature_override(const string &text)
+{
+    string::size_type epos = text.rfind("}");
+    if (epos == string::npos)
         return;
 
-    std::string fname = text.substr(0, spos);
-    std::string props = text.substr(spos + 1, epos - spos - 1);
-    std::vector<std::string> iprops = split_string(",", props, true, true);
+    string::size_type spos = text.rfind("{", epos);
+    if (spos == string::npos)
+        return;
+
+    string fname = text.substr(0, spos);
+    string props = text.substr(spos + 1, epos - spos - 1);
+    vector<string> iprops = split_string(",", props, true, true);
 
     if (iprops.size() < 1 || iprops.size() > 7)
         return;
@@ -1259,8 +1303,7 @@ void game_options::add_feature_override(const std::string &text)
         iprops.resize(7);
 
     trim_string(fname);
-    std::vector<dungeon_feature_type> feats =
-        features_by_desc(text_pattern(fname));
+    vector<dungeon_feature_type> feats = features_by_desc(text_pattern(fname));
     if (feats.empty())
         return;
 
@@ -1284,13 +1327,12 @@ void game_options::add_feature_override(const std::string &text)
     }
 }
 
-void game_options::add_cset_override(
-        char_set_type set, const std::string &overrides)
+void game_options::add_cset_override(char_set_type set, const string &overrides)
 {
-    std::vector<std::string> overs = split_string(",", overrides);
+    vector<string> overs = split_string(",", overrides);
     for (int i = 0, size = overs.size(); i < size; ++i)
     {
-        std::vector<std::string> mapping = split_string(":", overs[i]);
+        vector<string> mapping = split_string(":", overs[i]);
         if (mapping.size() != 2)
             continue;
 
@@ -1308,7 +1350,7 @@ void game_options::add_cset_override(char_set_type set, dungeon_char_type dc,
     cset_override[dc] = get_glyph_override(symbol);
 }
 
-static std::string _find_crawlrc()
+static string _find_crawlrc()
 {
     const char* locations_data[][2] = {
         { SysEnv.crawl_dir.c_str(), "init.txt" },
@@ -1340,8 +1382,7 @@ static std::string _find_crawlrc()
     {
         for (unsigned n = 0; n < ARRAYSZ(rc_dir_filenames); ++n)
         {
-            const std::string rc(
-                catpath(SysEnv.rcdirs[i], rc_dir_filenames[n]));
+            const string rc(catpath(SysEnv.rcdirs[i], rc_dir_filenames[n]));
             if (file_exists(rc))
                 return rc;
         }
@@ -1353,8 +1394,8 @@ static std::string _find_crawlrc()
         // Don't look at unset options
         if (locations_data[i][0] != NULL)
         {
-            const std::string rc =
-                catpath(locations_data[i][0], locations_data[i][1]);
+            const string rc = catpath(locations_data[i][0],
+                                      locations_data[i][1]);
             if (file_exists(rc))
                 return rc;
         }
@@ -1384,10 +1425,11 @@ static const char* config_defaults[] =
     "defaults/food_colouring.txt",
     "defaults/menu_colours.txt",
     "defaults/messages.txt",
+    "defaults/misc.txt",
 };
 
 // Returns an error message if the init.txt was not found.
-std::string read_init_file(bool runscript)
+string read_init_file(bool runscript)
 {
     Options.reset_options();
 
@@ -1415,7 +1457,7 @@ std::string read_init_file(bool runscript)
         Options.read_option_line(SysEnv.extra_opts_first[i], true);
     }
 
-    const std::string init_file_name(_find_crawlrc());
+    const string init_file_name(_find_crawlrc());
 
     FileLineInput f(init_file_name.c_str());
     if (f.error())
@@ -1454,6 +1496,20 @@ std::string read_init_file(bool runscript)
     Options.filename     = init_file_name;
     Options.basefilename = get_base_filename(init_file_name);
     Options.line_num     = -1;
+
+    if (!warn_list_append.empty())
+    {
+        string warn =
+            "Your configuration uses = to append to a list option. This "
+            "syntax will override the option in a future version. Use += "
+            "instead to append. Affected options are: ";
+        warn += comma_separated_line(warn_list_append.begin(),
+                                     warn_list_append.end());
+
+        // Can't use Options.report_error() as that prevents webtiles from
+        // starting the game.
+        mpr(warn, MSGCH_ERROR);
+    }
 
     return "";
 }
@@ -1517,7 +1573,7 @@ void write_newgame_options_file(const newgame_def& prefs)
     //
     unwind_var<game_type> gt(crawl_state.type, Options.game.type);
 
-    std::string fn = get_prefs_filename();
+    string fn = get_prefs_filename();
     FILE *f = fopen_u(fn.c_str(), "w");
     if (!f)
         return;
@@ -1541,7 +1597,7 @@ void save_player_name()
 #endif // !DISABLE_STICKY_STARTUP_OPTIONS
 }
 
-void read_options(const std::string &s, bool runscript, bool clear_aliases)
+void read_options(const string &s, bool runscript, bool clear_aliases)
 {
     StringLineInput st(s);
     Options.read_options(st, runscript, clear_aliases);
@@ -1574,8 +1630,8 @@ void game_options::read_options(LineInput &il, bool runscript,
     while (!il.eof())
     {
         line_num++;
-        std::string s   = il.get_line();
-        std::string str = s;
+        string s   = il.get_line();
+        string str = s;
         line++;
 
         trim_string(str);
@@ -1742,7 +1798,7 @@ void game_options::fixup_options()
         evil_colour = MAGENTA;
 }
 
-static int _str_to_killcategory(const std::string &s)
+static int _str_to_killcategory(const string &s)
 {
     static const char *kc[] = {
         "you",
@@ -1757,7 +1813,7 @@ static int _str_to_killcategory(const std::string &s)
     return -1;
 }
 
-void game_options::do_kill_map(const std::string &from, const std::string &to)
+void game_options::do_kill_map(const string &from, const string &to)
 {
     int ifrom = _str_to_killcategory(from),
         ito   = _str_to_killcategory(to);
@@ -1765,13 +1821,13 @@ void game_options::do_kill_map(const std::string &from, const std::string &to)
         kill_map[ifrom] = ito;
 }
 
-int game_options::read_explore_stop_conditions(const std::string &field) const
+int game_options::read_explore_stop_conditions(const string &field) const
 {
     int conditions = 0;
-    std::vector<std::string> stops = split_string(",", field);
+    vector<string> stops = split_string(",", field);
     for (int i = 0, count = stops.size(); i < count; ++i)
     {
-        const std::string c = replace_all_of(stops[i], " ", "_");
+        const string c = replace_all_of(stops[i], " ", "_");
         if (c == "item" || c == "items")
             conditions |= ES_ITEM;
         else if (c == "greedy_pickup")
@@ -1792,6 +1848,8 @@ int game_options::read_explore_stop_conditions(const std::string &field) const
             conditions |= ES_PORTAL;
         else if (c == "altar" || c == "altars")
             conditions |= ES_ALTAR;
+        else if (c == "runed_door")
+            conditions |= ES_RUNED_DOOR;
         else if (c == "greedy_item" || c == "greedy_items")
             conditions |= ES_GREEDY_ITEM;
         else if (c == "greedy_visited_item_stack")
@@ -1814,11 +1872,11 @@ int game_options::read_explore_stop_conditions(const std::string &field) const
     return conditions;
 }
 
-void game_options::add_alias(const std::string &key, const std::string &val)
+void game_options::add_alias(const string &key, const string &val)
 {
     if (key[0] == '$')
     {
-        std::string name = key.substr(1);
+        string name = key.substr(1);
         // Don't alter if it's a constant.
         if (constants.find(name) != constants.end())
             return;
@@ -1828,7 +1886,7 @@ void game_options::add_alias(const std::string &key, const std::string &val)
         aliases[key] = val;
 }
 
-std::string game_options::unalias(const std::string &key) const
+string game_options::unalias(const string &key) const
 {
     string_map::const_iterator i = aliases.find(key);
     return (i == aliases.end()? key : i->second);
@@ -1836,37 +1894,33 @@ std::string game_options::unalias(const std::string &key) const
 
 #define IS_VAR_CHAR(c) (isaalpha(c) || c == '_' || c == '-')
 
-std::string game_options::expand_vars(const std::string &field) const
+string game_options::expand_vars(const string &field) const
 {
-    std::string field_out = field;
+    string field_out = field;
 
-    std::string::size_type curr_pos = 0;
+    string::size_type curr_pos = 0;
 
     // Only try 100 times, so as to not get stuck in infinite recursion.
     for (int i = 0; i < 100; i++)
     {
-        std::string::size_type dollar_pos = field_out.find("$", curr_pos);
+        string::size_type dollar_pos = field_out.find("$", curr_pos);
 
-        if (dollar_pos == std::string::npos
-            || field_out.size() == (dollar_pos + 1))
-        {
+        if (dollar_pos == string::npos || field_out.size() == (dollar_pos + 1))
             break;
-        }
 
-        std::string::size_type start_pos = dollar_pos + 1;
+        string::size_type start_pos = dollar_pos + 1;
 
         if (!IS_VAR_CHAR(field_out[start_pos]))
             continue;
 
-        std::string::size_type end_pos;
+        string::size_type end_pos;
         for (end_pos = start_pos; end_pos < field_out.size(); end_pos++)
         {
             if (!IS_VAR_CHAR(field_out[end_pos + 1]))
                 break;
         }
 
-        std::string var_name = field_out.substr(start_pos,
-                                                end_pos - start_pos + 1);
+        string var_name = field_out.substr(start_pos, end_pos - start_pos + 1);
 
         string_map::const_iterator x = variables.find(var_name);
 
@@ -1876,7 +1930,7 @@ std::string game_options::expand_vars(const std::string &field) const
             continue;
         }
 
-        std::string dollar_plus_name = "$";
+        string dollar_plus_name = "$";
         dollar_plus_name += var_name;
 
         field_out = replace_all(field_out, dollar_plus_name, x->second);
@@ -1888,23 +1942,26 @@ std::string game_options::expand_vars(const std::string &field) const
     return field_out;
 }
 
-void game_options::add_message_colour_mappings(const std::string &field)
+void game_options::add_message_colour_mappings(const string &field,
+                                               bool prepend, bool subtract)
 {
-    std::vector<std::string> fragments = split_string(",", field);
+    vector<string> fragments = split_string(",", field);
+    if (prepend)
+        reverse(fragments.begin(), fragments.end());
     for (int i = 0, count = fragments.size(); i < count; ++i)
-        add_message_colour_mapping(fragments[i]);
+        add_message_colour_mapping(fragments[i], prepend, subtract);
 }
 
-message_filter game_options::parse_message_filter(const std::string &filter)
+message_filter game_options::parse_message_filter(const string &filter)
 {
-    std::string::size_type pos = filter.find(":");
-    if (pos && pos != std::string::npos)
+    string::size_type pos = filter.find(":");
+    if (pos && pos != string::npos)
     {
-        std::string prefix = filter.substr(0, pos);
+        string prefix = filter.substr(0, pos);
         int channel = str_to_channel(prefix);
         if (channel != -1 || prefix == "any")
         {
-            std::string s = filter.substr(pos + 1);
+            string s = filter.substr(pos + 1);
             trim_string(s);
             return message_filter(channel, s);
         }
@@ -1913,9 +1970,10 @@ message_filter game_options::parse_message_filter(const std::string &filter)
     return message_filter(filter);
 }
 
-void game_options::add_message_colour_mapping(const std::string &field)
+void game_options::add_message_colour_mapping(const string &field,
+                                              bool prepend, bool subtract)
 {
-    std::vector<std::string> cmap = split_string(":", field, true, true, 1);
+    vector<string> cmap = split_string(":", field, true, true, 1);
 
     if (cmap.size() != 2)
         return;
@@ -1930,12 +1988,17 @@ void game_options::add_message_colour_mapping(const std::string &field)
         mcol = msg_colour(col);
 
     message_colour_mapping m = { parse_message_filter(cmap[1]), mcol };
-    message_colour_mappings.push_back(m);
+    if (subtract)
+        remove_matching(message_colour_mappings, m);
+    else if (prepend)
+        message_colour_mappings.insert(message_colour_mappings.begin(), m);
+    else
+        message_colour_mappings.push_back(m);
 }
 
 // Option syntax is:
 // sort_menu = [menu_type:]yes|no|auto:n[:sort_conditions]
-void game_options::set_menu_sort(std::string field)
+void game_options::set_menu_sort(string field)
 {
     if (field.empty())
         return;
@@ -1958,22 +2021,21 @@ void game_options::set_menu_sort(std::string field)
     sort_menus.push_back(cond);
 }
 
-void game_options::split_parse(
-    const std::string &s, const std::string &separator,
-    void (game_options::*add)(const std::string &))
+void game_options::split_parse(const string &s, const string &separator,
+                               void (game_options::*add)(const string &))
 {
-    const std::vector<std::string> defs = split_string(separator, s);
+    const vector<string> defs = split_string(separator, s);
     for (int i = 0, size = defs.size(); i < size; ++i)
         (this->*add)(defs[i]);
 }
 
-void game_options::set_option_fragment(const std::string &s)
+void game_options::set_option_fragment(const string &s)
 {
     if (s.empty())
         return;
 
-    std::string::size_type st = s.find(':');
-    if (st == std::string::npos)
+    string::size_type st = s.find(':');
+    if (st == string::npos)
     {
         // Boolean option.
         if (s[0] == '!')
@@ -1990,13 +2052,13 @@ void game_options::set_option_fragment(const std::string &s)
 
 // Not a method of the game_options class since keybindings aren't
 // stored in that class.
-static void _bindkey(std::string field)
+static void _bindkey(string field)
 {
     const size_t start_bracket = field.find_first_of('[');
     const size_t end_bracket   = field.find_last_of(']');
 
-    if (start_bracket == std::string::npos
-        || end_bracket == std::string::npos
+    if (start_bracket == string::npos
+        || end_bracket == string::npos
         || start_bracket > end_bracket)
     {
         mprf(MSGCH_ERROR, "Bad bindkey bracketing in '%s'",
@@ -2004,8 +2066,8 @@ static void _bindkey(std::string field)
         return;
     }
 
-    const std::string key_str = field.substr(start_bracket + 1,
-                                             end_bracket - start_bracket - 1);
+    const string key_str = field.substr(start_bracket + 1,
+                                        end_bracket - start_bracket - 1);
 
     int key;
 
@@ -2036,14 +2098,14 @@ static void _bindkey(std::string field)
     }
 
     const size_t start_name = field.find_first_not_of(' ', end_bracket + 1);
-    if (start_name == std::string::npos)
+    if (start_name == string::npos)
     {
         mprf(MSGCH_ERROR, "No command name for bindkey directive '%s'",
              field.c_str());
         return;
     }
 
-    const std::string  name = field.substr(start_name);
+    const string       name = field.substr(start_name);
     const command_type cmd  = name_to_command(name);
     if (cmd == CMD_NO_CMD)
     {
@@ -2054,7 +2116,57 @@ static void _bindkey(std::string field)
     bind_command_to_key(cmd, key);
 }
 
-void game_options::read_option_line(const std::string &str, bool runscript)
+static bool _is_autopickup_ban(pair<text_pattern, bool> entry)
+{
+    return !entry.second;
+}
+
+static bool _first_less(const pair<int, int> &l, const pair<int, int> &r)
+{
+    return l.first < r.first;
+}
+
+static bool _first_greater(const pair<int, int> &l, const pair<int, int> &r)
+{
+    return l.first > r.first;
+}
+
+// Returns true if the semantics of this call are expected to change:
+// that is, if old_semantics is true, add and subtract are both false,
+// and field is non-empty. T must be convertible to from a string.
+template <class T>
+static bool _handle_list(bool old_semantics, vector<T> &value_list,
+                         string field, bool append, bool prepend,
+                         bool subtract)
+{
+    bool needs_warning = false;
+    if (!append && !prepend && !subtract)
+    {
+        if (!old_semantics || field.empty())
+            value_list.clear();
+        else if (!value_list.empty())
+            needs_warning = true;
+    }
+
+    vector<T> new_entries;
+    vector<string> parts = split_string(",", field);
+    for (vector<string>::iterator part = parts.begin();
+         part != parts.end(); ++part)
+    {
+        if (part->empty())
+            continue;
+
+        if (subtract)
+            remove_matching(value_list, *part);
+        else
+            new_entries.push_back(*part);
+    }
+    _merge_lists(value_list, new_entries, prepend);
+
+    return needs_warning;
+}
+
+void game_options::read_option_line(const string &str, bool runscript)
 {
 #define BOOL_OPTION_NAMED(_opt_str, _opt_var)               \
     if (key == _opt_str) do {                               \
@@ -2092,16 +2204,27 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         else if (val > max_val)                                         \
             report_error("Bad %s: %d > %d", _opt_str, val, max_val);    \
         else                                                            \
-            _opt_var = val;                                       \
+            _opt_var = val;                                             \
     } while (false)
 #define INT_OPTION(_opt, _min_val, _max_val) \
     INT_OPTION_NAMED(#_opt, _opt, _min_val, _max_val)
 
-    std::string key    = "";
-    std::string subkey = "";
-    std::string field  = "";
+#define LIST_OPTION_NAMED(_opt_str, _opt_var, old)                       \
+    if (key == _opt_str) do {                                            \
+        if (_handle_list(old, _opt_var, field, plus_equal,               \
+                         caret_equal, minus_equal))                      \
+        {                                                                \
+            warn_list_append.insert(key);                                \
+        }                                                                \
+    } while (false)
+#define LIST_OPTION(_opt) LIST_OPTION_NAMED(#_opt, _opt, false)
+#define OLD_LIST_OPTION(_opt) LIST_OPTION_NAMED(#_opt, _opt, true)
+    string key    = "";
+    string subkey = "";
+    string field  = "";
 
     bool plus_equal  = false;
+    bool caret_equal = false;
     bool minus_equal = false;
 
     const int first_equals = str.find('=');
@@ -2113,7 +2236,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     field = str.substr(first_equals + 1);
     field = expand_vars(field);
 
-    std::string prequal = trimmed_string(str.substr(0, first_equals));
+    string prequal = trimmed_string(str.substr(0, first_equals));
 
     // Is this a case of key += val?
     if (prequal.length() && prequal[prequal.length() - 1] == '+')
@@ -2128,6 +2251,12 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         prequal = prequal.substr(0, prequal.length() - 1);
         trim_string(prequal);
     }
+    else if (prequal.length() && prequal[prequal.length() - 1] == '^')
+    {
+        caret_equal = true;
+        prequal = prequal.substr(0, prequal.length() - 1);
+        trim_string(prequal);
+    }
     else if (prequal.length() && prequal[prequal.length() - 1] == ':')
     {
         prequal = prequal.substr(0, prequal.length() - 1);
@@ -2138,10 +2267,12 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         return;
     }
 
+    bool plain = !plus_equal && !minus_equal && !caret_equal;
+
     prequal = unalias(prequal);
 
-    const std::string::size_type first_dot = prequal.find('.');
-    if (first_dot != std::string::npos)
+    const string::size_type first_dot = prequal.find('.');
+    if (first_dot != string::npos)
     {
         key    = prequal.substr(0, first_dot);
         subkey = prequal.substr(first_dot + 1);
@@ -2160,7 +2291,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     trim_string(field);
 
     // Keep unlowercased field around
-    const std::string orig_field = field;
+    const string orig_field = field;
 
     if (key != "name" && key != "crawl_dir" && key != "macro_dir"
         && key != "species" && key != "background" && key != "job"
@@ -2174,13 +2305,14 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         && key != "note_monsters" && key != "note_messages"
         && key.find("cset") != 0 && key != "dungeon"
         && key != "feature" && key != "fire_items_start"
-        && key != "mon_glyph" && key != "opt" && key != "option"
+        && key != "mon_glyph" && key != "item_glyph"
+        && key != "opt" && key != "option"
         && key != "menu_colour" && key != "menu_color"
         && key != "message_colour" && key != "message_color"
         && key != "levels" && key != "level" && key != "entries"
         && key != "include" && key != "bindkey"
         && key != "spell_slot"
-        && key.find("font") == std::string::npos)
+        && key.find("font") == string::npos)
     {
         lowercase(field);
     }
@@ -2232,18 +2364,42 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         // FIXME: should talk to gettext/etc instead
         if (field == "en" || field == "english")
             lang = LANG_EN, lang_name = 0; // disable the db
-        else if (field == "pl" || field == "polish" || field == "polski")
-            lang = LANG_PL, lang_name = "pl";
-        else if (field == "de" || field == "german" || field == "deutch")
+        else if (field == "cs" || field == "czech" || field == "český" || field == "cesky")
+            lang = LANG_CS, lang_name = "cs";
+        else if (field == "da" || field == "danish" || field == "dansk")
+            lang = LANG_DA, lang_name = "da";
+        else if (field == "de" || field == "german" || field == "deutsch")
             lang = LANG_DE, lang_name = "de";
-        else if (field == "fr" || field == "french" || field == "français" || field == "francais")
-            lang = LANG_FR, lang_name = "fr";
-        else if (field == "es" || field == "spanish" || field == "español" || field == "espanol")
-            lang = LANG_ES, lang_name = "es";
         else if (field == "el" || field == "greek" || field == "ελληνικά" || field == "ελληνικα")
             lang = LANG_EL, lang_name = "el";
+        else if (field == "es" || field == "spanish" || field == "español" || field == "espanol")
+            lang = LANG_ES, lang_name = "es";
         else if (field == "fi" || field == "finnish" || field == "suomi")
             lang = LANG_FI, lang_name = "fi";
+        else if (field == "fr" || field == "french" || field == "français" || field == "francais")
+            lang = LANG_FR, lang_name = "fr";
+        else if (field == "hu" || field == "hungarian" || field == "magyar")
+            lang = LANG_HU, lang_name = "hu";
+        else if (field == "it" || field == "italian" || field == "italiano")
+            lang = LANG_IT, lang_name = "it";
+        else if (field == "ko" || field == "korean" || field == "한국의")
+            lang = LANG_KO, lang_name = "ko";
+        else if (field == "lt" || field == "lithuanian" || field == "lietuvos")
+            lang = LANG_LT, lang_name = "lt";
+        else if (field == "lv" || field == "latvian" || field == "lettish"
+                 || field == "latvijas" || field == "latviešu"
+                 || field == "latvieshu" || field == "latviesu")
+        {
+            lang = LANG_LV, lang_name = "lv";
+        }
+        else if (field == "pl" || field == "polish" || field == "polski")
+            lang = LANG_PL, lang_name = "pl";
+        else if (field == "pt" || field == "portuguese" || field == "português" || field == "portugues")
+            lang = LANG_PT, lang_name = "pt";
+        else if (field == "ru" || field == "russian" || field == "русский" || field == "русскии")
+            lang = LANG_RU, lang_name = "ru";
+        else if (field == "zh" || field == "chinese" || field == "中国的" || field == "中國的")
+            lang = LANG_ZH, lang_name = "zh";
         // Fake languages do not reset lang_name, allowing a translated
         // database in an actual language.  This is probably pointless for
         // most fake langs, though.
@@ -2399,12 +2555,12 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         set_activity_interrupt(key.substr(interrupt_prefix.length()),
                                field,
-                               plus_equal,
+                               plus_equal || caret_equal,
                                minus_equal);
     }
     else if (key.find("cset") == 0)
     {
-        std::string cset = key.substr(4);
+        string cset = key.substr(4);
         if (!cset.empty() && cset[0] == '_')
             cset = cset.substr(1);
 
@@ -2420,6 +2576,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         split_parse(field, ";", &game_options::add_feature_override);
     else if (key == "mon_glyph")
         split_parse(field, ",", &game_options::add_mon_glyph_override);
+    else if (key == "item_glyph")
+        split_parse(field, ",", &game_options::add_item_glyph_override);
     else CURSES_OPTION(friend_brand);
     else CURSES_OPTION(neutral_brand);
     else CURSES_OPTION(stab_brand);
@@ -2478,7 +2636,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             assign_item_slot = SS_BACKWARD;
     }
     else if (key == "fire_order")
-        set_fire_order(field, plus_equal);
+        set_fire_order(field, plus_equal, caret_equal);
 #if !defined(DGAMELAUNCH) || defined(DGL_REMEMBER_NAME)
     else BOOL_OPTION(remember_name);
 #endif
@@ -2494,10 +2652,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else BOOL_OPTION(show_no_ctele);
     else INT_OPTION(hp_warning, 0, 100);
     else INT_OPTION_NAMED("mp_warning", magic_point_warning, 0, 100);
-    else if (key == "note_monsters")
-        append_vector(note_monsters, split_string(",", field));
-    else if (key == "note_messages")
-        append_vector(note_messages, split_string(",", field));
+    else OLD_LIST_OPTION(note_monsters);
+    else OLD_LIST_OPTION(note_messages);
     else INT_OPTION(note_hp_percent, 0, 100);
 #ifndef DGAMELAUNCH
     // If DATA_DIR_PATH is set, don't set crawl_dir from .crawlrc.
@@ -2627,35 +2783,70 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else if (key == "ban_pickup")
     {
-        std::vector<std::string> args = split_string(",", field);
+        if (plain && field.empty())
+        {
+            // Only remove negative, not positive, exceptions.
+            force_autopickup.erase(remove_if(force_autopickup.begin(),
+                                             force_autopickup.end(),
+                                             _is_autopickup_ban),
+                                   force_autopickup.end());
+        }
+        else if (plain && !count_if(force_autopickup.begin(),
+                                    force_autopickup.end(),
+                                    _is_autopickup_ban))
+        {
+            warn_list_append.insert(key);
+        }
+
+        vector<pair<text_pattern, bool> > new_entries;
+        vector<string> args = split_string(",", field);
         for (int i = 0, size = args.size(); i < size; ++i)
         {
-            const std::string &s = args[i];
+            const string &s = args[i];
             if (s.empty())
                 continue;
-            force_autopickup.push_back(std::make_pair(s, false));
+
+            const pair<text_pattern, bool> f_a(s, false);
+
+            if (minus_equal)
+                remove_matching(force_autopickup, f_a);
+            else
+                new_entries.push_back(f_a);
         }
+        _merge_lists(force_autopickup, new_entries, caret_equal);
     }
     else if (key == "autopickup_exceptions")
     {
-        std::vector<std::string> args = split_string(",", field);
+        if (plain && field.empty())
+            force_autopickup.clear();
+        else if (plain && !force_autopickup.empty())
+            warn_list_append.insert(key);
+
+        vector<pair<text_pattern, bool> > new_entries;
+        vector<string> args = split_string(",", field);
         for (int i = 0, size = args.size(); i < size; ++i)
         {
-            const std::string &s = args[i];
+            const string &s = args[i];
             if (s.empty())
                 continue;
 
-            if (s[0] == '>')
-                force_autopickup.push_back(std::make_pair(s.substr(1), false));
-            else if (s[0] == '<')
-                force_autopickup.push_back(std::make_pair(s.substr(1), true));
-            else
-                force_autopickup.push_back(std::make_pair(s, false));
-        }
-    }
-    else if (key == "note_items")
-        append_vector(note_items, split_string(",", field));
+            pair<text_pattern, bool> f_a;
 
+            if (s[0] == '>')
+                f_a = make_pair(s.substr(1), false);
+            else if (s[0] == '<')
+                f_a = make_pair(s.substr(1), true);
+            else
+                f_a = make_pair(s, false);
+
+            if (minus_equal)
+                remove_matching(force_autopickup, f_a);
+            else
+                new_entries.push_back(f_a);
+        }
+        _merge_lists(force_autopickup, new_entries, caret_equal);
+    }
+    else OLD_LIST_OPTION(note_items);
 #ifndef _MSC_VER
     // break if-else chain on broken Microsoft compilers with stupid nesting limits
     else
@@ -2663,12 +2854,14 @@ void game_options::read_option_line(const std::string &str, bool runscript)
 
     if (key == "autoinscribe")
     {
-        if (field.empty())
-            return report_error("Autoinscribe string is empty");
+        if (plain && field.empty())
+            autoinscriptions.clear();
+        else if (plain && !autoinscriptions.empty())
+            warn_list_append.insert(key);
 
         const size_t first = field.find_first_of(':');
         const size_t last  = field.find_last_of(':');
-        if (first == std::string::npos || first != last)
+        if (first == string::npos || first != last)
         {
             return report_error("Autoinscribe string must have exactly "
                                 "one colon: %s\n", field.c_str());
@@ -2681,18 +2874,28 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         }
 
         if (last == field.length() - 1)
-            return report_error("Autoinscribe result is empty: %s\n", field.c_str());
-
-        std::vector<std::string> thesplit = split_string(":", field);
-
-        if (thesplit.size() != 2)
         {
-            report_error("Error parsing autoinscribe string: %s\n", field.c_str());
+            report_error("Autoinscribe result is empty: %s\n", field.c_str());
             return;
         }
 
-        autoinscriptions.push_back(
-            std::pair<text_pattern,std::string>(thesplit[0], thesplit[1]));
+        vector<string> thesplit = split_string(":", field);
+
+        if (thesplit.size() != 2)
+        {
+            report_error("Error parsing autoinscribe string: %s\n",
+                         field.c_str());
+            return;
+        }
+
+        pair<text_pattern,string> entry(thesplit[0], thesplit[1]);
+
+        if (minus_equal)
+            remove_matching(autoinscriptions, entry);
+        else if (caret_equal)
+            autoinscriptions.insert(autoinscriptions.begin(), entry);
+        else
+            autoinscriptions.push_back(entry);
     }
     else BOOL_OPTION(autoinscribe_artefacts);
     else BOOL_OPTION(autoinscribe_cursed);
@@ -2702,11 +2905,13 @@ void game_options::read_option_line(const std::string &str, bool runscript)
 #endif
     else if (key == "hp_colour" || key == "hp_color")
     {
-        hp_colour.clear();
-        std::vector<std::string> thesplit = split_string(",", field);
+        if (plain)
+            hp_colour.clear();
+
+        vector<string> thesplit = split_string(",", field);
         for (unsigned i = 0; i < thesplit.size(); ++i)
         {
-            std::vector<std::string> insplit = split_string(":", thesplit[i]);
+            vector<string> insplit = split_string(":", thesplit[i]);
             int hp_percent = 100;
 
             if (insplit.empty() || insplit.size() > 2
@@ -2720,16 +2925,24 @@ void game_options::read_option_line(const std::string &str, bool runscript)
                 hp_percent = atoi(insplit[0].c_str());
 
             int scolour = str_to_colour(insplit[(insplit.size() == 1) ? 0 : 1]);
-            hp_colour.push_back(std::pair<int, int>(hp_percent, scolour));
+            pair<int, int> entry(hp_percent, scolour);
+            // We do not treat prepend differently since we will be sorting.
+            if (minus_equal)
+                remove_matching(hp_colour, entry);
+            else
+                hp_colour.push_back(entry);
         }
+        stable_sort(hp_colour.begin(), hp_colour.end(), _first_greater);
     }
     else if (key == "mp_color" || key == "mp_colour")
     {
-        mp_colour.clear();
-        std::vector<std::string> thesplit = split_string(",", field);
+        if (plain)
+            mp_colour.clear();
+
+        vector<string> thesplit = split_string(",", field);
         for (unsigned i = 0; i < thesplit.size(); ++i)
         {
-            std::vector<std::string> insplit = split_string(":", thesplit[i]);
+            vector<string> insplit = split_string(":", thesplit[i]);
             int mp_percent = 100;
 
             if (insplit.empty() || insplit.size() > 2
@@ -2743,16 +2956,24 @@ void game_options::read_option_line(const std::string &str, bool runscript)
                 mp_percent = atoi(insplit[0].c_str());
 
             int scolour = str_to_colour(insplit[(insplit.size() == 1) ? 0 : 1]);
-            mp_colour.push_back(std::pair<int, int>(mp_percent, scolour));
+            pair<int, int> entry(mp_percent, scolour);
+            // We do not treat prepend differently since we will be sorting.
+            if (minus_equal)
+                remove_matching(mp_colour, entry);
+            else
+                mp_colour.push_back(entry);
         }
+        stable_sort(mp_colour.begin(), mp_colour.end(), _first_greater);
     }
     else if (key == "stat_colour" || key == "stat_color")
     {
-        stat_colour.clear();
-        std::vector<std::string> thesplit = split_string(",", field);
+        if (plain)
+            stat_colour.clear();
+
+        vector<string> thesplit = split_string(",", field);
         for (unsigned i = 0; i < thesplit.size(); ++i)
         {
-            std::vector<std::string> insplit = split_string(":", thesplit[i]);
+            vector<string> insplit = split_string(":", thesplit[i]);
 
             if (insplit.empty() || insplit.size() > 2
                 || insplit.size() == 1 && i != 0)
@@ -2766,21 +2987,28 @@ void game_options::read_option_line(const std::string &str, bool runscript)
                 stat_limit = atoi(insplit[0].c_str());
 
             int scolour = str_to_colour(insplit[(insplit.size() == 1) ? 0 : 1]);
-            stat_colour.push_back(std::pair<int, int>(stat_limit, scolour));
+            pair<int, int> entry(stat_limit, scolour);
+            // We do not treat prepend differently since we will be sorting.
+            if (minus_equal)
+                remove_matching(stat_colour, entry);
+            else
+                stat_colour.push_back(entry);
         }
+        stable_sort(stat_colour.begin(), stat_colour.end(), _first_less);
     }
 
     else if (key == "enemy_hp_colour" || key == "enemy_hp_color")
     {
-        enemy_hp_colour.clear();
-        str_to_enemy_hp_colour(field);
+        if (plain)
+            enemy_hp_colour.clear();
+        str_to_enemy_hp_colour(field, caret_equal);
     }
 
     else if (key == "note_skill_levels")
     {
-        if (!plus_equal && !minus_equal)
+        if (plain)
             note_skill_levels.reset();
-        std::vector<std::string> thesplit = split_string(",", field);
+        vector<string> thesplit = split_string(",", field);
         for (unsigned i = 0; i < thesplit.size(); ++i)
         {
             int num = atoi(thesplit[i].c_str());
@@ -2796,24 +3024,33 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else if (key == "spell_slot")
     {
-        std::vector<std::string> thesplit = split_string(":", field);
+        if (plain && field.empty())
+            auto_spell_letters.clear();
+        else if (plain && !auto_spell_letters.empty())
+            warn_list_append.insert(key);
+
+        vector<string> thesplit = split_string(":", field);
         if (thesplit.size() != 2)
         {
             return report_error("Error parsing spell lettering string: %s\n",
                                 field.c_str());
         }
-        lowercase(thesplit[0]);
-        auto_spell_letters.push_back(
-            std::pair<text_pattern,std::string>(thesplit[0], thesplit[1]));
+        pair<text_pattern,string> entry(lowercase_string(thesplit[0]),
+                                        thesplit[1]);
+
+        if (minus_equal)
+            remove_matching(auto_spell_letters, entry);
+        else if (caret_equal)
+            auto_spell_letters.insert(auto_spell_letters.begin(), entry);
+        else
+            auto_spell_letters.push_back(entry);
     }
     else BOOL_OPTION(pickup_thrown);
 #ifdef WIZARD
     else if (key == "fsim_mode")
         fsim_mode = field;
-    else if (key == "fsim_scale")
-        append_vector(fsim_scale, split_string(",", field));
-    else if (key == "fsim_kit")
-        append_vector(fsim_kit, split_string(",", field));
+    else OLD_LIST_OPTION(fsim_scale);
+    else OLD_LIST_OPTION(fsim_kit);
     else if (key == "fsim_rounds")
     {
         fsim_rounds = atol(field.c_str());
@@ -2827,7 +3064,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
 #endif // WIZARD
     else if (key == "sort_menus")
     {
-        std::vector<std::string> frags = split_string(";", field);
+        vector<string> frags = split_string(";", field);
         for (int i = 0, size = frags.size(); i < size; ++i)
         {
             if (frags[i].empty())
@@ -2867,36 +3104,44 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else BOOL_OPTION(show_player_species);
     else if (key == "force_more_message")
     {
-        std::vector<std::string> fragments = split_string(",", field);
+        if (plain && field.empty())
+            force_more_message.clear();
+        else if (plain && !force_more_message.empty())
+            warn_list_append.insert(key);
+
+        vector<message_filter> new_entries;
+        vector<string> fragments = split_string(",", field);
         for (int i = 0, count = fragments.size(); i < count; ++i)
         {
-            if (fragments[i].length() == 0)
+            if (fragments[i].empty())
                 continue;
 
-            std::string::size_type pos = fragments[i].find(":");
-            if (pos && pos != std::string::npos)
+            message_filter mf(fragments[i]);
+
+            string::size_type pos = fragments[i].find(":");
+            if (pos && pos != string::npos)
             {
-                std::string prefix = fragments[i].substr(0, pos);
+                string prefix = fragments[i].substr(0, pos);
                 int channel = str_to_channel(prefix);
                 if (channel != -1 || prefix == "any")
                 {
-                    std::string s = fragments[i].substr(pos + 1);
-                    trim_string(s);
-                    force_more_message.push_back(
-                        message_filter(channel, s));
-                    continue;
+                    string s = fragments[i].substr(pos + 1);
+                    mf = message_filter(channel, trim_string(s));
                 }
             }
 
-            force_more_message.push_back(
-                    message_filter(fragments[i]));
+            if (minus_equal)
+                remove_matching(force_more_message, mf);
+            else
+                new_entries.push_back(mf);
         }
+        _merge_lists(force_more_message, new_entries, caret_equal);
     }
-    else if (key == "drop_filter")
-        append_vector(drop_filter, split_string(",", field));
+    else OLD_LIST_OPTION(drop_filter);
     else if (key == "travel_avoid_terrain")
     {
-        std::vector<std::string> seg = split_string(",", field);
+        // TODO: allow resetting (need reset_forbidden_terrain())
+        vector<string> seg = split_string(",", field);
         for (int i = 0, count = seg.size(); i < count; ++i)
             prevent_travel_to(seg[i]);
     }
@@ -2913,15 +3158,14 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         tc_dangerous = str_to_colour(field, tc_dangerous);
     else if (key == "tc_disconnected")
         tc_disconnected = str_to_colour(field, tc_disconnected);
-    else if (key == "auto_exclude")
-        append_vector(auto_exclude, split_string(",", field));
+    else OLD_LIST_OPTION(auto_exclude);
     else BOOL_OPTION(easy_exit_menu);
     else BOOL_OPTION(dos_use_background_intensity);
     else if (key == "item_stack_summary_minimum")
         item_stack_summary_minimum = atoi(field.c_str());
     else if (key == "explore_stop")
     {
-        if (!plus_equal && !minus_equal)
+        if (plain)
             explore_stop = ES_NONE;
 
         const int new_conditions = read_explore_stop_conditions(field);
@@ -2930,16 +3174,9 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         else
             explore_stop |= new_conditions;
     }
-    else if (key == "sacrifice_before_explore")
-    {
-        if (field == "prompt" || field == "ask")
-            sacrifice_before_explore = 2;
-        else
-            sacrifice_before_explore = _read_bool(field, false);
-    }
     else if (key == "explore_stop_prompt")
     {
-        if (!plus_equal && !minus_equal)
+        if (plain)
             explore_stop_prompt = ES_NONE;
         const int new_conditions = read_explore_stop_conditions(field);
         if (minus_equal)
@@ -2947,8 +3184,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         else
             explore_stop_prompt |= new_conditions;
     }
-    else if (key == "explore_stop_pickup_ignore")
-        append_vector(explore_stop_pickup_ignore, split_string(",", field));
+    else OLD_LIST_OPTION(explore_stop_pickup_ignore);
     else if (key == "explore_item_greed")
     {
         explore_item_greed = atoi(field.c_str());
@@ -2968,22 +3204,40 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else BOOL_OPTION(explore_improved);
     else BOOL_OPTION(travel_key_stop);
-    else BOOL_OPTION(auto_sacrifice);
+    else if (key == "auto_sacrifice")
+    {
+        if (field == "prompt" || field == "ask")
+            auto_sacrifice = OPT_PROMPT;
+        else if (field == "before_explore")
+            auto_sacrifice = OPT_BEFORE_EXPLORE;
+        else
+            auto_sacrifice = _read_bool(field, false) ? OPT_YES : OPT_NO;
+    }
     else if (key == "sound")
     {
-        std::vector<std::string> seg = split_string(",", field);
+        if (plain && field.empty())
+            sound_mappings.clear();
+        else if (plain && !sound_mappings.empty())
+            warn_list_append.insert(key);
+
+        vector<sound_mapping> new_entries;
+        vector<string> seg = split_string(",", field);
         for (int i = 0, count = seg.size(); i < count; ++i)
         {
-            const std::string &sub = seg[i];
-            std::string::size_type cpos = sub.find(":", 0);
-            if (cpos != std::string::npos)
+            const string &sub = seg[i];
+            string::size_type cpos = sub.find(":", 0);
+            if (cpos != string::npos)
             {
-                sound_mapping mapping;
-                mapping.pattern = sub.substr(0, cpos);
-                mapping.soundfile = sub.substr(cpos + 1);
-                sound_mappings.push_back(mapping);
+                sound_mapping entry;
+                entry.pattern = sub.substr(0, cpos);
+                entry.soundfile = sub.substr(cpos + 1);
+                if (minus_equal)
+                    remove_matching(sound_mappings, entry);
+                else
+                    new_entries.push_back(entry);
             }
         }
+        _merge_lists(sound_mappings, new_entries, caret_equal);
     }
 #ifndef TARGET_COMPILER_VC
     // MSVC has a limit on how many if/else if can be chained together.
@@ -2991,13 +3245,19 @@ void game_options::read_option_line(const std::string &str, bool runscript)
 #endif
     if (key == "menu_colour" || key == "menu_color")
     {
-        std::vector<std::string> seg = split_string(",", field);
+        if (plain && field.empty())
+            menu_colour_mappings.clear();
+        else if (plain && !menu_colour_mappings.empty())
+            warn_list_append.insert(key);
+
+        vector<colour_mapping> new_entries;
+        vector<string> seg = split_string(",", field);
         for (int i = 0, count = seg.size(); i < count; ++i)
         {
             // Format is "tag:colour:pattern" or "colour:pattern" (default tag).
             // FIXME: arrange so that you can use ':' inside a pattern
-            std::vector<std::string> subseg = split_string(":", seg[i], false);
-            std::string tagname, patname, colname;
+            vector<string> subseg = split_string(":", seg[i], false);
+            string tagname, patname, colname;
             if (subseg.size() < 2)
                 continue;
             if (subseg.size() >= 3)
@@ -3017,23 +3277,37 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             mapping.pattern = patname;
             mapping.colour  = str_to_colour(colname);
 
-            if (mapping.colour != -1)
-                menu_colour_mappings.push_back(mapping);
+            if (mapping.colour == -1)
+                continue;
+            else if (minus_equal)
+                remove_matching(menu_colour_mappings, mapping);
+            else
+                new_entries.push_back(mapping);
         }
+        _merge_lists(menu_colour_mappings, new_entries, caret_equal);
     }
     else BOOL_OPTION(menu_colour_prefix_class);
     else BOOL_OPTION_NAMED("menu_color_prefix_class", menu_colour_prefix_class);
     else BOOL_OPTION(menu_colour_shops);
     else BOOL_OPTION_NAMED("menu_color_shops", menu_colour_shops);
     else if (key == "message_colour" || key == "message_color")
-        add_message_colour_mappings(field);
+    {
+        // TODO: support -= here.
+        if (plain && field.empty())
+            message_colour_mappings.clear();
+        else if (plain && !message_colour_mappings.empty())
+            warn_list_append.insert(key);
+
+        add_message_colour_mappings(field, caret_equal, minus_equal);
+    }
     else if (key == "dump_order")
     {
-        if (!plus_equal)
+        if (plain)
             dump_order.clear();
 
-        new_dump_fields(field, !minus_equal);
+        new_dump_fields(field, !minus_equal, caret_equal);
     }
+    else BOOL_OPTION(dump_on_save);
     else if (key == "dump_kill_places")
     {
         dump_kill_places = (field == "none" ? KDO_NO_PLACES :
@@ -3042,15 +3316,23 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else if (key == "kill_map")
     {
-        std::vector<std::string> seg = split_string(",", field);
+        // TODO: treat this as a map option (e.g. kill_map.you = friendly)
+        if (plain && field.empty())
+        {
+            kill_map[KC_YOU] = KC_YOU;
+            kill_map[KC_FRIENDLY] = KC_FRIENDLY;
+            kill_map[KC_OTHER] = KC_OTHER;
+        }
+
+        vector<string> seg = split_string(",", field);
         for (int i = 0, count = seg.size(); i < count; ++i)
         {
-            const std::string &s = seg[i];
-            std::string::size_type cpos = s.find(":", 0);
-            if (cpos != std::string::npos)
+            const string &s = seg[i];
+            string::size_type cpos = s.find(":", 0);
+            if (cpos != string::npos)
             {
-                std::string from = s.substr(0, cpos);
-                std::string to   = s.substr(cpos + 1);
+                string from = s.substr(0, cpos);
+                string to   = s.substr(cpos + 1);
                 do_kill_map(from, to);
             }
         }
@@ -3063,11 +3345,13 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else if (key == "dump_item_origins")
     {
-        dump_item_origins = IODS_PRICE;
-        std::vector<std::string> choices = split_string(",", field);
+        if (plain)
+            dump_item_origins = IODS_PRICE;
+
+        vector<string> choices = split_string(",", field);
         for (int i = 0, count = choices.size(); i < count; ++i)
         {
-            const std::string &ch = choices[i];
+            const string &ch = choices[i];
             if (ch == "artefacts" || ch == "artifacts"
                 || ch == "artefact" || ch == "artifact")
             {
@@ -3117,23 +3401,27 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         darken_beyond_range = _read_bool(field, darken_beyond_range);
     else if (key == "drop_mode")
     {
-        if (field.find("multi") != std::string::npos)
+        if (field.find("multi") != string::npos)
             drop_mode = DM_MULTI;
         else
             drop_mode = DM_SINGLE;
     }
     else if (key == "pickup_mode")
     {
-        if (field.find("multi") != std::string::npos)
+        if (field.find("multi") != string::npos)
             pickup_mode = 0;
-        else if (field.find("single") != std::string::npos)
+        else if (field.find("single") != string::npos)
             pickup_mode = -1;
         else
             pickup_mode = _read_bool_or_number(field, pickup_mode, "auto:");
     }
     else if (key == "additional_macro_file")
     {
-        const std::string resolved = resolve_include(orig_field, "macro ");
+        // TODO: this option could probably be improved.  For new, keep the
+        // "= means append" behaviour, and don't allow clearing the list;
+        // if we rename to "additional_macro_files" then it could work like
+        // other list options.
+        const string resolved = resolve_include(orig_field, "macro ");
         if (!resolved.empty())
             additional_macro_files.push_back(resolved);
     }
@@ -3208,6 +3496,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else INT_OPTION(tile_window_width, INT_MIN, INT_MAX);
     else INT_OPTION(tile_window_height, INT_MIN, INT_MAX);
     else INT_OPTION(tile_map_pixels, 1, INT_MAX);
+    else INT_OPTION(tile_cell_pixels, 1, INT_MAX);
+    else BOOL_OPTION(tile_filter_scaling);
 #endif // USE_TILE_LOCAL
 #ifdef USE_TILE
     else BOOL_OPTION(tile_force_overlay);
@@ -3218,8 +3508,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else BOOL_OPTION(tile_show_minimagicbar);
     else BOOL_OPTION(tile_show_demon_tier);
     else BOOL_OPTION(tile_force_regenerate_levels);
-    else if (key == "tile_layout_priority")
-        tile_layout_priority = split_string(",", field.c_str());
+    else LIST_OPTION(tile_layout_priority);
     else if (key == "tile_tag_pref")
         tile_tag_pref = _str_to_tag_pref(field.c_str());
 #endif
@@ -3244,8 +3533,16 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (runscript)
     {
 #ifdef CLUA_BINDINGS
-        if (!clua.callbooleanfn(false, "c_process_lua_option", "ss",
-                        key.c_str(), orig_field.c_str()))
+        int setmode = 0;
+        if (plus_equal)
+            setmode = 1;
+        if (minus_equal)
+            setmode = -1;
+        if (caret_equal)
+            setmode = 2;
+
+        if (!clua.callbooleanfn(false, "c_process_lua_option", "ssd",
+                        key.c_str(), orig_field.c_str(), setmode))
 #endif
         {
 #ifdef CLUA_BINDINGS
@@ -3261,12 +3558,9 @@ void game_options::read_option_line(const std::string &str, bool runscript)
 // If safety check fails, throws a string with the reason for failure.
 // If file cannot be resolved, returns the empty string (this does not throw!)
 // If file can be resolved, returns the resolved path.
-std::string game_options::resolve_include(
-    std::string parent_file,
-    std::string included_file,
-    const std::vector<std::string> *rcdirs)
-
-    throw (std::string)
+string game_options::resolve_include(string parent_file, string included_file,
+                                     const vector<string> *rcdirs)
+    throw (string)
 {
     // Before we start, make sure we convert forward slashes to the platform's
     // favoured file separator.
@@ -3292,18 +3586,18 @@ std::string game_options::resolve_include(
 
     if (!parent_file.empty())
     {
-        const std::string candidate =
-            get_path_relative_to(parent_file, included_file);
+        const string candidate = get_path_relative_to(parent_file,
+                                                      included_file);
         if (file_exists(candidate))
             return candidate;
     }
 
     if (rcdirs)
     {
-        const std::vector<std::string> &dirs(*rcdirs);
+        const vector<string> &dirs(*rcdirs);
         for (int i = 0, size = dirs.size(); i < size; ++i)
         {
-            const std::string candidate(catpath(dirs[i], included_file));
+            const string candidate(catpath(dirs[i], included_file));
             if (file_exists(candidate))
                 return candidate;
         }
@@ -3312,36 +3606,33 @@ std::string game_options::resolve_include(
     return datafile_path(included_file, false, true);
 }
 
-std::string game_options::resolve_include(const std::string &file,
-                                           const char *type)
+string game_options::resolve_include(const string &file, const char *type)
 {
     try
     {
-        const std::string resolved =
-            resolve_include(filename, file, &SysEnv.rcdirs);
+        const string resolved = resolve_include(filename, file, &SysEnv.rcdirs);
 
         if (resolved.empty())
             report_error("Cannot find %sfile \"%s\".", type, file.c_str());
         return resolved;
     }
-    catch (const std::string &err)
+    catch (const string &err)
     {
         report_error("Cannot include %sfile: %s", type, err.c_str());
         return "";
     }
 }
 
-bool game_options::was_included(const std::string &file) const
+bool game_options::was_included(const string &file) const
 {
     return (included.find(file) != included.end());
 }
 
-void game_options::include(const std::string &rawfilename,
-                           bool resolve,
+void game_options::include(const string &rawfilename, bool resolve,
                            bool runscript)
 {
-    const std::string include_file =
-        resolve ? resolve_include(rawfilename) : rawfilename;
+    const string include_file = resolve ? resolve_include(rawfilename)
+                                        : rawfilename;
 
     if (was_included(include_file))
         return;
@@ -3349,8 +3640,8 @@ void game_options::include(const std::string &rawfilename,
     included.insert(include_file);
 
     // Change filename to the included filename while we're reading it.
-    unwind_var<std::string> optfile(filename, include_file);
-    unwind_var<std::string> basefile(basefilename, rawfilename);
+    unwind_var<string> optfile(filename, include_file);
+    unwind_var<string> basefile(basefilename, rawfilename);
 
     // Save current line number
     unwind_var<int> currlinenum(line_num, 0);
@@ -3367,7 +3658,7 @@ void game_options::report_error(const char* format, ...)
 {
     va_list args;
     va_start(args, format);
-    std::string error = vmake_stringf(format, args);
+    string error = vmake_stringf(format, args);
     va_end(args);
 
     // If called before game starts, log a startup error,
@@ -3386,7 +3677,7 @@ void game_options::report_error(const char* format, ...)
     }
 }
 
-static std::string check_string(const char *s)
+static string check_string(const char *s)
 {
     return s? s : "";
 }
@@ -3494,7 +3785,7 @@ static const char *cmd_ops[] = {
 static const int num_cmd_ops = CLO_NOPS;
 static bool arg_seen[num_cmd_ops];
 
-static std::string _find_executable_path()
+static string _find_executable_path()
 {
     // A lot of OSes give ways to find the location of the running app's
     // binary executable. This is useful, because argv[0] can be relative
@@ -3535,7 +3826,7 @@ static void _print_save_version(char *name)
 {
     try
     {
-        std::string filename = name;
+        string filename = name;
         // Check for the exact filename first, then go by char name.
         if (!file_exists(filename))
             filename = get_savedir_filename(filename);
@@ -3617,7 +3908,7 @@ static void _edit_save(int argc, char **argv)
 
     try
     {
-        std::string filename = name;
+        string filename = name;
         // Check for the exact filename first, then go by char name.
         if (!file_exists(filename))
             filename = get_savedir_filename(filename);
@@ -3625,8 +3916,8 @@ static void _edit_save(int argc, char **argv)
 
         if (cmd == ES_LS)
         {
-            std::vector<std::string> list = save.list_chunks();
-            std::sort(list.begin(), list.end(), numcmpstr);
+            vector<string> list = save.list_chunks();
+            sort(list.begin(), list.end(), numcmpstr);
             for (size_t i = 0; i < list.size(); i++)
                 printf("%s\n", list[i].c_str());
         }
@@ -3695,7 +3986,7 @@ static void _edit_save(int argc, char **argv)
         else if (cmd == ES_REPACK)
         {
             package save2((filename + ".tmp").c_str(), true, true);
-            std::vector<std::string> list = save.list_chunks();
+            vector<string> list = save.list_chunks();
             for (size_t i = 0; i < list.size(); i++)
             {
                 char buf[16384];
@@ -3712,8 +4003,8 @@ static void _edit_save(int argc, char **argv)
         }
         else if (cmd == ES_INFO)
         {
-            std::vector<std::string> list = save.list_chunks();
-            std::sort(list.begin(), list.end(), numcmpstr);
+            vector<string> list = save.list_chunks();
+            sort(list.begin(), list.end(), numcmpstr);
             len_t nchunks = list.size();
             len_t frag = save.get_chunk_fragmentation("");
             len_t flen = save.get_size();
@@ -3750,7 +4041,7 @@ static void _edit_save(int argc, char **argv)
 
 static bool _check_extra_opt(char* _opt)
 {
-    std::string opt(_opt);
+    string opt(_opt);
     trim_string(opt);
 
     if (opt[0] == ':' || opt[0] == '<' || opt[0] == '{'
@@ -3768,14 +4059,14 @@ static bool _check_extra_opt(char* _opt)
         return false;
     }
 
-    if (opt.find_first_of('=') == std::string::npos)
+    if (opt.find_first_of('=') == string::npos)
     {
         fprintf(stderr, "An extra opt must contain a '=' (%s)\n",
                 _opt);
         return false;
     }
 
-    std::vector<std::string> parts = split_string(opt, "=");
+    vector<string> parts = split_string(opt, "=");
     if (opt.find_first_of('=') == 0 || parts[0].length() == 0)
     {
         fprintf(stderr, "An extra opt must have an option name (%s)\n",
@@ -3797,7 +4088,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
             argv, argv + argc);
     }
 
-    std::string exe_path = _find_executable_path();
+    string exe_path = _find_executable_path();
 
     if (!exe_path.empty())
         set_crawl_base_dir(exe_path.c_str());
@@ -3920,6 +4211,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
             break;
 
         case CLO_MAPSTAT:
+#ifdef DEBUG_DIAGNOSTICS
             crawl_state.map_stat_gen = true;
             if (next_is_param)
             {
@@ -3932,7 +4224,12 @@ bool parse_args(int argc, char **argv, bool rc_only)
             }
             else
                 SysEnv.map_gen_iters = 100;
+
             break;
+#else
+            fprintf(stderr, "mapstat is available only in DEBUG_DIAGNOSTICS builds.\n");
+            end(1);
+#endif
 
         case CLO_ARENA:
             if (!rc_only)
@@ -4021,10 +4318,10 @@ bool parse_args(int argc, char **argv, bool rc_only)
             if (!rc_only)
             {
                 if (o == 2)
-                    Options.game.species = _str_to_species(std::string(next_arg));
+                    Options.game.species = _str_to_species(string(next_arg));
 
                 if (o == 3)
-                    Options.game.job = _str_to_job(std::string(next_arg));
+                    Options.game.job = _str_to_job(string(next_arg));
             }
             nextUsed = true;
             break;
@@ -4223,9 +4520,9 @@ bool game_options::o_bool(const char *name, bool def) const
     return val;
 }
 
-std::string game_options::o_str(const char *name, const char *def) const
+string game_options::o_str(const char *name, const char *def) const
 {
-    std::string val;
+    string val;
     opt_map::const_iterator i = named_options.find(name);
     if (i != named_options.end())
         val = i->second;
@@ -4236,7 +4533,7 @@ std::string game_options::o_str(const char *name, const char *def) const
 
 int game_options::o_colour(const char *name, int def) const
 {
-    std::string val = o_str(name);
+    string val = o_str(name);
     trim_string(val);
     lowercase(val);
     int col = str_to_colour(val);
@@ -4246,9 +4543,9 @@ int game_options::o_colour(const char *name, int def) const
 ///////////////////////////////////////////////////////////////////////
 // system_environment
 
-void system_environment::add_rcdir(const std::string &dir)
+void system_environment::add_rcdir(const string &dir)
 {
-    std::string cdir = canonicalise_file_separator(dir);
+    string cdir = canonicalise_file_separator(dir);
     if (dir_exists(cdir))
         rcdirs.push_back(cdir);
     else
@@ -4263,10 +4560,10 @@ menu_sort_condition::menu_sort_condition(menu_type _mt, int _sort)
 {
 }
 
-menu_sort_condition::menu_sort_condition(const std::string &s)
+menu_sort_condition::menu_sort_condition(const string &s)
     : mtype(MT_ANY), sort(-1), cmp()
 {
-    std::string cp = s;
+    string cp = s;
     set_menu_type(cp);
     set_sort(cp);
     set_comparators(cp);
@@ -4277,11 +4574,11 @@ bool menu_sort_condition::matches(menu_type mt) const
     return (mtype == MT_ANY || mtype == mt);
 }
 
-void menu_sort_condition::set_menu_type(std::string &s)
+void menu_sort_condition::set_menu_type(string &s)
 {
     static struct
     {
-        const std::string mname;
+        const string mname;
         menu_type mtype;
     } menu_type_map[] =
       {
@@ -4294,7 +4591,7 @@ void menu_sort_condition::set_menu_type(std::string &s)
 
     for (unsigned mi = 0; mi < ARRAYSZ(menu_type_map); ++mi)
     {
-        const std::string &name = menu_type_map[mi].mname;
+        const string &name = menu_type_map[mi].mname;
         if (s.find(name) == 0)
         {
             s = s.substr(name.length());
@@ -4304,26 +4601,25 @@ void menu_sort_condition::set_menu_type(std::string &s)
     }
 }
 
-void menu_sort_condition::set_sort(std::string &s)
+void menu_sort_condition::set_sort(string &s)
 {
     // Strip off the optional sort clauses and get the primary sort condition.
-    std::string::size_type trail_pos = s.find(':');
+    string::size_type trail_pos = s.find(':');
     if (s.find("auto:") == 0)
         trail_pos = s.find(':', trail_pos + 1);
 
-    std::string sort_cond =
-        trail_pos == std::string::npos? s : s.substr(0, trail_pos);
+    string sort_cond = trail_pos == string::npos? s : s.substr(0, trail_pos);
 
     trim_string(sort_cond);
     sort = _read_bool_or_number(sort_cond, sort, "auto:");
 
-    if (trail_pos != std::string::npos)
+    if (trail_pos != string::npos)
         s = s.substr(trail_pos + 1);
     else
         s.clear();
 }
 
-void menu_sort_condition::set_comparators(std::string &s)
+void menu_sort_condition::set_comparators(string &s)
 {
     init_item_sort_comparators(
         cmp,

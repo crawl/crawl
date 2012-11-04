@@ -8,6 +8,9 @@
 #include "options.h"
 #include "tilebuf.h"
 #include "tilefont.h"
+#ifdef TOUCH_UI
+#include "cio.h"
+#endif
 
 MenuRegion::MenuRegion(ImageManager *im, FontWrapper *entry) :
     m_image(im), m_font_entry(entry), m_mouse_idx(-1),
@@ -27,7 +30,7 @@ MenuRegion::MenuRegion(ImageManager *im, FontWrapper *entry) :
 
 void MenuRegion::set_num_columns(int columns)
 {
-    m_max_columns = std::max(1, columns);
+    m_max_columns = max(1, columns);
 }
 
 int MenuRegion::mouse_entry(int x, int y)
@@ -56,6 +59,14 @@ int MenuRegion::handle_mouse(MouseEvent &event)
 
     int x, y;
     if (!mouse_pos(event.px, event.py, x, y))
+#ifdef TOUCH_UI
+        if((int)event.py < oy && event.event == MouseEvent::PRESS
+           && event.button == MouseEvent::LEFT)
+        {
+            return CK_TOUCH_DUMMY; // mouse click in title area
+        }
+        else
+#endif
         return 0;
 
     if (event.event == MouseEvent::MOVE)
@@ -88,7 +99,14 @@ int MenuRegion::handle_mouse(MouseEvent &event)
         {
             int entry = mouse_entry(x, y);
             if (entry == -1)
+#ifdef TOUCH_UI
+                // if L-CLICK on --more--, do more action
+                if(y > m_more_region_start && m_more.width() > 0)
+                    return CK_TOUCH_DUMMY;
+                else
+#endif
                 return 0;
+
             return m_entries[entry].key;
         }
 #if 0
@@ -109,6 +127,13 @@ int MenuRegion::handle_mouse(MouseEvent &event)
 
 void MenuRegion::place_entries()
 {
+    _clear_buffers();
+    _place_entries(0, 0, mx);
+}
+
+void MenuRegion::_place_entries(const int left_offset, const int top_offset,
+                                const int menu_width)
+{
     m_dirty = false;
 
     const int heading_indent  = 10;
@@ -118,27 +143,25 @@ void MenuRegion::place_entries()
     const int entry_buffer    = 1;
     const VColour selected_colour(50, 50, 10, 255);
 
-    m_font_buf.clear();
-    m_shape_buf.clear();
-    m_line_buf.clear();
-    for (int t = 0; t < TEX_MAX; t++)
-        m_tile_buf[t].clear();
-
     int column = 0;
     if (!Options.tile_menu_icons)
         set_num_columns(1);
-    const int max_columns  = std::min(2, m_max_columns);
-    const int column_width = mx / max_columns;
+    const int max_columns  = min(2, m_max_columns);
+    const int column_width = menu_width / max_columns;
 
     int lines = count_linebreaks(m_more);
     int more_height = (lines + 1) * m_font_entry->char_height();
     m_font_buf.add(m_more, sx + ox, ey - oy - more_height);
 
-    int height = 0;
+    int height = top_offset;
     int end_height = my - more_height;
 
-    const int max_entry_height = std::max((int)m_font_entry->char_height() * 2,
-                                          max_tile_height);
+#ifdef TOUCH_UI
+    m_more_region_start = end_height;
+#endif
+
+    const int max_entry_height = max((int)m_font_entry->char_height() * 2,
+                                     max_tile_height);
 
     for (unsigned int i = 0; i < m_entries.size(); i++)
     {
@@ -153,7 +176,7 @@ void MenuRegion::place_entries()
 
         if (height + max_entry_height > end_height && column <= max_columns)
         {
-            height = 0;
+            height = top_offset;
             column++;
         }
 
@@ -162,19 +185,36 @@ void MenuRegion::place_entries()
 
         if (m_entries[i].heading)
         {
-            m_entries[i].sx = heading_indent + column * column_width;
-            m_entries[i].ex = m_entries[i].sx + text_width;
+            m_entries[i].sx = heading_indent + column * column_width + left_offset;
+            m_entries[i].ex = m_entries[i].sx + text_width + left_offset;
             m_entries[i].sy = height;
             m_entries[i].ey = m_entries[i].sy + text_height;
 
-            m_font_buf.add(m_entries[i].text, m_entries[i].sx, m_entries[i].sy);
+            // wrap titles to two lines if they don't fit
+            if (Options.tile_menu_icons
+                && m_entries[i].ex > m_entries[i].sx + column_width)
+            {
+                int w = column_width;
+                int h = m_font_entry->char_height() * 2;
+                formatted_string split = m_font_entry->split(m_entries[i].text, w, h);
+                int string_height = m_font_entry->string_height(split);
 
-            height += text_height;
+                m_entries[i].ex = w;
+                m_entries[i].ey = m_entries[i].sy + string_height;
+
+                m_font_buf.add(split, m_entries[i].sx, m_entries[i].sy);
+                height += string_height;
+            }
+            else
+            {
+                m_font_buf.add(m_entries[i].text, m_entries[i].sx, m_entries[i].sy);
+                height += text_height;
+            }
         }
         else
         {
             m_entries[i].sy = height;
-            int entry_start = column * column_width;
+            int entry_start = column * column_width + left_offset;
             int text_sx = text_indent + entry_start;
 
             int entry_height;
@@ -182,7 +222,7 @@ void MenuRegion::place_entries()
             if (!m_entries[i].tiles.empty())
             {
                 m_entries[i].sx = entry_start + tile_indent;
-                entry_height = std::max(max_tile_height, text_height);
+                entry_height = max(max_tile_height, text_height);
 
                 for (unsigned int t = 0; t < m_entries[i].tiles.size(); t++)
                 {
@@ -211,7 +251,7 @@ void MenuRegion::place_entries()
             {
                 // [enne] - Ugh, hack.  Maybe MenuEntry could specify the
                 // presence and length of this substring?
-                std::string unfm = m_entries[i].text.tostring();
+                string unfm = m_entries[i].text.tostring();
                 bool let = (unfm[1] >= 'a' && unfm[1] <= 'z'
                             || unfm[1] >= 'A' && unfm[1] <= 'Z');
                 bool plus = (unfm[3] == '-' || unfm[3] == '+');
@@ -229,11 +269,9 @@ void MenuRegion::place_entries()
                         text.del_char();
                 }
                 else
-                {
                     text += m_entries[i].text;
-                }
 
-                int w = entry_start + column_width - text_sx;
+                int w = entry_start + column_width - text_sx - tile_indent;
                 int h = m_font_entry->char_height() * 2;
                 formatted_string split = m_font_entry->split(text, w, h);
 
@@ -243,22 +281,18 @@ void MenuRegion::place_entries()
 
                 m_font_buf.add(split, text_sx, text_sy);
 
-                entry_height = std::max(entry_height, string_height);
-                m_entries[i].ex = entry_start + column_width;
+                entry_height = max(entry_height, string_height);
+                m_entries[i].ex = entry_start + column_width - tile_indent;
             }
             else
             {
-                if (max_columns == 1)
-                    m_entries[i].ex = text_sx + text_width;
-                else
-                    m_entries[i].ex = entry_start + column_width;
+                m_entries[i].ex = entry_start + column_width - tile_indent;
                 m_font_buf.add(m_entries[i].text, text_sx, text_sy);
             }
 
             m_entries[i].ey = m_entries[i].sy + entry_height;
             height = m_entries[i].ey;
         }
-
         if (m_entries[i].selected)
         {
             m_shape_buf.add(m_entries[i].sx-1, m_entries[i].sy-1,
@@ -286,13 +320,18 @@ void MenuRegion::render()
     m_font_buf.draw();
 }
 
-void MenuRegion::clear()
+void MenuRegion::_clear_buffers()
 {
     m_shape_buf.clear();
     m_line_buf.clear();
     for (int i = 0; i < TEX_MAX; i++)
         m_tile_buf[i].clear();
     m_font_buf.clear();
+}
+
+void MenuRegion::clear()
+{
+    _clear_buffers();
 
     m_more.clear();
 
@@ -302,7 +341,7 @@ void MenuRegion::clear()
     m_mouse_idx = -1;
 }
 
-void MenuRegion::set_entry(int idx, const std::string &str, int colour,
+void MenuRegion::set_entry(int idx, const string &str, int colour,
                            const MenuEntry *me, bool mark_selected)
 {
     if (idx >= (int)m_entries.size())
@@ -322,7 +361,7 @@ void MenuRegion::set_entry(int idx, const std::string &str, int colour,
     e.text.clear();
     e.text.textcolor(colour);
     e.text += formatted_string::parse_string(str);
-
+    e.colour   = colour;
     e.heading  = (me->level == MEL_TITLE || me->level == MEL_SUBTITLE);
     e.selected = mark_selected ? me->selected() : false;
     e.key      = !me->hotkeys.empty() ? me->hotkeys[0] : 0;

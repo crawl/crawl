@@ -31,6 +31,7 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "item_use.h"
+#include "libutil.h"
 #include "macro.h"
 #include "mgen_data.h"
 #include "message.h"
@@ -278,7 +279,7 @@ static bool _corpse_butchery(int corpse_id, int butcher_tool,
     if (first_corpse)
         mitm[corpse_id].plus2++;
 
-    int work_req = std::max(0, 4 - mitm[corpse_id].plus2);
+    int work_req = max(0, 4 - mitm[corpse_id].plus2);
 
     delay_type dtype = DELAY_BUTCHER;
     // Sanity checks.
@@ -380,9 +381,9 @@ static bool _have_corpses_in_pack(bool remind, bool bottle_blood = false)
     if (num == 0)
         return false;
 
-    std::string verb = (bottle_blood ? "bottle" : "butcher");
+    string verb = (bottle_blood ? "bottle" : "butcher");
 
-    std::string noun, pronoun;
+    string noun, pronoun;
     if (num == 1)
     {
         noun    = "corpse";
@@ -407,6 +408,13 @@ static bool _have_corpses_in_pack(bool remind, bool bottle_blood = false)
 
     return true;
 }
+
+#ifdef TOUCH_UI
+static string _butcher_menu_title(const Menu *menu, const string &oldt)
+{
+    return oldt;
+}
+#endif
 
 bool butchery(int which_corpse, bool bottle_blood)
 {
@@ -560,10 +568,50 @@ bool butchery(int which_corpse, bool bottle_blood)
     // Now pick what you want to butcher. This is only a problem
     // if there are several corpses on the square.
     bool butcher_all   = false;
-    bool repeat_prompt = false;
     bool did_weap_swap = false;
     bool first_corpse  = true;
+#ifdef TOUCH_UI
+    vector<const item_def*> meat;
+    for (stack_iterator si(you.pos(), true); si; ++si)
+    {
+        if (si->base_type != OBJ_CORPSES || si->sub_type != CORPSE_BODY)
+            continue;
+
+        if (bottle_blood && (food_is_rotten(*si)
+                             || !can_bottle_blood_from_corpse(si->mon_type)))
+        {
+            continue;
+        }
+        meat.push_back(& (*si));
+    }
+
+    corpse_id = -1;
+    vector<SelItem> selected =
+        select_items(meat, bottle_blood ? "Choose a corpse to bottle"
+                                        : "Choose a corpse to butcher",
+                     false, MT_ANY, _butcher_menu_title);
+    redraw_screen();
+    for (int i = 0, count = selected.size(); i < count; ++i)
+    {
+        corpse_id = selected[i].item->index();
+        if (!did_weap_swap)
+        {
+            if (_prepare_butchery(can_butcher, removed_gloves, wpn_switch))
+                did_weap_swap = true;
+            else
+                return false;
+        }
+        if (_corpse_butchery(corpse_id, butcher_tool, first_corpse,
+                             bottle_blood))
+        {
+            success = true;
+            first_corpse = false;
+        }
+    }
+
+#else
     int keyin;
+    bool repeat_prompt = false;
     for (stack_iterator si(you.pos(), true); si; ++si)
     {
         if (si->base_type != OBJ_CORPSES || si->sub_type != CORPSE_BODY)
@@ -581,7 +629,7 @@ bool butchery(int which_corpse, bool bottle_blood)
         {
             corpse_id = -1;
 
-            std::string corpse_name = si->name(DESC_A);
+            string corpse_name = si->name(DESC_A);
 
             // We don't need to check for undead because
             // * Mummies can't eat.
@@ -652,7 +700,7 @@ bool butchery(int which_corpse, bool bottle_blood)
             }
         }
     }
-
+#endif
     if (!butcher_all && corpse_id == -1)
     {
         mprf("There isn't anything %s to %s here.",
@@ -888,7 +936,7 @@ static bool _player_has_enough_food()
     return (food_value > 5);
 }
 
-static std::string _how_hungry()
+static string _how_hungry()
 {
     if (you.hunger_state > HS_SATIATED)
         return "full";
@@ -907,8 +955,8 @@ bool food_change(bool suppress_message)
     bool state_changed = false;
     bool less_hungry   = false;
 
-    you.hunger = std::max(you_min_hunger(), you.hunger);
-    you.hunger = std::min(you_max_hunger(), you.hunger);
+    you.hunger = max(you_min_hunger(), you.hunger);
+    you.hunger = min(you_max_hunger(), you.hunger);
 
     // Get new hunger state.
     hunger_state_t newstate = HS_STARVING;
@@ -964,7 +1012,7 @@ bool food_change(bool suppress_message)
 
         if (!suppress_message)
         {
-            std::string msg = "You ";
+            string msg = "You ";
             switch (you.hunger_state)
             {
             case HS_STARVING:
@@ -1027,7 +1075,7 @@ bool food_change(bool suppress_message)
 static void _describe_food_change(int food_increment)
 {
     int magnitude = (food_increment > 0)?food_increment:(-food_increment);
-    std::string msg;
+    string msg;
 
     if (magnitude == 0)
         return;
@@ -1121,7 +1169,7 @@ void eat_floor_item(int item_link)
 class compare_by_freshness
 {
 public:
-    bool operator()(item_def *food1, item_def *food2)
+    bool operator()(const item_def *food1, const item_def *food2)
     {
         ASSERT(food1->base_type == OBJ_CORPSES || food1->base_type == OBJ_FOOD);
         ASSERT(food2->base_type == OBJ_CORPSES || food2->base_type == OBJ_FOOD);
@@ -1166,6 +1214,12 @@ public:
     }
 };
 
+#ifdef TOUCH_UI
+static string _floor_eat_menu_title(const Menu *menu, const string &oldt)
+{
+    return oldt;
+}
+#endif
 // Returns -1 for cancel, 1 for eaten, 0 for not eaten.
 int eat_from_floor(bool skip_chunks)
 {
@@ -1185,7 +1239,7 @@ int eat_from_floor(bool skip_chunks)
     item_def wonteat;
     bool found_valid = false;
 
-    std::vector<item_def *> food_items;
+    vector<const item_def*> food_items;
     for (stack_iterator si(you.pos(), true); si; ++si)
     {
         if (you.species == SP_VAMPIRE)
@@ -1244,12 +1298,37 @@ int eat_from_floor(bool skip_chunks)
 
     if (found_valid)
     {
-        std::sort(food_items.begin(), food_items.end(), compare_by_freshness());
+#ifdef TOUCH_UI
+        vector<SelItem> selected =
+            select_items(food_items,
+                         you.species == SP_VAMPIRE ? "Drink blood from" : "Eat",
+                         false, MT_SELONE, _floor_eat_menu_title);
+        redraw_screen();
+        for (int i = 0, count = selected.size(); i < count; ++i)
+        {
+            const item_def *item = selected[i].item;
+            if (!check_warning_inscriptions(*item, OPER_EAT))
+                break;
+
+            if (can_ingest(*item, false))
+            {
+                int ilink = item_on_floor(*item, you.pos());
+
+                if (ilink != NON_ITEM)
+                {
+                    eat_floor_item(ilink);
+                    return true;
+                }
+                else
+                    return false;
+            }
+        }
+#else
+        sort(food_items.begin(), food_items.end(), compare_by_freshness());
         for (unsigned int i = 0; i < food_items.size(); ++i)
         {
-            item_def *item = food_items[i];
-            std::string item_name = get_menu_colour_prefix_tags(*item,
-                                                                DESC_A);
+            const item_def *item = food_items[i];
+            string item_name = get_menu_colour_prefix_tags(*item, DESC_A);
 
             mprf(MSGCH_PROMPT, "%s %s%s? (ye/n/q/i?)",
                  (you.species == SP_VAMPIRE ? "Drink blood from" : "Eat"),
@@ -1290,6 +1369,7 @@ int eat_from_floor(bool skip_chunks)
                 break;
             }
         }
+#endif
     }
     else
     {
@@ -1344,7 +1424,7 @@ bool eat_from_inventory()
     item_def *wonteat = NULL;
     bool found_valid = false;
 
-    std::vector<item_def *> food_items;
+    vector<item_def *> food_items;
     for (int i = 0; i < ENDOFPACK; ++i)
     {
         if (!you.inv[i].defined())
@@ -1402,12 +1482,11 @@ bool eat_from_inventory()
 
     if (found_valid)
     {
-        std::sort(food_items.begin(), food_items.end(), compare_by_freshness());
+        sort(food_items.begin(), food_items.end(), compare_by_freshness());
         for (unsigned int i = 0; i < food_items.size(); ++i)
         {
             item_def *item = food_items[i];
-            std::string item_name = get_menu_colour_prefix_tags(*item,
-                                                                DESC_A);
+            string item_name = get_menu_colour_prefix_tags(*item, DESC_A);
 
             mprf(MSGCH_PROMPT, "%s %s%s? (ye/n/q)",
                  (you.species == SP_VAMPIRE ? "Drink blood from" : "Eat"),
@@ -1486,7 +1565,7 @@ int prompt_eat_chunks(bool only_auto)
     }
 
     bool found_valid = false;
-    std::vector<item_def *> chunks;
+    vector<item_def *> chunks;
 
     // First search the stash on the floor, unless levitating.
     if (you.flight_mode() != FL_LEVITATE)
@@ -1560,13 +1639,12 @@ int prompt_eat_chunks(bool only_auto)
 
     if (found_valid)
     {
-        std::sort(chunks.begin(), chunks.end(), compare_by_freshness());
+        sort(chunks.begin(), chunks.end(), compare_by_freshness());
         for (unsigned int i = 0; i < chunks.size(); ++i)
         {
             bool autoeat = false;
             item_def *item = chunks[i];
-            std::string item_name = get_menu_colour_prefix_tags(*item,
-                                                                DESC_A);
+            string item_name = get_menu_colour_prefix_tags(*item, DESC_A);
 
             const bool contam = is_contaminated(*item);
             const bool bad    = is_bad_food(*item);
@@ -2069,7 +2147,7 @@ void finished_eating_message(int food_type)
         break;
     case FOOD_PIZZA:
     {
-        std::string taste = getMiscString("eating_pizza");
+        string taste = getMiscString("eating_pizza");
         if (taste.empty())
             taste = "Bleh, bug pizza.";
         mprf("%s", taste.c_str());
@@ -2077,7 +2155,7 @@ void finished_eating_message(int food_type)
     }
     case FOOD_CHEESE:
     {
-        std::string taste = getMiscString("eating_cheese");
+        string taste = getMiscString("eating_cheese");
         if (taste.empty())
             taste = "Yeuchh! Moldy bug cheese.";
         mprf("%s", taste.c_str());
@@ -2674,7 +2752,7 @@ static void _heal_from_food(int hp_amt, bool unrot, bool restore_str)
         unrot_hp(1);
     }
 
-    if (restore_str && you.strength() < you.max_strength())
+    if (restore_str && you.strength(false) < you.max_strength())
         restore_stat(STAT_STR, 1, false);
 
     calc_hp();
@@ -2726,11 +2804,13 @@ void handle_starvation()
         {
             mpr("You have starved to death.", MSGCH_FOOD);
             ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_STARVATION);
+            if (!you.dead) // if we're still here...
+                set_hunger(HUNGER_DEFAULT, true);
         }
     }
 }
 
-std::string hunger_cost_string(const int hunger)
+string hunger_cost_string(const int hunger)
 {
     if (you.is_undead == US_UNDEAD)
         return "N/A";
@@ -2744,11 +2824,13 @@ std::string hunger_cost_string(const int hunger)
     const int numbars = breakpoint_rank(hunger, breakpoints, ARRAYSZ(breakpoints));
 
     if (numbars > 0)
-        return std::string(numbars, '#') + std::string(ARRAYSZ(breakpoints) - numbars, '.');
+        return string(numbars, '#') + string(ARRAYSZ(breakpoints) - numbars, '.');
     else
         return "None";
 }
 
+// Simulacrum and Sublimation of Blood are handled elsewhere, as they ignore
+// chunk edibility.
 static int _chunks_needed()
 {
     if (you.form == TRAN_LICH)
@@ -2780,14 +2862,13 @@ static int _chunks_needed()
             biggest_spell = spell_hunger(you.spells[i]);
     hunger += biggest_spell;
 
-    int needed = 1 + std::max(0, hunger / 666);
+    int needed = 1 + max(0, hunger / 666);
     dprf("want to keep %d chunks", needed);
 
     return needed;
 }
 
-static bool _compare_second(const std::pair<int, int> &a,
-                            const std::pair<int, int> &b)
+static bool _compare_second(const pair<int, int> &a, const pair<int, int> &b)
 {
     return a.second < b.second;
 }
@@ -2817,7 +2898,7 @@ maybe_bool drop_spoiled_chunks(int weight_needed, bool whole_slot)
     int nchunks = 0;
     maybe_bool result = B_FALSE;
 
-    std::vector<std::pair<int, int> > chunk_slots;
+    vector<pair<int, int> > chunk_slots;
     for (int slot = 0; slot < ENDOFPACK; slot++)
     {
         item_def &item(you.inv[slot]);
@@ -2851,7 +2932,7 @@ maybe_bool drop_spoiled_chunks(int weight_needed, bool whole_slot)
         int badness = _corpse_badness(ce, item, wants_any);
 
         nchunks += item.quantity;
-        chunk_slots.push_back(std::pair<int,int>(slot, badness));
+        chunk_slots.push_back(pair<int,int>(slot, badness));
     }
 
     // No rotten ones to drop, and we're not allowed to drop others.
@@ -2860,14 +2941,14 @@ maybe_bool drop_spoiled_chunks(int weight_needed, bool whole_slot)
 
     nchunks -= _chunks_needed();
 
-    std::sort(chunk_slots.begin(), chunk_slots.end(), _compare_second);
+    sort(chunk_slots.begin(), chunk_slots.end(), _compare_second);
 
     while (nchunks > 0 && !chunk_slots.empty())
     {
         int slot = chunk_slots.back().first;
         chunk_slots.pop_back();
 
-        int quant = std::min<int>(nchunks, you.inv[slot].quantity);
+        int quant = min<int>(nchunks, you.inv[slot].quantity);
         if (whole_slot && quant < you.inv[slot].quantity)
             return result;
 

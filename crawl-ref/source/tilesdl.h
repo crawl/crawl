@@ -7,15 +7,14 @@
 #ifndef TILESDL_H
 #define TILESDL_H
 
-#include "externs.h"
 #include "tilereg.h"
-#include "tiletex.h"
-#include "mon-info.h"
 
+class Popup;
 class Region;
 class CRTRegion;
 class CRTRegionSingleSelect;
 class MenuRegion;
+class PopupRegion;
 class TileRegion;
 class DungeonRegion;
 class GridRegion;
@@ -38,7 +37,7 @@ class MessageRegion;
 
 struct map_cell;
 
-typedef std::map<int, TabbedRegion*>::iterator tab_iterator;
+typedef map<int, TabbedRegion*>::iterator tab_iterator;
 
 enum key_mod
 {
@@ -119,7 +118,7 @@ public:
 
     void place_cursor(cursor_type type, const coord_def &gc);
     void clear_text_tags(text_tag_type type);
-    void add_text_tag(text_tag_type type, const std::string &tag,
+    void add_text_tag(text_tag_type type, const string &tag,
                       const coord_def &gc);
     void add_text_tag(text_tag_type type, const monster_info& mon);
 
@@ -131,10 +130,15 @@ public:
     void clear_overlays();
 
     void draw_title();
-    void update_title_msg(std::string load_msg);
+    void update_title_msg(string load_msg);
     void hide_title();
 
     void draw_doll_edit();
+
+    int draw_popup(Popup *popup);
+    void set_map_display(const bool display);
+    bool get_map_display();
+    void do_map_display();
 
     MenuRegion *get_menu() { return m_region_menu; }
     bool is_fullscreen() { return m_fullscreen; }
@@ -142,13 +146,14 @@ public:
     FontWrapper* get_crt_font() { return m_fonts.at(m_crt_font).font; }
     CRTRegion* get_crt() { return m_region_crt; }
     const ImageManager* get_image_manager() { return m_image; }
-    int to_lines(int num_tiles);
+    int to_lines(int num_tiles, int tile_height = TILE_Y);
 protected:
     int load_font(const char *font_file, int font_size,
                   bool default_on_fail, bool outline);
     int handle_mouse(MouseEvent &event);
 
-    void use_control_region(ControlRegion *region);
+    void use_control_region(ControlRegion *region, bool use_control_layer = true);
+    bool m_map_mode_enabled;
 
     // screen pixel dimensions
     coord_def m_windowsz;
@@ -160,6 +165,18 @@ protected:
 
     enum TabID
     {
+#ifdef TOUCH_UI
+        TAB_COMMAND,
+        TAB_ITEM,
+        TAB_NAVIGATION,
+        TAB_COMMAND2,
+        TAB_MONSTER,
+        TAB_SPELL,
+        TAB_ABILITY,
+        TAB_SKILL,
+        TAB_MEMORISE,
+        TAB_MAX,
+#else
         TAB_ITEM,
         TAB_SPELL,
         TAB_MEMORISE,
@@ -167,7 +184,10 @@ protected:
         TAB_MONSTER,
         TAB_SKILL,
         TAB_COMMAND,
+        TAB_COMMAND2,
+        TAB_NAVIGATION,
         TAB_MAX,
+#endif
     };
 
     enum LayerID
@@ -182,7 +202,7 @@ protected:
     {
     public:
         // Layers don't own these regions
-        std::vector<Region*> m_regions;
+        vector<Region*> m_regions;
     };
     Layer m_layers[LAYER_MAX];
     LayerID m_active_layer;
@@ -201,8 +221,10 @@ protected:
     MonsterRegion   *m_region_mon;
     SkillRegion     *m_region_skl;
     CommandRegion   *m_region_cmd;
+    CommandRegion   *m_region_cmd_meta;
+    CommandRegion   *m_region_cmd_map;
 
-    std::map<int, TabbedRegion*> m_tabs;
+    map<int, TabbedRegion*> m_tabs;
 
     // Full-screen CRT layer
     CRTRegion       *m_region_crt;
@@ -210,12 +232,12 @@ protected:
 
     struct font_info
     {
-        std::string name;
+        string name;
         int size;
         bool outline;
         FontWrapper *font;
     };
-    std::vector<font_info> m_fonts;
+    vector<font_info> m_fonts;
     int m_crt_font;
     int m_msg_font;
     int m_tip_font;
@@ -245,7 +267,7 @@ protected:
     unsigned int m_last_tick_moved;
     unsigned int m_last_tick_redraw;
 
-    std::string m_tooltip;
+    string m_tooltip;
 
     int m_screen_width;
     int m_screen_height;

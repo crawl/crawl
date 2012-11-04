@@ -237,7 +237,7 @@ xxxx???xxxxxx?***??xxxxxxxxxxxxx.........7...c...444..cccc..........cx
 xx$$$$$$?xxxx?.6..?xxxxxxxxxeeee..7..........+........+TT+.........5cx
 x?$$$$$$.?xx?.666.xxxxxxee0eexxx7....7.......c........cccc.........1cx
 x.$$$$$$..?x...6..eeeeeeexxxxxxx............7ccccc+ccccccc.........5cx
-x....<.....=?....xxxxxxxxx$$$TTcccc+ccccccccccccccTc(((((+..........cx
+x....<.....+?....xxxxxxxxx$$$TTcccc+ccccccccccccccTc(((((+..........cx
 x?........?xxxx.xxxxxxxx<=$$$TT+.......+TTTTTTTTTTTc(((((c.......***cx
 xx........?xx...xxxxxxxxxxx!xxxc..4.4..ccccccccccccccccccc444....***cx
 xxxx?...?xxxx.xxxxxxxxxxxxxCxxxc...4...cxxxCxxxxxxxxxxxxxxxxxxxxx=xxxx
@@ -502,8 +502,8 @@ MAP
 .c$c%c......ww.ccccccccc.......xx
 .c+c+c......ww.c.%$....ccccccccxx
 .c...+......ww.c*.115..c$$+|*|cxx
-.c1..c.....ww..c...55+ccc+cxx=cxx
-.ccccc.....ww..ccccccc....c|=*cxx
+.c1..c.....ww..c...55+ccc=cxx+cxx
+.ccccc.....ww..ccccccc....c|+*cxx
 ............ww.......c5...cxx=cxx
 ....6.ccccc.ww.w...2.+51..c|1.cxx
 ....63+...c..wwww..21+51..c2.2cxx
@@ -864,8 +864,7 @@ MONS:   raven
 NSUBST: A = 3:v / *:=, B = 3:v / *:=
 NSUBST: C = 2:v / *:=, D = 2:v / *:=
 # Make sure monsters don't wander to much.
-MARKER: + = lua:restrict_door()
-MARKER: = = lua:restrict_door()
+KFEAT:  + = runed_door
 # Colouring
 COLOUR: G = cyan
 COLOUR: I5M% = white
@@ -931,7 +930,8 @@ ENDMAP
 NAME:    statue_cache
 ORIENT:  north
 TAGS:    no_monster_gen
-DEPTH:   D:12-20, Elf, Vaults
+DEPTH:   D:12-20, Elf
+SHUFFLE: 12, 34, 56, 89
 MONS: statue name:archer name_adjective tile:mons_statue_crossbow ; crossbow \
       ego:flame . bolt q:30
 MONS: statue name:archer name_adjective tile:mons_statue_crossbow ; crossbow \
@@ -973,7 +973,7 @@ ENDMAP
 #
 NAME:   evilmike_wizard_prison
 TAGS:   no_monster_gen
-DEPTH:  D:17-27, Vaults:3-7, Crypt:1-4
+DEPTH:  D:17-27, Crypt:1-4
 ORIENT: southeast
 SUBST:  ~ = ~:2 .:3
 SUBST:  . = ~:1 .:9
@@ -981,10 +981,9 @@ NSUBST: 3 = 3:. / *:3
 SUBST:  ^ : ^mmm
 KFEAT:  ^ = teleport trap
 KFEAT:  m = iron_grate
-KFEAT:  ! = closed_door
+KFEAT:  ! = runed_door
 KFEAT:  y = rock_wall
 KMASK:  y = no_wall_fixup
-MARKER: ! = lua:restrict_door()
 KPROP:  -d|*$14567^ = no_rtele_into
 FTILE:  -mcyd|*$14567^! = FLOOR_PEBBLE_DARKGRAY
 FTILE:  .@~+23 = FLOOR_HALL
@@ -1055,7 +1054,6 @@ NSUBST: * = 2:| / *:*
 SUBST:  Z = Y, Y = Y:4 V:1
 SUBST:  v = v:6 b:1, . = .:7 ':1
 KPROP:  'b6 = bloody
-MARKER: = = lua:restrict_door()
 SUBST:  b = v, B = .
 MONS:   hell knight
 MONS:   kobold demonologist, deep elf demonologist
@@ -1109,13 +1107,12 @@ ENDMAP
 ################################################################################
 # Sif Muna library
 #
-NAME:   evilmike_library_of_many_secrets
+NAME:   evilmike_library_of_no_secrets
 ORIENT: southeast
 DEPTH:  D:11-
 TAGS:   no_pool_fixup no_monster_gen
 TILE:   c = DNGN_STONE_WALL_BLUE
 COLOUR: c" = lightblue
-COLOUR: = = lightblue
 FTILE:  .+def12Ubc|* = FLOOR_CRYSTAL_SQUARES
 FTILE:  "_ = FLOOR_MARBLE
 KFEAT:  _ = altar_sif_muna
@@ -1139,7 +1136,7 @@ MONS:   w:25 deep elf sorcerer / w:50 lich / w:25 ancient lich
 ITEM:   any book / w:20 any randbook
 ITEM:   w:18 any magical staff / any rod w:5 / any jewellery
 ITEM:   any randbook / gold
-SUBST:  '" = .
+SUBST:  " = .
 MAP
                 xxxxxxxxxxxxxxxxxxxxxxxxx
                 xcccccccccccccccccccccccc
@@ -1147,29 +1144,29 @@ MAP
                 xccccU............Ucccccc
                 xcwwc..b..b..b..b..cccccc
                 xc|*+..b..b..b..b..cccccc
-                xc||c..2..1..1..1..='cccc
-                xc|*+..b..b..b..b..c'cccc
-  xxxxxxxxxxxxxxxcwwc..b..b..b..b..c'cccc
-  xcccccccccccccccc=cU............Uc'cccc
-  xccc'=''''''''''='ccccccc++ccccccc'cccc
-  xccc'cccccccccccc'ccccccw..wcccccc=cccc
-  xccc'=f...cc...f='=''''=w..w='''''''ccc
-  xccc'c.bb.cc.bb.c'ccccccc++cccc=ccc=ccc
-  xccc'c..1.cc.1..c'cwwwwwwWWwwwc'cwwwwwc
-  xccc=cccc+cc+cccc=cwbb..1..bbwc'cdd.eec
-''cccc..............cwb...U...bwc'ccc+ccc
-'Yc.1c..bbbb..bbbb1.cw..U"""U..wc'c.....c
-@'+..c..............cw.."""""..wc=c..b.2c
+                xc||c..2..1..1..1..cccccc
+                xc|*+..b..b..b..b..cccccc
+  xxxxxxxxxxxxxxxcwwc..b..b..b..b..cccccc
+  xccccccccccccccccccU............Ucccccc
+  xcccccccccccccccccccccccc++cccccccccccc
+  xcccccccccccccccccccccccw..wccccccccccc
+  xcccccf...cc...fccccccccw..wccccccccccc
+  xccccc.bb.cc.bb.ccccccccc++cccccccccccc
+  xccccc..1.cc.1..cccwwwwwwWWwwwcccwwwwwc
+  xcccccccc+cc+ccccccwbb..1..bbwcccdd.eec
+''cccc..............cwb...U...bwccccc+ccc
+'Yc.1c..bbbb..bbbb1.cw..U"""U..wccc.....c
+@'+..c..............cw.."""""..wccc..b.2c
 @Yc..+..bbbb1.bbbb1.+W.U""_""U2W+.+.bUb1c
-@'+..c..............cw.."""""..wc=c..b.2c
-'Yc.1c..bbbb..bbbb1.cw..U"""U..wc'c.....c
-''cccc..............cwb...U...bwc'ccc+ccc
-  xccc=cccc+cc+cccc=cwbb..1..bbwc'cee.ddc
-  xccc'c..c....c..c'cwwwwwwwwwwwc'cwwwwwc
-  xccc'cU.+1bb1+.Uc'cccccc=cccccc=ccc=ccc
-  xccc'=f.c....c.f='='''''''''''''''''ccc
-  xccc'cccccc=ccccc'ccccccccccccccccccccc
-  xccc'=''''''''''='ccccccccccccccccccccc
+@'+..c..............cw.."""""..wccc..b.2c
+'Yc.1c..bbbb..bbbb1.cw..U"""U..wccc.....c
+''cccc..............cwb...U...bwccccc+ccc
+  xcccccccc+cc+ccccccwbb..1..bbwcccee.ddc
+  xccccc..c....c..cccwwwwwwwwwwwcccwwwwwc
+  xcccccU.+1bb1+.Uccccccccccccccccccccccc
+  xcccccf.c....c.fccccccccccccccccccccccc
+  xcccccccccccccccccccccccccccccccccccccc
+  xcccccccccccccccccccccccccccccccccccccc
   xcccccccccccccccccccccccccccccccccccccc
 ENDMAP
 
@@ -1179,9 +1176,9 @@ ENDMAP
 NAME:   evilmike_iron_armoury
 ORIENT: southeast
 TAGS:   no_monster_gen no_item_gen
-DEPTH:  D:11-27, Vaults:1-7
+DEPTH:  D:11-27
 KFEAT:  _ = altar_okawaru
-SUBST:  = = =v
+SUBST:  = = nv
 FTILE:  '+Gvc12345_defghijk = floor_hall
 : if you.absdepth() < 16 then
 MONS:   w:5 deep elf soldier / deep elf fighter / orc warrior
@@ -1258,8 +1255,6 @@ MARKER: ! = lua:fog_machine { \
                 size = 8, size_buildup_amnt = 5, \
                 size_buildup_time = 10, cloud_type = "flame" \
             }
-# let's not have enemies opening the door and roasting themselves...
-MARKER: = = lua:restrict_door()
 KFEAT:  _ = altar_vehumet
 : if you.absdepth() < 22 then
 # Given a special name so they stand out in tiles mode
@@ -1318,7 +1313,7 @@ DEPTH:  D:15-
 TAGS:   no_monster_gen
 #
 # gives a 50% chance of there being at least one shortcut in this vault
-SUBST:  = = c:8 =:1
+SUBST:  = = c:8 +:1
 TILE:   c = WALL_BRICK_GRAY
 # maybe use something darker?
 #
@@ -1388,9 +1383,7 @@ MONS:    guardian serpent
 MONS:    curse skull
 # Randomise wall type: in 50% of maps, you cannot dig to the stairs.
 SUBST:   x : xxxxxxvvvccb
-# Hints at the important secret doors (red colour). On the one hand, we
-# may be too nice here; on the other hand, that's spoily information.
-# (red blood tiles at the claws)
+KFEAT:   = = closed_door
 COLOUR:  ' = red
 FTILE:   ' = floor_rough_red
 SUBST:   ' = .

@@ -92,6 +92,7 @@ Some shortcuts:
 <w>..</w>            lists all items you know.
 <w>0</w> to <w>9</w>        lists all items at the specified waypoint.
 <w>*</w>             lists all items at all waypoints.
+<w>@(pattern)</w>    lists everything matching (pattern) on your current level.
 
 You can also examine shops and items in the search results by pressing <w>?</w> and
 then hitting the hotkey for the search result. This will give a description
@@ -262,7 +263,7 @@ Apart from (de)selecting skills, you also have the following toggles:
 <w>_</w> :   Shows/hides skill modifiers, e.g. from god powers.
 
                                <h>Training restrictions</h>
-Fighting, Throwing, Dodging, Stealth, Stabbing, Traps & Doors, Unarmed Combat,
+Fighting, Throwing, Dodging, Stealth, Stabbing, Traps, Unarmed Combat,
 and Spellcasting can always be trained. For the rest:
 * Weapon skills require carrying a weapon of the appropriate type.
 * Armour requires wearing an armour with an evasion penalty.

@@ -1,0 +1,102 @@
+%%%%
+A closed door
+
+Dřevěné dveře. Chcete-li je otevřít, zkuste do nich jednoduše vejít, nebo
+stiskněte "O".
+%%%%
+A crawl-hole back to the Lair
+
+Tento průchod vede zpět k méně stísněným prostorám s menším počtem pavučin.
+%%%%
+A dry fountain
+
+Vyschlá fontána, která již zaznamenala lepší časy.
+%%%%
+A gate leading back out of here
+
+U této brány se zdá, že se vrátíte tam, odkud jste přišel.
+%%%%
+A gate leading back out of this place
+
+Tato brána vede zpět do žaláře.
+%%%%
+A gate leading out of Pandemonium
+
+Konečně, brána, která vede zpět do žaláře.
+%%%%
+A gateway to Hell
+
+Tato brána vede do předsálí pekla. Jen málokdo by tam šel dobrovolně.
+%%%%
+A gateway to the decaying netherworld of Tartarus
+
+Toto místo se zdá vyzařuje negativní energii.
+%%%%
+A magical trap
+
+Magické zařízení určené k ohrožení vetřelců, které nelze deaktivovat.
+%%%%
+A mechanical trap
+
+Mechanický vynález navržen tak, aby ohrozil nepovolané osoby. Avšak zručný
+dobrodruh se jej může pokusit zneškodnit.
+%%%%
+A crystal clear mirror
+
+Lesknoucí se zrcadlo, odráží všechno kolem něj.
+%%%%
+A glistening fountain
+
+Jediné co chybí, je voda.
+%%%%
+A crumbling stone wall
+
+To vypadá starobyle.
+%%%%
+A gravestone
+
+Bezejmenný hrob.Otázkou zůstává: je to hrob, který je bezejmenný, nebo osoba,
+která spočívá v tomto hrobě?
+%%%%
+A damp floor
+
+Možná je to vlhkost, nebo stálý proud mraků, ale podlaha zde zůstává navždy
+vlhká.
+%%%%
+A hot floor
+
+Hluboko pod podlahou hoří oheň teplejší, než jakýkoli jiný oheň: oheň pekla.
+Podlaha je horká na dotek.
+%%%%
+A dead tree
+
+Tento strom je mrtvý jako všechno ostatní tady.
+%%%%
+A cracked metal wall
+
+Tato kovová stěna utrpěla nějaké škody. Bohužel, díra není dost velká na to,
+abyste prolez.
+%%%%
+A golden statue
+
+Socha věštce z ryzího zlata.
+%%%%
+A sarcophagus
+
+Starověký sarkofág. Zdá být prázdný.
+%%%%
+A large window
+
+Okno vložené do boku obrovského kovového potrubí, což umožňuje pozorování
+tekoucí vody uvnitř.
+%%%%
+A magical portal
+
+Tento portál byl ponechán otevřený neopatrným mágem. Mohl by vést k tajné
+laboratoři, ale pozor! Určitě bude střežen kouzelnými pastmi a strašlivými
+příšerami. Zdá se, že pomalu mizí.
+%%%%
+An exit from the tutorial
+
+Toto je cesta ven z žaláře, umožní vám dokončit tuto lekci.
+%%%%

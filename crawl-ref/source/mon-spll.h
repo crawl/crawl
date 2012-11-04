@@ -133,11 +133,11 @@
     {  MST_LICH_III,
       {
        SPELL_BOLT_OF_DRAINING,
-       SPELL_ANIMATE_DEAD,
-       SPELL_SUMMON_UNDEAD,
-       SPELL_THROW_FROST,
+       SPELL_SLOW,
+       SPELL_INVISIBILITY,
+       SPELL_THROW_ICICLE,
        SPELL_LEHUDIBS_CRYSTAL_SPEAR,
-       SPELL_SUMMON_UNDEAD
+       SPELL_INVISIBILITY
       }
     },
 
@@ -389,8 +389,8 @@
        SPELL_NO_SPELL,
        SPELL_CANTRIP,
        SPELL_SMITING,
-       SPELL_NO_SPELL,
-       SPELL_HEAL_OTHER
+       SPELL_HEAL_OTHER,
+       SPELL_NO_SPELL
       }
     },
 
@@ -400,8 +400,8 @@
        SPELL_SUMMON_DEMON,
        SPELL_SUMMON_DEMON,
        SPELL_SMITING,
-       SPELL_ANIMATE_DEAD,
-       SPELL_HEAL_OTHER
+       SPELL_HEAL_OTHER,
+       SPELL_MINOR_HEALING,
       }
     },
 
@@ -1299,12 +1299,12 @@
 
     {  MST_ERESHKIGAL,
       {
-       SPELL_BOLT_OF_DRAINING,
        SPELL_BOLT_OF_COLD,
+       SPELL_SILENCE,
        SPELL_SUMMON_GREATER_DEMON,
        SPELL_SYMBOL_OF_TORMENT,
        SPELL_PARALYSE,
-       SPELL_MINOR_HEALING
+       SPELL_MAJOR_HEALING
       }
     },
 
@@ -1777,7 +1777,7 @@
        SPELL_HASTE,
        SPELL_HELLFIRE,
        SPELL_BLINK_AWAY,
-       SPELL_THROW_FLAME
+       SPELL_NO_SPELL
       }
     },
 
@@ -1789,6 +1789,39 @@
        SPELL_AIRSTRIKE,
        SPELL_BLINK_RANGE,
        SPELL_BLINK_RANGE
+      }
+    },
+
+    {  MST_SOUL_EATER,
+      {
+       SPELL_DRAIN_LIFE,
+       SPELL_MELEE,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_WRETCHED_STAR,
+      {
+       SPELL_ISKENDERUNS_MYSTIC_BLAST,
+       SPELL_ISKENDERUNS_MYSTIC_BLAST,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_FRANCES,
+      {
+       SPELL_THROW_ICICLE,
+       SPELL_SUMMON_DEMON,
+       SPELL_HASTE,
+       SPELL_IRON_SHOT,
+       SPELL_SUMMON_DEMON,
+       SPELL_HASTE
       }
     },
 
