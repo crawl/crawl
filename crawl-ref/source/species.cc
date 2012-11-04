@@ -427,6 +427,7 @@ int species_exp_modifier(species_type species)
     case SP_VAMPIRE:
     case SP_TROLL:
     case SP_DEMONSPAWN:
+    case SP_LAVA_ORC:
         return -1;
     case SP_DEMIGOD:
         return -2;

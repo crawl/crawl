@@ -954,7 +954,6 @@ void draw_border(void)
     int str_pos = ac_pos;
     int int_pos = ev_pos;
     int dex_pos = sh_pos;
-    int gold_pos = 9 + temp;
 
     //cgotoxy(1, 3, GOTO_STAT); cprintf("Hp:");
     cgotoxy(1, mp_pos, GOTO_STAT); cprintf("Magic:");

@@ -39,6 +39,7 @@
 #include "libutil.h"
 #include "losglobal.h"
 #include "makeitem.h"
+#include "math.h"
 #include "message.h"
 #include "mgen_data.h"
 #include "misc.h"
@@ -4818,14 +4819,11 @@ bool temperature_effect(int which) {
 //      case nothing, right now:
 //            return (you.temperature >= TEMP_COOL && you.temperature < TEMP_WARM); // 5-8
         case LORC_FIRE_RES_II:
-        case LORC_LAVA_BLOOD:
-            return (temperature() >= TEMP_WARM); // 9-15
         case LORC_LAVA_BOOST:
             return (temperature() >= TEMP_WARM && temperature() < TEMP_HOT); // 9 - 10
         case LORC_FIRE_RES_III:
-        case LORC_FIRE_BOOST:
-        case LORC_LAVA_BLOOD:
             return (temperature() >= TEMP_WARM); // 9-15
+        case LORC_FIRE_BOOST:
         case LORC_COLD_VULN:
         case LORC_PASSIVE_HEAT:
             return (temperature() >= TEMP_HOT); // 11-15
@@ -4838,18 +4836,29 @@ bool temperature_effect(int which) {
     }
 }
 
-int temperature_colour() {
+int temperature_colour(int temp) {
 
-return (temperature() > TEMP_FIRE) ? LIGHTRED  :
-       (temperature() > TEMP_HOT)  ? RED       :
-       (temperature() > TEMP_WARM) ? YELLOW    :
-       (temperature() > TEMP_ROOM) ? WHITE     :
-       (temperature() > TEMP_COOL) ? LIGHTCYAN :
-       (temperature() > TEMP_COLD) ? LIGHTBLUE : BLUE;
+return (temp > TEMP_FIRE) ? LIGHTRED  :
+       (temp > TEMP_HOT)  ? RED       :
+       (temp > TEMP_WARM) ? YELLOW    :
+       (temp > TEMP_ROOM) ? WHITE     :
+       (temp > TEMP_COOL) ? LIGHTCYAN :
+       (temp > TEMP_COLD) ? LIGHTBLUE : BLUE;
+}
 
-std::string temperature_text(int which) {
+std::string temperature_string(int temp) {
 
-    switch (which)
+return (temp > TEMP_FIRE) ? "lightred"  :
+       (temp > TEMP_HOT)  ? "red"       :
+       (temp > TEMP_WARM) ? "yellow"    :
+       (temp > TEMP_ROOM) ? "white"     :
+       (temp > TEMP_COOL) ? "lightcyan" :
+       (temp > TEMP_COLD) ? "lightblue" : "blue";
+}
+
+std::string temperature_text(int temp) {
+
+    switch (temp)
     {
         case TEMP_MIN:
             return "Minimum temperature; always rF+.";

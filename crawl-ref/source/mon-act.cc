@@ -3716,6 +3716,51 @@ static void _mons_in_cloud(monster* mons)
     actor_apply_cloud(mons);
 }
 
+static void _heated_area(monster* mons)
+{
+    if (!heated(mons->pos()))
+        return;
+
+    if (mons->is_fiery())
+        return;
+
+    const int base_damage = roll_dice(2, 11);
+
+    // Timescale, like with clouds:
+    const int speed = mons->speed > 0? mons->speed : 10;
+    const int timescaled = (std::max(0, base_damage) * 10 / speed);
+
+    // rF protects:
+    const int resist = mons->res_fire();
+    const int adjusted_damage = resist_adjust_damage(mons,
+                                BEAM_FIRE, resist,
+                                timescaled, true);
+    // So does AC:
+    const int final_damage = std::max(0, adjusted_damage
+                                      - random2(mons->armour_class()));
+
+    if (final_damage > 0)
+    {
+        if (mons->observable())
+            mprf("%s is blasted by searing heat.",
+                 mons->name(DESC_THE).c_str());
+
+        behaviour_event(mons, ME_DISTURB, 0, mons->pos());
+
+#ifdef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_DIAGNOSTICS, "%s %s %d damage from heat.",
+             mons->name(DESC_THE).c_str(),
+             mons->conj_verb("take").c_str(),
+             final_damage);
+#endif
+
+        mons->hurt(&you, final_damage, BEAM_MISSILE);
+
+        if (mons->alive() && mons->observable())
+            print_wounds(mons);
+    }
+}
+
 static spell_type _map_wand_to_mspell(int wand_type)
 {
     switch (wand_type)

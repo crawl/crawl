@@ -50,6 +50,8 @@ enum temperature_effect
     LORC_PASSIVE_HEAT,
     LORC_HEAT_AURA,
     LORC_NO_SCROLLS,
+    LORC_FIRE_RES_II,
+    LORC_FIRE_RES_III,
 };
 
 struct level_exit
@@ -230,5 +232,7 @@ void temperature_increment(float degree);
 void temperature_decrement(float degree);
 void temperature_changed(bool inc_temp);
 bool temperature_effect(int which);
-int temperature_colour();
+int temperature_colour(int temp);
+std::string temperature_string(int temp);
+std::string temperature_text(int temp);
 #endif

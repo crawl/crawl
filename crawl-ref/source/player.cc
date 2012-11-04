@@ -46,6 +46,7 @@
 #include "kills.h"
 #include "libutil.h"
 #include "macro.h"
+#include "map_knowledge.h"
 #include "melee_attack.h"
 #include "message.h"
 #include "misc.h"
@@ -6036,11 +6037,12 @@ int player::armour_class() const
     if (duration[DUR_ICY_ARMOUR])
         AC += 400 + skill(SK_ICE_MAGIC, 100) / 3;    // max 13
 
-    if (duration[DUR_STONESKIN])
+    if (duration[DUR_STONESKIN]) {
+        int boost = 200 + skill(SK_EARTH_MAGIC, 20); // max 7
         if (you.species == SP_LAVA_ORC)
-            AC += 200 + 100 * you.experience_level / 5;       // max 7
-        else
-            AC += 200 + skill(SK_EARTH_MAGIC, 20);       // max 7
+            boost = std::max(boost, 200 + 100 * you.experience_level / 5); // max 7
+        AC += boost;
+    }
 
     if (mutation[MUT_ICEMAIL])
         AC += 100 * player_icemail_armour_class();

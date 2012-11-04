@@ -206,7 +206,6 @@ public:
 
   vector<demon_trait> demonic_traits;
 
-  int temperature; // For lava orcs.
   int earth_attunement; // nomes only
   int magic_contamination;
 
@@ -645,6 +644,7 @@ public:
     int liquefying_radius2 () const;
     int umbra_radius2 () const;
     int suppression_radius2 () const;
+    int heat_radius2 () const;
     bool glows_naturally() const;
     bool petrifying() const;
     bool petrified() const;
