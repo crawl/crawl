@@ -1267,7 +1267,7 @@ ENDMAP
 # There's about 800 gold.
 NAME:   st_grand_hoard_of_tiamat
 TAGS:   no_monster_gen
-KMONS:  1 = patrolling Tiamat w:100 / patrolling golden dragon w:1
+KMONS:  1 = patrolling Tiamat, patrolling golden dragon
 SUBST:  D = DDD$
 KITEM:  D = $
 KITEM:  $ = gold q:1
