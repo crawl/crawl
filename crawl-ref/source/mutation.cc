@@ -532,9 +532,34 @@ string describe_mutations(bool center_title)
         have_any = true;
         std::string col = "darkgrey";
 
-        col = (temperature_effect(LORC_STONESKIN)) ? "brown" : "darkgrey";
+        col = (temperature_effect(LORC_STONESKIN)) ? "lightgrey" : "darkgrey";
         result += "<" + col + ">You have stony skin.</" + col + ">\n";
 
+        if (temperature_effect(LORC_FAST_MOVE))
+        {
+            // Fast move
+            col = "lightred";
+            result += "<" + col + ">You cover ground quickly.</" + col + ">\n";
+        }
+        else
+        {
+            // Slow or normal move
+            col = (temperature_effect(LORC_SLOW_MOVE)) ? "lightgrey" : "darkgrey";
+            result += "<" + col + ">You cover ground slowly.</" + col + ">\n";
+        }
+
+        // Fire res
+        col = (temperature_effect(LORC_FIRE_RES_III)) ? "lightred" :
+              (temperature_effect(LORC_FIRE_RES_II))  ? "white"    :
+              (temperature_effect(LORC_FIRE_RES_I))   ? "lightgrey"    : "bugged";
+
+        result += "<" + col + ">";
+        result += (temperature_effect(LORC_FIRE_RES_III)) ? "Your flesh is almost immune to the effects of heat." :
+                  (temperature_effect(LORC_FIRE_RES_II))  ? "Your flesh is very heat resistant." :
+                  (temperature_effect(LORC_FIRE_RES_I))   ? "Your flesh is heat resistant." : "bugged";
+        result += "</" + col + ">\n";
+
+        // Lava/fire boost
         if (temperature_effect(LORC_LAVA_BOOST))
         {
             col = "white";
@@ -546,15 +571,19 @@ string describe_mutations(bool center_title)
             result += "<" + col + ">Your fire spells are more powerful.<" + col + ">\n";
         }
 
-        col = (temperature_effect(LORC_PASSIVE_HEAT)) ? "lightred" : "darkgrey";
-        result += "<" + col + ">Your heat harms attackers.</" + col + ">\n";
-
-        col = (temperature_effect(LORC_HEAT_AURA)) ? "lightred" : "darkgrey";
-        result += "<" + col + ">You bathe your surroundings in blazing heat.</" + col + ">\n";
-
+        // Cold vulnerability
         col = (temperature_effect(LORC_COLD_VULN)) ? "red" : "darkgrey";
         result += "<" + col + ">You are vulnerable to cold.</" + col + ">\n";
 
+        // Passive heat
+        col = (temperature_effect(LORC_PASSIVE_HEAT)) ? "lightred" : "darkgrey";
+        result += "<" + col + ">Your heat harms attackers.</" + col + ">\n";
+
+        // Heat aura
+        col = (temperature_effect(LORC_HEAT_AURA)) ? "lightred" : "darkgrey";
+        result += "<" + col + ">You bathe your surroundings in blazing heat.</" + col + ">\n";
+
+        // No scrolls
         col = (temperature_effect(LORC_NO_SCROLLS)) ? "red" : "darkgrey";
         result += "<" + col + ">You are too hot to use scrolls or read books.</" + col + ">\n";
 
@@ -815,14 +844,16 @@ static void _display_temperature()
         std::ostringstream ostr;
 
         std::string colourname = temperature_string(t);
-        if (t == TEMP_MAX || t == TEMP_MIN)
-            text = "  --------";
+        if (t == TEMP_MAX)
+            text = "  ╔═MAX══╗";
+        else if (t == TEMP_MIN)
+            text = "  ╚══MIN═╝";
         else if (temperature() < t)
-            text = "  |      |";
+            text = "  ║      ║";
         else if (temperature() == t)
-            text = "  |~~~~~~|";
+            text = "  ║~~~~~~║";
         else
-            text = "  |######|";
+            text = "  ║######║";
         text += "    ";
 
         ostr << '<' << colourname << '>' << text
