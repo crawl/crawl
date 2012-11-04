@@ -88,6 +88,7 @@ static band_type _choose_band(monster_type mon_type, int &band_size,
                               bool& natural_leader);
 
 static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
+                               int monster_level,
                                bool force_pos = false, bool dont_place = false);
 
 // Returns whether actual_feat is compatible with feat_wanted for monster
@@ -915,14 +916,15 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     if (mg.use_position() && monster_at(mg.pos))
         return 0;
 
-    if (mg.power == -1)
-        mg.power = env.absdepth0;
+    if (!mg.place.is_valid())
+        mg.place = level_id::current();
+    int monster_level = mg.place.absdepth();
 
     bool chose_ood_monster = false;
     bool want_band = false;
     mg.cls = _resolve_monster_type(mg.cls, mg.proximity, mg.base_type,
                                    mg.pos, mg.map_mask,
-                                   &stair_type, &mg.power,
+                                   &stair_type, &monster_level,
                                    &chose_ood_monster,
                                    &want_band);
     if (want_band)
@@ -1116,7 +1118,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     if (ugly_colour != BLACK)
         ugly_colour = BLACK;
 
-    monster* mon = _place_monster_aux(mg, 0, force_pos, dont_place);
+    monster* mon = _place_monster_aux(mg, 0, monster_level, force_pos, dont_place);
 
     // Bail out now if we failed.
     if (!mon)
@@ -1212,7 +1214,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
             continue;
         }
 
-        monster *member = _place_monster_aux(band_template, mon);
+        monster *member = _place_monster_aux(band_template, mon, monster_level);
         if (member)
         {
             member->flags |= MF_BAND_MEMBER;
@@ -1279,6 +1281,7 @@ static void _place_twister_clouds(monster *mon)
 }
 
 static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
+                                   int monster_level,
                                    bool force_pos, bool dont_place)
 {
     coord_def fpos;
@@ -1381,7 +1384,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         monster_type ztype = mg.base_type;
 
         if (ztype == MONS_NO_MONSTER || ztype == RANDOM_MONSTER)
-            ztype = pick_local_zombifiable_monster(mg.power, true, mg.cls, fpos);
+            ztype = pick_local_zombifiable_monster(monster_level, true, mg.cls, fpos);
 
         define_zombie(mon, ztype, mg.cls);
     }
@@ -1591,7 +1594,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         if (mg.props.exists(TUKIMA_WEAPON))
             give_specific_item(mon, mg.props[TUKIMA_WEAPON].get_item());
         else
-            give_item(mon, mg.power, summoned);
+            give_item(mon, monster_level, summoned);
 
         // Dancing weapons *always* have a weapon. Fail to create them
         // otherwise.
@@ -1608,10 +1611,10 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     }
     else if (mons_class_itemuse(mg.cls) >= MONUSE_STARTING_EQUIPMENT)
     {
-        give_item(mon, mg.power, summoned);
+        give_item(mon, monster_level, summoned);
         // Give these monsters a second weapon. - bwr
         if (mons_class_wields_two_weapons(mg.cls))
-            give_weapon(mon, mg.power, summoned);
+            give_weapon(mon, monster_level, summoned);
 
         unwind_var<int> save_speedinc(mon->speed_increment);
         mon->wield_melee_weapon(false);
@@ -3058,10 +3061,8 @@ monster* mons_place(mgen_data mg)
     else if (_is_random_monster(mg.cls))
         mg.flags |= MG_PERMIT_BANDS;
 
-    if (crawl_state.game_is_zotdef())
-        mg.power = you.num_turns / (ZOTDEF_CYCLE_LENGTH * 3);
-    else
-        mg.power = -1;
+    if (crawl_state.game_is_zotdef()) // check if emulation of old mg.power is there
+        ASSERT(mg.place.is_valid());
 
     if (mg.behaviour == BEH_COPY)
     {

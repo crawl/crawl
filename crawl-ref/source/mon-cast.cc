@@ -3452,7 +3452,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                 mgen_data(MONS_KRAKEN_TENTACLE, SAME_ATTITUDE(mons), mons,
                           0, 0, adj_squares[i], mons->foe,
                           MG_FORCE_PLACE, god, MONS_NO_MONSTER, kraken_index,
-                          mons->colour, -1, PROX_CLOSE_TO_PLAYER)))
+                          mons->colour, PROX_CLOSE_TO_PLAYER)))
             {
                 created_count++;
                 tentacle->props["inwards"].get_int() = kraken_index;
