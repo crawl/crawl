@@ -82,10 +82,8 @@ static int dgn_create_item(lua_State *ls)
     COORDS(c, 1, 2);
 
     item_list ilist = _lua_get_ilist(ls, 3);
-    const int level =
-    lua_isnumber(ls, 4) ? lua_tointeger(ls, 4) : env.absdepth0;
 
-    dgn_place_multiple_items(ilist, c, level);
+    dgn_place_multiple_items(ilist, c);
     link_items();
     return 0;
 }

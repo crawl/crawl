@@ -136,15 +136,13 @@ public:
     map_def map;
     std::vector<coord_def> exits;
 
-    int level_number;
-
     // The PC has seen at least one square of this vault.
     bool seen;
 
 public:
     vault_placement()
         : pos(-1, -1), size(0, 0), orient(MAP_NONE), map(),
-          exits(), level_number(0), seen(false)
+          exits(), seen(false)
     {
     }
 
@@ -235,8 +233,7 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
                                 coord_def base_pos, bool find_closest);
 
 class mons_spec;
-monster *dgn_place_monster(mons_spec &mspec,
-                           int monster_level, const coord_def& where,
+monster *dgn_place_monster(mons_spec &mspec, coord_def where,
                            bool force_pos = false, bool generate_awake = false,
                            bool patrolling = false);
 int dgn_place_item(const item_spec &spec,
@@ -245,8 +242,7 @@ int dgn_place_item(const item_spec &spec,
 
 class item_list;
 void dgn_place_multiple_items(item_list &list,
-                              const coord_def& where,
-                              int level);
+                              const coord_def& where);
 
 bool set_level_flags(uint32_t flags, bool silent = false);
 bool unset_level_flags(uint32_t flags, bool silent = false);

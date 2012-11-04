@@ -1597,7 +1597,9 @@ static void marshall_vault_placement(writer &th, const vault_placement &vp)
     marshallShort(th, vp.orient);
     marshall_mapdef(th, vp.map);
     marshall_iterator(th, vp.exits.begin(), vp.exits.end(), marshallCoord);
-    marshallShort(th, vp.level_number);
+#if TAG_MAJOR_VERSION == 34
+    marshallShort(th, -1);
+#endif
     marshallByte(th, vp.seen);
 }
 
@@ -1609,7 +1611,9 @@ static vault_placement unmarshall_vault_placement(reader &th)
     vp.orient = static_cast<map_section_type>(unmarshallShort(th));
     vp.map = unmarshall_mapdef(th);
     unmarshall_vector(th, vp.exits, unmarshallCoord);
-    vp.level_number = unmarshallShort(th);
+#if TAG_MAJOR_VERSION == 34
+    unmarshallShort(th);
+#endif
     vp.seen = !!unmarshallByte(th);
 
     return vp;

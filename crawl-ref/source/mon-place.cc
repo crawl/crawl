@@ -464,7 +464,7 @@ static monster_type _pick_random_monster(const level_id &place, int power,
 
     if (crawl_state.game_is_arena())
     {
-        monster_type type = arena_pick_random_monster(place, power, lev_mons);
+        monster_type type = arena_pick_random_monster(place);
         if (!_is_random_monster(type))
             return type;
     }
