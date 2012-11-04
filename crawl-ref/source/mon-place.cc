@@ -83,8 +83,8 @@ static monster_type _resolve_monster_type(monster_type mon_type,
                                           bool *chose_ood_monster,
                                           bool *want_band);
 
-static monster_type _band_member(band_type band, int power);
-static band_type _choose_band(monster_type mon_type, int power, int &band_size,
+static monster_type _band_member(band_type band);
+static band_type _choose_band(monster_type mon_type, int &band_size,
                               bool& natural_leader);
 
 static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
@@ -972,11 +972,11 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
 #ifdef DEBUG_MON_CREATION
         mpr("Choose band members...", MSGCH_DIAGNOSTICS);
 #endif
-        band = _choose_band(mg.cls, mg.power, band_size, leader);
+        band = _choose_band(mg.cls, band_size, leader);
         band_size++;
         for (int i = 1; i < band_size; ++i)
         {
-            band_monsters[i] = _band_member(band, mg.power);
+            band_monsters[i] = _band_member(band);
 
             // Get the (very) ugly thing band colour, so that all (very)
             // ugly things in a band will start with it.
@@ -2098,7 +2098,7 @@ bool downgrade_zombie_to_skeleton(monster* mon)
     return true;
 }
 
-static band_type _choose_band(monster_type mon_type, int power, int &band_size,
+static band_type _choose_band(monster_type mon_type, int &band_size,
                               bool &natural_leader)
 {
 #ifdef DEBUG_MON_CREATION
@@ -2144,7 +2144,7 @@ static band_type _choose_band(monster_type mon_type, int power, int &band_size,
         break;
 
     case MONS_BIG_KOBOLD:
-        if (power > 3)
+        if (env.absdepth0 > 3)
         {
             band = BAND_KOBOLDS;
             band_size = 2 + random2(6);
@@ -2227,7 +2227,7 @@ static band_type _choose_band(monster_type mon_type, int power, int &band_size,
     case MONS_CENTAUR_WARRIOR:
         natural_leader = true;
     case MONS_CENTAUR:
-        if (power > 9 && one_chance_in(3) && !player_in_branch(BRANCH_SHOALS))
+        if (env.absdepth0 > 9 && one_chance_in(3) && !player_in_branch(BRANCH_SHOALS))
         {
             band = BAND_CENTAURS;
             band_size = 2 + random2(4);
@@ -2443,7 +2443,7 @@ static band_type _choose_band(monster_type mon_type, int power, int &band_size,
     case MONS_GREEN_DRACONIAN:
     case MONS_GREY_DRACONIAN:
     case MONS_PALE_DRACONIAN:
-        if (power > 18 && one_chance_in(3) && player_in_connected_branch())
+        if (env.absdepth0 > 18 && one_chance_in(3) && player_in_connected_branch())
         {
             band = BAND_DRACONIAN;
             band_size = random_range(2, 4);
@@ -2457,7 +2457,7 @@ static band_type _choose_band(monster_type mon_type, int power, int &band_size,
     case MONS_DRACONIAN_ANNIHILATOR:
     case MONS_DRACONIAN_ZEALOT:
     case MONS_DRACONIAN_SHIFTER:
-        if (power > 20 && player_in_connected_branch())
+        if (env.absdepth0 > 20 && player_in_connected_branch())
         {
             band = BAND_DRACONIAN;
             band_size = random_range(3, 6);
@@ -2568,7 +2568,7 @@ static band_type _choose_band(monster_type mon_type, int power, int &band_size,
     return band;
 }
 
-static monster_type _band_member(band_type band, int power)
+static monster_type _band_member(band_type band)
 {
     monster_type mon_type = MONS_PROGRAM_BUG;
     int temp_rand;
@@ -2634,7 +2634,7 @@ static monster_type _band_member(band_type band, int power)
         break;
 
     case BAND_UGLY_THINGS:
-        mon_type = ((power > 21 && one_chance_in(4)) ?
+        mon_type = ((env.absdepth0 > 21 && one_chance_in(4)) ?
                        MONS_VERY_UGLY_THING : MONS_UGLY_THING);
         break;
 
@@ -2834,7 +2834,7 @@ static monster_type _band_member(band_type band, int power)
         break;
     case BAND_DRACONIAN:
     {
-        temp_rand = random2((power < 24) ? 27 : 40);
+        temp_rand = random2((env.absdepth0 < 24) ? 27 : 40);
         mon_type =
                 ((temp_rand > 38) ? MONS_DRACONIAN_CALLER :     // 1
                  (temp_rand > 36) ? MONS_DRACONIAN_KNIGHT :     // 2
