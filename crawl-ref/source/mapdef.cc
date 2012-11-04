@@ -3600,10 +3600,6 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
             }
         }
 
-        mspec.mlevel = strip_number_tag(mon_str, "lev:");
-        if (mspec.mlevel == TAG_UNFOUND)
-            mspec.mlevel = 0;
-
         mspec.hd = std::min(100, strip_number_tag(mon_str, "hd:"));
         if (mspec.hd == TAG_UNFOUND)
             mspec.hd = 0;
@@ -3799,9 +3795,9 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
         trim_string(mon_str);
 
         if (mon_str == "8")
-            mspec.mlevel = -8;
+            mspec.ood = -8;
         else if (mon_str == "9")
-            mspec.mlevel = -9;
+            mspec.ood = -9;
         else if (mspec.place.is_valid())
         {
             // For monster specs such as place:Orc:4 zombie, we may

@@ -4378,16 +4378,10 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
     int monster_level = mspec.place.is_valid() ? mspec.place.absdepth()
                                                : env.absdepth0;
 
-    const int mlev = mspec.mlevel;
-    if (mlev)
-    {
-        if (mlev > 0)
-            monster_level = mlev;
-        else if (mlev == -8)
-            monster_level = 4 + monster_level * 2;
-        else if (mlev == -9)
-            monster_level += 5;
-    }
+    if (mspec.ood == -8)
+        monster_level = 4 + monster_level * 2;
+    else if (mspec.ood == -9)
+        monster_level += 5;
 
     if (type != RANDOM_MONSTER && type < NUM_MONSTERS)
     {
@@ -4415,8 +4409,8 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
     {
         const monster_type mon =
             pick_random_monster_for_place(mspec.place, mspec.monbase,
-                                          mlev == -9,
-                                          mlev == -8,
+                                          mspec.ood == -9,
+                                          mspec.ood == -8,
                                           false);
         mg.cls = mon == MONS_NO_MONSTER? RANDOM_MONSTER : mon;
     }
@@ -4782,11 +4776,10 @@ static void _vault_grid_glyph_mons(vault_placement &place,
         mons_spec ms(RANDOM_MONSTER);
 
         if (vgrid == '8')
-            ms.mlevel = -8;
+            ms.ood = -8;
         else if (vgrid == '9')
-            ms.mlevel = -9;
-
-        if (vgrid != '8' && vgrid != '9' && vgrid != '0')
+            ms.ood = -9;
+        else if (vgrid != '0')
         {
             int slot = map_def::monster_array_glyph_to_slot(vgrid);
             ms = place.map.mons.get_monster(slot);
