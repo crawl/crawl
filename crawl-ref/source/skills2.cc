@@ -24,6 +24,7 @@
 #include "player.h"
 #include "species.h"
 #include "skills.h"
+#include "skill_menu.h"
 #include "unwind.h"
 
 typedef string (*string_fn)();
@@ -878,4 +879,7 @@ void fixup_skills()
         check_skill_level_change(sk);
     }
     init_can_train();
+
+    if (you.exp_available >= calc_skill_cost(you.skill_cost_level))
+        skill_menu(SKMF_EXPERIENCE);
 }
