@@ -1,0 +1,40 @@
+%%%%
+Centaur
+
+Schnell, stark und massig. Zentauren brauchen mehr Nahrung als andere Spezies.
+Sie sind besonders geschickt im Umgang mit Fernkampfwaffen.
+%%%%
+Demigod
+
+Sie werden niemals einem Gott folgen, aber Halbgötter machen das mit göttlichen
+Attributen und Lebenspunkten wett.
+%%%%
+Ghoul
+
+Ein Untoter, dazu verdammt auf ewig zu verrotten. Sie sind immer auf der Suche
+nach Faulem, um es zu essen...
+%%%%
+High Elf
+
+Stolze Elfen, die sowohl Zauber sprechen als auch mit dem Schwert kämpfen
+können.
+%%%%
+Human
+
+Schlicht und durchschnittlich.
+%%%%
+Minotaur
+
+Ein großer, muskulärer Mensch mit dem Kopf eins Bullen. Sie sind hervorragend
+in allen Formen von Nah- und Fernkampf.
+%%%%
+Octopode
+
+Eine Spezies amphibischer Kopffüßer. Sie können acht Ringe tragen, aber fast
+keine Rüstung passt ihnen.
+%%%%
+Spriggan
+
+Sehr klein, sehr schmächtig und sehr schnell. Spriggans sind kompetente
+Messerstecher und Zauberer.
+%%%%

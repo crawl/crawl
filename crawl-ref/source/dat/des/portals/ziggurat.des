@@ -17,7 +17,7 @@
 
 # Dummy for the trowel card
 NAME:   enter_the_ziggurat
-TAGS:   trowel_portal unrand
+TAGS:   trowel_portal unrand can_overwrite
 DEPTH:  *, !Zig
 veto {{
   for d = 1,27 do

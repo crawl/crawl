@@ -15,14 +15,13 @@
 #include "externs.h"
 
 #include "areas.h"
-#include "artefact.h"
+#include "art-enum.h"
 #include "attitude-change.h"
 #include "beam.h"
 #include "cloud.h"
 #include "database.h"
 #include "debug.h"
 #include "delay.h"
-#include "directn.h"
 #include "effects.h"
 #include "env.h"
 #include "exercise.h"
@@ -65,10 +64,12 @@
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
+#include "target.h"
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
 #include "hints.h"
+#include "unwind.h"
 #include "view.h"
 #include "shout.h"
 #include "xom.h"
@@ -87,14 +88,15 @@
  **************************************************
 */
 melee_attack::melee_attack(actor *attk, actor *defn,
-                           int attack_num, int effective_attack_num)
+                           int attack_num, int effective_attack_num,
+                           bool is_cleaving)
     :  // Call attack's constructor
     attack::attack(attk, defn),
 
     perceived_attack(false), obvious_effect(false), attack_number(attack_num),
     effective_attack_number(effective_attack_num),
     skip_chaos_message(false), special_damage_flavour(BEAM_NONE),
-    stab_attempt(false), stab_bonus(0),
+    stab_attempt(false), stab_bonus(0), cleaving(is_cleaving),
     miscast_level(-1), miscast_type(SPTYP_NONE), miscast_target(NULL),
     simu(false)
 {
@@ -103,11 +105,13 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     damage_brand    = attacker->damage_brand(attack_number);
     wpn_skill       = weapon ? weapon_skill(*weapon) : SK_UNARMED_COMBAT;
     to_hit          = calc_to_hit();
+    can_cleave      = wpn_skill == SK_AXES && attacker != defender
+                      && !attacker->confused();
 
     attacker_armour_tohit_penalty =
-        attacker->armour_tohit_penalty(true);
+        div_rand_round(attacker->armour_tohit_penalty(true, 20), 20);
     attacker_shield_tohit_penalty =
-        attacker->shield_tohit_penalty(true);
+        div_rand_round(attacker->shield_tohit_penalty(true, 20), 20);
 
     if (attacker->is_monster())
     {
@@ -159,8 +163,8 @@ melee_attack::melee_attack(actor *attk, actor *defn,
                           && you.see_cell(defender->pos()));
     needs_message      = (attacker_visible || defender_visible);
 
-    attacker_body_armour_penalty = attacker->adjusted_body_armour_penalty(1);
-    attacker_shield_penalty = attacker->adjusted_shield_penalty(1);
+    attacker_body_armour_penalty = attacker->adjusted_body_armour_penalty(20);
+    attacker_shield_penalty = attacker->adjusted_shield_penalty(20);
 }
 
 static bool _conduction_affected(const coord_def &pos)
@@ -196,7 +200,7 @@ bool melee_attack::handle_phase_attempted()
                 && !attacker->res_elec()
                 && !you.received_weapon_warning)
             {
-                std::string prompt = "Really attack with ";
+                string prompt = "Really attack with ";
                 if (weapon)
                     prompt += weapon->name(DESC_YOUR);
                 else
@@ -213,7 +217,7 @@ bool melee_attack::handle_phase_attempted()
             }
             else
             {
-                std::string junk1, junk2;
+                string junk1, junk2;
                 const char *verb = (bad_attack(defender->as_monster(),
                                                junk1, junk2)
                                     ? "attack" : "attack near");
@@ -229,6 +233,15 @@ bool melee_attack::handle_phase_attempted()
                     cancel_attack = true;
                     return false;
                 }
+            }
+        }
+        else if (can_cleave)
+        {
+            targetter_cleave hitfunc(attacker, defender->pos());
+            if (stop_attack_prompt(hitfunc, "attack"))
+            {
+                cancel_attack = true;
+                return false;
             }
         }
         else if (stop_attack_prompt(defender->as_monster(), false,
@@ -331,7 +344,7 @@ bool melee_attack::handle_phase_attempted()
         && mons_wall_shielded(defender->as_monster())
         && (!crawl_state.game_is_zotdef() || !one_chance_in(20)))
     {
-        std::string feat_name = raw_feature_description(defender->pos());
+        string feat_name = raw_feature_description(defender->pos());
 
         if (attacker->is_player())
         {
@@ -476,7 +489,8 @@ bool melee_attack::handle_phase_hit()
 
     // Slimify does no damage and serves as an on-hit effect, handle it
     if (attacker->is_player() && you.duration[DUR_SLIMIFY]
-        && mon_can_be_slimified(defender->as_monster()))
+        && mon_can_be_slimified(defender->as_monster())
+        && !cleaving)
     {
         // Bail out after sliming so we don't get aux unarmed and
         // attack a fellow slime.
@@ -599,8 +613,8 @@ bool melee_attack::handle_phase_damaged()
         int blood = modify_blood_amount(damage_done, attacker->damage_type());
         if (blood > defender->stat_hp())
             blood = defender->stat_hp();
-
-        bleed_onto_floor(defender->pos(), defender->type, blood, true);
+        if (blood)
+            (new blood_fineff(defender, defender->pos(), blood))->schedule();
     }
 
     announce_hit();
@@ -758,12 +772,19 @@ bool melee_attack::handle_phase_end()
     {
         // returns whether an aux attack successfully took place
         if (!defender->as_monster()->friendly()
-            && adjacent(defender->pos(), attacker->pos()))
+            && adjacent(defender->pos(), attacker->pos())
+            && !cleaving) // additional attacks from cleave don't get aux
         {
             player_aux_unarmed();
         }
 
         print_wounds(defender->as_monster());
+    }
+
+    if (!cleave_targets.empty())
+    {
+        attack_cleave_targets(attacker, cleave_targets, attack_number,
+                              effective_attack_number);
     }
 
     // Check for passive mutation effects.
@@ -790,11 +811,23 @@ bool melee_attack::handle_phase_end()
  */
 bool melee_attack::attack()
 {
-    if (!handle_phase_attempted())
+    if (!cleaving && !handle_phase_attempted())
         return false;
 
     if (attacker != defender && attacker->self_destructs())
         return (did_hit = perceived_attack = true);
+
+
+    if (can_cleave && !cleaving)
+        cleave_setup();
+
+    // We might have killed the kraken target by cleaving a tentacle.
+    if (!defender->alive())
+    {
+        handle_phase_killed();
+        handle_phase_end();
+        return attack_occurred;
+    }
 
     // Apparently I'm insane for believing that we can still stay general past
     // this point in the combat code, mebe I am! --Cryptic
@@ -1046,12 +1079,45 @@ void melee_attack::adjust_noise()
 
 void melee_attack::check_autoberserk()
 {
-    if (weapon
-        && art_props[ARTP_ANGRY] >= 1
-        && !one_chance_in(1 + art_props[ARTP_ANGRY])
-        && !attacker->suppressed())
+    if (attacker->suppressed())
+        return;
+
+    if (attacker->is_player())
     {
-        attacker->go_berserk(false);
+        for (int i = EQ_WEAPON; i < NUM_EQUIP; ++i)
+        {
+            const item_def *item = you.slot_item(static_cast<equipment_type>(i));
+            if (!item)
+                continue;
+
+            if (!is_artefact(*item))
+                continue;
+
+            if (x_chance_in_y(artefact_wpn_property(*item, ARTP_ANGRY), 100))
+            {
+                attacker->go_berserk(false);
+                return;
+            }
+        }
+    }
+    else
+    {
+        for (int i = MSLOT_WEAPON; i <= MSLOT_JEWELLERY; ++i)
+        {
+            const item_def *item =
+                attacker->as_monster()->mslot_item(static_cast<mon_inv_type>(i));
+            if (!item)
+                continue;
+
+            if (!is_artefact(*item))
+                continue;
+
+            if (x_chance_in_y(artefact_wpn_property(*item, ARTP_ANGRY), 100))
+            {
+                attacker->go_berserk(false);
+                return;
+            }
+        }
     }
 }
 
@@ -1123,23 +1189,15 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
 
         break;
 
-    case UNAT_HEADBUTT:
-        aux_damage = 5;
+    case UNAT_PECK:
+        aux_damage = 6;
+        noise_factor = 75;
+        aux_attack = aux_verb = "peck";
+        break;
 
-        if (player_mutation_level(MUT_BEAK)
-            && (!player_mutation_level(MUT_HORNS) || coinflip()))
-        {
-            aux_attack = aux_verb = "peck";
-            aux_damage++;
-            noise_factor = 75;
-        }
-        else
-        {
-            aux_attack = aux_verb = "headbutt";
-            // Minotaurs used to get +5 damage here, now they get
-            // +6 because of the horns.
-            aux_damage += player_mutation_level(MUT_HORNS) * 3;
-        }
+    case UNAT_HEADBUTT:
+        aux_damage = 5 + player_mutation_level(MUT_HORNS) * 3;
+        aux_attack = aux_verb = "headbutt";
         break;
 
     case UNAT_TAILSLAP:
@@ -1183,7 +1241,7 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
     case UNAT_BITE:
         aux_attack = aux_verb = "bite";
         aux_damage += you.has_usable_fangs() * 2;
-        aux_damage += div_rand_round(std::max(you.strength()-10, 0), 5);
+        aux_damage += div_rand_round(max(you.strength()-10, 0), 5);
         noise_factor = 75;
 
         // prob of vampiric bite:
@@ -1236,7 +1294,7 @@ unarmed_attack_type melee_attack::player_aux_choose_uc_attack()
     // Octopodes get more tentacle-slaps.
     if (you.species == SP_OCTOPODE && coinflip())
         uc_attack = UNAT_PUNCH;
-    // No punching with a shield or 2-handed wpn, except staves.
+    // No punching with a shield or 2-handed wpn.
     // Octopodes aren't affected by this, though!
     if (you.species != SP_OCTOPODE && uc_attack == UNAT_PUNCH
         && !you.has_usable_offhand())
@@ -1368,7 +1426,6 @@ bool melee_attack::player_aux_unarmed()
 
 bool melee_attack::player_aux_apply(unarmed_attack_type atk)
 {
-    const int slaying = slaying_bonus(PWPN_DAMAGE);
     did_hit = true;
 
     aux_damage  = player_aux_stat_modify_damage(aux_damage);
@@ -1377,9 +1434,11 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
 
     aux_damage  = player_apply_fighting_skill(aux_damage, true);
 
-    aux_damage += (slaying > -1) ? random2(1 + slaying)
-                                 : -random2(1 - slaying);
     aux_damage  = player_apply_misc_modifiers(aux_damage);
+
+    aux_damage  = player_apply_slaying_bonuses(aux_damage, true);
+
+    aux_damage  = player_apply_final_multipliers(aux_damage);
 
     const int pre_ac_dmg = aux_damage;
     const int post_ac_dmg = apply_defender_ac(aux_damage);
@@ -1401,7 +1460,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
         case UNAT_HEADBUTT:
         {
             const int horns = player_mutation_level(MUT_HORNS);
-            const int stun = bestroll(std::min(damage_done, 7), 1 + horns);
+            const int stun = bestroll(min(damage_done, 7), 1 + horns);
 
             defender->as_monster()->speed_increment -= stun;
             break;
@@ -1484,7 +1543,7 @@ void melee_attack::player_announce_aux_hit()
          attack_strength_punctuation().c_str());
 }
 
-std::string melee_attack::player_why_missed()
+string melee_attack::player_why_missed()
 {
     const int ev = defender->melee_evasion(attacker);
     const int combined_penalty =
@@ -1499,8 +1558,8 @@ std::string melee_attack::player_why_missed()
              && to_hit + attacker_shield_tohit_penalty >= ev);
 
         const item_def *armour = you.slot_item(EQ_BODY_ARMOUR, false);
-        const std::string armour_name =
-            (armour? armour->name(DESC_BASENAME) : std::string("armour"));
+        const string armour_name = armour ? armour->name(DESC_BASENAME)
+                                          : string("armour");
 
         if (armour_miss && !shield_miss)
             return "Your " + armour_name + " prevents you from hitting ";
@@ -1580,6 +1639,8 @@ int melee_attack::player_apply_fighting_skill(int damage, bool aux)
     return damage;
 }
 
+// A couple additive modifiers that should be applied to both unarmed and
+// armed attacks.
 int melee_attack::player_apply_misc_modifiers(int damage)
 {
     if (you.duration[DUR_MIGHT] || you.duration[DUR_BERSERK])
@@ -1588,28 +1649,34 @@ int melee_attack::player_apply_misc_modifiers(int damage)
     if (you.species != SP_VAMPIRE && you.hunger_state == HS_STARVING)
         damage -= random2(5);
 
-    // not additive, statues are supposed to be bad with tiny toothpicks but
-    // deal crushing blows with big weapons
-    if (you.form == TRAN_STATUE)
-        damage = div_rand_round(damage * 3, 2);
-
     return damage;
 }
 
+// Slaying and weapon enchantment. Apply this for slaying even if not
+// using a weapon to attack.
+int melee_attack::player_apply_slaying_bonuses(int damage, bool aux)
+{
+    int damage_plus = 0;
+    if (!aux && weapon && is_weapon(*weapon) && !is_range_weapon(*weapon))
+    {
+        damage_plus = weapon->plus2;
+
+        if (weapon->base_type == OBJ_RODS)
+            damage_plus = weapon->special;
+    }
+    damage_plus += slaying_bonus(PWPN_DAMAGE);
+
+    damage += (damage_plus > -1) ? (random2(1 + damage_plus))
+                                 : (-random2(1 - damage_plus));
+    return damage;
+}
+
+// Modifiers dependent on wielding a weapon. Does not include weapon
+// enchantment, which is handled by player_apply_slaying_bonuses.
 int melee_attack::player_apply_weapon_bonuses(int damage)
 {
     if (weapon && is_weapon(*weapon) && !is_range_weapon(*weapon))
     {
-        int wpn_damage_plus = weapon->plus2;
-
-        if (weapon->base_type == OBJ_RODS)
-            wpn_damage_plus = weapon->special;
-
-        wpn_damage_plus += slaying_bonus(PWPN_DAMAGE);
-
-        damage += (wpn_damage_plus > -1) ? (random2(1 + wpn_damage_plus))
-                                         : (-random2(1 - wpn_damage_plus));
-
         if (get_equip_race(*weapon) == ISFLAG_DWARVEN
             && you.species == SP_DEEP_DWARF)
         {
@@ -1631,7 +1698,7 @@ int melee_attack::player_apply_weapon_bonuses(int damage)
                 damage +=
                     random2avg(
                         div_rand_round(
-                            std::min(static_cast<int>(you.piety), 180), 33), 2);
+                            min(static_cast<int>(you.piety), 180), 33), 2);
 
                 dprf(DIAG_COMBAT, "Damage: %d -> %d, Beogh bonus: %d",
                      orig_damage, damage, damage - orig_damage);
@@ -1648,6 +1715,25 @@ int melee_attack::player_apply_weapon_bonuses(int damage)
         if (get_weapon_brand(*weapon) == SPWPN_SPEED)
             damage = div_rand_round(damage * 9, 10);
     }
+
+    return damage;
+}
+
+// Multipliers to be applied to the final (pre-stab, pre-AC) damage.
+// It might be tempting to try to pick and choose what pieces of the damage
+// get affected by such multipliers, but putting them at the end is the
+// simplest effect to understand if they aren't just going to be applied
+// to the base damage of the weapon.
+int melee_attack::player_apply_final_multipliers(int damage)
+{
+    //cleave damage modifier
+    if (cleaving)
+        damage = cleave_damage_mod(damage);
+
+    // not additive, statues are supposed to be bad with tiny toothpicks but
+    // deal crushing blows with big weapons
+    if (you.form == TRAN_STATUE)
+        damage = div_rand_round(damage * 3, 2);
 
     return damage;
 }
@@ -1714,7 +1800,7 @@ int melee_attack::player_stab(int damage)
     if (stab_bonus)
     {
         // Let's make sure we have some damage to work with...
-        damage = std::max(1, damage);
+        damage = max(1, damage);
 
         damage = player_stab_weapon_bonus(damage);
     }
@@ -2182,7 +2268,7 @@ bool melee_attack::distortion_affects_defender()
         if (defender_visible)
             obvious_effect = true;
         if (!defender->no_tele(true, false))
-            add_final_effect(FINEFF_BLINK, 0, defender);
+            (new blink_fineff(defender))->schedule();
         return false;
     }
 
@@ -2197,10 +2283,11 @@ bool melee_attack::distortion_affects_defender()
         if (crawl_state.game_is_sprint() && defender->is_player()
             || defender->no_tele())
         {
-            canned_msg(MSG_STRANGE_STASIS);
+            if (defender->is_player())
+                canned_msg(MSG_STRANGE_STASIS);
         }
         else if (coinflip())
-            add_final_effect(FINEFF_DISTORTION_TELEPORT, 0, defender);
+            (new distortion_tele_fineff(defender))->schedule();
         else
             defender->teleport();
         return false;
@@ -2235,7 +2322,7 @@ void melee_attack::antimagic_affects_defender()
 {
     if (defender->is_player())
     {
-        int mp_loss = std::min(you.magic_points, random2(damage_done * 2));
+        int mp_loss = min(you.magic_points, random2(damage_done * 2));
         if (!mp_loss)
             return;
         mpr("You feel your power leaking away.", MSGCH_WARN);
@@ -2373,7 +2460,7 @@ void melee_attack::chaos_affects_defender()
 
     int choice = choose_random_weighted(probs, probs + NUM_CHAOS_TYPES);
 #ifdef NOTE_DEBUG_CHAOS_EFFECTS
-    std::string chaos_effect = "CHAOS effect: ";
+    string chaos_effect = "CHAOS effect: ";
     switch (choice)
     {
     case CHAOS_CLONE:           chaos_effect += "clone"; break;
@@ -2459,9 +2546,9 @@ void melee_attack::chaos_affects_defender()
 
         // At level == 27 there's a 13.9% chance of a level 3 miscast.
         int level0_chance = level;
-        int level1_chance = std::max(0, level - 7);
-        int level2_chance = std::max(0, level - 12);
-        int level3_chance = std::max(0, level - 17);
+        int level1_chance = max(0, level - 7);
+        int level2_chance = max(0, level - 12);
+        int level3_chance = max(0, level - 17);
 
         level = random_choose_weighted(
             level0_chance, 0,
@@ -2604,17 +2691,17 @@ void melee_attack::chaos_affects_attacker()
     if (weapon && player_can_hear(attacker->pos())
         && one_chance_in(200))
     {
-        std::string msg = "";
+        string msg = "";
         if (!you.can_see(attacker))
         {
-            std::string noise = getSpeakString("weapon_noise");
+            string noise = getSpeakString("weapon_noise");
             if (!noise.empty())
                 msg = "You hear " + noise;
         }
         else
         {
             msg = getSpeakString("weapon_noises");
-            std::string wepname = wep_name(DESC_YOUR);
+            string wepname = wep_name(DESC_YOUR);
             if (!msg.empty())
             {
                 msg = replace_all(msg, "@Your_weapon@", wepname);
@@ -2656,10 +2743,10 @@ void melee_attack::do_miscast()
     // If the miscast is happening on the attacker's side and is due to
     // a chaos weapon then make smoke/sand/etc pour out of the weapon
     // instead of the attacker's hands.
-    std::string hand_str;
+    string hand_str;
 
-    std::string cause = atk_name(DESC_THE);
-    int         source;
+    string cause = atk_name(DESC_THE);
+    int    source;
 
     const int ignore_mask = ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES;
 
@@ -2787,7 +2874,7 @@ brand_type melee_attack::random_chaos_brand()
             break;
     }
 #ifdef NOTE_DEBUG_CHAOS_BRAND
-    std::string brand_name = "CHAOS brand: ";
+    string brand_name = "CHAOS brand: ";
     switch (brand)
     {
     case SPWPN_NORMAL:          brand_name += "(plain)"; break;
@@ -2871,7 +2958,7 @@ bool melee_attack::apply_damage_brand()
         calc_elemental_brand_damage(BEAM_FIRE, res,
                                     defender->is_icy() ? "melt" : "burn");
         defender->expose_to_element(BEAM_FIRE);
-        noise_factor += 400 / std::max(1, damage_done);
+        noise_factor += 400 / max(1, damage_done);
         break;
 
     case SPWPN_FREEZING:
@@ -2895,7 +2982,7 @@ bool melee_attack::apply_damage_brand()
         break;
 
     case SPWPN_ELECTROCUTION:
-        noise_factor += 800 / std::max(1, damage_done);
+        noise_factor += 800 / max(1, damage_done);
         if (defender->airborne() || defender->res_elec() > 0)
             break;
         else if (one_chance_in(3))
@@ -2914,10 +3001,7 @@ bool melee_attack::apply_damage_brand()
             // resistant, from above, but we still have to make sure it
             // is in water (and not clinging above it).
             if (_conduction_affected(pos))
-            {
-                add_final_effect(FINEFF_LIGHTNING_DISCHARGE, attacker, defender,
-                                 pos);
-            }
+                (new lightning_fineff(attacker, pos))->schedule();
         }
 
         break;
@@ -3173,10 +3257,10 @@ void melee_attack::handle_noise(const coord_def & pos)
     int level = noise_factor * damage_done / 100 / 4;
 
     if (noise_factor > 0)
-        level = std::max(1, level);
+        level = max(1, level);
 
     // Cap melee noise at shouting volume.
-    level = std::min(12, level);
+    level = min(12, level);
 
     if (level > 0)
         noisy(level, pos, attacker->mindex());
@@ -3428,7 +3512,7 @@ void melee_attack::apply_staff_damage()
                     defender->name(DESC_THE).c_str(),
                     defender->is_player() ? "" : "s");
 
-            did_god_conduct(DID_NECROMANCY, 4);
+            attacker->god_conduct(DID_NECROMANCY, 4);
         }
         break;
 
@@ -3448,7 +3532,9 @@ void melee_attack::apply_staff_damage()
     case STAFF_POWER:
     case STAFF_CHANNELING:
     case STAFF_CONJURATION:
+#if TAG_MAJOR_VERSION == 34
     case STAFF_ENCHANTMENT:
+#endif
     case STAFF_ENERGY:
     case STAFF_WIZARDRY:
         break;
@@ -3481,9 +3567,6 @@ int melee_attack::calc_to_hit(bool random)
     // player_to_hit methods.
     if (attacker->is_player())
     {
-        if (player_effect_inaccuracy())
-            mhit -= 5;
-
         // fighting contribution
         mhit += maybe_random_div(you.skill(SK_FIGHTING, 100), 100, random);
 
@@ -3619,13 +3702,6 @@ int melee_attack::calc_to_hit(bool random)
             mhit += mitm[jewellery].plus;
         }
 
-        if (jewellery != NON_ITEM
-            && mitm[jewellery].base_type == OBJ_JEWELLERY
-            && mitm[jewellery].sub_type == AMU_INACCURACY)
-        {
-            mhit -= 5;
-        }
-
         mhit += scan_mon_inv_randarts(attacker->as_monster(), ARTP_ACCURACY);
 
         if (weapon && weapon->base_type == OBJ_RODS)
@@ -3633,6 +3709,9 @@ int melee_attack::calc_to_hit(bool random)
     }
 
     // Penalties for both players and monsters:
+
+    if (attacker->inaccuracy())
+        mhit -= 5;
 
     // If you can't see yourself, you're a little less accurate.
     if (!attacker->visible_to(attacker))
@@ -3694,23 +3773,29 @@ int melee_attack::calc_attack_delay(bool random, bool scaled)
     {
         random_var attack_delay = weapon ? player_weapon_speed()
                                          : player_unarmed_speed();
+        // At the moment it never gets this low anyway.
+        attack_delay = rv::max(attack_delay, constant(3));
 
+        // Calculate this separately to avoid overflowing the weights in
+        // the random_var.
+        random_var shield_penalty = constant(0);
         if (attacker_shield_penalty)
         {
             if (weapon && hands == HANDS_HALF)
-                attack_delay += rv::roll_dice(1, attacker_shield_penalty);
+                shield_penalty = div_rand_round(rv::roll_dice(1, attacker_shield_penalty), 20);
             else
             {
-                attack_delay += rv::min(rv::random2(1 + attacker_shield_penalty),
-                                        rv::random2(1 + attacker_shield_penalty));
+                shield_penalty = div_rand_round(rv::min(rv::roll_dice(1, attacker_shield_penalty),
+                                                        rv::roll_dice(1, attacker_shield_penalty)),
+                                                20);
             }
         }
         // Give unarmed shield-users a slight penalty always.
         if (!weapon && player_wearing_slot(EQ_SHIELD))
-            attack_delay += rv::random2(2);
+            shield_penalty += rv::random2(2);
 
-        attack_delay = rv::max(attack_delay, constant(3));
-        int final_delay = random ? attack_delay.roll() : attack_delay.expected();
+        int final_delay = random ? attack_delay.roll() + shield_penalty.roll()
+                                 : attack_delay.expected() + shield_penalty.expected();
         // Stop here if we just want the unmodified value.
         if (!scaled)
             return final_delay;
@@ -3727,7 +3812,7 @@ int melee_attack::calc_attack_delay(bool random, bool scaled)
         dprf(DIAG_COMBAT, "Weapon speed: %d; min: %d; attack time: %d",
              final_delay, min_delay, you.time_taken);
 
-        return std::max(2, div_rand_round(you.time_taken * final_delay, 10));
+        return max(2, div_rand_round(you.time_taken * final_delay, 10));
     }
     else
     {
@@ -3843,8 +3928,8 @@ random_var melee_attack::player_unarmed_speed()
 {
     random_var unarmed_delay =
         rv::max(constant(10),
-                 (rv::roll_dice(1, 10) +
-                  rv::roll_dice(2, attacker_body_armour_penalty)));
+                (rv::roll_dice(1, 10) +
+                 div_rand_round(rv::roll_dice(2, attacker_body_armour_penalty), 20)));
 
     // Unarmed speed. Min delay is 10 - 270/54 = 5.
     if (you.burden_state == BS_UNENCUMBERED)
@@ -3939,7 +4024,7 @@ bool melee_attack::attack_shield_blocked(bool verbose)
  *
  * Returns (attack_verb)
  */
-std::string melee_attack::mons_attack_verb()
+string melee_attack::mons_attack_verb()
 {
     static const char *klown_attack[] =
     {
@@ -4016,12 +4101,12 @@ std::string melee_attack::mons_attack_verb()
     return (attack_types[attk_type]);
 }
 
-std::string melee_attack::mons_attack_desc()
+string melee_attack::mons_attack_desc()
 {
     if (!you.can_see(attacker))
         return "";
 
-    std::string ret;
+    string ret;
     int dist = (attacker->pos() - defender->pos()).abs();
     if (dist > 2)
     {
@@ -4128,7 +4213,7 @@ void melee_attack::mons_do_napalm()
             napalm_monster(
                 defender->as_monster(),
                 attacker,
-                std::min(4, 1 + random2(attacker->get_experience_level())/2));
+                min(4, 1 + random2(attacker->get_experience_level())/2));
         }
     }
 }
@@ -4321,7 +4406,7 @@ void melee_attack::mons_apply_attack_flavour()
     case AF_BLINK:
         // blinking can kill, delay the call
         if (one_chance_in(3))
-            add_final_effect(FINEFF_BLINK, 0, attacker);
+            (new blink_fineff(attacker))->schedule();
         break;
 
     case AF_CONFUSE:
@@ -4567,10 +4652,9 @@ void melee_attack::do_spines()
             }
 
             int dmg = roll_dice(mut, 6);
-            int ac = random2(1 + attacker->armour_class());
-            int hurt = dmg - ac - evp;
+            int hurt = attacker->apply_ac(dmg) - evp;
 
-            dprf(DIAG_COMBAT, "Spiny: dmg = %d ac = %d hurt = %d", dmg, ac, hurt);
+            dprf(DIAG_COMBAT, "Spiny: dmg = %d hurt = %d", dmg, hurt);
 
             if (hurt <= 0)
                 return;
@@ -4602,9 +4686,8 @@ void melee_attack::do_spines()
         else if (attacker->alive())
         {
             int dmg = roll_dice(level, 4);
-            int ac = random2(1 + attacker->armour_class());
-            int hurt = dmg - ac;
-            dprf(DIAG_COMBAT, "Spiny: dmg = %d ac = %d hurt = %d", dmg, ac, hurt);
+            int hurt = attacker->apply_ac(dmg);
+            dprf(DIAG_COMBAT, "Spiny: dmg = %d hurt = %d", dmg, hurt);
 
             if (hurt <= 0)
                 return;
@@ -4661,10 +4744,10 @@ void melee_attack::do_minotaur_retaliation()
         if (!x_chance_in_y(2, 5))
             return;
 
-        int hurt = random2(20) - attacker->armour_class();
+        int hurt = attacker->apply_ac(random2(21));
         if (you.see_cell(defender->pos()))
         {
-            const std::string defname = defender->name(DESC_THE);
+            const string defname = defender->name(DESC_THE);
             mprf("%s furiously retaliates!", defname.c_str());
             if (hurt <= 0)
             {
@@ -4695,7 +4778,6 @@ void melee_attack::do_minotaur_retaliation()
     }
     // This will usually be 2, but could be 3 if the player mutated more.
     const int mut = player_mutation_level(MUT_HORNS);
-    const int slaying = slaying_bonus(PWPN_DAMAGE);
 
     if (5 * you.strength() + 7 * you.dex() > random2(600))
     {
@@ -4704,14 +4786,13 @@ void melee_attack::do_minotaur_retaliation()
         dmg = player_aux_stat_modify_damage(dmg);
         dmg = random2(dmg);
         dmg = player_apply_fighting_skill(dmg, true);
-        dmg += (slaying > -1) ? (random2(1 + slaying))
-                              : (-random2(1 - slaying));
         dmg = player_apply_misc_modifiers(dmg);
-        int ac = random2(1 + attacker->armour_class());
-        int hurt = dmg - ac;
+        dmg = player_apply_slaying_bonuses(dmg, true);
+        dmg = player_apply_final_multipliers(dmg);
+        int hurt = attacker->apply_ac(dmg);
 
         mpr("You furiously retaliate!");
-        dprf(DIAG_COMBAT, "Retaliation: dmg = %d ac = %d hurt = %d", dmg, ac, hurt);
+        dprf(DIAG_COMBAT, "Retaliation: dmg = %d hurt = %d", dmg, hurt);
         if (hurt <= 0)
         {
             mprf("You headbutt %s, but do no damage.",
@@ -4767,7 +4848,7 @@ bool melee_attack::do_knockback(bool trample)
         // is a player, a shaft trap will unload the level.  If trampling will
         // somehow fail, move attempt will be ignored.
         if (trample)
-            add_final_effect(FINEFF_TRAMPLE_FOLLOW, attacker, 0, old_pos);
+            (new trample_follow_fineff(attacker, old_pos))->schedule();
 
         if (defender->as_player())
             move_player_to_grid(new_pos, false, true);
@@ -4792,6 +4873,34 @@ bool melee_attack::do_knockback(bool trample)
     return false;
 }
 
+//cleave can cover up to 7 cells (not the one opposite to the target), but is
+// stopped by solid features. Allies are passed through without harm.
+void melee_attack::cleave_setup()
+{
+    if (feat_is_solid(grd(defender->pos())))
+        return;
+
+    // Don't cleave on a self-attack.
+    if (attacker->pos() == defender->pos())
+        return;
+
+    int dir = coinflip() ? -1 : 1;
+    get_cleave_targets(attacker, defender->pos(), dir, cleave_targets);
+    cleave_targets.reverse();
+    attack_cleave_targets(attacker, cleave_targets, attack_number,
+                          effective_attack_number);
+
+    // We need to get the list of the remaining potential targets now because
+    // if the main target dies, its position will be lost.
+    get_cleave_targets(attacker, defender->pos(), -dir, cleave_targets);
+}
+
+// cleave damage modifier for additional attacks: 75% of base damage
+int melee_attack::cleave_damage_mod(int dam)
+{
+    return div_rand_round(dam * 3, 4);
+}
+
 void melee_attack::chaos_affect_actor(actor *victim)
 {
     melee_attack attk(victim, victim);
@@ -4811,6 +4920,7 @@ bool melee_attack::_tran_forbid_aux_attack(unarmed_attack_type atk)
     switch (atk)
     {
     case UNAT_KICK:
+    case UNAT_PECK:
     case UNAT_HEADBUTT:
     case UNAT_PUNCH:
         return (you.form == TRAN_ICE_BEAST
@@ -4848,10 +4958,14 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk, bool is_uc)
                  || you.has_usable_talons()
                  || player_mutation_level(MUT_TENTACLE_SPIKE));
 
+    case UNAT_PECK:
+        return ((is_uc
+                 || player_mutation_level(MUT_BEAK))
+                && !one_chance_in(3));
+
     case UNAT_HEADBUTT:
         return ((is_uc
-                 || player_mutation_level(MUT_HORNS)
-                 || player_mutation_level(MUT_BEAK))
+                 || player_mutation_level(MUT_HORNS))
                 && !one_chance_in(3));
 
     case UNAT_TAILSLAP:
@@ -4898,7 +5012,7 @@ int melee_attack::calc_your_to_hit_unarmed(int uattack, bool vampiric)
                 + you.skill(SK_FIGHTING, 30);
     your_to_hit /= 100;
 
-    if (player_effect_inaccuracy())
+    if (you.inaccuracy())
         your_to_hit -= 5;
 
     if (player_mutation_level(MUT_EYEBALLS))
@@ -5136,6 +5250,9 @@ int melee_attack::calc_damage()
                  damage);
         }
 
+        if (cleaving)
+            damage = cleave_damage_mod(damage);
+
         return apply_defender_ac(damage, damage_max);
     }
     else
@@ -5150,8 +5267,8 @@ int melee_attack::calc_damage()
         if (weapon && hands == HANDS_HALF)
         {
             potential_damage =
-                std::max(1,
-                         potential_damage - roll_dice(1, attacker_shield_penalty));
+                max(1,
+                    potential_damage - div_rand_round(roll_dice(1, attacker_shield_penalty), 20));
         }
 
         potential_damage = player_stat_modify_damage(potential_damage);
@@ -5162,13 +5279,15 @@ int melee_attack::calc_damage()
         damage_done = player_apply_weapon_skill(damage_done);
         damage_done = player_apply_fighting_skill(damage_done, false);
         damage_done = player_apply_misc_modifiers(damage_done);
+        damage_done = player_apply_slaying_bonuses(damage_done, false);
         damage_done = player_apply_weapon_bonuses(damage_done);
+        damage_done = player_apply_final_multipliers(damage_done);
 
         damage_done = player_stab(damage_done);
         damage_done = apply_defender_ac(damage_done);
 
         set_attack_verb();
-        damage_done = std::max(0, damage_done);
+        damage_done = max(0, damage_done);
 
         return damage_done;
     }
@@ -5178,40 +5297,20 @@ int melee_attack::calc_damage()
 
 int melee_attack::apply_defender_ac(int damage, int damage_max)
 {
-    int ac = defender->armour_class();
     int stab_bypass = stab_bonus
                       ? random2(you.skill_rdiv(SK_STABBING) / stab_bonus)
                       : 0;
-    if (ac > 0)
-    {
-        if (attacker->is_player())
-            damage -= random2(1 + defender->armour_class() - stab_bypass);
-        else
-        {
-            int damage_reduction = random2(ac + 1);
-            int guaranteed_damage_reduction = 0;
-
-            if (defender->is_player())
-            {
-                const int gdr_perc = defender->as_player()->gdr_perc();
-                guaranteed_damage_reduction =
-                    std::min(damage_max * gdr_perc / 100, ac / 2);
-                damage_reduction =
-                    std::max(guaranteed_damage_reduction, damage_reduction);
-            }
-
-            damage -= damage_reduction;
-
-            dprf(DIAG_COMBAT, "AC: at: %s, df: %s, dam: %d (max %d), DR: %d (GDR %d), "
-                 "rdam: %d",
+    int after_ac = defender->apply_ac(damage, damage_max, AC_NORMAL,
+                                      stab_bypass);
+    dprf(DIAG_COMBAT, "AC: att: %s, def: %s, ac: %d, gdr: %d, dam: %d -> %d",
                  attacker->name(DESC_PLAIN, true).c_str(),
                  defender->name(DESC_PLAIN, true).c_str(),
-                 damage, damage_max, damage_reduction, guaranteed_damage_reduction,
-                 damage - damage_reduction);
-        }
-    }
+                 defender->armour_class(),
+                 defender->gdr_perc(),
+                 damage,
+                 after_ac);
 
-    return std::max(0, damage);
+    return after_ac;
 }
 
 /* TODO: This code is only used from melee_attack methods, but perhaps it

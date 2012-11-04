@@ -33,7 +33,7 @@ scroll
 
 Popieriaus ritinys, padengtas magiškais užrašais.
 %%%%
-magical staff
+staff
 
 Lazda, sustiprinta nežinomos kilmės magiškomis galiomis.
 %%%%

@@ -157,11 +157,7 @@ CMD_AUTOFIGHT_NOMOVE verbose
 
 Atacas a un monstruo adyacente a ti con el arma que empuñes.
 %%%%
-CMD_SEARCH
+CMD_WAIT
 
 Esperar un turno
-%%%%
-CMD_SEARCH verbose
-
-Pasas un turno esperando, descansando y buscando.
 %%%%

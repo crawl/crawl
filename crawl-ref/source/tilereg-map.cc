@@ -168,10 +168,10 @@ void MapRegion::set(const coord_def &gc, map_feature f)
         return;
 
     // Get map extents
-    m_min_gx = std::min(m_min_gx, gc.x);
-    m_max_gx = std::max(m_max_gx, gc.x);
-    m_min_gy = std::min(m_min_gy, gc.y);
-    m_max_gy = std::max(m_max_gy, gc.y);
+    m_min_gx = min(m_min_gx, gc.x);
+    m_max_gx = max(m_max_gx, gc.x);
+    m_min_gy = min(m_min_gy, gc.y);
+    m_max_gy = max(m_max_gy, gc.y);
 
     recenter();
 }
@@ -195,10 +195,10 @@ void MapRegion::update_bounds()
             if (f == MF_UNSEEN)
                 continue;
 
-            m_min_gx = std::min(m_min_gx, x);
-            m_max_gx = std::max(m_max_gx, x);
-            m_min_gy = std::min(m_min_gy, y);
-            m_max_gy = std::max(m_max_gy, y);
+            m_min_gx = min(m_min_gx, x);
+            m_max_gx = max(m_max_gx, x);
+            m_min_gy = min(m_min_gy, y);
+            m_max_gy = max(m_max_gy, y);
         }
 
     recenter();
@@ -239,8 +239,11 @@ void MapRegion::clear()
 
 int MapRegion::handle_mouse(MouseEvent &event)
 {
-    if (mouse_control::current_mode() != MOUSE_MODE_COMMAND)
+    if (mouse_control::current_mode() != MOUSE_MODE_COMMAND
+        && !tiles.get_map_display())
+    {
         return 0;
+    }
 
     if (!inside(event.px, event.py))
     {
@@ -266,6 +269,24 @@ int MapRegion::handle_mouse(MouseEvent &event)
             tiles.load_dungeon(gc);
         return 0;
     case MouseEvent::PRESS:
+#ifdef TOUCH_UI
+        if (event.button == MouseEvent::LEFT)
+        {
+            m_far_view = true;
+            tiles.load_dungeon(gc);
+            if (!tiles.get_map_display())
+            {
+                process_command(CMD_DISPLAY_MAP);
+                m_far_view = false;
+                return CK_MOUSE_CMD;
+            }
+        }
+        return 0;
+    case MouseEvent::RELEASE:
+        if ((event.button == MouseEvent::LEFT) && m_far_view)
+            m_far_view = false;
+        return 0;
+#else
         if (event.button == MouseEvent::LEFT)
         {
             if (event.mod & MOD_SHIFT)
@@ -287,25 +308,32 @@ int MapRegion::handle_mouse(MouseEvent &event)
         {
             m_far_view = true;
             tiles.load_dungeon(gc);
+            if (!tiles.get_map_display())
+            {
+                process_command(CMD_DISPLAY_MAP);
+                m_far_view = false;
+                return CK_MOUSE_CMD;
+            }
         }
         return 0;
     case MouseEvent::RELEASE:
         if ((event.button == MouseEvent::RIGHT) && m_far_view)
-        {
             m_far_view = false;
-            tiles.load_dungeon(crawl_view.vgrdc);
-        }
         return 0;
+#endif
     default:
         return 0;
     }
 }
 
-bool MapRegion::update_tip_text(std::string& tip)
+bool MapRegion::update_tip_text(string& tip)
 {
     if (mouse_control::current_mode() != MOUSE_MODE_COMMAND)
         return false;
 
+#ifdef TOUCH_UI
+    tip = "[L-Click] Enable map mode";
+#else
     tip = "[L-Click] Travel / [R-Click] View";
     if (!player_in_branch(BRANCH_LABYRINTH)
         && (you.hunger_state > HS_STARVING || you_min_hunger())
@@ -313,6 +341,7 @@ bool MapRegion::update_tip_text(std::string& tip)
     {
         tip += "\n[Shift + L-Click] Autoexplore";
     }
+#endif
     return true;
 }
 

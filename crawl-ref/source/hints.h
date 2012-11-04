@@ -12,11 +12,12 @@
 #include <stdlib.h>
 
 #include "externs.h"
-#include "mon-info.h"
 
 class formatted_string;
 class writer;
 class reader;
+
+struct monster_info;
 
 enum hints_types
 {
@@ -57,7 +58,7 @@ enum hints_event_type
     HINT_SEEN_ALTAR,
     HINT_SEEN_SHOP,
     HINT_SEEN_DOOR,
-    HINT_FOUND_SECRET_DOOR,
+    HINT_FOUND_RUNED_DOOR,
     // other 'first events'
     HINT_SEEN_MONSTER,
     HINT_SEEN_ZERO_EXP_MON,
@@ -134,7 +135,9 @@ enum hints_event_type
     HINT_FUMBLING_SHALLOW_WATER,
     HINT_EATING_ROTTEN_FOOD,
     HINT_CLOUD_WARNING,
+#if TAG_MAJOR_VERSION == 34
     HINT_MEMORISE_FAILURE,
+#endif
     HINT_ANIMATE_CORPSE_SKELETON,
     HINT_SEEN_WEB,
     HINT_SEEN_ROD,
@@ -146,7 +149,6 @@ void init_hints();
 void tutorial_init_hints();
 void pick_hints(newgame_def* choice);
 void hints_load_game(void);
-void hints_zap_secret_doors(void);
 
 formatted_string hints_starting_info2();
 void hints_starting_screen(void);
@@ -164,14 +166,14 @@ void hints_first_item(const item_def& item);
 void learned_something_new(hints_event_type seen_what,
                            coord_def gc = coord_def());
 formatted_string hints_abilities_info(void);
-std::string hints_skills_info(void);
-std::string hints_skill_training_info();
-std::string hints_skills_description_info(void);
+string hints_skills_info(void);
+string hints_skill_training_info();
+string hints_skills_description_info(void);
 
 // Additional information for tutorial players.
 void check_item_hint(const item_def &item, unsigned int num_old_talents);
 void hints_describe_item(const item_def &item);
-void hints_inscription_info(bool autoinscribe, std::string prompt);
+void hints_inscription_info(bool autoinscribe, string prompt);
 bool hints_pos_interesting(int x, int y);
 void hints_describe_pos(int x, int y);
 bool hints_monster_interesting(const monster* mons);

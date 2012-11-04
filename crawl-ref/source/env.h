@@ -3,18 +3,18 @@
 
 #include "map_knowledge.h"
 #include "monster.h"
-#include "show.h"
 #include "trap_def.h"
 #include <set>
 
 typedef FixedArray<short, GXM, GYM> grid_heightmap;
 typedef uint32_t terrain_property_t;
 
-typedef std::set<std::string> string_set;
+typedef set<string> string_set;
 
 struct vault_placement;
-typedef std::vector<vault_placement*> vault_placement_refv;
+typedef vector<vault_placement*> vault_placement_refv;
 
+class final_effect;
 struct crawl_environment
 {
     colour_t rock_colour;
@@ -37,20 +37,21 @@ struct crawl_environment
     string_set                               level_uniq_maps;
     string_set                               level_uniq_map_tags;
     string_set                               level_layout_types;
+    vector<string>                           level_vault_list;
 
-    std::string                              level_build_method;
+    string                                   level_build_method;
 
     vault_placement_refv                     level_vaults;
 
-    std::auto_ptr<grid_heightmap>            heightmap;
+    unique_ptr<grid_heightmap>               heightmap;
 
     // Player-remembered terrain and LOS
     FixedArray< map_cell, GXM, GYM >         map_knowledge;
     // Previous map knowledge (last step)
     FixedArray< map_cell, GXM, GYM >         map_shadow;
-    std::set<coord_def> visible;
+    set<coord_def> visible;
 
-    std::vector<coord_def>                   travel_trail;
+    vector<coord_def>                        travel_trail;
 
     // indexed by grid coords
 #ifdef USE_TILE
@@ -64,7 +65,7 @@ struct crawl_environment
     FixedArray<tileidx_t, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> tile_bg;
 #endif
     tile_flavour tile_default;
-    std::vector<std::string> tile_names;
+    vector<string> tile_names;
 
     FixedVector< cloud_struct, MAX_CLOUDS >  cloud; // cloud list
     short cloud_no;
@@ -107,16 +108,25 @@ struct crawl_environment
     int forest_awoken_until;
     int density;
     int absdepth0;
-    std::vector<std::pair<coord_def, int> > sunlight;
+    vector<pair<coord_def, int> > sunlight;
+
+    //------------------------------------------------------------------------
 
     // Volatile level flags, not saved.
     uint32_t level_state;
 
     // Mapping mid->mindex until the transition is finished.
-    std::map<mid_t, unsigned short> mid_cache;
+    map<mid_t, unsigned short> mid_cache;
 
-    // Temp stuff.
-    std::vector<final_effect> final_effects;
+    // Things to happen when the current attack/etc finishes.
+    vector<final_effect *> final_effects;
+
+    // A stack that accumulates subvaults being placed. A failure may pop a
+    // part of the stack before retrying.
+    vector<string> new_subvault_names, new_subvault_tags;
+
+    // Vault currently being placed, for crash dump purposes.
+    string placing_vault;
 };
 
 #ifdef DEBUG_GLOBALS

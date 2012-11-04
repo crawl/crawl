@@ -2,7 +2,6 @@
 
 #include "act-iter.h"
 
-#include "actor.h"
 #include "coord-circle.h"
 #include "mon-iter.h"
 #include "monster.h"

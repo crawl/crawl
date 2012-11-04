@@ -30,7 +30,7 @@ int allowed_deaths_door_hp(void)
     if (you.religion == GOD_KIKUBAAQUDGHA && !player_under_penance())
         hp += you.piety / 15;
 
-    return std::max(hp, 1);
+    return max(hp, 1);
 }
 
 spret_type cast_deaths_door(int pow, bool fail)
@@ -204,7 +204,7 @@ spret_type cast_swiftness(int power, bool fail)
 
 spret_type cast_fly(int power, bool fail)
 {
-    if (liquefied(you.pos()) && you.ground_level())
+    if (you.liquefied_ground())
     {
         mpr("Such puny magic can't pull you from the ground!", MSGCH_WARN);
         return SPRET_ABORT;
@@ -239,7 +239,7 @@ spret_type cast_teleport_control(int power, bool fail)
     return SPRET_SUCCESS;
 }
 
-int cast_selective_amnesia(std::string *pre_msg)
+int cast_selective_amnesia(string *pre_msg)
 {
     if (you.spell_no == 0)
     {

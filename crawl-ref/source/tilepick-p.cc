@@ -129,7 +129,9 @@ tileidx_t tilep_equ_weapon(const item_def &item)
     case WPN_SPEAR:         return TILEP_HAND1_SPEAR;
     case WPN_HALBERD:       return TILEP_HAND1_HALBERD;
     case WPN_GLAIVE:        return TILEP_HAND1_GLAIVE;
+#if TAG_MAJOR_VERSION == 34
     case WPN_STAFF:         return TILEP_HAND1_STAFF;
+#endif
     case WPN_QUARTERSTAFF:  return TILEP_HAND1_QUARTERSTAFF1;
     case WPN_LAJATANG:
         return tileidx_enchant_equ(item, TILEP_HAND1_LAJATANG, true);
@@ -155,6 +157,9 @@ tileidx_t tilep_equ_shield(const item_def &item)
 {
     if (item.base_type != OBJ_ARMOUR)
         return 0;
+
+    if (item.props.exists("worn_tile"))
+        return item.props["worn_tile"].get_short();
 
     if (is_unrandom_artefact(item))
     {
@@ -346,10 +351,10 @@ tileidx_t tilep_equ_boots(const item_def &item)
     }
 
     if (item.sub_type == ARM_NAGA_BARDING)
-        return TILEP_BOOTS_NAGA_BARDING + std::min(etype, 3);
+        return TILEP_BOOTS_NAGA_BARDING + min(etype, 3);
 
     if (item.sub_type == ARM_CENTAUR_BARDING)
-        return TILEP_BOOTS_CENTAUR_BARDING + std::min(etype, 3);
+        return TILEP_BOOTS_CENTAUR_BARDING + min(etype, 3);
 
     if (item.sub_type != ARM_BOOTS)
         return 0;

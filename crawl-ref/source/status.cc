@@ -4,6 +4,7 @@
 
 #include "areas.h"
 #include "env.h"
+#include "libutil.h"
 #include "misc.h"
 #include "mutation.h"
 #include "player.h"
@@ -18,11 +19,11 @@
 struct duration_def
 {
     duration_type dur;
-    bool expire;              // whether to do automat expiring transforms
-    int         light_colour; // status light base colour
-    std::string light_text;   // for the status lights
-    std::string short_text;   // for @: line
-    std::string long_text ;   // for @ message
+    bool expire;         // whether to do automat expiring transforms
+    int    light_colour; // status light base colour
+    string light_text;   // for the status lights
+    string short_text;   // for @: line
+    string long_text ;   // for @ message
 };
 
 static duration_def duration_data[] =
@@ -374,9 +375,7 @@ void fill_status_info(int status, status_info* inf)
         const int dur = you.duration[DUR_CONFUSING_TOUCH];
         const int high = 40 * BASELINE_DELAY;
         const int low  = 20 * BASELINE_DELAY;
-        inf->long_text = std::string("Your ")
-                         + you.hand_name(true)
-                         + " are glowing ";
+        inf->long_text = string("Your ") + you.hand_name(true) + " are glowing ";
         if (dur > high)
             inf->long_text += "an extremely bright ";
         else if (dur > low)
@@ -441,7 +440,7 @@ void fill_status_info(int status, status_info* inf)
     case STATUS_MANUAL:
         if (!is_invalid_skill(you.manual_skill))
         {
-            std::string sk = skill_name(you.manual_skill);
+            string sk = skill_name(you.manual_skill);
             inf->short_text = "studying " + sk;
             inf->long_text = "You are " + inf->short_text + ".";
         }
@@ -452,7 +451,7 @@ void fill_status_info(int status, status_info* inf)
         inf->light_colour = BLUE;
         inf->light_text   = "Blade";
         inf->short_text   = "bonded with blade";
-        std::string desc;
+        string desc;
         if (you.duration[DUR_SURE_BLADE] > 15 * BASELINE_DELAY)
             desc = "strong ";
         else if (you.duration[DUR_SURE_BLADE] >  5 * BASELINE_DELAY)
@@ -683,7 +682,7 @@ static void _describe_poison(status_info* inf)
     inf->light_colour = (player_res_poison(false) >= 3
                          ? DARKGREY : _bad_ench_colour(pois, 5, 10));
     inf->light_text   = "Pois";
-    const std::string adj =
+    const string adj =
          (pois > 10) ? "extremely" :
          (pois > 5)  ? "very" :
          (pois > 3)  ? "quite"
@@ -716,12 +715,12 @@ static void _describe_speed(status_info* inf)
         inf->long_text = "Your actions are hasted.";
         _mark_expiring(inf, dur_expiring(DUR_HASTE));
     }
-    if (liquefied(you.pos(), true) && you.ground_level())
+    if (you.liquefied_ground())
     {
         inf->light_colour = BROWN;
         inf->light_text   = "SlowM";
         inf->short_text   = "slowed movement";
-        inf->long_text    = "Your movement is slowed in this liquid ground.";
+        inf->long_text    = "Your movement is slowed on this liquid ground.";
     }
 }
 
@@ -730,7 +729,7 @@ static void _describe_sage(status_info* inf)
     if (you.sage_skills.empty())
         return;
 
-    std::vector<const char*> sages;
+    vector<const char*> sages;
     for (unsigned long i = 0; i < you.sage_skills.size(); ++i)
         sages.push_back(skill_name(you.sage_skills[i]));
 
@@ -783,7 +782,7 @@ static void _describe_rotting(status_info* inf)
         inf->long_text = "Your flesh is rotting";
         int rot = you.rotting;
         if (you.species == SP_GHOUL)
-            rot += 1 + (1 << std::max(0, HS_SATIATED - you.hunger_state));
+            rot += 1 + (1 << max(0, HS_SATIATED - you.hunger_state));
         if (rot > 15)
             inf->long_text += " before your eyes";
         else if (rot > 8)
@@ -809,9 +808,9 @@ static void _describe_sickness(status_info* inf)
         inf->light_colour   = _bad_ench_colour(you.disease, low, high);
         inf->light_text     = "Sick";
 
-        std::string mod = (you.disease > high) ? "badly "  :
-                          (you.disease >  low) ? ""        :
-                                                 "mildly ";
+        string mod = (you.disease > high) ? "badly "  :
+                     (you.disease >  low) ? ""
+                                          : "mildly ";
 
         inf->short_text = mod + "diseased";
         inf->long_text  = "You are " + mod + "diseased.";

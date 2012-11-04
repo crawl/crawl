@@ -1,0 +1,113 @@
+%%%%
+Centaur
+
+Gyors, erős és nagydarab, több ételre van szükségük mint más fajoknak.
+%%%%
+Deep Dwarf
+
+Mélyen a föld alatt élnek, nem tudnak természetes módon regenerálni, de
+ellenállóak és van eszközük a gyógyításra.
+%%%%
+Deep Elf
+
+A mágiához legjobban értő tünde, de a legtörékenyebb is.
+%%%%
+Demigod
+
+Soha nem követnek istent, de segítik őket természetfeletti képességeik és
+életerejük.
+%%%%
+Demonspawn
+
+A démonfatty félig ember, félig démon. Ahogy növekednek erős démonikus
+mutációkat kapnak.
+%%%%
+Draconian
+
+A sárkányfattyak sokoldalúak. A 7. szintet elérve válnak felnőtté és szerzik
+meg színüket.
+%%%%
+Felid
+
+Ezek a macskák értelmesek, de nem tudnak használni se fegyvereket, se
+páncélokat és sok más tárgyat sem.
+%%%%
+Ghoul
+
+Egy örök rothadásra ítélt élőhalott. Folyton rohadt húsra vágynak, hogy éles
+karmaikkal feldarabolják és felfalják.
+%%%%
+Halfling
+
+Kicsi de kemény, kiváló parittyával. Enyhén ellenállóak mutációkkal szemben.
+%%%%
+High Elf
+
+Büszke tündék, akik épp oly jól használnak varázslatokat mint ahogy a kardot
+forgatják.
+%%%%
+Hill Orc
+
+Az orkok a közelharc mesterei, és gyakran belekóstolnak a támadó mágiába is.
+Közutálatnak örvendve az orkok büszkék és sok közülük felsőbbrendűnek érzi
+magát.
+%%%%
+Human
+
+Evilágiak és átlagosak.
+%%%%
+Tengu
+
+Madárember, egyaránt szeret fegyverekkel és varázslatokkal harcolni. Nagyon
+törékenyek, de később megtanul repülni.
+%%%%
+Kobold
+
+Kicsi, csintalan és kicsit törékeny, de sok mindenhez ért. Képes és hajlandó is
+felfalni bármilyen húst.
+%%%%
+Merfolk
+
+Félig ember, félig hal, a merfolk otthon érzi magát vízben és szárazon is.
+%%%%
+Minotaur
+
+Nagy és izmos ember bikafejjel. A közel- és távharc minden formájában kiválóak.
+%%%%
+Mummy
+
+Bebalzsamozott és bepólyált élőholt, akit egy ősi átok kényszerít a mozgásra.
+%%%%
+Naga
+
+Hibrid: deréktól felfelé ember, vastag, pikkelyes, kígyóéhoz hasonlatos
+alsótesttel.
+%%%%
+Octopode
+
+A fejlábúak egy kétéltű faja. 8 gyűrűt viselhetnek, de szinte semmilyen páncélt
+nem tudnak felhúzni.
+%%%%
+Ogre
+
+Nagy és erős, de jól kiismeri magát a mágia alapjaiban.
+%%%%
+Sludge Elf
+
+Romlott tünde, aki többre értékeli a fortélyt a becsületes harcnál és a fekete
+mágiát más varázslatoknál.
+%%%%
+Spriggan
+
+Nagyon kicsi, nagyon törékeny és nagyon gyors. A sprigganok ügyesen szúrnak le
+másokat hátulról, és jól értenek a varázsláshoz.
+%%%%
+Troll
+
+Nagy és nyers, bármit kész elsőre széthasítani a karmaival. Mindig éhes.
+%%%%
+Vampire
+
+Az élő és élőholt állapotokat váltogatja. Ért hozzá, hogy kell másokat hátulról
+leszúrni, és jól ismeri a mágiát.
+%%%%

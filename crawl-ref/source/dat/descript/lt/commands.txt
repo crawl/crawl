@@ -152,11 +152,7 @@ CMD_AUTOFIGHT_NOMOVE verbose
 
 Pulti šalia esantį monstrą su rankose laikomu ginklu.
 %%%%
-CMD_SEARCH
+CMD_WAIT
 
 Palūkėti vieną ėjimą
-%%%%
-CMD_SEARCH verbose
-
-Praleisti vieną ėjimą laukiant, ilsintis ir ieškant.
 %%%%

@@ -25,7 +25,7 @@ static mons_list _lua_get_mlist(lua_State *ls, int ndx)
     {
         const char *spec = lua_tostring(ls, ndx);
         mons_list mlist;
-        const std::string err = mlist.add_mons(spec);
+        const string err = mlist.add_mons(spec);
         if (!err.empty())
             luaL_error(ls, err.c_str());
         return mlist;
@@ -93,7 +93,7 @@ static int dgn_set_random_mon_list(lua_State *ls)
         return 0;
     }
 
-    std::vector<mons_spec> mons;
+    vector<mons_spec> mons;
     int num_lords = 0;
     for (int i = 0; i < num_mons; i++)
     {
@@ -107,12 +107,12 @@ static int dgn_set_random_mon_list(lua_State *ls)
             continue;
         }
 
-        std::string name;
+        string name;
         if (mon.place.is_valid())
         {
             if (!branch_has_monsters(mon.place.branch))
             {
-                std::string err;
+                string err;
                 err = make_stringf("mon #%d: Can't use a place with no natural "
                                    "monsters as a monster place.", i + 1);
                 luaL_argerror(ls, list_pos, err.c_str());
@@ -124,7 +124,7 @@ static int dgn_set_random_mon_list(lua_State *ls)
         {
             if (mon.type == RANDOM_MONSTER || mon.monbase == RANDOM_MONSTER)
             {
-                std::string err;
+                string err;
                 err = make_stringf("mon #%d: can't use random monster in "
                                    "list specifying random monsters", i + 1);
                 luaL_argerror(ls, list_pos, err.c_str());

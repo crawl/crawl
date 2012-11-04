@@ -8,11 +8,11 @@
 namespace msg
 {
     mpr_stream_buf msbuf(MSGCH_PLAIN);
-    std::ostream stream(&msbuf);
-    std::vector<std::ostream*> stream_ptrs;
-    std::vector<mpr_stream_buf*> stream_buffers;
+    ostream stream(&msbuf);
+    vector<ostream*> stream_ptrs;
+    vector<mpr_stream_buf*> stream_buffers;
 
-    std::ostream& streams(msg_channel_type chan)
+    ostream& streams(msg_channel_type chan)
     {
         ASSERT(chan >= 0
                && static_cast<unsigned int>(chan) < stream_ptrs.size());
@@ -25,12 +25,12 @@ namespace msg
         {
             mpr_stream_buf* pmsb =
                 new mpr_stream_buf(static_cast<msg_channel_type>(i));
-            std::ostream* pos = new std::ostream(pmsb);
-            (*pos) << std::nounitbuf;
+            ostream* pos = new ostream(pmsb);
+            (*pos) << nounitbuf;
             stream_ptrs.push_back(pos);
             stream_buffers.push_back(pmsb);
         }
-        stream << std::nounitbuf;
+        stream << nounitbuf;
     }
 
     void deinitialise_mpr_streams()
@@ -87,13 +87,13 @@ namespace msg
         {
             mpr("oops, hit overflow", MSGCH_ERROR);
             internal_count = 0;
-            return std::streambuf::traits_type::eof();
+            return streambuf::traits_type::eof();
         }
         return 0;
     }
 }
 
-std::ostream& operator<<(std::ostream& os, const msg::setparam& sp)
+ostream& operator<<(ostream& os, const msg::setparam& sp)
 {
     msg::mpr_stream_buf* ps = dynamic_cast<msg::mpr_stream_buf*>(os.rdbuf());
     ps->set_param(sp.m_param);

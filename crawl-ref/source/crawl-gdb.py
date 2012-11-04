@@ -126,6 +126,7 @@ def build_pretty_printer():
 #   pp.add_printer('actor', '^actor$', actor_printer)
 
     pp.add_printer('FixedVector', '^FixedVector<.*>$', FixedVector_printer)
+    pp.add_printer('FixedArray', '^FixedArray<.*>$', FixedVector_printer)
 
     pp.add_printer('CrawlHashTable', '^CrawlHashTable$', CrawlHashTable_printer)
     pp.add_printer('CrawlVector', '^CrawlVector$', CrawlVector_printer)

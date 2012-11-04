@@ -82,17 +82,17 @@ enum diag_type
 
 msg_colour_type msg_colour(int colour);
 
-void mpr(std::string text, msg_channel_type channel=MSGCH_PLAIN, int param=0,
+void mpr(string text, msg_channel_type channel=MSGCH_PLAIN, int param=0,
          bool nojoin=false, bool cap=true);
 
-static inline void mprnojoin(std::string text, msg_channel_type channel=MSGCH_PLAIN,
-                      int param=0)
+static inline void mprnojoin(string text, msg_channel_type channel=MSGCH_PLAIN,
+                             int param=0)
 {
     mpr(text, channel, param, true);
 }
 
-static inline void mpr_nocap(std::string text, msg_channel_type channel=MSGCH_PLAIN,
-                      int param=0, bool nojoin=false)
+static inline void mpr_nocap(string text, msg_channel_type channel=MSGCH_PLAIN,
+                             int param=0, bool nojoin=false)
 {
     mpr(text, channel, param, nojoin, false);
 }

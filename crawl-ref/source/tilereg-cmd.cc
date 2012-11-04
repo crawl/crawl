@@ -19,9 +19,20 @@
 #include "tiledef-icons.h"
 #include "tilepick.h"
 #include "viewgeom.h"
+#include "spl-cast.h"
+#include "items.h"
+#include "areas.h"
 
-CommandRegion::CommandRegion(const TileRegionInit &init) : GridRegion(init)
+CommandRegion::CommandRegion(const TileRegionInit &init,
+                             const command_type commands[],
+                             const int n_commands, const string _name,
+                             const string help) :
+    GridRegion(init),
+    _common_commands( commands, commands + n_commands ),
+    m_name(_name),
+    m_help(help)
 {
+    n_common_commands = n_commands;
 }
 
 void CommandRegion::activate()
@@ -55,23 +66,27 @@ int CommandRegion::handle_mouse(MouseEvent &event)
     {
         const command_type cmd = (command_type) m_items[item_idx].idx;
         m_last_clicked_item = item_idx;
+
+        // this is a really horrid way to preserve the interface in viewmap.cc
+        // which expects a keypress rather than a command :(
+        if (tiles.get_map_display())
+            return command_to_key(cmd);
+
         process_command(cmd);
         return CK_MOUSE_CMD;
     }
     return 0;
 }
 
-bool CommandRegion::update_tab_tip_text(std::string &tip, bool active)
+bool CommandRegion::update_tab_tip_text(string &tip, bool active)
 {
     const char *prefix = active ? "" : "[L-Click] ";
 
-    tip = make_stringf("%s%s",
-                       prefix, "Execute commands");
-
+    tip = make_stringf("%s%s", prefix, m_help.c_str());
     return true;
 }
 
-bool CommandRegion::update_tip_text(std::string& tip)
+bool CommandRegion::update_tip_text(string& tip)
 {
     if (m_cursor == NO_CURSOR)
         return false;
@@ -95,7 +110,7 @@ bool CommandRegion::update_tip_text(std::string& tip)
     return true;
 }
 
-bool CommandRegion::update_alt_text(std::string &alt)
+bool CommandRegion::update_alt_text(string &alt)
 {
     if (m_cursor == NO_CURSOR)
         return false;
@@ -114,7 +129,7 @@ bool CommandRegion::update_alt_text(std::string &alt)
 
     const command_type cmd = (command_type) idx;
 
-    const std::string desc = get_command_description(cmd, false);
+    const string desc = get_command_description(cmd, false);
     if (desc.empty())
         return false;
 
@@ -171,6 +186,42 @@ static bool _command_not_applicable(const command_type cmd, bool safe)
                 && !feat_is_altar(grd(you.pos())));
     case CMD_USE_ABILITY:
         return (your_talents(false).empty());
+    case CMD_BUTCHER:
+        // this logic is enormously simplistic compared to food.cc
+        for (stack_iterator si(you.pos(), true); si; ++si)
+            if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
+                return false;
+        if (you.species == SP_VAMPIRE)
+            return false;
+        return true;
+    case CMD_CAST_SPELL:
+        return // shamefully copied from _can_cast in spl-cast.cc
+            (player_in_bat_form() || you.form == TRAN_PIG) ||
+            (you.stat_zero[STAT_INT]) ||
+            (player_effect_nocast()) ||
+            (!you.spell_no) ||
+            (you.berserk()) ||
+            (you.confused()) ||
+            (silenced(you.pos()));
+    case CMD_DISPLAY_MAP:
+        return tiles.get_map_display();
+    case CMD_MAP_GOTO_TARGET:
+    case CMD_MAP_ADD_WAYPOINT:
+    case CMD_MAP_EXCLUDE_AREA:
+    case CMD_MAP_CLEAR_EXCLUDES:
+    case CMD_MAP_NEXT_LEVEL:
+    case CMD_MAP_PREV_LEVEL:
+    case CMD_MAP_GOTO_LEVEL:
+    case CMD_MAP_FIND_UPSTAIR:
+    case CMD_MAP_FIND_DOWNSTAIR:
+    case CMD_MAP_FIND_YOU:
+    case CMD_MAP_FIND_PORTAL:
+    case CMD_MAP_FIND_TRAP:
+    case CMD_MAP_FIND_ALTAR:
+    case CMD_MAP_FIND_EXCLUDED:
+    case CMD_MAP_FIND_WAYPOINT:
+    case CMD_MAP_FIND_STASH:
+        return !tiles.get_map_display();
     default:
         return false;
     }

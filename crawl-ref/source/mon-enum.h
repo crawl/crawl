@@ -9,7 +9,7 @@
 #ifndef MON_ENUM_H
 #define MON_ENUM_H
 
-#include "tag-version.h"
+// #include "tag-version.h"
 
 #define HERD_COMFORT_RANGE 6
 

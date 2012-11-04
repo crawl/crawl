@@ -1,15 +1,14 @@
 #ifndef TILEFONT_H
 #define TILEFONT_H
 
-#include "externs.h"
-#include "tilebuf.h"
-#include "tiletex.h"
+#include "defines.h"
+#include "glwrapper.h"
 
 extern const VColour term_colours[MAX_TERM_COLOUR];
 
 class FontBuffer;
-struct VColour;
 class formatted_string;
+class GenericTexture;
 
 class FontWrapper
 {
@@ -44,7 +43,7 @@ public:
 
     // FontBuffer helper functions
     virtual void store(FontBuffer &buf, float &x, float &y,
-                       const std::string &s, const VColour &c) = 0;
+                       const string &s, const VColour &c) = 0;
     virtual void store(FontBuffer &buf, float &x, float &y,
                        const formatted_string &fs) = 0;
     virtual void store(FontBuffer &buf, float &x, float &y, ucs_t c,

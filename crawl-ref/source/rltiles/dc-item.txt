@@ -115,11 +115,11 @@ greatsword2
 %rim 0
 orcish_great_sword1 WPN_GREAT_SWORD_ORC
 orcish_great_sword2
-%rim 1
 
+
+%rim 0
 falchion1 WPN_FALCHION
 falchion2
-%rim 0
 orcish_falchion1 WPN_FALCHION_ORC
 orcish_falchion2
 dwarven_falchion1 WPN_FALCHION_DWARF
@@ -130,10 +130,20 @@ elven_falchion2
 scimitar1 WPN_SCIMITAR
 scimitar2
 
-sabre1_silver WPN_SABRE
+%rim 0
+sabre1 WPN_SABRE
 sabre2
+sabre3
+orcish_sabre1 WPN_SABRE_ORC
+orcish_sabre2
+dwarven_sabre1 WPN_SABRE_DWARF
+dwarven_sabre2
+elven_sabre1 WPN_SABRE_ELF
+elven_sabre2
 
-quickblade WPN_QUICK_BLADE
+quickblade1 WPN_QUICK_BLADE
+quickblade2
+quickblade3
 
 double_sword WPN_DOUBLE_SWORD
 triple_sword WPN_TRIPLE_SWORD
@@ -213,6 +223,9 @@ orcish_glaive2
 %rim 1
 bardiche1 WPN_BARDICHE
 bardiche2
+bardiche3
+orcish_bardiche WPN_BARDICHE_ORC
+orcish_bardiche2
 
 ##Staff
 %rim 0
@@ -517,6 +530,10 @@ large_shield1 ARM_LARGE_SHIELD
 large_shield2
 large_shield3
 
+shield_dd SHIELD_DEEP_DWARF
+shield_dd_scion SHIELD_DEEP_DWARF_SCION
+lshield_dd_dk LARGE_SHIELD_DEEP_DWARF_DEATH_KNIGHT
+
 %sdir item/armour/headgear
 #####ARM_HELMET
 elven_leather_helm THELM_CAP
@@ -633,7 +650,14 @@ beef_jerky FOOD_BEEF_JERKY
 cheese FOOD_CHEESE
 sausage FOOD_SAUSAGE
 piece_of_ambrosia FOOD_AMBROSIA
-bone FOOD_BONE
+bone_humanoid1 FOOD_BONE_HUMANOID
+bone_humanoid2
+bone_humanoid3
+bone_humanoid4
+bone1 FOOD_BONE
+bone2
+bone3
+bone4
 chunk FOOD_CHUNK
 chunk_rotten FOOD_CHUNK_ROTTEN
 %back chunk
@@ -713,21 +737,23 @@ i-curse-jewellery SCR_CURSE_JEWELLERY SCR_ID_LAST
 ##################OBJ_JEWELLERY
 ############ring
 %sdir item/ring
+%rim 0
 wooden RING_NORMAL_OFFSET UNSEEN_RING
 silver
 gold
 iron
 steel
-bronze
+tourmaline
 brass
 copper
 granite
 ivory
-clay
+ruby
 tiger_eye
 jade
 glass
 ###########random
+%rim 0
 agate RING_RANDOM_OFFSET RING_COL_FIRST
 clay
 diamond
@@ -744,7 +770,27 @@ plain_black
 bronze
 moonstone RING_COL_LAST
 
+###########randarts
+%sdir item/ring/randarts
+%rim 0
+four-colour RING_RANDART_OFFSET
+green
+ice
+blood
+dark
+red-blue
+double
+anvil
+eye
+flower
+zircon
+fire
+pink
+bronze-flower
+snake
+
 #########ID-ed
+%sdir item/ring
 %rim 0
 i-regeneration RING_REGENERATION RING_ID_FIRST
 i-protection RING_PROTECTION

@@ -747,6 +747,10 @@ large_shield_of_ignorance LARGE_SHIELD_OF_IGNORANCE
 gil-galad SHIELD_GILGALAD
 shield_spriggan SHIELD_SPRIGGAN
 
+shield_dd SHIELD_DEEP_DWARF
+shield_dd_scion SHIELD_DEEP_DWARF_SCION
+lshield_dd_dk LARGE_SHIELD_DEEP_DWARF_DEATH_KNIGHT
+
 ## books
 %sdir player/hand2/misc
 book_black BOOK_BLACK

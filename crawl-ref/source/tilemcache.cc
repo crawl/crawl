@@ -46,10 +46,12 @@ public:
     static bool valid(const monster_info& mon);
 
     static bool get_weapon_offset(tileidx_t mon_tile, int *ofs_x, int *ofs_y);
+    static bool get_shield_offset(tileidx_t mon_tile, int *ofs_x, int *ofs_y);
 
 protected:
     tileidx_t m_mon_tile;
     tileidx_t m_equ_tile;
+    tileidx_t m_shd_tile;
 };
 
 class mcache_draco : public mcache_entry
@@ -65,6 +67,7 @@ protected:
     tileidx_t m_mon_tile;
     tileidx_t m_job_tile;
     tileidx_t m_equ_tile;
+    tileidx_t m_shd_tile;
 };
 
 class mcache_ghost : public mcache_entry
@@ -210,7 +213,10 @@ mcache_monster::mcache_monster(const monster_info& mon)
 
     m_mon_tile = tileidx_monster(mon) & TILE_FLAG_MASK;
 
-    m_equ_tile = tilep_equ_weapon(*mon.inv[MSLOT_WEAPON]);
+    const item_info* mon_weapon = mon.inv[MSLOT_WEAPON].get();
+    m_equ_tile = (mon_weapon != NULL) ? tilep_equ_weapon(*mon_weapon) : 0;
+    const item_info* mon_shield = mon.inv[MSLOT_SHIELD].get();
+    m_shd_tile = (mon_shield != NULL) ? tilep_equ_shield(*mon_shield) : 0;
 }
 
 // Returns the amount of pixels necessary to shift a wielded weapon
@@ -240,7 +246,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_RAKSHASA:
     case TILEP_MONS_RAKSHASA_FAKE:
     case TILEP_MONS_VAMPIRE_KNIGHT:
-    case TILEP_MONS_SKELETAL_WARRIOR:
     case TILEP_MONS_ANGEL:
     case TILEP_MONS_SERAPH:
     case TILEP_MONS_CHERUB:
@@ -283,12 +288,15 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_TIAMAT+6:
     case TILEP_MONS_TIAMAT+7:
     case TILEP_MONS_TIAMAT+8:
-    case TILEP_MONS_ANCIENT_CHAMPION:
     case TILEP_MONS_MERFOLK_IMPALER:
     case TILEP_MONS_MERFOLK_IMPALER_WATER:
     case TILEP_MONS_TENGU:
     case TILEP_MONS_TENGU_CONJURER:
         *ofs_x = -2;
+        *ofs_y = 0;
+        break;
+    case TILEP_MONS_SKELETON_LARGE:
+        *ofs_x = -3;
         *ofs_y = 0;
         break;
     // Shift to the right.
@@ -316,6 +324,10 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_DEEP_ELF_HIGH_PRIEST:
     case TILEP_MONS_RUPERT:
     case TILEP_MONS_HELL_KNIGHT:
+    case TILEP_MONS_MUMMY:
+    case TILEP_MONS_MUMMY_PRIEST:
+    case TILEP_MONS_GUARDIAN_MUMMY:
+    case TILEP_MONS_SKELETON_SMALL:
         *ofs_x = 0;
         *ofs_y = -1;
         break;
@@ -370,6 +382,8 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_y = -3;
         break;
     case TILEP_MONS_SONJA:
+    case TILEP_MONS_ANCIENT_CHAMPION:
+    case TILEP_MONS_SKELETAL_WARRIOR:
         *ofs_x = -2;
         *ofs_y = -2;
         break;
@@ -387,6 +401,10 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_x = -2;
         *ofs_y = -4;
         break;
+    case TILEP_MONS_ARACHNE_STAVELESS:
+        *ofs_x = -2;
+        *ofs_y = -5;
+        break;
     // Shift upwards and to the right.
     case TILEP_MONS_NECROMANCER:
     case TILEP_MONS_WIZARD:
@@ -396,8 +414,8 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_y = -1;
         break;
     case TILEP_MONS_AGNES:
-        *ofs_x = 1;
-        *ofs_y = -3;
+        *ofs_x = 0;
+        *ofs_y = 1;
         break;
     case TILEP_MONS_LOUISE:
         *ofs_x = 1;
@@ -461,14 +479,57 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     return true;
 }
 
+// Returns the amount of pixels necessary to shift a worn shield, like
+// it's done with weapon.  Tiles that have a shield hard-drawn should not
+// be listed here.
+bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
+                                       int *ofs_x, int *ofs_y)
+{
+    switch (mon_tile)
+    {
+    case TILEP_MONS_ORC:
+    case TILEP_MONS_URUG:
+    case TILEP_MONS_BLORK_THE_ORC:
+    case TILEP_MONS_SAINT_ROKA:
+    case TILEP_MONS_ORC_WARRIOR:
+    case TILEP_MONS_ORC_KNIGHT:
+    case TILEP_MONS_ORC_WARLORD:
+        *ofs_x = 1;
+        *ofs_y = 2;
+        break;
+
+    case TILEP_MONS_ARACHNE_STAVELESS:
+        *ofs_x = -6;
+        *ofs_y = 1;
+        break;
+
+    case TILEP_MONS_ZOMBIE_SMALL:
+    case TILEP_MONS_SKELETON_SMALL:
+        *ofs_x = -2;
+        *ofs_y = 1;
+        break;
+
+    case TILEP_MONS_HUMAN:
+    case TILEP_MONS_LOUISE:
+        *ofs_x = 0;
+        *ofs_y = 0;
+        break;
+
+    default:
+        // This monster cannot be displayed with a shield.
+        return false;
+    }
+
+    return true;
+}
+
 int mcache_monster::info(tile_draw_info *dinfo) const
 {
-    int ofs_x, ofs_y;
-    get_weapon_offset(m_mon_tile, &ofs_x, &ofs_y);
-
     int count = 0;
     dinfo[count++].set(m_mon_tile);
-    if (m_equ_tile)
+
+    int ofs_x, ofs_y;
+    if (m_equ_tile && get_weapon_offset(m_mon_tile, &ofs_x, &ofs_y))
         dinfo[count++].set(m_equ_tile, ofs_x, ofs_y);
 
     // In some cases, overlay a second weapon tile...
@@ -492,19 +553,21 @@ int mcache_monster::info(tile_draw_info *dinfo) const
         if (eq2)
             dinfo[count++].set(eq2, -ofs_x, ofs_y);
     }
+    else if (m_shd_tile && get_shield_offset(m_mon_tile, &ofs_x, &ofs_y))
+        dinfo[count++].set(m_shd_tile, ofs_x, ofs_y);
 
     return count;
 }
 
 bool mcache_monster::valid(const monster_info& mon)
 {
-    if (mon.inv[MSLOT_WEAPON].get() == NULL)
-        return false;
-
     tileidx_t mon_tile = tileidx_monster(mon) & TILE_FLAG_MASK;
 
     int ox, oy;
-    return get_weapon_offset(mon_tile, &ox, &oy);
+    return (mon.inv[MSLOT_WEAPON].get() != NULL
+            && get_weapon_offset(mon_tile, &ox, &oy))
+        || (mon.inv[MSLOT_SHIELD].get() != NULL
+            && get_shield_offset(mon_tile, &ox, &oy));
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -517,6 +580,8 @@ mcache_draco::mcache_draco(const monster_info& mon)
     m_mon_tile = tileidx_draco_base(mon);
     const item_info* mon_wep = mon.inv[MSLOT_WEAPON].get();
     m_equ_tile = (mon_wep != NULL) ? tilep_equ_weapon(*mon_wep) : 0;
+    mon_wep = mon.inv[MSLOT_SHIELD].get();
+    m_shd_tile = (mon_wep != NULL) ? tilep_equ_shield(*mon_wep) : 0;
     m_job_tile = tileidx_draco_job(mon);
 }
 
@@ -529,6 +594,8 @@ int mcache_draco::info(tile_draw_info *dinfo) const
         dinfo[i++].set(m_job_tile);
     if (m_equ_tile)
         dinfo[i++].set(m_equ_tile, -2, 0);
+    if (m_shd_tile)
+        dinfo[i++].set(m_shd_tile, 2, 0);
 
     return i;
 }
@@ -545,7 +612,7 @@ mcache_ghost::mcache_ghost(const monster_info& mon)
 {
     ASSERT(mcache_ghost::valid(mon));
 
-    const uint32_t seed = hash(&mon.mname[0], mon.mname.size());
+    const uint32_t seed = hash32(&mon.mname[0], mon.mname.size());
     rng_save_excursion exc;
     seed_rng(seed);
 
@@ -693,7 +760,7 @@ mcache_demon::mcache_demon(const monster_info& minf)
 {
     ASSERT(minf.type == MONS_PANDEMONIUM_LORD);
 
-    const uint32_t seed = hash(&minf.mname[0], minf.mname.size());
+    const uint32_t seed = hash32(&minf.mname[0], minf.mname.size());
     rng_save_excursion exc;
     seed_rng(seed);
 

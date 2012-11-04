@@ -1,10 +1,7 @@
 #ifndef LOS_DEF_H
 #define LOS_DEF_H
 
-#include "coord-circle.h"
 #include "los.h"
-#include "losglobal.h"
-#include "losparam.h"
 
 class los_base
 {

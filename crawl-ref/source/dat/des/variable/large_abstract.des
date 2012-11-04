@@ -91,7 +91,7 @@ MONS:    silver statue, nothing
 SUBST:   E=E.
 SHUFFLE: abcd, $*, |ABCDE, nm, 45
 SUBST:   A=., B=., C=., D=*, E=%, n=9, m=0
-SUBST:   a = = x:8, b = = x:30, c=x, d=x
+SUBST:   a = + x:8, b = + x:30, c=x, d=x
 SUBST:   * = * |:1
 SHUFFLE: opq
 SUBST:   o=+
@@ -439,7 +439,7 @@ x..b...xxb...........bxx...b..xx
 x..bb..xxbbb..9.9..bbbxx..bb..xx
 x......xxxxbbbb'bbbbxxxx......xx
 x..bb..xxxxxxxb=bxxxxxxx..bb..xx
-x..b...xxxxxxxx=xxxxxxxx...b..xx
+x..b...xxxxxxxx'xxxxxxxx...b..xx
 x...b..xxxxxxxx'xxxxxxxx..b...xx
 x..b....xxxxxxx=xxxxxxx....b..xx
 x...b...'''''''.'''''''...b...xx
@@ -463,18 +463,18 @@ MAP
 ...............................x
 .....cccccccccccccccc..........x
 .....c[^...........9cc.........x
-.....c^xxxxx=xxxxxx..cc........x
+.....c^xxxxx+xxxxxx..cc........x
 .....c.x9..^^^...9xx..cc.......x
 .....c.x.xxx=xxxx..xx..cc......x
 .....c.x^x$$$$$$xx..xx.9c......x
-.....c.=^=$*|||*$xx..xx.c......x
+.....c.+^=$*|||*$xx..xx.c......x
 .....c.x^xx$*|||*$xx.9x.c......x
 .....c.x9.xx$*|||*$xx^x.c......x
-.....c.xx..xx$*|||*$=^=.c......x
+.....c.xx..xx$*|||*$=^+.c......x
 .....c9.xx..xx$$$$$$x^x.c......x
 .....cc..xx..xxxx=xxx.x.c......x
 ......cc..xx9...^^^..9x.c......x
-.......cc..xxxxxx=xxxxx^c......x
+.......cc..xxxxxx+xxxxx^c......x
 ........cc9...........^]c......x
 .........cccccccccccccccc......x
 ...............................x
@@ -516,7 +516,7 @@ xx.....vvbbb......bbbvv.....xxxx
 xxx....vvb....66....bvvxxxxxxxxx
 xxxxxxvvvb..llllll..bvvvxxxxxxxx
 xvvvvvvvvb..ll45ll..bvvvvvvvvxxx
-xccc***+==..l3.2.l..cccccccccxxx
+xccc***+.+..l3.2.l..cccccccccxxx
 xccc+cccbb....ll....c..$$$$+$*cx
 xcc|||cbb...3llll2...cc%*%*c$|cx
 xcccccccbbbbbbbbbbbccccccccccccx
@@ -525,7 +525,7 @@ ENDMAP
 
 NAME:    minmay_open_boxes_in_corner
 ORIENT:  southeast
-DEPTH:   D:12-, Vaults
+DEPTH:   D:12-
 SHUFFLE: $*%
 SUBST:   c : xcv
 SUBST:   $ = $$$$%*
@@ -553,7 +553,7 @@ ENDMAP
 
 NAME:    minmay_connected_boxes_in_corner
 ORIENT:  southeast
-DEPTH:   D:12-, Vaults
+DEPTH:   D:12-
 SHUFFLE: $*%, ABCDEFH
 SUBST:   $ = $$$$%*..
 SUBST:   % = %%%%$*.....
@@ -638,7 +638,7 @@ ENDMAP
 
 NAME:    minmay_isolated_rectangles_in_corner
 ORIENT:  southeast
-DEPTH:   D:12-26, Vaults:2-6
+DEPTH:   D:12-26
 SHUFFLE: ([{)]}, *$
 SUBST:   * = %**|$....
 SUBST:   $ = $$$$%
@@ -670,7 +670,7 @@ ENDMAP
 
 NAME:    minmay_connected_triangles_in_corner
 ORIENT:  southeast
-DEPTH:   D:12-26, Vaults:2-6
+DEPTH:   D:12-26
 SHUFFLE: ([{)]}, 890, |*%$
 SUBST:   c : cv
 MAP
@@ -745,12 +745,12 @@ MAP
 c+..ccccccccccccc
 c...0cccccccccccc
 c...9cccccccccccc
-cc09xxccccccccccc
+cc09=xccccccccccc
 ccccxx...cccccccc
 ccccc....0ccccccc
 ccccc...09ccccccc
 ccccc..098ccccccc
-cccccc098xxcccccc
+cccccc098=xcccccc
 cccccccccxx....cc
 cccccccccc.....0c
 cccccccccc....09c

@@ -43,12 +43,13 @@
 #include "stuff.h"
 #include "syscalls.h"
 #include "unicode.h"
+#include "version.h"
 
 // for trim_string:
 #include "initfile.h"
 
-typedef std::deque<int> keybuf;
-typedef std::map<keyseq,keyseq> macromap;
+typedef deque<int> keybuf;
+typedef map<keyseq,keyseq> macromap;
 
 static macromap Keymaps[KMC_CONTEXT_COUNT];
 static macromap Macros;
@@ -67,12 +68,12 @@ static keybuf Buffer;
 static keybuf SendKeysBuffer;
 
 #define USERFUNCBASE -10000
-static std::vector<std::string> userfunctions;
+static vector<string> userfunctions;
 
-static std::vector<key_recorder*> recorders;
+static vector<key_recorder*> recorders;
 
-typedef std::map<std::string, int> name_to_cmd_map;
-typedef std::map<int, std::string> cmd_to_name_map;
+typedef map<string, int> name_to_cmd_map;
+typedef map<int, string> cmd_to_name_map;
 
 struct command_name
 {
@@ -97,8 +98,8 @@ static default_binding _default_binding_list[] = {
 #include "cmd-keys.h"
 };
 
-typedef std::map<int, int> key_to_cmd_map;
-typedef std::map<int, int> cmd_to_key_map;
+typedef map<int, int> key_to_cmd_map;
+typedef map<int, int> cmd_to_key_map;
 
 static key_to_cmd_map _keys_to_cmds[KMC_CONTEXT_COUNT];
 static cmd_to_key_map _cmds_to_keys[KMC_CONTEXT_COUNT];
@@ -129,13 +130,13 @@ static bool is_userfunction(const keyseq &seq)
     return (userfunc_index(seq) != -1);
 }
 
-std::string get_userfunction(int key)
+string get_userfunction(int key)
 {
     int index = userfunc_index(key);
     return (index == -1 ? NULL : userfunctions[index]);
 }
 
-static std::string get_userfunction(const keyseq &seq)
+static string get_userfunction(const keyseq &seq)
 {
     int index = userfunc_index(seq);
     return (index == -1 ? NULL : userfunctions[index]);
@@ -172,7 +173,7 @@ static void userfunc_collectgarbage(void)
     }
 }
 
-static int userfunc_getindex(const std::string &fname)
+static int userfunc_getindex(const string &fname)
 {
     if (fname.length() == 0)
         return -1;
@@ -201,10 +202,10 @@ static int userfunc_getindex(const std::string &fname)
 }
 
 // Returns the name of the file that contains macros.
-static std::string get_macro_file()
+static string get_macro_file()
 {
-    std::string dir = !Options.macro_dir.empty() ? Options.macro_dir :
-                      !SysEnv.crawl_dir.empty()  ? SysEnv.crawl_dir : "";
+    string dir = !Options.macro_dir.empty() ? Options.macro_dir :
+                 !SysEnv.crawl_dir.empty()  ? SysEnv.crawl_dir : "";
 
     if (!dir.empty())
     {
@@ -250,7 +251,7 @@ static void buf2keyseq(const char *buff, keyseq &k)
     }
 }
 
-static int read_key_code(std::string s)
+static int read_key_code(string s)
 {
     if (s.empty())
         return 0;
@@ -281,7 +282,7 @@ static int read_key_code(std::string s)
  *   \{x40} produces 64 (hexadecimal code)
  *   \{!more} or \{!m} disables -more- prompt until the end of the macro.
  */
-static keyseq parse_keyseq(std::string s)
+static keyseq parse_keyseq(string s)
 {
     int state = 0;
     keyseq v;
@@ -319,11 +320,11 @@ static keyseq parse_keyseq(std::string s)
 
         case 2: // Inside \{}
         {
-            const std::string::size_type clb = s.find('}', i);
-            if (clb == std::string::npos)
+            const string::size_type clb = s.find('}', i);
+            if (clb == string::npos)
                 break;
 
-            const std::string arg = s.substr(i, clb - i);
+            const string arg = s.substr(i, clb - i);
             if (!more_reset && (arg == "!more" || arg == "!m"))
             {
                 more_reset = true;
@@ -349,16 +350,16 @@ static keyseq parse_keyseq(std::string s)
  * Serialises a key sequence into a string of the format described
  * above.
  */
-static std::string vtostr(const keyseq &seq)
+static string vtostr(const keyseq &seq)
 {
-    std::ostringstream s;
+    ostringstream s;
 
     const keyseq *v = &seq;
     keyseq dummy;
     if (is_userfunction(seq))
     {
         // Laboriously reconstruct the original user input
-        std::string newseq = std::string("==") + get_userfunction(seq);
+        string newseq = string("==") + get_userfunction(seq);
         buf2keyseq(newseq.c_str(), dummy);
         dummy.push_front('=');
 
@@ -665,7 +666,7 @@ static void write_map(FILE *f, const macromap &mp, const char *key)
 void macro_save()
 {
     FILE *f;
-    const std::string macrofile = get_macro_file();
+    const string macrofile = get_macro_file();
     f = fopen_u(macrofile.c_str(), "w");
     if (!f)
     {
@@ -815,17 +816,17 @@ void flush_input_buffer(int reason)
     }
 }
 
-static std::string _macro_prompt_string(const std::string &macro_type)
+static string _macro_prompt_string(const string &macro_type)
 {
     return make_stringf("Input %s action: ", macro_type.c_str());
 }
 
-static void _macro_prompt(const std::string &macro_type)
+static void _macro_prompt(const string &macro_type)
 {
     msgwin_prompt(_macro_prompt_string(macro_type));
 }
 
-static void _input_action_raw(const std::string &macro_type, keyseq* action)
+static void _input_action_raw(const string &macro_type, keyseq* action)
 {
     _macro_prompt(macro_type);
     const int x = wherex();
@@ -860,7 +861,7 @@ static void _input_action_raw(const std::string &macro_type, keyseq* action)
     msgwin_reply(vtostr(*action));
 }
 
-static void _input_action_text(const std::string &macro_type, keyseq* action)
+static void _input_action_text(const string &macro_type, keyseq* action)
 {
     char buff[1024];
     msgwin_get_line_autohist(_macro_prompt_string(macro_type),
@@ -868,7 +869,7 @@ static void _input_action_text(const std::string &macro_type, keyseq* action)
     *action = parse_keyseq(buff);
 }
 
-static std::string _macro_type_name(bool keymap, KeymapContext keymc)
+static string _macro_type_name(bool keymap, KeymapContext keymc)
 {
     return make_stringf("%s%s",
                         keymap ? (keymc == KMC_DEFAULT    ? "default " :
@@ -939,9 +940,9 @@ void macro_add_query(void)
 
     // reference to the appropriate mapping
     macromap &mapref = (keymap ? Keymaps[keymc] : Macros);
-    const std::string macro_type = _macro_type_name(keymap, keymc);
-    const std::string trigger_prompt = make_stringf("Input %s trigger key: ",
-                                                    macro_type.c_str());
+    const string macro_type = _macro_type_name(keymap, keymc);
+    const string trigger_prompt = make_stringf("Input %s trigger key: ",
+                                               macro_type.c_str());
     msgwin_prompt(trigger_prompt);
 
     keyseq key;
@@ -952,7 +953,7 @@ void macro_add_query(void)
 
     if (mapref.find(key) != mapref.end() && !mapref[key].empty())
     {
-        std::string action = vtostr(mapref[key]);
+        string action = vtostr(mapref[key]);
         action = replace_all(action, "<", "<<");
         mprf(MSGCH_WARN, "Current Action: %s", action.c_str());
         mpr("Do you wish to (r)edefine, (c)lear, or (a)bort? ", MSGCH_PROMPT);
@@ -1013,7 +1014,7 @@ static void _read_macros_from(const char* filename)
     if (!file_exists(filename))
         return;
 
-    std::string s;
+    string s;
     FileLineInput f(filename);
     keyseq key, action;
     bool keymap = false;
@@ -1056,8 +1057,8 @@ static void _read_macros_from(const char* filename)
 
 void macro_init()
 {
-    const std::vector<std::string>& files = Options.additional_macro_files;
-    for (std::vector<std::string>::const_iterator it = files.begin();
+    const vector<string>& files = Options.additional_macro_files;
+    for (vector<string>::const_iterator it = files.begin();
          it != files.end();
          ++it)
     {
@@ -1140,7 +1141,7 @@ void add_key_recorder(key_recorder* recorder)
 
 void remove_key_recorder(key_recorder* recorder)
 {
-    std::vector<key_recorder*>::iterator i;
+    vector<key_recorder*>::iterator i;
 
     for (i = recorders.begin(); i != recorders.end(); ++i)
         if (*i == recorder)
@@ -1203,7 +1204,7 @@ void init_keybindings()
     ASSERT(i >= 130);
 }
 
-command_type name_to_command(std::string name)
+command_type name_to_command(string name)
 {
     name_to_cmd_map::iterator it = _names_to_cmds.find(name);
 
@@ -1213,7 +1214,7 @@ command_type name_to_command(std::string name)
     return static_cast<command_type>(it->second);
 }
 
-std::string command_to_name(command_type cmd)
+string command_to_name(command_type cmd)
 {
     cmd_to_name_map::iterator it = _cmds_to_names.find(cmd);
 
@@ -1304,8 +1305,8 @@ static KeymapContext _context_for_command(command_type cmd)
 
 void bind_command_to_key(command_type cmd, int key)
 {
-    KeymapContext context      = _context_for_command(cmd);
-    std::string   command_name = command_to_name(cmd);
+    KeymapContext context = _context_for_command(cmd);
+    string   command_name = command_to_name(cmd);
 
     if (context == KMC_NONE || command_name == "CMD_NO_CMD"
         || !VALID_BIND_COMMAND(cmd))
@@ -1342,12 +1343,12 @@ void bind_command_to_key(command_type cmd, int key)
     cmd_map[cmd] = key;
 }
 
-static std::string _special_keys_to_string(int key)
+static string _special_keys_to_string(int key)
 {
     const bool shift = (key >= CK_SHIFT_UP && key <= CK_SHIFT_PGDN);
     const bool ctrl  = (key >= CK_CTRL_UP && key <= CK_CTRL_PGDN);
 
-    std::string cmd = "";
+    string cmd = "";
 
     if (shift)
     {
@@ -1381,11 +1382,11 @@ static std::string _special_keys_to_string(int key)
     return cmd;
 }
 
-std::string command_to_string(command_type cmd, bool tutorial)
+string command_to_string(command_type cmd, bool tutorial)
 {
     const int key = command_to_key(cmd);
 
-    const std::string desc = _special_keys_to_string(key);
+    const string desc = _special_keys_to_string(key);
     if (!desc.empty())
         return desc;
 
@@ -1410,21 +1411,20 @@ std::string command_to_string(command_type cmd, bool tutorial)
             snprintf(info, INFO_SIZE, "%d", key);
     }
 
-    std::string result = info;
+    string result = info;
     return result;
 }
 
-void insert_commands(std::string &desc, std::vector<command_type> cmds,
-                     bool formatted)
+void insert_commands(string &desc, vector<command_type> cmds, bool formatted)
 {
     desc = untag_tiles_console(desc);
     for (unsigned int i = 0; i < cmds.size(); ++i)
     {
-        const std::string::size_type found = desc.find("%");
-        if (found == std::string::npos)
+        const string::size_type found = desc.find("%");
+        if (found == string::npos)
             break;
 
-        std::string command_name = command_to_string(cmds[i]);
+        string command_name = command_to_string(cmds[i]);
         if (formatted && command_name == "<")
             command_name += "<";
         else if (command_name == "%")
@@ -1435,9 +1435,9 @@ void insert_commands(std::string &desc, std::vector<command_type> cmds,
     desc = replace_all(desc, "percent", "%");
 }
 
-void insert_commands(std::string &desc, const int first, ...)
+void insert_commands(string &desc, const int first, ...)
 {
-    std::vector<command_type> cmd_vector;
+    vector<command_type> cmd_vector;
     cmd_vector.push_back((command_type) first);
 
     va_list args;
@@ -1460,13 +1460,13 @@ void insert_commands(std::string &desc, const int first, ...)
 
 #if 0
 // Currently unused, might be useful somewhere.
-static void _list_all_commands(std::string &commands)
+static void _list_all_commands(string &commands)
 {
     for (int i = CMD_NO_CMD; i < CMD_MAX_CMD; i++)
     {
         const command_type cmd = (command_type) i;
 
-        const std::string command_name = command_to_name(cmd);
+        const string command_name = command_to_name(cmd);
         if (command_name == "CMD_NO_CMD")
             continue;
 

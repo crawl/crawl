@@ -383,6 +383,9 @@ SUBST:   $ = *:2 |:1 $:17
 #
 MONS:    mummy, guardian mummy, mummy priest, greater mummy
 #
+KITEM:   $ = $ no_pickup
+KITEM:   * = * no_pickup
+KITEM:   | = | no_pickup
 KMASK:   O = no_item_gen
 KITEM:   O = golden rune of Zot
 MAP

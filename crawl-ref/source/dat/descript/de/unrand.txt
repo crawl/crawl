@@ -1,0 +1,55 @@
+%%%%
+Singing Sword
+
+Diese gesegnete Waffe tut nichts lieber als ihrem Besitzer vorzusingen, ob sie
+es wollen oder nicht,
+%%%%
+Mace of Variability
+
+Es ist recht unzuverlässig.
+%%%%
+dagger of Chilly Death
+
+Ein aus einem riesigen Saphir hergestellter Dolch.
+%%%%
+scythe "Finisher"
+
+Eine lange und scharfe Sense, speziell für Kampfzwecke modifiziert.
+%%%%
+mithril axe "Arga"
+
+Eine wunderschöne Mithrilaxt. Warscheinlich hat ein zwergischer Held sie
+verloren.
+%%%%
+crossbow "Sniper"
+
+Eine aus schwarzem Material hergestellte Armbrust
+%%%%
+shield "Bullseye"
+
+Nur für den Fall, dass du Probleme hattest, getroffen zu werden.
+%%%%
+boots of the Assassin
+
+Ein Paar weiche Stiefel, die von der Assassinengilde entworfen wurden.
+%%%%
+shield of Resistance
+
+Ein Schild aus Bronze.
+%%%%
+Maxwell's patent armour
+
+Eine seltsam aussehende Rüstung.
+%%%%
+mask of the Dragon
+
+Eine blaue Maske.
+%%%%
+fencer's gloves
+
+Ein Paar Handschuhe aus weißer Seide.
+%%%%
+ring of Shadows
+
+Ein schwarzer Ring der seinen Träger Eins mit den Schatten machen kann.
+%%%%

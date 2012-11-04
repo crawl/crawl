@@ -22,6 +22,8 @@
 #include "invent.h"
 #include "itemprop.h"
 #include "items.h"
+#include "libutil.h"
+#include "losglobal.h"
 #include "mapmark.h"
 #include "message.h"
 #include "mgen_data.h"
@@ -31,20 +33,21 @@
 #include "mon-place.h"
 #include "mon-speak.h"
 #include "mon-stuff.h"
-#include "mon-util.h"
 #include "options.h"
 #include "player-equip.h"
 #include "player-stats.h"
 #include "religion.h"
 #include "shout.h"
+#include "state.h"
 #include "stuff.h"
 #include "teleport.h"
 #include "terrain.h"
+#include "unwind.h"
 #include "xom.h"
 
-static void _monster_greeting(monster *mons, const std::string &key)
+static void _monster_greeting(monster *mons, const string &key)
 {
-    std::string msg = getSpeakString(key);
+    string msg = getSpeakString(key);
     if (msg == "__NONE")
         msg.clear();
     mons_speaks_msg(mons, msg, MSGCH_TALK, silenced(mons->pos()));
@@ -55,7 +58,7 @@ spret_type cast_summon_butterflies(int pow, god_type god, bool fail)
     fail_check();
     bool success = false;
 
-    const int how_many = std::min(15, 3 + random2(3) + random2(pow) / 10);
+    const int how_many = min(15, 3 + random2(3) + random2(pow) / 10);
 
     for (int i = 0; i < how_many; ++i)
     {
@@ -133,7 +136,9 @@ static bool _snakable_weapon(const item_def& item)
                 || item.sub_type == WPN_DEMON_TRIDENT
                 || item.sub_type == WPN_GLAIVE
                 || item.sub_type == WPN_BARDICHE
+#if TAG_MAJOR_VERSION == 34
                 || item.sub_type == WPN_STAFF
+#endif
                 || item.sub_type == WPN_QUARTERSTAFF
                 || item.sub_type == WPN_BLOWGUN
                 || item.sub_type == WPN_BOW
@@ -154,10 +159,9 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
     }
 
     const item_def& wpn = *you.weapon();
-    const std::string abort_msg =
-            make_stringf("%s feel%s slithery for a moment!",
-                         wpn.name(DESC_YOUR).c_str(),
-                         wpn.quantity > 1 ? "" : "s");
+    const string abort_msg = make_stringf("%s feel%s slithery for a moment!",
+                                          wpn.name(DESC_YOUR).c_str(),
+                                          wpn.quantity > 1 ? "" : "s");
 
     // Don't enchant sticks marked with {!D}.
     if (!check_warning_inscriptions(wpn, OPER_DESTROY))
@@ -166,7 +170,7 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
         return SPRET_ABORT;
     }
 
-    const int dur = std::min(3 + random2(pow) / 20, 5);
+    const int dur = min(3 + random2(pow) / 20, 5);
     int how_many_max = 1 + random2(1 + you.skill(SK_TRANSMUTATIONS)) / 4;
     const bool friendly = (!wpn.cursed());
     const beh_type beha = (friendly) ? BEH_FRIENDLY : BEH_HOSTILE;
@@ -184,7 +188,7 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
             monster_type mon;
 
             if (get_ammo_brand(wpn) == SPMSL_POISONED
-                || one_chance_in(5 - std::min(4, div_rand_round(pow * 2, 25))))
+                || one_chance_in(5 - min(4, div_rand_round(pow * 2, 25))))
             {
                 mon = x_chance_in_y(pow / 3, 100) ? MONS_WATER_MOCCASIN
                                                   : MONS_ADDER;
@@ -281,7 +285,7 @@ spret_type cast_summon_swarm(int pow, god_type god, bool fail)
 {
     fail_check();
     bool success = false;
-    const int dur = std::min(2 + (random2(pow) / 4), 6);
+    const int dur = min(2 + (random2(pow) / 4), 6);
     const int how_many = stepdown_value(2 + random2(pow)/10 + random2(pow)/25,
                                         2, 2, 6, 8);
 
@@ -357,7 +361,7 @@ spret_type cast_call_canine_familiar(int pow, god_type god, bool fail)
         }
     }
 
-    const int dur = std::min(2 + (random2(pow) / 4), 6);
+    const int dur = min(2 + (random2(pow) / 4), 6);
 
     if (!create_monster(
             mgen_data(mon, BEH_FRIENDLY, &you,
@@ -446,7 +450,7 @@ spret_type cast_summon_elemental(int pow, god_type god,
     coord_def targ;
     dist smove;
 
-    const int dur = std::min(2 + (random2(pow) / 5), 6);
+    const int dur = min(2 + (random2(pow) / 5), 6);
 
     while (true)
     {
@@ -558,7 +562,7 @@ spret_type cast_summon_elemental(int pow, god_type god,
 spret_type cast_summon_ice_beast(int pow, god_type god, bool fail)
 {
     fail_check();
-    const int dur = std::min(2 + (random2(pow) / 4), 6);
+    const int dur = min(2 + (random2(pow) / 4), 6);
 
     if (create_monster(
             mgen_data(MONS_ICE_BEAST, BEH_FRIENDLY, &you,
@@ -584,7 +588,7 @@ spret_type cast_summon_ugly_thing(int pow, god_type god, bool fail)
     else
         mon = MONS_UGLY_THING;
 
-    const int dur = std::min(2 + (random2(pow) / 4), 6);
+    const int dur = min(2 + (random2(pow) / 4), 6);
 
     if (create_monster(
             mgen_data(mon,
@@ -612,9 +616,9 @@ spret_type cast_summon_hydra(actor *caster, int pow, god_type god, bool fail)
 
     // Small chance to create a huge hydra (if spell power is high enough)
     if (one_chance_in(6))
-        heads = std::min((random2(pow) / 6), 12);
+        heads = min((random2(pow) / 6), 12);
     else
-        heads = std::min((random2(pow) / 6), 8);
+        heads = min((random2(pow) / 6), 8);
 
     if (heads < 4)
         heads = 4;
@@ -729,7 +733,7 @@ bool summon_berserker(int pow, actor *caster, monster_type override_mons)
 {
     monster_type mon = MONS_PROGRAM_BUG;
 
-    const int dur = std::min(2 + (random2(pow) / 4), 6);
+    const int dur = min(2 + (random2(pow) / 4), 6);
 
     if (override_mons != MONS_PROGRAM_BUG)
         mon = override_mons;
@@ -841,9 +845,8 @@ bool summon_holy_warrior(int pow, god_type god, int spell,
                          bool quiet)
 {
     return _summon_holy_being_wrapper(pow, god, spell, HOLY_BEING_WARRIOR,
-                                      !permanent ?
-                                          std::min(2 + (random2(pow) / 4), 6) :
-                                          0,
+                                      !permanent ? min(2 + (random2(pow) / 4), 6)
+                                                 : 0,
                                       !force_hostile, quiet);
 }
 
@@ -851,7 +854,7 @@ bool summon_holy_warrior(int pow, god_type god, int spell,
 spret_type cast_tukimas_dance(int pow, god_type god, bool force_hostile,
                               bool fail)
 {
-    const int dur = std::min(2 + (random2(pow) / 5), 6);
+    const int dur = min(2 + (random2(pow) / 5), 6);
     item_def* wpn = you.weapon();
 
     // See if the wielded item is appropriate.
@@ -918,6 +921,8 @@ spret_type cast_tukimas_dance(int pow, god_type god, bool force_hostile,
         did_god_conduct(why, 10, true, mons);
     }
 
+    burden_change();
+
     return SPRET_SUCCESS;
 }
 
@@ -928,7 +933,7 @@ spret_type cast_conjure_ball_lightning(int pow, god_type god, bool fail)
 
     // Restricted so that the situation doesn't get too gross.  Each of
     // these will explode for 3d20 damage. -- bwr
-    const int how_many = std::min(8, 3 + random2(2 + pow / 50));
+    const int how_many = min(8, 3 + random2(2 + pow / 50));
 
     for (int i = 0; i < how_many; ++i)
     {
@@ -937,7 +942,7 @@ spret_type cast_conjure_ball_lightning(int pow, god_type god, bool fail)
         for (int j = 0; j < 10; ++j)
         {
             if (random_near_space(you.pos(), target, true, true, false)
-                && distance(you.pos(), target) <= 5)
+                && distance2(you.pos(), target) <= 5)
             {
                 found = true;
                 break;
@@ -976,7 +981,7 @@ spret_type cast_call_imp(int pow, god_type god, bool fail)
     else
         mon = one_chance_in(3) ? MONS_WHITE_IMP : MONS_CRIMSON_IMP;
 
-    const int dur = std::min(2 + (random2(pow) / 4), 6);
+    const int dur = min(2 + (random2(pow) / 4), 6);
 
     if (monster *imp = create_monster(
             mgen_data(mon, BEH_FRIENDLY, &you, dur, SPELL_CALL_IMP,
@@ -1041,14 +1046,14 @@ static bool _summon_demon_wrapper(int pow, god_type god, int spell,
 static bool _summon_lesser_demon(int pow, god_type god, int spell, bool quiet)
 {
     return _summon_demon_wrapper(pow, god, spell, DEMON_LESSER,
-                                 std::min(2 + (random2(pow) / 4), 6),
+                                 min(2 + (random2(pow) / 4), 6),
                                  random2(pow) > 3, false, quiet);
 }
 
 static bool _summon_common_demon(int pow, god_type god, int spell, bool quiet)
 {
     return _summon_demon_wrapper(pow, god, spell, DEMON_COMMON,
-                                 std::min(2 + (random2(pow) / 4), 6),
+                                 min(2 + (random2(pow) / 4), 6),
                                  random2(pow) > 3, false, quiet);
 }
 
@@ -1067,7 +1072,7 @@ bool summon_demon_type(monster_type mon, int pow, god_type god,
                        int spell)
 {
     return _summon_demon_wrapper(pow, god, spell, mon,
-                                 std::min(2 + (random2(pow) / 4), 6),
+                                 min(2 + (random2(pow) / 4), 6),
                                  random2(pow) > 3, false, false);
 }
 
@@ -1142,7 +1147,7 @@ spret_type cast_shadow_creatures(god_type god, bool fail)
                       MG_FORCE_BEH, god), false))
     {
         // Choose a new duration based on HD.
-        int x = std::max(mons->hit_dice - 3, 1);
+        int x = max(mons->hit_dice - 3, 1);
         int d = div_rand_round(17,x);
         if (d < 1)
             d = 1;
@@ -1174,7 +1179,7 @@ coord_def find_gateway_location(actor* caster)
     you.xray_vision = false;
 
     unsigned compass_idx[8] = {0, 1, 2, 3, 4, 5, 6, 7};
-    std::random_shuffle(compass_idx, compass_idx + 8);
+    random_shuffle(compass_idx, compass_idx + 8);
 
 
     for (unsigned i = 0; i < 8; ++i)
@@ -1278,8 +1283,8 @@ spret_type cast_summon_horrible_things(int pow, god_type god, bool fail)
     }
 
     // No more than 8 summons.
-    how_many_small = std::min(8, how_many_small);
-    how_many_big   = std::min(8, how_many_big);
+    how_many_small = min(8, how_many_small);
+    how_many_big   = min(8, how_many_big);
 
     int count = 0;
 
@@ -1369,7 +1374,7 @@ static void _equip_undead(const coord_def &a, int corps, monster *mon, monster_t
     // Iterate backwards over the list, since the items earlier in the
     // linked list were dropped most recently and hence more likely to
     // be items the monster didn't die with.
-    std::vector<int> item_list;
+    vector<int> item_list;
     objl = first_obj;
     while (objl != NON_ITEM && objl != corps)
     {
@@ -1474,7 +1479,7 @@ static void _equip_undead(const coord_def &a, int corps, monster *mon, monster_t
 // Displays message when raising dead with Animate Skeleton or Animate Dead.
 static void _display_undead_motions(int motions)
 {
-    std::vector<std::string> motions_list;
+    vector<string> motions_list;
 
     // Check bitfield from _raise_remains for types of corpse(s) being animated.
     if (motions & DEAD_ARE_WALKING)
@@ -1499,7 +1504,7 @@ static void _display_undead_motions(int motions)
 }
 
 static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
-                           unsigned short hitting, actor *as, std::string nas,
+                           unsigned short hitting, actor *as, string nas,
                            god_type god, bool actual, bool force_beh,
                            monster **raised, int* motions_r)
 {
@@ -1524,7 +1529,7 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     // Save the corpse name before because it can get destroyed if it is
     // being drained and the raising interrupts it.
     uint64_t name_type = 0;
-    std::string name;
+    string name;
     if (is_named_corpse(item))
         name = get_corpse_name(item, &name_type);
 
@@ -1579,7 +1584,7 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     // be rerolled to match.
     if (mons->hit_dice != hd)
     {
-        mons->hit_dice = std::max(hd, 1);
+        mons->hit_dice = max(hd, 1);
         roll_zombie_hp(mons);
     }
 
@@ -1636,7 +1641,7 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
 // This is called for Animate Skeleton and from animate_dead.
 int animate_remains(const coord_def &a, corpse_type class_allowed,
                     beh_type beha, unsigned short hitting,
-                    actor *as, std::string nas,
+                    actor *as, string nas,
                     god_type god, bool actual,
                     bool quiet, bool force_beh,
                     monster** mon, int* motions_r)
@@ -1703,7 +1708,7 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
 }
 
 int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
-                 actor *as, std::string nas, god_type god, bool actual)
+                 actor *as, string nas, god_type god, bool actual)
 {
     UNUSED(pow);
 
@@ -1838,7 +1843,7 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
     }
 
     monster_type sim_type = MONS_PROGRAM_BUG;
-    std::string name;
+    string name;
 
     switch (flesh->sub_type)
     {
@@ -1881,8 +1886,8 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
                      sim_type);
 
     // Can't create more than the available chunks.
-    int how_many = std::min(8, 4 + random2(pow) / 20);
-    how_many = std::min<int>(how_many, flesh->quantity);
+    int how_many = min(8, 4 + random2(pow) / 20);
+    how_many = min<int>(how_many, flesh->quantity);
 
     int count = 0;
 
@@ -1922,9 +1927,9 @@ static void _apport_and_butcher(monster *caster, item_def &item)
     if (item.pos != caster->pos())
     {
         apported = true;
-        const std::string item_name = item.name(DESC_A);
+        const string item_name = item.name(DESC_A);
 
-        std::string theft;
+        string theft;
         if (is_being_drained(item))
             theft = " you were drinking from";
         else if (is_being_butchered(item))
@@ -2004,8 +2009,8 @@ bool monster_simulacrum(monster *caster, bool actual)
                 MONS_SIMULACRUM_LARGE : MONS_SIMULACRUM_SMALL;
 
             // Can't create more than the available chunks.
-            int how_many = std::min(8, 4 + random2(100) / 20);
-            how_many = std::min<int>(how_many, item.quantity);
+            int how_many = min(8, 4 + random2(100) / 20);
+            how_many = min<int>(how_many, item.quantity);
 
             int created = 0;
             int seen = 0;
@@ -2176,7 +2181,7 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
         if (hd > 15)
             hd = 15 + (hd - 15) / 2;
 
-        hd = std::min(hd, 30);
+        hd = min(hd, 30);
 
         monster_type montype;
 
@@ -2339,7 +2344,7 @@ static int _abjuration(int pow, monster *mon)
     int duration;
     if (mon->is_summoned(&duration))
     {
-        int sockage = std::max(fuzz_value(abjdur, 60, 30), 40);
+        int sockage = max(fuzz_value(abjdur, 60, 30), 40);
         dprf("%s abj: dur: %d, abj: %d",
              mon->name(DESC_PLAIN).c_str(), duration, sockage);
 

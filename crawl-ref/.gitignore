@@ -121,6 +121,9 @@ makefile.dep
 /source/conftest.cc
 /source/conftest.o
 
+# Test suite.
+/source/util/fake_pty
+
 # Xcode cruft
 /source/build
 *.pbxuser
@@ -186,3 +189,11 @@ source/.tx/config
 .project
 .settings
 .settings/
+.metadata/
+
+# generated files for android
+bin/
+AndroidData/
+icon.png
+libapplication.so
+source/crawl_tiles_android-*

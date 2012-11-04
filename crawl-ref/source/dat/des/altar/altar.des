@@ -35,7 +35,7 @@ default-depth: D
 
 NAME:    jmf_multi_god_temple
 SHUFFLE: abc
-SUBST:   a:=, b:x, c:x
+SUBST:   a:+, b:x, c:x
 DEPTH:   D:8-21, Vaults
 MAP
 ............
@@ -180,11 +180,11 @@ MAP
  2
 ENDMAP
 
-NAME:    lemuel_hidden_altar
+NAME:    lemuel_doored_altar
 DEPTH:   D:1-18, Vaults, Lair, Elf, Crypt
 SHUFFLE: XY
 SUBST:   X = .
-SUBST:   Y = =
+SUBST:   Y = +
 MAP
 .........
 .xxxmxxx.
@@ -375,7 +375,7 @@ ENDMAP
 NAME:    good_gods_mini_temple
 DEPTH:   D:2-27, Lair
 TAGS:    no_monster_gen no_trap_gen no_pool_fixup uniq_good_god_temple
-TAGS:    no_item_gen no_secret_doors extra
+TAGS:    no_item_gen extra
 MONS:    plant
 KFEAT:   D = altar_elyvilon
 KFEAT:   E = altar_zin

@@ -53,7 +53,7 @@ CLua::~CLua()
     // Copy the listener vector, because listeners may remove
     // themselves from the listener list when we notify them of a
     // shutdown.
-    const std::vector<lua_shutdown_listener*> slisteners = shutdown_listeners;
+    const vector<lua_shutdown_listener*> slisteners = shutdown_listeners;
     for (int i = 0, size = slisteners.size(); i < size; ++i)
         slisteners[i]->shutdown(*this);
     shutting_down = true;
@@ -78,7 +78,7 @@ void CLua::getglobal(const char *name)
     lua_getglobal(state(), name);
 }
 
-std::string CLua::setuniqregistry()
+string CLua::setuniqregistry()
 {
     char name[100];
     snprintf(name, sizeof name, "__cru%u", uniqindex++);
@@ -118,7 +118,7 @@ void CLua::save(writer &outf)
     if (!_state)
         return;
 
-    std::string res;
+    string res;
     callfn("c_save", ">s", &res);
     outf.write(res.c_str(), res.size());
 }
@@ -217,10 +217,10 @@ int CLua::execstring(const char *s, const char *context, int nresults)
     return err;
 }
 
-bool CLua::is_path_safe(std::string s, bool trusted)
+bool CLua::is_path_safe(string s, bool trusted)
 {
     lowercase(s);
-    return (s.find("..") == std::string::npos && shell_safe(s.c_str())
+    return (s.find("..") == string::npos && shell_safe(s.c_str())
             // loading dlua stuff would spew tons of error messages
             && (trusted || s.find("dlua") != 0));
 }
@@ -239,7 +239,7 @@ int CLua::loadfile(lua_State *ls, const char *filename, bool trusted,
         return -1;
     }
 
-    std::string file = datafile_path(filename, die_on_fail);
+    string file = datafile_path(filename, die_on_fail);
     if (file.empty())
     {
         lua_pushstring(ls,
@@ -248,7 +248,7 @@ int CLua::loadfile(lua_State *ls, const char *filename, bool trusted,
     }
 
     FileLineInput f(file.c_str());
-    std::string script;
+    string script;
     while (!f.eof())
         script += f.get_line() + "\n";
 
@@ -362,7 +362,7 @@ void CLua::vfnreturns(const char *format, va_list args)
             {
                 const char *s = lua_tostring(ls, sp);
                 if (s)
-                    *(va_arg(args, std::string *)) = s;
+                    *(va_arg(args, string *)) = s;
                 break;
             }
         default:
@@ -538,9 +538,9 @@ bool CLua::proc_returns(const char *par) const
 //
 // Guarantees to push exactly one value onto the stack.
 //
-void CLua::pushglobal(const std::string &name)
+void CLua::pushglobal(const string &name)
 {
-    std::vector<std::string> pieces = split_string(".", name);
+    vector<string> pieces = split_string(".", name);
     lua_State *ls(state());
 
     if (pieces.empty())
@@ -721,16 +721,17 @@ void CLua::load_cmacro()
 
 void CLua::add_shutdown_listener(lua_shutdown_listener *listener)
 {
-    if (std::find(shutdown_listeners.begin(), shutdown_listeners.end(),
-                  listener) == shutdown_listeners.end())
+    if (find(shutdown_listeners.begin(), shutdown_listeners.end(), listener)
+        == shutdown_listeners.end())
+    {
         shutdown_listeners.push_back(listener);
+    }
 }
 
 void CLua::remove_shutdown_listener(lua_shutdown_listener *listener)
 {
-    std::vector<lua_shutdown_listener*>::iterator i =
-        std::find(shutdown_listeners.begin(), shutdown_listeners.end(),
-                  listener);
+    vector<lua_shutdown_listener*>::iterator i =
+        find(shutdown_listeners.begin(), shutdown_listeners.end(), listener);
     if (i != shutdown_listeners.end())
         shutdown_listeners.erase(i);
 }
@@ -789,17 +790,17 @@ static lua_pat_op pat_ops[] =
 
 unsigned int lua_text_pattern::lfndx = 0;
 
-bool lua_text_pattern::is_lua_pattern(const std::string &s)
+bool lua_text_pattern::is_lua_pattern(const string &s)
 {
     for (int i = 0, size = ARRAYSZ(pat_ops); i < size; ++i)
     {
-        if (s.find(pat_ops[i].token) != std::string::npos)
+        if (s.find(pat_ops[i].token) != string::npos)
             return true;
     }
     return false;
 }
 
-lua_text_pattern::lua_text_pattern(const std::string &_pattern)
+lua_text_pattern::lua_text_pattern(const string &_pattern)
     : translated(false), isvalid(true), pattern(_pattern), lua_fn_name()
 {
     lua_fn_name = new_fn_name();
@@ -823,7 +824,7 @@ bool lua_text_pattern::valid() const
     return translated? isvalid : translate();
 }
 
-bool lua_text_pattern::matches(const std::string &s) const
+bool lua_text_pattern::matches(const string &s) const
 {
     if (isvalid && !translated)
         translate();
@@ -834,7 +835,7 @@ bool lua_text_pattern::matches(const std::string &s) const
     return clua.callbooleanfn(false, lua_fn_name.c_str(), "s", s.c_str());
 }
 
-void lua_text_pattern::pre_pattern(std::string &pat, std::string &fn) const
+void lua_text_pattern::pre_pattern(string &pat, string &fn) const
 {
     // Trim trailing spaces
     pat.erase(pat.find_last_not_of(" \t\n\r") + 1);
@@ -846,7 +847,7 @@ void lua_text_pattern::pre_pattern(std::string &pat, std::string &fn) const
     pat.clear();
 }
 
-void lua_text_pattern::post_pattern(std::string &pat, std::string &fn) const
+void lua_text_pattern::post_pattern(string &pat, string &fn) const
 {
     pat.erase(0, pat.find_first_not_of(" \t\n\r"));
 
@@ -857,7 +858,7 @@ void lua_text_pattern::post_pattern(std::string &pat, std::string &fn) const
     pat.clear();
 }
 
-std::string lua_text_pattern::new_fn_name()
+string lua_text_pattern::new_fn_name()
 {
     return make_stringf("__ch_stash_search_%u", lfndx++);
 }
@@ -867,16 +868,13 @@ bool lua_text_pattern::translate() const
     if (translated || !isvalid)
         return false;
 
-    if (pattern.find("]]") != std::string::npos
-        || pattern.find("[[") != std::string::npos)
-    {
+    if (pattern.find("]]") != string::npos || pattern.find("[[") != string::npos)
         return false;
-    }
 
-    std::string textp;
-    std::string luafn;
+    string textp;
+    string luafn;
     const lua_pat_op *currop = NULL;
-    for (std::string::size_type i = 0; i < pattern.length(); ++i)
+    for (string::size_type i = 0; i < pattern.length(); ++i)
     {
         bool match = false;
         for (unsigned p = 0; p < ARRAYSZ(pat_ops); ++p)
@@ -1102,7 +1100,7 @@ static int _clua_dofile(lua_State *ls)
     return lua_gettop(ls);
 }
 
-std::string quote_lua_string(const std::string &s)
+string quote_lua_string(const string &s)
 {
     return replace_all_of(replace_all_of(s, "\\", "\\\\"), "\"", "\\\"");
 }

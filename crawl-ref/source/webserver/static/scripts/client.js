@@ -383,7 +383,7 @@ function (exports, $, key_conversion, chat, comm) {
     {
         $(".floating_dialog").hide();
         var elem = $(id);
-        elem.fadeIn(100, function () {
+        elem.stop(true, true).fadeIn(100, function () {
             elem.focus();
         });
         center_element(elem);
@@ -649,7 +649,8 @@ function (exports, $, key_conversion, chat, comm) {
                 sortlist = [[0, 0]];
             new_list.tablesorter({
                 sortList: sortlist,
-                textExtraction: extract_text_or_data
+                textExtraction: extract_text_or_data,
+                headers: { 0: { sorter: "text" } }
             });
         }
         else

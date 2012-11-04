@@ -85,7 +85,7 @@ void DungeonCellBuffer::add(const packed_cell &cell, int x, int y)
 void DungeonCellBuffer::add_dngn_tile(int tileidx, int x, int y,
                                       bool in_water)
 {
-    assert(tileidx < TILE_FEAT_MAX);
+    ASSERT(tileidx < TILE_FEAT_MAX);
 
     if (tileidx < TILE_FLOOR_MAX)
         m_buf_floor.add(tileidx, x, y);
@@ -223,9 +223,6 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
 
     if (bg_idx > TILE_DNGN_UNSEEN)
     {
-        if (bg & TILE_FLAG_WAS_SECRET)
-            m_buf_feat.add(TILE_DNGN_DETECTED_SECRET_DOOR, x, y);
-
         // Draw blood on top of wall tiles.
         if (bg_idx <= TILE_WALL_MAX)
             add_blood_overlay(x, y, cell, bg_idx >= TILE_FLOOR_MAX);
@@ -414,6 +411,11 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
     if (fg & TILE_FLAG_SLOWED)
     {
         m_buf_icons.add(TILEI_SLOWED, x, y, -status_shift, 0);
+        status_shift += 11;
+    }
+    if (fg & TILE_FLAG_PAIN_MIRROR)
+    {
+        m_buf_icons.add(TILEI_PAIN_MIRROR, x, y, -status_shift, 0);
         status_shift += 13;
     }
 

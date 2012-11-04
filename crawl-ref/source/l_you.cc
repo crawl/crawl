@@ -4,6 +4,7 @@
 #include "l_libs.h"
 
 #include "abl-show.h"
+#include "abyss.h"
 #include "areas.h"
 #include "branch.h"
 #include "chardump.h"
@@ -16,11 +17,12 @@
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
-#include "newgame.h"
 #include "ng-setup.h"
+#include "mapmark.h"
 #include "misc.h"
 #include "mon-util.h"
 #include "mutation.h"
+#include "newgame_def.h"
 #include "jobs.h"
 #include "ouch.h"
 #include "place.h"
@@ -95,9 +97,9 @@ LUARET2(you_hp, number, you.hp, you.hp_max)
 LUARET2(you_mp, number, you.magic_points, you.max_magic_points)
 LUARET1(you_hunger, number, you.hunger_state)
 LUARET1(you_hunger_name, string, hunger_level())
-LUARET2(you_strength, number, you.strength(), you.max_strength())
-LUARET2(you_intelligence, number, you.intel(), you.max_intel())
-LUARET2(you_dexterity, number, you.dex(), you.max_dex())
+LUARET2(you_strength, number, you.strength(false), you.max_strength())
+LUARET2(you_intelligence, number, you.intel(false), you.max_intel())
+LUARET2(you_dexterity, number, you.dex(false), you.max_dex())
 LUARET1(you_xl, number, you.experience_level)
 LUARET1(you_xl_progress, number, get_exp_progress())
 LUARET1(you_skill_progress, number,
@@ -117,6 +119,8 @@ LUARET1(you_res_mutation, number, wearing_amulet(AMU_RESIST_MUTATION, false))
 LUARET1(you_see_invisible, boolean, you.can_see_invisible(false))
 LUARET1(you_spirit_shield, number, player_spirit_shield())
 LUARET1(you_gourmand, boolean, wearing_amulet(AMU_THE_GOURMAND, false))
+LUARET1(you_conservation, boolean, player_item_conserve(false))
+LUARET1(you_res_corr, boolean, player_res_corr(false))
 LUARET1(you_like_chunks, number, player_likes_chunks(true))
 LUARET1(you_saprovorous, number, player_mutation_level(MUT_SAPROVOROUS))
 LUARET1(you_levitating, boolean, you.flight_mode() == FL_LEVITATE)
@@ -136,6 +140,15 @@ LUARET1(you_poisoned, boolean, you.duration[DUR_POISONING])
 LUARET1(you_invisible, boolean, you.duration[DUR_INVIS])
 LUARET1(you_mesmerised, boolean, you.duration[DUR_MESMERISED])
 LUARET1(you_nauseous, boolean, you.duration[DUR_NAUSEA])
+LUARET1(you_on_fire, boolean, you.duration[DUR_LIQUID_FLAMES])
+LUARET1(you_petrifying, boolean, you.duration[DUR_PETRIFYING])
+LUARET1(you_silencing, boolean, you.duration[DUR_SILENCE])
+LUARET1(you_regenerating, boolean, you.duration[DUR_REGENERATION])
+LUARET1(you_breath_timeout, boolean, you.duration[DUR_BREATH_WEAPON])
+LUARET1(you_extra_resistant, boolean, you.duration[DUR_RESISTANCE])
+LUARET1(you_mighty, boolean, you.duration[DUR_MIGHT])
+LUARET1(you_agile, boolean, you.duration[DUR_AGILITY])
+LUARET1(you_brilliant, boolean, you.duration[DUR_BRILLIANCE])
 LUARET1(you_rotting, boolean, you.rotting)
 LUARET1(you_silenced, boolean, silenced(you.pos()))
 LUARET1(you_sick, boolean, you.disease)
@@ -174,7 +187,7 @@ LUARET1(you_constricting, boolean, you.is_constricting())
 static int l_you_genus(lua_State *ls)
 {
     bool plural = lua_toboolean(ls, 1);
-    std::string genus = species_name(you.species, true);
+    string genus = species_name(you.species, true);
     lowercase(genus);
     if (plural)
         genus = pluralise(genus);
@@ -229,7 +242,7 @@ static int l_you_abils(lua_State *ls)
 {
     lua_newtable(ls);
 
-    std::vector<const char *>abils = get_ability_names();
+    vector<const char *>abils = get_ability_names();
     for (int i = 0, size = abils.size(); i < size; ++i)
     {
         lua_pushstring(ls, abils[i]);
@@ -245,7 +258,7 @@ static int l_you_abil_letters(lua_State *ls)
     char buf[2];
     buf[1] = 0;
 
-    std::vector<talent> talents = your_talents(false);
+    vector<talent> talents = your_talents(false);
     for (int i = 0, size = talents.size(); i < size; ++i)
     {
         buf[0] = talents[i].hotkey;
@@ -264,6 +277,29 @@ static int you_can_consume_corpses(lua_State *ls)
     return 1;
 }
 
+static int _you_have_rune(lua_State *ls)
+{
+    int which_rune = NUM_RUNE_TYPES;
+    if (lua_gettop(ls) >= 1 && lua_isnumber(ls, 1))
+        which_rune = luaL_checkint(ls, 1);
+    else if (lua_gettop(ls) >= 1 && lua_isstring(ls, 1))
+    {
+        const char *spec = lua_tostring(ls, 1);
+        for (which_rune = 0; which_rune < NUM_RUNE_TYPES; which_rune++)
+            if (!strcasecmp(spec, rune_type_name(which_rune)))
+                break;
+    }
+    bool have_rune = false;
+    if (which_rune >= 0 && which_rune < NUM_RUNE_TYPES)
+        have_rune = you.runes[which_rune];
+    lua_pushboolean(ls, have_rune);
+    return 1;
+}
+
+LUARET1(you_num_runes, number, runes_in_pack())
+
+LUARET1(you_have_orb, boolean, player_has_orb())
+
 LUAFN(you_caught)
 {
     if (you.caught())
@@ -276,7 +312,7 @@ LUAFN(you_caught)
 
 LUAFN(you_mutation)
 {
-    std::string mutname = luaL_checkstring(ls, 1);
+    string mutname = luaL_checkstring(ls, 1);
     for (int i = 0; i < NUM_MUTATIONS; ++i)
     {
         mutation_type mut = static_cast<mutation_type>(i);
@@ -288,19 +324,19 @@ LUAFN(you_mutation)
             PLUARET(integer, you.mutation[mut]);
     }
 
-    std::string err = make_stringf("No such mutation: '%s'.", mutname.c_str());
+    string err = make_stringf("No such mutation: '%s'.", mutname.c_str());
     return luaL_argerror(ls, 1, err.c_str());
 }
 
 LUAFN(you_is_level_on_stack)
 {
-    std::string levname = luaL_checkstring(ls, 1);
+    string levname = luaL_checkstring(ls, 1);
     level_id lev;
     try
     {
         lev = level_id::parse_level_id(levname);
     }
-    catch (const std::string &err)
+    catch (const string &err)
     {
         return luaL_argerror(ls, 1, err.c_str());
     }
@@ -320,7 +356,7 @@ LUAFN(you_train_skill)
     skill_type sk = str_to_skill(luaL_checkstring(ls, 1));
     if (lua_gettop(ls) >= 2 && you.can_train[sk])
     {
-        you.train[sk] = std::min(std::max(luaL_checkint(ls, 2), 0), 2);
+        you.train[sk] = min(max(luaL_checkint(ls, 2), 0), 2);
         reset_training();
     }
 
@@ -370,6 +406,8 @@ static const struct luaL_reg you_clib[] =
     { "saprovorous",  you_saprovorous },
     { "like_chunks",  you_like_chunks },
     { "gourmand",     you_gourmand },
+    { "conservation", you_conservation },
+    { "res_corr",     you_res_corr },
     { "levitating",   you_levitating },
     { "flying",       you_flying },
     { "transform",    you_transform },
@@ -388,6 +426,15 @@ static const struct luaL_reg you_clib[] =
     { "invisible",    you_invisible },
     { "mesmerised",   you_mesmerised },
     { "nauseous",     you_nauseous },
+    { "on_fire",      you_on_fire },
+    { "petrifying",   you_petrifying },
+    { "silencing",    you_silencing },
+    { "regenerating", you_regenerating },
+    { "breath_timeout", you_breath_timeout },
+    { "extra_resistant", you_extra_resistant },
+    { "mighty",       you_mighty },
+    { "agile",        you_agile },
+    { "brilliant",    you_brilliant },
     { "rotting",      you_rotting },
     { "silenced",     you_silenced },
     { "sick",         you_sick },
@@ -422,6 +469,10 @@ static const struct luaL_reg you_clib[] =
     { "see_cell_no_trans", you_see_cell_no_trans_rel },
 
     { "mutation",          you_mutation },
+
+    { "num_runes",          you_num_runes },
+    { "have_rune",          _you_have_rune },
+    { "have_orb",           you_have_orb},
 
     { NULL, NULL },
 };
@@ -469,6 +520,8 @@ LUAFN(you_teleport_to)
         move_monsters = lua_toboolean(ls, 3);
 
     lua_pushboolean(ls, you_teleport_to(place, move_monsters));
+    if (player_in_branch(BRANCH_ABYSS))
+        maybe_shift_abyss_around_player();
 
     return 1;
 }
@@ -490,36 +543,13 @@ static int _you_uniques(lua_State *ls)
     return 1;
 }
 
-LUARET1(you_num_runes, number, runes_in_pack())
-
-static int _you_have_rune(lua_State *ls)
-{
-    int which_rune = NUM_RUNE_TYPES;
-    if (lua_gettop(ls) >= 1 && lua_isnumber(ls, 1))
-        which_rune = luaL_checkint(ls, 1);
-    else if (lua_gettop(ls) >= 1 && lua_isstring(ls, 1))
-    {
-        const char *spec = lua_tostring(ls, 1);
-        for (which_rune = 0; which_rune < NUM_RUNE_TYPES; which_rune++)
-            if (!strcasecmp(spec, rune_type_name(which_rune)))
-                break;
-    }
-    bool have_rune = false;
-    if (which_rune >= 0 && which_rune < NUM_RUNE_TYPES)
-        have_rune = you.runes[which_rune];
-    lua_pushboolean(ls, have_rune);
-    return 1;
-}
-
-LUARET1(you_have_orb, boolean, player_has_orb())
-
 static int _you_gold(lua_State *ls)
 {
     if (lua_gettop(ls) >= 1)
     {
         const int new_gold = luaL_checkint(ls, 1);
         const int old_gold = you.gold;
-        you.set_gold(std::max(new_gold, 0));
+        you.set_gold(max(new_gold, 0));
         if (new_gold > old_gold)
             you.attribute[ATTR_GOLD_FOUND] += new_gold - old_gold;
         else if (old_gold > new_gold)
@@ -534,7 +564,7 @@ static int _you_piety(lua_State *ls)
 {
     if (lua_gettop(ls) >= 1)
     {
-        const int new_piety = std::min(std::max(luaL_checkint(ls, 1), 0), MAX_PIETY);
+        const int new_piety = min(max(luaL_checkint(ls, 1), 0), MAX_PIETY);
         while (new_piety > you.piety)
             gain_piety(new_piety - you.piety, 1, true, false);
         lose_piety(you.piety - new_piety);
@@ -556,7 +586,7 @@ LUAFN(you_in_branch)
         {
             if (br != NUM_BRANCHES)
             {
-                std::string err = make_stringf(
+                string err = make_stringf(
                     "'%s' matches both branch '%s' and '%s'",
                     name, branches[br].abbrevname,
                     branches[i].abbrevname);
@@ -568,7 +598,7 @@ LUAFN(you_in_branch)
 
     if (br == NUM_BRANCHES)
     {
-        std::string err = make_stringf("'%s' matches no branches.", name);
+        string err = make_stringf("'%s' matches no branches.", name);
         return luaL_argerror(ls, 1, err.c_str());
     }
 
@@ -624,7 +654,7 @@ LUAWRAP(you_gain_exp, gain_exp(luaL_checkint(ls, 1)))
  */
 LUAFN(you_init)
 {
-    const std::string combo = luaL_checkstring(ls, 1);
+    const string combo = luaL_checkstring(ls, 1);
     newgame_def ng;
     ng.type = GAME_TYPE_NORMAL;
     ng.species = get_species_by_abbrev(combo.substr(0, 2).c_str());
@@ -656,9 +686,6 @@ static const struct luaL_reg you_dlib[] =
 { "teleport_to",        you_teleport_to },
 { "gold",               _you_gold },
 { "uniques",            _you_uniques },
-{ "num_runes",          you_num_runes },
-{ "have_rune",          _you_have_rune },
-{ "have_orb",           you_have_orb},
 { "die",                _you_die },
 { "piety",              _you_piety },
 { "in_branch",          you_in_branch },

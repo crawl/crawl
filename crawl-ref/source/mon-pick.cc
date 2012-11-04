@@ -97,7 +97,7 @@ bool branch_has_monsters(branch_type branch)
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_TESTS)
 void debug_monpick()
 {
-    std::string fails;
+    string fails;
 
     for (int i = 0; i < NUM_BRANCHES; ++i)
     {

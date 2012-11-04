@@ -34,7 +34,7 @@ scroll
 
 Paperikäärö täynnä maagista kirjoitusta.
 %%%%
-magical staff
+staff
 
 Salaisilla voimilla vahvistettu taistelusauva.
 %%%%

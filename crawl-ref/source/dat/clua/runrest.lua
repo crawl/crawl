@@ -102,19 +102,42 @@ function rr_check_params()
     return true
 end
 
-function rr_add_message(s, v)
-    local typ = v == nil and "nil" or v and "true" or "false"
+function rr_add_message(s, v, mode)
     local channel, str = rr_split_channel(s)
-    table.insert(g_rr_ignored,
-                 { filter = crawl.message_filter(str, channel),
-                   value = v })
+    local filter = crawl.message_filter(str, channel)
+    if mode < 0 then
+        for k, p in pairs (g_rr_ignored) do
+            if p.filter:equals(filter) and p.value == v then
+                table.remove(g_rr_ignored, k)
+                return
+            end
+        end
+    else
+        local entry = { filter = filter, value = v }
+        local position = table.getn(g_rr_ignored) + 1
+        if mode > 1 then
+            position = 1
+        end
+        table.insert(g_rr_ignored, position, entry)
+    end
 end
 
 function rr_message_adder(v)
-    local function rr_add_messages(key, value)
-        local segs = crawl.split(value, ',')
+    local function rr_add_messages(key, value, mode)
+        if mode == 0 and value == "" then
+            -- Clear list
+            for k in pairs (g_rr_ignored) do
+                g_rr_ignored[k] = nil
+            end
+            return
+        elseif mode == 0 and table.getn(g_rr_ignored) > 0 then
+            -- listopt = foo  will reset listopt in 0.12, warn.
+            crawl.warn_list_append(key)
+        end
+
+        local segs = crawl.split(value, ',', mode > 1)
         for _, s in ipairs(segs) do
-            rr_add_message(s, v)
+            rr_add_message(s, v, mode)
         end
     end
     return rr_add_messages
@@ -129,25 +152,40 @@ chk_lua_option.travel_stop_message = rr_message_adder(true)
 g_rr_monsters        = { {}, {} }
 g_rr_monsters_moving = { {}, {} }
 
-function rr_add_monster(mons_table, s)
+function rr_add_monster(mons_table, s, mode)
     local parts = crawl.split(s, ":")
 
     if #parts ~= 2 then
         return
     end
 
-    local regexp = parts[1]
+    local re_str = parts[1]
+    local regexp = crawl.regex(re_str)
     local dist   = tonumber(parts[2])
 
     if dist == 0 then
         return
     end
 
-    table.insert( mons_table[1], crawl.regex( regexp ) )
-    table.insert( mons_table[2], dist )
+    if mode < 0 then
+        for k, r in pairs(mons_table[1]) do
+            if r:equals(regexp) and mons_table[2][k] == dist then
+                table.remove(mons_table[1], k)
+                table.remove(mons_table[2], k)
+                return
+            end
+        end
+    else
+        local position = table.getn(mons_table[1]) + 1
+        if mode > 1 then
+            position = 1
+        end
+        table.insert( mons_table[1], position, regexp )
+        table.insert( mons_table[2], position, dist )
+    end
 end
 
-function rr_add_monsters(key, value)
+function rr_add_monsters(key, value, mode)
     local mons_table
 
     if (key == "runrest_ignore_monster") then
@@ -158,9 +196,21 @@ function rr_add_monsters(key, value)
         return
     end
 
-    local segs = crawl.split(value, ',')
+    if mode == 0 and value == "" then
+        -- Clear list
+        for k in pairs (mons_table[1]) do
+            mons_table[1][k] = nil
+            mons_table[2][k] = nil
+        end
+        return
+    elseif mode == 0 and table.getn(mons_table[1]) > 0 then
+        -- listopt = foo  will reset listopt in 0.12, warn.
+        crawl.warn_list_append(key)
+    end
+
+    local segs = crawl.split(value, ',', mode > 1)
     for _, s in ipairs(segs) do
-        rr_add_monster(mons_table, s)
+        rr_add_monster(mons_table, s, mode)
     end
 end
 

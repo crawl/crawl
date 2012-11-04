@@ -78,7 +78,7 @@ static const char *dgn_event_type_names[] =
 "pressure_plate",
 };
 
-static dgn_event_type dgn_event_type_by_name(const std::string &name)
+static dgn_event_type dgn_event_type_by_name(const string &name)
 {
     for (unsigned i = 0; i < ARRAYSZ(dgn_event_type_names); ++i)
         if (dgn_event_type_names[i] == name)

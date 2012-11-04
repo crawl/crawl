@@ -14,6 +14,8 @@
 #include <stdio.h>
 #include <algorithm>
 
+#include "art-enum.h"
+// #include "artefact.h"
 #include "externs.h"
 #include "enum.h"
 #include "fight.h"
@@ -59,8 +61,8 @@ bool attack::handle_phase_attempted()
  * Takes into account actor visibility/invisibility and the type of description
  * to be used (capitalization, possessiveness, etc.)
  */
-std::string attack::actor_name(const actor *a, description_level_type desc,
-                               bool actor_visible, bool actor_invisible)
+string attack::actor_name(const actor *a, description_level_type desc,
+                          bool actor_visible, bool actor_invisible)
 {
     return actor_visible ? a->name(desc) : anon_name(desc, actor_invisible);
 }
@@ -69,8 +71,8 @@ std::string attack::actor_name(const actor *a, description_level_type desc,
  *
  * Takes into account actor visibility
  */
-std::string attack::actor_pronoun(const actor *a, pronoun_type pron,
-                                  bool actor_visible)
+string attack::actor_pronoun(const actor *a, pronoun_type pron,
+                             bool actor_visible)
 {
     return actor_visible ? a->pronoun(pron) : anon_pronoun(pron);
 }
@@ -80,8 +82,7 @@ std::string attack::actor_pronoun(const actor *a, pronoun_type pron,
  * Given the actor visible or invisible, returns the
  * appropriate possessive pronoun.
  */
-std::string attack::anon_name(description_level_type desc,
-                                    bool actor_invisible)
+string attack::anon_name(description_level_type desc, bool actor_invisible)
 {
     switch (desc)
     {
@@ -101,9 +102,9 @@ std::string attack::anon_name(description_level_type desc,
 /* Returns an anonymous actor's pronoun
  *
  * Given invisibility (whether out of LOS or just invisible), returns the
- * appropriate possessive, inflexive, capitalized pronoun.
+ * appropriate possessive, inflexive, capitalised pronoun.
  */
-std::string attack::anon_pronoun(pronoun_type pron)
+string attack::anon_pronoun(pronoun_type pron)
 {
     switch (pron)
     {
@@ -133,7 +134,7 @@ void attack::init_attack()
 /* If debug, return formatted damage done
  *
  */
-std::string attack::debug_damage_number()
+string attack::debug_damage_number()
 {
 #ifdef DEBUG_DIAGNOSTICS
     return make_stringf(" for %d", damage_done);
@@ -147,7 +148,7 @@ std::string attack::debug_damage_number()
  * Used (mostly) for elemental or branded attacks (napalm, dragon slaying, orc
  * slaying, holy, etc.)
  */
-std::string attack::special_attack_punctuation()
+string attack::special_attack_punctuation()
 {
     if (special_damage < 6)
         return ".";
@@ -159,7 +160,7 @@ std::string attack::special_attack_punctuation()
  *
  * Used in player / monster (both primary and aux) attacks
  */
-std::string attack::attack_strength_punctuation()
+string attack::attack_strength_punctuation()
 {
     if (attacker->is_player())
         return get_exclams(damage_done);
@@ -167,7 +168,7 @@ std::string attack::attack_strength_punctuation()
         return (damage_done < HIT_WEAK ? "." : "!");
 }
 
-std::string attack::get_exclams(int dmg)
+string attack::get_exclams(int dmg)
 {
     if (dmg < HIT_WEAK)
         return ".";
@@ -182,7 +183,7 @@ std::string attack::get_exclams(int dmg)
 /* Returns evasion adverb
  *
  */
-std::string attack::evasion_margin_adverb()
+string attack::evasion_margin_adverb()
 {
     return (ev_margin <= -20) ? " completely" :
            (ev_margin <= -12) ? "" :
@@ -194,7 +195,7 @@ std::string attack::evasion_margin_adverb()
  *
  * Helper method to easily access the attacker's name
  */
-std::string attack::atk_name(description_level_type desc)
+string attack::atk_name(description_level_type desc)
 {
     return actor_name(attacker, desc, attacker_visible, attacker_invisible);
 }
@@ -203,7 +204,7 @@ std::string attack::atk_name(description_level_type desc)
  *
  * Helper method to easily access the defender's name
  */
-std::string attack::def_name(description_level_type desc)
+string attack::def_name(description_level_type desc)
 {
     return actor_name(defender, desc, defender_visible, defender_invisible);
 }
@@ -214,14 +215,14 @@ std::string attack::def_name(description_level_type desc)
  * based on if the attacker is a player or non-player (non-players use a
  * plain name and a manually entered pronoun)
  */
-std::string attack::wep_name(description_level_type desc, iflags_t ignre_flags)
+string attack::wep_name(description_level_type desc, iflags_t ignre_flags)
 {
     ASSERT(weapon != NULL);
 
     if (attacker->is_player())
         return weapon->name(desc, false, false, false, false, ignre_flags);
 
-    std::string name;
+    string name;
     bool possessive = false;
     if (desc == DESC_YOUR)
     {
@@ -242,7 +243,7 @@ std::string attack::wep_name(description_level_type desc, iflags_t ignre_flags)
  * below, in calc_elemental_brand_damage, which is called for both frost and
  * flame brands for both players and monsters.
  */
-std::string attack::defender_name()
+string attack::defender_name()
 {
     if (attacker == defender)
         return actor_pronoun(attacker, PRONOUN_REFLEXIVE, attacker_visible);

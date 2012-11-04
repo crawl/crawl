@@ -15,39 +15,30 @@
 function callback.beogh_warn_stepped(data, triggerable, triggerer, marker, ev)
   local x, y = marker:pos()
 
--- This checks to see if you worship Beogh and are in good standing or are a godless
--- orc . If you do/are then you get a positive message but if you don't, Beogh warns
--- you that you should not continue towards his altar. (Monsters stepping on this
--- trap will also activate it.
-  if you.god() == "Beogh" and you.piety() > 50 then
-     crawl.god_speaks("Beogh" , "Your presence is welcomed at the altar to your God.")
+-- This checks to see if you worship Beogh or are a godless orc. If you do/are then
+-- you get a positive message but if you don't, Beogh warns you that you should not
+-- continue towards his altar.
+  if you.god() == "Beogh" or (you.race() == "Hill Orc" and you.god() == "No God") then
+     crawl.god_speaks("Beogh" , "Your presence is welcomed at the altar of Beogh.")
      dgn.grid(x, y, "floor")
-  elseif you.race() == "Hill Orc" and you.god() == "No God" then
-     crawl.god_speaks("Beogh" , "Beogh will allow you to approach the altar.")
-     dgn.grid(x, y, "floor")
+  elseif you.race() == "Hill Orc" then
+     crawl.god_speaks("Beogh" , "The orc god booms: Stay away, heretic!")
   else
-     if you.race() == "Demigod" then
-        crawl.god_speaks("Beogh" , "The orc god booms: STAY AWAY, HOLY BEING!")
-     elseif you.race() == "Demonspawn" then
-        crawl.god_speaks("Beogh", "The orc god booms: STAY AWAY, FOUL BEING!")
-     else
-        crawl.god_speaks("Beogh" , "The orc god booms: STAY AWAY, MORTAL!")
-     end
+     crawl.god_speaks("Beogh" , "The orc god booms: Stay away, mortal!")
   end
 end
 
 function callback.beogh_trap_stepped(data, triggerable, triggerer, marker, ev)
   local x, y = marker:pos()
--- This enacts the changes.  First it checks to see if the player is a Beogh
--- worshipper in good standing or a godless orc (a potential worshipper).  If
--- the player is one of these things nothing happens.  Otherwise the trap is sprung.
+-- This enacts the changes. First it checks to see if the player is a Beogh
+-- worshipper or a godless orc (a potential worshipper). If the player is one of
+-- these things nothing happens. Otherwise the trap is sprung.
   if monster_step == true then
     return
-  elseif (you.god() == "Beogh" and you.piety() > 50) or
-         (you.race() == "Hill Orc" and you.god() == "No God") then
+  elseif you.god() == "Beogh" or (you.race() == "Hill Orc" and you.god() == "No God") then
     dgn.grid(x, y, "floor")
   else
-    crawl.god_speaks("Beogh", "Beogh's wrath is called down upon you! The monsters attack!")
+    crawl.god_speaks("Beogh", "Beogh's servants are called upon to defend the altar!")
     for slave in iter.slave_iterator("bridge", 1) do
       dgn.terrain_changed(slave.x, slave.y, "floor", false, false, false)
     end
@@ -64,7 +55,7 @@ ORIENT: float
 # t gives you a warning not to come closer
 # ^ actually triggers the trap
 KFEAT:  Z = altar_beogh
-KPROP:  ^t.1* = no_rtele_into
+KPROP:  ^t.123*Z = no_rtele_into
 {{
 local tm = TriggerableFunction:new{func="callback.beogh_trap_stepped",
                                    repeated=false}
@@ -76,10 +67,7 @@ lua_marker('^', tm)
 lua_marker('t', tm2)
 lua_marker('M', props_marker { bridge=1 })
 }}
-SHUFFLE: NM
-SUBST:   NML:l, 1=1112 , 3=123 , ^t:. , *=*|
-# Some orcs who can shoot are necessary, otherwise a caster can snipe
-# all the ogres and trolls safely.
+SUBST:  M:v, 1=1112 , 3=123 , ^t:. , *=*|
 MONS:   w:7  generate_awake troll ; robe . nothing /\
         w:5  generate_awake ogre ;  giant club | robe /\
         w:5  generate_awake orc ; war axe | robe
@@ -95,16 +83,16 @@ MAP
      x.xx
      x.xx
    xxx..xxx
-  xxlll.llxx
+  xxll..llxx
  xxlllltlllxxx
- x...........x
-xx.llll*llll.xx
-x..l13l^l31l..x
-x..M13N.N31M..x
-x..M13N.N31M..x
-xx.MllNZNllM.xx
- x...vv=vv...x
- xxxxv***vxxxx
+ xllllI.Illllx
+xxlvvvv.vvvvlxx
+xllv13v^v31vllx
+xllv13M*M31vllx
+xllv13M.M31vllx
+xxvvvvMZMvvvvxx
+ xvvvvv+vvvvvx
+ xxxvv***vvxxx
    xxvvvvvxx
     xxxxxxx
 ENDMAP

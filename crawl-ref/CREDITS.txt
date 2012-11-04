@@ -4,7 +4,8 @@ Paul Du Bois, Florian Diebold, Michael Gagno, Eino Keskitalo, Vsevolod
 Kozlov, Janne Lahdenperä, Raphaël Langella, Nat Lanza, Jesse Luehrs,
 Steve Melenchuk, Neil Middleton, Neil Moore, Steven Noonan, Haran Pilpel,
 Aaron Pixton, David Ploog, Johanna Ploog, Stefan O'Rear, Charles Otto,
-David Lawrence Ramsey, Robert Vollmert, Enne Walker) would like to thank:
+David Lawrence Ramsey, Robert Vollmert, Enne Walker, Chris West, Samuel Wilson)
+would like to thank:
 
 * Linley Henzell, the author of Dungeon Crawl, for writing this great game.
 
@@ -27,12 +28,12 @@ David Lawrence Ramsey, Robert Vollmert, Enne Walker) would like to thank:
   contributions.
 
 * The members of various usability testing teams from the department of
-  Information Processing Science in Oulu University: Satu Alanko, Tiina
-  Kallinen, Aslak Karsi, Teemu Kaukoranta, Miikka Kuutila, Sami Mylly, Joonas
-  Nissinen, Perttu Piirainen, Jouni Rissanen, Tuomas Ristioja, Arto Saukko,
-  Janne Seppänen, Henri Sorsa and Sebastian Turpeinen. Additional thanks to
-  Mikko Rajanen for providing the opportunity for usability testing during
-  various courses.
+  Information Processing Science in Oulu University: Satu Alanko, Sampo Jumisko,
+  Topi Leinonen, Tiina Kallinen, Aslak Karsi, Teemu Kaukoranta, Miikka Kuutila,
+  Sami Mylly, Joonas Nissinen, Perttu Piirainen, Pekka Reijonen, Jouni Rissanen,
+  Juulia Ruha, Tuomas Ristioja, Arto Saukko, Janne Seppänen, Henri Sorsa and
+  Sebastian Turpeinen. Additional thanks to Mikko Rajanen for providing the
+  opportunity for usability testing during various courses.
 
 We'd also like to thank members of the Dungeon Crawl community who have
 contributed to Dungeon Crawl Stone Soup:
@@ -115,6 +116,7 @@ Erkki Nurmi
 Mattias Nyberg
 nyra
 Dylan O'Donnell
+Chris Oelmueller
 Yuuma Oohara
 Malwyn P
 William Parker
@@ -124,6 +126,7 @@ Lemuel Pitkin
 Derek Ray
 Terence Reeves
 Remsleep
+Ryan Riegel
 RjY
 Will Rogers
 David Rose
@@ -141,6 +144,7 @@ Michael Spang
 Jan 'heftig' Steffens
 Johan Strandell
 Ben Striegel
+Derrick Sund
 Pavel 'Curio' Svinarchuk
 Matthew Tadd
 William Tanksley, Jr.
@@ -151,7 +155,6 @@ Steven Wheeler
 Thomas Willem
 Evan Williams
 Jeremey Wilson
-Samuel Wilson
 Yelve Yakut
 Zannick
 Zooko

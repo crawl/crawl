@@ -10,8 +10,6 @@
 
 struct bolt;
 
-#include "art-enum.h"
-
 #define ART_PROPERTIES ARTP_NUM_PROPERTIES
 
 #define KNOWN_PROPS_KEY     "artefact_known_props"
@@ -69,7 +67,7 @@ struct unrandart_entry
         void (*melee_effects)(item_def* item, actor* attacker,
                               actor* defender, bool mondied, int damage);
         setup_missile_type (*launch)(item_def* item, bolt* beam,
-                                     std::string* ammo_name, bool* returning);
+                                     string* ammo_name, bool* returning);
     } fight_func;
     bool (*evoke_func)(item_def *item, int* pract, bool* did_work,
                        bool* unevokable);
@@ -89,12 +87,12 @@ unique_item_status_type get_unique_item_status(int unrand_index);
 void set_unique_item_status(const item_def& item,
                             unique_item_status_type status);
 
-std::string get_artefact_name(const item_def &item, bool force_known = false);
+string get_artefact_name(const item_def &item, bool force_known = false);
 
-void set_artefact_name(item_def &item, const std::string &name);
+void set_artefact_name(item_def &item, const string &name);
 
-std::string make_artefact_name(const item_def &item, bool appearance = false);
-std::string replace_name_parts(const std::string &name_in, const item_def& item);
+string make_artefact_name(const item_def &item, bool appearance = false);
+string replace_name_parts(const string &name_in, const item_def& item);
 
 int find_okay_unrandart(uint8_t aclass, uint8_t atype = OBJ_RANDOM,
                         bool in_abyss = false);
@@ -133,11 +131,11 @@ bool randart_is_bad(const item_def &item, artefact_properties_t &proprt);
 
 int find_unrandart_index(const item_def& artefact);
 
-unrandart_entry* get_unrand_entry(int unrand_index);
+const unrandart_entry* get_unrand_entry(int unrand_index);
 
 void artefact_set_property(item_def           &item,
-                            artefact_prop_type  prop,
-                            int                 val);
+                           artefact_prop_type  prop,
+                           int                 val);
 
 int get_unrandart_num(const char *name);
 

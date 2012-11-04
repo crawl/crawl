@@ -5,10 +5,12 @@
 
 #include "AppHdr.h"
 
+#include "actor.h"
 #include "areas.h"
 #include "cloud.h"
 #include "coordit.h"
 #include "delay.h"
+#include "describe.h"
 #include "dgn-shoals.h"
 #include "env.h"
 #include "fight.h"
@@ -16,12 +18,14 @@
 #include "hints.h"
 #include "itemprop.h"
 #include "items.h"
+#include "libutil.h"
 #include "mgen_data.h"
 #include "misc.h"
 #include "mon-behv.h"
 #include "mon-death.h"
 #include "mon-place.h"
 #include "spl-damage.h"
+#include "state.h"
 #include "terrain.h"
 #include "traps.h"
 #include "view.h"
@@ -37,7 +41,7 @@ bool monster::has_ench(enchant_type ench) const
         {
             die("monster %s has ench '%s' not in cache",
                 name(DESC_PLAIN).c_str(),
-                std::string(e).c_str());
+                string(e).c_str());
         }
     }
     else if (e.ench == ENCH_NONE)
@@ -46,14 +50,14 @@ bool monster::has_ench(enchant_type ench) const
         {
             die("monster %s has no ench '%s' but cache says it does",
                 name(DESC_PLAIN).c_str(),
-                std::string(mon_enchant(ench)).c_str());
+                string(mon_enchant(ench)).c_str());
         }
     }
     else
     {
         die("get_ench returned '%s' when asked for '%s'",
-            std::string(e).c_str(),
-            std::string(mon_enchant(ench)).c_str());
+            string(e).c_str(),
+            string(mon_enchant(ench)).c_str());
     }
     return ench_cache[ench];
 }
@@ -435,7 +439,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_SLOW:
-        if (!quiet && !(liquefied(pos()) && ground_level() && !is_insubstantial()))
+        if (!quiet && !liquefied_ground())
             simple_monster_message(this, " is no longer moving slowly.");
         calc_speed();
         break;
@@ -627,7 +631,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         monster_die(this, KILL_TIMEOUT, NON_MONSTER);
         break;
     case ENCH_SUBMERGED:
-        if (mons_is_wandering(this))
+        if (mons_is_wandering(this) || mons_is_lurking(this))
         {
             behaviour = BEH_SEEK;
             behaviour_event(this, ME_EVAL);
@@ -660,14 +664,22 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             }
             else if (!quiet)
             {
+                msg_channel_type channel = MSGCH_PLAIN;
+                if (!seen_context)
+                {
+                    channel = MSGCH_WARN;
+                    seen_context = SC_JUST_SEEN;
+                }
+
                 if (type == MONS_AIR_ELEMENTAL)
                 {
-                    mprf("%s forms itself from the air!",
-                         name(DESC_A, true).c_str());
+                    mprf(channel, "%s forms itself from the air!",
+                                  name(DESC_A, true).c_str());
                 }
                 else if (type == MONS_TRAPDOOR_SPIDER)
                 {
-                    mprf("%s leaps out from its hiding place under the floor!",
+                    mprf(channel,
+                         "%s leaps out from its hiding place under the floor!",
                          name(DESC_A, true).c_str());
                 }
                 else if (crawl_state.game_is_arena())
@@ -774,6 +786,15 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(this, " is no longer regenerating.");
          break;
 
+    case ENCH_WRETCHED:
+         if (!quiet)
+         {
+            snprintf(info, INFO_SIZE, " seems to return to %s normal shape.",
+                     pronoun(PRONOUN_POSSESSIVE, true).c_str());
+            simple_monster_message(this, info);
+         }
+         break;
+
     default:
         break;
     }
@@ -877,7 +898,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_MIRROR_DAMAGE: case ENCH_STONESKIN: case ENCH_LIQUEFYING:
         case ENCH_SILVER_CORONA: case ENCH_DAZED: case ENCH_FAKE_ABJURATION:
         case ENCH_ROUSED: case ENCH_BREATH_WEAPON: case ENCH_DEATHS_DOOR:
-        case ENCH_OZOCUBUS_ARMOUR:
+        case ENCH_OZOCUBUS_ARMOUR: case ENCH_WRETCHED:
             lose_ench_levels(i->second, levels);
             break;
 
@@ -954,15 +975,15 @@ void monster::timeout_enchantments(int levels)
     }
 }
 
-std::string monster::describe_enchantments() const
+string monster::describe_enchantments() const
 {
-    std::ostringstream oss;
+    ostringstream oss;
     for (mon_enchant_list::const_iterator i = enchantments.begin();
          i != enchantments.end(); ++i)
     {
         if (i != enchantments.begin())
             oss << ", ";
-        oss << std::string(i->second);
+        oss << string(i->second);
     }
     return oss.str();
 }
@@ -1085,6 +1106,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_BREATH_WEAPON:
     case ENCH_DEATHS_DOOR:
     case ENCH_OZOCUBUS_ARMOUR:
+    case ENCH_WRETCHED:
     // case ENCH_ROLLING:
         decay_enchantment(me);
         break;
@@ -1246,9 +1268,7 @@ void monster::apply_enchantment(const mon_enchant &me)
                              name(DESC_THE).c_str());
                     }
                     else
-                    {
                         mpr("All of a sudden the net rips apart!");
-                    }
                 }
                 destroy_item(net);
 
@@ -1434,7 +1454,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         {
             // Search for an open adjacent square to place a spore on
             int idx[] = {0, 1, 2, 3, 4, 5, 6, 7};
-            std::random_shuffle(idx, idx + 8);
+            random_shuffle(idx, idx + 8);
 
             bool re_add = true;
 
@@ -1651,7 +1671,7 @@ void monster::apply_enchantment(const mon_enchant &me)
 
             if (newdam > 0)
             {
-                std::string msg = mons_has_flesh(this) ? "'s flesh" : "";
+                string msg = mons_has_flesh(this) ? "'s flesh" : "";
                 msg += (dam < newdam) ? " is horribly charred!"
                                       : " is seared.";
                 simple_monster_message(this, msg.c_str());
@@ -1782,7 +1802,11 @@ static const char *enchant_names[] =
     "sleep_wary", "submerged", "short_lived", "paralysis", "sick",
     "sleepy", "held", "battle_frenzy", "temp_pacif", "petrifying",
     "petrified", "lowered_mr", "soul_ripe", "slowly_dying", "eat_items",
-    "aquatic_land", "spore_production", "slouch", "swift", "tide",
+    "aquatic_land", "spore_production",
+#if TAG_MAJOR_VERSION == 34
+    "slouch",
+#endif
+    "swift", "tide",
     "insane", "silenced", "awaken_forest", "exploding", "bleeding",
     "tethered", "severed", "antimagic", "fading_away", "preparing_resurrect", "regen",
     "magic_res", "mirror_dam", "stoneskin", "fear inspiring", "temporarily pacified",
@@ -1790,7 +1814,7 @@ static const char *enchant_names[] =
     "liquefying", "tornado", "fake_abjuration",
     "dazed", "mute", "blind", "dumb", "mad", "silver_corona", "recite timer",
     "inner_flame", "roused", "breath timer", "deaths_door", "rolling",
-    "ozocubus_armour", "buggy",
+    "ozocubus_armour", "wretched", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
@@ -1827,7 +1851,7 @@ mon_enchant::mon_enchant(enchant_type e, int deg, const actor* a,
     }
 }
 
-mon_enchant::operator std::string () const
+mon_enchant::operator string () const
 {
     const actor *a = agent();
     return make_stringf("%s (%d:%d%s %s)",
@@ -1916,7 +1940,7 @@ int mon_enchant::calc_duration(const monster* mons,
     const int deg = newdegree ? newdegree : 1;
 
     // Beneficial enchantments (like Haste) should not be throttled by
-    // monster HD via modded_speed(). Use mod_speed instead!
+    // monster HD via modded_speed(). Use _mod_speed instead!
     switch (ench)
     {
     case ENCH_WITHDRAWN:
@@ -1949,17 +1973,17 @@ int mon_enchant::calc_duration(const monster* mons,
         cturn = 150 / (1 + modded_speed(mons, 5));
         break;
     case ENCH_PARALYSIS:
-        cturn = std::max(90 / modded_speed(mons, 5), 3);
+        cturn = max(90 / modded_speed(mons, 5), 3);
         break;
     case ENCH_PETRIFIED:
-        cturn = std::max(8, 150 / (1 + modded_speed(mons, 5)));
+        cturn = max(8, 150 / (1 + modded_speed(mons, 5)));
         break;
     case ENCH_DAZED:
     case ENCH_PETRIFYING:
         cturn = 50 / _mod_speed(10, mons->speed);
         break;
     case ENCH_CONFUSION:
-        cturn = std::max(100 / modded_speed(mons, 5), 3);
+        cturn = max(100 / modded_speed(mons, 5), 3);
         break;
     case ENCH_HELD:
         cturn = 120 / _mod_speed(25, mons->speed);
@@ -2032,7 +2056,7 @@ int mon_enchant::calc_duration(const monster* mons,
             cturn = 1000 / _mod_speed(10, mons->speed);
         if (deg >= 5)
             cturn += 1000 / _mod_speed(20, mons->speed);
-        cturn += 1000 * std::min(4, deg) / _mod_speed(100, mons->speed);
+        cturn += 1000 * min(4, deg) / _mod_speed(100, mons->speed);
         break;
     case ENCH_CHARM:
         cturn = 500 / modded_speed(mons, 10);
@@ -2052,16 +2076,19 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_ROLLING:
         cturn = 10000 / _mod_speed(25, mons->speed);
         break;
+    case ENCH_WRETCHED:
+        cturn = (20 + roll_dice(3, 10)) * 10 / _mod_speed(10, mons->speed);
+        break;
     default:
         break;
     }
 
-    cturn = std::max(2, cturn);
+    cturn = max(2, cturn);
 
     int raw_duration = (cturn * speed_to_duration(mons->speed));
     // Note: this fuzzing is _not_ symmetric, resulting in 90% of input
     // on the average.
-    raw_duration = std::max(15, fuzz_value(raw_duration, 60, 40));
+    raw_duration = max(15, fuzz_value(raw_duration, 60, 40));
 
     dprf("cturn: %d, raw_duration: %d", cturn, raw_duration);
 

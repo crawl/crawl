@@ -10,6 +10,7 @@
 #include "itemprop.h"
 #include "libutil.h"
 #include "los.h"
+#include "misc.h"
 #include "mon-death.h"
 #include "ouch.h"
 #include "player.h"
@@ -200,7 +201,7 @@ bool actor::can_sleep() const
 void actor::shield_block_succeeded(actor *foe)
 {
     item_def *sh = shield();
-    unrandart_entry *unrand_entry;
+    const unrandart_entry *unrand_entry;
 
     if (sh
         && sh->base_type == OBJ_ARMOUR
@@ -237,6 +238,45 @@ int actor::body_weight(bool base) const
     default:
         die("invalid body weight");
     }
+}
+
+int actor::apply_ac(int damage, int max_damage, ac_type ac_rule,
+                    int stab_bypass) const
+{
+    int ac = max(armour_class() - stab_bypass, 0);
+    int gdr = gdr_perc();
+    int saved = 0;
+    switch (ac_rule)
+    {
+    case AC_NONE:
+        return damage; // no GDR, too
+    case AC_PROPORTIONAL:
+        ASSERT(stab_bypass == 0);
+        saved = damage - apply_chunked_AC(damage, ac);
+        saved = max(saved, div_rand_round(max_damage * gdr, 100));
+        return max(damage - saved, 0);
+
+    case AC_NORMAL:
+        saved = random2(1 + ac);
+        break;
+    case AC_HALF:
+        saved = random2(1 + ac) / 2;
+        ac /= 2;
+        gdr /= 2;
+        break;
+    case AC_TRIPLE:
+        saved = random2(1 + ac) + random2(1 + ac) + random2(1 + ac);
+        ac *= 3;
+        // apply GDR only twice rather than thrice, that's probably still waaay
+        // too good.  50% gives 75% rather than 100%, too.
+        gdr = 100 - gdr * gdr / 100;
+        break;
+    default:
+        die("invalid AC rule");
+    }
+
+    saved = max(saved, min(gdr * max_damage / 100, ac / 2));
+    return max(damage - saved, 0);
 }
 
 bool actor_slime_wall_immune(const actor *act)
@@ -394,7 +434,7 @@ void actor::clear_far_constrictions()
     if (!constricting)
         return;
 
-    std::vector<mid_t> need_cleared;
+    vector<mid_t> need_cleared;
     constricting_t::iterator i;
     for (i = constricting->begin(); i != constricting->end(); ++i)
     {
@@ -403,7 +443,7 @@ void actor::clear_far_constrictions()
             need_cleared.push_back(i->first);
     }
 
-    std::vector<mid_t>::iterator j;
+    vector<mid_t>::iterator j;
     for (j = need_cleared.begin(); j != need_cleared.end(); ++j)
         stop_constricting(*j, false, false);
 }
@@ -504,7 +544,7 @@ void actor::handle_constriction()
         damage = defender->hurt(this, damage, BEAM_MISSILE, false);
         DIAG_ONLY(const int infdam = damage);
 
-        std::string exclams;
+        string exclams;
         if (damage <= 0 && is_player()
             && you.can_see(defender))
         {

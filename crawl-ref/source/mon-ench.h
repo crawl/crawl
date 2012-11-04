@@ -1,9 +1,9 @@
 #ifndef MON_ENCH_H
 #define MON_ENCH_H
 
-#include "actor.h"
-
 #define INFINITE_DURATION  30000
+
+class actor;
 
 class mon_enchant
 {
@@ -25,7 +25,7 @@ public:
     int kill_agent() const;
     actor* agent() const;
 
-    operator std::string () const;
+    operator string () const;
     const char *kill_category_desc(kill_category) const;
     void merge_killer(kill_category who, mid_t whos);
     void cap_degree();

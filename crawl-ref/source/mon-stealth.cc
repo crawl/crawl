@@ -15,9 +15,7 @@ static int _clamp_stealth(int stealth)
     else if (stealth < -3)
         return -3;
     else
-    {
         return stealth;
-    }
 }
 
 // Monster stealth is a value between:
@@ -32,7 +30,7 @@ static int _clamp_stealth(int stealth)
 //
 int monster::stealth() const
 {
-    int base_stealth = -(std::min((int) body_size(), 6) - 3);
+    int base_stealth = -(min((int) body_size(), 6) - 3);
 
     int actual_stealth = base_stealth;
 

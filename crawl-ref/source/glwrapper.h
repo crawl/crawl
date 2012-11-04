@@ -170,6 +170,10 @@ public:
     virtual void reset_view_for_resize(const coord_def &m_windowsz) = 0;
     virtual void set_transform(const GLW_3VF &trans, const GLW_3VF &scale) = 0;
     virtual void reset_transform() = 0;
+#ifdef __ANDROID__
+    virtual void fixup_gl_state() = 0;
+#endif
+
 
     // Texture-specific functinos
     virtual void delete_textures(size_t count, unsigned int *textures) = 0;

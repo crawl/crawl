@@ -52,7 +52,7 @@ xw.x...xxx
 xw.xx...xx
 xww.x...xx
 xwwWxx...x
-xwwwW+...=
+xwwwW+...+
 xwwWxx...x
 xww.x...xx
 xw.xx...xx
@@ -150,7 +150,6 @@ SUBST:   . = ' .:120
 SUBST:   ` = ''., V = Xx, U = Xxxx, x = X x:60
 KPROP:   X' = bloody
 SUBST:   X = x, ' = .
-SUBST:   = : xx=, = = +==
 SUBST:   . = .:320 d:5 e:20 f:5
 SUBST:   y : x
 MAP
@@ -239,7 +238,7 @@ ORIENT:  float
 SHUFFLE: d'
 : end
 SUBST:   '=.
-MONS:    worm / worm zombie
+MONS:    worm
 ITEM:    stone / dart
 MAP
 xxxxxxxxxxxxxxxxx
@@ -376,8 +375,8 @@ ENDMAP
 NAME:    minmay_entry_stone_box
 TAGS:    entry
 ORIENT:  float
-NSUBST:  A = 1:= / 1=c= / *:c
-NSUBST:  B = 1:= / *:c
+NSUBST:  A = 1:+ / 1=c+ / *:c
+NSUBST:  B = 1:+ / *:c
 SHUFFLE: {[(<
 SHUFFLE: ^B~>TVGl
 KFEAT:   ^ = teleport trap
@@ -406,10 +405,10 @@ ORIENT: float
 MONS:   kobold; dart ego:dispersal q:3
 MAP
 .............
-.x=xxxxxxx=x.
+.x+xxxxxxx+x.
 .x.llllll{.l@
 .x.llllll>.l.
-.x.xxxxxxx=x.
+.x.xxxxxxx+x.
 .x1x.........
 .xxx.........
 .............
@@ -596,7 +595,7 @@ MAP
 xxxxxxxxxxx
 x.........+
 x.xxxxxxxxx
-x.x.......=
+x.x.......+
 x.x.xxxxxxxxxxxxxx
 x.x.x.....+......x
 x.x.x.xxxxxxxxxx.x
@@ -741,7 +740,7 @@ TAGS:    entry
 ORIENT:  float
 SHUFFLE: {[(, XY/AB
 KFEAT:   X = teleport trap
-SUBST:   Y=x, A=., B==, (=(., [=[.
+SUBST:   Y=x, A=., B=+, (=(., [=[.
 MAP
    xxxx@xxxxxxx.@.x
    xxxx.xxxxxx...xx
@@ -1084,7 +1083,7 @@ NAME:    lemuel_entry_rhombus
 TAGS:    entry no_monster_gen
 ORIENT:  float
 SHUFFLE: {[, abc
-SUBST:   a:+=, b=x, c=x
+SUBST:   a:+, b=x, c=x
 MAP
       x@x
     xax.xcx
@@ -1138,7 +1137,7 @@ NAME:    shiori_shiawase
 TAGS:    entry no_monster_gen no_rotate no_vmirror
 ORIENT:  float
 SHUFFLE: +=
-SUBST:   =:==x , x:xvcb
+SUBST:   =:x , x:xvcb
 MAP
       x+x
       x.x
@@ -1267,6 +1266,7 @@ ORIENT:  float
 ITEM:    nothing, nothing
 SHUFFLE: =+, TVG, {[
 SUBST:   c:cxx
+SUBST:   = = x
 KMASK:   T = no_monster_gen
 MAP
 xx@...@xxxxxxxx
@@ -1289,6 +1289,7 @@ TAGS:    entry
 ORIENT:  float
 ITEM:    nothing, nothing
 SHUFFLE: =+, cx, de/{(, {[(
+SUBST:   = = x
 MAP
 @.........@
 ...xx+xx...
@@ -1356,7 +1357,7 @@ TAGS:    entry
 MONS:    rat, goblin, bat
 ORIENT:  float
 SHUFFLE: [{(
-SUBST:   X = x=
+SUBST:   X = x+
 MAP
 xxxxxxxxxxxx..@
 xx.1.%1xxxxx...
@@ -1613,7 +1614,7 @@ ENDMAP
 NAME:    dpeg_entry_rhombi
 TAGS:    entry no_monster_gen
 SHUFFLE: WYZ{/wyz(
-SUBST:   Z=x, Y=x, W=@, C==+x
+SUBST:   Z=x, Y=x, W=@, C=+x
 SUBST:   z=@, y=+, w=x
 NSUBST:  . = 1:d / *:.
 ITEM:    stone / dart
@@ -1852,12 +1853,12 @@ ENDMAP
 NAME:   dpeg_entry_erosion
 TAGS:   entry
 ORIENT: float
-SUBST:  '=cx., "=+.=, c:xxc
+SUBST:  '=cx., "=+.x, c:xxc
 MAP
 xxxxxxxxxxxxxxxxxxxx
 xccccccx.......x..c.
 xccccccc..ccx'.x..x.
-xcc.(..c..'..c.'=''.
+xcc.(..c..'..c.'+''.
 xcc.[..+..c..+.x.."@
 xcc.{..c..cxxc.'..x.
 xccccccc..x....'xx'.
@@ -1900,22 +1901,22 @@ SHUFFLE: {[(
 : if r == 0 then
 :   subst("? = x")
 :   subst("A = .")
-:   subst("a = =")
+:   subst("a = +")
 : elseif r == 1 then
-:   subst("? = =")
+:   subst("? = +")
 :   subst("A = .")
 :   subst("a = x")
 : else
-:   subst("? = =")
+:   subst("? = +")
 :   subst("A = '")
-:   subst("a = =")
+:   subst("a = +")
 : end
 : if crawl.random2(3) == 0 then
 :   subst("B = .")
 :   subst("b = x")
 : else
 :   subst("B = '")
-:   subst("b = =")
+:   subst("b = x")
 : end
 SUBST:   ' = x. , v : cvxxxx
 MAP
@@ -1984,7 +1985,7 @@ NAME:    dpeg_entry_short_road
 TAGS:    entry
 ORIENT:  float
 SHUFFLE: {[(, XY
-SUBST:   X==, Y=x, %=%.
+SUBST:   X=+, Y=x, %=%.
 MAP
 xxxxxx@.xxx
 x(.xx..xxxx
@@ -2045,7 +2046,7 @@ NAME:    dpeg_entry_renting
 TAGS:    entry
 ORIENT:  float
 SHUFFLE: [>, {(, T), TcGv, XY
-SUBST:   ':.x, X=+=x, Y=+=x
+SUBST:   ':.x, X=+x, Y=+x
 KMASK:   T = no_monster_gen
 MAP
 xxxxxxxxxxxxxxxxxx..@
@@ -2173,7 +2174,7 @@ NAME:    elethiomel_entry_maze
 TAGS:    entry no_monster_gen
 ORIENT:  float
 SHUFFLE: {[(, WXYZ
-SUBST:   W=., X=X., X=x=., Y=Y., Y=x=., Z=Z., Z=x=.
+SUBST:   W=., X=X., X=x+., Y=Y., Y=x., Z=Z., Z=x+.
 MAP
 xx@xxxxxxxxxxxxxxxxxxxxxxxxxx
 xx.x.......xxxxx...xx......xx
@@ -2198,7 +2199,7 @@ NAME:    elethiomel_entry_quiet
 TAGS:    entry no_monster_gen
 ORIENT:  float
 SHUFFLE: '"XY/ABVW, !?/CD
-SUBST:   ':., ":=, A:x, B:x, !:., ?:=, C:x, D:x, V=x, W=x, Y=@x
+SUBST:   ':., ":+, A:x, B:x, !:., ?:+, C:x, D:x, V=x, W=x, Y=@x
 SUBST:   c : cxx
 KFEAT:   X = teleport trap / floor
 MAP
@@ -2227,7 +2228,7 @@ ITEM:    apple / sausage / nothing / stone
 SHUFFLE: ({[, Aa, Bb, Cc, Ee, Ff
 MONS:    w:30 nothing / w:10 plant / w:5 fungus / w:10 rat
 SUBST:   A=x, B=x, C=x, E=x, F=x, a=., b=., c=., e=., f=.
-SUBST:   X = x =
+SUBST:   X = xxxxxxxxxxxxxxxxx+
 MAP
 xxxxxxxxx@xxxxxxx
 x.......A.a.....x
@@ -2239,7 +2240,7 @@ xEx.x.x.xxxxx.xFx
 x...x.c...1dx...x
 xxxxxCxxxxxxxx.xx
 x...............x
-x.xxxxxX.Xxxxxx.x
+x.xxxxxx.xxxxxx.x
 x.....[x(x{.....x
 xxxxxxxxxxxxxxxxx
 ENDMAP
@@ -2250,7 +2251,7 @@ WEIGHT:  5
 ORIENT:  float
 ITEM:    apple / sausage / nothing / stone / w:30 nothing
 SHUFFLE: ({[ , AB
-SUBST:   A : x , B = +., X = x=
+SUBST:   A : x , B = +., X = x+
 MONS:    w:30 nothing / w:10 plant / w:3 fungus / w:1 worm
 MAP
 xxxxxxxxx@xxxxxxx
@@ -2274,15 +2275,14 @@ TAGS:    entry
 ORIENT:  float
 MONS:    w:100 rat / w:50 giant cockroach / quokka
 SUBST:   ? = .:30 1:20
-SUBST:   = = = +
 MAP
 xxxxxxxxxx@xxxxxxxxxx
 xxxx?x?x?x.x?x?x?xxxx
-xxxx=x=x=x+x=x=x=xxxx
+xxxx+x+x+x+x+x+x+xxxx
 xxxx.x.x.x.x.x.x.xxxx
-x?=......({[......=?x
+x?+......({[......+?x
 xxxx.x.x.x.x.x.x.xxxx
-xxxx=x=x=x=x=x=x=xxxx
+xxxx+x+x+x+x+x+x+xxxx
 xxxx?x?x?x?x?x?x?xxxx
 xxxxxxxxxxxxxxxxxxxxx
 ENDMAP
@@ -2486,6 +2486,7 @@ SUBST:   [ = l, ( = l
 SUBST:   ':l...' , '=l. , l:lllWw , n:nv , v:vvvc
 KMONS:   1 = orc / goblin / kobold
 KFEAT:   1 = .
+KPROP:   1 = no_rtele_into
 MAP
 .....................
 .....................
@@ -2550,7 +2551,7 @@ MONS:    ettin / frost giant / hill giant / stone giant / fire giant
 SHUFFLE: 1234567
 MONS:    giant gecko / iguana / giant newt / crocodile / komodo dragon
 MONS:    hog / jackal / wolf / hound / war dog
-MONS:    giant cockroach / worker ant / butterfly / killer bee / bumblebee /\
+MONS:    giant cockroach / worker ant / butterfly / killer bee /\
          redback / giant mite
 MONS:    swamp worm / lindwurm / worm / spiny worm
 MONS:    swamp drake / hydra / wyvern / fire drake
@@ -2690,8 +2691,8 @@ TAGS:    entry no_monster_gen
 WEIGHT:  3
 ORIENT:  southeast
 SHUFFLE: {(
-NSUBST:  V = 2:= / 2=v= / *:v
-NSUBST:  U = 2:= / 2=v= / *:v
+NSUBST:  V = 2:+ / 2=v+ / *:v
+NSUBST:  U = 2:+ / 2=v+ / *:v
 SUBST:   ' = .W
 MAP
   '''''''''@'''''x
@@ -2738,7 +2739,7 @@ xxxx[..xxxx
 ENDMAP
 
 ##############################################################
-# A simple fortress with semi-secret doors.
+# A simple fortress with double doors.
 NAME:    saegor_entry_fortress
 TAGS:    entry no_monster_gen no_pool_fixup
 ORIENT:  float
@@ -2749,21 +2750,21 @@ MAP
 wwwwwwwwwcccccwwwwwwwww
 wcccccccwcWtWcwcccccccw
 wc[...GccccGccccG...>cw
-wc.....=.......=.....cw
+wc.....+.......+.....cw
 wcG...GccGc+cGccG...Gcw
-wccc+cccccc=cccccc+cccw
+wccc+cccccc+cccccc+cccw
 wcWc.cctt.....ttcc.cWcw
 wttG.ctW...1...Wtc.Gttw
 wcWc.Gc.........cG.cWcw
 wccc.cc...WtW...cc.cccw
-@++..=+...tGt...+=..++@
+@++..++...tGt...++..++@
 wccc.cc...WtW...cc.cccw
 wcWc.Gc.........cG.cWcw
 wttG.ctW...1...Wtc.Gttw
 wcWc.cctt.....ttcc.cWcw
 wccc+cccccc+cccccc+cccw
-wcG...GccGc=cGccG...Gcw
-wc.....+.......=.....cw
+wcG...GccGc+cGccG...Gcw
+wc.....+.......+.....cw
 wc(...GccccGccccG...{cw
 wcccccccwcWtWcwcccccccw
 wwwwwwwwwcccccwwwwwwwww
@@ -2987,7 +2988,7 @@ SUBST:   Y = x .:1 , o : . , p : [
 NSUBST:  { = { / . , ( = ( / . , [ = [ / . , r = + / +c
 : if crawl.one_chance_in(3) then
 NSUBST:  R = + / +c
-NSUBST:  N = n / *=nnc=
+NSUBST:  N = n / *=nnc
 SUBST:   z : c
 : else
 SUBST:   R : c, z : +
@@ -3026,7 +3027,7 @@ KMASK:   l = no_monster_gen
 SUBST:   R : +R
 SUBST:   r : +ccc
 NSUBST:  R = + / ccc+
-SUBST:   = : cccc=+
+SUBST:   = : cc+
 SUBST:   t : tT.
 SUBST:   T = tt.
 MAP
@@ -3086,4 +3087,91 @@ xxww1..G..1wwxx
 .xxwww.1.wwwxx.
 ..xxwwwwwwwxx..
 @..xxxxxxxxx..@
+ENDMAP
+
+##############################################################################
+
+NAME:   lightli_entry_noodles
+ORIENT: float
+TAGS:   entry no_monster_gen
+MAP
+xxxxxxxxxx
+xG..{<..Gx
+xl......lx
+xl......lx
+xl......lx
+xl..GG..lx
+xl......lx
+xl......lx
+xl......lx
+xG......Gx
+xxxx++xxxx
+ENDMAP
+
+##############################################################################
+
+NAME:   lightli_entry_isolated_outpost
+ORIENT: float
+TAGS:   entry no_pool_fixup no_monster_gen
+SUBST:  < = <{
+MAP
+WWWWWWWW@@WWWWWWWW
+W..G..G....G..G..W
+W.cccccn++nccccc.W
+WGcWWWWW..WWWWWcGW
+W.cW..........Wc.W
+w.cW.cccccccc.Wc.W
+W.cW..........Wc.W
+W.cWWWWW..WWWWWc.W
+W.cccccn++nccccc.W
+W.c............c.W
+W.clllll..lllllc.W
+W.clllll..lllllc.W
+W.c............c.W
+W.cvvvvv++vvvvvc.W
+WGc.....{<.....cGW
+W.cccccccccccccc.W
+W..G..........G..W
+WWWWWWWWWWWWWWWWWW
+ENDMAP
+
+##############################################################################
+
+NAME:   lightli_entry_windingriver
+ORIENT: float
+TAGS:   entry no_monster_gen
+KMONS:  P = plant
+SUBST:  p = Pw
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxx
+xpwppwppppppwppp.p.p...x
+xwwwwwwpppppwwppp..w...x
+xwwwwwwwpwpwwwwppwwwwp.x
+xwwwwwwwwwwwwwwwwww..w.+
+xw.wwwwwwwwwwwwwww.....+
+xp..w..wwwww..www..p...x
+x.xp.px.w.w.xx.w.xxx...x
+x{xxxxxx.p.xxxx.xxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+
+NAME:   lightli_entry_boilingwater
+ORIENT: float
+TAGS:   entry no_monster_gen
+SUBST:  ( = (<
+SUBST:  [ = [<
+MAP
+  @@@@@@
+WWWllllWWW
+WGWWllWWGW
+WWGWWWWGWW
+lWWb++bWWl
+llWm{(mWll
+llWm[<mWll
+lWWbmmbWWl
+WWGWWWWGWW
+WGWWllWWGW
+WWWllllWWW
 ENDMAP

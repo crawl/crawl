@@ -11,7 +11,6 @@
 #include <iostream>
 
 #include "enum.h"
-#include "mpr.h"
 
 // Write the message window contents out.
 void display_message_window();
@@ -30,16 +29,16 @@ class formatted_string;
 void formatted_mpr(const formatted_string& fs,
                    msg_channel_type channel = MSGCH_PLAIN, int param = 0);
 
-void formatted_message_history(const std::string &st,
+void formatted_message_history(const string &st,
                                msg_channel_type channel = MSGCH_PLAIN,
                                int param = 0,
                                int wrap_col = 0);
 
 // mpr() an arbitrarily long list of strings
-void mpr_comma_separated_list(const std::string &prefix,
-                              const std::vector<std::string> &list,
-                              const std::string &andc = ", and ",
-                              const std::string &comma = ", ",
+void mpr_comma_separated_list(const string &prefix,
+                              const vector<string> &list,
+                              const string &andc = ", and ",
+                              const string &comma = ", ",
                               const msg_channel_type channel = MSGCH_PLAIN,
                               const int param = 0);
 
@@ -52,8 +51,8 @@ void msgwin_set_temporary(bool temp);
 // message window and history.
 void msgwin_clear_temporary();
 
-void msgwin_prompt(std::string prompt);
-void msgwin_reply(std::string reply);
+void msgwin_prompt(string prompt);
+void msgwin_reply(string reply);
 
 unsigned int msgwin_lines();
 
@@ -61,14 +60,14 @@ unsigned int msgwin_lines();
 // read, e.g. after reading input from the player.
 void msgwin_got_input();
 
-int msgwin_get_line(std::string prompt,
+int msgwin_get_line(string prompt,
                     char *buf, int len,
                     input_history *mh = NULL,
                     int (*keyproc)(int &c) = NULL);
 
 
 // Do not use this templated function directly.  Use the macro below instead.
-template<int> static int msgwin_get_line_autohist_temp(std::string prompt,
+template<int> static int msgwin_get_line_autohist_temp(string prompt,
                                                        char *buf, int len)
 {
     static input_history hist(10);
@@ -106,18 +105,18 @@ void replay_messages();
 
 void set_more_autoclear(bool on);
 
-std::string get_last_messages(int mcount);
-void get_recent_messages(std::vector<std::string> &messages,
-                         std::vector<msg_channel_type> &channels);
+string get_last_messages(int mcount);
+void get_recent_messages(vector<string> &messages,
+                         vector<msg_channel_type> &channels);
 
 int channel_to_colour(msg_channel_type channel, int param = 0);
-bool strip_channel_prefix(std::string &text, msg_channel_type &channel,
+bool strip_channel_prefix(string &text, msg_channel_type &channel,
                           bool silence = false);
 
 namespace msg
 {
-    extern std::ostream stream;
-    std::ostream& streams(msg_channel_type chan = MSGCH_PLAIN);
+    extern ostream stream;
+    ostream& streams(msg_channel_type chan = MSGCH_PLAIN);
 
     struct setparam
     {
@@ -131,7 +130,7 @@ namespace msg
         bool m_value;
     };
 
-    class mpr_stream_buf : public std::streambuf
+    class mpr_stream_buf : public streambuf
     {
     public:
         mpr_stream_buf(msg_channel_type chan);
@@ -153,7 +152,7 @@ namespace msg
     void deinitialise_mpr_streams();
 }
 
-std::ostream& operator<<(std::ostream& os, const msg::setparam& sp);
+ostream& operator<<(ostream& os, const msg::setparam& sp);
 
 void set_msg_dump_file(FILE* file);
 

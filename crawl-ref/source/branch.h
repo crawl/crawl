@@ -57,8 +57,7 @@ bool is_connected_branch(branch_type branch);
 bool is_connected_branch(level_id place);
 level_id current_level_parent();
 
-branch_type str_to_branch(const std::string &branch,
-                          branch_type err = NUM_BRANCHES);
+branch_type str_to_branch(const string &branch, branch_type err = NUM_BRANCHES);
 
 int current_level_ambient_noise();
 

@@ -1,0 +1,162 @@
+%%%%
+Dungeon
+
+Je ještě záhadou, jak vzniklo toto bizarní místo. Někteří tvrdí, že je hřištěm
+znuděných bohů, zatímco jiní tvrdí, že bylo formováno všemi druhy, které
+uprchly do podsvětí a stranili se světla. Bez ohledu na to, jaký je jeho původ,
+v této hluboké jeskyni je plno neslýchaného bohatství, stejně tak mnoho
+nebezpečí čekající na každého vetřelce. Jen málo z nich uniklo živích, a ještě
+méně si jich zachovalo kousek zdravého rozumu a mohlo vyprávět.
+
+žalář je 27 úrovní hluboký, ale upřímně řečeno, to je jen začátek.
+%%%%
+Temple
+
+Chrám bohů, místo klidu a útočiště před šílenstvím žaláře. Obvykle obsahuje
+oltáře pro většinu známých bohů. Nachází se mezi úrovní žaláře 4 a 7 .
+%%%%
+Orcish Mines
+
+Dobře pracovali ve zlatých dolech pokolení Orkských kmenů. Tyto klikaté jeskyně
+jsou plné skřetů, jejich humanoidních dělníků a hromad jejich právě vytěženého
+zlata. Podnikaví obchodníci zavedli obchodní stanice v pomoci zmírnit orkům
+jejich aurické břemeno. Nahodilý způsob, jakým mají orkové tendenci kopat v
+jejich důlních šachtách má za následek složitou a zrádnou změť komor, ve které
+je snadné se dostat do pasti.
+
+Skřetí doly mají čtyři úrovně a obsahují vstup do Elfích síní.
+%%%%
+Elven Halls
+
+Zatímco většina elfích lidí  se nikdy nepřesunula do temného podzemního
+komplexu, jako je tento, hlubinní elfové to udělali. Jejich sály jsou plné
+bohatství, ale všechny kolemjdoucí si musí být vědomi legendární magické
+zdatnosti tohoto druhu.
+
+Elfí sály jsou tří úrovňové.
+%%%%
+Dwarven Hall
+
+Tyto sály z jemně opracovaného kamene jsou obydlím hlubinných trpaslíků. Jejich
+schopnost jemného obrábění kovů jim umožnila vytvořit spoustu zbraní pro
+použití proti bytostem, jako jsi ty.
+
+Pouze jedna úroveň.
+%%%%
+Swamp
+
+Bažinatá pustina, plná slizu, bláta, much a velkých slintajících masožravých
+monster.
+
+Bažina má pět úrovní a obsahuje rozpadající se runu. Žalář má pouze dvě hadí
+jámy, bažiny, mělčiny a pavoučí hnízda. Pokud je bažina k dispozici, nachází se
+vchod mezi doupětem: 2 a doupětem: 5.
+%%%%
+Shoals
+
+Z dálky slyšíte pravidelné zvuky vln a cítíte vůni slané spršky vln. Po
+dosažení mělčin, budete ohromeni exotikou podzemních pláží, které tvoří několik
+ostrovů v širém moři. Najednou, hrůzostrašný výkřik vyplňuje vzduch,
+následovaný bublání. Úzkostlivě se podíváte kolem sebe a přemýšlíte: Kdo je
+dravec? A kdo je oběť?
+
+Mělčiny mají pět úrovní a obsahují runu korýše. Žalář má pouze dvě hadí jámy,
+bažiny, mělčiny a pavoučí hnízda. Pokud jsou mělčiny k dispozici, , nachází se
+vchod mezi doupětem: 3 a doupětem: 6.
+%%%%
+Snake Pit
+
+Domov hada, doupě nagy.
+
+Hadí jáma je pět úrovní hluboká a obsahuje hadí runu. Žalář má pouze dvě hadí
+jámy, bažiny, mělčiny a pavoučí hnízda. Pokud je hdí jáma přítomena, nachází se
+vchod mezi doupětem: 3 a doupětem: 6.
+%%%%
+Crypt
+
+Obrovské úložiště pro staré mrtvoly. Vzduch je chladný a páchnoucí, stěny
+chladné a vlhké. Kosti jsou rozházené všude kolem a celým místem zaznívá
+pronikavý křik z mučených duší a neklidných mrtvých.
+
+Krypta má pět úrovní a nachází se mezi sklepením:. 2 a sklepením: 4. Obsahuje
+vchod do hrobky.
+%%%%
+Tomb
+
+Hrobka Prastarých je místo prokletí a hrůz oživených nejodpornějšími
+nekromanty. Čestné bytosti zblednou při pouhé zmínce tohoto jména, seznam těch,
+kteří se vrátili z tohoto místa čisté smrti je mimořádně krátký.
+
+Hrobka má tři úrovně a obsahuje zlatou runu.  Její vstup je buď v  kryptě: 2
+nebo kryptě: 3.
+%%%%
+Gehenna
+
+Ohně Gehenny spálily mnoho sebevědomých hrdinů, a budou hořet navěky.
+
+Ohně Gehenny jsou sedm úrovní hluboké a obsahují Obsidianovou runu. Jsou
+přístupné přes předsálí pekla.
+%%%%
+Cocytus
+
+Ponurá a mrazem spálená pustina.
+
+Kokýtos je sedm úrovní hluboká a obsahuje ledovou runu. Je přístupná přes
+předsálí pekla.
+%%%%
+Bazaar
+
+Zatímco někteří obchodníci si zřídili obchod přímo v žaláři, jiní cestují v
+karavanech z místa na místo. Bazary těchto potulných obchodníků mají řadu
+různých obchodů a často mají lepší zboží než usedlíci, někdy dokonce i
+výhodněji.
+
+Buďte varováni, že jejich kočovný životní styl naučil tyto prodejce, aby si
+přivlastnili všechny položky, které jim může dobrodruh zanechat a pak rychle
+odejdou, zřejmě prodávat jinam.
+%%%%
+Sewer
+
+Každé obydlené místo, se musí zbavit svých odpadních produktů. Žalář má také
+své smradlavé stoky a kanalizace, plné špinavé vody. Jsou to nechutné a
+beznadějné zákoutí. Staré příběhy mluví o nebezpečných tvorech pronásledujících
+oběť přes páchnoucí zelenou vodou, lovících bez slitování. Příběhy se také
+zmiňují o cenných předmětech omylem spláchnutých do odvodňovacích tunelů,
+zapomenutých a časem zplesnivělých ve vlhkých jeskyních.
+%%%%
+Ossuary
+
+Kostnice je nevelká hrobka obsahující pozůstatky a hroby některých vzdálených
+příbuzných faraonů, spolu s mrtvolami svých poddaných a domácích zvířat. Je
+nepochybně protkána mnoha pastmi, a nemrtví obyvatelé nejsou laskaví k
+rabování.
+%%%%
+Bailey
+
+Nádvoří je stále obsazeno a dobře hlídáno v pevnosti pána Orků. Jsou v něm
+chráněny jeho soukromé poklady pomocí fyzických bariér a velkého množství dobře
+ozbrojených humanoidních bojovníků.
+%%%%
+Ice Cave
+
+Pusté jeskyně vytvarované z masivního ledu, plné ozvěn bestiálního vytí.
+Složité řezby soch, které kdysi lemovaly její stěny byly pokřiveny a zkresleny
+staletími pomalého tání a zmrazování.
+%%%%
+Volcano
+
+Postaveno z obrovských bloků obsidiánu, může to být horká komora, která kdysi
+sloužila jako chrám pro nějaké podivné božstvo, nebo možná obydlí mohutného
+ohnivého obra. Vzduch se třpytí tíhou tepla a nudný řev srdce sopky nikdy
+nepřestane.
+%%%%
+Wizlab
+
+V minulosti věků, nejsilnější mágové - o mnohých z nich jste možná slyšeli  -
+často našli nebo vybudovali malé říše uzavřené od zbytku světa, kde by se mohli
+izolovat ve snaze o stále větší magické znalosti a moc. Mágové jsou dávno pryč,
+ale mnoho z jejich tajemných laboratoří stále existuje, plné výsledků jejich
+experimentů. Ti, kteří chtějí prozkoumat tyto laboratoře mohou najít mocný
+magický poklad, ale pozor: mágové, kterým tyto laboratoře patřily si zaslouží
+svou pověst.
+%%%%

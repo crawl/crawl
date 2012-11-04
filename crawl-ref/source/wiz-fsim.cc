@@ -4,6 +4,7 @@
 **/
 
 #include "AppHdr.h"
+#include "bitary.h"
 
 #include "wiz-fsim.h"
 
@@ -32,20 +33,23 @@
 #include "skills.h"
 #include "skills2.h"
 #include "species.h"
+#include "state.h"
 #include "stuff.h"
 #include "throw.h"
+#include "unwind.h"
+#include "version.h"
 #include "wiz-you.h"
 
 #ifdef WIZARD
 
 fight_data null_fight = {0.0,0,0,0.0,0.0,0.0};
-typedef std::map<skill_type, int8_t> skill_map;
-typedef std::map<skill_type, int8_t>::iterator skill_map_iterator;
+typedef map<skill_type, int8_t> skill_map;
+typedef map<skill_type, int8_t>::iterator skill_map_iterator;
 
 static const char* _title_line =
     "AvHitDam | MaxDam | Accuracy | AvDam | AvTime | AvEffDam"; // 55 columns
 
-static const std::string _fight_string(fight_data fdata)
+static const string _fight_string(fight_data fdata)
 {
     return make_stringf("   %5.1f |    %3d |     %3d%% |"
                         " %5.1f |  %5.1f |    %5.1f",
@@ -72,7 +76,7 @@ static skill_type _equipped_skill()
     return SK_UNARMED_COMBAT;
 }
 
-static std::string _equipped_weapon_name()
+static string _equipped_weapon_name()
 {
     const int weapon = you.equip[EQ_WEAPON];
     const item_def * iweap = weapon != -1 ? &you.inv[weapon] : NULL;
@@ -80,7 +84,7 @@ static std::string _equipped_weapon_name()
 
     if (iweap)
     {
-        std::string item_buf = iweap->name(DESC_PLAIN, true);
+        string item_buf = iweap->name(DESC_PLAIN, true);
         // If it's a ranged weapon, add the description of the missile
         if (is_range_weapon(*iweap) && missile < ENDOFPACK && missile >= 0)
                 item_buf += " with " + you.inv[missile].name(DESC_PLAIN);
@@ -93,7 +97,7 @@ static std::string _equipped_weapon_name()
     return "Unarmed";
 }
 
-static std::string _time_string()
+static string _time_string()
 {
     time_t curr_time = time(NULL);
     struct tm *ltime = TIME_FN(&curr_time);
@@ -153,12 +157,12 @@ static void _write_mon(FILE * o, monster &mon)
             mon.ev);
 }
 
-static bool _fsim_kit_equip(const std::string &kit)
+static bool _fsim_kit_equip(const string &kit)
 {
-    std::string::size_type ammo_div = kit.find("/");
-    std::string weapon = kit;
-    std::string missile;
-    if (ammo_div != std::string::npos)
+    string::size_type ammo_div = kit.find("/");
+    string weapon = kit;
+    string missile;
+    if (ammo_div != string::npos)
     {
         weapon = kit.substr(0, ammo_div);
         missile = kit.substr(ammo_div + 1);
@@ -173,7 +177,7 @@ static bool _fsim_kit_equip(const std::string &kit)
             if (!you.inv[i].defined())
                 continue;
 
-            if (you.inv[i].name(DESC_PLAIN).find(weapon) != std::string::npos)
+            if (you.inv[i].name(DESC_PLAIN).find(weapon) != string::npos)
             {
                 if (i != you.equip[EQ_WEAPON])
                 {
@@ -195,7 +199,7 @@ static bool _fsim_kit_equip(const std::string &kit)
             if (!you.inv[i].defined())
                 continue;
 
-            if (you.inv[i].name(DESC_PLAIN).find(missile) != std::string::npos)
+            if (you.inv[i].name(DESC_PLAIN).find(missile) != string::npos)
             {
                 quiver_item(i);
                 break;
@@ -220,8 +224,11 @@ static monster* _init_fsim()
         args.needs_path = false;
         args.top_prompt = "Select a monster, or hit Escape to use default.";
         direction(moves, args);
-        if (monster_at(moves.target))
+        if (monster_at(moves.target)) {
             mon = clone_mons(monster_at(moves.target), true);
+            if (mon)
+                mon->flags |= MF_HARD_RESET;
+        }
     }
 
     if (!mon)
@@ -243,9 +250,11 @@ static monster* _init_fsim()
                 you.unique_creatures[mtype] = false;
         }
 
-        mon = create_monster(
-            mgen_data::hostile_at(mtype, "fightsim", false, 0, 0, you.pos(),
-                                  MG_DONT_COME));
+        mgen_data temp = mgen_data::hostile_at(mtype, "fightsim", false, 0, 0,
+                                               you.pos(), MG_DONT_COME);
+
+        temp.extra_flags |= MF_HARD_RESET;
+        mon = create_monster(temp);
         if (!mon)
         {
             mprf("Failed to create monster.");
@@ -312,13 +321,18 @@ static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
     no_messages mx;
     const int hunger = you.hunger;
 
+    const coord_def start_pos = mon.pos();
+
     if (!defend) // you're the attacker
     {
         for (int i = 0; i < iter_limit; i++)
         {
+            // This sets mgrid(mons.pos()) to NON_MONSTER
             mon = orig;
+            // Re-place the monster if it e.g. blinked away.
+            mon.move_to_pos(start_pos);
             mon.hit_points = mon.max_hit_points;
-            mon.move_to_pos(mon.pos());
+            mon.shield_blocks = 0;
             you.time_taken = player_speed();
 
             // first, ranged weapons. note: this includes
@@ -357,6 +371,7 @@ static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
         {
             you.hp = you.hp_max = 999; // again, arbitrary
             bool did_hit = false;
+            you.shield_blocks = 0; // no blocks this round
             fight_melee(&mon, &you, &did_hit, true);
 
             time_taken += 100 / (mon.speed ? mon.speed : 10);
@@ -367,6 +382,9 @@ static fight_data _get_fight_data(monster &mon, int iter_limit, bool defend)
             cumulative_damage += damage;
             if (damage > fdata.max_dam)
                 fdata.max_dam = damage;
+
+            // Re-place the monster if it e.g. blinked away.
+            mon.move_to_pos(start_pos);
         }
         you.hp = yhp;
         you.hp_max = ymhp;
@@ -403,13 +421,13 @@ void wizard_quick_fsim()
     return;
 }
 
-static std::string _init_scale(skill_map &scale, bool &xl_mode)
+static string _init_scale(skill_map &scale, bool &xl_mode)
 {
-    std::string ret;
+    string ret;
 
     for (int i = 0, size = Options.fsim_scale.size(); i < size; ++i)
     {
-        std::string sk_str = lowercase_string(Options.fsim_scale[i]);
+        string sk_str = lowercase_string(Options.fsim_scale[i]);
         if (sk_str == "xl")
         {
             xl_mode = true;
@@ -420,12 +438,12 @@ static std::string _init_scale(skill_map &scale, bool &xl_mode)
         int divider = 1;
         skill_type sk;
 
-        std::string::size_type sep = sk_str.find("/");
-        if (sep == std::string::npos)
+        string::size_type sep = sk_str.find("/");
+        if (sep == string::npos)
             sep = sk_str.find(":");
-        if (sep != std::string::npos)
+        if (sep != string::npos)
         {
-            std::string divider_str = sk_str.substr(sep + 1);
+            string divider_str = sk_str.substr(sep + 1);
             sk_str = sk_str.substr(0, sep);
             trim_string(sk_str);
             trim_string(divider_str);
@@ -456,7 +474,7 @@ static void _fsim_simple_scale(FILE * o, monster* mon, bool defense)
 {
     skill_map scale;
     bool xl_mode = false;
-    std::string col_name;
+    string col_name;
 
     if (Options.fsim_scale.empty())
     {
@@ -484,8 +502,8 @@ static void _fsim_simple_scale(FILE * o, monster* mon, bool defense)
                 set_skill_level(it->first, i / it->second);
 
         fight_data fdata = _get_fight_data(*mon, iter_limit, defense);
-        const std::string line = make_stringf("        %2d | %s", i,
-                                              _fight_string(fdata).c_str());
+        const string line = make_stringf("        %2d | %s", i,
+                                         _fight_string(fdata).c_str());
         mpr(line);
         fprintf(o, "%s\n", line.c_str());
         fflush(o);
@@ -561,13 +579,14 @@ void wizard_fight_sim(bool double_scale)
     if (!o)
     {
         mprf(MSGCH_ERROR, "Can't write %s: %s", fightstat, strerror(errno));
+        _uninit_fsim(mon);
         return;
     }
 
-    if (Options.fsim_mode.find("defen") != std::string::npos)
+    if (Options.fsim_mode.find("defen") != string::npos)
         defense = true;
-    else if (Options.fsim_mode.find("attack") != std::string::npos
-             || Options.fsim_mode.find("offen") != std::string::npos)
+    else if (Options.fsim_mode.find("attack") != string::npos
+             || Options.fsim_mode.find("offen") != string::npos)
     {
         defense = false;
     }
@@ -587,6 +606,7 @@ void wizard_fight_sim(bool double_scale)
             break;
         default:
             canned_msg(MSG_OK);
+            _uninit_fsim(mon);
             return;
         }
     }

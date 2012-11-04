@@ -24,7 +24,7 @@ function callback.acq_on_sight_trig(data, triggerable, triggerer, marker, ev)
       end
     end
   else
-    crawl.mpr("marker ["..data.slave_name.."] not found");
+    crawl.mpr("marker ["..data.slave_name.."] not found")
   end
 end
 

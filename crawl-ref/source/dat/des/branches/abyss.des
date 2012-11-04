@@ -119,7 +119,7 @@ ENDMAP
 NAME:   hangedman_abyss_sting
 TAGS:   abyss no_item_gen no_monster_gen
 KMONS:  1 = orange demon
-KMONS:  2 = red wasp / yellow wasp / bumblebee w:2
+KMONS:  2 = red wasp / yellow wasp / killer bee w:2
 KMONS:  3 = death drake / green death
 KFEAT:  123 = W
 KITEM:  23 = honeycomb / royal jelly w:2 / nothing
@@ -136,22 +136,25 @@ xx23xx W
 ENDMAP
 
 # "(He) opened the mailbox. There was nothing inside. Nothing after nothing came pouring out."
-NAME:   not_minivault_9_hangedman
+NAME:   not_door_vault_hangedman
 TAGS:   abyss
 MARKER: X = lua: props_marker { connected_exclude="true" }
-SUBST:  X = =
+MARKER: Y = lua: props_marker { connected_exclude="true", \
+                                stop_explore="strange structure made of doors" }
+KFEAT:  X = +
+KFEAT:  Y = runed_door
 MONS:   lorocyproca / vapour / ghost moth w:2, unseen horror / shadow wraith
 MAP
-XXXXXXXXXX
-XmXXmmXXmX
-XXXXXXXXXX
-XXX1111XXX
-XmX1221XmX
-XmX1221XmX
-XXX1111XXX
-XXXXXXXXXX
-XmXXmmXXmX
-XXXXXXXXXX
+YYYYYYYYYY
+YmXXmmXXmY
+YXXXXXXXXY
+YXX1111XXY
+YmX1221XmY
+YmX1221XmY
+YXX1111XXY
+YXXXXXXXXY
+YmXXmmXXmY
+YYYYYYYYYY
 ENDMAP
 
 NAME:   hangedman_abyss_overflow_altar
@@ -193,7 +196,7 @@ NAME:    hangedman_abyss_shoalhut
 TAGS:    abyss no_pool_fixup patrolling
 MONS:    red devil w:30 / smoke demon / eye of devastation w:5 / \
          unseen horror / ynoxinul / snapping turtle skeleton w:15
-NSUBST:  = = 1:x= / *:x
+NSUBST:  = = 1:x+ / *:x
 SUBST:   1 = 1., x = xxxxcccvb, l = wWll
 KMASK:   wWl = no_monster_gen
 MAP
@@ -282,7 +285,7 @@ NAME:   due_abyss_rune
 TAGS:   abyss_rune
 KITEM:  O = abyssal rune of Zot
 KMONS:  OL = lich / w:1 ancient lich
-SUBST:  C = c+
+NSUBST: C = 1:+ / *:cc+
 NSUBST: L = 1:O / *:L
 : colour("c = " .. dgn.random_colour() )
 : colour(". = " .. dgn.random_colour() )
@@ -584,8 +587,6 @@ KMONS:  O = flying skull
 KITEM:  O = abyssal rune of Zot
 KFEAT:  n = iron_grate
 KFEAT:  123456. = shallow_water w:1 / . w:9
-KFEAT:  * = +
-MARKER: * = lua:restrict_door()
 SUBST:  c = ccccvb
 MAP
  .cccccc4@4cccccc.
@@ -593,14 +594,14 @@ MAP
 .c 444. c5c .444 c.
 cc44nnn.c+c.nnn44cc
 c 4nn2n.....n2nn4 c
-c54*13n.....n31*45c
+c54=13n.....n31=45c
 c 4nn2n.....n2nn4 c
 cc.4nnn.....nnn4.cc
 .c ............. c.
  ccc .4nnnnn4. ccc
   .cc44n2O2n44cc.
    .c 4nn1nn4 c.
-    cc44n*n44cc
+    cc44n=n44cc
     .c 44444 c.
      ccc 6 ccc
       .ccccc.
@@ -615,7 +616,7 @@ KMONS:   34 = guardian serpent perm_ench:shapeshifter
 # fraction of characters finding the abyssal rune, remove or replace them.
 KITEM:   24d = scroll of curse weapon w:5 q:1 / \
          scroll of random uselessness q:1 / sultana q:1 w:5 / \
-         club w:5 / staff w:5 / stone q:1 / \
+         club w:5 / stone q:1 / \
          mundane dart q:1 / needle q:1 ego:sickness / mundane animal skin / \
          empty ebony casket w:5 / gold q:1
 KITEM:   13e = rod of striking w:2 / wand of slowing / wand of magic darts / \
@@ -750,15 +751,15 @@ NAME:   evilmike_abyss_exit_5
 TAGS:   abyss_exit allow_dup
 KFEAT:  O = exit_abyss
 KFEAT:  n = stone_arch
-NSUBST: n = 1:O / *:n, = = 1:+ / *:=
+NSUBST: n = 1:O / *:n
 MAP
     x   x
   x x x x x
  xxxxxxxxxxx
   xnxnxnxnx
-xxx=x=x=x=xxx
+xxx+x+x+x+xxx
   x.........@
-xxx=x=x=x=xxx
+xxx+x+x+x+xxx
   xnxnxnxnx
  xxxxxxxxxxx
   x x x x x
@@ -861,7 +862,7 @@ ENDMAP
 NAME:  evilmike_abyss_exit_12
 TAGS:  abyss_exit allow_dup
 KFEAT: O = exit_abyss
-SUBST: X = x., x = xxx++=1
+SUBST: X = x., x = xxx++1
 MONS:  w:2 trapdoor spider / nothing
 MAP
 XXXxxxXXX
@@ -923,7 +924,7 @@ NAME:   evilmike_abyss_exit_16
 TAGS:   abyss_exit allow_dup
 KFEAT:  O = exit_abyss
 NSUBST: . = 1:O / *:.
-SUBST:  c = cbx, + = +=, . = .....12
+SUBST:  c = cbx, . = .....12
 MONS:   slime creature, pulsating lump / giant amoeba
 MAP
 c+c+c+c+c+c
@@ -1143,9 +1144,9 @@ cccyy..yycc
 ENDMAP
 
 ###################################################################
-# < bmh> I got the idea after I introduced a bug where the whole floor of
+# <bh> I got the idea after I introduced a bug where the whole floor of
 #        the abyss turned into altars
-NAME:   bmh_abyss_xom_lugonu_altar
+NAME:   bh_abyss_xom_lugonu_altar
 TAGS:   abyss allow_dup
 COLOUR: " : magenta w:2 / white
 KFEAT:   _ = altar_lugonu
@@ -1165,132 +1166,17 @@ MAP
    ebe
 ENDMAP
 
-NAME:   bmh_abyss_demonologist_exit
-TAGS:   abyss_exit allow_dup no_monster_gen
-MONS:   generate_awake deep elf demonologist
-MONS:   generate_awake kobold demonologist
-MONS:   generate_awake orc sorcerer name:orc_demonologist name_replace name_descriptor
-MONS:   generate_awake lich name:lich_demonologist name_replace name_descriptor \
-                            spells:shadow_creatures;summon_greater_demon
-SUBST:  d = ccxxW....
-SUBST:  e = ccxxW...
-SUBST:  f = ccxxW..
-SUBST:  w = WW'..
-SUBST:  ' = B..
-SUBST:  " = B.
-KFEAT:  0 = exit_abyss
-KFEAT:  B = floor
-KPROP:  B = bloody
-MARKER: + = lua:props_marker { \
-            door_open_prompt="This door is covered in dire warnings. " .. \
-                             "Open it anyway?", \
-            door_description_prefix="warning-scrawled " \
-            }
-MAP
-fffffffffffffffffff
-feeeeeeeeeeeeeeeeef
-fedddddddddddddddef
-fedd....cnc....ddef
-fed..ccncWcncc..def
-fed..c1lw0wl2c..def
-fed..clnWWWnlc..def
-fed..cwwWWWwwc..def
-fed..cwwwWwwwc..def
-fed..clnwwwnlc..def
-fed..c3l"""l4c..def
-fed..ccc"""ccc..def
-fed....c+++c....def
-fedd...'''''...ddef
-fedddddddddddddddef
-feeeeeeeeeeeeeeeeef
-fffffffffffffffffff
-ENDMAP
-
-# Accompanied by a decoy vault, so that the silence field does not
-# give the exit away.
-NAME:   bmh_abyss_silent_exit
-WEIGHT: 5
-TAGS:   abyss_exit allow_dup no_monster_gen
+NAME:   bh_silent_lugonu_exit
+TAGS:   abyss allow_dup
 MONS:   silent spectre
-KFEAT:  0 = exit_abyss
-SUBST:  c = cx..
-SUBST:  d = cx....
-SUBST:  x = cxxv
-SUBST:  M : TEHS
-KMONS:  T = generate_awake patrolling frost giant
-KMONS:  E = generate_awake patrolling fire giant
-KMONS:  H = generate_awake patrolling hellephant
-KMONS:  S = generate_awake patrolling storm dragon
-NSUBST: T = 6:T / *:.
-NSUBST: E = 5:E / *:.
-NSUBST: H = 5:H / *:.
-NSUBST: S = 4:S / *:.
-MARKER: + = lua:props_marker { \
-            door_open_prompt="This door is covered in dire warnings. " .. \
-                             "Open it anyway?", \
-            door_description_prefix="warning-scrawled " \
-        }
+KFEAT:   _ = altar_lugonu
 MAP
-    ddddddd
-  xxxxxxxxxxx
- xxcccccccccxx
-dxcc...0...ccxd
- xxc.MMMMM.cxx
- dxc.MbbbM.cxd
- dxc.Mb1bM.cxd
- xxc.MbbbM.cxx
-dxcc.MMMMM.ccxd
-dxxcc.....ccxxd
- dxxxn+++nxxxd
-   dc.....cd
-      @@@
+...         xxx
+._.         x1x
+...         xx+
 ENDMAP
 
-# Decoy vault for bmh_abyss_silent_exit.
-# Not an exit vault, still placed here.
-# The vault is good Abyss furniture anyway, the silence field is interesting
-# and we don't have to worry about abyssical bubbles either.
-NAME:  bmh_abyss_silent_decoy_vault
-TAGS:  abyss no_monster_gen no_item_gen no_tele_into
-MONS:  generate_awake silent spectre
-SUBST: a = xx.
-SUBST: b = xx..
-SUBST: c = x...
-SUBST: x = xxxcccvvb
-MAP
- cccccccccccccccccc
-cbxxxaaaaxxxaaaaxxxbc
-cbx.xxxxxx.xxxxxx.xbc
-cax.......1.......xac
-cbx.xxxxxx.xxxxxx.xbc
-cbxxxaaaaxxxaaaaxxxbc
- ccccccccccccccccccc
-ENDMAP
-
-# Lower weight: this one will kill early Abyss visitors.
-# TODO: Once Abyss monster generation takes into account the player (e.g. time
-#       spent), we can adjust the horror/executioner probabilities.
-NAME:   bmh_executioner_abyss_exit
-WEIGHT: 3
-TAGS:   abyss_exit allow_dup
-KFEAT:  0 = exit_abyss
-NSUBST: E = 2:1 / 2:2 / *:.
-COLOUR: ' = gold
-MONS: executioner
-MONS: unseen horror
-MAP
-      xxx xxx
-     xx.xx xx.xx
-    xxEvExxxxEvExx
-@vvvv.vvv.vv.vvv.vvvvvvvvvv
-''''''''''''''''''0''''''Ev
- vvvvvvv.vvv.vv.vvv.vvvvvvv
-       xxEvExxxxExExx
-        xx.xx xx.xx
-         xxx xxx
-ENDMAP
-
-NAME:  bmh_abyss_fiendish_exit
+NAME:  bh_abyss_fiendish_exit
 TAGS:  abyss_exit allow_dup no_monster_gen
 KMONS: F = patrolling hell sentinel
 KFEAT: F = floor
@@ -1305,15 +1191,53 @@ SUBST: b = B..
 KPROP: B = bloody
 KPROP: F = bloody
 MAP
-    .
-   .c.
-  .bSb.
- .bBBBb.
-.cSF0FSc.
- .bBBBb.
-  .bSb.
-   .c.
-    .
+     .
+    ...
+   ..c..
+  ..bSb..
+ ..bBBBb..
+..cSF0FSc..
+ ..bBBBb..
+  ..bSb..
+   ..c..
+    ...
+     .
+ENDMAP
+
+NAME:   bh_abyss_demonologist_exit
+TAGS:   abyss_exit allow_dup no_monster_gen no_rtele_into
+MONS:   deep elf demonologist
+MONS:   kobold demonologist
+MONS:   orc sorcerer
+MONS:   lich name:lich_demonologist name_replace name_descriptor \
+                            spells:shadow_creatures;summon_greater_demon
+SUBST:  d = ccxxW....
+SUBST:  e = ccxxW...
+SUBST:  f = ccxxW..
+SUBST:  w = WW'..
+SUBST:  ' = B..
+SUBST:  " = B.
+KFEAT:  0 = exit_abyss
+KFEAT:  B = floor
+KPROP:  B = bloody
+MAP
+fffffffffffffffffff
+feeeeeeeeeeeeeeeeef
+fedddddddddddddddef
+fedd....cnc....ddef
+fed..ccncWcncc..def
+fed..c1lw0wl2c..def
+fed..clnWWWnlc..def
+fed..cwwWWWwwc..def
+fed..cwwwWwwwc..def
+fed..clnwwwnlc..def
+fed..c3l"""l4c..def
+fed..ccc"""ccc..def
+fed....c===c....def
+fedd...'''''...ddef
+fedddddddddddddddef
+feeeeeeeeeeeeeeeeef
+fffffffffffffffffff
 ENDMAP
 
 NAME:  guppyfry_abyss_exit_glass_guarded
@@ -1367,4 +1291,43 @@ MAP
 --..1.1..--
 ---..1..---
 .---------.
+ENDMAP
+
+NAME:  bh_abyss_exit_spiral
+TAGS:  abyss_exit allow_dup
+KFEAT: O = exit_abyss
+MAP
+ .xxxx.
+  .xxxx.
+    .xxx.
+    .xx.
+   ..x..
+  ...O...
+   ..x..
+   .xx.
+  .xxx.
+   .xxxx.
+    .xxxx.
+ENDMAP
+
+NAME:  bh_abyss_exit_grid
+TAGS:  abyss_exit allow_dup
+KFEAT: 0 = exit_abyss
+SUBST: a = x.
+SUBST: b = x..
+SUBST: c = x...
+MAP
+   b b b b b
+  a.a.a.a.a.a
+ a.x.x.x.x.x.a
+b.x.x.x.x.x.x.b
+ a.x.x.x.x.x.a
+b.x.x.c.c.x.x.b
+ a.x.c.0.c.x.a
+b.x.x.c.c.x.x.b
+ a.x.x.x.x.x.a
+b.x.x.x.x.x.x.b
+ a.x.x.x.x.x.a
+  a.a.a.a.a.a
+   b b b b b
 ENDMAP

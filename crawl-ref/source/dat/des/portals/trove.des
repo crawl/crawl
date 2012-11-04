@@ -225,7 +225,7 @@ function trove.spell_skills (e)
 end
 }}
 
-default-depth: D:10-, Elf:1-, Vaults:1-
+default-depth: D:10-, Elf:1-, Vaults
 
 ##############################################################################
 #
@@ -270,16 +270,15 @@ NAME:   enter_trove_3
 TAGS:   uniq_trove no_monster_gen no_wall_fixup chance_trove
 CHANCE: 5%
 : trove.portal(_G)
-COLOUR: .cx = blue
-SUBST:  x = c:20 =:6
-TILE:   cx = wall_stone_dark
-FTILE:  =.cxO = floor_marble
+COLOUR: .c = blue
+TILE:   c = wall_stone_dark
+FTILE:  .cO = floor_marble
 MAP
-cxxxc
-x...x
-x.O.x
-x...x
-cxxxc
+ccccc
+c...c
+c.O.c
+c...c
+cc+cc
 ENDMAP
 
 # Of course, not everyone is willing for you to take their treasure...
@@ -290,7 +289,7 @@ CHANCE: 5%
 COLOUR: . = blue
 COLOUR: c = blue
 : if you.absdepth() <= 15 then
-# Got drafted in from Vaults:8, while the mages try and close the portal down.
+# Got drafted in from Vaults:$, while the mages try and close the portal down.
 KMONS:  e = vault guard
 : else
 # And this time he brought some friends...
@@ -320,8 +319,8 @@ TAGS:   uniq_trove no_monster_gen no_wall_fixup chance_trove
 CHANCE: 5%
 : trove.portal(_G)
 MARKER: X = lua: props_marker { connected_exclude="true" }
-SUBST:  X = =
-COLOUR: = = blue
+SUBST:  X = +
+COLOUR: + = blue
 MAP
 ccccccc
 c$$$$$c
@@ -334,7 +333,7 @@ ccc+ccc
 ENDMAP
 
 NAME:   trove_entry_trowel
-TAGS:   transparent trowel_portal unrand uniq_trove
+TAGS:   transparent trowel_portal unrand can_overwrite uniq_trove
 DEPTH:  *, !Trove
 veto {{ return you.is_level_on_stack("Trove") }}
 : trove.portal(_G)
@@ -436,9 +435,9 @@ MAP
 .1.1'"'wwW'''o__xxxx+xxxx__o.1.m.1.1.1.1.1
 1.1."'"Www'''o__xddx_xedx__o1.1.1.1.1.1.1.
 .1.1."'"Www''o__xefx_xdex__o.1.1.1.1.1.1.1
-1.1.1."'"Ww''o__xxx=_=xxx__o1.1.1.1.1.1.1.
+1.1.1."'"Ww''o__xxx+_+xxx__o1.1.1.1.1.1.1.
 .1.1.1."'"ww'o__+___1___+__o.1.m.1.1.1.1.1
-1.1.1.1'"'mwWo__xxx=_=xxx__o1.1.1.1.1.1.1.
+1.1.1.1'"'mwWo__xxx+_+xxx__o1.1.1.1.1.1.1.
 .1.1.1.1'"'wwo__xdfx_xdex__o.1.1.1.1.1.1.1
 1.1.1.1."'"WwoV_xdex_xdfx__o1.1.1.1.1.1.1.
 .1.1.1.1.1'"'ovvxxxx+xxxx__o.1.1.1.1.1.1.1
@@ -670,8 +669,8 @@ TAGS:   no_item_gen no_monster_gen allow_dup no_vmirror no_rotate
 WEIGHT: 2
 COLOUR: x = blue
 COLOUR: = = blue
-NSUBST: " = 1:= / *:x
-NSUBST: ' = 1:= / *:x
+NSUBST: " = 1:+ / *:x
+NSUBST: ' = 1:+ / *:x
 # Rock is actually diggable for those people driven mad by hatred.
 MONS:   vampire
 # 24 items, just because we're feeling generous.
@@ -795,7 +794,8 @@ ITEM:    dagger unrand:vampires_tooth / dagger unrand:dagger_of_chilly_death /\
          dagger unrand:knife_of_accuracy / long sword unrand:plutonium_sword /\
          demon blade unrand:leech / long sword unrand:sword_of_zonguldrok    /\
          staff of poison unrand:staff_of_olgreb / scythe unrand:finisher     /\
-         staff unrand:elemental_staff / glaive unrand:glaive_of_prune        /\
+         quarterstaff unrand:elemental_staff                                 /\
+         glaive unrand:glaive_of_prune                                       /\
          battleaxe unrand:wrath_of_trog / glaive unrand:glaive_of_the_guard  /\
          trident unrand:trident_of_the_octopus_king / spear unrand:wyrmbane  /\
          scythe unrand:scythe_of_curses / giant club unrand:skullcrusher     /\

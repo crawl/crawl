@@ -17,10 +17,10 @@
 #include "env.h"
 #include "godabil.h"
 #include "goditem.h"
-#include "invent.h"
 #include "item_use.h"
 #include "itemprop.h"
 #include "items.h"
+#include "libutil.h"
 #include "mutation.h"
 #include "output.h"
 #include "player.h"
@@ -175,10 +175,10 @@ bool form_keeps_mutations(transformation_type form)
     }
 }
 
-static std::set<equipment_type>
+static set<equipment_type>
 _init_equipment_removal(transformation_type form)
 {
-    std::set<equipment_type> result;
+    set<equipment_type> result;
     if (!form_can_wield(form) && you.weapon() || you.melded[EQ_WEAPON])
         result.insert(EQ_WEAPON);
 
@@ -208,11 +208,11 @@ _init_equipment_removal(transformation_type form)
     return result;
 }
 
-static void _remove_equipment(const std::set<equipment_type>& removed,
+static void _remove_equipment(const set<equipment_type>& removed,
                               bool meld = true, bool mutation = false)
 {
-    // Meld items into you in (reverse) order. (std::set is a sorted container)
-    std::set<equipment_type>::const_iterator iter;
+    // Meld items into you in (reverse) order. (set is a sorted container)
+    set<equipment_type>::const_iterator iter;
     for (iter = removed.begin(); iter != removed.end(); ++iter)
     {
         const equipment_type e = *iter;
@@ -334,10 +334,10 @@ static void _unmeld_equipment_type(equipment_type e)
     }
 }
 
-static void _unmeld_equipment(const std::set<equipment_type>& melded)
+static void _unmeld_equipment(const set<equipment_type>& melded)
 {
     // Unmeld items in order.
-    std::set<equipment_type>::const_iterator iter;
+    set<equipment_type>::const_iterator iter;
     for (iter = melded.begin(); iter != melded.end(); ++iter)
     {
         const equipment_type e = *iter;
@@ -350,14 +350,14 @@ static void _unmeld_equipment(const std::set<equipment_type>& melded)
 
 void unmeld_one_equip(equipment_type eq)
 {
-    std::set<equipment_type> e;
+    set<equipment_type> e;
     e.insert(eq);
     _unmeld_equipment(e);
 }
 
 void remove_one_equip(equipment_type eq, bool meld, bool mutation)
 {
-    std::set<equipment_type> r;
+    set<equipment_type> r;
     r.insert(eq);
     _remove_equipment(r, meld, mutation);
 }
@@ -418,7 +418,7 @@ monster_type transform_mons()
     return MONS_PLAYER;
 }
 
-std::string blade_parts(bool terse)
+string blade_parts(bool terse)
 {
     if (you.species == SP_FELID)
         return terse ? "paws" : "front paws";
@@ -480,8 +480,8 @@ static bool _levitating_in_new_form(transformation_type which_trans)
 
     int sources = player_evokable_levitation();
     int sources_removed = 0;
-    std::set<equipment_type> removed = _init_equipment_removal(which_trans);
-    for (std::set<equipment_type>::iterator iter = removed.begin();
+    set<equipment_type> removed = _init_equipment_removal(which_trans);
+    for (set<equipment_type>::iterator iter = removed.begin();
          iter != removed.end(); ++iter)
     {
         item_def *item = you.slot_item(*iter, true);
@@ -525,7 +525,6 @@ static mutation_type appendages[] =
 {
     MUT_HORNS,
     MUT_TENTACLE_SPIKE,
-    MUT_CLAWS,
     MUT_TALONS,
 };
 
@@ -598,17 +597,17 @@ static int _transform_duration(transformation_type which_trans, int pow)
     switch (which_trans)
     {
     case TRAN_BLADE_HANDS:
-        return std::min(10 + random2(pow), 100);
+        return min(10 + random2(pow), 100);
     case TRAN_APPENDAGE:
     case TRAN_SPIDER:
-        return std::min(10 + random2(pow) + random2(pow), 60);
+        return min(10 + random2(pow) + random2(pow), 60);
     case TRAN_STATUE:
     case TRAN_DRAGON:
     case TRAN_LICH:
     case TRAN_BAT:
-        return std::min(20 + random2(pow) + random2(pow), 100);
+        return min(20 + random2(pow) + random2(pow), 100);
     case TRAN_ICE_BEAST:
-        return std::min(30 + random2(pow) + random2(pow), 100);
+        return min(30 + random2(pow) + random2(pow), 100);
     case TRAN_PIG:
         return pow;
     case TRAN_NONE:
@@ -716,11 +715,11 @@ bool transform(int pow, transformation_type which_trans, bool force,
         return _abort_or_fizzle(just_check);
     }
 
-    std::set<equipment_type> rem_stuff = _init_equipment_removal(which_trans);
+    set<equipment_type> rem_stuff = _init_equipment_removal(which_trans);
 
     int str = 0, dex = 0;
     const char* tran_name = "buggy";
-    std::string msg;
+    string msg;
 
     if (was_in_water && form_can_fly(which_trans))
         msg = "You fly out of the water as you turn into ";
@@ -828,6 +827,17 @@ bool transform(int pow, transformation_type which_trans, bool force,
         break;
     default:
         msg += "something buggy!";
+    }
+
+    if (!force && just_check && (str + you.strength() <= 0 || dex + you.dex() <= 0))
+    {
+        string prompt = make_stringf("Transforming will reduce your %s to zero. Continue?",
+                                     str + you.strength() <= 0 ? "strength" : "dexterity");
+        if (!yesno(prompt.c_str(), false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return false;
+        }
     }
 
     // If we're just pretending return now.
@@ -1008,7 +1018,7 @@ void untransform(bool skip_wielding, bool skip_move)
     int hp_downscale = form_hp_mod();
 
     // We may have to unmeld a couple of equipment types.
-    std::set<equipment_type> melded = _init_equipment_removal(old_form);
+    set<equipment_type> melded = _init_equipment_removal(old_form);
 
     you.form = TRAN_NONE;
     you.duration[DUR_TRANSFORMATION]   = 0;

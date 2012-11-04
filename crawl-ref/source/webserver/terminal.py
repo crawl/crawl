@@ -4,6 +4,7 @@ import os
 import fcntl
 import struct
 import resource
+import signal
 import sys
 import time
 
@@ -13,7 +14,10 @@ class TerminalRecorder(object):
     def __init__(self, command, filename, id_header, logger, io_loop, termsize):
         self.io_loop = io_loop
         self.command = command
-        self.ttyrec = open(filename, "w", 0)
+        if filename:
+            self.ttyrec = open(filename, "w", 0)
+        else:
+            self.ttyrec = None
         self.id = id
         self.returncode = None
         self.output_buffer = ""
@@ -43,6 +47,10 @@ class TerminalRecorder(object):
 
         if self.pid == 0:
             # We're the child
+            def handle_signal(signal, f):
+                sys.exit(0)
+            signal.signal(1, handle_signal)
+
             # Set window size
             cols, lines = self.get_terminal_size()
             s = struct.pack("HHHH", lines, cols, 0, 0)
@@ -64,7 +72,10 @@ class TerminalRecorder(object):
             env["COLUMNS"] = str(cols)
             env["LINES"]   = str(lines)
             env["TERM"]    = "linux"
-            os.execvpe(self.command[0], self.command, env)
+            try:
+                os.execvpe(self.command[0], self.command, env)
+            except OSError:
+                sys.exit(1)
 
         # We're the parent
         os.close(errpipe_write)
@@ -106,10 +117,12 @@ class TerminalRecorder(object):
             self.poll()
 
     def write_ttyrec_header(self, sec, usec, l):
+        if self.ttyrec is None: return
         s = struct.pack("<iii", sec, usec, l)
         self.ttyrec.write(s)
 
     def write_ttyrec_chunk(self, data):
+        if self.ttyrec is None: return
         t = time.time()
         self.write_ttyrec_header(int(t), int((t % 1) * 1000000), len(data))
         self.ttyrec.write(data)
@@ -164,7 +177,8 @@ class TerminalRecorder(object):
                 os.close(self.child_fd)
                 os.close(self.errpipe_read)
 
-                self.ttyrec.close()
+                if self.ttyrec:
+                    self.ttyrec.close()
 
                 if self.end_callback:
                     self.end_callback()

@@ -1,7 +1,7 @@
 %%%%
 Singing Sword
 
-This blessed weapon loves nothing more than to sing to its owner, whether they
+This enchanted weapon loves nothing more than to sing to its owner, whether they
 want it to or not.
 %%%%
 Wrath of Trog
@@ -17,7 +17,7 @@ It is rather unreliable.
 Glaive of Prune
 
 It is the creation of a mad god, and carries a curse which transforms anyone
-possessing it into a prune. Fortunately, the curse works very slowly, and one
+wielding it into a prune. Fortunately, the curse works very slowly, and one
 can use it briefly with no consequences worse than slightly purple skin and a
 few wrinkles.
 %%%%
@@ -73,9 +73,10 @@ It carries some of the powers of the arch-fiend Asmodeus.
 %%%%
 faerie dragon armour
 
-Faerie dragons used to be a race of the same species as mottled ones. Too bad,
-their vivid colours became their bane, as they alerted potential prey. They are
-now extinct, and this prized relic is one of the last proofs they ever existed.
+Faerie dragons used to be a race of the same species as mottled ones.
+Unfortunately, their vivid colours became their bane, as they alerted potential
+prey. They are now extinct, and this prized relic is one of the last proofs
+they ever existed.
 %%%%
 demon blade "Bloodbane"
 
@@ -151,7 +152,8 @@ The rosy fingers of the Dawn...
 %%%%
 spear of the Botono
 
-A really dark and malign artefact, which no wise man would even touch.
+A dark and malign artefact. It increases the potency of hexes cast by anyone
+unwise enough to risk wielding it.
 %%%%
 trident of the Octopus King
 
@@ -307,7 +309,8 @@ A blue mask.
 %%%%
 robe of Night
 
-A long black robe made of strange glossy material.
+A long black robe made of strange glossy material. It seems to shroud its
+wearer in darkness.
 
 According to legend, it was the gift of Ratri the Goddess of the Night to one
 of her followers.

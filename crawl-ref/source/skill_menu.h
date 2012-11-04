@@ -48,11 +48,20 @@ enum skill_menu_switch
 
 class SkillMenu;
 
+#ifdef USE_TILE_LOCAL
+class SkillTextTileItem : public TextTileItem
+{
+public:
+    SkillTextTileItem() {};
+protected:
+    bool handle_mouse(const MouseEvent& me);
+};
+#endif
+
 class SkillMenuEntry
 {
 public:
     static menu_letter2 m_letter;
-    static SkillMenu* m_skm;
 
     SkillMenuEntry() {};
     SkillMenuEntry(coord_def coord);
@@ -70,9 +79,10 @@ public:
 private:
     skill_type m_sk;
 
-    TextItem* m_name;
 #ifdef USE_TILE_LOCAL
-    TextTileItem* m_name_tile;
+    SkillTextTileItem* m_name;
+#else
+    TextItem* m_name;
 #endif
     NoSelectTextItem* m_level;
     NoSelectTextItem* m_progress;
@@ -80,7 +90,7 @@ private:
 
     void _clear();
     COLORS get_colour() const;
-    std::string get_prefix();
+    string get_prefix();
     void set_aptitude();
     void set_level();
     void set_new_level();
@@ -94,12 +104,10 @@ private:
 class SkillMenuSwitch : public FormattedTextItem
 {
 public:
-    static SkillMenu* m_skm;
-
-    SkillMenuSwitch(std::string name, int hotkey);
+    SkillMenuSwitch(string name, int hotkey);
     void add(skill_menu_state state);
-    std::string get_help();
-    std::string get_name(skill_menu_state state);
+    string get_help();
+    string get_name(skill_menu_state state);
     skill_menu_state get_state();
     void set_state(skill_menu_state state);
     int size() const;
@@ -107,9 +115,9 @@ public:
     void update();
 
 private:
-    std::string m_name;
+    string m_name;
     skill_menu_state m_state;
-    std::vector<skill_menu_state> m_states;
+    vector<skill_menu_state> m_states;
 };
 
 static const int SK_ARR_LN  = (ndisplayed_skills - 1) / 2;
@@ -118,9 +126,11 @@ static const int SK_ARR_COL =  2;
 class SkillMenu : public PrecisionMenu
 {
 public:
-    SkillMenu(int flag, int exp);
+    SkillMenu();
 
     void clear_flag(int flag);
+    void init(int flag, int exp);
+    void clear();
     bool is_set(int flag) const;
     void set_flag(int flag);
     void toggle_flag(int flag);
@@ -128,6 +138,9 @@ public:
     void add_item(TextItem* item, const int size, coord_def &coord);
     void cancel_help();
     bool exit();
+#ifdef USE_TILE_LOCAL
+    int get_line_height();
+#endif
     int get_raw_skill_level(skill_type sk);
     int get_saved_skill_level(skill_type sk, bool real);
     skill_menu_state get_state(skill_menu_switch sw);
@@ -143,13 +156,16 @@ private:
     coord_def m_min_coord;
     coord_def m_max_coord;
     coord_def m_pos;
+#ifdef USE_TILE_LOCAL
+    int line_height;
+#endif
 
     SkillMenuEntry  m_skills[SK_ARR_LN][SK_ARR_COL];
 
     NoSelectTextItem*  m_title;
     FormattedTextItem* m_help;
 
-    std::map<skill_menu_switch, SkillMenuSwitch*> m_switches;
+    map<skill_menu_switch, SkillMenuSwitch*> m_switches;
     FormattedTextItem* m_help_button;
 
     skill_state m_skill_backup;
@@ -163,7 +179,7 @@ private:
     void refresh_display();
     void refresh_names();
     void set_default_help();
-    void set_help(std::string msg);
+    void set_help(string msg);
     void set_skills();
     void set_title();
     void shift_bottom_down();

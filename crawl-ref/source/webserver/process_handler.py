@@ -85,6 +85,7 @@ class CrawlProcessHandlerBase(object):
 
         self.process = None
         self.client_path = self.config_path("client_path")
+        self.crawl_version = None
         self.where = {}
         self.wheretime = 0
         self.last_milestone = None
@@ -194,7 +195,10 @@ class CrawlProcessHandlerBase(object):
             self._send_client(receiver)
 
     def _send_client(self, watcher):
-        v = hashlib.sha1(os.path.abspath(self.client_path)).hexdigest()
+        h = hashlib.sha1(os.path.abspath(self.client_path))
+        if self.crawl_version:
+            h.update(self.crawl_version)
+        v = h.hexdigest()
         GameDataHandler.add_version(v,
                                     os.path.join(self.client_path, "static"))
 
@@ -342,7 +346,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                     self._process_hup_timeout = to
                 else:
                     self._kill_stale_process()
-            except:
+            except Exception:
                 self.logger.error("Error while handling lockfile %s.", lockfile,
                                   exc_info=True)
                 errmsg = ("Error while trying to terminate a stale process.<br>" +
@@ -441,31 +445,39 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                                     "-await-connection"]
 
         ttyrec_path = self.config_path("ttyrec_path")
-        self.ttyrec_filename = os.path.join(ttyrec_path, self.lock_basename)
+        if ttyrec_path:
+            self.ttyrec_filename = os.path.join(ttyrec_path, self.lock_basename)
 
         processes[os.path.abspath(self.socketpath)] = self
 
         self.logger.info("Starting %s.", game["id"])
 
-        self.process = TerminalRecorder(call, self.ttyrec_filename,
-                                        self._ttyrec_id_header(),
-                                        self.logger, self.io_loop,
-                                        config.recording_term_size)
-        self.process.end_callback = self._on_process_end
-        self.process.output_callback = self._on_process_output
-        self.process.activity_callback = self.note_activity
+        try:
+            self.process = TerminalRecorder(call, self.ttyrec_filename,
+                                            self._ttyrec_id_header(),
+                                            self.logger, self.io_loop,
+                                            config.recording_term_size)
+            self.process.end_callback = self._on_process_end
+            self.process.output_callback = self._on_process_output
+            self.process.activity_callback = self.note_activity
 
-        self.gen_inprogress_lock()
+            self.gen_inprogress_lock()
 
-        self.connect(self.socketpath, True)
+            self.connect(self.socketpath, True)
 
-        self.logger.info("Crawl FDs: fd%s, fd%s.",
-                         self.process.child_fd,
-                         self.process.errpipe_read)
+            self.logger.info("Crawl FDs: fd%s, fd%s.",
+                             self.process.child_fd,
+                             self.process.errpipe_read)
 
-        self.last_activity_time = time.time()
+            self.last_activity_time = time.time()
 
-        self.check_where()
+            self.check_where()
+        except Exception:
+            self.logger.warning("Error while starting the Crawl process!", exc_info=True)
+            if self.process:
+                self.stop()
+            else:
+                self._on_process_end()
 
     def connect(self, socketpath, primary = False):
         self.socketpath = socketpath
@@ -484,6 +496,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         f.flush()
 
     def remove_inprogress_lock(self):
+        if self.inprogress_lock_file is None: return
         fcntl.lockf(self.inprogress_lock_file.fileno(), fcntl.LOCK_UN)
         self.inprogress_lock_file.close()
         try:
@@ -587,6 +600,9 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
             if msgobj["msg"] == "client_path":
                 if self.client_path == None:
                     self.client_path = self.format_path(msgobj["path"])
+                    if "version" in msgobj:
+                        self.crawl_version = msgobj["version"]
+                        self.logger.info("Crawl version: %s.", self.crawl_version)
                     self.send_client_to_all()
             else:
                 self.logger.warning("Unknown message from the crawl process: %s",
@@ -634,7 +650,7 @@ class CompatCrawlProcessHandler(CrawlProcessHandlerBase):
         game = self.game_params
         call = self._base_call()
 
-        self.logger.info("Starting crawl (compat-mode).")
+        self.logger.info("Starting %s (compat-mode).", game["id"])
 
         self.process = subprocess.Popen(call,
                                         stdin = subprocess.PIPE,
@@ -654,6 +670,8 @@ class CompatCrawlProcessHandler(CrawlProcessHandlerBase):
         self.last_activity_time = time.time()
 
         self.create_mock_ttyrec()
+
+        processes[os.path.abspath(self.ttyrec_filename)] = self
 
         self.check_where()
 
@@ -680,11 +698,16 @@ class CompatCrawlProcessHandler(CrawlProcessHandlerBase):
 
             self.logger.info("Crawl terminated. (compat-mode)")
 
+            try:
+                del processes[os.path.abspath(self.ttyrec_filename)]
+            except KeyError:
+                self.logger.warning("Process entry already deleted")
+
             self.delete_mock_ttyrec()
             self.handle_process_end()
 
-    def add_watcher(self, watcher, hide = False):
-        super(CompatCrawlProcessHandler, self).add_watcher(watcher, hide)
+    def add_watcher(self, watcher):
+        super(CompatCrawlProcessHandler, self).add_watcher(watcher)
 
         if self.process:
             self.process.stdin.write("^r")

@@ -9,6 +9,11 @@ Air Elementalist
 Les Élementalistes de l'Air ont appris le sort Choc. Plus tard, le livre de
 l'Air leur fournira la flexibilité nécessaire à leur survie.
 %%%%
+Arcane Marksman
+
+Les Tireurs Arcanistes portent des armes de distance et, utilisent leur magie
+pour rendre leurs ennemis plus vulnérables à leur attaque à distance.
+%%%%
 Artificer
 
 Les Artificiers entrent dans le Donjon avec quelques dispositifs magiques et
@@ -19,6 +24,12 @@ Assassin
 Les Assassins sont tout en furtivité, prêts à poignarder tout adversaire
 inattentif. En plus d'une dague et d'une cape, ils ont de dangereuses aiguilles
 enduites de curare pour leur sarbacane.
+%%%%
+Berserker
+
+Les Berserkers vénèrent Trog, le dieu de la frénésie détestant la magie. Pas
+grand chose est capable d'arrêter un berserker enragé en début de jeu, à part
+leur orgueil.
 %%%%
 Chaos Knight
 
@@ -35,6 +46,12 @@ Death Knight
 Les Chevaliers de la Mort sont des combattants qui commandent aux morts-vivants
 au nom de Yredelemnul le Ténébreux.
 %%%%
+Earth Elementalist
+
+Les Élémentalistes de la Terre connaisse le sort Explosion de Sable et,
+transporte des pierres pour accroitre leur pouvoir de leur sortilèges. Leur
+livre de Géomancie contient d'autres sortilèges de la terre.
+%%%%
 Enchanter
 
 Les Enchanteurs utilisent des sorts pour se renforcer pendant un combat ou pour
@@ -46,26 +63,78 @@ Fighter
 Les Guerriers commencent avec une armure et un bouclier, ainsi qu'une arme de
 leur choix. Ils ont une meilleure santé que les autres professions.
 %%%%
+Fire Elementalist
+
+Les Élémentalistes du Feu commence avec le livre des Flammes et connaisse le
+sort Langue de Feu. Les autres sortilèges contenus dans leur livre sont aussi
+centrés sur la destruction.
+%%%%
 Gladiator
 
 Les Gladiateurs sont prêts à entrer dans l'arène avec une armure légère, un
 bouclier, des filets et une arme de leur choix.
 %%%%
+Healer
+
+Les Guérisseurs sont des fidèles de Elyvilon, prêts à se soigner et à soigner
+les autres. De telles guérisons pourraient pacifier les bêtes et les brutes,
+rapportant de l'expérience.
+%%%%
 Hunter
 
 Les Chasseurs peuvent attaquer à distance sans recourir à la magie.
+%%%%
+Ice Elementalist
+
+Les Élémentalistes de la Glace commence avec le livre du Froid et le sort Gel.
+Leur livre contient d'autres sortilèges très variés.
 %%%%
 Monk
 
 Les Moines sont prêts à affronter tout ce qu'il vont trouver dans le Donjon
 avec juste une robe et la maîtrise de leur corps.
 %%%%
+Necromancer
+
+Les Nécromanciens sont des sorciers spécialisés dans la magie des morts. Ils
+connaissent le sort Douleur.
+%%%%
 Priest
 
 Les Prêtres sont les adeptes de Zin, et portent la parole de leur  dieu aux
 habitants du Donjon. Les Orcs des Collines servent le dieu orc Beogh.
 %%%%
+Skald
+
+Les Scaldes sont des combattants au corps-à-corps qui peuvent accroitre leurs
+performances en combat grâce aux sorts de leur livre de Chants de Guerre.
+%%%%
+Summoner
+
+Les Invocateurs commencent avec le livre des Appels et sont capables de
+Convoquer des Petits Mammifères dès le début.
+%%%%
+Transmuter
+
+Les Transmuteurs change leur forme pour combat avec des attributs bestiaux. Ils
+sont capables de transformer des bâtons en serpent aussi.
+%%%%
+Venom Mage
+
+Les Mages Venimeux commence avec le Manuel du Jeune Empoisonneur et le sort
+Piqûre. Le début est assez facile pour eux.
+%%%%
 Wanderer
 
 Les Vagabonds commencent avec un équipement et des compétences aléatoires.
+%%%%
+Warper
+
+Les Translocateurs commencent avec une arme de leur choix et un parchemin de
+%%%%
+Wizard
+
+Les magiciens commencent avec un livre de Magie Mineure, contenant un large
+panel de sortilèges. Ils ont plus de réserves magiques que n'importe quelle
+autre classe.
 %%%%

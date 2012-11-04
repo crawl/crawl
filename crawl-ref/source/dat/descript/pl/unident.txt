@@ -30,7 +30,7 @@ scroll
 
 Zwój papieru pokryty magicznym pismem.
 %%%%
-magical staff
+staff
 
 Kij, który może wesprzeć czary maga nim władającego.
 %%%%

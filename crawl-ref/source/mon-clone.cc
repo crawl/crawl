@@ -23,14 +23,16 @@
 #include "mon-util.h"
 #include "player.h"
 #include "random.h"
+#include "state.h"
 #include "terrain.h"
 #include "transform.h"
+#include "unwind.h"
 #include "view.h"
 
-const std::string clone_master_key = "mcloneorig";
-const std::string clone_slave_key  = "mclonedupe";
+const string clone_master_key = "mcloneorig";
+const string clone_slave_key  = "mclonedupe";
 
-static std::string _monster_clone_id_for(monster* mons)
+static string _monster_clone_id_for(monster* mons)
 {
     return make_stringf("%s%d",
                         mons->name(DESC_PLAIN, true).c_str(),
@@ -42,7 +44,7 @@ static bool _monster_clone_exists(monster* mons)
     if (!mons->props.exists(clone_master_key))
         return false;
 
-    const std::string clone_id = mons->props[clone_master_key].get_string();
+    const string clone_id = mons->props[clone_master_key].get_string();
     for (monster_iterator mi; mi; ++mi)
     {
         monster* thing(*mi);
@@ -102,7 +104,7 @@ static void _mons_summon_monster_illusion(monster* caster,
     bool cloning_visible = false;
     if (monster *clone = clone_mons(foe, true, &cloning_visible))
     {
-        const std::string clone_id = _monster_clone_id_for(foe);
+        const string clone_id = _monster_clone_id_for(foe);
         clone->props[clone_slave_key] = clone_id;
         foe->props[clone_master_key] = clone_id;
         mons_add_blame(clone,

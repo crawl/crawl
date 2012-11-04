@@ -2,7 +2,7 @@
 #define TARGET_H
 
 #include "beam.h"
-#include "mon-info.h"
+// #include "mon-info.h"
 
 enum aff_type // sign and non-zeroness matters
 {
@@ -22,10 +22,11 @@ public:
     coord_def origin;
     coord_def aim;
     const actor* agent;
-    std::string why_not;
+    string why_not;
 
     virtual bool set_aim(coord_def a);
     virtual bool valid_aim(coord_def a) = 0;
+    virtual bool can_affect_outside_range();
 
     virtual aff_type is_affected(coord_def loc) = 0;
 protected:
@@ -40,9 +41,10 @@ public:
     bolt beam;
     virtual bool set_aim(coord_def a);
     bool valid_aim(coord_def a);
+    bool can_affect_outside_range();
     virtual aff_type is_affected(coord_def loc);
 protected:
-    std::vector<coord_def> path_taken; // Path beam took.
+    vector<coord_def> path_taken; // Path beam took.
 private:
     bool penetrates_targets;
     int range2;
@@ -57,8 +59,8 @@ public:
     bool set_aim(coord_def a);
     aff_type is_affected(coord_def loc);
 private:
-    std::vector<coord_def> splash;
-    std::vector<coord_def> splash2;
+    vector<coord_def> splash;
+    vector<coord_def> splash2;
 };
 
 class targetter_view : public targetter
@@ -77,6 +79,7 @@ public:
                     bool (*affects_pos_func)(const coord_def &) = 0);
     virtual bool set_aim(coord_def a);
     virtual bool valid_aim(coord_def a);
+    virtual bool can_affect_outside_range();
     aff_type is_affected(coord_def loc);
 protected:
     // assumes exp_map is valid only if >0, so let's keep it private
@@ -107,6 +110,16 @@ public:
     aff_type is_affected(coord_def loc);
 };
 
+class targetter_cleave : public targetter
+{
+public:
+    targetter_cleave(const actor* act, coord_def target);
+    aff_type is_affected(coord_def loc);
+    bool valid_aim(coord_def a) { return false; }
+private:
+    set<coord_def> targets;
+};
+
 class targetter_cloud : public targetter
 {
 public:
@@ -114,11 +127,12 @@ public:
                     int count_min = 8, int count_max = 10);
     bool set_aim(coord_def a);
     bool valid_aim(coord_def a);
+    bool can_affect_outside_range();
     aff_type is_affected(coord_def loc);
     int range2;
     int cnt_min, cnt_max;
-    std::map<coord_def, aff_type> seen;
-    std::vector<std::vector<coord_def> > queue;
+    map<coord_def, aff_type> seen;
+    vector<vector<coord_def> > queue;
 };
 
 class targetter_splash : public targetter
@@ -149,7 +163,7 @@ public:
     bool valid_aim(coord_def a);
     bool set_aim(coord_def a);
     aff_type is_affected(coord_def loc);
-    std::map<coord_def, aff_type> zapped;
+    map<coord_def, aff_type> zapped;
     FixedVector<int, LOS_RADIUS + 1> arc_length;
 private:
     coord_def prev;

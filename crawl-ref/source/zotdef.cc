@@ -4,8 +4,10 @@
 **/
 
 #include "AppHdr.h"
+#include "bitary.h"
 
 #include "branch.h"
+#include "describe.h"
 #include "directn.h"
 #include "dungeon.h" // for Zotdef unique placement
 #include "env.h"
@@ -27,6 +29,7 @@
 #include "random.h"
 #include "religion.h"
 #include "state.h"
+#include "stuff.h"
 #include "terrain.h"
 #include "traps.h"
 #include "libutil.h"
@@ -128,7 +131,7 @@ static branch_type _zotdef_random_branch()
 
 static int _mon_strength(monster_type mon_type)
 {
-    monsterentry *mentry = get_monster_data(mon_type);
+    const monsterentry *mentry = get_monster_data(mon_type);
     if (!mentry)
         return 0; // sanity
     int strength = (mentry->hpdice[0] * mentry->exp_mod) / 10;
@@ -435,7 +438,7 @@ static void _insect_wave(int power)
     wave_name("INSECT WAVE");
     monster_type insects[] = {MONS_WORKER_ANT, MONS_KILLER_BEE, MONS_YELLOW_WASP,
                 MONS_GOLIATH_BEETLE, MONS_QUEEN_BEE, MONS_WOLF_SPIDER, MONS_BUTTERFLY,
-                MONS_BOULDER_BEETLE, MONS_GIANT_MITE, MONS_BUMBLEBEE, MONS_REDBACK,
+                MONS_BOULDER_BEETLE, MONS_GIANT_MITE, MONS_FIREFLY, MONS_REDBACK,
                 MONS_VAMPIRE_MOSQUITO, MONS_RED_WASP, MONS_SOLDIER_ANT, MONS_QUEEN_ANT,
                 MONS_GIANT_COCKROACH, MONS_BORING_BEETLE, MONS_TRAPDOOR_SPIDER,
                 MONS_SCORPION, MONS_GIANT_CENTIPEDE, END};
@@ -464,7 +467,7 @@ static void _pan_wave(int power)
         while (env.mons_alloc[i] == MONS_PROGRAM_BUG)
         {
             monster_type mon_type = static_cast<monster_type>(random2(NUM_MONSTERS));
-            monsterentry *mentry = get_monster_data(mon_type);
+            const monsterentry *mentry = get_monster_data(mon_type);
             int pow = random2avg(power, 2);
             switch (mentry->basechar)
             {
@@ -568,7 +571,7 @@ static monster_type _get_zotdef_monster(level_id &place, int power)
         }
 
         // Calculate strength
-        monsterentry *mentry = get_monster_data(mon_type);
+        const monsterentry *mentry = get_monster_data(mon_type);
         if (!mentry)
             continue;        // sanity
         if (mentry == get_monster_data(MONS_PROGRAM_BUG))
@@ -626,7 +629,7 @@ static monster_type _get_zotdef_monster(level_id &place, int power)
             continue;
 
         // Less OOD allowed on early levels
-        if (diff < std::min(-3,-power))
+        if (diff < min(-3,-power))
             continue;
 
         if (random2avg(100, 2) <= chance)
@@ -750,14 +753,14 @@ void zotdef_set_wave()
     dprf("NEW WAVE: %s", zotdef_debug_wave_desc().c_str());
 }
 
-std::string zotdef_debug_wave_desc()
+string zotdef_debug_wave_desc()
 {
-    std::string list = you.zotdef_wave_name + " [";
+    string list = you.zotdef_wave_name + " [";
     for (int i = 0; i <= (crawl_state.game_is_zotdef() ? NSLOTS : 9); i++)
     {
         if (i)
             list += ", ";
-        monsterentry *mentry = get_monster_data(env.mons_alloc[i]);
+        const monsterentry *mentry = get_monster_data(env.mons_alloc[i]);
         if (!env.mons_alloc[i])
             list += "EMPTY";
         else if (mentry)
@@ -947,7 +950,7 @@ bool zotdef_create_altar(bool wizmode)
     if (specs[0] == '\0')
         return false;
 
-    std::string spec = lowercase_string(specs);
+    string spec = lowercase_string(specs);
 
     god_type god = GOD_NO_GOD;
 
@@ -958,7 +961,7 @@ bool zotdef_create_altar(bool wizmode)
         if (!wizmode && is_unavailable_god(gi))
             continue;
 
-        if (lowercase_string(god_name(gi)).find(spec) != std::string::npos)
+        if (lowercase_string(god_name(gi)).find(spec) != string::npos)
         {
             god = gi;
             break;
@@ -994,7 +997,7 @@ bool create_zotdef_ally(monster_type mtyp, const char *successmsg)
     }
 
     dist abild;
-    std::string msg = "Make ";
+    string msg = "Make ";
     msg += get_monster_data(mtyp)->name;
     msg += " where?";
 

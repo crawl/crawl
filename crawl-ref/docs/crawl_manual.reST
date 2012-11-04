@@ -329,8 +329,8 @@ If you press Shift and '5' on the numeric keypad (or just the number '5' on the
 keyboard), you rest for 100 turns or until your hit points or magic return to
 full, whichever is sooner. You can rest for just one turn by pressing '.',
 Delete, 's' or '5' on the keypad. Whenever you are resting, you are assumed to
-be observing your surroundings, so you have a chance of detecting any traps or
-secret doors near you.
+be observing your surroundings, so you have a chance of detecting any traps
+near you.
 
 Resting stops if a monster appears or if you are otherwise interrupted.
 
@@ -899,12 +899,16 @@ You can press '"' to quickly check what jewellery you're wearing.
 There are a number of types of magical staves. Some enhance your general
 spellcasting ability, while some greatly increase the power of a certain class
 of spells (and possibly reduce your effectiveness with others). They can even be
-used in hand-to-hand combat about as effectively as quarterstaves.
+used in hand-to-hand combat, although with mediocre effectiveness unless you can
+harness their special power, using a combination of the Evocations skill and the
+skill specific to the staff's type. Staves which do not enhance a destructive
+magic school tend to have no combat powers at all.
 
-Spell staves (called "rods" in the game) are a totally different kind of item.
-They hold spells which you can cast without having to memorise them first. You
-must wield a rod like a weapon in order to gain from its power. Rods can be
-invoked with the 'v' command when wielded. They have a pool of magical energy
+\| Rods
+========================================
+
+Rods ('|') hold one or more spells that you can evoke while wielding the rod, using
+the 'v' command. They have a pool of magical energy
 which regenerates according to the rod's enchantment (which can be increased
 using scrolls of recharging) and your Evocations skill. They're shorter than
 full-length staves and thus use the Maces &amp; Flails skill instead of Staves when
@@ -1022,8 +1026,8 @@ H. Spellcasting
 
 Magical spells are a very important part of surviving in the dungeon. Every
 character can make use of magical spells, although those who enter the dungeon
-without magical skills must practise by reading scrolls before they can attempt
-spellcasting.
+without magical skills must first train at least one magic skill before they
+can learn any spells.
 
 There are many skills related to magic, the principal one being Spellcasting.
 Spellcasting determines the number of Magic Points available; it also helps in
@@ -1873,7 +1877,8 @@ Yellow Draconians
 
 Grey Draconians
   have no breath weapon, but also no need to breathe in order to live, which
-  helps them survive in deep water. They are stealthy and good at stabbing.
+  helps them survive in deep water. They are proficient with earth magic but bad
+  with air magic, and also have harder scales than other Draconians.
 
 Black Draconians
   can unleash huge electrical discharges, and are naturally insulated. They are
@@ -1978,11 +1983,6 @@ Assassins
   An Assassin is a stealthy character who is especially good at killing, using
   daggers or blowguns.
 
-Stalkers
-  The Stalker is an Assassin who practices alchemy to prepare dangerous potions
-  to use against his or her enemies. They also have means to pass through walls
-  to catch foes unaware.
-
 Hunters
   The Hunter is a type of fighter who specialises in missile weapons. A Hunter
   starts with either some throwing weapons or a ranged weapon and some
@@ -1996,7 +1996,7 @@ Artificers
   Artificers are attuned to gadgets, mechanics and magic elicited from arcane
   items, as opposed to casting magic themselves. As a consequence, they enter
   the Dungeon with an assortment of wands or a rod of striking. Artificers are
-  skilled at evoking magical items and finding Traps and Doors, and understand
+  skilled at evoking magical items, finding Traps, and understand
   the basics of melee combat. Those with wands also have some prior experience
   with scrolls of recharging.
 
@@ -2217,12 +2217,12 @@ Shields
   Affects the amount of protection you gain by using a shield, and the degree to
   which it hinders you.
 
-Traps &amp; Doors
-  Affects your ability to notice hidden traps and doors and to disarm traps when
-  you find them. With this skill at a high level, you will often find hidden
-  things without actively looking for them. Note that you scan your vicinity in
+Traps
+  Affects your ability to notice traps and to disarm when
+  you find them. With this skill at a high level, you will often find traps
+  without actively looking for them. Note that you scan your vicinity in
   every move (not just with commands like 's', '.' or '5'). Without (or with
-  low) Traps &amp; Doors skill, you search only the eight adjacent squares. The area
+  low) Traps skill, you search only the eight adjacent squares. The area
   covered gets larger with higher skill, as well as the chance to detect
   something.
 
@@ -2632,8 +2632,11 @@ already selected, the key will deselect it (except for ',' and '-', obviously).
 /
   Select all wands.
 
-\\ or |
+|
   Select all staves.
+
+\\
+  Select all rods.
 
 !
   Select all potions.
@@ -2950,7 +2953,7 @@ Regen
   temporary regeneration.
 
 Contam
-  You glow from mutagenic radiation. This can mutate you over time, usually with
+  You glow with mutagenic radiation. This can mutate you over time, usually with
   a bad outcome. The colour indicates the severity: the first level (darkgrey)
   is only a warning, and no mutation or loss of stealth will occur from it.
 

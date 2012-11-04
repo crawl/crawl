@@ -38,7 +38,7 @@ int grid_distance(const coord_def& p1, const coord_def& p2)
     return ((p2 - p1).rdist());
 }
 
-int distance(const coord_def& p1, const coord_def& p2)
+int distance2(const coord_def& p1, const coord_def& p2)
 {
     return ((p2 - p1).abs());
 }
@@ -79,4 +79,17 @@ coord_def player2grid(const coord_def &pc)
 coord_def grid2player(const coord_def &gc)
 {
     return (gc - you.pos());
+}
+
+//rotates a coord_def that points to an adjacent square
+//clockwise (direction > 0), or counter-clockwise (direction < 0)
+coord_def rotate_adjacent(coord_def vector, int direction)
+{
+    int xn, yn;
+
+    xn = vector.x - sgn(direction) * vector.y;
+    yn = sgn(direction) * vector.x + vector.y;
+    vector.x = xn;
+    vector.y = yn;
+    return vector.sgn();
 }

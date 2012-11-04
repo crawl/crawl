@@ -1,0 +1,84 @@
+%%%%
+CMD_REST
+
+Trochu léčit a hledat
+%%%%
+CMD_REST verbose
+
+Strávit až 100 kol regenerací zdraví, dobíjením magie, nebo vyhledáváním.
+Odpočinek je přerušen, jakmile se nepřátelské monstrum objeví v zorném poly.
+%%%%
+CMD_EXPLORE
+
+Automaticky prozkoumat současnou úroveň
+%%%%
+CMD_INTERLEVEL_TRAVEL
+
+Cestovat do vzdálených úrovní
+%%%%
+CMD_INTERLEVEL_TRAVEL verbose
+
+Automaticky cestovat do vzdálených úrovní. Cesta je přerušena, jakmile se
+nepřátelské monstrum objeví v zorném poly.
+%%%%
+CMD_USE_ABILITY
+
+Použít božské, nebo vrozené schopnosti
+%%%%
+CMD_PRAY
+
+Modlit se k bohu
+%%%%
+CMD_SEARCH_STASHES
+
+Vyhledat předměty/vlastnosti
+%%%%
+CMD_REPLAY_MESSAGES
+
+Znovu přečíst poslední zprávy
+%%%%
+CMD_DISPLAY_RELIGION
+
+Zobrazit náboženskou příslušnost
+%%%%
+CMD_DISPLAY_MUTATIONS
+
+Zobrazit mutace
+%%%%
+CMD_DISPLAY_SKILLS
+
+Spravovat dovednosti
+%%%%
+CMD_DISPLAY_KNOWN_OBJECTS
+
+Seznam zjištěných typů předmětů
+%%%%
+CMD_SAVE_GAME_NOW
+
+Uložit a ukončit
+%%%%
+CMD_SAVE_GAME_NOW verbose
+
+Ukončit a uložit hru, pro pozdější příchod. Jakmile se vrátíte do hry, je
+soubor s uložením odstraněn.
+%%%%
+CMD_DISPLAY_COMMANDS
+
+Herní nápověda
+%%%%
+CMD_DISPLAY_COMMANDS verbose
+
+Seznam příkazů, možností, atd.
+%%%%
+CMD_AUTOFIGHT
+
+Zasáhnout nejbližší monstrum
+%%%%
+CMD_AUTOFIGHT_NOMOVE
+
+Zasáhnout sousední monstrum
+%%%%
+CMD_WAIT
+
+Počkat jedno kolo
+%%%%

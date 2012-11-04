@@ -1,13 +1,11 @@
 #ifndef MELEE_ATTACK_H
 #define MELEE_ATTACK_H
 
-#include "artefact.h"
+#include <list>
+
 #include "attack.h"
 #include "fight.h"
-#include "mon-enum.h"
-#include "itemprop-enum.h"
 #include "random-var.h"
-#include "random.h"
 
 // Forward declaration of the struct
 struct mon_attack_def;
@@ -18,6 +16,7 @@ enum unarmed_attack_type
     UNAT_CONSTRICT,  // put constriction first so octopodes will use it
     UNAT_KICK,
     UNAT_HEADBUTT,
+    UNAT_PECK,
     UNAT_TAILSLAP,
     UNAT_PUNCH,
     UNAT_BITE,
@@ -43,6 +42,10 @@ public:
     bool    stab_attempt;
     int     stab_bonus;
 
+    bool         can_cleave;
+    list<actor*> cleave_targets;
+    bool         cleaving;        // additional attack from cleaving
+
     // Miscast to cause after special damage is done. If miscast_level == 0
     // the miscast is discarded if special_damage_message isn't empty.
     int    miscast_level;
@@ -53,7 +56,8 @@ public:
 
 public:
     melee_attack(actor *attacker, actor *defender,
-                 int attack_num = -1, int effective_attack_num = -1);
+                 int attack_num = -1, int effective_attack_num = -1,
+                 bool is_cleaving = false);
 
     // Applies attack damage and other effects.
     bool attack();
@@ -98,6 +102,10 @@ private:
                          int dam_type,
                          brand_type wpn_brand);
 
+    /* Axe cleaving */
+    void cleave_setup();
+    int cleave_damage_mod(int dam);
+
     /* Mutation Effects */
     void do_spines();
     void do_passive_freeze();
@@ -130,8 +138,8 @@ private:
 private:
     // Monster-attack specific stuff
     void mons_apply_attack_flavour();
-    std::string mons_attack_verb();
-    std::string mons_attack_desc();
+    string mons_attack_verb();
+    string mons_attack_desc();
     // TODO: Unify do_poison and poison_monster
     void mons_do_poison();
     void mons_do_napalm();
@@ -153,6 +161,8 @@ private:
     int  player_apply_weapon_skill(int damage);
     int  player_apply_fighting_skill(int damage, bool aux);
     int  player_apply_misc_modifiers(int damage);
+    int  player_apply_slaying_bonuses(int damage, bool aux);
+    int  player_apply_final_multipliers(int damage);
     int  player_stab_weapon_bonus(int damage);
     int  player_stab(int damage);
 
@@ -165,7 +175,7 @@ private:
     random_var player_weapon_speed();
     random_var player_unarmed_speed();
     void player_announce_aux_hit();
-    std::string player_why_missed();
+    string player_why_missed();
     void player_warn_miss();
     void player_weapon_upsets_god();
     void _defender_die();

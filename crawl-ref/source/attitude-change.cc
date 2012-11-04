@@ -61,7 +61,7 @@ void good_god_follower_attitude_change(monster* mons)
             {
                 msg::stream << mons->name(DESC_THE)
                             << " glares at your weapon."
-                            << std::endl;
+                            << endl;
                 _good_god_holy_fail_attitude_change(mons);
                 return;
             }
@@ -104,7 +104,7 @@ void beogh_follower_convert(monster* mons, bool orc_hit)
             {
                 msg::stream << mons->name(DESC_THE)
                             << " flinches from your weapon."
-                            << std::endl;
+                            << endl;
                 return;
             }
             beogh_convert_orc(mons, orc_hit);
@@ -275,7 +275,7 @@ bool beogh_followers_abandon_you()
         simple_god_message("'s voice booms out, \"Who do you think you "
                            "are?\"", GOD_BEOGH);
 
-        std::ostream& chan = msg::streams(MSGCH_MONSTER_ENCHANT);
+        ostream& chan = msg::streams(MSGCH_MONSTER_ENCHANT);
 
         if (num_reconvert > 0)
         {
@@ -287,7 +287,7 @@ bool beogh_followers_abandon_you()
                 chan << "Some of your followers decide to abandon you.";
         }
 
-        chan << std::endl;
+        chan << endl;
 
         return true;
     }
@@ -296,17 +296,17 @@ bool beogh_followers_abandon_you()
 }
 
 static void _print_good_god_holy_being_speech(bool neutral,
-                                              const std::string key,
+                                              const string key,
                                               monster* mon,
                                               msg_channel_type channel)
 {
-    std::string full_key = "good_god_";
+    string full_key = "good_god_";
     if (!neutral)
         full_key += "non";
     full_key += "neutral_holy_being_";
     full_key += key;
 
-    std::string msg = getSpeakString(full_key);
+    string msg = getSpeakString(full_key);
 
     if (!msg.empty())
     {
@@ -324,7 +324,14 @@ void good_god_holy_attitude_change(monster* holy)
 
     if (you.can_see(holy)) // show reaction
     {
-        _print_good_god_holy_being_speech(true, "reaction", holy,
+        string key = "reaction";
+
+        // Quadrupeds can't salute, etc.
+        mon_body_shape shape = get_mon_shape(holy);
+        if (shape >= MON_SHAPE_HUMANOID && shape <= MON_SHAPE_NAGA)
+            key += "_humanoid";
+
+        _print_good_god_holy_being_speech(true, key, holy,
                                           MSGCH_FRIEND_ENCHANT);
 
         if (!one_chance_in(3)
@@ -356,7 +363,14 @@ static void _good_god_holy_fail_attitude_change(monster* holy)
 
     if (you.can_see(holy)) // show reaction
     {
-        _print_good_god_holy_being_speech(false, "reaction", holy,
+        string key = "reaction";
+
+        // Quadrupeds can't salute, etc.
+        mon_body_shape shape = get_mon_shape(holy);
+        if (shape >= MON_SHAPE_HUMANOID && shape <= MON_SHAPE_NAGA)
+            key += "_humanoid";
+
+        _print_good_god_holy_being_speech(false, key, holy,
                                           MSGCH_FRIEND_ENCHANT);
 
         if (!one_chance_in(3)
@@ -367,11 +381,11 @@ static void _good_god_holy_fail_attitude_change(monster* holy)
     }
 }
 
-static void _print_converted_orc_speech(const std::string key,
+static void _print_converted_orc_speech(const string key,
                                         monster* mon,
                                         msg_channel_type channel)
 {
-    std::string msg = getSpeakString("beogh_converted_orc_" + key);
+    string msg = getSpeakString("beogh_converted_orc_" + key);
 
     if (!msg.empty())
     {
@@ -432,7 +446,7 @@ void beogh_convert_orc(monster* orc, bool emergency,
     }
 
     if (!orc->alive())
-        orc->hit_points = std::min(random_range(1, 4), orc->max_hit_points);
+        orc->hit_points = min(random_range(1, 4), orc->max_hit_points);
 
     // Avoid immobile "followers".
     behaviour_event(orc, ME_ALERT);

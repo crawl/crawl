@@ -2,7 +2,7 @@
 long sword
 
 "Y andando en estas priesas entre aquellos grandes guerreros y sus temerosos
-montantes, parece ser acordaron de se Juntar muchos dellos y de mayores fuerzas
+montantes, parece ser acordaron de se juntar muchos dellos y de mayores fuerzas
 para tomar a manos algún caballo, y lo pusieron por obra, y arremetieron, y
 echan mano a una muy buena yegua y bien revuelta, de juego y de carrera, y el
 caballero que en ella iba muy buen jinete, que se decía Pedro de Morón; y como
@@ -23,4 +23,42 @@ fortifican, pero los dedos de mi pie no quieren saberlo. No les interesa otra
 cosa que emitir uñas: láminas córneas, semitransparentes y elásticas, para
 defenderse, ¿de quién?”
     -Jorge Luis Borges
+%%%%
+stone
+
+“Así es mi vida,
+ piedra,
+ como tú. Como tú,
+ piedra pequeña;
+ como tú,
+ piedra ligera;
+ como tú,
+ canto que ruedas
+ por las calzadas
+ y por las veredas;
+ como tú,
+ guijarro humilde de las carreteras;
+ como tú,
+ que en días de tormenta
+ te hundes
+ en el cieno de la tierra
+ y luego
+ centelleas
+ bajo los cascos
+ y bajo las ruedas;
+ como tú, que no has servido
+ para ser ni piedra
+ de una lonja,
+ ni piedra de una audiencia,
+ ni piedra de un palacio,
+ ni piedra de una iglesia;
+ como tú,
+ piedra aventurera;
+ como tú,
+ que tal vez estás hecha
+ sólo para una honda,
+ piedra pequeña
+ y
+ ligera...”
+    -León Felipe, Versos y oraciones de caminante I. 1920.
 %%%%

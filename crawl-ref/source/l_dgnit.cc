@@ -25,7 +25,7 @@ static item_list _lua_get_ilist(lua_State *ls, int ndx)
         const char *spec = lua_tostring(ls, ndx);
 
         item_list ilist;
-        const std::string err = ilist.add_item(spec);
+        const string err = ilist.add_item(spec);
         if (!err.empty())
             luaL_error(ls, err.c_str());
 
@@ -99,8 +99,8 @@ static int dgn_item_property_set(lua_State *ls)
 {
     if (item_def *item = clua_get_item(ls, 1))
     {
-        const std::string key = luaL_checkstring(ls, 2);
-        const std::string type = luaL_checkstring(ls, 3);
+        const string key = luaL_checkstring(ls, 2);
+        const string type = luaL_checkstring(ls, 3);
         if (type.empty() || type.length() > 1)
         {
             luaL_error(ls, "Expected type: [BbSifsC], got: '%s'",
@@ -143,8 +143,8 @@ static int dgn_item_property(lua_State *ls)
 {
     if (item_def *item = clua_get_item(ls, 1))
     {
-        const std::string key = luaL_checkstring(ls, 2);
-        const std::string type = luaL_checkstring(ls, 3);
+        const string key = luaL_checkstring(ls, 2);
+        const string type = luaL_checkstring(ls, 3);
         if (type.empty() || type.length() > 1)
         {
             luaL_error(ls, "Expected type: [BbSifsC], got: '%s'",
@@ -198,8 +198,8 @@ static int dgn_stash_items(lua_State *ls)
     unsigned min_value  = lua_isnumber(ls, 1)  ? luaL_checkint(ls, 1) : 0;
     bool skip_stackable = lua_isboolean(ls, 2) ? lua_toboolean(ls, 2)
                                                 : false;
-    std::vector<const item_def*> floor_items;
-    std::vector<const item_def*> shop_items;
+    vector<const item_def*> floor_items;
+    vector<const item_def*> shop_items;
 
     for (ST_ItemIterator stii; stii; ++stii)
     {

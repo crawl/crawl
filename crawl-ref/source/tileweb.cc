@@ -29,6 +29,8 @@
 #include "tileview.h"
 #include "travel.h"
 #include "unicode.h"
+#include "unwind.h"
+#include "version.h"
 #include "view.h"
 #include "viewgeom.h"
 
@@ -271,7 +273,7 @@ wint_t TilesFramework::_receive_control_message()
     if (len == -1)
         die("Socket read error: %s", strerror(errno));
 
-    std::string data(buf, len);
+    string data(buf, len);
     try
     {
         return _handle_control_message(srcaddr, data);
@@ -283,14 +285,14 @@ wint_t TilesFramework::_receive_control_message()
     }
 }
 
-wint_t TilesFramework::_handle_control_message(sockaddr_un addr, std::string data)
+wint_t TilesFramework::_handle_control_message(sockaddr_un addr, string data)
 {
     JsonWrapper obj = json_decode(data.c_str());
     obj.check(JSON_OBJECT);
 
     JsonWrapper msg = json_find_member(obj.node, "msg");
     msg.check(JSON_STRING);
-    std::string msgtype(msg->string_);
+    string msgtype(msg->string_);
 
     int c = 0;
 
@@ -398,18 +400,16 @@ bool TilesFramework::await_input(wint_t& c, bool block)
             return false;
         }
         else
-        {
             die("select error: %s", strerror(errno));
-        }
     }
 }
 
-void TilesFramework::push_prefix(const std::string& prefix)
+void TilesFramework::push_prefix(const string& prefix)
 {
     m_prefixes.push_back(prefix);
 }
 
-void TilesFramework::pop_prefix(const std::string& suffix)
+void TilesFramework::pop_prefix(const string& suffix)
 {
     if (!m_prefixes.empty())
         m_prefixes.pop_back();
@@ -422,15 +422,21 @@ bool TilesFramework::prefix_popped()
     return m_prefixes.empty();
 }
 
+void TilesFramework::dump()
+{
+    fprintf(stderr, "Webtiles message buffer: %s\n", m_msg_buf.c_str());
+    fprintf(stderr, "Webtiles prefix count: %d\n", (int) m_prefixes.size());
+}
+
 void TilesFramework::_send_version()
 {
-    std::string title = CRAWL " " + Version::Long();
-    send_message("{msg:\"version\",text:\"%s\"}", title.c_str());
-
 #ifdef WEB_DIR_PATH
     // The star signals a message to the server
-    send_message("*{\"msg\":\"client_path\",\"path\":\"%s\"}", WEB_DIR_PATH);
+    send_message("*{\"msg\":\"client_path\",\"path\":\"%s\",\"version\":\"%s\"}", WEB_DIR_PATH, Version::Long().c_str());
 #endif
+
+    string title = CRAWL " " + Version::Long();
+    send_message("{msg:\"version\",text:\"%s\"}", title.c_str());
 }
 
 void TilesFramework::push_menu(Menu* m)
@@ -442,7 +448,7 @@ void TilesFramework::push_menu(Menu* m)
     tiles.send_message();
 }
 
-void TilesFramework::push_crt_menu(std::string tag)
+void TilesFramework::push_crt_menu(string tag)
 {
     MenuInfo mi;
     mi.menu = NULL;
@@ -639,7 +645,7 @@ static inline void _write_tileidx(tileidx_t t)
 void TilesFramework::_send_cell(const coord_def &gc,
                                 const screen_cell_t &current_sc, const screen_cell_t &next_sc,
                                 const map_cell &current_mc, const map_cell &next_mc,
-                                std::map<uint32_t, coord_def>& new_monster_locs,
+                                map<uint32_t, coord_def>& new_monster_locs,
                                 bool force_full)
 {
     if (current_mc.feat() != next_mc.feat())
@@ -669,7 +675,8 @@ void TilesFramework::_send_cell(const coord_def &gc,
             write_message("g:'%s',", buf);
         }
     }
-    if (current_sc.colour != next_sc.colour)
+    if ((current_sc.colour != next_sc.colour
+         || current_sc.glyph == ' ') && glyph != ' ')
     {
         int col = next_sc.colour;
         col = (_get_brand(col) << 4) | (col & 0xF);
@@ -821,7 +828,7 @@ void TilesFramework::_send_cell(const coord_def &gc,
 
 void TilesFramework::_send_map(bool force_full)
 {
-    std::map<uint32_t, coord_def> new_monster_locs;
+    map<uint32_t, coord_def> new_monster_locs;
 
     force_full = force_full || m_need_full_map;
     m_need_full_map = false;
@@ -867,14 +874,10 @@ void TilesFramework::_send_map(bool force_full)
                 || last_gc.x + 1 != gc.x
                 || last_gc.y != gc.y)
             {
-                std::ostringstream xy;
-                xy << "{x:" << (x - m_origin.x) << ",y:" << (y - m_origin.y) << ",";
-                push_prefix(xy.str());
+                push_prefix(make_stringf("{x:%d,y:%d,", (x - m_origin.x), (y - m_origin.y)));
             }
             else
-            {
                 push_prefix("{");
-            }
 
             const screen_cell_t& sc = force_full ? default_cell
                 : m_current_view(gc);
@@ -903,21 +906,19 @@ void TilesFramework::_send_map(bool force_full)
 }
 
 void TilesFramework::_send_monster(const coord_def &gc, const monster_info* m,
-                                   std::map<uint32_t, coord_def>& new_monster_locs,
+                                   map<uint32_t, coord_def>& new_monster_locs,
                                    bool force_full)
 {
     if (m->client_id)
     {
-        std::ostringstream id;
-        id << "mon:{id:" << m->client_id << ",";
-        push_prefix(id.str());
+        push_prefix(make_stringf("mon:{id:%d,", m->client_id));
         new_monster_locs[m->client_id] = gc;
     }
     else
         push_prefix("mon:{");
 
     const monster_info* last = NULL;
-    std::map<uint32_t, coord_def>::const_iterator it =
+    map<uint32_t, coord_def>::const_iterator it =
         m_monster_locs.find(m->client_id);
     if (m->client_id == 0 || it == m_monster_locs.end())
     {
@@ -1278,7 +1279,7 @@ void TilesFramework::clear_text_tags(text_tag_type type)
 {
 }
 
-void TilesFramework::add_text_tag(text_tag_type type, const std::string &tag,
+void TilesFramework::add_text_tag(text_tag_type type, const string &tag,
                                   const coord_def &gc)
 {
 }
@@ -1411,7 +1412,7 @@ bool TilesFramework::cell_needs_redraw(const coord_def& gc)
 }
 
 
-void TilesFramework::write_message_escaped(const std::string& s)
+void TilesFramework::write_message_escaped(const string& s)
 {
     m_msg_buf.reserve(m_msg_buf.size() + s.size());
 
@@ -1429,7 +1430,7 @@ void TilesFramework::write_message_escaped(const std::string& s)
     }
 }
 
-void TilesFramework::json_open_object(const std::string& name)
+void TilesFramework::json_open_object(const string& name)
 {
     json_write_comma();
     if (!name.empty())
@@ -1447,7 +1448,7 @@ void TilesFramework::json_close_object()
     need_comma = true;
 }
 
-void TilesFramework::json_open_array(const std::string& name)
+void TilesFramework::json_open_array(const string& name)
 {
     json_write_comma();
     if (!name.empty())
@@ -1474,7 +1475,7 @@ void TilesFramework::json_write_comma()
     }
 }
 
-void TilesFramework::json_write_name(const std::string& name)
+void TilesFramework::json_write_name(const string& name)
 {
     json_write_comma();
 
@@ -1492,7 +1493,7 @@ void TilesFramework::json_write_int(int value)
     need_comma = true;
 }
 
-void TilesFramework::json_write_int(const std::string& name, int value)
+void TilesFramework::json_write_int(const string& name, int value)
 {
     if (!name.empty())
         json_write_name(name);
@@ -1500,7 +1501,7 @@ void TilesFramework::json_write_int(const std::string& name, int value)
     json_write_int(value);
 }
 
-void TilesFramework::json_write_string(const std::string& value)
+void TilesFramework::json_write_string(const string& value)
 {
     json_write_comma();
 
@@ -1511,8 +1512,7 @@ void TilesFramework::json_write_string(const std::string& value)
     need_comma = true;
 }
 
-void TilesFramework::json_write_string(const std::string& name,
-                                       const std::string& value)
+void TilesFramework::json_write_string(const string& name, const string& value)
 {
     if (!name.empty())
         json_write_name(name);

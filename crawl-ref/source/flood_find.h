@@ -30,7 +30,7 @@ protected:
 protected:
     bool point_hunt, want_exit, no_vault, check_traversable;
     bool needed_features[NUM_FEATURES];
-    std::vector<coord_def> needed_points;
+    vector<coord_def> needed_points;
     bool left_vault;
     const map_mask *vaults;
 
@@ -126,8 +126,8 @@ bool flood_find<fgrd, bound_check>::path_flood(
 
     if (!needed_points.empty())
     {
-        std::vector<coord_def>::iterator i =
-            std::find(needed_points.begin(), needed_points.end(), dc);
+        vector<coord_def>::iterator i = find(needed_points.begin(),
+                                             needed_points.end(), dc);
         if (i != needed_points.end())
         {
             needed_points.erase(i);
@@ -157,7 +157,6 @@ bool flood_find<fgrd, bound_check>::path_flood(
     }
 
     if (check_traversable && !feat_is_traversable(feat)
-        && feat != DNGN_SECRET_DOOR
         && !feat_is_trap(feat))
     {
         return false;

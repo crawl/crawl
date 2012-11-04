@@ -148,17 +148,14 @@ public:
     {
     }
 
-    virtual std::string name(description_level_type type,
-                             bool force_visible = false) const = 0;
-    virtual std::string pronoun(pronoun_type which_pronoun,
-                                bool force_visible = false) const = 0;
-    virtual std::string conj_verb(const std::string &verb) const = 0;
-    virtual std::string hand_name(bool plural,
-                                  bool *can_plural = NULL) const = 0;
-    virtual std::string foot_name(bool plural,
-                                  bool *can_plural = NULL) const = 0;
-    virtual std::string arm_name(bool plural,
-                                 bool *can_plural = NULL) const = 0;
+    virtual string name(description_level_type type,
+                        bool force_visible = false) const = 0;
+    virtual string pronoun(pronoun_type which_pronoun,
+                           bool force_visible = false) const = 0;
+    virtual string conj_verb(const string &verb) const = 0;
+    virtual string hand_name(bool plural, bool *can_plural = NULL) const = 0;
+    virtual string foot_name(bool plural, bool *can_plural = NULL) const = 0;
+    virtual string arm_name(bool plural, bool *can_plural = NULL) const = 0;
 
     virtual bool fumbles_attack(bool verbose = true) = 0;
 
@@ -201,7 +198,7 @@ public:
     virtual bool can_mutate() const = 0;
     virtual bool can_safely_mutate() const = 0;
     virtual bool can_bleed(bool allow_tran = true) const = 0;
-    virtual bool mutate(const std::string &reason) = 0;
+    virtual bool mutate(const string &reason) = 0;
     virtual bool drain_exp(actor *agent, bool quiet = false, int pow = 3) = 0;
     virtual bool rot(actor *agent, int amount, int immediate = 0,
                      bool quiet = false) = 0;
@@ -209,15 +206,14 @@ public:
                       beam_type flavour = BEAM_MISSILE,
                       bool cleanup_dead = true) = 0;
     virtual bool heal(int amount, bool max_too = false) = 0;
-    virtual void banish(actor *agent, const std::string &who = "") = 0;
+    virtual void banish(actor *agent, const string &who = "") = 0;
     virtual void blink(bool allow_partial_control = true) = 0;
     virtual void teleport(bool right_now = false,
                           bool abyss_shift = false,
                           bool wizard_tele = false) = 0;
     virtual bool poison(actor *attacker, int amount = 1, bool force = false) = 0;
     virtual bool sicken(int amount, bool allow_hint = true) = 0;
-    virtual void paralyse(actor *attacker, int strength,
-                          std::string source = "") = 0;
+    virtual void paralyse(actor *attacker, int strength, string source = "") = 0;
     virtual void petrify(actor *attacker) = 0;
     virtual bool fully_petrify(actor *foe, bool quiet = false) = 0;
     virtual void slow_down(actor *attacker, int strength) = 0;
@@ -230,7 +226,7 @@ public:
     virtual void hibernate(int power = 0) = 0;
     virtual void check_awaken(int disturbance) = 0;
     virtual int beam_resists(bolt &beam, int hurted, bool doEffects,
-                             std::string source = "") = 0;
+                             string source = "") = 0;
 
     virtual int  skill(skill_type sk, int scale = 1, bool real = false) const = 0;
     int  skill_rdiv(skill_type sk, int mult = 1, int div = 1) const;
@@ -243,6 +239,9 @@ public:
     virtual bool can_throw_large_rocks() const = 0;
 
     virtual int armour_class() const = 0;
+    virtual int gdr_perc() const = 0;
+    int apply_ac(int damage, int max_damage = 0, ac_type ac_rule = AC_NORMAL,
+                 int stab_bypass = 0) const;
     virtual int melee_evasion(const actor *attacker,
                               ev_ignore_type ign = EV_IGNORE_NONE) const = 0;
     virtual int shield_bonus() const = 0;
@@ -256,8 +255,8 @@ public:
     virtual int adjusted_body_armour_penalty(int scale = 1,
                                              bool use_size = false) const = 0;
     virtual int adjusted_shield_penalty(int scale) const = 0;
-    virtual int armour_tohit_penalty(bool random_factor) const = 0;
-    virtual int shield_tohit_penalty(bool random_factor) const = 0;
+    virtual int armour_tohit_penalty(bool random_factor, int scale = 1) const = 0;
+    virtual int shield_tohit_penalty(bool random_factor, int scale = 1) const = 0;
 
     virtual monster_type mons_species(bool zombie_base = false) const = 0;
 
@@ -290,6 +289,7 @@ public:
     virtual int res_magic() const = 0;
     virtual int check_res_magic(int power);
     virtual bool no_tele(bool calc_unid = true, bool permit_id = true) const = 0;
+    virtual bool inaccuracy() const = 0;
 
     virtual flight_type flight_mode() const = 0;
     virtual bool is_levitating() const = 0;
@@ -340,6 +340,8 @@ public:
     virtual bool petrifying() const = 0;
     virtual bool petrified() const = 0;
 
+    virtual bool liquefied_ground() const = 0;
+
     virtual bool handle_trap();
 
     virtual void god_conduct(conduct_type thing_done, int level) { }
@@ -375,7 +377,7 @@ public:
     int escape_attempts;
 
     // Map from mid to duration.
-    typedef std::map<mid_t, int> constricting_t;
+    typedef map<mid_t, int> constricting_t;
     // Freed and set to NULL when empty.
     constricting_t *constricting;
 

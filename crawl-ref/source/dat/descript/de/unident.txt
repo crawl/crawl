@@ -6,8 +6,10 @@ unbekannten Ursprungs.
 %%%%
 book
 
-Ein Buch mit Zaubersprüchen. Nimm dich in Acht, denn mit einigen der
-mächtigeren Zauberbücher ist nicht zu spaßen.
+Ein Buch mit Zaubersprüchen unbekannten Ursprungs. Geschrieben für wahre
+Meister sind einleitende Kenntnisse in der okkulten Kunst des Zauberns
+erforderlich, um jeglichen Gebrauch des Wälzers zu machen. Nimm dich in Acht,
+denn mit einigen der mächtigeren Zauberbücher ist nicht zu spaßen.
 %%%%
 deck of cards
 
@@ -16,16 +18,28 @@ Karten kann vielerlei nützliche oder riskante Auswirkungen zur Folge haben.
 %%%%
 potion
 
-Eine kleine Flasche Flüssigkeit.
+Ein unetikettiertes Fläschchen, das eine einzelne Dosis einer unbekannten
+Flüssigkeit enthält.
 %%%%
 ring
 
 Ein Talisman welcher als Schmuck an einem Finger getragen wird, durchströmt von
 Magie unbekannten Ursprungs.
 %%%%
+rod
+
+Ein magischer Stab, der in der Hand gehalten wird und evoziert werden kann, um
+einen von mehreren Zaubern hervorzurufen, die ihre Energie aus einem
+selbstaufladenden Reservoir beziehen. Der Stab ist robust genug, um als eine
+einfache Schlagwaffe zu dienen.
+%%%%
 scroll
 
 Eine von magischen Schriftzügen bedeckte Schriftrolle.
+%%%%
+staff
+
+Ein auf magische Weise verbesserter Schlagstock.
 %%%%
 wand
 

@@ -329,8 +329,8 @@ confirming the target with <w>Enter</w>.</localtiles>
 
 <yellow>Resting</yellow>
 
-  <w>$cmd[CMD_MOVE_NOWHERE]</w>  wait, rest and search a single turn
-  <w>$cmd[CMD_REST]</w>  wait, rest and search up to 100 turns
+  <w>$cmd[CMD_MOVE_NOWHERE]</w>  wait and rest a single turn
+  <w>$cmd[CMD_REST]</w>  wait and rest up to 100 turns
 
 
 <yellow>Corpses<console> <brown>%</brown></console></yellow>
@@ -355,7 +355,7 @@ them in the inventory panel.</localtiles>
 %%%%
 tutorial3 autopickup
 
-Some types of items<tiles>, marked with a green frame, </tiles>are picked up
+Some types of items<tiles>, marked with a green frame,</tiles> are picked up
 automatically as you step on them.
 %%%%
 tutorial3 scroll
@@ -644,9 +644,9 @@ religion screen.</localtiles>
 
 <yellow>Resting</yellow>
 
-  $cmd[CMD_MOVE_NOWHERE]  wait, rest and search a single turn
+  $cmd[CMD_MOVE_NOWHERE]  wait and rest a single turn
 
-  $cmd[CMD_REST]  wait, rest and search up to 100 turns
+  $cmd[CMD_REST]  wait and rest up to 100 turns
 
 
 <yellow>Other commands</yellow>

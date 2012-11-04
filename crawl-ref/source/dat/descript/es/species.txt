@@ -27,6 +27,11 @@ Draconian
 Los draconianos son híbridos versátiles. Alcanzan la madurez en el nivel 7 y
 desarrollan un color.
 %%%%
+Felid
+
+Estos gatos son sentientes, pero son incapaces de manipular objetos de una
+forma avanzada o de usar armaduras o armas.
+%%%%
 Ghoul
 
 Un no-muerto, condenado a pudrirse eternamente. Están continuamente buscando

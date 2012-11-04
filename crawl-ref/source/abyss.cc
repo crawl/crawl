@@ -24,6 +24,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "l_defs.h"
+#include "libutil.h"
 #include "los.h"
 #include "makeitem.h"
 #include "mapmark.h"
@@ -59,8 +60,8 @@ static const int ABYSSAL_RUNE_MAX_ROLL = 200;
 
 abyss_state abyssal_state;
 
-static std::vector<dungeon_feature_type> abyssal_features;
-static std::list<monster*> displaced_monsters;
+static vector<dungeon_feature_type> abyssal_features;
+static list<monster*> displaced_monsters;
 
 static void abyss_area_shift(void);
 static void _push_items(void);
@@ -195,8 +196,7 @@ static int _abyssal_rune_roll()
     const int cutoff = lugonu_favoured ? 50 : 500;
     const int scale = lugonu_favoured ? 57 : 228;
 
-    const int odds =
-        std::min(1 + std::max((env.turns_on_level - cutoff) / scale, 0), 34);
+    const int odds = min(1 + max((env.turns_on_level - cutoff) / scale, 0), 34);
 #ifdef DEBUG_ABYSS
     dprf("Abyssal rune odds: %d in %d (%.2f%%)",
          odds, ABYSSAL_RUNE_MAX_ROLL, odds * 100.0 / ABYSSAL_RUNE_MAX_ROLL);
@@ -264,7 +264,7 @@ static bool _abyss_place_map(const map_def *mdef)
 }
 
 static bool _abyss_place_vault_tagged(const map_bitmask &abyss_genlevel_mask,
-                                      const std::string &tag)
+                                      const string &tag)
 {
     const map_def *map = random_map_for_tag(tag, false, true);
     if (map)
@@ -362,7 +362,7 @@ static int _abyss_create_items(const map_bitmask &abyss_genlevel_mask,
 
     const int abyssal_rune_roll = _abyssal_rune_roll();
     bool should_place_abyssal_rune = false;
-    std::vector<coord_def> chosen_item_places;
+    vector<coord_def> chosen_item_places;
     for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
     {
         if (_abyss_square_accepts_items(abyss_genlevel_mask, *ri))
@@ -471,7 +471,7 @@ void push_features_to_abyss()
 // square is 1 in N.
 static int _abyss_exit_chance()
 {
-    int exit_chance = 7500;
+    int exit_chance = (you.runes[RUNE_ABYSSAL] ? 1250 : 7500);
     if (crawl_state.game_is_sprint())
         exit_chance = sprint_modify_abyss_exit_chance(exit_chance);
     return exit_chance;
@@ -627,7 +627,7 @@ static void _push_displaced_monster(monster* mon)
 
 static void _place_displaced_monsters()
 {
-    std::list<monster*>::iterator mon_itr;
+    list<monster*>::iterator mon_itr;
 
     for (mon_itr = displaced_monsters.begin();
          mon_itr != displaced_monsters.end(); ++mon_itr)
@@ -760,7 +760,7 @@ static void _abyss_move_entities_at(coord_def src, coord_def dst)
 // Move all vaults within the mask by the specified delta.
 static void _abyss_move_masked_vaults_by_delta(const coord_def delta)
 {
-    std::set<int> vault_indexes;
+    set<int> vault_indexes;
     for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
     {
         const int vi = env.level_map_ids(*ri);
@@ -768,7 +768,7 @@ static void _abyss_move_masked_vaults_by_delta(const coord_def delta)
             vault_indexes.insert(vi);
     }
 
-    for (std::set<int>::const_iterator i = vault_indexes.begin();
+    for (set<int>::const_iterator i = vault_indexes.begin();
          i != vault_indexes.end(); ++i)
     {
         vault_placement &vp(*env.level_vaults[*i]);
@@ -808,9 +808,9 @@ static void _abyss_move_entities(coord_def target_centre,
     coord_def end(GXM - 1 - MAPGEN_BORDER, GYM - 1 - MAPGEN_BORDER);
 
     if (direction.x == -1)
-        std::swap(start.x, end.x);
+        swap(start.x, end.x);
     if (direction.y == -1)
-        std::swap(start.y, end.y);
+        swap(start.y, end.y);
 
     end += direction;
 
@@ -860,7 +860,7 @@ static void _abyss_identify_area_to_shift(coord_def source, int radius,
 {
     mask->reset();
 
-    std::set<int> affected_vault_indexes;
+    set<int> affected_vault_indexes;
     for (radius_iterator ri(source, radius, C_SQUARE); ri; ++ri)
     {
         if (!map_bounds_with_margin(*ri, MAPGEN_BORDER))
@@ -873,7 +873,7 @@ static void _abyss_identify_area_to_shift(coord_def source, int radius,
             affected_vault_indexes.insert(map_index);
     }
 
-    for (std::set<int>::const_iterator i = affected_vault_indexes.begin();
+    for (set<int>::const_iterator i = affected_vault_indexes.begin();
          i != affected_vault_indexes.end(); ++i)
     {
         _abyss_expand_mask_to_cover_vault(mask, *i);
@@ -1366,7 +1366,7 @@ static colour_t _roll_abyss_rock_colour()
          // no DARKGREY (out of LOS)
          570, LIGHTBLUE,
          705, LIGHTGREEN,
-         952, LIGHTCYAN,
+         // no LIGHTCYAN (glass)
         1456, LIGHTRED,
          377, LIGHTMAGENTA,
          105, YELLOW,
@@ -1529,7 +1529,7 @@ static void _place_corruption_seed(const coord_def &pos, int duration)
 static void _initialise_level_corrupt_seeds(int power)
 {
     const int low = power * 40 / 100, high = power * 140 / 100;
-    const int nseeds = random_range(-1, std::min(2 + power / 110, 4), 2);
+    const int nseeds = random_range(-1, min(2 + power / 110, 4), 2);
 
     const int aux_seed_radius = 4;
 
@@ -1606,7 +1606,7 @@ static void _apply_corruption_effect(map_marker *marker, int duration)
     if (cmark->duration < 1)
         return;
 
-    const int neffects = std::max(div_rand_round(duration, 5), 1);
+    const int neffects = max(div_rand_round(duration, 5), 1);
 
     for (int i = 0; i < neffects; ++i)
     {
@@ -1621,8 +1621,7 @@ static void _apply_corruption_effect(map_marker *marker, int duration)
 
 void run_corruption_effects(int duration)
 {
-    std::vector<map_marker*> markers =
-        env.markers.get_all(MAT_CORRUPTION_NEXUS);
+    vector<map_marker*> markers = env.markers.get_all(MAT_CORRUPTION_NEXUS);
 
     for (int i = 0, size = markers.size(); i < size; ++i)
     {
@@ -1715,7 +1714,6 @@ static void _corrupt_square(const corrupt_env &cenv, const coord_def &c)
         feat = _abyss_proto_feature();
 
     if (feat_is_trap(feat, true)
-        || feat == DNGN_SECRET_DOOR
         || feat == DNGN_UNSEEN
         || (feat_is_traversable(grd(c)) && !feat_is_traversable(feat)
             && coinflip()))
@@ -1758,8 +1756,8 @@ static void _corrupt_square(const corrupt_env &cenv, const coord_def &c)
 
 static void _corrupt_level_features(const corrupt_env &cenv)
 {
-    std::vector<coord_def> corrupt_seeds;
-    std::vector<map_marker*> corrupt_markers =
+    vector<coord_def> corrupt_seeds;
+    vector<map_marker*> corrupt_markers =
         env.markers.get_all(MAT_CORRUPTION_NEXUS);
 
     for (int i = 0, size = corrupt_markers.size(); i < size; ++i)
@@ -1782,7 +1780,7 @@ static void _corrupt_level_features(const corrupt_env &cenv)
         // the feature still gets a chance to resist if it's a wall.
         const int corrupt_perc_chance =
             idistance2 <= ground_zero_radius2 ? 100 :
-            std::max(1, 100 - (idistance2 - ground_zero_radius2) * 70 / 57);
+            max(1, 100 - (idistance2 - ground_zero_radius2) * 70 / 57);
 
         if (random2(100) < corrupt_perc_chance && _is_grid_corruptible(*ri))
             _corrupt_square(cenv, *ri);

@@ -1,0 +1,208 @@
+### Ambush Vault ###############################################################
+#
+# A large ambush with several monsters, many potentially OOD. Can appear almost
+# anywhere, any number of times.
+#
+# Number of monsters (and amount of ood) depends on depth and randomness. Ranges
+# from 8 to 24 monsters. Very random, middle part is all subvaults.
+#
+# Currently set to never appear earlier than D:14, meaning this is always
+# post-lair.
+
+NAME:     evilmike_ambush
+DEPTH:    D:14-26, Elf:1-2, Snake:1-4, Dis:1-6, Geh:1-6, Tar:1-6, \
+          Coc:1-6, Zot:1-4, Crypt:1-4
+TAGS:     allow_dup
+SUBVAULT: = : evilmike_ambush_outer
+SUBVAULT: - : evilmike_ambush_inner
+SUBST:    =- : .
+: local x = you.absdepth() - 14 + crawl.random2(12)
+: if x > 17 then
+SUBST:    1 = 0, 2 = 8
+: elseif x > 11 then
+SUBST:    1 = 00., 2 = 89
+: elseif x > 5 then
+SUBST:    1 = 0., 2 = 9
+: else
+SUBST:    1 = 0.., 2 = 9.
+: end
+MAP
+  2...0...9
+ ...1...1...
+9.0=======0.2
+..==-----==..
+.1=-------=1.
+..=-------=..
+0.=-------=.0
+..=-------=..
+.1=-------=1.
+..==-----==..
+2.0=======0.9
+ ...1...1...
+  9...0...2
+ENDMAP
+
+# Outer ring subvaults
+NAME:   evilmike_ambush_outer_basic
+TAGS:   evilmike_ambush_outer allow_dup
+WEIGHT: 25
+SUBST:  G : Gx..
+SUBST:  x : xcbwnm
+: if you.branch() == "Dis" then
+TILE: G = dngn_statue_iron
+: end
+MAP
+ ...G...
+.G     G.
+.       .
+.       .
+G       G
+.       .
+.       .
+.G     G.
+ ...G...
+ENDMAP
+
+NAME:    evilmike_ambush_outer_pillars
+TAGS:    evilmike_ambush_outer allow_dup
+SHUFFLE: x.
+SUBST:   x : xxxccvvbmG
+: if you.branch() == "Dis" then
+TILE: G = dngn_statue_iron
+: end
+MAP
+ .x.x.x.
+.x     x.
+x       x
+.       .
+x       x
+.       .
+x       x
+.x     x.
+ .x.x.x.
+ENDMAP
+
+NAME:    evilmike_ambush_outer_corners
+TAGS:    evilmike_ambush_outer allow_dup
+SUBST:   y : x., x : xxxcccvvbm
+MAP
+ xy...yx
+xx     xx
+y       y
+.       .
+.       .
+.       .
+y       y
+xx     xx
+ xy...yx
+ENDMAP
+
+NAME:    evilmike_ambush_outer_doors
+TAGS:    evilmike_ambush_outer allow_dup
+WEIGHT:  5
+SHUFFLE: +D
+SUBST:   D : +x
+MAP
+ x+D+D+x
+xx     xx
++       +
+D       D
++       +
+D       D
++       +
+xx     xx
+ x+D+D+x
+ENDMAP
+
+# Inner subvaults. Always contains two stairs, with a large chance of having all 3
+NAME:    evilmike_ambush_inner_basic
+TAGS:    evilmike_ambush_inner allow_dup
+WEIGHT:  25
+SHUFFLE: <AB
+SUBST:   AB = .
+NSUBST:  < = 1:{ / 1:( / 1:[} / 1:>
+: if you.branch() == "Dis" then
+TILE: G = dngn_statue_iron
+: end
+MAP
+ ..A..
+...<...
+...B...
+A<BGB<A
+...B...
+...<...
+ ..A..
+ENDMAP
+
+NAME:    evilmike_ambush_inner_wall_1
+TAGS:    evilmike_ambush_inner allow_dup
+WEIGHT:  3
+SHUFFLE: AB / {(
+SUBST:   AB = .
+SHUFFLE: yxX / "">
+SUBST:   " = .
+SUBST:   y : x., X = x
+SUBST:   x : xxxccvvbmm
+SUBST:   > = }>
+MAP
+ .....
+...y...
+...x...
+A{.X.(B
+...x...
+...y...
+ .....
+ENDMAP
+
+NAME:    evilmike_ambush_inner_wall_2
+TAGS:    evilmike_ambush_inner allow_dup
+WEIGHT:  3
+SHUFFLE: AB / {(
+SUBST:   AB = .
+SHUFFLE: yxX / ""<
+SUBST:   " = .
+SUBST:   y : x., X = x
+SUBST:   x : xxxccvvbmm
+SUBST:   > = }>
+MAP
+ .....
+..y.y..
+..x.x..
+A{X>X(B
+..x.x..
+..y.y..
+ .....
+ENDMAP
+
+NAME:    evilmike_ambush_inner_pond
+TAGS:    evilmike_ambush_inner allow_dup
+SUBST:   w : wwwWWlm...
+SUBST:   > : >..
+NSUBST:  < = 1:{ / 1:( / 1:[} / 1:>
+: if you.branch() == "Dis" then
+TILE: G = dngn_statue_iron
+: end
+MAP
+ .....
+..>w<..
+.<www>.
+.wwGww.
+.>www<.
+..<w>..
+ .....
+ENDMAP
+
+NAME:    evilmike_ambush_inner_cross
+TAGS:    evilmike_ambush_inner allow_dup
+WEIGHT:  5
+SUBST:   y : x., z : x., x : xxxccvvbmm
+NSUBST:  < = 1:{ / 1:( / 1:[} / 1:>
+MAP
+ ..y..
+...x...
+..<x<..
+yxxzxxy
+..<x<..
+...x...
+ ..y..
+ENDMAP

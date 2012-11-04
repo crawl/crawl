@@ -31,6 +31,7 @@ ITEM:   bread ration q:2
 : else
 SUBST: =e = x
 : end
+SUBST: = = +
 MONS:   spriggan col:white name:baker n_suf ; robe . dagger
 MAP
 xxxxxx
@@ -69,7 +70,7 @@ ENDMAP
 NAME:     blue_anna_alchemist
 DEPTH:    D:8-14
 CHANCE:   100% (D:14), 15%
-TAGS:     uniq_second_food extra chance_second_food
+TAGS:     uniq_second_food extra chance_second_food mini_float
 SUBVAULT: Z : fruiting_plant
 SUBVAULT: Y : fruiting_plant
 SUBVAULT: X : fruiting_plant
@@ -150,12 +151,11 @@ KMONS:  C = slime creature
 KITEM:  C = royal jelly q:4 / royal jelly q:6
 KFEAT:  C = altar_jiyva w:1 / . w:20
 KMASK:  W = no_monster_gen
-MARKER: + = lua:restrict_door()
 MAP
  .Wxxxxx
 .Wxxxxxxx
 @.xBBAxxx
- W+BxA+Cx
+ W=BxA=Cx
 @.xBBAxxx
 .Wxxxxxxx
  .Wxxxxxx
@@ -283,17 +283,16 @@ MARKER:  Y = lua:fog_machine { cloud_type = "steam", pow_min = 1, \
                  pow_max = 10, delay = 60, size = 1, walk_dist = 0 }
 MARKER:  Z = lua:fog_machine { cloud_type = "flame", pow_min = 100, pow_max = 100, \
                  delay = 10, size = 1, walk_dist = 0, excl_rad = -1 }
-MARKER:  + = lua:restrict_door()
 NSUBST:  c = 2:a / *:b
 SHUFFLE: ABCDEFGHIJKLMNOPQR
 MAP
  .......
 ..A......
-..vvvv+B.
+..vvvv=B.
 .Zvcccv..
 ..vY1cv..
 .Zvcccv..
-..vvvv+D.
+..vvvv=D.
 ..C......
  .......
 ENDMAP

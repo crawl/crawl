@@ -7,13 +7,13 @@
 #define TILEPICK_H
 
 #include "tiledef_defines.h"
-#include "mon-info.h"
 
 struct bolt;
 struct cloud_info;
 struct coord_def;
 struct item_def;
 class monster;
+struct monster_info;
 struct show_type;
 
 bool is_door_tile(tileidx_t tile);
@@ -54,9 +54,15 @@ int enchant_to_int(const item_def &item);
 tileidx_t tileidx_enchant_equ(const item_def &item, tileidx_t tile,
                               bool player = false);
 
+#ifdef USE_TILE
+void bind_item_tile(item_def &item);
+#else
+static inline void bind_item_tile(item_def &item) {}
+#endif
+
 // For a given fg/bg set of tile indices and a 1 character prefix,
 // return index, flag, and tile name as a printable string.
-std::string tile_debug_string(tileidx_t fg, tileidx_t bg, char prefix);
+string tile_debug_string(tileidx_t fg, tileidx_t bg, char prefix);
 
 void tile_init_props(monster* mon);
 

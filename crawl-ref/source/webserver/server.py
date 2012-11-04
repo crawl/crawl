@@ -24,14 +24,17 @@ class MainHandler(tornado.web.RequestHandler):
         self.render("client.html", socket_server = protocol + host + "/socket",
                     username = None, config = config)
 
+def err_exit(errmsg):
+    logging.error(errmsg)
+    sys.exit(errmsg)
+
 def daemonize():
     try:
         pid = os.fork()
         if pid > 0:
             os._exit(0)
     except OSError, e:
-        logging.error("Fork #1 failed! (%s)", e.strerror)
-        sys.exit(1)
+        err_exit("Fork #1 failed! (%s)" % (e.strerror))
 
     os.setsid()
 
@@ -40,8 +43,7 @@ def daemonize():
         if pid > 0:
             os._exit(0)
     except OSError, e:
-        logging.error("Fork #2 failed! (%s)", e.strerror)
-        sys.exit(1)
+        err_exit("Fork #2 failed! (%s)" % e.strerror)
 
     with open("/dev/null", "rw") as f:
         os.dup2(f.fileno(), sys.stdin.fileno())
@@ -56,7 +58,7 @@ def write_pidfile():
             with open(pidfile) as f:
                 pid = int(f.read())
         except ValueError:
-            sys.exit("PIDfile %s contains non-numeric value" % pidfile)
+            err_exit("PIDfile %s contains non-numeric value" % pidfile)
         try:
             os.kill(pid, 0)
         except OSError, why:
@@ -65,10 +67,10 @@ def write_pidfile():
                 logging.warn("Removing stale pidfile %s" % pidfile)
                 os.remove(pidfile)
             else:
-                sys.exit("Can't check status of PID %s from pidfile %s: %s" %
+                err_exit("Can't check status of PID %s from pidfile %s: %s" %
                          (pid, pidfile, why[1]))
         else:
-            sys.exit("Another Webtiles server is running, PID %s\n" % pid)
+            err_exit("Another Webtiles server is running, PID %s\n" % pid)
 
     with open(pidfile, "w") as f:
         f.write(str(os.getpid()))
@@ -172,8 +174,7 @@ if __name__ == "__main__":
     init_logging(logging_config)
 
     if not check_config():
-        logging.error("Errors in config. Exiting.")
-        sys.exit(1)
+        err_exit("Errors in config. Exiting.")
 
     if daemon:
         daemonize()

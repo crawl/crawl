@@ -78,6 +78,7 @@
 # * inv:      Lets wearer evoke invisibility ability.
 # * lev:      Lets wearer evoke levitation ability.
 # * life:     Grants negative energy resistance.
+# * mutate:   Causes high magical contamination when unequipped.
 # * nogen:    Never randomly generated.
 # * noises:   Weapon makes noises.  Can be given its own set of noises by
 #             making an entry in dat/database/wpnnoise.txt, with the
@@ -86,6 +87,8 @@
 # * nospell:  Prevents wearer from casting spells.
 # * notelep:  Prevents wearer from teleporting or blinking.
 # * poison:   Grants poison resistance.
+# * randapp:  Generated with a random artefact's appearance (used by
+#             strictly-bad unrands).
 # * rnd_tele: Induces random teleportation.
 # * seeinv:   Lets wearer see invisible.
 # * special:  Artefact is "special": can't be picked up by monsters,
@@ -118,15 +121,14 @@
 # AC:       Armour class modifier (for non-armour artefacts).
 # ACC:      Accuracy modifier (for non-weapon artefacts).
 # ANGRY     Each time the wielder of the weapon strikes a victim there's
-#           a chance of the wielder going berserk, with the chance
-#           increasing with the value of ANGRY.
+#           a num-in-100 chance of the wielder going berserk.
 # APPEAR:   Unidentified appearance of artifact.
 # COLD:     Cold resistance/vulnerability.
 # COLOUR:   The colour of the artifact, either as listed in defines.h
 #           (e.g., LIGHTRED) or as listed under element_type in view.h
 #           (e.g., ETC_FIRE)
 # CURSED:   The artefact has a one-in-num chance of becoming cursed each
-#           time it's equipped.
+#           time it's equipped (and is generated cursed).
 # DAM:      Damage modifier (for non-weapon artefacts).
 # DEX:      Dexterity modifier.
 # EV:       Evasion modifier.
@@ -136,7 +138,6 @@
 # METAB:    Hunger modifier.
 # MP:       Mana capacity modifier.
 # NAME:     Name of artefact when identified.
-# MUTATE:   Gives artifact mutagenic glow.
 # STEALTH:  Stealth modifier.
 # STR:      Strength modifier.
 # TILE:     The file containing the artefact's tile, with file type png.
@@ -173,6 +174,7 @@ COLOUR:  ETC_BLOOD
 TILE:    spwpn_wrath_of_trog
 TILE_EQ: axe_trog
 VALUE:   1000
+ANGRY:   50
 BRAND:   SPWPN_ANTIMAGIC
 
 NAME:    Mace of Variability
@@ -274,7 +276,7 @@ TILE:    spwpn_sword_of_cerebov
 TILE_EQ: sword_twist
 VALUE:   2000
 BRAND:   SPWPN_FLAMING
-BOOL:    cursed, tilerim, evil, nogen
+BOOL:    tilerim, evil, nogen
 
 NAME:    Staff of Dispater
 APPEAR:  golden staff
@@ -316,7 +318,7 @@ COLOUR:  ETC_DARK
 TILE:    urand_bloodbane
 TILE_EQ: bloodbane
 BRAND:   SPWPN_VORPAL
-ANGRY:   1
+ANGRY:   9
 BOOL:    berserk
 STEALTH: -20
 
@@ -356,7 +358,6 @@ STR:     -1
 INT:     -1
 DEX:     -1
 BOOL:    life
-CURSED:  4
 
 NAME:    dagger of Chilly Death
 OBJ:     OBJ_WEAPONS/WPN_DAGGER
@@ -388,7 +389,6 @@ TILE:    urand_finisher
 TILE_EQ: finisher
 BRAND:   SPWPN_SPEED
 STR:     3
-BOOL:    cursed
 
 NAME:    sling "Punk"
 OBJ:     OBJ_WEAPONS/WPN_SLING
@@ -438,7 +438,7 @@ TILE_EQ:  jihad
 BRAND:    SPWPN_HOLY_WRATH
 EV:       3
 MAGIC:    20
-ANGRY:    1
+ANGRY:    3
 STEALTH:  -50
 BOOL:     life
 
@@ -483,8 +483,8 @@ COLOUR:   ETC_UNHOLY
 TILE:     urand_botono
 TILE_EQ:  botono
 BRAND:    SPWPN_REAPING
-HP:       -3
-BOOL:     poison, life, noises
+HP:       -6
+BOOL:     poison, life
 
 NAME:     trident of the Octopus King
 OBJ:      OBJ_WEAPONS/WPN_TRIDENT
@@ -579,8 +579,7 @@ PLUS:    +12/+16
 COLOUR:  ETC_RANDOM
 TILE:    urand_plutonium
 TILE_EQ: plutonium_sword
-MUTATE:  6
-CURSED:  1
+BOOL:    mutate
 STEALTH: -20
 
 NAME:     great mace "Undeadhunter"
@@ -711,10 +710,9 @@ EV:       -4
 STR:      -2
 INT:      -2
 DEX:      -2
-MUTATE:   5
 CURSED:   1
 STEALTH:  -80
-BOOL:     nospell, rnd_tele, randapp, unided
+BOOL:     nospell, rnd_tele, randapp, unided, mutate
 
 NAME:     cloak of Flash
 OBJ:      OBJ_ARMOUR/ARM_CLOAK
@@ -790,7 +788,7 @@ COLOUR:  LIGHTGREY
 TILE:    urand_folly
 TILE_EQ: robe_red2
 INT:     -5
-CURSED:  2
+CURSED:  1
 BOOL:    nospell, randapp, unided
 
 ENUM:    MAXWELL
@@ -903,7 +901,7 @@ BOOL:    life, seeinv
 
 NAME:    amulet of Cekugob
 OBJ:     OBJ_JEWELLERY/AMU_WARDING
-COLOUR:  LIGHTGREY
+COLOUR:  ETC_SILVER
 TILE:    urand_cekugob
 AC:      1
 EV:      1
@@ -924,7 +922,7 @@ TILE:    urand_bloodlust
 STR:     2
 INT:     -2
 MAGIC:   30
-ANGRY:   1
+ANGRY:   9
 DAM:     5
 CURSED:  3
 STEALTH: -20
@@ -938,7 +936,7 @@ TILE:    urand_shaolin
 NAME:    ring of Robustness
 OBJ:     OBJ_JEWELLERY/RING_PROTECTION
 PLUS:    +8
-COLOUR:  LIGHTGREY
+COLOUR:  ETC_GOLD
 TILE:    urand_robustness
 
 NAME:    ring of the Mage
@@ -1010,7 +1008,7 @@ BOOL:     life, evil
 NAME:     ring of Vitality
 OBJ:      OBJ_JEWELLERY/RING_REGENERATION
 HP:       +15
-COLOUR:   LIGHTMAGENTA
+COLOUR:   ETC_MUTAGENIC
 TILE:     urand_vitality
 
 NAME:     autumn katana
@@ -1074,7 +1072,7 @@ OBJ:     OBJ_JEWELLERY/AMU_STASIS
 COLOUR:  BROWN
 TILE:    urand_air
 ACC:     60
-ANGRY:   1
+ANGRY:   100
 COLD:    3
 DAM:     60
 DEX:     3
@@ -1085,10 +1083,9 @@ MAGIC:   100
 METAB:   10
 HP:      10
 MP:      10
-MUTATE:  6
 STEALTH: 100
 STR:     3
-BOOL:    nogen, berserk, blink, clarity, elec, inv, lev, life, nospell, notelep, poison, seeinv
+BOOL:    nogen, berserk, blink, clarity, elec, inv, lev, life, nospell, notelep, poison, seeinv, mutate
 
 # This is the second of two amulets used to test suppression. See above.
 NAME:    dark chocolate

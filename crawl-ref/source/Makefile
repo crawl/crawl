@@ -58,6 +58,9 @@
 #    WEBDIR        -- place to hold the Webtiles client data. Can be either
 #                     relative to prefix or absolute.
 #
+#    ANDROID       -- perform an Android build (see docs/develop/android.txt)
+#    TOUCH_UI      -- enable UI behaviour more compatible with touch-screens
+#
 #
 # Requirements:
 #    For tile builds, you need pkg-config.
@@ -74,9 +77,9 @@ GAME = crawl
 MAKEFLAGS += -rR # This only works for recursive makes, i.e. contribs ...
 .SUFFIXES:       # ... so zap the suffix list to neutralize most predifined rules, too
 
-.PHONY: all test install clean clean-contrib clean-rltiles distclean debug debug-lite \
-        profile package-source source build-windows package-windows rest docs greet \
-        api
+.PHONY: all test install clean clean-contrib clean-rltiles clean-android \
+        distclean debug debug-lite profile package-source source \
+        build-windows package-windows rest docs greet api android
 
 include Makefile.obj
 
@@ -126,7 +129,11 @@ CFWARN_L := -Wundef
 
 DEFINES := $(EXTERNAL_DEFINES)
 
+ifdef ANDROID
+LDFLAGS := $(EXTERNAL_LDFLAGS) $(LDFLAGS)
+else
 LDFLAGS := $(EXTERNAL_LDFLAGS)
+endif
 
 #
 # The GCC and GXX variables are set later.
@@ -325,7 +332,9 @@ endif
 ifdef WIN32
 EXTRA_OBJECTS += icon.o
 else
+ifndef ANDROID
 EXTRA_LIBS += -pthread
+endif
 endif
 
 ifndef TILES
@@ -530,6 +539,34 @@ CFOPTIMIZE += -march=native
 endif
 endif
 
+# Okay, we have to assume we're on something else that
+# uses standard UNIX-like methods for finding libs.
+#
+# For instance, on Linux and most other UNIX-likes,
+# the app pkg-config can provide the appropriate
+# CFLAGS and LDFLAGS.
+#
+
+ifndef NO_PKGCONFIG
+ifeq ($(shell which pkg-config 2> /dev/null),)
+NO_PKGCONFIG = YesPlease
+endif
+endif
+
+ifdef ANDROID
+  BUILD_LUA=
+  BUILD_SQLITE=
+  BUILD_ZLIB=
+  BUILD_SDL=
+  BUILD_FREETYPE=
+  NO_PKGCONFIG=Y
+else
+
+ifndef BUILD_LUA
+  ifdef NO_PKGCONFIG
+    BUILD_LUA = yes
+  endif
+endif
 ifndef BUILD_LUA
   ifneq ($(shell $(PKGCONFIG) lua5.1 --exists || echo no),)
     ifneq ($(shell $(PKGCONFIG) lua --exists || echo no),)
@@ -571,6 +608,7 @@ ifndef BUILD_ZLIB
 else
   LIBS += $(LIBZ)
 endif
+endif #ANDROID
 
 RLTILES = rltiles
 INCLUDES_L += -I$(RLTILES)
@@ -588,6 +626,10 @@ ifdef TILES
 DEFINES_L += -DUSE_TILE
 DEFINES_L += -DUSE_TILE_LOCAL
 
+ifdef TOUCH_UI
+DEFINES_L += -DTOUCH_UI
+endif
+
 ifdef BUILD_SDL
 INCLUDES_L += -Icontrib/install/$(ARCH)/include/SDL
 endif
@@ -599,20 +641,6 @@ DEFINES_L += -DUSE_SDL -DUSE_GL -DUSE_FT
 
 ifdef GLES
 DEFINES_L += -DUSE_GLES
-endif
-
-# Okay, we have to assume we're on something else that
-# uses standard UNIX-like methods for finding libs.
-#
-# For instance, on Linux and most other UNIX-likes,
-# the app pkg-config can provide the appropriate
-# CFLAGS and LDFLAGS.
-#
-
-ifndef NO_PKGCONFIG
-ifeq ($(shell which pkg-config 2> /dev/null),)
-NO_PKGCONFIG = YesPlease
-endif
 endif
 
 ifndef NO_PKGCONFIG
@@ -634,7 +662,9 @@ LIBS += -lSDL_image $(SDL_LDFLAGS) $(FREETYPE_LDFLAGS)
 endif # pkg-config
 
 ifdef GLES
+ifndef ANDROID
 LIBS += -lSDL_gles -lEGL -lGLES_CM
+endif
 else
 ifneq ($(uname_S),Darwin)
 ifeq (,$(findstring MINGW,$(uname_S)))
@@ -651,7 +681,7 @@ INCLUDES_L += $(PNG_INCLUDE) $(FREETYPE_INCLUDE) $(SDL_INCLUDE)
 endif # TILES
 
 # On clang, unknown -Wfoo is merely a warning, thus -Werror.
-CFWARN_L += $(shell w=-Wno-array-bounds;echo|$(GCC) -E - -Werror $$w >/dev/null 2>&1 && echo $$w)
+CFWARN_L += $(shell w=-Wno-array-bounds;echo|$(GXX) -E - -Werror $$w >/dev/null 2>&1 && echo $$w)
 
 CFWARN_L += -Wno-parentheses -Wno-unused-parameter -Wwrite-strings -Wshadow
 CFOTHERS_L = $(EXTERNAL_FLAGS_L) $(EXTRA_FLAGS) $(DEFINES) $(SDL_CFLAGS)
@@ -786,11 +816,11 @@ ifneq ($(strip $(DATADIR)),)
     endif
   endif
   CFOTHERS_L += -DDATA_DIR_PATH=\"$(abspath $(DATADIR))/\"
-  FONTDIR = $(abspath $(DATADIR))dat/tiles/
+  FONTDIR = $(abspath $(DATADIR))/dat/tiles/
 else
   ifneq ($(prefix),)
 	DATADIR := $(strip $(prefix))/$(strip $(DATADIR))
-        FONTDIR = $(strip $(prefix))/$(strip $(DATADIR))dat/tiles/
+        FONTDIR = $(strip $(prefix))/$(strip $(DATADIR))/dat/tiles/
   else
     ifneq ($(DESTDIR),)
         FONTDIR = dat/tiles/
@@ -829,9 +859,9 @@ ifdef PROPORTIONAL_FONT
     INSTALL_FONTS += $(PROPORTIONAL_FONT)
   endif
 else
-  SYS_PROPORTIONAL_FONT = $(shell find /usr/share/fonts -iname $(OUR_PROPORTIONAL_FONT)|head -n 1)
+  SYS_PROPORTIONAL_FONT = $(shell dir=/usr/share/fonts; [ -d $$dir ] && find $$dir -iname $(OUR_PROPORTIONAL_FONT)|head -n 1)
   ifeq (,$(SYS_PROPORTIONAL_FONT))
-    SYS_PROPORTIONAL_FONT = $(shell find /usr/local/share/fonts -iname $(OUR_PROPORTIONAL_FONT)|head -n 1)
+    SYS_PROPORTIONAL_FONT = $(shell dir=/usr/local/share/fonts ; [ -d $$dir ] && find $$dir -iname $(OUR_PROPORTIONAL_FONT)|head -n 1)
   endif
   ifneq (,$(SYS_PROPORTIONAL_FONT))
     ifeq (,$(COPY_FONTS))
@@ -852,9 +882,9 @@ ifdef MONOSPACED_FONT
     INSTALL_FONTS += $(MONOSPACED_FONT)
   endif
 else
-  SYS_MONOSPACED_FONT = $(shell find /usr/share/fonts -iname $(OUR_MONOSPACED_FONT)|head -n 1)
+  SYS_MONOSPACED_FONT = $(shell dir=/usr/share/fonts; [ -d $$dir ] && find $$dir -iname $(OUR_MONOSPACED_FONT)|head -n 1)
   ifeq (,$(SYS_MONOSPACED_FONT))
-    SYS_MONOSPACED_FONT = $(shell find /usr/local/share/fonts -iname $(OUR_MONOSPACED_FONT)|head -n 1)
+    SYS_MONOSPACED_FONT = $(shell dir=/usr/local/share/fonts; [ -d $$dir ] && find $$dir -iname $(OUR_MONOSPACED_FONT)|head -n 1)
   endif
   ifneq (,$(SYS_MONOSPACED_FONT))
     ifeq (,$(COPY_FONTS))
@@ -922,7 +952,11 @@ ifdef REPORT
 CFOTHERS += -ftime-report
 endif
 
+ifdef ANDROID
+CFLAGS   := $(CFOPTIMIZE) $(CFOTHERS) $(CFWARN) $(CFLAGS)
+else
 CFLAGS   := $(CFOPTIMIZE) $(CFOTHERS) $(CFWARN)
+endif
 CFLAGS_L := $(CFOPTIMIZE_L) $(DEFINES_L) $(CFWARN_L) $(INCLUDES_L) $(CFOTHERS_L)
 ALL_CFLAGS := $(CFLAGS) $(CFLAGS_L)
 YACC_CFLAGS  := $(ALL_CFLAGS) -Wno-unused-function -Wno-sign-compare -DYYENABLE_NLS=0 -DYYLTYPE_IS_TRIVIAL=0
@@ -1051,9 +1085,6 @@ greet:
 	fi
 
 docs: $(GENERATED_DOCS)
-
-test:
-	./$(GAME) -test > /dev/null
 
 
 # Webtiles data
@@ -1219,6 +1250,14 @@ endif
 ##########################################################################
 # The actual build targets
 #
+ifdef ANDROID
+  # during build, data goes in a different directory to when crawl runs!
+  prefix_fp = ..
+  datadir_fp = ../AndroidData
+  savedir_fp = ../AndroidData
+  shareddir_fp =
+endif
+
 install: all
 ifeq ($(DESTDIR)$(prefix),)
 	@echo Neither "DESTDIR" nor "prefix" defined -- nowhere to install to, aborting.
@@ -1230,7 +1269,6 @@ endif
 	mkdir -p $(datadir_fp)/dat/des
 	mkdir -p $(datadir_fp)/dat/dlua
 	mkdir -p $(datadir_fp)/dat/clua
-	mkdir -p $(datadir_fp)/dat/lua
 	mkdir -p $(datadir_fp)/dat/database
 	mkdir -p $(datadir_fp)/dat/defaults
 	mkdir -p $(datadir_fp)/dat/descript
@@ -1247,7 +1285,6 @@ endif
 	    do echo "dgn.load_des_file('$$x')"; \
 	    done >>$(datadir_fp)/dat/dlua/loadmaps.lua
 	$(COPY)   dat/clua/*.lua $(datadir_fp)/dat/clua/
-	$(COPY)   dat/lua/*.lua $(datadir_fp)/dat/lua/
 	$(COPY_R) dat/database/* $(datadir_fp)/dat/database/
 	$(COPY_R) dat/defaults/* $(datadir_fp)/dat/defaults/
 	$(COPY_R) dat/descript/* $(datadir_fp)/dat/descript/
@@ -1302,7 +1339,7 @@ ifeq ($(USE_DGAMELAUNCH),)
 endif
 endif
 
-clean: clean-rltiles clean-webserver tx-clean
+clean: clean-rltiles clean-webserver clean-android tx-clean
 	+$(MAKE) -C $(UTIL) clean
 	$(RM) $(GAME) $(GAME).exe $(GENERATED_FILES) $(EXTRA_OBJECTS) libw32c.o\
 	    libunix.o $(ALL_OBJECTS) $(ALL_OBJECTS:.o=.d) *.ixx  \
@@ -1312,6 +1349,11 @@ clean: clean-rltiles clean-webserver tx-clean
 
 clean-contrib:
 	+$(MAKE) -C contrib clean
+
+clean-android:
+	$(RM) ../icon.png ../libapplication.so
+	$(RM) -r ../AndroidData
+	$(RM) -r ../bin
 
 distclean: clean clean-contrib clean-rltiles
 	$(RM) -r morgue saves
@@ -1434,7 +1476,7 @@ macro.o: cmd-name.h
 # Only support a single dir for now
 TX = tx
 TX-CONFIG = .tx/config
-TX-SET = $(TX) set --auto-local --source-lang en_AU -t INI --mode=reviewed --execute
+TX-SET = $(TX) set --auto-local --source-lang en_AU -t INI --execute
 TX-DIR = dat/descript
 
 # List of languages
@@ -1459,8 +1501,8 @@ TX-HAVE-QUOTES = $(foreach name, branches features items monsters unident, $(TX-
 # Files pulled from transifex. It is different than TX-TRANS, because it can
 # contain new files for which we have no .txt yet
 TX-NEW-TRANS = $(foreach lang, $(TX-LANG), $(wildcard $(TX-DIR)/$(lang)/*.ini))
-TX-NEW-TEXT = $(filter-out, quotes, $(wildcard $(TX-DIR)/en/*.ini))
 TX-NEW-QUOTES = $(TX-DIR)/en/quotes.ini
+TX-NEW-TEXT = $(filter-out $(TX-NEW-QUOTES), $(wildcard $(TX-DIR)/en/*.ini))
 TX-NEW = $(TX-NEW-TRANS) $(TX-NEW-TEXT) $(TX-NEW-QUOTES)
 
 TX-COMMIT-AUTHOR = "Translators <crawl-ref-discuss@lists.sourceforge.net>"
@@ -1528,10 +1570,10 @@ tx-check: $(TX-INI)
 	$(TX-MKTXT) -w $(TX-TRANS);\
 
 tx-commit:
-	@if git diff --quiet $(TX-TXT); then\
+	@if git diff HEAD --quiet $(TX-TXT); then\
 		exit 0;\
 	fi;\
-	git diff $(TX-TXT);\
+	git diff HEAD $(TX-TXT);\
 	read -p "Commit? (Y/n) " RESP;\
 	if [ "$$RESP" = n -o "$$RESP" = N ]; then\
 		exit 1;\
@@ -1547,7 +1589,7 @@ tx-commit:
 tx-pull:
 	@echo "Cleaning up downloaded translations.";\
 	$(RM) $(TX-NEW)
-	tx pull -a --minimum-perc=1 --mode=reviewed
+	tx pull -a
 
 tx-push: $(TX-INI) $(TX-QUOTES-ALL)
 	$(TX-MKINI) -umd $(TX-DIR)/en $(TX-TSOURCES)
@@ -1568,7 +1610,14 @@ tx-sync:
 
 .PHONY: build-rltiles
 build-rltiles: .contrib-libs $(RLTILES)/dc-unrand.txt
+ifdef ANDROID
+	# force submake to run properly
+	env -i - bash -l -c "$(MAKE) -C $(RLTILES) all TILES=1 V=1"
+    # prove that tiles were generated properly
+	grep tile_info rltiles/*.cc| head
+else
 	+$(MAKE) -C $(RLTILES) all ARCH=$(ARCH) TILES=$(TILES)$(WEBTILES)
+endif
 
 $(TILEDEFSRCS) $(TILEDEFHDRS) $(ORIGTILEFILES): build-rltiles
 
@@ -1607,7 +1656,7 @@ source: removeold prebuildyacc
 	(cd ../..;git ls-files| \
 		grep -v -f crawl-ref/source/misc/src-pkg-excludes.lst| \
 		tar cf - -T -)|tar xf - -C build
-	for x in lua pcre sqlite libpng freetype sdl sdl-image zlib; \
+	for x in lua pcre sqlite libpng freetype sdl sdl-image zlib fonts; \
 	  do \
 	   mkdir -p $(BSRC)contrib/$$x; \
 	   (cd contrib/$$x;git ls-files|tar cf - -T -)| \
@@ -1687,3 +1736,29 @@ mac-app-tiles: all
 
 mac-app-console: all
 	+$(MAKE) -j1 -C mac -f Makefile.app-bundle
+
+#############################################################################
+# Building the Android package
+#
+
+android:
+	@SRC_LINK=contrib/sdl-android/project/jni/application/src ;\
+	if [ ! -e $$SRC_LINK ]; then \
+		ln -s `cd ..; pwd` $$SRC_LINK; \
+	fi
+	@cd contrib/sdl-android && ./build.sh && \
+	mv project/bin/MainActivity-debug.apk ../../crawl_tiles_android-$(SRC_VERSION).apk
+
+#############################################################################
+# Canned tests
+#
+
+TESTS=test woken_rest unwoken_rest fireworks cerebov pan_lords miscasts kraken
+test: $(foreach i, $(TESTS), test-$(i))
+
+test-%: $(GAME) util/fake_pty
+	util/fake_pty test/stress/run $*
+	@echo "Finished: $*"
+
+util/fake_pty: util/fake_pty.c
+	$(if $(HOSTCC),$(HOSTCC),$(CC)) -Wall $< -o $@ -lutil

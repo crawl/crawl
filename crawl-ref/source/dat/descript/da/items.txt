@@ -1,0 +1,616 @@
+%%%%
+air elemental fan
+
+En magisk anordning, som kan hidkalde luft-elementaler. Den er upålidelig, og
+det kræver som regel flere forsøg at få den til at virke korrekt. Det er
+risikabelt at bruge den, men bliver minde farligt, hvis brugeren er trænet i
+den tilhørende elementarmagi.
+%%%%
+amulet of clarity
+
+Denne amulet beskytter den, der bærer den, mod visse former for mental
+forvirring, blandt andet at blive gjort rasende mod sin vilje.
+%%%%
+amulet of conservation
+
+Denne amulet beskytter bærerens ejendele mod ødelæggelse, men er ikke
+ufejlbarlig.
+%%%%
+amulet of controlled flight
+
+Hvis bæreren af denne amulet skulle blive leviteret på magisk vis, så får han
+eller hun en vist grad af kontrol over bevægelsen. Det gør det muligt at gå ned
+ad trapper og at samle ting op, som ligger på jorden, for eksempel, men uden at
+fratage bæreren levitationens fordele.
+%%%%
+amulet of guardian spirit
+
+Denne amulet gør bæreren mindre modtagelig over for fysisk skade, men dræner i
+stedet magisk kraft. Hvis dine magireserver udtømmes, kan ånden ikke beskytte
+dig mere, før de er fyldt op igen.
+%%%%
+amulet of inaccuracy
+
+Denne amulet gør bæreren mindre præcis, hvad end det gælder nærkamp eller om at
+ramme uhyrer på afstand eller med besværgelser.
+%%%%
+amulet of rage
+
+Denne amulet lader bæreren forsøge at gå bersærk.
+%%%%
+amulet of resist corrosion
+
+Denne amulet beskytter bæreren og dennes udstyr mod den ætsning, syre
+forårsager, men den er ikke ufejlbarlig.
+%%%%
+amulet of resist mutation
+
+Denne amulet beskytter bæreren mod mutationer, men den er ikke ufejlbarlig.
+%%%%
+amulet of the gourmand
+
+Denne amulet beskytter bæreren mod sygdom som følge af at spise frisk, råt kød
+og gør det muligt at fordøje det uden at være sulten. Effekten på bærerens
+fordøjelse er små til at begynde med, men tager til med tiden.
+%%%%
+amulet of warding
+
+Denne amulet afværger angreb fra væsener, der er magisk fremmanet, og gør
+bæreren mere modstandsdygtig over for drænende angreb.
+%%%%
+amulet of faith
+
+Denne talisman er lavet til gøre guderne opmærksomme på den, der bærer den.
+Denne guddommelige opmærksomhed gør det lettere at glæde din gud, men det
+bliver også sværere at blive tilgivet for dine synder. Amuletten dræner noget
+af din guddommelige gunst, når du tager den af.
+%%%%
+amulet of stasis
+
+En amulet, som er omhyggeligt konstrueret med magiske værn, som blokerer
+magiske og fysiologiske effekter, der ellers ville have teleporteret, sænket,
+forhastet eller lammet bæreren.
+
+Amuletten virker mod de fleste former for translokativ magi, men planskift som
+forvisning formår den ikke at blokere.
+%%%%
+animal skin
+
+Et stort stykke tyk hud, dækket af pels, som er flået af et dyrekadaver, og som
+kan bæres som en primitiv klædedragt. Den yder rudimentær beskyttelse mod slag,
+men fordi det ikke er garvet, lugter det svagt af råddent kød.
+%%%%
+apple
+
+En lækker, fast, rød frugt, som er syrlig på tungen.
+%%%%
+apricot
+
+En saftig, gulorange frugt, prunus armeniaca.
+%%%%
+arrow
+
+Et langskaftet projektil, som skal affyres med bue eller langbue. Det er
+forsynet med fjer i den ene ende og en spids i den anden.
+%%%%
+banana
+
+En lækker, gul frugt, som sandsynligvis er dyrket og importeret af et amoralsk,
+multinationalt selskab som følge af en korrupt handelsaftale.
+%%%%
+bardiche
+
+En lang stage med et enormt, kløvende blad i den ene ende.
+%%%%
+battleaxe
+
+En stor, tohåndet krigsøkse med et formidabelt, tveægget hoved, som er lavet
+til dygtige krigere.
+%%%%
+beef jerky
+
+Et stykke konserveret, død ko.
+%%%%
+blessed double sword
+
+Et magisk våben med to barberbladsskarpe klinger. Det er blevet forbedret af
+Den Strålendes kraft.
+%%%%
+blessed falchion
+
+Et sværd med en bred, skærende klinge. Det er blevet forbedret af Den
+Strålendes kraft.
+%%%%
+blessed great sword
+
+Et sværd med en meget lang, tung klinge og et langt skæfte. Det er blevet
+forbedret af Den Strålendes kraft.
+%%%%
+blessed long sword
+
+Et sværd med en lang, huggende klinge. Det er blevet forbedret af Den
+Strålendes kraft.
+%%%%
+blessed scimitar
+
+Et langt sværd med krum klinge. Det er blevet forbedret af Den Strålendes
+kraft.
+%%%%
+blessed triple sword
+
+Et magisk våben med tre store, barberbladsskarpe klinger. Det er blevet
+forbedret af Den Strålendes kraft.
+%%%%
+blowgun
+
+Et langt, let rør, der er åbent i begge ender, og som man kan bruge til at
+puste forskellige slags nåle efter fjender med. Det støjer meget lidt.
+%%%%
+bolt
+
+Et metalprojektil, kortere end en pil, der skal affyres med en armbrøst.
+%%%%
+book of air
+
+En grundbog om den meste elementære luftmagi. Siderne bladrer ofte af sig selv,
+som om de befandt sig i en kraftig blæst; på andre tidspunkter er siderne
+klistret sammen af statisk elektricitet, og skyder små gnister, når man
+adskiller dem.
+%%%%
+book of alchemy
+
+En bog som fokuserer på alkymistiske processer og hvordan man bruger dem i
+magiske besværgelser. Den samler mange af oldtidens alkymisters visdom. Når
+bogen åbnes, kondenseres blækket ud af den blå luft ned på siderne og afslører
+teksten.
+%%%%
+book of annihilations
+
+Denne bogs lasede sider bløder, og selv analfabeter kan mærke kraften i det
+mystiske raseri, den indeholder. Den er eftersøgt af troldmænd, for den lader
+de dygtige og snarrådige styre den totale ødelæggelse så let som ingenting. Men
+sølle troldkarle risikerer en krank skæbne, hvis de læser dette værk.
+
+ADVARSEL: Hvis det mislykkes at lære en besværgelse fra denne bog, vil den
+angribe dig.
+%%%%
+book of beasts
+
+En bog med besværgelser som er fokuseret på den magiske produktion af væsener,
+med sider af dyrehuder og bind, der er dekoreret med tænder. Den stinker som et
+menageri og kan finde på at bide uforsigtige læseres fingre.
+%%%%
+book of burglary
+
+En bog som indeholder mange alsidige besværgelser, der alle fokuserer på
+tyveri, indbrud og andre skurkagtige foretagender. Troldmænd, som lader
+opmærksomheden vandre, mens de læser i bogen, vil ind i mellem bladre og
+opdage, at småting fra deres lommer er blevet rapset og placeret mellem
+siderne.
+%%%%
+book of callings
+
+En begyndertekst om magisk fremmaning af dyr og væsener fra andre riger. Små
+fluer og myg dukker op ud af ingenting, når man åbner bogen, og forsvinder, når
+den lukkes.
+%%%%
+book of cantrips
+
+En bog som indeholder et lille udvalg af de mest grundlæggende besværgelser,
+beregnet på begyndere, som gerne vil lære en af de repræsenterede magiske
+skolers mest rudimentære teknikker. Ikke desto mindre kan selv erfarne
+troldmænd drage nytte af besværgelserne i den.
+%%%%
+book of changes
+
+En grundlæggende lærebog om transmutationernes magiske kunst, med mange
+overdådige illuminationer fra skolen tidlige, eksperimenterende historie:
+halvt-troldmand-halvt-edderkop, troldmænd med sværdnæser eller næbbede
+tentakler i stedet for ben. Teksten er fyldt med forsikringer om, at den slags
+ikke kan ske længere, selvom en del spirende transmutanister vælger at slå ind
+på fortryllelser i stedet.
+%%%%
+book of clouds
+
+En bog med magiske besværgelser, der skaber forskellige skyer, som er indhyllet
+i en fin tåge, der sommetider slører ordene en smule. En indsigtsfuld bog,
+selvom forfatteren ind i mellem kører ud kedelige tangenter om, hvad de
+forskellige diagrammer af skyer ligner.
+%%%%
+book of conjurations
+
+En bog, som indeholder en introduktion til fremmaningernes destruktive magiske
+kunster. Når den åbnes, skælver den af kræfter, den knapt kan rumme. En meget
+populær bog, som konstant bliver revideret og opdateret: Udgaven fra i år
+fokuserer på elementerne is og luft.
+%%%%
+book of control
+
+En bog med magiske besværgelser, der kan kontrollere sind, kroppe og endda rum.
+Troldmænd, som får øje på denne bog, føler sig ofte drevet til at bladre gennem
+dens sider, og de, der gør det, har ofte svært ved at rive sig løs fra tegnene
+og runerne i den.
+%%%%
+book of death
+
+Et grufuldt illumineret manuskript, som indeholder nekromantikkens mørke
+besværgelser, nedfældet med blæk, der er destilleret fra lig. Hver side er
+fyldt med grotesk kunst, der skildrer scener med afskyeligt fordærv og
+gruopvækkende død, hvori meget af teksten er indkorporeret som ruller af
+indvolde eller knoglearrangementer.
+%%%%
+book of debilitation
+
+En bog med forbandelser som er nyttige for en okkult skytte. Mange af siderne
+er fyldt med huller, som om de blev brugt til at træne bueskydning med, før de
+blev beskrevet og indbundet. Denne okkulte teknik skulle gøre besværgelserne
+mere velegnede til brug med skydevåben, men i praksis fungerer de ikke
+anderledes end de udgaver, der findes i mindre gennemhullede tekster.
+%%%%
+book of dreams
+
+Optegnelser over en mystikers mumlen, mens han var i trance, som beskriver en
+række besværgelser, der afspejler mystikerens drømmetilstand. Værkets kritikere
+mener, at besværgelserne ikke funktionelt adskiller sig fra allerede kendte
+udgaver, men bogen er fortsat populær for sit bizarre billedsprog og sine
+kryptiske sidebemærkninger.
+%%%%
+book of enchantments
+
+En grimoire, der indeholder et sortiment af magiske forbandelser og
+fortryllelser, som glimter og glitrer, når man bladrer i den. Den bedårende
+anakronistiske titel afspejler en tidligere, mere ufuldstændig forståelse af
+disse to magiske skoler.
+%%%%
+book of envenomations
+
+En bog med magiske besværgelser, som gløder med et sygeligt, grønt lys. Bogen
+er oprindeligt skrevet af Olgreb, den berygtede gift-troldmand, som myrdede
+mange af sine rivaler ved at begave dem med overordentligt giftige eksemplarer
+af den. De nuværende udgaver er harmløse, men man kan ofte finde døde bogorm og
+sølvfisk mellem siderne.
+%%%%
+book of fixed level
+
+En bog med magiske besværgelser.
+%%%%
+book of fixed theme
+
+En bog med magiske besværgelser.
+%%%%
+book of fire
+
+En bog som indeholder avancerede besværgelser fra ildens elementarskole. Mange
+ildelementalister har fået deres øjenbryn og skæg brændt af af de midlertidige
+flammer, der opstår første gang, man åbner bogen, og der er endda rapporter om,
+at hvis man lader den ligge i månedsvis, kan den selvantænde og brænde hele
+biblioteker ned i forfærdelige brande.
+%%%%
+book of flames
+
+Standardteksten på trolddoms-akademierne for de, der studerer ildens
+elementarskole. Den er var at røre ved, og hjørnerne er svedne. Siderne er
+beskrevet med ildruner, som gløder med et blafrende lys, man kan læse ved.
+%%%%
+book of frost
+
+En bog med magiske besværgelser, der ofte bruges som introduktion til isens
+elementarskole. Omslaget er koldt at røre ved, og de mystiske runer er skrevet
+med en flydende, kantet stil, som minder om frost, der dækker et vindue.
+%%%%
+book of geomancy
+
+En bog med grundlæggende besværgelser, der involverer elementet jord. Den føles
+tæt, selvom den ikke er tungere end andre magiske bøger. Når man læser i den,
+drysser der grus ud fra siderne, som lader til at være lavet af tynde plader
+glimmer.
+%%%%
+book of hinderance
+
+En magisk manual, som er dedikeret til kunsten at sløve dine fjenders sind og
+krop. Den er skrevet med en krampagtig, næsten ulæselig håndskrift på meget
+stive sider, som er svære at bladre i. Nogle troldmænd har rapporteret en
+stivhed i fingrene, mens de læser, som forsvinder når de lukker bogen.
+%%%%
+book of ice
+
+En bog med avancerede besværgelser, der bruger elementet is. Bogen er iskold,
+og siderne er dækket af små frostflager. Selvom de har varmt tøj på, får de
+skrivere, der kopierer dette værk, ofte frostbid eller forfrysninger.
+%%%%
+book of maledictions
+
+Denne bog med besværgelser lærer forheksere, hvordan de svækker og forvirrer
+deres fjender med hekseri, før de gør en ende på dem. Indersiden af omslaget er
+illustreret med det onde øje, et ældgammelt, forbandet symbol; det har
+foranlediget mange historier om eventyrere, som kom galt af sted efter at have
+taget denne bog med ned i de underjordiske gange. Men som skeptikerne også har
+påpeget, så kommer næsten alle, der bevæger sig ned i de underjordiske gange,
+galt af sted.
+%%%%
+book of minor magic
+
+En bog, som indeholder et udvalg af simple, men nyttige magiske besværgelser.
+Mange prominente troldmænd har påbegyndt deres okkulte studier med denne bog,
+siden den udkom første gang for tre århundreder siden. Den er sidenhen udkommet
+i 88 oplag, og er i dag en af verdens mest velkendte grimoirer.
+%%%%
+book of morphology
+
+En bog, som er dedikeret til transmutationer af form. Teksten ændrer og flytter
+sig konstant, så det er stort set umuligt at bruge indholdsfortegnelsen eller
+et bogmærke. Men det lykkes nu alligevel for de fleste troldmænd at finde det,
+de leder efter.
+%%%%
+book of necromancy
+
+En makaber bog med magiske besværgelser, som ofte er den første grimoire, en
+nybegynder udi nekromantikken studerer. På grund af de farer, der er forbundet
+med at beskæftige sig med nekromantisk magi, er det også til tider den *sidste*
+grimoire, en nybegynder udi nekromantikken studerer.
+%%%%
+book of party tricks
+
+Denne bog indeholder et utal af morsomme besværgelser, som med garanti kan
+sætte gang i enhver troldmandsfest, og en lang række skåle, vittigheder og
+selskabslege, alt sammen skrevet med kulørt og morsom skrift. Besværgelserne i
+denne bog er blevet justeret en smule, så de kan synges til melodierne til
+populære drikkesange.
+%%%%
+book of power
+
+En bog med kraftfulde magiske besværgelser, som er eftersøgt af ambitiøse
+troldmænd, der vil hæve sig over deres rivaler. Den knitrer og skælver af
+energier, der med nød og næppe er dæmmet op for.
+%%%%
+book of spatial translocations
+
+Klassiskeren over dem alle om translokationernes magiske felt, skrevet af
+ærketroldmanden Golubria, som også var en dygtig forvrænger, for tohundrede år
+siden. Bogen findes stadig i magiske biblioteker over hele verdenen, selvom den
+ikke altid er der, hvor bibliotekaren efterlod den.
+%%%%
+bottled efreet
+
+En mægtig ifrit, som blev fanget af en troldmand og bundet i en bronzeflaske.
+Hvis du bryder flaskens segl, kan du slippe den fri til at hærge – men det går
+måske ud over dig.
+%%%%
+bow
+
+Et buet stykke træ og snor, som kan affyre pile. Den gør god skade i kamp, og
+en dygtig bruger kan bruge den med stor effekt.
+%%%%
+box of beasts
+
+En magisk æske, som indeholder mange vilde dyr. Man kan slippe dem fri ved at
+åbne æskens låg.
+%%%%
+bread ration
+
+Et stort, mættende måltid af tørt brød.
+%%%%
+broad axe
+
+En krigsøkse, som er forbedret med metalbånd, pigge, et forlænget skæfte og et
+halvmåneformet blad. Den kan forårsage frygtelige skader, men er svær at bruge
+med en hånd på grund af længden og vægten.
+%%%%
+cap
+
+En hat af stof eller læder.
+%%%%
+centaur barding
+
+Rustning til kentaurer, som de kan bære på deres hestehalvdel.
+%%%%
+chain mail
+
+En rustning, som udelukkende består af små metalringe. Ringbrynje yder stærk
+beskyttelse mod våben, kløer og savtænder, men forhindrer hurtig og snigende
+bevægelse.
+%%%%
+cheese
+
+En klump ost.
+%%%%
+choko
+
+En næsten smagløs, grøn grøntsag, som vokser på en vinranke.
+%%%%
+chunk of flesh
+
+En klump kød, du har fundet i de underjordiske gange.
+%%%%
+cloak
+
+En stofkappe.
+%%%%
+club
+
+Et tungt stykke træ med et greb i den ene ende og det meste af sin vægt i den
+anden, hvilket gør den velegnet til at slå eller kaste med. Køller er ganske
+primitive våben, men at slå nogens pandebrask ind med dem forbliver alligevel
+en meget populær og effektiv måde at løse konflikter på.
+%%%%
+corpse
+
+Et kadaver. Du kan slagte det for at få spiselige kødklumper.
+%%%%
+crossbow
+
+Et stykke maskineri, som kan affyre bolte. Det tager et stykke tid at lade og
+affyre den, men den gør særdeles god skade i kamp.
+%%%%
+crystal plate armour
+
+En utroligt tung, men ekstremt effektiv krystallinsk rustning.
+%%%%
+demon blade
+
+Et grufuldt våben, som er smedet i Helvedes ild. Det bliver endnu mere
+dødbringende i hænderne på dem med en dæmonisk natur.
+%%%%
+demon trident
+
+Et grufuldt, tregrenet våben, som er formet af ild og svovl.
+%%%%
+demon whip
+
+Et grufuldt våben, som er vævet i infernoets dybder.
+%%%%
+dire flail
+
+En stridsplejl med længere pigge og et tungere hoved.
+%%%%
+eggplant
+
+En rådden aubergine, som du kan kaste efter Crawl-udviklerne. (Det er en fejl,
+hvis du nogensinde ser denne besked.)
+%%%%
+empty ebony casket
+
+En magisk æske, som er tømt for kraft.
+%%%%
+eudemon blade
+
+En hellig klinge, som er frembragt af Himmelens smedjer og beboet af en god
+ånd. Det er Den Strålendes tjeneres yndlingsvåben, og det kan ikke bruges af
+ondskabens styrker.
+%%%%
+eveningstar
+
+Piggene på denne morgenstjerne er exceptionelt lange, hvilket lader den
+forårsage odiøse sår.
+%%%%
+executioner's axe
+
+Dette frygtindgydende våben er dækket af indtørret blod og grove indgraveringer
+af tortur og død, men bladet er velslebet. Det enorme øksehoved lader til uden
+videre at kunne lemlæste ethvert offer, som skulle møde den, og du er
+overbevist om, at et slag er nok.
+%%%%
+falchion
+
+Et langt, enægget sværd med en lidt krum klinge. Vægten er samlet i odden for
+at gøre det mere dødbringende.
+%%%%
+fire dragon armour
+
+En magisk rustning, som er lavet af en ildsprudende drages skæl. Den beskytter
+fremragende mod ild, men gør bæreren mere modtagelig over for effekterne af
+kulde.
+%%%%
+fire dragon hide
+
+En almindelig sand drages skællede skind. Det kan laves om til en rigtig
+rustning, men selv i rå form giver den fremragende beskyttelse mod virkningen
+af ild, men gør bæreren mere modtagelig mod kulde.
+%%%%
+flail
+
+En stridskølle, hvor hovedet er forbundet til skaftet med en kort kæde. Dette
+giver slagene mere kraft, men gør den også sværere at bruge.
+%%%%
+giant club
+
+En kæmpe klump træ, som er formet til en jættes hænder.
+%%%%
+giant spiked club
+
+En kæmpe klump træ med spidse pigge i den ene ende.
+%%%%
+glaive
+
+En stage med en stor, tung klinge i den ene ende.
+%%%%
+gold dragon armour
+
+En magisk rustning, som er lavet af en gulddrages skæl. Den er meget tungere
+end de fleste drageskæls-rustninger og beskytter bæreren mod gift, ild og
+kulde.
+%%%%
+gold piece
+
+En bunke glimtende guldmønter.
+%%%%
+grape
+
+En lille frugt.
+%%%%
+great mace
+
+En enorm stridskølle af metal, som er overordentligt uhåndterlig.
+%%%%
+helm
+
+En hovedbeklædning af metal.
+%%%%
+honeycomb
+
+En klump lækker bikage, som er lavet af kæmpebier.
+%%%%
+lemon
+
+En gul frugt.
+%%%%
+lychee
+
+En tropisk frugt.
+%%%%
+manual
+
+En værdifuld bog, som lader dig træne en bestemt færdighed mere effektivt.
+%%%%
+meat ration
+
+En mættende ration af tørret og konserveret kød.
+%%%%
+potion of speed
+
+En fortryllet drik, som gør alle, der drikker den, hurtigere.
+%%%%
+potion of strong poison
+
+En forfærdeligt giftig drik.
+%%%%
+quad damage
+
+En mystisk genstand, som ligner en form for rune. Når den aktiveres, får den
+brugeren til at lyse blåt og får alle lyde til at give genlyd ... og måske er
+der også andre virkninger.
+%%%%
+quarterstaff
+
+En solid træstang, som er lavet til kamp.
+%%%%
+rambutan
+
+En lille, men lækker tropisk frugt. Hvordan den er havnet her, er ikke til at
+vide.
+%%%%
+ring of protection from cold
+
+Denne ring beskytter mod kulde.
+%%%%
+ring of protection from fire
+
+Denne ring beskytter mod varme og ild.
+%%%%
+ring of see invisible
+
+Denne ring lader bæreren se de ting, der er skjult af magi.
+%%%%
+ring of sustenance
+
+Denne ring giver bæreren energi, så man ikke har brug for at spise så ofte.
+%%%%
+rune of zot
+
+En talisman, som lader dig træde ind i Zots domæne.
+%%%%
+sabre
+
+Selvom det egentlig er lavet til at blive brugt fra hesteryg, så fungerer dette
+enæggede, let krumme kortsværd stadig udmærket i hænderne på krigere til fods.
+%%%%

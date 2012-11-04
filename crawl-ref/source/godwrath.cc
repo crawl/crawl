@@ -19,9 +19,11 @@
 #include "food.h"
 #include "ghost.h"
 #include "godabil.h"
+#include "itemprop.h"
 #include "libutil.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-iter.h"
 #include "mon-util.h"
 #include "mon-place.h"
 #include "terrain.h"
@@ -208,10 +210,10 @@ static bool _zin_retribution()
             confuse_player(3 + random2(10), false);
             break;
         case 1:
-            you.hibernate();
+            you.put_to_sleep(NULL, 30 + random2(20));
             break;
         case 2:
-            paralyse_player("the wrath of Zin", 3 + random2(10));
+            paralyse_player("the wrath of Zin");
             break;
         }
         break;
@@ -553,7 +555,7 @@ static bool _trog_retribution()
 
             while (points > 0)
             {
-                int cost = std::min(random2(8) + 3, points);
+                int cost = min(random2(8) + 3, points);
 
                 // quick reduction for large values
                 if (points > 20 && coinflip())
@@ -715,7 +717,7 @@ static bool _beogh_retribution()
 
         if (num_created > 0)
         {
-            std::ostringstream msg;
+            ostringstream msg;
             msg << " throws "
                 << (num_created == 1 ? "an implement" : "implements")
                 << " of " << (am_orc ? "orc slaying" : "electrocution")
@@ -1081,7 +1083,7 @@ static bool _fedhas_retribution()
 
         // We are going to spawn some oklobs but first we need to find
         // out a little about the situation.
-        std::vector<std::vector<coord_def> > radius_points;
+        vector<vector<coord_def> > radius_points;
         collect_radius_points(radius_points, you.pos(),
                               you.get_los_no_trans());
 
@@ -1186,7 +1188,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     // gods don't use divine retribution on followers of gods they don't
     // hate.
     if (!force && ((god == you.religion && is_good_god(god))
-        || (!god_hates_your_god(god))))
+        || (god != you.religion && !god_hates_your_god(god))))
     {
         return false;
     }
@@ -1287,9 +1289,9 @@ bool do_god_revenge(conduct_type thing_done, const monster *victim)
 }
 
 // Currently only used when orcish idols have been destroyed.
-static std::string _get_beogh_speech(const std::string key)
+static string _get_beogh_speech(const string key)
 {
-    std::string result = getSpeakString("Beogh " + key);
+    string result = getSpeakString("Beogh " + key);
 
     if (result.empty())
         return "Beogh is angry!";
@@ -1353,9 +1355,9 @@ static void _tso_blasts_cleansing_flame(const char *message)
 }
 
 // Currently only used when holy beings have been killed.
-static std::string _get_tso_speech(const std::string key)
+static string _get_tso_speech(const string key)
 {
-    std::string result = getSpeakString("the Shining One " + key);
+    string result = getSpeakString("the Shining One " + key);
 
     if (result.empty())
         return "The Shining One is angry!";
@@ -1398,12 +1400,12 @@ static bool _ely_holy_revenge(const monster *victim)
 
     god_acting gdact(GOD_ELYVILON, true);
 
-    std::string msg = getSpeakString("Elyvilon holy");
+    string msg = getSpeakString("Elyvilon holy");
     if (msg.empty())
         msg = "Elyvilon is displeased.";
     mpr(msg.c_str(), MSGCH_GOD, GOD_ELYVILON);
 
-    std::vector<monster*> patients;
+    vector<monster*> patients;
     for (monster_iterator mi(you.get_los()); mi; ++mi)
     {
         // healer not necromancer
@@ -1423,7 +1425,7 @@ static bool _ely_holy_revenge(const monster *victim)
         return false;
 
     mpr("Elyvilon touches your foes with healing grace.");
-    for (std::vector<monster*>::const_iterator mi = patients.begin();
+    for (vector<monster*>::const_iterator mi = patients.begin();
          mi != patients.end(); ++mi)
     {
         simple_monster_message(*mi, " is healed.");
@@ -1459,7 +1461,7 @@ static void _god_smites_you(god_type god, const char *message,
             }
         }
 
-        std::string aux;
+        string aux;
 
         if (death_type != KILLED_BY_BEOGH_SMITING
             && death_type != KILLED_BY_TSO_SMITING)
@@ -1487,7 +1489,7 @@ void ash_reduce_penance(int amount)
     if (!you.penance[GOD_ASHENZARI] || !you.exp_docked_total)
         return;
 
-    int lost = std::min(amount / 2, you.exp_docked);
+    int lost = min(amount / 2, you.exp_docked);
     you.exp_docked -= lost;
 
     int new_pen = (((int64_t)you.exp_docked * 50) + you.exp_docked_total - 1)

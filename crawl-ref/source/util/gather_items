@@ -1,0 +1,69 @@
+#!/usr/bin/perl -w
+
+my $db = grep /^-d$/, @ARGV;
+
+open IN, "util/cpp_version itemname.cc|" or die "Can't read itemname.cc\n";
+{ undef local $/; $_ = <IN>; }
+close IN;
+
+$items{"wand of $_"} = 1 for /WAND_[A-Z_]+: *return "([^"]+)";/g;
+$items{"potion of $_"} = 1 for /POT_[A-Z_]+: *return "([^"]+)";/g;
+$items{"scroll of $_"} = 1 for /SCR_[A-Z_]+: *return "([^"]+)";/g;
+$items{$_} = 1 for /RING_[A-Z_]+: *return "([^"]+)";/g;
+$items{$_} = 1 for /AMU_[A-Z_]+: *return "([^"]+)";/g;
+unless ($db)
+{
+    $items{"$_ rune of Zot"} = 1 for /RUNE_[A-Z_]+: *return "([^"]+)";/g;
+    $items{"$_ deck of cards"} = 1 for /DECK_RARITY_[A-Z_]+: *return "([^"]+)";/g;
+}
+$items{$_} = 1 for /MISC_[A-Z_]+: *return "([^"]+)";/g;
+$items{"book of $_"} = 1 for /BOOK_[A-Z_]+: *return "([^"]+)";/g;
+$items{"staff of $_"} = 1 for /STAFF_[A-Z_]+: *return "([^"]+)";/g;
+$items{"rod of $_"} = 1 for /ROD_[A-Z_]+: *return "([^"]+)";/g;
+$items{$_} = 1 for /FOOD_[A-Z_]+: buff << "([^"]+)";/g;
+
+open IN, "util/cpp_version itemprop.cc|" or die "Can't read itemprop.cc\n";
+{ undef local $/; $_ = <IN>; }
+close IN;
+
+$items{$_} = 1 for /^ *\{ *ARM_[A-Z_]+, *"([^"]+)"/mg;
+$items{$_} = 1 for /^ *\{ *WPN_[A-Z_]+, *"([^"]+)"/mg;
+$items{$_} = 1 for /^ *\{ *MI_[A-Z_]+, *"([^"]+)"/mg;
+#"
+# food is redundant -- fixme!
+
+$items{$_} = 1 for (split /\n/, <<END);
+chunk of flesh
+corpse
+eggplant
+gold piece
+Grand Grimoire
+helm
+lightning rod
+manual
+Necronomicon
+orb of Zot
+pair of boots
+pair of bracers
+pair of gauntlets
+pair of gloves
+rod of destruction
+rune of Zot
+skeleton
+tome of Destruction
+Young Poisoner's Handbook
+END
+
+delete $items{$_} for (split /\n/, <<END);
+boots
+gloves
+rod of lightning
+END
+
+for (sort keys %items)
+{
+    next if /bugginess/i;
+    # yay consistency, all other descs use proper capitalization
+    tr/A-Z/a-z/ if $db && !/Geryon/;
+    print "$_\n";
+}

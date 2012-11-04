@@ -1,0 +1,96 @@
+%%%%
+amulet of rage
+
+Tento amulet umožňuje jeho nositeli pokusit se vstoupit do stavu šíleného
+hněvu.
+%%%%
+amulet of resist corrosion
+
+Tento amulet chrání nositele a jejho vybavení proti korozi způsobené kyselinou,
+i když ne tak uplně neomylně.
+%%%%
+amulet of resist mutation
+
+Tento amulet chrání svého nositele před mutací, i když ne tak úplně neomylně.
+%%%%
+apricot
+
+Sukulentní žlutooranžové ovoce, prunus armeniaca.
+%%%%
+book of fixed level
+
+Kniha kouzel.
+%%%%
+book of fixed theme
+
+Kniha kouzel.
+%%%%
+cheese
+
+Kus sýra.
+%%%%
+cloak
+
+Plátěný plášť.
+%%%%
+crystal plate armour
+
+Neuvěřitelně těžký, ale velmi účinný oblek krystalického brnění.
+%%%%
+ring of protection from fire
+
+Tento prsten poskytuje ochranu před teplem a ohněm.
+%%%%
+ring of protection from magic
+
+Tento prsten zvyšuje nositeli odolnost proti nepřátelským kouzlom.
+%%%%
+ring of regeneration
+
+Tento nádherný prsten výrazně zvyšuje regenerační schopnosti svého nositele,
+ale značně urychluje metabolismus.
+%%%%
+ring of sustain abilities
+
+Tento prsten chrání svého nositele před ztrátou jeho síly, obratnosti a
+inteligence.
+%%%%
+ring of wizardry
+
+Tento prsten zvyšuje schopnost svého nositele k použití magických kouzel.
+%%%%
+wand of fireball
+
+Magické zařízení, které vrhá vybuchující poryvy ohně.
+%%%%
+wand of paralysis
+
+Magické zařízení, které může způsobit nehybnost.
+%%%%
+wand of polymorph other
+
+Magické zařízení, které způsobí, že se bytost promění do jiné formy. To  je
+obzvláště účinné proti tvar-měnící bytosti. Nefunguje na vás, takže se ani
+nepokoušejte.
+%%%%
+wand of random effects
+
+Magické zařízení, které může produkovat různé efekty.
+%%%%
+wand of slowing
+
+Magické zařízení, které vrhá kouzla zpomalení na bytost, na kterou je právě
+namířeno.
+%%%%
+wand of teleportation
+
+Magické zařízení, které způsobí, že bytost bude náhodně přemístěna.
+%%%%
+war axe
+
+Jednoruční vojenská sekera s dlouhou rukojetí a čepelí s jednou hlavicí.
+%%%%
+wizard hat
+
+Kuželovitý látkový klobouk.
+%%%%
