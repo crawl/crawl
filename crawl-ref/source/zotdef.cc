@@ -786,6 +786,11 @@ monster* zotdef_spawn(bool boss)
     mg.proximity = PROX_NEAR_STAIRS;
     mg.flags |= MG_PERMIT_BANDS;
 
+    // Hack: emulate old mg.power
+    mg.place = level_id(BRANCH_MAIN_DUNGEON, you.num_turns / (ZOTDEF_CYCLE_LENGTH * 3) + 1);
+    // but only for item generation/etc, not for actual monster selection.
+    ASSERT(mt != RANDOM_MONSTER);
+
     monster *mon  = mons_place(mg);
 
     // Boss monsters which aren't uniques are named, and beefed a bit further

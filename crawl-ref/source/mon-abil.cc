@@ -1303,7 +1303,7 @@ static void _establish_connection(int tentacle,
             mgen_data(connector_type, SAME_ATTITUDE(main), main,
                       0, 0, last->pos, main->foe,
                       MG_FORCE_PLACE, main->god, MONS_NO_MONSTER, tentacle,
-                      main->colour, -1, PROX_CLOSE_TO_PLAYER)))
+                      main->colour, PROX_CLOSE_TO_PLAYER)))
         {
             connect->props["inwards"].get_int()  = -1;
             connect->props["outwards"].get_int() = -1;
@@ -1348,7 +1348,7 @@ static void _establish_connection(int tentacle,
             mgen_data(connector_type, SAME_ATTITUDE(main), main,
                       0, 0, current->pos, main->foe,
                       MG_FORCE_PLACE, main->god, MONS_NO_MONSTER, tentacle,
-                      main->colour, -1, PROX_CLOSE_TO_PLAYER)))
+                      main->colour, PROX_CLOSE_TO_PLAYER)))
         {
             connect->max_hit_points = menv[tentacle].max_hit_points;
             connect->hit_points = menv[tentacle].hit_points;

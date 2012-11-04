@@ -3400,7 +3400,6 @@ static int _place_monster_vector(std::vector<monster_type> montypes,
     int result = 0;
 
     mgen_data mg;
-    mg.power     = -1;
     mg.behaviour = BEH_SLEEP;
     mg.flags    |= MG_PERMIT_BANDS;
     mg.map_mask |= MMT_NO_MONS;
@@ -3553,7 +3552,6 @@ static void _builder_monsters()
     {
         mgen_data mg;
         mg.behaviour              = BEH_SLEEP;
-        mg.power                  = -1;
         mg.flags                 |= MG_PERMIT_BANDS;
         mg.map_mask              |= MMT_NO_MONS;
         mg.preferred_grid_feature = preferred_grid_feature;
@@ -4240,9 +4238,10 @@ static void _dgn_place_item_explicit(int index, const coord_def& where,
 
 static void _dgn_give_mon_spec_items(mons_spec &mspec,
                                      monster *mon,
-                                     const monster_type type,
-                                     const int monster_level)
+                                     const monster_type type)
 {
+    ASSERT(mspec.place.is_valid());
+
     unwind_var<int> save_speedinc(mon->speed_increment);
 
     // Get rid of existing equipment.
@@ -4300,7 +4299,7 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
             }
         }
 
-        int item_level = monster_level;
+        int item_level = mspec.place.absdepth();
 
         if (spec.level >= 0)
             item_level = spec.level;
@@ -4375,13 +4374,16 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
     const bool m_patrolling     = (patrolling || mspec.patrolling);
     const bool m_band           = mspec.band;
 
-    int monster_level = mspec.place.is_valid() ? mspec.place.absdepth()
-                                               : env.absdepth0;
+    if (!mspec.place.is_valid())
+        mspec.place = level_id::current();
 
-    if (mspec.ood == -8)
-        monster_level = 4 + monster_level * 2;
-    else if (mspec.ood == -9)
-        monster_level += 5;
+    if (is_connected_branch(mspec.place))
+    {
+        if (mspec.ood == -8)
+            mspec.place.depth += 4 + mspec.place.depth;
+        else if (mspec.ood == -9)
+            mspec.place.depth += 5;
+    }
 
     if (type != RANDOM_MONSTER && type < NUM_MONSTERS)
     {
@@ -4415,7 +4417,6 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
         mg.cls = mon == MONS_NO_MONSTER? RANDOM_MONSTER : mon;
     }
 
-    mg.power     = monster_level;
     mg.behaviour = (m_generate_awake) ? BEH_WANDER : BEH_SLEEP;
     switch (mspec.attitude)
     {
@@ -4492,7 +4493,7 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
         mons->spells = mspec.spells[random2(mspec.spells.size())];
 
     if (!mspec.items.empty())
-        _dgn_give_mon_spec_items(mspec, mons, type, monster_level);
+        _dgn_give_mon_spec_items(mspec, mons, type);
 
     if (mspec.props.exists("monster_tile"))
     {
