@@ -535,14 +535,18 @@ string describe_mutations(bool center_title)
         col = (temperature_effect(LORC_STONESKIN)) ? "lightgrey" : "darkgrey";
         result += "<" + col + ">You have stony skin.</" + col + ">\n";
 
-        if (!temperature_effect(LORC_FAST_MOVE))
-            // Slow or normal move
-            col = (temperature_effect(LORC_SLOW_MOVE)) ? "brown" : "darkgrey";
-            result += "<" + col + ">You cover ground slowly.</" + col + ">\n";
-        else:
+        if (temperature_effect(LORC_FAST_MOVE))
+        {
             // Fast move
             col = "lightred";
             result += "<" + col + ">You cover ground quickly.</" + col + ">\n";
+        }
+        else
+        {
+            // Slow or normal move
+            col = (temperature_effect(LORC_SLOW_MOVE)) ? "brown" : "darkgrey";
+            result += "<" + col + ">You cover ground slowly.</" + col + ">\n";
+        }
 
         // Fire res
         col = (temperature_effect(LORC_FIRE_RES_III)) ? "lightred" :
