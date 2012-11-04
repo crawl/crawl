@@ -1765,7 +1765,8 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         // player is fighting them one-on-one, while he will often summon
         // several.
         ghost.init_dancing_weapon(*(mon->mslot_item(MSLOT_WEAPON)),
-                                  mg.summoner ? mg.power : 180);
+                                  mg.props.exists(TUKIMA_POWER) ?
+                                      mg.props[TUKIMA_POWER].get_int() : 180);
         mon->set_ghost(ghost);
         mon->ghost_demon_init();
     }
@@ -3057,9 +3058,7 @@ monster* mons_place(mgen_data mg)
     else if (_is_random_monster(mg.cls))
         mg.flags |= MG_PERMIT_BANDS;
 
-    if (mg.cls == MONS_DANCING_WEAPON && mg.summoner)
-        ; // It's an animated weapon, don't touch the power
-    else if (crawl_state.game_is_zotdef())
+    if (crawl_state.game_is_zotdef())
         mg.power = you.num_turns / (ZOTDEF_CYCLE_LENGTH * 3);
     else
         mg.power = -1;
