@@ -8,6 +8,7 @@
 // Hash key for passing a weapon to be given to
 // a dancing weapon.
 #define TUKIMA_WEAPON "tukima-weapon"
+#define TUKIMA_POWER "tukima-power"
 
 // A structure with all the data needed to whip up a new monster.
 struct mgen_data

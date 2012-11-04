@@ -890,10 +890,9 @@ spret_type cast_tukimas_dance(int pow, god_type god, bool force_hostile,
                  dur, SPELL_TUKIMAS_DANCE,
                  you.pos(),
                  MHITYOU,
-                 0, god,
-                 MONS_NO_MONSTER, 0, BLACK,
-                 pow);
+                 0, god);
     mg.props[TUKIMA_WEAPON] = cp;
+    mg.props[TUKIMA_POWER] = pow;
 
     if (force_hostile)
         mg.non_actor_summoner = god_name(god, false);
