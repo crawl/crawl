@@ -63,6 +63,7 @@
 
 static bool _handle_pickup(monster* mons);
 static void _mons_in_cloud(monster* mons);
+static void _heated_area(monster* mons);
 static bool _is_trap_safe(const monster* mons, const coord_def& where,
                           bool just_check = false);
 static bool _monster_move(monster* mons);
@@ -1694,10 +1695,14 @@ void handle_monster_move(monster* mons)
 
     // Handle clouds on nonmoving monsters.
     if (mons->speed == 0)
+    {
         _mons_in_cloud(mons);
 
-    // Update constriction durations
-    mons->accum_has_constricted();
+        // Update constriction durations
+        mons->accum_has_constricted();
+
+        _heated_area(mons);
+    }
 
     // Apply monster enchantments once for every normal-speed
     // player turn.
@@ -1834,6 +1839,8 @@ void handle_monster_move(monster* mons)
         const bool avoid_cloud = mons_avoids_cloud(mons, cloud_num);
 
         _mons_in_cloud(mons);
+        _heated_area(mons);
+
         if (!mons->alive())
             break;
 
