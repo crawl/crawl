@@ -551,9 +551,6 @@ string describe_mutations(bool center_title)
             result += "<" + col + ">Your fire spells are more powerful.<" + col + ">\n";
         }
 
-        col = (temperature_effect(LORC_LAVA_BLOOD)) ? "lightred" : "darkgrey";
-        result += "<" + col + ">You bleed molten lava.</" + col + ">\n";
-
         col = (temperature_effect(LORC_PASSIVE_HEAT)) ? "lightred" : "darkgrey";
         result += "<" + col + ">Your heat harms attackers.</" + col + ">\n";
 

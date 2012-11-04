@@ -45,7 +45,6 @@ enum temperature_effect
     LORC_LAVA_BOOST,
     LORC_FIRE_BOOST,
     LORC_STONESKIN,
-    LORC_LAVA_BLOOD,
     LORC_COLD_VULN,
     LORC_PASSIVE_HEAT,
     LORC_HEAT_AURA,
