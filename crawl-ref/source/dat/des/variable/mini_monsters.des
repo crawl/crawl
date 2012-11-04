@@ -3585,6 +3585,240 @@ x}....xxx  xx@.0.@x
 xxxxxxx
 ENDMAP
 
+##################
+# Stair vaults. They place a few random monsters but are mainly for variety.
+NAME:    stairs_1
+TAGS:    extra transparent allow_dup mini_float
+DEPTH:   D, Zot, Snake, Elf, Crypt, Pan
+NSUBST:  ' = 1:> / *:.
+SUBST:   > = }]), . = .:15 0:1
+MAP
+.........
+.G.....G.
+.........
+...'''...
+...'''...
+...'''...
+.........
+.G.....G.
+.........
+ENDMAP
+
+NAME:    stairs_2
+TAGS:    extra transparent allow_dup mini_float
+DEPTH:   D, Zot, Snake, Elf, Crypt, Pan
+NSUBST:  . = 1:> / *:.
+SUBST:   > = }]), . = .:15 0:1
+SHUFFLE: abc / abc / abc / abc / abc / ab. / a.c / a.. / .bc / .b. / ..c
+SUBST:   a=x, b=x, c=x
+MAP
+.........
+.a.b.b.a.
+.........
+.b.c.c.b.
+.........
+.b.c.c.b.
+.........
+.a.b.b.a.
+.........
+ENDMAP
+
+NAME:    stairs_3
+TAGS:    extra transparent allow_dup ruin_lair mini_float
+DEPTH:   D, Zot, Snake, Lair, Elf, Crypt, Pan
+NSUBST:  ' = 1:> / *:.
+SUBST:   > = }]), . = .:15 0:1
+MAP
+.........
+.xxx.xxx.
+.x.....x.
+.x.'''.x.
+...'''...
+.x.'''.x.
+.x.....x.
+.xxx.xxx.
+.........
+ENDMAP
+
+NAME:    stairs_4
+TAGS:    extra transparent allow_dup mini_float
+DEPTH:   D, Zot, Snake, Lair, Elf, Crypt, Pan
+NSUBST:  ' = 1:> / *:.
+SUBST:   > = }]), . = .:15 0:1
+MAP
+x.x.x.x.x
+.........
+x.......x
+...'''...
+x..'''..x
+...'''...
+x.......x
+.........
+x.x.x.x.x
+ENDMAP
+
+NAME:    stairs_5
+TAGS:    extra transparent allow_dup mini_float
+DEPTH:   D, Zot, Snake, Lair, Elf, Crypt, Pan
+NSUBST:  ' = 1:> / *:.
+SUBST:   > = }]), . = .:15 0:1
+MAP
+xx..xx..xx
+x........x
+..........
+...''''...
+x..''''..x
+x..''''..x
+...''''...
+..........
+x........x
+xx..xx..xx
+ENDMAP
+
+NAME:    stairs_6
+TAGS:    extra transparent allow_dup mini_float
+DEPTH:   D, Zot, Snake, Lair, Elf, Crypt, Pan
+NSUBST:  ' = 1:> / *:.
+SUBST:   > = }]), . = .:15 0:1, G : .:10 G:1
+MAP
+xx..xx
+xG..Gx
+..''..
+..''..
+xG..Gx
+xx..xx
+ENDMAP
+
+NAME:    stairs_7
+TAGS:    extra transparent allow_dup mini_float
+DEPTH:   D, Zot, Snake, Lair, Elf, Crypt, Pan
+NSUBST:  ' = 1:> / *:.
+SUBST:   > = }]), . = .:15 0:1
+MAP
+x.xx.x
+..xx..
+xx''xx
+xx''xx
+..xx..
+x.xx.x
+ENDMAP
+
+# I like the way these ones can turn out,
+# it reminds me of those rooms in Angband
+NAME:    stairs_8
+TAGS:    extra transparent allow_dup mini_float
+DEPTH:   D, Zot, Snake, Lair, Elf, Crypt, Pan
+NSUBST:  . = 1:> / *:.
+SUBST:   > = ([{}]), . = .:15 0:1
+MAP
+x.x.x.x
+.......
+x.x.x.x
+.......
+x.x.x.x
+.......
+x.x.x.x
+ENDMAP
+
+NAME:    stairs_9
+TAGS:    extra transparent allow_dup mini_float
+DEPTH:   D, Zot, Snake, Lair, Elf, Crypt, Pan
+NSUBST:  . = 1:> / *:.
+SUBST:   > = ([{}]), . = .:15 0:1
+MAP
+x.x.x.x.x
+.........
+x.x.x.x.x
+.........
+x.x.x.x.x
+.........
+x.x.x.x.x
+.........
+x.x.x.x.x
+ENDMAP
+
+NAME:    stairs_10
+TAGS:    extra transparent allow_dup mini_float
+DEPTH:   D, Zot, Snake, Lair, Elf, Crypt, Pan
+NSUBST:  . = 1:> / *:.
+SUBST:   > = ([{}]), . = .:15 0:1
+MAP
+x.x.x.x.x.x
+...........
+x.x.x.x.x.x
+...........
+x.x.x.x.x.x
+...........
+x.x.x.x.x.x
+...........
+x.x.x.x.x.x
+...........
+x.x.x.x.x.x
+ENDMAP
+
+NAME:    stairs_11
+TAGS:    extra transparent allow_dup mini_float
+DEPTH:   D, Zot, Snake, Lair, Elf, Crypt, Pan
+NSUBST:  . = 1:> / *:.
+SUBST:   > = ([{}]), . = .:15 0:1
+MAP
+x.x.x.x.x.x.x.x.x
+.................
+x.x.x.x.x.x.x.x.x
+.................
+x.x.x.x.x.x.x.x.x
+.................
+x.x.x.x.x.x.x.x.x
+.................
+x.x.x.x.x.x.x.x.x
+.................
+x.x.x.x.x.x.x.x.x
+ENDMAP
+
+NAME:    stairs_12
+TAGS:    extra transparent allow_dup mini_float
+DEPTH:   D, Zot, Snake, Lair, Elf, Crypt, Pan
+NSUBST:  . = 1:> / *:.
+SUBST:   > = ([{}]), . = .:15 0:1
+MAP
+x.x.x.x.x.x.x.x.x
+.................
+x.x.x.x.x.x.x.x.x
+.................
+x.x.x.x.x.x.x.x.x
+.................
+x.x.x.x.x.x.x.x.x
+ENDMAP
+
+NAME:    stairs_13
+TAGS:    extra transparent allow_dup mini_float
+DEPTH:   D, Zot, Snake, Lair, Elf, Crypt, Pan
+NSUBST:  . = 1:> / *:.
+SUBST:   > = ([{}]), . = .:15 0:1
+MAP
+x.x.x.x.x.x.x.x.x.x.x
+.....................
+x.x.x.x.x.x.x.x.x.x.x
+.....................
+x.x.x.x.x.x.x.x.x.x.x
+ENDMAP
+
+NAME:    stairs_14
+TAGS:    extra transparent allow_dup mini_float
+DEPTH:   D, Zot, Snake, Elf, Crypt, Pan
+SUBST:   > = }]), . = .:15 0:1
+SHUFFLE: abc / bab / cbb / bcb
+SUBST:   a=x, b=., c:Gx
+MAP
+.......
+.......
+..aba..
+..b>b..
+..aba..
+.......
+.......
+ENDMAP
+
 ################################################################
 #
 # <<8>> Minivaults with monsters guarding a thematic item.
