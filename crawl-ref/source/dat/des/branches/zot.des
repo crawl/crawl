@@ -1291,6 +1291,206 @@ xxxxxxxxx$$x$$xx*Dxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+#########################
+# Minivaults based on the old orb chambers.
+#
+NAME:    zot_minivault_1
+TAGS:    transparent
+WEIGHT:  20
+DEPTH:   Zot:1-4
+MAP
+ xxxxxxxxxxx
+xxx...0...xxx
+xx..0...0..xx
+x0.........0x
+@..0..0..0..@
+x0.........0x
+xx..0...0..xx
+xxx...0...xxx
+ xxxxxxxxxxx
+ENDMAP
+
+# Based on orb_monky_inset
+NAME:    zot_minivault_2
+TAGS:    transparent
+WEIGHT:  5
+DEPTH:   Zot:1-4
+SUBST:   > = }]}
+MAP
+ xxxxxxxxxxx
+xxx0.....0xxx
+xx....0....xx
+x0...xxx...0x
+@...xxxxx...@
+x0...xxx...0x
+xx....0....xx
+xxx0.....0xxx
+ xxxxx.xxxxx
+xx...0.0...xx
+x...........x
+x.....>.....x
+xx.........xx
+ xxxxxxxxxxx
+ENDMAP
+
+# Based on orb_two_ways
+NAME:    zot_minivault_3
+TAGS:    transparent
+WEIGHT:  5
+DEPTH:   Zot:1-4
+SUBST:   < = ([{000
+MAP
+ xxxxxxxxxxx
+xxxx.....xxxx
+xx....x...xxx
+xx.<.xxx..xxx
+xx...xx..xxxx
+xxxxxx..xxxxx
+xxxx.....xxxx
+xxx..0x0..xxx
+x0...xxx...0x
+@..0xxxxx0..@
+x0...xxx...0x
+xxx..0x0..xxx
+xxxx.....xxxx
+xxxxx..xxxxxx
+xxxx..xx...xx
+xxx..xxx.<.xx
+xxx...x....xx
+xxxx.....xxxx
+ xxxxxxxxxxx
+ENDMAP
+
+# Based on orb_monky_within_orb
+NAME:    zot_minivault_4
+TAGS:    transparent
+DEPTH:   Zot:1-4
+COLOUR:  n = magenta
+TILE:    n = dngn_transparent_wall_magenta
+MAP
+ xxxxxxxxxxx
+xxx0.....0xxx
+xx..nn0nn..xx
+x..n0...0n..x
+@..n.0.0.n..@
+x..n0...0n..x
+xx..nn0nn..xx
+xxx0.....0xxx
+ xxxxxxxxxxx
+ENDMAP
+
+# Based on orb_monky_twist
+NAME:    zot_minivault_5
+TAGS:    transparent
+DEPTH:   Zot:1-4
+COLOUR:  n = magenta
+TILE:    n = dngn_transparent_wall_magenta
+MAP
+ xxxxxxxxxxx
+xxxnn...0.xxx
+xxnn0.0.n..xx
+xnnn....nn.0x
+@.nn0.0.0nn.@
+x0.nn....nnnx
+xx..n.0.0nnxx
+xxx.0...nnxxx
+ xxxxxxxxxxx
+ENDMAP
+
+# Based on orb_nicolae_swirls
+# Guarantees an upstairs and downstairs, and makes sure the player can see
+# them both from one side.
+# Stone is bordered by rock to make it stand out less and not look ugly.
+NAME:    zot_minivault_6
+TAGS:    transparent
+DEPTH:   Zot:1-4
+SUBST:   < = ([{
+SUBST:   > = }]}
+COLOUR:  n = magenta
+TILE:    n = dngn_transparent_wall_magenta
+MAP
+ xxxxxxxxxxxxx
+xxcccccccccccxx
+xccxxxxxxxxxccx
+xcxx.......xxcx
+xcx0...>...0xcx
+xcx.........xcx
+xcxx0.....0xxcx
+xcxxxxx...xxxxx
+xcxxxx..0nnn.
+xxxx...0nnn0@
+  ...0nnn....
+  @0nnn0...xxxx
+  .nnn...xxxxcx
+xxxxx0..xxxxxcx
+xcxx.......xxcx
+xcx.........xcx
+xcx0...<...0xcx
+xcxx.......xxcx
+xccxxxxxxxxxccx
+xxcccccccccccxx
+ xxxxxxxxxxxxx
+ENDMAP
+
+# Based on orb_nicolae_fourfold
+NAME:    zot_minivault_7
+TAGS:    transparent
+WEIGHT:  5
+DEPTH:   Zot:1-4
+SUBST:   > = }]}
+MAP
+ xxxxxxxxx
+xx...0...xx
+x0.0...0.0x
+x..xx.xx..x
+x..x...x..x
+x..x.0.x..x
+x..x...x..x
+x..xx.xx..x
+x.xx...xx.x
+x.x.0.0.x.x
+@.x0.>.0x.@
+x.x.0.0.x.x
+x.xx...xx.x
+x..xx.xx..x
+x..x...x..x
+x..x.0.x..x
+x..x...x..x
+x..xx.xx..x
+x0.0...0.0x
+xx...0...xx
+ xxxxxxxxx
+ENDMAP
+
+# Based on orb_grunt_hallway
+NAME:    zot_minivault_8
+TAGS:    transparent
+WEIGHT:  5
+DEPTH:   Zot:1-4
+SUBST:   > = }]}
+MAP
+ xxxxxxxxx
+xxxx...xxxx
+xxx0...0xxx
+xxx..>..xxx
+xxx0...0xxx
+xxxx...xxxx
+xxxx0.0xxxx
+x00x...x00x
+x..x...x..x
+@..x0.0x..@
+x..x...x..x
+x..x...x..x
+x..x0.0x..x
+x.0x...x0.x
+x.0x...x0.x
+x..x0.0x..x
+x..x...x..x
+x.........x
+xx.......xx
+ xxxxxxxxx
+ENDMAP
+
 ##############################################################################
 ##############################################################################
 #
