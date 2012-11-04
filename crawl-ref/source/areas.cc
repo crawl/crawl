@@ -813,11 +813,7 @@ int player::heat_radius2() const
     if (!temperature_effect(LORC_HEAT_AURA))
         return (-1);
 
-    // 13, 14, 15 -> 1, 2, 3
-    int temp = (int) (you.temperature - 12);
-
-    // 1, 2, 3 -> 2, 5, 10
-    return (temp*temp + 1);
+    return (2); // Surrounds you to radius of 1.
 }
 
 // Stub for monster radius
