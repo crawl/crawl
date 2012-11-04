@@ -532,7 +532,7 @@ string describe_mutations(bool center_title)
         have_any = true;
         std::string col = "darkgrey";
 
-        col = (temperature_effect(LORC_STONESKIN)) ? "brown" : "darkgrey";
+        col = (temperature_effect(LORC_STONESKIN)) ? "lightgrey" : "darkgrey";
         result += "<" + col + ">You have stony skin.</" + col + ">\n";
 
         if (!temperature_effect(LORC_FAST_MOVE))
@@ -574,6 +574,10 @@ string describe_mutations(bool center_title)
 
         col = (temperature_effect(LORC_PASSIVE_HEAT)) ? "lightred" : "darkgrey";
         result += "<" + col + ">Your heat harms attackers.</" + col + ">\n";
+
+        // Fast move
+        col = (temperature_effect(LORC_FAST_MOVE)) ? "lightred" : "darkgrey";
+        result += "<" + col + ">You cover ground quickly.</" + col + ">\n";
 
         // Heat aura
         col = (temperature_effect(LORC_HEAT_AURA)) ? "lightred" : "darkgrey";

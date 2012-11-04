@@ -4851,10 +4851,10 @@ bool temperature_effect(int which) {
         case LORC_COLD_VULN:
             return (temperature() >= TEMP_HOT); // 11-15
         case LORC_FAST_MOVE:
-        case LORC_NO_SCROLLS:
         case LORC_PASSIVE_HEAT:
             return (temperature() >= TEMP_FIRE); // 13-15
         case LORC_HEAT_AURA:
+        case LORC_NO_SCROLLS:
             return (temperature() >= TEMP_MAX); // 15
 
         default:
