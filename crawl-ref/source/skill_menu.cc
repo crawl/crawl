@@ -674,10 +674,9 @@ SkillMenu::SkillMenu() : PrecisionMenu(), m_min_coord(), m_max_coord(),
 {
 }
 
-void SkillMenu::init(int flag, int exp)
+void SkillMenu::init(int flag)
 {
     m_flags = flag;
-    m_exp = exp;
     init_flags();
 
     if (is_set(SKMF_EXPERIENCE))
@@ -846,7 +845,6 @@ bool SkillMenu::exit()
 
     if (is_set(SKMF_EXPERIENCE))
     {
-        you.exp_available += m_exp;
         redraw_screen();
         train_skills();
         m_skill_backup.restore_training();
@@ -1143,10 +1141,7 @@ void SkillMenu::init_switches()
 void SkillMenu::refresh_display()
 {
     if (is_set(SKMF_EXPERIENCE))
-    {
-        you.exp_available += m_exp;
         train_skills(true);
-    }
 
     for (int ln = 0; ln < SK_ARR_LN; ++ln)
         for (int col = 0; col < SK_ARR_COL; ++col)
@@ -1343,6 +1338,8 @@ void SkillMenu::set_title()
         t = make_stringf(format, "source");
     else if (is_set(SKMF_RESKILL_TO))
         t = make_stringf(format, "destination");
+    else if (is_set(SKMF_EXPERIENCE_CARD) && is_set(SKMF_EXPERIENCE_POTION))
+        t = "You are more experienced. Select the skills to train.";
     else if (is_set(SKMF_EXPERIENCE_CARD))
         t = make_stringf(format, "drawn an Experience card");
     else if (is_set(SKMF_EXPERIENCE_POTION))
@@ -1442,12 +1439,14 @@ void skill_menu(int flag, int exp)
         return;
     }
 
+    you.exp_available += exp;
+
 #ifdef USE_TILE_WEB
     tiles_crt_control show_as_menu(CRT_MENU, "skills");
 #endif
 
     clrscr();
-    skm.init(flag, exp);
+    skm.init(flag);
     int keyn;
 
     while (true)
