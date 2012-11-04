@@ -50,6 +50,7 @@ struct cloud_info
 #define MAP_SUPPRESSED     0X2000000
 #define MAP_QUAD_HALOED    0X4000000
 #define MAP_DISJUNCT       0X8000000
+#define MAP_HOT           0x10000000
 
 /*
  * A map_cell stores what the player knows about a cell.

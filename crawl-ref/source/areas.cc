@@ -245,6 +245,8 @@ static area_centre_type _get_first_area(const coord_def& f)
         return AREA_SANCTUARY;
     if (a & APROP_SILENCE)
         return AREA_SILENCE;
+    if (a & APROP_HOT)
+        return AREA_HOT;
     if (a & APROP_HALO)
         return AREA_HALO;
     if (a & APROP_UMBRA)
