@@ -849,15 +849,15 @@ static void _display_temperature()
 
         std::string colourname = temperature_string(t);
         if (t == TEMP_MAX)
-            text = "  --MAX---";
+            text = "  ╔═MAX══╗";
         else if (t == TEMP_MIN)
-            text = "  ---MIN--";
+            text = "  ╚══MIN═╝";
         else if (temperature() < t)
-            text = "  |      |";
+            text = "  ║      ║";
         else if (temperature() == t)
-            text = "  |~~~~~~|";
+            text = "  ║~~~~~~║";
         else
-            text = "  |######|";
+            text = "  ║######║";
         text += "    ";
 
         ostr << '<' << colourname << '>' << text
