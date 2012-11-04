@@ -820,8 +820,10 @@ static void _display_temperature()
         std::ostringstream ostr;
 
         std::string colourname = temperature_string(t);
-        if (t == TEMP_MAX || t == TEMP_MIN)
-            text = "  --------";
+        if (t == TEMP_MAX)
+            text = "  --MAX---";
+        else if (t == TEMP_MIN)
+            text = "  ---MIN--";
         else if (temperature() < t)
             text = "  |      |";
         else if (temperature() == t)

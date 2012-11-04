@@ -4863,15 +4863,15 @@ std::string temperature_text(int temp) {
     switch (temp)
     {
         case TEMP_MIN:
-            return "Minimum temperature; always rF+.";
+            return "Resist fire {rF+}.";
         case TEMP_WARM:
-            return "rF++; lava magic boost; lose stoneskin.";
+            return "Resist fire {rF++}; lava magic boost; lose stoneskin.";
         case TEMP_HOT:
-            return "rF+++; fire magic boost; cold vulnerability.";
+            return "Resist fire {rF+++}; fire magic boost; cold vulnerability.";
         case TEMP_FIRE:
             return "Burn attackers; cannot read books or scrolls.";
         case TEMP_MAX:
-            return "Maximum temperature! Set your surroundings ablaze!";
+            return "Set your surroundings ablaze!";
         default:
             return "";
     }
