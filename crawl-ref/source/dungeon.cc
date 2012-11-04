@@ -3854,8 +3854,6 @@ static bool _build_vault_impl(const map_def *vault,
 
     vault_placement place;
 
-    place.level_number = env.absdepth0;
-
     if (map_bounds(where))
         place.pos = where;
 
@@ -3988,7 +3986,7 @@ static int _dgn_item_corpse(const item_spec &ispec, const coord_def where)
     {
         if (tries > 200)
             return NON_ITEM;
-        monster *mon = dgn_place_monster(mspec, -1, coord_def(), true);
+        monster *mon = dgn_place_monster(mspec, coord_def(), true);
         if (!mon)
             continue;
         mon->position = where;
@@ -4218,17 +4216,15 @@ retry:
     return NON_ITEM;
 }
 
-void dgn_place_multiple_items(item_list &list,
-                              const coord_def& where, int level)
+void dgn_place_multiple_items(item_list &list, const coord_def& where)
 {
     const int size = list.size();
     for (int i = 0; i < size; ++i)
-        dgn_place_item(list.get_item(i), where, level);
+        dgn_place_item(list.get_item(i), where);
 }
 
 static void _dgn_place_item_explicit(int index, const coord_def& where,
-                                     vault_placement &place,
-                                     int level)
+                                     vault_placement &place)
 {
     item_list &sitems = place.map.items;
 
@@ -4239,7 +4235,7 @@ static void _dgn_place_item_explicit(int index, const coord_def& where,
     }
 
     const item_spec spec = sitems.get_item(index);
-    dgn_place_item(spec, where, level);
+    dgn_place_item(spec, where);
 }
 
 static void _dgn_give_mon_spec_items(mons_spec &mspec,
@@ -4368,8 +4364,7 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
 }
 
 
-monster* dgn_place_monster(mons_spec &mspec,
-                           int monster_level, const coord_def& where,
+monster* dgn_place_monster(mons_spec &mspec, coord_def where,
                            bool force_pos, bool generate_awake, bool patrolling)
 {
     if (mspec.type == -1)
@@ -4380,8 +4375,8 @@ monster* dgn_place_monster(mons_spec &mspec,
     const bool m_patrolling     = (patrolling || mspec.patrolling);
     const bool m_band           = mspec.band;
 
-    if (monster_level == -1)
-        monster_level = env.absdepth0;
+    int monster_level = mspec.place.is_valid() ? mspec.place.absdepth()
+                                               : env.absdepth0;
 
     const int mlev = mspec.mlevel;
     if (mlev)
@@ -4410,11 +4405,8 @@ monster* dgn_place_monster(mons_spec &mspec,
 
         const habitat_type habitat = mons_class_primary_habitat(montype);
 
-        if (in_bounds(where)
-            && !monster_habitable_grid(montype, grd(where)))
-        {
+        if (in_bounds(where) && !monster_habitable_grid(montype, grd(where)))
             dungeon_terrain_changed(where, habitat2grid(habitat));
-        }
     }
 
     mgen_data mg(type);
@@ -4470,16 +4462,15 @@ monster* dgn_place_monster(mons_spec &mspec,
     if (mg.colour == -1)
         mg.colour = random_monster_colour();
 
-    coord_def place(where);
-    if (!force_pos && monster_at(place)
+    if (!force_pos && monster_at(where)
         && (mg.cls < NUM_MONSTERS || mg.cls == RANDOM_MONSTER))
     {
         const monster_type habitat_target =
             mg.cls == RANDOM_MONSTER ? MONS_BAT : mg.cls;
-        place = find_newmons_square_contiguous(habitat_target, where, 0);
+        where = find_newmons_square_contiguous(habitat_target, where, 0);
     }
 
-    mg.pos = place;
+    mg.pos = where;
 
     if (mons_class_is_zombified(mg.base_type))
     {
@@ -4498,7 +4489,7 @@ monster* dgn_place_monster(mons_spec &mspec,
     // Store any extra flags here.
     mg.extra_flags |= mspec.extra_monster_flags;
 
-    monster *mons = place_monster(mg, true, force_pos && place.origin());
+    monster *mons = place_monster(mg, true, force_pos && where.origin());
     if (!mons)
         return 0;
 
@@ -4558,7 +4549,7 @@ monster* dgn_place_monster(mons_spec &mspec,
 }
 
 static bool _dgn_place_monster(const vault_placement &place, mons_spec &mspec,
-                                int monster_level, const coord_def& where)
+                               const coord_def& where)
 {
     const bool generate_awake
         = mspec.generate_awake || place.map.has_tag("generate_awake");
@@ -4566,18 +4557,16 @@ static bool _dgn_place_monster(const vault_placement &place, mons_spec &mspec,
     const bool patrolling
         = mspec.patrolling || place.map.has_tag("patrolling");
 
-    return dgn_place_monster(mspec, monster_level, where, false,
-                             generate_awake, patrolling);
+    return dgn_place_monster(mspec, where, false, generate_awake, patrolling);
 }
 
 static bool _dgn_place_one_monster(const vault_placement &place,
-                                    mons_list &mons, int monster_level,
-                                    const coord_def& where)
+                                   mons_list &mons, const coord_def& where)
 {
     for (int i = 0, size = mons.size(); i < size; ++i)
     {
         mons_spec spec = mons.get_monster(i);
-        if (_dgn_place_monster(place, spec, monster_level, where))
+        if (_dgn_place_monster(place, spec, where))
             return true;
     }
     return false;
@@ -4696,7 +4685,7 @@ static void _vault_grid_mapspec(vault_placement &place, const coord_def &where,
         env.level_map_mask(where) |= MMT_NO_MIMIC;
 
     item_list &items = mapsp.get_items();
-    dgn_place_multiple_items(items, where, place.level_number);
+    dgn_place_multiple_items(items, where);
 }
 
 static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
@@ -4736,7 +4725,7 @@ static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
         int item_made = NON_ITEM;
         object_class_type which_class = OBJ_RANDOM;
         uint8_t which_type = OBJ_RANDOM;
-        int which_depth = place.level_number;
+        int which_depth = env.absdepth0;
         int spec = 250;
 
         if (vgrid == '$')
@@ -4755,7 +4744,7 @@ static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
             which_depth = MAKE_GOOD_ITEM;
         }
         else if (vgrid == '*')
-            which_depth = 5 + (place.level_number * 2);
+            which_depth = 5 + which_depth * 2;
 
         item_made = items(1, which_class, which_type, true,
                            which_depth, spec);
@@ -4768,7 +4757,7 @@ static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
     if (map_def::valid_item_array_glyph(vgrid))
     {
         int slot = map_def::item_array_glyph_to_slot(vgrid);
-        _dgn_place_item_explicit(slot, where, place, place.level_number);
+        _dgn_place_item_explicit(slot, where, place);
     }
 }
 
@@ -4790,25 +4779,18 @@ static void _vault_grid_glyph_mons(vault_placement &place,
     // Handle grids that place monsters {dlb}:
     if (map_def::valid_monster_glyph(vgrid))
     {
-        int monster_level;
-        mons_spec monster_type_thing(RANDOM_MONSTER);
+        mons_spec ms(RANDOM_MONSTER);
 
-        monster_level = place.level_number;
-        if (branches[you.where_are_you].numlevels <= 1)
-            ; // no data that could be used for OODs there
-        else if (vgrid == '8')
-            monster_level = 4 + (place.level_number * 2);
+        if (vgrid == '8')
+            ms.mlevel = -8;
         else if (vgrid == '9')
-            monster_level = 5 + place.level_number;
-
-        if (monster_level > 30) // very high level monsters more common here
-            monster_level = 30;
+            ms.mlevel = -9;
 
         if (vgrid != '8' && vgrid != '9' && vgrid != '0')
         {
             int slot = map_def::monster_array_glyph_to_slot(vgrid);
-            monster_type_thing = place.map.mons.get_monster(slot);
-            monster_type mt = static_cast<monster_type>(monster_type_thing.type);
+            ms = place.map.mons.get_monster(slot);
+            monster_type mt = static_cast<monster_type>(ms.type);
             // Is a map for a specific place trying to place a unique which
             // somehow already got created?
             if (!place.map.place.empty()
@@ -4824,7 +4806,7 @@ static void _vault_grid_glyph_mons(vault_placement &place,
             }
         }
 
-        _dgn_place_monster(place, monster_type_thing, monster_level, where);
+        _dgn_place_monster(place, ms, where);
     }
 }
 
@@ -4836,7 +4818,7 @@ static void _vault_grid_mapspec_mons(vault_placement &place,
     if (f.glyph >= 0)
         _vault_grid_glyph_mons(place, where, f.glyph);
     mons_list &mons = mapsp.get_monsters();
-    _dgn_place_one_monster(place, mons, place.level_number, where);
+    _dgn_place_one_monster(place, mons, where);
 }
 
 static void _vault_grid_mons(vault_placement &place,
@@ -6388,9 +6370,9 @@ static void _remember_vault_placement(std::string key, const vault_placement &pl
                                     table.size() + 1);
 
     std::string place_str
-        = make_stringf("(%d,%d) (%d,%d) orient: %d lev: %d",
+        = make_stringf("(%d,%d) (%d,%d) orient: %d",
                        place.pos.x, place.pos.y, place.size.x, place.size.y,
-                       place.orient, place.level_number);
+                       place.orient);
 
     table[name] = place_str;
 

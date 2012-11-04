@@ -196,7 +196,7 @@ namespace arena
                 if (!in_bounds(loc))
                     break;
 
-                const monster* mon = dgn_place_monster(spec, -1,
+                const monster* mon = dgn_place_monster(spec,
                                                        loc, false, true, false);
                 if (!mon)
                 {
@@ -769,7 +769,7 @@ namespace arena
             if (fac.friendly)
                 spec.attitude = ATT_FRIENDLY;
 
-            monster *mon = dgn_place_monster(spec, -1, pos, false, true);
+            monster *mon = dgn_place_monster(spec, pos, false, true);
 
             if (!mon && fac.active_members == 0 && monster_at(pos))
             {
@@ -798,7 +798,7 @@ namespace arena
                     monster_teleport(other, true);
                 }
 
-                mon = dgn_place_monster(spec, -1, pos, false, true);
+                mon = dgn_place_monster(spec, pos, false, true);
             }
 
             if (mon)
@@ -1050,8 +1050,7 @@ namespace arena
 
 // Various arena callbacks
 
-monster_type arena_pick_random_monster(const level_id &place, int power,
-                                       int &lev_mons)
+monster_type arena_pick_random_monster(const level_id &place)
 {
     if (arena::random_uniques)
     {

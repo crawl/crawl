@@ -458,7 +458,7 @@ local function ziggurat_create_loot_at(c)
 
   local function place_loot(what)
     local p = next_loot_spot()
-    dgn.create_item(p.x, p.y, what, 27)
+    dgn.create_item(p.x, p.y, what)
   end
 
   for i = 1, nloot do

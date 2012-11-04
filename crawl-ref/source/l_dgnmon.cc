@@ -203,7 +203,7 @@ static int dgn_create_monster(lua_State *ls)
     for (int i = 0, size = mlist.size(); i < size; ++i)
     {
         mons_spec mspec = mlist.get_monster(i);
-        if (monster *mon = dgn_place_monster(mspec, -1, c, false, false, false))
+        if (monster *mon = dgn_place_monster(mspec, c, false, false, false))
         {
             push_monster(ls, mon);
             return 1;
