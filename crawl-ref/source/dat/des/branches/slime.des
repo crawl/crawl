@@ -287,6 +287,33 @@ X'xxxxxxxxxxxxxxxx'X
   X'            'X
 ENDMAP
 
+NAME: nicolae_amoeba_pool
+DEPTH: Slime
+TAGS: transparent mini_float
+MONS: giant amoeba
+ORIENT: float
+SHUFFLE: abcd
+SUBST: ab : @, cd : .
+KPROP: f = no_rtele_into
+SUBST: f = w.1
+KMASK: w = no_monster_gen
+KMASK: W = no_monster_gen
+MAP
+   cccc
+ ..........
+d.w.wwwf..w.
+d..wwfwwf....
+d.fwwfffwffbb
+d..fwwwfww.b
+ ...ffwwww.b
+  ..wffw...b
+  ..wfwfw.fw
+ ...ffffw.ww
+.ff.wwwwf.f
+ .....f..ff
+    aaaa..fw
+ENDMAP
+
 ################################################################################
 # Slime Pit
 ################################################################################
