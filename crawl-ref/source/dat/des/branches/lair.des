@@ -2328,3 +2328,47 @@ xxxxxxxxx             ..G........
 xxx                   .........G.
 x                           .....
 ENDMAP
+
+##############################################################################
+# Dragon's lair.
+#
+NAME:   guppyfry_lair_end_dragon
+PLACE:  Lair:$
+TAGS:   patrolling no_monster_gen
+ORIENT: southeast
+KMONS:  1 = fire drake / swamp drake / mottled dragon / steam dragon
+KMONS:  2 = dragon
+KMONS:  3 = plant
+KMONS:  4 = basilisk / komodo dragon
+KMONS:  5 = iguana / crocodile
+SUBST:  - = wwWW..%3t554
+SUBST:  w = wwwW
+SUBST:  ? = 145*
+: lair_small_ending(_G)
+MAP
+@..@..@..xxxxxxxxxxxxxxxxx
+x3WW-3.xxxxttttttttttxxxxx
+xttWW-tttt.ttt3WW-..ttxxxx
+x3ttW-tt.ttt--WwwW3..ttxxx
+xtttWWtt...t--WwwwW-.tttxx
+xtt1Wttt1.tt.WWtt3WW..tttx
+xttWw-t3.t..Wttt--WWW.tttx
+xxttWWt-1t..W--t3.WwwWttxx
+xtt1-Wwttt.-wWtt-WwwwWttxx
+xxtt--Wtt3.wWtttWwwwwWtttx
+xtt3.tWWttwW3tt1WWWwwWttxx
+xttt.ttWww-.tttt3WwwwWtttx
+xxtt3.3-W-.tt??..WwwW.ttxx
+xxtt...3WWttt$%.WwwW.ttxxx
+xxttt.t.-Wtt2**.WwwW.ttxxx
+xttttt..Wwttt$%..WW.tttxxx
+xxxxtt..-WWtt??..WwWW.ttxx
+xxxxxtt..-WWttt3WWwW..ttxx
+xxxxxxtt..3WWt1WWwW.tttxxx
+xxxxxxxttt..WWtWW-..ttxxxx
+xxxxxxxxttt.WwwwW3.ttxxxxx
+xxxxxxxxxtt.-WwW..ttttxxxx
+xxxxxxxxxttttWW-.tttxxxxxx
+xxxxxxxxxxtttttttttxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
