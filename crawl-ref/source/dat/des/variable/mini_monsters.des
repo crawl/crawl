@@ -2860,46 +2860,6 @@ MAP
  (bab bab bababtt
 ENDMAP
 
-NAME:   nicolae_well_that_was_easy
-DEPTH:  D:4-13
-TAGS:   no_hmirror no_vmirror no_monster_gen no_trap_gen no_item_gen mini_float
-WEIGHT: 3
-SUBST:  - = ABCDEFHIJKLMNOPQR
-KITEM:  A = gossamer rune of zot mimic
-KITEM:  B = decaying rune of zot mimic
-KITEM:  C = serpentine rune of zot mimic
-KITEM:  D = barnacled rune of zot mimic
-KITEM:  E = slimy rune of zot mimic
-KITEM:  F = silver rune of zot mimic
-KITEM:  H = abyssal rune of zot mimic
-KITEM:  I = demonic rune of zot mimic
-KITEM:  J = glowing rune of zot mimic
-KITEM:  K = magical rune of zot mimic
-KITEM:  L = fiery rune of zot mimic
-KITEM:  M = dark rune of zot mimic
-KITEM:  N = iron rune of zot mimic
-KITEM:  O = icy rune of zot mimic
-KITEM:  P = obsidian rune of zot mimic
-KITEM:  Q = bone rune of zot mimic
-KITEM:  R = golden rune of zot mimic
-MAP
-    .......
-  ...........
- ....ccccc....
- ..nnc...cnn..
-...n.......n...
-..cc.9...9.cc..
-..cG........c..
-..=....-....c..
-..cG........c..
-..cc.9...9.cc..
-...n.......n...
- ..nnc...cnn..
- ....ccccc....
-  ...........
-    .......
-ENDMAP
-
 NAME:    hangedman_jelly_panic
 TAGS:    no_monster_gen no_item_gen
 TAGS:    vaults_room_15_facing_encounter
