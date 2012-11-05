@@ -152,6 +152,26 @@ MAP
    ...
 ENDMAP
 
+NAME:   gup_ossuary_entry_pyramid
+TAGS:   uniq_ossuary no_monster_gen chance_ossuary mini_float
+CHANCE: 5%
+KMONS:	O = mummy
+COLOUR: ' = yellow
+TILE:	c = dngn_stone_wall_yellow
+FTILE:  ' = floor_sandstone
+NSUBST: ' = 3:~ / *:'
+: ossuary_portal(_G)
+MAP
+     ...
+    ..c..
+   ..ccc..
+  ..ccOcc..
+ ..cc'''cc..
+..cc'''''cc..
+.ccccc+ccccc.
+.............
+ENDMAP
+
 
 #### The portal vaults ####################################
 
