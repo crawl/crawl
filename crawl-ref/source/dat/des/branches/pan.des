@@ -1816,9 +1816,7 @@ MONS: greater demon, common demon
 NSUBST: t = 10:p / *:., b = 10:p / *:.
 KMONS: p = human / elf / orc / naga / centaur / draconian / \
    ogre / minotaur / troll / kobold / mummy / ghoul / spriggan / dwarf / \
-   deep dwarf / felid / octopode / vampire / red draconian / white draconian / \
-   black draconian / green draconian / yellow draconian / grey draconian / \
-   purple draconian / mottled draconian / pale draconian / demigod / \
+   deep dwarf / felid / octopode / vampire / base draconian / demigod / \
    demonspawn / merfolk / halfling
 : pan_demonic_rune(_G, 'P', true)
 MAP
