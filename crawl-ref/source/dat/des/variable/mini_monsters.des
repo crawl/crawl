@@ -1801,6 +1801,36 @@ MAP
 ..............
 ENDMAP
 
+NAME:    guppyfry_library_mini
+DEPTH:   Snake, Elf, Orc, Zot
+TAGS:    patrolling mini_float no_monster_gen transparent
+ITEM:    gold / any scroll / any book w:4
+SUBST:   ? = 123d
+: if you.branch() == "Snake" then
+MONS:    naga, naga warrior, naga mage w:9 / greater naga w:1
+: elseif you.branch() == "Elf" then
+MONS:    deep elf soldier, deep elf mage, deep elf conjurer / deep elf summoner
+: elseif you.branch() == "Orc" then
+MONS:  Orc, orc warrior, orc wizard w:9 / orc sorcerer w:1
+: else
+MONS:  any draconian, draconian scorcher, draconian annihilator / \
+  draconian caller
+: end
+MAP
+............
+.xxmxxxxmxx.
+.x.?....?.x.
+.x........x.
+.x.xx++xx.x.
+.+1xd33dx.+.
+.+.xd33dx1+.
+.x.xx++xx.x.
+.x........x.
+.x.?....?.x.
+.xxmxxxxmxx.
+............
+ENDMAP
+
 ################################################################################
 #
 # <<4>> Demons and undead
