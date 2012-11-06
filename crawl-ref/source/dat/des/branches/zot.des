@@ -1578,6 +1578,59 @@ MAP
         ;;;;;
 ENDMAP
 
+##########################################################################
+
+NAME:    hangedman_zot_spectrum
+TAGS:    no_monster_gen
+DEPTH:   Zot:1-4
+KMONS:   A = red very ugly thing
+KMONS:   B = red draconian
+KMONS:   C = fire crab / nonbase red draconian w:6
+KMONS:   D = cyan very ugly thing
+KMONS:   E = black draconian
+KMONS:   F = electric golem / nonbase black draconian w:6
+KMONS:   G = green very ugly thing
+KMONS:   H = green draconian
+KMONS:   I = green death / nonbase green draconian w:6
+KMONS:   J = white very ugly thing
+KMONS:   K = white draconian
+KMONS:   L = frost giant / nonbase white draconian w:6
+KMONS:   M = brown very ugly thing
+KMONS:   N = yellow draconian
+KMONS:   O = acid blob / nonbase yellow draconian w:6
+KMONS:   Z = golden dragon / killer klown / Tiamat, golden dragon / killer klown
+KITEM:   BEHKN = $ w:15 / % w:25 / *
+KITEM:   z = any good_item
+KITEM:   Z = acquire any
+SHUFFLE: defg{>Z' / defg{<'' / fgde>{'Z / fgde<{'' / defg'|Z' / fgde|''Z / \
+         fgfg''() / fgfg'')( / dede'''' / dede'''' / dede''''
+SHUFFLE: ABC / DEF / GHI / JKL / MNO
+SUBST:   d = @, e = ., f = x, g = c, c : ccb, Z = z Z:6, {' = .
+NSUBST:  < = 1:{ / 1:[, > = 1:} / 1:]
+MAP
+ ddddxxxx
+ddeeeecxxxxxxxx
+dee{..cxxxccccx
+de{'c+cccccBBcx
+de.cc.......Acxxx
+xe.+.......Accccx
+xccc..Cc+ccccEEcx
+xxxc..cc......Dcxxx
+xxxc..+......Dccccx
+ xxc..c..Fc+cccHHcx
+ xcc..c..cc.....Gcxxx
+ xcB.Ac..+.....Gccccx
+ xcBAcc..c..Ic+ccKKcx
+ xccccE.Dc..cc....Jcx
+ xxxxcEDcc..+....Jccx
+    xccccH.Gc..Lc+cgx
+    xxxxcHGcc..cc.>gf
+       xccccK.J+.Z.gf
+       xxxxcKJcc>.ggf
+          xccccggggff
+          xxxxxxffff
+ENDMAP
+
 ##############################################################################
 ##############################################################################
 #
