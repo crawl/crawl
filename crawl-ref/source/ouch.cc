@@ -1252,8 +1252,8 @@ void ouch(int dam, int death_source, kill_method_type death_type,
                     .death_description(scorefile_entry::DDV_TERSE);
             }
 
-            take_note(
-                      Note(NOTE_HP_CHANGE, you.hp, you.hp_max, damage_desc.c_str()));
+            take_note(Note(NOTE_HP_CHANGE, you.hp, you.hp_max,
+                           damage_desc.c_str()));
 
             _yred_mirrors_injury(dam, death_source);
             _maybe_spawn_jellies(dam, aux, death_type, death_source);

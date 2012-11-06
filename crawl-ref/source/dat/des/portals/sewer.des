@@ -201,7 +201,7 @@ TAGS:   uniq_sewer no_monster_gen mini_float chance_sewer patrolling
 CHANCE: 8%
 : sewer_portal(_G)
 KMONS:  1 = rat / grey rat / green rat w:5 / giant centipede w:5 / \
-		giant cockroach / giant mite / giant gecko / worm w:5 / nothing
+            giant cockroach / giant mite / giant gecko / worm w:5 / nothing
 KFEAT:  1 = W
 NSUBST: - : 8:1 / 8:. / *:W
 COLOUR: 1W = green
@@ -225,7 +225,7 @@ CHANCE: 8%
 : sewer_portal(_G)
 COLOUR: 1W = green
 KMONS:  1 = rat / grey rat / green rat w:5 / giant centipede w:5 / \
-		giant cockroach / giant mite / giant gecko / worm w:5 / nothing
+            giant cockroach / giant mite / giant gecko / worm w:5 / nothing
 KFEAT:  1 = W
 NSUBST: - = 8:1 / *:W
 MAP
@@ -249,7 +249,7 @@ CHANCE: 8%
 : sewer_portal(_G)
 COLOUR: 1W = green
 KMONS:  1 = rat / grey rat / green rat w:5 / \
-		giant cockroach / giant mite / giant gecko / worm w:3 / nothing
+            giant cockroach / giant mite / giant gecko / worm w:3 / nothing
 KFEAT:  1 = W
 MAP
 ..........
