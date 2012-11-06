@@ -266,6 +266,105 @@ MAP
 ....             ....
 ENDMAP
 
+NAME:    hangedman_abyss_theft
+TAGS:    abyss no_monster_gen
+KMONS:   1 = place:Lair:$
+KMONS:   2 : place:Swamp:1 / place:Swamp:$
+KMONS:   3 : place:Snake:1 / place:Snake:$
+KMONS:   4 : place:Shoals:1 / place:Shoals:$
+KMONS:   5 : place:Spider:1 / place:Spider:$
+KMONS:   6 = place:Orc:$
+KMONS:   7 : place:Elf:1 / place:Elf:$
+KMONS:   8 : place:Crypt:1 / place:Crypt:$
+KMONS:   9 : place:Hell / place:Slime
+KMONS:   A = plant
+KMONS:   B = bush
+SHUFFLE: Gwm, xcvbwm, wwl, mmttB, 12345678, 169, $%
+KMASK:   B = no_item_gen
+MAP
+     ..xbb..
+ A x .xxbbb. b A
+  x  xx1cvbb  b
+ x  x...vc..b  b
+   x.x.1cv...b
+..x...x.vc2.b.b..
+.xx..1..cv.b..bb.
+xxbvbvb%$*..2.2bb
+ccvbvbv$G$xcxcxbb
+cc3.3..*$%cxcxcvv
+.cc..c.xb..4..vv.
+..c.c.3bx.v...v..
+   c...xb4.v.v
+ c  c..bx...v  v
+  c  ccxb4vv  v
+ A c .ccvvv. v A
+     ..cvv..
+ENDMAP
+
+NAME:    hangedman_abyss_lost_library
+TAGS:    abyss patrolling no_monster_gen no_item_gen
+MONS:    guardian serpent, great orb of eyes, giant orange brain
+MONS:    boggart, rakshasa, cacodemon, shadow demon
+KMONS:   0 = wizard
+KMONS:   8 = orc sorcerer
+KMONS:   9 = sphinx
+KMONS:   & = lich
+KMONS:   @ = deep elf sorcerer
+KMONS:   Z = nonbase draconian
+ITEM:    randbook numspells:1 w:19 / randbook numspells:2 w:1, any scroll
+KFEAT:   _ = altar_sif_muna
+SHUFFLE: ABCDEF
+NSUBST:  A = 1:0 / 1:d / 1:dee / *:., B = 1:1 / 1:d / 1:dee / *:.
+NSUBST:  C = 1:2 / 1:d / 1:dee / *:., D = 1:3 / 1:d / 1:dee / *:.
+NSUBST:  E = 1:4 / 1:d / 1:dee / *:., F = 1:& / 2:d / 1:e / *:.
+NSUBST:  + = 2:+ / *:x, - = 2:+ / *:x
+SHUFFLE: 0123456789', '''''''''@, &@Z
+SUBST:   ' = ., = = +wl x:45, _ : _:30 TUVY .:35
+SUBST:   x = x:20 c:4 v:1 b:1 .:4, X = x:20 c:5 v:2 b:2 .:1
+MAP
+ . .. .. .. .. .. .
+..X++XXXXXXXXXXXXX..
+ XX. xx xxx xxx xXX
+.+._ xAAAxBBBxCCCxX.
+.+  .xAAA=BBB=CCC X.
+ XX..xAAAxBBBxCCCxX
+.XX..xx xxx xxx xxX.
+.X .............. X.
+.X .............. X.
+.Xxx xxx xxx xx..XX.
+ XxDDDxEEExFFFx..XX
+.X DDD=EEE=FFFx.  -.
+.XxDDDxEEExFFFx _.-.
+ XXx xxx xxx xx .XX
+..XXXXXXXXXXXXX--X..
+ . .. .. .. .. .. .
+ENDMAP
+
+NAME:    hangedman_abyss_batty_box
+TAGS:    abyss
+MONS:    bat / fire bat / vampire bat, butterfly, raven
+MONS:    spatial vortex, vapour, harpy, unseen horror
+KMONS:   8 = phoenix w:9 / harpy w:1
+KITEM:   8 = acquire any / any good_item / stone q:1 w:5
+KFEAT:   = = runed_door
+NSUBST:  A = 2:2 / 1:2 / 1:1122. / 1:1122., B = 1:3 / 1:4 / 1:1334. / 1:12334.
+NSUBST:  C = 1:556 / 1:6 / 1:7 / 1:66777. / 1:1234567.
+SUBST:   x = x:25 c:14 v:6 b:4 G:1 n:2, y = c:3 v:1 b:1, z = x:2 c:1 v:1 b:1
+MAP
+ xxxxxxxxxx.
+xx x x x x.x
+x x0x x.x.x
+xx0x.x1x.x.x
+x x.x.x.x.x.
+xx x.==xyyyy
+x x.x=xAzCzy
+xx1x.xAAABCy
+x x.xyzACBzy
+xx.x.yCBB8zy
+x.x.xyzCzzzy
+.x x.yyyyyyy
+ENDMAP
+
 ###############################################################################
 # abyss rune vaults
 ###############################################################################
