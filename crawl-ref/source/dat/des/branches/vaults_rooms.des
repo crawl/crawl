@@ -2039,6 +2039,21 @@ wW.[.Ww
 ww...ww
 ENDMAP
 
+NAME:    vaults_room_7_spin_up3_hangedman_random_cross
+TAGS:    vaults_room_7_spin_up3 allow_dup
+SHUFFLE: ABCDEF
+SUBST:   A : x:4 .:1, B : x:7 .:3, C : x:1 .:4, DEF = .
+NSUBST:  { = 1:{ / 1:[ / 1:( / 1:<
+MAP
+...A...
+.BC{DB.
+.DEFEC.
+A{F<F{A
+.CEFED.
+.BD{CB.
+...A...
+ENDMAP
+
 NAME:     vaults_room_7_spin_up3_grunt_open
 TAGS:     vaults_room_7_spin_up3 allow_dup no_monster_gen no_item_gen
 SHUFFLE:  {([<
@@ -2660,6 +2675,19 @@ xxG%Gxx
 %G...G.A
 xxG%Gxx
 xx%*%xx
+ENDMAP
+
+NAME:     vaults_room_7_dead_end_dangerous_hangedman_quadrants
+TAGS:     vaults_room_7_dead_end_dangerous no_monster_gen allow_dup luniq
+SUBST:    $ : $., % : $%., = : -., - : +:4 $:1
+MAP
+xx9x0xx
+x.$x$0x
+9$%-%$.+
+xx=x=xx+
+9$%-%$.+
+x.$x$0x
+xx9x0xx
 ENDMAP
 
 NAME:     vaults_room_7_dead_end_loot_glass_wall
