@@ -578,6 +578,17 @@ IDEF(branded)
     return 1;
 }
 
+IDEF(hands)
+{
+    if (!item || !item->defined())
+        return 0;
+
+    int hands = you.hands_reqd(*item) == HANDS_TWO ? 2 : 1;
+    lua_pushnumber(ls, hands);
+
+    return 1;
+}
+
 IDEF(snakable)
 {
     if (!item || !item->defined())
@@ -1214,6 +1225,7 @@ static ItemAccessor item_attrs[] =
     { "ego_type_terse",    l_item_ego_type_terse },
     { "artefact_name",     l_item_artefact_name },
     { "is_cursed",         l_item_is_cursed },
+    { "hands",             l_item_hands },
 };
 
 static int item_get(lua_State *ls)
