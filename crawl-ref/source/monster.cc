@@ -3528,6 +3528,7 @@ bool monster::is_known_chaotic() const
         || type == MONS_VERY_UGLY_THING
         || type == MONS_ABOMINATION_SMALL
         || type == MONS_ABOMINATION_LARGE
+        || type == MONS_WRETCHED_STAR
         || type == MONS_KILLER_KLOWN // For their random attacks.
         || type == MONS_TIAMAT)      // For her colour-changing.
     {
