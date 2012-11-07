@@ -223,8 +223,6 @@ private:
     // Whether the current target is valid.
     bool move_is_ok() const;
 
-    void cycle_targetting_mode();
-
     void describe_target();
     void show_help();
 

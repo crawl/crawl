@@ -999,28 +999,6 @@ static bool _blocked_ray(const coord_def &where,
     return true;
 }
 
-static string _targ_mode_name(targ_mode_type mode)
-{
-    switch (mode)
-    {
-    case TARG_ANY:
-        return "any";
-    case TARG_ENEMY:
-        return "enemies";
-    case TARG_FRIEND:
-        return "friends";
-    case TARG_INJURED_FRIEND:
-        return "injured friends";
-    case TARG_HOSTILE:
-    case TARG_HOSTILE_SUBMERGED:
-        return "hostiles";
-    case TARG_EVOLVABLE_PLANTS:
-        return "plants";
-    default:
-        return "buggy";
-    }
-}
-
 #ifndef USE_TILE_LOCAL
 static void _update_mlist(bool enable)
 {
@@ -1868,12 +1846,6 @@ void direction_chooser::show_help()
     need_all_redraw = true;
 }
 
-void direction_chooser::cycle_targetting_mode()
-{
-    mode = static_cast<targ_mode_type>((mode + 1) % TARG_NUM_MODES);
-    mprf("Targetting mode is now: %s", _targ_mode_name(mode).c_str());
-}
-
 // Return false if we should continue looping, true if we're done.
 bool direction_chooser::do_main_loop()
 {
@@ -1936,8 +1908,6 @@ bool direction_chooser::do_main_loop()
     case CMD_TARGET_FIND_ALTAR:     feature_cycle_forward('_');  break;
     case CMD_TARGET_FIND_UPSTAIR:   feature_cycle_forward('<');  break;
     case CMD_TARGET_FIND_DOWNSTAIR: feature_cycle_forward('>');  break;
-
-    case CMD_TARGET_CYCLE_TARGET_MODE: cycle_targetting_mode(); break;
 
     case CMD_TARGET_MAYBE_PREV_TARGET:
         loop_done = looking_at_you() ? select_previous_target()
@@ -4030,7 +4000,7 @@ command_type targetting_behaviour::get_command(int key)
         key = get_key();
 
     command_type cmd = key_to_command(key, KMC_TARGETTING);
-    if (cmd >= CMD_MIN_TARGET && cmd < CMD_TARGET_CYCLE_TARGET_MODE)
+    if (cmd >= CMD_MIN_TARGET && cmd < CMD_TARGET_PREV_TARGET)
         return cmd;
 
 #ifndef USE_TILE_LOCAL
