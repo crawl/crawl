@@ -1057,7 +1057,7 @@ static monster_type _xom_random_demon(int sever, bool use_greater_demons = true)
 static bool _player_is_dead()
 {
     return (you.hp <= 0 || you.strength() <= 0 || you.dex() <= 0 || you.intel() <= 0
-            || is_feat_dangerous(grd(you.pos()))
+            || is_feat_dangerous(grd(you.pos())) && !you.is_wall_clinging()
             || you.did_escape_death());
 }
 
