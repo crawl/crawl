@@ -638,6 +638,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
 #endif
     case CONTROL('H'): wizard_set_hunger_state(); break;
     case CONTROL('I'): debug_item_statistics(); break;
+    case CONTROL('K'): wizard_clear_used_vaults(); break;
     case CONTROL('L'): wizard_set_xl(); break;
     case CONTROL('M'): wizard_memorise_spec_spell(); break;
     case CONTROL('P'): wizard_transform(); break;

@@ -834,6 +834,15 @@ void wizard_recreate_level()
     trackers_init_new_level(true);
 }
 
+void wizard_clear_used_vaults()
+{
+    you.uniq_map_tags.clear();
+    you.uniq_map_names.clear();
+    env.level_uniq_maps.clear();
+    env.level_uniq_map_tags.clear();
+    mpr("All vaults are now eligible for [re]use.");
+}
+
 void wizard_abyss_speed()
 {
     char specs[256];
