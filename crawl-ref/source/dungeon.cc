@@ -4455,10 +4455,7 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
     if (mg.cls == RANDOM_MONSTER && mspec.place.is_valid())
     {
         const monster_type mon =
-            pick_random_monster_for_place(mspec.place, mspec.monbase,
-                                          mspec.ood == -9,
-                                          mspec.ood == -8,
-                                          false);
+            pick_random_monster_for_place(mspec.place, mspec.monbase, false);
         mg.cls = mon == MONS_NO_MONSTER? RANDOM_MONSTER : mon;
     }
 

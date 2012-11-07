@@ -783,17 +783,9 @@ static monster_type _resolve_monster_type(monster_type mon_type,
 
 monster_type pick_random_monster_for_place(const level_id &place,
                                            monster_type zombie_monster,
-                                           bool moderate_ood,
-                                           bool super_ood,
                                            bool want_corpse_capable)
 {
     int lev = place.absdepth();
-
-    if (super_ood)
-        lev = 4 + lev * 2;
-
-    if (moderate_ood)
-        lev += 5;
 
     int tries = 100;
     monster_type chosen = MONS_NO_MONSTER;
