@@ -974,7 +974,7 @@ static void _abyss_generate_monsters(int nmonsters)
     for (int mcount = 0; mcount < nmonsters; mcount++)
     {
         mons.cls = pick_random_monster_for_place(BRANCH_ABYSS, MONS_NO_MONSTER,
-                                                 false, false, false);
+                                                 false);
         if (!invalid_monster_type(mons.cls))
             mons_place(mons);
     }
