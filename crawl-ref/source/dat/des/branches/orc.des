@@ -121,30 +121,24 @@ ENDMAP
 #############################################################################
 # Wary orcs
 #
-# Disabled, knowing of guaranteed traps there makes walking here a degenerate
-# piece of spoilage.  Is this vault salvageable somehow?
 NAME: david_orc_4
-WEIGHT: 0
 TAGS: orc_entry no_rotate
 ORIENT: float
-SHUFFLE: XYZ
-SUBST: ? = I F
-# around 4% of these entries have a dangerous statue
-SUBST: a = ~:4  .
-SUBST: b = ~:8  .
-SUBST: c = ~:12 .
-SUBST: d = ~:16 .
-KFEAT: X = .
-KFEAT: Y = bolt trap
-KFEAT: Z = bolt trap
-KFEAT: O = enter_orcish_mines
+SUBST:  ? = I G .
+MONS:   orc warrior band
+NSUBST: a = 1:1 / *:.
+NSUBST: b = 1:1 / *:.
+NSUBST: c = 1:1 / *:.
+NSUBST: d = 1:1 / *:.
+KFEAT:  X = known bolt trap
+KFEAT:  O = enter_orcish_mines
 MAP
 xxxxxxxxxxxxxxxxxxxxxx
 xx?xxx?xxx?xxx?xxxxxxx
 xaaaxbbbxcccxdddx.lllx
 .aaaabbbbccccdddx.Xllx
-@aaaabbbbccccddd+.YOlx
-.aaaabbbbccccdddx.Zllx
+@aaaabbbbccccddd+.XOlx
+.aaaabbbbccccdddx.Xllx
 xaaaxbbbxcccxdddx.lllx
 xx?xxx?xxx?xxx?xxxxxxx
 xxxxxxxxxxxxxxxxxxxxxx
