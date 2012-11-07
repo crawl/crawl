@@ -2138,7 +2138,7 @@ cset = <dungeon_character_name : symbol>
 
         The possible entries for dungeon_character_name are:
            wall, wall_magic, floor, floor_magic, door_open, door_closed,
-           trap, stairs_down, stairs_up, altar, arch, fountain, wavy,
+           trap, stairs_down, stairs_up, grate, altar, arch, fountain, wavy,
            statue, invis_exposed, item_detected, item_orb, item_weapon,
            item_armour, item_wand, item_food, item_scroll, item_ring,
            item_potion, item_missile, item_book, item_stave,
@@ -2151,7 +2151,8 @@ cset = <dungeon_character_name : symbol>
         portals. "floor_magic" and "wall_magic" are used to display
         magic-mapped squares on the level map. "invis_exposed" is the
         character for water creatures submerged in shallow water, or
-        invisible creatures wading in shallow water.
+        invisible creatures wading in shallow water. "wavy" is water and
+        lava.
 
         Symbols can be specified using a letter, or by its ASCII/Unicode
         code: a decimal number or a hexadecimal one (prefixed with x).
