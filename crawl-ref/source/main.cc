@@ -1503,12 +1503,6 @@ static void _go_downstairs()
     if (_stairs_check_mesmerised())
         return;
 
-    if (shaft && you.flight_mode() == FL_LEVITATE)
-    {
-        mpr("You can't fall through a shaft while levitating.");
-        return;
-    }
-
     // Up and down both work for shops.
     if (ygrd == DNGN_ENTER_SHOP)
     {
@@ -1540,9 +1534,6 @@ static void _go_downstairs()
     }
 
     if (!you.attempt_escape()) // false means constricted and don't escape
-        return;
-
-    if (!feat_is_gate(ygrd) && !player_can_reach_floor("floor"))
         return;
 
     if (!_prompt_dangerous_portal(ygrd))
@@ -2266,7 +2257,7 @@ static void _decrement_petrification(int delay)
         {
             dur = 0;
             // If we'd kill the player when active flight stops, this will
-            // need to pass the killer.  Unlike monsters, almost all cFly is
+            // need to pass the killer.  Unlike monsters, almost all flight is
             // magical (sans tengu) so there's no flapping of wings, though.
             you.fully_petrify(NULL);
         }
@@ -2704,7 +2695,7 @@ static void _decrement_durations()
     {
         remove_tornado_clouds(MID_PLAYER);
     }
-    // Should expire before levitation.
+    // Should expire before flight.
     if (you.duration[DUR_TORNADO])
     {
         tornado_damage(&you, min(delay, you.duration[DUR_TORNADO]));
@@ -2714,11 +2705,11 @@ static void _decrement_durations()
             you.duration[DUR_TORNADO_COOLDOWN] = random_range(25, 35);
     }
 
-    if (you.duration[DUR_LEVITATION])
+    if (you.duration[DUR_FLIGHT])
     {
-        if (!you.permanent_levitation() && !you.permanent_flight())
+        if (!you.permanent_flight())
         {
-            if (_decrement_a_duration(DUR_LEVITATION, delay,
+            if (_decrement_a_duration(DUR_FLIGHT, delay,
                                       0,
                                       random2(6),
                                       "You are starting to lose your buoyancy."))
@@ -2726,20 +2717,12 @@ static void _decrement_durations()
                 land_player();
             }
         }
-        else if ((you.duration[DUR_LEVITATION] -= delay) <= 0)
+        else if ((you.duration[DUR_FLIGHT] -= delay) <= 0)
         {
             // Just time out potions/spells/miscasts.
-            you.attribute[ATTR_LEV_UNCANCELLABLE] = 0;
-            you.duration[DUR_LEVITATION] = 0;
+            you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 0;
+            you.duration[DUR_FLIGHT] = 0;
         }
-    }
-
-    if (!you.permanent_flight()
-        && _decrement_a_duration(DUR_CONTROLLED_FLIGHT, delay)
-        && you.airborne()
-        && !player_effect_cfly())
-    {
-            mpr("You lose control over your flight.", MSGCH_DURATION);
     }
 
     if (you.rotting > 0)
@@ -3488,9 +3471,6 @@ static bool _untrap_target(const coord_def move, bool check_confused)
                 mpr("You can't disarm traps in your present form.");
                 return true;
             }
-
-            if (!player_can_reach_floor())
-                return true;
 
             const int cloud = env.cgrid(target);
             if (cloud != EMPTY_CLOUD
@@ -4271,10 +4251,8 @@ static void _move_player(coord_def move)
     coord_def mon_swap_dest;
 
     string verb;
-    if (you.flight_mode() == FL_FLY)
+    if (you.is_flying())
         verb = "fly";
-    else if (you.flight_mode() == FL_LEVITATE)
-        verb = "levitate";
     else if (you.is_wall_clinging())
         verb = "cling";
     else if (you.species == SP_NAGA && !form_changed_physiology())

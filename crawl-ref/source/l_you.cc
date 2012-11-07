@@ -123,8 +123,7 @@ LUARET1(you_conservation, boolean, player_item_conserve(false))
 LUARET1(you_res_corr, boolean, player_res_corr(false))
 LUARET1(you_like_chunks, number, player_likes_chunks(true))
 LUARET1(you_saprovorous, number, player_mutation_level(MUT_SAPROVOROUS))
-LUARET1(you_levitating, boolean, you.flight_mode() == FL_LEVITATE)
-LUARET1(you_flying, boolean, you.flight_mode() == FL_FLY)
+LUARET1(you_flying, boolean, you.is_flying())
 LUARET1(you_transform, string, you.form ? transform_name() : "")
 LUARET1(you_berserk, boolean, you.berserk())
 LUARET1(you_confused, boolean, you.confused())
@@ -408,7 +407,6 @@ static const struct luaL_reg you_clib[] =
     { "gourmand",     you_gourmand },
     { "conservation", you_conservation },
     { "res_corr",     you_res_corr },
-    { "levitating",   you_levitating },
     { "flying",       you_flying },
     { "transform",    you_transform },
     { "berserk",      you_berserk },

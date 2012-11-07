@@ -155,7 +155,7 @@ FTILE:   .{)deS = floor_swamp, t = floor_grass
 FTILE:   ABCde = tutorial_pad
 FTILE:   c = wall_vines
 KFEAT:   S = general shop use_all ; \
-             ring of levitation mundane not_cursed | potion of curing | \
+             ring of flight mundane not_cursed | potion of curing | \
              potion of heal wounds | potion of heal wounds q:2 | \
              potion of might | wand of paralysis | ring mail | \
              buckler ego:none | ring of slaying | scroll of enchant weapon II

@@ -80,9 +80,13 @@ enum ability_type
     ABIL_EVOKE_BLINK,
     ABIL_EVOKE_TURN_INVISIBLE,
     ABIL_EVOKE_TURN_VISIBLE,
-    ABIL_EVOKE_LEVITATE,
+    ABIL_EVOKE_FLIGHT,
+#if TAG_MAJOR_VERSION == 34
     ABIL_EVOKE_STOP_LEVITATING,
     ABIL_MAX_EVOKE = ABIL_EVOKE_STOP_LEVITATING,
+#else
+    ABIL_MAX_EVOKE = ABIL_EVOKE_FLIGHT,
+#endif
 
     // Divine abilities
     // Zin
@@ -263,9 +267,9 @@ enum attribute_type
 #if TAG_MAJOR_VERSION == 34
     ATTR_FRUIT_FOUND,          // Mask of fruit types found.
 #endif
-    ATTR_LEV_UNCANCELLABLE,    // Potion or spell of levitation is in effect.
+    ATTR_FLIGHT_UNCANCELLABLE, // Potion of flight is in effect.
     ATTR_INVIS_UNCANCELLABLE,  // Potion/spell/wand of invis is in effect.
-    ATTR_PERM_LEVITATION,      // Tengu flight or boots of lev are on.
+    ATTR_PERM_FLIGHT,          // Tengu flight or boots of flight are on.
     ATTR_SEEN_INVIS_TURN,      // Last turn you saw something invisible.
     ATTR_SEEN_INVIS_SEED,      // Random seed for invis monster positions.
     ATTR_APPENDAGE,            // eq slot of Beastly Appendage
@@ -1365,7 +1369,7 @@ enum duration_type
     DUR_MIGHT,
     DUR_BRILLIANCE,
     DUR_AGILITY,
-    DUR_LEVITATION,
+    DUR_FLIGHT,
     DUR_BERSERK,
     DUR_POISONING,
 
@@ -1388,7 +1392,9 @@ enum duration_type
     DUR_DIVINE_SHIELD,          // duration of TSO's Divine Shield
     DUR_REGENERATION,
     DUR_SWIFTNESS,
+#if TAG_MAJOR_VERSION == 34
     DUR_CONTROLLED_FLIGHT,
+#endif
     DUR_TELEPORT,
     DUR_CONTROL_TELEPORT,
     DUR_BREATH_WEAPON,
@@ -1512,7 +1518,7 @@ enum enchant_type
     ENCH_WITHDRAWN,
     ENCH_ATTACHED,
     ENCH_LIFE_TIMER,    // Minimum time demonic guardian must exist.
-    ENCH_LEVITATION,
+    ENCH_FLIGHT,
     ENCH_LIQUEFYING,
     ENCH_TORNADO,
     ENCH_FAKE_ABJURATION,
@@ -1845,13 +1851,6 @@ enum killer_type                       // monster_die(), thing_thrown
     KILL_TIMEOUT,                      // non-summoned monsters whose times ran out
     KILL_PACIFIED,                     // only used by milestones and notes
     KILL_ENSLAVED,                     // only used by milestones and notes
-};
-
-enum flight_type
-{
-    FL_NONE = 0,
-    FL_LEVITATE,                       // doesn't require physical effort
-    FL_FLY                             // wings, etc... paralysis == fall
 };
 
 // Can't change this order without breaking saves.
@@ -2760,7 +2759,7 @@ enum potion_type
     POT_GAIN_STRENGTH,
     POT_GAIN_DEXTERITY,
     POT_GAIN_INTELLIGENCE,
-    POT_LEVITATION,
+    POT_FLIGHT,
     POT_POISON,
     POT_SLOWING,
     POT_PARALYSIS,
@@ -2810,7 +2809,7 @@ enum artefact_prop_type
     ARTP_MAGIC,
     ARTP_EYESIGHT,
     ARTP_INVISIBLE,
-    ARTP_LEVITATE,
+    ARTP_FLY,
     ARTP_BLINK,
     ARTP_BERSERK,
     ARTP_NOISES,

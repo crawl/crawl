@@ -1642,7 +1642,7 @@ bool monster::pickup_melee_weapon(item_def &item, int near)
             {
                 // Use shopping value as a crude estimate of resistances etc.
                 // XXX: This is not really logical as many properties don't
-                //      apply to monsters (e.g. levitation, blink, berserk).
+                //      apply to monsters (e.g. flight, blink, berserk).
                 // For simplicity, don't apply this check to secondary weapons
                 // for dual wielding monsters.
                 int oldval = item_value(*weap, true);
@@ -4003,15 +4003,10 @@ bool monster::inaccuracy() const
            && !suppressed();
 }
 
-flight_type monster::flight_mode() const
-{
-    return mons_flies(this);
-}
-
-bool monster::is_levitating() const
+bool monster::is_flying() const
 {
     // Checking class flags is not enough - see mons_flies().
-    return (flight_mode() == FL_LEVITATE);
+    return mons_flies(this);
 }
 
 bool monster::is_banished() const

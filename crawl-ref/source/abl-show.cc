@@ -247,8 +247,7 @@ static const ability_def Ability_List[] =
     { ABIL_EVOKE_TURN_INVISIBLE, "Evoke Invisibility",
       2, 0, 250, 0, 0, ABFLAG_NONE},
     { ABIL_EVOKE_TURN_VISIBLE, "Turn Visible", 0, 0, 0, 0, 0, ABFLAG_NONE},
-    { ABIL_EVOKE_LEVITATE, "Evoke Levitation", 1, 0, 100, 0, 0, ABFLAG_NONE},
-    { ABIL_EVOKE_STOP_LEVITATING, "Stop Levitating", 0, 0, 0, 0, 0, ABFLAG_NONE},
+    { ABIL_EVOKE_FLIGHT, "Evoke Flight", 1, 0, 100, 0, 0, ABFLAG_NONE},
 
     { ABIL_END_TRANSFORMATION, "End Transformation", 0, 0, 0, 0, 0, ABFLAG_NONE},
 
@@ -1034,12 +1033,11 @@ talent get_talent(ability_type ability, bool check_confused)
         break;
 
     case ABIL_EVOKE_TURN_VISIBLE:
-    case ABIL_EVOKE_STOP_LEVITATING:
     case ABIL_STOP_FLYING:
         failure = 0;
         break;
 
-    case ABIL_EVOKE_LEVITATE:
+    case ABIL_EVOKE_FLIGHT:
     case ABIL_EVOKE_BLINK:
         failure = 40 - you.skill(SK_EVOCATIONS, 2);
         break;
@@ -1281,9 +1279,7 @@ void no_ability_msg()
     else if (you.species == SP_TENGU && you.experience_level >= 5
              || player_mutation_level(MUT_BIG_WINGS))
     {
-        if (you.flight_mode() == FL_LEVITATE)
-            mpr("You can only start flying from the ground.");
-        else if (you.flight_mode() == FL_FLY)
+        if (you.is_flying())
             mpr("You're already flying!");
     }
     else if (silenced(you.pos()) && you.religion != GOD_NO_GOD)
@@ -1570,12 +1566,12 @@ bool check_ability_possible(const ability_type ability, bool hungerCheck,
 bool activate_talent(const talent& tal)
 {
     // Doing these would outright kill the player.
-    if (tal.which == ABIL_EVOKE_STOP_LEVITATING)
+    if (tal.which == ABIL_STOP_FLYING)
     {
         if (is_feat_dangerous(env.grid(you.pos()), true, true)
             && (!you.can_swim() || !feat_is_water(env.grid(you.pos()))))
         {
-            mpr("Stopping levitation right now would be fatal!");
+            mpr("Stopping flight right now would be fatal!");
             crawl_state.zero_turns_taken();
             return false;
         }
@@ -1614,7 +1610,7 @@ bool activate_talent(const talent& tal)
         return false;
     }
 
-    if ((tal.which == ABIL_EVOKE_LEVITATE || tal.which == ABIL_TRAN_BAT)
+    if ((tal.which == ABIL_EVOKE_FLIGHT || tal.which == ABIL_TRAN_BAT)
         && you.liquefied_ground())
     {
         mpr("You can't escape from the ground with such puny magic!", MSGCH_WARN);
@@ -1627,7 +1623,6 @@ bool activate_talent(const talent& tal)
     switch (tal.which)
     {
         case ABIL_RENOUNCE_RELIGION:
-        case ABIL_EVOKE_STOP_LEVITATING:
         case ABIL_STOP_FLYING:
         case ABIL_EVOKE_TURN_VISIBLE:
         case ABIL_END_TRANSFORMATION:
@@ -2122,8 +2117,8 @@ static bool _do_ability(const ability_def& abil)
             cast_fly(you.experience_level * 4);
         else
         {
-            you.attribute[ATTR_PERM_LEVITATION] = 1;
-            float_player(true);
+            you.attribute[ATTR_PERM_FLIGHT] = 1;
+            float_player();
             mpr("You feel very comfortable in the air.");
         }
         break;
@@ -2153,31 +2148,23 @@ static bool _do_ability(const ability_def& abil)
         you.duration[DUR_INVIS] = 1;
         break;
 
-    case ABIL_EVOKE_LEVITATE:           // ring, boots, randarts
-        if (player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_LEVITATION))
+    case ABIL_EVOKE_FLIGHT:             // ring, boots, randarts
+        if (player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_FLIGHT))
         {
             bool standing = !you.airborne();
-            you.attribute[ATTR_PERM_LEVITATION] = 1;
+            you.attribute[ATTR_PERM_FLIGHT] = 1;
             if (standing)
-                float_player(false);
+                float_player();
             else
                 mpr("You feel more buoyant.");
         }
         else
-            levitate_player(you.skill(SK_EVOCATIONS, 2) + 30);
-        break;
-
-    case ABIL_EVOKE_STOP_LEVITATING:
-        ASSERT(!you.attribute[ATTR_LEV_UNCANCELLABLE]);
-        you.duration[DUR_LEVITATION] = 0;
-        // cancels all sources at once: boots + tengu
-        you.attribute[ATTR_PERM_LEVITATION] = 0;
-        land_player();
+            fly_player(you.skill(SK_EVOCATIONS, 2) + 30);
         break;
 
     case ABIL_STOP_FLYING:
-        you.duration[DUR_LEVITATION] = 0;
-        you.attribute[ATTR_PERM_LEVITATION] = 0;
+        you.duration[DUR_FLIGHT] = 0;
+        you.attribute[ATTR_PERM_FLIGHT] = 0;
         land_player();
         break;
 
@@ -3147,7 +3134,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         _add_talent(talents, ABIL_BOTTLE_BLOOD, false);
 
     if (you.species == SP_TENGU
-        && !you.attribute[ATTR_PERM_LEVITATION]
+        && !you.attribute[ATTR_PERM_FLIGHT]
         && you.experience_level >= 5
         && (you.experience_level >= 15 || !you.airborne()))
     {
@@ -3164,7 +3151,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         _add_talent(talents, ABIL_FLY_II, check_confused);
     }
 
-    if (you.attribute[ATTR_PERM_LEVITATION]
+    if (you.attribute[ATTR_PERM_FLIGHT]
         && you.species == SP_TENGU && you.experience_level >= 5)
     {
         _add_talent(talents, ABIL_STOP_FLYING, check_confused);
@@ -3224,24 +3211,24 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
                 _add_talent(talents, ABIL_EVOKE_TURN_INVISIBLE, check_confused);
         }
 
-        if (player_evokable_levitation())
+        if (player_evokable_flight())
         {
             // Has no effect on permanently flying Tengu.
             if (!you.permanent_flight())
             {
-                // You can still evoke perm levitation if you have temporary one.
-                if (!you.is_levitating()
-                    || !you.attribute[ATTR_PERM_LEVITATION]
-                       && player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_LEVITATION))
+                // You can still evoke perm flight if you have temporary one.
+                if (!you.is_flying()
+                    || !you.attribute[ATTR_PERM_FLIGHT]
+                       && player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_FLIGHT))
                 {
-                    _add_talent(talents, ABIL_EVOKE_LEVITATE, check_confused);
+                    _add_talent(talents, ABIL_EVOKE_FLIGHT, check_confused);
                 }
-                // Now you can only turn levitation off if you have an
+                // Now you can only turn flight off if you have an
                 // activatable item.  Potions and miscast effects will
                 // have to time out (this makes the miscast effect actually
                 // a bit annoying). -- bwr
-                if (you.is_levitating() && !you.attribute[ATTR_LEV_UNCANCELLABLE])
-                    _add_talent(talents, ABIL_EVOKE_STOP_LEVITATING, check_confused);
+                if (you.is_flying() && !you.attribute[ATTR_FLIGHT_UNCANCELLABLE])
+                    _add_talent(talents, ABIL_STOP_FLYING, check_confused);
             }
         }
 

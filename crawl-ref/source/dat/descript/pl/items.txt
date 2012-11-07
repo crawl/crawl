@@ -15,13 +15,6 @@ amulet of conservation
 Ten amulet ochrania zwoje i eliksiry przed zniszczeniem, niestety nie jest
 niezawodny.
 %%%%
-amulet of controlled flight
-
-Jeśli nosiciel tego amuletu zostanie poddany lewitacji w jakiś sposób, amulet
-ten umożliwia kontrolę nad lotem. Daje to między innymi możliwość kontaktu z
-podłożem, podnoszenia przedmiotów leżących na ziemi, jak i schodzenia po
-schodach.
-%%%%
 amulet of guardian spirit
 
 Ten amulet chroni swego nosiciela przed obrażeniami. Odniesione rany zamiast
@@ -890,10 +883,6 @@ potion of invisibility
 
 Eliksir który daje tymczasową niewidzialność.
 %%%%
-potion of levitation
-
-Eliksir który czyni pijącego lżejszym od powietrza.
-%%%%
 potion of magic
 
 Eliksir który jednorazowo odnawia część zasobów magicznej energii.
@@ -1004,12 +993,6 @@ tego efektu — trzeba go aktywować, do czego potrzebna jest umiejętność
 posługiwania się magicznymi przedmiotami. Bycie niewidzialnym znacznie wzmaga
 zużycie metabolizm, a także powoduje magiczne skażenie. Zbyt częste użycie tego
 pierścienia nie jest więc wskazane.
-%%%%
-ring of levitation
-
-Ten pierścień, po uruchomieniu, pozwala unieść się w powietrze na krótki czas.
-Po wylądowaniu można uruchomić pierścień ponownie, nie da się jednak tego
-zrobić z powietrza.
 %%%%
 ring of life protection
 

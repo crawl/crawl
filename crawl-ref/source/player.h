@@ -412,7 +412,7 @@ public:
     bool in_water() const;
     bool can_swim(bool permanently = false) const;
     int visible_igrd(const coord_def&) const;
-    bool is_levitating() const;
+    bool is_flying() const;
     bool can_cling_to_walls() const;
     bool is_banished() const;
     bool is_web_immune() const;
@@ -616,9 +616,7 @@ public:
     bool no_tele(bool calc_unid = true, bool permit_id = true) const;
     bool inaccuracy() const;
 
-    flight_type flight_mode() const;
-    bool cancellable_levitation() const;
-    bool permanent_levitation() const;
+    bool cancellable_flight() const;
     bool permanent_flight() const;
 
     bool paralysed() const;
@@ -835,7 +833,6 @@ int player_effect_gourmand();
 int player_effect_stasis(bool calc_unid = true);
 int player_effect_notele(bool calc_unid = true);
 int player_effect_running();
-int player_effect_cfly(bool calc_unid = true);
 int player_effect_faith();
 int player_effect_archmagi();
 int player_effect_nocast();
@@ -878,7 +875,7 @@ int player_spec_poison(void);
 int player_spec_summ(void);
 
 int player_speed(void);
-int player_evokable_levitation();
+int player_evokable_flight();
 int player_evokable_invis();
 
 int player_spell_levels(void);
@@ -907,7 +904,6 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain = NULL);
 
 bool player_in_bat_form();
 bool player_can_open_doors();
-bool player_can_reach_floor(string feat = "", bool quiet = false);
 
 void level_change(bool skip_attribute_increase = false);
 void adjust_level(int diff, bool just_xp = false);
@@ -975,8 +971,8 @@ void dec_exhaust_player(int delay);
 
 bool haste_player(int turns, bool rageext = false);
 void dec_haste_player(int delay);
-void levitate_player(int pow, bool already_levitating = false);
-void float_player(bool fly);
+void fly_player(int pow, bool already_flying = false);
+void float_player();
 bool land_player();
 
 void dec_disease_player(int delay);

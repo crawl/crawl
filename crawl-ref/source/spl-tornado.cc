@@ -100,10 +100,8 @@ static void _set_tornado_durations(int powc)
 {
     int dur = 60;
     you.duration[DUR_TORNADO] = dur;
-    you.duration[DUR_LEVITATION] = max(dur, you.duration[DUR_LEVITATION]);
-    you.duration[DUR_CONTROLLED_FLIGHT] =
-        max(dur, you.duration[DUR_CONTROLLED_FLIGHT]);
-    you.attribute[ATTR_LEV_UNCANCELLABLE] = 1;
+    you.duration[DUR_FLIGHT] = max(dur, you.duration[DUR_FLIGHT]);
+    you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 1;
 }
 
 spret_type cast_tornado(int powc, bool fail)
@@ -321,11 +319,10 @@ void tornado_damage(actor *caster, int dur)
                         monster *mon = victim->as_monster();
                         if (!leda)
                         {
-                            // levitate the monster so you get only one attempt
+                            // fly the monster so you get only one attempt
                             // at tossing them into water/lava
-                            mon_enchant ench(ENCH_LEVITATION, 0,
-                                             caster, 20);
-                            if (mon->has_ench(ENCH_LEVITATION))
+                            mon_enchant ench(ENCH_FLIGHT, 0, caster, 20);
+                            if (mon->has_ench(ENCH_FLIGHT))
                                 mon->update_ench(ench);
                             else
                                 mon->add_ench(ench);
@@ -337,11 +334,11 @@ void tornado_damage(actor *caster, int dur)
                         bool standing = !you.airborne();
                         if (standing)
                             mpr("The vortex of raging winds lifts you up.");
-                        you.attribute[ATTR_LEV_UNCANCELLABLE] = 1;
-                        you.duration[DUR_LEVITATION]
-                            = max(you.duration[DUR_LEVITATION], 20);
+                        you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 1;
+                        you.duration[DUR_FLIGHT]
+                            = max(you.duration[DUR_FLIGHT], 20);
                         if (standing)
-                            float_player(false);
+                            float_player();
                     }
                     int dmg = victim->apply_ac(
                                 div_rand_round(roll_dice(9, rpow), 15),
@@ -432,24 +429,21 @@ void cancel_tornado(bool tloc)
         return;
 
     dprf("Aborting tornado.");
-    if (you.duration[DUR_TORNADO] == you.duration[DUR_LEVITATION])
+    if (you.duration[DUR_TORNADO] == you.duration[DUR_FLIGHT])
     {
         if (tloc)
         {
-            // it'd be better to abort levitation instantly, but let's first
+            // it'd be better to abort flight instantly, but let's first
             // make damn sure all ways of translocating are prevented from
             // landing you in water.  Insta-kill due to an arrow of dispersal
             // is not nice.
-            you.duration[DUR_LEVITATION] = min(20,
-                you.duration[DUR_LEVITATION]);
-            you.duration[DUR_CONTROLLED_FLIGHT] = min(20,
-                you.duration[DUR_CONTROLLED_FLIGHT]);
+            you.duration[DUR_FLIGHT] = min(20,
+                you.duration[DUR_FLIGHT]);
         }
         else
         {
-            you.duration[DUR_LEVITATION] = 0;
-            you.duration[DUR_CONTROLLED_FLIGHT] = 0;
-            you.attribute[ATTR_LEV_UNCANCELLABLE] = 0;
+            you.duration[DUR_FLIGHT] = 0;
+            you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 0;
             burden_change();
             // NO checking for water, since this is called only during level
             // change, and being, say, banished from above water shouldn't

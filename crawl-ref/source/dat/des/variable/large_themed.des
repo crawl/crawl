@@ -101,7 +101,7 @@ DEPTH:   D:7-27, Lair, Crypt
 MONS:    ice statue / orange crystal statue
 SHUFFLE: 1|/!*
 SUBST:   *:*$, ?:x., !:., '=w.
-ITEM:    ring of teleportation / ring of levitation
+ITEM:    ring of teleportation / ring of flight
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxwwwxxxxxxxxxxx
@@ -179,7 +179,7 @@ NAME:    dragon1_lemuel
 ORIENT:  northeast
 DEPTH:   D:9-20, Lair
 MONS:    patrolling dragon, patrolling ice dragon
-ITEM:    potion of levitation / scroll of teleportation
+ITEM:    potion of flight / scroll of teleportation
 SUBST:   ! : ?x
 SHUFFLE: 1?/2W
 SUBST:   2=2:20 1
@@ -534,8 +534,8 @@ DEPTH:   D:10-16
 ORIENT:  south
 TAGS:    no_pool_fixup no_rotate uniq_rubicon
 WEIGHT:  6
-ITEM:    ring of levitation / potion of levitation / nothing
-ITEM:    potion of levitation / nothing, nothing, nothing, nothing
+ITEM:    ring of flight / potion of flight / nothing
+ITEM:    potion of flight / nothing, nothing, nothing, nothing
 SHUFFLE: {[(, )gh
 SUBST:   ?:?.w, ?=w., w:lw, ':'.c, '=cx.
 MAP
@@ -565,8 +565,8 @@ DEPTH:   D:10-16
 ORIENT:  south
 TAGS:    no_rotate uniq_rubicon
 WEIGHT:  4
-ITEM:    ring of levitation / potion of levitation / nothing
-ITEM:    potion of levitation, nothing, nothing, nothing, nothing
+ITEM:    ring of flight / potion of flight / nothing
+ITEM:    potion of flight, nothing, nothing, nothing, nothing
 SHUFFLE: {[(, fgW, )hi
 SUBST:   ?:?.wW, ?=wW., ':'.c, '=c.
 MAP

@@ -1195,10 +1195,6 @@ amulet of conservation
 
 <amulet>
 %%%%
-amulet of controlled flight
-
-<amulet>
-%%%%
 amulet of guardian spirit
 
 <amulet>
@@ -1700,7 +1696,7 @@ his left pocket, and it slipped on his finger. The goblins stopped short. They
 could not see a sign of him. He had vanished.”
     -J.R.R. Tolkien, _The Hobbit, or There and Back Again_. 1937.
 %%%%
-ring of levitation
+ring of flight
 
 <ring>
 %%%%

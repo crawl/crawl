@@ -115,7 +115,7 @@ bool monster::add_ench(const mon_enchant &ench)
         return false;
     }
 
-    if (ench.ench == ENCH_LEVITATION && has_ench(ENCH_LIQUEFYING))
+    if (ench.ench == ENCH_FLIGHT && has_ench(ENCH_LIQUEFYING))
     {
         del_ench(ENCH_LIQUEFYING);
         invalidate_agrid();
@@ -725,7 +725,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(this, " is no longer liquefying the ground.");
         break;
 
-    case ENCH_LEVITATION:
+    case ENCH_FLIGHT:
         apply_location_effects(pos(), me.killer(), me.kill_agent());
         break;
 
@@ -1094,7 +1094,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_STONESKIN:
     case ENCH_FEAR_INSPIRING:
     case ENCH_LIFE_TIMER:
-    case ENCH_LEVITATION:
+    case ENCH_FLIGHT:
     case ENCH_DAZED:
     case ENCH_FAKE_ABJURATION:
     case ENCH_RECITE_TIMER:
@@ -1360,7 +1360,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_STICKY_FLAME:
     {
         if (feat_is_watery(grd(pos())) && (ground_level()
-              || mons_intel(this) >= I_NORMAL && flight_mode() != FL_LEVITATE))
+              || mons_intel(this) >= I_NORMAL && is_flying()))
         {
             if (mons_near(this) && visible_to(&you))
             {
@@ -1810,7 +1810,7 @@ static const char *enchant_names[] =
     "insane", "silenced", "awaken_forest", "exploding", "bleeding",
     "tethered", "severed", "antimagic", "fading_away", "preparing_resurrect", "regen",
     "magic_res", "mirror_dam", "stoneskin", "fear inspiring", "temporarily pacified",
-    "withdrawn", "attached", "guardian_timer", "levitation",
+    "withdrawn", "attached", "guardian_timer", "flight",
     "liquefying", "tornado", "fake_abjuration",
     "dazed", "mute", "blind", "dumb", "mad", "silver_corona", "recite timer",
     "inner_flame", "roused", "breath timer", "deaths_door", "rolling",

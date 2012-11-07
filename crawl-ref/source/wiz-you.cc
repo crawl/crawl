@@ -705,7 +705,7 @@ static const char* dur_names[] =
     "might",
     "brilliance",
     "agility",
-    "levitation",
+    "flight",
     "berserker",
     "poisoning",
     "confusing touch",
@@ -725,7 +725,9 @@ static const char* dur_names[] =
     "divine shield",
     "regeneration",
     "swiftness",
+#if TAG_MAJOR_VERSION == 34
     "controlled flight",
+#endif
     "teleport",
     "control teleport",
     "breath weapon",

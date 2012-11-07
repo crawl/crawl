@@ -1181,27 +1181,27 @@ static bool _safe_to_remove_or_wear(const item_def &item, bool remove, bool quie
     return true;
 }
 
-// Checks whether removing an item would cause levitation to end and the
+// Checks whether removing an item would cause flight to end and the
 // player to fall to their death.
 bool safe_to_remove(const item_def &item, bool quiet)
 {
     item_info inf = get_item_info(item);
 
-    const bool grants_lev =
-         inf.base_type == OBJ_JEWELLERY && inf.sub_type == RING_LEVITATION
-         || inf.base_type == OBJ_ARMOUR && inf.special == SPARM_LEVITATION
+    const bool grants_flight =
+         inf.base_type == OBJ_JEWELLERY && inf.sub_type == RING_FLIGHT
+         || inf.base_type == OBJ_ARMOUR && inf.special == SPARM_FLIGHT
          || is_artefact(inf)
-            && artefact_known_wpn_property(inf, ARTP_LEVITATE);
+            && artefact_known_wpn_property(inf, ARTP_FLY);
 
-    // assumes item can't grant levitation twice
-    const bool removing_ends_lev =
-        you.is_levitating()
-        && !you.attribute[ATTR_LEV_UNCANCELLABLE]
-        && (player_evokable_levitation() == 1);
+    // assumes item can't grant flight twice
+    const bool removing_ends_flight =
+        you.is_flying()
+        && !you.attribute[ATTR_FLIGHT_UNCANCELLABLE]
+        && (player_evokable_flight() == 1);
 
     const dungeon_feature_type feat = grd(you.pos());
 
-    if (grants_lev && removing_ends_lev
+    if (grants_flight && removing_ends_flight
         && (feat == DNGN_LAVA
             || feat == DNGN_DEEP_WATER && !player_likes_water()))
     {
@@ -2160,9 +2160,6 @@ static bool _drink_fountain()
     if (feat < DNGN_FOUNTAIN_BLUE || feat > DNGN_FOUNTAIN_BLOOD)
         return false;
 
-    if (!player_can_reach_floor("fountain"))
-        return false;
-
     if (you.berserk())
     {
         canned_msg(MSG_TOO_BERSERK);
@@ -2203,7 +2200,7 @@ static bool _drink_fountain()
                                    40,  POT_AGILITY,
                                    40,  POT_BRILLIANCE,
                                    32,  POT_DEGENERATION,
-                                   27,  POT_LEVITATION,
+                                   27,  POT_FLIGHT,
                                    27,  POT_POISON,
                                    27,  POT_SLOWING,
                                    27,  POT_PARALYSIS,

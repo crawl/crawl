@@ -954,7 +954,6 @@ static void _shoals_apply_tide_at(coord_def c, int tide, bool incremental_tide)
         && final_feature == DNGN_DEEP_WATER
         && c == you.pos()
         && !you.ground_level()
-        && !you.permanent_levitation()
         && !you.permanent_flight())
     {
         mprf(MSGCH_WARN, "The tide rushes in under you.");

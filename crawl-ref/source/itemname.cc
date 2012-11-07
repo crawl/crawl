@@ -468,7 +468,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
         case SPARM_DEXTERITY:         return "dexterity";
         case SPARM_INTELLIGENCE:      return "intelligence";
         case SPARM_PONDEROUSNESS:     return "ponderousness";
-        case SPARM_LEVITATION:        return "levitation";
+        case SPARM_FLIGHT:            return "flight";
         case SPARM_MAGIC_RESISTANCE:  return "magic resistance";
         case SPARM_PROTECTION:        return "protection";
         case SPARM_STEALTH:           return "stealth";
@@ -501,7 +501,7 @@ const char* armour_ego_name(const item_def& item, bool terse)
         case SPARM_DEXTERITY:         return " {Dex+3}";
         case SPARM_INTELLIGENCE:      return " {Int+3}";
         case SPARM_PONDEROUSNESS:     return " {ponderous}";
-        case SPARM_LEVITATION:        return " {Lev}";
+        case SPARM_FLIGHT:            return " {Fly}";
         case SPARM_MAGIC_RESISTANCE:  return " {MR}";
         case SPARM_PROTECTION:        return " {AC+3}";
         case SPARM_STEALTH:           return " {Stlth+}";
@@ -602,7 +602,7 @@ static const char* potion_type_name(int potiontype)
     case POT_GAIN_STRENGTH:     return "gain strength";
     case POT_GAIN_DEXTERITY:    return "gain dexterity";
     case POT_GAIN_INTELLIGENCE: return "gain intelligence";
-    case POT_LEVITATION:        return "levitation";
+    case POT_FLIGHT:            return "flight";
     case POT_POISON:            return "poison";
     case POT_SLOWING:           return "slowing";
     case POT_PARALYSIS:         return "paralysis";
@@ -682,7 +682,7 @@ static const char* jewellery_type_name(int jeweltype)
     case RING_INTELLIGENCE:          return "ring of intelligence";
     case RING_WIZARDRY:              return "ring of wizardry";
     case RING_MAGICAL_POWER:         return "ring of magical power";
-    case RING_LEVITATION:            return "ring of levitation";
+    case RING_FLIGHT:                return "ring of flight";
     case RING_LIFE_PROTECTION:       return "ring of life protection";
     case RING_PROTECTION_FROM_MAGIC: return "ring of protection from magic";
     case RING_FIRE:                  return "ring of fire";
@@ -694,7 +694,9 @@ static const char* jewellery_type_name(int jeweltype)
     case AMU_RESIST_CORROSION:  return "amulet of resist corrosion";
     case AMU_THE_GOURMAND:      return "amulet of the gourmand";
     case AMU_CONSERVATION:      return "amulet of conservation";
+#if TAG_MAJOR_VERSION == 34
     case AMU_CONTROLLED_FLIGHT: return "amulet of controlled flight";
+#endif
     case AMU_INACCURACY:        return "amulet of inaccuracy";
     case AMU_RESIST_MUTATION:   return "amulet of resist mutation";
     case AMU_GUARDIAN_SPIRIT:   return "amulet of guardian spirit";
@@ -3140,8 +3142,8 @@ bool is_useless_item(const item_def &item, bool temp)
                         && (you.species != SP_VAMPIRE
                             || temp && you.hunger_state < HS_SATIATED));
 
-        case POT_LEVITATION:
-            return (you.permanent_levitation() || you.permanent_flight());
+        case POT_FLIGHT:
+            return you.permanent_flight();
 
         case POT_PORRIDGE:
         case POT_BLOOD:
@@ -3211,9 +3213,11 @@ bool is_useless_item(const item_def &item, bool temp)
             return (player_res_poison(false, temp, false) > 0
                     && (temp || you.species != SP_VAMPIRE));
 
+#if TAG_MAJOR_VERSION == 34
         case AMU_CONTROLLED_FLIGHT:
             return (player_genus(GENPC_DRACONIAN)
                     || (you.species == SP_TENGU && you.experience_level >= 5));
+#endif
 
         case RING_WIZARDRY:
             return (you.religion == GOD_TROG);
@@ -3227,8 +3231,8 @@ bool is_useless_item(const item_def &item, bool temp)
         case RING_INVISIBILITY:
             return _invisibility_is_useless(temp);
 
-        case RING_LEVITATION:
-            return (you.permanent_levitation() || you.permanent_flight());
+        case RING_FLIGHT:
+            return you.permanent_flight();
 
         default:
             return false;

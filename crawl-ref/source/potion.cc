@@ -223,15 +223,15 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
             learned_something_new(HINT_YOU_MUTATED);
         break;
 
-    case POT_LEVITATION:
+    case POT_FLIGHT:
         if (you.liquefied_ground())
         {
             mprf(MSGCH_WARN, "This potion isn't strong enough to pull you from the ground!");
             break;
         }
 
-        you.attribute[ATTR_LEV_UNCANCELLABLE] = 1;
-        levitate_player(pow);
+        you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 1;
+        fly_player(pow);
         break;
 
     case POT_POISON:

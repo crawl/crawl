@@ -1151,7 +1151,7 @@ bool spell_is_useless(spell_type spell, bool transient)
     case SPELL_FLY:
         if (you.species == SP_TENGU && you.experience_level >= 15)
             return true;
-        if (transient && you.is_levitating())
+        if (transient && you.is_flying())
             return true;
         break;
     case SPELL_INVISIBILITY:

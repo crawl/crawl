@@ -381,7 +381,7 @@ static bool _jewel_auto_id(const item_def& item)
     case RING_INVISIBILITY:
     case RING_TELEPORTATION:
     case RING_MAGICAL_POWER:
-    case RING_LEVITATION:
+    case RING_FLIGHT:
     case RING_ICE:
     case RING_FIRE:
     case RING_WIZARDRY:

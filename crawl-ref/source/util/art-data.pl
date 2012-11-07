@@ -40,7 +40,7 @@ my %field_type = (
     HOLY     => "bool",
     INT      => "num",
     INV      => "bool",
-    LEV      => "bool",
+    FLY      => "bool",
     LIFE     => "bool",
     MAGIC    => "num",
     METAB    => "num",
@@ -483,7 +483,7 @@ my @art_order = (
 
     "{", "BRAND", "AC", "EV", "STR", "INT", "DEX", "\n",
     "FIRE", "COLD", "ELEC", "POISON", "LIFE", "MAGIC", "\n",
-    "SEEINV", "INV", "LEV", "BLINK", "BERSERK",  "NOISES", "\n",
+    "SEEINV", "INV", "FLY", "BLINK", "BERSERK",  "NOISES", "\n",
     "NOSPELL", "RND_TELE", "NOTELEP", "ANGRY", "METAB", "\n",
     "MUTATE", "ACC", "DAM", "CURSED", "STEALTH", "MP", "\n",
     "BASE_DELAY", "HP", "CLARITY", "BASE_ACC", "BASE_DAM", "\n",

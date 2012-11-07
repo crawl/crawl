@@ -110,7 +110,7 @@ struct monster_info_base
     resists_t mresists;
     mon_itemuse_type mitemuse;
     int mbase_speed;
-    flight_type fly;
+    bool flies;
     CrawlHashTable props;
     string constrictor_name;
     vector<string> constricting_name;

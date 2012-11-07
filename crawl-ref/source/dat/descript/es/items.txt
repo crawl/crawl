@@ -16,13 +16,6 @@ amulet of conservation
 Este amuleto protege de la destrucción algunas de las pertenencias de su
 portador, aunque no de forma infalible.
 %%%%
-amulet of controlled flight
-
-Si el portador consigue comenzar a levitar de alguna forma, este amuleto le
-permitirá ejercer cierto control sobre el movimiento resultante. Por ejemplo,
-podrá descender escaleras, y tomar objetos del suelo. Todo ello, sin perder
-ninguna de las ventajas de levitar.
-%%%%
 amulet of guardian spirit
 
 Este amuleto hace que su portador sea un poco menos vulnerable al daño externo.
@@ -929,10 +922,6 @@ potion of invisibility
 
 Una poción que te oculta de la vista de los demás.
 %%%%
-potion of levitation
-
-Una poción que confiere gran flotabilidad a quien la consuma.
-%%%%
 potion of magic
 
 Una valiosa poción que infunde energía mágica.
@@ -1039,11 +1028,6 @@ ring of invisibility
 Este poderoso anillo puede ser activado para ocultar a su portador de la vista
 de los demás, pero incrementa la velocidad de su metabolismo en gran medida
 mientras lo hace.
-%%%%
-ring of levitation
-
-Este anillo permite que su portador levite sobre el suelo. El poder de este
-anillo no puede ser evocado si ya se está levitando.
 %%%%
 ring of life protection
 

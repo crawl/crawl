@@ -344,7 +344,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
         // Airstrike.
         if (you.res_wind() > 0)
             hurted = 0;
-        else if (you.flight_mode())
+        else if (you.is_flying())
             hurted += hurted / 2;
         break;
     }
