@@ -947,6 +947,10 @@ ancient_champion MONS_ANCIENT_CHAMPION
 ## Sprint specials
 %sdir mon/sprint
 succubus MONS_SUCCUBUS
+%rim 0
+orb_of_ice MONS_ORB_OF_ICE
+orb_of_electricity MONS_ORB_OF_ELECTRICITY
+%rim 1
 
 %include dc-zombie.txt
 
