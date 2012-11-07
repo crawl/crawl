@@ -216,10 +216,19 @@ fire_elemental MONS_FIRE_ELEMENTAL /*'#'*/
 water_elemental MONS_WATER_ELEMENTAL /*'#'*/
 air_elemental MONS_AIR_ELEMENTAL /*'#'*/
 iron_elemental MONS_IRON_ELEMENTAL
-fire_vortex MONS_FIRE_VORTEX /*'v'*/
-spatial_vortex MONS_SPATIAL_VORTEX /*'v'*/
-twister MONS_TWISTER /*'v'*/
 %rim 0
+fire_vortex1 MONS_FIRE_VORTEX /*'v'*/
+fire_vortex2
+fire_vortex3
+fire_vortex4
+spatial_vortex1 MONS_SPATIAL_VORTEX /*'v'*/
+spatial_vortex2
+spatial_vortex3
+spatial_vortex4
+twister1 MONS_TWISTER /*'v'*/
+twister2
+twister3
+twister4
 vapour MONS_VAPOUR /*'#'*/
 orb_of_fire MONS_ORB_OF_FIRE /*'*'*/
 orb_of_destruction1 MONS_ORB_OF_DESTRUCTION /*'*'*/
