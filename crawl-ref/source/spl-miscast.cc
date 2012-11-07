@@ -990,26 +990,11 @@ void MiscastEffect::_enchantment(int severity)
         switch (random2(target->is_player() ? 2 : 1))
         {
         case 0:
-            if (target->is_player() && !liquefied(you.pos())
-                && you.ground_level())
-            {
-                you.attribute[ATTR_LEV_UNCANCELLABLE] = 1;
-                levitate_player(20);
-            }
-            else if (target->is_player())
-            {
-                // Reasoning: miscasts to get levitation to escape the effects of
-                // liquefaction = cheap.
-                random_uselessness();
-            }
+            if (target->is_player())
+                you.backlight();
             else
-            {
-                // There's no levitation enchantment for monsters, and,
-                // anyway, it's not nearly as inconvenient for monsters as
-                // for the player, so backlight them instead.
                 target_as_monster()->add_ench(mon_enchant(ENCH_CORONA, 20,
                                                           guilty));
-            }
             break;
         case 1:
             random_uselessness();

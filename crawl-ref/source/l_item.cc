@@ -287,7 +287,7 @@ static const char *ring_types[] =
     "intelligence",
     "wizardry",
     "magical power",
-    "levitation",
+    "flight",
     "life protection",
     "protection from magic",
     "fire",
@@ -298,7 +298,11 @@ static const char *ring_types[] =
 static const char *amulet_types[] =
 {
     "rage", "clarity", "warding", "resist corrosion",
-    "gourmand", "conservation", "controlled flight", "inaccuracy",
+    "gourmand", "conservation",
+#if TAG_MAJOR_VERSION == 34
+    "controlled flight",
+#endif
+    "inaccuracy",
     "resist mutation", "guardian spirit", "faith", "stasis",
 };
 

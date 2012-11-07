@@ -1337,7 +1337,7 @@ static misc_item_type _gift_type_to_deck(int gift)
 
 static bool _give_nemelex_gift(bool forced = false)
 {
-    // But only if you're not levitating over deep water.
+    // But only if you're not flying over deep water.
     // Merfolk don't get gifts in deep water. {due}
     if (!feat_has_solid_floor(grd(you.pos())))
         return false;

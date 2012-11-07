@@ -545,7 +545,7 @@ ITEM:    cap ego:cold_resistance w:10 / \
          large shield ego:cold_resistance w:5 / \
          animal skin ego:cold_resistance / nothing w:60
 ITEM:    potion of resistance w:5 / potion of gain strength / \
-         potion of might / potion of confusion / potion of levitation / \
+         potion of might / potion of confusion / potion of flight / \
          potion of experience w:2
 MAP
                   xxxxx        xxxxxxxx

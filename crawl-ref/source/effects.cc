@@ -612,7 +612,7 @@ void direct_effect(monster* source, spell_type spell,
             simple_monster_message(def, " is struck by the twisting air!");
         else
         {
-            if (you.flight_mode())
+            if (you.is_flying())
                 mpr("The air twists around and violently strikes you in flight!");
             else
                 mpr("The air twists around and strikes you!");

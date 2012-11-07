@@ -175,7 +175,9 @@ static const char* _jewellery_base_ability_string(int subtype)
     case AMU_RESIST_CORROSION:   return "rCorr";
     case AMU_THE_GOURMAND:       return "Gourm";
     case AMU_CONSERVATION:       return "Cons";
+#if TAG_MAJOR_VERSION == 34
     case AMU_CONTROLLED_FLIGHT:  return "cFly";
+#endif
     case AMU_RESIST_MUTATION:    return "rMut";
     case AMU_GUARDIAN_SPIRIT:    return "Spirit";
     case AMU_FAITH:              return "Faith";
@@ -221,7 +223,7 @@ static vector<string> _randart_propnames(const item_def& item,
         { "+Blink", ARTP_BLINK,                 2 },
         { "+Rage",  ARTP_BERSERK,               2 },
         { "+Inv",   ARTP_INVISIBLE,             2 },
-        { "+Lev",   ARTP_LEVITATE,              2 },
+        { "+Fly",   ARTP_FLY,                   2 },
 
         // Resists, also really important
         { "rElec",  ARTP_ELECTRICITY,           2 },
@@ -446,7 +448,7 @@ static string _randart_descrip(const item_def &item)
         { ARTP_MAGICAL_POWER, "It affects your mana capacity (%d).", false},
         { ARTP_EYESIGHT, "It enhances your eyesight.", false},
         { ARTP_INVISIBLE, "It lets you turn invisible.", false},
-        { ARTP_LEVITATE, "It lets you levitate.", false},
+        { ARTP_FLY, "It lets you fly.", false},
         { ARTP_BLINK, "It lets you blink.", false},
         { ARTP_BERSERK, "It lets you go berserk.", false},
         { ARTP_NOISES, "It makes noises.", false},
@@ -576,7 +578,7 @@ int str_to_trap(const string &s)
 // Describes the random demons you find in Pandemonium.
 //
 //---------------------------------------------------------------
-static string _describe_demon(const string& name, flight_type fly)
+static string _describe_demon(const string& name, bool flies)
 {
     const uint32_t seed =
         accumulate(name.begin(), name.end(), 0) *
@@ -619,7 +621,7 @@ static string _describe_demon(const string& name, flight_type fly)
         " slender "
     };
 
-    const char* wing_names[] = {
+    const char* fly_names[] = {
         " with small insectoid wings",
         " with large insectoid wings",
         " with moth-like wings",
@@ -629,10 +631,7 @@ static string _describe_demon(const string& name, flight_type fly)
         " with small, bat-like wings",
         " with hairy wings",
         " with great feathered wings",
-        " with shiny metal wings"
-    };
-
-    const char* lev_names[] = {
+        " with shiny metal wings",
         " which hovers in mid-air",
         " with sacs of gas hanging from its back"
     };
@@ -693,21 +692,10 @@ static string _describe_demon(const string& name, flight_type fly)
     description << "A powerful demon, " << name << " has a"
                 << RANDOM_ELEMENT(body_descs) << "body";
 
-    switch (fly)
-    {
-    case FL_FLY:
-        description << RANDOM_ELEMENT(wing_names);
-        break;
-
-    case FL_LEVITATE:
-        description << RANDOM_ELEMENT(lev_names);
-        break;
-
-    case FL_NONE:  // does not fly
-        if (!one_chance_in(4))
-            description << RANDOM_ELEMENT(nonfly_names);
-        break;
-    }
+    if (flies)
+        description << RANDOM_ELEMENT(fly_names);
+    else if (!one_chance_in(4))
+        description << RANDOM_ELEMENT(nonfly_names);
 
     description << ".";
 
@@ -1330,9 +1318,9 @@ static string _describe_armour(const item_def &item, bool verbose)
         case SPARM_PONDEROUSNESS:
             description += "It is very cumbersome, thus slowing your movement.";
             break;
-        case SPARM_LEVITATION:
+        case SPARM_FLIGHT:
             description += "It can be activated to allow its wearer to "
-                "float above the ground and remain so indefinitely.";
+                "fly indefinitely.";
             break;
         case SPARM_MAGIC_RESISTANCE:
             description += "It increases its wearer's resistance "
@@ -3281,15 +3269,12 @@ static string _monster_stat_description(const monster_info& mi)
         result << ".\n";
     }
 
-    // Can the monster levitate/fly?
+    // Can the monster fly?
     // This doesn't give anything away since no (very) ugly things can
     // fly, all ghosts can fly, and for demons it's already mentioned in
     // their flavour description.
-    if (mi.fly != FL_NONE)
-    {
-        result << uppercase_first(pronoun) << " can "
-               << (mi.fly == FL_FLY ? "fly" : "levitate") << ".\n";
-    }
+    if (mi.flies)
+        result << uppercase_first(pronoun) << " can fly.\n";
 
     // Unusual regeneration rates.
     if (!mi.can_regenerate())
@@ -3442,7 +3427,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         break;
 
     case MONS_PANDEMONIUM_LORD:
-        inf.body << _describe_demon(mi.mname, mi.fly) << "\n";
+        inf.body << _describe_demon(mi.mname, mi.flies) << "\n";
         break;
 
     case MONS_PROGRAM_BUG:

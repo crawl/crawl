@@ -1669,11 +1669,11 @@ KITEM:   f = book of spatial translocations w:5 / book of the warp w:5 / \
              manual of translocations w:5 / randbook disc:translocation numspells:5 / \
              randbook disc:translocation owner:Golubria numspells:7 \
              spells:shroud_of_golubria|passage_of_golubria
-KITEM:   g = ring of levitation / potion of levitation q:2 / \
+KITEM:   g = ring of flight / potion of flight q:2 / \
              wand of digging w:5 / lantern of shadows / \
              potion of speed w:5 / scroll of fog / potion of porridge / \
              any wand w:1 / any potion w:1 / any scroll w:1
-KITEM:   h = pair of boots ego:levitation w:9 / pair of boots ego:running w:1 / \
+KITEM:   h = pair of boots ego:flight w:9 / pair of boots ego:running w:1 / \
              pair of boots ego:stealth w:9 / pair of boots w:1
 KITEM:   i = cloak good_item w:75 / randart cloak w:95 / cloak unrand:cloak_of_flash / \
              cloak unrand:cloak_of_starlight / cloak unrand:cloak_of_the_thief
@@ -1842,11 +1842,11 @@ MARKER:     ! = lua:fog_machine { \
                 size_buildup_time = 25, cloud_type = "grey smoke", \
                 colour = "white", name = "white fluffiness" \
             }
-KITEM:      % = w:20 potion of levitation / \
+KITEM:      % = w:20 potion of flight / \
             potion of magic / potion of speed / potion of resistance / \
             gold / potion of agility / potion of brilliance
 KITEM:      ? = randbook disc:air
-KITEM:      $ = wand of lightning / staff of air / ring of levitation /\
+KITEM:      $ = wand of lightning / staff of air / ring of flight /\
             gold / scroll of silence / ring of teleport control / \
             quick blade / ring of evasion / ring of see invisible / \
             book of clouds / any book w:15 / any good_item / any w:20

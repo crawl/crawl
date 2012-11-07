@@ -746,24 +746,13 @@ static void _describe_airborne(status_info* inf)
     if (!you.airborne())
         return;
 
-    const bool perm     = you.permanent_flight() || you.permanent_levitation();
-    const bool expiring = (!perm && dur_expiring(DUR_LEVITATION));
-    const bool uncancel = you.attribute[ATTR_LEV_UNCANCELLABLE];
+    const bool perm     = you.permanent_flight();
+    const bool expiring = (!perm && dur_expiring(DUR_FLIGHT));
 
-    if (player_effect_cfly())
-    {
-        inf->light_colour = you.light_flight() ? BLUE : perm ? WHITE : MAGENTA;
-        inf->light_text   = "Fly";
-        inf->short_text   = "flying";
-        inf->long_text    = "You are flying.";
-    }
-    else
-    {
-        inf->light_colour = perm ? WHITE : uncancel ? BLUE : MAGENTA;
-        inf->light_text   = "Lev";
-        inf->short_text   = "levitating";
-        inf->long_text    = "You are hovering above the floor.";
-    }
+    inf->light_colour = you.light_flight() ? BLUE : perm ? WHITE : MAGENTA;
+    inf->light_text   = "Fly";
+    inf->short_text   = "flying";
+    inf->long_text    = "You are flying.";
     inf->light_colour = _dur_colour(inf->light_colour, expiring);
     _mark_expiring(inf, expiring);
 }
@@ -847,7 +836,7 @@ static void _describe_burden(status_info* inf)
         inf->long_text    = "You are burdened.";
         break;
     case BS_UNENCUMBERED:
-        if (you.species == SP_TENGU && you.flight_mode() == FL_FLY)
+        if (you.species == SP_TENGU && you.is_flying())
         {
             if (you.travelling_light())
                 inf->long_text = "Your small burden allows quick flight.";

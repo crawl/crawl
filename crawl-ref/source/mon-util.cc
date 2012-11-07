@@ -1519,57 +1519,57 @@ bool mons_skeleton(monster_type mc)
     return !mons_class_flag(mc, M_NO_SKELETON);
 }
 
-flight_type mons_class_flies(monster_type mc)
+bool mons_class_flies(monster_type mc)
 {
     const monsterentry *me = get_monster_data(mc);
-    return (me ? me->fly : FL_NONE);
+    return (me ? me->flies : false);
 }
 
-flight_type mons_flies(const monster* mon, bool temp)
+bool mons_flies(const monster* mon, bool temp)
 {
-    flight_type ret;
+    bool ret;
     // For dancing weapons, this function can get called before their
     // ghost_demon is created, so check for a NULL ghost. -cao
     if (mons_is_ghost_demon(mon->type) && mon->ghost.get())
-        ret = mon->ghost->fly;
+        ret = mon->ghost->flies;
     else
         ret = mons_class_flies(mons_base_type(mon));
 
     // Handle the case where the zombified base monster can't fly, but
     // the zombified monster can (e.g. spectral things).
-    if (ret == FL_NONE && mons_is_zombified(mon))
+    if (!ret && mons_is_zombified(mon))
         ret = mons_class_flies(mon->type);
 
-    if (temp && ret == FL_NONE
-        && scan_mon_inv_randarts(mon, ARTP_LEVITATE) > 0)
+    if (temp && !ret
+        && scan_mon_inv_randarts(mon, ARTP_FLY) > 0)
     {
-        ret = FL_LEVITATE;
+        ret = true;
     }
 
-    if (temp && ret == FL_NONE)
+    if (temp && !ret)
     {
         const int armour = mon->inv[MSLOT_ARMOUR];
         if (armour != NON_ITEM
             && mitm[armour].base_type == OBJ_ARMOUR
-            && mitm[armour].special == SPARM_LEVITATION)
+            && mitm[armour].special == SPARM_FLIGHT)
         {
-            ret = FL_LEVITATE;
+            ret = true;
         }
     }
 
-    if (temp && ret == FL_NONE)
+    if (temp && !ret)
     {
         const int jewellery = mon->inv[MSLOT_JEWELLERY];
         if (jewellery != NON_ITEM
             && mitm[jewellery].base_type == OBJ_JEWELLERY
-            && mitm[jewellery].sub_type == RING_LEVITATION)
+            && mitm[jewellery].sub_type == RING_FLIGHT)
         {
-            ret = FL_LEVITATE;
+            ret = true;
         }
     }
 
-    if (temp && ret == FL_NONE && mon->has_ench(ENCH_LEVITATION))
-        ret = FL_LEVITATE;
+    if (temp && !ret && mon->has_ench(ENCH_FLIGHT))
+        ret = true;
 
     return ret;
 }
@@ -3865,7 +3865,7 @@ mon_body_shape get_mon_shape(const monster_type mc)
     if (mc == MONS_CHAOS_SPAWN)
         return (static_cast<mon_body_shape>(random2(MON_SHAPE_MISC + 1)));
 
-    const bool flies = (mons_class_flies(mc) == FL_FLY);
+    const bool flies = mons_class_flies(mc);
 
     switch (mons_base_char(mc))
     {

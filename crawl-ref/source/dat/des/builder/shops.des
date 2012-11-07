@@ -182,7 +182,7 @@ KFEAT:   v = general shop type:Fishing suffix:Supplies count:7 ; \
          w:10 throwing net | w:5 javelin | w:5 spear | w:5 trident | \
          w:1 javelin ego:penetration | w:1 spear ego:electrocution | \
          w:1 trident ego:electrocution | w:1 demon trident | \
-         w:8 potion of levitation | w:5 ring of levitation
+         w:8 potion of flight | w:5 ring of flight
 SUBST:   ? = 2Ww
 : if you.absdepth() < 8 then
 SUBST:   2 = 1

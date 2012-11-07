@@ -580,7 +580,7 @@ ENDMAP
 ############################################################################
 # River.
 #
-# There will be either a ring of levitation or about three potions.
+# There will be either a ring of flight or about three potions.
 # Loots consists of six good items.
 #
 NAME:    bailey_axe_4
@@ -589,8 +589,8 @@ ORIENT:  encompass
 TAGS:    bailey_axe no_rotate no_item_gen no_monster_gen no_pool_fixup
 #
 ITEM:    any good_item
-ITEM:    potion of levitation ident:type
-ITEM:    ring of levitation ident:type
+ITEM:    potion of flight ident:type
+ITEM:    ring of flight ident:type
 SUBST:   e : eeef
 NSUBST:  f = 1:f / *:.
 SUBST:   e = e..

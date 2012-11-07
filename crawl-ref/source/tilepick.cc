@@ -2489,7 +2489,7 @@ static tileidx_t _tileidx_tentacle(const monster_info& mon)
     return TILEP_MONS_PROGRAM_BUG;
 }
 
-static bool _tentacle_tile_not_levitating(tileidx_t tile)
+static bool _tentacle_tile_not_flying(tileidx_t tile)
 {
     // All tiles between these two enums feature tentacles
     // emerging from water.
@@ -2644,7 +2644,7 @@ tileidx_t tileidx_monster(const monster_info& mons)
 {
     tileidx_t ch = _tileidx_monster_no_props(mons);
 
-    if (!mons.ground_level() && !_tentacle_tile_not_levitating(ch))
+    if (!mons.ground_level() && !_tentacle_tile_not_flying(ch))
         ch |= TILE_FLAG_FLYING;
     // FIXME: should probably have a different tile flag for being webbed
     if (mons.is(MB_CAUGHT) || mons.is(MB_WEBBED))
@@ -4986,10 +4986,8 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_EVOKE_INVISIBILITY;
     case ABIL_EVOKE_TURN_VISIBLE:
         return TILEG_ABILITY_EVOKE_INVISIBILITY_END;
-    case ABIL_EVOKE_LEVITATE:
-        return TILEG_ABILITY_EVOKE_LEVITATE;
-    case ABIL_EVOKE_STOP_LEVITATING:
-        return TILEG_ABILITY_EVOKE_LEVITATE_END;
+    case ABIL_EVOKE_FLIGHT:
+        return TILEG_ABILITY_EVOKE_FLIGHT;
 
     // Divine abilities
     // Zin

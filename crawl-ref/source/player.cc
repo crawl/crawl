@@ -249,7 +249,7 @@ static bool _check_moveto_terrain(const coord_def& p, const string &move_verb,
 
         prompt += env.grid(p) == DNGN_DEEP_WATER ? "deep water" : "lava";
 
-        prompt += need_expiration_warning(DUR_LEVITATION, p)
+        prompt += need_expiration_warning(DUR_FLIGHT, p)
                       ? " while you are losing your buoyancy?"
                       : " while your transformation is expiring?";
 
@@ -422,8 +422,7 @@ void move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift)
 bool is_feat_dangerous(dungeon_feature_type grid, bool permanently,
                        bool ignore_items)
 {
-    if (you.permanent_flight() || (you.permanent_levitation() && !ignore_items)
-        || you.airborne() && !permanently)
+    if (you.permanent_flight() || you.airborne() && !permanently)
     {
         return false;
     }
@@ -466,23 +465,6 @@ bool player_in_bat_form()
 bool player_can_open_doors()
 {
     return (you.form != TRAN_BAT);
-}
-
-bool player_can_reach_floor(string feat, bool quiet)
-{
-    if (you.flight_mode() != FL_LEVITATE)
-        return true;
-
-    if (quiet)
-        return false;
-
-    if (feat == "")
-        mpr("You can't reach the floor from up here.");
-    else
-        mprf("You are floating high above the %s.", feat.c_str());
-
-    learned_something_new(HINT_LEVITATING);
-    return false;
 }
 
 bool player_under_penance(void)
@@ -1136,11 +1118,11 @@ bool player_equip_unrand(int unrand_index)
     return false;
 }
 
-int player_evokable_levitation()
+int player_evokable_flight()
 {
-    return player_equip(EQ_RINGS, RING_LEVITATION)
-           + player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_LEVITATION)
-           + scan_artefacts(ARTP_LEVITATE);
+    return player_equip(EQ_RINGS, RING_FLIGHT)
+           + player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_FLIGHT)
+           + scan_artefacts(ARTP_FLY);
 }
 
 int player_evokable_invis()
@@ -2470,7 +2452,7 @@ static int _player_scale_evasion(int prescaled_ev, const int scale)
 
     case SP_TENGU:
         // Flying Tengu get an evasion bonus.
-        if (you.flight_mode() == FL_FLY)
+        if (you.is_flying())
         {
             const int ev_bonus = min(9 * scale,
                                      max(1 * scale, prescaled_ev / 5));
@@ -2779,7 +2761,7 @@ int burden_change(void)
         }
     }
 
-    // Stop travel if we get burdened (as from potions of might/levitation
+    // Stop travel if we get burdened (as from potions of might/flight
     // wearing off).
     if (you.burden_state > old_burdenstate)
         interrupt_activity(AI_BURDEN_CHANGE);
@@ -3816,7 +3798,7 @@ int get_expiration_threshold(duration_type dur)
     case DUR_SHROUD_OF_GOLUBRIA:
         return (6 * BASELINE_DELAY);
 
-    case DUR_LEVITATION:
+    case DUR_FLIGHT:
     case DUR_TRANSFORMATION: // not on status
     case DUR_DEATHS_DOOR:    // not on status
     case DUR_SLIMIFY:
@@ -3917,16 +3899,14 @@ static void _display_movement_speed()
     const bool water  = you.in_water();
     const bool swim   = you.swimming();
 
-    const bool lev    = you.airborne();
-    const bool fly    = (you.flight_mode() == FL_FLY);
+    const bool fly    = you.is_flying();
     const bool swift  = (you.duration[DUR_SWIFTNESS] > 0);
 
     mprf("Your %s speed is %s%s%s.",
           // order is important for these:
           (swim)    ? "swimming" :
           (water)   ? "wading" :
-          (fly)     ? "flying" :
-          (lev)     ? "levitating"
+          (fly)     ? "flying"
                     : "movement",
 
           (water && !swim)  ? "uncertain and " :
@@ -4222,15 +4202,6 @@ int player_effect_running()
         return 0;
 }
 
-int player_effect_cfly(bool calc_unid)
-{
-    // All effects negated by magical suppression should go in here.
-    if (!you.suppressed())
-        return wearing_amulet(AMU_CONTROLLED_FLIGHT, calc_unid);
-    else
-        return 0;
-}
-
 int player_effect_faith()
 {
     // All effects negated by magical suppression should go in here.
@@ -4273,12 +4244,6 @@ bool extrinsic_amulet_effect(jewellery_type amulet)
 {
     switch (amulet)
     {
-    case AMU_CONTROLLED_FLIGHT:
-        return (you.duration[DUR_CONTROLLED_FLIGHT]
-                || player_genus(GENPC_DRACONIAN)
-                || (you.species == SP_TENGU && you.experience_level >= 5)
-                || you.form == TRAN_DRAGON
-                || you.form == TRAN_BAT);
     case AMU_CLARITY:
         return player_mental_clarity(true, false);
     case AMU_RESIST_CORROSION:
@@ -4442,7 +4407,7 @@ bool items_give_ability(const int slot, artefact_prop_type abil)
 
         if (eq >= EQ_LEFT_RING && eq < NUM_EQUIP && eq != EQ_AMULET)
         {
-            if (abil == ARTP_LEVITATE && you.inv[eq].sub_type == RING_LEVITATION)
+            if (abil == ARTP_FLY && you.inv[eq].sub_type == RING_FLIGHT)
                 return true;
             if (abil == ARTP_INVISIBLE && you.inv[eq].sub_type == RING_INVISIBILITY)
                 return true;
@@ -5181,7 +5146,7 @@ void dec_napalm_player(int delay)
 {
     delay = min(delay, you.duration[DUR_LIQUID_FLAMES]);
 
-    if (feat_is_watery(grd(you.pos())) && you.flight_mode() != FL_LEVITATE)
+    if (feat_is_watery(grd(you.pos())) && you.is_flying())
     {
         if (you.ground_level())
             mpr("The flames go out!", MSGCH_WARN);
@@ -5387,54 +5352,35 @@ void dec_disease_player(int delay)
     }
 }
 
-void float_player(bool fly)
+void float_player()
 {
     if (you.fishtail)
     {
-        mprf("Your tail turns into legs as you %s out of the water.",
-             fly ? "fly" : "levitate");
+        mprf("Your tail turns into legs as you fly out of the water.");
         merfolk_stop_swimming();
     }
     else if (you.light_flight())
         mpr("You swoop lightly up into the air.");
-    else if (fly)
-        mpr("You fly up into the air.");
     else
-    {
-        mprf("You gently float away from the %s.",
-             you.is_wall_clinging() ? "wall" : "floor");
-    }
-
-    // Amulet of Controlled Flight can auto-ID
-    // ...but not if you're suppressed!
-    if (!you.suppressed()
-        && wearing_amulet(AMU_CONTROLLED_FLIGHT)
-        && !extrinsic_amulet_effect(AMU_CONTROLLED_FLIGHT))
-    {
-        // it's important to do this only if the amulet is not identified yet,
-        // or you'd get spammed
-        item_def& amu(you.inv[you.equip[EQ_AMULET]]);
-        if (!is_artefact(amu))
-            wear_id_type(amu);
-    }
+        mpr("You fly up into the air.");
 
     burden_change();
 
-    // The player hasn't actuclly taken a step, but in this case, we want
+    // The player hasn't actually taken a step, but in this case, we want
     // neither the message, nor the location effect.
     you.check_clinging(true);
 }
 
-void levitate_player(int pow, bool already_levitating)
+void fly_player(int pow, bool already_flying)
 {
-    bool standing = !you.airborne() && !already_levitating;
-    if (!already_levitating)
+    bool standing = !you.airborne() && !already_flying;
+    if (!already_flying)
         mprf(MSGCH_DURATION, "You feel %s buoyant.", standing ? "very" : "more");
 
-    you.increase_duration(DUR_LEVITATION, 25 + random2(pow), 100);
+    you.increase_duration(DUR_FLIGHT, 25 + random2(pow), 100);
 
     if (standing)
-        float_player(false);
+        float_player();
 }
 
 bool land_player()
@@ -5445,9 +5391,7 @@ bool land_player()
 
     mpr("You float gracefully downwards.");
     burden_change();
-    // Landing kills controlled flight.
-    you.duration[DUR_CONTROLLED_FLIGHT] = 0;
-    you.attribute[ATTR_LEV_UNCANCELLABLE] = 0;
+    you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 0;
     // Re-enter the terrain.
     move_player_to_grid(you.pos(), false, true);
     return true;
@@ -5851,9 +5795,9 @@ player::~player()
     ASSERT(!save); // the save file should be closed or deleted
 }
 
-bool player::is_levitating() const
+bool player::is_flying() const
 {
-    return duration[DUR_LEVITATION] || you.attribute[ATTR_PERM_LEVITATION];
+    return duration[DUR_FLIGHT] || you.attribute[ATTR_PERM_FLIGHT];
 }
 
 bool player::is_banished() const
@@ -6630,46 +6574,22 @@ bool player::fights_well_unarmed(int heavy_armour_penalty)
             && x_chance_in_y(2, 1 + heavy_armour_penalty));
 }
 
-flight_type player::flight_mode() const
+bool player::cancellable_flight() const
 {
-    if (form == TRAN_DRAGON
-        || form == TRAN_BAT)
-    {
-        return FL_FLY;
-    }
-    else if (is_levitating())
-    {
-        return (duration[DUR_CONTROLLED_FLIGHT]
-                || (!you.suppressed()
-                    && wearing_amulet(AMU_CONTROLLED_FLIGHT)) ? FL_FLY
-                                                         : FL_LEVITATE);
-    }
-    else
-        return FL_NONE;
-}
-
-bool player::cancellable_levitation() const
-{
-    return you.duration[DUR_LEVITATION] && !you.permanent_levitation()
-           && !you.attribute[ATTR_LEV_UNCANCELLABLE];
-}
-bool player::permanent_levitation() const
-{
-    return you.attribute[ATTR_PERM_LEVITATION]
-           && player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_LEVITATION);
+    return you.duration[DUR_FLIGHT] && !you.permanent_flight()
+           && !you.attribute[ATTR_FLIGHT_UNCANCELLABLE];
 }
 
 bool player::permanent_flight() const
 {
-    return you.attribute[ATTR_PERM_LEVITATION]
-           && species == SP_TENGU && experience_level >= 15;
+    return you.attribute[ATTR_PERM_FLIGHT];
 }
 
 bool player::light_flight() const
 {
     // Only Tengu get perks for flying light.
     return (species == SP_TENGU
-            && flight_mode() == FL_FLY && travelling_light());
+            && is_flying() && travelling_light());
 }
 
 bool player::travelling_light() const
@@ -7534,7 +7454,7 @@ bool player::attempt_escape(int attempts)
 }
 
 /*
- * Check if the player is about to die from levitation/form expiration.
+ * Check if the player is about to die from flight/form expiration.
  *
  * Check whether the player is on a cell which would be deadly if not for some
  * temporary condition, and if such condition is expiring. In that case, we
@@ -7550,7 +7470,7 @@ bool need_expiration_warning(duration_type dur, coord_def p)
     if (!is_feat_dangerous(env.grid(p), true) || !dur_expiring(dur))
         return false;
 
-    if (dur == DUR_LEVITATION)
+    if (dur == DUR_FLIGHT)
         return true;
     else if (dur == DUR_TRANSFORMATION
              && (!you.airborne() || form_can_fly()))
@@ -7562,7 +7482,7 @@ bool need_expiration_warning(duration_type dur, coord_def p)
 
 bool need_expiration_warning(coord_def p)
 {
-    return need_expiration_warning(DUR_LEVITATION, p)
+    return need_expiration_warning(DUR_FLIGHT, p)
            || need_expiration_warning(DUR_TRANSFORMATION, p);
 }
 

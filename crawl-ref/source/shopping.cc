@@ -1139,7 +1139,7 @@ int artefact_value(const item_def &item)
         ret += 10;
 
     // abilities:
-    if (prop[ ARTP_LEVITATE ])
+    if (prop[ ARTP_FLY ])
         ret += 3;
 
     if (prop[ ARTP_BLINK ])
@@ -1711,7 +1711,7 @@ unsigned int item_value(item_def item, bool ident)
             case SPARM_FIRE_RESISTANCE:
             case SPARM_SEE_INVISIBLE:
             case SPARM_INTELLIGENCE:
-            case SPARM_LEVITATION:
+            case SPARM_FLIGHT:
             case SPARM_PRESERVATION:
             case SPARM_STEALTH:
             case SPARM_STRENGTH:
@@ -1879,7 +1879,7 @@ unsigned int item_value(item_def item, bool ident)
             case POT_BERSERK_RAGE:
             case POT_HEAL_WOUNDS:
             case POT_RESTORE_ABILITIES:
-            case POT_LEVITATION:
+            case POT_FLIGHT:
             case POT_MUTATION:
                 valued += 30;
                 break;
@@ -2124,14 +2124,13 @@ unsigned int item_value(item_def item, bool ident)
                 case RING_SUSTAIN_ABILITIES:
                 case RING_SUSTENANCE:
                 case RING_TELEPORTATION:
-                case RING_LEVITATION:
+                case RING_FLIGHT:
                 case AMU_STASIS:
                     valued += 175;
                     break;
 
                 case RING_SEE_INVISIBLE:
                 case AMU_WARDING:
-                case AMU_CONTROLLED_FLIGHT:
                     valued += 150;
                     break;
 

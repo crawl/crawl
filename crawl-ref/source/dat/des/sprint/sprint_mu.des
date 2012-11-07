@@ -171,7 +171,7 @@ MONS: patrolling giant mite / patrolling grey rat / patrolling jessica
 MONS: patrolling phantom hd:2 / patrolling wolf hd:2 / patrolling scorpion / \
       patrolling crazy yiuf
 MONS: patrolling human hd:2 hp:35 / patrolling elf hd:2 hp:30
-KITEM: * = potion of levitation q:2 / potion of levitation q:1 / any potion, \
+KITEM: * = potion of flight q:2 / potion of flight q:1 / any potion, \
  potion of cure mutation q:2 / potion of cure mutation q:1 / any potion, \
  meat ration / bread ration / royal jelly / honeycomb / choko, \
  scroll of remove curse q:2 / scroll of remove curse q:1 / any scroll, \
@@ -204,7 +204,7 @@ MONS: patrolling giant mite / patrolling grey rat / patrolling jessica
 MONS: patrolling phantom hd:2 / patrolling wolf hd:2 / patrolling scorpion / \
       patrolling crazy yiuf
 MONS: patrolling human hd:2 hp:35 / patrolling elf hd:2 hp:30
-KITEM: * = potion of levitation q:2 / potion of levitation q:1 / any potion, \
+KITEM: * = potion of flight q:2 / potion of flight q:1 / any potion, \
  potion of cure mutation q:2 / potion of cure mutation q:1 / any potion, \
  meat ration / bread ration / royal jelly / honeycomb / choko, \
  scroll of remove curse q:2 / scroll of remove curse q:1 / any scroll, \
@@ -939,7 +939,7 @@ SUBST: f = f..
 NSUBST: . = 15:M / *:.
 KMONS: M = very ugly thing / slime creature / glowing shapeshifter
 KITEM: % = silver rune of zot
-KITEM: " = ring of levitation, potion of levitation q:3, scroll of acquirement, \
+KITEM: " = ring of flight, potion of flight q:3, scroll of acquirement, \
  wand of disintegration / wand of fire, acquire gold, ring of protection from fire
 
 COLOUR: #~^ = yellow

@@ -68,7 +68,9 @@ Spit acid at a targeted monster.
 # Both for Fly I and II.
 Fly
 
-Start flying.
+Start flying. During flight you can safely cross water and similar
+obstacles. Be warned, though, that flight may time out at inopportune
+moments and cause you to fall to your death.
 %%%%
 Hellfire
 
@@ -115,16 +117,13 @@ Turn Visible
 
 Turn visible again.
 %%%%
-Evoke Levitation
+Evoke Flight
 
-Start levitating. During levitation you can safely cross water and similar
-obstacles. Be warned, though, that levitation may time out at inopportune
-moments and cause you to fall to your death. While levitating, you cannot
-interact with items on the floor or pick them up.
+<Fly>
 %%%%
-Stop Levitating
+Stop Flying
 
-Stop levitating.
+Stop flying.
 %%%%
 End Transformation
 

@@ -140,7 +140,7 @@ struct monsterentry
     shout_type         shouts;
     mon_intel_type     intel;
     habitat_type     habitat;
-    flight_type      fly;
+    bool             flies;
     int8_t           speed;        // How quickly speed_increment increases
     mon_energy_usage energy_usage; // And how quickly it decreases
     mon_itemuse_type gmon_use;
@@ -188,8 +188,8 @@ string mons_type_name(monster_type type, description_level_type desc);
 
 bool give_monster_proper_name(monster* mon, bool orcs_only = true);
 
-flight_type mons_class_flies(monster_type mc);
-flight_type mons_flies(const monster* mon, bool temp = true);
+bool mons_class_flies(monster_type mc);
+bool mons_flies(const monster* mon, bool temp = true);
 
 bool mons_flattens_trees(const monster* mon);
 int mons_class_res_wind(monster_type mc);

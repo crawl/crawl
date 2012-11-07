@@ -1796,15 +1796,12 @@ static vector<formatted_string> _get_overview_resistances(
 
     int rctel = player_control_teleport(calc_unid);
     rctel = allow_control_teleport(true) ? rctel : -1;
-    const int rlevi = you.airborne();
-    const int rcfli = player_effect_cfly(calc_unid);
+    const int rflyi = you.airborne();
     snprintf(buf, sizeof buf,
              "%sCtrl.Telep.: %s\n"
-             "%sLevitation : %s\n"
-             "%sCtrl.Flight: %s\n",
+             "%sFlight     : %s\n",
              _determine_colour_string(rctel, 1), _itosym1(rctel),
-             _determine_colour_string(rlevi, 1), _itosym1(rlevi),
-             _determine_colour_string(rcfli, 1), _itosym1(rcfli));
+             _determine_colour_string(rflyi, 1), _itosym1(rflyi));
     cols.add_formatted(1, buf, false);
 
     _print_overview_screen_equip(cols, equip_chars);

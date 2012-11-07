@@ -16,13 +16,6 @@ amulet of conservation
 This amulet protects some of the possessions of its wearer from outright
 destruction, but not infallibly so.
 %%%%
-amulet of controlled flight
-
-Should the wearer of this amulet be levitated by magical means, he or she will
-be able to exercise some control over the resulting motion. This allows the
-descent of staircases and the retrieval of items lying on the ground, for
-example, but does not deprive the wearer of the benefits of levitation.
-%%%%
 amulet of guardian spirit
 
 This amulet makes its wearer less susceptible to external damage, draining
@@ -1060,7 +1053,7 @@ potion of invisibility
 
 A potion which hides you from the sight of others.
 %%%%
-potion of levitation
+potion of flight
 
 A potion which confers great buoyancy on one who consumes it.
 %%%%
@@ -1173,10 +1166,9 @@ ring of invisibility
 This powerful ring can be activated to hide its wearer from the view of others,
 but increases the speed of his or her metabolism greatly while doing so.
 %%%%
-ring of levitation
+ring of flight
 
-This ring allows its wearer to hover above the floor. The ring's power cannot
-be invoked while levitating.
+This ring allows its wearer to fly.
 %%%%
 ring of life protection
 

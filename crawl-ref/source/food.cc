@@ -425,9 +425,6 @@ bool butchery(int which_corpse, bool bottle_blood)
         return false;
     }
 
-    if (!player_can_reach_floor())
-        return false;
-
     // Vampires' fangs are optimised for biting, not for tearing flesh.
     // (Not that they really need to.) Other species with this mutation
     // might still benefit from it.
@@ -1226,9 +1223,6 @@ int eat_from_floor(bool skip_chunks)
     if (!_eat_check())
         return false;
 
-    if (you.flight_mode() == FL_LEVITATE)
-        return 0;
-
     // Corpses should have been handled before.
     if (you.species == SP_VAMPIRE && skip_chunks)
         return 0;
@@ -1567,32 +1561,28 @@ int prompt_eat_chunks(bool only_auto)
     bool found_valid = false;
     vector<item_def *> chunks;
 
-    // First search the stash on the floor, unless levitating.
-    if (you.flight_mode() != FL_LEVITATE)
+    for (stack_iterator si(you.pos(), true); si; ++si)
     {
-        for (stack_iterator si(you.pos(), true); si; ++si)
+        if (you.species == SP_VAMPIRE)
         {
-            if (you.species == SP_VAMPIRE)
-            {
-                if (si->base_type != OBJ_CORPSES || si->sub_type != CORPSE_BODY)
-                    continue;
-
-                if (!mons_has_blood(si->mon_type))
-                    continue;
-            }
-            else if (si->base_type != OBJ_FOOD || si->sub_type != FOOD_CHUNK)
+            if (si->base_type != OBJ_CORPSES || si->sub_type != CORPSE_BODY)
                 continue;
 
-            if (food_is_rotten(*si) && !_player_can_eat_rotten_meat())
+            if (!mons_has_blood(si->mon_type))
                 continue;
-
-            // Don't prompt for bad food types.
-            if (is_bad_food(*si))
-                continue;
-
-            found_valid = true;
-            chunks.push_back(&(*si));
         }
+        else if (si->base_type != OBJ_FOOD || si->sub_type != FOOD_CHUNK)
+            continue;
+
+        if (food_is_rotten(*si) && !_player_can_eat_rotten_meat())
+            continue;
+
+        // Don't prompt for bad food types.
+        if (is_bad_food(*si))
+            continue;
+
+        found_valid = true;
+        chunks.push_back(&(*si));
     }
 
     // Then search through the inventory.

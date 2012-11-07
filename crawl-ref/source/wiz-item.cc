@@ -1172,7 +1172,7 @@ static void _debug_acquirement_stats(FILE *ostat)
             "dexterity",
             "intelligence",
             "ponderous",
-            "levitation",
+            "flight",
             "magic reistance",
             "protection",
             "stealth",
@@ -1344,7 +1344,7 @@ static void _debug_rap_stats(FILE *ostat)
          1, //ARTP_MAGIC
          1, //ARTP_EYESIGHT
          1, //ARTP_INVISIBLE
-         1, //ARTP_LEVITATE
+         1, //ARTP_FLY
          1, //ARTP_BLINK
          1, //ARTP_CAN_TELEPORT
          1, //ARTP_BERSERK
@@ -1491,7 +1491,7 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_MAGIC",
         "ARTP_EYESIGHT",
         "ARTP_INVISIBLE",
-        "ARTP_LEVITATE",
+        "ARTP_FLY",
         "ARTP_BLINK",
         "ARTP_BERSERK",
         "ARTP_NOISES",

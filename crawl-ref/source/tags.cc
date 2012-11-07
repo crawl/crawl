@@ -1886,11 +1886,25 @@ static void tag_read_you(reader &th)
 
     count = unmarshallByte(th);
     ASSERT(count == (int)you.ability_letter_table.size());
+#if TAG_MAJOR_VERSION == 34
+    bool found_stop_flying = false;
+#endif
     for (i = 0; i < count; i++)
     {
         int a = unmarshallShort(th);
         ASSERT(a >= -1 && a != 0 && a < NUM_ABILITIES);
         you.ability_letter_table[i] = static_cast<ability_type>(a);
+#if TAG_MAJOR_VERSION == 34
+        if (you.ability_letter_table[i] == ABIL_EVOKE_STOP_LEVITATING
+            || you.ability_letter_table[i] == ABIL_STOP_FLYING)
+        {
+            if (found_stop_flying)
+                you.ability_letter_table[i] = ABIL_NON_ABILITY;
+            else
+                you.ability_letter_table[i] = ABIL_STOP_FLYING;
+            found_stop_flying = true;
+        }
+#endif
     }
 
     // how many skills?
@@ -2850,7 +2864,11 @@ void marshallMonsterInfo(writer &th, const monster_info& mi)
     marshallInt(th, mi.mresists);
     marshallUnsigned(th, mi.mitemuse);
     marshallByte(th, mi.mbase_speed);
-    marshallUnsigned(th, mi.fly);
+#if TAG_MAJOR_VERSION == 34
+    marshallUnsigned(th, mi.flies ? 1 : 0);
+#else
+    marshallBoolean(th, mi.flies);
+#endif
     for (unsigned int i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
     {
         if (mi.inv[i].get())
@@ -2900,7 +2918,11 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
     unmarshallUnsigned(th, mi.mitemuse);
     mi.mbase_speed = unmarshallByte(th);
 
-    unmarshallUnsigned(th, mi.fly);
+#if TAG_MAJOR_VERSION == 34
+    mi.flies = unmarshallUnsigned(th) != 0;
+#else
+    unmarshallBoolean(th, mi.fly);
+#endif
 
     for (unsigned int i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
     {
@@ -3554,7 +3576,11 @@ static void marshallGhost(writer &th, const ghost_demon &ghost)
     marshallByte(th, ghost.spellcaster);
     marshallByte(th, ghost.cycle_colours);
     marshallByte(th, ghost.colour);
-    marshallShort(th, ghost.fly);
+#if TAG_MAJOR_VERSION == 34
+    marshallShort(th, ghost.flies ? 1 : 0);
+#else
+    marshallBoolean(th, ghost.flies);
+#endif
 
     marshallSpells(th, ghost.spells);
 }
@@ -3584,7 +3610,11 @@ static ghost_demon unmarshallGhost(reader &th)
     ghost.cycle_colours    = unmarshallByte(th);
     ghost.colour           = unmarshallByte(th);
 
-    ghost.fly              = static_cast<flight_type>(unmarshallShort(th));
+#if TAG_MAJOR_VERSION == 34
+    ghost.flies            = unmarshallShort(th) != 0;
+#else
+    ghost.flies            = unmarshallBoolean(th);
+#endif
 
     unmarshallSpells(th, ghost.spells);
 

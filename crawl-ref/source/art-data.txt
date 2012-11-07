@@ -76,7 +76,7 @@
 # * evil:     Is treated as an evil item.
 # * holy:     Is treated as a holy item.
 # * inv:      Lets wearer evoke invisibility ability.
-# * lev:      Lets wearer evoke levitation ability.
+# * fly:      Lets wearer evoke flight ability.
 # * life:     Grants negative energy resistance.
 # * mutate:   Causes high magical contamination when unequipped.
 # * nogen:    Never randomly generated.
@@ -670,7 +670,7 @@ EV:       2
 DEX:      2
 DAM:      -3
 STEALTH:  60
-BOOL:     seeinv, inv, lev
+BOOL:     seeinv, inv, fly
 
 NAME:    shield "Bullseye"
 OBJ:     OBJ_ARMOUR/ARM_SHIELD
@@ -721,7 +721,7 @@ COLOUR:   ETC_FLASH
 TILE:     urand_flash
 TILE_EQ:  red
 EV:       4
-BOOL:     lev
+BOOL:     fly
 
 ENUM:     BOOTS_ASSASSIN
 NAME:     boots of the Assassin
@@ -888,7 +888,7 @@ COLOUR:  ETC_ELECTRICITY
 TILE:    urand_air
 EV:      3
 STEALTH: 50
-BOOL:    elec, lev
+BOOL:    elec, fly
 
 NAME:    ring of Shadows
 OBJ:     OBJ_JEWELLERY/RING_INVISIBILITY
@@ -960,7 +960,7 @@ PLUS:     +3
 COLOUR:   ETC_MIST
 TILE:     urand_clouds
 TILE_EQ:  robe_clouds
-BOOL:     elec, lev
+BOOL:     elec, fly
 
 NAME:     hat of Pondering
 OBJ:      OBJ_ARMOUR/ARM_WIZARD_HAT
@@ -983,7 +983,7 @@ TILE_EQ:  demon_axe
 BRAND:    SPWPN_VORPAL
 CURSED:    1
 STR:      +3
-BOOL:     evil, seeinv, lev, special
+BOOL:     evil, seeinv, fly, special
 
 NAME:     lightning scales
 OBJ:      OBJ_ARMOUR/ARM_NAGA_BARDING
@@ -1085,7 +1085,7 @@ HP:      10
 MP:      10
 STEALTH: 100
 STR:     3
-BOOL:    nogen, berserk, blink, clarity, elec, inv, lev, life, nospell, notelep, poison, seeinv, mutate
+BOOL:    nogen, berserk, blink, clarity, elec, inv, fly, life, nospell, notelep, poison, seeinv, mutate
 
 # This is the second of two amulets used to test suppression. See above.
 NAME:    dark chocolate

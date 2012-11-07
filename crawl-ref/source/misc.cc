@@ -1274,8 +1274,8 @@ void search_around()
 
         int dist = ri->range(you.pos());
 
-        // Own square is not excluded; may be levitating.
-        // XXX: Currently, levitating over a trap will always detect it.
+        // Own square is not excluded; may be flying.
+        // XXX: Currently, flying over a trap will always detect it.
 
         int effective = (dist <= 1) ? skill : farskill - 256 * dist;
 
@@ -2074,7 +2074,7 @@ void revive()
     you.clear_fearmongers();
     you.attribute[ATTR_DIVINE_DEATH_CHANNEL] = 0;
     you.attribute[ATTR_INVIS_UNCANCELLABLE] = 0;
-    you.attribute[ATTR_LEV_UNCANCELLABLE] = 0;
+    you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 0;
     if (you.duration[DUR_SCRYING])
         you.xray_vision = false;
 

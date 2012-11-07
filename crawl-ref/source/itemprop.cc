@@ -2625,7 +2625,7 @@ bool gives_ability(const item_def &item)
         break;
     case OBJ_JEWELLERY:
         if (item.sub_type == RING_TELEPORTATION
-            || item.sub_type == RING_LEVITATION
+            || item.sub_type == RING_FLIGHT
             || item.sub_type == RING_INVISIBILITY
             || item.sub_type == AMU_RAGE)
         {
@@ -2639,7 +2639,7 @@ bool gives_ability(const item_def &item)
             return false;
         const special_armour_type ego = get_armour_ego_type(item);
 
-        if (ego == SPARM_DARKNESS || ego == SPARM_LEVITATION)
+        if (ego == SPARM_DARKNESS || ego == SPARM_FLIGHT)
             return true;
         break;
     }

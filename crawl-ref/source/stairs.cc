@@ -185,22 +185,19 @@ static void _climb_message(dungeon_feature_type stair, bool going_up,
         else
         {
             mprf("You %s downwards.",
-                 you.flight_mode() == FL_FLY ? "fly" :
-                     (you.airborne() ? "float" : "slide"));
+                 you.is_flying() ? "fly" : "slide");
         }
     }
     else if (feat_is_gate(stair))
     {
         mprf("You %s %s through the gate.",
-             you.flight_mode() == FL_FLY ? "fly" :
-                   (you.airborne() ? "float" : "go"),
+             you.is_flying() ? "fly" : "go",
              going_up ? "up" : "down");
     }
     else
     {
         mprf("You %s %swards.",
-             you.flight_mode() == FL_FLY ? "fly" :
-                   (you.airborne() ? "float" : "climb"),
+             you.is_flying() ? "fly" : "climb",
              going_up ? "up" : "down");
     }
 }
@@ -407,10 +404,8 @@ void up_stairs(dungeon_feature_type force_stair)
 
     const dungeon_feature_type stair_taken = stair_find;
 
-    if (you.flight_mode() == FL_LEVITATE && !feat_is_gate(stair_find))
-        mpr("You float upwards... And bob straight up to the ceiling!");
-    else if (you.flight_mode() == FL_FLY && !feat_is_gate(stair_find))
-        mpr("You fly upwards.");
+    if (you.is_flying() && !feat_is_gate(stair_find))
+        mpr("You fly upwards... And bob straight up to the ceiling!");
     else
         _climb_message(stair_find, true, old_level.branch);
 
@@ -675,13 +670,6 @@ void down_stairs(dungeon_feature_type force_stair)
         const bool known_trap = (grd(you.pos()) != DNGN_UNDISCOVERED_TRAP
                                  && !force_stair);
 
-        if (you.flight_mode() == FL_LEVITATE && !force_stair)
-        {
-            if (known_trap)
-                mpr("You can't fall through a shaft while levitating.");
-            return;
-        }
-
         if (!is_valid_shaft_level())
         {
             if (known_trap)
@@ -709,9 +697,9 @@ void down_stairs(dungeon_feature_type force_stair)
                                     + short_place_name(shaft_dest) + ".");
         }
 
-        if (you.flight_mode() != FL_FLY || force_stair)
+        if (!you.is_flying() || force_stair)
             mpr("You fall through a shaft!");
-        if (you.flight_mode() == FL_FLY && !force_stair)
+        if (you.is_flying() && !force_stair)
             mpr("You dive down through the shaft.");
 
         // Shafts are one-time-use.

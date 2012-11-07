@@ -1130,7 +1130,7 @@ static bool _tutorial_interesting(hints_event_type event)
     case HINT_CONTAMINATED_CHUNK:
     case HINT_NEW_ABILITY_ITEM:
     case HINT_ITEM_RESISTANCES:
-    case HINT_LEVITATING:
+    case HINT_FLYING:
     case HINT_INACCURACY:
     case HINT_HEALING_POTIONS:
     case HINT_GAINED_SPELLCASTING:
@@ -2388,17 +2388,17 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         break;
 
     case HINT_NEW_ABILITY_ITEM:
-        // Specialcase levitation because it's a guaranteed trigger in the
+        // Specialcase flight because it's a guaranteed trigger in the
         // tutorial.
-        if (player_evokable_levitation())
+        if (player_evokable_flight())
         {
-            text << "Levitation will allow you to cross deep water or lava. To "
+            text << "Flight will allow you to cross deep water or lava. To "
                     "activate it, select the corresponding ability in the ability "
                     "menu (<w>%</w>"
 #ifdef USE_TILE
                     " or via <w>mouseclick</w> in the <w>command panel</w>"
 #endif
-                    "). Once levitating, keep an eye on the status line and messages "
+                    "). Once flying, keep an eye on the status line and messages "
                     "as it will eventually time out and may cause you to fall "
                     "into water and drown.";
         }
@@ -2425,10 +2425,10 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         cmd.push_back(CMD_RESISTS_SCREEN);
         break;
 
-    case HINT_LEVITATING:
-        if (player_evokable_levitation())
+    case HINT_FLYING:
+        if (player_evokable_flight())
         {
-            text << "To stop levitating, use the corresponding ability "
+            text << "To stop flying, use the corresponding ability "
                     "in the ability menu (<w>%</w>).";
             cmd.push_back(CMD_USE_ABILITY);
         }
@@ -4033,13 +4033,13 @@ static void _hints_describe_feature(int x, int y)
                         "dangerous task.\n\n"
 
                         "You can safely pass over a mechanical trap if "
-                        "you're flying or levitating.";
+                        "you're flying.";
             }
             else
             {
                 ostr << "Magical traps can't be disarmed, and unlike "
                         "mechanical traps you can't avoid tripping them "
-                        "by levitating or flying over them.";
+                        "by flying over them.";
             }
             Hints.hints_events[HINT_SEEN_TRAP] = false;
             break;

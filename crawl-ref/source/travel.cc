@@ -238,11 +238,11 @@ bool feat_is_traversable_now(dungeon_feature_type grid)
         if (grid == DNGN_DEEP_WATER && player_likes_water(true))
             return true;
 
-        // Permanently levitating players can cross most hostile terrain.
+        // Permanently flying players can cross most hostile terrain.
         if (grid == DNGN_DEEP_WATER || grid == DNGN_LAVA
             || grid == DNGN_TRAP_MECHANICAL || grid == DNGN_TRAP_NATURAL)
         {
-            return (you.permanent_levitation() || you.permanent_flight());
+            return you.permanent_flight();
         }
 
         // You can't open doors in bat form.

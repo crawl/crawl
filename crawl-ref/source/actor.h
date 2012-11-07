@@ -291,8 +291,7 @@ public:
     virtual bool no_tele(bool calc_unid = true, bool permit_id = true) const = 0;
     virtual bool inaccuracy() const = 0;
 
-    virtual flight_type flight_mode() const = 0;
-    virtual bool is_levitating() const = 0;
+    virtual bool is_flying() const = 0;
     virtual bool is_wall_clinging() const;
     virtual bool is_banished() const = 0;
     virtual bool can_cling_to_walls() const = 0;

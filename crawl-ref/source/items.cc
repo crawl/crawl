@@ -1212,9 +1212,6 @@ string origin_desc(const item_def &item)
 
 bool pickup_single_item(int link, int qty)
 {
-    if (!player_can_reach_floor())
-        return false;
-
     item_def* item = &mitm[link];
     if (item->base_type == OBJ_GOLD && !qty && !i_feel_safe()
         && !yesno("Are you sure you want to pick up this pile of gold now?",
@@ -1282,9 +1279,6 @@ bool player_on_single_stack()
 void pickup(bool partial_quantity)
 {
     int keyin = 'x';
-
-    if (!player_can_reach_floor())
-        return;
 
     int o = you.visible_igrd(you.pos());
     const int num_nonsquelched = _count_nonsquelched_items(o);
@@ -2619,9 +2613,6 @@ bool can_autopickup()
     // autopickup is still possible with inscriptions and
     // pickup_thrown.
     if (Options.autopickup_on <= 0)
-        return false;
-
-    if (you.flight_mode() == FL_LEVITATE)
         return false;
 
     if (!i_feel_safe())
