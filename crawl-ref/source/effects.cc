@@ -2278,9 +2278,10 @@ void handle_time()
         {
             you.attribute[ATTR_EVOL_XP] = 0;
             mpr("You feel a genetic drift.");
-            bool evol = mutate(coinflip() ? RANDOM_GOOD_MUTATION : RANDOM_MUTATION,
-                               "evolution",
-                               false, false, false, false, false, true);
+            bool evol = one_chance_in(5) ?
+                delete_mutation(RANDOM_BAD_MUTATION, "evolution", false) :
+                mutate(coinflip() ? RANDOM_GOOD_MUTATION : RANDOM_MUTATION,
+                       "evolution", false, false, false, false, false, true);
             // it would kill itself anyway, but let's speed that up
             if (one_chance_in(10)
                 && (!player_res_mutation_from_item()
