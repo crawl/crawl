@@ -279,48 +279,59 @@ static int _scale_spawn_parameter(int base_value,
              / dropoff_ramp_turns));
 }
 
-static bool _need_super_ood(int lev_mons)
+static void _apply_ood(level_id &place)
 {
-    return (env.turns_on_level > 1400 - lev_mons * 117
-            && x_chance_in_y(
-                _scale_spawn_parameter(2, 10000, 10000, 3000, 9000),
-                10000));
-}
+    // OODs do not apply to any portal vaults, any 1-level branches, Zot and
+    // hells.  What with newnewabyss?
+    if (!is_connected_branch(place)
+        || startdepth[place.branch] >= 27
+        || brdepth[place.branch] <= 1)
+    {
+        return;
+    }
 
-static int _fuzz_mons_depth(int level)
-{
-    // Apply a fuzz to the monster level we're looking for. The fuzz
-    // is intended to mix up monster generation producing moderately
-    // OOD monsters, over and above the +5 OOD that's baked into the
-    // monster selection loop.
-    //
     // The OOD fuzz roll is not applied at level generation time on
     // D:1, and is applied slightly less often (0.75*0.14) on D:2. All
     // other levels have a straight 14% chance of moderate OOD fuzz
     // for each monster at level generation, and the chances of
     // moderate OODs go up to 100% after a ramp-up period.
-    if ((level > 1
-         // Give 25% chance of not trying for moderate OOD on D:2
-         || (level == 1 && !one_chance_in(4))
-         // Try moderate OOD after 700 turns on level on D:1, or 583 turns
-         // spent on D:2.
-         || env.turns_on_level > 700 - level * 117)
-        && x_chance_in_y(
-            _scale_spawn_parameter(140, 1000, 1000, 3000, 4800),
-            1000))
+
+    if (place.branch == BRANCH_MAIN_DUNGEON
+        && (place.depth == 1 && env.turns_on_level < 701
+         || place.depth == 2 && (env.turns_on_level < 584 || one_chance_in(4))))
+    {
+        return;
+    }
+
+#ifdef DEBUG_DIAGNOSTICS
+    level_id old_place = place;
+#endif
+
+    if (x_chance_in_y(_scale_spawn_parameter(140, 1000, 1000, 3000, 4800),
+                      1000))
     {
         const int fuzzspan = 5;
         const int fuzz = max(0, random_range(-fuzzspan, fuzzspan, 2));
 
+        // Quite bizarre logic: why should we fail in >50% cases here?
         if (fuzz)
         {
-            dprf("Monster level fuzz: %d (old: %d, new: %d)",
-                 fuzz, level, level + fuzz);
+            place.depth += fuzz;
+            dprf("Monster level fuzz: %d (old: %s, new: %s)",
+                 fuzz, old_place.describe().c_str(), place.describe().c_str());
         }
-
-        return level + fuzz;
     }
-    return level;
+
+    // On D:13 and deeper, and for those who tarry, something extreme:
+    if (env.turns_on_level > 1400 - place.absdepth() * 117
+        && x_chance_in_y(_scale_spawn_parameter(2, 10000, 10000, 3000, 9000),
+                         10000))
+    {
+        // this maxes depth most of the time
+        place.depth += random2avg(27, 2);
+        dprf("Super OOD roll: Old: %s, New: %s",
+             old_place.describe().c_str(), place.describe().c_str());
+    }
 }
 
 static int _vestibule_spawn_rate()
@@ -454,13 +465,10 @@ static bool _is_random_monster(int mt)
 
 // Caller must use !invalid_monster_type to check if the return value
 // is a real monster.
-static monster_type _pick_random_monster(const level_id place,
+static monster_type _pick_random_monster(level_id place,
                                  level_id *final_place = nullptr,
                                  bool force_mobile = false)
 {
-    if (final_place)
-        *final_place = place; // FIXME
-
     if (crawl_state.game_is_arena())
     {
         monster_type type = arena_pick_random_monster(place);
@@ -474,34 +482,13 @@ static monster_type _pick_random_monster(const level_id place,
 
     monster_type mon_type = MONS_PROGRAM_BUG;
 
-    // FIXME: return actual place chosen
-    int lev_mons = place.absdepth();
-
-    const int original_level = lev_mons;
-
-    // OODs do not apply to any portal vaults, any 1-level branches, Zot and
-    // hells.
-    if (is_connected_branch(place)
-        && startdepth[place.branch] < 27
-        && brdepth[place.branch] > 1)
-    {
-        // Apply moderate OOD fuzz where appropriate.
-        lev_mons = _fuzz_mons_depth(lev_mons);
-
-        // Potentially nasty surprise, but very rare.
-        if (_need_super_ood(lev_mons))
-        {
-            const int new_level = lev_mons + random2avg(27, 2);
-            dprf("Super OOD roll: Old: %d, New: %d", lev_mons, new_level);
-            lev_mons = new_level;
-        }
-
-        lev_mons = min(30, lev_mons);
-    }
+    _apply_ood(place);
+    if (final_place)
+        *final_place = place;
 
     int level = 0, diff, chance;
 
-    lev_mons = min(30, lev_mons);
+    int lev_mons = min(30, place.absdepth());
 
     const int n_pick_tries   = 10000;
     const int n_relax_margin = n_pick_tries / 10;
@@ -557,12 +544,6 @@ static monster_type _pick_random_monster(const level_id place,
 
     if (monster_pick_tries <= 0)
         return MONS_PROGRAM_BUG;
-
-    if (lev_mons > original_level)
-        dprf("Orginal level: %d, Final level: %d, Monster: %s",
-             original_level, lev_mons,
-             mon_type == MONS_NO_MONSTER || mon_type == MONS_PROGRAM_BUG ?
-             "NONE" : get_monster_data(mon_type)->name);
 
     return mon_type;
 }
