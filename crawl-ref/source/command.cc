@@ -643,7 +643,6 @@ static const char *targetting_help_1 =
     "<w>Tab</w> : cycle through shops and portals\n"
     "<w>r</w> : move cursor to you\n"
     "<w>e</w> : create/remove travel exclusion\n"
-    "<w>Ctrl-F</w> : monster targetting modes\n"
 #ifndef USE_TILE_LOCAL
     "<w>Ctrl-L</w> : targetting via monster list\n"
 #endif
