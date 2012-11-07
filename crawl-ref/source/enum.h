@@ -2507,12 +2507,13 @@ enum monster_type                      // menv[].type
 
     // A random draconian, either base coloured drac or specialised.
     RANDOM_DRACONIAN,
-
     // Any random base draconian colour.
     RANDOM_BASE_DRACONIAN,
-
     // Any random specialised draconian, such as a draconian knight.
     RANDOM_NONBASE_DRACONIAN,
+
+    RANDOM_MODERATE_OOD, // +5 depth, AKA '9' glyph on maps
+    RANDOM_SUPER_OOD, // *2 + 4 depth, AKA '8'
 
     WANDERING_MONSTER = 3500, // only used in monster placement routines - forced limit checks {dlb}
 };

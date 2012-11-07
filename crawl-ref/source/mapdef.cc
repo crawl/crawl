@@ -3782,9 +3782,9 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(string spec)
         trim_string(mon_str);
 
         if (mon_str == "8")
-            mspec.ood = -8;
+            mspec.type = RANDOM_SUPER_OOD;
         else if (mon_str == "9")
-            mspec.ood = -9;
+            mspec.type = RANDOM_MODERATE_OOD;
         else if (mspec.place.is_valid())
         {
             // For monster specs such as place:Orc:4 zombie, we may

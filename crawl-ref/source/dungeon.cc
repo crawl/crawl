@@ -4414,7 +4414,7 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
     if (mspec.type == -1)
         return 0;
 
-    const monster_type type = static_cast<monster_type>(mspec.type);
+    monster_type type = static_cast<monster_type>(mspec.type);
     const bool m_generate_awake = (generate_awake || mspec.generate_awake);
     const bool m_patrolling     = (patrolling || mspec.patrolling);
     const bool m_band           = mspec.band;
@@ -4424,10 +4424,10 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
 
     if (is_connected_branch(mspec.place))
     {
-        if (mspec.ood == -8)
-            mspec.place.depth += 4 + mspec.place.depth;
-        else if (mspec.ood == -9)
-            mspec.place.depth += 5;
+        if (type == RANDOM_SUPER_OOD)
+            mspec.place.depth += 4 + mspec.place.depth, type = RANDOM_MONSTER;
+        else if (type == RANDOM_MODERATE_OOD)
+            mspec.place.depth += 5, type = RANDOM_MONSTER;
     }
 
     if (type != RANDOM_MONSTER && type < NUM_MONSTERS)
@@ -4450,14 +4450,15 @@ monster* dgn_place_monster(mons_spec &mspec, coord_def where,
             dungeon_terrain_changed(where, habitat2grid(habitat));
     }
 
-    mgen_data mg(type);
-
-    if (mg.cls == RANDOM_MONSTER && mspec.place.is_valid())
+    if (type == RANDOM_MONSTER)
     {
-        const monster_type mon =
-            pick_random_monster_for_place(mspec.place, mspec.monbase, false);
-        mg.cls = mon == MONS_NO_MONSTER? RANDOM_MONSTER : mon;
+        type = pick_random_monster_for_place(mspec.place, mspec.monbase,
+                                             false);
+        if (type == MONS_NO_MONSTER)
+            type = RANDOM_MONSTER;
     }
+
+    mgen_data mg(type);
 
     mg.behaviour = (m_generate_awake) ? BEH_WANDER : BEH_SLEEP;
     switch (mspec.attitude)
@@ -4816,9 +4817,9 @@ static void _vault_grid_glyph_mons(vault_placement &place,
         mons_spec ms(RANDOM_MONSTER);
 
         if (vgrid == '8')
-            ms.ood = -8;
+            ms.type = RANDOM_SUPER_OOD;
         else if (vgrid == '9')
-            ms.ood = -9;
+            ms.type = RANDOM_MODERATE_OOD;
         else if (vgrid != '0')
         {
             int slot = map_def::monster_array_glyph_to_slot(vgrid);
