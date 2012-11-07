@@ -2592,6 +2592,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w><<</w>/<w>></w>    : create up/down staircase\n"
                        "<w>(</w>      : turn cell into feature\n"
                        "<w>\\</w>      : make a shop\n"
+                       "<w>Ctrl-K</w> : mark all vaults as unused\n"
                        "\n"
                        "<yellow>Other level related commands</yellow>\n"
                        "<w>Ctrl-A</w> : generate new Abyss area\n"
