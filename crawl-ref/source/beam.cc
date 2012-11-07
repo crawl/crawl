@@ -4463,8 +4463,10 @@ void bolt::affect_monster(monster* mon)
             // if it would have hit otherwise...
             if (_test_beam_hit(beam_hit, rand_ev, is_beam, 0, r))
             {
-                msg::stream << mon->name(DESC_THE) << " deflects the "
-                            << name << '!' << endl;
+                string deflects = (defl == 2) ? "deflects" : "repels";
+                msg::stream << mon->name(DESC_THE) << " "
+                            << deflects << " the " << name
+                            << '!' << endl;
             }
             else if (mons_class_flag(mon->type, M_PHASE_SHIFT)
                      && _test_beam_hit(beam_hit, rand_ev - random2(8),

@@ -54,6 +54,7 @@ my %field_type = (
     NOTELEP  => "bool",
     POISON   => "bool",
     RANDAPP  => "bool",
+    RMSL     => "bool",
     RND_TELE => "bool",
     SEEINV   => "bool",
     SPECIAL  => "bool",
@@ -487,6 +488,7 @@ my @art_order = (
     "NOSPELL", "RND_TELE", "NOTELEP", "ANGRY", "METAB", "\n",
     "MUTATE", "ACC", "DAM", "CURSED", "STEALTH", "MP", "\n",
     "BASE_DELAY", "HP", "CLARITY", "BASE_ACC", "BASE_DAM", "\n",
+    "RMSL", "\n",
     "}",
 
     "equip_func", "unequip_func", "world_reacts_func", "{fight_func_func",

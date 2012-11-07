@@ -3316,8 +3316,12 @@ int monster::shield_bypass_ability(int) const
 
 int monster::missile_deflection() const
 {
-    // No temporary effects, no RMsl as well.
-    return mons_class_flag(type, M_DEFLECT_MISSILES) ? 2 : 0;
+    if (mons_class_flag(type, M_DEFLECT_MISSILES))
+        return 2;
+    else if (scan_mon_inv_randarts(this, ARTP_RMSL))
+        return 1;
+    else
+        return 0;
 }
 
 int monster::armour_class() const

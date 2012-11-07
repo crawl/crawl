@@ -249,6 +249,7 @@ static vector<string> _randart_propnames(const item_def& item,
         { "Stlth",  ARTP_STEALTH,               2 }, // handled specially
         { "Curse",  ARTP_CURSED,                2 },
         { "Clar",   ARTP_CLARITY,               2 },
+        { "RMsl",   ARTP_RMSL,                  2 }
     };
 
     // For randart jewellery, note the base jewellery type if it's not
@@ -460,6 +461,7 @@ static string _randart_descrip(const item_def &item)
         { ARTP_CURSED, "It may recurse itself.", false},
         { ARTP_CLARITY, "It protects you against confusion.", false},
         { ARTP_MUTAGENIC, "It causes magical contamination when unequipped.", false},
+        { ARTP_RMSL, "It protects you from missiles.", false},
     };
 
     for (unsigned i = 0; i < ARRAYSZ(propdescs); ++i)

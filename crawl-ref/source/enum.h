@@ -2829,6 +2829,7 @@ enum artefact_prop_type
     ARTP_CLARITY,
     ARTP_BASE_ACC,
     ARTP_BASE_DAM,
+    ARTP_RMSL,
     ARTP_NUM_PROPERTIES
 };
 

@@ -5993,7 +5993,8 @@ int player::missile_deflection() const
     if (you.duration[DUR_DEFLECT_MISSILES])
         return 2;
     if (you.duration[DUR_REPEL_MISSILES]
-        || player_mutation_level(MUT_DISTORTION_FIELD) == 3)
+        || player_mutation_level(MUT_DISTORTION_FIELD) == 3
+        || (!you.suppressed() && scan_artefacts(ARTP_RMSL, true)))
     {
         return 1;
     }
