@@ -893,6 +893,13 @@ static tileidx_t _mon_sinus(tileidx_t tile)
     return (n < count) ? (tile + n) : (tile + 2 * count - 2 - n);
 }
 
+static tileidx_t _mon_cycle(tileidx_t tile, int offset)
+{
+    int count = tile_player_count(tile);
+    return (tile + ((offset + you.frame_no) % count));
+}
+
+
 // This function allows for getting a monster from "just" the type.
 // To avoid needless duplication of a cases in tileidx_monster, some
 // extra parameters that have reasonable defaults for monsters where
@@ -1211,11 +1218,11 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
 
     // vortices ('v')
     case MONS_FIRE_VORTEX:
-        return TILEP_MONS_FIRE_VORTEX;
+        return _mon_cycle(TILEP_MONS_FIRE_VORTEX, tile_num_prop);
     case MONS_SPATIAL_VORTEX:
-        return TILEP_MONS_SPATIAL_VORTEX;
+        return _mon_cycle(TILEP_MONS_SPATIAL_VORTEX, tile_num_prop);
     case MONS_TWISTER:
-        return TILEP_MONS_TWISTER;
+        return _mon_cycle(TILEP_MONS_TWISTER, tile_num_prop);
 
     // elementals ('E')
     case MONS_AIR_ELEMENTAL:
@@ -5470,9 +5477,11 @@ void bind_item_tile(item_def &item)
 
 void tile_init_props(monster* mon)
 {
-    // Only those use tile_num.
+    // Only monsters using mon_mod or mon_cycle need a tile_num.
     if (mon->type != MONS_TOADSTOOL && mon->type != MONS_SLAVE
         && mon->type != MONS_PLANT && mon->type != MONS_FUNGUS
+        && mon->type != MONS_FIRE_VORTEX && mon->type != MONS_TWISTER
+        && mon->type != MONS_SPATIAL_VORTEX
         && mon->type != MONS_ABOMINATION_SMALL
         && mon->type != MONS_ABOMINATION_LARGE)
     {
