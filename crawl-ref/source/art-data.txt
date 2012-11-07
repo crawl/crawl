@@ -89,6 +89,7 @@
 # * poison:   Grants poison resistance.
 # * randapp:  Generated with a random artefact's appearance (used by
 #             strictly-bad unrands).
+# * rmsl:     Passively repels missiles.
 # * rnd_tele: Induces random teleportation.
 # * seeinv:   Lets wearer see invisible.
 # * special:  Artefact is "special": can't be picked up by monsters,
@@ -883,12 +884,11 @@ MAGIC:    50
 BOOL:     elec, life
 
 NAME:    amulet of the Air
-OBJ:     OBJ_JEWELLERY/AMU_CONTROLLED_FLIGHT
+OBJ:     OBJ_JEWELLERY/AMU_INACCURACY
 COLOUR:  ETC_ELECTRICITY
 TILE:    urand_air
-EV:      3
-STEALTH: 50
-BOOL:    elec, fly
+EV:      5
+BOOL:    elec, fly, rmsl
 
 NAME:    ring of Shadows
 OBJ:     OBJ_JEWELLERY/RING_INVISIBILITY

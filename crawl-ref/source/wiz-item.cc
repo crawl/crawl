@@ -286,6 +286,7 @@ static const char* _prop_name[] = {
     "Clar",
     "BAcc",
     "BDam",
+    "RMsl",
 };
 
 #define ARTP_VAL_BOOL 0
@@ -327,6 +328,7 @@ static int8_t _prop_type[] = {
     ARTP_VAL_BOOL, //CLARITY
     ARTP_VAL_ANY,  //BASE_ACC
     ARTP_VAL_ANY,  //BASE_DAM
+    ARTP_VAL_BOOL, //RMSL
 };
 
 static void _tweak_randart(item_def &item)
@@ -1366,6 +1368,7 @@ static void _debug_rap_stats(FILE *ostat)
          1, //ARTP_CLARITY
          0, //ARTP_BASE_ACC
          0, //ARTP_BASE_DAM
+         1, //ARTP_RMSL
          -1
     };
 
@@ -1511,6 +1514,7 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_CLARITY",
         "ARTP_BASE_ACC",
         "ARTP_BASE_DAM",
+        "ARTP_RMSL"
     };
 
     fprintf(ostat, "                            All    Good   Bad\n");
