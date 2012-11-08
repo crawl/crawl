@@ -2215,7 +2215,7 @@ static special_armour_type _determine_armour_ego(const item_def& item,
         const int tmp = random2(600) + 200 * (item.sub_type != ARM_BOOTS);
 
         rc = (tmp < 200) ? SPARM_RUNNING :
-             (tmp < 400) ? SPARM_FLIGHT :
+             (tmp < 400) ? SPARM_FLYING :
              (tmp < 600) ? SPARM_STEALTH :
              (tmp < 700) ? SPARM_COLD_RESISTANCE
                          : SPARM_FIRE_RESISTANCE;
@@ -2282,7 +2282,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
     case SPARM_NORMAL:
         return true;
 
-    case SPARM_FLIGHT:
+    case SPARM_FLYING:
         if (slot == EQ_BODY_ARMOUR)
             return true;
         // deliberate fall-through

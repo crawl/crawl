@@ -1189,7 +1189,7 @@ bool safe_to_remove(const item_def &item, bool quiet)
 
     const bool grants_flight =
          inf.base_type == OBJ_JEWELLERY && inf.sub_type == RING_FLIGHT
-         || inf.base_type == OBJ_ARMOUR && inf.special == SPARM_FLIGHT
+         || inf.base_type == OBJ_ARMOUR && inf.special == SPARM_FLYING
          || is_artefact(inf)
             && artefact_known_wpn_property(inf, ARTP_FLY);
 

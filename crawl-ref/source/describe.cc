@@ -1320,7 +1320,7 @@ static string _describe_armour(const item_def &item, bool verbose)
         case SPARM_PONDEROUSNESS:
             description += "It is very cumbersome, thus slowing your movement.";
             break;
-        case SPARM_FLIGHT:
+        case SPARM_FLYING:
             description += "It can be activated to allow its wearer to "
                 "fly indefinitely.";
             break;
