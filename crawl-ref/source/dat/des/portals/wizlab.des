@@ -901,7 +901,7 @@ ctttttttttyyyttttttty...ytttttttyyytttttttttc
 ctttttttty...yttttty.....yttttty...yttttttttc
 cttttttt..111.........T.........111..tttttttc
 ctttttt...121.tttttc.....cttttt.121...ttttttc
-cttttt.tty...yttttttcc=cctttttty...ytt.tttttc
+cttttt.tty...yttttttcc+cctttttty...ytt.tttttc
 ctttt.tttty.yttttttt.....ttttttty.ytttt.ttttc
 cttt.tttttt.tttttttyd232eyttttttt.tttttt.tttc
 cttt.tttttt..tttttttydefyttttttt..tttttt.tttc
@@ -918,7 +918,7 @@ cttttt.tttttt..ttttttttttttttt..tttttt.tttttc
 ctttt.tttttt..ttttt.G._.G.ttttt..tttttt.ttttc
 cttt.tttttt..ttttt...4.4...ttttt..tttttt.tttc
 cttt.ttttt..ttttt...........ttttt..ttttt.tttc
-ctttt.ttty/ytttt....cc=cc....tttty/yttt.ttttc
+ctttt.ttty/ytttt....cc+cc....tttty/yttt.ttttc
 cttttt.ty...yttttttcc...cctttttty...yt.tttttc
 ctttttt./.1./.ttttcc..2..cctttt./.1./.ttttttc
 cttttttty...yt...../.1T1../....ty...ytttttttc
@@ -1140,9 +1140,9 @@ MAP
 ^^^^^^^^^^^^^^^^^^^^^^.^^^^^^^^^^^^^^^^^^^^^^
                 ^____...____^
                 ^__.......__^
-                ^_...!=!..._^
-                ^_.<.=A=.<._^
-                ^_...!=!..._^
+                ^_...!+!..._^
+                ^_.<.+A+.<._^
+                ^_...!+!..._^
                 ^__.......__^
                 ^____...____^
                 ^^^^^^^^^^^^^
@@ -1325,7 +1325,6 @@ TILE:       c = wall_zot_magenta
 TILE:       v = dngn_metal_wall_magenta
 LFLOORTILE: floor_rough_magenta
 LFLOORCOL:  magenta
-KFEAT:      + = runed_door
 MARKER:     R = lua:fog_machine { \
                 pow_max = 10, delay_min = 10, delay_max = 40, \
                 size = 15, cloud_type = "purple smoke" \
@@ -1599,7 +1598,7 @@ ttT.....ccG.............Gcc..........Ttt
 ttT.....Tc....G.....G....cT..........Ttt
 ttT.c..cTcc.............cccT.........Ttt
 ttTcc++ccccccc.......ccccccc+cc......Ttt
-ttcc5555cccdeccc===cccfgccc444cc.....Ttt
+ttcc5555cccdeccc+++cccfgccc444cc.....Ttt
 ttc555555c....c.....c....c44444c....Tttt
 ttc555555cc.............cc44444cc..ctttt
 ttc555555ccccccccccccccccccc+cccc++ccttt

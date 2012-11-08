@@ -565,7 +565,7 @@ xxxxxxxxxcc.....ccxxxxxxxxx
 xxxxxxxxxc<d.3.d<cxxxxxxxxx
 xxxxxxxxxc...G...cxxxxxxxxx
 xxxxxxxxxcc.....ccxxxxxxxxx
-xxxxxxxxxxcvv=vvcxxxxxxxxxx
+xxxxxxxxxxcvv+vvcxxxxxxxxxx
 xxxxxxxxvvvv...vvvvxxxxxxxx
 xxxxxxvvv.........vvvxxxxxx
 xxxxxvv.............vvxxxxx
@@ -687,7 +687,7 @@ tttttc.......+....2....+.......cttttt
 ttttcc.......cc.1...1.cc.......cctttt
 ttttc.........c.......c.........ctttt
 tttcc...1.1...ccGG.GGcc...1.1...ccttt
-tttc1....T....1ccc=ccc1....T....1cttt
+tttc1....T....1ccc+ccc1....T....1cttt
 tttcc...1.1...ccc...ccc...1.1...ccttt
 ttttc.........c1.....1c.........ctttt
 ttttcc.......cc..1.1..cc.......cctttt
@@ -765,7 +765,7 @@ xxxxxxxx.xx..w..ccc..ww..xxxxxxxxxx
 x.........xx...cc.cc..ww..........x
 x.wwwwwwwxxxxxccd|ecc..wwwwwwwwww.x
 x.w..xxxxxxxxcc.....cc1..1..1..1w.x
-x.w.ccncccccccccc=ccccccccccncc.w.x
+x.w.ccncccccccccc+ccccccccccncc.w.x
 x.w1cc.$$$.cc.........cE....2cc1w.x
 x.w..nc.$.cc..lllllll..EE...cn..w.x
 x.ww1.cc.cc..ll..2..ll..Ec.cc.1ww.x
