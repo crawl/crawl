@@ -315,22 +315,18 @@ make your character walk repeatedly by pressing Shift and a direction;
 alternatively, press '/' followed by a direction. You will walk in that
 direction until any of a number of things happen: a hostile monster is visible
 on the screen, a message is sent to the message window for any reason, you press
-a key, or you are about to step on anything other than normal floor or an
-undiscovered trap and it is not your first move of the long walk. Note that this
+a key, or you are about to step on anything other than normal floor and it is not your
+first move of the long walk. Note that this
 is functionally equivalent to just pressing the direction key several times.
 
 Another convenient method for moving long distances is described in the section
 on Automated Travel and Exploration below.
 
-Resting and Searching
+Resting
 ========================================
 
-If you press Shift and '5' on the numeric keypad (or just the number '5' on the
-keyboard), you rest for 100 turns or until your hit points or magic return to
-full, whichever is sooner. You can rest for just one turn by pressing '.',
-Delete, 's' or '5' on the keypad. Whenever you are resting, you are assumed to
-be observing your surroundings, so you have a chance of detecting any traps
-near you.
+If you press '5', you rest for 100 turns or until your hit points or magic return to
+full, whichever is sooner. You can rest for just one turn by pressing '.', Delete or 's'.
 
 Resting stops if a monster appears or if you are otherwise interrupted.
 
@@ -907,12 +903,11 @@ magic school tend to have no combat powers at all.
 \| Rods
 ========================================
 
-Rods ('|') hold one or more spells that you can evoke while wielding the rod, using
-the 'v' command. They have a pool of magical energy
-which regenerates according to the rod's enchantment (which can be increased
-using scrolls of recharging) and your Evocations skill. They're shorter than
-full-length staves and thus use the Maces &amp; Flails skill instead of Staves when
-used as a cudgel.
+Rods ('|') hold one or more spells that you can evoke while wielding the rod,
+using the 'v' command. They have a pool of magical energy which regenerates
+according to the rod's enchantment (which can be increased using scrolls of
+recharging) and your Evocations skill. They're shorter than full-length staves
+and thus use the Maces &amp; Flails skill instead of Staves when used as cudgels.
 
 \+ Books
 ========================================
@@ -1040,9 +1035,8 @@ casting chance and, in many cases, the effect as well.
 
 Spells are stored in books, which you will occasionally find in the dungeon. You
 can read books with 'r' to check what spells they contain; doing so will allow
-you to read the individual spells' descriptions. In order to try to memorise a
-certain spell, use the 'M' command. Memorising can take a while and, for spells
-in certain books, be hazardous.
+you to read the individual spells' descriptions. In order to memorise a certain
+spell, use the 'M' command.
 
 Each spell has a level. A spell's level denotes the amount of skill required to
 use it and indicates how powerful it may be. You can only memorise a certain
@@ -1138,8 +1132,6 @@ Finally, there are some more targetting related commands:
   needles. Your last usage will be remembered. Note that you can use '(' for
   changing the quiver ammunition even outside of targetting.
 - The ':' key allows you to hide the path of your spell/wand/missile.
-- Ctrl-F changes which monsters are cycled when using '+', '=' or '-': hostiles,
-  friends, plants or all monsters.
 
 ****************************************
 J. Religion
@@ -1995,10 +1987,10 @@ Arcane Marksmen
 Artificers
   Artificers are attuned to gadgets, mechanics and magic elicited from arcane
   items, as opposed to casting magic themselves. As a consequence, they enter
-  the Dungeon with an assortment of wands or a rod of striking. Artificers are
-  skilled at evoking magical items, finding Traps, and understand
-  the basics of melee combat. Those with wands also have some prior experience
-  with scrolls of recharging.
+  the Dungeon with an assortment of wands. Artificers are skilled at evoking
+  magical items and finding traps, and also understand the basics of melee
+  combat. Those with wands also have some prior experience with scrolls of
+  recharging.
 
 Wanderers
   Wanderers are people who have not learned a specific trade. Instead, they've
@@ -2159,8 +2151,7 @@ magical energy (Magic) in the same way that Fighting affects your hit points:
 every time you increase the Spellcasting skill you gain some magic points and
 spell levels. This skill greatly influences the amount by which casting causes
 hunger. Spellcasting also helps with the power of your spells, but to a lesser
-extent than the more specialised magical skills. This skill is very difficult to
-learn, and requires a large amount of experience.
+extent than the more specialised magical skills.
 
 There are also individual skills for each different type of magic; the higher
 the skill, the more powerful the spell. Multidisciplinary spells use an average
@@ -2218,26 +2209,23 @@ Shields
   which it hinders you.
 
 Traps
-  Affects your ability to notice traps and to disarm when
-  you find them. With this skill at a high level, you will often find traps
-  without actively looking for them. Note that you scan your vicinity in
-  every move (not just with commands like 's', '.' or '5'). Without (or with
-  low) Traps skill, you search only the eight adjacent squares. The area
-  covered gets larger with higher skill, as well as the chance to detect
-  something.
+  Affects your ability to notice traps and to disarm them when you find them.
+  While you may be able to spot some traps even without this skill, most traps are
+  hidden cunningly enough to avoid detection without at least some training. More
+  skilled people may be able to spot traps at a distance, yet after looking closely
+  enough, spending more time is pointless unless your skill grows.
 
 Invocations
-  An easy-to-learn skill which affects your ability to call on your god for aid.
-  Those skilled at invoking have reduced fail rates and produce more powerful
-  effects. Some gods (such as Trog) do not require followers to learn this
-  skill.
+  Affects your ability to call on your god for aid. Those skilled at Invocations
+  have reduced failure rates and produce more powerful effects. Some gods (such
+  as Trog) do not require followers to learn this skill.
 
 Evocations
   This skill lets you use wands much more effectively, in terms of both damage
   and precision. Furthermore, with high Evocations, you can easily deduce the
   number of charges in a wand through usage. Similarly, all other items that
   have certain powers (like crystal balls) work better for characters trained in
-  this skill. Like Invocations, Evocations is easier to learn than other skills.
+  this skill.
 
   Invocations and Evocations can increase your maximum magical reserves,
   although both have a smaller effect than Spellcasting in this regard. The
@@ -2827,10 +2815,6 @@ f
 :
   Toggle display of the beam path.
 
-Ctrl-F
-  Toggle target modes (between enemies, all, friends; see also option
-  target_zero_exp).
-
 (, )
   These two commands allow you to change ammunition while targetting. The choice
   is subject to the fire_order option. Usually, you change missiles according to
@@ -2924,13 +2908,12 @@ Tele
   You are about to teleport, i.e. feeling "unstable". If you are about to
   teleport, another teleport (by any source) will cancel it.
 
-Lev
-  You levitate a few inches above the ground. While this is enough to cross
-  water and lava, movement is not completely controlled. It will usually time
-  out. You are also safe from electrical melee attacks while levitating.
-
 Fly
-  You fly, gaining the benefits of levitation with none of the drawbacks.
+  You fly above the ground, being able to cross water and lava, and also to avoid most
+  types of traps. Due to low ceilings in the dungeon, this is not enough to get out of
+  reach of ground-based enemies, although you are safe from electrical melee attacks.
+  Most types of flight will usually time out -- be sure you're not above deadly liquids
+  at that moment.
 
 Held
   You are held in a net or a spiderweb. You cannot move freely and will instead
@@ -3215,8 +3198,8 @@ rCorr
 rMut
   resist mutation
 
-\+Lev
-  can evoke levitation
+\+Fly
+  can evoke flight
 
 \+Inv
   can evoke invisibility
