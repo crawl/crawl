@@ -906,7 +906,7 @@ static void _equip_armour_effect(item_def& arm, bool unmeld)
             mpr("You feel rather ponderous.");
             break;
 
-        case SPARM_FLIGHT:
+        case SPARM_FLYING:
             mpr("You feel rather light.");
             break;
 
@@ -1049,9 +1049,9 @@ static void _unequip_armour_effect(item_def& item, bool meld)
         mpr("That put a bit of spring back into your step.");
         break;
 
-    case SPARM_FLIGHT:
+    case SPARM_FLYING:
         if (you.attribute[ATTR_PERM_FLIGHT]
-            && !player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_FLIGHT)
+            && !player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_FLYING)
             && (you.species != SP_TENGU || you.experience_level < 15))
         {
             you.attribute[ATTR_PERM_FLIGHT] = 0;

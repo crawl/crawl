@@ -1551,7 +1551,7 @@ bool mons_flies(const monster* mon, bool temp)
         const int armour = mon->inv[MSLOT_ARMOUR];
         if (armour != NON_ITEM
             && mitm[armour].base_type == OBJ_ARMOUR
-            && mitm[armour].special == SPARM_FLIGHT)
+            && mitm[armour].special == SPARM_FLYING)
         {
             ret = true;
         }

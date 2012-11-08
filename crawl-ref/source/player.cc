@@ -1121,7 +1121,7 @@ bool player_equip_unrand(int unrand_index)
 int player_evokable_flight()
 {
     return player_equip(EQ_RINGS, RING_FLIGHT)
-           + player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_FLIGHT)
+           + player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_FLYING)
            + scan_artefacts(ARTP_FLY);
 }
 

@@ -1679,7 +1679,7 @@ KITEM:   g = ring of flight / potion of flight q:2 / \
              wand of digging w:5 / lantern of shadows / \
              potion of speed w:5 / scroll of fog / potion of porridge / \
              any wand w:1 / any potion w:1 / any scroll w:1
-KITEM:   ! = pair of boots ego:flight w:9 / pair of boots ego:running w:1 / \
+KITEM:   ! = pair of boots ego:flying w:9 / pair of boots ego:running w:1 / \
              pair of boots ego:stealth w:9 / pair of boots w:1
 KITEM:   $ = wand of disintegration
 KITEM:   % = any level:3, any level:3 / nothing

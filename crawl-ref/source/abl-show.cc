@@ -2149,7 +2149,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_EVOKE_FLIGHT:             // ring, boots, randarts
-        if (player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_FLIGHT))
+        if (player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_FLYING))
         {
             bool standing = !you.airborne();
             you.attribute[ATTR_PERM_FLIGHT] = 1;
@@ -3219,7 +3219,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
                 // You can still evoke perm flight if you have temporary one.
                 if (!you.is_flying()
                     || !you.attribute[ATTR_PERM_FLIGHT]
-                       && player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_FLIGHT))
+                       && player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_FLYING))
                 {
                     _add_talent(talents, ABIL_EVOKE_FLIGHT, check_confused);
                 }
