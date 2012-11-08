@@ -35,7 +35,7 @@ function ready()
     crawl.sendkeys("&@27 12 12" .. eol)
     crawl.sendkeys("&o)demon whip" .. eol .. "chaos" .. eol)
     crawl.sendkeys("g&o[boots" .. eol .. "running" .. eol)
-    crawl.sendkeys("g&o[gold dragon armour" .. eol .. "levitation" .. eol)
+    crawl.sendkeys("g&o[gold dragon armour" .. eol .. "flight" .. eol)
     crawl.sendkeys("g&o[large shield" .. eol .. "reflection" .. eol)
     crawl.sendkeys("g&o[helmet" .. eol .. "see invis" .. eol)
     crawl.sendkeys("g&o[gloves" .. eol .. "strength" .. eol)
@@ -49,7 +49,7 @@ function ready()
     crawl.sendkeys("&tga2" .. eol .. esc)
     crawl.sendkeys("&tha2" .. eol .. esc)
     crawl.sendkeys("&tia2" .. eol .. esc)
-    crawl.sendkeys("ag") -- levitation
+    crawl.sendkeys("ag") -- flight
     --# re-enable monsters
     crawl.sendkeys("&" .. string.char(20) ..
                    "debug.disable('mon_act', false)" .. eol .. esc)

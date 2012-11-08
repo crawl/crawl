@@ -424,7 +424,7 @@ static bool _is_travelsafe_square(const coord_def& c, bool ignore_hostile,
     }
 
     // If 'ignore_hostile' is true, we're ignoring hazards that can be
-    // navigated over if the player is willing to take damage, or levitate.
+    // navigated over if the player is willing to take damage or fly.
     if (ignore_hostile && _is_reseedable(c, true))
         return true;
 

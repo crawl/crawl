@@ -1362,7 +1362,7 @@ bool fall_into_a_pool(const coord_def& entry, bool allow_shift,
     }
 
     // A distinction between stepping and falling from
-    // you.duration[DUR_LEVITATION] prevents stepping into a thin stream
+    // you.duration[DUR_FLIGHT] prevents stepping into a thin stream
     // of lava to get to the other side.
     if (scramble())
     {

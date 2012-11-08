@@ -399,7 +399,7 @@ void move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift)
         tornado_move(p);
     }
 
-    // assuming that entering the same square means coming from above (levitate)
+    // assuming that entering the same square means coming from above (flight)
     const coord_def old_pos = you.pos();
     const bool from_above = (old_pos == p);
     const dungeon_feature_type old_grid =

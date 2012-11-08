@@ -35,9 +35,9 @@ default-depth: D:12-26
 # Should be turned into a timed, non-announced portal vault
 # using the maprot (or unmappable) flag.
 #
-# The two orange statues are placed for maximum pain -- one you're
-# likely to first see while levitating, the other is hard to target
-# with disintegration through its protective plants.
+# The two orange statues are placed for maximum pain -- one you're likely to
+# first see while flying, the other is hard to target with disintegration
+# through its protective plants.
 #
 # Lemuel
 #
@@ -140,10 +140,9 @@ ENDMAP
 #
 # By minmay.
 #
-# All arrivals from above (and one from below) bubbles just lead to
-# downward escape hatches. The other two staircases from below lead
-# to bubbles with some loot. For the main fight, you have to levitate
-# or teleport.
+# All arrivals from above (and one from below) bubbles just lead to downward
+# escape hatches.  The other two staircases from below lead to bubbles with
+# some loot.  For the main fight, you have to fly or teleport.
 # The opposition is nasty, but this map is deep enough.
 NAME:    minmay_sea_of_fire
 TAGS:    no_rotate

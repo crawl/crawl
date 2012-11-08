@@ -787,7 +787,7 @@ explore_delay = -1
 travel_avoid_terrain = (shallow water | deep water)
         Prevent travel from routing through shallow water. By default,
         this option is commented out. For merfolk and/or characters with
-        permanent levitation,
+        permanent flight,
              travel_avoid_terrain = shallow water, deep water
         will prevent travel or explore from going through any water.
         This option is not a true list option; in particular, it is not
@@ -797,8 +797,7 @@ explore_greedy = true
         Greedy explore travels to items that are eligible for
         autopickup in addition to exploring the level, but is
         otherwise identical to regular explore. Explore greed is
-        disabled if you're temporarily unable to pick up items
-        (from uncontrolled levitation, for instance).
+        disabled if autopickup is off (Ctrl-A).
 
 explore_stop  = items,stairs,shops,altars,portals,branches,runed_doors
 explore_stop += greedy_pickup_smart,greedy_visited_item_stack
