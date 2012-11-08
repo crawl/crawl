@@ -471,9 +471,12 @@ int form_hp_mod()
 
 static bool _flying_in_new_form(transformation_type which_trans)
 {
-    //if our flight is uncancellable (or tenguish) then it's not from evoking
-    if (you.attribute[ATTR_FLIGHT_UNCANCELLABLE] || you.permanent_flight())
+    // If our flight is uncancellable (or tenguish) then it's not from evoking
+    if (you.attribute[ATTR_FLIGHT_UNCANCELLABLE]
+        || you.permanent_flight() && you.species == SP_TENGU)
+    {
         return true;
+    }
 
     if (!you.is_flying())
         return false;

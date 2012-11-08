@@ -3214,7 +3214,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         if (player_evokable_flight())
         {
             // Has no effect on permanently flying Tengu.
-            if (!you.permanent_flight())
+            if (!(you.permanent_flight() && you.species == SP_TENGU))
             {
                 // You can still evoke perm flight if you have temporary one.
                 if (!you.is_flying()
