@@ -123,17 +123,14 @@ NAME:   hangedman_pestilent_swarm
 DEPTH:  D:8-14
 CHANCE: 100% (D:14), 15%
 TAGS:   uniq_second_food extra chance_second_food no_monster_gen patrolling
-MONS:   spider / shadow / giant firefly / giant frog / brain worm / jelly / goliath beetle
-MONS:   orange rat w:8 / yellow wasp / rock worm / boring beetle / scorpion / \
-        soldier ant
-MONS:   human / elf / nothing
-ITEM:   cheese q:3 / beef jerky q:3 / lemon q:3, potion of porridge
-KITEM:  3 = honeycomb q:6
+MONS:   spider / giant firefly / brain worm w:5 / goliath beetle / giant centipede
+MONS:   yellow wasp w:7 / rock worm w:5 / boring beetle / soldier ant w:13 / giant slug
+ITEM:   cheese q:3 / beef jerky q:3 / lemon q:3, potion of porridge, honeycomb q:6
 MAP
 .xxxxxxx
 @xx.x.xcccc
  ..x1x2cdec
-@xx.x.x+3dc
+@xx.x.x+fdc
 .x1x.x2cccc
  xxxxxxx
 ENDMAP
@@ -224,28 +221,30 @@ MONS:   shadow imp
 : if you.absdepth() < 13 then
 KMONS:  A = trapdoor spider w:6 / unseen horror / nothing w:4
 : else
-KMONS:  A = vapour w:4 / trapdoor spider w:6 / unseen horror / nothing w:1
+KMONS:  A = vapour w:4 / trapdoor spider w:6 / unseen horror / nothing w:2
 : end
-ITEM:   sultana w:8 q:1
-ITEM:   honeycomb q:2, bread ration q:3
+ITEM:  sultana q:1 / grape w:8 q:1
+ITEM:  sultana mimic q:1 w:8 / grape mimic w:8 q:1
+ITEM:  honeycomb q:2, bread ration q:3
 : if crawl.coinflip() then
-:     dgn.delayed_decay(_G, 'g', 'spriggan skeleton')
+:     dgn.delayed_decay(_G, 'h', 'spriggan skeleton')
 : else
-:     dgn.delayed_decay(_G, 'g', 'ogre skeleton')
+:     dgn.delayed_decay(_G, 'h', 'ogre skeleton')
 : end
 : if crawl.coinflip() then
 :     dgn.delayed_decay(_G, 'A', 'spriggan skeleton')
 : else
 :     dgn.delayed_decay(_G, 'A', 'ogre skeleton')
 : end
-NSUBST: D = 1:A / 2:d / 2:e / 1:g, g = 1:g / .
+SUBST:  D : DDDDE
+NSUBST: D = 1:A / 2:d / 2:f / 1:h, E = 1:d / 1:e / 2:f / 2:h
 MAP
  cccccccccc
-ccxx1xg+DDc
+ccxx1xh=DDc
 c.x.x..mDDc
 @.d.x2.mDDc
 c.x.x..cc+c
-ccxx1x.+3fc
+ccxx1x.c3gc
  cccccccccc
 ENDMAP
 
@@ -253,28 +252,19 @@ ENDMAP
 NAME:    hangedman_stone_soup
 DEPTH:   D:8-14
 CHANCE:  100% (D:14), 10%
-TAGS:    uniq_second_food extra chance_second_food patrolling
+TAGS:    uniq_second_food extra chance_second_food patrolling no_rotate no_vmirror
+# Branch representatives working together to cook some soup:
+# D, Orc, Elf, Snake, Shoals, Vaults, Crypt, Hells, Zot.
 KMONS:   A = kobold
 KMONS:   B = orc
-KMONS:   C = halfling
-KMONS:   D = felid
-KMONS:   E = elf
-KMONS:   F = deep dwarf
-KMONS:   G = human
-KMONS:   H = demigod
-KMONS:   I = demonspawn
-KMONS:   J = octopode
-KMONS:   K = naga
-KMONS:   L = spriggan
-KMONS:   M = merfolk
-KMONS:   N = tengu
-KMONS:   O = ogre
-KMONS:   P = centaur
-KMONS:   Q = troll
-KMONS:   R = draconian
-# Minotaurs are too strong and are busy guarding their labyrinths.
-# The undead don't care much for the culinary arts.
-KITEM:   1 = stone q:1 / large rock q:1
+KMONS:   C = deep elf soldier
+KMONS:   D = naga
+KMONS:   E = merfolk
+KMONS:   F = human
+KMONS:   G = necrophage
+KMONS:   H = crimson imp
+KMONS:   I = draconian
+KITEM:   1 = stone q:1 no_pickup / large rock q:1 w:5
 KITEM:   Ya = royal jelly / meat ration / bread ration
 KITEM:   b = honeycomb / cheese / apricot q:2 / apple q:2 / choko q:2
 KFEAT:   1Yab = shallow_water
@@ -284,15 +274,15 @@ MARKER:  Y = lua:fog_machine { cloud_type = "steam", pow_min = 1, \
 MARKER:  Z = lua:fog_machine { cloud_type = "flame", pow_min = 100, pow_max = 100, \
                  delay = 10, size = 1, walk_dist = 0, excl_rad = -1 }
 NSUBST:  c = 2:a / *:b
-SHUFFLE: ABCDEFGHIJKLMNOPQR
+SHUFFLE: ABCDEFGHI
 MAP
  .......
-..A......
-..vvvv=B.
-.Zvcccv..
+..A...B..
+..vv.vv..
+..vcccv..
 ..vY1cv..
-.Zvcccv..
-..vvvv=D.
-..C......
+..vcccv..
+.CvvvvvD.
+...Z.Z...
  .......
 ENDMAP

@@ -226,8 +226,7 @@ ENDMAP
 # Other Swamp vaults
 ###############################################################################
 NAME:    hangedman_swamp_phenomena
-ORIENT:  float
-TAGS:    no_pool_fixup no_monster_gen patrolling
+TAGS:    no_pool_fixup no_monster_gen patrolling transparent
 DEPTH:   Swamp:1-4
 KMONS:   1 = insubstantial wisp
 KMONS:   2 = ball lightning
@@ -235,55 +234,55 @@ KMONS:   3 = vapour
 KFEAT:   t = mangrove
 KFEAT:   123 = deep_water
 SHUFFLE: })
-SUBST:   T = w:3 t, W = W:3 w, . = .:3 W, \
-         } = }>, ) = <)>
+SUBST:   T = w:3 t, M = ~:4 t, W = W:3 w, . = .:3 W, } = }:20 >, ) = ):25 <>
+KPROP:   ~ = no_rtele_into
 MAP
-  Ttttttt  @tt{@
- Tttttttttt .ttT
-Tttt3tww.tWT.wtt
-Ttt211w}wWt.wwwtt
-ttt11wW.W.Ww11ttt
-ttwww.tWw)w112ttT
-Tttw.TWt.wwt3tttT
- Ttt. tttttttttT
+  Mtttttt  @tt{@
+ Mttttttttt..ttM
+Mttt3twwwtWT.wtt
+Mtt211w}wwt.wwwtt
+ttt11w.w.w.w11ttt
+ttwww.tWw)w112ttM
+Mttw.TWt.wwt3tttM
+ Mtt..tttttttttM
    tt@  ttttttt
 ENDMAP
 
 NAME:    hangedman_swamp_wriggling
-ORIENT:  float
-TAGS:    no_pool_fixup no_monster_gen patrolling
+TAGS:    no_pool_fixup no_monster_gen patrolling transparent
 DEPTH:   Swamp:1-4
 MONS:    swamp worm, giant leech, spiny worm
 KFEAT:   t = mangrove
 SHUFFLE: })
-SUBST:   } = }>, ) = <)>
+SUBST:   } = }>, ) = <)>, } = }:20 >, ) = ):25 <>, 4 = 23
 MAP
       @tttttt@
-     Wttw.wwtt{
+     WttwWwwtt{
  ...tttW2..w1tt
- tw1tt3wWt.Wwtt
+ tw1tt4wWt.Wwtt
 ttW.tt}3)tW.1tt
-t1.WtW2wtt.Wtt
+t1.WtW4wtt.Wtt
 tww..2Wwtt1Wt
-tt1w.wwtt....
+tt1wWwwtt....
  ttttttt@
 ENDMAP
 
 NAME:    hangedman_swamp_ravenous
-ORIENT:  float
-TAGS:    no_pool_fixup no_monster_gen patrolling
+TAGS:    no_pool_fixup no_monster_gen patrolling transparent
 DEPTH:   Swamp:1-4
 MONS:    necrophage / nothing w:4
 MONS:    rotting hulk / necrophage w:4
-MONS:    ghoul
+MONS:    ghoul w:19 / rotting hulk w:1
 KFEAT:   jlt = mangrove
 KFEAT:   % = shallow_water / .
+KFEAT:   ~ = deep_water
 SHUFFLE: jJ / lL, })
-SUBST:   JLT = w:4 t, } = }>, ) = <)>
+SUBST:   JLT = w:4 t, M = ~:4 t, } = }:20 >, ) = ):25 <>
+KPROP:   ~ = no_rtele_into
 : dgn.delayed_decay(_G, '%', 'any corpse')
 MAP
- TTtttttt{
-TtttWTWttt@
+ MMtttttt{
+MtttWTWttt@
 tt1W2w2W1tt
 t1WlTWt.W1t
 @%wlL}jJ.%t
@@ -291,30 +290,33 @@ t1WlTWt.W1t
 t%.lL)jJw%@
 t1W.tWTt.1t
 tt1W2w2W1tt
-TtttWTWtttT
- TTtttttTT
+MtttWTWtttM
+ MMtttttMM
 ENDMAP
 
 NAME:    hangedman_swamp_muck
-ORIENT:  float
-TAGS:    no_pool_fixup no_monster_gen patrolling
+TAGS:    no_pool_fixup no_monster_gen patrolling transparent
 DEPTH:   Swamp:1-4
-MONS:    slime creature, giant amoeba, brown ooze
+KMONS:   1 = slime creature
+KMONS:   2 = giant amoeba
+KMONS:   3 = brown ooze
 KFEAT:   t = mangrove
 KFEAT:   12 = shallow_water
+KFEAT:   ~ = deep_water
 SHUFFLE: })
-SUBST:   T = w:4 t, } = }>, ) = <)>
+SUBST:   T = w:4 t, M = ~:4 t, } = }:20 >, ) = ):25 <>
+KPROP:   ~ = no_rtele_into
 MAP
- TtttttttttT
-TttW3}2)3wttT
-Ttw.tt1tt.WtT
-Ttt..wtt..ttT
-Tttt.1t1.tttt
-Ttw.1wtw1.WTt
-TtWtttwtttWtt
-Tt2.tT.Tt.2tT
-Ttt..twW..ttT
-{Ttt.www.ttT
+ MtttttttttM
+MttW3}2)3wttM
+Mtw.tt1tt.WtM
+Mtt..wtt..ttM
+Mttt.1t1.tttt
+Mtw.1wtw1.WTt
+MtWtttwtttWtt
+Mt2.tT.Tt.2tM
+Ttt..twW..ttM
+{Ttt.www.ttM
  @WWwtTtwW@
 ENDMAP
 

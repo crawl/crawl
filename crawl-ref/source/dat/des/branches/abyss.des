@@ -91,29 +91,30 @@ ENDMAP
 # Inspired by a bug which turned Lemuel's castle moat into draconians,
 # a little outpost with either easier interior or exterior. ~HangedMan
 NAME:   hangedman_abyss_monster_moat
-TAGS:   abyss
-MONS:   fire bat / bat simulacrum / spectral bat / vampire bat, \
-        vampire, vampire knight / vampire mage w:7, \
-        crimson imp / white imp / shadow imp / iron imp, \
-        kobold demonologist, deep elf summoner / orc sorcerer w:7, \
-        tarantella / vampire mosquito w:4 / rock worm w:3 / yellow wasp w:8
+TAGS:   abyss no_monster_gen patrolling
+MONS:   fire bat w:12 / bat simulacrum / spectral bat / vampire bat
+MONS:   vampire, vampire knight / vampire mage w:7
+MONS:   crimson imp w:12 / white imp / shadow imp / iron imp
+MONS:   kobold demonologist, deep elf summoner / orc sorcerer w:7
+MONS:   worker ant w:40 / goliath beetle w:20 / rock worm / vampire mosquito
 KMONS:  8 = demonic crawler
-KMONS:  9 = emperor scorpion / spiny worm w:7
-KMONS:  D = chaos spawn w:7 / ugly thing w:4 / small abomination / shapeshifter w:2
-KMONS:  E = large abomination
-KMONS:  F = very ugly thing / glowing shapeshifter w:7
+KMONS:  9 = spiny worm / emperor scorpion w:7
+KMONS:  D = place:D:1 perm_ench:shapeshifter w:30 / \
+            small abomination w:15 / ugly thing w:15 / chaos spawn
+KMONS:  E = very ugly thing
+KMONS:  F = large abomination / glowing shapeshifter w:7
 SHUFFLE: 123/456/789/DEF
-SUBST:  C = xccv
+SUBST:  C = xccv, w : w:8 l:1 .:1, W : .:9 W:1
 MAP
  CCCC  CCCCCCCCCC  CCCC
-CC 1cccc+2....2+cccc1 CC
-C 11n|3.ccc++ccc.3|n11 C
-C 11c3|3c1 .. 1c3|3c11 C
-  11ccncc11..11ccncc11
-   11111111..11111111
-    111111 .. 111111
- CC                  CC
-  CCCCCC        CCCCCC
+CC 1cccc+2WWWW2+cccc1 CC
+C 11n|3Wccc++cccW3|n11 C
+C 11c3|3c1WwwW1c3|3c11 C
+C 11ccncc11ww11ccncc11 C
+C  11111111ww11111111  C
+C   111111 ww 111111   C
+.C                   .C.
+ .CC .C. CCCCCC .C. CC.
 ENDMAP
 
 NAME:   hangedman_abyss_sting
@@ -177,11 +178,10 @@ ENDMAP
 NAME:   hangedman_abyss_mock_shop
 TAGS:   abyss no_monster_gen patrolling
 KMONS:  1 = water elemental / nothing w:5
-KMONS:  2 = statue name:archer tile:mons_statue_archer \
-        n_adj; longbow ego:chaos . arrow q:40
+KMONS:  2 = stone golem
 KFEAT:  0 = abandoned_shop
 KFEAT:  1 = permadry_fountain
-SUBST:  x = xcv, . = ..W
+SUBST:  x = xcv, . = ...W
 MAP
      . .
   ..xx.xx..
@@ -655,19 +655,19 @@ KPROP:  l = no_cloud_gen
 SUBST:  5 = 23
 NSUBST: P = 1:O / 1:2
 MAP
-    .......
+    ...3...
 .ccccGclcGcccc.
  .cPccclcccPc.
   c+c5.l.5c+c
 .cc1ccclccc1c.
  .c4c5.l.5c4c.
-  c.ccclccc.c
+  c.c clc c.c
 .cc.c5.l.5c.cc.
- .c.c clc c.c.
+ .c.ccclccc.c.
   c.c5.l.5c.c
-.cc ncclccn cc.
+.cc.ncclccn.cc.
  .c+c2c2c2c+c.
-  c3  c1c  3c
+  c 3 c1c 3 c
 .cc3  + +  3cc.
  .ccccccccccc.
   .c c. .c c.
@@ -675,24 +675,24 @@ ENDMAP
 
 NAME:   hangedman_abyss_rune_macabre_mess
 TAGS:   abyss_rune allow_dup
-KMONS:  1 = giant orange brain spells:brain_feed;cause_fear;\
-            shadow_creatures;confuse;cantrip;teleport_self
+KMONS:  1 = giant orange brain
 KMONS:  2 = golden eye
 KMONS:  3 = flying skull
 KMONS:  4 = macabre mass hd:2 / macabre mass hd:3 / small abomination w:4
 KMONS:  5 = neqoxec
 KMONS:  6 = cacodemon
+KMONS:  7 = shining eye
 KMONS:  O = flying skull
 KITEM:  O = abyssal rune of Zot
 KFEAT:  n = iron_grate
-KFEAT:  123456. = shallow_water w:1 / . w:9
+KFEAT:  1234567. = shallow_water w:1 / . w:9
 SUBST:  c = ccccvb
 MAP
  .cccccc4@4cccccc.
  cc .. ccWcc .. cc
-.c 444. c5c .444 c.
+.c 44.. c5c ..44 c.
 cc44nnn.c+c.nnn44cc
-c 4nn2n.....n2nn4 c
+c 4nn7n.....n7nn4 c
 c54=13n.....n31=45c
 c 4nn2n.....n2nn4 c
 cc.4nnn.....nnn4.cc

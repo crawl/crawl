@@ -882,25 +882,26 @@ KFEAT:   0 = known zot trap
 KFEAT:   ^~ = teleport trap w:45 / zot trap w:4 / . w:1
 KFEAT:   _ = altar_xom
 KFEAT:   > = } mimic
-KPROP:   ^~> = no_rtele_into
-KFEAT:   - = runed_door
+KPROP:   ^~'"> = no_rtele_into
+MARKER:  - = lua:restrict_door()
 COLOUR:  ^~ = warp
-FTILE:   ^ = floor_rough_magenta
-FTILE:   ~ = floor_rough_lightmagenta
-NSUBST:  > = 1:} / 1:) / 1:] / *:>, 9 = 1:0 / *:9, T = 1:. / *:T
-SUBST:   d = tGmcc, c = cccccbbvvx, M = m`, ` = `:195 ':3 ":2
-SUBST:   } = }:80 >, ) = ):80 >, ] = ]:80 >, l = wl
-SHUFFLE: 56, 78, ^~, cm / xn
-MARKER:  ' = lua:fog_machine { cloud_type = "seething chaos", pow_max = 17, \
+FTILE:   ^' = floor_rough_magenta
+FTILE:   ~" = floor_rough_lightmagenta
+NSUBST:  > = 1:} / 1:) / 1:] / *:>, 9 = 1:0 / *:9
+NSUBST:  ^ = 1:' / *:^, ~ = 1:" / *:~
+SUBST:   d = tGmcc, c = cccccbbvvx, M = m`, ` = `:195 f:3 F:2
+SUBST:   } = }:80 >, ) = ):80 >, ] = ]:80 >, l = wl, - = +
+SHUFFLE: 56, 78, ^' / ~", cm / xn
+MARKER:  f = lua:fog_machine { cloud_type = "seething chaos", pow_max = 17, \
              delay_min = 450, delay_max = 700, size = 1, excl_rad = 0 }
-MARKER:  " = lua:fog_machine { cloud_type = "noxious fumes", pow_max = 17, \
+MARKER:  F = lua:fog_machine { cloud_type = "noxious fumes", pow_max = 17, \
              delay_min = 350, delay_max = 400, size_min = 2, size_max = 3}
 MAP
         mmmmmmm
-    @mmmm2.1.2mmmm@
-  @.cmMMmm+m+mmMMmc.@
-  ...clMMl```lMMlc...
- @c.c.```````````.c.c@
+     mmmm2.1.2mmmm
+  @@cmMMmm+m+mmMMmc@@
+  @..clMMl```lMMlc..@
+  c.c.```````````.c.c
  mmc.l````.c.````l.cmm
  mMl``c..`.>.`..c``lMm
  mMM``.>.`d..`d>.``MMm
@@ -914,10 +915,10 @@ mmmM``...`^~~^.d.``Mmmm
  mMM``.>d`..d`.>.``MMm
  mMl``c..`.>.`..c``lMm
  mmc.l````.c.````l.cmm
- @c.c.```````````.c.c@
-  ...clMMl```lMMlc...
-  @.cmMMmm+m+mmMMmmc.@
-    @mmmm8.7.8mmmm@
+  c.c.```````````.c.c
+  @..clMMl```lMMlc..@
+  @@cmMMmm+m+mmMMmc@@
+     mmmm8.7.8mmmm
         mmmmmmm
 ENDMAP
 

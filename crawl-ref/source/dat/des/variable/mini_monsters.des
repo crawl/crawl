@@ -1685,7 +1685,7 @@ MAP
 ENDMAP
 
 NAME:    hangedman_elemental_death_ray
-TAGS:    transparent
+TAGS:    transparent patrolling
 DEPTH:   D:13-
 MONS:    deep dwarf artificer ; wand of cold | wand of frost w:5 . \
          staff of fire w:15 | quarterstaff ego:flaming w:14 | rod of destruction w:1 . \
@@ -1702,19 +1702,12 @@ ITEM:    empty ebony casket, lamp of fire
 SHUFFLE: 12, 3df / 4eF
 FTILE:   fF'@ = floor_pebble_darkgray
 COLOUR:  fF'@ = white
-KFEAT:   + = runed_door
-{{
-  local fog = chained_fog_machine {
-                            cloud_type = 'freezing vapour', pow_min = 6, pow_max = 6,
-                            delay = 150, size_min = 2, size_max = 3, walk_dist = 0
-                          }
-  lua_marker('f', fog)
-  local fog = chained_fog_machine {
-                            cloud_type = 'flame', pow_min = 6, pow_max = 6,
-                            delay = 200, size_min = 2, size_max = 3, walk_dist = 0
-                          }
-  lua_marker('F', fog)
-}}
+MARKER:  f = lua:fog_machine {cloud_type = "freezing vapour", \
+             pow_min = 6, pow_max = 6, delay = 150, \
+             size_min = 2, size_max = 2, walk_dist = 1, start_clouds = 1 }
+MARKER:  F = lua:fog_machine {cloud_type = "flame", \
+             pow_min = 6, pow_max = 6, delay = 200, \
+             size_min = 2, size_max = 2, walk_dist = 1, start_clouds = 1 }
 MAP
  ......
 ..bbbb..
@@ -2174,58 +2167,58 @@ ENDMAP
 
 NAME:   hangedman_blasphemy
 DEPTH:  D:20-, Crypt
-MONS:   phoenix simulacrum / spectral holy swine
+MONS:   patrolling phoenix simulacrum / patrolling spectral holy swine
 MONS:   shedu zombie / apis skeleton, pearl dragon zombie
-MONS:   profane servitor, deep dwarf death knight
+MONS:   patrolling profane servitor, deep dwarf death knight
 COLOUR: G = lightgrey, t = w:5 lightgrey / w:5 darkgrey / brown, c = white
-FTILE:  t' = FLOOR_PEBBLE_BROWN
-TILE:   t = DNGN_TREE_DEAD, c = WALL_STONE_GRAY
+FTILE:  t' = floor_pebble_brown
+TILE:   t = dngn_tree_dead, c = wall_stone_gray
 KFEAT:  _ = altar_yredelemnul
-MARKER: _ = lua:fog_machine { cloud_type = "foul pestilence", pow_min = 5, \
-                               pow_max = 10, delay = 30, size = 1, walk_dist = 0 }
+MARKER: _ = lua:fog_machine { cloud_type = "foul pestilence", \
+                              pow_min = 5, pow_max = 10, delay = 30, \
+                              size = 1, walk_dist = 0, excl_rad = 0 }
+: set_feature_name("tree", "dead tree")
 MAP
-@@xxxxxxx
-@..t....xxxxx
-x...'''..c.2x
+@@xxxxxxxxxxxx
+@..t....xxxxxxx
+x...'''..c.2xxx
 xt...tc'.c..xxx
 x.'.11c'...G.2x
 x.'t1cc't.....x
 x.'ccc'G...ccxx
-x..'''G'''...x
-xx...t.'_ccc.x
- xcc...'cc3*.x
- x......c34.xx
- x2.G.c.c*.5x
- xxx..c...xxx
-   x2.xxxxx
-   xxxx
+x..'''G'''...xx
+xx...t.'_ccc.xx
+xxcc...'cc3*.xx
+xx......c34.xxx
+xx2.G.c.c*.5xxx
+xxxx..c...xxxx
+xxxx2.xxxxxxxx
+ xxxxxxxxxxx
 ENDMAP
 
 NAME:   hangedman_devilish_allure
-TAGS:   no_monster_gen no_item_gen patrolling
+TAGS:   no_monster_gen no_item_gen
 DEPTH:  D:12-26
 WEIGHT: 5
-KMONS:  S = silver statue
-KITEM:  S = superb_item / any good_item
-: if you.absdepth() < 18 then
-MONS:   lesser demon, common demon, efreet / large abomination / rakshasa
-: else
-MONS:   lesser demon / common demon, common demon, greater demon
+MONS:   silver statue, lesser demon, common demon
+MONS:   efreet / large abomination / rakshasa
+MONS:   shadow demon / green death / blizzard demon / balrug / cacodemon / \
+        hell beast / hellion / reaper / lorocyproca / tormentor
+KITEM:  | = superb_item / any good_item / any w:5
+: if you.absdepth() > 17 then
+SUBST:  2 = 23, 4 = 5
 : end
-KMASK:  ` = !no_monster_gen
-KMASK:  ` = !no_item_gen
-SUBST:  [ = [`
 MAP
 xxxxxxxxxxxx@@x
-@``xll.l.l....x
-@``xl.l.l.l..lx
-x``x.%vvvvvvvxx
-x{`m$*v11123vxx
-x`[mlS+11222vxx
-x(`m$*v11123vxx
-x``x.%vvvvvvvxx
-@``xl.l.l.l..lx
-@``xll.l.l....x
+@.lxlll.l.l...x
+@..xl..l.l.l.lx
+x.{xl%vvvvvvvvx
+x..m$*v22234vvx
+xl.m2|122333|vx
+x..m$*v22234vvx
+x.(xl%vvvvvvvvx
+@..xl..l.l.l.lx
+@.lxlll.l.l...x
 xxxxxxxxxxxx@@x
 ENDMAP
 
@@ -2738,6 +2731,7 @@ MAP
 ENDMAP
 
 NAME:   hangedman_glaring_trap
+TAGS:   extra transparent
 DEPTH:  D:12-
 WEIGHT: 5
 KMASK:  m = no_wall_fixup
@@ -2771,28 +2765,32 @@ x.'...1lx
 ENDMAP
 
 NAME:   hangedman_eye_storm
+TAGS:   no_monster_gen no_item_gen patrolling abyss
 DEPTH:  D:20-26
-TAGS:   no_monster_gen no_item_gen patrolling
-MONS:   golden eye, eye of draining, giant eyeball, \
-        eye of devastation / great orb of eyes / shining eye w:5
+MONS:   golden eye, eye of draining, giant eyeball
+MONS:   eye of devastation, great orb of eyes / shining eye w:5
+NSUBST: 5 = 2:5 / *:4 5:15
 KPROP:  13' = no_rtele_into
+: if you.branch() == "Abyss" then
+SUBST:  c = c:4 v:1 b:1
+: end
 MAP
      c++cccc
    ccc..c3'ccc
-  cc'c++c+m''cc
- cc1mm..c.mmm1cc
+  cc'c==c+m''cc
+ cc'mm..c.mmm'cc
  c'mm...c...mm'c
-cc'm....c..4.m'cc
-c+mm...mc+...mm'c
-c'm...mm4mm...m'c
-c'm.4.m|m2m.4.m+c
-c'm...mm|mm...m'c
-c+mm...mmm...mm'c
-cc'm.4.....4.m'cc
- c'mm...4...mm1c
- cc1mmm...mmm+cc
-  cc''mmmmm'1cc
-   ccc'+'+'ccc
+cc'm....c..5.m'cc
+c'mm...mc+...mm'c
+c1m...mm5mm...m'c
+c+m.4.m|m2m.5.m+c
+c'm...mm|mm...m1c
+c'mm...mmm...mm'c
+cc'm.5.....5.m'cc
+ c'mm...5...mm'c
+ cc'mmm...mmm'cc
+  cc''mmmmm''cc
+   ccc'1+''ccc
      ccccccc
 ENDMAP
 
@@ -2829,16 +2827,18 @@ xxxxaaaaaaaxxx..@
 xxxxxxxxxxxxxx.@@
 ENDMAP
 
+
 NAME:    hangedman_aerie_drop
 TAGS:    no_monster_gen no_pool_fixup
 DEPTH:   D:17-26
 WEIGHT:  3
-MONS:    patrolling spriggan air mage ; staff of air
-MONS:    patrolling spriggan rider ; spear ego:electrocution . buckler
+MONS:    patrolling spriggan air mage ; staff of air ident:type. robe
+MONS:    patrolling spriggan rider ; spear ego:electrocution ident:type . buckler . robe
 MONS:    lightning spire, sky beast, electric eel
 KMONS:   E = vapour w:10 / ball lightning w:6 / \
              generate_awake air elemental w:7 / air elemental w:1
-KITEM:   dT = any weapon good_item ego:electrocution, disc of storms
+KITEM:   dT = any weapon good_item ego:electrocution ident:type, \
+              disc of storms w:4 / lightning rod ident:type w:1
 KFEAT:   E = deep_water
 KFEAT:   d = shallow_water
 KFEAT:   T = teleport trap
@@ -3468,30 +3468,36 @@ ccccccccccccccccccc
 ENDMAP
 
 NAME:    hangedman_feature_mirror
-TAGS:    transparent mini_float extra no_monster_gen
+TAGS:    transparent mini_float extra allow_dup no_monster_gen
 TAGS:    no_item_gen no_trap_gen no_pool_fixup patrolling
-DEPTH:   D, Orc, Elf, Crypt, Snake, Zot
-WEIGHT:  10 (D), 1 (Zot), 4
-MONS:    fungus, plant, bush
-ITEM:    large rock q:1
-KFEAT:   A : stone_arch
-KFEAT:   D : any shop
-KFEAT:   ^ : known blade trap / known teleport trap
-SHUFFLE: ACCDDTVY^{[(<>, cccbvwtdGG123, 00099'
-SUBST:   .' : .:99 W:1
-NSUBST:  { = 1:{ / 1:}, [ = 1:} / 1:], ( = 1:} / 1:]
+DEPTH:   D, Orc, Elf, Crypt, Snake, Shoals, Geh, Coc, Dis, Tar, Zot
+WEIGHT:  10 (D), 1 (Geh, Coc, Dis, Tar, Zot), 4
+KFEAT:   A = stone_arch
+KFEAT:   D = any shop
+KFEAT:   ^ : known blade trap / known teleport trap / known shaft trap
+KFEAT:   Z = known zot trap
+SUBST:   A : C:20 D:20 ATVY^{[(<>, b : c:30 G:20 bvwtdGG123, 0 : 0:3 9:2 ':1
+SUBST:   .' : .:99 W:1, [ : [], ( : ()
+NSUBST:  { = 1:{ / 1:}, [ = 1:[ / 1:(, ] = 1:[ / 1:], ( = 1:] / 1:), ) = 1:( / 1:)
 : if you.branch() == "D" then
 :    if you.absdepth() < 2 then
-SUBST:   CD[{^ : T, 9 = 0
+SUBST:   CDY[{^ = T, 9 : 0'
 :    elseif you.absdepth() < 5 then
-SUBST:   CD : T, 9 = 0
+SUBST:   CDY = T, 9 : 0'
 :    elseif you.absdepth() > 20 then
 MARKER:  A = lua:props_marker { portal=1 }
 :    end
 : elseif you.branch() == "Orc" then
-SUBST:   G = I
+SUBST:   G = I, t23 = 1:9 I:1
+: elseif you.branch() == "Geh" or you.branch() == "Coc"
+: or you.branch() == "Dis" or you.branch() == "Tar" then
+SUBST:   DTV : Y:9 ^:1, t123 : G:9 ^:1, b : c
+: elseif you.branch() == "Crypt" then
+SUBST:   TV : VY, t123 : c
 : elseif you.branch() == "Crypt" or you.branch() == "Zot" then
-SUBST:   D = V
+SUBST:   D : V:9 Z:1, ^ : ^Z, t123 : G:9 Z:1
+: else
+SUBST:   A = T
 : end
 MAP
 ...
