@@ -1375,14 +1375,14 @@ static bool _tso_holy_revenge()
         && ((is_evil_god(you.religion) && one_chance_in(6))
             || one_chance_in(8)))
     {
-        const char *revenge;
+        string revenge;
 
         if (is_evil_god(you.religion))
-            revenge = _get_tso_speech("holy evil").c_str();
+            revenge = _get_tso_speech("holy evil");
         else
-            revenge = _get_tso_speech("holy other").c_str();
+            revenge = _get_tso_speech("holy other");
 
-        _tso_blasts_cleansing_flame(revenge);
+        _tso_blasts_cleansing_flame(revenge.c_str());
 
         return true;
     }
