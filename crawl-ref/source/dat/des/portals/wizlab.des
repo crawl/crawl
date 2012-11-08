@@ -1676,11 +1676,11 @@ KITEM:   f = book of spatial translocations w:5 / book of the warp w:5 / \
              manual of translocations w:5 / randbook disc:translocation numspells:5 / \
              randbook disc:translocation owner:Golubria numspells:7 \
              spells:shroud_of_golubria|passage_of_golubria
-KITEM:   g = ring of levitation / potion of levitation q:2 / \
+KITEM:   g = ring of flight / potion of flight q:2 / \
              wand of digging w:5 / lantern of shadows / \
              potion of speed w:5 / scroll of fog / potion of porridge / \
              any wand w:1 / any potion w:1 / any scroll w:1
-KITEM:   ! = pair of boots ego:levitation w:9 / pair of boots ego:running w:1 / \
+KITEM:   ! = pair of boots ego:flight w:9 / pair of boots ego:running w:1 / \
              pair of boots ego:stealth w:9 / pair of boots w:1
 KITEM:   $ = wand of disintegration
 KITEM:   % = any level:3, any level:3 / nothing
