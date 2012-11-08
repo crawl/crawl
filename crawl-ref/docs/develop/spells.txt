@@ -198,8 +198,8 @@ Air
 
 All spells involving the air specifically as an element.
 
-This includes: the act of levitation, the ability to repel missiles (presumably
-by manipulating air flow, though not currently flavoured as such), the creation
+This includes: flying, the ability to repel missiles (presumably by
+manipulating air flow, though not currently flavoured as such), the creation
 of clouds (in combination with the relevant element and the school of
 Conjurations), etc.
 

@@ -3903,7 +3903,7 @@ int mons_natural_regen_rate(monster* mons)
 void mons_check_pool(monster* mons, const coord_def &oldpos,
                      killer_type killer, int killnum)
 {
-    // Levitating/flying/clinging monsters don't make contact with the terrain.
+    // Flying/clinging monsters don't make contact with the terrain.
     if (!mons->ground_level())
         return;
 
