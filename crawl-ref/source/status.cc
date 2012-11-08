@@ -749,7 +749,7 @@ static void _describe_airborne(status_info* inf)
     const bool perm     = you.permanent_flight();
     const bool expiring = (!perm && dur_expiring(DUR_FLIGHT));
 
-    inf->light_colour = you.light_flight() ? BLUE : perm ? WHITE : MAGENTA;
+    inf->light_colour = you.tengu_flight() ? BLUE : perm ? WHITE : MAGENTA;
     inf->light_text   = "Fly";
     inf->short_text   = "flying";
     inf->long_text    = "You are flying.";
@@ -836,13 +836,6 @@ static void _describe_burden(status_info* inf)
         inf->long_text    = "You are burdened.";
         break;
     case BS_UNENCUMBERED:
-        if (you.species == SP_TENGU && you.is_flying())
-        {
-            if (you.travelling_light())
-                inf->long_text = "Your small burden allows quick flight.";
-            else
-                inf->long_text = "Your heavy burden is slowing your flight.";
-        }
         break;
     }
 }

@@ -2168,8 +2168,8 @@ int player_movement_speed(bool ignore_burden)
     if (you.religion == GOD_CHEIBRIADOS)
         mv += 2 + min(div_rand_round(you.piety, 20), 8);
 
-    // In the air, can fly fast (should be lightly burdened).
-    if (!ignore_burden && you.light_flight())
+    // Tengu can move slightly faster when flying.
+    if (you.tengu_flight())
         mv--;
 
     // Swiftness doesn't work in water.
@@ -2714,7 +2714,6 @@ int carrying_capacity(burden_state_type bs)
 int burden_change(void)
 {
     const burden_state_type old_burdenstate = you.burden_state;
-    const bool was_flying_light = you.light_flight();
 
     you.burden = 0;
 
@@ -2764,14 +2763,6 @@ int burden_change(void)
     // wearing off).
     if (you.burden_state > old_burdenstate)
         interrupt_activity(AI_BURDEN_CHANGE);
-
-    const bool is_flying_light = you.light_flight();
-
-    if (is_flying_light != was_flying_light)
-    {
-        mpr(is_flying_light ? "You feel quicker in the air."
-                            : "You feel heavier in the air.");
-    }
 
     return you.burden;
 }
@@ -5358,12 +5349,10 @@ void float_player()
         mprf("Your tail turns into legs as you fly out of the water.");
         merfolk_stop_swimming();
     }
-    else if (you.light_flight())
+    else if (you.tengu_flight())
         mpr("You swoop lightly up into the air.");
     else
         mpr("You fly up into the air.");
-
-    burden_change();
 
     // The player hasn't actually taken a step, but in this case, we want
     // neither the message, nor the location effect.
@@ -6585,16 +6574,10 @@ bool player::permanent_flight() const
     return you.attribute[ATTR_PERM_FLIGHT];
 }
 
-bool player::light_flight() const
+bool player::tengu_flight() const
 {
-    // Only Tengu get perks for flying light.
-    return (species == SP_TENGU
-            && is_flying() && travelling_light());
-}
-
-bool player::travelling_light() const
-{
-    return (burden < carrying_capacity(BS_UNENCUMBERED) * 70 / 100);
+    // Only Tengu get perks for flying.
+    return (species == SP_TENGU && is_flying());
 }
 
 bool player::nightvision() const
