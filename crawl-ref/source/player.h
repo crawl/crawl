@@ -435,8 +435,7 @@ public:
     bool is_fiery() const;
     bool is_skeletal() const;
 
-    bool light_flight() const;
-    bool travelling_light() const;
+    bool tengu_flight() const;
 
     // Dealing with beholders. Implemented in behold.cc.
     void add_beholder(const monster* mon, bool axe = false);
