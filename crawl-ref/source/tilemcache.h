@@ -45,7 +45,7 @@ public:
     enum
     {
         // The maximum number of values written in the info function.
-        MAX_INFO_COUNT = 3
+        MAX_INFO_COUNT = 4
     };
 
     virtual int info(tile_draw_info *dinfo) const { return 0; }
