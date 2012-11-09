@@ -218,7 +218,7 @@ BOOL:    poison
 
 NAME:    Staff of Wucad Mu
 OBJ:     OBJ_WEAPONS/WPN_STAFF
-PLUS:    0/0 # Set on wield
+PLUS:    +9/+9
 COLOUR:  ETC_MAGIC
 TILE:    spwpn_wucad_mu
 TILE_EQ: wucad_mu

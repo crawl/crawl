@@ -35,9 +35,8 @@ effect even on creatures immune to all commonly known poisons.
 %%%%
 Staff of Wucad Mu
 
-Its power varies in proportion to its wielder's intelligence. It can be evoked
-to restore large amounts of magical energy, but at the risk of damaging the
-user's mind.
+It can be evoked to restore large amounts of magical energy, but at the risk of
+damaging the user's mind. Its power depends on the wielder's evocations skill.
 %%%%
 Vampire's Tooth
 
