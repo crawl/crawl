@@ -1824,6 +1824,67 @@ MAP
 ............
 ENDMAP
 
+NAME:   lightli_giant_bouncers
+DEPTH:  D:20-27
+MONS:   fire giant
+MONS:   frost giant
+MONS:   titan
+MAP
+bbbbbbbbbbb
+b.......bbb
+b.bbbbb+bbb
+b.l1b...bbb
+b.bbb.212bb
+b.bbb.121bb
+b.l2b.....b
+b.bbbb.3..b
+b.b**+....b
+b=b|*bbbbbb
+.@nbbbbbbbb
+ENDMAP
+
+NAME:   lightli_church_of_beogh
+DEPTH:  D:5-19, Orc
+: if you.absdepth() < 9 then
+MONS: orc w:9 / orc warrior w:1
+: elseif you.absdepth() < 15 then
+MONS: orc w:6 / orc warrior w:2 / orc knight w:1
+: else
+MONS: orc w:8 / orc warrior w:4 / orc knight w:2 / orc warlord w:1
+: end
+: if you.absdepth() < 12 then
+MONS: orc priest
+MONS: orc wizard
+: else
+MONS: orc high priest
+MONS: orc wizard / orc sorcerer
+: end
+MONS: orc
+KFEAT: _ = altar_beogh
+MAP
+ccccccccc
+cc%*_*%cc
+ccc%%%ccc
+cccc+cccc
+c.II2II.c
+c.......c
+c1111111c
+c1313131c
+c1111111c
+c.I...I.c
+c.......c
+c.......c
+c.I...I.c
+c.......c
+c.......c
+c.I...I.c
+c.......c
+cc.....cc
+ccI...Icc
+ccc444ccc
+cccc=cccc
+ENDMAP
+
 ################################################################################
 #
 # <<4>> Demons and undead
@@ -2938,6 +2999,28 @@ xx.xx.xx.xx.xx
 xxxxxxxxxxxxxx
 ENDMAP
 
+NAME:   lightli_elemental_guards
+DEPTH:  D:8-12
+TAGS:   no_pool_fixup
+MONS:   earth elemental
+MONS:   air elemental
+KMONS:  F = fire elemental
+KFEAT:  F = lava
+KMONS:  W = water elemental
+KFEAT:  W = deep_water
+MAP
+xxxxxxxxxx
+x%x.....2x
+xx1......x
+x........x
+x...x*...x
+x...wl...x
+x........x
+xww....llx
+xWw....lFx
+xxxx==xxxx
+ENDMAP
+
 ###################################################################
 #
 # <<7>> Random monsters
@@ -3813,6 +3896,49 @@ MAP
 ..aba..
 .......
 .......
+ENDMAP
+
+NAME:   lightli_corner_chamber
+DEPTH:  D:2-
+TAGS:   no_rtele_into allow_dup
+MAP
+xxxxxxxxxxxx
+xxxxxxx....x
+xxxxx......+
+xxxx.......x
+xxx.....xxxx
+xx....xxxxxx
+xx...xmcccc
+x....xc$9$c
+x...xxc0*0c
+x...xxc$9$c
+x...xxccccc
+xx+xxx
+ENDMAP
+
+NAME:   lightli_gold_pyramid
+DEPTH:  D:15-27
+TAGS:   no_vmirror no_rotate
+COLOUR: .089+*|c = yellow
+FTILE:  .089+*|c = floor_sandstone
+TILE:   c = wall_tomb
+MAP
+       cnc
+      cc|cc
+      c***c
+     cc***cc
+     ccc+ccc
+    cc8.8.8cc
+    c.......c
+   cc.......cc
+   c9.9.9.9.9c
+  cc.........cc
+  c...........c
+ cc...........cc
+ c.............c
+cc0.0.0.0.0.0.0cc
+c...............c
+cccccccc=cccccccc
 ENDMAP
 
 ################################################################
