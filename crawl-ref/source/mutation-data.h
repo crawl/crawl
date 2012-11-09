@@ -576,8 +576,8 @@
    "Your genes go into a fast flux.",
    ""},
 
-  {"Your wild genetic ride slows down.",
-   "You feel genetically stable.",
+  {"You feel genetically stable.",
+   "Your wild genetic ride slows down.",
    ""},
 
   "evolution"
