@@ -761,7 +761,6 @@ void game_options::reset_options()
     mlist_targetting = false;
     msg_condense_repeats = true;
     msg_condense_short = true;
-    show_no_ctele = true;
 
     view_lock_x = true;
     view_lock_y = true;
@@ -2649,7 +2648,6 @@ void game_options::read_option_line(const string &str, bool runscript)
     else BOOL_OPTION(show_newturn_mark);
     else BOOL_OPTION(show_gold_turns);
     else BOOL_OPTION(show_game_turns);
-    else BOOL_OPTION(show_no_ctele);
     else INT_OPTION(hp_warning, 0, 100);
     else INT_OPTION_NAMED("mp_warning", magic_point_warning, 0, 100);
     else OLD_LIST_OPTION(note_monsters);

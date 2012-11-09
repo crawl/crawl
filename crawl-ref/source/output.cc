@@ -643,7 +643,7 @@ static void _get_status_lights(vector<status_light>& out)
             out.push_back(sl);
         }
     }
-    if (!allow_control_teleport(true) && Options.show_no_ctele)
+    if (!allow_control_teleport(true))
         out.push_back(status_light(RED,"-cTele"));
 }
 

@@ -67,7 +67,7 @@ The contents of this text are:
                 show_newturn_mark, show_gold_turns, show_game_turns,
                 item_stack_summary_minimum, list_rotten,
                 mlist_min_height, msg_min_height, msg_max_height,
-                messages_at_top, show_no_ctele, skill_focus,
+                messages_at_top, skill_focus,
                 mlist_allow_alternate_layout, mlist_targetting,
                 menu_colour, menu_colour_prefix_class, menu_colour_shops,
                 message_colour, force_more_message,
@@ -1552,10 +1552,6 @@ show_travel_trail = true
         will be highlighted. If a travel trail is currently being displayed,
         the Clear Map command (Ctrl-C) clears the trail instead of the map
         (pressing it a second time then clears the map as usual).
-
-show_no_ctele = true
-        If set, -cTele will be displayed in the status light area when
-        teleport control is not possible.
 
 skill_focus = true
         When set to true, skills cycle between disabled, enabled and focus in

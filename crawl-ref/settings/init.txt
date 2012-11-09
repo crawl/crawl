@@ -231,7 +231,6 @@
 # auto_drop_chunks           = (never | rotten | yes)
 # msg_condense_repeats   = false
 # msg_condense_short     = false
-# show_no_ctele          = false
 # skill_focus            = false
 # show_travel_trail       = true
 
