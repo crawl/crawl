@@ -2867,7 +2867,7 @@ static int _xom_miscast(const int max_level, const bool nasty,
 #endif
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, desc.c_str()), true);
 
-    if (level == 0 && one_chance_in(20))
+    if (level == 0 && one_chance_in(3))
     {
         god_speaks(GOD_XOM, _get_xom_speech(speech_str).c_str());
         _xom_zero_miscast();
