@@ -2696,7 +2696,7 @@ int carrying_capacity(burden_state_type bs)
     // otherwise - but there's no good way to rationalize here...  --sorear
     const int used_weight = max(you.body_weight(), you.body_weight(true));
 
-    int cap = 2 * used_weight + you.strength() * 300;
+    int cap = 2 * used_weight + you.strength() * 250 + 1000;
     // We are nice to the lighter species in that strength adds absolutely
     // instead of relatively to body weight. --dpeg
 
