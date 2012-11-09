@@ -5783,7 +5783,10 @@ player::~player()
 
 bool player::is_flying() const
 {
-    return duration[DUR_FLIGHT] || you.attribute[ATTR_PERM_FLIGHT];
+    return (duration[DUR_FLIGHT]
+            || you.attribute[ATTR_PERM_FLIGHT]
+            || form == TRAN_DRAGON
+            || form == TRAN_BAT);
 }
 
 bool player::is_banished() const
