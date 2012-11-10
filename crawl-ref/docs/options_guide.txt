@@ -786,7 +786,7 @@ explore_delay = -1
 
 travel_avoid_terrain = (shallow water | deep water)
         Prevent travel from routing through shallow water. By default,
-        this option is commented out. For merfolk and/or characters with
+        this option is disabled. For merfolk and/or characters with
         permanent flight,
              travel_avoid_terrain = shallow water, deep water
         will prevent travel or explore from going through any water.
@@ -860,11 +860,7 @@ explore_stop_pickup_ignore += <regex>, <regex>, ...
         (List option)
         If explore_stop has greedy_pickup or greedy_pickup_smart set,
         then picking up any items matching any of the regexes in the list
-        will *not* stop auto-explore. For example, by default curare-
-        tipped needles are automatically picked up to keep them out of
-        the hands of monsters, even if you don't have a blowgun, so to
-        not stop auto-explore because of this use
-        "explore_stop_pickup_ignore += curare".
+        will *not* stop auto-explore.
 
         This options has no affect on items which were thrown by the
         player.
@@ -883,14 +879,15 @@ explore_improved = false
         pathological cases causing a 13% increase.
 
 auto_sacrifice = false
-       If set to true, elligible items will be automatically sacrificed during
+       If set to true, eligible items will be automatically sacrificed during
        auto-explore.
        When set to "before_explore", if you are standing on items which can be
        sacricied when you start auto-explore, they will be automatically
        sacrificied.
        It can also be set to "prompt", in which case you will have a
        confirmation prompt before the items are sacrificed.
-       This option has no effect when explore_stop hasn't greedy_sacrificeable.
+       This option has no effect when explore_stop doesn't include
+       greedy_sacrificeable.
 
 travel_key_stop = true
         If set to true then travel will stop at any keypress.
@@ -1353,7 +1350,7 @@ show_gold_turns = true
         option is ignored. Use the tile_layout_priority option instead.
 
 show_game_turns = true
-        By default, the turn counter in the stat area display game turns, which
+        By default, the turn counter in the stat area displays game turns, which
         means absolute turns of constant duration. Most actions take one turn,
         but some are quicker (putting a ring, wielding a weapon, ...) and
         others are slower (ending a transformation, changing armour,...). The
@@ -1361,7 +1358,8 @@ show_game_turns = true
         count.
         When set to false, the turn counter will display player turns instead,
         which is the number of actions done, regardless of their duration. It
-        is this turn count which is used for scoring.
+        is this turn count which is used for scoring (and this turn count is
+        always visible on the % overview screen).
 
 item_stack_summary_minimum = 5
         If you step over a stack with this number or more of items in
@@ -2032,10 +2030,9 @@ note_hp_percent = 5
         hit points, a note will be taken. There is some code to avoid
         repetitions of notes based on the same incident.
 
-note_skill_levels = 1,5,13,27
+note_skill_levels = 1,5,10,15,27
         This sets which skill levels are noteworthy. It's a single line,
-        although you can use += as a continuation. The default is levels
-        1, 5, 10, 15, 27.
+        although you can use += as a continuation.
 
 note_all_skill_levels = false
         This is a shortcut for note_skill_levels = 1,2,..,27. If you set
@@ -2065,7 +2062,7 @@ note_messages += <regex>, <regex>, ...
 note_chat_messages = false
         If set to false, this will disable logging of chat messages
         from other players. (This setting only applies on the online
-        servers.)
+        servers).
 
 
 5-  Miscellaneous.
@@ -2209,17 +2206,10 @@ mon_glyph = <monster name or symbol> : <colour> <glyph>
 
         You can customise symbols based on monster names or their
         existing symbols. For instance, if you want to put elves on E
-        and efreeti on e, you can do this:
+        and elementals on e, you can do this:
 
              mon_glyph = e : E
              mon_glyph = E : e
-
-        If you want to change the symbol for a monster that uses a space
-        as a symbol, specify an underscore on the left:
-
-             mon_glyph = _ : #
-
-        (That changes shades to use #.)
 
         You can specify a different symbol, or a colour, or both, in any
         order. Here are more examples:
