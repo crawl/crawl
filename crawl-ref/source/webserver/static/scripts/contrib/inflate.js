@@ -2104,12 +2104,8 @@
                         do {
                                 z.next_out_index = 0;
                                 z.avail_out = bufsize;
-                                if ((z.avail_in === 0) && (!nomoreinput)) { // if buffer is empty and more input is available, refill it
-                                        z.next_in_index = 0;
-                                        nomoreinput = true;
-                                }
                                 err = z.inflate(flush);
-                                if (nomoreinput && (err == Z_BUF_ERROR))
+                                if (err == Z_BUF_ERROR)
                                         return -1;
                                 if (err != Z_OK && err != Z_STREAM_END)
                                         throw "inflating: " + z.msg;
@@ -2125,7 +2121,7 @@
                                         onprogress(z.next_in_index);
                                         lastIndex = z.next_in_index;
                                 }
-                        } while (z.avail_in > 0 || z.avail_out === 0);
+                        } while (z.avail_in > 0);
                         array = new Uint8Array(bufferSize);
                         buffers.forEach(function(chunk) {
                                 array.set(chunk, bufferIndex);
