@@ -2138,32 +2138,5 @@
                 };
         }
 
-        var inflater;
-
-        if (obj.zip)
-                obj.zip.Inflater = Inflater;
-        else {
-                inflater = new Inflater();
-                obj.addEventListener("message", function(event) {
-                        var message = event.data;
-
-                        if (message.append)
-                                obj.postMessage({
-                                        onappend : true,
-                                        data : inflater.append(message.data, function(current) {
-                                                obj.postMessage({
-                                                        progress : true,
-                                                        current : current
-                                                });
-                                        })
-                                });
-                        if (message.flush) {
-                                inflater.flush();
-                                obj.postMessage({
-                                        onflush : true
-                                });
-                        }
-                }, false);
-        }
-
+    obj.Inflater = Inflater;
 })(this);

@@ -1,6 +1,6 @@
 define(["exports", "jquery", "key_conversion", "chat", "comm",
         "contrib/jquery.cookie", "contrib/jquery.tablesorter",
-        "contrib/jquery.waitforimages"],
+        "contrib/jquery.waitforimages", "contrib/inflate"],
 function (exports, $, key_conversion, chat, comm) {
 
     // Need to keep this global for backwards compatibility :(
@@ -841,7 +841,15 @@ function (exports, $, key_conversion, chat, comm) {
             message_queue.unshift(msg);
     }
 
-
+    function decode_utf8(bufs, callback)
+    {
+        var b = new Blob(bufs);
+        var f = new FileReader();
+        f.onload = function(e) {
+            callback(e.target.result)
+        }
+        f.readAsText(b, "UTF-8");
+    }
 
     // Global functions for backwards compatibility (HACK)
     window.log = log;
@@ -919,6 +927,9 @@ function (exports, $, key_conversion, chat, comm) {
 
         do_layout();
 
+        var inflater = new Inflater();
+        var end_marker = new Uint8Array([0, 0, 255, 255]);
+
         if ("MozWebSocket" in window)
         {
             window.WebSocket = MozWebSocket;
@@ -928,6 +939,7 @@ function (exports, $, key_conversion, chat, comm) {
         {
             // socket_server is set in the client.html template
             socket = new WebSocket(socket_server);
+            socket.binaryType = "arraybuffer";
 
             socket.onopen = function ()
             {
@@ -944,6 +956,15 @@ function (exports, $, key_conversion, chat, comm) {
 
             socket.onmessage = function (msg)
             {
+                if (msg.data instanceof ArrayBuffer)
+                {
+                    var decompressed = [inflater.append(new Uint8Array(msg.data))];
+                    decompressed.push(inflater.append(end_marker));
+                    decode_utf8(decompressed, function (s) {
+                        enqueue_message(s);
+                    });
+                    return;
+                }
                 if (window.log_messages)
                 {
                     console.log("Message: " + msg.data);
