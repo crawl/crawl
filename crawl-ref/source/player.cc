@@ -3251,6 +3251,7 @@ void level_change(bool skip_attribute_increase)
                              break;
                         case SP_BLACK_DRACONIAN:
                              perma_mutate(MUT_BIG_WINGS, 1, "draconian growth");
+                             mpr("You can now fly continuously.", MSGCH_INTRINSIC_GAIN);
                              break;
                         default:
                              break;
@@ -6577,6 +6578,12 @@ bool player::cancellable_flight() const
 bool player::permanent_flight() const
 {
     return you.attribute[ATTR_PERM_FLIGHT];
+}
+
+bool player::racial_permanent_flight() const
+{
+    return (you.species == SP_TENGU && you.experience_level >= 15 ||
+            you.species == SP_BLACK_DRACONIAN && you.experience_level >= 14);
 }
 
 bool player::tengu_flight() const

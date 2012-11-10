@@ -617,6 +617,7 @@ public:
 
     bool cancellable_flight() const;
     bool permanent_flight() const;
+    bool racial_permanent_flight() const;
 
     bool paralysed() const;
     bool cannot_move() const;

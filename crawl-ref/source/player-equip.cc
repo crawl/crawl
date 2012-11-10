@@ -1052,7 +1052,7 @@ static void _unequip_armour_effect(item_def& item, bool meld)
     case SPARM_FLYING:
         if (you.attribute[ATTR_PERM_FLIGHT]
             && !player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_FLYING)
-            && (you.species != SP_TENGU || you.experience_level < 15))
+            && !you.racial_permanent_flight())
         {
             you.attribute[ATTR_PERM_FLIGHT] = 0;
             if (player_evokable_flight())

@@ -4959,7 +4959,6 @@ tileidx_t tileidx_ability(const ability_type ability)
         return TILEG_ABILITY_HELLFIRE;
     // Tengu, Draconians
     case ABIL_FLY:
-    case ABIL_FLY_II:
         return TILEG_ABILITY_FLIGHT;
     case ABIL_STOP_FLYING:
         return TILEG_ABILITY_FLIGHT_END;

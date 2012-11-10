@@ -1887,6 +1887,7 @@ static void tag_read_you(reader &th)
     count = unmarshallByte(th);
     ASSERT(count == (int)you.ability_letter_table.size());
 #if TAG_MAJOR_VERSION == 34
+    bool found_fly = false;
     bool found_stop_flying = false;
 #endif
     for (i = 0; i < count; i++)
@@ -1895,6 +1896,15 @@ static void tag_read_you(reader &th)
         ASSERT(a >= -1 && a != 0 && a < NUM_ABILITIES);
         you.ability_letter_table[i] = static_cast<ability_type>(a);
 #if TAG_MAJOR_VERSION == 34
+        if (you.ability_letter_table[i] == ABIL_FLY
+            || you.ability_letter_table[i] == ABIL_FLY_II)
+        {
+            if (found_fly)
+                you.ability_letter_table[i] = ABIL_NON_ABILITY;
+            else
+                you.ability_letter_table[i] = ABIL_FLY;
+            found_fly = true;
+        }
         if (you.ability_letter_table[i] == ABIL_EVOKE_STOP_LEVITATING
             || you.ability_letter_table[i] == ABIL_STOP_FLYING)
         {
