@@ -50,9 +50,7 @@ The contents of this text are:
                 runrest_ignore_message, runrest_stop_message,
                 runrest_ignore_poison, runrest_ignore_monster,
                 trapwalk_safe_hp, rest_wait_both, auto_exclude
-3-h     Floor items.
-                annotate_item_class, annotate_item_dropped
-3-i     Command Enhancements.
+3-h     Command Enhancements.
                 auto_list, auto_switch, easy_open, easy_unequip,
                 equip_unequip, easy_confirm, allow_self_target,
                 confirm_butcher, prefer_safe_chunks, easy_eat_chunks,
@@ -60,7 +58,7 @@ The contents of this text are:
                 prompt_for_swap, easy_quit_item_prompts,
                 easy_exit_menu, sort_menus, spell_slot, autofight_stop,
                 autofight_throw
-3-j     Message and Display Improvements.
+3-i     Message and Display Improvements.
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
                 status_caption_colour, enemy_hp_colour, clear_messages,
                 show_more, small_more, show_inventory_weights,
@@ -72,20 +70,20 @@ The contents of this text are:
                 menu_colour, menu_colour_prefix_class, menu_colour_shops,
                 message_colour, force_more_message,
                 msg_condense_repeats, msg_condense_short, show_travel_trail
-3-k     Missiles.
+3-j     Missiles.
                 fire_items_start, fire_order
-3-l     Message Channels.
+3-k     Message Channels.
                 plain, prompt, god, pray, duration, danger, food, warning,
                 recovery, talk, talk_visual, intrinsic_gain, mutation,
                 monster_spell, monster_enchant, friend_spell, friend_enchant,
                 monster_damage, rotten_meat, equipment, floor, multiturn,
                 examine, examine_filter, diagnostics, error, tutorial
-3-m     Inscriptions.
+3-l     Inscriptions.
                 autoinscribe, autoinscribe_artefacts, autoinscribe_cursed
-3-n     Macro related Options.
+3-m     Macro related Options.
                 flush.failure, flush.command, flush.message,
                 additional_macro_file, bindkey
-3-o     Tiles Options.
+3-n     Tiles Options.
                 tile_show_items, tile_skip_title, tile_menu_icons,
                 tile_player_col, tile_monster_col, tile_neutral_col,
                 tile_peaceful_col, tile_friendly_col, tile_plant_col,
@@ -985,20 +983,7 @@ auto_exclude += <monster name>, <monster name>, ...
         monster dies or wakes up while you are in sight, this exclusion
         is automatically removed again.
 
-3-h     Floor items.
-----------------
-
-You can search for items all around the dungeon with Ctrl-F. It accepts not
-only the real name but can also take certain "annotations":
-
-annotate_item_class = false
-        Automatically annotates items with their object class, e.g. weapon
-        or wand, for floor item searching.
-
-annotate_item_dropped = false
-        Annotates dropped items with {dropped} for floor searching.
-
-3-i     Command Enhancements.
+3-h     Command Enhancements.
 -----------------------------
 
 auto_list = true
@@ -1275,7 +1260,7 @@ autofight_throw_nomove = true
         rather than ===hit_closest; this is usually bound to shift-Tab.
 
 
-3-j     Messages and Display Enhancements.
+3-i     Messages and Display Enhancements.
 ------------------------------------------
 
 hp_warning = 10
@@ -1557,7 +1542,7 @@ skill_focus = true
         and disabled. Setting the option to "toggle" adds a toggle to the skill
         screen to change the behaviour in-game.
 
-3-k     Missiles.
+3-j     Missiles.
 -----------------
 
 fire_items_start = a
@@ -1589,7 +1574,7 @@ fire_order += inscribed
 
 (See also pickup_thrown in 3-a.)
 
-3-l     Message Channels.
+3-k     Message Channels.
 -------------------------
 
 Crawl communicates to the players with its message window. Every message
@@ -1644,7 +1629,7 @@ option).
 The only multi-colour channels currently are monster_damage and god. All
 other channels are defaulted to on.
 
-3-m     Inscriptions.
+3-l     Inscriptions.
 ---------------------
 
 See the "Inscriptions" section of the crawl manual for more information
@@ -1675,7 +1660,7 @@ autoinscribe_cursed = true
         Automatically inscribes items with "was cursed" when using a scroll of
         remove curse.
 
-3-n     Macro related Options.
+3-m     Macro related Options.
 ------------------------------
 
 flush.failure = true
@@ -1707,7 +1692,7 @@ bindkey = [^D] CMD_BUTCHER
         bind the same command to different keys.
         For a full list of possible commands, see keybind.txt.
 
-3-o     Tiles Options.
+3-n     Tiles Options.
 ----------------------
 In non-tile games the tile options are ignored.
 
