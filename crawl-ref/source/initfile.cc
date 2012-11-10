@@ -2412,6 +2412,8 @@ void game_options::read_option_line(const string &str, bool runscript)
         // option.  Let's try to keep to less rude ones, though.
         else if (field == "kraut" || field == "jerry" || field == "fritz")
             lang = LANG_KRAUT;
+        else if (field == "futhark" || field == "runes" || field == "runic")
+            lang = LANG_FUTHARK;
 /*
         else if (field == "cyr" || field == "cyrillic" || field == "commie" || field == "кириллица")
             lang = LANG_CYRILLIC;

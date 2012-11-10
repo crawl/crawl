@@ -415,7 +415,7 @@
 # language = pl|fr|zh|ko|fi|ru|el|da|li|pt|de|lv|cs|hu
 #
 # Joke translations (complete!).
-# language = dwarven|jagerkin|kraut|wide
+# language = dwarven|jagerkin|kraut|runes|wide
 #
 # colour.lightgray = black
 # colour.lightcyan = cyan

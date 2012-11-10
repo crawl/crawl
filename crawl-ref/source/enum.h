@@ -33,6 +33,7 @@ enum lang_t
     LANG_JAGERKIN,
     LANG_KRAUT,
     LANG_CYRILLIC,
+    LANG_FUTHARK,
     LANG_WIDE,
 };
 
