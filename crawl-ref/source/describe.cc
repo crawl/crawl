@@ -356,29 +356,13 @@ static vector<string> _randart_propnames(const item_def& item,
     return propnames;
 }
 
-// Remove randart auto-inscription.  Do it once for each property
-// string, rather than the return value of artefact_auto_inscription(),
-// in case more information about the randart has been learned since
-// the last auto-inscription.
-void trim_randart_inscrip(item_def& item)
-{
-    vector<string> propnames = _randart_propnames(item, true);
-
-    for (unsigned int i = 0; i < propnames.size(); ++i)
-    {
-        item.inscription = replace_all(item.inscription, propnames[i]+",", "");
-        item.inscription = replace_all(item.inscription, propnames[i],     "");
-    }
-    trim_string(item.inscription);
-}
-
 void trim_god_gift_inscrip(item_def& item)
 {
     item.inscription = replace_all(item.inscription, "god gift, ", "");
     item.inscription = replace_all(item.inscription, "god gift", "");
 }
 
-string artefact_auto_inscription(const item_def& item)
+string artefact_inscription(const item_def& item)
 {
     if (item.base_type == OBJ_BOOKS)
         return "";
@@ -390,17 +374,6 @@ string artefact_auto_inscription(const item_def& item)
     if (!insc.empty() && insc[insc.length() - 1] == ',')
         insc.erase(insc.length() - 1);
     return insc;
-}
-
-void add_autoinscription(item_def &item)
-{
-    if (!is_artefact(item) || !Options.autoinscribe_artefacts)
-        return;
-
-    // Remove previous randart inscription.
-    trim_randart_inscrip(item);
-
-    add_inscription(item, artefact_auto_inscription(item));
 }
 
 void add_inscription(item_def &item, string inscrip)
@@ -2381,7 +2354,6 @@ static command_type _get_action(int key, vector<command_type> actions)
         act_key[CMD_QUAFF]              = 'q';
         act_key[CMD_DROP]               = 'd';
         act_key[CMD_INSCRIBE_ITEM]      = 'i';
-        act_key[CMD_MAKE_NOTE]          = 'a'; //autoinscribe
         act_key[CMD_ADJUST_INVENTORY]   = '=';
         act_key_init = false;
     }
@@ -2393,22 +2365,6 @@ static command_type _get_action(int key, vector<command_type> actions)
             return *at;
     }
     return CMD_NO_CMD;
-}
-
-static bool _need_autoinscribe(item_def &item)
-{
-    // Only allow autoinscription if we don't have all the text already.
-    if (is_artefact(item))
-    {
-        string ainscrip = artefact_auto_inscription(item);
-        if (!ainscrip.empty()
-            && (item.inscription.empty()
-                || item.inscription.find(ainscrip) == string::npos))
-        {
-            return true;
-        }
-    }
-    return false;
 }
 
 //---------------------------------------------------------------
@@ -2497,9 +2453,6 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe)
     if (allow_inscribe)
         actions.push_back(CMD_INSCRIBE_ITEM);
 
-    if (_need_autoinscribe(item))
-        actions.push_back(CMD_MAKE_NOTE); //autoinscribe
-
     static bool act_str_init = true; // Does act_str needs to be initialised?
     static map<command_type, string> act_str;
     if (act_str_init)
@@ -2517,7 +2470,6 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe)
         act_str[CMD_QUAFF]              = "(q)uaff";
         act_str[CMD_DROP]               = "(d)rop";
         act_str[CMD_INSCRIBE_ITEM]      = "(i)nscribe";
-        act_str[CMD_MAKE_NOTE]          = "(a)utoinscribe";
         act_str[CMD_ADJUST_INVENTORY]   = "(=)adjust";
         act_str_init = false;
     }
@@ -2632,9 +2584,6 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe)
     case CMD_INSCRIBE_ITEM:
         inscribe_item(item, false);
         break;
-    case CMD_MAKE_NOTE:
-        add_autoinscription(item);
-        break;
     case CMD_ADJUST_INVENTORY:
         _adjust_item(item);
         return false;
@@ -2710,21 +2659,13 @@ void inscribe_item(item_def &item, bool msgwin)
 
     const bool is_inscribed = !item.inscription.empty();
 
-    bool need_autoinscribe = _need_autoinscribe(item) && msgwin;
     string prompt;
     int keyin;
 
-    // Don't prompt for whether to inscribe in the first place unless
-    // autoinscribing or clearing an existing inscription become an option.
-    if (need_autoinscribe && !is_inscribed)
-        prompt = "You can (i)nscribe or (a)utoinscribe.";
-    else if (!need_autoinscribe && is_inscribed)
+    if (is_inscribed)
+    {
         prompt = "You can (a)dd to, (r)eplace or (c)lear the inscription.";
-    else if (need_autoinscribe && is_inscribed)
-        prompt = "You can (a)dd to, (r)eplace, (c)lear the inscription "
-                 "or (A)utoinscribe.";
 
-    if (prompt != "")
         if (msgwin)
             mpr(prompt.c_str(), MSGCH_PROMPT);
         else
@@ -2736,11 +2677,12 @@ void inscribe_item(item_def &item, bool msgwin)
             if (crawl_state.game_is_hints()
                 && wherey() <= get_number_of_lines() - 5)
             {
-                hints_inscription_info(need_autoinscribe, prompt);
+                hints_inscription_info(prompt);
             }
         }
+    }
 
-    keyin = (prompt != "" ? getch_ck() : 'i');
+    keyin = (is_inscribed ? getch_ck() : 'i');
     if (keyin != 'A')
         keyin = tolower(keyin);
     switch (keyin)
@@ -2748,26 +2690,12 @@ void inscribe_item(item_def &item, bool msgwin)
     case 'c':
         item.inscription.clear();
         break;
-    case 'A':
-        if (need_autoinscribe)
-        {
-            add_autoinscription(item);
-            break;
-        }
-        // If autoinscription is impossible, prompt for an inscription instead.
-    case 'a':
-        if (!is_inscribed)
-        {
-            add_autoinscription(item);
-            break;
-        }
-        // If it is inscribed, prompt for an inscription instead.
     case 'i':
     case 'r':
     {
         if (!is_inscribed)
             prompt = "Inscribe with what? ";
-        else if (keyin == 'i' || keyin == 'a' || keyin == 'A')
+        else if (keyin == 'i')
             prompt = "Add what to inscription? ";
         else
             prompt = "Replace inscription with what? ";

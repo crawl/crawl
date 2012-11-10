@@ -358,7 +358,6 @@ void autoid_unrand(item_def &item)
         return;
 
     set_ident_flags(item, ISFLAG_IDENT_MASK | ISFLAG_NOTED_ID);
-    add_autoinscription(item);
 }
 
 unique_item_status_type get_unique_item_status(int art)
@@ -1347,7 +1346,6 @@ void artefact_wpn_learn_prop(item_def &item, artefact_prop_type prop)
         return;
 
     known_vec[prop] = static_cast<bool>(true);
-    add_autoinscription(item);
 }
 
 static string _get_artefact_type(const item_def &item, bool appear = false)
@@ -2055,7 +2053,6 @@ bool make_item_unrandart(item_def &item, int unrand_index)
         && !strcmp(unrand->name, unrand->unid_name))
     {
         set_ident_flags(item, ISFLAG_IDENT_MASK | ISFLAG_NOTED_ID);
-        add_autoinscription(item);
     }
 
     return true;

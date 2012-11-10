@@ -588,15 +588,6 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
     int total_cost = 0;
 
     vector<int> stock = _shop_get_stock(shopidx);
-
-    // Autoinscribe randarts in the shop.
-    for (unsigned int i = 0; i < stock.size(); i++)
-    {
-        item_def& item = mitm[stock[i]];
-        if (Options.autoinscribe_artefacts && is_artefact(item))
-            item.inscription = artefact_auto_inscription(item);
-    }
-
     vector<bool> selected;
     vector<bool> in_list;
 

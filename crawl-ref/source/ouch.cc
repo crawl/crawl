@@ -1448,7 +1448,6 @@ void _end_game(scorefile_entry &se)
             continue;
         set_ident_flags(you.inv[i], ISFLAG_IDENT_MASK);
         set_ident_type(you.inv[i], ID_KNOWN_TYPE);
-        add_autoinscription(you.inv[i]);
     }
 
     _delete_files();

@@ -4147,10 +4147,7 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
         item.plus2 = props["plus2"].get_int();
     }
     if (props.exists("ident"))
-    {
         item.flags |= props["ident"].get_int();
-        add_autoinscription(item);
-    }
     if (props.exists("unobtainable"))
         item.flags |= ISFLAG_UNOBTAINABLE;
 

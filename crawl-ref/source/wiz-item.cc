@@ -225,11 +225,6 @@ void wizard_create_spec_object()
             destroy_item(thing_created);
             return;
         }
-        if (Options.autoinscribe_artefacts && is_artefact(mitm[thing_created]))
-        {
-            mitm[thing_created].inscription
-                = artefact_auto_inscription(mitm[thing_created]);
-        }
     }
 
     // Deck colour (which control rarity) already set.
@@ -426,9 +421,6 @@ static void _tweak_randart(item_def &item)
                              val);
         break;
     }
-
-    if (Options.autoinscribe_artefacts)
-        item.inscription = artefact_auto_inscription(item);
 }
 
 void wizard_tweak_object(void)
@@ -668,11 +660,6 @@ void wizard_make_object_randart()
             return;
         }
 
-        // need to trim before the object changes, or else the old properties
-        // won't be removed
-        if (Options.autoinscribe_artefacts)
-            trim_randart_inscrip(item);
-
         item.special = 0;
         item.flags  &= ~ISFLAG_RANDART;
         item.props.clear();
@@ -712,8 +699,6 @@ void wizard_make_object_randart()
         do_curse_item(item, true);
     else
         do_uncurse_item(item, false);
-
-    add_autoinscription(item);
 
     // If it was equipped, requip the item.
     if (eq != EQ_NONE)
@@ -756,8 +741,6 @@ void wizard_identify_pack()
         {
             set_ident_type(item, ID_KNOWN_TYPE);
             set_ident_flags(item, ISFLAG_IDENT_MASK);
-            if (Options.autoinscribe_artefacts && is_artefact(item))
-                item.inscription = artefact_auto_inscription(item);
         }
     }
     you.wield_change  = true;
