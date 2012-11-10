@@ -289,7 +289,6 @@
 #
 # autoinscribe += bad_item.*potion:!q
 # autoinscribe += potion.*mutation:!q
-# autoinscribe_artefacts = false
 # autoinscribe_cursed = false
 # autoinscribe += fruit:!e
 

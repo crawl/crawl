@@ -3907,7 +3907,7 @@ void hints_describe_item(const item_def &item)
     display_tagged_block(broken);
 }
 
-void hints_inscription_info(bool autoinscribe, string prompt)
+void hints_inscription_info(string prompt)
 {
     // Don't print anything if there's not enough space.
     if (wherey() >= get_number_of_lines() - 1)
@@ -3917,7 +3917,7 @@ void hints_inscription_info(bool autoinscribe, string prompt)
     text << "<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
     bool longtext = false;
-    if (wherey() <= get_number_of_lines() - (autoinscribe ? 10 : 8))
+    if (wherey() <= get_number_of_lines() - 8)
     {
         text << "\n"
          "Inscriptions are a powerful concept of Dungeon Crawl.\n"
@@ -3928,14 +3928,6 @@ void hints_inscription_info(bool autoinscribe, string prompt)
         longtext = true;
     }
 
-    if (autoinscribe && wherey() <= get_number_of_lines() - 6)
-    {
-        text << "\n"
-         "Artefacts can be autoinscribed to give a brief overview of their \n"
-         "known properties.";
-
-        longtext = true;
-    }
     text << "\n"
        "(In the main screen, press <w>?6</w> for more information.)\n";
     text << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";

@@ -311,9 +311,6 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld)
     if (proprt[ARTP_NOISES])
         you.attribute[ATTR_NOISES] = 1;
 
-    if (!alreadyknown)
-        add_autoinscription(item);
-
     if (!alreadyknown && dangerous)
     {
         // Xom loves it when you use an unknown random artefact and
@@ -540,8 +537,6 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
             if (!was_known)
             {
                 item.flags |= ISFLAG_NOTED_ID;
-
-                add_autoinscription(item);
 
                 // Make a note of it.
                 take_note(Note(NOTE_ID_ITEM, 0, 0, item.name(DESC_A).c_str(),

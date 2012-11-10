@@ -2667,7 +2667,6 @@ bool maybe_id_weapon(item_def &item, const char *msg)
         set_ident_flags(item, id);
         if (do_art_brand)
             artefact_wpn_learn_prop(item, ARTP_BRAND);
-        add_autoinscription(item);
         if (msg)
             mprf("%s%s", msg, item.name(DESC_INVENTORY_EQUIP).c_str());
         you.wield_change = true;

@@ -18,6 +18,7 @@ enum tag_minor_version
     TAG_MINOR_TRAPS_DETERM,        // Searching for traps is deterministic.
     TAG_MINOR_ACTION_THROW,        // Store base type of throw objects.
     TAG_MINOR_TEMP_MUTATIONS,      // Enable transient mutations
+    TAG_MINOR_AUTOINSCRIPTIONS,    // Artefact inscriptions are added on the fly
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
 };

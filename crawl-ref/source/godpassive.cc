@@ -479,7 +479,6 @@ bool god_id_item(item_def& item, bool silent)
         if (ided & ISFLAG_KNOW_TYPE)
             set_ident_type(item, ID_KNOWN_TYPE);
         set_ident_flags(item, ided);
-        add_autoinscription(item);
 
         if (item.props.exists("needs_autopickup") && is_useless_item(item))
             item.props.erase("needs_autopickup");

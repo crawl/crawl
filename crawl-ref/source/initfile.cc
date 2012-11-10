@@ -1091,7 +1091,6 @@ void game_options::reset_options()
     note_monsters.clear();
     note_messages.clear();
     autoinscriptions.clear();
-    autoinscribe_artefacts = true;
     autoinscribe_cursed = true;
     note_items.clear();
     note_skill_levels.reset();
@@ -2895,7 +2894,6 @@ void game_options::read_option_line(const string &str, bool runscript)
         else
             autoinscriptions.push_back(entry);
     }
-    else BOOL_OPTION(autoinscribe_artefacts);
     else BOOL_OPTION(autoinscribe_cursed);
 #ifndef DGAMELAUNCH
     else if (key == "map_file_name")

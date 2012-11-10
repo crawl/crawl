@@ -2587,6 +2587,24 @@ void unmarshallItem(reader &th, item_def &item)
         artefact_fixup_props(item);
 
 #if TAG_MAJOR_VERSION == 34
+    // Remove artefact autoinscriptions from the saved inscription.
+    if (th.getMinorVersion() < TAG_MINOR_AUTOINSCRIPTIONS && is_artefact(item))
+    {
+        string art_ins = artefact_inscription(item);
+        if (!art_ins.empty())
+        {
+            item.inscription = replace_all(item.inscription, art_ins + ",", "");
+            item.inscription = replace_all(item.inscription, art_ins, "");
+
+            // Avoid q - the ring "Foo" {+Fly rF+, +Lev rF+}
+            art_ins = replace_all(art_ins, "+Fly", "+Lev");
+            item.inscription = replace_all(item.inscription, art_ins + ",", "");
+            item.inscription = replace_all(item.inscription, art_ins, "");
+
+            trim_string(item.inscription);
+        }
+    }
+
     if (item.base_type == OBJ_POTIONS && item.sub_type == POT_WATER)
         item.sub_type = POT_CONFUSION;
 #endif

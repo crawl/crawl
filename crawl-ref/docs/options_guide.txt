@@ -79,7 +79,7 @@ The contents of this text are:
                 monster_damage, rotten_meat, equipment, floor, multiturn,
                 examine, examine_filter, diagnostics, error, tutorial
 3-l     Inscriptions.
-                autoinscribe, autoinscribe_artefacts, autoinscribe_cursed
+                autoinscribe, autoinscribe_cursed
 3-m     Macro related Options.
                 flush.failure, flush.command, flush.message,
                 additional_macro_file, bindkey
@@ -1652,9 +1652,6 @@ autoinscribe += <regex>:<inscription>
 
         Unlike most ordered list options, multiple matching entries all have
         an effect: the order only determines the order of the inscriptions.
-
-autoinscribe_artefacts = true
-        Automatically inscribes identified artefacts with their properties.
 
 autoinscribe_cursed = true
         Automatically inscribes items with "was cursed" when using a scroll of

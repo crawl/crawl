@@ -21,6 +21,7 @@
 #include "artefact.h"
 #include "colour.h"
 #include "decks.h"
+#include "describe.h"
 #include "food.h"
 #include "goditem.h"
 #include "invent.h"
@@ -294,6 +295,13 @@ string item_def::name(description_level_type descrip, bool terse, bool ident,
 
         if (tried)
             insparts.push_back(tried_str);
+
+        if (is_artefact(*this))
+        {
+            string part = artefact_inscription(*this);
+            if (!part.empty())
+                insparts.push_back(part);
+        }
 
         if (with_inscription && !(inscription.empty()))
             insparts.push_back(inscription);

@@ -76,7 +76,6 @@ int identify(int power, int item_slot, string *pre_msg)
 
         set_ident_type(item, ID_KNOWN_TYPE);
         set_ident_flags(item, ISFLAG_IDENT_MASK);
-        add_autoinscription(item);
 
         if (is_deck(item) && !top_card_is_known(item))
             deck_identify_first(item_slot);
