@@ -958,21 +958,31 @@ function (exports, $, key_conversion, chat, comm) {
             {
                 if (msg.data instanceof ArrayBuffer)
                 {
-                    var decompressed = [inflater.append(new Uint8Array(msg.data))];
-                    decompressed.push(inflater.append(end_marker));
+                    var data = new Uint8Array(msg.data.byteLength + 4);
+                    data.set(new Uint8Array(msg.data), 0);
+                    data.set([0, 0, 255, 255], msg.data.byteLength);
+                    var decompressed = [inflater.append(data)];
+                    if (decompressed[0] === -1)
+                    {
+                        console.log("decompression error!");
+                        var x = inflater.append(data);
+                    }
                     decode_utf8(decompressed, function (s) {
+                        if (window.log_messages)
+                            console.log("Message: " + s);
+                        if (window.log_message_size)
+                            console.log("Message size: " + s.length);
+
                         enqueue_message(s);
                     });
                     return;
                 }
+
                 if (window.log_messages)
-                {
                     console.log("Message: " + msg.data);
-                }
                 if (window.log_message_size)
-                {
                     console.log("Message size: " + msg.data.length);
-                }
+
                 enqueue_message(msg.data);
             };
 
