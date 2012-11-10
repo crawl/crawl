@@ -5352,6 +5352,9 @@ void float_player()
     else
         mpr("You fly up into the air.");
 
+    if (you.species == SP_TENGU)
+        you.redraw_evasion = true;
+
     // The player hasn't actually taken a step, but in this case, we want
     // neither the message, nor the location effect.
     you.check_clinging(true);
@@ -5376,7 +5379,8 @@ bool land_player()
         return false;
 
     mpr("You float gracefully downwards.");
-    burden_change();
+    if (you.species == SP_TENGU)
+        you.redraw_evasion = true;
     you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 0;
     // Re-enter the terrain.
     move_player_to_grid(you.pos(), false, true);
