@@ -221,9 +221,6 @@ static const ability_def Ability_List[] =
     { ABIL_STOP_FLYING, "Stop Flying", 0, 0, 0, 0, 0, ABFLAG_NONE},
     { ABIL_HELLFIRE, "Hellfire", 0, 150, 200, 0, 0, ABFLAG_NONE},
 
-    // FLY_II used to have ABFLAG_EXHAUSTION, but that's somewhat meaningless
-    // as exhaustion's only (and designed) effect is preventing Berserk. - bwr
-    { ABIL_FLY_II, "Fly", 0, 0, 25, 0, 0, ABFLAG_NONE},
     { ABIL_DELAYED_FIREBALL, "Release Delayed Fireball",
       0, 0, 0, 0, 0, ABFLAG_INSTANT},
     { ABIL_MUMMY_RESTORATION, "Self-Restoration",
@@ -988,12 +985,8 @@ talent get_talent(ability_type ability, bool check_confused)
             failure -= 20;
         break;
 
-    case ABIL_FLY:              // this is for tengu {dlb}
+    case ABIL_FLY:
         failure = 45 - (3 * you.experience_level);
-        break;
-
-    case ABIL_FLY_II:           // this is for draconians {dlb}
-        failure = 45 - (you.experience_level + you.strength());
         break;
 
     case ABIL_TRAN_BAT:
@@ -1273,7 +1266,7 @@ void no_ability_msg()
 {
     // Give messages if the character cannot use innate talents right now.
     // * Vampires can't turn into bats when full of blood.
-    // * Permanent flying (Tengu) cannot be turned off.
+    // * Tengu can't start to fly if already flying.
     if (you.species == SP_VAMPIRE && you.experience_level >= 3)
         mpr("Sorry, you're too full to transform right now.");
     else if (you.species == SP_TENGU && you.experience_level >= 5
@@ -1535,21 +1528,6 @@ static bool _check_ability_possible(const ability_def& abil,
     case ABIL_TROG_BERSERK:
         return (you.can_go_berserk(true, false, true)
                 && (quiet || berserk_check_wielded_weapon()));
-
-    case ABIL_FLY_II:
-        if (you.duration[DUR_EXHAUSTED])
-        {
-            if (!quiet)
-                mpr("You're too exhausted to fly.");
-            return false;
-        }
-        else if (you.burden_state != BS_UNENCUMBERED)
-        {
-            if (!quiet)
-                mpr("You're carrying too much weight to fly.");
-            return false;
-        }
-        return true;
 
     default:
         return true;
@@ -2111,21 +2089,17 @@ static bool _do_ability(const ability_def& abil)
         go_berserk(true);
         break;
 
-    // Fly (tengu) - eventually becomes permanent (see main.cc).
+    // Fly (tengu/drac) - permanent at high XL
     case ABIL_FLY:
-        if (you.experience_level < 15)
-            cast_fly(you.experience_level * 4);
-        else
+        if (you.racial_permanent_flight())
         {
             you.attribute[ATTR_PERM_FLIGHT] = 1;
             float_player();
-            mpr("You feel very comfortable in the air.");
+            if (you.species == SP_TENGU)
+                mpr("You feel very comfortable in the air.");
         }
-        break;
-
-    // Fly (Draconians, or anything else with wings).
-    case ABIL_FLY_II:
-        cast_fly(you.experience_level * 2);
+        else
+            cast_fly(you.experience_level * 4);
         break;
 
     // DEMONIC POWERS:
@@ -3133,26 +3107,20 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     if (you.species == SP_VAMPIRE && you.experience_level >= 6)
         _add_talent(talents, ABIL_BOTTLE_BLOOD, false);
 
-    if (you.species == SP_TENGU
-        && !you.attribute[ATTR_PERM_FLIGHT]
-        && you.experience_level >= 5
-        && (you.experience_level >= 15 || !you.airborne()))
+    if ((you.species == SP_TENGU && you.experience_level >= 5
+         || player_mutation_level(MUT_BIG_WINGS)) && !you.airborne()
+        || you.racial_permanent_flight() && !you.attribute[ATTR_PERM_FLIGHT])
     {
         // Tengu can fly, but only from the ground
         // (until level 15, when it becomes permanent until revoked).
-        // jmf: "upgrade" for draconians -- expensive flight
+        // Black draconians get permaflight at XL 14, but they don't get
+        // the tengu movement/evasion bonuses and they don't get temporary
+        // flight before then.
+        // Other dracs can mutate big wings whenever for temporary flight.
         _add_talent(talents, ABIL_FLY, check_confused);
     }
-    else if (player_mutation_level(MUT_BIG_WINGS) && !you.airborne()
-             // Liches' bone wings and statues' stone wings cannot fly.
-             && !form_changed_physiology())
-    {
-        ASSERT(player_genus(GENPC_DRACONIAN));
-        _add_talent(talents, ABIL_FLY_II, check_confused);
-    }
 
-    if (you.attribute[ATTR_PERM_FLIGHT]
-        && you.species == SP_TENGU && you.experience_level >= 5)
+    if (you.attribute[ATTR_PERM_FLIGHT] && you.racial_permanent_flight())
     {
         _add_talent(talents, ABIL_STOP_FLYING, check_confused);
     }
@@ -3214,7 +3182,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
         if (player_evokable_flight())
         {
             // Has no effect on permanently flying Tengu.
-            if (!(you.permanent_flight() && you.species == SP_TENGU))
+            if (!you.permanent_flight() || !you.racial_permanent_flight())
             {
                 // You can still evoke perm flight if you have temporary one.
                 if (!you.is_flying()

@@ -1149,7 +1149,7 @@ bool spell_is_useless(spell_type spell, bool transient)
             return true;
         break;
     case SPELL_FLY:
-        if (you.species == SP_TENGU && you.experience_level >= 15)
+        if (you.racial_permanent_flight())
             return true;
         if (transient && you.is_flying())
             return true;

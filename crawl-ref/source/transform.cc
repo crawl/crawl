@@ -70,11 +70,8 @@ bool form_can_wear(transformation_type form)
 
 bool form_can_fly(transformation_type form)
 {
-    if (you.species == SP_TENGU
-        && (you.experience_level >= 15 || you.airborne()))
-    {
+    if (you.racial_permanent_flight())
         return true;
-    }
     return (form == TRAN_DRAGON || form == TRAN_BAT);
 }
 
@@ -473,7 +470,7 @@ static bool _flying_in_new_form(transformation_type which_trans)
 {
     // If our flight is uncancellable (or tenguish) then it's not from evoking
     if (you.attribute[ATTR_FLIGHT_UNCANCELLABLE]
-        || you.permanent_flight() && you.species == SP_TENGU)
+        || you.permanent_flight() && you.racial_permanent_flight())
     {
         return true;
     }

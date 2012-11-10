@@ -2163,6 +2163,8 @@ static string _status_mut_abilities(int sw)
 
       case SP_BLACK_DRACONIAN:
           mutations.push_back(_dragon_abil("breathe lightning"));
+          if (you.experience_level >= 14)
+              mutations.push_back("able to fly continuously");
           break;
 
       case SP_PURPLE_DRACONIAN:

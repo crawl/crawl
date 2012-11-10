@@ -441,6 +441,8 @@ string describe_mutations(bool center_title)
 
     case SP_BLACK_DRACONIAN:
         result += _dragon_abil("You can breathe wild blasts of lightning.");
+        if (you.experience_level >= 14)
+            result += "You can fly continuously.\n";
         scale_type = "glossy black";
         have_any = true;
         break;
