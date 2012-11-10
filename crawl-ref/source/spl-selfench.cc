@@ -217,8 +217,6 @@ spret_type cast_fly(int power, bool fail)
     you.increase_duration(DUR_FLIGHT, dur_change, 100);
     you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 1;
 
-    burden_change();
-
     if (!was_flying)
         float_player();
     else

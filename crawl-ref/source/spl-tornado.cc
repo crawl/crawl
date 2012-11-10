@@ -138,7 +138,6 @@ spret_type cast_tornado(int powc, bool fail)
 
     you.props["tornado_since"].get_int() = you.elapsed_time;
     _set_tornado_durations(powc);
-    burden_change();
 
     return SPRET_SUCCESS;
 }
@@ -444,7 +443,6 @@ void cancel_tornado(bool tloc)
         {
             you.duration[DUR_FLIGHT] = 0;
             you.attribute[ATTR_FLIGHT_UNCANCELLABLE] = 0;
-            burden_change();
             // NO checking for water, since this is called only during level
             // change, and being, say, banished from above water shouldn't
             // kill you.
