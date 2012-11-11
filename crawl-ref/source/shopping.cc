@@ -501,18 +501,12 @@ static string _shop_print_stock(const vector<int>& stock,
                              && item_type_known(item)
                              && get_ident_type(item) != ID_KNOWN_TYPE
                              && !is_artefact(item);
-        if (viewing)
-            textcolor((unknown || is_artefact(item))? WHITE : LIGHTGREY);
-        else if (Options.menu_colour_shops)
-        {
-            // Colour stock according to menu colours.
-            const string colprf = menu_colour_item_prefix(item);
-            const int col = menu_colour(item.name(DESC_A),
-                                        colprf, "shop");
-            textcolor(col != -1 ? col : LIGHTGREY);
-        }
-        else
-            textcolor(i % 2 ? LIGHTGREY : WHITE);
+
+        // Colour stock according to menu colours.
+        const string colprf = menu_colour_item_prefix(item);
+        const int col = menu_colour(item.name(DESC_A),
+                                    colprf, "shop");
+        textcolor(col != -1 ? col : LIGHTGREY);
 
         string item_name = item.name(DESC_A, false, id);
         if (unknown)
@@ -2957,7 +2951,7 @@ void ShoppingList::fill_out_menu(Menu& shopmenu)
 
         if (cost > you.gold)
             me->colour = DARKGREY;
-        else if (thing_is_item(thing) && Options.menu_colour_shops)
+        else if (thing_is_item(thing))
         {
             // Colour shopping list item according to menu colours.
             const item_def &item = get_thing_item(thing);

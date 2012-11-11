@@ -227,9 +227,6 @@
 
 ##### 3-j       Colours (messages and menus) ##########
 #
-# menu_colour_prefix_class = false
-# menu_colour_shops = false
-
 # Food is colour coded by default as follows:
 #
 #   yellow     = preferred food                    ($preferred)

@@ -1103,8 +1103,6 @@ void game_options::reset_options()
     force_more_message.clear();
     sound_mappings.clear();
     menu_colour_mappings.clear();
-    menu_colour_prefix_class = true;
-    menu_colour_shops = true;
     message_colour_mappings.clear();
     drop_filter.clear();
     map_file_name.clear();
@@ -3284,10 +3282,6 @@ void game_options::read_option_line(const string &str, bool runscript)
         }
         _merge_lists(menu_colour_mappings, new_entries, caret_equal);
     }
-    else BOOL_OPTION(menu_colour_prefix_class);
-    else BOOL_OPTION_NAMED("menu_color_prefix_class", menu_colour_prefix_class);
-    else BOOL_OPTION(menu_colour_shops);
-    else BOOL_OPTION_NAMED("menu_color_shops", menu_colour_shops);
     else if (key == "message_colour" || key == "message_color")
     {
         // TODO: support -= here.

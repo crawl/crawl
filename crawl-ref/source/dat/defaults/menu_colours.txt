@@ -39,7 +39,6 @@ menu += white:.*artefact.*
 
 # Ego items
 #
-: if options.menu_colour_prefix_class then
 menu += lightblue:(^identified armour.* pair of .* of )
 menu += lightgrey:(^identified armour.* pair of )
 menu += lightblue:(^identified (weapon|armour).* of )
@@ -49,7 +48,6 @@ menu += lightblue:(^identified weapon.* anti-magic .*)
 # Possible egos
 menu += lightblue:^unidentified .*weapon.*(runed|glowing)
 menu += lightblue:^unidentified .*armour.*(runed|glowing|embroidered|shiny|dyed)
-:end
 
 # Emergency items
 menu += yellow:.*emergency_item.*
