@@ -95,8 +95,6 @@ int spellbook_contents(item_def &book, read_book_action_type action,
 
     const int spell_levels = player_spell_levels();
 
-    set_ident_flags(book, ISFLAG_KNOW_TYPE);
-
     formatted_string out;
     out.textcolor(LIGHTGREY);
 
@@ -447,7 +445,9 @@ int read_book(item_def &book, read_book_action_type action)
     tiles_crt_control show_as_menu(CRT_MENU, "read_book");
 #endif
 
-    // Remember that this function is called from staff spells as well.
+    set_ident_flags(book, ISFLAG_IDENT_MASK);
+
+    // Remember that this function is called for rods as well.
     const int keyin = spellbook_contents(book, action);
 
     if (book.base_type == OBJ_BOOKS)
@@ -455,12 +455,6 @@ int read_book(item_def &book, read_book_action_type action)
 
     if (!crawl_state.is_replaying_keys())
         redraw_screen();
-
-    // Put special book effects in another function which can be called
-    // from memorise as well.
-
-    set_ident_flags(book, ISFLAG_KNOW_TYPE);
-    set_ident_flags(book, ISFLAG_IDENT_MASK);
 
     return keyin;
 }
