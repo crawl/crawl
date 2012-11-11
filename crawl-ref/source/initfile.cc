@@ -804,7 +804,6 @@ void game_options::reset_options()
     confirm_butcher        = CONFIRM_AUTO;
     chunks_autopickup      = true;
     prompt_for_swap        = true;
-    list_rotten            = true;
     auto_drop_chunks       = ADC_NEVER;
     prefer_safe_chunks     = true;
     easy_eat_chunks        = false;
@@ -2490,7 +2489,6 @@ void game_options::read_option_line(const string &str, bool runscript)
     }
     else BOOL_OPTION(chunks_autopickup);
     else BOOL_OPTION(prompt_for_swap);
-    else BOOL_OPTION(list_rotten);
     else BOOL_OPTION(prefer_safe_chunks);
     else BOOL_OPTION(easy_eat_chunks);
     else BOOL_OPTION(easy_eat_gourmand);
