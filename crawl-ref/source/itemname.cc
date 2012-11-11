@@ -3446,7 +3446,7 @@ static const string _item_prefix(const item_def &item, bool temp, bool filter)
         break;
     }
 
-    if (Options.menu_colour_prefix_class && !filter)
+    if (!filter)
         prefixes.push_back(item_class_name(item.base_type, true));
 
     string result = comma_separated_line(prefixes.begin(), prefixes.end(),

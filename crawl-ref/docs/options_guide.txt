@@ -1428,6 +1428,9 @@ menu_colour ^= <match>:<colour>:<regex>, <colour>:<regex>, ...
            known           (You recognize the item's subtype.)
            unidentified    (You don't recognize the item's subtype.)
 
+        Items are also prefixed with their base type (armour, weapon, wand,
+        etc.)
+
         The following only apply to items whose subtype is known.
            evil_item       (Your god would hate it if you used this item.)
 
@@ -1484,21 +1487,6 @@ menu_colour ^= <match>:<colour>:<regex>, <colour>:<regex>, ...
         be read with '?:'). The following line will show level ups in
         white:
           menu_colour ^= notes:white:Reached XP level
-
-menu_colour_prefix_class = true
-        Setting this option to true will prefix the string against which
-        menu_colour regexes are matched (not the string displayed) with
-        the item's object type: armour, weapon, wand, etc.
-
-        Note that the prefix is put before the the *entire* string which
-        is displayed, so if you're wielding a uncursed dagger which has
-        the 'a' slot, the string the regexes will match against is
-        "weapon  a - an uncursed dagger (weapon)".
-
-menu_colour_shops = true
-        If this option is set to true the shop menu will be coloured
-        according to the menu colours (using tags "shop" or "any");
-        otherwise the lines are coloured alternately white or lightgrey.
 
 message_colour ^= <colour>:<channel>:<regex>, <colour>:<regex>, ...
         (Ordered list option)

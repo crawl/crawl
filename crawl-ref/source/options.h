@@ -322,9 +322,6 @@ public:
     vector<colour_mapping> menu_colour_mappings;
     vector<message_colour_mapping> message_colour_mappings;
 
-    bool       menu_colour_prefix_class; // Prefix item class to string
-    bool       menu_colour_shops;   // Use menu colours in shops?
-
     vector<menu_sort_condition> sort_menus;
 
     bool        dump_on_save;       // Automatically dump character when saving.
