@@ -16,6 +16,7 @@
 #include "options.h"
 #include "player.h"
 #include "showsymb.h"
+#include "state.h"
 #include "stuff.h"
 #include "terrain.h"
 #include "tiledef-dngn.h"
@@ -399,7 +400,7 @@ void tile_init_flavour(const coord_def &gc)
 
     if (!env.tile_flv(gc).wall)
     {
-        if (player_in_branch(BRANCH_MAIN_DUNGEON))
+        if (player_in_branch(BRANCH_MAIN_DUNGEON) && env.tile_default.wall == TILE_WALL_NORMAL)
         {
             vector<tileidx_t> tile_candidates;
             _get_dungeon_wall_tiles_by_depth(you.depth, tile_candidates);
