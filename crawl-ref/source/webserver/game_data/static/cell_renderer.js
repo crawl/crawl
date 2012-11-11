@@ -606,10 +606,10 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
             else if (fg.MIMIC_RAVEN)
                 this.draw_icon(icons.RAVENOUS_MIMIC, x, y);
 
+            //The berserk icon is in the lower right, so status_shift doesn't need changing.
             if (fg.BERSERK)
             {
                 this.draw_icon(icons.BERSERK, x, y);
-                status_shift += 10;
             }
 
             // Pet mark
