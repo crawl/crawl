@@ -3172,7 +3172,9 @@ enum spell_type
 
     // Mostly monster-only spells after this point:
     SPELL_HELLFIRE_BURST,
+#if TAG_MAJOR_VERSION == 34
     SPELL_VAMPIRE_SUMMON,
+#endif
     SPELL_BRAIN_FEED,
     SPELL_FAKE_RAKSHASA_SUMMON,
     SPELL_STEAM_BALL,

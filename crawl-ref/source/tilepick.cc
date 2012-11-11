@@ -4713,7 +4713,6 @@ tileidx_t tileidx_spell(spell_type spell)
 
     // Monster spells (mostly?)
     case SPELL_HELLFIRE_BURST:
-    case SPELL_VAMPIRE_SUMMON:
     case SPELL_BRAIN_FEED:
     case SPELL_FAKE_RAKSHASA_SUMMON:
     case SPELL_STEAM_BALL:
