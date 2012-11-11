@@ -1948,19 +1948,14 @@ static void _rot_inventory_food(int time_delta)
                 break;
             }
         }
-        else if (Options.list_rotten)
+        else
             msg = "Something in your inventory has become rotten.";
 
-        if (Options.list_rotten)
-        {
-            mprf(MSGCH_ROTTEN_MEAT, "%s (slot%s %s)",
-                 msg.c_str(),
-                 rotten_items.size() > 1 ? "s" : "",
-                 comma_separated_line(rotten_items.begin(),
-                                      rotten_items.end()).c_str());
-        }
-        else if (!msg.empty())
-            mpr(msg.c_str(), MSGCH_ROTTEN_MEAT);
+        mprf(MSGCH_ROTTEN_MEAT, "%s (slot%s %s)",
+             msg.c_str(),
+             rotten_items.size() > 1 ? "s" : "",
+             comma_separated_line(rotten_items.begin(),
+                                  rotten_items.end()).c_str());
 
         learned_something_new(HINT_ROTTEN_FOOD);
     }

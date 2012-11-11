@@ -63,12 +63,11 @@ The contents of this text are:
                 status_caption_colour, enemy_hp_colour, clear_messages,
                 show_more, small_more, show_inventory_weights,
                 show_newturn_mark, show_gold_turns, show_game_turns,
-                item_stack_summary_minimum, list_rotten,
+                item_stack_summary_minimum,
                 mlist_min_height, msg_min_height, msg_max_height,
                 messages_at_top, skill_focus,
                 mlist_allow_alternate_layout, mlist_targetting,
-                menu_colour, menu_colour_prefix_class, menu_colour_shops,
-                message_colour, force_more_message,
+                menu_colour, message_colour, force_more_message,
                 msg_condense_repeats, msg_condense_short, show_travel_trail
 3-j     Missiles.
                 fire_items_start, fire_order
@@ -1355,14 +1354,6 @@ item_stack_summary_minimum = 5
         Known artefacts will be coloured in yellow; glowing or runed
         items will be in white, unless you already know that they are
         not ego items.
-
-list_rotten = true
-        Setting this to true will print a list of inventory slots for
-        all corpses and chunks that have become rotten along with the
-        rotting message, in the form of
-          "You smell something rotten. (slots f and m)"
-        Additionally, this option will make a default message appear
-        for Trolls, as well.
 
 mlist_min_height = 4
         If there is extra space available for the message area and

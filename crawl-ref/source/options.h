@@ -172,7 +172,6 @@ public:
     bool        chunks_autopickup; // Autopickup chunks after butchering
     bool        prompt_for_swap; // Prompt to switch back from butchering
                                  // tool if hostile monsters are around.
-    bool        list_rotten;     // list slots for rotting corpses/chunks
     chunk_drop_type auto_drop_chunks; // drop chunks when overburdened
     bool        prefer_safe_chunks; // prefer clean chunks to contaminated ones
     bool        easy_eat_chunks; // make 'e' auto-eat the oldest safe chunk
