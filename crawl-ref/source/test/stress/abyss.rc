@@ -59,6 +59,18 @@ function ready()
   if you.turns() ~= last_turn then
     command = 1
     last_turn = you.turns()
+
+    -- every 50 turns, cast a spell assigned to 'T' if there is one
+    if you.turns() % 50 == 0 then
+      local sp = you.spell_letters()
+      for i = 1, 52 do
+        if sp[i] == 'T' then
+          command = 0
+          crawl.sendkeys("ZT" .. eol .. esc)
+          return
+        end
+      end
+    end
   else
     command = command + 1
   end
@@ -67,8 +79,5 @@ function ready()
       command = 2
   end
   crawl.sendkeys(cmds[command])
-  -- if you.turns() >= 1000 then
-  --   crawl.sendkeys("*qyes" .. eol .. esc .. esc)
-  -- end
 end
 }
