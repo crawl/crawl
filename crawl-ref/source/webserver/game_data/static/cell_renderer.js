@@ -621,28 +621,28 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
             else if (fg.GD_NEUTRAL)
             {
                 this.draw_icon(icons.GOOD_NEUTRAL, x, y);
-                status_shift += 8;
+                status_shift += 7;
             }
             else if (fg.NEUTRAL)
             {
                 this.draw_icon(icons.NEUTRAL, x, y);
-                status_shift += 8;
+                status_shift += 7;
             }
 
             if (fg.STAB)
             {
                 this.draw_icon(icons.STAB_BRAND, x, y);
-                status_shift += 15;
+                status_shift += 12;
             }
             else if (fg.MAY_STAB)
             {
                 this.draw_icon(icons.MAY_STAB_BRAND, x, y);
-                status_shift += 8;
+                status_shift += 7;
             }
             else if (fg.FLEEING)
             {
                 this.draw_icon(icons.FLEEING, x, y);
-                status_shift += 4;
+                status_shift += 3;
             }
 
             if (fg.POISON)
@@ -653,32 +653,32 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
             if (fg.STICKY_FLAME)
             {
                 this.draw_icon(icons.STICKY_FLAME, x, y, -status_shift, 0);
-                status_shift += 5;
+                status_shift += 7;
             }
             if (fg.INNER_FLAME)
             {
                 this.draw_icon(icons.INNER_FLAME, x, y, -status_shift, 0);
-                status_shift += 8;
+                status_shift += 7;
             }
             if (fg.CONSTRICTED)
             {
                 this.draw_icon(icons.CONSTRICTED, x, y, -status_shift, 0);
-                status_shift += 13;
+                status_shift += 11;
             }
             if (fg.GLOWING)
             {
                 this.draw_icon(icons.GLOWING, x, y, -status_shift, 0);
-                status_shift += 10;
+                status_shift += 8;
             }
             if (fg.SLOWED)
             {
                 this.draw_icon(icons.SLOWED, x, y, -status_shift, 0);
-                status_shift += 11;
+                status_shift += 6;
             }
             if (fg.PAIN_MIRROR)
             {
                 this.draw_icon(icons.PAIN_MIRROR, x, y, -status_shift, 0);
-                status_shift += 13;
+                status_shift += 7;
             }
 
             if (fg.ANIM_WEP)
