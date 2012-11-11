@@ -6582,8 +6582,8 @@ bool player::permanent_flight() const
 
 bool player::racial_permanent_flight() const
 {
-    return (you.species == SP_TENGU && you.experience_level >= 15 ||
-            you.species == SP_BLACK_DRACONIAN && you.experience_level >= 14);
+    return (you.species == SP_TENGU && you.experience_level >= 15
+            || you.species == SP_BLACK_DRACONIAN && you.experience_level >= 14);
 }
 
 bool player::tengu_flight() const
