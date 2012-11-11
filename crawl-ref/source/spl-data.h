@@ -1940,6 +1940,7 @@ struct spell_desc
      false
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     SPELL_VAMPIRE_SUMMON, "Vampire Summon",
      SPTYP_SUMMONING,
@@ -1952,6 +1953,7 @@ struct spell_desc
      false,
      false
 },
+#endif
 
 {
     SPELL_BRAIN_FEED, "Brain Feed",

@@ -1035,7 +1035,9 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_VAMPIRIC_DRAINING:
     case SPELL_MIRROR_DAMAGE:
     case SPELL_MAJOR_HEALING:
+#if TAG_MAJOR_VERSION == 34
     case SPELL_VAMPIRE_SUMMON:
+#endif
     case SPELL_SHADOW_CREATURES:       // summon anything appropriate for level
     case SPELL_FAKE_RAKSHASA_SUMMON:
     case SPELL_FAKE_MARA_SUMMON:
@@ -1360,7 +1362,7 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
     case SPELL_VAMPIRIC_DRAINING:
         if (!foe
             || mon->hit_points + 1 >= mon->max_hit_points
-            || grid_distance(mon->pos(), foe->pos()) > 1)
+            || !adjacent(mon->pos(), foe->pos()))
         {
             ret = true;
         }
@@ -1441,9 +1443,11 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
         // Monsters aren't smart enough to know when to cancel teleport.
         if (mon->has_ench(ENCH_TP))
             ret = true;
+    case SPELL_BLINK_CLOSE:
+        if (adjacent(mon->pos(), foe->pos()))
+            ret = true;
     case SPELL_BLINK:
     case SPELL_CONTROLLED_BLINK:
-    case SPELL_BLINK_CLOSE:
     case SPELL_BLINK_RANGE:
     case SPELL_BLINK_AWAY:
         if (mon->no_tele(true, false))
@@ -3273,20 +3277,16 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
             " squirts a massive cloud of ink into the water!");
         return;
 
-    case SPELL_SUMMON_SMALL_MAMMALS:
+#if TAG_MAJOR_VERSION == 34
     case SPELL_VAMPIRE_SUMMON:
-        if (spell_cast == SPELL_SUMMON_SMALL_MAMMALS)
-            sumcount2 = 1 + random2(3);
-        else
-            sumcount2 = 3 + random2(3);
+#endif
+    case SPELL_SUMMON_SMALL_MAMMALS:
+        sumcount2 = 1 + random2(3);
 
         for (sumcount = 0; sumcount < sumcount2; ++sumcount)
         {
-            monster_type rats[] = { MONS_ORANGE_RAT, MONS_GREEN_RAT,
-                                    MONS_GREY_RAT,   MONS_RAT };
-
-            if (spell_cast == SPELL_SUMMON_SMALL_MAMMALS)
-                rats[0] = MONS_QUOKKA;
+            monster_type rats[] = { MONS_QUOKKA,   MONS_GREEN_RAT,
+                                    MONS_GREY_RAT, MONS_RAT };
 
             const monster_type mon = (one_chance_in(3) ? MONS_BAT
                                                        : RANDOM_ELEMENT(rats));
