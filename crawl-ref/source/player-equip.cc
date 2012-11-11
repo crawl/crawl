@@ -301,6 +301,13 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld)
         artefact_wpn_learn_prop(item, ARTP_BERSERK);
     }
 
+    if (unknown_proprt(ARTP_MUTAGENIC))
+    {
+        if (msg)
+            mpr("You feel a build-up of mutagenic energy.");
+        artefact_wpn_learn_prop(item, ARTP_MUTAGENIC);
+    }
+
     if (!unmeld && !item.cursed() && proprt[ARTP_CURSED] > 0
          && one_chance_in(proprt[ARTP_CURSED]))
     {
