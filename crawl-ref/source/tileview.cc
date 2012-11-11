@@ -309,23 +309,30 @@ void tile_init_flavour()
 
 static void _get_dungeon_wall_tiles_by_depth(int depth, vector<tileidx_t>& t)
 {
-    if (depth <= 9)
+    if (crawl_state.game_is_sprint() || crawl_state.game_is_zotdef() || crawl_state.game_is_arena())
+    {
+        t.push_back(TILE_WALL_BRICK_DARK_4);
+        t.push_back(TILE_WALL_BRICK_DARK_5);
+        t.push_back(TILE_WALL_BRICK_DARK_4_TORCH);
+        return;
+    }
+    if (depth <= 6)
         t.push_back(TILE_WALL_BRICK_DARK_1);
-    if (depth > 4 && depth <= 13)
+    if (depth > 3 && depth <= 9)
     {
         t.push_back(TILE_WALL_BRICK_DARK_2);
         t.push_back(TILE_WALL_BRICK_DARK_2_TORCH);
     }
-    if (depth > 9 && depth <= 18)
+    if (depth > 6 && depth <= 14)
         t.push_back(TILE_WALL_BRICK_DARK_3);
-    if (depth > 13 && depth <= 22)
+    if (depth > 9 && depth <= 20)
     {
         t.push_back(TILE_WALL_BRICK_DARK_4);
         t.push_back(TILE_WALL_BRICK_DARK_4_TORCH);
     }
-    if (depth > 18)
+    if (depth > 14)
         t.push_back(TILE_WALL_BRICK_DARK_5);
-    if (depth > 22)
+    if (depth > 20)
     {
         t.push_back(TILE_WALL_BRICK_DARK_6);
         t.push_back(TILE_WALL_BRICK_DARK_6_TORCH);
