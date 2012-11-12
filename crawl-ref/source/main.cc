@@ -961,7 +961,6 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     case CMD_SUSPEND_GAME:
     case CMD_QUIT:
     case CMD_DESTROY_ITEM:
-    case CMD_FORGET_STASH:
     case CMD_FIX_WAYPOINT:
     case CMD_CLEAR_MAP:
     case CMD_INSCRIBE_ITEM:
@@ -1904,11 +1903,6 @@ void process_command(command_type cmd)
         if (Hints.hints_stashes)
             Hints.hints_stashes = 0;
         StashTrack.search_stashes();
-        break;
-
-    case CMD_FORGET_STASH:
-        if (Options.stash_tracking >= STM_EXPLICIT)
-            StashTrack.no_stash();
         break;
 
     case CMD_INSPECT_FLOOR:

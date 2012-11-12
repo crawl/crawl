@@ -2147,7 +2147,6 @@ static void _add_formatted_keyhelp(column_composer &cols)
     _add_command(cols, 0, CMD_INTERLEVEL_TRAVEL, "interlevel travel");
     _add_command(cols, 0, CMD_SEARCH_STASHES, "Find items");
     _add_command(cols, 0, CMD_FIX_WAYPOINT, "set Waypoint");
-    _add_command(cols, 0, CMD_FORGET_STASH, "Exclude square from searches");
 
     cols.add_formatted(
             0,
