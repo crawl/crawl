@@ -1799,6 +1799,9 @@ static bool _item_is_swappable(const item_def &item, equipment_type slot, bool s
     if (get_item_slot(item) != slot)
         return true;
 
+    if (item.base_type == OBJ_WEAPONS)
+        return true;
+
     if (item.base_type == OBJ_ARMOUR || !_item_known_uncursed(item))
         return false;
 
@@ -1810,11 +1813,7 @@ static bool _item_is_swappable(const item_def &item, equipment_type slot, bool s
                 || item.sub_type == AMU_GUARDIAN_SPIRIT
                 || (item.sub_type == RING_MAGICAL_POWER && !swap_in));
     }
-
-    const brand_type brand = get_weapon_brand(item);
-    return (brand != SPWPN_DISTORTION
-           && (brand != SPWPN_VAMPIRICISM || you.is_undead != US_ALIVE)
-           && (brand != SPWPN_HOLY_WRATH || you.is_undead == US_ALIVE));
+    return true;
 }
 
 static bool _item_is_swappable(const item_def &item, bool swap_in)
