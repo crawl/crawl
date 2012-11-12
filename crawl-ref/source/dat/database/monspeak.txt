@@ -2074,7 +2074,7 @@ VISUAL:@The_monster@ inspects you suspiciously.
 @The_monster@ says, "ME ROCKS!"
 ### End CHUCK ###
 %%%%
-############ CRAZY YIUF  ### A mad old gnoll!
+############ CRAZY YIUF ### A mad old gnoll!
 Crazy Yiuf
 
 @_crazy_yiuf_speech_@
