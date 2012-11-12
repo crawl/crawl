@@ -15,7 +15,6 @@ function ($, cr, map_knowledge, settings, dngn) {
         if (cell == null || cell.bg == null) return false;
         var base_bg = dngn.basetile(cell.bg.value);
         return (base_bg == dngn.DNGN_PORTAL_WIZARD_LAB
-                || base_bg == dngn.DNGN_ALTAR_CHEIBRIADOS
                 || is_torch(base_bg)
                 || (base_bg >= dngn.DNGN_LAVA && base_bg < dngn.BLOOD));
     }
@@ -24,7 +23,6 @@ function ($, cr, map_knowledge, settings, dngn) {
     {
         var base_bg = dngn.basetile(cell.bg.value);
         if (base_bg == dngn.DNGN_PORTAL_WIZARD_LAB
-            || base_bg == dngn.DNGN_ALTAR_CHEIBRIADOS
             || is_torch(base_bg))
         {
             cell.bg.value = base_bg + (cell.bg.value - base_bg + 1) % dngn.tile_count(base_bg);

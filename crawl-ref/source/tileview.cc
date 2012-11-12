@@ -989,8 +989,7 @@ void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
 {
 #ifndef USE_TILE_WEB
     tileidx_t bg_idx = bg & TILE_FLAG_MASK;
-    if (bg_idx == TILE_DNGN_PORTAL_WIZARD_LAB
-        || bg_idx == TILE_DNGN_ALTAR_CHEIBRIADOS)
+    if (bg_idx == TILE_DNGN_PORTAL_WIZARD_LAB)
     {
         flv->special = (flv->special + 1) % tile_dngn_count(bg_idx);
     }
@@ -1191,8 +1190,7 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
         else
             *bg = orig + min((int)flv.special, 6);
     }
-    else if (orig == TILE_DNGN_PORTAL_WIZARD_LAB
-             || orig == TILE_DNGN_ALTAR_CHEIBRIADOS)
+    else if (orig == TILE_DNGN_PORTAL_WIZARD_LAB)
     {
         *bg = orig + flv.special % tile_dngn_count(orig);
     }
