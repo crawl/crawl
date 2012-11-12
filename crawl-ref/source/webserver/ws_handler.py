@@ -180,7 +180,6 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         elif self.subprotocol == "no-compression":
             compression = "off, client request"
         if hasattr(self, "get_extensions"):
-            print self.get_extensions()
             if any(s.endswith("deflate-frame") for s in self.get_extensions()):
                 self.deflate = False
                 compression = "deflate-frame extension"
