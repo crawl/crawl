@@ -531,14 +531,7 @@ jiyva09
 jiyva10
 jiyva11
 fedhas DNGN_ALTAR_FEDHAS
-cheibriados_02 DNGN_ALTAR_CHEIBRIADOS
-cheibriados_03
-cheibriados_04
-cheibriados_06
-cheibriados_08
-cheibriados_09
-cheibriados_10
-cheibriados_12
+cheibriados DNGN_ALTAR_CHEIBRIADOS
 ashenzari DNGN_ALTAR_ASHENZARI
 unknown DNGN_UNKNOWN_ALTAR
 
