@@ -60,14 +60,13 @@ W         CMD_WEAR_ARMOUR
 (         CMD_CYCLE_QUIVER_FORWARD
 )         CMD_CYCLE_QUIVER_BACKWARD
 '         CMD_WEAPON_SWAP
-          CMD_ZAP_WAND (deprecated, now uses CMD_EVOKE instead)
 
 Dungeon interaction
 -------------------
 c         CMD_BUTCHER
 o         CMD_EXPLORE
-s, .      CMD_SEARCH, CMD_MOVE_NOWHERE  (same command)
-5         CMD_REST             (rest/search 100 turns)
+s, .      CMD_MOVE_NOWHERE
+5         CMD_REST             (rest 100 turns)
 t         CMD_SHOUT
 x         CMD_LOOK_AROUND
 X         CMD_DISPLAY_MAP
@@ -77,7 +76,6 @@ X         CMD_DISPLAY_MAP
 z         CMD_CAST_SPELL
 Z         CMD_FORCE_CAST_SPELL
 C         CMD_CLOSE_DOOR
-^E        CMD_FORGET_STASH
 ^F        CMD_SEARCH_STASHES
 G, ^G     CMD_INTERLEVEL_TRAVEL
 O         CMD_OPEN_DOOR
@@ -154,14 +152,12 @@ v              CMD_TARGET_DESCRIBE
 SPACE, !       CMD_TARGET_SELECT
 ., 5           CMD_TARGET_SELECT_ENDPOINT
 ^P             CMD_TARGET_SHOW_PROMPT
-^C             CMD_TARGET_CYCLE_BEAM
 :              CMD_TARGET_HIDE_BEAM
 ^I             CMD_TARGET_FIND_PORTAL
 ^              CMD_TARGET_FIND_TRAP
 _              CMD_TARGET_FIND_ALTAR
 <              CMD_TARGET_FIND_UPSTAIR
 >              CMD_TARGET_FIND_DOWNSTAIR
-^F             CMD_TARGET_CYCLE_TARGET_MODE
 ^L             CMD_TARGET_TOGGLE_MLIST     (non-Tiles only)
 p              CMD_TARGET_PREV_TARGET
 f, t           CMD_TARGET_MAYBE_PREV_TARGET
@@ -219,7 +215,8 @@ W         CMD_MAP_FIND_WAYPOINT
 
 Wiz-mode targetting sub-commands
 --------------------------------
-g         CMD_TARGET_WIZARD_GIVE_ITEM
+^C        CMD_TARGET_CYCLE_BEAM
+o         CMD_TARGET_WIZARD_GIVE_ITEM
 m         CMD_TARGET_WIZARD_MOVE
 s         CMD_TARGET_WIZARD_MAKE_SHOUT
 w         CMD_TARGET_WIZARD_PATHFIND
