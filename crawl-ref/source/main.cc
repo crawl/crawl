@@ -1948,14 +1948,10 @@ void process_command(command_type cmd)
 
     case CMD_DROP:
         drop();
-        if (Options.stash_tracking >= STM_DROPPED)
-            StashTrack.add_stash();
         break;
 
     case CMD_DROP_LAST:
         drop_last();
-        if (Options.stash_tracking >= STM_DROPPED)
-            StashTrack.add_stash();
         break;
 
     case CMD_EVOKE:

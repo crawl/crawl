@@ -2933,14 +2933,6 @@ void start_explore(bool grab_items)
     maybe_clear_weapon_swap();
 
     you.running = (grab_items? RMODE_EXPLORE_GREEDY : RMODE_EXPLORE);
-    if (you.running == RMODE_EXPLORE_GREEDY
-        && Options.stash_tracking != STM_ALL)
-    {
-        Options.explore_greedy = false;
-        mpr("Greedy explore is available only if stash_tracking = all");
-        more();
-        you.running = RMODE_EXPLORE;
-    }
 
     if (you.running == RMODE_EXPLORE_GREEDY && god_likes_items(you.religion, true))
     {
