@@ -98,12 +98,8 @@ string stash_annotate_item(const char *s, const item_def *item, bool exclusive)
 
 void maybe_update_stashes()
 {
-    if (Options.stash_tracking && !crawl_state.game_is_arena())
-    {
-        StashTrack.update_visible_stashes(
-            Options.stash_tracking == STM_ALL ? StashTracker::ST_AGGRESSIVE
-                                              : StashTracker::ST_PASSIVE);
-    }
+    if (crawl_state.game_is_arena())
+        StashTrack.update_visible_stashes();
 }
 
 bool is_stash(const coord_def& c)
@@ -1501,17 +1497,10 @@ void StashTracker::no_stash(int x, int y)
         remove_level();
 }
 
-void StashTracker::add_stash(int x, int y, bool verbose)
+void StashTracker::add_stash(int x, int y)
 {
     LevelStashes &current = get_current_level();
     current.add_stash(x, y);
-
-    if (verbose)
-    {
-        Stash *s = current.find_stash(coord_def(x, y));
-        if (s && s->enabled)
-            mpr("Added stash.");
-    }
 
     if (!current.stash_count())
         remove_level();
@@ -1573,7 +1562,7 @@ void StashTracker::load(reader& inf)
     }
 }
 
-void StashTracker::update_visible_stashes(StashTracker::stash_update_mode mode)
+void StashTracker::update_visible_stashes()
 {
     LevelStashes *lev = find_current_level();
     coord_def c;
@@ -1582,7 +1571,6 @@ void StashTracker::update_visible_stashes(StashTracker::stash_update_mode mode)
         const dungeon_feature_type feat = grd(*ri);
 
         if ((!lev || !lev->update_stash(*ri))
-            && mode == ST_AGGRESSIVE
             && (_grid_has_perceived_item(*ri)
                 || !Stash::is_boring_feature(feat)))
         {

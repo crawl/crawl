@@ -884,8 +884,6 @@ void game_options::reset_options()
     use_fake_player_cursor = true;
     show_player_species    = false;
 
-    stash_tracking         = STM_ALL;
-
     explore_stop           = (ES_ITEM | ES_STAIR | ES_PORTAL | ES_BRANCH
                               | ES_SHOP | ES_ALTAR | ES_RUNED_DOOR
                               | ES_GREEDY_PICKUP_SMART
