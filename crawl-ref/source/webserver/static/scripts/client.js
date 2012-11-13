@@ -851,8 +851,20 @@ function (exports, $, key_conversion, chat, comm) {
         f.readAsText(b, "UTF-8");
     }
 
+    var blob_construction_supported = true;
+    try {
+        var blob = new Blob([new Uint8Array([0])]);
+    }
+    catch (e)
+    {
+        blob_construction_supported = false;
+        log("Blob construction not supported, disabling compression");
+    }
+
     function inflate_works_on_ua()
     {
+        if (!blob_construction_supported)
+            return false;
         var b = $.browser;
         if (b.chrome && b.version.match("^14\."))
             return false; // doesn't support binary frames
