@@ -390,8 +390,9 @@ Weapon speech
 
 For obvious reasons, weapon noises get by without any such prefixes,
 and the only hardcoded keywords are "noisy weapon" for weapons with
-the noises property, and "singing sword" for (who'd have guessed?) the
-Singing Sword.
+the noises property, "shield of the gong", while the singing sword uses
+"singing sword " + one of: silenced, no_tension, low_tension, high_tension,
+SCREAM.
 
 
 Death speech
@@ -916,8 +917,8 @@ D   all dragons, wyvern, and hydra
 E   all elementals
 F   all frogs
 G   all eyes, giant orange brain, ophan
-H   hippogriff, manticore, griffon, harpy, minotaur, sphinx, shedu,
-    tengu
+H   hybrids: hippogriff, manticore, griffon, harpy, minotaur, sphinx,
+    shedu, tengu
 I   ice beast, sky beast
 J   all jellies, oozes, and slime creature, pulsating lump,
     giant amoeba, jellyfish, and acid blob
