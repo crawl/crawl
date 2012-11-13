@@ -553,7 +553,7 @@ int str_to_trap(const string &s)
 // Describes the random demons you find in Pandemonium.
 //
 //---------------------------------------------------------------
-static string _describe_demon(const string& name, bool flies)
+static string _describe_demon(const string& name, flight_type fly)
 {
     const uint32_t seed =
         accumulate(name.begin(), name.end(), 0) *
@@ -593,10 +593,10 @@ static string _describe_demon(const string& name, bool flies)
         " lumpy ",
         "n armoured ",
         " carapaced ",
-        " slender "
+        " slender ",
     };
 
-    const char* fly_names[] = {
+    const char* wing_names[] = {
         " with small insectoid wings",
         " with large insectoid wings",
         " with moth-like wings",
@@ -607,8 +607,11 @@ static string _describe_demon(const string& name, bool flies)
         " with hairy wings",
         " with great feathered wings",
         " with shiny metal wings",
+    };
+
+    const char* lev_names[] = {
         " which hovers in mid-air",
-        " with sacs of gas hanging from its back"
+        " with sacs of gas hanging from its back",
     };
 
     const char* nonfly_names[] = {
@@ -667,10 +670,21 @@ static string _describe_demon(const string& name, bool flies)
     description << "A powerful demon, " << name << " has a"
                 << RANDOM_ELEMENT(body_descs) << "body";
 
-    if (flies)
-        description << RANDOM_ELEMENT(fly_names);
-    else if (!one_chance_in(4))
-        description << RANDOM_ELEMENT(nonfly_names);
+    switch (fly)
+    {
+    case FL_FLY:
+        description << RANDOM_ELEMENT(wing_names);
+        break;
+
+    case FL_LEVITATE:
+        description << RANDOM_ELEMENT(lev_names);
+        break;
+
+    case FL_NONE:  // does not fly
+        if (!one_chance_in(4))
+            description << RANDOM_ELEMENT(nonfly_names);
+        break;
+    }
 
     description << ".";
 
@@ -3199,12 +3213,15 @@ static string _monster_stat_description(const monster_info& mi)
         result << ".\n";
     }
 
-    // Can the monster fly?
+    // Can the monster levitate/fly?
     // This doesn't give anything away since no (very) ugly things can
     // fly, all ghosts can fly, and for demons it's already mentioned in
     // their flavour description.
-    if (mi.flies)
-        result << uppercase_first(pronoun) << " can fly.\n";
+    if (mi.fly != FL_NONE)
+    {
+        result << uppercase_first(pronoun) << " can "
+               << (mi.fly == FL_FLY ? "fly" : "levitate") << ".\n";
+    }
 
     // Unusual regeneration rates.
     if (!mi.can_regenerate())
@@ -3357,7 +3374,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         break;
 
     case MONS_PANDEMONIUM_LORD:
-        inf.body << _describe_demon(mi.mname, mi.flies) << "\n";
+        inf.body << _describe_demon(mi.mname, mi.fly) << "\n";
         break;
 
     case MONS_PROGRAM_BUG:

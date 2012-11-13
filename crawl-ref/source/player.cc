@@ -2450,7 +2450,7 @@ static int _player_scale_evasion(int prescaled_ev, const int scale)
 
     case SP_TENGU:
         // Flying Tengu get an evasion bonus.
-        if (you.is_flying())
+        if (you.flight_mode())
         {
             const int ev_bonus = min(9 * scale,
                                      max(1 * scale, prescaled_ev / 5));
@@ -2757,8 +2757,7 @@ int burden_change(void)
         }
     }
 
-    // Stop travel if we get burdened (as from potions of might/flight
-    // wearing off).
+    // Stop travel if we get burdened (as from potions of might wearing off).
     if (you.burden_state > old_burdenstate)
         interrupt_activity(AI_BURDEN_CHANGE);
 
@@ -3888,7 +3887,7 @@ static void _display_movement_speed()
     const bool water  = you.in_water();
     const bool swim   = you.swimming();
 
-    const bool fly    = you.is_flying();
+    const bool fly    = you.flight_mode();
     const bool swift  = (you.duration[DUR_SWIFTNESS] > 0);
 
     mprf("Your %s speed is %s%s%s.",
@@ -5786,12 +5785,19 @@ player::~player()
     ASSERT(!save); // the save file should be closed or deleted
 }
 
-bool player::is_flying() const
+flight_type player::flight_mode() const
 {
-    return (duration[DUR_FLIGHT]
-            || you.attribute[ATTR_PERM_FLIGHT]
-            || form == TRAN_DRAGON
-            || form == TRAN_BAT);
+    if (duration[DUR_FLIGHT]
+        || you.attribute[ATTR_PERM_FLIGHT]
+        // dragon and bat should be FL_FLY, but we don't want paralysis
+        // instakills over lava
+        || form == TRAN_DRAGON
+        || form == TRAN_BAT)
+    {
+        return FL_LEVITATE;
+    }
+
+    return FL_NONE;
 }
 
 bool player::is_banished() const
@@ -6589,7 +6595,7 @@ bool player::racial_permanent_flight() const
 bool player::tengu_flight() const
 {
     // Only Tengu get perks for flying.
-    return (species == SP_TENGU && is_flying());
+    return (species == SP_TENGU && flight_mode());
 }
 
 bool player::nightvision() const

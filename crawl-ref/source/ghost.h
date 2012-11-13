@@ -37,7 +37,7 @@ public:
 
     bool spellcaster, cycle_colours;
     colour_t colour;
-    bool flies;
+    flight_type fly;
 
     monster_spells spells;
 

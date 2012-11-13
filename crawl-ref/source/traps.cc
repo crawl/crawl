@@ -360,7 +360,7 @@ void monster_caught_in_net(monster* mon, bolt &pbolt)
         return;
     }
 
-    if (mon->is_flying() && (!mons_is_confused(mon) || one_chance_in(3)))
+    if (mon->flight_mode() && (!mons_is_confused(mon) || one_chance_in(3)))
     {
         simple_monster_message(mon, " darts out from under the net!");
         return;
@@ -379,7 +379,7 @@ void monster_caught_in_net(monster* mon, bolt &pbolt)
         else
             simple_monster_message(mon, " is caught in the net!");
 
-        if (mon->is_flying())
+        if (mon->flight_mode() == FL_FLY)
         {
             simple_monster_message(mon, " falls like a stone!");
             mons_check_pool(mon, mon->pos(), pbolt.killer(), pbolt.beam_source);
@@ -392,7 +392,7 @@ bool player_caught_in_net()
     if (you.body_size(PSIZE_BODY) >= SIZE_GIANT)
         return false;
 
-    if (you.is_flying() && (!you.confused() || one_chance_in(3)))
+    if (you.flight_mode() && (!you.confused() || one_chance_in(3)))
     {
         mpr("You dart out from under the net!");
         return false;
@@ -404,7 +404,11 @@ bool player_caught_in_net()
         mpr("You become entangled in the net!");
         stop_running();
 
-        if (you.is_flying())
+        // I guess magical works differently, keeping both you
+        // and the net hovering above the floor.
+        // Currently we cheat for bat and dragon forms, pretending them to
+        // be magical, and thus this check never matches currently.
+        if (you.flight_mode() == FL_FLY)
         {
             mpr("You fall like a stone!");
             fall_into_a_pool(you.pos(), false, grd(you.pos()));

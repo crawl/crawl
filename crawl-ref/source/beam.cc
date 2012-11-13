@@ -1801,7 +1801,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
     case BEAM_AIR:
         if (mons->res_wind() > 0)
             hurted = 0;
-        else if (mons->is_flying())
+        else if (mons->flight_mode())
             hurted += hurted / 2;
         if (!hurted)
         {
@@ -4169,7 +4169,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         beogh_follower_convert(mon, true);
 
     if ((flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE) ||
-          (name == "freezing breath" && mon->is_flying()))
+          (name == "freezing breath" && mon->flight_mode()))
         beam_hits_actor(mon);
 }
 

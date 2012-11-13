@@ -47,7 +47,8 @@ level_id actor::shaft_dest(bool known = false) const
 
 bool actor::airborne() const
 {
-    return (is_flying() && !cannot_move());
+    flight_type fly = flight_mode();
+    return (fly == FL_LEVITATE || fly == FL_FLY && !cannot_move());
 }
 
 /**

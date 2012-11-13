@@ -767,7 +767,7 @@ mcache_demon::mcache_demon(const monster_info& minf)
     m_demon.head = TILEP_DEMON_HEAD + random2(tile_player_count(TILEP_DEMON_HEAD));
     m_demon.body = TILEP_DEMON_BODY + random2(tile_player_count(TILEP_DEMON_BODY));
 
-    if (minf.flies)
+    if (minf.fly)
     {
         m_demon.wings = TILEP_DEMON_WINGS
                         + random2(tile_player_count(TILEP_DEMON_WINGS));

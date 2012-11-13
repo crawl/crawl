@@ -475,7 +475,7 @@ static bool _flying_in_new_form(transformation_type which_trans)
         return true;
     }
 
-    if (!you.is_flying())
+    if (!you.flight_mode())
         return false;
 
     int sources = player_evokable_flight();
@@ -626,7 +626,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
 {
     transformation_type previous_trans = you.form;
     bool was_in_water = you.in_water();
-    const bool was_flying = you.is_flying();
+    const flight_type was_flying = you.flight_mode();
 
     // Zin's protection.
     if (!just_check && you.religion == GOD_ZIN
@@ -992,7 +992,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
        you.transform_uncancellable = true;
 
     // Re-check terrain now that be may no longer be swimming or flying.
-    if (was_flying && !you.is_flying()
+    if (was_flying && !you.flight_mode()
                    || feat_is_water(grd(you.pos()))
                       && (which_trans == TRAN_BLADE_HANDS
                           || which_trans == TRAN_APPENDAGE)
@@ -1006,7 +1006,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
 
 void untransform(bool skip_wielding, bool skip_move)
 {
-    const bool was_flying = you.is_flying();
+    const flight_type old_flight = you.flight_mode();
 
     you.redraw_quiver       = true;
     you.redraw_evasion      = true;
@@ -1109,7 +1109,7 @@ void untransform(bool skip_wielding, bool skip_move)
     _unmeld_equipment(melded);
 
     // Re-check terrain now that be may no longer be swimming or flying.
-    if (!skip_move && (was_flying && !you.is_flying()
+    if (!skip_move && (old_flight && !you.flight_mode()
                        || (feat_is_water(grd(you.pos()))
                            && (old_form == TRAN_ICE_BEAST
                                || you.species == SP_MERFOLK))))

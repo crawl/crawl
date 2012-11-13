@@ -2892,11 +2892,7 @@ void marshallMonsterInfo(writer &th, const monster_info& mi)
     marshallInt(th, mi.mresists);
     marshallUnsigned(th, mi.mitemuse);
     marshallByte(th, mi.mbase_speed);
-#if TAG_MAJOR_VERSION == 34
-    marshallUnsigned(th, mi.flies ? 1 : 0);
-#else
-    marshallBoolean(th, mi.flies);
-#endif
+    marshallUnsigned(th, mi.fly);
     for (unsigned int i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
     {
         if (mi.inv[i].get())
@@ -2946,11 +2942,9 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
     unmarshallUnsigned(th, mi.mitemuse);
     mi.mbase_speed = unmarshallByte(th);
 
-#if TAG_MAJOR_VERSION == 34
-    mi.flies = unmarshallUnsigned(th) != 0;
-#else
-    unmarshallBoolean(th, mi.fly);
-#endif
+    // Some TAG_MAJOR_VERSION == 34 saves suffered data loss here, beware.
+    // Should be harmless, hopefully.
+    unmarshallUnsigned(th, mi.fly);
 
     for (unsigned int i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
     {
@@ -3604,11 +3598,7 @@ static void marshallGhost(writer &th, const ghost_demon &ghost)
     marshallByte(th, ghost.spellcaster);
     marshallByte(th, ghost.cycle_colours);
     marshallByte(th, ghost.colour);
-#if TAG_MAJOR_VERSION == 34
-    marshallShort(th, ghost.flies ? 1 : 0);
-#else
-    marshallBoolean(th, ghost.flies);
-#endif
+    marshallShort(th, ghost.fly);
 
     marshallSpells(th, ghost.spells);
 }
@@ -3638,11 +3628,7 @@ static ghost_demon unmarshallGhost(reader &th)
     ghost.cycle_colours    = unmarshallByte(th);
     ghost.colour           = unmarshallByte(th);
 
-#if TAG_MAJOR_VERSION == 34
-    ghost.flies            = unmarshallShort(th) != 0;
-#else
-    ghost.flies            = unmarshallBoolean(th);
-#endif
+    ghost.fly              = static_cast<flight_type>(unmarshallShort(th));
 
     unmarshallSpells(th, ghost.spells);
 

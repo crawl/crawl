@@ -1151,7 +1151,7 @@ bool spell_is_useless(spell_type spell, bool transient)
     case SPELL_FLY:
         if (you.racial_permanent_flight())
             return true;
-        if (transient && you.is_flying())
+        if (transient && you.flight_mode())
             return true;
         break;
     case SPELL_INVISIBILITY:
