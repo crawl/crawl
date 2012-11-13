@@ -5789,7 +5789,7 @@ flight_type player::flight_mode() const
 {
     if (duration[DUR_FLIGHT]
         || you.attribute[ATTR_PERM_FLIGHT]
-        // dragon and bat should be FL_FLY, but we don't want paralysis
+        // dragon and bat should be FL_WINGED, but we don't want paralysis
         // instakills over lava
         || form == TRAN_DRAGON
         || form == TRAN_BAT)

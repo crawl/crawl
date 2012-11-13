@@ -1858,7 +1858,7 @@ enum killer_type                       // monster_die(), thing_thrown
 enum flight_type
 {
     FL_NONE = 0,
-    FL_FLY,                            // wings, etc... paralysis == fall
+    FL_WINGED,                            // wings, etc... paralysis == fall
     FL_LEVITATE,                       // doesn't require physical effort
 };
 

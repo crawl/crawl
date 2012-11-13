@@ -1557,7 +1557,7 @@ bool monster_info::cannot_move() const
 
 bool monster_info::airborne() const
 {
-    return (fly == FL_LEVITATE) || (fly == FL_FLY && !cannot_move());
+    return (fly == FL_LEVITATE) || (fly == FL_WINGED && !cannot_move());
 }
 
 bool monster_info::ground_level() const

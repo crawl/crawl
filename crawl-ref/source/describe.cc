@@ -672,7 +672,7 @@ static string _describe_demon(const string& name, flight_type fly)
 
     switch (fly)
     {
-    case FL_FLY:
+    case FL_WINGED:
         description << RANDOM_ELEMENT(wing_names);
         break;
 
@@ -3213,14 +3213,21 @@ static string _monster_stat_description(const monster_info& mi)
         result << ".\n";
     }
 
-    // Can the monster levitate/fly?
+    // Can the monster fly, and how?
     // This doesn't give anything away since no (very) ugly things can
     // fly, all ghosts can fly, and for demons it's already mentioned in
     // their flavour description.
-    if (mi.fly != FL_NONE)
+    switch (mi.fly)
     {
-        result << uppercase_first(pronoun) << " can "
-               << (mi.fly == FL_FLY ? "fly" : "levitate") << ".\n";
+    case FL_NONE:
+        break;
+    case FL_WINGED:
+        result << uppercase_first(pronoun) << " can fly by flapping "
+               << mi.pronoun(PRONOUN_POSSESSIVE) << " wings.\n";
+        break;
+    case FL_LEVITATE:
+        result << uppercase_first(pronoun) << " can fly.\n";
+        break;
     }
 
     // Unusual regeneration rates.
