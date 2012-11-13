@@ -98,7 +98,7 @@ string stash_annotate_item(const char *s, const item_def *item, bool exclusive)
 
 void maybe_update_stashes()
 {
-    if (crawl_state.game_is_arena())
+    if (!crawl_state.game_is_arena())
         StashTrack.update_visible_stashes();
 }
 
