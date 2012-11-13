@@ -927,8 +927,15 @@ function (exports, $, key_conversion, chat, comm) {
 
         do_layout();
 
-        var inflater = new Inflater();
-        var end_marker = new Uint8Array([0, 0, 255, 255]);
+        var inflater = null;
+
+        if ("Uint8Array" in window &&
+            "Blob" in window &&
+            "FileReader" in window &&
+            "ArrayBuffer" in window)
+        {
+            inflater = new Inflater();
+        }
 
         if ("MozWebSocket" in window)
         {
@@ -938,7 +945,10 @@ function (exports, $, key_conversion, chat, comm) {
         if ("WebSocket" in window)
         {
             // socket_server is set in the client.html template
-            socket = new WebSocket(socket_server);
+            if (inflater)
+                socket = new WebSocket(socket_server);
+            else
+                socket = new WebSocket(socket_server, "no-compression");
             socket.binaryType = "arraybuffer";
 
             socket.onopen = function ()
@@ -956,7 +966,7 @@ function (exports, $, key_conversion, chat, comm) {
 
             socket.onmessage = function (msg)
             {
-                if (msg.data instanceof ArrayBuffer)
+                if (inflater && msg.data instanceof ArrayBuffer)
                 {
                     var data = new Uint8Array(msg.data.byteLength + 4);
                     data.set(new Uint8Array(msg.data), 0);
