@@ -496,7 +496,8 @@ Petrify spell
 
 This spell attempts to petrify a monster. If successful, the monster is slowed
 down for a while until it is temporarily turned into stone. In this state, a
-monster will take less damage upon being hit.
+monster will take less damage upon being hit. It also precludes the use of
+wings, which can be quite unhealthy above lava.
 %%%%
 Phase Shift spell
 

@@ -1785,7 +1785,9 @@ miss.
 %%%%
 wand of paralysis
 
-A magical device which can render a creature immobile.
+A magical device which can render a creature immobile, incapable of moving
+any of its limbs. It can just breathe, think, watch and lie helplessly
+while falling into lava below or being put out of misery by your dagger.
 %%%%
 wand of polymorph other
 
