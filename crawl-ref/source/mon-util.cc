@@ -3859,7 +3859,7 @@ mon_body_shape get_mon_shape(const monster_type mc)
     if (mc == MONS_CHAOS_SPAWN)
         return (static_cast<mon_body_shape>(random2(MON_SHAPE_MISC + 1)));
 
-    const bool flies = (mons_class_flies(mc) == FL_FLY);
+    const bool flies = (mons_class_flies(mc) == FL_WINGED);
 
     switch (mons_base_char(mc))
     {
