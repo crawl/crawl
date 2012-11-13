@@ -1695,6 +1695,9 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
         {
             blame_prefix = "woven by ";
         }
+
+        if (mg.cls == MONS_DANCING_WEAPON)
+            blame_prefix = "animated by ";
     }
     else if (mons_class_is_zombified(mg.cls))
         blame_prefix = "animated by ";
