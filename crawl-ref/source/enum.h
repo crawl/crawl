@@ -1855,6 +1855,13 @@ enum killer_type                       // monster_die(), thing_thrown
     KILL_ENSLAVED,                     // only used by milestones and notes
 };
 
+enum flight_type
+{
+    FL_NONE = 0,
+    FL_FLY,                            // wings, etc... paralysis == fall
+    FL_LEVITATE,                       // doesn't require physical effort
+};
+
 // Can't change this order without breaking saves.
 enum map_marker_type
 {

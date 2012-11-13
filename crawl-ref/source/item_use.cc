@@ -1195,7 +1195,7 @@ bool safe_to_remove(const item_def &item, bool quiet)
 
     // assumes item can't grant flight twice
     const bool removing_ends_flight =
-        you.is_flying()
+        you.flight_mode()
         && !you.attribute[ATTR_FLIGHT_UNCANCELLABLE]
         && (player_evokable_flight() == 1);
 

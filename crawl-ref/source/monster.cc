@@ -4007,7 +4007,7 @@ bool monster::inaccuracy() const
            && !suppressed();
 }
 
-bool monster::is_flying() const
+flight_type monster::flight_mode() const
 {
     // Checking class flags is not enough - see mons_flies().
     return mons_flies(this);

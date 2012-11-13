@@ -2545,6 +2545,14 @@ static bool _handle_pickup(monster* mons)
     if (mons->asleep() || mons->submerged())
         return false;
 
+    // Flying over water doesn't let you pick up stuff.  This is inexact, as
+    // a merfolk could be flying, but that's currently impossible except for
+    // being tornadoed, and with *that* low life expectancy let's not care.
+    dungeon_feature_type feat = grd(mons->pos());
+
+    if ((feat == DNGN_LAVA || feat == DNGN_DEEP_WATER) && mons->flight_mode())
+        return false;
+
     const bool nearby = mons_near(mons);
     int count_pickup = 0;
 

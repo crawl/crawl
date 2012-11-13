@@ -335,7 +335,7 @@ public:
     bool no_tele(bool calc_unid = true, bool permit_id = true) const;
     bool inaccuracy() const;
 
-    bool is_flying() const;
+    flight_type flight_mode() const;
     bool can_cling_to_walls() const;
     bool is_banished() const;
     bool is_web_immune() const;

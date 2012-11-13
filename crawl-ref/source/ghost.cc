@@ -158,7 +158,7 @@ void ghost_demon::reset()
     spellcaster      = false;
     cycle_colours    = false;
     colour           = BLACK;
-    flies            = false;
+    fly              = FL_NONE;
 }
 
 void ghost_demon::init_random_demon()
@@ -221,7 +221,9 @@ void ghost_demon::init_random_demon()
     }
 
     // Does demon fly?
-    flies = (one_chance_in(3) ? false : true);
+    fly = (one_chance_in(3) ? FL_NONE :
+           one_chance_in(5) ? FL_LEVITATE
+                            : FL_FLY);
 
     // hit dice:
     xl = 10 + roll_dice(2, 10);
@@ -458,7 +460,7 @@ void ghost_demon::init_player_ghost()
 
     // These are the same as in mon-data.h.
     colour = WHITE;
-    flies = true;
+    fly = FL_LEVITATE;
 
     add_spells();
 }
@@ -667,7 +669,7 @@ void ghost_demon::init_dancing_weapon(const item_def& weapon, int power)
         power = 100;
 
     colour = weapon.colour;
-    flies = true;
+    fly = FL_LEVITATE;
 
     // We want Tukima to reward characters who invest heavily in both
     // carrying capacity and Hexes skill.  Therefore, heavy weapons are a bit
@@ -1093,8 +1095,8 @@ void ghost_demon::init_labrat(colour_t force_colour)
     case LIGHTRED: // leeching
         att_flav = AF_VAMPIRIC;
         break;
-    case LIGHTBLUE: // airborne
-        flies = true;
+    case LIGHTBLUE: // floating
+        fly = FL_LEVITATE;
         spells[0] = SPELL_SHOCK;
         spellcaster = true;
         resists |= MR_RES_ELEC;

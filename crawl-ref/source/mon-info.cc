@@ -305,9 +305,7 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
 
     mbase_speed = mons_class_base_speed(type);
 
-    flies = mons_class_flies(type);
-    if (!flies)
-        flies = mons_class_flies(base_type);
+    fly = max(mons_class_flies(type), mons_class_flies(base_type));
 
     if (mons_class_wields_two_weapons(type)
         || mons_class_wields_two_weapons(base_type))
@@ -532,9 +530,9 @@ monster_info::monster_info(const monster* m, int milev)
 
     // consider randarts too, since flight should be visually obvious
     if (type_known)
-        flies = mons_flies(m);
+        fly = mons_flies(m);
     else
-        flies = mons_class_flies(type);
+        fly = mons_class_flies(type);
 
     if (mons_wields_two_weapons(m))
         mb.set(MB_TWO_WEAPONS);
@@ -1559,7 +1557,7 @@ bool monster_info::cannot_move() const
 
 bool monster_info::airborne() const
 {
-    return (flies && !cannot_move());
+    return (fly == FL_LEVITATE) || (fly == FL_FLY && !cannot_move());
 }
 
 bool monster_info::ground_level() const

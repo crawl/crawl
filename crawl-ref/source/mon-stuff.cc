@@ -3719,7 +3719,7 @@ static bool _mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
             return true;
 
         // We don't care about what's underneath the rain cloud if we can fly.
-        if (mons->is_flying())
+        if (mons->flight_mode())
             return false;
 
         // These don't care about deep water.

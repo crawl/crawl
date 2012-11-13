@@ -142,7 +142,10 @@ bool monster_habitable_grid(const monster* mon,
 
 bool mons_airborne(monster_type mcls, int flies, bool paralysed)
 {
-    return (flies && !paralysed);
+    if (flies == -1)
+        flies = mons_class_flies(mcls);
+
+    return (paralysed ? flies == FL_LEVITATE : flies != FL_NONE);
 }
 
 // Can monsters of class monster_class live happily on actual_grid?
@@ -155,11 +158,8 @@ bool mons_airborne(monster_type mcls, int flies, bool paralysed)
 bool monster_habitable_grid(monster_type mt,
                             dungeon_feature_type actual_grid,
                             dungeon_feature_type wanted_grid_feature,
-                            bool flies, bool paralysed)
+                            int flies, bool paralysed)
 {
-    if (!flies)
-        flies = mons_class_flies(mt);
-
     // No monster may be placed on open sea.
     if (actual_grid == DNGN_OPEN_SEA || actual_grid == DNGN_LAVA_SEA)
         return false;

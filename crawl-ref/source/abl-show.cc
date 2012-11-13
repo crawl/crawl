@@ -1272,7 +1272,7 @@ void no_ability_msg()
     else if (you.species == SP_TENGU && you.experience_level >= 5
              || player_mutation_level(MUT_BIG_WINGS))
     {
-        if (you.is_flying())
+        if (you.flight_mode())
             mpr("You're already flying!");
     }
     else if (silenced(you.pos()) && you.religion != GOD_NO_GOD)
@@ -3185,7 +3185,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
             if (!you.permanent_flight() || !you.racial_permanent_flight())
             {
                 // You can still evoke perm flight if you have temporary one.
-                if (!you.is_flying()
+                if (!you.flight_mode()
                     || !you.attribute[ATTR_PERM_FLIGHT]
                        && player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_FLYING))
                 {
@@ -3195,7 +3195,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
                 // activatable item.  Potions and miscast effects will
                 // have to time out (this makes the miscast effect actually
                 // a bit annoying). -- bwr
-                if (you.is_flying() && !you.attribute[ATTR_FLIGHT_UNCANCELLABLE])
+                if (you.flight_mode() && !you.attribute[ATTR_FLIGHT_UNCANCELLABLE])
                     _add_talent(talents, ABIL_STOP_FLYING, check_confused);
             }
         }
