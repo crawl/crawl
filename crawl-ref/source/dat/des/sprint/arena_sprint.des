@@ -746,7 +746,7 @@ function arena_sprint_init_boss_table()
     else
         bs[2] = {"place:Shoals", "polyphemus hp:350 / ilsuiw hp:250 /\
                  siren name:succubus tile:mons_succubus n_rpl n_des n_spe \
-                     col:lightmagenta hp:300 spells:malign_gateway /\
+                     col:lightmagenta hp:300 spells:malign_gateway perm_ench:flight /\
                  harpy name:queen n_suf n_noc col:lightgreen hp:260 /\
                  manticore name:hardcore n_adj n_noc col:lightred hp:400",
                  "barnacled rune of zot"}
