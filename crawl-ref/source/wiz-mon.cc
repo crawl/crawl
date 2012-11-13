@@ -175,7 +175,7 @@ static int _make_mimic_item(object_class_type type)
 // map definitions.
 void wizard_create_spec_monster_name()
 {
-    char specs[100];
+    char specs[1024];
     mpr("Enter monster name (or MONS spec): ", MSGCH_PROMPT);
     if (cancelable_get_line_autohist(specs, sizeof specs) || !*specs)
     {
@@ -702,7 +702,7 @@ void wizard_detect_creatures()
 // specified regex.
 void wizard_dismiss_all_monsters(bool force_all)
 {
-    char buf[80] = "";
+    char buf[1024] = "";
     if (!force_all)
     {
         mpr("Regex of monsters to dismiss (ENTER for all): ", MSGCH_PROMPT);
