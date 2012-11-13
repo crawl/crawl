@@ -851,6 +851,16 @@ function (exports, $, key_conversion, chat, comm) {
         f.readAsText(b, "UTF-8");
     }
 
+    function inflate_works_on_ua()
+    {
+        var b = $.browser;
+        if (b.chrome && b.version.match("^14\."))
+            return false; // doesn't support binary frames
+        if (b.chrome && b.version.match("^19\."))
+            return false; // buggy Blob builder
+        return true;
+    }
+
     // Global functions for backwards compatibility (HACK)
     window.log = log;
     window.set_layer = set_layer;
@@ -932,7 +942,8 @@ function (exports, $, key_conversion, chat, comm) {
         if ("Uint8Array" in window &&
             "Blob" in window &&
             "FileReader" in window &&
-            "ArrayBuffer" in window)
+            "ArrayBuffer" in window &&
+            inflate_works_on_ua())
         {
             inflater = new Inflater();
         }
