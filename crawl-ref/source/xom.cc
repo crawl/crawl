@@ -2573,7 +2573,7 @@ static void _xom_zero_miscast()
                 str += " primary";
             else
             {
-                str += random_choose(" front", " middle", " rear");
+                str += random_choose(" front", " middle", " rear", 0);
                 str += " secondary";
             }
         str += " eye.";
