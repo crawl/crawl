@@ -265,7 +265,7 @@ show_class get_cell_show_class(const map_cell& cell,
 
     if (feat_is_trap(cell.feat())
      || is_critical_feature(cell.feat())
-     || cell.feat() < DNGN_MINMOVE)
+     || (cell.feat() && cell.feat() < DNGN_MINMOVE))
     {
         return SH_FEATURE;
     }
