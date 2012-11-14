@@ -1587,7 +1587,9 @@ void note_inscribe_item(item_def &item)
 int move_item_to_player(int obj, int quant_got, bool quiet,
                         bool ignore_burden)
 {
-    if (item_is_stationary(mitm[obj]))
+    item_def &it = mitm[obj];
+
+    if (item_is_stationary(it))
     {
         mpr("You cannot pick up the net that holds you!");
         // Fake a successful pickup (return 1), so we can continue to
@@ -1595,7 +1597,7 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
         return 1;
     }
 
-    if (mitm[obj].base_type == OBJ_ORBS && crawl_state.game_is_zotdef())
+    if (it.base_type == OBJ_ORBS && crawl_state.game_is_zotdef())
     {
         if (runes_in_pack() < 15)
         {
@@ -1607,24 +1609,24 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
     int retval = quant_got;
 
     // Gold has no mass, so we handle it first.
-    if (mitm[obj].base_type == OBJ_GOLD)
+    if (it.base_type == OBJ_GOLD)
     {
-        _got_gold(mitm[obj], quant_got, quiet);
+        _got_gold(it, quant_got, quiet);
         dec_mitm_item_quantity(obj, quant_got);
 
         you.turn_is_over = true;
         return retval;
     }
     // So do runes.
-    if (item_is_rune(mitm[obj]))
+    if (item_is_rune(it))
     {
-        you.runes.set(mitm[obj].plus);
-        _check_note_item(mitm[obj]);
+        you.runes.set(it.plus);
+        _check_note_item(it);
 
         if (!quiet)
         {
             mprf("You pick up the %s rune and feel its power.",
-                 rune_type_name(mitm[obj].plus));
+                 rune_type_name(it.plus));
             int nrunes = runes_in_pack();
             if (nrunes >= you.obtainable_runes)
                 mpr("You have collected all the runes! Now go and win!");
@@ -1641,13 +1643,13 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
             mpr("Press } to see all the runes you have collected.");
         }
 
-        if (mitm[obj].plus == RUNE_ABYSSAL)
+        if (it.plus == RUNE_ABYSSAL)
             mpr("You feel the abyssal rune guiding you out of this place.");
 
-        if (mitm[obj].plus == RUNE_TOMB)
+        if (it.plus == RUNE_TOMB)
             add_daction(DACT_TOMB_CTELE);
 
-        if (mitm[obj].plus >= RUNE_DIS && mitm[obj].plus <= RUNE_TARTARUS)
+        if (it.plus >= RUNE_DIS && it.plus <= RUNE_TARTARUS)
             unset_level_flags(LFLAG_NO_TELE_CONTROL);
 
         dungeon_events.fire_position_event(
@@ -1667,9 +1669,9 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
         return retval;
     }
 
-    const int unit_mass = item_mass(mitm[obj]);
-    if (quant_got > mitm[obj].quantity || quant_got <= 0)
-        quant_got = mitm[obj].quantity;
+    const int unit_mass = item_mass(it);
+    if (quant_got > it.quantity || quant_got <= 0)
+        quant_got = it.quantity;
 
     int imass = unit_mass * quant_got;
     if (!ignore_burden && (you.burden + imass > carrying_capacity()))
@@ -1695,29 +1697,29 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
         retval = part;
     }
 
-    if (is_stackable_item(mitm[obj]))
+    if (is_stackable_item(it))
     {
         for (int m = 0; m < ENDOFPACK; m++)
         {
-            if (items_stack(you.inv[m], mitm[obj]))
+            if (items_stack(you.inv[m], it))
             {
                 if (!quiet && partial_pickup)
                     mpr("You can only carry some of what is here.");
 
-                _check_note_item(mitm[obj]);
+                _check_note_item(it);
 
                 const bool floor_god_gift
-                    = mitm[obj].inscription.find("god gift") != string::npos;
+                    = it.inscription.find("god gift") != string::npos;
                 const bool inv_god_gift
                     = you.inv[m].inscription.find("god gift") != string::npos;
 
                 // If the object on the ground is inscribed, but not
                 // the one in inventory, then the inventory object
                 // picks up the other's inscription.
-                if (!(mitm[obj].inscription).empty()
+                if (!(it.inscription).empty()
                     && you.inv[m].inscription.empty())
                 {
-                    you.inv[m].inscription = mitm[obj].inscription;
+                    you.inv[m].inscription = it.inscription;
                 }
 
                 // Remove god gift inscription unless both items have it.
@@ -1727,13 +1729,13 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
                     trim_god_gift_inscrip(you.inv[m]);
                 }
 
-                merge_item_stacks(mitm[obj], you.inv[m], quant_got);
+                merge_item_stacks(it, you.inv[m], quant_got);
 
                 inc_inv_item_quantity(m, quant_got);
                 dec_mitm_item_quantity(obj, quant_got);
                 burden_change();
 
-                _got_item(mitm[obj], quant_got);
+                _got_item(it, quant_got);
 
                 if (!quiet)
                 {
@@ -1759,7 +1761,7 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
     if (!quiet && partial_pickup)
         mpr("You can only carry some of what is here.");
 
-    int freeslot = find_free_slot(mitm[obj]);
+    int freeslot = find_free_slot(it);
     if (freeslot < 0 || freeslot >= ENDOFPACK
         || you.inv[freeslot].defined())
     {
@@ -1767,11 +1769,11 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
         return -1;
     }
 
-    if (mitm[obj].base_type == OBJ_ORBS
+    if (it.base_type == OBJ_ORBS
         && you.char_direction == GDT_DESCENDING)
     {
         // Take a note!
-        _check_note_item(mitm[obj]);
+        _check_note_item(it);
 
         env.orb_pos = you.pos(); // can be wrong in wizmode
         orb_pickup_noise(you.pos(), 30);
@@ -1788,7 +1790,7 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
         invalidate_agrid(true);
     }
 
-    coord_def p = mitm[obj].pos;
+    coord_def p = it.pos;
     // If moving an item directly from a monster to the player without the
     // item having been on the grid, then it really isn't a position event.
     if (in_bounds(p))
@@ -1796,9 +1798,10 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
         dungeon_events.fire_position_event(
             dgn_event(DET_ITEM_PICKUP, p, 0, obj, -1), p);
     }
+
     item_def &item = you.inv[freeslot];
     // Copy item.
-    item        = mitm[obj];
+    item        = it;
     item.link   = freeslot;
     item.pos.set(-1, -1);
     // Remove "dropped by ally" flag.
@@ -1814,13 +1817,13 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
     note_inscribe_item(item);
 
     item.quantity = quant_got;
-    if (is_blood_potion(mitm[obj]))
+    if (is_blood_potion(it))
     {
-        if (quant_got != mitm[obj].quantity)
+        if (quant_got != it.quantity)
         {
             // Remove oldest timers from original stack.
             for (int i = 0; i < quant_got; i++)
-                remove_oldest_blood_potion(mitm[obj]);
+                remove_oldest_blood_potion(it);
 
             // ... and newest ones from picked up stack
             remove_newest_blood_potion(item);
