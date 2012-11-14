@@ -1,0 +1,2195 @@
+################################################################################
+# Sprint VII, by st
+################################################################################
+#
+# Comments:
+#
+# - The named doors should give a "found door to x" message when they come into
+#   view and should be coloured, however I have ran out of energy to add the
+#   messages and a bug prevents colouring doors or using runed doors in sprint.
+#
+# - Performance is noticably bad while resting on the map.
+#
+# Thanks to elliott, HangedMan, Nomi and N78291 for the early testing/feedback.
+#
+################################################################################
+{{
+
+function base_monster_setup(e)
+  e.kmons("A = goblin / giant newt / giant cockroach / ooze / ball python /\
+           bat / kobold / rat / giant gecko / giant mite / gnoll band /\
+           hobgoblin / jackal band / worm / adder / quokka /\
+           gnoll shaman band / orc band / orc priest band / worker ant /\
+           giant eyeball / hound / iguana / ogre / orc wizard band /\
+           phantom / scorpion / small skeleton / gnoll sergeant band /\
+           centaur / jelly / water moccasin / ice beast / crimson imp /\
+           necrophage / quasit / small zombie / sky beast / deep elf soldier /\
+           giant frog / mummy / orc warrior band / wight band /\
+           hungry ghost / shadow / big kobold band / giant centipede /\
+           brain worm / warg / wolf / porcupine / black bear /\
+           giant mite / green rat / flying skull / iron imp / lemure /\
+           white imp / ufetubus / fire bat / rotting devil")
+  e.kmons("B = goliath beetle / steam dragon / crocodile / hippogriff /\
+           killer bee band / yellow wasp / eye of draining / manticore /\
+           wyvern / troll / two-headed ogre / yak band /\
+           hill giant / komodo dragon / wraith / soldier ant / unseen horror /\
+           trapdoor spider / basilisk / cyclops band / efreet /\
+           mottled dragon / blink frog band / vampire mosquito band /\
+           griffon / ugly thing / gargoyle / molten gargoyle / metal gargoyle /\
+           kobold demonologist band / giant slug / rock troll /\
+           deep elf fighter band / agate snail / boulder beetle / red wasp /\
+           orc high priest band w:5 / pulsating lump / boring beetle /\
+           flayed ghost / freezing wraith / shadow wraith /\
+           orc sorcerer band w:5 / orc knight band / grizzly bear /\
+           redback / phantasmal warrior / spiny frog / orange rat /\
+           black mamba / fire drake / hydra w:5 / polar bear / lindwurm /\
+           elephant / death yak / war dog band / sheep band /\
+           raven / swamp drake / bog body / giant leech / swamp dragon w:3 /\
+           merfolk band w:5 / mermaid w:3 / sea snake / snapping turtle /\
+           tarantella / jumping spider / demonic crawler / rotting hulk /\
+           flaming corpse / small abomination / guardian mummy / spriggan /\
+           orange demon / hellwing / smoke demon / ynoxinul / blue devil /\
+           red devil / centaur band / deep dwarf artificer")
+  e.kmons("C = eye of devastation / hydra / skeletal warrior band w:5 /\
+           catoblepas / vampire / wandering mushroom /\
+           guardian serpent / rakshasa w:5 / slime creature band w:5 /\
+           centaur warrior band w:5 / ugly thing band w:5 / wizard /\
+           small simulacrum / rock worm / giant amoeba / ogre mage band w:5 /\
+           wolf spider / yaktaur / air elemental / fire elemental /\
+           water elemental / earth elemental / deep elf knight band w:5 /\
+           deep elf mage band w:3 / deep elf summoner band w:3 /\
+           great orb of eyes / naga mage band w:5 / naga warrior band w:5 /\
+           necromancer band w:5 / orc knight band w:5 / spiny worm /\
+           harpy band w:5 / fire crab / redback band /\
+           vapour / deep elf priest band w:3 / shapeshifter / large zombie /\
+           large skeleton / deep dwarf necromancer / deep dwarf death knight /\
+           eidolon / elephant band w:5 / death yak band w:5 /\
+           insubstantial wisp band w:5 / swamp dragon / siren /\
+           alligator snapping turtle / anaconda / greater naga /\
+           merfolk javelineer band w:5 / merfolk impaler band w:5 /\
+           merfolk aquamancer band w:5 / ghost moth / emperor scorpion /\
+           vampire knight / vampire mage / large abomination /\
+           spriggan druid / spriggan rider / death cob /\
+           hell hound band w:5 / neqoxec / large simulacrum / sixfirhy /\
+           chaos spawn / ice devil / sun demon / iron devil / paladin /\
+           hell hog band w:5 / alligator band w:5 / minotaur")
+  e.kmons("D = dragon w:20 / yaktaur band w:5 / ice dragon w:20 /\
+           very ugly thing band w:5 / sphinx / iron troll /\
+           orc warlord band / yaktaur captain band w:5 / deep troll band w:5 /\
+           fire giant w:20 / frost giant w:20 / hell knight band /\
+           storm dragon / glowing shapeshifter / bone dragon / stone giant /\
+           deep elf annihilator / deep elf death mage / deep elf high priest /\
+           deep elf demonologist / deep elf sorcerer / shadow dragon /\
+           titan w:5 / deep dwarf berserker / unborn deep dwarf / ettin /\
+           greater naga / dancing weapon / dire elephant band /\
+           eye of draining / giant eyeball / vault guard / ghoul band w:5 /\
+           mummy priest / spriggan air mage / spriggan berserker /\
+           spriggan defender / base draconian w:70 / nonbase draconian w:5 /\
+           base draconian band w:5 / lorocyproca / daeva / angel /\
+           profane servitor / soul eater / hell beast / cherub / apis / ophan /\
+           balrug / green death / blizzard demon / deep elf blademaster /\
+           deep elf master archer")
+  e.kmons("E = lich / tentacled monstrosity / golden dragon /\
+           iron dragon / quicksilver dragon / titan / acid blob /\
+           azure jelly / golden eye / ancient lich w:5 /\
+           death ooze / reaper / greater mummy w:3 / curse toe / ghost moth /\
+           killer klown / nonbase draconian w:15 /\
+           nonbase draconian band w:15 / storm dragon / shadow dragon /\
+           hellephant / balrug w:5 / deep elf blademaster / cacodemon /\
+           deep elf master archer / blizzard demon / executioner /\
+           green death / hellion / tormentor / iron elemental w:3 /\
+           death drake w:2 / hell sentinel w:2 / brimstone fiend w:2 /\
+           ice fiend w:2 / shadow fiend w:2 / moth of wrath w:5 /\
+           balrug band w:5")
+  e.kmons("F = orb of fire / electric golem / ancient lich / greater mummy /\
+           hell sentinel / brimstone fiend / ice fiend / shadow fiend /\
+           pandemonium lord w:20 / pearl dragon / titan")
+  e.kmons("G = goblin / giant newt / giant cockroach / ooze /\
+           ball python /\
+           bat / kobold / rat / giant gecko / giant mite / gnoll /\
+           hobgoblin / jackal band /  adder / quokka /\
+           orc / worker ant / giant eyeball / small skeleton /\
+           small zombie / giant centipede / brain worm / giant mite /\
+           green rat / lemure / ufetubus")
+  e.kmons("H = Sigmund / Jessica / Blork the orc / Crazy Yiuf / Duvessa band /\
+           Edmund / Ijyb / Grinder / Pikel band / Purgy / Terence / Menkaure /\
+           Prince Ribbit")
+  e.kmons("I = Erica / Erolcha / Eustachio / Gastronok / Grum band / Harold /\
+           Joseph / Josephine band / Maurice / Psyche / Sonja / Urug")
+  e.kmons("J = Agnes / Aizul / Azrael band / Donald / Frances / Kirke band /\
+           Maud / Nergalle / Nessos / Ilsuiw band / Arachne /\
+           Polyphemus / Rupert / Saint Roka band / Snorg / Wiglaf")
+  e.kmons("K = Louise / Nikola / Norris / Frederick / Boris / Margery band /\
+           Dissolution / Xtahua / the Lernaean hydra / Jory / Mennas / Mara /\
+           the Serpent of Hell")
+  e.kmons("L = Khufu band / Tiamat band / Murray / Mnoleg / Gloorx Vloq /\
+           Lom Lobon / Cerebov w:5 / Dispater / Asmodeus / Antaeus /\
+           Ereshkigal / Ignacio / Geryon")
+  e.kmons("M = stone giant / hill giant / cyclops / frost giant /\
+           fire giant / ettin / rock troll / iron troll")
+  e.kmons("N = stone giant / titan / frost giant / fire giant / ettin")
+  e.kmons("O = deep elf mage / deep elf summoner / deep elf conjurer /\
+           deep elf annihilator / deep elf knight band / deep elf death mage /\
+           deep elf high priest / deep elf knight / deep elf sorcerer /\
+           deep elf demonologist /\
+           deep elf master archer w:3 / deep elf blademaster w:3")
+  e.kmons("P = deep elf annihilator / deep elf death mage /\
+           deep elf sorcerer / deep elf high priest / deep elf demonologist /\
+           deep elf master archer / deep elf blademaster")
+  e.kmons("Q = large skeleton / large zombie / skeletal warrior band /\
+           ghoul / vampire knight / vampire mage band / lich w:5 / eidolon /\
+           guardian mummy / mummy priest w:5")
+  e.kmons("R = greater mummy w:3 / mummy priest / lich / ancient lich /\
+           ghoul band / skeletal warrior band / vampire knight /\
+           vampire mage band")
+  e.kmons("S = orange demon / hellwing / smoke demon / ynoxinul / blue devil /\
+           red devil / sixfirhy / chaos spawn / ice devil / sun demon /\
+           iron devil / neqoxec band / green death w:5 / blizzard demon w:5 /\
+           balrug w:5 / cacodemon w:5 / hell beast / reaper w:5 / soul eater /\
+           lorocyproca")
+  e.kmons("T = balrug / blizzard demon / green death / reaper / cacodemon /\
+           lorocyproca / brimstone fiend / ice fiend / shadow fiend /\
+           hell sentinel / executioner")
+  e.kmons("U = place:Slime:6 / slime creature band / giant amoeba /\
+           death ooze / azure jelly / acid blob / brown ooze /\
+           giant eyeball w:3 / eye of draining w:3 / eye of devastation /\
+           golden eye w:3 / shining eye w:3")
+  e.kmons("V = azure jelly / death ooze / acid blob")
+  e.kmons("W = mottled dragon / steam dragon / dragon / ice dragon /\
+           storm dragon / swamp drake / lindwurm / fire drake /\
+           shadow dragon w:5")
+  e.kmons("X = shadow dragon / iron dragon / quicksilver dragon /\
+           golden dragon")
+  e.kmons("Y = base draconian")
+  e.kmons("Z = nonbase draconian")
+  e.subst("H = H, I = HI, J = HIJ, K = HIJK, L = HIJKL")
+  e.subst("1 = A:30 H:2")
+  e.subst("2 = B:76 A:15 C:5 I:4")
+  e.subst("3 = C:76 B:15 D:5 J:4")
+  e.subst("4 = D:71 C:20 E:5 K:4")
+  e.subst("5 = E:44 D:30 F:5 L:2 K:15")
+  e.subst("6 = F:70 E:25 L:10")
+end
+
+
+function general_item_setup(e)
+  e.kitem("^ = superb_item ident:all w:590 / potion of porridge ident:all w:2 /\
+          wand of heal wounds w:1 ident:all / wand of hasting ident:all w:1 /\
+          potion of heal wounds ident:all q:2 w:2 /\
+          scroll of recharging ident:all w:1 /\
+          scroll of fog w:1 ident:all / scroll of holy word w:1 ident:all /\
+          potion of might ident:all w:2 / potion of agility w:2 ident:all /\
+          potion of speed q:2 ident:all w:2 /\
+          scroll of acquirement w:1 ident:all /\
+          scroll of enchant weapon iii ident:all q:2 w:2 /\
+          scroll of enchant armour ident:all q:4 w:2 /\
+          scroll of vorpalise weapon ident:all")
+  e.kitem("| = superb_item ident:all w:66 / star_item ident:all w:33")
+  e.kitem("* = star_item ident:all w:66 / any ident:all w:33")
+  e.kitem("% = any ident:all")
+  e.kitem("! = potion of heal wounds ident:all q:2 w:30 /\
+          potion of curing ident:all w:20 /\
+          potion of might ident:all / potion of agility ident:all /\
+          potion of speed ident:all /\
+          potion of restore abilities ident:all w:5 /\
+          potion of resistance ident:all w:5 / potion of brilliance ident:all /\
+          potion of berserk rage ident:all /\
+          potion of cure mutation ident:all")
+  e.kitem("? = scroll of blinking ident:all /\
+          scroll of remove curse ident:all /\
+          scroll of identify ident:all / scroll of recharging ident:all /\
+          scroll of fog ident:all / scroll of fear ident:all /\
+          scroll of enchant weapon i ident:all q:2 /\
+          scroll of enchant weapon ii ident:all q:2 /\
+          scroll of enchant weapon iii ident:all /\
+          scroll of enchant armour ident:all q:2")
+  e.kitem(") = battleaxe plus:9 plus2:9 good_item not_cursed ident:all /\
+    battleaxe plus:7 plus2:7 randart not_cursed ident:all w:3 /\
+    battleaxe plus:5 plus2:10 randart not_cursed ident:all w:3 /\
+    battleaxe plus:10 plus2:5 randart not_cursed ident:all w:3 /\
+    executioner's axe plus:7 plus2:7 good_item not_cursed ident:all /\
+    executioner's axe plus:5 plus2:5 randart not_cursed ident:all w:3 /\
+    executioner's axe plus:3 plus2:9 randart not_cursed ident:all w:3 /\
+    executioner's axe plus:9 plus2:3 randart not_cursed ident:all w:3 /\
+    broad axe plus:11 plus2:11 good_item not_cursed ident:all /\
+    broad axe plus:9 plus2:9 randart not_cursed ident:all w:3 /\
+    broad axe plus:7 plus2:13 randart not_cursed ident:all w:3 /\
+    broad axe plus:13 plus2:7 randart not_cursed ident:all w:3 /\
+    glaive plus:9 plus2:9 good_item not_cursed ident:all /\
+    glaive plus:7 plus2:7 randart not_cursed ident:all w:3 /\
+    glaive plus:10 plus2:5 randart not_cursed ident:all w:3 /\
+    glaive plus:5 plus2:10 randart not_cursed ident:all w:3 /\
+    scythe plus:11 plus2:11 good_item not_cursed ident:all /\
+    scythe plus:9 plus2:9 randart not_cursed ident:all w:3 /\
+    scythe plus:15 plus2:5 randart not_cursed ident:all w:3 /\
+    scythe plus:5 plus2:15 randart not_cursed ident:all w:3 /\
+    bardiche plus:7 plus2:7 good_item not_cursed ident:all /\
+    bardiche plus:5 plus2:5 randart not_cursed ident:all w:3 /\
+    bardiche plus:3 plus2:9 randart not_cursed ident:all w:3 /\
+    bardiche plus:9 plus2:3 randart not_cursed ident:all w:3 /\
+    demon trident plus:9 plus2:9 good_item not_cursed ident:all /\
+    demon trident plus:7 plus2:7 randart not_cursed ident:all w:3 /\
+    demon trident plus:10 plus2:5 randart not_cursed ident:all w:3 /\
+    demon trident plus:5 plus2:10 randart not_cursed ident:all w:3 /\
+    great mace plus:9 plus2:9 good_item not_cursed ident:all /\
+    great mace plus:7 plus2:7 randart not_cursed ident:all w:3 /\
+    great mace plus:10 plus2:5 randart not_cursed ident:all w:3 /\
+    great mace plus:5 plus2:10 randart not_cursed ident:all w:3 /\
+    giant spiked club plus:9 plus2:9 good_item not_cursed ident:all /\
+    giant spiked club plus:7 plus2:7 randart not_cursed ident:all w:3 /\
+    giant spiked club plus:10 plus2:5 randart not_cursed ident:all w:3 /\
+    giant spiked club plus:5 plus2:10 randart not_cursed ident:all w:3 /\
+    demon whip plus:9 plus2:9 good_item not_cursed ident:all /\
+    demon whip plus:7 plus2:7 randart not_cursed ident:all w:3 /\
+    demon whip plus:10 plus2:5 randart not_cursed ident:all w:3 /\
+    demon whip plus:5 plus2:10 randart not_cursed ident:all w:3 /\
+    double sword plus:9 plus2:9 good_item not_cursed ident:all /\
+    double sword plus:7 plus2:7 randart not_cursed ident:all w:3 /\
+    double sword plus:10 plus2:5 randart not_cursed ident:all w:3 /\
+    double sword plus:5 plus2:10 randart not_cursed ident:all w:3 /\
+    triple sword plus:7 plus2:7 good_item not_cursed ident:all /\
+    triple sword plus:5 plus2:5 randart not_cursed ident:all w:3 /\
+    triple sword plus:3 plus2:9 randart not_cursed ident:all w:3 /\
+    triple sword plus:9 plus2:3 randart not_cursed ident:all w:3 /\
+    demon blade plus:9 plus2:9 good_item not_cursed ident:all /\
+    demon blade plus:9 plus2:9 randart not_cursed ident:all w:3 /\
+    demon blade plus:13 plus2:7 randart not_cursed ident:all w:3 /\
+    demon blade plus:7 plus2:13 randart not_cursed ident:all w:3 /\
+    great sword plus:9 plus2:9 good_item not_cursed ident:all /\
+    great sword plus:7 plus2:7 randart not_cursed ident:all w:3 /\
+    great sword plus:11 plus2:11 randart not_cursed ident:all w:3 /\
+    great sword plus:5 plus2:13 randart not_cursed ident:all w:3 /\
+    lajatang plus:9 plus2:9 good_item not_cursed ident:all /\
+    lajatang plus:7 plus2:7 randart not_cursed ident:all w:3 /\
+    lajatang plus:10 plus2:5 randart not_cursed ident:all w:3 /\
+    lajatang plus:5 plus2:10 randart not_cursed ident:all w:3 /\
+    longbow plus:7 plus2:7 ego:vorpal not_cursed ident:all w:15 /\
+    crossbow plus:7 plus2:7 ego:vorpal not_cursed ident:all w:15")
+  e.kitem("] = plate armour plus:12 not_cursed ident:all /\
+    plate armour plus:8 good_item not_cursed ident:all /\
+    chain mail plus:8 not_cursed ident:all /\
+    chain mail plus:6 good_item not_cursed ident:all /\
+    robe plus:4 ego:resistance not_cursed ident:all /\
+    fire dragon armour plus:10 not_cursed ident:all /\
+    ice dragon armour plus:10 not_cursed ident:all /\
+    swamp dragon armour plus:9 not_cursed ident:all /\
+    swamp dragon armour plus:5 good_item not_cursed ident:all /\
+    mottled dragon armour plus:8 not_cursed ident:all /\
+    mottled dragon armour plus:4 good_item not_cursed ident:all /\
+    storm dragon armour plus:12 not_cursed ident:all /\
+    storm dragon armour plus:8 good_item not_cursed ident:all /\
+    gold dragon armour plus:14 not_cursed ident:all /\
+    gold dragon armour plus:10 good_item not_cursed ident:all /\
+    pair of gloves plus:4 not_cursed ident:all /\
+    pair of gloves plus:2 good_item not_cursed ident:all /\
+    pair of boots plus:4 not_cursed ident:all /\
+    pair of boots plus:2 good_item not_cursed ident:all /\
+    helmet plus:4 not_cursed ident:all /\
+    helmet plus:2 good_item not_cursed ident:all /\
+    cloak plus:4 not_cursed ident:all /\
+    cloak plus:2 good_item not_cursed ident:all /\
+    wizard hat plus:4 not_cursed ident:all /\
+    wizard hat plus:2 good_item not_cursed ident:all /\
+    large shield plus:5 not_cursed ident:all /\
+    large shield plus:3 good_item not_cursed ident:all /\
+    naga barding plus:6 not_cursed ident:all w:5 /\
+    centaur barding plus:6 not_cursed ident:all w:5")
+  e.kitem("( = battleaxe plus:6 plus2:6 ego:none not_cursed ident:all /\
+    battleaxe plus:3 plus2:3 good_item not_cursed ident:all /\
+    executioner's axe plus:3 plus2:3 ego:none not_cursed ident:all /\
+    executioner's axe plus:0 plus2:0 good_item not_cursed ident:all /\
+    broad axe plus:9 plus2:9 ego:none not_cursed ident:all /\
+    broad axe plus:6 plus2:6 good_item not_cursed ident:all /\
+    glaive plus:6 plus2:6 ego:none not_cursed ident:all /\
+    glaive plus:3 plus2:3 good_item not_cursed ident:all /\
+    scythe plus:9 plus2:9 ego:none not_cursed ident:all /\
+    scythe plus:6 plus2:6 good_item not_cursed ident:all /\
+    bardiche plus:3 plus2:3 ego:none not_cursed ident:all /\
+    bardiche plus:0 plus2:0 good_item not_cursed ident:all /\
+    demon trident plus:6 plus2:6 ego:none not_cursed ident:all /\
+    demon trident plus:3 plus2:3 good_item not_cursed ident:all /\
+    great mace plus:6 plus2:6 ego:none not_cursed ident:all /\
+    great mace plus:3 plus2:3 good_item not_cursed ident:all /\
+    giant spiked club plus:6 plus2:6 ego:none not_cursed ident:all /\
+    giant spiked club plus:3 plus2:3 good_item not_cursed ident:all /\
+    demon whip plus:6 plus2:6 ego:none not_cursed ident:all /\
+    demon whip plus:3 plus2:3 good_item not_cursed ident:all /\
+    double sword plus:6 plus2:6 ego:none not_cursed ident:all /\
+    double sword plus:3 plus2:3 good_item not_cursed ident:all /\
+    triple sword plus:3 plus2:3 ego:none not_cursed ident:all /\
+    triple sword plus:0 plus2:0 good_item not_cursed ident:all /\
+    demon blade plus:6 plus2:6 ego:none not_cursed ident:all /\
+    demon blade plus:3 plus2:3 good_item not_cursed ident:all /\
+    great sword plus:6 plus2:6 ego:none not_cursed ident:all /\
+    great sword plus:3 plus2:3 good_item not_cursed ident:all /\
+    lajatang plus:6 plus2:6 ego:none not_cursed ident:all /\
+    lajatang plus:3 plus2:3 good_item not_cursed ident:all /\
+    longbow plus:5 plus2:5 good_item not_cursed ident:all w:15 /\
+    crossbow plus:5 plus2:5 good_item not_cursed ident:all w:15")
+  e.kitem("[ = plate armour plus:7 not_cursed ident:all /\
+    plate armour plus:4 good_item not_cursed ident:all /\
+    splint mail plus:6 not_cursed ident:all /\
+    splint mail plus:4 good_item not_cursed ident:all /\
+    chain mail plus:7 not_cursed ident:all /\
+    chain mail plus:4 good_item not_cursed ident:all /\
+    robe plus:4 not_cursed ident:all /\
+    robe plus:1 good_item not_cursed ident:all /\
+    fire dragon armour plus:7 not_cursed ident:all /\
+    ice dragon armour plus:7 not_cursed ident:all /\
+    swamp dragon armour plus:5 not_cursed ident:all /\
+    mottled dragon armour plus:5 not_cursed ident:all /\
+    storm dragon armour plus:6 not_cursed ident:all /\
+    gold dragon armour plus:8 not_cursed ident:all /\
+    pair of gloves plus:2 not_cursed ident:all /\
+    pair of gloves plus:0 good_item not_cursed ident:all /\
+    pair of boots plus:2 not_cursed ident:all /\
+    pair of boots plus:0 good_item not_cursed ident:all /\
+    helmet plus:2 not_cursed ident:all /\
+    helmet plus:0 good_item not_cursed ident:all /\
+    cloak plus:2 not_cursed ident:all /\
+    cloak plus:0 good_item not_cursed ident:all /\
+    wizard hat plus:2 not_cursed ident:all /\
+    wizard hat plus:0 good_item not_cursed ident:all /\
+    large shield plus:3 not_cursed ident:all /\
+    large shield plus:0 good_item not_cursed ident:all /\
+    naga barding plus:2 not_cursed ident:all w:5 /\
+    centaur barding plus:2 not_cursed ident:all w:5")
+end
+
+function general_setup(e)
+  e.tags("no_rotate no_hmirror no_vmirror")
+  e.tags("no_monster_gen no_item_gen no_trap_gen no_pool_fixup")
+  e.kfeat("& = runed_door")
+  e.marker("& = lua:restrict_door()")
+  e.kfeat("~ = runed_door")
+  e.marker("~ = lua:restrict_door()")
+  e.kfeat("< = runed_door")
+  e.marker("< = lua:restrict_door()")
+  e.kfeat("> = runed_door")
+  e.marker("> = lua:restrict_door()")
+  e.kfeat("# = runed_door")
+  e.marker("# = lua:restrict_door()")
+  e.kfeat("_ = runed_door")
+  e.marker("_ = lua:restrict_door()")
+  e.kfeat("@ = floor")
+  e.colour("@ = yellow")
+  e.ftile("@ = floor_crypt")
+end
+
+function metal_vault_setup(e)
+  e.tags("the_vault_of_metal")
+  e.colour("v = red")
+  e.tile("v = dngn_metal_iron")
+  e.kitem("a = ring of protection from fire ident:all not_cursed /\
+          ring of protection from cold ident:all not_cursed /\
+          ring of life protection ident:all not_cursed /\
+          ring of protection from magic ident:all not_cursed /\
+          ring of fire ident:all not_cursed /\
+          ring of ice ident:all not_cursed /\
+          ring of see invisible ident:all not_cursed /\
+          ring of poison resistance ident:all not_cursed /\
+          any jewellery ident:all not_cursed")
+  e.lua_marker('>', props_marker {
+              door_description_suffix=" to the Metal Vault (Medium)",
+              })
+end
+
+function steel_vault_setup(e)
+  e.tags("the_vault_of_steel")
+  e.colour("v = red")
+  e.tile("v = dngn_metal_iron")
+  e.subst("4 = 4:290 M:1 O:1 Q:1 S:1 U:1 W:1 Y:1 J:1")
+  e.subst("5 = 5:290 N:1 P:1 R:1 T:1 V:1 X:1 Z:1 K:1")
+  e.kitem("a = any weapon randart level:17 ident:all")
+  e.kitem("b = any armour randart level:17 ident:all")
+  e.kitem("c = ring of slaying plus:0 plus2:5 ident:all not_cursed w:5 /\
+          ring of slaying plus:5 plus2:0 ident:all not_cursed w:5 /\
+          ring of regeneration ident:all not_cursed /\
+          ring of invisibility ident:all not_cursed /\
+          ring of protection plus:6 ident:all not_cursed /\
+          ring of evasion plus:6 ident:all not_cursed /\
+          ring of strength plus:6 ident:all not_cursed /\
+          ring of intelligence plus:6 ident:all not_cursed /\
+          ring of dexterity plus:6 ident:all not_cursed /\
+          ring of wizardry ident:all not_cursed /\
+          any jewellery ident:all not_cursed")
+  e.lua_marker('~', props_marker {
+           door_description_suffix=" to the Steel Vault (Very Hard)",
+           })
+  e.lua_marker('<', props_marker {
+           door_description_suffix=" to the Silver Pit (Extremely Hard)",
+           })
+end
+
+function crystal_vault_setup(e)
+  e.tags("the_vault_of_crystal")
+  e.colour("v = red")
+  e.tile("v = dngn_metal_iron")
+  e.subst("4 = 4:290 M:1 O:1 Q:1 S:1 U:1 W:1 Y:1 J:1")
+  e.subst("5 = 5:290 N:1 P:1 R:1 T:1 V:1 X:1 Z:1 K:1")
+  e.kitem("c = any jewellery randart level:27 not_cursed ident:all")
+  e.lua_marker('>', props_marker {
+           door_description_suffix=" to the Crystal Vault (Extremely Hard)",
+           })
+end
+
+function iron_vault_setup(e)
+  e.tags("the_vault_of_iron")
+  e.colour("v = red")
+  e.tile("v = dngn_metal_iron")
+  e.kitem("c = any jewellery randart level:27 not_cursed ident:all")
+  e.kitem("d = iron rune of zot")
+  e.subst("' = ))]]cc")
+  e.lua_marker('~', props_marker {
+           door_description_suffix=" to the Iron Vault (Extremely Hard)",
+           })
+end
+
+function armoury_setup(e)
+  e.tile("v = dngn_metal_wall_cyan")
+  e.kmons("8 = orc warlord")
+  e.kmons("9 = orc knight")
+  e.kmons("0 = orc knight / vault guard / naga warrior / deep elf knight /\
+             deep elf blademaster w:1 / yaktaur captain band w:5")
+  e.kitem("a = any weapon level:27 ident:all /\
+          broad axe plus:5 plus2:5 not_cursed ident:all /\
+          battleaxe plus:3 plus2:3 not_cursed ident:all /\
+          executioner's axe plus:1 plus2:1 not_cursed ident:all w:3 /\
+          glaive plus:3 plus2:3 not_cursed ident:all /\
+          bardiche plus:1 plus2:1 not_cursed ident:all w:3 /\
+          dire flail plus:5 plus2:5 not_cursed ident:all /\
+          great mace plus:3 plus2:3 not_cursed ident:all /\
+          demon whip plus:3 plus2:3 not_cursed ident:all w:5 /\
+          giant spiked plus:3 plus2:3 club not_cursed ident:all /\
+          quick blade plus:5 plus2:5 not_cursed ident:all /\
+          great sword plus:3 plus2:3 not_cursed ident:all /\
+          double sword plus:3 plus2:3 not_cursed ident:all /\
+          demon blade plus:3 plus2:3 not_cursed ident:all w:3 /\
+          triple sword plus:1 plus2:1 not_cursed ident:all w:3 /\
+          lajatang plus:3 plus2:3 not_cursed ident:all /\
+          longbow plus:3 plus2:3 not_cursed ident:all /\
+          crossbow plus:3 plus2:3 not_cursed ident:all /\
+          any weapon good_item ident:all w:30")
+  e.kitem("b = any armour level:27 ident:all /\
+          pair of gloves plus:1 ident:all not_cursed /\
+          pair of boots plus:1 ident:all not_cursed /\
+          helmet plus:1 ident:all not_cursed /\
+          cloak plus:1 ident:all not_cursed /\
+          chain mail plus:6 ident:all not_cursed /\
+          ring mail plus:4 ident:all not_cursed /\
+          scale mail plus:7 ident:all not_cursed /\
+          splint mail plus:6 ident:all not_cursed /\
+          plate armour plus:5 ident:all not_cursed /\
+          fire dragon armour plus:4 not_cursed ident:all /\
+          ice dragon armour plus:4 not_cursed ident:all /\
+          swamp dragon armour plus:2 not_cursed ident:all /\
+          mottled dragon armour plus:2 not_cursed ident:all /\
+          storm dragon armour plus:3 not_cursed ident:all /\
+          gold dragon armour plus:2 not_cursed ident:all /\
+          large shield plus:1 not_cursed ident:all /\
+          any armour good_item ident:all w:20")
+  e.kitem("c = any weapon good_item ident:all")
+  e.kitem("d = any armour good_item ident:all")
+  e.kitem("e = arrow q:50 mundane ident:all")
+  e.kitem("f = bolt q:50 mundane ident:all")
+  e.subst("c = ccc(")
+  e.subst("d = ddd[")
+  e.lua_marker('~', props_marker {
+           door_description_suffix=" to the Main Hall (Safe)",
+           })
+  e.lua_marker('<', props_marker {
+        door_description_suffix=" to the Hallway of Sentries (Extremely Hard)",
+           })
+  e.lua_marker('>', props_marker {
+           door_description_suffix=" to the Coven (Very Hard)",
+           })
+  e.lua_marker('#', props_marker {
+           door_description_suffix=" to the Armoury (Hard)",
+           })
+end
+
+function coven_setup(e)
+  e.kmons("0 = deep elf annihilator / deep elf death mage / deep elf sorcerer /\
+        deep elf demonologist / deep elf high priest / nonbase draconian w:20 /\
+        sphinx / lich / ancient lich w:3 / wizard / ogre mage / vampire mage /\
+        naga mage / greater naga / base draconian w:20")
+  e.kmons("9 = Frederick / Margery band / Boris / Norris / Frances")
+  e.kfeat("v = green_crystal_wall")
+  e.colour("v = green")
+  e.tile("v = wall_emerald")
+  e.subst("0 = 0:20 9:1")
+  e.kitem("a = any book good_item ident:all")
+  e.kitem("b = amulet of conservation randart not_cursed ident:all /\
+          amulet of faith randart not_cursed ident:all /\
+          amulet of guardian spirit randart not_cursed ident:all /\
+          amulet of resist corrosion randart not_cursed ident:all /\
+          amulet of resist mutation randart not_cursed ident:all /\
+          amulet of rage randart not_cursed ident:all /\
+          amulet of stasis randart not_cursed ident:all /\
+          amulet of the gourmand randart not_cursed ident:all /\
+          amulet of warding randart not_cursed ident:all /\
+          ring of slaying plus:0 plus2:8 ident:all not_cursed w:5 /\
+          ring of slaying plus:8 plus2:0 ident:all not_cursed w:5 /\
+          ring of slaying plus:5 plus2:5 randart ident:all not_cursed w:5 /\
+          any jewellery randart level:27 not_cursed ident:all w:40")
+  e.kitem("c = ring of protection from fire randart ident:all not_cursed /\
+          ring of protection from cold randart ident:all not_cursed /\
+          ring of life protection randart ident:all not_cursed /\
+          ring of protection from magic randart ident:all not_cursed /\
+          ring of fire randart ident:all not_cursed /\
+          ring of ice randart ident:all not_cursed /\
+          ring of see invisible randart ident:all not_cursed /\
+          ring of poison resistance randart ident:all not_cursed /\
+          ring of slaying plus:5 plus2:5 ident:all not_cursed w:5 /\
+          ring of slaying plus:5 plus2:5 ident:all not_cursed w:5 /\
+          ring of regeneration randart ident:all not_cursed /\
+          ring of invisibility randart ident:all not_cursed /\
+          ring of protection plus:6 randart ident:all not_cursed /\
+          ring of evasion plus:6 randart ident:all not_cursed /\
+          ring of strength plus:6 randart ident:all not_cursed /\
+          ring of intelligence plus:6 randart ident:all not_cursed /\
+          ring of dexterity plus:6 randart ident:all not_cursed /\
+          ring of wizardry ident:all randart not_cursed")
+  e.kitem("d = wand of heal wounds charges:5 ident:all")
+  e.kitem("e = wand of hasting charges:5 ident:all")
+  e.kitem("f = any wand good_item ident:all")
+  e.kitem("g = staff of energy ident:all")
+  e.kitem("h = staff of channeling ident:all")
+  e.kitem("i = crystal ball of energy")
+  e.kitem("j = potion of cure mutation ident:all")
+  e.lua_marker('~', props_marker {
+           door_description_suffix=" to the Coven (Very Hard)",
+           })
+end
+
+}}
+################################################################################
+#
+################################################################################
+NAME:      pitsprint
+TAGS:      sprint
+LFLOORCOL: lightgrey
+ORIENT:    encompass
+DESC:      Sprint VII: "The Pits"
+SUBVAULT:  A : the_storerooms
+SUBVAULT:  B : the_entrance_hall
+SUBVAULT:  C : the_vault_of_metal
+SUBVAULT:  E : the_armoury
+SUBVAULT:  F : the_minivault
+SUBVAULT:  G : the_grid_vault
+SUBVAULT:  H : the_main_hall
+SUBVAULT:  I : the_silver_pit
+SUBVAULT:  J : the_coven
+SUBVAULT:  K : the_vestibule
+SUBVAULT:  L : the_vault_of_steel
+SUBVAULT:  N : the_golden_pit
+SUBVAULT:  P : the_hallway_of_sentries
+SUBVAULT:  R : the_vault_of_crystal
+SUBVAULT:  S : the_vault_of_iron
+SUBVAULT:  Z : the_final_vault
+LFLOORTILE: floor_iron
+: general_setup(_G)
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZNNNNNNNNNNNNNNNNNNNNNNNNNv
+vZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZNNNNNNNNNNNNNNNNNNNNNNNNNv
+vZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZNNNNNNNNNNNNNNNNNNNNNNNNNv
+vZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZNNNNNNNNNNNNNNNNNNNNNNNNNv
+vZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZNNNNNNNNNNNNNNNNNNNNNNNNNv
+vZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZNNNNNNNNNNNNNNNNNNNNNNNNNv
+vZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZNNNNNNNNNNNNNNNNNNNNNNNNNv
+vZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZNNNNNNNNNNNNNNNNNNNNNNNNNv
+vZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZNNNNNNNNNNNNNNNNNNNNNNNNNv
+vZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZSSSSSSSSSSSSSSSSSSSSSSPPPv
+vZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZSSSSSSSSSSSSSSSSSSSSSSPPPv
+vZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZSSSSSSSSSSSSSSSSSSSSSSPPPv
+vZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZSSSSSSSSSSSSSSSSSSSSSSPPPv
+vZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZSSSSSSSSSSSSSSSSSSSSSSPPPv
+vZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZSSSSSSSSSSSSSSSSSSSSSSPPPv
+vZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZSSSSSSSSSSSSSSSSSSSSSSPPPv
+vZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZSSSSSSSSSSSSSSSSSSSSSSPPPv
+vLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLKKKKKKKKKKKKKKKKKKKSSSSSSSSSSSSSSSSSSSSSSPPPv
+vLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLKKKKKKKKKKKKKKKKKKKSSSSSSSSSSSSSSSSSSSSSSPPPv
+vLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLKKKKKKKKKKKKKKKKKKKSSSSSSSSSSSSSSSSSSSSSSPPPv
+vLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLKKKKKKKKKKKKKKKKKKKSSSSSSSSSSSSSSSSSSSSSSPPPv
+vLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLKKKKKKKKKKKKKKKKKKKSSSSSSSSSSSSSSSSSSSSSSPPPv
+vLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLKKKKKKKKKKKKKKKKKKKSSSSSSSSSSSSSSSSSSSSSSPPPv
+vLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLKKKKKKKKKKKKKKKKKKKSSSSSSSSSSSSSSSSSSSSSSPPPv
+vLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLKKKKKKKKKKKKKKKKKKKSSSSSSSSSSSSSSSSSSSSSSPPPv
+vLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLKKKKKKKKKKKKKKKKKKKSSSSSSSSSSSSSSSSSSSSSSPPPv
+vLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLHHHHHHHHHHHHRRRRRRRRRRRRRRRRRRRRRRRRRRRRRPPPv
+vLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLHHHHHHHHHHHHRRRRRRRRRRRRRRRRRRRRRRRRRRRRRPPPv
+vLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLHHHHHHHHHHHHRRRRRRRRRRRRRRRRRRRRRRRRRRRRRPPPv
+vLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLHHHHHHHHHHHHRRRRRRRRRRRRRRRRRRRRRRRRRRRRRPPPv
+vLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLHHHHHHHHHHHHRRRRRRRRRRRRRRRRRRRRRRRRRRRRRPPPv
+vLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLHHHHHHHHHHHHRRRRRRRRRRRRRRRRRRRRRRRRRRRRRPPPv
+vIIIIIIIIIIIIGGGGGGGGGGGGGGGGGGGGGGHHHHHHHHHHHHRRRRRRRRRRRRRRRRRRRRRRRRRRRRRPPPv
+vIIIIIIIIIIIIGGGGGGGGGGGGGGGGGGGGGGHHHHHHHHHHHHRRRRRRRRRRRRRRRRRRRRRRRRRRRRRPPPv
+vIIIIIIIIIIIIGGGGGGGGGGGGGGGGGGGGGGHHHHHHHHHHHHRRRRRRRRRRRRRRRRRRRRRRRRRRRRRPPPv
+vIIIIIIIIIIIIGGGGGGGGGGGGGGGGGGGGGGHHHHHHHHHHHHRRRRRRRRRRRRRRRRRRRRRRRRRRRRRPPPv
+vIIIIIIIIIIIIGGGGGGGGGGGGGGGGGGGGGGHHHHHHHHHHHHRRRRRRRRRRRRRRRRRRRRRRRRRRRRRPPPv
+vIIIIIIIIIIIIGGGGGGGGGGGGGGGGGGGGGGHHHHHHHHHHHHRRRRRRRRRRRRRRRRRRRRRRRRRRRRRPPPv
+vIIIIIIIIIIIIGGGGGGGGGGGGGGGGGGGGGGHHHHHHHHHHHHRRRRRRRRRRRRRRRRRRRRRRRRRRRRRPPPv
+vIIIIIIIIIIIIGGGGGGGGGGGGGGGGGGGGGGFFFFFFFFEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEv
+vIIIIIIIIIIIIGGGGGGGGGGGGGGGGGGGGGGFFFFFFFFEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEv
+vIIIIIIIIIIIIGGGGGGGGGGGGGGGGGGGGGGFFFFFFFFEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEv
+vAAAAAAAAAAAAGGGGGGGGGGGGGGGGGGGGGGFFFFFFFFEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEv
+vAAAAAAAAAAAAGGGGGGGGGGGGGGGGGGGGGGFFFFFFFFEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEv
+vAAAAAAAAAAAAGGGGGGGGGGGGGGGGGGGGGGFFFFFFFFEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEv
+vAAAAAAAAAAAABBBBBBBBBBBBBBBBBBEEEEFFFFFFFFEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEv
+vAAAAAAAAAAAABBBBBBBBBBBBBBBBBBEEEEFFFFFFFFEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEv
+vAAAAAAAAAAAABBBBBBBBBBBBBBBBBBEEEEFFFFFFFFEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEv
+vAAAAAAAAAAAABBBBBBBBBBBBBBBBBBEEEEFFFFFFFFEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEv
+vAAAAAAAAAAAABBBBBBBBBBBBBBBBBBEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEv
+vAAAAAAAAAAAABBBBBBBBBBBBBBBBBBEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEv
+vAAAAAAAAAAAABBBBBBBBBBBBBBBBBBEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEv
+vAAAAAAAAAAAABBBBBBBBBBBBBBBBBBEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEv
+vAAAAAAAAAAAABBBBBBBBBCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCJJJJJJJJJJJJJJJJJJJJJv
+vAAAAAAAAAAAABBBBBBBBBCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCJJJJJJJJJJJJJJJJJJJJJv
+vAAAAAAAAAAAABBBBBBBBBCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCJJJJJJJJJJJJJJJJJJJJJv
+vAAAAAAAAAAAABBBBBBBBBCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCJJJJJJJJJJJJJJJJJJJJJv
+vAAAAAAAAAAAABBBBBBBBBCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCJJJJJJJJJJJJJJJJJJJJJv
+vAAAAAAAAAAAABBBBBBBBBCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCJJJJJJJJJJJJJJJJJJJJJv
+vAAAAAAAAAAAABBBBBBBBBCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCJJJJJJJJJJJJJJJJJJJJJv
+vAAAAAAAAAAAABBBBBBBBBCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCJJJJJJJJJJJJJJJJJJJJJv
+vAAAAAAAAAAAAAAAAAAAAACCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCJJJJJJJJJJJJJJJJJJJJJv
+vAAAAAAAAAAAAAAAAAAAAACCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCJJJJJJJJJJJJJJJJJJJJJv
+vAAAAAAAAAAAAAAAAAAAAACCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCJJJJJJJJJJJJJJJJJJJJJv
+vAAAAAAAAAAAAAAAAAAAAACCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCJJJJJJJJJJJJJJJJJJJJJv
+vAAAAAAAAAAAAAAAAAAAAACCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCJJJJJJJJJJJJJJJJJJJJJv
+vAAAAAAAAAAAAAAAAAAAAACCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCJJJJJJJJJJJJJJJJJJJJJv
+vAAAAAAAAAAAAAAAAAAAAACCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCJJJJJJJJJJJJJJJJJJJJJv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+
+################################################################################
+# The Storerooms
+################################################################################
+NAME:     storerooms_1
+TAGS:     the_storerooms
+SUBVAULT: Z : storerooms_room_a
+SUBVAULT: Y : storerooms_room_b
+SUBVAULT: T : the_temple
+SUBVAULT: U : equipment_1
+# Initial consumables
+KITEM: a = bread ration q:7, \
+       meat ration q:7, \
+       strawberry q:40
+KITEM: b = scroll of unholy creation ident:all q:2, \
+       scroll of amnesia q:5 ident:all, \
+       scroll of remove curse q:3 ident:all, \
+       scroll of vulnerability q:2 ident:all
+KITEM: c = staff of channeling ident:all, \
+       stone q:10
+KITEM: d = potion of invisibility ident:all q:2, \
+       potion of berserk rage ident:all q:2, \
+       potion of magic q:2 ident:all
+# The 3rd equipment room
+KITEM: e = sabre plus:2 plus2:2 ego:electrocution ident:all not_cursed /\
+       sabre plus:2 plus2:2 ego:draining ident:all not_cursed /\
+       sabre plus:2 plus2:2 ego:venom ident:all not_cursed /\
+       sabre plus:2 plus2:2 ego:distortion ident:all not_cursed /\
+       sabre plus:2 plus2:2 good_item ident:all not_cursed
+KITEM: f = war axe plus:2 plus2:3 ego:freezing ident:all not_cursed /\
+       war axe plus:2 plus2:3 ego:vorpal ident:all not_cursed /\
+       war axe plus:2 plus2:3 good_item ident:all not_cursed w:5 /\
+       broad axe plus:2 plus2:0 ego:freezing ident:all not_cursed /\
+       broad axe plus:2 plus2:0 ego:vorpal ident:all not_cursed /\
+       broad axe plus:2 plus2:0 good_item ident:all not_cursed w:5
+KITEM: g = dire flail plus:2 plus2:2 ego:protection ident:all not_cursed /\
+       dire flail plus:2 plus2:2 ego:vorpal ident:all not_cursed /\
+       dire flail plus:2 plus2:2 good_item ident:all not_cursed w:5 /\
+       spiked flail plus:2 plus2:2 ego:protection ident:all not_cursed /\
+       spiked flail plus:2 plus2:2 ego:vorpal ident:all not_cursed /\
+       spiked flail plus:2 plus2:2 good_item ident:all not_cursed w:5
+KITEM: h = halberd plus:2 plus2:2 ego:protection ident:all not_cursed /\
+       halberd plus:2 plus2:2 ego:venom ident:all not_cursed /\
+       halberd plus:2 plus2:2 good_item ident:all not_cursed w:5
+KITEM: i = lajatang plus:0 plus2:0 ident:all not_cursed /\
+       quarterstaff plus:4 plus2:4 ego:speed ident:all not_cursed w:15 /\
+       quarterstaff plus:4 plus2:4 good_item ident:all not_cursed w:5
+KITEM: j = scimitar plus:2 plus2:2 ego:flaming ident:all not_cursed /\
+       scimitar plus:2 plus2:2 ego:holy_wrath not_cursed ident:all /\
+       scimitar plus:2 plus2:2 good_item not_cursed ident:all
+KITEM: k = pair of gloves mundane ident:all not_cursed /\
+       pair of boots mundane ident:all not_cursed /\
+       helmet mundane ident:all not_cursed /\
+       cloak mundane ident:all not_cursed /\
+       chain mail plus:4 ident:all not_cursed /\
+       ring mail plus:5 ident:all not_cursed /\
+       scale mail plus:4 ident:all not_cursed /\
+       splint mail plus:3 ident:all not_cursed /\
+       plate armour plus:3 ident:all not_cursed
+KITEM: l = ring of protection plus:3 ident:all not_cursed /\
+       ring of evasion plus:3 ident:all not_cursed /\
+       ring of strength plus:3 ident:all not_cursed /\
+       ring of intelligence plus:3 ident:all not_cursed /\
+       ring of dexterity plus:3 ident:all not_cursed
+SHUFFLE: efghij
+TILE:  v = dngn_metal_wall_cyan
+: lua_marker('~', props_marker {
+:            door_description_suffix=" to the Temple (Safe)",
+:            })
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+MAP
+vvvvvvvvvvvv
+vTTTTTTTTTTv
+vTTTTTTTTTTv
+vvvvvvv~vvvv
+vUUUUU&@&adv
+vUUUUUv.vbcv
+vvvvvvv&vvvv
+v.........G@
+v&vvvvv&vvvv
+v.vZZZZZZZZv
+v.vZZZZZZZZv
+v.vZZZZZZZZv
+v.vZZZZZZZZv
+v.vZZZZZZZZv
+v.vZZZZZZZZv
+v.vZZZZZZZZv
+v.vZZZZZZZZv
+v&vvvvvvvvvv
+vYYYYYYYv11v
+vYYYYYYYv1vvvvvvvvvvv
+vYYYYYYYv1v..1.v!!kkv
+vYYYYYYYv&v....v!!kkv
+vYYYYYYYv2&...2&llhiv
+vYYYYYYYv&v....v!!fgv
+vYYYYYYY&1v..2.v!!ejv
+vvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+NAME:  equipment_1
+TAGS:  equipment_1
+KITEM: a = dagger plus:2 plus2:2 ident:all not_cursed
+KITEM: b = hand axe plus:2 plus2:2 ident:all not_cursed
+KITEM: c = mace plus:2 plus2:2 ident:all not_cursed
+KITEM: d = trident plus:2 plus2:2 ident:all not_cursed
+KITEM: e = quarterstaff plus:2 plus2:2 ident:all not_cursed
+KITEM: f = falchion plus:2 plus2:2 ident:all not_cursed
+SHUFFLE: abcdef
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+MAP
+.eda.
+.fcb.
+ENDMAP
+
+NAME:  equipment_2
+TAGS:  equipment_2
+KITEM: a = dagger ego:electrocution ident:all not_cursed /\
+       dagger ego:draining ident:all not_cursed /\
+       dagger ego:venom ident:all not_cursed
+KITEM: b = hand axe ego:freezing ident:all not_cursed /\
+       hand axe ego:vorpal ident:all not_cursed
+KITEM: c = mace ego:vorpal ident:all not_cursed /\
+       mace ego:protection ident:all not_cursed /\
+       flail ego:vorpal ident:all not_cursed /\
+       flail ego:protection ident:all not_cursed
+KITEM: d = trident ego:vorpal ident:all not_cursed /\
+       trident ego:orc_slaying ident:all not_cursed
+KITEM: e = quarterstaff ego:protection ident:all not_cursed /\
+       quarterstaff ego:speed ident:all not_cursed
+KITEM: f = long sword ego:holy_wrath ident:all not_cursed /\
+       long sword ego:flaming ident:all not_cursed
+KITEM: g = potion of heal wounds q:5 ident:all
+KITEM: h = potion of curing q:5 ident:all
+KITEM: i = chain mail plus:3 ident:all not_cursed /\
+       ring mail plus:3 ident:all not_cursed /\
+       scale mail plus:3 ident:all not_cursed /\
+       splint mail plus:2 ident:all not_cursed /\
+       plate armour plus:2 ident:all not_cursed
+SHUFFLE: abcdef
+: general_item_setup(_G)
+: base_monster_setup(_G)
+MAP
+gedai
+hfcbi
+ENDMAP
+
+
+NAME:  storerooms_room_a_1
+TAGS:  storerooms_room_a
+SUBVAULT: U : equipment_2
+TILE:  v = dngn_metal_wall_cyan
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+MAP
+GGv..G&.
+..vG..v.
+..vvvvv.
+..&..Gv.
+..&G..&.
+..vvvvvv
+..&UUUUU
+G1vUUUUU
+ENDMAP
+
+NAME:  storerooms_room_a_2
+TAGS:  storerooms_room_a
+SUBVAULT: U : equipment_2
+TILE:  v = dngn_metal_wall_cyan
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+MAP
+UUv.G..G
+UUvvvvv&
+UUv...G.
+UUv.G...
+UUvvv&vv
+v&v....G
+.1......
+..G....G
+ENDMAP
+
+NAME:  storerooms_room_a_3
+TAGS:  storerooms_room_a
+SUBVAULT: U : equipment_2
+TILE:  v = dngn_metal_wall_cyan
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+MAP
+.Gv..vUU
+..&GGvUU
+G.vvvvUU
+..v1GvUU
+.Gv..vUU
+v&v..v&v
+.......G
+.....G..
+ENDMAP
+
+NAME:  storerooms_room_a_4
+TAGS:  storerooms_room_a
+SUBVAULT: U : equipment_2
+TILE:  v = dngn_metal_wall_cyan
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+MAP
+G..vGvUU
+..Gv.vUU
+...&GvUU
+v&vvvvUU
+....GvUU
+G....v&v
+......1.
+....G...
+ENDMAP
+
+NAME:  storerooms_room_a_5
+TAGS:  storerooms_room_a
+SUBVAULT: U : equipment_2
+TILE:  v = dngn_metal_wall_cyan
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+MAP
+..G..vUU
+.G...vUU
+vv&vvvUU
+G..G.vUU
+.....vUU
+vvv&vv&v
+G......1
+G......G
+ENDMAP
+
+NAME:  storerooms_room_a_6
+TAGS:  storerooms_room_a
+SUBVAULT: U : equipment_2
+TILE:  v = dngn_metal_wall_cyan
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+MAP
+.Gv..vG.
+G.&G.&.G
+v&vvvv&v
+...GG...
+...1G...
+vvvv&vvv
+..UUUUU.
+..UUUUU.
+ENDMAP
+
+NAME:  storerooms_room_b_1
+TAGS:  storerooms_room_b
+TILE:  v = dngn_metal_wall_cyan
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+MAP
+......1
+.vvv...
+.v1....
+.v.1.v.
+....1v.
+...vvv.
+1.....1
+ENDMAP
+
+NAME:  storerooms_room_b_2
+TAGS:  storerooms_room_b
+TILE:  v = dngn_metal_wall_cyan
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+MAP
+......1
+...v...
+...v1..
+.vv.vv.
+..1v1..
+...v...
+1.....1
+ENDMAP
+
+NAME:  storerooms_room_b_3
+TAGS:  storerooms_room_b
+TILE:  v = dngn_metal_wall_cyan
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+MAP
+......1
+..v.v..
+.vv1vv.
+..1..1.
+.vv.vv.
+..v1v..
+1......
+ENDMAP
+
+NAME:  storerooms_room_b_4
+TAGS:  storerooms_room_b
+TILE:  v = dngn_metal_wall_cyan
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+MAP
+......1
+.......
+..1v...
+..vvv.1
+...v...
+.......
+1..1..1
+ENDMAP
+
+NAME:  storerooms_room_b_5
+TAGS:  storerooms_room_b
+TILE:  v = dngn_metal_wall_cyan
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+MAP
+..v.v1v
+.......
+v.v.v.v
+...1..1
+v.v.v.v
+1......
+v.v1v.1
+ENDMAP
+
+NAME:  storerooms_room_b_6
+TAGS:  storerooms_room_b
+TILE:  v = dngn_metal_wall_cyan
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+MAP
+...1...
+..vvv..
+...1...
+v1vvv1v
+...1...
+..vvv..
+...1...
+ENDMAP
+
+
+NAME:    temple_room_1
+TAGS:    the_temple
+KFEAT:   a = altar_zin
+KFEAT:   b = altar_the_shining_one
+KFEAT:   c = altar_ashenzari
+KFEAT:   d = altar_kikubaaqudgha
+KFEAT:   e = altar_yredelemnul
+KFEAT:   f = altar_xom
+KFEAT:   g = altar_vehumet
+KFEAT:   h = altar_okawaru
+KFEAT:   i = altar_makhleb
+KFEAT:   j = altar_sif_muna
+KFEAT:   k = altar_trog
+KFEAT:   l = altar_nemelex_xobeh
+KFEAT:   m = altar_elyvilon
+KFEAT:   n = altar_lugonu
+KFEAT:   o = altar_beogh
+KFEAT:   p = altar_jiyva
+KFEAT:   q = altar_fedhas
+KFEAT:   r = altar_cheibriados
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+MAP
+hopnlfjida
+gqrmk..ebc
+ENDMAP
+
+
+################################################################################
+# Safe places
+#
+################################################################################
+# the Entrance Room
+################################################################################
+NAME:    entrance_room_1
+TAGS:    the_entrance_hall
+COLOUR:  v = lightgrey
+TILE:    v = wall_crypt_metal
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+: lua_marker('~', props_marker {
+:           door_description_suffix=" to the Storerooms (Easy)",
+:           })
+: lua_marker('<', props_marker {
+:           door_description_suffix=" to the Grid Vault (Hard)",
+:           })
+: lua_marker('>', props_marker {
+:           door_description_suffix=" to the Metal Vault (Medium)",
+:           })
+: lua_marker('+', props_marker {
+:           door_description_suffix=" to the Entrance Hall (Safe)",
+:           })
+: lua_marker('#', props_marker {
+:           door_description_suffix=" leading to the Armoury (Hard)",
+:           })
+MAP
+vvvvvvvvvv<<vvvvvv
+v.........@@.....v
+v......v..v......v
+v...............@#
+~@..............@#
+v......v..v......v
+v...@.....@@.....v
+vvvv+vvvvv>>vvvvvv
+v...@...v
+v.......v
+v.......v
+v...{...v
+v.......v
+v.......v
+v.......v
+vvvvvvvvv
+ENDMAP
+
+
+NAME:    main_hall_1
+TAGS:    the_main_hall
+COLOUR:  v = lightgrey
+TILE:    v = wall_crypt_metal
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+: lua_marker('~', props_marker {
+:           door_description_suffix=" to the Vestibule (Extremely Hard)",
+:           })
+: lua_marker('<', props_marker {
+:           door_description_suffix=" to the Steel Vault (Very Hard)",
+:           })
+: lua_marker('>', props_marker {
+:           door_description_suffix=" to the Crystal Vault (Extremely Hard)",
+:           })
+: lua_marker('#', props_marker {
+:           door_description_suffix=" to the Grid Vault (Hard)",
+:           })
+: lua_marker('_', props_marker {
+:           door_description_suffix=" to a Minivault (Hard)",
+:           })
+: lua_marker('&', props_marker {
+:           door_description_suffix=" leading to the Armoury (Hard)",
+:           })
+MAP
+vvvvv~~vvvvv
+v....@@....v
+v..........v
+<@.v....v..v
+<@.........v
+v..........v
+v..v....v..v
+#@.........v
+#@.........v
+v..v....v..v
+v.........@>
+v..@@....@@>
+vvv__vvvv&&v
+ENDMAP
+
+
+################################################################################
+# The Vaults
+#
+################################################################################
+# The Metal Vault
+################################################################################
+# 37
+# 27 '2', 7 '1', 3 '3'
+NAME:    metal_vault_1
+: metal_vault_setup(_G)
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+MAP
+v>>vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+v@@v2.............vvv22vv....v!!v*av
+v..vv1.............v.2vv.v2v2v!!v**v
+v..vvvv222v+vvvvvv...vv......v!!v**v
+v..v..vvvvv.vv2.3vv+vv1v1v2v2v!!v**v
+v..v....vv...v...v...v.......vv&vv&v
+v..&....2v...v...v...v.......v.....v
+v..&....1+...+.|.+.2.+......3&.....v
+v..&....2v...v...v...v.......v.....v
+v..v....vv...v...v...v.......vv&vv&v
+v..v..vvvvv.vv2.3vv+vv1v1v2v2v|*v??v
+v..vvvv222v+vvvvvv...vv......v|*v??v
+v..vv1.............v.2vv.v2v2v*|v??v
+v..v2.............vvv22vv....va*v??v
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+# 37
+# 27 '2', 7 '1', 3 '3'
+NAME:    metal_vault_2
+: metal_vault_setup(_G)
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+MAP
+v>>vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+v@@....vvvv2.......2vv**a**&2.2&*a*v
+v......vvvvv2.....1vvv*****vv.vv|||v
+vv....vvvvvvvv...vvvvvvvvvvv.2.vvvvv
+vvv&&vvvvvv..+...+.2vv.3vv.......vvv
+vv....vvv...2vv+vv.....vv....1..2.vv
+v...1..v....vv...vv....v...........v
+v2.....+...2+.2.2.+..2.+..1..1...3.v
+v......v....vv...vv....v...........v
+vv...2vvv...2vv+vv.....vv....1..2.vv
+vvv++vvvvvv..+...+.2vv.3vv.......vvv
+vv....vvvvvvvv...vvvvvvvvvvv.2.vvvvv
+v...2..vvvvv2.....1vvv!?!?!vv.vv?!?v
+v2....2vvvv2.......2vv?!?!?&2.2&!?!v
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+# 36
+# 27 '2', 6 '1', 3 '3'
+NAME:    metal_vault_3
+: metal_vault_setup(_G)
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+MAP
+v>>vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+v@@vvvv.....2vvv2..vvvv??&..2..&|*vv
+v..vvv..v+v...1.....vv???vv2.2vv*|*v
+v..vv2.vv2vv.....v..2v??vv.....vva|v
+v..vv2vv...vv...vvv..v?vv...1..2vv*v
+v..vvvv....2vv.vv2vv3vvv.........vvv
+v..1vv......v...v.v...v...........vv
+v...2+...2..+...+.+...+......1..3..v
+v..2vv......v...v.v...v...........vv
+v..vvvv....2vv.vv2vv3vvv.........vvv
+v..vv2vv...vv...vvv..v!vv...1..2vv*v
+v..vv2.vv2vv.....v..2v!!vv.....vv**v
+v..vvv..v+v...1.....vv!!!vv2.2vv**av
+v..vvvv.....2vvv2..vvvv!!&..2..&**vv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+# 36
+# 26 '2', 7 '1', 3 '3'
+NAME:    metal_vault_4
+: metal_vault_setup(_G)
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+MAP
+v>>vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+v@@....+..+...vvv........vvv2..2vvvv
+v......+..+....1vv..23..vv....vvv?!v
+v...2.vv..vv2....vv....vv.1v2vv!?!?v
+v..2vvv....vvv2...v2...v.....v!?!?!v
+v..vv2......2vvv.vvv..vv.v.v2v?!?!?v
+v++v...v..v...v...2v..v......vvv&vvv
+v.......12....+.1..+..+...1.3&.....v
+v++v...v..v...v...2v..v......vvv&vvv
+v..vv2......2vvv.vvv..vv.v.v2v***|*v
+v..2vvv....vvv2...v2...v.....v*|a**v
+v....2vv..vv2....vv....vv.1v2vv***|v
+vv2....+..+....1vv..32..vv....vvva*v
+vvvv...+..+...vvv........vvv2..2vvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+# 37
+# 28 '2', 6 '1', 3 '3'
+NAME:    metal_vault_5
+: metal_vault_setup(_G)
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+MAP
+v>>vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+v@@vvv2.2vvv..+...vvv.2.......2.&?!v
+v...vv...vv..vv.2.vvv...........v!?v
+vv...vv+vv..vvv.2.+.vv..2...2..vv?!v
+vvv.........2vv...v..vvv.....vvvv!?v
+vv..vvv+vvv...vv+vv..3vvv.1.vvv?!?!v
+v2.vv.....vv..v2..v...v.......v!?!?v
+v1.+..212..+..+..2+.2.+...1..3vvvvvv
+v2.vv.....vv..v2..v...v.......v***av
+vv..vvv+vvv...vv+vv..3vvv.1.vvv|***v
+vvv.........2vv...v..vvv.....vvvv|*v
+vv...vv+vv..vvv.2.+.vv..2...2..vv*av
+v2..vv...vv..vv.2.vvv...........v*|v
+v.2vvv2.2vvv..+...vvv.2.......2.&**v
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+# 37
+# 27 '2', 7 '1', 3 '3'
+NAME:    metal_vault_6
+: metal_vault_setup(_G)
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+MAP
+v>>vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+v......v.2.+....vvv.22vv....vv!!?!?v
+v...1vvv.1.vvv...v...vv2.1..2vv?!?!v
+v..2vv.+...+.vv..3..vvvv....vvvv?!?v
+v..vv.2vv+vv2.vv...vv.1vv..vv2.vv?!v
+v..v..vv...vv..+...v............v!?v
+v..v..v.....v.2v...v....v..v...2vv&v
+v..+..+..2..+..+.2.+....2..2......3v
+v..v..v.....v.2v...v....v..v...2vv&v
+v..v..vv...vv..+...v............v|*v
+v..vv.2vv+vv2.vv...vv.1vv..vv2.vv**v
+v...vv.+...+.vv..3..vvvv....vvvva*|v
+v...2vvv.1.vvv...v...vv2..1.2vv****v
+v.....2v.2.+....vvv.22vv....vv|***av
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+# 35
+# 26 '2', 6 '1', 3 '3'
+NAME:    metal_vault_7
+WEIGHT:  5
+: metal_vault_setup(_G)
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+MAP
+v>>vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+v...2vv..+...vv2..vvvvv!?!?!?!?!?vvv
+v...vv...v..vv......vvv?!?!vvvvv&vvv
+v..vv..2vv..v........vv!vvvv2.2..vvv
+v..v...vv1..+.....3...vvv2.......3vv
+v.1+..vv....vvv.......vv...1......vv
+v2vv..v......2vvv..2...v..........2v
+vvv...+.........vv.....v....1......v
+vv....v....vvvv.2vv..2.v+.........2v
+v2.v..vv1.vv..vv..+.....v+.......2vv
+v2vvv..vv.+.22.+..v......vv+1..2.vvv
+vvv2vv..v.vv..vv..v..3...2.vvvvvv&vv
+vv2..+..+..vvvv...vv...vvvvvvv|****v
+v2...v.2vv...2....2vv.vv|***a**|**av
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+# 35
+# 26 '2', 6 '1', 3 '3'
+NAME:    metal_vault_8
+WEIGHT:  5
+: metal_vault_setup(_G)
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+MAP
+v>>vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+v..........v..2...v1..2...v!?!?!?!?v
+v....2.....+.2.2..v......2v?!?!?!?!v
+v..vvvvv...vvvvv+vv.......vvvvv&vvvv
+v..+..1v.....2........1....2..2...2v
+v..v.2.v...1....vv+vv..............v
+v.2v1..v.vvvvv..v..3v..vvv+vv...3..v
+v..vvvvv.+..2v..v3..v..v.2..v2.....v
+v........v...+..vv+vv..+..2.v..2..2v
+v.......2v..2v2.....2..vvvv+v.vvv&vv
+vv+vvv...v2..v................v*|**v
+v2...+...v+vvv...vvvv+vv1....2v**|*v
+v..2.v...........v.2...v......va***v
+v...2v..1.......2+..2.2v..2...v*|*av
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+
+################################################################################
+# The Steel Vault
+################################################################################
+# 44
+# 17 '3', 24 '4', 3 '5'
+NAME:   steel_vault_1
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+: steel_vault_setup(_G)
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+v..!!!????v..+........33.........v
+v..!!!???vv..+.4......33......4..v
+v..!!!!?vv..vvvv4.....vv.....4vvvv
+v..!!vvvv..vv||vvvv........vvvv||v
+v&vvvv4....4v||.43vvvv++vvvv34.||v
+v.5.4....vv.v4........33........4v
+v..4..vv...4v5........vv........3v
+v.5.4....vv.v4........33........4v
+v&vvvv4....4v||.43vvvv++vvvv34.||v
+v..ccvvvv..vv||vvvv........vvvv||v
+v..cc[[(vv..vvvv4.....vv.....4vvvv
+v..cc[[((vv..+.4......33......4.@~
+v@@|[[[(((v..+........33........@~
+v<<vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+# 44
+# 17 '3', 24 '4', 3 '5'
+NAME:   steel_vault_2
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+: steel_vault_setup(_G)
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vcccv|||||.......4..........34v..v
+vcccvv||4.....4.v.v.4.......4vv..v
+v[[[[v|44...4.vv...vv.3....43v...v
+v[[[(vv54..vvv.......vvv...3vv...v
+v((((!vvvvv.............vvvvv..v.v
+v((!!!!v........4v3.......+3..33.v
+v!!!!?.&.5.....vv3vv......v...vv.v
+v!!??..v........4v3.......+3..33.v
+v!??..vvvvv.............vvvvv..v.v
+v??..vv54..vvv.......vvv...3vv...v
+v?...v|44...4.vv...vv.3....43v...v
+v...vv||4.....4.v.v.4.......4vv.@~
+v@@.v|||||.......4..........34v.@~
+v<<vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+
+# 44
+# 17 '3', 24 '4', 3 '5'
+NAME:   steel_vault_3
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+: steel_vault_setup(_G)
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+v!!!!!!????&.......v.343v|||||.4.v
+v!!!!!!????v...........4v..3.3..4v
+v++vvvvvvvvv..44...v....v...3...|v
+vccc(((([[[v..5v+vvv....+.......|v
+vccc((([[[[v..4v..3.....vvvvvvv.vv
+vvvvvvvvvvvv.vvv.3vv4...........4v
+v54v...v..........vv...3........4v
+v4.v.4............3.vv+vvvvv.vvvvv
+v..+...vvvv+vvv.v...v.....v......v
+v.4v.5.v........v............33..v
+v..v.......44...v...v........33..v
+v.4v.4....3443......v3...4v.....@~
+v@@....v||||||||v4.4v3|||4v.....@~
+v<<vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+# 44
+# 17 '3', 24 '4', 3 '5'
+NAME:   steel_vault_4
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+: steel_vault_setup(_G)
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+v!!!!v.4v||||||||v.44.v.34v33..44v
+v!!!!v4....v44v...........v.....4v
+v??!!v......5.............v......v
+v??!!v..v..v4.v..v....v...v....33v
+v??vvv.vv........vv..vv...vv...vvv
+v??v..4..v......v..33..v.v..v.v.4v
+vc[&..5...vvvvvv...43............v
+vc[v..4..v......v..33..v.v..v.v.4v
+vc[vvv.vv........vv..vv...vv...vvv
+vc[[[v..v..v4.v..v....v...v....33v
+vc[((v......5.............v......v
+vc(((v4....v44v...........v.....@~
+v@@((v.4v||||||||v.44.v.34v33...@~
+v<<vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+# 44
+# 16 '3', 25 '4', 3 '5'
+NAME:   steel_vault_5
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+: steel_vault_setup(_G)
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+v!!!!v4...4v5......4v4....33..v..v
+v!!!!v.....v........v.........v..v
+v!!!!v.....4..3..v..4..v......v..v
+v????v4.........4v.....v4....4v33v
+v????vvv..vvv..vvv..v..vvv..vvv33v
+v[...v...4.........3v3...........v
+vc[..&.5...4.33.4.vvvvv..........v
+vc[[.v...4.........3v3...........v
+vc[[(vvv..vvv..vvv..v..vvv..vvv..v
+vcc[(v4.........4v.....v4....4v..v
+v.c((v.....4..3..v..4..v......v..v
+v..((v.....v........v.........v.@~
+v@@.(v4...4v5......4v4....33..v.@~
+v<<vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+
+################################################################################
+# The Crystal Vault
+################################################################################
+# 47
+# 20 '4', 27 '5'
+NAME:   crystal_vault_1
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+: crystal_vault_setup(_G)
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+v44v55v5......5......5v55v55v
+v44v44v.....5...5.....v44v44v
+v++v++v..vvvvvvvvvvv..v++v++v
+v........v))))$!!!!v.......5v
+v.......5v))))$!!!!v5......4v
+v..v..v..v$$$$$$$$$&..v..v.5v
+v.......5v]]]]$ccccv5......4v
+v........v]]]]$ccccv.......5v
+v++v++v..vvvvvvvvvvv..v++v++v
+>@.v44v.....5...5.....v44v44v
+>@.v44v5......5......5v55v55v
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+# 46
+# 20 '4', 26 '5'
+NAME:   crystal_vault_2
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+: crystal_vault_setup(_G)
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+v54...v55vcccc$!!!!v5....454v
+v54...v..vcccc$!!!!v5....454v
+vvvv++v++vvvvv&vvvvv++v++vvvv
+v44...................5....4v
+v44...v...5...5...5...v....5v
+v..v.....v5.v555v.5v.....v.5v
+v44...v...5...5...5...v....5v
+v44...................5....4v
+vvvv++v++vvvvv&vvvvv++v++vvvv
+>@....v..v]]]]$))))v5....454v
+>@....v55v]]]]$))))v5....454v
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+# 47
+# 20 '4', 27 '5'
+NAME:   crystal_vault_3
+WEIGHT: 5
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+: crystal_vault_setup(_G)
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+v]]))v54..vv....5vv5...5..5.v
+v]]))&54.+v...4...vv..4..4..v
+v]]))v54+v.........vv5..5..5v
+vvvvvvvvv.....4.....vv+vv+vvv
+v44..........5v5............v
+v5.......4..4v5v4..5..5...5.v
+v44..........5v5............v
+vvvv++vvv.....4.....vvvvv++vv
+v.......vv.........vvc!!v..5v
+>@......4vv...4...vvcc!!&.45v
+>@......44vv5...5vvccc!!v.55v
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+# 47
+# 20 '4', 27 '5'
+NAME:   crystal_vault_4
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+: crystal_vault_setup(_G)
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+v5.4.4v5.5.5v55vcccc&.55.v))v
+v.....v.....v44vccccv4444v))v
+v4.v++v++v++v++vvvvvv+vv+v))v
+v..+.....................v))v
+v4.+.....5.....5.....5...vv&v
+vvvv..v.5v5.v.5v5.v.5v5.....v
+v44+.....5.....5.....5...vv&v
+v..+.....................v]]v
+v..v++v++v++v++vvvvvv+vv+v]]v
+>@...4v.....v44v!!!!v4444v]]v
+>@...4v5.5.5v55v!!!!&.55.v]]v
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+# 47
+# 20 '4', 27 '5'
+NAME:   crystal_vault_5
+WEIGHT: 5
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+: crystal_vault_setup(_G)
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+v]]vccccv4...5.4..4...5..555v
+v]]vccccv..................5v
+v]]vv&vvv.5.4.....vvv...5..5v
+v]]&4.............v5555v....v
+vvvv.........5.4..v5555v5...v
+v4...vvv....4...5....vvv...5v
+v....v5444v...5..........vvvv
+v....v4445v...4...4...4..&))v
+v.......vvv5........vvv&vv))v
+>@..................v!!!!v))v
+>@..4.....4...5..4.5v!!!!v))v
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+# 47
+# 20 '4', 27 '5'
+NAME:   crystal_vault_6
+WEIGHT: 5
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+: crystal_vault_setup(_G)
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+v]]+44+..+))+..+..+44+..+ccvv
+v]]+44+..+))+.5+5.+44+..+ccvv
+v++v++v++v++v++v++v++v++v++vv
+v..+..+45+..+45+]]+55+..+55vv
+v.5+..+54+..+54+]]+55+..+55vv
+v++v++v++v++v++v++v++v++v++vv
+v..+44+..+55+..+55+..+!!+.5vv
+v..+44+..+55+5.+55+.5+!!+5.vv
+v++v++v++v++v++v++v++v++v++vv
+>@.+..+..+..+))+44+!!+.5+ccvv
+>@.+..+5.+5.+))+44+!!+5.+ccvv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+
+################################################################################
+# The Iron Vault
+################################################################################
+# 42
+# 21 '5', 21 '6'
+NAME:   iron_vault_1
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+: iron_vault_setup(_G)
+MAP
+vvvvvvvvvvvvvvvvvvvvvv
+vv6vv5vvv5vvv6vvv5vvvv
+vv+v555+...+...+.5.+6v
+vv.+v5+vv6+vv5vvv5+vvv
+v6.6vvv6vvv6vvv.vvv.vv
+vv.v+vvvv'vvvv.5.+.5.v
+vv+vv6vv'''vvvv.vv+.vv
+vvv5vvv'''''vvv+v5vvvv
+vv565&'''d'''vv.vvv.vv
+vv+5+vv'''''vv.6.+.6.v
+v6vvv6vv'''vvv+.vv+.vv
+vvv'vvvvv'vvv6vvv6v+vv
+vvv'vvv.vvv.vvv.vvv.vv
+v''6'+.6.+.6.+.5.+.5.v
+vv+'vv+.vv+.vv+.vv+.vv
+v6v'v5vvv5vvv6vvv5vv~~
+vvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+# 42
+# 21 '5', 21 '6'
+NAME:   iron_vault_2
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+: iron_vault_setup(_G)
+MAP
+vvvvvvvvvvvvvvvvvvvvvv
+vv6+v.vvv5vvv.vvv5vvvv
+vvvv.6.+.65v.6.+.6.+5v
+v6vvv.vvv.vvv.vvv5vvvv
+vv+.v+v.vv+.vv+.vvv.vv
+vv6.6v.6.v555v.5.v.5.v
+vvv.vvv.+vv.+vv.vv+.vv
+v6v+v6vvv6v+v6v+v5v+vv
+vv+5+vv6vvv.vvv.vvv.vv
+vv565+.55v.6.+.5.v.6.v
+vvv5vvv6vv+.+vv.+v+.vv
+vvvvvvv&v6vvv6vvv6v+vv
+vv''''''vv+.vvv.vvv.vv
+v''''''''v.6.+.5.+.5.v
+v'''d''''vv.vv+.vv+.vv
+vv''''''vvvvv5vvv5vv~~
+vvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+# 44
+# 21 '5', 23 '6'
+NAME:   iron_vault_3
+WEIGHT: 5
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+: iron_vault_setup(_G)
+MAP
+vvvvvvvvvvvvvvvvvvvvvv
+vv6vv+6+''''''d''''''v
+v+vv6vvv'''''''''''''v
+vv.vv+vvvvvvvvvvvvvvvv
+v.6.+5v6v6+.+6v6vv+5vv
+vv.vvvv+v+v+v+v+v6vvvv
+vv+v.v+5+.+6+.+5+v+.vv
+v6v.6.vvvvvvvvvvvv.6.v
+vvvv.vv5+6+5v5+6vvv.vv
+v5+vvvv+vvv+vvv+v6v+vv
+v+v5+v+5+vv6+v+5+v+6vv
+v5vvv6vvv6vvv5vvv5vvvv
+vv+.vvv.vvv.vvv.vvv.vv
+vv.6.+.6.+.5.+.5.+.5.v
+vv+.vv+.vv+.vv+.vv+.vv
+v5vvv5vvv5vvv6vvv5vv~~
+vvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+# 43
+# 21 '5', 22 '6'
+NAME:   iron_vault_4
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+: iron_vault_setup(_G)
+MAP
+vvvvvvvvvvvvvvvvvvvvvv
+vv6vvv6vvv6vvv6vvvvvvv
+vvv+.+vv.+vv6+vv''''vv
+v6+.65+565+.6.&''''''v
+vvvv.vvv.vvv6vv''d'''v
+v5vv+vvv+vvvvvv''''''v
+vvvv5vvv5vvv.vvv''''vv
+v6+.6.+.5.+.6.vvvvvvvv
+v+vv5vvv5vvv.vvv5+v.vv
+vv6vvv6v+v5vvv6vvv.6.v
+v+v+.vv+.vv+.vv+.+v.vv
+v6v.6.+555v.6.v.5.v+vv
+vv+v.vvv.vvv.+vv.vv.vv
+vv.vvv5vvv.vvv.+vv.5.v
+v.6.+.5.+.5.+.6.vv+.vv
+vv.vvv5vvv.vvv.vv5vv~~
+vvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+# 42
+# 20 '5', 22 '6'
+NAME:   iron_vault_5
+WEIGHT: 5
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+: iron_vault_setup(_G)
+MAP
+vvvvvvvvvvvvvvvvvvvvvv
+vvvvv5vvvv+v+..vv6vvvv
+v6+6vv+vv5v6vv..+vv6vv
+vvvv+vv6vvvvv+v..v+vvv
+v6v6v6vv+vv6v5vv..vv5v
+vv+vvv+v5.+vvvv+v..+vv
+v6v6v5v.vv5v5v6vvv..vv
+vv+vvvvv..vvv+vv5vv.5v
+vv6vv6v.vv..+5vvv+v.5v
+v656vv+v5.vvvvv6vv..vv
+vv6vv5v+vv+6v5vv+..vvv
+vv&vvvv6v5vvvv+v..+vvv
+v'''''vvvvvv6vv..vv5vv
+v''''''vvv5vv+..v+vv+v
+v'''d'''vvv+v..+vv5v.v
+v''''''''vvv..vv5vvv~~
+vvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+################################################################################
+# Loot Stores
+#
+################################################################################
+# The Armoury
+################################################################################
+NAME:    armoury_1
+TAGS:    the_armoury
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+: armoury_setup(_G)
+MAP
+            v~~vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv<v
+            v@@...............................@v
+            v........2.3.............3.2.......v
+            v..vvvvvvvvvvvvvv##vvvvvvvvvvvvvv..v
+            v2.vaavaavccccv......vddddvbbvbbv..v
+            v..vaavaavv&&vv......vv&&vvbbvbbv.2v
+vvvv        v.3v.....v0030v3....3v0300v.....v..v
+v..v        v..v..vvvv....vvv..vvv....vvvv..v3.v
+v..v        v2.v..&4....................4&..v..v
+&@.v        v..v..vvvv................vvvv..v.2v
+&@.vvvvvvvvvv..v.....v..vvvv9999vvvv..v.....v..v
+v......22......vaavaav..veev9889vffv..vbbvbbv..v
+v..............vaavaav00&eevv99vvff&00vbbvbbv@@v
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv>>v
+ENDMAP
+
+NAME:    armoury_2
+TAGS:    the_armoury
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+: armoury_setup(_G)
+MAP
+            v~~vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv<v
+            v@@...............................@v
+            v........2.3.............3.2.......v
+            v..vvvvvvvvvvvvvv##vvvvvvvvvvvvvv..v
+            v2.vaa&030&aav........vbb&030&bbv..v
+            v..vaav...vaav3......3vbbv...vbbv.2v
+vvvv        v.3vvvv...vvvvvvv..vvvvvvv...vvvv..v
+v..v        v..v.........v........v.........v3.v
+v..v        v2.v4..........................4v..v
+&@.v        v..v.0...0...v99999999v...0...0.v.2v
+&@.vvvvvvvvvv..vv&vvv&vv.vvvv88vvvv.vv&vvv&vv..v
+v......22......vaaaavccv.veevvvvffv.vddvbbbbv..v
+v..............vaaaavccv0&eevvvvff&0vddvbbbbv@@v
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv>>v
+ENDMAP
+
+NAME:    armoury_3
+TAGS:    the_armoury
+WEIGHT:  5
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+: armoury_setup(_G)
+MAP
+            v~~vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv<v
+            v@@...............................@v
+            v........2.3.............3.2.......v
+            v..vvvvvvvvvvvvvv##vvvvvvvvvvvvvv..v
+            v2.vaaavcvev3v........v3vfvdvbbbv..v
+            v..vavavcvev.v.v....v.v.vfvdvbvbv.2v
+vvvv        v.3vaaavcvev............vfvdvbbbv..v
+v..v        v..vv.vvcvev.v.v....v.v.vfvdvv.vv3.v
+v..v        v2.vaaav&v&v............v&v&vbbbv..v
+&@.v        v..vavav040v.v.v....v.v.v040vbvbv.2v
+&@.vvvvvvvvvv..vaaav........9999........vbbbv..v
+v......22......v&vvv.v.v.v.v9889v.v.v.v.vvv&v..v
+v..............v0......v030v9999v030v......0v@@v
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv>>v
+ENDMAP
+
+
+################################################################################
+# The Coven
+################################################################################
+# 25
+# 6 '4', 19 '0'
+NAME:   the_coven_1
+TAGS:   the_coven
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+: coven_setup(_G)
+MAP
+vvvvvvvvvvvvvvvvvv~~v
+vv4.4vvccccccccvv.@@v
+va....vvccccccvv4.4vv
+vv.vv..vvv&&vvv...vvv
+va0av0...........vvev
+va.avv......0v...vgjv
+va0av0.0v0..vvv..&fiv
+vv.vvv.vvv..0v0..vhjv
+va0av0.0v0.......vvdv
+va.avv............vvv
+va0av0.vv&&vv..0v0.vv
+vv.vv.vvbbbbvv.vvv..v
+va....vbbbbbbv.0v0..v
+vv4.4vvvbbbbvvv....vv
+vvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+# 25
+# 6 '4', 19 '0'
+NAME:   the_coven_2
+TAGS:   the_coven
+WEIGHT: 5
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+: coven_setup(_G)
+MAP
+vvvvvvvvvvvvvvvvvv~~v
+vcccccccccvvv.....@@v
+vcccbbbbvvv..0v....4v
+vbbbbbvvv....vvv....v
+vbbbvvv......0v0...4v
+vb&vv....0v0........v
+vvv4.....vvv...0v0..v
+vv4..0v0.0v0...vvv..v
+v....vvv.......0v0..v
+vv...0v0...........vv
+vvvvv......0v0...vvvv
+vaaavvv4...vvv..v&jdv
+vaaaaa&vv4.0v0.vvhijv
+vaaaaaaavvv...vvvfgev
+vvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+# 25
+# 6 '4', 19 '0'
+NAME:   the_coven_3
+TAGS:   the_coven
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+: coven_setup(_G)
+MAP
+vvvvvvvvvvvvvvvvvv~~v
+vbbbbvv...v0v0v...@@v
+vbbbbv4.v.......v..vv
+vbbb&v.vvv.....vvv.av
+vbbvv4.0v0.....0v0.vv
+vvvvv..vvv.0v0.vvv.av
+vejgv4..v..vvv..v..av
+vhif&...0..0v0..0..av
+vdjfv4..v..vvv..v..av
+vvvvv..vvv.0v0.vvv.av
+vccvv4.0v0.....0v0.vv
+vccc&v.vvv.....vvv.av
+vccccv4.v...0...v..vv
+vccccvvaaavavavaaavvv
+vvvvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+
+################################################################################
+# Mini-Vaults
+################################################################################
+NAME:   mini_pit_1
+TAGS:   the_minivault
+COLOUR: v = white
+TILE:   v = wall_cobalt_stone
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+KITEM:  34CBDEJK = superb_item ident:all w:66 /\
+                   potion of porridge ident:all q:2 /\
+                   bread ration ident:all q:2 /\
+                   meat ration ident:all q:2
+: lua_marker('_', props_marker {
+:           door_description_suffix=" to a Minivault (Hard)",
+:           })
+MAP
+vvv__vvv
+v..@@..v
+v.v+vv.v
+v.v33+.v
+v.+44v.v
+v.v43+.v
+v.+33v.v
+v.vv+v.v
+v......v
+vvvvvvvv
+ENDMAP
+
+NAME:   grid_room_1
+TAGS:   the_grid_vault
+NSUBST: + = 1:& / *:v
+COLOUR: v = white
+TILE:   v = wall_cobalt_stone
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+KITEM:  3CDJ = superb_item ident:all w:66 / star_item ident:all w:33
+: lua_marker('<', props_marker {
+:           door_description_suffix=" to the Main Hall (Safe)",
+:           })
+: lua_marker('~', props_marker {
+:           door_description_suffix=" to the Grid Vault (Hard)",
+:           })
+MAP
+vvvvvvvvvvvvvvvvvvvvvv
+v...................@<
+v...................@<
+v..vvv+vvv+vvv+v+vv..v
+v..+v.v.v.v3v.v.v.v..v
+v..v.v2v2v3v3v2v2v+..v
+v..+v3v3v4v3v4v3v3v..v
+v..v.v2v2v3v3v2v2v+..v
+v..vv.v.v.v3v.v.v.v..v
+v..v+vvv+vvv+vvv+vv..v
+v....................v
+v.........@@.........v
+vvvvvvvvvv~~vvvvvvvvvv
+ENDMAP
+
+NAME:   hallway_of_sentries
+TAGS:   the_hallway_of_sentries
+KFEAT:  & = closed_door
+MARKER: & = lua:restrict_door()
+TILE:   v = dngn_metal_wall_cyan
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+: lua_marker('~', props_marker {
+:           door_description_suffix=" to the Golden Pit (Nightmare!)",
+:           })
+: lua_marker('<', props_marker {
+:       door_description_suffix=" to the Hallway of Sentries (Extremely Hard)",
+:           })
+MAP
+v~v
+v5v
+v&v
+v6v
+v&v
+v5v
+v&v
+v6v
+v&v
+v5v
+v&v
+v6v
+v&v
+v5v
+464
+464
+v5v
+v&v
+v5v
+v&v
+v6v
+v&v
+v5v
+v&v
+v6v
+v&v
+v5v
+v&v
+v6v
+v<v
+ENDMAP
+
+NAME:   the_vestibule_1
+TAGS:   the_vestibule
+COLOUR: v = magenta
+TILE:   v = dngn_metal_wall_blue
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+: lua_marker('~', props_marker {
+:           door_description_suffix=" to the Vestibule (Extremely Hard)",
+:           })
+: lua_marker('>', props_marker {
+:           door_description_suffix=" to the Final Vault (Nightmare!)",
+:           })
+MAP
+vvvvvvvvvv>>vvvvvvv
+vvvv......@@...vvvv
+vv....5.....5....vv
+v..4...........5..v
+v........5........v
+v..4...........5..v
+vv....4.....5....vv
+vvvv.@@........vvvv
+vvvvv~~vvvvvvvvvvvv
+ENDMAP
+
+
+################################################################################
+# Pits
+#
+################################################################################
+# The Silver Pit
+################################################################################
+NAME:   silver_pit
+TAGS:   the_silver_pit
+KITEM:  2ABCDE = silver rune of zot
+KITEM:  1abcde = superb_item ident:all w:66 / star_item ident:all w:33 /\
+        any ident:all w:133
+NSUBST: + = 1:& / *:v
+KMONS:  a = orc knight w:20 / orc warrior w:20 / orc warlord w:20 /\
+        orc sorcerer / orc high priest
+KMONS:  A = orc warlord
+KMONS:  b = hill giant /\
+        ogre / two-headed ogre / troll / rock troll /\
+        iron troll w:5 / deep troll/ ogre mage w:5 /\
+        cyclops / stone giant w:5 / ettin w:5
+KMONS:  B = titan
+KMONS:  c = human / wizard / hell knight / vault guard / necromancer
+KMONS:  C = Frederick, Norris, Louise, Rupert
+KMONS:  d = small zombie w:5 / large zombie / small skeleton w:5 /\
+        large skeleton / small simulacrum w:5 / large simulacrum /\
+        vampire / vampire mage / vampire knight / ghoul w:5 / rotting hulk /\
+        skeletal warrior w:20 / lich w:3 / bone dragon w:3 / wraith w:3 /\
+        freezing wraith w:3 / flaming corpse / flayed ghost
+KMONS:  D = lich
+KMONS:  e = hydra w:20 / swamp dragon / mottled dragon / steam dragon /\
+        catoblepas / dire elephant / fire drake / lindwurm / komodo dragon /\
+        basilisk / swamp drake / wyvern / dragon w:5 / ice dragon w:5
+KMONS:  E = golden dragon
+SUBST:  1 : a, 2 : A
+SHUFFLE: aA / bB / cC / dD / eE
+COLOUR: v = yellow
+TILE:   v = wall_lab_metal
+: general_setup(_G)
+: general_item_setup(_G)
+: lua_marker('~', props_marker {
+:           door_description_suffix=" to the Silver Pit (Extremely Hard)",
+:           })
+MAP
+v~~vvvvvvvvv
+v@@v1111111v
+v..+1111111v
+v..+1111111v
+v..+1112111v
+v..+1111111v
+v..+1111111v
+v..+1111111v
+v..v1111111v
+vvvvvvvvvvvv
+ENDMAP
+
+
+################################################################################
+# The Golden Pit
+################################################################################
+NAME:   golden_pit
+TAGS:   the_golden_pit
+KITEM:  2ABCD = golden rune of zot
+KITEM:  1abcd = superb_item ident:all w:66 / star_item ident:all w:33 /\
+        any ident:all w:33
+KMONS:  a = stone giant / frost giant / fire giant / ettin / titan /\
+        cyclops / hill giant
+KMONS:  A = titan
+# I'm sorry if you get an undead pit here
+KMONS:  b = large zombie w:20 / large skeleton w:20 / large simulacrum w:20 /\
+        ancient lich w:5 / vampire knight / mummy priest / lich /\
+        greater mummy / bone dragon / ghoul / skeletal warrior /\
+        guardian mummy
+KMONS:  B = ancient lich
+KMONS:  c = dragon / ice dragon / shadow dragon / iron dragon w:5 /\
+        quicksilver dragon w:5 / golden dragon / swamp dragon /\
+        hydra
+KMONS:  C = quicksilver dragon
+KMONS:  d = angel / daeva / cherub / paladin
+KMONS:  D = silver star
+NSUBST: + = 1:& / *:v
+SUBST:  1 : a, 2 : A
+SHUFFLE: aA / bB / cC / dD
+COLOUR: v = yellow
+TILE:   v = wall_lab_metal
+: general_setup(_G)
+: general_item_setup(_G)
+: lua_marker('~', props_marker {
+:           door_description_suffix=" to the Golden Pit (Nightmare!)",
+:           })
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvv
+vvv1111111111111111111vvv
+vvv1111111112111111111vvv
+vvv1111111111111111111vvv
+vvv1111111111111111111vvv
+vvvvvv+++++++++++++vvvvvv
+v.......................v
+v.....................@@v
+vvvvvvvvvvvvvvvvvvvvvvv~v
+ENDMAP
+
+
+################################################################################
+# The Final Vault
+################################################################################
+# 65
+# ~13 '7', 13 '6', ~12 '0', 4 '5', 23 '9'
+NAME:    final_vault
+TAGS:    the_final_vault
+KMONS:   98 = patrolling orb guardian
+KITEM:   8 = orb of zot
+SUBST:   0 = 65., 7 = 5.
+COLOUR:  v = lightmagenta
+TILE:    v = dngn_metal_wall_magenta
+: general_setup(_G)
+: general_item_setup(_G)
+: base_monster_setup(_G)
+: lua_marker('~', props_marker {
+:           door_description_suffix=" to the Final Vault (Nightmare!)",
+:           })
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+vvvvv.......vvvvvvv...............vvvvvvv........vvvv
+vvvv...6.6...vvvvv.................vvvvv.....7....vvv
+vvv...........vvv.....vvv999vvv.....vvv..7......7..vv
+vv..5...6...5..v....vvv.......vvv....v......7.....0.v
+vv....0...0........vv...0...0...vv...v0.7.....7.....v
+vv6.....9....0....vv..0.......0..vv..v....7.....7.7.v
+vv..0..999........v.....7...7.....v..9......6.......v
+vv6...99899.0.....v.7.6...6...6.7.v..9.7.7.....7.7..v
+vv..0..999........v.....7...7.....v..9.....7.7......v
+vv6.....9....0....vv..0.......0..vv..v..7......7....v
+vv....0...0........vv...0...0...vv...v............7.v
+vv..5...6...5..v....vvv.......vvv....v....7...7.....v
+vvv...........vvv.....vvv999vvv.....vvv............vv
+vvvv...6.6...vvvvv.................vvvvv...9999...vvv
+vvvvv.......vvvvvvv...............vvvvvvv...@@...vvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv~~vvvvvvv
+ENDMAP
