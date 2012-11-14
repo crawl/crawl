@@ -1486,7 +1486,7 @@ void Menu::webtiles_handle_item_request(int start, int end)
     tiles.json_close_array();
 
     tiles.json_close_object();
-    tiles.send_message();
+    tiles.finish_message();
 }
 
 void Menu::webtiles_update_item(int index) const
@@ -1511,7 +1511,7 @@ void Menu::webtiles_update_item(int index) const
     tiles.json_close_array();
 
     tiles.json_close_object();
-    tiles.send_message();
+    tiles.finish_message();
 }
 
 void Menu::webtiles_update_title() const
@@ -1520,7 +1520,7 @@ void Menu::webtiles_update_title() const
     tiles.json_write_string("msg", "update_menu");
     webtiles_write_title();
     tiles.json_close_object();
-    tiles.send_message();
+    tiles.finish_message();
 }
 
 void Menu::webtiles_update_scroll_pos() const
@@ -1529,7 +1529,7 @@ void Menu::webtiles_update_scroll_pos() const
     tiles.json_write_string("msg", "menu_scroll");
     tiles.json_write_int("first", first_entry);
     tiles.json_close_object();
-    tiles.send_message();
+    tiles.finish_message();
 }
 
 void Menu::webtiles_write_title() const
