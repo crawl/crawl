@@ -484,7 +484,9 @@ maud MONS_MAUD
 maurice MONS_MAURICE
 nikola MONS_NIKOLA
 norris MONS_NORRIS
+%rim 0
 psyche MONS_PSYCHE
+%rim 1
 rupert MONS_RUPERT
 sigmund MONS_SIGMUND
 terence MONS_TERENCE
