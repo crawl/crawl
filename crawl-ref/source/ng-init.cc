@@ -28,20 +28,18 @@
 
 static uint8_t _random_potion_description()
 {
-    int desc, colour;
+    int desc;
 
     desc = random2(PDQ_NQUALS * PDC_NCOLOURS);
 
     if (coinflip())
         desc %= PDC_NCOLOURS;
 
-    colour = PCOLOUR(desc);
-
     // nature and colour correspond to primary and secondary in
     // itemname.cc.
 
 #if TAG_MAJOR_VERSION == 34
-    if (colour == PDC_CLEAR) // only water can be clear, re-roll
+    if (PCOLOUR(desc) == PDC_CLEAR) // only water can be clear, re-roll
         return _random_potion_description();
 #endif
 
