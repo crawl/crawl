@@ -326,6 +326,15 @@ shallow_bord_bl DNGN_WAVE_SW
 shallow_bord_lft DNGN_WAVE_W
 shallow_bord_tl DNGN_WAVE_NW
 
+murky_bord_top MURKY_WAVE_N
+murky_bord_tr MURKY_WAVE_NE
+murky_bord_rgt MURKY_WAVE_E
+murky_bord_br MURKY_WAVE_SE
+murky_bord_btm MURKY_WAVE_S
+murky_bord_bl MURKY_WAVE_SW
+murky_bord_lft MURKY_WAVE_W
+murky_bord_tl MURKY_WAVE_NW
+
 # Make all base variants equally likely, but their special ones less so.
 %weight 4
 shoals_deep_water1 SHOALS_DEEP_WATER
