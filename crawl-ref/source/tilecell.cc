@@ -352,10 +352,10 @@ static void _pack_default_waves(const coord_def &gc, packed_cell *cell)
     if (cell->mangrove_water && feat == DNGN_TREE)
         feat = DNGN_SHALLOW_WATER;
 
-    if (!feat_is_water(feat) && !feat_is_lava(feat) || env.grid_colours(gc))
+    if (!feat_is_water(feat) && !feat_is_lava(feat))
         return;
 
-    if (feat == DNGN_DEEP_WATER)
+    if (feat == DNGN_DEEP_WATER && !env.grid_colours(gc))
     {
         if (_is_seen_shallow(coord_def(gc.x, gc.y - 1)))
             _add_overlay(TILE_DNGN_WAVE_N, cell);
@@ -375,12 +375,32 @@ static void _pack_default_waves(const coord_def &gc, packed_cell *cell)
             _add_overlay(TILE_DNGN_WAVE_NW, cell);
     }
 
+    // Sewer water
+    if (feat == DNGN_DEEP_WATER && env.grid_colours(gc) == GREEN)
+    {
+        if (_is_seen_shallow(coord_def(gc.x, gc.y - 1)))
+            _add_overlay(TILE_MURKY_WAVE_N, cell);
+        if (_is_seen_shallow(coord_def(gc.x + 1, gc.y - 1)))
+            _add_overlay(TILE_MURKY_WAVE_NE, cell);
+        if (_is_seen_shallow(coord_def(gc.x + 1, gc.y)))
+            _add_overlay(TILE_MURKY_WAVE_E, cell);
+        if (_is_seen_shallow(coord_def(gc.x + 1, gc.y + 1)))
+            _add_overlay(TILE_MURKY_WAVE_SE, cell);
+        if (_is_seen_shallow(coord_def(gc.x, gc.y + 1)))
+            _add_overlay(TILE_MURKY_WAVE_S, cell);
+        if (_is_seen_shallow(coord_def(gc.x - 1, gc.y + 1)))
+            _add_overlay(TILE_MURKY_WAVE_SW, cell);
+        if (_is_seen_shallow(coord_def(gc.x - 1, gc.y)))
+            _add_overlay(TILE_MURKY_WAVE_W, cell);
+        if (_is_seen_shallow(coord_def(gc.x - 1, gc.y - 1)))
+            _add_overlay(TILE_MURKY_WAVE_NW, cell);
+    }
 
     bool north = _is_seen_land(coord_def(gc.x, gc.y - 1));
     bool west  = _is_seen_land(coord_def(gc.x - 1, gc.y));
     bool east  = _is_seen_land(coord_def(gc.x + 1, gc.y));
 
-    if (north || west || east)
+    if (north || west || east && (!env.grid_colours(gc) || env.grid_colours(gc) == LIGHTGREEN))
     {
         if (north)
             _add_overlay(TILE_SHORE_N, cell);
