@@ -2571,14 +2571,11 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe)
         eat_food(slot);
         return false;
     case CMD_READ:
-        read_scroll(slot);
-        if (item.base_type == OBJ_BOOKS)
-            return true; // We stay in the inventory to see the book content.
-        else
-        {
+        if (item.base_type != OBJ_BOOKS)
             redraw_screen();
-            return false;
-        }
+        read_scroll(slot);
+        // In case of a book, stay in the inventory to see the content.
+        return item.base_type == OBJ_BOOKS;
     case CMD_WEAR_JEWELLERY:
         redraw_screen();
         puton_ring(slot);
