@@ -4845,11 +4845,10 @@ bool temperature_effect(int which) {
             return (temperature() < TEMP_WARM); // 1-8
 //      case nothing, right now:
 //            return (you.temperature >= TEMP_COOL && you.temperature < TEMP_WARM); // 5-8
-        case LORC_FIRE_RES_II:
         case LORC_LAVA_BOOST:
             return (temperature() >= TEMP_WARM && temperature() < TEMP_HOT); // 9-10
-//      case nothing, right now:
-//            return (temperature() >= TEMP_WARM); // 9-15
+        case LORC_FIRE_RES_II:
+            return (temperature() >= TEMP_WARM); // 9-15
         case LORC_FIRE_RES_III:
         case LORC_FIRE_BOOST:
         case LORC_COLD_VULN:

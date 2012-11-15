@@ -1477,6 +1477,16 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
     if (you.species == SP_MUMMY)
         rf--;
 
+    if (you.species == SP_LAVA_ORC)
+    {
+    if (temperature_effect(LORC_FIRE_RES_I))
+        rf++;
+    if (temperature_effect(LORC_FIRE_RES_II))
+        rf++;
+    if (temperature_effect(LORC_FIRE_RES_III))
+        rf++;
+    }
+
     // mutations:
     rf += player_mutation_level(MUT_HEAT_RESISTANCE, temp);
     rf += player_mutation_level(MUT_MOLTEN_SCALES, temp) == 3 ? 1 : 0;
