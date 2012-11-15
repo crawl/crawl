@@ -927,7 +927,7 @@ iflags_t get_species_race(species_type sp)
 {
     return you.species == SP_DEEP_DWARF ? ISFLAG_DWARVEN :
            player_genus(GENPC_ELVEN)    ? ISFLAG_ELVEN :
-           you.species == SP_HILL_ORC   ? ISFLAG_ORCISH
+           player_genus(GENPC_ORCISH)   ? ISFLAG_ORCISH
                                         : 0;
 }
 
