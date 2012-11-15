@@ -1,3 +1,10 @@
+crawl (2:0.10.3-3) unstable; urgency=low
+
+  * Work around dpkg failing to replace a directory with a symlink.
+    Closes: #692947
+
+ -- Adam Borowski <kilobyte@angband.pl>  Thu, 15 Nov 2012 13:54:14 +0100
+
 crawl (2:0.10.3-2) unstable; urgency=low
 
   * Never #define NEED_FAKE_FDATASYNC; all platforms supported by Debian
