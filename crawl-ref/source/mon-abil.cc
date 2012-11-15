@@ -823,11 +823,11 @@ bool slime_creature_mutate(monster* slime)
 }
 
 // Returns true if you resist the siren's call.
-// -- added equivalency for huldra
 static bool _siren_movement_effect(const monster* mons)
 {
     bool do_resist = (you.attribute[ATTR_HELD] || you.check_res_magic(70) > 0
-                      || you.cannot_act() || you.asleep());
+                      || you.cannot_act() || you.asleep()
+                      || player_mental_clarity(true));
 
     if (!do_resist)
     {
@@ -2805,7 +2805,9 @@ bool mon_special_ability(monster* mons, bolt & beem)
             // Once mesmerised by a particular monster, you cannot resist
             // anymore.
             if (!already_mesmerised
-                && (you.species == SP_MERFOLK || you.check_res_magic(100) > 0))
+                && (you.species == SP_MERFOLK
+                    || you.check_res_magic(100) > 0
+                    || player_mental_clarity(true)))
             {
                 if (!did_resist)
                     canned_msg(MSG_YOU_RESIST);

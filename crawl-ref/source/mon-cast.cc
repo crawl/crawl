@@ -2701,9 +2701,11 @@ static int _mons_mesmerise(monster* mons, bool actual)
     const int pow = min(mons->hit_dice * 12, 200);
 
     // Don't spam mesmerisation if you're already mesmerised,
-    // or don't mesmerise at all if you fail a check.
-    if (you.check_res_magic(pow) > 0 || !(mons->foe == MHITYOU
-        && !already_mesmerised && coinflip()))
+    // or don't mesmerise at all if you pass an MR check or have clarity.
+    if (you.check_res_magic(pow) > 0
+        || player_mental_clarity(true)
+        || !(mons->foe == MHITYOU
+             && !already_mesmerised && coinflip()))
     {
         if (actual)
             canned_msg(MSG_YOU_RESIST);
