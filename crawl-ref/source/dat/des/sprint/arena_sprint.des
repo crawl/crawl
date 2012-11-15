@@ -100,7 +100,11 @@ function arena_sprint_end_round(data)
         if data.round_id > 27 then
             local p = dgn.find_marker_positions_by_prop("centre_point", 1)[1]
             dgn.grid(p.x, p.y, "exit_dungeon")
-            crawl.mpr("The exit has re-opened... for now.", "orb")
+            if data.round_id < 42 then
+                crawl.mpr("The exit has re-opened... for now.", "orb")
+            else
+                crawl.mpr("The exit has re-opened.", "orb")
+            end
         end
     elseif data.round_id == 27 then
         crawl.mpr("The Orb of Zot has appeared in the centre of the arena!", "orb")
@@ -172,11 +176,9 @@ function arena_sprint_end_round(data)
     end
 
     if data.round_id == 42 then
-        crawl.mpr("The arena falls silent. Everyone but you is dead.")
-        crawl.mpr("Frankly, I didn't think it was possible to get this far.")
-        crawl.mpr("Congratulations, champion.")
-        crawl.mpr("ARENA POINT TOTAL: " .. data.style_points, "intrinsic_gain")
-        crawl.take_note("ARENA POINT TOTAL: " .. data.style_points)
+        crawl.mpr("<white>The arena falls silent. Everyone but you is dead.</white>")
+        crawl.mpr("<white>There is nothing to do now but take the Orb and leave.</white>")
+        crawl.mpr("<white>Congratulations, champion.</white>")
         data.finished = true
     else
         data.round_id = data.round_id + 1
@@ -854,6 +856,7 @@ function thing_do_arena(data, triggerable, triggerer, marker, ev)
             arena_sprint_ominous_countdown(data.time_left, data.between_rounds)
 
             if data.time_left <= 0 then
+                crawl.take_note("Round " .. data.round_id .. ".")
                 crawl.mpr("ROUND " .. data.round_id .. "!", "warning")
                 if data.round_id == 42 then
                     crawl.mpr("FINAL BOSS!", "warning")
