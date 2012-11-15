@@ -4683,10 +4683,7 @@ void temperature_check()
 {
     // These numbers seem to work pretty well, but they're definitely experimental:
 
-    float factor = sqrt(1 + exp_needed(you.experience_level) / 30.0);
     int tension = get_tension(GOD_NO_GOD); // Raw tension
-    float tension_b = tension / (1 + factor); // Scaled to your level, again. (Redundant!)
-    float tension_c = sqrt(tension_b); // Take the square root of it.
 
     // It would generally be better to handle this at the tension level and have temperature much more closely tied to tension.
 
@@ -4726,7 +4723,7 @@ void temperature_check()
     }
 
     // Next, add temperature from tension. Can override temperature loss from water!
-    temperature_increment(tension_c);
+    temperature_increment(tension);
 
     // Handle any effects that change with temperature.
     float tempchange = you.temperature - you.temperature_last;
