@@ -2609,11 +2609,9 @@ static void _decrement_durations()
         //       avoid the mutation being a "death sentence" to
         //       certain characters.
 
-        if (you.berserk_penalty != NO_BERSERK_PENALTY)
+        if (you.berserk_penalty != NO_BERSERK_PENALTY
+            && one_chance_in(10 + player_mutation_level(MUT_BERSERK) * 25))
         {
-            const int chance =
-                10 + player_mutation_level(MUT_BERSERK) * 25;
-
             // Note the beauty of Trog!  They get an extra save that's at
             // the very least 20% and goes up to 100%.
             if (you.religion == GOD_TROG && x_chance_in_y(you.piety, 150)
@@ -2621,7 +2619,7 @@ static void _decrement_durations()
             {
                 mpr("Trog's vigour flows through your veins.");
             }
-            else if (one_chance_in(chance))
+            else
             {
                 mpr("You pass out from exhaustion.", MSGCH_WARN);
                 you.increase_duration(DUR_PARALYSIS, roll_dice(1,4));
