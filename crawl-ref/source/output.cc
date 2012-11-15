@@ -785,11 +785,9 @@ static void _redraw_title(const string &your_name, const string &job_name)
 void print_stats(void)
 {
     int temp = (you.species == SP_LAVA_ORC) ? 1 : 0;
-    int hp_pos = 3;
-    int mp_pos = 4;
     int temp_pos = 5;
-    int ac_pos = 5 + temp;
-    int ev_pos = 6 + temp;
+    int ac_pos = temp_pos + temp;
+    int ev_pos = temp_pos + temp;
 
     cursor_control coff(false);
     textcolor(LIGHTGREY);
@@ -818,8 +816,8 @@ void print_stats(void)
     if (you.redraw_hit_points)   { you.redraw_hit_points = false;   _print_stats_hp (1, 3); }
     if (you.redraw_magic_points) { you.redraw_magic_points = false; _print_stats_mp (1, 4); }
     if (you.redraw_temperature)  { you.redraw_temperature = false;  _print_stats_temperature (1, temp_pos); }
-    if (you.redraw_armour_class) { you.redraw_armour_class = false; _print_stats_ac (1, 5); }
-    if (you.redraw_evasion)      { you.redraw_evasion = false;      _print_stats_ev (1, 6); }
+    if (you.redraw_armour_class) { you.redraw_armour_class = false; _print_stats_ac (1, ac_pos); }
+    if (you.redraw_evasion)      { you.redraw_evasion = false;      _print_stats_ev (1, ev_pos); }
 
     for (int i = 0; i < NUM_STATS; ++i)
         if (you.redraw_stats[i])
@@ -1686,7 +1684,7 @@ static vector<formatted_string> _get_overview_stats()
     char temperature[20];
     if (you.species == SP_LAVA_ORC)
     {
-        snprintf(temperature, sizeof(temperature), "Temperature: %d",
+        snprintf(temperature, sizeof(temperature), "Temperature: %f",
                  you.temperature);
     }
     else
