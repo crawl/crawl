@@ -469,6 +469,7 @@ int species_hp_modifier(species_type species)
     case SP_PALE_DRACONIAN:
     case SP_GHOUL:
     case SP_HILL_ORC:
+    case SP_LAVA_ORC:
     case SP_MINOTAUR:
         return 1;
     case SP_DEEP_DWARF:
