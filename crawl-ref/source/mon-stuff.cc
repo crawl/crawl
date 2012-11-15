@@ -4847,9 +4847,9 @@ bool temperature_effect(int which) {
 //            return (you.temperature >= TEMP_COOL && you.temperature < TEMP_WARM); // 5-8
         case LORC_FIRE_RES_II:
         case LORC_LAVA_BOOST:
-            return (temperature() >= TEMP_WARM && temperature() < TEMP_HOT); // 9 - 10
+            return (temperature() >= TEMP_WARM && temperature() < TEMP_HOT); // 9-10
 //      case nothing, right now:
-            return (temperature() >= TEMP_WARM); // 9-15
+//            return (temperature() >= TEMP_WARM); // 9-15
         case LORC_FIRE_RES_III:
         case LORC_FIRE_BOOST:
         case LORC_COLD_VULN:
@@ -4891,17 +4891,17 @@ std::string temperature_text(int temp) {
     switch (temp)
     {
         case TEMP_MIN:
-            return "Resist fire {rF+}.";
+            return "rF+";
         case TEMP_COOL:
-            return "Normal movement speed.";
+            return "Normal movement speed";
         case TEMP_WARM:
-            return "Resist fire {rF++}; lava magic boost; lose stoneskin.";
+            return "rF++; lava magic boost; Stoneskin melts";
         case TEMP_HOT:
-            return "Resist fire {rF+++}; fire magic boost; cold vulnerability.";
+            return "rF+++; rC-; fire magic boost";
         case TEMP_FIRE:
-            return "Fast movement speed; burn attackers.";
+            return "Fast movement speed; burn attackers";
         case TEMP_MAX:
-            return "Burn surroundings; cannot read books or scrolls.";
+            return "Burn surroundings; cannot read books or scrolls";
         default:
             return "";
     }
