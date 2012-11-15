@@ -2697,22 +2697,22 @@ void inscribe_item(item_def &item, bool msgwin)
     }
 
     keyin = (is_inscribed ? getch_ck() : 'i');
-    if (keyin != 'A')
-        keyin = tolower(keyin);
+    keyin = tolower(keyin);
     switch (keyin)
     {
     case 'c':
         item.inscription.clear();
         break;
+    case 'a':
     case 'i':
     case 'r':
     {
         if (!is_inscribed)
             prompt = "Inscribe with what? ";
-        else if (keyin == 'i')
-            prompt = "Add what to inscription? ";
-        else
+        else if (keyin == 'r')
             prompt = "Replace inscription with what? ";
+        else
+            prompt = "Add what to inscription? ";
 
         char buf[79];
         int ret;
