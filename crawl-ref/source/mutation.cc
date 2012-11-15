@@ -544,7 +544,7 @@ string describe_mutations(bool center_title)
         else
         {
             // Slow or normal move
-            col = (temperature_effect(LORC_SLOW_MOVE)) ? "brown" : "darkgrey";
+            col = (temperature_effect(LORC_SLOW_MOVE)) ? "lightgrey" : "darkgrey";
             result += "<" + col + ">You cover ground slowly.</" + col + ">\n";
         }
 
@@ -559,11 +559,6 @@ string describe_mutations(bool center_title)
                   (temperature_effect(LORC_FIRE_RES_I))   ? "Your flesh is heat resistant." : "bugged";
         result += "</" + col + ">\n";
 
-        // Cold vulnerability
-        col = (temperature_effect(LORC_COLD_VULN)) ? "red" : "darkgrey";
-        result += "<" + col + ">You are vulnerable to cold.</" + col + ">\n";
-
-
         // Lava/fire boost
         if (temperature_effect(LORC_LAVA_BOOST))
         {
@@ -576,12 +571,13 @@ string describe_mutations(bool center_title)
             result += "<" + col + ">Your fire spells are more powerful.<" + col + ">\n";
         }
 
+        // Cold vulnerability
+        col = (temperature_effect(LORC_COLD_VULN)) ? "red" : "darkgrey";
+        result += "<" + col + ">You are vulnerable to cold.</" + col + ">\n";
+
+        // Passive heat
         col = (temperature_effect(LORC_PASSIVE_HEAT)) ? "lightred" : "darkgrey";
         result += "<" + col + ">Your heat harms attackers.</" + col + ">\n";
-
-        // Fast move
-        col = (temperature_effect(LORC_FAST_MOVE)) ? "lightred" : "darkgrey";
-        result += "<" + col + ">You cover ground quickly.</" + col + ">\n";
 
         // Heat aura
         col = (temperature_effect(LORC_HEAT_AURA)) ? "lightred" : "darkgrey";
