@@ -41,7 +41,6 @@ enum temperature_level
 
 enum temperature_effect
 {
-    LORC_EARTH_BOOST,
     LORC_LAVA_BOOST,
     LORC_FIRE_BOOST,
     LORC_STONESKIN,
