@@ -1454,7 +1454,8 @@ bool go_berserk(bool intentional, bool potion)
     if (you.species == SP_LAVA_ORC)
     {
         mpr("You burn with rage!");
-        temperature_increment(16);
+        // This will get sqrt'd later, so.
+        you.temperature = TEMP_MAX;
     }
     return true;
 }
