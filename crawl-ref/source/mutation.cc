@@ -2187,6 +2187,9 @@ bool temp_mutate(mutation_type which_mut, const string &reason)
         break;
     }
 
+    if (which_mut == NUM_MUTATIONS)
+        return false;
+
     int old_level = you.mutation[which_mut];
 
     if (mutate(which_mut, reason, false, false, false, false, false, false, true))
