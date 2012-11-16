@@ -1040,6 +1040,9 @@ void TilesFramework::_send_cell(const coord_def &gc,
         if (next_pc.travel_trail != current_pc.travel_trail)
             json_write_int("travel_trail", next_pc.travel_trail);
 
+        if (next_pc.heat_aura != current_pc.heat_aura)
+            write_message("heat_aura:%u,", next_pc.heat_aura);
+
         if (_needs_flavour(next_pc) &&
             (next_pc.flv.floor != current_pc.flv.floor
              || next_pc.flv.special != current_pc.flv.special
