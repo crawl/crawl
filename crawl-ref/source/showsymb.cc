@@ -81,8 +81,12 @@ unsigned short _cell_feat_show_colour(const map_cell& cell,
     {
         colour = LIGHTGREEN;
     }
-    else if (cell.feat_colour() && !norecolour)
+    else if (cell.feat_colour() && (!norecolour
+                                    || feat == DNGN_ENTER_PORTAL_VAULT
+                                    || feat == DNGN_EXIT_PORTAL_VAULT))
+    {
         colour = cell.feat_colour();
+    }
     else
     {
         colour = fdef.colour;
