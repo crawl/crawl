@@ -4810,6 +4810,10 @@ void temperature_changed(float change)
     // If we're in this function, temperature changed, anyways.
     you.redraw_temperature = true;
 
+    #ifdef USE_TILE
+        init_player_doll();
+    #endif
+
     // Just do this every turn to be safe. Can be fixed later if there
     // any performance issues.
     invalidate_agrid(true);
