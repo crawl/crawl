@@ -4137,12 +4137,12 @@ static bool _apply_item_props(item_def &item, const item_spec &spec,
         item.plus = props["charges"].get_int();
     if ((item.base_type == OBJ_WEAPONS || item.base_type == OBJ_ARMOUR
          || item.base_type == OBJ_JEWELLERY || item.base_type == OBJ_MISSILES)
-        && props.exists("plus"))
+        && props.exists("plus") && !is_unrandom_artefact(item))
     {
         item.plus = props["plus"].get_int();
     }
     if ((item.base_type == OBJ_WEAPONS || item.base_type == OBJ_JEWELLERY)
-        && props.exists("plus2"))
+        && props.exists("plus2") && !is_unrandom_artefact(item))
     {
         item.plus2 = props["plus2"].get_int();
     }
