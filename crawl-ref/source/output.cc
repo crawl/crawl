@@ -119,7 +119,7 @@ class colour_bar
             textcolor(BLACK + m_empty * 16);
 
             if (cx < disp)
-                textcolor(BLACK + (temp) ? temp_colour : m_default * 16);
+                textcolor(BLACK + (temp) ? temp_colour * 16 : m_default * 16);
             else if (old_disp > disp && cx < old_disp)
                 textcolor(BLACK + m_change_neg * 16);
             putwch(' ');

@@ -687,6 +687,9 @@ effect/orb_glow0 ORB_GLOW
 effect/orb_glow1
 effect/quad_glow QUAD_GLOW
 effect/disjunct DISJUNCT
+effect/heataura0 HEAT_AURA
+effect/heataura1
+effect/heataura2
 ray RAY
 ray_out_of_range RAY_OUT_OF_RANGE
 travel_exclusion TRAVEL_EXCLUSION_BG
