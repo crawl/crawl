@@ -1478,9 +1478,6 @@ static void _go_upstairs()
         }
     }
 
-    if (you.duration[DUR_MISLED])
-        end_mislead(true);
-
     you.clear_clinging();
     you.stop_constricting_all(true);
     you.stop_being_constricted();
@@ -1551,9 +1548,6 @@ static void _go_downstairs()
 
     if (!_prompt_unique_pan_rune(ygrd))
         return;
-
-    if (you.duration[DUR_MISLED])
-        end_mislead(true);
 
     you.clear_clinging();
     you.stop_constricting_all(true);

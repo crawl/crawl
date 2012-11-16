@@ -883,20 +883,11 @@ bool _actor_apply_cloud_side_effects(actor *act,
         }
         if (player)
         {
-            bool affected = false;
             if (you.duration[DUR_FIRE_SHIELD] > 1)
             {
                 you.duration[DUR_FIRE_SHIELD] = 1;
-                affected = true;
+                return true;
             }
-
-            if (you.misled())
-            {
-                mpr("The rain washes away your illusions!", MSGCH_DURATION);
-                you.duration[DUR_MISLED] = 0;
-                affected = true;
-            }
-            return affected;
         }
         break;
 
