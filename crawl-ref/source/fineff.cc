@@ -194,8 +194,10 @@ void trj_spawn_fineff::fire()
 
     dprf("Trying to spawn %d jellies.", tospawn);
 
-    unsigned short foe = attack && attack->alive() ? attack->mindex()
-                                                       : MHITNOT;
+    unsigned short foe = attack && attack->alive() ? attack->mindex() : MHITNOT;
+    // may be ANON_FRIENDLY_MONSTER
+    if (invalid_monster_index(foe) && foe != MHITYOU)
+        foe = MHITNOT;
 
     int spawned = 0;
     for (int i = 0; i < tospawn; ++i)
