@@ -328,7 +328,11 @@ void moveto_location_effects(dungeon_feature_type old_feat,
             if (feat_is_lava(new_grid) && !feat_is_lava(old_feat))
             {
                 mprf("You %s lava.",
-                     (stepped) ? "immerse yourself in the" : "fall into the");
+                     (stepped) ? "slowly immerse yourself in the" : "fall into the");
+
+                // Extra time if you stepped in.
+                if (stepped)
+                    you.time_taken *= 2;
 
                 // This gets called here because otherwise you wouldn't heat
                 // until your second turn in lava.
@@ -338,7 +342,10 @@ void moveto_location_effects(dungeon_feature_type old_feat,
             }
 
             else if (!feat_is_lava(new_grid) && feat_is_lava(old_feat))
-                mpr("You pull yourself out of the lava.");
+            {
+                mpr("You slowly pull yourself out of the lava.");
+                you.time_taken *= 2;
+            }
         }
 
         if (you.species == SP_MERFOLK)
