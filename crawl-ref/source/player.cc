@@ -327,6 +327,9 @@ void moveto_location_effects(dungeon_feature_type old_feat,
         {
             if (feat_is_lava(new_grid) && !feat_is_lava(old_feat))
             {
+                if (!stepped)
+                    noisy(4, you.pos(), "Gloop!");
+
                 mprf("You %s lava.",
                      (stepped) ? "slowly immerse yourself in the" : "fall into the");
 
