@@ -4681,8 +4681,10 @@ int temperature_last()
 
 void temperature_check()
 {
-    // These numbers seem to work pretty well, but they're definitely experimental:
+    // Whether to ignore caps on incrementing temperature
+    bool ignore_cap = you.duration[DUR_BERSERK];
 
+    // These numbers seem to work pretty well, but they're definitely experimental:
     int tension = get_tension(GOD_NO_GOD); // Raw tension
 
     // It would generally be better to handle this at the tension level and have temperature much more closely tied to tension.
@@ -4702,6 +4704,7 @@ void temperature_check()
         if (temperature() < TEMP_FIRE)
             mpr("The lava instantly superheats you.");
         temperature_increment(TEMP_MAX*TEMP_MAX);
+        ignore_cap = true;
     }
     // Alternately, cool you off by 1 additional each turn until
     // you're not hot enough to boil water.
@@ -4725,8 +4728,18 @@ void temperature_check()
     // Next, add temperature from tension. Can override temperature loss from water!
     temperature_increment(tension);
 
-    // Handle any effects that change with temperature.
+    // Cap temperature change to 1 per turn except while berserking.
     float tempchange = you.temperature - you.temperature_last;
+    if (!ignore_cap && tempchange > 1)
+    {
+      you.temperature = you.temperature_last + 1;
+    }
+    else if (tempchange < -1)
+    {
+      you.temperature = you.temperature_last - 1;
+    }
+
+    // Handle any effects that change with temperature.
     temperature_changed(tempchange);
 
     // Save your new temp as your new 'old' temperature.
