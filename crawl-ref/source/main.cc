@@ -2628,10 +2628,7 @@ static void _decrement_durations()
             mpr("You are exhausted.", MSGCH_WARN);
 
         if (you.species == SP_LAVA_ORC)
-        {
             mpr("You feel less hot-headed.");
-            temperature_decrement(16);
-        }
 
         // This resets from an actual penalty or from NO_BERSERK_PENALTY.
         you.berserk_penalty = 0;

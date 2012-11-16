@@ -337,7 +337,7 @@ void moveto_location_effects(dungeon_feature_type old_feat,
                 // until your second turn in lava.
                 if (temperature() < TEMP_FIRE)
                     mpr("The lava instantly superheats you.");
-                temperature_increment(TEMP_MAX*TEMP_MAX);
+                you.temperature = TEMP_MAX;
             }
 
             else if (!feat_is_lava(new_grid) && feat_is_lava(old_feat))
