@@ -2571,41 +2571,6 @@ void update_level(int elapsedTime)
         delete_cloud(i);
 }
 
-static void _maybe_restart_fountain_flow(const coord_def& where,
-                                         const int tries)
-{
-    dungeon_feature_type grid = grd(where);
-
-    if (grid < DNGN_DRY_FOUNTAIN_BLUE || grid > DNGN_DRY_FOUNTAIN_BLOOD)
-        return;
-
-    for (int i = 0; i < tries; ++i)
-    {
-        if (!one_chance_in(100))
-            continue;
-
-        // Make it start flowing again.
-        grd(where) = static_cast<dungeon_feature_type> (grid
-                        - (DNGN_DRY_FOUNTAIN_BLUE - DNGN_FOUNTAIN_BLUE));
-
-        // XXX: why should the player magically know this?!
-        if (env.map_knowledge(where).seen())
-            env.map_knowledge(where).set_feature(grd(where));
-
-        // Clean bloody floor.
-        if (is_bloodcovered(where))
-            env.pgrid(where) &= ~(FPROP_BLOODY);
-
-        // Chance of cleaning adjacent squares.
-        for (adjacent_iterator ai(where); ai; ++ai)
-            if (is_bloodcovered(*ai) && one_chance_in(5))
-                env.pgrid(*ai) &= ~(FPROP_BLOODY);
-
-        break;
-   }
-}
-
-
 // A comparison struct for use in an stl priority queue.
 template<typename T>
 struct greater_second
@@ -3093,23 +3058,6 @@ static void _update_corpses(int elapsedTime)
         }
         else
             it.special -= rot_time;
-    }
-
-    int fountain_checks = elapsedTime / 1000;
-    if (x_chance_in_y(elapsedTime % 1000, 1000))
-        fountain_checks += 1;
-
-    // Dry fountains may start flowing again.
-    if (fountain_checks > 0)
-    {
-        for (rectangle_iterator ri(1); ri; ++ri)
-        {
-            if (grd(*ri) >= DNGN_DRY_FOUNTAIN_BLUE
-                && grd(*ri) < DNGN_PERMADRY_FOUNTAIN)
-            {
-                _maybe_restart_fountain_flow(*ri, fountain_checks);
-            }
-        }
     }
 }
 
