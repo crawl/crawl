@@ -1542,7 +1542,7 @@ void monster::apply_enchantment(const mon_enchant &me)
             if (env.grid(base_position) == DNGN_MALIGN_GATEWAY)
                 env.grid(base_position) = DNGN_FLOOR;
 
-            env.pgrid(base_position) |= FPROP_BLOODY;
+            maybe_bloodify_square(base_position);
             add_ench(ENCH_SEVERED);
 
             // Severed tentacles immediately become "hostile" to everyone (or insane)
@@ -1581,12 +1581,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     {
         simple_monster_message(this, " writhes!");
         coord_def base_position = props["base_position"].get_coord();
-        dungeon_feature_type ftype = env.grid(base_position);
-        if (feat_has_solid_floor(ftype)
-            && !feat_is_watery(ftype))
-        {
-            env.pgrid(base_position) |= FPROP_BLOODY;
-        }
+        maybe_bloodify_square(base_position);
         hurt(me.agent(), 20);
     }
 
