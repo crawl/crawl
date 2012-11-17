@@ -733,7 +733,9 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
 
     if (mouse_control::current_mode() == MOUSE_MODE_NORMAL
         || mouse_control::current_mode() == MOUSE_MODE_MACRO
-        || mouse_control::current_mode() == MOUSE_MODE_MORE)
+        || mouse_control::current_mode() == MOUSE_MODE_MORE
+        || mouse_control::current_mode() == MOUSE_MODE_PROMPT
+        || mouse_control::current_mode() == MOUSE_MODE_YESNO)
     {
         return 0;
     }

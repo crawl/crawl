@@ -1327,7 +1327,7 @@ void pickup(bool partial_quantity)
                      get_menu_colour_prefix_tags(mitm[o],
                                                  DESC_A).c_str());
 
-                mouse_control mc(MOUSE_MODE_MORE);
+                mouse_control mc(MOUSE_MODE_YESNO);
                 keyin = getchk();
             }
 

@@ -756,7 +756,7 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
         }
 
 #else
-        mouse_control mc(MOUSE_MODE_MORE);
+        mouse_control mc(MOUSE_MODE_PROMPT);
         int key = getchm();
 #endif
 
