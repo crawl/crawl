@@ -163,7 +163,7 @@ int cancelable_get_line(char *buf, int len, input_history *mh,
 {
     flush_prev_message();
 
-    mouse_control mc(MOUSE_MODE_MORE);
+    mouse_control mc(MOUSE_MODE_PROMPT);
     line_reader reader(buf, len, get_number_of_cols());
     reader.set_input_history(mh);
     reader.set_keyproc(keyproc);

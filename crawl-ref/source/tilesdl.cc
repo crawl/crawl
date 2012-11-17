@@ -560,7 +560,9 @@ int TilesFramework::handle_mouse(MouseEvent &event)
         return return_key;
 
     // Handle "more" mode globally here, rather than duplicate across regions.
-    if (mouse_control::current_mode() == MOUSE_MODE_MORE
+    if ((mouse_control::current_mode() == MOUSE_MODE_MORE
+         || mouse_control::current_mode() == MOUSE_MODE_PROMPT
+         || mouse_control::current_mode() == MOUSE_MODE_YESNO)
         && event.event == MouseEvent::PRESS)
     {
         if (event.button == MouseEvent::LEFT)

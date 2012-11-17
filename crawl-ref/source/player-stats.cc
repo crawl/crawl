@@ -99,7 +99,7 @@ bool attribute_increase()
     learned_something_new(HINT_CHOOSE_STAT);
     mpr("Increase (S)trength, (I)ntelligence, or (D)exterity? ", MSGCH_PROMPT);
 #endif
-    mouse_control mc(MOUSE_MODE_MORE);
+    mouse_control mc(MOUSE_MODE_PROMPT);
     // Calling a user-defined lua function here to let players reply to the
     // prompt automatically.
     clua.callfn("choose_stat_gain", 0, 0);

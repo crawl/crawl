@@ -17,6 +17,8 @@ define(function () {
     exports.mouse_mode.TARGET_PATH = val++;
     exports.mouse_mode.MORE = val++;
     exports.mouse_mode.MACRO = val++;
+    exports.mouse_mode.PROMPT = val++;
+    exports.mouse_mode.YESNO = val++;
     exports.mouse_mode.MAX = val++;
 
     // Cursors

@@ -1001,7 +1001,7 @@ static int _prompt_ring_to_remove(int new_ring)
     // Deactivate choice from tile inventory.
     // FIXME: We need to be able to get the choice (item letter)
     //        *without* the choice taking action by itself!
-    mouse_control mc(MOUSE_MODE_MORE);
+    mouse_control mc(MOUSE_MODE_PROMPT);
     int c;
     do
         c = getchm();
@@ -1053,7 +1053,7 @@ static int _prompt_ring_to_remove_octopode(int new_ring)
     //        *without* the choice taking action by itself!
     int eqslot = EQ_NONE;
 
-    mouse_control mc(MOUSE_MODE_MORE);
+    mouse_control mc(MOUSE_MODE_PROMPT);
     int c;
     do
     {

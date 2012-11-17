@@ -93,7 +93,7 @@ void set_redraw_status(uint64_t flags)
 
 int get_ch()
 {
-    mouse_control mc(MOUSE_MODE_MORE);
+    mouse_control mc(MOUSE_MODE_PROMPT);
     int gotched = getchm();
 
     if (gotched == 0)
@@ -564,7 +564,7 @@ bool yesno(const char *str, bool safe, int safeanswer, bool clear_after,
     me->add_tile(tile_def(TILEG_PROMPT_NO, TEX_GUI));
     pop->push_entry(me);
 #endif
-    mouse_control mc(MOUSE_MODE_MORE);
+    mouse_control mc(MOUSE_MODE_YESNO);
     while (true)
     {
 #ifdef TOUCH_UI
@@ -689,7 +689,7 @@ int yesnoquit(const char* str, bool safe, int safeanswer, bool allow_all,
     if (!crawl_state.is_repeating_cmd())
         interrupt_activity(AI_FORCE_INTERRUPT);
 
-    mouse_control mc(MOUSE_MODE_MORE);
+    mouse_control mc(MOUSE_MODE_YESNO);
 
     string prompt =
         make_stringf("%s%s ", str ? str : "Buggy prompt?",
