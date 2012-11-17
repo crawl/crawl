@@ -27,6 +27,7 @@ function ($, comm, util) {
 
     function new_command(new_turn)
     {
+        $("#more").hide();
         if (new_turn)
             set_last_prefix_glyph("_", "turn_marker");
         else
@@ -83,9 +84,13 @@ function ($, comm, util) {
             rollback(msg.rollback);
         if (msg.old_msgs)
             rollback(msg.old_msgs);
-        for (var i = 0; i < msg.data.length; ++i)
+        $("#more").toggle(!!msg.more);
+        if (msg.messages)
         {
-            add_message(msg.data[i]);
+            for (var i = 0; i < msg.messages.length; ++i)
+            {
+                add_message(msg.messages[i]);
+            }
         }
     }
 
@@ -128,27 +133,10 @@ function ($, comm, util) {
         input.remove();
     }
 
-    function hide_more()
-    {
-        $("#more").hide();
-    }
-
-    function more(full, user)
-    {
-        $("#more").show();
-    }
-
-    function handle_more(data)
-    {
-        more(data.full, data.user);
-    }
-
     comm.register_handlers({
         "msgs": handle_messages,
         "get_line": get_line,
-        "abort_get_line": abort_get_line,
-        "more": handle_more,
-        "hide_more": hide_more
+        "abort_get_line": abort_get_line
     });
 
     $(document).off("game_init.messages")
