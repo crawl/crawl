@@ -195,6 +195,7 @@ function ($, comm, enums, map_knowledge, messages) {
             && (player.pos != null))
         {
             map_knowledge.touch(player.pos);
+            $("#dungeon").trigger("update_cells", [[player.pos]]);
         }
     }
 
