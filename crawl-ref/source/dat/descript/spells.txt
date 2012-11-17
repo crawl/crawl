@@ -228,6 +228,10 @@ Dig spell
 
 This spell forms tunnels through unworked rock by liquefying it.
 %%%%
+Disjunction spell
+
+This spell blinks away any monsters near to the caster.
+%%%%
 Dispel Undead spell
 
 This spell uses the very forces that bind an undead creature together to

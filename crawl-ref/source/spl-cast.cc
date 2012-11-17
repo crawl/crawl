@@ -1603,6 +1603,9 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_RECALL:
         return cast_recall(fail);
 
+    case SPELL_DISJUNCTION:
+        return cast_disjunction(powc, fail);
+
     case SPELL_CORPSE_ROT:
         return cast_corpse_rot(fail);
 

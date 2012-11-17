@@ -12,6 +12,7 @@ enum area_centre_type
     AREA_UMBRA,
     AREA_SUPPRESSION,
     AREA_QUAD,
+    AREA_DISJUNCTION,
 };
 
 void invalidate_agrid(bool recheck_new = false);
@@ -38,6 +39,9 @@ bool orb_haloed(const coord_def& p);
 
 // ...or by a quad damage?
 bool quad_haloed(const coord_def& p);
+
+// ...or by disjunction?
+bool disjunction_haloed(const coord_def& p);
 
 // ...or endarkened by an umbra?
 bool umbraed(const coord_def& p);

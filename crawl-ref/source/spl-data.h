@@ -313,6 +313,19 @@ struct spell_desc
 },
 
 {
+    SPELL_DISJUNCTION, "Disjunction",
+     SPTYP_TRANSLOCATION,
+     SPFLAG_ESCAPE,
+     8,
+     200,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     true
+},
+
+{
     SPELL_FREEZING_CLOUD, "Freezing Cloud",
      SPTYP_CONJURATION | SPTYP_ICE | SPTYP_AIR,
      SPFLAG_GRID | SPFLAG_AREA,

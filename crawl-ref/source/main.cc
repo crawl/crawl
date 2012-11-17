@@ -2674,6 +2674,16 @@ static void _decrement_durations()
 #endif
     }
 
+
+    if (you.duration[DUR_DISJUNCTION])
+    {
+        disjunction();
+        _decrement_a_duration(DUR_DISJUNCTION, delay,
+                              "The translocation chaos dissipates.");
+        if (!you.duration[DUR_DISJUNCTION])
+            invalidate_agrid(true);
+    }
+
     if (_decrement_a_duration(DUR_TORNADO_COOLDOWN, delay,
                               "The winds around you calm down."))
     {

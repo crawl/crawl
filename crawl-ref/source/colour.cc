@@ -166,6 +166,38 @@ static int _etc_waves(int, const coord_def& loc)
         return CYAN;
 }
 
+static int _etc_disjunction(int, const coord_def& loc)
+{
+    static int turns = you.num_turns;
+    static coord_def centre = find_centre_for(loc, AREA_DISJUNCTION);
+
+    if (turns != you.num_turns || (centre-loc).abs() > 15)
+    {
+        centre = find_centre_for(loc, AREA_DISJUNCTION);
+        turns = you.num_turns;
+    }
+
+    if (centre.origin())
+        return MAGENTA;
+
+    int x = loc.x - centre.x;
+    int y = loc.y - centre.y;
+    double dist = sqrt(x*x + y*y);
+    int parity = ((int) (dist / PI) + you.frame_no / 11) % 2 ? 1 : -1;
+    double dir = sin(atan2(x, y)*PI + parity * you.frame_no / 3) + 1;
+    switch ((int) floor(dir * 2))
+    {
+    case 0:
+        return LIGHTBLUE;
+    case 1:
+        return BLUE;
+    case 2:
+        return MAGENTA;
+    default:
+        return LIGHTMAGENTA;
+    }
+}
+
 static int _etc_liquefied(int, const coord_def& loc)
 {
     static int turns = you.num_turns;
@@ -563,6 +595,9 @@ void init_element_colours()
                        ));
     add_element_colour(new element_colour_calc(
                             ETC_ORB_GLOW, "orb_glow", _etc_orb_glow
+                       ));
+    add_element_colour(new element_colour_calc(
+                            ETC_DISJUNCTION, "disjunction", _etc_disjunction
                        ));
     add_element_colour(new element_colour_calc(
                             ETC_RANDOM, "random", _etc_random

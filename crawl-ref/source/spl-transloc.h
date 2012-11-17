@@ -4,6 +4,8 @@
 #include "spl-cast.h"
 
 spret_type cast_controlled_blink(int pow, bool fail);
+spret_type cast_disjunction(int pow, bool fail);
+void disjunction();
 int blink(int pow, bool high_level_controlled_blink, bool wizard_blink = false,
           string *pre_msg = NULL);
 spret_type cast_blink(bool allow_partial_control, bool fail);
