@@ -235,7 +235,7 @@
     "",
     100,
     NULL,
-    NULL,
+    new tohit_calculator<0, 3, 2>,
     BLACK,
     true,
     BEAM_TELEPORT,
