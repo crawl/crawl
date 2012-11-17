@@ -42,6 +42,7 @@ enum areaprop_flag
     APROP_UMBRA         = (1 << 7),
     APROP_SUPPRESSION   = (1 << 8),
     APROP_QUAD          = (1 << 9),
+    APROP_DISJUNCTION   = (1 << 10),
 };
 
 struct area_centre
@@ -194,6 +195,18 @@ static void _update_agrid()
              ri; ++ri)
         {
             _set_agrid_flag(*ri, APROP_QUAD);
+        }
+        no_areas = false;
+    }
+
+    if (you.duration[DUR_DISJUNCTION])
+    {
+        const int r = 27;
+        _agrid_centres.push_back(area_centre(AREA_DISJUNCTION, you.pos(), r));
+        for (radius_iterator ri(you.pos(), r, C_CIRCLE, you.get_los());
+             ri; ++ri)
+        {
+            _set_agrid_flag(*ri, APROP_DISJUNCTION);
         }
         no_areas = false;
     }
@@ -688,6 +701,20 @@ bool quad_haloed(const coord_def& p)
         _update_agrid();
 
     return _check_agrid_flag(p, APROP_QUAD);
+}
+
+/////////////
+// Disjunction Glow
+//
+
+bool disjunction_haloed(const coord_def& p)
+{
+    if (!map_bounds(p))
+        return false;
+    if (!_agrid_valid)
+        _update_agrid();
+
+    return _check_agrid_flag(p, APROP_DISJUNCTION);
 }
 
 /////////////

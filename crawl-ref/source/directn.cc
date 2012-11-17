@@ -3780,6 +3780,8 @@ static bool _print_cloud_desc(const coord_def where)
         areas.push_back("is liquefied");
     if (orb_haloed(where) || quad_haloed(where))
         areas.push_back("is covered in magical glow");
+    if (disjunction_haloed(where))
+        areas.push_back("is bathed in translocation energy");
     if (!areas.empty())
     {
         mprf("This square %s.",

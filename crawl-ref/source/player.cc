@@ -4033,6 +4033,7 @@ void display_char_status()
         DUR_RESISTANCE,
         DUR_TELEPORT,
         DUR_CONTROL_TELEPORT,
+        DUR_DISJUNCTION,
         DUR_DEATH_CHANNEL,
         DUR_PHASE_SHIFT,
         DUR_SILENCE,

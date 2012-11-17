@@ -5,6 +5,10 @@
 
 #include "AppHdr.h"
 
+#include <cmath>
+#include <vector>
+#include <algorithm>
+
 #include "spl-transloc.h"
 #include "externs.h"
 
@@ -59,6 +63,55 @@ spret_type cast_controlled_blink(int pow, bool fail)
     if (blink(pow, true) == -1)
         return SPRET_ABORT;
     return SPRET_SUCCESS;
+}
+
+spret_type cast_disjunction(int pow, bool fail)
+{
+    fail_check();
+    int rand = random_range(35, 45) + random2(pow / 12);
+    you.duration[DUR_DISJUNCTION] = min(90 + pow / 12,
+        max(you.duration[DUR_DISJUNCTION] + rand,
+        30 + rand));
+    contaminate_player(1, true);
+    disjunction();
+    return SPRET_SUCCESS;
+}
+
+void disjunction()
+{
+    int steps = you.time_taken;
+    invalidate_agrid(true);
+    for (int step = 0; step < steps; ++step)
+    {
+        vector<monster*> mvec;
+        for (radius_iterator ri(you.pos(), LOS_RADIUS, C_ROUND); ri; ++ri)
+        {
+            monster* mons = monster_at(*ri);
+            if (!mons || !you.see_cell(*ri))
+                continue;
+            mvec.push_back(mons);
+        }
+        if (mvec.empty())
+            return;
+        // blink should be isotropic
+        random_shuffle(mvec.begin(), mvec.end());
+        for (vector<monster*>::iterator mitr = mvec.begin();
+            mitr != mvec.end(); mitr++)
+        {
+            monster* mons = *mitr;
+            if (mons->check_stasis(true))
+                continue;
+            coord_def p = mons->pos();
+            if (!disjunction_haloed(p))
+                continue;
+
+            int dist = grid_distance(you.pos(), p);
+            int decay = max(1, (dist - 1) * (dist + 1));
+            int chance = pow(0.8, 1.0 / decay) * 1000;
+            if (!x_chance_in_y(chance, 1000))
+                blink_away(mons, &you);
+        }
+    }
 }
 
 // If wizard_blink is set, all restriction are ignored (except for

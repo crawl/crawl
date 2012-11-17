@@ -155,18 +155,26 @@ void blink_other_close(actor* victim, const coord_def &target)
     victim->blink_to(dest);
 }
 
-// Blink the monster away from its foe.
-bool blink_away(monster* mon)
+// Blink a monster away from the caster.
+bool blink_away(monster* mon, actor* caster)
 {
-    actor* foe = mon->get_foe();
-    if (!foe || !mon->can_see(foe))
+    if (!mon->can_see(caster))
         return false;
-    coord_def dest = random_space_weighted(mon, foe, false, false);
+    coord_def dest = random_space_weighted(mon, caster, false, false);
     if (dest.origin())
         return false;
     bool success = mon->blink_to(dest);
     ASSERT(success || mon->is_constricted());
     return success;
+}
+
+// Blink the monster away from its foe.
+bool blink_away(monster* mon)
+{
+    actor* foe = mon->get_foe();
+    if (!foe)
+        return false;
+    return blink_away(mon, foe);
 }
 
 // Blink the monster within range but at distance to its foe.

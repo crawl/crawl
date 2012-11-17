@@ -129,6 +129,8 @@ static duration_def duration_data[] =
       BLUE, "Shroud", "shrouded", "You are protected by a distorting shroud." },
     { DUR_TORNADO_COOLDOWN, false,
       YELLOW, "Tornado", "", "" ,},
+    { DUR_DISJUNCTION, true,
+      YELLOW, "Disjoin", "disjoining", "You are disjoining your surroundings." },
 };
 
 static int duration_index[NUM_DURATIONS];

@@ -780,7 +780,8 @@ static const char* dur_names[] =
     "tornado cooldown",
     "nausea",
     "ambrosia",
-    "temporary mutations"
+    "temporary mutations",
+    "disjunction",
 };
 
 void wizard_edit_durations(void)
