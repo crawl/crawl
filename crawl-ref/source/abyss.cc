@@ -1195,6 +1195,12 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
             {
                 push_player = true;
             }
+
+            if (testbits(env.pgrid(p), FPROP_BLOODY)
+                && (feat_is_water(feat) || feat == DNGN_LAVA))
+            {
+                env.pgrid(p) &= ~(FPROP_BLOODY);
+            }
         }
 
         if (morph)
