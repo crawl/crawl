@@ -587,23 +587,7 @@ public:
             else
                 cprintf("--more--");
 
-#ifdef USE_TILE_WEB
-            tiles.json_open_object();
-            tiles.json_write_string("msg", "more");
-            tiles.json_write_int("full", full);
-            tiles.json_write_int("user", user);
-            tiles.json_close_object();
-            tiles.finish_message();
-#endif
-
             readkey_more(user);
-
-#ifdef USE_TILE_WEB
-            tiles.json_open_object();
-            tiles.json_write_string("msg", "hide_more");
-            tiles.json_close_object();
-            tiles.finish_message();
-#endif
         }
     }
 };
@@ -740,8 +724,6 @@ public:
         unsent += old_msgs;
         if (unsent == 0) return;
 
-        tiles.json_open_object();
-        tiles.json_write_string("msg", "msgs");
         if (client_rollback > 0)
         {
             tiles.json_write_int("rollback", client_rollback);
@@ -751,7 +733,7 @@ public:
         {
             tiles.json_write_int("old_msgs", old_msgs);
         }
-        tiles.json_open_array("data");
+        tiles.json_open_array("messages");
         for (int i = -unsent; i < 0; ++i)
         {
             message_item& msg = msgs[i];
@@ -774,8 +756,6 @@ public:
             tiles.json_close_object();
         }
         tiles.json_close_array();
-        tiles.json_close_object();
-        tiles.finish_message();
         unsent = 0;
         prev_unsent = false;
     }
@@ -786,13 +766,22 @@ public:
 message_store buffer;
 
 #ifdef USE_TILE_WEB
+bool _more = false;
+
 void webtiles_send_messages()
 {
-    buffer.send();
+    webtiles_send_last_messages(0);
 }
 void webtiles_send_last_messages(int n)
 {
+    tiles.json_open_object();
+    tiles.json_write_string("msg", "msgs");
+    tiles.json_treat_as_empty();
+    if (_more)
+        tiles.json_write_bool("more", true);
     buffer.send(n);
+    tiles.json_close_object(true);
+    tiles.finish_message();
 }
 #endif
 
@@ -1463,6 +1452,10 @@ static void readkey_more(bool user_forced)
         return;
     int keypress;
     mouse_control mc(MOUSE_MODE_MORE);
+#ifdef USE_TILE_WEB
+    unwind_bool unwind_more(_more, true);
+#endif
+
     do
         keypress = getch_ck();
     while (keypress != ' ' && keypress != '\r' && keypress != '\n'
