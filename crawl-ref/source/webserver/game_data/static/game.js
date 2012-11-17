@@ -2,7 +2,10 @@ define(["jquery", "comm", "client", "./dungeon_renderer", "./display", "./minima
         "./settings", "./enums", "./messages",
         "./text", "./menu", "./player"],
 function ($, comm, client, dungeon_renderer, display, minimap, settings, enums, messages) {
-    var layout_parameters, ui_state, input_mode;
+    var layout_parameters = null, ui_state, input_mode;
+    var stat_width = 42;
+    var msg_height = 6;
+    var show_diameter = 17;
 
     function init()
     {
@@ -28,7 +31,6 @@ function ($, comm, client, dungeon_renderer, display, minimap, settings, enums, 
     {
         var window_width = params.window_width = $(window).width();
         var window_height = params.window_height = $(window).height();
-        log(params);
 
         if (!force && !layout_params_differ(layout_parameters, params))
             return false;
@@ -41,14 +43,13 @@ function ($, comm, client, dungeon_renderer, display, minimap, settings, enums, 
         // Determine width of stats area
         var old_html = $("#stats").html();
         var s = "";
-        for (var i = 0; i < layout_parameters.stat_width; i++)
+        for (var i = 0; i < enums.stat_width; i++)
             s = s + "&nbsp;";
         $("#stats").html(s);
         var stat_width_px = $("#stats").outerWidth();
         $("#stats").html(old_html);
 
         // Determine height of messages area
-        var msg_height = layout_parameters.msg_height;
         old_html = $("#messages").html();
         s = "";
         for (var i = 0; i < msg_height+1; i++)
@@ -70,7 +71,7 @@ function ($, comm, client, dungeon_renderer, display, minimap, settings, enums, 
             "width": remaining_width
         });
         dungeon_renderer.fit_to(remaining_width, remaining_height,
-                                layout_parameters.show_diameter);
+                                show_diameter);
 
         minimap.fit_to(stat_width_px, layout_parameters);
 
@@ -136,6 +137,11 @@ function ($, comm, client, dungeon_renderer, display, minimap, settings, enums, 
     function handle_set_ui_state(data)
     {
         set_ui_state(data.state);
+
+        if (layout_parameters == null)
+        {
+            layout({});
+        }
     }
 
     function set_input_mode(mode)
@@ -220,7 +226,6 @@ function ($, comm, client, dungeon_renderer, display, minimap, settings, enums, 
     });
 
     comm.register_handlers({
-        "layout": layout,
         "delay": handle_delay,
         "version": handle_version,
         "ui_state": handle_set_ui_state,

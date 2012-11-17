@@ -1,6 +1,11 @@
 // TODO: Generate this automatically from enum.h?
 define(function () {
     var exports = {}, val;
+    // Various constants
+    exports.gxm = 80;
+    exports.gym = 70;
+    exports.stat_width = 42;
+
     // UI States (tileweb.h)
     exports.ui = {};
     exports.ui.NORMAL   = 0;

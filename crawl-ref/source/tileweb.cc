@@ -1390,30 +1390,8 @@ void TilesFramework::load_dungeon(const coord_def &cen)
     place_cursor(CURSOR_MAP, cen);
 }
 
-static const int min_stat_height = 12;
-static const int stat_width = 42;
-
-static void _send_layout_data()
-{
-    tiles.json_open_object();
-    tiles.json_write_string("msg", "layout");
-
-    tiles.json_write_int("stat_width", crawl_view.hudsz.x);
-    tiles.json_write_int("show_diameter", ENV_SHOW_DIAMETER);
-    tiles.json_write_int("gxm", GXM);
-    tiles.json_write_int("gym", GYM);
-    tiles.json_write_int("msg_height", crawl_view.msgsz.y);
-
-    tiles.json_close_object();
-
-    tiles.finish_message();
-}
-
 void TilesFramework::resize()
 {
-    // Send the client the necessary data to do the layout
-    _send_layout_data();
-
     m_text_crt.resize(crawl_view.termsz.x, crawl_view.termsz.y);
     m_text_menu.resize(crawl_view.termsz.x, crawl_view.termsz.y);
 }
@@ -1424,7 +1402,6 @@ void TilesFramework::resize()
 void TilesFramework::_send_everything()
 {
     _send_version();
-    _send_layout_data();
 
     send_message("{\"msg\":\"vgrdc\",\"x\":%d,\"y\":%d}",
                  m_current_gc.x - m_origin.x, m_current_gc.y - m_origin.y);
