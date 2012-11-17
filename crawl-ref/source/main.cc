@@ -3433,20 +3433,6 @@ static bool _untrap_target(const coord_def move, bool check_confused)
     monster* mon = monster_at(target);
     if (mon && player_can_hit_monster(mon))
     {
-        if (mon->caught() && mon->friendly() && form_can_wield()
-            && !you.confused())
-        {
-            const string prompt =
-                make_stringf("Do you want to try to take the net off %s?",
-                             mon->name(DESC_THE).c_str());
-
-            if (yesno(prompt.c_str(), true, 'n'))
-            {
-                remove_net_from(mon);
-                return true;
-            }
-        }
-
         you.turn_is_over = true;
         fight_melee(&you, mon);
 
