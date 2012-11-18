@@ -2654,6 +2654,11 @@ bool gives_ability(const item_def &item)
         if (artefact_wpn_property(item, static_cast<artefact_prop_type>(rap)))
             return true;
 
+#if TAG_MAJOR_VERSION == 34
+    if (artefact_wpn_property(item, ARTP_FOG))
+        return true;
+#endif
+
     return false;
 }
 

@@ -74,6 +74,7 @@
 # * cursed:   Item is generated cursed.
 # * elec:     Grants electrical resistance.
 # * evil:     Is treated as an evil item.
+# * fog:      Lets wearer use the evoke fog ability.
 # * holy:     Is treated as a holy item.
 # * inv:      Lets wearer evoke invisibility ability.
 # * fly:      Lets wearer evoke flight ability.
@@ -663,15 +664,13 @@ DEX:     4
 
 NAME:     cloak of the Thief
 OBJ:      OBJ_ARMOUR/ARM_CLOAK
-PLUS:     +1
+PLUS:     +2
 COLOUR:   ETC_DARK
 TILE:     urand_thief
 TILE_EQ:  black
-EV:       2
-DEX:      2
 DAM:      -3
 STEALTH:  60
-BOOL:     seeinv, inv, fly
+BOOL:     seeinv, fog
 
 NAME:    shield "Bullseye"
 OBJ:     OBJ_ARMOUR/ARM_SHIELD

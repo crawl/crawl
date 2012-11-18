@@ -127,6 +127,10 @@ Stop Flying
 
 Stop flying.
 %%%%
+Evoke Fog
+
+Release a thick cloud of fog to obscure vision.
+%%%%
 End Transformation
 
 Revert to your normal form, with a short delay.

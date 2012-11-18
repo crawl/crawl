@@ -224,6 +224,7 @@ static vector<string> _randart_propnames(const item_def& item,
         { "+Rage",  ARTP_BERSERK,               2 },
         { "+Inv",   ARTP_INVISIBLE,             2 },
         { "+Fly",   ARTP_FLY,                   2 },
+        { "+Fog",   ARTP_FOG,                   2 },
 
         // Resists, also really important
         { "rElec",  ARTP_ELECTRICITY,           2 },
@@ -435,6 +436,7 @@ static string _randart_descrip(const item_def &item)
         { ARTP_CLARITY, "It protects you against confusion.", false},
         { ARTP_MUTAGENIC, "It causes magical contamination when unequipped.", false},
         { ARTP_RMSL, "It protects you from missiles.", false},
+        { ARTP_FOG, "It can be evoked to emit clouds of fog.", false},
     };
 
     for (unsigned i = 0; i < ARRAYSZ(propdescs); ++i)
