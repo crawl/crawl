@@ -2679,7 +2679,7 @@ static void _decrement_durations()
     {
         disjunction();
         _decrement_a_duration(DUR_DISJUNCTION, delay,
-                              "The translocation chaos dissipates.");
+                              "The translocation energy dissipates.");
         if (!you.duration[DUR_DISJUNCTION])
             invalidate_agrid(true);
     }
