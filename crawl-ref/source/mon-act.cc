@@ -3252,31 +3252,34 @@ static bool _do_move_monster(monster* mons, const coord_def& delta)
         }
     }
 
-    if (mons_can_open_door(mons, f))
+    if (grd(f) == DNGN_CLOSED_DOOR)
     {
-        _mons_open_door(mons, f);
-        return true;
-    }
-    else if (mons_can_eat_door(mons, f))
-    {
-        grd(f) = DNGN_FLOOR;
-        set_terrain_changed(f);
-
-        _jelly_grows(mons);
-
-        if (you.see_cell(f))
+        if (mons_can_open_door(mons, f))
         {
-            viewwindow();
-
-            if (!you.can_see(mons))
-            {
-                mpr("The door mysteriously vanishes.");
-                interrupt_activity(AI_FORCE_INTERRUPT);
-            }
-            else
-                simple_monster_message(mons, " eats the door!");
+            _mons_open_door(mons, f);
+            return true;
         }
-    } // done door-eating jellies
+        else if (mons_can_eat_door(mons, f))
+        {
+            grd(f) = DNGN_FLOOR;
+            set_terrain_changed(f);
+
+            _jelly_grows(mons);
+
+            if (you.see_cell(f))
+            {
+                viewwindow();
+
+                if (!you.can_see(mons))
+                {
+                    mpr("The door mysteriously vanishes.");
+                    interrupt_activity(AI_FORCE_INTERRUPT);
+                }
+                else
+                    simple_monster_message(mons, " eats the door!");
+            }
+        } // done door-eating jellies
+    }
 
     // The monster gave a "comes into view" message and then immediately
     // moved back out of view, leaing the player nothing to see, so give
