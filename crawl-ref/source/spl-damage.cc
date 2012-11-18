@@ -1755,11 +1755,9 @@ static int _disperse_monster(monster* mon, int pow)
 {
     if (!mon)
         return 0;
-    if (mons_is_projectile(mon->type))
-        return 0;
 
     if (mon->no_tele())
-        return 1;
+        return 0;
 
     if (mon->check_res_magic(pow) > 0)
     {
