@@ -822,15 +822,13 @@ static bool _mons_check_foe(monster* mon, const coord_def& p,
     // -- But why should they always attack monsters? -- 1KB
 
     monster* foe = monster_at(p);
-    if (!foe || !summon_can_attack(mon, p))
-        return false;
-
-    if (foe != mon
-        && mon->can_see(foe)
-        && !mons_is_projectile(foe->type)
-        && (friendly || !is_sanctuary(p))
+    if (foe && foe != mon
         && (foe->friendly() != friendly
             || neutral && !foe->neutral())
+        && mon->can_see(foe)
+        && !mons_is_projectile(foe->type)
+        && summon_can_attack(mon, p)
+        && (friendly || !is_sanctuary(p))
         && (crawl_state.game_is_zotdef() || !mons_is_firewood(foe)))
             // Zotdef allies take out firewood
     {
