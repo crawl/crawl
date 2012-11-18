@@ -9,11 +9,18 @@ function ($, comm, enums, map_knowledge, messages) {
         gold: 0,
         str: 0, int: 0, dex: 0,
         piety_rank: 0, penance: false,
+        status: [],
         inv: {}, equip: {},
         pos: null
     };
     var last_time = null;
     window.player = player;
+
+    var stat_boosters = {
+        "str": "vitalised|mighty|berserk",
+        "int": "vitalised|brilliant",
+        "dex": "vitalised|agile"
+    };
 
     for (var i = 0; i < enums.equip.NUM_EQUIP; ++i)
         player.equip[i] = -1;
@@ -79,6 +86,27 @@ function ($, comm, enums, map_knowledge, messages) {
             return inventory_item_desc(player.quiver_item);
     }
 
+    player.has_status_light = function (status_light)
+    {
+        for (var i = 0; i < player.status.length; ++i)
+        {
+            if (player.status[i].light &&
+                player.status[i].light.match(status_light))
+                return true;
+        }
+        return false;
+    }
+    player.has_status = function (status_name)
+    {
+        for (var i = 0; i < player.status.length; ++i)
+        {
+            if (player.status[i].text &&
+                player.status[i].text.match(status_name))
+                return true;
+        }
+        return false;
+    }
+
     function stat_class(stat)
     {
         var val = player[stat];
@@ -86,9 +114,12 @@ function ($, comm, enums, map_knowledge, messages) {
         if (val <= 0)
             return "zero_stat";
 
-        // TODO: stat colour options
+        // TODO: stat colour options -- hardcoded for now
+        if (val <= 3)
+            return "low_stat";
 
-        // TODO: magically increased stats
+        if (player.has_status(stat_boosters[stat]))
+            return "boosted_stat";
 
         if (val < max_val)
             return "degenerated_stat";
@@ -152,11 +183,13 @@ function ($, comm, enums, map_knowledge, messages) {
         $("#stats_place").text(place_desc);
 
         var status = "";
-        for (var status_light in player.status)
+        for (var i = 0; i < player.status.length; ++i)
         {
+            var status_inf = player.status[i];
+            if (!status_inf.light) continue;
             status += ("<span class='status_light fg"
-                       + player.status[status_light].colour + "'>"
-                       + status_light + "</span> ");
+                       + status_inf.col + "'>"
+                       + status_inf.light + "</span> ");
         }
         $("#stats_status_lights").html(status);
 

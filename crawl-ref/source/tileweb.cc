@@ -509,92 +509,24 @@ template<class T> static bool _update_int(bool force, T& current, T next,
         return false;
 }
 
-const int statuses[] = {
-    STATUS_STR_ZERO, STATUS_INT_ZERO, STATUS_DEX_ZERO,
-    STATUS_BURDEN,
-    STATUS_HUNGER,
-    DUR_PETRIFYING,
-    DUR_PETRIFIED,
-    DUR_PARALYSIS,
-    DUR_JELLY_PRAYER,
-    DUR_TELEPORT,
-    DUR_DEATHS_DOOR,
-    DUR_QUAD_DAMAGE,
-    DUR_DEFLECT_MISSILES,
-    DUR_REPEL_MISSILES,
-    STATUS_REGENERATION,
-    DUR_BERSERK,
-    DUR_RESISTANCE,
-    DUR_INSULATION,
-    DUR_SEE_INVISIBLE,
-    STATUS_AIRBORNE,
-    DUR_INVIS,
-    DUR_CONTROL_TELEPORT,
-    DUR_SILENCE,
-    DUR_CONFUSING_TOUCH,
-    DUR_BARGAIN,
-    STATUS_SAGE,
-    DUR_FIRE_SHIELD,
-    DUR_SLIMIFY,
-    DUR_SURE_BLADE,
-    DUR_CONF,
-    DUR_LOWERED_MR,
-    STATUS_BEHELD,
-    DUR_LIQUID_FLAMES,
-    DUR_MISLED,
-    DUR_POISONING,
-    STATUS_SICK,
-    DUR_NAUSEA,
-    STATUS_ROT,
-    STATUS_NET,
-    STATUS_CONTAMINATION,
-    DUR_SWIFTNESS,
-    STATUS_SPEED,
-    DUR_DEATH_CHANNEL,
-    DUR_TELEPATHY,
-    DUR_STEALTH,
-    DUR_BREATH_WEAPON,
-    DUR_EXHAUSTED,
-    DUR_POWERED_BY_DEATH,
-    DUR_TRANSFORMATION,
-    DUR_AFRAID,
-    DUR_MIRROR_DAMAGE,
-    DUR_SCRYING,
-    STATUS_CLINGING,
-    DUR_TORNADO,
-    DUR_LIQUEFYING,
-    DUR_HEROISM,
-    DUR_FINESSE,
-    DUR_LIFESAVING,
-    DUR_DARKNESS,
-    STATUS_FIREBALL,
-    DUR_SHROUD_OF_GOLUBRIA,
-    DUR_TORNADO_COOLDOWN,
-    STATUS_BACKLIT,
-    STATUS_UMBRA,
-    STATUS_CONSTRICTED,
-    DUR_DIVINE_STAMINA,
-    STATUS_AUGMENTED,
-    STATUS_SUPPRESSED,
-    STATUS_TERRAIN,
-    STATUS_SILENCE,
-};
-
 static bool _update_statuses(player_info& c)
 {
     bool changed = false;
     unsigned int counter = 0;
     status_info inf;
-    for (unsigned int i = 0; i < ARRAYSZ(statuses); ++i)
+    for (unsigned int status = 0; status <= STATUS_LAST_STATUS; ++status)
     {
-        fill_status_info(statuses[i], &inf);
-        if (!inf.light_text.empty())
+        if (!fill_status_info(status, &inf))
+            continue;
+
+        if (!inf.light_text.empty() || !inf.short_text.empty())
         {
             if (!changed)
             {
                 if (counter >= c.status.size()
                     || inf.light_text != c.status[counter].light_text
-                    || inf.light_colour != c.status[counter].light_colour)
+                    || inf.light_colour != c.status[counter].light_colour
+                    || inf.short_text != c.status[counter].short_text)
                 {
                     changed = true;
                 }
@@ -728,14 +660,19 @@ void TilesFramework::_send_player(bool force_full)
 
     if (force_full || _update_statuses(c))
     {
-        json_open_object("status");
+        json_open_array("status");
         for (unsigned int i = 0; i < c.status.size(); ++i)
         {
-            json_open_object(c.status[i].light_text);
-            json_write_int("colour", c.status[i].light_colour);
-            json_close_object();
+            json_open_object();
+            if (!c.status[i].light_text.empty())
+                json_write_string("light", c.status[i].light_text);
+            if (!c.status[i].short_text.empty())
+                json_write_string("text", c.status[i].short_text);
+            if (c.status[i].light_colour)
+                json_write_int("col", c.status[i].light_colour);
+            json_close_object(true);
         }
-        json_close_object();
+        json_close_array();
     }
 
     json_open_object("inv");
