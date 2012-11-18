@@ -990,9 +990,7 @@ void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
 #ifndef USE_TILE_WEB
     tileidx_t bg_idx = bg & TILE_FLAG_MASK;
     if (bg_idx == TILE_DNGN_PORTAL_WIZARD_LAB)
-    {
         flv->special = (flv->special + 1) % tile_dngn_count(bg_idx);
-    }
     else if (bg_idx == TILE_DNGN_LAVA)
     {
         // Lava tiles are four sets of four tiles (the second and fourth
@@ -1191,9 +1189,7 @@ void apply_variations(const tile_flavour &flv, tileidx_t *bg,
             *bg = orig + min((int)flv.special, 6);
     }
     else if (orig == TILE_DNGN_PORTAL_WIZARD_LAB)
-    {
         *bg = orig + flv.special % tile_dngn_count(orig);
-    }
     else if (orig < TILE_DNGN_MAX)
         *bg = _pick_random_dngn_tile(orig, flv.special);
 

@@ -3121,9 +3121,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     }
 
     if (you.attribute[ATTR_PERM_FLIGHT] && you.racial_permanent_flight())
-    {
         _add_talent(talents, ABIL_STOP_FLYING, check_confused);
-    }
 
     // Mutations
     if (player_mutation_level(MUT_HURL_HELLFIRE))
