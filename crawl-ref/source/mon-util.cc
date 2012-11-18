@@ -3288,37 +3288,27 @@ static bool _mons_can_open_doors(const monster* mon)
 // given door. These all return false if there's no closed door there.
 bool mons_can_open_door(const monster* mon, const coord_def& pos)
 {
-    if (env.markers.property_at(pos, MAT_ANY, "door_restrict") == "veto")
-        return false;
-
     if (!_mons_can_open_doors(mon))
         return false;
 
-    return (env.grid(pos) == DNGN_CLOSED_DOOR);
+    if (env.markers.property_at(pos, MAT_ANY, "door_restrict") == "veto")
+        return false;
+
+    return true;
 }
 
 // Monsters that eat items (currently only jellies) also eat doors.
 // However, they don't realise that secret doors make good eating.
 bool mons_can_eat_door(const monster* mon, const coord_def& pos)
 {
-    if (env.markers.property_at(pos, MAT_ANY, "door_restrict") == "veto")
-        return false;
 
     if (mons_itemeat(mon) != MONEAT_ITEMS)
         return false;
 
-    dungeon_feature_type feat = env.grid(pos);
-    if (feat == DNGN_OPEN_DOOR)
-        return true;
-
-    if (env.markers.property_at(pos, MAT_ANY, "door_restrict") == "veto"
-         // Doors with permarock marker cannot be eaten.
-        || feature_marker_at(pos, DNGN_PERMAROCK_WALL))
-    {
+    if (env.markers.property_at(pos, MAT_ANY, "door_restrict") == "veto")
         return false;
-    }
 
-    return (feat == DNGN_CLOSED_DOOR);
+    return true;
 }
 
 static bool _mons_can_pass_door(const monster* mon, const coord_def& pos)
@@ -3331,7 +3321,7 @@ static bool _mons_can_pass_door(const monster* mon, const coord_def& pos)
 bool mons_can_traverse(const monster* mon, const coord_def& p,
                        bool checktraps)
 {
-    if (_mons_can_pass_door(mon, p))
+    if (grd(p) == DNGN_CLOSED_DOOR && _mons_can_pass_door(mon, p))
         return true;
 
     if (!mon->is_habitable(p))
