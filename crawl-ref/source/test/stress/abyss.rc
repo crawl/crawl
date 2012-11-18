@@ -60,15 +60,23 @@ function ready()
     command = 1
     last_turn = you.turns()
 
-    -- every 50 turns, cast a spell assigned to 'T' if there is one
+    -- every 50 turns, cast a spell assigned to an uppercase slot if there is one
     if you.turns() % 50 == 0 then
       local sp = you.spell_letters()
+      local to_cast = 0
+      local count = 0
       for i = 1, 52 do
-        if sp[i] == 'T' then
-          command = 0
-          crawl.sendkeys("ZT" .. eol .. esc)
-          return
+        if sp[i] ~= nil and sp[i] >= 'A' and sp[i] <= 'Z' then
+          count = count + 1
+          if crawl.one_chance_in(count) then
+            to_cast = sp[i]
+          end
         end
+      end
+      if to_cast ~= 0 then
+        command = 0
+        crawl.sendkeys("Z" .. to_cast .. eol .. esc)
+        return
       end
     end
   else
