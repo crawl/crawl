@@ -344,8 +344,7 @@ ORIENT: float
 TAGS:   lair_entry transparent
 MONS:   plant / fungus / nothing
 MONS:   w:100 bat / w:100 rat / w:30 green rat / crocodile / yak / w:20 nothing
-KMONS:  A = patrolling deep elf soldier name:deep_elf_watchman \
-            name_replace name_descriptor name_nocorpse
+MONS:   patrolling deep elf soldier
 KFEAT:  O = enter_lair
 SUBST:  D = 1:5 2:2 .
 SUBST:  . = 1:2 2:2 .
@@ -366,7 +365,7 @@ MAP
  .D.1D221D1..
 .D.1D1D1D1D1..
 ..1D1ccccD1D1.
-@1D2DcOAc121..
+@1D2DcO3c121..
 ..121c%CcD2D1@
 .1D1Dcc+c1D1..
 ..1D1D1C1D1.D.
