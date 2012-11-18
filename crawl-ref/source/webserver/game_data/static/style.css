@@ -44,8 +44,15 @@ body {
     color: #fce94f; /* yellow */
 }
 .zero_stat {
+    color: #ef2929; /* lightred */
+}
+.low_stat {
     color: #a40000; /* red */
 }
+.boosted_stat {
+    color: #729fcf; /* lightblue */
+}
+
 
 .bar span {
     display: inline-block;

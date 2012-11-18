@@ -225,7 +225,7 @@ static void _describe_transform(status_info* inf);
 static void _describe_stat_zero(status_info* inf, stat_type st);
 static void _describe_terrain(status_info* inf);
 
-void fill_status_info(int status, status_info* inf)
+bool fill_status_info(int status, status_info* inf)
 {
     _reset_status_info(inf);
 
@@ -238,7 +238,7 @@ void fill_status_info(int status, status_info* inf)
         duration_type dur = static_cast<duration_type>(status);
 
         if (!you.duration[dur])
-            return;
+            return false;
 
         const duration_def* ddef = _lookup_duration(dur);
         if (ddef)
@@ -536,9 +536,12 @@ void fill_status_info(int status, status_info* inf)
             inf->light_text   = "Missing";
             inf->short_text   = "missing status";
             inf->long_text    = "Missing status description.";
+            return false;
         }
-        break;
+        else
+            break;
     }
+    return true;
 }
 
 static void _describe_hunger(status_info* inf)
