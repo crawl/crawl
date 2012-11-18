@@ -147,9 +147,8 @@ static void _update_feat_at(const coord_def &gp)
         env.map_knowledge(gp).flags |= MAP_QUAD_HALOED;
 
     if (disjunction_haloed(gp))
-    {
         env.map_knowledge(gp).flags |= MAP_DISJUNCT;
-    }
+
     if (is_sanctuary(gp))
     {
         if (testbits(env.pgrid(gp), FPROP_SANCTUARY_1))
