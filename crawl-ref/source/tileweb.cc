@@ -745,6 +745,9 @@ void TilesFramework::_send_cell(const coord_def &gc,
         if (next_pc.quad_glow != current_pc.quad_glow)
             write_message("quad_glow:%u,", next_pc.quad_glow);
 
+        if (next_pc.disjunct != current_pc.disjunct)
+            write_message("disjunct:%u,", next_pc.disjunct);
+
         if (next_pc.mangrove_water != current_pc.mangrove_water)
             write_message("swtree:%u,", next_pc.mangrove_water);
 
