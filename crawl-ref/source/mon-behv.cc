@@ -816,33 +816,25 @@ void handle_behaviour(monster* mon)
 static bool _mons_check_foe(monster* mon, const coord_def& p,
                             bool friendly, bool neutral)
 {
-    if (!in_bounds(p))
+    // We don't check for the player here because otherwise wandering
+    // monsters will always attack you.
+
+    // -- But why should they always attack monsters? -- 1KB
+
+    monster* foe = monster_at(p);
+    if (!foe || !summon_can_attack(mon, p))
         return false;
 
-    if (p == you.pos())
+    if (foe != mon
+        && mon->can_see(foe)
+        && !mons_is_projectile(foe->type)
+        && (friendly || !is_sanctuary(p))
+        && (foe->friendly() != friendly
+            || neutral && !foe->neutral())
+        && (crawl_state.game_is_zotdef() || !mons_is_firewood(foe)))
+            // Zotdef allies take out firewood
     {
-        // The player: We don't return true here because
-        // otherwise wandering monsters will always
-        // attack the player.
-        return false;
-    }
-
-    if (!summon_can_attack(mon, p))
-        return false;
-
-    if (monster* foe = monster_at(p))
-    {
-        if (foe != mon
-            && mon->can_see(foe)
-            && !mons_is_projectile(foe->type)
-            && (friendly || !is_sanctuary(p))
-            && (foe->friendly() != friendly
-                || neutral && !foe->neutral())
-            && (crawl_state.game_is_zotdef() || !mons_is_firewood(foe)))
-                // Zotdef allies take out firewood
-        {
-            return true;
-        }
+        return true;
     }
     return false;
 }
