@@ -883,12 +883,6 @@ deep elf summoner
 
 This deep elf is skilled in the summoning of small demons and creatures.
 %%%%
-deep elf watchman
-
-A battle-scarred deep elf soldier. It eyes you warily, as though determined to
-keep you from gaining entry to the place it guards, and it looks well prepared
-to do so with strong weapons and magic.
-%%%%
 deep dwarf
 
 Pale and unnaturally tough-skinned, deep dwarves dwell far below ground and
