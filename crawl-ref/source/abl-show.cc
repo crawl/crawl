@@ -20,6 +20,7 @@
 #include "acquire.h"
 #include "artefact.h"
 #include "beam.h"
+#include "cloud.h"
 #include "coordit.h"
 #include "database.h"
 #include "decks.h"
@@ -57,6 +58,7 @@
 #include "skills2.h"
 #include "species.h"
 #include "spl-cast.h"
+#include "spl-clouds.h"
 #include "spl-damage.h"
 #include "spl-goditem.h"
 #include "spl-other.h"
@@ -245,6 +247,7 @@ static const ability_def Ability_List[] =
       2, 0, 250, 0, 0, ABFLAG_NONE},
     { ABIL_EVOKE_TURN_VISIBLE, "Turn Visible", 0, 0, 0, 0, 0, ABFLAG_NONE},
     { ABIL_EVOKE_FLIGHT, "Evoke Flight", 1, 0, 100, 0, 0, ABFLAG_NONE},
+    { ABIL_EVOKE_FOG, "Evoke Fog", 2, 0, 250, 0, 0, ABFLAG_NONE},
 
     { ABIL_END_TRANSFORMATION, "End Transformation", 0, 0, 0, 0, 0, ABFLAG_NONE},
 
@@ -1036,6 +1039,7 @@ talent get_talent(ability_type ability, bool check_confused)
         break;
 
     case ABIL_EVOKE_BERSERK:
+    case ABIL_EVOKE_FOG:
         failure = 50 - you.skill(SK_EVOCATIONS, 2);
         break;
         // end item abilities - some possibly mutagenic {dlb}
@@ -1528,6 +1532,14 @@ static bool _check_ability_possible(const ability_def& abil,
     case ABIL_TROG_BERSERK:
         return (you.can_go_berserk(true, false, true)
                 && (quiet || berserk_check_wielded_weapon()));
+
+    case ABIL_EVOKE_FOG:
+        if (env.cgrid(you.pos()) != EMPTY_CLOUD)
+        {
+            mpr("It's too cloudy to do that here.");
+            return false;
+        }
+        return true;
 
     default:
         return true;
@@ -2134,6 +2146,11 @@ static bool _do_ability(const ability_def& abil)
         }
         else
             fly_player(you.skill(SK_EVOCATIONS, 2) + 30);
+        break;
+
+    case ABIL_EVOKE_FOG:     // cloak of the Thief
+        mpr("With a swish of your cloak, you release a cloud of fog.");
+        big_cloud(random_smoke_type(), &you, you.pos(), 50, 8 + random2(8));
         break;
 
     case ABIL_STOP_FLYING:
@@ -3162,6 +3179,9 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     {
         if (scan_artefacts(ARTP_BLINK))
             _add_talent(talents, ABIL_EVOKE_BLINK, check_confused);
+
+        if (scan_artefacts(ARTP_FOG))
+            _add_talent(talents, ABIL_EVOKE_FOG, check_confused);
 
         if (wearing_amulet(AMU_RAGE) || scan_artefacts(ARTP_BERSERK))
             _add_talent(talents, ABIL_EVOKE_BERSERK, check_confused);

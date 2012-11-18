@@ -36,6 +36,7 @@ my %field_type = (
     ELEC     => "bool",
     EV       => "num",
     EVIL     => "bool",
+    FOG      => "bool",
     FIRE     => "num",
     HOLY     => "bool",
     INT      => "num",
@@ -488,7 +489,7 @@ my @art_order = (
     "NOSPELL", "RND_TELE", "NOTELEP", "ANGRY", "METAB", "\n",
     "MUTATE", "ACC", "DAM", "CURSED", "STEALTH", "MP", "\n",
     "BASE_DELAY", "HP", "CLARITY", "BASE_ACC", "BASE_DAM", "\n",
-    "RMSL", "\n",
+    "RMSL", "FOG", "\n",
     "}",
 
     "equip_func", "unequip_func", "world_reacts_func", "{fight_func_func",

@@ -246,7 +246,8 @@ A robe made of the finest silk.
 %%%%
 cloak of the Thief
 
-It allows its wearer to excel in the arts of thievery.
+It allows its wearer to excel in the arts of thievery, and can be evoked to
+release thick clouds of smoke to allow for a hasty escape.
 %%%%
 shield "Bullseye"
 
