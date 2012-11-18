@@ -517,6 +517,8 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
                         this.draw_dngn(dngn.ORB_GLOW + cell.orb_glow - 1, x, y);
                     if (cell.quad_glow)
                         this.draw_dngn(dngn.QUAD_GLOW, x, y);
+                    if (cell.disjunct)
+                        this.draw_dngn(dngn.DISJUNCT, x, y);
 
                     // Apply the travel exclusion under the foreground if the cell is
                     // visible.  It will be applied later if the cell is unseen.
