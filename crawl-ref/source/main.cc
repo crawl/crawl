@@ -2674,7 +2674,6 @@ static void _decrement_durations()
 #endif
     }
 
-
     if (you.duration[DUR_DISJUNCTION])
     {
         disjunction();
