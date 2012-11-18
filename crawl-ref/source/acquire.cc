@@ -954,30 +954,11 @@ static bool _do_book_acquirement(item_def &book, int agent)
     ASSERT(!is_random_artefact(book));
 
     int          level       = (you.skills[SK_SPELLCASTING] + 2) / 3;
-    unsigned int seen_levels = you.attribute[ATTR_RND_LVL_BOOKS];
 
     level = max(1, level);
 
     if (agent == GOD_XOM)
         level = random_range(1, 9);
-    else if (seen_levels & (1 << level))
-    {
-        // Give a book of a level not seen before, preferably one with
-        // spells of a low enough level for the player to cast, or the
-        // lowest aviable level if all levels which the player can cast
-        // have already been given.
-        int max_level = min(9, you.get_experience_level());
-
-        vector<int> vec;
-        for (int i = 1; i <= 9 && (vec.empty() || i <= max_level); i++)
-            if (!(seen_levels & (1 << i)))
-                vec.push_back(i);
-
-        if (!vec.empty())
-            level = vec[random2(vec.size())];
-        else
-            level = -1;
-    }
 
     int choice = NUM_BOOKS;
 

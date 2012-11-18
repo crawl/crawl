@@ -263,12 +263,13 @@ enum attribute_type
     ATTR_PURCHASES,            // Gold amount spent at shops.
     ATTR_DONATIONS,            // Gold amount donated to Zin.
     ATTR_MISC_SPENDING,        // Spending for things like ziggurats.
-    ATTR_RND_LVL_BOOKS,        // Bitfield of level-type randart spellbooks
-                               // player has seen.
+#if TAG_MAJOR_VERSION == 34
+    ATTR_UNUSED1,              // was ATTR_RND_LVL_BOOKS
+#endif
     ATTR_NOISES,               // A noisy artefact is equipped.
     ATTR_SHADOWS,              // Lantern of shadows effect.
 #if TAG_MAJOR_VERSION == 34
-    ATTR_FRUIT_FOUND,          // Mask of fruit types found.
+    ATTR_UNUSED2,              // was ATTR_FRUIT_FOUND
 #endif
     ATTR_FLIGHT_UNCANCELLABLE, // Potion of flight is in effect.
     ATTR_INVIS_UNCANCELLABLE,  // Potion/spell/wand of invis is in effect.
