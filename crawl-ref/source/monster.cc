@@ -3984,6 +3984,9 @@ bool monster::no_tele(bool calc_unid, bool permit_id) const
     if (mons_class_is_stationary(type) && type != MONS_CURSE_SKULL)
         return true;
 
+    if (mons_is_projectile(type))
+        return true;
+
     // Might be better to teleport the whole kraken instead...
     if (mons_is_tentacle(type))
         return true;
