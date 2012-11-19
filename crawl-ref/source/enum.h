@@ -1407,8 +1407,8 @@ enum duration_type
 #if TAG_MAJOR_VERSION == 34
     DUR_SEE_INVISIBLE,
 #endif
-    DUR_WEAPON_BRAND,                  // general "branding" spell counter
-    DUR_DEMONIC_GUARDIAN,              // demonic guardian timeout
+    DUR_WEAPON_BRAND,           // general "branding" spell counter
+    DUR_DEMONIC_GUARDIAN,       // demonic guardian timeout
     DUR_POWERED_BY_DEATH,
     DUR_SILENCE,
     DUR_CONDENSATION_SHIELD,
@@ -1431,7 +1431,7 @@ enum duration_type
     DUR_COLOUR_SMOKE_TRAIL,
     DUR_SLIMIFY,
     DUR_TIME_STEP,
-    DUR_ICEMAIL_DEPLETED,     // Wait this many turns for full Icemail
+    DUR_ICEMAIL_DEPLETED,       // Wait this many turns for full Icemail
     DUR_MISLED,
     DUR_QUAD_DAMAGE,
     DUR_AFRAID,
@@ -1454,8 +1454,7 @@ enum duration_type
     NUM_DURATIONS
 };
 
-// This list must match the enchant_names array in monster.cc or Crawl
-// will CRASH, we kid you not.
+// This list must match the enchant_names array in monster.cc
 // Enchantments that imply other enchantments should come first
 // to avoid timeout message confusion. Currently:
 //     berserk -> haste, might; fatigue -> slow
