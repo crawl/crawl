@@ -3979,7 +3979,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_TENTACLED_STARSPAWN, 'X', CYAN, "tentacled starspawn",
+    MONS_TENTACLED_STARSPAWN, 'X', LIGHTCYAN, "tentacled starspawn",
     M_SEE_INVIS | M_SPELLCASTER | M_FAKE_SPELLS,
     MR_NO_FLAGS,
     0, 20, MONS_TENTACLED_STARSPAWN, MONS_TENTACLED_STARSPAWN, MH_DEMONIC, -6,
@@ -3991,7 +3991,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_STARSPAWN_TENTACLE, 'w', CYAN, "starspawn tentacle",
+    MONS_STARSPAWN_TENTACLE, 'w', LIGHTCYAN, "starspawn tentacle",
     M_NO_EXP_GAIN | M_STATIONARY | M_NO_POLY_TO,
     MR_NO_FLAGS,
     0, 10, MONS_TENTACLED_STARSPAWN, MONS_STARSPAWN_TENTACLE, MH_DEMONIC, MAG_IMMUNE,
@@ -4003,7 +4003,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_STARSPAWN_TENTACLE_SEGMENT, '*', CYAN, "starspawn tentacle segment",
+    MONS_STARSPAWN_TENTACLE_SEGMENT, '*', LIGHTCYAN, "starspawn tentacle segment",
     M_NO_EXP_GAIN | M_STATIONARY | M_NO_POLY_TO,
     MR_NO_FLAGS,
     0, 10, MONS_TENTACLED_STARSPAWN, MONS_STARSPAWN_TENTACLE_SEGMENT, MH_DEMONIC, MAG_IMMUNE,
