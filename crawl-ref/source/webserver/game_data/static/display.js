@@ -83,6 +83,9 @@ function ($, comm, map_knowledge, view_data, monster_list, minimap,
         if (data.clear)
             clear_map();
 
+        if (data.vgrdc)
+            minimap.do_view_center_update(data.vgrdc.x, data.vgrdc.y);
+
         map_knowledge.merge(data.cells);
 
         // Mark cells above high cells as dirty
@@ -91,6 +94,8 @@ function ($, comm, map_knowledge, view_data, monster_list, minimap,
             if (cell.t && cell.t.sy && cell.t.sy < 0)
                 map_knowledge.touch(loc.x, loc.y - 1);
         });
+
+        display();
     }
 
     function handle_overlay_message(data)
@@ -107,15 +112,12 @@ function ($, comm, map_knowledge, view_data, monster_list, minimap,
 
     function handle_vgrdc(data)
     {
-        minimap.do_view_center_update(data.x, data.y);
     }
 
     comm.register_handlers({
         "map": handle_map_message,
         "overlay": handle_overlay_message,
         "clear_overlays": clear_overlays,
-        "vgrdc": handle_vgrdc,
-        "redraw": display,
     });
 
 
