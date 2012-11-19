@@ -1188,6 +1188,17 @@ void TilesFramework::_send_map(bool force_full)
     if (force_full)
         json_write_bool("clear", true);
 
+    if (m_current_gc != m_next_gc)
+    {
+        if (m_origin.equals(-1, -1))
+            m_origin = m_next_gc;
+        json_open_object("vgrdc");
+        json_write_int("x", m_next_gc.x - m_origin.x);
+        json_write_int("y", m_next_gc.y - m_origin.y);
+        json_close_object();
+        m_current_gc = m_next_gc;
+    }
+
     screen_cell_t default_cell;
     default_cell.tile.bg = TILE_FLAG_UNSEEN;
     default_cell.glyph = ' ';
@@ -1250,6 +1261,8 @@ void TilesFramework::_send_map(bool force_full)
     json_close_array(true);
 
     json_close_object(true);
+
+    finish_message();
 
     m_current_map_knowledge = env.map_knowledge;
     m_current_view = m_next_view;
@@ -1403,17 +1416,12 @@ void TilesFramework::_send_everything()
 {
     _send_version();
 
-    send_message("{\"msg\":\"vgrdc\",\"x\":%d,\"y\":%d}",
-                 m_current_gc.x - m_origin.x, m_current_gc.y - m_origin.y);
     send_message("{\"msg\":\"flash\",\"col\":%d}", m_current_flash_colour);
 
     _send_map(true);
-    finish_message();
 
      // Player
     _send_player(true);
-
-    send_message("{\"msg\":\"redraw\"}");
 
     // UI State
     _send_ui_state(m_ui_state);
@@ -1499,43 +1507,15 @@ void TilesFramework::redraw()
     _send_player();
     webtiles_send_messages();
 
-    if (m_need_redraw)
+    if (m_need_redraw && m_view_loaded)
     {
-        json_open_object();
-        json_write_string("msg", "multi");
-        json_treat_as_empty();
-        json_open_array("msgs");
-        if (m_current_gc != m_next_gc)
-        {
-            if (m_origin.equals(-1, -1))
-                m_origin = m_next_gc;
-            write_message("{\"msg\":\"vgrdc\",\"x\":%d,\"y\":%d}",
-                          m_next_gc.x - m_origin.x,
-                          m_next_gc.y - m_origin.y);
-            m_current_gc = m_next_gc;
-        }
-
         if (m_current_flash_colour != m_next_flash_colour)
         {
-            json_write_comma();
-            write_message("{\"msg\":\"flash\",\"col\":%d}",
-                          m_next_flash_colour);
+            send_message("{\"msg\":\"flash\",\"col\":%d}",
+                         m_next_flash_colour);
             m_current_flash_colour = m_next_flash_colour;
         }
-
-        if (m_view_loaded)
-        {
-            _send_map(false);
-        }
-
-        if (!json_is_empty())
-        {
-            json_write_comma();
-            write_message("{\"msg\":\"redraw\"}");
-        }
-        json_close_array(true);
-        json_close_object(true);
-        finish_message();
+        _send_map(false);
     }
 
     m_need_redraw = false;
