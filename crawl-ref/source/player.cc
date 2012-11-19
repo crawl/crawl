@@ -2634,9 +2634,8 @@ int player_shield_class(void)
     else
     {
         if (you.duration[DUR_MAGIC_SHIELD])
-        {
             shield += 900 + you.skill(SK_EVOCATIONS, 75);
-        }
+
         if (!you.duration[DUR_FIRE_SHIELD]
             && you.duration[DUR_CONDENSATION_SHIELD])
         {
@@ -2650,10 +2649,11 @@ int player_shield_class(void)
         stat = max(stat, int(you.attribute[ATTR_DIVINE_SHIELD] * 300));
     }
 
-    if (shield + stat > 0 &&
-        (player_wearing_slot(EQ_SHIELD) || you.duration[DUR_DIVINE_SHIELD]))
+    if (shield + stat > 0
+        && (player_wearing_slot(EQ_SHIELD) || you.duration[DUR_DIVINE_SHIELD]))
     {
-        shield += you.skill(SK_SHIELDS, 38) + min(you.skill(SK_SHIELDS, 38), 3 * 38);
+        shield += you.skill(SK_SHIELDS, 38)
+                + min(you.skill(SK_SHIELDS, 38), 3 * 38);
     }
 
     // mutations
