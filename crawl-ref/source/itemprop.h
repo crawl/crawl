@@ -99,7 +99,7 @@ bool is_giant_club_type(int wpn_type);
 bool is_demonic(const item_def &item);
 bool is_blessed(const item_def &item);
 bool is_blessed_convertible(const item_def &item);
-bool convert2good(item_def &item, bool allow_blessed = true);
+bool convert2good(item_def &item);
 bool convert2bad(item_def &item);
 
 int get_vorpal_type(const item_def &item);

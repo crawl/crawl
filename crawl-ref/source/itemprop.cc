@@ -1604,72 +1604,24 @@ bool is_blessed_convertible(const item_def &item)
                     || weapon_skill(item) == SK_LONG_BLADES)));
 }
 
-bool convert2good(item_def &item, bool allow_blessed)
+bool convert2good(item_def &item)
 {
     if (item.base_type != OBJ_WEAPONS)
         return false;
 
     switch (item.sub_type)
     {
-    default:
-        return false;
+    default: return false;
 
-    case WPN_FALCHION:
-        if (!allow_blessed)
-            return false;
-        item.sub_type = WPN_BLESSED_FALCHION;
-        break;
-
-    case WPN_LONG_SWORD:
-        if (!allow_blessed)
-            return false;
-        item.sub_type = WPN_BLESSED_LONG_SWORD;
-        break;
-
-    case WPN_SCIMITAR:
-        if (!allow_blessed)
-            return false;
-        item.sub_type = WPN_BLESSED_SCIMITAR;
-        break;
-
-    case WPN_DEMON_BLADE:
-        if (!allow_blessed)
-            item.sub_type = WPN_SCIMITAR;
-        else
-            item.sub_type = WPN_EUDEMON_BLADE;
-        break;
-
-    case WPN_DOUBLE_SWORD:
-        if (!allow_blessed)
-            return false;
-        item.sub_type = WPN_BLESSED_DOUBLE_SWORD;
-        break;
-
-    case WPN_GREAT_SWORD:
-        if (!allow_blessed)
-            return false;
-        item.sub_type = WPN_BLESSED_GREAT_SWORD;
-        break;
-
-    case WPN_TRIPLE_SWORD:
-        if (!allow_blessed)
-            return false;
-        item.sub_type = WPN_BLESSED_TRIPLE_SWORD;
-        break;
-
-    case WPN_DEMON_WHIP:
-        if (!allow_blessed)
-            item.sub_type = WPN_WHIP;
-        else
-            item.sub_type = WPN_SACRED_SCOURGE;
-        break;
-
-    case WPN_DEMON_TRIDENT:
-        if (!allow_blessed)
-            item.sub_type = WPN_TRIDENT;
-        else
-            item.sub_type = WPN_TRISHULA;
-        break;
+    case WPN_FALCHION:      item.sub_type = WPN_BLESSED_FALCHION; break;
+    case WPN_LONG_SWORD:    item.sub_type = WPN_BLESSED_LONG_SWORD; break;
+    case WPN_SCIMITAR:      item.sub_type = WPN_BLESSED_SCIMITAR; break;
+    case WPN_DEMON_BLADE:   item.sub_type = WPN_EUDEMON_BLADE; break;
+    case WPN_DOUBLE_SWORD:  item.sub_type = WPN_BLESSED_DOUBLE_SWORD; break;
+    case WPN_GREAT_SWORD:   item.sub_type = WPN_BLESSED_GREAT_SWORD; break;
+    case WPN_TRIPLE_SWORD:  item.sub_type = WPN_BLESSED_TRIPLE_SWORD; break;
+    case WPN_DEMON_WHIP:    item.sub_type = WPN_SACRED_SCOURGE; break;
+    case WPN_DEMON_TRIDENT: item.sub_type = WPN_TRISHULA; break;
     }
 
     if (is_blessed(item))
@@ -1685,44 +1637,17 @@ bool convert2bad(item_def &item)
 
     switch (item.sub_type)
     {
-    default:
-        return false;
+    default: return false;
 
-    case WPN_BLESSED_FALCHION:
-        item.sub_type = WPN_FALCHION;
-        break;
-
-    case WPN_BLESSED_LONG_SWORD:
-        item.sub_type = WPN_LONG_SWORD;
-        break;
-
-    case WPN_BLESSED_SCIMITAR:
-        item.sub_type = WPN_SCIMITAR;
-        break;
-
-    case WPN_EUDEMON_BLADE:
-        item.sub_type = WPN_DEMON_BLADE;
-        break;
-
-    case WPN_BLESSED_DOUBLE_SWORD:
-        item.sub_type = WPN_DOUBLE_SWORD;
-        break;
-
-    case WPN_BLESSED_GREAT_SWORD:
-        item.sub_type = WPN_GREAT_SWORD;
-        break;
-
-    case WPN_BLESSED_TRIPLE_SWORD:
-        item.sub_type = WPN_TRIPLE_SWORD;
-        break;
-
-    case WPN_SACRED_SCOURGE:
-        item.sub_type = WPN_DEMON_WHIP;
-        break;
-
-    case WPN_TRISHULA:
-        item.sub_type = WPN_DEMON_TRIDENT;
-        break;
+    case WPN_BLESSED_FALCHION:     item.sub_type = WPN_FALCHION; break;
+    case WPN_BLESSED_LONG_SWORD:   item.sub_type = WPN_LONG_SWORD; break;
+    case WPN_BLESSED_SCIMITAR:     item.sub_type = WPN_SCIMITAR; break;
+    case WPN_EUDEMON_BLADE:        item.sub_type = WPN_DEMON_BLADE; break;
+    case WPN_BLESSED_DOUBLE_SWORD: item.sub_type = WPN_DOUBLE_SWORD; break;
+    case WPN_BLESSED_GREAT_SWORD:  item.sub_type = WPN_GREAT_SWORD; break;
+    case WPN_BLESSED_TRIPLE_SWORD: item.sub_type = WPN_TRIPLE_SWORD; break;
+    case WPN_SACRED_SCOURGE:       item.sub_type = WPN_DEMON_WHIP; break;
+    case WPN_TRISHULA:             item.sub_type = WPN_DEMON_TRIDENT; break;
     }
 
     return true;
