@@ -523,14 +523,10 @@ void init_element_colours()
                         0));
     add_element_colour(_create_random_element_colour_calc(
                             ETC_KRAKEN, "kraken",
-                            15,  GREEN,
-                            15,  LIGHTGREEN,
-                            15,  LIGHTCYAN,
-                            15,  LIGHTBLUE,
-                            15,  RED,
-                            15,  LIGHTRED,
-                            15,  MAGENTA,
-                            15,  LIGHTMAGENTA,
+                            30,  LIGHTGREEN,
+                            30,  LIGHTBLUE,
+                            30,  RED,
+                            30,  LIGHTMAGENTA,
                         0));
     add_element_colour(new element_colour_calc(
                             ETC_FLOOR, "floor", _etc_floor
