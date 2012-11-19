@@ -34,7 +34,7 @@ KMONS:  e = vampire / yaktaur / w:5 frost giant / w:5 fire giant /\
             ettin / orc / war dog / draconian / iron troll /\
             deep troll / cyclops / deep dwarf / centaur / warg / wizard
 KMONS:  i = titan
-  : end	
+  : end
 KMONS:  P = plant
 KMONS:  h = generate_awake human / generate_awake elf / generate_awake gnome
 : dgn.delayed_decay(_G, 'h', 'elf chunk / q:2 human chunk / q:2 gnome chunk')
