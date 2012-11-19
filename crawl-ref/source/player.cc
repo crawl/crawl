@@ -1976,9 +1976,6 @@ int player_spec_earth()
         se += you.wearing(EQ_STAFF, STAFF_EARTH);
     }
 
-    if (you.species == SP_LAVA_ORC && temperature_effect(LORC_EARTH_BOOST))
-        se++;
-
     return se;
 }
 
