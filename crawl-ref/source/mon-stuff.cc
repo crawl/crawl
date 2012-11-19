@@ -2505,6 +2505,9 @@ void monster_cleanup(monster* mons)
     // cleaned up first, we wouldn't get a message anyway.
     mons->stop_constricting_all(false, true);
 
+    if (mons_is_tentacle_head(mons_base_type(mons)))
+        _destroy_tentacles(mons);
+
     env.mid_cache.erase(mons->mid);
     unsigned int monster_killed = mons->mindex();
     mons->reset();
