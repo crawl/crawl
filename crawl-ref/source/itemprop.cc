@@ -1900,14 +1900,6 @@ bool item_skills(const item_def &item, set<skill_type> &skills)
     if (sk != SK_THROWING)
         skills.insert(sk);
 
-    if (item.base_type == OBJ_RODS && item_type_known(item))
-    {
-        int sp = 0;
-        while (sp < SPELLBOOK_SIZE && is_valid_spell_in_book(item, sp))
-            if (which_spell_in_book(item, sp++) == SPELL_CONDENSATION_SHIELD)
-                skills.insert(SK_SHIELDS);
-    }
-
     return !skills.empty();
 }
 

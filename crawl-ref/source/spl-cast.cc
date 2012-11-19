@@ -1902,6 +1902,4 @@ void spell_skills(spell_type spell, set<skill_type> &skills)
         if (disciplines & bit)
             skills.insert(spell_type2skill(bit));
     }
-    if (spell == SPELL_CONDENSATION_SHIELD)
-        skills.insert(SK_SHIELDS);
 }
