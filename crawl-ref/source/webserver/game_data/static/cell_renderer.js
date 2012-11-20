@@ -389,14 +389,14 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
             }
             else if (cell.bloody)
             {
-                cell.bloodrot = cell.bloodrot || 0;
+                cell.blood_rotation = cell.blood_rotation || 0;
                 var basetile;
                 if (is_wall)
                 {
                     basetile = cell.old_blood ? dngn.WALL_OLD_BLOOD : dngn.WALL_BLOOD_S;
-                    basetile += dngn.tile_count(basetile) * cell.bloodrot;
+                    basetile += dngn.tile_count(basetile) * cell.blood_rotation;
                     basetile = dngn.WALL_BLOOD_S + dngn.tile_count(dngn.WALL_BLOOD_S)
-                        * cell.bloodrot;
+                        * cell.blood_rotation;
                 }
                 else
                     basetile = dngn.BLOOD;
@@ -420,7 +420,7 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
             var bg = cell.bg;
             var bg_idx = cell.bg.value;
 
-            if (cell.swtree && bg_idx > dngn.DNGN_UNSEEN)
+            if (cell.mangrove_water && bg_idx > dngn.DNGN_UNSEEN)
                 this.draw_dngn(dngn.DNGN_SHALLOW_WATER, x, y);
             else if (bg_idx >= dngn.DNGN_FIRST_TRANSPARENT)
                 this.draw_dngn(cell.flv.f, x, y); // f = floor
@@ -429,7 +429,7 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
             if (bg_idx > dngn.WALL_MAX)
                 this.draw_blood_overlay(x, y, cell);
 
-            if (cell.swtree) // Draw the tree submerged
+            if (cell.mangrove_water) // Draw the tree submerged
             {
                 this.ctx.save();
                 try
@@ -723,15 +723,15 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinf
                 this.draw_icon(icons.CURSOR3, x, y);
             }
 
-            if (cell.tt & 0xF)
+            if (cell.travel_trail & 0xF)
             {
                 this.draw_icon(icons.TRAVEL_PATH_FROM +
-                               (cell.tt & 0xF) - 1, x, y);
+                               (cell.travel_trail & 0xF) - 1, x, y);
             }
-            if (cell.tt & 0xF0)
+            if (cell.travel_trail & 0xF0)
             {
                 this.draw_icon(icons.TRAVEL_PATH_TO +
-                               ((cell.tt & 0xF0) >> 4) - 1, x, y);
+                               ((cell.travel_trail & 0xF0) >> 4) - 1, x, y);
             }
 
             if (fg.MDAM_LIGHT)
