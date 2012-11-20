@@ -1343,7 +1343,7 @@ clean: clean-rltiles clean-webserver clean-android tx-clean
 	+$(MAKE) -C $(UTIL) clean
 	$(RM) $(GAME) $(GAME).exe $(GENERATED_FILES) $(EXTRA_OBJECTS) libw32c.o\
 	    libunix.o $(ALL_OBJECTS) $(ALL_OBJECTS:.o=.d) *.ixx  \
-	    .contrib-libs .cflags AppHdr.h.gch AppHdr.h.d
+	    .contrib-libs .cflags AppHdr.h.gch AppHdr.h.d util/fake_pty
 	$(RM) -r build-win
 	$(RM) -r build
 
