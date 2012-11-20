@@ -722,7 +722,7 @@ void TilesFramework::_send_cell(const coord_def &gc,
             json_write_bool("quad_glow", next_pc.quad_glow);
 
         if (next_pc.disjunct != current_pc.disjunct)
-            write_message("disjunct:%u,", next_pc.disjunct);
+            json_write_bool("disjunct", next_pc.disjunct);
 
         if (next_pc.mangrove_water != current_pc.mangrove_water)
             json_write_bool("mangrove_water", next_pc.mangrove_water);
