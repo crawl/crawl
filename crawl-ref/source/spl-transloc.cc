@@ -458,7 +458,7 @@ static void _handle_teleport_update(bool large_change, bool check_ring_TC,
 }
 
 static bool _teleport_player(bool allow_control, bool new_abyss_area,
-                             bool wizard_tele)
+                             bool wizard_tele, int range)
 {
     bool is_controlled = (allow_control && !you.confused()
                           && player_control_teleport()
@@ -665,6 +665,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
         do
             newpos = random_in_bounds();
         while (_cell_vetoes_teleport(newpos)
+               || (newpos - old_pos).abs() > dist_range(range)
                || need_distance_check && (newpos - centre).abs() < 34*34
                || testbits(env.pgrid(newpos), FPROP_NO_RTELE_INTO));
 
@@ -757,10 +758,11 @@ bool you_teleport_to(const coord_def where_to, bool move_monsters)
     return true;
 }
 
-void you_teleport_now(bool allow_control, bool new_abyss_area, bool wizard_tele)
+void you_teleport_now(bool allow_control, bool new_abyss_area,
+                      bool wizard_tele, int range)
 {
     const bool randtele = _teleport_player(allow_control, new_abyss_area,
-                                           wizard_tele);
+                                           wizard_tele, range);
 
     // Xom is amused by uncontrolled teleports that land you in a
     // dangerous place, unless the player is in the Abyss and

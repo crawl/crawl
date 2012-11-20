@@ -3007,7 +3007,12 @@ static void _player_reacts()
         const int teleportitis_level = player_teleport();
         // this is instantaneous
         if (teleportitis_level > 0 && one_chance_in(100 / teleportitis_level))
-            you_teleport_now(true);
+        {
+            if (teleportitis_level >= 8)
+                you_teleport_now(true);
+            else
+                you_teleport_now(true, false, false, teleportitis_level * 5);
+        }
         else if (player_in_branch(BRANCH_ABYSS) && one_chance_in(80))
         {
             mpr("You are suddenly pulled into a different region of the Abyss!",
