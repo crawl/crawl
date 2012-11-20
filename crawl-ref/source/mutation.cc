@@ -1832,11 +1832,11 @@ string mutation_name(mutation_type mut, int level, bool colour)
             if (fully_inactive)
                 colourname = "darkgrey";
             else if (partially_active)
-                colourname = demonspawn ? "yellow"   : "blue";
+                colourname = demonspawn ? "yellow"    : "blue";
             else if (extra)
-                colourname = demonspawn ? "lightmagenta" : "cyan";
+                colourname = demonspawn ? "lightcyan" : "cyan";
             else
-                colourname = demonspawn ? "magenta"      : "lightblue";
+                colourname = demonspawn ? "cyan"      : "lightblue";
         }
         else if (fully_inactive)
             colourname = "darkgrey";
@@ -1847,7 +1847,8 @@ string mutation_name(mutation_type mut, int level, bool colour)
         else if (_is_slime_mutation(mut))
             colourname = "green";
         else if (temporary)
-            colourname = "magenta";
+            colourname = (you.mutation[mut] > you.temp_mutations[mut]) ?
+                         "lightmagenta" : "magenta";
 
         // Build the result
         ostringstream ostr;
