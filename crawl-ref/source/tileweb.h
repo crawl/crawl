@@ -81,10 +81,8 @@ public:
     void pop_menu();
     void close_all_menus();
 
-    void write_message();
     void write_message(PRINTF(1, ));
     void finish_message();
-    void send_message();
     void send_message(PRINTF(1, ));
 
     bool has_receivers() { return !m_dest_addrs.empty(); }
@@ -109,27 +107,28 @@ public:
 
     void check_for_control_messages();
 
-    /* Adds a prefix that will be written before any other
-       data that is sent after this call, unless no other
-       data is sent until pop_prefix is called. The suffix
-       passed to pop_prefix will only be sent if the prefix
-       was sent. */
-    void push_prefix(const string& prefix);
-    void pop_prefix(const string& suffix);
-    bool prefix_popped();
-
     // Helper functions for writing JSON
     void write_message_escaped(const string& s);
     void json_open_object(const string& name = "");
-    void json_close_object();
+    void json_close_object(bool erase_if_empty = false);
     void json_open_array(const string& name = "");
-    void json_close_array();
+    void json_close_array(bool erase_if_empty = false);
     void json_write_comma();
     void json_write_name(const string& name);
     void json_write_int(int value);
     void json_write_int(const string& name, int value);
+    void json_write_bool(bool value);
+    void json_write_bool(const string& name, bool value);
+    void json_write_null();
+    void json_write_null(const string& name);
     void json_write_string(const string& value);
     void json_write_string(const string& name, const string& value);
+    /* Causes the current object/array to be erased if it is closed
+       with erase_if_empty without writing any other content after
+       this call */
+    void json_treat_as_empty();
+    void json_treat_as_nonempty();
+    bool json_is_empty();
 
     string m_sock_name;
     bool m_await_connection;
@@ -155,9 +154,16 @@ protected:
     wint_t _handle_control_message(sockaddr_un addr, string data);
     wint_t _receive_control_message();
 
-    vector<string> m_prefixes;
-    int json_object_level;
-    bool need_comma;
+    struct JsonFrame
+    {
+        int start;
+        int prefix_end;
+        char type; // '}' or ']'
+    };
+    vector<JsonFrame> m_json_stack;
+
+    void json_open(const string& name, char opener, char type);
+    void json_close(bool erase_if_empty, char type);
 
     struct MenuInfo
     {
