@@ -220,6 +220,7 @@ transform.o \
 traps.o \
 travel.o \
 tutorial.o \
+uncancel.o \
 unicode.o \
 view.o \
 viewchar.o \

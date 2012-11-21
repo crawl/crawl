@@ -19,6 +19,7 @@ enum tag_minor_version
     TAG_MINOR_ACTION_THROW,        // Store base type of throw objects.
     TAG_MINOR_TEMP_MUTATIONS,      // Enable transient mutations
     TAG_MINOR_AUTOINSCRIPTIONS,    // Artefact inscriptions are added on the fly
+    TAG_MINOR_UNCANCELLABLES,      // Restart uncancellable questions upon save load
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
 };

@@ -284,6 +284,10 @@ public:
   // For now, only control the speed of abyss morphing.
   int abyss_speed;
 
+  // Prompts or actions the player must answer before continuing.
+  // A stack -- back() is the first to go.
+  vector<pair<uncancellable_type, int> > uncancel;
+
 
   // -------------------
   // Non-saved UI state:

@@ -1333,6 +1333,13 @@ static void tag_construct_you(writer &th)
 
     marshallUByte(th, you.octopus_king_rings);
 
+    marshallUnsigned(th, you.uncancel.size());
+    for (i = 0; i < (int)you.uncancel.size(); i++)
+    {
+        marshallUByte(th, you.uncancel[i].first);
+        marshallInt(th, you.uncancel[i].second);
+    }
+
     if (!dlua.callfn("dgn_save_data", "u", &th))
         mprf(MSGCH_ERROR, "Failed to save Lua data: %s", dlua.error.c_str());
 
@@ -2147,6 +2154,21 @@ static void tag_read_you(reader &th)
     _unmarshall_constriction(th, &you);
 
     you.octopus_king_rings = unmarshallUByte(th);
+
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() >= TAG_MINOR_UNCANCELLABLES)
+    {
+#endif
+    count = unmarshallUnsigned(th);
+    you.uncancel.resize(count);
+    for (i = 0; i < count; i++)
+    {
+        you.uncancel[i].first = (uncancellable_type)unmarshallUByte(th);
+        you.uncancel[i].second = unmarshallInt(th);
+    }
+#if TAG_MAJOR_VERSION == 34
+    }
+#endif
 
     if (!dlua.callfn("dgn_load_data", "u", &th))
     {
