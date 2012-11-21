@@ -1632,7 +1632,7 @@ bool acquirement(object_class_type class_wanted, int agent,
             // to make a selection.
             if (crawl_state.seen_hups)
             {
-                mpr("Acquirement interrupted by HUP signal.", MSGCH_ERROR);
+                dprf("Acquirement interrupted by HUP signal.");
                 you.turn_is_over = false;
                 return false;
             }

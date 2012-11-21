@@ -3542,6 +3542,11 @@ enum ac_type
     AC_PROPORTIONAL,
 };
 
+enum uncancellable_type
+{
+    UNC_ACQUIREMENT,           // arg is AQ_SCROLL or AQ_CARD_GENIE
+};
+
 // Tiles stuff.
 
 enum screen_mode

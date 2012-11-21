@@ -8,7 +8,6 @@
 #include "item_use.h"
 
 #include "abl-show.h"
-#include "acquire.h"
 #include "areas.h"
 #include "artefact.h"
 #include "cloud.h"
@@ -58,6 +57,7 @@
 #include "target.h"
 #include "throw.h"
 #include "transform.h"
+#include "uncancel.h"
 #include "unwind.h"
 #include "view.h"
 #include "xom.h"
@@ -3040,7 +3040,7 @@ void read_scroll(int slot)
         more();
         // Identify it early in case the player checks the '\' screen.
         set_ident_type(scroll, ID_KNOWN_TYPE);
-        acquirement(OBJ_RANDOM, AQ_SCROLL);
+        run_uncancel(UNC_ACQUIREMENT, AQ_SCROLL);
         break;
 
     case SCR_FEAR:

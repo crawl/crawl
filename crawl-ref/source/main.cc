@@ -131,6 +131,7 @@
 #include "hints.h"
 #include "shout.h"
 #include "stash.h"
+#include "uncancel.h"
 #include "version.h"
 #include "view.h"
 #include "viewchar.h"
@@ -441,6 +442,8 @@ static void _launch_game()
 
     // Initialise save game so we can recover from crashes on D:1.
     save_game_state();
+
+    run_uncancels();
 
     cursor_control ccon(!Options.use_fake_player_cursor);
     while (true)

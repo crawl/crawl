@@ -12,7 +12,6 @@
 
 #include "externs.h"
 
-#include "acquire.h"
 #include "beam.h"
 #include "cio.h"
 #include "coordit.h"
@@ -69,6 +68,7 @@
 #include "terrain.h"
 #include "transform.h"
 #include "traps.h"
+#include "uncancel.h"
 #include "view.h"
 #include "xom.h"
 
@@ -2458,7 +2458,7 @@ static void _genie_card(int power, deck_rarity_type rarity)
         mpr("A genie takes form and thunders: "
             "\"Choose your reward, mortal!\"");
         more();
-        acquirement(OBJ_RANDOM, AQ_CARD_GENIE);
+        run_uncancel(UNC_ACQUIREMENT, AQ_CARD_GENIE);
     }
     else
     {
