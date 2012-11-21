@@ -33,6 +33,20 @@ Interface
 * Some colour changes in the skill menu.
 * Swap the cycle ammunition commands. '(' = backward, ')' = forward.
 
+Stone Soup 0.11.1 (20121116)
+----------------------------
+* A number of crash fixes.
+* Option fixes: spell_slot=, runrest_ignore_monster-=
+* Xom won't Inner Flame magic-immune monsters. Some were quite inappropriate.
+* TSO won't get mad at you when a monster uses a staff of death.
+* Boulder beetles stop rolling upon teleporting.
+* Zombies get same eligibility for constriction as their base monsters.
+* Slimify fixes: kraken tentacles (no longer slimeable) and monsters in/over
+  water (will turn into water-capable jellies).
+* You can't stop some of Xom's spells anymore.
+* Gaining/losing mutations from Jiyva is less spammy.
+* Non-good gods can punish their worshippers during penance, like in 0.10-.
+
 Stone Soup 0.11 (20121001)
 --------------------------
 
@@ -45,6 +59,8 @@ Stone Soup 0.11 (20121001)
 * New monsters: Arachne, Fannar, orb spider, bog body, Hell Sentinel.
 * Removed monsters: Jozef, bog mummy, midge, Pit Fiend, hairy devil.
 * Lots of new vaults and tiles.
+* Config file overhaul: lists require += when appending, you don't need to
+  upgrade your config by hand anymore (after this last(?) time).
 
 Branches, environment
 ---------------------
