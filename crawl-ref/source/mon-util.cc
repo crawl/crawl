@@ -2637,7 +2637,14 @@ habitat_type mons_secondary_habitat(const monster* mon)
 
 bool mons_wall_shielded(const monster* mon)
 {
-    return (_mons_class_habitat(mons_base_type(mon)) == HT_ROCK);
+    switch (_mons_class_habitat(mons_base_type(mon)))
+    {
+        case HT_ROCK:
+        case HT_INCORPOREAL:
+            return true;
+        default:
+            return false;
+    }
 }
 
 bool intelligent_ally(const monster* mon)
@@ -3416,6 +3423,9 @@ bool mons_class_can_pass(monster_type mc, const dungeon_feature_type grid)
     if (grid == DNGN_MALIGN_GATEWAY)
         return (mc == MONS_ELDRITCH_TENTACLE || mc == MONS_ELDRITCH_TENTACLE_SEGMENT);
 
+    if (_mons_class_habitat(mc) == HT_INCORPOREAL)
+        return !feat_is_permarock(grid);
+    
     if (_mons_class_habitat(mc) == HT_ROCK)
     {
         // Permanent walls can't be passed through.

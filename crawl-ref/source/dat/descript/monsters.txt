@@ -2558,6 +2558,10 @@ training dummy
 
 A mannequin used for battle practice.
 %%%%
+tilling worm
+
+A bulbous worm which displaces the world as it moves.
+%%%%
 trapdoor spider
 
 A fast-moving arachnid that both surprises its prey and evades its enemies by

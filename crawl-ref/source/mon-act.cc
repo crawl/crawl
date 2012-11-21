@@ -3560,11 +3560,16 @@ static bool _monster_move(monster* mons)
 
         if ((((feat == DNGN_ROCK_WALL || feat == DNGN_CLEAR_ROCK_WALL)
               && burrows)
-             || (flattens_trees && feat_is_tree(feat)))
+             || (flattens_trees && feat_is_tree(feat))
+             || (!feat_is_permarock(feat) && mons->type == MONS_TILLING_WORM))
             && good_move[mmov.x + 1][mmov.y + 1] == true)
         {
             const coord_def target(mons->pos() + mmov);
-
+            if (mons->type == MONS_TILLING_WORM) {
+                grd(mons->pos()) = grd(target);
+                env.level_map_mask(mons->pos()) |= MMT_NUKED;
+                set_terrain_changed(mons->pos());
+            }
             nuke_wall(target);
 
             if (flattens_trees)
@@ -3587,9 +3592,22 @@ static bool _monster_move(monster* mons)
             {
                 // Message depends on whether caused by boring beetle or
                 // acid (Dissolution).
-                mpr((mons->type == MONS_BORING_BEETLE) ?
-                    "You hear a grinding noise." :
-                    "You hear a sizzling sound.", MSGCH_SOUND);
+                string noise;
+                switch (mons->type) {
+                    case MONS_BORING_BEETLE:
+                        noise = "grinding noise";
+                        break;
+                    case MONS_DISSOLUTION:
+                        noise = "sizzling sound";
+                        break;
+                    case MONS_TILLING_WORM:
+                        noise = "popping noise";
+                        break;
+                    default:
+                        noise = "buggy noise";
+                        break;
+                }
+                mpr("You hear a " + noise + ".", MSGCH_SOUND);
             }
         }
     }
