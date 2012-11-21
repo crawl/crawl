@@ -301,7 +301,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         if (x_chance_in_y(3, 5))     // give hand weapon
         {
             item.base_type = OBJ_WEAPONS;
-            item.sub_type  = (coinflip() ? WPN_DAGGER : WPN_CLUB);
+            item.sub_type  = coinflip() ? WPN_DAGGER : WPN_CLUB;
         }
         else
             return item_race;
@@ -497,14 +497,14 @@ static item_make_species_type _give_weapon(monster* mon, int level,
     case MONS_TERENCE:
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = random_choose_weighted(30, WPN_FLAIL,
-                                                 20, WPN_HAND_AXE,
-                                                 20, WPN_SHORT_SWORD,
-                                                 20, WPN_MACE,
-                                                 10, WPN_TRIDENT,
-                                                 10, WPN_FALCHION,
-                                                 10, WPN_MORNINGSTAR,
-                                                  3, WPN_SPIKED_FLAIL,
-                                                  0);
+                                                20, WPN_HAND_AXE,
+                                                20, WPN_SHORT_SWORD,
+                                                20, WPN_MACE,
+                                                10, WPN_TRIDENT,
+                                                10, WPN_FALCHION,
+                                                10, WPN_MORNINGSTAR,
+                                                 3, WPN_SPIKED_FLAIL,
+                                                 0);
         break;
 
     case MONS_DUVESSA:
@@ -1658,7 +1658,7 @@ static void _give_shield(monster* mon, int level)
         if (coinflip())
         {
             make_item_for_monster(mon, OBJ_ARMOUR,
-                                  coinflip()? ARM_LARGE_SHIELD : ARM_SHIELD,
+                                  coinflip() ? ARM_LARGE_SHIELD : ARM_SHIELD,
                                   level, MAKE_ITEM_NO_RACE);
         }
         break;
@@ -1667,7 +1667,7 @@ static void _give_shield(monster* mon, int level)
         if (one_chance_in(3))
         {
             make_item_for_monster(mon, OBJ_ARMOUR,
-                                  coinflip()? ARM_BUCKLER : ARM_SHIELD,
+                                  coinflip() ? ARM_BUCKLER : ARM_SHIELD,
                                   level, MAKE_ITEM_NO_RACE);
         }
         break;
