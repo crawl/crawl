@@ -66,7 +66,7 @@ static void _handle_stat_change(stat_type stat, const char *aux = NULL,
                                 bool see_source = true);
 static void _handle_stat_change(const char *aux = NULL, bool see_source = true);
 
-void attribute_increase()
+bool attribute_increase()
 {
     crawl_state.stat_gain_prompt = true;
     mpr("Your experience leads to an increase in your attributes!",
@@ -85,27 +85,27 @@ void attribute_increase()
         switch (keyin)
         {
         CASE_ESCAPE
-            // [ds] It's safe to save the game here; when the player
-            // reloads, the game will re-prompt for their level-up
-            // stat gain.
+            // It is unsafe to save the game here; continue with the turn
+            // normally, when the player reloads, the game will re-prompt
+            // for their level-up stat gain.
             if (crawl_state.seen_hups)
-                sighup_save_and_exit();
+                return false;
             break;
 
         case 's':
         case 'S':
             modify_stat(STAT_STR, 1, false, "level gain");
-            return;
+            return true;
 
         case 'i':
         case 'I':
             modify_stat(STAT_INT, 1, false, "level gain");
-            return;
+            return true;
 
         case 'd':
         case 'D':
             modify_stat(STAT_DEX, 1, false, "level gain");
-            return;
+            return true;
         }
     }
 }

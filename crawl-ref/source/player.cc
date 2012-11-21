@@ -3116,7 +3116,8 @@ void level_change(bool skip_attribute_increase)
             }
 
             if (!(new_exp % 3) && !skip_attribute_increase)
-                attribute_increase();
+                if (!attribute_increase())
+                    return; // abort level gain, the xp is still there
 
             crawl_state.stat_gain_prompt = false;
             you.experience_level = new_exp;
