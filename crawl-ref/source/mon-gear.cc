@@ -412,7 +412,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
     case MONS_GNOLL_SHAMAN:
         item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
-        item.sub_type  = random_choose(WPN_CLUB, WPN_WHIP, -1);
+        item.sub_type  = coinflip() ? WPN_CLUB : WPN_WHIP;
         break;
 
     case MONS_GNOLL_SERGEANT:
