@@ -410,9 +410,9 @@ static bool _reroll_random(newgame_def* ng)
 
     cprintf("\nDo you want to play this combination? (ynq) [y]");
     char c = getchm();
-    if (key_is_escape(c) || tolower(c) == 'q')
+    if (key_is_escape(c) || toalower(c) == 'q')
         game_ended();
-    return (tolower(c) == 'n');
+    return (toalower(c) == 'n');
 }
 
 static void _choose_char(newgame_def* ng, newgame_def* choice,

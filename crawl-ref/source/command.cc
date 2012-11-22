@@ -236,7 +236,7 @@ void adjust(void)
 {
     mpr("Adjust (i)tems, (s)pells, or (a)bilities? ", MSGCH_PROMPT);
 
-    const int keyin = tolower(get_ch());
+    const int keyin = toalower(get_ch());
 
     if (keyin == 'i')
         _adjust_item();
@@ -723,7 +723,7 @@ static void _add_file_to_scroller(FILE* fp, formatted_scroller& m,
             }
             me->add_hotkey(hotkey);
             if (isaupper(hotkey))
-                me->add_hotkey(tolower(hotkey));
+                me->add_hotkey(toalower(hotkey));
             me->level  = MEL_SUBTITLE;
             me->colour = WHITE;
         }

@@ -3297,7 +3297,7 @@ static void _rune_from_specs(const char* _specs, item_def &item)
         }
         mpr("Which rune (ESC to exit)? ", MSGCH_PROMPT);
 
-        int keyin = tolower(get_ch());
+        int keyin = toalower(get_ch());
 
         if (key_is_escape(keyin) || keyin == ' '
             || keyin == '\r' || keyin == '\n')
@@ -3380,7 +3380,7 @@ static void _deck_from_specs(const char* _specs, item_def &item)
                 MSGCH_PROMPT);
             mpr("Which deck (ESC to exit)? ");
 
-            const int keyin = tolower(get_ch());
+            const int keyin = toalower(get_ch());
 
             if (key_is_escape(keyin) || keyin == ' '
                 || keyin == '\r' || keyin == '\n')
@@ -3421,7 +3421,7 @@ static void _deck_from_specs(const char* _specs, item_def &item)
             mpr("[a] plain [b] ornate [c] legendary? (ESC to exit)",
                 MSGCH_PROMPT);
 
-            int keyin = tolower(get_ch());
+            int keyin = toalower(get_ch());
 
             if (key_is_escape(keyin) || keyin == ' '
                 || keyin == '\r' || keyin == '\n')
@@ -4075,7 +4075,7 @@ object_class_type get_item_mimic_type()
     mprf("[%c] random", letter);
     choices[letter] = OBJ_RANDOM;
     mpr("\nWhat kind of item mimic? ", MSGCH_PROMPT);
-    const int keyin = tolower(get_ch());
+    const int keyin = toalower(get_ch());
 
     if (choices.find(keyin) == choices.end())
         return OBJ_UNASSIGNED;

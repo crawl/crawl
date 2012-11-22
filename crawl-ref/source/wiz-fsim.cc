@@ -594,7 +594,7 @@ void wizard_fight_sim(bool double_scale)
     {
         mpr("(A)ttack or (D)efense?", MSGCH_PROMPT);
 
-        switch (tolower(getchk()))
+        switch (toalower(getchk()))
         {
         case 'a':
         case 'A':

@@ -637,7 +637,7 @@ static string _list_alternative_yes(char yes1, char yes2, bool lowered = false,
     if (yes1 != 'Y')
     {
         if (lowered)
-            help += tolower(yes1);
+            help += toalower(yes1);
         else
             help += yes1;
         print_yes = true;
@@ -649,7 +649,7 @@ static string _list_alternative_yes(char yes1, char yes2, bool lowered = false,
             help += "/";
 
         if (lowered)
-            help += tolower(yes2);
+            help += toalower(yes2);
         else
             help += yes2;
         print_yes = true;

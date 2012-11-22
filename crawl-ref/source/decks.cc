@@ -1204,7 +1204,7 @@ bool deck_triple_draw()
             }
             need_prompt_redraw = false;
         }
-        const int keyin = tolower(get_ch());
+        const int keyin = toalower(get_ch());
         if (keyin == '?')
         {
             _describe_cards(draws);

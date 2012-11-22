@@ -2528,7 +2528,7 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe)
     menu.draw_menu();
 #endif
 
-    keyin = tolower(getch_ck());
+    keyin = toalower(getch_ck());
     command_type action = _get_action(keyin, actions);
 
 #ifdef TOUCH_UI
@@ -2697,7 +2697,7 @@ void inscribe_item(item_def &item, bool msgwin)
     }
 
     keyin = (is_inscribed ? getch_ck() : 'i');
-    keyin = tolower(keyin);
+    keyin = toalower(keyin);
     switch (keyin)
     {
     case 'c':

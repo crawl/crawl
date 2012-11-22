@@ -1699,7 +1699,7 @@ static void _toggle_friendly_pickup()
     int type;
     {
         cursor_control con(true);
-        type = tolower(getchm(KMC_DEFAULT));
+        type = toalower(getchm(KMC_DEFAULT));
     }
 
     switch (type)

@@ -65,6 +65,11 @@ static inline bool isaalnum(int c)
     return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9');
 }
 
+static inline ucs_t toalower(ucs_t c)
+{
+    return isaupper(c) ? c + 'a' - 'A' : c;
+}
+
 int numcmp(const char *a, const char *b, int limit = 0);
 bool numcmpstr(string a, string b);
 size_t strlcpy(char *dst, const char *src, size_t n);

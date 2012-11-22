@@ -3676,7 +3676,7 @@ void TravelCache::add_waypoint(int x, int y)
     mprf(MSGCH_PROMPT, "Assign waypoint to what number? (0-9%s) ",
          waypoints_exist? ", D - delete waypoint" : "");
 
-    int keyin = tolower(get_ch());
+    int keyin = toalower(get_ch());
 
     if (waypoints_exist && keyin == 'd')
     {

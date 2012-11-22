@@ -643,7 +643,7 @@ bool butchery(int which_corpse, bool bottle_blood)
                      corpse_name.c_str());
                 repeat_prompt = false;
 
-                keyin = tolower(getchm(KMC_CONFIRM));
+                keyin = toalower(getchm(KMC_CONFIRM));
                 switch (keyin)
                 {
                 case 'y':
@@ -1329,7 +1329,7 @@ int eat_from_floor(bool skip_chunks)
                  ((item->quantity > 1) ? "one of " : ""),
                  item_name.c_str());
 
-            int keyin = tolower(getchm(KMC_CONFIRM));
+            int keyin = toalower(getchm(KMC_CONFIRM));
             switch (keyin)
             {
             case 'q':
@@ -1487,7 +1487,7 @@ bool eat_from_inventory()
                  ((item->quantity > 1) ? "one of " : ""),
                  item_name.c_str());
 
-            int keyin = tolower(getchm(KMC_CONFIRM));
+            int keyin = toalower(getchm(KMC_CONFIRM));
             switch (keyin)
             {
             case 'q':
@@ -1656,7 +1656,7 @@ int prompt_eat_chunks(bool only_auto)
                      item_name.c_str());
             }
 
-            int keyin = autoeat ? 'y' : tolower(getchm(KMC_CONFIRM));
+            int keyin = autoeat ? 'y' : toalower(getchm(KMC_CONFIRM));
             switch (keyin)
             {
             case 'q':

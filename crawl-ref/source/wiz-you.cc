@@ -300,7 +300,7 @@ void wizard_set_hunger_state()
 
     mprf(MSGCH_PROMPT, "%s", hunger_prompt.c_str());
 
-    const int c = tolower(getchk());
+    const int c = toalower(getchk());
 
     // Values taken from food.cc.
     switch (c)
@@ -1018,7 +1018,7 @@ void wizard_transform()
         }
         mpr("Which form (ESC to exit)? ", MSGCH_PROMPT);
 
-        int keyin = tolower(get_ch());
+        int keyin = toalower(get_ch());
 
         if (key_is_escape(keyin) || keyin == ' '
             || keyin == '\r' || keyin == '\n')

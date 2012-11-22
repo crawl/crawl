@@ -1565,7 +1565,7 @@ static bool _has_warning_inscription(const item_def& item,
             else if (oper == OPER_ZAP && r[i+1] == 'z') // for the 0.3.4. keys
                 return true;
             else if (oper == OPER_EVOKE
-                     && (r[i+1] == 'V' || tolower(r[i+1]) == 'z'))
+                     && (r[i+1] == 'V' || toalower(r[i+1]) == 'z'))
             {
                 return true;
             }

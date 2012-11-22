@@ -210,9 +210,9 @@ int spellbook_contents(item_def &book, read_book_action_type action,
     }
 
     if (update_screen)
-        keyn = tolower(getchm(KMC_MENU));
+        keyn = toalower(getchm(KMC_MENU));
 
-    return keyn;     // try to figure out that for which this is used {dlb}
+    return keyn;     // either ignored or spell letter
 }
 
 // Rarity 100 is reserved for unused books.
