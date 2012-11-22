@@ -6,6 +6,7 @@
 
 #include "AppHdr.h"
 #include "acquire.h"
+#include "decks.h"
 #include "libutil.h"
 #include "player.h"
 #include "state.h"
@@ -34,6 +35,12 @@ void run_uncancels()
         case UNC_ACQUIREMENT:
             if (!acquirement(OBJ_RANDOM, arg) && crawl_state.seen_hups)
                 return;
+            break;
+
+        case UNC_DRAW_THREE:
+            if (!draw_three(arg) && crawl_state.seen_hups)
+                return;
+            break;
         }
 
         if (act != -1)

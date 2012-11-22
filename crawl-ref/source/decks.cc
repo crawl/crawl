@@ -1158,6 +1158,12 @@ bool deck_triple_draw()
         return false;
     }
 
+    run_uncancel(UNC_DRAW_THREE, slot);
+    return true;
+}
+
+bool draw_three(int slot)
+{
     item_def& deck(you.inv[slot]);
 
     if (_check_buggy_deck(deck))
@@ -1205,6 +1211,16 @@ bool deck_triple_draw()
             need_prompt_redraw = false;
         }
         const int keyin = toalower(get_ch());
+
+        if (crawl_state.seen_hups)
+        {
+            // Return the cards, for now.
+            for (int i = 0; i < num_to_draw; ++i)
+                _push_top_card(deck, draws[i], flags[i]);
+
+            return false;
+        }
+
         if (keyin == '?')
         {
             _describe_cards(draws);
