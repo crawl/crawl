@@ -3546,6 +3546,7 @@ enum uncancellable_type
 {
     UNC_ACQUIREMENT,           // arg is AQ_SCROLL or AQ_CARD_GENIE
     UNC_DRAW_THREE,            // arg is inv slot of the deck
+    UNC_STACK_FIVE,            // arg is inv slot of the deck
 };
 
 // Tiles stuff.
