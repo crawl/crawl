@@ -709,7 +709,7 @@ int zin_check_recite_to_monsters(recite_type *prayertype)
 
     while (true)
     {
-        int keyn = tolower(getch_ck());
+        int keyn = toalower(getch_ck());
 
         if (keyn >= 'a' && keyn < 'a' + menu_cnt)
         {

@@ -377,7 +377,7 @@ static void _tweak_randart(item_def &item)
 
     mpr("Change which field? ", MSGCH_PROMPT);
 
-    int keyin = tolower(get_ch());
+    int keyin = toalower(get_ch());
     unsigned int  choice;
 
     if (isaalpha(keyin))
@@ -461,7 +461,7 @@ void wizard_tweak_object(void)
 
             mpr("Which field? ", MSGCH_PROMPT);
 
-            keyin = tolower(get_ch());
+            keyin = toalower(get_ch());
 
             if (keyin == 'a')
                 old_val = you.inv[item].plus;
@@ -547,7 +547,7 @@ static bool _make_book_randart(item_def &book)
     do
     {
         mpr("Make book fixed [t]heme or fixed [l]evel? ", MSGCH_PROMPT);
-        type = tolower(getchk());
+        type = toalower(getchk());
     }
     while (type != 't' && type != 'l');
 
@@ -863,7 +863,7 @@ static void _debug_acquirement_stats(FILE *ostat)
         MSGCH_PROMPT);
 
     object_class_type type;
-    const int keyin = tolower(get_ch());
+    const int keyin = toalower(get_ch());
     switch (keyin)
     {
     case 'a': type = OBJ_WEAPONS;    break;
@@ -1535,7 +1535,7 @@ void debug_item_statistics(void)
     mpr("Generate stats for: [a] acquirement [b] randart properties");
     flush_prev_message();
 
-    const int keyin = tolower(get_ch());
+    const int keyin = toalower(get_ch());
     switch (keyin)
     {
     case 'a': _debug_acquirement_stats(ostat); break;

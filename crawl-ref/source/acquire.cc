@@ -26,6 +26,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "item_use.h"
+#include "libutil.h"
 #include "makeitem.h"
 #include "message.h"
 #include "misc.h"
@@ -1606,7 +1607,7 @@ bool acquirement(object_class_type class_wanted, int agent,
             you.species == SP_FELID ? "" : "[j] Ammunition");
         mpr("What kind of item would you like to acquire? (\\ to view known items)", MSGCH_PROMPT);
 
-        const int keyin = tolower(get_ch());
+        const int keyin = toalower(get_ch());
         switch (keyin)
         {
         case 'a':    class_wanted = OBJ_WEAPONS;    break;

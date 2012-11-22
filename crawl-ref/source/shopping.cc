@@ -951,7 +951,7 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
         }
         else
         {
-            key = tolower(key) - 'a';
+            key = toalower(key) - 'a';
             if (key >= static_cast<int>(stock.size()))
             {
                 _shop_print("No such item.", 1);

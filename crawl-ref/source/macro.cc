@@ -894,7 +894,7 @@ void macro_add_query(void)
         "(s)ave? ",
         MSGCH_PROMPT);
     input = m_getch();
-    int low = tolower(input);
+    int low = toalower(input);
 
     if (low == 'k')
     {
@@ -960,7 +960,7 @@ void macro_add_query(void)
 
         input = m_getch();
 
-        input = tolower(input);
+        input = toalower(input);
         if (input == 'a' || key_is_escape(input))
         {
             canned_msg(MSG_OK);

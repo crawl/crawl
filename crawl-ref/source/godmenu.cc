@@ -8,6 +8,7 @@
 #include "godmenu.h"
 
 #include "colour.h"
+#include "libutil.h"
 #include "religion.h"
 
 GodMenuEntry::GodMenuEntry(god_type god_, bool long_name) :
@@ -19,7 +20,7 @@ GodMenuEntry::GodMenuEntry(god_type god_, bool long_name) :
     else
     {
         hotkeys.push_back(text.at(0));
-        hotkeys.push_back(tolower(text.at(0)));
+        hotkeys.push_back(toalower(text.at(0)));
     }
     int c = god_message_altar_colour(god);
     colour_text = colour_to_str(c);
