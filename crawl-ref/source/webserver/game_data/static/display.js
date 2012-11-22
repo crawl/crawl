@@ -86,7 +86,8 @@ function ($, comm, map_knowledge, view_data, monster_list, minimap,
         if (data.vgrdc)
             minimap.do_view_center_update(data.vgrdc.x, data.vgrdc.y);
 
-        map_knowledge.merge(data.cells);
+        if (data.cells)
+            map_knowledge.merge(data.cells);
 
         // Mark cells above high cells as dirty
         $.each(map_knowledge.dirty().slice(), function (i, loc) {

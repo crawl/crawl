@@ -1,29 +1,12 @@
 define(["jquery", "comm", "./enums", "./map_knowledge", "./messages"],
 function ($, comm, enums, map_knowledge, messages) {
-    var player = {
-        name: "", god: "",
-        hp: 0, hp_max: 0,
-        mp: 0, mp_max: 0,
-        ac: 0, ev: 0, sh: 0,
-        xl: 0, progress: 0,
-        gold: 0,
-        str: 0, int: 0, dex: 0,
-        piety_rank: 0, penance: false,
-        status: [],
-        inv: {}, equip: {},
-        pos: null
-    };
-    var last_time = null;
-    window.player = player;
+    var player = {}, last_time;
 
     var stat_boosters = {
         "str": "vitalised|mighty|berserk",
         "int": "vitalised|brilliant",
         "dex": "vitalised|agile"
     };
-
-    for (var i = 0; i < enums.equip.NUM_EQUIP; ++i)
-        player.equip[i] = -1;
 
     function update_bar(name)
     {
@@ -235,6 +218,26 @@ function ($, comm, enums, map_knowledge, messages) {
     comm.register_handlers({
         "player": handle_player_message,
     });
+
+    $(document).off("game_init.player")
+        .on("game_init.player", function () {
+            $.extend(player, {
+                name: "", god: "",
+                hp: 0, hp_max: 0,
+                mp: 0, mp_max: 0,
+                ac: 0, ev: 0, sh: 0,
+                xl: 0, progress: 0,
+                gold: 0,
+                str: 0, int: 0, dex: 0,
+                piety_rank: 0, penance: false,
+                status: [],
+                inv: {}, equip: {},
+                pos: null
+            });
+            for (var i = 0; i < enums.equip.NUM_EQUIP; ++i)
+                player.equip[i] = -1;
+            last_time = null;
+        });
 
     return player;
 });

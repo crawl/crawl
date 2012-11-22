@@ -68,7 +68,7 @@ function ($, comm, util) {
             .stop(true, false)
             .animate({
             scrollTop: $("#messages").height()
-        }, "fast");
+        }, 100);
     }
 
     function rollback(count)
