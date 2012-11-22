@@ -41,6 +41,11 @@ void run_uncancels()
             if (!draw_three(arg) && crawl_state.seen_hups)
                 return;
             break;
+
+        case UNC_STACK_FIVE:
+            if (!stack_five(arg) && crawl_state.seen_hups)
+                return;
+            break;
         }
 
         if (act != -1)

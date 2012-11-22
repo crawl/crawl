@@ -1016,12 +1016,11 @@ bool deck_stack()
 
     _deck_ident(deck);
     const int num_cards    = cards_in_deck(deck);
-    const int num_to_stack = (num_cards < 5 ? num_cards : 5);
 
     if (num_cards == 1)
         mpr("There's only one card left!");
     else if (num_cards < 5)
-        mprf("The deck only has %d cards.", num_to_stack);
+        mprf("The deck only has %d cards.", num_cards);
     else if (num_cards == 5)
         mpr("The deck has exactly five cards.");
     else
@@ -1030,6 +1029,19 @@ bool deck_stack()
              num_cards);
     }
     more();
+
+    run_uncancel(UNC_STACK_FIVE, slot);
+    return true;
+}
+
+bool stack_five(int slot)
+{
+    item_def& deck(you.inv[slot]);
+    if (_check_buggy_deck(deck))
+        return false;
+
+    const int num_cards    = cards_in_deck(deck);
+    const int num_to_stack = (num_cards < 5 ? num_cards : 5);
 
 #ifdef USE_TILE_WEB
     tiles_crt_control show_as_menu(CRT_MENU, "deck_stack");
@@ -1050,22 +1062,14 @@ bool deck_stack()
         // Rest of deck is discarded.
     }
 
-    // Re-add the cards, with changed flags, in case the game is closed
-    // while the swapping takes place, so we don't leak information about
-    // the deck.
-    // If it does get closed, the order of the top five cards will be
-    // unchanged, but the deck will be marked as stacked. (jpeg)
-    for (unsigned int i = 0; i < draws.size(); ++i)
-    {
-        _push_top_card(deck, draws[draws.size() - 1 - i],
-                       flags[flags.size() - 1 - i]);
-    }
+    CrawlHashTable &props = deck.props;
     deck.plus2 = -num_to_stack;
     props["num_marked"] = static_cast<char>(num_to_stack);
     // Remember that the deck was stacked even if it is later unmarked
     // (e.g. by Nemelex abandonment).
     props["stacked"] = true;
     you.wield_change = true;
+    bool done = true;
 
     if (draws.size() > 1)
     {
@@ -1094,7 +1098,7 @@ bool deck_stack()
             {
                 cgotoxy(1,11);
                 textcolor(LIGHTGREY);
-                cprintf("Are you sure? (press y or Y to confirm)");
+                cprintf("Are you done? (press y or Y to confirm)");
                 if (toupper(getchk()) == 'Y')
                     break;
 
@@ -1122,19 +1126,13 @@ bool deck_stack()
 
                 _redraw_stacked_cards(draws, selected);
             }
-            // If you HUP the game, you lose the opportunity for further
-            // stacking, but you might have already ordered some, no need
-            // to destroy that.
             else if (c == CK_ESCAPE && crawl_state.seen_hups)
-                break; // TODO: continue on game restore instead?
+            {
+                done = false;
+                break; // continue on game restore
+            }
         }
         redraw_screen();
-    }
-    // Remove the cards again, and add them
-    for (unsigned int i = 0; i < draws.size(); ++i)
-    {
-        uint8_t   _flags;
-        _draw_top_card(deck, false, _flags);
     }
     for (unsigned int i = 0; i < draws.size(); ++i)
     {
@@ -1145,7 +1143,7 @@ bool deck_stack()
     _check_buggy_deck(deck);
     you.wield_change = true;
 
-    return true;
+    return done;
 }
 
 // Draw the next three cards, discard two and pick one.
