@@ -33,6 +33,9 @@ body {
 #stats_piety.penance {
     color: #a40000; /* red */
 }
+#stats_piety.monk {
+    color: #555753; /* darkgray */
+}
 #stats_wizmode {
     color: #204a87; /* blue */
 }

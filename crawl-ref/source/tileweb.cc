@@ -595,6 +595,11 @@ void TilesFramework::_send_player(bool force_full)
     {
         prank = std::max(0, piety_rank() - 1);
     }
+    else if (you.char_class == JOB_MONK && you.species != SP_DEMIGOD
+             && !had_gods())
+    {
+        prank = 2;
+    }
     _update_int(force_full, c.piety_rank, prank, "piety_rank");
 
     _update_int(force_full, c.form, (uint8_t) you.form, "form");
