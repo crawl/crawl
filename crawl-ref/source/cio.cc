@@ -298,11 +298,14 @@ int line_reader::read_line(bool clear_previous)
         return false;
 
 #ifdef USE_TILE_WEB
-    tiles.redraw();
-    tiles.json_open_object();
-    tiles.json_write_string("msg", "get_line");
-    tiles.json_close_object();
-    tiles.finish_message();
+    if (!tiles.is_in_crt_menu())
+    {
+        tiles.redraw();
+        tiles.json_open_object();
+        tiles.json_write_string("msg", "get_line");
+        tiles.json_close_object();
+        tiles.finish_message();
+    }
 #endif
 
     cursor_control con(true);
