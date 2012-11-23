@@ -185,6 +185,9 @@ static coord_def _rotate(coord_def org, coord_def from,
             best = avail[i], hiscore = score;
     }
 
+    // must find _something_, the original space might be already taken
+    ASSERT(hiscore != 1e38);
+
     return best;
 }
 
