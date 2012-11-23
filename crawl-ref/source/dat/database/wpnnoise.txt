@@ -144,10 +144,10 @@ w:80
 @Your_weapon@ [cackles|giggles|gurgles|sighs|snorts|warbles|wails|whimpers].
 
 w:50
-@Your_weapon@ [coughs|swears|yawns][.| loudly.| noisily.]
+@Your_weapon@ [coughs|swears|yawns][| loudly| noisily].
 
 w:40
-@Your_weapon@ [burps|cheers|hollers|yelps][!| loudly!]
+@Your_weapon@ [burps|cheers|hollers|yelps][| loudly]!
 
 w:30
 @Your_weapon@ makes a [horrible|deep, guttural|tutting] noise.
@@ -514,7 +514,7 @@ w:30
 
 @The_weapon@ plays a couple of bars.
 
-@The_weapon@[ nearly | clearly | ][hits|misses] the concert pitch.
+@The_weapon@ [nearly |clearly |][hits|misses] the concert pitch.
 
 @The_weapon@ repeatedly practises the high pitch.
 
@@ -527,7 +527,7 @@ _singing_no-low_tension_
 
 @The_weapon@ breaks into glorious song!
 
-@The_weapon@ sings[.| off-key.]
+@The_weapon@ sings[ |off-key].
 
 @The_weapon@ [sings|whistles] [loudly|merrily].
 
