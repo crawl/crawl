@@ -688,7 +688,7 @@ string maybe_pick_random_substring(string s)
             break;
 
         string substring = s.substr(start + 1, end - start - 1);
-        vector<string> split = split_string("|", substring, false, false);
+        vector<string> split = split_string("|", substring, false, true);
         int index = random2(split.size());
         s.replace(start, end + 1 - start, split[index]);
     }
