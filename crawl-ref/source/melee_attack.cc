@@ -2696,7 +2696,7 @@ void melee_attack::chaos_affects_attacker()
         {
             string noise = getSpeakString("weapon_noise");
             if (!noise.empty())
-                msg = "You hear " + noise;
+                msg = "You hear " + maybe_pick_random_substring(noise);
         }
         else
         {
@@ -2704,6 +2704,7 @@ void melee_attack::chaos_affects_attacker()
             string wepname = wep_name(DESC_YOUR);
             if (!msg.empty())
             {
+                msg = maybe_pick_random_substring(msg);
                 msg = replace_all(msg, "@Your_weapon@", wepname);
                 msg = replace_all(msg, "@The_weapon@", wepname);
             }
