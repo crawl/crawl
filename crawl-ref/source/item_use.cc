@@ -2900,6 +2900,15 @@ void read_scroll(int slot)
         case SCR_ENCHANT_WEAPON_I:
         case SCR_ENCHANT_WEAPON_II:
         case SCR_ENCHANT_WEAPON_III:
+            if (you.weapon() && is_weapon(*you.weapon())
+                && !you.weapon()->cursed()
+                && (is_artefact(*you.weapon())
+                    || you.weapon()->base_type != OBJ_WEAPONS))
+            {
+                mpr("This weapon cannot be enchanted.");
+                return;
+            }
+        // Fall-through.
         case SCR_VORPALISE_WEAPON:
             if (!you.weapon() || !is_weapon(*you.weapon()))
             {
