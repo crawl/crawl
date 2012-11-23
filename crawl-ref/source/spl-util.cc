@@ -1311,6 +1311,9 @@ bool spell_no_hostile_in_range(spell_type spell)
         beam.foe_info.dont_stop = true;
         beam.attitude = ATT_FRIENDLY;
         beam.can_see_invis = you.can_see_invisible();
+#ifdef DEBUG_DIAGNOSTICS
+        beam.quiet_debug = true;
+#endif
         for (radius_iterator ri(you.pos(), range, C_ROUND, you.get_los());
              ri; ++ri)
         {
