@@ -479,7 +479,10 @@ bool bolt::can_affect_actor(const actor *act) const
         // Note: this is done for balance, even if it hurts realism a bit.
         // It is arcane knowledge which wall patterns will cause lightning
         // to bounce thrice, double damage for ordinary bounces is enough.
-        dprf(DIAG_BEAM, "skipping beam hit, affected them twice already");
+#ifdef DEBUG_DIAGNOSTICS
+        if (!quiet_debug)
+            dprf(DIAG_BEAM, "skipping beam hit, affected them twice already");
+#endif
         return false;
     }
     // If there's a function that checks whether an actor is affected,
@@ -705,6 +708,10 @@ void bolt::initialise_fire()
     }
 
 #ifdef DEBUG_DIAGNOSTICS
+    // Not a "real" tracer, merely a range/reachability check.
+    if (quiet_debug)
+        return;
+
     dprf(DIAG_BEAM, "%s%s%s [%s] (%d,%d) to (%d,%d): "
           "gl=%d col=%d flav=%d hit=%d dam=%dd%d range=%d",
           (is_beam) ? "beam" : "missile",
@@ -5669,7 +5676,11 @@ bolt::bolt() : origin_spell(SPELL_NO_SPELL),
                is_big_cloud(false), aimed_at_spot(false), aux_source(),
                affects_nothing(false), affects_items(true), effect_known(true),
                draw_delay(15), special_explosion(NULL), animate(true),
-               ac_rule(AC_NORMAL), range_funcs(),
+               ac_rule(AC_NORMAL),
+#ifdef DEBUG_DIAGNOSTICD
+               quier_debug(false),
+#endif
+               range_funcs(),
                damage_funcs(), hit_funcs(), aoe_funcs(), affect_func(NULL),
                obvious_effect(false), seen(false), heard(false),
                path_taken(), extra_range_used(0), is_tracer(false),
