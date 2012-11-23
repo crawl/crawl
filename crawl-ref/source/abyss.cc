@@ -927,16 +927,10 @@ static void _abyss_shift_level_contents_around_player(
     recompute_saved_abyss_features();
 
     ASSERT(radius >= LOS_RADIUS);
-#ifdef WIZARD
     // This should only really happen due to wizmode blink/movement.
-    if (!map_bounds_with_margin(source_centre, radius))
-        mprf("source_centre(%d, %d) outside map radius %d", source_centre.x, source_centre.y, radius);
-    if (!map_bounds_with_margin(target_centre, radius))
-        mprf("target_centre(%d, %d) outside map radius %d", target_centre.x, target_centre.y, radius);
-#else
-    ASSERT(map_bounds_with_margin(source_centre, radius));
-    ASSERT(map_bounds_with_margin(target_centre, radius));
-#endif
+    // 1KB: ... yet at least Xom "swap with monster" triggers it.
+    //ASSERT(map_bounds_with_margin(source_centre, radius));
+    //ASSERT(map_bounds_with_margin(target_centre, radius));
 
     _abyss_identify_area_to_shift(source_centre, radius,
                                   &abyss_destruction_mask);
