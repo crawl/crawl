@@ -436,6 +436,11 @@ void TilesFramework::push_crt_menu(string tag)
     finish_message();
 }
 
+bool TilesFramework::is_in_crt_menu()
+{
+    return !m_menu_stack.empty() && m_menu_stack.back().menu == NULL;
+}
+
 void TilesFramework::pop_menu()
 {
     if (m_menu_stack.empty()) return;
