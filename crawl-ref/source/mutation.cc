@@ -1209,6 +1209,23 @@ static const char* _stat_mut_desc(mutation_type mut, bool gain)
     return stat_desc(stat, positive ? SD_INCREASE : SD_DECREASE);
 }
 
+static bool _undead_rot()
+{
+    if (you.is_undead == US_SEMI_UNDEAD)
+    {
+        switch (you.hunger_state)
+        {
+        case HS_SATIATED:  return !one_chance_in(3);
+        case HS_FULL:      return coinflip();
+        case HS_VERY_FULL: return one_chance_in(3);
+        case HS_ENGORGED:  return false;
+        default: return true;
+        }
+    }
+
+    return you.is_undead;
+}
+
 bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
             bool force_mutation, bool god_gift, bool stat_gain_potion,
             bool demonspawn, bool no_rot, bool temporary)
@@ -1262,7 +1279,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         }
     }
 
-    bool rotting = you.is_undead;
+    bool rotting = _undead_rot();
 
     if (you.is_undead == US_SEMI_UNDEAD)
     {
@@ -1276,18 +1293,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
             if (you.hunger_state >= HS_SATIATED)
                 rotting = false;
         }
-        else
-        {
-            // Else, chances depend on hunger state.
-            switch (you.hunger_state)
-            {
-            case HS_SATIATED:  rotting = !one_chance_in(3); break;
-            case HS_FULL:      rotting = coinflip();        break;
-            case HS_VERY_FULL: rotting = one_chance_in(3);  break;
-            case HS_ENGORGED:  rotting = false;             break;
-            default: ;
-            }
-        }
+        // Else, chances depend on hunger state.
     }
 
     // Undead bodies don't mutate, they fall apart. -- bwr
@@ -1628,6 +1634,9 @@ bool delete_mutation(mutation_type which_mutation, const string &reason,
                 return false;
             }
         }
+
+        if (_undead_rot())
+            return false;
     }
 
     if (which_mutation == RANDOM_MUTATION
