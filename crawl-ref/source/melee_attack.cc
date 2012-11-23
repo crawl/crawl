@@ -4445,7 +4445,14 @@ void melee_attack::mons_apply_attack_flavour()
 
     case AF_PARALYSE:
     {
-        // Only wasps at the moment.
+        // Only wasps at the moment, so Zin vitalisation
+        // protects from the paralysis and slow.
+        if (you.duration[DUR_DIVINE_STAMINA] > 0)
+        {
+            mpr("Your divine stamina protects you from poison!");
+            break;
+        }
+
         if (attacker->type == MONS_RED_WASP || one_chance_in(3))
             defender->poison(attacker, coinflip() ? 2 : 1);
 
