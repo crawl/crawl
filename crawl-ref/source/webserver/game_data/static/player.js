@@ -130,19 +130,21 @@ function ($, comm, enums, map_knowledge, messages) {
     {
         $("#stats_titleline").text(player.name + " the " + player.title);
         $("#stats_wizmode").text(player.wizard ? "*WIZARD*" : "");
+
         var species_god = player.species;
         if (player.god != "")
-        {
             species_god += " of " + player.god;
+        if (player.piety_rank > 0)
+        {
             $("#stats_piety").text(repeat_string("*", player.piety_rank)
                                    + repeat_string(".", 6-player.piety_rank));
         }
         else
-        {
             $("#stats_piety").text("");
-        }
         $("#stats_species_god").text(species_god);
         $("#stats_piety").toggleClass("penance", !!player.penance);
+        $("#stats_piety").toggleClass("monk", player.god == "");
+
         for (var i = 0; i < simple_stats.length; ++i)
         {
             $("#stats_" + simple_stats[i]).text(player[simple_stats[i]]);
