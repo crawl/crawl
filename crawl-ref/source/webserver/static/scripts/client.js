@@ -870,6 +870,8 @@ function (exports, $, key_conversion, chat, comm) {
             return false; // doesn't support binary frames
         if (b.chrome && b.version.match("^19\."))
             return false; // buggy Blob builder
+        if (b.safari)
+            return false;
         return true;
     }
 
