@@ -94,6 +94,7 @@ TilesFramework tiles;
 TilesFramework::TilesFramework()
     : m_crt_mode(CRT_NORMAL),
       m_controlled_from_web(false),
+      m_last_ui_state(UI_INIT),
       m_view_loaded(false),
       m_next_view_tl(0, 0),
       m_next_view_br(-1, -1),
@@ -469,7 +470,6 @@ void TilesFramework::set_ui_state(WebtilesUIState state)
     if (m_ui_state == state) return;
 
     m_ui_state = state;
-    _send_ui_state(state);
 }
 
 void TilesFramework::update_input_mode(mouse_mode mode)
@@ -1373,6 +1373,7 @@ void TilesFramework::_send_everything()
 
     // UI State
     _send_ui_state(m_ui_state);
+    m_last_ui_state = m_ui_state;
 
     // Menus
     json_open_object();
@@ -1448,6 +1449,12 @@ void TilesFramework::cgotoxy(int x, int y, GotoRegion region)
 void TilesFramework::redraw()
 {
     if (!has_receivers()) return;
+
+    if (m_last_ui_state != m_ui_state)
+    {
+        _send_ui_state(m_ui_state);
+        m_last_ui_state = m_ui_state;
+    }
 
     m_text_crt.send();
     m_text_menu.send();
