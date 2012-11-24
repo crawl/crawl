@@ -1002,8 +1002,7 @@ enum chunk_drop_type
     ADC_YES,
 };
 
-// When adding new delays, update their names in delay.cc, or bad things will
-// happen.
+// When adding new delays, update their names in delay.cc
 enum delay_type
 {
     DELAY_NOT_DELAYED,
@@ -1815,7 +1814,7 @@ enum KeymapContext
 {
     KMC_DEFAULT,         // For no-arg getchm(), must be zero.
     KMC_LEVELMAP,        // When in the 'X' level map
-    KMC_TARGETTING,       // Only during 'x' and other targetting modes
+    KMC_TARGETTING,      // Only during 'x' and other targetting modes
     KMC_CONFIRM,         // When being asked y/n/q questions
     KMC_MENU,            // For menus
 #ifdef USE_TILE
