@@ -2335,7 +2335,7 @@ int monster_die(monster* mons, killer_type killer,
         take_note(Note(NOTE_ALLY_DEATH, 0, 0, mons->mname.c_str()));
     else if (mons_base_type(mons) == MONS_KRAKEN)
     {
-        if (_destroy_tentacles(mons) && !in_transit)
+        if (_destroy_tentacles(mons) && !in_transit && you.see_cell(mons->pos()))
             mpr("The dead kraken's tentacles slide back into the water.");
     }
     else if ((mons->type == MONS_KRAKEN_TENTACLE_SEGMENT
