@@ -134,7 +134,8 @@ function ($, comm, enums, map_knowledge, messages) {
         var species_god = player.species;
         if (player.god != "")
             species_god += " of " + player.god;
-        if (player.piety_rank > 0)
+        if (player.piety_rank > 0 ||
+            (player.god != "" && player.god != "Xom"))
         {
             $("#stats_piety").text(repeat_string("*", player.piety_rank)
                                    + repeat_string(".", 6-player.piety_rank));
