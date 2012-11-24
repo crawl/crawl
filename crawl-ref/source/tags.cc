@@ -2435,7 +2435,7 @@ static void tag_construct_level(writer &th)
 
     marshallInt(th, env.level_flags);
 
-    marshallInt(th, you.elapsed_time);
+    marshallInt(th, you.on_current_level ? you.elapsed_time : env.elapsed_time);
     marshallCoord(th, you.pos());
 
     // Map grids.
