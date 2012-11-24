@@ -27,6 +27,7 @@ enum WebtilesCRTMode
 
 enum WebtilesUIState
 {
+    UI_INIT = -1,
     UI_NORMAL,
     UI_CRT,
     UI_VIEW_MAP,
@@ -220,6 +221,7 @@ protected:
     vector<MenuInfo> m_menu_stack;
 
     WebtilesUIState m_ui_state;
+    WebtilesUIState m_last_ui_state;
 
     unsigned int m_last_tick_redraw;
     bool m_need_redraw;
