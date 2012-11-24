@@ -1,5 +1,5 @@
-define(["jquery", "comm", "./util"],
-function ($, comm, util) {
+define(["jquery", "comm", "./util", "./settings"],
+function ($, comm, util, settings) {
     var messages = [];
     var old_scroll_top;
 
@@ -64,11 +64,18 @@ function ($, comm, util) {
             msg_elem.append(" ");
             msg_elem.append(repeats);
         }
-        $("#messages_container")
-            .stop(true, false)
-            .animate({
-            scrollTop: $("#messages").height()
-        }, 100);
+        if (settings.get("animations"))
+        {
+            $("#messages_container")
+                .stop(true, false)
+                .animate({
+                    scrollTop: $("#messages").height()
+                }, 100);
+        }
+        else
+        {
+            $("#messages_container").scrollTop($("#messages").height());
+        }
     }
 
     function rollback(count)
