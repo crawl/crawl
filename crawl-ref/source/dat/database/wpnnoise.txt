@@ -527,7 +527,7 @@ _singing_no-low_tension_
 
 @The_weapon@ breaks into glorious song!
 
-@The_weapon@ sings[ |off-key].
+@The_weapon@ sings[|off-key].
 
 @The_weapon@ [sings|whistles] [loudly|merrily].
 
