@@ -636,7 +636,8 @@ void TilesFramework::_send_player(bool force_full)
     {
         _update_int(force_full, c.zot_points, you.zot_points, "zp");
     }
-    _update_int(force_full, c.elapsed_time, you.elapsed_time, "time");
+    if (you.running == 0) // Don't update during running/resting
+        _update_int(force_full, c.elapsed_time, you.elapsed_time, "time");
 
     const PlaceInfo& place = you.get_place_info();
     std::string short_name = branches[place.branch].shortname;
