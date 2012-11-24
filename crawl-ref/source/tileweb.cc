@@ -474,7 +474,7 @@ void TilesFramework::set_ui_state(WebtilesUIState state)
 
 void TilesFramework::update_input_mode(mouse_mode mode)
 {
-    webtiles_send_messages();
+    redraw();
 
     json_open_object();
     json_write_string("msg", "input_mode");
