@@ -4232,7 +4232,7 @@ int player_effect_angry()
 
 // Returns whether the player has the effect of the amulet from a
 // non-amulet source.
-bool extrinsic_amulet_effect(jewellery_type amulet)
+static bool _extrinsic_amulet_effect(jewellery_type amulet)
 {
     switch (amulet)
     {
@@ -4253,7 +4253,7 @@ bool extrinsic_amulet_effect(jewellery_type amulet)
 
 bool wearing_amulet(jewellery_type amulet, bool calc_unid, bool ignore_extrinsic)
 {
-    if (!ignore_extrinsic && extrinsic_amulet_effect(amulet))
+    if (!ignore_extrinsic && _extrinsic_amulet_effect(amulet))
         return true;
 
     if (!player_wearing_slot(EQ_AMULET))
