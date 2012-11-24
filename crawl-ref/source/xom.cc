@@ -2607,8 +2607,8 @@ static void _xom_zero_miscast()
                            "immediately jumps back in!");
     }
 
-    ////////////////////////////////////////////
-    // Body, player spcies, transformations, etc
+    //////////////////////////////////////////////
+    // Body, player species, transformations, etc.
 
     if (you.species == SP_MUMMY && you_tran_can_wear(EQ_BODY_ARMOUR))
     {
