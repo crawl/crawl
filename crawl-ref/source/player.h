@@ -180,7 +180,7 @@ public:
 
   god_type religion;
   string god_name;
-  string jiyva_second_name;      // Random second name of Jiyva
+  string jiyva_second_name;       // Random second name of Jiyva
   uint8_t piety;
   uint8_t piety_hysteresis;       // amount of stored-up docking
   uint8_t gift_timeout;
@@ -213,7 +213,7 @@ public:
   FixedVector<bool, NUM_SPELLS>      seen_spell;
   FixedVector<uint32_t, NUM_WEAPONS> seen_weapon;
   FixedVector<uint32_t, NUM_ARMOURS> seen_armour;
-  FixedBitVector<NUM_MISCELLANY>      seen_misc;
+  FixedBitVector<NUM_MISCELLANY>     seen_misc;
   uint8_t                            octopus_king_rings;
 
   uint8_t normal_vision;        // how far the species gets to see
@@ -235,7 +235,7 @@ public:
   //
   // In other words, the spell table contains hard links and the ability
   // table contains soft links.
-  FixedVector<int, 52>  spell_letter_table;   // ref to spell by slot
+  FixedVector<int, 52>           spell_letter_table;   // ref to spell by slot
   FixedVector<ability_type, 52>  ability_letter_table; // ref to abil by enum
 
   // Maps without allow_dup that have been already used.
@@ -301,7 +301,7 @@ public:
   short travel_x, travel_y;
   level_id travel_z;
 
-  runrest running;            // Nonzero if running/traveling.
+  runrest running;                    // Nonzero if running/traveling.
   bool received_weapon_warning;
 
   delay_queue_type delay_queue;       // pending actions
@@ -344,7 +344,7 @@ public:
 
   int shield_blocks;         // number of shield blocks since last action
 
-  int           old_hunger;  // used for hunger delta-meter (see output.cc)
+  int old_hunger;            // used for hunger delta-meter (see output.cc)
 
   // Set when the character is going to a new level, to guard against levgen
   // failures
@@ -381,7 +381,7 @@ public:
   package *save;
 
 protected:
-    FixedVector<PlaceInfo, NUM_BRANCHES>             branch_info;
+    FixedVector<PlaceInfo, NUM_BRANCHES> branch_info;
 
 public:
     player();
@@ -482,7 +482,7 @@ public:
 
     // actor
     int mindex() const;
-    int       get_experience_level() const;
+    int get_experience_level() const;
     actor_type atype() const { return ACT_PLAYER; }
     monster* as_monster() { return NULL; }
     player* as_player() { return this; }
