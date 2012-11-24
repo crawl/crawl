@@ -22,7 +22,6 @@ class writer;
 void remove_markers_and_listeners_at(coord_def p);
 
 bool marker_vetoes_operation(const char *op);
-bool feature_marker_at(const coord_def &pos, dungeon_feature_type feat);
 coord_def find_marker_position_by_prop(const string &prop,
                                        const string &expected = "");
 vector<coord_def> find_marker_positions_by_prop(const string &prop,

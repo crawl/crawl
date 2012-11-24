@@ -134,8 +134,6 @@ bool item_is_rune(const item_def &item, rune_type which_rune = NUM_RUNE_TYPES);
 bool item_is_unique_rune(const item_def &item);
 bool item_is_orb(const item_def &orb);
 bool item_is_horn_of_geryon(const item_def &item);
-
-bool item_is_corpse(const item_def &item);
 bool item_is_spellbook(const item_def &item);
 
 

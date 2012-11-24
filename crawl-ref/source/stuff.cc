@@ -120,7 +120,7 @@ void cio_cleanup()
 }
 
 // Clear some globally defined variables.
-void clear_globals_on_exit()
+static void _clear_globals_on_exit()
 {
     clear_rays_on_exit();
     clear_zap_info_on_exit();
@@ -220,7 +220,7 @@ NORETURN void end(int exit_code, bool print_error, const char *format, ...)
 
     cio_cleanup();
     msg::deinitialise_mpr_streams();
-    clear_globals_on_exit();
+    _clear_globals_on_exit();
     databaseSystemShutdown();
 #ifdef DEBUG_PROPS
     dump_prop_accesses();

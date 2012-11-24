@@ -2012,11 +2012,6 @@ bool item_is_horn_of_geryon(const item_def &item)
             && item.sub_type == MISC_HORN_OF_GERYON);
 }
 
-bool item_is_corpse(const item_def &item)
-{
-    return (item.base_type == OBJ_CORPSES && item.sub_type == CORPSE_BODY);
-}
-
 bool item_is_spellbook(const item_def &item)
 {
     return (item.base_type == OBJ_BOOKS && item.sub_type != BOOK_MANUAL

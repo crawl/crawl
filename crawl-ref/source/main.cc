@@ -377,7 +377,7 @@ static void _launch_game_loop()
              && !crawl_state.seen_hups);
 }
 
-static void _launch_game()
+static NORETURN void _launch_game()
 {
     const bool game_start = startup_step();
 
@@ -448,8 +448,6 @@ static void _launch_game()
     cursor_control ccon(!Options.use_fake_player_cursor);
     while (true)
         _input();
-
-    clear_globals_on_exit();
 }
 
 static void _show_commandline_options_help()

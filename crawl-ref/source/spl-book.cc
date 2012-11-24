@@ -356,7 +356,7 @@ int spell_rarity(spell_type which_spell)
     return rarity;
 }
 
-bool is_valid_spell_in_book(const item_def &book, int spell)
+static bool _is_valid_spell_in_book(const item_def &book, int spell)
 {
     return which_spell_in_book(book, spell) != SPELL_NO_SPELL;
 }
@@ -612,7 +612,7 @@ static void _index_book(item_def& book, spells_to_books &book_hash,
     int spells_in_book = 0;
     for (int j = 0; j < SPELLBOOK_SIZE; j++)
     {
-        if (!is_valid_spell_in_book(book, j))
+        if (!_is_valid_spell_in_book(book, j))
             continue;
 
         const spell_type spell = which_spell_in_book(book, j);
@@ -1244,7 +1244,7 @@ int count_rod_spells(const item_def &item, bool need_id)
         return 0;
 
     int nspel = 0;
-    while (nspel < SPELLBOOK_SIZE && is_valid_spell_in_book(item, nspel))
+    while (nspel < SPELLBOOK_SIZE && _is_valid_spell_in_book(item, nspel))
         ++nspel;
 
     return nspel;
@@ -1297,7 +1297,7 @@ int rod_spell(int rod)
 
     const int idx = letter_to_index(keyin);
 
-    if ((idx >= SPELLBOOK_SIZE) || !is_valid_spell_in_book(irod, idx))
+    if ((idx >= SPELLBOOK_SIZE) || !_is_valid_spell_in_book(irod, idx))
     {
         canned_msg(MSG_HUH);
         return -1;
