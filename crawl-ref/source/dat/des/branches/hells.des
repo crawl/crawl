@@ -1226,6 +1226,7 @@ TAGS:    dis_divider no_vmirror no_rotate
 KMONS:   1 = hell sentinel
 KMONS:   2 = iron dragon
 KFEAT:   2 = deep_water
+KFEAT:   w = deep_water
 KMASK:   w = no_monster_gen
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv++++vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
@@ -1246,6 +1247,7 @@ TAGS:    dis_divider no_vmirror no_rotate
 KMONS:   1 = hell sentinel
 KMONS:   2 = iron dragon
 KFEAT:   2 = deep_water
+KFEAT:   w = deep_water
 KMASK:   w = no_monster_gen
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv++++vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
