@@ -1,6 +1,7 @@
 define(["jquery", "comm", "./util", "./settings"],
 function ($, comm, util, settings) {
     var messages = [];
+    var more = false;
     var old_scroll_top;
 
     function hide()
@@ -91,7 +92,9 @@ function ($, comm, util, settings) {
             rollback(msg.rollback);
         if (msg.old_msgs)
             rollback(msg.old_msgs);
-        $("#more").toggle(!!msg.more);
+        if ("more" in msg)
+            more = msg.more;
+        $("#more").toggle(more);
         if (msg.messages)
         {
             for (var i = 0; i < msg.messages.length; ++i)
@@ -149,6 +152,7 @@ function ($, comm, util, settings) {
     $(document).off("game_init.messages")
         .on("game_init.messages", function () {
             messages = [];
+            more = false;
         });
 
     return {

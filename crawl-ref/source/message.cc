@@ -766,7 +766,7 @@ public:
 message_store buffer;
 
 #ifdef USE_TILE_WEB
-bool _more = false;
+bool _more = false, _last_more = false;
 
 void webtiles_send_messages()
 {
@@ -777,8 +777,11 @@ void webtiles_send_last_messages(int n)
     tiles.json_open_object();
     tiles.json_write_string("msg", "msgs");
     tiles.json_treat_as_empty();
-    if (_more)
-        tiles.json_write_bool("more", true);
+    if (_more != _last_more)
+    {
+        tiles.json_write_bool("more", _more);
+        _last_more = _more;
+    }
     buffer.send(n);
     tiles.json_close_object(true);
     tiles.finish_message();
@@ -1451,10 +1454,10 @@ static void readkey_more(bool user_forced)
     if (autoclear_more)
         return;
     int keypress;
-    mouse_control mc(MOUSE_MODE_MORE);
 #ifdef USE_TILE_WEB
     unwind_bool unwind_more(_more, true);
 #endif
+    mouse_control mc(MOUSE_MODE_MORE);
 
     do
         keypress = getch_ck();
