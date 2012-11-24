@@ -115,7 +115,7 @@ static duration_def duration_data[] =
       LIGHTGREY, "Tornado", "tornado",
       "You are in the eye of a mighty hurricane." },
     { DUR_LIQUEFYING, false,
-      YELLOW, "Liquid", "liquefying",
+      LIGHTBLUE, "Liquid", "liquefying",
       "The ground has become liquefied beneath your feet." },
     { DUR_HEROISM, false,
       LIGHTBLUE, "Hero", "heroism", "You possess the skills of a mighty hero." },
@@ -130,7 +130,7 @@ static duration_def duration_data[] =
     { DUR_TORNADO_COOLDOWN, false,
       YELLOW, "Tornado", "", "" ,},
     { DUR_DISJUNCTION, true,
-      YELLOW, "Disjoin", "disjoining", "You are disjoining your surroundings." },
+      BLUE, "Disjoin", "disjoining", "You are disjoining your surroundings." },
 };
 
 static int duration_index[NUM_DURATIONS];
