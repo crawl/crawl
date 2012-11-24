@@ -134,8 +134,16 @@ function ($, comm, enums, map_knowledge, messages) {
         var species_god = player.species;
         if (player.god != "")
             species_god += " of " + player.god;
-        if (player.piety_rank > 0 ||
-            (player.god != "" && player.god != "Xom"))
+        if (player.god == "Xom")
+        {
+            if (player.piety_rank == 1)
+                $("#stats_piety").text("- getting BORED");
+            else if (player.piety_rank == 2)
+                $("#stats_piety").text("- BORED");
+            else
+                $("#stats_piety").text("");
+        }
+        else if (player.piety_rank > 0 || player.god != "")
         {
             $("#stats_piety").text(repeat_string("*", player.piety_rank)
                                    + repeat_string(".", 6-player.piety_rank));
