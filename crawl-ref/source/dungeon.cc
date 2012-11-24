@@ -4708,9 +4708,7 @@ static void _vault_grid_mapspec(vault_placement &place, const coord_def &where,
     if (f.trap.get())
     {
         trap_spec* spec = f.trap.get();
-        if (spec && spec->tr_type == TRAP_INDEPTH)
-            place_specific_trap(where, random_trap_for_place());
-        else if (spec)
+        if (spec)
             _place_specific_trap(where, spec);
 
         // f.feat == 1 means trap is generated known.

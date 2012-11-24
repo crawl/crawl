@@ -533,8 +533,6 @@ int str_to_trap(const string &s)
     // allow a couple of synonyms
     if (tspec == "random" || tspec == "any")
         return TRAP_RANDOM;
-    else if (tspec == "suitable")
-        return TRAP_INDEPTH;
     else if (tspec == "nonteleport" || tspec == "noteleport"
              || tspec == "nontele" || tspec == "notele")
     {

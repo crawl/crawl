@@ -3330,7 +3330,9 @@ enum trap_type                         // env.trap_type[]
     NUM_TRAPS,                         // must remain last 'regular' member {dlb}
     TRAP_MAX_REGULAR = TRAP_SHAFT,
     TRAP_UNASSIGNED = 100,
-    TRAP_INDEPTH,                      // Level-appropriate trap.
+#if TAG_MAJOR_VERSION == 34
+    TRAP_UNUSED1,                      // was TRAP_INDEPTH
+#endif
     TRAP_NONTELEPORT,
     TRAP_RANDOM,
 };
