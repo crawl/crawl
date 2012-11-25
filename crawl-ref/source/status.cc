@@ -46,8 +46,6 @@ static duration_def duration_data[] =
       MAGENTA, "cTele", "", "You can control teleportations." },
     { DUR_DEATH_CHANNEL, true,
       MAGENTA, "DChan", "death channel", "You are channeling the dead." },
-    { DUR_DEFLECT_MISSILES, true,
-      MAGENTA, "DMsl", "deflect missiles", "You deflect missiles." },
     { DUR_DIVINE_STAMINA, true,
       WHITE, "Vit", "vitalised", "You are divinely vitalised." },
     { DUR_DIVINE_VIGOUR, false,
@@ -76,8 +74,6 @@ static duration_def duration_data[] =
       MAGENTA, "Petr", "petrifying", "You are turning to stone." },
     { DUR_JELLY_PRAYER, false,
       WHITE, "Pray", "praying", "You are praying." },
-    { DUR_REPEL_MISSILES, true,
-      BLUE, "RMsl", "repel missiles", "You are protected from missiles." },
     { DUR_RESISTANCE, true,
       LIGHTBLUE, "Resist", "", "You resist elements." },
     { DUR_SLAYING, false,
@@ -224,6 +220,7 @@ static void _describe_poison(status_info* inf);
 static void _describe_transform(status_info* inf);
 static void _describe_stat_zero(status_info* inf, stat_type st);
 static void _describe_terrain(status_info* inf);
+static void _describe_missiles(status_info* inf);
 
 bool fill_status_info(int status, status_info* inf)
 {
@@ -429,14 +426,8 @@ bool fill_status_info(int status, status_info* inf)
         }
         break;
 
-    case DUR_REPEL_MISSILES:
-        // no status light or short text when also deflecting
-        if (you.duration[DUR_DEFLECT_MISSILES])
-        {
-            inf->light_colour = 0;
-            inf->light_text   = "";
-            inf->short_text   = "";
-        }
+    case STATUS_MISSILES:
+        _describe_missiles(inf);
         break;
 
     case STATUS_MANUAL:
@@ -942,4 +933,34 @@ static void _describe_terrain(status_info* inf)
     default:
         ;
     }
+}
+
+static void _describe_missiles(status_info* inf)
+{
+    const int level = you.missile_deflection();
+    if (!level)
+        return;
+
+    bool expiring;
+    if (level > 1)
+    {
+        inf->light_colour = MAGENTA;
+        inf->light_text   = "DMsl";
+        inf->short_text   = "deflect missiles";
+        inf->long_text    = "You deflect missiles.";
+        expiring = dur_expiring(DUR_DEFLECT_MISSILES);
+    }
+    else
+    {
+        bool perm = (player_mutation_level(MUT_DISTORTION_FIELD) == 3 ||
+                     (!you.suppressed() && scan_artefacts(ARTP_RMSL, true)));
+        inf->light_colour = perm ? WHITE : BLUE;
+        inf->light_text   = "RMsl";
+        inf->short_text   = "repel missiles";
+        inf->long_text    = "You repel missiles.";
+        expiring = (!perm && dur_expiring(DUR_REPEL_MISSILES));
+    }
+
+    inf->light_colour = _dur_colour(inf->light_colour, expiring);
+    _mark_expiring(inf, expiring);
 }
