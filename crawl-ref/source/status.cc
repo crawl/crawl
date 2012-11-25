@@ -954,7 +954,7 @@ static void _describe_missiles(status_info* inf)
     {
         bool perm = (player_mutation_level(MUT_DISTORTION_FIELD) == 3 ||
                      (!you.suppressed() && scan_artefacts(ARTP_RMSL, true)));
-        inf->light_colour = perm ? WHITE : BLUE;
+        inf->light_colour = BLUE;
         inf->light_text   = "RMsl";
         inf->short_text   = "repel missiles";
         inf->long_text    = "You repel missiles.";
