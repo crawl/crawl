@@ -1083,9 +1083,9 @@
 { MUT_AUGMENTATION,            0,  3, false, false, false,
   "augmentation",
 
-  {"Your magical and physical power is slightly enhanced as your life falls.",
-   "Your magical and physical power is enhanced as your life falls.",
-   "Your magical and physical power is greatly enhanced as your life falls."},
+  {"Your magical and physical power is slightly enhanced at high health.",
+   "Your magical and physical power is enhanced at high health.",
+   "Your magical and physical power is greatly enhanced at high health."},
 
   {"You feel power flowing into your body.",
    "You feel power rushing into your body.",
