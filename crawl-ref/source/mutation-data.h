@@ -1212,8 +1212,8 @@
   NULL,
 
   {"You are partially covered in icy blue scales (AC +1).",
-   "You are mostly covered in icy blue scales (AC +2, EV -1).",
-   "You are completely covered in icy blue scales (AC +3, EV -1, rC+)."},
+   "You are mostly covered in icy blue scales (AC +3, EV -1).",
+   "You are completely covered in icy blue scales (AC +4, EV -1, rC+)."},
 
   {"Icy blue scales grow over part of your body.",
    "Icy blue scales spread over more of your body.",
@@ -1248,8 +1248,8 @@
   NULL,
 
   {"You are partially covered in large bone plates (AC +2, SH +2).",
-   "You are mostly covered in large bone plates (AC +3, SH +3).",
-   "You are completely covered in large bone plates (AC +4, SH +4)."},
+   "You are mostly covered in large bone plates (AC +3, SH +4).",
+   "You are completely covered in large bone plates (AC +4, SH +6)."},
 
   {"Large bone plates grow over parts of your arms.",
    "Large bone plates spread over more of your arms.",
@@ -1266,8 +1266,8 @@
   NULL,
 
   {"You are partially covered in molten scales (AC +1).",
-   "You are mostly covered in molten scales (AC +2, EV -1).",
-   "You are completely covered in molten scales (AC +3, EV -1, rF+)."},
+   "You are mostly covered in molten scales (AC +3, EV -1).",
+   "You are completely covered in molten scales (AC +4, EV -1, rF+)."},
 
   {"Molten scales grow over part of your body.",
    "Molten scales spread over more of your body.",
@@ -1301,9 +1301,9 @@
 { MUT_RUGGED_BROWN_SCALES,              2,  3, false,  true, true,
   NULL,
 
-  {"You are partially covered in rugged brown scales (AC +2, +3% HP).",
+  {"You are partially covered in rugged brown scales (AC +1, +3% HP).",
    "You are mostly covered in rugged brown scales (AC +2, +5% HP).",
-   "You are completely covered in rugged brown scales (AC +2, +7% HP)."},
+   "You are completely covered in rugged brown scales (AC +3, +7% HP)."},
 
   {"Rugged brown scales grow over part of your body.",
    "Rugged brown scales spread over more of your body.",
@@ -1319,9 +1319,9 @@
 { MUT_SLIMY_GREEN_SCALES,            2,  3, false, true, true,
   NULL,
 
-  {"You are partially covered in slimy green scales (AC +1).",
-   "You are mostly covered in slimy green scales (AC +2).",
-   "You are completely covered in slimy green scales (AC +3, rPois)."},
+  {"You are partially covered in slimy green scales (AC +2).",
+   "You are mostly covered in slimy green scales (AC +3).",
+   "You are completely covered in slimy green scales (AC +4, rPois)."},
 
   {"Slimy green scales grow over part of your body.",
    "Slimy green scales spread over more of your body.",
@@ -1337,9 +1337,9 @@
 { MUT_THIN_METALLIC_SCALES,            2,  3, false, true, true,
   NULL,
 
-  {"You are partially covered in thin metallic scales (AC +1).",
-   "You are mostly covered in thin metallic scales (AC +2).",
-   "You are completely covered in thin metallic scales (AC +3, rElec)."},
+  {"You are partially covered in thin metallic scales (AC +2).",
+   "You are mostly covered in thin metallic scales (AC +3).",
+   "You are completely covered in thin metallic scales (AC +4, rElec)."},
 
   {"Thin metallic scales grow over part of your body.",
    "Thin metallic scales spread over more of your body.",
@@ -1355,9 +1355,9 @@
 { MUT_THIN_SKELETAL_STRUCTURE,          2,  3, false,  true, false,
   NULL,
 
-  {"You have a somewhat thin skeletal structure (Dex +2, Str -1, Stlth).",
-   "You have a moderately thin skeletal structure (Dex +4, Str -2, Stlth).",
-   "You have an unnaturally thin skeletal structure (Dex +6, Str -3, Stlth)."},
+  {"You have a somewhat thin skeletal structure (Dex +2, Stlth).",
+   "You have a moderately thin skeletal structure (Dex +4, Str -1, Stlth).",
+   "You have an unnaturally thin skeletal structure (Dex +6, Str -2, Stlth)."},
 
   {"Your bones become slightly less dense.",
    "Your bones become somewhat less dense.",
@@ -1373,9 +1373,9 @@
 { MUT_YELLOW_SCALES,                    2,  3, false,  true, true,
   NULL,
 
-  {"You are partially covered in yellow scales (AC +1).",
-   "You are mostly covered in yellow scales (AC +2).",
-   "You are completely covered in yellow scales (AC +3, rCorr)."},
+  {"You are partially covered in yellow scales (AC +2).",
+   "You are mostly covered in yellow scales (AC +3).",
+   "You are completely covered in yellow scales (AC +4, rCorr)."},
 
   {"Yellow scales grow over part of your body.",
    "Yellow scales spread over more of your body.",
