@@ -440,6 +440,13 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
             power /= 10;
         }
 
+        // Augmentation boosts spell power at high HP.
+        if (!fail_rate_check)
+        {
+            power *= 10 + 4 * augmentation_amount();
+            power /= 10;
+        }
+
         power = stepdown_value(power / 100, 50, 50, 150, 200);
     }
 
@@ -495,8 +502,6 @@ static int _spell_enhancement(unsigned int typeflags)
 
     if (player_effect_archmagi())
         enhanced++;
-
-    enhanced += augmentation_amount();
 
     // These are used in an exponential way, so we'll limit them a bit. -- bwr
     if (enhanced > 3)

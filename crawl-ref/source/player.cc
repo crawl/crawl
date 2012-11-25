@@ -4373,7 +4373,7 @@ int slaying_bonus(weapon_property_type which_affected, bool ranged)
     }
 
     ret += min(you.duration[DUR_SLAYING] / (13 * BASELINE_DELAY), 6);
-    ret += 3 * augmentation_amount();
+    ret += 4 * augmentation_amount();
 
     return ret;
 }
