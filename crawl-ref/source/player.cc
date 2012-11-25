@@ -2657,9 +2657,9 @@ int player_shield_class(void)
     }
 
     // mutations
-    // +2, +3, +4
+    // +2, +4, +6
     shield += (player_mutation_level(MUT_LARGE_BONE_PLATES) > 0
-               ? 100 + player_mutation_level(MUT_LARGE_BONE_PLATES) * 100
+               ? player_mutation_level(MUT_LARGE_BONE_PLATES) * 200
                : 0);
 
     return (shield + stat + 50) / 100;
@@ -6229,17 +6229,17 @@ int player::armour_class() const
           ? 100 + _mut_level(MUT_LARGE_BONE_PLATES, MUTACT_FULL) * 100 : 0;    // +2, +3, +4
     AC += _mut_level(MUT_ROUGH_BLACK_SCALES, MUTACT_FULL)
           ? 100 + _mut_level(MUT_ROUGH_BLACK_SCALES, MUTACT_FULL) * 300 : 0;   // +4, +7, +10
-    AC += _mut_level(MUT_RUGGED_BROWN_SCALES, MUTACT_FULL) ? 200 : 0;          // +2, +2, +2
-    AC += _mut_level(MUT_ICY_BLUE_SCALES, MUTACT_FULL)
-          ? _mut_level(MUT_ICY_BLUE_SCALES, MUTACT_FULL) * 100 : 0;            // +1, +2, +3
-    AC += _mut_level(MUT_MOLTEN_SCALES, MUTACT_FULL)
-          ? _mut_level(MUT_MOLTEN_SCALES, MUTACT_FULL) * 100 : 0;              // +1, +2, +3
+    AC += _mut_level(MUT_RUGGED_BROWN_SCALES, MUTACT_FULL) * 100;              // +1, +2, +3
+    AC += _mut_level(MUT_ICY_BLUE_SCALES, MUTACT_FULL) * 100 +
+          (_mut_level(MUT_ICY_BLUE_SCALES, MUTACT_FULL) > 1) ? 100 : 0;        // +1, +3, +4
+    AC += _mut_level(MUT_MOLTEN_SCALES, MUTACT_FULL) * 100 +
+          (_mut_level(MUT_MOLTEN_SCALES, MUTACT_FULL) > 1) ? 100 : 0;          // +1, +3, +4
     AC += _mut_level(MUT_SLIMY_GREEN_SCALES, MUTACT_FULL)
-          ? _mut_level(MUT_SLIMY_GREEN_SCALES, MUTACT_FULL) * 100 : 0;         // +1, +2, +3
+          ? 100 + _mut_level(MUT_SLIMY_GREEN_SCALES, MUTACT_FULL) * 100 : 0;   // +2, +3, +4
     AC += _mut_level(MUT_THIN_METALLIC_SCALES, MUTACT_FULL)
-          ? _mut_level(MUT_THIN_METALLIC_SCALES, MUTACT_FULL) * 100 : 0;       // +1, +2, +3
+          ? 100 + _mut_level(MUT_THIN_METALLIC_SCALES, MUTACT_FULL) * 100 : 0; // +2, +3, +4
     AC += _mut_level(MUT_YELLOW_SCALES, MUTACT_FULL)
-          ? _mut_level(MUT_YELLOW_SCALES, MUTACT_FULL) * 100 : 0;              // +1, +2, +3
+          ? 100 + _mut_level(MUT_YELLOW_SCALES, MUTACT_FULL) * 100 : 0;        // +2, +3, +4
 
     return (AC / 100);
 }
