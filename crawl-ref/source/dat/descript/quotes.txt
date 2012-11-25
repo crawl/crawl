@@ -1780,11 +1780,15 @@ rod of destruction
 
 <rod>
 %%%%
+rod of inaccuracy
+
+<rod>
+%%%%
 rod of striking
 
 <rod>
 %%%%
-rod of summoning
+rod of the swarm
 
 <rod>
 %%%%

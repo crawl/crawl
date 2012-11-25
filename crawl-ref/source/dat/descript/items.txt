@@ -1263,17 +1263,22 @@ rod of destruction
 
 This rod contains spells of mayhem and destruction.
 %%%%
+rod of inaccuracy
+
+This rod allows its wielder to fire a powerful but extremely inaccurate bolt
+of power.
+%%%%
 rod of striking
 
 This rod allows its wielder to strike foes from afar with force bolts.
 %%%%
-rod of summoning
+rod of the swarm
 
-This rod contains spells of summoning.
+This rod allows its wielder to summon a swarm of insects.
 %%%%
 rod of venom
 
-This rod contains offensive and defensive spells of poison.
+This rod contains offensive spells of poison.
 %%%%
 rod of warding
 
