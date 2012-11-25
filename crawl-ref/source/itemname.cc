@@ -1055,17 +1055,17 @@ static const char* rod_type_name(int type)
 {
     switch ((rod_type)type)
     {
-    case ROD_SUMMONING:       return "summoning";
+    case ROD_SWARM:           return "the swarm";
     case ROD_WARDING:         return "warding";
     case ROD_LIGHTNING:       return "lightning";
     case ROD_STRIKING:        return "striking";
     case ROD_DEMONOLOGY:      return "demonology";
     case ROD_VENOM:           return "venom";
+    case ROD_INACCURACY:      return "inaccuracy";
 
     case ROD_DESTRUCTION_I:
     case ROD_DESTRUCTION_II:
     case ROD_DESTRUCTION_III:
-    case ROD_DESTRUCTION_IV:
                               return "destruction";
 
     default: return "bugginess";
@@ -1885,9 +1885,6 @@ string item_def::name_aux(description_level_type desc, bool terse, bool ident,
                 break;
             case ROD_DESTRUCTION_III:
                 buff << " [lightning,fireball,iron]";
-                break;
-            case ROD_DESTRUCTION_IV:
-                buff << " [inacc,magma,cold]";
                 break;
             }
             break;
