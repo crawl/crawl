@@ -1364,16 +1364,16 @@ void TilesFramework::_send_everything()
 {
     _send_version();
 
+    // UI State
+    _send_ui_state(m_ui_state);
+    m_last_ui_state = m_ui_state;
+
     send_message("{\"msg\":\"flash\",\"col\":%d}", m_current_flash_colour);
 
     _send_map(true);
 
      // Player
     _send_player(true);
-
-    // UI State
-    _send_ui_state(m_ui_state);
-    m_last_ui_state = m_ui_state;
 
     // Menus
     json_open_object();
