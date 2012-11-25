@@ -390,7 +390,7 @@ void antimagic()
         DUR_INVIS, DUR_CONF, DUR_PARALYSIS, DUR_HASTE, DUR_MIGHT, DUR_AGILITY,
         DUR_BRILLIANCE, DUR_CONFUSING_TOUCH, DUR_SURE_BLADE, DUR_CORONA,
         DUR_FIRE_SHIELD, DUR_ICY_ARMOUR, DUR_REPEL_MISSILES,
-        DUR_REGENERATION, DUR_SWIFTNESS, DUR_CONTROL_TELEPORT,
+        DUR_SWIFTNESS, DUR_CONTROL_TELEPORT,
         DUR_TRANSFORMATION, DUR_DEATH_CHANNEL, DUR_DEFLECT_MISSILES,
         DUR_PHASE_SHIFT, DUR_SEE_INVISIBLE, DUR_WEAPON_BRAND, DUR_SILENCE,
         DUR_CONDENSATION_SHIELD, DUR_STONESKIN, DUR_INSULATION, DUR_RESISTANCE,
@@ -411,6 +411,14 @@ void antimagic()
     if (!you.permanent_flight() && you.duration[DUR_CONTROLLED_FLIGHT] > 11)
     {
         you.duration[DUR_CONTROLLED_FLIGHT] = 11;
+        need_msg = true;
+    }
+
+    // Don't dispel divine regeneration.
+    if (you.duration[DUR_REGENERATION] > 0
+        && !you.attribute[ATTR_DIVINE_REGENERATION])
+    {
+        you.duration[DUR_REGENERATION] = 1;
         need_msg = true;
     }
 

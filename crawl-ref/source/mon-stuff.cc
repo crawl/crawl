@@ -4616,7 +4616,8 @@ void debuff_monster(monster* mon)
         ENCH_REGENERATION,
         ENCH_STICKY_FLAME,
         ENCH_TP,
-        ENCH_INNER_FLAME
+        ENCH_INNER_FLAME,
+        ENCH_OZOCUBUS_ARMOUR
     };
 
     // Dispel all magical enchantments...
@@ -4631,6 +4632,18 @@ void debuff_monster(monster* mon)
             // For non-natural invisibility, turn autopickup back on manually,
             // since dispelling invisibility quietly won't do so.
             autotoggle_autopickup(false);
+        }
+        if (lost_enchantments[i] == ENCH_CONFUSION)
+        {
+            // Don't dispel permaconfusion.
+            if (mons_class_flag(mon->type, M_CONFUSED))
+                continue;
+        }
+        if (lost_enchantments[i] == ENCH_REGENERATION)
+        {
+            // Don't dispel regen if it's from Trog.
+            if (mon->has_ench(ENCH_RAISED_MR))
+                continue;
         }
 
         mon->del_ench(lost_enchantments[i], true, true);
