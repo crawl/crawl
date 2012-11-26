@@ -1175,6 +1175,13 @@ bool spell_is_useless(spell_type spell, bool transient)
             return true;
         break;
 #endif
+    case SPELL_REPEL_MISSILES:
+        if (player_mutation_level(MUT_DISTORTION_FIELD) == 3
+            || !you.suppressed() && scan_artefacts(ARTP_RMSL, true))
+        {
+            return true;
+        }
+        break;
     default:
         break; // quash unhandled constants warnings
     }
