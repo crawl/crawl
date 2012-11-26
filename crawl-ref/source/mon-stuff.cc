@@ -4690,24 +4690,26 @@ void temperature_check()
     // It would generally be better to handle this at the tension level and have temperature much more closely tied to tension.
 
     // For testing, but super handy for that!
-    // mprf("Factor: %f, Tension value: %d, Tension 2: %f, Tension 3: %f", factor, tension, tension_b, tension_c);
+    // mprf("Tension value: %d", tension);
 
-    // First, your temperature naturally decays.
-    temperature_decay();
-
-    // Then, increment temp to full if you're in lava.
+    // Increment temp to full if you're in lava.
     if (feat_is_lava(env.grid(you.pos())) && you.ground_level())
     {
         // If you're already very hot, no message,
         // but otherwise it lets you know you're being
         // brought up to max temp.
-        if (temperature() < TEMP_FIRE)
+        if (temperature() <= TEMP_FIRE)
             mpr("The lava instantly superheats you.");
         you.temperature = TEMP_MAX;
+        ignore_cap = true;
+    // Otherwise, your temperature naturally decays.
+    } else {
+        temperature_decay();
     }
-    // Alternately, cool you off by 1 additional each turn until
+
+    // Follow this up with 1 additional decrement each turn until
     // you're not hot enough to boil water.
-    else if (feat_is_water(env.grid(you.pos())) && you.ground_level()
+    if (feat_is_water(env.grid(you.pos())) && you.ground_level()
             && temperature_effect(LORC_PASSIVE_HEAT))
     {
         temperature_decrement(1);
@@ -4727,7 +4729,7 @@ void temperature_check()
     // Next, add temperature from tension. Can override temperature loss from water!
     temperature_increment(tension);
 
-    // Cap temperature change to 1 per turn except while berserking.
+    // Cap net temperature change to 1 per turn if no exceptions.
     float tempchange = you.temperature - you.temperature_last;
     if (!ignore_cap && tempchange > 1)
     {
@@ -4770,10 +4772,14 @@ void temperature_decrement(float degree)
 void temperature_changed(float change) {
 
     // Arbitrary - how big does a swing in a turn have to be?
-    float pos_threshold = .05;
+    float pos_threshold = .25;
     float neg_threshold = -1 * pos_threshold;
 
     // For INCREMENTS:
+
+    // Warmed up enough to lose slow movement.
+    if (change > pos_threshold && temperature_tier(TEMP_COOL))
+        mpr("Your movements quicken.", MSGCH_DURATION);
 
     // Reached the temp that kills off stoneskin.
     if (change > pos_threshold && temperature_tier(TEMP_WARM))
@@ -4818,6 +4824,10 @@ void temperature_changed(float change) {
             mpr("Your skin cools and hardens.", MSGCH_DURATION);
             you.redraw_armour_class = true;
     }
+
+    // Cooled down enough for slow movement.
+    if (change < neg_threshold && temperature_tier(TEMP_COOL))
+        mpr("Your movements slow.", MSGCH_DURATION);
 
     // If we're in this function, temperature changed, anyways.
     you.redraw_temperature = true;
