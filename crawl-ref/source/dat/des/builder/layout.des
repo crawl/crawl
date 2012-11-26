@@ -681,6 +681,8 @@ TAGS: overwritable layout allow_dup unrand
 {{
     layout_type "delve"
 
+    if is_validating() then return; end
+
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym}
     fill_area{fill = 'x', border = 'X'}
@@ -1008,6 +1010,8 @@ TAGS: overwritable layout allow_dup unrand
 {{
     layout_type "delve"
 
+    if is_validating() then return; end
+
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym}
     fill_area{fill = 'x', border = 'X'}
@@ -1058,6 +1062,8 @@ ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
     layout_type "delve"
+
+    if is_validating() then return; end
 
     local gxm, gym = dgn.max_bounds()
     extend_map{width = gxm, height = gym}
