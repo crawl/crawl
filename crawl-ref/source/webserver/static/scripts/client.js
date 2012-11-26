@@ -930,7 +930,7 @@ function (exports, $, key_conversion, chat, comm) {
             if (location.hash.match(/^#play-(.+)/i) &&
                 socket.readyState == 1)
             {
-                return "Really quit the game?";
+                return "Really save and quit the game?";
             }
         });
 
