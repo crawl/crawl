@@ -4777,8 +4777,8 @@ void temperature_changed(float change)
     if (change > pos_threshold && temperature_tier(TEMP_COOL))
         mpr("Your movements quicken.", MSGCH_DURATION);
 
-    // Reached the temp that kills off stoneskin.
-    if (change > pos_threshold && temperature_tier(TEMP_WARM))
+    // Check these no-nos every turn.
+    if (you.temperature >= TEMP_WARM)
     {
         // Handles condensation shield, ozo's armour, icemail.
         expose_player_to_element(BEAM_FIRE, 0);
@@ -4789,6 +4789,11 @@ void temperature_changed(float change)
 
         // Stoneskin melts.
         you.set_duration(DUR_STONESKIN, 0);
+    }
+
+    // Just reached the temp that kills off stoneskin.
+    if (change > pos_threshold && temperature_tier(TEMP_WARM))
+    {
         mpr("Your stony skin melts.", MSGCH_DURATION);
         you.redraw_armour_class = true;
     }
