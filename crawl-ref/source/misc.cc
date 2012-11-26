@@ -1455,7 +1455,7 @@ bool go_berserk(bool intentional, bool potion)
     {
         mpr("You burn with rage!");
         // This will get sqrt'd later, so.
-        temperature_increment(TEMP_MAX*TEMP_MAX);
+        you.temperature = TEMP_MAX;
     }
     return true;
 }

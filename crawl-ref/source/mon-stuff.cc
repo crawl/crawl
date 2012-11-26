@@ -4703,8 +4703,7 @@ void temperature_check()
         // brought up to max temp.
         if (temperature() < TEMP_FIRE)
             mpr("The lava instantly superheats you.");
-        temperature_increment(TEMP_MAX*TEMP_MAX);
-        ignore_cap = true;
+        you.temperature = TEMP_MAX;
     }
     // Alternately, cool you off by 1 additional each turn until
     // you're not hot enough to boil water.
