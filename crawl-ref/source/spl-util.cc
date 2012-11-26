@@ -1176,6 +1176,10 @@ bool spell_is_useless(spell_type spell, bool transient)
         if (player_res_electricity(false, transient, transient))
             return true;
         break;
+    case SPELL_REPEL_MISSILES:
+        if (player_mutation_level(MUT_DISTORTION_FIELD) == 3)
+            return true;
+        break;
     default:
         break; // quash unhandled constants warnings
     }
