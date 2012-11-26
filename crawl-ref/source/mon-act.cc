@@ -3731,6 +3731,10 @@ static void _heated_area(monster* mons)
     if (mons->is_fiery())
         return;
 
+    // HACK: Currently this prevents even auras not caused by lava orcs...
+    if (you.religion == GOD_BEOGH && mons->friendly() && mons->god == GOD_BEOGH)
+        return;
+
     const int base_damage = random2(11);
 
     // Timescale, like with clouds:
