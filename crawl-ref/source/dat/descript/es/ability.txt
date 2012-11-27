@@ -119,17 +119,6 @@ Turn Visible
 
 Te vuelves visible de nuevo.
 %%%%
-Evoke Levitation
-
-Comienzas a levitar. Durante la levitación puedes cruzar agua y obstáculos
-similares sin peligro. Quedas advertido, sin embargo, de que la levitación
-puede acabarse en un momento inoportuno y provocar una caída mortal. Mientras
-estés levitando no puedes interactuar con objetos en el suelo ni recogerlos.
-%%%%
-Stop Levitating
-
-Paras de levitar.
-%%%%
 End Transformation
 
 Recuperas tu forma normal, tras un leve retardo.
@@ -517,6 +506,11 @@ enfadar a dicho dios).
 Request Jelly
 
 Creas una gelatina neutral que vagará por el suelo digiriendo objetos.
+%%%%
+Jelly Paralyse
+
+Rezas para detener temporalmente la consumición de objetos por parte de tus
+limos.
 %%%%
 Slimify
 

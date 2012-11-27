@@ -1,0 +1,8 @@
+%%%%
+tutorial5 tutorial_end
+
+Gratulujeme! Skončili jste poslední výukovou lekci a nyní jste připraveni pro
+skutečnou hru. Hodně štěstí!
+
+Chcete-li ukončit výuku, stačí jít dolů na schody.
+%%%%

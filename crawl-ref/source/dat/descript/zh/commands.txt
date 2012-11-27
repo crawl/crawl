@@ -1,33 +1,33 @@
 %%%%
 CMD_REST
 
-回血及探索
+回血并搜索
 %%%%
 CMD_REST verbose
 
-花费100个回合自动回血、法杖充能、或者探索。休息过程中如果发现有敌意的怪物会立即
-打断
+最多花费100个回合自动回血、回魔，并且搜索周围。休息过程中如果发现敌对怪物会立即
+中断休息。
 %%%%
 CMD_EXPLORE
 
-在当前层自动探索
+自动探索当前楼层
 %%%%
 CMD_EXPLORE verbose
 
-让角色在当前层自动探索尚未去过的地方，根据自动拾取的设置自动收集物品。如遇有敌
-意的怪、发现物品、或特殊地点，移动自行会中止。
+让角色在当前层自动探索尚未去过的地方，根据自动拾取的设置自动收集物品。如果遇到
+敌对怪物、发现物品、或特殊设施，移动自行会中止。
 %%%%
 CMD_INTERLEVEL_TRAVEL
 
-长距离移动到指定的层
+长距离移动到指定的楼层
 %%%%
 CMD_INTERLEVEL_TRAVEL verbose
 
-远距离自动移动到指定的层，移动过程中如遇怪会打断
+远距离自动移动到指定的楼层，移动过程中如果遇到怪物会中断移动。
 %%%%
 CMD_USE_ABILITY
 
-使用神术、或内在能力
+使用神能或自己的异能
 %%%%
 CMD_PRAY
 
@@ -35,20 +35,20 @@ CMD_PRAY
 %%%%
 CMD_PRAY verbose
 
-如果你信仰的神接受献祭，祈祷会献祭尸体或其他物品。如果站在神坛的位置，祈祷的操
-作会让你加入相应的神。对某些神来说，祈祷有其他特殊效果。
+如果你信仰的神接受献祭，祈祷会献祭尸体或其他物品。另外，如果你站在祭坛上，祈祷
+会让你加入相应的教会。对某些神来说，祈祷有其他特殊效果。
 %%%%
 CMD_SEARCH_STASHES
 
-查找物品、特殊地点
+查找物品/特殊设施
 %%%%
 CMD_SEARCH_STASHES verbose
 
-查找曾经发现过的物品、特殊地点，并移动到指定地方
+搜索曾经发现过的物品或特殊设施，并移动到它们的所在地。
 %%%%
 CMD_REPLAY_MESSAGES
 
-重读游戏提示信息
+重读最近的游戏信息
 %%%%
 CMD_RESISTS_SCREEN
 
@@ -56,7 +56,7 @@ CMD_RESISTS_SCREEN
 %%%%
 CMD_RESISTS_SCREEN verbose
 
-显示抗性、能力、装备情况等
+显示抗性、属性、装备情况等
 %%%%
 CMD_DISPLAY_OVERMAP
 
@@ -64,7 +64,7 @@ CMD_DISPLAY_OVERMAP
 %%%%
 CMD_DISPLAY_OVERMAP verbose
 
-显示曾经发现的特殊关、商店和特殊地点的位置
+显示已经发现的分支地城、商店和其他特殊设施的位置。
 %%%%
 CMD_DISPLAY_RELIGION
 
@@ -72,11 +72,11 @@ CMD_DISPLAY_RELIGION
 %%%%
 CMD_DISPLAY_RELIGION verbose
 
-显示神的喜好厌恶、行为，以及当前的信仰值和可用的神术
+显示你信仰的神祗的好恶、教规，以及当前的信仰值和可用的神能。
 %%%%
 CMD_DISPLAY_MUTATIONS
 
-显示变异
+显示突变状况
 %%%%
 CMD_DISPLAY_SKILLS
 
@@ -88,11 +88,11 @@ CMD_DISPLAY_CHARACTER_STATUS
 %%%%
 CMD_DISPLAY_CHARACTER_STATUS verbose
 
-显示激活的附魔情况和其他信息
+显示激活的状态法术和一些其他信息。
 %%%%
 CMD_DISPLAY_KNOWN_OBJECTS
 
-显示物品类别
+列出已经发现的物品类别
 %%%%
 CMD_SAVE_GAME_NOW
 
@@ -100,7 +100,7 @@ CMD_SAVE_GAME_NOW
 %%%%
 CMD_SAVE_GAME_NOW verbose
 
-保存游戏并退出，一旦继续游戏，存档会一度删除
+保存游戏并退出。一旦继续游戏，存档就会被删除。
 %%%%
 CMD_EDIT_PLAYER_TILE
 
@@ -108,7 +108,7 @@ CMD_EDIT_PLAYER_TILE
 %%%%
 CMD_EDIT_PLAYER_TILE verbose
 
-修改角色显示的装备和贴图
+修改角色纸娃娃上显示的装备和种族的贴图。
 %%%%
 CMD_DISPLAY_COMMANDS
 
@@ -116,7 +116,7 @@ CMD_DISPLAY_COMMANDS
 %%%%
 CMD_DISPLAY_COMMANDS verbose
 
-列出命令及设置等
+列出命令及选项等
 %%%%
 CMD_CHARACTER_DUMP
 
@@ -124,8 +124,8 @@ CMD_CHARACTER_DUMP
 %%%%
 CMD_CHARACTER_DUMP verbose
 
-将角色资料输出到morgue文件夹下的‘playername.txt’，适合空闲时间再度利用。文件包
-含主要属性、装备、魔法、技能、记录等。
+将角色资料输出到morgue文件夹下的“玩家名.txt”，以便空闲时查看。文件记录内容包括
+主要属性、装备、魔法、技能、笔记等。
 %%%%
 CMD_AUTOFIGHT
 
@@ -133,17 +133,197 @@ CMD_AUTOFIGHT
 %%%%
 CMD_AUTOFIGHT verbose
 
-向最近的有敌意怪物移动，用持有的武器进行攻击
+向最近的敌对怪物移动，用持用的武器进行攻击。
 %%%%
 CMD_AUTOFIGHT_NOMOVE
 
-攻击邻接的怪物
+攻击一个邻接的怪物
 %%%%
 CMD_AUTOFIGHT_NOMOVE verbose
 
-用持有的武器攻击邻接的怪物
+用持用的武器攻击一个邻接的怪物
 %%%%
 CMD_WAIT
 
-等一个回合
+等待一回合
+%%%%
+CMD_WAIT verbose
+
+等待并休息一个回合。
+%%%%
+CMD_DISPLAY_INVENTORY
+
+显示物品栏内容
+%%%%
+CMD_DISPLAY_INVENTORY verbose
+
+显示物品栏内容。
+%%%%
+CMD_CAST_SPELL
+
+施放一道法术
+%%%%
+CMD_CAST_SPELL verbose
+
+施放一道法术。
+%%%%
+CMD_BUTCHER
+
+分解尸体
+%%%%
+CMD_BUTCHER verbose
+
+把尸体分解成肉块。
+%%%%
+CMD_MEMORISE_SPELL
+
+记忆法术
+%%%%
+CMD_MEMORISE_SPELL verbose
+
+阅读一本拿在手里或站在上面的书，记忆一道法术。
+%%%%
+CMD_DROP
+
+丢弃物品
+%%%%
+CMD_DROP verbose
+
+丢弃你现在拥有的一个或多个物品。
+%%%%
+CMD_DISPLAY_MAP
+
+进入地图模式
+%%%%
+CMD_DISPLAY_MAP verbose
+
+浏览之前探索过的地图。
+%%%%
+CMD_MAP_GOTO_TARGET
+
+移动到光标处
+%%%%
+CMD_MAP_GOTO_TARGET verbose
+
+前往现在鼠标光标所在位置。
+%%%%
+CMD_MAP_ADD_WAYPOINT
+
+添加导航点
+%%%%
+CMD_MAP_ADD_WAYPOINT verbose
+
+将目前所在位置设为导航点。
+%%%%
+CMD_MAP_EXCLUDE_AREA
+
+旅行禁场
+%%%%
+CMD_MAP_EXCLUDE_AREA verbose
+
+创建一个旅行禁场，改变它的半径，或消除它。
+%%%%
+CMD_MAP_CLEAR_EXCLUDES
+
+清除旅行禁场
+%%%%
+CMD_MAP_CLEAR_EXCLUDES verbose
+
+擦除本层所有旅行禁场。
+%%%%
+CMD_MAP_NEXT_LEVEL
+
+向下一层
+%%%%
+CMD_MAP_NEXT_LEVEL verbose
+
+检查向下的一层。
+%%%%
+CMD_MAP_PREV_LEVEL
+
+向上一层
+%%%%
+CMD_MAP_PREV_LEVEL verbose
+
+检查向上的一层。
+%%%%
+CMD_MAP_GOTO_LEVEL
+
+跳转到楼层
+%%%%
+CMD_MAP_GOTO_LEVEL verbose
+
+跳转到指定分支地城的指定楼层。
+%%%%
+CMD_MAP_FIND_UPSTAIR
+
+寻找向上的楼梯
+%%%%
+CMD_MAP_FIND_UPSTAIR verbose
+
+切换到下一个向上的楼梯。
+%%%%
+CMD_MAP_FIND_DOWNSTAIR
+
+寻找向下的楼梯
+%%%%
+CMD_MAP_FIND_DOWNSTAIR verbose
+
+切换到下一个向下的楼梯。
+%%%%
+CMD_MAP_FIND_YOU
+
+找到我
+%%%%
+CMD_MAP_FIND_YOU verbose
+
+将地图光标移回你目前所在位置。
+%%%%
+CMD_MAP_FIND_PORTAL
+
+寻找商店和传送门
+%%%%
+CMD_MAP_FIND_PORTAL verbose
+
+切换到本层上的下一个商店或传送门。
+%%%%
+CMD_MAP_FIND_TRAP
+
+寻找陷阱
+%%%%
+CMD_MAP_FIND_TRAP verbose
+
+切换到本层上的下一个陷阱。
+%%%%
+CMD_MAP_FIND_ALTAR
+
+寻找祭坛
+%%%%
+CMD_MAP_FIND_ALTAR verbose
+
+切换到本层上的另一个祭坛。
+%%%%
+CMD_MAP_FIND_EXCLUDED
+
+寻找旅行禁场
+%%%%
+CMD_MAP_FIND_EXCLUDED verbose
+
+切换到本层上的下一个旅行禁场。
+%%%%
+CMD_MAP_FIND_WAYPOINT
+
+寻找导航点
+%%%%
+CMD_MAP_FIND_WAYPOINT verbose
+
+切换到本层上的下一个导航点。
+%%%%
+CMD_MAP_FIND_STASH
+
+寻找储藏点
+%%%%
+CMD_MAP_FIND_STASH verbose
+
+切换到本层上的下一个储藏点。
 %%%%

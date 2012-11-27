@@ -1,0 +1,223 @@
+%%%%
+welcome
+
+<white>Bienvenue dans Dungeon Crawl !</white>
+
+Votre objectif est de mener un <w>{{ return you.race() }} {{ return you.class()
+}}</w> au plus profond du donjon, récupérer la légendaire Orbe de Zot et
+revenir à la surface. Dans un premier temps, toutefois, l'exploration sera
+votre principal objectif. Essayez de descendre le plus profondément possible,
+mais attention : la mort se cache à chaque coin.
+
+Pour le moment, souvenez-vous des touches suivantes et de leur fonction :
+  <white>$cmd[CMD_DISPLAY_COMMANDS]?</white> - montre les objets et commandes
+  <white>$cmd[CMD_SAVE_GAME]</white>  - sauve la partie pour être continuée
+plus tard (mais notez que la mort est permanente)
+  <white>$cmd[CMD_LOOK_AROUND]</white>  - examine quelque chose dans votre
+champ de vision
+
+Le mode "indice" peut vous aider à jouer à Crawl sans avoir à lire toute la
+documentation. Si vous ne l'avez pas encore fait, vous voudrez probablement
+suivre le tutoriel. De plus, si vous êtes curieux, il y a plus d'informations
+dans les fichiers inclus dans le répertoire docs/ (qui tous peuvent être lu
+depuis le jeu) :
+  <lightblue>quickstart.txt</lightblue>     - Un très court guide à Crawl.
+  <lightblue>crawl_manual.txt</lightblue>   - Celui-ci contient tous les
+détails sur les races, la magie, les compétences, etc.
+  <lightblue>options_guide.txt</lightblue>  - L'interface de Crawl est
+hautement configurable. Ce document
+                       en explique toutes les options.
+
+Joyeux Crawl !
+%%%%
+death
+
+Toutes nos condoléances ! La mort prématurée de votre personnage est triste
+mais une chose si commune dans Crawl. Soyez assuré que rapidement grâce à votre
+expérience de jeu, vos personnages futurs dureront plus longtemps.
+
+Peut-être que les conseils suivants pourront améliorer votre style de jeu :
+%%%%
+death conjurer melee
+
+En tant que Conjurateur votre arme principale devrait être la magie offensive.
+Lancez des sorts plus souvent ! Rappelez-vous de vous reposer quand vos
+réserves magiques sont basses.
+%%%%
+death berserker unberserked
+
+N'oubliez pas de passer berserk quand vous combattez des ennemis
+particulièrement coriaces. C'est risqué mais, vous rend plus rapide et
+endurant.
+{{
+  if you.hunger() < 3
+    then return "Passer berserk est impossible quand vous êtes affamé ou pire,
+" ..
+                "assurez-vous de vous restaurer régulièrement, juste au cas où"
+..
+                "vous avez besoin de devenir berserk." end
+}}
+%%%%
+death ranger melee
+
+Votre arc et vos flèches sont extrêmement puissants contre les monstres à
+distance. Soyez certain de collecter toutes les flèches que vous trouverez dans
+le donjon.
+%%%%
+death random 0
+
+Envisagez toujours l'usage de projectiles, baguettes ou sorts avant d'engager
+des monstres en combat rapproché.
+%%%%
+death random 1
+
+Apprenez à fuir ce que vous ne pouvez gérer - c'est vital ! Il est plus sage
+d'éviter un niveau particulièrement dangereux. Mais ne le faite pas trop
+souvent car les monstres deviennent de plus en plus coriaces à mesure que vous
+descendez.
+%%%%
+death random 2
+
+Reposez-vous entre deux rencontres, si possible dans une zone déjà explorée et
+nettoyée de ses monstres. Dans Crawl, chercher et se reposer sont une seule et
+même chose. Pour chercher sur un tour, pressez <w>s</w>, <w>.</w>,
+<w>delete</w> ou <w>pavé numérique-5</w>. Pressez <w>5</w> ou <w>shift-et-pavé
+numérique-5</w> <tiles>, ou <w>cliquez dans la zone des stats</w></tiles> vous
+laissera vous reposer pour un long moment (vous vous arrêterez après 100 tours,
+ou quand vous serez pleinement guéri).
+%%%%
+death random 3
+
+Rappelez-vous d'utiliser les parchemins, potions et baguettes que vous avez
+trouvez. Très souvent, vous ne pourrez espérer identifier chacun avec
+uniquement un parchemin d'identification. Apprenez à improviser : identifiez en
+utilisant.
+%%%%
+death random 4
+
+Si une rencontre particulière vous semble dangereuse, n'oubliez pas d'utiliser
+des objets d'urgence rapidement. Un parchemin de téléportation ou une potion de
+vitesse peuvent réellement vous sauver la mise.
+%%%%
+death random 5
+
+Ne combattez jamais plus d'un monstre à la fois, si vous le pouvez.
+Rabattez-vous toujours dans un couloir afin de les obliger à vous combattre un
+à la fois.
+%%%%
+finished
+
+Félicitations ! Vous avez survécu jusqu'à la fin du mode "indice"- veillez à
+essayer les autres aussi. Notez que la commande écran d'aide
+(<w>$cmd[CMD_DISPLAY_COMMANDS]?</w>) va devenir très différente à partir de
+maintenant. Voici le dernier conseil de jeu :
+%%%%
+finished explored
+
+Vous déplacez et explorez les niveaux est beaucoup plus facile en utilisant
+l'auto-exploration (<w>$cmd[CMD_EXPLORE]</w>). Crawl vous déplacera
+automatiquement et ramassera pour vous les objets les plus intéressants.
+<tiles>
+
+L'auto-exploration peut aussi être démarrée via un <w>clic gauche</w> sur la
+mini-carte lorsque la touche <w>Contrôle</w> est pressée.</tiles>
+%%%%
+finished travel
+
+Il existe un moyen pratique pour se déplacer de plusieurs niveaux : pressez
+<w>$cmd[CMD_INTERLEVEL_TRAVEL]</w> ou <w>G</w> et entrez la destination
+désirée. Si votre trajet est interrompu, utilisez
+<w>$cmd[CMD_INTERLEVEL_TRAVEL] Entrée</w> ou <w>G Entrée</w> vous permettra de
+le reprendre.
+%%%%
+finished stashes
+
+Vous pouvez faire une recherche sur tous les objets existant dans le donjon
+avec la commande <w>$cmd[CMD_SEARCH_STASHES]</w>. Par exemple,
+<w>$cmd[CMD_SEARCH_STASHES] "couteau"</w> listera tous les couteaux. Vous
+pouvez alors vous rendre à l'un des objets. Cela est aussi possible avec les
+mots <w>"échoppes"</w> ou <w>"autel"</w>.
+%%%%
+finished random 0
+
+Le jeu garde un journal de bord automatisé de tous vos personnages. Utilisez
+<w>$cmd[CMD_DISPLAY_COMMANDS] :</w> pour le lire. Vous pouvez entrer
+manuellement des notes avec la commande <w>$cmd[CMD_MAKE_NOTE]</w>. Une fois
+votre personnage mort, deux fichiers de morgues sont conservés dans le
+répertoire <w>morgue/</w>. Celui se terminant par .txt contient une copie de
+votre journal de bord. Durant le jeu, vous pouvez créer un fichier de
+sauvegarde avec <w>$cmd[CMD_CHARACTER_DUMP]</w>.
+%%%%
+finished random 1
+
+Crawl a une fonction macro en son sein : pressez <w>~m</w> pour définir une
+macro en précisant d'abord une touche de déclenchement (par exemple, <w>F1</w>)
+et une séquence de commande, par exemple <w>za+.</w>. Cette dernière fera que
+la touche <w>F1</w> déclenchera toujours le lancement du sort dans
+l'emplacement a ciblant le monstre le plus proche. Pour plus d'informations sur
+les macros, tapez <w>$cmd[CMD_DISPLAY_COMMANDS]~</w>.
+%%%%
+finished random 2
+
+L'interface peut être grandement personnalisée. Toutes les options sont
+expliquées dans le fichier <w>options_guide.txt</w> qui se trouve dans le
+répertoire <w>docs</w>. Les options elles-mêmes sont définies dans
+<w>init.txt</w> ou <w>.crawlrc</w>. Crawl se plaindra s'il ne peut pas trouver
+ses fichiers.
+%%%%
+finished random 3
+
+Vous pouvez demander à d'autres joueurs de Crawl des conseils et de l'aide sur
+le canal IRC (Internet Relay Chat) <w>##crawl</w> sur freenode
+(<w>irc.freenode.net</w>).
+%%%%
+dissection reminder
+
+Si vous ne voulez pas le manger, considérez d'offrir ce corps via une
+<w>p</w>rière comme un sacrifice à
+{{ return you.god() }}<tiles>. Vous pouvez aussi découper n'importe quel corps
+qui se trouve au sol sous votre inventaire en cliquant dessus avec le <w>bouton
+gauche de souris</w></tiles>. Chaque fois que vous voyez un corps en mode
+"indice", vous pourrez relire cette information.
+%%%%
+HINT_CONVERT Xom
+
+Vous venez de vous convertir à la religion de <w>Xom</w>. Vous pouvez garder
+Xom heureux en le maintenant amusé ; vous ne voulez absolument pas que ce dieu
+s'ennuie de vous!
+
+Si vous gardez Xom amusé, il vous traitera comme sa chose, vous aidant ou vous
+persécutant aléatoirement pour son propre plaisir ; sinon, il vous traitera
+comme un jouet mal-aimé.
+%%%%
+HINT_CONVERT
+
+Vous venez de vous convertir à la religion de <w>{{ return you.god() }}</w>.
+Votre piété (faveur divine) diminuera graduellement avec le temps, et si elle
+tombe à zéro, {{ return you.god() }} vous excommuniera et vous punira. Vous
+pouvez éviter cela, et même gagner suffisamment piété pour obtenir des pouvoirs
+et récompenses divines, en faisant des choses pour plaire à
+{{ return you.god() }}. Mais ne paniquez pas : vous commencez avec un montant
+confortable de piété, et tout danger d'excommunication est donc loin.
+
+Vous pouvez vérifier ce que votre dieu aime ou n'aime pas, ainsi que vos
+capacités divines actuelles, en appuyant sur <w>^</w><tiles> (ou en pressant
+<w>Shift</w> puis <w>clic droit</w> sur votre avatar)</tiles>.
+%%%%
+HINT_SEEN_FIRST_OBJECT
+
+Ce <console>$1 </console>est un objet. Si vous vous déplacez là et pressez
+<w>g</w> ou <w>,</w> vous ramasserez cet objet. <console>Généralement, les
+objets sont indiqués par des symboles et non des lettres, comme
+<w>%?!"=()[</w>. </console> <tiles>Vouspouvez aussi ramasser un objet en
+cliquant sur votre <w>bouton gauche de souris</w> en étant sur leur case.
+</tiles> De plus, plusieurs types d'objets pourront être ramassés
+automatiquement. <tiles>(En mode tuiles, ils seront entouré avec un pourtour
+vert.)</tiles>
+
+Une foi dans votre inventaire, vous pouvez le déposer en utilisant <tiles>un
+<w>clic gauche de souris</w> tout en pressant la <w> touche Shift</w>. Ou en
+faisant un <w>clic droit</w> sur un objet</tiles><console><w>d</w>. A chaque
+fois que vous regardez un objet dans votre <w>i</w>nventaire</console>, vous
+pourrez lire ses propriétés et sa description.
+%%%%

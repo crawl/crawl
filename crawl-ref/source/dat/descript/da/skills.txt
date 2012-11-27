@@ -1,0 +1,21 @@
+%%%%
+Armour
+
+Træning i rustning øger den RK, du får for at bære tung rustning og mindsker
+besværet med den i forbindelse med nærkamp og besværgelser.
+%%%%
+Air Magic
+
+Hvis man er trænet i en magisk "skole", bliver det lettere at lære og at kaste
+besværgelser fra denne skole. Mange besværgelser tilhører en kombination af
+flere skoler, og så afhænger både succesraten og besværgelseskraften af din
+gennemsnitlige evne i de skoler.
+
+Luftmagi giver besværgelser, som giver direkte skade med vinden, og larmende,
+men kraftfulde lyn-påkaldelser. Den giver også hjælpe-besværgelser som
+fortryllelser, der hidkalder vinden til at hjælpe med dine bevægelser eller
+beskytte dig mod projektilangreb.
+
+Hvis du er trænet i luftmagi, bliver det sværere at lære jordmagi og vice
+versa.
+%%%%
