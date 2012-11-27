@@ -2219,6 +2219,20 @@ MAP
 :...::
 ENDMAP
 
+NAME:  mrwooster_statue_mirror
+TAGS:  no_item_gen no_monster_gen extra luniq decor
+DEPTH: D:2-12
+NSUBST: a : 3:% / *:.
+MAP
+...........
+..x..G..x..
+..xxaaaxx..
+..xxxxxxx..
+..xxaaaxx..
+..x..G..x..
+...........
+ENDMAP
+
 ##########################################################################
 #
 # <<4>> Fog generator vaults.
