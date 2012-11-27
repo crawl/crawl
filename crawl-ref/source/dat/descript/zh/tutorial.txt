@@ -28,8 +28,8 @@ tutorial1 diagonal
 
 <w></w>                 /|\                         /|\
 
-<w></w>                <w>1 2 3</w>
-<w>$cmd[CMD_MOVE_DOWN_LEFT] $cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
+<w></w>                <w>1 2 3</w> <w>$cmd[CMD_MOVE_DOWN_LEFT]
+$cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
 
 <localtiles>同样你可以使用 <w>[鼠标点击]</w>移动。</localtiles>
 %%%%
@@ -270,9 +270,8 @@ tutorial2 exit
 
 <yellow>武器<console><cyan>)</cyan></console></yellow>
 
-<w>$cmd[CMD_PICKUP]</w>  捡起物品
-<w>$cmd[CMD_WIELD_WEAPON]</w> 装备一件武器<localtiles>（ 你也可以在物品栏<w>点
-击</w>武器。）</localtiles>
+<w>$cmd[CMD_PICKUP]</w>  捡起物品 <w>$cmd[CMD_WIELD_WEAPON]</w> 装备一件武器
+<localtiles>（ 你也可以在物品栏<w>点 击</w>武器。）</localtiles>
 
 
 <yellow>怪物</yellow>
