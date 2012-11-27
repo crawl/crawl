@@ -1,8 +1,8 @@
 %%%%
 Singing Sword
 
-This enchanted weapon loves nothing more than to sing to its owner, whether they
-want it to or not.
+This enchanted weapon loves nothing more than to sing to its owner, whether
+they want it to or not.
 %%%%
 Wrath of Trog
 
@@ -17,9 +17,9 @@ It is rather unreliable.
 Glaive of Prune
 
 It is the creation of a mad god, and carries a curse which transforms anyone
-wielding it into a prune. Fortunately, the curse works very slowly, and one
-can use it briefly with no consequences worse than slightly purple skin and a
-few wrinkles.
+wielding it into a prune. Fortunately, the curse works very slowly, and one can
+use it briefly with no consequences worse than slightly purple skin and a few
+wrinkles.
 %%%%
 Sword of Power
 

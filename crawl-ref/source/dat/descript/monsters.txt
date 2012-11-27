@@ -2657,9 +2657,9 @@ hunger for life essence, on which it feeds.
 %%%%
 wretched star
 
-A conflux of unearthly light and energy, awash in unnatural colours and
-strange forms no normal being was meant to perceive. Merely being near it
-fills your body with the disorder of the Abyss.
+A conflux of unearthly light and energy, awash in unnatural colours and strange
+forms no normal being was meant to perceive. Merely being near it fills your
+body with the disorder of the Abyss.
 %%%%
 wyvern
 
