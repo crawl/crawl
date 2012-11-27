@@ -1620,8 +1620,11 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
     // So do runes.
     if (item_is_rune(it))
     {
-        you.runes.set(it.plus);
-        _check_note_item(it);
+        if (!you.runes[it.plus])
+        {
+            you.runes.set(it.plus);
+            _check_note_item(it);
+        }
 
         if (!quiet)
         {
