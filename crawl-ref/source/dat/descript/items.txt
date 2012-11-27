@@ -1265,8 +1265,8 @@ This rod contains spells of mayhem and destruction.
 %%%%
 rod of inaccuracy
 
-This rod allows its wielder to fire a powerful but extremely inaccurate bolt
-of power.
+This rod allows its wielder to fire a powerful but extremely inaccurate bolt of
+power.
 %%%%
 rod of striking
 
@@ -1790,9 +1790,10 @@ miss.
 %%%%
 wand of paralysis
 
-A magical device which can render a creature immobile, incapable of moving
-any of its limbs. A paralysed creature can only breathe, think, and helplessly watch
-as it falls into lava below or you put it out of its misery with your dagger.
+A magical device which can render a creature immobile, incapable of moving any
+of its limbs. A paralysed creature can only breathe, think, and helplessly
+watch as it falls into lava below or you put it out of its misery with your
+dagger.
 %%%%
 wand of polymorph other
 

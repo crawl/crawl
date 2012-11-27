@@ -230,10 +230,9 @@ This spell forms tunnels through unworked rock by liquefying it.
 %%%%
 Disjunction spell
 
-This spell destabilizes the space in a sphere around you for a while,
-causing anyone nearby to be randomly blinked. The chance of blinking
-depends on the distance from you, being nearly certain when directly
-adjacent.
+This spell destabilizes the space in a sphere around you for a while, causing
+anyone nearby to be randomly blinked. The chance of blinking depends on the
+distance from you, being nearly certain when directly adjacent.
 %%%%
 Dispel Undead spell
 

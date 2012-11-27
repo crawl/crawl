@@ -70,9 +70,9 @@ Spit acid at a targeted monster.
 # Both for Fly I and II.
 Fly
 
-Start flying. During flight you can safely cross water and similar
-obstacles. Be warned, though, that flight may time out at inopportune
-moments and cause you to fall to your death.
+Start flying. During flight you can safely cross water and similar obstacles.
+Be warned, though, that flight may time out at inopportune moments and cause
+you to fall to your death.
 %%%%
 Hellfire
 
