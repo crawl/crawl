@@ -1,19 +1,78 @@
 %%%%
 A gateway to a ziggurat
 
-“Captain: Take off every ‘zig’!!
- Captain: For great justice.”
+“Капитан: Снять каждый 'ЗИГ' !!
+  Капитан: Ради великой справедливости.”
     -Zero Wing
 %%%%
 A gateway to Hell
 
-"Оставь надежду, всяк сюда входящий."
-    -Данте Альгьери, "Божественная комедия", "Ад", песнь 3. Ок. 1315 г.
+"Я увожу к отверженным селеньям,
+  Я увожу сквозь вековечный стон,
+  Я увожу к погибшим поколеньям.
+
+  Был правдою мой зодчий вдохновлен:
+  Я высшей силой, полнотой всезнанья
+  И первою любовью сотворен.
+
+  Древней меня лишь вечные созданья,
+  И с вечностью пребуду наравне.
+  Входящие, оставьте упованья."
+   -Данте Альгьери, "Божественная комедия", "Ад" Песнь 3. 1315г.
+    Перевод М.Лозинского 1982г.
+%%%%
+A granite statue
+
+"Рассказывал мне странник, что в пустыне,
+  В песках, две каменных ноги стоят
+  Без туловища с давних пор поныне.
+  У ног — разбитый лик, чей властный взгляд
+  Исполнен столь насмешливой гордыни,
+  Что можно восхититься мастерством,
+  Которое в таких сердцах читало,
+  Запечатлев живое в неживом.
+  И письмена взывают с пьедестала;
+  «Я Озимандия. Я царь царей.
+  Моей державе в мире места мало.
+  Все рушится. Нет ничего быстрей
+  Песков, которым словно не пристало
+  Вокруг развалин медлить в беге дней»."
+    -Перси Биши Шелли, “Озимандия”. 1818г.
 %%%%
 A one-way gate to the infinite horrors of the Abyss
 
-"И если ты долго смотришь в бездну, то бездна тоже смотрит в тебя."
-    -Фридрих Ницше, "По ту сторону добра и зла"
+"И если ты долго смотришь в бездну,  то бездна тоже смотрит в тебя."
+    -Фридрих Ницше, "По ту сторону добра и зла", афоризм 146 1886г.
+
+" - У нас, - сказала Алиса, с трудом переводя дух, - когда долго бежишь со всех
+ног, непременно попадешь в другое место.
+ - Какая медлительная страна! -  сказала  Королева.  -  Ну,  а  здесь, знаешь
+ли, приходится бежать  со всех ног , чтобы только остаться  на  том же месте!
+Если же хочешь попасть в другое место,  тогда нужно  бежать  по меньшей мере
+вдвое быстрее!"
+    -Льюис Кэрролл, Алиса в Зазеркалье, глава 2.
+    "Сад живых цветов". 1871г.
+%%%%
+A portal to a secret trove of treasure
+
+"Держите вора! Держите вора!"  Есть  в  этих  словах  магическая  сила.
+Лавочник покидает свой прилавок, а возчик свою подводу, мясник бросает  свой
+лоток, булочник свою корзину, молочник свое ведро, рассыльный свои  свертки,
+школьник свои шарики мостильщик свою кирку, ребенок свой волан . И бегут они
+как попало, вперемежку, наобум, толкаются, орут, кричат, заворачивая  за угол,
+сбивают с ног прохожих, пугают собак и приводят  в изумление  кур;  а улицы,
+площади и дворы оглашаются криками."
+    -Чарльз Диккенс,  Приключения Оливера Твиста, глава X 1838г.
+%%%%
+A rock wall
+
+"Прав или нет  Закон - не знаю,
+  Одно в душе живет:
+  В тюрьме - тоска, в ней стены крепки,
+  В ней каждый день - как год.
+  И каждый день в том долгом годе
+  Так медленно идет.
+   -Оскар Уайльд, “Баллада Рэдингской тюрьмы”. 1898г.
 %%%%
 potion
 
@@ -43,4 +102,1689 @@ mad acolyte of Lugonu
 
 "И если ты долго смотришь в бездну, то бездна тоже смотрит в тебя."
     -Фридрих Ницше, "По ту сторону добра и зла", 1886
+%%%%
+Dungeon
+
+Подземелье
+%%%%
+Temple
+
+Храм
+%%%%
+Orcish Mines
+
+Шахты Орков
+%%%%
+Elven Halls
+
+Эльфийские Залы
+%%%%
+Dwarven Hall
+
+Дварфский Зал
+%%%%
+Lair
+
+Логово
+%%%%
+Swamp
+
+Болото
+%%%%
+Shoals
+
+Отмель
+%%%%
+Snake Pit
+
+Змеиная Яма
+%%%%
+Spider Nest
+
+Паучье Гнездо
+%%%%
+Hall of Blades
+
+Зал Клинков
+%%%%
+Crypt
+
+Крипта
+%%%%
+Hell
+
+Ад
+%%%%
+Gehenna
+
+Геенна
+%%%%
+Cocytus
+
+Кокитос
+%%%%
+Tartarus
+
+Тартар
+%%%%
+Forest
+
+Лес
+%%%%
+Abyss
+
+Бездна
+%%%%
+Pandemonium
+
+Обитель Демонов
+%%%%
+Ziggurat
+
+Зиккурат
+%%%%
+Labyrinth
+
+Лабиринт
+%%%%
+Bazaar
+
+Базар
+%%%%
+Trove
+
+Находка
+%%%%
+Sewer
+
+Коллектор
+%%%%
+Ossuary
+
+Склеп
+%%%%
+Bailey
+
+Стена Замка
+%%%%
+Ice Cave
+
+Ледяная Пещера
+%%%%
+Volcano
+
+Вулкан
+%%%%
+A basalt altar of Yredelemnul
+
+Базальтовый алтарь Yredelemnul
+%%%%
+A blade trap
+
+ловушка с лезвиями
+%%%%
+A bloodstained altar of Trog
+
+окровавленный алтарь Trog
+%%%%
+A blossoming altar of Fedhas
+
+цветущий алтарь Fedhas
+%%%%
+A burning altar of Makhleb
+
+горящий алтарь Makhleb
+%%%%
+A closed door
+
+закрытая дверь
+%%%%
+A corrupted altar of Lugonu
+
+поврежденный алтарь Lugonu
+%%%%
+A deep blue altar of Sif Muna
+
+темно-синий алтарь Sif Muna
+%%%%
+A dry fountain
+
+высохший фонтан
+%%%%
+A fountain of clear blue water
+
+фонтан чистой голубой воды
+%%%%
+A fountain of blood
+
+фонтан крови
+%%%%
+A fountain of sparkling water
+
+фонтан сверкающей воды
+%%%%
+A gate leading back out of here
+
+врата ведущие обратно отсюда
+%%%%
+A gate leading back out of this place
+
+врата ведущие обратно из этого места
+%%%%
+A gate leading out of Pandemonium
+
+врата ведущие из Обители Демонов
+%%%%
+A gate leading to another region of Pandemonium
+
+врата ведущие в другие области Обители Демонов
+%%%%
+A one-way gate leading to the halls of Pandemonium
+
+односторонние врата, ведущие в залы Обители Демонов
+%%%%
+A gate to the Realm of Zot
+
+Врата в царство Zot
+%%%%
+A gateway leading out of the Abyss
+
+Врата ведущие обратно из Бездны
+%%%%
+A gateway to the ashen valley of Gehenna
+
+Врата в пепельную долину Геенна
+%%%%
+A gateway to the Iron City of Dis
+
+врата в Железный город Дис
+%%%%
+A gateway to the decaying netherworld of Tartarus
+
+Врата в загнивающий загробный мир Тартар
+%%%%
+A gateway to the freezing wastes of Cocytus
+
+Врата в леденящую пустошь Кокитос
+%%%%
+A glowing golden altar of the Shining One
+
+сияющий алтарь Shining One
+%%%%
+A glowing silver altar of Zin
+
+блестящий серебренный алтарь Zin
+%%%%
+A magical trap
+
+магическая ловушка
+%%%%
+A mechanical trap
+
+механическая ловушка
+%%%%
+A natural trap
+
+естественная ловушка
+%%%%
+A metal wall
+
+металлическая стена
+%%%%
+A needle trap
+
+ловушка с иглами
+%%%%
+A portal to somewhere
+
+портал куда-нибудь
+%%%%
+A radiant altar of Vehumet
+
+лучистый алтарь Vehumet
+%%%%
+A rock-blocked tunnel
+
+скальный заблокированный тоннель
+%%%%
+A rocky tunnel leading out of this place
+
+горный тоннель, ведущий обратно из этого места
+%%%%
+A roughly hewn altar of Beogh
+
+грубо отесанный алтарь Beogh
+%%%%
+A shattered altar of Ashenzari
+
+разрушенный алтарь Ashenzari
+%%%%
+A shimmering altar of Xom
+
+мерцающий алтарь Xom
+%%%%
+A shop
+
+магазин
+%%%%
+A slime covered rock wall
+
+покрытая слизью скальная стена
+%%%%
+A sparkling altar of Nemelex Xobeh
+
+искрящийся алтарь Nemelex Xobeh
+%%%%
+A staircase back to the Crypt
+
+лестница назад в Крипту
+%%%%
+A staircase back to the Dungeon
+
+лестница назад в Подземелье
+%%%%
+A staircase back to the Lair
+
+лестница назад в Логово
+%%%%
+A staircase back to the Mines
+
+лестница назад в Шахту
+%%%%
+A staircase leading out of the dungeon
+
+лестница ведущая обратно из подземелья
+%%%%
+A staircase to the Crypt
+
+Лестница в Крипту
+%%%%
+A staircase to the Ecumenical Temple
+
+лестница в Вселенский Храм
+%%%%
+A staircase to the Elven Halls
+
+лестница в Эльфийские Залы
+%%%%
+A staircase to the Hall of Blades
+
+лестница в Зал Клинков
+%%%%
+A staircase to the Lair
+
+лестница в Логово
+%%%%
+A staircase to the Orcish Mines
+
+лестница в Шахты Орков
+%%%%
+A staircase to the Dwarven Hall
+
+лестница в Дварфский Зал
+%%%%
+A staircase to the Enchanted Forest
+
+лестница в Заколдованный Лес
+%%%%
+A staircase to the Shoals
+
+лестница в Отмель
+%%%%
+A staircase to the Snake Pit
+
+лестница в Змеиную Яму
+%%%%
+A staircase to the Swamp
+
+лестница в Болото
+%%%%
+A stone staircase leading down
+
+каменная лестница ведущая вниз
+%%%%
+A stone staircase leading up
+
+каменная лестница ведущая вверх
+%%%%
+A stone wall
+
+каменная стена
+%%%%
+A teleporter
+
+телепорт
+%%%%
+A translucent rock wall
+
+прозрачная горная стена
+%%%%
+A translucent stone wall
+
+прозрачная каменная стена
+%%%%
+A viscous altar of Jiyva
+
+вязкий алтарь  Jiyva
+%%%%
+A wall of green crystal
+
+стена из зеленого кристалла
+%%%%
+A white marble altar of Elyvilon
+
+белый мраморный алтарь Elyvilon
+%%%%
+An abandoned shop
+
+заброшенный магазин
+%%%%
+An ancient bone altar of Kikubaaqudgha
+
+древний костяной алтарь Kikubaaqudgha
+%%%%
+An iron altar of Okawaru
+
+железный алтарь Okawaru
+%%%%
+An iron grate
+
+железная решетка
+%%%%
+An open door
+
+открытая дверь
+%%%%
+An orcish idol
+
+идол орков
+%%%%
+The endless lava
+
+неиссякаемая лава
+%%%%
+A floor
+
+пол
+%%%%
+The open sea
+
+открытое море
+%%%%
+An autumnal tree
+
+осеннее дерево
+%%%%
+A crumbled stone wall
+
+осыпавшееся каменная стена
+%%%%
+A strange statue
+
+странная статуя
+%%%%
+A crystal clear mirror
+
+кристально чистое зеркало
+%%%%
+A strange machine
+
+странная машина
+%%%%
+A glistening fountain
+
+блестящий фонтан
+%%%%
+A black marble wall
+
+стена из черного мрамора
+%%%%
+A marble floor
+
+мраморный пол
+%%%%
+A vine-covered statue
+
+статуя покрытая лозой
+%%%%
+A crumbling stone wall
+
+потрескавшееся каменная стена
+%%%%
+The grass-covered ground
+
+земля покрытая травой
+%%%%
+A strange rock wall
+
+необычная горная стена
+%%%%
+A highly decorated stone wall
+
+богато украшена каменная стена
+%%%%
+A rough-hewn floor
+
+грубо обтесанный пол
+%%%%
+Viscous fluid
+
+вязкая жидкость
+%%%%
+A thin membrane
+
+тонкая мембрана
+%%%%
+A pulsating floor
+
+пульсирующий пол
+%%%%
+Zonguldrok's gravestone
+
+надгробие Zonguldrok
+%%%%
+A gravestone
+
+надгробие
+%%%%
+The ground
+
+земля
+%%%%
+A damp floor
+
+влажный пол
+%%%%
+A hot floor
+
+теплый пол
+%%%%
+A black wall
+
+черная стена
+%%%%
+A carved rock wall
+
+резная горная стена
+%%%%
+A dead tree
+
+мертвое дерево
+%%%%
+An iron statue
+
+железная статуя
+%%%%
+Ashen ground
+
+пепельная земля
+%%%%
+A tempered metal wall
+
+закаленная металлическая стена
+%%%%
+An ice-covered rock wall
+
+покрытая льдом горная стена
+%%%%
+An ice-covered stone wall
+
+покрытая льдом каменная стена
+%%%%
+Frost-covered floor
+
+пол покрытый инеем
+%%%%
+A cracked metal wall
+
+треснувшая металлическая стена
+%%%%
+A golden statue
+
+золотая статуя
+%%%%
+A silver wall
+
+серебряная стена
+%%%%
+A rune carved stone wall
+
+руны вырезанные на каменной стене
+%%%%
+A sarcophagus
+
+саркофаг
+%%%%
+A granite stump
+
+гранитная культя
+%%%%
+A large window
+
+большое окно
+%%%%
+A glass window
+
+стеклянное окно
+%%%%
+A granite statue of a fallen hero
+
+гранитная статуя поверженного героя
+%%%%
+An elephant-shaped statue
+
+статуя в форме слона
+%%%%
+A weirdly glowing ball
+
+странно светящийся шар
+%%%%
+A very old granite statue
+
+очень старая гранитная статуя
+%%%%
+A sealed sarcophagus
+
+запечатанный саркофаг
+%%%%
+A flagged portal
+
+отмеченный портал
+%%%%
+A flickering gateway to a bazaar
+
+мерцающие врата на базар
+%%%%
+A gateway to a bazaar
+
+Вход на базар
+%%%%
+A frozen archway
+
+обледенелая арка
+%%%%
+A sand-covered staircase
+
+покрытая песком лестница
+%%%%
+A dark tunnel
+
+темный тоннель
+%%%%
+A magical portal
+
+магический портал
+%%%%
+An open sea?
+
+открытое море?
+%%%%
+banana
+
+банан
+%%%%
+beef jerky
+
+вяленая говядина
+%%%%
+blessed double sword
+
+благословенный двойной меч
+%%%%
+blessed falchion
+
+благословенная сабля
+%%%%
+blessed great sword
+
+благословенный большой меч
+%%%%
+blessed long sword
+
+благословенныйдлинный меч
+%%%%
+blessed scimitar
+
+благословенный ятаган
+%%%%
+blessed triple sword
+
+благословенный тройной меч
+%%%%
+book of air
+
+книга воздуха
+%%%%
+book of alchemy
+
+книга алхимии
+%%%%
+book of annihilations
+
+книга уничтожений
+%%%%
+book of beasts
+
+книга зверей
+%%%%
+book of burglary
+
+книга воровства
+%%%%
+book of callings
+
+книга призывов
+%%%%
+book of cantrips
+
+книга мистификаций
+%%%%
+book of changes
+
+книга изменений
+%%%%
+book of conjurations
+
+книга заклинаний
+%%%%
+book of control
+
+книга контроля
+%%%%
+book of death
+
+книга смерти
+%%%%
+book of debilitation
+
+книга слабости
+%%%%
+book of dreams
+
+книга грез
+%%%%
+book of enchantments
+
+книга чар
+%%%%
+book of envenomations
+
+книга отравлений
+%%%%
+book of fire
+
+книга огня
+%%%%
+book of flames
+
+книга пламени
+%%%%
+book of frost
+
+книга мороза
+%%%%
+book of geomancy
+
+книга геомантии
+%%%%
+book of hinderance
+
+книга препятствия
+%%%%
+book of ice
+
+книга льда
+%%%%
+book of maledictions
+
+книга проклятий
+%%%%
+book of minor magic
+
+книга минорной магии
+%%%%
+book of morphology
+
+книга морфологии
+%%%%
+book of necromancy
+
+книга некромантии
+%%%%
+book of power
+
+книга силы
+%%%%
+book of spatial translocations
+
+книга пространственных перемещений
+%%%%
+book of summonings
+
+книга вызовов
+%%%%
+book of the dragon
+
+книга дракона
+%%%%
+book of the earth
+
+книга земли
+%%%%
+book of the sky
+
+книга неба
+%%%%
+book of the tempests
+
+книга бурь
+%%%%
+book of the warp
+
+книга искажения
+%%%%
+book of transfigurations
+
+книга преобразований
+%%%%
+book of war chants
+
+книга военных песнопений
+%%%%
+book of wizardry
+
+книга колдовства
+%%%%
+bottled efreet
+
+сдерживаемый ифрит
+%%%%
+cap
+
+шапка
+%%%%
+centaur barding
+
+броня кентавра
+%%%%
+cheese
+
+сыр
+%%%%
+chunk of flesh
+
+кусок мяса
+%%%%
+corpse
+
+труп
+%%%%
+crystal ball of energy
+
+хрустальный шар энергии
+%%%%
+crystal plate armour
+
+кристальный латный доспех
+%%%%
+deck of changes
+
+колода изменений
+%%%%
+deck of defence
+
+колода защиты
+%%%%
+deck of destruction
+
+колода разрушения
+%%%%
+deck of dungeons
+
+колода подземелий
+%%%%
+deck of escape
+
+колода спасения
+%%%%
+deck of punishment
+
+колода кары
+%%%%
+deck of summonings
+
+колода призывов
+%%%%
+deck of war
+
+колода войны
+%%%%
+deck of wonders
+
+колода чудес
+%%%%
+disc of storms
+
+диск бури
+%%%%
+eggplant
+
+баклажан
+%%%%
+empty ebony casket
+
+пустая шкатулка из эбенового дерева
+%%%%
+grand grimoire
+
+великий гримуар
+%%%%
+grape
+
+виноград
+%%%%
+helmet
+
+шлем
+%%%%
+honeycomb
+
+медовые соты
+%%%%
+lamp of fire
+
+лампа огня
+%%%%
+lantern of shadows
+
+фонарь теней
+%%%%
+lemon
+
+лимон
+%%%%
+meat ration
+
+мясная порция
+%%%%
+naga barding
+
+броня наги
+%%%%
+necronomicon
+
+некрономикон
+%%%%
+pair of boots
+
+пара сапог
+%%%%
+pair of bracers
+
+пара наручей
+%%%%
+pair of gauntlets
+
+пара латных рукавиц
+%%%%
+pair of gloves
+
+пара перчаток
+%%%%
+pear
+
+груша
+%%%%
+piece of ambrosia
+
+кусок амброзии
+%%%%
+plate armour
+
+латный доспех
+%%%%
+potion of agility
+
+зелье ловкости
+%%%%
+potion of berserk rage
+
+зелье неистовой ярости
+%%%%
+potion of blood
+
+зелье крови
+%%%%
+potion of confusion
+
+зелье замешательства
+%%%%
+potion of cure mutation
+
+зелье лечения мутации
+%%%%
+potion of curing
+
+зелье лечения
+%%%%
+potion of degeneration
+
+зелье дегенерации
+%%%%
+potion of experience
+
+зелье опыта
+%%%%
+potion of invisibility
+
+зелье невидимости
+%%%%
+potion of magic
+
+зелье магии
+%%%%
+potion of might
+
+зелье энергии
+%%%%
+potion of mutation
+
+зелье мутации
+%%%%
+potion of paralysis
+
+зелье паралича
+%%%%
+potion of resistance
+
+зелье сопротивляемости
+%%%%
+potion of restore abilities
+
+зелье восстановление способностей
+%%%%
+potion of slowing
+
+зелье замедления
+%%%%
+potion of speed
+
+зелье скорости
+%%%%
+royal jelly
+
+королевский студень
+%%%%
+sacred scourge
+
+священный бич
+%%%%
+sausage
+
+сосиски
+%%%%
+scroll of acquirement
+
+свиток приобретения
+%%%%
+scroll of amnesia
+
+свиток амнезии
+%%%%
+scroll of blinking
+
+свиток мигания
+%%%%
+scroll of curse armour
+
+свиток проклятия брони
+%%%%
+scroll of curse jewellery
+
+свиток проклятия украшения
+%%%%
+scroll of curse weapon
+
+свиток проклятия оружия
+%%%%
+scroll of enchant armour
+
+свиток чар для брони
+%%%%
+scroll of enchant weapon i
+
+свиток чар для оружия I
+%%%%
+scroll of enchant weapon ii
+
+свиток чар для оружия II
+%%%%
+scroll of enchant weapon iii
+
+свиток чар для оружия III
+%%%%
+scroll of fear
+
+свиток страха
+%%%%
+scroll of fog
+
+свиток тумана
+%%%%
+scroll of holy word
+
+свиток святого слова
+%%%%
+scroll of identify
+
+свиток идентификации
+%%%%
+scroll of immolation
+
+свиток жертвоприношения
+%%%%
+scroll of magic mapping
+
+свиток магической карты
+%%%%
+scroll of noise
+
+свиток шума
+%%%%
+scroll of recharging
+
+свиток зарядки
+%%%%
+scroll of remove curse
+
+свиток снятие проклятия
+%%%%
+scroll of teleportation
+
+свиток телепортации
+%%%%
+scroll of torment
+
+свиток мучения
+%%%%
+scroll of vulnerability
+
+свиток уязвимости
+%%%%
+scroll of silence
+
+свиток тишины
+%%%%
+skeleton
+
+скелет
+%%%%
+stone of earth elementals
+
+камень элементаля земли
+%%%%
+tome of destruction
+
+фолиант разрушения
+%%%%
+trishula
+
+тришула
+%%%%
+wand of heal wounds
+
+жезл исцеления ран
+%%%%
+wizard hat
+
+магическая шляпа
+%%%%
+young poisoner's handbook
+
+Настольная книга молодого отравителя
+%%%%
+Agnes
+
+Агнес
+%%%%
+Arachne
+
+Арахна
+%%%%
+Azrael
+
+Азраил
+%%%%
+Boris
+
+Борис
+%%%%
+Cerebov
+
+Керебов
+%%%%
+Chuck
+
+Чак
+%%%%
+Donald
+
+Дональд
+%%%%
+the Enchantress
+
+Колдунья
+%%%%
+Ereshkigal
+
+Эрешкигаль
+%%%%
+Erica
+
+Эрикэ
+%%%%
+Erolcha
+
+Еролха
+%%%%
+Frances
+
+Франсис
+%%%%
+Gastronok
+
+Гэстронок
+%%%%
+Grinder
+
+Грайндэ
+%%%%
+Grum
+
+Грум
+%%%%
+Harold
+
+Хэрольд
+%%%%
+Ignacio
+
+Игнасио
+%%%%
+Jessica
+
+Джессика
+%%%%
+Jory
+
+Джори
+%%%%
+Joseph
+
+Джозеф
+%%%%
+Josephine
+
+Джозефин
+%%%%
+Lom Lobon
+
+Лом Лобон
+%%%%
+Louise
+
+Луиза
+%%%%
+Margery
+
+Марджери
+%%%%
+Maud
+
+Мод
+%%%%
+Mennas
+
+Меннас
+%%%%
+Mnoleg
+
+Мнолег
+%%%%
+Nellie
+
+Нелли
+%%%%
+Nergalle
+
+Нергалл
+%%%%
+Nessos
+
+Нессос
+%%%%
+Pikel
+
+Пайкель
+%%%%
+Purgy
+
+Пурги
+%%%%
+Roxanne
+
+Роксанна
+%%%%
+Rupert
+
+Руперт
+%%%%
+Saint Roka
+
+Сэйнт Рока
+%%%%
+Snorg
+
+Снорг
+%%%%
+Sonja
+
+Соня
+%%%%
+Urug
+
+Уруг
+%%%%
+Wiglaf
+
+Уиглаф
+%%%%
+acid blob
+
+капля кислоты
+%%%%
+air elemental
+
+воздушный элементаль
+%%%%
+alligator snapping turtle
+
+грифовая черепаха
+%%%%
+anaconda
+
+анаконда
+%%%%
+ancient lich
+
+древний лич
+%%%%
+angel
+
+ангел
+%%%%
+ant larva
+
+личинка муравья
+%%%%
+apis
+
+пчела
+%%%%
+azure jelly
+
+лазурный студень
+%%%%
+ball lightning
+
+шаровая молния
+%%%%
+ball python
+
+шар предсказателя
+%%%%
+basilisk
+
+василиск
+%%%%
+big kobold
+
+большой кобольд
+%%%%
+black bear
+
+черный медведь
+%%%%
+black draconian
+
+черный драконид
+%%%%
+black mamba
+
+черная мамба
+%%%%
+blink frog
+
+мерцающая лягушка
+%%%%
+bone dragon
+
+костяной дракон
+%%%%
+brain worm
+
+мозговой червь
+%%%%
+centaur
+
+кентавр
+%%%%
+centaur warrior
+
+воин кентавр
+%%%%
+crawling corpse
+
+ползущий труп
+%%%%
+crocodile
+
+крокодил
+%%%%
+crystal golem
+
+кристальный голем
+%%%%
+curse skull
+
+проклятый череп
+%%%%
+curse toe
+
+проклятая нога
+%%%%
+cyclops
+
+циклоп
+%%%%
+dancing weapon
+
+танец оружия
+%%%%
+deep elf annihilator
+
+глубинный эльф уничтожитель
+%%%%
+deep elf blademaster
+
+глубинный эльф мастер клинка
+%%%%
+deep elf demonologist
+
+глубинный эльф демонолог
+%%%%
+deep elf elementalist
+
+глубинный эльф элементалист
+%%%%
+deep elf fighter
+
+глубинный эльф боец
+%%%%
+deep elf high priest
+
+глубинный эльф верховный жрец
+%%%%
+deep elf knight
+
+глубинный эльф рыцарь
+%%%%
+deep elf mage
+
+глубинный эльф маг
+%%%%
+deep elf master archer
+
+глубинный эльф мастер лука
+%%%%
+deep elf priest
+
+глубинный эльф жрец
+%%%%
+deep elf soldier
+
+глубинный эльф воин
+%%%%
+deep elf sorcerer
+
+глубинный эльф колдун
+%%%%
+deep dwarf
+
+глубинный дварф
+
+%%%%
+deep dwarf artificer
+
+глубинный дварф изобретатель
+%%%%
+deep dwarf berserker
+
+глубинный дварф берсерк
+%%%%
+deep dwarf death knight
+
+глубинный дварф рыцарь смерти
+%%%%
+deep dwarf necromancer
+
+глубинный дварф некромант
+%%%%
+deep troll
+
+глубинный тролль
+%%%%
+demigod
+
+полубог
+%%%%
+diamond obelisk
+
+алмазный обелиск
+%%%%
+draconian
+
+драконид
+%%%%
+draconian annihilator
+
+драконид уничтожитлеь
+%%%%
+draconian knight
+
+драконид рыцарь
+%%%%
+draconian monk
+
+драконид монах
+%%%%
+dragon
+
+дракон
+%%%%
+dwarf
+
+дварф
+%%%%
+earth elemental
+
+элементаль земли
+%%%%
+eidolon
+
+фантом
+%%%%
+electric eel
+
+электрический угорь
+%%%%
+elf
+
+эльф
+%%%%
+Executioner
+
+Экзекутор
+%%%%
+fire bat
+
+огненная летучая мышь
+%%%%
+fire elemental
+
+элементаль огня
+%%%%
+fire giant
+
+огненный гигант
+%%%%
+fire vortex
+
+огненный вихрь
+%%%%
+fire drake
+
+огненный дракон
+%%%%
+flaming corpse
+
+пылающий труп
+%%%%
+flayed ghost
+
+освежеванный призрак
+%%%%
+freezing wraith
+
+ледяной дух
+%%%%
+frost giant
+
+ледяной гигант
+%%%%
+fungus
+
+грибок
+%%%%
+gargoyle
+
+горгулья
+%%%%
+giant amoeba
+
+гигантская амеба
+%%%%
+worker ant
+
+муравей рабочий
+%%%%
+goliath beetle
+
+жук голиаф
+%%%%
+giant centipede
+
+гигантская сороконожка
+%%%%
+giant cockroach
+
+гигантский таракан
+%%%%
+giant eyeball
+
+гигантское глазное яблоко
+%%%%
+giant firefly
+
+гигантский светлячок
+%%%%
+giant gecko
+
+гигантский геккон
+%%%%
+giant goldfish
+
+гигантская золотая рыба
+%%%%
+giant leech
+
+гигантская пиявка
+%%%%
+giant mite
+
+гигантский клещ
+%%%%
+giant newt
+
+гигантский тритон
+%%%%
+giant orange brain
+
+гигантский оранжевый мозг
+%%%%
+giant slug
+
+гигантский слизень
+%%%%
+giant spore
+
+гигантская спора
+%%%%
+glowing shapeshifter
+
+светящийся оборотень
+%%%%
+gnoll sergeant
+
+гнолл сержант
+%%%%
+gnoll shaman
+
+гнолл шаман
+%%%%
+gnome
+
+гном
+%%%%
+great orb of eyes
+
+большой шар глаз
+%%%%
+green death
+
+зеленая смерть
+%%%%
+green draconian
+
+зеленый драконид
+%%%%
+green rat
+
+зеленпая крыса
+%%%%
+grey draconian
+
+серый драконид
+%%%%
+grey rat
+
+серая крыса
+%%%%
+grizzly bear
+
+медведь гризли
+%%%%
+glowing angel
+
+светящийся ангел
 %%%%

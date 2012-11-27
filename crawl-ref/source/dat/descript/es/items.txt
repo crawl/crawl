@@ -1090,6 +1090,33 @@ ring of sustenance
 Este anillo proporciona sustento a su portador, de tal forma que necesita comer
 con menos frecuencia.
 %%%%
+ring of teleport control
+
+Este anillo le permite a su portador controlar el destino de cualquier
+teletransportación, aunque no con perfecta precisión. Intentar teletranspotarse
+a la posición de un objeto sólido, resultará en una teletransportación a una
+posición completamente aleatoria. También debes tener presente, que las
+teletransportaciones controladas te contaminarán con energías mágicas
+resisduales.
+%%%%
+ring of teleportation
+
+Este anillo ocasionalmente activará su poder para teletranspotar a su portador
+a una posición aleatoria, y puede ser evocado deliberadamente para conseguir el
+mismo efecto.
+%%%%
+ring of wizardry
+
+Este anillo incrementa la habilidad de su portador para usar hechizos mágicos.
+%%%%
+robe
+
+Una prenda holgada, con mangas anchas y hecha de un tejido ligero. Las túnicas
+se pueden ajustar fácilmente a cualquier humanoide, sea cual sea su tamaño.
+Esta vestimenta ofrece poca protección ante el daño físico, pero no obstaculiza
+la capacidad para evadir ataques, o la adecuada realización de los gestos
+taumatúrgicos.
+%%%%
 scythe
 
 Un ápero de granja, normalmente no apto para el combate.

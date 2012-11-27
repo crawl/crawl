@@ -16,12 +16,6 @@ amulet of conservation
 Tämä amuletti suojaa joitakin käyttäjän omistamia tavaroita tuhoutumiselta,
 mutta ei pettämättömästi.
 %%%%
-amulet of controlled flight
-
-Jos tämän amuletin käyttäjä nostetaan taikuudella ilmaan, hän saa jonkin verran
-kontrollia omiin liikkeisiinsä. Tämä sallii esimerkiksi portaiden käyttämisen
-ja maassa olevien tavaroiden keräämisen, mutta ei vie pois leijumisen hyötyjä.
-%%%%
 amulet of guardian spirit
 
 Tämä amuletti vähentää käyttäjänsä herkkyyttä ulkoiselle vahingolle, kuluttaen

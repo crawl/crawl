@@ -1,0 +1,345 @@
+%%%%
+Fighting
+
+Erfahrung mit Kämpfen erhöht deine Trefferwahrscheinlichkeit und deinen Schaden
+im Nahkampf; außerdem erhöht sie deine maximalen Lebenspunkte.
+%%%%
+Short Blades
+
+Erfahrung mit einer bestimmten Waffenart erhöht deine Angriffsgeschwindigkeit,
+deinen Schaden und deine Zielsicherheit mit dieser Waffenart. Es wird generell
+empfohlen, deine Anstrengungen auf eine oder zwei Waffenarten zu konzentrieren,
+um besser mit ihnen zu werden.
+
+Kurzschwerter sind besonders im Endspiel für ihren geringen Schaden bekannt,
+doch sie haben auch Vorteile - man kann seine Gegner damit sehr gut erdolchen.
+
+Erfahrung mit Kurzschwertern erleichtert das Training mit Langschwertern, und
+umgekehrt.
+%%%%
+Long Blades
+
+Erfahrung mit einer bestimmten Waffenart erhöht deine Angriffsgeschwindigkeit,
+deinen Schaden und deine Zielsicherheit mit dieser Waffenart. Es wird generell
+empfohlen, deine Anstrengungen auf eine oder zwei Waffenarten zu konzentrieren,
+um besser mit ihnen zu werden.
+
+Erfahrung mit Langschwertern erleichtert das Training mit Kurzschwertern, und
+umgekehrt.
+%%%%
+Axes
+
+Erfahrung mit einer bestimmten Waffenart erhöht deine Angriffsgeschwindigkeit,
+deinen Schaden und deine Zielsicherheit mit dieser Waffenart. Es wird generell
+empfohlen, deine Anstrengungen auf eine oder zwei Waffenarten zu konzentrieren,
+um besser mit ihnen zu werden.
+
+Äxte sind teilweise die stärksten zweihändigen Waffen, doch man braucht eine
+Menge Erfahrung, um sie effektiv zu nutzen.
+
+Erfahrung mit Äxten erleichtert das Training mit Keulen & Flegeln oder
+Stangenwaffen, und umgekehrt.
+%%%%
+Maces & Flails
+
+Erfahrung mit einer bestimmten Waffenart erhöht deine Angriffsgeschwindigkeit,
+deinen Schaden und deine Zielsicherheit mit dieser Waffenart. Es wird generell
+empfohlen, deine Anstrengungen auf eine oder zwei Waffenarten zu konzentrieren,
+um besser mit ihnen zu werden.
+
+Erfahrung mit Keulen & Flegeln erleichtert das Training mit Äxten oder Stäben,
+und umgekehrt.
+%%%%
+Polearms
+
+Erfahrung mit einer bestimmten Waffenart erhöht deine Angriffsgeschwindigkeit,
+deinen Schaden und deine Zielsicherheit mit dieser Waffenart. Es wird generell
+empfohlen, deine Anstrengungen auf eine oder zwei Waffenarten zu konzentrieren,
+um besser mit ihnen zu werden.
+
+Stangenwaffen können mit 'v' benutzt werden, um Gegner anzugreifen, die zwei
+Felder entfernt sind.
+
+Erfahrung mit Stangenwaffen erleichtert das Training mit Äxten oder Stäben, und
+umgekehrt.
+%%%%
+Staves
+
+Erfahrung mit einer bestimmten Waffenart erhöht deine Angriffsgeschwindigkeit,
+deinen Schaden und deine Zielsicherheit mit dieser Waffenart. Es wird generell
+empfohlen, deine Anstrengungen auf eine oder zwei Waffenarten zu konzentrieren,
+um besser mit ihnen zu werden.
+
+Man benötigt relativ wenig Erfahrung, um einen Stab richtig als Waffe
+einzusetzen, doch diese Waffenart ist im Vergleich zu anderen eher schlecht für
+den Nahkampf geeignet.
+
+Erfahrung mit Stäben erleichtert das Training mit Keulen & Flegeln oder
+Stangenwaffen, und umgekehrt.
+%%%%
+Slings
+
+Erfahrung mit einer bestimmten Fernkampfwaffenart erhöht deinen Schaden mit
+dieser Waffenart, wenn du die passende Munition verwendest.
+
+Erfahrung mit Schleudern erleichtert das Sammeln von Erfahrung mit Werfen, und
+umgekehrt.
+%%%%
+Bows
+
+Erfahrung mit einer bestimmten Fernkampfwaffenart erhöht deinen Schaden mit
+dieser Waffenart, wenn du die passende Munition verwendest.
+%%%%
+Crossbows
+
+Erfahrung mit einer bestimmten Fernkampfwaffenart erhöht deinen Schaden mit
+dieser Waffenart, wenn du die passende Munition verwendest.
+%%%%
+Darts
+
+Erfahrung mit einer bestimmten Fernkampfwaffenart erhöht deinen Schaden mit
+dieser Waffenart, wenn du die passende Munition verwendest.
+%%%%
+Throwing
+
+Erfahrung mit Werfen macht die Benutzung geworfener Waffen (z.B. Wurfspeeren
+und Blasrohren) effektiver. Außerdem erhöht sie die Wahrscheinlichkeit, dass
+eine zurückkehrende Waffe tatsächlich zurückkehrt, und dass mit einem Blasrohr
+geschossene magische Nadeln einen besonderen Effekt haben.
+
+Erfahrung mit Werfen erleichtert das Training mit Schleudern, und umgekehrt.
+%%%%
+Armour
+
+Die Rüstungserfahrung erhöht die von schwerer Rüstung erhaltene AC, und sie
+verringert den Nachteil, den das Tragen schwerer Rüstung bei Nahkampf und
+Zaubern verursacht.
+%%%%
+Dodging
+
+Erfahrung mit Ausweichen beeinflusst deine Chance, einer Attacke auszuweichen -
+sei es Nahkampf, Fernkampf oder Magie. Manchen Arten von Attacken kann man
+allerdings nicht ausweichen, zum Beispiel Verzauberungen (dafür ist
+Magiewiderstand wichtig) und Explosionen.
+%%%%
+Stealth
+
+Erfahrung mit Tarnung verringert die Wahrscheinlichkeit, dass Gegner dich
+bemerken, wenn sie schlafen oder unaufmerksam sind, und die Wahrscheinlichkeit,
+dass Gegner dich wiederfinden, nachdem sie dich aus den Augen verloren haben.
+Beachte, dass die Gegner mit zunehmender Tiefe immer aufmerksamer und
+misstrauischer werden.
+%%%%
+Stabbing
+
+Erfahrung mit Erdolchen erhöht deine Wahrscheinlichkeit, großen Schaden zu
+verursachen, wenn du einen abgelenkten oder hilflosen Gegner angreifst
+(normalerweise mit einem Kurzschwert). Je erfahrener du mit Erdolchen bist,
+desto mehr Schaden verursacht ein solcher Angriff. Manche Götter missbilligen
+diese Angriffsart.
+%%%%
+Shields
+
+Erfahrung mit Schutzschildern hilft dir, Nahkampfangriffe oder Projektile
+(magisch und nicht-magisch) mit einem ausgerüsteten (oder magischen)
+Schutzschuild abzuwehren. Manche Angriffe, beispielsweise durchdringende
+Pfeile, können nicht abgewehrt werden.
+%%%%
+Traps
+
+Erfahrung mit Fallen macht dich aufmerksamer auf deine Umgebung und lässt dich
+Fallen schneller erkennen und unschädlich machen.
+%%%%
+Unarmed Combat
+
+Erfahrung mit waffenlosem Kampf erhöht deine Trefferwahrscheinlichkeit, deinen
+Schaden und deine Geschwindigkeit im Nahkampf, wenn du unbewaffnet bist. Ein
+erfahrener waffenloser Kämpfer kann außerdem eine freie Hand nutzen, um während
+eines bewaffneten Kampfes zusätzliche Schläge auszuteilen.
+%%%%
+Spellcasting
+
+Erfahrung mit Zaubern erleichtert das Lernen und Zaubern von Zaubersprüchen und
+erhöht deine maximalen Magiepunkte. Jedes Level in Zaubern gibt dir mehr
+Zauber-Einbauplätze, die du für neue Zaubersprüche nutzen kannst.
+Zaubererfahrung und deine Intelligenz sind die einzigen Faktoren, die
+Zauberhunger beeinflussen.
+%%%%
+Conjurations
+
+In einer magischen "Schule" ausgebildet zu sein, macht es leichter,
+Zaubersprüche dieser Schule zu lernen und zu benutzen. Viele Zaubersprüche
+gehören zu einer Kombination mehrerer Schulen - in diesem Fall bestimmt die
+durchschnittliche Erfahrung in diesen Schulen über die
+Erfolgswahrscheinlichkeit und die Kraft der Zaubersprüche.
+
+Elementbeschwörungen sind Kampfzauber, die direkten Schaden verursachen, indem
+kurzlebige Materie beschworen und mit Wucht gegen einen Gegner geschleudert
+wird. Erfahrung mit Elementbeschwörungen erhöht meistens den verursachten
+Schaden und manchmal die Reichweite oder die Größe des beeinflussten Gebiets.
+%%%%
+Hexes
+
+In einer magischen "Schule" ausgebildet zu sein, macht es leichter,
+Zaubersprüche dieser Schule zu lernen und zu benutzen. Viele Zaubersprüche
+gehören zu einer Kombination mehrerer Schulen - in diesem Fall bestimmt die
+durchschnittliche Erfahrung in diesen Schulen über die
+Erfolgswahrscheinlichkeit und die Kraft der Zaubersprüche.
+
+Flüche versuchen, die Gegner in der Nähe zu verzaubern. Kein Fluch verursacht
+direkten Schaden, aber ein Gegner, der verzaubert wurde, ist oft kampfunfähig
+oder stark geschwächt. Ein Fluch ist nur erfolgreich, wenn er stärker als die
+Magieresistenz des Gegners ist. Erfahrung mit Flüchen hilft, diese Resistenz zu
+überwinden.
+%%%%
+Charms
+
+In einer magischen "Schule" ausgebildet zu sein, macht es leichter,
+Zaubersprüche dieser Schule zu lernen und zu benutzen. Viele Zaubersprüche
+gehören zu einer Kombination mehrerer Schulen - in diesem Fall bestimmt die
+durchschnittliche Erfahrung in diesen Schulen über die
+Erfolgswahrscheinlichkeit und die Kraft der Zaubersprüche.
+
+CHARMS - currently editing!!!
+%%%%
+Summonings
+
+In einer magischen "Schule" ausgebildet zu sein, macht es leichter,
+Zaubersprüche dieser Schule zu lernen und zu benutzen. Viele Zaubersprüche
+gehören zu einer Kombination mehrerer Schulen - in diesem Fall bestimmt die
+durchschnittliche Erfahrung in diesen Schulen über die
+Erfolgswahrscheinlichkeit und die Kraft der Zaubersprüche.
+
+Kreaturbeschwörungen ermöglichen es dir, Wesen aus einer anderen Welt als
+Kämpfer an deiner Seite herbeizurufen. Erfahrung mit Kreaturbeschwörungen hat
+abhängig vom Zauberspruch viele verschiedene Auswirkungen, beispielsweise eine
+Verlängerung der Beschwörungsdauer oder eine geringere Wahrscheinlichkeit, dass
+das beschworene Wesen dir feindlich gesinnt ist.
+%%%%
+Necromancy
+
+In einer magischen "Schule" ausgebildet zu sein, macht es leichter,
+Zaubersprüche dieser Schule zu lernen und zu benutzen. Viele Zaubersprüche
+gehören zu einer Kombination mehrerer Schulen - in diesem Fall bestimmt die
+durchschnittliche Erfahrung in diesen Schulen über die
+Erfolgswahrscheinlichkeit und die Kraft der Zaubersprüche.
+
+Nekromantie ist die Kunst, Leben zu stehlen, und wird oft mit Zombies und
+anderen Untoten in Verbindung gebracht. Nekromantiezaubersprüche haben einen
+großen Wirkungsbereich, der sich vom Herstellen und Kontrollieren der Untoten
+bis zu entsetzlichen Heilzaubern erstreckt.
+%%%%
+Translocations
+
+In einer magischen "Schule" ausgebildet zu sein, macht es leichter,
+Zaubersprüche dieser Schule zu lernen und zu benutzen. Viele Zaubersprüche
+gehören zu einer Kombination mehrerer Schulen - in diesem Fall bestimmt die
+durchschnittliche Erfahrung in diesen Schulen über die
+Erfolgswahrscheinlichkeit und die Kraft der Zaubersprüche.
+
+Translokationen sind Zauber, die die Positionen von Wesen oder Gegenständen
+verändern. Dazu zählen beispielsweise Zaubersprüche, die dich selbst über eine
+kurze Distanz transportieren oder deine Gegner von dir weg teleportieren.
+%%%%
+Transmutations
+
+In einer magischen "Schule" ausgebildet zu sein, macht es leichter,
+Zaubersprüche dieser Schule zu lernen und zu benutzen. Viele Zaubersprüche
+gehören zu einer Kombination mehrerer Schulen - in diesem Fall bestimmt die
+durchschnittliche Erfahrung in diesen Schulen über die
+Erfolgswahrscheinlichkeit und die Kraft der Zaubersprüche.
+
+Umwandlungen ermöglichen das Verändern von Formen. Viele Umwandlungszauber
+verändern deine eigene Form, aber diese Art von Zaubern kann auch genutzt
+werden, um Gegner oder Objekte in deiner Nähe zu verändern.
+%%%%
+Fire Magic
+
+In einer magischen "Schule" ausgebildet zu sein, macht es leichter,
+Zaubersprüche dieser Schule zu lernen und zu benutzen. Viele Zaubersprüche
+gehören zu einer Kombination mehrerer Schulen - in diesem Fall bestimmt die
+durchschnittliche Erfahrung in diesen Schulen über die
+Erfolgswahrscheinlichkeit und die Kraft der Zaubersprüche.
+
+Feuermagie bietet Zauber, die Feuerschaden über lange Distanzen verursachen
+können - mit vielen effektiven Elementbeschwörungen.
+
+Erfahrung mit Feuermagie erschwert das Lernen von Eismagie, und umgekehrt.
+%%%%
+Ice Magic
+
+In einer magischen "Schule" ausgebildet zu sein, macht es leichter,
+Zaubersprüche dieser Schule zu lernen und zu benutzen. Viele Zaubersprüche
+gehören zu einer Kombination mehrerer Schulen - in diesem Fall bestimmt die
+durchschnittliche Erfahrung in diesen Schulen über die
+Erfolgswahrscheinlichkeit und die Kraft der Zaubersprüche.
+
+Eismagie bietet eine Reihe direkt schadender Zaubersprüche, aber auch einige
+defensive Effekte wie z.B. Zaubersprüche, die (temporäre) Schutzschilder und
+Rüstungen aus Eis herstellen.
+
+Erfahrung mit Eismagie erschwert das Lernen von Feuermagie, und umgekehrt.
+%%%%
+Air Magic
+
+In einer magischen "Schule" ausgebildet zu sein, macht es leichter,
+Zaubersprüche dieser Schule zu lernen und zu benutzen. Viele Zaubersprüche
+gehören zu einer Kombination mehrerer Schulen - in diesem Fall bestimmt die
+durchschnittliche Erfahrung in diesen Schulen über die
+Erfolgswahrscheinlichkeit und die Kraft der Zaubersprüche.
+
+Luftmagie bietet Zaubersprüche, die Schaden direkt durch den Wind oder durch
+laute, aber mächtige Blitzzauber verursachen. Zusätzlich bietet sie nützliche
+Zauber, die den Wind nutzen, um deine Bewegung zu unterstützen oder dich vor
+Projektilen zu schützen.
+
+Erfahrung mit Luftmagie erschwert das Lernen von Erdmagie, und umgekehrt.
+%%%%
+Earth Magic
+
+In einer magischen "Schule" ausgebildet zu sein, macht es leichter,
+Zaubersprüche dieser Schule zu lernen und zu benutzen. Viele Zaubersprüche
+gehören zu einer Kombination mehrerer Schulen - in diesem Fall bestimmt die
+durchschnittliche Erfahrung in diesen Schulen über die
+Erfolgswahrscheinlichkeit und die Kraft der Zaubersprüche.
+
+Erdmagie bietet Zaubersprüche, die dazu in der Lage sind, sehr viel direkten,
+physischen Schaden zu verursachen. Diesem Schaden können Gegner nicht wie
+Feuer-, Kälte- und Blitzschaden widerstehen. Zusätzlich dazu bietet Erdmagie
+Mutationszauber, die die Erde um dich herum verflüssigen oder deine Gegner
+versteinern können.
+
+Erfahrung mit Erdmagie erschwert das Lernen von Luftmagie, und umgekehrt.
+%%%%
+Poison Magic
+
+In einer magischen "Schule" ausgebildet zu sein, macht es leichter,
+Zaubersprüche dieser Schule zu lernen und zu benutzen. Viele Zaubersprüche
+gehören zu einer Kombination mehrerer Schulen - in diesem Fall bestimmt die
+durchschnittliche Erfahrung in diesen Schulen über die
+Erfolgswahrscheinlichkeit und die Kraft der Zaubersprüche.
+
+Giftmagie ist besonders am Anfang nützlich, doch im späteren Verlauf des Spiels
+tauchen immer mehr giftresistente Gegner auf. Es gibt allerdings auch
+Giftzaubersprüche, die während des ganzen Spiels nützlich sein können.
+%%%%
+Invocations
+
+Erfahrung mit Gottesfähigkeiten erhöht die Wahrscheinlichkeit, dass eine Bitte
+um göttliche Hilfe erfolgreich ist. Außerdem wird dadurch der durch viele
+göttliche Fähigkeiten verursachte Schaden erhöht. Deine Erfahrung mit
+Gottesfähigkeiten beeinflusst zusätzlich deine maximalen Magiepunkte, aber
+nicht so stark wie Erfahrung mit Zaubern, und auch nur dann, wenn du schlechter
+zaubern als Gottesfähigkeiten benutzen kannst.
+%%%%
+Evocations
+
+Evokationen haben viel mit magischen Gegenständen wie Zauberstäben, Kartendecks
+und anderen ungewöhnlichen Objekten zu tun. Erfahrung mit Evokationen erhöht
+die Wahrscheinlichkeit, dass das Evozieren/Benutzen eines magischen
+Gegenstandes fehlerfrei funktioniert. Außerdem kann ein erfahrener Evokateur(?)
+fühlen, wie oft ein gebrauchter Zauberstab noch benutzt werden kann. Deine
+Erfahrung mit Evokationen beeinflusst zusätzlich deine maximalen Magiepunkte,
+aber nicht so stark wie Erfahrung mit Zaubern, und auch nur dann, wenn du
+schlechter zaubern als evozieren kannst.
+%%%%

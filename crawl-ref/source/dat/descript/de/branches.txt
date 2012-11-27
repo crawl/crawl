@@ -1,0 +1,11 @@
+%%%%
+Temple
+
+Ein Tempel der Götter, ein Ort des Friedens und der Erholung vom Wahnsinn des
+Verlieses. Er enthält normalerweise Altare für die meisten bekannten Götter und
+befindet sich stets zwischen den Ebenen 4 und 7.
+%%%%
+Forest
+
+Diese Bäume greifen an!
+%%%%

@@ -1087,10 +1087,6 @@ rod of striking
 
 Ten pręt pozwala uderzać wrógów surową magią, niestety niezbyt efektywnie.
 %%%%
-rod of summoning
-
-Ten pret zawiera czary przywołań.
-%%%%
 rod of venom
 
 Ten pręt zawiera ofensywne jak i ochronne czary Magii Trucizn.

@@ -1,0 +1,24 @@
+%%%%
+death
+
+Izsākām līdzjūtību! Jūsu tēla pirmslaicīgā nāve ir skumja, taču ierasta
+parādība Crawl. Neapšaubāmi, ka ar centību un spēlēšanas pieredzi Jūsu tēlu
+mūžs būs ilgāks.
+
+Varbūt šie padomi uzlabos Jūsu spēlēšanas stilu:
+%%%%
+death ranger melee
+
+Jūsu loks un bultas ir ārkārtīgi iedarbīgas pret attāliem briesmoņiem, tādēļ
+paceliet visas pazemē mētājošās bultas.
+%%%%
+death random 0
+
+Vienmēr centieties izmantot šāviņus vai burvestības pirms iesaistīšanās ar
+briesmoņiem tuvcīņā.
+%%%%
+death random 5
+
+Ja iespējams, nekad necīnieties ar vairāk kā vienu briesmoni. Vienmēr
+atkāpieties gaitenī, lai tie ir spiesti ar Jums cīnīties viens pret viens.
+%%%%

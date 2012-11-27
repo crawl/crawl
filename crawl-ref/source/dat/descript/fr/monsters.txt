@@ -128,6 +128,11 @@ Gloorx Vloq
 
 Une silhouette sombre enveloppée de profonds ténèbres.
 %%%%
+Ijyb
+
+Un gobelin petit et tordu. Il considère que ce niveau du donjon lui appartient,
+et punit de mort tous ceux qui oseraient s'y aventurer sans son consentement.
+%%%%
 Joseph
 
 Ressemble à un mercenaire.
@@ -234,10 +239,29 @@ blizzard demon
 
 Un grand démon, recouvert de neige et parcouru d'éclairs.
 %%%%
+boring beetle
+
+Un coléoptère nocturne doté de grandes et puissantes mandibules qui lui
+permettent de creuser au travers de la roche.
+%%%%
 Brimstone Fiend
 
 Un démon puissant et énorme, baigné de flammes infernales et doté de grandes
 ailes écailleuses. Un des plus effrayants habitants de n'importe quel Enfer.
+%%%%
+centaur
+
+Une créature hybride composée d'un torse humain sur un grand corps chevalin.
+Les centaures sont réputés pour leurs compétences à l'arc.
+%%%%
+centaur warrior
+
+Un puissant centaure, vétéran de nombreuses batailles, et qui porte une arme de
+qualité et tout à fait capable d'en tirer le meilleur.
+%%%%
+clay golem
+
+Une énorme statue d'argile qui été animée par quelques moyens occultes.
 %%%%
 deep elf fighter
 
@@ -447,6 +471,12 @@ mottled dragon
 Un petit dragon violet avec des écailles curieusement marbré, sa bouche bave
 d'une étrange flamme liquide.
 %%%%
+oklob plant
+
+Une plante très dangereuse qui éloigne les prédateurs en leur pulvérisant du
+vitriol corrosif dessus. Même les aventuriers expérimentés gardent à grande
+distance d'eux la plante oklob.
+%%%%
 oklob sapling
 
 Une jeune plante oklob, mais déjà dangereuse.
@@ -464,6 +494,11 @@ pandemonium lord
 
 Un formidable seigneur démon habitant les halls sans fin du Pandémonium. Chacun
 est différent, avec ses propres forces et faiblesses.
+%%%%
+phoenix
+
+Un oiseau mythique et légendaire, il est dit de lui qu'il meurt dans un
+tourbillon de flammes et qu'il renaît de ses cendres.
 %%%%
 pillar of salt
 
@@ -503,6 +538,21 @@ silver star
 
 Une orbe d'énergie divine, pulsant d'une lumière aveuglante.
 %%%%
+siren
+
+Une jeune femme avec une queue de poisson à la place des jambes. Les sirènes
+sont capables de lancer un sort très puissant à ceux qui les écoutent.
+%%%%
+skeletal bat
+
+Une chauve-souris squelette sans la décence de rester immobile comme les
+chauve-souris mortes sont supposées l'être.
+%%%%
+small abomination
+
+Un amas hideux de parties de corps humains, en partie chair morte animée, en
+partie démon.
+%%%%
 small simulacrum
 
 Une réplique de glace d'une monstre, animée par les pouvoirs de la nécromancie.
@@ -514,6 +564,10 @@ Un squelette animé de non-vie par la nécromancie.
 small zombie
 
 Un cadavre animé de non-vie par la nécromancie.
+%%%%
+spatial vortex
+
+Un tourbillon en constante déformation dans le tissu de la réalité.
 %%%%
 spectral thing
 
@@ -542,6 +596,21 @@ Un spriggan dont la connexion avec les oiseaux et les bêtes est
 exceptionnellement forte. Dans la nature, ces protecteurs de la terre sont la
 perte des non-écologistes.
 %%%%
+sun demon
+
+Une figure démoniaque brillante telle la lumière et avec toute la fureur d'une
+étoile déchue.
+%%%%
+tarantella
+
+Une petite araignée mais très redoutée, au poison redoutable causant même aux
+victimes les plus resistantes dans une danse frénétique.
+%%%%
+tentacle segment
+
+Partie de la puissante tentacule d'un kraken. Tout dégat qui lui est infligé
+blesse toute la créature.
+%%%%
 training dummy
 
 Un mannequin utilisé pour l'entrainement au combat.
@@ -549,6 +618,11 @@ Un mannequin utilisé pour l'entrainement au combat.
 twister
 
 Un vibrant vortex d'air turbulent.
+%%%%
+two-headed ogre
+
+Un oger énorme avec deux têtes perchées au sommet d'un corps d'ogre ballonné.
+Il est capable de tenir une arme dans chacune de ses mains géantes.
 %%%%
 ufetubus
 
@@ -570,6 +644,14 @@ wight
 
 Un ancien guerrier, maintenu dans ce perpétuel état de non-vie par son désir de
 mourir au combat.
+%%%%
+wolf
+
+Un canidé fort et sauvage, avec des dents tranchantes et un gros appétit.
+%%%%
+wood golem
+
+Un personnage énorme fait tout de bois et animé. Il est hautement inflamable.
 %%%%
 yellow draconian
 
@@ -596,6 +678,15 @@ deformed humanoid
 
 La pauvre créature semble hideusement déformée.
 %%%%
+gourd plant
+
+Cette vigne robuste abrite des fruits nutritifs, mais n'ayant presque aucun
+goût.
+%%%%
+hungry kobold
+
+Ce kobold semble énervé du fait d'avoir été interrompu durant son repas.
+%%%%
 lich demonologist
 
 <lich>
@@ -604,13 +695,47 @@ mummy warrior
 
 <guardian mummy>
 %%%%
+oklob plant annihilator
+
+Il pourrait sembler inconcevable qu'une simple plante puisse atteindre la
+sensibilité et l'usabilité de la magie, mais c'est ce que vous voyez ici.
+Quelle est cette sorcellerie?
+%%%%
 oklob plant conjurer
 
 <oklob plant annihilator>
 %%%%
+oklob plant demonologist
+
+<oklob plant annihilator>
+%%%%
+oklob plant meteorologist
+
+<oklob plant annihilator>
+%%%%
+oklob plant shifter
+
+<oklob plant annihilator>
+%%%%
+oklob plant summoner
+
+<oklob plant annihilator>
+%%%%
+oklob sapling wizard
+
+<oklob plant annihilator>
+%%%%
+orc berserker
+
+Un ogre résistant, fort et surtout particulièrement énervé.
+%%%%
 pyrus tree
 
 <apple tree>
+%%%%
+strange machine
+
+Une machine scintillante en argent.
 %%%%
 vampire noble
 

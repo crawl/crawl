@@ -1202,10 +1202,6 @@ rod of striking
 Ce sceptre permet à son possesseur de frapper ses ennemis à distance avec des
 projectiles d’énergie.
 %%%%
-rod of summoning
-
-Ce sceptre contient des sorts de convocation.
-%%%%
 rod of venom
 
 Ce sceptre contient des sorts offensifs et défensifs de poison.
