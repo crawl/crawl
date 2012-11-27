@@ -1765,3 +1765,63 @@ xxxllllllllllxxx
 xxxxxllllllxxxxx
 xxxxxxxxxxxxxxxx
 ENDMAP
+
+NAME:   mrwooster_entry_arrow
+TAGS:   entry no_monster_gen
+ORIENT: float
+MAP
+xxxxxxxxxxxxx
+xxxxxx.xxxxxx
+xxxxx...xxxxx
+xxxx.....xxxx
+xxx.......xxx
+xx.........xx
++.....{.....+
+xxxxx...xxxxx
+    xx.xx
+     x.x
+     x.x
+     x.x
+     x+x
+ENDMAP
+
+NAME:   mrwooster_entry_statue
+TAGS:   entry no_monster_gen
+ORIENT: float
+MAP
+xxxxxxxxxxxxx
+xxxxxG{Gxxxxx
+xx.........xx
+xx.........xx
+xx.........xx
+.............
+ENDMAP
+
+NAME:   mrwooster_entry_statue_2
+TAGS:   entry no_monster_gen
+ORIENT: float
+MAP
+xxxxxxxxxxxxx
+xxxxxG{Gxxxxx
+xx.........xx
+xG.........Gx
+x[.........(x
+xG.........Gx
+xx.........xx
+.............
+ENDMAP
+
+NAME:   mrwooster_entry_statue_3
+TAGS:   entry no_monster_gen
+ORIENT: float
+MAP
+xxxxxxxxxxxxx
+xxxxxG{Gxxxxx
+xx.........xx
+xG.........Gx
+x[.........(x
+xG.........Gx
+xx.........xx
+xx.........xx
+xxxxxx+xxxxxx
+ENDMAP
