@@ -31,8 +31,8 @@ Vous pouvez vous déplacer en diagonale grâce au <w>[pavé numérique]</w>
 
 <w></w>                 /|\                         /|\
 
-<w></w>                <w>1 2 3</w>
-<w>$cmd[CMD_MOVE_DOWN_LEFT] $cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
+<w></w>                <w>1 2 3</w> <w>$cmd[CMD_MOVE_DOWN_LEFT]
+$cmd[CMD_MOVE_DOWN] $cmd[CMD_MOVE_DOWN_RIGHT]</w>
 
 <localtiles>Vous pouvez aussi vous déplacer en utilisant un <w>[clic de
 souris]</w>.</localtiles>
