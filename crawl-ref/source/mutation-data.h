@@ -926,21 +926,21 @@
 },
 
 { MUT_WILD_MAGIC,                 6,   3,  false, false, false,
-    "wild magic",
+  "wild magic",
 
-    {"Your spells are a little harder to cast, but a little more powerful.",
-     "Your spells are harder to cast, but more powerful.",
-     "Your spells are much harder to cast, but much more powerful."},
+  {"Your spells are a little harder to cast, but a little more powerful.",
+   "Your spells are harder to cast, but more powerful.",
+   "Your spells are much harder to cast, but much more powerful."},
 
-    {"You feel less in control of your magic.",
-     "You feel less in control of your magic.",
-     "You feel your magical power running wild!"},
+  {"You feel less in control of your magic.",
+   "You feel less in control of your magic.",
+   "You feel your magical power running wild!"},
 
-    {"You regain control of your magic.",
-     "You feel more in control of your magic.",
-     "You feel more in control of your magic."},
+  {"You regain control of your magic.",
+   "You feel more in control of your magic.",
+   "You feel more in control of your magic."},
 
-    "wild magic"
+  "wild magic"
 },
 
 { MUT_STOCHASTIC_TORMENT_RESISTANCE, 0,  1, false, false, false,
@@ -1104,15 +1104,15 @@
    "Your pliable body absorbs attacks (AC +1, EV +1).",
    "Your gelatinous body deflects attacks (AC +2, EV +2)."},
 
-   {"Your body becomes stretchy.",
-    "Your body becomes more malleable.",
-    "Your body becomes viscous."},
+  {"Your body becomes stretchy.",
+   "Your body becomes more malleable.",
+   "Your body becomes viscous."},
 
-   {"Your body returns to its normal consistency.",
-    "Your body becomes less malleable.",
-    "Your body becomes less viscous."},
+  {"Your body returns to its normal consistency.",
+   "Your body becomes less malleable.",
+   "Your body becomes less viscous."},
 
-    "gelatinous body"
+  "gelatinous body"
 },
 
 { MUT_EYEBALLS,                   0,  3, false, true, true,
@@ -1122,15 +1122,15 @@
    "Your body is mostly covered in golden eyeballs (Acc +5).",
    "Your body is completely covered in golden eyeballs (Acc +7, SInv)."},
 
-   {"Eyeballs grow over part of your body.",
-    "Eyeballs cover a large portion of your body.",
-    "Eyeballs cover you completely."},
+  {"Eyeballs grow over part of your body.",
+   "Eyeballs cover a large portion of your body.",
+   "Eyeballs cover you completely."},
 
-   {"The eyeballs on your body disappear.",
-    "The eyeballs on your body recede somewhat.",
-    "The eyeballs on your body recede somewhat."},
+  {"The eyeballs on your body disappear.",
+   "The eyeballs on your body recede somewhat.",
+   "The eyeballs on your body recede somewhat."},
 
-    "eyeballs"
+  "eyeballs"
 },
 
 { MUT_TRANSLUCENT_SKIN,           0,  3, false, true, true,
@@ -1148,7 +1148,7 @@
    "Your skin's translucency fades.",
    "Your skin's transparency fades."},
 
-   "translucent skin"
+  "translucent skin"
 },
 
 { MUT_PSEUDOPODS,                 0,  3, false, true, true,
@@ -1166,7 +1166,7 @@
    "Your pseudopods become smaller.",
    "Your pseudopods become smaller."},
 
-   "pseudopods"
+  "pseudopods"
 },
 
 { MUT_FOOD_JELLY,                       0,  1, false, true, false,
