@@ -77,7 +77,7 @@ spret_type ice_armour(int pow, bool fail)
         return SPRET_ABORT;
     }
 
-    if (you.duration[DUR_STONESKIN])
+    if (you.duration[DUR_STONESKIN] || you.duration[DUR_FIRE_SHIELD])
     {
         mpr("The spell conflicts with another spell still in effect.");
         return SPRET_ABORT;
