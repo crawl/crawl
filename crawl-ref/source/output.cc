@@ -2279,7 +2279,7 @@ static string _status_mut_abilities(int sw)
                     current = "repel missiles";
                 break;
             case MUT_ICY_BLUE_SCALES:
-                AC_change += level;
+                AC_change += level + (level > 1 ? 1 : 0);
                 EV_change -= level > 1 ? 1 : 0;
                 break;
             case MUT_IRIDESCENT_SCALES:
@@ -2287,10 +2287,10 @@ static string _status_mut_abilities(int sw)
                 break;
             case MUT_LARGE_BONE_PLATES:
                 AC_change += level + 1;
-                SH_change += level + 1;
+                SH_change += level * 2;
                 break;
             case MUT_MOLTEN_SCALES:
-                AC_change += level;
+                AC_change += level + (level > 1 ? 1 : 0);
                 EV_change -= level > 1 ? 1 : 0;
                 break;
             case MUT_ROUGH_BLACK_SCALES:
@@ -2298,20 +2298,20 @@ static string _status_mut_abilities(int sw)
                 Dex_change -= level;
                 break;
             case MUT_RUGGED_BROWN_SCALES:
-                AC_change += 2;
+                AC_change += level;
                 break;
             case MUT_SLIMY_GREEN_SCALES:
-                AC_change += level;
+                AC_change += level + 1;
                 break;
             case MUT_THIN_METALLIC_SCALES:
-                AC_change += level;
+                AC_change += level + 1;
                 break;
             case MUT_THIN_SKELETAL_STRUCTURE:
                 Dex_change += 2 * level;
-                Str_change -= level;
+                Str_change -= (level - 1);
                 break;
             case MUT_YELLOW_SCALES:
-                AC_change += level;
+                AC_change += level + 1;
                 break;
             case MUT_GELATINOUS_BODY:
                 AC_change += (level == 3) ? 2 : 1;
