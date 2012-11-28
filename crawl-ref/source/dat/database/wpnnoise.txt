@@ -1259,63 +1259,63 @@ w:1
 @The_weapon@ sings, in a lilting soprano, "[Heiajaheia! Heiajaheia!|Wagala weia! Wallala, weiala weia!|Wallala! Lalaleia! Leialala!|Heia! Heia! Hahei!]"
 
 w:1
-@The_weapon@ sings, in a lilting soprano, "Badly you guard ... the sleeping gold; watch better o'er ... the slumberer's bed!"
+@The_weapon@ sings, in a lilting soprano, "Badly you guard... the sleeping gold; watch better o'er... the slumberer's bed!"
 
 w:1
 @The_weapon@ sings, in a stentorian basso, "Damp fills my nostrils: curse this sneezing!"
 
 w:1
-@The_weapon@ sings, in a stentorian basso, "... for hear me, ye waves: thus I curse love!"
+@The_weapon@ sings, in a stentorian basso, "...for hear me, ye waves: thus I curse love!"
 
 w:1
 @The_weapon@ sings, in a stentorian basso, "Thank you, stupid! Your work has stood the test."
 
 w:1
-@The_weapon@ sings, in a stentorian basso, "The whole world will I win ... all for my own!"
+@The_weapon@ sings, in a stentorian basso, "The whole world will I win... all for my own!"
 
 w:1
-@The_weapon@ sings, in a stentorian basso, "All you gods I'll grip ... in my golden grasp!"
+@The_weapon@ sings, in a stentorian basso, "All you gods I'll grip... in my golden grasp!"
 
 w:1
-@The_weapon@ sings, in a stentorian basso, "As I renounced love, all living things ... shall love renounce!"
+@The_weapon@ sings, in a stentorian basso, "As I renounced love, all living things... shall love renounce!"
 
 w:1
-@The_weapon@ sings, in a stentorian basso, "Beware! Beware! For when once you men ... serve my might..."
+@The_weapon@ sings, in a stentorian basso, "Beware! Beware! For when once you men... serve my might..."
 
 w:1
-@The_weapon@ sings, in a stentorian basso, "Beware the nocturnal host ... when the Abyssal horde rises ... from the silent depths ... to the day's light!"
+@The_weapon@ sings, in a stentorian basso, "Beware the nocturnal host... when the Abyssal horde rises... from the silent depths... to the day's light!"
 
 w:1
-@The_weapon@ sings, in a stentorian basso, "With wisdom the fool ... is puffed up to bursting! Now may envy devour you!"
+@The_weapon@ sings, in a stentorian basso, "With wisdom the fool... is puffed up to bursting! Now may envy devour you!"
 
 w:1
 @The_weapon@ sings, in a stentorian basso, "Take heed, haughty god! If I sinned, I sinned only 'gainst myself!"
 
 w:1
-@The_weapon@ sings, in a stentorian basso, "But you, immortal one, sin against ... all that was, is and shall be!""
+@The_weapon@ sings, in a stentorian basso, "But you, immortal one, sin against... all that was, is and shall be!""
 
 w:1
-@The_weapon@ sings, in a stentorian basso, "It shall gladden ... no happy man; its bright gleam ... shall light on no one lucky!"
+@The_weapon@ sings, in a stentorian basso, "It shall gladden... no happy man; its bright gleam... shall light on no one lucky!"
 
 w:1
-@The_weapon@ sings, in a thundering basso, "Many a time have I paid ... giants their due."
+@The_weapon@ sings, in a thundering basso, "Many a time have I paid... giants their due."
 
 w:1
-@The_weapon@ sings, in a thundering basso, "A sultry haze ... hangs in the air; its dull weight ... oppresses me."
+@The_weapon@ sings, in a thundering basso, "A sultry haze... hangs in the air; its dull weight... oppresses me."
 
 @The_weapon@ sings, in a thundering basso, "Heda! Heda! Hedo!"
 
 w:1
-@The_weapon@ sings, in a rumbling basso, "... its glittering glow hides ... runes of riches..."
+@The_weapon@ sings, in a rumbling basso, "...its glittering glow hides... runes of riches..."
 
 w:1
 @The_weapon@ sings, in a mocking tenor, "As you command, I will willingly lead you - steeply down: shall we journey to the Orb?"
 
 w:1
-@The_weapon@ sings, in a rumbling basso, "But for all the world ... I will not surrender the Orb!"
+@The_weapon@ sings, in a rumbling basso, "But for all the world... I will not surrender the Orb!"
 
 w:1
-@The_weapon@ sings, in a mocking tenor, "Then shall we swing down ... through the sulphurous cleft?"
+@The_weapon@ sings, in a mocking tenor, "Then shall we swing down... through the sulphurous cleft?"
 
 w:1
 @The_weapon@ sings, in a mocking tenor, "Oh! Oh! Terrible serpent, do not swallow me!"
@@ -1330,28 +1330,28 @@ w:1
 @The_weapon@ sings, in a squeaky tenor, "Oh, Oh! Ow! Ow! Ow!"
 
 w:1
-@The_weapon@ sings, in a melting tenor, "How soft the breeze ... which breathes on us again!"
+@The_weapon@ sings, in a melting tenor, "How soft the breeze... which breathes on us again!"
 
 w:1
-@The_weapon@ sings, in a mocking tenor, "Your power lends you ... high-flying courage: grim and great ... has grown your strength."
+@The_weapon@ sings, in a mocking tenor, "Your power lends you... high-flying courage: grim and great... has grown your strength."
 
 w:1
-@The_weapon@ sings, in a mocking tenor, "For moon, stars and the radiant sun ... may, too, do no other ... than to serve you!"
+@The_weapon@ sings, in a mocking tenor, "For moon, stars and the radiant sun... may, too, do no other... than to serve you!"
 
 w:1
-@The_weapon@ sings, in a mocking tenor, "Take whatever shape you wish ... with wonder strike me dumb!"
+@The_weapon@ sings, in a mocking tenor, "Take whatever shape you wish... with wonder strike me dumb!"
 
 w:1
-@The_weapon@ sings, in a cavernous basso, "Ah, her gaze ... still gleams toward me; the stars of her eyes ... still shine on me!"
+@The_weapon@ sings, in a cavernous basso, "Ah, her gaze... still gleams toward me; the stars of her eyes... still shine on me!"
 
 w:1
-@The_weapon@ sings, in a forceful soprano, "Irredeemably ... to dark destruction ... its possession dooms you."
+@The_weapon@ sings, in a forceful soprano, "Irredeemably... to dark destruction... its possession dooms you."
 
 w:1
 @The_weapon@ sings, in a forceful soprano, "Hear me! Hear me! Hear me! All that is shall come to an end."
 
 w:1
-@The_weapon@ sings, in a forceful soprano, "A dark day ... dawns for the gods."
+@The_weapon@ sings, in a forceful soprano, "A dark day... dawns for the gods."
 
 w:1
 @The_weapon@ sings, in a forceful soprano, "Whatever was - I know; whatever is, whatever shall be - I also see."
@@ -1394,7 +1394,7 @@ w:1
 @The_weapon@ roars, "I want to gut you like an animal!"
 
 # Queen
-@The_weapon@ happily sings, "... another one bites the dust!"
+@The_weapon@ happily sings, "...another one bites the dust!"
 
 # GG Allin
 @The_weapon@ sings, "Die when you die!"
@@ -1416,28 +1416,28 @@ w:1
 @The_weapon@ sings, in a stentorian basso, "I have faith in your faithlessness, not your fidelity! But dauntlessly - I defy you all!"
 
 w:1
-@The_weapon@ sings, in a stentorian basso, "Too hard for you ... because you're too stupid!"
+@The_weapon@ sings, in a stentorian basso, "Too hard for you... because you're too stupid!"
 
 w:1
-@The_weapon@ sings, in a stentorian basso, "Bring it in there ... as I command! Pile the hoard ... into a heap!"
+@The_weapon@ sings, in a stentorian basso, "Bring it in there... as I command! Pile the hoard... into a heap!"
 
 w:1
 @The_weapon@ sings, in a thundering basso, "Come here, you cur! If you want to measure, measure yourself against me!"
 
 w:1
-@The_weapon@ sings, in a rumbling basso, "You slyly ... evade the POINT."
+@The_weapon@ sings, in a rumbling basso, "You slyly... evade the POINT."
 
 w:1
-@The_weapon@ sings, in a rumbling basso, "Shall I exert myself ... against the miscreant for you?"
+@The_weapon@ sings, in a rumbling basso, "Shall I exert myself... against the miscreant for you?"
 
 w:1
-@The_weapon@ sings, in a rumbling basso, "But fall will the foe ... with your cunning's aid!"
+@The_weapon@ sings, in a rumbling basso, "But fall will the foe... with your cunning's aid!"
 
 w:1
 @The_weapon@ sings, in a rumbling basso, "Enough, blasphemous fool!"
 
 w:1
-@The_weapon@ sings, in a rumbling basso, "Leave him ... his slavering fury!"
+@The_weapon@ sings, in a rumbling basso, "Leave him... his slavering fury!"
 
 ############ real songs, high tension -- damage! ############
 %%%%
@@ -1460,7 +1460,7 @@ w:1
 @The_weapon@ sings, in a stentorian basso, "Rascally robber! Rogue! Ruffian!"
 
 w:1
-@The_weapon@ sings, in a stentorian basso, "Terrible vengeance ... I vow for this wrong!"
+@The_weapon@ sings, in a stentorian basso, "Terrible vengeance... I vow for this wrong!"
 
 w:1
 @The_weapon@ sings, in a stentorian basso, "Ah! Crushed! Shattered! Of wretches the wretchedest slave!"
@@ -1470,12 +1470,11 @@ w:1
 @The_weapon@ sings, in a thundering basso, "Breche denn alles!"
 
 w:1
-@The_weapon@ sings, in a mocking tenor, "Does a mist deceive me? Does a dream mock me? How anxious and pale ... you've a-sudden become!"
+@The_weapon@ sings, in a mocking tenor, "Does a mist deceive me? Does a dream mock me? How anxious and pale... you've a-sudden become!"
 
 # This would need the ability to have conditionals based on branch.
 #w:1
 #@The_weapon@ sings, in a mocking tenor, "Here is the Swamp: through the pale mist - what fiery sparks are flashing?"
-
 
 ###############################################################################
 # synonyms used above
