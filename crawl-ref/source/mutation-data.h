@@ -13,7 +13,7 @@
 #ifndef MUTATION_DATA_H
 #define MUTATION_DATA_H
 
-{ MUT_TOUGH_SKIN,                0,  3, false,  true, true,
+{ MUT_TOUGH_SKIN,                     0,  3, false,  true,  true,
   "tough skin",
 
   {"You have tough skin (AC +1).",
@@ -31,7 +31,7 @@
   "tough skin"
 },
 
-{ MUT_STRONG,                     8, 14, false,  true, false,
+{ MUT_STRONG,                         8, 14, false,  true, false,
   NULL,
 
   {"Your muscles are strong (Str +", "", ""},
@@ -41,7 +41,7 @@
   "strong"
 },
 
-{ MUT_CLEVER,                     8, 14, false,  true, false,
+{ MUT_CLEVER,                         8, 14, false,  true, false,
   NULL,
 
   {"Your mind is acute (Int +", "", ""},
@@ -51,7 +51,7 @@
   "clever"
 },
 
-{ MUT_AGILE,                      8, 14, false,  true, false,
+{ MUT_AGILE,                          8, 14, false,  true, false,
   NULL,
 
   {"You are agile (Dex +", "", ""},
@@ -61,7 +61,7 @@
   "agile"
 },
 
-{ MUT_POISON_RESISTANCE,          4,  1, false, false, true,
+{ MUT_POISON_RESISTANCE,              4,  1, false, false,  true,
   "poison resistance",
 
   {"Your system is resistant to poisons.", "", ""},
@@ -71,7 +71,7 @@
   "poison resistance"
 },
 
-{ MUT_CARNIVOROUS,                5,  3, false, false, false,
+{ MUT_CARNIVOROUS,                    5,  3, false, false, false,
   "carnivore",
 
   {"Your digestive system is specialised to digest meat.",
@@ -89,7 +89,7 @@
   "carnivorous"
 },
 
-{ MUT_HERBIVOROUS,                5,  3,  true, false, false,
+{ MUT_HERBIVOROUS,                    5,  3,  true, false, false,
   "herbivore",
 
   {"You digest meat inefficiently.",
@@ -107,7 +107,7 @@
   "herbivorous"
 },
 
-{ MUT_HEAT_RESISTANCE,            4,  3, false, false, true,
+{ MUT_HEAT_RESISTANCE,                4,  3, false, false,  true,
   "fire resistance",
 
   {"Your flesh is heat resistant.",
@@ -125,7 +125,7 @@
   "heat resistance"
 },
 
-{ MUT_COLD_RESISTANCE,            4,  3, false, false, true,
+{ MUT_COLD_RESISTANCE,                4,  3, false, false,  true,
   "cold resistance",
 
   {"Your flesh is cold resistant.",
@@ -143,7 +143,7 @@
   "cold resistance"
 },
 
-{ MUT_DEMONIC_GUARDIAN,            0,  3, false, false, false,
+{ MUT_DEMONIC_GUARDIAN,               0,  3, false, false, false,
   "demonic guardian",
 
   {"A weak demonic guardian rushes to your aid.",
@@ -161,7 +161,7 @@
   "demonic guardian"
 },
 
-{ MUT_SHOCK_RESISTANCE,           2,  1, false, false, true,
+{ MUT_SHOCK_RESISTANCE,               2,  1, false, false,  true,
   "electricity resistance",
 
   {"You are resistant to electric shocks.", "", ""},
@@ -171,7 +171,7 @@
   "shock resistance"
 },
 
-{ MUT_REGENERATION,               3,  3, false, false, false,
+{ MUT_REGENERATION,                   3,  3, false, false, false,
   "regeneration",
 
   {"Your natural rate of healing is unusually fast.",
@@ -189,7 +189,7 @@
   "regeneration"
 },
 
-{ MUT_SLOW_HEALING,               3,  3,  true, false, false,
+{ MUT_SLOW_HEALING,                   3,  3,  true, false, false,
   "slow healing",
 
   {"You heal slowly.",
@@ -207,7 +207,7 @@
   "slow healing"
 },
 
-{ MUT_FAST_METABOLISM,           10,  3,  true, false, false,
+{ MUT_FAST_METABOLISM,               10,  3,  true, false, false,
   "fast metabolism",
 
   {"You have a fast metabolism.",
@@ -225,7 +225,7 @@
   "fast metabolism"
 },
 
-{ MUT_SLOW_METABOLISM,            7,  2, false, false, false,
+{ MUT_SLOW_METABOLISM,                7,  2, false, false, false,
   "slow metabolism",
 
   {"You have a slow metabolism.",
@@ -243,7 +243,7 @@
   "slow metabolism"
 },
 
-{ MUT_WEAK,                      10, 14,  true,  true, false,
+{ MUT_WEAK,                          10, 14,  true,  true, false,
   NULL,
   {"You are weak (Str -", "", ""},
   {"", "", ""},
@@ -251,7 +251,7 @@
   "weak"
 },
 
-{ MUT_DOPEY,                     10, 14,  true,  true, false,
+{ MUT_DOPEY,                         10, 14,  true,  true, false,
   NULL,
   {"You are dopey (Int -", "", ""},
   {"", "", ""},
@@ -259,7 +259,7 @@
   "dopey",
 },
 
-{ MUT_CLUMSY,                    10, 14,  true,  true, false,
+{ MUT_CLUMSY,                        10, 14,  true,  true, false,
   NULL,
   {"You are clumsy (Dex -", "", ""},
   {"", "", ""},
@@ -267,7 +267,7 @@
   "clumsy"
 },
 
-{ MUT_TELEPORT_CONTROL,           2,  1, false, false, false,
+{ MUT_TELEPORT_CONTROL,               2,  1, false, false, false,
   "teleport control",
 
   {"You can control translocations.", "", ""},
@@ -277,7 +277,7 @@
   "teleport control"
 },
 
-{ MUT_TELEPORT,                   3,  3,  true, false, false,
+{ MUT_TELEPORT,                       3,  3,  true, false, false,
   "teleportitis",
 
   {"Space occasionally distorts in your vicinity.",
@@ -295,7 +295,7 @@
   "teleport"
 },
 
-{ MUT_MAGIC_RESISTANCE,           5,  3, false, false, false,
+{ MUT_MAGIC_RESISTANCE,               5,  3, false, false, false,
   "magic resistance",
 
   {"You are resistant to hostile enchantments.",
@@ -313,7 +313,7 @@
   "magic resistance"
 },
 
-{ MUT_FAST,                       1,  3, false, false, true,
+{ MUT_FAST,                           1,  3, false, false,  true,
   "speed",
 
   {"You cover ground quickly.",
@@ -331,7 +331,7 @@
   "fast"
 },
 
-{ MUT_SLOW,                       3,  3, true, false, true,
+{ MUT_SLOW,                           3,  3,  true, false,  true,
   "slowness",
 
   {"You cover ground slowly.",
@@ -349,7 +349,7 @@
   "slow"
 },
 
-{ MUT_ACUTE_VISION,               2,  1, false, false, false,
+{ MUT_ACUTE_VISION,                   2,  1, false, false, false,
   "see invisible",
 
   {"You have supernaturally acute eyesight.", "", ""},
@@ -365,7 +365,7 @@
   "acute vision"
 },
 
-{ MUT_DEFORMED,                   8,  1,  true,  true, true,
+{ MUT_DEFORMED,                       8,  1,  true,  true,  true,
   "deformed body",
 
   {"Armour fits poorly on your strangely shaped body.", "", ""},
@@ -375,7 +375,7 @@
   "deformed"
 },
 
-{ MUT_SPIT_POISON,                8,  3, false, false, false,
+{ MUT_SPIT_POISON,                    8,  3, false, false, false,
   "spit poison",
 
   {"You can spit poison.",
@@ -393,7 +393,7 @@
   "spit poison"
 },
 
-{ MUT_BREATHE_FLAMES,             4,  3, false, false, false,
+{ MUT_BREATHE_FLAMES,                 4,  3, false, false, false,
   "breathe flames",
 
   {"You can breathe flames.",
@@ -411,7 +411,7 @@
   "breathe flames"
 },
 
-{ MUT_BLINK,                      3,  3, false, false, false,
+{ MUT_BLINK,                          3,  3, false, false, false,
   "blink",
 
   {"You can translocate small distances at will.",
@@ -429,7 +429,7 @@
   "blink"
 },
 
-{ MUT_STRONG_STIFF,              10,  3, false,  true, false,
+{ MUT_STRONG_STIFF,                  10,  3, false,  true, false,
   NULL,
 
   {"Your muscles are strong, but stiff (Str +1, Dex -1).",
@@ -447,7 +447,7 @@
   "strong stiff"
 },
 
-{ MUT_FLEXIBLE_WEAK,             10,  3, false,  true, false,
+{ MUT_FLEXIBLE_WEAK,                 10,  3, false,  true, false,
   NULL,
 
   {"Your muscles are flexible, but weak (Str -1, Dex +1).",
@@ -465,7 +465,7 @@
   "flexible weak"
 },
 
-{ MUT_SCREAM,                     6,  3,  true, false, false,
+{ MUT_SCREAM,                         6,  3,  true, false, false,
   "screaming",
 
   {"You occasionally shout uncontrollably.",
@@ -483,7 +483,7 @@
   "scream"
 },
 
-{ MUT_CLARITY,                    6,  1, false, false, false,
+{ MUT_CLARITY,                        6,  1, false, false, false,
   "clarity",
 
   {"You possess an exceptional clarity of mind.", "", ""},
@@ -493,7 +493,7 @@
   "clarity"
 },
 
-{ MUT_BERSERK,                    7,  3,  true, false, false,
+{ MUT_BERSERK,                        7,  3,  true, false, false,
   "berserk",
 
   {"You tend to lose your temper in combat.",
@@ -511,7 +511,7 @@
   "berserk"
 },
 
-{ MUT_DETERIORATION,             10,  3,  true, false, false,
+{ MUT_DETERIORATION,                 10,  3,  true, false, false,
   "deterioration",
 
   {"Your body is slowly deteriorating.",
@@ -529,7 +529,7 @@
   "deterioration"
 },
 
-{ MUT_BLURRY_VISION,             10,  3,  true, false, false,
+{ MUT_BLURRY_VISION,                 10,  3,  true, false, false,
   "blurry vision",
 
   {"Your vision is a little blurry.",
@@ -547,7 +547,7 @@
   "blurry vision"
 },
 
-{ MUT_MUTATION_RESISTANCE,        4,  3, false, false, false,
+{ MUT_MUTATION_RESISTANCE,            4,  3, false, false, false,
   "mutation resistance",
 
   {"You are somewhat resistant to further mutation.",
@@ -565,7 +565,7 @@
   "mutation resistance"
 },
 
-{ MUT_EVOLUTION,                  4,  2, false, false, false,
+{ MUT_EVOLUTION,                      4,  2, false, false, false,
   "evolution",
 
   {"You evolve.",
@@ -583,7 +583,7 @@
   "evolution"
 },
 
-{ MUT_FRAIL,                     10,  3,  true,  true, false,
+{ MUT_FRAIL,                         10,  3,  true,  true, false,
   NULL,
 
   {"You are frail (-10% HP).",
@@ -601,7 +601,7 @@
   "frail"
 },
 
-{ MUT_ROBUST,                     5,  3, false,  true, false,
+{ MUT_ROBUST,                         5,  3, false,  true, false,
   NULL,
 
   {"You are robust (+10% HP).",
@@ -619,7 +619,7 @@
   "robust"
 },
 
-{ MUT_UNBREATHING,                0,  1, false, false, true,
+{ MUT_UNBREATHING,                    0,  1, false, false,  true,
   "unbreathing",
 
   {"You can survive without breathing.", "", ""},
@@ -629,7 +629,7 @@
   "unbreathing"
 },
 
-{ MUT_TORMENT_RESISTANCE,         0,  1, false, false, false,
+{ MUT_TORMENT_RESISTANCE,             0,  1, false, false, false,
   "torment resistance",
 
   {"You are immune to unholy pain and torment.", "", ""},
@@ -639,7 +639,7 @@
   "torment resistance"
 },
 
-{ MUT_NEGATIVE_ENERGY_RESISTANCE, 0,  3, false, false, true,
+{ MUT_NEGATIVE_ENERGY_RESISTANCE,     0,  3, false, false,  true,
   "life protection",
 
   {"You resist negative energy.",
@@ -655,7 +655,7 @@
   "negative energy resistance"
 },
 
-{ MUT_HURL_HELLFIRE,              0,  1, false, false, false,
+{ MUT_HURL_HELLFIRE,                  0,  1, false, false, false,
   "hurl hellfire",
 
   {"You can hurl blasts of hellfire.", "", ""},
@@ -666,7 +666,7 @@
 },
 
 // body-slot facets
-{ MUT_HORNS,                      7,  3, false,  true, true,
+{ MUT_HORNS,                          7,  3, false,  true,  true,
   "horns",
 
   {"You have a pair of small horns on your head.",
@@ -684,7 +684,7 @@
   "horns"
 },
 
-{ MUT_BEAK,                       1,  1, false,  true, true,
+{ MUT_BEAK,                           1,  1, false,  true,  true,
   "beak",
 
   {"You have a beak for a mouth.", "", ""},
@@ -694,7 +694,7 @@
   "beak"
 },
 
-{ MUT_CLAWS,                      2,  3, false,  true, true,
+{ MUT_CLAWS,                          2,  3, false,  true,  true,
   "claws",
 
   {"You have sharp fingernails.",
@@ -712,7 +712,7 @@
   "claws"
 },
 
-{ MUT_FANGS,                      1,  3, false,  true, true,
+{ MUT_FANGS,                          1,  3, false,  true,  true,
   "fangs",
 
   {"You have very sharp teeth.",
@@ -730,7 +730,7 @@
   "fangs"
 },
 
-{ MUT_HOOVES,                     5,  3, false,  true, true,
+{ MUT_HOOVES,                         5,  3, false,  true,  true,
   "hooves",
 
   {"You have large cloven feet.",
@@ -748,7 +748,7 @@
   "hooves"
 },
 
-{ MUT_ANTENNAE,                   4,  3, false,  true, true,
+{ MUT_ANTENNAE,                       4,  3, false,  true,  true,
   "antennae",
 
   {"You have a pair of small antennae on your head.",
@@ -766,7 +766,7 @@
   "antennae"
 },
 
-{ MUT_TALONS,                     5,  3, false,  true, true,
+{ MUT_TALONS,                         5,  3, false,  true,  true,
   "talons",
 
   {"You have sharp toenails.",
@@ -785,7 +785,7 @@
 },
 
 // Octopode only
-{ MUT_TENTACLE_SPIKE,           10,  3, false,  true, true,
+{ MUT_TENTACLE_SPIKE,                10,  3, false,  true,  true,
   "spike",
 
   {"One of your tentacles bears a spike.",
@@ -804,7 +804,7 @@
 },
 
 // Naga only; getting it is special-cased.
-{ MUT_BREATHE_POISON,             0,  1, false, false, true,
+{ MUT_BREATHE_POISON,                 0,  1, false, false,  true,
   "breathe poison",
 
   {"You can exhale a cloud of poison.", "", ""},
@@ -815,7 +815,7 @@
 },
 
 // Naga and Draconian only
-{ MUT_STINGER,                    8,  3, false,  true, true,
+{ MUT_STINGER,                        8,  3, false,  true,  true,
   "stinger",
 
   {"Your tail ends in a poisonous barb.",
@@ -834,7 +834,7 @@
 },
 
 // Draconian only
-{ MUT_BIG_WINGS,                  4,  1, false,  true, true,
+{ MUT_BIG_WINGS,                      4,  1, false,  true,  true,
   "large and strong wings",
 
   {"Your wings are large and strong.", "", ""},
@@ -845,7 +845,7 @@
 },
 
 // species-dependent innate mutations
-{ MUT_SAPROVOROUS,                0,  3, false, false, false,
+{ MUT_SAPROVOROUS,                    0,  3, false, false, false,
   "saprovore",
 
   {"You can tolerate rotten meat.",
@@ -861,7 +861,7 @@
   "saprovorous"
 },
 
-{ MUT_GOURMAND,                   0,  1, false, false, false,
+{ MUT_GOURMAND,                       0,  1, false, false, false,
   "gourmand",
 
   {"You like to eat raw meat.", "", ""},
@@ -871,7 +871,7 @@
   "gourmand"
 },
 
-{ MUT_SHAGGY_FUR,                 2,  3, false,  true, true,
+{ MUT_SHAGGY_FUR,                     2,  3, false,  true,  true,
   NULL,
 
   {"You are covered in fur (AC +1).",
@@ -889,7 +889,7 @@
   "shaggy fur"
 },
 
-{ MUT_HIGH_MAGIC,                 2,  3, false, false, false,
+{ MUT_HIGH_MAGIC,                     2,  3, false, false, false,
   NULL,
 
   {"You have an increased reservoir of magic (+10% MP).",
@@ -907,7 +907,7 @@
   "high mp"
 },
 
-{ MUT_LOW_MAGIC,                  9,  3,  true, false, false,
+{ MUT_LOW_MAGIC,                      9,  3,  true, false, false,
   NULL,
 
   {"Your magical capacity is low (-10% MP).",
@@ -925,7 +925,7 @@
   "low mp"
 },
 
-{ MUT_WILD_MAGIC,                 6,   3,  false, false, false,
+{ MUT_WILD_MAGIC,                     6,  3, false, false, false,
   "wild magic",
 
   {"Your spells are a little harder to cast, but a little more powerful.",
@@ -943,7 +943,7 @@
   "wild magic"
 },
 
-{ MUT_STOCHASTIC_TORMENT_RESISTANCE, 0,  1, false, false, false,
+{ MUT_STOCHASTIC_TORMENT_RESISTANCE,  0,  1, false, false, false,
   "50% torment resistance",
 
   {"You are somewhat able to resist unholy torments (1 in 2 success).","",""},
@@ -953,7 +953,7 @@
   "stochastic torment resistance"
 },
 
-{ MUT_PASSIVE_MAPPING,            3,  3, false, false, false,
+{ MUT_PASSIVE_MAPPING,                3,  3, false, false, false,
   "sense surroundings",
 
   {"You passively map a small area around you.",
@@ -971,7 +971,7 @@
   "passive mapping"
 },
 
-{ MUT_ICEMAIL,                    0,  1, false, false, false,
+{ MUT_ICEMAIL,                        0,  1, false, false, false,
   NULL,
 
   {"A meltable icy envelope protects you from harm and freezing vapours (AC +", "", ""},
@@ -981,7 +981,7 @@
   "icemail"
 },
 
-{ MUT_CONSERVE_SCROLLS,           0,  1, false, false, false,
+{ MUT_CONSERVE_SCROLLS,               0,  1, false, false, false,
   "conserve scrolls",
 
   {"You are very good at protecting items from fire.", "", ""},
@@ -991,7 +991,7 @@
   "conserve scrolls",
 },
 
-{ MUT_CONSERVE_POTIONS,           0,  1, false, false, false,
+{ MUT_CONSERVE_POTIONS,               0,  1, false, false, false,
   "conserve potions",
 
   {"You are very good at protecting items from cold.", "", ""},
@@ -1000,7 +1000,7 @@
   "conserve potions",
 },
 
-{ MUT_PASSIVE_FREEZE,             0,  1, false, false, false,
+{ MUT_PASSIVE_FREEZE,                 0,  1, false, false, false,
   "passive freeze",
 
   {"A frigid envelope surrounds you and freezes all who hurt you.", "", ""},
@@ -1010,7 +1010,7 @@
   "passive freeze",
 },
 
-{ MUT_NIGHTSTALKER,               0,  3, false, true, false,
+{ MUT_NIGHTSTALKER,                   0,  3, false,  true, false,
   "nightstalker",
 
   {"You are slightly more attuned to the shadows.",
@@ -1028,7 +1028,7 @@
   "nightstalker"
 },
 
-{ MUT_SPINY,                      0,  3, false, true, true,
+{ MUT_SPINY,                          0,  3, false,  true,  true,
   "spiny",
 
   {"You are partially covered in sharp spines.",
@@ -1046,7 +1046,7 @@
   "spiny"
 },
 
-{ MUT_POWERED_BY_DEATH,           0,  3, false, false, false,
+{ MUT_POWERED_BY_DEATH,               0,  3, false, false, false,
   "powered by death",
 
   {"You can steal the life force of nearby defeated enemies.",
@@ -1064,7 +1064,7 @@
   "powered by death"
 },
 
-{ MUT_POWERED_BY_PAIN,            0,  3, false, false, false,
+{ MUT_POWERED_BY_PAIN,                0,  3, false, false, false,
   "powered by pain",
 
   {"You sometimes regain a little magical energy from taking damage.",
@@ -1080,7 +1080,7 @@
   "powered by pain"
 },
 
-{ MUT_AUGMENTATION,            0,  3, false, false, false,
+{ MUT_AUGMENTATION,                   0,  3, false, false, false,
   "augmentation",
 
   {"Your magical and physical power is slightly enhanced at high health.",
@@ -1097,7 +1097,7 @@
 },
 
 // Jiyva only mutations
-{ MUT_GELATINOUS_BODY,            0,  3, false, true, true,
+{ MUT_GELATINOUS_BODY,                0,  3, false,  true,  true,
   NULL,
 
   {"Your rubbery body absorbs attacks (AC +1).",
@@ -1115,7 +1115,7 @@
   "gelatinous body"
 },
 
-{ MUT_EYEBALLS,                   0,  3, false, true, true,
+{ MUT_EYEBALLS,                       0,  3, false,  true,  true,
   NULL,
 
   {"Your body is partially covered in golden eyeballs (Acc +3).",
@@ -1133,7 +1133,7 @@
   "eyeballs"
 },
 
-{ MUT_TRANSLUCENT_SKIN,           0,  3, false, true, true,
+{ MUT_TRANSLUCENT_SKIN,               0,  3, false,  true,  true,
   "translucent skin",
 
   {"Your skin is partially translucent.",
@@ -1151,7 +1151,7 @@
   "translucent skin"
 },
 
-{ MUT_PSEUDOPODS,                 0,  3, false, true, true,
+{ MUT_PSEUDOPODS,                     0,  3, false,  true,  true,
   "pseudopods",
 
   {"Armour fits poorly on your pseudopods.",
@@ -1169,7 +1169,7 @@
   "pseudopods"
 },
 
-{ MUT_FOOD_JELLY,                       0,  1, false, true, false,
+{ MUT_FOOD_JELLY,                     0,  1, false,  true, false,
   "spawn jellies when eating",
 
   {"You occasionally spawn a jelly by eating.", "", ""},
@@ -1179,7 +1179,7 @@
   "jelly spawner"
 },
 
-{ MUT_ACIDIC_BITE,                      0,  1, false, true, true,
+{ MUT_ACIDIC_BITE,                    0,  1, false,  true,  true,
   "acidic bite",
 
   {"You have acidic saliva.", "", ""},
@@ -1190,7 +1190,7 @@
 },
 
 // Scale mutations
-{ MUT_DISTORTION_FIELD,                 2,  3, false, false, false,
+{ MUT_DISTORTION_FIELD,               2,  3, false, false, false,
   NULL,
 
   {"You are surrounded by a mild repulsion field (EV +2).",
@@ -1208,7 +1208,7 @@
   "repulsion field"
 },
 
-{ MUT_ICY_BLUE_SCALES,                  2,  3, false, true, true,
+{ MUT_ICY_BLUE_SCALES,                2,  3, false,  true,  true,
   NULL,
 
   {"You are partially covered in icy blue scales (AC +1).",
@@ -1226,7 +1226,7 @@
   "icy blue scales"
 },
 
-{ MUT_IRIDESCENT_SCALES,                2,  3, false,  true, true,
+{ MUT_IRIDESCENT_SCALES,              2,  3, false,  true,  true,
   NULL,
 
   {"You are partially covered in iridescent scales (AC +4).",
@@ -1244,7 +1244,7 @@
   "iridescent scales"
 },
 
-{ MUT_LARGE_BONE_PLATES,                2,  3, false,  true, true,
+{ MUT_LARGE_BONE_PLATES,              2,  3, false,  true,  true,
   NULL,
 
   {"You are partially covered in large bone plates (AC +2, SH +2).",
@@ -1262,7 +1262,7 @@
   "large bone plates"
 },
 
-{ MUT_MOLTEN_SCALES,                    2,  3, false, true, true,
+{ MUT_MOLTEN_SCALES,                  2,  3, false,  true,  true,
   NULL,
 
   {"You are partially covered in molten scales (AC +1).",
@@ -1280,7 +1280,7 @@
   "molten scales"
 },
 
-{ MUT_ROUGH_BLACK_SCALES,              2,  3, false,  true, true,
+{ MUT_ROUGH_BLACK_SCALES,             2,  3, false,  true,  true,
   NULL,
 
   {"You are partially covered in rough black scales (AC +4, Dex -1).",
@@ -1298,7 +1298,7 @@
   "rough black scales"
 },
 
-{ MUT_RUGGED_BROWN_SCALES,              2,  3, false,  true, true,
+{ MUT_RUGGED_BROWN_SCALES,            2,  3, false,  true,  true,
   NULL,
 
   {"You are partially covered in rugged brown scales (AC +1, +3% HP).",
@@ -1316,7 +1316,7 @@
   "rugged brown scales"
 },
 
-{ MUT_SLIMY_GREEN_SCALES,            2,  3, false, true, true,
+{ MUT_SLIMY_GREEN_SCALES,             2,  3, false,  true,  true,
   NULL,
 
   {"You are partially covered in slimy green scales (AC +2).",
@@ -1334,7 +1334,7 @@
   "slimy green scales"
 },
 
-{ MUT_THIN_METALLIC_SCALES,            2,  3, false, true, true,
+{ MUT_THIN_METALLIC_SCALES,           2,  3, false,  true,  true,
   NULL,
 
   {"You are partially covered in thin metallic scales (AC +2).",
@@ -1352,7 +1352,7 @@
   "thin metallic scales"
 },
 
-{ MUT_THIN_SKELETAL_STRUCTURE,          2,  3, false,  true, false,
+{ MUT_THIN_SKELETAL_STRUCTURE,        2,  3, false,  true, false,
   NULL,
 
   {"You have a somewhat thin skeletal structure (Dex +2, Stlth).",
@@ -1370,7 +1370,7 @@
   "thin skeletal structure"
 },
 
-{ MUT_YELLOW_SCALES,                    2,  3, false,  true, true,
+{ MUT_YELLOW_SCALES,                  2,  3, false,  true,  true,
   NULL,
 
   {"You are partially covered in yellow scales (AC +2).",
@@ -1388,7 +1388,7 @@
   "yellow scales"
 },
 
-{ MUT_CAMOUFLAGE,           1,   3, false, true, true,
+{ MUT_CAMOUFLAGE,                     1,  3, false,  true,  true,
   "camouflage",
 
   {"Your skin changes colour to match your surroundings (Stlth).",
@@ -1406,7 +1406,7 @@
    "camouflage"
 },
 
-{ MUT_IGNITE_BLOOD,              0,  1, false, false, false,
+{ MUT_IGNITE_BLOOD,                   0,  1, false, false, false,
   "ignite blood",
 
   {"Your demonic aura causes spilled blood to erupt in flames.", "", ""},
@@ -1416,7 +1416,7 @@
   "ignite blood"
 },
 
-{ MUT_FOUL_STENCH,              0,  2, false, false, false,
+{ MUT_FOUL_STENCH,                    0,  2, false, false, false,
   "foul stench",
 
   {"You emit a foul stench, and are resistant to rotting and decay.",
