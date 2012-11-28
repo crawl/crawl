@@ -666,7 +666,8 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
             newpos = random_in_bounds();
         while (_cell_vetoes_teleport(newpos)
                || (newpos - old_pos).abs() > dist_range(range)
-               || need_distance_check && (newpos - centre).abs() < 34*34
+               || need_distance_check && (newpos - centre).abs()
+                                          <= dist_range(min(range - 1, 34))
                || testbits(env.pgrid(newpos), FPROP_NO_RTELE_INTO));
 
         if (newpos == old_pos)
