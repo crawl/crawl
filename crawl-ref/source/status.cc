@@ -520,6 +520,14 @@ bool fill_status_info(int status, status_info* inf)
         }
         break;
 
+    case STATUS_NO_CTELE:
+        if (!allow_control_teleport(true))
+        {
+            inf->light_colour = RED;
+            inf->light_text = "-cTele";
+        }
+        break;
+
     default:
         if (!found)
         {

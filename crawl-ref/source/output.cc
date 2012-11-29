@@ -607,6 +607,7 @@ static void _get_status_lights(vector<status_light>& out)
         STATUS_SUPPRESSED,
         STATUS_TERRAIN,
         STATUS_SILENCE,
+        STATUS_NO_CTELE,
     };
 
     status_info inf;
@@ -619,8 +620,6 @@ static void _get_status_lights(vector<status_light>& out)
             out.push_back(sl);
         }
     }
-    if (!allow_control_teleport(true))
-        out.push_back(status_light(RED,"-cTele"));
 }
 
 static void _print_status_lights(int y)
