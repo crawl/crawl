@@ -94,7 +94,7 @@ function ($, comm, client, dungeon_renderer, display, minimap, settings, enums, 
         {
             dungeon_renderer.fit_to(layout_parameters.window_width - 5,
                                     layout_parameters.window_height - 5,
-                                    layout_parameters.show_diameter);
+                                    show_diameter);
             $("#right_column").hide();
             messages.hide();
         }
@@ -102,7 +102,7 @@ function ($, comm, client, dungeon_renderer, display, minimap, settings, enums, 
         {
             dungeon_renderer.fit_to(layout_parameters.remaining_width,
                                     layout_parameters.remaining_height,
-                                    layout_parameters.show_diameter);
+                                    show_diameter);
             $("#right_column").show();
             messages.show();
         }
