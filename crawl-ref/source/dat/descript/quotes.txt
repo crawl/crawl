@@ -3097,8 +3097,8 @@ Kirke
 
 “Lo, thy comrades yonder in the house of Kirke are penned like swine in
 close-barred sties. And art thou come to release them? Nay, I tell thee, thou
-shalt not thyself return, but shalt remain there with the others.” Homer,
-Odysseia
+shalt not thyself return, but shalt remain there with the others.”
+    -Homer, Odysseia
 %%%%
 the Lernaean hydra
 
