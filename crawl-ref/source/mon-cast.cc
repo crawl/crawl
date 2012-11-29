@@ -4257,7 +4257,33 @@ static unsigned int _noise_keys(vector<string>& key_list,
     const string    spell_name = spell_title(spell);
     const bool      real_spell = !innate && (priest || wizard);
 
-    // First try the spells name.
+    // Before just using generic per-spell and per-monster casts, try
+    // per-monster, per-spell, with the monster type name, then the
+    // species name, then the genus name, then wizard/priest/demon.
+    // We don't include "real" or "gestures" here since that can be
+    // be determined from the monster type; or "targeted" since that
+    // can be determined from the spell.
+    key_list.push_back(spell_name + " "
+                       + mons_type_name(mons->type, DESC_PLAIN) + cast_str);
+    key_list.push_back(spell_name + " "
+                       + mons_type_name(mons_species(mons->type), DESC_PLAIN)
+                       + cast_str);
+    key_list.push_back(spell_name + " "
+                       + mons_type_name(mons_genus(mons->type), DESC_PLAIN)
+                       + cast_str);
+    if (wizard)
+    {
+        key_list.push_back(make_stringf("%s %swizard%s",
+                               spell_name.c_str(),
+                               shape <= MON_SHAPE_NAGA ? "" : "non-humanoid ",
+                               cast_str.c_str()));
+    }
+    else if (priest)
+        key_list.push_back(spell_name + " priest" + cast_str);
+    else if (mons_is_demon(mons->type))
+        key_list.push_back(spell_name + " demon" + cast_str);
+
+    // Now try just the spell's name.
     if (shape <= MON_SHAPE_NAGA)
     {
         if (real_spell)
@@ -4292,9 +4318,6 @@ static unsigned int _noise_keys(vector<string>& key_list,
         }
     }
 
-    // Before just using generic per-spell and per-monster casts, try
-    // per-monster, per-spell.
-    key_list.push_back(spell_name + " " + mons_type_name(mons->type, DESC_PLAIN) + cast_str);
     key_list.push_back(spell_name + cast_str);
 
     const unsigned int num_spell_keys = key_list.size();
