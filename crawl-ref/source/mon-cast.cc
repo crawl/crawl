@@ -4353,6 +4353,11 @@ static string _noise_message(const vector<string>& key_list,
     {
         const string key = key_list[i];
 
+#ifdef DEBUG_MONSPEAK
+        mprf(MSGCH_DIAGNOSTICS, "monster casting lookup: %s%s", prefix.c_str(),
+                                                                key.c_str());
+#endif
+
         msg = getSpeakString(prefix + key);
         if (msg == "__NONE")
         {
