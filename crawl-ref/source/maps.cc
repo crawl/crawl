@@ -490,7 +490,8 @@ static coord_def _find_minivault_place(
             {
                 coord_def v1((*it)->pos);
                 if ((!check_place || map_place_valid(place.map, v1, place.size))
-                    && _connected_minivault_place(v1, place))
+                    && _connected_minivault_place(v1, place)
+                    && !feat_is_gate(grd(v1)))
                     candidates.push_back(v1);
             }
         }
