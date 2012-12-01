@@ -2633,32 +2633,6 @@ struct spell_desc
 },
 
 {
-    SPELL_SUMMON_HOLIES, "Summon Holies",
-     SPTYP_SUMMONING,
-     SPFLAG_MONSTER,
-     5,
-     0,
-     -1, -1,
-     0,
-     NULL,
-     false,
-     false
-},
-
-{
-    SPELL_HOLY_WORD, "Holy Word",
-     SPTYP_NONE,
-     SPFLAG_AREA,
-     6,
-     0,
-     -1, -1,
-     0,
-     NULL,
-     false,
-     false
-},
-
-{
     SPELL_HEAL_OTHER, "Heal Other",
      SPTYP_NONE,
      SPFLAG_DIR_OR_TARGET | SPFLAG_HELPFUL,

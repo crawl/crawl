@@ -379,10 +379,6 @@ angel cast targeted
 
 @The_monster@ calls down the wrath of @possessive_God@ upon @target@.
 %%%%
-blessed toe cast targeted
-
-@The_monster@ beseeches @possessive_God@ to heal @target@!
-%%%%
 dragon cast targeted
 
 @The_monster@ breathes @beam@ @at@ @target@.
