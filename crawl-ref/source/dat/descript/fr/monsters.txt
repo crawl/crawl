@@ -230,11 +230,6 @@ black mamba
 Un grand serpent tropical incroyablement rapide dont la morsure véhicule un
 poison mortel.
 %%%%
-blessed toe
-
-Une relique sacrée provenant du corps d'un pieu saint. Elle flotte dans les air
-et brille d'une lumière divine.
-%%%%
 blizzard demon
 
 Un grand démon, recouvert de neige et parcouru d'éclairs.

@@ -624,8 +624,6 @@ int monster::halo_radius2() const
     case MONS_PALADIN: // If a paladin finds the mace of brilliance
                        // it needs a larger halo
         return max(4, size);  // mere humans
-    case MONS_BLESSED_TOE:
-        return 17;
     case MONS_SILVER_STAR:
         return 40; // dumb but with an immense power
     case MONS_HOLY_SWINE:

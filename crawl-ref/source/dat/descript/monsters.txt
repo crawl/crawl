@@ -623,11 +623,6 @@ black mamba
 
 A large and astonishingly fast tropical snake whose bite bears a deadly venom.
 %%%%
-blessed toe
-
-A sacred relic from the body of a pious saint. It floats through the air and
-shines with a divine light.
-%%%%
 blink frog
 
 A species of giant frog that possesses the ability to blink at will. It can

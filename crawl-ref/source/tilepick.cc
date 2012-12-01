@@ -1828,8 +1828,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_ORB_OF_FIRE;
     case MONS_ORB_OF_DESTRUCTION:
         return _mon_random(TILEP_MONS_ORB_OF_DESTRUCTION);
-    case MONS_BLESSED_TOE:
-        return TILEP_MONS_BLESSED_TOE;
     case MONS_SILVER_STAR:
         return TILEP_MONS_SILVER_STAR;
 
