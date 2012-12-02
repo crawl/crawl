@@ -1291,28 +1291,23 @@ static bool _ms_direct_nasty(spell_type monspell)
 // monsters will just "know" whether a player is fully life-protected.
 static bool _foe_should_res_negative_energy(const actor* foe)
 {
-    const mon_holy_type holiness = foe->holiness();
-
     if (foe->is_player())
     {
-        // Non-bloodless vampires do not appear immune.
-        if (holiness == MH_UNDEAD
-            && you.is_undead == US_SEMI_UNDEAD
-            && you.hunger_state > HS_STARVING)
+        switch (you.is_undead)
         {
+        case US_ALIVE:
+            // Demonspawn are not demonic (their holiness is wrong), and
+            // statue form grants only partial resistance.
             return false;
+        case US_SEMI_UNDEAD:
+            // Non-bloodless vampires do not appear immune.
+            return you.hunger_state == HS_STARVING;
+        default:
+            return true;
         }
-
-        // Demonspawn do not appear immune.
-        if (holiness == MH_DEMONIC)
-            return false;
-
-        // Nor do statues (they only have partial resistance).
-        if (you.form == TRAN_STATUE)
-            return false;
     }
 
-    return (holiness != MH_NATURAL);
+    return (foe->holiness() != MH_NATURAL);
 }
 
 // Checks to see if a particular spell is worth casting in the first place.
