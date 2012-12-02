@@ -630,7 +630,7 @@ spret_type vampiric_drain(int pow, monster* mons, bool fail)
         return SPRET_SUCCESS;
     }
 
-    if (mons->observable() && mons->undead_or_demonic())
+    if (mons->observable() && mons->holiness() != MH_NATURAL)
     {
         mpr("Draining that being is not a good idea.");
         return SPRET_ABORT;
@@ -665,15 +665,14 @@ spret_type vampiric_drain(int pow, monster* mons, bool fail)
     }
 
     // Monster might be invisible or player misled.
-    if (mons->undead_or_demonic())
+    if (mons->holiness() == MH_UNDEAD || mons->holiness() == MH_DEMONIC)
     {
         mpr("Aaaarggghhhhh!");
         dec_hp(random2avg(39, 2) + 10, false, "vampiric drain backlash");
         return SPRET_SUCCESS;
     }
 
-    if (mons->holiness() != MH_NATURAL
-        || mons->res_negative_energy())
+    if (mons->holiness() != MH_NATURAL || mons->res_negative_energy())
     {
         canned_msg(MSG_NOTHING_HAPPENS);
         return SPRET_SUCCESS;
