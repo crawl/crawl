@@ -3434,7 +3434,7 @@ bool monster::undead_or_demonic() const
 {
     const mon_holy_type holi = holiness();
 
-    return (holi == MH_UNDEAD || holi == MH_DEMONIC);
+    return (holi == MH_UNDEAD || holi == MH_DEMONIC || type == MONS_DEMONSPAWN);
 }
 
 bool monster::is_holy(bool check_spells) const
@@ -3451,7 +3451,7 @@ bool monster::is_holy(bool check_spells) const
 
 bool monster::is_unholy(bool check_spells) const
 {
-    if (type == MONS_SILVER_STATUE)
+    if (type == MONS_SILVER_STATUE || type == MONS_DEMONSPAWN)
         return true;
 
     if (holiness() == MH_DEMONIC)
@@ -5763,8 +5763,7 @@ bool monster::is_web_immune() const
             || mons_genus(type) == MONS_MOTH);
 }
 
-// Undead and demonic monsters have nightvision, as do all followers
-// of Yredelemnul.
+// Undead monsters have nightvision, as do all followers of Yredelemnul.
 bool monster::nightvision() const
 {
     return (holiness() == MH_UNDEAD || god == GOD_YREDELEMNUL);

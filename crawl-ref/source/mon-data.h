@@ -4444,7 +4444,7 @@ static monsterentry mondata[] = {
     MONS_DEMONSPAWN, '@', DARKGREY, "demonspawn", // likely to become '6'
     M_WARM_BLOOD | M_SPEAKS | M_NO_POLY_TO,
     MR_NO_FLAGS,
-    550, 10, MONS_HUMAN, MONS_DEMONSPAWN, MH_DEMONIC, -3,
+    550, 10, MONS_HUMAN, MONS_DEMONSPAWN, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 5, 3, 5, 0 },
     2, 12, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT,

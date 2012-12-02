@@ -1296,8 +1296,8 @@ static bool _foe_should_res_negative_energy(const actor* foe)
         switch (you.is_undead)
         {
         case US_ALIVE:
-            // Demonspawn are not demonic (their holiness is wrong), and
-            // statue form grants only partial resistance.
+            // Demonspawn are not demons, and statue form grants only
+            // partial resistance.
             return false;
         case US_SEMI_UNDEAD:
             // Non-bloodless vampires do not appear immune.
