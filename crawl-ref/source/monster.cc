@@ -1835,7 +1835,7 @@ static int _get_monster_armour_value(const monster *mon,
         value += get_armour_res_poison(item, true);
 
     // Same for life protection.
-    if (mon->holiness() != MH_NATURAL)
+    if (mon->holiness() == MH_NATURAL)
         value += get_armour_life_protection(item, true);
 
     // See invisible also is only useful if not already intrinsic.
@@ -1991,7 +1991,7 @@ static int _get_monster_jewellery_value(const monster *mon,
         value += get_jewellery_res_poison(item, true);
 
     // Same for life protection.
-    if (mon->holiness() != MH_NATURAL)
+    if (mon->holiness() == MH_NATURAL)
         value += get_jewellery_life_protection(item, true);
 
     // See invisible also is only useful if not already intrinsic.
