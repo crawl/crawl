@@ -2790,8 +2790,8 @@ static void _decrement_durations()
     if (_decrement_a_duration(DUR_DIVINE_VIGOUR, delay))
         elyvilon_remove_divine_vigour();
 
-    _decrement_a_duration(DUR_REPEL_STAIRS_MOVE, 1);
-    _decrement_a_duration(DUR_REPEL_STAIRS_CLIMB, 1);
+    _decrement_a_duration(DUR_REPEL_STAIRS_MOVE, delay);
+    _decrement_a_duration(DUR_REPEL_STAIRS_CLIMB, delay);
 
     _decrement_a_duration(DUR_COLOUR_SMOKE_TRAIL, 1);
 
