@@ -23,7 +23,12 @@
 
 static bool _airtight(coord_def c)
 {
-    return grd(c) <= DNGN_MAXWALL;
+    // Broken by 6f473416 -- we should re-allow the wind through grates; this
+    // simplicistic check allows moving people through trees which is no good
+    // either.
+
+    // return grd(c) <= DNGN_MAXWALL && grd(c) != DNGN_MANGROVE;
+    return grd(c) <= DNGN_GRATE && grd(c) != DNGN_MANGROVE;
 }
 
 /* Explanation of the algorithm:
@@ -170,11 +175,6 @@ static coord_def _rotate(coord_def org, coord_def from,
         ang0 -= 2 * PI;
     for (unsigned int i = 0; i < avail.size(); i++)
     {
-        // If the path is blocked - say the monster is in a cage -
-        // veto the cell.
-        if (!cell_see_cell(from, avail[i], LOS_SOLID_SEE))
-            continue;
-
         double dist = sqrt((avail[i] - org).abs());
         double distdiff = fabs(dist - dist0);
         double ang = atan2(avail[i].x - org.x, avail[i].y - org.y);
