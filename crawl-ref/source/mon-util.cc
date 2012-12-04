@@ -772,14 +772,21 @@ bool mons_is_mimic(monster_type mc)
     return (mons_is_item_mimic(mc) || mons_is_feat_mimic(mc));
 }
 
+#if TAG_MAJOR_VERSION == 34
 bool mons_is_item_mimic(monster_type mc)
 {
     return (mc >= MONS_INEPT_ITEM_MIMIC && mc <= MONS_MONSTROUS_ITEM_MIMIC);
 }
+#else
+bool mons_is_item_mimic(monster_type mc)
+{
+    return (mc >= MONS_INEPT_ITEM_MIMIC && mc <= MONS_RAVENOUS_ITEM_MIMIC);
+}
+#endif
 
 bool mons_is_feat_mimic(monster_type mc)
 {
-    return (mc >= MONS_INEPT_FEATURE_MIMIC && mc <= MONS_MONSTROUS_FEATURE_MIMIC);
+    return (mc >= MONS_INEPT_FEATURE_MIMIC && mc <= MONS_RAVENOUS_FEATURE_MIMIC);
 }
 
 void discover_mimic(const coord_def& pos, bool wake)
@@ -859,11 +866,8 @@ void discover_mimic(const coord_def& pos, bool wake)
 
     const int level = env.absdepth0 + 1;
 
-    // Orb mimic is special
-    if (item && item->base_type == OBJ_ORBS)
-        mg.cls = MONS_MONSTROUS_ITEM_MIMIC;
     // Early levels get inept mimics instead
-    else if (!x_chance_in_y(level - 6, 6))
+    if (!x_chance_in_y(level - 6, 6))
         mg.cls = item ? MONS_INEPT_ITEM_MIMIC : MONS_INEPT_FEATURE_MIMIC;
     // Deeper, you get ravenous mimics
     else if (x_chance_in_y(level - 15, 6))

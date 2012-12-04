@@ -975,8 +975,10 @@ string monster_info::mimic_name() const
         s = "inept ";
     if (type == MONS_RAVENOUS_ITEM_MIMIC || type == MONS_RAVENOUS_FEATURE_MIMIC)
         s = "ravenous ";
-    if (type == MONS_MONSTROUS_ITEM_MIMIC || type == MONS_MONSTROUS_FEATURE_MIMIC)
+#if TAG_MAJOR_VERSION == 34
+    if (type == MONS_MONSTROUS_ITEM_MIMIC)
         s = "monstrous ";
+#endif
 
     if (props.exists("feat_type"))
         s += feat_type_name(get_mimic_feature());
