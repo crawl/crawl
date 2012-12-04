@@ -4553,6 +4553,7 @@ static monsterentry mondata[] = {
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LARGE
 },
 
+#if TAG_MAJOR_VERSION == 34
 {
     MONS_MONSTROUS_ITEM_MIMIC, 'X', BLACK, "monstrous item mimic",
     M_NO_FLAGS,
@@ -4565,6 +4566,7 @@ static monsterentry mondata[] = {
     I_NORMAL, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_TINY
 },
+#endif
 
 // dancing weapon
 // These are named more explicitly when they attack, also when you use 'x'

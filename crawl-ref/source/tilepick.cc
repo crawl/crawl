@@ -2564,7 +2564,9 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
         case MONS_ITEM_MIMIC:
             return tileidx_item(*mon.get_mimic_item()) | TILE_FLAG_MIMIC;
         case MONS_RAVENOUS_ITEM_MIMIC:
+#if TAG_MAJOR_VERSION == 34
         case MONS_MONSTROUS_ITEM_MIMIC:
+#endif
             return tileidx_item(*mon.get_mimic_item()) | TILE_FLAG_MIMIC_RAVEN;
 
         // Feature mimics get drawn with the dungeon, see tileidx_feature.
@@ -2573,7 +2575,6 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
         case MONS_FEATURE_MIMIC:
             return TILE_FLAG_MIMIC;
         case MONS_RAVENOUS_FEATURE_MIMIC:
-        case MONS_MONSTROUS_FEATURE_MIMIC: // unused
             return TILE_FLAG_MIMIC_RAVEN;
 
         case MONS_DANCING_WEAPON:
