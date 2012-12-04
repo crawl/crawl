@@ -1159,39 +1159,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     {
         pbolt.target = mons->pos();
     }
-    else if (spell_cast == SPELL_PORKALATOR && one_chance_in(3))
-    {
-        monster*    targ     = NULL;
-        int          count    = 0;
-        monster_type hog_type = MONS_HOG;
-        for (monster_iterator mi(mons); mi; ++mi)
-        {
-            hog_type = MONS_HOG;
-            if (mi->holiness() == MH_DEMONIC)
-                hog_type = MONS_HELL_HOG;
-            else if (mi->holiness() != MH_NATURAL)
-                continue;
 
-            if (mi->type != hog_type
-                && mons_aligned(mons, *mi)
-                && mons_power(hog_type) + random2(4) >= mons_power(mi->type)
-                && (!mi->can_use_spells() || coinflip())
-                && one_chance_in(++count))
-            {
-                targ = *mi;
-            }
-        }
-
-        if (targ)
-        {
-            pbolt.target = targ->pos();
-#ifdef DEBUG_DIAGNOSTICS
-            mprf("Porkalator: targetting %s instead",
-                 targ->name(DESC_PLAIN).c_str());
-#endif
-        }
-        // else target remains as specified
-    }
     return true;
 }
 
