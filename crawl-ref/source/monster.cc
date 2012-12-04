@@ -1674,7 +1674,7 @@ bool monster::pickup_melee_weapon(item_def &item, int near)
             else if (!dual_wielding)
             {
                 // We've got a good melee weapon, that's enough.
-               return false;
+                return false;
             }
         }
     }
@@ -1738,7 +1738,7 @@ bool monster::pickup_throwable_weapon(item_def &item, int near)
 bool monster::wants_weapon(const item_def &weap) const
 {
     if (!could_wield(weap))
-       return false;
+        return false;
 
     // Blademasters and master archers like their starting weapon and
     // don't want another, thank you.
@@ -2710,19 +2710,19 @@ string monster::hand_name(bool plural, bool *can_plural) const
         }
     }
 
-   if (str.empty())
-   {
-       // Reduce the chance of a random-shaped monster having hands.
-       if (rand && coinflip())
-           return hand_name(plural, can_plural);
+    if (str.empty())
+    {
+        // Reduce the chance of a random-shaped monster having hands.
+        if (rand && coinflip())
+            return hand_name(plural, can_plural);
 
-       str = "hand";
-   }
+        str = "hand";
+    }
 
-   if (plural && *can_plural)
-       str = pluralise(str);
+    if (plural && *can_plural)
+        str = pluralise(str);
 
-   return str;
+    return str;
 }
 
 string monster::foot_name(bool plural, bool *can_plural) const
@@ -2825,19 +2825,19 @@ string monster::foot_name(bool plural, bool *can_plural) const
         break;
     }
 
-   if (str.empty())
-   {
-       // Reduce the chance of a random-shaped monster having feet.
-       if (rand && coinflip())
-           return foot_name(plural, can_plural);
+    if (str.empty())
+    {
+        // Reduce the chance of a random-shaped monster having feet.
+        if (rand && coinflip())
+            return foot_name(plural, can_plural);
 
-       return (plural ? "feet" : "foot");
-   }
+        return (plural ? "feet" : "foot");
+    }
 
-   if (plural && *can_plural)
-       str = pluralise(str);
+    if (plural && *can_plural)
+        str = pluralise(str);
 
-   return str;
+    return str;
 }
 
 string monster::arm_name(bool plural, bool *can_plural) const
@@ -4172,7 +4172,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
 
         if (amount != INSTANT_DEATH)
             if (has_ench(ENCH_DEATHS_DOOR))
-               return 0;
+                return 0;
             else if (petrified())
                 amount /= 2;
             else if (petrifying())
@@ -4996,9 +4996,9 @@ void monster::apply_location_effects(const coord_def &oldpos,
             prop &= ~FPROP_BLOODY;
             if (you.see_cell(pos()) && !visible_to(&you))
             {
-               string desc =
-                   feature_description_at(pos(), false, DESC_THE, false);
-               mprf("The bloodstain on %s disappears!", desc.c_str());
+                string desc =
+                    feature_description_at(pos(), false, DESC_THE, false);
+                mprf("The bloodstain on %s disappears!", desc.c_str());
             }
         }
     }

@@ -313,7 +313,7 @@ public:
 
     ShopInfo &get_shop(const coord_def& c)
     {
-      return get_current_level().get_shop(c);
+        return get_current_level().get_shop(c);
     }
 
     void remove_level(const level_id &which = level_id::current());

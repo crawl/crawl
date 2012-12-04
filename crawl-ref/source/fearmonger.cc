@@ -112,7 +112,7 @@ void player::clear_fearmongers()
 void player::fearmongers_check_noise(int loudness, bool axe)
 {
     if (axe)
-       return;
+        return;
 
     if (loudness >= 20 && beheld())
     {

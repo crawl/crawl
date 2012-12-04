@@ -189,53 +189,53 @@ spell_type spell_by_name(string name, bool partial_match)
 
 spschool_flag_type school_by_name(string name)
 {
-   spschool_flag_type short_match, long_match;
-   int                short_matches, long_matches;
+    spschool_flag_type short_match, long_match;
+    int                short_matches, long_matches;
 
-   short_match   = long_match   = SPTYP_NONE;
-   short_matches = long_matches = 0;
+    short_match   = long_match   = SPTYP_NONE;
+    short_matches = long_matches = 0;
 
-   lowercase(name);
+    lowercase(name);
 
-   for (int i = 0; i <= SPTYP_RANDOM; i++)
-   {
-       spschool_flag_type type = (spschool_flag_type) (1 << i);
+    for (int i = 0; i <= SPTYP_RANDOM; i++)
+    {
+        spschool_flag_type type = (spschool_flag_type) (1 << i);
 
-       string short_name = spelltype_short_name(type);
-       string long_name  = spelltype_long_name(type);
+        string short_name = spelltype_short_name(type);
+        string long_name  = spelltype_long_name(type);
 
-       lowercase(short_name);
-       lowercase(long_name);
+        lowercase(short_name);
+        lowercase(long_name);
 
-       if (name == short_name)
-           return type;
-       if (name == long_name)
-           return type;
+        if (name == short_name)
+            return type;
+        if (name == long_name)
+            return type;
 
-       if (short_name.find(name) != string::npos)
-       {
-           short_match = type;
-           short_matches++;
-       }
-       if (long_name.find(name) != string::npos)
-       {
-           long_match = type;
-           long_matches++;
-       }
-   }
+        if (short_name.find(name) != string::npos)
+        {
+            short_match = type;
+            short_matches++;
+        }
+        if (long_name.find(name) != string::npos)
+        {
+            long_match = type;
+            long_matches++;
+        }
+    }
 
-   if (short_matches != 1 && long_matches != 1)
-       return SPTYP_NONE;
+    if (short_matches != 1 && long_matches != 1)
+        return SPTYP_NONE;
 
-   if (short_matches == 1 && long_matches != 1)
-       return short_match;
-   if (short_matches != 1 && long_matches == 1)
-       return long_match;
+    if (short_matches == 1 && long_matches != 1)
+        return short_match;
+    if (short_matches != 1 && long_matches == 1)
+        return long_match;
 
-   if (short_match == long_match)
-       return short_match;
+    if (short_match == long_match)
+        return short_match;
 
-   return SPTYP_NONE;
+    return SPTYP_NONE;
 }
 
 int get_spell_slot_by_letter(char letter)
@@ -605,7 +605,7 @@ int apply_monsters_around_square(monster_func mf, const coord_def& where,
         }
     }
 
-   return rv;
+    return rv;
 }
 
 // Affect up to max_targs monsters around a point, chosen randomly.

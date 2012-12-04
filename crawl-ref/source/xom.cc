@@ -286,9 +286,9 @@ void xom_is_stimulated(int maxinterestingness, const string& message,
 
 void xom_tick()
 {
-     // Xom now ticks every action, not every 20 turns.
-     if (x_chance_in_y(1, 20))
-     {
+    // Xom now ticks every action, not every 20 turns.
+    if (x_chance_in_y(1, 20))
+    {
         // Xom semi-randomly drifts your piety.
         const string old_xom_favour = describe_xom_favour();
         const bool good = (you.piety == HALF_MAX_PIETY? coinflip()
@@ -839,12 +839,12 @@ static bool _is_chaos_upgradeable(const item_def &item,
     // Since Xom is a god, he is capable of changing randarts, but not
     // other artefacts.
     if (is_unrandom_artefact(item))
-       return false;
+        return false;
 
     // Staves and rods can't be changed either, since they don't have brands
     // in the way other weapons do.
     if (item.base_type == OBJ_STAVES || item.base_type == OBJ_RODS)
-       return false;
+        return false;
 
     // Only upgrade permanent items, since the player should get a
     // chance to use the item if he or she can defeat the monster.
@@ -906,7 +906,7 @@ static bool _choose_chaos_upgrade(const monster* mon)
     if (!mon->alive() || mons_attitude(mon) != ATT_HOSTILE
         || mons_is_fleeing(mon) || mons_is_panicking(mon))
     {
-       return false;
+        return false;
     }
 
     if (mons_itemuse(mon) < MONUSE_STARTING_EQUIPMENT)
@@ -921,7 +921,7 @@ static bool _choose_chaos_upgrade(const monster* mon)
     // being given chaos weapons, while other gods won't mind the help
     // in their servants' killing the player.
     if (is_good_god(mon->god))
-       return false;
+        return false;
 
     // Beogh presumably doesn't want Xom messing with his orcs, even if
     // it would give them a better weapon.

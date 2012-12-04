@@ -136,9 +136,9 @@ void dgn_event_dispatcher::register_listener_at(unsigned mask,
     alarm->eventmask |= mask;
     if (find(alarm->listeners.begin(), alarm->listeners.end(), listener)
         == alarm->listeners.end())
-      {
+    {
         alarm->listeners.push_back(listener);
-      }
+    }
 }
 
 void dgn_event_dispatcher::remove_listener(dgn_event_listener *listener,

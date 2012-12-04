@@ -568,30 +568,30 @@ void check_player_sense(sense_type sense, int range, const coord_def& where)
         switch (sense)
         {
         case SENSE_SMELL_BLOOD:
-             dprf("Player smells blood, pos: (%d, %d), dist = %d)",
-                  you.pos().x, you.pos().y, player_distance);
-             you.check_awaken(range - player_distance);
-             // Don't message if you can see the square.
-             if (!you.see_cell(where))
-             {
-                 mprf("You smell fresh blood%s.",
-                      _player_vampire_smells_blood(player_distance));
-             }
-             break;
+            dprf("Player smells blood, pos: (%d, %d), dist = %d)",
+                 you.pos().x, you.pos().y, player_distance);
+            you.check_awaken(range - player_distance);
+            // Don't message if you can see the square.
+            if (!you.see_cell(where))
+            {
+                mprf("You smell fresh blood%s.",
+                     _player_vampire_smells_blood(player_distance));
+            }
+            break;
 
         case SENSE_WEB_VIBRATION:
-             // Spider form
-             if (you.can_cling_to_walls())
-             {
-                 you.check_awaken(range - player_distance);
-                 // Don't message if you can see the square.
-                 if (!you.see_cell(where))
-                 {
-                     mprf("You hear a 'twang'%s.",
-                          _player_spider_senses_web(player_distance));
-                 }
-             }
-             break;
+            // Spider form
+            if (you.can_cling_to_walls())
+            {
+                you.check_awaken(range - player_distance);
+                // Don't message if you can see the square.
+                if (!you.see_cell(where))
+                {
+                    mprf("You hear a 'twang'%s.",
+                         _player_spider_senses_web(player_distance));
+                }
+            }
+            break;
         }
     }
 }

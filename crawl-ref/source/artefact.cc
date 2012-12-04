@@ -1372,7 +1372,7 @@ static string _get_artefact_type(const item_def &item, bool appear = false)
         else
             return "ring";
      default:
-         return "artefact";
+        return "artefact";
     }
 }
 

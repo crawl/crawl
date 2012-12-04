@@ -323,8 +323,8 @@ static bool _fire_validate_item(int slot, string &err)
     }
     else if (you.inv[slot].base_type == OBJ_ORBS)
     {
-       err = "You don't feel like leaving the orb behind!";
-       return false;
+        err = "You don't feel like leaving the orb behind!";
+        return false;
     }
     return true;
 }
@@ -388,16 +388,16 @@ static bool _autoswitch_to_ranged()
 
     FixedVector<item_def,ENDOFPACK>::const_pointer iter = you.inv.begin();
     for (;iter!=you.inv.end(); ++iter)
-       if (iter->launched_by(launcher))
-       {
-          if (!wield_weapon(true, item_slot))
-              return false;
+        if (iter->launched_by(launcher))
+        {
+            if (!wield_weapon(true, item_slot))
+                return false;
 
-          you.turn_is_over = true;
-          //XXX Hacky. Should use a delay instead.
-          macro_buf_add(command_to_key(CMD_FIRE));
-          return true;
-       }
+            you.turn_is_over = true;
+            //XXX Hacky. Should use a delay instead.
+            macro_buf_add(command_to_key(CMD_FIRE));
+            return true;
+        }
 
     return false;
 }
@@ -1232,28 +1232,28 @@ static bool _setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     // redundant "exploding".
     if (exploding)
     {
-         bolt *expl = new bolt(beam);
+        bolt *expl = new bolt(beam);
 
-         expl->is_explosion = true;
-         expl->damage       = dice_def(2, 5);
-         expl->ex_size      = 1;
+        expl->is_explosion = true;
+        expl->damage       = dice_def(2, 5);
+        expl->ex_size      = 1;
 
-         if (beam.flavour == BEAM_MISSILE)
-         {
-             expl->flavour = BEAM_FRAG;
-             expl->name   += " fragments";
+        if (beam.flavour == BEAM_MISSILE)
+        {
+            expl->flavour = BEAM_FRAG;
+            expl->name   += " fragments";
 
-             const string short_name =
-                 item.name(DESC_PLAIN, false, false, false, false,
-                           ISFLAG_IDENT_MASK | ISFLAG_COSMETIC_MASK
-                           | ISFLAG_RACIAL_MASK);
+            const string short_name =
+                item.name(DESC_PLAIN, false, false, false, false,
+                          ISFLAG_IDENT_MASK | ISFLAG_COSMETIC_MASK
+                          | ISFLAG_RACIAL_MASK);
 
-             expl->name = replace_all(expl->name, item.name(DESC_PLAIN),
-                                      short_name);
-         }
-         expl->name = "explosion of " + expl->name;
+            expl->name = replace_all(expl->name, item.name(DESC_PLAIN),
+                                     short_name);
+        }
+        expl->name = "explosion of " + expl->name;
 
-         beam.special_explosion = expl;
+        beam.special_explosion = expl;
     }
 
     if (exploding && item.special != SPMSL_EXPLODING)

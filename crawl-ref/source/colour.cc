@@ -292,8 +292,8 @@ int dam_colour(const monster_info& mi)
     if (!mons_class_can_display_wounds(mi.type))
         return Options.enemy_hp_colour[6]; // undead and whatnot
 
-   switch (mi.dam)
-   {
+    switch (mi.dam)
+    {
         case MDAM_OKAY:                 return Options.enemy_hp_colour[0];
         case MDAM_LIGHTLY_DAMAGED:      return Options.enemy_hp_colour[1];
         case MDAM_MODERATELY_DAMAGED:   return Options.enemy_hp_colour[2];
@@ -664,8 +664,8 @@ unsigned int str_to_tile_colour(string colour)
 
     for (unsigned int i = 0; i < 24; i++)
     {
-         if (tile_cols[i] == colour)
-             return i;
+        if (tile_cols[i] == colour)
+            return i;
     }
     return 0;
 }

@@ -2538,11 +2538,11 @@ static void _crusade_card(int power, deck_rarity_type rarity)
         // A chance to convert opponents.
         for (monster_iterator mi(you.get_los()); mi; ++mi)
         {
-             if (mi->friendly()
-                || mi->holiness() != MH_NATURAL
-                || mons_is_unique(mi->type)
-                || mons_immune_magic(*mi)
-                || player_will_anger_monster(*mi))
+            if (mi->friendly()
+               || mi->holiness() != MH_NATURAL
+               || mons_is_unique(mi->type)
+               || mons_immune_magic(*mi)
+               || player_will_anger_monster(*mi))
             {
                 continue;
             }

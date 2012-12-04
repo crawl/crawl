@@ -711,11 +711,11 @@ static void _display_vampire_attributes()
     {
         for (int x = 0; x < 7; x++)  // columns (hunger states)
         {
-             if (y > 0 && x == current)
-                 result += "<w>";
-             result += column[y][x];
-             if (y > 0 && x == current)
-                 result += "</w>";
+            if (y > 0 && x == current)
+                result += "<w>";
+            result += column[y][x];
+            if (y > 0 && x == current)
+                result += "</w>";
         }
         result += "\n";
     }

@@ -161,7 +161,7 @@ public:
 
     virtual bool fights_well_unarmed(int heavy_armour_penalty)
     {
-         return true;
+        return true;
     }
     // Returns true if the actor has no way to attack (plants, statues).
     // (statues have only indirect attacks).

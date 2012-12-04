@@ -923,11 +923,11 @@ bool MonsterMenuEntry::get_tiles(vector<tile_def>& tileset) const
 
     if (!fake)
     {
-       ch = tileidx_feature(c);
-       if (ch == TILE_FLOOR_NORMAL)
-           ch = env.tile_flv(c).floor;
-       else if (ch == TILE_WALL_NORMAL)
-           ch = env.tile_flv(c).wall;
+        ch = tileidx_feature(c);
+        if (ch == TILE_FLOOR_NORMAL)
+            ch = env.tile_flv(c).floor;
+        else if (ch == TILE_WALL_NORMAL)
+            ch = env.tile_flv(c).wall;
     }
 
     tileset.push_back(tile_def(ch, get_dngn_tex(ch)));
@@ -4277,7 +4277,7 @@ void BoxMenuHighlighter::render()
         return;
 
     if (!m_visible)
-       return;
+        return;
     _place_items();
 #ifdef USE_TILE_LOCAL
     m_line_buf.draw();

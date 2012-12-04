@@ -2067,15 +2067,15 @@ static bool _do_ability(const ability_def& abil)
             break;
 
         case ABIL_BREATHE_MEPHITIC:
-             if (!zapping(ZAP_BREATHE_MEPHITIC,
-                 (you.form == TRAN_DRAGON) ?
-                     2 * you.experience_level : you.experience_level,
-                 beam, true,
-                          "You exhale a blast of noxious fumes."))
-             {
-                 return false;
-             }
-             break;
+            if (!zapping(ZAP_BREATHE_MEPHITIC,
+                (you.form == TRAN_DRAGON) ?
+                    2 * you.experience_level : you.experience_level,
+                beam, true,
+                         "You exhale a blast of noxious fumes."))
+            {
+                return false;
+            }
+            break;
 
         default:
             break;

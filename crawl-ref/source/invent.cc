@@ -1203,8 +1203,8 @@ static bool _item_class_selected(const item_def &i, int selector)
             return true;
 
         for (int eq = 0; eq < NUM_EQUIP; eq++)
-             if (you.equip[eq] == i.link)
-                 return true;
+            if (you.equip[eq] == i.link)
+                return true;
 
         return false;
     }

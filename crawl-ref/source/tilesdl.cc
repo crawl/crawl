@@ -749,7 +749,7 @@ int TilesFramework::getch_ck()
                         continue;
 
                     key = mouse_key;
-               }
+                }
                break;
 
             case WM_MOUSEBUTTONUP:

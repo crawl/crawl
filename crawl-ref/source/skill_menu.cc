@@ -301,7 +301,7 @@ COLORS SkillMenuEntry::get_colour() const
     else if (is_antitrained(m_sk) && is_set(SKMF_APTITUDE))
         return RED;
     else if (you.train[m_sk] == 2)
-       return WHITE;
+        return WHITE;
     else
         return LIGHTGREY;
 }

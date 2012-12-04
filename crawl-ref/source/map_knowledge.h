@@ -101,7 +101,7 @@ struct map_cell
             _mons = new monster_info(*_mons);
         if (_item)
             _item = new item_info(*_item);
-         return *this;
+        return *this;
     }
 
     void clear()
