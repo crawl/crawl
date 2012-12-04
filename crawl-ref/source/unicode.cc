@@ -534,9 +534,9 @@ string chop_string(const char *s, int width, bool spaces)
         s += clen;
     }
 
-   if (spaces && width)
-       return string(s0, s - s0) + string(width, ' ');
-   return string(s0, s - s0);;
+    if (spaces && width)
+        return string(s0, s - s0) + string(width, ' ');
+    return string(s0, s - s0);;
 }
 
 string chop_string(const string &s, int width, bool spaces)

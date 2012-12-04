@@ -1453,9 +1453,9 @@ void scorefile_entry::init(time_t dt)
         fill_status_info(statuses[i], &inf);
         if (!inf.short_text.empty())
         {
-             if (!status_effects.empty())
-                 status_effects += ",";
-             status_effects += inf.short_text;
+            if (!status_effects.empty())
+                status_effects += ",";
+            status_effects += inf.short_text;
         }
     }
 

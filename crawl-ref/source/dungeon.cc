@@ -5539,7 +5539,7 @@ static void _add_plant_clumps(int frequency /* = 10 */,
             if ((type == MONS_PLANT  ||
                  type == MONS_FUNGUS ||
                  type == MONS_BUSH) && one_chance_in(frequency))
-                 {
+            {
                 mg.cls = type;
             }
             else

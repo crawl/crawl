@@ -226,7 +226,7 @@ void MiscastEffect::init()
             cause.replace(cause.begin(), cause.begin() + 2, "an indirect");
         else
             cause = replace_all(cause, "death curse", "indirect death curse");
-   }
+    }
 
     // source_known = false for MELEE_MISCAST so that melee miscasts
     // won't give a "nothing happens" message.

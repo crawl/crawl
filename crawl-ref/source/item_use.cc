@@ -240,8 +240,8 @@ static bool _valid_weapon_swap(const item_def &item)
 
     if (item.base_type == OBJ_POTIONS && item_type_known(item))
     {
-       return (item.sub_type == POT_BLOOD
-               || item.sub_type == POT_BLOOD_COAGULATED);
+        return (item.sub_type == POT_BLOOD
+                || item.sub_type == POT_BLOOD_COAGULATED);
     }
 
     return false;
@@ -584,7 +584,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     if (base_type != OBJ_ARMOUR || you.species == SP_FELID)
     {
         if (verbose)
-           mpr("You can't wear that.");
+            mpr("You can't wear that.");
 
         return false;
     }
@@ -669,7 +669,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         {
             if (verbose)
                 mpr("Boots don't fit your talons!");
-           return false;
+            return false;
         }
 
         if (you.species == SP_NAGA)
@@ -682,7 +682,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         if (!ignore_temporary && you.fishtail)
         {
             if (verbose)
-               mpr("You don't currently have feet!");
+                mpr("You don't currently have feet!");
             return false;
         }
     }
@@ -699,7 +699,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
 
         if (player_mutation_level(MUT_ANTENNAE) == 3)
         {
-           if (verbose)
+            if (verbose)
                 mpr("You can't wear any headgear with your large antennae!");
             return false;
         }
@@ -760,7 +760,7 @@ bool do_wear_armour(int item, bool quiet)
     if (!invitem.defined())
     {
         if (!quiet)
-           mpr("You don't have any such object.");
+            mpr("You don't have any such object.");
         return false;
     }
 
@@ -772,7 +772,7 @@ bool do_wear_armour(int item, bool quiet)
     if (item == you.equip[EQ_WEAPON])
     {
         if (!quiet)
-           mpr("You are wielding that object!");
+            mpr("You are wielding that object!");
         return false;
     }
 
@@ -832,7 +832,7 @@ bool do_wear_armour(int item, bool quiet)
         else
         {
             if (!quiet)
-               mpr("Your cloak prevents you from wearing the armour.");
+                mpr("Your cloak prevents you from wearing the armour.");
             return false;
         }
     }
@@ -2057,9 +2057,9 @@ void drink(int slot)
 
     if (you.form == TRAN_BAT)
     {
-       canned_msg(MSG_PRESENT_FORM);
-       _vampire_corpse_help();
-       return;
+        canned_msg(MSG_PRESENT_FORM);
+        _vampire_corpse_help();
+        return;
     }
 
     if (slot == -1)

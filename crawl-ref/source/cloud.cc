@@ -406,14 +406,14 @@ static void _maybe_leave_water(const cloud_struct& c)
     {
         dungeon_feature_type feat;
 
-       if (grd(c.pos) == DNGN_FLOOR)
-           feat = DNGN_SHALLOW_WATER;
-       else if (grd(c.pos) == DNGN_SHALLOW_WATER && you.pos() != c.pos
-                && one_chance_in(3) && !crawl_state.game_is_zotdef())
-           // Don't drown the player!
-           feat = DNGN_DEEP_WATER;
-       else
-           feat = grd(c.pos);
+        if (grd(c.pos) == DNGN_FLOOR)
+            feat = DNGN_SHALLOW_WATER;
+        else if (grd(c.pos) == DNGN_SHALLOW_WATER && you.pos() != c.pos
+                 && one_chance_in(3) && !crawl_state.game_is_zotdef())
+            // Don't drown the player!
+            feat = DNGN_DEEP_WATER;
+        else
+            feat = grd(c.pos);
 
         if (grd(c.pos) != feat)
         {

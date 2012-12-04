@@ -203,13 +203,13 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
 
        case DID_KILL_PLANT:
        case DID_PLANT_KILLED_BY_SERVANT:
-           // Piety loss but no penance for killing a plant.
-           if (you.religion == GOD_FEDHAS)
-           {
-               retval = true;
-               piety_change = -level;
-           }
-           break;
+            // Piety loss but no penance for killing a plant.
+            if (you.religion == GOD_FEDHAS)
+            {
+                retval = true;
+                piety_change = -level;
+            }
+            break;
 
         case DID_ATTACK_NEUTRAL:
             switch (you.religion)

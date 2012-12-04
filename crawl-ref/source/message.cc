@@ -1376,9 +1376,9 @@ static bool channel_message_history(msg_channel_type channel)
     case MSGCH_PROMPT:
     case MSGCH_EQUIPMENT:
     case MSGCH_EXAMINE_FILTER:
-       return false;
+        return false;
     default:
-       return true;
+        return true;
     }
 }
 

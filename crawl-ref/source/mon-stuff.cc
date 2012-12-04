@@ -966,7 +966,7 @@ static void _mummy_curse(monster* mons, killer_type killer, int index)
     {
         // Mummies committing suicide don't cause a death curse.
         if (index == mons->mindex())
-           return;
+            return;
         target = &menv[index];
     }
 
@@ -2519,7 +2519,7 @@ void monster_cleanup(monster* mons)
     mons->reset();
 
     for (monster_iterator mi; mi; ++mi)
-       if (mi->foe == monster_killed)
+        if (mi->foe == monster_killed)
             mi->foe = MHITNOT;
 
     if (you.pet_target == monster_killed)

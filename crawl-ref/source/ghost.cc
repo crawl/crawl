@@ -712,7 +712,7 @@ static bool _know_spell(spell_type spell)
 static spell_type search_first_list(int ignore_spell)
 {
     for (unsigned i = 0; i < ARRAYSZ(search_order_conj); ++i)
-     {
+    {
         if (search_order_conj[i] == SPELL_NO_SPELL)
             return SPELL_NO_SPELL;
 

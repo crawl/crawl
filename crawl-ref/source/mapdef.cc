@@ -4004,7 +4004,7 @@ mons_spec mons_list::get_slime_spec(const string &name) const
         mprf(MSGCH_DIAGNOSTICS, "Slime spec wants invalid size '%s'",
              prefix.c_str());
 #endif
-     }
+    }
 
     return mons_spec(MONS_SLIME_CREATURE, MONS_NO_MONSTER, slime_size);
 }

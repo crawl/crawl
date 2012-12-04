@@ -120,18 +120,18 @@ void jiyva_slurp_bonus(int item_value, int *js)
         && x_chance_in_y(you.piety, MAX_PIETY)
         && you.magic_points < you.max_magic_points)
     {
-         inc_mp(max(random2(item_value), 1));
-         *js |= JS_MP;
-     }
+        inc_mp(max(random2(item_value), 1));
+        *js |= JS_MP;
+    }
 
     if (you.piety >= piety_breakpoint(4)
         && x_chance_in_y(you.piety, MAX_PIETY)
         && you.hp < you.hp_max
         && !you.duration[DUR_DEATHS_DOOR])
     {
-         inc_hp(max(random2(item_value), 1));
-         *js |= JS_HP;
-     }
+        inc_hp(max(random2(item_value), 1));
+        *js |= JS_HP;
+    }
 }
 
 void jiyva_slurp_message(int js)

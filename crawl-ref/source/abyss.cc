@@ -423,46 +423,46 @@ void push_features_to_abyss()
     for (int x = -LOS_RADIUS; x <= LOS_RADIUS; x++)
     {
         for (int y = -LOS_RADIUS; y <= LOS_RADIUS; y++)
-         {
-             coord_def p(x, y);
-             if (p.abs() > LOS_RADIUS * LOS_RADIUS + 1)
-                 continue;
+        {
+            coord_def p(x, y);
+            if (p.abs() > LOS_RADIUS * LOS_RADIUS + 1)
+                continue;
 
-             p += you.pos();
+            p += you.pos();
 
-             dungeon_feature_type feature = map_bounds(p) ? grd(p) : DNGN_UNSEEN;
+            dungeon_feature_type feature = map_bounds(p) ? grd(p) : DNGN_UNSEEN;
 
-             if (feat_is_gate(feature))
-                 feature = DNGN_STONE_ARCH;
+            if (feat_is_gate(feature))
+                feature = DNGN_STONE_ARCH;
 
-             if (feat_is_stair(feature))
-                 feature = (one_chance_in(3) ? DNGN_STONE_ARCH : DNGN_FLOOR);
+            if (feat_is_stair(feature))
+                feature = (one_chance_in(3) ? DNGN_STONE_ARCH : DNGN_FLOOR);
 
-             if (feat_is_altar(feature))
-                 feature = (one_chance_in(9) ? DNGN_ALTAR_XOM : DNGN_FLOOR);
+            if (feat_is_altar(feature))
+                feature = (one_chance_in(9) ? DNGN_ALTAR_XOM : DNGN_FLOOR);
 
-             if (feature == DNGN_ENTER_SHOP)
-                 feature = DNGN_ABANDONED_SHOP;
+            if (feature == DNGN_ENTER_SHOP)
+                feature = DNGN_ABANDONED_SHOP;
 
-             if (feat_is_trap(feature, true))
-                 feature = DNGN_FLOOR;
+            if (feat_is_trap(feature, true))
+                feature = DNGN_FLOOR;
 
-             switch (feature)
-             {
-                 // demote permarock
-                 case DNGN_PERMAROCK_WALL:
-                     feature = DNGN_ROCK_WALL;
-                     break;
-                 case DNGN_CLEAR_PERMAROCK_WALL:
-                     feature = DNGN_CLEAR_ROCK_WALL;
-                     break;
-                 case DNGN_SLIMY_WALL:
-                     feature = DNGN_GREEN_CRYSTAL_WALL;
-                 default:
-                     // handle more terrain types.
-                     break;
-             }
-             abyssal_features.push_back(feature);
+            switch (feature)
+            {
+                // demote permarock
+                case DNGN_PERMAROCK_WALL:
+                    feature = DNGN_ROCK_WALL;
+                    break;
+                case DNGN_CLEAR_PERMAROCK_WALL:
+                    feature = DNGN_CLEAR_ROCK_WALL;
+                    break;
+                case DNGN_SLIMY_WALL:
+                    feature = DNGN_GREEN_CRYSTAL_WALL;
+                default:
+                    // handle more terrain types.
+                    break;
+            }
+            abyssal_features.push_back(feature);
         }
     }
 }
@@ -992,8 +992,8 @@ void maybe_shift_abyss_around_player()
 #ifdef DEBUG_DIAGNOSTICS
     int j = 0;
     for (int i = 0; i < MAX_ITEMS; ++i)
-         if (mitm[i].defined())
-             ++j;
+        if (mitm[i].defined())
+            ++j;
 
     dprf("Number of items present: %d", j);
 

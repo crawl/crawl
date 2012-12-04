@@ -428,25 +428,25 @@ monster_type dragon_form_dragon_type()
 {
     switch (you.species)
     {
-        case SP_WHITE_DRACONIAN:
-             return MONS_ICE_DRAGON;
-        case SP_GREEN_DRACONIAN:
-             return MONS_SWAMP_DRAGON;
-        case SP_YELLOW_DRACONIAN:
-             return MONS_GOLDEN_DRAGON;
-        case SP_GREY_DRACONIAN:
-             return MONS_IRON_DRAGON;
-        case SP_BLACK_DRACONIAN:
-             return MONS_STORM_DRAGON;
-        case SP_PURPLE_DRACONIAN:
-             return MONS_QUICKSILVER_DRAGON;
-        case SP_MOTTLED_DRACONIAN:
-             return MONS_MOTTLED_DRAGON;
-        case SP_PALE_DRACONIAN:
-             return MONS_STEAM_DRAGON;
-        case SP_RED_DRACONIAN:
-        default:
-             return MONS_DRAGON;
+    case SP_WHITE_DRACONIAN:
+        return MONS_ICE_DRAGON;
+    case SP_GREEN_DRACONIAN:
+        return MONS_SWAMP_DRAGON;
+    case SP_YELLOW_DRACONIAN:
+        return MONS_GOLDEN_DRAGON;
+    case SP_GREY_DRACONIAN:
+        return MONS_IRON_DRAGON;
+    case SP_BLACK_DRACONIAN:
+        return MONS_STORM_DRAGON;
+    case SP_PURPLE_DRACONIAN:
+        return MONS_QUICKSILVER_DRAGON;
+    case SP_MOTTLED_DRACONIAN:
+        return MONS_MOTTLED_DRAGON;
+    case SP_PALE_DRACONIAN:
+        return MONS_STEAM_DRAGON;
+    case SP_RED_DRACONIAN:
+    default:
+        return MONS_DRAGON;
     }
 }
 

@@ -3049,13 +3049,13 @@ void level_change(bool skip_attribute_increase)
 
             if (new_exp == 27)
             {
-               mpr("You have reached level 27, the final one!",
-                   MSGCH_INTRINSIC_GAIN);
+                mpr("You have reached level 27, the final one!",
+                    MSGCH_INTRINSIC_GAIN);
             }
             else
             {
-               mprf(MSGCH_INTRINSIC_GAIN, "You have reached level %d!",
-                    new_exp);
+                mprf(MSGCH_INTRINSIC_GAIN, "You have reached level %d!",
+                     new_exp);
             }
 
             if (!(new_exp % 3) && !skip_attribute_increase)
@@ -3245,18 +3245,18 @@ void level_change(bool skip_attribute_increase)
                 {
                     switch (you.species)
                     {
-                        case SP_GREEN_DRACONIAN:
-                             perma_mutate(MUT_STINGER, 1, "draconian growth");
-                             break;
-                        case SP_YELLOW_DRACONIAN:
-                             perma_mutate(MUT_ACIDIC_BITE, 1, "draconian growth");
-                             break;
-                        case SP_BLACK_DRACONIAN:
-                             perma_mutate(MUT_BIG_WINGS, 1, "draconian growth");
-                             mpr("You can now fly continuously.", MSGCH_INTRINSIC_GAIN);
-                             break;
-                        default:
-                             break;
+                    case SP_GREEN_DRACONIAN:
+                        perma_mutate(MUT_STINGER, 1, "draconian growth");
+                        break;
+                    case SP_YELLOW_DRACONIAN:
+                        perma_mutate(MUT_ACIDIC_BITE, 1, "draconian growth");
+                        break;
+                    case SP_BLACK_DRACONIAN:
+                        perma_mutate(MUT_BIG_WINGS, 1, "draconian growth");
+                        mpr("You can now fly continuously.", MSGCH_INTRINSIC_GAIN);
+                        break;
+                    default:
+                        break;
                     }
                 }
                 break;
@@ -6158,11 +6158,11 @@ int player::armour_class() const
 
         if (player_genus(GENPC_DRACONIAN))
         {
-           AC += 400 + 100 * (you.experience_level / 3);  // max 13
-           if (species == SP_GREY_DRACONIAN) // no breath
-               AC += 500;
-           if (form == TRAN_DRAGON)
-               AC += 1000;
+            AC += 400 + 100 * (you.experience_level / 3);  // max 13
+            if (species == SP_GREY_DRACONIAN) // no breath
+                AC += 500;
+            if (form == TRAN_DRAGON)
+                AC += 1000;
         }
         else
         {

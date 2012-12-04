@@ -601,9 +601,9 @@ static void _construct_species_menu(const newgame_def* ng,
 
         if (ng->job == JOB_UNKNOWN
             || job_allowed(species, ng->job) == CC_UNRESTRICTED)
-          {
-              tmp->set_fg_colour(LIGHTGRAY);
-              tmp->set_highlight_colour(GREEN);
+        {
+            tmp->set_fg_colour(LIGHTGRAY);
+            tmp->set_highlight_colour(GREEN);
         }
         else
         {

@@ -670,12 +670,12 @@ static string _list_allowed_keys(char yes1, char yes2, bool lowered = false,
                                  bool allow_all = false)
 {
     string result = " [";
-           result += (lowered ? "(y)es" : "(Y)es");
-           result += _list_alternative_yes(yes1, yes2, lowered);
-           if (allow_all)
-               result += (lowered? "/(a)ll" : "/(A)ll");
-           result += (lowered ? "/(n)o/(q)uit" : "/(N)o/(Q)uit");
-           result += "]";
+    result += (lowered ? "(y)es" : "(Y)es");
+    result += _list_alternative_yes(yes1, yes2, lowered);
+    if (allow_all)
+        result += (lowered? "/(a)ll" : "/(A)ll");
+    result += (lowered ? "/(n)o/(q)uit" : "/(N)o/(Q)uit");
+    result += "]";
 
     return result;
 }

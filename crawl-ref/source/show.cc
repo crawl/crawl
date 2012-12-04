@@ -217,7 +217,7 @@ static show_item_type _item_to_show_code(const item_def &item)
     case OBJ_GOLD:       return SHOW_ITEM_GOLD;
     case OBJ_DETECTED:   return SHOW_ITEM_DETECTED;
     default:             return SHOW_ITEM_ORB; // bad item character
-   }
+    }
 }
 
 static void _update_item_at(const coord_def &gp)
@@ -499,11 +499,11 @@ void show_init(bool terrain_only)
 // emphasise(p) == true, but we optimise a bit.
 void show_update_emphasis()
 {
-   // The only thing that can change is that previously unknown
-   // stairs are now known. (see is_unknown_stair(), emphasise())
-   LevelInfo& level_info = travel_cache.get_level_info(level_id::current());
-   vector<stair_info> stairs = level_info.get_stairs();
-   for (unsigned i = 0; i < stairs.size(); ++i)
-       if (stairs[i].destination.is_valid())
-           env.map_knowledge(stairs[i].position).flags &= ~MAP_EMPHASIZE;
+    // The only thing that can change is that previously unknown
+    // stairs are now known. (see is_unknown_stair(), emphasise())
+    LevelInfo& level_info = travel_cache.get_level_info(level_id::current());
+    vector<stair_info> stairs = level_info.get_stairs();
+    for (unsigned i = 0; i < stairs.size(); ++i)
+        if (stairs[i].destination.is_valid())
+            env.map_knowledge(stairs[i].position).flags &= ~MAP_EMPHASIZE;
 }

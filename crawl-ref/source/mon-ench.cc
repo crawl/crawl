@@ -782,18 +782,18 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_REGENERATION:
-         if (!quiet)
+        if (!quiet)
             simple_monster_message(this, " is no longer regenerating.");
-         break;
+        break;
 
     case ENCH_WRETCHED:
-         if (!quiet)
-         {
+        if (!quiet)
+        {
             snprintf(info, INFO_SIZE, " seems to return to %s normal shape.",
                      pronoun(PRONOUN_POSSESSIVE, true).c_str());
             simple_monster_message(this, info);
-         }
-         break;
+        }
+        break;
 
     default:
         break;
@@ -1421,14 +1421,11 @@ void monster::apply_enchantment(const mon_enchant &me)
             if (you.can_see(this))
             {
                 if (type == MONS_PILLAR_OF_SALT)
-                {
-                     mprf("%s crumbles away.",
-                          name(DESC_THE, false).c_str());
-                }
+                    mprf("%s crumbles away.", name(DESC_THE, false).c_str());
                 else
                 {
-                     mprf("A nearby %s withers and dies.",
-                          name(DESC_PLAIN, false).c_str());
+                    mprf("A nearby %s withers and dies.",
+                         name(DESC_PLAIN, false).c_str());
                 }
             }
 

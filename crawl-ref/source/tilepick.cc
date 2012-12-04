@@ -3096,9 +3096,9 @@ static tileidx_t _tileidx_missile_base(const item_def &item)
         case SPMSL_STEEL:    return TILE_MI_JAVELIN_STEEL;
         case SPMSL_SILVER:   return TILE_MI_JAVELIN_SILVER;
         }
-  }
+    }
 
-  return TILE_ERROR;
+    return TILE_ERROR;
 }
 
 static tileidx_t _tileidx_missile(const item_def &item)

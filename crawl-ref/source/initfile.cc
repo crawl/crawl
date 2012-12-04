@@ -2102,8 +2102,8 @@ static void _bindkey(string field)
     const command_type cmd  = name_to_command(name);
     if (cmd == CMD_NO_CMD)
     {
-       mprf(MSGCH_ERROR, "No command named '%s'", name.c_str());
-       return;
+        mprf(MSGCH_ERROR, "No command named '%s'", name.c_str());
+        return;
     }
 
     bind_command_to_key(cmd, key);

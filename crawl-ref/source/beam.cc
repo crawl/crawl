@@ -1011,11 +1011,11 @@ void bolt::nuke_wall_effect()
     case DNGN_CLOSED_DOOR:
     case DNGN_RUNED_DOOR:
     {
-         set<coord_def> doors = connected_doors(pos());
-         set<coord_def>::iterator it;
-         for (it = doors.begin(); it != doors.end(); ++it)
-             nuke_wall(*it);
-         break;
+        set<coord_def> doors = connected_doors(pos());
+        set<coord_def>::iterator it;
+        for (it = doors.begin(); it != doors.end(); ++it)
+            nuke_wall(*it);
+        break;
     }
 
     default:

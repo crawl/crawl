@@ -2977,9 +2977,9 @@ static string _base_feature_desc(dungeon_feature_type grid, trap_type trap)
         return "mangrove";
     case DNGN_ORCISH_IDOL:
         if (you.species == SP_HILL_ORC)
-           return "idol of Beogh";
+            return "idol of Beogh";
         else
-           return "orcish idol";
+            return "orcish idol";
     case DNGN_GRANITE_STATUE:
         return "granite statue";
     case DNGN_LAVA:

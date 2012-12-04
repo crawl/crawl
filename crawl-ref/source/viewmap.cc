@@ -67,9 +67,9 @@ static unsigned _get_travel_colour(const coord_def& p)
 #ifndef USE_TILE_LOCAL
 static bool _travel_colour_override(const coord_def& p)
 {
-  if (is_waypoint(p) || is_stair_exclusion(p)
-     || travel_point_distance[p.x][p.y] == PD_EXCLUDED)
-        return true;
+    if (is_waypoint(p) || is_stair_exclusion(p)
+       || travel_point_distance[p.x][p.y] == PD_EXCLUDED)
+          return true;
 #ifdef WIZARD
     if (you.wizard && testbits(env.pgrid(p), FPROP_HIGHLIGHT))
         return true;

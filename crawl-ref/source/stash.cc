@@ -1919,11 +1919,11 @@ static void _stash_flatten_results(const vector<stash_search_result> &in,
                 tmp.match = Stash::stash_item_name(item);
                 if (tmp.shop)
                 {
-                  // Need to check if the item is in the shop so we can add gold price...
-                  // tmp.shop->shop_item_name()
-                  string sn = tmp.shop->get_shop_item_name(item);
-                  if (!sn.empty())
-                  tmp.match=sn;
+                    // Need to check if the item is in the shop so we can add gold price...
+                    // tmp.shop->shop_item_name()
+                    string sn = tmp.shop->get_shop_item_name(item);
+                    if (!sn.empty())
+                        tmp.match=sn;
                 }
                 tmp.matches = item.quantity;
                 tmp.matching_items.clear();

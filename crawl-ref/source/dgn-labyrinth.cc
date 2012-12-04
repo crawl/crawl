@@ -137,7 +137,7 @@ static bool _has_no_floor_neighbours(const coord_def &pos, bool recurse = false)
         if (recurse)
         {
             if (grd(p) == DNGN_FLOOR)
-               return false;
+                return false;
         }
         else if (_has_no_floor_neighbours(p, true))
             return true;

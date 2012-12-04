@@ -674,11 +674,11 @@ void wizard_make_object_randart()
     {
         god_type god = str_to_god(name, false);
         if (god == GOD_NO_GOD)
-           mpr("No such god, leaving item origin alone.");
+            mpr("No such god, leaving item origin alone.");
         else
         {
-           mprf("God gift of %s.", god_name(god, false).c_str());
-           item.orig_monnum = -god;
+            mprf("God gift of %s.", god_name(god, false).c_str());
+            item.orig_monnum = -god;
         }
     }
 
@@ -1170,14 +1170,14 @@ static void _debug_acquirement_stats(FILE *ostat)
             "reflection",
             "spirit shield",
             "archery",
-         };
+        };
 
         const int non_art = acq_calls - num_arts;
         for (int i = 0; i < NUM_SPECIAL_ARMOURS; ++i)
         {
-           if (ego_quants[i] > 0)
-               fprintf(ostat, "%17s: %5.2f\n", names[i],
-                       100.0 * (float) ego_quants[i] / (float) non_art);
+            if (ego_quants[i] > 0)
+                fprintf(ostat, "%17s: %5.2f\n", names[i],
+                        100.0 * (float) ego_quants[i] / (float) non_art);
         }
         fprintf(ostat, "\n\n");
     }

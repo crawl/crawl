@@ -90,7 +90,7 @@ void dgn_smooth_heights(int radius, int npasses)
                 dgn_smooth_height_at(coord_def(2 * xspan - x - 1,
                                                2 * yspan - y - 1),
                                      radius);
-           }
+            }
     }
 }
 

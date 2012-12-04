@@ -265,14 +265,14 @@ bool trap_def::is_safe(actor* act) const
     }
 
     #ifdef CLUA_BINDINGS
-     // Prompt for any trap where you might not have enough hp
-     // as defined in init.txt (see trapwalk.lua)
-     if (clua.callbooleanfn(false, "ch_cross_trap", "s", name().c_str()))
-         return true;
+    // Prompt for any trap where you might not have enough hp
+    // as defined in init.txt (see trapwalk.lua)
+    if (clua.callbooleanfn(false, "ch_cross_trap", "s", name().c_str()))
+        return true;
 
 #endif
 
-     return false;
+    return false;
 }
 
 // Returns the number of a net on a given square.
@@ -1392,9 +1392,9 @@ void free_self_from_net()
             if (you.attribute[ATTR_HELD] > 1 && hold < -random2(5))
                 you.attribute[ATTR_HELD]--;
         }
-   }
-   else
-   {
+    }
+    else
+    {
         // You try to escape (takes at least 3 turns, and at most 10).
         int escape = do_what;
 
@@ -1429,7 +1429,7 @@ void free_self_from_net()
             mpr("You struggle to escape the net.");
 
         you.attribute[ATTR_HELD] -= escape;
-   }
+    }
 }
 
 void clear_trapping_net()

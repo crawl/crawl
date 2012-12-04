@@ -2535,7 +2535,7 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
         {
             if (!suppress_msg)
                 mpr("Blech - you need blood!");
-             return false;
+            return false;
         }
 
         const int vorous = _player_likes_food_type(kindof_thing);

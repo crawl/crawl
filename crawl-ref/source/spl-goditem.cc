@@ -173,11 +173,11 @@ static int _can_pacify_monster(const monster* mon, const int healed,
                                const int max_healed)
 {
 
-   int pacifiable = is_pacifiable(mon);
-   if (pacifiable < 0)
-       return pacifiable;
+    int pacifiable = is_pacifiable(mon);
+    if (pacifiable < 0)
+        return pacifiable;
 
-   if (healed < 1)
+    if (healed < 1)
         return 0;
 
     const int factor = (mons_intel(mon) <= I_ANIMAL)       ? 3 : // animals

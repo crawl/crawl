@@ -590,8 +590,8 @@ static bool _do_merge_slimes(monster* initial_slime, monster* merge_to)
 // Slime creatures can split but not merge under these conditions.
 static bool _unoccupied_slime(monster* thing)
 {
-     return (thing->asleep() || mons_is_wandering(thing)
-             || thing->foe == MHITNOT);
+    return (thing->asleep() || mons_is_wandering(thing)
+            || thing->foe == MHITNOT);
 }
 
 // Slime creatures cannot split or merge under these conditions.
@@ -780,8 +780,8 @@ static monster *_slime_split(monster* thing, bool force_split)
         }
     }
 
-   // No free squares.
-   return 0;
+    // No free squares.
+    return 0;
 }
 
 // See if a given slime creature can split or merge.
@@ -1740,11 +1740,11 @@ static void _collect_tentacles(int headnum,
     // TODO: reorder tentacles based on distance to head or something.
     for (monster_iterator mi; mi; ++mi)
     {
-         if (int (mi->number) == headnum)
-         {
-             if (mi->type == MONS_KRAKEN_TENTACLE)
-                 tentacles.push_back(mi);
-         }
+        if (int (mi->number) == headnum)
+        {
+            if (mi->type == MONS_KRAKEN_TENTACLE)
+                tentacles.push_back(mi);
+        }
     }
 }
 

@@ -2623,7 +2623,7 @@ bool describe_item(item_def &item, bool allow_inscribe, bool shopping)
 #endif
 
     if (_can_show_spells(item))
-      return _describe_spellbook(item);
+        return _describe_spellbook(item);
 
     _show_item_description(item);
     _update_inscription(item);

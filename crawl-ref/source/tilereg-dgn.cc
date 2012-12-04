@@ -271,7 +271,7 @@ void DungeonRegion::draw_minibars()
         ShapeBuffer buff;
 
         if (!on_screen(you.pos()))
-             return;
+            return;
 
         // FIXME: to_screen_coords could be made into two versions: one
         // that gives coords by pixel (the current one), one that gives
@@ -480,7 +480,7 @@ static bool _have_appropriate_evokable(const actor* target)
 
         if (_is_appropriate_evokable(item, target))
             return true;
-   }
+    }
 
     return false;
 }

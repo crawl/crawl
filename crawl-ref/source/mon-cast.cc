@@ -247,8 +247,8 @@ bolt mons_spells(monster* mons, spell_type spell_cast, int power,
     beam.is_beam      = false;
     beam.is_explosion = false;
 
-     switch (spell_cast)
-     { // add touch or range-setting spells here
+    switch (spell_cast)
+    { // add touch or range-setting spells here
         case SPELL_SANDBLAST:
             break;
         case SPELL_FLAME_TONGUE:
@@ -259,7 +259,7 @@ bolt mons_spells(monster* mons, spell_type spell_cast, int power,
             break;
         default:
         beam.range = spell_range(spell_cast, power, false);
-     }
+    }
 
     const int drac_type = (mons_genus(mons->type) == MONS_DRACONIAN)
                             ? draco_subspecies(mons) : mons->type;
@@ -2502,13 +2502,13 @@ void mons_cast_spectral_orcs(monster* mons)
 
     for (int i = random2(3) + 1; i > 0; --i)
     {
-         monster_type mon = MONS_ORC;
-         if (coinflip())
-             mon = MONS_ORC_WARRIOR;
-         else if (one_chance_in(3))
-             mon = MONS_ORC_KNIGHT;
-         else if (one_chance_in(10))
-             mon = MONS_ORC_WARLORD;
+        monster_type mon = MONS_ORC;
+        if (coinflip())
+            mon = MONS_ORC_WARRIOR;
+        else if (one_chance_in(3))
+            mon = MONS_ORC_KNIGHT;
+        else if (one_chance_in(10))
+            mon = MONS_ORC_WARLORD;
 
         // Use the original monster type as the zombified type here, to
         // get the proper stats from it.

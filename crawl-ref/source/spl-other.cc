@@ -106,7 +106,7 @@ spret_type cast_sublimation_of_blood(int pow, bool fail)
                 "own body.");
         }
         else if (!enough_hp(2, true))
-             mpr("Your attempt to draw power from your own body fails.");
+            mpr("Your attempt to draw power from your own body fails.");
         else
         {
             int food = 0;

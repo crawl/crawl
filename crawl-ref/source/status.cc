@@ -356,17 +356,17 @@ bool fill_status_info(int status, status_info* inf)
 
     case STATUS_AUGMENTED:
     {
-         int level = augmentation_amount();
+        int level = augmentation_amount();
 
-         if (level > 0)
-         {
-             inf->light_colour = (level == 3) ? WHITE :
-                                 (level == 2) ? LIGHTBLUE
-                                              : BLUE;
+        if (level > 0)
+        {
+            inf->light_colour = (level == 3) ? WHITE :
+                                (level == 2) ? LIGHTBLUE
+                                             : BLUE;
 
-             inf->light_text = "Aug";
-         }
-         break;
+            inf->light_text = "Aug";
+        }
+        break;
     }
 
     case DUR_CONFUSING_TOUCH:
