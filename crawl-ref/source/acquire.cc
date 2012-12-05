@@ -458,7 +458,7 @@ static void _acquirement_determine_food(int& type_wanted, int& quantity,
     {
     // this was above in the vampire block, but gets overwritten by line 1371
     // so moving here {due}
-        quantity = 2 + random2(4);
+        quantity = 8 + random2(5);
     }
 }
 
