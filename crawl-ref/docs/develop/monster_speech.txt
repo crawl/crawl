@@ -955,7 +955,7 @@ Other symbols:
 ;   all fish, shark, electric eel
 @   all humans, (glowing) shapeshifter, and Killer Klown
 &   all pandemonium lords
-*   giant spore, ball lightning, orb of fire, silver star, blessed toe,
+*   giant spore, ball lightning, orb of fire, silver star,
     orb of destruction, wretched star, tentacle segment
 (   dancing weapon
 {   all sensed monsters, and lightning spire
