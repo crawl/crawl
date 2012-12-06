@@ -309,7 +309,7 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums, map_knowledge
             var hp_bar_offset = 2;
 
             // TODO: use different colors if heavily wounded, like in the tiles version
-            if (player.mp > 0) {
+            if (player.mp >= 0 && player.mp_max > 0) {
                 var mp_percent = player.mp / player.mp_max;
 
                 this.ctx.fillStyle = magic_spend;
@@ -318,7 +318,7 @@ function ($, view_data, main, tileinfo_player, icons, dngn, enums, map_knowledge
 
                 this.ctx.fillStyle = magic;
                 this.ctx.fillRect(x, y + this.cell_height - 2,
-                                  this.cell_width * mp_percent, 1);
+                                  this.cell_width * mp_percent, 2);
 
                 hp_bar_offset += 2;
             }
