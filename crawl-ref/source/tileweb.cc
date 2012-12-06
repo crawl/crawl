@@ -560,6 +560,7 @@ player_info::player_info()
 {
     for (unsigned int i = 0; i < NUM_EQUIP; ++i)
         equip[i] = -1;
+    position = coord_def(-1, -1);
 }
 
 void TilesFramework::_send_player(bool force_full)
