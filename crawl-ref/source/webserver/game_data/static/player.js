@@ -217,9 +217,8 @@ function ($, comm, enums, map_knowledge, messages) {
 
         update_stats_pane();
 
-        if (("hp" in data || "hp_max" in data ||
-             "mp" in data || "mp_max" in data)
-            && (player.pos != null))
+        if ("hp" in data || "hp_max" in data ||
+            "mp" in data || "mp_max" in data)
         {
             map_knowledge.touch(player.pos);
             $("#dungeon").trigger("update_cells", [[player.pos]]);
@@ -243,7 +242,7 @@ function ($, comm, enums, map_knowledge, messages) {
                 piety_rank: 0, penance: false,
                 status: [],
                 inv: {}, equip: {},
-                pos: null
+                pos: {x: 0, y: 0}
             });
             for (var i = 0; i < enums.equip.NUM_EQUIP; ++i)
                 player.equip[i] = -1;
