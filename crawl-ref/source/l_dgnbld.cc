@@ -764,7 +764,7 @@ LUAFN(dgn_replace_random)
     if (!_coords(ls, lines, x1, y1, x2, y2))
         return 0;
 
-    int count = (x2 - x1) * (y2 - y1);
+    int count = (x2 - x1 + 1) * (y2 - y1 + 1);
     if (!count)
     {
         if (required)
