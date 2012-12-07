@@ -1224,7 +1224,7 @@ static bool _handle_rod(monster *mons, bolt &beem)
 
     dprf("using rod with power %d", power);
 
-    bolt theBeam = mons_spells(mons, mzap, power, check_validity);
+    bolt theBeam = mons_spell_beam(mons, mzap, power, check_validity);
     beem         = _generate_item_beem(beem, theBeam, mons);
 
     if (mons->confused())
@@ -1321,7 +1321,7 @@ static bool _handle_wand(monster* mons, bolt &beem)
 
     // set up the beam
     int power         = 30 + mons->hit_dice;
-    bolt theBeam      = mons_spells(mons, mzap, power);
+    bolt theBeam      = mons_spell_beam(mons, mzap, power);
     beem = _generate_item_beem(beem, theBeam, mons);
 
     beem.aux_source =
