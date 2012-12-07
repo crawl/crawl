@@ -37,11 +37,11 @@ struct player_info
 {
     player_info();
 
-    std::string name;
-    std::string job_title;
+    string name;
+    string job_title;
     bool wizard;
-    std::string species;
-    std::string god;
+    string species;
+    string god;
     bool under_penance;
     uint8_t piety_rank;
 
@@ -65,16 +65,16 @@ struct player_info
     int elapsed_time;
     int lives, deaths;
 
-    std::string place;
+    string place;
     int depth;
     coord_def position;
 
-    std::vector<status_info> status;
+    vector<status_info> status;
 
     FixedVector<item_info, ENDOFPACK> inv;
     FixedVector<int8_t, NUM_EQUIP> equip;
     int8_t quiver_item;
-    std::string unarmed_attack;
+    string unarmed_attack;
 };
 
 class TilesFramework

@@ -508,9 +508,9 @@ string player::arm_name(bool plural, bool *can_plural) const
     return str;
 }
 
-std::string player::unarmed_attack_name() const
+string player::unarmed_attack_name() const
 {
-    std::string text = "Nothing wielded"; // Default
+    string text = "Nothing wielded"; // Default
 
     if (species == SP_FELID)
         text = "Teeth and claws";

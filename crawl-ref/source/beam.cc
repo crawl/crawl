@@ -3380,11 +3380,8 @@ void bolt::affect_player_enchantment()
 
         // An enemy helping you escape while in the Abyss, or an
         // enemy stabilizing a teleport that was about to happen.
-        if (!mons_att_wont_attack(attitude)
-            && player_in_branch(BRANCH_ABYSS))
-        {
+        if (!mons_att_wont_attack(attitude) && player_in_branch(BRANCH_ABYSS))
             xom_is_stimulated(200);
-        }
 
         obvious_effect = true;
         break;
