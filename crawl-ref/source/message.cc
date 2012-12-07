@@ -664,7 +664,7 @@ public:
 
     void roll_back()
     {
-        client_rollback = std::max(0, temp - unsent);
+        client_rollback = max(0, temp - unsent);
         msgs.roll_back(temp);
         temp = 0;
     }
@@ -730,9 +730,7 @@ public:
             client_rollback = 0;
         }
         if (old_msgs > 0)
-        {
             tiles.json_write_int("old_msgs", old_msgs);
-        }
         tiles.json_open_array("messages");
         for (int i = -unsent; i < 0; ++i)
         {

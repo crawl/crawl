@@ -2478,7 +2478,8 @@ int property(const item_def &item, int prop_type)
     case OBJ_WEAPONS:
         if (is_unrandom_artefact(item))
         {
-            switch (prop_type) {
+            switch (prop_type)
+            {
             case PWPN_DAMAGE:
                 return (Weapon_prop[ Weapon_index[item.sub_type] ].dam
                         + artefact_wpn_property(item, ARTP_BASE_DAM));

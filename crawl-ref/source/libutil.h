@@ -233,9 +233,7 @@ public:
 
 #ifdef USE_TILE_WEB
         if (m_previous_mode != ms_current_mode)
-        {
             tiles.update_input_mode(mode);
-        }
 #endif
     }
 
@@ -243,9 +241,7 @@ public:
     {
 #ifdef USE_TILE_WEB
         if (m_previous_mode != ms_current_mode)
-        {
             tiles.update_input_mode(m_previous_mode);
-        }
 #endif
         ms_current_mode = m_previous_mode;
     }

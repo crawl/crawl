@@ -483,9 +483,9 @@ void TilesFramework::update_input_mode(mouse_mode mode)
     finish_message();
 }
 
-static bool _update_string(bool force, std::string& current,
-                           const std::string& next,
-                           const std::string& name,
+static bool _update_string(bool force, string& current,
+                           const string& next,
+                           const string& name,
                            bool update = true)
 {
     if (force || (current != next))
@@ -500,7 +500,7 @@ static bool _update_string(bool force, std::string& current,
 }
 
 template<class T> static bool _update_int(bool force, T& current, T next,
-                                          const std::string& name,
+                                          const string& name,
                                           bool update = true)
 {
     if (force || (current != next))
@@ -577,7 +577,7 @@ void TilesFramework::_send_player(bool force_full)
     _update_int(force_full, c.wizard, you.wizard, "wizard");
     _update_string(force_full, c.species, species_name(you.species),
                    "species");
-    std::string god = "";
+    string god = "";
     if (you.religion == GOD_JIYVA)
         god = god_name_jiyva(true);
     else if (you.religion != GOD_NO_GOD)
@@ -593,9 +593,7 @@ void TilesFramework::_send_player(bool force_full)
             prank = 1;
     }
     else if (you.religion != GOD_NO_GOD)
-    {
-        prank = std::max(0, piety_rank() - 1);
-    }
+        prank = max(0, piety_rank() - 1);
     else if (you.char_class == JOB_MONK && you.species != SP_DEMIGOD
              && !had_gods())
     {
@@ -634,14 +632,12 @@ void TilesFramework::_send_player(bool force_full)
     _update_int(force_full, c.gold, you.gold, "gold");
 
     if (crawl_state.game_is_zotdef())
-    {
         _update_int(force_full, c.zot_points, you.zot_points, "zp");
-    }
     if (you.running == 0) // Don't update during running/resting
         _update_int(force_full, c.elapsed_time, you.elapsed_time, "time");
 
     const PlaceInfo& place = you.get_place_info();
-    std::string short_name = branches[place.branch].shortname;
+    string short_name = branches[place.branch].shortname;
 
     if (brdepth[place.branch] == 1)
     {
@@ -746,7 +742,7 @@ void TilesFramework::_send_item(item_info& current, const item_info& next,
     // Derived stuff
     if (changed)
     {
-        std::string name = next.name(DESC_A, true, false, true);
+        string name = next.name(DESC_A, true, false, true);
         if (force_full || current.name(DESC_A, true, false, true) != name)
         {
             json_write_string("name", name);
@@ -942,9 +938,7 @@ void TilesFramework::_send_cell(const coord_def &gc,
     if (next_mc.monsterinfo())
         _send_monster(gc, next_mc.monsterinfo(), new_monster_locs, force_full);
     else if (current_mc.monsterinfo())
-    {
         json_write_null("mon");
-    }
 
     map_feature mf = get_cell_map_feature(next_mc);
     if (get_cell_map_feature(current_mc) != mf)
@@ -1253,14 +1247,10 @@ void TilesFramework::_send_monster(const coord_def &gc, const monster_info* m,
         force_full = true;
 
     if (force_full || (last->full_name() != m->full_name()))
-    {
         json_write_string("name", m->full_name());
-    }
 
     if (force_full || (last->pluralised_name() != m->pluralised_name()))
-    {
         json_write_string("plural", m->pluralised_name());
-    }
 
     if (force_full || (last->type != m->type))
     {
