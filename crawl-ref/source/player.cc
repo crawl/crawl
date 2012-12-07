@@ -6231,9 +6231,9 @@ int player::armour_class() const
           ? 100 + _mut_level(MUT_ROUGH_BLACK_SCALES, MUTACT_FULL) * 300 : 0;   // +4, +7, +10
     AC += _mut_level(MUT_RUGGED_BROWN_SCALES, MUTACT_FULL) * 100;              // +1, +2, +3
     AC += _mut_level(MUT_ICY_BLUE_SCALES, MUTACT_FULL) * 100 +
-          (_mut_level(MUT_ICY_BLUE_SCALES, MUTACT_FULL) > 1) ? 100 : 0;        // +1, +3, +4
+          (_mut_level(MUT_ICY_BLUE_SCALES, MUTACT_FULL) > 1 ? 100 : 0);        // +1, +3, +4
     AC += _mut_level(MUT_MOLTEN_SCALES, MUTACT_FULL) * 100 +
-          (_mut_level(MUT_MOLTEN_SCALES, MUTACT_FULL) > 1) ? 100 : 0;          // +1, +3, +4
+          (_mut_level(MUT_MOLTEN_SCALES, MUTACT_FULL) > 1 ? 100 : 0);          // +1, +3, +4
     AC += _mut_level(MUT_SLIMY_GREEN_SCALES, MUTACT_FULL)
           ? 100 + _mut_level(MUT_SLIMY_GREEN_SCALES, MUTACT_FULL) * 100 : 0;   // +2, +3, +4
     AC += _mut_level(MUT_THIN_METALLIC_SCALES, MUTACT_FULL)
