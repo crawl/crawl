@@ -228,8 +228,8 @@ static bool _set_allied_target(monster* caster, bolt & pbolt)
     return false;
 }
 
-bolt mons_spells(monster* mons, spell_type spell_cast, int power,
-                  bool check_validity)
+bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
+                     bool check_validity)
 {
     ASSERT(power > 0);
 
@@ -1111,7 +1111,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     default:
         if (check_validity)
         {
-            bolt beam = mons_spells(mons, spell_cast, 1, true);
+            bolt beam = mons_spell_beam(mons, spell_cast, 1, true);
             return (beam.flavour != NUM_BEAMS);
         }
         break;
@@ -1120,7 +1120,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     // Need to correct this for power of spellcaster
     int power = 12 * mons->hit_dice;
 
-    bolt theBeam         = mons_spells(mons, spell_cast, power);
+    bolt theBeam         = mons_spell_beam(mons, spell_cast, power);
 
     // [ds] remind me again why we're doing this piecemeal copying?
     pbolt.origin_spell   = theBeam.origin_spell;
