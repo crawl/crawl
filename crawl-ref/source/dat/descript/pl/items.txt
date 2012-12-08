@@ -591,10 +591,6 @@ hand axe
 
 Mała siekiera zdatna zarówno do walki wręcz jak i do rzucania.
 %%%%
-helm
-
-Metalowe nakrycie głowy.
-%%%%
 helmet
 
 Metalowe nakrycie głowy.

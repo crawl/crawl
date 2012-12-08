@@ -535,10 +535,6 @@ great mace
 
 En enorm stridskølle af metal, som er overordentligt uhåndterlig.
 %%%%
-helm
-
-En hovedbeklædning af metal.
-%%%%
 honeycomb
 
 En klump lækker bikage, som er lavet af kæmpebier.

@@ -679,10 +679,6 @@ Un outil pour trancher des fibres de bois, ou de la chair. Petite et conçue
 pour une manipulation rapide et précise, elle est également équilibrée de façon
 a être lancée si nécessaire.
 %%%%
-helm
-
-Un couvre-chef en métal.
-%%%%
 helmet
 
 Un couvre-chef en métal.
