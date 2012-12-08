@@ -599,7 +599,7 @@ static void _get_status_lights(vector<status_light>& out)
         STATUS_FIREBALL,
         DUR_SHROUD_OF_GOLUBRIA,
         DUR_TORNADO_COOLDOWN,
-        STATUS_BACKLIT,
+        DUR_CORONA,
         STATUS_UMBRA,
         STATUS_CONSTRICTED,
         DUR_DIVINE_STAMINA,
