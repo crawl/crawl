@@ -44,6 +44,8 @@ static duration_def duration_data[] =
       BLUE, "Touch", "confusing touch", "" },
     { DUR_CONTROL_TELEPORT, true,
       MAGENTA, "cTele", "", "You can control teleportations." },
+    { DUR_CORONA, false,
+      YELLOW, "Corona", "", "" },
     { DUR_DEATH_CHANNEL, true,
       MAGENTA, "DChan", "death channel", "You are channeling the dead." },
     { DUR_DIVINE_STAMINA, true,
@@ -208,7 +210,6 @@ static void _mark_expiring(status_info* inf, bool expiring)
 static void _describe_airborne(status_info* inf);
 static void _describe_burden(status_info* inf);
 static void _describe_glow(status_info* inf);
-static void _describe_backlit(status_info* inf);
 static void _describe_hunger(status_info* inf);
 static void _describe_regen(status_info* inf);
 static void _describe_rotting(status_info* inf);
@@ -292,7 +293,10 @@ bool fill_status_info(int status, status_info* inf)
 
     case STATUS_BACKLIT:
         if (you.backlit())
-            _describe_backlit(inf);
+        {
+            inf->short_text = "glowing";
+            inf->long_text  = "You are glowing.";
+        }
         break;
 
     case STATUS_UMBRA:
@@ -606,26 +610,6 @@ static void _describe_glow(status_info* inf)
         inf->short_text += "contaminated";
         inf->long_text = describe_contamination(cont);
     }
-}
-
-static void _describe_backlit(status_info* inf)
-{
-    if (get_contamination_level() > 1)
-        inf->light_colour = _bad_ench_colour(get_contamination_level(), 2, 3);
-    else if (you.duration[DUR_QUAD_DAMAGE])
-        inf->light_colour = BLUE;
-    else if (you.duration[DUR_LIQUID_FLAMES])
-        inf->light_colour = RED;
-    else if (you.halo_radius2() > 0)
-        return;
-    else if (you.duration[DUR_CORONA])
-        inf->light_colour = LIGHTBLUE;
-    else if (!you.umbraed() && you.haloed())
-        inf->light_colour = YELLOW;
-
-    inf->light_text   = "Glow";
-    inf->short_text   = "glowing";
-    inf->long_text    = "You are glowing.";
 }
 
 static void _describe_regen(status_info* inf)
