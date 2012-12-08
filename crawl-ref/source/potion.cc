@@ -164,7 +164,6 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
         mprf(MSGCH_DURATION, "You feel %s all of a sudden.",
              were_mighty ? "mightier" : "very mighty");
 
-        // conceivable max gain of +184 {dlb}
         you.increase_duration(DUR_MIGHT, (35 + random2(pow)) / factor, 80);
 
         if (!were_mighty)
