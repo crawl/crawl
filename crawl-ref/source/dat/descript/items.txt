@@ -160,8 +160,8 @@ book of annihilations
 Blood leaks from the tattered pages of this book, and even an illiterate will
 feel the sheer impact of arcane fury contained within. It is sought after by
 sorcerers, for it allows the gifted and resourceful to command destruction with
-the ease of a twinkle. Feeble wizards, however, may well meet their doom when
-trying to read this opus.
+ease. Feeble wizards, however, may well meet their doom when trying to read this
+opus.
 %%%%
 book of beasts
 
@@ -208,9 +208,7 @@ what objects the cloud diagrams look like.
 book of conjurations
 
 A book containing an introduction to the destructive magical arts of
-Conjurations. It shudders with barely-contained power when it is opened. A very
-popular book, it is constantly being revised and updated: this year's edition
-has a focus on the elements of Ice and Air.
+Conjurations. It shudders with barely-contained power when it is opened.
 %%%%
 book of control
 
@@ -595,8 +593,7 @@ Wild Magic, the Helix, the Sage, the Alchemist.
 %%%%
 demon blade
 
-A terrible weapon, forged in the fires of Hell. It becomes even more deadly
-when wielded by those of a demonic nature.
+A terrible weapon, forged in the fires of Hell.
 %%%%
 demon trident
 
@@ -640,8 +637,7 @@ forces of evil.
 %%%%
 eveningstar
 
-The spikes of this type of morningstar are exeptionally long, allowing it to
-cause invidious wounds.
+The opposite of a morningstar.
 %%%%
 executioner's axe
 
@@ -741,10 +737,6 @@ hand axe
 A tool for rending apart the fibres of wood, or flesh. Small and crafted for
 fast, precise handling, it is also balanced such that it can be thrown if
 necessary.
-%%%%
-helm
-
-A piece of metal headgear.
 %%%%
 helmet
 
@@ -914,10 +906,9 @@ they could not hope to control.
 %%%%
 needle
 
-A thin piece of metal, typically coated in some harmful substance. It does
-little damage if thrown by hand, but when launched from a blowgun it can be
-deadly, delivering its toxins into the bloodstream of a living or demonic
-being.
+A thin piece of metal, typically coated in some harmful substance. When
+launched from a blowgun it can be deadly, delivering its toxins into the
+bloodstream of a living or demonic being.
 %%%%
 orange
 
@@ -1713,8 +1704,8 @@ One's servants.
 %%%%
 troll hide
 
-The stiff and knobbly hide of a troll. Wearable, like other beastly skins, it
-also reacts well to enchantment.
+The stiff and knobbly hide of a troll, with magical regenerative properties.
+Wearable, like other beastly skins, it also reacts well to enchantment.
 %%%%
 troll leather armour
 
