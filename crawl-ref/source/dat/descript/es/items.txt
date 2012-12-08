@@ -633,10 +633,6 @@ hand axe
 
 Una pequeña hacha ideada para el combate cuerpo a cuerpo, o para ser arrojada.
 %%%%
-helm
-
-Una protección metálica para la cabeza.
-%%%%
 helmet
 
 Una protección metálica para la cabeza.
