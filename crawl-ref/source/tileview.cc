@@ -277,6 +277,9 @@ void tile_default_flv(branch_type br, tile_flavour &flv)
         flv.floor = TILE_FLOOR_NORMAL;
         return;
 
+#if TAG_MAJOR_VERSION == 34
+    case BRANCH_UNUSED:
+#endif
     case NUM_BRANCHES:
         break;
     }

@@ -4006,6 +4006,7 @@ static void _build_postvault_level(vault_placement &place)
     else
     {
         const map_def* layout = random_map_for_tag("layout", true, true);
+        ASSERT(layout);
         _build_secondary_vault(layout, false);
     }
 }
@@ -6017,6 +6018,7 @@ void init_level_connectivity()
 void read_level_connectivity(reader &th)
 {
     int nb = unmarshallInt(th);
+    ASSERT(nb <= NUM_BRANCHES);
     for (int i = 0; i < nb; i++)
     {
         unsigned int depth = brdepth[i] > 0 ? brdepth[i] : 0;

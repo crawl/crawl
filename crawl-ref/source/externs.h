@@ -281,6 +281,24 @@ static inline monster_type operator++(monster_type &x)
     return x;
 }
 
+static inline monster_type operator--(monster_type &x)
+{
+    x = static_cast<monster_type>(x - 1);
+    return x;
+}
+
+static inline spell_type operator++(spell_type &x)
+{
+    x = static_cast<spell_type>(x + 1);
+    return x;
+}
+
+static inline spell_type operator--(spell_type &x)
+{
+    x = static_cast<spell_type>(x - 1);
+    return x;
+}
+
 struct cloud_struct
 {
     coord_def     pos;

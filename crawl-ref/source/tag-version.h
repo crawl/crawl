@@ -25,6 +25,8 @@ enum tag_minor_version
     TAG_MINOR_REMOVE_ABYSS_SEED,   // Remove the abyss seed.
     TAG_MINOR_REIFY_SUBVAULTS,     // Save subvaults with level for attribution
     TAG_MINOR_VEHUMET_SPELL_GIFT,  // Vehumet gift spells instead of books
+    TAG_MINOR_0_11 = 17,           // 0.11 final saves
+    TAG_MINOR_0_12,                // (no change)
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
 };
