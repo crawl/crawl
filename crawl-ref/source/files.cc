@@ -2017,6 +2017,10 @@ static bool _read_char_chunk(package *save)
         if (major == TAG_MAJOR_VERSION && minor == TAG_MINOR_VERSION)
             inf.fail_if_not_eof("chr");
 
+#if TAG_MAJOR_VERSION == 34
+        if (major == 33 && minor == TAG_MINOR_0_11)
+            return true;
+#endif
         return (major == TAG_MAJOR_VERSION && minor <= TAG_MINOR_VERSION);
     }
     catch (short_read_exception &E)
@@ -2036,7 +2040,11 @@ static bool _tagged_chunk_version_compatible(reader &inf, string* reason)
         return false;
     }
 
-    if (major != TAG_MAJOR_VERSION)
+    if (major != TAG_MAJOR_VERSION
+#if TAG_MAJOR_VERSION == 34
+        && (major != 33 || minor != 17)
+#endif
+       )
     {
         if (Version::ReleaseType())
         {
