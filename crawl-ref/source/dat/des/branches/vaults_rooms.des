@@ -6833,34 +6833,6 @@ EEEEEEExDDDDDDD
 EEEEEEExDDDDDDD
 ENDMAP
 
-# average 24 + 13.5 = 37.5 gold
-NAME:     vaults_room_15_dead_end_empty_spiral_pool
-TAGS:     vaults_room_15_dead_end_empty allow_dup
-SUBST:    - = x+
-SUBST:    I = Gd
-MONS:     fungus / nothing
-MONS:     fungus / nothing w:30
-KFEAT:    ^ = known zot trap
-: vaults_ornamental_pool(_G)
-: vaults_numbered_gold_items(_G)
-MAP
-xxxxx..^..xxxxx
-xxx..xxxx...xxx
-xx.xxxxxxx...xx
-x.xxxxxxxxx...x
-x.xxxxwwwxx...xx
-xxxxx1wwwdxx..xx
-xxx221wwwdex...-
-xx.221wwwIexG..+
-xx.x21wwwdex...-
-x.xxx1wwwdxx..xx
-x.xxxxwwwxx...xx
-x..xxxxxxxx...x
-xx.xxxxxxx...xx
-xxx..xxxx...xxx
-xxxxx..^..xxxxx
-ENDMAP
-
 NAME:     vaults_room_15_dead_end_encounter_guarded_subvault
 TAGS:     vaults_room_15_dead_end_encounter allow_dup no_monster_gen
 SHUFFLE:  GHIJ
