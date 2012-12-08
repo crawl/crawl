@@ -167,9 +167,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
         // conceivable max gain of +184 {dlb}
         you.increase_duration(DUR_MIGHT, (35 + random2(pow)) / factor, 80);
 
-        if (were_mighty)
-            contaminate_player(1, was_known);
-        else
+        if (!were_mighty)
             notify_stat_change(STAT_STR, 5, true, "");
         break;
     }
@@ -184,9 +182,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
         you.increase_duration(DUR_BRILLIANCE,
                               (35 + random2(pow)) / factor, 80);
 
-        if (were_brilliant)
-            contaminate_player(1, was_known);
-        else
+        if (!were_brilliant)
             notify_stat_change(STAT_INT, 5, true, "");
         break;
     }
@@ -200,9 +196,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
 
         you.increase_duration(DUR_AGILITY, (35 + random2(pow)) / factor, 80);
 
-        if (were_agile)
-            contaminate_player(1, was_known);
-        else
+        if (!were_agile)
             notify_stat_change(STAT_DEX, 5, true, "");
         break;
     }
@@ -428,10 +422,6 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known,
     case POT_RESISTANCE:
         mpr("You feel protected.", MSGCH_DURATION);
         you.increase_duration(DUR_RESISTANCE, (random2(pow) + 35) / factor);
-
-        // Just one point of contamination. These potions are really rare,
-        // and contamination is nastier.
-        contaminate_player(1, was_known);
         break;
 
 #if TAG_MAJOR_VERSION == 34
