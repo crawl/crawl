@@ -1006,7 +1006,7 @@ void yell(bool force)
     case 't':
         mprf(MSGCH_SOUND, "You %s%s!",
              shout_verb.c_str(),
-             you.berserk() ? "wildly" : " for attention");
+             you.berserk() ? " wildly" : " for attention");
         noisy(noise_level, you.pos());
         you.turn_is_over = true;
         return;
