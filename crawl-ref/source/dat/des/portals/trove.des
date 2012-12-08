@@ -774,7 +774,7 @@ ITEM:    chain mail unrand:lears_chain_mail                                  /\
 ITEM:    ring of evasion unrand:ring_of_shaolin / any randart jewellery w:60 /\
          ring of protection unrand:ring_of_robustness                        /\
          ring of invisibility unrand:ring_of_shadows                         /\
-         amulet of controlled flight unrand:amulet_of_the_air                /\
+         amulet of inaccuracy unrand:amulet_of_the_air                       /\
          amulet of clarity unrand:amulet_of_the_four_winds                   /\
          amulet of warding unrand:amulet_of_cekugob                          /\
          amulet of warding unrand:brooch_of_shielding                        /\
