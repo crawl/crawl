@@ -867,7 +867,8 @@ static bool _valid_monster_generation_location(const mgen_data &mg,
     if (!monster_habitable_grid(montype, grd(mg_pos), mg.preferred_grid_feature,
                                 mons_class_flies(montype), false)
         || (mg.behaviour != BEH_FRIENDLY && !mons_is_mimic(montype)
-            && (is_sanctuary(mg_pos) && !mons_is_tentacle_segment(montype))))
+            && is_sanctuary(mg_pos) 
+            && !mons_is_tentacle_segment(montype)))
     {
         return false;
     }

@@ -1290,7 +1290,7 @@ static int _destroy_tentacle(monster* mons)
     
     //If we tried to find the head, but failed (probably because it is already
     //dead), cancel trying to kill this tentacle
-    if (head == 0)
+    if (head == NULL)
         return 0;
 
     // Some issue with using monster_die leading to DEAD_MONSTER
@@ -1572,7 +1572,7 @@ int monster_die(monster* mons, killer_type killer,
             mpr("You feel the power of Trog in you as your rage grows.",
                 MSGCH_GOD, GOD_TROG);
         }
-        else if (player_equip_unrand_effect(UNRAND_BLOODLUST)
+        else if (player_equip_unrand_effect(UNRAND_BLOODLUST))
         {
             if (coinflip())
             {

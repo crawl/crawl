@@ -3475,7 +3475,8 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         return;
 
     case SPELL_CREATE_TENTACLES:
-        int created_count = _mon_create_tentacles(mons);
+    {
+        int created_count = _mons_create_tentacles(mons);
         if (mons_base_type(mons) == MONS_KRAKEN)
         {
             if (created_count == 1)
@@ -3491,7 +3492,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                 mpr("Tentacles burst from the starspawn's body!");
         }
         return;
-
+    }
     case SPELL_FAKE_MARA_SUMMON:
         // We only want there to be two fakes, which, plus Mara, means
         // a total of three Maras; if we already have two, give up, otherwise

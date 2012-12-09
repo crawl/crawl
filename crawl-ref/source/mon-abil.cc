@@ -1754,19 +1754,15 @@ static void _purge_connectors(int tentacle_idx, monster_type mon_type)
 {
     for (monster_iterator mi; mi; ++mi)
     {
-        if (int (mi->number) == tentacle_idx)
+        if ((int) mi->number == tentacle_idx
+            && mi->type == mon_type)
         {
-            if (mi->type == mon_type)
-            {
-//                mpr("Purging a connector");
-                int hp = menv[mi->mindex()].hit_points;
-                if (hp > 0 && hp < menv[tentacle_idx].hit_points)
-                    menv[tentacle_idx].hit_points = hp;
+            int hp = menv[mi->mindex()].hit_points;
+            if (hp > 0 && hp < menv[tentacle_idx].hit_points)
+                menv[tentacle_idx].hit_points = hp;
 
-                monster_die(&env.mons[mi->mindex()],
-                        KILL_MISC, NON_MONSTER, true);
-            }
-
+            monster_die(&env.mons[mi->mindex()],
+                    KILL_MISC, NON_MONSTER, true);
         }
     }
 }
@@ -1954,13 +1950,11 @@ void move_demon_tentacle(monster* tentacle)
     {
         // todo: set a random position?
 
-        //mprf("pathing failed, target %d %d", new_pos.x, new_pos.y);
+        dprf("pathing failed, target %d %d", new_pos.x, new_pos.y);
         random_shuffle(compass_idx, compass_idx + 8);
         for (int i=0; i < 8; ++i)
         {
             coord_def test = old_pos + Compass[compass_idx[i]];
-            //coord_def test = old_pos;
-            //test.x++;
             if (!in_bounds(test) || is_sanctuary(test)
                 || actor_at(test))
             {
@@ -1981,7 +1975,6 @@ void move_demon_tentacle(monster* tentacle)
                     || connection_data.find(test)->second.size() > 1))
             {
                 new_pos = test;
-//                mprf("start 0, escalated %d max %d", escalated, *probe->second.rbegin());
                 break;
             }
             else if (tentacle->is_habitable(test)
@@ -2077,12 +2070,11 @@ void move_child_tentacles(monster* mons)
     // Move each tentacle in turn
     for (unsigned i = 0; i < tentacles.size(); i++)
     {
-//        mpr ("Checking a tentacle");
         monster* tentacle = monster_at(tentacles[i]->pos());
 
         if (!tentacle)
         {
-            mprf("missing tentacle in path");
+            dprf("Missing tentacle in path.");
             continue;
         }
 
@@ -2110,9 +2102,9 @@ void move_child_tentacles(monster* mons)
                     || menv[next_idx].is_parent_monster_of(tentacle)))
             {
                 current_mon = &menv[next_idx];
-                if (!retract_found && current_mon->is_child_tentacle_of(tentacle))
+                if (!retract_found 
+                    && current_mon->is_child_tentacle_of(tentacle))
                 {
-//                    mpr ("Found retract pos");
                     retract_pos = current_mon->pos();
                     retract_found = true;
                 }
@@ -2141,7 +2133,6 @@ void move_child_tentacles(monster* mons)
         bool path_found = false;
 
         tentacle_attack_constraints attack_constraints;
-        //attack_constraints.base_monster = kraken;
         attack_constraints.base_monster = tentacle;
         attack_constraints.max_string_distance = MAX_KRAKEN_TENTACLE_DIST;
         attack_constraints.connection_constraints = &connection_data;
@@ -2155,8 +2146,6 @@ void move_child_tentacles(monster* mons)
         {
             actor::constricting_t::const_iterator it = tentacle->constricting->begin();
             constrictee = actor_by_mid(it->first);
-//            if (!constrictee->is_habitable(old_pos))
-//                mpr("old_pos is not habitable.");
             if (grd(old_pos) >= DNGN_SHALLOW_WATER 
                     && constrictee->is_habitable(old_pos))
                 pull_constrictee = true;
@@ -2164,9 +2153,12 @@ void move_child_tentacles(monster* mons)
 
         if (!no_foe && !pull_constrictee)
         {
-            path_found = _tentacle_pathfind(tentacle, attack_constraints, new_pos,
-                                            foe_positions,
-                                            current_count);
+            path_found = _tentacle_pathfind(
+                    tentacle,
+                    attack_constraints,
+                    new_pos,
+                    foe_positions,
+                    current_count);
         }
 
         if (no_foe || !path_found || pull_constrictee)
@@ -2198,8 +2190,8 @@ void move_child_tentacles(monster* mons)
         mgrd(tentacle->pos()) = NON_MONSTER;
 
         // Why do I have to do this move? I don't get it.
-        // specifically, if tentacle isn't registered at its new position on mgrd
-        // the search fails (sometimes), Don't know why. -cao
+        // specifically, if tentacle isn't registered at its new position on
+        // mgrd the search fails (sometimes), Don't know why. -cao
         tentacle->set_position(new_pos);
         mgrd(tentacle->pos()) = tentacle->mindex();
         
@@ -2216,24 +2208,20 @@ void move_child_tentacles(monster* mons)
             // Interrupt stair travel and passwall.
             if (constrictee->is_player())
                 stop_delay(true);
-            
-            
         }
         tentacle->clear_far_constrictions();
 
         connect_costs.connection_constraints = &connection_data;
         connect_costs.base_monster = tentacle;
         bool connected = _try_tentacle_connect(new_pos, mons->pos(),
-                                               tentacle_idx, mons->mindex(),
-                                               connect_costs,
-                                               mons_tentacle_child_type(tentacle));
-
+                                tentacle_idx, mons->mindex(),
+                                connect_costs,
+                                mons_tentacle_child_type(tentacle));
 
         // Can't connect, usually the head moved and invalidated our position
         // in some way. Should look into this more at some point -cao
         if (!connected)
         {
-            //mprf("CONNECT FAILED, PURGING TENTACLE");
             mgrd(tentacle->pos()) = tentacle->mindex();
             monster_die(tentacle, KILL_MISC, NON_MONSTER, true);
 
