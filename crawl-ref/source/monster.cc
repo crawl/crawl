@@ -5869,20 +5869,12 @@ bool monster::is_child_monster() const
 
 bool monster::is_child_tentacle_of(const monster* mons) const
 {
-    if (mons_base_type(mons) == 
-            mons_tentacle_parent_type(this)
-            && (int)number == mons->mindex())
-        return true;
-    else
-        return false;
+    return (mons_base_type(mons) == mons_tentacle_parent_type(this)
+            && (int) number == mons->mindex());
 }
 
 bool monster::is_parent_monster_of(const monster* mons) const
 {
-    if (mons_base_type(this) == 
-            mons_tentacle_parent_type(mons)
-            && (int)mons->number == mindex())
-        return true;
-    else
-        return false;
+    return (mons_base_type(this) == mons_tentacle_parent_type(mons)
+            && (int) mons->number == mindex());
 }
