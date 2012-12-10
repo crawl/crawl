@@ -2465,7 +2465,7 @@ break into a frenzied dance.
 %%%%
 tentacle
 
-This mighty tentacle is a part of a kraken. Any damage dealt to it hurts the
+This mighty tentacle is part of a kraken. Any damage dealt to it hurts the
 whole creature.
 %%%%
 tentacle segment
@@ -2479,7 +2479,7 @@ A writhing mass of tentacles, all covered in putrid mucus.
 %%%%
 tentacled starspawn
 
-A lumbering maw shrouded in a mass of sinuous tentacles. Every now and again
+A lumbering maw shrouded in a mass of sinuous tentacles. Every now and again,
 one slithers out to drag unfortunate prey back into its waiting gullet.
 %%%%
 terrified wizard
