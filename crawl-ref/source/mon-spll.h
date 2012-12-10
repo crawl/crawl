@@ -1802,7 +1802,7 @@
        SPELL_NO_SPELL
       }
     },
-            
+
     {  MST_TENTACLED_STARSPAWN,
       {
        SPELL_CREATE_TENTACLES,

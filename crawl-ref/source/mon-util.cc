@@ -4189,7 +4189,7 @@ monster* mons_get_parent_monster(monster* mons)
         if (mi->is_parent_monster_of(mons))
             return mi->as_monster();
     }
-    
+
     return 0;
 }
 

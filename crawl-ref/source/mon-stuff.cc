@@ -1221,9 +1221,7 @@ void mons_relocated(monster* mons)
                 for (monster_iterator connect; connect; ++connect)
                 {
                     if (connect->is_child_tentacle_of(*mi))
-                    {
                         monster_die(*connect, KILL_RESET, -1, true, false);
-                    }
                 }
                 monster_die(*mi, KILL_RESET, -1, true, false);
             }
@@ -1235,7 +1233,7 @@ void mons_relocated(monster* mons)
         int base_id = mons->mindex();
 
         monster* tentacle = mons;
-        
+
         if (mons->is_child_tentacle_segment()
                 && !::invalid_monster_index(base_id)
                 && menv[base_id].is_parent_monster_of(mons))
@@ -1246,9 +1244,7 @@ void mons_relocated(monster* mons)
         for (monster_iterator connect; connect; ++connect)
         {
             if (connect->is_child_tentacle_of(tentacle))
-            {
                 monster_die(*connect, KILL_RESET, -1, true, false);
-            }
         }
 
         monster_die(tentacle, KILL_RESET, -1, true, false);
@@ -1284,10 +1280,10 @@ void mons_relocated(monster* mons)
 static int _destroy_tentacle(monster* mons)
 {
     int seen = 0;
-    
+
     monster* head = mons_is_tentacle_segment(mons->type)
             ? mons_get_parent_monster(mons) : mons;
-    
+
     //If we tried to find the head, but failed (probably because it is already
     //dead), cancel trying to kill this tentacle
     if (head == NULL)
@@ -1305,7 +1301,7 @@ static int _destroy_tentacle(monster* mons)
             monster_die(*mi, KILL_MISC, NON_MONSTER, true);
         }
     }
-    
+
     if (mons != head)
     {
         if (mons_near(head))
@@ -1315,7 +1311,7 @@ static int _destroy_tentacle(monster* mons)
         //menv[tentacle_idx].hurt(&menv[tentacle_idx], INSTANT_DEATH);
         monster_die(head, KILL_MISC, NON_MONSTER, true);
     }
-    
+
     return seen;
 }
 
@@ -1327,9 +1323,7 @@ static int _destroy_tentacles(monster* head)
         if (mi->is_child_tentacle_of(head))
         {
             if (_destroy_tentacle(*mi))
-            {
                 seen++;
-            }
             if (!mi->is_child_tentacle_segment())
             {
                 monster_die(mi->as_monster(), KILL_MISC, NON_MONSTER, true);
@@ -2310,7 +2304,7 @@ int monster_die(monster* mons, killer_type killer,
     else if (mons_is_tentacle_head(mons_base_type(mons)))
     {
         if (_destroy_tentacles(mons)
-            && !in_transit 
+            && !in_transit
             && you.see_cell(mons->pos()))
         {
             if (mons_base_type(mons) == MONS_KRAKEN)

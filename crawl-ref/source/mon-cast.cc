@@ -3021,7 +3021,7 @@ static int _mons_create_tentacles(monster* head)
     }
 
     int possible_count = _mons_available_tentacles(head);
-    
+
     if (possible_count <= 0)
         return 0;
 
