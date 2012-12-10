@@ -99,7 +99,7 @@ void disjunction()
             mitr != mvec.end(); mitr++)
         {
             monster* mons = *mitr;
-            if (mons->no_tele())
+            if (!mons->alive() || mons->no_tele())
                 continue;
             coord_def p = mons->pos();
             if (!disjunction_haloed(p))
