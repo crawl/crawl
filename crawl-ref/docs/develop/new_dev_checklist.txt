@@ -17,4 +17,5 @@ This is a checklist for when a new developer joins the team.
  * On the Tavern, add them to the Dungeon Master group.
  * Subscribe their email to c-r-d:
      https://lists.sourceforge.net/lists/listinfo/crawl-ref-discuss
+ * Ask |amethyst or edlothiol to add them to the super-secret mailing list.
  * Send an announcement/welcome message on c-r-d.
