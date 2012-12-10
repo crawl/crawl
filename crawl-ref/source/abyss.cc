@@ -633,7 +633,7 @@ static void _place_displaced_monsters()
          mon_itr != displaced_monsters.end(); ++mon_itr)
     {
         monster* mon = *mon_itr;
-        if (!mon->find_home_near_place(mon->pos()))
+        if (mon->alive() && !mon->find_home_near_place(mon->pos()))
         {
             maybe_bloodify_square(mon->pos());
             if (you.can_see(mon))
