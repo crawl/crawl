@@ -1712,7 +1712,7 @@ static bool _try_tentacle_connect(const coord_def & new_pos,
     // Find the tentacle -> head path
     target_position current_target;
     current_target.target = base_position;
-/*    target_monster current_target;
+/*  target_monster current_target;
     current_target.target_mindex = headnum;
 */
 
@@ -1742,11 +1742,8 @@ static void _collect_tentacles(monster* mons,
     // TODO: reorder tentacles based on distance to head or something.
     for (monster_iterator mi; mi; ++mi)
     {
-         if (int (mi->number) == mons->mindex())
-         {
-             if (mi->type == tentacle)
-                 tentacles.push_back(mi);
-         }
+        if (int (mi->number) == mons->mindex() && mi->type == tentacle)
+            tentacles.push_back(mi);
     }
 }
 
@@ -1869,11 +1866,9 @@ static int _collect_connection_data(monster* start_monster,
 
 void move_demon_tentacle(monster* tentacle)
 {
-    if (!tentacle
-        || tentacle->type != MONS_ELDRITCH_TENTACLE)
-    {
+    if (!tentacle || tentacle->type != MONS_ELDRITCH_TENTACLE)
         return;
-    }
+
     int compass_idx[8] = {0, 1, 2, 3, 4, 5, 6, 7};
 
     int tentacle_idx = tentacle->mindex();
@@ -2032,14 +2027,14 @@ void move_demon_tentacle(monster* tentacle)
         mprf("pathed to %d %d from %d %d mid %d count %d", new_pos.x, new_pos.y,
              old_pos.x, old_pos.y, tentacle->mindex(), visited_count);
 
-//        mgrd(tentacle->pos()) = tentacle->mindex();
+//      mgrd(tentacle->pos()) = tentacle->mindex();
 
         // Is it ok to purge the tentacle here?
         monster_die(tentacle, KILL_MISC, NON_MONSTER, true);
         return;
     }
 
-//    mprf("mindex %d vsisted %d", tentacle_idx, visited_count);
+//  mprf("mindex %d vsisted %d", tentacle_idx, visited_count);
     tentacle->check_redraw(old_pos);
     tentacle->apply_location_effects(old_pos);
 }
@@ -2051,7 +2046,7 @@ void move_child_tentacles(monster* mons)
     {
         return;
     }
-    
+
     bool no_foe = false;
 
     vector<coord_def> foe_positions;
@@ -2102,7 +2097,7 @@ void move_child_tentacles(monster* mons)
                     || menv[next_idx].is_parent_monster_of(tentacle)))
             {
                 current_mon = &menv[next_idx];
-                if (!retract_found 
+                if (!retract_found
                     && current_mon->is_child_tentacle_of(tentacle))
                 {
                     retract_pos = current_mon->pos();
@@ -2137,7 +2132,7 @@ void move_child_tentacles(monster* mons)
         attack_constraints.max_string_distance = MAX_KRAKEN_TENTACLE_DIST;
         attack_constraints.connection_constraints = &connection_data;
         attack_constraints.target_positions = &foe_positions;
-        
+
         //If this tentacle is constricting a creature, attempt to pull it back
         //towards the head.
         bool pull_constrictee = false;
@@ -2146,9 +2141,11 @@ void move_child_tentacles(monster* mons)
         {
             actor::constricting_t::const_iterator it = tentacle->constricting->begin();
             constrictee = actor_by_mid(it->first);
-            if (grd(old_pos) >= DNGN_SHALLOW_WATER 
-                    && constrictee->is_habitable(old_pos))
+            if (grd(old_pos) >= DNGN_SHALLOW_WATER
+                && constrictee->is_habitable(old_pos))
+            {
                 pull_constrictee = true;
+            }
         }
 
         if (!no_foe && !pull_constrictee)
@@ -2194,12 +2191,12 @@ void move_child_tentacles(monster* mons)
         // mgrd the search fails (sometimes), Don't know why. -cao
         tentacle->set_position(new_pos);
         mgrd(tentacle->pos()) = tentacle->mindex();
-        
+
         if (pull_constrictee)
         {
             mprf("The tentacle pulls %s backwards!",
                  constrictee->name(DESC_THE).c_str());
-            
+
             if (constrictee->as_player())
                 move_player_to_grid(old_pos, false, true);
             else

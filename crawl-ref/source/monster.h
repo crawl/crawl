@@ -465,7 +465,7 @@ public:
 
     bool check_clarity(bool silent) const;
     bool check_stasis(bool silent, bool calc_unid = true) const;
-    
+
     bool is_child_tentacle() const;
     bool is_child_tentacle_of(const monster* mons) const;
     bool has_child_tentacles() const;

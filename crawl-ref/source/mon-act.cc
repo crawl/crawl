@@ -2106,7 +2106,7 @@ void handle_monster_move(monster* mons)
 
             // See if we move into (and fight) an unfriendly monster.
             monster* targ = monster_at(mons->pos() + mmov);
-            
+
             //If a tentacle owner is attempting to move into an adjacent
             //segment, kill the segment and adjust connectivity data.
             if (targ && mons_tentacle_adjacent(mons, targ))
@@ -2180,7 +2180,7 @@ void handle_monster_move(monster* mons)
     {
         if (mons->pos() != kraken_last_update)
             move_child_tentacles(mons);
-        
+
         mons->number += you.time_taken * _tentacle_move_speed(mons_base_type(mons));
         while (mons->number >= 100)
         {

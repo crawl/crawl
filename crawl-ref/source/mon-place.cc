@@ -583,7 +583,7 @@ bool can_place_on_trap(monster_type mon_type, trap_type trap)
 {
     if (mons_is_tentacle_segment(mon_type))
         return true;
-    
+
     if (trap == TRAP_TELEPORT)
         return false;
 
@@ -867,7 +867,7 @@ static bool _valid_monster_generation_location(const mgen_data &mg,
     if (!monster_habitable_grid(montype, grd(mg_pos), mg.preferred_grid_feature,
                                 mons_class_flies(montype), false)
         || (mg.behaviour != BEH_FRIENDLY && !mons_is_mimic(montype)
-            && is_sanctuary(mg_pos) 
+            && is_sanctuary(mg_pos)
             && !mons_is_tentacle_segment(montype)))
     {
         return false;
@@ -1309,7 +1309,7 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     if (dont_place)
         fpos.reset();
     else if (leader == 0 && in_bounds(mg.pos)
-        && (mg.behaviour == BEH_FRIENDLY || 
+        && (mg.behaviour == BEH_FRIENDLY ||
             (!is_sanctuary(mg.pos) || mons_is_tentacle_segment(montype))
             || mons_is_mimic(montype))
         && !monster_at(mg.pos)
