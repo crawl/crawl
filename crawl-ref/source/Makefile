@@ -1740,14 +1740,20 @@ mac-app-console: all
 #############################################################################
 # Building the Android package
 #
+PROJECT_DIR=contrib/sdl-android/project
+SRC_LINK=$(PROJECT_DIR)/jni/application/src
+ifeq (,$(wildcard $(PROJECT_DIR)/ant.properties))
+	GENERATED_APK=project/bin/MainActivity-debug.apk
+else
+	GENERATED_APK=project/bin/MainActivity-release.apk
+endif
 
 android:
-	@SRC_LINK=contrib/sdl-android/project/jni/application/src ;\
-	if [ ! -e $$SRC_LINK ]; then \
-		ln -s `cd ..; pwd` $$SRC_LINK; \
+	if [ ! -e $(SRC_LINK) ]; then \
+		ln -s `cd ..; pwd` $(SRC_LINK); \
 	fi
 	@cd contrib/sdl-android && ./build.sh && \
-	mv project/bin/MainActivity-debug.apk ../../crawl_tiles_android-$(SRC_VERSION).apk
+	mv $(GENERATED_APK) ../../crawl_tiles_android-$(SRC_VERSION).apk
 
 #############################################################################
 # Canned tests
