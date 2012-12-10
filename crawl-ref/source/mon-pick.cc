@@ -120,6 +120,7 @@ int mons_abyss_rare(monster_type mcls)
         return 35;
 
     case MONS_WRETCHED_STAR:
+    case MONS_TENTACLED_STARSPAWN:
     case MONS_BONE_DRAGON:
     case MONS_SIXFIRHY:
         return 20;
