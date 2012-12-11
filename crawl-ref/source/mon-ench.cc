@@ -898,7 +898,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_MIRROR_DAMAGE: case ENCH_STONESKIN: case ENCH_LIQUEFYING:
         case ENCH_SILVER_CORONA: case ENCH_DAZED: case ENCH_FAKE_ABJURATION:
         case ENCH_ROUSED: case ENCH_BREATH_WEAPON: case ENCH_DEATHS_DOOR:
-        case ENCH_OZOCUBUS_ARMOUR: case ENCH_WRETCHED:
+            case ENCH_OZOCUBUS_ARMOUR: case ENCH_WRETCHED: case ENCH_SCREAMED:
             lose_ench_levels(i->second, levels);
             break;
 
@@ -1107,6 +1107,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_DEATHS_DOOR:
     case ENCH_OZOCUBUS_ARMOUR:
     case ENCH_WRETCHED:
+    case ENCH_SCREAMED:
     // case ENCH_ROLLING:
         decay_enchantment(me);
         break;
@@ -1806,7 +1807,7 @@ static const char *enchant_names[] =
     "liquefying", "tornado", "fake_abjuration",
     "dazed", "mute", "blind", "dumb", "mad", "silver_corona", "recite timer",
     "inner_flame", "roused", "breath timer", "deaths_door", "rolling",
-    "ozocubus_armour", "wretched", "buggy",
+    "ozocubus_armour", "wretched", "screamed", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
