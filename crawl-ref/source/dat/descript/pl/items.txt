@@ -857,6 +857,10 @@ potion of experience
 
 Prawdziwie cudowny napitek, który trwale zwiększa umiejętności pijącego.
 %%%%
+potion of flight
+
+Eliksir który daje zdolność lotu.
+%%%%
 potion of gain dexterity
 
 Eliksir który powoduje korzystną mutację.
@@ -966,6 +970,12 @@ ring of fire
 Ten pierścień daje swemu nosicielowi moc ognia. Wzmacnia to wszelkie czary
 Magii Ognia jak i zapewnia odporność na ogień, jednakże czary Magii Lodu są
 osłabione, a nosiciel jest bardziej wrażliwy na zimno.
+%%%%
+ring of flight
+
+Ten pierścień można aktywować dla uzyskania zdolności lotu na krótki czas.
+Uwaga: przedłużenie działania pierścienia nie jest możliwe bez lądowania.
+To może być dość niezdrowe w czasie dłuższych wypraw ponad głębinami...
 %%%%
 ring of hunger
 
@@ -1079,13 +1089,23 @@ rod of destruction
 
 Ten pręt zawiera czary siejące zniszczenie.
 %%%%
+rod of inaccuracy
+
+Ten pręt strzela potężną strugą czystej magii. Jest on bardzo trudny do
+wycelowania, a jego efekt łatwy do uniknięcia, jednak jak już w coś trafi,
+skutki są dość brutalne.
+%%%%
 rod of striking
 
 Ten pręt pozwala uderzać wrógów surową magią, niestety niezbyt efektywnie.
 %%%%
+rod of the swarm
+
+Ten pręt pozwala przyzwać chmarę owadów.
+%%%%
 rod of venom
 
-Ten pręt zawiera ofensywne jak i ochronne czary Magii Trucizn.
+Ten pręt zawiera ofensywne czary Magii Trucizn.
 %%%%
 rod of warding
 
@@ -1578,7 +1598,8 @@ trafiają.
 wand of paralysis
 
 Magiczny przedmiot który potrafi uczynić stworzenie na które został skierowany
-niezdolnym do ruchu.
+niezdolnym do ruchu. W szczególności, nagła utrata zdolności machania
+skrzydłami może się skończyć kąpielą w lawie.
 %%%%
 wand of polymorph other
 
