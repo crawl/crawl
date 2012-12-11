@@ -4026,6 +4026,18 @@ static monsterentry mondata[] = {
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LARGE
 },
 
+{
+    MONS_STARCURSED_MASS, 'x', BLUE, "starcursed mass",
+    M_SEE_INVIS,
+    MR_NO_FLAGS,
+    0, 12, MONS_STARCURSED_MASS, MONS_STARCURSED_MASS, MH_NONLIVING, 2,
+    { {AT_ENGULF, AF_PLAIN, 16}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 12, 9, 7, 0 },
+    10, 0, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
+    I_ANIMAL, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
+    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_HUGE
+},
+
 // yaks, sheep and elephants ('Y')
 {
     MONS_SHEEP, 'Y', LIGHTGREY, "sheep",

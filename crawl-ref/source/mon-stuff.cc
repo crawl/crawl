@@ -4009,6 +4009,7 @@ bool monster_descriptor(monster_type which_class, mon_desc_type which_descriptor
         case MONS_TROLL:
         case MONS_HYDRA:
         case MONS_KILLER_KLOWN:
+        case MONS_STARCURSED_MASS:
         case MONS_LERNAEAN_HYDRA:
         case MONS_DISSOLUTION:
         case MONS_TEST_SPAWNER:
