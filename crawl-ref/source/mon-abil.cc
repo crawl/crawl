@@ -8,6 +8,7 @@
 
 #include "externs.h"
 
+#include "act-iter.h"
 #include "arena.h"
 #include "beam.h"
 #include "colour.h"
@@ -43,6 +44,7 @@
 #include "view.h"
 #include "shout.h"
 #include "viewchar.h"
+#include "ouch.h"
 
 #include <algorithm>
 #include <queue>
@@ -858,6 +860,74 @@ bool _starcursed_split(monster* mon)
 
     // No free squares.
     return false;
+}
+
+void _starcursed_scream(monster* mon)
+{
+    //Gather the chorus
+    vector<monster*> chorus;
+
+    for (actor_iterator ai(mon->get_los()); ai; ++ai)
+    {
+        if (ai->is_monster())
+        {
+            monster* m = ai->as_monster();
+            if (m->type == MONS_STARCURSED_MASS)
+                chorus.push_back(m);
+        }
+    }
+
+    int n = chorus.size();
+    int dam = 0; int stun = 0;
+
+    if (n > 7)
+    {
+        mpr("A cacophony of accursed wailing tears at your sanity!", MSGCH_MONSTER_SPELL);
+        if (coinflip())
+            stun = 2;
+    }
+    else if (n > 4)
+    {
+        mpr("A deafening chorus of shrieks assaults your mind!", MSGCH_MONSTER_SPELL);
+        if (x_chance_in_y(1,3))
+            stun = 1;
+    }
+    else if (n > 1)
+        mpr("A chorus of shrieks assaults your mind.", MSGCH_MONSTER_SPELL);
+    else
+        mpr("The starcursed mass shrieks in your mind.", MSGCH_MONSTER_SPELL);
+
+    dam = 4 + random2(5) + random2(n * 3 / 2);
+    ouch(dam, mon->mindex(), KILLED_BY_BEAM, "accursed screaming");
+    if (stun)
+        you.paralyse(mon, stun);
+
+    for (unsigned int i = 0; i < chorus.size(); ++i)
+        chorus[i]->add_ench(mon_enchant(ENCH_SCREAMED, 1, chorus[i], 1));
+}
+
+bool _will_starcursed_scream(monster* mon)
+{
+    vector<monster*> chorus;
+
+    for (actor_iterator ai(mon->get_los()); ai; ++ai)
+    {
+        if (ai->is_monster())
+        {
+            monster* m = ai->as_monster();
+            if (m->type == MONS_STARCURSED_MASS)
+            {
+                //Don't scream if any part of the chorus has a scream timeout
+                //(This prevents it being staggered into a bunch of mini-screams)
+                if (m->has_ench(ENCH_SCREAMED))
+                    return false;
+                else
+                    chorus.push_back(m);
+            }
+        }
+    }
+
+    return x_chance_in_y(1, chorus.size() + 1);
 }
 
 // Returns true if you resist the siren's call.
@@ -3067,6 +3137,12 @@ void mon_nearby_ability(monster* mons)
     case MONS_PANDEMONIUM_LORD:
         if (mons->ghost->cycle_colours)
             mons->colour = random_colour();
+        break;
+
+    case MONS_STARCURSED_MASS:
+        if (_eyeball_will_use_ability(mons) && foe->is_player()
+                && _will_starcursed_scream(mons))
+            _starcursed_scream(mons);
         break;
 
     default:
