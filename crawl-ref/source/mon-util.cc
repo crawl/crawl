@@ -2248,6 +2248,10 @@ void define_monster(monster* mons)
         ev += random2(5) - 2;
         break;
 
+    case MONS_STARCURSED_MASS:
+        monnumber = 12;
+        break;
+
     default:
         break;
     }

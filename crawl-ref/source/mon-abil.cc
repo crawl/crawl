@@ -355,7 +355,7 @@ static void _stats_from_blob_count(monster* slime, float max_per_blob,
 static monster* _do_split(monster* thing, coord_def & target)
 {
     // Create a new slime.
-    mgen_data new_slime_data = mgen_data(MONS_SLIME_CREATURE,
+    mgen_data new_slime_data = mgen_data(thing->type,
                                          thing->behaviour,
                                          0,
                                          0,
@@ -828,6 +828,36 @@ bool slime_creature_mutate(monster* slime)
     }
 
     return monster_polymorph(slime, RANDOM_MONSTER);
+}
+
+bool _starcursed_split(monster* mon)
+{
+    if (!mon
+        || mon->number <= 1
+        || mon->type != MONS_STARCURSED_MASS)
+    {
+        return false;
+    }
+
+    const coord_def origin = mon->pos();
+
+    int compass_idx[] = {0, 1, 2, 3, 4, 5, 6, 7};
+    random_shuffle(compass_idx, compass_idx + 8);
+
+    // Anywhere we can place an offspring?
+    for (int i = 0; i < 8; ++i)
+    {
+        coord_def target = origin + Compass[compass_idx[i]];
+
+        if (mons_class_can_pass(MONS_STARCURSED_MASS, env.grid(target))
+            && !actor_at(target))
+        {
+            return _do_split(mon, target);
+        }
+    }
+
+    // No free squares.
+    return false;
 }
 
 // Returns true if you resist the siren's call.
@@ -2880,6 +2910,11 @@ bool mon_special_ability(monster* mons, bolt & beem)
 
             used = true;
         }
+        break;
+
+    case MONS_STARCURSED_MASS:
+        if (x_chance_in_y(mons->number,8) && x_chance_in_y(2,3))
+            _starcursed_split(mons);
         break;
 
     default:
