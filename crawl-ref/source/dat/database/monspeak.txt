@@ -1256,15 +1256,17 @@ VISUAL ENCHANT:@The_monster@ is bathed in the radiant lights of Iskenderun.
 
 VISUAL SPELL:Energy condenses in front of @the_monster@, but quickly dissipates.
 %%%%
-Enchantments player ghost
+Hexes player ghost
 
 VISUAL WARN:You feel a strange force tugging at your mind. @player_only@
 
 @The_monster@ says @to_foe@, "You will soon be helpless to avoid my power."
 
-@The_monster@ says, "If you think I look tough now, just wait!"
-
 @The_monster@ says @to_foe@, "When I snap my fingers, you will think you are a chicken."
+%%%%
+Charms player ghost
+
+@The_monster@ says, "If you think I look tough now, just wait!"
 %%%%
 Summonings player ghost
 
