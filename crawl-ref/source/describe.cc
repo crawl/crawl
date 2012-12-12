@@ -3946,14 +3946,6 @@ static string _religion_help(god_type god)
                   "sacrifice only some kinds of items.";
         break;
 
-    case GOD_VEHUMET:
-        if (you.piety >= piety_breakpoint(1))
-        {
-            result += uppercase_first(god_name(god)) + " assists you in casting "
-                      "destructive magics.";
-        }
-        break;
-
     case GOD_FEDHAS:
         if (you.piety >= piety_breakpoint(0))
         {
