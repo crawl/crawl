@@ -1159,7 +1159,7 @@ but increases the speed of his or her metabolism greatly while doing so.
 %%%%
 ring of flight
 
-This ring allows its wearer to fly. The ring's power cannot be invoked while
+This ring allows its wearer to fly. The ring's power cannot be evoked while
 airborne, so it's ill-suited for longer trips above deadly liquid.
 %%%%
 ring of life protection
