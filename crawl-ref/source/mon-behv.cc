@@ -1228,7 +1228,7 @@ void shake_off_monsters(const actor* target)
     //lose track of them so easily
     if (target->is_player() && you.penance[GOD_ASHENZARI])
         return;
-    
+
     for (monster_iterator mi; mi; ++mi)
     {
         monster* m = mi->as_monster();
@@ -1238,7 +1238,7 @@ void shake_off_monsters(const actor* target)
             // still close in on your old location, rather than immediately
             // realizing their target is gone, even if they took stairs while
             // out of sight
-            dprf("Monster %d forgot about foe %d. (Previous foe_memory: %d)", 
+            dprf("Monster %d forgot about foe %d. (Previous foe_memory: %d)",
                     m->mindex(), target->mindex(), m->foe_memory);
             m->foe_memory = min(m->foe_memory, 7);
         }
