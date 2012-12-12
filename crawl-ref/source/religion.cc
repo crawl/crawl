@@ -3008,6 +3008,8 @@ void excommunication(god_type new_god)
         break;
 
     case GOD_VEHUMET:
+        you.vehumet_gift = SPELL_NO_SPELL;
+        you.duration[DUR_VEHUMET_GIFT] = 0;
         _set_penance(old_god, 25);
         break;
 
