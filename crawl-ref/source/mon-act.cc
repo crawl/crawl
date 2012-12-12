@@ -48,6 +48,7 @@
 #include "religion.h"
 #include "shopping.h" // for item values
 #include "spl-book.h"
+#include "spl-clouds.h"
 #include "spl-damage.h"
 #include "spl-util.h"
 #include "state.h"
@@ -3565,10 +3566,36 @@ static bool _monster_move(monster* mons)
             && good_move[mmov.x + 1][mmov.y + 1] == true)
         {
             const coord_def target(mons->pos() + mmov);
-            if (mons->type == MONS_TILLING_WORM) {
+            if (mons->type == MONS_TILLING_WORM && player_in_branch(BRANCH_ABYSS))
+            {
                 grd(mons->pos()) = grd(target);
                 env.level_map_mask(mons->pos()) |= MMT_NUKED;
                 set_terrain_changed(mons->pos());
+                for (adjacent_iterator ai(mons->pos()); ai; ++ai)
+                {
+                    if (grd(*ai) != DNGN_FLOOR
+                        && !random2(grid_distance(*ai, you.pos())))
+                    {
+                        cloud_type cloud = CLOUD_TLOC_ENERGY;
+                        dungeon_feature_type adjacent_feat = grd(*ai);
+                        switch (adjacent_feat)
+                        {
+                            case DNGN_LAVA:
+                                cloud = CLOUD_FIRE;
+                                break;
+                            case DNGN_SHALLOW_WATER:
+                            case DNGN_DEEP_WATER:
+                                cloud = coinflip() ? CLOUD_STEAM : CLOUD_COLD;
+                                break;
+                            default:
+                                break;
+                        }
+                        if (one_chance_in(25))
+                            cloud = CLOUD_CHAOS;
+                        nuke_wall(*ai);
+                        big_cloud(cloud, mons, *ai, 1 + random2(2), 3, 3);
+                    }
+                }
             }
             nuke_wall(target);
 
