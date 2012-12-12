@@ -2012,13 +2012,7 @@ bool vehumet_accept_gift()
 vector<spell_type> _vehumet_eligible_gift_spells()
 {
     vector<spell_type>eligible_spells;
-    // TODO: Find a better way to determine if MAGIC_DART should be gifted
-    if (you.num_current_gifts[you.religion] == 0 && !you.has_spell(SPELL_MAGIC_DART)
-        && !_is_recent_spell(SPELL_MAGIC_DART))
-    {
-        eligible_spells.push_back(SPELL_MAGIC_DART);
-        return eligible_spells;
-    }
+
     int max_level = 0;
     if (you.piety >= 160 )
         max_level = 9;
@@ -2038,13 +2032,18 @@ vector<spell_type> _vehumet_eligible_gift_spells()
         spell_type spell = static_cast<spell_type>(i);
         if (!is_valid_spell(spell))
             continue;
+
+        // Your first offer will always be level 1 (even if you joined
+        // with extra piety by being a Monk, for example).
         // TODO: seen spells in destroyed books should be gifted
         if (vehumet_supports_spell(spell)
             && !you.has_spell(spell)
             && !you.seen_spell[spell]
             && spell_rarity(spell) != -1
             && spell_difficulty(spell) <= max_level
-            && !_is_recent_spell(spell))
+            && !_is_recent_spell(spell)
+            && (you.num_total_gifts[you.religion] > 0
+                || spell_difficulty(spell) == 1))
         {
             eligible_spells.push_back(spell);
         }
