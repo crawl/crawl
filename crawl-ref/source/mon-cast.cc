@@ -3010,20 +3010,20 @@ static int _mons_available_tentacles(monster* head)
     return _max_tentacles(head) - tentacle_count;
 }
 
-static int _mons_create_tentacles(monster* head)
+static void _mons_create_tentacles(monster* head)
 {
     int head_index = head->mindex();
     if (invalid_monster_index(head_index))
     {
         mpr("Error! Tentacle head is not a part of the current environment!",
             MSGCH_ERROR);
-        return 0;
+        return;
     }
 
     int possible_count = _mons_available_tentacles(head);
 
     if (possible_count <= 0)
-        return 0;
+        return;
 
     monster_type tent_type = mons_tentacle_child_type(head);
 
@@ -3042,9 +3042,9 @@ static int _mons_create_tentacles(monster* head)
     else if (adj_squares.size() > unsigned(possible_count))
         random_shuffle(adj_squares.begin(), adj_squares.end());
 
-    int created_count = 0;
+    int visible_count = 0;
 
-    for (int i=0;i<possible_count;++i)
+    for (int i = 0 ; i < possible_count; ++i)
     {
         if (monster *tentacle = create_monster(
             mgen_data(tent_type, SAME_ATTITUDE(head), head,
@@ -3052,7 +3052,9 @@ static int _mons_create_tentacles(monster* head)
                         MG_FORCE_PLACE, head->god, MONS_NO_MONSTER, head_index,
                         head->colour, -1, PROX_CLOSE_TO_PLAYER)))
         {
-            created_count++;
+            if (you.can_see(tentacle))
+                visible_count++;
+
             tentacle->props["inwards"].get_int() = head_index;
 
             if (head->holiness() == MH_UNDEAD)
@@ -3062,20 +3064,20 @@ static int _mons_create_tentacles(monster* head)
 
     if (mons_base_type(head) == MONS_KRAKEN)
     {
-        if (created_count == 1)
+        if (visible_count == 1)
             mpr("A tentacle rises from the water!");
-        else if (created_count > 1)
+        else if (visible_count > 1)
             mpr("Tentacles burst out of the water!");
     }
     else if (head->type == MONS_TENTACLED_STARSPAWN)
     {
-        if (created_count == 1)
+        if (visible_count == 1)
             mpr("A tentacle flies out from the starspawn's body!");
-        else if (created_count > 1)
+        else if (visible_count > 1)
             mpr("Tentacles burst from the starspawn's body!");
     }
 
-    return created_count;
+    return;
 }
 
 static bool _mon_spell_bail_out_early(monster* mons, spell_type spell_cast)
@@ -3476,21 +3478,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_CREATE_TENTACLES:
     {
-        int created_count = _mons_create_tentacles(mons);
-        if (mons_base_type(mons) == MONS_KRAKEN)
-        {
-            if (created_count == 1)
-                mpr("A tentacle rises from the water!");
-            else if (created_count > 1)
-                mpr("Tentacles burst out of the water!");
-        }
-        else if (mons->type == MONS_TENTACLED_STARSPAWN)
-        {
-            if (created_count == 1)
-                mpr("A tentacle flies out from the starspawn's body!");
-            else if (created_count > 1)
-                mpr("Tentacles burst from the starspawn's body!");
-        }
+        _mons_create_tentacles(mons);
         return;
     }
     case SPELL_FAKE_MARA_SUMMON:
