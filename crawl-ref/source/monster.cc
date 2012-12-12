@@ -1808,6 +1808,9 @@ bool monster::wants_jewellery(const item_def &item) const
         return false;
     }
 
+    if (item.sub_type == AMU_INACCURACY)
+        return false;
+
     // TODO: figure out what monsters actually want rings or amulets
     return true;
 }
