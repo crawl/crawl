@@ -2286,6 +2286,7 @@ bool do_god_gift(bool forced)
                                       (spell_difficulty(you.vehumet_gift)^2) / 3));
                     you.num_current_gifts[you.religion]++;
                     you.num_total_gifts[you.religion]++;
+                    take_note(Note(NOTE_OFFERED_SPELL, you.vehumet_gift));
                     success = true;
                 }
                 else
