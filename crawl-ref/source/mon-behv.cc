@@ -521,7 +521,7 @@ void handle_behaviour(monster* mon)
                                 mon->target = PLAYER_POS;  // infallible tracking in zotdef
                             else
                             {
-                                if (x_chance_in_y(300, you.skill(SK_STEALTH, 100))
+                                if (x_chance_in_y(50, you.stealth())
                                     || you.penance[GOD_ASHENZARI] && coinflip())
                                 {
                                     mon->target = you.pos();
