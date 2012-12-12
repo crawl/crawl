@@ -4379,6 +4379,8 @@ void monster_teleport(monster* mons, bool instan, bool silent)
     mons->apply_location_effects(oldplace);
 
     mons_relocated(mons);
+    
+    shake_off_monsters(mons);
 }
 
 void mons_clear_trapping_net(monster* mon)
