@@ -52,7 +52,7 @@ static void _actor_apply_noise(actor *act,
 
 void handle_monster_shouts(monster* mons, bool force)
 {
-    if (!force && x_chance_in_y(you.skill(SK_STEALTH, 100), 3000))
+    if (!force && one_chance_in(5))
         return;
 
     // Friendly or neutral monsters don't shout.
