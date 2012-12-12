@@ -107,7 +107,8 @@ enum ability_type
     ABIL_YRED_DRAIN_LIFE,
     ABIL_YRED_ENSLAVE_SOUL,
     ABIL_YRED_ANIMATE_REMAINS_OR_DEAD,
-    // Xom, Vehumet = 90
+    // Vehumet
+    ABIL_VEHUMET_MEMORISE_SPELL = 90,
     // Okawaru
     ABIL_OKAWARU_HEROISM = 100,
     ABIL_OKAWARU_FINESSE,
@@ -167,8 +168,7 @@ enum ability_type
     ABIL_ASHENZARI_SCRYING = 210,
     ABIL_ASHENZARI_TRANSFER_KNOWLEDGE,
     ABIL_ASHENZARI_END_TRANSFER,
-    // Vehumet
-    ABIL_VEHUMET_MEMORISE_SPELL,
+
     // General divine (pseudo) abilities.
     ABIL_RENOUNCE_RELIGION,
 
