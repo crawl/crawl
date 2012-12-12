@@ -1220,3 +1220,27 @@ void make_mons_stop_fleeing(monster* mon)
     if (mons_is_retreating(mon))
         behaviour_event(mon, ME_CORNERED);
 }
+
+//Make all monsters lose track of a given target after a few turns
+void shake_off_monsters(const actor* target)
+{
+    //If the player is under Ashenzari penance, monsters will not
+    //lose track of them so easily
+    if (target->is_player() && you.penance[GOD_ASHENZARI])
+        return;
+    
+    for (monster_iterator mi; mi; ++mi)
+    {
+        monster* m = mi->as_monster();
+        if (m->foe == target->mindex() && m->foe_memory > 0)
+        {
+            // Set foe_memory to a small non-zero amount so that monsters can
+            // still close in on your old location, rather than immediately
+            // realizing their target is gone, even if they took stairs while
+            // out of sight
+            dprf("Monster %d forgot about foe %d. (Previous foe_memory: %d)", 
+                    m->mindex(), target->mindex(), m->foe_memory);
+            m->foe_memory = min(m->foe_memory, 7);
+        }
+    }
+}
