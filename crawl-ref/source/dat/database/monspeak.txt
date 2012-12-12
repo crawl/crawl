@@ -770,7 +770,7 @@ VISUAL:@The_monster@ looks really [rattled|scared stiff|petrified].
 
 @The_monster@ weeps quietly.
 
-@The_monster@ looks in an agony of indecision for an escape route...
+@The_monster@ looks desperately for an escape route.
 
 @The_monster@ hums to @reflexive@ desperately, trying to keep calm.
 
@@ -1063,8 +1063,6 @@ VISUAL:@The_monster@ takes a fighting stance.
 @The_monster@ says, "My insurmountable tactics guarantee your defeat."
 
 @The_monster@ says, "Are you willing to die fighting? I was!"
-
-@The_monster@ says @to_foe@, "I lost a battle, but kept my dignity. You look to have neither."
 
 @The_monster@ sneers, "Do you call that fighting?"
 
@@ -3913,7 +3911,6 @@ ENCHANT:@The_monster@ mutters a nigh-unspeakable word.
 @The_monster@ says, "I speak the language of demons!"
 
 @The_monster@ howls an indescribable curse.
-VISUAL WARN:You feel fear.
 
 @The_monster@ says, "I have seen worlds and universes beyond all imagining."
 %%%%
@@ -4868,10 +4865,8 @@ VISUAL:@The_monster@'s bandages flutter.
 VISUAL:@The_monster@ breathes soot at you.
 
 VISUAL SPELL:@The_monster@ blazes with dark energy!
-VISUAL WARN:You feel utter despair.
 
 VISUAL SPELL:@The_monster@ @_Menkaure_verb_@ a few words.
-VISUAL WARN:You feel lassitude.
 
 VISUAL SPELL:@The_monster@ @_Menkaure_verb_@ dryly.
 VISUAL ENCHANT:@The_monster@ glows.
@@ -5943,28 +5938,16 @@ VISUAL:@The_monster@ basks in @possessive@ own plume of deadly dust.
 @The_monster@ stomps on the ground.
 WARN:You hear tremors.
 
-VISUAL:@The_monster@ closes @possessive@ eyes.
-VISUAL WARN:You feel as though you are being watched from above.
-
 VISUAL:@The_monster@ bares @possessive@ teeth, and the ground turns slowly to stone.
 
-VISUAL:@The_monster@ stomps toward you, implacably.
+VISUAL:@The_monster@ stomps toward @foe@, implacably.
 
-VISUAL:@The_monster@ prepares to charge at you.
+VISUAL:@The_monster@ prepares to charge at @foe@.
 
 VISUAL:@The_monster@ wanders slowly into a prime firing position.
 
 w:1
-VISUAL:@The_monster@ readies @possessive@ vast lungs of living stone to calcify you where you stand.
-
-w:1
-VISUAL:@The_monster@ sculpts the ground into a sphere of stone suspended by the thinnest support in the sky.
-
-w:1
-VISUAL:@The_monster@ breathes on the earth until a ridged crescent appears, raises @possessive@ hoof in rage, then stops.
-
-w:1
-VISUAL:Tears glisten in @possessive@ eyes as @subjective@ regards a sphere of stone @subjective@ breathed into being on the floor.
+VISUAL:@The_monster@ readies @possessive@ vast lungs of living stone to calcify you where you stand. @player_only@
 %%%%
 ################## Crystal golem ###########################
 crystal golem
@@ -6153,9 +6136,6 @@ VISUAL SPELL:@The_monster@ flicks @possessive@ antennae at the ground!
 VISUAL WARN:The ground rattles!
 
 VISUAL:@The_monster@ tries to bite you, but has no teeth.
-
-VISUAL:@The_monster@ forgets @subjective@ is a moth of wrath and starts meditating mothfully.
-VISUAL ENCHANT:The Dungeon calms.
 %%%%
 ################## Statues ##################
 default orange crystal statue
