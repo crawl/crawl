@@ -427,7 +427,7 @@ static void _handle_teleport_update(bool large_change, bool check_ring_TC,
         {
             const bool see_cell = you.see_cell(mi->pos());
 
-            if (mi->foe == MHITYOU && !see_cell)
+            if (mi->foe == MHITYOU && !see_cell && !you.penance[GOD_ASHENZARI])
             {
                 mi->foe_memory = 0;
                 behaviour_event(*mi, ME_EVAL);
