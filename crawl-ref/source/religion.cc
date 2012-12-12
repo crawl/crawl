@@ -1995,12 +1995,9 @@ bool vehumet_accept_gift()
             prompt = make_stringf(" grants you knowledge of %s.",
                                   spell_title(you.vehumet_gift));
             simple_god_message(prompt.c_str());
-            _inc_gift_timeout(max(spell_difficulty(you.vehumet_gift),
-                                  (spell_difficulty(you.vehumet_gift)^2) / 3));
             you.vehumet_gift = SPELL_NO_SPELL;
             you.duration[DUR_VEHUMET_GIFT] = 0;
-            you.num_current_gifts[you.religion]++;
-            you.num_total_gifts[you.religion]++;
+
             return true;
         }
         else
@@ -2286,6 +2283,10 @@ bool do_god_gift(bool forced)
                     simple_god_message(prompt.c_str());
                     more();
                     you.duration[DUR_VEHUMET_GIFT] = (100 + random2avg(100, 2)) * BASELINE_DELAY;
+                    _inc_gift_timeout(max(spell_difficulty(you.vehumet_gift),
+                                      (spell_difficulty(you.vehumet_gift)^2) / 3));
+                    you.num_current_gifts[you.religion]++;
+                    you.num_total_gifts[you.religion]++;
                     success = true;
                 }
                 else
