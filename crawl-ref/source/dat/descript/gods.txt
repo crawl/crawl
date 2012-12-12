@@ -211,7 +211,7 @@ upon killing beings. As they gain favour, they will also gain various
 enhancements to their destructive spells — firstly, assistance in casting such
 spells; then increased range for conjurations; and finally a lowered cost for
 casting higher level destructive spells. Vehumet will offer followers the
-knowledge of increasingly destructive spells as they gain piety.
+knowledge of increasingly powerful destructive spells as they gain piety.
 %%%%
 Okawaru powers
 
