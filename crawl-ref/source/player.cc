@@ -5339,7 +5339,12 @@ void dec_disease_player(int delay)
         int rr = 50;
 
         // Extra regeneration means faster recovery from disease.
-        rr += _player_bonus_regen();
+        // But not if not actually regenerating!
+        if (player_mutation_level(MUT_SLOW_HEALING) < 3
+            && !(you.species == SP_VAMPIRE && you.hunger_state == HS_STARVING))
+        {
+            rr += _player_bonus_regen();
+        }
 
         // Trog's Hand.
         if (you.attribute[ATTR_DIVINE_REGENERATION])
