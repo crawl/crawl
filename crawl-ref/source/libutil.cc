@@ -1204,7 +1204,8 @@ static void handle_hangup(int)
 
 #ifdef USE_TILE_LOCAL
     // XXX: Will a tiles build ever need to handle the HUP signal?
-    sighup_save_and_exit();
+    // 1KB: yes, but you may not save here, especially not from a signal
+    // handler.
 #elif defined(USE_CURSES)
     // When using Curses, closing stdin will cause any Curses call blocking
     // on key-presses to immediately return, including any call that was
@@ -1242,7 +1243,13 @@ void init_signals()
     signal(SIGINT, SIG_IGN);
 #endif
 
+# ifdef USE_TILE_LOCAL
+    // Losing the controlling terminal doesn't matter, we continue and will
+    // shut down only when the actual window is closed.
+    signal(SIGHUP, SIG_IGN);
+# else
     signal(SIGHUP, handle_hangup);
+# endif
 #endif
 
 #ifdef DGL_ENABLE_CORE_DUMP
