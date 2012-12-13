@@ -1242,6 +1242,27 @@ cccyy..yycc
      @@
 ENDMAP
 
+NAME:  bh_abyss_bestiary
+TAGS:  abyss allow_dup no_rtele_into
+MONS:  tilling worm
+MONS:  wretched star
+MONS:  lurking horror
+MONS:  tentacled starspawn
+KFEAT: 0 = exit_abyss / abyssal_stair
+MAP
+    @
+xxxx.xxxx
+x1.n.n.4x
+x.nn.nn.x
+xxn...nxx
+x0.......@
+xxn...nxx
+x.nn.nn.x
+x2.x.x.3x
+xxxx.xxxx
+    @
+ENDMAP
+
 ###################################################################
 # <bh> I got the idea after I introduced a bug where the whole floor of
 #        the abyss turned into altars
