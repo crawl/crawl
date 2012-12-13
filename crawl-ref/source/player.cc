@@ -1354,7 +1354,8 @@ int player_hunger_rate(bool temp)
         hunger += 4 * player_equip(EQ_RINGS, RING_HUNGER);
 
         // troll leather armour
-        if (you.species != SP_TROLL && you.hp < you.hp_max)
+        if (you.species != SP_TROLL && you.hp < you.hp_max
+            && player_mutation_level(MUT_SLOW_HEALING) < 3)
         {
             if (player_equip(EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR)
                 || player_equip(EQ_BODY_ARMOUR, ARM_TROLL_HIDE))
