@@ -3092,7 +3092,14 @@ zap_type item_def::zap() const
         return ZAP_DEBUGGING_RAY;
 
     zap_type result = ZAP_DEBUGGING_RAY;
-    switch (static_cast<wand_type>(sub_type))
+    wand_type wand_sub_type = static_cast<wand_type>(sub_type);
+
+    if (wand_sub_type == WAND_RANDOM_EFFECTS)
+        while (wand_sub_type == WAND_RANDOM_EFFECTS
+               || wand_sub_type == WAND_HEAL_WOUNDS)
+            wand_sub_type = static_cast<wand_type>(random2(NUM_WANDS));
+
+    switch (wand_sub_type)
     {
     case WAND_FLAME:           result = ZAP_FLAME;           break;
     case WAND_FROST:           result = ZAP_FROST;           break;
@@ -3113,14 +3120,7 @@ zap_type item_def::zap() const
     case WAND_ENSLAVEMENT:     result = ZAP_ENSLAVEMENT;     break;
     case WAND_DRAINING:        result = ZAP_NEGATIVE_ENERGY; break;
     case WAND_DISINTEGRATION:  result = ZAP_DISINTEGRATION;  break;
-    case WAND_RANDOM_EFFECTS:
-        result = static_cast<zap_type>(random2(ZAP_LAST_RANDOM + 1));
-        if (one_chance_in(20))
-            result = ZAP_NEGATIVE_ENERGY;
-        if (one_chance_in(17))
-            result = ZAP_ENSLAVEMENT;
-        break;
-
+    case WAND_RANDOM_EFFECTS:  /* impossible */
     case NUM_WANDS: break;
     }
     return result;
