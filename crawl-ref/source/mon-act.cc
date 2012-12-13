@@ -3615,7 +3615,8 @@ static bool _monster_move(monster* mons)
                 else
                     noisy(25, target, "You hear a crashing sound.");
             }
-            else if (player_can_hear(mons->pos() + mmov))
+            else if (mons->type != MONS_TILLING_WORM
+                    && player_can_hear(mons->pos() + mmov))
             {
                 // Message depends on whether caused by boring beetle or
                 // acid (Dissolution).
@@ -3626,9 +3627,6 @@ static bool _monster_move(monster* mons)
                         break;
                     case MONS_DISSOLUTION:
                         noise = "sizzling sound";
-                        break;
-                    case MONS_TILLING_WORM:
-                        noise = "popping noise";
                         break;
                     default:
                         noise = "buggy noise";
