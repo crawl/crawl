@@ -1241,8 +1241,8 @@ COLOUR:     W = green
 :           door_verb_open="You part the %s%s.",
 :           door_verb_close="You squeeze the %s%s shut."
 :           })
-KITEM:      $ = w:30 potion of mutation / potion of gain strength / \
-            potion of gain dexterity / potion of gain intelligence / \
+KITEM:      $ = w:45 potion of mutation / w:5 potion of gain strength / \
+            w:5 potion of gain dexterity / w:5 potion of gain intelligence / \
             w:1 potion of cure mutation
 KITEM:      * = gold
 KITEM:      % = amulet of resist mutation good_item
