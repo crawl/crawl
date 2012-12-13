@@ -157,7 +157,7 @@ void jiyva_stat_action()
     }
     // Try to avoid burdening people or making their armour difficult to use.
     int current_capacity = carrying_capacity(BS_UNENCUMBERED);
-    int carrying_strength = cur_stat[0] + (you.burden - current_capacity + 249)/250;
+    int carrying_strength = cur_stat[0] + (you.burden - current_capacity + 207)/208;
     int evp = you.unadjusted_body_armour_penalty();
     target_stat[0] = max(max(9, 2 + 3 * evp), 2 + carrying_strength);
     target_stat[1] = 9;
