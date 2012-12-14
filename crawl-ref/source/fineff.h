@@ -135,6 +135,17 @@ protected:
     int damage;
 };
 
+class starcursed_merge_fineff : public final_effect
+{
+public:
+    starcursed_merge_fineff(const actor *merger)
+            : final_effect(0, merger, coord_def())
+    {
+    }
+    bool mergeable(const final_effect &a) const;
+    void fire();
+};
+
 void fire_final_effects();
 
 #endif
