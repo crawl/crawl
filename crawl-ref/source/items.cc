@@ -3095,9 +3095,13 @@ zap_type item_def::zap() const
     wand_type wand_sub_type = static_cast<wand_type>(sub_type);
 
     if (wand_sub_type == WAND_RANDOM_EFFECTS)
+    {
         while (wand_sub_type == WAND_RANDOM_EFFECTS
                || wand_sub_type == WAND_HEAL_WOUNDS)
+        {
             wand_sub_type = static_cast<wand_type>(random2(NUM_WANDS));
+        }
+    }
 
     switch (wand_sub_type)
     {
