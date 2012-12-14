@@ -3380,3 +3380,49 @@ void ancient_zyme_sicken(monster* mons)
         }
     }
 }
+
+static bool _do_merge_masses(monster* initial_mass, monster* merge_to)
+{
+    // Combine enchantment durations.
+    _merge_ench_durations(initial_mass, merge_to);
+
+    merge_to->number += initial_mass->number;
+    merge_to->max_hit_points += initial_mass->max_hit_points;
+    merge_to->hit_points += initial_mass->hit_points;
+
+    // Merge monster flags (mostly so that MF_CREATED_NEUTRAL, etc. are
+    // passed on if the merged slime subsequently splits.  Hopefully
+    // this won't do anything weird.
+    merge_to->flags |= initial_mass->flags;
+
+    // Overwrite the state of the slime getting merged into, because it
+    // might have been resting or something.
+    merge_to->behaviour = initial_mass->behaviour;
+    merge_to->foe = initial_mass->foe;
+
+    behaviour_event(merge_to, ME_EVAL);
+
+    // Have to 'kill' the slime doing the merging.
+    monster_die(initial_mass, KILL_DISMISSED, NON_MONSTER, true);
+
+    return true;
+}
+
+void starcursed_merge(monster* mon, bool forced)
+{
+    //Find a random adjacent starcursed mass
+    int compass_idx[] = {0, 1, 2, 3, 4, 5, 6, 7};
+    random_shuffle(compass_idx, compass_idx + 8);
+
+    for (int i = 0; i < 8; ++i)
+    {
+        coord_def target = mon->pos() + Compass[compass_idx[i]];
+        monster* mergee = monster_at(target);
+        if (mergee && mergee->alive() && mergee->type == MONS_STARCURSED_MASS)
+        {
+            if (forced && you.can_see(mon))
+                mpr("The starcursed mass shudders and is absorbed by its neighbour.");
+            _do_merge_masses(mon, mergee);
+        }
+    }
+}

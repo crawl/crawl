@@ -5533,6 +5533,8 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             }
         }
     }
+    else if (type == MONS_STARCURSED_MASS)
+        (new starcursed_merge_fineff(this))->schedule();
 }
 
 reach_type monster::reach_range() const

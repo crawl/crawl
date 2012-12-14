@@ -12,6 +12,7 @@
 #include "libutil.h"
 #include "mgen_data.h"
 #include "misc.h"
+#include "mon-abil.h"
 #include "mon-place.h"
 #include "ouch.h"
 #include "religion.h"
@@ -83,6 +84,11 @@ bool kraken_damage_fineff::mergeable(const final_effect &fe) const
     return o && att == o->att && def == o->def;
 }
 
+bool starcursed_merge_fineff::mergeable(const final_effect &fe) const
+{
+    const starcursed_merge_fineff *o = dynamic_cast<const starcursed_merge_fineff *>(&fe);
+    return o && def == o->def;
+}
 
 void mirror_damage_fineff::merge(const final_effect &fe)
 {
@@ -255,6 +261,13 @@ void kraken_damage_fineff::fire()
 {
     if (actor *df = defender())
         df->hurt(attacker(), damage);
+}
+
+void starcursed_merge_fineff::fire()
+{
+    actor *defend = defender();
+    if (defend && defend->alive())
+        starcursed_merge(defender()->as_monster(), true);
 }
 
 // Effects that occur after all other effects, even if the monster is dead.
