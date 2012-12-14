@@ -2463,7 +2463,7 @@ static bool _find_monster_expl(const coord_def& where, int mode, bool need_path,
     if (hitfunc->set_aim(where))
         for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
         {
-            if (hitfunc->is_affected(*ri) == AFF_YES)
+            if (hitfunc->is_affected(*ri) >= AFF_YES)
             {
                 const monster* mon = monster_at(*ri);
                 if (mon != NULL)
