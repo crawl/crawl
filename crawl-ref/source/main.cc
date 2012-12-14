@@ -1460,19 +1460,13 @@ static void _go_upstairs()
     if (!_prompt_unique_pan_rune(ygrd))
         return;
 
-    if (ygrd == DNGN_EXIT_DUNGEON)
+    if (ygrd == DNGN_EXIT_DUNGEON && !player_has_orb())
     {
-        bool stay = true;
         string prompt = make_stringf("Are you sure you want to leave the "
                                      "Dungeon?%s",
                                      crawl_state.game_is_tutorial() ? "" :
                                      " This will make you lose the game!");
-        if (player_has_orb())
-            stay = !yesno("Are you sure you want to win?");
-        else
-            stay = !yesno(prompt.c_str(), false, 'n');
-
-        if (stay)
+        if (!yesno(prompt.c_str(), false, 'n'))
         {
             mpr("Alright, then stay!");
             return;
