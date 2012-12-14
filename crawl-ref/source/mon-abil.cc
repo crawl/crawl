@@ -355,17 +355,27 @@ static void _stats_from_blob_count(monster* slime, float max_per_blob,
 static monster* _do_split(monster* thing, coord_def & target)
 {
     // Create a new slime.
-    monster *new_slime = create_monster(mgen_data(MONS_SLIME_CREATURE,
-                                             thing->behaviour,
-                                             0,
-                                             0,
-                                             0,
-                                             target,
-                                             thing->foe,
-                                             MG_FORCE_PLACE));
+    mgen_data new_slime_data = mgen_data(MONS_SLIME_CREATURE,
+                                         thing->behaviour,
+                                         0,
+                                         0,
+                                         0,
+                                         target,
+                                         thing->foe,
+                                         MG_FORCE_PLACE);
+
+    // Don't explicitly announce the child slime coming into view if you
+    // saw the split that created it
+    if (you.can_see(thing))
+        new_slime_data.extra_flags |= MF_WAS_IN_VIEW;
+
+    monster *new_slime = create_monster(new_slime_data);
 
     if (!new_slime)
         return 0;
+
+    if (you.can_see(thing))
+        mprf("%s splits.", thing->name(DESC_A).c_str());
 
     // Inflict the new slime with any enchantments on the parent.
     _split_ench_durations(thing, new_slime);
@@ -373,9 +383,6 @@ static monster* _do_split(monster* thing, coord_def & target)
     new_slime->flags = thing->flags;
     new_slime->props = thing->props;
     // XXX copy summoner info
-
-    if (you.can_see(thing))
-        mprf("%s splits.", thing->name(DESC_A).c_str());
 
     int split_off = thing->number / 2;
     float max_per_blob = thing->max_hit_points / float(thing->number);
