@@ -2406,6 +2406,15 @@ spriggan rider
 Mounted on giant fireflies, these riders make sure no one who dares to intrude
 on the spriggan forests and cairns will be able to just walk away.
 %%%%
+starcursed mass
+
+An mass of stellar detritus that glows with the sickly putrescence of a
+dying star, forever shrieking soundlessly in a voice beyond mortal grasp.
+Its form quivers and undulates constantly, dividing spontaneously and then
+withdrawing when threatened. While the voice of even a single one is
+unsettling, in chorus, their screams can overwhelm the minds of even the
+bravest warriors, leaving them stunned and helpless.
+%%%%
 starspawn tentacle
 
 The writhing appendage of a tentacled starspawn, capable of grasping nearly
