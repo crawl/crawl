@@ -370,6 +370,12 @@ static bool _mon_on_interesting_grid(monster* mon)
     case DNGN_ENTER_FOREST:
         return mons_is_native_in_branch(mon, BRANCH_FOREST);
 
+    // And abyss denizens!
+    case DNGN_ENTER_ABYSS:
+    case DNGN_EXIT_ABYSS:
+    case DNGN_ABYSSAL_STAIR:
+        return mons_is_native_in_branch(mon, BRANCH_ABYSS);
+
     default:
         return false;
     }

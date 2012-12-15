@@ -913,6 +913,20 @@ struct spell_desc
 },
 
 {
+    SPELL_FRENZY, "Frenzy",
+     SPTYP_CHARMS,
+     SPFLAG_HASTY | SPFLAG_MONSTER,
+     3,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+
+{
     SPELL_DISPEL_UNDEAD, "Dispel Undead",
      SPTYP_NECROMANCY,
      SPFLAG_DIR_OR_TARGET,

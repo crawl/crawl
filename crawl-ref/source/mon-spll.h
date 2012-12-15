@@ -1835,6 +1835,17 @@
        SPELL_BERSERKER_RAGE
       }
     },
+
+    {  MST_THRASHING_HORROR,
+      {
+       SPELL_FRENZY,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL
+      }
+    },
     
     {  MST_TEST_SPAWNER,
       {

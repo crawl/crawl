@@ -2534,6 +2534,11 @@ terrified wizard
 This guy has been caught by magic-haters, and is going to be sacrificed on the
 altar of Trog.
 %%%%
+thrashing horror
+
+A seething mass of yellow flesh. It thrashes erratically, sometimes devouring
+friend and foe alike.
+%%%%
 titan
 
 This huge, bolt-hurling, lightning-limned humanoid is unusually large and
