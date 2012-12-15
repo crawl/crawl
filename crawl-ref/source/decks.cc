@@ -2808,42 +2808,60 @@ static void _mercenary_card(int power, deck_rarity_type rarity)
 
     monster *mon = create_monster(mg);
 
-    if (mon)
+    if (!mon)
     {
-        mon->props["dbname"].get_string() = mons_class_name(merctypes[merc]);
-
-        redraw_screen(); // We want to see the monster while it's asking to be paid.
-
-        if (player_will_anger_monster(mon))
-        {
-            simple_monster_message(mon, " is repulsed!");
-            return;
-        }
-
-        const int fee = fuzz_value(exper_value(mon), 15, 15);
-        if (fee > you.gold)
-        {
-            mprf("You cannot afford %s fee of %d gold!",
-                 mon->name(DESC_ITS).c_str(), fee);
-            simple_monster_message(mon, " attacks!");
-            return;
-        }
-
-        const string prompt = make_stringf("Pay %s fee of %d gold?",
-                                           mon->name(DESC_ITS).c_str(), fee);
-        if (!yesno(prompt.c_str()))
-        {
-            simple_monster_message(mon, " attacks!");
-            return;
-        }
-
-        simple_monster_message(mon, " joins your ranks!");
-        mon->attitude = ATT_FRIENDLY;
-        mons_att_changed(mon);
-        you.del_gold(fee);
-    }
-    else
         mpr("You see a puff of smoke.");
+        return;
+    }
+
+    mon->props["dbname"].get_string() = mons_class_name(merctypes[merc]);
+
+    redraw_screen(); // We want to see the monster while it's asking to be paid.
+
+    if (player_will_anger_monster(mon))
+    {
+        simple_monster_message(mon, " is repulsed!");
+        return;
+    }
+
+    const int fee = fuzz_value(exper_value(mon), 15, 15);
+    if (fee > you.gold)
+    {
+        mprf("You cannot afford %s fee of %d gold!",
+             mon->name(DESC_ITS).c_str(), fee);
+        simple_monster_message(mon, " attacks!");
+        return;
+    }
+
+    mon->props["mercenary_fee"] = fee;
+    run_uncancel(UNC_MERCENARY, mon->mid);
+}
+
+bool recruit_mercenary(int mid)
+{
+    monster *mon = monster_by_mid(mid);
+    if (!mon)
+        return true; // wut?
+
+    int fee = mon->props["mercenary_fee"].get_int();
+    const string prompt = make_stringf("Pay %s fee of %d gold?",
+                                       mon->name(DESC_ITS).c_str(), fee);
+    bool paid = yesno(prompt.c_str(), false, 0);
+    if (crawl_state.seen_hups)
+        return false;
+
+    mon->props.erase("mercenary_fee");
+    if (!paid)
+    {
+        simple_monster_message(mon, " attacks!");
+        return true;
+    }
+
+    simple_monster_message(mon, " joins your ranks!");
+    mon->attitude = ATT_FRIENDLY;
+    mons_att_changed(mon);
+    you.del_gold(fee);
+    return true;
 }
 
 static void _alchemist_card(int power, deck_rarity_type rarity)
