@@ -46,6 +46,12 @@ void run_uncancels()
             if (!stack_five(arg) && crawl_state.seen_hups)
                 return;
             break;
+
+        case UNC_MERCENARY:
+            if (!recruit_mercenary(arg) && crawl_state.seen_hups)
+                return;
+            break;
+
         }
 
         if (act != -1)

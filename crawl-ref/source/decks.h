@@ -129,6 +129,7 @@ void shuffle_all_decks_on_level();
 
 bool draw_three(int slot);
 bool stack_five(int slot);
+bool recruit_mercenary(int mid);
 
 void card_effect(card_type which_card, deck_rarity_type rarity,
                  uint8_t card_flags = 0, bool tell_card = true);
