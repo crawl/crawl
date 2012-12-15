@@ -3422,7 +3422,51 @@ void starcursed_merge(monster* mon, bool forced)
         {
             if (forced && you.can_see(mon))
                 mpr("The starcursed mass shudders and is absorbed by its neighbour.");
-            _do_merge_masses(mon, mergee);
+            if (_do_merge_masses(mon, mergee))
+                return;
+        }
+    }
+
+    // If there was nothing adjacent to merge with, at least try to move toward
+    // another starcursed mass
+    for (distance_iterator di(mon->pos(), true, true, 8); di; ++di)
+    {
+        monster* ally = monster_at(*di);
+        if (ally && ally->alive() && ally->type == MONS_STARCURSED_MASS
+            && mon->can_see(ally))
+        {
+            bool moved = false;
+
+            coord_def sgn = (*di - mon->pos()).sgn();
+            if (mon_can_move_to_pos(mon, sgn))
+            {
+                mon->move_to_pos(mon->pos()+sgn, false);
+                moved = true;
+            }
+            else if (abs(sgn.x) != 0)
+            {
+                coord_def dx(sgn.x, 0);
+                if (mon_can_move_to_pos(mon, dx))
+                {
+                    mon->move_to_pos(mon->pos()+dx, false);
+                    moved = true;
+                }
+            }
+            else if (abs(sgn.y) != 0)
+            {
+                coord_def dy(0, sgn.y);
+                if (mon_can_move_to_pos(mon, dy))
+                {
+                    mon->move_to_pos(mon->pos()+dy, false);
+                    moved = true;
+                }
+            }
+
+            if (moved)
+            {
+                mpr("The starcursed mass shudders and withdraws towards its neighbour.");
+                mon->speed_increment -= 10;
+            }
         }
     }
 }
