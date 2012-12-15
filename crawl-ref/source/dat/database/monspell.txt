@@ -240,6 +240,10 @@ Petrifying Cloud cast
 Chaos Breath cast
 
 @The_monster@ breathes @beam@ @at@ @target@.
+%%%%
+Frenzy cast
+
+@The_monster@ convulses with anger.
 ########################################################################
 # Unique monsters
 ########################################################################

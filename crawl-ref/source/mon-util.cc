@@ -795,6 +795,21 @@ bool mons_is_native_in_branch(const monster* mons,
     case BRANCH_HALL_OF_BLADES:
         return (mons->type == MONS_DANCING_WEAPON);
 
+    case BRANCH_ABYSS:
+        switch (mons->type)
+        {
+            case MONS_ABOMINATION_LARGE:
+            case MONS_ABOMINATION_SMALL:
+            case MONS_LURKING_HORROR:
+            case MONS_TENTACLED_MONSTROSITY:
+            case MONS_TENTACLED_STARSPAWN:
+            case MONS_THRASHING_HORROR:
+            case MONS_UNSEEN_HORROR:
+            case MONS_WRETCHED_STAR:
+                return true;
+            default:
+                return false;
+        }
     default:
         return false;
     }
@@ -3019,6 +3034,7 @@ static bool _ms_ranged_spell(spell_type monspell, bool attack_only = false,
     {
     case SPELL_NO_SPELL:
     case SPELL_CANTRIP:
+    case SPELL_FRENZY:
     case SPELL_HASTE:
     case SPELL_MIGHT:
     case SPELL_MINOR_HEALING:

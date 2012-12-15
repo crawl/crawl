@@ -1119,6 +1119,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_OZOCUBUS_REFRIGERATION:
     case SPELL_FRAGMENTATION:
     case SPELL_SHATTER:
+    case SPELL_FRENZY:
         return true;
     default:
         if (check_validity)
@@ -1167,7 +1168,8 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         || spell_cast == SPELL_INVISIBILITY
         || spell_cast == SPELL_MINOR_HEALING
         || spell_cast == SPELL_TELEPORT_SELF
-        || spell_cast == SPELL_SILENCE)
+        || spell_cast == SPELL_SILENCE
+        || spell_cast == SPELL_FRENZY)
     {
         pbolt.target = mons->pos();
     }
@@ -1361,6 +1363,11 @@ static bool _ms_waste_of_time(const monster* mon, spell_type monspell)
 
     case SPELL_BERSERKER_RAGE:
         if (!mon->needs_berserk(false))
+            ret = true;
+        break;
+
+    case SPELL_FRENZY:
+        if (mon->has_ench(ENCH_HASTE) && mon->has_ench(ENCH_MIGHT))
             ret = true;
         break;
 
@@ -1628,6 +1635,7 @@ static bool _ms_low_hitpoint_cast(const monster* mon, spell_type monspell)
     case SPELL_HASTE:
     case SPELL_DEATHS_DOOR:
     case SPELL_BERSERKER_RAGE:
+    case SPELL_FRENZY:
         return true;
     case SPELL_VAMPIRIC_DRAINING:
         return !targ_sanct && targ_adj && !targ_friendly && !targ_undead;
@@ -3285,6 +3293,10 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_BERSERKER_RAGE:
         mons->props["went_berserk"] = bool(true);
         mons->go_berserk(true);
+        return;
+
+    case SPELL_FRENZY:
+        mons->go_frenzy();
         return;
 
     case SPELL_TROGS_HAND:
