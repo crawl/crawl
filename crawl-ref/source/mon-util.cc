@@ -1928,6 +1928,10 @@ int exper_value(const monster* mon, bool real)
     if (mon->type == MONS_SLIME_CREATURE && mon->number > 1)
         x_val *= mon->number;
 
+    // Scale starcursed mass exp by what percentage of the whole it represents
+    if (mon->type == MONS_STARCURSED_MASS)
+        x_val = (x_val * 12) / mon->number;
+
     // Reductions for big values. - bwr
     if (x_val > 100)
         x_val = 100 + ((x_val - 100) * 3) / 4;
