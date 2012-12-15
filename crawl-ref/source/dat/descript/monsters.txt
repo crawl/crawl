@@ -1723,6 +1723,17 @@ lindwurm
 A small serpentine dragon with a pair of strong forelimbs. Its thick scales
 give off an eerie green glow.
 %%%%
+lost hound
+
+A misshapen dog {{
+    if you.can_smell() then
+        return "that stinks of"
+    else
+        return "with"
+    end
+}} burned hair. Its empty eye sockets crackle with a horrifying light.
+
+%%%%
 lurking horror
 
 A formless mass of energy. It seems to stop moving when you look at it.

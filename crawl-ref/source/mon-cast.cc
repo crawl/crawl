@@ -3828,7 +3828,10 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         if (_mons_abjured(mons, monsterNearby))
             return;
 
-        summon_type = random_choose_weighted(
+        if (mons_genus(mons->type) == MONS_HOUND)
+            summon_type = MONS_WOLF;
+        else
+            summon_type = random_choose_weighted(
                             10, MONS_WOLF,
                              3, MONS_GRIZZLY_BEAR,
                              6, MONS_BLACK_BEAR,

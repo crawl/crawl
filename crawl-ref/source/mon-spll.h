@@ -1846,7 +1846,18 @@
        SPELL_NO_SPELL
       }
     },
-    
+
+    {  MST_LOST_HOUND,
+       {
+       SPELL_CAUSE_FEAR,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL
+       }
+    },
+
     {  MST_TEST_SPAWNER,
       {
        SPELL_SHADOW_CREATURES,
