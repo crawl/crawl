@@ -1950,7 +1950,14 @@ staff of energy
 %%%%
 staff of fire
 
-<staff>
+“The wizard suddenly remembered the words of the god. He remembered that of all
+the creatures that people the earth, Fire was the only one who knew his son to
+be a phantom. This memory, which at first calmed him, ended by tormenting him.
+He feared lest his son should meditate on this abnormal privilege and by some
+means find out he was a mere simulacrum. Not to be a man, to be a projection of
+another man's dreams—what an incomparable humiliation, what madness!”
+    -Jorge Luis Borges, _The Circular Ruins_. 1940.
+    trans. Anthony Bonner, 1962.
 %%%%
 staff of poison
 
