@@ -3234,3 +3234,33 @@ void activate_ballistomycetes(monster* mons, const coord_def & origin,
         env.level_state |= LSTATE_GLOW_MOLD;
     }
 }
+
+void ancient_zyme_sicken(monster* mons)
+{
+    if (is_sanctuary(mons->pos()))
+        return;
+
+    if (!is_sanctuary(you.pos()) && cell_see_cell(you.pos(), mons->pos(), LOS_SOLID_SEE))
+    {
+        if (!you.disease)
+        {
+            mpr("You feel yourself grow ill in the presence of the ancient zyme", MSGCH_WARN);
+            you.sicken(50 + random2(50));
+        }
+        else if (x_chance_in_y(you.time_taken, 60))
+            you.sicken(35 + random2(50));
+
+        if (x_chance_in_y(you.time_taken, 100))
+        {
+            mpr("The zyme's presence inflicts a toll on your body.");
+            you.drain_stat((coinflip() ? STAT_STR : STAT_DEX), 1, mons);
+        }
+
+    }
+    for (radius_iterator ri(mons->pos(), LOS_RADIUS, C_ROUND); ri; ++ri)
+    {
+        monster *m = monster_at(*ri);
+        if (m && cell_see_cell(mons->pos(), *ri, LOS_SOLID_SEE))
+            m->sicken(2 * you.time_taken);
+    }
+}

@@ -3511,6 +3511,10 @@ bool monster::is_unclean(bool check_spells) const
         return true;
     }
 
+    // A floating mass of disease is nearly the definition of unclean
+    if (type == MONS_ANCIENT_ZYME)
+        return true;
+
     // Assume that all unknown gods (GOD_NAMELESS) are not chaotic.
     // Being a worshipper of a chaotic god doesn't yet make you
     // physically/essentially chaotic (so you don't get hurt by silver),
