@@ -2271,6 +2271,18 @@ static monsterentry mondata[] = {
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_SMALL
 },
 
+{
+    MONS_ANCIENT_ZYME, 'x', GREEN, "ancient zyme",
+    M_SEE_INVIS,
+    MR_RES_POISON,
+    0, 8, MONS_ANCIENT_ZYME, MONS_ANCIENT_ZYME, MH_NONLIVING, 1,
+    { {AT_HIT, AF_DRAIN_STR, 16}, {AT_HIT, AF_DRAIN_DEX, 16}, AT_NO_ATK, AT_NO_ATK },
+    { 8, 4, 5, 0 },
+    6, 6, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
+    I_ANIMAL, HT_LAND, FL_LEVITATE, 10, DEFAULT_ENERGY,
+    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_MEDIUM
+},
+
 // flying insects ('y')
 {
     MONS_YELLOW_WASP, 'y', YELLOW, "yellow wasp",

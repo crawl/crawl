@@ -25,4 +25,6 @@ bool valid_kraken_connection(const monster* mons);
 void move_child_tentacles(monster * kraken);
 void move_demon_tentacle(monster * tentacle);
 
+void ancient_zyme_sicken(monster* mons);
+
 #endif

@@ -545,6 +545,10 @@ ancient lich
 A lich who, having existed for countless centuries, has grown almost
 unimaginably powerful through the study of dark magic.
 %%%%
+ancient zyme
+
+A nexus of sentient cancer and disease, born aloft perhaps by malice alone. Its nature inflicts withering illness on all living beings in its presence.
+%%%%
 angel
 
 A divine warrior of the Shining One, it is a towering winged figure of

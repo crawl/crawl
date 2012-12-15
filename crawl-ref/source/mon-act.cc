@@ -2191,6 +2191,9 @@ void handle_monster_move(monster* mons)
 
     mons->handle_constriction();
 
+    if (mons->type == MONS_ANCIENT_ZYME)
+        ancient_zyme_sicken(mons);
+
     if (mons->type != MONS_NO_MONSTER && mons->hit_points < 1)
         monster_die(mons, KILL_MISC, NON_MONSTER);
 }
