@@ -3572,15 +3572,15 @@ static bool _monster_move(monster* mons)
             && good_move[mmov.x + 1][mmov.y + 1] == true)
         {
             const coord_def target(mons->pos() + mmov);
-            if (mons->type == MONS_TILLING_WORM && player_in_branch(BRANCH_ABYSS))
+            if (mons->type == MONS_TILLING_WORM
+                && player_in_branch(BRANCH_ABYSS)
+                && mons->get_foe())
             {
-                grd(mons->pos()) = grd(target);
-                env.level_map_mask(mons->pos()) |= MMT_NUKED;
-                set_terrain_changed(mons->pos());
+                coord_def foe_pos = mons->get_foe()->pos(); // faux pas
                 for (adjacent_iterator ai(mons->pos()); ai; ++ai)
                 {
                     if (grd(*ai) != DNGN_FLOOR
-                        && !random2(grid_distance(*ai, you.pos())))
+                        && !random2(grid_distance(*ai, foe_pos)))
                     {
                         cloud_type cloud = CLOUD_TLOC_ENERGY;
                         dungeon_feature_type adjacent_feat = grd(*ai);
