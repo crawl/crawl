@@ -1646,7 +1646,7 @@ static void _confused_move_dir(monster *mons)
         }
 }
 
-int _tentacle_move_speed(monster_type type)
+static int _tentacle_move_speed(monster_type type)
 {
     if (type == MONS_KRAKEN)
         return 10;
