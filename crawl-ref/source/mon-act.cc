@@ -3571,6 +3571,8 @@ static bool _monster_move(monster* mons)
             && good_move[mmov.x + 1][mmov.y + 1] == true)
         {
             const coord_def target(mons->pos() + mmov);
+            nuke_wall(target);
+
             if (flattens_trees)
             {
                 // Flattening trees has a movement cost to the monster
