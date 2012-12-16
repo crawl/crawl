@@ -2591,7 +2591,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_BORING_BEETLE, 'B', BROWN, "boring beetle",
-    M_NO_SKELETON,
+    M_NO_SKELETON | M_BURROWS,
     MR_VUL_POISON,
     1300, 10, MONS_GOLIATH_BEETLE, MONS_BORING_BEETLE, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 35}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
