@@ -155,7 +155,7 @@ public:
     const CrawlHashTable& get_table()  const;
     const CrawlVector&    get_vector() const;
     const item_def&       get_item()   const;
-    const monster&       get_monster() const;
+    const monster&        get_monster() const;
     const dlua_chunk&     get_lua() const;
 
 public:

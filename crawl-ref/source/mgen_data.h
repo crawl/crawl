@@ -27,7 +27,7 @@ struct mgen_data
 
     // Who summoned this monster?  Important to know for death accounting
     // and the summon cap, if and when it goes in.  NULL is no summoner.
-    actor*          summoner;
+    const actor*    summoner;
 
     // For summoned monsters, this is a measure of how long the summon will
     // hang around, on a scale of 1-6, 6 being longest. Use 0 for monsters
@@ -118,7 +118,7 @@ struct mgen_data
 
     mgen_data(monster_type mt = RANDOM_MONSTER,
               beh_type beh = BEH_HOSTILE,
-              actor* sner = 0,
+              const actor* sner = 0,
               int abj = 0,
               int st = 0,
               const coord_def &p = coord_def(-1, -1),

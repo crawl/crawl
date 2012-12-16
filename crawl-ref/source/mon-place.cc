@@ -1731,16 +1731,16 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
             mons_add_blame(mon, blame_prefix + "the player character");
         else
         {
-            monster* sum = mg.summoner->as_monster();
+            const monster* sum = mg.summoner->as_monster();
             mons_add_blame(mon, (blame_prefix
                                  + sum->full_name(DESC_A, true)));
             if (sum->props.exists("blame"))
             {
-                CrawlVector& oldblame = sum->props["blame"].get_vector();
-                for (CrawlVector::iterator i = oldblame.begin();
+                const CrawlVector& oldblame = sum->props["blame"].get_vector();
+                for (CrawlVector::const_iterator i = oldblame.begin();
                      i != oldblame.end(); ++i)
                 {
-                    mons_add_blame(mon, *i);
+                    mons_add_blame(mon, i->get_string());
                 }
             }
         }
