@@ -28,48 +28,6 @@ enum tag_type   // used during save/load process to identify data blocks
     TAG_SKIP
 };
 
-struct enum_info
-{
-    void (*collect)(vector<pair<int,string> >& prs);
-    int replacement;
-
-    struct enum_val
-    {
-        int value;
-        const char *name;
-    };
-
-    const enum_val *historical;
-    tag_minor_version non_historical_first;
-    char historic_bytes;
-};
-
-struct enum_write_state
-{
-    set<int> used;
-    map<int, string> names;
-    char store_type;
-
-    enum_write_state() : used(), names(), store_type(0) {}
-};
-
-struct enum_read_state
-{
-    map<int, int> mapping;
-    map<string, int> names;
-    char store_type;
-
-    enum_read_state() : mapping(), names(), store_type(0) {}
-};
-
-template<typename enm> struct enum_details;
-
-// TO ADD A NEW ENUM UNDER THE UMBRELLA OF marshallEnum:
-// * Create an enum_info instance
-// * Instanciate the enum_details template
-// * Change existing serialization to use marshallEnum
-// * Bump minor version
-
 /* ***********************************************************************
  * writer API
  * *********************************************************************** */
@@ -114,9 +72,6 @@ private:
     vector<unsigned char>* _pbuf;
 
     bool failed;
-
-    map<const enum_info*, enum_write_state> used_enums;
-    friend void marshallEnumVal(writer&, const enum_info*, int);
 };
 
 void marshallByte    (writer &, int8_t);
@@ -133,15 +88,6 @@ void marshallMonster (writer &, const monster&);
 void marshallMonsterInfo (writer &, const monster_info &);
 void marshallMapCell (writer &, const map_cell &);
 void marshall_level_id(writer& th, const level_id& id);
-
-void marshallEnumVal (writer &, const enum_info *, int);
-
-template<typename enm>
-static inline void marshallEnum(writer& wr, enm value)
-{
-    marshallEnumVal(wr, &enum_details<enm>::desc, static_cast<int>(value));
-}
-
 void marshallUnsigned(writer& th, uint64_t v);
 void marshallSigned(writer& th, int64_t v);
 
@@ -183,9 +129,6 @@ private:
     const vector<unsigned char>* _pbuf;
     unsigned int _read_offset;
     int _minorVersion;
-
-    map<const enum_info*, enum_read_state> seen_enums;
-    friend int unmarshallEnumVal(reader &, const enum_info *);
 };
 
 class short_read_exception : exception {};
@@ -204,14 +147,6 @@ void        unmarshallMonster (reader &, monster& item);
 void        unmarshallMonsterInfo (reader &, monster_info &mi);
 void        unmarshallMapCell (reader &, map_cell& cell);
 level_id    unmarshall_level_id(reader& th);
-
-int         unmarshallEnumVal (reader &, const enum_info *);
-
-template<typename enm>
-static inline enm unmarshallEnum(writer& wr)
-{
-    return static_cast<enm>(unmarshallEnumVal(wr, &enum_details<enm>::desc));
-}
 
 uint64_t unmarshallUnsigned(reader& th);
 template<typename T>
