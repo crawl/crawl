@@ -35,18 +35,16 @@ enum tag_type   // used during save/load process to identify data blocks
 class writer
 {
 public:
-    writer(const string &filename, FILE* output, bool ignore_errors = false)
-        : _filename(filename), _file(output), _chunk(0),
-          _ignore_errors(ignore_errors), _pbuf(0), failed(false)
+    writer(const string &filename, FILE* output)
+        : _filename(filename), _file(output), _chunk(0), _pbuf(0)
     {
         ASSERT(output);
     }
     writer(vector<unsigned char>* poutput)
-        : _filename(), _file(0), _chunk(0), _ignore_errors(false),
-          _pbuf(poutput), failed(false) { ASSERT(poutput); }
+        : _filename(), _file(0), _chunk(0), _pbuf(poutput)
+    { ASSERT(poutput); }
     writer(package *save, const string &chunkname)
-        : _filename(), _file(0), _chunk(0), _ignore_errors(false),
-          failed(false)
+        : _filename(), _file(0), _chunk(0)
     {
         ASSERT(save);
         _chunk = save->writer(chunkname);
@@ -58,8 +56,6 @@ public:
     void write(const void *data, size_t size);
     long tell();
 
-    bool succeeded() const { return !failed; }
-
 private:
     void check_ok(bool ok);
 
@@ -67,11 +63,8 @@ private:
     string _filename;
     FILE* _file;
     chunk_writer *_chunk;
-    bool _ignore_errors;
 
     vector<unsigned char>* _pbuf;
-
-    bool failed;
 };
 
 void marshallByte    (writer &, int8_t);
