@@ -3567,44 +3567,10 @@ static bool _monster_move(monster* mons)
 
         if ((((feat == DNGN_ROCK_WALL || feat == DNGN_CLEAR_ROCK_WALL)
               && burrows)
-             || (flattens_trees && feat_is_tree(feat))
-             || (!feat_is_permarock(feat) && mons->type == MONS_TILLING_WORM))
+             || (flattens_trees && feat_is_tree(feat)))
             && good_move[mmov.x + 1][mmov.y + 1] == true)
         {
             const coord_def target(mons->pos() + mmov);
-            if (mons->type == MONS_TILLING_WORM
-                && player_in_branch(BRANCH_ABYSS)
-                && mons->get_foe())
-            {
-                coord_def foe_pos = mons->get_foe()->pos(); // faux pas
-                for (adjacent_iterator ai(mons->pos()); ai; ++ai)
-                {
-                    if (grd(*ai) != DNGN_FLOOR
-                        && !random2(grid_distance(*ai, foe_pos)))
-                    {
-                        cloud_type cloud = CLOUD_TLOC_ENERGY;
-                        dungeon_feature_type adjacent_feat = grd(*ai);
-                        switch (adjacent_feat)
-                        {
-                            case DNGN_LAVA:
-                                cloud = CLOUD_FIRE;
-                                break;
-                            case DNGN_SHALLOW_WATER:
-                            case DNGN_DEEP_WATER:
-                                cloud = coinflip() ? CLOUD_STEAM : CLOUD_COLD;
-                                break;
-                            default:
-                                break;
-                        }
-                        if (one_chance_in(25))
-                            cloud = CLOUD_CHAOS;
-                        nuke_wall(*ai);
-                        big_cloud(cloud, mons, *ai, 1 + random2(2), 3, 3);
-                    }
-                }
-            }
-            nuke_wall(target);
-
             if (flattens_trees)
             {
                 // Flattening trees has a movement cost to the monster
@@ -3621,8 +3587,7 @@ static bool _monster_move(monster* mons)
                 else
                     noisy(25, target, "You hear a crashing sound.");
             }
-            else if (mons->type != MONS_TILLING_WORM
-                    && player_can_hear(mons->pos() + mmov))
+            else if (player_can_hear(mons->pos() + mmov))
             {
                 // Message depends on whether caused by boring beetle or
                 // acid (Dissolution).

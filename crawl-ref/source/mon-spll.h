@@ -1825,17 +1825,6 @@
       }
     },
 
-    {  MST_WARWICK,
-      {
-       SPELL_BLINK_OTHER_CLOSE,
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
-       SPELL_BERSERKER_RAGE
-      }
-    },
-
     {  MST_THRASHING_HORROR,
       {
        SPELL_FRENZY,
@@ -1845,17 +1834,6 @@
        SPELL_NO_SPELL,
        SPELL_NO_SPELL
       }
-    },
-
-    {  MST_LOST_HOUND,
-       {
-       SPELL_CAUSE_FEAR,
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL
-       }
     },
 
     {  MST_TEST_SPAWNER,

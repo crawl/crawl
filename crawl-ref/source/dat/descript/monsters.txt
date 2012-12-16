@@ -468,30 +468,6 @@ remaining eye is not very good, and he has mistaken you for one.
     end
 }}
 %%%%
-Warwick von Hugford
-
-An enormous bear with a gold monocole and a polka dot bow tie.
-His {{
-    return crawl.random_element({
-        ["paws"] = 10, ["eyes"] = 5, ["claws"] = 5,
-        ["teeth"] = 2})
-}} glow with {{
-    return crawl.article_a(crawl.random_element(({
-        ["yellow"] = 10, ["green"] = 10, ["red"] = 10,
-        ["blue"] = 10, ["orange"] = 6, ["cyan"] = 6,
-        ["magenta"] = 5, ["hideous"] = 5, ["ultraviolet"] = 3,
-        ["infrared"] = 3, ["ultraviolent"] = 1,
-        ["radioactive"] = 1, ["insane"] = 1})))
-}} light.
-
-{{
-    if you.god() == "Xom" then
-        return "Xom gets out the popcorn."
-    else
-        return "Xom thinks this is hilarious."
-    end 
-}}  
-%%%% 
 Wiglaf
 
 A fat dwarf wearing a stupid-looking hat. {{
@@ -1723,17 +1699,6 @@ lindwurm
 A small serpentine dragon with a pair of strong forelimbs. Its thick scales
 give off an eerie green glow.
 %%%%
-lost hound
-
-A misshapen dog {{
-    if you.can_smell() then
-        return "that stinks of"
-    else
-        return "with"
-    end
-}} burned hair. Its empty eye sockets crackle with a horrifying light.
-
-%%%%
 lurking horror
 
 A formless mass of energy. It seems to stop moving when you look at it.
@@ -2573,10 +2538,6 @@ able to inflict torturous agony on those foolish enough to gaze upon it.
 training dummy
 
 A mannequin used for battle practice.
-%%%%
-tilling worm
-
-A bulbous worm which displaces the world as it moves.
 %%%%
 trapdoor spider
 

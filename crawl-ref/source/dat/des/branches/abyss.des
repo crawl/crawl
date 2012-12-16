@@ -1244,7 +1244,7 @@ ENDMAP
 
 NAME:  bh_abyss_bestiary
 TAGS:  abyss allow_dup no_rtele_into
-MONS:  tilling worm
+MONS:  thrashing horror
 MONS:  wretched star
 MONS:  lurking horror
 MONS:  tentacled starspawn
