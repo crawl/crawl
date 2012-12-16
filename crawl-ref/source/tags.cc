@@ -87,7 +87,7 @@ extern abyss_state abyssal_state;
 
 reader::reader(const string &_read_filename, int minorVersion)
     : _filename(_read_filename), _chunk(0), _pbuf(NULL), _read_offset(0),
-      _minorVersion(minorVersion), seen_enums()
+      _minorVersion(minorVersion)
 {
     _file       = fopen_u(_filename.c_str(), "rb");
     opened_file = !!_file;
@@ -837,98 +837,6 @@ string make_date_string(time_t in_date)
               date->tm_year + 1900, date->tm_mon, date->tm_mday,
               date->tm_hour, date->tm_min, date->tm_sec,
               ((date->tm_isdst > 0) ? "D" : "S"));
-}
-
-void marshallEnumVal(writer& wr, const enum_info *ei, int val)
-{
-    enum_write_state& ews = wr.used_enums[ei];
-
-    if (!ews.store_type)
-    {
-        vector<pair<int, string> > values;
-
-        ei->collect(values);
-
-        for (unsigned i = 0; i < values.size(); ++i)
-            ews.names.insert(values[i]);
-
-        ews.store_type = 1;
-
-        if (ews.names.begin() != ews.names.end()
-            && (ews.names.rbegin()->first >= 128
-                || ews.names.begin()->first <= -1))
-        {
-            ews.store_type = 2;
-        }
-
-        marshallByte(wr, ews.store_type);
-    }
-
-    if (ews.store_type == 2)
-        marshallShort(wr, val);
-    else
-        marshallByte(wr, val);
-
-    if (ews.used.find(val) == ews.used.end())
-    {
-        ASSERT(ews.names.find(val) != ews.names.end());
-        marshallString(wr, ews.names[val]);
-
-        ews.used.insert(val);
-    }
-}
-
-int unmarshallEnumVal(reader& rd, const enum_info *ei)
-{
-    enum_read_state& ers = rd.seen_enums[ei];
-
-    if (!ers.store_type)
-    {
-        vector<pair<int, string> > values;
-
-        ei->collect(values);
-
-        for (unsigned i = 0; i < values.size(); ++i)
-            ers.names.insert(make_pair(values[i].second, values[i].first));
-
-        if (rd.getMinorVersion() < ei->non_historical_first)
-        {
-            ers.store_type = ei->historic_bytes;
-
-            const enum_info::enum_val *evi = ei->historical;
-
-            for (; evi->name; ++evi)
-            {
-                if (ers.names.find(string(evi->name)) != ers.names.end())
-                    ers.mapping[evi->value] = ers.names[string(evi->name)];
-                else
-                    ers.mapping[evi->value] = ei->replacement;
-            }
-        }
-        else
-            ers.store_type = unmarshallByte(rd);
-    }
-
-    int raw;
-
-    if (ers.store_type == 2)
-        raw = unmarshallShort(rd);
-    else
-        raw = unmarshallByte(rd);
-
-    if (ers.mapping.find(raw) != ers.mapping.end())
-        return ers.mapping[raw];
-
-    ASSERT(rd.getMinorVersion() >= ei->non_historical_first);
-
-    string name = unmarshallString(rd);
-
-    if (ers.names.find(name) != ers.names.end())
-        ers.mapping[raw] = ers.names[name];
-    else
-        ers.mapping[raw] = ei->replacement;
-
-    return ers.mapping[raw];
 }
 
 static void marshallStringVector(writer &th, const vector<string> &vec)
