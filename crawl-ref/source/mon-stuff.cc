@@ -2370,11 +2370,6 @@ int monster_die(monster* mons, killer_type killer,
             _mummy_curse(mons, killer, killer_index);
     }
     
-    if (mons->type == MONS_WARWICK)
-    {
-       cast_summon_butterflies(100, GOD_XOM);  
-    }
-
     if (mons->mons_species() == MONS_BALLISTOMYCETE)
     {
         activate_ballistomycetes(mons, mons->pos(),

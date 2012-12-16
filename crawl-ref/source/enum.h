@@ -2520,12 +2520,6 @@ enum monster_type                      // menv[].type
     MONS_STARSPAWN_TENTACLE,
     MONS_STARSPAWN_TENTACLE_SEGMENT,
 
-    MONS_WARWICK,
-
-    MONS_TILLING_WORM,
-
-    MONS_LOST_HOUND,
-
     NUM_MONSTERS,               // used for polymorph
 
     // MONS_NO_MONSTER can get put in savefiles, so it shouldn't change
