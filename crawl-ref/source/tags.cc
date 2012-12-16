@@ -210,19 +210,12 @@ void reader::fail_if_not_eof(const string &name)
 
 void writer::check_ok(bool ok)
 {
-    if (!ok && !failed)
-    {
-        failed = true;
-        if (!_ignore_errors)
-            end(1, true, "Error writing to %s", _filename.c_str());
-    }
+    if (!ok)
+        end(1, true, "Error writing to %s", _filename.c_str());
 }
 
 void writer::writeByte(unsigned char ch)
 {
-    if (failed)
-        return;
-
     if (_chunk)
         _chunk->write(&ch, 1);
     else if (_file)
@@ -233,9 +226,6 @@ void writer::writeByte(unsigned char ch)
 
 void writer::write(const void *data, size_t size)
 {
-    if (failed)
-        return;
-
     if (_chunk)
         _chunk->write(data, size);
     else if (_file)
