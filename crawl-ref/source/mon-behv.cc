@@ -567,17 +567,17 @@ void handle_behaviour(monster* mon)
             switch (mons_intel(mon))
             {
             case I_HIGH:
-                mon->foe_memory = 100 + random2(200);
+                mon->foe_memory = random_range(700, 1300);
                 break;
             case I_NORMAL:
-                mon->foe_memory = 50 + random2(100);
+                mon->foe_memory = random_range(300, 700);
                 break;
             case I_ANIMAL:
             case I_INSECT:
-                mon->foe_memory = 25 + random2(75);
+                mon->foe_memory = random_range(250, 550);
                 break;
             case I_PLANT:
-                mon->foe_memory = 10 + random2(50);
+                mon->foe_memory = random_range(100, 300);
                 break;
             }
 
