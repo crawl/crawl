@@ -1721,7 +1721,7 @@ void handle_monster_move(monster* mons)
     // Memory is decremented here for a reason -- we only want it
     // decrementing once per monster "move".
     if (mons->foe_memory > 0 && !you.penance[GOD_ASHENZARI])
-        mons->foe_memory--;
+        mons->foe_memory -= you.time_taken;
 
     // Otherwise there are potential problems with summonings.
     if (mons->type == MONS_GLOWING_SHAPESHIFTER)
