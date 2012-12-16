@@ -131,9 +131,9 @@ ENDMAP
 
 # Not Minivault 9 (by Mu.)
 NAME:   not_door_vault_mu
-TAGS:   allow_dup vaults_room_10_spin_empty
+TAGS:   allow_dup
 WEIGHT: 1
-DEPTH:  D:15-27, Elf, Vaults
+DEPTH:  D:15-27, Elf
 MONS:   butterfly
 MARKER: X = lua: props_marker { connected_exclude="true" }
 MARKER: Y = lua: props_marker { connected_exclude="true", \
@@ -526,9 +526,9 @@ ENDMAP
 
 # Not Minivault 9 (or, elephant zoo)
 NAME:   not_door_vault_due
-TAGS:   allow_dup vaults_room_10_spin_dangerous
+TAGS:   allow_dup
 WEIGHT: 1
-DEPTH:  D:20-27, Elf:3-5, Vaults:3-
+DEPTH:  D:20-27, Elf:3-5
 MONS:   elephant, dire elephant, hellephant
 MARKER: X = lua: props_marker { connected_exclude="true" }
 MARKER: Y = lua: props_marker { connected_exclude="true", \
@@ -2026,8 +2026,7 @@ ENDMAP
 ##### Demonic crawlers (s) and beetles.
 NAME:  einodemon_crawler_minivault
 TAGS:  patrolling mini_float
-TAGS:  vaults_room_10_spin_encounter
-DEPTH: D:13-27, Vaults, Elf, Spider
+DEPTH: D:13-27, Elf, Spider
 MONS:  demonic crawler
 MONS:  goliath beetle / boulder beetle w:8 / demonic crawler w:2 / \
        nothing
@@ -2923,8 +2922,7 @@ ENDMAP
 
 NAME:    hangedman_jelly_panic
 TAGS:    no_monster_gen no_item_gen
-TAGS:    vaults_room_15_facing_encounter
-DEPTH:   D:4-, Vaults
+DEPTH:   D:4-
 MONS:    ooze
 KMONS:   2J = jelly
 KMONS:   3 = brown ooze
@@ -3149,19 +3147,30 @@ MAP
 .......   .......
 ENDMAP
 
-NAME:  minmay_ominous_box
+NAME:  minmay_st_funbox
 TAGS:  extra luniq_mini
-TAGS:  vaults_room_7_facing_dangerous
-DEPTH: D:4-, Vaults
-: if you.branch() ~= "Vaults" then
-SUBST: 8 = 8.......
+DEPTH: D:9-
+KMONS: 0 = 0
+KMONS: 9 = 9
+KMONS: 8 = 8
+: if you.absdepth() < 11 then
+SUBST: 9 = 0, 8 = 9
+KITEM: 09 = star_item
+KITEM: 8 = superb_item
+: elseif you.absdepth() < 21 then
+SUBST: 0 = 90
+KITEM: 098 = superb_item
+: else
+SUBST: 9 = 98, 0 = 98
+KITEM: 09 = superb_item
+KITEM: 8 = any acquire
 : end
 MAP
 .......
 .vvvvv.
-.v.*.v.
-.v.8.v.
-.v...v.
+.v090v.
+.v989v.
+.v090v.
 .vv=vv.
 ..G.G..
   ...
@@ -4287,26 +4296,6 @@ DEPTH:   D:10-26
 MONS:    laboratory rat
 MAP
 ccccccc+cc
-c........c
-c........c
-c..1.....c
-c........c
-cc+ccccccc
-c***c2222c
-c|**+2222c
-c||*c2222c
-cccccccccc
-ENDMAP
-
-NAME:    laboratory_2_vaults
-TAGS:    uniq_laboratory_2 vaults_room_10_facing_encounter
-MONS:    wizard col:lightred name:mad n_adj n_noc spells:polymorph_other;\
-         paralyse;blink;bolt_of_fire;bolt_of_fire;teleport_self
-DEPTH:   Vaults
-MONS:    laboratory rat
-MAP
-   ....
-ccc++++ccc
 c........c
 c........c
 c..1.....c
