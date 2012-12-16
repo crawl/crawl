@@ -126,12 +126,6 @@ void trap_def::prepare_ammo(int charges)
     case TRAP_SPEAR:
         ammo_qty = 2 + random2avg(6, 3);
         break;
-    case TRAP_ALARM:
-        ammo_qty = 2 + random2(4);
-        // Zotdef: alarm traps have practically unlimited ammo
-        if (crawl_state.game_is_zotdef())
-            ammo_qty = 3276; // *10, stored as short
-        break;
     case TRAP_GOLUBRIA:
         // really, turns until it vanishes
         ammo_qty = 30 + random2(20);
@@ -634,22 +628,14 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         break;
 
     case TRAP_ALARM:
-        if (!ammo_qty--)
-        {
-            if (you_trigger)
-                mpr("You trigger an alarm trap, but it seems broken.");
-            else if (in_sight && you_know)
-                mpr("The alarm trap gives no sound.");
+        // In ZotDef, alarm traps don't go away after use.
+        if (!crawl_state.game_is_zotdef())
             trap_destroyed = true;
-        }
-        else if (silenced(pos))
+
+        if (silenced(pos))
         {
             if (you_know && in_sight)
-                mpr("The alarm trap is silent.");
-
-            // If it's silent, you don't know about it.
-            if (!you_know)
-                hide();
+                mpr("The alarm trap vibrates slightly, failing to make a sound.");
         }
         else
         {
