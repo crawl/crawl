@@ -338,6 +338,7 @@ public:
     int res_constrict() const;
     int res_magic() const;
     bool no_tele(bool calc_unid = true, bool permit_id = true) const;
+    bool res_corr(bool calc_unid = true, bool items = true) const;
 
     flight_type flight_mode() const;
     bool can_cling_to_walls() const;

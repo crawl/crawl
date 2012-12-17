@@ -3925,9 +3925,17 @@ int monster::res_constrict() const
     return 0;
 }
 
+bool monster::res_corr(bool calc_unid, bool items) const
+{
+    if (get_mons_resist(this, MR_RES_ACID) > 0)
+        return true;
+
+    return actor::res_corr(calc_unid, items);
+}
+
 int monster::res_acid() const
 {
-    return get_mons_resist(this, MR_RES_ACID);
+    return res_corr() ? 1 : 0;
 }
 
 int monster::res_magic() const
