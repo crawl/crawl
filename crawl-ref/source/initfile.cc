@@ -495,7 +495,13 @@ void game_options::str_to_enemy_hp_colour(const string &colours, bool prepend)
     for (int i = 0, csize = colour_list.size(); i < csize; i++)
     {
         const int col = str_to_colour(colour_list[i]);
-        if (prepend)
+        if (col < 0)
+        {
+            Options.report_error("Bad enemy_hp_colour: %s\n",
+                                 colour_list[i].c_str());
+            return;
+        }
+        else if (prepend)
             enemy_hp_colour.insert(enemy_hp_colour.begin(), col);
         else
             enemy_hp_colour.push_back(col);
@@ -2916,13 +2922,22 @@ void game_options::read_option_line(const string &str, bool runscript)
             if (insplit.size() == 2)
                 hp_percent = atoi(insplit[0].c_str());
 
-            int scolour = str_to_colour(insplit[(insplit.size() == 1) ? 0 : 1]);
-            pair<int, int> entry(hp_percent, scolour);
-            // We do not treat prepend differently since we will be sorting.
-            if (minus_equal)
-                remove_matching(hp_colour, entry);
+            const string colstr = insplit[(insplit.size() == 1) ? 0 : 1];
+            const int scolour = str_to_colour(colstr);
+            if (scolour > 0)
+            {
+                pair<int, int> entry(hp_percent, scolour);
+                // We do not treat prepend differently since we will be sorting.
+                if (minus_equal)
+                    remove_matching(hp_colour, entry);
+                else
+                    hp_colour.push_back(entry);
+            }
             else
-                hp_colour.push_back(entry);
+            {
+                report_error("Bad hp_colour: %s", colstr.c_str());
+                break;
+            }
         }
         stable_sort(hp_colour.begin(), hp_colour.end(), _first_greater);
     }
@@ -2947,13 +2962,22 @@ void game_options::read_option_line(const string &str, bool runscript)
             if (insplit.size() == 2)
                 mp_percent = atoi(insplit[0].c_str());
 
-            int scolour = str_to_colour(insplit[(insplit.size() == 1) ? 0 : 1]);
-            pair<int, int> entry(mp_percent, scolour);
-            // We do not treat prepend differently since we will be sorting.
-            if (minus_equal)
-                remove_matching(mp_colour, entry);
+            const string colstr = insplit[(insplit.size() == 1) ? 0 : 1];
+            const int scolour = str_to_colour(colstr);
+            if (scolour > 0)
+            {
+                pair<int, int> entry(mp_percent, scolour);
+                // We do not treat prepend differently since we will be sorting.
+                if (minus_equal)
+                    remove_matching(mp_colour, entry);
+                else
+                    mp_colour.push_back(entry);
+            }
             else
-                mp_colour.push_back(entry);
+            {
+                report_error("Bad mp_colour: %s", colstr.c_str());
+                break;
+            }
         }
         stable_sort(mp_colour.begin(), mp_colour.end(), _first_greater);
     }
@@ -2978,13 +3002,22 @@ void game_options::read_option_line(const string &str, bool runscript)
             if (insplit.size() == 2)
                 stat_limit = atoi(insplit[0].c_str());
 
-            int scolour = str_to_colour(insplit[(insplit.size() == 1) ? 0 : 1]);
-            pair<int, int> entry(stat_limit, scolour);
-            // We do not treat prepend differently since we will be sorting.
-            if (minus_equal)
-                remove_matching(stat_colour, entry);
+            const string colstr = insplit[(insplit.size() == 1) ? 0 : 1];
+            const int scolour = str_to_colour(colstr);
+            if (scolour > 0)
+            {
+                pair<int, int> entry(stat_limit, scolour);
+                // We do not treat prepend differently since we will be sorting.
+                if (minus_equal)
+                    remove_matching(stat_colour, entry);
+                else
+                    stat_colour.push_back(entry);
+            }
             else
-                stat_colour.push_back(entry);
+            {
+                report_error("Bad stat_colour: %s", colstr.c_str());
+                break;
+            }
         }
         stable_sort(stat_colour.begin(), stat_colour.end(), _first_less);
     }
