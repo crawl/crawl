@@ -3970,7 +3970,7 @@ static const char *divine_title[NUM_GODS][8] =
     {"Scum",               "Jelly",                 "Squelcher",                "Dissolver",
      "Putrid Slime",       "Consuming %s",          "Archjelly",                "Royal Jelly"},
 
-    // Fedhas Madash -- nature theme.  Titles could use some work
+    // Fedhas Madash -- nature theme.
     {"Walking Fertiliser", "Green %s",              "Inciter",                  "Photosynthesist",
      "Cultivator",         "Green Death",           "Nimbus",                   "Force of Nature"},
 
