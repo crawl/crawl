@@ -1594,7 +1594,7 @@ int monster_die(monster* mons, killer_type killer,
             }
         }
         else if (!you.suppressed()
-                 && wearing_amulet(AMU_RAGE)
+                 && you.wearing(EQ_AMULET, AMU_RAGE)
                  && one_chance_in(30))
         {
             const int bonus = (2 + random2(4)) / 2;

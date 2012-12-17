@@ -317,7 +317,7 @@ int check_your_resists(int hurted, beam_type flavour, string source,
 
             if (one_chance_in(3)
                 // delete_mutation() handles MUT_MUTATION_RESISTANCE but not the amulet
-                && (!player_res_mutation_from_item()
+                && (!you.rmut_from_item()
                     || one_chance_in(10)))
             {
                 // silver stars only, if this ever changes we may want to give
@@ -434,7 +434,7 @@ static void _item_corrode(int slot)
         return;
 
     // Anti-corrosion items protect against 90% of corrosion.
-    if (player_res_corr() && !one_chance_in(10))
+    if (you.res_corr() && !one_chance_in(10))
     {
         dprf("Amulet protects.");
         return;
@@ -587,7 +587,7 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
         {
             // Conservation doesn't help against harpies' devouring food.
             if (flavour != BEAM_DEVOUR_FOOD
-                && player_item_conserve() && !one_chance_in(10))
+                && you.conservation() && !one_chance_in(10))
             {
                 continue;
             }
@@ -1192,7 +1192,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
 
     if (dam != INSTANT_DEATH)
     {
-        if (player_spirit_shield() && death_type != KILLED_BY_POISON)
+        if (you.spirit_shield() && death_type != KILLED_BY_POISON)
         {
             // round off fairly (important for taking 1 damage at a time)
             int mp = div_rand_round(dam * you.magic_points,

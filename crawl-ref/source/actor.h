@@ -105,23 +105,21 @@ public:
 
     virtual brand_type damage_brand(int which_attack = -1) = 0;
     virtual int       damage_type(int which_attack = -1) = 0;
-    virtual item_def *weapon(int which_attack = -1) = 0;
-    // Yay for broken overloading.
+    virtual item_def *weapon(int which_attack = -1) const = 0;
     const item_def *primary_weapon() const
     {
-        return const_cast<actor*>(this)->weapon(0);
+        return weapon(0);
     }
     virtual int has_claws(bool allow_tran = true) const = 0;
     virtual item_def *shield() = 0;
     virtual item_def *slot_item(equipment_type eq,
-                                bool include_melded=false) = 0;
-    // Just a wrapper; not to be overridden
-    const item_def *slot_item(equipment_type eq,
-                              bool include_melded=false) const
-    {
-        return const_cast<actor*>(this)->slot_item(eq, include_melded);
-    }
-    virtual bool has_equipped(equipment_type eq, int sub_type) const;
+                                bool include_melded=false) const = 0;
+    virtual int wearing(equipment_type slot, int sub_type,
+                        bool calc_unid = true) const = 0;
+    virtual int wearing_ego(equipment_type slot, int sub_type,
+                            bool calc_unid = true) const = 0;
+    virtual int scan_artefacts(artefact_prop_type which_property,
+                               bool calc_unid = true) const = 0;
 
             bool can_wield(const item_def* item,
                            bool ignore_curse = false,
@@ -289,7 +287,28 @@ public:
     virtual int res_magic() const = 0;
     virtual int check_res_magic(int power);
     virtual bool no_tele(bool calc_unid = true, bool permit_id = true) const = 0;
-    virtual bool inaccuracy() const = 0;
+    virtual bool inaccuracy() const;
+
+    virtual bool gourmand(bool calc_unid = true, bool items = true) const;
+    virtual bool conservation(bool calc_unid = true, bool items = true) const;
+    virtual bool res_corr(bool calc_unid = true, bool items = true) const;
+    virtual bool notele(bool calc_unid = true, bool items = true) const;
+    virtual bool stasis(bool calc_unid = true, bool items = true) const;
+    virtual bool run(bool calc_unid = true, bool items = true) const;
+    virtual bool angry(bool calc_unid = true, bool items = true) const;
+    virtual bool clarity(bool calc_unid = true, bool items = true) const;
+    virtual bool faith(bool calc_unid = true, bool items = true) const;
+    virtual bool warding(bool calc_unid = true, bool items = true) const;
+    virtual bool archmagi(bool calc_unid = true, bool items = true) const;
+    virtual bool no_cast(bool calc_unid = true, bool items = true) const;
+
+    virtual bool rmut_from_item(bool calc_unid = true) const;
+    virtual bool evokable_berserk(bool calc_unid = true) const;
+    virtual bool evokable_invis(bool calc_unid = true) const;
+
+    // Return an int so we know whether an item is the sole source.
+    virtual int evokable_flight(bool calc_unid = true) const;
+    virtual int spirit_shield(bool calc_unid = true, bool items = true) const;
 
     virtual flight_type flight_mode() const = 0;
     virtual bool is_wall_clinging() const;
@@ -356,7 +375,6 @@ public:
 
     virtual bool wont_attack() const = 0;
     virtual mon_attitude_type temp_attitude() const = 0;
-    virtual int warding() const = 0;
 
     virtual bool has_spell(spell_type spell) const = 0;
 

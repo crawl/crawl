@@ -473,10 +473,7 @@ public:
                              int psize = PSIZE_TORSO) const;
     string shout_verb() const;
 
-    item_def *slot_item(equipment_type eq,
-                        bool include_melded=false);
-    const item_def *slot_item(equipment_type eq,
-                              bool include_melded=false) const;
+    item_def *slot_item(equipment_type eq, bool include_melded=false) const;
 
     map<int,int> last_pickup;
 
@@ -522,7 +519,12 @@ public:
     int       has_tentacles(bool allow_tran = true) const;
     int       has_usable_tentacles(bool allow_tran = true) const;
 
-    item_def *weapon(int which_attack = -1);
+    int wearing(equipment_type slot, int sub_type, bool calc_unid = true) const;
+    int wearing_ego(equipment_type slot, int type, bool calc_unid = true) const;
+    int scan_artefacts(artefact_prop_type which_property,
+                       bool calc_unid = true) const;
+
+    item_def *weapon(int which_attack = -1) const;
     item_def *shield();
 
     bool      can_wield(const item_def &item,
@@ -585,7 +587,6 @@ public:
 
     bool wont_attack() const { return true; };
     mon_attitude_type temp_attitude() const { return ATT_FRIENDLY; };
-    int warding() const;
 
     monster_type mons_species(bool zombie_base = false) const;
 
@@ -617,7 +618,10 @@ public:
     int res_constrict() const { return 0; };
     int res_magic() const;
     bool no_tele(bool calc_unid = true, bool permit_id = true) const;
-    bool inaccuracy() const;
+
+    bool gourmand(bool calc_unid = true, bool items = true) const;
+    bool res_corr(bool calc_unid = true, bool items = true) const;
+    bool clarity(bool calc_unid = true, bool items = true) const;
 
     flight_type flight_mode() const;
     bool cancellable_flight() const;
@@ -778,8 +782,6 @@ static inline bool player_in_branch(int branch)
 { return you.where_are_you == branch; };
 
 bool berserk_check_wielded_weapon(void);
-int player_equip(equipment_type slot, int sub_type, bool calc_unid = true);
-int player_equip_ego_type(int slot, int sub_type, bool calc_unid = true);
 bool player_equip_unrand_effect(int unrand_index);
 bool player_equip_unrand(int unrand_index);
 bool player_can_hit_monster(const monster* mon);
@@ -791,9 +793,6 @@ bool is_effectively_light_armour(const item_def *item);
 bool player_effectively_in_light_armour();
 
 bool player_under_penance(void);
-
-bool wearing_amulet(jewellery_type which_am, bool calc_unid = true,
-                    bool ignore_extrinsic = false);
 
 int burden_change(void);
 
@@ -824,23 +823,9 @@ int player_regen(void);
 int player_res_cold(bool calc_unid = true, bool temp = true,
                     bool items = true);
 int player_res_acid(bool calc_unid = true, bool items = true);
-int player_res_corr(bool calc_unid = true, bool items = true);
 int player_acid_resist_factor();
 
 int player_res_torment(bool calc_unid = true, bool temp = true);
-
-bool player_item_conserve(bool calc_unid = true);
-int player_mental_clarity(bool calc_unid = true, bool items = true);
-int player_spirit_shield(bool calc_unid = true);
-int player_res_mutation_from_item(bool calc_unid = true);
-int player_effect_gourmand();
-int player_effect_stasis(bool calc_unid = true);
-int player_effect_notele(bool calc_unid = true);
-int player_effect_running();
-int player_effect_faith();
-int player_effect_archmagi();
-int player_effect_nocast();
-int player_effect_angry();
 
 int player_likes_chunks(bool permanently = false);
 bool player_likes_water(bool permanently = false);
@@ -879,18 +864,14 @@ int player_spec_poison(void);
 int player_spec_summ(void);
 
 int player_speed(void);
-int player_evokable_flight();
-int player_evokable_invis();
 
 int player_spell_levels(void);
 
 int player_sust_abil(bool calc_unid = true);
-int player_warding(bool calc_unid = true);
 
 int player_teleport(bool calc_unid = true);
 
 bool items_give_ability(const int slot, artefact_prop_type abil);
-int scan_artefacts(artefact_prop_type which_property, bool calc_unid = true);
 
 int slaying_bonus(weapon_property_type which_affected, bool ranged = false);
 

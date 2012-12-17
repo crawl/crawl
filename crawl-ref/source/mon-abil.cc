@@ -835,7 +835,7 @@ static bool _siren_movement_effect(const monster* mons)
 {
     bool do_resist = (you.attribute[ATTR_HELD] || you.check_res_magic(70) > 0
                       || you.cannot_act() || you.asleep()
-                      || player_mental_clarity(true));
+                      || you.clarity());
 
     if (!do_resist)
     {
@@ -2814,7 +2814,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
             if (!already_mesmerised
                 && (you.species == SP_MERFOLK
                     || you.check_res_magic(100) > 0
-                    || player_mental_clarity(true)))
+                    || you.clarity()))
             {
                 if (!did_resist)
                     canned_msg(MSG_YOU_RESIST);

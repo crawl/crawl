@@ -1678,7 +1678,7 @@ static vector<formatted_string> _get_overview_resistances(
     const int rpois = player_res_poison(calc_unid);
     const int relec = player_res_electricity(calc_unid);
     const int rsust = player_sust_abil(calc_unid);
-    const int rmuta = (player_res_mutation_from_item(calc_unid)
+    const int rmuta = (you.rmut_from_item(calc_unid)
                        || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
                        || you.religion == GOD_ZIN && you.piety >= 150);
     const int rrott = you.res_rotting();
@@ -1709,7 +1709,7 @@ static vector<formatted_string> _get_overview_resistances(
     if (you.species != SP_MUMMY
         && you.species != SP_VAMPIRE
         && player_mutation_level(MUT_HERBIVOROUS) < 3
-        && player_effect_gourmand())
+        && you.gourmand())
     {
         pregourmand = "Gourmand  : ";
         postgourmand = _itosym1(1);
@@ -1726,11 +1726,11 @@ static vector<formatted_string> _get_overview_resistances(
 
 
     const int rinvi = you.can_see_invisible(calc_unid);
-    const int rward = player_warding(calc_unid);
-    const int rcons = player_item_conserve(calc_unid);
-    const int rcorr = player_res_corr(calc_unid);
-    const int rclar = player_mental_clarity(calc_unid);
-    const int rspir = player_spirit_shield(calc_unid);
+    const int rward = you.warding(calc_unid);
+    const int rcons = you.conservation(calc_unid);
+    const int rcorr = you.res_corr(calc_unid);
+    const int rclar = you.clarity(calc_unid);
+    const int rspir = you.spirit_shield(calc_unid);
     snprintf(buf, sizeof buf,
              "%sSee Invis. : %s\n"
              "%sWarding    : %s\n"
@@ -1747,8 +1747,8 @@ static vector<formatted_string> _get_overview_resistances(
              _determine_colour_string(rspir, 1), _itosym1(rspir));
     cols.add_formatted(1, buf, false);
 
-    const int stasis = player_effect_stasis(calc_unid);
-    const int notele = player_effect_notele(calc_unid)
+    const int stasis = you.stasis(calc_unid);
+    const int notele = you.notele(calc_unid)
                        || crawl_state.game_is_zotdef()
                           && orb_haloed(you.pos());
     const int rrtel = !!player_teleport(calc_unid);

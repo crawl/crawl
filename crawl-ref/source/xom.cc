@@ -343,7 +343,7 @@ void xom_tick()
         }
     }
 
-    if (player_effect_faith() ? coinflip() : one_chance_in(3))
+    if (you.faith() ? coinflip() : one_chance_in(3))
     {
         const int tension = get_tension(GOD_XOM);
         const int chance = (tension ==  0 ? 1 :

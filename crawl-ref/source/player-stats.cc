@@ -364,10 +364,10 @@ static int _strength_modifier()
         result += 3 * count_worn_ego(SPARM_STRENGTH);
 
         // rings of strength
-        result += player_equip(EQ_RINGS_PLUS, RING_STRENGTH);
+        result += you.wearing(EQ_RINGS_PLUS, RING_STRENGTH);
 
         // randarts of strength
-        result += scan_artefacts(ARTP_STRENGTH);
+        result += you.scan_artefacts(ARTP_STRENGTH);
     }
 
     // mutations
@@ -409,10 +409,10 @@ static int _int_modifier()
         result += 3 * count_worn_ego(SPARM_INTELLIGENCE);
 
         // rings of intelligence
-        result += player_equip(EQ_RINGS_PLUS, RING_INTELLIGENCE);
+        result += you.wearing(EQ_RINGS_PLUS, RING_INTELLIGENCE);
 
         // randarts of intelligence
-        result += scan_artefacts(ARTP_INTELLIGENCE);
+        result += you.scan_artefacts(ARTP_INTELLIGENCE);
     }
 
     // mutations
@@ -440,10 +440,10 @@ static int _dex_modifier()
         result += 3 * count_worn_ego(SPARM_DEXTERITY);
 
         // rings of dexterity
-        result += player_equip(EQ_RINGS_PLUS, RING_DEXTERITY);
+        result += you.wearing(EQ_RINGS_PLUS, RING_DEXTERITY);
 
         // randarts of dexterity
-        result += scan_artefacts(ARTP_DEXTERITY);
+        result += you.scan_artefacts(ARTP_DEXTERITY);
     }
 
     // mutations

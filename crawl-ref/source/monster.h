@@ -223,9 +223,14 @@ public:
     int         damage_type(int which_attack = -1);
     int         has_claws(bool allow_tran = true) const;
 
-    item_def *slot_item(equipment_type eq, bool include_melded=false);
+    int wearing(equipment_type slot, int type, bool calc_unid = true) const;
+    int wearing_ego(equipment_type slot, int type, bool calc_unid = true) const;
+    int scan_artefacts(artefact_prop_type which_property,
+                       bool calc_unid = true) const;
+
+    item_def *slot_item(equipment_type eq, bool include_melded=false) const;
     item_def *mslot_item(mon_inv_type sl) const;
-    item_def *weapon(int which_attack = -1);
+    item_def *weapon(int which_attack = -1) const;
     item_def *launcher();
     item_def *missiles();
     item_def *shield();
@@ -333,7 +338,6 @@ public:
     int res_constrict() const;
     int res_magic() const;
     bool no_tele(bool calc_unid = true, bool permit_id = true) const;
-    bool inaccuracy() const;
 
     flight_type flight_mode() const;
     bool can_cling_to_walls() const;
@@ -376,7 +380,6 @@ public:
     bool wont_attack() const;
     bool pacified() const;
     bool withdrawn() const {return has_ench(ENCH_WITHDRAWN);};
-    int warding() const;
 
     bool rolling() const { return has_ench(ENCH_ROLLING); } ;
     bool has_spells() const;
@@ -488,6 +491,9 @@ private:
     void unequip_jewellery(item_def &item, int near);
     int armour_bonus(const item_def &item);
 
+    void id_if_worn(mon_inv_type mslot, object_class_type base_type,
+                    int sub_type) const;
+
     bool decay_enchantment(const mon_enchant &me, bool decay_degree = true);
 
     bool wants_weapon(const item_def &item) const;
@@ -497,7 +503,6 @@ private:
     bool check_set_valid_home(const coord_def &place,
                               coord_def &chosen,
                               int &nvalid) const;
-
 };
 
 #endif

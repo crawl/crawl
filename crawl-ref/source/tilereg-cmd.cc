@@ -198,7 +198,7 @@ static bool _command_not_applicable(const command_type cmd, bool safe)
         return // shamefully copied from _can_cast in spl-cast.cc
             (player_in_bat_form() || you.form == TRAN_PIG) ||
             (you.stat_zero[STAT_INT]) ||
-            (player_effect_nocast()) ||
+            (you.no_cast()) ||
             (!you.spell_no) ||
             (you.berserk()) ||
             (you.confused()) ||

@@ -2135,7 +2135,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_EVOKE_FLIGHT:             // ring, boots, randarts
-        if (player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_FLYING))
+        if (you.wearing_ego(EQ_ALL_ARMOUR, SPARM_FLYING))
         {
             bool standing = !you.airborne();
             you.attribute[ATTR_PERM_FLIGHT] = 1;
@@ -3177,16 +3177,16 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
     // Evocations from items.
     if (!you.suppressed())
     {
-        if (scan_artefacts(ARTP_BLINK))
+        if (you.scan_artefacts(ARTP_BLINK))
             _add_talent(talents, ABIL_EVOKE_BLINK, check_confused);
 
-        if (scan_artefacts(ARTP_FOG))
+        if (you.scan_artefacts(ARTP_FOG))
             _add_talent(talents, ABIL_EVOKE_FOG, check_confused);
 
-        if (wearing_amulet(AMU_RAGE) || scan_artefacts(ARTP_BERSERK))
+        if (you.evokable_berserk())
             _add_talent(talents, ABIL_EVOKE_BERSERK, check_confused);
 
-        if (player_evokable_invis() && !you.attribute[ATTR_INVIS_UNCANCELLABLE])
+        if (you.evokable_invis() && !you.attribute[ATTR_INVIS_UNCANCELLABLE])
         {
             // Now you can only turn invisibility off if you have an
             // activatable item.  Wands and potions will have to time
@@ -3197,7 +3197,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
                 _add_talent(talents, ABIL_EVOKE_TURN_INVISIBLE, check_confused);
         }
 
-        if (player_evokable_flight())
+        if (you.evokable_flight())
         {
             // Has no effect on permanently flying Tengu.
             if (!you.permanent_flight() || !you.racial_permanent_flight())
@@ -3205,7 +3205,7 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
                 // You can still evoke perm flight if you have temporary one.
                 if (!you.flight_mode()
                     || !you.attribute[ATTR_PERM_FLIGHT]
-                       && player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_FLYING))
+                       && you.wearing_ego(EQ_ALL_ARMOUR, SPARM_FLYING))
                 {
                     _add_talent(talents, ABIL_EVOKE_FLIGHT, check_confused);
                 }
@@ -3218,8 +3218,11 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
             }
         }
 
-        if (player_equip(EQ_RINGS, RING_TELEPORTATION) && !crawl_state.game_is_sprint())
+        if (you.wearing(EQ_RINGS, RING_TELEPORTATION)
+            && !crawl_state.game_is_sprint())
+        {
             _add_talent(talents, ABIL_EVOKE_TELEPORTATION, check_confused);
+        }
     }
 
     // Find hotkeys for the non-hotkeyed talents.

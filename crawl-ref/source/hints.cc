@@ -2390,7 +2390,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_NEW_ABILITY_ITEM:
         // Specialcase flight because it's a guaranteed trigger in the
         // tutorial.
-        if (player_evokable_flight())
+        if (you.evokable_flight())
         {
             text << "Flight will allow you to cross deep water or lava. To "
                     "activate it, select the corresponding ability in the ability "
@@ -2426,7 +2426,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         break;
 
     case HINT_FLYING:
-        if (player_evokable_flight())
+        if (you.evokable_flight())
         {
             text << "To stop flying, use the corresponding ability "
                     "in the ability menu (<w>%</w>).";

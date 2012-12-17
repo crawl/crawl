@@ -3703,7 +3703,7 @@ int melee_attack::calc_to_hit(bool random)
             mhit += mitm[jewellery].plus;
         }
 
-        mhit += scan_mon_inv_randarts(attacker->as_monster(), ARTP_ACCURACY);
+        mhit += attacker->scan_artefacts(ARTP_ACCURACY);
 
         if (weapon && weapon->base_type == OBJ_RODS)
             mhit += weapon->special;
@@ -3943,11 +3943,11 @@ random_var melee_attack::player_unarmed_speed()
 
 bool melee_attack::attack_warded_off()
 {
-    // [dshaligram] Note: warding is no longer a simple 50% chance.
-    const int warding = defender->warding();
-    if (warding
+    const int WARDING_CHECK = 60;
+
+    if (defender->warding()
         && attacker->is_summoned()
-        && attacker->as_monster()->check_res_magic(warding) <= 0)
+        && attacker->as_monster()->check_res_magic(WARDING_CHECK) <= 0)
     {
         if (needs_message)
         {
@@ -3957,8 +3957,8 @@ bool melee_attack::attack_warded_off()
         }
 
         if (defender->is_player()
-            && player_equip(EQ_AMULET, AMU_WARDING, true)
-            && !player_equip(EQ_STAFF, STAFF_SUMMONING, true))
+            && you.wearing(EQ_AMULET, AMU_WARDING, true)
+            && !you.wearing(EQ_STAFF, STAFF_SUMMONING, true))
         {
             item_def *amu = you.slot_item(EQ_AMULET);
             ASSERT(amu);
@@ -5206,8 +5206,7 @@ int melee_attack::calc_damage()
                 wpn_damage_plus += mitm[jewellery].plus2;
             }
 
-            wpn_damage_plus += scan_mon_inv_randarts(attacker->as_monster(),
-                                                     ARTP_DAMAGE);
+            wpn_damage_plus += attacker->scan_artefacts(ARTP_DAMAGE);
 
             if (wpn_damage_plus >= 0)
                 damage += random2(wpn_damage_plus);

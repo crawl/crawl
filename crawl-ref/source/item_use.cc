@@ -1197,7 +1197,7 @@ bool safe_to_remove(const item_def &item, bool quiet)
     const bool removing_ends_flight =
         you.flight_mode()
         && !you.attribute[ATTR_FLIGHT_UNCANCELLABLE]
-        && (player_evokable_flight() == 1);
+        && (you.evokable_flight() == 1);
 
     const dungeon_feature_type feat = grd(you.pos());
 
@@ -3307,7 +3307,7 @@ void examine_object(void)
 
 bool item_blocks_teleport(bool calc_unid, bool permit_id)
 {
-    return (player_effect_notele(calc_unid)
+    return (you.notele(calc_unid)
             || stasis_blocks_effect(calc_unid, permit_id, NULL)
             || crawl_state.game_is_zotdef() && orb_haloed(you.pos()));
 }
@@ -3317,9 +3317,13 @@ bool stasis_blocks_effect(bool calc_unid,
                           const char *msg, int noise,
                           const char *silenced_msg)
 {
-    if (player_effect_stasis(calc_unid))
+    if (you.stasis(calc_unid))
     {
         item_def *amulet = you.slot_item(EQ_AMULET, false);
+
+        // Just in case a non-amulet stasis source is added.
+        if (amulet && amulet->sub_type != AMU_STASIS)
+            amulet = 0;
 
         if (msg)
         {

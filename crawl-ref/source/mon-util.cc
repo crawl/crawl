@@ -403,27 +403,164 @@ bool mons_class_flag(monster_type mc, uint64_t bf)
     return (me ? (me->bitfields & bf) != 0 : false);
 }
 
-int scan_mon_inv_randarts(const monster* mon,
-                          artefact_prop_type ra_prop)
+int monster::wearing(equipment_type slot, int sub_type, bool calc_unid) const
+{
+    int ret = 0;
+    const item_def *item = 0;
+
+    switch (slot)
+    {
+    case EQ_WEAPON:
+    case EQ_STAFF:
+        {
+            const mon_inv_type end = mons_wields_two_weapons(this)
+                                     ? MSLOT_ALT_WEAPON : MSLOT_WEAPON;
+
+            for (int i = MSLOT_WEAPON; i <= end; i = i + 1)
+            {
+                item = mslot_item((mon_inv_type) i);
+                if (item && item->base_type == (slot == EQ_WEAPON ? OBJ_WEAPONS
+                                                                  : OBJ_STAVES)
+                    && item->sub_type == sub_type
+                    // Weapon subtypes are always known, staves not.
+                    && (slot == EQ_WEAPON || calc_unid
+                        || item_type_known(*item)))
+                {
+                    ret++;
+                }
+            }
+        }
+        break;
+
+    case EQ_ALL_ARMOUR:
+    case EQ_CLOAK:
+    case EQ_HELMET:
+    case EQ_GLOVES:
+    case EQ_BOOTS:
+    case EQ_SHIELD:
+        item = mslot_item(MSLOT_SHIELD);
+        if (item && item->base_type == OBJ_ARMOUR && item->sub_type == sub_type)
+            ret++;
+        // Don't check MSLOT_ARMOUR for EQ_SHIELD
+        if (slot == EQ_SHIELD)
+            break;
+        // intentional fall-through
+    case EQ_BODY_ARMOUR:
+        item = mslot_item(MSLOT_ARMOUR);
+        if (item && item->base_type == OBJ_ARMOUR && item->sub_type == sub_type)
+            ret++;
+        break;
+
+    case EQ_AMULET:
+    case EQ_RINGS:
+    case EQ_RINGS_PLUS:
+    case EQ_RINGS_PLUS2:
+        item = mslot_item(MSLOT_JEWELLERY);
+        if (item && item->base_type == OBJ_JEWELLERY
+            && item->sub_type == sub_type
+            && (calc_unid || item_type_known(*item)))
+        {
+            if (slot == EQ_RINGS_PLUS)
+                ret += item->plus;
+            else if (slot == EQ_RINGS_PLUS2)
+                ret += item->plus2;
+            else
+                ret++;
+        }
+        break;
+    default:
+        die("invalid slot %d for monster::wearing()", slot);
+    }
+    return ret;
+}
+
+int monster::wearing_ego(equipment_type slot, int special, bool calc_unid) const
+{
+    int ret = 0;
+    const item_def *item = 0;
+
+    switch (slot)
+    {
+    case EQ_WEAPON:
+        {
+            const mon_inv_type end = mons_wields_two_weapons(this)
+                                     ? MSLOT_ALT_WEAPON : MSLOT_WEAPON;
+
+            for (int i = MSLOT_WEAPON; i <= end; i++)
+            {
+                item = mslot_item((mon_inv_type) i);
+                if (item && item->base_type == OBJ_WEAPONS
+                    && get_weapon_brand(*item) == special
+                    && (calc_unid || item_type_known(*item)))
+                {
+                    ret++;
+                }
+            }
+        }
+        break;
+
+    case EQ_ALL_ARMOUR:
+    case EQ_CLOAK:
+    case EQ_HELMET:
+    case EQ_GLOVES:
+    case EQ_BOOTS:
+    case EQ_SHIELD:
+        item = mslot_item(MSLOT_SHIELD);
+        if (item && item->base_type == OBJ_ARMOUR
+            && get_armour_ego_type(*item) == special
+            && (calc_unid || item_type_known(*item)))
+        {
+            ret++;
+        }
+        // Don't check MSLOT_ARMOUR for EQ_SHIELD
+        if (slot == EQ_SHIELD)
+            break;
+        // intentional fall-through
+    case EQ_BODY_ARMOUR:
+        item = mslot_item(MSLOT_ARMOUR);
+        if (item && item->base_type == OBJ_ARMOUR
+            && get_armour_ego_type(*item) == special
+            && (calc_unid || item_type_known(*item)))
+        {
+            ret++;
+        }
+        break;
+
+    case EQ_AMULET:
+    case EQ_STAFF:
+    case EQ_RINGS:
+    case EQ_RINGS_PLUS:
+    case EQ_RINGS_PLUS2:
+        // No egos.
+        break;
+
+    default:
+        die("invalid slot %d for monster::wearing_ego()", slot);
+    }
+    return ret;
+}
+
+int monster::scan_artefacts(artefact_prop_type ra_prop, bool calc_unid) const
 {
     int ret = 0;
 
-    if (mons_itemuse(mon) >= MONUSE_STARTING_EQUIPMENT)
+    // TODO: do we really want to prevent randarts from working for zombies?
+    if (mons_itemuse(this) >= MONUSE_STARTING_EQUIPMENT)
     {
-        const int weapon    = mon->inv[MSLOT_WEAPON];
-        const int second    = mon->inv[MSLOT_ALT_WEAPON]; // Two-headed ogres, etc.
-        const int armour    = mon->inv[MSLOT_ARMOUR];
-        const int shield    = mon->inv[MSLOT_SHIELD];
-        const int jewellery = mon->inv[MSLOT_JEWELLERY];
+        const int weap      = inv[MSLOT_WEAPON];
+        const int second    = inv[MSLOT_ALT_WEAPON]; // Two-headed ogres, etc.
+        const int armour    = inv[MSLOT_ARMOUR];
+        const int shld      = inv[MSLOT_SHIELD];
+        const int jewellery = inv[MSLOT_JEWELLERY];
 
-        if (weapon != NON_ITEM && mitm[weapon].base_type == OBJ_WEAPONS
-            && is_artefact(mitm[weapon]))
+        if (weap != NON_ITEM && mitm[weap].base_type == OBJ_WEAPONS
+            && is_artefact(mitm[weap]))
         {
-            ret += artefact_wpn_property(mitm[weapon], ra_prop);
+            ret += artefact_wpn_property(mitm[weap], ra_prop);
         }
 
         if (second != NON_ITEM && mitm[second].base_type == OBJ_WEAPONS
-            && is_artefact(mitm[second]) && mons_wields_two_weapons(mon))
+            && is_artefact(mitm[second]) && mons_wields_two_weapons(this))
         {
             ret += artefact_wpn_property(mitm[second], ra_prop);
         }
@@ -434,10 +571,10 @@ int scan_mon_inv_randarts(const monster* mon,
             ret += artefact_wpn_property(mitm[armour], ra_prop);
         }
 
-        if (shield != NON_ITEM && mitm[shield].base_type == OBJ_ARMOUR
-            && is_artefact(mitm[shield]))
+        if (shld != NON_ITEM && mitm[shld].base_type == OBJ_ARMOUR
+            && is_artefact(mitm[shld]))
         {
-            ret += artefact_wpn_property(mitm[shield], ra_prop);
+            ret += artefact_wpn_property(mitm[shld], ra_prop);
         }
 
         if (jewellery != NON_ITEM && mitm[jewellery].base_type == OBJ_JEWELLERY
@@ -1543,7 +1680,7 @@ flight_type mons_flies(const monster* mon, bool temp)
 
     if (temp && ret < FL_LEVITATE)
     {
-        if (scan_mon_inv_randarts(mon, ARTP_FLY) > 0)
+        if (mon->scan_artefacts(ARTP_FLY) > 0)
             return FL_LEVITATE;
 
         const int armour = mon->inv[MSLOT_ARMOUR];

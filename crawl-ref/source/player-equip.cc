@@ -385,7 +385,7 @@ static void _unequip_artefact_effect(item_def &item,
         you.attribute[ATTR_NOISES] = 0;
 
     if (proprt[ARTP_FLY] != 0 && you.cancellable_flight()
-        && !player_evokable_flight())
+        && !you.evokable_flight())
     {
         you.duration[DUR_FLIGHT] = 0;
         land_player();
@@ -394,7 +394,7 @@ static void _unequip_artefact_effect(item_def &item,
     if (proprt[ARTP_INVISIBLE] != 0
         && you.duration[DUR_INVIS] > 1
         && !you.attribute[ATTR_INVIS_UNCANCELLABLE]
-        && !player_evokable_invis())
+        && !you.evokable_invis())
     {
         you.duration[DUR_INVIS] = 1;
     }
@@ -940,7 +940,7 @@ static void _equip_armour_effect(item_def& arm, bool unmeld)
             break;
 
         case SPARM_SPIRIT_SHIELD:
-            if (!unmeld && player_spirit_shield() < 2)
+            if (!unmeld && you.spirit_shield() < 2)
             {
                 dec_mp(you.magic_points);
                 mpr("You feel spirits watching over you.");
@@ -1029,7 +1029,7 @@ static void _unequip_armour_effect(item_def& item, bool meld)
     case SPARM_DARKNESS:
         if (you.duration[DUR_INVIS]
             && !you.attribute[ATTR_INVIS_UNCANCELLABLE]
-            && !player_evokable_invis())
+            && !you.evokable_invis())
         {
             you.duration[DUR_INVIS] = 1;
         }
@@ -1053,17 +1053,17 @@ static void _unequip_armour_effect(item_def& item, bool meld)
 
     case SPARM_FLYING:
         if (you.attribute[ATTR_PERM_FLIGHT]
-            && !player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_FLYING)
+            && !you.wearing_ego(EQ_ALL_ARMOUR, SPARM_FLYING)
             && !you.racial_permanent_flight())
         {
             you.attribute[ATTR_PERM_FLIGHT] = 0;
-            if (player_evokable_flight())
+            if (you.evokable_flight())
                 fly_player(you.skill(SK_EVOCATIONS, 2) + 30, true);
         }
 
         // since a permflight item can keep tempflight evocations going
         // we should check tempflight here too
-        if (you.cancellable_flight() && !player_evokable_flight())
+        if (you.cancellable_flight() && !you.evokable_flight())
         {
             you.duration[DUR_FLIGHT] = 0;
             land_player();
@@ -1095,13 +1095,13 @@ static void _unequip_armour_effect(item_def& item, bool meld)
         break;
 
     case SPARM_SPIRIT_SHIELD:
-        if (!player_spirit_shield())
+        if (!you.spirit_shield())
         {
             mpr("You feel strangely alone.");
             if (you.species == SP_DEEP_DWARF)
                 mpr("Your magic begins regenerating once more.");
         }
-        else if (player_equip(EQ_AMULET, AMU_GUARDIAN_SPIRIT, true))
+        else if (you.wearing(EQ_AMULET, AMU_GUARDIAN_SPIRIT, true))
         {
             item_def& amu(you.inv[you.equip[EQ_AMULET]]);
             wear_id_type(amu);
@@ -1291,7 +1291,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
         break;
 
     case RING_FLIGHT:
-        if (!scan_artefacts(ARTP_FLY))
+        if (!you.scan_artefacts(ARTP_FLY))
         {
             if (you.airborne())
                 mpr("You feel vaguely more buoyant than before.");
@@ -1315,7 +1315,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
         break;
 
     case AMU_RAGE:
-        if (!scan_artefacts(ARTP_BERSERK))
+        if (!you.scan_artefacts(ARTP_BERSERK))
         {
             mpr("You feel a brief urge to hack something to bits.");
             if (artefact)
@@ -1353,7 +1353,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
 #endif
 
     case AMU_GUARDIAN_SPIRIT:
-        if (player_spirit_shield() < 2 && !unmeld)
+        if (you.spirit_shield() < 2 && !unmeld)
         {
             dec_mp(you.magic_points);
             mpr("You feel your power drawn to a protective spirit.");
@@ -1514,7 +1514,7 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld)
         break;
 
     case RING_FLIGHT:
-        if (you.cancellable_flight() && !player_evokable_flight())
+        if (you.cancellable_flight() && !you.evokable_flight())
         {
             you.duration[DUR_FLIGHT] = 0;
             land_player();
@@ -1524,7 +1524,7 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg, bool meld)
     case RING_INVISIBILITY:
         if (you.duration[DUR_INVIS]
             && !you.attribute[ATTR_INVIS_UNCANCELLABLE]
-            && !player_evokable_invis())
+            && !you.evokable_invis())
         {
             you.duration[DUR_INVIS] = 1;
         }

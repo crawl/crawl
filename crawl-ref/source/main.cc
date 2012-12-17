@@ -1605,7 +1605,7 @@ static void _experience_check()
                 << " (" << you.num_turns << " turns)"
                 << endl;
 #ifdef DEBUG_DIAGNOSTICS
-    if (wearing_amulet(AMU_THE_GOURMAND))
+    if (you.gourmand())
     {
         mprf(MSGCH_DIAGNOSTICS, "Gourmand charge: %d",
              you.duration[DUR_GOURMAND]);
@@ -2254,7 +2254,7 @@ static void _decrement_durations()
 {
     int delay = you.time_taken;
 
-    if (player_effect_gourmand())
+    if (you.gourmand())
     {
         if (you.duration[DUR_GOURMAND] < GOURMAND_MAX && coinflip())
             you.duration[DUR_GOURMAND] += delay;
@@ -2901,7 +2901,7 @@ static void _regenerate_hp_and_mp(int delay)
 
     // XXX: Don't let DD use guardian spirit for free HP, since their
     // damage shaving is enough. (due, dpeg)
-    if (player_spirit_shield() && you.species == SP_DEEP_DWARF)
+    if (you.spirit_shield() && you.species == SP_DEEP_DWARF)
         return;
 
     // XXX: Doing the same as the above, although overflow isn't an
@@ -4412,7 +4412,7 @@ static void _move_player(coord_def move)
     apply_berserk_penalty = !attacking;
 
     if (!attacking && you.religion == GOD_CHEIBRIADOS && one_chance_in(10)
-        && player_effect_running())
+        && you.run())
     {
         did_god_conduct(DID_HASTY, 1, true);
     }
