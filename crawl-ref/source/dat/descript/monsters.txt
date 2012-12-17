@@ -3182,13 +3182,6 @@ sacrificial human
 From the look of things, she was supposed to be sacrificed in some
 demon-summoning ritual.
 %%%%
-shadowy statue
-
-Made of some black lusterless stone, this statue seems to be the focal point
-for swirling shadows that permeate this room. They seem to be more substantial
-than your usual half-light, so it might be a good idea to blow the statue to
-smithereens before the shadows turn fully real.
-%%%%
 sickly siren
 
 A young woman with a fish tail in place of legs. She looks quite sick, but
@@ -3204,20 +3197,9 @@ Since when is having flesh a requirement to be a master archer? These skeletal
 fellows can turn you into a bloody hedgehog with ease. Meatlings like you are
 only good for a supply of sinew for bowstrings anyway.
 %%%%
-snail statue
-
-This idol to the god Cheibriados has the odd property of turning the ground in
-its presence into difficult-to-slog-through mud.
-%%%%
 soapberry tree
 
 <apple tree>
-%%%%
-spearthrower statue
-
-This statue bristles with sharp shards of green crystal that sparkle with every
-gleam of light. The shards seem to be in motion, migrating to form long spears
-of crystal that the statue can shoot through interlopers.
 %%%%
 spooky statue
 
