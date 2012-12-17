@@ -48,7 +48,6 @@
 #include "religion.h"
 #include "shopping.h" // for item values
 #include "spl-book.h"
-#include "spl-clouds.h"
 #include "spl-damage.h"
 #include "spl-util.h"
 #include "state.h"
@@ -369,12 +368,6 @@ static bool _mon_on_interesting_grid(monster* mon)
     // And spriggans.
     case DNGN_ENTER_FOREST:
         return mons_is_native_in_branch(mon, BRANCH_FOREST);
-
-    // And abyss denizens!
-    case DNGN_ENTER_ABYSS:
-    case DNGN_EXIT_ABYSS:
-    case DNGN_ABYSSAL_STAIR:
-        return mons_is_native_in_branch(mon, BRANCH_ABYSS);
 
     default:
         return false;
@@ -2979,9 +2972,7 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
     }
 
     // Wandering mushrooms usually don't move while you are looking.
-    if (mons->type == MONS_WANDERING_MUSHROOM
-        || (mons->type == MONS_LURKING_HORROR
-            && mons->foe_distance() > random2(LOS_RADIUS + 1)))
+    if (mons->type == MONS_WANDERING_MUSHROOM)
     {
         if (!mons->wont_attack()
             && is_sanctuary(mons->pos()))
@@ -3558,13 +3549,28 @@ static bool _monster_move(monster* mons)
     // If we haven't found a good move by this point, we're not going to.
     // ------------------------------------------------------------------
 
+    if (mons->type == MONS_SPATIAL_MAELSTROM)
+    {
+        const dungeon_feature_type feat = grd(mons->pos() + mmov);
+        if (!feat_is_permarock(feat) && feat_is_solid(feat)
+            && mons->type == MONS_SPATIAL_MAELSTROM)
+        {
+            const coord_def target(mons->pos() + mmov);
+            create_monster(
+                    mgen_data(MONS_SPATIAL_VORTEX, SAME_ATTITUDE(mons), mons,
+                          2, MON_SUMM_ANIMATE,
+                          target, MHITNOT,
+                          0, GOD_LUGONU));
+            nuke_wall(target);
+        }
+    }
+
     const bool burrows = mons_class_flag(mons->type, M_BURROWS);
     const bool flattens_trees = mons_flattens_trees(mons);
     // Take care of beetle burrowing.
     if (burrows || flattens_trees)
     {
         const dungeon_feature_type feat = grd(mons->pos() + mmov);
-
         if ((((feat == DNGN_ROCK_WALL || feat == DNGN_CLEAR_ROCK_WALL)
               && burrows)
              || (flattens_trees && feat_is_tree(feat)))
@@ -3593,19 +3599,9 @@ static bool _monster_move(monster* mons)
             {
                 // Message depends on whether caused by boring beetle or
                 // acid (Dissolution).
-                string noise;
-                switch (mons->type) {
-                    case MONS_BORING_BEETLE:
-                        noise = "grinding noise";
-                        break;
-                    case MONS_DISSOLUTION:
-                        noise = "sizzling sound";
-                        break;
-                    default:
-                        noise = "buggy noise";
-                        break;
-                }
-                mpr("You hear a " + noise + ".", MSGCH_SOUND);
+                mpr((mons->type == MONS_BORING_BEETLE) ?
+                    "You hear a grinding noise." :
+                    "You hear a sizzling sound.", MSGCH_SOUND);
             }
         }
     }

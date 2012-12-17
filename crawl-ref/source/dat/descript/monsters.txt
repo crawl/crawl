@@ -2338,6 +2338,10 @@ soul eater
 This demon looks like a malignantly shifting shadow gliding through the air. It
 radiates an intense aura of negative force.
 %%%%
+spatial maelstrom
+
+A malevolent rift in reality.
+%%%%
 spatial vortex
 
 A crazily shifting twist in the fabric of reality.
