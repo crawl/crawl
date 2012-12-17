@@ -269,6 +269,7 @@ int mons_abyss_rare(monster_type mcls)
     case MONS_DRACONIAN_ZEALOT:
     case MONS_DRACONIAN_SHIFTER:
     case MONS_HELLEPHANT:
+    case MONS_SPATIAL_MAELSTROM:
         return 3;
 
     case MONS_DANCING_WEAPON:

@@ -2642,6 +2642,8 @@ habitat_type mons_class_secondary_habitat(monster_type mc)
         ht = HT_WATER;
     else if (ht == HT_ROCK)
         ht = HT_LAND;
+    else if (ht == HT_INCORPOREAL)
+        ht = HT_ROCK;
     return ht;
 }
 
@@ -2655,7 +2657,6 @@ bool mons_wall_shielded(const monster* mon)
     switch (_mons_class_habitat(mons_base_type(mon)))
     {
         case HT_ROCK:
-        case HT_INCORPOREAL:
             return true;
         default:
             return false;
