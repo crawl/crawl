@@ -2379,18 +2379,12 @@ bool travel_kill_monster(monster_type mons)
         return false;
 
     // Don't auto-kill things with berserkitis or *rage.
-    if (player_mutation_level(MUT_BERSERK)
-        || player_effect_angry())
+    if (player_mutation_level(MUT_BERSERK) || you.angry())
     {
-        if (player_effect_stasis(false)
-            || player_mental_clarity(false)
-            || you.is_undead == US_UNDEAD
-            || you.is_undead == US_HUNGRY_DEAD)
-        {
-            return true;
-        }
-        else
-            return false;
+        return (you.stasis(false)
+                || you.clarity(false)
+                || you.is_undead == US_UNDEAD
+                || you.is_undead == US_HUNGRY_DEAD);
     }
 
     return true;

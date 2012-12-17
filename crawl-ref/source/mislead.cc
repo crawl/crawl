@@ -107,9 +107,10 @@ void mons_cast_mislead(monster* mons)
 
     // We deal with pointless misleads in the right place now.
 
-    if (player_mental_clarity(true))
+    if (you.clarity())
     {
         mpr("Your vision blurs momentarily.");
+        // TODO: identify the clarity if !you.clarity(false)
         return;
     }
 

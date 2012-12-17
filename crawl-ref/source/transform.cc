@@ -478,7 +478,7 @@ static bool _flying_in_new_form(transformation_type which_trans)
     if (!you.flight_mode())
         return false;
 
-    int sources = player_evokable_flight();
+    int sources = you.evokable_flight();
     int sources_removed = 0;
     set<equipment_type> removed = _init_equipment_removal(which_trans);
     for (set<equipment_type>::iterator iter = removed.begin();

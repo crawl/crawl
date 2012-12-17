@@ -2578,6 +2578,15 @@ void maybe_id_ring_hunger()
     _maybe_id_jewel(RING_SUSTENANCE, NUM_JEWELLERY, ARTP_METABOLISM);
 }
 
+void maybe_id_clarity()
+{
+    // If we have clarity without any items
+    if (you.clarity(false, false))
+        return;
+
+    _maybe_id_jewel(NUM_JEWELLERY, AMU_CLARITY, ARTP_CLARITY);
+}
+
 void maybe_id_resist(beam_type flavour)
 {
     switch (flavour)

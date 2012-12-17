@@ -2450,7 +2450,7 @@ int piety_scale(int piety)
     if (piety < 0)
         return -piety_scale(-piety);
 
-    if (player_effect_faith())
+    if (you.faith())
         return (piety + div_rand_round(piety, 3));
 
     return piety;

@@ -500,7 +500,7 @@ static int _spell_enhancement(unsigned int typeflags)
     if (you.attribute[ATTR_SHADOWS])
         enhanced -= 2;
 
-    if (player_effect_archmagi())
+    if (you.archmagi())
         enhanced++;
 
     // These are used in an exponential way, so we'll limit them a bit. -- bwr
@@ -540,7 +540,7 @@ static bool _can_cast()
     }
 
     // Randart weapons.
-    if (player_effect_nocast())
+    if (you.no_cast())
     {
         mpr("Something interferes with your magic!");
         return false;

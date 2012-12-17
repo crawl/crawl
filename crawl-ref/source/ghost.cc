@@ -348,7 +348,7 @@ static int _player_ghost_base_movement_speed()
     if (player_mutation_level(MUT_SLOW, false))
         speed -= player_mutation_level(MUT_SLOW, false) + 1;
 
-    if (player_equip_ego_type(EQ_BOOTS, SPARM_RUNNING))
+    if (you.wearing_ego(EQ_BOOTS, SPARM_RUNNING))
         speed += 2;
 
     // Cap speeds.

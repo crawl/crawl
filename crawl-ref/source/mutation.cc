@@ -1253,7 +1253,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
         // resistance mutation.
         if (!god_gift)
         {
-            if ((player_res_mutation_from_item()
+            if ((you.rmut_from_item()
                  && !one_chance_in(temporary ? 3 : 10) && !stat_gain_potion)
                 || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
                 || (player_mutation_level(MUT_MUTATION_RESISTANCE)

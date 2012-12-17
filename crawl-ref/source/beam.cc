@@ -3026,7 +3026,7 @@ bool bolt::harmless_to_player() const
         return (player_res_poison(false) >= 3);
 
     case BEAM_POTION_MEPHITIC:
-        return (player_res_poison(false) > 0 || player_mental_clarity(false)
+        return (player_res_poison(false) > 0 || you.clarity(false)
                 || you.is_unbreathing());
 
     case BEAM_ELECTRICITY:

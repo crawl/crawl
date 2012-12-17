@@ -416,9 +416,6 @@ bool mons_can_traverse(const monster* mon, const coord_def& pos,
 mon_inv_type equip_slot_to_mslot(equipment_type eq);
 mon_inv_type item_to_mslot(const item_def &item);
 
-int scan_mon_inv_randarts(const monster* mon,
-                          artefact_prop_type ra_prop);
-
 bool player_or_mon_in_sanct(const monster* mons);
 bool mons_is_immotile(const monster* mons);
 

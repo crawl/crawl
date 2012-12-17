@@ -2672,7 +2672,7 @@ static int _mons_mesmerise(monster* mons, bool actual)
     // Don't spam mesmerisation if you're already mesmerised,
     // or don't mesmerise at all if you pass an MR check or have clarity.
     if (you.check_res_magic(pow) > 0
-        || player_mental_clarity(true)
+        || you.clarity()
         || !(mons->foe == MHITYOU
              && !already_mesmerised && coinflip()))
     {
