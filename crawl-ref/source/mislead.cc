@@ -10,6 +10,7 @@
 #include "env.h"
 #include "hints.h"
 #include "message.h"
+#include "misc.h"
 #include "monster.h"
 #include "mon-iter.h"
 #include "mon-util.h"
@@ -110,7 +111,8 @@ void mons_cast_mislead(monster* mons)
     if (you.clarity())
     {
         mpr("Your vision blurs momentarily.");
-        // TODO: identify the clarity if !you.clarity(false)
+        if (!you.clarity(false))
+            maybe_id_clarity();
         return;
     }
 
