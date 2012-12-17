@@ -3240,7 +3240,9 @@ void ancient_zyme_sicken(monster* mons)
     if (is_sanctuary(mons->pos()))
         return;
 
-    if (!is_sanctuary(you.pos()) && cell_see_cell(you.pos(), mons->pos(), LOS_SOLID_SEE))
+    if (!is_sanctuary(you.pos())
+        && you.res_rotting() <= 0
+        && cell_see_cell(you.pos(), mons->pos(), LOS_SOLID_SEE))
     {
         if (!you.disease)
         {
@@ -3260,7 +3262,10 @@ void ancient_zyme_sicken(monster* mons)
     for (radius_iterator ri(mons->pos(), LOS_RADIUS, C_ROUND); ri; ++ri)
     {
         monster *m = monster_at(*ri);
-        if (m && cell_see_cell(mons->pos(), *ri, LOS_SOLID_SEE))
+        if (m && cell_see_cell(mons->pos(), *ri, LOS_SOLID_SEE)
+            && !is_sanctuary(*ri))
+        {
             m->sicken(2 * you.time_taken);
+        }
     }
 }
