@@ -425,7 +425,11 @@ MONS:   orc zombie / orc skeleton w:2 / goblin zombie w:2 /\
         hobgoblin zombie w:2 / goblin skeleton w:1 / hobgoblin skeleton w:1
 MONS:   ogre zombie / troll zombie w:3 / hill giant zombie w:1
 MONS:   hungry ghost / phantom / w:1 wraith
+: if you.absdepth() >= 10 then
 MONS:   w:1 orc sorcerer / orc priest
+: else
+MONS:   orc priest
+: end
 SUBST:  4 = 34
 SUBST:  ? = x . $:1
 KFEAT:  O = enter_orcish_mines
