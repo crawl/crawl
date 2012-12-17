@@ -115,6 +115,7 @@ int mons_abyss_rare(monster_type mcls)
     case MONS_TENTACLED_STARSPAWN:
     case MONS_LURKING_HORROR:
     case MONS_ANCIENT_ZYME:
+    case MONS_STARCURSED_MASS:
     case MONS_SKELETON_LARGE:
     case MONS_SKELETON_SMALL:
     case MONS_SKELETAL_WARRIOR:
