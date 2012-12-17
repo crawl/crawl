@@ -44,8 +44,8 @@ The contents of this text are:
 3-g     Travel and Exploration.
                 travel_delay, explore_delay, travel_avoid_terrain,
                 explore_greedy, explore_stop, explore_stop_pickup_ignore,
-                explore_wall_bias, explore_improved, travel_key_stop,
-                tc_reachable, tc_dangerous, tc_disconnected,
+                explore_wall_bias, explore_improved, auto_sacrifice,
+                travel_key_stop, tc_reachable, tc_dangerous, tc_disconnected,
                 tc_excluded, tc_exclude_circle,
                 runrest_ignore_message, runrest_stop_message,
                 runrest_ignore_poison, runrest_ignore_monster,
