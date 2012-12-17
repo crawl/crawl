@@ -1,0 +1,7 @@
+# Please remove on a TAG_MAJOR_VERSION bump.
+
+{{
+function callback.grunt_victim_ignite(data, triggerable, triggerer, marker, ev)
+  -- the victims don't spawn before; do nothing
+end
+}}
