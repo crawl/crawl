@@ -314,7 +314,8 @@ int resist_adjust_damage(actor *defender, beam_type flavour,
 
     if (res > 0)
     {
-        if (mons && res >= 3)
+        // Acid resistance is immunity
+        if (mons && (flavour == BEAM_ACID || res >= 3))
             resistible = 0;
         else
         {

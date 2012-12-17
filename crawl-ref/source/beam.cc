@@ -2984,7 +2984,7 @@ bool bolt::is_harmless(const monster* mon) const
         return (mon->res_poison() >= 3);
 
     case BEAM_ACID:
-        return (mon->res_acid() >= 3);
+        return mon->res_acid();
 
     case BEAM_PETRIFY:
         return (mon->res_petrify() || mon->petrified());
