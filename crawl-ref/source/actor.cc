@@ -241,9 +241,10 @@ int actor::body_weight(bool base) const
 
 bool actor_slime_wall_immune(const actor *act)
 {
-    return (act->is_player()?
+    // res_acid is immunity only for monsters; players need Jiyva
+    return (act->is_player() ?
               you.religion == GOD_JIYVA && !you.penance[GOD_JIYVA]
-            : act->res_acid() == 3);
+            : act->res_acid());
 }
 /**
  * Accessor method to the clinging member.
