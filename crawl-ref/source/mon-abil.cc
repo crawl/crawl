@@ -862,12 +862,19 @@ bool _starcursed_split(monster* mon)
     return false;
 }
 
-void _starcursed_scream(monster* mon)
+void _starcursed_scream(monster* mon, actor* target)
 {
+    if (!target || !target->alive())
+        return;
+
+    // These monsters have too primitive a mind to be affected
+    if (!target->is_player() && mons_intel(target->as_monster()) <= I_INSECT)
+        return;
+
     //Gather the chorus
     vector<monster*> chorus;
 
-    for (actor_iterator ai(mon->get_los()); ai; ++ai)
+    for (actor_iterator ai(target->get_los()); ai; ++ai)
     {
         if (ai->is_monster())
         {
@@ -879,28 +886,42 @@ void _starcursed_scream(monster* mon)
 
     int n = chorus.size();
     int dam = 0; int stun = 0;
+    string message;
+
+    dprf("Chorus size: %d", n);
 
     if (n > 7)
     {
-        mpr("A cacophony of accursed wailing tears at your sanity!", MSGCH_MONSTER_SPELL);
+        message = "A cacophony of accursed wailing tears at your sanity!";
         if (coinflip())
             stun = 2;
     }
     else if (n > 4)
     {
-        mpr("A deafening chorus of shrieks assaults your mind!", MSGCH_MONSTER_SPELL);
+        message = "A deafening chorus of shrieks assaults your mind!";
         if (x_chance_in_y(1,3))
             stun = 1;
     }
     else if (n > 1)
-        mpr("A chorus of shrieks assaults your mind.", MSGCH_MONSTER_SPELL);
+        message = "A chorus of shrieks assaults your mind.";
     else
-        mpr("The starcursed mass shrieks in your mind.", MSGCH_MONSTER_SPELL);
+        message = "The starcursed mass shrieks in your mind.";
 
     dam = 4 + random2(5) + random2(n * 3 / 2);
-    ouch(dam, mon->mindex(), KILLED_BY_BEAM, "accursed screaming");
+
+    if (!target->is_player())
+    {
+        simple_monster_message(target->as_monster(), " writhes in pain as voices assail their mind.");
+        target->hurt(mon, dam);
+    }
+    else
+    {
+        mpr(message, MSGCH_MONSTER_SPELL);
+        ouch(dam, mon->mindex(), KILLED_BY_BEAM, "accursed screaming");
+    }
+
     if (stun)
-        you.paralyse(mon, stun);
+        target->paralyse(mon, stun, "accursed screaming");
 
     for (unsigned int i = 0; i < chorus.size(); ++i)
         chorus[i]->add_ench(mon_enchant(ENCH_SCREAMED, 1, chorus[i], 1));
@@ -2985,6 +3006,12 @@ bool mon_special_ability(monster* mons, bolt & beem)
     case MONS_STARCURSED_MASS:
         if (x_chance_in_y(mons->number,8) && x_chance_in_y(2,3))
             _starcursed_split(mons);
+
+        if (!mons_is_confused(mons)
+                && !is_sanctuary(mons->pos()) && !is_sanctuary(beem.target)
+                && _will_starcursed_scream(mons)
+                && coinflip())
+            _starcursed_scream(mons, actor_at(beem.target));
         break;
 
     default:
@@ -3137,12 +3164,6 @@ void mon_nearby_ability(monster* mons)
     case MONS_PANDEMONIUM_LORD:
         if (mons->ghost->cycle_colours)
             mons->colour = random_colour();
-        break;
-
-    case MONS_STARCURSED_MASS:
-        if (_eyeball_will_use_ability(mons) && foe->is_player()
-                && _will_starcursed_scream(mons))
-            _starcursed_scream(mons);
         break;
 
     default:
