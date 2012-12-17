@@ -403,7 +403,6 @@ orange_crystal_statue MONS_ORANGE_STATUE
 wucad_mu_statue MONS_WUCAD_MU_STATUE
 %sdir mon/vault
 spooky_statue MONS_SPOOKY_STATUE
-snail_statue MONS_SNAIL_STATUE
 chilling_statue MONS_CHILLING_STATUE
 air_elementalist_statue MONS_AIR_ELEMENTALIST_STATUE
 earth_elementalist_statue MONS_EARTH_ELEMENTALIST_STATUE
