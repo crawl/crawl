@@ -1555,7 +1555,7 @@ void dgl_record_timestamp(unsigned long file_offset, time_t time)
     static bool timestamp_first_write = true;
     if (FILE *ftimestamp = dgl_timestamp_filehandle())
     {
-        writer w(dgl_timestamp_filename(), ftimestamp);
+        writer w(dgl_timestamp_filename(), ftimestamp, true);
         if (timestamp_first_write)
         {
             unsigned long ts_size = file_size(ftimestamp);
