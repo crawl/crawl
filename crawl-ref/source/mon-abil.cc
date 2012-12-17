@@ -911,7 +911,14 @@ void _starcursed_scream(monster* mon, actor* target)
 
     if (!target->is_player())
     {
-        simple_monster_message(target->as_monster(), " writhes in pain as voices assail their mind.");
+        if (you.see_cell(target->pos()))
+        {
+            mprf(target->as_monster()->friendly() ? MSGCH_FRIEND_SPELL
+                                                  : MSGCH_MONSTER_SPELL,
+                 "%s writhes in pain as voices assail %s mind.",
+                 target->name(DESC_THE).c_str(),
+                 target->pronoun(PRONOUN_POSSESSIVE).c_str());
+        }
         target->hurt(mon, dam);
     }
     else
