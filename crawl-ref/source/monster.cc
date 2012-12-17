@@ -5156,6 +5156,9 @@ int monster::action_energy(energy_use_type et) const
         if (has_ench(ENCH_SWIFT))
             move_cost -= 2;
 
+        if (run())
+            move_cost -= 2;
+
         // Floundering monsters get the same penalty as the player, except that
         // player get penalty on entering water, while monster get the penalty
         // when leaving it.
@@ -5167,7 +5170,8 @@ int monster::action_energy(energy_use_type et) const
         if (has_ench(ENCH_LIQUEFYING))
             move_cost -= 2;
 
-        return move_cost;
+        // Never reduce the cost to zero
+        return max(move_cost, 1);
     }
     return 10;
 }
