@@ -577,9 +577,8 @@ public:
             if (crawl_state.game_is_hints())
             {
                 string more_str = "--more-- Press Space ";
-#ifdef USE_TILE
-                more_str += "or click ";
-#endif
+                if (is_tiles())
+                    more_str += "or click ";
                 more_str += "to continue. You can later reread messages with "
                             "Ctrl-P.";
                 cprintf(more_str.c_str());
