@@ -1062,7 +1062,7 @@ coord_def direction_chooser::find_default_target() const
             // We might be able to hit monsters in LOS that are outside of
             // normal range, but inside explosion/cloud range
             if (!success
-                && you.current_vision > range
+                && (you.current_vision > range || hitfunc->can_affect_walls())
                 && hitfunc && hitfunc->can_affect_outside_range())
             {
                 success = _find_square_wrapper(result, 1, _find_monster_expl,
@@ -2445,7 +2445,7 @@ static bool _find_monster_expl(const coord_def& where, int mode, bool need_path,
 #endif
 
     // Only check for explosive targetting at the edge of the range
-    if (you.pos().range(where) != range)
+    if (you.pos().range(where) != range && !hitfunc->can_affect_walls())
         return false;
 
     // Target outside LOS.
