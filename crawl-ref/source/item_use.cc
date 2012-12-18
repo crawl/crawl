@@ -2708,7 +2708,7 @@ static bool _scroll_modify_item(item_def scroll)
     switch (scroll.sub_type)
     {
     case SCR_IDENTIFY:
-        if (!fully_identified(item))
+        if (!fully_identified(item) || is_deck(item) && !top_card_is_known(item))
         {
             identify(-1, item_slot);
             return true;
