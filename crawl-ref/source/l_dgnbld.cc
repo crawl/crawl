@@ -698,7 +698,7 @@ LUAFN(dgn_replace_area)
 {
     LINES(ls, 1, lines);
 
-    TABLE_STR(ls, find, '\0');
+    TABLE_STR(ls, find, 0);
     TABLE_CHAR(ls, replace, '\0');
 
     int x1, y1, x2, y2;
