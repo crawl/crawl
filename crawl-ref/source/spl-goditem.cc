@@ -425,7 +425,7 @@ void antimagic()
     if (you.duration[DUR_PETRIFYING] > 0)
     {
         you.duration[DUR_PETRIFYING] = 0;
-        mpr("Your limbs stop stiffening.", MSGCH_DURATION);
+        mpr("You feel limber!", MSGCH_DURATION);
     }
 
     if (you.attribute[ATTR_DELAYED_FIREBALL])
