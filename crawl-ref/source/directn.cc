@@ -2431,7 +2431,7 @@ static bool _find_monster(const coord_def& where, int mode, bool need_path,
 }
 
 static bool _find_monster_expl(const coord_def& where, int mode, bool need_path,
-                           int range, targetter *hitfunc)
+                               int range, targetter *hitfunc)
 {
 #ifdef CLUA_BINDINGS
     {
