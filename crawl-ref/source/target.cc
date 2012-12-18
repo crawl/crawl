@@ -38,6 +38,11 @@ bool targetter::can_affect_outside_range()
     return false;
 }
 
+bool targetter::can_affect_walls()
+{
+    return false;
+}
+
 bool targetter::anyone_there(coord_def loc)
 {
     if (!map_bounds(loc))
@@ -427,6 +432,11 @@ bool targetter_fragment::set_aim(coord_def a)
     beam.determine_affected_cells(exp_map_max, coord_def(), 0,
                                   exp_range_max, false, false);
 
+    return true;
+}
+
+bool targetter_fragment::can_affect_walls()
+{
     return true;
 }
 
