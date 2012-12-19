@@ -347,7 +347,7 @@ void SkillMenuEntry::set_aptitude()
 
     if (is_antitrained(m_sk))
     {
-        skm.set_flag(SKMF_ANTITRAIN);
+        m_skm->set_flag(SKMF_ANTITRAIN);
         text += make_stringf("<magenta>%d</magenta>", ct_bonus - 4);
     }
     else if (ct_bonus)
