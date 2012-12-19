@@ -332,30 +332,34 @@ void SkillMenuEntry::set_aptitude()
 
     text += "</red>";
 
-    if (antitrain_other(m_sk, show_all) || is_antitrained(m_sk))
+    if (antitrain_other(m_sk, show_all))
     {
         m_skm->set_flag(SKMF_ANTITRAIN);
-        text += "<magenta>";
-        text += antitrain_other(m_sk, show_all) ? "*" : " ";
-        if (is_antitrained(m_sk))
-            text += make_stringf("%d", ct_bonus - 4);
-
-        text += "</magenta>";
+        text += "<magenta>*</magenta>";
     }
-    else if (crosstrain_other(m_sk, show_all) || ct_bonus)
+    else if (crosstrain_other(m_sk, show_all))
+    {
+        m_skm->set_flag(SKMF_CROSSTRAIN);
+        text += "<green>*</green>";
+    }
+    else
+        text += " ";
+
+    if (is_antitrained(m_sk))
+    {
+        skm.set_flag(SKMF_ANTITRAIN);
+        text += make_stringf("<magenta>%d</magenta>", ct_bonus - 4);
+    }
+    else if (ct_bonus)
     {
         m_skm->set_flag(SKMF_CROSSTRAIN);
         text += manual ? "<lightgreen>" : "<green>";
-        text += crosstrain_other(m_sk, show_all) ? "*" : " ";
 
-        if (ct_bonus)
-        {
-            // Only room for two characters.
-            if (ct_bonus < 10)
-                text += make_stringf("+%d", ct_bonus);
-            else
-                text += make_stringf("%d", ct_bonus);
-        }
+        // Only room for two characters.
+        if (ct_bonus < 10)
+            text += make_stringf("+%d", ct_bonus);
+        else
+            text += make_stringf("%d", ct_bonus);
 
         text += manual ? "</lightgreen>" : "</green>";
     }
