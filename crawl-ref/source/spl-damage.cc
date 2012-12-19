@@ -546,12 +546,8 @@ spret_type cast_refrigeration(int pow, bool non_player, bool freeze_potions,
             remove_sanctuary(true);
 
         // Cold-blooded creatures can be slowed.
-        if (mi->alive()
-            && mons_class_flag(mi->type, M_COLD_BLOOD)
-            && coinflip())
-        {
-            mi->add_ench(ENCH_SLOW);
-        }
+        if (mi->alive())
+            mi->expose_to_element(BEAM_COLD, hurt);
     }
     return SPRET_SUCCESS;
 }

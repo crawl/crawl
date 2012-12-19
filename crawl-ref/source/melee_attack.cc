@@ -2964,7 +2964,7 @@ bool melee_attack::apply_damage_brand()
 
     case SPWPN_FREEZING:
         calc_elemental_brand_damage(BEAM_COLD, defender->res_cold(), "freeze");
-        defender->expose_to_element(BEAM_COLD);
+        defender->expose_to_element(BEAM_COLD, damage_done);
         break;
 
     case SPWPN_HOLY_WRATH:
