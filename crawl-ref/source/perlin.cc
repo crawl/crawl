@@ -6,7 +6,7 @@
  * Better rank ordering method by Stefan Gustavson in 2012.
  * This could be speeded up even further, but it's useful as it is.
  *
- * Clumsily ported to some horrendous C/C++ mix by 
+ * Clumsily ported to some horrendous C/C++ mix by
  *      Brendan Hickey (brendan@bhickey.net)
  *
  * Version 2012-09-16
@@ -27,8 +27,8 @@ namespace perlin
     class Grad {
         public:
             const double x, y, z, w;
-            Grad(double _x, double _y, double _z) : x(_x), y(_y), z(_z), w(0) {} 
-            Grad(double _x, double _y, double _z, double _w) : x(_x), y(_y), z(_z), w(_w) {} 
+            Grad(double _x, double _y, double _z) : x(_x), y(_y), z(_z), w(0) {}
+            Grad(double _x, double _y, double _z, double _w) : x(_x), y(_y), z(_z), w(_w) {}
     };
 
     const Grad grad3[] = {
@@ -78,7 +78,7 @@ namespace perlin
 
     static const uint8_t permMod12(const uint32_t x) {
         return perm[x] % 12;
-    } 
+    }
 
     // Skewing and unskewing factors for 2, 3, and 4 dimensions
     const double F2 = 0.5*(sqrt(3.0)-1.0);
@@ -97,10 +97,10 @@ namespace perlin
         return g.x*x + g.y*y;
     }
     static double dot(Grad g, double x, double y, double z) {
-        return g.x*x + g.y*y + g.z*z; 
+        return g.x*x + g.y*y + g.z*z;
     }
-    static double dot(Grad g, double x, double y, double z, double w) { 
-        return g.x*x + g.y*y + g.z*z + g.w*w; 
+    static double dot(Grad g, double x, double y, double z, double w) {
+        return g.x*x + g.y*y + g.z*z + g.w*w;
     }
 
 

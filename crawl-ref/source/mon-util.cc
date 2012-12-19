@@ -3443,7 +3443,7 @@ bool mons_class_can_pass(monster_type mc, const dungeon_feature_type grid)
 
     if (_mons_class_habitat(mc) == HT_INCORPOREAL)
         return !feat_is_permarock(grid);
-    
+
     if (_mons_class_habitat(mc) == HT_ROCK)
     {
         // Permanent walls can't be passed through.

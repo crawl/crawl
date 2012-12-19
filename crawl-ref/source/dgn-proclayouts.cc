@@ -1,7 +1,7 @@
 /**
  * @file
  * @brief Procedurally generated dungeon layouts.
- **/  
+ **/
 
 #include <cmath>
 
@@ -68,13 +68,13 @@ ColumnLayout::operator()(const coord_def &p, const uint32_t offset) const
         dungeon_feature_type feat = _pick_pseudorandom_wall(hash3(p.x/w, p.y/w, 2));
         return ProceduralSample(p, feat, offset + 4096);
     }
-    return ProceduralSample(p, DNGN_FLOOR, offset + 4096); 
+    return ProceduralSample(p, DNGN_FLOOR, offset + 4096);
 }
 
 ProceduralSample
 DiamondLayout::operator()(const coord_def &p, const uint32_t offset) const
-{             
-    
+{
+
     uint8_t halfCell = w + s;
     uint8_t cellSize = halfCell * 2;
     uint8_t x = abs(abs(p.x) % cellSize - halfCell);
@@ -84,9 +84,9 @@ DiamondLayout::operator()(const coord_def &p, const uint32_t offset) const
         dungeon_feature_type feat = _pick_pseudorandom_wall(hash3(p.x/w, p.y/w, 2));
         return ProceduralSample(p, feat, offset + 4096);
     }
-    return ProceduralSample(p, DNGN_FLOOR, offset + 4096); 
+    return ProceduralSample(p, DNGN_FLOOR, offset + 4096);
 }
- 
+
 
 uint32_t _get_changepoint(const worley::noise_datum &n, const double scale)
 {
@@ -117,7 +117,7 @@ WorleyLayout::operator()(const coord_def &p, const uint32_t offset) const
         : min(id % size, (id / size) % size);
     ProceduralSample sample = (*layouts[(choice + seed) % size])(p, offset);
 
-    return ProceduralSample(p, sample.feat(), 
+    return ProceduralSample(p, sample.feat(),
                 min(changepoint, sample.changepoint()));
 }
 
@@ -133,7 +133,7 @@ ChaosLayout::operator()(const coord_def &p, const uint32_t offset) const
 
 ProceduralSample
 RoilingChaosLayout::operator()(const coord_def &p, const uint32_t offset) const
-{   
+{
     const double scale = (density - 350) + 4800;
     double x = p.x;
     double y = p.y;
@@ -146,7 +146,7 @@ RoilingChaosLayout::operator()(const coord_def &p, const uint32_t offset) const
 
 ProceduralSample
 RiverLayout::operator()(const coord_def &p, const uint32_t offset) const
-{   
+{
     const double scale = 10000;
     const double scalar = 90.0;
     double x = (p.x + perlin::fBM(p.x/4.0, p.y/4.0, seed, 5) * 3) / scalar;
@@ -190,7 +190,7 @@ NewAbyssLayout::operator()(const coord_def &p, const uint32_t offset) const
 
     if (base % 3 == 0)
         isWall = !isWall;
-  
+
     if (isWall)
     {
         int fuzz = (base / 3) % 3 ? 0 : (base / 9) % 3 - 1;

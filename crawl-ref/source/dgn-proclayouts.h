@@ -19,7 +19,7 @@ bool less_dense_than(const dungeon_feature_type &a, const dungeon_feature_type &
 class ProceduralSample
 {
     public:
-        ProceduralSample(const coord_def _c, const dungeon_feature_type _ft, const uint32_t _cp, map_mask_type _m = MMT_NONE) : 
+        ProceduralSample(const coord_def _c, const dungeon_feature_type _ft, const uint32_t _cp, map_mask_type _m = MMT_NONE) :
             c(_c), ft(_ft), cp(_cp), m(_m) {}
         coord_def coord() const { return c; }
         dungeon_feature_type feat() const { return ft; }
@@ -72,7 +72,7 @@ class DiamondLayout : public ProceduralLayout
     private:
         uint32_t w, s;
 };
- 
+
 class WorleyLayout : public ProceduralLayout
 {
     public:
@@ -103,7 +103,7 @@ class RoilingChaosLayout : public ProceduralLayout
             : seed(_seed), density(_density) {}
         ProceduralSample operator()(const coord_def &p, const uint32_t offset = 0) const;
     private:
-        const uint32_t seed; 
+        const uint32_t seed;
         const uint32_t density;
 };
 
@@ -113,7 +113,7 @@ class RiverLayout : public ProceduralLayout
         RiverLayout(uint32_t _seed, const ProceduralLayout &_layout) : seed(_seed), layout(_layout) {}
         ProceduralSample operator()(const coord_def &p, const uint32_t offset = 0) const;
     private:
-        const uint32_t seed; 
+        const uint32_t seed;
         const ProceduralLayout &layout;
 };
 
@@ -123,6 +123,6 @@ class NewAbyssLayout : public ProceduralLayout
         NewAbyssLayout(uint32_t _seed) : seed(_seed) {}
         ProceduralSample operator()(const coord_def &p, const uint32_t offset = 0) const;
     private:
-        const uint32_t seed; 
+        const uint32_t seed;
 };
 #endif /* PROC_LAYOUTS_H */

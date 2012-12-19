@@ -2068,7 +2068,7 @@ static monsterentry mondata[] = {
     I_INSECT, HT_LAND, FL_NONE, 11, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_SMALL
 },
- 
+
 {
     MONS_APOCALYPSE_CRAB, 't', WHITE, "apocalypse crab",
     M_NO_SKELETON | M_FLEES | M_SEE_INVIS,
@@ -2080,7 +2080,7 @@ static monsterentry mondata[] = {
     I_INSECT, HT_LAND, FL_NONE, 11, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_SMALL
 },
- 
+
 // ugly things ('u')
 {
     MONS_UGLY_THING, 'u', BLACK, "ugly thing",
@@ -4391,7 +4391,7 @@ static monsterentry mondata[] = {
     I_PLANT, HT_ROCK, FL_NONE, 12, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LARGE
 },
- 
+
 // humans ('@')
 {
     MONS_HUMAN, '@', LIGHTGREY, "human",

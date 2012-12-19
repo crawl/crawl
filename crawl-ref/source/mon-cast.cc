@@ -823,7 +823,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.flavour    = BEAM_FIRE;
         beam.is_beam    = true;
         break;
-    
+
     case SPELL_CHAOS_BREATH:
         beam.name       = "blast of chaos";
         beam.aux_source = "blast of chaotic breath";
@@ -833,7 +833,7 @@ bolt mons_spell_beam(monster* mons, spell_type spell_cast, int power,
         beam.flavour    = BEAM_CHAOS;
         beam.is_beam    = true;
         break;
-    
+
     case SPELL_COLD_BREATH:
         beam.name       = "blast of cold";
         beam.aux_source = "blast of icy breath";
