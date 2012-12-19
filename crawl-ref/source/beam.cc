@@ -5674,8 +5674,8 @@ bolt::bolt() : origin_spell(SPELL_NO_SPELL),
                affects_nothing(false), affects_items(true), effect_known(true),
                draw_delay(15), special_explosion(NULL), animate(true),
                ac_rule(AC_NORMAL),
-#ifdef DEBUG_DIAGNOSTICD
-               quier_debug(false),
+#ifdef DEBUG_DIAGNOSTICS
+               quiet_debug(false),
 #endif
                range_funcs(),
                damage_funcs(), hit_funcs(), aoe_funcs(), affect_func(NULL),
