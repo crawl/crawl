@@ -3215,6 +3215,7 @@ void world_reacts()
     if (!crawl_state.game_is_arena())
         _player_reacts();
 
+    abyss_morph(you.time_taken);
     apply_noises();
     handle_monsters(true);
 
