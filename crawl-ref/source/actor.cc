@@ -362,7 +362,7 @@ bool actor::evokable_berserk(bool calc_unid) const
 
 bool actor::evokable_invis(bool calc_unid) const
 {
-    return suppressed()
+    return !suppressed()
            && (wearing(EQ_RINGS, RING_INVISIBILITY, calc_unid)
                || wearing_ego(EQ_CLOAK, SPARM_DARKNESS, calc_unid)
                || scan_artefacts(ARTP_INVISIBLE, calc_unid));
