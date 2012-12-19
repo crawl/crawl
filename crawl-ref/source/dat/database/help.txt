@@ -107,16 +107,16 @@ or rods that contain the spell.
 You can search for artefact item properties (such as <w>prevents.*teleport</w>)
 to find artefacts that have the property.
 
-If you're using stash.lua (which is the default), you can also search by
-some additional item properties: <w>artefact</w> will find identified artefacts,
-<w>ego</w> will find non-artefacts with a brand and unidentified items which may
-be branded, and <w>throwable</w> will find things you can throw. Skill names
-(such as <w>Polearms</w> or <w>Long Blades</w>) will find all weapons that train
-that skill.
+You can also search by some additional item properties: <w>artefact</w> will
+find identified artefacts, <w>ego</w> will find non-artefacts with a brand and
+unidentified items which may be branded, and <w>throwable</w> will find things
+you can throw. Skill names (such as <w>Polearms</w> or <w>Long Blades</w>) will
+find all weapons that train that skill.
 
-If you're using stash.lua and have set annotate_item_class = true in your
-initfile, you can also search by item types such as <w>book</w> or <w>jewellery</w>. For
-armour slots, you can use <w>helmet</w> (all head gear), <w>gloves</w>, <w>shield</w>, and <w>body</w>.
+If you have set annotate_item_class = true in your initfile, you can also
+search by item types such as <w>book</w> or <w>jewellery</w>. For armour slots,
+you can use <w>helmet</w> (all head gear), <w>gloves</w>, <w>shield</w>, and
+<w>body</w>.
 
 <h>Finding Dungeon Features:</h>
 
