@@ -559,7 +559,7 @@ string describe_mutations(bool center_title)
         num << 4 + you.experience_level / 3
                  + (you.species == SP_GREY_DRACONIAN ? 5 : 0);
 
-        const string msg = "Your " + scale_type + " scales are "
+        string msg = "Your " + scale_type + " scales are "
               + (you.species == SP_GREY_DRACONIAN ? "very " : "") + "hard"
               + " (AC +" + num.str() + ").";
 
@@ -567,6 +567,13 @@ string describe_mutations(bool center_title)
                       player_is_shapechanged() && you.form != TRAN_DRAGON);
 
         result += "Your body does not fit into most forms of armour.\n";
+
+        msg = "Your cold-blooded metabolism reacts poorly when cold.";
+        if (you.res_cold() <= 0)
+            result += msg + "\n";
+        else
+            result += "<darkgrey>" + msg + "</darkgrey>\n";
+
         have_any = true;
     }
 

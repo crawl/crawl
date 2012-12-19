@@ -783,9 +783,15 @@ bool expose_items_to_element(beam_type flavour, const coord_def& where,
 //
 // XXX: This function is far from perfect and a work in progress.
 bool expose_player_to_element(beam_type flavour, int strength,
-                              bool damage_inventory)
+                              bool damage_inventory, bool slow_dracs)
 {
     _maybe_melt_player_enchantments(flavour, strength ? strength : 10);
+
+    if (flavour == BEAM_COLD && slow_dracs && player_genus(GENPC_DRACONIAN)
+        && you.res_cold() <= 0 && coinflip())
+    {
+        you.slow_down(0, strength);
+    }
 
     if (strength <= 0 || !damage_inventory)
         return false;
