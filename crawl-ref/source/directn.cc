@@ -1062,8 +1062,8 @@ coord_def direction_chooser::find_default_target() const
             // We might be able to hit monsters in LOS that are outside of
             // normal range, but inside explosion/cloud range
             if (!success
-                && (you.current_vision > range || hitfunc->can_affect_walls())
-                && hitfunc && hitfunc->can_affect_outside_range())
+                && hitfunc && hitfunc->can_affect_outside_range()
+                && (you.current_vision > range || hitfunc->can_affect_walls()))
             {
                 success = _find_square_wrapper(result, 1, _find_monster_expl,
                                                needs_path, mode, range, hitfunc,
@@ -2433,6 +2433,8 @@ static bool _find_monster(const coord_def& where, int mode, bool need_path,
 static bool _find_monster_expl(const coord_def& where, int mode, bool need_path,
                                int range, targetter *hitfunc)
 {
+    ASSERT(hitfunc);
+
 #ifdef CLUA_BINDINGS
     {
         coord_def dp = grid2player(where);
