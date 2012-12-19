@@ -2268,7 +2268,7 @@ struct spell_desc
      true,
      false
 },
- 
+
 {
     SPELL_COLD_BREATH, "Cold Breath",
      SPTYP_CONJURATION | SPTYP_ICE,

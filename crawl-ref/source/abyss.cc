@@ -66,7 +66,7 @@ typedef std::priority_queue<ProceduralSample, vector<ProceduralSample>, Procedur
 static sample_queue abyss_sample_queue;
 static vector<dungeon_feature_type> abyssal_features;
 static list<monster*> displaced_monsters;
-    
+
 static void abyss_area_shift(void);
 static void _push_items(void);
 
@@ -983,25 +983,25 @@ void save_abyss_uniques()
 static ProceduralSample _abyss_grid(const coord_def &p)
 {
     const uint32_t seed = abyssal_state.seed;
-    const coord_def pt = p + abyssal_state.major_coord; 
+    const coord_def pt = p + abyssal_state.major_coord;
 
     const static DiamondLayout diamond30(3,0);
     const static DiamondLayout diamond21(2,1);
     const static ColumnLayout column2(2);
     const static ColumnLayout column26(2,6);
-    const static ProceduralLayout* regularLayouts[] = { 
+    const static ProceduralLayout* regularLayouts[] = {
         &diamond30, &diamond21, &column2, &column26
     };
-    const static vector<const ProceduralLayout*> layout_vec(regularLayouts, 
+    const static vector<const ProceduralLayout*> layout_vec(regularLayouts,
         regularLayouts + 4);
     const static WorleyLayout worley(seed + 123456, layout_vec);
     const static RoilingChaosLayout chaosA(seed + 8675309, 450);
     const static RoilingChaosLayout chaosB(seed + 7654321, 400);
     const static RoilingChaosLayout chaosC(seed + 24324,   380);
     const static RoilingChaosLayout chaosD(seed + 24816,   500);
-    const static NewAbyssLayout newAbyssLayout(seed + 7629); 
+    const static NewAbyssLayout newAbyssLayout(seed + 7629);
     const ProceduralLayout* mixedLayouts[] = {
-        &chaosA, &worley, &chaosB, &chaosC, &chaosD, &newAbyssLayout                                      
+        &chaosA, &worley, &chaosB, &chaosC, &chaosD, &newAbyssLayout
     };
     const static vector<const ProceduralLayout*> mixed_vec(mixedLayouts, mixedLayouts + 6);
     const static WorleyLayout layout(seed + 4321, mixed_vec);
@@ -1013,7 +1013,7 @@ static ProceduralSample _abyss_grid(const coord_def &p)
     abyss_sample_queue.push(sample);
     return sample;
 }
- 
+
 static cloud_type _cloud_from_feat(const dungeon_feature_type &ft)
 {
     switch (ft)
@@ -1054,7 +1054,7 @@ static void _update_abyss_terrain(const coord_def &p,
     // ignore dead coordinates
     if (!in_bounds(rp))
         return;
-     
+
     const dungeon_feature_type currfeat = grd(rp);
 
     // Don't decay vaults.
@@ -1076,18 +1076,18 @@ static void _update_abyss_terrain(const coord_def &p,
 
     if (!abyss_genlevel_mask(rp))
         return;
-    
+
     if (currfeat != DNGN_UNSEEN && !morph)
         return;
 
     // What should have been there previously?  It might not be because
     // of external changes such as digging.
     const ProceduralSample sample = _abyss_grid(rp);
-    
+
     // Enqueue the update, but don't morph.
     if (_abyssal_rune_at(rp))
         return;
-    
+
     const dungeon_feature_type feat = sample.feat();
 
     // If the selected grid is already there, *or* if we're morphing and
@@ -1106,7 +1106,7 @@ static void _update_abyss_terrain(const coord_def &p,
             _push_displaced_monster(mon);
     }
 }
-    
+
 static int _abyssal_stair_chance() {
   return 3500 - (200 * you.depth / 3);
 }
@@ -1116,14 +1116,14 @@ static void _nuke_all_terrain()
    for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
     {
         env.level_map_mask(*ri) = MMT_NUKED;
-    } 
+    }
 }
 
 static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
                                  bool morph = false)
 {
     const int exit_chance = _abyss_exit_chance();
-    
+
     // Except for the altar on the starting position, don't place any altars.
     const int altar_chance = you.char_direction != GDT_GAME_START? 10000 : 0;
 
@@ -1146,7 +1146,7 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
         if (ii)
             dprf("Examined %d features.", ii);
     }
-   
+
     int ii = 0;
     int delta = you.time_taken * (you.abyss_speed + 40) / 200;
     for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
@@ -1180,7 +1180,7 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
                                 _abyss_pick_altar(),
                                 abyss_genlevel_mask)
         ||
-        (level_id::current().depth < 27 && 
+        (level_id::current().depth < 27 &&
         _abyss_check_place_feat(p, _abyssal_stair_chance(), NULL, NULL,
                                 DNGN_ABYSSAL_STAIR,
                                 abyss_genlevel_mask))
@@ -1257,7 +1257,7 @@ static void _initialize_abyss_state()
     abyssal_state.depth = random2(0x7FFFFFFF);
     abyss_sample_queue = sample_queue(ProceduralSamplePQCompare());
 }
- 
+
 static void abyss_area_shift(void)
 {
 #ifdef DEBUG_ABYSS

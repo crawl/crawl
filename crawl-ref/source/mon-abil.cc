@@ -2843,7 +2843,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
             {
                 beem.is_big_cloud = true;
                 beem.damage       = dice_def(1, (mons->hit_dice*3)/2);
-            } 
+            }
 
             // Fire tracer.
             fire_tracer(mons, beem);

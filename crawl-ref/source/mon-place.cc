@@ -909,14 +909,14 @@ static bool _in_ood_pack_protected_place()
 static string _abyss_monster_creation_message(monster* mon, bool visible)
 {
   if (mon->type == MONS_DEATH_COB)
-  {   
+  {
       if (visible) {
         return coinflip() ? " appears in a burst of microwaves!" : " pops from nullspace!";
       }
       return " smells like butter!";
   }
 
-    string messages[] = { 
+    string messages[] = {
         (visible ? " appears" : " flickers") + string(" in a shower of")
             + (one_chance_in(3) ? " translocational energy." : " sparks."),
         " materialises.",
@@ -924,7 +924,7 @@ static string _abyss_monster_creation_message(monster* mon, bool visible)
         " assembles " + string(mons_pronoun(mon->type, PRONOUN_REFLEXIVE, visible)) + "!",
         (one_chance_in(3) ? " erupts" : " bursts") + string(" from nowhere!"),
         string(" is cast out of ") + (one_chance_in(3) ? "space!" : "reality!"),
-        string(" coalesces out of ") + (one_chance_in(3) ? "pure" : "seething") 
+        string(" coalesces out of ") + (one_chance_in(3) ? "pure" : "seething")
             + string(" chaos."),
         string(" punctures the fabric of ") + (one_chance_in(5) ? " time!" : " the universe."),
         string(" manifests") + (silenced(you.pos()) ? "!" : " with a bang!")
@@ -1162,15 +1162,15 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
              mon->name(DESC_PLAIN).c_str(), mon->pos().x, mon->pos().y);
 #endif
     }
-    
+
     if (player_in_branch(BRANCH_ABYSS) && !mg.summoner)
     {
         big_cloud(CLOUD_TLOC_ENERGY, mon, mon->pos(), 3 + random2(3), 3, 3);
     }
 
     // Message to player from stairwell/gate appearance.
-    if (you.see_cell(mg.pos) && 
-       (mg.proximity == PROX_NEAR_STAIRS || 
+    if (you.see_cell(mg.pos) &&
+       (mg.proximity == PROX_NEAR_STAIRS ||
        (player_in_branch(BRANCH_ABYSS) && !mg.summoner)))
     {
         string msg;
@@ -1202,7 +1202,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
                 else
                     msg = "";
             }
-        } 
+        }
         else if (player_in_branch(BRANCH_ABYSS))
         {
             msg += _abyss_monster_creation_message(mon, is_visible);
@@ -1211,7 +1211,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
             mpr(msg.c_str());
         // Special case: must update the view for monsters created
         // in player LOS.
-        viewwindow();  
+        viewwindow();
     }
 
     // Now, forget about banding if the first placement failed, or there are

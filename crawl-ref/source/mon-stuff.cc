@@ -2369,7 +2369,7 @@ int monster_die(monster* mons, killer_type killer,
         if (mons_genus(mons->type) == MONS_MUMMY)
             _mummy_curse(mons, killer, killer_index);
     }
-    
+
     if (mons->mons_species() == MONS_BALLISTOMYCETE)
     {
         activate_ballistomycetes(mons, mons->pos(),
