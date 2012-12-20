@@ -2869,8 +2869,6 @@ w:50
 
 @The_monster@ says, "I hate vampires."
 
-@The_monster@ says, "What is up with vampires and their rat fetish?"
-
 @The_monster@ says, "How did they even end up in those cages?"
 
 @The_monster@ says, "That ghoul gave me heartburn."
@@ -2885,7 +2883,7 @@ w:50
 
 @The_monster@ says, "I just hope the loot isn't guarded by liches. I hate liches."
 
-@The_monster@ says, "The mummy wasn't that great."
+@The_monster@ says, "That mummy wasn't so great."
 
 @The_monster@ says, "This place has the same junk as everywhere else. I hate that."
 
