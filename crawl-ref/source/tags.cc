@@ -2068,6 +2068,8 @@ static void tag_read_you(reader &th)
     {
 #endif
     count = unmarshallUnsigned(th);
+    ASSERT(count >= 0);
+    ASSERT(count < 16); // sanity check
     you.uncancel.resize(count);
     for (i = 0; i < count; i++)
     {

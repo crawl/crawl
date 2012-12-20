@@ -11,14 +11,22 @@
 #include "player.h"
 #include "state.h"
 #include "uncancel.h"
+#include "unwind.h"
 
 void add_uncancel(uncancellable_type kind, int arg)
 {
     you.uncancel.push_back(pair<uncancellable_type, int>(kind, arg));
 }
 
+static bool running = false;
+
 void run_uncancels()
 {
+    // Run uncancels iteratively rather than recursively.
+    if (running)
+        return;
+    unwind_var<bool> run(running, true);
+
     while (!you.uncancel.empty() && !crawl_state.seen_hups)
     {
         // changed to -1 if we pop prematurely
@@ -29,6 +37,7 @@ void run_uncancels()
         // was no HUP, it's due to some other reason.
 
         int arg = you.uncancel[act].second;
+        dprf("Running uncancel type=%d arg=%d", you.uncancel[act].first, arg);
 
         switch (you.uncancel[act].first)
         {
