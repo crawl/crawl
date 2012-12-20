@@ -13,6 +13,7 @@ These include:
 * 2-clause BSD: all contributions by Steve Noonan and Jesse Luehrs
 * Public Domain|CC0: most of tiles
 * MIT: json.cc/json.h, some .js files in webserver/static/scripts/contrib/
+       worley.{cc,h}
 * zlib: webserver/static/scripts/contrib/inflate.js
 
 While a majority of the tiles are in the Public Domain, there is no accurate
