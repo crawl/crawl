@@ -1,8 +1,23 @@
 /* Copyright 1994, 2002 by Steven Worley
-   This software may be modified and redistributed without restriction
-   provided this comment header remains intact in the source code.
-   This code is provided with no warrantee, express or implied, for
-   any purpose.
+
+   Permission is hereby granted, free of charge, to any person
+   obtaining a copy of this software and associated documentation files
+   (the "Software"), to deal in the Software without restriction,
+   including without limitation the rights to use, copy, modify, merge,
+   publish, distribute, sublicense, and/or sell copies of the Software,
+   and to permit persons to whom the Software is furnished to do so,
+   subject to the following conditions:
+
+   The above copyright notice and this permission notice shall be
+   included in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+   IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+   CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+   TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
    A detailed description and application examples can be found in the
    1996 SIGGRAPH paper "A Cellular Texture Basis Function" and
@@ -11,7 +26,8 @@
    site http://www.worley.com/cellular.html .
 
    If you do find interesting uses for this tool, and especially if
-   you enhance it, please drop me an email at steve@worley.com. */
+   you enhance it, please drop me an email at steve@worley.com.
+*/
 
 #include "AppHdr.h"
 
