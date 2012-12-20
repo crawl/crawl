@@ -19,6 +19,7 @@ struct abyss_state
     uint32_t seed;
     double phase;
     uint32_t depth;
+    bool nuke_all;
 };
 
 void abyss_morph(double duration);

@@ -2065,8 +2065,21 @@ static void tag_read_you(reader &th)
 #endif
 
     abyssal_state.major_coord = unmarshallCoord(th);
-    abyssal_state.seed = unmarshallInt(th);
-    abyssal_state.depth = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() >= TAG_MINOR_DEEP_ABYSS)
+    {
+        abyssal_state.seed = unmarshallInt(th);
+        abyssal_state.depth = unmarshallInt(th);
+        abyssal_state.nuke_all = false;
+    }
+    else
+    {
+        unmarshallFloat(th);
+        abyssal_state.seed = 0;
+        abyssal_state.depth = 0;
+        abyssal_state.nuke_all = true;
+    }
+#endif
     abyssal_state.phase = unmarshallFloat(th);
 
     _unmarshall_constriction(th, &you);
