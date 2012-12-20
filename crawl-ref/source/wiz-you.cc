@@ -270,6 +270,7 @@ void wizard_heal(bool super_heal)
     if (super_heal)
     {
         // Clear more stuff and give a HP boost.
+        unrot_hp(9999);
         you.magic_contamination = 0;
         you.duration[DUR_LIQUID_FLAMES] = 0;
         you.clear_beholders();
@@ -279,6 +280,7 @@ void wizard_heal(bool super_heal)
     // Clear most status ailments.
     you.rotting = 0;
     you.disease = 0;
+    you.duration[DUR_NAUSEA]    = 0;
     you.duration[DUR_CONF]      = 0;
     you.duration[DUR_MISLED]    = 0;
     you.duration[DUR_POISONING] = 0;
