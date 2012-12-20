@@ -927,11 +927,12 @@ void _starcursed_scream(monster* mon, actor* target)
         ouch(dam, mon->mindex(), KILLED_BY_BEAM, "accursed screaming");
     }
 
-    if (stun)
+    if (stun && target->alive())
         target->paralyse(mon, stun, "accursed screaming");
 
     for (unsigned int i = 0; i < chorus.size(); ++i)
-        chorus[i]->add_ench(mon_enchant(ENCH_SCREAMED, 1, chorus[i], 1));
+        if (chorus[i]->alive())
+            chorus[i]->add_ench(mon_enchant(ENCH_SCREAMED, 1, chorus[i], 1));
 }
 
 bool _will_starcursed_scream(monster* mon)
