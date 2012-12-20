@@ -1111,10 +1111,12 @@ static int _abyssal_stair_chance() {
   return 3500 - (200 * you.depth / 3);
 }
 
-static void _nuke_all_terrain()
+static void _nuke_all_terrain(bool vaults)
 {
    for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
     {
+        if (vaults && env.level_map_mask(*ri) & MMT_VAULT)
+            continue;
         env.level_map_mask(*ri) = MMT_NUKED;
     }
 }
@@ -1255,6 +1257,7 @@ static void _initialize_abyss_state()
     abyssal_state.major_coord.y = random2(0x7FFFFFFF);
     abyssal_state.phase = 0.0;
     abyssal_state.depth = random2(0x7FFFFFFF);
+    abyssal_state.nuke_all = false;
     abyss_sample_queue = sample_queue(ProceduralSamplePQCompare());
 }
 
@@ -1439,6 +1442,11 @@ void _increase_depth()
 
 void abyss_morph(double duration)
 {
+    if (abyssal_state.nuke_all)
+    {
+        _nuke_all_terrain(false);
+        abyssal_state.nuke_all = false;
+    }
     if (!player_in_branch(BRANCH_ABYSS))
         return;
     _increase_depth();
@@ -1458,7 +1466,7 @@ void abyss_teleport(bool new_area)
         _abyss_teleport_within_level();
         abyss_area_shift();
         _initialize_abyss_state();
-        _nuke_all_terrain();
+        _nuke_all_terrain(true);
         forget_map(false);
         clear_excludes();
         more();
