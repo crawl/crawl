@@ -11,7 +11,7 @@ Certain pieces come with different licenses, all compatible with the GPL.
 These include:
 * 3-clause BSD: MSVC/stdint.h
 * 2-clause BSD: all contributions by Steve Noonan and Jesse Luehrs
-* Public Domain|CC0: most of tiles
+* Public Domain|CC0: most of tiles, perlin.cc, perlin.h
 * MIT: json.cc/json.h, some .js files in webserver/static/scripts/contrib/
        worley.{cc,h}
 * zlib: webserver/static/scripts/contrib/inflate.js
