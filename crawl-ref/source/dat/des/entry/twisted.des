@@ -8,45 +8,6 @@
 # lua, use of SUBVAULTs or just plain obfusciation. Some maps simply have
 # extremely long headers, so we put them here.
 ##############################################################################
-NAME:    dpeg_entry_thieves
-ORIENT:  float
-TAGS:    entry no_monster_gen
-WEIGHT:  20
-: if crawl.one_chance_in(7) then
-SHUFFLE: Aa/Bb, EF, CD
-NSUBST:  A=1:+/*:x, F=1:+/*:x, D=1:+/*:x
-SUBST:   Y=], a:+., BbCEG=x
-: else
-SHUFFLE: Aa/Bb, FG, CDE
-NSUBST:  A=1:+/*:x, F=1:+/*:x, D=1:+/*:x, E=1:+/*:x
-SUBST:   a:+., BbCG=x, Y=.
-:end
-SHUFFLE: H4/'"
-SUBST:   '=x, ":x"
-NSUBST:  "=1:<>/*:., H=1:+/*:x, 4:4..
-SUBST:   Z=.+
-: if crawl.one_chance_in(7) then
-SHUFFLE: LK, IJ
-NSUBST:  L=1:+/*:x, I=1:+/*:x
-SUBST:   X=), KJM=x
-:else
-SHUFFLE: ML, IJ, JKL
-SUBST:   KL=x, X=.
-NSUBST:  M=1:+/*:x, I=1:+/*:x, J=1:+/*:x
-:end
-SHUFFLE: 123567
-SUBST:   12=., 3:3., 5:5., 3567=.
-MAP
-xxxxxxxxxxxxx
-x11B2.D33F.[x
-AAAB.2D33FY.x
-xaaxCCxEExGGx
-@.....{.....@
-MMMxKxIIxZHHH
-x.XL7J65I.H4x
-x(.L7J56IxH4x
-xxxxxxxxxxxxx
-ENDMAP
 
 ##############################################################################
 # 37 x 22 -- this one is huge and twisted, but it's also old...
