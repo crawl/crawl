@@ -65,6 +65,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
         return false;
     }
 
+    bool targ_mid = false;
     dist beam;
 
     direction_chooser_args args;
@@ -161,6 +162,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
                 success = false;
                 beam.target = middle;
                 mons = midmons;
+                targ_mid = true;
                 if (mons->wont_attack())
                 {
                     // Let's assume friendlies cooperate.
@@ -193,9 +195,16 @@ static bool _reaching_weapon_attack(const item_def& wpn)
             mpr("You attack empty space.");
         return true;
     }
-    else
+    else if (!fight_melee(&you, mons))
     {
-        if (!fight_melee(&you, mons))
+        if (targ_mid)
+        {
+            // turn_is_over may have been reset to false by fight_melee, but
+            // a failed attempt to reach further should not be free; instead,
+            // charge the same as a successful attempt.
+            you.turn_is_over = true;
+        }
+        else
         {
             canned_msg(MSG_OK);
             return false;
