@@ -1,5 +1,13 @@
 /*
- * A speed-improved simplex noise algorithm for 2D, 3D and 4D in Java.
+ * This is a C++ port of version Stefan Gustavson's public domain
+ * implementation of simplex noise (Version 2012-03-09).
+ *
+ * It was ported by Brendan Hickey (brendan@bhickey.net) and released on
+ * 2012-09-16.
+ *
+ * It is made available under the Creative Commons CC0 license.
+ *
+ * A speed-improved simplex noise algorithm for 2D, 3D and 4D in C++.
  *
  * Based on example code by Stefan Gustavson (stegu@itn.liu.se).
  * Optimisations by Peter Eastman (peastman@drizzle.stanford.edu).
