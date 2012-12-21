@@ -72,8 +72,8 @@ NSUBST: Y=1:+/*:x
 : end
 SUBST:  XY=x, ABCabcdefghijk=l, DEFmnopqrstuv=w
 KPROP:  1G = no_rtele_into
-MONS:   bush w:1 / plant w:6 / fungus w:9
-MONS:   fungus
+MONS:   bush w:1 / plant w:6 / fungus w:9 / nothing w:45
+MONS:   fungus / nothing w:20
 SUBST:  "=2', '=2..., 2:222.WW
 : if crawl.coinflip() then
 SUBST:  Z=x, z=+, V=x
