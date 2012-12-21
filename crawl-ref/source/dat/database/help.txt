@@ -114,10 +114,9 @@ unidentified items which may be branded, and <w>throwable</w> will find things
 you can throw. Skill names (such as <w>Polearms</w> or <w>Long Blades</w>) will
 find all weapons that train that skill.
 
-If you have set annotate_item_class = true in your initfile, you can also
-search by item types such as <w>book</w> or <w>jewellery</w>. For armour slots,
-you can use <w>helmet</w> (all head gear), <w>gloves</w>, <w>shield</w>, and
-<w>body</w>.
+You can also search by item types such as <w>book</w> or <w>jewellery</w>. For
+armour slots, you can use <w>helmet</w> (all head gear), <w>gloves</w>,
+<w>shield</w>, and <w>body</w>.
 
 <h>Finding Dungeon Features:</h>
 
