@@ -399,6 +399,9 @@ static void _check_stop_train()
     _check_spell_skills();
     _check_abil_skills();
 
+    if (you.manual_skill != SK_NONE)
+        you.stop_train.erase(you.manual_skill);
+
     if (you.stop_train.empty())
         return;
 
