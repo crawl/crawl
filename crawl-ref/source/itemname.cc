@@ -3366,7 +3366,10 @@ static const string _item_prefix(const item_def &item, bool temp, bool filter)
     }
 
     if (good_god_hates_item_handling(item) || god_hates_item_handling(item))
+    {
         prefixes.push_back("evil_item");
+        prefixes.push_back("forbidden");
+    }
 
     if (is_emergency_item(item))
         prefixes.push_back("emergency_item");
@@ -3393,7 +3396,10 @@ static const string _item_prefix(const item_def &item, bool temp, bool filter)
         if (item.sub_type == NUM_FOODS)
             break;
         if (is_forbidden_food(item))
-            prefixes.push_back("evil_eating");
+        {
+            prefixes.push_back("evil_eating"); // compat with old configs
+            prefixes.push_back("forbidden");
+        }
 
         if (is_inedible(item))
             prefixes.push_back("inedible");
@@ -3415,6 +3421,7 @@ static const string _item_prefix(const item_def &item, bool temp, bool filter)
             && is_blood_potion(item))
         {
             prefixes.push_back("evil_eating");
+            prefixes.push_back("forbidden");
         }
         if (is_preferred_food(item))
             prefixes.push_back("preferred");

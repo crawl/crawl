@@ -1423,7 +1423,7 @@ menu_colour ^= <match>:<colour>:<regex>, <colour>:<regex>, ...
         etc.)
 
         The following only apply to items whose subtype is known.
-           evil_item       (Your god would hate it if you used this item.)
+           forbidden       (Your god would hate it if you used this item.)
 
            emergency_item  (This item is invaluable in emergencies.)
            good_item       (This item is generally a good item.)
@@ -1431,7 +1431,6 @@ menu_colour ^= <match>:<colour>:<regex>, <colour>:<regex>, ...
            bad_item        (This item is generally a bad item.)
            useless_item    (This item is of no use to you.)
 
-           evil_eating     (Eating this item is punished by the good gods.)
            inedible        (You cannot eat this, or get no nutrition from it.)
            preferred       (The food type your character prefers, for example
                             for herbivores/carnivores.)
@@ -1446,7 +1445,7 @@ menu_colour ^= <match>:<colour>:<regex>, <colour>:<regex>, ...
 
         When looking for menu_colour matches, these prefixes are prepended to
         the actual item name, e.g. in the form of
-           identified evil_item wand of draining (4)
+           identified forbidden wand of draining (4)
            unidentified equipped artefact sparkling ring (left hand)
 
         The same prefixes can also be used for highlighting prompts pertaining
@@ -1623,7 +1622,7 @@ autoinscribe += <regex>:<inscription>
         important wands, as in
              autoinscribe += wand of heal wounds:!V
 
-        The menu colour prefixes (evil_item etc.) can also be used here.
+        The menu colour prefixes (forbidden etc.) can also be used here.
         For example:
              autoinscribe += (bad|dangerous)_item.*scroll:!r
         will prevent accidentally reading any identified bad or
