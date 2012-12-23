@@ -747,8 +747,8 @@ void TilesFramework::_send_item(item_info& current, const item_info& next,
         {
             json_write_string("name", name);
 
-            const string current_prefix = menu_colour_item_prefix(current);
-            const string prefix = menu_colour_item_prefix(next);
+            const string current_prefix = item_prefix(current);
+            const string prefix = item_prefix(next);
             if (force_full || current_prefix != prefix)
             {
                 const int current_prefcol = menu_colour(current.name(DESC_INVENTORY), current_prefix);

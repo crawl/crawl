@@ -2000,8 +2000,7 @@ bool StashTracker::display_search_results(
         {
             const item_def &first(*res.matching_items.begin());
             const int itemcol = menu_colour(first.name(DESC_PLAIN).c_str(),
-                                            menu_colour_item_prefix(first),
-                                            "pickup");
+                                            item_prefix(first), "pickup");
             if (itemcol != -1)
                 me->colour = itemcol;
         }
