@@ -2183,6 +2183,9 @@ void melee_attack::drain_defender()
     if (defender->is_monster() && one_chance_in(3))
         return;
 
+    if (defender->holiness() != MH_NATURAL)
+        return;
+
     special_damage = 1 + random2(damage_done)
                          / (2 + defender->res_negative_energy());
 
