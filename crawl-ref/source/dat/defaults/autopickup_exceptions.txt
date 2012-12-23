@@ -18,7 +18,7 @@ ae += useless_item
 ae += dangerous_item
 
 # Exclude items which your god disapproves of.
-ae += evil_item
+ae += forbidden
 
 # Excluding amulets as you only need one of each. (If you know the
 # subtype that means you already have one of it.) Also for some rings.

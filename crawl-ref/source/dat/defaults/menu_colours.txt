@@ -17,8 +17,8 @@ menu += darkgrey:.*jewellery.*(sustenance)
 ae   += >ring.*(sustenance)
 :end
 
-# Evil items
-menu += $evil:.*evil_item.*
+# Items disliked by your god.
+menu += $forbidden:.*forbidden.*
 
 # Handle cursed and equipped items early to override other colour settings.
 menu += lightred:.*equipped.* cursed
