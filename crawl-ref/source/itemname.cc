@@ -3393,7 +3393,7 @@ static const string _item_prefix(const item_def &item, bool temp, bool filter)
         if (item.sub_type == NUM_FOODS)
             break;
         if (is_forbidden_food(item))
-            prefixes.push_back("evil_eating"), prefixes.push_back("forbidden");
+            prefixes.push_back("evil_eating");
 
         if (is_inedible(item))
             prefixes.push_back("inedible");
