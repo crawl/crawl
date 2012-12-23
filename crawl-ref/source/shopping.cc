@@ -503,7 +503,7 @@ static string _shop_print_stock(const vector<int>& stock,
                              && !is_artefact(item);
 
         // Colour stock according to menu colours.
-        const string colprf = menu_colour_item_prefix(item);
+        const string colprf = item_prefix(item);
         const int col = menu_colour(item.name(DESC_A),
                                     colprf, "shop");
         textcolor(col != -1 ? col : LIGHTGREY);
@@ -2956,7 +2956,7 @@ void ShoppingList::fill_out_menu(Menu& shopmenu)
             // Colour shopping list item according to menu colours.
             const item_def &item = get_thing_item(thing);
 
-            const string colprf = menu_colour_item_prefix(item);
+            const string colprf = item_prefix(item);
             const int col = menu_colour(item.name(DESC_A),
                                         colprf, "shop");
 

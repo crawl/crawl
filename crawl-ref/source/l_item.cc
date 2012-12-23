@@ -428,7 +428,7 @@ static int l_item_do_name_coloured(lua_State *ls)
     if (item)
     {
         string name   = _item_name(ls, item);
-        int    col    = menu_colour(name, menu_colour_item_prefix(*item));
+        int    col    = menu_colour(name, item_prefix(*item));
         string colstr = colour_to_str(col);
 
         ostringstream out;

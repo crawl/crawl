@@ -533,8 +533,7 @@ void list_armour()
         else if (armour_id != -1)
         {
             estr << you.inv[armour_id].name(DESC_INVENTORY);
-            colour = menu_colour(estr.str(),
-                                 menu_colour_item_prefix(you.inv[armour_id]),
+            colour = menu_colour(estr.str(), item_prefix(you.inv[armour_id]),
                                  "equip");
         }
         else if (!you_can_wear(i))
@@ -589,7 +588,7 @@ void list_jewellery(void)
         else if (jewellery_id != -1)
         {
             item = you.inv[jewellery_id].name(DESC_INVENTORY);
-            string prefix = menu_colour_item_prefix(you.inv[jewellery_id]);
+            string prefix = item_prefix(you.inv[jewellery_id]);
             colour = menu_colour(item, prefix, "equip");
         }
         else

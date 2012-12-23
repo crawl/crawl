@@ -2140,7 +2140,7 @@ string get_item_description(const item_def &item, bool verbose,
     {
         description << "\n\n" << "Stash search prefixes: "
                     << userdef_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item);
-        string menu_prefix = filtering_item_prefix(item, false);
+        string menu_prefix = item_prefix(item, false);
         if (!menu_prefix.empty())
             description << "\nMenu/colouring prefixes: " << menu_prefix;
     }

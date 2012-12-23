@@ -3427,7 +3427,7 @@ static bool _prompt_eat_bad_food(const item_def food)
     if (!is_bad_food(food))
         return true;
 
-    const string food_colour = menu_colour_item_prefix(food);
+    const string food_colour = item_prefix(food);
     string colour            = "";
     string colour_off        = "";
 

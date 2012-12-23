@@ -401,7 +401,7 @@ static void _print_stats_wp(int y)
     {
         const item_def& wpn = *you.weapon();
 
-        const string prefix = menu_colour_item_prefix(wpn);
+        const string prefix = item_prefix(wpn);
         const int prefcol = menu_colour(wpn.name(DESC_INVENTORY), prefix);
         if (prefcol != -1)
             col = prefcol;
@@ -463,7 +463,7 @@ static void _print_stats_qv(int y)
     if (q != -1 && !fire_warn_if_impossible(true))
     {
         const item_def& quiver = you.inv[q];
-        const string prefix = menu_colour_item_prefix(quiver);
+        const string prefix = item_prefix(quiver);
         const int prefcol =
             menu_colour(quiver.name(DESC_INVENTORY), prefix);
         if (prefcol != -1)
@@ -1324,7 +1324,7 @@ static void _print_overview_screen_equip(column_composer& cols,
             const int item_idx   = you.equip[e_order[i]];
             const item_def& item = you.inv[item_idx];
             const bool melded    = !player_wearing_slot(e_order[i]);
-            const string prefix = menu_colour_item_prefix(item);
+            const string prefix = item_prefix(item);
             const int prefcol = menu_colour(item.name(DESC_INVENTORY), prefix);
             const int col = prefcol == -1 ? LIGHTGREY : prefcol;
 
