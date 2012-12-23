@@ -3048,14 +3048,6 @@ ring
  To hang upon a tree.”
     -Oscar Wilde, “Chanson”. 1881.
 %%%%
-rod
-
-“Fear not the wicked’s malice, nor their rod.”
-    -John Bunyan, _The Pilgrim's Progress From This World, to That Which is to
-     Come: Delivered Under the Similitude of a Dream Wherein is Discovered, the
-     Manner of His Setting Out, His Dangerous Journey; and Safe Arrival at the
-     Desired Countrey_, para. 500. 1678.
-%%%%
 wand
 
 "[The principle of selection] is the magician’s wand, by means of which he may

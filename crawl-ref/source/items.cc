@@ -3063,7 +3063,7 @@ bool item_is_active_manual(const item_def &item)
 bool item_def::has_spells() const
 {
     return (item_is_spellbook(*this) && item_type_known(*this)
-            || count_rod_spells(*this, true) > 1);
+            || count_rod_spells(*this, true) > 0);
 }
 
 int item_def::book_number() const
