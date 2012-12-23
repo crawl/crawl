@@ -89,4 +89,5 @@ bool trigger_arcane_familiar();
 bool fire_arcane_familiar(monster* mons);
 void reset_arcane_familiar(monster* mons);
 
+spret_type cast_fulminating_prism(int pow, const coord_def& where, bool fail);
 #endif

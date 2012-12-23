@@ -1911,6 +1911,19 @@ struct spell_desc
      false,
      false
 },
+        
+{
+    SPELL_FULMINANT_PRISM, "Fulminant Prism",
+     SPTYP_CONJURATION | SPTYP_HEXES,
+     SPFLAG_GRID | SPFLAG_AREA | SPFLAG_NOT_SELF,
+     5,
+     100,
+     5, 5,
+     0,
+     NULL,
+     true,
+     false
+},
 
 // From here on, all spells are monster-only spells.
 

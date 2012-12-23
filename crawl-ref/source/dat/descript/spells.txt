@@ -305,6 +305,10 @@ Freezing Cloud spell
 
 This spell conjures up a large cloud of lethally cold vapour.
 %%%%
+Fulminant Prism spell
+
+This spell conjures a prism which channels magical energy from its surroundings and unleashes it after a short while as a violent explosion of arcane force. Be warned that the prism is extremely fragile and any damage caused to it may result in premature detonation!
+%%%%
 Major Healing spell
 
 This spell heals a large amount of damage to the caster's body.

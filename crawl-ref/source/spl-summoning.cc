@@ -2719,3 +2719,55 @@ bool fire_arcane_familiar(monster* mons)
 
     return used;
 }
+
+spret_type cast_fulminating_prism(int pow, const coord_def& where, bool fail)
+{
+    if (distance2(where, you.pos()) > dist_range(spell_range(SPELL_FULMINANT_PRISM,
+                                                      pow)))
+    {
+        mpr("That's too far away.");
+        return SPRET_ABORT;
+    }
+
+    if (cell_is_solid(where))
+    {
+        mpr("You can't conjure that within a solid object!");
+        return SPRET_ABORT;
+    }
+
+    // Note that self-targetting is handled by SPFLAG_NOT_SELF.
+    monster* mons = monster_at(where);
+    if (mons)
+    {
+        if (you.can_see(mons))
+        {
+            mpr("You can't place the prism on a creature.");
+            return SPRET_ABORT;
+        }
+
+        fail_check();
+
+        // FIXME: maybe should do _paranoid_option_disable() here?
+        mpr("You see a ghostly outline there, and the spell fizzles.");
+        return SPRET_SUCCESS;      // Don't give free detection!
+    }
+
+    fail_check();
+
+    int hd = pow / 10;
+
+    mgen_data prism_data = mgen_data(MONS_FULMINANT_PRISM, BEH_FRIENDLY, &you,
+                                  3, SPELL_SUMMON_SMALL_MAMMALS,
+                                  where, MHITYOU,  MG_FORCE_PLACE);
+    prism_data.hd = hd;
+    monster *prism = create_monster(prism_data);
+
+    if (prism)
+    {
+        mpr("You conjure a prism of explosive energy!");
+    }
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return SPRET_SUCCESS;
+}

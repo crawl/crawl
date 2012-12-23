@@ -1850,6 +1850,20 @@ void handle_monster_move(monster* mons)
                 mons->lose_energy(EUT_SPECIAL);
         }
 
+        if (mons->type == MONS_FULMINANT_PRISM)
+        {
+            ++mons->number;
+            if (mons->number == 2)
+                mons->suicide();
+            else
+            {
+                simple_monster_message(mons, " crackles loudly.", MSGCH_WARN);
+                // Done this way to keep the detonation timer predictable
+                mons->speed_increment -= 10;
+            }
+            continue;
+        }
+
         mons->shield_blocks = 0;
 
         const int  cloud_num   = env.cgrid(mons->pos());
