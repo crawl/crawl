@@ -755,6 +755,10 @@ Throw Frost spell
 
 This spell throws a small bolt of frost.
 %%%%
+Thunderbolt spell
+
+This spell creates an arc of electricity.
+%%%%
 Tornado spell
 
 This spell turns the air around the caster in a mighty vortex, doing tremendous
