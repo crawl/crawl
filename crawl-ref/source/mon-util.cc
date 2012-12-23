@@ -1157,7 +1157,8 @@ bool mons_is_conjured(monster_type mc)
            || mc == MONS_FIRE_VORTEX
            || mc == MONS_SPATIAL_VORTEX
            || mc == MONS_BALL_LIGHTNING
-           || mc == MONS_ARCANE_FAMILIAR;
+           || mc == MONS_ARCANE_FAMILIAR
+           || mc == MONS_FULMINANT_PRISM;
 }
 
 // Returns true if the given monster's foe is also a monster.
@@ -2750,7 +2751,8 @@ bool mons_self_destructs(const monster* m)
     return (m->type == MONS_GIANT_SPORE
             || m->type == MONS_BALL_LIGHTNING
             || m->type == MONS_LURKING_HORROR
-            || m->type == MONS_ORB_OF_DESTRUCTION);
+            || m->type == MONS_ORB_OF_DESTRUCTION
+            || m->type == MONS_FULMINANT_PRISM);
 }
 
 bool mons_att_wont_attack(mon_attitude_type fr)

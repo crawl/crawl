@@ -1050,6 +1050,17 @@ static void _setup_lightning_explosion(bolt & beam, const monster& origin)
     beam.ex_size = coinflip() ? 3 : 2;
 }
 
+static void _setup_prism_explosion(bolt& beam, const monster& origin)
+{
+    _setup_base_explosion(beam, origin);
+    beam.flavour = BEAM_MISSILE;
+    beam.damage  = (origin.number == 2 ? dice_def(3, 6 + origin.hit_dice * 7 / 4)
+                    : dice_def(2, 6 + origin.hit_dice * 7 / 4));
+    beam.name    = "blast of energy";
+    beam.colour  = MAGENTA;
+    beam.ex_size = origin.number;
+}
+
 static void _setup_inner_flame_explosion(bolt & beam, const monster& origin,
                                          actor* agent)
 {
@@ -1094,6 +1105,11 @@ static bool _explode_monster(monster* mons, killer_type killer,
     }
     else if (type == MONS_LURKING_HORROR)
         sanct_msg = "The lurking horror fades away harmlessly.";
+    else if (type == MONS_FULMINANT_PRISM)
+    {
+        _setup_prism_explosion(beam, *mons);
+        sanct_msg = "By Zin's power, the prism's explosion is contained.";
+    }
     else if (mons->has_ench(ENCH_INNER_FLAME))
     {
         mon_enchant i_f = mons->get_ench(ENCH_INNER_FLAME);
@@ -1613,10 +1629,20 @@ int monster_die(monster* mons, killer_type killer,
     if (mons->type == MONS_GIANT_SPORE
         || mons->type == MONS_BALL_LIGHTNING
         || mons->type == MONS_LURKING_HORROR
+        || (mons->type == MONS_FULMINANT_PRISM && mons->number > 0)
         || mons->has_ench(ENCH_INNER_FLAME))
     {
         did_death_message =
             _explode_monster(mons, killer, killer_index, pet_kill, wizard);
+    }
+    else if (mons->type == MONS_FULMINANT_PRISM && mons->number == 0)
+    {
+        if (!silent && !hard_reset && !was_banished)
+        {
+            simple_monster_message(mons, " detonates feebly.",
+                                   MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
+            silent = true;
+        }
     }
     else if (mons->type == MONS_FIRE_VORTEX
              || mons->type == MONS_SPATIAL_VORTEX

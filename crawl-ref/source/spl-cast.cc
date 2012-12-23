@@ -1022,6 +1022,8 @@ static targetter* _spell_targetter(spell_type spell, int pow, int range)
                 you.props["thunderbolt_aim"].get_coord() : coord_def());
     case SPELL_FRAGMENTATION:
         return new targetter_fragment(&you, pow, range);
+    case SPELL_FULMINANT_PRISM:
+        return new targetter_smite(&you, range, 0, 2);
     default:
         return 0;
     }
@@ -1648,6 +1650,9 @@ static spret_type _do_cast(spell_type spell, int powc,
 
     case SPELL_SHROUD_OF_GOLUBRIA:
         return cast_shroud_of_golubria(powc, fail);
+        
+    case SPELL_FULMINANT_PRISM:
+        return cast_fulminating_prism(powc, beam.target, fail);
 
     default:
         return SPRET_NONE;

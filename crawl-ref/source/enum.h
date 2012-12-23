@@ -2543,6 +2543,8 @@ enum monster_type                      // menv[].type
     MONS_JORGRUN,
     MONS_LAMIA,
 
+    MONS_FULMINANT_PRISM,
+
     NUM_MONSTERS,               // used for polymorph
 
     // MONS_NO_MONSTER can get put in savefiles, so it shouldn't change
@@ -3318,6 +3320,7 @@ enum spell_type
     SPELL_FRENZY,
     SPELL_SUMMON_TWISTER,
     SPELL_ARCANE_FAMILIAR,
+    SPELL_FULMINANT_PRISM,
     NUM_SPELLS
 };
 
