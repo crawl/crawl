@@ -3025,13 +3025,14 @@ void monster::go_berserk(bool /* intentional */, bool /* potion */)
         xom_is_stimulated(friendly() ? 25 : 100);
 }
 
-void monster::expose_to_element(beam_type flavour, int strength)
+void monster::expose_to_element(beam_type flavour, int strength,
+                                bool damage_inventory, bool slow_cold_blood)
 {
     switch (flavour)
     {
     case BEAM_COLD:
-        if (mons_class_flag(type, M_COLD_BLOOD) && res_cold() <= 0
-            && coinflip())
+        if (slow_cold_blood && mons_class_flag(type, M_COLD_BLOOD)
+            && res_cold() <= 0 && coinflip())
         {
             slow_down(this, strength);
         }

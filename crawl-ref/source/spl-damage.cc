@@ -479,8 +479,7 @@ spret_type cast_refrigeration(int pow, bool non_player, bool freeze_potions,
         // Note: this used to be 12!... and it was also applied even if
         // the player didn't take damage from the cold, so we're being
         // a lot nicer now.  -- bwr
-        if (freeze_potions)
-            expose_player_to_element(BEAM_COLD, 5);
+        expose_player_to_element(BEAM_COLD, 5, freeze_potions);
     }
 
     // Now do the monsters.
@@ -547,7 +546,7 @@ spret_type cast_refrigeration(int pow, bool non_player, bool freeze_potions,
 
         // Cold-blooded creatures can be slowed.
         if (mi->alive())
-            mi->expose_to_element(BEAM_COLD, hurt);
+            mi->expose_to_element(BEAM_COLD, 5);
     }
     return SPRET_SUCCESS;
 }

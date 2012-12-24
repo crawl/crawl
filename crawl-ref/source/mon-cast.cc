@@ -2923,8 +2923,7 @@ static bool _mons_ozocubus_refrigeration(monster* mons, bool actual)
                 if (m->alive())
                 {
                     print_wounds(m);
-                    if (mons_class_flag(m->type, M_COLD_BLOOD) && coinflip())
-                        m->add_ench(ENCH_SLOW);
+                    m->expose_to_element(BEAM_COLD, 5);
                 }
             }
 
