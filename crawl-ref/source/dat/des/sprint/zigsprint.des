@@ -26,7 +26,7 @@ function callback.zig_tele(data, triggerable, triggerer, marker, ev)
   local position = dgn.point(marker:pos())
   my_slaves = dgn.find_marker_positions_by_prop("teleport_spot",
                                                 data.teleport_spot)
-  you.teleport_to(my_slaves[1].x, my_slaves[1].y)
+  you.teleport_to(my_slaves[1].x, my_slaves[1].y, false, true)
   crawl.mpr("Your surroundings seem different!")
   if data.teleport_spot < 28 then
     crawl.mpr("Welcome to arena " .. data.teleport_spot .. ".")

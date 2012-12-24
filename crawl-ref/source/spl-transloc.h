@@ -19,7 +19,8 @@ void you_teleport_now(bool allow_control,
                       bool wizard_tele = false,
                       int range = GDM);
 bool you_teleport_to(const coord_def where,
-                     bool move_monsters = false);
+                     bool move_monsters = false,
+                     bool override_stasis = false);
 
 spret_type cast_portal_projectile(int pow, bool fail);
 
