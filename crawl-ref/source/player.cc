@@ -6463,9 +6463,10 @@ bool player::poison(actor *agent, int amount, bool force)
                            force);
 }
 
-void player::expose_to_element(beam_type element, int st)
+void player::expose_to_element(beam_type element, int strength,
+                               bool damage_inventory, bool slow_cold_blood)
 {
-    ::expose_player_to_element(element, st);
+    ::expose_player_to_element(element, strength, damage_inventory, slow_cold_blood);
 }
 
 void player::blink(bool allow_partial_control)

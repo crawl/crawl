@@ -3712,7 +3712,7 @@ void bolt::affect_player()
 
         // Potions exploding.
         if (flavour == BEAM_COLD)
-            expose_player_to_element(BEAM_COLD, burn_power);
+            expose_player_to_element(BEAM_COLD, burn_power, true, false);
 
         // Spore pops.
         if (in_explosion_phase && flavour == BEAM_SPORE)
