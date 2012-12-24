@@ -443,6 +443,11 @@ static NORETURN void _launch_game()
     // Initialise save game so we can recover from crashes on D:1.
     save_game_state();
 
+#ifdef USE_TILE_WEB
+    // Send initial game state before we do any UI updates
+    tiles.redraw();
+#endif
+
     run_uncancels();
 
     cursor_control ccon(!Options.use_fake_player_cursor);
