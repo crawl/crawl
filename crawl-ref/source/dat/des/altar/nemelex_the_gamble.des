@@ -23,26 +23,38 @@ function callback.grunt_nemelex_gamble_start(data,triggerable,triggerer,marker,e
     dgn.terrain_changed(slave[1].x, slave[1].y, "floor", false, false, false)
     if crawl.coinflip() then
         slave = dgn.find_marker_positions_by_prop("prize", 1)
-        you.teleport_to(slave[1].x, slave[1].y)
-        crawl.god_speaks("Nemelex Xobeh", "Nemelex Xobeh says, \"You win!\"")
+        if you.teleport_to(slave[1].x, slave[1].y) then
+            crawl.god_speaks("Nemelex Xobeh", "Nemelex Xobeh says, \"You win!\"")
+        else
+            crawl.mpr("There is a strange hissing noise.")
+        end
     else
         slave = dgn.find_marker_positions_by_prop("peril", 1)
-        you.teleport_to(slave[1].x, slave[1].y)
-        crawl.god_speaks("Nemelex Xobeh", "Nemelex Xobeh says, \"You lose!\"")
+        if you.teleport_to(slave[1].x, slave[1].y) then
+            crawl.god_speaks("Nemelex Xobeh", "Nemelex Xobeh says, \"You lose!\"")
+        else
+            crawl.mpr("There is a strange hissing noise.")
+        end
     end
     crawl.mpr("Your surroundings suddenly seem different.")
 end
 
 function callback.grunt_nemelex_gamble_finish1(data,triggerable,triggerer,marker,ev)
     slave = dgn.find_marker_positions_by_prop("exit", 1)
-    you.teleport_to(slave[1].x, slave[1].y)
-    crawl.mpr("Your surroundings suddenly seem different.")
+    if you.teleport_to(slave[1].x, slave[1].y) then
+        crawl.mpr("Your surroundings suddenly seem different.")
+    else
+        crawl.mpr("There is a strange hissing noise.")
+    end
 end
 
 function callback.grunt_nemelex_gamble_finish2(data,triggerable,triggerer,marker,ev)
     slave = dgn.find_marker_positions_by_prop("exit", 1)
-    you.teleport_to(slave[1].x, slave[1].y)
-    crawl.mpr("Your surroundings suddenly seem different.")
+    if you.teleport_to(slave[1].x, slave[1].y) then
+        crawl.mpr("Your surroundings suddenly seem different.")
+    else
+        crawl.mpr("There is a strange hissing noise.")
+    end
 end
 
 function callback.grunt_nemelex_gamble_expire(data,triggerable,triggerer,marker,ev)
