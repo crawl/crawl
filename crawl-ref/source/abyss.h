@@ -16,9 +16,8 @@ extern const coord_def ABYSS_CENTRE;
 struct abyss_state
 {
     coord_def major_coord;
-    uint32_t seed;
+    uint64_t depth;
     double phase;
-    uint32_t depth;
     bool nuke_all;
 };
 
@@ -32,5 +31,6 @@ void save_abyss_uniques();
 bool is_level_incorruptible(bool quiet = false);
 bool lugonu_corrupt_level(int power);
 void run_corruption_effects(int duration);
+void set_abyss_state(coord_def coord, uint32_t depth);
 
 #endif

@@ -982,9 +982,7 @@ void save_abyss_uniques()
 
 static ProceduralSample _abyss_grid(const coord_def &p)
 {
-    const uint32_t seed = abyssal_state.seed;
     const coord_def pt = p + abyssal_state.major_coord;
-
     const static DiamondLayout diamond30(3,0);
     const static DiamondLayout diamond21(2,1);
     const static ColumnLayout column2(2);
@@ -994,21 +992,21 @@ static ProceduralSample _abyss_grid(const coord_def &p)
     };
     const static vector<const ProceduralLayout*> layout_vec(regularLayouts,
         regularLayouts + 4);
-    const static WorleyLayout worley(seed + 123456, layout_vec);
-    const static RoilingChaosLayout chaosA(seed + 8675309, 450);
-    const static RoilingChaosLayout chaosB(seed + 7654321, 400);
-    const static RoilingChaosLayout chaosC(seed + 24324,   380);
-    const static RoilingChaosLayout chaosD(seed + 24816,   500);
-    const static NewAbyssLayout newAbyssLayout(seed + 7629);
+    const static WorleyLayout worley(123456, layout_vec);
+    const static RoilingChaosLayout chaosA(8675309, 450);
+    const static RoilingChaosLayout chaosB(7654321, 400);
+    const static RoilingChaosLayout chaosC(24324,   380);
+    const static RoilingChaosLayout chaosD(24816,   500);
+    const static NewAbyssLayout newAbyssLayout(7629);
     const ProceduralLayout* mixedLayouts[] = {
         &chaosA, &worley, &chaosB, &chaosC, &chaosD, &newAbyssLayout
     };
     const static vector<const ProceduralLayout*> mixed_vec(mixedLayouts, mixedLayouts + 6);
-    const static WorleyLayout layout(seed + 4321, mixed_vec);
+    const static WorleyLayout layout(4321, mixed_vec);
     const ProceduralLayout* masterLayouts[] = { &newAbyssLayout, &layout };
     const static vector<const ProceduralLayout*> master_vec(masterLayouts, masterLayouts + 2);
-    const static WorleyLayout masterLayout(seed + 314159, master_vec, 5.0);
-    const static RiverLayout rivers(seed, masterLayout);
+    const static WorleyLayout masterLayout(314159, master_vec, 5.0);
+    const static RiverLayout rivers(1800, masterLayout);
     const ProceduralSample sample = rivers(pt, abyssal_state.depth);
     abyss_sample_queue.push(sample);
     return sample;
@@ -1122,7 +1120,7 @@ static void _nuke_all_terrain(bool vaults)
 }
 
 static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
-                                 bool morph = false)
+                                 bool morph = false, bool now = false)
 {
     const int exit_chance = _abyss_exit_chance();
 
@@ -1159,7 +1157,7 @@ static void _abyss_apply_terrain(const map_bitmask &abyss_genlevel_mask,
         if (used_queue && !nuked)
             continue;
 
-        if (nuked && x_chance_in_y(delta, 50) || !nuked && !used_queue)
+        if (nuked && (now || x_chance_in_y(delta, 50)) || !nuked && !used_queue)
         {
             ++ii;
             _update_abyss_terrain(abyss_coord, abyss_genlevel_mask, morph);
@@ -1259,6 +1257,18 @@ static void _initialize_abyss_state()
     abyssal_state.depth = random2(0x7FFFFFFF);
     abyssal_state.nuke_all = false;
     abyss_sample_queue = sample_queue(ProceduralSamplePQCompare());
+}
+
+void set_abyss_state(coord_def coord, uint32_t depth)
+{
+    abyssal_state.major_coord = coord;
+    abyssal_state.depth = depth;
+    abyssal_state.phase = 0.0;
+    abyssal_state.nuke_all = true;
+    abyss_sample_queue = sample_queue(ProceduralSamplePQCompare());
+    you.moveto(ABYSS_CENTRE);
+    map_bitmask abyss_genlevel_mask(true);
+    _abyss_apply_terrain(abyss_genlevel_mask, true, true);
 }
 
 static void abyss_area_shift(void)
