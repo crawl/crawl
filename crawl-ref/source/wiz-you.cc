@@ -7,6 +7,8 @@
 
 #include "wiz-you.h"
 
+#include "abyss.h"
+
 #include "cio.h"
 #include "debug.h"
 #include "dbg-util.h"
@@ -674,6 +676,18 @@ bool wizard_add_mutation()
     return success;
 }
 #endif
+
+void wizard_set_abyss()
+{
+    char buf[80];
+    mprf(MSGCH_PROMPT, "Enter values for X, Y, Z (space separated) or return: ");
+    if (cancelable_get_line_autohist(buf, sizeof buf))
+        abyss_teleport(true);
+
+    uint32_t x, y, z;
+    sscanf(buf, "%d %d %d", &x, &y, &z);
+    set_abyss_state(coord_def(x,y), z);
+}
 
 void wizard_set_stats()
 {

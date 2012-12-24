@@ -739,7 +739,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
 
     case CONTROL('A'):
         if (player_in_branch(BRANCH_ABYSS))
-            abyss_teleport(true);
+            wizard_set_abyss();
         else
             mpr("You can only abyss_teleport() inside the Abyss.");
         break;
