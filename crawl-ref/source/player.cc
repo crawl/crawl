@@ -2469,7 +2469,7 @@ int player_evasion(ev_ignore_type evit)
     const int size_factor = _player_evasion_size_factor();
     // Repulsion fields and size are all that matters when paralysed or
     // at 0 dex.
-    if ((you.cannot_move() || you.stat_zero[STAT_DEX])
+    if ((you.cannot_move() || you.stat_zero[STAT_DEX] || you.form == TRAN_TREE)
         && !(evit & EV_IGNORE_HELPLESS))
     {
         const int paralysed_base_ev = 2 + size_factor / 2;
@@ -5252,6 +5252,9 @@ void float_player()
 
 void fly_player(int pow, bool already_flying)
 {
+    if (you.form == TRAN_TREE)
+        return mpr("Your roots keep you in place.");
+
     bool standing = !you.airborne() && !already_flying;
     if (!already_flying)
         mprf(MSGCH_DURATION, "You feel %s buoyant.", standing ? "very" : "more");
@@ -6456,6 +6459,9 @@ int player_res_magic(bool calc_unid, bool temp)
 bool player::no_tele(bool calc_unid, bool permit_id, bool blinking) const
 {
     if (crawl_state.game_is_sprint() && !blinking)
+        return true;
+
+    if (you.form == TRAN_TREE)
         return true;
 
     return (you.has_notele_item(calc_unid)
