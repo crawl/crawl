@@ -4135,6 +4135,10 @@ static void _move_player(coord_def move)
                 }
             }
         }
+
+        if (you.form == TRAN_TREE)
+            dangerous = DNGN_FLOOR; // still warn about allies
+
         if (dangerous != DNGN_FLOOR || bad_mons)
         {
             string prompt = "Are you sure you want to move while confused "
@@ -4210,7 +4214,7 @@ static void _move_player(coord_def move)
         targ_monst = NULL;
     }
 
-    const bool targ_pass = you.can_pass_through(targ);
+    const bool targ_pass = you.can_pass_through(targ) && you.form != TRAN_TREE;
 
     // You can swap places with a friendly or good neutral monster if
     // you're not confused, or if both of you are inside a sanctuary.
@@ -4387,13 +4391,13 @@ static void _move_player(coord_def move)
     }
     else if (!targ_pass && !attacking)
     {
-        if (grd(targ) == DNGN_OPEN_SEA)
+        if (you.form == TRAN_TREE)
+            mpr("You cannot move.");
+        else if (grd(targ) == DNGN_OPEN_SEA)
             mpr("The ferocious winds and tides of the open sea thwart your progress.");
-
-        if (grd(targ) == DNGN_LAVA_SEA)
+        else if (grd(targ) == DNGN_LAVA_SEA)
             mpr("The endless sea of lava is not a nice place.");
-
-        if (feat_is_tree(grd(targ)) && you.religion == GOD_FEDHAS)
+        else if (feat_is_tree(grd(targ)) && you.religion == GOD_FEDHAS)
             mpr("You cannot walk through the dense trees.");
 
         stop_running();

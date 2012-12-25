@@ -1144,11 +1144,15 @@ bool spell_is_useless(spell_type spell, bool transient)
             return true;
         break;
     case SPELL_SWIFTNESS:
+        if (transient && you.form == TRAN_TREE)
+            return true;
         // looking at player_movement_speed, this should be correct ~DMB
         if (player_movement_speed() <= 6)
             return true;
         break;
     case SPELL_FLY:
+        if (transient && you.form == TRAN_TREE)
+            return true;
         if (you.racial_permanent_flight())
             return true;
         if (transient && you.flight_mode())

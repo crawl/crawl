@@ -370,6 +370,9 @@ bool actor::evokable_invis(bool calc_unid) const
 // Return an int so we know whether an item is the sole source.
 int actor::evokable_flight(bool calc_unid) const
 {
+    if (is_player() && you.form == TRAN_TREE)
+        return 0;
+
     if (suppressed())
         return 0;
 
