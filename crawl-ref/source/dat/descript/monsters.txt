@@ -1665,33 +1665,33 @@ sear anything that gets too close to its mouth.
 %%%%
 lava orc
 
-A tall, muscular humanoid strongly in tune with the elemental forces of fire 
-and earth. These distant relatives of cave orcs are possessed of passionate 
+A tall, muscular humanoid strongly in tune with the elemental forces of fire
+and earth. These distant relatives of cave orcs are possessed of passionate
 hearts, and their inner temperature is closely linked to their emotions.
 %%%%
 lava orc berserker
 
-This massive axe-wielding orc looks like a statue commemorating the carnage 
+This massive axe-wielding orc looks like a statue commemorating the carnage
 about to ensue. It is coated head to toe in war paint - or maybe blood?
 %%%%
 lava orc warrior
 
-A particularly brutish lava orc that commands fear by its strength. 
+A particularly brutish lava orc that commands fear by its strength.
 %%%%
 lava orc elementalist
 
-A svelte specimen with skin of rough grey granite sparkling with quartz 
-inclusions. It gazes hatefully at you through the smoke coiling from its 
+A svelte specimen with skin of rough grey granite sparkling with quartz
+inclusions. It gazes hatefully at you through the smoke coiling from its
 nostrils.
 %%%%
 lava orc warlord
 
-A truly mighty leader among the lava orcs, commanding great armies and even 
+A truly mighty leader among the lava orcs, commanding great armies and even
 greater wealth.
 %%%%
 lava orc transmuter
 
-A lava orc who uses magic to augment its martial prowess. Its obsidian skin is 
+A lava orc who uses magic to augment its martial prowess. Its obsidian skin is
 dotted with snowflake patterns that shift as you watch.
 %%%%
 lava snake
