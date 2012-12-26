@@ -2963,14 +2963,13 @@ bool mon_special_ability(monster* mons, bolt & beem)
 
         if (one_chance_in(5))
         {
-            if (you.visible_to(mons))
+            if (you.visible_to(mons)
+                && cell_see_cell(you.pos(), mons->pos(), LOS_SOLID_SEE))
             {
                 flash_view_delay(MAGENTA, 300);
                 simple_monster_message(mons, " pulses with an eldritch light!");
 
-                if (!is_sanctuary(you.pos())
-                    // Doesn't work through glass, but you still see pulses.
-                    && cell_see_cell(you.pos(), mons->pos(), LOS_SOLID_SEE))
+                if (!is_sanctuary(you.pos()))
                 {
                     int num_mutations = 2 + random2(3);
                     for (int i = 0; i < num_mutations; ++i)
