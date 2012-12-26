@@ -1983,8 +1983,20 @@ static void tag_read_you(reader &th)
     you.deaths = unmarshallByte(th);
     you.lives = unmarshallByte(th);
 
-    you.temperature = unmarshallFloat(th);
-    you.temperature_last = unmarshallFloat(th);
+#if TAG_MAJOR_VERSION == 34
+    if (th.getMinorVersion() >= TAG_MINOR_LORC_TEMPERATURE)
+    {
+#endif
+        you.temperature = unmarshallFloat(th);
+        you.temperature_last = unmarshallFloat(th);
+#if TAG_MAJOR_VERSION == 34
+    }
+    else
+    {
+        you.temperature = 0.0;
+        you.temperature_last = 0.0;
+    }
+#endif
 
     you.dead = !you.hp;
 
