@@ -970,6 +970,10 @@ void viewwindow(bool show_updates, bool tiles_only)
 
     screen_cell_t *cell(crawl_view.vbuf);
 
+    // The buffer is not initialised when run from 'monster'; abort early.
+    if (!cell)
+        return;
+
     // Update the animation of cells only once per turn.
     const bool anim_updates = (you.last_view_update != you.num_turns);
     // Except for elemental colours, which should be updated every refresh.
