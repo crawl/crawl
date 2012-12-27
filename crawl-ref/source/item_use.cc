@@ -73,7 +73,7 @@ static bool _safe_to_remove_or_wear(const item_def &item, bool remove,
 // Rather messy - we've gathered all the can't-wield logic from wield_weapon()
 // here.
 bool can_wield(item_def *weapon, bool say_reason,
-               bool ignore_temporary_disability, bool unwield)
+               bool ignore_temporary_disability, bool unwield, bool only_known)
 {
 #define SAY(x) {if (say_reason) { x; }}
 
@@ -155,7 +155,8 @@ bool can_wield(item_def *weapon, bool say_reason,
         return false;
     }
 
-    if (you.undead_or_demonic() && is_holy_item(*weapon))
+    if (you.undead_or_demonic() && is_holy_item(*weapon)
+        && (item_type_known(*weapon) || !only_known))
     {
         if (say_reason)
         {
@@ -178,7 +179,8 @@ bool can_wield(item_def *weapon, bool say_reason,
         && you.hunger_state < HS_FULL
         && get_weapon_brand(*weapon) == SPWPN_VAMPIRICISM
         && !crawl_state.game_is_zotdef()
-        && !you.is_undead)
+        && !you.is_undead
+        && (item_type_known(*weapon) || !only_known))
     {
         if (say_reason)
         {
@@ -359,6 +361,10 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
         return false;
     }
 
+    // Ensure wieldable, stat loss non-fatal
+    if (!can_wield(&new_wpn, true) || !_safe_to_remove_or_wear(new_wpn, false))
+        return false;
+
     // Unwield any old weapon.
     if (you.weapon())
     {
@@ -371,9 +377,8 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
             return false;
     }
 
-    // Ensure wieldable, stat loss non-fatal
-    if (!can_wield(&new_wpn, true)
-        || !_safe_to_remove_or_wear(new_wpn, false))
+    // Really ensure wieldable, even unknown brand
+    if (!can_wield(&new_wpn, true, false, false, false))
     {
         if (!was_barehanded)
         {
