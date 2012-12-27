@@ -45,6 +45,7 @@
 #include "shout.h"
 #include "viewchar.h"
 #include "ouch.h"
+#include "target.h"
 
 #include <algorithm>
 #include <queue>
@@ -2963,13 +2964,14 @@ bool mon_special_ability(monster* mons, bolt & beem)
 
         if (one_chance_in(5))
         {
-            if (you.visible_to(mons)
-                && cell_see_cell(you.pos(), mons->pos(), LOS_SOLID_SEE))
+            if (cell_see_cell(you.pos(), mons->pos(), LOS_DEFAULT))
             {
-                flash_view_delay(MAGENTA, 300);
+                targetter_los hitfunc(mons, LOS_SOLID);
+                flash_view_delay(MAGENTA, 300, &hitfunc);
                 simple_monster_message(mons, " pulses with an eldritch light!");
 
-                if (!is_sanctuary(you.pos()))
+                if (!is_sanctuary(you.pos())
+                        && cell_see_cell(you.pos(), mons->pos(), LOS_SOLID))
                 {
                     int num_mutations = 2 + random2(3);
                     for (int i = 0; i < num_mutations; ++i)
