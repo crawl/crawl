@@ -240,9 +240,9 @@ bool trap_def::is_safe(actor* act) const
     if (!act->is_player())
         return false;
 
-    // No prompt (teleport traps are ineffective if
-    // wearing an amulet of stasis)
-    if (type == TRAP_TELEPORT && (you.stasis(false) || you.notele(false)))
+    // No prompt (teleport traps are ineffective if wearing an amulet of
+    // stasis or a -TELE item)
+    if (type == TRAP_TELEPORT && you.no_tele(false))
         return true;
 
     if (!is_known(act))

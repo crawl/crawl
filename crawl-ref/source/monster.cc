@@ -4010,7 +4010,7 @@ bool monster::no_tele(bool calc_unid, bool permit_id) const
         return true;
 
     // TODO: permit_id
-    if (notele(calc_unid))
+    if (has_notele_item(calc_unid))
         return true;
 
     return false;

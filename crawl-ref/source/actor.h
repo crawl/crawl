@@ -294,7 +294,7 @@ public:
     virtual bool gourmand(bool calc_unid = true, bool items = true) const;
     virtual bool conservation(bool calc_unid = true, bool items = true) const;
     virtual bool res_corr(bool calc_unid = true, bool items = true) const;
-    virtual bool notele(bool calc_unid = true, bool items = true) const;
+    bool has_notele_item(bool calc_unid = true) const;
     virtual bool stasis(bool calc_unid = true, bool items = true) const;
     virtual bool run(bool calc_unid = true, bool items = true) const;
     virtual bool angry(bool calc_unid = true, bool items = true) const;
