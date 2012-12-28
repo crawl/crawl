@@ -1858,10 +1858,11 @@ void StashSearchMenu::draw_title()
 
         draw_title_suffix(formatted_string::parse_string(make_stringf(
                  "<lightgrey> [<w>a-z</w>: %s"
-                 "  <w>?</w>/<w>!</w>: action"
+                 "  <w>?</w>/<w>!</w>: %s"
                  "  <w>-</w>: stacking"
                  "  <w>/</w>: sorting]",
-                 menu_action == ACT_EXECUTE ? "travel" : "examine")), false);
+                 menu_action == ACT_EXECUTE ? "travel" : "examine",
+                 menu_action == ACT_EXECUTE ? "examine" : "travel")), false);
     }
 }
 
