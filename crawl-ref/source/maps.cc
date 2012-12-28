@@ -109,6 +109,7 @@ static map_section_type _write_vault(map_def &mdef,
     // We're a regular vault, so clear the subvault stack.
     env.new_subvault_names.clear();
     env.new_subvault_tags.clear();
+    env.new_used_subvault_names.clear();
 
     mdef.load();
 

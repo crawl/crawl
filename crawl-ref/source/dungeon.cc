@@ -632,7 +632,8 @@ static void _set_grd(const coord_def &c, dungeon_feature_type feat)
 }
 
 static void _dgn_register_vault(const string name, const string spaced_tags)
-{    if (spaced_tags.find(" allow_dup ") == string::npos)
+{
+    if (spaced_tags.find(" allow_dup ") == string::npos)
         you.uniq_map_names.insert(name);
 
     if (spaced_tags.find(" luniq ") != string::npos)
@@ -999,6 +1000,7 @@ void dgn_register_place(const vault_placement &place, bool register_vault)
         }
         env.new_subvault_names.clear();
         env.new_subvault_tags.clear();
+        env.new_used_subvault_names.clear();
 
         // Identify each square in the map with its map_index.
         if (!overwritable && !transparent)
@@ -1174,6 +1176,7 @@ void dgn_reset_level(bool enable_random_maps)
     dgn_colour_grid.reset(NULL);
     env.new_subvault_names.clear();
     env.new_subvault_tags.clear();
+    env.new_used_subvault_names.clear();
 
     use_random_maps = enable_random_maps;
     dgn_check_connectivity = false;

@@ -2184,6 +2184,8 @@ bool map_def::map_already_used() const
     return (you.uniq_map_names.find(name) != you.uniq_map_names.end()
             || (env.level_uniq_maps.find(name) !=
                 env.level_uniq_maps.end())
+            || (env.new_used_subvault_names.find(name) !=
+                env.new_used_subvault_names.end())
             || has_any_tag(you.uniq_map_tags.begin(),
                            you.uniq_map_tags.end())
             || has_any_tag(env.level_uniq_map_tags.begin(),
@@ -3145,6 +3147,22 @@ string map_def::subvault_from_tagstring(const string &sub)
     return "";
 }
 
+static void _reset_subvault_stack(const int reg_stack)
+{
+    env.new_subvault_names.resize(reg_stack);
+    env.new_subvault_tags.resize(reg_stack);
+
+    env.new_used_subvault_names.clear();
+    for (int i = 0; i < reg_stack; i++)
+    {
+        if (env.new_subvault_tags[i].find(" allow_dup ") == string::npos
+            || env.new_subvault_tags[i].find(" luniq ") != string::npos)
+        {
+            env.new_used_subvault_names.insert(env.new_subvault_names[i]);
+        }
+    }
+}
+
 string map_def::apply_subvault(string_spec &spec)
 {
     // Find bounding box for key glyphs
@@ -3163,6 +3181,7 @@ string map_def::apply_subvault(string_spec &spec)
     // Remember the subvault registration pointer, so we can clear it.
     const int reg_stack = env.new_subvault_names.size();
     ASSERT(reg_stack == (int)env.new_subvault_tags.size());
+    ASSERT(reg_stack >= (int)env.new_used_subvault_names.size());
 
     const int max_tries = 100;
     int ntries = 0;
@@ -3173,8 +3192,7 @@ string map_def::apply_subvault(string_spec &spec)
         // Each iteration, restore tags and names.  This is because this vault
         // may successfully load a subvault (registering its tag and name), but
         // then itself fail.
-        env.new_subvault_names.resize(reg_stack);
-        env.new_subvault_tags.resize(reg_stack);
+        _reset_subvault_stack(reg_stack);
 
         const map_def *orig = random_map_for_tag(tag, true);
         if (!orig)
@@ -3199,12 +3217,17 @@ string map_def::apply_subvault(string_spec &spec)
         env.new_subvault_names.push_back(vault.name);
         env.new_subvault_tags.push_back(vault.tags);
 
+        if (vault.tags.find(" allow_dup ") == string::npos
+            || vault.tags.find(" luniq ") != string::npos)
+        {
+            env.new_used_subvault_names.insert(vault.name);
+        }
+
         return "";
     }
 
     // Failure, drop subvault registrations.
-    env.new_subvault_names.resize(reg_stack);
-    env.new_subvault_tags.resize(reg_stack);
+    _reset_subvault_stack(reg_stack);
 
     return (make_stringf("Could not fit '%s' in (%d,%d) to (%d, %d).",
                          tag.c_str(), tl.x, tl.y, br.x, br.y));
