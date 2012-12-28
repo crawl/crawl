@@ -1977,8 +1977,8 @@ bool formatted_scroller::process_key(int keyin)
     lastch = keyin;
 
 #ifdef TOUCH_UI
-    if(keyin == CK_TOUCH_DUMMY) // mouse click in title area, which
-        return true;            // wouldn't usually be handled
+    if (keyin == CK_TOUCH_DUMMY) // mouse click in title area, which
+        return true;             // wouldn't usually be handled
 #endif
 
     if (f_keyfilter)

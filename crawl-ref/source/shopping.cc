@@ -751,8 +751,8 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
         if (key != CK_ENTER && menu.process_key(key))
         {
             vector<MenuItem*> selection = menu.get_selected_items();
-            if( selection.size() == 1 )
-                key = (int)selection.at(0)->get_id();
+            if (selection.size() == 1)
+                key = (int) selection.at(0)->get_id();
         }
 
 #else

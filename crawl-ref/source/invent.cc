@@ -915,7 +915,7 @@ vector<SelItem> InvMenu::get_selitems() const
 
 bool InvMenu::process_key(int key)
 {
-    if ( key == CONTROL('W') )
+    if (key == CONTROL('W'))
     {
         Options.show_inventory_weights = !Options.show_inventory_weights;
         draw_menu();

@@ -870,7 +870,7 @@ bool show_map(level_pos &lpos,
                 // location.  It silently ignores everything else going
                 // on in this function.  --Enne
 #ifdef USE_TILE_LOCAL
-                if(first_run)
+                if (first_run)
                 {
                     tiles.update_tabs();
                     first_run = false;

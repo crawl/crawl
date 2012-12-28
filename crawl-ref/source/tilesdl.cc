@@ -275,7 +275,7 @@ int TilesFramework::draw_popup(Popup *popup)
 
     // get menu items to draw
     int col = 0;
-    while(MenuEntry *me = popup->next_entry())
+    while (MenuEntry *me = popup->next_entry())
     {
         col++;
         reg->set_entry(col, me->get_text(true), me->colour, me, false);

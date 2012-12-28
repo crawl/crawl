@@ -2536,8 +2536,8 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe)
     if (menu.process_key(keyin))
     {
         vector<MenuItem*> selection = menu.get_selected_items();
-        if( selection.size() == 1 )
-            action = (command_type)selection.at(0)->get_id();
+        if (selection.size() == 1)
+            action = (command_type) selection.at(0)->get_id();
     }
 #endif
 
