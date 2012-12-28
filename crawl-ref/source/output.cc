@@ -1748,9 +1748,7 @@ static vector<formatted_string> _get_overview_resistances(
     cols.add_formatted(1, buf, false);
 
     const int stasis = you.stasis(calc_unid);
-    const int notele = you.notele(calc_unid)
-                       || crawl_state.game_is_zotdef()
-                          && orb_haloed(you.pos());
+    const int notele = you.no_tele(calc_unid);
     const int rrtel = !!player_teleport(calc_unid);
     if (notele && !stasis)
     {

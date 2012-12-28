@@ -3312,7 +3312,7 @@ void examine_object(void)
 
 bool item_blocks_teleport(bool calc_unid, bool permit_id)
 {
-    return (you.notele(calc_unid)
+    return (you.has_notele_item(calc_unid)
             || stasis_blocks_effect(calc_unid, permit_id, NULL)
             || crawl_state.game_is_zotdef() && orb_haloed(you.pos()));
 }
