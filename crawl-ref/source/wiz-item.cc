@@ -261,7 +261,7 @@ static const char* _prop_name[] = {
     "Mag",
     "SInv",
     "Inv",
-    "Lev",
+    "Fly",
     "Blnk",
     "Bers",
     "Nois",
