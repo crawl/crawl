@@ -1158,6 +1158,16 @@ spret_type cast_shadow_creatures(god_type god, bool fail)
         me.set_duration(mons, &me);
         mons->update_ench(me);
         player_angers_monster(mons);
+
+        // Possibly anger band members, too.
+        for (monster_iterator mi; mi; ++mi)
+        {
+            if (testbits(mi->flags, MF_BAND_MEMBER)
+                && (mid_t) mi->props["band_leader"].get_int() == mons->mid)
+            {
+                player_angers_monster(*mi);
+            }
+        }
     }
     else
         mpr("The shadows disperse without effect.");
