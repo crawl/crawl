@@ -45,7 +45,7 @@ void WindowManager::shutdown()
     wm = NULL;
 #ifdef __ANDROID__
     Mix_CloseAudio();
-    while(Mix_Init(0))
+    while (Mix_Init(0))
         Mix_Quit();
 #endif
 }
@@ -918,7 +918,7 @@ void SDLWrapper::glDebug(const char* msg)
 {
 #ifdef __ANDROID__
     int e = glGetError();
-    if(e>0)
+    if (e > 0)
        __android_log_print(ANDROID_LOG_INFO, "Crawl", "ERROR %x: %s", e, msg);
 #endif
 }
