@@ -630,6 +630,11 @@ static void debug_load_map_by_name(string name, bool primary)
         you.props["force_map"] = toplace->name;
         wizard_recreate_level();
         you.props.erase("force_map");
+
+        // We just saved with you.props["force_map"] set; save again in
+        // case we crash (lest we have the property forever).
+        if (!crawl_state.test)
+            save_game_state();
     }
     else
     {
