@@ -4670,7 +4670,8 @@ void melee_attack::do_spines()
     {
         const item_def *body = you.slot_item(EQ_BODY_ARMOUR, false);
         const int evp = body ? -property(*body, PARM_EVASION) : 0;
-        const int mut = player_mutation_level(MUT_SPINY);
+        const int mut = (you.form == TRAN_PORCUPINE) ? 3
+                        : player_mutation_level(MUT_SPINY);
 
         if (mut && attacker->alive() && one_chance_in(evp + 1))
         {
