@@ -787,7 +787,7 @@ void print_stats(void)
     int temp = (you.species == SP_LAVA_ORC) ? 1 : 0;
     int temp_pos = 5;
     int ac_pos = temp_pos + temp;
-    int ev_pos = temp_pos + temp;
+    int ev_pos = temp_pos + temp + 1;
 
     cursor_control coff(false);
     textcolor(LIGHTGREY);
