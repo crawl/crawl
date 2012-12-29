@@ -1032,6 +1032,7 @@ void game_options::reset_options()
     tile_layout_priority = split_string(",", "minimap, command, gold_turn, "
                                              "inventory, command2, spell, "
                                              "ability, monster");
+    tile_use_small_layout = false;
 # else
     tile_layout_priority = split_string(",", "minimap, inventory, gold_turn, "
                                              "command, spell, ability, "
@@ -3520,6 +3521,24 @@ void game_options::read_option_line(const string &str, bool runscript)
     else INT_OPTION(tile_cell_pixels, 1, INT_MAX);
     else BOOL_OPTION(tile_filter_scaling);
 #endif // USE_TILE_LOCAL
+#ifdef TOUCH_UI
+//    else BOOL_OPTION(tile_use_small_layout);
+    else if (key == "tile_use_small_layout")
+    {
+        if (field == "true")
+            tile_use_small_layout = true;
+        else if (field == "false")
+            tile_use_small_layout = false;
+        else
+#ifdef __ANDROID__
+            // android default to true for now
+            tile_use_small_layout = true;
+#else
+            // should choose small layout for small *physical* screens
+            tile_use_small_layout = false;
+#endif
+    }
+#endif
 #ifdef USE_TILE
     else BOOL_OPTION(tile_force_overlay);
     else INT_OPTION(tile_tooltip_ms, 0, INT_MAX);

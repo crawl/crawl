@@ -342,6 +342,7 @@
 # tile_full_screen      = true
 # tile_window_width     = 1024
 # tile_window_height    = 768
+# tile_use_small_layout = true
 # tile_map_pixels       = 3
 # tile_cell_pixels      = 32
 # tile_filter_scaling   = true

@@ -7,14 +7,16 @@
 #include "libutil.h"
 #include "state.h"
 #include "tiledef-gui.h"
+#include "cio.h"
 
 TabbedRegion::TabbedRegion(const TileRegionInit &init) :
     GridRegion(init),
     m_active(-1),
     m_mouse_tab(-1),
+    m_use_small_layout(false),
+    m_is_deactivated(false),
     m_buf_gui(&init.im->m_textures[TEX_GUI])
 {
-
 }
 
 TabbedRegion::~TabbedRegion()
@@ -113,10 +115,17 @@ void TabbedRegion::activate_tab(int idx)
         return;
 
     if (m_active == idx)
-        return;
+        if (m_use_small_layout)
+        {
+            if (!m_is_deactivated)
+                return deactivate_tab();
+        }
+        else
+            return;
 
     m_active = idx;
     m_dirty  = true;
+    m_is_deactivated = false;
     tiles.set_need_redraw();
 
     if (m_tabs[m_active].reg)
@@ -124,6 +133,17 @@ void TabbedRegion::activate_tab(int idx)
         m_tabs[m_active].reg->activate();
         m_tabs[m_active].reg->update();
     }
+}
+
+void TabbedRegion::deactivate_tab()
+{
+    m_is_deactivated = true;
+
+    m_dirty = true;
+    tiles.set_need_redraw();
+
+    if (m_tabs[m_active].reg)
+        m_tabs[m_active].reg->clear();
 }
 
 int TabbedRegion::active_tab() const
@@ -187,6 +207,8 @@ void TabbedRegion::update()
 {
     if (!active_is_valid())
         return;
+    if (m_is_deactivated)
+        return;
 
     m_tabs[m_active].reg->update();
 }
@@ -218,8 +240,7 @@ void TabbedRegion::pack_buffers()
 
         tileidx_t tileidx = m_tabs[i].tile_tab + ofs;
         const tile_info &inf = tile_gui_info(tileidx);
-        int offset_y = m_tabs[i].min_y;
-        m_buf_gui.add(tileidx, 0, 0, -inf.width, offset_y, false);
+        m_buf_gui.add(tileidx, 0, 0, -inf.width, m_tabs[i].min_y, false);
     }
 }
 
@@ -270,6 +291,14 @@ void TabbedRegion::on_resize()
         if (!m_tabs[i].reg)
             continue;
 
+        // on small layout we want to draw tab from top-right corner inwards (down and left)
+        if (m_use_small_layout)
+        {
+            reg_sx = (sx+ox) - ox*dx/32 - mx*m_tabs[i].reg->dx;
+            m_tabs[i].reg->dx = dx;
+            m_tabs[i].reg->dy = dy;
+        }
+
         m_tabs[i].reg->place(reg_sx, reg_sy);
         m_tabs[i].reg->resize(mx, my);
     }
@@ -280,14 +309,22 @@ int TabbedRegion::get_mouseover_tab(MouseEvent &event) const
     int x = event.px - sx;
     int y = event.py - sy;
 
+    if (m_use_small_layout)
+    {
+        // scale x and y back to fit
+        // x = ... only works because we have offset all the way over to the right and
+        //         it's just the margin (ox) that's visible
+        x = ((sx+ox)-event.px)*32/dx;
+        y = y*32/dy;
+    }
+
     if (x < 0 || x > ox || y < 0 || y > wy)
         return -1;
 
     for (int i = 0; i < (int)m_tabs.size(); ++i)
-    {
         if (y >= m_tabs[i].min_y && y <= m_tabs[i].max_y)
             return i;
-    }
+
     return -1;
 }
 
@@ -312,7 +349,7 @@ int TabbedRegion::handle_mouse(MouseEvent &event)
         if (event.event == MouseEvent::PRESS)
         {
             activate_tab(m_mouse_tab);
-            return 0;
+            return CK_NO_KEY; // prevent clicking on tab from 'bubbling up' to other regions
         }
     }
 
@@ -363,6 +400,19 @@ int TabbedRegion::find_tab(string tab_name) const
     }
 
     return -1;
+}
+
+void TabbedRegion::set_small_layout(bool use_small_layout, const coord_def &windowsz)
+{
+    m_use_small_layout = use_small_layout;
+
+    if (m_tabs.size() == 0 || !use_small_layout)
+        return;
+
+    // original dx (32) * region height (240) / num tabs (7) / height of tab (20)
+    int scale = 32 * windowsz.y/num_tabs()/m_tabs[0].height -1;
+    dx = scale;
+    dy = scale;
 }
 
 #endif

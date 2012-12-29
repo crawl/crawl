@@ -202,6 +202,14 @@ static int _translate_keysym(SDL_keysym &keysym)
     case SDLK_TAB:
         if (numpad_offset) // keep tab a tab
             return (CK_TAB_TILE + numpad_offset);
+#ifdef TOUCH_UI
+        break;
+    // used for zoom in/out
+    case SDLK_KP_PLUS:
+        return CK_NUMPAD_PLUS;
+    case SDLK_KP_MINUS:
+        return CK_NUMPAD_MINUS;
+#endif
     default:
         break;
     }

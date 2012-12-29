@@ -24,11 +24,14 @@ public:
     GridRegion *get_tab_region(int idx);
     tileidx_t get_tab_tile(int idx);
     void activate_tab(int idx);
+    void deactivate_tab();
     int active_tab() const;
     int num_tabs() const;
     void enable_tab(int idx);
     void disable_tab(int idx);
     int find_tab(string tab_name) const;
+
+    void set_small_layout(bool use_small_layout, const coord_def &windowsz);
 
     virtual void update();
     virtual void clear();
@@ -56,6 +59,8 @@ protected:
 
     int m_active;
     int m_mouse_tab;
+    bool m_use_small_layout;
+    bool m_is_deactivated;
     TileBuffer m_buf_gui;
 
     struct TabInfo

@@ -36,22 +36,26 @@ InventoryRegion::InventoryRegion(const TileRegionInit &init) : GridRegion(init)
 void InventoryRegion::pack_buffers()
 {
     // Pack base separately, as it comes from a different texture...
-    unsigned int i = 0;
+    unsigned int i = 0 + (m_grid_page*mx*my - m_grid_page);
     for (int y = 0; y < my; y++)
     {
-        if (i >= m_items.size())
-            break;
-
         for (int x = 0; x < mx; x++)
         {
             if (i >= m_items.size())
                 break;
 
+            if ((y==my-1 && x==mx-1) || (y==0 && x==0 && m_grid_page>0))
+            {
+                // draw a background for paging tiles
+                m_buf.add_dngn_tile(TILE_ITEM_SLOT, x, y);
+                continue;
+            }
+
             InventoryTile &item = m_items[i++];
 
             if (item.flag & TILEI_FLAG_FLOOR)
             {
-                if (i >= (unsigned int) mx * my)
+                if (i >= (unsigned int) mx * my * (m_grid_page+1))
                     break;
 
                 int num_floor = tile_dngn_count(env.tile_default.floor);
@@ -63,16 +67,26 @@ void InventoryRegion::pack_buffers()
         }
     }
 
-    i = 0;
+    i = 0 + (m_grid_page*mx*my - m_grid_page);
     for (int y = 0; y < my; y++)
     {
-        if (i >= m_items.size())
-            break;
-
         for (int x = 0; x < mx; x++)
         {
             if (i >= m_items.size())
                 break;
+
+            if (y==my-1 && x==mx-1)
+            {
+                // continuation to next page icon
+                m_buf.add_main_tile(TILE_UNSEEN_ITEM, x, y);
+                continue;
+            }
+            else if (y==0 && x==0 && m_grid_page>0)
+            {
+                // previous page icon
+                m_buf.add_main_tile(TILE_UNSEEN_ITEM, x, y);
+                continue;
+            }
 
             InventoryTile &item = m_items[i++];
 
@@ -119,11 +133,33 @@ int InventoryRegion::handle_mouse(MouseEvent &event)
     if (!place_cursor(event, item_idx))
         return 0;
 
+    // handle paging
+    if (m_cursor.x==(mx-1) && m_cursor.y==(my-1) && event.button==MouseEvent::LEFT)
+    {
+        // next page
+        m_grid_page++;
+        update();
+        return CK_NO_KEY;
+    }
+    else if (m_cursor.x==0 && m_cursor.y==0 && m_grid_page>0 && event.button==MouseEvent::LEFT)
+    {
+        // prev page
+        m_grid_page--;
+        update();
+        return CK_NO_KEY;
+    }
+
     int idx = m_items[item_idx].idx;
 
     bool on_floor = m_items[item_idx].flag & TILEI_FLAG_FLOOR;
 
     ASSERT(idx >= 0);
+
+    if (tiles.is_using_small_layout())
+    {
+        // close the inventory tab after successfully clicking on an item
+        tiles.deactivate_tab();
+    }
 
     // TODO enne - this is all really only valid for the on-screen inventory
     // Do we subclass InventoryRegion for the onscreen and offscreen versions?
@@ -592,6 +628,9 @@ void InventoryRegion::activate()
         canned_msg(MSG_NOTHING_CARRIED);
         flush_prev_message();
     }
+
+    // switch to first page on activation
+    m_grid_page = 0;
 }
 
 static void _fill_item_info(InventoryTile &desc, const item_info &item)
@@ -653,8 +692,17 @@ void InventoryRegion::update()
 
     // If the inventory is full, show at least one row of the ground.
     int min_ground = min(num_ground, mx);
-    max_pack_items = min(max_pack_items, mx * my - min_ground);
+    max_pack_items = min(max_pack_items, mx * my * (m_grid_page+1) - min_ground);
     max_pack_items = min(ENDOFPACK, max_pack_items);
+
+/*
+    // for the paged UI used by the small layout, we can have any number of pack and ground items
+    if (tiles.is_using_small_layout())
+    {
+        max_pack_items = ENDOFPACK;
+        min_ground = num_ground;
+    }
+*/
 
     ucs_t c;
     const char *tp = Options.tile_show_items.c_str();
@@ -706,11 +754,11 @@ void InventoryRegion::update()
         }
     } while (s);
 
-    int remaining = mx*my - m_items.size();
+    int remaining = mx*my*(m_grid_page+1) - m_items.size();
     int empty_on_this_row = mx - m_items.size() % mx;
 
     // If we're not on the last row...
-    if ((int)m_items.size() < mx * (my-1))
+    if ((int)m_items.size() < mx * (my-1)) // * (m_grid_page+1)) // let's deliberately not do this on page 2
     {
         if (num_ground > remaining - empty_on_this_row)
         {
@@ -761,7 +809,7 @@ void InventoryRegion::update()
     {
         tp += s = utf8towc(&c, tp);
 
-        if ((int)m_items.size() >= mx * my)
+        if ((int)m_items.size() >= mx * my * (m_grid_page+1))
             break;
 
         bool show_any = !c;
@@ -770,7 +818,7 @@ void InventoryRegion::update()
         for (int i = you.visible_igrd(you.pos()); i != NON_ITEM;
              i = mitm[i].link)
         {
-            if ((int)m_items.size() >= mx * my)
+            if ((int)m_items.size() >= mx * my * (m_grid_page+1))
                 break;
 
             if (ground_shown[i] || !show_any && mitm[i].base_type != type)
@@ -785,7 +833,7 @@ void InventoryRegion::update()
         }
     } while (s);
 
-    while ((int)m_items.size() < mx * my)
+    while ((int)m_items.size() < mx * my) // * (m_grid_page+1)) // let's not do this for p2 either
     {
         InventoryTile desc;
         desc.flag = TILEI_FLAG_FLOOR;

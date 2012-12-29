@@ -58,6 +58,235 @@
 #include "directn.h"
 #endif
 
+#ifdef TOUCH_UI
+#include "tilesdl.h"
+
+/*
+ * this glorious piece of code works by:
+    - overriding cgotoxy and cprintf
+    - mapping the x,y coordinate of each part of the HUD to a
+      value in the touchui_states enum and storing the current value
+    - using the current state to decide what and where to actually
+      render each part of the HUD
+
+  12345678901234567890
+1 Nameaname
+2 TrDk(Mak)
+3  St Dx In
+4  nn nn nn
+5  AC SH EV
+6  nn nn nn
+7 W: foobar
+8 Q: 20 baz
+9 XXXXXXXXX      status lights
+.
+y  HPP MPP
+ */
+#include <stdarg.h>
+#define CGOTOXY cgotoxy_touchui
+#define CPRINTF cprintf_touchui
+#define NOWRAP_EOL_CPRINTF nowrap_eol_cprintf_touchui
+
+enum touchui_states
+{
+    TOUCH_S_INIT  = 0x0,
+    TOUCH_S_NULL  = 0x1,
+    TOUCH_T_MP    = 0x0104,
+    TOUCH_T_AC    = 0x0105,
+    TOUCH_T_EV    = 0x0106,
+    TOUCH_T_SH    = 0x0107,
+    TOUCH_T_STR   = 0x1305,
+    TOUCH_T_INT   = 0x1306,
+    TOUCH_T_DEX   = 0x1307,
+    TOUCH_V_PLACE = 0x1308,
+    TOUCH_T_HP    = 0x0103,
+    TOUCH_V_HP    = 0x0203, // dummy location
+    TOUCH_V_MP    = 0x0904,
+    TOUCH_V_AC    = 0x0505,
+    TOUCH_V_EV    = 0x0506,
+    TOUCH_V_SH    = 0x0507,
+    TOUCH_V_STR   = 0x1805,
+    TOUCH_V_INT   = 0x1806,
+    TOUCH_V_DEX   = 0x1807,
+    TOUCH_V_XL    = 0x0108,
+    TOUCH_T_WP    = 0x0109,
+    TOUCH_T_QV    = 0x010A,
+    TOUCH_V_WP    = 0x0209, // dummy
+    TOUCH_V_QV    = 0x020A, // dummy
+    TOUCH_V_TITLE = 0x0101,
+    TOUCH_V_TITL2 = 0x0102,
+    TOUCH_V_LIGHT = 0x010B,
+};
+touchui_states TOUCH_UI_STATE = TOUCH_S_INIT;
+void cgotoxy_touchui(int x, int y, GotoRegion region = GOTO_CRT)
+{
+//    printf("go to (%d,%d): ",x,y);
+    if (tiles.is_using_small_layout())
+        TOUCH_UI_STATE = (touchui_states)((x<<8)+y);
+//    printf("[%x]: ",TOUCH_UI_STATE);
+    switch ( TOUCH_UI_STATE )
+    {
+        case TOUCH_V_HP:
+        case TOUCH_T_MP:
+        case TOUCH_V_TITLE:
+        case TOUCH_V_TITL2:
+        case TOUCH_V_XL:
+        case TOUCH_V_PLACE:
+        case TOUCH_S_NULL:
+            // no special behaviour for these
+            break;
+        case TOUCH_T_STR:
+            x = 1; y = 3;
+            break;
+        case TOUCH_T_INT:
+            x = 4; y = 3;
+            break;
+        case TOUCH_T_DEX:
+            x = 7; y = 3;
+            break;
+        case TOUCH_T_AC:
+            x = 1; y = 5;
+            break;
+        case TOUCH_T_EV:
+            x = 4; y = 5;
+            break;
+        case TOUCH_T_SH:
+            x = 7; y = 5;
+            break;
+        case TOUCH_V_STR:
+            x = 1; y = 4;
+            break;
+        case TOUCH_V_INT:
+            x = 4; y = 4;
+            break;
+        case TOUCH_V_DEX:
+            x = 7; y = 4;
+            break;
+        case TOUCH_V_AC:
+            x = 2; y = 6;
+            break;
+        case TOUCH_V_EV:
+            x = 5; y = 6;
+            break;
+        case TOUCH_V_SH:
+            x = 8; y = 6;
+            break;
+        case TOUCH_T_WP:
+            x = 1; y = 7;
+            break;
+        case TOUCH_T_QV:
+            x = 1; y = 8;
+            break;
+        case TOUCH_V_WP:
+            x = 4; y = 7;
+            break;
+        case TOUCH_V_QV:
+            x = 4; y = 8;
+            break;
+        case TOUCH_V_LIGHT:
+            x = 1; y = 9;
+            break;
+        case TOUCH_T_HP:
+            x = 2; y = crawl_view.hudsz.y;
+            break;
+        case TOUCH_V_MP:
+            x = 6; y = crawl_view.hudsz.y;
+            break;
+        default:
+            // reset state
+            TOUCH_UI_STATE = TOUCH_S_INIT;
+    }
+//    printf("(%d,%d): ",x,y);
+    cgotoxy(x,y,region);
+}
+
+void cprintf_touchui(const char *format, ...)
+{
+    va_list args;
+    string  buf;
+    va_start( args, format );
+    buf = vmake_stringf( format, args );
+
+    switch( TOUCH_UI_STATE )
+    {
+        case TOUCH_T_MP:
+        case TOUCH_V_TITL2:
+        case TOUCH_V_XL:
+        case TOUCH_V_PLACE:
+        case TOUCH_S_NULL:
+            // don't draw these
+//            printf("X! %s\n",buf.c_str());
+            break;
+        case TOUCH_T_HP:
+            TOUCH_UI_STATE = TOUCH_V_HP;
+            break;
+        case TOUCH_V_TITLE:
+            cprintf( you.your_name.c_str() );
+            break;
+        case TOUCH_V_HP:
+        case TOUCH_V_MP:
+            // suppress everything after initial print; rjustify
+            cprintf( "%3s", buf.c_str() );
+            TOUCH_UI_STATE = TOUCH_S_NULL;
+            break;
+        case TOUCH_V_STR:
+        case TOUCH_V_INT:
+        case TOUCH_V_DEX:
+            // rjustify to 3 chars on these
+            cprintf( "%3s", buf.c_str() );
+            break;
+        case TOUCH_T_WP:
+            TOUCH_UI_STATE = TOUCH_V_WP;
+            cprintf( buf.c_str() );
+            break;
+        case TOUCH_T_QV:
+            TOUCH_UI_STATE = TOUCH_V_QV;
+            cprintf( buf.c_str() );
+            break;
+        case TOUCH_V_WP:
+        case TOUCH_V_QV:
+            // get rid of the hotkey; somewhat pointless in a touch-screen ui :)
+            cprintf( buf.substr(3,10).c_str() );
+            break;
+
+        default:
+//            printf("p: %s\n",buf.c_str());
+            cprintf( buf.c_str() );
+    }
+    va_end( args );
+}
+
+void nowrap_eol_cprintf_touchui(const char *format, ...)
+{
+    va_list args;
+    string  buf;
+    va_start( args, format );
+    buf = vmake_stringf( format, args );
+
+    // N.B. this should really be factored out and merged with the other switch-case above
+    switch( TOUCH_UI_STATE )
+    {
+        case TOUCH_S_NULL:
+            // don't print these
+            break;
+        case TOUCH_V_TITL2:
+            cprintf( "%s%s %.4s",get_species_abbrev(you.species),get_job_abbrev(you.char_class),god_name(you.religion).c_str());
+            TOUCH_UI_STATE = TOUCH_S_NULL; // suppress whatever else it was going to print
+            break;
+        default:
+//            printf("q: %s\n",buf.c_str());
+            nowrap_eol_cprintf( buf.c_str() );
+    }
+    va_end( args );
+}
+
+#else
+#define CGOTOXY cgotoxy
+#define CPRINTF cprintf
+#define NOWRAP_EOL_CPRINTF nowrap_eol_cprintf
+#endif
+
+
 static string _god_powers(bool simple = false);
 
 // Color for captions like 'Health:', 'Str:', etc.
@@ -106,7 +335,7 @@ class colour_bar
         const int old_disp = (m_old_disp < 0) ? disp : m_old_disp;
         m_old_disp = disp;
 
-        cgotoxy(ox, oy, GOTO_STAT);
+        CGOTOXY(ox, oy, GOTO_STAT);
 
         textcolor(BLACK);
         for (int cx = 0; cx < width; cx++)
@@ -155,6 +384,54 @@ class colour_bar
         textbackground(BLACK);
     }
 
+    void vdraw(int ox, int oy, int val, int max_val)
+    {
+        // ox is width from l/h edge; oy is height from top
+        // bars are 3chars wide and render down to hudsz.y-1
+        const int bar_width = 3;
+        const int obase     = crawl_view.hudsz.y-1;
+
+        ASSERT(val <= max_val);
+        if (max_val <= 0)
+        {
+            m_old_disp = -1;
+            return;
+        }
+
+        const int height   = bar_width * (obase-oy+1);
+        const int disp     = height * val / max_val;
+        const int old_disp = (m_old_disp < 0) ? disp : m_old_disp;
+
+        CGOTOXY(ox, obase, GOTO_STAT);
+
+        textcolor(WHITE);
+        for (int cx = 0; cx < height; cx++)
+        {
+            // Maybe this should use textbackground too?
+            textcolor(BLACK + m_empty * 16);
+
+            if (cx < disp)
+                textcolor(BLACK + m_default * 16);
+            else if (old_disp > disp && cx < old_disp)
+                textcolor(BLACK + m_change_neg * 16);
+            putwch(' ');
+
+            // move up a line if we've drawn this bit of the bar
+            if ((cx+1) % bar_width == 0)
+                CGOTOXY(ox, obase-cx/bar_width, GOTO_STAT);
+
+            // If some change colour was rendered, redraw in a few
+            // turns to clear it out.
+            if (old_disp != disp)
+                m_request_redraw_after = you.num_turns + 4;
+            else
+                m_request_redraw_after = 0;
+        }
+
+        textcolor(LIGHTGREY);
+        textbackground(BLACK);
+    }
+
  private:
     const color_t m_default;
     const color_t m_change_pos;
@@ -185,11 +462,11 @@ void update_message_status()
 
     textcolor(LIGHTBLUE);
 
-    cgotoxy(crawl_view.hudsz.x - len + 1, 1, GOTO_STAT);
+    CGOTOXY(crawl_view.hudsz.x - len + 1, 1, GOTO_STAT);
     if (SysEnv.have_messages)
-        cprintf(msg);
+        CPRINTF(msg);
     else
-        cprintf(spc.c_str());
+        CPRINTF(spc.c_str());
     textcolor(LIGHTGREY);
 }
 #endif
@@ -205,19 +482,19 @@ void update_turn_count()
         return;
     }
 
-    cgotoxy(19+6, 9 + crawl_state.game_is_zotdef(), GOTO_STAT);
+    CGOTOXY(19+6, 9 + crawl_state.game_is_zotdef(), GOTO_STAT);
 
     // Show the turn count starting from 1. You can still quit on turn 0.
     textcolor(HUD_VALUE_COLOUR);
     if (Options.show_game_turns)
     {
-       cprintf("%.1f (%.1f)%s", you.elapsed_time / 10.0,
+       CPRINTF("%.1f (%.1f)%s", you.elapsed_time / 10.0,
                (you.elapsed_time - you.elapsed_time_at_last_input) / 10.0,
                // extra spaces to erase excess if previous output was longer
                "    ");
     }
     else
-        cprintf("%d", you.num_turns);
+        CPRINTF("%d", you.num_turns);
     textcolor(LIGHTGREY);
 }
 
@@ -252,20 +529,25 @@ static void _print_stats_mp(int x, int y)
                 mp_colour = Options.mp_colour[i].second;
     }
 
-    cgotoxy(x+8, y, GOTO_STAT);
+    CGOTOXY(x+8, y, GOTO_STAT);
     textcolor(mp_colour);
-    cprintf("%d", you.magic_points);
+    CPRINTF("%d", you.magic_points);
     if (!boosted)
         textcolor(HUD_VALUE_COLOUR);
-    cprintf("/%d", you.max_magic_points);
+    CPRINTF("/%d", you.max_magic_points);
     if (boosted)
         textcolor(HUD_VALUE_COLOUR);
 
     int col = _count_digits(you.magic_points)
               + _count_digits(you.max_magic_points) + 1;
     for (int i = 11-col; i > 0; i--)
-        cprintf(" ");
+        CPRINTF(" ");
 
+#ifdef TOUCH_UI
+    if (tiles.is_using_small_layout())
+        MP_Bar.vdraw(6, 10, you.magic_points, you.max_magic_points);
+    else
+#endif
     MP_Bar.draw(19, y, you.magic_points, you.max_magic_points);
 }
 
@@ -293,23 +575,28 @@ static void _print_stats_hp(int x, int y)
 
     // 01234567890123456789
     // Health: xxx/yyy (zzz)
-    cgotoxy(x, y, GOTO_STAT);
+    CGOTOXY(x, y, GOTO_STAT);
     textcolor(HUD_CAPTION_COLOUR);
-    cprintf(max_max_hp != you.hp_max ? "HP: " : "Health: ");
+    CPRINTF(max_max_hp != you.hp_max ? "HP: " : "Health: ");
     textcolor(hp_colour);
-    cprintf("%d", you.hp);
+    CPRINTF("%d", you.hp);
     if (!boosted)
         textcolor(HUD_VALUE_COLOUR);
-    cprintf("/%d", you.hp_max);
+    CPRINTF("/%d", you.hp_max);
     if (max_max_hp != you.hp_max)
-        cprintf(" (%d)", max_max_hp);
+        CPRINTF(" (%d)", max_max_hp);
     if (boosted)
         textcolor(HUD_VALUE_COLOUR);
 
     int col = wherex() - crawl_view.hudp.x;
     for (int i = 18-col; i > 0; i--)
-        cprintf(" ");
+        CPRINTF(" ");
 
+#ifdef TOUCH_UI
+    if (tiles.is_using_small_layout())
+        HP_Bar.vdraw(2, 10, you.hp, you.hp_max);
+    else
+#endif
     HP_Bar.draw(19, y, you.hp, you.hp_max);
 }
 
@@ -342,21 +629,21 @@ static short _get_stat_colour(stat_type stat)
 
 static void _print_stat(stat_type stat, int x, int y)
 {
-    cgotoxy(x+5, y, GOTO_STAT);
+    CGOTOXY(x+5, y, GOTO_STAT);
 
     textcolor(_get_stat_colour(stat));
-    cprintf("%d", you.stat(stat, false));
+    CPRINTF("%d", you.stat(stat, false));
 
     if (you.stat_loss[stat] > 0)
-        cprintf(" (%d)  ", you.max_stat(stat));
+        CPRINTF(" (%d)  ", you.max_stat(stat));
     else
-        cprintf("       ");
+        CPRINTF("       ");
 }
 
 static void _print_stats_ac(int x, int y)
 {
     // AC:
-    cgotoxy(x+4, y, GOTO_STAT);
+    CGOTOXY(x+4, y, GOTO_STAT);
     if (you.duration[DUR_ICY_ARMOUR] || you.duration[DUR_STONESKIN])
         textcolor(LIGHTBLUE);
     else if (you.duration[DUR_ICEMAIL_DEPLETED] > ICEMAIL_TIME / ICEMAIL_MAX)
@@ -368,10 +655,10 @@ static void _print_stats_ac(int x, int y)
     if (you.wizard)
         ac += make_stringf("(%d%%) ", you.gdr_perc());
 #endif
-    cprintf("%s", ac.c_str());
+    CPRINTF("%s", ac.c_str());
 
     // SH: (two lines lower)
-    cgotoxy(x+4, y+2, GOTO_STAT);
+    CGOTOXY(x+4, y+2, GOTO_STAT);
     if (you.incapacitated() && player_wearing_slot(EQ_SHIELD))
         textcolor(RED);
     else if (you.duration[DUR_CONDENSATION_SHIELD]
@@ -382,15 +669,15 @@ static void _print_stats_ac(int x, int y)
     }
     else
         textcolor(HUD_VALUE_COLOUR);
-    cprintf("%2d ", player_shield_class());
+    CPRINTF("%2d ", player_shield_class());
 }
 
 static void _print_stats_ev(int x, int y)
 {
-    cgotoxy(x+4, y, GOTO_STAT);
+    CGOTOXY(x+4, y, GOTO_STAT);
     textcolor(you.duration[DUR_PHASE_SHIFT] || you.duration[DUR_AGILITY]
               ? LIGHTBLUE : HUD_VALUE_COLOUR);
-    cprintf("%2d ", player_evasion());
+    CPRINTF("%2d ", player_evasion());
 }
 
 static void _print_stats_wp(int y)
@@ -444,12 +731,12 @@ static void _print_stats_wp(int y)
         text = prefix + you.unarmed_attack_name();
     }
 
-    cgotoxy(1, y, GOTO_STAT);
+    CGOTOXY(1, y, GOTO_STAT);
     textcolor(Options.status_caption_colour);
-    cprintf("Wp: ");
+    CPRINTF("Wp: ");
     textcolor(col);
-    int w = crawl_view.hudsz.x - 4;
-    cprintf("%s", chop_string(text, w).c_str());
+    int w = crawl_view.hudsz.x - (tiles.is_using_small_layout()?0:4);
+    CPRINTF("%s", chop_string(text, w).c_str());
     textcolor(LIGHTGREY);
 }
 
@@ -489,12 +776,12 @@ static void _print_stats_qv(int y)
 
         text = prefix + text;
     }
-    cgotoxy(1, y, GOTO_STAT);
+    CGOTOXY(1, y, GOTO_STAT);
     textcolor(Options.status_caption_colour);
-    cprintf("Qv: ");
+    CPRINTF("Qv: ");
     textcolor(col);
-    int w = crawl_view.hudsz.x - 4;
-    cprintf("%s", chop_string(text, w).c_str());
+    int w = crawl_view.hudsz.x - (tiles.is_using_small_layout()?0:4);
+    CPRINTF("%s", chop_string(text, w).c_str());
     textcolor(LIGHTGREY);
 }
 
@@ -634,7 +921,7 @@ static void _print_status_lights(int y)
     size_t line_cur = y;
     const size_t line_end = crawl_view.hudsz.y+1;
 
-    cgotoxy(1, line_cur, GOTO_STAT);
+    CGOTOXY(1, line_cur, GOTO_STAT);
 #ifdef ASSERTS
     if (wherex() != crawl_view.hudp.x)
     {
@@ -643,6 +930,10 @@ static void _print_status_lights(int y)
     }
 #endif
 
+#ifdef TOUCH_UI
+    if (!tiles.is_using_small_layout())
+    {
+#endif
     size_t i_light = 0;
     while (true)
     {
@@ -653,21 +944,48 @@ static void _print_status_lights(int y)
         if (end_x <= crawl_view.hudsz.x)
         {
             textcolor(lights[i_light].color);
-            cprintf("%s", lights[i_light].text.c_str());
+            CPRINTF("%s", lights[i_light].text.c_str());
             if (end_x < crawl_view.hudsz.x)
-                cprintf(" ");
+                CPRINTF(" ");
             ++i_light;
         }
         else
         {
             clear_to_end_of_line();
             ++line_cur;
-            // Careful not to trip the )#(*$ cgotoxy ASSERT
+            // Careful not to trip the )#(*$ CGOTOXY ASSERT
             if (line_cur == line_end)
                 break;
-            cgotoxy(1, line_cur, GOTO_STAT);
+            CGOTOXY(1, line_cur, GOTO_STAT);
         }
     }
+#ifdef TOUCH_UI
+    }
+    else
+    {
+        size_t i_light = 0;
+        if (lights.size() == 1)
+        {
+            textcolor(lights[0].color);
+            CPRINTF("%s", lights[0].text.c_str());
+        }
+        else
+        {
+            while (i_light<lights.size() && i_light<crawl_view.hudsz.x-1)
+            {
+                textcolor(lights[i_light].color);
+                if (i_light==lights.size()-1 && strwidth(lights[i_light].text) < crawl_view.hudsz.x-wherex())
+                    CPRINTF("%s",lights[i_light].text.c_str());
+                else if (lights.size()>crawl_view.hudsz.x/2)
+                    CPRINTF("%.1s",lights[i_light].text.c_str());
+                else
+                    CPRINTF("%.1s ",lights[i_light].text.c_str());
+                ++i_light;
+            }
+        }
+        clear_to_end_of_line();
+    }
+#endif
 }
 
 #ifdef USE_TILE_LOCAL
@@ -689,36 +1007,41 @@ static bool _need_stats_printed()
 
 static void _redraw_title(const string &your_name, const string &job_name)
 {
+    const unsigned int WIDTH = crawl_view.hudsz.x;
     string title = your_name + " the " + job_name;
 
-    unsigned int in_len = strwidth(title);
-    const unsigned int WIDTH = crawl_view.hudsz.x;
-    if (in_len > WIDTH)
+    if (tiles.is_using_small_layout())
+        title = your_name;
+    else
     {
-        in_len -= 3;  // What we're getting back from removing "the".
-
-        const unsigned int name_len = strwidth(your_name);
-        string trimmed_name = your_name;
-
-        // Squeeze name if required, the "- 8" is to not squeeze too much.
-        if (in_len > WIDTH && (name_len - 8) > (in_len - WIDTH))
+        unsigned int in_len = strwidth(title);
+        if (in_len > WIDTH)
         {
-            trimmed_name = chop_string(trimmed_name,
-                                       name_len - (in_len - WIDTH) - 1);
-        }
+            in_len -= 3;  // What we're getting back from removing "the".
 
-        title = trimmed_name + ", " + job_name;
+            const unsigned int name_len = strwidth(your_name);
+            string trimmed_name = your_name;
+            // Squeeze name if required, the "- 8" is to not squeeze too much.
+            if (in_len > WIDTH && (name_len - 8) > (in_len - WIDTH))
+            {
+                trimmed_name = chop_string(trimmed_name,
+                                           name_len - (in_len - WIDTH) - 1);
+            }
+
+            title = trimmed_name + ", " + job_name;
+        }
     }
 
     // Line 1: Foo the Bar    *WIZARD*
-    cgotoxy(1, 1, GOTO_STAT);
+    CGOTOXY(1, 1, GOTO_STAT);
     textcolor(YELLOW);
-    cprintf("%s", chop_string(title, WIDTH).c_str());
-    if (you.wizard)
+    if (tiles.is_using_small_layout() && you.wizard) textcolor(LIGHTBLUE);
+    CPRINTF("%s", chop_string(title, WIDTH).c_str());
+    if (you.wizard && !tiles.is_using_small_layout())
     {
         textcolor(LIGHTBLUE);
-        cgotoxy(1 + crawl_view.hudsz.x-9, 1, GOTO_STAT);
-        cprintf(" *WIZARD*");
+        CGOTOXY(1 + crawl_view.hudsz.x-9, 1, GOTO_STAT);
+        CPRINTF(" *WIZARD*");
     }
 #ifdef DGL_SIMPLE_MESSAGING
     update_message_status();
@@ -727,15 +1050,15 @@ static void _redraw_title(const string &your_name, const string &job_name)
     // Line 2:
     // Minotaur [of God] [Piety]
     textcolor(YELLOW);
-    cgotoxy(1, 2, GOTO_STAT);
+    CGOTOXY(1, 2, GOTO_STAT);
     string species = species_name(you.species);
-    nowrap_eol_cprintf("%s", species.c_str());
+    NOWRAP_EOL_CPRINTF("%s", species.c_str());
     if (you.religion != GOD_NO_GOD)
     {
         string god = " of ";
         god += you.religion == GOD_JIYVA ? god_name_jiyva(true)
                                          : god_name(you.religion);
-        nowrap_eol_cprintf("%s", god.c_str());
+        NOWRAP_EOL_CPRINTF("%s", god.c_str());
 
         string piety = _god_powers(true);
         if (player_under_penance())
@@ -743,14 +1066,14 @@ static void _redraw_title(const string &your_name, const string &job_name)
         if ((unsigned int)(strwidth(species) + strwidth(god) + strwidth(piety) + 1)
             <= WIDTH)
         {
-            nowrap_eol_cprintf(" %s", piety.c_str());
+            NOWRAP_EOL_CPRINTF(" %s", piety.c_str());
         }
         else if ((unsigned int)(strwidth(species) + strwidth(god) + strwidth(piety) + 1)
                   == (WIDTH + 1))
         {
             //mottled draconian of TSO doesn't fit by one symbol,
             //so we remove leading space.
-            nowrap_eol_cprintf("%s", piety.c_str());
+            NOWRAP_EOL_CPRINTF("%s", piety.c_str());
         }
     }
     else if (you.char_class == JOB_MONK && you.species != SP_DEMIGOD
@@ -759,7 +1082,7 @@ static void _redraw_title(const string &your_name, const string &job_name)
         string godpiety = "**....";
         textcolor(DARKGREY);
         if ((unsigned int)(strwidth(species) + strwidth(godpiety) + 1) <= WIDTH)
-            nowrap_eol_cprintf(" %s", godpiety.c_str());
+            NOWRAP_EOL_CPRINTF(" %s", godpiety.c_str());
     }
 
     clear_to_end_of_line();
@@ -790,7 +1113,6 @@ void print_stats(void)
         you.redraw_title = false;
         _redraw_title(you.your_name, filtered_lang(player_title()));
     }
-
     if (you.redraw_hit_points)   { you.redraw_hit_points = false;   _print_stats_hp (1, 3); }
     if (you.redraw_magic_points) { you.redraw_magic_points = false; _print_stats_mp (1, 4); }
     if (you.redraw_armour_class) { you.redraw_armour_class = false; _print_stats_ac (1, 5); }
@@ -803,25 +1125,25 @@ void print_stats(void)
 
     if (you.redraw_experience)
     {
-        cgotoxy(1,8, GOTO_STAT);
+        CGOTOXY(1,8, GOTO_STAT);
         textcolor(Options.status_caption_colour);
-        cprintf("XL: ");
+        CPRINTF("XL: ");
         textcolor(HUD_VALUE_COLOUR);
-        cprintf("%2d ", you.experience_level);
+        CPRINTF("%2d ", you.experience_level);
         if (you.experience_level < 27)
         {
             textcolor(Options.status_caption_colour);
-            cprintf("Next: ");
+            CPRINTF("Next: ");
             textcolor(HUD_VALUE_COLOUR);
-            cprintf("%2d%% ", get_exp_progress());
+            CPRINTF("%2d%% ", get_exp_progress());
         }
         if (crawl_state.game_is_zotdef())
         {
-            cgotoxy(1, 9, GOTO_STAT);
+            CGOTOXY(1, 9, GOTO_STAT);
             textcolor(Options.status_caption_colour);
-            cprintf("ZP: ");
+            CPRINTF("ZP: ");
             textcolor(HUD_VALUE_COLOUR);
-            cprintf("%d     ", you.zot_points);
+            CPRINTF("%d     ", you.zot_points);
         }
         you.redraw_experience = false;
     }
@@ -829,13 +1151,13 @@ void print_stats(void)
     int yhack = crawl_state.game_is_zotdef();
 
     // If Options.show_gold_turns, line 9 is Gold and Turns
-    if (Options.show_gold_turns)
+    if (Options.show_gold_turns && !tiles.is_using_small_layout())
     {
         // Increase y-value for all following lines.
         yhack++;
-        cgotoxy(1+6, 8 + yhack, GOTO_STAT);
+        CGOTOXY(1+6, 8 + yhack, GOTO_STAT);
         textcolor(HUD_VALUE_COLOUR);
-        cprintf("%-6d", you.gold);
+        CPRINTF("%-6d", you.gold);
     }
 
     if (you.wield_change)
@@ -898,15 +1220,15 @@ static string _level_description_string_hud()
 
 void print_stats_level()
 {
-    cgotoxy(19, 8, GOTO_STAT);
+    CGOTOXY(19, 8, GOTO_STAT);
     textcolor(HUD_CAPTION_COLOUR);
-    cprintf("Place: ");
+    CPRINTF("Place: ");
 
     textcolor(HUD_VALUE_COLOUR);
 #ifdef DEBUG_DIAGNOSTICS
-    cprintf("(%d) ", env.absdepth0 + 1);
+    CPRINTF("(%d) ", env.absdepth0 + 1);
 #endif
-    cprintf("%s", _level_description_string_hud().c_str());
+    CPRINTF("%s", _level_description_string_hud().c_str());
     clear_to_end_of_line();
 }
 
@@ -917,22 +1239,25 @@ void draw_border(void)
 
     textcolor(Options.status_caption_colour);
 
-    //cgotoxy(1, 3, GOTO_STAT); cprintf("Hp:");
-    cgotoxy(1, 4, GOTO_STAT); cprintf("Magic:");
-    cgotoxy(1, 5, GOTO_STAT); cprintf("AC:");
-    cgotoxy(1, 6, GOTO_STAT); cprintf("EV:");
-    cgotoxy(1, 7, GOTO_STAT); cprintf("SH:");
+    //CGOTOXY(1, 3, GOTO_STAT); CPRINTF("Hp:");
+#ifdef TOUCH_UI_deleteme
+    if (!tiles.is_using_small_layout())
+#endif
+    CGOTOXY(1, 4, GOTO_STAT); CPRINTF("Magic:");
+    CGOTOXY(1, 5, GOTO_STAT); CPRINTF("AC:");
+    CGOTOXY(1, 6, GOTO_STAT); CPRINTF("EV:");
+    CGOTOXY(1, 7, GOTO_STAT); CPRINTF("SH:");
 
-    cgotoxy(19, 5, GOTO_STAT); cprintf("Str:");
-    cgotoxy(19, 6, GOTO_STAT); cprintf("Int:");
-    cgotoxy(19, 7, GOTO_STAT); cprintf("Dex:");
+    CGOTOXY(19, 5, GOTO_STAT); CPRINTF("Str:");
+    CGOTOXY(19, 6, GOTO_STAT); CPRINTF("Int:");
+    CGOTOXY(19, 7, GOTO_STAT); CPRINTF("Dex:");
 
     if (Options.show_gold_turns)
     {
         int yhack = crawl_state.game_is_zotdef();
-        cgotoxy(1, 9 + yhack, GOTO_STAT); cprintf("Gold:");
-        cgotoxy(19, 9 + yhack, GOTO_STAT);
-        cprintf(Options.show_game_turns ? "Time:" : "Turn:");
+        CGOTOXY(1, 9 + yhack, GOTO_STAT); CPRINTF("Gold:");
+        CGOTOXY(19, 9 + yhack, GOTO_STAT);
+        CPRINTF(Options.show_game_turns ? "Time:" : "Turn:");
     }
     // Line 8 is exp pool, Level
 }
@@ -1046,8 +1371,8 @@ static void _print_next_monster_desc(const vector<monster_info>& mons,
         if (idx >= 0)
         {
             textcolor(WHITE);
-            cprintf(stringize_glyph(mlist_index_to_letter(idx)).c_str());
-            cprintf(" - ");
+            CPRINTF(stringize_glyph(mlist_index_to_letter(idx)).c_str());
+            CPRINTF(" - ");
             printed += 4;
         }
 
@@ -1057,7 +1382,7 @@ static void _print_next_monster_desc(const vector<monster_info>& mons,
             monster_info mi = mons[i_mon];
             cglyph_t g = get_mons_glyph(mi);
             textcolor(g.col);
-            cprintf("%s", stringize_glyph(g.ch).c_str());
+            CPRINTF("%s", stringize_glyph(g.ch).c_str());
             ++printed;
 
             // Printing too many looks pretty bad, though.
@@ -1070,7 +1395,7 @@ static void _print_next_monster_desc(const vector<monster_info>& mons,
 
         if (count == 1)  // Print an icon representing damage level.
         {
-            cprintf(" ");
+            CPRINTF(" ");
 
             monster_info mi = mons[start];
 #ifdef TARGET_OS_WINDOWS
@@ -1078,16 +1403,16 @@ static void _print_next_monster_desc(const vector<monster_info>& mons,
 #else
             textcolor(real_colour(dam_colour(mi) | COLFLAG_REVERSE));
 #endif
-            cprintf(" ");
+            CPRINTF(" ");
             textbackground(BLACK);
             textcolor(LIGHTGREY);
-            cprintf(" ");
+            CPRINTF(" ");
             printed += 3;
         }
         else
         {
             textcolor(LIGHTGREY);
-            cprintf("  ");
+            CPRINTF("  ");
             printed += 2;
         }
 
@@ -1098,7 +1423,7 @@ static void _print_next_monster_desc(const vector<monster_info>& mons,
             mons[start].to_string(count, desc, desc_colour, zombified);
             textcolor(desc_colour);
             desc.resize(crawl_view.mlistsz.x-printed, ' ');
-            cprintf("%s", desc.c_str());
+            CPRINTF("%s", desc.c_str());
         }
     }
 
@@ -1158,7 +1483,7 @@ int update_monster_pane()
     int i_mons = 0;
     for (int i_print = 0; i_print < max_print; ++i_print)
     {
-        cgotoxy(1, 1 + i_print, GOTO_MLIST);
+        CGOTOXY(1, 1 + i_print, GOTO_MLIST);
         // i_mons is incremented by _print_next_monster_desc
         if (i_print >= skip_lines && i_mons < (int) mons.size())
         {
@@ -1166,14 +1491,14 @@ int update_monster_pane()
              _print_next_monster_desc(mons, i_mons, full_info, idx);
         }
         else
-            cprintf("%s", blank.c_str());
+            CPRINTF("%s", blank.c_str());
     }
 
     if (i_mons < (int)mons.size())
     {
         // Didn't get to all of them.
-        cgotoxy(crawl_view.mlistsz.x - 4, crawl_view.mlistsz.y, GOTO_MLIST);
-        cprintf(" ... ");
+        CGOTOXY(crawl_view.mlistsz.x - 4, crawl_view.mlistsz.y, GOTO_MLIST);
+        CPRINTF(" ... ");
     }
 
     if (mons.empty())

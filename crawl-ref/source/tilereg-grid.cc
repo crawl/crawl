@@ -29,6 +29,7 @@ GridRegion::GridRegion(const TileRegionInit &init) :
     m_flavour(NULL),
     m_cursor(NO_CURSOR),
     m_last_clicked_item(-1),
+    m_grid_page(0),
     m_buf(init.im)
 {
 }
@@ -64,7 +65,7 @@ void GridRegion::on_resize()
 unsigned int GridRegion::cursor_index() const
 {
     ASSERT(m_cursor != NO_CURSOR);
-    return (m_cursor.x + m_cursor.y * mx);
+    return m_cursor.x + m_cursor.y * mx + m_grid_page*mx*my -2*m_grid_page;
 }
 
 void GridRegion::place_cursor(const coord_def &cursor)
