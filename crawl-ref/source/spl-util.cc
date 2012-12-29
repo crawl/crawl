@@ -1140,7 +1140,7 @@ bool spell_is_useless(spell_type spell, bool transient)
     case SPELL_BLINK:
     case SPELL_CONTROLLED_BLINK:
     case SPELL_TELEPORT_SELF:
-        if (item_blocks_teleport(false, false))
+        if (you.no_tele(false, false, spell != SPELL_TELEPORT_SELF))
             return true;
         break;
     case SPELL_SWIFTNESS:

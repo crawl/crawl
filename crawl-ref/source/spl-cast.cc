@@ -850,7 +850,7 @@ bool is_prevented_teleport(spell_type spell)
     return (spell == SPELL_BLINK
              || spell == SPELL_CONTROLLED_BLINK
              || spell == SPELL_TELEPORT_SELF)
-            && item_blocks_teleport(false, false);
+            && you.no_tele(false, false, spell == SPELL_TELEPORT_SELF);
 }
 
 bool spell_is_uncastable(spell_type spell, string &msg)

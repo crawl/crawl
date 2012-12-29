@@ -6408,12 +6408,14 @@ int player_res_magic(bool calc_unid, bool temp)
     return rm;
 }
 
-bool player::no_tele(bool calc_unid, bool permit_id) const
+bool player::no_tele(bool calc_unid, bool permit_id, bool blinking) const
 {
-    if (crawl_state.game_is_sprint())
+    if (crawl_state.game_is_sprint() && !blinking)
         return true;
 
-    return item_blocks_teleport(calc_unid, permit_id);
+    return (you.has_notele_item(calc_unid)
+            || stasis_blocks_effect(calc_unid, permit_id, NULL)
+            || crawl_state.game_is_zotdef() && orb_haloed(you.pos()));
 }
 
 bool player::fights_well_unarmed(int heavy_armour_penalty)
