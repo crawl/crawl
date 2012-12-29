@@ -1475,7 +1475,7 @@ static void _portal_card(int power, deck_rarity_type rarity)
 
 static void _warp_card(int power, deck_rarity_type rarity)
 {
-    if (item_blocks_teleport(true, true))
+    if (you.no_tele(true, true, true))
     {
         canned_msg(MSG_STRANGE_STASIS);
         return;

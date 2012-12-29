@@ -3992,7 +3992,7 @@ int monster::res_magic() const
     return u;
 }
 
-bool monster::no_tele(bool calc_unid, bool permit_id) const
+bool monster::no_tele(bool calc_unid, bool permit_id, bool blinking) const
 {
     // Plants can't survive without roots, so it's either this or auto-kill.
     // Statues have pedestals so moving them is weird.

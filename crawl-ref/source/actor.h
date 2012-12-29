@@ -288,7 +288,8 @@ public:
     virtual int res_constrict() const = 0;
     virtual int res_magic() const = 0;
     virtual int check_res_magic(int power);
-    virtual bool no_tele(bool calc_unid = true, bool permit_id = true) const = 0;
+    virtual bool no_tele(bool calc_unid = true, bool permit_id = true,
+                         bool blink = false) const = 0;
     virtual bool inaccuracy() const;
 
     virtual bool gourmand(bool calc_unid = true, bool items = true) const;

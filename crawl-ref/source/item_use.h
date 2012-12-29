@@ -55,7 +55,6 @@ void prompt_inscribe_item();
 void warn_shield_penalties();
 void warn_armour_penalties();
 
-bool item_blocks_teleport(bool calc_unid, bool permit_id);
 bool stasis_blocks_effect(bool calc_unid, bool identify,
                           const char *msg, int noise = 0,
                           const char *silencedmsg = NULL);

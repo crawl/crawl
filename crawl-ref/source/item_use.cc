@@ -1871,7 +1871,7 @@ void zap_wand(int slot)
     if (alreadyknown && zap_wand.target == you.pos())
     {
         if (wand.sub_type == WAND_TELEPORTATION
-            && item_blocks_teleport(false, false))
+            && you.no_tele(false, false))
         {
             mpr("You cannot teleport right now.");
             return;
@@ -2890,7 +2890,7 @@ void read_scroll(int slot)
         {
         case SCR_BLINKING:
         case SCR_TELEPORTATION:
-            if (item_blocks_teleport(false, false))
+            if (you.no_tele(false, false, which_scroll == SCR_BLINKING))
             {
                 mpr("You cannot teleport right now.");
                 return;
@@ -3308,13 +3308,6 @@ void examine_object(void)
     describe_item(you.inv[item_slot], true);
     redraw_screen();
     mesclr();
-}
-
-bool item_blocks_teleport(bool calc_unid, bool permit_id)
-{
-    return (you.has_notele_item(calc_unid)
-            || stasis_blocks_effect(calc_unid, permit_id, NULL)
-            || crawl_state.game_is_zotdef() && orb_haloed(you.pos()));
 }
 
 bool stasis_blocks_effect(bool calc_unid,

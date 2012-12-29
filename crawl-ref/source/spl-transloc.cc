@@ -133,7 +133,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
     }
 
     // yes, there is a logic to this ordering {dlb}:
-    if (item_blocks_teleport(true, true) && !wizard_blink)
+    if (you.no_tele(true, true, true) && !wizard_blink)
     {
         if (pre_msg)
             mpr(pre_msg->c_str());
@@ -305,7 +305,7 @@ void random_blink(bool allow_partial_control, bool override_abyss, bool override
 
     coord_def target;
 
-    if (item_blocks_teleport(true, true) && !override_stasis)
+    if (you.no_tele(true, true, true) && !override_stasis)
         canned_msg(MSG_STRANGE_STASIS);
     else if (player_in_branch(BRANCH_ABYSS)
              && !override_abyss
@@ -371,7 +371,7 @@ void you_teleport(void)
 {
     // [Cha] here we block teleportation, which will save the player from
     // death from read-id'ing scrolls (in sprint)
-    if (crawl_state.game_is_sprint() || item_blocks_teleport(true, true))
+    if (you.no_tele(true, true))
         canned_msg(MSG_STRANGE_STASIS);
     else if (you.duration[DUR_TELEPORT])
     {
@@ -471,7 +471,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
 
     // Stasis can't block the Abyss from shifting.
     if (!wizard_tele
-        && (crawl_state.game_is_sprint() || item_blocks_teleport(true, true))
+        && (crawl_state.game_is_sprint() || you.no_tele(true, true))
             && !new_abyss_area)
     {
         canned_msg(MSG_STRANGE_STASIS);
@@ -703,7 +703,7 @@ bool you_teleport_to(const coord_def where_to, bool move_monsters, bool override
     //      then teleport the player there.
     //   4. If not, give up and return false.
 
-    if (item_blocks_teleport(true, true) && !override_stasis)
+    if (you.no_tele(true, true) && !override_stasis)
     {
         canned_msg(MSG_STRANGE_STASIS);
         return false;

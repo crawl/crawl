@@ -32,7 +32,7 @@ bool player::blink_to(const coord_def& dest, bool quiet)
     if (dest == pos())
         return false;
 
-    if (item_blocks_teleport(true, true))
+    if (you.no_tele(true, true, true))
     {
         if (!quiet)
             canned_msg(MSG_STRANGE_STASIS);

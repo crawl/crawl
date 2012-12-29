@@ -1520,7 +1520,7 @@ static bool _check_ability_possible(const ability_def& abil,
 
     case ABIL_BLINK:
     case ABIL_EVOKE_BLINK:
-        if (item_blocks_teleport(false, false))
+        if (you.no_tele(false, false, true))
         {
             if (!quiet)
                 mpr("You cannot teleport right now.");
