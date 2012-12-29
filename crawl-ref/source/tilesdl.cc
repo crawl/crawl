@@ -69,8 +69,8 @@
 
 // Default Screen Settings
 // width, height, map, crt, stat, msg, tip, lbl
-#ifdef __ANDROID__
-static int _screen_sizes[5][8] =
+#ifdef TOUCH_UI
+static int _screen_sizes[6][8] =
 #else
 static int _screen_sizes[4][8] =
 #endif
@@ -83,9 +83,10 @@ static int _screen_sizes[4][8] =
     {800, 600, 2, 14, 11, 12, 13, 12},
     // Eee PC
     {800, 480, 2, 13, 12, 10, 13, 11}
-#ifdef __ANDROID__
+#ifdef TOUCH_UI
     // puny mobile screens
     ,{480, 320, 2, 9, 8, 8, 9, 8}
+    ,{320, 240, 1, 8, 8, 6, 8, 6} // :(
 #endif
 };
 
@@ -251,7 +252,7 @@ void TilesFramework::draw_doll_edit()
 void TilesFramework::set_map_display(const bool display)
 {
     m_map_mode_enabled = display;
-    if (!display)
+    if (!display && !tiles.is_using_small_layout())
         m_region_tab->activate_tab(TAB_ITEM);
 }
 
@@ -451,9 +452,9 @@ bool TilesFramework::initialise()
     m_region_menu = new MenuRegion(m_image, m_fonts[m_crt_font].font);
 
     m_layers[LAYER_NORMAL].m_regions.push_back(m_region_tile);
-    m_layers[LAYER_NORMAL].m_regions.push_back(m_region_tab);
     m_layers[LAYER_NORMAL].m_regions.push_back(m_region_msg);
     m_layers[LAYER_NORMAL].m_regions.push_back(m_region_stat);
+    m_layers[LAYER_NORMAL].m_regions.push_back(m_region_tab);
 
     m_layers[LAYER_CRT].m_regions.push_back(m_region_crt);
     m_layers[LAYER_CRT].m_regions.push_back(m_region_menu);
@@ -865,76 +866,118 @@ void TilesFramework::do_layout()
     // Initial sizes.
     m_region_tile->dx = m_viewsc.x;
     m_region_tile->dy = m_viewsc.y;
-
-    // Locations in pixels. stat_x_divider is the dividing vertical line
-    // between dungeon view on the left and status area on the right.
-    // message_y_divider is the horizontal line between dungeon view on
-    // the top and message window at the bottom.
-    m_stat_x_divider = 0;
     int message_y_divider = 0;
 
-    bool message_overlay = Options.tile_force_overlay ? true : false;
+    // if the screen estate is very small, or if the option is set, choose
+    // a layout that is optimal for very small screens
+    bool use_small_layout = is_using_small_layout();
+    bool message_overlay = Options.tile_force_overlay ? true : use_small_layout;
 
-    // We ignore Options.view_max_width and use the maximum space available.
-    int available_width_in_tiles = 0;
-
-    available_width_in_tiles = (m_windowsz.x - stat_width
-                                * m_region_stat->dx) / m_region_tile->dx;
-
-    // Scale the dungeon region tiles so we have enough space to
-    // display full LOS.
-    if (available_width_in_tiles < ENV_SHOW_DIAMETER)
+    if (use_small_layout)
     {
-        m_region_tile->dx = (m_windowsz.x - stat_width * m_region_stat->dx)
-                            / ENV_SHOW_DIAMETER;
-        m_region_tile->dy = m_region_tile->dx;
-        available_width_in_tiles = ENV_SHOW_DIAMETER;
-    }
+        // for now assuming that width > height:
+        //   * dungeon view, on left, is full height of screen and square
+        //   * message area is overlaid on dungeon view
+        //   * command tabs are scaled to height of screen and put to far right
+        //   * command boxes are hidden (appear when tabs pressed, covering screen)
+        //   * stats region squeezed between dungeon and command tabs
 
-    m_stat_x_divider = available_width_in_tiles * m_region_tile->dx;
+        // scale dungeon region to fit *height* of window
+        int available_height_in_tiles = m_windowsz.y / m_region_tile->dy;
+        if (available_height_in_tiles < ENV_SHOW_DIAMETER)
+        {
+            m_region_tile->dy = m_windowsz.y / ENV_SHOW_DIAMETER;
+            m_region_tile->dx = m_region_tile->dy;
 
-    // Calculate message_y_divider. First off, if we have already decided to
-    // use the overlay, we can place the divider to the bottom of the screen.
-    if (message_overlay)
+            available_height_in_tiles = ENV_SHOW_DIAMETER;
+        }
+
+        // let's make stats region exactly 9 chars wide, so non 4:3 ratio screens look ok
+        //  * this sets the tab region width
+        m_region_tab->set_small_layout(true, m_windowsz);
+        m_region_tab->resize_to_fit(m_windowsz.x, m_windowsz.y);
+        //  * ox tells us the width of screen obscured by the tabs
+        m_stat_x_divider = m_windowsz.x - m_region_tab->ox - Options.tile_font_stat_size*10;
+        // old logic, if we're going to impinge upon a nice square dregion
+        if (available_height_in_tiles * m_region_tile->dx > m_stat_x_divider)
+            m_stat_x_divider = available_height_in_tiles * m_region_tile->dx;
+
+        // always overlay message area on dungeon
         message_y_divider = m_windowsz.y;
-
-    // Then, the optimal situation without the overlay - we can fit both
-    // Options.view_max_height and at least Options.msg_min_height in the space.
-    if (max(Options.view_max_height, ENV_SHOW_DIAMETER)
-        * m_region_tile->dy + Options.msg_min_height
-        * m_region_msg->dy
-        <= m_windowsz.y && !message_overlay)
-    {
-        message_y_divider = max(Options.view_max_height, ENV_SHOW_DIAMETER)
-                            * m_region_tile->dy;
-        message_y_divider = max(message_y_divider, m_windowsz.y -
-                                    Options.msg_max_height * m_region_msg->dy);
     }
     else
     {
-        int available_height_in_tiles = 0;
-        available_height_in_tiles = (m_windowsz.y - (message_overlay
-                                     ? 0 : (Options.msg_min_height
-                                     * m_region_msg->dy)))
-                                     / m_region_tile->dy;
+        // normal layout code
 
-        // If we can't fit the full LOS to the available space, try using the
-        // message overlay.
-        if (available_height_in_tiles < ENV_SHOW_DIAMETER)
+        // Locations in pixels. stat_x_divider is the dividing vertical line
+        // between dungeon view on the left and status area on the right.
+        // message_y_divider is the horizontal line between dungeon view on
+        // the top and message window at the bottom.
+        m_stat_x_divider = 0;
+
+        // We ignore Options.view_max_width and use the maximum space available.
+        int available_width_in_tiles = 0;
+
+        available_width_in_tiles = (m_windowsz.x - stat_width
+                                    * m_region_stat->dx) / m_region_tile->dx;
+
+        // Scale the dungeon region tiles so we have enough space to
+        // display full LOS.
+        if (available_width_in_tiles < ENV_SHOW_DIAMETER)
         {
-            message_y_divider = m_windowsz.y;
-            message_overlay = true;
+            m_region_tile->dx = (m_windowsz.x - stat_width * m_region_stat->dx)
+                / ENV_SHOW_DIAMETER;
+            m_region_tile->dy = m_region_tile->dx;
+            available_width_in_tiles = ENV_SHOW_DIAMETER;
+        }
 
-            // If using message_overlay isn't enough, scale the dungeon region
-            // tiles to fit full LOS into the available space.
-            if (m_windowsz.y / m_region_tile->dy < ENV_SHOW_DIAMETER)
-            {
-                m_region_tile->dy = m_windowsz.y / ENV_SHOW_DIAMETER;
-                m_region_tile->dx = m_region_tile->dy;
-            }
+        m_stat_x_divider = available_width_in_tiles * m_region_tile->dx;
+
+        // Calculate message_y_divider. First off, if we have already decided to
+        // use the overlay, we can place the divider to the bottom of the screen.
+        if (message_overlay)
+            message_y_divider = m_windowsz.y;
+
+        // Then, the optimal situation without the overlay - we can fit both
+        // Options.view_max_height and at least Options.msg_min_height in the space.
+        if (max(Options.view_max_height, ENV_SHOW_DIAMETER)
+            * m_region_tile->dy + Options.msg_min_height
+            * m_region_msg->dy
+            <= m_windowsz.y && !message_overlay)
+        {
+            message_y_divider = max(Options.view_max_height, ENV_SHOW_DIAMETER)
+                * m_region_tile->dy;
+            message_y_divider = max(message_y_divider, m_windowsz.y -
+                                    Options.msg_max_height * m_region_msg->dy);
         }
         else
-            message_y_divider = available_height_in_tiles * m_region_tile->dy;
+        {
+            int available_height_in_tiles = 0;
+            available_height_in_tiles = (m_windowsz.y - (message_overlay
+                                                         ? 0 : (Options.msg_min_height
+                                                                * m_region_msg->dy)))
+                / m_region_tile->dy;
+
+            // If we can't fit the full LOS to the available space, try using the
+            // message overlay.
+            if (available_height_in_tiles < ENV_SHOW_DIAMETER)
+            {
+                message_y_divider = m_windowsz.y;
+                message_overlay = true;
+
+                // If using message_overlay isn't enough, scale the dungeon region
+                // tiles to fit full LOS into the available space.
+                if (m_windowsz.y / m_region_tile->dy < ENV_SHOW_DIAMETER)
+                {
+                    m_region_tile->dy = m_windowsz.y / ENV_SHOW_DIAMETER;
+                    m_region_tile->dx = m_region_tile->dy;
+                }
+            }
+            else
+            {
+                message_y_divider = available_height_in_tiles * m_region_tile->dy;
+            }
+        }
     }
 
     // Resize and place the dungeon region.
@@ -947,11 +990,11 @@ void TilesFramework::do_layout()
     // Resize and place the message window.
     if (message_overlay)
     {
-       m_region_msg->place(0, 0, 0); // TODO: Maybe add an option to place
-                                     // overlay at the bottom.
-       m_region_msg->resize_to_fit(m_stat_x_divider, Options.msg_min_height
-                                   * m_region_msg->dy);
-       m_region_msg->set_overlay(message_overlay);
+        m_region_msg->place(0, 0, 0); // TODO: Maybe add an option to place
+                                      // overlay at the bottom.
+        m_region_msg->resize_to_fit(m_stat_x_divider, Options.msg_min_height
+                                    * m_region_msg->dy);
+        m_region_msg->set_overlay(message_overlay);
     }
     else
     {
@@ -963,8 +1006,14 @@ void TilesFramework::do_layout()
     crawl_view.msgsz.x = m_region_msg->mx;
     crawl_view.msgsz.y = m_region_msg->my;
 
-    m_stat_col = m_stat_x_divider + map_stat_margin;
-
+    if (use_small_layout)
+    {
+        m_stat_col = m_stat_x_divider;
+    }
+    else
+    {
+        m_stat_col = m_stat_x_divider + map_stat_margin;
+    }
     m_region_stat->resize_to_fit(m_windowsz.x - m_stat_x_divider, m_windowsz.y);
     m_region_stat->place(m_stat_col, 0, 0);
     m_region_stat->resize(m_region_stat->mx, min_stat_height);
@@ -978,6 +1027,71 @@ void TilesFramework::do_layout()
     m_region_menu->resize_to_fit(m_windowsz.x, m_windowsz.y);
 
     crawl_view.init_view();
+}
+
+bool TilesFramework::is_using_small_layout()
+{
+    return (m_windowsz.y <= 480 || Options.tile_use_small_layout);
+}
+void TilesFramework::zoom_dungeon(bool in)
+{
+    m_region_tile->zoom(in);
+}
+
+bool TilesFramework::zoom_to_minimap()
+{
+    // don't zoom to the minimap if it's already on the screen
+    if (m_region_map || !tiles.is_using_small_layout())
+        return false;
+
+    m_region_map  = new MapRegion(m_map_pixels);
+    m_region_map->dx = m_region_map->dy = min((m_windowsz.x-2*map_margin)/GXM,(m_windowsz.y-2*map_margin)/GYM);
+    m_region_map->resize(GXM, GYM);
+    m_region_map->place(0, 0, map_margin);
+    // put the minimap at the beginning so that menus get drawn over it
+    m_layers[LAYER_NORMAL].m_regions.insert(m_layers[LAYER_NORMAL].m_regions.begin(),m_region_map);
+
+    // move the dregion out of the way
+    m_region_tile->place(m_region_tile->sx,m_windowsz.y,0);
+
+    set_need_redraw();
+
+    // force the minimap to be redrawn properly
+    //  - not sure why this is necessary :(
+    clear_map();
+
+    // force UI into map mode
+//    set_map_display(true);
+//    process_command(CMD_DISPLAY_MAP);
+    return true;
+}
+
+bool TilesFramework::zoom_from_minimap()
+{
+    // don't try to zap the overlaid minimap twice
+    if (!m_region_map || !tiles.is_using_small_layout())
+        return false;
+    delete m_region_map;
+    m_region_map = NULL;
+
+    // remove minimap from layers again (was at top of vector)
+    m_layers[LAYER_NORMAL].m_regions.erase(m_layers[LAYER_NORMAL].m_regions.begin());
+
+    // take UI out of map mode again
+//    set_map_display(false);
+
+    // put the dregion back (not at 0,0 because we scaled it!)
+    // NB. this assumes that we can work out sy again based on the ratio of wx to wy :O
+    m_region_tile->place(m_region_tile->sx,m_region_tile->sx*m_region_tile->wy/m_region_tile->wx,0);
+
+    set_need_redraw();
+    return true;
+}
+
+
+void TilesFramework::deactivate_tab()
+{
+    m_region_tab->deactivate_tab();
 }
 
 void TilesFramework::autosize_minimap()
@@ -1115,6 +1229,8 @@ void TilesFramework::place_gold_turns()
 
 void TilesFramework::layout_statcol()
 {
+    bool use_small_layout = is_using_small_layout();
+
     for (tab_iterator it = m_tabs.begin(); it != m_tabs.end(); ++it)
     {
         delete it->second;
@@ -1129,42 +1245,70 @@ void TilesFramework::layout_statcol()
         m_layers[LAYER_NORMAL].m_regions.pop_back();
     }
     Options.show_gold_turns = false;
-    crawl_view.hudsz.y = min_stat_height;
-    m_region_stat->resize(m_region_stat->mx, crawl_view.hudsz.y);
 
-    m_statcol_top = m_region_stat->ey;
-
-    // Set the inventory region to minimal size.
-    m_region_tab->place(m_stat_col, m_statcol_top);
-    m_region_tab->resize_to_fit(m_windowsz.x - m_region_tab->sx,
-                                m_windowsz.y - m_region_tab->sy);
-    m_region_tab->resize(m_region_tab->mx, min_inv_height);
-    m_region_tab->place(m_stat_col, m_windowsz.y - m_region_tab->wy);
-
-    m_statcol_bottom = m_region_tab->sy - m_tab_margin;
-
-    for (int i = 0, size = Options.tile_layout_priority.size(); i < size; ++i)
+    if (use_small_layout)
     {
-        string str = Options.tile_layout_priority[i];
-        if (str == "inventory")
-            resize_inventory();
-        else if (str == "minimap" || str == "map")
-            place_minimap();
-        else if (str == "gold_turn" || str == "gold_turns")
-            place_gold_turns();
-        else
-            place_tab(m_region_tab->find_tab(str));
+        // * commands will be on right as tabs
+        // * stats will be squeezed in gap between dungeon and commands
+        m_statcol_top = 0;
+        m_statcol_bottom = m_windowsz.y;
+
+        // place tabs (covering whole screen)
+        m_region_tab->set_small_layout(true, m_windowsz);
+        m_region_tab->resize_to_fit(m_windowsz.x, m_windowsz.y);
+
+        // place tabs waay to the right (all offsets will be negative)
+        m_region_tab->place(m_windowsz.x-m_region_tab->ox, 0);
+
+        // close any open tab
+        m_region_tab->deactivate_tab();
+
+        // resize stats to be up to beginning of command tabs
+        //  ... this works because the margin (ox) on m_region_tab contains the tabs themselves
+        m_region_stat->resize_to_fit((m_windowsz.x - m_stat_x_divider) - m_region_tab->ox*m_region_tab->dx/32, m_statcol_bottom-m_statcol_top);
+        crawl_view.hudsz.y = m_region_stat->my;
+        crawl_view.hudsz.x = m_region_stat->mx;
     }
-    // We stretch the minimap so it is centered in the space left.
-    if (m_region_map)
+    else
     {
-        if (!Options.tile_map_pixels)
-            autosize_minimap();
+        crawl_view.hudsz.y = min_stat_height;
+        m_region_stat->resize(m_region_stat->mx, crawl_view.hudsz.y);
 
-        m_region_map->place(m_region_stat->sx, m_region_stat->ey,
-                            m_region_stat->ex, m_statcol_bottom,
-                            map_margin);
-        tile_new_level(false, false);
+        m_statcol_top = m_region_stat->ey;
+
+        // Set the inventory region to minimal size.
+        m_region_tab->set_small_layout(false, m_windowsz);
+        m_region_tab->place(m_stat_col, m_statcol_top);
+        m_region_tab->resize_to_fit(m_windowsz.x - m_region_tab->sx,
+                                    m_windowsz.y - m_region_tab->sy);
+        m_region_tab->resize(m_region_tab->mx, min_inv_height);
+        m_region_tab->place(m_stat_col, m_windowsz.y - m_region_tab->wy);
+
+        m_statcol_bottom = m_region_tab->sy - m_tab_margin;
+
+        for (int i = 0, size = Options.tile_layout_priority.size(); i < size; ++i)
+        {
+            string str = Options.tile_layout_priority[i];
+            if (str == "inventory")
+                resize_inventory();
+            else if (str == "minimap" || str == "map")
+                place_minimap();
+            else if (str == "gold_turn" || str == "gold_turns")
+                place_gold_turns();
+            else
+                place_tab(m_region_tab->find_tab(str));
+        }
+        // We stretch the minimap so it is centered in the space left.
+        if (m_region_map)
+        {
+            if (!Options.tile_map_pixels)
+                autosize_minimap();
+
+            m_region_map->place(m_region_stat->sx, m_region_stat->ey,
+                                m_region_stat->ex, m_statcol_bottom,
+                                map_margin);
+            tile_new_level(false, false);
+        }
     }
 }
 

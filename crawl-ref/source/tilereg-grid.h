@@ -59,6 +59,7 @@ protected:
     unsigned char *m_flavour;
     coord_def m_cursor;
     int m_last_clicked_item;
+    int m_grid_page;
 
     vector<InventoryTile> m_items;
 

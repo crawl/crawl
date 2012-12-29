@@ -1892,6 +1892,12 @@ void process_command(command_type cmd)
     case CMD_DISPLAY_OVERMAP: display_overview(); break;
     case CMD_DISPLAY_MAP:     _do_display_map(); break;
 
+#ifdef TOUCH_UI
+        // zoom commands
+    case CMD_ZOOM_IN:   tiles.zoom_dungeon(true); break;
+    case CMD_ZOOM_OUT:  tiles.zoom_dungeon(false); break;
+#endif
+
         // Stash commands.
     case CMD_SEARCH_STASHES:
         if (Hints.hints_stashes)

@@ -270,6 +270,13 @@ int MapRegion::handle_mouse(MouseEvent &event)
         return 0;
     case MouseEvent::PRESS:
 #ifdef TOUCH_UI
+        // ctrl-rolley-wheel on the minimap (this ensures busting out of minimap when zooming in again on very small layouts)
+        if ( (event.mod & MOD_CTRL)
+        && (event.button == MouseEvent::SCROLL_UP || event.button == MouseEvent::SCROLL_DOWN))
+        {
+            tiles.zoom_dungeon(event.button == MouseEvent::SCROLL_UP);
+            return CK_NO_KEY; // prevents this being handled by the dungeon underneath too(!)
+        }
         if (event.button == MouseEvent::LEFT)
         {
             m_far_view = true;

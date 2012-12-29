@@ -371,6 +371,12 @@
 {CONTROL('Q'), CMD_DOLL_QUIT},
 #endif
 
+#ifdef TOUCH_UI
+// zoom functions
+{CK_NUMPAD_PLUS, CMD_ZOOM_IN},
+{CK_NUMPAD_MINUS, CMD_ZOOM_OUT},
+#endif
+
 {'\0', CMD_NO_CMD}
 
 #endif // CMD_KEY_H

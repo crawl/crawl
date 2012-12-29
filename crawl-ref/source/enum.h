@@ -737,6 +737,12 @@ enum command_type
     CMD_MAX_TILE = CMD_EDIT_PLAYER_TILE,
 #endif
 
+#ifdef TOUCH_UI
+    // zoom on dungeon
+    CMD_ZOOM_IN,
+    CMD_ZOOM_OUT,
+#endif
+
     // Repeat previous command
     CMD_PREV_CMD_AGAIN,
 

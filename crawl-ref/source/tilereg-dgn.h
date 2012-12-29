@@ -43,6 +43,7 @@ public:
 
     void add_overlay(const coord_def &gc, int idx);
     void clear_overlays();
+    void zoom(bool in);
 
 protected:
     void pack_buffers();
