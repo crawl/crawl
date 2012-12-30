@@ -2335,7 +2335,7 @@ bool player_effectively_in_light_armour()
 // This function returns true if the player has a radically different
 // shape... minor changes like blade hands don't count, also note
 // that lich transformation doesn't change the character's shape
-// (so we end up with Naga-lichs, Spiggan-lichs, Minotaur-lichs)
+// (so we end up with Naga-liches, Spiggan-liches, Minotaur-liches)
 // it just makes the character undead (with the benefits that implies). - bwr
 bool player_is_shapechanged(void)
 {
