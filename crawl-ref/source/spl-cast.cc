@@ -527,7 +527,8 @@ void inspect_spells()
 
 static bool _can_cast()
 {
-    if (player_in_bat_form() || you.form == TRAN_PIG)
+    if (player_in_bat_form() || you.form == TRAN_PIG || you.form == TRAN_JELLY
+        || you.form == TRAN_PORCUPINE)
     {
         canned_msg(MSG_PRESENT_FORM);
         return false;
