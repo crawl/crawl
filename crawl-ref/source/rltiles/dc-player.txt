@@ -707,8 +707,8 @@ bladehands BLADEHAND
 %parts_ctg HAND2
 %sdir player/hand2
 
-shield_round_small SHIELD_ROUND_SMALL
-shield_round_small2 SHIELD_ROUND_SMALL2
+buckler_round BUCKLER_ROUND
+buckler_round2 BUCKLER_ROUND2
 bullseye BULLSEYE
 gong GONG
 
@@ -745,7 +745,7 @@ shield_shaman SHIELD_SHAMAN
 shield_of_resistance SHIELD_OF_RESISTANCE
 large_shield_of_ignorance LARGE_SHIELD_OF_IGNORANCE
 gil-galad SHIELD_GILGALAD
-shield_spriggan SHIELD_SPRIGGAN
+buckler_spriggan BUCKLER_SPRIGGAN
 
 shield_dd SHIELD_DEEP_DWARF
 shield_dd_scion SHIELD_DEEP_DWARF_SCION
