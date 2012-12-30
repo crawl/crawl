@@ -1612,7 +1612,7 @@ tx-sync:
 build-rltiles: .contrib-libs $(RLTILES)/dc-unrand.txt
 ifdef ANDROID
 	# force submake to run properly
-	env -i - bash -l -c "$(MAKE) -C $(RLTILES) all TILES=1 V=1"
+	env -i - sh -c "$(MAKE) -C $(RLTILES) all TILES=1 V=1"
     # prove that tiles were generated properly
 	grep tile_info rltiles/*.cc| head
 else
