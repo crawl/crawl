@@ -750,6 +750,8 @@ shield_spriggan SHIELD_SPRIGGAN
 shield_dd SHIELD_DEEP_DWARF
 shield_dd_scion SHIELD_DEEP_DWARF_SCION
 lshield_dd_dk LARGE_SHIELD_DEEP_DWARF_DEATH_KNIGHT
+shield_donald SHIELD_DONALD
+lshield_louise LSHIELD_LOUISE
 
 ## books
 %sdir player/hand2/misc

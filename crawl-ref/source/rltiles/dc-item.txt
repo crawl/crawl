@@ -533,6 +533,10 @@ large_shield3
 shield_dd SHIELD_DEEP_DWARF
 shield_dd_scion SHIELD_DEEP_DWARF_SCION
 lshield_dd_dk LARGE_SHIELD_DEEP_DWARF_DEATH_KNIGHT
+%rim 0
+shield_donald SHIELD_DONALD
+lshield_louise LSHIELD_LOUISE
+%rim 1
 
 %sdir item/armour/headgear
 #####ARM_HELMET

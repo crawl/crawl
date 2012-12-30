@@ -24,6 +24,7 @@
 #include "random.h"
 #include "spl-book.h"
 #include "state.h"
+#include "tilepick.h"
 #include "unwind.h"
 
 
@@ -209,7 +210,7 @@ static void _give_potion(monster* mon, int level)
     }
 }
 
-static bool make_item_for_monster(
+static item_def* make_item_for_monster(
     monster* mons,
     object_class_type base,
     int subtype,
@@ -1571,7 +1572,7 @@ static void _give_ammo(monster* mon, int level,
     }
 }
 
-static bool make_item_for_monster(
+static item_def* make_item_for_monster(
     monster* mons,
     object_class_type base,
     int subtype,
@@ -1582,24 +1583,25 @@ static bool make_item_for_monster(
 {
     const int bp = get_mitm_slot();
     if (bp == NON_ITEM)
-        return false;
+        return 0;
 
     const int thing_created =
         items(allow_uniques, base, subtype, true, level, race);
 
     if (thing_created == NON_ITEM)
-        return false;
+        return 0;
 
     mitm[thing_created].flags |= flags;
 
     _give_monster_item(mons, thing_created);
-    return true;
+    return &mitm[thing_created];
 }
 
 static void _give_shield(monster* mon, int level)
 {
     const item_def *main_weap = mon->mslot_item(MSLOT_WEAPON);
     const item_def *alt_weap  = mon->mslot_item(MSLOT_ALT_WEAPON);
+    item_def *shield;
 
     // If the monster is already wielding/carrying a two-handed weapon,
     // it doesn't get a shield.  (Monsters always prefer raw damage to
@@ -1698,37 +1700,45 @@ static void _give_shield(monster* mon, int level)
                               level * 2 + 1, MAKE_ITEM_DWARVEN, 1);
         break;
     case MONS_LOUISE:
-        make_item_for_monster(mon, OBJ_ARMOUR, ARM_LARGE_SHIELD,
+        shield = make_item_for_monster(mon, OBJ_ARMOUR, ARM_LARGE_SHIELD,
                               level * 2 + 1, MAKE_ITEM_RANDOM_RACE, 1);
+        if (shield && !is_artefact(*shield))
+        {
+            shield->props["item_tile_name"] = "lshield_louise";
+            shield->props["worn_tile_name"] = "lshield_louise";
+            bind_item_tile(*shield);
+        }
         break;
     case MONS_DONALD:
-        make_item_for_monster(mon, OBJ_ARMOUR, ARM_SHIELD,
+        shield = make_item_for_monster(mon, OBJ_ARMOUR, ARM_SHIELD,
                               level * 2 + 1, MAKE_ITEM_RANDOM_RACE, 1);
 
-        if (coinflip())
+        if (shield)
         {
-            item_def *shield = mon->shield();
-            if (shield)
+            if (coinflip())
             {
                 set_item_ego_type(*shield, OBJ_ARMOUR, SPARM_REFLECTION);
                 set_equip_desc(*shield, ISFLAG_GLOWING);
-                shield->props["autoinscribe"] = "Donald";
+            }
+            shield->props["autoinscribe"] = "Donald";
+            if (!is_artefact(*shield))
+            {
+                shield->props["item_tile_name"] = "shield_donald";
+                shield->props["worn_tile_name"] = "shield_donald";
+                bind_item_tile(*shield);
             }
         }
 
         break;
     case MONS_NIKOLA:
-        {
-            make_item_for_monster(mon, OBJ_ARMOUR, ARM_GLOVES,
-                                  level * 2 + 1, MAKE_ITEM_NO_RACE, 1);
+        shield = make_item_for_monster(mon, OBJ_ARMOUR, ARM_GLOVES,
+                              level * 2 + 1, MAKE_ITEM_NO_RACE, 1);
 
-            item_def *gaunt = mon->shield();
-            if (gaunt)
-            {
-                if (get_armour_ego_type(*gaunt) == SPARM_ARCHERY)
-                    set_item_ego_type(*gaunt, OBJ_ARMOUR, SPARM_NORMAL);
-                gaunt->plus2 = TGLOV_DESC_GAUNTLETS;
-            }
+        if (shield) // gauntlets
+        {
+            if (get_armour_ego_type(*shield) == SPARM_ARCHERY)
+                set_item_ego_type(*shield, OBJ_ARMOUR, SPARM_NORMAL);
+            shield->plus2 = TGLOV_DESC_GAUNTLETS;
         }
         break;
     default:
