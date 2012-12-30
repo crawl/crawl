@@ -1504,9 +1504,9 @@ int player_res_steam(bool calc_unid, bool temp, bool items)
 
         if (items && you.wearing(EQ_BODY_ARMOUR, ARM_STEAM_DRAGON_HIDE))
             res += 2;
-
-        res += (player_res_fire(calc_unid, temp, items) + 1) / 2;
     }
+
+    res += (player_res_fire(calc_unid, temp, items) + 1) / 2;
 
     if (res > 3)
         res = 3;
