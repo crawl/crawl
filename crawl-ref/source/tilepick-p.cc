@@ -171,7 +171,7 @@ tileidx_t tilep_equ_shield(const item_def &item)
     switch (item.sub_type)
     {
         case ARM_SHIELD:       return TILEP_HAND2_SHIELD_KNIGHT_BLUE;
-        case ARM_BUCKLER:      return TILEP_HAND2_SHIELD_ROUND_SMALL;
+        case ARM_BUCKLER:      return TILEP_HAND2_BUCKLER_ROUND;
         case ARM_LARGE_SHIELD: return TILEP_HAND2_SHIELD_LONG_RED;
         default: return 0;
     }
