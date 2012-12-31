@@ -910,8 +910,9 @@ static string _abyss_monster_creation_message(monster* mon, bool visible)
 {
   if (mon->type == MONS_DEATH_COB)
   {
-      if (visible) {
-        return coinflip() ? " appears in a burst of microwaves!" : " pops from nullspace!";
+      if (visible)
+      {
+          return coinflip() ? " appears in a burst of microwaves!" : " pops from nullspace!";
       }
       return " smells like butter!";
   }
@@ -926,7 +927,7 @@ static string _abyss_monster_creation_message(monster* mon, bool visible)
         string(" is cast out of ") + (one_chance_in(3) ? "space!" : "reality!"),
         string(" coalesces out of ") + (one_chance_in(3) ? "pure" : "seething")
             + string(" chaos."),
-        string(" punctures the fabric of ") + (one_chance_in(5) ? " time!" : " the universe."),
+        string(" punctures the fabric of") + (one_chance_in(5) ? " time!" : " the universe."),
         string(" manifests") + (silenced(you.pos()) ? "!" : " with a bang!")
   };
   return messages[min(random2(9), random2(9))];
