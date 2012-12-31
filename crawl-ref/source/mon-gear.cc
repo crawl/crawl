@@ -1686,10 +1686,16 @@ static void _give_shield(monster* mon, int level)
             break;
     case MONS_SPRIGGAN_DEFENDER:
     case MONS_THE_ENCHANTRESS:
-        make_item_for_monster(mon, OBJ_ARMOUR, ARM_BUCKLER,
+        shield = make_item_for_monster(mon, OBJ_ARMOUR, ARM_BUCKLER,
                       mon->type == MONS_THE_ENCHANTRESS ? MAKE_GOOD_ITEM :
                       mon->type == MONS_SPRIGGAN_DEFENDER ? level * 2 + 1 :
                       level, MAKE_ITEM_NO_RACE);
+        if (shield && !is_artefact(*shield)) // ineligible...
+        {
+            shield->props["item_tile_name"] = "buckler_spriggan";
+            shield->props["worn_tile_name"] = "buckler_spriggan";
+            bind_item_tile(*shield);
+        }
         break;
     case MONS_NORRIS:
         make_item_for_monster(mon, OBJ_ARMOUR, ARM_BUCKLER,

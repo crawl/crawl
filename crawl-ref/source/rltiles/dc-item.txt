@@ -522,6 +522,8 @@ orcish_buckler1 ARM_BUCKLER_ORCISH
 orcish_buckler2
 %rim 1
 
+buckler_spriggan ARM_BUCKLER_SPRIGGAN
+
 shield1_elven ARM_SHIELD
 shield2_kite
 shield3_round
