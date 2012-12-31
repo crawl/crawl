@@ -1111,7 +1111,7 @@ static int _abyssal_stair_chance() {
 
 static void _nuke_all_terrain(bool vaults)
 {
-   for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
+    for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
     {
         if (vaults && env.level_map_mask(*ri) & MMT_VAULT)
             continue;
