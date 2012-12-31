@@ -96,6 +96,14 @@ static int find_weight(string &s, int defweight = TAG_UNFOUND)
     return (weight == TAG_UNFOUND? defweight : weight);
 }
 
+void clear_subvault_stack(void)
+{
+    env.new_subvault_names.clear();
+    env.new_subvault_tags.clear();
+    env.new_used_subvault_names.clear();
+    env.new_used_subvault_tags.clear();
+}
+
 void map_register_flag(const string &flag)
 {
     Map_Flag_Names.insert(flag);
@@ -2189,7 +2197,9 @@ bool map_def::map_already_used() const
             || has_any_tag(you.uniq_map_tags.begin(),
                            you.uniq_map_tags.end())
             || has_any_tag(env.level_uniq_map_tags.begin(),
-                           env.level_uniq_map_tags.end()));
+                           env.level_uniq_map_tags.end())
+            || has_any_tag(env.new_used_subvault_tags.begin(),
+                           env.new_used_subvault_tags.end()));
 }
 
 bool map_def::valid_item_array_glyph(int gly)
@@ -3147,19 +3157,34 @@ string map_def::subvault_from_tagstring(const string &sub)
     return "";
 }
 
+static void _register_subvault(const string name, const string spaced_tags)
+{
+    if (spaced_tags.find(" allow_dup ") == string::npos
+        || spaced_tags.find(" luniq ") != string::npos)
+    {
+        env.new_used_subvault_names.insert(name);
+    }
+
+    vector<string> tags = split_string(" ", spaced_tags);
+    for (int t = 0, ntags = tags.size(); t < ntags; t++)
+    {
+        const string &tag = tags[t];
+        if (tag.find("uniq_") == 0 || tag.find("luniq_") == 0)
+            env.new_used_subvault_tags.insert(tag);
+    }
+}
+
 static void _reset_subvault_stack(const int reg_stack)
 {
     env.new_subvault_names.resize(reg_stack);
     env.new_subvault_tags.resize(reg_stack);
 
     env.new_used_subvault_names.clear();
+    env.new_used_subvault_tags.clear();
     for (int i = 0; i < reg_stack; i++)
     {
-        if (env.new_subvault_tags[i].find(" allow_dup ") == string::npos
-            || env.new_subvault_tags[i].find(" luniq ") != string::npos)
-        {
-            env.new_used_subvault_names.insert(env.new_subvault_names[i]);
-        }
+        _register_subvault(env.new_subvault_names[i],
+                           env.new_subvault_tags[i]);
     }
 }
 
@@ -3217,11 +3242,7 @@ string map_def::apply_subvault(string_spec &spec)
         env.new_subvault_names.push_back(vault.name);
         env.new_subvault_tags.push_back(vault.tags);
 
-        if (vault.tags.find(" allow_dup ") == string::npos
-            || vault.tags.find(" luniq ") != string::npos)
-        {
-            env.new_used_subvault_names.insert(vault.name);
-        }
+        _register_subvault(vault.name, vault.tags);
 
         return "";
     }
