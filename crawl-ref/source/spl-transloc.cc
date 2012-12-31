@@ -1042,7 +1042,7 @@ spret_type cast_semi_controlled_blink(int pow, bool cheap_cancel, bool fail)
     args.restricts = DIR_DIR;
     args.mode = TARG_ANY;
 
-    while (1)
+    while (!crawl_state.seen_hups)
     {
         mpr("Which direction? [ESC to cancel]", MSGCH_PROMPT);
         direction(bmove, args);
