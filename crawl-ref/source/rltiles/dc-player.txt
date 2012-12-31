@@ -708,9 +708,21 @@ bladehands BLADEHAND
 %sdir player/hand2
 
 buckler_round BUCKLER_ROUND
+buckler_spriggan BUCKLER_SPRIGGAN
+
+shield_knight_blue SHIELD_KNIGHT_BLUE
+shield_donald SHIELD_DONALD
+shield_bullseye SHIELD_BULLSEYE
+shield_gong SHIELD_GONG
+shield_of_resistance SHIELD_OF_RESISTANCE
+
+lshield_long_red LARGE_SHIELD_LONG_RED
+lshield_of_ignorance LARGE_SHIELD_OF_IGNORANCE
+lshield_louise LSHIELD_LOUISE
+
+%sdir player/hand2/doll_only
+
 buckler_round2 BUCKLER_ROUND2
-bullseye BULLSEYE
-gong GONG
 
 shield_middle_round SHIELD_MIDDLE_ROUND
 shield_skull SHIELD_SKULL
@@ -724,7 +736,6 @@ shield_round5 SHIELD_ROUND5
 shield_round6 SHIELD_ROUND6
 shield_round7 SHIELD_ROUND7
 
-shield_knight_blue SHIELD_KNIGHT_BLUE
 shield_knight_gray SHIELD_KNIGHT_GRAY
 shield_knight_rw SHIELD_KNIGHT_RW
 shield_middle_unicorn SHIELD_MIDDLE_UNICORN
@@ -733,7 +744,6 @@ shield_kite2 SHIELD_KITE2
 shield_kite3 SHIELD_KITE3
 shield_kite4 SHIELD_KITE4
 
-shield_long_red SHIELD_LONG_RED
 shield_middle_gray SHIELD_MIDDLE_GRAY
 shield_diamond_yellow SHIELD_DIAMOND_YELLOW
 shield_middle_brown SHIELD_MIDDLE_BROWN
@@ -742,16 +752,11 @@ shield_middle_cyan SHIELD_MIDDLE_CYAN
 shield_middle_ethn SHIELD_MIDDLE_ETHN
 shield_long_cross SHIELD_LONG_CROSS
 shield_shaman SHIELD_SHAMAN
-shield_of_resistance SHIELD_OF_RESISTANCE
-large_shield_of_ignorance LARGE_SHIELD_OF_IGNORANCE
 gil-galad SHIELD_GILGALAD
-buckler_spriggan BUCKLER_SPRIGGAN
 
 shield_dd SHIELD_DEEP_DWARF
 shield_dd_scion SHIELD_DEEP_DWARF_SCION
 lshield_dd_dk LARGE_SHIELD_DEEP_DWARF_DEATH_KNIGHT
-shield_donald SHIELD_DONALD
-lshield_louise LSHIELD_LOUISE
 
 ## books
 %sdir player/hand2/misc

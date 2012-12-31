@@ -645,7 +645,7 @@ OBJ:     OBJ_ARMOUR/ARM_LARGE_SHIELD
 PLUS:    +8
 COLOUR:  BROWN
 TILE:    urand_ignorance
-TILE_EQ: large_shield_of_ignorance
+TILE_EQ: lshield_of_ignorance
 AC:      2
 EV:      2
 INT:     -6
@@ -677,7 +677,7 @@ OBJ:     OBJ_ARMOUR/ARM_SHIELD
 PLUS:    +15
 COLOUR:  RED
 TILE:    urand_bullseye
-TILE_EQ: bullseye
+TILE_EQ: shield_bullseye
 EV:      -5
 
 NAME:    crown of Dyrovepreva
@@ -877,7 +877,7 @@ OBJ:      OBJ_ARMOUR/ARM_SHIELD
 PLUS:     +6
 COLOUR:   ETC_GOLD
 TILE:     urand_gong
-TILE_EQ:  gong
+TILE_EQ:  shield_gong
 BRAND:    SPARM_SPIRIT_SHIELD
 MAGIC:    50
 BOOL:     elec, life
