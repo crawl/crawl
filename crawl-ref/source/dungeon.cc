@@ -48,6 +48,7 @@
 #include "lev-pand.h"
 #include "libutil.h"
 #include "makeitem.h"
+#include "mapdef.h"
 #include "mapmark.h"
 #include "maps.h"
 #include "message.h"
@@ -999,9 +1000,7 @@ void dgn_register_place(const vault_placement &place, bool register_vault)
             _dgn_register_vault(env.new_subvault_names[i],
                                 env.new_subvault_tags[i]);
         }
-        env.new_subvault_names.clear();
-        env.new_subvault_tags.clear();
-        env.new_used_subvault_names.clear();
+        clear_subvault_stack();
 
         // Identify each square in the map with its map_index.
         if (!overwritable && !transparent)
@@ -1166,6 +1165,7 @@ void dgn_reset_level(bool enable_random_maps)
     env.level_uniq_maps.clear();
     env.level_uniq_map_tags.clear();
     env.level_vault_list.clear();
+    clear_subvault_stack();
 
     you.unique_creatures = temp_unique_creatures;
     you.unique_items = temp_unique_items;
@@ -1175,9 +1175,6 @@ void dgn_reset_level(bool enable_random_maps)
     env.level_layout_types.clear();
     level_clear_vault_memory();
     dgn_colour_grid.reset(NULL);
-    env.new_subvault_names.clear();
-    env.new_subvault_tags.clear();
-    env.new_used_subvault_names.clear();
 
     use_random_maps = enable_random_maps;
     dgn_check_connectivity = false;
