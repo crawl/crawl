@@ -1485,8 +1485,6 @@ static monster* _place_monster_aux(const mgen_data &mg, const monster *leader,
     // Yiuf is a faithful Xommite.
     else if (mg.cls == MONS_CRAZY_YIUF)
         mon->god = GOD_XOM;
-    else if (mg.cls == MONS_SPATIAL_MAELSTROM)
-        mon->god = GOD_LUGONU;
     // The hell lords, Grinder and Ignacio belong to Makhleb.
     else if (mons_species(mg.cls) == MONS_HELL_LORD
              || mg.cls == MONS_ANTAEUS
