@@ -908,14 +908,14 @@ static bool _in_ood_pack_protected_place()
 
 static string _abyss_monster_creation_message(monster* mon, bool visible)
 {
-  if (mon->type == MONS_DEATH_COB)
-  {
-      if (visible)
-      {
-          return coinflip() ? " appears in a burst of microwaves!" : " pops from nullspace!";
-      }
-      return " smells like butter!";
-  }
+    if (mon->type == MONS_DEATH_COB)
+    {
+        if (visible)
+        {
+            return coinflip() ? " appears in a burst of microwaves!" : " pops from nullspace!";
+        }
+        return " smells like butter!";
+    }
 
     string messages[] = {
         (visible ? " appears" : " flickers") + string(" in a shower of")
@@ -929,8 +929,8 @@ static string _abyss_monster_creation_message(monster* mon, bool visible)
             + string(" chaos."),
         string(" punctures the fabric of") + (one_chance_in(5) ? " time!" : " the universe."),
         string(" manifests") + (silenced(you.pos()) ? "!" : " with a bang!")
-  };
-  return messages[min(random2(9), random2(9))];
+    };
+    return messages[min(random2(9), random2(9))];
 }
 
 monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)

@@ -2067,7 +2067,7 @@ static void tag_read_you(reader &th)
 #if TAG_MAJOR_VERSION == 34
     if (th.getMinorVersion() >= TAG_MINOR_DEEP_ABYSS)
     {
-         if (th.getMinorVersion() < TAG_MINOR_REMOVE_ABYSS_SEED)
+        if (th.getMinorVersion() < TAG_MINOR_REMOVE_ABYSS_SEED)
             unmarshallInt(th); // was abyssal_state.seed, unused.
         abyssal_state.depth = unmarshallInt(th);
         abyssal_state.nuke_all = false;
