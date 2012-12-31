@@ -522,6 +522,30 @@ bool mcache_monster::get_shield_offset(tileidx_t mon_tile,
         *ofs_y = -1;
         break;
 
+    case TILEP_MONS_SPRIGGAN:
+    case TILEP_MONS_SPRIGGAN_DEFENDER:
+    case TILEP_MONS_SPRIGGAN_BERSERKER:
+    case TILEP_MONS_SPRIGGAN_ASSASSIN:
+        *ofs_x = 2;
+        *ofs_y = 3;
+        break;
+
+    case TILEP_MONS_SPRIGGAN_DRUID:
+        *ofs_x = 2;
+        *ofs_y = -4;
+        break;
+
+    case TILEP_MONS_SPRIGGAN_AIR_MAGE:
+        *ofs_x = 2;
+        *ofs_y = -9;
+        break;
+
+    case TILEP_MONS_THE_ENCHANTRESS:
+        *ofs_x = 6;
+        *ofs_y = 3;
+        break;
+
+    case TILEP_MONS_SPRIGGAN_RIDER: // shield covered, out of picture
     default:
         // This monster cannot be displayed with a shield.
         return false;
