@@ -118,6 +118,7 @@ int mons_abyss_rare(monster_type mcls)
     case MONS_LURKING_HORROR:
     case MONS_ANCIENT_ZYME:
     case MONS_STARCURSED_MASS:
+    case MONS_THRASHING_HORROR:
     case MONS_SKELETON_LARGE:
     case MONS_SKELETON_SMALL:
         return 40;
@@ -157,7 +158,6 @@ int mons_abyss_rare(monster_type mcls)
     case MONS_GOLDEN_EYE:
         return 12;
 
-    case MONS_THRASHING_HORROR:
     case MONS_HELL_HOG:
     case MONS_HELL_HOUND:
     case MONS_HUNGRY_GHOST:
