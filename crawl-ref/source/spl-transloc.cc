@@ -1042,10 +1042,16 @@ spret_type cast_semi_controlled_blink(int pow, bool cheap_cancel, bool fail)
     args.restricts = DIR_DIR;
     args.mode = TARG_ANY;
 
-    while (!crawl_state.seen_hups)
+    while (1)
     {
         mpr("Which direction? [ESC to cancel]", MSGCH_PROMPT);
         direction(bmove, args);
+
+        if (crawl_state.seen_hups)
+        {
+            mpr("Cancelling blink due to HUP.");
+            return SPRET_ABORT;
+        }
 
         if (bmove.isValid && !bmove.delta.origin())
             break;
