@@ -897,13 +897,17 @@ void TilesFramework::do_layout()
         m_region_tab->set_small_layout(true, m_windowsz);
         m_region_tab->resize_to_fit(m_windowsz.x, m_windowsz.y);
         //  * ox tells us the width of screen obscured by the tabs
-        m_stat_x_divider = m_windowsz.x - m_region_tab->ox - Options.tile_font_stat_size*10;
+        m_stat_x_divider = m_windowsz.x - (m_region_tab->ox*m_region_tab->dx/32) - get_crt_font()->char_width()*10;
         // old logic, if we're going to impinge upon a nice square dregion
         if (available_height_in_tiles * m_region_tile->dx > m_stat_x_divider)
+        {
             m_stat_x_divider = available_height_in_tiles * m_region_tile->dx;
-
+        }
         // always overlay message area on dungeon
         message_y_divider = m_windowsz.y;
+
+        //printf("window x = %d; x div = %d; x button = +%d; x dreg = %d; font w = %d; y div = %d\n",m_windowsz.x,m_stat_x_divider,m_region_tab->ox,available_height_in_tiles*m_region_tile->dx,Options.tile_font_stat_size,message_y_divider);
+        //printf("m_region_tab dx = %d; ox = %d; wx = %d; sx = %d\n",m_region_tab->dx,m_region_tab->ox,m_region_tab->wx,m_region_tab->sx);
     }
     else
     {
