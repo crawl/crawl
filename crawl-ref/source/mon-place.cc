@@ -389,7 +389,7 @@ void spawn_random_monsters()
         // a bit strange for a place as chaotic as the Abyss.  Then again,
         // the player is unlikely to meet all of them and notice this.
         if (you.char_direction != GDT_GAME_START)
-            rate = 5 - div_rand_round(you.depth, 9);
+            rate = 5;
         if (you.religion == GOD_CHEIBRIADOS)
             rate *= 2;
     }
