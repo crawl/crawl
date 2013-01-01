@@ -36,7 +36,7 @@ InventoryRegion::InventoryRegion(const TileRegionInit &init) : GridRegion(init)
 void InventoryRegion::pack_buffers()
 {
     // Pack base separately, as it comes from a different texture...
-    unsigned int i = 0 + (m_grid_page*mx*my - m_grid_page);
+    unsigned int i = 0 + (m_grid_page*mx*my);// - m_grid_page); @@CW: how should these tie in????
     for (int y = 0; y < my; y++)
     {
         for (int x = 0; x < mx; x++)
@@ -67,7 +67,7 @@ void InventoryRegion::pack_buffers()
         }
     }
 
-    i = 0 + (m_grid_page*mx*my - m_grid_page);
+    i = 0 + (m_grid_page*mx*my);// - m_grid_page);
     for (int y = 0; y < my; y++)
     {
         for (int x = 0; x < mx; x++)
@@ -705,18 +705,11 @@ void InventoryRegion::update()
     for (int i = you.visible_igrd(you.pos()); i != NON_ITEM; i = mitm[i].link)
         num_ground++;
 
+/* *** use paging instead
     // If the inventory is full, show at least one row of the ground.
     int min_ground = min(num_ground, mx);
     max_pack_items = min(max_pack_items, mx * my * (m_grid_page+1) - min_ground);
     max_pack_items = min(ENDOFPACK, max_pack_items);
-
-/*
-    // for the paged UI used by the small layout, we can have any number of pack and ground items
-    if (tiles.is_using_small_layout())
-    {
-        max_pack_items = ENDOFPACK;
-        min_ground = num_ground;
-    }
 */
 
     ucs_t c;
