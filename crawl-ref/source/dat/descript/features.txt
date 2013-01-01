@@ -149,6 +149,11 @@ A gateway leading out of the Abyss
 A gateway out of this accursed place, shimmering and shifting in the
 impermanent landscape.
 %%%%
+A gateway leading deeper into the Abyss
+
+A strangely calm gateway amid the roiling landscape. It leads one way into the
+depths of the abyss.
+%%%%
 A gateway to a ziggurat
 
 This portal leads to an ancient ziggurat, a place of untold challenges and
