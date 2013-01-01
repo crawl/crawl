@@ -21,6 +21,7 @@
 
 #include "areas.h"
 #include "attitude-change.h"
+#include "branch.h"
 #include "cio.h"
 #include "cloud.h"
 #include "colour.h"
@@ -4790,7 +4791,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return MON_AFFECTED;
 
     case BEAM_BANISH:
-        if (player_in_branch(BRANCH_ABYSS) && x_chance_in_y(you.depth, 27))
+        if (player_in_branch(BRANCH_ABYSS) && x_chance_in_y(you.depth, brdepth[BRANCH_ABYSS]))
             simple_monster_message(mon, " wobbles for a moment.");
         else
             mon->banish(agent());
