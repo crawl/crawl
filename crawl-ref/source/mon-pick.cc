@@ -99,12 +99,6 @@ int mons_abyss_rare(monster_type mcls)
     case MONS_ABOMINATION_SMALL:
         return 99;
 
-    case MONS_IRON_IMP:
-    case MONS_LEMURE:
-    case MONS_UFETUBUS:
-    case MONS_WHITE_IMP:
-        return 80;
-
     case MONS_HELLWING:
     case MONS_NEQOXEC:
     case MONS_ORANGE_DEMON:
@@ -119,13 +113,13 @@ int mons_abyss_rare(monster_type mcls)
     case MONS_ANCIENT_ZYME:
     case MONS_STARCURSED_MASS:
     case MONS_THRASHING_HORROR:
-    case MONS_SKELETON_LARGE:
-    case MONS_SKELETON_SMALL:
-        return 40;
+       return 40;
 
-    case MONS_ZOMBIE_LARGE:
-    case MONS_ZOMBIE_SMALL:
-        return 35;
+    case MONS_IRON_IMP:
+    case MONS_LEMURE:
+    case MONS_UFETUBUS:
+    case MONS_WHITE_IMP:
+        return 30;
 
     case MONS_BONE_DRAGON:
     case MONS_SIXFIRHY:
@@ -140,6 +134,10 @@ int mons_abyss_rare(monster_type mcls)
     case MONS_BRAIN_WORM:
         return 16;
 
+    case MONS_SKELETON_LARGE:
+    case MONS_SKELETON_SMALL:
+    case MONS_ZOMBIE_LARGE:
+    case MONS_ZOMBIE_SMALL:
     case MONS_FLYING_SKULL:
     case MONS_FREEZING_WRAITH:
     case MONS_GIANT_ORANGE_BRAIN:
