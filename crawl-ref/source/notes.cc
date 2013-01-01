@@ -75,9 +75,10 @@ static bool _is_noteworthy_dlevel(unsigned short place)
     branch_type branch = place_branch(place);
     int lev = place_depth(place);
 
-    // The Abyss is noted a different way (since we care mostly about the cause).
+    // Entering the Abyss is noted a different way, since we care mostly about
+    // the cause.
     if (branch == BRANCH_ABYSS)
-        return false;
+        return lev == _dungeon_branch_depth(branch);
 
     // Other portal levels are always interesting.
     if (!is_connected_branch(static_cast<branch_type>(branch)))
