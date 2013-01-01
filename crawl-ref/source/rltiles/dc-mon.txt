@@ -248,6 +248,7 @@ silver_star MONS_SILVER_STAR /*'*'*/
 ### Abyssal horrors ('*')
 %sdir mon/abyss
 ancient_zyme MONS_ANCIENT_ZYME
+apocalypse_crab MONS_APOCALYPSE_CRAB
 lurking_horror MONS_LURKING_HORROR
 starcursed_mass MONS_STARCURSED_MASS
 tentacled_starspawn MONS_TENTACLED_STARSPAWN
