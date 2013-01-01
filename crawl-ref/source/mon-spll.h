@@ -1827,12 +1827,12 @@
 
     {  MST_THRASHING_HORROR,
       {
-       SPELL_FRENZY,
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
-       SPELL_NO_SPELL
+       SPELL_NO_SPELL,
+       SPELL_FRENZY
       }
     },
 
