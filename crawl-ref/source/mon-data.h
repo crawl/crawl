@@ -4064,7 +4064,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_STARCURSED_MASS, 'x', BLUE, "starcursed mass",
+    MONS_STARCURSED_MASS, 'X', BLUE, "starcursed mass",
     M_SEE_INVIS,
     mrd(MR_RES_POISON, 3),
     0, 12, MONS_STARCURSED_MASS, MONS_STARCURSED_MASS, MH_NONLIVING, -6,
