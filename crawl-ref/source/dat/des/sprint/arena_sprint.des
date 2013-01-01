@@ -38,9 +38,6 @@
 -- only get about 60 turns to kill the last enemy, and it might spawn in a far
 -- away spot. This is intentional.
 --
--- XXX: It would be good if arena points override real points, multiplied by
---      runecount if you win.
---
 -- XXX: TRJ doesn't work.
 --
 -- XXX: Zin is overpowered.
@@ -150,14 +147,15 @@ function arena_sprint_end_round(data)
     end
 
     style_gain = style_gain * data.style_mult
-    data.style_points = data.style_points + style_gain
-    if data.style_points > 1 then
-        crawl.mpr("You now have " .. data.style_points .. " arena points " ..
+    local style_points = dgn.persist.arena_style_points + style_gain
+    dgn.persist.arena_style_points = style_points
+    if style_points > 1 then
+        crawl.mpr("You now have " .. style_points .. " arena points " ..
                   "(gained " .. style_gain .. ").", "intrinsic_gain")
     else
         crawl.mpr("You now have 1 arena point.", "intrinsic_gain")
     end
-    crawl.take_note("Arena points: " .. data.style_points ..
+    crawl.take_note("Arena points: " .. style_points ..
                     " (+" .. style_gain .. ") [x" .. data.style_mult .. "]",
                     "intrinsic_gain")
 
@@ -944,6 +942,18 @@ function thing_do_arena(data, triggerable, triggerer, marker, ev)
     end
 end
 
+-- Should return two values: the score, and false to indicate that we
+-- don't want to add the default score.
+function arena_sprint_score (won)
+    local points = dgn.persist.arena_style_points
+    local runes = you.num_runes()
+
+    if won and runes > 0 then
+        points = points * runes
+    end
+    return points, false
+end
+
 }}
 
 NAME:       arena_sprint
@@ -966,7 +976,6 @@ LROCKTILE:  wall_hall
             between_rounds = true,  -- Are we waiting for the next round?
             finished = false,       -- You somehow beat round 42
             monster_set = {},
-            style_points = 0,
             style_mult = 1,
             spawn_dir = ""          -- Which spawn points to use?
         },
@@ -987,6 +996,11 @@ LROCKTILE:  wall_hall
     })
 
     dgn.persist.arena_sprint_boss_set = arena_sprint_init_boss_table()
+
+    -- Storing this in dgn.persist rather than arena_marker.data so that
+    -- arena_sprint_score can access it.
+    dgn.persist.arena_style_points = 0
+    dgn.persist.calc_score = global_function("arena_sprint_score");
 
     lua_marker("{", arena_marker)
     lua_marker("{", portal_desc { centre_point = 1 })
