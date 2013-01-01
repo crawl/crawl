@@ -1383,28 +1383,42 @@ void scorefile_entry::init(time_t dt)
      */
 
     // do points first.
-    uint64_t pt = min(you.gold, 1000000); // sprint games could overflow a 32 bit value
-    pt += _award_modified_experience();
+    points = 0;
+    bool base_score = true;
+    dlua.pushglobal("dgn.persist.calc_score");
+    lua_pushboolean(dlua, death_type == KILLED_BY_WINNING);
 
-    num_runes      = runes_in_pack();
-    num_diff_runes = num_runes;
+    if (dlua.callfn(NULL, 1, 2))
+        dlua.fnreturns(">db", &points, &base_score);
 
-    // There's no point in rewarding lugging artefacts.  Thus, no points
-    // for the value of the inventory. -- 1KB
-    if (death_type == KILLED_BY_WINNING)
+    // If calc_score didn't exist, or returned true as its second value,
+    // use the default formula.
+    if (base_score)
     {
-        pt += 250000; // the Orb
-        pt += num_runes * 2000 + 4000;
-        pt += ((uint64_t)250000) * 25000 * num_runes * num_runes
-            / (1+you.num_turns) / (crawl_state.game_is_zotdef() ? 10 : 1);
-    }
-    pt += num_runes * 10000;
-    pt += num_runes * (num_runes + 2) * 1000;
+        // sprint games could overflow a 32 bit value
+        uint64_t pt = points + min(you.gold, 1000000);
+        pt += _award_modified_experience();
 
-    // Players will have a hard time getting 1/10 of this (see XP cap):
-    if (pt > 99999999)
-        pt = 99999999;
-    points = pt;
+        num_runes      = runes_in_pack();
+        num_diff_runes = num_runes;
+
+        // There's no point in rewarding lugging artefacts.  Thus, no points
+        // for the value of the inventory. -- 1KB
+        if (death_type == KILLED_BY_WINNING)
+        {
+            pt += 250000; // the Orb
+            pt += num_runes * 2000 + 4000;
+            pt += ((uint64_t)250000) * 25000 * num_runes * num_runes
+                / (1+you.num_turns) / (crawl_state.game_is_zotdef() ? 10 : 1);
+        }
+        pt += num_runes * 10000;
+        pt += num_runes * (num_runes + 2) * 1000;
+
+        // Players will have a hard time getting 1/10 of this (see XP cap):
+        if (pt > 99999999)
+            pt = 99999999;
+        points = pt;
+    }
 
     race = you.species;
     job  = you.char_class;
