@@ -44,7 +44,7 @@
 #ifdef WIZARD
 static dungeon_feature_type _find_appropriate_stairs(bool down)
 {
-    if (player_in_connected_branch())
+    if (player_in_connected_branch() || player_in_branch(BRANCH_ABYSS))
     {
         int depth = you.depth;
         if (down)
@@ -64,6 +64,8 @@ static dungeon_feature_type _find_appropriate_stairs(bool down)
             // Special cases
             if (player_in_branch(BRANCH_VESTIBULE_OF_HELL))
                 return DNGN_EXIT_HELL;
+            else if (player_in_branch(BRANCH_ABYSS))
+                return DNGN_EXIT_ABYSS;
             else if (player_in_branch(BRANCH_MAIN_DUNGEON))
                 return DNGN_STONE_STAIRS_UP_I;
 
@@ -102,9 +104,6 @@ static dungeon_feature_type _find_appropriate_stairs(bool down)
         }
         else
             return DNGN_ESCAPE_HATCH_UP;
-
-    case BRANCH_ABYSS:
-        return DNGN_EXIT_ABYSS;
 
     case BRANCH_PANDEMONIUM:
         if (down)
