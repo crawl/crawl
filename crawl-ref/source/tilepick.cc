@@ -1261,11 +1261,13 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     case MONS_MACABRE_MASS:
         return TILEP_MONS_MACABRE_MASS;
 
-    // abyssal monsters (not assigned/implemented yet)
+    // abyssal monsters
     case MONS_LURKING_HORROR:
         return TILEP_MONS_LURKING_HORROR;
     case MONS_ANCIENT_ZYME:
         return TILEP_MONS_ANCIENT_ZYME;
+    case MONS_APOCALYPSE_CRAB:
+        return TILEP_MONS_APOCALYPSE_CRAB;
     case MONS_STARCURSED_MASS:
         return TILEP_MONS_STARCURSED_MASS;
     case MONS_TENTACLED_STARSPAWN:
