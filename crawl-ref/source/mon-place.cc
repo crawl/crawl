@@ -911,9 +911,7 @@ static string _abyss_monster_creation_message(monster* mon, bool visible)
     if (mon->type == MONS_DEATH_COB)
     {
         if (visible)
-        {
             return coinflip() ? " appears in a burst of microwaves!" : " pops from nullspace!";
-        }
         return " smells like butter!";
     }
 
@@ -1165,9 +1163,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
     }
 
     if (player_in_branch(BRANCH_ABYSS) && !mg.summoner)
-    {
         big_cloud(CLOUD_TLOC_ENERGY, mon, mon->pos(), 3 + random2(3), 3, 3);
-    }
 
     // Message to player from stairwell/gate appearance.
     if (you.see_cell(mg.pos) &&
@@ -1205,9 +1201,7 @@ monster* place_monster(mgen_data mg, bool force_pos, bool dont_place)
             }
         }
         else if (player_in_branch(BRANCH_ABYSS))
-        {
             msg += _abyss_monster_creation_message(mon, is_visible);
-        }
         if (!msg.empty())
             mpr(msg.c_str());
         // Special case: must update the view for monsters created
