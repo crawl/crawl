@@ -44,18 +44,18 @@ void InventoryRegion::pack_buffers()
             if (i >= m_items.size())
                 break;
 
-            if ((y==my-1 && x==mx-1) || (y==0 && x==0 && m_grid_page>0))
+            InventoryTile &item = m_items[i++];
+
+            if ((y==my-1 && x==mx-1 && item.tile) || (y==0 && x==0 && m_grid_page>0))
             {
                 // draw a background for paging tiles
                 m_buf.add_dngn_tile(TILE_ITEM_SLOT, x, y);
                 continue;
             }
 
-            InventoryTile &item = m_items[i++];
-
             if (item.flag & TILEI_FLAG_FLOOR)
             {
-                if (i >= (unsigned int) mx * my * (m_grid_page+1))
+                if (i >= (unsigned int) mx * my * (m_grid_page+1) && item.tile)
                     break;
 
                 int num_floor = tile_dngn_count(env.tile_default.floor);
@@ -75,7 +75,9 @@ void InventoryRegion::pack_buffers()
             if (i >= m_items.size())
                 break;
 
-            if (y==my-1 && x==mx-1)
+            InventoryTile &item = m_items[i++];
+
+            if (y==my-1 && x==mx-1 && item.tile)
             {
                 // continuation to next page icon
                 m_buf.add_main_tile(TILE_UNSEEN_ITEM, x, y);
@@ -87,8 +89,6 @@ void InventoryRegion::pack_buffers()
                 m_buf.add_main_tile(TILE_UNSEEN_ITEM, x, y);
                 continue;
             }
-
-            InventoryTile &item = m_items[i++];
 
             if (item.flag & TILEI_FLAG_EQUIP)
             {
@@ -592,7 +592,18 @@ bool InventoryRegion::update_alt_text(string &alt)
         return false;
 
     describe_info inf;
-    get_item_desc(*item, inf, true);
+    if (_is_next_button(item_idx))
+    {
+        // alt text for next page button
+        inf.title = "Next Page";
+    }
+    else if (_is_prev_button(item_idx))
+    {
+        // alt text for prev page button
+        inf.title = "Previous Page";
+    }
+    else
+        get_item_desc(*item, inf, true);
 
     alt_desc_proc proc(crawl_view.msgsz.x, crawl_view.msgsz.y);
     process_description<alt_desc_proc>(proc, inf);
@@ -615,7 +626,11 @@ void InventoryRegion::draw_tag()
 
     bool floor = m_items[curs_index].flag & TILEI_FLAG_FLOOR;
 
-    if (floor && mitm[idx].defined())
+    if (_is_next_button(curs_index))
+        draw_desc("Next Page");
+    else if (_is_prev_button(curs_index))
+        draw_desc("Previous Page");
+    else if (floor && mitm[idx].defined())
         draw_desc(mitm[idx].name(DESC_PLAIN).c_str());
     else if (!floor && you.inv[idx].defined())
         draw_desc(you.inv[idx].name(DESC_INVENTORY_EQUIP).c_str());
@@ -841,4 +856,15 @@ void InventoryRegion::update()
     }
 }
 
+bool InventoryRegion::_is_prev_button(int idx)
+{
+    // idx is an index in m_items as returned by cursor_index()
+    return (m_grid_page>0 && idx == mx*my*m_grid_page-1);
+}
+
+bool InventoryRegion::_is_next_button(int idx)
+{
+    // idx is an index in m_items as returned by cursor_index()
+    return (idx == mx*my*(m_grid_page+1)-1);
+}
 #endif
