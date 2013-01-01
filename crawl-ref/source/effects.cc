@@ -2025,6 +2025,10 @@ void handle_time()
         && !crawl_state.game_is_zotdef())
     {
         spawn_random_monsters();
+        if (player_in_branch(BRANCH_ABYSS))
+          for (int i = 1; i < you.depth; ++i)
+                if (x_chance_in_y(i, 5))
+                    spawn_random_monsters();
     }
 
     // Labyrinth and Abyss maprot.
