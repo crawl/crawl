@@ -2222,7 +2222,7 @@ void give_item(monster *mons, int level_number, bool mons_summoned, bool spectra
 {
     ASSERT(level_number > -1); // debugging absdepth0 changes
 
-    if (mons->type == MONS_MAURICE || mons->type == MONS_DEEP_DWARF_SCION)
+    if (mons->type == MONS_MAURICE)
         _give_gold(mons, level_number);
 
     _give_scroll(mons, level_number);
