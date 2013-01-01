@@ -72,8 +72,8 @@ static int _dungeon_branch_depth(uint8_t branch)
 
 static bool _is_noteworthy_dlevel(unsigned short place)
 {
-    const uint8_t branch = (place >> 8) & 0xFF;
-    const int lev = (place & 0xFF);
+    branch_type branch = place_branch(place);
+    int lev = place_depth(place);
 
     // The Abyss is noted a different way (since we care mostly about the cause).
     if (branch == BRANCH_ABYSS)
@@ -83,15 +83,10 @@ static bool _is_noteworthy_dlevel(unsigned short place)
     if (!is_connected_branch(static_cast<branch_type>(branch)))
         return true;
 
-    if (lev == _dungeon_branch_depth(branch)
-        || branch == BRANCH_MAIN_DUNGEON && (lev % 5) == 0
-        || branch == BRANCH_MAIN_DUNGEON && lev == 14
-        || branch != BRANCH_MAIN_DUNGEON && lev == 1)
-    {
-        return true;
-    }
-
-    return false;
+    return (lev == _dungeon_branch_depth(branch)
+            || branch == BRANCH_MAIN_DUNGEON && (lev % 5) == 0
+            || branch == BRANCH_MAIN_DUNGEON && lev == 14
+            || branch != BRANCH_MAIN_DUNGEON && lev == 1);
 }
 
 // Is a note worth taking?
