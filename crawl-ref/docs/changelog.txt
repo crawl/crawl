@@ -26,7 +26,7 @@ Branches, environment
 Character
 ---------
 * Stalker is removed.
-* Gladiator no longer starts with a buckler, get more Dodging to compensate.
+* Gladiator no longer starts with a buckler, gets more Dodging to compensate.
 * Traps & Doors is just "Traps".
 * Traps are spotted (or not) deterministically based on skill level and a
   few other factors: spending more time does not help.
@@ -39,7 +39,7 @@ Character
 * Experience aptitude uses the same scale as skill aptitudes. This scale is
   coarser than the old one, so most races now require slightly more or less
   experience to gain levels than before.
-* Deep Elves is better at Earth magic than Air.
+* Deep Elves are better at Earth magic than Air.
 * Hill Orcs are better at Axes, worse at gaining levels.
 * Tengu are better at gaining levels.
 * Berserkers may choose their starting weapon.
@@ -63,7 +63,7 @@ Monsters
       torment and draining.
     - Starcursed mass: proliferates when ignored, re-merges when damaged.
       Has a smite-targeted psychic scream that becomes more powerful as
-      more masses are visible.
+      more masses become visible.
     - Apocalypse crab: breathes clouds of chaos.
     - Thrashing horror: moves like a bat, tramples, and frenzies.
     - Spatial maelstrom: incorporeal vortex that turns walls into more 
@@ -85,7 +85,7 @@ Monsters
 * Frances has a more powerful set of spells.
 * Joseph does somewhat more damage in melee.
 * Monsters are much less likely to polymorph into plain elves and humans.
-* Non-humanoid holies no longer "salute" etc.
+* Non-humanoid holies no longer "salute", etc.
 * Trapdoor spiders no longer get "stuck".
 
 Spells
@@ -110,8 +110,8 @@ Items
   but not if a wall is in the way). These secondary attacks do only 75%
   damage and do not hit allies. Base damage for the larger axes is reduced
   to compensate.
-* Weapon skill training requires only having a weapon of the appropriate
-  type, not necessarily being able to wield it.
+* Weapon skill training only requires having a weapon of the appropriate
+  type, not necessarily the ability to wield it.
 * All troll-genus monsters can drop troll hides.
 * Monsters don't drop animal skins.
 * Potion of water is removed.
