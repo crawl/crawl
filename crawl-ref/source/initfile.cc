@@ -1032,12 +1032,12 @@ void game_options::reset_options()
     tile_layout_priority = split_string(",", "minimap, command, gold_turn, "
                                              "inventory, command2, spell, "
                                              "ability, monster");
-    tile_use_small_layout = false;
 # else
     tile_layout_priority = split_string(",", "minimap, inventory, gold_turn, "
                                              "command, spell, ability, "
                                              "monster");
 # endif
+    tile_use_small_layout = false;
 #endif
 
 #ifdef USE_TILE

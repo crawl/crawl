@@ -1035,7 +1035,13 @@ void TilesFramework::do_layout()
 
 bool TilesFramework::is_using_small_layout()
 {
+    // automatically use small layout at low resolutions if TOUCH_UI enabled,
+    // otherwise only if forced to
+#ifdef TOUCH_UI
     return (m_windowsz.y <= 480 || Options.tile_use_small_layout);
+#else
+    return Options.tile_use_small_layout;
+#endif
 }
 void TilesFramework::zoom_dungeon(bool in)
 {
