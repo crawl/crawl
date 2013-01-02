@@ -422,13 +422,6 @@ void tome_of_power(int slot)
                 << weird_writing() << '.' << endl;
 
     you.turn_is_over = true;
-    if (!item_ident(you.inv[slot], ISFLAG_KNOW_TYPE))
-    {
-        set_ident_flags(you.inv[slot], ISFLAG_KNOW_TYPE);
-
-        if (!yesno("Read it?", false, 'n'))
-            return;
-    }
 
     if (player_mutation_level(MUT_BLURRY_VISION) > 0
         && x_chance_in_y(player_mutation_level(MUT_BLURRY_VISION), 4))
