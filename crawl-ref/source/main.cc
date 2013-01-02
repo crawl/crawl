@@ -3549,11 +3549,7 @@ static void _open_door(coord_def move, bool check_confused)
     if (!move.origin())
     {
         if (check_confused && you.confused() && !one_chance_in(3))
-        {
-            do
-                move = coord_def(random2(3) - 1, random2(3) - 1);
-            while (move.origin());
-        }
+            move = Compass[random2(8)];
         if (_untrap_target(move, check_confused))
             return;
     }
@@ -3598,11 +3594,7 @@ static void _open_door(coord_def move, bool check_confused)
         door_move.delta = move;
 
     if (check_confused && you.confused() && !one_chance_in(3))
-    {
-        do
-            door_move.delta = coord_def(random2(3) - 1, random2(3) - 1);
-        while (door_move.delta.origin());
-    }
+        door_move.delta = Compass[random2(8)];
 
     // We got a valid direction.
     const coord_def doorpos = you.pos() + door_move.delta;
@@ -3854,11 +3846,7 @@ static void _close_door(coord_def move)
         door_move.delta = move;
 
     if (you.confused() && !one_chance_in(3))
-    {
-        do
-            door_move.delta = coord_def(random2(3) - 1, random2(3) - 1);
-        while (door_move.delta.origin());
-    }
+        door_move.delta = Compass[random2(8)];
 
     if (door_move.delta.origin())
     {
