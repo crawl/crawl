@@ -59,6 +59,7 @@
 const coord_def ABYSS_CENTRE(GXM / 2, GYM / 2);
 
 static const int ABYSSAL_RUNE_MAX_ROLL = 200;
+static const int ABYSSAL_RUNE_MIN_LEVEL = 3;
 
 abyss_state abyssal_state;
 
@@ -166,7 +167,7 @@ static void _write_abyssal_features()
 // Returns the roll to use to check if we want to create an abyssal rune.
 static int _abyssal_rune_roll()
 {
-    if (you.runes[RUNE_ABYSSAL] || you.depth < 3)
+    if (you.runes[RUNE_ABYSSAL] || you.depth < ABYSSAL_RUNE_MIN_LEVEL)
         return -1;
     const bool lugonu_favoured =
         (you.religion == GOD_LUGONU && !player_under_penance()
