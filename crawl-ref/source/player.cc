@@ -500,6 +500,8 @@ bool is_player_same_species(const monster_type mon, bool transform)
             return (mon == MONS_ANIMATED_TREE);
         case TRAN_PORCUPINE:
             return (mon == MONS_PORCUPINE);
+        case TRAN_WISP:
+            return (mon == MONS_INSUBSTANTIAL_WISP);
         // Compare with monster *species*.
         case TRAN_LICH:
             return (mons_species(mon) == MONS_LICH);
@@ -761,8 +763,12 @@ bool you_tran_can_wear(int eq, bool check_mutation)
     if (eq == EQ_NONE)
         return true;
 
-    if (you.form == TRAN_JELLY || you.form == TRAN_PORCUPINE)
+    if (you.form == TRAN_JELLY
+        || you.form == TRAN_PORCUPINE
+        || you.form == TRAN_WISP)
+    {
         return (false);
+    }
 
     if (eq == EQ_STAFF)
         eq = EQ_WEAPON;
@@ -1480,6 +1486,9 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
         case TRAN_TREE:
             rf--;
             break;
+        case TRAN_WISP:
+            rf += 2;
+            break;
         case TRAN_DRAGON:
         {
             monster_type drag = dragon_form_dragon_type();
@@ -1544,6 +1553,9 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
         {
         case TRAN_ICE_BEAST:
             rc += 3;
+            break;
+        case TRAN_WISP:
+            rc += 2;
             break;
         case TRAN_DRAGON:
         {
@@ -1624,7 +1636,7 @@ bool player::res_corr(bool calc_unid, bool items) const
     if (religion == GOD_JIYVA && piety >= piety_breakpoint(2))
         return true;
 
-    if (you.form == TRAN_JELLY)
+    if (you.form == TRAN_JELLY || you.form == TRAN_WISP)
         return 1;
 
     if (items && !suppressed())
@@ -1702,7 +1714,7 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
             re++;
 
         // transformations:
-        if (you.form == TRAN_STATUE)
+        if (you.form == TRAN_STATUE || you.form == TRAN_WISP)
             re += 1;
 
         if (re > 1)
@@ -1726,6 +1738,7 @@ int player_res_torment(bool, bool temp)
     return (player_mutation_level(MUT_TORMENT_RESISTANCE)
             || you.form == TRAN_LICH
             || you.form == TRAN_TREE
+            || you.form == TRAN_WISP
             || you.species == SP_VAMPIRE && you.hunger_state == HS_STARVING
             || you.petrified()
             || (temp && player_mutation_level(MUT_STOCHASTIC_TORMENT_RESISTANCE)
@@ -1794,6 +1807,7 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
         case TRAN_DRAGON:
         case TRAN_TREE:
         case TRAN_JELLY:
+        case TRAN_WISP:
             rp++;
             break;
         default:
@@ -1854,6 +1868,9 @@ int player_res_sticky_flame(bool calc_unid, bool temp, bool items)
         if (items && calc_unid && player_equip_unrand_effect(UNRAND_DRAGONSKIN) && coinflip())
             rsf++;
     }
+
+    if (you.form == TRAN_WISP)
+        rsf++;
 
     if (rsf > 1)
         rsf = 1;
@@ -2073,6 +2090,7 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
         switch (you.form)
         {
         case TRAN_STATUE:
+        case TRAN_WISP:
             pl++;
             break;
         case TRAN_TREE:
@@ -3633,6 +3651,7 @@ int check_stealth(void)
         break;
     case TRAN_SPIDER:
     case TRAN_JELLY:
+    case TRAN_WISP:
         race_mod = 21;
         break;
     case TRAN_ICE_BEAST:
@@ -5684,6 +5703,7 @@ flight_type player::flight_mode() const
 {
     if (duration[DUR_FLIGHT]
         || you.attribute[ATTR_PERM_FLIGHT]
+        || form == TRAN_WISP
         // dragon and bat should be FL_WINGED, but we don't want paralysis
         // instakills over lava
         || form == TRAN_DRAGON
@@ -6086,6 +6106,10 @@ int player::armour_class() const
                 AC += 100 + skill(SK_ICE_MAGIC, 25);     // max +7
             break;
 
+        case TRAN_WISP:
+            AC += 1000;
+            break;
+
         case TRAN_DRAGON: // Draconians handled above
             AC += 1600;
             break;
@@ -6190,7 +6214,7 @@ bool player::heal(int amount, bool max_too)
 
 mon_holy_type player::holiness() const
 {
-    if (form == TRAN_STATUE || petrified())
+    if (form == TRAN_STATUE || form == TRAN_WISP || petrified())
         return MH_NONLIVING;
 
     if (is_undead)
@@ -6250,6 +6274,7 @@ bool player::is_unbreathing() const
     case TRAN_STATUE:
     case TRAN_TREE:
     case TRAN_JELLY:
+    case TRAN_WISP:
         return true;
     default:
         break;
@@ -6261,10 +6286,9 @@ bool player::is_unbreathing() const
     return player_mutation_level(MUT_UNBREATHING);
 }
 
-// This is a stub. Makes checking for silver damage a little cleaner.
 bool player::is_insubstantial() const
 {
-    return false;
+    return you.form == TRAN_WISP;
 }
 
 int player::res_acid() const
@@ -6378,15 +6402,18 @@ int player::res_wind() const
 
 int player::res_petrify(bool temp) const
 {
-    if (temp && you.form == TRAN_STATUE)
+    if (temp && (you.form == TRAN_STATUE || you.form == TRAN_WISP))
         return 1;
     return 0;
 }
 
 int player::res_constrict() const
 {
-    if (you.form == TRAN_JELLY || you.form == TRAN_PORCUPINE)
+    if (you.form == TRAN_JELLY || you.form == TRAN_PORCUPINE
+        || you.form == TRAN_WISP)
+    {
         return 3;
+    }
     return 0;
 }
 

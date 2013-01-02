@@ -670,6 +670,8 @@ static bool _ball_of_energy(void)
 
 bool evoke_item(int slot)
 {
+    if (you.form == TRAN_WISP)
+        return mpr("You cannot handle anything in this form."), false;
 
     if (you.berserk() && (slot == -1
                        || slot != you.equip[EQ_WEAPON]

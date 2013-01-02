@@ -2830,6 +2830,9 @@ bool _is_cancellable_scroll(scroll_type scroll)
 
 void read_scroll(int slot)
 {
+    if (you.form == TRAN_WISP)
+        return mpr("You have no means to unroll scrolls or open books.");
+
     if (you.berserk())
     {
         canned_msg(MSG_TOO_BERSERK);
@@ -2996,9 +2999,7 @@ void read_scroll(int slot)
     string pre_succ_msg =
             make_stringf("As you read the %s, it crumbles to dust.",
                           scroll.name(DESC_QUALNAME).c_str());
-    if (you.confused()
-        || (which_scroll != SCR_IMMOLATION
-            && !_is_cancellable_scroll(which_scroll)))
+    if (which_scroll != SCR_IMMOLATION && !_is_cancellable_scroll(which_scroll))
     {
         mpr(pre_succ_msg.c_str());
         // Actual removal of scroll done afterwards. -- bwr

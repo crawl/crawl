@@ -2019,6 +2019,15 @@ void melee_attack::set_attack_verb()
             else
                 attack_verb = coinflip() ? "maul" : "trample";
             break;
+        case TRAN_WISP:
+            if (damage_done < HIT_WEAK)
+                attack_verb = "touch";
+            else if (damage_done < HIT_MED)
+                attack_verb = "hit";
+            else
+                attack_verb = "engulf";
+            break;
+            break;
         case TRAN_NONE:
         case TRAN_APPENDAGE:
             if (you.damage_type() == DVORP_CLAWING)
@@ -3678,32 +3687,21 @@ int melee_attack::calc_to_hit(bool random)
             switch (you.form)
             {
             case TRAN_SPIDER:
+            case TRAN_ICE_BEAST:
+            case TRAN_DRAGON:
+            case TRAN_LICH:
+            case TRAN_TREE:
+            case TRAN_WISP:
                 mhit += maybe_random2(10, random);
                 break;
             case TRAN_BAT:
-                mhit += maybe_random2(12, random);
-                break;
-            case TRAN_ICE_BEAST:
-                mhit += maybe_random2(10, random);
-                break;
             case TRAN_BLADE_HANDS:
                 mhit += maybe_random2(12, random);
                 break;
             case TRAN_STATUE:
                 mhit += maybe_random2(9, random);
                 break;
-            case TRAN_DRAGON:
-                mhit += maybe_random2(10, random);
-                break;
-            case TRAN_LICH:
-                mhit += maybe_random2(10, random);
-                break;
-            case TRAN_TREE:
-                mhit += maybe_random2(10, random);
-                break;
             case TRAN_PORCUPINE:
-                mhit -= maybe_random2(5, random);
-                break;
             case TRAN_PIG:
             case TRAN_APPENDAGE:
             case TRAN_JELLY:
@@ -5163,6 +5161,7 @@ int melee_attack::calc_base_unarmed_damage()
             damage = 12 + div_rand_round(you.strength() * 2, 3);
             break;
         case TRAN_LICH:
+        case TRAN_WISP:
             damage = 5;
             break;
         case TRAN_PIG:
