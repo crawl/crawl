@@ -1385,9 +1385,9 @@ void scorefile_entry::init(time_t dt)
     // do points first.
     points = 0;
     bool base_score = true;
+
     dlua.pushglobal("dgn.persist.calc_score");
     lua_pushboolean(dlua, death_type == KILLED_BY_WINNING);
-
     if (dlua.callfn(NULL, 1, 2))
         dlua.fnreturns(">db", &points, &base_score);
 
