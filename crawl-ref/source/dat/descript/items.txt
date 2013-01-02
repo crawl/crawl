@@ -1396,9 +1396,6 @@ else nearby.
 scroll of magic mapping
 
 This scroll reveals the surroundings of the one who reads it.
-
-It will reveal the presence of secret doors, but is not strong enough to see
-past them, or into completely sealed areas.
 %%%%
 scroll of noise
 
