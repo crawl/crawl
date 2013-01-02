@@ -2033,9 +2033,12 @@ static void _vampire_corpse_help()
 
 void drink(int slot)
 {
-    if (you.is_undead == US_UNDEAD)
+    if (you_foodless())
     {
-        mpr("You can't drink.");
+        if (you.form == TRAN_TREE)
+            mpr("It'd take too long for a potion to reach your roots.");
+        else
+            mpr("You can't drink.");
         return;
     }
 
