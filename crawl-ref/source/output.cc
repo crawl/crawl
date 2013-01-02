@@ -423,6 +423,7 @@ static void _print_stats_wp(int y)
             col = RED;
             break;
         case TRAN_STATUE:
+        case TRAN_WISP:
             col = LIGHTGREY;
             break;
         case TRAN_ICE_BEAST:

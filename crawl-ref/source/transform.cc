@@ -52,6 +52,7 @@ static const char* form_names[] =
     "tree",
     "porcupine",
     "jelly",
+    "wisp",
 };
 
 const char* transform_name(transformation_type form)
@@ -76,7 +77,7 @@ bool form_can_fly(transformation_type form)
 {
     if (you.racial_permanent_flight())
         return true;
-    return (form == TRAN_DRAGON || form == TRAN_BAT);
+    return (form == TRAN_DRAGON || form == TRAN_BAT || form == TRAN_WISP);
 }
 
 bool form_can_swim(transformation_type form)
@@ -119,12 +120,12 @@ bool form_changed_physiology(transformation_type form)
 
 bool form_can_wear_item(const item_def& item, transformation_type form)
 {
-    if (form == TRAN_JELLY || form == TRAN_PORCUPINE)
+    if (form == TRAN_JELLY || form == TRAN_PORCUPINE || form == TRAN_WISP)
         return false;
 
     if (item.base_type == OBJ_JEWELLERY)
     {
-        // Everyone but jellies and porcupines can wear amulets.
+        // Everyone but jellies, porcupines and wisps can wear amulets.
         if (jewellery_is_amulet(item))
             return true;
         // Bats and pigs can't wear rings.
@@ -376,6 +377,7 @@ size_type player::transform_size(transformation_type tform, int psize) const
     case TRAN_SPIDER:
     case TRAN_BAT:
     case TRAN_PORCUPINE:
+    case TRAN_WISP:
         return SIZE_TINY;
     case TRAN_PIG:
     case TRAN_JELLY:
@@ -425,6 +427,8 @@ monster_type transform_mons()
         return MONS_PORCUPINE;
     case TRAN_TREE:
         return MONS_ANIMATED_TREE;
+    case TRAN_WISP:
+        return MONS_INSUBSTANTIAL_WISP;
     case TRAN_BLADE_HANDS:
     case TRAN_APPENDAGE:
     case TRAN_NONE:
@@ -633,6 +637,7 @@ static int _transform_duration(transformation_type which_trans, int pow)
     case TRAN_PORCUPINE:
     case TRAN_JELLY:
     case TRAN_TREE:
+    case TRAN_WISP:
         return pow;
     case TRAN_NONE:
         return 0;
@@ -860,6 +865,11 @@ bool transform(int pow, transformation_type which_trans, bool force,
         tran_name = "tree";
         str       = 10;
         msg      += "an animated tree.";
+        break;
+
+    case TRAN_WISP:
+        tran_name = "wisp";
+        msg      += "an insubstantial wisp of gas.";
         break;
 
     case TRAN_NONE:
@@ -1139,6 +1149,7 @@ void untransform(bool skip_wielding, bool skip_move)
     case TRAN_PIG:
     case TRAN_JELLY:
     case TRAN_PORCUPINE:
+    case TRAN_WISP:
         mpr("Your transformation has ended.", MSGCH_DURATION);
         break;
 

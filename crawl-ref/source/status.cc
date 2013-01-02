@@ -898,6 +898,11 @@ static void _describe_transform(status_info* inf)
         inf->short_text = "porcupine-form";
         inf->long_text  = "You are a porcupine.";
         break;
+    case TRAN_WISP:
+        inf->light_text = "Wisp";
+        inf->short_text = "wisp-form";
+        inf->long_text  = "You are an insubstantial wisp.";
+        break;
     case TRAN_NONE:
         break;
     }
