@@ -81,7 +81,7 @@ void make_hungry(int hunger_amount, bool suppress_msg,
         return;
     }
 
-    if (you.is_undead == US_UNDEAD)
+    if (you_foodless())
         return;
 
     if (allow_reducing)
@@ -108,7 +108,7 @@ void make_hungry(int hunger_amount, bool suppress_msg,
 
 void lessen_hunger(int satiated_amount, bool suppress_msg)
 {
-    if (you.is_undead == US_UNDEAD)
+    if (you_foodless())
         return;
 
     you.hunger += satiated_amount;
@@ -125,7 +125,7 @@ void lessen_hunger(int satiated_amount, bool suppress_msg)
 
 void set_hunger(int new_hunger_level, bool suppress_msg)
 {
-    if (you.is_undead == US_UNDEAD)
+    if (you_foodless())
         return;
 
     int hunger_difference = (new_hunger_level - you.hunger);
@@ -134,6 +134,13 @@ void set_hunger(int new_hunger_level, bool suppress_msg)
         make_hungry(-hunger_difference, suppress_msg);
     else if (hunger_difference > 0)
         lessen_hunger(hunger_difference, suppress_msg);
+}
+
+bool you_foodless()
+{
+    return you.is_undead == US_UNDEAD
+        || you.form == TRAN_TREE
+        || you.form == TRAN_WISP;
 }
 
 /**
@@ -774,11 +781,14 @@ bool prompt_eat_inventory_item(int slot)
 
 static bool _eat_check(bool check_hunger = true, bool silent = false)
 {
-    if (you.is_undead == US_UNDEAD)
+    if (you_foodless())
     {
         if (!silent)
         {
-            mpr("You can't eat.");
+            if (you.form == TRAN_TREE)
+                mpr("Just photosynthesize.");
+            else
+                mpr("You can't eat.");
             crawl_state.zero_turns_taken();
         }
         return false;
@@ -2368,8 +2378,8 @@ static int _player_likes_food_type(int type)
 // be eaten (respecting species and mutations set).
 bool is_inedible(const item_def &item)
 {
-    // Mummies don't eat.
-    if (you.is_undead == US_UNDEAD)
+    // Mummies, liches, trees and wisps don't eat.
+    if (you_foodless())
         return true;
 
     if (food_is_rotten(item)
@@ -2399,8 +2409,8 @@ bool is_inedible(const item_def &item)
 // still be edible or even delicious.
 bool is_preferred_food(const item_def &food)
 {
-    // Mummies don't eat.
-    if (you.is_undead == US_UNDEAD)
+    // Mummies/etc don't eat.
+    if (you_foodless())
         return false;
 
     // Vampires don't really have a preferred food type, but they really
@@ -2749,8 +2759,7 @@ static void _heal_from_food(int hp_amt, bool unrot, bool restore_str)
 
 int you_max_hunger()
 {
-    // This case shouldn't actually happen.
-    if (you.is_undead == US_UNDEAD)
+    if (you_foodless())
         return HUNGER_DEFAULT;
 
     // Ghouls can never be full or above.
@@ -2763,7 +2772,7 @@ int you_max_hunger()
 int you_min_hunger()
 {
     // This case shouldn't actually happen.
-    if (you.is_undead == US_UNDEAD)
+    if (you_foodless())
         return HUNGER_DEFAULT;
 
     // Vampires can never starve to death.  Ghouls will just rot much faster.
@@ -2775,8 +2784,7 @@ int you_min_hunger()
 
 void handle_starvation()
 {
-    if (you.is_undead != US_UNDEAD && !you.duration[DUR_DEATHS_DOOR]
-        && you.hunger <= 500)
+    if (!you_foodless() && !you.duration[DUR_DEATHS_DOOR] && you.hunger <= 500)
     {
         if (!you.cannot_act() && one_chance_in(40))
         {
@@ -2800,7 +2808,7 @@ void handle_starvation()
 
 string hunger_cost_string(const int hunger)
 {
-    if (you.is_undead == US_UNDEAD)
+    if (you_foodless())
         return "N/A";
 
 #ifdef WIZARD

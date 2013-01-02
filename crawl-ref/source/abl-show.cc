@@ -661,7 +661,7 @@ const string make_cost_description(ability_type ability)
         ret << " ZP";
     }
 
-    if (abil.food_cost && you.is_undead != US_UNDEAD
+    if (abil.food_cost && !you_foodless()
         && (you.is_undead != US_SEMI_UNDEAD || you.hunger_state > HS_STARVING))
     {
         if (!ret.str().empty())
@@ -808,7 +808,7 @@ static const string _detailed_cost_description(ability_type ability)
         ret << abil.zp_cost;
     }
 
-    if (abil.food_cost && you.is_undead != US_UNDEAD
+    if (abil.food_cost && !you_foodless()
         && (you.is_undead != US_SEMI_UNDEAD || you.hunger_state > HS_STARVING))
     {
         have_cost = true;
@@ -1628,7 +1628,7 @@ bool activate_talent(const talent& tal)
             break;
     }
 
-    if (hungerCheck && !you.is_undead
+    if (hungerCheck && !you_foodless()
         && you.hunger_state == HS_STARVING)
     {
         canned_msg(MSG_TOO_HUNGRY);
