@@ -15,6 +15,7 @@
 #include "abyss.h"
 #include "areas.h"
 #include "artefact.h"
+#include "branch.h"
 #include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
@@ -170,14 +171,10 @@ static int _abyssal_rune_roll()
     const bool lugonu_favoured =
         (you.religion == GOD_LUGONU && !player_under_penance()
          && you.piety >= piety_breakpoint(4));
-    const int depth = you.depth + lugonu_favoured;
-    if (depth == 3) {
-      return 15;
-    }
-    if (depth == 4) {
-      return 34;
-    }
-    return 45 + depth;
+
+    const double depth = you.depth + lugonu_favoured;
+
+    return (int) pow(100.0, depth/(1 + brdepth[BRANCH_ABYSS]));
 }
 
 static void _abyss_erase_stairs_from(const vault_placement *vp)
