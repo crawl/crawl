@@ -728,6 +728,12 @@ static iflags_t _full_ident_mask(const item_def& item)
         flagset = 0;
         break;
     case OBJ_BOOKS:
+        if (item.sub_type == BOOK_DESTRUCTION)
+        {
+            flagset = 0;
+            break;
+        }
+        // Intentional fall-through.
     case OBJ_SCROLLS:
     case OBJ_POTIONS:
         flagset = ISFLAG_KNOW_TYPE;
