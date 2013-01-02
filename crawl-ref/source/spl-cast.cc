@@ -714,7 +714,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
         return false;
     }
 
-    if (!you.is_undead
+    if (!you.is_undead && !you_foodless()
         && (you.hunger_state == HS_STARVING
             || you.hunger <= spell_hunger(spell)))
     {
