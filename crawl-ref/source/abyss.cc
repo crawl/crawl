@@ -169,7 +169,7 @@ static int _abyssal_rune_roll()
         return -1;
     const bool lugonu_favoured =
         (you.religion == GOD_LUGONU && !player_under_penance()
-         && you.piety > 120);
+         && you.piety >= piety_breakpoint(4));
     const int depth = you.depth + lugonu_favoured;
     if (depth == 3) {
       return 15;
