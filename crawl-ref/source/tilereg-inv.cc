@@ -36,7 +36,7 @@ InventoryRegion::InventoryRegion(const TileRegionInit &init) : GridRegion(init)
 void InventoryRegion::pack_buffers()
 {
     // Pack base separately, as it comes from a different texture...
-    unsigned int i = 0 + (m_grid_page*mx*my);// - m_grid_page); @@CW: how should these tie in????
+    unsigned int i = 0 + (m_grid_page*mx*my - m_grid_page*2); // this has to match the logic in cursor_index()
     for (int y = 0; y < my; y++)
     {
         for (int x = 0; x < mx; x++)
@@ -67,7 +67,7 @@ void InventoryRegion::pack_buffers()
         }
     }
 
-    i = 0 + (m_grid_page*mx*my);// - m_grid_page);
+    i = 0 + (m_grid_page*mx*my - m_grid_page*2); // this also has to match the logic in cursor_index()
     for (int y = 0; y < my; y++)
     {
         for (int x = 0; x < mx; x++)
@@ -294,6 +294,18 @@ bool InventoryRegion::update_tip_text(string& tip)
     unsigned int item_idx = cursor_index();
     if (item_idx >= m_items.size() || m_items[item_idx].empty())
         return false;
+
+    // page next/prev
+    if( _is_next_button(item_idx) )
+    {
+        tip = "Next page\n[L-Click] Show next page of items";
+        return true;
+    }
+    else if( _is_prev_button(item_idx) )
+    {
+        tip = "Previous page\n[L-Click] Show previous page of items";
+        return true;
+    }
 
     int idx = m_items[item_idx].idx;
 
@@ -595,12 +607,12 @@ bool InventoryRegion::update_alt_text(string &alt)
     if (_is_next_button(item_idx))
     {
         // alt text for next page button
-        inf.title = "Next Page";
+        inf.title = "Next page";
     }
     else if (_is_prev_button(item_idx))
     {
         // alt text for prev page button
-        inf.title = "Previous Page";
+        inf.title = "Previous page";
     }
     else
         get_item_desc(*item, inf, true);
@@ -627,9 +639,9 @@ void InventoryRegion::draw_tag()
     bool floor = m_items[curs_index].flag & TILEI_FLAG_FLOOR;
 
     if (_is_next_button(curs_index))
-        draw_desc("Next Page");
+        draw_desc("Next page");
     else if (_is_prev_button(curs_index))
-        draw_desc("Previous Page");
+        draw_desc("Previous page");
     else if (floor && mitm[idx].defined())
         draw_desc(mitm[idx].name(DESC_PLAIN).c_str());
     else if (!floor && you.inv[idx].defined())
@@ -852,7 +864,7 @@ void InventoryRegion::update()
 bool InventoryRegion::_is_prev_button(int idx)
 {
     // idx is an index in m_items as returned by cursor_index()
-    return (m_grid_page>0 && idx == mx*my*m_grid_page-1);
+    return (m_grid_page>0 && idx == mx*my*m_grid_page-2*m_grid_page);
 }
 
 bool InventoryRegion::_is_next_button(int idx)

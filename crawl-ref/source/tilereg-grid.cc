@@ -65,7 +65,7 @@ void GridRegion::on_resize()
 unsigned int GridRegion::cursor_index() const
 {
     ASSERT(m_cursor != NO_CURSOR);
-    return m_cursor.x + m_cursor.y * mx + m_grid_page*mx*my;// -2*m_grid_page;
+    return m_cursor.x + m_cursor.y * mx + m_grid_page*mx*my - m_grid_page*2;
 }
 
 void GridRegion::place_cursor(const coord_def &cursor)
