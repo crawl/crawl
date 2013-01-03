@@ -559,6 +559,9 @@ bool you_cannot_memorise(spell_type spell, bool &undead)
         rc = true, undead = false;
     }
 
+    if (you.species == SP_LAVA_ORC && spell == SPELL_STONESKIN)
+        rc = true;
+
     return rc;
 }
 

@@ -1133,6 +1133,21 @@ bool spell_is_useless(spell_type spell, bool transient)
         {
             return true;
         }
+
+        if (you.species == SP_LAVA_ORC && !temperature_effect(LORC_STONESKIN))
+        {
+            switch (spell)
+            {
+            case SPELL_STATUE_FORM: // Stony self is too melty
+            // Too hot for these ice spells:
+            case SPELL_ICE_FORM:
+            case SPELL_OZOCUBUS_ARMOUR:
+            case SPELL_CONDENSATION_SHIELD:
+                return true;
+            default:
+                break;
+            }
+        }
     }
 
     switch (spell)
@@ -1182,6 +1197,12 @@ bool spell_is_useless(spell_type spell, bool transient)
             return true;
         }
         break;
+
+    case SPELL_STONESKIN:
+        if (you.species == SP_LAVA_ORC)
+            return (true);
+        break;
+
     default:
         break; // quash unhandled constants warnings
     }
