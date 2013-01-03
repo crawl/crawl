@@ -63,6 +63,7 @@
 
 static bool _handle_pickup(monster* mons);
 static void _mons_in_cloud(monster* mons);
+static void _heated_area(monster* mons);
 static bool _is_trap_safe(const monster* mons, const coord_def& where,
                           bool just_check = false);
 static bool _monster_move(monster* mons);
@@ -1694,10 +1695,14 @@ void handle_monster_move(monster* mons)
 
     // Handle clouds on nonmoving monsters.
     if (mons->speed == 0)
+    {
         _mons_in_cloud(mons);
 
-    // Update constriction durations
-    mons->accum_has_constricted();
+        // Update constriction durations
+        mons->accum_has_constricted();
+
+        _heated_area(mons);
+    }
 
     // Apply monster enchantments once for every normal-speed
     // player turn.
@@ -1834,6 +1839,8 @@ void handle_monster_move(monster* mons)
         const bool avoid_cloud = mons_avoids_cloud(mons, cloud_num);
 
         _mons_in_cloud(mons);
+        _heated_area(mons);
+
         if (!mons->alive())
             break;
 
@@ -3714,6 +3721,52 @@ static void _mons_in_cloud(monster* mons)
         return;
 
     actor_apply_cloud(mons);
+}
+
+static void _heated_area(monster* mons)
+{
+    if (!heated(mons->pos()))
+        return;
+
+    if (mons->is_fiery())
+        return;
+
+    const int base_damage = random2(11);
+
+    // Timescale, like with clouds:
+    const int speed = mons->speed > 0? mons->speed : 10;
+    const int timescaled = (std::max(0, base_damage) * 10 / speed);
+
+    // rF protects:
+    const int resist = mons->res_fire();
+    const int adjusted_damage = resist_adjust_damage(mons,
+                                BEAM_FIRE, resist,
+                                timescaled, true);
+    // So does AC:
+    const int final_damage = std::max(0, adjusted_damage
+                                      - random2(mons->armour_class()));
+
+    if (final_damage > 0)
+    {
+        if (mons->observable())
+            mprf("%s is %s by your radiant heat.",
+                 mons->name(DESC_THE).c_str(),
+                 (final_damage) > 10 ? "blasted" : "burned");
+
+        behaviour_event(mons, ME_DISTURB, 0, mons->pos());
+
+#ifdef DEBUG_DIAGNOSTICS
+        mprf(MSGCH_DIAGNOSTICS, "%s %s %d damage from heat.",
+             mons->name(DESC_THE).c_str(),
+             mons->conj_verb("take").c_str(),
+             final_damage);
+#endif
+
+        mons->hurt(&you, final_damage, BEAM_MISSILE);
+
+        if (mons->alive() && mons->observable())
+            print_wounds(mons);
+    }
 }
 
 static spell_type _map_wand_to_mspell(int wand_type)
