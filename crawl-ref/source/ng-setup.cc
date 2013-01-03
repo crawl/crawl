@@ -244,7 +244,6 @@ void give_basic_mutations(species_type speci)
     switch (speci)
     {
     case SP_LAVA_ORC:
-        you.mutation[MUT_HEAT_RESISTANCE] = 3;
         you.mutation[MUT_CONSERVE_SCROLLS] = 1;
     // Intentional fallthrough.
     case SP_HILL_ORC:
